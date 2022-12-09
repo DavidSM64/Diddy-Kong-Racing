@@ -578,158 +578,56 @@ s32 get_time_data_file_size(void) {
     return 512;
 }
 
-#if 1
-size_t strlen(const char *str);
-SIDeviceStatus func_80073C5C(s32 controllerIndex, s32 fileType, char **fileExt) {
+SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileExt) {
+    #define BLANK_EXT_CHAR ' '
     char *fileNames[16];
     char *fileExtensions[16];
     u8 fileTypes[16];
     u32 fileSizes[16];
-    SIDeviceStatus ret;
     s32 var_s1;
     s32 fileNum;
-    s32 var_s4;
     char fileExtChar;
+    SIDeviceStatus ret;
 
+    fileExtChar = BLANK_EXT_CHAR;
     var_s1 = 0;
-    var_s4 = ' ';
-    ret = get_controller_pak_file_list(controllerIndex, 16, &fileNames, &fileExtensions, &fileSizes, &fileTypes);
+    ret = get_controller_pak_file_list(controllerIndex, 16, fileNames, fileExtensions, fileSizes, fileTypes);
     if (ret == CONTROLLER_PAK_GOOD) {
         for (fileNum = 0; fileNum < 16; fileNum++) {
-            if (fileNames[fileNum] != NULL) {
-                if (fileType == 3) {
-                    if ((func_800CE050((u8 *) fileNames[fileNum], D_800E7630, strlen(D_800E7640)) == 0) //DKRACING-ADV
-                     || (func_800CE050((u8 *) fileNames[fileNum], D_800E7650, strlen(D_800E7660)) == 0)) { //DKRACING-TIMES
-                        if (var_s4 < fileExtensions[fileNum][0]) {
-                            var_s4 = fileExtensions[fileNum][0];
-                        }
-                        var_s1 |= 1 << ((fileExtensions[fileNum][0] & 0xFF) & 0x1F);
-                    }
-                }
+            if (fileNames[fileNum] == NULL) {
+                continue;
             }
-        }
-        if (var_s4 == ' ') {
-            fileExtChar = 'A';
-        } else if (var_s4 == 'Z') {
-            fileExtChar = 'A';
-            loop_16:
-            if (var_s1 & 1) {
-                fileExtChar++;
-                var_s1 = var_s1 >> 1;
-                if (!(fileExtChar <= 'Z')) {
+            if (fileType == 3) {
+                if((func_800CE050((u8 *) fileNames[fileNum], (char *)D_800E7630, strlen((char *)D_800E7640)) != 0)) {
+                    continue;
+                }
+            } else if((func_800CE050((u8 *) fileNames[fileNum], (char *)D_800E7650, strlen((char *)D_800E7660)) != 0))  {
+                continue;
+            }
 
-                } else {
-                    goto loop_16;
+            if (fileExtChar < fileExtensions[fileNum][0]) {
+                fileExtChar = fileExtensions[fileNum][0];
+            }
+            var_s1 |= (1 << (fileExtensions[fileNum][0] + (BLANK_EXT_CHAR - 1)));
+        }
+        if (fileExtChar == BLANK_EXT_CHAR) {
+            fileExtChar = 'A';
+        } else if (fileExtChar == 'Z') {
+            for (fileExtChar = 'A'; fileExtChar <= 'Z'; var_s1 >>= 1, fileExtChar++) {
+                if (!(var_s1 & 1)) {
+                    break;
                 }
             }
         } else {
-            fileExtChar = var_s4 + 1;
+            fileExtChar++;
         }
-        //Even though file extensions are technically 4 characters, only the first is used.
+        // Even though file extensions are technically 4 characters, only the first is used.
         // So this will set the extension to that character and then a null terminator.
         fileExt[0] = fileExtChar;
         fileExt[1] = '\0';
     }
     return ret;
 }
-
-// SIDeviceStatus func_80073C5C_2(s32 controllerIndex, s32 fileType, char **fileExt) {
-//     char *fileNames;
-//     char *fileExtensions;
-//     u8 *fileTypes;
-//     u32 *fileSizes;
-//     s32 ret;
-//     s32 temp_at;
-//     s32 var_s1;
-//     s32 i;
-//     s32 var_s4;
-//     char *fileName;
-//     char temp_t6;
-//     char var_s2;
-//     char temp_v0_2;
-//     char *fileExtension;
-
-//     var_s2 = 32;
-//     var_s1 = 0;
-//     ret = get_controller_pak_file_list(controllerIndex, 16, &fileNames, &fileExtensions, &fileSizes, &fileTypes);
-//     if (ret == CONTROLLER_PAK_GOOD) {
-//         var_s4 = 32;
-//         for (i = 0; i < controllerIndex; i++) {
-//             fileName = fileNames[i];
-//             if (*fileName != NULL) {
-//                 fileExtension = fileExtensions[i];
-//                 if (fileType == 3) {
-//                     //DKRACING-ADV
-//                     if (func_800CE050((u8 *) *fileName, D_800E7630, strlen(D_800E7640))) {
-//                         goto block_7;
-//                     }
-//                 } else {
-//                     //DKRACING-TIMES
-//                     if (func_800CE050((u8 *) *fileName, D_800E7650, strlen(D_800E7660)) == 0) {
-// block_7:
-//                         if (var_s4 < *fileExtension) {
-//                             var_s2 = *fileExtension;
-//                             var_s4 = var_s2;
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-
-// //         fileName = &fileNames;
-// //         var_s4 = 32;
-// //         do {
-// //             if (*fileName != NULL) {
-// //                 var_t0 = fileExtensions[var_s3];
-// //                 if (fileType == 3) {
-// //                     //D_800E7630 = DKRACING-ADV
-// //                     //D_800E7640 = DKRACING-ADV
-// //                     if (func_800CE050((u8 *) *fileName, D_800E7630, strlen(D_800E7640))) {
-// //                         goto block_7;
-// //                     }
-// //                 } else {
-// //                     //D_800E7650 = DKRACING-TIMES
-// //                     //D_800E7660 = DKRACING-TIMES
-// //                     if (func_800CE050((u8 *) *fileName, D_800E7650, strlen(D_800E7660)) == 0) {
-// // block_7:
-// //                         temp_v0_2 = *var_t0;
-// //                         if (var_s4 < temp_v0_2) {
-// //                             var_s2 = temp_v0_2;
-// //                             var_s4 = var_s2;
-// //                         }
-// //                         var_s1 |= 1 << (temp_v0_2 + 0x1F);
-// //                     }
-// //                 }
-// //             }
-// //             fileName += 4;
-// //             i += 4;
-// //         } while (var_s3 < controllerIndex);
-//         if (var_s4 == 32) {
-//             var_s2 = 'A';
-//         } else if (var_s4 == 90) {
-//             //for (var_s2_2 = 65; var_s1 & 1 && var_s2_2 < 90; var_s2_2++, var_s1 >>= 1) { }
-//             var_s2 = 'A';
-// loop_16:
-//             if (var_s1 & 1) {
-//                 var_s2++;
-//                 var_s1 >>= 1;
-//                 if (!(var_s2 <= 'Z')) {
-//                     goto loop_16;
-//                 }
-//             }
-//         } else {
-//             var_s2++;
-//         }
-//         fileExt[0] = var_s2;
-//         fileExt[1] = 0;
-//     }
-//     return ret;
-// }
-#else
-//Probably get_file_extension
-//func_80073C5C(s32 controllerIndex, s32 fileType, char **fileExt);
-GLOBAL_ASM("asm/non_matchings/save_data/func_80073C5C.s")
-#endif
 
 //Read DKRACING-ADV data into settings?
 s32 read_game_data_from_controller_pak(s32 controllerIndex, char *fileExt, Settings *settings) {
@@ -789,7 +687,7 @@ s32 write_game_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     gameData = allocate_from_main_pool_safe(fileSize, COLOUR_TAG_WHITE);
     *((s32 *)gameData) = GAMD;
     func_800732E8(arg1, gameData + 4);
-    ret = func_80073C5C(controllerIndex, 3, &fileExt);
+    ret = get_file_extension(controllerIndex, 3, (char *)&fileExt);
     if (ret == CONTROLLER_PAK_GOOD) {
         // D_800E7680 = DKRACING-ADV
         ret = write_controller_pak_file(controllerIndex, -1, (char *) D_800E7680, (char *)&fileExt, gameData, fileSize);
@@ -828,7 +726,7 @@ s32 read_time_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
             status = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *)cpakData, fileSize);
             if (status == CONTROLLER_PAK_GOOD) {
                 if (*cpakData == TIMD) {
-                    func_80073588(settings, (u64 *) (cpakData + 1), 3);
+                    func_80073588(settings, (u8 *) (cpakData + 1), 3);
                 } else {
                     status = CONTROLLER_PAK_BAD_DATA;
                 }
@@ -857,7 +755,7 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     timeData = allocate_from_main_pool_safe(fileSize, COLOUR_TAG_WHITE);
     *((s32 *)timeData) = TIMD;
     func_800738A4(arg1, timeData + 4);
-    ret = func_80073C5C(controllerIndex, 4, &fileExt);
+    ret = get_file_extension(controllerIndex, 4, (char *)&fileExt);
     if (ret == CONTROLLER_PAK_GOOD) {
         //D_800E76A0 = DKRACING-TIMES
         ret = write_controller_pak_file(controllerIndex, -1, (char *)D_800E76A0, (char *)&fileExt, timeData, fileSize);
@@ -1031,7 +929,7 @@ s32 read_eeprom_data(Settings *arg0, u8 arg1) {
         for (i = 0; i < blocks; i++) {
             osEepromRead(get_si_mesg_queue(), i + 0x10, (u8 *)&alloc[i]);
         }
-        func_80073588(arg0, alloc, 1);
+        func_80073588(arg0, (u8 *)alloc, 1);
     }
 
     if (arg1 & 2) {
@@ -1039,7 +937,7 @@ s32 read_eeprom_data(Settings *arg0, u8 arg1) {
         for (i = 0; i < blocks; i++) {
             osEepromRead(get_si_mesg_queue(), i + 0x28, (u8 *)(&alloc[24] + i));
         }
-        func_80073588(arg0, alloc, 2);
+        func_80073588(arg0, (u8 *)alloc, 2);
     }
 
     free_from_memory_pool(alloc);
