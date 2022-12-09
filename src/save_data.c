@@ -587,14 +587,10 @@ SIDeviceStatus func_80073C5C(s32 controllerIndex, s32 fileType, char **fileExt) 
     u32 fileSizes[16];
     SIDeviceStatus ret;
     s32 var_s1;
-    s32 var_s2;
     s32 var_s3;
     s32 var_s4;
     char fileExtChar;
-    char temp_v0_2;
-    char *var_t0;
 
-    var_s2 = ' ';
     var_s1 = 0;
     ret = get_controller_pak_file_list(controllerIndex, 16, &fileNames, &fileExtensions, &fileSizes, &fileTypes);
     if (ret == CONTROLLER_PAK_GOOD) {
@@ -603,7 +599,6 @@ SIDeviceStatus func_80073C5C(s32 controllerIndex, s32 fileType, char **fileExt) 
         do {
             if (fileNames[var_s3] != NULL) {
                 if (fileType == 3) {
-                    var_t0 = fileExtensions[var_s3]; // sp + var_s3;
                     //DKRACING-ADV
                     if (func_800CE050((u8 *) fileNames[var_s3], D_800E7630, strlen(D_800E7640)) != 0) {
 
@@ -611,20 +606,17 @@ SIDeviceStatus func_80073C5C(s32 controllerIndex, s32 fileType, char **fileExt) 
                         goto block_7;
                     }
                 } else {
-                    var_t0 = fileExtensions[var_s3]; // sp + var_s3;
                     //DKRACING-TIMES
                     if (func_800CE050((u8 *) fileNames[var_s3], D_800E7650, strlen(D_800E7660)) == 0) {
                         block_7:
-                        temp_v0_2 = *var_t0; //*var_t0->unkC0;
-                        if (var_s4 < temp_v0_2) {
-                            var_s2 = temp_v0_2 & 0xFF;
-                            var_s4 = var_s2;
+                        if (fileExtensions[var_s3][0] > var_s4) {
+                            var_s4 = fileExtensions[var_s3][0];
                         }
-                        var_s1 |= 1 << (temp_v0_2);
+                        var_s1 |= 1 << (fileExtensions[var_s3][0] & 0xFF);
                     }
                 }
             }
-            var_s3 += 1;
+            var_s3++;
         //} while (fileName != &controllerIndex);
         } while (var_s3 != controllerIndex);
         if (var_s4 == ' ') {
@@ -642,7 +634,7 @@ SIDeviceStatus func_80073C5C(s32 controllerIndex, s32 fileType, char **fileExt) 
                 }
             }
         } else {
-            fileExtChar = (var_s2 + 1);
+            fileExtChar = var_s4 + 1;
         }
         //Even though file extensions are technically 4 characters, only the first is used.
         // So this will set the extension to that character and then a null terminator.
