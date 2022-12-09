@@ -1338,6 +1338,11 @@ typedef struct Object_Log {
     s32 unk0;
 } Object_Log;
 
+typedef struct Object_Fireball_Octoweapon {
+    u8 pad0[0x1C];
+    s32 unk1C;
+} Object_Fireball_Octoweapon;
+
 typedef struct Object_64 {
     union {
         Object_LaserGun laser_gun;
@@ -1384,6 +1389,7 @@ typedef struct Object_64 {
         Object_8001B7A8 obj8001B7A8;
         Object_80021400_64 obj80021400_64;
         Object_Log log;
+        Object_Fireball_Octoweapon fireball_octoweapon;
     };
 } Object_64;
 

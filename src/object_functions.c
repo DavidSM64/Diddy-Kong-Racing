@@ -194,133 +194,115 @@ void obj_init_fireball_octoweapon(Object *obj, UNUSED LevelObjectEntry_Fireball_
 }
 
 #ifdef NON_MATCHING
-// Has a minor regalloc issue with obj4C_obj.
+void obj_loop_fireball_octoweapon(Object* obj, s32 arg1) {
+    Object *someObj; // 84
+    f32 var_f2;
+    f32 updateRateF;
+    Object *racerObj;
+    Object_Fireball_Octoweapon *sp74;
+    Object_Racer *racer;
+    s32 pad[7];
+    s32 temp;
+    f32 sp4C;
 
-typedef struct Object80033F60_64 {
-	u8 pad0[0x1C];
-	s32 *unk1C;
-	u8 pad20[0x8];
-	s32 unk28;
-} Object80033F60_64;
-
-typedef struct Object80033F60_4C_64 {
-	s16 unk0;
-	u8 pad2[0x185];
-	s8 unk187;
-	u8 pad188[0x7C];
-	s16 unk204;
-} Object80033F60_4C_64;
-
-void obj_loop_fireball_octoweapon(Object *obj, s32 speed) {
-	ObjectTransform *trans78;
-	Object_4C *obj4C;
-	f32 sp7C;
-	Object80033F60_4C_64 *obj4C_obj64;
-	Object80033F60_64 *obj64;
-	Object *obj4C_obj;
-	f32 phi_f2;
-    s32 *temp;
-	f32 sp4C[7];
-
-    trans78 = obj->trans78;
-
-    sp7C = speed;
-    if (osTvType == TV_TYPE_PAL) {
-        sp7C *= 1.2;
+    someObj = (Object*)obj->unk78;
+    updateRateF = (f32) arg1;
+    if (osTvType == 0) {
+        updateRateF *= 1.2;
     }
-
-    if ((obj->behaviorId == 116) && (obj->unk7C.word < 0)) {
+    if ((obj->behaviorId == 0x74) && ((s32) obj->unk7C.word < 0)) {
         obj->segment.trans.x_position = 0.0f;
         obj->segment.trans.y_position = 0.0f;
         obj->segment.trans.z_position = 0.0f;
         func_80011560();
-        func_80011570(obj, trans78->x_position, trans78->y_position, trans78->z_position);
+        func_80011570(obj, someObj->segment.trans.x_position, someObj->segment.trans.y_position, someObj->segment.trans.z_position);
     } else {
-        phi_f2 = (trans78->x_position - obj->segment.trans.x_position) * 0.1;
-        if (phi_f2 > 10.0) {
-            phi_f2 = 10.0f;
+        var_f2 = (f32) ((f64) (someObj->segment.trans.x_position - obj->segment.trans.x_position) * 0.1);
+        if (var_f2 > 10.0) {
+            var_f2 = 10.0f;
         }
-        if (phi_f2 < -10.0) {
-            phi_f2 = -10.0f;
+        if (var_f2 < -10.0) {
+            var_f2 = -10.0f;
         }
-        obj->segment.x_velocity += (phi_f2 - obj->segment.x_velocity) * 0.125 * sp7C;
-        phi_f2 = (trans78->y_position - obj->segment.trans.y_position) * 0.1;
-        if (phi_f2 > 10.0) {
-            phi_f2 = 10.0f;
+        obj->segment.x_velocity += (f64) (var_f2 - obj->segment.x_velocity) * 0.125 * updateRateF;
+        var_f2 = (f32) ((f64) (someObj->segment.trans.y_position - obj->segment.trans.y_position) * 0.1);
+        if (var_f2 > 10.0) {
+            var_f2 = 10.0f;
         }
-        if (phi_f2 < -10.0) {
-            phi_f2 = -10.0f;
+        if (var_f2 < -10.0) {
+            var_f2 = -10.0f;
         }
-        obj->segment.y_velocity += (phi_f2 - obj->segment.y_velocity) * 0.125 * sp7C;
-        phi_f2 = (trans78->z_position - obj->segment.trans.z_position) * 0.1;
-        if (phi_f2 > 10.0) {
-            phi_f2 = 10.0f;
+        obj->segment.y_velocity += (f64) (var_f2 - obj->segment.y_velocity) * 0.125 * updateRateF;
+        var_f2 = (f32) ((f64) (someObj->segment.trans.z_position - obj->segment.trans.z_position) * 0.1);
+        if (var_f2 > 10.0) {
+            var_f2 = 10.0f;
         }
-        if (phi_f2 < -10.0) {
-            phi_f2 = -10.0f;
+        if (var_f2 < -10.0) {
+            var_f2 = -10.0f;
         }
-        obj->segment.z_velocity += (phi_f2 - obj->segment.z_velocity) * 0.125 * sp7C;
+        obj->segment.z_velocity += (f64) (var_f2 - obj->segment.z_velocity) * 0.125 * updateRateF;
         if (sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity)) > 0.5) {
             obj->segment.trans.y_rotation = arctan2_f(obj->segment.x_velocity, obj->segment.z_velocity);
-            obj->segment.trans.x_rotation -= speed << 9;
+            obj->segment.trans.x_rotation -= arg1 << 9;
         }
-        func_80011570(obj, obj->segment.x_velocity * sp7C, obj->segment.y_velocity * sp7C, obj->segment.z_velocity * sp7C);
-        if (obj->unk4A == 298 && func_8002AD08(obj->segment.trans.y_position, sp4C, 0)) {
-			obj->segment.trans.y_position = sp4C[0];
-        }
-    }
-    obj->segment.unk18 += speed * 10;
-    obj64 = (Object80033F60_64 *) obj->unk64;
-    obj4C = obj->unk4C;
-    obj4C_obj = (Object*)obj4C->unk0; // This should be a0, not v1!
-    if ((obj4C_obj != NULL) && (obj4C->unk13 < 60) && (obj4C_obj->segment.header->behaviorId == 1)) {
-        obj4C_obj64 = (Object80033F60_4C_64 *) obj4C_obj->unk64;
-        if (obj4C_obj64->unk0 != -1) {
-            if (obj->behaviorId == 108) {
-                obj4C_obj64->unk187 = 1;
-                obj->unk7C.word = 20;
-                func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, 17, 1.0f, 1);
-                gParticlePtrList_addObject(obj);
-            } else if (obj->unk7C.word > 0) {
-                obj4C_obj64->unk204 = 60;
-                obj->unk7C.word = -60;
-                obj->action = (s32) obj4C_obj;
-                play_sound_global(SOUND_BUBBLE_RISE, obj64->unk1C);
+        func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
+        if (obj->unk4A == 0x12A) {
+            if (func_8002AD08(obj->segment.trans.y_position, &sp4C, NULL) != 0) {
+                obj->segment.trans.y_position = sp4C;
             }
         }
     }
-    if (obj->behaviorId == 108) {
+    obj->segment.unk18 += arg1 * 10;
+    sp74 = (Object_Fireball_Octoweapon*)obj->unk64;
+    racerObj = obj->unk4C->unk0;
+    if ((racerObj != NULL) && ((s32) obj->unk4C->unk13 < 0x3C) && (racerObj->segment.header->behaviorId == 1)) {
+        racer = (Object_Racer*)racerObj->unk64;
+        if (racer->playerIndex != -1) {
+            if (obj->behaviorId == 0x6C) {
+                racer->attackType = 1;
+                obj->unk7C.word = 0x14;
+                func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0x2C, 0x11, 1.0f, (s32) 1);
+                gParticlePtrList_addObject(obj);
+            } else if ((s32) obj->unk7C.word > 0) {
+                racer->unk204 = 0x3C;
+                obj->unk7C.word = -0x3C;
+                obj->unk78 = (s32) racerObj;
+                play_sound_global(0x24AU, &sp74->unk1C);
+            }
+        }
+    }
+    if (obj->behaviorId == 0x6C) {
         obj->unk74 = 1;
-        func_800AFC3C(obj, speed);
-        obj->unk7C.word -= speed;
+        func_800AFC3C(obj, arg1);
+        obj->unk7C.word -= arg1;
         if (obj->unk7C.word < 0) {
-            if (obj->unk4A == 298) {
+            if (obj->unk4A == 0x12A) {
                 gParticlePtrList_addObject(obj);
-                func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, 17, 1.0f, 1);
+                func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0x2C, 0x11, 1.0f, 1);
             }
-            obj->segment.trans.scale *= 0.9;
-            if (obj->segment.trans.scale < 0.5) {
+            obj->segment.trans.scale = (f32) ((f64) obj->segment.trans.scale * 0.9);
+            if ((f64) obj->segment.trans.scale < 0.5) {
                 gParticlePtrList_addObject(obj);
             }
         }
     } else {
         if (obj->unk7C.word < 0) {
-            obj->unk7C.word += speed;
+            obj->unk7C.word += arg1;
             if (obj->unk7C.word >= 0) {
                 obj->unk7C.word = 0;
             }
         } else {
-            obj->unk7C.word -= speed;
+            obj->unk7C.word -= arg1;
             if (obj->unk7C.word <= 0) {
                 obj->unk7C.word = 0;
             }
         }
         if (obj->unk7C.word == 0) {
-            temp = obj64->unk1C;
+            temp = sp74->unk1C;
             if (temp != 0) {
                 func_8000488C(temp);
             }
-            func_80009558(SOUND_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, 0);
+            func_80009558(0x155U, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
             gParticlePtrList_addObject(obj);
         }
     }

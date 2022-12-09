@@ -447,7 +447,7 @@ s16 *func_80024594(s32 *arg0, s32 *arg1);
 void func_800245B4(s16 arg0);
 void func_80012E28(Object *this);
 f32 catmull_rom_interpolation(f32*, s32, f32);
-f32 cubic_spline_interpolation(f32 *, s32, f32, f32 *);
+f32 cubic_spline_interpolation(f32 *data, s32 index, f32 x, f32 *derivative);
 s32 func_80031F88(Object*, ObjectHeader24 *);
 s16 func_8001C418(f32 yPos);
 void func_80021400(s32 arg0);
