@@ -120,31 +120,31 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of December 8, 2022, this is our current score:
+As of December 9, 2022, this is our current score:
 ```
- ===========================================
-   ADVENTURE ONE (ASM -> C Decompilation)
- ------------- 42.28% Complete -------------
-        # Decompiled functions: 1400
-         # GLOBAL_ASM remaining: 436
-        # NON_MATCHING functions: 12
-     # NON_EQUIVALENT WIP functions: 79
- --------------- Game Status ---------------
-  Balloons: 21/47, Keys: 2/4, Trophies: 1/5
-   T.T. Amulets: 2/4, Wizpig Amulets: 1/4
- -------------------------------------------
- We are racing in the rematch against Bluey.
- ===========================================
-    ADVENTURE TWO (Cleanup & Documentation)
- ------------- 13.03% Complete -------------
-         # Documented functions: 298
-       # Undocumented remaining: 1538
- --------------- Game Status ---------------
-  Balloons: 8/47, Keys: 1/4, Trophies: 0/5
-   T.T. Amulets: 0/4, Wizpig Amulets: 0/4
- -------------------------------------------
- We are racing the dinosaur boss Trickytops
- ===========================================
+ ==========================================================================
+                   ADVENTURE ONE (ASM -> C Decompilation)
+ ---------------------------- 42.65% Complete -----------------------------
+                        # Decompiled functions: 1404
+                        # GLOBAL_ASM remaining: 432
+                        # NON_MATCHING functions: 11
+                     # NON_EQUIVALENT WIP functions: 79
+ ------------------------------ Game Status -------------------------------
+                 Balloons: 21/47, Keys: 2/4, Trophies: 1/5
+                   T.T. Amulets: 2/4, Wizpig Amulets: 2/4
+ --------------------------------------------------------------------------
+ We are participating in the Trophy Race of Snowflake Mountain. (Round One)
+ ==========================================================================
+                   ADVENTURE TWO (Cleanup & Documentation)
+ ---------------------------- 13.39% Complete -----------------------------
+                        # Documented functions: 305
+                       # Undocumented remaining: 1531
+ ------------------------------ Game Status -------------------------------
+                  Balloons: 8/47, Keys: 1/4, Trophies: 0/5
+                   T.T. Amulets: 0/4, Wizpig Amulets: 0/4
+ --------------------------------------------------------------------------
+                 We are racing the dinosaur boss Trickytops
+ ==========================================================================
 ```
 <!-- README_SCORE_END -->
 
