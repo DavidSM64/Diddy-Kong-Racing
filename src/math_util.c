@@ -106,14 +106,14 @@ void f32_matrix_to_s16_matrix(Matrix *input, MatrixS *output) {
         temp_f6  = (*input)[i][1] * 65536.0f;
         temp_f8  = (*input)[i][2] * 65536.0f;
         temp_f10 = (*input)[i][3] * 65536.0f;
-        output[i+4][0] = temp_f4;
-        output[i+4][1] = temp_f6;
-        output[i+4][2] = temp_f8;
-        output[i+4][3] = temp_f10;
-        output[i][0] = (temp_f4 >> 16);
-        output[i][1] = (temp_f6 >> 16);
-        output[i][2] = (temp_f8 >> 16);
-        output[i][3] = (temp_f10 >> 16);
+        *output[i+4][0] = temp_f4;
+        *output[i+4][1] = temp_f6;
+        *output[i+4][2] = temp_f8;
+        *output[i+4][3] = temp_f10;
+        *output[i][0] = (temp_f4 >> 16);
+        *output[i][1] = (temp_f6 >> 16);
+        *output[i][2] = (temp_f8 >> 16);
+        *output[i][3] = (temp_f10 >> 16);
     }
 }
 #else

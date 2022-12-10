@@ -1670,7 +1670,7 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
             gSPEndDisplayList(gCurrDisplayList++);
         }
     }
-    if (levelId != (s32)SPECIAL_MAP_ID_NO_LEVEL) {
+    if (levelId != (s32) SPECIAL_MAP_ID_NO_LEVEL) {
         load_level_3(levelId, numberOfPlayers, 0, VEHICLE_PLANE, cutsceneId);
         gIsLoading = FALSE;
         return;

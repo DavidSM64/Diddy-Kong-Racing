@@ -3860,9 +3860,9 @@ void func_8003F0DC(void) {
     D_8011D4DC--;
 }
 
-void func_8003F0F8(Object* obj, struct Object_Weapon* weapon, u16 soundID) {
-    Object* racer;
-    Object** racerGroup;
+void func_8003F0F8(Object *obj, struct Object_Weapon *weapon, u16 soundID) {
+    Object *racer;
+    Object **racerGroup;
     f32 distance;
     s32 numRacers;
     f32 diffX;

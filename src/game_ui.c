@@ -1185,7 +1185,7 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
                     } else {
                         D_80126CDC->unk3AC = D_80126CDC->unk3BC;
                     }
-                    if (racer->lap_times[racer->lap] >= 0x3C) {
+                    if (racer->lap_times[racer->lap] >= 60) {
                         D_80126CDC->unk3DB = 1;
                         play_sound_global(SOUND_WHOOSH1, NULL);
                     }
