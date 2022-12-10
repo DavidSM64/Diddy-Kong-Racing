@@ -467,6 +467,7 @@ s32 func_8001C48C(Object *obj);
 void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z);
 Object *func_8001B7A8(Object *racer, s32 position, f32 *distance);
 s32 func_8000FD34(unk8000FD34 *arg0, unk_80016BC4_2 *arg1);
+void func_8000E4E8(s32 index);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

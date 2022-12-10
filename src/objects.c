@@ -211,9 +211,8 @@ s32 D_8011AE88;
 Gfx *gObjectCurrDisplayList;
 Matrix *gObjectCurrMatrix;
 VertexList *gObjectCurrVertexList;
-s32 D_8011AE98[2];
-s32 D_8011AEA0;
-s32 D_8011AEA4;
+u8 *D_8011AE98[2];
+s32 D_8011AEA0[2];
 s32 D_8011AEA8[2];
 s32 D_8011AEB0[2];
 s16 *gAssetsLvlObjTranslationTable;
@@ -701,7 +700,25 @@ u8 func_8000E4D8(void) {
     return D_8011AEF5;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8000E4E8.s")
+void func_8000E4E8(s32 index) {
+    s32 *temp_v0;
+    s32 i;
+    u8 *temp_a1;
+
+    temp_v0 = (s32 *) D_8011AEB0[index];
+    temp_v0[0] = D_8011AEA0[index];
+    temp_v0[3] = 0;
+    temp_v0[2] = 0;
+    temp_v0[1] = 0;
+    temp_a1 = &D_8011AE98[index][D_8011AEA0[index]]; 
+    
+    // The backslash here is needed to match. And no, a for loop doesn't match.
+    i = 0; \
+    while(i < 16) {
+        temp_a1[i] = 0;
+        i++;
+    }
+}
 
 s32 func_8000E558(Object *arg0){
     s32 temp_v0;
@@ -710,13 +727,13 @@ s32 func_8000E558(Object *arg0){
         return TRUE;
     }
     temp_v0 = (s32) arg0->segment.unk3C_a.level_entry;
-    new_var2 = D_8011AE98[0];
-    if ((temp_v0 >= new_var2) && (((D_8011AEA0 * 8) + new_var2) >= temp_v0)) {
+    new_var2 = (s32) D_8011AE98[0];
+    if ((temp_v0 >= new_var2) && (((D_8011AEA0[0] * 8) + new_var2) >= temp_v0)) {
         return FALSE;
     }
-    new_var = D_8011AE98[1];
+    new_var = (s32) D_8011AE98[1];
     // Why even bother with this check?
-    if (temp_v0 >= new_var && temp_v0 <= ((D_8011AEA4 * 8) + new_var)) {
+    if (temp_v0 >= new_var && temp_v0 <= ((D_8011AEA0[1] * 8) + new_var)) {
         return TRUE;
     }
     return TRUE;
