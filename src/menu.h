@@ -934,6 +934,10 @@ s32 func_80095728(Gfx **gfx, MatrixS **mtx, Vertex **vtx, s32 updateRate);
 s32 func_8008F618(Gfx **dlist, MatrixS **mat);
 void func_80093D40(UNUSED s32 updateRate);
 void func_80080BC8(Gfx **);
+void func_8009963C(void);
+void func_80081C04(s32 num, s32 x, s32 y, u8 r, u8 g, u8 b, u8 a, u8 font, u8 alignment);
+void func_80080E90(Gfx **dList, s32 x, s32 y, u8 BGr, u8 BGg, u8 BGb, u8 BGa, u8 r, u8 g, u8 b, u8 a);
+void func_80084854(void);
 
 typedef enum MenuTextures {
 /* 0x00 */ TEXTURE_UNK_00,

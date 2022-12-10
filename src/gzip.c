@@ -3,6 +3,7 @@
 
 #include "gzip.h"
 #include "asset_loading.h"
+#include "PR/os_libc.h"
 
 /************ .data ************/
 

@@ -103,5 +103,6 @@ void free_memory_pool_slot(s32 poolIndex, s32 slotIndex); // Non Matching
 void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag); // Non Matching
 void free_slot_containing_address(u8 *address); // Non Matching
 s32 get_memory_colour_tag_count(s32 arg0); // Non Matching
+s32 allocate_memory_pool_slot(s32 memoryPoolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken, u32 colorTag);
 
 #endif

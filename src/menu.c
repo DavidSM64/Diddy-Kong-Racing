@@ -29,6 +29,7 @@
 #include "racer.h"
 #include "unknown_078050.h"
 #include "unknown_0255E0.h"
+#include "lib/src/mips1/al/alSynStartVoiceParams.h"
 
 /**
  * @file Contains all the code used for every menu in the game.

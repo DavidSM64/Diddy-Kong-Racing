@@ -107,5 +107,6 @@ void f32_matrix_dot(Matrix *arg0, Matrix *arg1, Matrix *arg2);
 void func_800AC21C(void);
 void func_800AC8A8(Object *);
 void func_800ACA20(Gfx**, MatrixS**, Vertex**, ObjectSegment*);
+void func_800AB4A8(s16 weatherType, s16 weatherEnable, s16 velX, s16 velY, s16 velZ, u8 intensity, u8 opacity);
 
 #endif

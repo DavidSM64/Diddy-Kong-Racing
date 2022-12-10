@@ -132,5 +132,6 @@ void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32);
 void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2);
 void func_800048D8(s32);
 void func_80002C00(s32, OSMesg mesg);
+void _handleEvent(unk800DC6BC *snd, ALSndpEvent *event);
 
 #endif
