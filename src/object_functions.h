@@ -405,6 +405,7 @@ void obj_loop_modechange(Object *obj, s32 updateRate);
 void obj_loop_bonus(Object *obj, s32 updateRate);
 void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate);
 void obj_loop_lasergun(Object *obj, s32 updateRate);
+void func_8003F0F8(Object* obj, struct Object_Weapon* weapon, u16 soundID);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 speed);

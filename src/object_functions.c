@@ -3860,7 +3860,49 @@ void func_8003F0DC(void) {
     D_8011D4DC--;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003F0F8.s")
+void func_8003F0F8(Object* obj, struct Object_Weapon* weapon, u16 soundID) {
+    Object* racer;
+    Object** racerGroup;
+    f32 distance;
+    s32 numRacers;
+    f32 diffX;
+    f32 diffZ;
+    f32 diffY;
+    s32 var_s4;
+    s32 i;
+
+    var_s4 = FALSE;
+    racerGroup = get_racer_objects_by_port(&numRacers);
+    for (i = 0; i < numRacers; i++) {
+        racer = racerGroup[i];
+        if (weapon->owner != racerGroup[i] && racer->unk64->racer.playerIndex != PLAYER_COMPUTER) {
+            diffX = racer->segment.trans.x_position - obj->segment.trans.x_position;
+            diffY = racer->segment.trans.y_position - obj->segment.trans.y_position;
+            diffZ = racer->segment.trans.z_position - obj->segment.trans.z_position;
+            distance = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
+            if (distance <= func_80001CB8(soundID)) {
+                var_s4 = TRUE;
+            }
+        }
+    }
+    if (var_s4) {
+        if (weapon->unk1C == 0) {
+            if (D_8011D4DC < 8) {
+                func_80009558(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &weapon->unk1C);
+                D_8011D4DC += 1;
+            }
+        } else {
+            update_spatial_audio_position(weapon->unk1C, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+        }
+    } else {
+        if (weapon->unk1C != 0) {
+            func_800096F8(weapon->unk1C);
+            weapon->unk1C = 0;
+            D_8011D4DC -= 1;
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003F2E8.s")
 
 void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 arg4, f32 scale, s32 arg6) {

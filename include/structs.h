@@ -774,6 +774,8 @@ typedef struct Object_Weapon {
   /* 0x14 */ s32 unk14;
   /* 0x18 */ u8 weaponID;
   /* 0x19 */ u8 checkpoint;
+  /* 0x19 */ s16 unk1A;
+  /* 0x19 */ s32 unk1C;
 } Object_Weapon;
 
 typedef struct Object_Butterfly {
