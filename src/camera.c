@@ -550,7 +550,7 @@ void set_viewport_properties(s32 viewPortIndex, s32 posX, s32 posY, s32 width, s
         gScreenViewports[viewPortIndex].flags &= ~VIEWPORT_X_CUSTOM;
     }
     if (posY != VIEWPORT_AUTO) {
-// !@bug Viewport Y writes to the X value. Luckily, all cases this function is called use VIEWPORT_AUTO,
+//!@bug Viewport Y writes to the X value. Luckily, all cases this function is called use VIEWPORT_AUTO,
 // so this bug doesn't happen in practice.
         gScreenViewports[viewPortIndex].posX = posY;
         gScreenViewports[viewPortIndex].flags |= VIEWPORT_Y_CUSTOM;

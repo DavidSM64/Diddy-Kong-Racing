@@ -28,6 +28,8 @@
 #include "unknown_005740.h"
 #include "game_ui.h"
 #include "object_models.h"
+#include "unknown_003260.h"
+
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
@@ -213,8 +215,6 @@ s8 D_8011D5AF;
 struct TempStruct8 **D_8011D5B0;
 s32 D_8011D5B4;
 s16 D_8011D5B8;
-
-extern void func_8000488C(u8 *soundMask);
 
 /******************************/
 
