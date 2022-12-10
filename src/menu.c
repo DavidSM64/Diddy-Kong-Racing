@@ -29,6 +29,7 @@
 #include "racer.h"
 #include "unknown_078050.h"
 #include "unknown_0255E0.h"
+#include "lib/src/mips1/al/alSynStartVoiceParams.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
@@ -634,7 +635,7 @@ CharacterSelectData gCharacterSelectBytesComplete[] = {
     /*Timber*/    { { BANJO, NONE },     { NONE, NONE },     { PIPSY, TICTOC_9, TIPTUP, CONKER },  { NONE, NONE, NONE, NONE },          0x0004 },
     /*Drumstick*/ { { NONE, NONE },      { TICTOC_9, NONE }, { DIDDY, KRUNCH, NONE, NONE },        { BUMPER, BANJO, NONE, NONE },       0x0006 },
     /*T.T*/       { { DRUMSTICK, NONE }, { TIPTUP, NONE },   { TIPTUP, CONKER, NONE, NONE },       { PIPSY, TIMBER, NONE, NONE },       0x0008 }
-// !@bug T.T's down input selects Tiptup. It should be set to NONE.
+//!@bug T.T's down input selects Tiptup. It should be set to NONE.
 };
 
 s32 D_800DFFCC = 0; // Likely unused.
@@ -2851,8 +2852,6 @@ void menu_audio_options_init(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80084854.s")
-
-extern void func_8000488C(s32 *soundMask); // Temporary until the proper signature is found.
 
 #ifdef NON_EQUIVALENT
 
@@ -8433,7 +8432,8 @@ void render_track_selection_viewport_border(ObjectModel *objMdl) {
             numTris = objMdl->batches[i + 1].facesOffset - triOffset;
             verts = &objMdl->vertices[vertOffset];
             tris = &objMdl->triangles[triOffset];
-            if (objMdl->batches[i].textureIndex == -1) { // !@bug Never true, since textureIndex is unsigned. This should've been either `== (u8)-1` or `== 0xFF`.
+            //!@bug Never true, since textureIndex is unsigned. This should've been either `== (u8)-1` or `== 0xFF`.
+            if (objMdl->batches[i].textureIndex == -1) { 
                 tex = NULL;
                 texEnabled = FALSE;
                 var_a3 = 0;

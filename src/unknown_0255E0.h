@@ -147,5 +147,9 @@ void func_8002DE30(Object*);
 void func_8002E234(Object*, s32);
 void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
 s32 func_8002BAB0(s16, f32, f32, f32*);
+void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 arg5, u32 arg6);
+void func_800B82B4(LevelModel *, LevelHeader *, s32);
+void func_8000C8F8(u32, u32);
+void func_80025510(s32);
 
 #endif
