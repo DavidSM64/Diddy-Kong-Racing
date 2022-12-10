@@ -4,6 +4,7 @@
 #include "unknown_003260.h"
 #include "memory.h"
 #include "audio_internal.h"
+#include "video.h"
 
 /************ .bss ************/
 
