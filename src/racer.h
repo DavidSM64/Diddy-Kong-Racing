@@ -237,11 +237,11 @@ void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *
 void func_800598D0(void);
 void func_80059944(void);
 void func_80059984(s32 arg0);
-MapId func_800599A8(void);
-s32 func_800599B8(s32 arg0, MapId mapId, s16 arg2, s16 *arg3, s16 *arg4);
+s32 func_800599A8(void);
+s32 func_800599B8(s32 arg0, s32 mapId, s16 arg2, s16 *arg3, s16 *arg4);
 s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime);
 void free_tt_ghost_data(void);
-s32 func_80059B7C(s32 controllerIndex, MapId mapId, s16 arg2, s16 arg3, s16 arg4);
+s32 func_80059B7C(s32 controllerIndex, s32 mapId, s16 arg2, s16 arg3, s16 arg4);
 s16 func_80059E20(void);
 void func_8005A3B0(void);
 void func_8005A3C0(void);

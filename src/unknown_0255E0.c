@@ -20,6 +20,7 @@
 #include "particles.h"
 #include "lib/src/libc/rmonPrintf.h"
 #include "objects.h"
+#include "math_util.h"
 
 // Maximum size for a level model is 522.5 KiB
 #define LEVEL_MODEL_MAX_SIZE 0x82A00
@@ -69,8 +70,8 @@ const char D_800E5E10[] = "TrackGetHeight() - Overflow!!!\n";
 /************ .bss ************/
 
 Gfx *gSceneCurrDisplayList;
-Matrix *gSceneCurrMatrix;
-VertexList *gSceneCurrVertexList;
+MatrixS *gSceneCurrMatrix;
+Vertex *gSceneCurrVertexList;
 TriangleList *gSceneCurrTriList;
 
 ObjectSegment *D_8011B0B0; // Camera Object?
@@ -271,7 +272,7 @@ extern u32 D_A0000200;
 /**
  * The root function for rendering the entire scene
 */
-void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRate) {
+void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, s8** tris, s32 updateRate) {
     s32 i;
     s32 numViewports;
     s32 delta;
@@ -598,7 +599,7 @@ void draw_gradient_background(void) {
     tris[1].uv2.u = 0;
     tris[1].uv2.v = 0;
     verts += 4;
-    gSceneCurrVertexList = (VertexList *) verts;
+    gSceneCurrVertexList = verts;
     tris += 2;
     gSceneCurrTriList = (TriangleList *) tris;
 }

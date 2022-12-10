@@ -61,7 +61,7 @@ UNUSED const char sDebugVehicleSwapString[] = "Swapping\n";
 
 /************ .data ************/
 
-s8 *D_800DD310 = NULL; // Currently unknown, might be a different type.
+char *D_800DD310 = NULL; // Currently unknown, might be a different type.
 s8 D_800DD314 = -1;
 u8 D_800DD318 = 0;
 s32 D_800DD31C = 0;
@@ -123,9 +123,9 @@ extern s32 gShowControllerPakMenu;
 /************ .bss ************/
 
 s32 *gTempAssetTable;
-MapId gMapId;
+s32 gMapId;
 LevelHeader *gCurrentLevelHeader;
-u8 **gLevelNames;
+char **gLevelNames;
 s32 gNumberOfLevelHeaders;
 s32 gNumberOfWorlds;
 
@@ -139,10 +139,10 @@ s16 D_801211C8[20];
 Gfx *gDisplayLists[2];
 Gfx *gCurrDisplayList;
 UNUSED s32 D_801211FC;
-Matrix *gHudMatrices[2];
-Matrix *gGameCurrMatrix;
-VertexList *gHudVertices[2];
-VertexList *gGameCurrVertexList;
+MatrixS *gHudMatrices[2];
+MatrixS *gGameCurrMatrix;
+Vertex *gHudVertices[2];
+Vertex *gGameCurrVertexList;
 TriangleList *gHudTriangles[2];
 TriangleList *gGameCurrTriList;
 UNUSED s32 D_80121230[8];
@@ -153,7 +153,7 @@ s32 gSPTaskNum;
 s32 sRenderContext;
 s32 D_801234F0;
 // Similar to gMapId, but is 0 if not currently playing a level (e.g. start menu).
-MapId gPlayableMapId;
+s32 gPlayableMapId;
 s32 D_801234F8;
 s32 D_801234FC;
 s32 D_80123500;
@@ -246,7 +246,7 @@ void func_8006A6B0(void) {
   D_800DD310 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
   load_asset_to_address(ASSET_LEVEL_NAMES, (u32) D_800DD310, 0, temp);
   for (count = 0; count < i; count++) {
-    gLevelNames[count] = (u8 *) &D_800DD310[gTempAssetTable[count]];
+    gLevelNames[count] = (char *) &D_800DD310[gTempAssetTable[count]];
   }
   free_from_memory_pool(gTempAssetTable);
 
@@ -299,14 +299,14 @@ s32 func_8006B054(s8 arg0) {
     return out;
 }
 
-Vehicle get_map_default_vehicle(MapId mapId) {
+Vehicle get_map_default_vehicle(s32 mapId) {
     if (mapId > 0 && mapId < gNumberOfLevelHeaders) {
         return D_8012117C[mapId].unk2 & 0xF;
     }
     return VEHICLE_CAR;
 }
 
-s32 get_map_available_vehicles(MapId mapId) {
+s32 get_map_available_vehicles(s32 mapId) {
     if (mapId > 0 && mapId < gNumberOfLevelHeaders) {
         s32 temp = D_8012117C[mapId].unk2;
         if (temp != 0) {
@@ -316,21 +316,21 @@ s32 get_map_available_vehicles(MapId mapId) {
     return 1;
 }
 
-s8 func_8006B14C(MapId mapId) {
+s8 func_8006B14C(s32 mapId) {
     if (mapId >= 0 && mapId < gNumberOfLevelHeaders) {
         return D_8012117C[mapId].unk1;
     }
     return -1;
 }
 
-s8 func_8006B190(MapId mapId) {
+s8 func_8006B190(s32 mapId) {
     if (mapId >= 0 && mapId < gNumberOfLevelHeaders) {
         return D_8012117C[mapId].unk0;
     }
     return 0;
 }
 
-MapId get_hub_area_id(s32 worldId) {
+s32 get_hub_area_id(s32 worldId) {
     s8 *hubAreaIds;
 
     if (worldId < 0 || worldId >= gNumberOfWorlds) {
@@ -353,9 +353,9 @@ s32 func_8006B240(void) {
 // This isn't matching, but there shouldn't be any issues (hopefully).
 #ifdef NON_EQUIVALENT
 
-void load_level(MapId levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
+void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
     s32 maxLevelCount;
-    MapId sp44;
+    s32 sp44;
     s32 noPlayers;
     s32 phi_s0;
     s32 vehicle;
@@ -612,7 +612,7 @@ void func_8006BD10(f32 arg0) {
     }
 }
 
-MapId func_8006BD88(void) {
+s32 func_8006BD88(void) {
     return gMapId;
 }
 
@@ -641,8 +641,8 @@ UNUSED u8 get_total_level_header_count(void) {
 /**
  * Returns the name of the level from the passed ID
  */
-char *get_level_name(MapId levelId) {
-    u8 *levelName;
+char *get_level_name(s32 levelId) {
+    char *levelName;
     u8 numberOfNullPointers = 0;
 
     if (levelId < 0 || levelId >= gNumberOfLevelHeaders) {
@@ -765,7 +765,7 @@ s8 func_8006C19C(void) {
 }
 
 // Push a stack onto D_801211C8
-void func_8006C1AC(MapId levelId, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
+void func_8006C1AC(s32 levelId, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
     D_801211C8[D_800DD328++] = levelId;
     D_801211C8[D_800DD328++] = entranceId;
     D_801211C8[D_800DD328++] = vehicleId;
@@ -1031,7 +1031,7 @@ void func_8006CAE4(s32 arg0, s32 arg1, Vehicle vehicle) {
  * which is the value at D_80123508. Also does some other stuff.
  * Needs a better name!
  */
-void load_level_2(MapId levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId) {
+void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId) {
     func_8006ECFC(numberOfPlayers);
     set_free_queue_state(0);
     func_80065EA0();
@@ -1273,8 +1273,8 @@ void ingame_logic_loop(s32 updateRate) {
             func_8006C22C(&gPlayableMapId, &D_80123504, &i, &D_80123508);
             func_8006F42C();
             if (gPlayableMapId < 0) {
-                if (gPlayableMapId == (MapId)SPECIAL_MAP_ID_NO_LEVEL || gPlayableMapId == (MapId)SPECIAL_MAP_ID_UNK_NEG10) {
-                    if (gPlayableMapId == (MapId)SPECIAL_MAP_ID_UNK_NEG10 && is_in_two_player_adventure()) {
+                if (gPlayableMapId == (s32)SPECIAL_MAP_ID_NO_LEVEL || gPlayableMapId == (s32)SPECIAL_MAP_ID_UNK_NEG10) {
+                    if (gPlayableMapId == (s32)SPECIAL_MAP_ID_UNK_NEG10 && is_in_two_player_adventure()) {
                         func_8006F398();
                     }
                     buttonHeldInputs |= L_TRIG;
@@ -1501,7 +1501,7 @@ Vehicle get_level_default_vehicle(void) {
  * Calls load_level() with the same arguments, but also does some other stuff.
  * Needs a better name!
  */
-void load_level_3(MapId levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
+void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
     set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
@@ -1661,7 +1661,7 @@ void func_8006DCF8(s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/game/func_8006DCF8.s")
 #endif
 
-void load_level_for_menu(MapId levelId, s32 numberOfPlayers, s32 cutsceneId) {
+void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
     if (!gIsLoading) {
         func_8006DBE4();
         if (get_thread30_level_id_to_load() == 0) {
@@ -1670,7 +1670,7 @@ void load_level_for_menu(MapId levelId, s32 numberOfPlayers, s32 cutsceneId) {
             gSPEndDisplayList(gCurrDisplayList++);
         }
     }
-    if (levelId != (MapId)SPECIAL_MAP_ID_NO_LEVEL) {
+    if (levelId != (s32)SPECIAL_MAP_ID_NO_LEVEL) {
         load_level_3(levelId, numberOfPlayers, 0, VEHICLE_PLANE, cutsceneId);
         gIsLoading = FALSE;
         return;
@@ -1831,7 +1831,7 @@ s32 is_reset_pressed(void) {
     return gNMIMesgBuf[0];
 }
 
-MapId func_8006EB14(void) {
+s32 func_8006EB14(void) {
     return gPlayableMapId;
 }
 

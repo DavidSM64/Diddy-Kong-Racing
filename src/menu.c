@@ -45,8 +45,8 @@ s32 gSaveGhostDelayCounter;
 s32 gPreviousMenuID;
 Gfx *sMenuCurrDisplayList;
 char **gTTSaveGhostPakErrorText;
-Matrix *sMenuCurrHudMat;
-VertexList *sMenuCurrHudVerts;
+MatrixS *sMenuCurrHudMat;
+Vertex *sMenuCurrHudVerts;
 TriangleList *sMenuCurrHudTris;
 unk801263C0 D_801263B4;
 unk801263C0 D_801263B8;
@@ -319,7 +319,7 @@ s32 D_800DF4B4              = 0;
 s32 gIsInTracksMode         = 1;
 s32 gNumberOfActivePlayers  = 1;
 s32 gIsInTwoPlayerAdventure = 0;
-MapId gTrackIdForPreview    = ASSET_LEVEL_CENTRALAREAHUB;
+s32 gTrackIdForPreview    = ASSET_LEVEL_CENTRALAREAHUB;
 s32 gTrackSelectRow         = 0; // 1 = Dino Domain, 2 = Sherbet Island, etc.
 s32 gSaveFileIndex          = 0;
 s32 D_800DF4D0              = 0; // Unused?
@@ -1847,7 +1847,7 @@ void menu_init(u32 menuId) {
 /**
  * Runs every frame. Calls the loop function of the current menu id
  */
-s32 menu_loop(Gfx **currDisplayList, Matrix **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
+s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
     s32 ret;
 
     sMenuCurrDisplayList = *currDisplayList;
@@ -4812,7 +4812,7 @@ s32 menu_game_select_loop(s32 updateRate) {
             func_80000B28();
             gIsInTracksMode = TRUE;
             func_8006E5BC();
-            load_level_for_menu((MapId)SPECIAL_MAP_ID_NO_LEVEL, -1, 0);
+            load_level_for_menu((s32)SPECIAL_MAP_ID_NO_LEVEL, -1, 0);
             menu_init(MENU_TRACK_SELECT);
         } else {
             gIsInAdventureTwo = D_800DF460;
@@ -6028,7 +6028,7 @@ void func_80090918(s32 updateRate) {
     if (sp24 == 0) {
         var_a1 = (gFFLUnlocked == -1) ? 3 : 4;
         if (D_801267E8 & (A_BUTTON | START_BUTTON)) {
-            if (gTrackIdForPreview != (MapId) -1) {
+            if (gTrackIdForPreview != (s32) -1) {
                 gMenuDelay = 1;
                 gTrackIdToLoad = gTrackIdForPreview;
                 D_800E1E1C = 1;
@@ -6379,7 +6379,7 @@ GLOBAL_ASM("asm/non_matchings/menu/render_track_select_setup_ui.s")
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80092188.s")
 
-s32 func_80092BE0(MapId mapId) {
+s32 func_80092BE0(s32 mapId) {
     s8 *trackIdArray;
     s32 index;
     s32 temp;
@@ -6390,7 +6390,7 @@ s32 func_80092BE0(MapId mapId) {
     temp = -1;
     if (trackIdArray[0] != -1) {
         while (temp < 0) {
-            if (mapId == (MapId) trackIdArray[index]) {
+            if (mapId == (s32) trackIdArray[index]) {
                 temp = index;
             }
             index++;
@@ -6416,7 +6416,7 @@ s32 func_80092BE0(MapId mapId) {
 void menu_adventure_track_init(void) {
     Settings *settings;
     s32 result;
-    MapId mapId;
+    s32 mapId;
     s16 temp;
 
     settings = get_settings();
@@ -6588,7 +6588,7 @@ s32 menu_adventure_track_loop(s32 updateRate) {
     s32 sp30;
     s32 vehicle2;
     s32 sp28;
-    MapId mapId;
+    s32 mapId;
     s32 sp20;
     s32 sp1C;
     Settings *settings;
@@ -7535,7 +7535,7 @@ void func_80098208(void) {
 
 #ifdef NON_MATCHING
 void menu_trophy_race_round_init(void) {
-    MapId levelId;
+    s32 levelId;
     s32 i;
     Settings *settings;
     s8 *levelIds;
@@ -7550,7 +7550,7 @@ void menu_trophy_race_round_init(void) {
     }
 
     levelId = levelIds[((gTrophyRaceWorldId - 1) * 6) + gTrophyRaceRound];
-    while (levelId == (MapId) -1) {
+    while (levelId == (s32) -1) {
         levelId = (levelId + 1) & 3;
     }
 
@@ -9048,7 +9048,7 @@ void dialogue_close_stub(void) {
  * Renders a textbox with a displaylist.
  * Return value goes completely unused.
  */
-f32 func_8009E9B0(UNUSED DialogueBoxBackground *textbox, Gfx **dlist, Matrix **mat, VertexList **verts) {
+f32 func_8009E9B0(UNUSED DialogueBoxBackground *textbox, Gfx **dlist, MatrixS **mat, Vertex **verts) {
     sMenuCurrDisplayList = *dlist;
     sMenuCurrHudMat = *mat;
     sMenuCurrHudVerts = *verts;

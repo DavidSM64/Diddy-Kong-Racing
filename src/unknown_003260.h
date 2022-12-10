@@ -125,11 +125,13 @@ void func_800049F8(s32 soundMask, s16 type, u32 volume);
 u16 func_80004A3C(u8 arg0);
 ALDMAproc __amDmaNew(AMDMAState **state);
 void func_80004A60(u8 arg0, u16 arg1);
-void func_80002DF8(s32 arg0);
+void func_80002DF8(OSMesg mesg);
 
 // Non Matching
 ALMicroTime  _sndpVoiceHandler(void *node);
 void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32);
 void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2);
+void func_800048D8(s32);
+void func_80002C00(s32, OSMesg mesg);
 
 #endif

@@ -153,10 +153,10 @@ unk80127BF8 D_80127BF8;
 s32 D_80127C00;
 s32 D_80127C04;
 s32 D_80127C08;
-Gfx *gWeatherDisplayListHead;
-Matrix *D_80127C10;
-VertexList *D_80127C14;
-TriangleList *D_80127C18;
+Gfx *gCurrWeatherDisplayList;
+MatrixS *gCurrWeatherMatrix;
+Vertex *gCurrWeatherVertexList;
+TriangleList *gCurrWeatherTriList;
 ObjectSegment *D_80127C1C;
 Matrix *D_80127C20;
 s32 D_80127C24;
@@ -290,12 +290,12 @@ void func_800ABC5C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
  * The root function for handling all weather.
  * Decide whether to perform rain or snow logic, execute it, then set it to render right after.
  */
-void process_weather(Gfx **currDisplayList, Matrix **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
+void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
     UNUSED s32 unused;
-    gWeatherDisplayListHead = *currDisplayList;
-    D_80127C10 = *currHudMat;
-    D_80127C14 = *currHudVerts;
-    D_80127C18 = *currHudTris;
+    gCurrWeatherDisplayList = *currDisplayList;
+    gCurrWeatherMatrix = *currHudMat;
+    gCurrWeatherVertexList = *currHudVerts;
+    gCurrWeatherTriList = *currHudTris;
     D_80127C1C = func_80069D20();
     D_80127C20 = func_80069DBC();
     if (gWeatherType != WEATHER_SNOW) {
@@ -329,10 +329,10 @@ void process_weather(Gfx **currDisplayList, Matrix **currHudMat, VertexList **cu
             D_80127C08 = 1 - D_80127C08;
         }
     }
-    *currDisplayList = gWeatherDisplayListHead;
-    *currHudMat = D_80127C10;
-    *currHudVerts = D_80127C14;
-    *currHudTris = D_80127C18;
+    *currDisplayList = gCurrWeatherDisplayList;
+    *currHudMat = gCurrWeatherMatrix;
+    *currHudVerts = gCurrWeatherVertexList;
+    *currHudTris = gCurrWeatherTriList;
 }
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC0C8.s")
@@ -351,18 +351,18 @@ void render_falling_snow(void) {
         if (D_800E2908 >= 4) {
             i = 0;
             mtx = (u32) func_80069DB0();
-            gSPMatrix(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(mtx ^ 0), G_MTX_DKR_INDEX_0);
-            gDkrInsertMatrix(gWeatherDisplayListHead++, G_MTX_DKR_INDEX_0, 0);
-            func_8007B4C8(&gWeatherDisplayListHead, D_800E28D8.unk8, 2U);
+            gSPMatrix(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx ^ 0), G_MTX_DKR_INDEX_0);
+            gDkrInsertMatrix(gCurrWeatherDisplayList++, G_MTX_DKR_INDEX_0, 0);
+            func_8007B4C8(&gCurrWeatherDisplayList, D_800E28D8.unk8, 2U);
             while (i + D_80127C00 < D_800E2908) {
                 mtx = (u32) &D_800E2904[i];
-                gSPVertexDKR(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(mtx), D_80127C00, 0);
-                gSPPolygon(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(D_800E290C), D_80127C04, 1);
+                gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx), D_80127C00, 0);
+                gSPPolygon(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(D_800E290C), D_80127C04, 1);
                 i += D_80127C00;
             }
             mtx = (u32) &D_800E2904[i];
-            gSPVertexDKR(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(mtx), (D_800E2908 - i), 0);
-            gSPPolygon(gWeatherDisplayListHead++, OS_PHYSICAL_TO_K0(D_800E290C), ((s32) (D_800E2908 - i) >> 1), 1);
+            gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx), (D_800E2908 - i), 0);
+            gSPPolygon(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(D_800E290C), ((s32) (D_800E2908 - i) >> 1), 1);
         }
     }
 }
@@ -509,14 +509,14 @@ void handle_weather_rain(s32 updateRate) {
         render_rain_splashes(updateRate);
         handle_rain_lightning(updateRate);
         if (gLightningFrequency >= 256) {
-            func_80067F2C(&gWeatherDisplayListHead, &D_80127C10);
+            func_80067F2C(&gCurrWeatherDisplayList, &gCurrWeatherMatrix);
             for(i = 0; i < 2; i++) {
                 render_rain_overlay(&gRainGfx[i], updateRate);
             }
-            gDPSetPrimColor(gWeatherDisplayListHead++, 0, 0, 255, 255, 255, 255);
-            gDPSetEnvColor(gWeatherDisplayListHead++, 255, 255, 255, 0);
-            reset_render_settings(&gWeatherDisplayListHead); // Pipesync and some stuff idk yet
-            func_800682AC(&gWeatherDisplayListHead); // Looks to create a viewport scissor.
+            gDPSetPrimColor(gCurrWeatherDisplayList++, 0, 0, 255, 255, 255, 255);
+            gDPSetEnvColor(gCurrWeatherDisplayList++, 255, 255, 255, 0);
+            reset_render_settings(&gCurrWeatherDisplayList); // Pipesync and some stuff idk yet
+            func_800682AC(&gCurrWeatherDisplayList); // Looks to create a viewport scissor.
         }
     }
 }

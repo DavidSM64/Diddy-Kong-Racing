@@ -94,7 +94,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_mult.s")
 #endif
 
 #ifdef NON_EQUIVALENT
-void f32_matrix_to_s16_matrix(Matrix *input, s16 **output) {
+void f32_matrix_to_s16_matrix(Matrix *input, MatrixS *output) {
     s32 temp_f10;
     s32 temp_f4;
     s32 temp_f6;
@@ -499,7 +499,7 @@ GLOBAL_ASM("asm/math_util/point_triangle_2d_xz_intersection.s")
 #endif
 
 #ifdef NON_EQUIVALENT
-void f32_matrix_from_position(Matrix mtx, f32 x, f32 y, f32 z) {
+void f32_matrix_from_position(Matrix *mtx, f32 x, f32 y, f32 z) {
     s32 j;
     s32 i;
     // Clear matrix

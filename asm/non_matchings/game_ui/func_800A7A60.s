@@ -53,10 +53,10 @@ glabel func_800A7A60
 /* 0A872C 800A7B2C 8FA70028 */  lw    $a3, 0x28($sp)
 /* 0A8730 800A7B30 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
 /* 0A8734 800A7B34 3C058012 */  lui   $a1, %hi(gHUDCurrMatrix) # $a1, 0x8012
-/* 0A8738 800A7B38 3C068012 */  lui   $a2, %hi(gHUDCurrTriList) # $a2, 0x8012
+/* 0A8738 800A7B38 3C068012 */  lui   $a2, %hi(gHUDCurrVertex) # $a2, 0x8012
 /* 0A873C 800A7B3C 240E0100 */  li    $t6, 256
 /* 0A8740 800A7B40 AFAE0014 */  sw    $t6, 0x14($sp)
-/* 0A8744 800A7B44 24C66D04 */  addiu $a2, %lo(gHUDCurrTriList) # addiu $a2, $a2, 0x6d04
+/* 0A8744 800A7B44 24C66D04 */  addiu $a2, %lo(gHUDCurrVertex) # addiu $a2, $a2, 0x6d04
 /* 0A8748 800A7B48 24A56D00 */  addiu $a1, %lo(gHUDCurrMatrix) # addiu $a1, $a1, 0x6d00
 /* 0A874C 800A7B4C 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A8750 800A7B50 0C01A145 */  jal   render_sprite_billboard
