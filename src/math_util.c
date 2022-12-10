@@ -505,16 +505,16 @@ void f32_matrix_from_position(Matrix *mtx, f32 x, f32 y, f32 z) {
     // Clear matrix
     for(i = 0; i < 4; i++) {
         for(j = 0; j < 4; j++) {
-            mtx[i][j] = 0;
+            *mtx[i][j] = 0;
         }
     }
-    mtx[0][0] = 1.0f;
-    mtx[1][1] = 1.0f;
-    mtx[2][2] = 1.0f;
-    mtx[3][3] = 1.0f;
-    mtx[3][0] = x;
-    mtx[3][1] = y;
-    mtx[3][2] = z;
+    *mtx[0][0] = 1.0f;
+    *mtx[1][1] = 1.0f;
+    *mtx[2][2] = 1.0f;
+    *mtx[3][3] = 1.0f;
+    *mtx[3][0] = x;
+    *mtx[3][1] = y;
+    *mtx[3][2] = z;
 }
 #else
 GLOBAL_ASM("asm/math_util/f32_matrix_from_position.s")
