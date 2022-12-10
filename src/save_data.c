@@ -507,25 +507,25 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         for (i = 2, var_s0 = 5; i < 192; i++) {
             var_s0 += saveData[i];
         }
-        var_s0 -= func_80072C54(0x10);
+        var_s0 -= func_80072C54(16);
         if (var_s0 == 0) {
             for (i = 0; i < levelCount; i++) {
                 if (func_8006B14C(i) == 0) {
                     availableVehicles = get_map_available_vehicles(i);
                     // Car Available
                     if (availableVehicles & 1) {
-                        settings->flapTimesPtr[0][i] = func_80072C54(0x10);
-                        settings->flapInitialsPtr[0][i] = func_80072C54(0x10);
+                        settings->flapTimesPtr[0][i] = func_80072C54(16);
+                        settings->flapInitialsPtr[0][i] = func_80072C54(16);
                     }
                     // Hovercraft Available
                     if (availableVehicles & 2) {
-                        settings->flapTimesPtr[1][i] = func_80072C54(0x10);
-                        settings->flapInitialsPtr[1][i] = func_80072C54(0x10);
+                        settings->flapTimesPtr[1][i] = func_80072C54(16);
+                        settings->flapInitialsPtr[1][i] = func_80072C54(16);
                     }
                     // Plane Available
                     if (availableVehicles & 4) {
-                        settings->flapTimesPtr[2][i] = func_80072C54(0x10);
-                        settings->flapInitialsPtr[2][i] = func_80072C54(0x10);
+                        settings->flapTimesPtr[2][i] = func_80072C54(16);
+                        settings->flapInitialsPtr[2][i] = func_80072C54(16);
                     }
                 }
             }
@@ -539,25 +539,25 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         for (i = 2, var_s0 = 5; i < 192; i++) {
             var_s0 += saveData[i];
         }
-        var_s0 -= func_80072C54(0x10);
+        var_s0 -= func_80072C54(16);
         if (var_s0 == 0) {
             for (i = 0; i < levelCount; i++) {
                 if (func_8006B14C(i) == 0) {
                     availableVehicles = get_map_available_vehicles(i);
                     // Car Available
                     if (availableVehicles & 1) {
-                        settings->courseTimesPtr[0][i] = func_80072C54(0x10);
-                        settings->courseInitialsPtr[0][i] = func_80072C54(0x10);
+                        settings->courseTimesPtr[0][i] = func_80072C54(16);
+                        settings->courseInitialsPtr[0][i] = func_80072C54(16);
                     }
                     // Hovercraft Available
                     if (availableVehicles & 2) {
-                        settings->courseTimesPtr[1][i] = func_80072C54(0x10);
-                        settings->courseInitialsPtr[1][i] = func_80072C54(0x10);
+                        settings->courseTimesPtr[1][i] = func_80072C54(16);
+                        settings->courseInitialsPtr[1][i] = func_80072C54(16);
                     }
                     // Plane Available
                     if (availableVehicles & 4) {
-                        settings->courseTimesPtr[2][i] = func_80072C54(0x10);
-                        settings->courseInitialsPtr[2][i] = func_80072C54(0x10);
+                        settings->courseTimesPtr[2][i] = func_80072C54(16);
+                        settings->courseInitialsPtr[2][i] = func_80072C54(16);
                     }
                 }
             }
@@ -568,7 +568,122 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
 GLOBAL_ASM("asm/non_matchings/save_data/func_80073588.s")
 #endif
 
+#if 0
+void func_800738A4(Settings *settings, u8 *saveData) {
+    s32 levelCount;
+    s32 worldCount;
+    s16 temp_t1;
+    s16 temp_t2;
+    s16 availableVehicles;
+    s16 var_v1;
+    s16 var_v1_2;
+    s32 var_at;
+    s32 i;
+    s32 var_s1_2;
+    s32 var_s1_4;
+    s32 var_s2;
+    s32 var_t2;
+    s32 var_t9;
+    u8 *temp_s2;
+    u8 *var_v0;
+    u8 *var_v0_2;
+
+    get_number_of_levels_and_worlds(&levelCount, &worldCount);
+    D_801241EC = saveData;
+    D_801241F0 = 0;
+    D_801241F4 = 128;
+    func_80072E28(16, 0);
+    var_s2 = 0;
+    i = 0;
+    if (levelCount > 0) {
+loop_1:
+        if (func_8006B14C(i) == 0) {
+            availableVehicles = get_map_available_vehicles(i);
+            // Car Available
+            if (availableVehicles & 1) {
+                func_80072E28(16, settings->flapTimesPtr[0][i]);
+                func_80072E28(16, settings->flapInitialsPtr[0][i]);
+                var_s2++;
+            }
+            // Hovercraft Available
+            if (availableVehicles & 2) {
+                func_80072E28(16, settings->flapTimesPtr[1][i]);
+                func_80072E28(16, settings->flapInitialsPtr[1][i]);
+                var_s2++;
+            }
+            // Plane Available
+            if (availableVehicles & 4) {
+                func_80072E28(16, settings->flapTimesPtr[2][i]);
+                func_80072E28(16, settings->flapInitialsPtr[2][i]);
+                var_s2++;
+            }
+            if (!(var_s2 < 48)) {
+                goto block_11;
+            }
+        } else {
+block_11:
+            i++;
+            if (i < levelCount) {
+                goto loop_1;
+            }
+        }
+    }
+    D_801241EC = saveData;
+    D_801241F0 = 0;
+    D_801241F4 = 128;
+    var_s1_2 = 2;
+    var_v1 = 5;
+    var_v0 = saveData + 2;
+    do {
+        var_s1_2 += 1;
+        temp_t2 = var_v1 + *var_v0;
+        var_v0 += 1;
+        var_v1 = temp_t2;
+    } while (var_s1_2 < 192);
+    func_80072E28(0x10, (s32) temp_t2);
+    temp_s2 = saveData + 192;
+    D_801241EC = temp_s2;
+    D_801241F0 = 0;
+    D_801241F4 = 128;
+    func_80072E28(16, 0);
+    i = 0;
+    if (levelCount > 0) {
+        do {
+            if (func_8006B14C(i) == 0) {
+                availableVehicles = get_map_available_vehicles(i);
+                if (availableVehicles & 1) {
+                    func_80072E28(16, settings->courseTimesPtr[0][i]);
+                    func_80072E28(16, settings->courseInitialsPtr[0][i]);
+                }
+                if (availableVehicles & 2) {
+                    func_80072E28(16, settings->courseTimesPtr[1][i]);
+                    func_80072E28(16, settings->courseInitialsPtr[1][i]);
+                }
+                if (availableVehicles & 4) {
+                    func_80072E28(16, settings->courseTimesPtr[2][i]);
+                    func_80072E28(16, settings->courseInitialsPtr[2][i]);
+                }
+            }
+            i++;
+        } while (i < levelCount);
+    }
+    D_801241EC = temp_s2;
+    D_801241F0 = 0;
+    D_801241F4 = 128;
+    var_v0_2 = D_801241EC + 4;
+    var_v1_2 = D_801241EC[2] + 5 + D_801241EC[2] + 1;
+    var_s1_4 = 4;
+    do {
+        temp_t1 = var_v1_2 + var_v0_2[0] + var_v0_2[1] + var_v0_2[2] + var_v0_2[3];
+        var_s1_4 += 4;
+        var_v1_2 = temp_t1;
+        var_v0_2 += 4;
+    } while (var_s1_4 < 192);
+    func_80072E28(16, temp_t1);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/save_data/func_800738A4.s")
+#endif
 
 s32 get_game_data_file_size(void) {
     return 256;
