@@ -125,14 +125,14 @@ f32 D_80120D40[6];
 f32 D_80120D58[5];
 u16 perspNorm;
 Matrix *D_80120D70[6];
-Matrix *D_80120D88[6];
+MatrixS *D_80120D88[6];
 Matrix D_80120DA0[5];
 Matrix D_80120EE0; // Perspective matrix?
 Matrix D_80120F20;
 Matrix D_80120F60;
 Matrix D_80120FA0;
-Matrix D_80120FE0;
-Matrix D_80121020;
+MatrixS D_80120FE0;
+MatrixS D_80121020;
 Matrix D_80121060;
 Matrix D_801210A0;
 OSMesgQueue sSIMesgQueue;
@@ -248,7 +248,7 @@ s32 get_current_viewport(void) {
     return gActiveCameraID;
 }
 
-void func_80066230(Gfx **dlist, Matrix **mats) {
+void func_80066230(Gfx **dlist, MatrixS **mats) {
     ObjectSegment *someStruct;
     s16 sp2A;
     s16 sp28;
@@ -615,7 +615,7 @@ UNUSED void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2) 
 
 #define SCISSOR_INTERLACE G_SC_NON_INTERLACE
 
-void func_80066CDC(Gfx **dlist, Matrix **mats) {
+void func_80066CDC(Gfx **dlist, MatrixS **mats) {
     u32 sp58;
     u32 sp54;
     u32 sp4C;
@@ -841,7 +841,7 @@ void func_80067A3C(Gfx **dlist) {
     gDPSetScissor((*dlist)++, 0, 0, 0, width, height);
 }
 
-void func_80067D3C(Gfx **dlist, UNUSED Matrix **mats) {
+void func_80067D3C(Gfx **dlist, UNUSED MatrixS **mats) {
     s32 temp;
 
     gSPPerspNormalize((*dlist)++, perspNorm);
@@ -862,7 +862,7 @@ void func_80067D3C(Gfx **dlist, UNUSED Matrix **mats) {
     }
     D_80120CF0.z_position = -gActiveCameraStack[gActiveCameraID].trans.z_position;
 
-    object_transform_to_matrix_2(&D_80120F60, &D_80120CF0);
+    object_transform_to_matrix_2(D_80120F60, &D_80120CF0);
     f32_matrix_mult(&D_80120F60, &D_80120EE0, &D_80120F20);
 
     D_80120CF0.y_rotation = -0x8000 - gActiveCameraStack[gActiveCameraID].trans.y_rotation;
@@ -890,7 +890,7 @@ void set_ortho_matrix_height(f32 value) {
     gOrthoMatrix[1][1] = value;
 }
 
-void func_80067F2C(Gfx **dlist, Matrix **mats) {
+void func_80067F2C(Gfx **dlist, MatrixS **mtx) {
     u32 widthAndHeight;
     s32 width, height;
     s32 i, j;
@@ -898,14 +898,14 @@ void func_80067F2C(Gfx **dlist, Matrix **mats) {
     widthAndHeight = get_video_width_and_height_as_s32();
     height = GET_VIDEO_HEIGHT(widthAndHeight);
     width = GET_VIDEO_WIDTH(widthAndHeight);
-    f32_matrix_to_s16_matrix(&gOrthoMatrix, (Matrix *)*mats);
-    D_80120D88[0] = (Matrix *) *mats;
+    f32_matrix_to_s16_matrix(&gOrthoMatrix, *mtx);
+    D_80120D88[0] = *mtx;
     D_800DD148[gActiveCameraID + 5].vp.vscale[0] = width * 2;
     D_800DD148[gActiveCameraID + 5].vp.vscale[1] = width * 2;
     D_800DD148[gActiveCameraID + 5].vp.vtrans[0] = width * 2;
     D_800DD148[gActiveCameraID + 5].vp.vtrans[1] = height * 2;
     gSPViewport((*dlist)++, OS_K0_TO_PHYSICAL(&D_800DD148[gActiveCameraID + 5]));
-    gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mats)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+    gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
     D_80120D1C = 0;
     D_80120D08 = 0;
 
@@ -917,13 +917,13 @@ void func_80067F2C(Gfx **dlist, Matrix **mats) {
     }
 }
 
-void func_8006807C(Gfx **dlist, Matrix **mats) {
-    object_transform_to_matrix_2(&D_80121060, &D_800DD288);
+void func_8006807C(Gfx **dlist, MatrixS **mtx) {
+    object_transform_to_matrix_2(D_80121060, &D_800DD288);
     f32_matrix_mult(&D_80121060, &D_80120EE0, &D_80120F20);
-    object_transform_to_matrix_2(D_80120D70[0], &D_800DD2A0);
+    object_transform_to_matrix_2((float (*)[4]) D_80120D70[0], &D_800DD2A0);
     f32_matrix_mult(D_80120D70[0], &D_80120F20, &D_80121060);
-    f32_matrix_to_s16_matrix(&D_80121060, (Matrix *)*mats);
-    gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mats)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+    f32_matrix_to_s16_matrix(&D_80121060, *mtx);
+    gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
     D_80120D1C = 0;
     D_80120D08 = 0;
 }
@@ -962,12 +962,12 @@ void func_800682AC(Gfx **dlist) {
     gActiveCameraID = 0;
 }
 
-void func_80068408(Gfx **dlist, Matrix **mats) {
+void func_80068408(Gfx **dlist, MatrixS **mtx) {
     f32_matrix_from_position(D_80120D70[D_80120D1C], 0.0f, 0.0f, 0.0f);
     f32_matrix_mult(D_80120D70[D_80120D1C], &D_80120F20, &D_80121060);
-    f32_matrix_to_s16_matrix(&D_80121060, (Matrix *)*mats);
-    D_80120D88[D_80120D1C] = (Matrix *) *mats;
-    gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mats)++), D_80120D08 << 6);
+    f32_matrix_to_s16_matrix(&D_80121060, *mtx);
+    D_80120D88[D_80120D1C] = *mtx;
+    gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), D_80120D08 << 6);
 }
 
 void func_80068508(s32 arg0) {
@@ -977,7 +977,7 @@ void func_80068508(s32 arg0) {
 /**
  * Calculates angle from object to camera, then renders the sprite as a billboard, facing the camera.
  */
-s32 render_sprite_billboard(Gfx **dlist, Matrix **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags) {
+s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags) {
     f32 sp5C;
     f32 sp58;
     Vertex *v;
@@ -1086,7 +1086,7 @@ s32 render_sprite_billboard(Gfx **dlist, Matrix **mtx, Vertex **vertexList, Obje
     return result;
 }
 
-void func_80068BF4(Gfx **arg0, Matrix **arg1, Vertex **arg2, ObjectSegment *arg3, unk80068BF4 *arg4, s32 arg5) {
+void func_80068BF4(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, unk80068BF4 *arg4, s32 flags) {
     UNUSED s32 pad;
     f32 scale;
     s32 index;
@@ -1095,80 +1095,80 @@ void func_80068BF4(Gfx **arg0, Matrix **arg1, Vertex **arg2, ObjectSegment *arg3
     Matrix sp50;
 
     if (arg4 != NULL) {
-        temp_v1 = *arg2;
-        temp_v1->x = arg3->trans.x_position;
-        temp_v1->y = arg3->trans.y_position;
-        temp_v1->z = arg3->trans.z_position;
+        temp_v1 = *vtx;
+        temp_v1->x = segment->trans.x_position;
+        temp_v1->y = segment->trans.y_position;
+        temp_v1->z = segment->trans.z_position;
         temp_v1->r = 255;
         temp_v1->g = 255;
         temp_v1->b = 255;
         temp_v1->a = 255;
-        gDkrVertices((*arg0)++, OS_PHYSICAL_TO_K0(*arg2), (((s32)OS_PHYSICAL_TO_K0(*arg2)) & 6), 13);
-        (*arg2)++; // Can't be done in the macro?
-        index = arg3->unk18;
+        gDkrVertices((*dList)++, OS_PHYSICAL_TO_K0(*vtx), (((s32)OS_PHYSICAL_TO_K0(*vtx)) & 6), 13);
+        (*vtx)++; // Can't be done in the macro?
+        index = segment->unk18;
         D_80120D1C ++;
-        D_80120CF0.y_rotation = -arg3->trans.y_rotation;
-        D_80120CF0.x_rotation = -arg3->trans.x_rotation;
-        D_80120CF0.z_rotation = gActiveCameraStack[gActiveCameraID].trans.z_rotation + arg3->trans.z_rotation;
+        D_80120CF0.y_rotation = -segment->trans.y_rotation;
+        D_80120CF0.x_rotation = -segment->trans.x_rotation;
+        D_80120CF0.z_rotation = gActiveCameraStack[gActiveCameraID].trans.z_rotation + segment->trans.z_rotation;
         D_80120CF0.x_position = 0.0f;
         D_80120CF0.y_position = 0.0f;
         D_80120CF0.z_position = 0.0f;
         if (gAdjustViewportHeight) {
-            scale = arg3->trans.scale;
+            scale = segment->trans.scale;
             f32_matrix_from_scale(sp50, scale, scale, 1.0f);
             f32_matrix_from_rotation_and_scale(sp90, 0, 1.0f, gVideoAspectRatio);
             f32_matrix_mult(&sp90, &sp50, &D_80121060);
         } else {
-            scale = arg3->trans.scale;
+            scale = segment->trans.scale;
             f32_matrix_from_scale(D_80121060, scale, scale, 1.0f);
         }
-        object_transform_to_matrix_2(&sp90, &D_80120CF0);
+        object_transform_to_matrix_2(sp90, &D_80120CF0);
         f32_matrix_mult(&D_80121060, &sp90, D_80120D70[D_80120D1C]);
-        f32_matrix_to_s16_matrix(D_80120D70[D_80120D1C], *arg1);
-        D_80120D88[D_80120D1C] = *arg1;
-        gSPMatrix((*arg0)++, OS_PHYSICAL_TO_K0((*arg1)++), G_MTX_DKR_INDEX_2);
-        gDkrEnableBillboard((*arg0)++);
+        f32_matrix_to_s16_matrix(D_80120D70[D_80120D1C], *mtx);
+        D_80120D88[D_80120D1C] = *mtx;
+        gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
+        gDkrEnableBillboard((*dList)++);
         if (D_80120D0C == 0) {
             index =  (((u8) index) * arg4->unk0) >> 8;
         }
-        func_8007BF34(arg0, arg4->unk6 | arg5);
+        func_8007BF34(dList, arg4->unk6 | flags);
         if (index >= arg4->unk0) {
             index = arg4->unk0 - 1;
         }
-        gSPDisplayList((*arg0)++, arg4->unkC[index]);
+        gSPDisplayList((*dList)++, arg4->unkC[index]);
         if (--D_80120D1C == 0) {
             index = 0;
         } else {
             index = 1;
         }
-        gDkrInsertMatrix((*arg0)++, 0, index << 6);
-        gDkrDisableBillboard((*arg0)++);
+        gDkrInsertMatrix((*dList)++, 0, index << 6);
+        gDkrDisableBillboard((*dList)++);
     }
 }
 
 GLOBAL_ASM("asm/non_matchings/camera/func_80068FA8.s")
 
-void func_80069484(Gfx **arg0, Matrix **arg1, ObjectTransform *arg2, f32 arg3, f32 arg4) {
+void func_80069484(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale, f32 scaleY) {
     f32 tempX;
     f32 tempY;
     f32 tempZ;
     s32 index;
     f32 scaleFactor;
 
-    object_transform_to_matrix(D_80121060, arg2);
-    if (arg4 != 0.0f) {
-        f32_matrix_y_scale(&D_80121060, arg4);
+    object_transform_to_matrix(D_80121060, trans);
+    if (scaleY != 0.0f) {
+        f32_matrix_y_scale(&D_80121060, scaleY);
     }
-    if (arg3 != 1.0f) {
-        f32_matrix_scale(&D_80121060, arg3);
+    if (scale != 1.0f) {
+        f32_matrix_scale(&D_80121060, scale);
     }
     f32_matrix_mult(&D_80121060, D_80120D70[D_80120D1C], D_80120D70[D_80120D1C + 1]);
     f32_matrix_mult(D_80120D70[D_80120D1C + 1], &D_80120F20, &D_801210A0);
-    f32_matrix_to_s16_matrix(&D_801210A0, *arg1);
+    f32_matrix_to_s16_matrix(&D_801210A0, *mtx);
     D_80120D1C++;
-    D_80120D88[0, D_80120D1C] = *arg1; // Should be [D_80120D1C], but only matches with [0, D_80120D1C]
-    if (1) { } if (1) { } if (1) { }; // Necessary to match
-    gSPMatrix((*arg0)++, OS_PHYSICAL_TO_K0((*arg1)++), G_MTX_DKR_INDEX_1);
+    D_80120D88[0, D_80120D1C] = *mtx; // Should be [D_80120D1C], but only matches with [0, D_80120D1C]
+    if (1) { } if (1) { } if (1) { }; // Fakematch
+    gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_1);
     guMtxXFMF(*D_80120D70[D_80120D1C], 0.0f, 0.0f, 0.0f, &tempX, &tempY, &tempZ);
     index = gActiveCameraID;
     if (gCutsceneCameraActive) {
@@ -1177,16 +1177,16 @@ void func_80069484(Gfx **arg0, Matrix **arg1, ObjectTransform *arg2, f32 arg3, f
     tempX = gActiveCameraStack[index].trans.x_position - tempX;
     tempY = gActiveCameraStack[index].trans.y_position - tempY;
     tempZ = gActiveCameraStack[index].trans.z_position - tempZ;
-    D_80120CF0.y_rotation = -arg2->y_rotation;
-    D_80120CF0.x_rotation = -arg2->x_rotation;
-    D_80120CF0.z_rotation = -arg2->z_rotation;
+    D_80120CF0.y_rotation = -trans->y_rotation;
+    D_80120CF0.x_rotation = -trans->x_rotation;
+    D_80120CF0.z_rotation = -trans->z_rotation;
     D_80120CF0.x_position = 0.0f;
     D_80120CF0.y_position = 0.0f;
     D_80120CF0.z_position = 0.0f;
     D_80120CF0.scale = 1.0f;
-    object_transform_to_matrix_2(&D_80121060, &D_80120CF0);
+    object_transform_to_matrix_2(D_80121060, &D_80120CF0);
     guMtxXFMF(D_80121060, tempX, tempY, tempZ, &tempX, &tempY, &tempZ);
-    scaleFactor = 1.0f / arg2->scale;
+    scaleFactor = 1.0f / trans->scale;
     tempX *= scaleFactor;
     tempY *= scaleFactor;
     tempZ *= scaleFactor;
@@ -1272,7 +1272,7 @@ Matrix *func_80069DA4(void) {
     return &D_80120FA0;
 }
 
-Matrix *func_80069DB0(void) {
+MatrixS *func_80069DB0(void) {
     return &D_80120FE0;
 }
 

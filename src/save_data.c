@@ -679,7 +679,7 @@ s32 read_time_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
             status = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *)cpakData, fileSize);
             if (status == CONTROLLER_PAK_GOOD) {
                 if (*cpakData == TIMD) {
-                    func_80073588(settings, (u64 *) (cpakData + 1), 3);
+                    func_80073588(settings, (u8 *) (cpakData + 1), 3);
                 } else {
                     status = CONTROLLER_PAK_BAD_DATA;
                 }
@@ -882,7 +882,7 @@ s32 read_eeprom_data(Settings *arg0, u8 arg1) {
         for (i = 0; i < blocks; i++) {
             osEepromRead(get_si_mesg_queue(), i + 0x10, (u8 *)&alloc[i]);
         }
-        func_80073588(arg0, alloc, 1);
+        func_80073588(arg0, (u8 *) alloc, 1);
     }
 
     if (arg1 & 2) {
@@ -890,7 +890,7 @@ s32 read_eeprom_data(Settings *arg0, u8 arg1) {
         for (i = 0; i < blocks; i++) {
             osEepromRead(get_si_mesg_queue(), i + 0x28, (u8 *)(&alloc[24] + i));
         }
-        func_80073588(arg0, alloc, 2);
+        func_80073588(arg0, (u8 *) alloc, 2);
     }
 
     free_from_memory_pool(alloc);

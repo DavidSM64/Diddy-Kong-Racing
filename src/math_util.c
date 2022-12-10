@@ -94,7 +94,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_mult.s")
 #endif
 
 #ifdef NON_EQUIVALENT
-void f32_matrix_to_s16_matrix(Matrix *input, s16 **output) {
+void f32_matrix_to_s16_matrix(Matrix *input, MatrixS *output) {
     s32 temp_f10;
     s32 temp_f4;
     s32 temp_f6;
@@ -106,14 +106,14 @@ void f32_matrix_to_s16_matrix(Matrix *input, s16 **output) {
         temp_f6  = (*input)[i][1] * 65536.0f;
         temp_f8  = (*input)[i][2] * 65536.0f;
         temp_f10 = (*input)[i][3] * 65536.0f;
-        output[i+4][0] = temp_f4;
-        output[i+4][1] = temp_f6;
-        output[i+4][2] = temp_f8;
-        output[i+4][3] = temp_f10;
-        output[i][0] = (temp_f4 >> 16);
-        output[i][1] = (temp_f6 >> 16);
-        output[i][2] = (temp_f8 >> 16);
-        output[i][3] = (temp_f10 >> 16);
+        *output[i+4][0] = temp_f4;
+        *output[i+4][1] = temp_f6;
+        *output[i+4][2] = temp_f8;
+        *output[i+4][3] = temp_f10;
+        *output[i][0] = (temp_f4 >> 16);
+        *output[i][1] = (temp_f6 >> 16);
+        *output[i][2] = (temp_f8 >> 16);
+        *output[i][3] = (temp_f10 >> 16);
     }
 }
 #else
@@ -499,22 +499,22 @@ GLOBAL_ASM("asm/math_util/point_triangle_2d_xz_intersection.s")
 #endif
 
 #ifdef NON_EQUIVALENT
-void f32_matrix_from_position(Matrix mtx, f32 x, f32 y, f32 z) {
+void f32_matrix_from_position(Matrix *mtx, f32 x, f32 y, f32 z) {
     s32 j;
     s32 i;
     // Clear matrix
     for(i = 0; i < 4; i++) {
         for(j = 0; j < 4; j++) {
-            mtx[i][j] = 0;
+            *mtx[i][j] = 0;
         }
     }
-    mtx[0][0] = 1.0f;
-    mtx[1][1] = 1.0f;
-    mtx[2][2] = 1.0f;
-    mtx[3][3] = 1.0f;
-    mtx[3][0] = x;
-    mtx[3][1] = y;
-    mtx[3][2] = z;
+    *mtx[0][0] = 1.0f;
+    *mtx[1][1] = 1.0f;
+    *mtx[2][2] = 1.0f;
+    *mtx[3][3] = 1.0f;
+    *mtx[3][0] = x;
+    *mtx[3][1] = y;
+    *mtx[3][2] = z;
 }
 #else
 GLOBAL_ASM("asm/math_util/f32_matrix_from_position.s")

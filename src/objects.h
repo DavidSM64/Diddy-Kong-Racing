@@ -382,7 +382,7 @@ void func_80012C30(void);
 void func_80012C3C(Gfx** dlist);
 void func_80012C98(Gfx **dlist);
 void func_80012CE8(Gfx **dlist);
-void func_80012D5C(Gfx **dlist, Matrix **mats, VertexList **verts, Object *object);
+void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object);
 void func_80012F30(Object *obj);
 void render_object(Object *this);
 void func_80013548(Object *arg0);
@@ -454,11 +454,11 @@ void func_80021400(s32 arg0);
 s32 func_8001B668(s32 arg0);
 s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos);
 Object *get_racer_object_by_port(s32 index);
-void render_racer_shield(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj);
-void render_racer_magnet(Gfx **dList, Matrix **mtx, VertexList **vtxList, Object *obj);
+void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
+void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
 void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
 s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1);
-s32 func_8001B2F0(MapId mapId);
+s32 func_8001B2F0(s32 mapId);
 void render_3d_billboard(Object *obj);
 void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 arg6, u32 arg7, f32 arg8);
 void func_8000B290(void);
@@ -467,6 +467,7 @@ s32 func_8001C48C(Object *obj);
 void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z);
 Object *func_8001B7A8(Object *racer, s32 position, f32 *distance);
 s32 func_8000FD34(unk8000FD34 *arg0, unk_80016BC4_2 *arg1);
+void func_8000E4E8(s32 index);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -487,7 +488,7 @@ s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpoint
 void func_80011134(Object *, s32);
 void func_800113CC(Object *, s32, s32, s32, s32);
 s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
-void func_80068FA8(Gfx**, Matrix**, Object*, Object*, f32); /* extern */
+void func_80068FA8(Gfx**, MatrixS**, Object*, Object*, f32); /* extern */
 void func_800138A8(Object*, unk80068514_arg4*, ObjectTransformExt *, s32);
 Object *func_8002342C(f32 x, f32 z);
 void func_8006017C(s32);

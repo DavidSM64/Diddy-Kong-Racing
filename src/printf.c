@@ -78,7 +78,7 @@ GLOBAL_ASM("asm/non_matchings/printf/func_800B3358.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B34B0.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3564.s")
 
-UNUSED void func_800B3678(Gfx **arg0, Matrix **arg1, VertexList **arg2) {
+UNUSED void func_800B3678(Gfx **arg0, MatrixS **arg1, Vertex **arg2) {
     UNUSED s32 pad;
     UNUSED s32 pad2;
     Object **temp_s0;
