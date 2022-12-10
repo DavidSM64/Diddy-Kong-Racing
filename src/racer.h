@@ -120,7 +120,8 @@ typedef struct unk8005234C {
 } unk8005234C;
 
 typedef struct TempStruct5 {
-    s8 pad0[8];
+    f32 unk0;
+    f32 unk4;
     s8 unk8[4][4];
 } TempStruct5;
 
