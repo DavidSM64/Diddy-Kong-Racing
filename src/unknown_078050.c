@@ -425,11 +425,11 @@ void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG) {
     gDPPipeSync((*dlist)++);
     gDPSetScissor((*dlist)++, 0, 0, 0, w - 1, h - 1);
     gDPSetCycleType((*dlist)++, G_CYC_FILL);
-    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, 0x02000000);
+    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_DEPTH_BUFFER);
     gDPSetFillColor((*dlist)++, GPACK_RGBA5551(255, 255, 240, 0) << 16 | GPACK_RGBA5551(255, 255, 240, 0));
     gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
     gDPPipeSync((*dlist)++);
-    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, 0x01000000);
+    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_COLOUR_BUFFER);
     if (drawBG) {
         if (func_80066910(0)) {
             if (D_800DE4CC) {
@@ -472,8 +472,8 @@ void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG) {
  */
 void init_rdp_and_framebuffer(Gfx **dlist) {
     s32 width = GET_VIDEO_WIDTH(get_video_width_and_height_as_s32());
-    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, 0x01000000);
-    gDPSetDepthImage((*dlist)++, 0x2000000);
+    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, SEGMENT_COLOUR_BUFFER);
+    gDPSetDepthImage((*dlist)++, SEGMENT_DEPTH_BUFFER);
     gSPDisplayList((*dlist)++, dRdpInit);
 }
 
