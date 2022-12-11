@@ -171,7 +171,7 @@ typedef struct CheckpointNode {
 /* 0x20 */ f32 distance;
 /* 0x24 */ f32 unk24; // Appears to be exactly the same as distance?
 /* 0x28 */ Object* obj;
-/* 0x2C */ u8 pad2C[0x2];
+/* 0x2C */ s16 unk2C;
 /* 0x2E */ s8 unk2E[4];
 /* 0x32 */ s8 unk32[4];
 /* 0x36 */ s8 unk36[4]; // Appear to be flags of some sort?
@@ -475,6 +475,8 @@ void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z);
 Object *func_8001B7A8(Object *racer, s32 position, f32 *distance);
 s32 func_8000FD34(unk8000FD34 *arg0, unk_80016BC4_2 *arg1);
 void func_8000E4E8(s32 index);
+void func_8000F648(Object *obj, s32 count, s32 objType);
+void func_8005FF40(ObjectModel **gfxData);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

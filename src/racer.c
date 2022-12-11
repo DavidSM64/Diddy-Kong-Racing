@@ -1951,7 +1951,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
         if (tempRacer->unk150 && gRaceStartTimer == 0) {
             s8 *yAsset;
             tempRacer->unk150->segment.trans.x_position = obj->segment.trans.x_position;
-            yAsset = (s8 *)get_misc_asset(MISC_ASSET_UNK00);
+            yAsset = (s8 *) get_misc_asset(MISC_ASSET_UNK00);
             
             tempRacer->unk150->segment.trans.y_position = obj->segment.trans.y_position + yAsset[tempRacer->characterId];
             tempRacer->unk150->segment.trans.z_position = obj->segment.trans.z_position;

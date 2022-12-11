@@ -110,21 +110,21 @@ u16 D_800DC864 = 0x0028;
 
 /************ .rodata ************/
 
-const char D_800E4F60[] = "Objects out of ram(1) !!\n";
-const char D_800E4F7C[] = "Door numbering error %d!!\n";
-const char D_800E4F98[] = "objGetScope: Unknown scope for object %d\n";
-const char D_800E4FC4[] = "ObjList (Part) Overflow %d!!!\n";
-const char D_800E4FE4[] = "ObjSetupObject(1) Memory fail!!\n";
-const char D_800E5008[] = "ObjSetupObject(2) Memory fail!!\n";
-const char D_800E502C[] = "ObjSetupObject(5) Memory fail!!\n";
-const char D_800E5050[] = "ObjSetupObject(6) Memory fail!!\n";
-const char D_800E5074[] = "ObjSetupObject(3) Memory fail!!\n";
-const char D_800E5098[] = "ObjList Overflow %d!!!\n";
-const char D_800E50B0[] = "ObjSetupObject(4) Memory fail!!\n";
-const char D_800E50D4[] = "Error: Multiple checkpoint no: %d !!\n";
-const char D_800E50FC[] = "ERROR Channel %d\n";
-const char D_800E5110[] = "RO error %d!!\n";
-const char D_800E5120[] = "ARGHHHHHHHHH\n";
+UNUSED const char sObjectOutofMemString[] = "Objects out of ram(1) !!\n";
+UNUSED const char sDoorNumberErrorString[] = "Door numbering error %d!!\n";
+UNUSED const char sObjectScopeErrorString[] = "objGetScope: Unknown scope for object %d\n";
+UNUSED const char sObjectListDataOverflowString[] = "ObjList (Part) Overflow %d!!!\n";
+UNUSED const char sObjectSetupError1String[] = "ObjSetupObject(1) Memory fail!!\n";
+UNUSED const char sObjectSetupError2String[] = "ObjSetupObject(2) Memory fail!!\n";
+UNUSED const char sObjectSetupError5String[] = "ObjSetupObject(5) Memory fail!!\n";
+UNUSED const char sObjectSetupError6String[] = "ObjSetupObject(6) Memory fail!!\n";
+UNUSED const char sObjectSetupError3String[] = "ObjSetupObject(3) Memory fail!!\n";
+UNUSED const char sObjectListOverflowString[] = "ObjList Overflow %d!!!\n";
+UNUSED const char sObjectSetupError4String[] = "ObjSetupObject(4) Memory fail!!\n";
+UNUSED const char sDuplicateCheckpointString[] = "Error: Multiple checkpoint no: %d !!\n";
+UNUSED const char sErrorChannelString[] = "ERROR Channel %d\n";
+UNUSED const char sReadOutErrorString[] = "RO error %d!!\n";
+UNUSED const char sPureAnguishString[] = "ARGHHHHHHHHH\n";
 extern f32 D_800E5644;
 
 /*********************************/
@@ -777,7 +777,29 @@ void func_8000E9D0(Object *arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/spawn_object.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8000F648.s")
+
+void func_8000F648(Object *obj, s32 count, s32 objType) {
+    s32 i;
+    if (objType == 0) { // 3D model
+        for (i = 0; i < count; i++) {
+            if (obj->unk68[i] != NULL) {
+                func_8005FF40((s32)obj->unk68[i]);
+            }
+        } 
+    } else if (objType == 4) {
+        for (i = 0; i < count; i++) {
+            if (obj->unk68[i] != NULL) {
+                free_texture((s32)obj->unk68[i]);
+            }
+        } 
+    } else { // Sprite
+        for (i = 0; i < count; i++) {
+            if (obj->unk68[i] != NULL) {
+                free_sprite((s32)obj->unk68[i]);
+            }
+        }
+    }
+}
 
 void func_8000F758(Object *obj) {
     s32 i;

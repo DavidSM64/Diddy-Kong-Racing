@@ -3683,7 +3683,7 @@ void obj_init_silvercoin(Object *obj, UNUSED LevelObjectEntry_SilverCoin *entry)
  * When collected, the coins are hidden for that player, rather than being removed outright.
 */
 void obj_loop_silvercoin(Object *obj, s32 updateRate) {
-    Object_4C* silverCoin4C;
+    Object_4C *silverCoin4C;
     Object_Racer* racer;
     Object *racerObj;
     s32 temp;
@@ -3758,7 +3758,7 @@ void obj_loop_worldkey(Object *worldKeyObj, s32 updateRate) {
     }
 
     // Rotate world key
-    worldKeyObj->segment.trans.y_rotation += updateRate * 0X100;
+    worldKeyObj->segment.trans.y_rotation += updateRate * 0x100;
 }
 
 void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) {

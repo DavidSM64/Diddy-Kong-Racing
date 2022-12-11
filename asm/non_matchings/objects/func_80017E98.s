@@ -156,8 +156,8 @@ glabel func_80017E98
 /* 018CDC 800180DC 24040014 */  li    $a0, 20
 /* 018CE0 800180E0 0C02D8D7 */  jal   set_render_printf_position
 /* 018CE4 800180E4 240500DC */   li    $a1, 220
-/* 018CE8 800180E8 3C04800E */  lui   $a0, %hi(D_800E50D4) # $a0, 0x800e
-/* 018CEC 800180EC 248450D4 */  addiu $a0, %lo(D_800E50D4) # addiu $a0, $a0, 0x50d4
+/* 018CE8 800180E8 3C04800E */  lui   $a0, %hi(sDuplicateCheckpointString) # $a0, 0x800e
+/* 018CEC 800180EC 248450D4 */  addiu $a0, %lo(sDuplicateCheckpointString) # addiu $a0, $a0, 0x50d4
 /* 018CF0 800180F0 0C02D7B7 */  jal   render_printf
 /* 018CF4 800180F4 02402825 */   move  $a1, $s2
 /* 018CF8 800180F8 3C088012 */  lui   $t0, %hi(D_8011AED4) # $t0, 0x8012
