@@ -421,13 +421,13 @@ void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
 
 #ifdef NON_EQUIVALENT
 void func_800732E8(Settings *settings, u8 *saveData) {
-    s32 i;
+    s16 var_v0;
+    s8 temp_v0;
+    u8 courseStatus;
     s32 levelCount;
     s32 worldCount;
-    s16 var_v0;
-    u8 courseStatus;
+    s32 i;
     s32 var_s0;
-    s8 temp_v0;
 
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
     D_801241EC = saveData;
@@ -470,11 +470,12 @@ void func_800732E8(Settings *settings, u8 *saveData) {
     func_80072E28(32, settings->cutsceneFlags);
     func_80072E28(16, settings->filename);
     func_80072E28(8, 0);
-    for (i = 2, var_v0 = saveData; i < 40; i++) { var_v0 += saveData[i]; }
-    D_801241EC = saveData;
+    var_v0 = saveData + 5;
+    for (i = 2; i < 40; i++) { var_v0 += saveData[i]; }
+    D_801241EC = var_v0;
     D_801241F0 = 0;
     D_801241F4 = 128;
-    func_80072E28(16, var_v0);
+    func_80072E28(16, saveData);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/save_data/func_800732E8.s")
