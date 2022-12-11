@@ -410,7 +410,7 @@ Object **get_racer_objects(s32 *numRacers);
 Object **get_racer_objects_by_port(s32 *numRacers);
 Object **get_racer_objects_by_position(s32 *numRacers);
 Object *get_racer_object(s32 index);
-void func_8001BC40(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+void func_8001BC40(s32, s32, Gfx**, s32, s32);
 u32 func_8001BD94(s32 arg0);
 void func_8001D1AC(void);
 void func_8001D1BC(s32 arg0);

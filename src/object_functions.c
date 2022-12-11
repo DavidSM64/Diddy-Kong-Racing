@@ -4049,7 +4049,6 @@ void obj_loop_log(Object *obj, s32 updateRate) {
     Object_Log *log;
     f32 cosine;
     f32 sine;
-    Object_5C *temp_v0;
     Object_Racer *racer;
     f32 temp;
     f32 temp2;
@@ -4060,14 +4059,13 @@ void obj_loop_log(Object *obj, s32 updateRate) {
     } else {
         obj->segment.trans.y_position = ((LevelObjectEntryCommon *) obj->segment.unk3C_a.level_entry)->y;
     }
-    temp_v0 = obj->unk5C;
-    if (temp_v0->unk100 != NULL) {
+    if (obj->unk5C->unk100 != NULL) {
         obj->unk7C.word++;
-        racerObj = (Object *) temp_v0->unk100;
+        racerObj = (Object *) obj->unk5C->unk100;
         if (racerObj->behaviorId == BHV_RACER) {
             racer = (Object_Racer *) racerObj->unk64;
             if (racer->velocity < -4.0 && racer->raceFinished == FALSE) {
-                func_80072348(racer->playerIndex, 0x12);
+                func_80072348(racer->playerIndex, 18);
             }
         }
         sine = sins_f(-obj->segment.trans.y_rotation);

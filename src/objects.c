@@ -1849,9 +1849,21 @@ Object *get_racer_object_by_port(s32 index) {
     return gRacersByPort[index];
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001BB68.s")
+UNUSED void func_8001BB68(Gfx **dlist, s32 arg1, s32 arg2) {
+    s32 i;
 
-UNUSED void func_8001BC40(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2, UNUSED s32 arg3) {
+    func_8007B4C8(dlist, NULL, 2U);
+    if (D_8011AED0 >= 4) {
+        for (i = 0; i < D_8011AED0; i++) {
+            func_8001BC40(i, 0, dlist, arg1, arg2);
+        }
+        for (i = 0; i < D_8011AED0; i++){
+            func_8001BC40(i, 1, dlist, arg1, arg2);
+        }
+    }
+}
+
+UNUSED void func_8001BC40(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED Gfx **dList, UNUSED s32 arg3, UNUSED s32 arg5) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BC54.s")
