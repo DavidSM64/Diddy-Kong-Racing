@@ -2,7 +2,7 @@
 /* RAM_POS: 0x80002660 */
 
 #include "unknown_003260.h"
-#include "memory.h".h"
+#include "memory.h"
 #include "video.h"
 #include "game.h"
 

@@ -3,6 +3,7 @@
 
 #include "video.h"
 #include "viint.h"
+#include "camera.h"
 
 /************ .data ************/
 

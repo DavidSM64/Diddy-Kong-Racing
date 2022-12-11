@@ -149,11 +149,18 @@ extern struct PuppyPrintTimers gPuppyTimers;
 extern void profiler_update(u32 *time, u32 time2);
 extern void puppyprint_update_rsp(u8 flags);
 extern void profiler_add(u32 *time, u32 offset);
+void profiler_offset(u32 *time, u32 offset);
+void profiler_reset_values(void);
+void render_profiler(void);
+void count_triangles(u8 *dlist, u8 *dlistEnd);
+void calculate_and_update_fps(void);
+void puppyprint_calculate_average_times(void);
 extern u8 perfIteration;
 extern u32 sPrevLoadTime;
 extern u8 sPrevLoadTimer;
 extern u8 gProfilerOn;
 #endif
+void crash_screen_init(void);
 extern s32 gAntiAliasing;
 
 extern s8  D_800DD314;

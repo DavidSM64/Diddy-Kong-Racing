@@ -30,6 +30,9 @@
 #include "unknown_078050.h"
 #include "unknown_0255E0.h"
 #include "lib/src/mips1/al/alSynStartVoiceParams.h"
+#include "math_util.h"
+#include "printf.h"
+#include "libc/stdio.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
@@ -9601,7 +9604,7 @@ s32 menu_benchmark_loop(s32 updateRate) {
             record_fps();
             benchTimer -= updateRate;
             if(benchState == BENCHMARK_RUNNING && benchTimer <= 60) {
-                func_800C01D8((FadeTransition* ) D_800E1E08);
+                func_800C01D8(&D_800E1E08);
                 benchState = BENCHMARK_RUNNING_FADE_OUT;
             }
             if (benchState == BENCHMARK_RUNNING_FADE_OUT && benchTimer <= 0){

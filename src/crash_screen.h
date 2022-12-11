@@ -3,6 +3,7 @@
 #include "macros.h"
 #include "menu.h"
 #include "save_data.h"
+#include "lib/src/libc/xprintf.h"
 #include "printf.h"
 #include "objects.h"
 #include "controller.h"
@@ -10,6 +11,9 @@
 #include "stacks.h"
 #include "stdarg.h"
 #include "string.h"
+#include "video.h"
+
+s32 _Printf(outfun prout, char *dst, const char *fmt, va_list args);
 
 #ifndef CRASH_SCREEN_H
 #define CRASH_SCREEN_H

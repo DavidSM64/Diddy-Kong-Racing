@@ -5,6 +5,9 @@
 #include "thread0_epc.h"
 #include "game.h"
 #include "lib/src/libc/rmonPrintf.h"
+#include "lib/src/libc/xprintf.h"
+#include "string.h"
+#include "stdarg.h"
 
 /************ .bss ************/
 
@@ -263,6 +266,7 @@ void profiler_reset_values(void) {
     }
 }
 
+s32 _Printf(outfun prout, char *dst, const char *fmt, va_list args);
 
 static char *proutSprintf(char *dst, const char *src, size_t count)
 {

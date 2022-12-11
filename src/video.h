@@ -106,4 +106,6 @@ void memory_copy(u8 *src, u8 *dest, s32 len);
 //Non Matching
 s32 swap_framebuffer_when_ready(s32 arg0);
 
+void change_vi(OSViMode *mode, int width, int height);
+
 #endif
