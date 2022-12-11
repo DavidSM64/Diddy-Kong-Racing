@@ -1139,7 +1139,7 @@ typedef struct Object_Racer {
   /* 0x1FF */ u8 unk1FF;
   /* 0x200 */ s8 transitionTimer;
   /* 0x201 */ s8 unk201;
-  /* 0x202 */ s8 unk202;
+  /* 0x202 */ s8 silverCoinCount;
   /* 0x203 */ s8 boostType;
   /* 0x204 */ s16 unk204;
   /* 0x206 */ s16 unk206;

@@ -23,6 +23,8 @@
 #include "waves.h"
 #include "object_functions.h"
 
+#define MAX_CHECKPOINTS 60
+
 /************ .data ************/
 
 unknown800DC6F0 D_800DC6F0 = { { -128 }, 0x1E, 0x0F };
@@ -220,8 +222,8 @@ s32 gAssetsLvlObjTranslationTableLength;
 s32 D_8011AEC0;
 Object **gParticlePtrList;
 s32 gParticleCount;
-unknown8011AECC *D_8011AECC; // Array of structs, unknown number of members
-s32 D_8011AED0;
+CheckpointNode *gTrackCheckpoints; // Array of structs, unknown number of members
+s32 gNumberOfCheckpoints;
 s32 D_8011AED4;
 s16 D_8011AED8;
 u32 (*D_8011AEDC)[64]; // Not sure about the number of elements
@@ -340,7 +342,7 @@ void func_8000BF8C(void) {
     gParticlePtrList = (Object **) allocate_from_main_pool_safe(0x320, COLOUR_TAG_BLUE);
     D_8011AE6C = (s32 *) allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
     D_8011AE74 = (Object **) allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
-    D_8011AECC = (unknown8011AECC *) allocate_from_main_pool_safe(0xE10, COLOUR_TAG_BLUE);
+    gTrackCheckpoints = (CheckpointNode *) allocate_from_main_pool_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
     D_8011AEDC = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
     gRacers = allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
     gRacersByPort = (Object **) allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
@@ -418,7 +420,7 @@ void func_8000C460(void) {
     D_8011AD60 = 0;
     gParticleCount = 0;
     D_8011AE70 = 0;
-    D_8011AED0 = 0;
+    gNumberOfCheckpoints = 0;
     D_8011AED4 = 0;
     gNumRacers = 0;
     D_8011AE78 = 0;
@@ -1604,7 +1606,26 @@ Object *func_80018C6C(void) {
 GLOBAL_ASM("asm/non_matchings/objects/func_80018CE0.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001955C.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80019808.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001A7D8.s")
+
+s8 func_8001A7D8(unk8001A7D8_arg0 *arg0) {
+    Object_Racer *racer;
+
+    racer = (Object_Racer *) gRacersByPosition[0]->unk64;
+    if (racer->playerIndex == PLAYER_COMPUTER) {
+        return 0;
+    }
+    D_8011ADC4 = 0;
+    if (!(arg0->unk4[arg0->unk49] & 2)) {
+        if (D_8011AEF5 == 0) {
+            D_8011ADC4 = 1;
+            arg0->unk4[arg0->unk49] |= 2;
+        }
+    } else if (gIsSilverCoinRace && racer->silverCoinCount >= 8 && D_8011AEF5 == 0) {
+        D_8011ADC4 = 1;
+            arg0->unk4[arg0->unk49] |= 4;
+    }
+    return D_8011ADC4;
+}
 
 void func_8001A8D4(s32 arg0) {
     D_8011AD4E = 0x12C;
@@ -1742,9 +1763,9 @@ f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2) {
     s32 r1_ccp;
     UNUSED s32 temp_lo;
     s32 var_v1;
-    s32 r1_lcp;
+    s32 checkpointID;
 
-    if (D_8011AED0 <= 0) {
+    if (gNumberOfCheckpoints <= 0) {
         return 0.0f;
     }
     var_f2 = 0.0f;
@@ -1755,23 +1776,23 @@ f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2) {
         racer2 = temp_racer;
         var_v1 = TRUE;
     }
-    r1_lcp = racer1->checkpoint;
+    checkpointID = racer1->checkpoint;
     for (r1_ccp = racer1->courseCheckpoint; r1_ccp < racer2->courseCheckpoint; r1_ccp++) {
-        var_f2 += D_8011AECC[r1_lcp++].unk20;
-        if (r1_lcp == D_8011AED0) {
-            r1_lcp = 0;
+        var_f2 += gTrackCheckpoints[checkpointID++].distance;
+        if (checkpointID == gNumberOfCheckpoints) {
+            checkpointID = 0;
         }
     }
-    r1_lcp = racer1->checkpoint - 1;
-    if (r1_lcp < 0) {
-        r1_lcp = D_8011AED0 - 1;
+    checkpointID = racer1->checkpoint - 1;
+    if (checkpointID < 0) {
+        checkpointID = gNumberOfCheckpoints - 1;
     }
-    var_f2 += (D_8011AECC[r1_lcp].unk20 * racer1->checkpoint_distance);
-    r1_lcp = racer2->checkpoint - 1;
-    if (r1_lcp < 0) {
-        r1_lcp = D_8011AED0 - 1;
+    var_f2 += (gTrackCheckpoints[checkpointID].distance * racer1->checkpoint_distance);
+    checkpointID = racer2->checkpoint - 1;
+    if (checkpointID < 0) {
+        checkpointID = gNumberOfCheckpoints - 1;
     }
-    var_f2 -= (D_8011AECC[r1_lcp].unk20 * racer2->checkpoint_distance);
+    var_f2 -= (gTrackCheckpoints[checkpointID].distance * racer2->checkpoint_distance);
     if (var_v1) {
         var_f2 = -var_f2;
     }
@@ -1780,50 +1801,68 @@ f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2) {
 
 UNUSED f32 func_8001B974(Object_Racer* racer) {
     f32 distLeft;
-    s32 lapChkPts;
+    s32 checkpointID;
 
-    if (D_8011AED0 <= 0) {
+    if (gNumberOfCheckpoints <= 0) {
         return 0.0f;
     }
     distLeft = 0.0f;
-    for (lapChkPts = racer->checkpoint; lapChkPts < D_8011AED0; lapChkPts++) {
-        distLeft += D_8011AECC[lapChkPts].unk20;
+    for (checkpointID = racer->checkpoint; checkpointID < gNumberOfCheckpoints; checkpointID++) {
+        distLeft += gTrackCheckpoints[checkpointID].distance;
     }
-    lapChkPts = racer->checkpoint - 1;
-    if (lapChkPts < 0) {
-        lapChkPts = D_8011AED0 - 1;
+    checkpointID = racer->checkpoint - 1;
+    if (checkpointID < 0) {
+        checkpointID = gNumberOfCheckpoints - 1;
     }
-    distLeft += (D_8011AECC[lapChkPts].unk20 * racer->checkpoint_distance);
+    distLeft += (gTrackCheckpoints[checkpointID].distance * racer->checkpoint_distance);
     return distLeft;
 }
 
-// Returns a pointer to some struct that is 0x3C bytes long.
-unknown8011AECC *func_8001BA00(s32 arg0) {
-    return &D_8011AECC[arg0];
+/**
+ * Returns a pointer to a specific checkpoint.
+*/
+CheckpointNode *get_checkpoint_node(s32 checkpointID) {
+    return &gTrackCheckpoints[checkpointID];
 }
 
-unknown8011AECC *func_8001BA1C(s32 arg0, s32 arg1) {
-    unknown8011AECC *val = &D_8011AECC[arg0];
-    if (arg1 != 0 && val->unk3A != -1) {
-        val = &D_8011AECC[val->unk3A];
+/**
+ * Takes the position along the checkpoint path, and finds the next applicable node.
+ * If an alternative path is available, use that node instead.
+*/
+CheckpointNode *find_next_checkpoint_node(s32 splinePos, s32 arg1) {
+    CheckpointNode *checkpointNode = &gTrackCheckpoints[splinePos];
+    if (arg1 != 0 && checkpointNode->altRouteID != -1) {
+        checkpointNode = &gTrackCheckpoints[checkpointNode->altRouteID];
     }
-    return val;
+    return checkpointNode;
 }
 
-s32 func_8001BA64() {
-    return D_8011AED0;
+/**
+ * Returns the number of active checkpoints in the current level.
+*/
+s32 get_checkpoint_count(void) {
+    return gNumberOfCheckpoints;
 }
 
+/**
+ * Returns the group of racer objects.
+*/
 Object **get_racer_objects(s32 *numRacers) {
     *numRacers = gNumRacers;
     return *gRacers;
 }
 
+/**
+ * Returns the group of racer objects, ordered by player index.
+*/
 Object **get_racer_objects_by_port(s32 *numRacers) {
     *numRacers = gNumRacers;
     return gRacersByPort;
 }
 
+/**
+ * Returns the group of racer objects, ordered by current race position.
+*/
 Object **get_racer_objects_by_position(s32 *numRacers) {
     *numRacers = gNumRacers;
     return gRacersByPosition;
@@ -1849,21 +1888,31 @@ Object *get_racer_object_by_port(s32 index) {
     return gRacersByPort[index];
 }
 
-UNUSED void func_8001BB68(Gfx **dlist, s32 arg1, s32 arg2) {
+/**
+ * Unused function that would've iterated through all active checkpoints to render their visual nodes.
+ * The function it calls is completely stubbed out.
+*/
+UNUSED void debug_render_checkpoints(Gfx **dlist, MatrixS **mtx, Vertex **vtx) {
     s32 i;
 
-    func_8007B4C8(dlist, NULL, 2U);
-    if (D_8011AED0 >= 4) {
-        for (i = 0; i < D_8011AED0; i++) {
-            func_8001BC40(i, 0, dlist, arg1, arg2);
+    func_8007B4C8(dlist, NULL, RENDER_Z_COMPARE);
+    if (gNumberOfCheckpoints > 3) {
+        for (i = 0; i < gNumberOfCheckpoints; i++) {
+            // Ground path
+            debug_render_checkpoint_node(i, 0, dlist, mtx, vtx);
         }
-        for (i = 0; i < D_8011AED0; i++){
-            func_8001BC40(i, 1, dlist, arg1, arg2);
+        for (i = 0; i < gNumberOfCheckpoints; i++){
+            // Air path
+            debug_render_checkpoint_node(i, 1, dlist, mtx, vtx);
         }
     }
 }
 
-UNUSED void func_8001BC40(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED Gfx **dList, UNUSED s32 arg3, UNUSED s32 arg5) {
+/**
+ * Would've rendered an individual checkpoint node. On https://noclip.website, with dev objects enabled, you can see a visual representation of
+ * what these checkpoints would've looked like ingame.
+*/
+UNUSED void debug_render_checkpoint_node(UNUSED s32 checkpointID, UNUSED s32 pathID, UNUSED Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BC54.s")

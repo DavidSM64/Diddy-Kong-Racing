@@ -159,25 +159,25 @@ typedef struct unknown800DC6F0 {
 } unknown800DC6F0;
 
 /* Size: 0x3C bytes */
-typedef struct unknown8011AECC {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-    f32 unk18;
-    f32 unk1C;
-    f32 unk20;
-    f32 unk24;
-    Object* unk28;
-    u8 pad2C[0x2];
-    s8 unk2E[4];
-    s8 unk32[4];
-    s8 unk36[4];
-    s8 unk3A;
-    s8 unk3B;
-} unknown8011AECC;
+typedef struct CheckpointNode {
+/* 0x00 */ f32 rotationXFrac;
+/* 0x04 */ f32 rotationYFrac;
+/* 0x08 */ f32 rotationZFrac;
+/* 0x0C */ f32 unkC;
+/* 0x10 */ f32 x;
+/* 0x14 */ f32 y;
+/* 0x18 */ f32 z;
+/* 0x1C */ f32 scale;
+/* 0x20 */ f32 distance;
+/* 0x24 */ f32 unk24; // Appears to be exactly the same as distance?
+/* 0x28 */ Object* obj;
+/* 0x2C */ u8 pad2C[0x2];
+/* 0x2E */ s8 unk2E[4];
+/* 0x32 */ s8 unk32[4];
+/* 0x36 */ s8 unk36[4]; // Appear to be flags of some sort?
+/* 0x3A */ s8 altRouteID; // -1 if there's none to be found.
+/* 0x3B */ s8 unk3B;
+} CheckpointNode;
 
 /* Size: 0x40 bytes */
 typedef struct unk800179D0 {
@@ -300,6 +300,13 @@ typedef struct unk80022CFC_1 {
     s32 unk78;
 } unk80022CFC_1;
 
+typedef struct unk8001A7D8_arg0 {
+    u8 pad0[4];
+    s32 *unk4;
+    u8 pad8[0x41];
+    u8 unk49;
+} unk8001A7D8_arg0;
+
 extern unknown800DC6F0 D_800DC6F0;
 extern unknown800DC6F0 D_800DC6F8;
 
@@ -403,14 +410,14 @@ s32 func_8001B738(s32 controllerIndex);
 u8 has_ghost_to_save();
 void func_8001B790(void);
 f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2);
-unknown8011AECC *func_8001BA00(s32 arg0);
-unknown8011AECC *func_8001BA1C(s32 arg0, s32 arg1);
-s32 func_8001BA64();
+CheckpointNode *get_checkpoint_node(s32 arg0);
+CheckpointNode *find_next_checkpoint_node(s32 arg0, s32 arg1);
+s32 get_checkpoint_count(void);
 Object **get_racer_objects(s32 *numRacers);
 Object **get_racer_objects_by_port(s32 *numRacers);
 Object **get_racer_objects_by_position(s32 *numRacers);
 Object *get_racer_object(s32 index);
-void func_8001BC40(s32, s32, Gfx**, s32, s32);
+void debug_render_checkpoint_node(s32 checkpointID, s32 pathID, Gfx** dList, MatrixS **mtx, Vertex **vtx);
 u32 func_8001BD94(s32 arg0);
 void func_8001D1AC(void);
 void func_8001D1BC(s32 arg0);

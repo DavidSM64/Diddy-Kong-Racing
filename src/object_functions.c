@@ -3700,8 +3700,8 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate) {
                         obj->action |= SILVER_COIN_COLLECTED << racer->playerIndex;
                         obj->unk7C.word = 0x10;
                         obj->segment.trans.unk6 |= 0x200 << racer->playerIndex;
-                        play_sequence(SEQUENCE_SILVER_COIN_1 + racer->unk202);
-                        racer->unk202++;
+                        play_sequence(SEQUENCE_SILVER_COIN_1 + racer->silverCoinCount);
+                        racer->silverCoinCount++;
                     }
                 }
             }

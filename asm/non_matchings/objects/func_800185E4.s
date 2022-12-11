@@ -7,8 +7,8 @@ glabel D_800E5628
 .text
 glabel func_800185E4
 /* 0191E4 800185E4 27BDFF88 */  addiu $sp, $sp, -0x78
-/* 0191E8 800185E8 3C028012 */  lui   $v0, %hi(D_8011AED0) # $v0, 0x8012
-/* 0191EC 800185EC 8C42AED0 */  lw    $v0, %lo(D_8011AED0)($v0)
+/* 0191E8 800185E8 3C028012 */  lui   $v0, %hi(gNumberOfCheckpoints) # $v0, 0x8012
+/* 0191EC 800185EC 8C42AED0 */  lw    $v0, %lo(gNumberOfCheckpoints)($v0)
 /* 0191F0 800185F0 AFA70084 */  sw    $a3, 0x84($sp)
 /* 0191F4 800185F4 00A03825 */  move  $a3, $a1
 /* 0191F8 800185F8 AFBF001C */  sw    $ra, 0x1c($sp)
@@ -24,8 +24,8 @@ glabel func_800185E4
 /* 01921C 8001861C 8FAF0078 */  lw    $t7, 0x78($sp)
 /* 019220 80018620 2408003C */  li    $t0, 60
 /* 019224 80018624 01E80019 */  multu $t7, $t0
-/* 019228 80018628 3C068012 */  lui   $a2, %hi(D_8011AECC) # $a2, 0x8012
-/* 01922C 8001862C 8CC6AECC */  lw    $a2, %lo(D_8011AECC)($a2)
+/* 019228 80018628 3C068012 */  lui   $a2, %hi(gTrackCheckpoints) # $a2, 0x8012
+/* 01922C 8001862C 8CC6AECC */  lw    $a2, %lo(gTrackCheckpoints)($a2)
 /* 019230 80018630 8FB90090 */  lw    $t9, 0x90($sp)
 /* 019234 80018634 00005825 */  move  $t3, $zero
 /* 019238 80018638 00004812 */  mflo  $t1
@@ -298,10 +298,10 @@ glabel func_800185E4
 /* 019634 80018A34 46085182 */  mul.s $f6, $f10, $f8
 /* 019638 80018A38 C7AA0084 */  lwc1  $f10, 0x84($sp)
 /* 01963C 80018A3C 00A02025 */  move  $a0, $a1
-/* 019640 80018A40 3C0D8012 */  lui   $t5, %hi(D_8011AED0) # $t5, 0x8012
+/* 019640 80018A40 3C0D8012 */  lui   $t5, %hi(gNumberOfCheckpoints) # $t5, 0x8012
 /* 019644 80018A44 460A2202 */  mul.s $f8, $f4, $f10
 /* 019648 80018A48 C4AA0008 */  lwc1  $f10, 8($a1)
-/* 01964C 80018A4C 3C0E8012 */  lui   $t6, %hi(D_8011AECC) # $t6, 0x8012
+/* 01964C 80018A4C 3C0E8012 */  lui   $t6, %hi(gTrackCheckpoints) # $t6, 0x8012
 /* 019650 80018A50 46083100 */  add.s $f4, $f6, $f8
 /* 019654 80018A54 C7A60088 */  lwc1  $f6, 0x88($sp)
 /* 019658 80018A58 00000000 */  nop   
@@ -324,13 +324,13 @@ glabel func_800185E4
 /* 01969C 80018A9C A04301F8 */  sb    $v1, 0x1f8($v0)
 /* 0196A0 80018AA0 A04C01F9 */  sb    $t4, 0x1f9($v0)
 .L80018AA4:
-/* 0196A4 80018AA4 8DADAED0 */  lw    $t5, %lo(D_8011AED0)($t5)
+/* 0196A4 80018AA4 8DADAED0 */  lw    $t5, %lo(gNumberOfCheckpoints)($t5)
 /* 0196A8 80018AA8 25080001 */  addiu $t0, $t0, 1
 /* 0196AC 80018AAC 150D0002 */  bne   $t0, $t5, .L80018AB8
 /* 0196B0 80018AB0 2529003C */   addiu $t1, $t1, 0x3c
 /* 0196B4 80018AB4 00004825 */  move  $t1, $zero
 .L80018AB8:
-/* 0196B8 80018AB8 8DCEAECC */  lw    $t6, %lo(D_8011AECC)($t6)
+/* 0196B8 80018AB8 8DCEAECC */  lw    $t6, %lo(gTrackCheckpoints)($t6)
 /* 0196BC 80018ABC C4E0000C */  lwc1  $f0, 0xc($a3)
 /* 0196C0 80018AC0 012E2821 */  addu  $a1, $t1, $t6
 /* 0196C4 80018AC4 C4AE0000 */  lwc1  $f14, ($a1)
