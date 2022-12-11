@@ -37,6 +37,13 @@ enum TTBehaviours {
     TT_MODE_DIALOGUE_END
 };
 
+enum SilvereCoinBehaviours {
+    SILVER_COIN_ACTIVE,
+    SILVER_COIN_COLLECTED,
+    SILVER_COIN_COLLECTED_PLAYER_2,
+    SILVER_COIN_INACTIVE
+};
+
 typedef struct Object78_80033DD0 {
 	s32 *unk0;
 	s16 unk4;
@@ -393,6 +400,12 @@ void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry);
 void obj_loop_trigger(Object *obj, s32 updateRate);
 void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry);
 void obj_loop_treasuresucker(Object *obj, s32 updateRate);
+void obj_loop_log(Object *obj, s32 updateRate);
+void obj_loop_modechange(Object *obj, s32 updateRate);
+void obj_loop_bonus(Object *obj, s32 updateRate);
+void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate);
+void obj_loop_lasergun(Object *obj, s32 updateRate);
+void func_8003F0F8(Object *obj, struct Object_Weapon *weapon, u16 soundID);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 speed);
@@ -400,9 +413,7 @@ void obj_loop_animator(Object *obj, s32 speed);
 void obj_loop_vehicleanim(Object *obj, s32 speed);
 void obj_loop_snowball(Object *obj, s32 speed);
 void obj_loop_goldenballoon(Object *obj, s32 speed);
-void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate);
 void obj_loop_groundzipper(Object *obj, s32 updateRate);
-void obj_loop_lasergun(Object *obj, s32 updateRate);
 void obj_loop_laserbolt(Object *obj, s32 updateRate);
 void obj_loop_posarrow(Object *obj, s32 updateRate);
 void obj_loop_effectbox(Object *obj, s32 updateRate);
@@ -410,12 +421,9 @@ void obj_loop_bananacreator(Object *obj, s32 updateRate);
 void obj_loop_butterfly(Object *obj, s32 updateRate);
 void obj_loop_airzippers_waterzippers(Object *obj, s32 updateRate);
 void obj_loop_char_select(Object *obj, s32 updateRate);
-void obj_loop_log(Object *obj, s32 updateRate);
 void obj_loop_texscroll(Object *obj, s32 updateRate);
 void obj_loop_weaponballoon(Object *obj, s32 updateRate);
 void obj_loop_door(Object *obj, s32 updateRate);
-void obj_loop_bonus(Object *obj, s32 updateRate);
-void obj_loop_modechange(Object *obj, s32 updateRate);
 void obj_loop_exit(Object *obj, s32 updateRate);
 void obj_loop_fish(Object *obj, s32 updateRate);
 void obj_loop_scenery(Object *obj, s32 updateRate);

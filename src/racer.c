@@ -26,6 +26,10 @@
 #include "unknown_05F690.h"
 #include "unknown_05FF10.h"
 #include "unknown_005740.h"
+#include "game_ui.h"
+#include "object_models.h"
+#include "unknown_003260.h"
+
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
@@ -123,22 +127,22 @@ s8 D_800DCDA8[8] = {
 };
 
 s8 D_800DCDB0[16][2] = {
-    0x02,0xFE, 
-    0x03, 0xFE, 
-    0x02, 0xFC, 
-    0x02, 0xFB,
-    0x02, 0xFB, 
-    0x02, 0xFE, 
-    0x02, 0xFD, 
-    0x02, 0xFE,
-    0x03, 0xFD, 
-    0x05, 0xFC, 
-    0x04, 0xFE, 
-    0x02, 0xFE,
-    0x02, 0xFA, 
-    0x02, 0xFE, 
-    0x08, 0xF8, 
-    0x03, 0xFD,
+    {0x02,0xFE}, 
+    {0x03, 0xFE}, 
+    {0x02, 0xFC}, 
+    {0x02, 0xFB},
+    {0x02, 0xFB}, 
+    {0x02, 0xFE}, 
+    {0x02, 0xFD}, 
+    {0x02, 0xFE},
+    {0x03, 0xFD}, 
+    {0x05, 0xFC}, 
+    {0x04, 0xFE}, 
+    {0x02, 0xFE},
+    {0x02, 0xFA}, 
+    {0x02, 0xFE}, 
+    {0x08, 0xF8}, 
+    {0x03, 0xFD},
 };
 
 // Checksum count for obj_loop_goldenballoon
@@ -159,7 +163,7 @@ const char D_800E62A0[] = "Back\n";
 /************ .bss ************/
 
 f32 gCurrentCourseHeight;
-s32 D_8011D4F8[3];
+f32 D_8011D4F8[3];
 s8 D_8011D504;
 ObjectCamera *gCameraObject;
 UNUSED s32 D_8011D50C;
@@ -212,8 +216,6 @@ struct TempStruct8 **D_8011D5B0;
 s32 D_8011D5B4;
 s16 D_8011D5B8;
 
-extern void func_8000488C(u8 *soundMask);
-
 /******************************/
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
@@ -260,8 +262,8 @@ void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate) {
     } else {
         D_8011D5BC = 0;
     }
-    test = get_misc_asset(MISC_ASSET_UNK0C);
-    if ((gCurrentButtonsReleased & 0x2000) && racer->balloon_quantity) {
+    test = (s8 *) get_misc_asset(MISC_ASSET_UNK0C);
+    if ((gCurrentButtonsReleased & Z_TRIG) && racer->balloon_quantity) {
         if (racer->balloon_level < 3) {
             phi_a0 = test[racer->balloon_type * 3 + racer->balloon_level];
         } else {
@@ -447,15 +449,14 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     f32 yVel;
     s32 numViewports;
     u8 tempZoom;
-    f32 tempVel_3;
-    s32 pad;
+    UNUSED s32 pad[2];
     f32 phi_f14 = 165.0f;
     f32 phi_f18 = 65.0f;
     f32 xVel;
     f32 zVel;
-    f32 yOffset;
+    UNUSED s32 pad2;
     f32 sp34;
-    f32 extraOffset;
+    UNUSED s32 pad3;
     f32 brakeVar;
     f32 baseSpeed;
     s32 sp24 = 0x400;
@@ -463,7 +464,6 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     s32 angle;
     s32 segmentIndex;
     s32 tempAngle;
-    f32 anotherVel;
 
     delta = (s32) updateRate;
     // Place the camera a bit closer with 2+ players to help visibility.
@@ -516,8 +516,8 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     get_viewport_count();
     if (racer->velocity < 0.0f) {
         yVel = -(racer->velocity * brakeVar) * 6.0f;
-        if (racer->velocity);
-        if (yVel > 65.0f) {
+        if (racer->velocity) {} // Fakematch
+        if (yVel > 65.0) {
             yVel = 65.0f;
         }
         phi_f14 -= yVel;
@@ -607,7 +607,7 @@ f32 func_800494E0(Object *obj1, Object_Racer *racer, f32 *pos, s8 arg3, s32 upda
     D_8011D510.y_position = 0.0f;
     D_8011D510.z_position = 0.0f;
     D_8011D510.scale = 1.0f;
-    object_transform_to_matrix_2(&mtx, &D_8011D510);
+    object_transform_to_matrix_2(mtx, &D_8011D510);
     guMtxXFMF(mtx, pos[0], pos[1], pos[2], &pos[0], &pos[1], &pos[2]);
     angle = -((s16) (u16)arctan2_f(pos[0], pos[1])) * velocity;
     angle = (u16) (angle - (arg5 << 6)) - (u16) racer->x_rotation_vel;
@@ -1049,7 +1049,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     tempRacer->unk1A0 = obj->segment.trans.y_rotation;
     tempRacer->x_rotation_vel = obj->segment.trans.z_rotation;
     tempRacer->unkC4 = 0.5f;
-    if (1);
+    if (1) {} // Fakematch
     tempRacer->unk196 = tempRacer->unk1A0;
     tempRacer->unkD8.x = obj->segment.trans.x_position;
     tempRacer->unkD8.y = obj->segment.trans.y_position + 30.0f;
@@ -1083,7 +1083,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     tempRacer->unk21C = 0;
     if (tempRacer->playerIndex != -1 && !D_8011D582) {
         set_object_stack_pos(player);
-        gCameraObject = func_80069CFC();
+        gCameraObject = (ObjectCamera *) func_80069CFC();
         gCameraObject->trans.z_rotation = 0;
         gCameraObject->trans.x_rotation = 0x400;
         gCameraObject->trans.y_rotation = tempRacer->unk196;
@@ -1116,7 +1116,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
 
     // This needs to be on one line to match.
     for (i = 0; i < 4; i++) { D_8011D58C[i] = 0; }
-    if (1); if (1); // Also critical to match.
+    if (1) {} if (1) {} // Fakematch
     func_80043ECC(0, NULL, 0);
     D_8011D583 = i;
     gStartBoostTime = 0;
@@ -1143,7 +1143,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
     LevelHeader* header;
     unknown8011AECC* temp_v0_16;
     s32 angleVel;
-    s32 temp_v1_4;
+    UNUSED s32 pad;
     s32 i;
     struct LevelObjectEntryCommon newObject;
 #ifdef PUPPYPRINT_DEBUG
@@ -1219,7 +1219,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
         // Print player 1's coordinates to the screen if the debug cheat is enabled.
         if ((gRaceStartTimer == 0) && (tempRacer->playerIndex == PLAYER_ONE)) {
             if (get_filtered_cheats() & CHEAT_PRINT_COORDS) {
-                render_printf(&D_800E6280, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+                render_printf(D_800E6280, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
             }
         }
         set_render_printf_background_colour(0, 0, 0, 128);
@@ -1267,7 +1267,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
             tempRacer->unk88 -= tempRacer->unk88 * 0.0625 * delta;
         }
         gCurrentRacerMiscAssetPtr = (f32*) get_misc_asset(obj->segment.header->pad5B[1]);
-        D_8011D568 = get_misc_asset(obj->segment.header->pad5B[2]);
+        D_8011D568 = (f32 *) get_misc_asset(obj->segment.header->pad5B[2]);
         
         if (obj->segment.y_velocity < 4.0f && (tempRacer->unk1E2 >= 3 || tempRacer->buoyancy != 0.0f)) {
             tempRacer->unk1F1 = 0;
@@ -1373,7 +1373,7 @@ void update_player_racer(Object* obj, s32 updateRate) {
         if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
             gCameraObject = (ObjectCamera *) func_80069CFC();
         }
-        D_8011D5AE = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, &D_8011D5B0);
+        D_8011D5AE = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, (struct TempStruct8 **) &D_8011D5B0);
         if (D_8011D5AE) {
             for (i = 0; i < D_8011D5AE; i++) {
                 if (D_8011D5B0[i]->unk10 == 0xF) {
@@ -1806,13 +1806,13 @@ void func_800521C4(Object *obj, Object_Racer *racer, UNUSED s32 arg2) {
         foundObj = func_80052388(obj, racer, tempObj, 160000.0f);
     }
     if (!foundObj) {
-        tempObj = func_8001B7A8(racer, 1, &distance);
+        tempObj = func_8001B7A8((Object *) racer, 1, &distance);
         if (tempObj && !gRaceStartTimer) {
             foundObj = func_80052388(obj, racer, tempObj, 160000.0f);
         }
     }
     if (!foundObj) {
-        tempObj = func_8001B7A8(racer, -1, &distance);
+        tempObj = func_8001B7A8((Object *) racer, -1, &distance);
         if (tempObj && !gRaceStartTimer) {
             foundObj = func_80052388(obj, racer, tempObj, 30000.0f);
         }
@@ -1876,8 +1876,6 @@ s32 func_80052388(Object *obj1, Object_Racer *racer, Object *obj2, f32 distance)
 
 void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
     s8 *balloonAsset;
-    s16 angleDelta;
-    s32 phi_t1;
     s32 angleVel;
     s32 newAngle;
     s32 actionStatus;
@@ -1938,7 +1936,7 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
         }
         obj->segment.unk18 += angleVel;
         obj->segment.unk3B = 0;
-        if (angleVel);
+        if (angleVel) {} // Fakematch
         if (racer->unk1F3 & 4) {
             racer->unk1F2 = 3;
             racer->unk1F3 &= 0xFFFB;
@@ -2097,7 +2095,7 @@ void func_80052D7C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
     s32 angle;
     s8 sp33;
     f32 vel;
-    s32 temp;
+    UNUSED s32 temp;
 
     sp33 = 0;
     if (racer->unk1FE == 1 && racer->playerIndex == PLAYER_COMPUTER) {
@@ -2120,13 +2118,13 @@ void func_80052D7C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
         racer->x_rotation_vel += (angle >> 3);
     }
     if (racer->unk18) {
-        func_8000488C(racer->unk18);
+        func_8000488C((void *) racer->unk18);
     }
     if (racer->unk10) {
-        func_8000488C(racer->unk10);
+        func_8000488C((void *) racer->unk10);
     }
     if (racer->unk14) {
-        func_8000488C(racer->unk14);
+        func_8000488C((void *) racer->unk14);
     }
     if (racer->unk1FE == 1 || racer->unk1FE == 3) {
         racer->unk1E8 = racer->steerAngle;
@@ -2273,7 +2271,7 @@ void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
     D_8011D510.y_position = 0;
     D_8011D510.z_position = 0;
     D_8011D510.scale = 1;
-    object_transform_to_matrix_2(&mf, &D_8011D510);
+    object_transform_to_matrix_2(mf, &D_8011D510);
 
     guMtxXFMF(mf, 0.0f, -1.0f, 0.0f, &arg1->ox, &arg1->oy, &arg1->oz);
 }
@@ -2465,7 +2463,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         D_8011D510.y_position = 0.0f;
         D_8011D510.z_position = 0.0f;
         D_8011D510.scale = 1.0f;
-        object_transform_to_matrix_2(&mtx, &D_8011D510);
+        object_transform_to_matrix_2(mtx, &D_8011D510);
         guMtxXFMF(mtx, racer->lateral_velocity, 0.0f, racer->velocity, &obj->segment.x_velocity, &tempVel, &obj->segment.z_velocity);
     }
     if (racer->magnetTimer) {
@@ -2507,7 +2505,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     D_8011D510.y_position = 0.0f;
     D_8011D510.z_position = 0.0f;
     D_8011D510.scale = 1.0f;
-    object_transform_to_matrix_2(&mtx, &D_8011D510);
+    object_transform_to_matrix_2(mtx, &D_8011D510);
     guMtxXFMF(mtx, xVel, 0.0f, zVel, &hVel, &tempVel, &yVel);
     if (racer->unk1D2) {
         racer->unk1D2 -= updateRate;
@@ -2540,7 +2538,7 @@ void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
     s32 sp38;
     f32 temp_f0_2;
     f32 velSquare;
-    f32 pad;
+    UNUSED f32 pad;
     f32 traction;
     f32 forwardVel;
     f32 weight;
@@ -2683,7 +2681,7 @@ void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80054FD0.s")
 
-void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate) {
+void func_80055A84(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
     f32 angleZ;
     f32 distance;
     s32 sp74;
@@ -2800,10 +2798,10 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
     f32 distance;
     f32 var_f2;
     f32 var_f12;
-    s32 pad;
+    UNUSED s32 pad;
     s8 *miscAsset;
     Vertex *heldObjData;
-    s32 playerIndex;
+    UNUSED s32 playerIndex;
     u16 soundID = 0;
 
     if (racer->held_obj != NULL) {
@@ -2831,8 +2829,8 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
             heldObj->segment.x_velocity = obj->segment.x_velocity * 0.7;
             heldObj->segment.y_velocity = obj->segment.y_velocity - 2.0;
             heldObj->segment.z_velocity = obj->segment.z_velocity * 0.7;
-            heldObjData = (Object_64 *) &heldObj->unk64->egg;
-            ((Object_64 *)heldObjData)->egg.unkB = 2;
+            heldObjData = (Vertex *) &heldObj->unk64->egg;
+            ((Object_64 *) heldObjData)->egg.unkB = 2;
             racer->held_obj = NULL;
             racer->unk211 = 1;
         }
@@ -3223,7 +3221,7 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
         speedMultiplier = 0.0f;
     }
     timer3 = get_race_start_timer();
-    if (gRaceStartTimer);
+    if (gRaceStartTimer) {} // Fakematch
     // If the A button is held for the first time, 30 frames prior to starting,
     // decide how much boost to add based on when it was pressed.
     if (gRaceStartTimer > 0 && gRaceStartTimer < 30 && !racer->startInput) {
@@ -3770,7 +3768,7 @@ void update_camera_finish_challenge(UNUSED f32 updateRate, Object *obj, Object_R
     f32 xOffset;
 
     gCameraObject->trans.y_rotation += 0x200;
-    if (1);
+    if (1) {} // Fakematch
     gCameraObject->trans.x_rotation = 0x400;
     gCameraObject->trans.z_rotation = 0;
     gCameraObject->unk1C = 150.0f;
@@ -3901,7 +3899,7 @@ void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *
 
 void func_800598D0(void) {
     gGhostData[0] = allocate_from_main_pool_safe(0x21C0, COLOUR_TAG_RED);
-    gGhostData[1] = (GhostNode *)gGhostData[0] + MAX_NUMBER_OF_GHOST_NODES;
+    gGhostData[1] = (GhostHeader *) ((GhostNode *) gGhostData[0] + MAX_NUMBER_OF_GHOST_NODES);
     gGhostData[2] = NULL; // T.T. Ghost
     D_8011D5A0[0] = 0;
     D_8011D5A0[1] = 0;
@@ -3924,11 +3922,11 @@ void func_80059984(s32 arg0) {
     D_8011D5AC = arg0;
 }
 
-MapId func_800599A8(void) {
+s32 func_800599A8(void) {
     return D_8011D5AC;
 }
 
-s32 func_800599B8(s32 arg0, MapId mapId, s16 arg2, s16 *arg3, s16 *arg4) {
+s32 func_800599B8(s32 arg0, s32 mapId, s16 arg2, s16 *arg3, s16 *arg4) {
     s32 temp_v0;
     s32 temp_t8;
     s16 sp2E;
@@ -3954,7 +3952,7 @@ s32 func_800599B8(s32 arg0, MapId mapId, s16 arg2, s16 *arg3, s16 *arg4) {
 s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime) {
     GhostHeader *ghost = allocate_from_main_pool_safe(size, COLOUR_TAG_RED);
     if (ghost != NULL) {
-        load_asset_to_address(ASSET_TTGHOSTS, ghost, ghostOffset, size);
+        load_asset_to_address(ASSET_TTGHOSTS, (u32) ghost, ghostOffset, size);
         if (gGhostData[2] != NULL) {
             free_from_memory_pool(gGhostData[2]);
         }
@@ -3978,7 +3976,7 @@ void free_tt_ghost_data(void) {
     gGhostData[2] = NULL;
 }
 
-s32 func_80059B7C(s32 controllerIndex, MapId mapId, s16 arg2, s16 arg3, s16 arg4) {
+s32 func_80059B7C(s32 controllerIndex, s32 mapId, s16 arg2, s16 arg3, s16 arg4) {
     return func_80075000(controllerIndex, (s16)mapId, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], gGhostData[D_8011D59C]);
 }
 
@@ -4212,7 +4210,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->buoyancy = 0;
             D_8011D5AE = 0;
         } else {
-            D_8011D5AE = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, &D_8011D5B0);
+            D_8011D5AE = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, (struct TempStruct8 **) &D_8011D5B0);
         }
         func_8002ACC8(0);
         if ((racer->unk148 != NULL) || (gRaceStartTimer != 0) || (racer->unk204 > 0)) {

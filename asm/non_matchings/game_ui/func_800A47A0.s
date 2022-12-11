@@ -27,7 +27,7 @@ glabel func_800A47A0
 /* 0A5404 800A4804 448F4000 */  mtc1  $t7, $f8
 /* 0A5408 800A4808 3C148012 */  lui   $s4, %hi(gHUDCurrMatrix) # $s4, 0x8012
 /* 0A540C 800A480C 468042A0 */  cvt.s.w $f10, $f8
-/* 0A5410 800A4810 3C158012 */  lui   $s5, %hi(gHUDCurrTriList) # $s5, 0x8012
+/* 0A5410 800A4810 3C158012 */  lui   $s5, %hi(gHUDCurrVertex) # $s5, 0x8012
 /* 0A5414 800A4814 0080B025 */  move  $s6, $a0
 /* 0A5418 800A4818 4459F800 */  cfc1  $t9, $31
 /* 0A541C 800A481C E62A05D0 */  swc1  $f10, 0x5d0($s1)
@@ -36,7 +36,7 @@ glabel func_800A47A0
 /* 0A5428 800A4828 38210002 */  xori  $at, $at, 2
 /* 0A542C 800A482C 44C1F800 */  ctc1  $at, $31
 /* 0A5430 800A4830 C71005D0 */  lwc1  $f16, 0x5d0($t8)
-/* 0A5434 800A4834 26B56D04 */  addiu $s5, %lo(gHUDCurrTriList) # addiu $s5, $s5, 0x6d04
+/* 0A5434 800A4834 26B56D04 */  addiu $s5, %lo(gHUDCurrVertex) # addiu $s5, $s5, 0x6d04
 /* 0A5438 800A4838 460084A4 */  cvt.w.s $f18, $f16
 /* 0A543C 800A483C 26946D00 */  addiu $s4, %lo(gHUDCurrMatrix) # addiu $s4, $s4, 0x6d00
 /* 0A5440 800A4840 44089000 */  mfc1  $t0, $f18

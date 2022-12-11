@@ -8,6 +8,7 @@
 #include "unknown_005740.h"
 #include "memory.h"
 #include "audio.h"
+#include "textures_sprites.h"
 
 /************ .data ************/
 
@@ -174,7 +175,7 @@ s32 func_80009AB4(u8 arg0) {
     
     ret = 1;
     levelHeader = &D_8011A6D8[arg0];
-    var_a2 = &levelHeader->unk4;
+    var_a2 = (unk8011A6D8_04 *) &levelHeader->unk4;
 
     if (levelHeader->unkB8 <= 0) {
         return 0;

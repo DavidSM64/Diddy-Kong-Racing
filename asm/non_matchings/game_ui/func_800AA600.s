@@ -137,8 +137,8 @@ glabel func_800AA600
 /* 0AB3E0 800AA7E0 3C018012 */  lui   $at, %hi(gHUDCurrMatrix) # $at, 0x8012
 /* 0AB3E4 800AA7E4 AC2E6D00 */  sw    $t6, %lo(gHUDCurrMatrix)($at)
 /* 0AB3E8 800AA7E8 8DF90000 */  lw    $t9, ($t7)
-/* 0AB3EC 800AA7EC 3C018012 */  lui   $at, %hi(gHUDCurrTriList) # $at, 0x8012
-/* 0AB3F0 800AA7F0 AC396D04 */  sw    $t9, %lo(gHUDCurrTriList)($at)
+/* 0AB3EC 800AA7EC 3C018012 */  lui   $at, %hi(gHUDCurrVertex) # $at, 0x8012
+/* 0AB3F0 800AA7F0 AC396D04 */  sw    $t9, %lo(gHUDCurrVertex)($at)
 /* 0AB3F4 800AA7F4 86080006 */  lh    $t0, 6($s0)
 /* 0AB3F8 800AA7F8 24010028 */  li    $at, 40
 /* 0AB3FC 800AA7FC 11010021 */  beq   $t0, $at, .L800AA884
@@ -539,8 +539,8 @@ glabel func_800AA600
 /* 0AB9E0 800AADE0 A6190004 */  sh    $t9, 4($s0)
 /* 0AB9E4 800AADE4 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
 /* 0AB9E8 800AADE8 3C058012 */  lui   $a1, %hi(gHUDCurrMatrix) # $a1, 0x8012
-/* 0AB9EC 800AADEC 3C068012 */  lui   $a2, %hi(gHUDCurrTriList) # $a2, 0x8012
-/* 0AB9F0 800AADF0 24C66D04 */  addiu $a2, %lo(gHUDCurrTriList) # addiu $a2, $a2, 0x6d04
+/* 0AB9EC 800AADEC 3C068012 */  lui   $a2, %hi(gHUDCurrVertex) # $a2, 0x8012
+/* 0AB9F0 800AADF0 24C66D04 */  addiu $a2, %lo(gHUDCurrVertex) # addiu $a2, $a2, 0x6d04
 /* 0AB9F4 800AADF4 24A56D00 */  addiu $a1, %lo(gHUDCurrMatrix) # addiu $a1, $a1, 0x6d00
 /* 0AB9F8 800AADF8 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0AB9FC 800AADFC AFA00014 */  sw    $zero, 0x14($sp)
@@ -571,10 +571,10 @@ glabel func_800AA600
 /* 0ABA5C 800AAE5C 3C058012 */  lui   $a1, %hi(gHUDCurrMatrix) # $a1, 0x8012
 /* 0ABA60 800AAE60 A4EC0004 */  sh    $t4, 4($a3)
 /* 0ABA64 800AAE64 C610000C */  lwc1  $f16, 0xc($s0)
-/* 0ABA68 800AAE68 3C068012 */  lui   $a2, %hi(gHUDCurrTriList) # $a2, 0x8012
+/* 0ABA68 800AAE68 3C068012 */  lui   $a2, %hi(gHUDCurrVertex) # $a2, 0x8012
 /* 0ABA6C 800AAE6C E4F0000C */  swc1  $f16, 0xc($a3)
 /* 0ABA70 800AAE70 C60A0010 */  lwc1  $f10, 0x10($s0)
-/* 0ABA74 800AAE74 24C66D04 */  addiu $a2, %lo(gHUDCurrTriList) # addiu $a2, $a2, 0x6d04
+/* 0ABA74 800AAE74 24C66D04 */  addiu $a2, %lo(gHUDCurrVertex) # addiu $a2, $a2, 0x6d04
 /* 0ABA78 800AAE78 E4EA0010 */  swc1  $f10, 0x10($a3)
 /* 0ABA7C 800AAE7C C6040014 */  lwc1  $f4, 0x14($s0)
 /* 0ABA80 800AAE80 24A56D00 */  addiu $a1, %lo(gHUDCurrMatrix) # addiu $a1, $a1, 0x6d00
@@ -657,10 +657,10 @@ glabel func_800AA600
 /* 0ABB9C 800AAF9C ADAB0000 */  sw    $t3, ($t5)
 /* 0ABBA0 800AAFA0 8FAE00BC */  lw    $t6, 0xbc($sp)
 /* 0ABBA4 800AAFA4 8D8C6D00 */  lw    $t4, %lo(gHUDCurrMatrix)($t4)
-/* 0ABBA8 800AAFA8 3C198012 */  lui   $t9, %hi(gHUDCurrTriList) # $t9, 0x8012
+/* 0ABBA8 800AAFA8 3C198012 */  lui   $t9, %hi(gHUDCurrVertex) # $t9, 0x8012
 /* 0ABBAC 800AAFAC ADCC0000 */  sw    $t4, ($t6)
 /* 0ABBB0 800AAFB0 8FAF00C0 */  lw    $t7, 0xc0($sp)
-/* 0ABBB4 800AAFB4 8F396D04 */  lw    $t9, %lo(gHUDCurrTriList)($t9)
+/* 0ABBB4 800AAFB4 8F396D04 */  lw    $t9, %lo(gHUDCurrVertex)($t9)
 /* 0ABBB8 800AAFB8 00000000 */  nop   
 /* 0ABBBC 800AAFBC ADF90000 */  sw    $t9, ($t7)
 .L800AAFC0:

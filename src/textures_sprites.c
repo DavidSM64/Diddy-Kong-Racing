@@ -5,6 +5,7 @@
 #include "gzip.h"
 #include "asset_loading.h"
 #include "memory.h"
+#include "math_util.h"
 #include "game.h"
 
 /************ .data ************/
@@ -1114,9 +1115,9 @@ typedef struct Struct_Unk_8007B46C {
 Struct_Unk_8007B46C *func_8007B46C(Struct_Unk_8007B46C *arg0, s32 arg1) {
     if (arg1 > 0) {
         if (arg1 < arg0->unk12 << 8) {
-            arg0 = ((u8*)arg0) + ((arg1 >> 16) * arg0->unk16);
+            arg0 = (Struct_Unk_8007B46C *) (((u8*)arg0) + ((arg1 >> 16) * arg0->unk16));
         } else {
-            arg0 = ((u8*)arg0) + ((arg0->unk12 >> 8) - 1) * arg0->unk16;
+            arg0 = (Struct_Unk_8007B46C *) (((u8*)arg0) + ((arg0->unk12 >> 8) - 1) * arg0->unk16);
         }
     }
     return arg0;
@@ -1141,7 +1142,7 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 ar
 
     if (texhead != NULL) {
         if ((arg3) && (arg3 < (texhead->numOfTextures << 8))) {
-            texhead = (s8 *) texhead + ((arg3 >> 16) * texhead->textureSize);
+            texhead = (TextureHeader *) ((s8 *) texhead + ((arg3 >> 16) * texhead->textureSize));
         }
 
         flags |= texhead->flags;
@@ -1269,7 +1270,7 @@ void func_8007BA5C(Gfx **dlist, TextureHeader *texture_list, u32 flags, s32 text
     u16 *mblock;
     u16 *tblock;
     if ((texture_index != 0) && (texture_index < (texture_list->numOfTextures * 256))) {
-        texture_list = (s32)texture_list + ((texture_index >> 16) * texture_list->textureSize);
+        texture_list = (TextureHeader *) ((s32) texture_list + ((texture_index >> 16) * texture_list->textureSize));
     }
     mblock = (u16*)(texture_list + 1);
     tblock = mblock + 0x400;
@@ -1493,7 +1494,7 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CDC0.s")
 GLOBAL_ASM("asm/non_matchings/textures_sprites/build_tex_display_list.s")
 
 s32 func_8007EF64(s16 arg0) {
-    return arg0 + gCiPalettes;
+    return (s32) (arg0 + gCiPalettes);
 }
 
 // There might be a file boundary here.

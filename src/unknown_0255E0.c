@@ -20,6 +20,7 @@
 #include "particles.h"
 #include "lib/src/libc/rmonPrintf.h"
 #include "objects.h"
+#include "math_util.h"
 
 // Maximum size for a level model is 522.5 KiB
 #define LEVEL_MODEL_MAX_SIZE 0x82A00
@@ -69,11 +70,11 @@ const char D_800E5E10[] = "TrackGetHeight() - Overflow!!!\n";
 /************ .bss ************/
 
 Gfx *gSceneCurrDisplayList;
-Matrix *gSceneCurrMatrix;
-VertexList *gSceneCurrVertexList;
+MatrixS *gSceneCurrMatrix;
+Vertex *gSceneCurrVertexList;
 TriangleList *gSceneCurrTriList;
 
-Object *D_8011B0B0; // Camera Object?
+ObjectSegment *D_8011B0B0; // Camera Object?
 
 s32 D_8011B0B4;
 Object *D_8011B0B8;
@@ -271,7 +272,7 @@ extern u32 D_A0000200;
 /**
  * The root function for rendering the entire scene
 */
-void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRate) {
+void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, s8** tris, s32 updateRate) {
     s32 i;
     s32 numViewports;
     s32 delta;
@@ -665,7 +666,7 @@ void draw_gradient_background(void) {
     verts += 4;
     gSceneCurrVertexList = verts;
     tris += 2;
-    gSceneCurrTriList = tris;
+    gSceneCurrTriList = (TriangleList *) tris;
 }
 
 void render_skydome(void) {
@@ -700,19 +701,19 @@ void func_80028CD0(s32 updateRate) {
     sp3C = get_current_viewport();
     func_80031018();
     set_and_normalize_D_8011AFE8((f32) D_8011D468.x / 65536.0f, (f32) D_8011D468.y / 65536.0f, (f32) D_8011D468.z / 65536.0f);
-    temp_v0 = D_8011B0B0->segment.unk34_a.levelSegmentIndex;
+    temp_v0 = D_8011B0B0->unk34_a.levelSegmentIndex;
     if ((temp_v0 >= 0) && (temp_v0 < gCurrentLevelModel->numberOfSegments)) {
         D_8011B0D4 = (s32) gCurrentLevelModel->segments[temp_v0].unk28;
     } else {
         D_8011B0D4 = -1;
     }
-    D_8011D314 = D_8011B0B0->segment.trans.x_position;
-    D_8011D318 = D_8011B0B0->segment.trans.y_position;
-    D_8011D31C = D_8011B0B0->segment.trans.z_position;
+    D_8011D314 = D_8011B0B0->trans.x_position;
+    D_8011D318 = D_8011B0B0->trans.y_position;
+    D_8011D31C = D_8011B0B0->trans.z_position;
     if (D_8011D384 != 0) {
         func_800B8B8C();
         racers = get_racer_objects(&numRacers);
-        if ((D_8011B0B0->segment.unk34_a.unk36 != 7) && (numRacers > 0) && (!check_if_showing_cutscene_camera())) {
+        if ((D_8011B0B0->unk34_a.unk36 != 7) && (numRacers > 0) && (!check_if_showing_cutscene_camera())) {
             i = -1; 
             do {
                 i++;
@@ -720,7 +721,7 @@ void func_80028CD0(s32 updateRate) {
             } while((i < (numRacers - 1)) && (sp3C != (racer->playerIndex)));
             func_800B8C04(racers[i]->segment.trans.x_position, racers[i]->segment.trans.y_position, racers[i]->segment.trans.z_position, get_current_viewport(), updateRate);
         } else {
-            func_800B8C04((s32) D_8011B0B0->segment.trans.x_position, (s32) D_8011B0B0->segment.trans.y_position, (s32) D_8011B0B0->segment.trans.z_position, get_current_viewport(), updateRate);
+            func_800B8C04((s32) D_8011B0B0->trans.x_position, (s32) D_8011B0B0->trans.y_position, (s32) D_8011B0B0->trans.z_position, get_current_viewport(), updateRate);
         }
     }
     get_current_level_header()->unk3 = 1;
@@ -1009,11 +1010,11 @@ void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentInde
 
     curNode = &gCurrentLevelModel->segmentsBspTree[nodeIndex];
     if (curNode->splitType == 0) {
-        camValue = D_8011B0B0->segment.trans.x_position; // Camera X
+        camValue = D_8011B0B0->trans.x_position; // Camera X
     } else if (curNode->splitType == 1) {
-        camValue = D_8011B0B0->segment.trans.y_position; // Camera Y
+        camValue = D_8011B0B0->trans.y_position; // Camera Y
     } else {
-        camValue = D_8011B0B0->segment.trans.z_position; // Camera Z
+        camValue = D_8011B0B0->trans.z_position; // Camera Z
     }
 
     if (camValue < curNode->splitValue) {
@@ -1423,45 +1424,45 @@ void func_8002C0C4(s32 modelId) {
     temp_s4 = D_8011D310[modelId + 1] - D_8011D310[modelId];
 
     // temp = compressedRamAddr
-    temp = (u8*)gCurrentLevelModel;
+    temp = (s32) gCurrentLevelModel;
     temp +=  (LEVEL_MODEL_MAX_SIZE - temp_s4);
     temp -= ((s32)temp % 16); // Align to 16-byte boundary.
     
     load_asset_to_address(ASSET_LEVEL_MODELS, temp, D_8011D310[modelId], temp_s4);
     gzip_inflate((u8*) temp, (u8*) gCurrentLevelModel);
-    free_from_memory_pool(D_8011D310); // Done with the level models table, so free it.z
+    free_from_memory_pool(D_8011D310); // Done with the level models table, so free it.
     
     mdl = gCurrentLevelModel;
     
-    LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->textures);
-    LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments);
-    LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segmentsBoundingBoxes);
-    LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->unkC);
-    LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segmentsBitfields);
-    LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segmentsBspTree);
+    LOCAL_OFFSET_TO_RAM_ADDRESS(TextureInfo *, gCurrentLevelModel->textures);
+    LOCAL_OFFSET_TO_RAM_ADDRESS(LevelModelSegment *, gCurrentLevelModel->segments);
+    LOCAL_OFFSET_TO_RAM_ADDRESS(LevelModelSegmentBoundingBox *, gCurrentLevelModel->segmentsBoundingBoxes);
+    LOCAL_OFFSET_TO_RAM_ADDRESS(s32, gCurrentLevelModel->unkC);
+    LOCAL_OFFSET_TO_RAM_ADDRESS(u8 *, gCurrentLevelModel->segmentsBitfields);
+    LOCAL_OFFSET_TO_RAM_ADDRESS(BspTreeNode *, gCurrentLevelModel->segmentsBspTree);
     
-    if(1){}if(1){}if(1){}if(1){}if(1){}if(1){} // Most likely fake.
+    if(1){}if(1){}if(1){}if(1){}if(1){}if(1){} // Fakematch
     
     for(k = 0; k < gCurrentLevelModel->numberOfSegments; k++) {
-        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[k].vertices);
-        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[k].triangles);
-        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[k].batches);
-        LOCAL_OFFSET_TO_RAM_ADDRESS(gCurrentLevelModel->segments[k].unk14);
+        LOCAL_OFFSET_TO_RAM_ADDRESS(Vertex *, gCurrentLevelModel->segments[k].vertices);
+        LOCAL_OFFSET_TO_RAM_ADDRESS(Triangle *, gCurrentLevelModel->segments[k].triangles);
+        LOCAL_OFFSET_TO_RAM_ADDRESS(TriangleBatchInfo *, gCurrentLevelModel->segments[k].batches);
+        LOCAL_OFFSET_TO_RAM_ADDRESS(u8 *, gCurrentLevelModel->segments[k].unk14);
     }
     for(k = 0; k < gCurrentLevelModel->numberOfTextures; k++) {
         gCurrentLevelModel->textures[k].texture = load_texture(((s32)gCurrentLevelModel->textures[k].texture) | 0x8000);
     }
     j = (s32)gCurrentLevelModel + gCurrentLevelModel->modelSize;
     for(k = 0; k < gCurrentLevelModel->numberOfSegments; k++) {
-        gCurrentLevelModel->segments[k].unk10 = j;
-        j = align16((gCurrentLevelModel->segments[k].numberOfTriangles * 2) + j);
-        gCurrentLevelModel->segments[k].unk18 = j;
-        j = &((u8*)j)[func_8002CC30(&gCurrentLevelModel->segments[k])];
+        gCurrentLevelModel->segments[k].unk10 = (s16 *) j;
+        j = (s32) align16(((u8 *) (gCurrentLevelModel->segments[k].numberOfTriangles * 2)) + j);
+        gCurrentLevelModel->segments[k].unk18 = (s16 *) j;
+        j = (s32) &((u8*)j)[func_8002CC30(&gCurrentLevelModel->segments[k])];
         func_8002C954(&gCurrentLevelModel->segments[k], &gCurrentLevelModel->segmentsBoundingBoxes[k], k);
         gCurrentLevelModel->segments[k].unk30 = 0;
-        gCurrentLevelModel->segments[k].unk34 = j;
+        gCurrentLevelModel->segments[k].unk34 = (s16 *) j;
         func_8002C71C(&gCurrentLevelModel->segments[k]);
-        j = align16((gCurrentLevelModel->segments[k].unk32 * 2) + j);
+        j = (s32) align16(((u8 *) (gCurrentLevelModel->segments[k].unk32 * 2)) + j);
     }
     temp_s4 = j - (s32)gCurrentLevelModel;
     if (temp_s4 > LEVEL_MODEL_MAX_SIZE) {
@@ -1662,7 +1663,7 @@ void render_floor_decal(Object *obj, Object_50 *arg1) {
     Vertex *vtx;
     Triangle *tri;
     s32 temp;
-    s32 temp2;
+    UNUSED s32 temp2;
     s32 temp3;
     s32 new_var;
     s32 new_var2;
@@ -1730,8 +1731,8 @@ void func_8002D670(Object *obj, Object_50 *arg1) {
     Vertex *vtx;
     Triangle *tri;
     s32 temp;
-    s32 temp2;
-    s32 temp3;
+    UNUSED s32 temp2;
+    UNUSED s32 temp3;
 #ifdef PUPPYPRINT_DEBUG
     u32 first = osGetCount();
     u32 first2 = 0;
@@ -1998,13 +1999,14 @@ void func_8003093C(s32 arg0) {
  * Sets the active viewport's fog target when passed through.
  * Used in courses to make less, or more dense.
 */
-void obj_loop_fogchanger(Object* obj) {
+void obj_loop_fogchanger(Object *obj) {
     s32 temp3;
     s32 fogNear;
-    s32 sp74;
+    s32 views;
     s32 playerIndex;
     s32 index;
-    s32 phi_a0, fogFar;
+    UNUSED s32 pad;
+    s32 fogFar;
     s32 i;
     s32 fogR;
     s32 fogG;
@@ -2014,9 +2016,8 @@ void obj_loop_fogchanger(Object* obj) {
     s32 temp_a1;
     LevelObjectEntry_FogChanger *sp44;
     Object **racers;
-    s32 temp;
     Object_Racer *racer;
-    Object *racerObj;
+    UNUSED s32 pad2;
     unk8011D388 *temp_v0_3;
     ObjectSegment *phi_s3;
     
@@ -2026,12 +2027,12 @@ void obj_loop_fogchanger(Object* obj) {
     
     if (check_if_showing_cutscene_camera()) {
         phi_s3 = func_80069D7C();
-        sp74 = get_viewport_count() + 1;
+        views = get_viewport_count() + 1;
     } else {
-        racers = get_racer_objects(&sp74);
+        racers = get_racer_objects(&views);
     }
     
-    for(i = 0; i < sp74; i++) {
+    for(i = 0; i < views; i++) {
         index = PLAYER_COMPUTER;
         if (racers != NULL) {
             racer = &racers[i]->unk64->racer;
@@ -2049,7 +2050,7 @@ void obj_loop_fogchanger(Object* obj) {
         if (index != PLAYER_COMPUTER) {
             x -= obj->segment.trans.x_position;
             z -= obj->segment.trans.z_position;
-            if (&obj->segment.trans){} // Fakematch
+            if (1) {} // Fakematch
             if ((x * x) + (z * z) < obj->unk78f) {
                 fogNear = sp44->unkC;
                 fogFar = sp44->unkE;
@@ -2122,7 +2123,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 #endif
 
 UNUSED void func_80030FA0(void) {
-    D_8011B0B0 = (Object *) func_80069D20();
+    D_8011B0B0 = func_80069D20();
     func_80031018();
     set_and_normalize_D_8011AFE8((f32) D_8011D468.x / 65536.0f, (f32) D_8011D468.y / 65536.0f, (f32) D_8011D468.z / 65536.0f);
 }
@@ -2135,9 +2136,9 @@ void func_80031018(void) {
     f32 y = 0.0f;
     f32 z = -65536.0f;
 
-    trans.z_rotation = D_8011B0B0->segment.trans.z_rotation;
-    trans.x_rotation = D_8011B0B0->segment.trans.x_rotation;
-    trans.y_rotation = D_8011B0B0->segment.trans.y_rotation;
+    trans.z_rotation = D_8011B0B0->trans.z_rotation;
+    trans.x_rotation = D_8011B0B0->trans.x_rotation;
+    trans.y_rotation = D_8011B0B0->trans.y_rotation;
     trans.x_position = 0.0f;
     trans.y_position = 0.0f;
     trans.z_position = 0.0f;

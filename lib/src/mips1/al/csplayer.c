@@ -24,6 +24,7 @@ void alCSeqNextEvent(ALCSeq *seq, ALEvent *event);
 void __CSPHandleMIDIMsg(ALCSPlayer_Custom *seqp, ALEvent *event);
 ALMicroTime __CSPVoiceHandler(void *node);
 void		__CSPHandleNextSeqEvent(ALCSPlayer *seqp);
+void func_80065A80(ALSynth *arg0, PVoice *arg1, s16 arg2);
 
 /*
  * Sequence Player public functions

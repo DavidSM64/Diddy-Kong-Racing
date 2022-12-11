@@ -211,7 +211,7 @@ ifeq ($(shell getconf LONG_BIT), 64)
   # Ensure that gcc treats the code as 32-bit
   CC_CHECK_CFLAGS += -m32
 endif
-CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-format-security -Wno-main -DNON_MATCHING -DAVOID_UB -D_LANGUAGE_C -DNDEBUG
+CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-format-security -Wno-main -DNON_MATCHING -DAVOID_UB -D_LANGUAGE_C -DNDEBUG -Werror-implicit-function-declaration
 
 #Warnings to ignore
 CC_CHECK_CFLAGS += -Wno-builtin-declaration-mismatch -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast

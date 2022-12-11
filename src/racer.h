@@ -120,7 +120,8 @@ typedef struct unk8005234C {
 } unk8005234C;
 
 typedef struct TempStruct5 {
-    s8 pad0[8];
+    f32 unk0;
+    f32 unk4;
     s8 unk8[4][4];
 } TempStruct5;
 
@@ -236,11 +237,11 @@ void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *
 void func_800598D0(void);
 void func_80059944(void);
 void func_80059984(s32 arg0);
-MapId func_800599A8(void);
-s32 func_800599B8(s32 arg0, MapId mapId, s16 arg2, s16 *arg3, s16 *arg4);
+s32 func_800599A8(void);
+s32 func_800599B8(s32 arg0, s32 mapId, s16 arg2, s16 *arg3, s16 *arg4);
 s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime);
 void free_tt_ghost_data(void);
-s32 func_80059B7C(s32 controllerIndex, MapId mapId, s16 arg2, s16 arg3, s16 arg4);
+s32 func_80059B7C(s32 controllerIndex, s32 mapId, s16 arg2, s16 arg3, s16 arg4);
 s16 func_80059E20(void);
 void func_8005A3B0(void);
 void func_8005A3C0(void);
@@ -285,7 +286,7 @@ void set_ghost_position_and_rotation(Object *obj);
 void func_80054FD0(Object *obj, Object_Racer *racer, s32);
 void func_80053750(Object *obj, Object_Racer *racer, f32);
 void func_80052D7C(Object *obj, Object_Racer *racer, s32, f32);
-s32 func_80017248(void*, s32, s32*, Vec3f*, f32*, s32*, s8* surface);
+s32 func_80017248(void*, s32, s32*, Vec3f*, f32*, f32*, s8* surface);
 void func_80059BF0(Object* obj, s32 updateRate);
 void func_80059208(Object* obj, Object_Racer* racer, s32 updateRate);       /* extern */
 void func_8004F7F4(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */

@@ -158,5 +158,6 @@ MemoryPoolSlot *func_8007C12C(s32 arg0, s32 arg1); // Non Matching
 void func_8007AC70(void); // Non Matching
 void func_8007BF34(Gfx **dlist, s32 arg1); // Non Matching
 void func_8007BA5C(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3); // Non Matching
+void build_tex_display_list(TextureHeader *tex, u8 *addr);
 
 #endif
