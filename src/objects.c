@@ -22,6 +22,7 @@
 #include "camera.h"
 #include "waves.h"
 #include "object_functions.h"
+#include "object_models.h"
 
 #define MAX_CHECKPOINTS 60
 
@@ -783,19 +784,19 @@ void func_8000F648(Object *obj, s32 count, s32 objType) {
     if (objType == 0) { // 3D model
         for (i = 0; i < count; i++) {
             if (obj->unk68[i] != NULL) {
-                func_8005FF40((s32)obj->unk68[i]);
+                func_8005FF40((Object_68 **) (s32) obj->unk68[i]);
             }
         } 
     } else if (objType == 4) {
         for (i = 0; i < count; i++) {
             if (obj->unk68[i] != NULL) {
-                free_texture((s32)obj->unk68[i]);
+                free_texture((TextureHeader *) (s32) obj->unk68[i]);
             }
         } 
     } else { // Sprite
         for (i = 0; i < count; i++) {
             if (obj->unk68[i] != NULL) {
-                free_sprite((s32)obj->unk68[i]);
+                free_sprite((Sprite *) (s32) obj->unk68[i]);
             }
         }
     }
@@ -2249,7 +2250,45 @@ s8 func_800214C4(void) {
     return D_8011AD22[1 - D_8011AD20[1]];
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_800214E4.s")
+s8 func_800214E4(Object *obj, s32 updateRate) {
+    s16 temp_v1;
+    s32 i;
+    Object_AnimatedObject *animObj;
+
+    animObj = (Object_AnimatedObject *) obj->unk64;
+    if (animObj->unk3A != 0) {
+        obj->segment.trans.unk6 |= 0x4000;
+    }
+    if (animObj->unk36 == -1) {
+        return animObj->unk3A;
+    }
+    if (animObj->unk36 >= 0) {
+        animObj->unk36 -= updateRate;
+    }
+    if (animObj->unk36 == -1) {
+        animObj->unk36 = -2;
+    }
+    if (animObj->unk36 <= 0) {
+        obj->segment.trans.unk6 |= 0x4000;
+        i = 0;
+        if (D_8011AE78 > 0) {
+            temp_v1 = animObj->unk28;
+            if (temp_v1 != (s32) (*D_8011AE74)->unk7C.word) {
+loop_11:
+                i++;
+                if (i < D_8011AE78) {
+                    if (temp_v1 != (s32) D_8011AE74[i]->unk7C.word) {
+                        goto loop_11;
+                    }
+                }
+            }
+        }
+        func_8001EFA4(D_8011AE74[i], (Object_Animation *) obj);
+        return 1;
+    }
+    return 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80021600.s")
 
 f32 catmull_rom_interpolation(f32 *arg0, s32 arg1, f32 arg2) {

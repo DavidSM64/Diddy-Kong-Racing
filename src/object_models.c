@@ -77,10 +77,10 @@ GLOBAL_ASM("asm/non_matchings/object_models/func_8005F99C.s")
 GLOBAL_ASM("asm/non_matchings/object_models/func_8005FCD0.s")
 
 #ifdef NON_MATCHING
-void func_8005FF40(ObjectModel **modelPtr) {
+void func_8005FF40(Object_68 **modelPtr) {
     s32 i;
     s32 modelIndex;
-    ObjectModel *model;
+    Object_68 *model;
     
     if (modelPtr != NULL) {
         model = *modelPtr;
@@ -100,7 +100,7 @@ void func_8005FF40(ObjectModel **modelPtr) {
             D_8011D628[D_8011D634] = modelIndex;
             D_8011D634++;
             D_8011D624[modelIndex].unk0 = -1;
-            D_8011D624[modelIndex].model = (ObjectModel *)-1;
+            D_8011D624[modelIndex].model = (Object_68 *)-1;
             free_from_memory_pool(modelPtr);
         }
     }

@@ -1347,6 +1347,15 @@ typedef struct Object_Fireball_Octoweapon {
     s32 unk1C;
 } Object_Fireball_Octoweapon;
 
+typedef struct Object_AnimatedObject {
+    u8 pad0[0x28];
+    s16 unk28;
+    u8 pad2A[0xC];
+    s16 unk36;
+    u8 pad38[0x2];
+    s8 unk3A;
+} Object_AnimatedObject;
+
 typedef struct Object_64 {
     union {
         Object_Laser laser;
@@ -1394,6 +1403,7 @@ typedef struct Object_64 {
         Object_Log log;
         Object_Fireball_Octoweapon fireball_octoweapon;
         Object_LaserGun lasergun;
+        Object_AnimatedObject animatedObject;
     };
 } Object_64;
 
@@ -1409,6 +1419,11 @@ typedef struct Object_68 {
   /* 0x1F */ s8 unk1F;
   /* 0x20 */ s8 unk20;
   /* 0x21 */ s8 unk21;
+  /* 0x22 */ s16 unk22;
+  /* 0x24 */ s32 unk24;
+  /* 0x28 */ s32 unk28;
+  /* 0x2C */ s32 unk2C;
+  /* 0x30 */ s32 unk30;
  } Object_68;
  
 /* Size: 0x20 bytes */
