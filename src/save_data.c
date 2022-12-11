@@ -421,19 +421,18 @@ void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
 
 #ifdef NON_EQUIVALENT
 void func_800732E8(Settings *settings, u8 *saveData) {
+    s32 i;
     s32 levelCount;
     s32 worldCount;
     s16 var_v0;
     u8 courseStatus;
     s32 var_s0;
-    s32 i;
     s8 temp_v0;
-    s32 blocks;
 
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
     D_801241EC = saveData;
     D_801241F0 = 0;
-    D_801241F4 = 128; // 1000 0000 in binary.
+    D_801241F4 = 128;
     func_80072E28(16, 0);
     for (i = 0, var_s0 = 0; i < levelCount; i++) {
         temp_v0 = func_8006B14C(i);
@@ -460,7 +459,7 @@ void func_800732E8(Settings *settings, u8 *saveData) {
     func_80072E28(10, settings->trophies);
     func_80072E28(12, settings->bosses);
     for (i = 0; i < worldCount; i++) {
-        func_80072E28(7, settings->balloonsPtr[i * 2]);
+        func_80072E28(7, settings->balloonsPtr[i]);
     }
     func_80072E28(3, settings->ttAmulet);
     func_80072E28(3, settings->wizpigAmulet);
@@ -471,16 +470,10 @@ void func_800732E8(Settings *settings, u8 *saveData) {
     func_80072E28(32, settings->cutsceneFlags);
     func_80072E28(16, settings->filename);
     func_80072E28(8, 0);
-    blocks = 5;
-    var_v0 = saveData[2] + blocks + saveData[2] + 1;
-    // 40 is the number of bytes in a save file
-    // This will be +4 so as to skip the first 4 bytes, which will just be GAMD, the save file header.
-    for (i = 4; i < blocks * (s32)sizeof(u64); i++) {
-        var_v0 += saveData[i] + saveData[i + 1] + saveData[i + 2] + saveData[i + 3];
-    }
+    for (i = 2, var_v0 = saveData; i < 40; i++) { var_v0 += saveData[i]; }
     D_801241EC = saveData;
     D_801241F0 = 0;
-    D_801241F4 = 128; // 1000 0000 in binary.
+    D_801241F4 = 128;
     func_80072E28(16, var_v0);
 }
 #else
