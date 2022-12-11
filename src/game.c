@@ -184,7 +184,7 @@ s32 gNMIMesgBuf[8];
 
 /******************************/
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 // Only has regalloc issues.
 void func_8006A6B0(void) {
   s32 i;

@@ -9,7 +9,7 @@ SHELL := /bin/bash
 # Currently, only US 1.0 is supported.
 VERSION := us_1.0
 
-NON_MATCHING ?= 0
+NON_MATCHING ?= 1
 $(eval $(call validate-option,NON_MATCHING,0 1))
 
 COMPILE_ASSETS ?= 0
