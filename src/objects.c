@@ -1204,7 +1204,7 @@ void render_3d_billboard(Object *obj) {
         sp60.trans.x_position = 0.0f;
         sp60.trans.z_position = 0.0f;
         sp60.trans.y_position = 12.0f;
-        sp60.unk18 = obj->segment.unk18;
+        sp60.unk18 = obj->segment.visualIndex;
         sp60.unk1A = 32;
         if (var_a0 == NULL) {
             var_a0 = (Object *) obj->unk64->weapon.target;

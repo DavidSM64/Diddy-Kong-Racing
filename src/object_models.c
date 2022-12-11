@@ -194,11 +194,11 @@ void func_80061C0C(Object *obj) {
         } else {
             var_v1 = 0;
         }
-        if (obj->segment.unk18 >> 4 < 0) {
-            obj->segment.unk18 = var_v1;
+        if (obj->segment.visualIndex >> 4 < 0) {
+            obj->segment.visualIndex = var_v1;
         }
-        if (var_v1 < obj->segment.unk18 >> 4) {
-            obj->segment.unk18 = 0;
+        if (var_v1 < obj->segment.visualIndex >> 4) {
+            obj->segment.visualIndex = 0;
             temp_a1->unk10 = -1;
         }
     }

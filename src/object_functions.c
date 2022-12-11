@@ -155,14 +155,14 @@ void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
     obj->unk7C.word = 0;
 }
 
-void obj_loop_scenery(Object *obj, s32 speed) {
+void obj_loop_scenery(Object *obj, s32 updateRate) {
 	Object78_80033DD0 *obj78;
 	s32 temp_v0;
 
     if (obj->unk4C != NULL) {
         obj78 = (Object78_80033DD0 *) &obj->action;
         if (obj->unk7C.half.upper > 0) {
-            obj78->unk4 -= speed;
+            obj78->unk4 -= updateRate;
         }
         if ((obj->unk4C->unk14 & 0x40) && ((s32) obj78->unk4 <= 0)) {
             func_80009558(SOUND_TWANG, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
@@ -257,7 +257,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
             }
         }
     }
-    obj->segment.unk18 += updateRate * 10;
+    obj->segment.visualIndex += updateRate * 10;
     weapon = (Object_Fireball_Octoweapon *) obj->unk64;
     obj4C = obj->unk4C;
     if ((obj4C->unk0)) { 
@@ -419,8 +419,8 @@ typedef struct Object_7C_80034860 {
 	s16 unkC;
 } Object_7C_80034860;
 
-void obj_loop_laserbolt(Object *obj, s32 speed) {
-	f32 sp5C;
+void obj_loop_laserbolt(Object *obj, s32 updateRate) {
+	f32 updateRateF;
 
 	Object *obj4C_obj;
 
@@ -437,31 +437,31 @@ void obj_loop_laserbolt(Object *obj, s32 speed) {
 
 
     sp4F = FALSE;
-    sp5C = speed;
+    updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        sp5C *= 1.2;
+        updateRateF *= 1.2;
     }
-    sp40 = obj->segment.trans.x_position + (obj->segment.x_velocity * sp5C);
-    sp44 = obj->segment.trans.y_position + (obj->segment.y_velocity * sp5C);
-    sp48 = obj->segment.trans.z_position + (obj->segment.z_velocity * sp5C);
+    sp40 = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
+    sp44 = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
+    sp48 = obj->segment.trans.z_position + (obj->segment.z_velocity * updateRateF);
     sp3C = 9.0f;
 
     func_80031130(1, &obj->segment.trans.x_position, &sp40, -1);
     sp38 = FALSE;
     func_80031600(&obj->segment.trans.x_position, &sp40, &sp3C, &sp4E, 1, &sp38);
     if (sp38) {
-        obj->segment.x_velocity = (sp40 - obj->segment.trans.x_position) / sp5C;
-        obj->segment.y_velocity = (sp44 - obj->segment.trans.y_position) / sp5C;
-        obj->segment.z_velocity = (sp48 - obj->segment.trans.z_position) / sp5C;
+        obj->segment.x_velocity = (sp40 - obj->segment.trans.x_position) / updateRateF;
+        obj->segment.y_velocity = (sp44 - obj->segment.trans.y_position) / updateRateF;
+        obj->segment.z_velocity = (sp48 - obj->segment.trans.z_position) / updateRateF;
     }
-    func_80011570(obj, obj->segment.x_velocity * sp5C, obj->segment.y_velocity * sp5C, obj->segment.z_velocity * sp5C);
+    func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
     if (sp38) {
         func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position - 36.0f, obj->segment.trans.z_position, 44, 0, 0.2, 0);
         sp4F = TRUE;
     }
 
     if (obj->unk78 > 0) {
-        obj->unk78 -= speed;
+        obj->unk78 -= updateRate;
     } else {
         sp4F = TRUE;
     }
@@ -497,8 +497,8 @@ void obj_init_torch_mist(Object *obj, LevelObjectEntry_Torch_Mist *entry) {
     obj->unk78 = entry->unk8;
 }
 
-void obj_loop_torch_mist(Object *obj, s32 speed) {
-    obj->segment.unk18 += obj->unk78 * speed;
+void obj_loop_torch_mist(Object *obj, s32 updateRate) {
+    obj->segment.visualIndex += obj->unk78 * updateRate;
 }
 
 void obj_init_effectbox(UNUSED Object *obj, UNUSED LevelObjectEntry_EffectBox *entry) {
@@ -507,7 +507,7 @@ void obj_init_effectbox(UNUSED Object *obj, UNUSED LevelObjectEntry_EffectBox *e
 #ifdef NON_MATCHING
 // Has regalloc issues
 
-void obj_loop_effectbox(Object *obj, UNUSED s32 speed) {
+void obj_loop_effectbox(Object *obj, UNUSED s32 updateRate) {
     Object **objList;
     Object_EffectBox *curObj64;
     s32 numberOfObjects;
@@ -686,14 +686,14 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
     Object_Racer *racer;
     f32 sp40[3];
     f32 sp3C;
-    f32 speed;
+    f32 updateRateF;
     s32 sp34;
     s8 sp33;
 
     egg = (Object_CollectEgg *) obj->unk64;
-    speed = updateRate;
+    updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        speed *= 1.2;
+        updateRateF *= 1.2;
     }
     switch (egg->unkB) {
     case 0:
@@ -701,17 +701,17 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
         break;
     case 2:
         obj->segment.trans.unk6 &= 0xBFFF;
-        sp40[0] = obj->segment.trans.x_position + (obj->segment.x_velocity * speed);
-        sp40[1] = obj->segment.trans.y_position + (obj->segment.y_velocity * speed);
-        sp40[2] = obj->segment.trans.z_position + (obj->segment.z_velocity * speed);
+        sp40[0] = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
+        sp40[1] = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
+        sp40[2] = obj->segment.trans.z_position + (obj->segment.z_velocity * updateRateF);
         sp3C = 9.0f;
         func_80031130(1, &obj->segment.trans.x_position, sp40, -1);
         sp34 = 0;
         sp33 = 0;
         func_80031600(&obj->segment.trans.x_position, sp40, &sp3C, &sp33, 1, &sp34);
-        obj->segment.x_velocity = (sp40[0] - obj->segment.trans.x_position) / speed;
-        obj->segment.y_velocity = (sp40[1] - obj->segment.trans.y_position) / speed;
-        obj->segment.z_velocity = (sp40[2] - obj->segment.trans.z_position) / speed;
+        obj->segment.x_velocity = (sp40[0] - obj->segment.trans.x_position) / updateRateF;
+        obj->segment.y_velocity = (sp40[1] - obj->segment.trans.y_position) / updateRateF;
+        obj->segment.z_velocity = (sp40[2] - obj->segment.trans.z_position) / updateRateF;
         obj->segment.trans.x_position = sp40[0];
         obj->segment.trans.y_position = sp40[1];
         obj->segment.trans.z_position = sp40[2];
@@ -771,7 +771,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
                 racer->raceFinished = TRUE;
             }
         }
-        obj->segment.unk18 = 0x80;
+        obj->segment.visualIndex = 128;
         break;
     }
 }
@@ -779,7 +779,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
 void obj_init_eggcreator(UNUSED Object *obj, UNUSED LevelObjectEntry_EggCreator *entry) {
 }
 
-void obj_loop_eggcreator(Object *obj, UNUSED s32 speed) {
+void obj_loop_eggcreator(Object *obj, UNUSED s32 updateRate) {
     unk8003564C sp20;
     Object *someObj;
 
@@ -816,7 +816,7 @@ void obj_init_lighthouse_rocketsignpost(Object *obj, LevelObjectEntry_Lighthouse
     obj->unk4C->unk12 = 0;
 }
 
-void obj_loop_rocketsignpost(Object *obj, UNUSED s32 speed) {
+void obj_loop_rocketsignpost(Object *obj, UNUSED s32 updateRate) {
     Object *playerObj;
     Object_4C *obj4C;
 
@@ -860,7 +860,7 @@ void obj_init_airzippers_waterzippers(Object *obj, LevelObjectEntry_AirZippers_W
 }
 
 
-void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 speed) {
+void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 updateRate) {
     Object *curRacerObj;
     Object_Racer *racer;
     f32 xDiff;
@@ -927,7 +927,7 @@ void obj_init_groundzipper(Object *arg0, LevelObjectEntry_GroundZipper *entry) {
     }
 }
 
-void obj_loop_groundzipper(Object *obj, UNUSED s32 speed) {
+void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
     Object *curRacerObj;
     Object_Racer *racer;
     f32 xDiff;
@@ -972,26 +972,26 @@ void obj_init_unknown58(Object *obj, UNUSED LevelObjectEntry_Unknown58 *entry) {
     obj->unk7C.word = (s32) obj->segment.header;
 }
 
-void obj_loop_unknown58(Object *obj, s32 speed) {
+void obj_loop_unknown58(Object *obj, s32 updateRate) {
     Object *someObj;
     Object *someOtherObj;
     Object_UnkId58 *someOtherObj64;
     Object_60 *obj60;
 
     obj->segment.unk3B = 0;
-    obj->segment.unk18 = 0x28;
+    obj->segment.visualIndex = 40;
     if (func_8001139C() == 0) {
-        obj->unk78 += speed;
+        obj->unk78 += updateRate;
     }
     set_ghost_position_and_rotation(obj);
-    func_800AFC3C(obj, speed);
+    func_800AFC3C(obj, updateRate);
     someOtherObj = get_racer_object(0);
     someOtherObj64 = &someOtherObj->unk64->unkid58;
     obj60 = obj->unk60;
     if (obj60->unk0 == 1) {
         s8 temp = someOtherObj64->unk1D6;
-        if ((temp == 1) || (temp == 2)) {
-            someObj = (Object *)obj60->unk4;
+        if (temp == 1 || temp == 2) {
+            someObj = (Object *) obj60->unk4;
             someObj->segment.trans.y_rotation = 0x4000;
             someObj->segment.unk3A++;
             someObj->segment.unk3A &= 1;
@@ -1012,7 +1012,7 @@ void obj_init_characterflag(Object *obj, LevelObjectEntry_CharacterFlag *entry) 
     obj->segment.trans.scale = (f32)(obj->segment.header->scale * phi_f0);
 }
 
-void obj_loop_characterflag(Object *obj, UNUSED s32 speed) {
+void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
     s32 temp_t4;
     s32 temp_t5;
     Object *someObj;
@@ -1085,7 +1085,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         updateRateF *= 1.2;
     }
     tt = (Object_NPC *) obj->unk64;
-    if (obj->segment.unk18 == 0) {
+    if (obj->segment.visualIndex == 0) {
         if (tt->unk4 > 1.0) {
             tt->unk4 = 0.0f;
         }
@@ -1266,7 +1266,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     if (obj->action != TT_MODE_ROAM) {
         D_8011D4D0 = obj->segment.trans.y_position;
     }
-    obj->segment.unk18 = 1.0 * tt->unk4;
+    obj->segment.visualIndex = 1.0 * tt->unk4;
     func_80061C0C(obj);
     if (0) { } // Fakematch
     if (obj->unk7C.word > 0) {
@@ -1299,15 +1299,15 @@ void obj_init_lavaspurt(Object *obj, LevelObjectEntry_LavaSpurt *entry) {
     obj->unk7C.word = entry->unk8;
 }
 
-void obj_loop_lavaspurt(Object *obj, s32 speed) {
+void obj_loop_lavaspurt(Object *obj, s32 updateRate) {
     if (obj->unk78 > 0) {
-        obj->unk78 -= speed;
+        obj->unk78 -= updateRate;
         obj->segment.trans.unk6 |= 0x4000;
     } else {
         obj->segment.trans.unk6 &= ~0x4000;
-        obj->segment.unk18 += speed * 4;
-        if (obj->segment.unk18 >= 256) {
-            obj->segment.unk18 = 0;
+        obj->segment.visualIndex += updateRate * 4;
+        if (obj->segment.visualIndex > 255) {
+            obj->segment.visualIndex = 0;
             obj->unk78 = get_random_number_from_range(0, 30) + obj->unk7C.word;
         }
     }
@@ -1317,7 +1317,7 @@ void obj_init_posarrow(Object *obj, UNUSED LevelObjectEntry_PosArrow *entry) {
     obj->segment.trans.unk6 |= 0x4000;
 }
 
-void obj_loop_posarrow(Object *obj, UNUSED s32 speed) {
+void obj_loop_posarrow(Object *obj, UNUSED s32 updateRate) {
     Object_PosArrow *someObj64;
     Object **someObjList;
     Object *someObj;
@@ -1332,7 +1332,7 @@ void obj_loop_posarrow(Object *obj, UNUSED s32 speed) {
             obj->segment.trans.unk6 &= ~0x4000;
             someObj64->unk150 = obj;
         }
-        obj->segment.unk18 = obj->unk78 * 127;
+        obj->segment.visualIndex = obj->unk78 * 127;
     }
 }
 
@@ -1369,7 +1369,7 @@ void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 arg2) 
 
 // Has minor issues
 
-void obj_loop_animator(Object* obj, s32 speed) {
+void obj_loop_animator(Object* obj, s32 updateRate) {
     Object_Animator* obj64; // 3C
     s32 sp20;
     s32 sp1C;
@@ -1389,12 +1389,12 @@ void obj_loop_animator(Object* obj, s32 speed) {
 
     obj64 = &obj->unk64->animator;
 
-    temp = obj64->xSpeedFactor * speed;
+    temp = obj64->xSpeedFactor * updateRate;
     obj64->xSpeed += temp << 4;
     sp20 = obj64->xSpeed >> 4;
     obj64->xSpeed &= 0xF;
 
-    temp2 = obj64->ySpeedFactor * speed;
+    temp2 = obj64->ySpeedFactor * updateRate;
     obj64->ySpeed += temp2 << 4;
     sp1C = obj64->ySpeed >> 4;
     obj64->ySpeed &= 0xF;
@@ -1516,16 +1516,16 @@ void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2
 }
 
 
-void obj_loop_animobject(Object *obj, s32 speed) {
-    func_8001F460(obj, speed, obj);
+void obj_loop_animobject(Object *obj, s32 updateRate) {
+    func_8001F460(obj, updateRate, obj);
 }
 
-void obj_loop_dooropener(Object *obj, s32 speed) {
+void obj_loop_dooropener(Object *obj, s32 updateRate) {
     s32 phi_a0;
     unk80037D08_arg0_64 *sp18;
 
     sp18 = (unk80037D08_arg0_64 *) obj->unk64;
-    phi_a0 = 1 - func_8001F460(obj, speed, obj);
+    phi_a0 = 1 - func_8001F460(obj, updateRate, obj);
     if (sp18->unk2A > 0) {
         phi_a0 = 0;
     }
@@ -1613,11 +1613,11 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
     }
 }
 
-void obj_loop_vehicleanim(Object *obj, s32 speed) {
+void obj_loop_vehicleanim(Object *obj, s32 updateRate) {
     Object_60_800380F8 *obj60;
     Object *someObj;
 
-    func_8001F460(obj, speed, obj);
+    func_8001F460(obj, updateRate, obj);
     obj60 = (Object_60_800380F8 *) obj->unk60;
     if (obj60 != NULL) {
         if (obj60->unk0 > 0) {
@@ -1638,8 +1638,8 @@ void obj_init_hittester(Object *obj, UNUSED LevelObjectEntry_HitTester *entry) {
     obj->unk4C->unk12 = 0;
 }
 
-void obj_loop_hittester(Object *obj, s32 speed) {
-    func_8001F460(obj, speed, obj);
+void obj_loop_hittester(Object *obj, s32 updateRate) {
+    func_8001F460(obj, updateRate, obj);
 }
 
 void obj_init_dynamic_lighting_object(Object *obj, UNUSED LevelObjectEntry_DynamicLightingObject *entry) {
@@ -1663,7 +1663,7 @@ void obj_init_snowball(Object *obj, UNUSED LevelObjectEntry_Snowball *entry) {
     obj->unk4C->unk12 = 0;
 }
 
-void obj_loop_snowball(Object *obj, s32 speed) {
+void obj_loop_snowball(Object *obj, s32 updateRate) {
     Object_Snowball *obj64 = &obj->unk64->snowball;
     if (obj64->unk24 == 0) {
         if (obj64->unk38 != 0) {
@@ -1677,7 +1677,7 @@ void obj_loop_snowball(Object *obj, s32 speed) {
             update_spatial_audio_position(obj64->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
         }
     }
-    func_8001F460(obj, speed, obj);
+    func_8001F460(obj, updateRate, obj);
 }
 
 UNUSED void func_80038330(UNUSED s32 arg0, UNUSED s32 arg1) {
@@ -1685,12 +1685,12 @@ UNUSED void func_80038330(UNUSED s32 arg0, UNUSED s32 arg1) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_char_select.s")
 
-void obj_loop_animcamera(Object *obj, s32 speed) {
+void obj_loop_animcamera(Object *obj, s32 updateRate) {
     s32 temp_v0;
     s32 phi_v1;
     Object_AnimCamera *obj64;
 
-    temp_v0 = func_8001F460(obj, speed, obj);
+    temp_v0 = func_8001F460(obj, updateRate, obj);
     obj->segment.trans.unk6 |= 0x4000;
     obj64 = &obj->unk64->anim_camera;
     if (temp_v0 == 0) {
@@ -1708,7 +1708,7 @@ void obj_loop_animcamera(Object *obj, s32 speed) {
 UNUSED void func_800387C0(UNUSED s32 arg0, UNUSED s32 arg1) {
 }
 
-void obj_loop_animcar(Object *obj, s32 speed) {
+void obj_loop_animcar(Object *obj, s32 updateRate) {
     Object *someObj;
     s32 temp_v0;
     temp_v0 = obj->action;
@@ -1716,7 +1716,7 @@ void obj_loop_animcar(Object *obj, s32 speed) {
     if (temp_v0 != 0) {
         someObj = get_racer_object(temp_v0 - 1);
     }
-    obj->unk7C.word = func_8001F460(obj, speed, obj);
+    obj->unk7C.word = func_8001F460(obj, updateRate, obj);
     obj->segment.trans.unk6 |= 0x4000;
     if (obj->unk7C.word == 0 && someObj != NULL) {
         Object_AnimCar *someObj64 = &someObj->unk64->anim_car;
@@ -1738,7 +1738,7 @@ void obj_init_infopoint(Object *obj, LevelObjectEntry_InfoPoint *entry) {
     obj->segment.trans.y_rotation = entry->unkB << 10; // Not sure about the values here.
 }
 
-void obj_loop_infopoint(Object *obj, UNUSED s32 speed) {
+void obj_loop_infopoint(Object *obj, UNUSED s32 updateRate) {
     s16 player;
     Object_4C *obj4C;
     Object *playerObj;
@@ -1765,53 +1765,53 @@ void obj_loop_infopoint(Object *obj, UNUSED s32 speed) {
 void obj_init_smoke(UNUSED Object *obj, UNUSED LevelObjectEntry_Smoke *entry) {
 }
 
-void obj_loop_smoke(Object *obj, s32 speed) {
-    f32 temp_f2 = speed;
+void obj_loop_smoke(Object *obj, s32 updateRate) {
+    f32 updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        temp_f2 *= 1.2;
+        updateRateF *= 1.2;
     }
-    obj->segment.trans.x_position += obj->segment.x_velocity * temp_f2;
-    obj->segment.unk18 += speed * 16;
-    obj->segment.trans.y_position += obj->segment.y_velocity * temp_f2;
-    obj->segment.trans.z_position += obj->segment.z_velocity * temp_f2;
-    if (obj->segment.unk18 >= 256) {
+    obj->segment.trans.x_position += obj->segment.x_velocity * updateRateF;
+    obj->segment.visualIndex += updateRate * 16;
+    obj->segment.trans.y_position += obj->segment.y_velocity * updateRateF;
+    obj->segment.trans.z_position += obj->segment.z_velocity * updateRateF;
+    if (obj->segment.visualIndex > 255) {
         gParticlePtrList_addObject(obj);
-        obj->segment.unk18 = 255;
+        obj->segment.visualIndex = 255;
     }
 }
 
 void obj_init_unknown25(UNUSED Object *obj, UNUSED LevelObjectEntry_Unknown25 *entry) {
 }
 
-void obj_loop_unknown25(Object *obj, s32 speed) {
-    obj->segment.unk18 += speed * 8;
-    if (obj->segment.unk18 >= 256) {
+void obj_loop_unknown25(Object *obj, s32 updateRate) {
+    obj->segment.visualIndex += updateRate * 8;
+    if (obj->segment.visualIndex > 255) {
         gParticlePtrList_addObject(obj);
-        obj->segment.unk18 = 255;
+        obj->segment.visualIndex = 255;
     }
 }
 
 void obj_init_wardensmoke(UNUSED Object *obj, UNUSED LevelObjectEntry_WardenSmoke *entry) {
 }
 
-void obj_loop_wardensmoke(Object *obj, s32 speed) {
-    f32 temp_f2;
+void obj_loop_wardensmoke(Object *obj, s32 updateRate) {
+    f32 updateRateF;
 
-    temp_f2 = (f32)speed;
+    updateRateF = (f32) updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        temp_f2 *= 1.2;
+        updateRateF *= 1.2;
     }
-    obj->segment.unk18 += speed * 4;
-    obj->segment.trans.y_position += temp_f2 * 0.25;
-    if (obj->segment.unk18 >= 256) {
+    obj->segment.visualIndex += updateRate * 4;
+    obj->segment.trans.y_position += updateRateF * 0.25;
+    if (obj->segment.visualIndex > 255) {
         gParticlePtrList_addObject(obj);
-        obj->segment.unk18 = 255;
+        obj->segment.visualIndex = 255;
     }
 }
 
 void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry) {
     LevelObjectEntry_BombExplosion *entry2;
-    obj->segment.unk18 = 0;
+    obj->segment.visualIndex = 0;
     obj->segment.trans.scale = 0.5f;
     obj->segment.unk3A = get_random_number_from_range(0, obj->segment.header->numberOfModelIds - 1);
     entry2 = entry; // Needed for a match.
@@ -1862,7 +1862,7 @@ void obj_init_teleport(Object *obj, UNUSED LevelObjectEntry_Teleport *entry) {
     }
 }
 
-void obj_loop_teleport(Object *obj, UNUSED s32 speed) {
+void obj_loop_teleport(Object *obj, UNUSED s32 updateRate) {
     if (obj->action != 0) {
         LevelObjectEntry_Teleport *level_entry = &obj->segment.unk3C_a.level_entry->teleport;
         if (obj->unk4C->unk13 < 0x78) {
@@ -1897,7 +1897,7 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     obj->unk4C->unk12 = 0;
 }
 
-void obj_loop_exit(Object *obj, UNUSED s32 speed) {
+void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
     Object *racerObj;
     Object_Racer *racer;
     s32 numberOfRacers;
@@ -1951,7 +1951,7 @@ void obj_init_cameracontrol(Object *obj, LevelObjectEntry_CameraControl *entry) 
     func_80011390();
 }
 
-void obj_loop_cameracontrol(UNUSED Object *obj, UNUSED s32 speed) {
+void obj_loop_cameracontrol(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
 void obj_init_setuppoint(Object *obj, LevelObjectEntry_SetupPoint *entry) {
@@ -1960,7 +1960,7 @@ void obj_init_setuppoint(Object *obj, LevelObjectEntry_SetupPoint *entry) {
     obj->segment.trans.y_rotation = entry->unkA << 6 << 4; // Not sure about the values here.
 }
 
-void obj_loop_setuppoint(UNUSED Object *obj, UNUSED s32 speed) {
+void obj_loop_setuppoint(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
 void obj_init_dino_whale(Object *obj, UNUSED LevelObjectEntry_Dino_Whale *entry) {
@@ -1970,17 +1970,17 @@ void obj_init_dino_whale(Object *obj, UNUSED LevelObjectEntry_Dino_Whale *entry)
     obj->unk4C->unk12 = 0;
 }
 
-void obj_loop_dino_whale(Object *obj, s32 speed) {
+void obj_loop_dino_whale(Object *obj, s32 updateRate) {
     s32 sp2C;
 
     if (obj->unk78 > 0) {
-        obj->unk78 -= speed;
-        speed *= 2;
+        obj->unk78 -= updateRate;
+        updateRate *= 2;
     } else {
         obj->unk78 = 0;
     }
-    sp2C = obj->segment.unk18;
-    func_8001F460(obj, speed, obj);
+    sp2C = obj->segment.visualIndex;
+    func_8001F460(obj, updateRate, obj);
     func_800113CC(obj, 0, sp2C, 0xAC, 0xAD);
     if (obj->unk4C->unk13 < 0xFF) {
         if (obj->unk78 == 0) {
@@ -2053,7 +2053,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     taj = (Object_NPC *) obj->unk64;
     levelHeader = get_current_level_header();
     obj->unk74 = 0;
-    if (obj->segment.unk18 == 0 && taj->unk4 > 1.0) {
+    if (obj->segment.visualIndex == 0 && taj->unk4 > 1.0) {
         taj->unk4 = 0.0f;
     }
     distance = 0.0f;
@@ -2611,7 +2611,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     if (sp6B != 0) {
         func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0xC, 0, 1.0f, 0);
     }
-    obj->segment.unk18 = taj->unk4 * 1.0;
+    obj->segment.visualIndex = taj->unk4 * 1.0;
     func_80061C0C(obj);
     func_800AFC3C(obj, updateRate);
 }
@@ -2630,7 +2630,7 @@ void play_taj_voice_clip(u16 soundID, s32 interrupt) {
     }
 }
 
-void obj_loop_gbparkwarden(UNUSED Object *obj, UNUSED s32 speed) {
+void obj_loop_gbparkwarden(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
 f32 func_8003ACAC(void) {
@@ -2648,7 +2648,7 @@ void obj_init_checkpoint(Object *obj, LevelObjectEntry_Checkpoint *entry, UNUSED
     func_80011390();
 }
 
-void obj_loop_checkpoint(UNUSED Object *obj, UNUSED s32 speed) {
+void obj_loop_checkpoint(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
 void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
@@ -2755,7 +2755,7 @@ void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry) {
     obj->unk4C->unk12 = 0;
 }
 
-void obj_loop_bonus(Object *obj, UNUSED s32 speed) {
+void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
     Object *racerObj;
     Object_Racer *racer;
     s32 numberOfRacers;
@@ -2829,7 +2829,7 @@ void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) 
     }
 }
 
-void obj_loop_goldenballoon(Object *obj, s32 speed) {
+void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
     LevelObjectEntry *levelEntry;
     Object_4C *obj4C;
     Object_Racer *racer;
@@ -2838,28 +2838,28 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
     s32 flag;
     s32 doubleSpeed;
     Object *racerObj;
-    f32 sp2C;
+    f32 updateRateF;
     f32 speedf;
     s32 isPirated;
 
-    sp2C = speed;
+    updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        sp2C *= 1.2;
+        updateRateF *= 1.2;
     }
     isPirated = FALSE;
     // AntiPiracy check. Seems to set a flag that prevents collecting balloons.
     if (IO_READ(0x284) != 0x240B17D7) {
         isPirated = TRUE;
     }
-    speedf = sp2C;
+    speedf = updateRateF;
     settings = get_settings();
     levelEntry = obj->segment.unk3C_a.level_entry;
     flag = 0x10000 << levelEntry->goldenBalloon.unk8;
     if (settings->courseFlagsPtr[settings->courseId] & flag) {
         if (obj->unk7C.word > 0) {
             obj->unk74 = 2;
-            func_800AFC3C(obj, speed);
-            obj->unk7C.word -= speed;
+            func_800AFC3C(obj, updateRate);
+            obj->unk7C.word -= updateRate;
         } else {
             gParticlePtrList_addObject(obj);
         }
@@ -2867,7 +2867,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
         obj->segment.trans.unk6 |= 0x4000;
         if (obj->action == 0) {
             obj->segment.trans.unk6 &= 0xBFFF;
-            doubleSpeed = speed * 2;
+            doubleSpeed = updateRate * 2;
             if (obj->segment.unk38.half.lower < (255 - doubleSpeed)) {
                 obj->segment.unk38.half.lower += doubleSpeed;
             } else {
@@ -2890,7 +2890,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
                         obj->unk7C.word = 16;
                         obj->unk74 = 2;
                         obj->segment.trans.unk6 |= 0x4000;
-                        func_800AFC3C(obj, speed);
+                        func_800AFC3C(obj, updateRate);
                     }
                 }
             }
@@ -2907,7 +2907,7 @@ void obj_loop_goldenballoon(Object *obj, s32 speed) {
                     obj64->unkC = obj64->unkD;
                 }
             } else {
-                func_8001C6C4((Object_64 *) obj64, obj, sp2C, speedf, 0);
+                func_8001C6C4((Object_64 *) obj64, obj, updateRateF, speedf, 0);
             }
         }
     }
@@ -3305,7 +3305,7 @@ void obj_init_rampswitch(Object *obj, LevelObjectEntry_RampSwitch *entry) {
     obj->action = entry->unk8;
 }
 
-void obj_loop_rampswitch(Object *obj, UNUSED s32 speed) {
+void obj_loop_rampswitch(Object *obj, UNUSED s32 updateRate) {
     if (obj->unk4C->unk13 < 0x2D) {
         func_8001E344(obj->action);
     }
@@ -3315,7 +3315,7 @@ void obj_loop_rampswitch(Object *obj, UNUSED s32 speed) {
 void obj_init_seamonster(UNUSED Object *obj, UNUSED LevelObjectEntry_SeaMonster *entry) {
 }
 
-void obj_loop_seamonster(UNUSED Object *obj, UNUSED s32 speed) {
+void obj_loop_seamonster(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
 void obj_init_fogchanger(Object *obj, LevelObjectEntry_FogChanger *entry) {
@@ -3333,7 +3333,7 @@ void obj_init_skycontrol(Object *obj, LevelObjectEntry_SkyControl *entry) {
     obj->unk7C.word = entry->unk9;
 }
 
-void obj_loop_skycontrol(Object *obj, UNUSED s32 speed) {
+void obj_loop_skycontrol(Object *obj, UNUSED s32 updateRate) {
     if (obj->unk4C->unk13 < obj->unk7C.word) {
         func_80028044(obj->action);
     }
@@ -3347,11 +3347,11 @@ void obj_init_ainode(Object *obj, LevelObjectEntry_AiNode *entry) {
     func_8001D1AC();
 }
 
-void obj_loop_ainode(UNUSED Object *obj, UNUSED s32 speed) {
+void obj_loop_ainode(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
 void obj_init_treasuresucker(Object *obj, LevelObjectEntry_TreasureSucker *entry) {
-    obj->segment.unk18 = 0x78;
+    obj->segment.visualIndex = 120;
     obj->action = (entry->unk8 - 1) & 3;
 }
 
@@ -3445,20 +3445,20 @@ void obj_loop_flycoin(Object *obj, s32 updateRate) {
             play_sound_global(SOUND_SELECT, NULL);
         }
     }
-    obj->segment.unk18 += updateRate * 8;
+    obj->segment.visualIndex += updateRate * 8;
 }
 
 void obj_init_bananacreator(Object *obj, UNUSED LevelObjectEntry_BananaCreator *entry) {
-    obj->segment.unk18 = 100;
+    obj->segment.visualIndex = 100;
 }
 
-void obj_loop_bananacreator(Object *obj, s32 speed) {
+void obj_loop_bananacreator(Object *obj, s32 updateRate) {
   LevelObjectEntryCommon newEntry;
   Object *newBananaObj;
   Object_Banana *newBananaObj64;
 
   if (obj->unk7C.word != 0) {
-    obj->unk78 -= speed;
+    obj->unk78 -= updateRate;
   }
 
   if (obj->unk78 <= 0) {
@@ -3517,7 +3517,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
         updateRateF *= 1.2;
     }
     banana = (Object_Banana *) obj->unk64;
-    obj->segment.unk18 += updateRate * 8;
+    obj->segment.visualIndex += updateRate * 8;
     obj78 = (Object_78_Banana *) &obj->unk78;
     if (obj->unk78 == -1) {
         obj->segment.trans.unk6 |= 0x4000; 
@@ -3706,7 +3706,7 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate) {
                 }
             }
         }
-        obj->segment.unk18 += 8 * updateRate;
+        obj->segment.visualIndex += 8 * updateRate;
     }
     if (obj->unk7C.word > 0) {
         obj->unk7C.word -= updateRate;
@@ -3733,7 +3733,7 @@ void obj_init_worldkey(Object *obj, LevelObjectEntry_WorldKey *entry) {
 /**
  * Rotates the key and checks to see if the player grabbed it.
  */
-void obj_loop_worldkey(Object *worldKeyObj, s32 speed) {
+void obj_loop_worldkey(Object *worldKeyObj, s32 updateRate) {
     Settings *settings;
     Object *playerObj;
 
@@ -3758,7 +3758,7 @@ void obj_loop_worldkey(Object *worldKeyObj, s32 speed) {
     }
 
     // Rotate world key
-    worldKeyObj->segment.trans.y_rotation += speed * 256;
+    worldKeyObj->segment.trans.y_rotation += updateRate * 0X100;
 }
 
 void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) {
@@ -3819,7 +3819,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_weaponballoon.s")
 void obj_init_wballoonpop(UNUSED Object *obj, UNUSED LevelObjectEntry_WBalloonPop *entry) {
 }
 
-void obj_loop_wballoonpop(UNUSED Object *obj, UNUSED s32 speed) {
+void obj_loop_wballoonpop(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
 void obj_init_weapon(Object *obj, UNUSED LevelObjectEntry_Weapon *entry) {
@@ -3831,18 +3831,18 @@ void obj_init_weapon(Object *obj, UNUSED LevelObjectEntry_Weapon *entry) {
     obj->unk7C.word = 0;
 }
 
-void obj_loop_weapon(Object *obj, s32 speed) {
+void obj_loop_weapon(Object *obj, s32 updateRate) {
     Object_Weapon *obj64 = &obj->unk64->weapon;
     switch (obj64->weaponID) {
         case 0:
         case 1:
-            func_8003E694(obj, speed);
+            func_8003E694(obj, updateRate);
             break;
         case 2:
         case 3:
         case 10:
         case 11:
-            func_8003F2E8(obj, speed);
+            func_8003F2E8(obj, updateRate);
             break;
     }
     return;
@@ -4021,11 +4021,11 @@ void obj_init_buoy_pirateship(Object *obj, UNUSED LevelObjectEntry_Buoy_PirateSh
     obj->unk4C->unk12 = 0;
 }
 
-void obj_loop_buoy_pirateship(Object *obj, s32 speed) {
+void obj_loop_buoy_pirateship(Object *obj, s32 updateRate) {
     if (obj->unk64 != NULL) {
         obj->segment.trans.y_position = func_800BEEB4(obj->unk64);
     }
-    obj->segment.unk18 += speed * 8;
+    obj->segment.visualIndex += updateRate * 8;
 }
 
 void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
@@ -4120,7 +4120,7 @@ void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry) {
  * When passed through by the player, it will update the current weather settings.
  * Can be used to stop, start or change the intensity of the current weather.
 */
-void obj_loop_weather(Object *obj, UNUSED s32 speed) {
+void obj_loop_weather(Object *obj, UNUSED s32 updateRate) {
   s32 currViewport;
   s32 numberOfObjects;
   Object_Racer *curObj64;
@@ -4294,14 +4294,14 @@ void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry) {
     obj->unk78 = entry->unkA;
 }
 
-void obj_loop_bubbler(Object *obj, s32 speed) {
+void obj_loop_bubbler(Object *obj, s32 updateRate) {
     if (obj->unk78 >= get_random_number_from_range(0, 0x400)) {
         obj->unk74 = 1;
     } else {
         obj->unk74 = 0;
     }
     if (get_number_of_active_players() < 2) {
-        func_800AFC3C(obj, speed);
+        func_800AFC3C(obj, updateRate);
     }
 }
 
@@ -4313,13 +4313,13 @@ void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry) {
 void obj_init_unknown94(UNUSED Object *obj, UNUSED LevelObjectEntry_Unknown94 *entry, UNUSED s32 arg2) {
 }
 
-void obj_loop_unknown94(UNUSED Object *obj, s32 UNUSED speed) {
+void obj_loop_unknown94(UNUSED Object *obj, s32 UNUSED updateRate) {
 }
 
 void obj_init_rangetrigger(UNUSED Object *obj, UNUSED LevelObjectEntry_RangeTrigger *entry) {
 }
 
-void obj_loop_rangetrigger(Object *obj, s32 speed) {
+void obj_loop_rangetrigger(Object *obj, s32 updateRate) {
     UNUSED s32 temp;
     LevelObjectEntry_RangeTrigger *level_entry;
     unk80042178 sp20;
@@ -4330,7 +4330,7 @@ void obj_loop_rangetrigger(Object *obj, s32 speed) {
     } else {
         obj->unk74 = 0;
     }
-    func_800AFC3C(obj, speed);
+    func_800AFC3C(obj, updateRate);
 }
 
 void obj_init_frog(Object *obj, LevelObjectEntry_Frog *entry) {
@@ -4467,7 +4467,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
             frog->unk16 = get_random_number_from_range(0, 300);
             frog->unk18 = 0;
         }
-        obj->segment.unk18 = ((32 - frog->unk18) << 3) / 3;
+        obj->segment.visualIndex = ((32 - frog->unk18) << 3) / 3;
         cosine = (coss_f(frog->unk18 << 10) + 1.0f) * 0.5f;
         obj->segment.trans.x_position = frog->unk20;
         obj->segment.trans.z_position = frog->unk24;
@@ -4523,18 +4523,18 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
     }
 }
 
-void obj_loop_pigrocketeer(Object *obj, s32 speed) {
+void obj_loop_pigrocketeer(Object *obj, s32 updateRate) {
     Object *someObj;
     Object_Wizpig2 *obj64;
 
-    func_8001F460(obj, speed, obj);
+    func_8001F460(obj, updateRate, obj);
     someObj = func_8000BF44(-1);
 
     if (someObj != NULL) {
         obj64 = &someObj->unk64->wizpig2;
         someObj->action = 0;
         if (obj64 != 0) {
-            obj64->unk72 += speed;
+            obj64->unk72 += updateRate;
             obj64->unk70 = 2;
             obj64->unk74 = 1.0f;
             func_8000B750(obj, -1, 2, 1, 1);
@@ -4610,8 +4610,8 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
     }
 }
 
-void obj_loop_wizghosts(Object *obj, s32 speed) {
-    func_8001F460(obj, speed, obj);
-    obj->segment.unk18 = (obj->segment.unk18 + (speed * 8)) & 0xFF;
+void obj_loop_wizghosts(Object *obj, s32 updateRate) {
+    func_8001F460(obj, updateRate, obj);
+    obj->segment.visualIndex = (obj->segment.visualIndex + (updateRate * 8)) & 0xFF;
 }
 
