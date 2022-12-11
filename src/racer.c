@@ -218,7 +218,335 @@ s16 D_8011D5B8;
 
 /******************************/
 
+#ifdef NON_MATCHING
+void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
+    s32 numRacers;
+    u8 *miscAsset4;
+    f32 sp90;
+    s32 var_v0;
+    f32 temp_f12;
+    s16 index;
+    s8 sp3F;
+    f32 sp94;
+    s16 temp_v1_2;
+    s16 var_t0;
+    Object_64 *sp5C;
+    s16 var_t5;
+    s16 racerID;
+    LevelHeader *header;
+    Object **racerGroup;
+    s8 balloonType;
+    s16 temp_v0;
+    f32 *miscAsset3;
+    s16 sp3C;
+    s16 sp38;
+    Object_64 *sp58;
+    TempStruct5 *sp54;
+    s16 sp3A;
+    f32 temp_f0;
+    s16 sp6E;
+    f32 var_f14;
+    s8 *miscAsset2;
+    s8 *miscAsset1;
+    s16 sp36;
+    Object *temp_v0_3;
+    s16 var_t4;
+    s16 temp_v0_10;
+
+    sp6E = racer->unk1CA;
+    miscAsset1 = (s8 *) get_misc_asset(MISC_ASSET_UNK01);
+    miscAsset2 = (s8 *) get_misc_asset(MISC_ASSET_UNK02);
+    header = get_current_level_header();
+    racerGroup = get_racer_objects_by_position(&numRacers);
+    sp54 = func_8006C18C();
+    if (racer->unk1C6 > 0) {
+        racer->unk1C6 -= updateRate;
+    } else {
+        racer->unk1C6 = 0;
+    }
+    if (func_8001AE44() != 0) {
+        gCurrentRacerInput |= A_BUTTON;
+    } else {
+        index = 0;
+        var_t5 = 0;
+        var_t0 = 0;
+        var_t4 = -1;
+        for (var_v0 = 1; index < numRacers; index++) {
+            if ((Object_Racer *) racerGroup[index]->unk64 == racer) {
+                var_v0 = FALSE;
+                racerID = index;
+            }
+            if (racerGroup[index]->unk64->racer.playerIndex == PLAYER_COMPUTER) {
+                var_t0++;
+                if (var_v0) {
+                    var_t5++;
+                }
+            } else if (var_t4 == -1) {
+                var_t4 = index;
+            }
+        }
+        if (var_t4 == -1) {
+            var_t4 = 0;
+        }
+        if (var_t0 != 0) {
+            temp_v0 = func_80023568();
+            if (gRaceStartTimer == 0) {
+                if (racer->unk1D6 != 4) {
+                    temp_v1_2 = racerID - 1;
+                    if (racer->unk20B < racerID && temp_v1_2 >= 0 && temp_v1_2 < numRacers) {
+                        if (racerGroup[temp_v1_2]->unk64->racer.playerIndex != PLAYER_COMPUTER) {
+                            if (temp_v0 == FALSE) {
+                                play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 3);
+                            } else {
+                                func_8005CA84(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 5);
+                            }
+                            play_random_character_voice(racerGroup[temp_v1_2], SOUND_VOICE_CHARACTER_POSITIVE, 8, 2);
+                        }
+                    }
+                    temp_v1_2 = racerID + 1;
+                    if (racer->unk20B < racerID && temp_v1_2 >= 0 && temp_v1_2 < numRacers) {
+                        if (racerGroup[temp_v1_2]->unk64->racer.playerIndex != PLAYER_COMPUTER) {
+                            play_random_character_voice(racerGroup[racerID + 1], SOUND_VOICE_CHARACTER_NEGATIVE, 8, 2);
+                            if (temp_v0 == FALSE) {
+                                play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 3);
+                            } else {
+                                func_8005CA84(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 3);
+                            }
+                        }
+                    }
+                }
+            }
+            racer->unk20B = racerID;
+            sp5C = NULL;
+            sp94 = 0.0f;
+            sp90 = 0.0f;
+            temp_v0_3 = func_8001B7A8((Object *) racer, 1, &sp94);
+            if (temp_v0_3 != NULL) {
+                sp5C = temp_v0_3->unk64;
+            }
+            sp58 = NULL;
+            temp_v0_3 = func_8001B7A8((Object *) racer, -1, &sp90);
+            if (temp_v0_3 != NULL) {
+                sp58 = temp_v0_3->unk64;
+            }
+            if (sp5C != NULL) {
+                sp3F = sp5C->racer.characterId;
+            }
+            if (var_t0 < 7 && get_trophy_race_world_id() == 0 && func_80023568() == 0 && func_8002341C() == 0) {
+                if (gRaceStartTimer == 100) {
+                    racer->aiSkill = get_random_number_from_range(AI_MASTER, AI_HARD);
+                }
+            } else {
+                if (get_trophy_race_world_id() != 0) {
+                    racer->aiSkill = header->unk16[racer->characterId];
+                } else {
+                    racer->aiSkill = header->unkC[racer->characterId];
+                }
+            }
+            if (D_8011D544 != 0.0f) {
+                racer->unk1CA = D_800DCDA0[racer->unk1AE];
+            }
+            if ((f32) (s16) ((racer->aiSkill - 2) << 2) <= 300.0f - D_8011D544) {
+                gCurrentRacerInput |= A_BUTTON;
+            }
+            miscAsset4 = (u8 *) get_misc_asset(MISC_ASSET_UNK0C);
+            if (racer->balloon_level < 3) {
+                balloonType = miscAsset4[racer->balloon_type * 3 + racer->balloon_level];
+            } else {
+                balloonType = racer->balloon_type;
+            }
+            sp38 = (((sp54->unk8[1][1] - sp54->unk8[1][0]) * (7 - var_t5)) / 7) + sp54->unk8[1][0];
+            sp36 = (((sp54->unk8[2][1] - sp54->unk8[2][0]) * (7 - var_t5)) / 7) + sp54->unk8[2][0];
+            sp3A = (((sp54->unk8[0][1] - sp54->unk8[0][0]) * (7 - var_t5)) / 7) + sp54->unk8[0][0];
+            sp3C = (((sp54->unk8[3][1] - sp54->unk8[3][0]) * (7 - var_t5)) / 7) + sp54->unk8[3][0];
+            if (racer->unk209 & 1) {
+                if (racer->unk201 == 0) {
+                    if (racer->balloon_level == 0) {
+                        if (func_80044450((s16) (s32) sp38)) {
+                            racer->balloon_level++;
+                        }
+                    }
+                    if (var_t4 == 0 && var_t5 < 3) {
+                        if (func_80044450(sp3C)) {
+                            racer->balloon_type = 0;
+                        }
+                    }
+                }
+                if (racer->boostTimer == 0 && D_800DCD90[balloonType] == 4) {
+                    if (func_80044450(sp3C)) {
+                        gCurrentButtonsReleased |= Z_TRIG;
+                    }
+                }
+                if (racer->balloon_quantity != 0) {
+                    if (D_800DCD90[balloonType] == 1) {
+                        if (sp5C != NULL && sp5C->racer.playerIndex == PLAYER_COMPUTER) {
+                            if (var_t4 < 4) {
+                                racer->unk1C6 = miscAsset2[racer->characterId] * 60;
+                                racer->unk1C9 = 4;
+                            }
+                        } else {
+                            if (func_80044450(sp36) && var_t4 < 2) {
+                                racer->unk1C6 = miscAsset2[racer->characterId] * 60;
+                                racer->unk1C9 = 4;
+                            }
+                        }
+                    }
+                    if (D_800DCD90[balloonType] == 2) {
+                        if (sp58 != NULL && sp58->racer.playerIndex == PLAYER_COMPUTER) {
+                            if (var_t4 < 4) {
+                                racer->unk1C6 = miscAsset2[racer->characterId] * 60;
+                                racer->unk1C9 = 5;
+                            }
+                        } else {
+                            if (func_80044450(sp36) && var_t4 < 2) {
+                                racer->unk1C6 = miscAsset2[racer->characterId] * 60;
+                                racer->unk1C9 = 5;
+                            }
+                        }
+                    }
+                }
+                racer->unk209 &= (0x8000 | 0x4000 | 0x2000 | 0x1000 | 0x800 | 0x400 | 0x200 | 0x100 | 0x80 | 0x40 | 0x20 | 0x10 | 0x8 | 0x4 | 0x2);
+            }
+            if (racer->boostTimer != 0) {
+                if (!(racer->unk209 & 2)) {
+                    if (func_80044450(sp3A)) {
+                        racer->unk209 |= 4;
+                    }
+                    racer->unk209 |= 2;
+                }
+                if (racer->unk209 & 4) {
+                    gCurrentRacerInput &= 0xFFFF7FFF;
+                }
+            } else {
+                racer->unk209 &= ~2;
+                if (racer->velocity > -12.0) {
+                    racer->unk209 = (u16) (racer->unk209 & 0xFFFB);
+                }
+            }
+            if (racer->unk209 & 4) {
+                gCurrentRacerInput &= 0xFFFF7FFF;
+            }
+            if (racer->unk1C6 == 0) {
+                if (racer->unk1C9 == 4 || racer->unk1C9 == 5) {
+                    gCurrentButtonsReleased |= Z_TRIG;
+                }
+                racer->unk1C9 = 0;
+                if (sp58 != NULL && sp58->racer.playerIndex != PLAYER_COMPUTER && sp90 < 200.0f && var_t5 != 0 && var_t4 < 3 && miscAsset1[racer->characterId + (sp3F * 10)] < 5) {
+                    racer->unk1C9 = 5;
+                }
+                if (D_8011D544 == 0.0f) {
+                    racer->unk1CA = D_800DCDA8[var_t5];
+                    if (func_80044450(sp3C)) {
+                        racer->unk1CA -= 1;
+                    }
+                }
+                racer->unk1C6 = 300;
+            }
+            if (7 - var_t5 == 7 && sp58 != NULL && sp90 < -2500.0) {
+                racer->unk1CA = 1;
+                racer->unk209 = (u16) (racer->unk209 & 0xFFFB);
+            }
+            if (gRaceStartTimer == 0) {
+                temp_f12 = sqrtf(((sp54->unk0 * 0.025) + 0.561) / 0.004);
+                temp_f0 = sqrtf(((sp54->unk4 * 0.025) + 0.561) / 0.004);
+                temp_f12 += ((temp_f0 - temp_f12) / 7.0f) * (7 - var_t5);
+                if (racer->unk1CA > 1) {
+                    temp_f12 += (f32) (racer->unk1CA - 1) * 0.2;
+                }
+                racer->unk124 = (((temp_f12 * temp_f12) * 0.004) - 0.595) / 0.025;
+            }
+            if (sp5C != NULL && racer->unk1CA == 3 && sp94 < 500.0) {
+                racer->unk1CA = 2;
+            }
+            switch (racer->unk1C9) {
+            case 0:
+                if (sp5C != NULL && sp5C->racer.playerIndex == PLAYER_COMPUTER && sp5C->racer.unk1C9 == 0) {
+                    if (racer->unk1CA == sp5C->racer.unk1CA && sp94 < 100.0) {
+                        racer->unk1CA++;
+                        if (racer->unk1CA > 3) {
+                            racer->unk1CA = 3;
+                        }
+                    }
+                }
+                break;
+            case 4:
+                if (sp5C != NULL) {
+                    racer->unk1BA = sp5C->racer.unk1BA;
+                }
+                break;
+            case 5:
+                if (sp58 != NULL) {
+                    racer->unk1BA = sp58->racer.unk1BA;
+                }
+                break;
+            }
+            temp_v0_10 = (u16) func_8002341C();
+            if (temp_v0_10 != 0 || temp_v0 != 0) {
+                racer->unk1CA = 0;
+                racer->unk1C9 = 0;
+                if (temp_v0 != 0) {
+                    miscAsset3 = (f32 *) get_misc_asset(0x12);
+                    temp_v0_10 = temp_v0;
+                } else {
+                    miscAsset3 = (f32 *) get_misc_asset(0x11);
+                }
+                racer->unk124 = miscAsset3[temp_v0_10];
+            }
+            if (temp_v0 != 0) {
+                if (gRaceStartTimer != 0) {
+                    D_8011D5B8 = 900;
+                } else {
+                    D_8011D5B8 -= updateRate;
+                    if (D_8011D5B8 < 0) {
+                        D_8011D5B8 = 0;
+                        if (racerID == 1 && sp94 > 650.0) {
+                            racer->unk124 += 2.0;
+                        }
+                    } else {
+                        var_f14 = racer->unk124;
+                        if (D_8011D5B8 > 720) {
+                            var_f14 = racer->unk124 + 5.0;
+                        } else if (racerID == 1 || sp90 < 200.0) {
+                            // This section isn't close to right
+                            var_f14 = racer->unk124 + 2.5625;
+                        }
+                        if (racer->unk124 < var_f14) {
+                            racer->unk124 = var_f14;
+                        }
+                    }
+                }
+                if (racer->raceFinished != FALSE) {
+                    racer->boostTimer = 0;
+                    racer->unk213 = 0;
+                    gCurrentRacerInput &= 0xFFFF7FFF;
+                    gCurrentRacerInput |= B_BUTTON;
+                    if (racer->velocity > -0.3) {
+                        gCurrentRacerInput |= A_BUTTON;
+                        gCurrentStickX = 0;
+                    }
+                }
+            }
+            if (racer->unk214 != 0) {
+                racer->unk1CA = sp6E;
+            }
+            if (racer->unk1BA > 64) {
+                racer->unk1BA = 64;
+            }
+            if (racer->unk1BC > 40) {
+                racer->unk1BC = 40;
+            }
+            if (racer->unk1BA < -64) {
+                racer->unk1BA = -64;
+            }
+            if (racer->unk1BC < -40) {
+                racer->unk1BC = -40;
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
+#endif
 
 void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate) {
     TempStruct5 *temp_v0;
@@ -1771,7 +2099,485 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 yRotation, s1
     }
 }
 
+#ifdef NON_MATCHING
+typedef struct unk_Object_60 {
+    s32 count;
+    ObjectTransform *transforms[1]; // Array of ObjectTransform pointers.
+} unk_Object_60;
+
+void func_80050A28(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF) {
+    s32 soundID;
+    f32 scale;
+    f32 velocityDiff;
+    s32 sp68; // 68
+    s32 surfaceType;
+    s32 sp60; // 60
+    s32 velocityS;
+    s32 sp58; // 58
+    s8 stoneWheels;
+    s8 steerAngle;
+    f32 velSquare; // 50
+    s32 SteeringVel;
+    f32* miscAsset;
+    f32 traction;
+    f32 tempVel;
+    f32 surfaceTraction;
+    ObjectTransform *temp_v0;
+    f32 topSpeed; // 78
+    s32 i;
+
+    sp58 = 0;
+    // Set the square value of the current forward velocity
+    velSquare = racer->velocity * racer->velocity;
+    if (racer->velocity < 0.0f) {
+        velSquare = -velSquare;
+    }
+    racer->unk84 = 0.0f;
+    racer->unk88 = 0.0f;
+    // Apply bobbing if there's no dialogue camera rotation active.
+    if (D_8011D586 == 0) {
+        scale = (f32) D_800DCDB0[0][racer->unk1E7 & 0x1F] * 0.024999999999999998;
+        racer->carBobX = -racer->unkA0 * scale;
+        racer->carBobY = -racer->unkA4 * scale;
+        racer->carBobZ = -racer->pitch * scale;
+        if (obj->unk60 != NULL) {
+            for (i = 0; i < ((unk_Object_60 *) obj->unk60)->count; i++) {
+                scale = 1.0f / obj->segment.trans.scale;
+                temp_v0 = ((unk_Object_60 *) obj->unk60)->transforms[i];
+                temp_v0->x_position = (f32) (-racer->carBobX * scale);
+                temp_v0->y_position = (f32) (-racer->carBobY * scale);
+                temp_v0->z_position = (f32) (-racer->carBobZ * scale);
+            } 
+        }
+    } else {
+        racer->carBobX = 0.0f;
+        racer->carBobY = 0.0f;
+        racer->carBobZ = 0.0f;
+    }
+    // If moving forward, active throttle will set this var to 60, otherwise it's stuck at 0
+    if (racer->velocity > -0.5) {
+        if (gCurrentRacerInput & A_BUTTON) {
+            racer->unk1FB = 60;
+        } else {
+            racer->unk1FB = 0;
+        }
+    } else if (!(gCurrentRacerInput & A_BUTTON)) {
+        racer->unk1FB = 0;
+    }
+    if (racer->unk1FB > 0) {
+        racer->unk1FB -= updateRate;
+    } else {
+        racer->unk1FB = 0;
+    }
+    sp60 = FALSE;
+    // If currently braking, do something idk
+    if (racer->brake > 0.4) {
+        if (racer->velocity < -2.0 && racer->raceFinished == FALSE) {
+            func_80072348(racer->playerIndex, 1);
+        }
+        sp60 = TRUE;
+        if (gCurrentPlayerIndex >= PLAYER_ONE) {
+            if (gNumViewports < FOUR_PLAYERS) {
+                if (racer->drift_direction > 0) {
+                    obj->unk74 |= 0x1000 | 0x400;
+                } else if (racer->drift_direction < 0) {
+                    obj->unk74 |= 0x2000 | 0x800;
+                } else {
+                    obj->unk74 |= 0x2000 | 0x1000;
+                }
+            } else {
+                sp58 = 1;
+            }
+        }
+        if ((racer->unk1E7 & 7) < 2) {
+            racer->unk1D1 = get_random_number_from_range(-25, 25);
+        }
+        gCurrentStickX += racer->unk1D1;
+    }
+    // If moving fast enough, enable drifting if the R button is held
+    if (racer->drifting == 0 && racer->velocity > 2.0 && gCurrentRacerInput & R_TRIG && (gCurrentStickX > 50 || gCurrentStickX < -50)) {
+        if (gCurrentStickX > 0) {
+            racer->drifting = 1;
+        } else {
+            racer->drifting = -1;
+        }
+    }
+    // Handle drifting
+    if (racer->drifting) {
+        gCurrentRacerInput = (gCurrentRacerInput & 0xFFFF7FFF);
+        gCurrentRacerInput |= B_BUTTON;
+        gCurrentStickY = -70;
+        sp60 = TRUE;
+        if (gNumViewports < FOUR_PLAYERS) {
+            obj->unk74 |= 0x2000 | 0x1000 | 0x800 | 0x400;
+        } else {
+            sp58 = 1;
+        }
+        racer->y_rotation_vel += updateRate * 0x600 * racer->drifting;
+        if (racer->drifting > 0) {
+            if (racer->y_rotation_vel < 0 && racer->y_rotation_vel >= 0) {
+                racer->drifting = 0;
+                racer->y_rotation_vel = 0x7FFF;
+            }
+        } else if (racer->y_rotation_vel > 0 && racer->y_rotation_vel <= 0) {
+            racer->drifting = 0;
+            racer->y_rotation_vel = -0x8000;
+        }
+        if (racer->drifting == 0) {
+            racer->unk1A0 += racer->y_rotation_vel;
+            racer->unk19E = racer->y_rotation_vel;
+            racer->y_rotation_vel = 0;
+            racer->velocity = -racer->velocity;
+        }
+    }
+    // Apply some flags when drifting
+    if (racer->drift_direction != 0 && gCurrentPlayerIndex >= PLAYER_ONE) {
+        if (gNumViewports < FOUR_PLAYERS) {
+            if (racer->drift_direction > 0) {
+                obj->unk74 |= 0x1000 | 0x400;
+            } else {
+                obj->unk74 |= 0x2000 | 0x800;
+            }
+        } else {
+            sp58 = 1;
+        }
+    }
+    // Decide which way to drift when the R button is held
+    if (racer->drift_direction == 0 && gCurrentRacerInput & R_TRIG && racer->velocity < -3.0 && (gCurrentStickX > 15 || gCurrentStickX < -15)) {
+        if (gCurrentStickX < 0) {
+            racer->drift_direction = -1;
+        }
+        if (gCurrentStickX > 0) {
+            racer->drift_direction = 1;
+        }
+    }
+    // Disable drifting if going too slow
+    if (racer->velocity > -2.0) {
+        racer->drift_direction = 0;
+    }
+    // Get top speed value
+    topSpeed = handle_racer_top_speed(obj, racer);
+    // If currently drifting, apply a minor speed multiplier and tilt the natural steering towards the drift direction
+    if (gCurrentRacerInput & R_TRIG && racer->drift_direction != 0) {
+        topSpeed *= 1.1;
+        SteeringVel = (gCurrentStickX >> 1) + (racer->drift_direction * 30);
+        if (SteeringVel > 75) {
+            SteeringVel = 75;
+        }
+        if (SteeringVel < -75) {
+            SteeringVel = -75;
+        }
+    } else {
+        racer->drift_direction = 0;
+    }
+    i = ((racer->unk10C - (racer->drift_direction << 13)) * updateRate) >> 4;
+    racer->unk10C -= i;
+    // racer->unk10C -= ((racer->unk10C - (racer->drift_direction << 13)) * updateRate) >> 4;
+    // sounds for drifting and sliding
+    if (!(racer->y_rotation_vel <= 0x1800 && racer->y_rotation_vel >= -0x1800 && 
+        racer->drift_direction == 0 && racer->drifting == 0 && racer->unk1FB == 0)) {
+        sp60 = 1;
+        if (racer->unk1FB != 0 && racer->raceFinished == FALSE) {
+            func_80072348(racer->playerIndex, 0);
+        }
+        if (racer->y_rotation_vel < 0) {
+            obj->unk74 |= 0x1000 | 0x400;
+        } else {
+            obj->unk74 |= 0x2000 | 0x800;
+        }
+        if (racer->drift_direction != 0 || racer->drifting != 0 || racer->unk1FB != 0) {
+            if (racer->unk10 == 0) {
+                play_sound_spatial(SOUND_CAR_SLIDE, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, (s32 **) &racer->unk10);
+            } else {
+                func_80009B7C((void *) racer->unk10, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+            }
+            if (racer->unk14) {
+                func_8000488C(racer->unk14);
+            }
+        } else {
+            if (racer->unk10) {
+                func_8000488C(racer->unk10);
+            }
+        }
+    } else {
+        if (racer->unk10) {
+            func_8000488C(racer->unk10);
+        }
+        if (racer->unk14) {
+            func_8000488C(racer->unk14);
+        }
+    }
+    // Velocity of steering input
+    steerAngle = racer->steerAngle;
+    velocityS = 6;
+    // Turn twice as fast under braking (because that's totally how cars work)
+    if (gCurrentRacerInput & B_BUTTON) {
+        velocityS = 12;
+    }
+    // Turn thrice as fast when drifting and braking.
+    if (gCurrentRacerInput & B_BUTTON && racer->drift_direction != 0) {
+        velocityS = 18;
+    }
+    // Multiply steering velocity with angle
+    SteeringVel = 0;
+    if (racer->velocity < -0.3) {
+        SteeringVel = steerAngle * velocityS;
+    }
+    if (racer->velocity > 0.3) {
+        SteeringVel = -steerAngle * velocityS;
+    }
+    // Set final turn velocity by taking the steering velocity and multiplying it by the handling stat of the character. 
+    racer->unk1A0 -= (s32) (((SteeringVel * updateRate) >> 1) * gCurrentRacerHandlingStat);
+    // Now steer the car.
+    handle_car_steering(racer);
+    // Set base grip level to 0.
+    traction = 0.0f;
+    surfaceType = SURFACE_DEFAULT;
+    // If reversing, flip the steering
+    if (racer->velocity < -4.0) {
+        if (gCurrentCarSteerVel > 0x1400 || (racer->drift_direction != 0 && gCurrentCarSteerVel > 0)) {
+            SteeringVel = racer->unk1E7 & 7;
+            if (SteeringVel >= 4) {
+                SteeringVel = 7 - SteeringVel;
+            }
+            gCurrentCarSteerVel += SteeringVel * 0x190;
+        } else if (gCurrentCarSteerVel < -0x1400 || (racer->drift_direction != 0 && gCurrentCarSteerVel < 0)) {
+            SteeringVel = racer->unk1E7 & 7;
+            if (SteeringVel >= 4) {
+                SteeringVel = 7 - SteeringVel;
+            }
+            gCurrentCarSteerVel -= SteeringVel * 0x190;
+        }
+    }
+    surfaceTraction = 0.0f;
+    velocityDiff = 0.0f;
+    sp68 = 0; // Number of wheels contacting grass or sand
+    stoneWheels = 0; // Number of wheels contacting the stone surface type
+    // Iterate through each wheel and find which surface they're on.
+    for (i = 0; i < 4; i++) {
+        if (racer->wheel_surfaces[i] != SURFACE_NONE) {
+            if (get_filtered_cheats() & CHEAT_FOUR_WHEEL_DRIVER) {
+                traction += gSurfaceTractionTable[0];
+            } else {
+                traction += gSurfaceTractionTable[racer->wheel_surfaces[i]];
+            }
+            surfaceTraction += D_800DCBE8[racer->wheel_surfaces[i]];
+            sp68 += D_800DCC34[racer->wheel_surfaces[i]];
+            if (surfaceType < racer->wheel_surfaces[i]) {
+                surfaceType = racer->wheel_surfaces[i];
+            }
+            if (racer->wheel_surfaces[i] == SURFACE_STONE) {
+                stoneWheels++;
+            }
+            velocityDiff += 1.0f;
+        }
+    }
+    // With multiple contact patches, average the surface properties across.
+    if (velocityDiff > 1.0f) {
+        i--; // fakematch
+        traction /= velocityDiff;
+        surfaceTraction /= velocityDiff;
+    }
+    // If on the Taj pad and the horn is honked, summon Taj
+    if (racer->playerIndex == PLAYER_ONE && racer->unk1E2 != 0 && surfaceType == SURFACE_TAJ_PAD && gCurrentButtonsPressed & Z_TRIG) {
+        D_8011D582 = 2;
+    }
+    // Set grip levels to basically zero when floating on water.
+    if (racer->buoyancy != 0.0) {
+        traction = 0.02f;
+        surfaceTraction = 0.0f;
+    }
+    // no clue :) 
+    if (surfaceType == SURFACE_SAND && racer->velocity < -2.0 && racer->raceFinished == FALSE) {
+        func_80072348(racer->playerIndex, 0);
+    }
+    miscAsset = (f32 *) get_misc_asset(MISC_ASSET_UNK08);
+    // Degrade lateral velocity
+    if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
+        if (!(racer->velocity > -2.0) && racer->drift_direction == 0 && racer->raceFinished == FALSE) {
+            racer->lateral_velocity += (racer->velocity * gCurrentStickX) / miscAsset[racer->characterId];
+            if (racer->playerIndex == PLAYER_COMPUTER) {
+                racer->lateral_velocity *= 0.9;
+            }
+        }
+    }
+    if (racer->velocity > -3.0) {
+        tempVel = -(racer->velocity + 2.0);
+        if (tempVel < 0.0) {
+            tempVel = 0.0f;
+        }
+        gCurrentCarSteerVel *= tempVel;
+        surfaceTraction = ((1.0 - tempVel) * 0.7) + (surfaceTraction * tempVel);
+    }
+    // Multiply current velocity by the surface grip levels.
+    racer->lateral_velocity *= surfaceTraction;
+    tempVel = coss_f(racer->x_rotation_vel);
+    if (tempVel < 0.0f) {
+        tempVel = -tempVel;
+    }
+    // Multiply lateral velocity by pitch
+    racer->lateral_velocity *= tempVel;
+    gCurrentSurfaceType = surfaceType;
+    if (stoneWheels != 0) {
+        miscAsset = (f32 *) get_misc_asset(MISC_ASSET_UNK20);
+        topSpeed *= miscAsset[stoneWheels];
+        racer->magnetTimer = 0;
+        racer->lateral_velocity = 0.0f;
+    } else if (surfaceType == SURFACE_FROZEN_WATER) {
+        racer->boost_sound |= 4;
+        racer_play_sound(obj, SOUND_BOUNCE2);
+    }
+    // If driving over a zip pad, apply a boost.
+    if (racer->boostTimer == 0 && surfaceType == SURFACE_UNK03) {
+        racer->boostTimer = normalise_time(45);
+        racer->boostType = BOOST_LARGE;
+        racer_play_sound(obj, SOUND_ZIP_PAD_BOOST);
+        play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 0x82);
+        if (racer->raceFinished == FALSE) {
+            func_80072348(racer->playerIndex, 8);
+        }
+    }
+    // Slow down gradually when not acellerating and almost at a standstill
+    if (velSquare < 1.0f && !(gCurrentRacerInput & A_BUTTON)) {
+        racer->velocity -= racer->velocity * traction * 8.0f;
+    } else {
+        racer->velocity -= velSquare * traction;
+    }
+    if (sp60) {
+        if (racer->unk1EE <= 15) {
+            racer->unk1EE++;
+        }
+    } else {
+        racer->unk1EE = 0;
+    }
+    if (get_viewport_count() < THREE_PLAYERS) {
+        if ((sp60 && racer->velocity < -2.0) || sp58 || racer->unk1FB != 0) {
+            if (racer->wheel_surfaces[2] < SURFACE_NONE) {
+                obj->unk74 |= D_800DCCF4[racer->wheel_surfaces[2]];
+            }
+            if (racer->wheel_surfaces[3] < SURFACE_NONE) {
+                obj->unk74 |= D_800DCCF4[racer->wheel_surfaces[3]] * 2;
+            }
+        }
+        if (racer->velocity < -2.0) {
+            if (racer->wheel_surfaces[2] < SURFACE_NONE) {
+                obj->unk74 |= D_800DCD40[racer->wheel_surfaces[2]];
+            }
+            if (racer->wheel_surfaces[3] < SURFACE_NONE) {
+                obj->unk74 |= D_800DCD40[racer->wheel_surfaces[3]] * 2;
+            }
+        }
+    }
+    // Play a sound on grass and sand when landing on it
+    surfaceType = D_800DCC80[surfaceType];
+    soundID = surfaceType;
+    if (racer->unk18 == NULL && soundID != SOUND_NONE && racer->velocity < -2.0) {
+        play_sound_global(soundID, &racer->unk18);
+    }
+    if (racer->unk18 != NULL && (soundID == SOUND_NONE || racer->velocity > -2.0)) {
+        func_8000488C(racer->unk18);
+    }
+    // Apply a bobbing effect when on grass and sand.
+    if (racer->velocity < -2.0 && sp68 >= 4) {
+        scale = (f32) (racer->unk1E7 & 1) * 0.5;
+        racer->carBobX -= racer->unkA0 * scale;
+        racer->carBobY -= racer->unkA4 * scale;
+        racer->carBobZ -= racer->pitch * scale;
+    }
+    tempVel = racer->velocity;
+    // Keep velocity positive and keep it below 12
+    if (tempVel < 0.0f) {
+        tempVel = -tempVel;
+    }
+    if (tempVel > 12.0f) {
+        tempVel = 12.0f;
+    }
+    // Convert the velocity value to an int
+    velocityS = (s32) tempVel;
+    miscAsset = &gCurrentRacerMiscAssetPtr[velocityS];
+    velocityDiff = tempVel - velocityS;
+    // Calculate the velocity multiplier based on current velocity
+    surfaceTraction = (f32) ((miscAsset[1] * velocityDiff) + (miscAsset[0] * (1.0 - velocityDiff)));
+    surfaceTraction = (surfaceTraction * 1.7);
+    surfaceTraction *= topSpeed;
+    // Force the throttle wide open if boosting
+    if (racer->boostTimer > 0) {
+        if (gRaceStartTimer == 0) {
+            racer->throttle = 1.0f;
+            if (surfaceTraction != 0.0) {
+                surfaceTraction = 2.0f;
+            }
+            racer->boostTimer -= updateRate;
+        }
+    } else {
+        racer->boostTimer = 0;
+    }
+    if (racer->velocity > -2.0 && racer->velocity < 3.0 && (racer->playerIndex != PLAYER_COMPUTER || racer->unk214 != 0)) {
+        tempVel = (3.0 - racer->velocity) * 0.15;
+        if (soundID == 4) {
+            tempVel *= 0.25;
+        }
+        if ((gCurrentStickY < -25) && !(gCurrentRacerInput & A_BUTTON) && (gCurrentRacerInput & B_BUTTON)) {
+            if (racer->unk1D7 >= 5) {
+                tempVel *= 0.3;
+            }
+            racer->velocity += tempVel;
+            racer->brake = 0.0f;
+        }
+    }
+    tempVel = (racer->brake * surfaceTraction) * 0.32;
+    racer->velocity -= surfaceTraction * racer->throttle;
+    if (racer->velocity > -0.04 && racer->velocity < 0.04) {
+        racer->velocity = 0.0f;
+    }
+    if (racer->velocity < 0.0f) {
+        racer->velocity += tempVel;
+        if (racer->velocity > 0.0f) {
+            racer->velocity = 0.0f;
+        }
+    } else {
+        racer->velocity -= tempVel;
+        if (racer->velocity < 0.0f) {
+            racer->velocity = 0.0f;
+        }
+    }
+    surfaceTraction = gCurrentRacerWeightStat;
+    obj->segment.y_velocity -= surfaceTraction * updateRateF;
+    if (D_8011D586 != 0) {
+        surfaceTraction = 0.0f;
+    }
+    if (racer->brake < 0.9 && racer->unk1D7 < 5 && gRaceStartTimer == 0) {
+        if (racer->pitch < 0.0) {
+            velocityDiff = -racer->pitch;
+            velocityDiff -= 0.3;
+            if (velocityDiff < 0.0) {
+                velocityDiff = 0.0f;
+            }
+            if (velocityDiff > 0.1) {
+                velocityDiff = 0.1f;
+            }
+            velocityDiff *= 35.0f;
+        } else {
+            velocityDiff = 0.0f;
+        }
+        racer->velocity += surfaceTraction * (racer->pitch / (4.0f - velocityDiff)) * updateRateF;
+    }
+    racer->forwardVel -= (racer->forwardVel + (racer->velocity * 0.05)) * 0.125;
+    racer->unk1E8 = racer->steerAngle;
+    racer->unk110 = gCurrentCarSteerVel;
+    if (racer->unk1E0 != 0) {
+        if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
+            if (racer->wheel_surfaces[0] != SURFACE_NONE) {
+                D_8011D550 = D_800DCCCC[racer->wheel_surfaces[0]];
+                *((s16*) &D_8011D552) = racer->unk1E0; // necessary because a different function expects a char.
+                racer->unk1E0 = 0;
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/racer/func_80050A28.s")
+#endif
 
 // Loops for as long as Taj exists. After swapping vehicle once, will remain true until you enter a door.
 s32 func_80052188(void) {
@@ -3872,7 +4678,141 @@ void func_80059080(UNUSED Object *obj, Object_Racer *racer, f32 *xVel, f32 *yVel
     }
 }
 
+#ifdef NON_MATCHING
+void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
+    UNUSED s32 pad[2];
+    s32 temp_v0;
+    unknown8011AECC *temp_v0_4;
+    f32 posX[5];
+    f32 posY[5];
+    f32 posZ[5];
+    UNUSED s32 pad2;
+    f32 tempX;
+    s32 counter;
+    f32 tempY;
+    s32 angle;
+    f32 tempZ;
+    f32 splinePos;
+    f32 diffX;
+    f32 diffY;
+    f32 diffZ;
+    f32 distance;
+    f32 divisor;
+    f32 scale;
+    s32 splineIndex;
+    s32 i;
+    
+    temp_v0 = func_8001BA64();
+    if (temp_v0 == 0) {
+        return;
+    }
+    if ((func_8006BD88() == 0) && (racer->checkpoint >= temp_v0)) {
+        racer->lap = 0;
+        racer->checkpoint = 0;
+        racer->courseCheckpoint = 0;
+    }
+    splinePos = 1.0 - racer->checkpoint_distance;
+    if (splinePos < -0.2) {
+        racer->checkpoint--;
+        if (racer->checkpoint < 0) {
+            racer->checkpoint += temp_v0;
+            if (racer->lap > 0) {
+                racer->lap--;
+            }
+        }
+        if (racer->courseCheckpoint > -0x7D00) {
+            racer->courseCheckpoint--;
+        }
+        if (racer->unk1C8) {
+            temp_v0_4 = func_8001BA00(racer->checkpoint);
+            if (temp_v0_4->unk3A == -1) {
+                racer->unk1C8 = 0;
+            }
+            counter = racer->checkpoint - 1;
+            if (counter < 0) {
+                counter += temp_v0;
+            }
+            temp_v0_4 = func_8001BA00(counter);
+            if (temp_v0_4->unk3A == -1) {
+                racer->unk1C8 = 0;
+            }
+        }
+    } else {
+        if (splinePos < 0.0f) {
+            splinePos = 0.0f;
+        }
+        temp_v0_4 = func_8001BA1C(racer->checkpoint, racer->unk1C8);
+        scale = temp_v0_4->unk1C;
+        counter = racer->checkpoint - 1;
+        if (counter < 0) {
+            counter = temp_v0 - 1;
+        }
+        temp_v0_4 = func_8001BA00(counter);
+        distance = temp_v0_4->unk1C;
+        divisor = ((scale - temp_v0_4->unk1C) * splinePos) + distance;
+        counter = racer->checkpoint - 2;
+        if (counter < 0) {
+            counter += temp_v0;
+        }
+        for (i = 0; (i < 5) ^ 0; i++) {
+            temp_v0_4 = func_8001BA1C(counter, racer->unk1C8);
+            posX[i] = temp_v0_4->unk10 + ((temp_v0_4->unk1C * temp_v0_4->unk8) * racer->unk1BA);
+            posY[i] = temp_v0_4->unk14 + (temp_v0_4->unk1C * racer->unk1BC);
+            posZ[i] = temp_v0_4->unk18 + ((temp_v0_4->unk1C * (-temp_v0_4->unk0)) * racer->unk1BA);
+            counter++;
+            if (counter == temp_v0) {
+                counter = 0;
+            }
+        }
+        splineIndex = FALSE;
+        if (splinePos >= 1.0) {
+            splinePos -= 1.0;
+            splineIndex = TRUE;
+        }
+        tempX = cubic_spline_interpolation(posX, splineIndex, splinePos, &diffX);
+        tempY = cubic_spline_interpolation(posY, splineIndex, splinePos, &diffY);
+        tempZ = cubic_spline_interpolation(posZ, splineIndex, splinePos, &diffZ);
+        distance = sqrtf((diffX * diffX) + (diffZ * diffZ));
+        if (distance != 0.0f) {
+            scale = 1.0f / distance;
+            diffX *= scale;
+            diffZ *= scale;
+        }
+        angle = arctan2_f(diffX, diffZ) - (racer->unk1A0 & 0xFFFF) - 0x8000;
+        WRAP(angle, -0x8000, 0x8000);
+        if (angle > 0x4000 || angle < -0x4000) {
+            if (racer->unk1FC < 200 && racer->velocity <= -1.0) {
+                racer->unk1FC += updateRate;
+            }
+        } else {
+            racer->unk1FC = 0;
+        }
+        diffY = diffX;
+        diffX = diffZ;
+        diffZ = -diffY;
+        splinePos = obj->segment.trans.x_position;
+        distance = obj->segment.trans.z_position;
+        diffX = -(((splinePos * diffX) + (diffZ * distance) - ((tempZ * diffZ) + (diffX * tempX))) / divisor);
+        if (diffX > 5.0f) {
+            diffX = 5.0f;
+        }
+        if (diffX < -5.0f) {
+            diffX = -5.0f;
+        }
+        racer->unk1BA += (s32) diffX;
+        diffY = (obj->segment.trans.y_position - tempY) / divisor;
+        if (diffY > 100.0f) {
+            diffY = 100.0f;
+        }
+        if (diffY < -100.0f) {
+            diffY = -100.0f;
+        }
+        racer->unk1BC += (s32) diffY;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/racer/func_80059208.s")
+#endif
 
 void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *hundredths) {
     if (gVideoRefreshRate == REFRESH_50HZ) {
