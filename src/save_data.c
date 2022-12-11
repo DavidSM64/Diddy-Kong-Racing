@@ -434,7 +434,7 @@ void func_800732E8(Settings *settings, u8 *saveData) {
     D_801241EC = saveData;
     D_801241F0 = 0;
     D_801241F4 = 128; // 1000 0000 in binary.
-    func_80072E28(0x10, 0);
+    func_80072E28(16, 0);
     for (i = 0, var_s0 = 0; i < levelCount; i++) {
         temp_v0 = func_8006B14C(i);
          if ((temp_v0 == 0) || (temp_v0 & 0x40) || (temp_v0 == 8)) {
@@ -455,21 +455,21 @@ void func_800732E8(Settings *settings, u8 *saveData) {
             var_s0 += 2;
         }
     }
-    func_80072E28(0x44 - var_s0, 0);
+    func_80072E28(68 - var_s0, 0);
     func_80072E28(6, settings->tajFlags);
-    func_80072E28(0xA, settings->trophies);
-    func_80072E28(0xC, settings->bosses);
+    func_80072E28(10, settings->trophies);
+    func_80072E28(12, settings->bosses);
     for (i = 0; i < worldCount; i++) {
         func_80072E28(7, settings->balloonsPtr[i * 2]);
     }
     func_80072E28(3, settings->ttAmulet);
     func_80072E28(3, settings->wizpigAmulet);
     for (i = 0; i < worldCount; i++) {
-        func_80072E28(0x10, (settings->courseFlagsPtr[get_hub_area_id(i)] >> 16) & 0xFFFF);
+        func_80072E28(16, (settings->courseFlagsPtr[get_hub_area_id(i)] >> 16) & 0xFFFF);
     }
     func_80072E28(8, settings->keys);
-    func_80072E28(0x20, settings->cutsceneFlags);
-    func_80072E28(0x10, settings->filename);
+    func_80072E28(32, settings->cutsceneFlags);
+    func_80072E28(16, settings->filename);
     func_80072E28(8, 0);
     blocks = 5;
     var_v0 = saveData[2] + blocks + saveData[2] + 1;
@@ -481,7 +481,7 @@ void func_800732E8(Settings *settings, u8 *saveData) {
     D_801241EC = saveData;
     D_801241F0 = 0;
     D_801241F4 = 128; // 1000 0000 in binary.
-    func_80072E28(0x10, var_v0);
+    func_80072E28(16, var_v0);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/save_data/func_800732E8.s")
@@ -568,35 +568,21 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
 GLOBAL_ASM("asm/non_matchings/save_data/func_80073588.s")
 #endif
 
-#if 0
+#ifdef NON_EQUIVALENT
 void func_800738A4(Settings *settings, u8 *saveData) {
+    s16 availableVehicles;
     s32 levelCount;
     s32 worldCount;
-    s16 temp_t1;
-    s16 temp_t2;
-    s16 availableVehicles;
-    s16 var_v1;
-    s16 var_v1_2;
-    s32 var_at;
     s32 i;
-    s32 var_s1_2;
-    s32 var_s1_4;
     s32 var_s2;
-    s32 var_t2;
-    s32 var_t9;
-    u8 *temp_s2;
-    u8 *var_v0;
-    u8 *var_v0_2;
+    s16 var_v1;
 
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
     D_801241EC = saveData;
     D_801241F0 = 0;
     D_801241F4 = 128;
     func_80072E28(16, 0);
-    var_s2 = 0;
-    i = 0;
-    if (levelCount > 0) {
-loop_1:
+    for (var_s2 = 0, i = 0; i < levelCount; i++) {
         if (func_8006B14C(i) == 0) {
             availableVehicles = get_map_available_vehicles(i);
             // Car Available
@@ -617,69 +603,45 @@ loop_1:
                 func_80072E28(16, settings->flapInitialsPtr[2][i]);
                 var_s2++;
             }
-            if (!(var_s2 < 48)) {
-                goto block_11;
-            }
-        } else {
-block_11:
-            i++;
-            if (i < levelCount) {
-                goto loop_1;
+            if (var_s2 < 48) {
+                break;
             }
         }
     }
     D_801241EC = saveData;
     D_801241F0 = 0;
     D_801241F4 = 128;
-    var_s1_2 = 2;
-    var_v1 = 5;
-    var_v0 = saveData + 2;
-    do {
-        var_s1_2 += 1;
-        temp_t2 = var_v1 + *var_v0;
-        var_v0 += 1;
-        var_v1 = temp_t2;
-    } while (var_s1_2 < 192);
-    func_80072E28(0x10, (s32) temp_t2);
-    temp_s2 = saveData + 192;
-    D_801241EC = temp_s2;
+    for (i = 2, var_v1 = 5; i < 192; i++) { var_v1 += D_801241EC[i]; }
+    func_80072E28(16, var_v1);
+    D_801241EC = saveData + 192;
     D_801241F0 = 0;
     D_801241F4 = 128;
     func_80072E28(16, 0);
-    i = 0;
-    if (levelCount > 0) {
-        do {
-            if (func_8006B14C(i) == 0) {
-                availableVehicles = get_map_available_vehicles(i);
-                if (availableVehicles & 1) {
-                    func_80072E28(16, settings->courseTimesPtr[0][i]);
-                    func_80072E28(16, settings->courseInitialsPtr[0][i]);
-                }
-                if (availableVehicles & 2) {
-                    func_80072E28(16, settings->courseTimesPtr[1][i]);
-                    func_80072E28(16, settings->courseInitialsPtr[1][i]);
-                }
-                if (availableVehicles & 4) {
-                    func_80072E28(16, settings->courseTimesPtr[2][i]);
-                    func_80072E28(16, settings->courseInitialsPtr[2][i]);
-                }
+    for (i = 0; i < levelCount; i++) {
+        if (func_8006B14C(i) == 0) {
+            availableVehicles = get_map_available_vehicles(i);
+            // Car Available
+            if (availableVehicles & 1) {
+                func_80072E28(16, settings->courseTimesPtr[0][i]);
+                func_80072E28(16, settings->courseInitialsPtr[0][i]);
             }
-            i++;
-        } while (i < levelCount);
+            // Hovercraft Available
+            if (availableVehicles & 2) {
+                func_80072E28(16, settings->courseTimesPtr[1][i]);
+                func_80072E28(16, settings->courseInitialsPtr[1][i]);
+            }
+            // Plane Available
+            if (availableVehicles & 4) {
+                func_80072E28(16, settings->courseTimesPtr[2][i]);
+                func_80072E28(16, settings->courseInitialsPtr[2][i]);
+            }
+        }
     }
-    D_801241EC = temp_s2;
+    D_801241EC = saveData;
     D_801241F0 = 0;
     D_801241F4 = 128;
-    var_v0_2 = D_801241EC + 4;
-    var_v1_2 = D_801241EC[2] + 5 + D_801241EC[2] + 1;
-    var_s1_4 = 4;
-    do {
-        temp_t1 = var_v1_2 + var_v0_2[0] + var_v0_2[1] + var_v0_2[2] + var_v0_2[3];
-        var_s1_4 += 4;
-        var_v1_2 = temp_t1;
-        var_v0_2 += 4;
-    } while (var_s1_4 < 192);
-    func_80072E28(16, temp_t1);
+    for (i = 2, var_v1 = saveData; i < 192; i++) { var_v1 += D_801241EC[i]; }
+    func_80072E28(16, var_v1);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/save_data/func_800738A4.s")
