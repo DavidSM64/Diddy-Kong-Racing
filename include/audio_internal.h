@@ -311,5 +311,6 @@ s32             __timeToSamples(ALSynth *ALSynth, s32 micros);
 ALMicroTime     _samplesToTime(ALSynth *synth, s32 samples);
 
 void            _init_lpfilter(ALLowPass *lp);
+void alClose(ALGlobals *glob);
 
 #endif

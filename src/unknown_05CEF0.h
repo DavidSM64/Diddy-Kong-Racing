@@ -17,8 +17,6 @@ extern f32 D_8011D5C0;
 extern s8 D_8011D5C4;
 extern s8 D_8011D5CC;
 
-s32 get_random_number_from_range(s32, s32); //?
-
 void func_8005C2F0(Object *object, unk8005C2F0 *arg1);
 void func_8005CA78(u16 *arg0);
 void func_8005CA84(f32 x, f32 y, f32 z, s32 arg3);

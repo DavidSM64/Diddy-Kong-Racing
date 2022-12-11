@@ -41,16 +41,16 @@ void func_800C0180(void);
 u32 func_800C018C(void);
 void transition_end(void);
 s32 handle_transitions(s32 updateRate);
-void render_fade_transition(Gfx **dlist, Matrix **mats, VertexList **verts);
-void render_fade_fullscreen(Gfx **dlist, Matrix **mats, VertexList **verts);
-void render_fade_barndoor_horizontal(Gfx **dlist, Matrix **mats, VertexList **verts);
-void render_fade_barndoor_vertical(Gfx **dlist, Matrix **mats, VertexList **verts);
-void render_fade_barndoor_diagonal(Gfx **dlist, Matrix **mats, VertexList **verts);
-void render_fade_disabled(Gfx **dlist, Matrix **mats, VertexList **verts);
+void render_fade_transition(Gfx **dlist, MatrixS **mats, Vertex **verts);
+void render_fade_fullscreen(Gfx **dlist, MatrixS **mats, Vertex **verts);
+void render_fade_barndoor_horizontal(Gfx **dlist, MatrixS **mats, Vertex **verts);
+void render_fade_barndoor_vertical(Gfx **dlist, MatrixS **mats, Vertex **verts);
+void render_fade_barndoor_diagonal(Gfx **dlist, MatrixS **mats, Vertex **verts);
+void render_fade_disabled(Gfx **dlist, MatrixS **mats, Vertex **verts);
 void func_800C0780(FadeTransition *transition);
 
-void render_fade_circle(Gfx **dlist, Matrix **mats, VertexList **verts); //Non Matching
-void render_fade_waves(Gfx **dlist, Matrix **mats, VertexList **verts); //Non Matching
+void render_fade_circle(Gfx **dlist, MatrixS **mats, Vertex **verts); //Non Matching
+void render_fade_waves(Gfx **dlist, MatrixS **mats, Vertex **verts); //Non Matching
 void func_800C0834(s32); //Non Matching
 void func_800C1130(s32); //Non Matching
 void func_800C1EE8(s32); //Non Matching

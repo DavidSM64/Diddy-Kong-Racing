@@ -3,13 +3,15 @@
 
 #include "unknown_003260.h"
 #include "memory.h"
+#include "audio_internal.h"
+#include "video.h"
 
 /************ .bss ************/
 
 // All of these are defined in unknown_003260_bss.c
 // This was needed, since there is a bss reordering issue with D_80119BD0 and gAlSndPlayer
 
-extern s32 gAudioSched;
+extern OSSched *gAudioSched;
 extern ALHeap *D_80115F94;
 extern s32 D_80115F98[2];
 extern s32 D_80115FA0[3];
@@ -34,7 +36,6 @@ extern OSMesgQueue audDMAMessageQ;
 extern OSMesg audDMAMessageBuf[NUM_DMA_MESSAGES];
 extern unk800DC6BC D_80119BD0;
 extern u16 *D_80119C28;
-extern f32 gVideoRefreshRate;
 
 /******************************/
 
@@ -131,19 +132,19 @@ void audioStopThread(void) {
 void thread4_audio(UNUSED void *arg) {
     s32 audioThreadMarkExit;
     s16 *audioThreadRetraceMesg;
-    s16 *audioThreadUpdateMesg;
+    OSMesg *audioThreadUpdateMesg;
 
     audioThreadMarkExit = FALSE;
     audioThreadRetraceMesg = NULL;
     audioThreadUpdateMesg = NULL;
 
-    osScAddClient(gAudioSched, &audioStack, &gAudioMesgQueue, OS_SC_ID_AUDIO);
+    osScAddClient(gAudioSched, (OSScClient *) &audioStack, &gAudioMesgQueue, OS_SC_ID_AUDIO);
     while (!audioThreadMarkExit) {
-        osRecvMesg(&gAudioMesgQueue, &audioThreadRetraceMesg, 1);
+        osRecvMesg(&gAudioMesgQueue, (OSMesg *) &audioThreadRetraceMesg, 1);
         switch (*audioThreadRetraceMesg) {
         case 1:
             func_80002C00(D_80115F98[(((u32) audFrameCt % 3))+2], audioThreadUpdateMesg);
-            osRecvMesg(&D_80116198, &audioThreadUpdateMesg, 1);
+            osRecvMesg(&D_80116198, (OSMesg *) &audioThreadUpdateMesg, 1);
             func_80002DF8(audioThreadUpdateMesg);
             break;
         case 4:
@@ -159,7 +160,7 @@ void thread4_audio(UNUSED void *arg) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002C00.s")
 
-void func_80002DF8(s32 arg0) {
+void func_80002DF8(UNUSED OSMesg mesg) {
     static s32 D_800DC6A0 = 1;
     if ((osAiGetLength() >> 2) == 0) {
         if (D_800DC6A0 == 0) {
@@ -289,7 +290,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/__amDMA.s")
  *
  *****************************************************************************/
 ALDMAproc __amDmaNew(AMDMAState **state) {
-    int         i;
 
     if(!dmaState.initialized) {  /* only do this once */
         dmaState.firstUsed = 0;
@@ -342,7 +342,7 @@ void alSndPNew(audioMgrConfig *c) {
     i = 1;
     for (i = 1; i < c->unk00; i++) {
         tmp1 = gAlSndPlayer->unk40;
-        alLink(i + tmp1, i + tmp1 - 1);
+        alLink((ALLink *) (i + tmp1), (ALLink *) (i + tmp1 - 1));
     }
 
     D_80119C28 = alHeapDBAlloc(0, 0, c->hp, 2, c->unk10);
@@ -350,12 +350,12 @@ void alSndPNew(audioMgrConfig *c) {
         D_80119C28[i] = 32767;
     }
 
-    gAlSndPlayer->drvr = alGlobals;
+    gAlSndPlayer->drvr = (ALSynth *) alGlobals;
     gAlSndPlayer->node.next = NULL;
     gAlSndPlayer->node.handler = &_sndpVoiceHandler;
     gAlSndPlayer->node.clientData = gAlSndPlayer;
 
-    alSynAddPlayer(gAlSndPlayer->drvr, gAlSndPlayer);
+    alSynAddPlayer(gAlSndPlayer->drvr, (ALPlayer *) gAlSndPlayer);
     sp_38.type = 32;
     alEvtqPostEvent(&(gAlSndPlayer->evtq), &sp_38, gAlSndPlayer->frameTime);
     gAlSndPlayer->nextDelta = alEvtqNextEvent(&(gAlSndPlayer->evtq), &(gAlSndPlayer->nextEvent));
@@ -447,10 +447,10 @@ void func_800049D8(void) {
 void func_800049F8(s32 soundMask, s16 type, u32 volume) {
     ALSndpEvent sndEvt;
     sndEvt.snd_event.type = type;
-    sndEvt.snd_event.state = soundMask;
+    sndEvt.snd_event.state = (void *) soundMask;
     sndEvt.snd_event.unk04 = volume;
     if (soundMask) {
-        alEvtqPostEvent(&(gAlSndPlayer->evtq), &sndEvt, 0);
+        alEvtqPostEvent(&(gAlSndPlayer->evtq), (ALEvent *) &sndEvt, 0);
     }
 }
 

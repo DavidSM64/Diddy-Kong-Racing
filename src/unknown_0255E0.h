@@ -88,8 +88,6 @@ extern s32 D_800DC928;
 
 extern s8 D_800DC92C[24];
 
-void object_transform_to_matrix(Matrix, ObjectTransform *); // asm func
-
 s32 func_800249E0(s32 arg0);
 void func_800257D0(void);
 void func_80027FC4(s32 arg0);
@@ -130,7 +128,7 @@ void func_80028CD0(s32 updateRate);
 //Non Matching
 void render_level_segment(s32 segmentId, s32 nonOpaque);
 void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5);
-void render_scene(Gfx** dList, Matrix** mtx, s16** vtx, s8** tris, s32 updateRate);
+void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, s8** tris, s32 updateRate);
 void func_8002C7D4(void);
 Gfx *func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportIndex);
 s32 func_80027568(void);
@@ -142,13 +140,16 @@ void func_80028050(void);
 void func_80028CD0(s32);
 void func_8002A31C(void);
 void func_8007F24C(s8*, s32);
-void func_800ACA20(Gfx**, Matrix**, s16**, ObjectSegment*);
 void func_800AD030(ObjectSegment*);
 void func_800B9C18(s32);
-void func_800BA8E4(Gfx**, Matrix**, s32);
+void func_800BA8E4(Gfx**, MatrixS**, s32);
 void func_8002DE30(Object*);
 void func_8002E234(Object*, s32);
 void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
 s32 func_8002BAB0(s16, f32, f32, f32*);
+void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 arg5, u32 arg6);
+void func_800B82B4(LevelModel *, LevelHeader *, s32);
+void func_8000C8F8(u32, u32);
+void func_80025510(s32);
 
 #endif

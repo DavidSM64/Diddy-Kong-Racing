@@ -28,6 +28,8 @@
 #include "unknown_005740.h"
 #include "game_ui.h"
 #include "object_models.h"
+#include "unknown_003260.h"
+
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
@@ -213,8 +215,6 @@ s8 D_8011D5AF;
 struct TempStruct8 **D_8011D5B0;
 s32 D_8011D5B4;
 s16 D_8011D5B8;
-
-extern void func_8000488C(u8 *soundMask);
 
 /******************************/
 
@@ -3909,11 +3909,11 @@ void func_80059984(s32 arg0) {
     D_8011D5AC = arg0;
 }
 
-MapId func_800599A8(void) {
+s32 func_800599A8(void) {
     return D_8011D5AC;
 }
 
-s32 func_800599B8(s32 arg0, MapId mapId, s16 arg2, s16 *arg3, s16 *arg4) {
+s32 func_800599B8(s32 arg0, s32 mapId, s16 arg2, s16 *arg3, s16 *arg4) {
     s32 temp_v0;
     s32 temp_t8;
     s16 sp2E;
@@ -3963,7 +3963,7 @@ void free_tt_ghost_data(void) {
     gGhostData[2] = NULL;
 }
 
-s32 func_80059B7C(s32 controllerIndex, MapId mapId, s16 arg2, s16 arg3, s16 arg4) {
+s32 func_80059B7C(s32 controllerIndex, s32 mapId, s16 arg2, s16 arg3, s16 arg4) {
     return func_80075000(controllerIndex, (s16)mapId, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], gGhostData[D_8011D59C]);
 }
 

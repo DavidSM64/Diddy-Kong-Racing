@@ -3,6 +3,7 @@
 
 #include "gzip.h"
 #include "asset_loading.h"
+#include "PR/os_libc.h"
 
 /************ .data ************/
 
@@ -42,7 +43,7 @@ s32 byteswap32(u8 *arg0) {
  * Returns the uncompressed size of a gzip compressed asset.
  */
 s32 get_asset_uncompressed_size(s32 assetIndex, s32 assetOffset) {
-    load_asset_to_address(assetIndex, gAssetAddress, assetOffset, 8);
+    load_asset_to_address(assetIndex, (u32) gAssetAddress, assetOffset, 8);
     return byteswap32((u8 *)gAssetAddress);
 }
 

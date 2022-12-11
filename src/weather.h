@@ -94,7 +94,7 @@ void handle_rain_sound(s32 updateRate);
 void render_rain_splashes(s32 updateRate);
 void handle_rain_lightning(s32 updateRate);
 void render_rain_overlay(unk800E2C2C*, s32);
-void process_weather(Gfx **currDisplayList, Matrix **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
+void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris, s32 updateRate);
 void render_falling_snow(void);
 void free_weather_memory(void);
 void func_800ABC5C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
@@ -106,5 +106,7 @@ s32 func_800AC0C8(s32, unk80127BF8 *);
 void f32_matrix_dot(Matrix *arg0, Matrix *arg1, Matrix *arg2);
 void func_800AC21C(void);
 void func_800AC8A8(Object *);
+void func_800ACA20(Gfx**, MatrixS**, Vertex**, ObjectSegment*);
+void func_800AB4A8(s16 weatherType, s16 weatherEnable, s16 velX, s16 velY, s16 velZ, u8 intensity, u8 opacity);
 
 #endif

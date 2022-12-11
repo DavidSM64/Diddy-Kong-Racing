@@ -49,24 +49,6 @@ typedef struct unk800AF29C_C {
     s16 unk16;
 } unk800AF29C_C;
 
-typedef struct unk800AF29C {
-    ParticleBehavior *unk0;
-    s16 unk4;
-    u8 unk6;
-    u8 unk7;
-    s16 unk8;
-    s16 unkA;
-    union {
-        unk800AF29C_C_4000 unkC_4000;
-        unk800AF29C_C_400  unkC_400;
-        unk800AF29C_C      unkC;
-    } unkB;
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-} unk800AF29C;
-
 typedef struct unk800E2CF0 {
     u8 pad0[8];
     s16 unk8;
@@ -100,15 +82,24 @@ typedef struct unk800B2260_C {
     u8 unk74;
 } unk800B2260_C;
 
-//Could be the same as Object_6C
-typedef struct unk800B2260 {
+typedef struct unk800AF29C {
     ParticleBehavior *unk0;
     s16 unk4;
-    u8  unk6;
+    u8 unk6;
+    u8 unk7;
     s16 unk8;
     s16 unkA;
-    unk800B2260_C **unkC;
-} unk800B2260;
+    union {
+        unk800AF29C_C_4000 unkC_4000;
+        unk800AF29C_C_400  unkC_400;
+        unk800B2260_C    **unkC_60;
+        unk800AF29C_C      unkC;
+    } unkB;
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+} unk800AF29C;
 
 typedef struct XYStruct {
     s16 x, y;
@@ -149,11 +140,11 @@ void func_800AF0F0(Object *obj);
 void func_800AF1E0(unk800AF29C *arg0, s32 arg1, s32 arg2);
 void func_800AF29C(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5);
 void func_800AF6E4(Object *obj, s32 arg1);
-void func_800B2260(unk800B2260 *arg0);
+void func_800B2260(unk800AF29C *arg0);
 void func_800B263C(unk800B2260_C *arg0);
 void init_particle_assets(void);
 
-void func_800AF134(unk800B2260 *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5); // Non Matching
+void func_800AF134(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5); // Non Matching
 void func_800AF404(s32 arg0); // Non Matching
 void func_800AFC3C(Object *, s32); // Non Matching
 void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching

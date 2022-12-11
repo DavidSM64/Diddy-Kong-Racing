@@ -289,9 +289,8 @@ typedef struct LevelHeader {
   /* 0x03 */ u8 unk3;
   /* 0x04 */ s8 unk4[4];
   /* 0x08 */ f32 course_height;
-
-  /* 0x0C */ u8 padC[0x14];
-
+  /* 0x0C */ u8 unkC[10];
+  /* 0x16 */ u8 unk16[10];
   /* 0x20 */ s32 *unk20;
 
   /* 0x24 */ u8 pad24[6];
@@ -774,6 +773,8 @@ typedef struct Object_Weapon {
   /* 0x14 */ s32 unk14;
   /* 0x18 */ u8 weaponID;
   /* 0x19 */ u8 checkpoint;
+  /* 0x19 */ s16 unk1A;
+  /* 0x19 */ s32 unk1C;
 } Object_Weapon;
 
 typedef struct Object_Butterfly {
@@ -1142,9 +1143,10 @@ typedef struct Object_Racer {
   /* 0x203 */ s8 boostType;
   /* 0x204 */ s16 unk204;
   /* 0x206 */ s16 unk206;
-  /* 0x208 */ s16 unk208;
+  /* 0x208 */ s8 unk208;
+  /* 0x209 */ u8 unk209;
   /* 0x20A */ u8 unk20A;
-  /* 0x20B */ s8 unk20B;
+  /* 0x20B */ u8 unk20B;
   /* 0x20C */ u8 throttleReleased;
   /* 0x20D */ u8 unk20D;
   /* 0x20E */ u16 unk20E;
