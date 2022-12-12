@@ -92,7 +92,7 @@ void func_800738A4(Settings *settings, u8 *saveData);
 void func_800732E8(Settings *arg0, u8 *arg1); //Non matching
 //void func_80073588(Settings *arg0, u64 *eepromData, s32 arg2); //Non matching
 //Using some context, and best guesses, these could be the names of the variables
-s32 func_80074B34(s32 controllerIndex, s16 levelID, s16 vehicleID, s16 *ghostCharacterID, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *arg6); //Non matching
+//s32 func_80074B34(s32 controllerIndex, s16 levelID, s16 vehicleID, s16 *ghostCharacterID, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *arg6); //Non matching
 char *string_to_font_codes(char *inString, char *outString, s32 stringLength);
 
 //Reasonably certain about these names for now.

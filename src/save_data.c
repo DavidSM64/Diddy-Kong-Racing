@@ -1151,7 +1151,125 @@ s32 func_80074B1C(void) {
     return (&x)[0] * 6 + 0x100;
 }
 
+#ifdef NON_EQUIVALENT
+s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCharacterId, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *ghostData) {
+    #define GHSS_FILE_SIZE 0x100
+    u8 *fileData;
+    s32 fileNumber;
+    s32 fileOffset;
+    s32 fileSize;
+    s32 bytesFree;
+    s32 notesFree;
+    s32 ret;
+    s32 retTemp;
+    s32 var_v1;
+    u8 *temp_a1;
+    GhostHeader *ghostHeader;
+    u8 *var_v0_2;
+    u8 *temp_v0_4;
+
+    fileOffset = 0;
+    ret = get_si_device_status(controllerIndex);
+    if (ret != CONTROLLER_PAK_GOOD) {
+        start_reading_controller_data(controllerIndex);
+        return ret;
+    }
+    if (ghostCharacterId != NULL) {
+        *ghostTime = -1;
+        *ghostCharacterId = -1;
+    }
+    //D_800E773C = "DKRACING-GHOSTS"
+    //D_800E774C = ""
+    ret = get_file_number(controllerIndex, (char *) D_800E773C, (char *) D_800E774C, &fileNumber);
+    if (ret == CONTROLLER_PAK_GOOD) {
+        fileData = allocate_from_main_pool_safe(GHSS_FILE_SIZE, COLOUR_TAG_BLACK);
+        if (!(pfs[controllerIndex].status & PFS_INITIALIZED)) {
+            osPfsInit(sControllerMesgQueue, &pfs[controllerIndex], controllerIndex);
+        }
+        ret = read_data_from_controller_pak(controllerIndex, fileNumber, fileData, GHSS_FILE_SIZE);
+        if (ret == CONTROLLER_PAK_GOOD) {
+            temp_a1 = fileData + 4;
+            if (fileData[0] == GHSS) {
+                var_v1 = 0;
+                var_v0_2 = temp_a1;
+loop_10:
+                var_v1 += 4;
+                if ((levelId == var_v0_2[0]) && (vehicleId == var_v0_2[1])) {
+                    fileOffset = var_v0_2[2];
+                    fileSize = var_v0_2[6] - var_v0_2[2];
+                } else {
+                    var_v0_2 += 4;
+                    if (var_v1 < 24) {
+                        goto loop_10;
+                    }
+                }
+                if (fileOffset == 0) {
+                    ret = CONTROLLER_PAK_UNK6;
+                    if (fileData[4] == 0xFF) {
+                        ret = CONTROLLER_PAK_UNK8;
+                    }
+                    temp_v0_4 = temp_a1 + (2 * 4);
+                    if (fileData[4] == 0xFF) {
+                        ret = CONTROLLER_PAK_UNK8;
+                    }
+                    if (temp_v0_4[0] == 0xFF) {
+                        ret = CONTROLLER_PAK_UNK8;
+                    }
+                    if (temp_v0_4[4] == 0xFF) {
+                        ret = CONTROLLER_PAK_UNK8;
+                    }
+                    if (temp_v0_4[8] == 0xFF) {
+                        ret = CONTROLLER_PAK_UNK8;
+                    }
+                    if (temp_v0_4[12] == 0xFF) {
+                        ret = CONTROLLER_PAK_UNK8;
+                    }
+                }
+            } else {
+                ret = CONTROLLER_PAK_BAD_DATA;
+            }
+        }
+        free_from_memory_pool(fileData);
+        if (fileOffset != 0) {
+            if (ghostCharacterId != NULL) {
+                ghostHeader = allocate_from_main_pool_safe(fileSize + GHSS_FILE_SIZE, COLOUR_TAG_BLACK);
+                retTemp = CONTROLLER_PAK_BAD_DATA;
+                if (osPfsReadWriteFile(&pfs[controllerIndex], fileNumber, PFS_READ, fileOffset, fileSize, (u8 *) ghostHeader) == 0) {
+                    if (calculate_ghost_header_checksum(ghostHeader) == ghostHeader->checksum) {
+                        *ghostCharacterId = ghostHeader->characterID;
+                        *ghostTime = ghostHeader->time;
+                        *ghostNodeCount = ghostHeader->nodeCount;
+                        bcopy(ghostHeader + 8, ghostData, *ghostNodeCount * sizeof(GhostNode));
+                        retTemp = CONTROLLER_PAK_GOOD;
+                    } else {
+                        retTemp = CONTROLLER_PAK_BAD_DATA;
+                    }
+                }
+                free_from_memory_pool(ghostHeader);
+                ret = retTemp;
+            }
+        }
+        if ((fileOffset != 0) && (ghostCharacterId == NULL)) {
+            ret = CONTROLLER_PAK_GOOD;
+        }
+    }
+    start_reading_controller_data(controllerIndex);
+    if (ret == CONTROLLER_PAK_CHANGED) {
+        if (get_free_space(controllerIndex, &bytesFree, &notesFree) == CONTROLLER_PAK_GOOD) {
+            if ((bytesFree < func_80074B1C()) || ((notesFree == 0))) {
+                return CONTROLLER_PAK_FULL;
+            }
+            /* Duplicate return node #48. Try simplifying control flow for better match */
+            return ret;
+        }
+        return CONTROLLER_PAK_BAD_DATA;
+    }
+    return ret;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/save_data/func_80074B34.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/save_data/func_80074EB8.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_80075000.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_800753D8.s")
@@ -1482,6 +1600,7 @@ void func_80076164(void) {
 }
 
 //Get Available Space in Controller Pak
+//Upper bytes of return value couldl be controllerIndex
 s32 get_free_space(s32 controllerIndex, u32 *bytesFree, s32 *notesFree) {
     s32 ret;
     s32 bytesNotUsed;
