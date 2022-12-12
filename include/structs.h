@@ -708,9 +708,14 @@ typedef struct Object_58 {
     s16 unkE;
 } Object_58;
 
+typedef f32 FakeHalfMatrix[2][4];
 typedef struct Object_5C {
-    u8 pad0[0x100];
-    void *unk100;
+    union {
+  /* 0x0000 */ Matrix matrices[4];
+  /* 0x0000 */ FakeHalfMatrix _matrices[8]; // This is a hack. The Matrix[4] is the real one.
+ };
+  /* 0x0100 */ void *unk100;
+  /* 0x0104 */ u8 unk104;
 } Object_5C;
 
 typedef struct Object_60 {
@@ -772,7 +777,7 @@ typedef struct Object_Weapon {
   /* 0x10 */ f32 forwardVel;
   /* 0x14 */ s32 unk14;
   /* 0x18 */ u8 weaponID;
-  /* 0x19 */ u8 checkpoint;
+  /* 0x19 */ s8 checkpoint;
   /* 0x19 */ s16 unk1A;
   /* 0x19 */ s32 unk1C;
 } Object_Weapon;

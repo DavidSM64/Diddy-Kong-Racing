@@ -476,6 +476,7 @@ Object *func_8001B7A8(Object *racer, s32 position, f32 *distance);
 s32 func_8000FD34(unk8000FD34 *arg0, unk_80016BC4_2 *arg1);
 void func_8000E4E8(s32 index);
 void func_8000F648(Object *obj, s32 count, s32 objType);
+void func_8001709C();
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -500,7 +501,6 @@ void func_80068FA8(Gfx**, MatrixS**, Object*, Object*, f32); /* extern */
 void func_800138A8(Object*, unk80068514_arg4*, ObjectTransformExt *, s32);
 Object *func_8002342C(f32 x, f32 z);
 void func_8006017C(s32);
-void func_8001709C();
 void func_80012F94(Object *);
 void render_3d_model(Object *);
 void func_800101AC(Object *, s32);

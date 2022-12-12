@@ -3820,7 +3820,6 @@ void obj_loop_weaponballoon(Object* obj, s32 updateRate) {
     Object_Racer *racer;
     Object_WeaponBalloon *balloon;
     s8 *balloonAsset;
-    s8 var_v0;
     s8 prevQuantity;
     s8 levelMask;
     Object *interactObj;
@@ -3933,21 +3932,21 @@ void obj_init_weapon(Object *obj, UNUSED LevelObjectEntry_Weapon *entry) {
     obj->unk4C->unk11 = 0;
     obj->unk4C->unk10 = 0x18;
     obj->unk4C->unk12 = 0;
-    obj->unk78 = normalise_time(0x1E0);
+    obj->unk78 = normalise_time(480);
     obj->unk7C.word = 0;
 }
 
 void obj_loop_weapon(Object *obj, s32 updateRate) {
-    Object_Weapon *obj64 = &obj->unk64->weapon;
-    switch (obj64->weaponID) {
-        case 0:
-        case 1:
+    Object_Weapon *weapon = &obj->unk64->weapon;
+    switch (weapon->weaponID) {
+        case WEAPON_ROCKET_HOMING:
+        case WEAPON_ROCKET:
             func_8003E694(obj, updateRate);
             break;
-        case 2:
-        case 3:
-        case 10:
-        case 11:
+        case WEAPON_TRIPMINE:
+        case WEAPON_OIL_SLICK:
+        case WEAOON_BUBBLE_TRAP:
+        case WEAPON_UNK_11:
             func_8003F2E8(obj, updateRate);
             break;
     }

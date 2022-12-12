@@ -1560,7 +1560,48 @@ void func_80016BC4(unk8000FD34 *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80016C68.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016DE8.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001709C.s")
+
+void func_8001709C(Object* obj) {
+    ObjectTransform sp78;
+    s32 i;
+    f32 inverseScale;
+    Matrix *sp6C;
+    Matrix sp2C;
+    Object_5C* obj5C;
+    
+    obj5C = obj->unk5C;
+    obj5C->unk104 = (obj5C->unk104 + 1) & 1; 
+    sp6C = (Matrix *) &obj5C->_matrices[obj5C->unk104 << 1];
+    sp78.y_rotation = -obj->segment.trans.y_rotation;
+    sp78.x_rotation = -obj->segment.trans.x_rotation;
+    sp78.z_rotation = -obj->segment.trans.z_rotation;
+    sp78.scale = 1.0f;
+    sp78.x_position = -obj->segment.trans.x_position;
+    sp78.y_position = -obj->segment.trans.y_position;
+    sp78.z_position = -obj->segment.trans.z_position;
+    object_transform_to_matrix_2((float (*)[4]) sp6C, (ObjectTransform* ) &sp78);
+    inverseScale = 1.0 / obj->segment.trans.scale;
+    i = 0;
+    while (i < 16) {
+        ((f32 *) sp2C)[i] = 0.0f;
+        i++;
+    }
+    sp2C[0][0] = inverseScale;
+    sp2C[1][1] = inverseScale;
+    sp2C[2][2] = inverseScale;
+    sp2C[3][3] = 1.0f;
+    f32_matrix_mult(sp6C, &sp2C, sp6C);
+    sp78.y_rotation = obj->segment.trans.y_rotation;
+    sp78.x_rotation = obj->segment.trans.x_rotation;
+    sp78.z_rotation = obj->segment.trans.z_rotation;
+    sp78.scale = 1.0 / inverseScale;
+    sp78.x_position = obj->segment.trans.x_position;
+    sp78.y_position = obj->segment.trans.y_position;
+    sp78.z_position = obj->segment.trans.z_position;
+    object_transform_to_matrix(obj5C->_matrices[((s32) obj5C->unk104 + 2) << 1], (ObjectTransform* ) &sp78);
+    obj5C->unk100 = NULL;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80017248.s")
 
 unk800179D0 *func_8001790C(u32 *arg0, u32 *arg1) {
