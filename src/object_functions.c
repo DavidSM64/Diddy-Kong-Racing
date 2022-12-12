@@ -4252,8 +4252,8 @@ void obj_init_texscroll(Object *obj, LevelObjectEntry_TexScroll *entry, s32 arg2
     if (obj64->unk0 >= numberOfTexturesInLevel) {
         obj64->unk0 = numberOfTexturesInLevel - 1;
     }
-    obj64->unk4 = (s16)entry->unkA;
-    obj64->unk6 = (s16)entry->unkB;
+    obj64->unk4 = (s16) entry->unkA;
+    obj64->unk6 = (s16) entry->unkB;
     if (arg2 == 0) {
         obj64->unk8 = 0;
         obj64->unkA = 0;
