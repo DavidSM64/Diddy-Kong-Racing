@@ -784,7 +784,7 @@ void func_8000F648(Object *obj, s32 count, s32 objType) {
     if (objType == 0) { // 3D model
         for (i = 0; i < count; i++) {
             if (obj->unk68[i] != NULL) {
-                func_8005FF40((Object_68 **) (s32) obj->unk68[i]);
+                func_8005FF40((ObjectModel **) (s32) obj->unk68[i]);
             }
         } 
     } else if (objType == 4) {

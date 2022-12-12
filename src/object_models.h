@@ -19,6 +19,6 @@ void func_800619F4(s32 arg0);
 void func_80061C0C(Object* obj);
 
 void free_object_model(ObjectModel *model); //Non Matching
-void func_8005FF40(Object_68 **modelPtr);
+void func_8005FF40(ObjectModel **modelPtr);
 
 #endif
