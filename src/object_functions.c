@@ -3814,7 +3814,113 @@ void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) 
     }
 }
 
+#ifdef NON_MATCHING
+void obj_loop_weaponballoon(Object* obj, s32 updateRate) {
+    s8 currentBalloon;
+    Object_Racer *racer;
+    Object_WeaponBalloon *balloon;
+    s8 *balloonAsset;
+    s8 var_v0;
+    s8 prevQuantity;
+    s8 levelMask;
+    Object *interactObj;
+    s32 newvar;
+
+    balloon = (Object_WeaponBalloon *) obj->unk64;
+    obj->segment.trans.scale = balloon->unk0 * (1.0 - (balloon->unk4 / 90.0f));
+    if (obj->segment.trans.scale < 0.001) {
+        obj->segment.trans.scale = 0.001f;
+    }
+    if (obj->segment.trans.scale < 0.1) {
+        obj->segment.trans.unk6 |= 0x4000;
+    } else {
+        obj->segment.trans.unk6 &= 0xBFFF;
+    }
+    if (obj->unk7C.word > 0) {
+        obj->unk74 = 1;
+        func_800AFC3C(obj, updateRate);
+        obj->unk7C.word -= updateRate;
+    }
+    if (balloon->unk4 != 0) {
+        if (!(balloon->unk4 == 90 && obj->unk4C->unk13 < 45)) {
+            balloon->unk4 = (balloon->unk4 - updateRate) - updateRate;
+        }
+        if (balloon->unk4 < 0) {
+            balloon->unk4 = 0;
+        }
+    } else {
+        if (obj->unk4C->unk13 < 45) {
+            interactObj = obj->unk4C->unk0;
+            if (interactObj != NULL && interactObj->segment.header->behaviorId == BHV_RACER) {
+                racer = (Object_Racer *) interactObj->unk64;
+                    if (racer->unk1D6 < 5 || racer->playerIndex != PLAYER_COMPUTER) {
+                    currentBalloon = racer->balloon_type;
+                    racer->balloon_type = obj->unk78;
+                    if (currentBalloon == racer->balloon_type && racer->balloon_quantity != 0) {
+                        racer->balloon_level++;
+                    } else {
+                        racer->balloon_level = 0;
+                    }
+                    // Disallow level 3 ballons in challenge mode
+                    if (get_current_level_race_type() & RACETYPE_CHALLENGE) {
+                        if (racer->balloon_level > 1) {
+                            racer->balloon_level = 1;
+                        }
+                        // And instantly upgrade oil slicks to tripmines.
+                        if (racer->balloon_type == BALLOON_TYPE_TRAP) {
+                            racer->balloon_level = 1;
+                        }
+                    }
+                    levelMask = 3; // 3 isn't an attainable level so the future check won't be true if the item's already max level.
+                    if (get_filtered_cheats() & CHEAT_MAXIMUM_POWER_UP) {
+                        racer->balloon_level = 2;
+                    }
+                    if (racer->balloon_level > 2) {
+                        racer->balloon_level = 2;
+                        levelMask = 2;
+                    }
+                    balloonAsset = (s8 *) get_misc_asset(MISC_ASSET_UNK0C);
+                    prevQuantity = racer->balloon_quantity;
+                    racer->balloon_quantity = balloonAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2) + 1];
+                    racer->unk209 |= 1;
+                    if (get_number_of_active_players() < THREE_PLAYERS) {
+                        obj->unk7C.word = 0x10;
+                    }
+                    if (racer->playerIndex == PLAYER_COMPUTER) {
+                        func_80009558(SOUND_BALLOON_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                    } else {
+                        if (levelMask == racer->balloon_level) {
+                            if (racer->raceFinished == FALSE) {
+                                if (prevQuantity != racer->balloon_quantity) {
+                                    func_800A7484(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
+                                    newvar = racer->balloon_level;
+                                    if (racer->balloon_level > 2) {
+                                        newvar = 2;
+                                    }
+                                    play_sound_global(SOUND_COLLECT_ITEM + newvar, NULL);
+                                } else {
+                                    func_80009558(SOUND_BALLOON_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                                }
+                            }
+                        } else if (racer->raceFinished == FALSE) {
+                            newvar = racer->balloon_level;
+                            if (newvar > 0) {
+                                func_800A7484(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
+                            }
+                            play_sound_global(SOUND_COLLECT_ITEM + racer->balloon_level, NULL);
+                        }
+                    }
+                    obj->unk74 = 1;
+                    func_800AFC3C(obj, updateRate);
+                    balloon->unk4 = 90;
+                }
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_weaponballoon.s")
+#endif
 
 void obj_init_wballoonpop(UNUSED Object *obj, UNUSED LevelObjectEntry_WBalloonPop *entry) {
 }
