@@ -746,6 +746,9 @@ GLOBAL_ASM("asm/non_matchings/objects/func_8000E5EC.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8000E79C.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8000E898.s")
 
+/**
+ * Returns the object at the current offset by ID.
+*/
 Object *get_object(s32 index) {
     if (index < 0 || index >= objCount) {
         return 0;
@@ -773,7 +776,7 @@ void func_8000E9D0(Object *arg0) {
     arg0->segment.trans.unk6 |= 0x8000;
     func_800245B4(arg0->segment.unk2C.half.upper | 0xC000);
     gObjPtrList[objCount++] = arg0;
-    if (1){}
+    if (1) {}  // Fakematch
     D_8011AE64++;
 }
 
@@ -2392,35 +2395,37 @@ s8 func_8002341C(void) {
     return D_8011AEF6;
 }
 
-#ifdef NON_EQUIVALENT
-
-//bad regalloc
-//finds furthest object (with some additional conditions)
-Object *func_8002342C(f32 x, f32 z) {
-    Object *retval = NULL;
+Object* func_8002342C(f32 x, f32 z) {
+    Object* tempObj;
+    Object* bestObj;
+    f32 diffX;
+    f32 diffZ;
+    f32 distance;
+    f32 bestDist;
     s32 i;
-    Object *currObj = NULL;
-    f32 dist;
-    f32 max = 0.0f;
 
-    for (i = 0; i < objCount; i++) {
-        currObj = gObjPtrList[i];
-        if ((currObj->segment.trans.unk6 & 0x8000) == 0 && currObj->behaviorId == 87) {
-            x = currObj->segment.trans.x_position - x;
-            z = currObj->segment.trans.z_position - z;
-            dist = sqrtf(x * x + z * z);
-
-            if (max < dist) {
-                max = dist;
-                retval = currObj;
+    bestDist = 0.0f;
+    i = 0;
+    bestObj = NULL;
+    if (objCount > 0) {
+        do {
+            tempObj = gObjPtrList[i];
+            if (!(tempObj->segment.trans.unk6 & 0x8000) && tempObj->behaviorId == BHV_UNK_57) {
+                diffX = tempObj->segment.trans.x_position - x;
+                diffZ = tempObj->segment.trans.z_position - z;
+                tempObj = gObjPtrList[i]; // fakematch
+                distance = sqrtf((diffX * diffX) + (diffZ * diffZ));
+                if (bestDist < distance) {
+                    bestDist = distance;
+                    bestObj = tempObj;
+                }
             }
-        }
+            i += 1;
+        } while (i < objCount);
     }
-    return retval;
+    return bestObj;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/func_8002342C.s")
-#endif
+
 
 s32 func_80023568(void) {
     if (D_8011AD3C != 0) {
