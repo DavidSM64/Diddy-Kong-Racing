@@ -3941,7 +3941,7 @@ void obj_loop_weapon(Object *obj, s32 updateRate) {
     switch (weapon->weaponID) {
         case WEAPON_ROCKET_HOMING:
         case WEAPON_ROCKET:
-            func_8003E694(obj, updateRate);
+            handle_rocket_projectile(obj, updateRate);
             break;
         case WEAPON_TRIPMINE:
         case WEAPON_OIL_SLICK:
@@ -3953,7 +3953,155 @@ void obj_loop_weapon(Object *obj, s32 updateRate) {
     return;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003E694.s")
+/**
+ * Firing a standard rocket makes it fly forward.
+ * A homing rocket uses the checkpoint system to path towards its victim.
+ * When it collides with a racer, they're launched into the air.
+*/
+void handle_rocket_projectile(Object *obj, s32 updateRate) {
+    Object *interactObj;
+    Object_Racer *weaponOwner;
+    Object_Weapon *weapon;
+    Object *temp_s1_2;
+    UNUSED s32 pad;
+    f32 offsetZ;
+    f32 offsetY;
+    f32 offsetX;
+    f32 spC4;
+    f32 updateRateF;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    f32 diffX;
+    f32 diffY;
+    f32 diffZ;
+    s32 spA4;
+    s32 size;
+    s32 numCheckpoints;
+    Object_Racer *racer;
+    s8 sp97;
+    Matrix mtxf;
+    ObjectTransform trans;
+
+    obj->unk4C->unk14 |= 0x100;
+    weapon = (Object_Weapon *) obj->unk64;
+    posX = obj->segment.trans.x_position;
+    posY = obj->segment.trans.y_position;
+    posZ = obj->segment.trans.z_position;
+    trans.y_rotation = obj->segment.trans.y_rotation;
+    trans.x_rotation = obj->segment.trans.x_rotation;
+    trans.z_rotation = 0;
+    trans.x_position = 0.0f;
+    trans.y_position = 0.0f;
+    trans.z_position = 0.0f;
+    trans.scale = 1.0f;
+    object_transform_to_matrix(mtxf, &trans);
+    guMtxXFMF(mtxf, 0.0f, 0.0f, weapon->forwardVel, &obj->segment.x_velocity, &obj->segment.y_velocity, &obj->segment.z_velocity);
+    updateRateF = updateRate;
+    if (osTvType == TV_TYPE_PAL) {
+        updateRateF *= 1.2;
+    }
+    offsetX = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
+    offsetY = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
+    offsetZ = obj->segment.trans.z_position + (obj->segment.z_velocity * updateRateF);
+    if (weapon->weaponID != WEAPON_MAGNET_LEVEL_3) {
+        spC4 = 16.0f;
+        func_80031130(1, &obj->segment.trans.x_position, &offsetX, -1);
+        spA4 = 0;
+        sp97 = -1;
+        func_80031600(&obj->segment.trans.x_position, &offsetX, &spC4, &sp97, 1, &spA4);
+        if (spA4 > 0) {
+            if (func_8002ACD4(&diffX, &diffY, &diffZ) != 0) {
+                obj->unk78 = 0;
+            }
+        }
+    }
+    diffX = offsetX - posX;
+    diffY = offsetY - posY;
+    diffZ = offsetZ - posZ;
+    if (func_80011570(obj, diffX, diffY, diffZ) != 0) {
+        obj->unk78 = 0;
+    }
+    diffX = ((diffX * diffX) + (diffZ * diffZ)) / updateRateF;
+    diffZ = (weapon->forwardVel * weapon->forwardVel) / 2;
+    if (diffX < diffZ) {
+        obj->unk78 = 0;
+    }
+    if (weapon->weaponID == WEAPON_ROCKET_HOMING) {
+        numCheckpoints = get_checkpoint_count();
+        if (numCheckpoints > 0) {
+            if (func_800185E4(weapon->checkpoint, obj, posX, posY, posZ, &weapon->checkpointDist, (u8* ) &sp97) == FALSE) {
+                weapon->checkpoint++;
+                if (weapon->checkpoint >= numCheckpoints) {
+                    weapon->checkpoint = 0;
+                }
+            }
+        } else {
+            weapon->checkpoint = -1;
+        }
+    }
+    if (weapon->weaponID == WEAPON_ROCKET_HOMING) {
+        func_8003EDD8(obj, updateRate, weapon);
+    } else {
+        func_8003EC14(obj, updateRate, weapon);
+    }
+    //TODO: Fix these gotos.
+    if (obj->unk4C->unk0 != NULL) {
+        interactObj = obj->unk4C->unk0;
+        if (interactObj == weapon->owner) {
+            if (obj->unk78 < normalise_time(450) && obj->unk78 != 0) {
+                goto block_25;
+            }
+            goto block_37;
+        }
+block_25:
+        if (weapon->weaponID == WEAPON_ROCKET_HOMING ) {
+            if (interactObj == weapon->target) {
+                size = 75;
+            } else {
+                size = 20;
+            }
+        } else {
+            size = 60;
+        }
+        if (obj->unk4C->unk13 < size) {
+            if (interactObj->segment.header->behaviorId == BHV_RACER) {
+                racer = (Object_Racer *) interactObj->unk64;
+                racer->attackType = ATTACK_EXPLOSION;
+                weaponOwner = (Object_Racer *) weapon->owner->unk64;
+                if (racer->playerIndex != PLAYER_COMPUTER || weaponOwner->playerIndex != PLAYER_COMPUTER) {
+                    weaponOwner->boost_sound |= 2;
+                }
+                if (racer->raceFinished == FALSE) {
+                    func_80072348(racer->playerIndex, 9);
+                }
+            }
+            func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, 17, 1.0f, 1);
+            gParticlePtrList_addObject(obj);
+            return;
+        }
+    }
+block_37:
+    obj->unk7C.word += updateRate;
+    if (obj->unk60 != NULL) {
+        temp_s1_2 = (Object *) obj->unk60->unk4;
+        if (obj->unk7C.word < 8) {
+            temp_s1_2->segment.trans.scale = obj->unk7C.word * 0.5f;
+        } else if (obj->unk7C.word < 16) {
+            temp_s1_2->segment.trans.scale = 4.0f - ((obj->unk7C.word - 8) * 0.25f);
+        } else {
+            temp_s1_2->segment.trans.scale = (sins_f(obj->unk7C.word << 12) * 0.25f) + 2.0f;
+        }
+    }
+    obj->unk78 -= updateRate;
+    if (obj->unk78 < 0) {
+        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, 17, 1.0f, 1);
+        gParticlePtrList_addObject(obj);
+        return;
+    }
+}
+
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003EC14.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003EDD8.s")
 

@@ -440,6 +440,7 @@ void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry);
 void obj_init_fish(Object *obj, LevelObjectEntry_Fish *entry);
 void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry);
 void calc_env_mapping_for_object(ObjectModel *, s16, s16, s16);
+void handle_rocket_projectile(Object *obj, s32 updateRate);
 
 s32 func_8001C524(f32 x, f32 y, f32 z, s32 arg3);
 s32 func_8001CC48(s32, s32, s32);
@@ -453,7 +454,8 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *entry);
 s32 func_8001F3EC(s32);
 s32 func_80021600(s32);
 void func_80036040(Object*, Object_64*);
-void func_8003E694(Object *, s32 updateRate);
 void func_8003F2E8(Object *, s32 updateRate);
+void func_8003EC14(Object*, s32, Object_Weapon*);
+void func_8003EDD8(Object*, s32, Object_Weapon*);
 
 #endif

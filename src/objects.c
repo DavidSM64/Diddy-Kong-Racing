@@ -1598,7 +1598,7 @@ void func_8001709C(Object* obj) {
     sp78.x_position = obj->segment.trans.x_position;
     sp78.y_position = obj->segment.trans.y_position;
     sp78.z_position = obj->segment.trans.z_position;
-    object_transform_to_matrix(obj5C->_matrices[((s32) obj5C->unk104 + 2) << 1], (ObjectTransform* ) &sp78);
+    object_transform_to_matrix(obj5C->_matrices[(obj5C->unk104 + 2) << 1], (ObjectTransform* ) &sp78);
     obj5C->unk100 = NULL;
 }
 
