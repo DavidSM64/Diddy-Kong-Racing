@@ -261,7 +261,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
     weapon = (Object_Fireball_Octoweapon *) obj->unk64;
     obj4C = obj->unk4C;
     if ((obj4C->unk0)) { 
-        if ((obj4C->unk13 < 60)) {
+        if ((obj4C->distance < 60)) {
             someObj = obj4C->unk0;
             if((someObj->segment.header->behaviorId == BHV_RACER)) {
                 racer = (Object_Racer *) someObj->unk64;
@@ -360,7 +360,7 @@ void obj_loop_lasergun(Object *obj, s32 updateRate) {
         lasergun->fireTimer -= updateRate;
     } else {
         obj4C = obj->unk4C;
-        if (lasergun->unk11 >= obj4C->unk13) {
+        if (lasergun->unk11 >= obj4C->distance) {
             if (lasergun->targeting) {
                 racerObj = obj4C->unk0;
                 if (racerObj != NULL && racerObj->behaviorId == BHV_RACER) {
@@ -466,7 +466,7 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
         sp4F = TRUE;
     }
 
-    if (obj->unk4C->unk13 < 80) {
+    if (obj->unk4C->distance < 80) {
         obj4C_obj = (Object*)obj->unk4C->unk0;
         if (obj4C_obj && (obj4C_obj->behaviorId == 1)) {
             obj4C_obj64 = &obj4C_obj->unk64->laser;
@@ -823,7 +823,7 @@ void obj_loop_rocketsignpost(Object *obj, UNUSED s32 updateRate) {
     playerObj = get_racer_object(0);
     if (playerObj != NULL) {
         obj4C = obj->unk4C;
-        if (obj4C->unk13 < 0xC8) {
+        if (obj4C->distance < 0xC8) {
             if (playerObj == obj4C->unk0) {
                 // Detect if the player honks or slams into the signpost.
                 if ((get_buttons_pressed_from_player(PLAYER_ONE) & Z_TRIG) || playerObj == obj->unk5C->unk100) {
@@ -832,7 +832,7 @@ void obj_loop_rocketsignpost(Object *obj, UNUSED s32 updateRate) {
             }
         }
     }
-    obj->unk4C->unk13 = 0xFF;
+    obj->unk4C->distance = 0xFF;
 }
 
 void obj_init_airzippers_waterzippers(Object *obj, LevelObjectEntry_AirZippers_WaterZippers *entry) {
@@ -875,7 +875,7 @@ void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 updateRate) {
     } else {
         obj->segment.trans.unk6 &= 0xBFFF;
     }
-    if ((obj->unk4C->unk13 < 100) && !(obj->segment.trans.unk6 & 0x4000)) {
+    if ((obj->unk4C->distance < 100) && !(obj->segment.trans.unk6 & 0x4000)) {
         racerObjs = get_racer_objects(&numObjects);
         for (i = 0; i < numObjects; i++) {
             curRacerObj = racerObjs[i];
@@ -940,7 +940,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
     obj->segment.trans.unk6 &= 0xBFFF;
     obj->segment.trans.unk6 |= 0x1000;
     get_racer_object(0); // Unused. I guess the developers forgot to remove this?
-    if ((s32) obj->unk4C->unk13 < obj->unk78) {
+    if ((s32) obj->unk4C->distance < obj->unk78) {
         racerObjs = get_racer_objects(&numObjects);
         for (i = 0; i < numObjects; i++) {
             curRacerObj = racerObjs[i];
@@ -1750,7 +1750,7 @@ void obj_loop_infopoint(Object *obj, UNUSED s32 updateRate) {
     }
 
     obj4C = obj->unk4C;
-    if (obj4C->unk13 < ((obj->unk78 >> 16) & 0xFF)) {
+    if (obj4C->distance < ((obj->unk78 >> 16) & 0xFF)) {
         playerObj = obj4C->unk0;
         if (playerObj->segment.header->behaviorId == 1) {
             Object_InfoPoint *playerObj64 = &playerObj->unk64->info_point;
@@ -1865,7 +1865,7 @@ void obj_init_teleport(Object *obj, UNUSED LevelObjectEntry_Teleport *entry) {
 void obj_loop_teleport(Object *obj, UNUSED s32 updateRate) {
     if (obj->action != 0) {
         LevelObjectEntry_Teleport *level_entry = &obj->segment.unk3C_a.level_entry->teleport;
-        if (obj->unk4C->unk13 < 0x78) {
+        if (obj->unk4C->distance < 0x78) {
             func_8006F338(level_entry->unk8);
             obj->action = 0;
             play_sound_global(SOUND_WHOOSH2, NULL);
@@ -1922,7 +1922,7 @@ void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
         enableWarp = FALSE;
     }
     if (enableWarp) {
-        if (obj->unk4C->unk13 < obj64->unk10) {
+        if (obj->unk4C->distance < obj64->unk10) {
             dist = obj64->unk10;
             racerObjects = get_racer_objects(&numberOfRacers);
             for (i = 0; i < numberOfRacers; i++) {
@@ -1982,7 +1982,7 @@ void obj_loop_dino_whale(Object *obj, s32 updateRate) {
     sp2C = obj->segment.visualIndex;
     func_8001F460(obj, updateRate, obj);
     func_800113CC(obj, 0, sp2C, 0xAC, 0xAD);
-    if (obj->unk4C->unk13 < 0xFF) {
+    if (obj->unk4C->distance < 0xFF) {
         if (obj->unk78 == 0) {
             obj->unk78 = 0x3C;
             func_80009558(SOUND_VOICE_BRONTO_ROAR, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
@@ -2689,7 +2689,7 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
     f32 dist;
     
     modeChange = (Object_ModeChange *) obj->unk64;
-    if (obj->unk4C->unk13 < modeChange->unk10) {
+    if (obj->unk4C->distance < modeChange->unk10) {
         radiusF = modeChange->unk10;
         racerObjects = get_racer_objects(&numRacers);
         for (i = 0; i < numRacers; i++) {
@@ -2769,7 +2769,7 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
     s32 i;
 
     obj64 = &obj->unk64->bonus;
-    if (obj->unk4C->unk13 < obj64->unk10) {
+    if (obj->unk4C->distance < obj64->unk10) {
         dist = obj64->unk10;
         halfDist = dist * 0.5;
         racerObjects = get_racer_objects(&numberOfRacers);
@@ -2874,7 +2874,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
                 obj->segment.unk38.half.lower = 255;
             }
             obj4C = obj->unk4C;
-            if ((obj4C->unk13 < 45) && (isPirated == FALSE)) {
+            if ((obj4C->distance < 45) && (isPirated == FALSE)) {
                 racerObj = obj4C->unk0;
                 if ((racerObj && (racerObj->segment.header->behaviorId == 1))) {
                     racer = &racerObj->unk64->racer;
@@ -3005,7 +3005,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
     } else {
         obj->segment.unk3A = D_800DCA9C[settings->ttAmulet];
     }
-    if (obj->unk4C->unk13 < ttDoor->unk12 && (settings->ttAmulet < 4 || *settings->balloonsPtr < 47)) {
+    if (obj->unk4C->distance < ttDoor->unk12 && (settings->ttAmulet < 4 || *settings->balloonsPtr < 47)) {
         racerObj = obj->unk4C->unk0;
         if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
             racer = (Object_Racer *) racerObj->unk64;
@@ -3039,7 +3039,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
         ttDoor->unkC = 0;
     }
     openDoor = TRUE;
-    if (settings->ttAmulet >= 4 && obj->unk4C->unk13 < ttDoor->unk12 && *settings->balloonsPtr >= 47) {
+    if (settings->ttAmulet >= 4 && obj->unk4C->distance < ttDoor->unk12 && *settings->balloonsPtr >= 47) {
         angle = obj->segment.trans.y_rotation - obj->unk7C.word;
     } else {
         angle = obj->segment.trans.y_rotation - obj->unk78;
@@ -3065,7 +3065,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
             ttDoor->soundMask = NULL;
         }
     }
-    obj->unk4C->unk13 = 0xFF;
+    obj->unk4C->distance = 0xFF;
     obj->unk4C->unk0 = NULL;
     obj->unk4C->unk14 &= 0xFFF7;
     obj->unk5C->unk100 = NULL;
@@ -3130,7 +3130,7 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
     curRaceType = get_current_level_race_type();
     if (triggerEntry->unk9 >= 0) {
         flags = 0x10000 << triggerEntry->unk9;
-        if (obj->unk4C->unk13 < trigger->unk10) {
+        if (obj->unk4C->distance < trigger->unk10) {
             if (((u8) curRaceType != RACETYPE_HUBWORLD) || !(courseFlags & flags)) {
                 radiusF = trigger->unk10;
                 racers = get_racer_objects(&numRacers);
@@ -3255,7 +3255,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
     switch (entry->unkB) {
     case 0:
         obj->unk78 = 0;
-        if (obj->unk4C->unk13 < entry->unkC) {
+        if (obj->unk4C->distance < entry->unkC) {
             obj->unk78 = 1;
         }
         break;
@@ -3292,7 +3292,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
         break;
     }
     
-    obj->unk4C->unk13 = 255;
+    obj->unk4C->distance = 255;
     obj->unk4C->unk0 = NULL;
     obj->unk4C->unk14 &= 0xFFF7;
 }
@@ -3306,10 +3306,10 @@ void obj_init_rampswitch(Object *obj, LevelObjectEntry_RampSwitch *entry) {
 }
 
 void obj_loop_rampswitch(Object *obj, UNUSED s32 updateRate) {
-    if (obj->unk4C->unk13 < 0x2D) {
+    if (obj->unk4C->distance < 0x2D) {
         func_8001E344(obj->action);
     }
-    obj->unk4C->unk13 = (u8)0xFF;
+    obj->unk4C->distance = (u8)0xFF;
 }
 
 void obj_init_seamonster(UNUSED Object *obj, UNUSED LevelObjectEntry_SeaMonster *entry) {
@@ -3334,7 +3334,7 @@ void obj_init_skycontrol(Object *obj, LevelObjectEntry_SkyControl *entry) {
 }
 
 void obj_loop_skycontrol(Object *obj, UNUSED s32 updateRate) {
-    if (obj->unk4C->unk13 < obj->unk7C.word) {
+    if (obj->unk4C->distance < obj->unk7C.word) {
         func_80028044(obj->action);
     }
 }
@@ -3584,7 +3584,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
         } else {
             obj78->unk4 = 0;
         }
-        if (obj->unk4C->unk13 < 0x78) {
+        if (obj->unk4C->distance < 0x78) {
             if (get_current_level_race_type() == RACETYPE_CHALLENGE_BANANAS) {
                 racerObj = obj->unk4C->unk0;
                 if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
@@ -3595,7 +3595,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
                 }
             }
         }
-        if (obj->unk4C->unk13 < sp44 && obj78->unk4 == 0) {
+        if (obj->unk4C->distance < sp44 && obj78->unk4 == 0) {
             racerObj = obj->unk4C->unk0;
             if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) { 
                 racer = (Object_Racer *) racerObj->unk64;
@@ -3691,7 +3691,7 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate) {
     temp = func_8006C19C();
     if ((temp && obj->action != SILVER_COIN_INACTIVE) || (!temp && obj->action == SILVER_COIN_ACTIVE)) {
         silverCoin4C = obj->unk4C;
-        if (silverCoin4C->unk13 < 80) {
+        if (silverCoin4C->distance < 80) {
             racerObj = (Object *) silverCoin4C->unk0;
             if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
                 racer = (Object_Racer *) racerObj->unk64;
@@ -3738,8 +3738,8 @@ void obj_loop_worldkey(Object *worldKeyObj, s32 updateRate) {
     Object *playerObj;
 
     // Check if the player is near the key
-    // "worldKeyObj->unk4C->unk13" is the player's distance from the key (Up to 255).
-    if (worldKeyObj->unk4C->unk13 < WORLD_KEY_GRAB_CHECK_RADIUS) {
+    // "worldKeyObj->unk4C->distance" is the player's distance from the key (Up to 255).
+    if (worldKeyObj->unk4C->distance < WORLD_KEY_GRAB_CHECK_RADIUS) {
         // "worldKeyObj->unk4C->unk0" is only set when the player is within 255 units of
         // the key object, otherwise it is NULL.
         playerObj = worldKeyObj->unk4C->unk0;
@@ -3841,14 +3841,14 @@ void obj_loop_weaponballoon(Object* obj, s32 updateRate) {
         obj->unk7C.word -= updateRate;
     }
     if (balloon->unk4 != 0) {
-        if (!(balloon->unk4 == 90 && obj->unk4C->unk13 < 45)) {
+        if (!(balloon->unk4 == 90 && obj->unk4C->distance < 45)) {
             balloon->unk4 = (balloon->unk4 - updateRate) - updateRate;
         }
         if (balloon->unk4 < 0) {
             balloon->unk4 = 0;
         }
     } else {
-        if (obj->unk4C->unk13 < 45) {
+        if (obj->unk4C->distance < 45) {
             interactObj = obj->unk4C->unk0;
             if (interactObj != NULL && interactObj->segment.header->behaviorId == BHV_RACER) {
                 racer = (Object_Racer *) interactObj->unk64;
@@ -4055,7 +4055,7 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
             goto block_37;
         }
 block_25:
-        if (weapon->weaponID == WEAPON_ROCKET_HOMING ) {
+        if (weapon->weaponID == WEAPON_ROCKET_HOMING) {
             if (interactObj == weapon->target) {
                 size = 75;
             } else {
@@ -4064,7 +4064,7 @@ block_25:
         } else {
             size = 60;
         }
-        if (obj->unk4C->unk13 < size) {
+        if (obj->unk4C->distance < size) {
             if (interactObj->segment.header->behaviorId == BHV_RACER) {
                 racer = (Object_Racer *) interactObj->unk64;
                 racer->attackType = ATTACK_EXPLOSION;

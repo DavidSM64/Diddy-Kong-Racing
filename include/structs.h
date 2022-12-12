@@ -656,7 +656,7 @@ typedef struct Object_4C {
     u8 unk10;
     u8 unk11;
     u8 unk12;
-    u8 unk13;
+    u8 distance;
     s16 unk14;
     s8 unk16;
     s8 unk17;
