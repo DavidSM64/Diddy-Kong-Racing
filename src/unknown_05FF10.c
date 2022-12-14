@@ -151,7 +151,7 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     tempObj = get_racer_object(0);
     obj64 = tempObj->unk64;
-    if ((obj == tempobj->interactObj->obj) && (tempObj->interactObj->unk14 & 8) && (obj->segment.unk3B == 1)) {
+    if ((obj == tempObj->interactObj->obj) && (tempObj->interactObj->unk14 & 8) && (obj->segment.unk3B == 1)) {
         obj64->racer.attackType = ATTACK_SQUISHED;
     }
     if ((obj64->racer.raceFinished != FALSE) && (D_8011D610 == 0)) {
