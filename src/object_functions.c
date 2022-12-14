@@ -563,8 +563,6 @@ void obj_init_trophycab(Object *obj, LevelObjectEntry_TrophyCab *entry) {
     obj->segment.trans.y_rotation = entry->rotation << 6 << 4; // Not sure about the values here.
 }
 
-#include "printf.h"
-
 /**
  * Trophy Cabinet loop behaviour.
  * Displays the dialogue when ran into.
