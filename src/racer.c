@@ -1451,27 +1451,25 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     tempRacer->unk20A = 0;
 }
 
-#include "printf.h"
-
 /**
  * Main function for handling everything related to the player controlled racer object.
  * Branches off into a different function if the player becomes computer controlled. (Finishing a race)
  */
-void update_player_racer(Object* obj, s32 updateRate) {
+void update_player_racer(Object *obj, s32 updateRate) {
     s32 tempVar;
     s32 temp_v0_17;
     s32 context;
-    Object* tempObj;
+    Object *tempObj;
     f32 delta;
     f32 waterHeight;
-    Object_Racer* tempRacer;
+    Object_Racer *tempRacer;
     f32 xTemp;
     f32 yTemp;
     f32 zTemp;
     f32 lastCheckpointDist;
     f32 temp_f12;
-    LevelHeader* header;
-    CheckpointNode* checkpointNode;
+    LevelHeader *header;
+    CheckpointNode *checkpointNode;
     s32 angleVel;
     UNUSED s32 pad;
     s32 i;
@@ -2107,7 +2105,7 @@ typedef struct unk_Object_60 {
     ObjectTransform *transforms[1]; // Array of ObjectTransform pointers.
 } unk_Object_60;
 
-void func_80050A28(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF) {
+void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
     s32 soundID;
     f32 scale;
     f32 velocityDiff;

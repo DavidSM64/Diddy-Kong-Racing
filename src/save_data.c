@@ -1154,7 +1154,7 @@ s32 func_80074B1C(void) {
 }
 
 #ifdef NON_EQUIVALENT
-s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCharacterId, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *ghostData) {
+s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 *ghostCharacterId, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *ghostData) {
     #define GHSS_FILE_SIZE 0x100
     u8 *fileData;
     s32 fileNumber;

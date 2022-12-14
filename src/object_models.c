@@ -100,7 +100,7 @@ void func_8005FF40(ObjectModel **modelPtr) {
             D_8011D628[D_8011D634] = modelIndex;
             D_8011D634++;
             D_8011D624[modelIndex].unk0 = -1;
-            D_8011D624[modelIndex].model = -1;
+            D_8011D624[modelIndex].model = (ObjectModel *) -1;
             free_from_memory_pool(modelPtr);
         }
     }

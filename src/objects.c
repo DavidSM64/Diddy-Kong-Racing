@@ -380,7 +380,7 @@ void allocate_object_pools(void) {
     }
 
     decrypt_magic_codes(&gAssetsMiscSection[gAssetsMiscTable[65]], (gAssetsMiscTable[66] - gAssetsMiscTable[65]) * 4);
-    gObjPtrList = (Object **)allocate_from_main_pool_safe(sizeof(uintptr_t) * OBJECT_SLOT_COUNT, COLOUR_TAG_BLUE);
+    gObjPtrList = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * OBJECT_SLOT_COUNT, COLOUR_TAG_BLUE);
     D_8011ADC4 = 0;
     gTimeTrialEnabled = 0;
     D_8011AEF5 = 0;
@@ -1563,7 +1563,7 @@ void func_80016BC4(unk8000FD34 *arg0) {
 GLOBAL_ASM("asm/non_matchings/objects/func_80016C68.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016DE8.s")
 
-void func_8001709C(Object* obj) {
+void func_8001709C(Object *obj) {
     ObjectTransform sp78;
     s32 i;
     f32 inverseScale;
@@ -2438,9 +2438,9 @@ s8 func_8002341C(void) {
     return D_8011AEF6;
 }
 
-Object* func_8002342C(f32 x, f32 z) {
-    Object* tempObj;
-    Object* bestObj;
+Object *func_8002342C(f32 x, f32 z) {
+    Object *tempObj;
+    Object *bestObj;
     f32 diffX;
     f32 diffZ;
     f32 distance;

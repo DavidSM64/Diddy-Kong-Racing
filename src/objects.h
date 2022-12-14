@@ -170,7 +170,7 @@ typedef struct CheckpointNode {
 /* 0x1C */ f32 scale;
 /* 0x20 */ f32 distance;
 /* 0x24 */ f32 unk24; // Appears to be exactly the same as distance?
-/* 0x28 */ Object* obj;
+/* 0x28 */ Object *obj;
 /* 0x2C */ s16 unk2C;
 /* 0x2E */ s8 unk2E[4];
 /* 0x32 */ s8 unk32[4];

@@ -1369,7 +1369,7 @@ void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 arg2) 
 
 // Has minor issues
 
-void obj_loop_animator(Object* obj, s32 updateRate) {
+void obj_loop_animator(Object *obj, s32 updateRate) {
     Object_Animator* obj64; // 3C
     s32 sp20;
     s32 sp1C;
@@ -3815,7 +3815,7 @@ void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) 
 }
 
 #ifdef NON_MATCHING
-void obj_loop_weaponballoon(Object* obj, s32 updateRate) {
+void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
     s8 currentBalloon;
     Object_Racer *racer;
     Object_WeaponBalloon *balloon;
