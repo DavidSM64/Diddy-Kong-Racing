@@ -1453,7 +1453,7 @@ typedef struct ObjectTransform {
 /* Size: 0x44 bytes */
 typedef struct ObjectSegment {
   /* 0x0000 */ ObjectTransform trans;
-  /* 0x0018 */ s16 visualIndex;
+  /* 0x0018 */ s16 animFrame;
   /* 0x001A */ s16 unk1A;
   /* 0x001C */ f32 x_velocity;
   /* 0x0020 */ f32 y_velocity;

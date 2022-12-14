@@ -972,7 +972,7 @@ void func_8004C0A0(s32 updateRate, Object *obj, Object_Racer *racer) {
         if (phi_v0 > 73) {
             phi_v0 = 73;
         }
-        temp_v1 = phi_v0 - obj->segment.visualIndex;
+        temp_v1 = phi_v0 - obj->segment.animFrame;
         phi_v0 = 0;
         if (temp_v1 > 0) {
             phi_v0 = updateRate * 3;
@@ -986,7 +986,7 @@ void func_8004C0A0(s32 updateRate, Object *obj, Object_Racer *racer) {
                 phi_v0 = temp_v1;
             }
         }
-        obj->segment.visualIndex += phi_v0;
+        obj->segment.animFrame += phi_v0;
     }
 }
 
@@ -1325,7 +1325,7 @@ void func_8004D95C(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (func_8002341C() && racer->unk1D6 == 10) {
         obj->interactObj->unk14 = 0;
     }
-    sp26 = obj->segment.visualIndex;
+    sp26 = obj->segment.animFrame;
     racer->unk1D6 = 10;
     func_80049794(updateRate, updateRateF, obj, racer);
     racer->unk1D6 = racer->unk1D7;
@@ -1340,7 +1340,7 @@ void func_8004D95C(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             racer->unk154->segment.trans.x_rotation = obj->segment.trans.x_rotation;
             racer->unk154->segment.trans.z_rotation = obj->segment.trans.z_rotation;
             obj->segment.unk3B = 0;
-            obj->segment.visualIndex = sp26 + updateRate;
+            obj->segment.animFrame = sp26 + updateRate;
             func_80061C0C(obj);
         }
     }
@@ -1860,7 +1860,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         if (func_8002341C()) {
             if (tempRacer->unk15C) {
-                tempRacer->unk15C->segment.visualIndex += 8 * updateRate;
+                tempRacer->unk15C->segment.animFrame += 8 * updateRate;
             }
             if ((tempRacer->unk1BA > 400) || (tempRacer->unk1BA < -400)) {
                 func_80022E18(2);
@@ -2021,7 +2021,7 @@ void func_80050754(Object *obj, Object_Racer *racer, f32 divisor) {
     f32 zDiff;
 
     obj->segment.unk3B = 0;
-    obj->segment.visualIndex = 40;
+    obj->segment.animFrame = 40;
     xDiff = racer->unk148->segment.trans.x_position - obj->segment.trans.x_position;
     yDiff = racer->unk148->segment.trans.y_position - obj->segment.trans.y_position;
     zDiff = racer->unk148->segment.trans.z_position - obj->segment.trans.z_position;
@@ -2719,7 +2719,7 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
         if (angleVel > 73) {
             angleVel = 73;
         }
-        newAngle = angleVel - obj->segment.visualIndex;
+        newAngle = angleVel - obj->segment.animFrame;
         angleVel = 0;
         if (newAngle > 0) {
             angleVel = updateRate * 3;
@@ -2733,7 +2733,7 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
                 angleVel = newAngle;
             }
         }
-        obj->segment.visualIndex += angleVel;
+        obj->segment.animFrame += angleVel;
         obj->segment.unk3B = 0;
         if (angleVel) {} // Fakematch
         if (racer->unk1F3 & 4) {
@@ -2787,54 +2787,54 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
         racer->unk1F2 = 0;
     } else if (obj->segment.unk3B == 0) {
         if (arg6 & 1) {
-            if (obj->segment.visualIndex >= 41) {
-                obj->segment.visualIndex -= arg7 * 4;
-                if (obj->segment.visualIndex < 41) {
+            if (obj->segment.animFrame >= 41) {
+                obj->segment.animFrame -= arg7 * 4;
+                if (obj->segment.animFrame < 41) {
                     obj->segment.unk3B = action;
-                    obj->segment.visualIndex = arg3;
+                    obj->segment.animFrame = arg3;
                 }
             } else {
-                obj->segment.visualIndex += arg7 * 4;
-                if (obj->segment.visualIndex >= 40) {
+                obj->segment.animFrame += arg7 * 4;
+                if (obj->segment.animFrame >= 40) {
                     obj->segment.unk3B = action;
-                    obj->segment.visualIndex = arg3;
+                    obj->segment.animFrame = arg3;
                 }
             }
         } else {
             obj->segment.unk3B = action;
-            obj->segment.visualIndex = arg3;
+            obj->segment.animFrame = arg3;
             racer->unk1F3 &= ~0x80;
         }
     } else if (obj->segment.unk3B == action) {
         if (arg6 & 2) {
             if (racer->unk1F3 & 0x80) {
-                obj->segment.visualIndex -= arg5;
-                if (obj->segment.visualIndex <= 0) {
+                obj->segment.animFrame -= arg5;
+                if (obj->segment.animFrame <= 0) {
                     obj->segment.unk3B = 0;
                     racer->unk1F2 = 0;
-                    obj->segment.visualIndex = 40;
+                    obj->segment.animFrame = 40;
                     racer->unk1F3 = 0;
                 }
             } else {
-                obj->segment.visualIndex += arg5;
-                if (obj->segment.visualIndex >= duration) {
-                    obj->segment.visualIndex = duration - 1;
+                obj->segment.animFrame += arg5;
+                if (obj->segment.animFrame >= duration) {
+                    obj->segment.animFrame = duration - 1;
                     if (!(arg6 & 4)) {
                         racer->unk1F3 |= 0x80;
                     }
                 }
             }
         } else {
-            obj->segment.visualIndex += arg5;
-            if (obj->segment.visualIndex >= duration) {
+            obj->segment.animFrame += arg5;
+            if (obj->segment.animFrame >= duration) {
                 obj->segment.unk3B = 0;
                 racer->unk1F2 = 0;
-                obj->segment.visualIndex = 40;
+                obj->segment.animFrame = 40;
                 racer->unk1F3 = 0;
             }
         }
     } else {
-        obj->segment.visualIndex = arg3;
+        obj->segment.animFrame = arg3;
         obj->segment.unk3B = action;
     }
 }
@@ -3244,7 +3244,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     if (tempAngle > 73) {
         tempAngle = 73;
     }
-    obj->segment.visualIndex = tempAngle;
+    obj->segment.animFrame = tempAngle;
     func_8005234C(racer);
     angle = gCurrentCarSteerVel - (u16) racer->y_rotation_vel;
     WRAP(angle, -0x8000, 0x8000);
@@ -3860,7 +3860,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                             soundID = SOUND_PLOP;
                             break;
                         case WEAPON_UNK_11:
-                            spawnedObj->segment.visualIndex = 0;
+                            spawnedObj->segment.animFrame = 0;
                             break;
                         }
                         if (soundID != SOUND_NONE) {

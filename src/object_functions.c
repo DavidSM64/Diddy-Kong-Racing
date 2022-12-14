@@ -257,7 +257,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
             }
         }
     }
-    obj->segment.visualIndex += updateRate * 10;
+    obj->segment.animFrame += updateRate * 10;
     weapon = (Object_Fireball_Octoweapon *) obj->unk64;
     obj4C = obj->interactObj;
     if ((obj4C->obj)) { 
@@ -498,7 +498,7 @@ void obj_init_torch_mist(Object *obj, LevelObjectEntry_Torch_Mist *entry) {
 }
 
 void obj_loop_torch_mist(Object *obj, s32 updateRate) {
-    obj->segment.visualIndex += obj->unk78 * updateRate;
+    obj->segment.animFrame += obj->unk78 * updateRate;
 }
 
 void obj_init_effectbox(UNUSED Object *obj, UNUSED LevelObjectEntry_EffectBox *entry) {
@@ -771,7 +771,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
                 racer->raceFinished = TRUE;
             }
         }
-        obj->segment.visualIndex = 128;
+        obj->segment.animFrame = 128;
         break;
     }
 }
@@ -979,7 +979,7 @@ void obj_loop_unknown58(Object *obj, s32 updateRate) {
     Object_60 *obj60;
 
     obj->segment.unk3B = 0;
-    obj->segment.visualIndex = 40;
+    obj->segment.animFrame = 40;
     if (func_8001139C() == 0) {
         obj->unk78 += updateRate;
     }
@@ -1085,7 +1085,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         updateRateF *= 1.2;
     }
     tt = (Object_NPC *) obj->unk64;
-    if (obj->segment.visualIndex == 0) {
+    if (obj->segment.animFrame == 0) {
         if (tt->unk4 > 1.0) {
             tt->unk4 = 0.0f;
         }
@@ -1266,7 +1266,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     if (obj->action != TT_MODE_ROAM) {
         D_8011D4D0 = obj->segment.trans.y_position;
     }
-    obj->segment.visualIndex = 1.0 * tt->unk4;
+    obj->segment.animFrame = 1.0 * tt->unk4;
     func_80061C0C(obj);
     if (0) { } // Fakematch
     if (obj->unk7C.word > 0) {
@@ -1305,9 +1305,9 @@ void obj_loop_lavaspurt(Object *obj, s32 updateRate) {
         obj->segment.trans.unk6 |= 0x4000;
     } else {
         obj->segment.trans.unk6 &= ~0x4000;
-        obj->segment.visualIndex += updateRate * 4;
-        if (obj->segment.visualIndex > 255) {
-            obj->segment.visualIndex = 0;
+        obj->segment.animFrame += updateRate * 4;
+        if (obj->segment.animFrame > 255) {
+            obj->segment.animFrame = 0;
             obj->unk78 = get_random_number_from_range(0, 30) + obj->unk7C.word;
         }
     }
@@ -1332,7 +1332,7 @@ void obj_loop_posarrow(Object *obj, UNUSED s32 updateRate) {
             obj->segment.trans.unk6 &= ~0x4000;
             someObj64->unk150 = obj;
         }
-        obj->segment.visualIndex = obj->unk78 * 127;
+        obj->segment.animFrame = obj->unk78 * 127;
     }
 }
 
@@ -1771,12 +1771,12 @@ void obj_loop_smoke(Object *obj, s32 updateRate) {
         updateRateF *= 1.2;
     }
     obj->segment.trans.x_position += obj->segment.x_velocity * updateRateF;
-    obj->segment.visualIndex += updateRate * 16;
+    obj->segment.animFrame += updateRate * 16;
     obj->segment.trans.y_position += obj->segment.y_velocity * updateRateF;
     obj->segment.trans.z_position += obj->segment.z_velocity * updateRateF;
-    if (obj->segment.visualIndex > 255) {
+    if (obj->segment.animFrame > 255) {
         gParticlePtrList_addObject(obj);
-        obj->segment.visualIndex = 255;
+        obj->segment.animFrame = 255;
     }
 }
 
@@ -1784,10 +1784,10 @@ void obj_init_unknown25(UNUSED Object *obj, UNUSED LevelObjectEntry_Unknown25 *e
 }
 
 void obj_loop_unknown25(Object *obj, s32 updateRate) {
-    obj->segment.visualIndex += updateRate * 8;
-    if (obj->segment.visualIndex > 255) {
+    obj->segment.animFrame += updateRate * 8;
+    if (obj->segment.animFrame > 255) {
         gParticlePtrList_addObject(obj);
-        obj->segment.visualIndex = 255;
+        obj->segment.animFrame = 255;
     }
 }
 
@@ -1801,17 +1801,17 @@ void obj_loop_wardensmoke(Object *obj, s32 updateRate) {
     if (osTvType == TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
-    obj->segment.visualIndex += updateRate * 4;
+    obj->segment.animFrame += updateRate * 4;
     obj->segment.trans.y_position += updateRateF * 0.25;
-    if (obj->segment.visualIndex > 255) {
+    if (obj->segment.animFrame > 255) {
         gParticlePtrList_addObject(obj);
-        obj->segment.visualIndex = 255;
+        obj->segment.animFrame = 255;
     }
 }
 
 void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry) {
     LevelObjectEntry_BombExplosion *entry2;
-    obj->segment.visualIndex = 0;
+    obj->segment.animFrame = 0;
     obj->segment.trans.scale = 0.5f;
     obj->segment.unk3A = get_random_number_from_range(0, obj->segment.header->numberOfModelIds - 1);
     entry2 = entry; // Needed for a match.
@@ -1979,7 +1979,7 @@ void obj_loop_dino_whale(Object *obj, s32 updateRate) {
     } else {
         obj->unk78 = 0;
     }
-    sp2C = obj->segment.visualIndex;
+    sp2C = obj->segment.animFrame;
     func_8001F460(obj, updateRate, obj);
     func_800113CC(obj, 0, sp2C, 0xAC, 0xAD);
     if (obj->interactObj->distance < 0xFF) {
@@ -2053,7 +2053,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     taj = (Object_NPC *) obj->unk64;
     levelHeader = get_current_level_header();
     obj->unk74 = 0;
-    if (obj->segment.visualIndex == 0 && taj->unk4 > 1.0) {
+    if (obj->segment.animFrame == 0 && taj->unk4 > 1.0) {
         taj->unk4 = 0.0f;
     }
     distance = 0.0f;
@@ -2611,7 +2611,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     if (sp6B != 0) {
         func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0xC, 0, 1.0f, 0);
     }
-    obj->segment.visualIndex = taj->unk4 * 1.0;
+    obj->segment.animFrame = taj->unk4 * 1.0;
     func_80061C0C(obj);
     func_800AFC3C(obj, updateRate);
 }
@@ -3351,7 +3351,7 @@ void obj_loop_ainode(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
 void obj_init_treasuresucker(Object *obj, LevelObjectEntry_TreasureSucker *entry) {
-    obj->segment.visualIndex = 120;
+    obj->segment.animFrame = 120;
     obj->action = (entry->unk8 - 1) & 3;
 }
 
@@ -3445,11 +3445,11 @@ void obj_loop_flycoin(Object *obj, s32 updateRate) {
             play_sound_global(SOUND_SELECT, NULL);
         }
     }
-    obj->segment.visualIndex += updateRate * 8;
+    obj->segment.animFrame += updateRate * 8;
 }
 
 void obj_init_bananacreator(Object *obj, UNUSED LevelObjectEntry_BananaCreator *entry) {
-    obj->segment.visualIndex = 100;
+    obj->segment.animFrame = 100;
 }
 
 void obj_loop_bananacreator(Object *obj, s32 updateRate) {
@@ -3517,7 +3517,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
         updateRateF *= 1.2;
     }
     banana = (Object_Banana *) obj->unk64;
-    obj->segment.visualIndex += updateRate * 8;
+    obj->segment.animFrame += updateRate * 8;
     obj78 = (Object_78_Banana *) &obj->unk78;
     if (obj->unk78 == -1) {
         obj->segment.trans.unk6 |= 0x4000; 
@@ -3706,7 +3706,7 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate) {
                 }
             }
         }
-        obj->segment.visualIndex += 8 * updateRate;
+        obj->segment.animFrame += 8 * updateRate;
     }
     if (obj->unk7C.word > 0) {
         obj->unk7C.word -= updateRate;
@@ -4278,7 +4278,7 @@ void obj_loop_buoy_pirateship(Object *obj, s32 updateRate) {
     if (obj->unk64 != NULL) {
         obj->segment.trans.y_position = func_800BEEB4(obj->unk64);
     }
-    obj->segment.visualIndex += updateRate * 8;
+    obj->segment.animFrame += updateRate * 8;
 }
 
 void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
@@ -4718,7 +4718,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
             frog->unk16 = get_random_number_from_range(0, 300);
             frog->unk18 = 0;
         }
-        obj->segment.visualIndex = ((32 - frog->unk18) << 3) / 3;
+        obj->segment.animFrame = ((32 - frog->unk18) << 3) / 3;
         cosine = (coss_f(frog->unk18 << 10) + 1.0f) * 0.5f;
         obj->segment.trans.x_position = frog->unk20;
         obj->segment.trans.z_position = frog->unk24;
@@ -4863,6 +4863,6 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
 
 void obj_loop_wizghosts(Object *obj, s32 updateRate) {
     func_8001F460(obj, updateRate, obj);
-    obj->segment.visualIndex = (obj->segment.visualIndex + (updateRate * 8)) & 0xFF;
+    obj->segment.animFrame = (obj->segment.animFrame + (updateRate * 8)) & 0xFF;
 }
 

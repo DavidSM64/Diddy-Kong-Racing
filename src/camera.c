@@ -1055,7 +1055,7 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
         } else {
             sp34 = gActiveCameraStack[gActiveCameraID + 4].trans.z_rotation + obj->segment.trans.z_rotation;
         }
-        var_s2 = obj->segment.visualIndex;
+        var_s2 = obj->segment.animFrame;
         D_80120D1C++;
         f32_matrix_from_rotation_and_scale((f32 (*)[4]) D_80120D70[D_80120D1C], sp34, obj->segment.trans.scale, gVideoAspectRatio);
         f32_matrix_to_s16_matrix(D_80120D70[D_80120D1C], *mtx);
@@ -1105,7 +1105,7 @@ void func_80068BF4(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segm
         temp_v1->a = 255;
         gDkrVertices((*dList)++, OS_PHYSICAL_TO_K0(*vtx), (((s32)OS_PHYSICAL_TO_K0(*vtx)) & 6), 13);
         (*vtx)++; // Can't be done in the macro?
-        index = segment->visualIndex;
+        index = segment->animFrame;
         D_80120D1C ++;
         D_80120CF0.y_rotation = -segment->trans.y_rotation;
         D_80120CF0.x_rotation = -segment->trans.x_rotation;
