@@ -1323,7 +1323,7 @@ void func_8004D95C(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         func_80006AC8(obj);
     }
     if (func_8002341C() && racer->unk1D6 == 10) {
-        obj->unk4C->unk14 = 0;
+        obj->interactObj->unk14 = 0;
     }
     sp26 = obj->segment.visualIndex;
     racer->unk1D6 = 10;
@@ -1394,9 +1394,9 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     tempRacer->prev_x_position = obj->segment.trans.x_position;
     tempRacer->prev_y_position = obj->segment.trans.y_position;
     tempRacer->prev_z_position = obj->segment.trans.z_position;
-    obj->unk4C->x_position = obj->segment.trans.x_position;
-    obj->unk4C->y_position = obj->segment.trans.y_position;
-    obj->unk4C->z_position = obj->segment.trans.z_position;
+    obj->interactObj->x_position = obj->segment.trans.x_position;
+    obj->interactObj->y_position = obj->segment.trans.y_position;
+    obj->interactObj->z_position = obj->segment.trans.z_position;
     tempRacer->unk1E2 = 3;
     tempRacer->unk1AA = 1;
     tempRacer->unk1AE = 1;
@@ -1428,10 +1428,10 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
         D_8011D586 = 0;
         D_8011D584 = 0;
     }
-    obj->unk4C->unk14 = 5;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = 0xF;
-    obj->unk4C->unk12 = 0x14;
+    obj->interactObj->unk14 = 5;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = 0xF;
+    obj->interactObj->unk12 = 0x14;
     tempRacer->unk1EE = 0;
     if (!D_8011D582) {
         tempRacer->transparency = 0xFF;
@@ -1729,9 +1729,9 @@ void update_player_racer(Object* obj, s32 updateRate) {
                 }
             }
             if (tempRacer->unk1E5 > 0 && obj->segment.trans.y_position < waterHeight + 5.0f) {
-                obj->unk4C->unk14 |= 0x10;
+                obj->interactObj->unk14 |= 0x10;
             } else {
-                obj->unk4C->unk14 &= 0xFFEF;
+                obj->interactObj->unk14 &= 0xFFEF;
             }
         }
         func_8002ACC8(0);
@@ -5505,9 +5505,9 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         func_80042D20(obj, racer, updateRate);
         handle_racer_items(obj, racer, updateRate);
         racer->unk1E5 = 0;
-        obj->unk4C->x_position = obj->segment.trans.x_position;
-        obj->unk4C->y_position = obj->segment.trans.y_position;
-        obj->unk4C->z_position = obj->segment.trans.z_position;
+        obj->interactObj->x_position = obj->segment.trans.x_position;
+        obj->interactObj->y_position = obj->segment.trans.y_position;
+        obj->interactObj->z_position = obj->segment.trans.z_position;
         racer->drift_direction = 0;
         racer->y_rotation_vel = 0;
         racer->z_rotation_vel = 0;

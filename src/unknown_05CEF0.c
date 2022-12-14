@@ -48,10 +48,10 @@ s8 D_8011D5CC;
 /******************************/
 
 void func_8005C2F0(Object *object, unk8005C2F0 *arg1) {
-    object->unk4C->unk14 = 5;
-    object->unk4C->unk11 = 0;
-    object->unk4C->unk10 = 0x1E;
-    object->unk4C->unk12 = 0;
+    object->interactObj->unk14 = 5;
+    object->interactObj->unk11 = 0;
+    object->interactObj->unk10 = 0x1E;
+    object->interactObj->unk12 = 0;
     arg1->unkC = 0.0f;
     D_8011D5C0 = object->segment.trans.y_position;
     if (arg1->unk118 != 0) {
@@ -206,7 +206,7 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         func_8006F140(1);
     }
-    if ((obj == temp_v0_4->unk4C->unk0) && (temp_v0_4->unk4C->unk14 & 8) && (obj->segment.unk3B == 1)) {
+    if ((obj == temp_v0_4->interactObj->obj) && (temp_v0_4->interactObj->unk14 & 8) && (obj->segment.unk3B == 1)) {
         temp_s0->attackType = ATTACK_SQUISHED;
     }
     if ((temp_s0->raceFinished != FALSE) && (D_8011D5C4 == 0)) {

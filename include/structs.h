@@ -648,8 +648,8 @@ typedef struct Object_44 {
     Object_44_C *unkC;
 } Object_44;
 
-typedef struct Object_4C {
-    void *unk0;
+typedef struct ObjectInteraction {
+    struct Object *obj;
     f32 x_position;
     f32 y_position;
     f32 z_position;
@@ -660,7 +660,7 @@ typedef struct Object_4C {
     s16 unk14;
     s8 unk16;
     s8 unk17;
-} Object_4C;
+} ObjectInteraction;
 
 typedef struct Object_50 {
     f32 unk0;
@@ -1503,7 +1503,7 @@ typedef struct Object {
   /* 0x0044 */ Vertex *unk44;
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A;
-  /* 0x004C */ Object_4C *unk4C; //player + 0x318
+  /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318
   /* 0x0050 */ Object_50 *unk50; //player + 0x2F4
   /* 0x0054 */ Object_54 *unk54; //player + 0x2C0
   /* 0x0058 */ void *unk58; //player + 0x304

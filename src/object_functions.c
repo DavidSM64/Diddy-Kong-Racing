@@ -141,12 +141,12 @@ void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
     obj->segment.unk3A = entry->unk8;
     obj->segment.trans.y_rotation = entry->unkA << 6 << 4;
     if (entry->unkB) {
-        obj->unk4C->unk14 = 1;
-        obj->unk4C->unk11 = 1;
-        obj->unk4C->unk10 = 20;
-        obj->unk4C->unk12 = 0;
-        obj->unk4C->unk16 = -5;
-        obj->unk4C->unk17 = entry->unkB;
+        obj->interactObj->unk14 = 1;
+        obj->interactObj->unk11 = 1;
+        obj->interactObj->unk10 = 20;
+        obj->interactObj->unk12 = 0;
+        obj->interactObj->unk16 = -5;
+        obj->interactObj->unk17 = entry->unkB;
     }
     if (obj->segment.unk3A >= obj->segment.header->numberOfModelIds) {
         obj->segment.unk3A = 0;
@@ -159,14 +159,14 @@ void obj_loop_scenery(Object *obj, s32 updateRate) {
 	Object78_80033DD0 *obj78;
 	s32 temp_v0;
 
-    if (obj->unk4C != NULL) {
+    if (obj->interactObj != NULL) {
         obj78 = (Object78_80033DD0 *) &obj->action;
         if (obj->unk7C.half.upper > 0) {
             obj78->unk4 -= updateRate;
         }
-        if ((obj->unk4C->unk14 & 0x40) && ((s32) obj78->unk4 <= 0)) {
+        if ((obj->interactObj->unk14 & 0x40) && ((s32) obj78->unk4 <= 0)) {
             func_80009558(SOUND_TWANG, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
-            obj78->unk0 = (s32*) obj->unk4C->unk0;
+            obj78->unk0 = (s32*) obj->interactObj->obj;
             obj78->unk6 = 1820;
             obj78->unk4 = 10;
             if (get_number_of_active_players() < 2) {
@@ -189,8 +189,8 @@ void obj_loop_scenery(Object *obj, s32 updateRate) {
 }
 
 void obj_init_fireball_octoweapon(Object *obj, UNUSED LevelObjectEntry_Fireball_Octoweapon *entry) {
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
 }
 
 /**
@@ -206,7 +206,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
     Object_Fireball_Octoweapon *weapon;
     Object_Racer *racer;
     UNUSED s32 pad2[6];
-    Object_4C *obj4C;
+    ObjectInteraction *obj4C;
     s32 temp;
     f32 sp4C;
 
@@ -259,10 +259,10 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
     }
     obj->segment.visualIndex += updateRate * 10;
     weapon = (Object_Fireball_Octoweapon *) obj->unk64;
-    obj4C = obj->unk4C;
-    if ((obj4C->unk0)) { 
+    obj4C = obj->interactObj;
+    if ((obj4C->obj)) { 
         if ((obj4C->distance < 60)) {
-            someObj = obj4C->unk0;
+            someObj = obj4C->obj;
             if((someObj->segment.header->behaviorId == BHV_RACER)) {
                 racer = (Object_Racer *) someObj->unk64;
                 if (racer->playerIndex != PLAYER_COMPUTER) {
@@ -325,8 +325,8 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
 */
 void obj_init_lasergun(Object *obj, LevelObjectEntry_Lasergun *entry) {
     Object_LaserGun *laserGun;
-    obj->unk4C->unk14 = 34;
-    obj->unk4C->unk11 = 0;
+    obj->interactObj->unk14 = 34;
+    obj->interactObj->unk11 = 0;
     laserGun = &obj->unk64->lasergun;
     laserGun->targeting = entry->targeting;
     laserGun->fireRate = entry->fireRate;
@@ -352,17 +352,17 @@ void obj_loop_lasergun(Object *obj, s32 updateRate) {
     f32 diffX;
     f32 diffZ;
     f32 diffY;
-    Object_4C *obj4C;
+    ObjectInteraction *obj4C;
     LevelObjectEntryCommon spawnObj;
 
     lasergun = (Object_LaserGun *) obj->unk64;
     if (lasergun->fireTimer > 0) {
         lasergun->fireTimer -= updateRate;
     } else {
-        obj4C = obj->unk4C;
+        obj4C = obj->interactObj;
         if (lasergun->unk11 >= obj4C->distance) {
             if (lasergun->targeting) {
-                racerObj = obj4C->unk0;
+                racerObj = obj4C->obj;
                 if (racerObj != NULL && racerObj->behaviorId == BHV_RACER) {
                     diffX = obj->segment.trans.x_position - racerObj->segment.trans.x_position;
                     diffY = obj->segment.trans.y_position - racerObj->segment.trans.y_position;
@@ -410,8 +410,8 @@ void obj_loop_lasergun(Object *obj, s32 updateRate) {
 }
 
 void obj_init_laserbolt(Object *obj, UNUSED LevelObjectEntry_Laserbolt *entry) {
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
 }
 
 typedef struct Object_7C_80034860 {
@@ -466,8 +466,8 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
         sp4F = TRUE;
     }
 
-    if (obj->unk4C->distance < 80) {
-        obj4C_obj = (Object*)obj->unk4C->unk0;
+    if (obj->interactObj->distance < 80) {
+        obj4C_obj = (Object*)obj->interactObj->obj;
         if (obj4C_obj && (obj4C_obj->behaviorId == 1)) {
             obj4C_obj64 = &obj4C_obj->unk64->laser;
             sp4F = TRUE;
@@ -558,10 +558,12 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_effectbox.s")
 #endif
 
 void obj_init_trophycab(Object *obj, LevelObjectEntry_TrophyCab *entry) {
-    obj->unk4C->unk14 = 1;
-    obj->unk4C->unk11 = 2;
+    obj->interactObj->unk14 = 1;
+    obj->interactObj->unk11 = 2;
     obj->segment.trans.y_rotation = entry->rotation << 6 << 4; // Not sure about the values here.
 }
+
+#include "printf.h"
 
 /**
  * Trophy Cabinet loop behaviour.
@@ -674,10 +676,10 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
 }
 
 void obj_init_collectegg(Object *obj, UNUSED LevelObjectEntry_CollectEgg *entry) {
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = 0x14;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = 0x14;
+    obj->interactObj->unk12 = 0;
 }
 
 void obj_loop_collectegg(Object *obj, s32 updateRate) {
@@ -810,21 +812,21 @@ void obj_init_lighthouse_rocketsignpost(Object *obj, LevelObjectEntry_Lighthouse
     if (obj->segment.unk3A >= obj->segment.header->numberOfModelIds) {
         obj->segment.unk3A = 0;
     }
-    obj->unk4C->unk14 = 1;
-    obj->unk4C->unk11 = 2;
-    obj->unk4C->unk10 = 0x14;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 1;
+    obj->interactObj->unk11 = 2;
+    obj->interactObj->unk10 = 0x14;
+    obj->interactObj->unk12 = 0;
 }
 
 void obj_loop_rocketsignpost(Object *obj, UNUSED s32 updateRate) {
     Object *playerObj;
-    Object_4C *obj4C;
+    ObjectInteraction *obj4C;
 
     playerObj = get_racer_object(0);
     if (playerObj != NULL) {
-        obj4C = obj->unk4C;
+        obj4C = obj->interactObj;
         if (obj4C->distance < 0xC8) {
-            if (playerObj == obj4C->unk0) {
+            if (playerObj == obj4C->obj) {
                 // Detect if the player honks or slams into the signpost.
                 if ((get_buttons_pressed_from_player(PLAYER_ONE) & Z_TRIG) || playerObj == obj->unk5C->unk100) {
                     func_8006F29C();
@@ -832,7 +834,7 @@ void obj_loop_rocketsignpost(Object *obj, UNUSED s32 updateRate) {
             }
         }
     }
-    obj->unk4C->distance = 0xFF;
+    obj->interactObj->distance = 0xFF;
 }
 
 void obj_init_airzippers_waterzippers(Object *obj, LevelObjectEntry_AirZippers_WaterZippers *entry) {
@@ -850,10 +852,10 @@ void obj_init_airzippers_waterzippers(Object *obj, LevelObjectEntry_AirZippers_W
     if (obj->segment.unk3A >= objHeader->numberOfModelIds) {
         obj->segment.unk3A = 0;
     }
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = 0x14;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = 0x14;
+    obj->interactObj->unk12 = 0;
     if (get_filtered_cheats() & CHEAT_TURN_OFF_ZIPPERS) {
         gParticlePtrList_addObject(obj);
     }
@@ -875,7 +877,7 @@ void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 updateRate) {
     } else {
         obj->segment.trans.unk6 &= 0xBFFF;
     }
-    if ((obj->unk4C->distance < 100) && !(obj->segment.trans.unk6 & 0x4000)) {
+    if ((obj->interactObj->distance < 100) && !(obj->segment.trans.unk6 & 0x4000)) {
         racerObjs = get_racer_objects(&numObjects);
         for (i = 0; i < numObjects; i++) {
             curRacerObj = racerObjs[i];
@@ -916,12 +918,12 @@ void obj_init_groundzipper(Object *arg0, LevelObjectEntry_GroundZipper *entry) {
     if (arg0->unk78 > 255) {
         arg0->unk78 = 255;
     }
-    arg0->unk4C->unk14 = 2;
-    arg0->unk4C->unk11 = 0;
-    arg0->unk4C->unk10 = 0x14;
-    arg0->unk4C->unk12 = 0;
-    arg0->unk4C->unk16 = -0x64;
-    arg0->unk4C->unk17 = 0x64;
+    arg0->interactObj->unk14 = 2;
+    arg0->interactObj->unk11 = 0;
+    arg0->interactObj->unk10 = 0x14;
+    arg0->interactObj->unk12 = 0;
+    arg0->interactObj->unk16 = -0x64;
+    arg0->interactObj->unk17 = 0x64;
     if (get_filtered_cheats() & CHEAT_TURN_OFF_ZIPPERS) {
         gParticlePtrList_addObject(arg0);
     }
@@ -940,7 +942,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
     obj->segment.trans.unk6 &= 0xBFFF;
     obj->segment.trans.unk6 |= 0x1000;
     get_racer_object(0); // Unused. I guess the developers forgot to remove this?
-    if ((s32) obj->unk4C->distance < obj->unk78) {
+    if ((s32) obj->interactObj->distance < obj->unk78) {
         racerObjs = get_racer_objects(&numObjects);
         for (i = 0; i < numObjects; i++) {
             curRacerObj = racerObjs[i];
@@ -1048,10 +1050,10 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80036040.s")
 
 void obj_init_stopwatchman(Object *obj, UNUSED LevelObjectEntry_StopWatchMan *entry) {
     Object_TT *temp;
-    obj->unk4C->unk14 = 1;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = 0x1E;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 1;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = 0x1E;
+    obj->interactObj->unk12 = 0;
     temp = &obj->unk64->tt;
     temp->unkD = 0xFF;
     temp->unk0 = 0.0f;
@@ -1115,7 +1117,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     index = get_buttons_pressed_from_player(PLAYER_ONE);
     if (obj->action == TT_MODE_ROAM && distance < 300.0 && obj->unk7C.word == 0) {
         if (angleDiff > -0x2000 && angleDiff < 0x2000) {
-            if ((obj->unk4C->unk14 & 8 && racerObj == obj->unk4C->unk0) || index & Z_TRIG) {
+            if ((obj->interactObj->unk14 & 8 && racerObj == obj->interactObj->obj) || index & Z_TRIG) {
                 if (index & Z_TRIG) {
                     play_char_horn_sound(racerObj, racer);
                 }
@@ -1632,10 +1634,10 @@ void obj_loop_vehicleanim(Object *obj, s32 updateRate) {
 }
 
 void obj_init_hittester(Object *obj, UNUSED LevelObjectEntry_HitTester *entry) {
-    obj->unk4C->unk14 = 0x81;
-    obj->unk4C->unk11 = 2;
-    obj->unk4C->unk10 = 0x14;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 0x81;
+    obj->interactObj->unk11 = 2;
+    obj->interactObj->unk10 = 0x14;
+    obj->interactObj->unk12 = 0;
 }
 
 void obj_loop_hittester(Object *obj, s32 updateRate) {
@@ -1643,24 +1645,24 @@ void obj_loop_hittester(Object *obj, s32 updateRate) {
 }
 
 void obj_init_dynamic_lighting_object(Object *obj, UNUSED LevelObjectEntry_DynamicLightingObject *entry) {
-    obj->unk4C->unk14 = 1;
-    obj->unk4C->unk11 = 2;
-    obj->unk4C->unk10 = 0x14;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 1;
+    obj->interactObj->unk11 = 2;
+    obj->interactObj->unk10 = 0x14;
+    obj->interactObj->unk12 = 0;
 }
 
 void obj_init_unknown96(Object *obj, UNUSED LevelObjectEntry_Unknown96 *entry) {
-    obj->unk4C->unk14 = 0x81;
-    obj->unk4C->unk11 = 2;
-    obj->unk4C->unk10 = 0x14;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 0x81;
+    obj->interactObj->unk11 = 2;
+    obj->interactObj->unk10 = 0x14;
+    obj->interactObj->unk12 = 0;
 }
 
 void obj_init_snowball(Object *obj, UNUSED LevelObjectEntry_Snowball *entry) {
-    obj->unk4C->unk14 = 1;
-    obj->unk4C->unk11 = 2;
-    obj->unk4C->unk10 = 0x14;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 1;
+    obj->interactObj->unk11 = 2;
+    obj->interactObj->unk10 = 0x14;
+    obj->interactObj->unk12 = 0;
 }
 
 void obj_loop_snowball(Object *obj, s32 updateRate) {
@@ -1726,13 +1728,13 @@ void obj_loop_animcar(Object *obj, s32 updateRate) {
 
 void obj_init_infopoint(Object *obj, LevelObjectEntry_InfoPoint *entry) {
     if (entry->unk8[1] != 0) {
-        obj->unk4C->unk14 = 0x21;
+        obj->interactObj->unk14 = 0x21;
     } else {
-        obj->unk4C->unk14 = 0x22;
+        obj->interactObj->unk14 = 0x22;
     }
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = 0xF;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = 0xF;
+    obj->interactObj->unk12 = 0;
     obj->unk78 = (entry->unk8[2] << 16) | entry->unk8[0]; // Not sure about the values here.
     obj->unk7C.word = entry->unk8[1];
     obj->segment.trans.y_rotation = entry->unkB << 10; // Not sure about the values here.
@@ -1740,7 +1742,7 @@ void obj_init_infopoint(Object *obj, LevelObjectEntry_InfoPoint *entry) {
 
 void obj_loop_infopoint(Object *obj, UNUSED s32 updateRate) {
     s16 player;
-    Object_4C *obj4C;
+    ObjectInteraction *obj4C;
     Object *playerObj;
 
     if (obj->unk7C.word == 0) {
@@ -1749,9 +1751,9 @@ void obj_loop_infopoint(Object *obj, UNUSED s32 updateRate) {
         obj->segment.trans.unk6 &= ~0x4000;
     }
 
-    obj4C = obj->unk4C;
+    obj4C = obj->interactObj;
     if (obj4C->distance < ((obj->unk78 >> 16) & 0xFF)) {
-        playerObj = obj4C->unk0;
+        playerObj = obj4C->obj;
         if (playerObj->segment.header->behaviorId == 1) {
             Object_InfoPoint *playerObj64 = &playerObj->unk64->info_point;
             player = playerObj64->unk0;
@@ -1853,10 +1855,10 @@ void obj_loop_bombexplosion(Object *obj, s32 updateRate) {
 
 
 void obj_init_teleport(Object *obj, UNUSED LevelObjectEntry_Teleport *entry) {
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = 0xF;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = 0xF;
+    obj->interactObj->unk12 = 0;
     if (get_settings()->cutsceneFlags & CUTSCENE_LIGHTHOUSE_ROCKET) {
         obj->action = 1;
     }
@@ -1865,7 +1867,7 @@ void obj_init_teleport(Object *obj, UNUSED LevelObjectEntry_Teleport *entry) {
 void obj_loop_teleport(Object *obj, UNUSED s32 updateRate) {
     if (obj->action != 0) {
         LevelObjectEntry_Teleport *level_entry = &obj->segment.unk3C_a.level_entry->teleport;
-        if (obj->unk4C->distance < 0x78) {
+        if (obj->interactObj->distance < 0x78) {
             func_8006F338(level_entry->unk8);
             obj->action = 0;
             play_sound_global(SOUND_WHOOSH2, NULL);
@@ -1891,10 +1893,10 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->unk10;
     obj64->unk14 = entry->bossFlag;
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = entry->unk10;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = entry->unk10;
+    obj->interactObj->unk12 = 0;
 }
 
 void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
@@ -1922,7 +1924,7 @@ void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
         enableWarp = FALSE;
     }
     if (enableWarp) {
-        if (obj->unk4C->distance < obj64->unk10) {
+        if (obj->interactObj->distance < obj64->unk10) {
             dist = obj64->unk10;
             racerObjects = get_racer_objects(&numberOfRacers);
             for (i = 0; i < numberOfRacers; i++) {
@@ -1964,10 +1966,10 @@ void obj_loop_setuppoint(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
 void obj_init_dino_whale(Object *obj, UNUSED LevelObjectEntry_Dino_Whale *entry) {
-    obj->unk4C->unk14 = 1;
-    obj->unk4C->unk11 = 3;
-    obj->unk4C->unk10 = 0x14;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 1;
+    obj->interactObj->unk11 = 3;
+    obj->interactObj->unk10 = 0x14;
+    obj->interactObj->unk12 = 0;
 }
 
 void obj_loop_dino_whale(Object *obj, s32 updateRate) {
@@ -1982,7 +1984,7 @@ void obj_loop_dino_whale(Object *obj, s32 updateRate) {
     sp2C = obj->segment.visualIndex;
     func_8001F460(obj, updateRate, obj);
     func_800113CC(obj, 0, sp2C, 0xAC, 0xAD);
-    if (obj->unk4C->distance < 0xFF) {
+    if (obj->interactObj->distance < 0xFF) {
         if (obj->unk78 == 0) {
             obj->unk78 = 0x3C;
             func_80009558(SOUND_VOICE_BRONTO_ROAR, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
@@ -1992,10 +1994,10 @@ void obj_loop_dino_whale(Object *obj, s32 updateRate) {
 
 void obj_init_parkwarden(Object *obj, UNUSED LevelObjectEntry_Parkwarden *entry) {
     Object_NPC *temp;
-    obj->unk4C->unk14 = (u16)1;
-    obj->unk4C->unk11 = (u8)0;
-    obj->unk4C->unk10 = (u8)0x1E;
-    obj->unk4C->unk12 = (u8)0;
+    obj->interactObj->unk14 = (u16)1;
+    obj->interactObj->unk11 = (u8)0;
+    obj->interactObj->unk10 = (u8)0x1E;
+    obj->interactObj->unk12 = (u8)0;
     temp = &obj->unk64->npc;
     temp->unkD = 0xFF;
     temp->unk0 = 0.0f;
@@ -2072,7 +2074,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         (obj->action == NULL) &&
         (distance < 300.0) &&
         (
-            ((obj->unk4C->unk14 & 8) && (racerObj == obj->unk4C->unk0)) ||
+            ((obj->interactObj->unk14 & 8) && (racerObj == obj->interactObj->obj)) ||
             (buttonsPressed & Z_TRIG)
         )
     ) {
@@ -2091,7 +2093,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             var_a2 = TRUE;
         }
     }
-    obj->unk4C->unk14 = 1;
+    obj->interactObj->unk14 = 1;
     if ((func_80052188() || (var_a2)) && ((obj->action == 0 || obj->action == 31))) {
         func_800012E8();
         set_music_player_voice_limit(24);
@@ -2466,7 +2468,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
         break;
     case TAJ_MODE_RACE:
-        obj->unk4C->unk14 = 0;
+        obj->interactObj->unk14 = 0;
         obj->segment.unk3B = 6;
         obj->segment.unk38.half.lower = 0xFF;
         taj->unk4 += updateRateF * 1.0;
@@ -2668,10 +2670,10 @@ void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->unk8;
     obj64->unk14 = entry->unkA;
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = entry->unk8;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = entry->unk8;
+    obj->interactObj->unk12 = 0;
 }
 
 void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
@@ -2689,7 +2691,7 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
     f32 dist;
     
     modeChange = (Object_ModeChange *) obj->unk64;
-    if (obj->unk4C->distance < modeChange->unk10) {
+    if (obj->interactObj->distance < modeChange->unk10) {
         radiusF = modeChange->unk10;
         racerObjects = get_racer_objects(&numRacers);
         for (i = 0; i < numRacers; i++) {
@@ -2749,10 +2751,10 @@ void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry) {
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->unk8;
     obj64->unk14 = entry->unkA;
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = entry->unk8;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = entry->unk8;
+    obj->interactObj->unk12 = 0;
 }
 
 void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
@@ -2769,7 +2771,7 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
     s32 i;
 
     obj64 = &obj->unk64->bonus;
-    if (obj->unk4C->distance < obj64->unk10) {
+    if (obj->interactObj->distance < obj64->unk10) {
         dist = obj64->unk10;
         halfDist = dist * 0.5;
         racerObjects = get_racer_objects(&numberOfRacers);
@@ -2806,10 +2808,10 @@ void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) 
     if (entry->unk8 == -1) {
         rmonPrintf("Illegal door no!!!\n"); // Did the devs just copy-paste the door init function?
     }
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 4;
-    obj->unk4C->unk10 = 20;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 4;
+    obj->interactObj->unk10 = 20;
+    obj->interactObj->unk12 = 0;
     scalef = entry->scale & 0xFF;
     if (scalef < 10.0f) {
         scalef = 10.0f;
@@ -2831,7 +2833,7 @@ void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) 
 
 void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
     LevelObjectEntry *levelEntry;
-    Object_4C *obj4C;
+    ObjectInteraction *obj4C;
     Object_Racer *racer;
     Object_GoldenBalloon *obj64;
     Settings *settings;
@@ -2873,9 +2875,9 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
             } else {
                 obj->segment.unk38.half.lower = 255;
             }
-            obj4C = obj->unk4C;
+            obj4C = obj->interactObj;
             if ((obj4C->distance < 45) && (isPirated == FALSE)) {
-                racerObj = obj4C->unk0;
+                racerObj = obj4C->obj;
                 if ((racerObj && (racerObj->segment.header->behaviorId == 1))) {
                     racer = &racerObj->unk64->racer;
                     if (racer->playerIndex == PLAYER_ONE) {
@@ -2945,10 +2947,10 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     obj->segment.trans.scale = obj->segment.header->scale * phi_f0;
     obj64->unk13 = (u8) entry->unkF;
     obj64->unk14 = (s8) entry->unk11;
-    obj->unk4C->unk14 = 0x21;
-    obj->unk4C->unk11 = 2;
-    obj->unk4C->unk10 = 0x14;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 0x21;
+    obj->interactObj->unk11 = 2;
+    obj->interactObj->unk10 = 0x14;
+    obj->interactObj->unk12 = 0;
     if (obj->segment.unk3A >= obj->segment.header->numberOfModelIds) {
         obj->segment.unk3A = 0;
     }
@@ -2976,10 +2978,10 @@ void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
     }
     phi_f0 /= 64;
     obj->segment.trans.scale = obj->segment.header->scale * phi_f0;
-    obj->unk4C->unk14 = 0x21;
-    obj->unk4C->unk11 = 2;
-    obj->unk4C->unk10 = 0x14;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 0x21;
+    obj->interactObj->unk11 = 2;
+    obj->interactObj->unk10 = 0x14;
+    obj->interactObj->unk12 = 0;
     if (obj->segment.unk3A >= obj->segment.header->numberOfModelIds) {
         obj->segment.unk3A = 0;
     }
@@ -3005,8 +3007,8 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
     } else {
         obj->segment.unk3A = D_800DCA9C[settings->ttAmulet];
     }
-    if (obj->unk4C->distance < ttDoor->unk12 && (settings->ttAmulet < 4 || *settings->balloonsPtr < 47)) {
-        racerObj = obj->unk4C->unk0;
+    if (obj->interactObj->distance < ttDoor->unk12 && (settings->ttAmulet < 4 || *settings->balloonsPtr < 47)) {
+        racerObj = obj->interactObj->obj;
         if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
             racer = (Object_Racer *) racerObj->unk64;
             if (racer->playerIndex != PLAYER_COMPUTER && racerObj == obj->unk5C->unk100) {
@@ -3039,7 +3041,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
         ttDoor->unkC = 0;
     }
     openDoor = TRUE;
-    if (settings->ttAmulet >= 4 && obj->unk4C->distance < ttDoor->unk12 && *settings->balloonsPtr >= 47) {
+    if (settings->ttAmulet >= 4 && obj->interactObj->distance < ttDoor->unk12 && *settings->balloonsPtr >= 47) {
         angle = obj->segment.trans.y_rotation - obj->unk7C.word;
     } else {
         angle = obj->segment.trans.y_rotation - obj->unk78;
@@ -3065,9 +3067,9 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
             ttDoor->soundMask = NULL;
         }
     }
-    obj->unk4C->distance = 0xFF;
-    obj->unk4C->unk0 = NULL;
-    obj->unk4C->unk14 &= 0xFFF7;
+    obj->interactObj->distance = 0xFF;
+    obj->interactObj->obj = NULL;
+    obj->interactObj->unk14 &= 0xFFF7;
     obj->unk5C->unk100 = NULL;
 }
 
@@ -3098,10 +3100,10 @@ void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->scale;
     obj64->unk14 = entry->unkD;
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = entry->scale;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = entry->scale;
+    obj->interactObj->unk12 = 0;
 }
 
 
@@ -3130,7 +3132,7 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
     curRaceType = get_current_level_race_type();
     if (triggerEntry->unk9 >= 0) {
         flags = 0x10000 << triggerEntry->unk9;
-        if (obj->unk4C->distance < trigger->unk10) {
+        if (obj->interactObj->distance < trigger->unk10) {
             if (((u8) curRaceType != RACETYPE_HUBWORLD) || !(courseFlags & flags)) {
                 radiusF = trigger->unk10;
                 racers = get_racer_objects(&numRacers);
@@ -3166,10 +3168,10 @@ void obj_init_bridge_whaleramp(Object *obj, LevelObjectEntry_Bridge_WhaleRamp *e
     obj->segment.unk3A = entry->unk8;
     obj->segment.trans.y_rotation = entry->unk9 << 6 << 4;
     temp->unk0 = obj->segment.trans.y_position;
-    obj->unk4C->unk14 = 0x21;
-    obj->unk4C->unk11 = 2;
-    obj->unk4C->unk10 = 0x14;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 0x21;
+    obj->interactObj->unk11 = 2;
+    obj->interactObj->unk10 = 0x14;
+    obj->interactObj->unk12 = 0;
     temp->unk4 = 0;
     if (obj->segment.unk3A >= obj->segment.header->numberOfModelIds) {
         obj->segment.unk3A = 0;
@@ -3255,7 +3257,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
     switch (entry->unkB) {
     case 0:
         obj->unk78 = 0;
-        if (obj->unk4C->distance < entry->unkC) {
+        if (obj->interactObj->distance < entry->unkC) {
             obj->unk78 = 1;
         }
         break;
@@ -3292,24 +3294,24 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
         break;
     }
     
-    obj->unk4C->distance = 255;
-    obj->unk4C->unk0 = NULL;
-    obj->unk4C->unk14 &= 0xFFF7;
+    obj->interactObj->distance = 255;
+    obj->interactObj->obj = NULL;
+    obj->interactObj->unk14 &= 0xFFF7;
 }
 
 void obj_init_rampswitch(Object *obj, LevelObjectEntry_RampSwitch *entry) {
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = 0x14;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = 0x14;
+    obj->interactObj->unk12 = 0;
     obj->action = entry->unk8;
 }
 
 void obj_loop_rampswitch(Object *obj, UNUSED s32 updateRate) {
-    if (obj->unk4C->distance < 0x2D) {
+    if (obj->interactObj->distance < 0x2D) {
         func_8001E344(obj->action);
     }
-    obj->unk4C->distance = (u8)0xFF;
+    obj->interactObj->distance = (u8)0xFF;
 }
 
 void obj_init_seamonster(UNUSED Object *obj, UNUSED LevelObjectEntry_SeaMonster *entry) {
@@ -3326,15 +3328,15 @@ void obj_init_fogchanger(Object *obj, LevelObjectEntry_FogChanger *entry) {
 }
 
 void obj_init_skycontrol(Object *obj, LevelObjectEntry_SkyControl *entry) {
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = entry->unk9;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = entry->unk9;
     obj->action = entry->unk8;
     obj->unk7C.word = entry->unk9;
 }
 
 void obj_loop_skycontrol(Object *obj, UNUSED s32 updateRate) {
-    if (obj->unk4C->distance < obj->unk7C.word) {
+    if (obj->interactObj->distance < obj->unk7C.word) {
         func_80028044(obj->action);
     }
 }
@@ -3482,9 +3484,9 @@ void obj_loop_bananacreator(Object *obj, s32 updateRate) {
 
 
 void obj_init_banana(Object *obj, UNUSED LevelObjectEntry_Banana *entry) {
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = 0x1E;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = 0x1E;
     obj->unk7C.half.upper = 0x14;
     obj->unk7C.half.lower = 0x10;
     if (get_filtered_cheats() & CHEAT_DISABLE_BANANAS) {
@@ -3584,9 +3586,9 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
         } else {
             obj78->unk4 = 0;
         }
-        if (obj->unk4C->distance < 0x78) {
+        if (obj->interactObj->distance < 0x78) {
             if (get_current_level_race_type() == RACETYPE_CHALLENGE_BANANAS) {
-                racerObj = obj->unk4C->unk0;
+                racerObj = obj->interactObj->obj;
                 if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
                     racer = (Object_Racer *) racerObj->unk64;
                     if (racer->playerIndex == PLAYER_COMPUTER) {
@@ -3595,8 +3597,8 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
                 }
             }
         }
-        if (obj->unk4C->distance < sp44 && obj78->unk4 == 0) {
-            racerObj = obj->unk4C->unk0;
+        if (obj->interactObj->distance < sp44 && obj78->unk4 == 0) {
+            racerObj = obj->interactObj->obj;
             if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) { 
                 racer = (Object_Racer *) racerObj->unk64;
                 if ((get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) || racer->bananas < 2) {
@@ -3634,9 +3636,9 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
  * Rareware duplicated this function just to check for adventure 2...
 */
 void obj_init_silvercoin_adv2(Object *obj, UNUSED LevelObjectEntry_SilverCoinAdv2 *entry) {
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = 0x1E;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = 0x1E;
     obj->action = 3;
     obj->unk7C.word = 16;
     if (!is_in_tracks_mode()) {
@@ -3658,9 +3660,9 @@ void obj_init_silvercoin_adv2(Object *obj, UNUSED LevelObjectEntry_SilverCoinAdv
  * If the flag is inactive, destroy the object.
 */
 void obj_init_silvercoin(Object *obj, UNUSED LevelObjectEntry_SilverCoin *entry) {
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = 0x1E;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = 0x1E;
     obj->action = SILVER_COIN_INACTIVE;
     obj->unk7C.word = 0;
     if (!is_in_tracks_mode()) {
@@ -3683,16 +3685,16 @@ void obj_init_silvercoin(Object *obj, UNUSED LevelObjectEntry_SilverCoin *entry)
  * When collected, the coins are hidden for that player, rather than being removed outright.
 */
 void obj_loop_silvercoin(Object *obj, s32 updateRate) {
-    Object_4C *silverCoin4C;
+    ObjectInteraction *silverCoin4C;
     Object_Racer* racer;
     Object *racerObj;
     s32 temp;
 
     temp = func_8006C19C();
     if ((temp && obj->action != SILVER_COIN_INACTIVE) || (!temp && obj->action == SILVER_COIN_ACTIVE)) {
-        silverCoin4C = obj->unk4C;
+        silverCoin4C = obj->interactObj;
         if (silverCoin4C->distance < 80) {
-            racerObj = (Object *) silverCoin4C->unk0;
+            racerObj = (Object *) silverCoin4C->obj;
             if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
                 racer = (Object_Racer *) racerObj->unk64;
                 if (racer->playerIndex != PLAYER_COMPUTER) {
@@ -3718,9 +3720,9 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate) {
 
 void obj_init_worldkey(Object *obj, LevelObjectEntry_WorldKey *entry) {
     Settings *settings;
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = 0x1E;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = 0x1E;
     entry->unk8 &= 0xF;
     obj->action = entry->unk8;
     settings = get_settings();
@@ -3738,13 +3740,13 @@ void obj_loop_worldkey(Object *worldKeyObj, s32 updateRate) {
     Object *playerObj;
 
     // Check if the player is near the key
-    // "worldKeyObj->unk4C->distance" is the player's distance from the key (Up to 255).
-    if (worldKeyObj->unk4C->distance < WORLD_KEY_GRAB_CHECK_RADIUS) {
-        // "worldKeyObj->unk4C->unk0" is only set when the player is within 255 units of
+    // "worldKeyObj->interactObj->distance" is the player's distance from the key (Up to 255).
+    if (worldKeyObj->interactObj->distance < WORLD_KEY_GRAB_CHECK_RADIUS) {
+        // "worldKeyObj->interactObj->obj" is only set when the player is within 255 units of
         // the key object, otherwise it is NULL.
-        playerObj = worldKeyObj->unk4C->unk0;
+        playerObj = worldKeyObj->interactObj->obj;
         if (playerObj != NULL) {
-            if (playerObj->segment.header->behaviorId == 1) { // Is the player a racer?
+            if (playerObj->segment.header->behaviorId == BHV_RACER) {
                 Object_WorldKey *obj64 = &playerObj->unk64->world_key;
                 if (obj64->unk0 != -1) {
                     // Player has grabbed the key!
@@ -3766,9 +3768,9 @@ void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) 
     Object_WeaponBalloon *obj64;
     f32 scalef;
 
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 4;
-    obj->unk4C->unk10 = 0x14;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 4;
+    obj->interactObj->unk10 = 0x14;
 
     cheats = get_filtered_cheats();
 
@@ -3841,15 +3843,15 @@ void obj_loop_weaponballoon(Object* obj, s32 updateRate) {
         obj->unk7C.word -= updateRate;
     }
     if (balloon->unk4 != 0) {
-        if (!(balloon->unk4 == 90 && obj->unk4C->distance < 45)) {
+        if (!(balloon->unk4 == 90 && obj->interactObj->distance < 45)) {
             balloon->unk4 = (balloon->unk4 - updateRate) - updateRate;
         }
         if (balloon->unk4 < 0) {
             balloon->unk4 = 0;
         }
     } else {
-        if (obj->unk4C->distance < 45) {
-            interactObj = obj->unk4C->unk0;
+        if (obj->interactObj->distance < 45) {
+            interactObj = obj->interactObj->obj;
             if (interactObj != NULL && interactObj->segment.header->behaviorId == BHV_RACER) {
                 racer = (Object_Racer *) interactObj->unk64;
                     if (racer->unk1D6 < 5 || racer->playerIndex != PLAYER_COMPUTER) {
@@ -3928,10 +3930,10 @@ void obj_loop_wballoonpop(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
 void obj_init_weapon(Object *obj, UNUSED LevelObjectEntry_Weapon *entry) {
-    obj->unk4C->unk14 = 2;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = 0x18;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = 0x18;
+    obj->interactObj->unk12 = 0;
     obj->unk78 = normalise_time(480);
     obj->unk7C.word = 0;
 }
@@ -3983,7 +3985,7 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
     Matrix mtxf;
     ObjectTransform trans;
 
-    obj->unk4C->unk14 |= 0x100;
+    obj->interactObj->unk14 |= 0x100;
     weapon = (Object_Weapon *) obj->unk64;
     posX = obj->segment.trans.x_position;
     posY = obj->segment.trans.y_position;
@@ -4046,8 +4048,8 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
         func_8003EC14(obj, updateRate, weapon);
     }
     //TODO: Fix these gotos.
-    if (obj->unk4C->unk0 != NULL) {
-        interactObj = obj->unk4C->unk0;
+    if (obj->interactObj->obj != NULL) {
+        interactObj = obj->interactObj->obj;
         if (interactObj == weapon->owner) {
             if (obj->unk78 < normalise_time(450) && obj->unk78 != 0) {
                 goto block_25;
@@ -4064,7 +4066,7 @@ block_25:
         } else {
             size = 60;
         }
-        if (obj->unk4C->distance < size) {
+        if (obj->interactObj->distance < size) {
             if (interactObj->segment.header->behaviorId == BHV_RACER) {
                 racer = (Object_Racer *) interactObj->unk64;
                 racer->attackType = ATTACK_EXPLOSION;
@@ -4268,10 +4270,10 @@ void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, UNUSED s
 
 void obj_init_buoy_pirateship(Object *obj, UNUSED LevelObjectEntry_Buoy_PirateShip *entry, UNUSED s32 arg2) {
     obj->unk64 = func_800BE654(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position);
-    obj->unk4C->unk14 = 1;
-    obj->unk4C->unk11 = 0;
-    obj->unk4C->unk10 = 0x1E;
-    obj->unk4C->unk12 = 0;
+    obj->interactObj->unk14 = 1;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = 0x1E;
+    obj->interactObj->unk12 = 0;
 }
 
 void obj_loop_buoy_pirateship(Object *obj, s32 updateRate) {
@@ -4284,9 +4286,9 @@ void obj_loop_buoy_pirateship(Object *obj, s32 updateRate) {
 void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
     f32 phi_f0;
     obj->unk64 = func_800BE654(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position);
-    obj->unk4C->unk14 = 1;
-    obj->unk4C->unk11 = 2;
-    obj->unk4C->unk10 = 0x1E;
+    obj->interactObj->unk14 = 1;
+    obj->interactObj->unk11 = 2;
+    obj->interactObj->unk10 = 0x1E;
     phi_f0 = entry->unk9 & 0xFF;
     if (phi_f0 < 10.0f) {
         phi_f0 = 10.0f;
