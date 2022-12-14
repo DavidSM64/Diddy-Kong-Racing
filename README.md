@@ -120,20 +120,20 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of December 10, 2022, this is our current score:
+As of December 14, 2022, this is our current score:
 ```
  ==========================================================================
                    ADVENTURE ONE (ASM -> C Decompilation)
- ---------------------------- 42.72% Complete -----------------------------
-                        # Decompiled functions: 1406
-                        # GLOBAL_ASM remaining: 430
-                        # NON_MATCHING functions: 11
-                     # NON_EQUIVALENT WIP functions: 79
+ ---------------------------- 42.94% Complete -----------------------------
+                        # Decompiled functions: 1409
+                        # GLOBAL_ASM remaining: 427
+                        # NON_MATCHING functions: 10
+                     # NON_EQUIVALENT WIP functions: 80
  ------------------------------ Game Status -------------------------------
                  Balloons: 21/47, Keys: 2/4, Trophies: 1/5
                    T.T. Amulets: 2/4, Wizpig Amulets: 2/4
  --------------------------------------------------------------------------
- We are participating in the Trophy Race of Snowflake Mountain. (Round One)
+ We are participating in the Trophy Race of Snowflake Mountain. (Round Two)
  ==========================================================================
                    ADVENTURE TWO (Cleanup & Documentation)
  ---------------------------- 13.39% Complete -----------------------------
