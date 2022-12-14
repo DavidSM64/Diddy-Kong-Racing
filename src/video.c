@@ -271,21 +271,32 @@ void init_vi_settings(void) {
  * Will also allocate the depthbuffer if it does not already exist.
  */
 void init_framebuffer(s32 index) {
+    s32 width;
     if (gVideoFramebuffers[index] != 0) {
         func_80071538((u8 *)gVideoFramebuffers[index]);
         free_from_memory_pool(gVideoFramebuffers[index]);
     }
+
+    if (gExpansionPak) {
+        width = 408;
+    } else {
+        width = 304;
+    }
     gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].width;
     gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].height;
     if (gVideoModeIndex >= VIDEO_MODE_MIDRES_MASK) {
-        gVideoFramebuffers[index] = allocate_from_main_pool_safe((408 * 224 * 2) + 0x30, COLOUR_TAG_WHITE);
+        gVideoFramebuffers[index] = allocate_from_main_pool_safe((width * 224 * 2) + 0x30, COLOUR_TAG_WHITE);
         gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
         if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = allocate_from_main_pool_safe((408 * 224 * 2) + 0x30, COLOUR_TAG_WHITE);
+            gVideoDepthBuffer = allocate_from_main_pool_safe((width * 224 * 2) + 0x30, COLOUR_TAG_SEMITRANS_GREY);
             gVideoDepthBuffer = (u16 *)(((s32)gVideoDepthBuffer + 0x3F) & ~0x3F);
         }
     } else {
-        gVideoFramebuffers[index] = allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
+        if (gExpansionPak) {
+            gVideoFramebuffers[index] = (u16 *) 0x80500000 + (((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30) * index);
+        } else {
+            gVideoFramebuffers[index] = allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
+        }
         gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
         if (gVideoDepthBuffer == NULL) {
             gVideoDepthBuffer = allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
@@ -293,6 +304,8 @@ void init_framebuffer(s32 index) {
         }
     }
 }
+
+#include "printf.h"
 
 /**
  * Sets the video counters to their default values.
@@ -345,6 +358,8 @@ s32 swap_framebuffer_when_ready(s32 mesg) {
         osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_BLOCK);
         tempUpdateRate++;
     }
+
+    //render_printf
 
     osViSwapBuffer(gVideoLastFramebuffer);
     osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_BLOCK);
