@@ -40,7 +40,7 @@ glabel func_8002581C
 /* 0264A0 800258A0 2484B0A0 */  addiu $a0, %lo(gSceneCurrDisplayList) # addiu $a0, $a0, -0x4f60
 /* 0264A4 800258A4 00002825 */  move  $a1, $zero
 /* 0264A8 800258A8 24060003 */  li    $a2, 3
-/* 0264AC 800258AC 0C01ED32 */  jal   func_8007B4C8
+/* 0264AC 800258AC 0C01ED32 */  jal   load_and_set_texture_no_offset
 /* 0264B0 800258B0 AD0B0004 */   sw    $t3, 4($t0)
 /* 0264B4 800258B4 3C018012 */  lui   $at, %hi(D_8011D49C) # $at, 0x8012
 /* 0264B8 800258B8 A420D49C */  sh    $zero, %lo(D_8011D49C)($at)

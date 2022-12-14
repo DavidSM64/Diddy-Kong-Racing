@@ -133,10 +133,10 @@ void set_texture_colour_tag(s32 tagID);
 void reset_render_settings(Gfx **dlist);
 void func_8007B43C(void);
 void func_8007B454(void);
-void func_8007B4C8(Gfx **dlist, TextureHeader *arg1, u32 flags);
+void load_and_set_texture_no_offset(Gfx **dlist, TextureHeader *texhead, u32 flags);
 void func_8007BF1C(s32 arg0);
 s32 func_8007EF64(s16 arg0);
-void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 arg3);
+void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 offset);
 
 // There might be a file boundary here.
 void func_8007EF80(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 arg3);

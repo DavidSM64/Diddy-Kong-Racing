@@ -467,7 +467,7 @@ void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
 s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1);
 s32 func_8001B2F0(s32 mapId);
 void render_3d_billboard(Object *obj);
-void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 arg6, u32 arg7, f32 arg8);
+void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 flags, u32 offset, f32 arg8);
 void func_8000B290(void);
 void func_80016BC4(unk8000FD34*);
 s32 func_8001C48C(Object *obj);

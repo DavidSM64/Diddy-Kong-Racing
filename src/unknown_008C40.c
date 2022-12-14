@@ -228,7 +228,7 @@ void func_8000A414(Gfx **arg0, Vertex **arg1, Triangle **arg2, unk800A414_arg3 *
     
     sp30 = *arg1;
     sp2C = *arg2;
-    func_8007B4C8(&sp34, NULL, 0U);
+    load_and_set_texture_no_offset(&sp34, NULL, RENDER_NONE);
     gDkrVertices(sp34++, OS_PHYSICAL_TO_K0(sp30), (((s32)OS_PHYSICAL_TO_K0(sp30)) & 6) | 0x18, 0x28);
     gDkrTriangles(sp34++, OS_PHYSICAL_TO_K0(sp2C), 2, 0);
     sp30[0].x = sp2A;

@@ -1091,7 +1091,7 @@ s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     return 0;
 }
 
-void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 arg6, u32 arg7, f32 arg8) {
+void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 flags, u32 texOffset, f32 arg8) {
     s32 hasTexture = FALSE;
     func_80069484(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, arg8, 0.0f);
     gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -1099,7 +1099,7 @@ void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triang
     if (tex != NULL) {
         hasTexture = TRUE;
     }
-    load_and_set_texture(&gObjectCurrDisplayList, (TextureHeader* ) tex, (s32) arg6, (s32) arg7);
+    load_and_set_texture(&gObjectCurrDisplayList, (TextureHeader* ) tex, flags, texOffset);
     gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(verts), numVertices, 0);
     gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(triangles), numTriangles, hasTexture);
     func_80069A40(&gObjectCurrDisplayList);
@@ -1964,7 +1964,7 @@ Object *get_racer_object_by_port(s32 index) {
 UNUSED void debug_render_checkpoints(Gfx **dlist, MatrixS **mtx, Vertex **vtx) {
     s32 i;
 
-    func_8007B4C8(dlist, NULL, RENDER_Z_COMPARE);
+    load_and_set_texture_no_offset(dlist, NULL, RENDER_Z_COMPARE);
     if (gNumberOfCheckpoints > 3) {
         for (i = 0; i < gNumberOfCheckpoints; i++) {
             // Ground path
