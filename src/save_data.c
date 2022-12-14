@@ -342,7 +342,7 @@ s32 func_80072C54(s32 arg0) {
 
 // arg0 is the number of bits we care about
 // arg1 is the bit being looked for.
-void func_80072E28(s32 arg0, s32 arg1) {
+void func_80072E28(s32 arg0, u32 arg1) {
     u32 var_v0;
 
     if (arg0 > 0) {
@@ -419,22 +419,20 @@ void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 void func_800732E8(Settings *settings, u8 *saveData) {
+    s16 var_v0;
+    s8 temp_v0;
+    u8 courseStatus;
     s32 levelCount;
     s32 worldCount;
-    s16 var_v0;
-    u8 courseStatus;
-    s32 var_s0;
     s32 i;
-    s8 temp_v0;
-    s32 blocks;
+    s32 var_s0;
 
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
     D_801241EC = saveData;
     D_801241F0 = 0;
-    D_801241F4 = 128; // 1000 0000 in binary.
-    func_80072E28(0x10, 0);
+    D_801241F4 = 128;
+    func_80072E28(16, 0);
     for (i = 0, var_s0 = 0; i < levelCount; i++) {
         temp_v0 = func_8006B14C(i);
          if ((temp_v0 == 0) || (temp_v0 & 0x40) || (temp_v0 == 8)) {
@@ -455,47 +453,39 @@ void func_800732E8(Settings *settings, u8 *saveData) {
             var_s0 += 2;
         }
     }
-    func_80072E28(0x44 - var_s0, 0);
+    func_80072E28(68 - var_s0, 0);
     func_80072E28(6, settings->tajFlags);
-    func_80072E28(0xA, settings->trophies);
-    func_80072E28(0xC, settings->bosses);
+    func_80072E28(10, settings->trophies);
+    func_80072E28(12, settings->bosses);
     for (i = 0; i < worldCount; i++) {
-        func_80072E28(7, settings->balloonsPtr[i * 2]);
+        func_80072E28(7, settings->balloonsPtr[i]);
     }
     func_80072E28(3, settings->ttAmulet);
     func_80072E28(3, settings->wizpigAmulet);
     for (i = 0; i < worldCount; i++) {
-        func_80072E28(0x10, (settings->courseFlagsPtr[get_hub_area_id(i)] >> 16) & 0xFFFF);
+        func_80072E28(16, (settings->courseFlagsPtr[get_hub_area_id(i)] >> 16) & 0xFFFF);
     }
     func_80072E28(8, settings->keys);
-    func_80072E28(0x20, settings->cutsceneFlags);
-    func_80072E28(0x10, settings->filename);
+    func_80072E28(32, settings->cutsceneFlags);
+    func_80072E28(16, settings->filename);
     func_80072E28(8, 0);
-    blocks = 5;
-    var_v0 = saveData[2] + blocks + saveData[2] + 1;
-    // 40 is the number of bytes in a save file
-    // This will be +4 so as to skip the first 4 bytes, which will just be GAMD, the save file header.
-    for (i = 4; i < blocks * (s32)sizeof(u64); i++) {
-        var_v0 += saveData[i] + saveData[i + 1] + saveData[i + 2] + saveData[i + 3];
+    for (i = 2, var_v0 = 5; i < 40; i++) {
+        var_v0 += saveData[i];
     }
     D_801241EC = saveData;
     D_801241F0 = 0;
-    D_801241F4 = 128; // 1000 0000 in binary.
-    func_80072E28(0x10, var_v0);
+    D_801241F4 = 128;
+    func_80072E28(16, var_v0);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/func_800732E8.s")
-#endif
 
 //arg1 is eepromData, from read_eeprom_data
 //arg2 seems to be a flag for either lap times or course initials?
-#ifdef NON_MATCHING
 void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
     s16 availableVehicles;
     s32 levelCount;
     s32 worldCount;
     s32 i;
-    s16 var_s0;
+    s16 sum;
 
     func_8006E770(settings, arg2);
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
@@ -504,71 +494,154 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         D_801241EC = saveData;
         D_801241F0 = 0;
         D_801241F4 = 0;
-        for (i = 2, var_s0 = 5; i < 192; i++) {
-            var_s0 += saveData[i];
+        for (i = 2, sum = 5; i < 192; i++) {
+            sum += D_801241EC[i];
         }
-        var_s0 -= func_80072C54(0x10);
-        if (var_s0 == 0) {
+        sum -= func_80072C54(16);
+        if (sum == 0) {
             for (i = 0; i < levelCount; i++) {
                 if (func_8006B14C(i) == 0) {
                     availableVehicles = get_map_available_vehicles(i);
                     // Car Available
                     if (availableVehicles & 1) {
-                        settings->flapTimesPtr[0][i] = func_80072C54(0x10);
-                        settings->flapInitialsPtr[0][i] = func_80072C54(0x10);
+                        settings->flapTimesPtr[0][i] = func_80072C54(16);
+                        settings->flapInitialsPtr[0][i] = func_80072C54(16);
                     }
                     // Hovercraft Available
                     if (availableVehicles & 2) {
-                        settings->flapTimesPtr[1][i] = func_80072C54(0x10);
-                        settings->flapInitialsPtr[1][i] = func_80072C54(0x10);
+                        settings->flapTimesPtr[1][i] = func_80072C54(16);
+                        settings->flapInitialsPtr[1][i] = func_80072C54(16);
                     }
                     // Plane Available
                     if (availableVehicles & 4) {
-                        settings->flapTimesPtr[2][i] = func_80072C54(0x10);
-                        settings->flapInitialsPtr[2][i] = func_80072C54(0x10);
+                        settings->flapTimesPtr[2][i] = func_80072C54(16);
+                        settings->flapInitialsPtr[2][i] = func_80072C54(16);
                     }
                 }
             }
         }
     }
     if (arg2 & 2) {
-        saveData += 192;
-        D_801241EC = saveData;
+        D_801241EC = saveData + 192;
         D_801241F0 = 0;
         D_801241F4 = 0;
-        for (i = 2, var_s0 = 5; i < 192; i++) {
-            var_s0 += saveData[i];
+        for (i = 2, sum = 5; i < 192; i++) {
+            sum += (s16) D_801241EC[i];
         }
-        var_s0 -= func_80072C54(0x10);
-        if (var_s0 == 0) {
+        sum -= func_80072C54(16);
+        if (sum == 0) {
             for (i = 0; i < levelCount; i++) {
                 if (func_8006B14C(i) == 0) {
                     availableVehicles = get_map_available_vehicles(i);
                     // Car Available
                     if (availableVehicles & 1) {
-                        settings->courseTimesPtr[0][i] = func_80072C54(0x10);
-                        settings->courseInitialsPtr[0][i] = func_80072C54(0x10);
+                        settings->courseTimesPtr[0][i] = func_80072C54(16);
+                        settings->courseInitialsPtr[0][i] = func_80072C54(16);
                     }
                     // Hovercraft Available
                     if (availableVehicles & 2) {
-                        settings->courseTimesPtr[1][i] = func_80072C54(0x10);
-                        settings->courseInitialsPtr[1][i] = func_80072C54(0x10);
+                        settings->courseTimesPtr[1][i] = func_80072C54(16);
+                        settings->courseInitialsPtr[1][i] = func_80072C54(16);
                     }
                     // Plane Available
                     if (availableVehicles & 4) {
-                        settings->courseTimesPtr[2][i] = func_80072C54(0x10);
-                        settings->courseInitialsPtr[2][i] = func_80072C54(0x10);
+                        settings->courseTimesPtr[2][i] = func_80072C54(16);
+                        settings->courseInitialsPtr[2][i] = func_80072C54(16);
                     }
                 }
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/func_80073588.s")
-#endif
 
+#ifdef NON_EQUIVALENT
+void func_800738A4(Settings *settings, u8 *saveData) {
+    s16 availableVehicles;
+    s32 levelCount;
+    s32 worldCount;
+    s32 i;
+    s32 vehicleCount;
+    s16 sum;
+
+    // Fakematch?
+    if (1) {
+        get_number_of_levels_and_worlds(&levelCount, &worldCount);
+        D_801241EC = saveData;
+        D_801241F0 = 0;
+        D_801241F4 = 128;
+        func_80072E28(16, 0);
+        for (vehicleCount = 0, i = 0; i < levelCount; i++) {
+            if (func_8006B14C(i) == 0) {
+                availableVehicles = get_map_available_vehicles(i);
+                // Car Available
+                if (availableVehicles & 1) {
+                    func_80072E28(16, settings->flapTimesPtr[0][i]);
+                    func_80072E28(16, settings->flapInitialsPtr[0][i]);
+                    vehicleCount++;
+                }
+                // Hovercraft Available
+                if (availableVehicles & 2) {
+                    func_80072E28(16, settings->flapTimesPtr[1][i]);
+                    func_80072E28(16, settings->flapInitialsPtr[1][i]);
+                    vehicleCount++;
+                }
+                // Plane Available
+                if (availableVehicles & 4) {
+                    func_80072E28(16, settings->flapTimesPtr[2][i]);
+                    func_80072E28(16, settings->flapInitialsPtr[2][i]);
+                    vehicleCount++;
+                }
+                // How do we make the `b` instruction appear?
+                if (vehicleCount < 48) {
+                    continue;
+                } else {
+                    break;
+                }
+            }
+        }
+        D_801241EC = saveData;
+        D_801241F0 = 0;
+        D_801241F4 = 128;
+        for (i = 2, sum = 5; i < 192; i++) {
+            sum += (s16) D_801241EC[i];
+        }
+        func_80072E28(16, sum);
+        D_801241EC = saveData + 192;
+        D_801241F0 = 0;
+        D_801241F4 = 128;
+        func_80072E28(16, 0);
+        for (i = 0; i < levelCount; i++) {
+            if (func_8006B14C(i) == 0) {
+                availableVehicles = get_map_available_vehicles(i);
+                // Car Available
+                if (availableVehicles & 1) {
+                    func_80072E28(16, settings->courseTimesPtr[0][i]);
+                    func_80072E28(16, settings->courseInitialsPtr[0][i]);
+                }
+                // Hovercraft Available
+                if (availableVehicles & 2) {
+                    func_80072E28(16, settings->courseTimesPtr[1][i]);
+                    func_80072E28(16, settings->courseInitialsPtr[1][i]);
+                }
+                // Plane Available
+                if (availableVehicles & 4) {
+                    func_80072E28(16, settings->courseTimesPtr[2][i]);
+                    func_80072E28(16, settings->courseInitialsPtr[2][i]);
+                }
+            }
+        }
+        D_801241EC = saveData + 192;
+        D_801241F0 = 0;
+        D_801241F4 = 128;
+    }
+    for (i = 2, sum = 5; i < 192; i++) {
+        sum += D_801241EC[i];
+    }
+    func_80072E28(16, sum);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/save_data/func_800738A4.s")
+#endif
 
 s32 get_game_data_file_size(void) {
     return 256;
@@ -578,9 +651,56 @@ s32 get_time_data_file_size(void) {
     return 512;
 }
 
-//Probably get_file_extension
-//func_80073C5C(s32 controllerIndex, s32 fileType, char **fileExt);
-GLOBAL_ASM("asm/non_matchings/save_data/func_80073C5C.s")
+SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileExt) {
+    #define BLANK_EXT_CHAR ' '
+    char *fileNames[16];
+    char *fileExtensions[16];
+    u8 fileTypes[16];
+    u32 fileSizes[16];
+    s32 var_s1;
+    s32 fileNum;
+    char fileExtChar;
+    SIDeviceStatus ret;
+
+    fileExtChar = BLANK_EXT_CHAR;
+    var_s1 = 0;
+    ret = get_controller_pak_file_list(controllerIndex, 16, fileNames, fileExtensions, fileSizes, fileTypes);
+    if (ret == CONTROLLER_PAK_GOOD) {
+        for (fileNum = 0; fileNum < 16; fileNum++) {
+            if (fileNames[fileNum] == NULL) {
+                continue;
+            }
+            if (fileType == 3) {
+                if((func_800CE050((u8 *) fileNames[fileNum], (char *)D_800E7630, strlen((char *)D_800E7640)) != 0)) {
+                    continue;
+                }
+            } else if((func_800CE050((u8 *) fileNames[fileNum], (char *)D_800E7650, strlen((char *)D_800E7660)) != 0))  {
+                continue;
+            }
+
+            if (fileExtChar < fileExtensions[fileNum][0]) {
+                fileExtChar = fileExtensions[fileNum][0];
+            }
+            var_s1 |= (1 << (fileExtensions[fileNum][0] + (BLANK_EXT_CHAR - 1)));
+        }
+        if (fileExtChar == BLANK_EXT_CHAR) {
+            fileExtChar = 'A';
+        } else if (fileExtChar == 'Z') {
+            for (fileExtChar = 'A'; fileExtChar <= 'Z'; var_s1 >>= 1, fileExtChar++) {
+                if (!(var_s1 & 1)) {
+                    break;
+                }
+            }
+        } else {
+            fileExtChar++;
+        }
+        // Even though file extensions are technically 4 characters, only the first is used.
+        // So this will set the extension to that character and then a null terminator.
+        fileExt[0] = fileExtChar;
+        fileExt[1] = '\0';
+    }
+    return ret;
+}
 
 //Read DKRACING-ADV data into settings?
 s32 read_game_data_from_controller_pak(s32 controllerIndex, char *fileExt, Settings *settings) {
@@ -640,7 +760,7 @@ s32 write_game_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     gameData = allocate_from_main_pool_safe(fileSize, COLOUR_TAG_WHITE);
     *((s32 *)gameData) = GAMD;
     func_800732E8(arg1, gameData + 4);
-    ret = func_80073C5C(controllerIndex, 3, &fileExt);
+    ret = get_file_extension(controllerIndex, 3, (char *)&fileExt);
     if (ret == CONTROLLER_PAK_GOOD) {
         // D_800E7680 = DKRACING-ADV
         ret = write_controller_pak_file(controllerIndex, -1, (char *) D_800E7680, (char *)&fileExt, gameData, fileSize);
@@ -708,7 +828,7 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     timeData = allocate_from_main_pool_safe(fileSize, COLOUR_TAG_WHITE);
     *((s32 *)timeData) = TIMD;
     func_800738A4(arg1, timeData + 4);
-    ret = func_80073C5C(controllerIndex, 4, &fileExt);
+    ret = get_file_extension(controllerIndex, 4, (char *)&fileExt);
     if (ret == CONTROLLER_PAK_GOOD) {
         //D_800E76A0 = DKRACING-TIMES
         ret = write_controller_pak_file(controllerIndex, -1, (char *)D_800E76A0, (char *)&fileExt, timeData, fileSize);
@@ -1033,7 +1153,125 @@ s32 func_80074B1C(void) {
     return (&x)[0] * 6 + 0x100;
 }
 
+#ifdef NON_EQUIVALENT
+s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCharacterId, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *ghostData) {
+    #define GHSS_FILE_SIZE 0x100
+    u8 *fileData;
+    s32 fileNumber;
+    s32 fileOffset;
+    s32 fileSize;
+    s32 bytesFree;
+    s32 notesFree;
+    s32 ret;
+    s32 retTemp;
+    s32 var_v1;
+    u8 *temp_a1;
+    GhostHeader *ghostHeader;
+    u8 *var_v0_2;
+    u8 *temp_v0_4;
+
+    fileOffset = 0;
+    ret = get_si_device_status(controllerIndex);
+    if (ret != CONTROLLER_PAK_GOOD) {
+        start_reading_controller_data(controllerIndex);
+        return ret;
+    }
+    if (ghostCharacterId != NULL) {
+        *ghostTime = -1;
+        *ghostCharacterId = -1;
+    }
+    //D_800E773C = "DKRACING-GHOSTS"
+    //D_800E774C = ""
+    ret = get_file_number(controllerIndex, (char *) D_800E773C, (char *) D_800E774C, &fileNumber);
+    if (ret == CONTROLLER_PAK_GOOD) {
+        fileData = allocate_from_main_pool_safe(GHSS_FILE_SIZE, COLOUR_TAG_BLACK);
+        if (!(pfs[controllerIndex].status & PFS_INITIALIZED)) {
+            osPfsInit(sControllerMesgQueue, &pfs[controllerIndex], controllerIndex);
+        }
+        ret = read_data_from_controller_pak(controllerIndex, fileNumber, fileData, GHSS_FILE_SIZE);
+        if (ret == CONTROLLER_PAK_GOOD) {
+            temp_a1 = fileData + 4;
+            if (fileData[0] == GHSS) {
+                var_v1 = 0;
+                var_v0_2 = temp_a1;
+loop_10:
+                var_v1 += 4;
+                if ((levelId == var_v0_2[0]) && (vehicleId == var_v0_2[1])) {
+                    fileOffset = var_v0_2[2];
+                    fileSize = var_v0_2[6] - var_v0_2[2];
+                } else {
+                    var_v0_2 += 4;
+                    if (var_v1 < 24) {
+                        goto loop_10;
+                    }
+                }
+                if (fileOffset == 0) {
+                    ret = CONTROLLER_PAK_UNK6;
+                    if (fileData[4] == 0xFF) {
+                        ret = CONTROLLER_PAK_UNK8;
+                    }
+                    temp_v0_4 = temp_a1 + (2 * 4);
+                    if (fileData[4] == 0xFF) {
+                        ret = CONTROLLER_PAK_UNK8;
+                    }
+                    if (temp_v0_4[0] == 0xFF) {
+                        ret = CONTROLLER_PAK_UNK8;
+                    }
+                    if (temp_v0_4[4] == 0xFF) {
+                        ret = CONTROLLER_PAK_UNK8;
+                    }
+                    if (temp_v0_4[8] == 0xFF) {
+                        ret = CONTROLLER_PAK_UNK8;
+                    }
+                    if (temp_v0_4[12] == 0xFF) {
+                        ret = CONTROLLER_PAK_UNK8;
+                    }
+                }
+            } else {
+                ret = CONTROLLER_PAK_BAD_DATA;
+            }
+        }
+        free_from_memory_pool(fileData);
+        if (fileOffset != 0) {
+            if (ghostCharacterId != NULL) {
+                ghostHeader = allocate_from_main_pool_safe(fileSize + GHSS_FILE_SIZE, COLOUR_TAG_BLACK);
+                retTemp = CONTROLLER_PAK_BAD_DATA;
+                if (osPfsReadWriteFile(&pfs[controllerIndex], fileNumber, PFS_READ, fileOffset, fileSize, (u8 *) ghostHeader) == 0) {
+                    if (calculate_ghost_header_checksum(ghostHeader) == ghostHeader->checksum) {
+                        *ghostCharacterId = ghostHeader->characterID;
+                        *ghostTime = ghostHeader->time;
+                        *ghostNodeCount = ghostHeader->nodeCount;
+                        bcopy(ghostHeader + 8, ghostData, *ghostNodeCount * sizeof(GhostNode));
+                        retTemp = CONTROLLER_PAK_GOOD;
+                    } else {
+                        retTemp = CONTROLLER_PAK_BAD_DATA;
+                    }
+                }
+                free_from_memory_pool(ghostHeader);
+                ret = retTemp;
+            }
+        }
+        if ((fileOffset != 0) && (ghostCharacterId == NULL)) {
+            ret = CONTROLLER_PAK_GOOD;
+        }
+    }
+    start_reading_controller_data(controllerIndex);
+    if (ret == CONTROLLER_PAK_CHANGED) {
+        if (get_free_space(controllerIndex, &bytesFree, &notesFree) == CONTROLLER_PAK_GOOD) {
+            if ((bytesFree < func_80074B1C()) || ((notesFree == 0))) {
+                return CONTROLLER_PAK_FULL;
+            }
+            /* Duplicate return node #48. Try simplifying control flow for better match */
+            return ret;
+        }
+        return CONTROLLER_PAK_BAD_DATA;
+    }
+    return ret;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/save_data/func_80074B34.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/save_data/func_80074EB8.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_80075000.s")
 GLOBAL_ASM("asm/non_matchings/save_data/func_800753D8.s")
@@ -1364,6 +1602,7 @@ void func_80076164(void) {
 }
 
 //Get Available Space in Controller Pak
+//Upper bytes of return value couldl be controllerIndex
 s32 get_free_space(s32 controllerIndex, u32 *bytesFree, s32 *notesFree) {
     s32 ret;
     s32 bytesNotUsed;
