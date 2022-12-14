@@ -25,6 +25,8 @@
 #include "object_models.h"
 
 #define MAX_CHECKPOINTS 60
+#define OBJECT_POOL_SIZE 0x15800
+#define OBJECT_SLOT_COUNT 512
 
 /************ .data ************/
 
@@ -199,7 +201,7 @@ Object **gObjPtrList; // Not sure about the number of elements
 s32 objCount;
 s32 D_8011AE60;
 s32 D_8011AE64;
-s32 *D_8011AE68;
+Object *gObjectMemoryPool;
 s32 *D_8011AE6C;
 s32 D_8011AE70;
 Object **D_8011AE74;
@@ -335,19 +337,19 @@ Object *func_8000BF44(s32 arg0) {
     return D_8011B020[arg0];
 }
 
-void func_8000BF8C(void) {
+void allocate_object_pools(void) {
     s32 i;
 
     func_8001D258(0.67f, 0.33f, 0, -0x2000, 0);
-    D_8011AE68 = (s32 *) new_sub_memory_pool(0x15800, 0x200);
-    gParticlePtrList = (Object **) allocate_from_main_pool_safe(0x320, COLOUR_TAG_BLUE);
+    gObjectMemoryPool = (Object *) new_sub_memory_pool(OBJECT_POOL_SIZE, OBJECT_SLOT_COUNT);
+    gParticlePtrList = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 200, COLOUR_TAG_BLUE);
     D_8011AE6C = (s32 *) allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
     D_8011AE74 = (Object **) allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     gTrackCheckpoints = (CheckpointNode *) allocate_from_main_pool_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
     D_8011AEDC = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
-    gRacers = allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
-    gRacersByPort = (Object **) allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
-    gRacersByPosition = (Object **) allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
+    gRacers = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
+    gRacersByPort = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
+    gRacersByPosition = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
     D_8011AF04 = allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     D_8011ADCC = allocate_from_main_pool_safe(8, COLOUR_TAG_BLUE);
     D_8011AFF4 = (unk800179D0 *) allocate_from_main_pool_safe(0x400, COLOUR_TAG_BLUE);
@@ -356,7 +358,7 @@ void func_8000BF8C(void) {
     while (gAssetsLvlObjTranslationTable[gAssetsLvlObjTranslationTableLength] == 0) {
         gAssetsLvlObjTranslationTableLength--;
     }
-    D_8011AD58 = (s32 *)allocate_from_main_pool_safe(0x800, COLOUR_TAG_BLUE);
+    D_8011AD58 = (s32 *) allocate_from_main_pool_safe(0x800, COLOUR_TAG_BLUE);
     gAssetsObjectHeadersTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_HEADERS_TABLE);
     gAssetsObjectHeadersTableLength = 0;
     while (-1 != gAssetsObjectHeadersTable[gAssetsObjectHeadersTableLength]) {
@@ -378,7 +380,7 @@ void func_8000BF8C(void) {
     }
 
     decrypt_magic_codes(&gAssetsMiscSection[gAssetsMiscTable[65]], (gAssetsMiscTable[66] - gAssetsMiscTable[65]) * 4);
-    gObjPtrList = (Object **)allocate_from_main_pool_safe(0x800, COLOUR_TAG_BLUE);
+    gObjPtrList = (Object **)allocate_from_main_pool_safe(sizeof(uintptr_t) * OBJECT_SLOT_COUNT, COLOUR_TAG_BLUE);
     D_8011ADC4 = 0;
     gTimeTrialEnabled = 0;
     D_8011AEF5 = 0;

@@ -352,7 +352,7 @@ extern u8 D_800DC860;
 extern u16 D_800DC864;
 
 Object *func_8000BF44(s32 arg0);
-void func_8000BF8C(void);
+void allocate_object_pools(void);
 void func_8000C460(void);
 void func_8000C604(void);
 s32 normalise_time(s32 timer);

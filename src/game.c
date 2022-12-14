@@ -871,7 +871,7 @@ void init_game(void) {
     sControllerStatus = init_controllers();
     func_8007AC70(); // Should be very similar to func_8005F850
     func_8005F850(); // Matched
-    func_8000BF8C();
+    allocate_object_pools();
     func_800B5E88();
     func_800598D0();
     init_particle_assets();
