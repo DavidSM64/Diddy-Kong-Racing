@@ -342,7 +342,7 @@ s32 func_80072C54(s32 arg0) {
 
 // arg0 is the number of bits we care about
 // arg1 is the bit being looked for.
-void func_80072E28(s32 arg0, s32 arg1) {
+void func_80072E28(s32 arg0, u32 arg1) {
     u32 var_v0;
 
     if (arg0 > 0) {
@@ -634,7 +634,7 @@ void func_800738A4(Settings *settings, u8 *saveData) {
     D_801241EC = saveData;
     D_801241F0 = 0;
     D_801241F4 = 128;
-    for (i = 2, var_v1 = saveData; i < 192; i++) { var_v1 += D_801241EC[i]; }
+    for (i = 2, var_v1 = saveData + 5; i < 192; i++) { var_v1 += D_801241EC[i]; }
     func_80072E28(16, var_v1);
 }
 #else

@@ -80,7 +80,7 @@ void func_80072348(s16 controllerIndex, u8 arg1);
 void func_80072424(s16 controllerIndex, u8 arg1, f32 arg2);
 void rumble_controllers(s32 arg0);
 void init_controller_paks(void);
-void func_80072E28(s32 arg0, s32 arg1);
+void func_80072E28(s32 arg0, u32 arg1);
 s32 func_80072C54(s32 arg0);
 void populate_settings_from_save_data(Settings *settings, u8 *saveData);
 s32 func_80074204(s32 saveFileNum, Settings *settings);
