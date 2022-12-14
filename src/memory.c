@@ -69,56 +69,48 @@ MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots) {
     MemoryPoolSlot *newPool;
 
     size = poolDataSize + (numSlots * sizeof(MemoryPoolSlot));
-    slots = (MemoryPoolSlot *)allocate_from_main_pool_safe(size, COLOUR_TAG_WHITE);
+    slots = (MemoryPoolSlot *) allocate_from_main_pool_safe(size, COLOUR_TAG_WHITE);
     newPool = new_memory_pool(slots, size, numSlots);
     set_status_register_flags(temp);
     return newPool;
 }
 
-#ifdef NON_EQUIVALENT
-//Match found in Dinosaur Planet, and it's *really* close, but not yet there.
+/**
+ * Create and initialise a memory pool in RAM that will act as the place where arbitrary allocations can go.
+ * Will return the location of the first free slot in that pool.
+*/
 MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlots) {
     MemoryPoolSlot *firstSlot;
+    s32 poolCount;
     MemoryPool *pool;
     s32 i;
-    s32 len;
-
-    //The comma seperation seems to generate a better match
-    len = gNumberOfMemoryPools++, pool = &gMemoryPools[len];
-
-    len = numSlots * sizeof(MemoryPoolSlot);
-    pool->maxNumSlots = numSlots;
-    pool->curNumSlots = 0;
-    pool->slots = slots;
-    pool->size = poolSize;
-
+    
+    poolCount = ++gNumberOfMemoryPools; \
+    gMemoryPools[poolCount].maxNumSlots = numSlots;
+    gMemoryPools[poolCount].curNumSlots = 0;
+    gMemoryPools[poolCount].slots = slots;
+    gMemoryPools[poolCount].size = poolSize;
+    pool = &gMemoryPools[poolCount++];
     firstSlot = slots;
-
+    if(0){} if (!pool->maxNumSlots){} // Fakematch
     for (i = 0; i < pool->maxNumSlots; i++) {
         firstSlot->index = i;
         firstSlot++;
     }
-
     firstSlot = &pool->slots[0];
     slots += numSlots;
-    if (((s32)slots & 0xF) != 0) {
-        firstSlot->data = _ALIGN16(slots);
+    if ((s32) slots & 0xF) {
+        firstSlot->data = (u8 *) _ALIGN16(slots);
     } else {
-        firstSlot->data = slots;
+        firstSlot->data = (u8 *) slots;
     }
-
-    firstSlot->size = poolSize - len;
+    firstSlot->size = poolSize - (numSlots * sizeof(MemoryPoolSlot));
     firstSlot->flags = 0;
     firstSlot->prevIndex = -1;
     firstSlot->nextIndex = -1;
-
     pool->curNumSlots++;
-
     return pool->slots;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/memory/new_memory_pool.s")
-#endif
 
 /**
  * Reserves and returns memory from the main memory pool. Has 2 assert checks.
