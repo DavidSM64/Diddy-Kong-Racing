@@ -419,7 +419,6 @@ void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 void func_800732E8(Settings *settings, u8 *saveData) {
     s16 var_v0;
     s8 temp_v0;
@@ -470,16 +469,14 @@ void func_800732E8(Settings *settings, u8 *saveData) {
     func_80072E28(32, settings->cutsceneFlags);
     func_80072E28(16, settings->filename);
     func_80072E28(8, 0);
-    var_v0 = saveData + 5;
-    for (i = 2; i < 40; i++) { var_v0 += saveData[i]; }
-    D_801241EC = var_v0;
+    for (i = 2, var_v0 = 5; i < 40; i++) {
+        var_v0 += saveData[i];
+    }
+    D_801241EC = saveData;
     D_801241F0 = 0;
     D_801241F4 = 128;
-    func_80072E28(16, saveData);
+    func_80072E28(16, var_v0);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/func_800732E8.s")
-#endif
 
 //arg1 is eepromData, from read_eeprom_data
 //arg2 seems to be a flag for either lap times or course initials?
@@ -498,7 +495,7 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         D_801241F0 = 0;
         D_801241F4 = 0;
         for (i = 2, sum = 5; i < 192; i++) {
-            sum += (s16) D_801241EC[i];
+            sum += D_801241EC[i];
         }
         sum -= func_80072C54(16);
         if (sum == 0) {

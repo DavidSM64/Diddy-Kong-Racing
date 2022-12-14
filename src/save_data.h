@@ -88,9 +88,9 @@ void erase_save_file(s32 saveFileNum, Settings *settings);
 SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, s16 *arg4);
 SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileExt); //Non matching
 void func_80073588(Settings *settings, u8 *saveData, u8 arg2);
+void func_800732E8(Settings *settings, u8 *saveData);
 
 void func_800738A4(Settings *settings, u8 *saveData);
-void func_800732E8(Settings *arg0, u8 *arg1); //Non matching
 //Using some context, and best guesses, these could be the names of the variables
 s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCharacterId, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *ghostData); //Non matching
 char *string_to_font_codes(char *inString, char *outString, s32 stringLength);
