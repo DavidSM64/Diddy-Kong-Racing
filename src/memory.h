@@ -102,7 +102,6 @@ s32 allocate_memory_pool_slot(s32 memoryPoolIndex, s32 slotIndex, s32 size, s32 
 s32 get_memory_colour_tag_count(u32 colourTag);
 void free_slot_containing_address(u8 *address);
 MemoryPoolSlot *allocate_from_memory_pool(s32 memoryPoolIndex, s32 size, u32 colourTag);
-
-void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colourTag); // Non Matching
+void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colourTag);
 
 #endif

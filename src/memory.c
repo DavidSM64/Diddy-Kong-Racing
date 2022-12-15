@@ -188,47 +188,42 @@ void *allocate_from_pool_containing_slots(MemoryPoolSlot *slots, s32 size) {
     return (void *)NULL;
 }
 
-#ifdef NON_EQUIVALENT
-void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colourTag) {
-    s32 *sp38;
-    s32 s0;
+void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
+    s32 i;
     MemoryPoolSlot *curSlot;
     MemoryPoolSlot *slots;
-
-    sp38 = clear_status_register_flags();
+    s32 *flags;
+    
+    flags = clear_status_register_flags();
+    if (!size){} // Fakematch
     if ((gMemoryPools[0].curNumSlots + 1) == gMemoryPools[0].maxNumSlots) {
-        set_status_register_flags(sp38);
+        set_status_register_flags(flags);
     } else {
-        s0 = 0;
-        if (size & 0xF) {
-            size = _ALIGN16(size); // The size of the pool should be 16-byte aligned
-        }
-        slots = gMemoryPools[0].slots;
-        while (s0 != -1) {
-            curSlot = &slots[s0];
-            if (curSlot->flags == 0) {
-                if ((address >= (u8 *)curSlot->data) && (((u8 *)curSlot->data + curSlot->size) >= (address + size))) {
-                    if (address == (u8 *)curSlot->data) {
-                        allocate_memory_pool_slot(0, s0, size, 1, 0, colourTag);
-                        set_status_register_flags(sp38);
-                        return curSlot->data;
-                    } else {
-                        s0 = allocate_memory_pool_slot(0, s0, address - (u8 *)curSlot->data, 0, 1, colourTag);
-                        allocate_memory_pool_slot(0, s0, size, 1, 0, colourTag);
-                        set_status_register_flags(sp38);
-                        return slots[s0].data;
-                    }
+    if (size & 0xF) {
+        size = _ALIGN16(size);
+    }
+    slots = gMemoryPools[0].slots;
+    for (i = 0; i != -1; i = curSlot->nextIndex) {
+        curSlot = &slots[i];
+        if (curSlot->flags == 0) {
+            if ((u32) address >= (u32) curSlot->data && (u32)address + size <= (u32) curSlot->data + curSlot->size)  {
+                if (address == (u8 *) curSlot->data) {
+                    allocate_memory_pool_slot(0, i, size, 1, 0, colorTag);
+                    set_status_register_flags(flags);
+                    return curSlot->data;
+                } else {
+                    i = allocate_memory_pool_slot(0, i, (u32) address - (u32) curSlot->data, 0, 1, colorTag);
+                    allocate_memory_pool_slot(0, i, size, 1, 0, colorTag);
+                    set_status_register_flags(flags);
+                    return (slots + i)->data;
                 }
             }
-            s0 = curSlot->nextIndex;
         }
-        set_status_register_flags(sp38);
     }
-    return NULL;
+    set_status_register_flags(flags);
+    }
+    return 0;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/memory/allocate_at_address_in_main_pool.s")
-#endif
 
 /**
  * Sets the state of the free queue. State is either 0, 1, or 2.
@@ -585,26 +580,35 @@ void render_memory_colour_tags(void) {
     render_printf("ORANGE %d\n\n", get_memory_colour_tag_count(COLOUR_TAG_ORANGE));
 }
 
-#ifdef NON_EQUIVALENT
-// Unused. Does nothing?
-void func_80071C74(void) {
-    s32 i, flags;
-    MemoryPool *pool;
+UNUSED void func_80071C74(void) {
+    s32 i;
+    s32 skip;
+    s32 index;
+    s32 index2;
+    s32 nextIndex;
     MemoryPoolSlot *slot;
-
-    for (i = 0; i <= gNumberOfMemoryPools; i++) {
-        pool = &gMemoryPools[i];
-        slot = &pool->slots[0];
-        while (slot->nextIndex != -1) {
-            if (slot->flags) { // I don't know how to get this to appear.
+    
+    for (i = 0; (gNumberOfMemoryPools ^ 0) >= i; i++) {
+        if (i && i) {} // Fakematch
+        slot = &gMemoryPools[i].slots[0];
+        index = 1;
+        index2 = -index;
+        do {
+            index = slot->flags;
+            nextIndex = slot->nextIndex;
+            skip = nextIndex == index2;
+            if (index) {
+                if (((((((((!slot->nextIndex) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) {
+                    if (nextIndex && nextIndex) {} // Fakematch
+                }
             }
-            slot = &pool->slots[slot->nextIndex];
-        }
+            if (skip) {
+                continue;
+            }
+            slot = &gMemoryPools[i].slots[slot->nextIndex];
+        } while (nextIndex != (-1));
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/memory/func_80071C74.s")
-#endif
 
 // Unused. Does nothing?
 void func_80071CE8(void) {
