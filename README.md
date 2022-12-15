@@ -120,31 +120,31 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of December 14, 2022, this is our current score:
+As of December 15, 2022, this is our current score:
 ```
- ==========================================================================
-                   ADVENTURE ONE (ASM -> C Decompilation)
- ---------------------------- 42.94% Complete -----------------------------
-                        # Decompiled functions: 1409
-                        # GLOBAL_ASM remaining: 427
-                        # NON_MATCHING functions: 10
-                     # NON_EQUIVALENT WIP functions: 80
- ------------------------------ Game Status -------------------------------
-                 Balloons: 21/47, Keys: 2/4, Trophies: 1/5
-                   T.T. Amulets: 2/4, Wizpig Amulets: 2/4
- --------------------------------------------------------------------------
- We are participating in the Trophy Race of Snowflake Mountain. (Round Two)
- ==========================================================================
-                   ADVENTURE TWO (Cleanup & Documentation)
- ---------------------------- 13.39% Complete -----------------------------
-                        # Documented functions: 305
-                       # Undocumented remaining: 1531
- ------------------------------ Game Status -------------------------------
-                  Balloons: 8/47, Keys: 1/4, Trophies: 0/5
-                   T.T. Amulets: 0/4, Wizpig Amulets: 0/4
- --------------------------------------------------------------------------
-                 We are racing the dinosaur boss Trickytops
- ==========================================================================
+ ============================================================================
+                    ADVENTURE ONE (ASM -> C Decompilation)
+ ----------------------------- 43.28% Complete ------------------------------
+                         # Decompiled functions: 1414
+                         # GLOBAL_ASM remaining: 419
+                         # NON_MATCHING functions: 13
+                      # NON_EQUIVALENT WIP functions: 79
+ ------------------------------- Game Status --------------------------------
+                  Balloons: 21/47, Keys: 2/4, Trophies: 1/5
+                    T.T. Amulets: 2/4, Wizpig Amulets: 2/4
+ ----------------------------------------------------------------------------
+ We are participating in the Trophy Race of Snowflake Mountain. (Round Three)
+ ============================================================================
+                    ADVENTURE TWO (Cleanup & Documentation)
+ ----------------------------- 13.59% Complete ------------------------------
+                         # Documented functions: 313
+                        # Undocumented remaining: 1520
+ ------------------------------- Game Status --------------------------------
+                   Balloons: 8/47, Keys: 1/4, Trophies: 0/5
+                    T.T. Amulets: 0/4, Wizpig Amulets: 0/4
+ ----------------------------------------------------------------------------
+                  We are racing the dinosaur boss Trickytops
+ ============================================================================
 ```
 <!-- README_SCORE_END -->
 
