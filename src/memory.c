@@ -290,34 +290,33 @@ void clear_free_queue(void) {
     set_status_register_flags(sp28);
 }
 
-#ifdef NON_EQUIVALENT
 void free_slot_containing_address(u8 *address) {
-    s32 poolIndex;
     s32 slotIndex;
+    s32 poolIndex;
+    MemoryPool *pool;
     MemoryPoolSlot *slots;
     MemoryPoolSlot *slot;
-
+    
     poolIndex = get_memory_pool_index_containing_address(address);
-    slots = gMemoryPools[poolIndex].slots;
+    pool = gMemoryPools;
+    slots = pool[poolIndex].slots;
     for (slotIndex = 0; slotIndex != -1; slotIndex = slot->nextIndex) {
         slot = &slots[slotIndex];
-        if (address == (u8 *)slot->data) {
+        
+        if (address == (u8 *) slot->data) {
             if (slot->flags == 1 || slot->flags == 4) {
-                free_memory_pool_slot(poolIndex, slotIndex);
+            free_memory_pool_slot(poolIndex, slotIndex);
             }
             break;
         }
+        slot = &slots[slotIndex];
     }
 }
-
-#else
-GLOBAL_ASM("asm/non_matchings/memory/free_slot_containing_address.s")
-#endif
 
 void func_80071314(void) {
     MemoryPoolSlot *slotPos;
     MemoryPool *pool;
-    MemoryPoolSlot *slot;
+    UNUSED s32 pad;
     s32 *flags;
     s32 poolIndex;
     s32 slotIndex;
@@ -543,7 +542,7 @@ u8 *align4(u8 *address) {
 
 GLOBAL_ASM("asm/non_matchings/memory/func_800718A4.s")
 
-s32 get_memory_colour_tag_count(s32 colourTag) {
+s32 get_memory_colour_tag_count(u32 colourTag) {
     s32 i, count;
     MemoryPoolSlot *slot;
     count = 0;
