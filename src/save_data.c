@@ -25,39 +25,41 @@ s32 D_800DE48C = 0;
 
 /************ .rodata ************/
 
-const char D_800E7590[] = "Region = %d	 loc = %x	 size = %x\t";
-const char D_800E75B4[] = "FREE";
-const char D_800E75BC[] = "ALLOCATED";
-const char D_800E75C8[] = "ALLOCATED,FIXED";
-const char D_800E75D8[] = "\n";
-const char D_800E75DC[] = "\n";
-const char D_800E75E0[] = "Region number = %d\t";
-const char D_800E75F4[] = "maxSlots = %d\t";
-const char D_800E7604[] = "slotsUsed = %d\t";
-const char D_800E7614[] = "loc = %x\t";
-const char D_800E7620[] = "size = %x\n";
-const char D_800E762C[] = "\n";
+UNUSED const char D_800E7590[] = "Region = %d	 loc = %x	 size = %x\t";
+UNUSED const char D_800E75B4[] = "FREE";
+UNUSED const char D_800E75BC[] = "ALLOCATED";
+UNUSED const char D_800E75C8[] = "ALLOCATED,FIXED";
+UNUSED const char D_800E75D8[] = "\n";
+UNUSED const char D_800E75DC[] = "\n";
+UNUSED const char D_800E75E0[] = "Region number = %d\t";
+UNUSED const char D_800E75F4[] = "maxSlots = %d\t";
+UNUSED const char D_800E7604[] = "slotsUsed = %d\t";
+UNUSED const char D_800E7614[] = "loc = %x\t";
+UNUSED const char D_800E7620[] = "size = %x\n";
+UNUSED const char D_800E762C[] = "\n";
 
-const char D_800E7630[] = "DKRACING-ADV";
-const char D_800E7640[] = "DKRACING-ADV";
-const char D_800E7650[] = "DKRACING-TIMES";
-const char D_800E7660[] = "DKRACING-TIMES";
-const char D_800E7670[] = "DKRACING-ADV";
-const char D_800E7680[] = "DKRACING-ADV";
-const char D_800E7690[] = "DKRACING-TIMES";
-const char D_800E76A0[] = "DKRACING-TIMES";
+// File Names
+const char sDKRacingAdv1[] = "DKRACING-ADV";
+const char sDKRacingAdv2[] = "DKRACING-ADV";
+const char sDKRacingTimes1[] = "DKRACING-TIMES";
+const char sDKRacingTimes2[] = "DKRACING-TIMES";
+const char sDKRacingAdv3[] = "DKRACING-ADV";
+const char sDKRacingAdv4[] = "DKRACING-ADV";
+const char sDKRacingTimes3[] = "DKRACING-TIMES";
+const char sDKRacingTimes4[] = "DKRACING-TIMES";
 
-const char D_800E76B0[] = "WARNING : No Eprom\n";
-const char D_800E76C4[] = "WARNING : No Eprom\n";
-const char D_800E76D8[] = "WARNING : No Eprom\n";
-const char D_800E76EC[] = "WARNING : No Eprom\n";
-const char D_800E7700[] = "WARNING : No Eprom\n";
-const char D_800E7714[] = "WARNING : No Eprom\n";
-const char D_800E7728[] = "WARNING : No Eprom\n";
+UNUSED const char D_800E76B0[] = "WARNING : No Eprom\n";
+UNUSED const char D_800E76C4[] = "WARNING : No Eprom\n";
+UNUSED const char D_800E76D8[] = "WARNING : No Eprom\n";
+UNUSED const char D_800E76EC[] = "WARNING : No Eprom\n";
+UNUSED const char D_800E7700[] = "WARNING : No Eprom\n";
+UNUSED const char D_800E7714[] = "WARNING : No Eprom\n";
+UNUSED const char D_800E7728[] = "WARNING : No Eprom\n";
 
-const char D_800E773C[] = "DKRACING-GHOSTS"; // Used in func_80074B34
-const u8 D_800E774C[4] = { 0, 0, 0, 0 };     // Used in func_80074B34, but I'm confused to what this is for.
-const char D_800E7750[] = "warning: corrupt ghost\n";
+const char sDKRacingGhosts[] = "DKRACING-GHOSTS";
+const char sDKRacingGhostFileExt[] = "";
+
+UNUSED const char D_800E7750[] = "warning: corrupt ghost\n";
 
 /*********************************/
 
@@ -671,10 +673,10 @@ SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileE
                 continue;
             }
             if (fileType == 3) {
-                if((func_800CE050((u8 *) fileNames[fileNum], (char *)D_800E7630, strlen((char *)D_800E7640)) != 0)) {
+                if((func_800CE050((u8 *) fileNames[fileNum], (char *)sDKRacingAdv1, strlen((char *)sDKRacingAdv2)) != 0)) {
                     continue;
                 }
-            } else if((func_800CE050((u8 *) fileNames[fileNum], (char *)D_800E7650, strlen((char *)D_800E7660)) != 0))  {
+            } else if((func_800CE050((u8 *) fileNames[fileNum], (char *)sDKRacingTimes1, strlen((char *)sDKRacingTimes2)) != 0))  {
                 continue;
             }
 
@@ -715,8 +717,7 @@ s32 read_game_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
         start_reading_controller_data(controllerIndex);
         return (controllerIndex << 30) | ret;
     }
-    //D_800E7670 = "DKRACING-ADV"
-    ret = get_file_number(controllerIndex, (char *)D_800E7670, fileExt, &fileNumber);
+    ret = get_file_number(controllerIndex, (char *)sDKRacingAdv3, fileExt, &fileNumber);
     if (ret == CONTROLLER_PAK_GOOD) {
         ret = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (fileSize == 0) {
@@ -762,8 +763,7 @@ s32 write_game_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     func_800732E8(arg1, gameData + 4);
     ret = get_file_extension(controllerIndex, 3, (char *)&fileExt);
     if (ret == CONTROLLER_PAK_GOOD) {
-        // D_800E7680 = DKRACING-ADV
-        ret = write_controller_pak_file(controllerIndex, -1, (char *) D_800E7680, (char *)&fileExt, gameData, fileSize);
+        ret = write_controller_pak_file(controllerIndex, -1, (char *) sDKRacingAdv4, (char *)&fileExt, gameData, fileSize);
     }
     free_from_memory_pool(gameData);
     if (ret != CONTROLLER_PAK_GOOD) {
@@ -785,8 +785,7 @@ s32 read_time_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
         return (controllerIndex << 30) | status;
     }
 
-    //D_800E7690 = DKRACING-TIMES
-    status = get_file_number(controllerIndex, (char *)D_800E7690, fileExt, &fileNumber);
+    status = get_file_number(controllerIndex, (char *)sDKRacingTimes3, fileExt, &fileNumber);
     if (status == CONTROLLER_PAK_GOOD) {
         status = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (fileSize == 0) {
@@ -830,8 +829,7 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     func_800738A4(arg1, timeData + 4);
     ret = get_file_extension(controllerIndex, 4, (char *)&fileExt);
     if (ret == CONTROLLER_PAK_GOOD) {
-        //D_800E76A0 = DKRACING-TIMES
-        ret = write_controller_pak_file(controllerIndex, -1, (char *)D_800E76A0, (char *)&fileExt, timeData, fileSize);
+        ret = write_controller_pak_file(controllerIndex, -1, (char *)sDKRacingTimes4, (char *)&fileExt, timeData, fileSize);
     }
     free_from_memory_pool(timeData);
     if (ret != CONTROLLER_PAK_GOOD) {
@@ -1180,9 +1178,7 @@ s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCha
         *ghostTime = -1;
         *ghostCharacterId = -1;
     }
-    //D_800E773C = "DKRACING-GHOSTS"
-    //D_800E774C = ""
-    ret = get_file_number(controllerIndex, (char *) D_800E773C, (char *) D_800E774C, &fileNumber);
+    ret = get_file_number(controllerIndex, (char *) sDKRacingGhosts, (char *) sDKRacingGhostFileExt, &fileNumber);
     if (ret == CONTROLLER_PAK_GOOD) {
         fileData = allocate_from_main_pool_safe(GHSS_FILE_SIZE, COLOUR_TAG_BLACK);
         if (!(pfs[controllerIndex].status & PFS_INITIALIZED)) {
