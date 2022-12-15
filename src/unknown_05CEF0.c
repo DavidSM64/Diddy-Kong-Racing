@@ -48,10 +48,10 @@ s8 D_8011D5CC;
 /******************************/
 
 void func_8005C2F0(Object *object, unk8005C2F0 *arg1) {
-    object->unk4C->unk14 = 5;
-    object->unk4C->unk11 = 0;
-    object->unk4C->unk10 = 0x1E;
-    object->unk4C->unk12 = 0;
+    object->interactObj->unk14 = 5;
+    object->interactObj->unk11 = 0;
+    object->interactObj->unk10 = 0x1E;
+    object->interactObj->unk12 = 0;
     arg1->unkC = 0.0f;
     D_8011D5C0 = object->segment.trans.y_position;
     if (arg1->unk118 != 0) {
@@ -79,7 +79,7 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
     sp56 = obj->segment.unk3B;
-    sp54 = obj->segment.unk18;
+    sp54 = obj->segment.animFrame;
     sp52 = racer->unk16A;
     if (racer->raceFinished == TRUE) {
         func_80021400(130);
@@ -106,7 +106,7 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->lateral_velocity = 0.0f;
     racer->unk16A = sp52;
     obj->segment.unk3B = sp56;
-    obj->segment.unk18 = sp54;
+    obj->segment.animFrame = sp54;
     if ((racer->attackType != ATTACK_NONE) && (obj->segment.unk3B != 3)) {
         racer->unk1CD = obj->segment.unk3B;
         obj->segment.unk3B = 3;
@@ -150,8 +150,8 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if ((temp_v0_2->unk10 == -1) && (obj->segment.unk3B == 3)) {
         obj->segment.unk3B = racer->unk1CD;
     }
-    sp54 = obj->segment.unk18;
-    obj->segment.unk18 = racer->unkC;
+    sp54 = obj->segment.animFrame;
+    obj->segment.animFrame = racer->unkC;
     obj->unk74 = 0;
     if (obj->segment.unk3B == 1) {
         func_800113CC(obj, 2, sp54, 172, 173);
@@ -206,7 +206,7 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         func_8006F140(1);
     }
-    if ((obj == temp_v0_4->unk4C->unk0) && (temp_v0_4->unk4C->unk14 & 8) && (obj->segment.unk3B == 1)) {
+    if ((obj == temp_v0_4->interactObj->obj) && (temp_v0_4->interactObj->unk14 & 8) && (obj->segment.unk3B == 1)) {
         temp_s0->attackType = ATTACK_SQUISHED;
     }
     if ((temp_s0->raceFinished != FALSE) && (D_8011D5C4 == 0)) {

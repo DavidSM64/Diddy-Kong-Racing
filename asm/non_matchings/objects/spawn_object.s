@@ -582,7 +582,7 @@ glabel L8000EDE0
 /* 00FE9C 8000F29C 00C23021 */  addu  $a2, $a2, $v0
 .L8000F2A0:
 /* 00FEA0 8000F2A0 8209005A */  lb    $t1, 0x5a($s0)
-/* 00FEA4 8000F2A4 3C048012 */  lui   $a0, %hi(D_8011AE68) # $a0, 0x8012
+/* 00FEA4 8000F2A4 3C048012 */  lui   $a0, %hi(gObjectMemoryPool) # $a0, 0x8012
 /* 00FEA8 8000F2A8 19200007 */  blez  $t1, .L8000F2C8
 /* 00FEAC 8000F2AC 00D22823 */   subu  $a1, $a2, $s2
 /* 00FEB0 8000F2B0 AE460070 */  sw    $a2, 0x70($s2)
@@ -592,7 +592,7 @@ glabel L8000EDE0
 /* 00FEC0 8000F2C0 00CF3021 */  addu  $a2, $a2, $t7
 /* 00FEC4 8000F2C4 00D22823 */  subu  $a1, $a2, $s2
 .L8000F2C8:
-/* 00FEC8 8000F2C8 8C84AE68 */  lw    $a0, %lo(D_8011AE68)($a0)
+/* 00FEC8 8000F2C8 8C84AE68 */  lw    $a0, %lo(gObjectMemoryPool)($a0)
 /* 00FECC 8000F2CC 00A08825 */  move  $s1, $a1
 /* 00FED0 8000F2D0 0C01C3A4 */  jal   allocate_from_pool_containing_slots
 /* 00FED4 8000F2D4 02408025 */   move  $s0, $s2

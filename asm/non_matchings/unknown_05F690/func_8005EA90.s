@@ -210,7 +210,7 @@ glabel func_8005EA90
 .L8005ED70:
 /* 05F970 8005ED70 82040192 */  lb    $a0, 0x192($s0)
 /* 05F974 8005ED74 920501C8 */  lbu   $a1, 0x1c8($s0)
-/* 05F978 8005ED78 0C006E87 */  jal   func_8001BA1C
+/* 05F978 8005ED78 0C006E87 */  jal   find_next_checkpoint_node
 /* 05F97C 8005ED7C A7A00038 */   sh    $zero, 0x38($sp)
 /* 05F980 8005ED80 820E01CA */  lb    $t6, 0x1ca($s0)
 /* 05F984 8005ED84 87A60038 */  lh    $a2, 0x38($sp)

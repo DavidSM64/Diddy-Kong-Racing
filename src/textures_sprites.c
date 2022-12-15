@@ -1122,16 +1122,21 @@ Struct_Unk_8007B46C *func_8007B46C(Struct_Unk_8007B46C *arg0, s32 arg1) {
     return arg0;
 }
 
-void func_8007B4C8(Gfx **dlist, TextureHeader *arg1, u32 flags) {
-    load_and_set_texture(dlist, arg1, flags, 0);
+/**
+ * A version of the function below that chooses not to pass along an offset.
+*/
+void load_and_set_texture_no_offset(Gfx **dlist, TextureHeader *texhead, u32 flags) {
+    load_and_set_texture(dlist, texhead, flags, 0);
 }
 
 /**
  * Load a texture from memory into texture memory.
  * Also set render mode, combine mode and othermodes based on flags.
  * Also tracks which modes are active, to prevent setting them again if they're already active.
+ * A number can be attached that adds a texture address offset. An example of this being used is
+ * the numbered doors in the hub, to change what number is written on it.
 */
-void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 arg3) {
+void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 texOffset) {
     s32 forceFlags;
     s32 doPipeSync;
     s32 dlIndex;
@@ -1140,8 +1145,8 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 ar
     doPipeSync = TRUE;
 
     if (texhead != NULL) {
-        if ((arg3) && (arg3 < (texhead->numOfTextures << 8))) {
-            texhead = (TextureHeader *) ((s8 *) texhead + ((arg3 >> 16) * texhead->textureSize));
+        if (texOffset && (texOffset < texhead->numOfTextures << 8)) {
+            texhead = (TextureHeader *) ((s8 *) texhead + ((texOffset >> 16) * texhead->textureSize));
         }
 
         flags |= texhead->flags;

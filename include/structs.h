@@ -648,19 +648,19 @@ typedef struct Object_44 {
     Object_44_C *unkC;
 } Object_44;
 
-typedef struct Object_4C {
-    void *unk0;
+typedef struct ObjectInteraction {
+    struct Object *obj;
     f32 x_position;
     f32 y_position;
     f32 z_position;
     u8 unk10;
     u8 unk11;
     u8 unk12;
-    u8 unk13;
+    u8 distance;
     s16 unk14;
     s8 unk16;
     s8 unk17;
-} Object_4C;
+} ObjectInteraction;
 
 typedef struct Object_50 {
     f32 unk0;
@@ -708,9 +708,14 @@ typedef struct Object_58 {
     s16 unkE;
 } Object_58;
 
+typedef f32 FakeHalfMatrix[2][4];
 typedef struct Object_5C {
-    u8 pad0[0x100];
-    void *unk100;
+    union {
+  /* 0x0000 */ Matrix matrices[4];
+  /* 0x0000 */ FakeHalfMatrix _matrices[8]; // This is a hack. The Matrix[4] is the real one.
+ };
+  /* 0x0100 */ void *unk100;
+  /* 0x0104 */ u8 unk104;
 } Object_5C;
 
 typedef struct Object_60 {
@@ -768,11 +773,11 @@ typedef struct Object_Weapon {
   /* 0x00 */ struct Object *target;
   /* 0x04 */ struct Object *owner;
   /* 0x08 */ s32 unk8;
-  /* 0x0C */ s32 unkC;
+  /* 0x0C */ f32 checkpointDist;
   /* 0x10 */ f32 forwardVel;
   /* 0x14 */ s32 unk14;
   /* 0x18 */ u8 weaponID;
-  /* 0x19 */ u8 checkpoint;
+  /* 0x19 */ s8 checkpoint;
   /* 0x19 */ s16 unk1A;
   /* 0x19 */ s32 unk1C;
 } Object_Weapon;
@@ -1131,7 +1136,7 @@ typedef struct Object_Racer {
   /* 0x1F7 */ u8 transparency;
   /* 0x290 */ u8 indicator_type;
   /* 0x291 */ s8 indicator_timer;
-  /* 0x1FA */ s8 unk1FA;
+  /* 0x1FA */ s8 drifting;
   /* 0x1FB */ s8 unk1FB;
   /* 0x1FC */ u8 unk1FC;
   /* 0x1FD */ u8 unk1FD;
@@ -1139,7 +1144,7 @@ typedef struct Object_Racer {
   /* 0x1FF */ u8 unk1FF;
   /* 0x200 */ s8 transitionTimer;
   /* 0x201 */ s8 unk201;
-  /* 0x202 */ s8 unk202;
+  /* 0x202 */ s8 silverCoinCount;
   /* 0x203 */ s8 boostType;
   /* 0x204 */ s16 unk204;
   /* 0x206 */ s16 unk206;
@@ -1347,6 +1352,15 @@ typedef struct Object_Fireball_Octoweapon {
     s32 unk1C;
 } Object_Fireball_Octoweapon;
 
+typedef struct Object_AnimatedObject {
+    u8 pad0[0x28];
+    s16 unk28;
+    u8 pad2A[0xC];
+    s16 unk36;
+    u8 pad38[0x2];
+    s8 unk3A;
+} Object_AnimatedObject;
+
 typedef struct Object_64 {
     union {
         Object_Laser laser;
@@ -1394,6 +1408,7 @@ typedef struct Object_64 {
         Object_Log log;
         Object_Fireball_Octoweapon fireball_octoweapon;
         Object_LaserGun lasergun;
+        Object_AnimatedObject animatedObject;
     };
 } Object_64;
 
@@ -1409,6 +1424,11 @@ typedef struct Object_68 {
   /* 0x1F */ s8 unk1F;
   /* 0x20 */ s8 unk20;
   /* 0x21 */ s8 unk21;
+  /* 0x22 */ s16 unk22;
+  /* 0x24 */ s32 unk24;
+  /* 0x28 */ s32 unk28;
+  /* 0x2C */ s32 unk2C;
+  /* 0x30 */ s32 unk30;
  } Object_68;
  
 /* Size: 0x20 bytes */
@@ -1433,7 +1453,7 @@ typedef struct ObjectTransform {
 /* Size: 0x44 bytes */
 typedef struct ObjectSegment {
   /* 0x0000 */ ObjectTransform trans;
-  /* 0x0018 */ s16 unk18;
+  /* 0x0018 */ s16 animFrame;
   /* 0x001A */ s16 unk1A;
   /* 0x001C */ f32 x_velocity;
   /* 0x0020 */ f32 y_velocity;
@@ -1483,7 +1503,7 @@ typedef struct Object {
   /* 0x0044 */ Vertex *unk44;
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A;
-  /* 0x004C */ Object_4C *unk4C; //player + 0x318
+  /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318
   /* 0x0050 */ Object_50 *unk50; //player + 0x2F4
   /* 0x0054 */ Object_54 *unk54; //player + 0x2C0
   /* 0x0058 */ void *unk58; //player + 0x304

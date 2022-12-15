@@ -8407,7 +8407,7 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8009CA60.s")
  */
 void render_track_selection_viewport_border(ObjectModel *objMdl) {
     UNUSED s32 pad1[4];
-    s32 sp5C;
+    s32 flags;
     UNUSED s32 pad2[4];
     TextureHeader *tex;
     Triangle *tris;
@@ -8416,13 +8416,13 @@ void render_track_selection_viewport_border(ObjectModel *objMdl) {
     Vertex *verts;
     s32 numVerts;
     s32 numTris;
-    s32 var_a3;
+    s32 texOffset;
     s32 texEnabled;
     s32 i;
 
-    sp5C = 9;
+    flags = RENDER_FOG_ACTIVE | RENDER_ANTI_ALIASING;
     if (sMenuGuiOpacity != 255) {
-        sp5C = 13;
+        flags = RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_ANTI_ALIASING;
     }
     for (i = 0; i < objMdl->numberOfBatches; i++) {
         if (!(objMdl->batches[i].flags & 0x100)) {
@@ -8436,13 +8436,13 @@ void render_track_selection_viewport_border(ObjectModel *objMdl) {
             if (objMdl->batches[i].textureIndex == -1) { 
                 tex = NULL;
                 texEnabled = FALSE;
-                var_a3 = 0;
+                texOffset = 0;
             } else {
                 tex = objMdl->textures[objMdl->batches[i].textureIndex].texture;
                 texEnabled = TRUE;
-                var_a3 = objMdl->batches[i].unk7 << 14;
+                texOffset = objMdl->batches[i].unk7 << 14;
             }
-            load_and_set_texture(&sMenuCurrDisplayList, tex, sp5C, var_a3);
+            load_and_set_texture(&sMenuCurrDisplayList, tex, flags, texOffset);
             
             gSPVertexDKR(sMenuCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), numVerts, 0);
             gSPPolygon(sMenuCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), numTris, texEnabled);

@@ -1984,7 +1984,7 @@ void func_800AAFD0(ObjectModel *objModel) {
     
     for (i = 0; i < numBatches; i++) {
         flags = objModel->batches[i].flags;
-        if (!(flags & 0x100)) {
+        if (!(flags & RENDER_Z_UPDATE)) {
             vertOffset = objModel->batches[i].verticesOffset;
             triOffset = objModel->batches[i].facesOffset;
             numVerts = objModel->batches[i + 1].verticesOffset - vertOffset;
@@ -1998,7 +1998,7 @@ void func_800AAFD0(ObjectModel *objModel) {
             } else {
                 texPtr = objModel->textures[texIndex].texture;
             }
-            func_8007B4C8(&gHUDCurrDisplayList, texPtr, flags & ~2);
+            load_and_set_texture_no_offset(&gHUDCurrDisplayList, texPtr, flags & ~RENDER_Z_COMPARE);
             gSPVertexDKR(gHUDCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), numVerts, 0);
             if (texPtr == NULL) {
                 textureEnabled = TRIN_DISABLE_TEXTURE;
