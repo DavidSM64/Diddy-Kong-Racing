@@ -1569,7 +1569,7 @@ void func_8001709C(Object *obj) {
     f32 inverseScale;
     Matrix *sp6C;
     Matrix sp2C;
-    Object_5C* obj5C;
+    Object_5C *obj5C;
     
     obj5C = obj->unk5C;
     obj5C->unk104 = (obj5C->unk104 + 1) & 1; 
