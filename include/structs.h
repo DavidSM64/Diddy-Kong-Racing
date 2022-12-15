@@ -649,7 +649,7 @@ typedef struct Object_44 {
 } Object_44;
 
 typedef struct ObjectInteraction {
-    Object *obj;
+    struct Object *obj;
     f32 x_position;
     f32 y_position;
     f32 z_position;
