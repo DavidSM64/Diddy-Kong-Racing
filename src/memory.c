@@ -124,14 +124,14 @@ GLOBAL_ASM("asm/non_matchings/memory/new_memory_pool.s")
  * Reserves and returns memory from the main memory pool. Has 2 assert checks.
  * Will cause an exception if the size is 0 or if memory cannot be reserved.
  */
-void *allocate_from_main_pool_safe(s32 size, u32 colorTag) {
+void *allocate_from_main_pool_safe(s32 size, u32 colourTag) {
     void *temp_v0;
     if (size == 0) {
-        func_800B7460((s32 *)((u8 *)get_stack_pointer()->unk14), size, colorTag);
+        func_800B7460((s32 *)((u8 *)get_stack_pointer()->unk14), size, colourTag);
     }
-    temp_v0 = allocate_from_memory_pool(0, size, colorTag);
+    temp_v0 = allocate_from_memory_pool(0, size, colourTag);
     if (temp_v0 == (void *)NULL) {
-        func_800B7460((s32 *)((u8 *)get_stack_pointer()->unk14), size, colorTag);
+        func_800B7460((s32 *)((u8 *)get_stack_pointer()->unk14), size, colourTag);
     }
     return temp_v0;
 }
@@ -139,12 +139,12 @@ void *allocate_from_main_pool_safe(s32 size, u32 colorTag) {
 /**
  * Reserves and returns memory from the main memory pool. Has no assert checks.
  */
-MemoryPoolSlot *allocate_from_main_pool(s32 size, u32 colorTag) {
-    return allocate_from_memory_pool(0, size, colorTag);
+MemoryPoolSlot *allocate_from_main_pool(s32 size, u32 colourTag) {
+    return allocate_from_memory_pool(0, size, colourTag);
 }
 
 #ifdef NON_EQUIVALENT
-MemoryPoolSlot *allocate_from_memory_pool(s32 memoryPoolIndex, s32 size, u32 colorTag) {
+MemoryPoolSlot *allocate_from_memory_pool(s32 memoryPoolIndex, s32 size, u32 colourTag) {
     MemoryPool *pool;
     MemoryPoolSlot *curSlot;
     MemoryPoolSlot *slots;
@@ -173,7 +173,7 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 memoryPoolIndex, s32 size, u32 col
             phi_a0 = curSlot->nextIndex;
         }
         if (phi_s0 != -1) {
-            allocate_memory_pool_slot(memoryPoolIndex, phi_s0, size, TRUE, FALSE, colorTag);
+            allocate_memory_pool_slot(memoryPoolIndex, phi_s0, size, TRUE, FALSE, colourTag);
             set_status_register_flags(sp28);
             return pool->slots[phi_s0].data;
         }
@@ -196,7 +196,7 @@ void *allocate_from_pool_containing_slots(MemoryPoolSlot *slots, s32 size) {
 }
 
 #ifdef NON_EQUIVALENT
-void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
+void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colourTag) {
     s32 *sp38;
     s32 s0;
     MemoryPoolSlot *curSlot;
@@ -216,12 +216,12 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
             if (curSlot->flags == 0) {
                 if ((address >= (u8 *)curSlot->data) && (((u8 *)curSlot->data + curSlot->size) >= (address + size))) {
                     if (address == (u8 *)curSlot->data) {
-                        allocate_memory_pool_slot(0, s0, size, 1, 0, colorTag);
+                        allocate_memory_pool_slot(0, s0, size, 1, 0, colourTag);
                         set_status_register_flags(sp38);
                         return curSlot->data;
                     } else {
-                        s0 = allocate_memory_pool_slot(0, s0, address - (u8 *)curSlot->data, 0, 1, colorTag);
-                        allocate_memory_pool_slot(0, s0, size, 1, 0, colorTag);
+                        s0 = allocate_memory_pool_slot(0, s0, address - (u8 *)curSlot->data, 0, 1, colourTag);
+                        allocate_memory_pool_slot(0, s0, size, 1, 0, colourTag);
                         set_status_register_flags(sp38);
                         return slots[s0].data;
                     }
@@ -418,25 +418,26 @@ s32 get_memory_pool_index_containing_address(u8 *address) {
     return i;
 }
 
-#ifdef NON_EQUIVALENT
-// Regalloc issues
 void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
-    s32 nextIndex, prevIndex, tempNextIndex;
+    s32 nextIndex;
+    s32 prevIndex;
+    s32 tempNextIndex;
     MemoryPool *pool;
     MemoryPoolSlot *slots;
     MemoryPoolSlot *slot;
     MemoryPoolSlot *nextSlot;
     MemoryPoolSlot *prevSlot;
-
+    
     pool = &gMemoryPools[poolIndex];
     slots = pool->slots;
+    pool = pool; // Fakematch
     slot = &slots[slotIndex];
-    prevIndex = slot->prevIndex;
     nextIndex = slot->nextIndex;
+    prevIndex = slot->prevIndex;
+    slot = slot; // Fakematch
     nextSlot = &slots[nextIndex];
     prevSlot = &slots[prevIndex];
     slot->flags = 0;
-
     if (nextIndex != -1) {
         if (nextSlot->flags == 0) {
             slot->size += nextSlot->size;
@@ -463,51 +464,45 @@ void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
     }
 }
 
-#else
-GLOBAL_ASM("asm/non_matchings/memory/free_memory_pool_slot.s")
-#endif
-
 // Unused?
 MemoryPoolSlot *func_80071774(s32 poolIndex) {
     return gMemoryPools[poolIndex].slots;
 }
 
-#ifdef NON_EQUIVALENT
-s32 allocate_memory_pool_slot(s32 memoryPoolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken, u32 colorTag) {
-    s32 slotSize;
-    s32 newIndex;
-    s32 futureIndex;
-    MemoryPoolSlot *slot;
-    MemoryPoolSlot *newSlot;
+s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken, u32 colourTag) {
     MemoryPool *pool;
-
-    pool = &gMemoryPools[memoryPoolIndex];
-    slot = &pool->slots[slotIndex];
-    slotSize = slot->size;
-    slot->flags = slotIsTaken;
-    slot->size = size;
-    slot->colorTag = colorTag;
-    if (size < slotSize) {
-        newIndex = pool->slots[pool->curNumSlots].index;
+    MemoryPoolSlot *poolSlots;
+    s32 index;
+    s32 nextIndex;
+    s32 poolSize;
+    
+    pool = &gMemoryPools[poolIndex];
+    poolSlots = pool->slots;
+    pool = pool; // Fakematch
+    poolSlots[slotIndex].flags = slotIsTaken;
+    poolSize = poolSlots[slotIndex].size;
+    poolSlots[slotIndex].size = size;
+    poolSlots[slotIndex].colourTag = colourTag;
+    index = poolSlots[pool->curNumSlots].index;
+    if (size < poolSize) {
+        index = (pool->curNumSlots + poolSlots)->index;
         pool->curNumSlots++;
-        newSlot = &pool->slots[newIndex];
-        newSlot->data = ((u8 *)slot->data) + size;
-        newSlot->size = slotSize - size;
-        newSlot->flags = newSlotIsTaken;
-        futureIndex = slot->nextIndex;
-        newSlot->prevIndex = slotIndex;
-        newSlot->nextIndex = futureIndex;
-        slot->nextIndex = newIndex;
-        if (futureIndex != -1) {
-            pool->slots[futureIndex].prevIndex = newIndex;
+        poolSlots[index].data = &poolSlots[slotIndex].data[size];
+        poolSlots[index].size = poolSize;
+        poolSlots[index].size = poolSlots[index].size - size;
+        poolSlots[index].flags = newSlotIsTaken;
+        poolSize = poolSlots[slotIndex].nextIndex;
+        nextIndex = poolSize;
+        poolSlots[index].prevIndex = slotIndex;
+        poolSlots[index].nextIndex = nextIndex;
+        poolSlots[slotIndex].nextIndex = index;
+        if (nextIndex != -1) {
+            poolSlots[nextIndex].prevIndex = index;
         }
-        return newIndex;
+        return index;
     }
     return slotIndex;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/memory/allocate_memory_pool_slot.s")
-#endif
 
 /**
  * Returns the passed in address aligned to the next 16-byte boundary.
@@ -546,20 +541,21 @@ u8 *align4(u8 *address) {
 
 GLOBAL_ASM("asm/non_matchings/memory/func_800718A4.s")
 
-#ifdef NON_EQUIVALENT
-s32 get_memory_colour_tag_count(s32 arg0) {
+s32 get_memory_colour_tag_count(s32 colourTag) {
     s32 i, count;
+    MemoryPoolSlot *slot;
     count = 0;
-    for (i = 0; i < 80; i++) { // Issue with this loop
-        if ((gMemoryPools[0].slots[i].flags) && (arg0 == gMemoryPools[0].slots[i].colorTag)) {
-            count++;
+    slot = &gMemoryPools[0].slots[0];
+    for (i = 0; i < 1600; i++) {
+        if (slot->flags != 0) {
+            if(colourTag == slot->colourTag) {
+                count++;
+            }
         }
+        slot++;
     }
     return count;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/memory/get_memory_colour_tag_count.s")
-#endif
 
 /**
  * Prints out the counts for each color tag in the main pool.
