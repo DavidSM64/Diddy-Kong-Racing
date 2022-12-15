@@ -46,7 +46,7 @@ glabel func_8005B818
 /* 05C478 8005B878 3C018012 */  lui   $at, %hi(gCurrentRacerMiscAssetPtr) # $at, 0x8012
 /* 05C47C 8005B87C 0C01AF6C */  jal   get_current_level_header
 /* 05C480 8005B880 AC22D564 */   sw    $v0, %lo(gCurrentRacerMiscAssetPtr)($at)
-/* 05C484 8005B884 0C006E99 */  jal   func_8001BA64
+/* 05C484 8005B884 0C006E99 */  jal   get_checkpoint_count
 /* 05C488 8005B888 AFA20080 */   sw    $v0, 0x80($sp)
 /* 05C48C 8005B88C 10400260 */  beqz  $v0, .L8005C210
 /* 05C490 8005B890 AFA2011C */   sw    $v0, 0x11c($sp)
@@ -215,7 +215,7 @@ glabel func_8005B818
 /* 05C6E8 8005BAE8 AFA70074 */  sw    $a3, 0x74($sp)
 /* 05C6EC 8005BAEC AFA60078 */  sw    $a2, 0x78($sp)
 /* 05C6F0 8005BAF0 AFA40120 */  sw    $a0, 0x120($sp)
-/* 05C6F4 8005BAF4 0C006E87 */  jal   func_8001BA1C
+/* 05C6F4 8005BAF4 0C006E87 */  jal   find_next_checkpoint_node
 /* 05C6F8 8005BAF8 AFA3007C */   sw    $v1, 0x7c($sp)
 /* 05C6FC 8005BAFC 8FA3007C */  lw    $v1, 0x7c($sp)
 /* 05C700 8005BB00 C4460010 */  lwc1  $f6, 0x10($v0)

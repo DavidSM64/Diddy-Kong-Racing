@@ -534,7 +534,7 @@ void draw_gradient_background(void) {
     headerGreen1 = gCurrentLevelHeader2->unkBF;
     headerBlue1 = gCurrentLevelHeader2->unkC0;
     reset_render_settings(&gSceneCurrDisplayList);
-    func_8007B4C8(&gSceneCurrDisplayList, 0, 8);
+    load_and_set_texture_no_offset(&gSceneCurrDisplayList, 0, RENDER_FOG_ACTIVE);
     gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), 4, 0);
     gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), 2, 0);
     set_twenty = 20;
@@ -776,7 +776,7 @@ void render_level_geometry_and_objects(void) {
     }
 
     reset_render_settings(&gSceneCurrDisplayList);
-    func_8007B4C8(&gSceneCurrDisplayList, 0, 0xA);
+    load_and_set_texture_no_offset(&gSceneCurrDisplayList, 0, RENDER_FOG_ACTIVE | RENDER_Z_COMPARE);
     func_80012C3C(&gSceneCurrDisplayList);
 
     for (i = sp16C - 1; i >= sp160; i--) {
@@ -837,7 +837,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
     //s32 hasTexture;
     UNUSED s32 unused;
     s32 levelHeaderIndex;
-    s32 temp;
+    s32 texOffset;
     s32 sp78;
     s32 startPos;
     s32 endPos;
@@ -859,7 +859,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
         batchInfo = &segment->batches[i];
         textureFlags = 0; // Texture flags
         batchFlags = batchInfo->flags;
-        if (!(batchInfo->flags & 0x100)) { // 0x100 = Is this invisible geometry?
+        if (!(batchInfo->flags & RENDER_Z_UPDATE)) {
             renderBatch = FALSE;
             if (batchInfo->textureIndex == 0xFF) {
                 texture = NULL; // Solid color only
@@ -871,17 +871,17 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
             }
 
             batchFlags |= 10;
-            if (!(batchFlags & 0x10) && !(batchFlags & 0x800)) { // 0x10 = Depth write
+            if (!(batchFlags & RENDER_UNK_0000010) && !(batchFlags & RENDER_DECAL)) { // 0x10 = Depth write
                 batchFlags |= D_8011B0FC;
             }
             // temp & 0x04 = Is interlaced texture
-            if ((!(textureFlags & 4) && !(batchFlags & 0x2000)) || (batchFlags & 0x800)) {
+            if ((!(textureFlags & 4) && !(batchFlags & RENDER_UNK_0002000)) || (batchFlags & 0x800)) {
                 renderBatch = TRUE;
             }
             if (nonOpaque) {
                 renderBatch = (renderBatch + 1) & 1; // Why not just do `renderBatch ^= 1;` or `renderBatch = !renderBatch`?
             }
-            if (sp78 && (batchFlags & 0x2000)) {
+            if (sp78 && (batchFlags & RENDER_UNK_0002000)) {
                 renderBatch = FALSE;
             }
             if (renderBatch) {
@@ -892,7 +892,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
                 vertices = (s32) &segment->vertices[batchInfo->verticesOffset];
                 triangles = (s32) &segment->triangles[batchInfo->facesOffset];
                 
-                temp = batchInfo->unk7 << 14;
+                texOffset = batchInfo->unk7 << 14;
                 
                 levelHeaderIndex = (batchFlags >> 28) & 7;
                 if (levelHeaderIndex != 0) { // This is unused, so this should always be false.
@@ -906,15 +906,15 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
                 } else {
                     gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
                 }
-                if (batchFlags & 0x40000) { // Only gets used in Spaceport alpha for the pulsating lights in the outside section.
+                if (batchFlags & RENDER_UNK_0040000) { // Only gets used in Spaceport alpha for the pulsating lights in the outside section.
                     color = gCurrentLevelHeader2->pulseLightData->outColorValue & 0xFF;
                     gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, color, color, color, color);
-                    func_8007BA5C(&gSceneCurrDisplayList, texture, batchFlags, temp);
+                    func_8007BA5C(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
                     gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(vertices), numberVertices, 0);
                     gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, TRIN_ENABLE_TEXTURE);
                     gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255); // Reset the primitive color
                 } else {
-                    load_and_set_texture(&gSceneCurrDisplayList, texture, batchFlags, temp);
+                    load_and_set_texture(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
                     batchFlags = TRIN_ENABLE_TEXTURE;
                     if(texture == NULL) {
                         batchFlags = TRIN_DISABLE_TEXTURE;
@@ -1588,7 +1588,7 @@ void render_floor_decal(Object *obj, Object_50 *arg1) {
     s32 temp_a3;
     Vertex *vtx;
     Triangle *tri;
-    s32 temp;
+    s32 flags;
     UNUSED s32 temp2;
     s32 temp3;
     s32 new_var;
@@ -1606,16 +1606,16 @@ void render_floor_decal(Object *obj, Object_50 *arg1) {
             D_8011D330 = (unk8011D330 *) D_8011D320[D_8011B0CC];
             D_8011D348 = (unk8011D348 *) D_8011D338[D_8011B0CC];
             someAlpha = D_8011D348[D_8011D360[i].unk6].unk9;
-            temp = 10;
+            flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
             if (someAlpha == 0 || obj->segment.unk38.half.lower == 0) {
                 i = arg1->unkA;
             } else if (someAlpha != 255 || obj->segment.unk38.half.lower != 255) {
-                temp = 14;
+                flags = RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE;
                 someAlpha = (obj->segment.unk38.half.lower * someAlpha) >> 8;
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, someAlpha);
             }
             while (i < arg1->unkA) {
-                func_8007B4C8(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, temp);
+                load_and_set_texture_no_offset(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, flags);
                 // I hope we can clean this part up.
                 temp2 = new_var2 = D_8011D360[i].unk4; // Fakematch
                 temp3 = new_var = D_8011D360[i].unk6;
@@ -1628,7 +1628,7 @@ void render_floor_decal(Object *obj, Object_50 *arg1) {
                 i++;
             }
             
-            if (temp != 2) {
+            if (flags != RENDER_Z_COMPARE) {
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
         }
@@ -1641,7 +1641,7 @@ void func_8002D670(Object *obj, Object_50 *arg1) {
     s32 temp_a3;
     Vertex *vtx;
     Triangle *tri;
-    s32 temp;
+    s32 flags;
     UNUSED s32 temp2;
     UNUSED s32 temp3;
 
@@ -1656,12 +1656,12 @@ void func_8002D670(Object *obj, Object_50 *arg1) {
                     i = arg1->unkA;
                 }
             }
-            temp = 10;
+            flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
             D_8011D360 = (unk8011D360* ) D_8011D350[D_8011B0D0];
             D_8011D330 = (unk8011D330* ) D_8011D320[D_8011B0D0];
             D_8011D348 = (unk8011D348* ) D_8011D338[D_8011B0D0];
             while (i < arg1->unkA) {
-                func_8007B4C8(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, temp);
+                load_and_set_texture_no_offset(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, flags);
                 temp2 = D_8011D360[i].unk4; // Fakematch
                 temp3 = D_8011D360[i].unk6; // Fakematch
                 temp_a3 = D_8011D360[i+1].unk4 - D_8011D360[i].unk4;

@@ -353,7 +353,7 @@ void render_falling_snow(void) {
             mtx = (u32) func_80069DB0();
             gSPMatrix(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx ^ 0), G_MTX_DKR_INDEX_0);
             gDkrInsertMatrix(gCurrWeatherDisplayList++, G_MTX_DKR_INDEX_0, 0);
-            func_8007B4C8(&gCurrWeatherDisplayList, D_800E28D8.unk8, 2U);
+            load_and_set_texture_no_offset(&gCurrWeatherDisplayList, D_800E28D8.unk8, RENDER_Z_COMPARE);
             while (i + D_80127C00 < D_800E2908) {
                 mtx = (u32) &D_800E2904[i];
                 gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx), D_80127C00, 0);
