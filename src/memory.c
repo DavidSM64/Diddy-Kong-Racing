@@ -314,36 +314,38 @@ void free_slot_containing_address(u8 *address) {
 GLOBAL_ASM("asm/non_matchings/memory/free_slot_containing_address.s")
 #endif
 
-#ifdef NON_EQUIVALENT
-UNUSED void func_80071314(void) {
-    s32 *sp40;
+void func_80071314(void) {
+    MemoryPoolSlot *slotPos;
     MemoryPool *pool;
     MemoryPoolSlot *slot;
+    s32 *flags;
     s32 poolIndex;
     s32 slotIndex;
-
-    sp40 = clear_status_register_flags();
-
-    for (poolIndex = gNumberOfMemoryPools; poolIndex != -1; poolIndex--) {
+        
+    flags = clear_status_register_flags();
+    poolIndex = gNumberOfMemoryPools;
+    while (poolIndex != (-1)) {
         pool = &gMemoryPools[poolIndex];
-        for (slotIndex = 0; slotIndex != -1; slotIndex = slot->nextIndex) {
-            slot = &pool->slots[slotIndex];
-            if (slot->flags == 1) {
+        slotPos = pool->slots;
+        slotIndex = 0;
+        do {
+            if ((slotPos + slotIndex)->flags == 1) {
                 free_memory_pool_slot(poolIndex, slotIndex);
             }
-            if (slot->flags == 4 && pool->curNumSlots == 1) {
-                free_memory_pool_slot(poolIndex, slotIndex);
-            } else {
-                set_status_register_flags(sp40);
-                return;
+            if ((slotPos + slotIndex)->flags == 4) {
+                if (pool->curNumSlots == 1) {
+                    free_memory_pool_slot(poolIndex, slotIndex);
+                } else {
+                    set_status_register_flags(flags);
+                    return;
+                }
             }
-        }
+            slotIndex = (slotPos + slotIndex)->nextIndex;
+        } while (slotIndex != (-1));
+        poolIndex--;
     }
-    set_status_register_flags(sp40);
+    set_status_register_flags(flags);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/memory/func_80071314.s")
-#endif
 
 void func_80071440(void *dataAddress) {
     gFreeQueue[gFreeQueueCount].dataAddress = dataAddress;
