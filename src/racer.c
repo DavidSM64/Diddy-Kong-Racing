@@ -2118,7 +2118,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     s8 steerAngle;
     f32 velSquare; // 50
     s32 SteeringVel;
-    f32* miscAsset;
+    f32 *miscAsset;
     f32 traction;
     f32 tempVel;
     f32 surfaceTraction;
