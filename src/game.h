@@ -132,6 +132,7 @@ enum TrackTimers {
 
 
 
+#define NUM_OBJECT_PRINTS 200
 #define NUM_PERF_ITERATIONS 32
 #define PERF_AGGREGATE NUM_PERF_ITERATIONS
 #define PERF_TOTAL NUM_PERF_ITERATIONS + 1
@@ -144,6 +145,7 @@ struct PuppyPrintTimers {
     u32 rspGfxBufTime; // Buffer that keeps track of the current Gfx task;
     u32 rspAudioBufTime; // Buffer that keeps track of the current Audio task;
     PPTimer timers[PP_TIMES_TOTAL];
+    u16 objTimers[NUM_OBJECT_PRINTS][NUM_PERF_ITERATIONS + 2];
 };
 extern struct PuppyPrintTimers gPuppyTimers;
 extern void profiler_update(u32 *time, u32 time2);
@@ -155,6 +157,7 @@ void render_profiler(void);
 void count_triangles(u8 *dlist, u8 *dlistEnd);
 void calculate_and_update_fps(void);
 void puppyprint_calculate_average_times(void);
+void profiler_add_obj(u32 objID, u32 time);
 extern u8 perfIteration;
 extern u32 sPrevLoadTime;
 extern u8 sPrevLoadTimer;

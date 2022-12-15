@@ -2736,6 +2736,9 @@ s32 func_80023E30(s32 arg0) {
 }
 
 void run_object_loop_func(Object *obj, s32 updateRate) {
+#ifdef PUPPYPRINT_DEBUG
+    u32 first = osGetTime();
+#endif
     func_800B76B8(1, obj->unk4A);
     switch (obj->behaviorId) {
         case BHV_SCENERY:
@@ -2978,6 +2981,9 @@ void run_object_loop_func(Object *obj, s32 updateRate) {
             break;
     }
     func_800B76B8(1, -1);
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add_obj(obj->behaviorId, osGetTime() - first);
+#endif
 }
 
 UNUSED void func_8002458C(UNUSED s32 arg0) {

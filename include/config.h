@@ -36,14 +36,6 @@
 
 // Don't touch any of this below.
 
-#ifdef DISABLE_AA
-#define AA_DEF 0
-#define RD_DEF 0
-#else
-#define AA_DEF AA_EN
-#define RD_DEF IM_RD
-#endif
-
 #ifdef SKIP_WARNING_SCREEN
 #define CAUTIONSTATUS 1
 #else
