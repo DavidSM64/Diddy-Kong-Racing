@@ -1292,7 +1292,7 @@ typedef struct GhostHeaderAlt {
 
 #if 1
 s32 func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, GhostHeader *ghostData) {
-    u8 *sp70;
+    GhostHeader *sp70;
     s32 sp58;
     s32 fileSize;
     s32 fileNumber;
@@ -1300,13 +1300,10 @@ s32 func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostChar
     s32 ret;
     s32 var_t1;
     s32 i;
-    GhostHeader *temp_a2;
-    GhostHeaderAlt *temp_a2_2;
-    GhostHeader *temp_s0;
+    GhostHeader *ghostFileData;
+    GhostHeaderAlt *ghostFileDataAlt;
     u8 *fileData;
-    u8 *ghostDataToWrite;
-    GhostHeader *var_s1;
-    GhostHeader *temp_v0_5;
+    u8 *fileDataToWrite;
 
     ret = get_si_device_status(controllerIndex);
     if (ret != CONTROLLER_PAK_GOOD) {
@@ -1335,23 +1332,23 @@ s32 func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostChar
             } else {
                 ret = CONTROLLER_PAK_BAD_DATA;
                 if (fileData[0] == GHSS) {
-                    temp_a2 = &fileData[4];
-                    temp_a2_2 = (GhostHeaderAlt *) temp_a2;
+                    ghostFileData = &fileData[4];
+                    ghostFileDataAlt = (GhostHeaderAlt *) ghostFileData;
 
                     for (i = 0, var_t1 = -1; i < 6; i++) {
-                        if (levelId == temp_a2_2[i].unk0.levelID && vehicleId == temp_a2_2[i].unk0.vehicleID) {
+                        if (levelId == ghostFileDataAlt[i].unk0.levelID && vehicleId == ghostFileDataAlt[i].unk0.vehicleID) {
                             var_t1 = i;
                             break;
                         }
                     }
 
-                    if ((var_t1 != -1) && (fileData[(temp_a2 + (var_t1 * 4))->characterID]/*.unk4*/ < ghostTime)) {
+                    if ((var_t1 != -1) && (fileData[(ghostFileData + (var_t1 * 4))->characterID]/*.unk4*/ < ghostTime)) {
                         var_t1 = -2;
                     }
                     if (var_t1 == -1) {
-                        temp_a2_2 = (GhostHeaderAlt *) temp_a2;
+                        ghostFileDataAlt = (GhostHeaderAlt *) ghostFileData;
                         for (i = 0; i < 6; i++) {
-                            if (temp_a2_2[i].unk0.levelID == 0xFF) {
+                            if (ghostFileDataAlt[i].unk0.levelID == 0xFF) {
                                 var_t1 = i;
                                 break;
                             }
@@ -1364,32 +1361,27 @@ s32 func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostChar
                         if (var_t1 == -1) {
                             ret = CONTROLLER_PAK_UNK6;
                         } else {
-                            temp_v0_5 = &temp_a2[temp_t0];
-                            sp58 = (0x1100 - temp_v0_5->nodeCount) + temp_v0_5->unk2;
-                            ghostDataToWrite = allocate_from_main_pool_safe(fileSize + 0x100, COLOUR_TAG_BLACK);
-                            ghostDataToWrite[0] = GHSS;
-                            sp70 = &ghostDataToWrite[4];
-                            ghostDataToWrite[0x1C] = 0xFF;
-                            ghostDataToWrite[0x1E] = (s16) (temp_a2[2].unk2 + sp58);
-                            var_s1 = &sp70[0];
-                            i = 0;
-                            do {
-                                var_s1[i].unk0.levelID = temp_a2[i].unk0.levelID;
-                                var_s1[i].unk0.vehicleID = temp_a2[i].unk0.vehicleID;
+                            sp58 = (0x1100 - ghostFileData[temp_t0].nodeCount) + ghostFileData[temp_t0].unk2;
+                            fileDataToWrite = allocate_from_main_pool_safe(fileSize + 0x100, COLOUR_TAG_BLACK);
+                            fileDataToWrite[0] = GHSS;
+                            sp70 = &fileDataToWrite[4];
+                            fileDataToWrite[0x1C] = 0xFF;
+                            fileDataToWrite[0x1E] = (s16) (ghostFileData[2].unk2 + sp58);
+                            for (i = 0; i < 6; i++) {
+                                sp70[i].unk0.levelID = ghostFileData[i].unk0.levelID;
+                                sp70[i].unk0.vehicleID = ghostFileData[i].unk0.vehicleID;
                                 if (var_t1 >= i) {
-                                    var_s1[i].unk2 = temp_a2[i].unk2;
+                                    sp70[i].unk2 = ghostFileData[i].unk2;
                                 } else {
-                                    var_s1[i].unk2 = (temp_a2[i].unk2 + sp58);
+                                    sp70[i].unk2 = (ghostFileData[i].unk2 + sp58);
                                 }
-                                bcopy(&fileData[temp_a2[i].unk2], &ghostDataToWrite[var_s1[i].unk2], temp_a2[i].nodeCount - temp_a2[i].unk2);
-                                i++;
-                            } while (i < 6);
-                            temp_s0 = &sp70[temp_t0];
-                            func_80074AA8((GhostHeader *) &ghostDataToWrite[temp_s0->unk2], ghostCharacterId, ghostTime, ghostNodeCount, &ghostData->unk0.levelID);
-                            temp_s0->unk0.levelID = levelId;
-                            temp_s0->unk0.vehicleID = vehicleId;
-                            ret = write_controller_pak_file(controllerIndex, fileNumber, "DKRACING-GHOSTS", "", ghostDataToWrite, fileSize);
-                            free_from_memory_pool(ghostDataToWrite);
+                                bcopy(&fileData[ghostFileData[i].unk2], &fileDataToWrite[sp70[i].unk2], ghostFileData[i].nodeCount - ghostFileData[i].unk2);
+                            }
+                            func_80074AA8((GhostHeader *) &fileDataToWrite[sp70[temp_t0].unk2], ghostCharacterId, ghostTime, ghostNodeCount, &ghostData->unk0.levelID);
+                            sp70[temp_t0].unk0.levelID = levelId;
+                            sp70[temp_t0].unk0.vehicleID = vehicleId;
+                            ret = write_controller_pak_file(controllerIndex, fileNumber, "DKRACING-GHOSTS", "", fileDataToWrite, fileSize);
+                            free_from_memory_pool(fileDataToWrite);
                         }
                     }
                 }
