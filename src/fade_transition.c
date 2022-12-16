@@ -230,11 +230,9 @@ u32 func_800C018C(void) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-
-// Regalloc issue.
 s32 func_800C01D8(FadeTransition *transition) {
-    if (D_800E31A0) {
+    s32 new_var;
+    if (D_800E31A0 != NULL) {
         return 0;
     }
     transition_end();
@@ -244,12 +242,14 @@ s32 func_800C01D8(FadeTransition *transition) {
     sTransitionFadeTimer = transition->duration;
     D_800E31B8 = transition->duration;
     sTransitionFlags = transition->unk6;
-    D_800E31BC = !(transition->type & 0x80);
+    new_var = transition->type;
+    D_800E31BC = !(new_var & 0x80);
+    new_var = transition->duration;
     gCurFaceTransition = transition->type & 0x3F;
     D_800E31A8 = transition->type & 0x40;
     sLevelTransitionDelayTimer = 0;
-    if (!D_800E31BC) {
-        sLevelTransitionDelayTimer = 2;
+    if (!D_800E31BC && !sLevelTransitionDelayTimer) {
+        sLevelTransitionDelayTimer = 2; 
     }
     if (sTransitionFadeTimer > 0) {
         gLastFadeRed = gCurFadeRed;
@@ -259,34 +259,31 @@ s32 func_800C01D8(FadeTransition *transition) {
         gCurFadeGreen = transition->green;
         gCurFadeBlue = transition->blue;
         switch (gCurFaceTransition) {
-            case FADE_FULLSCREEN:
-                func_800C0780(transition);
-                break;
-            case FADE_BARNDOOR_HORIZONTAL:
-                func_800C0B00(transition, 0xC, 8, &D_800E3230, &D_800E32A0, &D_800E32AC, &D_800E32D0, &D_800E32D0, &D_800E32B8);
-                break;
-            case FADE_BARNDOOR_VERTICAL:
-                func_800C0B00(transition, 0xC, 8, &D_800E3268, &D_800E32A0, &D_800E32AC, &D_800E32D0, &D_800E32D0, &D_800E32B8);
-                break;
-            case FADE_CIRCLE:
-                func_800C15D4(transition);
-                break;
-            case FADE_WAVES:
-                func_800C0B00(transition, 0x5C, 0x50, &D_800E3344, &D_800E349C, &D_800E3440, &D_800E34F8, &D_800E34F8, &D_800E3554);
-                break;
-            case FADE_BARNDOOR_DIAGONAL:
-                func_800C0B00(transition, 0xA, 6, &D_800E32DC, &D_800E330C, &D_800E3318, &D_800E3338, &D_800E3338, &D_800E3324);
-                break;
-            case FADE_DISABLED:
-                func_800C2640(transition);
-                break;
+        case 0:
+            func_800C0780(transition);
+            break;
+        case 1:
+            func_800C0B00(transition, 12, 8, D_800E3230, D_800E32A0, D_800E32AC, D_800E32D0, D_800E32D0, D_800E32B8);
+            break;
+        case 2:
+            func_800C0B00(transition, 12, 8, D_800E3268, D_800E32A0, D_800E32AC, D_800E32D0, D_800E32D0, D_800E32B8);
+            break;
+        case 3:
+            func_800C15D4(transition);
+            break;
+        case 4:
+            func_800C0B00(transition, 92, 80, D_800E3344, D_800E349C, D_800E3440, D_800E34F8, D_800E34F8, D_800E3554);
+            break;
+        case 5:
+            func_800C0B00(transition, 10, 6, D_800E32DC, D_800E330C, D_800E3318, D_800E3338, D_800E3338, D_800E3324);
+            break;
+        case 6:
+            func_800C2640(transition);
+            break;
         }
     }
     return sTransitionStatus;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C01D8.s")
-#endif
 
 /**
  * Handle the logic portion of the transitions. Runs always and calls the specific transition func from here.
