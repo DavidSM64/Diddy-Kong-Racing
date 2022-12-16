@@ -1290,24 +1290,23 @@ typedef struct GhostHeaderAlt {
     };
 } GhostHeaderAlt;
 
-#ifdef NON_EQUIVALENT
-s32 func_80075000(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, GhostHeader *ghostData) {
+#if 1
+s32 func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, GhostHeader *ghostData) {
     u8 *sp70;
     s32 sp58;
     s32 fileSize;
     s32 fileNumber;
-    s16 temp_v0_7;
     s32 temp_t0;
     s32 ret;
     s32 var_t1;
     s32 i;
-    u8 *temp_a2;
+    GhostHeader *temp_a2;
     GhostHeaderAlt *temp_a2_2;
-    u8 *temp_s0;
+    GhostHeader *temp_s0;
     u8 *fileData;
     u8 *ghostDataToWrite;
-    u8 *var_s1;
-    u8 *temp_v0_5;
+    GhostHeader *var_s1;
+    GhostHeader *temp_v0_5;
 
     ret = get_si_device_status(controllerIndex);
     if (ret != CONTROLLER_PAK_GOOD) {
@@ -1317,7 +1316,7 @@ s32 func_80075000(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId,
     ret = get_file_number(controllerIndex, "DKRACING-GHOSTS", "", &fileNumber);
     if (ret == CONTROLLER_PAK_CHANGED) {
         start_reading_controller_data(controllerIndex);
-        return func_80074EB8(controllerIndex, arg1, arg2, ghostCharacterId, ghostTime, ghostNodeCount, &ghostData->unk0.levelID);
+        return func_80074EB8(controllerIndex, levelId, vehicleId, ghostCharacterId, ghostTime, ghostNodeCount, &ghostData->unk0.levelID);
     }
     if (ret != CONTROLLER_PAK_GOOD) {
         start_reading_controller_data(controllerIndex);
@@ -1340,13 +1339,13 @@ s32 func_80075000(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId,
                     temp_a2_2 = (GhostHeaderAlt *) temp_a2;
 
                     for (i = 0, var_t1 = -1; i < 6; i++) {
-                        if (arg1 == temp_a2_2[i].unk0.levelID && arg2 == temp_a2_2[i].unk0.vehicleID) {
+                        if (levelId == temp_a2_2[i].unk0.levelID && vehicleId == temp_a2_2[i].unk0.vehicleID) {
                             var_t1 = i;
                             break;
                         }
                     }
 
-                    if ((var_t1 != -1) && (fileData[(temp_a2 + (var_t1 * 4))[2]]/*.unk4*/ < ghostTime)) {
+                    if ((var_t1 != -1) && (fileData[(temp_a2 + (var_t1 * 4))->characterID]/*.unk4*/ < ghostTime)) {
                         var_t1 = -2;
                     }
                     if (var_t1 == -1) {
@@ -1365,33 +1364,30 @@ s32 func_80075000(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId,
                         if (var_t1 == -1) {
                             ret = CONTROLLER_PAK_UNK6;
                         } else {
-                            temp_v0_5 = temp_a2[temp_t0];
-                            sp58 = (0x1100 - temp_v0_5[6]) + temp_v0_5[2];
+                            temp_v0_5 = &temp_a2[temp_t0];
+                            sp58 = (0x1100 - temp_v0_5->nodeCount) + temp_v0_5->unk2;
                             ghostDataToWrite = allocate_from_main_pool_safe(fileSize + 0x100, COLOUR_TAG_BLACK);
-                            i = 0;
                             ghostDataToWrite[0] = GHSS;
                             sp70 = &ghostDataToWrite[4];
                             ghostDataToWrite[0x1C] = 0xFF;
-                            ghostDataToWrite[0x1E] = (s16) (temp_a2[0x1A] + sp58);
-                            var_s1 = sp70;
+                            ghostDataToWrite[0x1E] = (s16) (temp_a2[2].unk2 + sp58);
+                            var_s1 = &sp70[0];
+                            i = 0;
                             do {
-                                var_s1[0] = temp_a2[0];
-                                var_s1[1] = (u8) temp_a2[1];
+                                var_s1[i].unk0.levelID = temp_a2[i].unk0.levelID;
+                                var_s1[i].unk0.vehicleID = temp_a2[i].unk0.vehicleID;
                                 if (var_t1 >= i) {
-                                    var_s1[2] = (s16) temp_a2[2];
+                                    var_s1[i].unk2 = temp_a2[i].unk2;
                                 } else {
-                                    var_s1[2] = (s16) (temp_a2[2]+ sp58);
+                                    var_s1[i].unk2 = (temp_a2[i].unk2 + sp58);
                                 }
-                                temp_v0_7 = temp_a2[2];
-                                bcopy(&fileData[temp_v0_7], &ghostDataToWrite[var_s1[2]], temp_a2[6] - temp_v0_7);
+                                bcopy(&fileData[temp_a2[i].unk2], &ghostDataToWrite[var_s1[i].unk2], temp_a2[i].nodeCount - temp_a2[i].unk2);
                                 i++;
-                                var_s1 += 4;
-                                temp_a2 += 4;
                             } while (i < 6);
                             temp_s0 = &sp70[temp_t0];
-                            func_80074AA8((GhostHeader *) &ghostDataToWrite[temp_s0[2]], ghostCharacterId, ghostTime, ghostNodeCount, &ghostData->unk0.levelID);
-                            temp_s0[0] = (u8) arg1;
-                            temp_s0[1] = (s8) arg2;
+                            func_80074AA8((GhostHeader *) &ghostDataToWrite[temp_s0->unk2], ghostCharacterId, ghostTime, ghostNodeCount, &ghostData->unk0.levelID);
+                            temp_s0->unk0.levelID = levelId;
+                            temp_s0->unk0.vehicleID = vehicleId;
                             ret = write_controller_pak_file(controllerIndex, fileNumber, "DKRACING-GHOSTS", "", ghostDataToWrite, fileSize);
                             free_from_memory_pool(ghostDataToWrite);
                         }
