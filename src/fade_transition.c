@@ -548,36 +548,33 @@ void func_800C2640(UNUSED FadeTransition* transition) {
     sTransitionStatus = 1;
 }
 
-
-#ifdef NON_EQUIVALENT
 void func_800C27A0(s32 updateRate) {
-    //do {
-    if (sTransitionFadeTimer > 0) {
-        gLastFadeRed += D_8012A744 * updateRate;
-        gLastFadeGreen += D_8012A748 * updateRate;
-        gLastFadeBlue += D_8012A74C * updateRate;
-        if (updateRate >= sTransitionFadeTimer) {
-            gLastFadeRed = gCurFadeRed << 16;
-            gLastFadeGreen = gCurFadeGreen << 16;
-            gLastFadeBlue = gCurFadeBlue << 16;
-            sTransitionFadeTimer = 0;
-            updateRate -= sTransitionFadeTimer;
+    s32 var_v0;
+    do {
+        var_v0 = TRUE;
+        if (sTransitionFadeTimer > 0) {
+            gLastFadeRed += D_8012A744 * updateRate;
+            gLastFadeGreen += D_8012A748 * updateRate;
+            gLastFadeBlue += D_8012A74C * updateRate;
+            if (updateRate >= sTransitionFadeTimer) {
+                gLastFadeRed = gCurFadeRed << 0x10;
+                gLastFadeGreen = gCurFadeGreen << 0x10;
+                gLastFadeBlue = gCurFadeBlue << 0x10;
+                updateRate -= sTransitionFadeTimer;
+                sTransitionFadeTimer = 0;
+            } else {
+                sTransitionFadeTimer -= updateRate;
+            }
         } else {
-            sTransitionFadeTimer -= updateRate;
-        }
-    } else {
-        sTransitionFlags -= updateRate;
-        if (sTransitionFlags != 0xFFFF) {
-            if ((sTransitionFlags & 0xFFFF) <= 0) {
-                sTransitionFlags = 0;
+            if (sTransitionFlags != 0xFFFF) {
+                sTransitionFlags -= updateRate;
+                if (sTransitionFlags <= 0) {
+                    sTransitionFlags = 0;
+                }
             }
         }
-    }
-    //} while(1 == 0);
+    } while (var_v0 == FALSE);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C27A0.s")
-#endif
 
 void render_fade_disabled(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     s32 screenSize = get_video_width_and_height_as_s32();
