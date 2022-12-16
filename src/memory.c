@@ -537,7 +537,7 @@ s32 func_800718A4(void) {
     s32 j;
     s32 colourIndex;
     s32 var_a2;
-    s32 curColour;
+    u32 curColour;
     
     temp = 0;
     for (j = 0; j < 64; j++) {
