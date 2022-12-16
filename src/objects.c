@@ -240,10 +240,10 @@ s32 gNumRacers;
 u8 gTimeTrialEnabled;
 u8 D_8011AEF5;
 u8 D_8011AEF6;
-u8 D_8011AEF7;
+s8 D_8011AEF7;
 s32 D_8011AEF8;
 s32 D_8011AEFC;
-s32 D_8011AF00;
+s8 D_8011AF00;
 Object *(*D_8011AF04)[64]; // Not sure about the number of elements
 s32 D_8011AF08[2];
 s32 D_8011AF10[2];

@@ -1219,7 +1219,7 @@ void ingame_logic_loop(s32 updateRate) {
     }
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_borders_for_multiplayer(&gCurrDisplayList);
-    func_800A8474(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
+    render_minimap_and_multiplayer_hud(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
     render_second_multiplayer_borders(&gCurrDisplayList);
     if (D_800DD39C != 0) {
         if (func_800214C4() != 0) {
