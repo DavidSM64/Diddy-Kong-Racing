@@ -528,7 +528,55 @@ u8 *align4(u8 *address) {
     return address;
 }
 
-GLOBAL_ASM("asm/non_matchings/memory/func_800718A4.s")
+s32 func_800718A4(void) {
+    u32 colours[64];
+    u32 colourCounts[64];
+    MemoryPoolSlot *curSlot;
+    s32 temp;
+    s32 i;
+    s32 j;
+    s32 colourIndex;
+    s32 var_a2;
+    s32 curColour;
+    
+    temp = 0;
+    for (j = 0; j < 64; j++) {
+        colours[j] = 0;
+        colourCounts[j] = 0; 
+    }
+    for (i = 0; i < gNumberOfMemoryPools; i++) {
+        curSlot = gMemoryPools[i].slots;
+        do {
+            if (curSlot->flags != 0) {
+                var_a2 = curSlot->colourTag;
+                if (var_a2 != 0) {
+                    curColour = var_a2;
+                    colourIndex = 0;
+                    while (colourIndex < 64 && curColour != colours[colourIndex] && colours[colourIndex] != 0) {
+                        var_a2 = colours[colourIndex];
+                        colourIndex++;
+                    }
+                    if (colourIndex < 64) {
+                        colours[colourIndex] = curColour;
+                        colourCounts[colourIndex]++;
+                    } else {
+                        temp++;
+                    }
+                }
+            }
+            var_a2 = curSlot->nextIndex;
+            if (var_a2 != -1) {
+                curSlot = &gMemoryPools[i].slots[curSlot->nextIndex];
+            }
+        } while (var_a2 != (-1));
+    }
+    var_a2 = 0;
+    if(!temp) { } // Fakematch
+    for (j = 0; colours[j] != 0 && j < 64; j++) { } // Fakematch
+    var_a2 = 0;
+    if(!temp) { } // Fakematch
+    temp = var_a2;
+}
 
 s32 get_memory_colour_tag_count(u32 colourTag) {
     s32 i, count;
