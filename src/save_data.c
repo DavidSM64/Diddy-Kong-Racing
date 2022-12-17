@@ -528,7 +528,7 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         D_801241F0 = 0;
         D_801241F4 = 0;
         for (i = 2, sum = 5; i < 192; i++) {
-            sum += (s16) D_801241EC[i];
+            sum += D_801241EC[i];
         }
         sum -= func_80072C54(16);
         if (sum == 0) {
@@ -556,7 +556,6 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 void func_800738A4(Settings *settings, u8 *saveData) {
     s16 availableVehicles;
     s32 levelCount;
@@ -565,85 +564,80 @@ void func_800738A4(Settings *settings, u8 *saveData) {
     s32 vehicleCount;
     s16 sum;
 
-    // Fakematch?
-    if (1) {
-        get_number_of_levels_and_worlds(&levelCount, &worldCount);
-        D_801241EC = saveData;
-        D_801241F0 = 0;
-        D_801241F4 = 128;
-        func_80072E28(16, 0);
-        for (vehicleCount = 0, i = 0; i < levelCount; i++) {
-            if (func_8006B14C(i) == 0) {
-                availableVehicles = get_map_available_vehicles(i);
-                // Car Available
-                if (availableVehicles & 1) {
-                    func_80072E28(16, settings->flapTimesPtr[0][i]);
-                    func_80072E28(16, settings->flapInitialsPtr[0][i]);
-                    vehicleCount++;
-                }
-                // Hovercraft Available
-                if (availableVehicles & 2) {
-                    func_80072E28(16, settings->flapTimesPtr[1][i]);
-                    func_80072E28(16, settings->flapInitialsPtr[1][i]);
-                    vehicleCount++;
-                }
-                // Plane Available
-                if (availableVehicles & 4) {
-                    func_80072E28(16, settings->flapTimesPtr[2][i]);
-                    func_80072E28(16, settings->flapInitialsPtr[2][i]);
-                    vehicleCount++;
-                }
-                // How do we make the `b` instruction appear?
-                if (vehicleCount < 48) {
-                    continue;
-                } else {
-                    break;
-                }
+    get_number_of_levels_and_worlds(&levelCount, &worldCount);
+    D_801241EC = saveData;
+    D_801241F0 = 0;
+    D_801241F4 = 128;
+    func_80072E28(16, 0);
+    for (vehicleCount = 0, i = 0; i < levelCount; i++) {
+        if (func_8006B14C(i) == 0) {
+            availableVehicles = get_map_available_vehicles(i);
+            // Car Available
+            if (availableVehicles & 1) {
+                func_80072E28(16, settings->flapTimesPtr[0][i]);
+                func_80072E28(16, settings->flapInitialsPtr[0][i]);
+                vehicleCount++;
+            }
+            // Hovercraft Available
+            if (availableVehicles & 2) {
+                func_80072E28(16, settings->flapTimesPtr[1][i]);
+                func_80072E28(16, settings->flapInitialsPtr[1][i]);
+                vehicleCount++;
+            }
+            // Plane Available
+            if (availableVehicles & 4) {
+                func_80072E28(16, settings->flapTimesPtr[2][i]);
+                func_80072E28(16, settings->flapInitialsPtr[2][i]);
+                vehicleCount++;
+            }
+            if (vehicleCount >= 48) {
+                vehicleCount = 0; // Fakematch
+                break;
             }
         }
-        D_801241EC = saveData;
-        D_801241F0 = 0;
-        D_801241F4 = 128;
-        for (i = 2, sum = 5; i < 192; i++) {
-            sum += (s16) D_801241EC[i];
-        }
-        func_80072E28(16, sum);
-        D_801241EC = saveData + 192;
-        D_801241F0 = 0;
-        D_801241F4 = 128;
-        func_80072E28(16, 0);
-        for (i = 0; i < levelCount; i++) {
-            if (func_8006B14C(i) == 0) {
-                availableVehicles = get_map_available_vehicles(i);
-                // Car Available
-                if (availableVehicles & 1) {
-                    func_80072E28(16, settings->courseTimesPtr[0][i]);
-                    func_80072E28(16, settings->courseInitialsPtr[0][i]);
-                }
-                // Hovercraft Available
-                if (availableVehicles & 2) {
-                    func_80072E28(16, settings->courseTimesPtr[1][i]);
-                    func_80072E28(16, settings->courseInitialsPtr[1][i]);
-                }
-                // Plane Available
-                if (availableVehicles & 4) {
-                    func_80072E28(16, settings->courseTimesPtr[2][i]);
-                    func_80072E28(16, settings->courseInitialsPtr[2][i]);
-                }
-            }
-        }
-        D_801241EC = saveData + 192;
-        D_801241F0 = 0;
-        D_801241F4 = 128;
     }
+
+    if (vehicleCount) { } // Fakematch
+
+    D_801241EC = saveData;
+    D_801241F0 = 0;
+    D_801241F4 = 128;
+    for (i = 2, sum = 5; i < 192; i++) {
+        sum += D_801241EC[i];
+    }
+    func_80072E28(16, sum);
+    D_801241EC = saveData + 192;
+    D_801241F0 = 0;
+    D_801241F4 = 128;
+    func_80072E28(16, 0);
+    for (i = 0; i < levelCount; i++) {
+        if (func_8006B14C(i) == 0) {
+            availableVehicles = get_map_available_vehicles(i);
+            // Car Available
+            if (availableVehicles & 1) {
+                func_80072E28(16, settings->courseTimesPtr[0][i]);
+                func_80072E28(16, settings->courseInitialsPtr[0][i]);
+            }
+            // Hovercraft Available
+            if (availableVehicles & 2) {
+                func_80072E28(16, settings->courseTimesPtr[1][i]);
+                func_80072E28(16, settings->courseInitialsPtr[1][i]);
+            }
+            // Plane Available
+            if (availableVehicles & 4) {
+                func_80072E28(16, settings->courseTimesPtr[2][i]);
+                func_80072E28(16, settings->courseInitialsPtr[2][i]);
+            }
+        }
+    }
+    D_801241EC = saveData + 192;
+    D_801241F0 = 0;
+    D_801241F4 = 128;
     for (i = 2, sum = 5; i < 192; i++) {
         sum += D_801241EC[i];
     }
     func_80072E28(16, sum);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/func_800738A4.s")
-#endif
 
 s32 get_game_data_file_size(void) {
     return 256;
