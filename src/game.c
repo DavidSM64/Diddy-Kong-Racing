@@ -250,8 +250,7 @@ void func_8006A6B0(void) {
     }
 }
 
-// Unused.
-s16 func_8006ABB4(s32 arg0) {
+UNUSED s16 func_8006ABB4(s32 arg0) {
     if (arg0 < 0) {
         return 0xE10;
     }
@@ -261,7 +260,7 @@ s16 func_8006ABB4(s32 arg0) {
     return D_8012117C[arg0].unk4;
 }
 
-s32 func_8006AC00(s32 arg0, s8 arg1, s8 arg2) {
+UNUSED s32 func_8006AC00(s32 arg0, s8 arg1, s8 arg2) {
     if (arg0 < 0) {
         arg0 = 0;
     } else {
@@ -305,9 +304,48 @@ s32 func_8006AC00(s32 arg0, s8 arg1, s8 arg2) {
     return -1;
 }
 
-
-// Unused?
-GLOBAL_ASM("asm/non_matchings/game/func_8006AE2C.s")
+UNUSED s32 func_8006AE2C(s32 arg0, s8 arg1, s8 arg2) {
+    if(arg0 >= gNumberOfLevelHeaders){
+        arg0 = gNumberOfLevelHeaders;
+    }
+    arg0--;
+    if (arg1 != 0x40) {
+        if (arg2 == -1) {
+            for (; arg0 >= 0; arg0--) {
+                if (arg1 == D_8012117C[arg0].unk1) {
+                    return arg0;
+                }
+            }
+        } else if (arg1 == -1) {
+            for (; arg0 >= 0; arg0--) {
+                if (arg2 == D_8012117C[arg0].unk0) {
+                    return arg0;
+                }
+            }
+        } else {
+            for (; arg0 >= 0; arg0--) {
+                if ((arg1 == D_8012117C[arg0].unk1) && (arg2 == D_8012117C[arg0].unk0)) {
+                    return arg0;
+                }
+            }
+        }
+    } else {
+        if (arg2 == -1) {
+            for (; arg0 >= 0; arg0--) {
+                if (D_8012117C[arg0].unk1 & 0x40) {
+                    return arg0;
+                }
+            }
+        } else {
+            for (; arg0 >= 0; arg0--) {
+                if ((D_8012117C[arg0].unk1 & 0x40) && (arg2 == D_8012117C[arg0].unk0)) {
+                    return arg0;
+                }
+            }
+        }
+    }
+    return -1;
+}
 
 // Unused.
 s32 func_8006B018(s8 arg0) {
