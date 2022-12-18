@@ -120,31 +120,31 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of December 15, 2022, this is our current score:
+As of December 18, 2022, this is our current score:
 ```
- ============================================================================
-                    ADVENTURE ONE (ASM -> C Decompilation)
- ----------------------------- 43.28% Complete ------------------------------
-                         # Decompiled functions: 1414
-                         # GLOBAL_ASM remaining: 419
-                         # NON_MATCHING functions: 13
-                      # NON_EQUIVALENT WIP functions: 79
- ------------------------------- Game Status --------------------------------
-                  Balloons: 21/47, Keys: 2/4, Trophies: 1/5
-                    T.T. Amulets: 2/4, Wizpig Amulets: 2/4
- ----------------------------------------------------------------------------
- We are participating in the Trophy Race of Snowflake Mountain. (Round Three)
- ============================================================================
-                    ADVENTURE TWO (Cleanup & Documentation)
- ----------------------------- 13.59% Complete ------------------------------
-                         # Documented functions: 313
-                        # Undocumented remaining: 1520
- ------------------------------- Game Status --------------------------------
-                   Balloons: 8/47, Keys: 1/4, Trophies: 0/5
-                    T.T. Amulets: 0/4, Wizpig Amulets: 0/4
- ----------------------------------------------------------------------------
-                  We are racing the dinosaur boss Trickytops
- ============================================================================
+ ===================================================
+       ADVENTURE ONE (ASM -> C Decompilation)
+ ----------------- 45.05% Complete -----------------
+            # Decompiled functions: 1434
+             # GLOBAL_ASM remaining: 404
+            # NON_MATCHING functions: 12
+         # NON_EQUIVALENT WIP functions: 68
+ ------------------- Game Status -------------------
+      Balloons: 21/47, Keys: 2/4, Trophies: 2/5
+       T.T. Amulets: 2/4, Wizpig Amulets: 2/4
+ ---------------------------------------------------
+ We are racing Taj in the Hover Challenge. (Lap 3/3)
+ ===================================================
+        ADVENTURE TWO (Cleanup & Documentation)
+ ----------------- 15.10% Complete -----------------
+             # Documented functions: 328
+           # Undocumented remaining: 1510
+ ------------------- Game Status -------------------
+      Balloons: 8/47, Keys: 1/4, Trophies: 0/5
+       T.T. Amulets: 0/4, Wizpig Amulets: 0/4
+ ---------------------------------------------------
+ We are collecting eggs in Fire Mountain. (2/3 Eggs)
+ ===================================================
 ```
 <!-- README_SCORE_END -->
 
