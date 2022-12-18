@@ -2844,7 +2844,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
 
     updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        sp2C *= 1.2f;
+        updateRateF *= 1.2;
     }
     isPirated = FALSE;
     // AntiPiracy check. Seems to set a flag that prevents collecting balloons.
