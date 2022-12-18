@@ -316,7 +316,7 @@ glabel func_8008FF1C
 /* 090FB4 800903B4 263163A0 */  addiu $s1, %lo(sMenuCurrDisplayList) # addiu $s1, $s1, 0x63a0
 /* 090FB8 800903B8 3C058012 */  lui   $a1, %hi(sMenuCurrHudMat) # $a1, 0x8012
 /* 090FBC 800903BC 24A563A8 */  addiu $a1, %lo(sMenuCurrHudMat) # addiu $a1, $a1, 0x63a8
-/* 090FC0 800903C0 0C019FCB */  jal   func_80067F2C
+/* 090FC0 800903C0 0C019FCB */  jal   set_ortho_matrix_view
 /* 090FC4 800903C4 02202025 */   move  $a0, $s1
 /* 090FC8 800903C8 0C01ECF4 */  jal   reset_render_settings
 /* 090FCC 800903CC 02202025 */   move  $a0, $s1

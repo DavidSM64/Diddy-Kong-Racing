@@ -230,11 +230,9 @@ u32 func_800C018C(void) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-
-// Regalloc issue.
 s32 func_800C01D8(FadeTransition *transition) {
-    if (D_800E31A0) {
+    s32 new_var;
+    if (D_800E31A0 != NULL) {
         return 0;
     }
     transition_end();
@@ -244,12 +242,14 @@ s32 func_800C01D8(FadeTransition *transition) {
     sTransitionFadeTimer = transition->duration;
     D_800E31B8 = transition->duration;
     sTransitionFlags = transition->unk6;
-    D_800E31BC = !(transition->type & 0x80);
+    new_var = transition->type;
+    D_800E31BC = !(new_var & 0x80);
+    new_var = transition->duration;
     gCurFaceTransition = transition->type & 0x3F;
     D_800E31A8 = transition->type & 0x40;
     sLevelTransitionDelayTimer = 0;
-    if (!D_800E31BC) {
-        sLevelTransitionDelayTimer = 2;
+    if (!D_800E31BC && !sLevelTransitionDelayTimer) {
+        sLevelTransitionDelayTimer = 2; 
     }
     if (sTransitionFadeTimer > 0) {
         gLastFadeRed = gCurFadeRed;
@@ -259,34 +259,31 @@ s32 func_800C01D8(FadeTransition *transition) {
         gCurFadeGreen = transition->green;
         gCurFadeBlue = transition->blue;
         switch (gCurFaceTransition) {
-            case FADE_FULLSCREEN:
-                func_800C0780(transition);
-                break;
-            case FADE_BARNDOOR_HORIZONTAL:
-                func_800C0B00(transition, 0xC, 8, &D_800E3230, &D_800E32A0, &D_800E32AC, &D_800E32D0, &D_800E32D0, &D_800E32B8);
-                break;
-            case FADE_BARNDOOR_VERTICAL:
-                func_800C0B00(transition, 0xC, 8, &D_800E3268, &D_800E32A0, &D_800E32AC, &D_800E32D0, &D_800E32D0, &D_800E32B8);
-                break;
-            case FADE_CIRCLE:
-                func_800C15D4(transition);
-                break;
-            case FADE_WAVES:
-                func_800C0B00(transition, 0x5C, 0x50, &D_800E3344, &D_800E349C, &D_800E3440, &D_800E34F8, &D_800E34F8, &D_800E3554);
-                break;
-            case FADE_BARNDOOR_DIAGONAL:
-                func_800C0B00(transition, 0xA, 6, &D_800E32DC, &D_800E330C, &D_800E3318, &D_800E3338, &D_800E3338, &D_800E3324);
-                break;
-            case FADE_DISABLED:
-                func_800C2640(transition);
-                break;
+        case FADE_FULLSCREEN:
+            func_800C0780(transition);
+            break;
+        case FADE_BARNDOOR_HORIZONTAL:
+            func_800C0B00(transition, 12, 8, D_800E3230, D_800E32A0, D_800E32AC, D_800E32D0, D_800E32D0, D_800E32B8);
+            break;
+        case FADE_BARNDOOR_VERTICAL:
+            func_800C0B00(transition, 12, 8, D_800E3268, D_800E32A0, D_800E32AC, D_800E32D0, D_800E32D0, D_800E32B8);
+            break;
+        case FADE_CIRCLE:
+            func_800C15D4(transition);
+            break;
+        case FADE_WAVES:
+            func_800C0B00(transition, 92, 80, D_800E3344, D_800E349C, D_800E3440, D_800E34F8, D_800E34F8, D_800E3554);
+            break;
+        case FADE_BARNDOOR_DIAGONAL:
+            func_800C0B00(transition, 10, 6, D_800E32DC, D_800E330C, D_800E3318, D_800E3338, D_800E3338, D_800E3324);
+            break;
+        case FADE_DISABLED:
+            func_800C2640(transition);
+            break;
         }
     }
     return sTransitionStatus;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C01D8.s")
-#endif
 
 /**
  * Handle the logic portion of the transitions. Runs always and calls the specific transition func from here.
@@ -345,7 +342,7 @@ void render_fade_transition(Gfx **dlist, MatrixS **mats, Vertex **verts) {
         } else {
             set_ortho_matrix_height(1.2f);
         }
-        func_80067F2C(dlist, mats);
+        set_ortho_matrix_view(dlist, mats);
         set_ortho_matrix_height(1.0f);
         switch (gCurFaceTransition) {
             case FADE_FULLSCREEN:
@@ -402,7 +399,46 @@ void func_800C0780(FadeTransition *transition) {
     sTransitionStatus = TRANSITION_ACTIVE;
 }
 
-GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C0834.s")
+void func_800C0834(s32 updateRate) {
+    s32 var_v0;
+    do {
+        var_v0 = TRUE;
+        if ((sTransitionFadeTimer) > 0) {
+            if (updateRate < sTransitionFadeTimer) {
+                sTransitionFadeTimer -= updateRate;
+                sTransitionOpacity += D_8012A754 * updateRate;
+            } else {
+                updateRate -= sTransitionFadeTimer;
+                var_v0 = FALSE;
+                if (D_8012A754 < 0.0f) {
+                    sTransitionOpacity = 0.0f;
+                } else {
+                    sTransitionOpacity = 255.0f;
+                }
+                sTransitionFadeTimer = updateRate * 0; // Fakematch
+            }
+            if (sTransitionOpacity < 0.0f) {
+                sTransitionOpacity = 0.0f;
+            } else if (sTransitionOpacity > 255.0f) {
+                sTransitionOpacity = 255.0f;
+            }
+            gCurFadeAlpha = sTransitionOpacity;
+        } else if (sTransitionFlags != 0xFFFF) {
+            if (updateRate < sTransitionFlags) {
+                sTransitionFlags -= updateRate;
+            } else {
+                updateRate -= sTransitionFlags;
+                sTransitionFlags = 0;
+                if (D_800E31A8 != 0) {
+                    D_800E31A8 = 0;
+                    sTransitionFadeTimer = D_800E31B8;
+                    D_8012A754 = -D_8012A754;
+                    var_v0 = FALSE;
+                }
+            }
+        }
+    } while (var_v0 == FALSE && (updateRate > 0));
+}
 
 void render_fade_fullscreen(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     s32 screenSize = get_video_width_and_height_as_s32();
@@ -496,37 +532,46 @@ void render_fade_barndoor_diagonal(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Ve
     reset_render_settings(dlist);
 }
 
-GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C2640.s")
+void func_800C2640(UNUSED FadeTransition *transition) {
+    gLastFadeRed <<= 0x10;
+    gLastFadeGreen <<= 0x10;
+    gLastFadeBlue <<= 0x10;
+    gCurFadeAlpha = 0xFF;
+    sTransitionOpacity = 255.0f;
+    D_8012A754 = 0.0f;
+    D_8012A744 = (s32) ((gCurFadeRed << 0x10) - gLastFadeRed) / (s32) sTransitionFadeTimer;
+    D_8012A748 = (s32) ((gCurFadeGreen << 0x10) - gLastFadeGreen) / (s32) sTransitionFadeTimer;
+    D_8012A74C = (s32) ((gCurFadeBlue << 0x10) - gLastFadeBlue) / (s32) sTransitionFadeTimer;
+    sTransitionStatus = 1;
+}
 
-#ifdef NON_EQUIVALENT
 void func_800C27A0(s32 updateRate) {
-    //do {
-    if (sTransitionFadeTimer > 0) {
-        gLastFadeRed += D_8012A744 * updateRate;
-        gLastFadeGreen += D_8012A748 * updateRate;
-        gLastFadeBlue += D_8012A74C * updateRate;
-        if (updateRate >= sTransitionFadeTimer) {
-            gLastFadeRed = gCurFadeRed << 16;
-            gLastFadeGreen = gCurFadeGreen << 16;
-            gLastFadeBlue = gCurFadeBlue << 16;
-            sTransitionFadeTimer = 0;
-            updateRate -= sTransitionFadeTimer;
+    s32 var_v0;
+    do {
+        var_v0 = TRUE;
+        if (sTransitionFadeTimer > 0) {
+            gLastFadeRed += D_8012A744 * updateRate;
+            gLastFadeGreen += D_8012A748 * updateRate;
+            gLastFadeBlue += D_8012A74C * updateRate;
+            if (updateRate >= sTransitionFadeTimer) {
+                gLastFadeRed = gCurFadeRed << 0x10;
+                gLastFadeGreen = gCurFadeGreen << 0x10;
+                gLastFadeBlue = gCurFadeBlue << 0x10;
+                updateRate -= sTransitionFadeTimer;
+                sTransitionFadeTimer = 0;
+            } else {
+                sTransitionFadeTimer -= updateRate;
+            }
         } else {
-            sTransitionFadeTimer -= updateRate;
-        }
-    } else {
-        sTransitionFlags -= updateRate;
-        if (sTransitionFlags != 0xFFFF) {
-            if ((sTransitionFlags & 0xFFFF) <= 0) {
-                sTransitionFlags = 0;
+            if (sTransitionFlags != 0xFFFF) {
+                sTransitionFlags -= updateRate;
+                if (sTransitionFlags <= 0) {
+                    sTransitionFlags = 0;
+                }
             }
         }
-    }
-    //} while(1 == 0);
+    } while (var_v0 == FALSE);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C27A0.s")
-#endif
 
 void render_fade_disabled(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     s32 screenSize = get_video_width_and_height_as_s32();

@@ -296,7 +296,7 @@ void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currH
     gCurrWeatherMatrix = *currHudMat;
     gCurrWeatherVertexList = *currHudVerts;
     gCurrWeatherTriList = *currHudTris;
-    D_80127C1C = func_80069D20();
+    D_80127C1C = get_active_camera_segment();
     D_80127C20 = func_80069DBC();
     if (gWeatherType != WEATHER_SNOW) {
         handle_weather_rain(updateRate);
@@ -509,7 +509,7 @@ void handle_weather_rain(s32 updateRate) {
         render_rain_splashes(updateRate);
         handle_rain_lightning(updateRate);
         if (gLightningFrequency >= 256) {
-            func_80067F2C(&gCurrWeatherDisplayList, &gCurrWeatherMatrix);
+            set_ortho_matrix_view(&gCurrWeatherDisplayList, &gCurrWeatherMatrix);
             for(i = 0; i < 2; i++) {
                 render_rain_overlay(&gRainGfx[i], updateRate);
             }

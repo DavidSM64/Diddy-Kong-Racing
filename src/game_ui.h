@@ -296,7 +296,7 @@ void play_time_trial_end_message(s16 *playerID);
 void func_800A7484(u16 arg0, f32 arg1, s32 arg2);
 void func_800A74EC(u16 arg0, s32 arg1);
 void func_800A83B4(LevelModel *model);
-s8 func_800A8458(void);
+s8 get_multiplayer_hud_setting(void);
 void func_800AB194(s32 arg0);
 void func_800AB1AC(s32 arg0);
 void func_800AB1C8(void);
@@ -312,6 +312,7 @@ void render_racer_bananas(Object_Racer *obj, s32 updateRate);
 void render_race_finish_position(Object_64 *obj, s32 updateRate);
 void render_speedometer(Object *obj, s32 updateRate);
 void render_lap_count(Object_Racer *racer, s32 updateRate);
+void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtxList, s32 updateRate);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
@@ -321,7 +322,6 @@ void func_800A718C(Object_64 *obj);
 void func_800AA600(Gfx **dList, MatrixS **mtx, Vertex **vtxList, unk80126CDC **arg3);
 void func_8009ECF0(s32 viewPortCount);
 void func_800A003C(void);
-void func_800A8474(Gfx **dList, MatrixS **mtx, Vertex **vtxList, s32 updateRate);
 void func_800A7FBC(s32, s32, s32 minutes, s32 seconds, s32 hundredths, s32); 
 void func_800A1248(s32, Object*, s32);
 void func_800A1C04(s32, Object*, s32);
@@ -333,7 +333,7 @@ void func_800095E8(s32, f32, f32, f32, s32, s32, f32, s32*);
 void func_800A0BD4(s32);
 void func_800A19A4(Object_Racer*, s32 updateRate);
 void func_800A1E48(s32, s32);
-void func_800A45F0(Object_Racer*);
+void render_treasure_hud(Object_Racer*);
 void func_800AA3EC(f32, f32, f32, f32, f32);
 
 #endif

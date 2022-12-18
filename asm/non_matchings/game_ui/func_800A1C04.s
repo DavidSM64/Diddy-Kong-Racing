@@ -1,7 +1,7 @@
 glabel func_800A1C04
 /* 0A2804 800A1C04 27BDFFC0 */  addiu $sp, $sp, -0x40
-/* 0A2808 800A1C08 3C0F8012 */  lui   $t7, %hi(D_80126D37) # $t7, 0x8012
-/* 0A280C 800A1C0C 91EF6D37 */  lbu   $t7, %lo(D_80126D37)($t7)
+/* 0A2808 800A1C08 3C0F8012 */  lui   $t7, %hi(gNumActivePlayers) # $t7, 0x8012
+/* 0A280C 800A1C0C 91EF6D37 */  lbu   $t7, %lo(gNumActivePlayers)($t7)
 /* 0A2810 800A1C10 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0A2814 800A1C14 AFA40040 */  sw    $a0, 0x40($sp)
 /* 0A2818 800A1C18 AFA50044 */  sw    $a1, 0x44($sp)
@@ -27,8 +27,8 @@ glabel func_800A1C04
 /* 0A2864 800A1C64 00000000 */   nop   
 /* 0A2868 800A1C68 0C006E9D */  jal   get_racer_objects
 /* 0A286C 800A1C6C 27A40034 */   addiu $a0, $sp, 0x34
-/* 0A2870 800A1C70 3C038012 */  lui   $v1, %hi(D_80126D37) # $v1, 0x8012
-/* 0A2874 800A1C74 90636D37 */  lbu   $v1, %lo(D_80126D37)($v1)
+/* 0A2870 800A1C70 3C038012 */  lui   $v1, %hi(gNumActivePlayers) # $v1, 0x8012
+/* 0A2874 800A1C74 90636D37 */  lbu   $v1, %lo(gNumActivePlayers)($v1)
 /* 0A2878 800A1C78 8FA70038 */  lw    $a3, 0x38($sp)
 /* 0A287C 800A1C7C 24010001 */  li    $at, 1
 /* 0A2880 800A1C80 10610005 */  beq   $v1, $at, .L800A1C98

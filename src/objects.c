@@ -240,10 +240,10 @@ s32 gNumRacers;
 u8 gTimeTrialEnabled;
 u8 D_8011AEF5;
 u8 D_8011AEF6;
-u8 D_8011AEF7;
+s8 D_8011AEF7;
 s32 D_8011AEF8;
 s32 D_8011AEFC;
-s32 D_8011AF00;
+s8 D_8011AF00;
 Object *(*D_8011AF04)[64]; // Not sure about the number of elements
 s32 D_8011AF08[2];
 s32 D_8011AF10[2];
@@ -1661,13 +1661,18 @@ s16 func_80017E88(void) {
 GLOBAL_ASM("asm/non_matchings/objects/func_80017E98.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_800185E4.s")
 
-Object *func_80018C6C(void) {
+/**
+ * Search and return Taj's overworld object.
+ * Used for drawing his minimap position.
+*/
+Object *find_taj_object(void) {
     s32 i;
     Object *current_obj;
     for (i = D_8011AE60; i < objCount; i++) {
         current_obj = gObjPtrList[i];
-        if (!(current_obj->segment.trans.unk6 & 0x8000) && (current_obj->behaviorId == 62))
+        if (!(current_obj->segment.trans.unk6 & 0x8000) && (current_obj->behaviorId == 62)) {
             return current_obj;
+        }
     }
     return NULL;
 }

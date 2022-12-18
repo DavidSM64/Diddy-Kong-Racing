@@ -143,6 +143,7 @@ typedef struct Settings4C {
 #define TAJ_FLAGS_HOVER_CHAL_COMPLETED 0x10
 #define TAJ_FLAGS_PLANE_CHAL_COMPLETED 0x20
 
+#define CUTSCENE_NONE                      0x0
 #define CUTSCENE_LIGHTHOUSE_ROCKET         0x1
 #define CUTSCENE_TT_HELP                   0x2
 #define CUTSCENE_ADVENTURE_TWO             0x4
@@ -283,10 +284,10 @@ typedef struct PulsatingLightData {
 
 /* Size: 0xC4 bytes */
 typedef struct LevelHeader {
-  /* 0x00 */ u8 world;
+  /* 0x00 */ s8 world;
   /* 0x01 */ u8 unk1;
   /* 0x02 */ s8 unk2;
-  /* 0x03 */ u8 unk3;
+  /* 0x03 */ s8 unk3;
   /* 0x04 */ s8 unk4[4];
   /* 0x08 */ f32 course_height;
   /* 0x0C */ u8 unkC[10];
@@ -1157,7 +1158,7 @@ typedef struct Object_Racer {
   /* 0x20E */ u16 unk20E;
   /* 0x210 */ u8 unk210;
   /* 0x211 */ s8 unk211;
-  /* 0x212 */ u8 unk212;
+  /* 0x212 */ s8 unk212;
   /* 0x213 */ s8 unk213;
   /* 0x214 */ s8 unk214;
   /* 0x215 */ s8 unk215;

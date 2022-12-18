@@ -372,15 +372,15 @@ void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, s8** tris, s32 updat
         if (gCurrentLevelHeader2->weatherEnable > 0 && numViewports < 2) {
             process_weather(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList, delta);
         }
-        func_800AD030(func_80069D20());
-        func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, func_80069D20());
+        func_800AD030(get_active_camera_segment());
+        func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
         render_hud(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_racer_object_by_port(D_8011B0B4), updateRate);
     }
     if ((numViewports == 3) && 
         (get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS) &&
         (get_current_level_race_type() != RACETYPE_CHALLENGE_BATTLE) &&
         (get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS)) {
-        if (func_800A8458() == 0) {
+        if (get_multiplayer_hud_setting() == 0) {
             if (flip) {
                 gSPSetGeometryMode(gSceneCurrDisplayList++, CVG_X_ALPHA);
             }
@@ -399,8 +399,8 @@ void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, s8** tris, s32 updat
             gDPPipeSync(gSceneCurrDisplayList++);
             func_80028CD0(updateRate);
             func_800AB308(-1, -512);
-            func_800AD030(func_80069D20());
-            func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, func_80069D20());
+            func_800AD030(get_active_camera_segment());
+            func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
             set_text_font(0);
             if (osTvType == 0) {
                 posX = 166;
@@ -609,7 +609,7 @@ void render_skydome(void) {
     if (D_8011B0B8 == NULL)
         return;
 
-    v0_some_struct = func_80069D20();
+    v0_some_struct = get_active_camera_segment();
     if (gCurrentLevelHeader2->unk49 == 0) {
         D_8011B0B8->segment.trans.x_position = v0_some_struct->trans.x_position;
         D_8011B0B8->segment.trans.y_position = v0_some_struct->trans.y_position;
@@ -632,7 +632,7 @@ void func_80028CD0(s32 updateRate) {
     s32 temp_v0;
     Object_Racer *racer;
 
-    D_8011B0B0 = func_80069D20();
+    D_8011B0B0 = get_active_camera_segment();
     sp3C = get_current_viewport();
     func_80031018();
     set_and_normalize_D_8011AFE8((f32) D_8011D468.x / 65536.0f, (f32) D_8011D468.y / 65536.0f, (f32) D_8011D468.z / 65536.0f);
@@ -2019,7 +2019,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 #endif
 
 UNUSED void func_80030FA0(void) {
-    D_8011B0B0 = func_80069D20();
+    D_8011B0B0 = get_active_camera_segment();
     func_80031018();
     set_and_normalize_D_8011AFE8((f32) D_8011D468.x / 65536.0f, (f32) D_8011D468.y / 65536.0f, (f32) D_8011D468.z / 65536.0f);
 }

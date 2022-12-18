@@ -53,7 +53,7 @@ glabel render_track_select_setup_ui
 /* 091BE0 80090FE0 3C048012 */  lui   $a0, %hi(sMenuCurrDisplayList) # $a0, 0x8012
 /* 091BE4 80090FE4 3C058012 */  lui   $a1, %hi(sMenuCurrHudMat) # $a1, 0x8012
 /* 091BE8 80090FE8 24A563A8 */  addiu $a1, %lo(sMenuCurrHudMat) # addiu $a1, $a1, 0x63a8
-/* 091BEC 80090FEC 0C019FCB */  jal   func_80067F2C
+/* 091BEC 80090FEC 0C019FCB */  jal   set_ortho_matrix_view
 /* 091BF0 80090FF0 248463A0 */   addiu $a0, %lo(sMenuCurrDisplayList) # addiu $a0, $a0, 0x63a0
 /* 091BF4 80090FF4 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
 /* 091BF8 80090FF8 8C42F47C */  lw    $v0, %lo(gMenuDelay)($v0)
