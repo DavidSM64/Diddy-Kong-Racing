@@ -101,11 +101,11 @@ glabel func_800A0BD4
 /* 0A1940 800A0D40 11600018 */  beqz  $t3, .L800A0DA4
 /* 0A1944 800A0D44 8FBF002C */   lw    $ra, 0x2c($sp)
 /* 0A1948 800A0D48 918C2772 */  lbu   $t4, %lo(D_800E2770+2)($t4)
-/* 0A194C 800A0D4C 3C028012 */  lui   $v0, %hi(D_80126D37) # $v0, 0x8012
+/* 0A194C 800A0D4C 3C028012 */  lui   $v0, %hi(gNumActivePlayers) # $v0, 0x8012
 /* 0A1950 800A0D50 15800014 */  bnez  $t4, .L800A0DA4
 /* 0A1954 800A0D54 8FBF002C */   lw    $ra, 0x2c($sp)
 /* 0A1958 800A0D58 A0600000 */  sb    $zero, ($v1)
-/* 0A195C 800A0D5C 90426D37 */  lbu   $v0, %lo(D_80126D37)($v0)
+/* 0A195C 800A0D5C 90426D37 */  lbu   $v0, %lo(gNumActivePlayers)($v0)
 /* 0A1960 800A0D60 24010001 */  li    $at, 1
 /* 0A1964 800A0D64 14410006 */  bne   $v0, $at, .L800A0D80
 /* 0A1968 800A0D68 24010002 */   li    $at, 2

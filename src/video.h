@@ -98,7 +98,7 @@ s32 get_video_width_and_height_as_s32(void);
 void init_vi_settings(void);
 void init_framebuffer(s32 index);
 void reset_video_delta_time(void);
-void func_8007AB24(s8 arg0);
+void func_8007AB24(u8 arg0);
 s32 get_video_refresh_speed(void);
 void swap_framebuffers(void);
 void memory_copy(u8 *src, u8 *dest, s32 len);

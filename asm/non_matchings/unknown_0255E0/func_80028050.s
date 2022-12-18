@@ -8,7 +8,7 @@ glabel func_80028050
 /* 028C68 80028068 8E31B0A8 */  lw    $s1, %lo(gSceneCurrVertexList)($s1)
 /* 028C6C 8002806C 8E10B0AC */  lw    $s0, %lo(gSceneCurrTriList)($s0)
 /* 028C70 80028070 AFB30020 */  sw    $s3, 0x20($sp)
-/* 028C74 80028074 0C01A748 */  jal   func_80069D20
+/* 028C74 80028074 0C01A748 */  jal   get_active_camera_segment
 /* 028C78 80028078 AFB2001C */   sw    $s2, 0x1c($sp)
 /* 028C7C 8002807C 3C0E800E */  lui   $t6, %hi(gCurrentLevelHeader2) # $t6, 0x800e
 /* 028C80 80028080 8DCEC91C */  lw    $t6, %lo(gCurrentLevelHeader2)($t6)

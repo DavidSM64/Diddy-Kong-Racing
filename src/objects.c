@@ -22,6 +22,11 @@
 #include "camera.h"
 #include "waves.h"
 #include "object_functions.h"
+#include "object_models.h"
+
+#define MAX_CHECKPOINTS 60
+#define OBJECT_POOL_SIZE 0x15800
+#define OBJECT_SLOT_COUNT 512
 
 /************ .data ************/
 
@@ -108,21 +113,21 @@ u16 D_800DC864 = 0x0028;
 
 /************ .rodata ************/
 
-const char D_800E4F60[] = "Objects out of ram(1) !!\n";
-const char D_800E4F7C[] = "Door numbering error %d!!\n";
-const char D_800E4F98[] = "objGetScope: Unknown scope for object %d\n";
-const char D_800E4FC4[] = "ObjList (Part) Overflow %d!!!\n";
-const char D_800E4FE4[] = "ObjSetupObject(1) Memory fail!!\n";
-const char D_800E5008[] = "ObjSetupObject(2) Memory fail!!\n";
-const char D_800E502C[] = "ObjSetupObject(5) Memory fail!!\n";
-const char D_800E5050[] = "ObjSetupObject(6) Memory fail!!\n";
-const char D_800E5074[] = "ObjSetupObject(3) Memory fail!!\n";
-const char D_800E5098[] = "ObjList Overflow %d!!!\n";
-const char D_800E50B0[] = "ObjSetupObject(4) Memory fail!!\n";
-const char D_800E50D4[] = "Error: Multiple checkpoint no: %d !!\n";
-const char D_800E50FC[] = "ERROR Channel %d\n";
-const char D_800E5110[] = "RO error %d!!\n";
-const char D_800E5120[] = "ARGHHHHHHHHH\n";
+UNUSED const char sObjectOutofMemString[] = "Objects out of ram(1) !!\n";
+UNUSED const char sDoorNumberErrorString[] = "Door numbering error %d!!\n";
+UNUSED const char sObjectScopeErrorString[] = "objGetScope: Unknown scope for object %d\n";
+UNUSED const char sObjectListDataOverflowString[] = "ObjList (Part) Overflow %d!!!\n";
+UNUSED const char sObjectSetupError1String[] = "ObjSetupObject(1) Memory fail!!\n";
+UNUSED const char sObjectSetupError2String[] = "ObjSetupObject(2) Memory fail!!\n";
+UNUSED const char sObjectSetupError5String[] = "ObjSetupObject(5) Memory fail!!\n";
+UNUSED const char sObjectSetupError6String[] = "ObjSetupObject(6) Memory fail!!\n";
+UNUSED const char sObjectSetupError3String[] = "ObjSetupObject(3) Memory fail!!\n";
+UNUSED const char sObjectListOverflowString[] = "ObjList Overflow %d!!!\n";
+UNUSED const char sObjectSetupError4String[] = "ObjSetupObject(4) Memory fail!!\n";
+UNUSED const char sDuplicateCheckpointString[] = "Error: Multiple checkpoint no: %d !!\n";
+UNUSED const char sErrorChannelString[] = "ERROR Channel %d\n";
+UNUSED const char sReadOutErrorString[] = "RO error %d!!\n";
+UNUSED const char sPureAnguishString[] = "ARGHHHHHHHHH\n";
 extern f32 D_800E5644;
 
 /*********************************/
@@ -196,7 +201,7 @@ Object **gObjPtrList; // Not sure about the number of elements
 s32 objCount;
 s32 D_8011AE60;
 s32 D_8011AE64;
-s32 *D_8011AE68;
+Object *gObjectMemoryPool;
 s32 *D_8011AE6C;
 s32 D_8011AE70;
 Object **D_8011AE74;
@@ -220,8 +225,8 @@ s32 gAssetsLvlObjTranslationTableLength;
 s32 D_8011AEC0;
 Object **gParticlePtrList;
 s32 gParticleCount;
-unknown8011AECC *D_8011AECC; // Array of structs, unknown number of members
-s32 D_8011AED0;
+CheckpointNode *gTrackCheckpoints; // Array of structs, unknown number of members
+s32 gNumberOfCheckpoints;
 s32 D_8011AED4;
 s16 D_8011AED8;
 u32 (*D_8011AEDC)[64]; // Not sure about the number of elements
@@ -235,10 +240,10 @@ s32 gNumRacers;
 u8 gTimeTrialEnabled;
 u8 D_8011AEF5;
 u8 D_8011AEF6;
-u8 D_8011AEF7;
+s8 D_8011AEF7;
 s32 D_8011AEF8;
 s32 D_8011AEFC;
-s32 D_8011AF00;
+s8 D_8011AF00;
 Object *(*D_8011AF04)[64]; // Not sure about the number of elements
 s32 D_8011AF08[2];
 s32 D_8011AF10[2];
@@ -332,19 +337,19 @@ Object *func_8000BF44(s32 arg0) {
     return D_8011B020[arg0];
 }
 
-void func_8000BF8C(void) {
+void allocate_object_pools(void) {
     s32 i;
 
     func_8001D258(0.67f, 0.33f, 0, -0x2000, 0);
-    D_8011AE68 = (s32 *) new_sub_memory_pool(0x15800, 0x200);
-    gParticlePtrList = (Object **) allocate_from_main_pool_safe(0x320, COLOUR_TAG_BLUE);
+    gObjectMemoryPool = (Object *) new_sub_memory_pool(OBJECT_POOL_SIZE, OBJECT_SLOT_COUNT);
+    gParticlePtrList = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 200, COLOUR_TAG_BLUE);
     D_8011AE6C = (s32 *) allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
     D_8011AE74 = (Object **) allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
-    D_8011AECC = (unknown8011AECC *) allocate_from_main_pool_safe(0xE10, COLOUR_TAG_BLUE);
+    gTrackCheckpoints = (CheckpointNode *) allocate_from_main_pool_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
     D_8011AEDC = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
-    gRacers = allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
-    gRacersByPort = (Object **) allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
-    gRacersByPosition = (Object **) allocate_from_main_pool_safe(0x28, COLOUR_TAG_BLUE);
+    gRacers = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
+    gRacersByPort = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
+    gRacersByPosition = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
     D_8011AF04 = allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     D_8011ADCC = allocate_from_main_pool_safe(8, COLOUR_TAG_BLUE);
     D_8011AFF4 = (unk800179D0 *) allocate_from_main_pool_safe(0x400, COLOUR_TAG_BLUE);
@@ -353,7 +358,7 @@ void func_8000BF8C(void) {
     while (gAssetsLvlObjTranslationTable[gAssetsLvlObjTranslationTableLength] == 0) {
         gAssetsLvlObjTranslationTableLength--;
     }
-    D_8011AD58 = (s32 *)allocate_from_main_pool_safe(0x800, COLOUR_TAG_BLUE);
+    D_8011AD58 = (s32 *) allocate_from_main_pool_safe(0x800, COLOUR_TAG_BLUE);
     gAssetsObjectHeadersTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_HEADERS_TABLE);
     gAssetsObjectHeadersTableLength = 0;
     while (-1 != gAssetsObjectHeadersTable[gAssetsObjectHeadersTableLength]) {
@@ -375,7 +380,7 @@ void func_8000BF8C(void) {
     }
 
     decrypt_magic_codes(&gAssetsMiscSection[gAssetsMiscTable[65]], (gAssetsMiscTable[66] - gAssetsMiscTable[65]) * 4);
-    gObjPtrList = (Object **)allocate_from_main_pool_safe(0x800, COLOUR_TAG_BLUE);
+    gObjPtrList = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * OBJECT_SLOT_COUNT, COLOUR_TAG_BLUE);
     D_8011ADC4 = 0;
     gTimeTrialEnabled = 0;
     D_8011AEF5 = 0;
@@ -418,7 +423,7 @@ void func_8000C460(void) {
     D_8011AD60 = 0;
     gParticleCount = 0;
     D_8011AE70 = 0;
-    D_8011AED0 = 0;
+    gNumberOfCheckpoints = 0;
     D_8011AED4 = 0;
     gNumRacers = 0;
     D_8011AE78 = 0;
@@ -743,6 +748,9 @@ GLOBAL_ASM("asm/non_matchings/objects/func_8000E5EC.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8000E79C.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8000E898.s")
 
+/**
+ * Returns the object at the current offset by ID.
+*/
 Object *get_object(s32 index) {
     if (index < 0 || index >= objCount) {
         return 0;
@@ -770,12 +778,34 @@ void func_8000E9D0(Object *arg0) {
     arg0->segment.trans.unk6 |= 0x8000;
     func_800245B4(arg0->segment.unk2C.half.upper | 0xC000);
     gObjPtrList[objCount++] = arg0;
-    if (1){}
+    if (1) {}  // Fakematch
     D_8011AE64++;
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/spawn_object.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8000F648.s")
+
+void func_8000F648(Object *obj, s32 count, s32 objType) {
+    s32 i;
+    if (objType == 0) { // 3D model
+        for (i = 0; i < count; i++) {
+            if (obj->unk68[i] != NULL) {
+                func_8005FF40((ObjectModel **) (s32) obj->unk68[i]);
+            }
+        } 
+    } else if (objType == 4) {
+        for (i = 0; i < count; i++) {
+            if (obj->unk68[i] != NULL) {
+                free_texture((TextureHeader *) (s32) obj->unk68[i]);
+            }
+        } 
+    } else { // Sprite
+        for (i = 0; i < count; i++) {
+            if (obj->unk68[i] != NULL) {
+                free_sprite((Sprite *) (s32) obj->unk68[i]);
+            }
+        }
+    }
+}
 
 void func_8000F758(Object *obj) {
     s32 i;
@@ -1061,7 +1091,7 @@ s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     return 0;
 }
 
-void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 arg6, u32 arg7, f32 arg8) {
+void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 flags, u32 texOffset, f32 arg8) {
     s32 hasTexture = FALSE;
     func_80069484(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, arg8, 0.0f);
     gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -1069,7 +1099,7 @@ void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triang
     if (tex != NULL) {
         hasTexture = TRUE;
     }
-    load_and_set_texture(&gObjectCurrDisplayList, (TextureHeader* ) tex, (s32) arg6, (s32) arg7);
+    load_and_set_texture(&gObjectCurrDisplayList, (TextureHeader* ) tex, flags, texOffset);
     gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(verts), numVertices, 0);
     gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(triangles), numTriangles, hasTexture);
     func_80069A40(&gObjectCurrDisplayList);
@@ -1208,7 +1238,7 @@ void render_3d_billboard(Object *obj) {
         sp60.trans.x_position = 0.0f;
         sp60.trans.z_position = 0.0f;
         sp60.trans.y_position = 12.0f;
-        sp60.unk18 = obj->segment.unk18;
+        sp60.unk18 = obj->segment.animFrame;
         sp60.unk1A = 32;
         if (var_a0 == NULL) {
             var_a0 = (Object *) obj->unk64->weapon.target;
@@ -1546,7 +1576,48 @@ void func_80016BC4(unk8000FD34 *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80016C68.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016DE8.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001709C.s")
+
+void func_8001709C(Object *obj) {
+    ObjectTransform sp78;
+    s32 i;
+    f32 inverseScale;
+    Matrix *sp6C;
+    Matrix sp2C;
+    Object_5C *obj5C;
+    
+    obj5C = obj->unk5C;
+    obj5C->unk104 = (obj5C->unk104 + 1) & 1; 
+    sp6C = (Matrix *) &obj5C->_matrices[obj5C->unk104 << 1];
+    sp78.y_rotation = -obj->segment.trans.y_rotation;
+    sp78.x_rotation = -obj->segment.trans.x_rotation;
+    sp78.z_rotation = -obj->segment.trans.z_rotation;
+    sp78.scale = 1.0f;
+    sp78.x_position = -obj->segment.trans.x_position;
+    sp78.y_position = -obj->segment.trans.y_position;
+    sp78.z_position = -obj->segment.trans.z_position;
+    object_transform_to_matrix_2((float (*)[4]) sp6C, (ObjectTransform* ) &sp78);
+    inverseScale = 1.0 / obj->segment.trans.scale;
+    i = 0;
+    while (i < 16) {
+        ((f32 *) sp2C)[i] = 0.0f;
+        i++;
+    }
+    sp2C[0][0] = inverseScale;
+    sp2C[1][1] = inverseScale;
+    sp2C[2][2] = inverseScale;
+    sp2C[3][3] = 1.0f;
+    f32_matrix_mult(sp6C, &sp2C, sp6C);
+    sp78.y_rotation = obj->segment.trans.y_rotation;
+    sp78.x_rotation = obj->segment.trans.x_rotation;
+    sp78.z_rotation = obj->segment.trans.z_rotation;
+    sp78.scale = 1.0 / inverseScale;
+    sp78.x_position = obj->segment.trans.x_position;
+    sp78.y_position = obj->segment.trans.y_position;
+    sp78.z_position = obj->segment.trans.z_position;
+    object_transform_to_matrix(obj5C->_matrices[(obj5C->unk104 + 2) << 1], (ObjectTransform* ) &sp78);
+    obj5C->unk100 = NULL;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80017248.s")
 
 unk800179D0 *func_8001790C(u32 *arg0, u32 *arg1) {
@@ -1604,13 +1675,18 @@ s16 func_80017E88(void) {
 GLOBAL_ASM("asm/non_matchings/objects/func_80017E98.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_800185E4.s")
 
-Object *func_80018C6C(void) {
+/**
+ * Search and return Taj's overworld object.
+ * Used for drawing his minimap position.
+*/
+Object *find_taj_object(void) {
     s32 i;
     Object *current_obj;
     for (i = D_8011AE60; i < objCount; i++) {
         current_obj = gObjPtrList[i];
-        if (!(current_obj->segment.trans.unk6 & 0x8000) && (current_obj->behaviorId == 62))
+        if (!(current_obj->segment.trans.unk6 & 0x8000) && (current_obj->behaviorId == 62)) {
             return current_obj;
+        }
     }
     return NULL;
 }
@@ -1618,7 +1694,26 @@ Object *func_80018C6C(void) {
 GLOBAL_ASM("asm/non_matchings/objects/func_80018CE0.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001955C.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80019808.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001A7D8.s")
+
+s8 func_8001A7D8(unk8001A7D8_arg0 *arg0) {
+    Object_Racer *racer;
+
+    racer = (Object_Racer *) gRacersByPosition[0]->unk64;
+    if (racer->playerIndex == PLAYER_COMPUTER) {
+        return 0;
+    }
+    D_8011ADC4 = 0;
+    if (!(arg0->unk4[arg0->unk49] & 2)) {
+        if (D_8011AEF5 == 0) {
+            D_8011ADC4 = 1;
+            arg0->unk4[arg0->unk49] |= 2;
+        }
+    } else if (gIsSilverCoinRace && racer->silverCoinCount >= 8 && D_8011AEF5 == 0) {
+        D_8011ADC4 = 1;
+            arg0->unk4[arg0->unk49] |= 4;
+    }
+    return D_8011ADC4;
+}
 
 void func_8001A8D4(s32 arg0) {
     D_8011AD4E = 0x12C;
@@ -1756,9 +1851,9 @@ f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2) {
     s32 r1_ccp;
     UNUSED s32 temp_lo;
     s32 var_v1;
-    s32 r1_lcp;
+    s32 checkpointID;
 
-    if (D_8011AED0 <= 0) {
+    if (gNumberOfCheckpoints <= 0) {
         return 0.0f;
     }
     var_f2 = 0.0f;
@@ -1769,23 +1864,23 @@ f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2) {
         racer2 = temp_racer;
         var_v1 = TRUE;
     }
-    r1_lcp = racer1->checkpoint;
+    checkpointID = racer1->checkpoint;
     for (r1_ccp = racer1->courseCheckpoint; r1_ccp < racer2->courseCheckpoint; r1_ccp++) {
-        var_f2 += D_8011AECC[r1_lcp++].unk20;
-        if (r1_lcp == D_8011AED0) {
-            r1_lcp = 0;
+        var_f2 += gTrackCheckpoints[checkpointID++].distance;
+        if (checkpointID == gNumberOfCheckpoints) {
+            checkpointID = 0;
         }
     }
-    r1_lcp = racer1->checkpoint - 1;
-    if (r1_lcp < 0) {
-        r1_lcp = D_8011AED0 - 1;
+    checkpointID = racer1->checkpoint - 1;
+    if (checkpointID < 0) {
+        checkpointID = gNumberOfCheckpoints - 1;
     }
-    var_f2 += (D_8011AECC[r1_lcp].unk20 * racer1->checkpoint_distance);
-    r1_lcp = racer2->checkpoint - 1;
-    if (r1_lcp < 0) {
-        r1_lcp = D_8011AED0 - 1;
+    var_f2 += (gTrackCheckpoints[checkpointID].distance * racer1->checkpoint_distance);
+    checkpointID = racer2->checkpoint - 1;
+    if (checkpointID < 0) {
+        checkpointID = gNumberOfCheckpoints - 1;
     }
-    var_f2 -= (D_8011AECC[r1_lcp].unk20 * racer2->checkpoint_distance);
+    var_f2 -= (gTrackCheckpoints[checkpointID].distance * racer2->checkpoint_distance);
     if (var_v1) {
         var_f2 = -var_f2;
     }
@@ -1794,50 +1889,68 @@ f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2) {
 
 UNUSED f32 func_8001B974(Object_Racer* racer) {
     f32 distLeft;
-    s32 lapChkPts;
+    s32 checkpointID;
 
-    if (D_8011AED0 <= 0) {
+    if (gNumberOfCheckpoints <= 0) {
         return 0.0f;
     }
     distLeft = 0.0f;
-    for (lapChkPts = racer->checkpoint; lapChkPts < D_8011AED0; lapChkPts++) {
-        distLeft += D_8011AECC[lapChkPts].unk20;
+    for (checkpointID = racer->checkpoint; checkpointID < gNumberOfCheckpoints; checkpointID++) {
+        distLeft += gTrackCheckpoints[checkpointID].distance;
     }
-    lapChkPts = racer->checkpoint - 1;
-    if (lapChkPts < 0) {
-        lapChkPts = D_8011AED0 - 1;
+    checkpointID = racer->checkpoint - 1;
+    if (checkpointID < 0) {
+        checkpointID = gNumberOfCheckpoints - 1;
     }
-    distLeft += (D_8011AECC[lapChkPts].unk20 * racer->checkpoint_distance);
+    distLeft += (gTrackCheckpoints[checkpointID].distance * racer->checkpoint_distance);
     return distLeft;
 }
 
-// Returns a pointer to some struct that is 0x3C bytes long.
-unknown8011AECC *func_8001BA00(s32 arg0) {
-    return &D_8011AECC[arg0];
+/**
+ * Returns a pointer to a specific checkpoint.
+*/
+CheckpointNode *get_checkpoint_node(s32 checkpointID) {
+    return &gTrackCheckpoints[checkpointID];
 }
 
-unknown8011AECC *func_8001BA1C(s32 arg0, s32 arg1) {
-    unknown8011AECC *val = &D_8011AECC[arg0];
-    if (arg1 != 0 && val->unk3A != -1) {
-        val = &D_8011AECC[val->unk3A];
+/**
+ * Takes the position along the checkpoint path, and finds the next applicable node.
+ * If an alternative path is available, use that node instead.
+*/
+CheckpointNode *find_next_checkpoint_node(s32 splinePos, s32 arg1) {
+    CheckpointNode *checkpointNode = &gTrackCheckpoints[splinePos];
+    if (arg1 != 0 && checkpointNode->altRouteID != -1) {
+        checkpointNode = &gTrackCheckpoints[checkpointNode->altRouteID];
     }
-    return val;
+    return checkpointNode;
 }
 
-s32 func_8001BA64() {
-    return D_8011AED0;
+/**
+ * Returns the number of active checkpoints in the current level.
+*/
+s32 get_checkpoint_count(void) {
+    return gNumberOfCheckpoints;
 }
 
+/**
+ * Returns the group of racer objects.
+*/
 Object **get_racer_objects(s32 *numRacers) {
     *numRacers = gNumRacers;
     return *gRacers;
 }
 
+/**
+ * Returns the group of racer objects, ordered by player index.
+*/
 Object **get_racer_objects_by_port(s32 *numRacers) {
     *numRacers = gNumRacers;
     return gRacersByPort;
 }
 
+/**
+ * Returns the group of racer objects, ordered by current race position.
+*/
 Object **get_racer_objects_by_position(s32 *numRacers) {
     *numRacers = gNumRacers;
     return gRacersByPosition;
@@ -1863,9 +1976,31 @@ Object *get_racer_object_by_port(s32 index) {
     return gRacersByPort[index];
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001BB68.s")
+/**
+ * Unused function that would've iterated through all active checkpoints to render their visual nodes.
+ * The function it calls is completely stubbed out.
+*/
+UNUSED void debug_render_checkpoints(Gfx **dlist, MatrixS **mtx, Vertex **vtx) {
+    s32 i;
 
-UNUSED void func_8001BC40(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2, UNUSED s32 arg3) {
+    load_and_set_texture_no_offset(dlist, NULL, RENDER_Z_COMPARE);
+    if (gNumberOfCheckpoints > 3) {
+        for (i = 0; i < gNumberOfCheckpoints; i++) {
+            // Ground path
+            debug_render_checkpoint_node(i, 0, dlist, mtx, vtx);
+        }
+        for (i = 0; i < gNumberOfCheckpoints; i++){
+            // Air path
+            debug_render_checkpoint_node(i, 1, dlist, mtx, vtx);
+        }
+    }
+}
+
+/**
+ * Would've rendered an individual checkpoint node. On https://noclip.website, with dev objects enabled, you can see a visual representation of
+ * what these checkpoints would've looked like ingame.
+*/
+UNUSED void debug_render_checkpoint_node(UNUSED s32 checkpointID, UNUSED s32 pathID, UNUSED Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BC54.s")
@@ -2189,7 +2324,45 @@ s8 func_800214C4(void) {
     return D_8011AD22[1 - D_8011AD20[1]];
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_800214E4.s")
+s8 func_800214E4(Object *obj, s32 updateRate) {
+    s16 temp_v1;
+    s32 i;
+    Object_AnimatedObject *animObj;
+
+    animObj = (Object_AnimatedObject *) obj->unk64;
+    if (animObj->unk3A != 0) {
+        obj->segment.trans.unk6 |= 0x4000;
+    }
+    if (animObj->unk36 == -1) {
+        return animObj->unk3A;
+    }
+    if (animObj->unk36 >= 0) {
+        animObj->unk36 -= updateRate;
+    }
+    if (animObj->unk36 == -1) {
+        animObj->unk36 = -2;
+    }
+    if (animObj->unk36 <= 0) {
+        obj->segment.trans.unk6 |= 0x4000;
+        i = 0;
+        if (D_8011AE78 > 0) {
+            temp_v1 = animObj->unk28;
+            if (temp_v1 != (s32) (*D_8011AE74)->unk7C.word) {
+loop_11:
+                i++;
+                if (i < D_8011AE78) {
+                    if (temp_v1 != (s32) D_8011AE74[i]->unk7C.word) {
+                        goto loop_11;
+                    }
+                }
+            }
+        }
+        func_8001EFA4(D_8011AE74[i], (Object_Animation *) obj);
+        return 1;
+    }
+    return 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80021600.s")
 
 f32 catmull_rom_interpolation(f32 *arg0, s32 arg1, f32 arg2) {
@@ -2293,35 +2466,37 @@ s8 func_8002341C(void) {
     return D_8011AEF6;
 }
 
-#ifdef NON_EQUIVALENT
-
-//bad regalloc
-//finds furthest object (with some additional conditions)
 Object *func_8002342C(f32 x, f32 z) {
-    Object *retval = NULL;
+    Object *tempObj;
+    Object *bestObj;
+    f32 diffX;
+    f32 diffZ;
+    f32 distance;
+    f32 bestDist;
     s32 i;
-    Object *currObj = NULL;
-    f32 dist;
-    f32 max = 0.0f;
 
-    for (i = 0; i < objCount; i++) {
-        currObj = gObjPtrList[i];
-        if ((currObj->segment.trans.unk6 & 0x8000) == 0 && currObj->behaviorId == 87) {
-            x = currObj->segment.trans.x_position - x;
-            z = currObj->segment.trans.z_position - z;
-            dist = sqrtf(x * x + z * z);
-
-            if (max < dist) {
-                max = dist;
-                retval = currObj;
+    bestDist = 0.0f;
+    i = 0;
+    bestObj = NULL;
+    if (objCount > 0) {
+        do {
+            tempObj = gObjPtrList[i];
+            if (!(tempObj->segment.trans.unk6 & 0x8000) && tempObj->behaviorId == BHV_UNK_57) {
+                diffX = tempObj->segment.trans.x_position - x;
+                diffZ = tempObj->segment.trans.z_position - z;
+                tempObj = gObjPtrList[i]; // fakematch
+                distance = sqrtf((diffX * diffX) + (diffZ * diffZ));
+                if (bestDist < distance) {
+                    bestDist = distance;
+                    bestObj = tempObj;
+                }
             }
-        }
+            i += 1;
+        } while (i < objCount);
     }
-    return retval;
+    return bestObj;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/func_8002342C.s")
-#endif
+
 
 s32 func_80023568(void) {
     if (D_8011AD3C != 0) {

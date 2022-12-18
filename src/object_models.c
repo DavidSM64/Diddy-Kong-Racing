@@ -102,7 +102,7 @@ void func_8005FF40(ObjectModel **modelPtr) {
             D_8011D628[D_8011D634] = modelIndex;
             D_8011D634++;
             D_8011D624[modelIndex].unk0 = -1;
-            D_8011D624[modelIndex].model = (ObjectModel *)-1;
+            D_8011D624[modelIndex].model = (ObjectModel *) -1;
             free_from_memory_pool(modelPtr);
         }
     }
@@ -196,11 +196,11 @@ void func_80061C0C(Object *obj) {
         } else {
             var_v1 = 0;
         }
-        if (obj->segment.unk18 >> 4 < 0) {
-            obj->segment.unk18 = var_v1;
+        if (obj->segment.animFrame >> 4 < 0) {
+            obj->segment.animFrame = var_v1;
         }
-        if (var_v1 < obj->segment.unk18 >> 4) {
-            obj->segment.unk18 = 0;
+        if (var_v1 < obj->segment.animFrame >> 4) {
+            obj->segment.animFrame = 0;
             temp_a1->unk10 = -1;
         }
     }

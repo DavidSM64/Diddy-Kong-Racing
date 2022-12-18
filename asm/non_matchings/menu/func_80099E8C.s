@@ -20,7 +20,7 @@ glabel func_80099E8C
 /* 09AAC0 80099EC0 AFB1003C */  sw    $s1, 0x3c($sp)
 /* 09AAC4 80099EC4 AFB00038 */  sw    $s0, 0x38($sp)
 /* 09AAC8 80099EC8 24A563A8 */  addiu $a1, %lo(sMenuCurrHudMat) # addiu $a1, $a1, 0x63a8
-/* 09AACC 80099ECC 0C019FCB */  jal   func_80067F2C
+/* 09AACC 80099ECC 0C019FCB */  jal   set_ortho_matrix_view
 /* 09AAD0 80099ED0 02E02025 */   move  $a0, $s7
 /* 09AAD4 80099ED4 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
 /* 09AAD8 80099ED8 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)

@@ -109,7 +109,7 @@ glabel func_8009CA60
 /* 09D804 8009CC04 AFAA0010 */  sw    $t2, 0x10($sp)
 /* 09D808 8009CC08 02002025 */  move  $a0, $s0
 /* 09D80C 8009CC0C AFB80014 */  sw    $t8, 0x14($sp)
-/* 09D810 8009CC10 0C01A2FD */  jal   func_80068BF4
+/* 09D810 8009CC10 0C01A2FD */  jal   render_orthi_triangle_image
 /* 09D814 8009CC14 032D3821 */   addu  $a3, $t9, $t5
 /* 09D818 8009CC18 8E020000 */  lw    $v0, ($s0)
 /* 09D81C 8009CC1C 3C0FFA00 */  lui   $t7, 0xfa00

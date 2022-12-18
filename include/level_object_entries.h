@@ -120,6 +120,21 @@ typedef struct LevelObjectEntry_Checkpoint {
     /* 0x08 */ u8 unk8;
     /* 0x09 */ u8 unk9;
     /* 0x0A */ u8 unkA;
+    /* 0x0B */ s8 unkB;
+    /* 0x0C */ s8 unkC;
+    /* 0x0D */ s8 unkD;
+    /* 0x0E */ s8 unkE;
+    /* 0x0F */ s8 unkF;
+    /* 0x10 */ s8 unk10;
+    /* 0x11 */ s8 unk11;
+    /* 0x12 */ s8 unk12;
+    /* 0x13 */ s8 unk13;
+    /* 0x14 */ s8 unk14;
+    /* 0x15 */ s8 unk15;
+    /* 0x16 */ s8 unk16;
+    /* 0x17 */ s8 unk17;
+    /* 0x18 */ s8 unk18;
+    /* 0x19 */ u8 unk19;
 } LevelObjectEntry_Checkpoint;
 
 typedef struct LevelObjectEntry_Door {

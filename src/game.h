@@ -166,9 +166,9 @@ extern u8 gProfilerOn;
 void crash_screen_init(void);
 extern s32 gAntiAliasing;
 
-extern s8  D_800DD314;
+extern s8  gCurrentDefaultVehicle;
 extern u8  D_800DD318;
-extern s32 D_800DD31C;
+extern s32 gIsInRace;
 extern s32 gFunc80068158Checksum;
 extern s32 gFunc80068158Length;
 extern s16 D_800DD328;
@@ -219,7 +219,7 @@ s8 func_8006B14C(s32 mapId);
 s8 func_8006B190(s32 mapId);
 s32 get_hub_area_id(s32 worldId);
 void get_number_of_levels_and_worlds(s32 *outLevelCount, s32 *outWorldCount);
-s32 func_8006B240(void);
+s32 check_if_in_race(void);
 void func_8006BD10(f32 arg0);
 s32 func_8006BD88(void);
 u8 get_current_level_race_type(void);
@@ -263,7 +263,7 @@ void func_8006E994(Settings *settings);
 void func_8006EA58(void);
 Settings *get_settings(void);
 s8 is_game_paused(void);
-s8 func_8006EAB0(void);
+s8 is_postrace_viewport_active(void);
 s32 is_reset_pressed(void);
 s32 func_8006EB14(void);
 void func_8006EB24(void);
@@ -292,12 +292,12 @@ void pre_intro_loop(void);
 s32 is_controller_missing(void);
 s32 check_imem_validity(void);
 void ingame_logic_loop(s32 updateRate);
+void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId);
 
 //Non Matching
 void func_8006ECFC(s32 numberOfPlayers);
 void func_8006DCF8(s32 arg0);
 void func_8006EFDC(void);
-void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId);
 void func_8006A6B0(void);
 void func_80010994(s32 updateRate);
 

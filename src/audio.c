@@ -136,7 +136,7 @@ void audio_init(OSSched *sc) {
     D_80115D0C = (u32 *) allocate_from_main_pool_safe((ALSeqFile_80115CF8->seqCount) * 4, COLOUR_TAG_CYAN);
 
     for (iCnt = 0; iCnt < ALSeqFile_80115CF8->seqCount; iCnt++) {
-        (u32 *) ((u32) ALSeqFile_80115CF8 + 8 + iCnt * 8);
+        pad = (u32) (ALSeqFile_80115CF8 + 8 + iCnt * 8); // Fakematch
         D_80115D0C[iCnt] = ALSeqFile_80115CF8->seqArray[iCnt].len;
         if (D_80115D0C[iCnt] & 1) {
             D_80115D0C[iCnt]++;

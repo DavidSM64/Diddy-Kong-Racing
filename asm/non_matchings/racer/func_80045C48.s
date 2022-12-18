@@ -19,7 +19,7 @@ glabel func_80045C48
 /* 04688C 80045C8C AFA400E8 */  sw    $a0, 0xe8($sp)
 /* 046890 80045C90 AFA600F0 */  sw    $a2, 0xf0($sp)
 /* 046894 80045C94 AFA000C4 */  sw    $zero, 0xc4($sp)
-/* 046898 80045C98 0C006E99 */  jal   func_8001BA64
+/* 046898 80045C98 0C006E99 */  jal   get_checkpoint_count
 /* 04689C 80045C9C AC20D538 */   sw    $zero, %lo(gCurrentStickY)($at)
 /* 0468A0 80045CA0 14400005 */  bnez  $v0, .L80045CB8
 /* 0468A4 80045CA4 00409025 */   move  $s2, $v0
@@ -69,7 +69,7 @@ glabel func_80045C48
 /* 046940 80045D40 AFA70034 */  sw    $a3, 0x34($sp)
 /* 046944 80045D44 AFA60038 */  sw    $a2, 0x38($sp)
 /* 046948 80045D48 AFA30030 */  sw    $v1, 0x30($sp)
-/* 04694C 80045D4C 0C006E87 */  jal   func_8001BA1C
+/* 04694C 80045D4C 0C006E87 */  jal   find_next_checkpoint_node
 /* 046950 80045D50 02002025 */   move  $a0, $s0
 /* 046954 80045D54 8FA60038 */  lw    $a2, 0x38($sp)
 /* 046958 80045D58 C4520010 */  lwc1  $f18, 0x10($v0)
@@ -363,7 +363,7 @@ glabel func_80045C48
 /* 046D90 80046190 AFA70034 */  sw    $a3, 0x34($sp)
 /* 046D94 80046194 AFA60038 */  sw    $a2, 0x38($sp)
 /* 046D98 80046198 AFA30030 */  sw    $v1, 0x30($sp)
-/* 046D9C 8004619C 0C006E87 */  jal   func_8001BA1C
+/* 046D9C 8004619C 0C006E87 */  jal   find_next_checkpoint_node
 /* 046DA0 800461A0 02002025 */   move  $a0, $s0
 /* 046DA4 800461A4 862901BA */  lh    $t1, 0x1ba($s1)
 /* 046DA8 800461A8 C448001C */  lwc1  $f8, 0x1c($v0)

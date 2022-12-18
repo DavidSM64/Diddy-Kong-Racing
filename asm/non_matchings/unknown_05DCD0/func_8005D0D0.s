@@ -181,7 +181,7 @@ glabel func_8005D0D0
 .L8005D358:
 /* 05DF58 8005D358 82040192 */  lb    $a0, 0x192($s0)
 /* 05DF5C 8005D35C 920501C8 */  lbu   $a1, 0x1c8($s0)
-/* 05DF60 8005D360 0C006E87 */  jal   func_8001BA1C
+/* 05DF60 8005D360 0C006E87 */  jal   find_next_checkpoint_node
 /* 05DF64 8005D364 AFA0003C */   sw    $zero, 0x3c($sp)
 /* 05DF68 8005D368 820E01CA */  lb    $t6, 0x1ca($s0)
 /* 05DF6C 8005D36C 8FA3003C */  lw    $v1, 0x3c($sp)

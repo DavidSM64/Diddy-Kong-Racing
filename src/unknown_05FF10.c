@@ -57,7 +57,7 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     func_8005CA78(D_800DCE80);
     racer->unk1EC = 0;
     sp3E = obj->segment.unk3B;
-    sp3C = obj->segment.unk18;
+    sp3C = obj->segment.animFrame;
     sp3A = racer->unk16A;
     if ((racer->velocity < 0.3f)&& (racer->velocity > -0.3f)) {
         *buttonsPressed = 0;
@@ -91,7 +91,7 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     obj->unk74 = 0;
     racer->unk16A = sp3A;
     obj->segment.unk3B = sp3E;
-    obj->segment.unk18 = sp3C;
+    obj->segment.animFrame = sp3C;
     if ((racer->attackType != ATTACK_NONE) && (obj->segment.unk3B != 1)) {
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, NULL);
@@ -130,7 +130,7 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->unkC = 0;
     }
     obj->unk74 = 0;
-    obj->segment.unk18 = racer->unkC;
+    obj->segment.animFrame = racer->unkC;
     func_800AF714(obj, updateRate);
     func_8005D048(obj, racer, 40);
     if (*startTimer != 100) {
@@ -151,7 +151,7 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     tempObj = get_racer_object(0);
     obj64 = tempObj->unk64;
-    if ((obj == tempObj->unk4C->unk0) && (tempObj->unk4C->unk14 & 8) && (obj->segment.unk3B == 1)) {
+    if ((obj == tempObj->interactObj->obj) && (tempObj->interactObj->unk14 & 8) && (obj->segment.unk3B == 1)) {
         obj64->racer.attackType = ATTACK_SQUISHED;
     }
     if ((obj64->racer.raceFinished != FALSE) && (D_8011D610 == 0)) {

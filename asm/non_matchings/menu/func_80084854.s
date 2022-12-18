@@ -79,7 +79,7 @@ glabel func_80084854
 /* 085574 80084974 000FC080 */  sll   $t8, $t7, 2
 /* 085578 80084978 0338C821 */  addu  $t9, $t9, $t8
 /* 08557C 8008497C 8F3969D0 */  lw    $t9, %lo(gAudioOutputStrings)($t9)
-/* 085580 80084980 0C019FCB */  jal   func_80067F2C
+/* 085580 80084980 0C019FCB */  jal   set_ortho_matrix_view
 /* 085584 80084984 AC39FA48 */   sw    $t9, %lo(gAudioMenuStrings+12)($at)
 /* 085588 80084988 3C088000 */  lui   $t0, %hi(osTvType) # $t0, 0x8000
 /* 08558C 8008498C 8D080300 */  lw    $t0, %lo(osTvType)($t0)
