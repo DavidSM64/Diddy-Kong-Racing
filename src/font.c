@@ -6,6 +6,7 @@
 #include "textures_sprites.h"
 #include "camera.h"
 #include "game.h"
+#include "main.h"
 
 /************ .data ************/
 

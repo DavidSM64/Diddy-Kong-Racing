@@ -5,6 +5,7 @@
 #include "memory.h"
 #include "video.h"
 #include "game.h"
+#include "main.h"
 
 /************ .bss ************/
 

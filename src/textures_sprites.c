@@ -7,6 +7,7 @@
 #include "memory.h"
 #include "math_util.h"
 #include "game.h"
+#include "main.h"
 
 /************ .data ************/
 

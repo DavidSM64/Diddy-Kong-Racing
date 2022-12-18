@@ -9,6 +9,7 @@
 #include "textures_sprites.h"
 #include "objects.h"
 #include "game.h"
+#include "main.h"
 
 /************ .data ************/
 

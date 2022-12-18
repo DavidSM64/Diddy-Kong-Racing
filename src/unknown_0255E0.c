@@ -21,6 +21,7 @@
 #include "lib/src/libc/rmonPrintf.h"
 #include "objects.h"
 #include "math_util.h"
+#include "main.h"
 
 // Maximum size for a level model is 522.5 KiB
 #define LEVEL_MODEL_MAX_SIZE 0x82A00

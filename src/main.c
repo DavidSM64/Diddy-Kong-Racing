@@ -110,6 +110,7 @@ void find_expansion_pak(void) {
  * It kicks things off by initialising thread1, which serves as the top level
 */
 void main(void) {
+    gFreeMem = osGetMemSize();
     osInitialize();
     osCreateThread(&gThread1, 1, &thread1_main, 0, &gThread1StackPointer, OS_PRIORITY_IDLE);
     osStartThread(&gThread1);
@@ -205,6 +206,7 @@ u32 sTimerTemp = 0;
 u8 sProfilerPage = 0;
 u32 sPrevLoadTime = 0;
 u8 sPrevLoadTimer = 0;
+u32 gFreeMem = 0;
 u8 sPrintOrder[PP_RSP_GFX];
 u8 sObjPrintOrder[NUM_OBJECT_PRINTS];
 struct PuppyPrintTimers gPuppyTimers;
@@ -306,6 +308,11 @@ void render_profiler(void) {
     s32 totalGfx;
     s32 i;
     s32 y = 8;
+    u32 memsize = osGetMemSize();
+
+#ifdef FORCE_4MB_MEMORY
+    memsize = 0x400000;
+#endif
 
     if (get_buttons_pressed_from_player(PLAYER_ONE) & R_JPAD) {
         sProfilerPage++;
@@ -338,7 +345,7 @@ void render_profiler(void) {
             gDPSetCombineMode(gCurrDisplayList++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
             gDPSetPrimColor(gCurrDisplayList++, 0, 0, 0, 0, 0, 160);
             gDPFillRectangle(gCurrDisplayList++, TEXT_OFFSET - 2, 8, 112, printY + 2);
-            gDPFillRectangle(gCurrDisplayList++, ((gScreenWidth/2) / 3) - 38, gScreenHeight - 30, ((gScreenWidth/2) / 3) + 58, gScreenHeight - 6);
+            gDPFillRectangle(gCurrDisplayList++, ((gScreenWidth/2) / 3) - 42, gScreenHeight - 30, ((gScreenWidth/2) / 3) + 62, gScreenHeight - 6);
             gDPPipeSync(gCurrDisplayList++);
             set_text_background_colour(0, 0, 0, 0);
             set_kerning(FALSE);
@@ -358,6 +365,8 @@ void render_profiler(void) {
                 puppyprintf(textBytes,  "(%d%%)", gPuppyTimers.rdpTime / 333);
                 draw_text(&gCurrDisplayList, 112 - 4, 40, textBytes, ALIGN_TOP_RIGHT);
             }
+            //puppyprintf(textBytes,  "RAM: %06X/%06X", gFreeMem, osGetMemSize());
+            //draw_text(&gCurrDisplayList, ((gScreenWidth/2) / 3) + 10, gScreenHeight - 38, textBytes, ALIGN_TOP_CENTER);
             puppyprintf(textBytes,  "Tri: %d Vtx: %d", sTriCount, sVtxCount);
             draw_text(&gCurrDisplayList, ((gScreenWidth/2) / 3) + 10, gScreenHeight - 28, textBytes, ALIGN_TOP_CENTER);
             puppyprintf(textBytes, "Gfx: %d / %d", ((u32)gCurrDisplayList - (u32)gDisplayLists[gSPTaskNum]) / sizeof(Gfx), gCurrNumF3dCmdsPerPlayer);

@@ -29,6 +29,7 @@
 #include "game_ui.h"
 #include "object_models.h"
 #include "unknown_003260.h"
+#include "main.h"
 
 
 #define MAX_NUMBER_OF_GHOST_NODES 360

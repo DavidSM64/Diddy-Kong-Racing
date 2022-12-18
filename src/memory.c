@@ -6,6 +6,7 @@
 #include "thread0_epc.h"
 #include "controller.h"
 #include "video.h"
+#include "main.h"
 
 /************ .rodata ************/
 

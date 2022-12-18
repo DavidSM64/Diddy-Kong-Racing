@@ -10,6 +10,7 @@
 #include "lib/src/libc/rmonPrintf.h"
 #include "math_util.h"
 #include "weather.h"
+#include "main.h"
 
 extern u32 osTvType;
 

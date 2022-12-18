@@ -12,6 +12,7 @@
 #include "unknown_008C40.h"
 #include "textures_sprites.h"
 #include "math_util.h"
+#include "main.h"
 
 /************ .data ************/
 

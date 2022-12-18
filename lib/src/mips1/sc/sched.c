@@ -8,7 +8,7 @@
 #include "f3ddkr.h"
 #include "libultra_internal.h"
 #include "viint.h"
-#include "src/game.h"
+#include "src/main.h"
 
 /*
  * private typedefs and defines

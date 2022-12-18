@@ -294,19 +294,19 @@ ALL_ASSETS_BUILT += $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UC
 
 $(BUILD_DIR)/lib/%.o: OPT_FLAGS := -O2 -Xfullwarn
 $(BUILD_DIR)/lib/src/al/%.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/os/%.o: OPT_FLAGS := -O1 -Xfullwarn
+$(BUILD_DIR)/lib/src/os/%.o: OPT_FLAGS := -O2 -Xfullwarn
 $(BUILD_DIR)/lib/src/os/osViMgr.o: OPT_FLAGS := -O2 -Xfullwarn
 $(BUILD_DIR)/lib/src/os/osCreatePiManager.o: OPT_FLAGS := -O2 -Xfullwarn
 $(BUILD_DIR)/lib/src/os/osMotor.o: OPT_FLAGS := -O2 -Xfullwarn
 $(BUILD_DIR)/lib/src/libc/xprintf.o : OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/al/env.o: OPT_FLAGS := -g
+$(BUILD_DIR)/lib/src/al/env.o: OPT_FLAGS := -O2 -Xfullwarn
 #$(BUILD_DIR)/lib/src/libc/llcvt.o: OPT_FLAGS :=
 #$(BUILD_DIR)/lib/src/libc/llcvt.o: MIPSISET := -mips3 32
 
 $(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
 $(BUILD_DIR)/lib/src/mips1/%.o: MIPSISET := -mips1
-$(BUILD_DIR)/lib/src/os/osMotor.o: MIPSISET := -mips1
-$(BUILD_DIR)/lib/src/al/env.o: MIPSISET := -mips1
+$(BUILD_DIR)/lib/src/os/osMotor.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/al/env.o: MIPSISET := -mips2
 
 ####################### MATH UTIL #########################
 
@@ -332,6 +332,24 @@ $(BUILD_DIR)/src/audio.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/audio.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/memory.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/memory.o: OPT_FLAGS := -O3
+
+
+$(BUILD_DIR)/lib/src/mips1/sc/sched.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/mips1/sc/sched.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/lib/src/mips1/os/osCreatePiManager.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/mips1/os/osCreatePiManager.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/lib/src/mips1/al/alAuxBusPull.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/mips1/al/alFxNew.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/mips1/al/alSynAllocFX.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/mips1/al/alSynSetPan.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/mips1/al/alSynStartVoiceParams.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/mips1/al/reverb.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/mips1/al/seqplayer.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/mips1/al/synthesizer.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/mips1/al/unknown_0646F0.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/mips1/al/unknown_0647A0.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/mips1/al/unknown_064690.o: MIPSISET := -mips2
+$(BUILD_DIR)/lib/src/mips1/al/unknown_064800.o: MIPSISET := -mips2
 
 ######################## Targets #############################
 
