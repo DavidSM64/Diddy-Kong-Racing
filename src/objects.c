@@ -25,6 +25,7 @@
 #include "object_models.h"
 #include "unknown_032760.h"
 #include "game_ui.h"
+#include "unknown_008C40.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800

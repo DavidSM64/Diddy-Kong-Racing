@@ -184,7 +184,7 @@ s32 gNMIMesgBuf[8];
 void func_8006A6B0(void) {
     s32 i;
     s32 temp;
-    s32 pad;
+    UNUSED s32 pad;
     s32 checksumCount;
     u8 *header;
     s32 j;
@@ -261,8 +261,50 @@ s16 func_8006ABB4(s32 arg0) {
     return D_8012117C[arg0].unk4;
 }
 
-// Unused?
-GLOBAL_ASM("asm/non_matchings/game/func_8006AC00.s")
+s32 func_8006AC00(s32 arg0, s8 arg1, s8 arg2) {
+    if (arg0 < 0) {
+        arg0 = 0;
+    } else {
+        arg0++;
+    }
+    if (arg1 != 0x40) {
+        if (arg2 == -1) {
+            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
+                if (arg1 == D_8012117C[arg0].unk1) {
+                    return arg0;
+                }
+            }
+        } else if (arg1 == -1) {
+            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
+                if (arg2 == D_8012117C[arg0].unk0) {
+                    return arg0;
+                }
+            }
+        } else {
+            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
+                if ((arg1 == D_8012117C[arg0].unk1) && (arg2 == D_8012117C[arg0].unk0)) {
+                    return arg0;
+                }
+            }
+        }
+    } else {
+        if (arg2 == -1) {
+            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
+                if (D_8012117C[arg0].unk1 & 0x40) {
+                    return arg0;
+                }
+            }
+        } else {
+            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
+                if ((D_8012117C[arg0].unk1 & 0x40) && (arg2 == D_8012117C[arg0].unk0)) {
+                    return arg0;
+                }
+            }
+        }
+    }
+    return -1;
+}
+
 
 // Unused?
 GLOBAL_ASM("asm/non_matchings/game/func_8006AE2C.s")

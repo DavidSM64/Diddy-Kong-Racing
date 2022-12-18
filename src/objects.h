@@ -508,5 +508,17 @@ Object *func_8001BDD4(Object *obj, s32 *cameraID);
 void func_800135B8(Object *);
 void func_8000CC7C(Vehicle, u32, s32);
 void func_8000B020(s32, s32);
+void func_8000BADC(s32);
+void func_80022948(void);
+void func_80017E98(void);
+void func_8001BC54(void);
+void func_8001E93C(void);
+void func_80019808(s32 updateRate);
+void func_8001A8F4(s32 updateRate);
+void func_80014090(Object*, s32, ObjectHeader*);
+void func_80008438(Object**, s32, s32);
+void func_8001E6EC(s8);
+void func_8001E89C(void);
+void func_800155B8(void);
 
 #endif
