@@ -260,7 +260,7 @@ void func_80066230(Gfx **dlist, MatrixS **mats) {
 
     set_active_viewports_and_object_stack_cap(0);
     set_object_stack_pos(0);
-    someStruct = func_80069D20();
+    someStruct = get_active_camera_segment();
     sp2A = someStruct->trans.y_rotation;
     sp28 = someStruct->trans.x_rotation;
     sp26 = someStruct->trans.z_rotation;
@@ -890,7 +890,11 @@ void set_ortho_matrix_height(f32 value) {
     gOrthoMatrix[1][1] = value;
 }
 
-void func_80067F2C(Gfx **dlist, MatrixS **mtx) {
+/**
+ * Sets the current matrix to represent an orthogonal view.
+ * Used for drawing triangles on screen as HUD.
+*/
+void set_ortho_matrix_view(Gfx **dlist, MatrixS **mtx) {
     u32 widthAndHeight;
     s32 width, height;
     s32 i, j;
@@ -1086,7 +1090,10 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
     return result;
 }
 
-void func_80068BF4(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, unk80068BF4 *arg4, s32 flags) {
+/**
+ * Sets transform and scale matrices to set position and size, loads the texture, sets the rendermodes, then draws the result onscreen.
+*/
+void render_orthi_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, unk80068BF4 *arg4, s32 flags) {
     UNUSED s32 pad;
     f32 scale;
     s32 index;
@@ -1254,7 +1261,10 @@ ObjectSegment *func_80069CFC(void) {
     return &gActiveCameraStack[gActiveCameraID];
 }
 
-ObjectSegment *func_80069D20(void) {
+/**
+ * Returns the active segment data of the active camera.
+*/
+ObjectSegment *get_active_camera_segment(void) {
     if (gCutsceneCameraActive) {
         return &gActiveCameraStack[gActiveCameraID + 4];
     }

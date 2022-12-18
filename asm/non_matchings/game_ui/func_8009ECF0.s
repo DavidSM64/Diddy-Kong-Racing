@@ -11,9 +11,9 @@ glabel func_8009ECF0
 /* 09F914 8009ED14 AC620000 */  sw    $v0, ($v1)
 /* 09F918 8009ED18 0C01994B */  jal   set_active_viewports_and_object_stack_cap
 /* 09F91C 8009ED1C 00402025 */   move  $a0, $v0
-/* 09F920 8009ED20 3C018012 */  lui   $at, %hi(D_80126D37) # $at, 0x8012
+/* 09F920 8009ED20 3C018012 */  lui   $at, %hi(gNumActivePlayers) # $at, 0x8012
 /* 09F924 8009ED24 0C01BAA4 */  jal   get_settings
-/* 09F928 8009ED28 A0226D37 */   sb    $v0, %lo(D_80126D37)($at)
+/* 09F928 8009ED28 A0226D37 */   sb    $v0, %lo(gNumActivePlayers)($at)
 /* 09F92C 8009ED2C 3C018012 */  lui   $at, %hi(D_80127184) # $at, 0x8012
 /* 09F930 8009ED30 0C003877 */  jal   check_if_silver_coin_race
 /* 09F934 8009ED34 AC227184 */   sw    $v0, %lo(D_80127184)($at)
@@ -123,9 +123,9 @@ glabel func_8009ECF0
 /* 09FAC4 8009EEC4 3C078012 */  lui   $a3, %hi(D_80126CF4) # $a3, 0x8012
 /* 09FAC8 8009EEC8 24E76CF4 */  addiu $a3, %lo(D_80126CF4) # addiu $a3, $a3, 0x6cf4
 /* 09FACC 8009EECC 8CEA0000 */  lw    $t2, ($a3)
-/* 09FAD0 8009EED0 3C038012 */  lui   $v1, %hi(D_80126D37) # $v1, 0x8012
+/* 09FAD0 8009EED0 3C038012 */  lui   $v1, %hi(gNumActivePlayers) # $v1, 0x8012
 /* 09FAD4 8009EED4 AD420044 */  sw    $v0, 0x44($t2)
-/* 09FAD8 8009EED8 90636D37 */  lbu   $v1, %lo(D_80126D37)($v1)
+/* 09FAD8 8009EED8 90636D37 */  lbu   $v1, %lo(gNumActivePlayers)($v1)
 /* 09FADC 8009EEDC 24010003 */  li    $at, 3
 /* 09FAE0 8009EEE0 10610003 */  beq   $v1, $at, .L8009EEF0
 /* 09FAE4 8009EEE4 3405FFFF */   li    $a1, 65535

@@ -312,7 +312,7 @@ s32 swap_framebuffer_when_ready(s32 mesg) {
     return tempUpdateRate;
 }
 
-void func_8007AB24(s8 arg0) {
+void func_8007AB24(u8 arg0) {
     D_801262E4 = arg0;
 }
 

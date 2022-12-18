@@ -296,7 +296,7 @@ void play_time_trial_end_message(s16 *playerID);
 void func_800A7484(u16 arg0, f32 arg1, s32 arg2);
 void func_800A74EC(u16 arg0, s32 arg1);
 void func_800A83B4(LevelModel *model);
-s8 func_800A8458(void);
+s8 get_multiplayer_hud_setting(void);
 void func_800AB194(s32 arg0);
 void func_800AB1AC(s32 arg0);
 void func_800AB1C8(void);
@@ -333,7 +333,7 @@ void func_800095E8(s32, f32, f32, f32, s32, s32, f32, s32*);
 void func_800A0BD4(s32);
 void func_800A19A4(Object_Racer*, s32 updateRate);
 void func_800A1E48(s32, s32);
-void func_800A45F0(Object_Racer*);
+void render_treasure_hud(Object_Racer*);
 void func_800AA3EC(f32, f32, f32, f32, f32);
 
 #endif

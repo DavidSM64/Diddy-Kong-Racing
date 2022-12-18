@@ -397,7 +397,7 @@ void func_800142B8(void);
 u32 func_800179D0(void);
 void func_80017E74(s32 arg0);
 s16 func_80017E88(void);
-Object *func_80018C6C(void);
+Object *find_taj_object(void);
 void func_8001A8D4(s32 arg0);
 s16 func_8001AE44();
 s32 func_8001AE54();

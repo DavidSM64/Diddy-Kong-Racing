@@ -143,6 +143,7 @@ typedef struct Settings4C {
 #define TAJ_FLAGS_HOVER_CHAL_COMPLETED 0x10
 #define TAJ_FLAGS_PLANE_CHAL_COMPLETED 0x20
 
+#define CUTSCENE_NONE                      0x0
 #define CUTSCENE_LIGHTHOUSE_ROCKET         0x1
 #define CUTSCENE_TT_HELP                   0x2
 #define CUTSCENE_ADVENTURE_TWO             0x4

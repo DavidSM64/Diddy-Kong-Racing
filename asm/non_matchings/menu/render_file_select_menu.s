@@ -24,7 +24,7 @@ glabel render_file_select_menu
 /* 08D9C4 8008CDC4 26F763A0 */  addiu $s7, %lo(sMenuCurrDisplayList) # addiu $s7, $s7, 0x63a0
 /* 08D9C8 8008CDC8 3C058012 */  lui   $a1, %hi(sMenuCurrHudMat) # $a1, 0x8012
 /* 08D9CC 8008CDCC 24A563A8 */  addiu $a1, %lo(sMenuCurrHudMat) # addiu $a1, $a1, 0x63a8
-/* 08D9D0 8008CDD0 0C019FCB */  jal   func_80067F2C
+/* 08D9D0 8008CDD0 0C019FCB */  jal   set_ortho_matrix_view
 /* 08D9D4 8008CDD4 02E02025 */   move  $a0, $s7
 /* 08D9D8 8008CDD8 3C118012 */  lui   $s1, %hi(gSavefileInfo) # $s1, 0x8012
 /* 08D9DC 8008CDDC 3C10800E */  lui   $s0, %hi(gFileSelectButtons) # $s0, 0x800e

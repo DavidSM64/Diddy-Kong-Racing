@@ -1661,13 +1661,18 @@ s16 func_80017E88(void) {
 GLOBAL_ASM("asm/non_matchings/objects/func_80017E98.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_800185E4.s")
 
-Object *func_80018C6C(void) {
+/**
+ * Search and return Taj's overworld object.
+ * Used for drawing his minimap position.
+*/
+Object *find_taj_object(void) {
     s32 i;
     Object *current_obj;
     for (i = D_8011AE60; i < objCount; i++) {
         current_obj = gObjPtrList[i];
-        if (!(current_obj->segment.trans.unk6 & 0x8000) && (current_obj->behaviorId == 62))
+        if (!(current_obj->segment.trans.unk6 & 0x8000) && (current_obj->behaviorId == 62)) {
             return current_obj;
+        }
     }
     return NULL;
 }

@@ -342,7 +342,7 @@ void render_fade_transition(Gfx **dlist, MatrixS **mats, Vertex **verts) {
         } else {
             set_ortho_matrix_height(1.2f);
         }
-        func_80067F2C(dlist, mats);
+        set_ortho_matrix_view(dlist, mats);
         set_ortho_matrix_height(1.0f);
         switch (gCurFaceTransition) {
             case FADE_FULLSCREEN:

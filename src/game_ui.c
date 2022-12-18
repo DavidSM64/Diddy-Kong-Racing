@@ -18,6 +18,7 @@
 #include "unknown_0255E0.h"
 #include "unknown_078050.h"
 #include "unknown_003260.h"
+#include "printf.h"
 
 extern u32 osTvType;
 
@@ -136,7 +137,7 @@ u8 D_800E2794[4][4] = {
     {2, 2, 2, 2}
 };
 
-s8 D_800E27A4[4] = {
+s8 gHudMultiplayerUIToggle[4] = {
     1, 1, 1, 1
 };
 
@@ -150,7 +151,7 @@ s8 D_800E27AC[12] = {
 
 u8 D_800E27B8 = 0;
 
-ByteColour D_800E27BC[40] = {
+ByteColour gHudMinimapColours[40] = {
  { 255, 160, 0 }, 
  { 255, 255, 0 }, 
  { 0, 128, 255 }, 
@@ -249,7 +250,7 @@ f32 D_80126D30;
 u8 D_80126D34;
 u8 D_80126D35;
 u8 gHideRaceTimer;
-u8 D_80126D37;
+u8 gNumActivePlayers;
 u8 gWrongWayNagPrefix;
 s32 D_80126D3C;
 s32 gHUDVoiceSoundMask;
@@ -262,7 +263,7 @@ u8 gMinimapGreen;
 u8 gMinimapBlue;
 s32 D_80126D58;
 s32 D_80126D5C;
-LevelHeader *D_80126D60;
+LevelHeader *gHudLevelHeader;
 u8 D_80126D64;
 u8 D_80126D65;
 u8 D_80126D66;
@@ -312,13 +313,13 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
     if (D_8012718A) {
         arg3 = get_racer_object_by_port(1 - D_80126D08);
     }
-    D_80126D60 = get_current_level_header();
+    gHudLevelHeader = get_current_level_header();
     if (arg3 == NULL) {
         if (func_8001E440() == 10) {
             arg3 = get_racer_object_by_port(0);
         }
     }
-    if (arg3 != NULL && !(D_80126D60->unkBC & 2)) {
+    if (arg3 != NULL && !(gHudLevelHeader->unkBC & 2)) {
         if (get_render_context() != DRAW_MENU) {
             gHUDCurrDisplayList = *dList;
             gHUDCurrMatrix = *mtx;
@@ -345,7 +346,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 D_80126CDC = D_80126CE0[D_80126D08];
                 if (func_8001E440() != 10) {
                     if (gHUDNumPlayers == ONE_PLAYER) {
-                        if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->racer.raceFinished == FALSE && ((D_80126D60->race_type == RACETYPE_DEFAULT) || D_80126D60->race_type == RACETYPE_HORSESHOE_GULCH) && D_80126D34) {
+                        if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->racer.raceFinished == FALSE && ((gHudLevelHeader->race_type == RACETYPE_DEFAULT) || gHudLevelHeader->race_type == RACETYPE_HORSESHOE_GULCH) && D_80126D34) {
                             D_800E2790 = 1 - D_800E2790;
                             play_sound_global((SOUND_TING_HIGHER + D_800E2790), NULL);
                             if (D_800E2790) {
@@ -354,7 +355,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                                 D_800E27B8 = 0;
                             }
                         }
-                    } else if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->racer.raceFinished == FALSE && !(D_80126D60->race_type & RACETYPE_CHALLENGE) && D_80126D34) {
+                    } else if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->racer.raceFinished == FALSE && !(gHudLevelHeader->race_type & RACETYPE_CHALLENGE) && D_80126D34) {
                         if (D_800E2794[gHUDNumPlayers][racer->racer.playerIndex] < PLAYER_FOUR) {
                              D_800E2794[gHUDNumPlayers][racer->racer.playerIndex]++;
                         } else {
@@ -363,8 +364,8 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         play_sound_global((SOUND_TING_HIGHEST - (D_800E2794[gHUDNumPlayers][racer->racer.playerIndex] == 0)), NULL);
                     }
                     if (get_buttons_pressed_from_player(D_80126D10) & R_CBUTTONS && racer->racer.raceFinished == FALSE && D_80126D34 && D_80126CD0 == 0) {
-                        D_800E27A4[gHUDNumPlayers] = 1 - D_800E27A4[gHUDNumPlayers];
-                        if (D_800E27A4[gHUDNumPlayers] == FALSE) {
+                        gHudMultiplayerUIToggle[gHUDNumPlayers] = 1 - gHudMultiplayerUIToggle[gHUDNumPlayers];
+                        if (gHudMultiplayerUIToggle[gHUDNumPlayers] == 0) {
                             play_sound_global(SOUND_TING_LOW, NULL);
                         } else {
                             play_sound_global(SOUND_TING_HIGH, NULL);
@@ -372,7 +373,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                     }
                 }
                 if (gRaceStartShowHudStep == 0) {
-                    if (D_80126D60->race_type & RACETYPE_CHALLENGE || D_80126D60->race_type == RACETYPE_DEFAULT || D_80126D60->race_type == RACETYPE_HORSESHOE_GULCH || D_80126D60->race_type == RACETYPE_BOSS) {
+                    if (gHudLevelHeader->race_type & RACETYPE_CHALLENGE || gHudLevelHeader->race_type == RACETYPE_DEFAULT || gHudLevelHeader->race_type == RACETYPE_HORSESHOE_GULCH || gHudLevelHeader->race_type == RACETYPE_BOSS) {
                         D_800E2770[0].unk2 = 0x7F;
                         D_800E2770[1].unk2 = 0x7F;
                         func_80001844();
@@ -420,7 +421,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 }
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                 func_800A7A60(arg3, &gHUDCurrDisplayList);
-                func_80067F2C(&gHUDCurrDisplayList, &gHUDCurrMatrix);
+                set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
                 gDPSetEnvColor(gHUDCurrDisplayList++, 255, 255, 255, 0);
                 sp2C = func_8001139C(&gHUDCurrDisplayList) >> 1;
                 if (func_8000E4D8()) {
@@ -513,7 +514,7 @@ void func_800A0DC0(s32 arg0, Object *arg1, s32 updateRate) {
     render_wrong_way_text(racer, updateRate);
     render_race_start(arg0, updateRate);
 
-    if (D_80126D60->race_type == RACETYPE_DEFAULT) {
+    if (gHudLevelHeader->race_type == RACETYPE_DEFAULT) {
         render_lap_count(racer, updateRate);
     }
 
@@ -642,7 +643,7 @@ void render_hud_challenge_eggs(s32 arg0, Object *arg1, s32 updateRate) {
         } else {
             D_80126CDC->unk67A = (D_80126CDC->unk67A + (updateRate * 2)) - 255;
         }
-        if (D_80126D37 != 2) {
+        if (gNumActivePlayers != 2) {
             func_800A14F0(arg1, updateRate);
         }
         func_80068508(0);
@@ -729,7 +730,7 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
     Object_64* racer64;
     s32 opacity;
 
-    if (D_80126D37 == 1) {
+    if (gNumActivePlayers == 1) {
         if (!check_if_showing_cutscene_camera()) {
             racer64 = obj->unk64;
             if (racer64->racer.raceFinished == FALSE) {
@@ -763,7 +764,7 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
                         D_80126CDC->unk4C4 += ((vel - D_80126CDC->unk4C4) / 8);
                     }
                 }
-                if (D_800E27A4[gHUDNumPlayers] == FALSE) {
+                if (gHudMultiplayerUIToggle[gHUDNumPlayers] == 0) {
                     if (D_80126CD3 & 2) {
                         opacity = 255.0f - ((D_80126CD0 * 255.0f) / D_8012718B);
                     } else {
@@ -870,7 +871,7 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
     UNUSED s16 pad;
     s32 temp_lo;
     u8 var_v1;
-    if(racer->playerIndex == PLAYER_COMPUTER || (((gHUDNumPlayers < TWO_PLAYERS || D_800E2794[gHUDNumPlayers][racer->playerIndex] == PLAYER_THREE || D_80126D60->race_type == RACETYPE_CHALLENGE_BANANAS || D_80126D60->race_type == RACETYPE_CHALLENGE_BATTLE) && racer->raceFinished == FALSE) && (gHUDNumPlayers < TWO_PLAYERS || (racer->lap < 1) || racer->lap_times[racer->lap] >= 180 || D_80126D60->race_type & RACETYPE_CHALLENGE))) {
+    if(racer->playerIndex == PLAYER_COMPUTER || (((gHUDNumPlayers < TWO_PLAYERS || D_800E2794[gHUDNumPlayers][racer->playerIndex] == PLAYER_THREE || gHudLevelHeader->race_type == RACETYPE_CHALLENGE_BANANAS || gHudLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) && racer->raceFinished == FALSE) && (gHUDNumPlayers < TWO_PLAYERS || (racer->lap < 1) || racer->lap_times[racer->lap] >= 180 || gHudLevelHeader->race_type & RACETYPE_CHALLENGE))) {
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk240);
         bananas = racer->bananas;
         var_v1 = D_80126CDC->unkF8;
@@ -936,12 +937,16 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
     }
 }
 
-void func_800A45F0(Object_Racer* racer) {
+/**
+ * Renders the icons and secured treasure in Smokey's castle.
+ * In 4 player, all icons are skipped and in 3 player, player 4's icon is shown on their quadrant.
+*/
+void render_treasure_hud(Object_Racer* racer) {
     s32 i;
     s32 sp48;
 
     sp48 = D_80126CDC->unk410;
-    if (D_80126D37 < 3 || (D_80126D37 == 3 && racer->playerIndex == PLAYER_COMPUTER)) {
+    if (gNumActivePlayers < 3 || (gNumActivePlayers == 3 && racer->playerIndex == PLAYER_COMPUTER)) {
         D_80126CDC->unk646 = racer->characterId + 56;
         D_80126CD5 = TRUE;
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk640);
@@ -1046,7 +1051,7 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4C44.s")
 void render_lap_count(Object_Racer *racer, s32 updateRate) {
     if (racer->raceFinished == FALSE && (gHUDNumPlayers <= ONE_PLAYER || racer->lap <= 0 || racer->lap_times[racer->lap] >= 180) 
             && (gHUDNumPlayers <= ONE_PLAYER || D_800E2794[gHUDNumPlayers][racer->playerIndex] == 3)) {
-        if (D_80126D60->laps == (0, racer->unk194 + 1) && gHUDNumPlayers < THREE_PLAYERS) {
+        if (gHudLevelHeader->laps == (0, racer->unk194 + 1) && gHUDNumPlayers < THREE_PLAYERS) {
             D_80126CDC->unk21A += updateRate;
             if (D_80126CDC->unk21A > 6) {
                 D_80126CDC->unk218++;
@@ -1058,12 +1063,12 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk200);
         }
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk60);
-        if (racer->unk194 >= D_80126D60->laps - 1) {
-            D_80126CDC->unk98 = D_80126D60->laps;
+        if (racer->unk194 >= gHudLevelHeader->laps - 1) {
+            D_80126CDC->unk98 = gHudLevelHeader->laps;
         } else {
             D_80126CDC->unk98 = racer->unk194 + 1;
         }
-        D_80126CDC->unkD8 = D_80126D60->laps;
+        D_80126CDC->unkD8 = gHudLevelHeader->laps;
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk80);
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unkA0);
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unkC0);
@@ -1073,7 +1078,7 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
     }
     if (is_game_paused() == FALSE) {
         if (racer->lap_times[racer->lap] < 30 && D_80126CDC->unk3DA == 0 && racer->raceFinished == FALSE) {
-            if ((racer->lap == 1) && D_80126D60->laps >= 3) {
+            if ((racer->lap == 1) && gHudLevelHeader->laps >= 3) {
                 D_80126CDC->unk3DA = 2;
                 D_80126CDC->unk3DB = 1;
                 D_80126CDC->unk3DD = 0;
@@ -1105,7 +1110,7 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
                     }
                     break;
                 }
-            } else if (D_80126D60->laps == (0, racer->lap + 1) && racer->lap != 0) {
+            } else if (gHudLevelHeader->laps == (0, racer->lap + 1) && racer->lap != 0) {
                 D_80126CDC->unk3DA = 3;
                 D_80126CDC->unk3DB = -1;
                 D_80126CDC->unk3DD = 0;
@@ -1360,7 +1365,7 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
         if (D_80126CDC->unk5D != racerObj->racer.balloon_level) {
             if (racerObj->racer.balloon_level == 0) {
                 D_80126CDC->unk5C = 120;
-            } else if (D_80126D37 == 1) {
+            } else if (gNumActivePlayers == 1) {
                 D_80126CDC->unk5C = 0;
             } else {
                 D_80126CDC->unk5C = 120;
@@ -1444,7 +1449,7 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
     if (!(gHUDNumPlayers != ONE_PLAYER && D_800E2794[gHUDNumPlayers][racer->playerIndex] != 1) || (gHUDNumPlayers > ONE_PLAYER && racer->lap > 0 && racer->lap_times[racer->lap] < 180)) {
         if (racer->raceFinished == FALSE) {
             timerHideCounter = D_80126CDC->unk15A + 127;
-            if (racer->lap > 0 && racer->lap_times[racer->lap] < 180 && racer->lap < D_80126D60->laps) {
+            if (racer->lap > 0 && racer->lap_times[racer->lap] < 180 && racer->lap < gHudLevelHeader->laps) {
                 stopwatchTimer = racer->lap_times[racer->lap - 1];
                 countingDown = TRUE;
                 if (timerHideCounter == 0) {
@@ -1452,7 +1457,7 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
                 }
             } else {
                 stopwatchTimer = 0;
-                for (i = 0; racer->unk194 >= i && i < D_80126D60->laps; i++) {
+                for (i = 0; racer->unk194 >= i && i < gHudLevelHeader->laps; i++) {
                     stopwatchTimer += racer->lap_times[i];
                 }
                 countingDown = stopwatchTimer == 0 || racer->raceFinished || is_game_paused();
@@ -1492,7 +1497,7 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
                 }
             }
             
-            if (D_80126D37 == 1) {
+            if (gNumActivePlayers == 1) {
                 func_800A7FBC(D_80126CDC->unk16C, D_80126CDC->unk170, minutes, seconds, hundredths, 0);
             } else {
                 func_800A7FBC(D_80126CDC->unk16C, D_80126CDC->unk170, minutes, seconds, hundredths, 1);
@@ -1514,13 +1519,17 @@ void func_800A83B4(LevelModel *model) {
     model->unk20 = (s32)func_8007C12C(model->unk20, 1);
 }
 
-s8 func_800A8458(void) {
-    return D_800E27A4[gHUDNumPlayers];
+/**
+ * Return's the HUD toggle setting of each player.
+ * This shows either the lap count, banana count or neither.
+*/
+s8 get_multiplayer_hud_setting(void) {
+    return gHudMultiplayerUIToggle[gHUDNumPlayers];
 }
 
 /**
  * Renders the minimap in all modes.
- * This function also handles the HUD in 3/4 player, instead of the normal dedicated functions it has.
+ * This function also handles the HUD in 3 or 4 player, instead of the normal dedicated functions it has.
 */
 void render_minimap_and_multiplayer_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate) {
     Object_Racer *curRacerObj;
@@ -1598,17 +1607,17 @@ void render_minimap_and_multiplayer_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx
         }
     }
     
-    D_80126D60 = get_current_level_header();
+    gHudLevelHeader = get_current_level_header();
     objectGroup = get_racer_objects_by_port(&objectCount);
     gHUDCurrDisplayList = *dList;
     gHUDCurrMatrix = *mtx;
     gHUDCurrVertex = *vtx;
-    if (D_80126D60->race_type == RACETYPE_CHALLENGE_EGGS) {
-        if (D_80126D37 == 2 && D_800E27A4[gHUDNumPlayers] == ONE_PLAYER) {
+    if (gHudLevelHeader->race_type == RACETYPE_CHALLENGE_EGGS) {
+        if (gNumActivePlayers == 2 && gHudMultiplayerUIToggle[gHUDNumPlayers] == 0) {
             func_800A14F0(NULL, updateRate);
             reset_render_settings(&gHUDCurrDisplayList);
         } else {
-            if (D_80126D37 == 3) {
+            if (gNumActivePlayers == 3) {
                 tempVar4 = NULL;
                 for(tempVar2 = 0; tempVar2 < objectCount; tempVar2++) {
                     if (objectGroup[tempVar2]->unk64->racer.playerIndex == PLAYER_COMPUTER) {
@@ -1639,17 +1648,19 @@ void render_minimap_and_multiplayer_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx
                 }
             }
         }
-    } else if (D_80126D60->race_type == RACETYPE_CHALLENGE_BATTLE) {
-        if (D_80126D37 == 2 && D_800E27A4[gHUDNumPlayers] == ONE_PLAYER) {
+    } else if (gHudLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) {
+        // Show life counter and icons in 2 player.
+        if (gNumActivePlayers == 2 && gHudMultiplayerUIToggle[gHUDNumPlayers] == 0) {
             func_80068508(TRUE);
             func_8007BF1C(FALSE);
-            func_80067F2C(&gHUDCurrDisplayList, &gHUDCurrMatrix);
+            set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
             func_800A1E48(0, updateRate);
             func_80068508(FALSE);
             reset_render_settings(&gHUDCurrDisplayList);
             func_8007BF1C(TRUE);
         } else {
-            if (D_80126D37 == 3) {
+            // In 3/4 player, just show the life counter.
+            if (gNumActivePlayers == 3) {
                 curRacerObj = NULL;
                 for(tempVar2 = 0; tempVar2 < objectCount; tempVar2++) {
                     if (objectGroup[tempVar2]->unk64->racer.playerIndex == PLAYER_COMPUTER) { 
@@ -1661,7 +1672,7 @@ void render_minimap_and_multiplayer_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx
                     spE4 = D_80126CDC->unk64C;
                     spE0 = D_80126CDC->unk650;
                     func_8007BF1C(FALSE);
-                    func_80067F2C(&gHUDCurrDisplayList, &gHUDCurrMatrix);
+                    set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
                     func_80068508(TRUE);
                     D_80126CDC->unk64C = 225.0f;
                     if (osTvType == TV_TYPE_PAL) {
@@ -1720,17 +1731,16 @@ void render_minimap_and_multiplayer_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx
                 }
             }
         }
-    } else if (D_80126D60->race_type == RACETYPE_CHALLENGE_BANANAS) {
-        if (D_80126D37 == 2 && D_800E27A4[gHUDNumPlayers] == ONE_PLAYER) {
+    } else if (gHudLevelHeader->race_type == RACETYPE_CHALLENGE_BANANAS) {
+        if (gNumActivePlayers == 2 && gHudMultiplayerUIToggle[gHUDNumPlayers] == 0) {
             temp_s0_2 = D_80126CDC->unk64C;
             temp_s1_2 = D_80126CDC->unk650;
             temp_s3 = D_80126CDC->unk40C;
             spBC = D_80126CDC->unk410;
             racerGroup = get_racer_objects(&racerCount);
-            sp144 = 0;
             for (sp144 = 0; sp144 < racerCount; sp144++) {
                 someRacer = (Object_Racer *) racerGroup[sp144]->unk64;
-                func_800A45F0(someRacer);
+                render_treasure_hud(someRacer);
                 if (osTvType == TV_TYPE_PAL) {
                     D_80126CDC->unk650 += 66.0;
                     D_80126CDC->unk410 += 66.0;
@@ -1743,7 +1753,7 @@ void render_minimap_and_multiplayer_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx
             D_80126CDC->unk650 = temp_s1_2;
             D_80126CDC->unk40C = temp_s3;
             D_80126CDC->unk410 = spBC;
-        } else if (D_80126D37 == 3) {
+        } else if (gNumActivePlayers == 3) {
             tempVar4 = NULL;
             for(tempVar2 = 0; tempVar2 < objectCount; tempVar2++) {
                 if (objectGroup[tempVar2]->unk64->racer.playerIndex == PLAYER_COMPUTER) {
@@ -1767,7 +1777,7 @@ void render_minimap_and_multiplayer_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx
                     D_80126CDC->unk650 = (s32) D_80126CDC->unk650;
                     D_80126CDC->unk410 = (s32) D_80126CDC->unk410;
                 }
-                func_800A45F0(tempVar4);
+                render_treasure_hud(tempVar4);
                 D_80126CDC->unk64C = temp_s0_3;
                 D_80126CDC->unk650 = temp_s1_3;
                 D_80126CDC->unk40C = temp_f16;
@@ -1782,7 +1792,7 @@ void render_minimap_and_multiplayer_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx
     *dList = gHUDCurrDisplayList;
     *mtx = gHUDCurrMatrix;
     *vtx = gHUDCurrVertex;
-    if (!(D_80126D60->unkBC & 1)) {
+    if (!(gHudLevelHeader->unkBC & 1)) {
         sp113 = TRUE;
         for(i = 0; i < objectCount; i++) {
             someRacer = (Object_Racer *) objectGroup[i]->unk64;
@@ -1792,19 +1802,19 @@ void render_minimap_and_multiplayer_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx
                 sp113 = FALSE;
             }
         }
-        if((gHUDNumPlayers == THREE_PLAYERS && func_8006EAB0()) || check_if_showing_cutscene_camera() || sp113) {
+        if((gHUDNumPlayers == THREE_PLAYERS && is_postrace_viewport_active()) || check_if_showing_cutscene_camera() || sp113) {
             goto test;
-        } else if(D_800E27A4[gHUDNumPlayers] != 1) {
+        } else if(gHudMultiplayerUIToggle[gHUDNumPlayers] != 1) {
         test:
             return;
         } else {
             reset_render_settings(&gHUDCurrDisplayList);
-            func_80067F2C(&gHUDCurrDisplayList, &gHUDCurrMatrix);
+            set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
             lvlMdl = get_current_level_model();
             if (lvlMdl == NULL) {
                 return;
             }
-            someObjSeg = func_80069D20();
+            someObjSeg = get_active_camera_segment();
             func_80068508(TRUE);
             sp154 = lvlMdl->unk20;
             switch (gHUDNumPlayers) {
@@ -1856,12 +1866,12 @@ void render_minimap_and_multiplayer_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx
             if (mapOpacity > 160) {
                 mapOpacity = 160;
             }
-            if (D_80126D37 == 3) {
+            if (gNumActivePlayers == 3) {
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, mapOpacity);
             } else {
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gMinimapRed, gMinimapGreen, gMinimapBlue, mapOpacity);
             }
-            func_80068BF4(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (ObjectSegment* ) &objTrans.trans, (unk80068BF4* ) sp154, 0);
+            render_orthi_triangle_image(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (ObjectSegment* ) &objTrans.trans, (unk80068BF4* ) sp154, 0);
             sp11C = (lvlMdl->unk3E - lvlMdl->unk3C) / (f32) (lvlMdl->unk46 - lvlMdl->unk44);
             sp118 = coss_f((lvlMdl->unk24 * 0xFFFF) / 360);
             sp114 = sins_f((lvlMdl->unk24 * 0xFFFF) / 360);
@@ -1882,13 +1892,14 @@ void render_minimap_and_multiplayer_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx
                 func_800AA3EC(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114, sp118, sp11C);
                 D_80126CDC->unk1E4 = 0;
                 tempVar1 = (opacity * (f32) temp_v0_8->segment.unk38.half.lower) * 0.0078125;
-                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, D_800E27BC[8].red, D_800E27BC[8].green, D_800E27BC[8].blue, tempVar1);
+                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gHudMinimapColours[8].red, gHudMinimapColours[8].green, gHudMinimapColours[8].blue, tempVar1);
                 D_80126CDC->unk1E8 = 1.0f;
                 D_80126CDC->unk1E6 = 14;
                 func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk1E0);
             }
-            if (D_80126D60->race_type == RACETYPE_HUBWORLD) {
-                temp_v0_8 = func_80018C6C();
+            // Draw Taj's minimap icon.
+            if (gHudLevelHeader->race_type == RACETYPE_HUBWORLD) {
+                temp_v0_8 = find_taj_object();
                 if (temp_v0_8 != NULL) {
                     D_80126CDC->unk1E6 = 14;
                     func_800AA3EC(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114, sp118, sp11C);
@@ -1898,7 +1909,9 @@ void render_minimap_and_multiplayer_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx
                     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk1E0);
                 }
             }
-            for(i = objectCount - 1; i >= 0; i--) {
+            // Draw racer minimap icons.
+            // Non AI players get an arrow instead of a blob that rotates.
+            for (i = objectCount - 1; i >= 0; i--) {
                 temp_v0_8 = objectGroup[i];
                 someRacer = (Object_Racer *) objectGroup[i]->unk64;
                 if (someRacer != NULL) {
@@ -1919,7 +1932,7 @@ void render_minimap_and_multiplayer_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx
                     if (func_8002341C() && someRacer->unk1D6 == 10) {
                         gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 0, 255, opacity);
                     } else {
-                        gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, D_800E27BC[someRacer->characterId].red, D_800E27BC[someRacer->characterId].green, D_800E27BC[someRacer->characterId].blue, opacity);
+                        gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gHudMinimapColours[someRacer->characterId].red, gHudMinimapColours[someRacer->characterId].green, gHudMinimapColours[someRacer->characterId].blue, opacity);
                     }
                     if (!(get_current_level_race_type() & RACETYPE_CHALLENGE) || (!someRacer->raceFinished)) {
                         if (osTvType == TV_TYPE_PAL) {

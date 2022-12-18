@@ -2104,7 +2104,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
 
     s5 = FALSE;
     if (arg0 != 4) {
-        func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+        set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
         while (elem->unk14_a.element != NULL) {
             if (elem->unk14_a.element != &D_80126850) {
                 if (arg0 == 0) {
@@ -2461,7 +2461,7 @@ void func_8008377C(UNUSED s32 arg0, f32 arg1) {
     s32 posY;
 
     if (D_8012686C != 0) {
-        func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+        set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
         scale = (f32) D_8012686C * 0.03125f;
         sMenuGuiOpacity = (D_8012686C * 8) - 1;
         func_80068508(0);
@@ -2506,7 +2506,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
     ObjectSegment* sp18;
     s8 var_a1;
 
-    sp18 = func_80069D20();
+    sp18 = get_active_camera_segment();
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     func_8008E4EC();
     if (osTvType == 0) {
@@ -3101,7 +3101,7 @@ void func_80085B9C(UNUSED s32 updateRate) {
     if (D_801263E0 & 8) {
         drawDialogueBox = TRUE;
     }
-    func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     set_text_background_colour(0, 0, 0, 0);
     set_text_font(2);
     set_text_colour(0, 0, 0, 255, 128);
@@ -4758,7 +4758,7 @@ void func_8008C698(UNUSED s32 updateRate) {
         if (fade >= 0x100) {
             fade = 0x1FF - fade;
         }
-        func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+        set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
 
         for (i = 0; i <= D_801263E0; i++) {
             filterAlpha = 0;
@@ -4956,7 +4956,7 @@ void render_file_select_menu(UNUSED s32 updateRate) {
     }
 
     func_8009BD5C();
-    func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     for (i = 0; i < 3; i++) { // 3 files
         if (gSavefileInfo[i].isAdventure2 == gIsInAdventureTwo || gSavefileInfo[i].isStarted == 0) {
             color = 0xB0E0C0FF;
@@ -5924,7 +5924,7 @@ void func_8008FF1C(s32 updateRate) {
         }
         func_80066894(0, 1);
         func_8009BD5C();
-        func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+        set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
         reset_render_settings(&sMenuCurrDisplayList);
         gDPPipeSync(sMenuCurrDisplayList++);
         D_80126928 = 64;
@@ -6107,7 +6107,7 @@ void render_track_select_setup_ui(s32 updateRate) {
     }
     func_80066894(0, 1);
     func_8009BD5C();
-    func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (gMenuDelay < 0) {
         if (gSelectedTrackX == 4) {
             sp84 = 6;
@@ -6491,7 +6491,7 @@ void render_adventure_track_setup(UNUSED s32 arg0, s32 arg1, s32 arg2) {
     sp58 = ((Settings4C *)((u8 *) settings->unk4C + gTrackIdForPreview))->unk2;
     gSPClearGeometryMode(sMenuCurrDisplayList++, G_CULL_FRONT);
     func_8009BD5C();
-    func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (gMenuDelay >= -20) {
         if (gMenuDelay <= 20) {
             mask = get_map_available_vehicles(sp58);
@@ -8038,7 +8038,7 @@ void func_8009BD5C(void) {
     set_active_viewports_and_object_stack_cap(0);
     set_object_stack_pos(0);
 
-    temp_v0 = (unk80069D20 *)func_80069D20();
+    temp_v0 = (unk80069D20 *)get_active_camera_segment();
 
     sp2A = temp_v0->unk0;
     sp28 = temp_v0->unk2;
@@ -8259,13 +8259,13 @@ s32 get_filtered_cheats(void) {
     if (!gIsInTracksMode || is_time_trial_enabled()) {
         cheats &= CHEATS_ALLOWED_IN_ADVENTURE_AND_TIME_TRIAL;
     }
-    if (!func_8006B240()) {
+    if (!check_if_in_race()) {
         cheats &= ~CHEAT_MIRRORED_TRACKS; // Disable mirroring
     }
     if (func_8006B14C(get_settings()->courseId) & 0x40) {
         cheats &= CHEATS_ALLOWED_IN_CHALLENGES;
     }
-    if (gIsInAdventureTwo && func_8006B240()) {
+    if (gIsInAdventureTwo && check_if_in_race()) {
         cheats |= CHEAT_MIRRORED_TRACKS; // Enable mirroring
     }
     return cheats;
@@ -9052,7 +9052,7 @@ f32 func_8009E9B0(UNUSED DialogueBoxBackground *textbox, Gfx **dlist, MatrixS **
     sMenuCurrDisplayList = *dlist;
     sMenuCurrHudMat = *mat;
     sMenuCurrHudVerts = *verts;
-    func_80067F2C(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (D_800E1E28 != 0 && sCurrentMenuID == 4) {
         func_8009E3D0();
     }

@@ -62,9 +62,9 @@ UNUSED const char sDebugVehicleSwapString[] = "Swapping\n";
 /************ .data ************/
 
 char *D_800DD310 = NULL; // Currently unknown, might be a different type.
-s8 D_800DD314 = -1;
+s8 gCurrentDefaultVehicle = -1;
 u8 D_800DD318 = 0;
-s32 D_800DD31C = 0;
+s32 gIsInRace = 0;
 
 // Updated automatically from calc_func_checksums.py
 s32 gFunc80068158Checksum = 0x585E;
@@ -346,10 +346,18 @@ void get_number_of_levels_and_worlds(s32 *outLevelCount, s32 *outWorldCount) {
     *outWorldCount = gNumberOfWorlds;
 }
 
-s32 func_8006B240(void) {
-    return D_800DD31C;
+/**
+ * Returns true if the current event is a regular race or a boss race.
+ * Returns false if it's a menu, challenge or hubworld.
+*/
+s32 check_if_in_race(void) {
+    return gIsInRace;
 }
 
+/**
+ * Loads and sets up the level header, then loads and sets of the level geometry.
+ * Sets weather, fog and active cutscenes where applicable.
+*/
 void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
     s8 *someAsset;
     s32 i;
@@ -391,7 +399,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     offset = gTempAssetTable[levelId];
     size = gTempAssetTable[levelId + 1] - offset;
     gCurrentLevelHeader = (LevelHeader *) allocate_from_main_pool_safe(size, COLOUR_TAG_YELLOW);
-    load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, offset, size);
+    load_asset_to_address(ASSET_LEVEL_HEADERS, (u32) gCurrentLevelHeader, offset, size);
     D_800DD330 = 0;
     prevLevelID = levelId;
     if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
@@ -402,7 +410,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
             if (gCurrentLevelHeader->race_type == RACETYPE_BOSS) {
                 var_s0 = settings->courseFlagsPtr[levelId];
                 wizpig = FALSE;
-                if (gCurrentLevelHeader->world == 0 || gCurrentLevelHeader->world == 5) {
+                if (gCurrentLevelHeader->world == WORLD_CENTRAL_AREA || gCurrentLevelHeader->world == WORLD_FUTURE_FUN_LAND) {
                     wizpig = TRUE;
                 }
                 if (!(var_s0 & 1) || wizpig) {
@@ -426,7 +434,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
                 }
             }
             if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD) {
-                if (gCurrentLevelHeader->world > 0 && gCurrentLevelHeader->world < 5) {
+                if (gCurrentLevelHeader->world > WORLD_CENTRAL_AREA && gCurrentLevelHeader->world < WORLD_FUTURE_FUN_LAND) {
                     var_s0 = gCurrentLevelHeader->world;
                     if (settings->keys & (1 << var_s0) && !(settings->cutsceneFlags & (0x4000 << (var_s0 + 31)))) {
                         func_8006C1AC(levelId, entranceId, vehicleId, cutsceneId);
@@ -438,7 +446,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
                     }
                 }
             }
-            if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD && gCurrentLevelHeader->world == 0 && !(settings->cutsceneFlags & 0x2000) && settings->wizpigAmulet >= 4) {
+            if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD && gCurrentLevelHeader->world == WORLD_CENTRAL_AREA && !(settings->cutsceneFlags & 0x2000) && settings->wizpigAmulet >= 4) {
                 func_8006C1AC(levelId, entranceId, vehicleId, cutsceneId);
                 entranceId = 0;
                 cutsceneId = 0;
@@ -452,16 +460,16 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         free_from_memory_pool(gCurrentLevelHeader);
         offset = gTempAssetTable[levelId];
         size = gTempAssetTable[levelId + 1] - offset;
-        gCurrentLevelHeader = allocate_from_main_pool_safe(size, 0xFFFF00FF);
-        load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, offset, size);
+        gCurrentLevelHeader = allocate_from_main_pool_safe(size, COLOUR_TAG_YELLOW);
+        load_asset_to_address(ASSET_LEVEL_HEADERS, (u32) gCurrentLevelHeader, offset, size);
     }
     free_from_memory_pool(gTempAssetTable);
-    func_8006BFC8((s8 *)( & gCurrentLevelHeader->unk20));
+    func_8006BFC8((s8 *) &gCurrentLevelHeader->unk20);
     func_8000CBC0();
     gMapId = levelId;
     for (var_s0 = 0; var_s0 < 7; var_s0++) {
         if ((s32) gCurrentLevelHeader->unk74[var_s0] != -1) {
-            gCurrentLevelHeader->unk74[var_s0] = (s8 *) get_misc_asset(gCurrentLevelHeader->unk74[var_s0]);
+            gCurrentLevelHeader->unk74[var_s0] = (s8 *) get_misc_asset((s32) gCurrentLevelHeader->unk74[var_s0]);
             func_8007F1E8((unk8007F1E8 *) gCurrentLevelHeader->unk74[var_s0]);
         }
     }
@@ -469,18 +477,18 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     if (cutsceneId == 0x64) {
         if (get_trophy_race_world_id() != 0) {
             if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
-                cutsceneId = 0;
+                cutsceneId = CUTSCENE_NONE;
             }
         } else if (is_in_tracks_mode() == 1) {
             if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
-                cutsceneId = 0;
+                cutsceneId = CUTSCENE_NONE;
             }
         }
     }
     if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT || gCurrentLevelHeader->race_type == RACETYPE_BOSS) {
-        D_800DD31C = 1;
+        gIsInRace = TRUE;
     } else {
-        D_800DD31C = 0;
+        gIsInRace = FALSE;
     }
     if (numPlayers && gCurrentLevelHeader->race_type != RACETYPE_CUTSCENE_2) {
         gCurrentLevelHeader->race_type = RACETYPE_CUTSCENE_1;
@@ -499,10 +507,10 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     }
     settings->courseId = levelId;
     if (var_s0 == 0 && settings->worldId > 0) {
-        D_800DD314 = get_level_default_vehicle();
+        gCurrentDefaultVehicle = get_level_default_vehicle();
     }
-    if (settings->worldId == 0 && var_s0 > 0 && D_800DD314 != -1) {
-        vehicleId = D_800DD314;
+    if (settings->worldId == 0 && var_s0 > 0 && gCurrentDefaultVehicle != -1) {
+        vehicleId = gCurrentDefaultVehicle;
     }
     func_8006DB20(vehicleId);
     if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD) {
@@ -546,7 +554,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         D_800DD318 = 0;
 
     }
-    if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT && numPlayers ==0 && is_time_trial_enabled()) {
+    if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT && numPlayers == 0 && is_time_trial_enabled()) {
         cutsceneId = 0x64;
     }
     func_8001E450(cutsceneId);
@@ -570,12 +578,12 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         func_800AB308(-1, -0x200);
     }
     if (gCurrentLevelHeader->unk49 == -1) {
-        gCurrentLevelHeader->unkA4 = load_texture(gCurrentLevelHeader->unkA4);
+        gCurrentLevelHeader->unkA4 = load_texture((s32) gCurrentLevelHeader->unkA4);
         gCurrentLevelHeader->unkA8 = 0;
         gCurrentLevelHeader->unkAA = 0;
     }
     if ((s32) gCurrentLevelHeader->pulseLightData != -1) {
-        gCurrentLevelHeader->pulseLightData = (PulsatingLightData *) get_misc_asset(gCurrentLevelHeader->pulseLightData);
+        gCurrentLevelHeader->pulseLightData = (PulsatingLightData *) get_misc_asset((s32) gCurrentLevelHeader->pulseLightData);
         init_pulsating_light_data(gCurrentLevelHeader->pulseLightData);
     }
     update_camera_fov(gCurrentLevelHeader->cameraFOV);
@@ -1798,7 +1806,10 @@ s8 is_game_paused(void) {
     return gIsPaused;
 }
 
-s8 func_8006EAB0(void) {
+/**
+ * Returns the status of the post-race shrunken viewport.
+*/
+s8 is_postrace_viewport_active(void) {
     return gPostRaceViewPort;
 }
 
