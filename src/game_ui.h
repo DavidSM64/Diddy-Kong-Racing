@@ -312,7 +312,7 @@ void render_racer_bananas(Object_Racer *obj, s32 updateRate);
 void render_race_finish_position(Object_64 *obj, s32 updateRate);
 void render_speedometer(Object *obj, s32 updateRate);
 void render_lap_count(Object_Racer *racer, s32 updateRate);
-void render_minimap_and_multiplayer_hud(Gfx **dList, MatrixS **mtx, Vertex **vtxList, s32 updateRate);
+void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtxList, s32 updateRate);
 
 // Non Matching
 void func_800A14F0(Object *, s32);

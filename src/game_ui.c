@@ -941,7 +941,7 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
  * Renders the icons and secured treasure in Smokey's castle.
  * In 4 player, all icons are skipped and in 3 player, player 4's icon is shown on their quadrant.
 */
-void render_treasure_hud(Object_Racer* racer) {
+void render_treasure_hud(Object_Racer *racer) {
     s32 i;
     s32 sp48;
 
@@ -1528,10 +1528,10 @@ s8 get_multiplayer_hud_setting(void) {
 }
 
 /**
- * Renders the minimap in all modes.
+ * Renders the minimap in all modes as well as a few other random pieces of HUD.
  * This function also handles the HUD in 3 or 4 player, instead of the normal dedicated functions it has.
 */
-void render_minimap_and_multiplayer_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate) {
+void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate) {
     Object_Racer *curRacerObj;
     LevelModel *lvlMdl;
     s32 sp154;

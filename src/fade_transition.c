@@ -259,25 +259,25 @@ s32 func_800C01D8(FadeTransition *transition) {
         gCurFadeGreen = transition->green;
         gCurFadeBlue = transition->blue;
         switch (gCurFaceTransition) {
-        case 0:
+        case FADE_FULLSCREEN:
             func_800C0780(transition);
             break;
-        case 1:
+        case FADE_BARNDOOR_HORIZONTAL:
             func_800C0B00(transition, 12, 8, D_800E3230, D_800E32A0, D_800E32AC, D_800E32D0, D_800E32D0, D_800E32B8);
             break;
-        case 2:
+        case FADE_BARNDOOR_VERTICAL:
             func_800C0B00(transition, 12, 8, D_800E3268, D_800E32A0, D_800E32AC, D_800E32D0, D_800E32D0, D_800E32B8);
             break;
-        case 3:
+        case FADE_CIRCLE:
             func_800C15D4(transition);
             break;
-        case 4:
+        case FADE_WAVES:
             func_800C0B00(transition, 92, 80, D_800E3344, D_800E349C, D_800E3440, D_800E34F8, D_800E34F8, D_800E3554);
             break;
-        case 5:
+        case FADE_BARNDOOR_DIAGONAL:
             func_800C0B00(transition, 10, 6, D_800E32DC, D_800E330C, D_800E3318, D_800E3338, D_800E3338, D_800E3324);
             break;
-        case 6:
+        case FADE_DISABLED:
             func_800C2640(transition);
             break;
         }
@@ -532,7 +532,7 @@ void render_fade_barndoor_diagonal(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Ve
     reset_render_settings(dlist);
 }
 
-void func_800C2640(UNUSED FadeTransition* transition) {
+void func_800C2640(UNUSED FadeTransition *transition) {
     gLastFadeRed <<= 0x10;
     gLastFadeGreen <<= 0x10;
     gLastFadeBlue <<= 0x10;

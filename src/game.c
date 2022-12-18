@@ -437,6 +437,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
                 if (gCurrentLevelHeader->world > WORLD_CENTRAL_AREA && gCurrentLevelHeader->world < WORLD_FUTURE_FUN_LAND) {
                     var_s0 = gCurrentLevelHeader->world;
                     if (settings->keys & (1 << var_s0) && !(settings->cutsceneFlags & (0x4000 << (var_s0 + 31)))) {
+                        // Trigger World Key unlocking Challenge Door cutscene.
                         func_8006C1AC(levelId, entranceId, vehicleId, cutsceneId);
                         settings->cutsceneFlags |= 0x4000 << (var_s0 + 31);
                         someAsset = (s8 *) get_misc_asset(MISC_ASSET_UNK44);
@@ -447,6 +448,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
                 }
             }
             if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD && gCurrentLevelHeader->world == WORLD_CENTRAL_AREA && !(settings->cutsceneFlags & 0x2000) && settings->wizpigAmulet >= 4) {
+                // Trigger wizpig face cutscene
                 func_8006C1AC(levelId, entranceId, vehicleId, cutsceneId);
                 entranceId = 0;
                 cutsceneId = 0;
@@ -569,7 +571,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         }
     }
     settings = get_settings();
-    if (gCurrentLevelHeader->world != (-1)) {
+    if (gCurrentLevelHeader->world != -1) {
         settings->worldId = gCurrentLevelHeader->world;
     }
     settings->courseId = levelId;
@@ -1208,7 +1210,7 @@ void ingame_logic_loop(s32 updateRate) {
     }
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_borders_for_multiplayer(&gCurrDisplayList);
-    render_minimap_and_multiplayer_hud(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
+    render_minimap_and_misc_hud(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
     render_second_multiplayer_borders(&gCurrDisplayList);
     if (D_800DD39C != 0) {
         if (func_800214C4() != 0) {
