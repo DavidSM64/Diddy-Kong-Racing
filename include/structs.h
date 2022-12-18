@@ -620,7 +620,8 @@ typedef struct ObjectHeader {
   /* 0x60 */ char internalName[16];
   /* 0x70 */ u8 unk70;
   /* 0x71 */ u8 unk71;
-             u8 pad72[0x6];
+  /* 0x71 */ u8 unk72;
+             u8 pad73[0x5];
 } ObjectHeader;
 
 typedef struct Object_44_0 {

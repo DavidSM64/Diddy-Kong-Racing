@@ -23,6 +23,8 @@
 #include "waves.h"
 #include "object_functions.h"
 #include "object_models.h"
+#include "unknown_032760.h"
+#include "game_ui.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
