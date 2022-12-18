@@ -168,6 +168,7 @@ void func_8006A6B0(void);
 void func_8006ECFC(s32 numberOfPlayers);
 void func_8006DCF8(s32 arg0);
 void func_8006EFDC(void);
+void func_8006A6B0(void);
 void func_80010994(s32 updateRate);
 
 #endif
