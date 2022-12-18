@@ -283,10 +283,10 @@ typedef struct PulsatingLightData {
 
 /* Size: 0xC4 bytes */
 typedef struct LevelHeader {
-  /* 0x00 */ u8 world;
+  /* 0x00 */ s8 world;
   /* 0x01 */ u8 unk1;
   /* 0x02 */ s8 unk2;
-  /* 0x03 */ u8 unk3;
+  /* 0x03 */ s8 unk3;
   /* 0x04 */ s8 unk4[4];
   /* 0x08 */ f32 course_height;
   /* 0x0C */ u8 unkC[10];
