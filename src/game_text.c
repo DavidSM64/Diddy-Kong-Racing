@@ -327,9 +327,84 @@ void func_800C3440(s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/game_text/func_800C3564.s")
+s32 func_800C3564(void) {
+    s32 xPos;
+    s32 index;
+    s32 numberOfOnes;
+    s32 keepLooping;
+    u32 playerButtons;
+    TextBox textBox;
 
-s32 func_800C38B4(s32 arg0, s32 *arg1) {
+    textBox.font = ASSET_FONTS_FUNFONT;
+    SET_TEXTBOX_BOUNDARY(10, 15, 180, 125);
+    textBox.textFlags = 4;
+    textBox.textColRed = 0;
+    textBox.textColGreen = 0;
+    textBox.textColBlue = 0;
+    textBox.textColAlpha = 0;
+    SET_TEXTBOX_TEXT_POS_AND_LINEHEIGHT(5, 10, 15);
+    
+    set_current_dialogue_box_coords(1, textBox.left, textBox.top, textBox.right, textBox.bottom);
+    set_dialogue_font(1, textBox.font);
+    set_current_dialogue_background_colour(1, 0, 16, 16, 128);
+    set_current_text_colour(1, textBox.textColRed, textBox.textColGreen, textBox.textColBlue, textBox.textColAlpha, 255);
+
+    
+    for (index = 0, numberOfOnes = 0; D_8012A78E != numberOfOnes && D_8012A7A0[index] != 2; index++) {
+        if (D_8012A7A0[index] >= 3 && D_8012A7A0[index] < 13) {
+            index = func_800C38B4(index, &textBox);
+        }
+        if (D_8012A7A0[index] == 1) {
+            numberOfOnes++;
+        }
+    }
+    if (D_8012A7A0[index] >= 3 && D_8012A7A0[index] < 13) {
+        index = func_800C38B4(index, &textBox);
+    }
+    
+    keepLooping = TRUE;
+    do {
+        if (textBox.textFlags == 0) {
+            xPos = textBox.textX;
+        } else {
+            xPos = (s32) (textBox.right - textBox.left) >> 1; // Center x position to box.
+        }
+        render_dialogue_text(1, xPos, textBox.textY, &D_8012A7A0[index], D_800E3674, textBox.textFlags);
+        textBox.textY += textBox.lineHeight;
+        while (D_8012A7A0[index] > 0) {
+            index += 1;
+        }
+        while (D_8012A7A0[index] == 0) {
+            index += 1;
+        }
+        if (D_8012A7A0[index] < 3) {
+            keepLooping = FALSE;
+        }
+        if (D_8012A7A0[index] >= 3 && D_8012A7A0[index] < 13) {
+            index = func_800C38B4(index, &textBox);
+        }
+    } while (keepLooping);
+    playerButtons = get_buttons_pressed_from_player(PLAYER_ONE);
+    if (D_8012A787 == 0) {
+        playerButtons = 0;
+    }
+    if (D_8012A78A == 0) {
+        if (playerButtons & A_BUTTON || D_8012A784 != 0) {
+            if (D_8012A7A0[index] == 1) {
+                D_8012A78E += 1;
+            } else {
+                D_8012A789 = 0;
+                func_8009CF68(3);
+            }
+            D_8012A784 = 0;
+            D_8012A786 = 0;
+        }
+    }
+    D_8012A78A = 0;
+    return 1;
+}
+
+s32 func_800C38B4(s32 arg0, TextBox *textbox) {
     s32 temp;
     char *var_s0;
 
@@ -337,58 +412,58 @@ s32 func_800C38B4(s32 arg0, s32 *arg1) {
     while ((var_s0[0] >= 3) && (var_s0[0] < 13)) {
         switch (var_s0[0] - 3) {
         case 0:
-            arg1[0] = var_s0[1];
+            textbox->font = var_s0[1];
             arg0 += 2;
-            set_dialogue_font(1, arg1[0]);
+            set_dialogue_font(1, textbox->font);
             var_s0 = &D_8012A7A0[arg0];
             break;
         case 1:
-            arg1[1] = var_s0[1] & 0xFF;
-            arg1[2] = D_8012A7A0[arg0 + 2] & 0xFF;
+            textbox->left = var_s0[1] & 0xFF;
+            textbox->top = D_8012A7A0[arg0 + 2] & 0xFF;
             if (osTvType == 0) {
-                temp = arg1[2];
-                arg1[2] = ((arg1[2] * 0x108) / 240);
-                temp = arg1[2] - temp;
+                temp = textbox->top;
+                textbox->top = ((textbox->top * 0x108) / 240);
+                temp = textbox->top - temp;
             } else {
                 temp = 0;
             }
-            arg1[3] = (D_8012A7A0[arg0 + 3] & 0xFF) + 0x41;
-            arg1[4] = (D_8012A7A0[arg0 + 4] & 0xFF) + temp;
+            textbox->right = (D_8012A7A0[arg0 + 3] & 0xFF) + 0x41;
+            textbox->bottom = (D_8012A7A0[arg0 + 4] & 0xFF) + temp;
             arg0 += 5;
-            set_current_dialogue_box_coords(1, arg1[1], arg1[2], arg1[3], arg1[4]);
+            set_current_dialogue_box_coords(1, textbox->left, textbox->top, textbox->right, textbox->bottom);
             var_s0 = &D_8012A7A0[arg0];
             break;
         case 2:
-            arg1[5] = var_s0[1];
-            arg1[6] = D_8012A7A0[arg0 + 2];
-            arg1[7] = D_8012A7A0[arg0 + 3];
-            arg1[8] = D_8012A7A0[arg0 + 4];
+            textbox->textColRed = var_s0[1];
+            textbox->textColGreen = D_8012A7A0[arg0 + 2];
+            textbox->textColBlue = D_8012A7A0[arg0 + 3];
+            textbox->textColAlpha = D_8012A7A0[arg0 + 4];
             arg0 += 5;
-            set_current_text_colour(1, arg1[5], arg1[6], arg1[7], arg1[8], 255);
+            set_current_text_colour(1, textbox->textColRed, textbox->textColGreen, textbox->textColBlue, textbox->textColAlpha, 255);
             var_s0 = &D_8012A7A0[arg0];
             break;
         case 3:
             if (var_s0[1] == 0) {
-                arg1[9] = 4;
+                textbox->textFlags = 4;
             } else {
-                arg1[9] = 0;
+                textbox->textFlags = 0;
             }
             arg0 += 2;
             var_s0 = &D_8012A7A0[arg0];
             break;
         case 4:
             arg0 += 2;
-            arg1[10] = var_s0[1];
+            textbox->textX = var_s0[1];
             var_s0 = &D_8012A7A0[arg0];
             break;
         case 5:
             arg0 += 2;
-            arg1[11] += var_s0[1];
+            textbox->textY += var_s0[1];
             var_s0 = &D_8012A7A0[arg0];
             break;
         case 6:
             arg0 += 2;
-            arg1[12] = var_s0[1];
+            textbox->lineHeight = var_s0[1];
             var_s0 = &D_8012A7A0[arg0];
             break;
         case 7:
@@ -414,4 +489,3 @@ s32 func_800C38B4(s32 arg0, s32 *arg1) {
     }
     return arg0;
 }
-
