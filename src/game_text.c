@@ -19,20 +19,20 @@ s32 D_800E3680 = 1;
 
 /************ .bss ************/
 
-u8 *gGameTextTable; //128 bytes?
+GameTextTableStruct *gGameTextTable[1];
 s8 D_8012A784;
 s8 D_8012A785;
 s8 D_8012A786;
 s8 D_8012A787;
 s8 D_8012A788;
 u8 D_8012A789;
-s8 D_8012A78A;
+u8 D_8012A78A;
 s16 D_8012A78C;
 s16 D_8012A78E;
 s16 D_8012A790;
 s16 D_8012A792;
-u8 *D_8012A798[2]; //960 x2 bytes
-s32 D_8012A7A0;
+char *D_8012A798[2]; //960 x2 bytes
+char *D_8012A7A0;
 s32 D_8012A7A4;
 s16 sDialogueAlpha;
 s16 D_8012A7AA;
@@ -45,9 +45,9 @@ s16 D_8012A7B6;     // A Boolean value
 s16 D_8012A7B8;
 s16 D_8012A7BA;
 s16 D_8012A7BE;
-u8 *D_8012A7C0[1];
-unk8012A7C8 D_8012A7C8;
-u8 *D_8012A7D0;
+char *D_8012A7C0[1];
+char *D_8012A7C8[2];
+char *D_8012A7D0;
 s32 D_8012A7D4;
 s32 D_8012A7D8;
 s32 D_8012A7DC;
@@ -55,8 +55,8 @@ s32 D_8012A7DC;
 /*****************************/
 
 void func_800C29F0(void) {
-    D_8012A7C8.unk0 = (u8 *)allocate_from_main_pool_safe(0x780, COLOUR_TAG_GREEN);
-    D_8012A7C8.unk4 = D_8012A7C8.unk0 + 0x3C0;
+    D_8012A7C8[0] = (char *) allocate_from_main_pool_safe(0x780, COLOUR_TAG_GREEN);
+    D_8012A7C8[1] = D_8012A7C8[0] + 0x3C0;
     D_8012A7D4 = 0;
     D_8012A7B6 = 0;
     sDialogueAlpha = 0;
@@ -68,14 +68,14 @@ void func_800C29F0(void) {
         sDialogueYPos1 = 224;
         sDialogueYPos2 = 248;
     } else {
-        sDialogueYPos1 = 202;
-        sDialogueYPos2 = 222;
+        sDialogueYPos1 = SCREEN_HEIGHT - 38;
+        sDialogueYPos2 = SCREEN_HEIGHT - 18;
     }
     func_800C56D0(6);
 }
 
 void func_800C2AB4(void) {
-    free_from_memory_pool(D_8012A7C8.unk0);
+    free_from_memory_pool(D_8012A7C8[0]);
     D_8012A7B6 = 0;
     close_dialogue_box(6);
     assign_dialogue_box_id(6);
@@ -85,12 +85,46 @@ void func_800C2AF4(s32 arg0) {
     D_800E3680 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/game_text/func_800C2B00.s")
+void func_800C2B00(void) {
+    s32 var_s1;
+    s32 var_s3;
+    s32 i;
+    s32 textFlags;
+    char **var_s2;
+
+    assign_dialogue_box_id(6);
+    set_current_dialogue_box_coords(6, sDialogueXPos1, sDialogueYPos1, sDialogueXPos2, sDialogueYPos2);
+    set_current_dialogue_background_colour(6, 0x40, 0x60, 0x60, (sDialogueAlpha * 0xA0) >> 8);
+    set_current_text_background_colour(6, 0, 0, 0, 0);
+    var_s3 = ((((sDialogueYPos2 - sDialogueYPos1) - (D_8012A7B8 * 0xC)) - (D_8012A7B8 * 2)) + 2) >> 1;
+
+    
+    for (i = 0; i < D_8012A7B8; i++) {
+        var_s2 = &D_8012A7C0[0];
+        set_dialogue_font(6, (s32)var_s2[i][5]);
+        textFlags = var_s2[i][6];
+        if (textFlags == 4) {
+            var_s1 = (sDialogueXPos2 - sDialogueXPos1) >> 1;
+        } else {
+            if (textFlags == 1) {
+                var_s1 = (sDialogueXPos2 - sDialogueXPos1) - 8;
+            } else {
+                var_s1 = 8;
+            }
+        }
+        set_current_text_colour(6, var_s2[i][1], var_s2[i][2], var_s2[i][3], 255, (var_s2[i][4] * sDialogueAlpha) >> 8);
+        render_dialogue_text(6, var_s1, var_s3, var_s2[i] + 8, 1, textFlags);
+        set_current_text_colour(6, 0, 0, 0, 255, (sDialogueAlpha * 255) >> 8);
+        render_dialogue_text(6, var_s1 + 1, var_s3 + 1, var_s2[i] + 8, 1, textFlags);
+        var_s3 += 14;
+    }
+    open_dialogue_box(6);
+}
 
 void func_800C2D6C(void) {
-    unsigned int new_var3;
+    u32 new_var3;
     u8 new_var;
-    int new_var2;
+    s32 new_var2;
     s32 done;
     
     D_8012A7B8 = 0;
@@ -134,7 +168,7 @@ void func_800C2F1C(s32 arg0) {
     if (D_8012A7B6 != 0) {
         if (D_8012A7AC <= 0) {
             sDialogueAlpha -= arg0 * D_8012A7AA;
-            if ((s32)sDialogueAlpha < 0) {
+            if (sDialogueAlpha < 0) {
                 sDialogueAlpha = 0;
                 D_8012A7B6 = 0;
                 close_dialogue_box(6);
@@ -158,8 +192,8 @@ void func_800C2F1C(s32 arg0) {
 
 void func_800C3048(void) {
     D_8012A78C = -1;
-    gGameTextTable = (u8 *)allocate_from_main_pool_safe(2048, COLOUR_TAG_GREEN);
-    D_8012A798[0] = &gGameTextTable[128];
+    gGameTextTable[0] = (GameTextTableStruct *) allocate_from_main_pool_safe(2048, COLOUR_TAG_GREEN);
+    D_8012A798[0] = (char *) &gGameTextTable[0]->entries[32];
     D_8012A798[1] = &D_8012A798[0][960];
     D_8012A7A4 = 0;
     func_800C29F0();
@@ -170,7 +204,7 @@ void func_800C3048(void) {
 void func_800C30CC(void) {
     s32 i;
     if (D_800E3670) {
-        free_from_memory_pool(gGameTextTable);
+        free_from_memory_pool(gGameTextTable[0]);
         D_800E3670 = 0;
         D_8012A789 = 0;
         for (i = 0; i < 10; i++) {
@@ -197,7 +231,59 @@ void func_800C3158(s32 arg0, f32 arg1) {
     D_800E367C = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/game_text/func_800C31EC.s")
+void func_800C31EC(s32 arg0) {
+    char **entries;
+    UNUSED s32 pad;
+    s32 size;
+    s32 language;
+    s32 temp;
+    
+  if ((D_800E3670 != 0) && (arg0 >= 0)) {
+    if (arg0 < D_8012A790) {
+      language = get_language();
+      switch (language) {
+        case LANGUAGE_GERMAN:
+          arg0 += 0x55;
+          break;
+        case LANGUAGE_FRENCH:
+          arg0 += 0xAA;
+          break;
+        case LANGUAGE_JAPANESE:
+          arg0 += 0xFF;
+          break;
+      }
+
+      load_asset_to_address(ASSET_GAME_TEXT_TABLE, (u32) (*gGameTextTable)->entries, (arg0 & (~1)) << 2, 16);
+      
+      entries = (*gGameTextTable)->entries;
+      temp = ((s32) entries[(arg0 & 1)]) & 0xFF000000;
+      size = (((s32) entries[(arg0 & 1) + 1]) & 0xFFFFFF) - (((s32) entries[(arg0 & 1)]) & 0xFFFFFF);
+      
+      if (temp) {
+        load_asset_to_address(ASSET_GAME_TEXT, (u32) D_8012A7C8[D_8012A7D4], ((s32) entries[(arg0 & 1)]) ^ temp, size);
+        D_8012A7D0 = D_8012A7C8[D_8012A7D4];
+        func_800C2D6C();
+        D_8012A7D4 = (D_8012A7D4 + 1) & 1;
+        return;
+      }
+      load_asset_to_address(ASSET_GAME_TEXT, (u32) D_8012A798[D_8012A7A4], ((s32) entries[(arg0 & 1)]) ^ temp, size);
+      D_8012A7A0 = D_8012A798[D_8012A7A4];
+      D_8012A7A4 = (D_8012A7A4 + 1) & 1;
+      D_8012A788 = 0;
+      D_8012A786 = 0;
+      D_8012A784 = 0;
+      D_8012A787 = 1;
+      D_8012A7A0[size] = 2;
+      if (!D_8012A789) {
+        D_8012A78E = 0;
+        D_8012A78A = 1;
+        D_8012A789 = 1;
+      }
+      return;
+    }
+  }
+  D_8012A784 = 1;
+}
 
 s32 func_800C3400(void) {
     s32 result = 0;
@@ -242,4 +328,90 @@ void func_800C3440(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/game_text/func_800C3564.s")
-GLOBAL_ASM("asm/non_matchings/game_text/func_800C38B4.s")
+
+s32 func_800C38B4(s32 arg0, s32 *arg1) {
+    s32 temp;
+    char *var_s0;
+
+    var_s0 = &D_8012A7A0[arg0];
+    while ((var_s0[0] >= 3) && (var_s0[0] < 13)) {
+        switch (var_s0[0] - 3) {
+        case 0:
+            arg1[0] = var_s0[1];
+            arg0 += 2;
+            set_dialogue_font(1, arg1[0]);
+            var_s0 = &D_8012A7A0[arg0];
+            break;
+        case 1:
+            arg1[1] = var_s0[1] & 0xFF;
+            arg1[2] = D_8012A7A0[arg0 + 2] & 0xFF;
+            if (osTvType == 0) {
+                temp = arg1[2];
+                arg1[2] = ((arg1[2] * 0x108) / 240);
+                temp = arg1[2] - temp;
+            } else {
+                temp = 0;
+            }
+            arg1[3] = (D_8012A7A0[arg0 + 3] & 0xFF) + 0x41;
+            arg1[4] = (D_8012A7A0[arg0 + 4] & 0xFF) + temp;
+            arg0 += 5;
+            set_current_dialogue_box_coords(1, arg1[1], arg1[2], arg1[3], arg1[4]);
+            var_s0 = &D_8012A7A0[arg0];
+            break;
+        case 2:
+            arg1[5] = var_s0[1];
+            arg1[6] = D_8012A7A0[arg0 + 2];
+            arg1[7] = D_8012A7A0[arg0 + 3];
+            arg1[8] = D_8012A7A0[arg0 + 4];
+            arg0 += 5;
+            set_current_text_colour(1, arg1[5], arg1[6], arg1[7], arg1[8], 255);
+            var_s0 = &D_8012A7A0[arg0];
+            break;
+        case 3:
+            if (var_s0[1] == 0) {
+                arg1[9] = 4;
+            } else {
+                arg1[9] = 0;
+            }
+            arg0 += 2;
+            var_s0 = &D_8012A7A0[arg0];
+            break;
+        case 4:
+            arg0 += 2;
+            arg1[10] = var_s0[1];
+            var_s0 = &D_8012A7A0[arg0];
+            break;
+        case 5:
+            arg0 += 2;
+            arg1[11] += var_s0[1];
+            var_s0 = &D_8012A7A0[arg0];
+            break;
+        case 6:
+            arg0 += 2;
+            arg1[12] = var_s0[1];
+            var_s0 = &D_8012A7A0[arg0];
+            break;
+        case 7:
+            if (D_8012A786 == 0) {
+                D_8012A786 = var_s0[1] & 0xFF;
+                D_8012A785 = normalise_time(0x3C);
+                var_s0 = &D_8012A7A0[arg0];
+            }
+            arg0 += 2;
+            var_s0 += 2;
+            break;
+        case 8:
+            arg0 += 2;
+            D_8012A787 = (s8) var_s0[1];
+            var_s0 += 2;
+            break;
+        case 9:
+            arg0 += 2;
+            D_8012A788 = (s8) var_s0[1];
+            var_s0 += 2;
+            break;
+        }
+    }
+    return arg0;
+}
+

@@ -9,17 +9,15 @@
 #include "font.h"
 #include "PR/libultra.h"
 
-typedef struct unk8012A7C8 {
-    u8 *unk0;
-    u8 *unk4;
-} unk8012A7C8;
-
 typedef struct unk8012A798 {
     u8 *unk0;
     u8 *unk4;
 } unk8012A798;
 
-extern u32 osTvType;
+typedef struct GameTextTableStruct  {
+ char *entries[128];
+ s32 *somethingElse;
+} GameTextTableStruct;
 
 void func_800C29F0(void);
 void func_800C2AB4(void);
@@ -33,9 +31,10 @@ void func_800C3158(s32 arg0, f32 arg1);
 s32 func_800C3400(void);
 void func_800C3440(s32 arg0);
 void func_800C2D6C(void);
+s32 func_800C38B4(s32 arg0, s32 *arg1);
+void func_800C2B00(void);
+void func_800C31EC(s32 arg0);
 
-void func_800C31EC(s32); //Non Matching
 s32 func_800C3564(void); //Non Matching
-void func_800C2B00(void); //Non Matching
 
 #endif
