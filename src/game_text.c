@@ -45,9 +45,9 @@ s16 D_8012A7B6;     // A Boolean value
 s16 D_8012A7B8;
 s16 D_8012A7BA;
 s16 D_8012A7BE;
-s32 D_8012A7C0;
+u8 *D_8012A7C0[1];
 unk8012A7C8 D_8012A7C8;
-s32 D_8012A7D0;
+u8 *D_8012A7D0;
 s32 D_8012A7D4;
 s32 D_8012A7D8;
 s32 D_8012A7DC;
@@ -86,7 +86,46 @@ void func_800C2AF4(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/game_text/func_800C2B00.s")
-GLOBAL_ASM("asm/non_matchings/game_text/func_800C2D6C.s")
+
+void func_800C2D6C(void) {
+    unsigned int new_var3;
+    u8 new_var;
+    int new_var2;
+    s32 done;
+    
+    D_8012A7B8 = 0;
+    D_8012A7AC = 0;
+    done = FALSE;
+    while ((D_8012A7D0[0] != 0) && done == FALSE) {
+        D_8012A7BA = D_8012A7D0[0] - 1;
+        D_8012A7C0[(D_8012A7B8)] = D_8012A7D0;
+        D_8012A7AC = normalise_time(D_8012A7D0[7] * 6);
+        D_8012A7D0 += 8;
+        do {
+            new_var = D_8012A7D0[0];
+            if (new_var & 0x80) {
+            D_8012A7D0 += 2;
+            } else {
+            D_8012A7D0++;
+            }
+        } while (D_8012A7D0[0] != 0);
+        D_8012A7B8++;
+        if (D_8012A7B8 >= 2) {
+            done = TRUE;
+        }
+        D_8012A7D0++;
+        new_var3 = (new_var2 = D_8012A7D0[0]);
+        if (D_8012A7D0[0] == 10) {
+            D_8012A7D0++;
+        } else if (new_var3 == 12) {
+            D_8012A7D0++;
+            done = TRUE;
+        }
+    }
+    if (D_8012A7B8 > 0) {
+    D_8012A7B6 = 1;
+    }
+}
 
 void func_800C2F1C(s32 arg0) {
     if (D_800E3680 == 0) {

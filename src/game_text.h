@@ -32,10 +32,10 @@ void func_800C314C(void);
 void func_800C3158(s32 arg0, f32 arg1);
 s32 func_800C3400(void);
 void func_800C3440(s32 arg0);
+void func_800C2D6C(void);
 
 void func_800C31EC(s32); //Non Matching
 s32 func_800C3564(void); //Non Matching
-void func_800C2D6C(void); //Non Matching
 void func_800C2B00(void); //Non Matching
 
 #endif
