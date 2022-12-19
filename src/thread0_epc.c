@@ -165,7 +165,7 @@ void func_800B7144(void) {
 GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B71B0.s")
 
 #ifdef NON_EQUIVALENT
-//Rename mask to colorTag?
+//Rename mask to colourTag?
 void func_800B7460(s32 *epc, s32 size, s32 mask) {
     epcInfo sp840;
     s16 sp440[0x200];

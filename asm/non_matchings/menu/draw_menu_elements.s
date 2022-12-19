@@ -29,7 +29,7 @@ glabel draw_menu_elements
 /* 082E44 80082244 26D663A0 */  addiu $s6, %lo(sMenuCurrDisplayList) # addiu $s6, $s6, 0x63a0
 /* 082E48 80082248 3C058012 */  lui   $a1, %hi(sMenuCurrHudMat) # $a1, 0x8012
 /* 082E4C 8008224C 24A563A8 */  addiu $a1, %lo(sMenuCurrHudMat) # addiu $a1, $a1, 0x63a8
-/* 082E50 80082250 0C019FCB */  jal   func_80067F2C
+/* 082E50 80082250 0C019FCB */  jal   set_ortho_matrix_view
 /* 082E54 80082254 02C02025 */   move  $a0, $s6
 /* 082E58 80082258 8E110014 */  lw    $s1, 0x14($s0)
 /* 082E5C 8008225C 3C013B80 */  li    $at, 0x3B800000 # 0.003906

@@ -28,7 +28,7 @@ glabel func_80096978
 /* 0975DC 800969DC 3C058012 */  lui   $a1, %hi(sMenuCurrHudMat) # $a1, 0x8012
 /* 0975E0 800969E0 24A563A8 */  addiu $a1, %lo(sMenuCurrHudMat) # addiu $a1, $a1, 0x63a8
 /* 0975E4 800969E4 248463A0 */  addiu $a0, %lo(sMenuCurrDisplayList) # addiu $a0, $a0, 0x63a0
-/* 0975E8 800969E8 0C019FCB */  jal   func_80067F2C
+/* 0975E8 800969E8 0C019FCB */  jal   set_ortho_matrix_view
 /* 0975EC 800969EC AFA30098 */   sw    $v1, 0x98($sp)
 /* 0975F0 800969F0 44800000 */  mtc1  $zero, $f0
 /* 0975F4 800969F4 3C013F80 */  li    $at, 0x3F800000 # 1.000000

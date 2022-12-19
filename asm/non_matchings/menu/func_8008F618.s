@@ -20,7 +20,7 @@ glabel func_8008F618
 /* 090260 8008F660 0C01988C */  jal   func_80066230
 /* 090264 8008F664 02002825 */   move  $a1, $s0
 /* 090268 8008F668 02C02025 */  move  $a0, $s6
-/* 09026C 8008F66C 0C019FCB */  jal   func_80067F2C
+/* 09026C 8008F66C 0C019FCB */  jal   set_ortho_matrix_view
 /* 090270 8008F670 02002825 */   move  $a1, $s0
 /* 090274 8008F674 0C01ECF4 */  jal   reset_render_settings
 /* 090278 8008F678 02C02025 */   move  $a0, $s6

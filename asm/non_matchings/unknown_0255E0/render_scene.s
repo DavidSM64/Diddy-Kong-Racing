@@ -333,11 +333,11 @@ glabel render_scene
 /* 025E30 80025230 0C02AF9A */  jal   process_weather
 /* 025E34 80025234 AFAF0010 */   sw    $t7, 0x10($sp)
 .L80025238:
-/* 025E38 80025238 0C01A748 */  jal   func_80069D20
+/* 025E38 80025238 0C01A748 */  jal   get_active_camera_segment
 /* 025E3C 8002523C 00000000 */   nop   
 /* 025E40 80025240 0C02B40C */  jal   func_800AD030
 /* 025E44 80025244 00402025 */   move  $a0, $v0
-/* 025E48 80025248 0C01A748 */  jal   func_80069D20
+/* 025E48 80025248 0C01A748 */  jal   get_active_camera_segment
 /* 025E4C 8002524C 00000000 */   nop   
 /* 025E50 80025250 3C068012 */  lui   $a2, %hi(gSceneCurrVertexList) # $a2, 0x8012
 /* 025E54 80025254 24C6B0A8 */  addiu $a2, %lo(gSceneCurrVertexList) # addiu $a2, $a2, -0x4f58
@@ -381,7 +381,7 @@ glabel render_scene
 /* 025EE8 800252E8 24010041 */  li    $at, 65
 /* 025EEC 800252EC 1041005D */  beq   $v0, $at, .L80025464
 /* 025EF0 800252F0 00000000 */   nop   
-/* 025EF4 800252F4 0C02A116 */  jal   func_800A8458
+/* 025EF4 800252F4 0C02A116 */  jal   get_multiplayer_hud_setting
 /* 025EF8 800252F8 00000000 */   nop   
 /* 025EFC 800252FC 14400054 */  bnez  $v0, .L80025450
 /* 025F00 80025300 00000000 */   nop   
@@ -440,11 +440,11 @@ glabel render_scene
 /* 025FD0 800253D0 2404FFFF */  li    $a0, -1
 /* 025FD4 800253D4 0C02ACC2 */  jal   func_800AB308
 /* 025FD8 800253D8 2405FE00 */   li    $a1, -512
-/* 025FDC 800253DC 0C01A748 */  jal   func_80069D20
+/* 025FDC 800253DC 0C01A748 */  jal   get_active_camera_segment
 /* 025FE0 800253E0 00000000 */   nop   
 /* 025FE4 800253E4 0C02B40C */  jal   func_800AD030
 /* 025FE8 800253E8 00402025 */   move  $a0, $v0
-/* 025FEC 800253EC 0C01A748 */  jal   func_80069D20
+/* 025FEC 800253EC 0C01A748 */  jal   get_active_camera_segment
 /* 025FF0 800253F0 00000000 */   nop   
 /* 025FF4 800253F4 3C068012 */  lui   $a2, %hi(gSceneCurrVertexList) # $a2, 0x8012
 /* 025FF8 800253F8 24C6B0A8 */  addiu $a2, %lo(gSceneCurrVertexList) # addiu $a2, $a2, -0x4f58

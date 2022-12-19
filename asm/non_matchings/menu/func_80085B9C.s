@@ -59,7 +59,7 @@ glabel L80085C30
 /* 08684C 80085C4C AFA6004C */  sw    $a2, 0x4c($sp)
 /* 086850 80085C50 AFA70048 */  sw    $a3, 0x48($sp)
 /* 086854 80085C54 AFA80044 */  sw    $t0, 0x44($sp)
-/* 086858 80085C58 0C019FCB */  jal   func_80067F2C
+/* 086858 80085C58 0C019FCB */  jal   set_ortho_matrix_view
 /* 08685C 80085C5C AFA90040 */   sw    $t1, 0x40($sp)
 /* 086860 80085C60 00002025 */  move  $a0, $zero
 /* 086864 80085C64 00002825 */  move  $a1, $zero

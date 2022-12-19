@@ -25,8 +25,8 @@ glabel func_800A1248
 /* 0A1E90 800A1290 8FA50050 */  lw    $a1, 0x50($sp)
 /* 0A1E94 800A1294 0C028F39 */  jal   render_race_start
 /* 0A1E98 800A1298 02002025 */   move  $a0, $s0
-/* 0A1E9C 800A129C 3C028012 */  lui   $v0, %hi(D_80126D37) # $v0, 0x8012
-/* 0A1EA0 800A12A0 90426D37 */  lbu   $v0, %lo(D_80126D37)($v0)
+/* 0A1E9C 800A129C 3C028012 */  lui   $v0, %hi(gNumActivePlayers) # $v0, 0x8012
+/* 0A1EA0 800A12A0 90426D37 */  lbu   $v0, %lo(gNumActivePlayers)($v0)
 /* 0A1EA4 800A12A4 8FA70044 */  lw    $a3, 0x44($sp)
 /* 0A1EA8 800A12A8 24130001 */  li    $s3, 1
 /* 0A1EAC 800A12AC 10530007 */  beq   $v0, $s3, .L800A12CC
@@ -50,7 +50,7 @@ glabel func_800A1248
 /* 0A1EEC 800A12EC 8E180000 */  lw    $t8, ($s0)
 /* 0A1EF0 800A12F0 00000000 */  nop   
 /* 0A1EF4 800A12F4 8F040064 */  lw    $a0, 0x64($t8)
-/* 0A1EF8 800A12F8 0C02917C */  jal   func_800A45F0
+/* 0A1EF8 800A12F8 0C02917C */  jal   render_treasure_hud
 /* 0A1EFC 800A12FC 00000000 */   nop   
 /* 0A1F00 800A1300 1633000D */  bne   $s1, $s3, .L800A1338
 /* 0A1F04 800A1304 00000000 */   nop   
@@ -102,7 +102,7 @@ glabel func_800A1248
 /* 0A1FB4 800A13B4 10000003 */  b     .L800A13C4
 /* 0A1FB8 800A13B8 E452040C */   swc1  $f18, 0x40c($v0)
 .L800A13BC:
-/* 0A1FBC 800A13BC 0C02917C */  jal   func_800A45F0
+/* 0A1FBC 800A13BC 0C02917C */  jal   render_treasure_hud
 /* 0A1FC0 800A13C0 00E02025 */   move  $a0, $a3
 .L800A13C4:
 /* 0A1FC4 800A13C4 8FA8004C */  lw    $t0, 0x4c($sp)

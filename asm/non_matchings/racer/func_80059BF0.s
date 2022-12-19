@@ -65,7 +65,7 @@ glabel func_80059BF0
 /* 05A8E4 80059CE4 28E10168 */  slti  $at, $a3, 0x168
 /* 05A8E8 80059CE8 1420000D */  bnez  $at, .L80059D20
 /* 05A8EC 80059CEC A52F0000 */   sh    $t7, ($t1)
-/* 05A8F0 80059CF0 0C01BAAC */  jal   func_8006EAB0
+/* 05A8F0 80059CF0 0C01BAAC */  jal   is_postrace_viewport_active
 /* 05A8F4 80059CF4 00000000 */   nop   
 /* 05A8F8 80059CF8 3C0A8012 */  lui   $t2, %hi(D_8011D59C) # $t2, 0x8012
 /* 05A8FC 80059CFC 14400044 */  bnez  $v0, .L80059E10

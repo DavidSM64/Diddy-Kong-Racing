@@ -523,7 +523,7 @@ glabel func_800AA600
 .L800AADA4:
 /* 0AB9A4 800AADA4 13200020 */  beqz  $t9, .L800AAE28
 /* 0AB9A8 800AADA8 304E4000 */   andi  $t6, $v0, 0x4000
-/* 0AB9AC 800AADAC 0C01A748 */  jal   func_80069D20
+/* 0AB9AC 800AADAC 0C01A748 */  jal   get_active_camera_segment
 /* 0AB9B0 800AADB0 00000000 */   nop   
 /* 0AB9B4 800AADB4 3C098012 */  lui   $t1, %hi(D_80126CF4) # $t1, 0x8012
 /* 0AB9B8 800AADB8 AFA200A8 */  sw    $v0, 0xa8($sp)
@@ -545,7 +545,7 @@ glabel func_800AA600
 /* 0AB9F8 800AADF8 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0AB9FC 800AADFC AFA00014 */  sw    $zero, 0x14($sp)
 /* 0ABA00 800AAE00 02003825 */  move  $a3, $s0
-/* 0ABA04 800AAE04 0C01A2FD */  jal   func_80068BF4
+/* 0ABA04 800AAE04 0C01A2FD */  jal   render_orthi_triangle_image
 /* 0ABA08 800AAE08 AFA30010 */   sw    $v1, 0x10($sp)
 /* 0ABA0C 800AAE0C 8FB800A8 */  lw    $t8, 0xa8($sp)
 /* 0ABA10 800AAE10 860B0004 */  lh    $t3, 4($s0)
