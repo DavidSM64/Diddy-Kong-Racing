@@ -543,7 +543,55 @@ void func_800AF404(s32 arg0) {
 #else
 GLOBAL_ASM("asm/non_matchings/particles/func_800AF404.s")
 #endif
-GLOBAL_ASM("asm/non_matchings/particles/func_800AF52C.s")
+
+void func_800AF52C(Object *obj, s32 arg1) {
+    s32 i;
+    Object_6C_800AF52C *temp_v0;
+    Object_6C_800AF52C_0* temp_v1;
+    Object_6C_800AF52C_C * temp;
+
+    temp_v0 = &((Object_6C_800AF52C*)obj->unk6C)[arg1];
+    temp_v1 = temp_v0->unk0;
+    temp_v0->unkA = 0;
+    if (temp_v0->unk4 & 0x4000) {
+        ((ObjectSegment*)temp_v0)->trans.x_position = obj->segment.trans.x_position;
+        ((ObjectSegment*)temp_v0)->trans.y_position = obj->segment.trans.y_position;
+        ((ObjectSegment*)temp_v0)->trans.z_position = obj->segment.trans.z_position;
+    } else if (temp_v0->unk4 & 0x400) {
+        temp_v0->unkA = (s16) (gParticlesAssetTable[temp_v0->unk8]->unk17 << 8);
+
+        if (temp_v0->unk6 > 0) { // Useless if statement, since the loop already does this.
+            for (i = 0; i < temp_v0->unk6; i++){
+                temp = temp_v0->unkC_arr[i];
+                temp->unk3A = 0;
+            }
+        }
+        if (temp_v1->unk0 & 1) {
+            temp_v0->unk10 = (s16) temp_v1->unk14;
+            temp_v0->unk12 = (s16) temp_v1->unk16;
+        }
+        if (temp_v1->unk0 & 4) {
+            temp_v0->unk14 = (s16) temp_v1->unk22;
+            temp_v0->unk16 = (s16) temp_v1->unk24;
+        }
+    } else {
+        if (temp_v1->unk0 & 1) {
+            temp_v0->unk6 = 0U;
+            temp_v0->unkC = (s16) temp_v1->unk14;
+            temp_v0->unkE = (s16) temp_v1->unk16;
+            temp_v0->unk10 = (s16) temp_v1->unk18;
+        }
+        if (temp_v1->unk0 & 4) {
+            temp_v0->unk7 = 0;
+            temp_v0->unk12 = (s16) temp_v1->unk22;
+            temp_v0->unk14 = (s16) temp_v1->unk24;
+            temp_v0->unk16 = (s16) temp_v1->unk26;
+        }
+    }
+    temp_v0->unk4 &= 0xFDFF;
+    temp_v0->unk4 |= 0xA000;
+    obj->segment.unk1A++;
+}
 
 void func_800AF6E4(Object *obj, s32 arg1) {
     Object_6C *obj6C;

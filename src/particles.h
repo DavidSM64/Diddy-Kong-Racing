@@ -52,6 +52,8 @@ typedef struct unk800AF29C_C {
 typedef struct unk800E2CF0 {
     u8 pad0[8];
     s16 unk8;
+    u8 padA[13];
+    u8 unk17;
 } unk800E2CF0;
 
 /* Size: 0x10 bytes */
@@ -104,6 +106,46 @@ typedef struct unk800AF29C {
 typedef struct XYStruct {
     s16 x, y;
 } XYStruct;
+
+typedef struct Object_6C_800AF52C_0 {
+    s32 unk0;
+    u8 pad4[0x10];
+    s16 unk14;
+    s16 unk16;
+    s16 unk18;
+    s16 unk1A;
+    u8 pad1C[6];
+    s16 unk22;
+    s16 unk24;
+    s16 unk26;
+} Object_6C_800AF52C_0;
+
+typedef struct Object_6C_800AF52C_C {
+    u8 pad0[0x3A];
+    s16 unk3A;
+} Object_6C_800AF52C_C;
+
+/* Size: 32 bytes */
+typedef struct Object_6C_800AF52C {
+    Object_6C_800AF52C_0 *unk0;
+    s16 unk4;
+    u8 unk6;
+    u8 unk7;
+    s16 unk8;
+    s16 unkA;
+    union {
+        Object_6C_800AF52C_C **unkC_arr;
+        struct {
+            s16 unkC;
+            s16 unkE;
+        };
+    };
+    s16 unk10;
+    s16 unk12;
+    s16 unk14;
+    s16 unk16;
+    u8 pad18[0x8];
+} Object_6C_800AF52C;
 
 extern unk800E2CF0 **gParticlesAssetTable;
 extern s32 gParticlesAssetTableCount;
