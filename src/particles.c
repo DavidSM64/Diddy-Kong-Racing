@@ -604,7 +604,53 @@ void func_800AF6E4(Object *obj, s32 arg1) {
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800AF714.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800AFC3C.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800AFE5C.s")
+
+void func_800AFE5C(s32 arg0, Object_6C_800AF52C *arg1) {
+    unk800B0698 *temp_s0;
+    Object *tempObj;
+    Object *tempObj2;
+    s32 i;
+    Object_6C_800AF52C_0 *temp_s4;
+
+    temp_s4 = arg1->unk0;
+    if (arg1->unk4 & 0x4000) {
+        tempObj = func_800B0BAC();
+        if (tempObj != NULL) {
+            func_8000E9D0(tempObj);
+        }
+        arg1->unk4 &= 0xDFFF;
+        if (arg1->unk6 + 64 > 255) {
+            arg1->unk6 = 255;
+        } else {
+            arg1->unk6 += 64;
+        }
+    } else if (arg1->unk4 & 0x400) {
+        if (arg1->unk6 < arg1->unk7) {
+            temp_s0 = func_800B0698(arg0, arg1);
+            arg1->unk4 &= 0xDFFF;
+            if (temp_s0 != NULL) {
+                func_8000E9D0((Object*)temp_s0);
+                temp_s0->unk74 = (u8) arg1->unk6;
+                temp_s0->unk40 |= 0x2000;
+                arg1->unkC_arr[arg1->unk6] = temp_s0;
+                arg1->unk6++;
+            }
+        }
+    } else {
+        while (arg1->unkA >= temp_s4->unk40) {
+            arg1->unkA -= temp_s4->unk40;
+            for (i = 0; i < temp_s4->unk42; i++) {
+                tempObj2 = func_800B1130(arg0, arg1);
+                if (tempObj2 != NULL) {
+                    func_8000E9D0(tempObj2);
+                    func_800B22FC(tempObj2, arg1->unkA);
+                }
+                arg1->unk4 &= ~0x2000;
+            }
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/particles/func_800B0010.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B03C0.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B0698.s")

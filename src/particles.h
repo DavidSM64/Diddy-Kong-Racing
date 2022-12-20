@@ -118,12 +118,22 @@ typedef struct Object_6C_800AF52C_0 {
     s16 unk22;
     s16 unk24;
     s16 unk26;
+    u8 pad28[0x18];
+    s16 unk40;
+    s16 unk42;
 } Object_6C_800AF52C_0;
 
 typedef struct Object_6C_800AF52C_C {
     u8 pad0[0x3A];
     s16 unk3A;
 } Object_6C_800AF52C_C;
+
+typedef struct unk800B0698 {
+    u8 pad0[0x40];
+    s32 unk40;
+    u8 pad44[0x30];
+    u8 unk74;
+} unk800B0698;
 
 /* Size: 32 bytes */
 typedef struct Object_6C_800AF52C {
@@ -134,7 +144,7 @@ typedef struct Object_6C_800AF52C {
     s16 unk8;
     s16 unkA;
     union {
-        Object_6C_800AF52C_C **unkC_arr;
+        unk800B0698 **unkC_arr;
         struct {
             s16 unkC;
             s16 unkE;
@@ -192,5 +202,8 @@ void func_800AFC3C(Object *, s32); // Non Matching
 void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
 void func_800AF714(Object*, s32); // Non matching
 void func_800B22FC(void*, s32);
+Object* func_800B1130(s32, void*);
+Object* func_800B0BAC();
+unk800B0698 *func_800B0698(s32, void*);
 
 #endif
