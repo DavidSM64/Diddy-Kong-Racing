@@ -10,6 +10,8 @@
 #include "thread0_epc.h"
 #include "objects.h"
 #include "asset_loading.h"
+#include "math_util.h"
+#include "unknown_0255E0.h"
 
 /************ .rodata ************/
 
@@ -45,19 +47,19 @@ const char D_800E8B44[] = "\nError :: particle %x is not indexed correctly in tr
 // I woundn't be suprised if most of these zeroes are really just null pointers.
 s32 D_800E2CA0 = 0;
 s32 D_800E2CA4 = 0;
-s32 *D_800E2CA8 = NULL;
+unk800B1CB8 *D_800E2CA8 = NULL;
 s32 D_800E2CAC = 0;
 s32 D_800E2CB0 = 0;
-s32 *D_800E2CB4 = NULL;
+unk800B1CB8 *D_800E2CB4 = NULL;
 s32 D_800E2CB8 = 0;
 s32 D_800E2CBC = 0;
-s32 *D_800E2CC0 = NULL;
+unk800B1CB8 *D_800E2CC0 = NULL;
 s32 D_800E2CC4 = 0;
 s32 D_800E2CC8 = 0;
-s32 *D_800E2CCC = NULL;
+unk800B1CB8 *D_800E2CCC = NULL;
 s32 D_800E2CD0 = 0;
 s32 D_800E2CD4 = 0;
-s32 *D_800E2CD8 = NULL;
+unk800E2CD8 *D_800E2CD8 = NULL;
 s32 D_800E2CDC = 0;
 s32 *D_800E2CE0 = NULL;
 s32 *D_800E2CE4 = NULL;
@@ -460,7 +462,7 @@ void func_800AF134(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s1
         arg1 = 0;
     }
     temp = gParticleBehavioursAssetTable[arg1];
-    if ((arg0->unk8 != arg2) || (temp != arg0->unk0)) {
+    if (arg0->unk8 != arg2 || temp != arg0->unk0) {
         func_800B2260(arg0);
         func_800AF29C(arg0, arg1, arg2, arg3, arg4, arg5);
     }
@@ -470,7 +472,7 @@ void func_800AF1E0(unk800AF29C *arg0, s32 arg1, s32 arg2) {
     ParticleBehavior *temp_v0;
 
     if (arg1 < gParticleBehavioursAssetTableCount) {
-        temp_v0 = (ParticleBehavior *)gParticleBehavioursAssetTable[arg1];
+        temp_v0 = (ParticleBehavior *) gParticleBehavioursAssetTable[arg1];
         func_800AF29C(arg0, arg1, arg2, temp_v0->unk4, temp_v0->unk8, temp_v0->unkC);
     }
 }
@@ -547,45 +549,45 @@ GLOBAL_ASM("asm/non_matchings/particles/func_800AF404.s")
 void func_800AF52C(Object *obj, s32 arg1) {
     s32 i;
     Object_6C_800AF52C *temp_v0;
-    Object_6C_800AF52C_0* temp_v1;
-    Object_6C_800AF52C_C * temp;
+    Object_6C_800AF52C_0 *temp_v1;
+    Object *temp;
 
-    temp_v0 = &((Object_6C_800AF52C*)obj->unk6C)[arg1];
+    temp_v0 = &((Object_6C_800AF52C *) obj->unk6C)[arg1];
     temp_v1 = temp_v0->unk0;
     temp_v0->unkA = 0;
     if (temp_v0->unk4 & 0x4000) {
-        ((ObjectSegment*)temp_v0)->trans.x_position = obj->segment.trans.x_position;
-        ((ObjectSegment*)temp_v0)->trans.y_position = obj->segment.trans.y_position;
-        ((ObjectSegment*)temp_v0)->trans.z_position = obj->segment.trans.z_position;
+        ((ObjectSegment *) temp_v0)->trans.x_position = obj->segment.trans.x_position;
+        ((ObjectSegment *) temp_v0)->trans.y_position = obj->segment.trans.y_position;
+        ((ObjectSegment *) temp_v0)->trans.z_position = obj->segment.trans.z_position;
     } else if (temp_v0->unk4 & 0x400) {
-        temp_v0->unkA = (s16) (gParticlesAssetTable[temp_v0->unk8]->unk17 << 8);
+        temp_v0->unkA = gParticlesAssetTable[temp_v0->unk8]->unk17 << 8;
 
         if (temp_v0->unk6 > 0) { // Useless if statement, since the loop already does this.
             for (i = 0; i < temp_v0->unk6; i++){
                 temp = temp_v0->unkC_arr[i];
-                temp->unk3A = 0;
+                temp->segment.unk3A.half = 0;
             }
         }
         if (temp_v1->unk0 & 1) {
-            temp_v0->unk10 = (s16) temp_v1->unk14;
-            temp_v0->unk12 = (s16) temp_v1->unk16;
+            temp_v0->unk10 = temp_v1->unk14;
+            temp_v0->unk12 = temp_v1->unk16;
         }
         if (temp_v1->unk0 & 4) {
-            temp_v0->unk14 = (s16) temp_v1->unk22;
-            temp_v0->unk16 = (s16) temp_v1->unk24;
+            temp_v0->unk14 = temp_v1->unk22;
+            temp_v0->unk16 = temp_v1->unk24;
         }
     } else {
         if (temp_v1->unk0 & 1) {
-            temp_v0->unk6 = 0U;
-            temp_v0->unkC = (s16) temp_v1->unk14;
-            temp_v0->unkE = (s16) temp_v1->unk16;
-            temp_v0->unk10 = (s16) temp_v1->unk18;
+            temp_v0->unk6 = 0;
+            temp_v0->unkC = temp_v1->unk14;
+            temp_v0->unkE = temp_v1->unk16;
+            temp_v0->unk10 = temp_v1->unk18;
         }
         if (temp_v1->unk0 & 4) {
             temp_v0->unk7 = 0;
-            temp_v0->unk12 = (s16) temp_v1->unk22;
-            temp_v0->unk14 = (s16) temp_v1->unk24;
-            temp_v0->unk16 = (s16) temp_v1->unk26;
+            temp_v0->unk12 = temp_v1->unk22;
+            temp_v0->unk14 = temp_v1->unk24;
+            temp_v0->unk16 = temp_v1->unk26;
         }
     }
     temp_v0->unk4 &= 0xFDFF;
@@ -606,7 +608,7 @@ GLOBAL_ASM("asm/non_matchings/particles/func_800AF714.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800AFC3C.s")
 
 void func_800AFE5C(s32 arg0, Object_6C_800AF52C *arg1) {
-    unk800B0698 *temp_s0;
+    Object *temp_s0;
     Object *tempObj;
     Object *tempObj2;
     s32 i;
@@ -630,8 +632,8 @@ void func_800AFE5C(s32 arg0, Object_6C_800AF52C *arg1) {
             arg1->unk4 &= 0xDFFF;
             if (temp_s0 != NULL) {
                 func_8000E9D0((Object*)temp_s0);
-                temp_s0->unk74 = (u8) arg1->unk6;
-                temp_s0->unk40 |= 0x2000;
+                temp_s0->unk74_bytes.first = (u8) arg1->unk6;
+                temp_s0->segment.unk40 |= 0x2000;
                 arg1->unkC_arr[arg1->unk6] = temp_s0;
                 arg1->unk6++;
             }
@@ -651,13 +653,280 @@ void func_800AFE5C(s32 arg0, Object_6C_800AF52C *arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800B0010.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800B03C0.s")
+void func_800B0010(unk800B03C0_arg0 *arg0, unk800B03C0_arg0 *arg1, unk800B03C0_arg2 *arg2, unk800B03C0_arg3 *arg3) {
+    s32 sp3C;
+    Vec3f sp30;
+    Vec3s sp28;
+
+    if (arg3->unk0 & 0x70) {
+        arg0->segment.x_velocity = arg3->unk30;
+        arg0->segment.y_velocity = arg3->unk34;
+        arg0->segment.z_velocity = arg3->unk38;
+    } else {
+        arg0->segment.x_velocity = 0.0f;
+        arg0->segment.y_velocity = 0.0f;
+        arg0->segment.z_velocity = 0.0f;
+    }
+    sp3C = arg3->unk5C & 0x700;
+    if (sp3C) {
+        if (sp3C & 0x100) {
+            arg0->segment.x_velocity += (f32) get_random_number_from_range(-arg3->unk74, arg3->unk74) * 0.00001525878906;
+        }
+        if (sp3C & 0x200) {
+            arg0->segment.y_velocity += (f32) get_random_number_from_range(-arg3->unk78,  arg3->unk78) * 0.00001525878906;
+        }
+        if (sp3C & 0x400) {
+            arg0->segment.z_velocity += (f32) get_random_number_from_range(-arg3->unk7C, arg3->unk7C) * 0.00001525878906;
+        }
+    }
+    switch (arg3->unk0 & 0x70) {
+        case 0x10:
+            arg0->segment.x_velocity += arg1->segment.x_velocity;
+            arg0->segment.y_velocity += arg1->segment.y_velocity;
+            arg0->segment.z_velocity += arg1->segment.z_velocity;
+            break;
+        case 0x40:
+            arg0->segment.x_velocity *= arg1->segment.x_velocity;
+            arg0->segment.y_velocity *= arg1->segment.y_velocity;
+            arg0->segment.z_velocity *= arg1->segment.z_velocity;
+            break;
+    }
+    if (arg3->unk0 & 4) {
+        sp30.x = 0.0f;
+        sp30.y = 0.0f;
+        sp30.z = -arg3->unk3C;
+        sp3C = arg3->unk5C;
+        if (sp3C & 0x10) {
+            sp30.z += (f32) get_random_number_from_range(-arg3->unk70, arg3->unk70) * 0.00001525878906;
+        }
+        if (sp3C & 0x60) {
+            sp28.y_rotation = arg2->unk12;
+            if (sp3C & 0x20) {
+                sp28.y_rotation += get_random_number_from_range((s32) -arg3->unk6A, (s32) arg3->unk6A);
+            }
+            sp28.x_rotation = arg2->unk14;
+            if (sp3C & 0x40) {
+                sp28.x_rotation += get_random_number_from_range((s32) -arg3->unk6C, (s32) arg3->unk6C);
+            }
+            f32_vec3_apply_object_rotation3((ObjectTransform* ) &sp28, (f32*)&sp30);
+        } else {
+            f32_vec3_apply_object_rotation3((ObjectTransform* )&arg2->unk12, (f32*)&sp30);
+        }
+        f32_vec3_apply_object_rotation((ObjectTransform* )arg0->segment.unk3C_a.unk3C_ptr, (f32*)&sp30);
+        arg0->segment.x_velocity += sp30.x;
+        arg0->segment.y_velocity += sp30.y;
+        arg0->segment.z_velocity += sp30.z;
+    }
+}
+
+void func_800B03C0(unk800B03C0_arg0 *arg0, ObjectTransform *arg1, unk800B03C0_arg2 *arg2, unk800B03C0_arg3 *arg3) {
+    s32 sp3C;
+    Vec3f sp30;
+    Vec3s sp28;
+
+    arg0->unk4C = arg2->unk18;
+    arg0->unk50 = arg2->unk1A;
+    arg0->unk54 = arg2->unk1C;
+    arg0->unk58 = arg3->unk58;
+    if (arg3->unk5C & 0x80000) {
+        arg0->unk58 += (f32) get_random_number_from_range(-arg3->unk94, arg3->unk94) * 0.00001525878906; // 0.00001525878906 ~= 1.0/65536.0
+    }
+    if (arg3->unk0 & 1) {
+        sp30.x = 0.0f;
+        sp30.y = 0.0f;
+        sp30.z = -arg3->unk10;
+        sp3C = arg3->unk5C;
+        if (sp3C & 1) {
+            sp30.z += (f32) get_random_number_from_range(-arg3->unk60, arg3->unk60) * 0.00001525878906;
+        }
+        if (sp3C & 6) {
+            sp28.y_rotation = arg2->y_rotation;
+            if (sp3C & 2) {
+                sp28.y_rotation += get_random_number_from_range(-arg3->unk64, arg3->unk64);
+            }
+            sp28.x_rotation = arg2->x_rotation;
+            if (sp3C & 4) {
+                sp28.x_rotation += get_random_number_from_range(-arg3->unk66, arg3->unk66);
+            }
+            f32_vec3_apply_object_rotation3((ObjectTransform* ) &sp28, (f32 *) &sp30);
+        } else {
+            f32_vec3_apply_object_rotation((ObjectTransform* ) &arg2->y_rotation, (f32 *) &sp30);
+        }
+        arg0->unk4C += sp30.x;
+        arg0->unk50 += sp30.y;
+        arg0->unk54 += sp30.z;
+    }
+    if (arg0->segment.unk38.half.lower != 4) {
+        f32_vec3_apply_object_rotation(arg1, &arg0->unk4C);
+    }
+    arg0->segment.trans.x_position = arg0->unk4C;
+    arg0->segment.trans.y_position = arg0->unk50;
+    arg0->segment.trans.z_position = arg0->unk54;
+    if (arg0->segment.unk38.half.lower == 4) {
+        f32_vec3_apply_object_rotation(arg1, &arg0->segment.trans.x_position);
+    }
+    arg0->segment.trans.x_position += arg1->x_position;
+    arg0->segment.trans.y_position += arg1->y_position;
+    arg0->segment.trans.z_position += arg1->z_position;
+}
+
 GLOBAL_ASM("asm/non_matchings/particles/func_800B0698.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B0BAC.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B1130.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800B1CB8.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800B2040.s")
+
+unk800B1CB8 *func_800B1CB8(s32 arg0) {
+    s32 i;
+    unk800B1CB8 *var_v1;
+
+    var_v1 = NULL;
+    i = 0;
+
+    switch(arg0) {
+        case 0x80:
+            if ((D_800E2CC0 != NULL)) {
+                if (D_800E2CB8 >= D_800E2E54 - 1) {
+                    if (D_800E2CBC == 0) {
+                        D_800E2CBC = 1;
+                    }
+                } else {
+                    while(D_800E2CC0[i].unk2C != 0) {
+                        i++;
+                    }
+                    D_800E2CC0[i].unk2C = 0x80;
+                    D_800E2CB8++;
+                    var_v1 = &D_800E2CC0[i];
+                }
+            }
+            break;
+        case 1:
+            if (D_800E2CA8 != NULL) {
+                if (D_800E2CA0 >= D_800E2E4C - 1) {
+                    if (D_800E2CA4 == 0) {
+                        D_800E2CA4 = 1;
+                    }
+                } else {
+                    while (D_800E2CA8[i].unk2C != 0) {
+                        i++;
+                    }
+                    D_800E2CA8[i].unk2C = 1;
+                    D_800E2CA0++;
+                    var_v1 = &D_800E2CA8[i];
+                }
+            }
+            break;
+        case 2:
+            if (D_800E2CB4 != NULL) {
+                if (D_800E2CAC >= D_800E2E50 - 1) {
+                    if (D_800E2CB0 == 0) {
+                        D_800E2CB0 = 1;
+                    }
+                } else {
+                    while (D_800E2CB4[i].unk2C != 0) {
+                        i++;
+                    }
+                    D_800E2CB4[i].unk2C = 2;
+                    D_800E2CAC++;
+                    var_v1 = &D_800E2CB4[i];
+                }
+            }
+            break;
+        case 3:
+            if (D_800E2CCC != NULL) {
+                if (D_800E2CC4 >= D_800E2E58 - 1) {
+                    if (D_800E2CC8 == 0) {
+                        D_800E2CC8 = 1;
+                    }
+                } else {
+                    while (D_800E2CCC[i].unk2C != 0) {
+                        i++;
+                    }
+                    D_800E2CCC[i].unk2C = 3;
+                    D_800E2CC4++;
+                    var_v1 = &D_800E2CCC[i];
+                }
+            }
+            break;
+        case 4:
+            if (D_800E2CD8 != NULL) {
+                if (D_800E2CD0 >= D_800E2E5C - 1) {
+                    if (D_800E2CD4 == 0) {
+                        D_800E2CD4 = 1;
+                    }
+                } else {
+                    while (D_800E2CD8[i].unk0.unk2C != 0) {
+                        i++;
+                    }
+                    D_800E2CD8[i].unk0.unk2C = 4;
+                    D_800E2CD0++;
+                    var_v1 = &D_800E2CD8[i].unk0;
+                }
+            }
+            break;
+    }
+    if (var_v1 != NULL) {
+        var_v1->unk48 = -1;
+    }
+    return var_v1;
+}
+
+void func_800B2040(unk800B2260_C *arg0) {
+    TextureHeader *tex;
+
+    switch (arg0->unk2C) {
+    case 0x80:
+        if (D_800E2CB8 > 0) {
+            if (arg0->unk44 != NULL) {
+                free_sprite(arg0->unk44);
+            }
+            D_800E2CB8--;
+            arg0->unk2C = 0;
+        }
+        break;
+    case 0:
+        return;
+    case 1:
+        if (D_800E2CA0 > 0) {\
+            if (((unk800B2260_C_44 *) arg0->unk44)->texture != NULL) {
+                free_texture(((DrawTexture *) arg0->unk44)->texture);
+            }
+            D_800E2CA0--;
+            arg0->unk2C = 0;
+        }
+        break;
+    case 2:
+        if (D_800E2CAC > 0) {
+            tex = ((unk800B2260_C_44 *) arg0->unk44)->texture;
+            if (tex != NULL) {
+                free_texture(tex);
+            }
+            D_800E2CAC--;
+            arg0->unk2C = 0;
+        }
+        break;
+    case 3:
+        if (D_800E2CC4 > 0) {
+            tex = ((unk800B2260_C_44 *) arg0->unk44)->texture;
+            if (tex != NULL) {
+                free_texture(tex);
+            }
+            D_800E2CC4--;
+            arg0->unk2C = 0;
+        }
+        break;
+    case 4:
+        if (D_800E2CD0 > 0) {
+            func_800B263C(arg0);
+            tex = ((unk800B2260_C_44* ) arg0->unk44)->texture;
+            if (tex != NULL) {
+                free_texture(tex);
+            }
+            D_800E2CD0--;
+            arg0->unk2C = 0;
+        }
+        break;
+    }
+}
+
 
 void func_800B2260(unk800AF29C *arg0) {
     unk800B2260_C *temp_v0;
@@ -676,7 +945,72 @@ void func_800B2260(unk800AF29C *arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800B22FC.s")
+void func_800B22FC(Object *arg0, s32 arg1) {
+    LevelModelSegmentBoundingBox *temp_v0_2;
+    Object *sp20;
+
+    D_80127C80 = arg1;
+    sp20 = NULL;
+    if (arg0->segment.unk2C.half.upper == 3) {
+        func_800B26E0();
+    } else {
+        if (arg0->segment.unk40 & 3) {
+            if (D_80127C80 > 0) {
+                sp20 = NULL;
+                func_800B2FBC(arg0);
+                sp20 = NULL;
+            }
+        }
+        if (arg0->segment.unk2C.half.upper == 4) {
+            sp20 = arg0;
+            arg0->unk74_bytes.second = 1 - arg0->unk74_bytes.second;
+            arg0->unk74_bytes.fourth = 0;
+        }
+        if (sp20 == NULL || (sp20 != NULL && sp20->unk70 != 0)) {
+            if (arg0->segment.unk38.half.lower == 2) {
+                func_800B3358(arg0);
+            } else if (arg0->segment.unk38.half.lower == 3) {
+                func_800B3240(arg0);
+            } else if (arg0->segment.unk38.half.lower == 4) {
+                func_800B3140(arg0);
+            } else if (arg0->segment.unk38.half.lower == 5) {
+                func_800B3564(arg0);
+            } else {
+                func_800B34B0(arg0);
+            }
+        }
+        temp_v0_2 = func_8002A2DC(arg0->segment.unk2C.half.lower);
+        if (temp_v0_2 != NULL) {
+            if (arg0->segment.trans.x_position < temp_v0_2->x1 || temp_v0_2->x2 < arg0->segment.trans.x_position || arg0->segment.trans.y_position < temp_v0_2->y1 || temp_v0_2->y2 < arg0->segment.trans.y_position || arg0->segment.trans.z_position < temp_v0_2->z1 || temp_v0_2->z2 < arg0->segment.trans.z_position) {
+                arg0->segment.unk2C.half.lower = get_level_segment_index_from_position(arg0->segment.trans.x_position, arg0->segment.trans.y_position, arg0->segment.trans.z_position);
+            }
+        } else {
+            arg0->segment.unk2C.half.lower = get_level_segment_index_from_position(arg0->segment.trans.x_position, arg0->segment.trans.y_position, arg0->segment.trans.z_position);
+        }
+        arg0->segment.unk3A.half -= D_80127C80;
+        if (arg0->segment.unk3A.half <= 0) {
+            gParticlePtrList_addObject(arg0);
+        } else {
+            if (arg0->unk60_halfs.unk60 == 0) {
+                arg0->unk5C_halfs.unk5C += D_80127C80 * arg0->unk5C_halfs.unk5E;
+                if (arg0->unk5C_halfs.unk5C < 0xFF) {
+                    if (arg0->segment.unk40 & 0x1000) {
+                        arg0->segment.trans.unk6 |= 0x100;
+                    } else {
+                        arg0->segment.trans.unk6 |=  0x80;
+                    }
+                }
+            } else {
+                arg0->unk60_halfs.unk60 -= D_80127C80;
+                if (arg0->unk60_halfs.unk60 < 0) {
+                    arg0->unk5C_halfs.unk5C -= (arg0->unk60_halfs.unk60 * arg0->unk5C_halfs.unk5E);
+                    arg0->unk60_halfs.unk60 = 0;
+                }
+            }
+        }
+    }
+}
+
 
 void func_800B263C(unk800B2260_C *arg0) {
     unk800AF29C *new_var;
@@ -701,4 +1035,63 @@ void func_800B263C(unk800B2260_C *arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800B26E0.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800B2FBC.s")
+
+void func_800B2FBC(Object *arg0) {
+    s32 someFlag;
+    s32 keepGoing;
+    s32 i;
+    s32 var_a1;
+    s32 someFlag2;
+    s32 someFlag3;
+    s32 someFlag4;
+    
+    keepGoing = -1;
+
+    i = 128; // This is needed to match.
+    if (arg0->segment.unk2C.half.upper == i) {
+        var_a1 = arg0->unk44_0->unk0 * 256;
+    } else {
+        var_a1 = arg0->unk44_0->unk0Ptr->unk12;
+    }
+
+    someFlag4 = arg0->segment.unk40 & 1;
+    someFlag2 = arg0->segment.unk40 & 2;
+    someFlag3 = arg0->segment.unk40 & 4;
+    someFlag = arg0->segment.unk40 & 8;
+    for (i = 0; (i++ < D_80127C80) && keepGoing;) {
+        if (!someFlag) {
+            arg0->segment.animFrame += arg0->segment.unk1A;
+            if (arg0->segment.animFrame >= var_a1) {
+                if (someFlag2) {
+                    arg0->segment.animFrame = ((var_a1 * 2) - arg0->segment.animFrame) - 1;
+                    someFlag = TRUE;
+                    arg0->segment.unk40 |= 8;
+                } else if (someFlag3) {
+                    arg0->segment.animFrame -= var_a1;
+                } else {
+                    arg0->segment.animFrame = var_a1 - 1;
+                    keepGoing = FALSE;
+                    arg0->segment.unk40 &= ~3;
+                }
+            }
+        } else {
+            arg0->segment.animFrame -= arg0->segment.unk1A;
+            if (arg0->segment.animFrame < 0) {
+                if (someFlag3) {
+                    if (someFlag4) {
+                        arg0->segment.animFrame = -arg0->segment.animFrame;
+                        someFlag = FALSE;
+                        arg0->segment.unk40 &= ~8;
+                    } else {
+                        arg0->segment.animFrame += var_a1;
+                    }
+                } else {
+                    arg0->segment.animFrame = 0;
+                    keepGoing = FALSE;
+                    arg0->segment.unk40 &= ~3;
+                }
+            }
+        }
+    }
+}
+

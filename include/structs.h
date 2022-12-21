@@ -23,6 +23,22 @@ typedef struct Vec3f {
   };
 } Vec3f;
 
+typedef struct Vec3s {
+  union {
+    struct {
+      s16 y_rotation;
+      s16 x_rotation;
+      s16 z_rotation;
+    };
+    struct {
+      s16 x;
+      s16 y;
+      s16 z;
+    };
+    s16 s[3];
+  };
+} Vec3s;
+
 /* Size: 0x20 bytes */
 typedef struct TextureHeader {
   /* 0x00 */ u8 width;
@@ -1488,36 +1504,79 @@ typedef struct ObjectSegment {
       /* 0x0038 */ s16 word;
   } unk38;
 
-  /* 0x003A */ s8 unk3A;
-  /* 0x003B */ s8 unk3B;
+  union {
+      struct {
+          /* 0x003A */ s8 upper;
+          /* 0x003B */ s8 lower;
+      } byte;
+      /* 0x003A */ s16 half;
+  } unk3A;
 
   union {
     /* 0x003C */ LevelObjectEntry* level_entry;
+    /* 0x003C */ void *unk3C_ptr;
     /* 0x003C */ f32 unk3C_f;
   } unk3C_a;
 
-  /* 0x0040 */ ObjectHeader *header;
+  union {
+    /* 0x0040 */ ObjectHeader *header;
+    /* 0x0040 */ s32 unk40;
+  };
 } ObjectSegment;
+
+typedef struct unk800B0698_44_0 {
+    u8 pad0[0x12];
+    u16 unk12;
+} unk800B0698_44_0;
+
+typedef struct unk800B0698_44 {
+    union {
+        unk800B0698_44_0 *unk0Ptr;
+        s16 unk0;
+    };
+} unk800B0698_44;
 
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ ObjectSegment segment;
+  union {
   /* 0x0044 */ Vertex *unk44;
+  /* 0x0044 */ unk800B0698_44 *unk44_0;
+  };
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A;
   /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318
   /* 0x0050 */ Object_50 *unk50; //player + 0x2F4
   /* 0x0054 */ Object_54 *unk54; //player + 0x2C0
   /* 0x0058 */ void *unk58; //player + 0x304
+  union {
   /* 0x005C */ Object_5C *unk5C;
-
+      struct {
+          /* 0x005C */ s16 unk5C;
+          /* 0x005E */ s16 unk5E;
+      } unk5C_halfs;
+  };
+  union {
   /* 0x0060 */ Object_60 *unk60; //player + 0x340
+      struct {
+          /* 0x0060 */ s16 unk60;
+          /* 0x0062 */ s16 unk62;
+      } unk60_halfs;
+  };
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
   /* 0x0068 */ Object_68 **unk68; //player + 0x80
   /* 0x006C */ Object_6C *unk6C; //player + 0x370
   /* 0x0070 */ u32 *unk70;
 
+  union {
   /* 0x0074 */ u32 unk74;
+  struct {
+  /* 0x0074 */ u8 first;
+  /* 0x0074 */ u8 second;
+  /* 0x0074 */ u8 third;
+  /* 0x0074 */ u8 fourth;
+  } unk74_bytes;
+  };
 
   union {
   /* 0x0078 */ s32 unk78;

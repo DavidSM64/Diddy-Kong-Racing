@@ -77,10 +77,14 @@ typedef struct unk800AF024 {
 typedef struct unk800B2260_C {
     s32 unk0;
     s32 unk4;
-    u8  pad8[0x32];
+    u8 pad8[0x24];
+    s16 unk2C;
+    u8 pad2E[0xC];
     s16 unk3A;
-    u8  pad3C[0x34];
-    void *unk70; // unk800B2260 *
+    u8 pad3C[0x8];
+    void *unk44;
+    u8 pad48[0x28];
+    void *unk70;
     u8 unk74;
 } unk800B2260_C;
 
@@ -123,17 +127,72 @@ typedef struct Object_6C_800AF52C_0 {
     s16 unk42;
 } Object_6C_800AF52C_0;
 
-typedef struct Object_6C_800AF52C_C {
-    u8 pad0[0x3A];
-    s16 unk3A;
-} Object_6C_800AF52C_C;
+typedef struct unk800B03C0_arg0 {
+    ObjectSegment segment;
+    u8 pad44[0x08];
+    f32 unk4C;
+    f32 unk50;
+    f32 unk54;
+    f32 unk58;
+} unk800B03C0_arg0;
 
-typedef struct unk800B0698 {
-    u8 pad0[0x40];
-    s32 unk40;
-    u8 pad44[0x30];
-    u8 unk74;
-} unk800B0698;
+typedef struct unk800B03C0_arg2 {
+    u8 pad0[0xC];
+    s16 y_rotation;
+    s16 x_rotation;
+    s16 z_rotation;
+    s16 unk12;
+    s16 unk14;
+    s16 unk16;
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+} unk800B03C0_arg2;
+
+typedef struct unk800B03C0_arg3 {
+    s32 unk0;
+    u8 pad4[0xC];
+    f32 unk10;
+    u8 pad14[0x1C];
+    f32 unk30;
+    f32 unk34;
+    f32 unk38;
+    f32 unk3C;
+    u8 pad40[0x18];
+    f32 unk58;
+    s32 unk5C;
+    s32 unk60;
+    s16 unk64;
+    s16 unk66;
+    u8 pad68[0x2];
+    s16 unk6A;
+    s16 unk6C;
+    u8 pad6E[0x2];
+    s32 unk70;
+    s32 unk74;
+    s32 unk78;
+    s32 unk7C;
+    u8 pad80[0x14];
+    s32 unk94;
+} unk800B03C0_arg3;
+
+typedef struct unk800B2260_C_44 {
+    TextureHeader *texture;
+} unk800B2260_C_44;
+
+typedef struct unk800B1CB8 {
+    u8 pad0[0x2C];
+    s16 unk2C;
+    u8 pad2E[0x1A];
+    s16 unk48;
+    u8 pad4A[0x26];
+} unk800B1CB8;
+
+/* Size: 0x78 bytes */
+typedef struct unk800E2CD8 {
+    unk800B1CB8 unk0;
+    u8 pad80[8];
+} unk800E2CD8;
 
 /* Size: 32 bytes */
 typedef struct Object_6C_800AF52C {
@@ -144,7 +203,7 @@ typedef struct Object_6C_800AF52C {
     s16 unk8;
     s16 unkA;
     union {
-        unk800B0698 **unkC_arr;
+        Object **unkC_arr;
         struct {
             s16 unkC;
             s16 unkE;
@@ -195,15 +254,25 @@ void func_800AF6E4(Object *obj, s32 arg1);
 void func_800B2260(unk800AF29C *arg0);
 void func_800B263C(unk800B2260_C *arg0);
 void init_particle_assets(void);
+void func_800B2FBC(Object *arg0);
+void func_800B03C0(unk800B03C0_arg0 *arg0, ObjectTransform *arg1, unk800B03C0_arg2 *arg2, unk800B03C0_arg3 *arg3);
+void func_800B2040(unk800B2260_C *arg0);
+void func_800B22FC(Object *arg0, s32 arg1);
+void func_800B0010(unk800B03C0_arg0 *arg0, unk800B03C0_arg0 *arg1, unk800B03C0_arg2 *arg2, unk800B03C0_arg3 *arg3);
 
 void func_800AF134(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5); // Non Matching
 void func_800AF404(s32 arg0); // Non Matching
 void func_800AFC3C(Object *, s32); // Non Matching
 void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
 void func_800AF714(Object*, s32); // Non matching
-void func_800B22FC(void*, s32);
 Object* func_800B1130(s32, void*);
 Object* func_800B0BAC();
-unk800B0698 *func_800B0698(s32, void*);
+Object *func_800B0698(s32, void*);
+void func_800B26E0();
+void func_800B3140(Object *);
+void func_800B3240(Object *);
+void func_800B3358(Object *);
+void func_800B34B0(Object *);
+void func_800B3564(Object *);
 
 #endif

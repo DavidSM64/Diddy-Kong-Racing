@@ -184,7 +184,7 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80065EA0.s")
 void func_80066060(s32 arg0, s32 arg1) {
     if (arg0 >= 0 && arg0 < 4) {
         D_800DD2F8[arg0] = arg1;
-        gActiveCameraStack[arg0].unk3B = arg1;
+        gActiveCameraStack[arg0].unk3A.byte.lower = arg1;
     }
 }
 
@@ -318,7 +318,7 @@ void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5) {
     gActiveCameraStack[gActiveCameraID].unk30 = 0.0f;
     gActiveCameraStack[gActiveCameraID].x_velocity = 160.0f;
     gActiveCameraStack[gActiveCameraID].trans.y_rotation = (s16) (arg5 * 0xB6);
-    gActiveCameraStack[gActiveCameraID].unk3B = D_800DD2F8[gActiveCameraID];
+    gActiveCameraStack[gActiveCameraID].unk3A.byte.lower = D_800DD2F8[gActiveCameraID];
 }
 
 /**

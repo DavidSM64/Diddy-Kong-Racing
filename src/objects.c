@@ -955,7 +955,7 @@ void func_80011134(Object *arg0, s32 arg1) {
     s32 var_s1;
     u8 temp_v0;
 
-    temp_s3 = arg0->unk68[arg0->segment.unk3A]->objModel;
+    temp_s3 = arg0->unk68[arg0->segment.unk3A.byte.upper]->objModel;
     temp_s5 = temp_s3->unk50;
     temp_s4 = temp_s3->batches;
     for (var_s1 = 0; temp_s5 > 0 && var_s1 < temp_s3->numberOfBatches; var_s1++) {
@@ -1219,7 +1219,7 @@ void render_3d_billboard(Object *obj) {
     } else {
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     }
-    sp58 = (unk80068514_arg4 *) obj->unk68[obj->segment.unk3A];
+    sp58 = (unk80068514_arg4 *) obj->unk68[obj->segment.unk3A.byte.upper];
     var_a0 = NULL;
     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON_2) {
         var_a0 = (Object *) obj->trans78;
