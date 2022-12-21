@@ -61,11 +61,6 @@ typedef struct unk800E2D08 {
     s16 unk0, unk2, unk4, unk6, unk8, unkA, unkC, unkE;
 } unk800E2D08;
 
-/* Size: 6 bytes */
-typedef struct unk800E2D58 {
-    s16 unk0, unk2, unk4;
-} unk800E2D58;
-
 typedef struct unk800AF024 {
     u8 pad0[4];
     s16 unk4;

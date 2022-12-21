@@ -60,12 +60,6 @@ u8 *gzip_inflate(u8 *compressedInput, u8 *decompressedOutput) {
     return decompressedOutput;
 }
 
-#ifdef NON_EQUIVALENT
-
-// Work in progress.
-// You can find the original huft_build function here: 
-// https://github.com/oscarlab/gcc_test_files/blob/master/gzip.c#L4933
-
 void gzip_huft_build(u32 *b, u32 n, u32 s, u16 *d, u16 *e, huft **t, s32 *m) {
   u32 a;                   /* counter for codes of length k */
   u32 c[BMAX+1];           /* bit length count table */
@@ -119,11 +113,14 @@ void gzip_huft_build(u32 *b, u32 n, u32 s, u16 *d, u16 *e, huft **t, s32 *m) {
   *m = l;
   
   // Something is missing here.
-  
   /* Adjust last length count to fill out codes, if needed */
-  for (y = 1 << j; j < i; j++, y <<= 1)
+  y = 1 << j;
+  while (j < i) {
       y -= c[j];
-  y -= c[j];
+      j++; 
+      y <<= 1;
+  }
+  y -= c[i];
   c[i] += y;
 
 
@@ -141,7 +138,7 @@ void gzip_huft_build(u32 *b, u32 n, u32 s, u16 *d, u16 *e, huft **t, s32 *m) {
     if ((j = *p++) != 0)
       v[x[j]++] = i;
   } while (++i < n);
-  n = x[g];              /* set n to length of v */
+ // n = x[g];              /* set n to length of v */
 
 
   /* Generate the Huffman codes and for each, make the table entries */
@@ -174,7 +171,7 @@ void gzip_huft_build(u32 *b, u32 n, u32 s, u16 *d, u16 *e, huft **t, s32 *m) {
         {                       /* too few codes for k-w bit table */
           f -= a + 1;           /* deduct codes from patterns left */
           xp = c + k;
-	  if (j < z)
+	 // if (j < z)
 	    while (++j < z)       /* try smaller tables up to z bits */
 	    {
 	      if ((f <<= 1) <= *++xp)
@@ -183,6 +180,10 @@ void gzip_huft_build(u32 *b, u32 n, u32 s, u16 *d, u16 *e, huft **t, s32 *m) {
 	    }
         }
         z = 1 << j;             /* table entries for j-bit table */
+
+        q = &D_800E3760[D_8012AAD8];
+        D_8012AAD8 += z + 1;
+          
         *t = q + 1;             /* link to list for huft_free() */
         *(t = &(q->v.t)) = (huft *)NULL;
         u[h] = ++q;             /* table starts after link */
@@ -211,7 +212,7 @@ void gzip_huft_build(u32 *b, u32 n, u32 s, u16 *d, u16 *e, huft **t, s32 *m) {
       }
       else
       {
-        r.e = (u8)e[*p - s];   /* non-simple--look up in lists */
+        r.e = ((u8*)e)[*p - s];   /* non-simple--look up in lists */
         r.v.n = d[*p++ - s];
       }
 
@@ -235,6 +236,3 @@ void gzip_huft_build(u32 *b, u32 n, u32 s, u16 *d, u16 *e, huft **t, s32 *m) {
   }
   return;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/gzip/gzip_huft_build.s")
-#endif
