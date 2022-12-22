@@ -19,7 +19,7 @@
 #include "gzip.h"
 #include "printf.h"
 #include "thread0_epc.h"
-#include "thread30.h"
+#include "thread30_track_loading.h"
 #include "weather.h"
 #include "audio.h"
 #include "objects.h"
@@ -181,89 +181,76 @@ s32 gNMIMesgBuf[8];
 
 /******************************/
 
-#ifdef NON_EQUIVALENT
-// Only has regalloc issues.
 void func_8006A6B0(void) {
-  s32 i;
-  s32 temp;
-  s32 count;
-  s32 checksumCount;
-  u8 *sp44;
-  UNUSED s32 temp2;
-
-  sp44 = allocate_from_main_pool_safe(sizeof(LevelHeader), COLOUR_TAG_YELLOW);
-  gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
-  i = 0;
-  while (i < 16) {
-    D_80121180[i++] = 0;
-  }
-  gNumberOfLevelHeaders = 0;
-  while (gTempAssetTable[gNumberOfLevelHeaders] != -1) {
-    gNumberOfLevelHeaders++;
-  }
-  gNumberOfLevelHeaders--;
-  D_8012117C = allocate_from_main_pool_safe(gNumberOfLevelHeaders * sizeof(unk8012117C), COLOUR_TAG_YELLOW);
-  gCurrentLevelHeader = (LevelHeader *) sp44;
-  gNumberOfWorlds = -1;
-  for (i = 0; i < gNumberOfLevelHeaders; i++) {
-    load_asset_to_address(ASSET_LEVEL_HEADERS, (s32) gCurrentLevelHeader, gTempAssetTable[i], sizeof(LevelHeader));
-    if (gNumberOfWorlds < gCurrentLevelHeader->world) {
-      gNumberOfWorlds = gCurrentLevelHeader->world;
+    s32 i;
+    s32 temp;
+    UNUSED s32 pad;
+    s32 checksumCount;
+    u8 *header;
+    s32 j;
+    header = allocate_from_main_pool_safe(sizeof(LevelHeader), COLOUR_TAG_YELLOW);
+    gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
+    i = 0;
+    while (i < 16) {
+        D_80121180[i++] = 0;
     }
-    if ((gCurrentLevelHeader->race_type >= 0) && (gCurrentLevelHeader->race_type < 16)) {
-      D_80121180[gCurrentLevelHeader->race_type]++;
+    gNumberOfLevelHeaders = 0;
+    while (gTempAssetTable[gNumberOfLevelHeaders] != -1) {
+        gNumberOfLevelHeaders++;
     }
-    D_8012117C[i].unk0 = gCurrentLevelHeader->world;
-    D_8012117C[i].unk1 = gCurrentLevelHeader->race_type;
-    D_8012117C[i].unk2 = ((u16)gCurrentLevelHeader->available_vehicles) << 4;
-    D_8012117C[i].unk2 |= gCurrentLevelHeader->vehicle & 0xF;
-    D_8012117C[i].unk3 = 1;
-    D_8012117C[i].unk4 = gCurrentLevelHeader->unkB0;
-  }
-
-  gNumberOfWorlds++;
-  D_80121178 = allocate_from_main_pool_safe(gNumberOfWorlds, COLOUR_TAG_YELLOW);
-  for (i = 0; i < gNumberOfWorlds; i++) {
-    D_80121178[i] = -1;
-  }
-  for (i = 0; i < gNumberOfLevelHeaders; i++) {
-    if ((D_8012117C[i].unk1 == 5) != 0) {
-      D_80121178[D_8012117C[i].unk0] = i;
+    gNumberOfLevelHeaders--;
+    D_8012117C = allocate_from_main_pool_safe(gNumberOfLevelHeaders * sizeof(unk8012117C), COLOUR_TAG_YELLOW);
+    gCurrentLevelHeader = (LevelHeader *) header;
+    gNumberOfWorlds = -1;
+    for (i = 0; i < gNumberOfLevelHeaders; i++) {
+        load_asset_to_address(ASSET_LEVEL_HEADERS, (u32) gCurrentLevelHeader, gTempAssetTable[i], sizeof(LevelHeader));
+        if (gNumberOfWorlds < gCurrentLevelHeader->world) {
+            gNumberOfWorlds = gCurrentLevelHeader->world;
+        }
+        if ((gCurrentLevelHeader->race_type >= 0) && (gCurrentLevelHeader->race_type < 16)) {
+            D_80121180[gCurrentLevelHeader->race_type]++;
+        }
+        D_8012117C[i].unk0 = gCurrentLevelHeader->world;
+        D_8012117C[i].unk1 = gCurrentLevelHeader->race_type;
+        D_8012117C[i].unk2 = ((u16) gCurrentLevelHeader->available_vehicles) << 4;
+        D_8012117C[i].unk2 |= gCurrentLevelHeader->vehicle & 0xF;
+        D_8012117C[i].unk3 = 1;
+        D_8012117C[i].unk4 = gCurrentLevelHeader->unkB0;
     }
-  }
-  free_from_memory_pool(gTempAssetTable);
-  free_from_memory_pool(sp44);
-
-  gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_NAMES_TABLE);
-
-  for (i = 0; gTempAssetTable[i] != (-1); i++){}
-  i--;
-
-  temp = gTempAssetTable[i];
-  temp -= gTempAssetTable[0];
-
-  gLevelNames = allocate_from_main_pool_safe(i * sizeof(s32), COLOUR_TAG_YELLOW);
-  D_800DD310 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
-  load_asset_to_address(ASSET_LEVEL_NAMES, (u32) D_800DD310, 0, temp);
-  for (count = 0; count < i; count++) {
-    gLevelNames[count] = (char *) &D_800DD310[gTempAssetTable[count]];
-  }
-  free_from_memory_pool(gTempAssetTable);
-
-  checksumCount = 0;
-  for (i = 0; i < gFunc80068158Length; i++) {
-    checksumCount += ((u8 *) (&func_80068158))[i];
-  }
-  if (checksumCount != gFunc80068158Checksum) {
-    disable_button_mask();
-  }
+    gNumberOfWorlds++;
+    D_80121178 = allocate_from_main_pool_safe(gNumberOfWorlds, COLOUR_TAG_YELLOW);
+    for (i = 0; i < gNumberOfWorlds; i++) {
+        D_80121178[i] = -1;
+    }
+    for (i = 0; i < gNumberOfLevelHeaders; i++) {
+        if ((D_8012117C[i].unk1 == 5)) {
+            D_80121178[D_8012117C[i].unk0] = i;
+        }
+    }
+    free_from_memory_pool(gTempAssetTable);
+    free_from_memory_pool(header);
+    gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_NAMES_TABLE);
+    for (i = 0; gTempAssetTable[i] != (-1); i++){ }
+    i--;
+    temp = gTempAssetTable[0];
+    temp = gTempAssetTable[i] - temp;
+    gLevelNames = allocate_from_main_pool_safe(i * sizeof(s32), COLOUR_TAG_YELLOW);
+    D_800DD310 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
+    load_asset_to_address(ASSET_LEVEL_NAMES, (u32) D_800DD310, 0, temp);
+    for (temp = 0; temp < i; temp++) {
+        gLevelNames[temp] = (char *) &D_800DD310[gTempAssetTable[temp]];
+    }
+    free_from_memory_pool(gTempAssetTable);
+    checksumCount = 0;
+    for (j = 0; j < gFunc80068158Length; j++) {
+        checksumCount += ((u8 *) (&func_80068158))[j];
+    }
+    if (checksumCount != gFunc80068158Checksum) {
+        disable_button_mask();
+    }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/game/func_8006A6B0.s")
-#endif
 
-// Unused.
-s16 func_8006ABB4(s32 arg0) {
+UNUSED s16 func_8006ABB4(s32 arg0) {
     if (arg0 < 0) {
         return 0xE10;
     }
@@ -273,11 +260,92 @@ s16 func_8006ABB4(s32 arg0) {
     return D_8012117C[arg0].unk4;
 }
 
-// Unused?
-GLOBAL_ASM("asm/non_matchings/game/func_8006AC00.s")
+UNUSED s32 func_8006AC00(s32 arg0, s8 arg1, s8 arg2) {
+    if (arg0 < 0) {
+        arg0 = 0;
+    } else {
+        arg0++;
+    }
+    if (arg1 != 0x40) {
+        if (arg2 == -1) {
+            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
+                if (arg1 == D_8012117C[arg0].unk1) {
+                    return arg0;
+                }
+            }
+        } else if (arg1 == -1) {
+            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
+                if (arg2 == D_8012117C[arg0].unk0) {
+                    return arg0;
+                }
+            }
+        } else {
+            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
+                if ((arg1 == D_8012117C[arg0].unk1) && (arg2 == D_8012117C[arg0].unk0)) {
+                    return arg0;
+                }
+            }
+        }
+    } else {
+        if (arg2 == -1) {
+            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
+                if (D_8012117C[arg0].unk1 & 0x40) {
+                    return arg0;
+                }
+            }
+        } else {
+            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
+                if ((D_8012117C[arg0].unk1 & 0x40) && (arg2 == D_8012117C[arg0].unk0)) {
+                    return arg0;
+                }
+            }
+        }
+    }
+    return -1;
+}
 
-// Unused?
-GLOBAL_ASM("asm/non_matchings/game/func_8006AE2C.s")
+UNUSED s32 func_8006AE2C(s32 arg0, s8 arg1, s8 arg2) {
+    if(arg0 >= gNumberOfLevelHeaders){
+        arg0 = gNumberOfLevelHeaders;
+    }
+    arg0--;
+    if (arg1 != 0x40) {
+        if (arg2 == -1) {
+            for (; arg0 >= 0; arg0--) {
+                if (arg1 == D_8012117C[arg0].unk1) {
+                    return arg0;
+                }
+            }
+        } else if (arg1 == -1) {
+            for (; arg0 >= 0; arg0--) {
+                if (arg2 == D_8012117C[arg0].unk0) {
+                    return arg0;
+                }
+            }
+        } else {
+            for (; arg0 >= 0; arg0--) {
+                if ((arg1 == D_8012117C[arg0].unk1) && (arg2 == D_8012117C[arg0].unk0)) {
+                    return arg0;
+                }
+            }
+        }
+    } else {
+        if (arg2 == -1) {
+            for (; arg0 >= 0; arg0--) {
+                if (D_8012117C[arg0].unk1 & 0x40) {
+                    return arg0;
+                }
+            }
+        } else {
+            for (; arg0 >= 0; arg0--) {
+                if ((D_8012117C[arg0].unk1 & 0x40) && (arg2 == D_8012117C[arg0].unk0)) {
+                    return arg0;
+                }
+            }
+        }
+    }
+    return -1;
+}
 
 // Unused.
 s32 func_8006B018(s8 arg0) {

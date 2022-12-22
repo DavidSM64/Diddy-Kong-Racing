@@ -23,6 +23,22 @@ typedef struct Vec3f {
   };
 } Vec3f;
 
+typedef struct Vec3s {
+  union {
+    struct {
+      s16 y_rotation;
+      s16 x_rotation;
+      s16 z_rotation;
+    };
+    struct {
+      s16 x;
+      s16 y;
+      s16 z;
+    };
+    s16 s[3];
+  };
+} Vec3s;
+
 /* Size: 0x20 bytes */
 typedef struct TextureHeader {
   /* 0x00 */ u8 width;
@@ -620,7 +636,8 @@ typedef struct ObjectHeader {
   /* 0x60 */ char internalName[16];
   /* 0x70 */ u8 unk70;
   /* 0x71 */ u8 unk71;
-             u8 pad72[0x6];
+  /* 0x71 */ u8 unk72;
+             u8 pad73[0x5];
 } ObjectHeader;
 
 typedef struct Object_44_0 {
@@ -1439,6 +1456,61 @@ typedef struct Object_6C {
     u8  pad6[0x1A];
 } Object_6C;
 
+/* Size: 0xA0 bytes */
+typedef struct ParticleBehavior {
+    s32 flags;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    u8 pad10[4];
+    s16 unk14;
+    s16 unk16;
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    s16 unk26;
+    u8 pad28[0x18];
+    s16 unk40;
+    s16 unk42;
+    u8 pad44[0x58];
+    s32 *unk9C;
+} ParticleBehavior;
+
+typedef struct unk800AF29C_C_400 {
+    s32 *unkC;
+    s16 unk10;
+    s16 unk12;
+    s16 unk14;
+    s16 unk16;
+} unk800AF29C_C_400;
+
+typedef struct unk800AF29C_C {
+    s16 unkC;
+    s16 unkE;
+    s16 unk10;
+    s16 unk12;
+    s16 unk14;
+    s16 unk16;
+} unk800AF29C_C;
+
+typedef struct unk800B2260_C {
+    s32 unk0;
+    s32 unk4;
+    u8 pad8[0x24];
+    s16 unk2C;
+    u8 pad2E[0xC];
+    s16 unk3A;
+    u8 pad3C[0x8];
+    void *unk44;
+    u8 pad48[0x28];
+    void *unk70;
+    u8 unk74;
+} unk800B2260_C;
+
 /* Size: 0x018 bytes */
 typedef struct ObjectTransform {
   /* 0x0000 */ s16 y_rotation;
@@ -1451,12 +1523,47 @@ typedef struct ObjectTransform {
   /* 0x0014 */ f32 z_position;
 } ObjectTransform;
 
+/* Size: 0x018 bytes */
+typedef struct ObjectTransform_2 {
+  /* 0x0000 */ s32 unk0;
+  /* 0x0004 */ s32 unk4;
+  /* 0x0008 */ s32 unk8;
+  /* 0x000C */ f32 x_position;
+  /* 0x0010 */ f32 y_position;
+  /* 0x0014 */ f32 z_position;
+} ObjectTransform_2;
+
+typedef struct ParticleProperties {
+  /* 0x0000 */ ParticleBehavior *behaviour;
+  /* 0x0004 */ s16 unk4;
+  /* 0x0006 */ u8 unk6;
+  /* 0x0007 */ u8 unk7;
+  /* 0x0004 */ s16 unk8;
+  /* 0x0004 */ s16 unkA;
+    union {
+        Vec3f pos;
+        unk800AF29C_C unkC;
+        unk800B2260_C **unkC_60;
+        unk800AF29C_C_400 unkC_400;
+    };
+} ParticleProperties;
+
 /* Size: 0x44 bytes */
 typedef struct ObjectSegment {
+  union {
   /* 0x0000 */ ObjectTransform trans;
+  /* 0x0000 */ ObjectTransform_2 trans_unk;
+  /* 0x0000 */ ParticleProperties particle;
+  };
   /* 0x0018 */ s16 animFrame;
   /* 0x001A */ s16 unk1A;
+  union {
   /* 0x001C */ f32 x_velocity;
+  struct {
+    /* 0x001A */ s16 unk1C;
+    /* 0x001A */ s16 unk1E;
+  } unk1C_half;
+  };
   /* 0x0020 */ f32 y_velocity;
   /* 0x0024 */ f32 z_velocity;
   /* 0x0028 */ f32 unk28;
@@ -1481,42 +1588,119 @@ typedef struct ObjectSegment {
 
   union {
       struct {
-          /* 0x0038 */ u8 upper;
-          /* 0x0039 */ u8 lower;
+          /* 0x0038 */ u8 unk38;
+          /* 0x0039 */ u8 unk39;
+          /* 0x003A */ s8 unk3A;
+          /* 0x003B */ s8 unk3B;
+      } byte;
+      struct {
+          /* 0x0038 */ s16 unk38;
+          /* 0x003A */ s16 unk3A;
       } half;
-      /* 0x0038 */ s16 word;
+      f32 unk38_f32;
   } unk38;
-
-  /* 0x003A */ s8 unk3A;
-  /* 0x003B */ s8 unk3B;
 
   union {
     /* 0x003C */ LevelObjectEntry* level_entry;
+    /* 0x003C */ void *unk3C_ptr;
     /* 0x003C */ f32 unk3C_f;
   } unk3C_a;
 
-  /* 0x0040 */ ObjectHeader *header;
+  union {
+    /* 0x0040 */ ObjectHeader *header;
+    /* 0x0040 */ s32 unk40;
+  };
 } ObjectSegment;
+
+typedef struct unk800B0698_44_0 {
+    u8 pad0[0x12];
+    u16 unk12;
+} unk800B0698_44_0;
+
+typedef struct unk800B0698_44 {
+    union {
+        unk800B0698_44_0 *unk0Ptr;
+        s16 unk0;
+    };
+} unk800B0698_44;
 
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ ObjectSegment segment;
+  union {
   /* 0x0044 */ Vertex *unk44;
+  /* 0x0044 */ unk800B0698_44 *unk44_0;
+  };
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A;
+  union {
   /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318
+  /* 0x004C */ f32 unk4C_f32;
+  };
+  union {
   /* 0x0050 */ Object_50 *unk50; //player + 0x2F4
+  /* 0x0050 */ f32 unk50_f32;
+  };
+  union {
   /* 0x0054 */ Object_54 *unk54; //player + 0x2C0
+  /* 0x0054 */ f32 unk54_f32;
+  };
+  union {
   /* 0x0058 */ void *unk58; //player + 0x304
+  /* 0x0058 */ f32 unk58_f32;
+  };
+  union {
   /* 0x005C */ Object_5C *unk5C;
-
+      struct {
+          /* 0x005C */ s16 unk5C;
+          /* 0x005E */ s16 unk5E;
+      } unk5C_halfs;
+  /* 0x005C */ s32 unk5C_s32;
+  };
+  union {
   /* 0x0060 */ Object_60 *unk60; //player + 0x340
+      struct {
+          /* 0x0060 */ s16 unk60;
+          /* 0x0062 */ s16 unk62;
+      } unk60_halfs;
+  /* 0x0060 */ s32 unk60_s32;
+  };
+  union {
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
+      struct {
+          /* 0x0064 */ s16 unk64;
+          /* 0x0066 */ s16 unk66;
+      } unk64_halfs;
+  };
+  union {
   /* 0x0068 */ Object_68 **unk68; //player + 0x80
+      struct {
+          /* 0x0068 */ s16 unk68;
+          /* 0x006A */ s16 unk6A;
+      } unk68_halfs;
+  };
+  union {
   /* 0x006C */ Object_6C *unk6C; //player + 0x370
-  /* 0x0070 */ u32 *unk70;
+      struct {
+          /* 0x006C */ s16 unk6C;
+          /* 0x006E */ s16 unk6E;
+      } unk6C_halfs;
+  };
+  union {
+    /* 0x0070 */ u32 *unk70;
+    /* 0x0070 */ s32 unk70_s32;
+  };
 
+  union {
   /* 0x0074 */ u32 unk74;
+  /* 0x0074 */ s32 unk74_signed;
+  struct {
+  /* 0x0074 */ u8 first;
+  /* 0x0074 */ u8 second;
+  /* 0x0074 */ u8 third;
+  /* 0x0074 */ u8 fourth;
+  } unk74_bytes;
+  };
 
   union {
   /* 0x0078 */ s32 unk78;
@@ -1539,7 +1723,10 @@ typedef struct Object {
 
   /* 0x008C */ u32 unk8C;
   /* 0x0090 */ u32 unk90;
-  /* 0x0094 */ u32 unk94;
+  union {
+    /* 0x0094 */ u32 unk94;
+    /* 0x0094 */ s32 unk94_signed;
+  };
 
   /* 0x0098 */ Object_64 obj;
 
