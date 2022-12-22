@@ -531,14 +531,14 @@ void func_800AF404(s32 arg0) {
 
     D_800E2E28 = (D_800E2E28 + (arg0 * 64)) & 0x1FF;
     for (i = 0; i < 5; i++) {
-        D_800E2D08[i].unk6 = D_800E2D58[i].unk0 + D_800E2E28;
-        D_800E2D08[i].unkA = D_800E2D58[i].unk2 + D_800E2E28;
-        D_800E2D08[i].unkE = D_800E2D58[i].unk4 + D_800E2E28;
+        D_800E2D08[i].unk6 = D_800E2D58[i].y_rotation + D_800E2E28;
+        D_800E2D08[i].unkA = D_800E2D58[i].x_rotation + D_800E2E28;
+        D_800E2D08[i].unkE = D_800E2D58[i].z_rotation + D_800E2E28;
     }
     for (i = 0; i < 8; i++) {
-        D_800E2D78[i].unk6 = D_800E2DF8[i].unk0 + D_800E2E28;
-        D_800E2D78[i].unkA = D_800E2DF8[i].unk2 + D_800E2E28;
-        D_800E2D78[i].unkE = D_800E2DF8[i].unk4 + D_800E2E28;
+        D_800E2D78[i].unk6 = D_800E2DF8[i].y_rotation + D_800E2E28;
+        D_800E2D78[i].unkA = D_800E2DF8[i].x_rotation + D_800E2E28;
+        D_800E2D78[i].unkE = D_800E2DF8[i].z_rotation + D_800E2E28;
     }
 }
 
