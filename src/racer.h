@@ -218,7 +218,7 @@ s32 get_random_number_from_range(s32, s32); //?
 s32 func_80044450(s32 cap);
 void func_8004C0A0(s32 updateRate, Object *obj, Object_Racer *racer);
 void func_8004C140(Object *obj, Object_Racer *racer);
-void func_8004D95C(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer);
+void update_carpet(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer);
 void func_8004F77C(Object_Racer *arg0);
 s32 func_80052188(void);
 void func_800521B8(s32 arg0);

@@ -1316,7 +1316,10 @@ void update_camera_loop(f32 updateRate, Object* obj, Object_Racer* racer) {
     gCameraObject->trans.z_position += gCameraObject->z_velocity;
 }
 
-void func_8004D95C(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer) {
+/**
+ * Updates the carpet vehicle that Taj uses during the overworld race challenges.
+*/
+void update_carpet(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer) {
     s16 sp26;
 
     if (racer->unk118 != 0) {
@@ -1746,9 +1749,9 @@ void update_player_racer(Object *obj, s32 updateRate) {
         case VEHICLE_PLANE:
             func_80049794(updateRate, delta, obj, tempRacer);
             break;
-        case VEHICLE_UNK03:
+        case VEHICLE_FLYING_CAR:
         case VEHICLE_CARPET:
-            func_8004D95C(updateRate, delta, obj, tempRacer);
+            update_carpet(updateRate, delta, obj, tempRacer);
             break;
         case VEHICLE_TRICKY:
             func_8005C364(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
@@ -4609,7 +4612,7 @@ void update_camera_finish_race(UNUSED f32 updateRate, Object *obj, Object_Racer 
     yDiff = gCameraObject->trans.y_position - obj->segment.trans.y_position;
     zDiff = gCameraObject->trans.z_position - obj->segment.trans.z_position;
     distance = sqrtf((xDiff * xDiff) + (zDiff * zDiff));
-    gCameraObject->trans.y_rotation = (s16) (0x8000 - atan2s((s32) xDiff, (s32) zDiff));
+    gCameraObject->trans.y_rotation = 0x8000 - atan2s(xDiff, zDiff);
     gCameraObject->trans.x_rotation = atan2s((s32) yDiff, (s32) distance);
     gCameraObject->trans.z_rotation = 0;
     gCameraObject->segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, racer->oy1, gCameraObject->trans.z_position);
@@ -4626,11 +4629,9 @@ void update_camera_fixed(f32 updateRate, Object *obj, Object_Racer *racer) {
     delta = (s32) updateRate;
     xDiff = gCameraObject->trans.x_position - obj->segment.trans.x_position;
     zDiff = gCameraObject->trans.z_position - obj->segment.trans.z_position;
-    gCameraObject->trans.y_rotation += ((((-atan2s((s32) xDiff, (s32) zDiff)) -
-                                    gCameraObject->trans.y_rotation) + 0x8000) * delta) >> 4;
-    gCameraObject->trans.z_rotation -= (((s32) (gCameraObject->trans.z_rotation * delta)) >> 4);
-    gCameraObject->segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position,
-                            racer->oy1, gCameraObject->trans.z_position);
+    gCameraObject->trans.y_rotation += ((((-atan2s(xDiff, zDiff)) - gCameraObject->trans.y_rotation) + 0x8000) * delta) >> 4;
+    gCameraObject->trans.z_rotation -= ((s32) (gCameraObject->trans.z_rotation * delta)) >> 4;
+    gCameraObject->segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, racer->oy1, gCameraObject->trans.z_position);
 }
 
 // Think this is used to calculate the path for the AI.
@@ -5147,8 +5148,8 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         case VEHICLE_LOOPDELOOP: func_8004CC20(updateRate, updateRateF, obj, racer); break;
         case VEHICLE_HOVERCRAFT: func_80046524(updateRate, updateRateF, obj, racer); break;
         case VEHICLE_PLANE: func_80049794(updateRate, updateRateF, obj, racer); break;
-        case VEHICLE_UNK03: /* fall through */
-        case VEHICLE_CARPET: func_8004D95C(updateRate, updateRateF, obj, racer); break;
+        case VEHICLE_FLYING_CAR: /* fall through */
+        case VEHICLE_CARPET: update_carpet(updateRate, updateRateF, obj, racer); break;
         case VEHICLE_TRICKY: func_8005C364(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         case VEHICLE_BLUEY: func_8005D0D0(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         case VEHICLE_SMOKEY: /* fall through */

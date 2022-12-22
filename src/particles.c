@@ -293,8 +293,7 @@ void init_particle_assets(void) {
     for (i = 0; i < gParticleBehavioursAssetTableCount; i++) {
         new_var = -1;
         gParticleBehavioursAssetTable[i] = (ParticleBehavior *) (((u8 *) gParticleBehavioursAssets) + ((s32) gParticleBehavioursAssetTable[i]));
-        if (((u32) gParticleBehavioursAssetTable[i]->unk9C) != new_var)
-        {
+        if (((u32) gParticleBehavioursAssetTable[i]->unk9C) != new_var) {
             new_var2 = gParticleBehavioursAssetTable[i]->unk9C;
             gParticleBehavioursAssetTable[i]->unk9C = (s32 *) get_misc_asset((s32) new_var2);
         }
@@ -607,7 +606,7 @@ void func_800AF6E4(Object *obj, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/particles/func_800AF714.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800AFC3C.s")
 
-void func_800AFE5C(s32 arg0, Object_6C_800AF52C *arg1) {
+void func_800AFE5C(unk800B1CB8 *arg0, Object_6C_800AF52C *arg1) {
     Object *temp_s0;
     Object *tempObj;
     Object *tempObj2;
@@ -770,7 +769,122 @@ void func_800B03C0(Object *arg0, ObjectTransform *arg1, unk800B03C0_arg2 *arg2, 
     arg0->segment.trans.z_position += arg1->z_position;
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800B0698.s")
+unk800E2CD8 *func_800B0698(unk800B1CB8 *arg0, unk800B0698_arg1 *arg1) {
+    unk800E2CF0* sp2C;
+    unk800E2CD8* var_v0;
+    TextureHeader **sp24;
+    unk800B0698_arg1_0 *sp20;
+    f32 temp_f0;
+    f32 temp_f14;
+    f32 temp_f2;
+
+    sp2C = gParticlesAssetTable[arg1->unk8];
+    if (sp2C->unk0 != 4) {
+        return NULL;
+    }
+    sp20 = arg1->unk0;
+    sp2C = sp2C;
+    var_v0 = func_800B1CB8(4);
+    if (var_v0 == NULL) {
+        return var_v0;
+    }
+    var_v0->unk0.unk2E = arg0->unk2E;
+    var_v0->unk0.unk6 = -0x8000;
+    var_v0->unk0.unk39 = sp2C->unk1;
+    var_v0->unk0.unk40 = sp2C->unk2;
+    var_v0->unk0.unk3C = arg0;
+    var_v0->unk70 = arg1;
+    var_v0->unk0.unk8 = sp2C->unk10 * sp20->unk50;
+    var_v0->unk0.unk28 = sp2C->unk10 * sp20->unk54;
+    var_v0->unk0.unk3A = sp2C->unk8;
+    var_v0->unk0.unk34 = 0.0f;
+    var_v0->unk0.unk38 = 0;
+    var_v0->unk0.unk6C = sp2C->unk14;
+    var_v0->unk0.unk6D = sp2C->unk15;
+    var_v0->unk0.unk6E = sp2C->unk16;
+    var_v0->unk0.unk6F = sp2C->unk17;
+    if (var_v0->unk0.unk40 & 0x800 && arg0->unk54 != NULL) {
+        var_v0->unk0.unk4A = *arg0->unk54 * 255.0f;
+    } else {
+        var_v0->unk0.unk4A = 0xFF;
+    }
+    var_v0->unk0.unk60 = sp2C->unkE;
+    if (arg1->unk4 & 0x100) {
+        var_v0->unk0.unk5C = arg1->unkA;
+    } else {
+        var_v0->unk0.unk5C = sp2C->unkC << 8;
+    }
+    if (sp2C->unkC < 255) {
+        if (var_v0->unk0.unk40 & 0x1000) {
+            var_v0->unk0.unk6 |= 0x100;
+        } else {
+            var_v0->unk0.unk6 |= 0x80;
+        }
+    }
+    if (var_v0->unk0.unk60 < var_v0->unk0.unk3A) {
+        var_v0->unk0.unk5E = ((sp2C->unkD << 8) - (var_v0->unk0.unk5C & 0xFFFF)) / (var_v0->unk0.unk3A - var_v0->unk0.unk60);
+    } else {
+        var_v0->unk0.unk5E = 0;
+    }
+    func_800B03C0((Object *) var_v0, (ObjectTransform *) arg0, (unk800B03C0_arg2 *) arg1, (Object *)sp20);
+    if (sp20->unk0 & 0x80) {
+        var_v0->unk0.unk0 = sp20->unk44;
+        var_v0->unk0.unk2 = sp20->unk46;
+        var_v0->unk0.unk4 = sp20->unk48;
+    } else {
+        var_v0->unk0.unk0 = arg0->unk0 + sp20->unk44;
+        var_v0->unk0.unk2 = arg0->unk2 + sp20->unk46;
+        var_v0->unk0.unk4 = arg0->unk4 + sp20->unk48;
+    }
+    var_v0->unk0.unk62 = sp20->unk4A;
+    var_v0->unk0.unk64 = sp20->unk4C;
+    var_v0->unk0.unk66 = sp20->unk4E;
+    func_800B0010((Object *) var_v0, (Object *) arg0, (unk800B03C0_arg2 *) arg1, (Object *)sp20);
+    var_v0->unk0.unk68 = D_800E2E2C[(var_v0->unk0.unk40 >> 4) & 7];
+    if (var_v0->unk0.unk39 == 5) {
+        temp_f0 = var_v0->unk0.unk1C;
+        temp_f2 = var_v0->unk0.unk20;
+        temp_f14 = var_v0->unk0.unk24;
+        var_v0->unk0.unk58 = sqrtf((temp_f0 * temp_f0) + (temp_f2 * temp_f2) + (temp_f14 * temp_f14));
+    }
+    if (sp20->unk0 & 2) {
+        arg1->unk10 += sp20->unk1C;
+        arg1->unk12 += sp20->unk1E;
+    }
+    if (sp20->unk0 & 8) {
+        arg1->unk14 += sp20->unk2A;
+        arg1->unk16 += sp20->unk2C;
+    }
+    var_v0->unk0.unk1A = sp2C->unk6;
+    var_v0->unk0.unk18 = 0;
+    sp24 = var_v0->unk0.unk44;
+    if (sp2C->unk4 == -1) {
+        *sp24 = NULL;
+    } else {
+        *sp24 = load_texture(sp2C->unk4);
+        if ((*sp24) != NULL) {
+            if ((*sp24)->flags & 4) {
+                if (var_v0->unk0.unk40 & 0x1000) {
+                    var_v0->unk0.unk6 |= 0x100;
+                } else {
+                    var_v0->unk0.unk6 |= 0x80;
+                }
+            }
+            if ((var_v0->unk0.unk40 & 3) == 2) {
+                var_v0->unk0.unk18 = (*sp24)->numOfTextures - 1;
+            }
+        }
+    }
+    var_v0->unk75 = 0;
+    var_v0->unk76 = ((u32) sp2C->unkA) >> 10;
+    var_v0->unk77 = 0;
+    if (*sp24 == NULL) {
+        func_800B2040((unk800B2260_C *) var_v0);
+        return NULL;
+    }
+    return var_v0;
+}
+
 GLOBAL_ASM("asm/non_matchings/particles/func_800B0BAC.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B1130.s")
 
