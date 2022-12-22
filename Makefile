@@ -332,6 +332,10 @@ $(BUILD_DIR)/src/audio.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/audio.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/memory.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/memory.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/game_text.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/game_text.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/gzip.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/gzip.o: OPT_FLAGS := -O3
 
 
 $(BUILD_DIR)/lib/src/mips1/sc/sched.o: MIPSISET := -mips2
