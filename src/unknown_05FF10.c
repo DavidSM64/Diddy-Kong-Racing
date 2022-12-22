@@ -85,9 +85,9 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             }
         }
     }
-    racer->unk1D6 = 10;
+    racer->vehicleID = VEHICLE_CARPET;
     func_80049794(updateRate, updateRateF, obj, racer);
-    racer->unk1D6 = racer->unk1D7;
+    racer->vehicleID = racer->unk1D7;
     obj->unk74 = 0;
     racer->unk16A = sp3A;
     obj->segment.unk38.byte.unk3A = sp3E;

@@ -1121,7 +1121,7 @@ typedef struct Object_Racer {
   /* 0x1D3 */ s8 boostTimer;
   /* 0x1D4 */ u8 unk1D4;
   /* 0x1D5 */ u8 unk1D5;
-  /* 0x1D6 */ s8 unk1D6;
+  /* 0x1D6 */ s8 vehicleID;
   /* 0x1D7 */ s8 unk1D7;
   /* 0x1D8 */ s8 raceFinished;
   /* 0x1D9 */ s8 unk1D9;

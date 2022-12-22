@@ -673,7 +673,7 @@ void func_8000E2B4(void) {
     gRacersByPort[0] = player;
     *gRacersByPosition = player;
     player_64 = &player->unk64->racer;
-    player_64->unk1D6 = gOverworldVehicle;
+    player_64->vehicleID = gOverworldVehicle;
     player_64->unk1D7 = gOverworldVehicle;
     player_64->unk2 = 0;
     player_64->characterId = (s8) settings->racers[0].character;
@@ -1397,7 +1397,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         if (var_a2 > 10) {
             var_a2 = 0;
         }
-        var_a1 = racer->unk1D6;
+        var_a1 = racer->vehicleID;
         if (var_a1 > 2) {
             var_a1 = 0;
         }
@@ -1468,7 +1468,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gObjectCurrMatrix = *mtx;
             gObjectCurrVertexList = *vtxList;
             magnet = (f32 *) get_misc_asset(MISC_ASSET_MAGNET_DATA);
-            var_a0 = racer->unk1D6;
+            var_a0 = racer->vehicleID;
             if (var_a0 < 0 || var_a0 > 2) {
                 var_a0 = 0;
             }

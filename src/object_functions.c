@@ -1219,7 +1219,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             func_80030DE0(0, tt->unk11, tt->unk12, tt->unk13, tt->unk20, tt->unk22, 0xB4);
             play_music(header->music);
             func_80001074(header->instruments);
-            racer->unk118 = func_80004B40(racer->characterId, racer->unk1D6);
+            racer->unk118 = func_80004B40(racer->characterId, racer->vehicleID);
         }
         obj->unk7C.word = 0xB4;
         func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
@@ -2255,23 +2255,23 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
         if (var_a2_2 & 0x80) {
             D_8011D4E0 = var_a2_2 & 0x7F;
-            if (D_8011D4E0 != racer64->racer.unk1D6) {
+            if (D_8011D4E0 != racer64->racer.vehicleID) {
                 obj->action = TAJ_MODE_TRANSFORM_BEGIN;
                 taj->unk4 = 0;
                 // Voice clips: Abrakadabra, Alakazam, Alakazoom?
-                play_taj_voice_clip((racer64->racer.unk1D6 + 0x235), 1);
+                play_taj_voice_clip((racer64->racer.vehicleID + 0x235), 1);
             } else {
                 set_menu_id_if_option_equal(0x62, 2);
             }
         }
         if (var_a2_2 & 0x40) {
             D_8011D4E0 = var_a2_2 & 0xF;
-            if (D_8011D4E0 != racer64->racer.unk1D6) {
+            if (D_8011D4E0 != racer64->racer.vehicleID) {
                 D_8011D4E0 |= 0x80;
                 obj->action = TAJ_MODE_TRANSFORM_BEGIN;
                 taj->unk4 = 0.0f;
                 // Voice clips: Abrakadabra, Alakazam, Alakazoom?
-                play_taj_voice_clip((racer64->racer.unk1D6 + 0x235), 1);
+                play_taj_voice_clip((racer64->racer.vehicleID + 0x235), 1);
             } else {
                 obj->action = TAJ_MODE_SET_CHALLENGE;
                 func_800C01D8(&D_800DC978);
@@ -2351,7 +2351,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             }
             obj->action = TAJ_MODE_TELEPORT_AWAY_BEGIN;
             play_sound_global(SOUND_WHOOSH4, NULL);
-            racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.unk1D6);
+            racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.vehicleID);
         }
         break;
     case TAJ_MODE_TELEPORT_TO_PLAYER_BEGIN:
@@ -2409,12 +2409,12 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         if (obj->segment.unk38.byte.unk39 > var_a2) {
             obj->segment.unk38.byte.unk39 -= var_a2;
         } else {
-            racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.unk1D6);
+            racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.vehicleID);
             func_80030DE0(0, taj->unk11, taj->unk12, taj->unk13, taj->unk20, taj->unk22, 0xB4);
             set_music_player_voice_limit(levelHeader->voiceLimit);
             play_music(levelHeader->music);
             func_80001074(levelHeader->instruments);
-            func_800228EC(racer64->racer.unk1D6);
+            func_800228EC(racer64->racer.vehicleID);
             temp_v0_12 = func_8002342C(obj->segment.trans.x_position, obj->segment.trans.z_position);
             if (temp_v0_12 != NULL) {
                 obj->segment.trans.x_position = temp_v0_12->segment.trans.x_position;
@@ -2695,7 +2695,7 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
         for (i = 0; i < numRacers; i++) {
             racerObj = racerObjects[i];
             racer = (Object_Racer *) racerObj->unk64;
-            if (racer->unk1D6 != modeChange->unk14) {
+            if (racer->vehicleID != modeChange->unk14) {
                 diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
                 diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
@@ -2705,9 +2705,9 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
                     if (dist < 0.0f) {
                         racer->unk1E0 = 0;
                         if (modeChange->unk14 == 0) {
-                            racer->unk1D6 = racer->unk1D7;
+                            racer->vehicleID = racer->unk1D7;
                         } else {
-                            racer->unk1D6 = modeChange->unk14;
+                            racer->vehicleID = modeChange->unk14;
                         }
                         if (modeChange->unk14 == 4) {
                             if (racer->raceFinished == FALSE) {
@@ -3264,15 +3264,15 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
         racerObj = get_racer_object(0);
         if (racerObj != NULL) {
             racer = (Object_Racer *) racerObj->unk64;
-            switch(racer->unk1D6) {
+            switch(racer->vehicleID) {
                 default:
-                    var_v0 = 1;
+                    var_v0 = VEHICLE_HOVERCRAFT;
                     break;
                 case 1:
-                    var_v0 = 2;
+                    var_v0 = VEHICLE_PLANE;
                     break;
                 case 2:
-                    var_v0 = 4;
+                    var_v0 = VEHICLE_LOOPDELOOP;
                     break;
             }
             if (entry->unkF & var_v0) {
@@ -3852,7 +3852,7 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
             interactObj = obj->interactObj->obj;
             if (interactObj != NULL && interactObj->segment.header->behaviorId == BHV_RACER) {
                 racer = (Object_Racer *) interactObj->unk64;
-                    if (racer->unk1D6 < 5 || racer->playerIndex != PLAYER_COMPUTER) {
+                    if (racer->vehicleID < VEHICLE_TRICKY|| racer->playerIndex != PLAYER_COMPUTER) {
                     currentBalloon = racer->balloon_type;
                     racer->balloon_type = obj->unk78;
                     if (currentBalloon == racer->balloon_type && racer->balloon_quantity != 0) {
