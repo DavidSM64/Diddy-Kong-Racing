@@ -484,7 +484,7 @@ s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIs
         pool->curNumSlots++;
         poolSlots[index].data = &poolSlots[slotIndex].data[size];
         poolSlots[index].size = poolSize;
-        poolSlots[index].size = poolSlots[index].size - size;
+        poolSlots[index].size -= size;
         poolSlots[index].flags = newSlotIsTaken;
         poolSize = poolSlots[slotIndex].nextIndex;
         nextIndex = poolSize;

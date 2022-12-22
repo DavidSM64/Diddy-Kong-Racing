@@ -120,20 +120,20 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of December 18, 2022, this is our current score:
+As of December 22, 2022, this is our current score:
 ```
  ===================================================
        ADVENTURE ONE (ASM -> C Decompilation)
- ----------------- 45.05% Complete -----------------
-            # Decompiled functions: 1434
-             # GLOBAL_ASM remaining: 404
+ ----------------- 46.46% Complete -----------------
+            # Decompiled functions: 1451
+             # GLOBAL_ASM remaining: 387
             # NON_MATCHING functions: 12
-         # NON_EQUIVALENT WIP functions: 68
+         # NON_EQUIVALENT WIP functions: 66
  ------------------- Game Status -------------------
-      Balloons: 21/47, Keys: 2/4, Trophies: 2/5
+      Balloons: 22/47, Keys: 2/4, Trophies: 2/5
        T.T. Amulets: 2/4, Wizpig Amulets: 2/4
  ---------------------------------------------------
- We are racing Taj in the Hover Challenge. (Lap 3/3)
+        We are racing in Whale Bay. (Lap 2/3)
  ===================================================
         ADVENTURE TWO (Cleanup & Documentation)
  ----------------- 15.10% Complete -----------------

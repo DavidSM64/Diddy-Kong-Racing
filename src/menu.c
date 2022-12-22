@@ -19,7 +19,7 @@
 #include "object_models.h"
 #include "printf.h"
 #include "textures_sprites.h"
-#include "thread30.h"
+#include "thread30_track_loading.h"
 #include "objects.h"
 #include "game.h"
 #include "unknown_078050.h"

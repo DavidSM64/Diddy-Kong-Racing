@@ -56,7 +56,7 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
 
     func_8005CA78(D_800DCE80);
     racer->unk1EC = 0;
-    sp3E = obj->segment.unk3B;
+    sp3E = obj->segment.unk38.byte.unk3A;
     sp3C = obj->segment.animFrame;
     sp3A = racer->unk16A;
     if ((racer->velocity < 0.3f)&& (racer->velocity > -0.3f)) {
@@ -90,15 +90,15 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->unk1D6 = racer->unk1D7;
     obj->unk74 = 0;
     racer->unk16A = sp3A;
-    obj->segment.unk3B = sp3E;
+    obj->segment.unk38.byte.unk3A = sp3E;
     obj->segment.animFrame = sp3C;
-    if ((racer->attackType != ATTACK_NONE) && (obj->segment.unk3B != 1)) {
+    if ((racer->attackType != ATTACK_NONE) && (obj->segment.unk38.byte.unk3A != 1)) {
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, NULL);
         func_80069F28(12.0f);
-        obj->segment.x_velocity *= 0.4f;
-        obj->segment.z_velocity *= 0.4f;
-        obj->segment.unk3B = 1;
+        obj->segment.x_velocity *= 0.4;
+        obj->segment.z_velocity *= 0.4;
+        obj->segment.unk38.byte.unk3A = 1;
         racer->unkC = 0;
         obj->segment.y_velocity += 4.0f;
     }
@@ -116,7 +116,7 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     racer->unkC += (updateRateF * 2.0f);
     obj68 = obj->unk68[0];
-    temp_f2_3 = ((obj68->objModel->animations[obj->segment.unk3B].unk4 * 16) - 17);
+    temp_f2_3 = ((obj68->objModel->animations[obj->segment.unk38.byte.unk3A].unk4 * 16) - 17);
     while (temp_f2_3 <= racer->unkC) {
         racer->unkC -= temp_f2_3;
         obj68->unk10 = -1;
@@ -125,8 +125,8 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->unkC += temp_f2_3;
         obj68->unk10 = -1;
     }
-    if ((obj->segment.unk3B == 1) && (obj68->unk10 == -1)) {
-        obj->segment.unk3B = 0;
+    if ((obj->segment.unk38.byte.unk3A == 1) && (obj68->unk10 == -1)) {
+        obj->segment.unk38.byte.unk3A = 0;
         racer->unkC = 0;
     }
     obj->unk74 = 0;
@@ -151,7 +151,7 @@ void func_8005F310(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     tempObj = get_racer_object(0);
     obj64 = tempObj->unk64;
-    if ((obj == tempObj->interactObj->obj) && (tempObj->interactObj->unk14 & 8) && (obj->segment.unk3B == 1)) {
+    if ((obj == tempObj->interactObj->obj) && (tempObj->interactObj->unk14 & 8) && (obj->segment.unk38.byte.unk3A == 1)) {
         obj64->racer.attackType = ATTACK_SQUISHED;
     }
     if ((obj64->racer.raceFinished != FALSE) && (D_8011D610 == 0)) {

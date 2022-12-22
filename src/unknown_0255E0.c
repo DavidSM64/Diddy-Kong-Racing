@@ -792,7 +792,7 @@ void render_level_geometry_and_objects(void) {
         if (objFlags & 0x80) {
             s0 = 0;
         } else if (!(objFlags & 0x8000)) {
-            s0 = obj->segment.unk38.half.lower;
+            s0 = obj->segment.unk38.byte.unk39;
         }
         if (objFlags & sp158) {
             s0 = 0;
@@ -854,7 +854,7 @@ void render_level_geometry_and_objects(void) {
         if (objFlags & 0x80) {
             s0 = 1;
         } else if (!(objFlags & 0x8000)) {
-            s0 = obj->segment.unk38.half.lower;
+            s0 = obj->segment.unk38.byte.unk39;
         }
         if (objFlags & sp158) {
             s0 = 0;
@@ -1297,11 +1297,11 @@ s32 check_if_in_draw_range(Object *obj) {
         switch (obj->behaviorId) {
             case BHV_RACER:
                 obj64 = obj->unk64;
-                obj->segment.unk38.half.lower = ((obj64->racer.transparency + 1) * alpha) >> 8;
+                obj->segment.unk38.byte.unk39 = ((obj64->racer.transparency + 1) * alpha) >> 8;
                 break;
             case BHV_UNK_3A:
                 obj64 = obj->unk64;
-                obj->segment.unk38.half.lower = obj64->racer.transparency;
+                obj->segment.unk38.byte.unk39 = obj64->racer.transparency;
                 break;
             case BHV_ANIMATED_OBJECT: // Cutscene object?
             case BHV_CAMERA_ANIMATION:
@@ -1312,14 +1312,14 @@ s32 check_if_in_draw_range(Object *obj) {
             case BHV_HIT_TESTER_2: // animated objects?
             case BHV_ANIMATED_OBJECT_2: // space ships
                 obj64 = obj->unk64;
-                obj->segment.unk38.half.lower = obj64->effect_box.pad0[0x42];
+                obj->segment.unk38.byte.unk39 = obj64->effect_box.pad0[0x42];
                 break;
             case BHV_PARK_WARDEN:
             case BHV_GOLDEN_BALLOON:
             case BHV_PARK_WARDEN_2: // GBParkwarden
                 break;
             default:
-                obj->segment.unk38.half.lower = alpha;
+                obj->segment.unk38.byte.unk39 = alpha;
                 break;
         }
         for (i = 0; i < 3; i++) {
@@ -1686,11 +1686,11 @@ void render_floor_decal(Object *obj, Object_50 *arg1) {
             D_8011D348 = (unk8011D348 *) D_8011D338[D_8011B0CC];
             someAlpha = D_8011D348[D_8011D360[i].unk6].unk9;
             flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
-            if (someAlpha == 0 || obj->segment.unk38.half.lower == 0) {
+            if (someAlpha == 0 || obj->segment.unk38.byte.unk39 == 0) {
                 i = arg1->unkA;
-            } else if (someAlpha != 255 || obj->segment.unk38.half.lower != 255) {
+            } else if (someAlpha != 255 || obj->segment.unk38.byte.unk39 != 255) {
                 flags = RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE;
-                someAlpha = (obj->segment.unk38.half.lower * someAlpha) >> 8;
+                someAlpha = (obj->segment.unk38.byte.unk39 * someAlpha) >> 8;
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, someAlpha);
             }
             while (i < arg1->unkA) {
