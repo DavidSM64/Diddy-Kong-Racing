@@ -173,24 +173,24 @@ void func_80061C0C(Object *obj) {
     Object_68 *temp_a1;
     s32 var_v1;
 
-    if (obj->segment.unk3A.byte.upper < 0) {
-        obj->segment.unk3A.byte.upper = 0;
+    if (obj->segment.unk38.byte.unk3A < 0) {
+        obj->segment.unk38.byte.unk3A = 0;
     }
     var_v1 = obj->segment.header->numberOfModelIds - 1;
-    if (var_v1 < obj->segment.unk3A.byte.upper) {
-        obj->segment.unk3A.byte.upper = var_v1;
+    if (var_v1 < obj->segment.unk38.byte.unk3A) {
+        obj->segment.unk38.byte.unk3A = var_v1;
     }
-    temp_a1 = obj->unk68[obj->segment.unk3A.byte.upper];
+    temp_a1 = obj->unk68[obj->segment.unk38.byte.unk3A];
     mdl = temp_a1->objModel;
     if (temp_a1->objModel->animations != NULL) {
-        if (obj->segment.unk3A.byte.lower < 0) {
-            obj->segment.unk3A.byte.lower = 0;
+        if (obj->segment.unk38.byte.unk3B < 0) {
+            obj->segment.unk38.byte.unk3B = 0;
         }
-        if (obj->segment.unk3A.byte.lower >= mdl->numberOfAnimations) {
-            obj->segment.unk3A.byte.lower = mdl->numberOfAnimations - 1;
+        if (obj->segment.unk38.byte.unk3B >= mdl->numberOfAnimations) {
+            obj->segment.unk38.byte.unk3B = mdl->numberOfAnimations - 1;
         }
         if (mdl->numberOfAnimations > 0) {
-            var_v1 = mdl->animations[obj->segment.unk3A.byte.lower].unk4 - 2;
+            var_v1 = mdl->animations[obj->segment.unk38.byte.unk3B].unk4 - 2;
         } else {
             var_v1 = 0;
         }

@@ -78,7 +78,7 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     func_8005CA78(D_800DCDE0);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
-    sp56 = obj->segment.unk3A.byte.lower;
+    sp56 = obj->segment.unk38.byte.unk3A;
     sp54 = obj->segment.animFrame;
     sp52 = racer->unk16A;
     if (racer->raceFinished == TRUE) {
@@ -105,11 +105,11 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     *startTimer = var_v1;
     racer->lateral_velocity = 0.0f;
     racer->unk16A = sp52;
-    obj->segment.unk3A.byte.lower = sp56;
+    obj->segment.unk38.byte.unk3A = sp56;
     obj->segment.animFrame = sp54;
-    if ((racer->attackType != ATTACK_NONE) && (obj->segment.unk3A.byte.lower != 3)) {
-        racer->unk1CD = obj->segment.unk3A.byte.lower;
-        obj->segment.unk3A.byte.lower = 3;
+    if ((racer->attackType != ATTACK_NONE) && (obj->segment.unk38.byte.unk3A != 3)) {
+        racer->unk1CD = obj->segment.unk38.byte.unk3A;
+        obj->segment.unk38.byte.unk3A = 3;
         obj->segment.y_velocity += 7.5;
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, NULL);
@@ -124,16 +124,16 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->velocity = -sqrtf((temp_f20 * temp_f20) + (temp_f14 * temp_f14));
     }
     temp_v0_2 = *obj->unk68;
-    temp_f20 = ((temp_v0_2->objModel->animations[obj->segment.unk3A.byte.lower].unk4 * 16) - 17);
-    if (obj->segment.unk3A.byte.lower != 3) {
+    temp_f20 = ((temp_v0_2->objModel->animations[obj->segment.unk38.byte.unk3A].unk4 * 16) - 17);
+    if (obj->segment.unk38.byte.unk3A != 3) {
         if (racer->velocity < -2.0) {
-            obj->segment.unk3A.byte.lower = 1;
+            obj->segment.unk38.byte.unk3A = 1;
             racer->unkC -= racer->velocity * updateRateF * 0.5;
         } else if ((racer->velocity < -0.1) || (racer->velocity > 0.1)) {
-            obj->segment.unk3A.byte.lower = 2;
+            obj->segment.unk38.byte.unk3A = 2;
             racer->unkC -= racer->velocity * updateRateF * 2;
         } else {
-            obj->segment.unk3A.byte.lower = 0;
+            obj->segment.unk38.byte.unk3A = 0;
             racer->unkC += (f64) updateRateF;
         }
     } else {
@@ -147,20 +147,20 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->unkC -= temp_f20;
         temp_v0_2->unk10 = -1;
     }
-    if ((temp_v0_2->unk10 == -1) && (obj->segment.unk3A.byte.lower == 3)) {
-        obj->segment.unk3A.byte.lower = racer->unk1CD;
+    if ((temp_v0_2->unk10 == -1) && (obj->segment.unk38.byte.unk3A == 3)) {
+        obj->segment.unk38.byte.unk3A = racer->unk1CD;
     }
     sp54 = obj->segment.animFrame;
     obj->segment.animFrame = racer->unkC;
     obj->unk74 = 0;
-    if (obj->segment.unk3A.byte.lower == 1) {
+    if (obj->segment.unk38.byte.unk3A == 1) {
         func_800113CC(obj, 2, sp54, 172, 173);
         obj->unk74 |= 3;
     }
     func_800AFC3C(obj, updateRate);
     func_8005D048(obj, racer, 120);
 
-    switch(obj->segment.unk3A.byte.lower) {
+    switch(obj->segment.unk38.byte.unk3A) {
         case 1:
             var_a1 = 0x2500;
             break;
@@ -193,7 +193,7 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         racer->unk16C = var_v1;
     }
-    if ((obj->segment.unk3A.byte.lower == 1) && ((racer->unk1E7 & 0x1F) < 10)) {
+    if ((obj->segment.unk38.byte.unk3A == 1) && ((racer->unk1E7 & 0x1F) < 10)) {
         racer->unk16C >>= 1;
     }
     temp_s0 = (Object_Racer *)temp_v0_4->unk64;
@@ -206,7 +206,7 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         func_8006F140(1);
     }
-    if ((obj == temp_v0_4->interactObj->obj) && (temp_v0_4->interactObj->unk14 & 8) && (obj->segment.unk3A.byte.lower == 1)) {
+    if ((obj == temp_v0_4->interactObj->obj) && (temp_v0_4->interactObj->unk14 & 8) && (obj->segment.unk38.byte.unk3A == 1)) {
         temp_s0->attackType = ATTACK_SQUISHED;
     }
     if ((temp_s0->raceFinished != FALSE) && (D_8011D5C4 == 0)) {

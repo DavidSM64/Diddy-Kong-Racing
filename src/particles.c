@@ -472,7 +472,7 @@ void func_800AF1E0(Object *arg0, s32 arg1, s32 arg2) {
     ParticleBehavior *temp_v0;
 
     if (arg1 < gParticleBehavioursAssetTableCount) {
-        temp_v0 = (ParticleBehavior *) gParticleBehavioursAssetTable[arg1];
+        temp_v0 = gParticleBehavioursAssetTable[arg1];
         func_800AF29C(arg0, arg1, arg2, temp_v0->unk4, temp_v0->unk8, temp_v0->unkC);
     }
 }
@@ -549,7 +549,7 @@ GLOBAL_ASM("asm/non_matchings/particles/func_800AF404.s")
 void func_800AF52C(Object *obj, s32 arg1) {
     s32 i;
     Object_6C_800AF52C *temp_v0;
-    Object_6C_800AF52C_0 *temp_v1;
+    ParticleBehavior *temp_v1;
     Object *temp;
 
     temp_v0 = &((Object_6C_800AF52C *) obj->unk6C)[arg1];
@@ -565,25 +565,25 @@ void func_800AF52C(Object *obj, s32 arg1) {
         if (temp_v0->unk6 > 0) { // Useless if statement, since the loop already does this.
             for (i = 0; i < temp_v0->unk6; i++){
                 temp = temp_v0->unkC_arr[i];
-                temp->segment.unk3A.half = 0;
+                temp->segment.unk38.half.unk3A = 0;
             }
         }
-        if (temp_v1->unk0 & 1) {
+        if (temp_v1->flags & 1) {
             temp_v0->unk10 = temp_v1->unk14;
             temp_v0->unk12 = temp_v1->unk16;
         }
-        if (temp_v1->unk0 & 4) {
+        if (temp_v1->flags & 4) {
             temp_v0->unk14 = temp_v1->unk22;
             temp_v0->unk16 = temp_v1->unk24;
         }
     } else {
-        if (temp_v1->unk0 & 1) {
+        if (temp_v1->flags & 1) {
             temp_v0->unk6 = 0;
             temp_v0->unkC = temp_v1->unk14;
             temp_v0->unkE = temp_v1->unk16;
             temp_v0->unk10 = temp_v1->unk18;
         }
-        if (temp_v1->unk0 & 4) {
+        if (temp_v1->flags & 4) {
             temp_v0->unk7 = 0;
             temp_v0->unk12 = temp_v1->unk22;
             temp_v0->unk14 = temp_v1->unk24;
@@ -612,7 +612,7 @@ void func_800AFE5C(s32 arg0, Object_6C_800AF52C *arg1) {
     Object *tempObj;
     Object *tempObj2;
     s32 i;
-    Object_6C_800AF52C_0 *temp_s4;
+    ParticleBehavior *temp_s4;
 
     temp_s4 = arg1->unk0;
     if (arg1->unk4 & 0x4000) {
@@ -631,8 +631,8 @@ void func_800AFE5C(s32 arg0, Object_6C_800AF52C *arg1) {
             temp_s0 = func_800B0698(arg0, arg1);
             arg1->unk4 &= 0xDFFF;
             if (temp_s0 != NULL) {
-                func_8000E9D0((Object*)temp_s0);
-                temp_s0->unk74_bytes.first = (u8) arg1->unk6;
+                func_8000E9D0(temp_s0);
+                temp_s0->unk74_bytes.first = arg1->unk6;
                 temp_s0->segment.unk40 |= 0x2000;
                 arg1->unkC_arr[arg1->unk6] = temp_s0;
                 arg1->unk6++;
@@ -653,33 +653,33 @@ void func_800AFE5C(s32 arg0, Object_6C_800AF52C *arg1) {
     }
 }
 
-void func_800B0010(unk800B03C0_arg0 *arg0, unk800B03C0_arg0 *arg1, unk800B03C0_arg2 *arg2, unk800B03C0_arg3 *arg3) {
+void func_800B0010(Object *arg0, Object *arg1, unk800B03C0_arg2 *arg2, Object *arg3) {
     s32 sp3C;
     Vec3f sp30;
     Vec3s sp28;
 
-    if (arg3->unk0 & 0x70) {
-        arg0->segment.x_velocity = arg3->unk30;
-        arg0->segment.y_velocity = arg3->unk34;
-        arg0->segment.z_velocity = arg3->unk38;
+    if (arg3->segment.trans_unk.unk0 & 0x70) {
+        arg0->segment.x_velocity = arg3->segment.unk30;
+        arg0->segment.y_velocity = arg3->segment.unk34_a.unk34;
+        arg0->segment.z_velocity = arg3->segment.unk38.unk38_f32;
     } else {
         arg0->segment.x_velocity = 0.0f;
         arg0->segment.y_velocity = 0.0f;
         arg0->segment.z_velocity = 0.0f;
     }
-    sp3C = arg3->unk5C & 0x700;
+    sp3C = arg3->unk5C_s32 & 0x700;
     if (sp3C) {
         if (sp3C & 0x100) {
-            arg0->segment.x_velocity += (f32) get_random_number_from_range(-arg3->unk74, arg3->unk74) * 0.00001525878906;
+            arg0->segment.x_velocity += (f32) get_random_number_from_range(-arg3->unk74_signed, arg3->unk74_signed) * 0.00001525878906;
         }
         if (sp3C & 0x200) {
             arg0->segment.y_velocity += (f32) get_random_number_from_range(-arg3->unk78,  arg3->unk78) * 0.00001525878906;
         }
         if (sp3C & 0x400) {
-            arg0->segment.z_velocity += (f32) get_random_number_from_range(-arg3->unk7C, arg3->unk7C) * 0.00001525878906;
+            arg0->segment.z_velocity += (f32) get_random_number_from_range(-arg3->unk7C.word, arg3->unk7C.word) * 0.00001525878906;
         }
     }
-    switch (arg3->unk0 & 0x70) {
+    switch (arg3->segment.trans_unk.unk0 & 0x70) {
         case 0x10:
             arg0->segment.x_velocity += arg1->segment.x_velocity;
             arg0->segment.y_velocity += arg1->segment.y_velocity;
@@ -691,78 +691,78 @@ void func_800B0010(unk800B03C0_arg0 *arg0, unk800B03C0_arg0 *arg1, unk800B03C0_a
             arg0->segment.z_velocity *= arg1->segment.z_velocity;
             break;
     }
-    if (arg3->unk0 & 4) {
+    if (arg3->segment.trans_unk.unk0 & 4) {
         sp30.x = 0.0f;
         sp30.y = 0.0f;
-        sp30.z = -arg3->unk3C;
-        sp3C = arg3->unk5C;
+        sp30.z = -arg3->segment.unk3C_a.unk3C_f;
+        sp3C = arg3->unk5C_s32;
         if (sp3C & 0x10) {
-            sp30.z += (f32) get_random_number_from_range(-arg3->unk70, arg3->unk70) * 0.00001525878906;
+            sp30.z += (f32) get_random_number_from_range(-arg3->unk70_s32, arg3->unk70_s32) * 0.00001525878906;
         }
         if (sp3C & 0x60) {
             sp28.y_rotation = arg2->unk12;
             if (sp3C & 0x20) {
-                sp28.y_rotation += get_random_number_from_range((s32) -arg3->unk6A, (s32) arg3->unk6A);
+                sp28.y_rotation += get_random_number_from_range((s32) -arg3->unk68_halfs.unk6A, (s32) arg3->unk68_halfs.unk6A);
             }
             sp28.x_rotation = arg2->unk14;
             if (sp3C & 0x40) {
-                sp28.x_rotation += get_random_number_from_range((s32) -arg3->unk6C, (s32) arg3->unk6C);
+                sp28.x_rotation += get_random_number_from_range((s32) -arg3->unk6C_halfs.unk6C, (s32) arg3->unk6C_halfs.unk6C);
             }
-            f32_vec3_apply_object_rotation3((ObjectTransform* ) &sp28, (f32*)&sp30);
+            f32_vec3_apply_object_rotation3((ObjectTransform* ) &sp28, (f32*) &sp30);
         } else {
-            f32_vec3_apply_object_rotation3((ObjectTransform* )&arg2->unk12, (f32*)&sp30);
+            f32_vec3_apply_object_rotation3((ObjectTransform* )&arg2->unk12, (f32*) &sp30);
         }
-        f32_vec3_apply_object_rotation((ObjectTransform* )arg0->segment.unk3C_a.unk3C_ptr, (f32*)&sp30);
+        f32_vec3_apply_object_rotation((ObjectTransform* ) arg0->segment.unk3C_a.unk3C_ptr, (f32*) &sp30);
         arg0->segment.x_velocity += sp30.x;
         arg0->segment.y_velocity += sp30.y;
         arg0->segment.z_velocity += sp30.z;
     }
 }
 
-void func_800B03C0(unk800B03C0_arg0 *arg0, ObjectTransform *arg1, unk800B03C0_arg2 *arg2, unk800B03C0_arg3 *arg3) {
+void func_800B03C0(Object *arg0, ObjectTransform *arg1, unk800B03C0_arg2 *arg2, Object *arg3) {
     s32 sp3C;
     Vec3f sp30;
     Vec3s sp28;
 
-    arg0->unk4C = arg2->unk18;
-    arg0->unk50 = arg2->unk1A;
-    arg0->unk54 = arg2->unk1C;
-    arg0->unk58 = arg3->unk58;
-    if (arg3->unk5C & 0x80000) {
-        arg0->unk58 += (f32) get_random_number_from_range(-arg3->unk94, arg3->unk94) * 0.00001525878906; // 0.00001525878906 ~= 1.0/65536.0
+    arg0->unk4C_f32 = arg2->unk18;
+    arg0->unk50_f32 = arg2->unk1A;
+    arg0->unk54_f32 = arg2->unk1C;
+    arg0->unk58_f32 = arg3->unk58_f32;
+    if (arg3->unk5C_s32 & 0x80000) {
+        arg0->unk58_f32 += (f32) get_random_number_from_range(-arg3->unk94_signed, arg3->unk94_signed) * 0.00001525878906; // 0.00001525878906 ~= 1.0/65536.0
     }
-    if (arg3->unk0 & 1) {
+    if (arg3->segment.trans_unk.unk0 & 1) {
         sp30.x = 0.0f;
         sp30.y = 0.0f;
-        sp30.z = -arg3->unk10;
-        sp3C = arg3->unk5C;
+        sp30.z = -arg3->segment.trans_unk.y_position;
+        sp3C = arg3->unk5C_s32;
         if (sp3C & 1) {
-            sp30.z += (f32) get_random_number_from_range(-arg3->unk60, arg3->unk60) * 0.00001525878906;
+            sp30.z += (f32) get_random_number_from_range(-arg3->unk60_s32, arg3->unk60_s32) * 0.00001525878906;
         }
         if (sp3C & 6) {
             sp28.y_rotation = arg2->y_rotation;
             if (sp3C & 2) {
-                sp28.y_rotation += get_random_number_from_range(-arg3->unk64, arg3->unk64);
+                sp28.y_rotation += get_random_number_from_range(-arg3->unk64_halfs.unk64, arg3->unk64_halfs.unk64);
             }
             sp28.x_rotation = arg2->x_rotation;
             if (sp3C & 4) {
-                sp28.x_rotation += get_random_number_from_range(-arg3->unk66, arg3->unk66);
+                sp28.x_rotation += get_random_number_from_range(-arg3->unk64_halfs.unk66, arg3->unk64_halfs.unk66);
             }
             f32_vec3_apply_object_rotation3((ObjectTransform* ) &sp28, (f32 *) &sp30);
         } else {
             f32_vec3_apply_object_rotation((ObjectTransform* ) &arg2->y_rotation, (f32 *) &sp30);
         }
-        arg0->unk4C += sp30.x;
-        arg0->unk50 += sp30.y;
-        arg0->unk54 += sp30.z;
+        arg0->unk4C_f32 += sp30.x;
+        arg0->unk50_f32 += sp30.y;
+        arg0->unk54_f32 += sp30.z;
     }
-    if (arg0->segment.unk38.half.lower != 4) {
-        f32_vec3_apply_object_rotation(arg1, &arg0->unk4C);
+    if (arg0->segment.unk38.byte.unk39 != 4) {
+        f32_vec3_apply_object_rotation(arg1, &arg0->unk4C_f32);
     }
-    arg0->segment.trans.x_position = arg0->unk4C;
-    arg0->segment.trans.y_position = arg0->unk50;
-    arg0->segment.trans.z_position = arg0->unk54;
-    if (arg0->segment.unk38.half.lower == 4) {
+    arg0->segment.trans.x_position = arg0->unk4C_f32;
+    arg0->segment.trans.y_position = arg0->unk50_f32;
+    arg0->segment.trans.z_position = arg0->unk54_f32;
+    if (arg0->segment.unk38.byte.unk39 == 4) {
         f32_vec3_apply_object_rotation(arg1, &arg0->segment.trans.x_position);
     }
     arg0->segment.trans.x_position += arg1->x_position;
@@ -967,13 +967,13 @@ void func_800B22FC(Object *arg0, s32 arg1) {
             arg0->unk74_bytes.fourth = 0;
         }
         if (sp20 == NULL || (sp20 != NULL && sp20->unk70 != 0)) {
-            if (arg0->segment.unk38.half.lower == 2) {
+            if (arg0->segment.unk38.byte.unk39 == 2) {
                 func_800B3358(arg0);
-            } else if (arg0->segment.unk38.half.lower == 3) {
+            } else if (arg0->segment.unk38.byte.unk39 == 3) {
                 func_800B3240(arg0);
-            } else if (arg0->segment.unk38.half.lower == 4) {
+            } else if (arg0->segment.unk38.byte.unk39 == 4) {
                 func_800B3140(arg0);
-            } else if (arg0->segment.unk38.half.lower == 5) {
+            } else if (arg0->segment.unk38.byte.unk39 == 5) {
                 func_800B3564(arg0);
             } else {
                 func_800B34B0(arg0);
@@ -987,8 +987,8 @@ void func_800B22FC(Object *arg0, s32 arg1) {
         } else {
             arg0->segment.unk2C.half.lower = get_level_segment_index_from_position(arg0->segment.trans.x_position, arg0->segment.trans.y_position, arg0->segment.trans.z_position);
         }
-        arg0->segment.unk3A.half -= D_80127C80;
-        if (arg0->segment.unk3A.half <= 0) {
+        arg0->segment.unk38.half.unk3A -= D_80127C80;
+        if (arg0->segment.unk38.half.unk3A <= 0) {
             gParticlePtrList_addObject(arg0);
         } else {
             if (arg0->unk60_halfs.unk60 == 0) {

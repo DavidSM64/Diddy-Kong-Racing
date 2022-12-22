@@ -955,7 +955,7 @@ void func_80011134(Object *arg0, s32 arg1) {
     s32 var_s1;
     u8 temp_v0;
 
-    temp_s3 = arg0->unk68[arg0->segment.unk3A.byte.upper]->objModel;
+    temp_s3 = arg0->unk68[arg0->segment.unk38.byte.unk3A]->objModel;
     temp_s5 = temp_s3->unk50;
     temp_s4 = temp_s3->batches;
     for (var_s1 = 0; temp_s5 > 0 && var_s1 < temp_s3->numberOfBatches; var_s1++) {
@@ -1179,14 +1179,14 @@ void render_3d_billboard(Object *obj) {
 
     if (obj->behaviorId == BHV_BOMB_EXPLOSION) {
         //!@bug Never true, because the type is u8.
-        if (obj->segment.unk38.half.lower > 255) {
-            obj->segment.unk38.half.lower = obj->unk7C.word & 0xFF;
+        if (obj->segment.unk38.byte.unk39 > 255) {
+            obj->segment.unk38.byte.unk39 = obj->unk7C.word & 0xFF;
         } else {
-            obj->segment.unk38.half.lower = (obj->segment.unk38.half.lower * (obj->unk7C.word & 0xFF)) >> 8;
+            obj->segment.unk38.byte.unk39 = (obj->segment.unk38.byte.unk39 * (obj->unk7C.word & 0xFF)) >> 8;
         }
     }
     
-    alpha = obj->segment.unk38.half.lower;
+    alpha = obj->segment.unk38.byte.unk39;
     if (alpha > 255) {
         alpha = 255;
     }
@@ -1219,7 +1219,7 @@ void render_3d_billboard(Object *obj) {
     } else {
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     }
-    sp58 = (unk80068514_arg4 *) obj->unk68[obj->segment.unk3A.byte.upper];
+    sp58 = (unk80068514_arg4 *) obj->unk68[obj->segment.unk38.byte.unk3A];
     var_a0 = NULL;
     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON_2) {
         var_a0 = (Object *) obj->trans78;

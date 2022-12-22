@@ -1473,7 +1473,10 @@ typedef struct ParticleBehavior {
     s16 unk22;
     s16 unk24;
     s16 unk26;
-    u8 pad28[0x74];
+    u8 pad28[0x18];
+    s16 unk40;
+    s16 unk42;
+    u8 pad44[0x58];
     s32 *unk9C;
 } ParticleBehavior;
 
@@ -1585,19 +1588,17 @@ typedef struct ObjectSegment {
 
   union {
       struct {
-          /* 0x0038 */ u8 upper;
-          /* 0x0039 */ u8 lower;
-      } half;
-      /* 0x0038 */ s16 word;
-  } unk38;
-
-  union {
-      struct {
-          /* 0x003A */ s8 upper;
-          /* 0x003B */ s8 lower;
+          /* 0x0038 */ u8 unk38;
+          /* 0x0039 */ u8 unk39;
+          /* 0x003A */ s8 unk3A;
+          /* 0x003B */ s8 unk3B;
       } byte;
-      /* 0x003A */ s16 half;
-  } unk3A;
+      struct {
+          /* 0x0038 */ s16 unk38;
+          /* 0x003A */ s16 unk3A;
+      } half;
+      f32 unk38_f32;
+  } unk38;
 
   union {
     /* 0x003C */ LevelObjectEntry* level_entry;
@@ -1632,16 +1633,29 @@ typedef struct Object {
   };
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A;
+  union {
   /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318
+  /* 0x004C */ f32 unk4C_f32;
+  };
+  union {
   /* 0x0050 */ Object_50 *unk50; //player + 0x2F4
+  /* 0x0050 */ f32 unk50_f32;
+  };
+  union {
   /* 0x0054 */ Object_54 *unk54; //player + 0x2C0
+  /* 0x0054 */ f32 unk54_f32;
+  };
+  union {
   /* 0x0058 */ void *unk58; //player + 0x304
+  /* 0x0058 */ f32 unk58_f32;
+  };
   union {
   /* 0x005C */ Object_5C *unk5C;
       struct {
           /* 0x005C */ s16 unk5C;
           /* 0x005E */ s16 unk5E;
       } unk5C_halfs;
+  /* 0x005C */ s32 unk5C_s32;
   };
   union {
   /* 0x0060 */ Object_60 *unk60; //player + 0x340
@@ -1649,14 +1663,37 @@ typedef struct Object {
           /* 0x0060 */ s16 unk60;
           /* 0x0062 */ s16 unk62;
       } unk60_halfs;
+  /* 0x0060 */ s32 unk60_s32;
   };
+  union {
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
+      struct {
+          /* 0x0064 */ s16 unk64;
+          /* 0x0066 */ s16 unk66;
+      } unk64_halfs;
+  };
+  union {
   /* 0x0068 */ Object_68 **unk68; //player + 0x80
+      struct {
+          /* 0x0068 */ s16 unk68;
+          /* 0x006A */ s16 unk6A;
+      } unk68_halfs;
+  };
+  union {
   /* 0x006C */ Object_6C *unk6C; //player + 0x370
-  /* 0x0070 */ u32 *unk70;
+      struct {
+          /* 0x006C */ s16 unk6C;
+          /* 0x006E */ s16 unk6E;
+      } unk6C_halfs;
+  };
+  union {
+    /* 0x0070 */ u32 *unk70;
+    /* 0x0070 */ s32 unk70_s32;
+  };
 
   union {
   /* 0x0074 */ u32 unk74;
+  /* 0x0074 */ s32 unk74_signed;
   struct {
   /* 0x0074 */ u8 first;
   /* 0x0074 */ u8 second;
@@ -1686,7 +1723,10 @@ typedef struct Object {
 
   /* 0x008C */ u32 unk8C;
   /* 0x0090 */ u32 unk90;
-  /* 0x0094 */ u32 unk94;
+  union {
+    /* 0x0094 */ u32 unk94;
+    /* 0x0094 */ s32 unk94_signed;
+  };
 
   /* 0x0098 */ Object_64 obj;
 
