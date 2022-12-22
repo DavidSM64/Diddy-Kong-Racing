@@ -4541,7 +4541,7 @@ void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry) {
 }
 
 void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry) {
-    func_800AF134((unk800AF29C *) obj->unk6C, entry->unk9, entry->unk8, 0, 0, 0);
+    func_800AF134((Object *) obj->unk6C, entry->unk9, entry->unk8, 0, 0, 0);
     obj->unk78 = entry->unkA;
 }
 

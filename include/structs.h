@@ -1456,6 +1456,58 @@ typedef struct Object_6C {
     u8  pad6[0x1A];
 } Object_6C;
 
+/* Size: 0xA0 bytes */
+typedef struct ParticleBehavior {
+    s32 flags;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    u8 pad10[4];
+    s16 unk14;
+    s16 unk16;
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    s16 unk26;
+    u8 pad28[0x74];
+    s32 *unk9C;
+} ParticleBehavior;
+
+typedef struct unk800AF29C_C_400 {
+    s32 *unkC;
+    s16 unk10;
+    s16 unk12;
+    s16 unk14;
+    s16 unk16;
+} unk800AF29C_C_400;
+
+typedef struct unk800AF29C_C {
+    s16 unkC;
+    s16 unkE;
+    s16 unk10;
+    s16 unk12;
+    s16 unk14;
+    s16 unk16;
+} unk800AF29C_C;
+
+typedef struct unk800B2260_C {
+    s32 unk0;
+    s32 unk4;
+    u8 pad8[0x24];
+    s16 unk2C;
+    u8 pad2E[0xC];
+    s16 unk3A;
+    u8 pad3C[0x8];
+    void *unk44;
+    u8 pad48[0x28];
+    void *unk70;
+    u8 unk74;
+} unk800B2260_C;
+
 /* Size: 0x018 bytes */
 typedef struct ObjectTransform {
   /* 0x0000 */ s16 y_rotation;
@@ -1468,12 +1520,47 @@ typedef struct ObjectTransform {
   /* 0x0014 */ f32 z_position;
 } ObjectTransform;
 
+/* Size: 0x018 bytes */
+typedef struct ObjectTransform_2 {
+  /* 0x0000 */ s32 unk0;
+  /* 0x0004 */ s32 unk4;
+  /* 0x0008 */ s32 unk8;
+  /* 0x000C */ f32 x_position;
+  /* 0x0010 */ f32 y_position;
+  /* 0x0014 */ f32 z_position;
+} ObjectTransform_2;
+
+typedef struct ParticleProperties {
+  /* 0x0000 */ ParticleBehavior *behaviour;
+  /* 0x0004 */ s16 unk4;
+  /* 0x0006 */ u8 unk6;
+  /* 0x0007 */ u8 unk7;
+  /* 0x0004 */ s16 unk8;
+  /* 0x0004 */ s16 unkA;
+    union {
+        Vec3f pos;
+        unk800AF29C_C unkC;
+        unk800B2260_C **unkC_60;
+        unk800AF29C_C_400 unkC_400;
+    };
+} ParticleProperties;
+
 /* Size: 0x44 bytes */
 typedef struct ObjectSegment {
+  union {
   /* 0x0000 */ ObjectTransform trans;
+  /* 0x0000 */ ObjectTransform_2 trans_unk;
+  /* 0x0000 */ ParticleProperties particle;
+  };
   /* 0x0018 */ s16 animFrame;
   /* 0x001A */ s16 unk1A;
+  union {
   /* 0x001C */ f32 x_velocity;
+  struct {
+    /* 0x001A */ s16 unk1C;
+    /* 0x001A */ s16 unk1E;
+  } unk1C_half;
+  };
   /* 0x0020 */ f32 y_velocity;
   /* 0x0024 */ f32 z_velocity;
   /* 0x0028 */ f32 unk28;
