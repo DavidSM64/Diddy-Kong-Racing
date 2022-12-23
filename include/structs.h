@@ -1462,7 +1462,7 @@ typedef struct ParticleBehavior {
     f32 unk4;
     f32 unk8;
     f32 unkC;
-    u8 pad10[4];
+    u8 pad10[0x4];
     s16 unk14;
     s16 unk16;
     s16 unk18;
@@ -1473,10 +1473,37 @@ typedef struct ParticleBehavior {
     s16 unk22;
     s16 unk24;
     s16 unk26;
-    u8 pad28[0x18];
+    s16 unk28;
+    s16 unk2A;
+    s16 unk2C;
+    s16 unk2E;
+    u8 pad30[0x10];
     s16 unk40;
     s16 unk42;
-    u8 pad44[0x58];
+    s16 unk44;
+    s16 unk46;
+    s16 unk48;
+    s16 unk4A;
+    s16 unk4C;
+    s16 unk4E;
+    f32 unk50;
+    f32 unk54;
+    u8 pad58[0x4];
+    s32 unk5C;
+    u8 pad60[0x20];
+    s16 unk80;
+    s16 unk82;
+    s16 unk84;
+    s16 unk86;
+    s16 unk88;
+    s16 unk8A;
+    s32 unk8C;
+    s32 unk90;
+    u8 pad94[0x4];
+    u8 unk98;
+    u8 unk99;
+    u8 unk9A;
+    u8 unk9B;
     s32 *unk9C;
 } ParticleBehavior;
 
@@ -1863,10 +1890,15 @@ typedef struct ByteColour {
 } ByteColour;
 
 typedef struct {
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
+union {
+struct {
+ u8 r;
+ u8 g;
+ u8 b;
+ u8 a;
+};
+u32 word;
+};
 } ColourRGBA;
 
 #endif

@@ -12,7 +12,7 @@ typedef struct unk800E2CF0 {
     s16 unk4;
     s16 unk6;
     s16 unk8;
-    u16 unkA;
+    s16 unkA;
     u8 unkC;
     u8 unkD;
     s16 unkE;
@@ -57,6 +57,16 @@ typedef struct unk800B2260_C_44 {
     TextureHeader *texture;
 } unk800B2260_C_44;
 
+typedef struct unk800B1CB8_44_8 {
+    u8 pad0[6];
+    s16 unk6;
+} unk800B1CB8_44_8;
+typedef struct unk800B1CB8_44 {
+    s16 unk0;
+    u8 pad2[6];
+    unk800B1CB8_44_8 **unk8;
+} unk800B1CB8_44;
+
 typedef struct unk800B1CB8 {
     s16 unk0;
     s16 unk2;
@@ -79,7 +89,7 @@ typedef struct unk800B1CB8 {
     s16 unk3A;
     s32 unk3C;
     s32 unk40;
-    s32 unk44;
+    unk800B1CB8_44 *unk44;
     s16 unk48;
     s16 unk4A;
     u8 pad4C[0x8];
@@ -92,10 +102,7 @@ typedef struct unk800B1CB8 {
     s16 unk64;
     s16 unk66;
     f32 unk68;
-    u8 unk6C;
-    u8 unk6D;
-    u8 unk6E;
-    u8 unk6F;
+    ColourRGBA unk6C;
 } unk800B1CB8;
 
 typedef struct unk800B0698_arg1_0 {
@@ -159,8 +166,29 @@ typedef struct Object_6C_800AF52C {
     s16 unk12;
     s16 unk14;
     s16 unk16;
-    u8 pad18[0x8];
+    u8 pad18[0x6];
+    s16 unk1E;
 } Object_6C_800AF52C;
+
+typedef struct unk800B1130_8 {
+    u8 pad0[6];
+    s16 unk6;
+} unk800B1130_8;
+
+typedef struct unk800B1130 {
+    u8 pad0[8];
+    unk800B1130_8 **unk8;
+    u8 padC[0x6];
+    u16 unk12;
+} unk800B1130;
+
+typedef struct unk800B1130_SP28 {
+    s32 unk0;
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} unk800B1130_SP28;
 
 typedef struct Particle {
   /* 0x0000 */ ParticleBehavior *behaviour;
@@ -285,13 +313,14 @@ void func_800B0010(Object *arg0, Object *arg1, unk800B03C0_arg2 *arg2, Object *a
 unk800E2CD8 *func_800B0698(unk800B1CB8 *arg0, unk800B0698_arg1 *arg1);
 unk800B1CB8 *func_800B1CB8(s32 arg0);
 void func_800AFE5C(unk800B1CB8 *arg0, Object_6C_800AF52C *arg1);
+unk800E2CD8 *func_800B1130(unk800B1CB8 *arg0, Object_6C_800AF52C *arg1);
+void func_800AF52C(Object *obj, s32 arg1);
 
 void func_800AF134(Object *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5); // Non Matching
 void func_800AF404(s32 arg0); // Non Matching
 void func_800AFC3C(Object *, s32); // Non Matching
 void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
 void func_800AF714(Object*, s32); // Non matching
-Object* func_800B1130(s32, void*);
 Object* func_800B0BAC();
 void func_800B26E0();
 void func_800B3140(Object *);
