@@ -1379,6 +1379,15 @@ typedef struct Object_AnimatedObject {
     s8 unk3A;
 } Object_AnimatedObject;
 
+typedef struct Object_WizpigRocket {
+    u8 pad0[0x70];
+    u8 unk70;
+    u8 unk71;
+    u8 unk72;
+    u8 unk73;
+    f32 unk74;
+} Object_WizpigRocket;
+
 typedef struct Object_64 {
     union {
         Object_Laser laser;
@@ -1427,6 +1436,7 @@ typedef struct Object_64 {
         Object_Fireball_Octoweapon fireball_octoweapon;
         Object_LaserGun lasergun;
         Object_AnimatedObject animatedObject;
+        Object_WizpigRocket wizpigRocket;
     };
 } Object_64;
 
