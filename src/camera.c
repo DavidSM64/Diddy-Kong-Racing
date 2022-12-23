@@ -184,7 +184,7 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80065EA0.s")
 void func_80066060(s32 arg0, s32 arg1) {
     if (arg0 >= 0 && arg0 < 4) {
         D_800DD2F8[arg0] = arg1;
-        gActiveCameraStack[arg0].unk3B = arg1;
+        gActiveCameraStack[arg0].unk38.byte.unk3B = arg1;
     }
 }
 
@@ -267,17 +267,17 @@ void func_80066230(Gfx **dlist, MatrixS **mats) {
     sp20 = someStruct->trans.x_position;
     sp1C = someStruct->trans.y_position;
     sp18 = someStruct->trans.z_position;
-    sp24 = someStruct->unk38.word;
+    sp24 = someStruct->unk38.half.unk38;
     someStruct->trans.z_rotation = 0;
     someStruct->trans.x_rotation = 0;
     someStruct->trans.y_rotation = -0x8000;
-    someStruct->unk38.word = 0;
+    someStruct->unk38.half.unk38 = 0;
     someStruct->trans.x_position = 0.0f;
     someStruct->trans.y_position = 0.0f;
     someStruct->trans.z_position = 0.0f;
     set_and_normalize_D_8011AFE8(0.0f, 0.0f, -1.0f);
     func_80066CDC(dlist, mats);
-    someStruct->unk38.word = sp24;
+    someStruct->unk38.half.unk38 = sp24;
     someStruct->trans.y_rotation = sp2A;
     someStruct->trans.x_rotation = sp28;
     someStruct->trans.z_rotation = sp26;
@@ -311,14 +311,14 @@ void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5) {
     gActiveCameraStack[gActiveCameraID].trans.y_position = (f32) yPos;
     gActiveCameraStack[gActiveCameraID].trans.z_position = (f32) zPos;
     gActiveCameraStack[gActiveCameraID].trans.x_rotation = (s16) (arg4 * 0xB6);
-    gActiveCameraStack[gActiveCameraID].unk38.word = (s16) 0;
+    gActiveCameraStack[gActiveCameraID].unk38.half.unk38 = (s16) 0;
     gActiveCameraStack[gActiveCameraID].z_velocity = 0.0f;
     gActiveCameraStack[gActiveCameraID].unk28 = 0.0f;
     gActiveCameraStack[gActiveCameraID].unk2C.word = 0.0f;
     gActiveCameraStack[gActiveCameraID].unk30 = 0.0f;
     gActiveCameraStack[gActiveCameraID].x_velocity = 160.0f;
     gActiveCameraStack[gActiveCameraID].trans.y_rotation = (s16) (arg5 * 0xB6);
-    gActiveCameraStack[gActiveCameraID].unk3B = D_800DD2F8[gActiveCameraID];
+    gActiveCameraStack[gActiveCameraID].unk38.byte.unk3B = D_800DD2F8[gActiveCameraID];
 }
 
 /**
@@ -328,7 +328,7 @@ void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5) {
 */
 void write_to_object_render_stack(s32 stackPos, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6) {
     stackPos += 4;
-    gActiveCameraStack[stackPos].unk38.word = 0;
+    gActiveCameraStack[stackPos].unk38.half.unk38 = 0;
     gActiveCameraStack[stackPos].trans.x_position = xPos;
     gActiveCameraStack[stackPos].trans.y_position = yPos;
     gActiveCameraStack[stackPos].trans.z_position = zPos;
@@ -852,7 +852,7 @@ void func_80067D3C(Gfx **dlist, UNUSED MatrixS **mats) {
     }
 
     D_80120CF0.y_rotation = 0x8000 + gActiveCameraStack[gActiveCameraID].trans.y_rotation;
-    D_80120CF0.x_rotation = gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.word;
+    D_80120CF0.x_rotation = gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.half.unk38;
     D_80120CF0.z_rotation = gActiveCameraStack[gActiveCameraID].trans.z_rotation;
 
     D_80120CF0.x_position = -gActiveCameraStack[gActiveCameraID].trans.x_position;
@@ -866,7 +866,7 @@ void func_80067D3C(Gfx **dlist, UNUSED MatrixS **mats) {
     f32_matrix_mult(&D_80120F60, &D_80120EE0, &D_80120F20);
 
     D_80120CF0.y_rotation = -0x8000 - gActiveCameraStack[gActiveCameraID].trans.y_rotation;
-    D_80120CF0.x_rotation = -(gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.word);
+    D_80120CF0.x_rotation = -(gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.half.unk38);
     D_80120CF0.z_rotation = -gActiveCameraStack[gActiveCameraID].trans.z_rotation;
     D_80120CF0.scale = 1.0f;
     D_80120CF0.x_position = gActiveCameraStack[gActiveCameraID].trans.x_position;

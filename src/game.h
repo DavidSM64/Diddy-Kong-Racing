@@ -162,6 +162,7 @@ s32 is_controller_missing(void);
 s32 check_imem_validity(void);
 void ingame_logic_loop(s32 updateRate);
 void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId);
+void func_8006A6B0(void);
 
 //Non Matching
 void func_8006ECFC(s32 numberOfPlayers);

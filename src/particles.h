@@ -5,64 +5,17 @@
 #include "structs.h"
 #include "libultra_internal.h"
 
-/* Size: 0xA0 bytes */
-typedef struct ParticleBehavior {
-    s32 flags;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    u8 pad10[4];
-    s16 unk14;
-    s16 unk16;
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-    s16 unk20;
-    s16 unk22;
-    s16 unk24;
-    s16 unk26;
-    u8 pad28[0x74];
-    s32 *unk9C;
-} ParticleBehavior;
-
-typedef struct unk800AF29C_C_4000 {
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-} unk800AF29C_C_4000;
-
-typedef struct unk800AF29C_C_400 {
-    s32 *unkC;
-    s16 unk10;
-    s16 unk12;
-    s16 unk14;
-    s16 unk16;
-} unk800AF29C_C_400;
-
-typedef struct unk800AF29C_C {
-    s16 unkC;
-    s16 unkE;
-    s16 unk10;
-    s16 unk12;
-    s16 unk14;
-    s16 unk16;
-} unk800AF29C_C;
-
 typedef struct unk800E2CF0 {
     u8 pad0[8];
     s16 unk8;
+    u8 padA[13];
+    u8 unk17;
 } unk800E2CF0;
 
 /* Size: 0x10 bytes */
 typedef struct unk800E2D08 {
     s16 unk0, unk2, unk4, unk6, unk8, unkA, unkC, unkE;
 } unk800E2D08;
-
-/* Size: 6 bytes */
-typedef struct unk800E2D58 {
-    s16 unk0, unk2, unk4;
-} unk800E2D58;
 
 typedef struct unk800AF024 {
     u8 pad0[4];
@@ -72,17 +25,43 @@ typedef struct unk800AF024 {
     Triangle *unkC;
 } unk800AF024;
 
-typedef struct unk800B2260_C {
-    s32 unk0;
-    s32 unk4;
-    u8  pad8[0x32];
-    s16 unk3A;
-    u8  pad3C[0x34];
-    void *unk70; // unk800B2260 *
-    u8 unk74;
-} unk800B2260_C;
+typedef struct XYStruct {
+    s16 x, y;
+} XYStruct;
 
-typedef struct unk800AF29C {
+typedef struct unk800B03C0_arg2 {
+    u8 pad0[0xC];
+    s16 y_rotation;
+    s16 x_rotation;
+    s16 z_rotation;
+    s16 unk12;
+    s16 unk14;
+    s16 unk16;
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+} unk800B03C0_arg2;
+
+typedef struct unk800B2260_C_44 {
+    TextureHeader *texture;
+} unk800B2260_C_44;
+
+typedef struct unk800B1CB8 {
+    u8 pad0[0x2C];
+    s16 unk2C;
+    u8 pad2E[0x1A];
+    s16 unk48;
+    u8 pad4A[0x26];
+} unk800B1CB8;
+
+/* Size: 0x78 bytes */
+typedef struct unk800E2CD8 {
+    unk800B1CB8 unk0;
+    u8 pad80[8];
+} unk800E2CD8;
+
+/* Size: 32 bytes */
+typedef struct Object_6C_800AF52C {
     ParticleBehavior *unk0;
     s16 unk4;
     u8 unk6;
@@ -90,20 +69,18 @@ typedef struct unk800AF29C {
     s16 unk8;
     s16 unkA;
     union {
-        unk800AF29C_C_4000 unkC_4000;
-        unk800AF29C_C_400  unkC_400;
-        unk800B2260_C    **unkC_60;
-        unk800AF29C_C      unkC;
-    } unkB;
-    s16 unk18;
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
-} unk800AF29C;
-
-typedef struct XYStruct {
-    s16 x, y;
-} XYStruct;
+        Object **unkC_arr;
+        struct {
+            s16 unkC;
+            s16 unkE;
+        };
+    };
+    s16 unk10;
+    s16 unk12;
+    s16 unk14;
+    s16 unk16;
+    u8 pad18[0x8];
+} Object_6C_800AF52C;
 
 extern unk800E2CF0 **gParticlesAssetTable;
 extern s32 gParticlesAssetTableCount;
@@ -137,17 +114,31 @@ void func_800AEF88(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2);
 void func_800AF024(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2);
 void func_800AF0A4(Object *obj);
 void func_800AF0F0(Object *obj);
-void func_800AF1E0(unk800AF29C *arg0, s32 arg1, s32 arg2);
-void func_800AF29C(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5);
+void func_800AF1E0(Object *arg0, s32 arg1, s32 arg2);
+void func_800AF29C(Object *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5);
 void func_800AF6E4(Object *obj, s32 arg1);
-void func_800B2260(unk800AF29C *arg0);
+void func_800B2260(Object *arg0);
 void func_800B263C(unk800B2260_C *arg0);
 void init_particle_assets(void);
+void func_800B2FBC(Object *arg0);
+void func_800B03C0(Object *arg0, ObjectTransform *arg1, unk800B03C0_arg2 *arg2, Object *arg3);
+void func_800B2040(unk800B2260_C *arg0);
+void func_800B22FC(Object *arg0, s32 arg1);
+void func_800B0010(Object *arg0, Object *arg1, unk800B03C0_arg2 *arg2, Object *arg3);
 
-void func_800AF134(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5); // Non Matching
+void func_800AF134(Object *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5); // Non Matching
 void func_800AF404(s32 arg0); // Non Matching
 void func_800AFC3C(Object *, s32); // Non Matching
 void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
 void func_800AF714(Object*, s32); // Non matching
+Object* func_800B1130(s32, void*);
+Object* func_800B0BAC();
+Object *func_800B0698(s32, void*);
+void func_800B26E0();
+void func_800B3140(Object *);
+void func_800B3240(Object *);
+void func_800B3358(Object *);
+void func_800B34B0(Object *);
+void func_800B3564(Object *);
 
 #endif
