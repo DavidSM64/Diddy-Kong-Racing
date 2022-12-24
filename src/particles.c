@@ -70,7 +70,7 @@ unk800E2CF0 **gParticlesAssetTable = NULL;
 s32 gParticleBehavioursAssetTableCount = 0;
 s32 *gParticleBehavioursAssets = NULL;
 ParticleBehavior **gParticleBehavioursAssetTable = NULL;
-ColourRGBA D_800E2D00[2] = { 0, 0 };
+ColourRGBA D_800E2D00[2] = {{{{ 0 }}}, {{{ 0 }}}};
 
 // Are these just Triangles?
 unk800E2D08 D_800E2D08[5] = {
@@ -551,7 +551,7 @@ void func_800AF52C(Object *obj, s32 arg1) {
     ParticleBehavior *temp_v1;
     Particle2 *temp;
 
-    temp_v0 = &obj->unk6C[arg1];
+    temp_v0 = (Particle *) &obj->unk6C[arg1];
     temp_v1 = temp_v0->behaviour;
     temp_v0->unkA = 0;
     if (temp_v0->flags & 0x4000) {
@@ -607,7 +607,7 @@ GLOBAL_ASM("asm/non_matchings/particles/func_800AF714.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800AFC3C.s")
 
 void func_800AFE5C(unk800B1CB8 *arg0, Particle *arg1) {
-    Object *temp_s0;
+    Particle2 *temp_s0;
     Object *tempObj;
     Particle2 *tempObj2;
     s32 i;
@@ -630,9 +630,9 @@ void func_800AFE5C(unk800B1CB8 *arg0, Particle *arg1) {
             temp_s0 = func_800B0698(arg0, arg1);
             arg1->flags &= 0xDFFF;
             if (temp_s0 != NULL) {
-                func_8000E9D0(temp_s0);
-                temp_s0->unk74_bytes.first = arg1->unk6;
-                temp_s0->segment.unk40 |= 0x2000;
+                func_8000E9D0((Object *) temp_s0);
+                temp_s0->unk74 = arg1->unk6;
+                temp_s0->unk40 |= 0x2000;
                 arg1->unkC_60[arg1->unk6] = temp_s0;
                 arg1->unk6++;
             }
@@ -643,7 +643,7 @@ void func_800AFE5C(unk800B1CB8 *arg0, Particle *arg1) {
             for (i = 0; i < temp_s4->unk42; i++) {
                 tempObj2 = func_800B1130(arg0, arg1);
                 if (tempObj2 != NULL) {
-                    func_8000E9D0(tempObj2);
+                    func_8000E9D0((Object *) tempObj2);
                     func_800B22FC(tempObj2, arg1->unkA);
                 }
                 arg1->flags &= ~0x2000;
@@ -769,9 +769,9 @@ void func_800B03C0(Object *arg0, ObjectTransform *arg1, unk800B03C0_arg2 *arg2, 
     arg0->segment.trans.z_position += arg1->z_position;
 }
 
-unk800E2CD8 *func_800B0698(unk800B1CB8 *arg0, Particle *arg1) {
-    unk800E2CF0* sp2C;
-    unk800E2CD8* var_v0;
+Particle2 *func_800B0698(unk800B1CB8 *arg0, Particle *arg1) {
+    unk800E2CF0 *sp2C;
+    unk800E2CD8 *var_v0;
     TextureHeader **sp24;
     ParticleBehavior *sp20;
     f32 temp_f0;
@@ -784,9 +784,9 @@ unk800E2CD8 *func_800B0698(unk800B1CB8 *arg0, Particle *arg1) {
     }
     sp20 = arg1->behaviour;
     sp2C = sp2C;
-    var_v0 = func_800B1CB8(4);
+    var_v0 = (unk800E2CD8 *) func_800B1CB8(4);
     if (var_v0 == NULL) {
-        return var_v0;
+        return (Particle2 *) var_v0;
     }
     var_v0->unk0.unk2E = arg0->unk2E;
     var_v0->unk0.unk6 = -0x8000;
@@ -857,7 +857,7 @@ unk800E2CD8 *func_800B0698(unk800B1CB8 *arg0, Particle *arg1) {
     }
     var_v0->unk0.unk1A = sp2C->unk6;
     var_v0->unk0.unk18 = 0;
-    sp24 = var_v0->unk0.unk44;
+    sp24 = (TextureHeader **) var_v0->unk0.unk44;
     if (sp2C->unk4 == -1) {
         *sp24 = NULL;
     } else {
@@ -879,15 +879,15 @@ unk800E2CD8 *func_800B0698(unk800B1CB8 *arg0, Particle *arg1) {
     var_v0->unk76 = ((u32) (u16) sp2C->unkA) >> 10;
     var_v0->unk77 = 0;
     if (*sp24 == NULL) {
-        func_800B2040((unk800B2260_C *) var_v0);
+        func_800B2040((Particle2 *) var_v0);
         return NULL;
     }
-    return var_v0;
+    return (Particle2 *) var_v0;
 }
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800B0BAC.s")
 
-unk800E2CD8 *func_800B1130(unk800B1CB8 *arg0, Particle *arg1) {
+Particle2 *func_800B1130(unk800B1CB8 *arg0, Particle *arg1) {
     s32 sp3C;
     unk800E2CF0 *sp38;
     unk800B1CB8* var_v0;
@@ -898,22 +898,22 @@ unk800E2CD8 *func_800B1130(unk800B1CB8 *arg0, Particle *arg1) {
     s8 sp23;
     
     sp38 = gParticlesAssetTable[arg1->unk8];
-    if ((sp38->unk0 == 3) || (sp38->unk0 == 4)) {
+    if (sp38->unk0 == 3 || sp38->unk0 == 4) {
         return NULL;
     }
     partBeh = arg1->behaviour;
-    sp28 = (unk800E2CF0 *) partBeh->unk9C;
+    sp28 = (unk800B1130_SP28 *) partBeh->unk9C;
     
     var_v0 = func_800B1CB8(sp38->unk0);
     if (var_v0 == NULL) {
-        return (unk800E2CD8* ) var_v0;
+        return (Particle2 *) var_v0;
     }
     var_v0->unk2E = arg0->unk2E;
     var_v0->unk6 = -0x8000;
     var_v0->unk39 = sp38->unk1;
     var_v0->unk40 = sp38->unk2;
     var_v0->unk3C = arg0;
-    if ((var_v0->unk40 & 0x800) && ((arg0->unk54 != NULL))) {
+    if (var_v0->unk40 & 0x800 && arg0->unk54 != NULL) {
         var_v0->unk4A = *arg0->unk54 * 255.0f;
     } else {
         var_v0->unk4A = 255;
@@ -984,7 +984,7 @@ unk800E2CD8 *func_800B1130(unk800B1CB8 *arg0, Particle *arg1) {
     sp23 = 0;
     var_v0->unk1A = sp38->unk6;
     if (var_v0->unk2C == 0x80) {
-        var_v0->unk44 = (unk800B1130 *) func_8007C12C(sp38->unk4, 0);
+        var_v0->unk44 = (unk800B1CB8_44 *) func_8007C12C(sp38->unk4, 0);
         if (var_v0->unk44 != 0) {
             if ((*var_v0->unk44->unk8)->unk6 & 4) {
                 if (var_v0->unk40 & 0x1000) {
@@ -1007,7 +1007,7 @@ unk800E2CD8 *func_800B1130(unk800B1CB8 *arg0, Particle *arg1) {
             sp23 = 1;
         }
     } else if ((var_v0->unk2C == 2) || (var_v0->unk2C == 1)) {
-        sp30 = var_v0->unk44;
+        sp30 = (TextureHeader **) var_v0->unk44;
         if (sp30 != 0) {
             (*sp30) = load_texture(sp38->unk4);
             if ((*sp30) != NULL) {
@@ -1102,10 +1102,10 @@ unk800E2CD8 *func_800B1130(unk800B1CB8 *arg0, Particle *arg1) {
         }
     }
     if (var_v0->unk44 == 0) {
-        func_800B2040(var_v0);
+        func_800B2040((Particle2 *) var_v0);
         return NULL;
     } else {   
-        return (unk800E2CD8 *) var_v0;
+        return (Particle2 *) var_v0;
     }
 }
 

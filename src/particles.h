@@ -87,9 +87,9 @@ typedef struct unk800B1CB8 {
     u8 unk38;
     u8 unk39;
     s16 unk3A;
-    s32 unk3C;
+    struct unk800B1CB8 *unk3C;
     s32 unk40;
-    unk800B1CB8_44 *unk44;
+    struct unk800B1CB8_44 *unk44;
     s16 unk48;
     s16 unk4A;
     u8 pad4C[0x8];
@@ -108,7 +108,7 @@ typedef struct unk800B1CB8 {
 /* Size: 0x78 bytes */
 typedef struct unk800E2CD8 {
  unk800B1CB8 unk0;
-    s32 unk70;
+    struct Particle *unk70;
     u8 pad74;
     u8 unk75;
     u8 unk76;
@@ -336,10 +336,10 @@ void func_800B03C0(Object *arg0, ObjectTransform *arg1, unk800B03C0_arg2 *arg2, 
 void func_800B2040(Particle2 *arg0);
 void func_800B22FC(Particle2 *arg0, s32 arg1);
 void func_800B0010(Object *arg0, Object *arg1, unk800B03C0_arg2 *arg2, Object *arg3);
-unk800E2CD8 *func_800B0698(unk800B1CB8 *arg0, Particle *arg1);
+Particle2 *func_800B0698(unk800B1CB8 *arg0, Particle *arg1);
 unk800B1CB8 *func_800B1CB8(s32 arg0);
 void func_800AFE5C(unk800B1CB8 *arg0, Particle *arg1);
-unk800E2CD8 *func_800B1130(unk800B1CB8 *arg0, Particle *arg1);
+Particle2 *func_800B1130(unk800B1CB8 *arg0, Particle *arg1);
 void func_800AF52C(Object *obj, s32 arg1);
 void func_800AF134(Particle *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5);
 
