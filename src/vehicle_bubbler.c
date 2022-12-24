@@ -148,18 +148,8 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     zDiff = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
     if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) < 700.0) {
         timer = (arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
-        if (timer > 0x8000) {
-            timer -= 0xFFFF;
-        }
-        if (timer < -0x8000) {
-            timer += 0xFFFF;
-        }
-        if (sp38 < timer) {
-            timer = sp38;
-        }
-        if (timer < -sp38) {
-            timer = -sp38;
-        }
+        WRAP(timer, -0x8000, 0x8000);
+        CLAMP(timer, -sp38, sp38);
         racer->unk16C = timer;
     }
     if (obj->segment.unk38.byte.unk3B == 1) {

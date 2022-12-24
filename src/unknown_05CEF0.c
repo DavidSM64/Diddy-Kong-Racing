@@ -181,18 +181,8 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     zDiff = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
     if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) < 700.0) {
         sp40 = (arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
-        if (sp40 > 0x8000) {
-            sp40 -= 0xFFFF;
-        }
-        if (sp40 < -0x8000) {
-            sp40 += 0xFFFF;
-        }
-        if (sp38 < sp40) {
-            sp40 = sp38;
-        }
-        if (sp40 < -sp38) {
-            sp40 = -sp38;
-        }
+        WRAP(sp40, -0x8000, 0x8000);
+        CLAMP(sp40, -sp38, sp38);
         racer->unk16C = sp40;
     }
     if (obj->segment.unk38.byte.unk3B == 1) {

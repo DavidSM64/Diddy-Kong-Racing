@@ -176,18 +176,8 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* ra
     zDiff = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
     if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) < 700.0) {
         sp48 = (arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
-        if (sp48 > 0x8000) {
-            sp48 -= 0xFFFF;
-        }
-        if (sp48 < -0x8000) {
-            sp48 += 0xFFFF;
-        }
-        if (sp48 > 0xC00) {
-            sp48 = 0xC00;
-        }
-        if (sp48 < -0xC00) {
-            sp48 = -0xC00;
-        }
+        WRAP(sp48, -0x8000, 0x8000);
+        CLAMP(sp48, -0xC00, 0xC00);
         racer->unk16C = sp48;
     }
     if (obj->segment.unk38.byte.unk3B == 1) {
