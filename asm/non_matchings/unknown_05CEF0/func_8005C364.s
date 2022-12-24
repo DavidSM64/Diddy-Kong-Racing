@@ -9,7 +9,7 @@ glabel D_800E6A28
 .double 700.0
 
 .text
-glabel func_8005C364
+glabel update_tricky
 /* 05CF64 8005C364 27BDFFA8 */  addiu $sp, $sp, -0x58
 /* 05CF68 8005C368 AFA40058 */  sw    $a0, 0x58($sp)
 /* 05CF6C 8005C36C AFBF002C */  sw    $ra, 0x2c($sp)

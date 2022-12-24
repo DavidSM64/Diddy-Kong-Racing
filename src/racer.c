@@ -1754,7 +1754,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             update_carpet(updateRate, delta, obj, tempRacer);
             break;
         case VEHICLE_TRICKY:
-            func_8005C364(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
+            update_tricky(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
             break;
         case VEHICLE_BLUEY:
             func_8005D0D0(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
@@ -5150,7 +5150,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         case VEHICLE_PLANE: func_80049794(updateRate, updateRateF, obj, racer); break;
         case VEHICLE_FLYING_CAR: /* fall through */
         case VEHICLE_CARPET: update_carpet(updateRate, updateRateF, obj, racer); break;
-        case VEHICLE_TRICKY: func_8005C364(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
+        case VEHICLE_TRICKY: update_tricky(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         case VEHICLE_BLUEY: func_8005D0D0(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         case VEHICLE_SMOKEY: /* fall through */
         case VEHICLE_PTERODACTYL: func_8005D820(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentStickX, &gRaceStartTimer); break;

@@ -17,7 +17,7 @@ extern f32 D_8011D5C0;
 extern s8 D_8011D5C4;
 extern s8 D_8011D5CC;
 
-void func_8005C364(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer, u32* input, u32* buttonsPressed, s32* startTimer);
+void update_tricky(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer, u32* input, u32* buttonsPressed, s32* startTimer);
 
 void func_8005C2F0(Object *object, unk8005C2F0 *arg1);
 void func_8005CA78(u16 *arg0);

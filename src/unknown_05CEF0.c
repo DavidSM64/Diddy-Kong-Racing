@@ -60,7 +60,10 @@ void func_8005C2F0(Object *object, unk8005C2F0 *arg1) {
     D_8011D5C4 = 0;
 }
 
-void func_8005C364(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer, u32* input, u32* buttonsPressed, s32* startTimer) {
+/**
+ * Top level function for updating the Tricky vehicle as seen in the Dino Domain boss.
+*/
+void update_tricky(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer, u32* input, u32* buttonsPressed, s32* startTimer) {
     s16 sp56;
     s16 sp54;
     s16 sp52;
@@ -127,7 +130,7 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     }
     obj68 = *obj->unk68;
     objModel = obj68->objModel;
-    xDiff = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 0x10) - 0x11;
+    xDiff = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
     if (obj->segment.unk38.byte.unk3B != 3) {
         if (racer->velocity < -2.0) {
             obj->segment.unk38.byte.unk3B = 1;
@@ -157,11 +160,11 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     obj->segment.animFrame = racer->unkC;
     obj->unk74 = 0;
     if (obj->segment.unk38.byte.unk3B == 1) {
-        func_800113CC(obj, 2, sp54, 0xAC, 0xAD);
+        func_800113CC(obj, 2, sp54, 172, 173);
         obj->unk74 |= 3;
     }
     func_800AFC3C(obj, updateRate);
-    func_8005D048(obj, racer, 0x78);
+    func_8005D048(obj, racer, 120);
     switch( obj->segment.unk38.byte.unk3B) {
         case 1:
             sp38 = 0x2500;
