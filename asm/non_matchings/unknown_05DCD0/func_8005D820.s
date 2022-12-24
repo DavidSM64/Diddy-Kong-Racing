@@ -29,7 +29,7 @@ glabel func_8005D820
 /* 05E440 8005D840 E7B50018 */  swc1  $f21, 0x18($sp)
 /* 05E444 8005D844 E7B4001C */  swc1  $f20, 0x1c($sp)
 /* 05E448 8005D848 AFA50064 */  sw    $a1, 0x64($sp)
-/* 05E44C 8005D84C 0C01729E */  jal   func_8005CA78
+/* 05E44C 8005D84C 0C01729E */  jal   set_boss_voice_clip_offset
 /* 05E450 8005D850 2484CE20 */   addiu $a0, %lo(D_800DCE20) # addiu $a0, $a0, -0x31e0
 /* 05E454 8005D854 822E003B */  lb    $t6, 0x3b($s1)
 /* 05E458 8005D858 3C01800E */  lui   $at, %hi(D_800E6A50 + 4) # $at, 0x800e
@@ -597,7 +597,7 @@ glabel L8005DCE8
 /* 05EC68 8005E068 02202025 */   move  $a0, $s1
 /* 05EC6C 8005E06C 02202025 */  move  $a0, $s1
 /* 05EC70 8005E070 02002825 */  move  $a1, $s0
-/* 05EC74 8005E074 0C017412 */  jal   func_8005D048
+/* 05EC74 8005E074 0C017412 */  jal   fade_when_near_camera
 /* 05EC78 8005E078 24060028 */   li    $a2, 40
 /* 05EC7C 8005E07C 0C006EB2 */  jal   get_racer_object
 /* 05EC80 8005E080 00002025 */   move  $a0, $zero

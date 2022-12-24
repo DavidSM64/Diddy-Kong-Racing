@@ -57,7 +57,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     Object_68 *gfxData;
     ObjectModel *objModel;
 
-    func_8005CA78((u16* ) D_800DCE80);
+    set_boss_voice_clip_offset((u16* ) D_800DCE80);
     racer->unk1EC = 0;
     sp3E = obj->segment.unk38.byte.unk3B;
     sp3C = obj->segment.animFrame;
@@ -67,8 +67,8 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     if (racer->raceFinished == 1) {
         if (func_80023568() != 0) {
-            func_80021400(0x82);
-            racer->raceFinished += 1;
+            func_80021400(130);
+            racer->raceFinished++;
         }
     }
     sp2C = *startTimer;
@@ -81,12 +81,11 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         *startTimer -= 30;
             if (*startTimer < 0) {
                 if (D_8011D611 == 0) {
-                    sp2C = sp2C;
                     func_8005CB04(0);
                 }
                 D_8011D611 = 1;
                 *startTimer = 0;
-                *input |= 0x8000;
+                *input |= A_BUTTON;
             } else {
                 D_8011D611 = 0;
             }
@@ -94,13 +93,13 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     racer->vehicleID = VEHICLE_CARPET;
     func_80049794(updateRate, updateRateF, obj, racer);
-    racer->vehicleID = racer->unk1D7;
+    racer->vehicleID = racer->vehicleIDPrev;
     *startTimer = sp2C;
     obj->unk74 = 0;
     racer->unk16A = sp3A;
     obj->segment.unk38.byte.unk3B = sp3E;
     obj->segment.animFrame = sp3C;
-    if ((racer->attackType != 0) && (obj->segment.unk38.byte.unk3B != 1)) {
+    if (racer->attackType != ATTACK_NONE && obj->segment.unk38.byte.unk3B != 1) {
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, NULL);
         func_80069F28(12.0f);
@@ -113,7 +112,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->attackType = ATTACK_NONE;
     if (racer->unk148 != NULL) {
         xDiff = obj->segment.x_velocity * obj->segment.x_velocity;
-        zDiff = (obj->segment.z_velocity * obj->segment.z_velocity);
+        zDiff = obj->segment.z_velocity * obj->segment.z_velocity;
         racer->velocity = -sqrtf((xDiff * xDiff) + (zDiff * zDiff));
         if (racer->velocity > -0.5) {
             racer->velocity = 0.0f;
@@ -125,7 +124,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->unkC += 2.0 * updateRateF;
     gfxData = *obj->unk68;
     objModel = gfxData->objModel;
-    xDiff = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 0x10) - 0x11;
+    xDiff = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
     while (xDiff <= racer->unkC) {
         racer->unkC -= xDiff;
         gfxData->unk10 = -1;
@@ -141,7 +140,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     obj->segment.animFrame = racer->unkC;
     obj->unk74 = 0;
     func_800AF714(obj, updateRate);
-    func_8005D048(obj, racer, 0x28);
+    fade_when_near_camera(obj, racer, 40);
     if (*startTimer != 100) {
         someObj = func_8000BF44(-1);
         if (someObj != NULL) {

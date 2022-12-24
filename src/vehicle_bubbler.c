@@ -17,10 +17,22 @@
 /************ .data ************/
 
 s16 D_800DCE40[16] = {
-    0x0244, 0x0242, 0x0243, 0x0245,
-    0x0246, 0x0247, 0x0248, 0x00F6,
-    0x00F7, 0x0225, 0x0226, 0x002E,
-    0x002F, 0x0030, 0x0000, 0x0000,
+    SOUND_VOICE_BUBBLER_HOHO,
+    SOUND_VOICE_BUBBLER_OW,
+    SOUND_VOICE_BUBBLER_AUGH,
+    SOUND_VOICE_BUBBLER_HOHO2,
+    SOUND_VOICE_BUBBLER_AW,
+    SOUND_VOICE_BUBBLER_OW2,
+    SOUND_VOICE_BUBBLER_AUGH2,
+    SOUND_VOICE_TRICKY_LAUGH,
+    SOUND_VOICE_TRICKY_LAUGH2,
+    SOUND_VOICE_TRICKY_OW,
+    SOUND_VOICE_TRICKY_OW2,
+    SOUND_VOICE_CONKER_YEHAHA,
+    SOUND_VOICE_TIMBER_WOW,
+    SOUND_WHOOSH2,
+    SOUND_NONE,
+    SOUND_NONE,
 };
 
 /*******************************/
@@ -51,7 +63,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     f32 xDiff;
     s32 temp2;
     
-    func_8005CA78((u16 *) D_800DCE40);
+    set_boss_voice_clip_offset((u16 *) D_800DCE40);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~(R_TRIG);
     sp56 = obj->segment.unk38.byte.unk3B;
@@ -131,7 +143,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     }
     obj->unk74 = 0;
     func_800AFC3C(obj, updateRate);
-    func_8005D048(obj, racer, 0x28);
+    fade_when_near_camera(obj, racer, 0x28);
     switch (obj->segment.unk38.byte.unk3B) {
     case 1:
         sp38 = 0x2500;

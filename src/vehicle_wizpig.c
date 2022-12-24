@@ -15,7 +15,20 @@
 /************ .data ************/
 
 s16 D_800DCE60[14] = {
-    0x022C, 0x00A5, 0x00A6, 0x0057, 0x0051, 0x006D, 0x0052, 0x00F8, 0x00F9, 0x0227, 0x0228, 0x002E, 0x002F, 0x0030
+    SOUND_VOICE_BOSS_LAUGH2, 
+    SOUND_VOICE_TRICKY_HM, 
+    SOUND_VOICE_TRICKY_HMMM, 
+    SOUND_VOICE_WIZPIG_LAUGH4, 
+    SOUND_VOICE_WIZPIG_LAUGH2, 
+    SOUND_VOICE_WIZPIG_GROAN, 
+    SOUND_VOICE_WIZPIG_LAUGH3, 
+    SOUND_VOICE_SMOKEY_HAH, 
+    SOUND_VOICE_SMOKEY_LAUGH, 
+    SOUND_VOICE_SMOKEY_HM, 
+    SOUND_VOICE_SMOKEY_HM2, 
+    SOUND_VOICE_CONKER_YEHAHA, 
+    SOUND_VOICE_TIMBER_WOW, 
+    SOUND_WHOOSH2
 };
 
 /*******************************/
@@ -43,7 +56,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     ObjectModel* objModel;
     Object_68* gfxData;
 
-    func_8005CA78((u16* ) D_800DCE60);
+    set_boss_voice_clip_offset((u16* ) D_800DCE60);
     racer->unk1EC = 0;
     sp3E = obj->segment.unk38.byte.unk3B;
     sp3C = obj->segment.animFrame;
@@ -78,7 +91,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     }
     racer->vehicleID = VEHICLE_WIZPIG;
     func_80049794(updateRate, updateRateF, obj, racer);
-    racer->vehicleID = racer->unk1D7;
+    racer->vehicleID = racer->vehicleIDPrev;
     *startTimer = sp28;
     obj->unk74 = 0;
     racer->unk16A = sp3A;
@@ -217,7 +230,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
         }
     }
     func_800AFC3C(obj, updateRate);
-    func_8005D048(obj, racer, 0x28);
+    fade_when_near_camera(obj, racer, 0x28);
     firstRacerObj = get_racer_object(0);
     racer = (Object_Racer *) firstRacerObj->unk64;
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->unk14 & 8 && obj->segment.unk38.byte.unk3B == 1) {

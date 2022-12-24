@@ -960,7 +960,7 @@ void func_8004C0A0(s32 updateRate, Object *obj, Object_Racer *racer) {
     s32 temp_v1;
     s32 phi_v0;
 
-    if (racer->unk1D7 != 10) {
+    if (racer->vehicleIDPrev != VEHICLE_CARPET) {
         //!@bug Typo. Should've been `== 0`, not `= 0`.
         if ((racer->unk1F2 = 0)) {
             return; // This never gets called because of the typo.
@@ -1332,7 +1332,7 @@ void update_carpet(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     sp26 = obj->segment.animFrame;
     racer->vehicleID = VEHICLE_CARPET;
     func_80049794(updateRate, updateRateF, obj, racer);
-    racer->vehicleID = racer->unk1D7;
+    racer->vehicleID = racer->vehicleIDPrev;
     obj->segment.unk38.byte.unk3B = 0;
     if (racer->vehicleID == VEHICLE_CARPET) {
         if (racer->unk154 != NULL) {
@@ -2522,7 +2522,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             tempVel *= 0.25;
         }
         if ((gCurrentStickY < -25) && !(gCurrentRacerInput & A_BUTTON) && (gCurrentRacerInput & B_BUTTON)) {
-            if (racer->unk1D7 >= 5) {
+            if (racer->vehicleIDPrev >= 5) {
                 tempVel *= 0.3;
             }
             racer->velocity += tempVel;
@@ -2550,7 +2550,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     if (D_8011D586 != 0) {
         surfaceTraction = 0.0f;
     }
-    if (racer->brake < 0.9 && racer->unk1D7 < 5 && gRaceStartTimer == 0) {
+    if (racer->brake < 0.9 && racer->vehicleIDPrev < 5 && gRaceStartTimer == 0) {
         if (racer->pitch < 0.0) {
             velocityDiff = -racer->pitch;
             velocityDiff -= 0.3;
@@ -3507,7 +3507,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
     }
     temp_v0 =(f32 *) get_misc_asset(MISC_ASSET_UNK38);
     surface = -1;
-    sp40 = temp_v0[racer->unk1D7];
+    sp40 = temp_v0[racer->vehicleIDPrev];
     tempPos[0] = obj->segment.trans.x_position;
     tempPos[1] = obj->segment.trans.y_position;
     tempPos[2] = obj->segment.trans.z_position;
@@ -3515,7 +3515,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
     D_8011D54C = 0.0f;
     sp74 = 0;
     flags = 0;
-    if (racer->playerIndex != PLAYER_COMPUTER || racer->unk1D7 < 5) {
+    if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_TRICKY) {
         flags = func_80017248(obj, 1, &sp74, &racer->unkD8, tempPos, &sp40, &surface);
     }
     if (flags & 0x80) {

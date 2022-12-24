@@ -674,7 +674,7 @@ void func_8000E2B4(void) {
     *gRacersByPosition = player;
     player_64 = &player->unk64->racer;
     player_64->vehicleID = gOverworldVehicle;
-    player_64->unk1D7 = gOverworldVehicle;
+    player_64->vehicleIDPrev = gOverworldVehicle;
     player_64->unk2 = 0;
     player_64->characterId = (s8) settings->racers[0].character;
     player_64->playerIndex = 0;
@@ -1318,7 +1318,7 @@ void func_80012E28(Object *this) {
         this->segment.trans.x_rotation += sp_20->x_rotation_offset;
         this->segment.trans.z_rotation += sp_20->z_rotation_offset;
         sp_1c = 0.0f;
-        if (sp_20->unk1D7 < 5) {
+        if (sp_20->vehicleIDPrev < VEHICLE_TRICKY) {
 
             sp_1c = coss_f(sp_20->z_rotation_offset);
             tmp_f2 = sp_1c;

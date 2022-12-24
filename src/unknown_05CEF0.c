@@ -42,7 +42,7 @@ u16 D_800DCDE0[16] = {
 
 f32 D_8011D5C0;
 s8 D_8011D5C4;
-u16 *D_8011D5C8;
+u16 *gBossSoundIDOffset;
 s8 D_8011D5CC;
 
 /******************************/
@@ -76,7 +76,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     UNUSED s32 pad;
     Object* firstRacerObj;
 
-    func_8005CA78(D_800DCDE0);
+    set_boss_voice_clip_offset(D_800DCDE0);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~(R_TRIG);
     sp56 = obj->segment.unk38.byte.unk3B;
@@ -164,7 +164,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
         obj->unk74 |= 3;
     }
     func_800AFC3C(obj, updateRate);
-    func_8005D048(obj, racer, 120);
+    fade_when_near_camera(obj, racer, 120);
     switch( obj->segment.unk38.byte.unk3B) {
         case 1:
             sp38 = 0x2500;
@@ -211,26 +211,29 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     }
 }
 
-void func_8005CA78(u16 *arg0) {
-    D_8011D5C8 = arg0;
+/**
+ * Set the sound ID offset for a given boss clip.
+*/
+void set_boss_voice_clip_offset(u16 *soundID) {
+    gBossSoundIDOffset = soundID;
 }
 
-void func_8005CA84(f32 x, f32 y, f32 z, s32 arg3) {
+void func_8005CA84(f32 x, f32 y, f32 z, s32 offset) {
     s8 phi_v1 = get_random_number_from_range(0, 1);
-    if (arg3 == 0) {
+    if (offset == 0) {
         phi_v1 = 0;
     }
-    arg3 += phi_v1;
-    func_80009558(D_8011D5C8[arg3], x, y, z, 4, 0);
+    offset += phi_v1;
+    func_80009558(gBossSoundIDOffset[offset], x, y, z, 4, 0);
 }
 
-void func_8005CB04(s32 arg0) {
+void func_8005CB04(s32 offset) {
     s8 phi_v1 = get_random_number_from_range(0, 1);
-    if (arg0 == 0) {
+    if (offset == 0) {
         phi_v1 = 0;
     }
-    arg0 += phi_v1;
-    play_sound_global(D_8011D5C8[arg0], 0);
+    offset += phi_v1;
+    play_sound_global(gBossSoundIDOffset[offset], 0);
 }
 
 #ifdef NON_EQUIVALENT
@@ -372,12 +375,15 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005CB68.s")
 #endif
 
-void func_8005D048(Object *object, Object_Racer *arg1, s32 arg2) {
-    Object *sp1C = get_racer_object(0);
-    arg1->transparency = 0xFF;
+/**
+ * When close to the camera, fade the object so it doesn't block the screen.
+ */
+void fade_when_near_camera(Object *object, Object_Racer *racer, s32 distance) {
+    Object *player = get_racer_object(0);
+    racer->transparency = 255;
     if (!func_8001139C()) {
-        if ((object->segment.unk30 + arg2) < sp1C->segment.unk30) {
-            arg1->transparency = 0x40;
+        if ((object->segment.unk30 + distance) < player->segment.unk30) {
+            racer->transparency = 64;
         }
     }
 }

@@ -2651,6 +2651,10 @@ void obj_init_checkpoint(Object *obj, LevelObjectEntry_Checkpoint *entry, UNUSED
 void obj_loop_checkpoint(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
+/**
+ * Vehicle mode changer initialisation function.
+ * Sets direction and vehicleID based off spawn info.
+*/
 void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     f32 phi_f0;
     Object_ModeChange *obj64;
@@ -2667,13 +2671,17 @@ void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     obj64->unk8 = coss_f(obj->segment.trans.y_rotation);
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->unk8;
-    obj64->unk14 = entry->unkA;
+    obj64->vehicleID = entry->vehicleID;
     obj->interactObj->unk14 = 2;
     obj->interactObj->unk11 = 0;
     obj->interactObj->unk10 = entry->unk8;
     obj->interactObj->unk12 = 0;
 }
 
+/**
+ * Vehicle mode changer loop behaviour.
+ * Racers that pass through will have their vehicle type changed. This is usually used for loop-de-loops.
+*/
 void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
     Object *racerObj;
     Object **racerObjects;
@@ -2695,7 +2703,7 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
         for (i = 0; i < numRacers; i++) {
             racerObj = racerObjects[i];
             racer = (Object_Racer *) racerObj->unk64;
-            if (racer->vehicleID != modeChange->unk14) {
+            if (racer->vehicleID != modeChange->vehicleID) {
                 diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
                 diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
@@ -2704,12 +2712,12 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
                     dist = ((modeChange->unk0 * racerObj->segment.trans.x_position) + (modeChange->unk8 * racerObj->segment.trans.z_position) + modeChange->unkC);
                     if (dist < 0.0f) {
                         racer->unk1E0 = 0;
-                        if (modeChange->unk14 == 0) {
-                            racer->vehicleID = racer->unk1D7;
+                        if (modeChange->vehicleID == VEHICLE_CAR) {
+                            racer->vehicleID = racer->vehicleIDPrev;
                         } else {
-                            racer->vehicleID = modeChange->unk14;
+                            racer->vehicleID = modeChange->vehicleID;
                         }
-                        if (modeChange->unk14 == 4) {
+                        if (modeChange->vehicleID == VEHICLE_LOOPDELOOP) {
                             if (racer->raceFinished == FALSE) {
                                 func_80072348(racer->playerIndex, 8);
                             }
@@ -4541,7 +4549,7 @@ void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry) {
 }
 
 void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry) {
-    func_800AF134((Object *) obj->unk6C, entry->unk9, entry->unk8, 0, 0, 0);
+    func_800AF134((Particle *) obj->unk6C, entry->unk9, entry->unk8, 0, 0, 0);
     obj->unk78 = entry->unkA;
 }
 

@@ -16,11 +16,41 @@
 /************ .data ************/
 
 u16 D_800DCE00[16] = {
-    0x022D, 0x00A7, 0x00A8, 0x00B7, 0x00B8, 0x00F4, 0x00F5, 0x00FA, 0x00FB, 0x0229, 0x022A, 0x002E, 0x002F, 0x0030, 0x0000, 0x0000
+    SOUND_VOICE_BLUEY_EH3,
+    SOUND_VOICE_BLUEY_EH,
+    SOUND_VOICE_BLUEY_OHNO,
+    SOUND_VOICE_BLUEY_HAHA,
+    SOUND_VOICE_BLUEY_HAHA2,
+    SOUND_VOICE_BLUEY_EH2,
+    SOUND_VOICE_BLUEY_OHNO2,
+    SOUND_VOICE_BLUEY_HAHA3,
+    SOUND_VOICE_BLUEY_HAHA4,
+    SOUND_VOICE_BLUEY_AIEE,
+    SOUND_VOICE_BLUEY_OHNO3,
+    SOUND_VOICE_CONKER_YEHAHA,
+    SOUND_VOICE_TIMBER_WOW,
+    SOUND_WHOOSH2,
+    SOUND_NONE,
+    SOUND_NONE,
 };
 
 u16 D_800DCE20[16] = {
-    0x022C, 0x00A5, 0x00A6, 0x00B5, 0x00B6, 0x00F2, 0x00F3, 0x00F8, 0x00F9, 0x0227, 0x0228, 0x002E, 0x002F, 0x0030, 0x0000, 0x0000
+    SOUND_VOICE_BOSS_LAUGH2,
+    SOUND_VOICE_TRICKY_HM,
+    SOUND_VOICE_TRICKY_HMMM,
+    SOUND_VOICE_WIZPIG_HA,
+    SOUND_VOICE_WIZPIG_H2,
+    SOUND_VOICE_SMOKEY_EH,
+    SOUND_VOICE_SMOKEY_HEH,
+    SOUND_VOICE_SMOKEY_HAH,
+    SOUND_VOICE_SMOKEY_LAUGH,
+    SOUND_VOICE_SMOKEY_HM,
+    SOUND_VOICE_SMOKEY_HM2,
+    SOUND_VOICE_CONKER_YEHAHA,
+    SOUND_VOICE_TIMBER_WOW,
+    SOUND_WHOOSH2,
+    SOUND_NONE,
+    SOUND_NONE,
 };
 
 /*******************************/
@@ -29,11 +59,6 @@ u16 D_800DCE20[16] = {
 
 s8 D_8011D5D0;
 s8 D_8011D5D1;
-
-// These 3 might be a file boundary.
-s32 D_8011D5D4;
-s32 D_8011D5D8;
-s32 D_8011D5DC;
 
 /******************************/
 
@@ -54,7 +79,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* ra
     UNUSED s32 pad;
     Object* firstRacerObj;
 
-    func_8005CA78(D_800DCE00);
+    set_boss_voice_clip_offset(D_800DCE00);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
     sp5E = obj->segment.unk38.byte.unk3B;
@@ -170,7 +195,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* ra
         obj->unk74 |= 3;
     }
     func_800AFC3C(obj, updateRate);
-    func_8005D048(obj, racer, 0x28);
+    fade_when_near_camera(obj, racer, 0x28);
     firstRacerObj = get_racer_object(0);
     xDiff = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
     zDiff = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;

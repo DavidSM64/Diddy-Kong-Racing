@@ -1122,7 +1122,7 @@ typedef struct Object_Racer {
   /* 0x1D4 */ u8 unk1D4;
   /* 0x1D5 */ u8 unk1D5;
   /* 0x1D6 */ s8 vehicleID;
-  /* 0x1D7 */ s8 unk1D7;
+  /* 0x1D7 */ s8 vehicleIDPrev;
   /* 0x1D8 */ s8 raceFinished;
   /* 0x1D9 */ s8 unk1D9;
   /* 0x1DA */ u8 unk1DA;
@@ -1201,7 +1201,7 @@ typedef struct Object_ModeChange {
   /* 0x08 */ f32 unk8;
   /* 0x0C */ f32 unkC;
   /* 0x10 */ s32 unk10;
-  /* 0x14 */ u8 unk14;
+  /* 0x14 */ u8 vehicleID;
 } Object_ModeChange;
 
 typedef struct Object_GoldenBalloon {
