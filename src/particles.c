@@ -274,7 +274,7 @@ void init_particle_assets(void) {
     func_800AE490();
     gParticlesAssetTable = (unk800E2CF0 **) load_asset_section_from_rom(ASSET_PARTICLES_TABLE);
     gParticlesAssetTableCount = -1; 
-    while (((s32) gParticlesAssetTable[gParticlesAssetTableCount + 1]) != -1){
+    while (((s32) gParticlesAssetTable[gParticlesAssetTableCount + 1]) != -1) {
         gParticlesAssetTableCount++;
     }
 
@@ -285,7 +285,7 @@ void init_particle_assets(void) {
 
   gParticleBehavioursAssetTable = (ParticleBehavior **) load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS_TABLE);
   gParticleBehavioursAssetTableCount = -1; 
-  while (((s32) gParticleBehavioursAssetTable[gParticleBehavioursAssetTableCount + 1]) != (-1)) {
+  while (((s32) gParticleBehavioursAssetTable[gParticleBehavioursAssetTableCount + 1]) != -1) {
       gParticleBehavioursAssetTableCount++;
   }
 
@@ -452,7 +452,7 @@ void func_800AF0F0(Object *obj) {
     temp_v1->unk1C = temp_t8;
 }
 
-void func_800AF134(Object *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5) {
+void func_800AF134(Particle *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5) {
     ParticleBehavior *temp;
     if (arg2 >= gParticlesAssetTableCount) {
         arg2 = 0;
@@ -461,13 +461,13 @@ void func_800AF134(Object *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg
         arg1 = 0;
     }
     temp = gParticleBehavioursAssetTable[arg1];
-    if (arg0->segment.particle.unk8 != arg2 || temp != arg0->segment.particle.behaviour) {
+    if (arg0->unk8 != arg2 || temp != arg0->behaviour) {
         func_800B2260(arg0);
         func_800AF29C(arg0, arg1, arg2, arg3, arg4, arg5);
     }
 }
 
-void func_800AF1E0(Object *arg0, s32 arg1, s32 arg2) {
+void func_800AF1E0(Particle *arg0, s32 arg1, s32 arg2) {
     ParticleBehavior *temp_v0;
 
     if (arg1 < gParticleBehavioursAssetTableCount) {
@@ -476,49 +476,49 @@ void func_800AF1E0(Object *arg0, s32 arg1, s32 arg2) {
     }
 }
 
-void func_800AF29C(Object *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5) {
+void func_800AF29C(Particle *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5) {
     ParticleBehavior *temp_v1;
     s32 temp_v0_2;
     s32 flags;
 
     temp_v1 = gParticleBehavioursAssetTable[arg1];
-    arg0->segment.particle.unk8 = arg2;
-    arg0->segment.animFrame = arg3;
-    arg0->segment.particle.behaviour = temp_v1;
-    arg0->segment.unk1A = arg4;
-    arg0->segment.unk1C_half.unk1C = arg5;
-    arg0->segment.unk1C_half.unk1E = 0;
+    arg0->unk8 = arg2;
+    arg0->unk18 = arg3;
+    arg0->behaviour = temp_v1;
+    arg0->unk1A = arg4;
+    arg0->unk1C = arg5;
+    arg0->unk1E = 0;
 
     flags = temp_v1->flags;
 
     if (flags & 0x4000) {
-        arg0->segment.particle.unk4 = 0x4000;
-        arg0->segment.particle.unk6 = 0;
-        arg0->segment.particle.pos.x = 0.0f;
-        arg0->segment.particle.pos.y = 0.0f;
-        arg0->segment.particle.pos.z = 0.0f;
+        arg0->flags = 0x4000;
+        arg0->unk6 = 0;
+        arg0->pos.x = 0.0f;
+        arg0->pos.y = 0.0f;
+        arg0->pos.z = 0.0f;
     } else if (flags & 0x400) {
-        arg0->segment.particle.unk6 = 0;
-        arg0->segment.particle.unk4 = 0x400;
+        arg0->unk6 = 0;
+        arg0->flags = 0x400;
         temp_v0_2 = gParticlesAssetTable[arg2]->unk8;
         if (temp_v0_2 < 0x100) {
-            arg0->segment.particle.unk7 = temp_v0_2;
+            arg0->unk7 = temp_v0_2;
         } else {
-            arg0->segment.particle.unk7 = 0xFF;
+            arg0->unk7 = 0xFF;
         }
-        arg0->segment.particle.unkC_400.unkC = (s32 *) allocate_from_main_pool_safe(arg0->segment.particle.unk7 * 4, COLOUR_TAG_SEMITRANS_GREY);
-        arg0->segment.particle.unkC_400.unk10 = temp_v1->unk14;
-        arg0->segment.particle.unkC_400.unk12 = temp_v1->unk16;
-        arg0->segment.particle.unkC_400.unk14 = temp_v1->unk22;
-        arg0->segment.particle.unkC_400.unk16 = temp_v1->unk24;
+        arg0->unkC_400.unkC = (s32 *) allocate_from_main_pool_safe(arg0->unk7 * 4, COLOUR_TAG_SEMITRANS_GREY);
+        arg0->unkC_400.unk10 = temp_v1->unk14;
+        arg0->unkC_400.unk12 = temp_v1->unk16;
+        arg0->unkC_400.unk14 = temp_v1->unk22;
+        arg0->unkC_400.unk16 = temp_v1->unk24;
     } else {
-        arg0->segment.particle.unk4 = 0;
-        arg0->segment.particle.unkC.unkC = temp_v1->unk14;
-        arg0->segment.particle.unkC.unkE = temp_v1->unk16;
-        arg0->segment.particle.unkC.unk10 = temp_v1->unk18;
-        arg0->segment.particle.unkC.unk12 = temp_v1->unk22;
-        arg0->segment.particle.unkC.unk14 = temp_v1->unk24;
-        arg0->segment.particle.unkC.unk16 = temp_v1->unk26;
+        arg0->flags = 0;
+        arg0->unkC.unkC = temp_v1->unk14;
+        arg0->unkC.unkE = temp_v1->unk16;
+        arg0->unkC.unk10 = temp_v1->unk18;
+        arg0->unkC.unk12 = temp_v1->unk22;
+        arg0->unkC.unk14 = temp_v1->unk24;
+        arg0->unkC.unk16 = temp_v1->unk26;
     }
 }
 
@@ -547,50 +547,50 @@ GLOBAL_ASM("asm/non_matchings/particles/func_800AF404.s")
 
 void func_800AF52C(Object *obj, s32 arg1) {
     s32 i;
-    Object_6C_800AF52C *temp_v0;
+    Particle *temp_v0;
     ParticleBehavior *temp_v1;
-    Object *temp;
+    Particle2 *temp;
 
     temp_v0 = &obj->unk6C[arg1];
-    temp_v1 = temp_v0->unk0;
+    temp_v1 = temp_v0->behaviour;
     temp_v0->unkA = 0;
-    if (temp_v0->unk4 & 0x4000) {
+    if (temp_v0->flags & 0x4000) {
         ((ObjectSegment *) temp_v0)->trans.x_position = obj->segment.trans.x_position;
         ((ObjectSegment *) temp_v0)->trans.y_position = obj->segment.trans.y_position;
         ((ObjectSegment *) temp_v0)->trans.z_position = obj->segment.trans.z_position;
-    } else if (temp_v0->unk4 & 0x400) {
+    } else if (temp_v0->flags & 0x400) {
         temp_v0->unkA = gParticlesAssetTable[temp_v0->unk8]->unk17 << 8;
 
         if (temp_v0->unk6 > 0) { // Useless if statement, since the loop already does this.
             for (i = 0; i < temp_v0->unk6; i++){
-                temp = temp_v0->unkC_arr[i];
-                temp->segment.unk38.half.unk3A = 0;
+                temp = temp_v0->unkC_60[i];
+                temp->unk38.half.unk3A = 0;
             }
         }
         if (temp_v1->flags & 1) {
-            temp_v0->unk10 = temp_v1->unk14;
-            temp_v0->unk12 = temp_v1->unk16;
+            temp_v0->unkC.unk10 = temp_v1->unk14;
+            temp_v0->unkC.unk12 = temp_v1->unk16;
         }
         if (temp_v1->flags & 4) {
-            temp_v0->unk14 = temp_v1->unk22;
-            temp_v0->unk16 = temp_v1->unk24;
+            temp_v0->unkC.unk14 = temp_v1->unk22;
+            temp_v0->unkC.unk16 = temp_v1->unk24;
         }
     } else {
         if (temp_v1->flags & 1) {
             temp_v0->unk6 = 0;
-            temp_v0->unkC = temp_v1->unk14;
-            temp_v0->unkE = temp_v1->unk16;
-            temp_v0->unk10 = temp_v1->unk18;
+            temp_v0->unkC.unkC = temp_v1->unk14;
+            temp_v0->unkC.unkE = temp_v1->unk16;
+            temp_v0->unkC.unk10 = temp_v1->unk18;
         }
         if (temp_v1->flags & 4) {
             temp_v0->unk7 = 0;
-            temp_v0->unk12 = temp_v1->unk22;
-            temp_v0->unk14 = temp_v1->unk24;
-            temp_v0->unk16 = temp_v1->unk26;
+            temp_v0->unkC.unk12 = temp_v1->unk22;
+            temp_v0->unkC.unk14 = temp_v1->unk24;
+            temp_v0->unkC.unk16 = temp_v1->unk26;
         }
     }
-    temp_v0->unk4 &= 0xFDFF;
-    temp_v0->unk4 |= 0xA000;
+    temp_v0->flags &= 0xFDFF;
+    temp_v0->flags |= 0xA000;
     obj->segment.unk1A++;
 }
 
@@ -606,34 +606,34 @@ void func_800AF6E4(Object *obj, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/particles/func_800AF714.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800AFC3C.s")
 
-void func_800AFE5C(unk800B1CB8 *arg0, Object_6C_800AF52C *arg1) {
+void func_800AFE5C(unk800B1CB8 *arg0, Particle *arg1) {
     Object *temp_s0;
     Object *tempObj;
-    Object *tempObj2;
+    Particle2 *tempObj2;
     s32 i;
     ParticleBehavior *temp_s4;
 
-    temp_s4 = arg1->unk0;
-    if (arg1->unk4 & 0x4000) {
+    temp_s4 = arg1->behaviour;
+    if (arg1->flags & 0x4000) {
         tempObj = func_800B0BAC();
         if (tempObj != NULL) {
             func_8000E9D0(tempObj);
         }
-        arg1->unk4 &= 0xDFFF;
+        arg1->flags &= 0xDFFF;
         if (arg1->unk6 + 64 > 255) {
             arg1->unk6 = 255;
         } else {
             arg1->unk6 += 64;
         }
-    } else if (arg1->unk4 & 0x400) {
+    } else if (arg1->flags & 0x400) {
         if (arg1->unk6 < arg1->unk7) {
             temp_s0 = func_800B0698(arg0, arg1);
-            arg1->unk4 &= 0xDFFF;
+            arg1->flags &= 0xDFFF;
             if (temp_s0 != NULL) {
                 func_8000E9D0(temp_s0);
                 temp_s0->unk74_bytes.first = arg1->unk6;
                 temp_s0->segment.unk40 |= 0x2000;
-                arg1->unkC_arr[arg1->unk6] = temp_s0;
+                arg1->unkC_60[arg1->unk6] = temp_s0;
                 arg1->unk6++;
             }
         }
@@ -646,7 +646,7 @@ void func_800AFE5C(unk800B1CB8 *arg0, Object_6C_800AF52C *arg1) {
                     func_8000E9D0(tempObj2);
                     func_800B22FC(tempObj2, arg1->unkA);
                 }
-                arg1->unk4 &= ~0x2000;
+                arg1->flags &= ~0x2000;
             }
         }
     }
@@ -709,7 +709,7 @@ void func_800B0010(Object *arg0, Object *arg1, unk800B03C0_arg2 *arg2, Object *a
             }
             f32_vec3_apply_object_rotation3((ObjectTransform* ) &sp28, (f32*) &sp30);
         } else {
-            f32_vec3_apply_object_rotation3((ObjectTransform* )&arg2->unk12, (f32*) &sp30);
+            f32_vec3_apply_object_rotation3((ObjectTransform* ) &arg2->unk12, (f32*) &sp30);
         }
         f32_vec3_apply_object_rotation((ObjectTransform* ) arg0->segment.unk3C_a.unk3C_ptr, (f32*) &sp30);
         arg0->segment.x_velocity += sp30.x;
@@ -769,11 +769,11 @@ void func_800B03C0(Object *arg0, ObjectTransform *arg1, unk800B03C0_arg2 *arg2, 
     arg0->segment.trans.z_position += arg1->z_position;
 }
 
-unk800E2CD8 *func_800B0698(unk800B1CB8 *arg0, unk800B0698_arg1 *arg1) {
+unk800E2CD8 *func_800B0698(unk800B1CB8 *arg0, Particle *arg1) {
     unk800E2CF0* sp2C;
     unk800E2CD8* var_v0;
     TextureHeader **sp24;
-    unk800B0698_arg1_0 *sp20;
+    ParticleBehavior *sp20;
     f32 temp_f0;
     f32 temp_f14;
     f32 temp_f2;
@@ -782,7 +782,7 @@ unk800E2CD8 *func_800B0698(unk800B1CB8 *arg0, unk800B0698_arg1 *arg1) {
     if (sp2C->unk0 != 4) {
         return NULL;
     }
-    sp20 = arg1->unk0;
+    sp20 = arg1->behaviour;
     sp2C = sp2C;
     var_v0 = func_800B1CB8(4);
     if (var_v0 == NULL) {
@@ -809,7 +809,7 @@ unk800E2CD8 *func_800B0698(unk800B1CB8 *arg0, unk800B0698_arg1 *arg1) {
         var_v0->unk0.unk4A = 0xFF;
     }
     var_v0->unk0.unk60 = sp2C->unkE;
-    if (arg1->unk4 & 0x100) {
+    if (arg1->flags & 0x100) {
         var_v0->unk0.unk5C = arg1->unkA;
     } else {
         var_v0->unk0.unk5C = sp2C->unkC << 8;
@@ -827,7 +827,7 @@ unk800E2CD8 *func_800B0698(unk800B1CB8 *arg0, unk800B0698_arg1 *arg1) {
         var_v0->unk0.unk5E = 0;
     }
     func_800B03C0((Object *) var_v0, (ObjectTransform *) arg0, (unk800B03C0_arg2 *) arg1, (Object *)sp20);
-    if (sp20->unk0 & 0x80) {
+    if (sp20->flags & 0x80) {
         var_v0->unk0.unk0 = sp20->unk44;
         var_v0->unk0.unk2 = sp20->unk46;
         var_v0->unk0.unk4 = sp20->unk48;
@@ -847,13 +847,13 @@ unk800E2CD8 *func_800B0698(unk800B1CB8 *arg0, unk800B0698_arg1 *arg1) {
         temp_f14 = var_v0->unk0.unk24;
         var_v0->unk0.unk58 = sqrtf((temp_f0 * temp_f0) + (temp_f2 * temp_f2) + (temp_f14 * temp_f14));
     }
-    if (sp20->unk0 & 2) {
-        arg1->unk10 += sp20->unk1C;
-        arg1->unk12 += sp20->unk1E;
+    if (sp20->flags & 2) {
+        arg1->unkC.unk10 += sp20->unk1C;
+        arg1->unkC.unk12 += sp20->unk1E;
     }
-    if (sp20->unk0 & 8) {
-        arg1->unk14 += sp20->unk2A;
-        arg1->unk16 += sp20->unk2C;
+    if (sp20->flags & 8) {
+        arg1->unkC.unk14 += sp20->unk2A;
+        arg1->unkC.unk16 += sp20->unk2C;
     }
     var_v0->unk0.unk1A = sp2C->unk6;
     var_v0->unk0.unk18 = 0;
@@ -887,7 +887,7 @@ unk800E2CD8 *func_800B0698(unk800B1CB8 *arg0, unk800B0698_arg1 *arg1) {
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800B0BAC.s")
 
-unk800E2CD8 *func_800B1130(unk800B1CB8 *arg0, Object_6C_800AF52C *arg1) {
+unk800E2CD8 *func_800B1130(unk800B1CB8 *arg0, Particle *arg1) {
     s32 sp3C;
     unk800E2CF0 *sp38;
     unk800B1CB8* var_v0;
@@ -901,7 +901,7 @@ unk800E2CD8 *func_800B1130(unk800B1CB8 *arg0, Object_6C_800AF52C *arg1) {
     if ((sp38->unk0 == 3) || (sp38->unk0 == 4)) {
         return NULL;
     }
-    partBeh = arg1->unk0;
+    partBeh = arg1->behaviour;
     sp28 = (unk800E2CF0 *) partBeh->unk9C;
     
     var_v0 = func_800B1CB8(sp38->unk0);
@@ -1086,23 +1086,23 @@ unk800E2CD8 *func_800B1130(unk800B1CB8 *arg0, Object_6C_800AF52C *arg1) {
     if (partBeh->flags & 2) {
         arg1->unk6++;
         if (arg1->unk6 >= partBeh->unk1A) {
-            arg1->unkC += partBeh->unk1C;
-            arg1->unkE += partBeh->unk1E;
-            arg1->unk10 += partBeh->unk18;
+            arg1->unkC.unkC += partBeh->unk1C;
+            arg1->unkC.unkE += partBeh->unk1E;
+            arg1->unkC.unk10 += partBeh->unk18;
             arg1->unk6 -= partBeh->unk1A;
         }
     }
     if (partBeh->flags & 8) {
         arg1->unk7++;
         if (arg1->unk7 >= partBeh->unk28) {
-            arg1->unk12 += partBeh->unk2A;
-            arg1->unk14 += partBeh->unk2C;
-            arg1->unk16 += partBeh->unk2E;
+            arg1->unkC.unk12 += partBeh->unk2A;
+            arg1->unkC.unk14 += partBeh->unk2C;
+            arg1->unkC.unk16 += partBeh->unk2E;
             arg1->unk7 -= partBeh->unk28;
         }
     }
     if (var_v0->unk44 == 0) {
-        func_800B2040((unk800B2260_C *) var_v0);
+        func_800B2040(var_v0);
         return NULL;
     } else {   
         return (unk800E2CD8 *) var_v0;
@@ -1205,14 +1205,14 @@ unk800B1CB8 *func_800B1CB8(s32 arg0) {
     return var_v1;
 }
 
-void func_800B2040(unk800B2260_C *arg0) {
+void func_800B2040(Particle2 *arg0) {
     TextureHeader *tex;
 
     switch (arg0->unk2C) {
     case 0x80:
         if (D_800E2CB8 > 0) {
             if (arg0->unk44 != NULL) {
-                free_sprite(arg0->unk44);
+                free_sprite((Sprite *) arg0->unk44);
             }
             D_800E2CB8--;
             arg0->unk2C = 0;
@@ -1223,7 +1223,7 @@ void func_800B2040(unk800B2260_C *arg0) {
     case 1:
         if (D_800E2CA0 > 0) {\
             if (((unk800B2260_C_44 *) arg0->unk44)->texture != NULL) {
-                free_texture(((DrawTexture *) arg0->unk44)->texture);
+                free_texture(arg0->unk44_1->texture);
             }
             D_800E2CA0--;
             arg0->unk2C = 0;
@@ -1231,7 +1231,7 @@ void func_800B2040(unk800B2260_C *arg0) {
         break;
     case 2:
         if (D_800E2CAC > 0) {
-            tex = ((unk800B2260_C_44 *) arg0->unk44)->texture;
+            tex = arg0->unk44_1->texture;
             if (tex != NULL) {
                 free_texture(tex);
             }
@@ -1241,7 +1241,7 @@ void func_800B2040(unk800B2260_C *arg0) {
         break;
     case 3:
         if (D_800E2CC4 > 0) {
-            tex = ((unk800B2260_C_44 *) arg0->unk44)->texture;
+            tex = arg0->unk44_1->texture;
             if (tex != NULL) {
                 free_texture(tex);
             }
@@ -1252,7 +1252,7 @@ void func_800B2040(unk800B2260_C *arg0) {
     case 4:
         if (D_800E2CD0 > 0) {
             func_800B263C(arg0);
-            tex = ((unk800B2260_C_44* ) arg0->unk44)->texture;
+            tex = arg0->unk44_1->texture;
             if (tex != NULL) {
                 free_texture(tex);
             }
@@ -1264,76 +1264,76 @@ void func_800B2040(unk800B2260_C *arg0) {
 }
 
 
-void func_800B2260(Object *arg0) {
-    unk800B2260_C *temp_v0;
+void func_800B2260(Particle *arg0) {
+    Particle2 *temp_v0;
     s32 i;
 
-    if (arg0->segment.particle.unk4 & 0x400) {
-        if (arg0->segment.particle.unkC_60 != NULL) {
-            for (i = 0; i < arg0->segment.particle.unk6; i++) {
-                temp_v0 = arg0->segment.particle.unkC_60[i];
-                temp_v0->unk3A = 0;
+    if (arg0->flags & 0x400) {
+        if (arg0->unkC_60 != NULL) {
+            for (i = 0; i < arg0->unk6; i++) {
+                temp_v0 = arg0->unkC_60[i];
+                temp_v0->unk38.half.unk3A = 0;
                 temp_v0->unk70 = 0;
             }
-            free_from_memory_pool(arg0->segment.particle.unkC_60);
-            arg0->segment.particle.unkC_60 = NULL;
+            free_from_memory_pool(arg0->unkC_60);
+            arg0->unkC_60 = NULL;
         }
     }
 }
 
-void func_800B22FC(Object *arg0, s32 arg1) {
+void func_800B22FC(Particle2 *arg0, s32 arg1) {
     LevelModelSegmentBoundingBox *temp_v0_2;
-    Object *sp20;
+    Particle2 *sp20;
 
     D_80127C80 = arg1;
     sp20 = NULL;
-    if (arg0->segment.unk2C.half.upper == 3) {
+    if (arg0->unk2C == 3) {
         func_800B26E0();
     } else {
-        if (arg0->segment.unk40 & 3) {
+        if (arg0->unk40 & 3) {
             if (D_80127C80 > 0) {
                 sp20 = NULL;
                 func_800B2FBC(arg0);
                 sp20 = NULL;
             }
         }
-        if (arg0->segment.unk2C.half.upper == 4) {
+        if (arg0->unk2C == 4) {
             sp20 = arg0;
-            arg0->unk74_bytes.second = 1 - arg0->unk74_bytes.second;
-            arg0->unk74_bytes.fourth = 0;
+            arg0->unk75 = 1 - arg0->unk75;
+            arg0->unk77 = 0;
         }
         if (sp20 == NULL || (sp20 != NULL && sp20->unk70 != 0)) {
-            if (arg0->segment.unk38.byte.unk39 == 2) {
+            if (arg0->unk38.byte.unk39 == 2) {
                 func_800B3358(arg0);
-            } else if (arg0->segment.unk38.byte.unk39 == 3) {
+            } else if (arg0->unk38.byte.unk39 == 3) {
                 func_800B3240(arg0);
-            } else if (arg0->segment.unk38.byte.unk39 == 4) {
+            } else if (arg0->unk38.byte.unk39 == 4) {
                 func_800B3140(arg0);
-            } else if (arg0->segment.unk38.byte.unk39 == 5) {
+            } else if (arg0->unk38.byte.unk39 == 5) {
                 func_800B3564(arg0);
             } else {
                 func_800B34B0(arg0);
             }
         }
-        temp_v0_2 = func_8002A2DC(arg0->segment.unk2C.half.lower);
+        temp_v0_2 = func_8002A2DC(arg0->unk2E);
         if (temp_v0_2 != NULL) {
-            if (arg0->segment.trans.x_position < temp_v0_2->x1 || temp_v0_2->x2 < arg0->segment.trans.x_position || arg0->segment.trans.y_position < temp_v0_2->y1 || temp_v0_2->y2 < arg0->segment.trans.y_position || arg0->segment.trans.z_position < temp_v0_2->z1 || temp_v0_2->z2 < arg0->segment.trans.z_position) {
-                arg0->segment.unk2C.half.lower = get_level_segment_index_from_position(arg0->segment.trans.x_position, arg0->segment.trans.y_position, arg0->segment.trans.z_position);
+            if (arg0->trans.x_position < temp_v0_2->x1 || temp_v0_2->x2 < arg0->trans.x_position || arg0->trans.y_position < temp_v0_2->y1 || temp_v0_2->y2 < arg0->trans.y_position || arg0->trans.z_position < temp_v0_2->z1 || temp_v0_2->z2 < arg0->trans.z_position) {
+                arg0->unk2E = get_level_segment_index_from_position(arg0->trans.x_position, arg0->trans.y_position, arg0->trans.z_position);
             }
         } else {
-            arg0->segment.unk2C.half.lower = get_level_segment_index_from_position(arg0->segment.trans.x_position, arg0->segment.trans.y_position, arg0->segment.trans.z_position);
+            arg0->unk2E = get_level_segment_index_from_position(arg0->trans.x_position, arg0->trans.y_position, arg0->trans.z_position);
         }
-        arg0->segment.unk38.half.unk3A -= D_80127C80;
-        if (arg0->segment.unk38.half.unk3A <= 0) {
+        arg0->unk38.half.unk3A -= D_80127C80;
+        if (arg0->unk38.half.unk3A <= 0) {
             gParticlePtrList_addObject(arg0);
         } else {
             if (arg0->unk60_halfs.unk60 == 0) {
                 arg0->unk5C_halfs.unk5C += D_80127C80 * arg0->unk5C_halfs.unk5E;
                 if (arg0->unk5C_halfs.unk5C < 0xFF) {
-                    if (arg0->segment.unk40 & 0x1000) {
-                        arg0->segment.trans.unk6 |= 0x100;
+                    if (arg0->unk40 & 0x1000) {
+                        arg0->trans.unk6 |= 0x100;
                     } else {
-                        arg0->segment.trans.unk6 |=  0x80;
+                        arg0->trans.unk6 |=  0x80;
                     }
                 }
             } else {
@@ -1348,21 +1348,21 @@ void func_800B22FC(Object *arg0, s32 arg1) {
 }
 
 
-void func_800B263C(unk800B2260_C *arg0) {
-    Object *new_var;
-    unk800B2260_C *new_var2;
-    Object *temp_v0;
+void func_800B263C(Particle2 *arg0) {
+    Particle *new_var;
+    Particle2 *new_var2;
+    Particle *temp_v0;
     s32 i;
 
-    temp_v0 = (Object *) arg0->unk70;
+    temp_v0 = (Particle *) arg0->unk70;
     if (temp_v0 != NULL) {
         new_var = temp_v0;
-        if (temp_v0->segment.particle.unk6 != 0) {
-            if (arg0 == temp_v0->segment.particle.unkC_60[arg0->unk74]) {
-                temp_v0->segment.particle.unk6--;
-                for (i = arg0->unk74; i < temp_v0->segment.particle.unk6; i++) {
-                    new_var->segment.particle.unkC_60[i] = new_var->segment.particle.unkC_60[i + 1];
-                    new_var2 = new_var->segment.particle.unkC_60[i];
+        if (temp_v0->unk6 != 0) {
+            if (arg0 == temp_v0->unkC_60[arg0->unk74]) {
+                temp_v0->unk6--;
+                for (i = arg0->unk74; i < temp_v0->unk6; i++) {
+                    new_var->unkC_60[i] = new_var->unkC_60[i + 1];
+                    new_var2 = new_var->unkC_60[i];
                     new_var2->unk74 = i;
                 }
             }
@@ -1372,7 +1372,7 @@ void func_800B263C(unk800B2260_C *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800B26E0.s")
 
-void func_800B2FBC(Object *arg0) {
+void func_800B2FBC(Particle2 *arg0) {
     s32 someFlag;
     s32 keepGoing;
     s32 i;
@@ -1384,47 +1384,47 @@ void func_800B2FBC(Object *arg0) {
     keepGoing = -1;
 
     i = 128; // This is needed to match.
-    if (arg0->segment.unk2C.half.upper == i) {
-        var_a1 = arg0->unk44_0->unk0 * 256;
+    if (arg0->unk2C == i) {
+        var_a1 = arg0->unk44->unk0 * 256;
     } else {
-        var_a1 = arg0->unk44_0->unk0Ptr->unk12;
+        var_a1 = arg0->unk44->unk0Ptr->unk12;
     }
 
-    someFlag4 = arg0->segment.unk40 & 1;
-    someFlag2 = arg0->segment.unk40 & 2;
-    someFlag3 = arg0->segment.unk40 & 4;
-    someFlag = arg0->segment.unk40 & 8;
+    someFlag4 = arg0->unk40 & 1;
+    someFlag2 = arg0->unk40 & 2;
+    someFlag3 = arg0->unk40 & 4;
+    someFlag = arg0->unk40 & 8;
     for (i = 0; (i++ < D_80127C80) && keepGoing;) {
         if (!someFlag) {
-            arg0->segment.animFrame += arg0->segment.unk1A;
-            if (arg0->segment.animFrame >= var_a1) {
+            arg0->unk18 += arg0->unk1A;
+            if (arg0->unk18 >= var_a1) {
                 if (someFlag2) {
-                    arg0->segment.animFrame = ((var_a1 * 2) - arg0->segment.animFrame) - 1;
+                    arg0->unk18 = ((var_a1 * 2) - arg0->unk18) - 1;
                     someFlag = TRUE;
-                    arg0->segment.unk40 |= 8;
+                    arg0->unk40 |= 8;
                 } else if (someFlag3) {
-                    arg0->segment.animFrame -= var_a1;
+                    arg0->unk18 -= var_a1;
                 } else {
-                    arg0->segment.animFrame = var_a1 - 1;
+                    arg0->unk18 = var_a1 - 1;
                     keepGoing = FALSE;
-                    arg0->segment.unk40 &= ~3;
+                    arg0->unk40 &= ~3;
                 }
             }
         } else {
-            arg0->segment.animFrame -= arg0->segment.unk1A;
-            if (arg0->segment.animFrame < 0) {
+            arg0->unk18 -= arg0->unk1A;
+            if (arg0->unk18 < 0) {
                 if (someFlag3) {
                     if (someFlag4) {
-                        arg0->segment.animFrame = -arg0->segment.animFrame;
+                        arg0->unk18 = -arg0->unk18;
                         someFlag = FALSE;
-                        arg0->segment.unk40 &= ~8;
+                        arg0->unk40 &= ~8;
                     } else {
-                        arg0->segment.animFrame += var_a1;
+                        arg0->unk18 += var_a1;
                     }
                 } else {
-                    arg0->segment.animFrame = 0;
+                    arg0->unk18 = 0;
                     keepGoing = FALSE;
-                    arg0->segment.unk40 &= ~3;
+                    arg0->unk40 &= ~3;
                 }
             }
         }
