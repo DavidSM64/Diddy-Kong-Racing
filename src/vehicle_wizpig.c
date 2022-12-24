@@ -211,7 +211,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     if (obj->segment.unk38.byte.unk3B == 2) {
         func_800113CC(obj, 2, sp3C, 0xAC, 0xAD);
     }
-    if (racer->playerIndex == -1) {
+    if (racer->playerIndex == PLAYER_COMPUTER) {
         if (func_80023568() != 0) {
             func_8005E204(obj, racer, 100.0f, 0x89, 0xA5);
         }

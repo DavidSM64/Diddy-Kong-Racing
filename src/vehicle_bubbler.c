@@ -40,7 +40,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     s16 sp56;
     s16 animFrame;
     s16 sp52;
-    s32 temp3;
+    s32 objectID;
     f32 zDiff;
     Object_68 *gfxData;
     s32 timer;
@@ -122,11 +122,11 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     if (racer->playerIndex == PLAYER_COMPUTER) {
         temp2 = func_80023568();
         if (temp2 != 0) {
-            temp3 = 0x110;
+            objectID = 0x110;
             if (temp2 == 6) {
-                temp3 = 0x12A;
+                objectID = 0x12A;
             }
-            func_8005E204(obj, racer, 0.0f, temp3, 0x245);
+            func_8005E204(obj, racer, 0.0f, objectID, 0x245);
         }
     }
     obj->unk74 = 0;
