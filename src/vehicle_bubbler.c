@@ -53,7 +53,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     
     func_8005CA78((u16 *) D_800DCE40);
     *buttonsPressed &= ~R_TRIG;
-    *input &= ~(R_TRIG & 0xFFFFFFFF);
+    *input &= ~(R_TRIG);
     sp56 = obj->segment.unk38.byte.unk3B;
     animFrame = obj->segment.animFrame;
     sp52 = racer->unk16A;

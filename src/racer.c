@@ -29,6 +29,7 @@
 #include "game_ui.h"
 #include "object_models.h"
 #include "unknown_003260.h"
+#include "vehicle_bluey.h"
 
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
@@ -1757,7 +1758,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             update_tricky(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
             break;
         case VEHICLE_BLUEY:
-            func_8005D0D0(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
+            update_bluey(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
             break;
         case VEHICLE_SMOKEY:
         case VEHICLE_PTERODACTYL:
@@ -5151,7 +5152,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         case VEHICLE_FLYING_CAR: /* fall through */
         case VEHICLE_CARPET: update_carpet(updateRate, updateRateF, obj, racer); break;
         case VEHICLE_TRICKY: update_tricky(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
-        case VEHICLE_BLUEY: func_8005D0D0(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
+        case VEHICLE_BLUEY: update_bluey(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         case VEHICLE_SMOKEY: /* fall through */
         case VEHICLE_PTERODACTYL: func_8005D820(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentStickX, &gRaceStartTimer); break;
         case VEHICLE_BUBBLER: update_bubbler(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;

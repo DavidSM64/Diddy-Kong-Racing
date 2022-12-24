@@ -78,7 +78,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
 
     func_8005CA78(D_800DCDE0);
     *buttonsPressed &= ~R_TRIG;
-    *input &= ~(R_TRIG & 0xFFFFFFFF);
+    *input &= ~(R_TRIG);
     sp56 = obj->segment.unk38.byte.unk3B;
     sp54 = obj->segment.animFrame;
     sp52 = racer->unk16A;

@@ -1,5 +1,5 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x8005D0D0 */
+/* RAM_POS: 0x8005D820 */
 
 #include "unknown_05DCD0.h"
 
@@ -9,35 +9,16 @@
 #include "objects.h"
 #include "object_functions.h"
 #include "unknown_008C40.h"
-
-/************ .data ************/
-
-s16 D_800DCE00[16] = {
-    0x022D, 0x00A7, 0x00A8, 0x00B7, 0x00B8, 0x00F4, 0x00F5, 0x00FA, 0x00FB, 0x0229, 0x022A, 0x002E, 0x002F, 0x0030, 0x0000, 0x0000
-};
-
-s16 D_800DCE20[16] = {
-    0x022C, 0x00A5, 0x00A6, 0x00B5, 0x00B6, 0x00F2, 0x00F3, 0x00F8, 0x00F9, 0x0227, 0x0228, 0x002E, 0x002F, 0x0030, 0x0000, 0x0000
-};
-
-/*******************************/
+#include "racer.h"
+#include "unknown_05CEF0.h"
+#include "particles.h"
 
 /************ .bss ************/
-
-s8 D_8011D5D0;
-s8 D_8011D5D1;
-
-// These 3 might be a file boundary.
-s32 D_8011D5D4;
-s32 D_8011D5D8;
-s32 D_8011D5DC;
 
 s8 D_8011D5E0;
 s8 D_8011D5E1;
 
 /******************************/
-
-GLOBAL_ASM("asm/non_matchings/unknown_05DCD0/func_8005D0D0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_05DCD0/func_8005D820.s")
 
 void func_8005E204(Object *obj, Object_Racer *racer, f32 arg2, s32 objectID, s32 arg4) {
