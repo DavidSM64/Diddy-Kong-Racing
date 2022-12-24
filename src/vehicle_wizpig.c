@@ -4,8 +4,8 @@
 #include "vehicle_wizpig.h"
 
 #include "types.h"
-#include "racer.h"
 #include "macros.h"
+#include "racer.h"
 #include "objects.h"
 #include "unknown_05CEF0.h"
 #include "object_functions.h"
@@ -86,7 +86,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     obj->segment.animFrame = sp3C;
     if (racer->attackType != 0 && obj->segment.unk38.byte.unk3B != 5) {
         func_8005CB04(1);
-        play_sound_global(0x11U, NULL);
+        play_sound_global(SOUND_EXPLOSION, NULL);
         func_80069F28(12.0f);
         obj->segment.unk38.byte.unk3B = 5;
         obj->segment.x_velocity *= 0.4;
@@ -213,7 +213,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     }
     if (racer->playerIndex == -1) {
         if (func_80023568() != 0) {
-            func_8005E204(obj, racer, 0x42C80000, 0x89, 0xA5);
+            func_8005E204(obj, racer, 100.0f, 0x89, 0xA5);
         }
     }
     func_800AFC3C(obj, updateRate);
