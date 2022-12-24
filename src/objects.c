@@ -828,9 +828,9 @@ s32 func_8000FAC4(Object *obj, Object_6C *arg1) {
     particleDataEntry = obj->segment.header->objectParticles;
     for(i = 0; i < obj->segment.header->unk57; i++) {
         if ((particleDataEntry[i].upper & 0xFFFF0000) == 0xFFFF0000) {
-            func_800AF1E0((Object *) &obj->unk6C[i], (particleDataEntry[i].upper >> 8) & 0xFF, particleDataEntry[i].upper & 0xFF);
+            func_800AF1E0((Particle *) &obj->unk6C[i], (particleDataEntry[i].upper >> 8) & 0xFF, particleDataEntry[i].upper & 0xFF);
         } else {
-            func_800AF29C((Object *) &obj->unk6C[i],
+            func_800AF29C((Particle *) &obj->unk6C[i],
                 (particleDataEntry[i].upper >> 0x18) & 0xFF,
                 (particleDataEntry[i].upper >> 0x10) & 0xFF,
                 particleDataEntry[i].upper & 0xFFFF,
