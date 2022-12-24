@@ -23,7 +23,7 @@
 #include "unknown_05CEF0.h"
 #include "unknown_05DCD0.h"
 #include "vehicle_bubbler.h"
-#include "unknown_05F690.h"
+#include "vehicle_wizpig.h"
 #include "vehicle_rocket.h"
 #include "unknown_005740.h"
 #include "game_ui.h"
@@ -1767,7 +1767,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             update_bubbler(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
             break;
         case VEHICLE_WIZPIG:
-            func_8005EA90(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
+            update_wizpig(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
             break;
         case VEHICLE_ROCKET:
             update_rocket(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
@@ -5155,7 +5155,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         case VEHICLE_SMOKEY: /* fall through */
         case VEHICLE_PTERODACTYL: func_8005D820(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentStickX, &gRaceStartTimer); break;
         case VEHICLE_BUBBLER: update_bubbler(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
-        case VEHICLE_WIZPIG: func_8005EA90(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
+        case VEHICLE_WIZPIG: update_wizpig(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         case VEHICLE_ROCKET: update_rocket(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         }
         if (renderContext != DRAW_MENU) {
