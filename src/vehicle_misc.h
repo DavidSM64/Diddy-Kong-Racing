@@ -1,17 +1,14 @@
-#ifndef _VEHICLE_BLUEY_H_
-#define _VEHICLE_BLUEY_H_
+#ifndef _VEHICLE_MISC_H_
+#define _VEHICLE_MISC_H_
 
 #include "types.h"
 #include "structs.h"
 
+extern u16 D_800DCDE0[16];
 extern u16 D_800DCE20[16];
 extern u16 D_800DCE40[16];
-extern u16 D_800DCDE0[16];
-extern s16 D_800DCE80[14];
 extern s16 D_800DCE60[14];
-extern f32 D_8011D5C0;
-extern s8 D_8011D5C4;
-extern s8 D_8011D5CC;
+extern s16 D_800DCE80[14];
 
 typedef struct unk8005C2F0 {
     u8 pad0[0xC];

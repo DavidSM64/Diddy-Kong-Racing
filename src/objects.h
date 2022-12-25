@@ -520,5 +520,6 @@ void func_80008438(Object**, s32, s32);
 void func_8001E6EC(s8);
 void func_8001E89C(void);
 void func_800155B8(void);
+void func_800230D0(Object*, Object_Racer*);
 
 #endif

@@ -62,7 +62,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     
     set_boss_voice_clip_offset(D_800DCE40);
     *buttonsPressed &= ~R_TRIG;
-    *input &= ~(R_TRIG);
+    *input &= ~R_TRIG;
     sp56 = obj->segment.unk38.byte.unk3B;
     animFrame = obj->segment.animFrame;
     sp52 = racer->unk16A;
