@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8005D820 */
 
-#include "vehicle_smokey.h"
+#include "vehicle_misc.h"
 
 #include "types.h"
 #include "macros.h"
@@ -10,9 +10,7 @@
 #include "object_functions.h"
 #include "unknown_008C40.h"
 #include "racer.h"
-#include "vehicle_tricky.h"
 #include "particles.h"
-#include "vehicle_bluey.h"
 
 /************ .bss ************/
 

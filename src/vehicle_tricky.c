@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8005C2F0 */
 
-#include "vehicle_tricky.h"
+#include "vehicle_misc.h"
 
 #include "structs.h"
 #include "types.h"
@@ -78,12 +78,12 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
 
     set_boss_voice_clip_offset(D_800DCDE0);
     *buttonsPressed &= ~R_TRIG;
-    *input &= ~(R_TRIG);
+    *input &= ~R_TRIG;
     sp56 = obj->segment.unk38.byte.unk3B;
     sp54 = obj->segment.animFrame;
     sp52 = racer->unk16A;
-    if (racer->raceFinished == 1) {
-        func_80021400(0x82);
+    if (racer->raceFinished == TRUE) {
+        func_80021400(130);
         racer->raceFinished++;
     }
     sp40 = *startTimer;
@@ -97,7 +97,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
                 }
                 D_8011D5CC = 1;
                 *startTimer = 0;
-                *input |= 0x8000;
+                *input |= A_BUTTON;
             } else {
                 D_8011D5CC = 0;
             }

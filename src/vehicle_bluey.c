@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8005D0D0 */
 
-#include "vehicle_bluey.h"
+#include "vehicle_misc.h"
 
 #include "types.h"
 #include "macros.h"
@@ -10,7 +10,6 @@
 #include "object_functions.h"
 #include "unknown_008C40.h"
 #include "racer.h"
-#include "vehicle_tricky.h"
 #include "particles.h"
 
 /************ .data ************/
@@ -85,8 +84,8 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* ra
     sp5E = obj->segment.unk38.byte.unk3B;
     sp5C = obj->segment.animFrame;
     sp5A = racer->unk16A;
-    if (racer->raceFinished == 1 && func_80023568()) {
-        func_80021400(0x82);
+    if (racer->raceFinished == TRUE && func_80023568()) {
+        func_80021400(130);
         racer->raceFinished++;
     }
     sp48 = *startTimer;

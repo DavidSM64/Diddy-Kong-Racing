@@ -1,15 +1,13 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8005EA90 */
 
-#include "vehicle_wizpig.h"
+#include "vehicle_misc.h"
 
 #include "types.h"
 #include "macros.h"
 #include "racer.h"
 #include "objects.h"
-#include "vehicle_tricky.h"
 #include "object_functions.h"
-#include "vehicle_smokey.h"
 #include "particles.h"
 
 /************ .data ************/
@@ -64,8 +62,8 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     if (racer->velocity < 0.3 && -0.3 < racer->velocity) {
         *buttonsPressed = 0;
     }
-    if (racer->raceFinished == 1 && func_80023568() != 0) {
-        func_80021400(0x82);
+    if (racer->raceFinished == TRUE && func_80023568()) {
+        func_80021400(130);
         racer->raceFinished++;
     }
     sp28 = *startTimer;
@@ -79,7 +77,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
             if (*startTimer < 0) {
                 if (D_8011D601 == 0) {
                     func_8005CB04(0);
-                    racer->boostTimer = 0xA;
+                    racer->boostTimer = 10;
                 }
                 D_8011D601 = 1;
                 *startTimer = 0;

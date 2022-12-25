@@ -1,12 +1,11 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8005F310 */
 
-#include "vehicle_rocket.h"
+#include "vehicle_misc.h"
 
 #include "types.h"
 #include "macros.h"
 #include "racer.h"
-#include "vehicle_tricky.h"
 #include "objects.h"
 #include "audio.h"
 #include "camera.h"
@@ -65,11 +64,9 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if ((racer->velocity < 0.3) && (-0.3 < racer->velocity)) {
         *buttonsPressed = 0;
     }
-    if (racer->raceFinished == 1) {
-        if (func_80023568() != 0) {
-            func_80021400(130);
-            racer->raceFinished++;
-        }
+    if (racer->raceFinished == TRUE && func_80023568()) {
+        func_80021400(130);
+        racer->raceFinished++;
     }
     sp2C = *startTimer;
     if (sp2C == 0x64) {

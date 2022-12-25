@@ -20,16 +20,11 @@
 #include "math_util.h"
 #include "unknown_0255E0.h"
 #include "weather.h"
-#include "vehicle_tricky.h"
-#include "vehicle_smokey.h"
-#include "vehicle_bubbler.h"
-#include "vehicle_wizpig.h"
-#include "vehicle_rocket.h"
+#include "vehicle_misc.h"
 #include "unknown_005740.h"
 #include "game_ui.h"
 #include "object_models.h"
 #include "unknown_003260.h"
-#include "vehicle_bluey.h"
 
 
 #define MAX_NUMBER_OF_GHOST_NODES 360

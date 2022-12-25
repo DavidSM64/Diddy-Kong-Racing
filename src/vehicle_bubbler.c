@@ -1,22 +1,19 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8005E4C0 */
 
-#include "vehicle_bubbler.h"
+#include "vehicle_misc.h"
 
 #include "types.h"
 #include "macros.h"
 #include "racer.h"
-#include "vehicle_tricky.h"
 #include "math_util.h"
 #include "objects.h"
 #include "particles.h"
-#include "vehicle_smokey.h"
-#include "vehicle_bubbler.h"
 #include "printf.h"
 
 /************ .data ************/
 
-s16 D_800DCE40[16] = {
+u16 D_800DCE40[16] = {
     SOUND_VOICE_BUBBLER_HOHO,
     SOUND_VOICE_BUBBLER_OW,
     SOUND_VOICE_BUBBLER_AUGH,
@@ -63,14 +60,14 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     f32 xDiff;
     s32 temp2;
     
-    set_boss_voice_clip_offset((u16 *) D_800DCE40);
+    set_boss_voice_clip_offset(D_800DCE40);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~(R_TRIG);
     sp56 = obj->segment.unk38.byte.unk3B;
     animFrame = obj->segment.animFrame;
     sp52 = racer->unk16A;
-    if (racer->raceFinished == 1) {
-        func_80021400(0x82);
+    if (racer->raceFinished == TRUE) {
+        func_80021400(130);
         racer->raceFinished++;
     }
     timer = *startTimer;
