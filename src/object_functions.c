@@ -989,7 +989,7 @@ void obj_loop_unknown58(Object *obj, s32 updateRate) {
     someOtherObj64 = &someOtherObj->unk64->unkid58;
     obj60 = obj->unk60;
     if (obj60->unk0 == 1) {
-        s8 temp = someOtherObj64->unk1D6;
+        s8 temp = someOtherObj64->vehicleID;
         if (temp == 1 || temp == 2) {
             someObj = (Object *) obj60->unk4;
             someObj->segment.trans.y_rotation = 0x4000;

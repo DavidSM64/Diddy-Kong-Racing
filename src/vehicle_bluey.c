@@ -10,7 +10,7 @@
 #include "object_functions.h"
 #include "unknown_008C40.h"
 #include "racer.h"
-#include "unknown_05CEF0.h"
+#include "vehicle_tricky.h"
 #include "particles.h"
 
 /************ .data ************/

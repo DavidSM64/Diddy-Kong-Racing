@@ -6,7 +6,7 @@
 #include "types.h"
 #include "macros.h"
 #include "racer.h"
-#include "unknown_05CEF0.h"
+#include "vehicle_tricky.h"
 #include "objects.h"
 #include "audio.h"
 #include "camera.h"

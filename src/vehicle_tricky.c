@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8005C2F0 */
 
-#include "unknown_05CEF0.h"
+#include "vehicle_tricky.h"
 
 #include "structs.h"
 #include "types.h"

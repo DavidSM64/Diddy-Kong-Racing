@@ -20,8 +20,8 @@
 #include "math_util.h"
 #include "unknown_0255E0.h"
 #include "weather.h"
-#include "unknown_05CEF0.h"
-#include "unknown_05DCD0.h"
+#include "vehicle_tricky.h"
+#include "vehicle_smokey.h"
 #include "vehicle_bubbler.h"
 #include "vehicle_wizpig.h"
 #include "vehicle_rocket.h"
@@ -1762,7 +1762,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             break;
         case VEHICLE_SMOKEY:
         case VEHICLE_PTERODACTYL:
-            func_8005D820(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentStickX, &gRaceStartTimer);
+            update_smokey(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentStickX, &gRaceStartTimer);
             break;
         case VEHICLE_BUBBLER:
             update_bubbler(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
@@ -5154,7 +5154,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         case VEHICLE_TRICKY: update_tricky(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         case VEHICLE_BLUEY: update_bluey(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         case VEHICLE_SMOKEY: /* fall through */
-        case VEHICLE_PTERODACTYL: func_8005D820(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentStickX, &gRaceStartTimer); break;
+        case VEHICLE_PTERODACTYL: update_smokey(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentStickX, &gRaceStartTimer); break;
         case VEHICLE_BUBBLER: update_bubbler(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         case VEHICLE_WIZPIG: update_wizpig(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         case VEHICLE_ROCKET: update_rocket(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;

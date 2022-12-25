@@ -7,9 +7,9 @@
 #include "macros.h"
 #include "racer.h"
 #include "objects.h"
-#include "unknown_05CEF0.h"
+#include "vehicle_tricky.h"
 #include "object_functions.h"
-#include "unknown_05DCD0.h"
+#include "vehicle_smokey.h"
 #include "particles.h"
 
 /************ .data ************/

@@ -6,11 +6,11 @@
 #include "types.h"
 #include "macros.h"
 #include "racer.h"
-#include "unknown_05CEF0.h"
+#include "vehicle_tricky.h"
 #include "math_util.h"
 #include "objects.h"
 #include "particles.h"
-#include "unknown_05DCD0.h"
+#include "vehicle_smokey.h"
 #include "vehicle_bubbler.h"
 #include "printf.h"
 

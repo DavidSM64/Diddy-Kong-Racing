@@ -835,7 +835,7 @@ typedef struct Object_CollectEgg {
 
 typedef struct Object_UnkId58 {
   /* 0x000 */ u8 pad0[0x1D6];
-  /* 0x1D6 */ s8 unk1D6;
+  /* 0x1D6 */ s8 vehicleID;
 } Object_UnkId58;
 
 typedef struct Object_CharacterFlag {
