@@ -115,7 +115,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* ra
     racer->headAngle = sp5A;
     obj->segment.unk38.byte.unk3B = (s8) sp5E;
     obj->segment.animFrame = sp5C;
-    if (racer->attackType != 0) {
+    if (racer->attackType != ATTACK_NONE) {
         if (obj->segment.unk38.byte.unk3B != 4) {
             racer->unk1CD = obj->segment.unk38.byte.unk3B;
             obj->segment.unk38.byte.unk3B = 4;
@@ -133,9 +133,9 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* ra
         zDiff = obj->segment.z_velocity * obj->segment.z_velocity;
         racer->velocity = -sqrtf((xDiff * xDiff) + (zDiff * zDiff));
     }
-    sp3C = 0;
+    sp3C = FALSE;
     if ((find_next_checkpoint_node(racer->checkpoint, racer->unk1C8))->unk36[racer->unk1CA] == 1) {
-        sp3C = 1;
+        sp3C = TRUE;
     }
     if (obj->segment.unk38.byte.unk3B != 4) {
         if (racer->velocity < -2.0) {
