@@ -1057,8 +1057,8 @@ typedef struct Object_Racer {
   /* 0x164 */ s16 z_rotation_offset;
   /* 0x166 */ s16 unk166; // I don't know exactly what these are, but this one in particular seems to cause a Y position offset.
   /* 0x168 */ s16 unk168;
-  /* 0x16A */ s16 unk16A;
-  /* 0x166 */ s16 unk16C; // As for these, they seem to affect the turning direction of the racer's head.
+  /* 0x16A */ s16 headAngle;
+  /* 0x166 */ s16 headAngleTarget;
   /* 0x16E */ s16 unk16E;
   /* 0x170 */ s16 unk170;
   /* 0x172 */ s8 balloon_type;
@@ -1168,7 +1168,7 @@ typedef struct Object_Racer {
   /* 0x206 */ s16 unk206;
   /* 0x208 */ s8 unk208;
   /* 0x209 */ u8 unk209;
-  /* 0x20A */ u8 unk20A;
+  /* 0x20A */ u8 lightFlags;
   /* 0x20B */ u8 unk20B;
   /* 0x20C */ u8 throttleReleased;
   /* 0x20D */ u8 unk20D;

@@ -39,7 +39,7 @@
 /************ .data ************/
 
 s32 gObjLoopGoldenBalloonLength = 0x310;
-s16 D_800DCB54 = 0;
+s16 gAntiPiracyHeadroll = 0;
 s32 D_800DCB58 = 0; // Currently unknown, might be a different type.
 s32 D_800DCB5C = 0; // Currently unknown, might be a different type.
 
@@ -1448,7 +1448,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     func_80043ECC(0, NULL, 0);
     D_8011D583 = i;
     gStartBoostTime = 0;
-    tempRacer->unk20A = 0;
+    tempRacer->lightFlags = 0;
 }
 
 /**
@@ -1470,8 +1470,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     f32 temp_f12;
     LevelHeader *header;
     CheckpointNode *checkpointNode;
-    s32 angleVel;
-    UNUSED s32 pad;
+    UNUSED s32 pad[2];
     s32 i;
     struct LevelObjectEntryCommon newObject;
 
@@ -1874,18 +1873,17 @@ void update_player_racer(Object *obj, s32 updateRate) {
             tempRacer->stretch_height_cap = 1.0f;
         }
 
-        tempVar = ((tempRacer->unk16C - tempRacer->unk16A) * updateRate) >> 3;
+        tempVar = ((tempRacer->headAngleTarget - tempRacer->headAngle) * updateRate) >> 3;
         if (tempVar > 0x800) {
             tempVar = 0x800;
         }
         if (tempVar < -0x800) {
             tempVar = -0x800;
         }
-        angleVel = D_800DCB54;
-        if (angleVel) {
-            tempRacer->unk16A += angleVel;
+        if (gAntiPiracyHeadroll) {
+            tempRacer->headAngle += gAntiPiracyHeadroll;
         } else {
-            tempRacer->unk16A += tempVar;
+            tempRacer->headAngle += tempVar;
         }
         if ((gCurrentButtonsPressed & R_TRIG) && tempRacer->unk1EB) {
             tempRacer->unk1EC = 1;
@@ -1942,7 +1940,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             tempRacer->unk150 = NULL;
         }
         tempRacer->unk1FE = -1;
-        func_8004F77C(tempRacer);
+        set_racer_tail_lights(tempRacer);
         if (tempRacer->unk20E) {
             if (tempRacer->unk210 > updateRate) {
                 tempRacer->unk210 -= updateRate;
@@ -1967,28 +1965,33 @@ void update_player_racer(Object *obj, s32 updateRate) {
     }
 }
 
-void func_8004F77C(Object_Racer *racer) {
-    s32 temp;
+/**
+ * When braking or driving in a place considered dark, a timer counts up and then sets flags.
+ * These flags correspond to the lights on the back of the car being enabled and what colour they are.
+ * When you exit this dark place, the timer counts back down and the lights stop.
+*/
+void set_racer_tail_lights(Object_Racer *racer) {
+    s32 lightTimer;
 
-    racer->unk20A &= ~0x80;
+    racer->lightFlags &= ~RACER_LIGHT_BRAKE;
     if ((gCurrentRacerInput & B_BUTTON)) {
-        racer->unk20A |= 0x80;
+        racer->lightFlags |= RACER_LIGHT_BRAKE;
     }
 
-    temp = racer->unk20A & 0xF;
-    if ((racer->unk20A & 0xC0)) {
-        temp++;
-        if (temp >= 3) {
-            temp = 2;
+    lightTimer = racer->lightFlags & RACER_LIGHT_TIMER;
+    if (racer->lightFlags & (RACER_LIGHT_BRAKE | RACER_LIGHT_NIGHT)) {
+        lightTimer++;
+        if (lightTimer > 2) {
+            lightTimer = 2;
         }
     } else {
-        temp--;
-        if (temp < 0) {
-            temp = 0;
+        lightTimer--;
+        if (lightTimer < 0) {
+            lightTimer = 0;
         }
     }
 
-    racer->unk20A = (racer->unk20A & 0xFFF0) | temp;
+    racer->lightFlags = (racer->lightFlags & 0xFFF0) | lightTimer;
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_8004F7F4.s")
@@ -2571,81 +2574,92 @@ void func_800521B8(s32 arg0) {
     D_8011D582 = arg0;
 }
 
-void func_800521C4(Object *obj, Object_Racer *racer, UNUSED s32 arg2) {
+/**
+ * Find a nearby racer and set the head to turn to face them.
+ * Otherwise, if stationary, set a random angle to turn to periodically.
+*/
+void handle_racer_head_turning(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
     Object *tempObj;
     s8 foundObj;
     f32 distance;
-    s32 tempVel;
+    s32 intendedAngle;
 
-    foundObj = 0;
+    foundObj = FALSE;
     if (func_80023568()) {
         tempObj = get_racer_object(1);
-        foundObj = func_80052388(obj, racer, tempObj, 160000.0f);
+        foundObj = turn_head_towards_object(obj, racer, tempObj, 400.0f * 400.0f);
     }
-    if (!foundObj) {
+    if (foundObj == FALSE) {
         tempObj = func_8001B7A8((Object *) racer, 1, &distance);
         if (tempObj && !gRaceStartTimer) {
-            foundObj = func_80052388(obj, racer, tempObj, 160000.0f);
+            foundObj = turn_head_towards_object(obj, racer, tempObj, 400.0f * 400.0f);
         }
     }
-    if (!foundObj) {
+    if (foundObj == FALSE) {
         tempObj = func_8001B7A8((Object *) racer, -1, &distance);
         if (tempObj && !gRaceStartTimer) {
-            foundObj = func_80052388(obj, racer, tempObj, 30000.0f);
+            foundObj = turn_head_towards_object(obj, racer, tempObj, 30000.0f);
         }
     }
-    if (!foundObj) {
+    if (foundObj == FALSE) {
         if ((racer->unk1E7 & 0x1F) < 2) {
-            tempVel = racer->velocity * 1280.0f;
+            intendedAngle = racer->velocity * 1280.0f;
 
-            if (tempVel < 0) {
-                tempVel = -tempVel;
+            if (intendedAngle < 0) {
+                intendedAngle = -intendedAngle;
             }
 
-            if (tempVel > 0x2800) {
-                tempVel = 0x2800;
+            if (intendedAngle > 0x2800) {
+                intendedAngle = 0x2800;
             }
 
-            tempVel = 0x2800 - tempVel;
+            intendedAngle = 0x2800 - intendedAngle;
 
-            racer->unk16C = get_random_number_from_range(-tempVel, tempVel);
+            racer->headAngleTarget = get_random_number_from_range(-intendedAngle, intendedAngle);
         }
     }
 }
 
-// Ran by the AI. Seems to be direction related of some sorts.
-void func_8005234C(Object_Racer *racer) {
-    racer->unk16C -= racer->unk16C >> 3;
-    if (racer->unk16C >= -9 && racer->unk16C < 10) { // Deadzone?
-        racer->unk16C = 0;
+/**
+ * Over time, set the head angle target to zero.
+ * The character's head will start to face forward.
+*/
+void slowly_reset_head_angle(Object_Racer *racer) {
+    racer->headAngleTarget -= racer->headAngleTarget >> 3;
+    if (racer->headAngleTarget > -10 && racer->headAngleTarget < 10) {
+        racer->headAngleTarget = 0;
     }
 }
 
-s32 func_80052388(Object *obj1, Object_Racer *racer, Object *obj2, f32 distance) {
-    s32 rotation;
+/**
+ * Compute angle between objects, then set the intended angle for the character's head to face
+ * an object.
+*/
+s32 turn_head_towards_object(Object *obj, Object_Racer *racer, Object *targetObj, f32 distance) {
+    s32 intendedAngle;
     f32 xDiff;
     f32 zDiff;
     s32 ret = FALSE;
 
-    xDiff = obj2->segment.trans.x_position - obj1->segment.trans.x_position;
-    zDiff = obj2->segment.trans.z_position - obj1->segment.trans.z_position;
+    xDiff = targetObj->segment.trans.x_position - obj->segment.trans.x_position;
+    zDiff = targetObj->segment.trans.z_position - obj->segment.trans.z_position;
     if ((xDiff * xDiff) + (zDiff * zDiff) < distance) {
-        rotation = (arctan2_f(xDiff, zDiff) - (obj1->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
-        WRAP(rotation, -0x8000, 0x8000);
-        CLAMP(rotation, -0x3000, 0x3000);
-        racer->unk16C = rotation;
+        intendedAngle = (arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+        WRAP(intendedAngle, -0x8000, 0x8000);
+        CLAMP(intendedAngle, -0x3000, 0x3000);
+        racer->headAngleTarget = intendedAngle;
         if ((racer->unk1E7 & 0x3F) < 0x1F) {
-            racer->unk16C = 0;
+            racer->headAngleTarget = 0;
         }
-        racer = (struct Object_Racer *) obj2->unk64;
-        rotation = arctan2_f(xDiff, zDiff) - (obj1->segment.trans.y_rotation & 0xFFFF);
-        WRAP(rotation, -0x8000, 0x8000);
-        CLAMP(rotation, -0x3000, 0x3000);
-        racer->unk16C = rotation;
-        if (ret) {}
+        racer = (struct Object_Racer *) targetObj->unk64;
+        intendedAngle = arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF);
+        WRAP(intendedAngle, -0x8000, 0x8000);
+        CLAMP(intendedAngle, -0x3000, 0x3000);
+        racer->headAngleTarget = intendedAngle;
+        if (ret) {} // Fakematch
         ret = TRUE;
         if ((racer->unk1E7 & 0x1F) < 0xA) {
-            racer->unk16C = 0;
+            racer->headAngleTarget = 0;
         }
     }
     return ret;
@@ -3223,7 +3237,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         tempAngle = 73;
     }
     obj->segment.animFrame = tempAngle;
-    func_8005234C(racer);
+    slowly_reset_head_angle(racer);
     angle = gCurrentCarSteerVel - (u16) racer->y_rotation_vel;
     WRAP(angle, -0x8000, 0x8000);
     angle >>= 2;
@@ -4907,9 +4921,9 @@ void func_8005A3D0(void) {
     for (i = 0; i < gObjLoopGoldenBalloonLength; i++) {
         count += temp[i];
     }
-
+    // Antipiracy measure
     if (count != gObjLoopGoldenBalloonChecksum) {
-        D_800DCB54 = 0x800;
+        gAntiPiracyHeadroll = 0x800;
     }
 }
 
@@ -5208,12 +5222,12 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->stretch_height = racer->stretch_height_cap;
         racer->stretch_height_cap = 1.0f; 
     }
-    var_t2 = ((racer->unk16C - racer->unk16A) * updateRate) >> 3;
+    var_t2 = ((racer->headAngleTarget - racer->headAngle) * updateRate) >> 3;
     CLAMP(var_t2, -0x800, 0x800)
-    if (D_800DCB54 != 0) {
-        racer->unk16A += D_800DCB54;
+    if (gAntiPiracyHeadroll) {
+        racer->headAngle += gAntiPiracyHeadroll;
     } else {
-        racer->unk16A += var_t2;
+        racer->headAngle += var_t2;
     }
     if (racer->shieldTimer > 0) {
         if (racer->shieldTimer > 60) {
@@ -5253,7 +5267,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->unk150 = NULL;
     }
     racer->unk1FE = 0xFF;
-    func_8004F77C(racer);
+    set_racer_tail_lights(racer);
 }
 
 #ifdef NON_EQUIVALENT

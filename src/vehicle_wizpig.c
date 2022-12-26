@@ -58,7 +58,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     racer->unk1EC = 0;
     sp3E = obj->segment.unk38.byte.unk3B;
     sp3C = obj->segment.animFrame;
-    sp3A = racer->unk16A;
+    sp3A = racer->headAngle;
     if (racer->velocity < 0.3 && -0.3 < racer->velocity) {
         *buttonsPressed = 0;
     }
@@ -92,7 +92,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     racer->vehicleID = racer->vehicleIDPrev;
     *startTimer = sp28;
     obj->unk74 = 0;
-    racer->unk16A = sp3A;
+    racer->headAngle = sp3A;
     obj->segment.unk38.byte.unk3B = sp3E;
     obj->segment.animFrame = sp3C;
     if (racer->attackType != 0 && obj->segment.unk38.byte.unk3B != 5) {

@@ -40,7 +40,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     set_boss_voice_clip_offset(D_800DCE20);
     sp5E = obj->segment.unk38.byte.unk3B;
     sp5C = obj->segment.animFrame;
-    sp5A = racer->unk16A;
+    sp5A = racer->headAngle;
     if (racer->velocity < 0.3 && -0.3 < racer->velocity) {
         *stickMag = 0;
     }
@@ -71,7 +71,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->vehicleID = racer->vehicleIDPrev;
     *startTimer = sp44;
     obj->unk74 = 0;
-    racer->unk16A = sp5A;
+    racer->headAngle = sp5A;
     obj->segment.unk38.byte.unk3B = sp5E;
     obj->segment.animFrame = sp5C;
     if (racer->attackType != ATTACK_NONE && obj->segment.unk38.byte.unk3B != 5) {
@@ -223,11 +223,11 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         if (sp44 < -0xC00) {
             sp44 = -0xC00;
         }
-        racer->unk16C = sp44;
+        racer->headAngleTarget = sp44;
     }
     if (obj->segment.unk38.byte.unk3B >= 2) {
         if ((racer->unk1E7 & 0x1F) < 10) {
-            racer->unk16C >>= 1;
+            racer->headAngleTarget >>= 1;
         }
     }
     racer = (Object_Racer *) firstRacerObj->unk64;

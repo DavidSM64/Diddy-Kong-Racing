@@ -81,7 +81,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     *input &= ~R_TRIG;
     sp56 = obj->segment.unk38.byte.unk3B;
     sp54 = obj->segment.animFrame;
-    sp52 = racer->unk16A;
+    sp52 = racer->headAngle;
     if (racer->raceFinished == TRUE) {
         func_80021400(130);
         racer->raceFinished++;
@@ -107,7 +107,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     func_8004F7F4(updateRate, updateRateF, obj, racer);
     *startTimer = sp40;
     racer->lateral_velocity = 0.0f;
-    racer->unk16A = sp52;
+    racer->headAngle = sp52;
     obj->segment.unk38.byte.unk3B = sp56;
     obj->segment.animFrame = sp54;
     if (racer->attackType != 0) {
@@ -183,11 +183,11 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
         sp40 = (arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         WRAP(sp40, -0x8000, 0x8000);
         CLAMP(sp40, -sp38, sp38);
-        racer->unk16C = sp40;
+        racer->headAngleTarget = sp40;
     }
     if (obj->segment.unk38.byte.unk3B == 1) {
         if ((racer->unk1E7 & 0x1F) < 0xA) {
-            racer->unk16C >>= 1;
+            racer->headAngleTarget >>= 1;
         }
     }
     racer = (Object_Racer *) firstRacerObj->unk64;

@@ -83,7 +83,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* ra
     *input &= ~R_TRIG;
     sp5E = obj->segment.unk38.byte.unk3B;
     sp5C = obj->segment.animFrame;
-    sp5A = racer->unk16A;
+    sp5A = racer->headAngle;
     if (racer->raceFinished == TRUE && func_80023568()) {
         func_80021400(130);
         racer->raceFinished++;
@@ -112,7 +112,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* ra
     func_8004F7F4(updateRate, updateRateF, obj, racer);
     *startTimer = sp48;
     racer->lateral_velocity = 0.0f;
-    racer->unk16A = sp5A;
+    racer->headAngle = sp5A;
     obj->segment.unk38.byte.unk3B = (s8) sp5E;
     obj->segment.animFrame = sp5C;
     if (racer->attackType != 0) {
@@ -202,15 +202,15 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* ra
         sp48 = (arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         WRAP(sp48, -0x8000, 0x8000);
         CLAMP(sp48, -0xC00, 0xC00);
-        racer->unk16C = sp48;
+        racer->headAngleTarget = sp48;
     }
     if (obj->segment.unk38.byte.unk3B == 1) {
         if ((racer->unk1E7 & 0x1F) < 10) {
-            racer->unk16C >>= 1;
+            racer->headAngleTarget >>= 1;
         }
     }
     if (obj->segment.unk38.byte.unk3B == 3) {
-        racer->unk16C = 0;
+        racer->headAngleTarget = 0;
     }
     racer = (Object_Racer *) firstRacerObj->unk64;
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->unk14 & 8 && obj->segment.unk38.byte.unk3B == 1) {

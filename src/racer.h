@@ -93,6 +93,15 @@ typedef enum WeaponType {
     WEAPON_NITRO_LEVEL_3
 } WeaponType;
 
+typedef enum LightFlags {
+    RACER_LIGHT_UNK00 = 0,
+    RACER_LIGHT_TIMER = 0xF,
+    RACER_LIGHT_UNK10 = (1 << 4),
+    RACER_LIGHT_UNK20 = (1 << 5),
+    RACER_LIGHT_NIGHT = (1 << 6),
+    RACER_LIGHT_BRAKE = (1 << 7)
+} LightFlags;
+
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
   /* 0x0018 */ f32 unk18;
@@ -155,74 +164,14 @@ typedef struct unk800579B0 {
     s8 unk1E1;
 } unk800579B0;
 
-extern ObjectCamera *gCameraObject;
-extern s32 gObjLoopGoldenBalloonLength;
-extern s16 D_800DCB54;
-extern s32 D_800DCB58;
-extern s32 D_800DCB5C;
-
-// Not sure if D_800DCB58 & D_800DCB5C are actually a part of this array.
-extern f32 D_800DCB60[14];
-
-extern s32 gNumViewports;
-extern f32 gSurfaceTractionTable[19];
-
-extern f32 D_800DCBE8[19];
-
-// Unused? Not sure if this is actually an array or just some random data.
-extern s32 D_800DCC34[19];
-
-extern s32 D_800DCC80[];
-
-extern s16 D_800DCCB4[12];
-
-extern u16 D_800DCCCC[20];
-
-// Used for some sort of bit mask
-extern s32 D_800DCCF4[19];
-
-// Used for some sort of bit mask
-extern s32 D_800DCD40[20];
-
-extern s8 D_800DCD90[15];
-
-// Unused?
-extern s8 D_800DCDA0[8];
-
-extern s8 D_800DCDA8[8];
-
-extern s32 gObjLoopGoldenBalloonChecksum;
-
-extern ObjectTransform D_8011D510;
-
-extern s32 gCurrentStickX;
-extern s32 gRaceStartTimer;
-extern s32 gCurrentStickY;
-extern f32 gCurrentRacerWeightStat;
-extern u32 gCurrentRacerInput;
-extern f32 gCurrentRacerHandlingStat;
-extern f32 *gCurrentRacerMiscAssetPtr;
-extern s32 gCurrentPlayerIndex;
-extern u32 gCurrentButtonsPressed;
-extern u32 gCurrentButtonsReleased;
-extern s8 D_8011D5AE;
-extern s8 D_8011D584;
-extern f32 D_8011D574;
-extern f32 *D_8011D568;
-extern f32 D_8011D544;
-
-extern struct TempStruct8 **D_8011D5B0;
-
-s32 get_random_number_from_range(s32, s32); //?
-
 s32 func_80044450(s32 cap);
 void func_8004C0A0(s32 updateRate, Object *obj, Object_Racer *racer);
 void func_8004C140(Object *obj, Object_Racer *racer);
 void update_carpet(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer);
-void func_8004F77C(Object_Racer *arg0);
+void set_racer_tail_lights(Object_Racer *arg0);
 s32 func_80052188(void);
 void func_800521B8(s32 arg0);
-void func_8005234C(Object_Racer *racer);
+void slowly_reset_head_angle(Object_Racer *racer);
 void func_80052988(Object *obj, Object_Racer *arg1, s32 action, s32 arg3, s32 duration, s32 arg5, s32 arg6, s32 arg7);
 void handle_car_steering(Object_Racer *racer);
 void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1);
@@ -247,7 +196,7 @@ void func_8005A3B0(void);
 void func_8005A3C0(void);
 void func_8005A3D0(void);
 void antipiracy_modify_surface_traction_table(void);
-s32 func_80052388(Object *obj1, Object_Racer *racer, Object *obj2, f32 distance);
+s32 turn_head_towards_object(Object *obj, Object_Racer *racer, Object *targetObj, f32 distance);
 void func_80055A84(Object *obj, Object_Racer *racer, s32 arg2);
 void func_8005C270(Object_Racer *racer);
 f32 handle_racer_top_speed(Object *obj, Object_Racer *racer);
@@ -262,7 +211,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer);
 void update_camera_finish_challenge(f32 arg0, Object *obj, Object_Racer *racer);
 void update_camera_finish_race(f32 arg0, Object *obj, Object_Racer *racer);
 void update_camera_fixed(f32 arg0, Object *obj, Object_Racer *racer);
-void func_800521C4(Object *obj, Object_Racer *racer, s32 arg2);
+void handle_racer_head_turning(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80050754(Object *obj, Object_Racer *racer, f32 divisor);
 void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer);
 void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate);
