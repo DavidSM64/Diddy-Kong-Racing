@@ -25,6 +25,7 @@
 #include "game_ui.h"
 #include "object_models.h"
 #include "unknown_003260.h"
+#include "collision.h"
 
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
@@ -3469,7 +3470,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
     s32 xRot;
     f32 angleX;
     f32 *temp_v0;
-    f32 tempPos[3];
+    Vec3f tempPos;
     s32 i;
     f32 sp40;
     s8 surface;
@@ -3481,28 +3482,28 @@ void func_80055A84(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
     temp_v0 =(f32 *) get_misc_asset(MISC_ASSET_UNK38);
     surface = -1;
     sp40 = temp_v0[racer->vehicleIDPrev];
-    tempPos[0] = obj->segment.trans.x_position;
-    tempPos[1] = obj->segment.trans.y_position;
-    tempPos[2] = obj->segment.trans.z_position;
+    tempPos.x = obj->segment.trans.x_position;
+    tempPos.y = obj->segment.trans.y_position;
+    tempPos.z = obj->segment.trans.z_position;
     D_8011D548 = 0.0f;
     D_8011D54C = 0.0f;
     sp74 = 0;
     flags = 0;
     if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_TRICKY) {
-        flags = func_80017248(obj, 1, &sp74, &racer->unkD8, tempPos, &sp40, &surface);
+        flags = func_80017248(obj, 1, &sp74, &racer->unkD8, &tempPos.x, &sp40, &surface);
     }
     if (flags & 0x80) {
-        D_8011D548 = tempPos[0] - obj->segment.trans.x_position;
-        D_8011D54C = tempPos[2] - obj->segment.trans.z_position;
+        D_8011D548 = tempPos.x - obj->segment.trans.x_position;
+        D_8011D54C = tempPos.z - obj->segment.trans.z_position;
         flags &= ~0x80;
     }
     shouldSquish = 0;
-    if (flags && tempPos[1] < obj->segment.trans.y_position - 4.0) {
+    if (flags && tempPos.y < obj->segment.trans.y_position - 4.0) {
         shouldSquish = 1;
     }
-    func_80031130(1, &racer->unkD8.x, tempPos, racer->vehicleID);
+    func_80031130(1, &racer->unkD8.x, &tempPos.x, racer->vehicleID);
     sp74 = 0;
-    racer->unk1E3 = func_80031600(&racer->unkD8.x, tempPos, &sp40, &surface, 1, &sp74);
+    racer->unk1E3 = func_80031600(&racer->unkD8.x, &tempPos.x, &sp40, &surface, 1, &sp74);
     racer->unk1E4 = flags;
     racer->unk1E3 |= flags;
     racer->unk1E2 = 0;
@@ -3518,7 +3519,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
         }
     }
     for (i = 0; i < 3; i++) {
-        racer->unkD8.f[i] = tempPos[i];
+        racer->unkD8.f[i] = tempPos.f[i];
     }
     racer->wheel_surfaces[0] = surface;
     i = 1;

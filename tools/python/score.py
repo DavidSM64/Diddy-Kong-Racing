@@ -17,6 +17,7 @@ BLACKLIST = [
 
 BLACKLIST_C = [
     'math_util.c'
+    'collision.c'
 ]
 
 filelist = []

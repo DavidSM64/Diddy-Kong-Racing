@@ -29,6 +29,7 @@
 #include "unknown_005740.h"
 #include "object_models.h"
 #include "lib/src/libc/rmonPrintf.h"
+#include "collision.h"
 
 /************ .data ************/
 
