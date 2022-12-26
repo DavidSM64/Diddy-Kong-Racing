@@ -1839,7 +1839,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             if (tempRacer->unk15C) {
                 tempRacer->unk15C->segment.animFrame += 8 * updateRate;
             }
-            if ((tempRacer->unk1BA > 400) || (tempRacer->unk1BA < -400)) {
+            if (tempRacer->unk1BA > 400 || tempRacer->unk1BA < -400) {
                 func_80022E18(2);
             }
         }

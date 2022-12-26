@@ -16,8 +16,8 @@ BLACKLIST = [
 ]
 
 BLACKLIST_C = [
-    'math_util.c'
-    'collision.c'
+    'math_util.c',
+    'collision.c',
 ]
 
 filelist = []
@@ -175,16 +175,16 @@ def main():
             if blackListEntry in filename:
                 skipThis = True
                 break
-            if not skipThis:
-                scoreFile = ScoreFile(SRC_DIRECTORY + '/' + filename)
-                totalNumberOfDecompiledFunctions += len(scoreFile.functions)
-                totalNumberOfGlobalAsms += scoreFile.numGlobalAsms
-                totalNumberOfNonMatching += scoreFile.numNonMatchings
-                totalNumberOfNonEquivalent += scoreFile.numNonEquivalents
-                totalNumberOfDocumentedFunctions += scoreFile.get_number_of_documented_functions()
-                totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
-                totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
-                scoreFiles.append(scoreFile)
+        if not skipThis:
+            scoreFile = ScoreFile(SRC_DIRECTORY + '/' + filename)
+            totalNumberOfDecompiledFunctions += len(scoreFile.functions)
+            totalNumberOfGlobalAsms += scoreFile.numGlobalAsms
+            totalNumberOfNonMatching += scoreFile.numNonMatchings
+            totalNumberOfNonEquivalent += scoreFile.numNonEquivalents
+            totalNumberOfDocumentedFunctions += scoreFile.get_number_of_documented_functions()
+            totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
+            totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
+            scoreFiles.append(scoreFile)
     srcFilenames = FileUtil.get_filenames_from_directory_recursive(LIB_SRC_DIRECTORY, extensions=('.c'))
     for filename in srcFilenames:
         scoreFile = ScoreFile(LIB_SRC_DIRECTORY + '/' + filename)
