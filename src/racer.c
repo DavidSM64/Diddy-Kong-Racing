@@ -4622,9 +4622,9 @@ void update_camera_finish_race(UNUSED f32 updateRate, Object *obj, Object_Racer 
     xDiff = gCameraObject->trans.x_position - obj->segment.trans.x_position;
     yDiff = gCameraObject->trans.y_position - obj->segment.trans.y_position;
     zDiff = gCameraObject->trans.z_position - obj->segment.trans.z_position;
-    distance = ((xDiff * xDiff) + (zDiff * zDiff));
+    distance = sqrtf((xDiff * xDiff) + (zDiff * zDiff));
     gCameraObject->trans.y_rotation = (s16) (0x8000 - atan2s((s32) xDiff, (s32) zDiff));
-    gCameraObject->trans.x_rotation = atan2s((s32) yDiff * yDiff, (s32) distance);
+    gCameraObject->trans.x_rotation = atan2s(yDiff, distance);
     gCameraObject->trans.z_rotation = 0;
     gCameraObject->segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, racer->oy1, gCameraObject->trans.z_position);
 }
