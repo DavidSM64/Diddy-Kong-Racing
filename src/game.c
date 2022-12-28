@@ -1006,6 +1006,7 @@ void main_game_loop(void) {
     #ifdef PUPPYPRINT_DEBUG
         if (get_buttons_pressed_from_player(PLAYER_ONE) & D_JPAD) {
             gAntiAliasing ^= 1;
+            set_dither_filter();
         }
         if (suCodeSwitch == FALSE && IO_READ(DPC_BUFBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) {
     #endif

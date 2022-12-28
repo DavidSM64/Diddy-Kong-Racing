@@ -5,6 +5,7 @@
 #include "viint.h"
 #include "camera.h"
 #include "game.h"
+#include "main.h"
 
 /************ .data ************/
 
@@ -103,7 +104,7 @@ u8 gLastScreenMode = 0;
 void change_vi(OSViMode *mode, int width, int height) {
     s32 addPAL = 0;
     s32 addX = 16;
-    gGlobalVI = osViModeNtscLan1;
+    gGlobalVI = osViModeNtscLpn1;
 
     if (osTvType == TV_TYPE_PAL) {
         addPAL = PAL_HEIGHT_DIFFERENCE;
@@ -131,6 +132,16 @@ void change_vi(OSViMode *mode, int width, int height) {
     reset_perspective_matrix();
 }
 
+void set_dither_filter(void) {
+    if (gAntiAliasing) {
+        osViSetSpecialFeatures(OS_VI_DIVOT_ON);
+        osViSetSpecialFeatures(OS_VI_DITHER_FILTER_ON);
+    } else {
+        osViSetSpecialFeatures(OS_VI_DIVOT_OFF);
+        osViSetSpecialFeatures(OS_VI_DITHER_FILTER_OFF);
+    }
+}
+
 /**
  * Initialise the VI settings.
  * It first checks the TV type ad then will set the properties of the VI
@@ -142,8 +153,7 @@ void init_vi_settings(void) {
 	osViSetMode(&gGlobalVI);
     gScreenWidth = SCREEN_WIDTH;
     gScreenHeight = SCREEN_HEIGHT;
-    osViSetSpecialFeatures(OS_VI_DIVOT_ON);
-    osViSetSpecialFeatures(OS_VI_DITHER_FILTER_ON);
+    set_dither_filter();
     osViSetSpecialFeatures(OS_VI_GAMMA_OFF);
 }
 

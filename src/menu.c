@@ -6989,6 +6989,7 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                         break;
                     case 4:
                         gAntiAliasing ^= 1;
+                        set_dither_filter();
                         break;
                     }
                 }
