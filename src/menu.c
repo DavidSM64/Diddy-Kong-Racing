@@ -6746,11 +6746,11 @@ char gPauseConfigOpt[][32] = {
 };
 char gPauseOptionStack[sizeof(gPauseConfigOpt) / 32][40];
 char gPauseOptStrings[][8] = {
- {"Off"},
- {"On"},
- {"4:3"},
- {"16:10"},
- {"16:9"},
+    {"Off"},
+    {"On"},
+    {"4:3"},
+    {"16:10"},
+    {"16:9"},
 };
 u8 gPauseSubmenu = 0;
 
@@ -6841,7 +6841,7 @@ void func_80093D40(UNUSED s32 updateRate) {
     yOffset >>= 1;
     xPos >>= 1;
 
-    set_current_dialogue_box_coords(7, SCREEN_WIDTH_HALF - xPos, baseYPos - yOffset, xPos + SCREEN_WIDTH_HALF, yOffset + baseYPos);
+    set_current_dialogue_box_coords(7, (gScreenWidth / 2) - xPos, baseYPos - yOffset, xPos + (gScreenWidth / 2), yOffset + baseYPos);
     colours = &D_800E0990[get_player_id(D_800E098C)];
     set_current_dialogue_background_colour(7, colours->r, colours->g, colours->b, colours->a);
     set_dialogue_font(7, 0);
@@ -6876,6 +6876,9 @@ void func_80093D40(UNUSED s32 updateRate) {
         } else {
             yOffset = 8;
             for (i = 0; i < (s32) (sizeof(gPauseConfigOpt) / 32); i++) {
+                if ((i == 0 && gExpansionPak == FALSE) || (i > 0 && (IO_READ(DPC_PIPEBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) == 0)) {
+                    continue;
+                }
                 if (gMenuSubOption == i + 1) {
                     set_current_text_colour(7, 255, 255, 255, alpha, 255);
                 } else {
@@ -6943,52 +6946,51 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
         if (gMenuSubOption != 0) {
             if (gPauseSubmenu == 1) {
                 s32 moveDir = 0;
-                if (gControllersXAxisDirection[playerId] > 0) {
-                    moveDir = 1;
-                    play_sound_global(SOUND_SELECT2, NULL);
-                } else if (gControllersXAxisDirection[playerId] < 0) {
-                    moveDir = -1;
-                    play_sound_global(SOUND_SELECT2, NULL);
-                }
-                switch (gMenuSubOption) {
-                case 1:
-                    gScreenMode += moveDir;
-                    if (gScreenMode == -1) {
-                        gScreenMode = 2;
+                if (gControllersXAxisDirection[playerId] != 0) {
+                        play_sound_global(SOUND_SELECT2, NULL);
+                    if (gControllersXAxisDirection[playerId] > 0) {
+                        moveDir = 1;
+                    } else {
+                        moveDir = -1;
                     }
-                    if (gScreenMode > 2) {
-                        gScreenMode = 0;
-                    }
-                    switch (gScreenMode) {
-                    case 0:
-                        gScreenWidth = 304;
-                        change_vi(&gGlobalVI, 304, 224);
-                        break;
+                    switch (gMenuSubOption) {
                     case 1:
-                        gScreenWidth = 360;
-                        change_vi(&gGlobalVI, 360, 224);
+                        gScreenMode += moveDir;
+                        if (gScreenMode == -1) {
+                            gScreenMode = 2;
+                        }
+                        if (gScreenMode > 2) {
+                            gScreenMode = 0;
+                        }
+                        switch (gScreenMode) {
+                        case 0:
+                            gScreenWidth = 304;
+                            change_vi(&gGlobalVI, 304, 224);
+                            break;
+                        case 1:
+                            gScreenWidth = 360;
+                            change_vi(&gGlobalVI, 360, 224);
+                            break;
+                        case 2:
+                            gScreenWidth = 408;
+                            change_vi(&gGlobalVI, 408, 224);
+                            break;
+                        }
                         break;
                     case 2:
-                        gScreenWidth = 408;
-                        change_vi(&gGlobalVI, 408, 224);
+                        gScreenPos[0] += moveDir;
+                        CLAMP(gScreenPos[0], -8, 8);
+                        change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
+                        break;
+                    case 3:
+                        gScreenPos[1] += moveDir;
+                        CLAMP(gScreenPos[1], -8, 8);
+                        change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
+                        break;
+                    case 4:
+                        gAntiAliasing ^= 1;
                         break;
                     }
-                    break;
-                case 2:
-                    gScreenPos[0] += moveDir;
-                    CLAMP(gScreenPos[0], -8, 8);
-                    change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
-                    break;
-                case 3:
-                    gScreenPos[1] += moveDir;
-                    CLAMP(gScreenPos[1], -8, 8);
-                    change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
-                    break;
-                case 4:
-                    if (gControllersXAxisDirection[playerId] != 0) {
-                        gAntiAliasing ^= 1;
-                    }
-                    break;
                 }
             }
             if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
@@ -7021,6 +7023,12 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                             if (gMenuSubOption == 0) {
                                 gMenuSubOption = (sizeof(gPauseConfigOpt) / 32);
                             }
+                        }
+                        if (gMenuSubOption == 1 && gExpansionPak == FALSE) {
+                            gMenuSubOption++;
+                        }
+                        if ((IO_READ(DPC_PIPEBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) == 0) {
+                            gMenuSubOption = 1;
                         }
                     }
                 }
