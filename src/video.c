@@ -220,15 +220,15 @@ s32 swap_framebuffer_when_ready(s32 mesg) {
         tempUpdateRate++;
     }
 
-    while (tempUpdateRate < gVideoDeltaTime) {
+    /*while (tempUpdateRate < gVideoDeltaTime) {
         osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_BLOCK);
         tempUpdateRate++;
-    }
+    }*/
 
     //render_printf
 
     osViSwapBuffer(gVideoLastFramebuffer);
-    osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_BLOCK);
+    //osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_BLOCK);
     return tempUpdateRate;
 }
 
