@@ -1262,8 +1262,6 @@ loop_10:
 GLOBAL_ASM("asm/non_matchings/save_data/func_80074B34.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/save_data/func_80074EB8.s")
-
 typedef struct GhostHeaderAltUnk0 {
   u8 levelID;
   u8 vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
@@ -1284,13 +1282,32 @@ typedef struct GhostHeaderAlt {
     };
 } GhostHeaderAlt;
 
+typedef struct GhostDataData {
+    s16 unk0;
+    s16 unk2;
+    u8 unk4;
+    u8 unk5;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+    u8 padB[10];
+    s16 unk16;
+    s16 unk18;
+    s16 unk1A;
+} GhostDataData;
+
 typedef struct GhostData {
     /* 0x00 */ s32 headerId;
+    union {
     /* 0x04 */ GhostHeader *ghostHeader;
+    /* 0x04 */ GhostDataData *ghostData;
+    };
     /* 0x08 */ u8 unk8_pad[0x14];
     /* 0x1C */ u8 unk1C;
     /* 0x1E */ s16 unk1E;
 } GhostData;
+
+GLOBAL_ASM("asm/non_matchings/save_data/func_80074EB8.s")
 
 #ifdef NON_EQUIVALENT
 s32 func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, GhostHeader *ghostData) {
@@ -1394,7 +1411,92 @@ s32 func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostChar
 GLOBAL_ASM("asm/non_matchings/save_data/func_80075000.s")
 #endif
 
+
+
+#ifdef NON_EQUIVALENT
+//I give up. Ghost data structs have be beat for now.
+
+s32 func_800753D8(s32 controllerIndex, s32 arg1) {
+    GhostData *dataToWrite;
+    s32 fileNumber;
+    s32 fileLength;
+    u8 *sp28;
+    u8 *sp20;
+    s16 temp_t9_2;
+    s16 temp_t9_3;
+    s32 temp_a3;
+    s32 temp_t8;
+    s32 temp_t8_2;
+    s32 var_at;
+    s32 ret;
+    s32 var_v1_4;
+    GhostDataData *temp_t1;
+    GhostData *fileData;
+    GhostData *temp_v0_6;
+    u8 *temp_v1;
+    u8 temp_t2_2;
+    u8 temp_t3;
+    u8 temp_t7;
+    u8 temp_t7_2;
+    u8 temp_t8_3;
+    u8 temp_t8_4;
+    GhostDataData *temp_v0_5;
+    u8 *temp_v0_8;
+    GhostDataData *var_v0;
+    u8 *var_v0_2;
+
+    ret = get_si_device_status(controllerIndex);
+    if (ret != CONTROLLER_PAK_GOOD) {
+        start_reading_controller_data(controllerIndex);
+        return ret;
+    }
+    ret = get_file_number(controllerIndex, "DKRACING-GHOSTS", "", &fileNumber);
+    if (ret == CONTROLLER_PAK_GOOD) {
+        ret = get_file_size(controllerIndex, fileNumber, &fileLength);
+        if (ret != CONTROLLER_PAK_GOOD) {
+            start_reading_controller_data(controllerIndex);
+            return ret;
+        }
+        fileData = (GhostData *)allocate_from_main_pool_safe(fileLength + 0x100, COLOUR_TAG_BLACK);
+        ret = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *)fileData, fileLength);
+        start_reading_controller_data(controllerIndex);
+        if (ret == CONTROLLER_PAK_GOOD) {
+            ret = CONTROLLER_PAK_BAD_DATA;
+            if (fileData->headerId == GHSS) {
+                temp_t8 = arg1 * 4;
+                temp_v0_5 = (GhostDataData *)&fileData[temp_t8];
+                temp_a3 = temp_v0_5->unk6 - temp_v0_5->unkA;
+                temp_v0_6 = (GhostData *)allocate_from_main_pool_safe(fileLength + 0x100, COLOUR_TAG_BLACK);
+                temp_v1 = fileData->ghostHeader;
+                dataToWrite = temp_v0_6;
+                temp_t1 = &temp_v1[temp_t8];
+                sp20 = temp_t1;
+                sp28 = temp_v1;
+                bcopy(fileData, temp_v0_6, temp_t1->unk2);
+                if (arg1 != 5) {
+                    bcopy(&fileData[temp_t1->unk6], &(&dataToWrite[temp_t1->unk6])[temp_a3], fileData->ghostData->unk1A - temp_t1->unk6);
+                }
+                var_v0 = &dataToWrite[arg1].ghostData;
+                for (var_v1_4 = arg1; var_v1_4 < 6; var_v1_4++) {
+                    var_v0[var_v1_4].unk2 = (var_v0[var_v1_4].unk6 + temp_a3);
+                    var_v0[var_v1_4].unk18 = var_v0[var_v1_4].unk4;
+                    var_v0[var_v1_4].unk1A = var_v0[var_v1_4].unk5;
+                }
+                dataToWrite->ghostData->unk1A = dataToWrite->ghostData->unk16;
+                ret = write_controller_pak_file(controllerIndex, fileNumber, "DKRACING-GHOSTS", "", (u8 *) dataToWrite, fileLength);
+            }
+            free_from_memory_pool(dataToWrite);
+        }
+        free_from_memory_pool(fileData);
+    } else {
+        start_reading_controller_data(controllerIndex);
+    }
+
+    return ret;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/save_data/func_800753D8.s")
+#endif
 
 SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, s16 *arg4) {
     s32 i;
