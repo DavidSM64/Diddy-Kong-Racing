@@ -445,8 +445,8 @@ void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG) {
             } else if (D_800DE4D0.ptr != NULL) {
                 D_800DE4D0.function((Gfx *) dlist, mtx);
             } else {
-                //gDPSetFillColor((*dlist)++, sBackgroundFillColour);
-                //gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
+                gDPSetFillColor((*dlist)++, (GPACK_RGBA5551(0, 0, 0, 1) << 16) | GPACK_RGBA5551(0, 0, 0, 1));
+                gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
             }
             /*if (copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2)) {
                 gDPSetCycleType((*dlist)++, G_CYC_1CYCLE);
@@ -463,8 +463,8 @@ void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG) {
             } else if (D_800DE4D0.ptr != NULL) {
                 D_800DE4D0.function((Gfx *) dlist, mtx);
             } else {
-                //gDPSetFillColor((*dlist)++, (GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1) << 16) | GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1));
-                //gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
+                gDPSetFillColor((*dlist)++, (GPACK_RGBA5551(0, 0, 0, 1) << 16) | GPACK_RGBA5551(0, 0, 0, 1));
+                gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
             }
         }
     }
