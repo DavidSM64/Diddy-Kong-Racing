@@ -75,8 +75,11 @@ extern char *D_800DD410[3];
 extern FadeTransition D_800DD41C;
 extern FadeTransition D_800DD424;
 extern u16 *gVideoCurrFramebuffer;
-extern s32 gVideoLastFramebuffer;
-extern s32 gVideoLastDepthBuffer;
+extern u16 *gVideoLastFramebuffer;
+extern u16 *gVideoLastDepthBuffer;
+
+extern u8 gScreenMode;
+extern s8 gScreenPos[2];
 
 void dmacopy_doubleword(s32 videoLastFrameBuffer, s32 VideoCurrFrameBuffer, s32 size);
 

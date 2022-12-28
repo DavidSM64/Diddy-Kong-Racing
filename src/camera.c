@@ -148,7 +148,7 @@ u8 sPlayerID[16];
 
 /******************************/
 
-#ifdef NON_EQUIVALENT
+//#ifdef NON_EQUIVALENT
 extern s32 D_B0000578;
 
 void func_80065EA0(void) {
@@ -178,9 +178,14 @@ void func_80065EA0(void) {
     f32_matrix_to_s16_matrix(D_80120EE0, D_80120FE0);
     gCurCamFOV = CAMERA_DEFAULT_FOV;
 }
-#else
+/*#else
 GLOBAL_ASM("asm/non_matchings/camera/func_80065EA0.s")
-#endif
+#endif*/
+
+void reset_perspective_matrix(void) {
+    guPerspectiveF(D_80120EE0, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+    f32_matrix_to_s16_matrix(D_80120EE0, D_80120FE0);
+}
 
 void func_80066060(s32 arg0, s32 arg1) {
     if (arg0 >= 0 && arg0 < 4) {

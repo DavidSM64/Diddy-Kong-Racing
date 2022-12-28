@@ -33,6 +33,7 @@
 #include "math_util.h"
 #include "printf.h"
 #include "libc/stdio.h"
+#include "main.h"
 
 /**
  * @file Contains all the code used for every menu in the game.
@@ -6736,6 +6737,23 @@ void func_80093A0C(void) {
     func_80000B28();
 }
 
+char gPauseOptionText[] = "Options";
+char gPauseConfigOpt[][32] = {
+    {"Screen"},
+    {"Screen X"},
+    {"Screen Y"},
+    {"Anti Aliasing"},
+};
+char gPauseOptionStack[sizeof(gPauseConfigOpt) / 32][40];
+char gPauseOptStrings[][8] = {
+ {"Off"},
+ {"On"},
+ {"4:3"},
+ {"16:10"},
+ {"16:9"},
+};
+u8 gPauseSubmenu = 0;
+
 //Pause Menu
 void func_80093A40(void) {
     s32 raceType;
@@ -6783,15 +6801,18 @@ void func_80093A40(void) {
     } else {
         gMenuOptionText[gMenuOptionCap++] = gMenuText[ASSET_MENU_TEXT_QUITTROPHYRACE];
     }
+    
+    gMenuOptionText[gMenuOptionCap++] = gPauseOptionText;
     gMenuOption = 0;
     gOptionBlinkTimer = 0;
     gMenuDelay = 0;
+    gPauseSubmenu = 0;
     gIgnorePlayerInput = 1;
     gMenuSubOption = 0;
     reset_controller_sticks();
 }
 
-#ifdef NON_EQUIVALENT
+//#ifdef NON_EQUIVALENT
 // In the right ballpark, but not right.
 // Draw pause game screen?
 void func_80093D40(UNUSED s32 updateRate) {
@@ -6832,25 +6853,51 @@ void func_80093D40(UNUSED s32 updateRate) {
         alpha = 511 - alpha;
     }
     if (gMenuSubOption != 0) {
-        if (gTrophyRaceWorldId != 0) {
-            yOffset -= 26;
-            render_dialogue_text(7, POS_CENTRED, yOffset + 8, gMenuText[ASSET_MENU_TEXT_QUITTROPHYRACETITLE], 1, 12);
+        if (gPauseSubmenu == 0) {
+            if (gTrophyRaceWorldId != 0) {
+                yOffset -= 26;
+                render_dialogue_text(7, POS_CENTRED, yOffset + 8, gMenuText[ASSET_MENU_TEXT_QUITTROPHYRACETITLE], 1, 12);
+            } else {
+                yOffset -= 26;
+                render_dialogue_text(7, POS_CENTRED, yOffset + 8, gMenuText[ASSET_MENU_TEXT_QUITGAMETITLE], 1, 12);
+            }
+            if (gMenuSubOption == 1) {
+                set_current_text_colour(7, 255, 255, 255, alpha, 255);
+            } else {
+                set_current_text_colour(7, 255, 255, 255, 0, 255);
+            }
+            render_dialogue_text(7, POS_CENTRED, yOffset + 28, gMenuText[ASSET_MENU_TEXT_OK], 1, 12); // OK
+            if (gMenuSubOption == 2) {
+                set_current_text_colour(7, 255, 255, 255, alpha, 255);
+            } else {
+                set_current_text_colour(7, 255, 255, 255, 0, 255);
+            }
+            render_dialogue_text(7, POS_CENTRED, yOffset + 44, gMenuText[ASSET_MENU_TEXT_CANCEL], 1, 12);
         } else {
-            yOffset -= 26;
-            render_dialogue_text(7, POS_CENTRED, yOffset + 8, gMenuText[ASSET_MENU_TEXT_QUITGAMETITLE], 1, 12);
+            yOffset = 8;
+            for (i = 0; i < (s32) (sizeof(gPauseConfigOpt) / 32); i++) {
+                if (gMenuSubOption == i + 1) {
+                    set_current_text_colour(7, 255, 255, 255, alpha, 255);
+                } else {
+                    set_current_text_colour(7, 255, 255, 255, 0, 255);
+                }
+                switch (i) {
+                case 0:
+                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[2 + gScreenMode]);
+                    break;
+                case 1:
+                    puppyprintf(gPauseOptionStack[i], "%s: %d", gPauseConfigOpt[i], gScreenPos[0]);
+                    break;
+                case 2:
+                    puppyprintf(gPauseOptionStack[i], "%s: %d", gPauseConfigOpt[i], gScreenPos[1]);
+                    break;
+                case 3:
+                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gAntiAliasing]);
+                    break;
+                }
+                render_dialogue_text(7, POS_CENTRED, yOffset + 8 + (i * 16), gPauseOptionStack[i], 1, 12);
+            }
         }
-        if (gMenuSubOption == 1) {
-            set_current_text_colour(7, 255, 255, 255, alpha, 255);
-        } else {
-            set_current_text_colour(7, 255, 255, 255, 0, 255);
-        }
-        render_dialogue_text(7, POS_CENTRED, yOffset + 28, gMenuText[ASSET_MENU_TEXT_OK], 1, 12); // OK
-        if (gMenuSubOption == 2) {
-            set_current_text_colour(7, 255, 255, 255, alpha, 255);
-        } else {
-            set_current_text_colour(7, 255, 255, 255, 0, 255);
-        }
-        render_dialogue_text(7, POS_CENTRED, yOffset + 44, gMenuText[ASSET_MENU_TEXT_CANCEL], 1, 12);
     } else {
         render_dialogue_text(7, POS_CENTRED, 12, gMenuText[ASSET_MENU_TEXT_PAUSEOPTIONS], D_800E098C + 1, 12);
         for (i = 0, yOffset = 32; i < gMenuOptionCap; i++, yOffset += 16) {
@@ -6864,9 +6911,9 @@ void func_80093D40(UNUSED s32 updateRate) {
     }
     open_dialogue_box(7);
 }
-#else
+/*#else
 GLOBAL_ASM("asm/non_matchings/menu/func_80093D40.s")
-#endif
+#endif*/
 
 /**
  * Show the available options when the player pauses the game.
@@ -6894,21 +6941,88 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
 
     if (gMenuDelay == 0) {
         if (gMenuSubOption != 0) {
+            if (gPauseSubmenu == 1) {
+                s32 moveDir = 0;
+                if (gControllersXAxisDirection[playerId] > 0) {
+                    moveDir = 1;
+                    play_sound_global(SOUND_SELECT2, NULL);
+                } else if (gControllersXAxisDirection[playerId] < 0) {
+                    moveDir = -1;
+                    play_sound_global(SOUND_SELECT2, NULL);
+                }
+                switch (gMenuSubOption) {
+                case 1:
+                    gScreenMode += moveDir;
+                    if (gScreenMode == -1) {
+                        gScreenMode = 2;
+                    }
+                    if (gScreenMode > 2) {
+                        gScreenMode = 0;
+                    }
+                    switch (gScreenMode) {
+                    case 0:
+                        gScreenWidth = 304;
+                        change_vi(&gGlobalVI, 304, 224);
+                        break;
+                    case 1:
+                        gScreenWidth = 360;
+                        change_vi(&gGlobalVI, 360, 224);
+                        break;
+                    case 2:
+                        gScreenWidth = 408;
+                        change_vi(&gGlobalVI, 408, 224);
+                        break;
+                    }
+                    break;
+                case 2:
+                    gScreenPos[0] += moveDir;
+                    CLAMP(gScreenPos[0], -8, 8);
+                    change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
+                    break;
+                case 3:
+                    gScreenPos[1] += moveDir;
+                    CLAMP(gScreenPos[1], -8, 8);
+                    change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
+                    break;
+                case 4:
+                    if (gControllersXAxisDirection[playerId] != 0) {
+                        gAntiAliasing ^= 1;
+                    }
+                    break;
+                }
+            }
             if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
-                play_sound_global(SOUND_SELECT2, NULL);
-                if (gMenuSubOption == 1) {
-                    gMenuDelay = 1;
-                } else {
-                    gMenuSubOption = 0;
+                if (gPauseSubmenu == 0) {
+                    play_sound_global(SOUND_SELECT2, NULL);
+                    if (gMenuSubOption == 1) {
+                        gMenuDelay = 1;
+                    } else {
+                        gMenuSubOption = 0;
+                    }
                 }
             } else if (buttonsPressed & B_BUTTON) {
                 play_sound_global(SOUND_SELECT2, NULL);
                 gMenuSubOption = 0;
+                gPauseSubmenu = 0;
             } else {
                 temp = gMenuSubOption;
                 playerId = D_800E098C;
                 if (gControllersYAxisDirection[playerId] != 0) {
-                    gMenuSubOption = 3 - gMenuSubOption;
+                    if (gPauseSubmenu == 0) {
+                        gMenuSubOption = 3 - gMenuSubOption;
+                    } else {
+                        if (gControllersYAxisDirection[playerId] < 0) {
+                            gMenuSubOption++;
+                            if (gMenuSubOption > (s32) (sizeof(gPauseConfigOpt) / 32)) {
+                                gMenuSubOption = 1;
+                            }
+                        } else {
+                            gMenuSubOption--;
+                            if (gMenuSubOption == 0) {
+                                gMenuSubOption = (sizeof(gPauseConfigOpt) / 32);
+                            }
+                        }
+                    }
                 }
                 if (temp != gMenuSubOption) {
                     play_sound_global(SOUND_MENU_PICK2, NULL);
@@ -6919,6 +7033,10 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
             if ((gMenuOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_QUITGAME]) ||
                     ((gTrophyRaceWorldId != 0) && (gMenuOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_QUITTROPHYRACE]))) {
                 gMenuSubOption = 2;
+                gPauseSubmenu = 0;
+            } else if (gMenuOptionText[gMenuOption] == gPauseOptionText) {
+                gMenuSubOption = 1;
+                gPauseSubmenu = 1;
             } else {
                 gMenuDelay = 1;
             }
@@ -9500,9 +9618,9 @@ void render_benchmark_results_screen() {
     set_text_colour(200, 200, 60, 80, 255);
     // sprintf seems to only work with a single variable at a time.
     get_avg_and_min_fps(&avgFps, &minFps);
-    sprintf(outBuf, "Avg FPS: %d", &avgFps);
+    sprintf(outBuf, "Avg FPS: %d", (s32) &avgFps);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
-    sprintf(outBuf, "Min FPS: %d", &minFps);
+    sprintf(outBuf, "Min FPS: %d", (s32) &minFps);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
 
 

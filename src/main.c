@@ -188,6 +188,25 @@ void thread3_verify_stack(void) {
     }
 }
 
+s32 _Printf(outfun prout, char *dst, const char *fmt, va_list args);
+
+static char *proutSprintf(char *dst, const char *src, size_t count)
+{
+    return (char *)memcpy((u8 *)dst, (u8 *)src, count) + count;
+}
+
+int puppyprintf(char *dst, const char *fmt, ...)
+{
+    s32 ans;
+    va_list ap;
+    va_start(ap, fmt);
+    ans = _Printf(proutSprintf, dst, fmt, ap);
+    if (ans >= 0)
+    {
+        dst[ans] = 0;
+    }
+    return ans; 
+}
 
 #ifdef PUPPYPRINT_DEBUG
 extern Gfx *gCurrDisplayList;
@@ -279,26 +298,6 @@ void profiler_add_obj(u32 objID, u32 time) {
     }
     gPuppyTimers.objTimers[objID][PERF_AGGREGATE] += time;
     gPuppyTimers.objTimers[objID][perfIteration] += time;
-}
-
-s32 _Printf(outfun prout, char *dst, const char *fmt, va_list args);
-
-static char *proutSprintf(char *dst, const char *src, size_t count)
-{
-    return (char *)memcpy((u8 *)dst, (u8 *)src, count) + count;
-}
-
-int puppyprintf(char *dst, const char *fmt, ...)
-{
-    s32 ans;
-    va_list ap;
-    va_start(ap, fmt);
-    ans = _Printf(proutSprintf, dst, fmt, ap);
-    if (ans >= 0)
-    {
-        dst[ans] = 0;
-    }
-    return ans; 
 }
 
     #define TEXT_OFFSET 10

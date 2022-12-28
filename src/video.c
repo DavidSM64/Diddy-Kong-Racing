@@ -4,6 +4,7 @@
 #include "video.h"
 #include "viint.h"
 #include "camera.h"
+#include "game.h"
 
 /************ .data ************/
 
@@ -97,6 +98,7 @@ s32 get_video_width_and_height_as_s32(void) {
 }
 
 OSViMode gGlobalVI;
+u8 gLastScreenMode = 0;
 
 void change_vi(OSViMode *mode, int width, int height) {
     s32 addPAL = 0;
@@ -118,12 +120,15 @@ void change_vi(OSViMode *mode, int width, int height) {
         mode->fldRegs[0].origin = width*2;
         mode->fldRegs[1].origin = width*4;
 
-        mode->comRegs.hStart = (428-304) << 16 | (428+304);
-        mode->fldRegs[0].vStart = (277-height) << 16 | (271+height);
-        mode->fldRegs[1].vStart = (277-height) << 16 | (271+height);
+        mode->comRegs.hStart = (428-304 + (gScreenPos[0] * 2)) << 16 | (428+304 + (gScreenPos[0] * 2));
+        mode->fldRegs[0].vStart = (277-height + (gScreenPos[1] * 2)) << 16 | (271+height + (gScreenPos[1] * 2));
+        mode->fldRegs[1].vStart = (277-height + (gScreenPos[1] * 2)) << 16 | (271+height + (gScreenPos[1] * 2));
     }
-    gVideoAspectRatio = (f32) width / (f32) height;
-    func_80065EA0();
+    if (gLastScreenMode != gScreenMode) {
+        gVideoAspectRatio = (f32) width / (f32) height;
+        gLastScreenMode = gScreenMode;
+    }
+    reset_perspective_matrix();
 }
 
 /**
@@ -159,13 +164,13 @@ void init_framebuffer(s32 index) {
         width = SCREEN_WIDTH;
     }
     if (gExpansionPak) {
-        gVideoFramebuffers[index] = (u16 *) 0x80500000 + (((SCREEN_WIDTH * SCREEN_HEIGHT * 2) + 0x30) * index);
+        gVideoFramebuffers[index] = (u16 *) 0x80500000 + (((width * SCREEN_HEIGHT * 2) + 0x30) * index);
     } else {
-        gVideoFramebuffers[index] = allocate_from_main_pool_safe((SCREEN_WIDTH * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+        gVideoFramebuffers[index] = allocate_from_main_pool_safe((width * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
     }
     gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
     if (gVideoDepthBuffer == NULL) {
-        gVideoDepthBuffer = allocate_from_main_pool_safe((SCREEN_WIDTH * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+        gVideoDepthBuffer = allocate_from_main_pool_safe((width * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
         gVideoDepthBuffer = (u16 *)(((s32)gVideoDepthBuffer + 0x3F) & ~0x3F);
     }
 }

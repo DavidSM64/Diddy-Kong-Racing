@@ -897,6 +897,8 @@ void thread3_main(UNUSED void *unused) {
 }
 
 s32 gAntiAliasing = TRUE;
+u8 gScreenMode = 0;
+s8 gScreenPos[2] = {0, 0};
 
 /**
  * Setup all of the necessary pieces required for the game to function.
@@ -989,19 +991,6 @@ void main_game_loop(void) {
     }
     profiler_reset_values();
 #endif
-
-    /*if (get_buttons_pressed_from_player(0) & R_JPAD) {
-        if (gScreenWidth == 304) {
-            gScreenWidth = 360;
-            change_vi(&gGlobalVI, 360, 224);
-        } else if (gScreenWidth == 360) {
-            gScreenWidth = 408;
-            change_vi(&gGlobalVI, 408, 224);
-        } else {
-            gScreenWidth = 304;
-            change_vi(&gGlobalVI, 304, 224);
-        }
-    }*/
 
     if (gScreenStatus == MESG_SKIP_BUFFER_SWAP) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];

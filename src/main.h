@@ -141,6 +141,7 @@ extern u8 sPrevLoadTimer;
 extern u8 gProfilerOn;
 extern u32 gFreeMem;
 #endif
+int puppyprintf(char *dst, const char *fmt, ...);
 void crash_screen_init(void);
 extern s32 gAntiAliasing;
 
