@@ -2369,14 +2369,14 @@ s32 menu_logo_screen_loop(s32 updateRate) {
         menu_init(MENU_TITLE);
     }
 // This uses doubles instead of floats for precision in the counting.
-    if (sBootScreenTimer < 8.5) {
+    if (sBootScreenTimer < 8.5f) {
         set_text_font(ASSET_FONTS_SMALLFONT);
         set_text_background_colour(0, 0, 0, 0);
-        if ((sBootScreenTimer < 8.0) && (sBootScreenTimer >= 7.5)) {
-            opacity = (8.0 - sBootScreenTimer) * 510.0;
+        if ((sBootScreenTimer < 8.0f) && (sBootScreenTimer >= 7.5f)) {
+            opacity = (8.0 - sBootScreenTimer) * 510.0f;
         } else {
-            if ((sBootScreenTimer < 7.5) && (sBootScreenTimer >= 7.0)) {
-                opacity = (sBootScreenTimer - 7.0) * 510.0;
+            if ((sBootScreenTimer < 7.5f) && (sBootScreenTimer >= 7.0f)) {
+                opacity = (sBootScreenTimer - 7.0f) * 510.0f;
             } else {
                 opacity = 0;
             }
@@ -2389,8 +2389,8 @@ s32 menu_logo_screen_loop(s32 updateRate) {
             draw_text(&sMenuCurrDisplayList, POS_CENTRED, yOffset + 213, gRareCopyrightString, ALIGN_MIDDLE_CENTER);
         }
         yOffsetShadow = yOffset + 212;
-        if (sBootScreenTimer > 8.0) {
-            opacity = (8.5 - sBootScreenTimer) * 510.0;
+        if (sBootScreenTimer > 8.0f) {
+            opacity = (8.5 - sBootScreenTimer) * 510.0f;
         } else {
             opacity = 0xFF;
         }

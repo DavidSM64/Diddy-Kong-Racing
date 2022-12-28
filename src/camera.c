@@ -1329,9 +1329,9 @@ void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
         temp_f0 = arg0 - gActiveCameraStack[i].trans.x_position;
         temp_f2 = arg1 - gActiveCameraStack[i].trans.y_position;
         temp_f14 = arg2 - gActiveCameraStack[i].trans.z_position;
-        temp_f0_2 = sqrtf(((temp_f0 * temp_f0) + (temp_f2 * temp_f2)) + (temp_f14 * temp_f14));
-        if (temp_f0_2 < arg3) {
-            gActiveCameraStack[i].unk30 = ((arg3 - temp_f0_2) * arg4) / arg3;
+        temp_f0_2 = (((temp_f0 * temp_f0) + (temp_f2 * temp_f2)) + (temp_f14 * temp_f14));
+        if (temp_f0_2 < arg3 * arg3) {
+            gActiveCameraStack[i].unk30 = (((arg3 * arg3) - temp_f0_2) * arg4) / arg3;
         }
     }
 }

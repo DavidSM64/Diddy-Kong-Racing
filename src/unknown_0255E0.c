@@ -1241,7 +1241,7 @@ s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb) {
     y = (bb->y2 + bb->y1) >> 1;
     z = (bb->z2 + bb->z1) >> 1;
     gCurrBBoxDistanceToCamera = get_distance_to_active_camera(x, y, z);
-    if (gCurrBBoxDistanceToCamera < 1000.0) {
+    if (gCurrBBoxDistanceToCamera < 1000.0f) {
         gIsNearCurrBBox = TRUE;
     } else {
         gIsNearCurrBBox = FALSE;
@@ -1273,7 +1273,7 @@ s32 check_if_in_draw_range(Object *obj) {
         viewDistance = obj->segment.header->drawDistance;
         if (obj->segment.header->drawDistance) {
             if (D_8011D37C == 3) {
-                viewDistance *= 0.5;
+                viewDistance *= 0.5f;
             }
 
             dist = get_distance_to_active_camera(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
@@ -1282,12 +1282,12 @@ s32 check_if_in_draw_range(Object *obj) {
                 return FALSE;
             }
             
-            fadeDist = viewDistance * 0.8;
+            fadeDist = viewDistance * 0.8f;
             if (fadeDist < dist) {
                 temp2 = viewDistance - fadeDist;
                 if (temp2 > 0) {
                     fadeDist = dist - fadeDist;
-                    alpha = ((f64) (f32) (1.0f - (f64) ((fadeDist) / temp2)) * 255.0f);
+                    alpha = ((1.0f - ((fadeDist) / temp2)) * 255.0f);
                 }
                 if (alpha == 0) {
                     alpha = 1;

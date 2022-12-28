@@ -825,7 +825,7 @@ void render_race_start(s32 arg0, s32 updateRate) {
                 racer = (Object_Racer*)randomRacer->unk64;
                 if (racer->unk1D6 == 0) {
                     if (get_random_number_from_range(0, 100) >= 96) {
-                        sp4C = 1.25 - ((get_random_number_from_range(0, 7) * 0.5) / 7.0);
+                        sp4C = 1.25 - ((get_random_number_from_range(0, 7) * 0.5f) / 7.0f);
                         func_800095E8(76, randomRacer->segment.trans.x_position, randomRacer->segment.trans.y_position, randomRacer->segment.trans.z_position, 4, ((get_random_number_from_range(0, 7) * 63) / 7) + 24, sp4C * 100.0f, &D_80126D3C);
                     }
                 }
@@ -1379,7 +1379,7 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
         if (racerObj->racer.balloon_quantity > 0) {
             if (D_80126CDC->unk5B < 16 && racerObj->racer.unk170 == 0) {
                 D_80126CDC->unk44 = D_80126CDC->unk5B << 12;
-                D_80126CDC->unk48 = (D_80126CDC->unk5B * 0.04687) + 0.25;
+                D_80126CDC->unk48 = (D_80126CDC->unk5B * 0.04687) + 0.25f;
             } else {
                 D_80126CDC->unk44 = 0;
                 D_80126CDC->unk48 = 1.0f;
@@ -1392,13 +1392,13 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
                 if (D_80126CDC->unk5C > 120) {
                     D_80126CDC->unk5C = 120;
                 } else if (gHUDNumPlayers == ONE_PLAYER) {
-                    D_80126CDC->unk48 += 0.18 * sins_f(((f32) D_80126CDC->unk5C * 682.6583 * 4.0));
+                    D_80126CDC->unk48 += 0.18 * sins_f(((f32) D_80126CDC->unk5C * 682.6583 * 4.0f));
                 }
             }
             if (gHUDNumPlayers > ONE_PLAYER) {
-                D_80126CDC->unk48 *= 0.75;
+                D_80126CDC->unk48 *= 0.75f;
             }
-            if (D_80126CDC->unk48 != 1.0) {
+            if (D_80126CDC->unk48 != 1.0f) {
                 func_8007BF1C(TRUE);
             }
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk40);
@@ -1418,7 +1418,7 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
         } else {
             if (D_80126CDC->unk5B > 0) {
                 D_80126CDC->unk44 = D_80126CDC->unk5B << 12;
-                D_80126CDC->unk48 = (D_80126CDC->unk5B * 0.04687) + 0.25;
+                D_80126CDC->unk48 = (D_80126CDC->unk5B * 0.04687) + 0.25f;
                 D_80126CDC->unk5B -= updateRate;
                 D_80126CDC->unk58 = temp_a0;
                 if (D_80126CDC->unk5B < 0) {
@@ -1640,8 +1640,8 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     if (osTvType == TV_TYPE_PAL) {
                         D_80126CDC->unk64C -= 4.0f;
                         D_80126CDC->unk66C -= 4.0f;
-                        D_80126CDC->unk650 *= 1.1;
-                        D_80126CDC->unk670 *= 1.1;
+                        D_80126CDC->unk650 *= 1.1f;
+                        D_80126CDC->unk670 *= 1.1f;
                     }
                     func_800A19A4(tempVar4, updateRate);
                     D_800E2834 = -2;
@@ -1746,8 +1746,8 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 someRacer = (Object_Racer *) racerGroup[sp144]->unk64;
                 render_treasure_hud(someRacer);
                 if (osTvType == TV_TYPE_PAL) {
-                    D_80126CDC->unk650 += 66.0;
-                    D_80126CDC->unk410 += 66.0;
+                    D_80126CDC->unk650 += 66.0f;
+                    D_80126CDC->unk410 += 66.0f;
                 } else {
                     D_80126CDC->unk650 += 55.0f;
                     D_80126CDC->unk410 += 55.0f;
@@ -1776,8 +1776,8 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 if (osTvType == TV_TYPE_PAL) {
                     D_80126CDC->unk64C -= 4.0f;
                     D_80126CDC->unk40C -= 4.0f;
-                    D_80126CDC->unk650 *= 1.1;
-                    D_80126CDC->unk410 *= 1.1;
+                    D_80126CDC->unk650 *= 1.1f;
+                    D_80126CDC->unk410 *= 1.1f;
                     D_80126CDC->unk650 = (s32) D_80126CDC->unk650;
                     D_80126CDC->unk410 = (s32) D_80126CDC->unk410;
                 }
@@ -1847,7 +1847,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     break;
             }
             if (osTvType == TV_TYPE_PAL) {
-                D_80126D5C *= 1.2;
+                D_80126D5C *= 1.2f;
             }
             func_8007BF1C(FALSE);
             objTrans.trans.x_position = D_80126D58 + D_80126D24 + D_80126D28;

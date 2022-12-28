@@ -196,8 +196,8 @@ void func_80072578(s16 controllerIndex, s16 arg1, s16 arg2) {
         new_var = 1 << index;
         D_801241E6 |= new_var;
         D_801241E7 &= ~new_var;
-        D_801241B8[index].unk6 = ((arg1 * arg1) * 0.1);
-        D_801241B8[index].unk2 = ((arg1 * arg1) * 0.1);
+        D_801241B8[index].unk6 = ((arg1 * arg1) * 0.1f);
+        D_801241B8[index].unk2 = ((arg1 * arg1) * 0.1f);
         D_801241B8[index].unk4 = arg2;
     }
 }
@@ -272,12 +272,12 @@ void rumble_controllers(s32 arg0) {
                             temp->unk8 = -300;
                             osMotorStop(&pfs[i]);
                         } else {
-                            if (temp->unk2 > 490.0) {
+                            if (temp->unk2 > 490.0f) {
                                 if (!(D_801241E7 & controllerToCheck)) {
                                     pfsStatus |= osMotorStart(&pfs[i]);
                                     D_801241E7 |= controllerToCheck;
                                 }
-                            } else if (temp->unk2 < 3.6) {
+                            } else if (temp->unk2 < 3.6f) {
                                 if (D_801241E7 & controllerToCheck) {
                                     pfsStatus |= osMotorStop(&pfs[i]);
                                     D_801241E7 &= ~controllerToCheck;

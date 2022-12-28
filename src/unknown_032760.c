@@ -341,24 +341,24 @@ f32 func_80033A14(unk800DC950 *arg0) {
     out = arg0->unk28 / 65536.0f;
     switch (arg0->unk3) {
         case 1:
-            temp = 1.0f - (sqrtf(D_8011D4C0) * arg0->unk6C);
+            temp = 1.0f - ((D_8011D4C0) * (arg0->unk6C * arg0->unk6C));
             out *= temp;
             break;
         case 2:
-            temp = 1.0f - sqrtf(sqrtf(D_8011D4C0) * arg0->unk6C);
+            temp = 1.0f - sqrtf((D_8011D4C0) * (arg0->unk6C * arg0->unk6C));
             out *= temp;
             break;
         case 3:
-            temp = coss_f(sqrtf(D_8011D4C0) * arg0->unk6C * 16384.0f);
+            temp = coss_f((D_8011D4C0) * (arg0->unk6C * arg0->unk6C) * (16384.0f * 16384.0f));
             out *= temp;
             break;
         case 4:
-            temp = coss_f(sqrtf(D_8011D4C0) * arg0->unk6C * 16384.0f);
+            temp = coss_f((D_8011D4C0) * (arg0->unk6C * arg0->unk6C) * (16384.0f * 16384.0f));
             temp *= temp;
             out *= temp;
             break;
         case 5:
-            temp = 1.0f - (sqrtf(D_8011D4C0) * arg0->unk6C);
+            temp = 1.0f - ((D_8011D4C0) * (arg0->unk6C * arg0->unk6C));
             temp *= temp;
             out *= temp;
             break;

@@ -213,7 +213,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
     someObj = (Object *) obj->unk78;
     updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2;
+        updateRateF *= 1.2f;
     }
     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON_2 && obj->unk7C.word < 0) {
         obj->segment.trans.x_position = 0.0f;
@@ -222,31 +222,31 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         func_80011560();
         func_80011570(obj, someObj->segment.trans.x_position, someObj->segment.trans.y_position, someObj->segment.trans.z_position);
     } else {
-        var_f2 = (someObj->segment.trans.x_position - obj->segment.trans.x_position) * 0.1;
-        if (var_f2 > 10.0) {
+        var_f2 = (someObj->segment.trans.x_position - obj->segment.trans.x_position) * 0.1f;
+        if (var_f2 > 10.0f) {
             var_f2 = 10.0f;
         }
-        if (var_f2 < -10.0) {
+        if (var_f2 < -10.0f) {
             var_f2 = -10.0f;
         }
         obj->segment.x_velocity += (var_f2 - obj->segment.x_velocity) * 0.125 * updateRateF;
-        var_f2 = (someObj->segment.trans.y_position - obj->segment.trans.y_position) * 0.1;
-        if (var_f2 > 10.0) {
+        var_f2 = (someObj->segment.trans.y_position - obj->segment.trans.y_position) * 0.1f;
+        if (var_f2 > 10.0f) {
             var_f2 = 10.0f;
         }
-        if (var_f2 < -10.0) {
+        if (var_f2 < -10.0f) {
             var_f2 = -10.0f;
         }
         obj->segment.y_velocity += (var_f2 - obj->segment.y_velocity) * 0.125 * updateRateF;
-        var_f2 = (someObj->segment.trans.z_position - obj->segment.trans.z_position) * 0.1;
-        if (var_f2 > 10.0) {
+        var_f2 = (someObj->segment.trans.z_position - obj->segment.trans.z_position) * 0.1f;
+        if (var_f2 > 10.0f) {
             var_f2 = 10.0f;
         }
-        if (var_f2 < -10.0) {
+        if (var_f2 < -10.0f) {
             var_f2 = -10.0f;
         }
         obj->segment.z_velocity += (var_f2 - obj->segment.z_velocity) * 0.125 * updateRateF;
-        if (sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity)) > 0.5) {
+        if (((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity)) > 0.5f * 0.5f) {
             obj->segment.trans.y_rotation = arctan2_f(obj->segment.x_velocity, obj->segment.z_velocity);
             obj->segment.trans.x_rotation -= updateRate * 0x200;
         }
@@ -439,7 +439,7 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
     sp4F = FALSE;
     updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2;
+        updateRateF *= 1.2f;
     }
     sp40 = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
     sp44 = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
@@ -608,7 +608,6 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
     if (tempObj != NULL) {
         diffX = obj->segment.trans.x_position - tempObj->segment.trans.x_position;
         diffZ = obj->segment.trans.z_position - tempObj->segment.trans.z_position;
-        dist = sqrtf((diffX * diffX) + (diffZ * diffZ)); // unused
         bossFlags = settings->bosses;
         bossFlags |= 0x800;
         worldBalloons = (settings->balloonsPtr[settings->worldId] >= 8);
@@ -693,7 +692,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
     egg = (Object_CollectEgg *) obj->unk64;
     updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2;
+        updateRateF *= 1.2f;
     }
     switch (egg->unkB) {
     case 0:
@@ -715,9 +714,9 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
         obj->segment.trans.x_position = sp40[0];
         obj->segment.trans.y_position = sp40[1];
         obj->segment.trans.z_position = sp40[2];
-        obj->segment.y_velocity -= 0.5;
-        obj->segment.x_velocity *= 0.98;
-        obj->segment.z_velocity *= 0.98;
+        obj->segment.y_velocity -= 0.5f;
+        obj->segment.x_velocity *= 0.98f;
+        obj->segment.z_velocity *= 0.98f;
         obj->segment.y_velocity *= 0.95;
         if (obj->segment.trans.y_position < -2000.0f || (sp34 != 0 && (sp33 < 5 || sp33 >= 10))) {
             if (egg->unk4 != NULL) {
@@ -884,7 +883,7 @@ void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 updateRate) {
                 xDiff = curRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 yDiff = curRacerObj->segment.trans.y_position - obj->segment.trans.y_position;
                 zDiff = curRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                if ((s32) sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < 100) {
+                if (((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < 100.0f * 100.0f) {
                     racer->unk1F5 = 1;
                     racer->unk14C = obj;
                 }
@@ -949,7 +948,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
                 xDiff = curRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 yDiff = curRacerObj->segment.trans.y_position - obj->segment.trans.y_position;
                 zDiff = curRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                if ((s32) sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < obj->unk78) {
+                if ((s32) ((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < obj->unk78 * obj->unk78) {
                     if (racer->playerIndex != PLAYER_COMPUTER) {
                         play_sound_spatial(SOUND_ZIP_PAD_BOOST, curRacerObj->segment.trans.x_position, curRacerObj->segment.trans.y_position, curRacerObj->segment.trans.z_position, NULL);
                     }
@@ -1082,11 +1081,11 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     tempPosY = obj->segment.trans.y_position;
     updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2;
+        updateRateF *= 1.2f;
     }
     tt = (Object_NPC *) obj->unk64;
     if (obj->segment.animFrame == 0) {
-        if (tt->unk4 > 1.0) {
+        if (tt->unk4 > 1.0f) {
             tt->unk4 = 0.0f;
         }
     }
@@ -1145,10 +1144,10 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     case TT_MODE_APPROACH_PLAYER:
         obj->segment.unk38.byte.unk3B = 0;
         tt->unkD = 255;
-        if (distance < 100.0) {
+        if (distance < 100.0f) {
             func_8005A3C0();
         }
-        if (distance > 10.0) {
+        if (distance > 10.0f) {
             angleDiff = (arctan2_f(diffX / distance, diffZ / distance) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
             if (angleDiff > 0x8000) {
                 angleDiff -= 0xFFFF;
@@ -1246,7 +1245,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             }
         } else {
             diffZ =  func_8001C6C4((Object_64 *) tt, obj, updateRateF, 1.0f, 0);
-            tt->unk4 += diffZ * 1.5;
+            tt->unk4 += diffZ * 1.5f;
         }
         break;
     }
@@ -1255,7 +1254,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
      if(index != 0) {
         index--;
         while(index >= 0) {
-            if ((sp48[index]->unk10 != 11) && (sp48[index]->unk10 != 14) && (sp48[index]->unk8 > 0.0)) {
+            if ((sp48[index]->unk10 != 11) && (sp48[index]->unk10 != 14) && (sp48[index]->unk8 > 0.0f)) {
                 obj->segment.trans.y_position = sp48[index]->unk0;
             }
             index--;
@@ -1768,7 +1767,7 @@ void obj_init_smoke(UNUSED Object *obj, UNUSED LevelObjectEntry_Smoke *entry) {
 void obj_loop_smoke(Object *obj, s32 updateRate) {
     f32 updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2;
+        updateRateF *= 1.2f;
     }
     obj->segment.trans.x_position += obj->segment.x_velocity * updateRateF;
     obj->segment.animFrame += updateRate * 16;
@@ -1799,10 +1798,10 @@ void obj_loop_wardensmoke(Object *obj, s32 updateRate) {
 
     updateRateF = (f32) updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2;
+        updateRateF *= 1.2f;
     }
     obj->segment.animFrame += updateRate * 4;
-    obj->segment.trans.y_position += updateRateF * 0.25;
+    obj->segment.trans.y_position += updateRateF * 0.25f;
     if (obj->segment.animFrame > 255) {
         gParticlePtrList_addObject(obj);
         obj->segment.animFrame = 255;
@@ -1932,7 +1931,7 @@ void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
                     xDiff = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                     yDiff = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
                     zDiff = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                    if ((sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < dist)) {
+                    if ((((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < dist * dist)) {
                         temp = (obj64->unk0 * racerObj->segment.trans.x_position) + (obj64->unk8 * racerObj->segment.trans.z_position) + obj64->unkC;
                         if (temp < 0.0f) {
                             racer->unk108 = obj;
@@ -2048,12 +2047,12 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     updateRateF2 = updateRate;
     updateRateF = updateRateF2;
     if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2;
+        updateRateF *= 1.2f;
     }
     taj = (Object_NPC *) obj->unk64;
     levelHeader = get_current_level_header();
     obj->unk74 = 0;
-    if (obj->segment.animFrame == 0 && taj->unk4 > 1.0) {
+    if (obj->segment.animFrame == 0 && taj->unk4 > 1.0f) {
         taj->unk4 = 0.0f;
     }
     distance = 0.0f;
@@ -2070,7 +2069,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     var_a2 = FALSE;
     if (
         (obj->action == NULL) &&
-        (distance < 300.0) &&
+        (distance < 300.0f) &&
         (
             ((obj->interactObj->unk14 & 8) && (racerObj == obj->interactObj->obj)) ||
             (buttonsPressed & Z_TRIG)
@@ -2161,10 +2160,10 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     case TAJ_MODE_APPROACH_PLAYER:
         obj->segment.unk38.byte.unk3B = 0;
         taj->unkD = 0xFF;
-        if (distance < 100.0) {
+        if (distance < 100.0f) {
             func_8005A3C0();
         }
-        if (distance > 10.0) {
+        if (distance > 10.0f) {
             arctan = (arctan2_f(xPosDiff / distance, zPosDiff / distance) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
             if (arctan > 0x8000) {
                 arctan -= 0xFFFF;
@@ -2192,7 +2191,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     case TAJ_MODE_TURN_TOWARDS_PLAYER:
         func_8005A3C0();
         obj->segment.unk38.byte.unk3B = 0;
-        taj->unk4 += updateRateF * 2.0;
+        taj->unk4 += updateRateF * 2.0f;
         arctan = (racerObj->segment.trans.y_rotation - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         if (arctan > 0x8000) {
             arctan -= 0xFFFF;
@@ -2204,7 +2203,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             arctan = 16;
         }
         obj->segment.trans.y_rotation += arctan >> 3;
-        if (arctan < 0x400 && arctan > -0x400 && distance < 2.0) {
+        if (arctan < 0x400 && arctan > -0x400 && distance < 2.0f) {
             obj->action = TAJ_MODE_GREET_PLAYER;
             taj->unk4 = 0;
             play_taj_voice_clip(D_8011D4E2, 1);
@@ -2218,9 +2217,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     case TAJ_MODE_GREET_PLAYER:
         obj->segment.unk38.byte.unk3B = 1;
         taj->unk14 = 0.0f;
-        taj->unk4 += updateRateF * 1.0;
-        if (taj->unk4 > 77.0) {
-            taj->unk4 = 77.0;
+        taj->unk4 += updateRateF * 1.0f;
+        if (taj->unk4 > 77.0f) {
+            taj->unk4 = 77.0f;
             taj->unk18 = -1.0f;
             obj->action = TAJ_MODE_DIALOGUE;
         }
@@ -2239,7 +2238,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         break;
     case TAJ_MODE_DIALOGUE:
         obj->segment.unk38.byte.unk3B = 4;
-        taj->unk4 += updateRateF * 1.0;
+        taj->unk4 += updateRateF * 1.0f;
         func_8005A3C0();
         if (var_a2_2 == 3 || var_a2_2 == 4) {
             obj->action = (var_a2_2 == 4) ? TAJ_MODE_END_DIALOGUE_UNUSED : TAJ_MODE_END_DIALOGUE;
@@ -2284,14 +2283,14 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     case TAJ_MODE_TRANSFORM_BEGIN:
         obj->segment.unk38.byte.unk3B = 5;
         func_8005A3C0();
-        taj->unk4 += updateRateF * 2.0;
-        if (taj->unk4 > 25.0) {
+        taj->unk4 += updateRateF * 2.0f;
+        if (taj->unk4 > 25.0f) {
             obj->unk74 = 11;
         }
-        if (taj->unk4 > 50.0) {
+        if (taj->unk4 > 50.0f) {
             obj->unk74 = 0;
         }
-        if (taj->unk4 > 60.0) {
+        if (taj->unk4 > 60.0f) {
             taj->unk4 = 60.0f;
             if (racer64->racer.transparency > (updateRate * 16)) {
                 racer64->racer.transparency -= (updateRate * 16);
@@ -2308,7 +2307,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         func_8005A3C0();
         if (racerObj != NULL) {
             if (taj->unk4 != 0.0f) {
-                taj->unk4 += 8.0;
+                taj->unk4 += 8.0f;
             }
             var_a2 = updateRate;
             if (var_a2 > 4) {
@@ -2319,7 +2318,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 racer64->racer.transparency += var_a2;
             } else {
                 racer64->racer.transparency = 255;
-                if (taj->unk4 == 0.0) {
+                if (taj->unk4 == 0.0f) {
                     if (D_8011D4E0 & 0x80) {
                         func_800C01D8(&D_800DC978);
                         sp6B = 1;
@@ -2336,7 +2335,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         break;
     case TAJ_MODE_END_DIALOGUE:
     case TAJ_MODE_END_DIALOGUE_UNUSED:
-        if (taj->unk4 != 0.0) {
+        if (taj->unk4 != 0.0f) {
             taj->unk4 = taj->unk4 + (0.5 * updateRateF);
         }
         if (taj->unk4 == 0) {
@@ -2358,7 +2357,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         obj->segment.unk38.byte.unk3B = 3;
         taj->unkD = 0xFF;
         taj->unk14 = 0.0f;
-        taj->unk4 +=  updateRateF * 2.0;
+        taj->unk4 +=  updateRateF * 2.0f;
         if (taj->unk4 > 79.0f) {
             taj->unk4 = 79.0f;
         }
@@ -2382,7 +2381,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         break;
     case TAJ_MODE_TELEPORT_TO_PLAYER_END:
         obj->segment.unk38.byte.unk3B = 3;
-        taj->unk4 -= updateRateF * 2.0;
+        taj->unk4 -= updateRateF * 2.0f;
         if (taj->unk4 < 0.0f) {
             taj->unk4 = 0.0f;
         }
@@ -2398,7 +2397,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         obj->segment.unk38.byte.unk3B = 3;
         taj->unkD = 0xFF;
         taj->unk14 = 0.0f;
-        taj->unk4 += updateRateF * 2.0;
+        taj->unk4 += updateRateF * 2.0f;
         if (taj->unk4 > 79.0f) {
             taj->unk4 = 79.0f;
         }
@@ -2429,7 +2428,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         obj->segment.unk38.byte.unk3B = 3;
         taj->unkD = 0xFF;
         taj->unk14 = 0.0f;
-        taj->unk4 += updateRateF * 2.0;
+        taj->unk4 += updateRateF * 2.0f;
         if (taj->unk4 > 79.0f) {
             taj->unk4 = 79.0f;
         }
@@ -2453,7 +2452,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         break;
     case TAJ_MODE_TELEPORT_AWAY_END:
         obj->segment.unk38.byte.unk3B = 3;
-        taj->unk4 -= updateRateF * 2.0;
+        taj->unk4 -= updateRateF * 2.0f;
         if (taj->unk4 < 0.0f) {
             taj->unk4 = 0.0f;
         }
@@ -2469,7 +2468,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         obj->interactObj->unk14 = 0;
         obj->segment.unk38.byte.unk3B = 6;
         obj->segment.unk38.byte.unk39 = 0xFF;
-        taj->unk4 += updateRateF * 1.0;
+        taj->unk4 += updateRateF * 1.0f;
         break;
     default:
         obj->segment.unk38.byte.unk3B = 0;
@@ -2511,7 +2510,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                     0.0f,
                     (updateRateF2 * zPosDiff) * 1.1
                 );
-                taj->unk4 += updateRate * 2.2;
+                taj->unk4 += updateRate * 2.2f;
             }
         }
         racerObjs = get_racer_objects(&numRacers);
@@ -2519,10 +2518,10 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             xPosDiff = racerObjs[PLAYER_ONE]->segment.trans.x_position - obj->segment.trans.x_position;
             distance = racerObjs[PLAYER_ONE]->segment.trans.y_position - obj->segment.trans.y_position;
             zPosDiff = racerObjs[PLAYER_ONE]->segment.trans.z_position - obj->segment.trans.z_position;
-            var_f2 = sqrtf((xPosDiff * xPosDiff) + (distance * distance) + (zPosDiff * zPosDiff));
-            if (var_f2 < 1000.0f) {
-                var_f2 = 1000.0f - var_f2;
-                sp3C = (127.0f * var_f2) / 1000.0f;
+            var_f2 = ((xPosDiff * xPosDiff) + (distance * distance) + (zPosDiff * zPosDiff));
+            if (var_f2 < 1000.0f * 1000.0f) {
+                var_f2 = (1000.0f * 1000.0f) - var_f2;
+                sp3C = (127.0f * var_f2) / (1000.0f * 1000.0f);
                 temp_v0_22 = func_80069D7C();
                 xPosDiff = obj->segment.trans.x_position - temp_v0_22->trans.x_position;
                 zPosDiff = obj->segment.trans.z_position - temp_v0_22->trans.z_position;
@@ -2597,7 +2596,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     if(var_a2 != 0) {
         var_a2--;
         while(var_a2 >= 0) {
-            if ((sp94[var_a2]->unk10 != 11) && (sp94[var_a2]->unk10 != 14) && (sp94[var_a2]->unk8 > 0.0)) {
+            if ((sp94[var_a2]->unk10 != 11) && (sp94[var_a2]->unk10 != 14) && (sp94[var_a2]->unk8 > 0.0f)) {
                 obj->segment.trans.y_position = sp94[var_a2]->unk0;
             }
             var_a2--;
@@ -2611,7 +2610,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     if (sp6B != 0) {
         func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0xC, 0, 1.0f, 0);
     }
-    obj->segment.animFrame = taj->unk4 * 1.0;
+    obj->segment.animFrame = taj->unk4 * 1.0f;
     func_80061C0C(obj);
     func_800AFC3C(obj, updateRate);
 }
@@ -2780,7 +2779,7 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
             if ((yDiff < halfDist) && (-halfDist < yDiff)) {
                 xDiff = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 zDiff = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                if ((sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < dist)) {
+                if ((((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < dist * dist)) {
                     f32 temp = (obj64->unk0 * racerObj->segment.trans.x_position) + (obj64->unk8 * racerObj->segment.trans.z_position) + obj64->unkC;
                     if (temp < 0.0f) {
                         if ((s32) racer->bananas < 10) {
@@ -2844,7 +2843,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
 
     updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2;
+        updateRateF *= 1.2f;
     }
     isPirated = FALSE;
     // AntiPiracy check. Seems to set a flag that prevents collecting balloons.
@@ -3141,8 +3140,8 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
                         diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                         diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
                         diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                        distance = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
-                        if (distance < radiusF) {
+                        distance = ((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
+                        if (distance < radiusF * radiusF) {
                             distance = (trigger->unk0 * racerObj->segment.trans.x_position) + (trigger->unk8 * racerObj->segment.trans.z_position) + trigger->unkC;
                             if (distance < 0.0f) {
                                 settings->courseFlagsPtr[settings->courseId] |= flags;
@@ -3203,7 +3202,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
     updateRateF = updateRate;
     
     if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2;
+        updateRateF *= 1.2f;
     }
     
     if (entry->unkB != 3) {
@@ -3408,7 +3407,7 @@ void obj_loop_treasuresucker(Object *obj, s32 updateRate) {
             if (newObj != NULL) {
                 newObj->segment.unk3C_a.level_entry = NULL;
                 newObj->segment.y_velocity = 10.0f;
-                scale = (newObj->segment.y_velocity * 2) / 0.5;
+                scale = (newObj->segment.y_velocity * 2) / 0.5f;
                 newObj->segment.x_velocity = (obj->segment.trans.x_position - racerObj->segment.trans.x_position) / scale;
                 newObj->segment.z_velocity = (obj->segment.trans.z_position - racerObj->segment.trans.z_position) / scale;
                 newObj->unk7C.word = (s32) racer;
@@ -3429,7 +3428,7 @@ void obj_loop_flycoin(Object *obj, s32 updateRate) {
 
     updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2;
+        updateRateF *= 1.2f;
     }
     obj->segment.y_velocity -= 0.5 * updateRateF;
     func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
@@ -3514,7 +3513,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
 
     updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2;
+        updateRateF *= 1.2f;
     }
     banana = (Object_Banana *) obj->unk64;
     obj->segment.animFrame += updateRate * 8;
@@ -3549,7 +3548,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             obj->segment.trans.y_position = tempPos[1];
             obj->segment.trans.z_position = tempPos[2];
             if (banana->unk9 != 2) {
-                obj->segment.y_velocity -= 1.0;
+                obj->segment.y_velocity -= 1.0f;
                 obj->segment.x_velocity *= 0.95;
                 obj->segment.z_velocity *= 0.95;
             } else {
@@ -3558,14 +3557,14 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
                 obj->segment.z_velocity = 0.0f;
             }
             velX = obj->segment.x_velocity;
-            if (velX < 0.0) {
+            if (velX < 0.0f) {
                 velX = -velX;
             }
             velZ = obj->segment.z_velocity;
-            if (velZ < 0.0) {
+            if (velZ < 0.0f) {
                 velZ = -velZ;
             }
-            if (sp48 > 0 && velX < 0.5 && velZ < 0.5) {
+            if (sp48 > 0 && velX < 0.5 && velZ < 0.5f) {
                 obj78->unk0 = 0;
             }
             sp58 = -10000.0f;
@@ -3830,7 +3829,7 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
     if (obj->segment.trans.scale < 0.001) {
         obj->segment.trans.scale = 0.001f;
     }
-    if (obj->segment.trans.scale < 0.1) {
+    if (obj->segment.trans.scale < 0.1f) {
         obj->segment.trans.unk6 |= 0x4000;
     } else {
         obj->segment.trans.unk6 &= 0xBFFF;
@@ -3999,7 +3998,7 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
     guMtxXFMF(mtxf, 0.0f, 0.0f, weapon->forwardVel, &obj->segment.x_velocity, &obj->segment.y_velocity, &obj->segment.z_velocity);
     updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2;
+        updateRateF *= 1.2f;
     }
     offsetX = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
     offsetY = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
@@ -4122,6 +4121,7 @@ void func_8003F0F8(Object *obj, struct Object_Weapon *weapon, u16 soundID) {
     f32 diffZ;
     f32 diffY;
     s32 var_s4;
+    f32 dist;
     s32 i;
 
     var_s4 = FALSE;
@@ -4132,8 +4132,9 @@ void func_8003F0F8(Object *obj, struct Object_Weapon *weapon, u16 soundID) {
             diffX = racer->segment.trans.x_position - obj->segment.trans.x_position;
             diffY = racer->segment.trans.y_position - obj->segment.trans.y_position;
             diffZ = racer->segment.trans.z_position - obj->segment.trans.z_position;
-            distance = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
-            if (distance <= func_80001CB8(soundID)) {
+            distance = ((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
+            dist = func_80001CB8(soundID);
+            if (distance <= dist * dist) {
                 var_s4 = TRUE;
             }
         }
@@ -4343,7 +4344,7 @@ void obj_loop_log(Object *obj, s32 updateRate) {
             obj->unk7C.word--;
         }
     }
-    obj->segment.trans.y_position -= (f64) (f32) obj->unk7C.word;
+    obj->segment.trans.y_position -= (f32) obj->unk7C.word;
     if (obj->unk78 > 0) {
         obj->unk78 -= updateRate;
         if (obj->unk78 < 0) {
@@ -4637,7 +4638,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
 
     updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2;
+        updateRateF *= 1.2f;
     }
     frog = (Object_Frog *) obj->unk64;
     switch (frog->unk14) {

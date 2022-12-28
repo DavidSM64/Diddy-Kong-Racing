@@ -1436,7 +1436,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         if (shieldType > SHIELD_LEVEL3 - 1) {
             shieldType = SHIELD_LEVEL3 - 1;
         }
-        scale = ((f32) shieldType * 0.1) + 1.0f;
+        scale = ((f32) shieldType * 0.1f) + 1.0f;
         D_800DC75C->segment.trans.scale *= scale;
         shear *= scale;
         gfxData = D_800DC75C->unk68[shieldType];
@@ -2075,9 +2075,9 @@ s32 func_8001C524(f32 xDiff, f32 yDiff, f32 zDiff, s32 someFlag) {
                 x = segment->trans.x_position - xDiff;
                 y = segment->trans.y_position - yDiff;
                 z = segment->trans.z_position - zDiff;
-                len = sqrtf((x * x) + (y * y) + (z * z));
-                if (len < dist) {
-                    dist = len;
+                len = ((x * x) + (y * y) + (z * z));
+                if (len < dist * dist) {
+                    dist = sqrtf(len);
                     result = numSteps;
                 }
             }
@@ -2392,7 +2392,7 @@ f32 cubic_spline_interpolation(f32 *data, s32 index, f32 x, f32 *derivative) {
     
     temp =  (-0.5 * data[index])    + ( 1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + ( 0.5 * data[index + 3]);
     temp2 = ( 1.0 * data[index])    + (-2.5 * data[index + 1]) + ( 2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
-    temp3 = (data[index + 2] * 0.5) + ( 0.0 * data[index + 1]) + (-0.5 * data[index])     + ( 0.0 * data[index + 3]);
+    temp3 = (data[index + 2] * 0.5f) + ( 0.0 * data[index + 1]) + (-0.5 * data[index])     + ( 0.0 * data[index + 3]);
     
     ret = (1.0 * data[index + 1]);
     *derivative = (((temp * 3 * x) + (2 * temp2)) * x) + temp3;
@@ -2451,7 +2451,7 @@ void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z) {
                 if (obj->unk3C->unkA > 0) {
                     if ((settings->tajFlags != 0) && (settings->tajFlags & (1 << (obj->unk3C->unkA + 2)))) {
                         obj->unkC = x;
-                        obj->unk10 = y + 10.0;
+                        obj->unk10 = y + 10.0f;
                         obj->unk14 = z;
                         obj->unk2E = arg0;
                         obj->unk78 = 0;
@@ -2489,9 +2489,9 @@ Object *func_8002342C(f32 x, f32 z) {
                 diffX = tempObj->segment.trans.x_position - x;
                 diffZ = tempObj->segment.trans.z_position - z;
                 tempObj = gObjPtrList[i]; // fakematch
-                distance = sqrtf((diffX * diffX) + (diffZ * diffZ));
-                if (bestDist < distance) {
-                    bestDist = distance;
+                distance = ((diffX * diffX) + (diffZ * diffZ));
+                if (bestDist < distance * distance) {
+                    bestDist = sqrtf(distance);
                     bestObj = tempObj;
                 }
             }
