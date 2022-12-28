@@ -1439,7 +1439,7 @@ void ingame_logic_loop(s32 updateRate) {
         }
     }
     init_rdp_and_framebuffer(&gCurrDisplayList);
-    //render_borders_for_multiplayer(&gCurrDisplayList);
+    render_borders_for_multiplayer(&gCurrDisplayList);
     render_minimap_and_misc_hud(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
     //render_second_multiplayer_borders(&gCurrDisplayList);
 #ifdef PUPPYPRINT_DEBUG
@@ -1767,7 +1767,7 @@ void func_8006DC58(s32 updateRate) {
         render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
         func_800C3440(updateRate);
         init_rdp_and_framebuffer(&gCurrDisplayList);
-        //render_borders_for_multiplayer(&gCurrDisplayList);
+        render_borders_for_multiplayer(&gCurrDisplayList);
         //render_second_multiplayer_borders(&gCurrDisplayList);
     }
 }
