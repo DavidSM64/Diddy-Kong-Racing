@@ -1198,12 +1198,10 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A31C.s")
  * There's a large unused portion at the bottom writing to two vars, that are never later read.
 */
 s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb) {
-    UNUSED u8 unknown[0x28];
     s64 sp48;
     s32 i, j;
     s32 isVisible;
     f32 dirX, dirY, dirZ, dirW;
-    f32 x, y, z;
     
     for (j = 0; j < 3; j++) {
         dirX = D_8011D0F8[j].unk0;

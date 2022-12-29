@@ -445,7 +445,7 @@ void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG) {
             } else if (D_800DE4D0.ptr != NULL) {
                 D_800DE4D0.function((Gfx *) dlist, mtx);
             } else {
-                gDPSetFillColor((*dlist)++, (GPACK_RGBA5551(0, 0, 0, 1) << 16) | GPACK_RGBA5551(0, 0, 0, 1));
+                gDPSetFillColor((*dlist)++, sBackgroundFillColour);
                 gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
             }
             /*if (copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2)) {
@@ -463,7 +463,7 @@ void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG) {
             } else if (D_800DE4D0.ptr != NULL) {
                 D_800DE4D0.function((Gfx *) dlist, mtx);
             } else {
-                gDPSetFillColor((*dlist)++, (GPACK_RGBA5551(0, 0, 0, 1) << 16) | GPACK_RGBA5551(0, 0, 0, 1));
+                gDPSetFillColor((*dlist)++, (GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1) << 16) | GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1));
                 gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
             }
         }
@@ -477,7 +477,6 @@ void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG) {
  * afterwards, calls the draw command that initialises all the rendermodes, ready for use.
  */
 void init_rdp_and_framebuffer(Gfx **dlist) {
-    s32 width = GET_VIDEO_WIDTH(get_video_width_and_height_as_s32());
     gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, gScreenWidth, SEGMENT_COLOUR_BUFFER);
     gDPSetDepthImage((*dlist)++, SEGMENT_DEPTH_BUFFER);
     gSPDisplayList((*dlist)++, dRdpInit);
