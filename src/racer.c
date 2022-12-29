@@ -870,7 +870,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     phi_f18 = (gCameraObject->unk1C * sp34) + (gCameraObject->unk20 * phi_f18);
     xVel = sins_f(-racer->unk196 + 0x8000) * gCameraObject->unk1C;
     zVel = coss_f(-racer->unk196 + 0x8000) * gCameraObject->unk1C;
-    yVel = (1.0 - (D_8011D586 / 10240.0f));
+    yVel = (1.0f - (D_8011D586 / 10240.0f));
     xVel -= racer->ox1 * 10.0f * yVel;
     zVel -= racer->oz1 * 10.0f * yVel;
     yVel = racer->lateral_velocity * 2;
@@ -920,7 +920,7 @@ f32 func_800494E0(Object *obj1, Object_Racer *racer, f32 *pos, s8 arg3, s32 upda
         if (velocity < 0.0f) {
             velocity = -velocity;
         }
-        velocity = 1.0 - (velocity * (1.0/6.0f));
+        velocity = 1.0f - (velocity * (1.0/6.0f));
         if (velocity < 0.0f) {
             velocity = 0.0f;
         }
@@ -2180,7 +2180,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     sp60 = FALSE;
     // If currently braking, do something idk
     if (racer->brake > 0.4f) {
-        if (racer->velocity < -2.0 && racer->raceFinished == FALSE) {
+        if (racer->velocity < -2.0f && racer->raceFinished == FALSE) {
             func_80072348(racer->playerIndex, 1);
         }
         sp60 = TRUE;
@@ -2203,7 +2203,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         gCurrentStickX += racer->unk1D1;
     }
     // If moving fast enough, enable drifting if the R button is held
-    if (racer->drifting == 0 && racer->velocity > 2.0 && gCurrentRacerInput & R_TRIG && (gCurrentStickX > 50 || gCurrentStickX < -50)) {
+    if (racer->drifting == 0 && racer->velocity > 2.0f && gCurrentRacerInput & R_TRIG && (gCurrentStickX > 50 || gCurrentStickX < -50)) {
         if (gCurrentStickX > 0) {
             racer->drifting = 1;
         } else {
@@ -2251,7 +2251,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         }
     }
     // Decide which way to drift when the R button is held
-    if (racer->drift_direction == 0 && gCurrentRacerInput & R_TRIG && racer->velocity < -3.0 && (gCurrentStickX > 15 || gCurrentStickX < -15)) {
+    if (racer->drift_direction == 0 && gCurrentRacerInput & R_TRIG && racer->velocity < -3.0f && (gCurrentStickX > 15 || gCurrentStickX < -15)) {
         if (gCurrentStickX < 0) {
             racer->drift_direction = -1;
         }
@@ -2396,7 +2396,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         surfaceTraction = 0.0f;
     }
     // no clue :) 
-    if (surfaceType == SURFACE_SAND && racer->velocity < -2.0 && racer->raceFinished == FALSE) {
+    if (surfaceType == SURFACE_SAND && racer->velocity < -2.0f && racer->raceFinished == FALSE) {
         func_80072348(racer->playerIndex, 0);
     }
     miscAsset = (f32 *) get_misc_asset(MISC_ASSET_UNK08);
@@ -2415,7 +2415,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             tempVel = 0.0f;
         }
         gCurrentCarSteerVel *= tempVel;
-        surfaceTraction = ((1.0 - tempVel) * 0.7f) + (surfaceTraction * tempVel);
+        surfaceTraction = ((1.0f - tempVel) * 0.7f) + (surfaceTraction * tempVel);
     }
     // Multiply current velocity by the surface grip levels.
     racer->lateral_velocity *= surfaceTraction;
@@ -2486,7 +2486,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         func_8000488C(racer->unk18);
     }
     // Apply a bobbing effect when on grass and sand.
-    if (racer->velocity < -2.0 && sp68 >= 4) {
+    if (racer->velocity < -2.0f && sp68 >= 4) {
         scale = (f32) (racer->unk1E7 & 1) * 0.5f;
         racer->carBobX -= racer->unkA0 * scale;
         racer->carBobY -= racer->unkA4 * scale;
@@ -2505,7 +2505,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     miscAsset = &gCurrentRacerMiscAssetPtr[velocityS];
     velocityDiff = tempVel - velocityS;
     // Calculate the velocity multiplier based on current velocity
-    surfaceTraction = (f32) ((miscAsset[1] * velocityDiff) + (miscAsset[0] * (1.0 - velocityDiff)));
+    surfaceTraction = (f32) ((miscAsset[1] * velocityDiff) + (miscAsset[0] * (1.0f - velocityDiff)));
     surfaceTraction = (surfaceTraction * 1.7f);
     surfaceTraction *= topSpeed;
     // Force the throttle wide open if boosting
@@ -2520,8 +2520,8 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     } else {
         racer->boostTimer = 0;
     }
-    if (racer->velocity > -2.0 && racer->velocity < 3.0 && (racer->playerIndex != PLAYER_COMPUTER || racer->unk214 != 0)) {
-        tempVel = (3.0 - racer->velocity) * 0.15;
+    if (racer->velocity > -2.0f && racer->velocity < 3.0f && (racer->playerIndex != PLAYER_COMPUTER || racer->unk214 != 0)) {
+        tempVel = (3.0f - racer->velocity) * 0.15f;
         if (soundID == 4) {
             tempVel *= 0.25f;
         }
@@ -2554,7 +2554,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     if (D_8011D586 != 0) {
         surfaceTraction = 0.0f;
     }
-    if (racer->brake < 0.9 && racer->unk1D7 < 5 && gRaceStartTimer == 0) {
+    if (racer->brake < 0.9f && racer->unk1D7 < 5 && gRaceStartTimer == 0) {
         if (racer->pitch < 0.0f) {
             velocityDiff = -racer->pitch;
             velocityDiff -= 0.3f;
@@ -3451,7 +3451,7 @@ void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
     }
     // If basically at a standstill, then allow reversing.
     if (racer->velocity > -2.0f && racer->velocity < 3.0f) {
-        f32 reverseVel = (3.0f - racer->velocity) * 0.15;
+        f32 reverseVel = (3.0f - racer->velocity) * 0.15f;
         if (gCurrentStickY < -25 && !(gCurrentRacerInput & A_BUTTON) && gCurrentRacerInput & B_BUTTON) {
             racer->brake = 0.0f;
             racer->velocity += reverseVel;
@@ -3946,7 +3946,7 @@ void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate) {
     diffZ /= vel;
     magnetTarget = racer->magnetTargetObj->unk64;
     vel = -magnetTarget->racer.velocity;
-    if (vel < 8.0 && racer->unk195 == 0) {
+    if (vel < 8.0f && racer->unk195 == 0) {
         vel = 8.0f;
     }
     if (vel > 20.0f) {
@@ -4725,7 +4725,7 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
         racer->checkpoint = 0;
         racer->courseCheckpoint = 0;
     }
-    splinePos = 1.0 - racer->checkpoint_distance;
+    splinePos = 1.0f - racer->checkpoint_distance;
     if (splinePos < -0.2f) {
         racer->checkpoint--;
         if (racer->checkpoint < 0) {

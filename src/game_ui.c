@@ -825,7 +825,7 @@ void render_race_start(s32 arg0, s32 updateRate) {
                 racer = (Object_Racer*)randomRacer->unk64;
                 if (racer->unk1D6 == 0) {
                     if (get_random_number_from_range(0, 100) >= 96) {
-                        sp4C = 1.25 - ((get_random_number_from_range(0, 7) * 0.5f) / 7.0f);
+                        sp4C = 1.25f - ((get_random_number_from_range(0, 7) * 0.5f) / 7.0f);
                         func_800095E8(76, randomRacer->segment.trans.x_position, randomRacer->segment.trans.y_position, randomRacer->segment.trans.z_position, 4, ((get_random_number_from_range(0, 7) * 63) / 7) + 24, sp4C * 100.0f, &D_80126D3C);
                     }
                 }

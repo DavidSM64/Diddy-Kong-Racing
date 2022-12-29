@@ -1600,7 +1600,7 @@ void func_8001709C(Object *obj) {
     sp78.y_position = -obj->segment.trans.y_position;
     sp78.z_position = -obj->segment.trans.z_position;
     object_transform_to_matrix_2((float (*)[4]) sp6C, (ObjectTransform* ) &sp78);
-    inverseScale = 1.0 / obj->segment.trans.scale;
+    inverseScale = 1.0f / obj->segment.trans.scale;
     i = 0;
     while (i < 16) {
         ((f32 *) sp2C)[i] = 0.0f;
@@ -1614,7 +1614,7 @@ void func_8001709C(Object *obj) {
     sp78.y_rotation = obj->segment.trans.y_rotation;
     sp78.x_rotation = obj->segment.trans.x_rotation;
     sp78.z_rotation = obj->segment.trans.z_rotation;
-    sp78.scale = 1.0 / inverseScale;
+    sp78.scale = 1.0f / inverseScale;
     sp78.x_position = obj->segment.trans.x_position;
     sp78.y_position = obj->segment.trans.y_position;
     sp78.z_position = obj->segment.trans.z_position;
@@ -2390,11 +2390,11 @@ f32 cubic_spline_interpolation(f32 *data, s32 index, f32 x, f32 *derivative) {
     f32 ret;
     f32 temp3, temp2, temp;
     
-    temp =  (-0.5 * data[index])    + ( 1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + ( 0.5 * data[index + 3]);
-    temp2 = ( 1.0 * data[index])    + (-2.5 * data[index + 1]) + ( 2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
-    temp3 = (data[index + 2] * 0.5f) + ( 0.0 * data[index + 1]) + (-0.5 * data[index])     + ( 0.0 * data[index + 3]);
+    temp =  (-0.5f * data[index])    + ( 1.5f * data[index + 1]) + (-1.5f * data[index + 2]) + ( 0.5f * data[index + 3]);
+    temp2 = ( 1.0f * data[index])    + (-2.5f * data[index + 1]) + ( 2.0f * data[index + 2]) + (-0.5f * data[index + 3]);
+    temp3 = (data[index + 2] * 0.5f) + ( 0.0f * data[index + 1]) + (-0.5f * data[index])     + ( 0.0f * data[index + 3]);
     
-    ret = (1.0 * data[index + 1]);
+    ret = (1.0f * data[index + 1]);
     *derivative = (((temp * 3 * x) + (2 * temp2)) * x) + temp3;
     ret = (((((temp * x) + temp2) * x) + temp3) * x) + ret;
     

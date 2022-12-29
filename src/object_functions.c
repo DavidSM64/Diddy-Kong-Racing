@@ -1112,7 +1112,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         }
     }
     index = get_buttons_pressed_from_player(PLAYER_ONE);
-    if (obj->action == TT_MODE_ROAM && distance < 300.0 && obj->unk7C.word == 0) {
+    if (obj->action == TT_MODE_ROAM && distance < 300.0f && obj->unk7C.word == 0) {
         if (angleDiff > -0x2000 && angleDiff < 0x2000) {
             if ((obj->interactObj->unk14 & 8 && racerObj == obj->interactObj->obj) || index & Z_TRIG) {
                 if (index & Z_TRIG) {
@@ -1178,7 +1178,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     case TT_MODE_TURN_TOWARDS_PLAYER:
         func_8005A3C0();
         obj->segment.unk38.byte.unk3B = 0;
-        tt->unk4 += 3.0 * updateRateF;
+        tt->unk4 += 3.0f * updateRateF;
         angleDiff = (racerObj->segment.trans.y_rotation - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         if (angleDiff > 0x8000) {
             angleDiff -= 0xFFFF;
@@ -1206,7 +1206,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         obj->segment.x_velocity = diffX * 0.05;
         obj->segment.z_velocity = diffZ * 0.05;
         obj->segment.unk38.byte.unk3B = 1;
-        tt->unk4 += 1.0 * updateRateF;
+        tt->unk4 += 1.0f * updateRateF;
         func_8005A3C0();
         if (index == 3) {
             obj->action = TT_MODE_DIALOGUE_END;
@@ -1224,7 +1224,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
         break;
     case TT_MODE_DIALOGUE_END:
-        tt->unk4 += 1.0 * updateRateF;
+        tt->unk4 += 1.0f * updateRateF;
         func_8005A3C0();
         if (obj->unk7C.word < 140) {
             obj->unk7C.word += 60;
@@ -1265,7 +1265,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     if (obj->action != TT_MODE_ROAM) {
         D_8011D4D0 = obj->segment.trans.y_position;
     }
-    obj->segment.animFrame = 1.0 * tt->unk4;
+    obj->segment.animFrame = 1.0f * tt->unk4;
     func_80061C0C(obj);
     if (0) { } // Fakematch
     if (obj->unk7C.word > 0) {
@@ -2336,7 +2336,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     case TAJ_MODE_END_DIALOGUE:
     case TAJ_MODE_END_DIALOGUE_UNUSED:
         if (taj->unk4 != 0.0f) {
-            taj->unk4 = taj->unk4 + (0.5 * updateRateF);
+            taj->unk4 = taj->unk4 + (0.5f * updateRateF);
         }
         if (taj->unk4 == 0) {
             sp6B = 1;
@@ -2520,8 +2520,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             zPosDiff = racerObjs[PLAYER_ONE]->segment.trans.z_position - obj->segment.trans.z_position;
             var_f2 = ((xPosDiff * xPosDiff) + (distance * distance) + (zPosDiff * zPosDiff));
             if (var_f2 < 1000.0f * 1000.0f) {
-                var_f2 = (1000.0f * 1000.0f) - var_f2;
-                sp3C = (127.0f * var_f2) / (1000.0f * 1000.0f);
+                var_f2 = sqrtf(var_f2);
+                var_f2 = (1000.0f) - var_f2;
+                sp3C = (127.0f * var_f2) / (1000.0f);
                 temp_v0_22 = func_80069D7C();
                 xPosDiff = obj->segment.trans.x_position - temp_v0_22->trans.x_position;
                 zPosDiff = obj->segment.trans.z_position - temp_v0_22->trans.z_position;
@@ -3207,7 +3208,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
     
     if (entry->unkB != 3) {
         if (obj->unk78 != 0) {
-            temp_f2 = (2.0 * (f32) entry->unkE);
+            temp_f2 = (2.0f * (f32) entry->unkE);
             if (temp_f2 > 0.0f) {
                 if (obj->segment.trans.y_position < (whaleRamp->unk0 + temp_f2)) {
                     obj->segment.trans.y_position += (updateRateF * 2);
@@ -3430,7 +3431,7 @@ void obj_loop_flycoin(Object *obj, s32 updateRate) {
     if (osTvType == TV_TYPE_PAL) {
         updateRateF *= 1.2f;
     }
-    obj->segment.y_velocity -= 0.5 * updateRateF;
+    obj->segment.y_velocity -= 0.5f * updateRateF;
     func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
     obj->unk78 -= updateRate;
     if (obj->unk78 <= 0) {
@@ -3564,7 +3565,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             if (velZ < 0.0f) {
                 velZ = -velZ;
             }
-            if (sp48 > 0 && velX < 0.5 && velZ < 0.5f) {
+            if (sp48 > 0 && velX < 0.5f && velZ < 0.5f) {
                 obj78->unk0 = 0;
             }
             sp58 = -10000.0f;
@@ -3825,7 +3826,7 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
     s32 newvar;
 
     balloon = (Object_WeaponBalloon *) obj->unk64;
-    obj->segment.trans.scale = balloon->unk0 * (1.0 - (balloon->unk4 / 90.0f));
+    obj->segment.trans.scale = balloon->unk0 * (1.0f - (balloon->unk4 / 90.0f));
     if (obj->segment.trans.scale < 0.001) {
         obj->segment.trans.scale = 0.001f;
     }
@@ -4175,7 +4176,7 @@ void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 arg4, f32 scale, s32 a
         newObj->segment.x_velocity = 0.0f;
         newObj->segment.y_velocity = 0.0f;
         newObj->segment.z_velocity = 0.0f;
-        newObj->segment.trans.scale = newObj->segment.trans.scale * 3.5 * scale;
+        newObj->segment.trans.scale = newObj->segment.trans.scale * 3.5f * scale;
     }
     if (arg4 != 0) {
         func_80009558(arg4, x, y, z, 4, NULL);
@@ -4318,7 +4319,7 @@ void obj_loop_log(Object *obj, s32 updateRate) {
         racerObj = (Object *) obj->unk5C->unk100;
         if (racerObj->behaviorId == BHV_RACER) {
             racer = (Object_Racer *) racerObj->unk64;
-            if (racer->velocity < -4.0 && racer->raceFinished == FALSE) {
+            if (racer->velocity < -4.0f && racer->raceFinished == FALSE) {
                 func_80072348(racer->playerIndex, 18);
             }
         }
@@ -4841,8 +4842,8 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
         if (temp_s0->unk6 > 0) {
             levelName = get_level_name(temp_s0->unk4);
             textWidth = (get_text_width(levelName, 0, 0) + 24) >> 1;
-            x1 = SCREEN_WIDTH_HALF - textWidth;
-            x2 = textWidth + SCREEN_WIDTH_HALF;
+            x1 = (gScreenWidth / 2) - textWidth;
+            x2 = textWidth + (gScreenWidth / 2);
             if (osTvType == TV_TYPE_PAL) {
                 y1 = SCREEN_HEIGHT - 16;
                 y2 = SCREEN_HEIGHT - 16 + 24;
@@ -4852,7 +4853,7 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
             }
             assign_dialogue_box_id(4);
             set_current_dialogue_box_coords(4, x1, y1, x2, y2);
-            set_current_dialogue_background_colour(4, 128, 64, 128, (temp_s0->unk6 * SCREEN_WIDTH_HALF) >> 8);
+            set_current_dialogue_background_colour(4, 128, 64, 128, (temp_s0->unk6 * 160) >> 8);
             set_current_text_background_colour(4, 0, 0, 0, 0);
             set_dialogue_font(4, 0);
             set_current_text_colour(4, 255, 255, 255, 0, (temp_s0->unk6 * 255) >> 8);
