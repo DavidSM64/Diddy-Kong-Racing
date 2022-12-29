@@ -42,5 +42,8 @@
 #else
 #define CAUTIONSTATUS 0
 #endif
+#ifndef NON_MATCHING
+#define NON_MATCHING
+#endif
 
 #endif // CONFIG_H

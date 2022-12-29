@@ -99,12 +99,11 @@ s32 get_video_width_and_height_as_s32(void) {
 }
 
 OSViMode gGlobalVI;
-u8 gLastScreenMode = 0;
 
 void change_vi(OSViMode *mode, int width, int height) {
     s32 addPAL = 0;
     s32 addX = 16;
-    gGlobalVI = osViModeNtscLpn1;
+    gGlobalVI = osViModeNtscLan1;
 
     if (osTvType == TV_TYPE_PAL) {
         addPAL = PAL_HEIGHT_DIFFERENCE;
@@ -125,11 +124,8 @@ void change_vi(OSViMode *mode, int width, int height) {
         mode->fldRegs[0].vStart = (277-height + (gScreenPos[1] * 2)) << 16 | (271+height + (gScreenPos[1] * 2));
         mode->fldRegs[1].vStart = (277-height + (gScreenPos[1] * 2)) << 16 | (271+height + (gScreenPos[1] * 2));
     }
-    if (gLastScreenMode != gScreenMode) {
         gVideoAspectRatio = (f32) width / (f32) height;
-        gLastScreenMode = gScreenMode;
-    }
-    reset_perspective_matrix();
+        reset_perspective_matrix();
 }
 
 void set_dither_filter(void) {

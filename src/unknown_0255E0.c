@@ -268,7 +268,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
 #endif
 
 // Regalloc
-//#ifdef NON_MATCHING
+#ifdef NON_MATCHING
 extern u32 D_A0000200;
 /**
  * The root function for rendering the entire scene
@@ -442,7 +442,7 @@ void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, s8** tris, s32 updat
             func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             func_8002A31C();
             func_8006807C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
-            draw_gradient_background();
+            //draw_gradient_background();
             func_80067D3C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             
@@ -489,9 +489,9 @@ void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, s8** tris, s32 updat
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_VOID][perfIteration]);
 #endif
 }
-//#else
-//GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_scene.s")
-//#endif
+#else
+GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_scene.s")
+#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80025510.s")
 
