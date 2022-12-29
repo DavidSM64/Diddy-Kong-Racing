@@ -863,8 +863,8 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
         gCameraObject->unk1C = phi_f14;
         gCameraObject->unk20 = phi_f18;
     }
-    gCameraObject->unk1C += (phi_f14 - gCameraObject->unk1C) * 0.125;
-    gCameraObject->unk20 += (phi_f18 - gCameraObject->unk20) * 0.125;
+    gCameraObject->unk1C += (phi_f14 - gCameraObject->unk1C) * 0.125f;
+    gCameraObject->unk20 += (phi_f18 - gCameraObject->unk20) * 0.125f;
     sp34 = sins_f(gCameraObject->trans.x_rotation - sp24);
     phi_f18 = coss_f(gCameraObject->trans.x_rotation - sp24);
     phi_f18 = (gCameraObject->unk1C * sp34) + (gCameraObject->unk20 * phi_f18);
@@ -1088,7 +1088,7 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
             angle += 0xFFFF;
         }
         if (racer->camera_zoom < 0.4f){
-            racer->camera_zoom += 0.005;
+            racer->camera_zoom += 0.005f;
         } else {
             racer->camera_zoom = 0.4f;
         }
@@ -2533,9 +2533,9 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->brake = 0.0f;
         }
     }
-    tempVel = (racer->brake * surfaceTraction) * 0.32;
+    tempVel = (racer->brake * surfaceTraction) * 0.32f;
     racer->velocity -= surfaceTraction * racer->throttle;
-    if (racer->velocity > -0.04 && racer->velocity < 0.04) {
+    if (racer->velocity > -0.04f && racer->velocity < 0.04f) {
         racer->velocity = 0.0f;
     }
     if (racer->velocity < 0.0f) {
@@ -2570,7 +2570,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         }
         racer->velocity += surfaceTraction * (racer->pitch / (4.0f - velocityDiff)) * updateRateF;
     }
-    racer->forwardVel -= (racer->forwardVel + (racer->velocity * 0.05)) * 0.125;
+    racer->forwardVel -= (racer->forwardVel + (racer->velocity * 0.05f)) * 0.125f;
     racer->unk1E8 = racer->steerAngle;
     racer->unk110 = gCurrentCarSteerVel;
     if (racer->unk1E0 != 0) {
@@ -3101,7 +3101,7 @@ void handle_car_velocity_control(Object_Racer *racer) {
         }
     } else {
         //! @bug Will cause a negative brake value resulting in higher velocity
-        if (racer->brake > 0.05) {
+        if (racer->brake > 0.05f) {
             racer->brake -= 0.1f;
         }
     }
@@ -5459,7 +5459,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
                     racer->unkAC *= (sp8C / temp_f12);
                 } else {
                     var_s0 = -1;
-                    racer->unkAC += 0.01;
+                    racer->unkAC += 0.01f;
                 }
             }
         }

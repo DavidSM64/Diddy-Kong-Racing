@@ -229,7 +229,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         if (var_f2 < -10.0f) {
             var_f2 = -10.0f;
         }
-        obj->segment.x_velocity += (var_f2 - obj->segment.x_velocity) * 0.125 * updateRateF;
+        obj->segment.x_velocity += (var_f2 - obj->segment.x_velocity) * 0.125f * updateRateF;
         var_f2 = (someObj->segment.trans.y_position - obj->segment.trans.y_position) * 0.1f;
         if (var_f2 > 10.0f) {
             var_f2 = 10.0f;
@@ -237,7 +237,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         if (var_f2 < -10.0f) {
             var_f2 = -10.0f;
         }
-        obj->segment.y_velocity += (var_f2 - obj->segment.y_velocity) * 0.125 * updateRateF;
+        obj->segment.y_velocity += (var_f2 - obj->segment.y_velocity) * 0.125f * updateRateF;
         var_f2 = (someObj->segment.trans.z_position - obj->segment.trans.z_position) * 0.1f;
         if (var_f2 > 10.0f) {
             var_f2 = 10.0f;
@@ -245,7 +245,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         if (var_f2 < -10.0f) {
             var_f2 = -10.0f;
         }
-        obj->segment.z_velocity += (var_f2 - obj->segment.z_velocity) * 0.125 * updateRateF;
+        obj->segment.z_velocity += (var_f2 - obj->segment.z_velocity) * 0.125f * updateRateF;
         if (((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity)) > 0.5f * 0.5f) {
             obj->segment.trans.y_rotation = arctan2_f(obj->segment.x_velocity, obj->segment.z_velocity);
             obj->segment.trans.x_rotation -= updateRate * 0x200;
@@ -1166,7 +1166,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             if (angleDiff > 0x800 || angleDiff < -0x800) {
                 distance = -0.5f;
             }
-            tt->unk14 += (distance - tt->unk14) * 0.125;
+            tt->unk14 += (distance - tt->unk14) * 0.125f;
             obj->segment.x_velocity = sins_f(obj->segment.trans.y_rotation) * tt->unk14;
             obj->segment.z_velocity = coss_f(obj->segment.trans.y_rotation) * tt->unk14;
             tt->unk4 -= (tt->unk14 * 2 * updateRateF);
@@ -1193,8 +1193,8 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             }
         }
         obj->segment.trans.y_rotation += (angleDiff >> 4);
-        obj->segment.x_velocity = diffX * 0.05;
-        obj->segment.z_velocity = diffZ * 0.05;
+        obj->segment.x_velocity = diffX * 0.05f;
+        obj->segment.z_velocity = diffZ * 0.05f;
         if (angleDiff < 0x500) {
             if (angleDiff >= -0x4FF) {
                 obj->action = TT_MODE_DIALOGUE;
@@ -1204,8 +1204,8 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
         break;
     case TT_MODE_DIALOGUE:
-        obj->segment.x_velocity = diffX * 0.05;
-        obj->segment.z_velocity = diffZ * 0.05;
+        obj->segment.x_velocity = diffX * 0.05f;
+        obj->segment.z_velocity = diffZ * 0.05f;
         obj->segment.unk38.byte.unk3B = 1;
         tt->unk4 += 1.0f * updateRateF;
         func_8005A3C0();
@@ -2180,7 +2180,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             if (arctan > 0x800 || arctan < -0x800) {
                 var_f2 = -0.5f;
             }
-            taj->unk14 += (var_f2 - taj->unk14) * 0.125;
+            taj->unk14 += (var_f2 - taj->unk14) * 0.125f;
             obj->segment.x_velocity = sins_f(obj->segment.trans.y_rotation) * taj->unk14;
             obj->segment.z_velocity = coss_f(obj->segment.trans.y_rotation) * taj->unk14;
             taj->unk4 -= taj->unk14 * 2 * updateRateF;
@@ -2210,9 +2210,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             play_taj_voice_clip(D_8011D4E2, 1);
             D_8011D4E2 = SOUND_VOICE_TAJ_HELLO;
         }
-        obj->segment.x_velocity = xPosDiff * 0.125;
+        obj->segment.x_velocity = xPosDiff * 0.125f;
         obj->segment.y_velocity = 0;
-        obj->segment.z_velocity = zPosDiff * 0.125;
+        obj->segment.z_velocity = zPosDiff * 0.125f;
         func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
         break;
     case TAJ_MODE_GREET_PLAYER:
@@ -3828,7 +3828,7 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
 
     balloon = (Object_WeaponBalloon *) obj->unk64;
     obj->segment.trans.scale = balloon->unk0 * (1.0f - (balloon->unk4 / 90.0f));
-    if (obj->segment.trans.scale < 0.001) {
+    if (obj->segment.trans.scale < 0.001f) {
         obj->segment.trans.scale = 0.001f;
     }
     if (obj->segment.trans.scale < 0.1f) {

@@ -398,7 +398,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         if (D_80126D2C >= 0x8000) {
                             D_80126D2C -= 0x8000;
                             D_80126D30 = D_80126D30 / 2;
-                            if (D_80126D30 <= 0.125) {
+                            if (D_80126D30 <= 0.125f) {
                                 D_80126D34 = 1;
                                 D_80126D24 = 0;
                             }

@@ -69,7 +69,7 @@ f32 func_80007FA4(f32 arg0) {
     arg0 = (arg0 - 1.0f) / (1.0f + arg0);
     var_f14 = arg0;
     temp_f12 = arg0 * arg0;
-    for (var_v0 = 1; (var_f2 - temp_f0) > 0.001; var_v0 += 2) {
+    for (var_v0 = 1; (var_f2 - temp_f0) > 0.001f; var_v0 += 2) {
         temp_f0 = var_f2;
         var_f2 += var_f14 / var_v0;
         var_f14 *= temp_f12;
