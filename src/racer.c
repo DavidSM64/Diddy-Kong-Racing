@@ -1477,6 +1477,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     struct LevelObjectEntryCommon newObject;
 #ifdef PUPPYPRINT_DEBUG
     u32 first = osGetCount();
+    u32 first3 = gPuppyTimers.timers[PP_COLLISION];
 #endif
 
     gNumViewports = get_viewport_count() + 1;
@@ -1993,6 +1994,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     }
 #ifdef PUPPYPRINT_DEBUG
     profiler_add(gPuppyTimers.timers[PP_RACER], osGetCount() - first);
+    profiler_offset(gPuppyTimers.timers[PP_RACER], gPuppyTimers.timers[PP_COLLISION][perfIteration] - first3);
     profiler_offset(gPuppyTimers.timers[PP_RACER], gPuppyTimers.timers[PP_CAMERA][perfIteration]);
 #endif
 }
@@ -5034,6 +5036,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     f32 temp_fv1_2;
 #ifdef PUPPYPRINT_DEBUG
     u32 first = osGetCount();
+    u32 first3 = gPuppyTimers.timers[PP_COLLISION];
 #endif
 
     gCurrentPlayerIndex = -1;
@@ -5312,6 +5315,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     func_8004F77C(racer);
 #ifdef PUPPYPRINT_DEBUG
     profiler_add(gPuppyTimers.timers[PP_RACER], osGetCount() - first);
+    profiler_offset(gPuppyTimers.timers[PP_RACER], gPuppyTimers.timers[PP_COLLISION][perfIteration] - first3);
 #endif
 }
 

@@ -1,4 +1,4 @@
-glabel func_80031130
+glabel func_80031130_2
 /* 031D30 80031130 27BDFF90 */  addiu $sp, $sp, -0x70
 /* 031D34 80031134 3C080001 */  lui   $t0, (0x000186A0 >> 16) # lui $t0, 1
 /* 031D38 80031138 3C09FFFE */  lui   $t1, %hi(0xFFFDFFFB) # $t1, 0xfffe

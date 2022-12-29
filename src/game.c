@@ -1100,6 +1100,7 @@ void main_game_loop(void) {
             func_8006DCF8(sLogicUpdateRate);
 #ifdef PUPPYPRINT_DEBUG
             profiler_add(gPuppyTimers.timers[PP_MENU], osGetCount() - first2);
+            profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_COLLISION][perfIteration]);
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_OBJECTS][perfIteration]);
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_SCENE][perfIteration]);
             profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_LIGHT][perfIteration]);
@@ -1302,6 +1303,7 @@ void ingame_logic_loop(s32 updateRate) {
         func_80010994(updateRate);
 #ifdef PUPPYPRINT_DEBUG
     profiler_add(gPuppyTimers.timers[PP_OBJECTS], osGetCount() - first);
+    profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_COLLISION][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_RACER][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_WAVES][perfIteration] - first3);
 #endif
@@ -1761,6 +1763,7 @@ void func_8006DC58(s32 updateRate) {
         func_80010994(updateRate);
 #ifdef PUPPYPRINT_DEBUG
         profiler_add(gPuppyTimers.timers[PP_OBJECTS], osGetCount() - first);
+        profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_COLLISION][perfIteration]);
         profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_RACER][perfIteration]);
 #endif
         gParticlePtrList_flush();
