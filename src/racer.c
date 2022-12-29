@@ -4020,12 +4020,16 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
     f32 cap;
     s32 timer2;
     s32 timer3;
-
-    // If you want to change the baseline speed of vehicles, this is what you change.
-    speedMultiplier = 1.0f;
     // Set the player's top speed to 0 before the race starts, so you can't jump the start.
     if (gRaceStartTimer) {
         speedMultiplier = 0.0f;
+    } else {
+        // If you want to change the baseline speed of vehicles, this is what you change.
+        if (is_in_adventure_two()) {
+            speedMultiplier = 2.0f;
+        } else {
+            speedMultiplier = 1.0f;
+        }
     }
     timer3 = get_race_start_timer();
     if (gRaceStartTimer) {} // Fakematch

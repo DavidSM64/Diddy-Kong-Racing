@@ -2848,10 +2848,12 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
         updateRateF *= 1.2f;
     }
     isPirated = FALSE;
+#ifndef NO_ANTIPIRACY
     // AntiPiracy check. Seems to set a flag that prevents collecting balloons.
     if (IO_READ(0x284) != 0x240B17D7) {
         isPirated = TRUE;
     }
+#endif
     speedf = updateRateF;
     settings = get_settings();
     levelEntry = obj->segment.unk3C_a.level_entry;

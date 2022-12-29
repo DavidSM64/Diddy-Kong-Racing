@@ -169,11 +169,13 @@ void func_80065EA0(void) {
     D_80120D18 = 0;
     gAdjustViewportHeight = 0;
     gAntiPiracyViewport = 0;
+#ifndef NO_ANTIPIRACY
     while (IO_READ(PI_STATUS_REG) & PI_STATUS_ERROR) {
     }
     if ((D_B0000578 & 0xFFFF) != 0x8965) {
         gAntiPiracyViewport = TRUE;
     }
+#endif
     guPerspectiveF(D_80120EE0, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
     f32_matrix_to_s16_matrix(D_80120EE0, D_80120FE0);
     gCurCamFOV = CAMERA_DEFAULT_FOV;
@@ -940,11 +942,13 @@ void func_8006807C(Gfx **dlist, MatrixS **mtx) {
 
 void func_80068158(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY) {
     s32 tempWidth = (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) ? -width : width;
+#ifndef NO_ANTIPIRACY
     // Antipiracy measure. Flips the screen upside down.
     if (gAntiPiracyViewport) {
         height = -height;
         tempWidth = -width;
     }
+#endif
     if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_UNK_01)) {
         D_800DD148[gActiveCameraID].vp.vtrans[0] = posX * 4;
         D_800DD148[gActiveCameraID].vp.vtrans[1] = posY * 4;
