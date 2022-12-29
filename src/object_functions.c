@@ -2528,9 +2528,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 zPosDiff = coss_f(obj->segment.trans.y_rotation + 0x8000);
                 func_80011570(
                     obj,
-                    (updateRateF2 * xPosDiff) * 1.1,
+                    (updateRateF2 * xPosDiff) * 1.1f,
                     0.0f,
-                    (updateRateF2 * zPosDiff) * 1.1
+                    (updateRateF2 * zPosDiff) * 1.1f
                 );
                 taj->unk4 += updateRate * 2.2f;
             }
@@ -3824,7 +3824,7 @@ void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) 
     if (scalef < 10) {
         scalef = 10;
     }
-    scalef /= 64;
+    scalef /= 64.0f;
 
     obj64 = &obj->unk64->weapon_balloon;
 
@@ -4356,7 +4356,7 @@ void obj_loop_log(Object *obj, s32 updateRate) {
         temp2 = (temp2 * cosine) + (temp * sine);
         temp = (racerObj->segment.x_velocity * sine) - (racerObj->segment.z_velocity * cosine);
         temp2 *= temp;
-        obj->unk78 -= (s32) (temp2 / 4);
+        obj->unk78 -= (s32) (temp2 / 4.0f);
         
         if (obj->unk78 > 0x200) {
             obj->unk78 = 0x200;

@@ -1477,7 +1477,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     struct LevelObjectEntryCommon newObject;
 #ifdef PUPPYPRINT_DEBUG
     u32 first = osGetCount();
-    u32 first3 = gPuppyTimers.timers[PP_COLLISION];
+    u32 first3 = gPuppyTimers.timers[PP_COLLISION][perfIteration];
 #endif
 
     gNumViewports = get_viewport_count() + 1;
@@ -3482,7 +3482,7 @@ void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
         weight *= 0.5f;
     }
     if (racer->brake < 0.9f && gRaceStartTimer == 0) {
-        racer->velocity += weight * (racer->pitch / 4) * updateRateF;
+        racer->velocity += weight * (racer->pitch / 4.0f) * updateRateF;
     }
     obj->segment.y_velocity -= weight * updateRateF;
 }
@@ -5036,7 +5036,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     f32 temp_fv1_2;
 #ifdef PUPPYPRINT_DEBUG
     u32 first = osGetCount();
-    u32 first3 = gPuppyTimers.timers[PP_COLLISION];
+    u32 first3 = gPuppyTimers.timers[PP_COLLISION][perfIteration];
 #endif
 
     gCurrentPlayerIndex = -1;
