@@ -448,13 +448,13 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
                 racer->unk209 = (u16) (racer->unk209 & 0xFFFB);
             }
             if (gRaceStartTimer == 0) {
-                temp_f12 = sqrtf(((sp54->unk0 * 0.025) + 0.561) / 0.004);
-                temp_f0 = sqrtf(((sp54->unk4 * 0.025) + 0.561) / 0.004);
+                temp_f12 = sqrtf(((sp54->unk0 * 0.025f) + 0.561f) / 0.004f);
+                temp_f0 = sqrtf(((sp54->unk4 * 0.025f) + 0.561f) / 0.004f);
                 temp_f12 += ((temp_f0 - temp_f12) / 7.0f) * (7 - var_t5);
                 if (racer->unk1CA > 1) {
                     temp_f12 += (f32) (racer->unk1CA - 1) * 0.2f;
                 }
-                racer->unk124 = (((temp_f12 * temp_f12) * 0.004) - 0.595) / 0.025;
+                racer->unk124 = (((temp_f12 * temp_f12) * 0.004f) - 0.595f) / 0.025f;
             }
             if (sp5C != NULL && racer->unk1CA == 3 && sp94 < 500.0f) {
                 racer->unk1CA = 2;
@@ -920,7 +920,7 @@ f32 func_800494E0(Object *obj1, Object_Racer *racer, f32 *pos, s8 arg3, s32 upda
         if (velocity < 0.0f) {
             velocity = -velocity;
         }
-        velocity = 1.0f - (velocity * (1.0/6.0f));
+        velocity = 1.0f - (velocity * (1.0f/6.0f));
         if (velocity < 0.0f) {
             velocity = 0.0f;
         }
@@ -4786,8 +4786,9 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
         tempX = cubic_spline_interpolation(posX, splineIndex, splinePos, &diffX);
         tempY = cubic_spline_interpolation(posY, splineIndex, splinePos, &diffY);
         tempZ = cubic_spline_interpolation(posZ, splineIndex, splinePos, &diffZ);
-        distance = sqrtf((diffX * diffX) + (diffZ * diffZ));
+        distance = ((diffX * diffX) + (diffZ * diffZ));
         if (distance != 0.0f) {
+            distance = sqrtf(distance);
             scale = 1.0f / distance;
             diffX *= scale;
             diffZ *= scale;
@@ -5371,7 +5372,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         if (racer->unk124 > sp94) {
             racer->unk124 = sp94;
         }
-        var_f12 = sqrtf(((racer->unk124 * 0.025) + 0.595) / 0.004);
+        var_f12 = sqrtf(((racer->unk124 * 0.025f) + 0.595f) / 0.004f);
         var_v1 = &sp100;
         if (racer->boostTimer != 0) {
             var_f12 *= 1.2f;
@@ -5452,8 +5453,9 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             temp_f28 -= racer->unk70;
             if (var_s0 == 0) {
                 var_s2 = 0;
-                temp_f12 = sqrtf((temp_f26 * temp_f26) + (temp_f24 * temp_f24) + (temp_f28 * temp_f28)) / updateRateF;
+                temp_f12 = ((temp_f26 * temp_f26) + (temp_f24 * temp_f24) + (temp_f28 * temp_f28)) / updateRateF;
                 if (temp_f12 != 0) {
+                    temp_f12 = sqrtf(temp_f12);
                     racer->unkAC *= (sp8C / temp_f12);
                 } else {
                     var_s0 = -1;
@@ -5467,8 +5469,9 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         var_f26 = racer->unk68 - obj->segment.trans.x_position;
         var_f28 = racer->unk70 - obj->segment.trans.z_position;
         temp_f24_3 = racer->unk6C - obj->segment.trans.y_position;
-        temp_f12_2 = sqrtf((var_f26 * var_f26) + (var_f28 * var_f28)) / updateRateF;
-        if (temp_f12_2 > 35.0f) {
+        temp_f12_2 = ((var_f26 * var_f26) + (var_f28 * var_f28)) / updateRateF;
+        if (temp_f12_2 > 35.0f * 35.0f) {
+            temp_f12_2 = sqrtf(temp_f12_2);
             temp_f0_4 = (35.0f / temp_f12_2);
             var_f26 *= temp_f0_4;
             var_f28 *= temp_f0_4;
@@ -5500,8 +5503,9 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         }
         racer->unk1BA = (((spC0 - spBC) * var_f22) + spBC);
         racer->unk1BC = (((spAC - spA8) * var_f22) + spA8);
-        temp_f0_5 = sqrtf((sp9C * sp9C) + (sp94 * sp94));
+        temp_f0_5 = ((sp9C * sp9C) + (sp94 * sp94));
         if (temp_f0_5 != 0) {
+            temp_f0_5 = sqrtf(temp_f0_5);
             sp9C /= temp_f0_5;
             sp94 /= temp_f0_5;
             sp98 /= temp_f0_5;

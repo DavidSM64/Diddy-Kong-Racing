@@ -367,8 +367,9 @@ void obj_loop_lasergun(Object *obj, s32 updateRate) {
                     diffX = obj->segment.trans.x_position - racerObj->segment.trans.x_position;
                     diffY = obj->segment.trans.y_position - racerObj->segment.trans.y_position;
                     diffZ = obj->segment.trans.z_position - racerObj->segment.trans.z_position;
-                    distance = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
-                    if (distance > 10.0f) {
+                    distance = ((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
+                    if (distance > 10.0f * 10.0f) {
+                        distance = sqrtf(distance);
                         diffX /= distance;
                         diffY /= distance;
                         diffZ /= distance;
@@ -2699,8 +2700,8 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
                 diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
                 diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                dist = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
-                if (dist < radiusF) {
+                dist = ((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
+                if (dist < radiusF * radiusF) {
                     dist = ((modeChange->unk0 * racerObj->segment.trans.x_position) + (modeChange->unk8 * racerObj->segment.trans.z_position) + modeChange->unkC);
                     if (dist < 0.0f) {
                         racer->unk1E0 = 0;

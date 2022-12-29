@@ -729,7 +729,7 @@ void func_800B03C0(Object *arg0, ObjectTransform *arg1, unk800B03C0_arg2 *arg2, 
     arg0->unk54_f32 = arg2->unk1C;
     arg0->unk58_f32 = arg3->unk58_f32;
     if (arg3->unk5C_s32 & 0x80000) {
-        arg0->unk58_f32 += (f32) get_random_number_from_range(-arg3->unk94_signed, arg3->unk94_signed) * 0.00001525878906; // 0.00001525878906 ~= 1.0/65536.0
+        arg0->unk58_f32 += (f32) get_random_number_from_range(-arg3->unk94_signed, arg3->unk94_signed) * 0.00001525878906f; // 0.00001525878906 ~= 1.0/65536.0
     }
     if (arg3->segment.trans_unk.unk0 & 1) {
         sp30.x = 0.0f;
@@ -737,7 +737,7 @@ void func_800B03C0(Object *arg0, ObjectTransform *arg1, unk800B03C0_arg2 *arg2, 
         sp30.z = -arg3->segment.trans_unk.y_position;
         sp3C = arg3->unk5C_s32;
         if (sp3C & 1) {
-            sp30.z += (f32) get_random_number_from_range(-arg3->unk60_s32, arg3->unk60_s32) * 0.00001525878906;
+            sp30.z += (f32) get_random_number_from_range(-arg3->unk60_s32, arg3->unk60_s32) * 0.00001525878906f;
         }
         if (sp3C & 6) {
             sp28.y_rotation = arg2->y_rotation;

@@ -2124,9 +2124,10 @@ GLOBAL_ASM("asm/non_matchings/objects/func_8001D2A0.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001D4B4.s")
 
 void set_and_normalize_D_8011AFE8(f32 x, f32 y, f32 z) {
-    f32 vecLength = sqrtf((x * x) + (y * y) + (z * z));
+    f32 vecLength = ((x * x) + (y * y) + (z * z));
     f32 normalizedLength;
     if (vecLength != 0.0f) {
+        vecLength = sqrtf(vecLength);
         normalizedLength = -8192.0f / vecLength;
         x *= normalizedLength;
         y *= normalizedLength;

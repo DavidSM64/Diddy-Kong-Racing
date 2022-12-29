@@ -1236,16 +1236,6 @@ s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb) {
             return FALSE;
         }
     }
-    // From here until the "return TRUE" goes completely unused, functionally.
-    x = (bb->x2 + bb->x1) >> 1;
-    y = (bb->y2 + bb->y1) >> 1;
-    z = (bb->z2 + bb->z1) >> 1;
-    gCurrBBoxDistanceToCamera = get_distance_to_active_camera(x, y, z);
-    if (gCurrBBoxDistanceToCamera < 1000.0f) {
-        gIsNearCurrBBox = TRUE;
-    } else {
-        gIsNearCurrBBox = FALSE;
-    }
     return TRUE;
 }
 
@@ -1260,7 +1250,7 @@ s32 check_if_in_draw_range(Object *obj) {
     f32 fadeDist;
     f32 z;
     f32 x;
-    s32 viewDistance;
+    f32 viewDistance;
     s32 alpha;
     s32 i;
     Object_64 *obj64;
@@ -1270,7 +1260,7 @@ s32 check_if_in_draw_range(Object *obj) {
 
     if (!(obj->segment.trans.unk6 & 0x8000)) {
         alpha = 255;
-        viewDistance = obj->segment.header->drawDistance;
+        viewDistance = obj->segment.header->drawDistance * obj->segment.header->drawDistance;
         if (obj->segment.header->drawDistance) {
             if (D_8011D37C == 3) {
                 viewDistance *= 0.5f;
@@ -1283,10 +1273,11 @@ s32 check_if_in_draw_range(Object *obj) {
             }
             
             fadeDist = viewDistance * 0.8f;
+            fadeDist *= fadeDist;
             if (fadeDist < dist) {
                 temp2 = viewDistance - fadeDist;
                 if (temp2 > 0) {
-                    fadeDist = dist - fadeDist;
+                    fadeDist = dist - (fadeDist);
                     alpha = ((1.0f - ((fadeDist) / temp2)) * 255.0f);
                 }
                 if (alpha == 0) {
@@ -1746,7 +1737,7 @@ void func_8002D670(Object *obj, Object_50 *arg1) {
             if (obj->segment.header->unk36 == 1) {
                 D_8011B0D0 = D_8011B0C8;
                 D_8011B0D0 += 2;
-                if (get_distance_to_active_camera(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position) > 768.0f) {
+                if (get_distance_to_active_camera(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position) > 768.0f * 768.0f) {
                     i = arg1->unkA;
                 }
             }
@@ -1787,6 +1778,7 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 arg2) {
     ObjectHeader *objHeader;
     f32 var_f20;
     s32 temp_v1_2;
+    s32 temp_v1_3;
     s32 numViewports;
     Object **objects;
     s32 var_a0;
@@ -1841,10 +1833,11 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 arg2) {
                         var_a0 = TRUE;
                     }
                 } else {
-                    temp_v1_2 = objHeader->unk4A;
+                    temp_v1_2 = objHeader->unk4A * objHeader->unk4A;
+                    temp_v1_3 = objHeader->unk4C * objHeader->unk4C;
                     if (var_f20 < temp_v1_2) {
-                        if (objHeader->unk4C < var_f20) {
-                            D_8011D0D4 = (temp_v1_2 - var_f20) / ( temp_v1_2 - objHeader->unk4C);
+                        if (temp_v1_3 < var_f20) {
+                            D_8011D0D4 = (temp_v1_2 - var_f20) / ( temp_v1_2 - temp_v1_3);
                         }
                         func_8002E234(obj, FALSE);
                         var_a0 = TRUE;
@@ -1875,9 +1868,11 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 arg2) {
                         func_8002E234(obj, TRUE);
                     }
                 } else {
-                    if (var_f20 < objHeader->unk4A) {
-                        if (objHeader->unk4C < var_f20) {
-                            D_8011D0D4 = (objHeader->unk4A - var_f20) / (objHeader->unk4A - objHeader->unk4C);
+                    temp_v1_2 = objHeader->unk4A * objHeader->unk4A;
+                    temp_v1_3 = objHeader->unk4C * objHeader->unk4C;
+                    if (var_f20 < temp_v1_2) {
+                        if (temp_v1_3 < var_f20) {
+                            D_8011D0D4 = (temp_v1_2 - var_f20) / (temp_v1_2 - temp_v1_3);
                         }
                         func_8002E234(obj, TRUE);
                     }

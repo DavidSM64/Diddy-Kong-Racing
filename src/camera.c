@@ -308,7 +308,7 @@ f32 get_distance_to_active_camera(f32 xPos, f32 yPos, f32 zPos) {
     dz = zPos - gActiveCameraStack[index].trans.z_position;
     dx = xPos - gActiveCameraStack[index].trans.x_position;
     dy = yPos - gActiveCameraStack[index].trans.y_position;
-    return sqrtf((dz * dz) + ((dx * dx) + (dy * dy)));
+    return ((dz * dz) + ((dx * dx) + (dy * dy)));
 }
 
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5) {
