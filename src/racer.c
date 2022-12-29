@@ -4997,7 +4997,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     LevelHeader *levelHeader;
     s32 temp_v0_10;
     f32 temp_f0;
-    CheckpointNode *temp_v0_9;
+    CheckpointNode *checkpoint;
     Object_Racer *tempRacer;
     f32 temp_fv1_2;
 
@@ -5084,7 +5084,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->throttleReleased = 1;
         }
         if (racer->unk1FE == 3) {
-            gCurrentRacerWeightStat *= ((f32)racer->unk1FF / 256);
+            gCurrentRacerWeightStat *= ((f32) racer->unk1FF / 256);
         }
         if (racer->unk1FE == 1) {
             gCurrentRacerWeightStat -= ((gCurrentRacerWeightStat * racer->unk1FF) / 128);
@@ -5101,8 +5101,8 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->unk88 -= racer->unk88 * 0.0625 * updateRateF;
         }
         gCurrentRacerHandlingStat = 1;
-        gCurrentRacerMiscAssetPtr = (f32 *)get_misc_asset(MISC_ASSET_UNK21);
-        D_8011D568 = (f32 *)get_misc_asset(obj->segment.header->unk5D);
+        gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(MISC_ASSET_UNK21);
+        D_8011D568 = (f32 *) get_misc_asset(obj->segment.header->unk5D);
         if ((obj->segment.y_velocity < 4.0) && ((racer->unk1E2 >= 3) || (racer->buoyancy != 0.0))) {
             racer->unk1F1 = 0;
         }
@@ -5149,23 +5149,23 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         if (var_t2 == -100) {
             func_8005C270(racer);
         }
-        temp_v0_9 = find_next_checkpoint_node(racer->checkpoint, racer->unk1C8);
-        if (temp_v0_9->unk36[racer->unk1CA] == 5) {
+        checkpoint = find_next_checkpoint_node(racer->checkpoint, racer->unk1C8);
+        if (checkpoint->unk36[racer->unk1CA] == 5) {
             racer->unk201 = 30;
             if (racer->unk1E5 != 0) {
                 racer->unk1C8 = 1;
             }
         }
-        if (temp_v0_9->unk36[racer->unk1CA] == 6) {
+        if (checkpoint->unk36[racer->unk1CA] == 6) {
             racer->lap = levelHeader->laps + 1;
         }
-        if (temp_v0_9->unk36[racer->unk1CA] == 4) {
+        if (checkpoint->unk36[racer->unk1CA] == 4) {
             if (racer->velocity < -4.0) {
                 racer->velocity *= 0.9;
             }
         }
         if (var_t2 == 0) {
-            if (temp_v0_9->unk36[racer->unk1CA] == 2) {
+            if (checkpoint->unk36[racer->unk1CA] == 2) {
                 racer->unk1C8 = 1;
             }
             temp_v0_10 = get_checkpoint_count();
