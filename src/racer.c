@@ -1607,7 +1607,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         set_object_stack_pos(tempRacer->playerIndex);
         gCameraObject = (ObjectCamera *) func_80069CFC();
-        tempRacer->unk1E7++;
+        tempRacer->unk1E7++; //!@delta
         gCurrentPlayerIndex = tempRacer->playerIndex;
         if ((tempRacer->raceFinished == TRUE) || (context == 1)) {
             tempRacer->unk1CA = 1;
@@ -5037,7 +5037,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         }
     }
     
-    racer->unk1E7++;
+    racer->unk1E7++; //!@delta
     
     if (func_8002341C() || func_80023568() || racer->vehicleID == VEHICLE_LOOPDELOOP || D_8011D544 > 120.0f || gRaceStartTimer != 0 || levelHeader->race_type & RACETYPE_CHALLENGE_BATTLE) {
         racer->unk201 = 30;

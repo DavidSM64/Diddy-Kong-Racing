@@ -2260,7 +2260,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 obj->action = TAJ_MODE_TRANSFORM_BEGIN;
                 taj->unk4 = 0;
                 // Voice clips: Abrakadabra, Alakazam, Alakazoom?
-                play_taj_voice_clip((racer64->racer.vehicleID + 0x235), 1);
+                play_taj_voice_clip((racer64->racer.vehicleID + SOUND_VOICE_TAJ_ABRAKADABRA), 1);
             } else {
                 set_menu_id_if_option_equal(0x62, 2);
             }
@@ -2272,7 +2272,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 obj->action = TAJ_MODE_TRANSFORM_BEGIN;
                 taj->unk4 = 0.0f;
                 // Voice clips: Abrakadabra, Alakazam, Alakazoom?
-                play_taj_voice_clip((racer64->racer.vehicleID + 0x235), 1);
+                play_taj_voice_clip((racer64->racer.vehicleID + SOUND_VOICE_TAJ_ABRAKADABRA), 1);
             } else {
                 obj->action = TAJ_MODE_SET_CHALLENGE;
                 func_800C01D8(&D_800DC978);

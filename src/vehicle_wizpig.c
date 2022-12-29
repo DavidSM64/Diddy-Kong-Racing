@@ -41,7 +41,7 @@ s8 D_8011D601;
 /**
  * Top level function for updating the wizpig vehicle from the first boss race against him.
 */
-void update_wizpig(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer, u32* input, u32* buttonsPressed, s32* startTimer) {
+void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
     s16 sp3E;
     s16 sp3C;
     s16 sp3A;
@@ -50,9 +50,9 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     f32 xDiff;
     f32 var_f12;
     s32 sp28;
-    Object* firstRacerObj;
-    ObjectModel* objModel;
-    Object_68* gfxData;
+    Object *firstRacerObj;
+    ObjectModel *objModel;
+    Object_68 *gfxData;
 
     set_boss_voice_clip_offset((u16* ) D_800DCE60);
     racer->unk1EC = 0;

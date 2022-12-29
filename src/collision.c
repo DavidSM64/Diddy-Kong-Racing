@@ -14,7 +14,7 @@
 GLOBAL_ASM("asm/collision/func_80031130.s")
 // Might be segment related.
 #ifdef NON_EQUIVALENT
-s32 func_800314DC(LevelModelSegmentBoundingBox* a0, s32 a1, s32 a2, s32 a3, s32 t5) {
+s32 func_800314DC(LevelModelSegmentBoundingBox *a0, s32 a1, s32 a2, s32 a3, s32 t5) {
     s32 v0 = 0;
     s32 v1;
     s32 t0, t1, t2, t3, t4;

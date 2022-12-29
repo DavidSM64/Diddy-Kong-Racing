@@ -63,7 +63,7 @@ void func_8005C2F0(Object *object, unk8005C2F0 *arg1) {
 /**
  * Top level function for updating the Tricky vehicle as seen in the Dino Domain boss.
 */
-void update_tricky(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer, u32* input, u32* buttonsPressed, s32* startTimer) {
+void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
     s16 sp56;
     s16 sp54;
     s16 sp52;
@@ -71,7 +71,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* r
     f32 zDiff;
     ObjectModel *objModel;
     s32 sp40;
-    Object_68* obj68;
+    Object_68 *obj68;
     s32 sp38;
     UNUSED s32 pad;
     Object* firstRacerObj;

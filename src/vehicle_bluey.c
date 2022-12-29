@@ -64,7 +64,7 @@ s8 D_8011D5D1;
 /**
  * Top level function for the Bluey vehicle, as seen in the Snowflake Mountain boss stage.
 */
-void update_bluey(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer, u32* input, u32* buttonsPressed, s32* startTimer) {
+void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
     s16 sp5E;
     s16 sp5C;
     s16 sp5A;
