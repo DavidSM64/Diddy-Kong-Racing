@@ -55,6 +55,9 @@ void init_main_memory_pool(void) {
     if (gExpansionPak) {
         ramEnd = 0x80800000;
     }
+#ifdef PUPPYPRINT_DEBUG
+    gFreeMem = ramEnd - (s32)(&gMainMemoryPool);
+#endif
     gNumberOfMemoryPools = -1;
     if (1) {
         // Create the main memory pool.
@@ -485,6 +488,7 @@ s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIs
         poolSlots[index].data = &poolSlots[slotIndex].data[size];
         poolSlots[index].size = poolSize;
         poolSlots[index].size -= size;
+        poolSlots[index].sizeUsed = size;
         poolSlots[index].flags = newSlotIsTaken;
         poolSize = poolSlots[slotIndex].nextIndex;
         nextIndex = poolSize;

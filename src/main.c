@@ -110,7 +110,6 @@ void find_expansion_pak(void) {
  * It kicks things off by initialising thread1, which serves as the top level
 */
 void main(void) {
-    gFreeMem = osGetMemSize();
     osInitialize();
     osCreateThread(&gThread1, 1, &thread1_main, 0, &gThread1StackPointer, OS_PRIORITY_IDLE);
     osStartThread(&gThread1);
