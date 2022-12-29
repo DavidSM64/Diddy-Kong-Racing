@@ -100,7 +100,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
         obj->segment.y_velocity += 7.5;
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, 0);
-        func_80069F28(12.0f);
+        set_camera_shake(12.0f);
         racer->velocity *= 0.3;
         racer->unkC = 0.0f;
     }

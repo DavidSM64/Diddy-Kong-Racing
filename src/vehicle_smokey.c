@@ -77,7 +77,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (racer->attackType != ATTACK_NONE && obj->segment.unk38.byte.unk3B != 5) {
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, 0);
-        func_80069F28(12.0f);
+        set_camera_shake(12.0f);
         obj->segment.unk38.byte.unk3B = 5;
         obj->segment.x_velocity *= 0.27;
         obj->segment.z_velocity *= 0.27;

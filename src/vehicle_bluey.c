@@ -122,7 +122,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* ra
             racer->unkC = 0.0f;
             func_8005CB04(1);
             play_sound_global(SOUND_EXPLOSION, NULL);
-            func_80069F28(12.0f);
+            set_camera_shake(12.0f);
             racer->attackType = 0;
             racer->velocity *= 0.3;
             obj->segment.y_velocity += 7.5;
