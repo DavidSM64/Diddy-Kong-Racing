@@ -3454,21 +3454,21 @@ void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
         f32 reverseVel = (3.0f - racer->velocity) * 0.15f;
         if (gCurrentStickY < -25 && !(gCurrentRacerInput & A_BUTTON) && gCurrentRacerInput & B_BUTTON) {
             racer->brake = 0.0f;
-            racer->velocity += reverseVel * updateRateF;
+            racer->velocity += reverseVel;
         }
     }
-	forwardVel = (vel * racer->brake) * 0.32;
-    racer->velocity -= (vel * racer->throttle) * updateRateF;
+	forwardVel = (vel * racer->brake) * 0.32f;
+    racer->velocity -= (vel * racer->throttle);
     if (racer->velocity > -0.04 && racer->velocity < 0.04) {
         racer->velocity = 0.0f;
     }
     if (racer->velocity < 0.0f) {
-        racer->velocity += forwardVel * updateRateF;
+        racer->velocity += forwardVel;
         if (racer->velocity > 0.0f) {
             racer->velocity = 0.0f;
         }
     } else {
-        racer->velocity -= forwardVel * updateRateF;
+        racer->velocity -= forwardVel;
         if (racer->velocity < 0.0f) {
             racer->velocity = 0.0f;
         }
