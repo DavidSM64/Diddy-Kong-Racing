@@ -74,7 +74,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     Object_68 *obj68;
     s32 sp38;
     UNUSED s32 pad;
-    Object* firstRacerObj;
+    Object *firstRacerObj;
 
     set_boss_voice_clip_offset(D_800DCDE0);
     *buttonsPressed &= ~R_TRIG;
