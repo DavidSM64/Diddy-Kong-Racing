@@ -4506,41 +4506,41 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_butterfly.s")
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_midifade.s")
 
 void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry) {
-  Object_MidiFadePoint *obj64;
-  ObjectModel **models;
-  ObjectModel *objModel;
-  Vertex *vertex;
-  s32 i;
-  f32 x;
-  f32 y;
-  f32 z;
-  f32 dist;
+    Object_MidiFadePoint *obj64;
+    ObjectModel **models;
+    ObjectModel *objModel;
+    Vertex *vertex;
+    s32 i;
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 dist;
 
-  obj64 = &obj->unk64->midi_fade_point;
-  obj64->unk2 = entry->unkA;
-  obj64->unk0 = entry->unk8;
-  obj64->unk1C = entry->unk1C;
-  if (obj64->unk2 < obj64->unk0) {
-    obj64->unk2 = obj64->unk0 + 10;
-  }
-  obj->segment.trans.z_rotation = 0;
-  obj->segment.trans.x_rotation = 0;
-  obj->segment.trans.y_rotation = 0;
+    obj64 = &obj->unk64->midi_fade_point;
+    obj64->unk2 = entry->unkA;
+    obj64->unk0 = entry->unk8;
+    obj64->unk1C = entry->unk1C;
+    if (obj64->unk2 < obj64->unk0) {
+        obj64->unk2 = obj64->unk0 + 10;
+    }
+    obj->segment.trans.z_rotation = 0;
+    obj->segment.trans.x_rotation = 0;
+    obj->segment.trans.y_rotation = 0;
 
-  for (i = 0; i < 15; i++) {
-    obj64->unkC[i] = entry->unkC[i];
-  }
+    for (i = 0; i < 15; i++) {
+        obj64->unkC[i] = entry->unkC[i];
+    }
 
-  models = *((ObjectModel ***) obj->unk68);
-  objModel = models[0];
-  vertex = objModel->vertices + 1;
-  x = vertex->x;
-  y = vertex->y;
-  z = vertex->z;
-  dist = sqrtf(((x * x) + (y * y)) + (z * z));
-  obj64->unk4 = entry->unk8 / dist;
-  obj64->unk8 = entry->unkA / dist;
-  obj->segment.trans.scale = obj64->unk8;
+    models = *((ObjectModel ***) obj->unk68);
+    objModel = models[0];
+    vertex = objModel->vertices + 1;
+    x = vertex->x;
+    y = vertex->y;
+    z = vertex->z;
+    dist = sqrtf(((x * x) + (y * y)) + (z * z));
+    obj64->unk4 = entry->unk8 / dist;
+    obj64->unk8 = entry->unkA / dist;
+    obj->segment.trans.scale = obj64->unk8;
 }
 
 void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry) {
@@ -4556,7 +4556,7 @@ void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry) {
 }
 
 void obj_loop_bubbler(Object *obj, s32 updateRate) {
-    if (obj->unk78 >= get_random_number_from_range(0, 0x400)) {
+    if (obj->unk78 >= get_random_number_from_range(0, 1024)) {
         obj->unk74 = 1;
     } else {
         obj->unk74 = 0;
