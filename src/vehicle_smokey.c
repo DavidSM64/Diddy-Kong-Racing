@@ -243,12 +243,12 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
 }
 
 void func_8005E204(Object *obj, Object_Racer *racer, f32 arg2, s32 objectID, s32 arg4) {
-    Object** var_s6;
+    Object **var_s6;
     s32 sp80;
     s32 sp7C;
-    LevelObjectEntry* temp_s2;
-    Object* temp_s1;
-    Object* newObj;
+    LevelObjectEntry *temp_s2;
+    Object *temp_s1;
+    Object *newObj;
     s32 i;
     LevelObjectEntryCommon spawnObj;
     f32 xDiff;
