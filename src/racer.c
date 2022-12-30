@@ -3119,8 +3119,8 @@ void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate) {
     if (racer->attackType == 0 || racer->shieldTimer > 0) {
         racer->attackType = ATTACK_NONE;
     } else {
-        if ((racer->squish_timer == 0) || racer->attackType != 4) {
-            if ((racer->attackType != 2) && (racer->attackType != 4)) {
+        if ((racer->squish_timer == 0) || racer->attackType != ATTACK_SQUISHED) {
+            if (racer->attackType != ATTACK_SPIN && racer->attackType != ATTACK_SQUISHED) {
                 drop_bananas(obj, racer, 2);
             }
             racer->unk18C = 360;
