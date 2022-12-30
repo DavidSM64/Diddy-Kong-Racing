@@ -73,10 +73,10 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     s32 var_v0;
     s32 sp48;
     ObjectModel *objModel;
-    Object_68* obj68;
+    Object_68 *obj68;
     s32 sp3C;
     UNUSED s32 pad;
-    Object* firstRacerObj;
+    Object *firstRacerObj;
 
     set_boss_voice_clip_offset(D_800DCE00);
     *buttonsPressed &= ~R_TRIG;
