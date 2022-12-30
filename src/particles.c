@@ -783,7 +783,6 @@ Particle2 *func_800B0698(unk800B1CB8 *arg0, Particle *arg1) {
         return NULL;
     }
     sp20 = arg1->behaviour;
-    sp2C = sp2C;
     var_v0 = (unk800E2CD8 *) func_800B1CB8(4);
     if (var_v0 == NULL) {
         return (Particle2 *) var_v0;

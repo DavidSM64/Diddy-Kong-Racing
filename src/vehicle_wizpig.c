@@ -105,7 +105,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->unkC = 0.0f;
         obj->segment.y_velocity += 4.0;
     }
-    racer->attackType = 0;
+    racer->attackType = ATTACK_NONE;
     if (racer->unk148 != NULL) {
         xDiff = obj->segment.x_velocity * obj->segment.x_velocity;
         zDiff = (obj->segment.z_velocity * obj->segment.z_velocity);
@@ -232,7 +232,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     firstRacerObj = get_racer_object(0);
     racer = (Object_Racer *) firstRacerObj->unk64;
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->unk14 & 8 && obj->segment.unk38.byte.unk3B == 1) {
-        racer->attackType = 4;
+        racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {
         if (D_8011D600 == 0) {

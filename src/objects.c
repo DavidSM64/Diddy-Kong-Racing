@@ -1398,7 +1398,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             var_a2 = 0;
         }
         var_a1 = racer->vehicleID;
-        if (var_a1 > 2) {
+        if (var_a1 >= NUMBER_OF_PLAYER_VEHICLES) {
             var_a1 = 0;
         }
         shield = ((struct RacerShieldGfx *) get_misc_asset(MISC_ASSET_SHIELD_DATA));
@@ -1469,7 +1469,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gObjectCurrVertexList = *vtxList;
             magnet = (f32 *) get_misc_asset(MISC_ASSET_MAGNET_DATA);
             var_a0 = racer->vehicleID;
-            if (var_a0 < 0 || var_a0 > 2) {
+            if (var_a0 < VEHICLE_CAR || var_a0 >= NUMBER_OF_PLAYER_VEHICLES) {
                 var_a0 = 0;
             }
             magnet = &magnet[var_a0 * 5];

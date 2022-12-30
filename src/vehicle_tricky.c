@@ -122,7 +122,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             racer->unkC = 0.0f;
         }
     }
-    racer->attackType = 0;
+    racer->attackType = ATTACK_NONE;
     if (racer->unk148 != NULL) {
         xDiff = obj->segment.x_velocity * obj->segment.x_velocity;
         zDiff = obj->segment.z_velocity * obj->segment.z_velocity;
@@ -201,7 +201,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         func_8006F140(1);
     }
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->unk14 & 8 && obj->segment.unk38.byte.unk3B == 1) {
-        racer->attackType = 4;
+        racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != FALSE) {
         if (D_8011D5C4 == 0) {

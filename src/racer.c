@@ -3117,7 +3117,7 @@ void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate) {
         racer->squish_timer = 0;
     }
     if (racer->attackType == 0 || racer->shieldTimer > 0) {
-        racer->attackType = 0;
+        racer->attackType = ATTACK_NONE;
     } else {
         if ((racer->squish_timer == 0) || racer->attackType != 4) {
             if ((racer->attackType != 2) && (racer->attackType != 4)) {
@@ -3164,7 +3164,7 @@ void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate) {
                     racer_play_sound(obj, SOUND_WHEE);
                     break;
                 }
-                racer->attackType = 0;
+                racer->attackType = ATTACK_NONE;
             }
         }
     }
@@ -5322,7 +5322,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     if (sp11C != 0) {
         racer->unk1C9 = 0;
         racer->unk1F5 = 0;
-        racer->attackType = 0;
+        racer->attackType = ATTACK_NONE;
         racer->lateral_velocity = 0;
         sp94 = 20.0f;
         if (racer->unk124 < -20.0f) {
