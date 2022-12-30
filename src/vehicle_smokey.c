@@ -66,7 +66,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             D_8011D5E1 = 0;
         }
     }
-    racer->vehicleID = 7;
+    racer->vehicleID = VEHICLE_SMOKEY;
     func_80049794(updateRate, updateRateF, obj, racer);
     racer->vehicleID = racer->vehicleIDPrev;
     *startTimer = sp44;
