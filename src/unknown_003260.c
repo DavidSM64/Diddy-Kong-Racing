@@ -146,6 +146,7 @@ void thread4_audio(UNUSED void *arg) {
     osScAddClient(gAudioSched, (OSScClient *) &audioStack, &gAudioMesgQueue, OS_SC_ID_AUDIO);
     while (!audioThreadMarkExit) {
         osRecvMesg(&gAudioMesgQueue, (OSMesg *) &audioThreadRetraceMesg, 1);
+#ifndef DISABLE_AUDIO
 #ifdef PUPPYPRINT_DEBUG
         first = osGetCount();
 #endif
@@ -171,6 +172,7 @@ void thread4_audio(UNUSED void *arg) {
             audioThreadMarkExit = TRUE;
             break;
         }
+#endif
     }
     alClose(&ALGlobals_801161D0);
 }
