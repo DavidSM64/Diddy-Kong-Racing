@@ -3706,7 +3706,7 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
         yPos += 48;
 
         assign_dialogue_box_id(6);
-        set_current_dialogue_box_coords(6, 58, yPos, 262, yPos + 30);
+        set_current_dialogue_box_coords(6, (gScreenWidth / 2) - 102, yPos, (gScreenWidth / 2) + 102, yPos + 30);
 
         if (D_800DF460 == -1) {
             set_current_dialogue_background_colour(6, 255, 255, 255, (alpha >> 1) + 128);
@@ -3727,7 +3727,7 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
         set_current_text_background_colour(6, 0, 0, 0, 0);
         for (i = -1; i < sControllerPakMenuNumberOfRows; i++) {
             assign_dialogue_box_id(6);
-            set_current_dialogue_box_coords(6, 28, yPos, 292, yPos + 14);
+            set_current_dialogue_box_coords(6, (gScreenWidth / 2) - 132, yPos, (gScreenWidth / 2) + 132, yPos + 14);
             if (i < 0) {
                 //Red background for table header
                 set_current_dialogue_background_colour(6, 224, 48, 48, 224);
@@ -3778,7 +3778,7 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
             }
             assign_dialogue_box_id(6);
             set_dialogue_font(6, ASSET_FONTS_FUNFONT);
-            set_current_dialogue_box_coords(6, 76, yPos - 28, 244, yPos + 28);
+            set_current_dialogue_box_coords(6, (gScreenWidth / 2) - 84, yPos - 28, (gScreenWidth / 2) + 84, yPos + 28);
             set_current_dialogue_background_colour(6, 0, 0, 0, 160);
 
             yPos = 4;
@@ -3992,7 +3992,7 @@ void menu_magic_codes_init(void) {
     gOpacityDecayTimer = 0;
     D_801263E0 = 0;
     func_800C01D8(&sMenuTransitionFadeOut);
-    set_current_dialogue_box_coords(7, 50, 50, 270, 132);
+    set_current_dialogue_box_coords(7, (gScreenWidth / 2) - 110, 50, (gScreenWidth / 2) + 110, 132);
     set_current_dialogue_background_colour(7, 0, 0, 0, 128);
     assign_dialogue_box_id(7);
     load_font(ASSET_FONTS_BIGFONT);

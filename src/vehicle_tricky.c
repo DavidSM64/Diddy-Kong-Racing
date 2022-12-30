@@ -186,7 +186,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->headAngleTarget = sp40;
     }
     if (obj->segment.unk38.byte.unk3B == 1) {
-        if ((racer->unk1E7 & 0x1F) < 0xA) {
+        if ((racer->unk1E7 & 0x3F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }

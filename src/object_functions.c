@@ -638,6 +638,9 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
         if (worldBalloons) {
             worldBalloons = ((1 << (settings->worldId + 6)) & bossFlags) != 0;
         }
+#ifdef UNLOCK_ALL
+        worldBalloons = TRUE;
+#endif
         if (obj->action == NULL && func_800C3400() == FALSE) {
             if (obj->unk5C->unk100 != NULL) {
                 if (gfxData->unk4 == 0) {
@@ -1939,12 +1942,16 @@ void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
     obj64 = &obj->unk64->exit;
     enableWarp = TRUE;
     settings = get_settings();
+#ifndef UNLOCK_ALL
     if ((obj64->unk14 == 0) && (settings->balloonsPtr[settings->worldId] == 8)) {
         enableWarp = FALSE;
     }
     if ((obj64->unk14 == 1) && (settings->balloonsPtr[settings->worldId] < 8)) {
         enableWarp = FALSE;
     }
+#else
+    enableWarp = TRUE;
+#endif
     if (enableWarp) {
         if (obj->interactObj->distance < obj64->unk10) {
             dist = obj64->unk10;
@@ -3040,6 +3047,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
     } else {
         obj->segment.unk38.byte.unk3A = D_800DCA9C[settings->ttAmulet];
     }
+#ifndef UNLOCK_ALL
     if (obj->interactObj->distance < ttDoor->unk12 && (settings->ttAmulet < 4 || *settings->balloonsPtr < 47)) {
         racerObj = obj->interactObj->obj;
         if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
@@ -3059,6 +3067,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
             }
         }
     }
+#endif
     if (ttDoor->unk8 && func_80001C08() == 0) {
         if (updateRate < ttDoor->unk8) {
             ttDoor->unk8 -= updateRate;
@@ -3074,7 +3083,11 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
         ttDoor->unkC = 0;
     }
     openDoor = TRUE;
+#ifndef UNLOCK_ALL
     if (settings->ttAmulet >= 4 && obj->interactObj->distance < ttDoor->unk12 && *settings->balloonsPtr >= 47) {
+#else
+    if (obj->interactObj->distance < ttDoor->unk12) {
+#endif
         angle = obj->segment.trans.y_rotation - obj->unk7C.word;
     } else {
         angle = obj->segment.trans.y_rotation - obj->unk78;

@@ -205,7 +205,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
         racer->headAngleTarget = sp48;
     }
     if (obj->segment.unk38.byte.unk3B == 1) {
-        if ((racer->unk1E7 & 0x1F) < 10) {
+        if ((racer->unk1E7 & 0x3F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }
