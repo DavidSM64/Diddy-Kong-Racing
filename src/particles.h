@@ -347,7 +347,7 @@ void func_800AF404(s32 arg0); // Non Matching
 void func_800AFC3C(Object *, s32); // Non Matching
 void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
 void func_800AF714(Object*, s32); // Non matching
-Object* func_800B0BAC();
+Object *func_800B0BAC();
 void func_800B26E0();
 void func_800B3140(Particle2 *);
 void func_800B3240(Particle2 *);
