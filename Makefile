@@ -337,6 +337,16 @@ $(BUILD_DIR)/src/game_text.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/game_text.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/gzip.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/gzip.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/vehicle_bluey.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/vehicle_bluey.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/vehicle_bubbler.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/vehicle_bubbler.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/vehicle_smokey.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/vehicle_smokey.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/vehicle_wizpig.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/vehicle_wizpig.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/vehicle_rocket.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/vehicle_rocket.o: OPT_FLAGS := -O3
 
 
 $(BUILD_DIR)/lib/src/mips1/sc/sched.o: MIPSISET := -mips2

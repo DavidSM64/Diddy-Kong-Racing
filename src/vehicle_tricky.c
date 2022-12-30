@@ -114,7 +114,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         if (obj->segment.unk38.byte.unk3B != 3) {
             racer->unk1CD = obj->segment.unk38.byte.unk3B;
             obj->segment.unk38.byte.unk3B = 3;
-            obj->segment.y_velocity += 7.5;
+            obj->segment.y_velocity += 7.5f;
             func_8005CB04(1);
             play_sound_global(SOUND_EXPLOSION, NULL);
             set_camera_shake(12.0f);
@@ -132,18 +132,18 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     objModel = obj68->objModel;
     xDiff = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
     if (obj->segment.unk38.byte.unk3B != 3) {
-        if (racer->velocity < -2.0) {
+        if (racer->velocity < -2.0f) {
             obj->segment.unk38.byte.unk3B = 1;
             racer->unkC -= (racer->velocity * updateRateF) * 0.5;
-        } else if (racer->velocity < -0.1 || 0.1 < racer->velocity) {
+        } else if (racer->velocity < -0.1f || 0.1f < racer->velocity) {
             obj->segment.unk38.byte.unk3B = 2;
             racer->unkC -= (racer->velocity * updateRateF) * 2;
         } else {
             obj->segment.unk38.byte.unk3B = 0;
-            racer->unkC += 1.0 * updateRateF;
+            racer->unkC += 1.0f * updateRateF;
         }
     } else {
-        racer->unkC += 2.0 * updateRateF;
+        racer->unkC += 2.0f * updateRateF;
     }
     while (racer->unkC < 0.0f) {
         racer->unkC += xDiff;
@@ -179,7 +179,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     firstRacerObj = get_racer_object(0);
     xDiff = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
     zDiff = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
-    if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) < 700.0) {
+    if (((xDiff * xDiff) + (zDiff * zDiff)) < 700.0f * 700.0f) {
         sp40 = (arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         WRAP(sp40, -0x8000, 0x8000);
         CLAMP(sp40, -sp38, sp38);
@@ -194,7 +194,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (D_8011D5C0 < firstRacerObj->segment.trans.y_position) {
         D_8011D5C0 = firstRacerObj->segment.trans.y_position;
     }
-    if ((firstRacerObj->segment.trans.y_position + 400.0) < D_8011D5C0) {
+    if ((firstRacerObj->segment.trans.y_position + 400.0f) < D_8011D5C0) {
         if (func_800C018C() == 0 && is_in_two_player_adventure()) {
             func_8006F398();
         }

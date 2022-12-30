@@ -61,7 +61,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     sp3E = obj->segment.unk38.byte.unk3B;
     sp3C = obj->segment.animFrame;
     sp3A = racer->headAngle;
-    if ((racer->velocity < 0.3) && (-0.3 < racer->velocity)) {
+    if ((racer->velocity < 0.3f) && (-0.3f < racer->velocity)) {
         *buttonsPressed = 0;
     }
     if (racer->raceFinished == TRUE && func_80023568()) {
@@ -100,11 +100,11 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
-        obj->segment.x_velocity *= 0.4;
+        obj->segment.x_velocity *= 0.4f;
         obj->segment.unk38.byte.unk3B = 1;
-        obj->segment.z_velocity *= 0.4;
+        obj->segment.z_velocity *= 0.4f;
         racer->unkC = 0.0f;
-        obj->segment.y_velocity += 4.0;
+        obj->segment.y_velocity += 4.0f;
     }
     racer->attackType = ATTACK_NONE;
     if (racer->unk148 != NULL) {
@@ -118,7 +118,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             obj->segment.z_velocity = 0.0f;
         }
     }
-    racer->unkC += 2.0 * updateRateF;
+    racer->unkC += 2.0f * updateRateF;
     gfxData = *obj->unk68;
     objModel = gfxData->objModel;
     xDiff = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;

@@ -41,7 +41,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     sp5E = obj->segment.unk38.byte.unk3B;
     sp5C = obj->segment.animFrame;
     sp5A = racer->headAngle;
-    if (racer->velocity < 0.3 && -0.3 < racer->velocity) {
+    if (racer->velocity < 0.3f && -0.3f < racer->velocity) {
         *stickMag = 0;
     }
     if (racer->raceFinished == TRUE && func_80023568()) {
@@ -79,17 +79,17 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         play_sound_global(SOUND_EXPLOSION, 0);
         set_camera_shake(12.0f);
         obj->segment.unk38.byte.unk3B = 5;
-        obj->segment.x_velocity *= 0.27;
-        obj->segment.z_velocity *= 0.27;
+        obj->segment.x_velocity *= 0.27f;
+        obj->segment.z_velocity *= 0.27f;
         racer->unkC = 0.0f;
-        obj->segment.y_velocity += 4.0;
+        obj->segment.y_velocity += 4.0f;
     }
     racer->attackType = ATTACK_NONE;
     if (racer->unk148 != 0) {
         xDiff = obj->segment.x_velocity * obj->segment.x_velocity;
         zDiff = obj->segment.z_velocity * obj->segment.z_velocity;
         racer->velocity = -sqrtf((xDiff * xDiff) + (zDiff * zDiff));
-        if (racer->velocity > -0.5) {
+        if (racer->velocity > -0.5f) {
             racer->velocity = 0.0f;
             obj->segment.x_velocity = 0.0f;
             obj->segment.y_velocity = 0.0f;
@@ -99,18 +99,18 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     obj68 = *obj->unk68;
     objModel = obj68->objModel;
     xDiff = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
-    var_f2 = (racer->velocity * updateRateF) * 0.45;
-    if (var_f2 <= 0.0) {
-        if (var_f2 > -2.0) {
+    var_f2 = (racer->velocity * updateRateF) * 0.45f;
+    if (var_f2 <= 0.0f) {
+        if (var_f2 > -2.0f) {
         var_f2 = -2.0f;
         }
-    } else if (var_f2 < 2.0) {
+    } else if (var_f2 < 2.0f) {
         var_f2 = 2.0f;
     }
     switch (obj->segment.unk38.byte.unk3B) {
     case 0:
         racer->unk1CD = 0;
-        racer->unkC += 1.0 * updateRateF;
+        racer->unkC += 1.0f * updateRateF;
         break;
     case 1:
         if (racer->unk1CD == 2) {
@@ -125,18 +125,18 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         break;
     case 3:
         if (racer->unk1CD == 4) {
-            racer->unkC -= 2.0 * updateRateF;
+            racer->unkC -= 2.0f * updateRateF;
         }
         else {
-            racer->unkC += 2.0 * updateRateF;
+            racer->unkC += 2.0f * updateRateF;
         }
         break;
     case 4:
         racer->unk1CD = 4;
-        racer->unkC += 2.0 * updateRateF;
+        racer->unkC += 2.0f * updateRateF;
         break;
     case 5:
-        racer->unkC += 2.0 * updateRateF;
+        racer->unkC += 2.0f * updateRateF;
         break;
     default:
         break;
@@ -181,7 +181,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
                 obj->segment.unk38.byte.unk3B = 1;
                 racer->unkC = 0.0f;
             }
-            if (obj->segment.unk38.byte.unk3B == 4 && racer->unk1E2 != 0 && racer->velocity > -6.0) {
+            if (obj->segment.unk38.byte.unk3B == 4 && racer->unk1E2 != 0 && racer->velocity > -6.0f) {
                 obj->segment.unk38.byte.unk3B = 3;
                 racer->unkC = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
             }
@@ -209,7 +209,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     firstRacerObj = get_racer_object(0);
     xDiff = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
     zDiff = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
-    if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) < 700.0) {
+    if (((xDiff * xDiff) + (zDiff * zDiff)) < 700.0f * 700.0f) {
         sp44 = (arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         if (sp44 > 0x8000) {
             sp44 -= 0xFFFF;
@@ -270,7 +270,7 @@ void func_8005E204(Object *obj, Object_Racer *racer, f32 arg2, s32 objectID, s32
                 xDiff = temp_s1->segment.trans.x_position - obj->segment.trans.x_position;
                 yDiff = temp_s1->segment.trans.y_position - obj->segment.trans.y_position;
                 zDiff = temp_s1->segment.trans.z_position - obj->segment.trans.z_position;
-                if (sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < (f32) ((s8) temp_s2->animation.x_rotation & 0xFF) * 4.0) {
+                if (sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < (f32) ((s8) temp_s2->animation.x_rotation & 0xFF) * 4.0f) {
                     if (temp_s1->unk78 == 0) {
                         temp_s1->unk78 = 1;
                         newObj = spawn_object(&spawnObj, 1);

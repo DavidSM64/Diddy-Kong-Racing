@@ -59,7 +59,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     sp3E = obj->segment.unk38.byte.unk3B;
     sp3C = obj->segment.animFrame;
     sp3A = racer->headAngle;
-    if (racer->velocity < 0.3 && -0.3 < racer->velocity) {
+    if (racer->velocity < 0.3f && -0.3f < racer->velocity) {
         *buttonsPressed = 0;
     }
     if (racer->raceFinished == TRUE && func_80023568()) {
@@ -100,17 +100,17 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         play_sound_global(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
         obj->segment.unk38.byte.unk3B = 5;
-        obj->segment.x_velocity *= 0.4;
-        obj->segment.z_velocity *= 0.4;
+        obj->segment.x_velocity *= 0.4f;
+        obj->segment.z_velocity *= 0.4f;
         racer->unkC = 0.0f;
-        obj->segment.y_velocity += 4.0;
+        obj->segment.y_velocity += 4.0f;
     }
     racer->attackType = ATTACK_NONE;
     if (racer->unk148 != NULL) {
         xDiff = obj->segment.x_velocity * obj->segment.x_velocity;
         zDiff = (obj->segment.z_velocity * obj->segment.z_velocity);
         racer->velocity = -sqrtf((xDiff * xDiff) + (zDiff * zDiff));
-        if (racer->velocity > -0.5) {
+        if (racer->velocity > -0.5f) {
             racer->velocity = 0.0f;
             obj->segment.x_velocity = 0.0f;
             obj->segment.y_velocity = 0.0f;
@@ -126,18 +126,18 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     gfxData = *obj->unk68;
     objModel = gfxData->objModel;
     xDiff = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 0x10) - 0x11;
-    var_f12 = (racer->velocity * updateRateF) * 0.45;
+    var_f12 = (racer->velocity * updateRateF) * 0.45f;
     if (var_f12 <= 0.0) {
-        if (var_f12 > -2.0) {
+        if (var_f12 > -2.0f) {
             var_f12 = -2.0f;
         }
-    } else if (var_f12 < 2.0) {
+    } else if (var_f12 < 2.0f) {
         var_f12 = 2.0f;
     }
     switch (obj->segment.unk38.byte.unk3B) {
     case 0:
         racer->unk1CD = 0;
-        racer->unkC += 1.0 * updateRateF;
+        racer->unkC += 1.0f * updateRateF;
         break;
     case 1:
         if (racer->unk1CD == 2) {
@@ -152,17 +152,17 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         break;
     case 3:
         if (racer->unk1CD == 4) {
-            racer->unkC -= 2.0 * updateRateF;
+            racer->unkC -= 2.0f * updateRateF;
         } else {
-            racer->unkC += 2.0 * updateRateF;
+            racer->unkC += 2.0f * updateRateF;
         }
         break;
     case 4:
         racer->unk1CD = 4;
-        racer->unkC += 2.0 * updateRateF;
+        racer->unkC += 2.0f * updateRateF;
         break;
     case 5:
-        racer->unkC += 2.0 * updateRateF;
+        racer->unkC += 2.0f * updateRateF;
         break;
     default:
         break;
@@ -197,7 +197,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
                 obj->segment.unk38.byte.unk3B = 4;
             }
         } else {
-            if (-0.1 < racer->velocity && racer->velocity < 0.1) {
+            if (-0.1 < racer->velocity && racer->velocity < 0.1f) {
                 if (obj->segment.unk38.byte.unk3B == 2) {
                     obj->segment.unk38.byte.unk3B = 1;
                     racer->unkC = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 0x10) - 0x11;

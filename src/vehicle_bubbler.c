@@ -97,11 +97,11 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     if (racer->attackType != ATTACK_NONE && obj->segment.unk38.byte.unk3B != 2) {
         racer->unk1CD = obj->segment.unk38.byte.unk3B;
         obj->segment.unk38.byte.unk3B = 2;
-        obj->segment.y_velocity += 7.5;
+        obj->segment.y_velocity += 7.5f;
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, 0);
         set_camera_shake(12.0f);
-        racer->velocity *= 0.3;
+        racer->velocity *= 0.3f;
         racer->unkC = 0.0f;
     }
     racer->attackType = ATTACK_NONE;
@@ -114,7 +114,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     model = gfxData->objModel;
     xDiff = (model->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
     obj->segment.unk38.byte.unk3B = 1;
-    racer->unkC += 2.0 * updateRateF;
+    racer->unkC += 2.0f * updateRateF;
     while (racer->unkC < 0.0f) {
         racer->unkC += xDiff;
         gfxData->unk10 = -1;
@@ -155,7 +155,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     firstRacerObj = get_racer_object(0);
     xDiff = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
     zDiff = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
-    if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) < 700.0) {
+    if (((xDiff * xDiff) + (zDiff * zDiff)) < 700.0f * 700.0f) {
         timer = (arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         WRAP(timer, -0x8000, 0x8000);
         CLAMP(timer, -sp38, sp38);

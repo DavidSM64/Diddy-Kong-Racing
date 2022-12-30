@@ -124,8 +124,8 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
             play_sound_global(SOUND_EXPLOSION, NULL);
             set_camera_shake(12.0f);
             racer->attackType = ATTACK_NONE;
-            racer->velocity *= 0.3;
-            obj->segment.y_velocity += 7.5;
+            racer->velocity *= 0.3f;
+            obj->segment.y_velocity += 7.5f;
         }
     }
     if (racer->unk148 != NULL) {
@@ -154,23 +154,23 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
                     var_v0 = 73;
                 }
                 racer->unk1CD = 3;
-                racer->unkC += (var_v0 - racer->unkC) * 0.25;
+                racer->unkC += (var_v0 - racer->unkC) * 0.25f;
             } else {
                 racer->unk1CD = 0;
                 obj->segment.unk38.byte.unk3B = 0;
-                racer->unkC -= (racer->velocity * updateRateF) * 0.5;
+                racer->unkC -= (racer->velocity * updateRateF) * 0.5f;
             }
-        } else if (racer->velocity < -0.1 || 0.1 < racer->velocity) {
+        } else if (racer->velocity < -0.1f || 0.1f < racer->velocity) {
             racer->unk1CD = 1;
             obj->segment.unk38.byte.unk3B = 1;
             racer->unkC -= racer->velocity * updateRateF * 2;
         } else {
             racer->unk1CD = 2;
             obj->segment.unk38.byte.unk3B = 2;
-            racer->unkC += updateRateF * 1.0;
+            racer->unkC += updateRateF * 1.0f;
         }
     } else {
-        racer->unkC += updateRateF * 1.0;
+        racer->unkC += updateRateF * 1.0f;
     }
     obj68 = *obj->unk68;
     objModel = obj68->objModel;
@@ -198,7 +198,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     firstRacerObj = get_racer_object(0);
     xDiff = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
     zDiff = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
-    if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) < 700.0) {
+    if (((xDiff * xDiff) + (zDiff * zDiff)) < 700.0f * 700.0f) {
         sp48 = (arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         WRAP(sp48, -0x8000, 0x8000);
         CLAMP(sp48, -0xC00, 0xC00);
