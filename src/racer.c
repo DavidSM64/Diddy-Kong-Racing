@@ -20,15 +20,12 @@
 #include "math_util.h"
 #include "unknown_0255E0.h"
 #include "weather.h"
-#include "unknown_05CEF0.h"
-#include "unknown_05DCD0.h"
-#include "unknown_05F0C0.h"
-#include "unknown_05F690.h"
-#include "unknown_05FF10.h"
+#include "vehicle_misc.h"
 #include "unknown_005740.h"
 #include "game_ui.h"
 #include "object_models.h"
 #include "unknown_003260.h"
+#include "collision.h"
 
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
@@ -42,7 +39,7 @@
 /************ .data ************/
 
 s32 gObjLoopGoldenBalloonLength = 0x310;
-s16 D_800DCB54 = 0;
+s16 gAntiPiracyHeadroll = 0;
 s32 D_800DCB58 = 0; // Currently unknown, might be a different type.
 s32 D_800DCB5C = 0; // Currently unknown, might be a different type.
 
@@ -291,7 +288,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
         if (var_t0 != 0) {
             temp_v0 = func_80023568();
             if (gRaceStartTimer == 0) {
-                if (racer->unk1D6 != 4) {
+                if (racer->vehicleID != VEHICLE_LOOPDELOOP) {
                     temp_v1_2 = racerID - 1;
                     if (racer->unk20B < racerID && temp_v1_2 >= 0 && temp_v1_2 < numRacers) {
                         if (racerGroup[temp_v1_2]->unk64->racer.playerIndex != PLAYER_COMPUTER) {
@@ -959,7 +956,7 @@ void func_8004C0A0(s32 updateRate, Object *obj, Object_Racer *racer) {
     s32 temp_v1;
     s32 phi_v0;
 
-    if (racer->unk1D7 != 10) {
+    if (racer->vehicleIDPrev != VEHICLE_CARPET) {
         //!@bug Typo. Should've been `== 0`, not `= 0`.
         if ((racer->unk1F2 = 0)) {
             return; // This never gets called because of the typo.
@@ -1011,7 +1008,7 @@ void func_8004C140(Object *obj, Object_Racer *racer) {
     if (racer->unk1C9 == 8) {
         racer->unk1C9 = 0;
     }
-    if (racer->unk1D6 < 5) {
+    if (racer->vehicleID < VEHICLE_TRICKY) {
         play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 129);
         switch (racer->attackType) {
             case ATTACK_EXPLOSION:
@@ -1316,21 +1313,24 @@ void update_camera_loop(f32 updateRate, Object* obj, Object_Racer* racer) {
     gCameraObject->trans.z_position += gCameraObject->z_velocity;
 }
 
-void func_8004D95C(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer) {
+/**
+ * Updates the carpet vehicle that Taj uses during the overworld race challenges.
+*/
+void update_carpet(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer) {
     s16 sp26;
 
     if (racer->unk118 != 0) {
         func_80006AC8(obj);
     }
-    if (func_8002341C() && racer->unk1D6 == 10) {
+    if (func_8002341C() && racer->vehicleID == VEHICLE_CARPET) {
         obj->interactObj->unk14 = 0;
     }
     sp26 = obj->segment.animFrame;
-    racer->unk1D6 = 10;
+    racer->vehicleID = VEHICLE_CARPET;
     func_80049794(updateRate, updateRateF, obj, racer);
-    racer->unk1D6 = racer->unk1D7;
+    racer->vehicleID = racer->vehicleIDPrev;
     obj->segment.unk38.byte.unk3B = 0;
-    if (racer->unk1D6 == 10) {
+    if (racer->vehicleID == VEHICLE_CARPET) {
         if (racer->unk154 != NULL) {
             racer->unk154->segment.trans.x_position = obj->segment.trans.x_position;
             racer->unk154->segment.trans.y_position = obj->segment.trans.y_position;
@@ -1448,7 +1448,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     func_80043ECC(0, NULL, 0);
     D_8011D583 = i;
     gStartBoostTime = 0;
-    tempRacer->unk20A = 0;
+    tempRacer->lightFlags = 0;
 }
 
 /**
@@ -1470,8 +1470,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     f32 temp_f12;
     LevelHeader *header;
     CheckpointNode *checkpointNode;
-    s32 angleVel;
-    UNUSED s32 pad;
+    UNUSED s32 pad[2];
     s32 i;
     struct LevelObjectEntryCommon newObject;
 
@@ -1608,7 +1607,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         set_object_stack_pos(tempRacer->playerIndex);
         gCameraObject = (ObjectCamera *) func_80069CFC();
-        tempRacer->unk1E7++;
+        tempRacer->unk1E7++; //!@delta
         gCurrentPlayerIndex = tempRacer->playerIndex;
         if ((tempRacer->raceFinished == TRUE) || (context == 1)) {
             tempRacer->unk1CA = 1;
@@ -1708,7 +1707,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                 }
             }
         }
-        if (tempRacer->unk1D6 != 1) {
+        if (tempRacer->vehicleID != VEHICLE_HOVERCRAFT) {
             waterHeight = -10000.0f;
             // So I assume this func exists to find the water height.
             D_8011D504 = func_8002AD08(obj->segment.trans.y_position, &waterHeight, D_8011D4F8);
@@ -1733,42 +1732,20 @@ void update_player_racer(Object *obj, s32 updateRate) {
             }
         }
         func_8002ACC8(0);
-        switch (tempRacer->unk1D6) {
-        case 0:
-            func_8004F7F4(updateRate, delta, obj, tempRacer);
-            break;
-        case 4:
-            func_8004CC20(updateRate, delta, obj, tempRacer);
-            break;
-        case 1:
-            func_80046524(updateRate, delta, obj, tempRacer);
-            break;
-        case 2:
-            func_80049794(updateRate, delta, obj, tempRacer);
-            break;
-        case 3:
-        case 10:
-            func_8004D95C(updateRate, delta, obj, tempRacer);
-            break;
-        case 5:
-            func_8005C364(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
-            break;
-        case 6:
-            func_8005D0D0(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
-            break;
-        case 7:
-        case 8:
-            func_8005D820(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentStickX, &gRaceStartTimer);
-            break;
-        case 11:
-            func_8005E4C0(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
-            break;
-        case 12:
-            func_8005EA90(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
-            break;
-        case 13:
-            func_8005F310(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer);
-            break;
+        switch (tempRacer->vehicleID) {
+        case VEHICLE_CAR: func_8004F7F4(updateRate, delta, obj, tempRacer); break;
+        case VEHICLE_LOOPDELOOP: func_8004CC20(updateRate, delta, obj, tempRacer); break;
+        case VEHICLE_HOVERCRAFT: func_80046524(updateRate, delta, obj, tempRacer); break;
+        case VEHICLE_PLANE: func_80049794(updateRate, delta, obj, tempRacer); break;
+        case VEHICLE_FLYING_CAR: /* fall through */
+        case VEHICLE_CARPET: update_carpet(updateRate, delta, obj, tempRacer); break;
+        case VEHICLE_TRICKY: update_tricky(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
+        case VEHICLE_BLUEY: update_bluey(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
+        case VEHICLE_SMOKEY: /* fall through */
+        case VEHICLE_PTERODACTYL: update_smokey(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentStickX, &gRaceStartTimer); break;
+        case VEHICLE_BUBBLER: update_bubbler(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
+        case VEHICLE_WIZPIG: update_wizpig(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
+        case VEHICLE_ROCKET: update_rocket(updateRate, delta, obj, tempRacer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         }
         if (tempRacer->magnetTimer == 0) {
             if (tempRacer->magnetSoundMask) {
@@ -1838,7 +1815,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                     if (tempRacer->unk15C) {
                         tempRacer->unk15C->segment.trans.x_position = checkpointNode->obj->segment.trans.x_position;
                         tempRacer->unk15C->segment.trans.y_position = checkpointNode->obj->segment.trans.y_position;
-                        if (tempRacer->unk1D6 == 0) {
+                        if (tempRacer->vehicleID == VEHICLE_CAR) {
                             tempRacer->unk15C->segment.trans.y_position -= 30.0;
                         }
                         tempRacer->unk15C->segment.trans.z_position = checkpointNode->obj->segment.trans.z_position;
@@ -1862,7 +1839,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             if (tempRacer->unk15C) {
                 tempRacer->unk15C->segment.animFrame += 8 * updateRate;
             }
-            if ((tempRacer->unk1BA > 400) || (tempRacer->unk1BA < -400)) {
+            if (tempRacer->unk1BA > 400 || tempRacer->unk1BA < -400) {
                 func_80022E18(2);
             }
         }
@@ -1896,18 +1873,17 @@ void update_player_racer(Object *obj, s32 updateRate) {
             tempRacer->stretch_height_cap = 1.0f;
         }
 
-        tempVar = ((tempRacer->unk16C - tempRacer->unk16A) * updateRate) >> 3;
+        tempVar = ((tempRacer->headAngleTarget - tempRacer->headAngle) * updateRate) >> 3;
         if (tempVar > 0x800) {
             tempVar = 0x800;
         }
         if (tempVar < -0x800) {
             tempVar = -0x800;
         }
-        angleVel = D_800DCB54;
-        if (angleVel) {
-            tempRacer->unk16A += angleVel;
+        if (gAntiPiracyHeadroll) {
+            tempRacer->headAngle += gAntiPiracyHeadroll;
         } else {
-            tempRacer->unk16A += tempVar;
+            tempRacer->headAngle += tempVar;
         }
         if ((gCurrentButtonsPressed & R_TRIG) && tempRacer->unk1EB) {
             tempRacer->unk1EC = 1;
@@ -1964,7 +1940,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             tempRacer->unk150 = NULL;
         }
         tempRacer->unk1FE = -1;
-        func_8004F77C(tempRacer);
+        set_racer_tail_lights(tempRacer);
         if (tempRacer->unk20E) {
             if (tempRacer->unk210 > updateRate) {
                 tempRacer->unk210 -= updateRate;
@@ -1989,28 +1965,33 @@ void update_player_racer(Object *obj, s32 updateRate) {
     }
 }
 
-void func_8004F77C(Object_Racer *racer) {
-    s32 temp;
+/**
+ * When braking or driving in a place considered dark, a timer counts up and then sets flags.
+ * These flags correspond to the lights on the back of the car being enabled and what colour they are.
+ * When you exit this dark place, the timer counts back down and the lights stop.
+*/
+void set_racer_tail_lights(Object_Racer *racer) {
+    s32 lightTimer;
 
-    racer->unk20A &= ~0x80;
+    racer->lightFlags &= ~RACER_LIGHT_BRAKE;
     if ((gCurrentRacerInput & B_BUTTON)) {
-        racer->unk20A |= 0x80;
+        racer->lightFlags |= RACER_LIGHT_BRAKE;
     }
 
-    temp = racer->unk20A & 0xF;
-    if ((racer->unk20A & 0xC0)) {
-        temp++;
-        if (temp >= 3) {
-            temp = 2;
+    lightTimer = racer->lightFlags & RACER_LIGHT_TIMER;
+    if (racer->lightFlags & (RACER_LIGHT_BRAKE | RACER_LIGHT_NIGHT)) {
+        lightTimer++;
+        if (lightTimer > 2) {
+            lightTimer = 2;
         }
     } else {
-        temp--;
-        if (temp < 0) {
-            temp = 0;
+        lightTimer--;
+        if (lightTimer < 0) {
+            lightTimer = 0;
         }
     }
 
-    racer->unk20A = (racer->unk20A & 0xFFF0) | temp;
+    racer->lightFlags = (racer->lightFlags & 0xFFF0) | lightTimer;
 }
 
 GLOBAL_ASM("asm/non_matchings/racer/func_8004F7F4.s")
@@ -2428,7 +2409,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer_play_sound(obj, SOUND_BOUNCE2);
     }
     // If driving over a zip pad, apply a boost.
-    if (racer->boostTimer == 0 && surfaceType == SURFACE_UNK03) {
+    if (racer->boostTimer == 0 && surfaceType == SURFACE_ZIP_PAD) {
         racer->boostTimer = normalise_time(45);
         racer->boostType = BOOST_LARGE;
         racer_play_sound(obj, SOUND_ZIP_PAD_BOOST);
@@ -2518,7 +2499,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             tempVel *= 0.25;
         }
         if ((gCurrentStickY < -25) && !(gCurrentRacerInput & A_BUTTON) && (gCurrentRacerInput & B_BUTTON)) {
-            if (racer->unk1D7 >= 5) {
+            if (racer->vehicleIDPrev >= 5) {
                 tempVel *= 0.3;
             }
             racer->velocity += tempVel;
@@ -2546,7 +2527,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     if (D_8011D586 != 0) {
         surfaceTraction = 0.0f;
     }
-    if (racer->brake < 0.9 && racer->unk1D7 < 5 && gRaceStartTimer == 0) {
+    if (racer->brake < 0.9 && racer->vehicleIDPrev < 5 && gRaceStartTimer == 0) {
         if (racer->pitch < 0.0) {
             velocityDiff = -racer->pitch;
             velocityDiff -= 0.3;
@@ -2593,81 +2574,92 @@ void func_800521B8(s32 arg0) {
     D_8011D582 = arg0;
 }
 
-void func_800521C4(Object *obj, Object_Racer *racer, UNUSED s32 arg2) {
+/**
+ * Find a nearby racer and set the head to turn to face them.
+ * Otherwise, if stationary, set a random angle to turn to periodically.
+*/
+void handle_racer_head_turning(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
     Object *tempObj;
     s8 foundObj;
     f32 distance;
-    s32 tempVel;
+    s32 intendedAngle;
 
-    foundObj = 0;
+    foundObj = FALSE;
     if (func_80023568()) {
         tempObj = get_racer_object(1);
-        foundObj = func_80052388(obj, racer, tempObj, 160000.0f);
+        foundObj = turn_head_towards_object(obj, racer, tempObj, 400.0f * 400.0f);
     }
-    if (!foundObj) {
+    if (foundObj == FALSE) {
         tempObj = func_8001B7A8((Object *) racer, 1, &distance);
         if (tempObj && !gRaceStartTimer) {
-            foundObj = func_80052388(obj, racer, tempObj, 160000.0f);
+            foundObj = turn_head_towards_object(obj, racer, tempObj, 400.0f * 400.0f);
         }
     }
-    if (!foundObj) {
+    if (foundObj == FALSE) {
         tempObj = func_8001B7A8((Object *) racer, -1, &distance);
         if (tempObj && !gRaceStartTimer) {
-            foundObj = func_80052388(obj, racer, tempObj, 30000.0f);
+            foundObj = turn_head_towards_object(obj, racer, tempObj, 30000.0f);
         }
     }
-    if (!foundObj) {
+    if (foundObj == FALSE) {
         if ((racer->unk1E7 & 0x1F) < 2) {
-            tempVel = racer->velocity * 1280.0f;
+            intendedAngle = racer->velocity * 1280.0f;
 
-            if (tempVel < 0) {
-                tempVel = -tempVel;
+            if (intendedAngle < 0) {
+                intendedAngle = -intendedAngle;
             }
 
-            if (tempVel > 0x2800) {
-                tempVel = 0x2800;
+            if (intendedAngle > 0x2800) {
+                intendedAngle = 0x2800;
             }
 
-            tempVel = 0x2800 - tempVel;
+            intendedAngle = 0x2800 - intendedAngle;
 
-            racer->unk16C = get_random_number_from_range(-tempVel, tempVel);
+            racer->headAngleTarget = get_random_number_from_range(-intendedAngle, intendedAngle);
         }
     }
 }
 
-// Ran by the AI. Seems to be direction related of some sorts.
-void func_8005234C(Object_Racer *racer) {
-    racer->unk16C -= racer->unk16C >> 3;
-    if (racer->unk16C >= -9 && racer->unk16C < 10) { // Deadzone?
-        racer->unk16C = 0;
+/**
+ * Over time, set the head angle target to zero.
+ * The character's head will start to face forward.
+*/
+void slowly_reset_head_angle(Object_Racer *racer) {
+    racer->headAngleTarget -= racer->headAngleTarget >> 3;
+    if (racer->headAngleTarget > -10 && racer->headAngleTarget < 10) {
+        racer->headAngleTarget = 0;
     }
 }
 
-s32 func_80052388(Object *obj1, Object_Racer *racer, Object *obj2, f32 distance) {
-    s32 rotation;
+/**
+ * Compute angle between objects, then set the intended angle for the character's head to face
+ * an object.
+*/
+s32 turn_head_towards_object(Object *obj, Object_Racer *racer, Object *targetObj, f32 distance) {
+    s32 intendedAngle;
     f32 xDiff;
     f32 zDiff;
     s32 ret = FALSE;
 
-    xDiff = obj2->segment.trans.x_position - obj1->segment.trans.x_position;
-    zDiff = obj2->segment.trans.z_position - obj1->segment.trans.z_position;
+    xDiff = targetObj->segment.trans.x_position - obj->segment.trans.x_position;
+    zDiff = targetObj->segment.trans.z_position - obj->segment.trans.z_position;
     if ((xDiff * xDiff) + (zDiff * zDiff) < distance) {
-        rotation = (arctan2_f(xDiff, zDiff) - (obj1->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
-        WRAP(rotation, -0x8000, 0x8000);
-        CLAMP(rotation, -0x3000, 0x3000);
-        racer->unk16C = rotation;
+        intendedAngle = (arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+        WRAP(intendedAngle, -0x8000, 0x8000);
+        CLAMP(intendedAngle, -0x3000, 0x3000);
+        racer->headAngleTarget = intendedAngle;
         if ((racer->unk1E7 & 0x3F) < 0x1F) {
-            racer->unk16C = 0;
+            racer->headAngleTarget = 0;
         }
-        racer = (struct Object_Racer *) obj2->unk64;
-        rotation = arctan2_f(xDiff, zDiff) - (obj1->segment.trans.y_rotation & 0xFFFF);
-        WRAP(rotation, -0x8000, 0x8000);
-        CLAMP(rotation, -0x3000, 0x3000);
-        racer->unk16C = rotation;
-        if (ret) {}
+        racer = (struct Object_Racer *) targetObj->unk64;
+        intendedAngle = arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF);
+        WRAP(intendedAngle, -0x8000, 0x8000);
+        CLAMP(intendedAngle, -0x3000, 0x3000);
+        racer->headAngleTarget = intendedAngle;
+        if (ret) {} // Fakematch
         ret = TRUE;
         if ((racer->unk1E7 & 0x1F) < 0xA) {
-            racer->unk16C = 0;
+            racer->headAngleTarget = 0;
         }
     }
     return ret;
@@ -3125,17 +3117,17 @@ void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate) {
         racer->squish_timer = 0;
     }
     if (racer->attackType == 0 || racer->shieldTimer > 0) {
-        racer->attackType = 0;
+        racer->attackType = ATTACK_NONE;
     } else {
-        if ((racer->squish_timer == 0) || racer->attackType != 4) {
-            if ((racer->attackType != 2) && (racer->attackType != 4)) {
+        if ((racer->squish_timer == 0) || racer->attackType != ATTACK_SQUISHED) {
+            if (racer->attackType != ATTACK_SPIN && racer->attackType != ATTACK_SQUISHED) {
                 drop_bananas(obj, racer, 2);
             }
             racer->unk18C = 360;
             if (racer->unk1C9 == 8) {
                 racer->unk1C9 = 0;
             }
-            if (racer->unk1D6 < 5) {
+            if (racer->vehicleID < VEHICLE_TRICKY) {
                 play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 129);
                 switch (racer->attackType) {
                 // Getting hit by a rocket, or running into a landmine.
@@ -3172,7 +3164,7 @@ void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate) {
                     racer_play_sound(obj, SOUND_WHEE);
                     break;
                 }
-                racer->attackType = 0;
+                racer->attackType = ATTACK_NONE;
             }
         }
     }
@@ -3245,7 +3237,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         tempAngle = 73;
     }
     obj->segment.animFrame = tempAngle;
-    func_8005234C(racer);
+    slowly_reset_head_angle(racer);
     angle = gCurrentCarSteerVel - (u16) racer->y_rotation_vel;
     WRAP(angle, -0x8000, 0x8000);
     angle >>= 2;
@@ -3289,7 +3281,7 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     if (!racer->unk201) {
         obj->unk74 = 0;
-    } else if (racer->unk1D6 < 5) {
+    } else if (racer->vehicleID < VEHICLE_TRICKY) {
         func_800AF714(obj, updateRate);
     }
     func_80053750(obj, racer, updateRateF);
@@ -3394,11 +3386,11 @@ void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
     gCurrentSurfaceType = surfaceType;
     racer->drift_direction = 0;
     racer->unk10C = 0;
-    if (surfaceType == 4) {
+    if (surfaceType == SURFACE_STONE) {
         multiplier = 0.25f;
         racer->lateral_velocity = 0.0f;
     }
-    if (racer->boostTimer == 0 && surfaceType == SURFACE_UNK03) {
+    if (racer->boostTimer == 0 && surfaceType == SURFACE_ZIP_PAD) {
         racer->boostTimer = normalise_time(45);
         racer->boostType = 3;
     }
@@ -3492,7 +3484,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
     s32 xRot;
     f32 angleX;
     f32 *temp_v0;
-    f32 tempPos[3];
+    Vec3f tempPos;
     s32 i;
     f32 sp40;
     s8 surface;
@@ -3503,29 +3495,29 @@ void func_80055A84(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
     }
     temp_v0 =(f32 *) get_misc_asset(MISC_ASSET_UNK38);
     surface = -1;
-    sp40 = temp_v0[racer->unk1D7];
-    tempPos[0] = obj->segment.trans.x_position;
-    tempPos[1] = obj->segment.trans.y_position;
-    tempPos[2] = obj->segment.trans.z_position;
+    sp40 = temp_v0[racer->vehicleIDPrev];
+    tempPos.x = obj->segment.trans.x_position;
+    tempPos.y = obj->segment.trans.y_position;
+    tempPos.z = obj->segment.trans.z_position;
     D_8011D548 = 0.0f;
     D_8011D54C = 0.0f;
     sp74 = 0;
     flags = 0;
-    if (racer->playerIndex != PLAYER_COMPUTER || racer->unk1D7 < 5) {
-        flags = func_80017248(obj, 1, &sp74, &racer->unkD8, tempPos, &sp40, &surface);
+    if (racer->playerIndex != PLAYER_COMPUTER || racer->vehicleIDPrev < VEHICLE_TRICKY) {
+        flags = func_80017248(obj, 1, &sp74, &racer->unkD8, &tempPos.x, &sp40, &surface);
     }
     if (flags & 0x80) {
-        D_8011D548 = tempPos[0] - obj->segment.trans.x_position;
-        D_8011D54C = tempPos[2] - obj->segment.trans.z_position;
+        D_8011D548 = tempPos.x - obj->segment.trans.x_position;
+        D_8011D54C = tempPos.z - obj->segment.trans.z_position;
         flags &= ~0x80;
     }
     shouldSquish = 0;
-    if (flags && tempPos[1] < obj->segment.trans.y_position - 4.0) {
+    if (flags && tempPos.y < obj->segment.trans.y_position - 4.0) {
         shouldSquish = 1;
     }
-    func_80031130(1, &racer->unkD8.x, tempPos, racer->unk1D6);
+    func_80031130(1, &racer->unkD8.x, &tempPos.x, racer->vehicleID);
     sp74 = 0;
-    racer->unk1E3 = func_80031600(&racer->unkD8.x, tempPos, &sp40, &surface, 1, &sp74);
+    racer->unk1E3 = func_80031600(&racer->unkD8.x, &tempPos.x, &sp40, &surface, 1, &sp74);
     racer->unk1E4 = flags;
     racer->unk1E3 |= flags;
     racer->unk1E2 = 0;
@@ -3541,7 +3533,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
         }
     }
     for (i = 0; i < 3; i++) {
-        racer->unkD8.f[i] = tempPos[i];
+        racer->unkD8.f[i] = tempPos.f[i];
     }
     racer->wheel_surfaces[0] = surface;
     i = 1;
@@ -3565,14 +3557,14 @@ void func_80055A84(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
         if ((xRot < 0x2000) && (xRot > -0x2000)) {
             obj->segment.trans.x_rotation = xRot;
         }
-        if (racer->unk1D6 == 4) {
+        if (racer->vehicleID == VEHICLE_LOOPDELOOP) {
             if (1)
             xRot -= (u16) obj->segment.trans.x_rotation;
             WRAP(xRot, -0x8000, 0x8000);
             obj->segment.trans.x_rotation += xRot >> 2;
         }
     }
-    if (racer->unk1D6 != 4 && racer->unk1D6 != 2 && racer->unk1D6 != 10 && racer->unk1D6 != 7) {
+    if (racer->vehicleID != VEHICLE_LOOPDELOOP && racer->vehicleID != VEHICLE_PLANE && racer->vehicleID != VEHICLE_CARPET && racer->vehicleID != VEHICLE_SMOKEY) {
         CLAMP(racer->x_rotation_vel, -0x3400, 0x3400);
         CLAMP(obj->segment.trans.x_rotation, -0x3400, 0x3400);
     }
@@ -3716,7 +3708,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                         objID = 14;
                         break;
                     case WEAPON_OIL_SLICK:
-                        if (racer->unk1D6 != 2) {
+                        if (racer->vehicleID != VEHICLE_PLANE) {
                             objID = 130;
                         } else {
                             objID = 235;
@@ -3829,7 +3821,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                         spawnedObj->segment.z_velocity = obj->segment.z_velocity - (racer->oz1 * velocity);
                         spawnedObj->segment.trans.y_rotation = obj->segment.trans.y_rotation;
                         spawnedObj->segment.trans.x_rotation = obj->segment.trans.x_rotation;
-                        if (racer->unk1D6 == 1 && racer->unk1E5) {
+                        if (racer->vehicleID == VEHICLE_HOVERCRAFT && racer->unk1E5) {
                             if (spawnedObj->segment.trans.x_rotation > -0x400 && spawnedObj->segment.trans.x_rotation < 0x400) {
                                 spawnedObj->segment.trans.x_rotation = 0;
                             }
@@ -3851,7 +3843,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                             soundID = SOUND_PLOP;
                             break;
                             case WEAPON_OIL_SLICK:
-                            if (racer->unk1D6 != 2) {
+                            if (racer->vehicleID != VEHICLE_PLANE) {
                                 spawnedObj->unk50->unk0 = 0;
                             }
                             soundID = SOUND_SPLOINK2;
@@ -4170,7 +4162,7 @@ void drop_bananas(Object *obj, Object_Racer *racer, s32 number) {
                     if (bananaObj != NULL) {
                         bananaObj->segment.unk3C_a.level_entry = NULL;
                         temp = (Object_Banana *)bananaObj->unk64;
-                        temp->unk9 = racer->unk1D6;
+                        temp->unk9 = racer->vehicleID;
                         bananaObj->segment.x_velocity = racer->ox1 * 2;
                         bananaObj->segment.y_velocity = (0.0f - racer->oy1) + 5.0;
                         bananaObj->segment.z_velocity = racer->oz1 * 2;
@@ -4609,7 +4601,7 @@ void update_camera_finish_race(UNUSED f32 updateRate, Object *obj, Object_Racer 
     yDiff = gCameraObject->trans.y_position - obj->segment.trans.y_position;
     zDiff = gCameraObject->trans.z_position - obj->segment.trans.z_position;
     distance = sqrtf((xDiff * xDiff) + (zDiff * zDiff));
-    gCameraObject->trans.y_rotation = (s16) (0x8000 - atan2s((s32) xDiff, (s32) zDiff));
+    gCameraObject->trans.y_rotation = 0x8000 - atan2s(xDiff, zDiff);
     gCameraObject->trans.x_rotation = atan2s((s32) yDiff, (s32) distance);
     gCameraObject->trans.z_rotation = 0;
     gCameraObject->segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, racer->oy1, gCameraObject->trans.z_position);
@@ -4626,11 +4618,9 @@ void update_camera_fixed(f32 updateRate, Object *obj, Object_Racer *racer) {
     delta = (s32) updateRate;
     xDiff = gCameraObject->trans.x_position - obj->segment.trans.x_position;
     zDiff = gCameraObject->trans.z_position - obj->segment.trans.z_position;
-    gCameraObject->trans.y_rotation += ((((-atan2s((s32) xDiff, (s32) zDiff)) -
-                                    gCameraObject->trans.y_rotation) + 0x8000) * delta) >> 4;
-    gCameraObject->trans.z_rotation -= (((s32) (gCameraObject->trans.z_rotation * delta)) >> 4);
-    gCameraObject->segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position,
-                            racer->oy1, gCameraObject->trans.z_position);
+    gCameraObject->trans.y_rotation += ((((-atan2s(xDiff, zDiff)) - gCameraObject->trans.y_rotation) + 0x8000) * delta) >> 4;
+    gCameraObject->trans.z_rotation -= ((s32) (gCameraObject->trans.z_rotation * delta)) >> 4;
+    gCameraObject->segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, racer->oy1, gCameraObject->trans.z_position);
 }
 
 // Think this is used to calculate the path for the AI.
@@ -4931,9 +4921,9 @@ void func_8005A3D0(void) {
     for (i = 0; i < gObjLoopGoldenBalloonLength; i++) {
         count += temp[i];
     }
-
+    // Antipiracy measure
     if (count != gObjLoopGoldenBalloonChecksum) {
-        D_800DCB54 = 0x800;
+        gAntiPiracyHeadroll = 0x800;
     }
 }
 
@@ -4993,21 +4983,21 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
 }
 
 void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
-    s32 var_t2; // sp9C
+    s32 var_t2;
     Object **objects;
-    s32 renderContext; //sp94
-    s32 countOfObjects; //sp90
-    f32 xPos; //sp8C
-    f32 yPos; //sp88
-    f32 zPos; //sp84
-    f32 sp80; //sp80
+    s32 renderContext;
+    s32 countOfObjects;
+    f32 xPos;
+    f32 yPos;
+    f32 zPos;
+    f32 lastCheckpointDist;
     Object *playerOneObj;
-    f32 var_fv1; //sp78
+    f32 var_fv1;
     Object *playerTwoObj;
-    LevelHeader *levelHeader; //sp70
+    LevelHeader *levelHeader;
     s32 temp_v0_10;
     f32 temp_f0;
-    CheckpointNode *temp_v0_9;
+    CheckpointNode *checkpoint;
     Object_Racer *tempRacer;
     f32 temp_fv1_2;
 
@@ -5027,14 +5017,14 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     } else {
         racer->unk18C = 0;
     }
-    gCurrentRacerMiscAssetPtr = (f32 *)get_misc_asset(MISC_RACER_WEIGHT);
+    gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(MISC_RACER_WEIGHT);
     gCurrentRacerWeightStat = gCurrentRacerMiscAssetPtr[racer->characterId] * 0.45;
     if (racer->unk204 > 0) {
         gCurrentRacerWeightStat = -0.02f;
     }
-    gCurrentRacerMiscAssetPtr = (f32 *)get_misc_asset(MISC_RACER_HANDLING);
+    gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(MISC_RACER_HANDLING);
     gCurrentRacerHandlingStat = gCurrentRacerMiscAssetPtr[racer->characterId];
-    gCurrentRacerMiscAssetPtr = (f32 *)get_misc_asset(MISC_ASSET_UNK0B);
+    gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(MISC_ASSET_UNK0B);
     D_8011D574 = gCurrentRacerMiscAssetPtr[racer->characterId];
     xPos = obj->segment.trans.x_position;
     yPos = obj->segment.trans.y_position;
@@ -5047,16 +5037,9 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         }
     }
     
-    racer->unk1E7++;
+    racer->unk1E7++; //!@delta
     
-    if (
-        func_8002341C() ||
-        func_80023568() || 
-        racer->unk1D6 == 4 ||
-        D_8011D544 > 120.0f ||
-        gRaceStartTimer != 0 ||
-        (levelHeader->race_type & RACETYPE_CHALLENGE_BATTLE)
-    ) {
+    if (func_8002341C() || func_80023568() || racer->vehicleID == VEHICLE_LOOPDELOOP || D_8011D544 > 120.0f || gRaceStartTimer != 0 || levelHeader->race_type & RACETYPE_CHALLENGE_BATTLE) {
         racer->unk201 = 30;
     }
     
@@ -5101,7 +5084,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->throttleReleased = 1;
         }
         if (racer->unk1FE == 3) {
-            gCurrentRacerWeightStat *= ((f32)racer->unk1FF / 256);
+            gCurrentRacerWeightStat *= ((f32) racer->unk1FF / 256);
         }
         if (racer->unk1FE == 1) {
             gCurrentRacerWeightStat -= ((gCurrentRacerWeightStat * racer->unk1FF) / 128);
@@ -5118,15 +5101,15 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->unk88 -= racer->unk88 * 0.0625 * updateRateF;
         }
         gCurrentRacerHandlingStat = 1;
-        gCurrentRacerMiscAssetPtr = (f32 *)get_misc_asset(MISC_ASSET_UNK21);
-        D_8011D568 = (f32 *)get_misc_asset(obj->segment.header->unk5D);
+        gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(MISC_ASSET_UNK21);
+        D_8011D568 = (f32 *) get_misc_asset(obj->segment.header->unk5D);
         if ((obj->segment.y_velocity < 4.0) && ((racer->unk1E2 >= 3) || (racer->buoyancy != 0.0))) {
             racer->unk1F1 = 0;
         }
         if (racer->magnetTimer != 0) {
             racer_activate_magnet(obj, racer, updateRate);
         }
-        if (racer->unk1D6 != 1) {
+        if (racer->vehicleID != VEHICLE_HOVERCRAFT) {
             racer->unk1E5 = 0;
             racer->buoyancy = 0;
             D_8011D5AE = 0;
@@ -5142,47 +5125,47 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             gCurrentButtonsPressed = 0;
         }
         // The case statements break must be on the same line as the function call in order to match
-        switch (racer->unk1D6) {
-        case 0: func_8004F7F4(updateRate, updateRateF, obj, racer); break;
-        case 4: func_8004CC20(updateRate, updateRateF, obj, racer); break;
-        case 1: func_80046524(updateRate, updateRateF, obj, racer); break;
-        case 2: func_80049794(updateRate, updateRateF, obj, racer); break;
-        case 3: /* fall through */
-        case 10:func_8004D95C(updateRate, updateRateF, obj, racer); break;
-        case 5: func_8005C364(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
-        case 6: func_8005D0D0(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
-        case 7: /* fall through */
-        case 8: func_8005D820(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentStickX, &gRaceStartTimer); break;
-        case 11:func_8005E4C0(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
-        case 12:func_8005EA90(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
-        case 13:func_8005F310(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
+        switch (racer->vehicleID) {
+        case VEHICLE_CAR: func_8004F7F4(updateRate, updateRateF, obj, racer); break;
+        case VEHICLE_LOOPDELOOP: func_8004CC20(updateRate, updateRateF, obj, racer); break;
+        case VEHICLE_HOVERCRAFT: func_80046524(updateRate, updateRateF, obj, racer); break;
+        case VEHICLE_PLANE: func_80049794(updateRate, updateRateF, obj, racer); break;
+        case VEHICLE_FLYING_CAR: /* fall through */
+        case VEHICLE_CARPET: update_carpet(updateRate, updateRateF, obj, racer); break;
+        case VEHICLE_TRICKY: update_tricky(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
+        case VEHICLE_BLUEY: update_bluey(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
+        case VEHICLE_SMOKEY: /* fall through */
+        case VEHICLE_PTERODACTYL: update_smokey(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentStickX, &gRaceStartTimer); break;
+        case VEHICLE_BUBBLER: update_bubbler(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
+        case VEHICLE_WIZPIG: update_wizpig(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
+        case VEHICLE_ROCKET: update_rocket(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         }
         if (renderContext != DRAW_MENU) {
             func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
-        sp80 = racer->checkpoint_distance;
+        lastCheckpointDist = racer->checkpoint_distance;
         countOfObjects = racer->checkpoint;
         var_t2 = func_800185E4(racer->checkpoint, obj, xPos, yPos, zPos, &racer->checkpoint_distance, &racer->unk1C8);
         if (var_t2 == -100) {
             func_8005C270(racer);
         }
-        temp_v0_9 = find_next_checkpoint_node(racer->checkpoint, racer->unk1C8);
-        if (temp_v0_9->unk36[racer->unk1CA] == 5) {
+        checkpoint = find_next_checkpoint_node(racer->checkpoint, racer->unk1C8);
+        if (checkpoint->unk36[racer->unk1CA] == 5) {
             racer->unk201 = 30;
             if (racer->unk1E5 != 0) {
                 racer->unk1C8 = 1;
             }
         }
-        if (temp_v0_9->unk36[racer->unk1CA] == 6) {
+        if (checkpoint->unk36[racer->unk1CA] == 6) {
             racer->lap = levelHeader->laps + 1;
         }
-        if (temp_v0_9->unk36[racer->unk1CA] == 4) {
+        if (checkpoint->unk36[racer->unk1CA] == 4) {
             if (racer->velocity < -4.0) {
                 racer->velocity *= 0.9;
             }
         }
         if (var_t2 == 0) {
-            if (temp_v0_9->unk36[racer->unk1CA] == 2) {
+            if (checkpoint->unk36[racer->unk1CA] == 2) {
                 racer->unk1C8 = 1;
             }
             temp_v0_10 = get_checkpoint_count();
@@ -5200,8 +5183,8 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             }
             racer->unk1A8 = 10000;
         } else {
-            if ((racer->playerIndex == -1) && (sp80 < racer->checkpoint_distance)) {
-                racer->checkpoint_distance = sp80;
+            if (racer->playerIndex == PLAYER_COMPUTER && lastCheckpointDist < racer->checkpoint_distance) {
+                racer->checkpoint_distance = lastCheckpointDist;
             }
             racer->unk1A8 = var_t2;
         }
@@ -5239,12 +5222,12 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->stretch_height = racer->stretch_height_cap;
         racer->stretch_height_cap = 1.0f; 
     }
-    var_t2 = ((racer->unk16C - racer->unk16A) * updateRate) >> 3;
+    var_t2 = ((racer->headAngleTarget - racer->headAngle) * updateRate) >> 3;
     CLAMP(var_t2, -0x800, 0x800)
-    if (D_800DCB54 != 0) {
-        racer->unk16A += D_800DCB54;
+    if (gAntiPiracyHeadroll) {
+        racer->headAngle += gAntiPiracyHeadroll;
     } else {
-        racer->unk16A += var_t2;
+        racer->headAngle += var_t2;
     }
     if (racer->shieldTimer > 0) {
         if (racer->shieldTimer > 60) {
@@ -5284,7 +5267,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->unk150 = NULL;
     }
     racer->unk1FE = 0xFF;
-    func_8004F77C(racer);
+    set_racer_tail_lights(racer);
 }
 
 #ifdef NON_EQUIVALENT
@@ -5339,7 +5322,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     if (sp11C != 0) {
         racer->unk1C9 = 0;
         racer->unk1F5 = 0;
-        racer->attackType = 0;
+        racer->attackType = ATTACK_NONE;
         racer->lateral_velocity = 0;
         sp94 = 20.0f;
         if (racer->unk124 < -20.0f) {
@@ -5354,7 +5337,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             var_f12 *= 1.3;
         }
         var_a2 = &spEC;
-        if (racer->unk1D6 == 1) {
+        if (racer->vehicleID == VEHICLE_HOVERCRAFT) {
             var_v0 = (racer->unk1BE & 0xFFFF) - (racer->unk1C2 & 0xFFFF);
             if (var_v0 >= 0x8001) {
                 var_v0 += 0xFFFF0001;

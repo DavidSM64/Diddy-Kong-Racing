@@ -393,12 +393,12 @@ glabel func_80049794
 /* 04A87C 80049C7C 00000000 */   nop   
 /* 04A880 80049C80 8FA600F8 */  lw    $a2, 0xf8($sp)
 /* 04A884 80049C84 02202025 */  move  $a0, $s1
-/* 04A888 80049C88 0C014871 */  jal   func_800521C4
+/* 04A888 80049C88 0C014871 */  jal   handle_racer_head_turning
 /* 04A88C 80049C8C 02002825 */   move  $a1, $s0
 /* 04A890 80049C90 10000003 */  b     .L80049CA0
 /* 04A894 80049C94 00000000 */   nop   
 .L80049C98:
-/* 04A898 80049C98 0C0148D3 */  jal   func_8005234C
+/* 04A898 80049C98 0C0148D3 */  jal   slowly_reset_head_angle
 /* 04A89C 80049C9C 02002025 */   move  $a0, $s0
 .L80049CA0:
 /* 04A8A0 80049CA0 3C0E8012 */  lui   $t6, %hi(gCurrentRacerInput) # $t6, 0x8012

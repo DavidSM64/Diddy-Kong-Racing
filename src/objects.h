@@ -377,7 +377,7 @@ Object **func_8000E988(s32 *arg0, s32 *cnt);
 s32 getObjectCount(void);
 s32 func_8000E9C0(void);
 void func_8000E9D0(Object *arg0);
-void gParticlePtrList_addObject(Object *object);
+void gParticlePtrList_addObject();
 s32 func_80010018(void);
 s32 func_80010028(s32 arg0);
 void func_80011390(void);
@@ -520,5 +520,6 @@ void func_80008438(Object**, s32, s32);
 void func_8001E6EC(s8);
 void func_8001E89C(void);
 void func_800155B8(void);
+void func_800230D0(Object*, Object_Racer*);
 
 #endif

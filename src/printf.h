@@ -52,5 +52,7 @@ void set_render_printf_position(u16 xpos, u16 ypos); // Non Matching
 s32 render_printf(const char *format, ...); // Non Matchingg
 void func_800B3740(Object *, Gfx **, MatrixS **, Vertex **, s32); // Non Matching
 s32 func_800B653C(Gfx**, s8*);
+void func_800B4668(Object*, s32, s32, s32);
+void func_800B46BC(Object*, s32, s32, s32);
 
 #endif

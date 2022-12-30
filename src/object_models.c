@@ -63,10 +63,10 @@ void func_8005F850(void) {
     D_8011D644 = (s32) allocate_from_main_pool_safe(0xC00, COLOUR_TAG_GREEN);
     D_8011D640 = 0;
 
-    // Anti-tamper check.
+    // Antipiracy measure
     checksum = 0;
     for (i = 0; i < gFunc80024D54Length; i++) {
-        checksum += *(u8 *)(((s32)&render_scene) + i);
+        checksum += *(u8 *)(((s32) &render_scene) + i);
     }
     if (checksum != gTractionTableChecksum) {
         antipiracy_modify_surface_traction_table();

@@ -835,7 +835,7 @@ typedef struct Object_CollectEgg {
 
 typedef struct Object_UnkId58 {
   /* 0x000 */ u8 pad0[0x1D6];
-  /* 0x1D6 */ s8 unk1D6;
+  /* 0x1D6 */ s8 vehicleID;
 } Object_UnkId58;
 
 typedef struct Object_CharacterFlag {
@@ -1027,7 +1027,7 @@ typedef struct Object_Racer {
   /* 0x0C8 */ f32 unkC8;
   /* 0x0CC */ f32 unkCC;
   /* 0x0D0 */ f32 unkD0;
-  /* 0x0D4 */ s32 unkD4;
+  /* 0x0D4 */ f32 unkD4;
   /* 0x0D8 */ Vec3f unkD8;
   /* 0x0E4 */ Vec3f unkE4;
   /* 0x0F0 */ Vec3f unkF0;
@@ -1057,8 +1057,8 @@ typedef struct Object_Racer {
   /* 0x164 */ s16 z_rotation_offset;
   /* 0x166 */ s16 unk166; // I don't know exactly what these are, but this one in particular seems to cause a Y position offset.
   /* 0x168 */ s16 unk168;
-  /* 0x16A */ s16 unk16A;
-  /* 0x166 */ s16 unk16C; // As for these, they seem to affect the turning direction of the racer's head.
+  /* 0x16A */ s16 headAngle;
+  /* 0x166 */ s16 headAngleTarget;
   /* 0x16E */ s16 unk16E;
   /* 0x170 */ s16 unk170;
   /* 0x172 */ s8 balloon_type;
@@ -1119,10 +1119,10 @@ typedef struct Object_Racer {
   /* 0x1D1 */ s8 unk1D1;
   /* 0x1D2 */ s8 unk1D2;
   /* 0x1D3 */ s8 boostTimer;
-  /* 0x1D4 */ u8 unk1D4;
-  /* 0x1D5 */ u8 unk1D5;
-  /* 0x1D6 */ s8 unk1D6;
-  /* 0x1D7 */ s8 unk1D7;
+  /* 0x1D4 */ s8 unk1D4;
+  /* 0x1D5 */ s8 unk1D5;
+  /* 0x1D6 */ s8 vehicleID;
+  /* 0x1D7 */ s8 vehicleIDPrev;
   /* 0x1D8 */ s8 raceFinished;
   /* 0x1D9 */ s8 unk1D9;
   /* 0x1DA */ u8 unk1DA;
@@ -1168,7 +1168,7 @@ typedef struct Object_Racer {
   /* 0x206 */ s16 unk206;
   /* 0x208 */ s8 unk208;
   /* 0x209 */ u8 unk209;
-  /* 0x20A */ u8 unk20A;
+  /* 0x20A */ u8 lightFlags;
   /* 0x20B */ u8 unk20B;
   /* 0x20C */ u8 throttleReleased;
   /* 0x20D */ u8 unk20D;
@@ -1201,7 +1201,7 @@ typedef struct Object_ModeChange {
   /* 0x08 */ f32 unk8;
   /* 0x0C */ f32 unkC;
   /* 0x10 */ s32 unk10;
-  /* 0x14 */ u8 unk14;
+  /* 0x14 */ u8 vehicleID;
 } Object_ModeChange;
 
 typedef struct Object_GoldenBalloon {
@@ -1379,6 +1379,15 @@ typedef struct Object_AnimatedObject {
     s8 unk3A;
 } Object_AnimatedObject;
 
+typedef struct Object_WizpigRocket {
+    u8 pad0[0x70];
+    u8 unk70;
+    u8 unk71;
+    u8 unk72;
+    u8 unk73;
+    f32 unk74;
+} Object_WizpigRocket;
+
 typedef struct Object_64 {
     union {
         Object_Laser laser;
@@ -1427,6 +1436,7 @@ typedef struct Object_64 {
         Object_Fireball_Octoweapon fireball_octoweapon;
         Object_LaserGun lasergun;
         Object_AnimatedObject animatedObject;
+        Object_WizpigRocket wizpigRocket;
     };
 } Object_64;
 
@@ -1462,7 +1472,7 @@ typedef struct ParticleBehavior {
     f32 unk4;
     f32 unk8;
     f32 unkC;
-    u8 pad10[4];
+    u8 pad10[0x4];
     s16 unk14;
     s16 unk16;
     s16 unk18;
@@ -1473,10 +1483,37 @@ typedef struct ParticleBehavior {
     s16 unk22;
     s16 unk24;
     s16 unk26;
-    u8 pad28[0x18];
+    s16 unk28;
+    s16 unk2A;
+    s16 unk2C;
+    s16 unk2E;
+    u8 pad30[0x10];
     s16 unk40;
     s16 unk42;
-    u8 pad44[0x58];
+    s16 unk44;
+    s16 unk46;
+    s16 unk48;
+    s16 unk4A;
+    s16 unk4C;
+    s16 unk4E;
+    f32 unk50;
+    f32 unk54;
+    u8 pad58[0x4];
+    s32 unk5C;
+    u8 pad60[0x20];
+    s16 unk80;
+    s16 unk82;
+    s16 unk84;
+    s16 unk86;
+    s16 unk88;
+    s16 unk8A;
+    s32 unk8C;
+    s32 unk90;
+    u8 pad94[0x4];
+    u8 unk98;
+    u8 unk99;
+    u8 unk9A;
+    u8 unk9B;
     s32 *unk9C;
 } ParticleBehavior;
 
@@ -1707,6 +1744,7 @@ typedef struct Object {
   /* 0x0078 */ ObjectTransform *trans78;
   /* 0x0078 */ s32 action;
   /* 0x0078 */ f32 unk78f;
+  /* 0x0078 */ struct Object *unk78_obj;
   };
 
   union {
@@ -1863,10 +1901,15 @@ typedef struct ByteColour {
 } ByteColour;
 
 typedef struct {
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
+union {
+struct {
+ u8 r;
+ u8 g;
+ u8 b;
+ u8 a;
+};
+u32 word;
+};
 } ColourRGBA;
 
 #endif
