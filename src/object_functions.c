@@ -2890,7 +2890,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
                     racer = &racerObj->unk64->racer;
                     if (racer->playerIndex == PLAYER_ONE) {
                         settings->balloonsPtr[settings->worldId]++;
-                        if(isPirated == 1) { }
+                        if(isPirated == 1) { } // Fakematch
                         if (settings->worldId != 0) {
                             settings->balloonsPtr[0]++;
                         }

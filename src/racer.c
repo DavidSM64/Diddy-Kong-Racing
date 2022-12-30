@@ -2880,7 +2880,11 @@ void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 upd
     racer->steerAngle = 0;
 }
 
-void func_80052D7C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF) {
+/**
+ * Gets, sets and works with car velocity while either airborne or in water.
+ * It also handles turn velocity, too, as well as vertical velocity.
+ */
+void update_car_velocity_offground(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF) {
     s32 steerAngle;
     s32 yStick;
     s32 angle;
@@ -2900,12 +2904,7 @@ void func_80052D7C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
         }
         racer->unk1A0 -= (u16) ((steerAngle * 6 * updateRate) >> 1);
         angle = -(u16) racer->x_rotation_vel;
-        if (angle > 0x8000) {
-            angle -= 0xFFFF;
-        }
-        if (angle < -0x8000) {
-            angle += 0xFFFF;
-        }
+        WRAP(angle, -0x8000, 0x8000);
         racer->x_rotation_vel += (angle >> 3);
     }
     if (racer->unk18) {
@@ -3072,7 +3071,7 @@ void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1) {
  */
 void handle_car_velocity_control(Object_Racer *racer) {
     if (racer->throttle > 0.0) {
-        racer->throttle -= 0.1;
+        racer->throttle -= 0.1; //!@delta
     }
 
     if (gCurrentRacerInput & A_BUTTON) {
@@ -3081,12 +3080,12 @@ void handle_car_velocity_control(Object_Racer *racer) {
 
     if (gCurrentRacerInput & B_BUTTON) {
         if (racer->brake < 1.0) {
-            racer->brake += 0.2;
+            racer->brake += 0.2; //!@delta
         }
     } else {
         //! @bug Will cause a negative brake value resulting in higher velocity
         if (racer->brake > 0.05) {
-            racer->brake -= 0.1;
+            racer->brake -= 0.1; //!@delta
         }
     }
 }
@@ -3170,7 +3169,12 @@ void racer_attack_handler(Object* obj, Object_Racer* racer, s32 updateRate) {
     }
 }
 
-void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
+/**
+ * Only ran when onscreen or nearby, this function handles more authentic, but computationally expensive looking
+ * behaviour for AI controlled racers.
+ * This function also calls pathing, using splines, to know where to go.
+*/
+void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
     f32 tempVel;
     f32 xVel;
     f32 zVel;
@@ -3197,9 +3201,9 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     if (racer->spinout_timer) {
         racer_spinout_car(obj, racer, updateRate, updateRateF); // Sbinalla
     } else if (racer->unk1E2 > 0) {
-        func_8005492C(obj, racer, updateRate, updateRateF);
+        update_car_velocity_ground(obj, racer, updateRate, updateRateF);
     } else {
-        func_80052D7C(obj, racer, updateRate, updateRateF);
+        update_car_velocity_offground(obj, racer, updateRate, updateRateF);
     }
     apply_vehicle_rotation_offset(racer, updateRate, 0, 0, 0);
     header = get_current_level_header();
@@ -3322,7 +3326,11 @@ void func_80054110(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
 }
 
-void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF) {
+/**
+ * Gets, sets and works with car velocity while grounded.
+ * It also handles turn velocity, too.
+ */
+void update_car_velocity_ground(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF) {
     s32 xStick;
     s32 stickMultiplier;
     s32 surfaceType;
@@ -3392,7 +3400,7 @@ void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
     }
     if (racer->boostTimer == 0 && surfaceType == SURFACE_ZIP_PAD) {
         racer->boostTimer = normalise_time(45);
-        racer->boostType = 3;
+        racer->boostType = BOOST_UNK3;
     }
     racer->velocity -= velSquare * traction;
     if (sp38) {
@@ -3403,10 +3411,10 @@ void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
         racer->unk1EE = 0;
     }
     if (get_viewport_count() < 2 && sp38 && racer->velocity < -2.0) {
-        if (racer->wheel_surfaces[2] < 0xFF) {
+        if (racer->wheel_surfaces[2] < SURFACE_NONE) {
             obj->unk74 |= 1 << (racer->wheel_surfaces[2] * 2);
         }
-        if (racer->wheel_surfaces[3] < 0xFF) {
+        if (racer->wheel_surfaces[3] < SURFACE_NONE) {
             obj->unk74 |= 2 << (racer->wheel_surfaces[3] * 2);
         }
     }
@@ -4642,7 +4650,7 @@ void func_80059080(UNUSED Object *obj, Object_Racer *racer, f32 *xVel, f32 *yVel
         if (magnitude < 0.0f) {
             magnitude = 0.0f;
         }
-        if (racer->checkpoint) {}
+        if (racer->checkpoint) {} // Fakematch
         splinePos = racer->checkpoint - 2;
         if (splinePos < 0) {
             splinePos += splineEnd;

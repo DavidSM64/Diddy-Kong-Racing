@@ -2538,7 +2538,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
         gTitleDemoTimer = 0;
     }
     if ((gMenuDelay == 0) && (func_800214C4() || sp28)) {
-        if(gTitleDemoTimer){}
+        if(gTitleDemoTimer){} // Fakematch
         D_80126864 += 3;
         demo = &sTitleScreenDemoIds[D_80126864];
         if (demo[0] == -1) {
@@ -3860,7 +3860,7 @@ s32 menu_controller_pak_loop(s32 updateRate) {
                 switch (D_800DF460) {
                 case -1:
                     if (yStick < 0) {
-                        if(!xStick){}
+                        if(!xStick){} // Fakematch
                         D_800DF460 = 0;
                         playMoveSound = TRUE;
                     }
@@ -8841,7 +8841,7 @@ s32 tt_menu_loop(void) {
                 }
             }
             if ((buttonsPressed & A_BUTTON) && (sCurrentMenuID != TT_MENU_EXIT)) {
-                if(gPreviousMenuID && !gPreviousMenuID && !gPreviousMenuID){} // Fake match
+                if(gPreviousMenuID && !gPreviousMenuID && !gPreviousMenuID){} // Fakematch
                 switch (gDialogueItemSelection) {
                     case 1:
                         play_sound_global(SOUND_SELECT2, NULL);

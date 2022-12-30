@@ -1035,7 +1035,7 @@ s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     if (obj->segment.trans.x_position < test2) {
         var_v1 = 1;
     }
-    if (1) { } if (1) { } if (1) { }
+    if (1) { } if (1) { } if (1) { } // Fakematch
     test3 = (levelModel->unk42 + 3000.0);
     if (obj->segment.trans.y_position > test3) {
         var_v1 = 1;
@@ -1327,7 +1327,7 @@ void func_80012E28(Object *this) {
             tmp_f0 = (tmp_f0 < 0.0f) ? 0.0f : tmp_f0 * tmp_f0;
 
             temp = (1.0f - tmp_f0) * 24.0f + sp_20->unkD0;
-            if(0){}
+            if(0){} // Fakematch
             sp_1c = temp;
         }
         this->segment.trans.y_position = this->segment.trans.y_position + sp_1c;
