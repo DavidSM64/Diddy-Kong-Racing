@@ -1322,29 +1322,35 @@ f32 func_80069DC8(f32 x, f32 y, f32 z) {
     return oz;
 }
 
-void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
-    f32 temp_f0;
-    f32 temp_f0_2;
-    f32 temp_f14;
-    f32 temp_f2;
+/**
+ * Apply a shake to the camera based on the distance to the source.
+*/
+void set_camera_shake_by_distance(f32 x, f32 y, f32 z, f32 dist, f32 magnitude) {
+    f32 diffX;
+    f32 distance;
+    f32 diffZ;
+    f32 diffY;
     s32 i;
-    arg3 *= arg3;
+    dist *= dist;
 
     for (i = 0; i <= gNumberOfViewports; i++) {
-        temp_f0 = arg0 - gActiveCameraStack[i].trans.x_position;
-        temp_f2 = arg1 - gActiveCameraStack[i].trans.y_position;
-        temp_f14 = arg2 - gActiveCameraStack[i].trans.z_position;
-        temp_f0_2 = (((temp_f0 * temp_f0) + (temp_f2 * temp_f2)) + (temp_f14 * temp_f14));
-        if (temp_f0_2 < arg3) {
-            gActiveCameraStack[i].unk30 = ((arg3 - temp_f0_2) * arg4) / arg3;
+        diffX = x - gActiveCameraStack[i].trans.x_position;
+        diffY = y - gActiveCameraStack[i].trans.y_position;
+        diffZ = z - gActiveCameraStack[i].trans.z_position;
+        distance = (((diffX * diffX) + (diffY * diffY)) + (diffZ * diffZ));
+        if (distance < dist) {
+            gActiveCameraStack[i].unk30 = ((dist - distance) * magnitude) / dist;
         }
     }
 }
 
-void func_80069F28(f32 arg0) {
+/**
+ * Apply a shake to all active cameras.
+*/
+void set_camera_shake(f32 magnitude) {
     s32 i;
     for (i = 0; i <= gNumberOfViewports; i++) {
-        gActiveCameraStack[i].unk30 = arg0;
+        gActiveCameraStack[i].unk30 = magnitude;
     }
 }
 

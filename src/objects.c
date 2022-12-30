@@ -674,8 +674,8 @@ void func_8000E2B4(void) {
     gRacersByPort[0] = player;
     *gRacersByPosition = player;
     player_64 = &player->unk64->racer;
-    player_64->unk1D6 = gOverworldVehicle;
-    player_64->unk1D7 = gOverworldVehicle;
+    player_64->vehicleID = gOverworldVehicle;
+    player_64->vehicleIDPrev = gOverworldVehicle;
     player_64->unk2 = 0;
     player_64->characterId = (s8) settings->racers[0].character;
     player_64->playerIndex = 0;
@@ -829,9 +829,9 @@ s32 func_8000FAC4(Object *obj, Object_6C *arg1) {
     particleDataEntry = obj->segment.header->objectParticles;
     for(i = 0; i < obj->segment.header->unk57; i++) {
         if ((particleDataEntry[i].upper & 0xFFFF0000) == 0xFFFF0000) {
-            func_800AF1E0((Object *) &obj->unk6C[i], (particleDataEntry[i].upper >> 8) & 0xFF, particleDataEntry[i].upper & 0xFF);
+            func_800AF1E0((Particle *) &obj->unk6C[i], (particleDataEntry[i].upper >> 8) & 0xFF, particleDataEntry[i].upper & 0xFF);
         } else {
-            func_800AF29C((Object *) &obj->unk6C[i],
+            func_800AF29C((Particle *) &obj->unk6C[i],
                 (particleDataEntry[i].upper >> 0x18) & 0xFF,
                 (particleDataEntry[i].upper >> 0x10) & 0xFF,
                 particleDataEntry[i].upper & 0xFFFF,
@@ -1333,7 +1333,7 @@ void func_80012E28(Object *this) {
         this->segment.trans.x_rotation += sp_20->x_rotation_offset;
         this->segment.trans.z_rotation += sp_20->z_rotation_offset;
         sp_1c = 0.0f;
-        if (sp_20->unk1D7 < 5) {
+        if (sp_20->vehicleIDPrev < VEHICLE_TRICKY) {
 
             sp_1c = coss_f(sp_20->z_rotation_offset);
             tmp_f2 = sp_1c;
@@ -1412,8 +1412,8 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         if (var_a2 > 10) {
             var_a2 = 0;
         }
-        var_a1 = racer->unk1D6;
-        if (var_a1 > 2) {
+        var_a1 = racer->vehicleID;
+        if (var_a1 >= NUMBER_OF_PLAYER_VEHICLES) {
             var_a1 = 0;
         }
         shield = ((struct RacerShieldGfx *) get_misc_asset(MISC_ASSET_SHIELD_DATA));
@@ -1483,8 +1483,8 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gObjectCurrMatrix = *mtx;
             gObjectCurrVertexList = *vtxList;
             magnet = (f32 *) get_misc_asset(MISC_ASSET_MAGNET_DATA);
-            var_a0 = racer->unk1D6;
-            if (var_a0 < 0 || var_a0 > 2) {
+            var_a0 = racer->vehicleID;
+            if (var_a0 < VEHICLE_CAR || var_a0 >= NUMBER_OF_PLAYER_VEHICLES) {
                 var_a0 = 0;
             }
             magnet = &magnet[var_a0 * 5];

@@ -64,10 +64,10 @@ void func_8005F850(void) {
     D_8011D640 = 0;
 
 #ifndef NO_ANTIPIRACY
-    // Anti-tamper check.
+    // Antipiracy measure
     checksum = 0;
     for (i = 0; i < gFunc80024D54Length; i++) {
-        checksum += *(u8 *)(((s32)&render_scene) + i);
+        checksum += *(u8 *)(((s32) &render_scene) + i);
     }
     if (checksum != gTractionTableChecksum) {
         antipiracy_modify_surface_traction_table();

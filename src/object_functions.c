@@ -29,6 +29,7 @@
 #include "unknown_005740.h"
 #include "object_models.h"
 #include "lib/src/libc/rmonPrintf.h"
+#include "collision.h"
 #include "main.h"
 
 /************ .data ************/
@@ -999,6 +1000,7 @@ void obj_loop_unknown58(Object *obj, s32 updateRate) {
     Object *someOtherObj;
     Object_UnkId58 *someOtherObj64;
     Object_60 *obj60;
+    s8 vehicleID;
 
     obj->segment.unk38.byte.unk3B = 0;
     obj->segment.animFrame = 40;
@@ -1011,8 +1013,8 @@ void obj_loop_unknown58(Object *obj, s32 updateRate) {
     someOtherObj64 = &someOtherObj->unk64->unkid58;
     obj60 = obj->unk60;
     if (obj60->unk0 == 1) {
-        s8 temp = someOtherObj64->unk1D6;
-        if (temp == 1 || temp == 2) {
+        vehicleID = someOtherObj64->vehicleID;
+        if (vehicleID == VEHICLE_HOVERCRAFT || vehicleID == VEHICLE_PLANE) {
             someObj = (Object *) obj60->unk4;
             someObj->segment.trans.y_rotation = 0x4000;
             someObj->segment.unk38.byte.unk3A++;
@@ -1241,7 +1243,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             func_80030DE0(0, tt->unk11, tt->unk12, tt->unk13, tt->unk20, tt->unk22, 0xB4);
             play_music(header->music);
             func_80001074(header->instruments);
-            racer->unk118 = func_80004B40(racer->characterId, racer->unk1D6);
+            racer->unk118 = func_80004B40(racer->characterId, racer->vehicleID);
         }
         obj->unk7C.word = 0xB4;
         func_80011570(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
@@ -2277,23 +2279,23 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
         if (var_a2_2 & 0x80) {
             D_8011D4E0 = var_a2_2 & 0x7F;
-            if (D_8011D4E0 != racer64->racer.unk1D6) {
+            if (D_8011D4E0 != racer64->racer.vehicleID) {
                 obj->action = TAJ_MODE_TRANSFORM_BEGIN;
                 taj->unk4 = 0;
                 // Voice clips: Abrakadabra, Alakazam, Alakazoom?
-                play_taj_voice_clip((racer64->racer.unk1D6 + 0x235), 1);
+                play_taj_voice_clip((racer64->racer.vehicleID + SOUND_VOICE_TAJ_ABRAKADABRA), 1);
             } else {
                 set_menu_id_if_option_equal(0x62, 2);
             }
         }
         if (var_a2_2 & 0x40) {
             D_8011D4E0 = var_a2_2 & 0xF;
-            if (D_8011D4E0 != racer64->racer.unk1D6) {
+            if (D_8011D4E0 != racer64->racer.vehicleID) {
                 D_8011D4E0 |= 0x80;
                 obj->action = TAJ_MODE_TRANSFORM_BEGIN;
                 taj->unk4 = 0.0f;
                 // Voice clips: Abrakadabra, Alakazam, Alakazoom?
-                play_taj_voice_clip((racer64->racer.unk1D6 + 0x235), 1);
+                play_taj_voice_clip((racer64->racer.vehicleID + SOUND_VOICE_TAJ_ABRAKADABRA), 1);
             } else {
                 obj->action = TAJ_MODE_SET_CHALLENGE;
                 func_800C01D8(&D_800DC978);
@@ -2373,7 +2375,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             }
             obj->action = TAJ_MODE_TELEPORT_AWAY_BEGIN;
             play_sound_global(SOUND_WHOOSH4, NULL);
-            racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.unk1D6);
+            racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.vehicleID);
         }
         break;
     case TAJ_MODE_TELEPORT_TO_PLAYER_BEGIN:
@@ -2431,12 +2433,12 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         if (obj->segment.unk38.byte.unk39 > var_a2) {
             obj->segment.unk38.byte.unk39 -= var_a2;
         } else {
-            racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.unk1D6);
+            racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.vehicleID);
             func_80030DE0(0, taj->unk11, taj->unk12, taj->unk13, taj->unk20, taj->unk22, 0xB4);
             set_music_player_voice_limit(levelHeader->voiceLimit);
             play_music(levelHeader->music);
             func_80001074(levelHeader->instruments);
-            func_800228EC(racer64->racer.unk1D6);
+            func_800228EC(racer64->racer.vehicleID);
             temp_v0_12 = func_8002342C(obj->segment.trans.x_position, obj->segment.trans.z_position);
             if (temp_v0_12 != NULL) {
                 obj->segment.trans.x_position = temp_v0_12->segment.trans.x_position;
@@ -2674,6 +2676,10 @@ void obj_init_checkpoint(Object *obj, LevelObjectEntry_Checkpoint *entry, UNUSED
 void obj_loop_checkpoint(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
+/**
+ * Vehicle mode changer initialisation function.
+ * Sets direction and vehicleID based off spawn info.
+*/
 void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     f32 phi_f0;
     Object_ModeChange *obj64;
@@ -2690,13 +2696,17 @@ void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     obj64->unk8 = coss_f(obj->segment.trans.y_rotation);
     obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
     obj64->unk10 = entry->unk8;
-    obj64->unk14 = entry->unkA;
+    obj64->vehicleID = entry->vehicleID;
     obj->interactObj->unk14 = 2;
     obj->interactObj->unk11 = 0;
     obj->interactObj->unk10 = entry->unk8;
     obj->interactObj->unk12 = 0;
 }
 
+/**
+ * Vehicle mode changer loop behaviour.
+ * Racers that pass through will have their vehicle type changed. This is usually used for loop-de-loops.
+*/
 void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
     Object *racerObj;
     Object **racerObjects;
@@ -2718,7 +2728,7 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
         for (i = 0; i < numRacers; i++) {
             racerObj = racerObjects[i];
             racer = (Object_Racer *) racerObj->unk64;
-            if (racer->unk1D6 != modeChange->unk14) {
+            if (racer->vehicleID != modeChange->vehicleID) {
                 diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
                 diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
@@ -2727,12 +2737,12 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
                     dist = ((modeChange->unk0 * racerObj->segment.trans.x_position) + (modeChange->unk8 * racerObj->segment.trans.z_position) + modeChange->unkC);
                     if (dist < 0.0f) {
                         racer->unk1E0 = 0;
-                        if (modeChange->unk14 == 0) {
-                            racer->unk1D6 = racer->unk1D7;
+                        if (modeChange->vehicleID == VEHICLE_CAR) {
+                            racer->vehicleID = racer->vehicleIDPrev;
                         } else {
-                            racer->unk1D6 = modeChange->unk14;
+                            racer->vehicleID = modeChange->vehicleID;
                         }
-                        if (modeChange->unk14 == 4) {
+                        if (modeChange->vehicleID == VEHICLE_LOOPDELOOP) {
                             if (racer->raceFinished == FALSE) {
                                 func_80072348(racer->playerIndex, 8);
                             }
@@ -3289,15 +3299,15 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
         racerObj = get_racer_object(0);
         if (racerObj != NULL) {
             racer = (Object_Racer *) racerObj->unk64;
-            switch(racer->unk1D6) {
+            switch(racer->vehicleID) {
                 default:
-                    var_v0 = 1;
+                    var_v0 = VEHICLE_HOVERCRAFT;
                     break;
                 case 1:
-                    var_v0 = 2;
+                    var_v0 = VEHICLE_PLANE;
                     break;
                 case 2:
-                    var_v0 = 4;
+                    var_v0 = VEHICLE_LOOPDELOOP;
                     break;
             }
             if (entry->unkF & var_v0) {
@@ -3877,7 +3887,7 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
             interactObj = obj->interactObj->obj;
             if (interactObj != NULL && interactObj->segment.header->behaviorId == BHV_RACER) {
                 racer = (Object_Racer *) interactObj->unk64;
-                    if (racer->unk1D6 < 5 || racer->playerIndex != PLAYER_COMPUTER) {
+                    if (racer->vehicleID < VEHICLE_TRICKY|| racer->playerIndex != PLAYER_COMPUTER) {
                     currentBalloon = racer->balloon_type;
                     racer->balloon_type = obj->unk78;
                     if (currentBalloon == racer->balloon_type && racer->balloon_quantity != 0) {
@@ -4568,7 +4578,7 @@ void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry) {
 }
 
 void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry) {
-    func_800AF134((Object *) obj->unk6C, entry->unk9, entry->unk8, 0, 0, 0);
+    func_800AF134((Particle *) obj->unk6C, entry->unk9, entry->unk8, 0, 0, 0);
     obj->unk78 = entry->unkA;
 }
 

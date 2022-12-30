@@ -311,6 +311,7 @@ $(BUILD_DIR)/lib/src/al/env.o: MIPSISET := -mips2
 ####################### MATH UTIL #########################
 
 $(BUILD_DIR)/src/math_util.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/collision.o: MIPSISET := -mips2
 
 $(BUILD_DIR)/src/video.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/video.o: OPT_FLAGS := -O3

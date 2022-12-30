@@ -1,11 +1,25 @@
-glabel func_80031600_2
+.section .rodata
+
+glabel D_800E5F60
+.float -0.1
+glabel D_800E5F64
+.float -0.1
+glabel D_800E5F68
+.float 0.707
+glabel D_800E5F6C
+.float 0.45
+glabel D_800E5F70
+.float -0.1
+
+.section .text
+
+glabel func_80031600
 /* 032200 80031600 24080001 */  li    $t0, 1
 /* 032204 80031604 A3A80001 */  sb    $t0, 1($sp)
 /* 032208 80031608 3C088012 */  lui   $t0, %hi(D_8011D378) # $t0, 0x8012
 /* 03220C 8003160C 8D08D378 */  lw    $t0, %lo(D_8011D378)($t0)
 /* 032210 80031610 3C018012 */  lui   $at, %hi(D_8011B0F0) # $at, 0x8012
 /* 032214 80031614 A3A00000 */  sb    $zero, ($sp)
-/* 032368 80031768 0000C025 */  move  $t3, $zero
 /* 032218 80031618 1100014C */  beqz  $t0, .L80031B4C
 /* 03221C 8003161C AC20B0F0 */   sw    $zero, %lo(D_8011B0F0)($at)
 .L80031620:
