@@ -816,7 +816,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     case 3:
         phi_f14 -= 53.0f;
         phi_f18 -= 5.0f;
-        baseSpeed *= 0.250;
+        baseSpeed *= 0.250f;
         brakeVar = 0.0f;
         break;
     }
@@ -860,8 +860,8 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
         gCameraObject->unk1C = phi_f14;
         gCameraObject->unk20 = phi_f18;
     }
-    gCameraObject->unk1C += (phi_f14 - gCameraObject->unk1C) * 0.125f;
-    gCameraObject->unk20 += (phi_f18 - gCameraObject->unk20) * 0.125f;
+    gCameraObject->unk1C += ((phi_f14 - gCameraObject->unk1C) * 0.125f) * updateRate;
+    gCameraObject->unk20 += ((phi_f18 - gCameraObject->unk20) * 0.125f) * updateRate;
     sp34 = sins_f(gCameraObject->trans.x_rotation - sp24);
     phi_f18 = coss_f(gCameraObject->trans.x_rotation - sp24);
     phi_f18 = (gCameraObject->unk1C * sp34) + (gCameraObject->unk20 * phi_f18);
@@ -2496,7 +2496,11 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         if (gRaceStartTimer == 0) {
             racer->throttle = 1.0f;
             if (surfaceTraction != 0.0f) {
-                surfaceTraction = 2.0f;
+                if (is_in_adventure_two()) {
+                    surfaceTraction = 1.5f;
+                } else {
+                    surfaceTraction = 1.0f;
+                }
             }
             racer->boostTimer -= updateRate;
         }
@@ -2945,9 +2949,9 @@ void func_80052D7C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
             racer->velocity += 0.5f * updateRateF;
         }
         sp33 = 1;
-        racer->lateral_velocity -= (racer->lateral_velocity * 0.13f) * updateRateF;
-        racer->velocity -= (racer->velocity * 0.13f) * updateRateF;
-        obj->segment.y_velocity -= (obj->segment.y_velocity * 0.1f) * updateRateF;
+        racer->lateral_velocity *= 0.87;
+        racer->velocity *= 0.87;
+        obj->segment.y_velocity *= 0.9f;
         func_800494E0(obj, racer, D_8011D4F8, D_8011D504, updateRate, gCurrentStickX, 6.0f);
     }
     if (racer->playerIndex == -1) {
@@ -2974,7 +2978,7 @@ void func_80052D7C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
     if ((yStick < 50) && (yStick > (-50))) {
         yStick = 0;
     }
-    obj->segment.y_velocity -= (obj->segment.y_velocity * 0.025f) * updateRateF;
+    obj->segment.y_velocity -= (obj->segment.y_velocity * 0.025f) * (updateRateF);
     vel = gCurrentRacerWeightStat;
     if (racer->unk1F1 || racer->unk1F0) {
         vel = 0.45f;
@@ -2982,13 +2986,13 @@ void func_80052D7C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
         racer->x_rotation_offset += 0x600 * updateRate;
     }
     if (racer->unk1FE == 1 || racer->unk1FE == 3) {
-        racer->lateral_velocity -= (racer->lateral_velocity * 0.13f) * updateRateF;
-        racer->velocity  -= (racer->velocity * 0.13f) * updateRateF;
+        racer->lateral_velocity *= 0.97;
+        racer->velocity *= 0.97;
         if (yStick > 50) {
-            racer->velocity -= 0.2f * updateRateF;
+            racer->velocity -= 0.2f * (updateRateF / 2.0f);
         }
         if (yStick < -50) {
-            racer->velocity += 0.2f * updateRateF;
+            racer->velocity += 0.2f * (updateRateF / 2.0f);
         }
         sp33 = 1;
     }
@@ -3442,7 +3446,11 @@ void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
         if (gRaceStartTimer == 0) {
             racer->throttle = 1.0f;
             if (vel != 0.0f) {
-                vel = 2.0f;
+                if (is_in_adventure_two()) {
+                    vel = 1.5f;
+                } else {
+                    vel = 1.0f;
+                }
             }
             racer->boostTimer -= updateRate;
         }
@@ -4026,7 +4034,7 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
     } else {
         // If you want to change the baseline speed of vehicles, this is what you change.
         if (is_in_adventure_two()) {
-            speedMultiplier = 2.0f;
+            speedMultiplier = 1.0f;
         } else {
             speedMultiplier = 0.5f;
         }
