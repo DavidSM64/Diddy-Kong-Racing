@@ -3490,6 +3490,9 @@ void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
     if (racer->brake < 0.9f && gRaceStartTimer == 0) {
         racer->velocity += weight * (racer->pitch / 4.0f) * updateRateF;
     }
+    if (racer->vehicleID == VEHICLE_HOVERCRAFT && is_in_adventure_two()) {
+        weight *= 2;
+    }
     obj->segment.y_velocity -= weight * updateRateF;
 }
 
