@@ -4035,19 +4035,26 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
     if (gRaceStartTimer) {
         speedMultiplier = 0.0f;
     } else {
-        // If you want to change the baseline speed of vehicles, this is what you change.
-        if (is_in_adventure_two()) {
-            if (racer->vehicleID == VEHICLE_CAR) {
-                speedMultiplier = 1.0f;
-            } else {
-                speedMultiplier = 2.0f;
-            }
+        switch (racer->vehicleID) {
+            case VEHICLE_CAR: speedMultiplier = 0.5f; break;
+            case VEHICLE_HOVERCRAFT: speedMultiplier = 1.0f; break;
+            case VEHICLE_PLANE: speedMultiplier = 1.0f; break;
+            case VEHICLE_LOOPDELOOP: speedMultiplier = 1.0f; break;
+            case VEHICLE_TRICKY: speedMultiplier = 0.5f; break;
+            case VEHICLE_BLUEY: speedMultiplier = 0.5f; break;
+            case VEHICLE_BUBBLER: speedMultiplier = 0.5f; break;
+            case VEHICLE_SMOKEY: speedMultiplier = 0.5f; break;
+            case VEHICLE_WIZPIG: speedMultiplier = 1.0f; break;
+            case VEHICLE_ROCKET: speedMultiplier = 1.0f; break;
+            default: speedMultiplier = 1.0f; break;
+        }
+    }
+    
+    if (is_in_adventure_two()) {
+        if (racer->vehicleID >= VEHICLE_TRICKY) {
+            speedMultiplier *= 2.5f;
         } else {
-            if (racer->vehicleID == VEHICLE_CAR) {
-                speedMultiplier = 0.5f;
-            } else {
-                speedMultiplier = 1.0f;
-            }
+            speedMultiplier *= 2.0f;
         }
     }
     timer3 = get_race_start_timer();
