@@ -1962,16 +1962,17 @@ void calc_and_alloc_heap_for_settings(void) {
 void func_8006E5BC(void) {
     s32 i, j;
     gSettingsPtr->gNumRacers = get_number_of_active_players();
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < NUM_RACERS_1P; i++) {
         gSettingsPtr->racers[i].best_times = 0;
         gSettingsPtr->racers[i].character = get_character_id_from_slot(i);
-        if (gSettingsPtr->gNumRacers >= 2) {
+        /*if (gSettingsPtr->gNumRacers >= 2) {
             gSettingsPtr->racers[i].starting_position = i;
         } else if (is_in_two_player_adventure()) {
             gSettingsPtr->racers[i].starting_position = 5 - i;
         } else {
             gSettingsPtr->racers[i].starting_position = 7 - i;
-        }
+        }*/
+        gSettingsPtr->racers[i].starting_position = 0;
         gSettingsPtr->racers[i].unk7 = 0;
         for (j = 0; j < 4; j++) {
             gSettingsPtr->racers[i].placements[j] = 0;

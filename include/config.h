@@ -20,7 +20,7 @@
 #define DISABLE_MULTIPLAYER_CUTBACKS // Disable the measures Rare took to improve performance in multiplayer.
 
 #define NUM_RACERS_1P 8 // Default is 8
-#define NUM_RACERS_2P 6 // Default is 6
+#define NUM_RACERS_2P 8 // Default is 6
 #define NUM_RACERS_3P 4 // Default is 4
 #define NUM_RACERS_4P 4 // Default is 4
 

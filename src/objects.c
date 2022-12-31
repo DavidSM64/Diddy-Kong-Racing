@@ -235,7 +235,7 @@ s32 D_8011AED4;
 s16 D_8011AED8;
 u32 (*D_8011AEDC)[64]; // Not sure about the number of elements
 s32 D_8011AEE0;
-Object *(*gRacers)[8];
+Object *(*gRacers)[NUM_RACERS_1P];
 // Similar to gRacers, but sorts the pointer by the players' current position in the race.
 Object **gRacersByPosition;
 // Similar to gRacers, but sorts the pointer by controller ports 1-4, then CPUs.
@@ -351,9 +351,9 @@ void allocate_object_pools(void) {
     D_8011AE74 = (Object **) allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     gTrackCheckpoints = (CheckpointNode *) allocate_from_main_pool_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
     D_8011AEDC = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
-    gRacers = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
-    gRacersByPort = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
-    gRacersByPosition = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
+    gRacers = allocate_from_main_pool_safe(sizeof(uintptr_t) * (NUM_RACERS_1P + 2), COLOUR_TAG_BLUE);
+    gRacersByPort = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * (NUM_RACERS_1P + 2), COLOUR_TAG_BLUE);
+    gRacersByPosition = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * (NUM_RACERS_1P + 2), COLOUR_TAG_BLUE);
     D_8011AF04 = allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     D_8011ADCC = allocate_from_main_pool_safe(8, COLOUR_TAG_BLUE);
     D_8011AFF4 = (unk800179D0 *) allocate_from_main_pool_safe(0x400, COLOUR_TAG_BLUE);
