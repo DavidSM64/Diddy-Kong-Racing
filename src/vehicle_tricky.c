@@ -118,7 +118,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             func_8005CB04(1);
             play_sound_global(SOUND_EXPLOSION, NULL);
             set_camera_shake(12.0f);
-            racer->velocity *= 0.3;
+            racer->velocity *= 0.3f;
             racer->unkC = 0.0f;
         }
     }

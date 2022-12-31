@@ -506,7 +506,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
                             var_f14 = racer->unk124 + 5.0f;
                         } else if (racerID == 1 || sp90 < 200.0f) {
                             // This section isn't close to right
-                            var_f14 = racer->unk124 + 2.5625;
+                            var_f14 = racer->unk124 + 2.5625f;
                         }
                         if (racer->unk124 < var_f14) {
                             racer->unk124 = var_f14;
@@ -1658,12 +1658,12 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         if (tempRacer->unk204 > 0) {
             tempRacer->unk204 -= updateRate;
-            tempRacer->velocity *= 0.9f;
-            obj->segment.x_velocity *= 0.87f;
+            tempRacer->velocity -= (tempRacer->velocity * 0.13f) * (delta / 2.0f);
+            obj->segment.x_velocity -= (obj->segment.x_velocity * 0.13f) * (delta / 2.0f);
             if (obj->segment.y_velocity > 2.0f) {
                 obj->segment.y_velocity = 2.0f;
             }
-            obj->segment.z_velocity *= 0.87f;
+            obj->segment.z_velocity -= (obj->segment.z_velocity * 0.13f) * (delta / 2.0f);
         }
         if (tempRacer->unk206 > 0) {
             tempRacer->unk18A = tempRacer->unk206;
@@ -2949,9 +2949,9 @@ void func_80052D7C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
             racer->velocity += 0.5f * updateRateF;
         }
         sp33 = 1;
-        racer->lateral_velocity *= 0.87;
-        racer->velocity *= 0.87;
-        obj->segment.y_velocity *= 0.9f;
+        racer->lateral_velocity -= (racer->lateral_velocity * 0.13f) * (updateRateF / 2.0f);
+        racer->velocity -= (racer->velocity * 0.13f) * (updateRateF / 2.0f);
+        obj->segment.y_velocity -= (obj->segment.y_velocity * 0.1f) * (updateRateF / 2.0f);
         func_800494E0(obj, racer, D_8011D4F8, D_8011D504, updateRate, gCurrentStickX, 6.0f);
     }
     if (racer->playerIndex == -1) {
@@ -2986,8 +2986,8 @@ void func_80052D7C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
         racer->x_rotation_offset += 0x600 * updateRate;
     }
     if (racer->unk1FE == 1 || racer->unk1FE == 3) {
-        racer->lateral_velocity *= 0.97;
-        racer->velocity *= 0.97;
+        racer->lateral_velocity -= (racer->lateral_velocity * 0.03f) * (updateRateF / 2.0f);
+        racer->velocity -= (racer->velocity * 0.03f) * (updateRateF / 2.0f);
         if (yStick > 50) {
             racer->velocity -= 0.2f * (updateRateF / 2.0f);
         }
@@ -3007,7 +3007,7 @@ void func_80052D7C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
             vel *= 1.33f;
         }
         if (yStick < -50) {
-            vel *= 0.53;
+            vel *= 0.53f;
         }
     }
     if (racer->boostTimer) {
@@ -4034,9 +4034,17 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
     } else {
         // If you want to change the baseline speed of vehicles, this is what you change.
         if (is_in_adventure_two()) {
-            speedMultiplier = 1.0f;
+            if (racer->vehicleID == VEHICLE_CAR) {
+                speedMultiplier = 1.0f;
+            } else {
+                speedMultiplier = 2.0f;
+            }
         } else {
-            speedMultiplier = 0.5f;
+            if (racer->vehicleID == VEHICLE_CAR) {
+                speedMultiplier = 0.5f;
+            } else {
+                speedMultiplier = 1.0f;
+            }
         }
     }
     timer3 = get_race_start_timer();

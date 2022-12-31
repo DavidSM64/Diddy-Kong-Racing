@@ -1379,7 +1379,7 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
         if (racerObj->racer.balloon_quantity > 0) {
             if (D_80126CDC->unk5B < 16 && racerObj->racer.unk170 == 0) {
                 D_80126CDC->unk44 = D_80126CDC->unk5B << 12;
-                D_80126CDC->unk48 = (D_80126CDC->unk5B * 0.04687) + 0.25f;
+                D_80126CDC->unk48 = (D_80126CDC->unk5B * 0.04687f) + 0.25f;
             } else {
                 D_80126CDC->unk44 = 0;
                 D_80126CDC->unk48 = 1.0f;
@@ -1392,7 +1392,7 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
                 if (D_80126CDC->unk5C > 120) {
                     D_80126CDC->unk5C = 120;
                 } else if (gHUDNumPlayers == ONE_PLAYER) {
-                    D_80126CDC->unk48 += 0.18 * sins_f(((f32) D_80126CDC->unk5C * 682.6583 * 4.0f));
+                    D_80126CDC->unk48 += 0.18f * sins_f(((f32) D_80126CDC->unk5C * 682.6583f * 4.0f));
                 }
             }
             if (gHUDNumPlayers > ONE_PLAYER) {
@@ -1418,7 +1418,7 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
         } else {
             if (D_80126CDC->unk5B > 0) {
                 D_80126CDC->unk44 = D_80126CDC->unk5B << 12;
-                D_80126CDC->unk48 = (D_80126CDC->unk5B * 0.04687) + 0.25f;
+                D_80126CDC->unk48 = (D_80126CDC->unk5B * 0.04687f) + 0.25f;
                 D_80126CDC->unk5B -= updateRate;
                 D_80126CDC->unk58 = temp_a0;
                 if (D_80126CDC->unk5B < 0) {

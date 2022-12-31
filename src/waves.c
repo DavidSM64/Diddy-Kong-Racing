@@ -358,7 +358,7 @@ void func_800BF524(Object *obj) {
         var_v1 |= 2;
     }
     func_800BF634(obj, obj->segment.trans.x_position, obj->segment.trans.z_position, (f32)temp_v0->unkA, temp_v0->unk9 << 8,  
-        (f32)temp_v0->unk8 * 0.0625, (f32)temp_v0->unkE, (f32)temp_v0->unkC * 0.0625, var_v1);
+        (f32)temp_v0->unk8 * 0.0625f, (f32)temp_v0->unkE, (f32)temp_v0->unkC * 0.0625f, var_v1);
 }
 
 
@@ -375,9 +375,9 @@ UNUSED void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, 
         arg0->unk4 = (arg0->unkC + arg0->unk10);
         arg0->unk28 += arg2;
         if (osTvType == TV_TYPE_PAL) {
-            arg0->unk1C = arg0->unk28 * 20971.52;//(f64) (0x80000 / 25.0f);
+            arg0->unk1C = arg0->unk28 * 20971.52f;//(f64) (0x80000 / 25.0f);
         } else {
-            arg0->unk1C = arg0->unk28 * 17476.27;//(f64) ((0x80000 / 1.2f) / 25.0f);
+            arg0->unk1C = arg0->unk28 * 17476.27f;//(f64) ((0x80000 / 1.2f) / 25.0f);
         }
         arg0->unk2C = (arg0->unk2C + arg3);
         if (arg0->unk2C < 1.0f) {

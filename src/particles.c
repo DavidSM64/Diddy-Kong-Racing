@@ -669,13 +669,13 @@ void func_800B0010(Object *arg0, Object *arg1, unk800B03C0_arg2 *arg2, Object *a
     sp3C = arg3->unk5C_s32 & 0x700;
     if (sp3C) {
         if (sp3C & 0x100) {
-            arg0->segment.x_velocity += (f32) get_random_number_from_range(-arg3->unk74_signed, arg3->unk74_signed) * 0.00001525878906;
+            arg0->segment.x_velocity += (f32) get_random_number_from_range(-arg3->unk74_signed, arg3->unk74_signed) * 0.00001525878906f;
         }
         if (sp3C & 0x200) {
-            arg0->segment.y_velocity += (f32) get_random_number_from_range(-arg3->unk78,  arg3->unk78) * 0.00001525878906;
+            arg0->segment.y_velocity += (f32) get_random_number_from_range(-arg3->unk78,  arg3->unk78) * 0.00001525878906f;
         }
         if (sp3C & 0x400) {
-            arg0->segment.z_velocity += (f32) get_random_number_from_range(-arg3->unk7C.word, arg3->unk7C.word) * 0.00001525878906;
+            arg0->segment.z_velocity += (f32) get_random_number_from_range(-arg3->unk7C.word, arg3->unk7C.word) * 0.00001525878906f;
         }
     }
     switch (arg3->segment.trans_unk.unk0 & 0x70) {
@@ -696,7 +696,7 @@ void func_800B0010(Object *arg0, Object *arg1, unk800B03C0_arg2 *arg2, Object *a
         sp30.z = -arg3->segment.unk3C_a.unk3C_f;
         sp3C = arg3->unk5C_s32;
         if (sp3C & 0x10) {
-            sp30.z += (f32) get_random_number_from_range(-arg3->unk70_s32, arg3->unk70_s32) * 0.00001525878906;
+            sp30.z += (f32) get_random_number_from_range(-arg3->unk70_s32, arg3->unk70_s32) * 0.00001525878906f;
         }
         if (sp3C & 0x60) {
             sp28.y_rotation = arg2->unk12;
