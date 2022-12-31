@@ -8246,6 +8246,7 @@ void reset_controller_sticks(void) {
 
 #define STICK_DEADZONE 35
 #define STICK_DELAY_AMOUNT 15
+extern s32 sLogicUpdateRate;
 
 void update_controller_sticks(void) {
     s32 XClamp, YClamp;
@@ -8275,9 +8276,9 @@ void update_controller_sticks(void) {
 
         gControllersYAxis[i] = YClamp;
         if (gControllersYAxis[i] < -STICK_DEADZONE) {
-            gControllersYAxisDelay[i]++;
+            gControllersYAxisDelay[i] += sLogicUpdateRate;
         } else if (gControllersYAxis[i] > STICK_DEADZONE) {
-            gControllersYAxisDelay[i]++;
+            gControllersYAxisDelay[i] += sLogicUpdateRate;
         } else {
             gControllersYAxisDelay[i] = 0;
         }
@@ -8289,9 +8290,9 @@ void update_controller_sticks(void) {
 
         gControllersXAxis[i] = XClamp;
         if (gControllersXAxis[i] < -STICK_DEADZONE) {
-            gControllersXAxisDelay[i]++;
+            gControllersXAxisDelay[i] += sLogicUpdateRate;
         } else if (gControllersXAxis[i] > STICK_DEADZONE) {
-            gControllersXAxisDelay[i]++;
+            gControllersXAxisDelay[i] += sLogicUpdateRate;
         } else {
             gControllersXAxisDelay[i] = 0;
         }
