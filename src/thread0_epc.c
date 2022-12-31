@@ -269,7 +269,7 @@ void render_epc_lock_up_display(void) {
             D_80129FB0[0] = gEpcInfo.unk130[0];
             D_80129FB0[1] = gEpcInfo.unk130[1];
             D_80129FB0[2] = gEpcInfo.unk130[2];
-            if (((s32 *) gEpcInfo.unk130)[-4] == -1U) { // TODO: find better solution
+            if (((u32 *) gEpcInfo.unk130)[-4] == -1U) { // TODO: find better solution
                 render_printf(" epc\t\t0x%08x\n", gEpcInfo.epc);
                 render_printf(" cause\t\tmmAlloc(%d,0x%8x)\n", GET_REG(a0), GET_REG(a1));
                 for (i = 0; i < 3; i++) {
