@@ -78,7 +78,7 @@ extern u16 *gVideoCurrFramebuffer;
 extern u16 *gVideoLastFramebuffer;
 extern u16 *gVideoLastDepthBuffer;
 
-extern u8 gScreenMode;
+extern s8 gScreenMode;
 extern s8 gScreenPos[2];
 
 void dmacopy_doubleword(s32 videoLastFrameBuffer, s32 VideoCurrFrameBuffer, s32 size);

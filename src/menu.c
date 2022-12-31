@@ -6957,10 +6957,10 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                     case 1:
                         gScreenMode += moveDir;
                         if (gScreenMode == -1) {
-                            gScreenMode = 2;
+                            gScreenMode = 0;
                         }
                         if (gScreenMode > 2) {
-                            gScreenMode = 0;
+                            gScreenMode = 2;
                         }
                         switch (gScreenMode) {
                         case 0:

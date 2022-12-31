@@ -897,7 +897,7 @@ void thread3_main(UNUSED void *unused) {
 }
 
 s32 gAntiAliasing = TRUE;
-u8 gScreenMode = 0;
+s8 gScreenMode = 0;
 s8 gScreenPos[2] = {0, 0};
 
 /**
