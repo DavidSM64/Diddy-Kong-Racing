@@ -2497,7 +2497,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->throttle = 1.0f;
             if (surfaceTraction != 0.0f) {
                 if (is_in_adventure_two()) {
-                    surfaceTraction = 1.5f;
+                    surfaceTraction = 1.25f;
                 } else {
                     surfaceTraction = 1.0f;
                 }
@@ -2967,7 +2967,7 @@ void func_80052D7C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
         angle = -racer->steerAngle;
         angle *= 6;
     }
-    racer->unk1A0 -= (angle & 0xFFFF) * updateRate;
+    racer->unk1A0 -= (angle & 0xFFFF);
     gCurrentCarSteerVel = racer->unk110;
     if (racer->boostTimer) {
         if (racer->velocity > -20.0f) {
@@ -3444,7 +3444,7 @@ void func_8005492C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
             racer->throttle = 1.0f;
             if (vel != 0.0f) {
                 if (is_in_adventure_two()) {
-                    vel = 1.5f;
+                    vel = 1.25f;
                 } else {
                     vel = 1.0f;
                 }
