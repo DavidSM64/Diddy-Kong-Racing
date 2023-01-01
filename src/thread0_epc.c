@@ -209,7 +209,7 @@ s32 get_lockup_status(void) {
     s64 sp220[64];
     u8 dataFromControllerPak[512]; //Looks to be sizeof(epcInfo), aligned to 64
     extern epcInfo gEpcInfo;
-    extern s32 D_801299B0[16][4];
+    extern s32 D_801299B0[64];
 
     if (sLockupStatus != -1) {
         return sLockupStatus;
@@ -258,7 +258,7 @@ void render_epc_lock_up_display(void) {
     s32 j;
     s32 i;
     static epcInfo gEpcInfo;
-    static s32 D_801299B0[64][1];
+    static s32 D_801299B0[64];
     
     s3 = 0;
 
@@ -315,7 +315,7 @@ void render_epc_lock_up_display(void) {
         case EPC_PAGE_STACK_MIDDLE:
         case EPC_PAGE_STACK_BOTTOM:
             offset = (sLockupPage - 1) * 48;
-            for (j = (s32) D_801299B0[offset], i = 0; i < 16; i++) {
+            for (j = (s32) &D_801299B0[offset], i = 0; i < 16; i++) {
                 render_printf("   %08x %08x %08x\n", ((u8**)j)[0], ((u8**)j)[16], ((u8**)j)[32]); 
                 j = (s32) ((s32 *) j + 1);
             }
