@@ -2967,7 +2967,7 @@ void func_80052D7C(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateR
         angle = -racer->steerAngle;
         angle *= 6;
     }
-    racer->unk1A0 -= (angle & 0xFFFF);
+    racer->unk1A0 -= ((angle & 0xFFFF) / 2) * updateRate;
     gCurrentCarSteerVel = racer->unk110;
     if (racer->boostTimer) {
         if (racer->velocity > -20.0f) {
