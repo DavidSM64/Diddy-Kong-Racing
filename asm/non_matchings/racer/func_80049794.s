@@ -384,7 +384,7 @@ glabel func_80049794
 /* 04A858 80049C58 0C014D71 */  jal   func_800535C4
 /* 04A85C 80049C5C 02002825 */   move  $a1, $s0
 /* 04A860 80049C60 02202025 */  move  $a0, $s1
-/* 04A864 80049C64 0C013050 */  jal   func_8004C140
+/* 04A864 80049C64 0C013050 */  jal   racer_attack_handler_plane
 /* 04A868 80049C68 02002825 */   move  $a1, $s0
 /* 04A86C 80049C6C 3C0D8012 */  lui   $t5, %hi(gCurrentPlayerIndex) # $t5, 0x8012
 /* 04A870 80049C70 8DADD55C */  lw    $t5, %lo(gCurrentPlayerIndex)($t5)
@@ -606,7 +606,7 @@ glabel func_80049794
 /* 04ABA4 80049FA4 00000000 */   nop   
 /* 04ABA8 80049FA8 8FA400F8 */  lw    $a0, 0xf8($sp)
 /* 04ABAC 80049FAC 02202825 */  move  $a1, $s1
-/* 04ABB0 80049FB0 0C013028 */  jal   func_8004C0A0
+/* 04ABB0 80049FB0 0C013028 */  jal   apply_plane_tilt_anim
 /* 04ABB4 80049FB4 02003025 */   move  $a2, $s0
 .L80049FB8:
 /* 04ABB8 80049FB8 86020000 */  lh    $v0, ($s0)

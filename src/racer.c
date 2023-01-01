@@ -909,13 +909,14 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     }
 }
 
-// something to do with the boats; this function only fires on boats and it does so when the player's boat is accelerating?
-// it returns the velocity, so maybe so
-f32 func_800494E0(Object *obj1, Object_Racer *racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6) {
+/**
+ * When on water, apply a rotation effect based on the movement of the waves and turning direction.
+*/
+f32 rotate_racer_in_water(Object *obj1, Object_Racer *racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6) {
     Matrix mtx;
     f32 velocity;
     s32 angle;
-    s32 v1;
+    s32 angleVel;
     f32 updateRateF;
 
     updateRateF = updateRate;
@@ -947,10 +948,10 @@ f32 func_800494E0(Object *obj1, Object_Racer *racer, f32 *pos, s8 arg3, s32 upda
     angle = angle > 0x8000 ? angle - 0xffff : angle;
     angle = angle < -0x8000 ? angle + 0xffff : angle;
     racer->x_rotation_vel += (angle * updateRate) >> 4;
-    v1 = ((s16) (u16)arctan2_f(pos[2], pos[1]) * velocity);
-    v1 += -gCurrentStickY * 32;
-    v1 += 0x3C0;
-    angle = (u16)v1 - ((u16) obj1->segment.trans.x_rotation);
+    angleVel = ((s16) (u16)arctan2_f(pos[2], pos[1]) * velocity);
+    angleVel += -gCurrentStickY * 32;
+    angleVel += 0x3C0;
+    angle = (u16)angleVel - ((u16) obj1->segment.trans.x_rotation);
     angle = angle > 0x8000 ? angle - 0xffff : angle;
     angle = angle < -0x8000 ? angle + 0xffff : angle;
     obj1->segment.trans.x_rotation += (angle * updateRate) >> 4;
@@ -959,44 +960,51 @@ f32 func_800494E0(Object *obj1, Object_Racer *racer, f32 *pos, s8 arg3, s32 upda
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80049794.s")
 
-// Something Plane related.
-void func_8004C0A0(s32 updateRate, Object *obj, Object_Racer *racer) {
-    s32 temp_v1;
-    s32 phi_v0;
+/**
+ * When turning left and right in a plane, apply the tilting animation to the character.
+ * There's a few safeguards in place to ensure the animation frame is not out of bounds.
+*/
+void apply_plane_tilt_anim(s32 updateRate, Object *obj, Object_Racer *racer) {
+    s32 animDiff;
+    s32 animAdd;
 
     if (racer->vehicleIDPrev != VEHICLE_CARPET) {
         //!@bug Typo. Should've been `== 0`, not `= 0`.
         if ((racer->unk1F2 = 0)) {
             return; // This never gets called because of the typo.
         }
-        phi_v0 = racer->steerAngle;
-        phi_v0 = 40 - (phi_v0 >> 1);
-        if (phi_v0 < 0) {
-            phi_v0 = 0;
+        animAdd = racer->steerAngle;
+        animAdd = 40 - (animAdd >> 1);
+        if (animAdd < 0) {
+            animAdd = 0;
         }
-        if (phi_v0 > 73) {
-            phi_v0 = 73;
+        if (animAdd > 73) {
+            animAdd = 73;
         }
-        temp_v1 = phi_v0 - obj->segment.animFrame;
-        phi_v0 = 0;
-        if (temp_v1 > 0) {
-            phi_v0 = updateRate * 3;
-            if (temp_v1 < phi_v0) {
-                phi_v0 = temp_v1;
+        animDiff = animAdd - obj->segment.animFrame;
+        animAdd = 0;
+        if (animDiff > 0) {
+            animAdd = updateRate * 3;
+            if (animDiff < animAdd) {
+                animAdd = animDiff;
             }
         }
-        if (temp_v1 < 0) {
-            phi_v0 = updateRate * -3;
-            if (phi_v0 < temp_v1) {
-                phi_v0 = temp_v1;
+        if (animDiff < 0) {
+            animAdd = updateRate * -3;
+            if (animAdd < animDiff) {
+                animAdd = animDiff;
             }
         }
-        obj->segment.animFrame += phi_v0;
+        obj->segment.animFrame += animAdd; //!@Delta
     }
 }
 
-// Another attack handler by the looks of things.
-void func_8004C140(Object *obj, Object_Racer *racer) {
+/**
+ * Initialise some states when a racer is attacked or runs into something.
+ * While the majority of the respondent behaviour takes place elsewhere, the squish behaviour happens here.
+ * Planes do not have a spinning state, instead being in the same state when hit by a rocket.
+ */
+void racer_attack_handler_plane(Object *obj, Object_Racer *racer) {
     s8 bananas;
     s8 attackType;
     if (racer->playerIndex == PLAYER_COMPUTER) {
@@ -2787,19 +2795,19 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
 void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 duration, s32 arg5, s32 arg6, s32 arg7) {
     arg5 *= arg7;
 
-    if ((gCurrentPlayerIndex == -1) && (action >= 3)) {
+    if (gCurrentPlayerIndex == PLAYER_COMPUTER && action >= 3) {
         obj->segment.unk38.byte.unk3B = 0;
         racer->unk1F2 = 0;
     } else if (obj->segment.unk38.byte.unk3B == 0) {
         if (arg6 & 1) {
-            if (obj->segment.animFrame >= 41) {
-                obj->segment.animFrame -= arg7 * 4;
-                if (obj->segment.animFrame < 41) {
+            if (obj->segment.animFrame > 40) {
+                obj->segment.animFrame -= arg7 * 4; //!@Delta
+                if (obj->segment.animFrame <= 40) {
                     obj->segment.unk38.byte.unk3B = action;
                     obj->segment.animFrame = arg3;
                 }
             } else {
-                obj->segment.animFrame += arg7 * 4;
+                obj->segment.animFrame += arg7 * 4; //!@Delta
                 if (obj->segment.animFrame >= 40) {
                     obj->segment.unk38.byte.unk3B = action;
                     obj->segment.animFrame = arg3;
@@ -2813,7 +2821,7 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
     } else if (obj->segment.unk38.byte.unk3B == action) {
         if (arg6 & 2) {
             if (racer->unk1F3 & 0x80) {
-                obj->segment.animFrame -= arg5;
+                obj->segment.animFrame -= arg5; //!@Delta
                 if (obj->segment.animFrame <= 0) {
                     obj->segment.unk38.byte.unk3B = 0;
                     racer->unk1F2 = 0;
@@ -2821,7 +2829,7 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
                     racer->unk1F3 = 0;
                 }
             } else {
-                obj->segment.animFrame += arg5;
+                obj->segment.animFrame += arg5; //!@Delta
                 if (obj->segment.animFrame >= duration) {
                     obj->segment.animFrame = duration - 1;
                     if (!(arg6 & 4)) {
@@ -2830,7 +2838,7 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
                 }
             }
         } else {
-            obj->segment.animFrame += arg5;
+            obj->segment.animFrame += arg5; //!@Delta
             if (obj->segment.animFrame >= duration) {
                 obj->segment.unk38.byte.unk3B = 0;
                 racer->unk1F2 = 0;
@@ -2857,8 +2865,8 @@ void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 upd
         func_80072348(racer->playerIndex, 0);
     }
     angleVel = racer->y_rotation_vel;
-    if (gCurrentPlayerIndex >= 0) {
-        if (gNumViewports < 3) {
+    if (gCurrentPlayerIndex > PLAYER_COMPUTER) {
+        if (gNumViewports < VIEWPORTS_COUNT_4_PLAYERS) {
             obj->unk74 |= 0x4FC00;
             goto skip;
         }
@@ -2949,7 +2957,7 @@ void update_car_velocity_offground(Object* obj, Object_Racer* racer, s32 updateR
         racer->lateral_velocity *= 0.87; //!@Delta
         racer->velocity *= 0.87; //!@Delta
         obj->segment.y_velocity *= 0.9; //!@Delta
-        func_800494E0(obj, racer, D_8011D4F8, D_8011D504, updateRate, gCurrentStickX, 6.0f);
+        rotate_racer_in_water(obj, racer, D_8011D4F8, D_8011D504, updateRate, gCurrentStickX, 6.0f);
     }
     if (racer->playerIndex == -1) {
         racer->unk1E8 = racer->steerAngle;
@@ -3290,7 +3298,7 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
     } else {
         racer_approach_object(obj, racer, updateRateF);
     }
-    if (gCurrentPlayerIndex == -1 && !func_80023568()) {
+    if (gCurrentPlayerIndex == PLAYER_COMPUTER && !func_80023568()) {
             func_80055A84(obj, racer, updateRate);
     } else {
         func_80054FD0(obj, racer, updateRate);

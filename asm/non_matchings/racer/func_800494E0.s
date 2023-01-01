@@ -3,7 +3,7 @@ glabel D_800E64A0
 .double 0.16666666666666666
 
 .text
-glabel func_800494E0
+glabel rotate_racer_in_water
 /* 04A0E0 800494E0 27BDFF78 */  addiu $sp, $sp, -0x88
 /* 04A0E4 800494E4 8FB80098 */  lw    $t8, 0x98($sp)
 /* 04A0E8 800494E8 00077600 */  sll   $t6, $a3, 0x18
