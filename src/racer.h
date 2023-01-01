@@ -130,6 +130,20 @@ typedef struct TempStruct5 {
     s8 unk8[4][4];
 } TempStruct5;
 
+typedef struct Asset20 {
+    f32 unk0;
+    u8 pad4[0x6C];
+    u8 unk70;
+    f32 unk74;
+    u8 pad78[0x8];
+} Asset20;
+
+typedef struct Unknown80046524 {
+    s16 unk0;
+    u8 pad2[0x38];
+    s8 unk3A;
+} Unknown80046524;
+
 s32 roll_percent_chance(s32 chance);
 void apply_plane_tilt_anim(s32 updateRate, Object *obj, Object_Racer *racer);
 void racer_attack_handler_plane(Object *obj, Object_Racer *racer);
