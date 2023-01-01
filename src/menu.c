@@ -8110,9 +8110,9 @@ void update_controller_sticks(void) {
 
         gControllersYAxis[i] = YClamp;
         if (gControllersYAxis[i] < -STICK_DEADZONE) {
-            gControllersYAxisDelay[i]++;
+            gControllersYAxisDelay[i]++; //!@Delta
         } else if (gControllersYAxis[i] > STICK_DEADZONE) {
-            gControllersYAxisDelay[i]++;
+            gControllersYAxisDelay[i]++; //!@Delta
         } else {
             gControllersYAxisDelay[i] = 0;
         }
@@ -8124,9 +8124,9 @@ void update_controller_sticks(void) {
 
         gControllersXAxis[i] = XClamp;
         if (gControllersXAxis[i] < -STICK_DEADZONE) {
-            gControllersXAxisDelay[i]++;
+            gControllersXAxisDelay[i]++; //!@Delta
         } else if (gControllersXAxis[i] > STICK_DEADZONE) {
-            gControllersXAxisDelay[i]++;
+            gControllersXAxisDelay[i]++; //!@Delta
         } else {
             gControllersXAxisDelay[i] = 0;
         }

@@ -1006,16 +1006,20 @@ s32 func_80011560(void) { //! @bug The developers probably intended this to be a
     // No return value!
 }
 
-s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
-    UNUSED f32 unused;
-    f32 test1, test2, test3, test4, test5, test6;
+/**
+ * Sets the new position of the object using the differences given.
+ * Compares against the outer edges of the level geometry to decide wether or not to apply a segment ID.
+*/
+s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
+    s32 segmentID;
+    f32 x1, x2, y1, y2, z1, z2;
     f32 newXPos;
     f32 newYPos;
     f32 newZPos;
     LevelModel *levelModel;
     LevelModelSegmentBoundingBox *box;
-    s32 var_a0;
-    s32 var_v1;
+    s32 outsideBBox;
+    s32 outOfBounds;
     s32 intXPos, intYPos, intZPos;
 
     levelModel = get_current_level_model();
@@ -1026,38 +1030,39 @@ s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
         D_800DC848 = 0;
         return 0;
     }
-    var_v1 = 0;
-    test1 = (levelModel->unk3E + 1000.0);
-    if (newXPos > test1) {
-        var_v1 = 1;
+    outOfBounds = FALSE;
+    x1 = (levelModel->unk3E + 1000.0);
+    //@!bug should've campared against "obj->segment.trans.x_position"
+    if (newXPos > x1) {
+        outOfBounds = TRUE;
     }
-    test2 = (levelModel->unk3C - 1000.0);
-    if (obj->segment.trans.x_position < test2) {
-        var_v1 = 1;
+    x2 = (levelModel->unk3C - 1000.0);
+    if (obj->segment.trans.x_position < x2) {
+        outOfBounds = TRUE;
     }
     if (1) { } if (1) { } if (1) { } // Fakematch
-    test3 = (levelModel->unk42 + 3000.0);
-    if (obj->segment.trans.y_position > test3) {
-        var_v1 = 1;
+    y1 = (levelModel->unk42 + 3000.0);
+    if (obj->segment.trans.y_position > y1) {
+        outOfBounds = TRUE;
     }
-    test4 = (levelModel->unk40 - 500.00);
-    if (obj->segment.trans.y_position < test4) {
-        var_v1 = 1;
+    y2 = (levelModel->unk40 - 500.00);
+    if (obj->segment.trans.y_position < y2) {
+        outOfBounds = TRUE;
     }
-    test5 = (levelModel->unk46 + 1000.0);
-    if (obj->segment.trans.z_position > test5) {
-        var_v1 = 1;
+    z1 = (levelModel->unk46 + 1000.0);
+    if (obj->segment.trans.z_position > z1) {
+        outOfBounds = TRUE;
     }
-    test6 = (levelModel->unk44 - 1000.0);
-    if (obj->segment.trans.z_position < test6) {
-        var_v1 = 1;
+    z2 = (levelModel->unk44 - 1000.0);
+    if (obj->segment.trans.z_position < z2) {
+        outOfBounds = TRUE;
     }
     if (D_800DC848 != 0) {
-        var_v1 = 0;
+        outOfBounds = FALSE;
     }
     
     D_800DC848 = 0;
-    if (var_v1 != 0) {
+    if (outOfBounds) {
         obj->segment.unk2C.half.lower = -1;
         return 1;
     }
@@ -1074,20 +1079,20 @@ s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
         obj->segment.unk2C.half.lower = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
         return 0;
     } else {
-        var_a0 = 0;
-        if ((box->x2 < intXPos) || (intXPos < box->x1)) {
-            var_a0 = 1;
+        outsideBBox = FALSE;
+        if (box->x2 < intXPos || intXPos < box->x1) {
+            outsideBBox = TRUE;
         }
-        if ((box->y2 < intYPos) || (intYPos < box->y1)) {
-            var_a0 = 1;
+        if (box->y2 < intYPos || intYPos < box->y1) {
+            outsideBBox = TRUE;
         }
-        if ((box->z2 < intZPos) || (intZPos < box->z1)) {
-            var_a0 = 1;
+        if (box->z2 < intZPos || intZPos < box->z1) {
+            outsideBBox = TRUE;
         }
-        if (var_a0 != 0) {
-            var_v1 = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
-            if (var_v1 != -1) {
-                obj->segment.unk2C.half.lower = var_v1;
+        if (outsideBBox) {
+            segmentID = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
+            if (segmentID != -1) {
+                obj->segment.unk2C.half.lower = segmentID;
             }
         }
     }

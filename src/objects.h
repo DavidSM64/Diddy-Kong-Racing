@@ -459,7 +459,7 @@ s32 func_80031F88(Object*, ObjectHeader24 *);
 s16 func_8001C418(f32 yPos);
 void func_80021400(s32 arg0);
 s32 func_8001B668(s32 arg0);
-s32 func_80011570(Object *obj, f32 xPos, f32 yPos, f32 zPos);
+s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos);
 Object *get_racer_object_by_port(s32 index);
 void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
 void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);

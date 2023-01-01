@@ -128,7 +128,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
             obj->segment.y_velocity += 7.5;
         }
     }
-    if (racer->unk148 != NULL) {
+    if (racer->approachTarget != NULL) {
         xDiff = obj->segment.x_velocity * obj->segment.x_velocity;
         zDiff = obj->segment.z_velocity * obj->segment.z_velocity;
         racer->velocity = -sqrtf((xDiff * xDiff) + (zDiff * zDiff));
@@ -205,7 +205,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
         racer->headAngleTarget = sp48;
     }
     if (obj->segment.unk38.byte.unk3B == 1) {
-        if ((racer->unk1E7 & 0x1F) < 10) {
+        if ((racer->miscCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }

@@ -556,8 +556,8 @@ glabel func_8004F7F4
 /* 050BAC 8004FFAC 00000000 */   nop   
 /* 050BB0 8004FFB0 860901A0 */  lh    $t1, 0x1a0($s0)
 /* 050BB4 8004FFB4 8E0A010C */  lw    $t2, 0x10c($s0)
-/* 050BB8 8004FFB8 3C058012 */  lui   $a1, %hi(D_8011D510) # $a1, 0x8012
-/* 050BBC 8004FFBC 24A5D510 */  addiu $a1, %lo(D_8011D510) # addiu $a1, $a1, -0x2af0
+/* 050BB8 8004FFB8 3C058012 */  lui   $a1, %hi(gCurrentRacerTransform) # $a1, 0x8012
+/* 050BBC 8004FFBC 24A5D510 */  addiu $a1, %lo(gCurrentRacerTransform) # addiu $a1, $a1, -0x2af0
 /* 050BC0 8004FFC0 44800000 */  mtc1  $zero, $f0
 /* 050BC4 8004FFC4 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 050BC8 8004FFC8 44812000 */  mtc1  $at, $f4
@@ -586,11 +586,11 @@ glabel func_8004F7F4
 /* 050C20 80050020 820F0175 */  lb    $t7, 0x175($s0)
 /* 050C24 80050024 00000000 */  nop   
 /* 050C28 80050028 11E00007 */  beqz  $t7, .L80050048
-/* 050C2C 8005002C 3C018012 */   lui   $at, %hi(D_8011D578) # $at, 0x8012
-/* 050C30 80050030 C42AD578 */  lwc1  $f10, %lo(D_8011D578)($at)
-/* 050C34 80050034 3C018012 */  lui   $at, %hi(D_8011D57C) # $at, 0x8012
+/* 050C2C 8005002C 3C018012 */   lui   $at, %hi(gRacerMagnetVelX) # $at, 0x8012
+/* 050C30 80050030 C42AD578 */  lwc1  $f10, %lo(gRacerMagnetVelX)($at)
+/* 050C34 80050034 3C018012 */  lui   $at, %hi(gRacerMagnetVelZ) # $at, 0x8012
 /* 050C38 80050038 E62A001C */  swc1  $f10, 0x1c($s1)
-/* 050C3C 8005003C C426D57C */  lwc1  $f6, %lo(D_8011D57C)($at)
+/* 050C3C 8005003C C426D57C */  lwc1  $f6, %lo(gRacerMagnetVelZ)($at)
 /* 050C40 80050040 00000000 */  nop   
 /* 050C44 80050044 E6260024 */  swc1  $f6, 0x24($s1)
 .L80050048:
@@ -706,7 +706,7 @@ glabel func_8004F7F4
 /* 050DDC 800501DC 46008482 */  mul.s $f18, $f16, $f0
 /* 050DE0 800501E0 44063000 */  mfc1  $a2, $f6
 /* 050DE4 800501E4 44079000 */  mfc1  $a3, $f18
-/* 050DE8 800501E8 0C00455C */  jal   func_80011570
+/* 050DE8 800501E8 0C00455C */  jal   move_object
 /* 050DEC 800501EC 00000000 */   nop   
 /* 050DF0 800501F0 10400006 */  beqz  $v0, .L8005020C
 /* 050DF4 800501F4 3C098012 */   lui   $t1, %hi(gCurrentPlayerIndex) # $t1, 0x8012
@@ -721,7 +721,7 @@ glabel func_8004F7F4
 /* 050E14 80050214 10000007 */  b     .L80050234
 /* 050E18 80050218 2401FFFF */   li    $at, -1
 .L8005021C:
-/* 050E1C 8005021C 0C0141D5 */  jal   func_80050754
+/* 050E1C 8005021C 0C0141D5 */  jal   racer_approach_object
 /* 050E20 80050220 02002825 */   move  $a1, $s0
 /* 050E24 80050224 3C028012 */  lui   $v0, %hi(gCurrentPlayerIndex) # $v0, 0x8012
 /* 050E28 80050228 8C42D55C */  lw    $v0, %lo(gCurrentPlayerIndex)($v0)
@@ -749,8 +749,8 @@ glabel func_8004F7F4
 /* 050E74 80050274 3C018012 */  lui   $at, %hi(D_8011D548) # $at, 0x8012
 /* 050E78 80050278 C428D548 */  lwc1  $f8, %lo(D_8011D548)($at)
 /* 050E7C 8005027C 3C018012 */  lui   $at, %hi(D_8011D54C) # $at, 0x8012
-/* 050E80 80050280 3C058012 */  lui   $a1, %hi(D_8011D510) # $a1, 0x8012
-/* 050E84 80050284 24A5D510 */  addiu $a1, %lo(D_8011D510) # addiu $a1, $a1, -0x2af0
+/* 050E80 80050280 3C058012 */  lui   $a1, %hi(gCurrentRacerTransform) # $a1, 0x8012
+/* 050E84 80050284 24A5D510 */  addiu $a1, %lo(gCurrentRacerTransform) # addiu $a1, $a1, -0x2af0
 /* 050E88 80050288 44800000 */  mtc1  $zero, $f0
 /* 050E8C 8005028C 27A40060 */  addiu $a0, $sp, 0x60
 /* 050E90 80050290 E7AA00BC */  swc1  $f10, 0xbc($sp)

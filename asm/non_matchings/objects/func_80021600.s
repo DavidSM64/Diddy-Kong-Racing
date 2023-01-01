@@ -526,7 +526,7 @@ glabel func_80021600
 /* 0229DC 80021DDC 44064000 */  mfc1  $a2, $f8
 /* 0229E0 80021DE0 46043181 */  sub.s $f6, $f6, $f4
 /* 0229E4 80021DE4 44073000 */  mfc1  $a3, $f6
-/* 0229E8 80021DE8 0C00455C */  jal   func_80011570
+/* 0229E8 80021DE8 0C00455C */  jal   move_object
 /* 0229EC 80021DEC E7A600F0 */   swc1  $f6, 0xf0($sp)
 /* 0229F0 80021DF0 8FA600EC */  lw    $a2, 0xec($sp)
 /* 0229F4 80021DF4 27A400D0 */  addiu $a0, $sp, 0xd0

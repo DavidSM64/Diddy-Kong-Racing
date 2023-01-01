@@ -85,7 +85,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         obj->segment.y_velocity += 4.0;
     }
     racer->attackType = ATTACK_NONE;
-    if (racer->unk148 != 0) {
+    if (racer->approachTarget != 0) {
         xDiff = obj->segment.x_velocity * obj->segment.x_velocity;
         zDiff = obj->segment.z_velocity * obj->segment.z_velocity;
         racer->velocity = -sqrtf((xDiff * xDiff) + (zDiff * zDiff));
@@ -226,7 +226,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->headAngleTarget = sp44;
     }
     if (obj->segment.unk38.byte.unk3B >= 2) {
-        if ((racer->unk1E7 & 0x1F) < 10) {
+        if ((racer->miscCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }

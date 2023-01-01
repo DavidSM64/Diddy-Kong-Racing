@@ -261,7 +261,7 @@ void render_epc_lock_up_display(void) {
     
     s3 = 0;
 
-    set_render_printf_position(0x10, 0x20);
+    set_render_printf_position(16, 32);
 
     switch (sLockupPage) {
         case EPC_PAGE_REGISTER:

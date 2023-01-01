@@ -791,11 +791,11 @@ glabel func_80050A28
 /* 0520D8 800514D8 46087380 */  add.s $f14, $f14, $f8
 .L800514DC:
 /* 0520DC 800514DC 3C01800E */  lui   $at, %hi(D_800DCBE8) # $at, 0x800e
-/* 0520E0 800514E0 3C0D800E */  lui   $t5, %hi(D_800DCC34) # $t5, 0x800e
+/* 0520E0 800514E0 3C0D800E */  lui   $t5, %hi(gSurfaceBobbingTable) # $t5, 0x800e
 /* 0520E4 800514E4 00230821 */  addu  $at, $at, $v1
 /* 0520E8 800514E8 01A36821 */  addu  $t5, $t5, $v1
 /* 0520EC 800514EC C426CBE8 */  lwc1  $f6, %lo(D_800DCBE8)($at)
-/* 0520F0 800514F0 8DADCC34 */  lw    $t5, %lo(D_800DCC34)($t5)
+/* 0520F0 800514F0 8DADCC34 */  lw    $t5, %lo(gSurfaceBobbingTable)($t5)
 /* 0520F4 800514F4 8FAC0068 */  lw    $t4, 0x68($sp)
 /* 0520F8 800514F8 0122082A */  slt   $at, $t1, $v0
 /* 0520FC 800514FC 018D7021 */  addu  $t6, $t4, $t5
@@ -1162,9 +1162,9 @@ glabel func_80050A28
 /* 052650 80051A50 284100FF */  slti  $at, $v0, 0xff
 /* 052654 80051A54 10200008 */  beqz  $at, .L80051A78
 /* 052658 80051A58 00025080 */   sll   $t2, $v0, 2
-/* 05265C 80051A5C 3C0B800E */  lui   $t3, %hi(D_800DCCF4) # $t3, 0x800e
+/* 05265C 80051A5C 3C0B800E */  lui   $t3, %hi(gSurfaceFlagTable) # $t3, 0x800e
 /* 052660 80051A60 016A5821 */  addu  $t3, $t3, $t2
-/* 052664 80051A64 8D6BCCF4 */  lw    $t3, %lo(D_800DCCF4)($t3)
+/* 052664 80051A64 8D6BCCF4 */  lw    $t3, %lo(gSurfaceFlagTable)($t3)
 /* 052668 80051A68 8CD80074 */  lw    $t8, 0x74($a2)
 /* 05266C 80051A6C 00000000 */  nop   
 /* 052670 80051A70 030BC825 */  or    $t9, $t8, $t3
@@ -1175,9 +1175,9 @@ glabel func_80050A28
 /* 052680 80051A80 284100FF */  slti  $at, $v0, 0xff
 /* 052684 80051A84 10200008 */  beqz  $at, .L80051AA8
 /* 052688 80051A88 00026880 */   sll   $t5, $v0, 2
-/* 05268C 80051A8C 3C0E800E */  lui   $t6, %hi(D_800DCCF4) # $t6, 0x800e
+/* 05268C 80051A8C 3C0E800E */  lui   $t6, %hi(gSurfaceFlagTable) # $t6, 0x800e
 /* 052690 80051A90 01CD7021 */  addu  $t6, $t6, $t5
-/* 052694 80051A94 8DCECCF4 */  lw    $t6, %lo(D_800DCCF4)($t6)
+/* 052694 80051A94 8DCECCF4 */  lw    $t6, %lo(gSurfaceFlagTable)($t6)
 /* 052698 80051A98 8CCC0074 */  lw    $t4, 0x74($a2)
 /* 05269C 80051A9C 000E7840 */  sll   $t7, $t6, 1
 /* 0526A0 80051AA0 018F5025 */  or    $t2, $t4, $t7
@@ -1193,24 +1193,24 @@ glabel func_80050A28
 /* 0526C4 80051AC4 45000018 */  bc1f  .L80051B28
 /* 0526C8 80051AC8 0009C080 */   sll   $t8, $t1, 2
 /* 0526CC 80051ACC 920201DE */  lbu   $v0, 0x1de($s0)
-/* 0526D0 80051AD0 3C19800E */  lui   $t9, %hi(D_800DCD40) # $t9, 0x800e
+/* 0526D0 80051AD0 3C19800E */  lui   $t9, %hi(gSurfaceFlagTable4P) # $t9, 0x800e
 /* 0526D4 80051AD4 284100FF */  slti  $at, $v0, 0xff
 /* 0526D8 80051AD8 10200007 */  beqz  $at, .L80051AF8
 /* 0526DC 80051ADC 00025880 */   sll   $t3, $v0, 2
 /* 0526E0 80051AE0 032BC821 */  addu  $t9, $t9, $t3
-/* 0526E4 80051AE4 8F39CD40 */  lw    $t9, %lo(D_800DCD40)($t9)
+/* 0526E4 80051AE4 8F39CD40 */  lw    $t9, %lo(gSurfaceFlagTable4P)($t9)
 /* 0526E8 80051AE8 8CD80074 */  lw    $t8, 0x74($a2)
 /* 0526EC 80051AEC 00000000 */  nop   
 /* 0526F0 80051AF0 03196825 */  or    $t5, $t8, $t9
 /* 0526F4 80051AF4 ACCD0074 */  sw    $t5, 0x74($a2)
 .L80051AF8:
 /* 0526F8 80051AF8 920201DF */  lbu   $v0, 0x1df($s0)
-/* 0526FC 80051AFC 3C0F800E */  lui   $t7, %hi(D_800DCD40) # $t7, 0x800e
+/* 0526FC 80051AFC 3C0F800E */  lui   $t7, %hi(gSurfaceFlagTable4P) # $t7, 0x800e
 /* 052700 80051B00 284100FF */  slti  $at, $v0, 0xff
 /* 052704 80051B04 10200007 */  beqz  $at, .L80051B24
 /* 052708 80051B08 00026080 */   sll   $t4, $v0, 2
 /* 05270C 80051B0C 01EC7821 */  addu  $t7, $t7, $t4
-/* 052710 80051B10 8DEFCD40 */  lw    $t7, %lo(D_800DCD40)($t7)
+/* 052710 80051B10 8DEFCD40 */  lw    $t7, %lo(gSurfaceFlagTable4P)($t7)
 /* 052714 80051B14 8CCE0074 */  lw    $t6, 0x74($a2)
 /* 052718 80051B18 000F5040 */  sll   $t2, $t7, 1
 /* 05271C 80051B1C 01CA5825 */  or    $t3, $t6, $t2
@@ -1218,11 +1218,11 @@ glabel func_80050A28
 .L80051B24:
 /* 052724 80051B24 0009C080 */  sll   $t8, $t1, 2
 .L80051B28:
-/* 052728 80051B28 3C09800E */  lui   $t1, %hi(D_800DCC80) # $t1, 0x800e
+/* 052728 80051B28 3C09800E */  lui   $t1, %hi(gSurfaceSoundTable) # $t1, 0x800e
 /* 05272C 80051B2C 8E020018 */  lw    $v0, 0x18($s0)
 /* 052730 80051B30 01384821 */  addu  $t1, $t1, $t8
 /* 052734 80051B34 8FA60078 */  lw    $a2, 0x78($sp)
-/* 052738 80051B38 8D29CC80 */  lw    $t1, %lo(D_800DCC80)($t1)
+/* 052738 80051B38 8D29CC80 */  lw    $t1, %lo(gSurfaceSoundTable)($t1)
 /* 05273C 80051B3C 14400011 */  bnez  $v0, .L80051B84
 /* 052740 80051B40 00000000 */   nop   
 /* 052744 80051B44 1120000F */  beqz  $t1, .L80051B84

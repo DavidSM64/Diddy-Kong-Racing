@@ -105,7 +105,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
         racer->unkC = 0.0f;
     }
     racer->attackType = ATTACK_NONE;
-    if (racer->unk148 != 0) {
+    if (racer->approachTarget != 0) {
         xDiff = obj->segment.x_velocity * obj->segment.x_velocity;
         zDiff = obj->segment.z_velocity * obj->segment.z_velocity;
         racer->velocity = -sqrtf((xDiff * xDiff) + (zDiff * zDiff));
@@ -162,7 +162,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
         racer->headAngleTarget = timer;
     }
     if (obj->segment.unk38.byte.unk3B == 1) {
-        if ((racer->unk1E7 & 0x1F) < 10) {
+        if ((racer->miscCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }

@@ -90,7 +90,9 @@ typedef enum WeaponType {
     WEAPON_SHIELD_LEVEL_1,
     WEAPON_SHIELD_LEVEL_2,
     WEAPON_SHIELD_LEVEL_3,
-    WEAPON_NITRO_LEVEL_3
+    WEAPON_NITRO_LEVEL_3,
+
+    NUM_WEAPON_TYPES
 } WeaponType;
 
 typedef enum LightFlags {
@@ -122,49 +124,13 @@ typedef struct ObjectCamera {
   /* 0x003F */ u8 unk3F;
 } ObjectCamera;
 
-/* Unknown Size */
-typedef struct unk8005234C {
-    u8 unk0[0x16C];
-    s16 unk16C;
-} unk8005234C;
-
 typedef struct TempStruct5 {
     f32 unk0;
     f32 unk4;
     s8 unk8[4][4];
 } TempStruct5;
 
-/* Unknown Size */
-typedef struct unk800535C4 {
-    s16 unk0;
-    s16 unk2;
-} unk800535C4;
-
-/* Unknown Size */
-typedef struct unk800535C4_2 {
-    /* 0x00  */ u8 unk0[0x9C];
-    /* 0x9C  */ f32 oz;
-    /* 0xA0  */ f32 ox;
-    /* 0xA4  */ f32 oy;
-    /* 0xA8  */ u8 unkA8[0xF8];
-    /* 0x1A0 */ s16 unk1A0;
-    /* 0x1A2 */ s16 unk1A2;
-    /* 0x1A4 */ s16 unk1A4;
-} unk800535C4_2;
-
-/* Unknown Size */
-typedef struct unk80056930 {
-    u8 unk0[0x3];
-    s8 unk3;
-} unk80056930;
-
-/* Unknown Size */
-typedef struct unk800579B0 {
-    u8 unk0[0x1E1];
-    s8 unk1E1;
-} unk800579B0;
-
-s32 func_80044450(s32 cap);
+s32 roll_percent_chance(s32 chance);
 void func_8004C0A0(s32 updateRate, Object *obj, Object_Racer *racer);
 void func_8004C140(Object *obj, Object_Racer *racer);
 void update_carpet(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer);
@@ -174,7 +140,7 @@ void func_800521B8(s32 arg0);
 void slowly_reset_head_angle(Object_Racer *racer);
 void func_80052988(Object *obj, Object_Racer *arg1, s32 action, s32 arg3, s32 duration, s32 arg5, s32 arg6, s32 arg7);
 void handle_car_steering(Object_Racer *racer);
-void func_800535C4(unk800535C4 *arg0, unk800535C4_2 *arg1);
+void func_800535C4(Object *obj, Object_Racer *racer);
 void handle_car_velocity_control(Object_Racer *racer);
 void play_char_horn_sound(Object *obj, Object_Racer *racer);
 void racer_play_sound(Object *obj, s32 soundID);
@@ -212,7 +178,7 @@ void update_camera_finish_challenge(f32 arg0, Object *obj, Object_Racer *racer);
 void update_camera_finish_race(f32 arg0, Object *obj, Object_Racer *racer);
 void update_camera_fixed(f32 arg0, Object *obj, Object_Racer *racer);
 void handle_racer_head_turning(Object *obj, Object_Racer *racer, s32 updateRate);
-void func_80050754(Object *obj, Object_Racer *racer, f32 divisor);
+void racer_approach_object(Object *obj, Object_Racer *racer, f32 divisor);
 void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer);
 void func_80044170(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate);
@@ -225,7 +191,7 @@ void racer_enter_door(Object_Racer *racer, s32 updateRate);
 void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate);
 void update_car_velocity_ground(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
 f32 func_800494E0(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6);
-void func_8005A6F0(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
+void update_AI_racer(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
 void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate);
 void handle_racer_items(Object *obj, Object_Racer *racer, s32 updateRate);
 void drop_bananas(Object *obj, Object_Racer *racer, s32 number);

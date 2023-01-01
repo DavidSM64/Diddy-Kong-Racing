@@ -106,7 +106,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         obj->segment.y_velocity += 4.0;
     }
     racer->attackType = ATTACK_NONE;
-    if (racer->unk148 != NULL) {
+    if (racer->approachTarget != NULL) {
         xDiff = obj->segment.x_velocity * obj->segment.x_velocity;
         zDiff = (obj->segment.z_velocity * obj->segment.z_velocity);
         racer->velocity = -sqrtf((xDiff * xDiff) + (zDiff * zDiff));

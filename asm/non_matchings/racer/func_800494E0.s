@@ -64,8 +64,8 @@ glabel func_800494E0
 /* 04A1BC 800495BC E6300014 */  swc1  $f16, 0x14($s1)
 .L800495C0:
 /* 04A1C0 800495C0 86280000 */  lh    $t0, ($s1)
-/* 04A1C4 800495C4 3C058012 */  lui   $a1, %hi(D_8011D510) # $a1, 0x8012
-/* 04A1C8 800495C8 24A5D510 */  addiu $a1, %lo(D_8011D510) # addiu $a1, $a1, -0x2af0
+/* 04A1C4 800495C4 3C058012 */  lui   $a1, %hi(gCurrentRacerTransform) # $a1, 0x8012
+/* 04A1C8 800495C8 24A5D510 */  addiu $a1, %lo(gCurrentRacerTransform) # addiu $a1, $a1, -0x2af0
 /* 04A1CC 800495CC 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 04A1D0 800495D0 44815000 */  mtc1  $at, $f10
 /* 04A1D4 800495D4 00084823 */  negu  $t1, $t0
