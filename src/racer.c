@@ -1419,7 +1419,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     tempRacer->unk21C = 0;
     if (tempRacer->playerIndex != -1 && !D_8011D582) {
         set_object_stack_pos(player);
-        gCameraObject = (ObjectCamera *) func_80069CFC();
+        gCameraObject = (ObjectCamera *) get_active_camera_segment_no_cutscenes();
         gCameraObject->trans.z_rotation = 0;
         gCameraObject->trans.x_rotation = 0x400;
         gCameraObject->trans.y_rotation = tempRacer->unk196;
@@ -1465,7 +1465,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
  */
 void update_player_racer(Object *obj, s32 updateRate) {
     s32 tempVar;
-    s32 temp_v0_17;
+    s32 checkpointCount;
     s32 context;
     Object *tempObj;
     f32 updateRateF;
@@ -1475,10 +1475,11 @@ void update_player_racer(Object *obj, s32 updateRate) {
     f32 yTemp;
     f32 zTemp;
     f32 lastCheckpointDist;
-    f32 temp_f12;
+    f32 playerIDF;
     LevelHeader *header;
     CheckpointNode *checkpointNode;
-    UNUSED s32 pad[2];
+    s32 playerID;
+    f32 stretch;
     s32 i;
     struct LevelObjectEntryCommon newObject;
 
@@ -1614,7 +1615,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             }
         }
         set_object_stack_pos(tempRacer->playerIndex);
-        gCameraObject = (ObjectCamera *) func_80069CFC();
+        gCameraObject = (ObjectCamera *) get_active_camera_segment_no_cutscenes();
         tempRacer->miscCounter++; //!@Delta
         gCurrentPlayerIndex = tempRacer->playerIndex;
         if ((tempRacer->raceFinished == TRUE) || (context == 1)) {
@@ -1703,7 +1704,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         // Assign a camera to human players.
         if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
-            gCameraObject = (ObjectCamera *) func_80069CFC();
+            gCameraObject = (ObjectCamera *) get_active_camera_segment_no_cutscenes();
         }
         D_8011D5AE = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, (struct TempStruct8 **) &D_8011D5B0);
         if (D_8011D5AE) {
@@ -1761,14 +1762,14 @@ void update_player_racer(Object *obj, s32 updateRate) {
                 tempRacer->magnetSoundMask = 0;
             }
         }
-        temp_v0_17 = header->playerIndex;
-        if (temp_v0_17) {
-            temp_f12 = -(f32) temp_v0_17;
-            if (tempRacer->velocity > temp_v0_17) {
-                tempRacer->velocity = temp_v0_17;
+        playerID = header->playerIndex;
+        if (playerID) {
+            playerIDF = -(f32) playerID;
+            if (tempRacer->velocity > playerID) {
+                tempRacer->velocity = playerID;
             }
-            if (tempRacer->velocity < temp_f12) {
-                tempRacer->velocity = temp_f12;
+            if (tempRacer->velocity < playerIDF) {
+                tempRacer->velocity = playerIDF;
             }
         }
         if (context != 1 || func_8000E148()) {
@@ -1790,9 +1791,9 @@ void update_player_racer(Object *obj, s32 updateRate) {
             if (tempRacer->playerIndex == PLAYER_COMPUTER && checkpointNode->unk36[tempRacer->unk1CA] == 2) {
                 tempRacer->unk1C8 = 1;
             }
-            temp_v0_17 = get_checkpoint_count();
+            checkpointCount = get_checkpoint_count();
             tempRacer->checkpoint++;
-            if (tempRacer->checkpoint >= temp_v0_17) {
+            if (tempRacer->checkpoint >= checkpointCount) {
                 tempRacer->checkpoint = 0;
                 if (tempRacer->courseCheckpoint > 0) {
                     if (tempRacer->lap < 120) {
@@ -1833,7 +1834,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                     }
                 }
             }
-            if (tempRacer->courseCheckpoint < (header->laps + 3) * temp_v0_17) {
+            if (tempRacer->courseCheckpoint < (header->laps + 3) * checkpointCount) {
                 tempRacer->courseCheckpoint++;
             }
             tempRacer->unk1A8 = 10000;
@@ -1870,13 +1871,13 @@ void update_player_racer(Object *obj, s32 updateRate) {
             tempRacer->lateral_velocity = 0.0f;
         }
         if (tempRacer->stretch_height <= tempRacer->stretch_height_cap) {
-            temp_f12 = 0.02f;
+            stretch = 0.02f;
         } else {
-            temp_f12 = -0.02f;
+            stretch = -0.02f;
         }
-        tempRacer->stretch_height += (((tempRacer->stretch_height_cap - tempRacer->stretch_height) * 0.125) + temp_f12) * updateRateF;
-        if ((temp_f12 < 0.0f && tempRacer->stretch_height <= tempRacer->stretch_height_cap) ||
-            (temp_f12 > 0.0f && tempRacer->stretch_height >= tempRacer->stretch_height_cap)) {
+        tempRacer->stretch_height += (((tempRacer->stretch_height_cap - tempRacer->stretch_height) * 0.125) + stretch) * updateRateF;
+        if ((stretch < 0.0f && tempRacer->stretch_height <= tempRacer->stretch_height_cap) ||
+            (stretch > 0.0f && tempRacer->stretch_height >= tempRacer->stretch_height_cap)) {
             tempRacer->stretch_height = tempRacer->stretch_height_cap;
             tempRacer->stretch_height_cap = 1.0f;
         }
@@ -5277,7 +5278,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     if ((racer->unk150 != NULL) && (gRaceStartTimer == 0)) {
         s8 *temp;
         racer->unk150->segment.trans.x_position = obj->segment.trans.x_position;
-        temp = (s8 *)get_misc_asset(MISC_ASSET_UNK00);
+        temp = (s8 *) get_misc_asset(MISC_ASSET_UNK00);
         racer->unk150->segment.trans.y_position = obj->segment.trans.y_position + temp[racer->characterId];
         racer->unk150->segment.trans.z_position = obj->segment.trans.z_position;
         racer->unk150->segment.trans.scale = obj->segment.unk30 / 265.0f;

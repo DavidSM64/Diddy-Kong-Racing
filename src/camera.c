@@ -1256,12 +1256,15 @@ UNUSED void func_80069CB4(s32 xRotation, s32 yRotation, s32 zRotation) {
     gActiveCameraStack[gActiveCameraID].trans.z_rotation += zRotation;
 }
 
-ObjectSegment *func_80069CFC(void) {
+/**
+ * Returns the segment data of the active camera, but won't apply the offset for cutscenes.
+*/
+ObjectSegment *get_active_camera_segment_no_cutscenes(void) {
     return &gActiveCameraStack[gActiveCameraID];
 }
 
 /**
- * Returns the active segment data of the active camera.
+ * Returns the segment data of the active camera.
 */
 ObjectSegment *get_active_camera_segment(void) {
     if (gCutsceneCameraActive) {

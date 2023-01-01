@@ -104,7 +104,7 @@ glabel func_800278E8
 .L80027A5C:
 /* 02865C 80027A5C 104000ED */  beqz  $v0, .L80027E14
 /* 028660 80027A60 8FBF001C */   lw    $ra, 0x1c($sp)
-/* 028664 80027A64 0C01A73F */  jal   func_80069CFC
+/* 028664 80027A64 0C01A73F */  jal   get_active_camera_segment_no_cutscenes
 /* 028668 80027A68 AFA50054 */   sw    $a1, 0x54($sp)
 /* 02866C 80027A6C C604000C */  lwc1  $f4, 0xc($s0)
 /* 028670 80027A70 8FA50054 */  lw    $a1, 0x54($sp)
