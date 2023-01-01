@@ -9,6 +9,7 @@
 #include "racer.h"
 
 extern Gfx *gDisplayLists[2];
+extern s32 sLogicUpdateRate;
 
 enum RenderContext {
     DRAW_INTRO = -1,
