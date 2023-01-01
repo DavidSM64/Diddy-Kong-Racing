@@ -1536,7 +1536,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     }
     header = get_current_level_header();
     gCurrentCourseHeight = header->course_height;
-    tempRacer->throttleReleased = 0;
+    tempRacer->throttleReleased = FALSE;
     if (tempRacer->playerIndex == PLAYER_COMPUTER) {
         func_8005A6F0(obj, tempRacer, updateRate, delta); // AI.
     } else {
@@ -1641,7 +1641,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         //Set the value that decides whether to get an empowered boost.
         if ((gCurrentRacerInput & A_BUTTON) == 0) {
-            tempRacer->throttleReleased = 1;
+            tempRacer->throttleReleased = TRUE;
         }
         if (check_if_showing_cutscene_camera() || gRaceStartTimer == 100 || tempRacer->unk1F1 || D_8011D584 || tempRacer->unk148 || tempRacer->unk204 > 0) {
             gCurrentStickX = 0;
@@ -2838,7 +2838,7 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
 void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF) {
     s32 angleVel;
 
-    racer->velocity *= 0.97; //@Delta: Reduces 3% of speed per frame, not accounting for game speed.
+    racer->velocity *= 0.97; //!@Delta: Reduces 3% of speed per frame, not accounting for game speed.
     racer->lateral_velocity = 0.0f;
     if (racer->raceFinished == FALSE) {
         func_80072348(racer->playerIndex, 0);
@@ -2860,7 +2860,7 @@ void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 upd
     if (racer->spinout_timer > 0) {
         racer->y_rotation_vel += updateRate * 0x500;
         if (racer->y_rotation_vel > 0 && angleVel < 0) {
-            racer->spinout_timer--; //@Delta
+            racer->spinout_timer--; //!@Delta
             if (gCurrentStickX > 50 && racer->spinout_timer == 1) {
                 racer->spinout_timer = 0;
             }
@@ -2868,7 +2868,7 @@ void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 upd
     } else if (racer->spinout_timer < 0) {
         racer->y_rotation_vel -= updateRate * 0x500;
         if (racer->y_rotation_vel < 0 && angleVel > 0) {
-            racer->spinout_timer++; //@Delta
+            racer->spinout_timer++; //!@Delta
             if (gCurrentStickX < -50 && racer->spinout_timer == -1) {
                 racer->spinout_timer = 0;
             }
@@ -2905,7 +2905,7 @@ void update_car_velocity_offground(Object* obj, Object_Racer* racer, s32 updateR
         racer->unk1A0 -= (u16) ((steerAngle * 6 * updateRate) >> 1);
         angle = -(u16) racer->x_rotation_vel;
         WRAP(angle, -0x8000, 0x8000);
-        racer->x_rotation_vel += (angle >> 3);
+        racer->x_rotation_vel += (angle >> 3); //!@Delta
     }
     if (racer->unk18) {
         func_8000488C((void *) racer->unk18);
@@ -2928,15 +2928,15 @@ void update_car_velocity_offground(Object* obj, Object_Racer* racer, s32 updateR
         }
         racer->unk1E8 = racer->steerAngle;
         if (gCurrentRacerInput & A_BUTTON) {
-            racer->velocity -= 0.5;
+            racer->velocity -= 0.5; //!@Delta
         }
         if (gCurrentRacerInput & B_BUTTON && gCurrentStickY < -25) {
-            racer->velocity += 0.5;
+            racer->velocity += 0.5; //!@Delta
         }
         sp33 = 1;
-        racer->lateral_velocity *= 0.87;
-        racer->velocity *= 0.87;
-        obj->segment.y_velocity *= 0.9;
+        racer->lateral_velocity *= 0.87; //!@Delta
+        racer->velocity *= 0.87; //!@Delta
+        obj->segment.y_velocity *= 0.9; //!@Delta
         func_800494E0(obj, racer, D_8011D4F8, D_8011D504, updateRate, gCurrentStickX, 6.0f);
     }
     if (racer->playerIndex == -1) {
@@ -2956,11 +2956,11 @@ void update_car_velocity_offground(Object* obj, Object_Racer* racer, s32 updateR
     gCurrentCarSteerVel = racer->unk110;
     if (racer->boostTimer) {
         if (racer->velocity > -20.0) {
-            racer->velocity -= 1.6;
+            racer->velocity -= 1.6; //!@Delta
         }
     }
     yStick = gCurrentStickY;
-    if ((yStick < 50) && (yStick > (-50))) {
+    if (yStick < 50 && yStick > -50) {
         yStick = 0;
     }
     obj->segment.y_velocity -= (obj->segment.y_velocity * 0.025) * updateRateF;
@@ -2971,13 +2971,13 @@ void update_car_velocity_offground(Object* obj, Object_Racer* racer, s32 updateR
         racer->x_rotation_offset += 0x600 * updateRate;
     }
     if (racer->unk1FE == 1 || racer->unk1FE == 3) {
-        racer->lateral_velocity *= 0.97;
-        racer->velocity *= 0.97;
+        racer->lateral_velocity *= 0.97; //!@Delta
+        racer->velocity *= 0.97; //!@Delta
         if (yStick > 50) {
-            racer->velocity -= 0.2;
+            racer->velocity -= 0.2; //!@Delta
         }
         if (yStick < -50) {
-            racer->velocity += 0.2;
+            racer->velocity += 0.2; //!@Delta
         }
         sp33 = 1;
     }
@@ -3310,18 +3310,18 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
     } else {
         tempVel = racer->velocity - yVel;
         if (tempVel > 0.5) {
-            racer->velocity -= tempVel - 0.5;
+            racer->velocity -= tempVel - 0.5; //!@Delta
         }
         if (tempVel < -0.5) {
-            racer->velocity -= tempVel + 0.5;
+            racer->velocity -= tempVel + 0.5; //!@Delta
         }
         tempVel = racer->lateral_velocity - hVel;
         if (tempVel && tempVel) {}
         if (tempVel > 0.5) {
-            racer->lateral_velocity -= tempVel - 0.5;
+            racer->lateral_velocity -= tempVel - 0.5; //!@Delta
         }
         if (tempVel < -0.5) {
-            racer->lateral_velocity -= tempVel + 0.5;
+            racer->lateral_velocity -= tempVel + 0.5; //!@Delta
         }
     }
 }
@@ -3402,7 +3402,7 @@ void update_car_velocity_ground(Object* obj, Object_Racer* racer, s32 updateRate
         racer->boostTimer = normalise_time(45);
         racer->boostType = BOOST_UNK3;
     }
-    racer->velocity -= velSquare * traction;
+    racer->velocity -= velSquare * traction; //!@Delta
     if (sp38) {
         if (racer->unk1EE < 16) {
             racer->unk1EE++;
@@ -3446,21 +3446,21 @@ void update_car_velocity_ground(Object* obj, Object_Racer* racer, s32 updateRate
         f32 reverseVel = (3.0 - racer->velocity) * 0.15;
         if (gCurrentStickY < -25 && !(gCurrentRacerInput & A_BUTTON) && gCurrentRacerInput & B_BUTTON) {
             racer->brake = 0.0f;
-            racer->velocity += reverseVel;
+            racer->velocity += reverseVel; //!@Delta
         }
     }
 	forwardVel = (vel * racer->brake) * 0.32;
-    racer->velocity -= vel * racer->throttle;
+    racer->velocity -= vel * racer->throttle; //!@Delta
     if (racer->velocity > -0.04 && racer->velocity < 0.04) {
         racer->velocity = 0.0f;
     }
     if (racer->velocity < 0.0f) {
-        racer->velocity += forwardVel;
+        racer->velocity += forwardVel; //!@Delta
         if (racer->velocity > 0.0f) {
             racer->velocity = 0.0f;
         }
     } else {
-        racer->velocity -= forwardVel;
+        racer->velocity -= forwardVel; //!@Delta
         if (racer->velocity < 0.0f) {
             racer->velocity = 0.0f;
         }
@@ -3925,7 +3925,7 @@ void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate) {
         }
         racer->boostType = BOOST_NONE;
         if (racer->throttleReleased) {
-            racer->boostType |= 4;
+            racer->boostType |= EMPOWER_BOOST;
         }
         if (racer->magnetSoundMask == NULL && racer->raceFinished == FALSE) {
             play_sound_global(SOUND_MAGNET_HUM, (void *) &racer->magnetSoundMask);
@@ -5089,7 +5089,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     if (racer->unk201 != 0) {
         func_80044170(obj, racer, updateRate);
         if (!(gCurrentRacerInput & A_BUTTON)) {
-            racer->throttleReleased = 1;
+            racer->throttleReleased = TRUE;
         }
         if (racer->unk1FE == 3) {
             gCurrentRacerWeightStat *= ((f32) racer->unk1FF / 256);
@@ -5169,7 +5169,7 @@ void func_8005A6F0(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         }
         if (checkpoint->unk36[racer->unk1CA] == 4) {
             if (racer->velocity < -4.0) {
-                racer->velocity *= 0.9;
+                racer->velocity *= 0.9; //!@Delta
             }
         }
         if (var_t2 == 0) {

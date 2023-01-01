@@ -30,7 +30,7 @@ const char sCoreFileExt2[] = { 0, 0, 0, 0 };
 /************ .data ************/
 
 s32 sLockupStatus = -1;
-s32 sLockupPage = 0;
+s32 sLockupPage = EPC_PAGE_REGISTER;
 s32 sLockupDelay = 0;
 
 /*******************************/
@@ -218,8 +218,7 @@ s32 get_lockup_status(void) {
         // Looks like it reads EpcInfo data from the controller pak, which is interesting
         if ((get_si_device_status(controllerIndex) == CONTROLLER_PAK_GOOD) &&
             (get_file_number(controllerIndex, (char *)sCoreFileName2, (char *)sCoreFileExt2, &fileNum) == CONTROLLER_PAK_GOOD) &&
-            (read_data_from_controller_pak(controllerIndex, fileNum, dataFromControllerPak, 2048) == CONTROLLER_PAK_GOOD))
-        {
+            (read_data_from_controller_pak(controllerIndex, fileNum, dataFromControllerPak, 0x800) == CONTROLLER_PAK_GOOD)) {
             bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(epcInfo));
             bcopy(&sp220, &D_801299B0, sizeof(sp220));
             bcopy(&sp420, &D_80129BB0, sizeof(sp420));
@@ -236,7 +235,7 @@ s32 get_lockup_status(void) {
 
 void lockup_screen_loop(s32 updateRate) {
     sLockupDelay += updateRate;
-    if (sLockupDelay >= 61) {
+    if (sLockupDelay > 60) {
         sLockupDelay = 0;
         sLockupPage++;
     }
