@@ -3699,7 +3699,7 @@ void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateR
         angle = -racer->steerAngle;
         angle *= 6;
     }
-    racer->steerVisualRotation -= ((angle & 0xFFFF) / 2) * updateRate;
+    racer->steerVisualRotation -= (angle & 0xFFFF);
     gCurrentCarSteerVel = racer->unk110;
     if (racer->boostTimer) {
         if (racer->velocity > -20.0f) {
