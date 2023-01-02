@@ -120,31 +120,31 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of December 30, 2022, this is our current score:
+As of January 2, 2023, this is our current score:
 ```
- ===================================================================
+ ==================================================================
                ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------- 48.30% Complete -------------------------
-                    # Decompiled functions: 1460
-                     # GLOBAL_ASM remaining: 378
-                    # NON_MATCHING functions: 11
-                 # NON_EQUIVALENT WIP functions: 65
- --------------------------- Game Status ---------------------------
-              Balloons: 23/47, Keys: 2/4, Trophies: 2/5
+ ------------------------ 48.44% Complete -------------------------
+                    # Decompiled functions: 1461
+                    # GLOBAL_ASM remaining: 377
+                    # NON_MATCHING functions: 12
+                 # NON_EQUIVALENT WIP functions: 64
+ -------------------------- Game Status ---------------------------
+             Balloons: 23/47, Keys: 2/4, Trophies: 2/5
                T.T. Amulets: 2/4, Wizpig Amulets: 2/4
- -------------------------------------------------------------------
-             We are racing in Crescent Island. (Lap 3/3)
- ===================================================================
-                ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 16.67% Complete -------------------------
-                     # Documented functions: 345
-                   # Undocumented remaining: 1493
- --------------------------- Game Status ---------------------------
-              Balloons: 9/47, Keys: 1/4, Trophies: 0/5
+ ------------------------------------------------------------------
+            We are racing in Crescent Island. (Lap 3/3)
+ ==================================================================
+               ADVENTURE TWO (Cleanup & Documentation)
+ ------------------------ 18.52% Complete -------------------------
+                    # Documented functions: 365
+                   # Undocumented remaining: 1473
+ -------------------------- Game Status ---------------------------
+             Balloons: 10/47, Keys: 1/4, Trophies: 0/5
                T.T. Amulets: 1/4, Wizpig Amulets: 0/4
- -------------------------------------------------------------------
- We are collecting silver coins in Fossil Canyon. (0/8 silver coins)
- ===================================================================
+ ------------------------------------------------------------------
+ We are collecting silver coins in Jungle Falls. (2/8 silver coins)
+ ==================================================================
 ```
 <!-- README_SCORE_END -->
 
