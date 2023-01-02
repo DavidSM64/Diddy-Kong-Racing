@@ -1130,7 +1130,7 @@ typedef struct Object_Racer {
   /* 0x1E4 */ s8 unk1E4;
   /* 0x1E5 */ s8 unk1E5;
   /* 0x1E6 */ s8 drift_direction;
-  /* 0x1E7 */ s8 miscCounter;
+  /* 0x1E7 */ s8 miscAnimCounter;
   /* 0x1E8 */ s8 unk1E8;
   /* 0x1E9 */ s8 unk1E9;
   /* 0x1EA */ s8 unk1EA;

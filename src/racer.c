@@ -1437,7 +1437,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80046524.s")
  * While the majority of the respondent behaviour takes place elsewhere, the squish behaviour happens here.
  * Hovercraft do not have a spinning state, instead being in the same state when hit by a rocket.
  */
-void racer_attack_handler_hovercraft(Object* obj, Object_Racer* racer) {
+void racer_attack_handler_hovercraft(Object *obj, Object_Racer *racer) {
     s8 bananas;
 
     if (racer->playerIndex == PLAYER_COMPUTER) {
@@ -1633,7 +1633,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
 /**
  * When on water, apply a rotation effect based on the movement of the waves and turning direction.
 */
-f32 rotate_racer_in_water(Object *obj1, Object_Racer *racer, Vec3f *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6) {
+f32 rotate_racer_in_water(Object *obj, Object_Racer *racer, Vec3f *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6) {
     Matrix mtxF;
     f32 velocity;
     s32 angle;
@@ -1651,11 +1651,11 @@ f32 rotate_racer_in_water(Object *obj1, Object_Racer *racer, Vec3f *pos, s8 arg3
             velocity = 0.0f;
         }
     } else {
-        obj1->segment.trans.x_position += pos->x * updateRateF * arg6;
-        obj1->segment.trans.z_position += pos->z * updateRateF * arg6;
+        obj->segment.trans.x_position += pos->x * updateRateF * arg6;
+        obj->segment.trans.z_position += pos->z * updateRateF * arg6;
         velocity = 1.0f;
     }
-    gCurrentRacerTransform.y_rotation = -obj1->segment.trans.y_rotation;
+    gCurrentRacerTransform.y_rotation = -obj->segment.trans.y_rotation;
     gCurrentRacerTransform.x_rotation = 0;
     gCurrentRacerTransform.z_rotation = 0;
     gCurrentRacerTransform.x_position = 0.0f;
@@ -1672,10 +1672,10 @@ f32 rotate_racer_in_water(Object *obj1, Object_Racer *racer, Vec3f *pos, s8 arg3
     angleVel = ((s16) (u16)arctan2_f(pos->z, pos->y) * velocity);
     angleVel += -gCurrentStickY * 32;
     angleVel += 0x3C0;
-    angle = (u16)angleVel - ((u16) obj1->segment.trans.x_rotation);
+    angle = (u16)angleVel - ((u16) obj->segment.trans.x_rotation);
     angle = angle > 0x8000 ? angle - 0xffff : angle;
     angle = angle < -0x8000 ? angle + 0xffff : angle;
-    obj1->segment.trans.x_rotation += (angle * updateRate) >> 4;
+    obj->segment.trans.x_rotation += (angle * updateRate) >> 4;
     return velocity;
 }
 
@@ -1985,7 +1985,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8004CC20.s")
  * This happens in Walrus Cove and Darkmoon Caverns.
  * The camera's rotation follows the players exactly, in order to stay levelled.
  */
-void update_camera_loop(f32 updateRateF, Object* obj, Object_Racer* racer) {
+void update_camera_loop(f32 updateRateF, Object *obj, Object_Racer *racer) {
     s32 UpdateRate;
     UNUSED f32 pad;
     s32 segmentIndex;
@@ -2136,7 +2136,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     tempRacer->unk1E2 = 3;
     tempRacer->unk1AA = 1;
     tempRacer->unk1AE = 1;
-    tempRacer->miscCounter = tempRacer->playerIndex * 5;
+    tempRacer->miscAnimCounter = tempRacer->playerIndex * 5;
     tempRacer->checkpoint_distance = 1.0f;
     tempRacer->unk1FD = 0;
     tempRacer->magnetSoundMask = NULL;
@@ -2346,7 +2346,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         set_object_stack_pos(tempRacer->playerIndex);
         gCameraObject = (ObjectCamera *) get_active_camera_segment_no_cutscenes();
-        tempRacer->miscCounter++; //!@Delta
+        tempRacer->miscAnimCounter++; //!@Delta
         gCurrentPlayerIndex = tempRacer->playerIndex;
         if (tempRacer->raceFinished == TRUE || context == DRAW_MENU) {
             tempRacer->unk1CA = 1;
@@ -2850,7 +2850,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     racer->unk88 = 0.0f;
     // Apply bobbing if there's no dialogue camera rotation active.
     if (gDialogueCameraAngle == 0) {
-        scale = (f32) D_800DCDB0[0][racer->miscCounter & 0x1F] * 0.024999999999999998;
+        scale = (f32) D_800DCDB0[0][racer->miscAnimCounter & 0x1F] * 0.024999999999999998;
         racer->carBobX = -racer->roll * scale;
         racer->carBobY = -racer->yaw * scale;
         racer->carBobZ = -racer->pitch * scale;
@@ -2903,7 +2903,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
                 sp58 = 1;
             }
         }
-        if ((racer->miscCounter & 7) < 2) {
+        if ((racer->miscAnimCounter & 7) < 2) {
             racer->unk1D1 = get_random_number_from_range(-25, 25);
         }
         gCurrentStickX += racer->unk1D1;
@@ -3050,13 +3050,13 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     // If reversing, flip the steering
     if (racer->velocity < -4.0) {
         if (gCurrentCarSteerVel > 0x1400 || (racer->drift_direction != 0 && gCurrentCarSteerVel > 0)) {
-            SteeringVel = racer->miscCounter & 7;
+            SteeringVel = racer->miscAnimCounter & 7;
             if (SteeringVel >= 4) {
                 SteeringVel = 7 - SteeringVel;
             }
             gCurrentCarSteerVel += SteeringVel * 0x190;
         } else if (gCurrentCarSteerVel < -0x1400 || (racer->drift_direction != 0 && gCurrentCarSteerVel < 0)) {
-            SteeringVel = racer->miscCounter & 7;
+            SteeringVel = racer->miscAnimCounter & 7;
             if (SteeringVel >= 4) {
                 SteeringVel = 7 - SteeringVel;
             }
@@ -3193,7 +3193,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     // Apply a bobbing effect when on grass and sand.
     if (racer->velocity < -2.0 && sp68 >= 4) {
-        scale = (f32) (racer->miscCounter & 1) * 0.5;
+        scale = (f32) (racer->miscAnimCounter & 1) * 0.5;
         racer->carBobX -= racer->roll * scale;
         racer->carBobY -= racer->yaw * scale;
         racer->carBobZ -= racer->pitch * scale;
@@ -3335,7 +3335,7 @@ void handle_racer_head_turning(Object *obj, Object_Racer *racer, UNUSED s32 upda
         }
     }
     if (foundObj == FALSE) {
-        if ((racer->miscCounter & 0x1F) < 2) {
+        if ((racer->miscAnimCounter & 0x1F) < 2) {
             intendedAngle = racer->velocity * 1280.0f;
 
             if (intendedAngle < 0) {
@@ -3382,7 +3382,7 @@ s32 turn_head_towards_object(Object *obj, Object_Racer *racer, Object *targetObj
         WRAP(intendedAngle, -0x8000, 0x8000);
         CLAMP(intendedAngle, -0x3000, 0x3000);
         racer->headAngleTarget = intendedAngle;
-        if ((racer->miscCounter & 0x3F) < 0x1F) {
+        if ((racer->miscAnimCounter & 0x3F) < 0x1F) {
             racer->headAngleTarget = 0;
         }
         racer = (struct Object_Racer *) targetObj->unk64;
@@ -3392,7 +3392,7 @@ s32 turn_head_towards_object(Object *obj, Object_Racer *racer, Object *targetObj
         racer->headAngleTarget = intendedAngle;
         if (ret) {} // Fakematch
         ret = TRUE;
-        if ((racer->miscCounter & 0x1F) < 0xA) {
+        if ((racer->miscAnimCounter & 0x1F) < 0xA) {
             racer->headAngleTarget = 0;
         }
     }
@@ -3570,7 +3570,7 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
  * If the spinout timer is above zero, remove steering control and have them rotate until
  * the timer runs out.
  */
-void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF) {
+void racer_spinout_car(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
     s32 angleVel;
 
     racer->velocity *= 0.97; //!@Delta: Reduces 3% of speed per frame, not accounting for game speed.
@@ -3618,7 +3618,7 @@ void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 upd
  * Gets, sets and works with car velocity while either airborne or in water.
  * It also handles turn velocity, too, as well as vertical velocity.
  */
-void update_car_velocity_offground(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF) {
+void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
     s32 steerAngle;
     s32 yStick;
     s32 angle;
@@ -3830,7 +3830,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80053750.s")
  * While the majority of the respondent behaviour takes place elsewhere, the squish behaviour
  * happens here.
  */
-void racer_attack_handler_car(Object* obj, Object_Racer* racer, s32 updateRate) {
+void racer_attack_handler_car(Object *obj, Object_Racer *racer, s32 updateRate) {
     s8 bananas;
 
     if (racer->playerIndex == PLAYER_COMPUTER) {
@@ -4063,7 +4063,7 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
  * Gets, sets and works with car velocity while grounded.
  * It also handles turn velocity, too.
  */
-void update_car_velocity_ground(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF) {
+void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
     s32 xStick;
     s32 stickMultiplier;
     s32 surfaceType;
@@ -5802,7 +5802,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         }
     }
     
-    racer->miscCounter++; //!@Delta
+    racer->miscAnimCounter++; //!@Delta
     
     if (func_8002341C() || func_80023568() || racer->vehicleID == VEHICLE_LOOPDELOOP || D_8011D544 > 120.0f || gRaceStartTimer != 0 || levelHeader->race_type & RACETYPE_CHALLENGE_BATTLE) {
         racer->unk201 = 30;

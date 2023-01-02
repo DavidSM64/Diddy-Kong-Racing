@@ -1710,6 +1710,10 @@ void obj_loop_animcamera(Object *obj, s32 updateRate) {
 UNUSED void func_800387C0(UNUSED s32 arg0, UNUSED s32 arg1) {
 }
 
+/**
+ * Racer cutscene target loop behaviour.
+ * Exists as a target point for racer objects to automatically move towards, for cutscenes.
+ */
 void obj_loop_animcar(Object *obj, s32 updateRate) {
     Object *racerObj;
     s32 racerID;
