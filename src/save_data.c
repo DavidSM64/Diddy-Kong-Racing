@@ -1442,7 +1442,7 @@ void init_controller_paks(void) {
                 sControllerPaksPresent |= controllerBit;
             }
             else if (ret == PFS_ERR_ID_FATAL) {
-                if (controllerIndex) { }
+                if (controllerIndex) { } // Fakematch
                 ret = osMotorInit(sControllerMesgQueue, &pfs[controllerIndex], controllerIndex);
                 if (ret == 0) {
                     //If we found a rumble pak, set the bit that has one

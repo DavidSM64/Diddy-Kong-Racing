@@ -231,7 +231,7 @@ glabel func_8000B750
 /* 00C6A4 8000BAA4 46043200 */  add.s $f8, $f6, $f4
 /* 00C6A8 8000BAA8 44078000 */  mfc1  $a3, $f16
 /* 00C6AC 8000BAAC 44064000 */  mfc1  $a2, $f8
-/* 00C6B0 8000BAB0 0C00455C */  jal   func_80011570
+/* 00C6B0 8000BAB0 0C00455C */  jal   move_object
 /* 00C6B4 8000BAB4 00000000 */   nop   
 .L8000BAB8:
 /* 00C6B8 8000BAB8 8FAF0090 */  lw    $t7, 0x90($sp)

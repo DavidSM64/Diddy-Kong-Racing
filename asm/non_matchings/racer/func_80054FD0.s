@@ -25,8 +25,8 @@ glabel func_80054FD0
 .L80055010:
 /* 055C10 80055010 A7A00130 */  sh    $zero, 0x130($sp)
 /* 055C14 80055014 862E0000 */  lh    $t6, ($s1)
-/* 055C18 80055018 3C058012 */  lui   $a1, %hi(D_8011D510) # $a1, 0x8012
-/* 055C1C 8005501C 24A5D510 */  addiu $a1, %lo(D_8011D510) # addiu $a1, $a1, -0x2af0
+/* 055C18 80055018 3C058012 */  lui   $a1, %hi(gCurrentRacerTransform) # $a1, 0x8012
+/* 055C1C 8005501C 24A5D510 */  addiu $a1, %lo(gCurrentRacerTransform) # addiu $a1, $a1, -0x2af0
 /* 055C20 80055020 A4AE0000 */  sh    $t6, ($a1)
 /* 055C24 80055024 862F0002 */  lh    $t7, 2($s1)
 /* 055C28 80055028 3C013F80 */  li    $at, 0x3F800000 # 1.000000
@@ -508,8 +508,8 @@ glabel func_80054FD0
 /* 05633C 8005573C 46004283 */  div.s $f10, $f8, $f0
 /* 056340 80055740 C6280014 */  lwc1  $f8, 0x14($s1)
 /* 056344 80055744 862F0000 */  lh    $t7, ($s1)
-/* 056348 80055748 3C058012 */  lui   $a1, %hi(D_8011D510) # $a1, 0x8012
-/* 05634C 8005574C 24A5D510 */  addiu $a1, %lo(D_8011D510) # addiu $a1, $a1, -0x2af0
+/* 056348 80055748 3C058012 */  lui   $a1, %hi(gCurrentRacerTransform) # $a1, 0x8012
+/* 05634C 8005574C 24A5D510 */  addiu $a1, %lo(gCurrentRacerTransform) # addiu $a1, $a1, -0x2af0
 /* 056350 80055750 000FC023 */  negu  $t8, $t7
 /* 056354 80055754 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 056358 80055758 27A40060 */  addiu $a0, $sp, 0x60

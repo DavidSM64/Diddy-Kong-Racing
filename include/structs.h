@@ -573,12 +573,12 @@ typedef struct LevelModel {
 /* 0x26 */ u16 unk26;
            u8 pad28[0x10];
 /* 0x38 */ u32 minimapColor;
-/* 0x3C */ s16 unk3C;
-/* 0x3E */ s16 unk3E;
-/* 0x40 */ s16 unk40;
-/* 0x42 */ s16 unk42;
-/* 0x44 */ s16 unk44;
-/* 0x46 */ s16 unk46;
+/* 0x3C */ s16 lowerXBounds;
+/* 0x3E */ s16 upperXBounds;
+/* 0x40 */ s16 lowerYBounds;
+/* 0x42 */ s16 upperYBounds;
+/* 0x44 */ s16 lowerZBounds;
+/* 0x46 */ s16 upperZBounds;
 /* 0x48 */ s32 modelSize;
 } LevelModel;
 
@@ -867,11 +867,6 @@ typedef struct Object_AnimCamera {
   /* 0x44 */ s8 unk44;
 } Object_AnimCamera;
 
-typedef struct Object_AnimCar {
-  /* 0x000 */ u8 pad0[0x148];
-  /* 0x148 */ struct Object *unk148;
-} Object_AnimCar;
-
 typedef struct Object_InfoPoint {
   /* 0x0 */ s16 unk0;
 } Object_InfoPoint;
@@ -1013,10 +1008,10 @@ typedef struct Object_Racer {
   /* 0x08C */ f32 stretch_height;
   /* 0x090 */ f32 stretch_height_cap;
   /* 0x094 */ f32 camera_zoom;
-  /* 0x098 */ f32 unk98; // Can only guess this is yaw.
+  /* 0x098 */ f32 unk98;
   /* 0x09C */ f32 pitch;
-  /* 0x0A0 */ f32 unkA0; // might be roll
-  /* 0x0A4 */ f32 unkA4;
+  /* 0x0A0 */ f32 roll;
+  /* 0x0A4 */ f32 yaw;
   /* 0x0A8 */ f32 checkpoint_distance;
   /* 0x0AC */ f32 unkAC;
   /* 0x0B0 */ f32 unkB0;
@@ -1047,7 +1042,7 @@ typedef struct Object_Racer {
   /* 0x13C */ s32 unk13C;
   /* 0x140 */ struct Object *magnetTargetObj;
   /* 0x144 */ struct Object *held_obj;
-  /* 0x148 */ struct Object *unk148;
+  /* 0x148 */ struct Object *approachTarget;
   /* 0x14C */ struct Object *unk14C;
   /* 0x150 */ struct Object *unk150;
   /* 0x154 */ struct Object *unk154;
@@ -1089,7 +1084,7 @@ typedef struct Object_Racer {
   /* 0x19A */ s16 unk19A;
   /* 0x19C */ s16 unk19C;
   /* 0x19E */ s16 unk19E;
-  /* 0x1A0 */ s16 unk1A0;
+  /* 0x1A0 */ s16 steerVisualRotation;
   /* 0x1A2 */ s16 y_rotation_vel;
   /* 0x1A4 */ s16 x_rotation_vel;
   /* 0x1A6 */ s16 z_rotation_vel;
@@ -1136,7 +1131,7 @@ typedef struct Object_Racer {
   /* 0x1E4 */ s8 unk1E4;
   /* 0x1E5 */ s8 unk1E5;
   /* 0x1E6 */ s8 drift_direction;
-  /* 0x1E7 */ s8 unk1E7;
+  /* 0x1E7 */ s8 miscAnimCounter;
   /* 0x1E8 */ s8 unk1E8;
   /* 0x1E9 */ s8 unk1E9;
   /* 0x1EA */ s8 unk1EA;
@@ -1405,7 +1400,6 @@ typedef struct Object_64 {
         Object_CharacterFlag character_flag;
         Object_Snowball snowball;
         Object_AnimCamera anim_camera;
-        Object_AnimCar anim_car;
         Object_InfoPoint info_point;
         Object_TTDoor tt_door;
         Object_WorldKey world_key;

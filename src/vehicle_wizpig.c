@@ -46,8 +46,8 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s16 sp3C;
     s16 sp3A;
     s16 sp38;
-    f32 zDiff;
-    f32 xDiff;
+    f32 diffZ;
+    f32 diffX;
     f32 var_f12;
     s32 sp28;
     Object *firstRacerObj;
@@ -106,10 +106,10 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         obj->segment.y_velocity += 4.0f;
     }
     racer->attackType = ATTACK_NONE;
-    if (racer->unk148 != NULL) {
-        xDiff = obj->segment.x_velocity * obj->segment.x_velocity;
-        zDiff = (obj->segment.z_velocity * obj->segment.z_velocity);
-        racer->velocity = -sqrtf((xDiff * xDiff) + (zDiff * zDiff));
+    if (racer->approachTarget != NULL) {
+        diffX = obj->segment.x_velocity * obj->segment.x_velocity;
+        diffZ = (obj->segment.z_velocity * obj->segment.z_velocity);
+        racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
         if (racer->velocity > -0.5f) {
             racer->velocity = 0.0f;
             obj->segment.x_velocity = 0.0f;
@@ -125,7 +125,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->x_rotation_offset = -obj->segment.trans.x_rotation;
     gfxData = *obj->unk68;
     objModel = gfxData->objModel;
-    xDiff = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 0x10) - 0x11;
+    diffX = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 0x10) - 0x11;
     var_f12 = (racer->velocity * updateRateF) * 0.45f;
     if (var_f12 <= 0.0) {
         if (var_f12 > -2.0f) {
@@ -168,12 +168,12 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         break;
     }
     
-    while (xDiff <= racer->unkC) {
-        racer->unkC -= xDiff;
+    while (diffX <= racer->unkC) {
+        racer->unkC -= diffX;
         gfxData->unk10 = -1;
     }
     while (racer->unkC <= 0.0f){
-        racer->unkC += xDiff;
+        racer->unkC += diffX;
         gfxData->unk10 = -1;
     }
     if (obj->segment.unk38.byte.unk3B == 2 && sp38 != 0) {

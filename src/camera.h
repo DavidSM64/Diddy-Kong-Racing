@@ -140,7 +140,7 @@ void func_80068158(Gfx **dlist, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_800682AC(Gfx **dlist);
 void func_80068408(Gfx **dlist, MatrixS **mats);
 void func_80068508(s32 arg0);
-ObjectSegment *func_80069CFC(void);
+ObjectSegment *get_active_camera_segment_no_cutscenes(void);
 ObjectSegment *get_active_camera_segment(void);
 ObjectSegment *func_80069D7C(void);
 Matrix *func_80069DA4(void);

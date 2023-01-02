@@ -68,8 +68,8 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     s16 sp5E;
     s16 sp5C;
     s16 sp5A;
-    f32 xDiff;
-    f32 zDiff;
+    f32 diffX;
+    f32 diffZ;
     s32 var_v0;
     s32 sp48;
     ObjectModel *objModel;
@@ -128,10 +128,10 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
             obj->segment.y_velocity += 7.5f;
         }
     }
-    if (racer->unk148 != NULL) {
-        xDiff = obj->segment.x_velocity * obj->segment.x_velocity;
-        zDiff = obj->segment.z_velocity * obj->segment.z_velocity;
-        racer->velocity = -sqrtf((xDiff * xDiff) + (zDiff * zDiff));
+    if (racer->approachTarget != NULL) {
+        diffX = obj->segment.x_velocity * obj->segment.x_velocity;
+        diffZ = obj->segment.z_velocity * obj->segment.z_velocity;
+        racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
     }
     sp3C = FALSE;
     if ((find_next_checkpoint_node(racer->checkpoint, racer->unk1C8))->unk36[racer->unk1CA] == 1) {
@@ -174,13 +174,13 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     }
     obj68 = *obj->unk68;
     objModel = obj68->objModel;
-    xDiff = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
+    diffX = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
     while (racer->unkC < 0.0f) {
-        racer->unkC += xDiff;
+        racer->unkC += diffX;
         obj68->unk10 = -1;
     }
-    while (xDiff < racer->unkC) {
-        racer->unkC -= xDiff;
+    while (diffX < racer->unkC) {
+        racer->unkC -= diffX;
         obj68->unk10 = -1;
     }
     if ((obj68->unk10 == -1) && (obj->segment.unk38.byte.unk3B == 4)) {
@@ -196,16 +196,16 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     func_800AFC3C(obj, updateRate);
     fade_when_near_camera(obj, racer, 0x28);
     firstRacerObj = get_racer_object(0);
-    xDiff = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
-    zDiff = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
-    if (((xDiff * xDiff) + (zDiff * zDiff)) < 700.0f * 700.0f) {
-        sp48 = (arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+    diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
+    diffZ = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
+    if (((diffX * diffX) + (diffZ * diffZ)) < 700.0f * 700.0f) {
+        sp48 = (arctan2_f(diffX, diffZ) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         WRAP(sp48, -0x8000, 0x8000);
         CLAMP(sp48, -0xC00, 0xC00);
         racer->headAngleTarget = sp48;
     }
     if (obj->segment.unk38.byte.unk3B == 1) {
-        if ((racer->unk1E7 & 0x3F) < 10) {
+        if ((racer->miscAnimCounter & 0x3F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }
