@@ -204,7 +204,7 @@ void racer_attack_handler_hovercraft(Object* obj, Object_Racer* racer);
 void racer_enter_door(Object_Racer *racer, s32 updateRate);
 void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate);
 void update_car_velocity_ground(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
-f32 rotate_racer_in_water(Object* obj1, Object_Racer* racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6);
+f32 rotate_racer_in_water(Object* obj1, Object_Racer* racer, Vec3f *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6);
 void update_AI_racer(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);
 void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate);
 void handle_racer_items(Object *obj, Object_Racer *racer, s32 updateRate);

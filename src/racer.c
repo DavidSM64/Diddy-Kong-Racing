@@ -146,22 +146,22 @@ s8 D_800DCDB0[16][2] = {
 // Checksum count for obj_loop_goldenballoon
 s32 gObjLoopGoldenBalloonChecksum = 0xA597;
 
-FadeTransition D_800DCDD4 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 50, -1);
+FadeTransition gDoorFadeTransition = FADE_TRANSITION(0, FADE_COLOR_BLACK, 50, -1);
 
 /*******************************/
 
 /************ .rodata ************/
 
-const char D_800E6280[] = "%.1f,%.1f,%.1f\n";
-const char D_800E6290[] = "Chk ovflow!!\n";
-const char D_800E62A0[] = "Back\n";
+const char gRacerDebugCoords[] = "%.1f,%.1f,%.1f\n";
+UNUSED const char gChecksumOverflowString[] = "Chk ovflow!!\n";
+UNUSED const char gRacerBackString[] = "Back\n";
 
 /*********************************/
 
 /************ .bss ************/
 
 f32 gCurrentCourseHeight;
-f32 D_8011D4F8[3];
+Vec3f gCurrentRacerWaterPos;
 s8 D_8011D504;
 ObjectCamera *gCameraObject;
 UNUSED s32 D_8011D50C;
@@ -741,7 +741,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     UNUSED s32 temp3;
     f32 var_f2;
     UNUSED f32 *pad3;
-    f32 spD4;
+    Vec3f *spD4;
     f32 temp_f0;
     s32 var_v0;
     f32 spC8;
@@ -1253,7 +1253,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     var_f14 = 5.0f;
     sp118 = -10000.0f;
-    temp_v0_10 = func_8002AD08(obj->segment.trans.y_position, &sp118, &spD4); 
+    temp_v0_10 = func_8002AD08(obj->segment.trans.y_position, &sp118, spD4); 
     if (temp_v0_10) {
         var_f14 = racer->velocity;
         if (var_f14 < 0.0f) {
@@ -1286,7 +1286,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         if (gCurrentRacerInput & 0x0010) {
             i = gCurrentStickX * 2;
         }
-        rotate_racer_in_water(obj, racer, &spD4, temp_v0_10, updateRate, i, 1.0f);
+        rotate_racer_in_water(obj, racer, spD4, temp_v0_10, updateRate, i, 1.0f);
     }
     if (racer->buoyancy > 0.0) {
         obj->segment.trans.y_position += racer->buoyancy * racer->unkC4;
@@ -1633,7 +1633,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
 /**
  * When on water, apply a rotation effect based on the movement of the waves and turning direction.
 */
-f32 rotate_racer_in_water(Object *obj1, Object_Racer *racer, f32 *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6) {
+f32 rotate_racer_in_water(Object *obj1, Object_Racer *racer, Vec3f *pos, s8 arg3, s32 updateRate, s32 arg5, f32 arg6) {
     Matrix mtxF;
     f32 velocity;
     s32 angle;
@@ -1651,8 +1651,8 @@ f32 rotate_racer_in_water(Object *obj1, Object_Racer *racer, f32 *pos, s8 arg3, 
             velocity = 0.0f;
         }
     } else {
-        obj1->segment.trans.x_position += pos[0] * updateRateF * arg6;
-        obj1->segment.trans.z_position += pos[2] * updateRateF * arg6;
+        obj1->segment.trans.x_position += pos->x * updateRateF * arg6;
+        obj1->segment.trans.z_position += pos->z * updateRateF * arg6;
         velocity = 1.0f;
     }
     gCurrentRacerTransform.y_rotation = -obj1->segment.trans.y_rotation;
@@ -1663,13 +1663,13 @@ f32 rotate_racer_in_water(Object *obj1, Object_Racer *racer, f32 *pos, s8 arg3, 
     gCurrentRacerTransform.z_position = 0.0f;
     gCurrentRacerTransform.scale = 1.0f;
     object_transform_to_matrix_2(mtxF, &gCurrentRacerTransform);
-    guMtxXFMF(mtxF, pos[0], pos[1], pos[2], &pos[0], &pos[1], &pos[2]);
-    angle = -((s16) (u16)arctan2_f(pos[0], pos[1])) * velocity;
+    guMtxXFMF(mtxF, pos->x, pos->y, pos->z, &pos->x, &pos->y, &pos->z);
+    angle = -((s16) (u16)arctan2_f(pos->x, pos->y)) * velocity;
     angle = (u16) (angle - (arg5 << 6)) - (u16) racer->x_rotation_vel;
     angle = angle > 0x8000 ? angle - 0xffff : angle;
     angle = angle < -0x8000 ? angle + 0xffff : angle;
     racer->x_rotation_vel += (angle * updateRate) >> 4;
-    angleVel = ((s16) (u16)arctan2_f(pos[2], pos[1]) * velocity);
+    angleVel = ((s16) (u16)arctan2_f(pos->z, pos->y) * velocity);
     angleVel += -gCurrentStickY * 32;
     angleVel += 0x3C0;
     angle = (u16)angleVel - ((u16) obj1->segment.trans.x_rotation);
@@ -2282,7 +2282,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         // Print player 1's coordinates to the screen if the debug cheat is enabled.
         if (gRaceStartTimer == 0 && tempRacer->playerIndex == PLAYER_ONE) {
             if (get_filtered_cheats() & CHEAT_PRINT_COORDS) {
-                render_printf(D_800E6280, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+                render_printf(gRacerDebugCoords, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
             }
         }
         set_render_printf_background_colour(0, 0, 0, 128);
@@ -2449,7 +2449,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         if (tempRacer->vehicleID != VEHICLE_HOVERCRAFT) {
             waterHeight = -10000.0f;
             // So I assume this func exists to find the water height.
-            D_8011D504 = func_8002AD08(obj->segment.trans.y_position, &waterHeight, D_8011D4F8);
+            D_8011D504 = func_8002AD08(obj->segment.trans.y_position, &waterHeight, &gCurrentRacerWaterPos);
             if (D_8011D504) {
                 if (obj->segment.trans.y_position - 5.0f < waterHeight) {
                     tempRacer->unk1E5 = 5;
@@ -3670,7 +3670,7 @@ void update_car_velocity_offground(Object* obj, Object_Racer* racer, s32 updateR
         racer->lateral_velocity *= 0.87; //!@Delta
         racer->velocity *= 0.87; //!@Delta
         obj->segment.y_velocity *= 0.9; //!@Delta
-        rotate_racer_in_water(obj, racer, D_8011D4F8, D_8011D504, updateRate, gCurrentStickX, 6.0f);
+        rotate_racer_in_water(obj, racer, &gCurrentRacerWaterPos, D_8011D504, updateRate, gCurrentStickX, 6.0f);
     }
     if (racer->playerIndex == PLAYER_COMPUTER) {
         racer->unk1E8 = racer->steerAngle;
@@ -5729,7 +5729,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
     }
     if ((racer->transitionTimer < -1 && gCurrentStickX < 10 && gCurrentStickX > -10) || racer->transitionTimer == -1) {
         if (check_if_showing_cutscene_camera() == 0) {
-            func_800C01D8(&D_800DCDD4);
+            func_800C01D8(&gDoorFadeTransition);
         }
         racer->transitionTimer = 60 - updateRate;
     }
