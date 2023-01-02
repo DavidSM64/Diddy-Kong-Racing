@@ -92,17 +92,17 @@ typedef struct unk800BFC54_arg0 {
 void func_800B7D20(void);
 void func_800B8B8C(void);
 s32 func_800B9228(LevelModelSegment *arg0);
-void func_800BBDDC(s32 arg0);
+void func_800BBDDC(LevelModel *level, LevelHeader *header);
 void func_800BFE98(s32 arg0);
 void func_800B8134(unk800B8134 *arg0);
-void func_800BBE08();
+void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1);
 void obj_loop_wavepower(Object *obj);
 void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
 void func_800BF3E4(s32 arg0);
 
 Object_64 *func_800BE654(s16, f32, f32); // Non Matching
 f32 func_800BEEB4(Object_64 *); // Non Matching
-void func_800BBF78(s32 arg0); // Non Matching
+void func_800BBF78(LevelModel *arg0); // Non Matching
 f32 func_800BB2F4(s32, f32, f32, f32*);
 void func_800B8C04(s32, s32, s32, s32, s32);
 void func_800BF524(Object *);
