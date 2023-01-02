@@ -2397,12 +2397,12 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         if (tempRacer->unk204 > 0) {
             tempRacer->unk204 -= updateRate;
-            tempRacer->velocity -= (tempRacer->velocity * 0.13f) * (updateRateF / 2.0f);
-            obj->segment.x_velocity -= (obj->segment.x_velocity * 0.13f) * (updateRateF / 2.0f);
+            tempRacer->velocity -= (tempRacer->velocity * 0.065f) * updateRateF;
+            obj->segment.x_velocity -= (obj->segment.x_velocity * 0.065f) * updateRateF;
             if (obj->segment.y_velocity > 2.0f) {
                 obj->segment.y_velocity = 2.0f;
             }
-            obj->segment.z_velocity -= (obj->segment.z_velocity * 0.13f) * (updateRateF / 2.0f);
+            obj->segment.z_velocity -= (obj->segment.z_velocity * 0.065f) * updateRateF;
         }
         if (tempRacer->unk206 > 0) {
             tempRacer->unk18A = tempRacer->unk206;
@@ -3119,7 +3119,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     // Degrade lateral velocity
     if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
         if (!(racer->velocity > -2.0f) && racer->drift_direction == 0 && racer->raceFinished == FALSE) {
-            racer->lateral_velocity += (racer->velocity * gCurrentStickX) / miscAsset[racer->characterId];
+            racer->lateral_velocity += ((racer->velocity * gCurrentStickX) / miscAsset[racer->characterId]) * (updateRateF / 2.0f);
             if (racer->playerIndex == PLAYER_COMPUTER) {
                 racer->lateral_velocity *= 0.9f;
             }
@@ -3163,7 +3163,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     // Slow down gradually when not acellerating and almost at a standstill
     if (velSquare < 1.0f && !(gCurrentRacerInput & A_BUTTON)) {
-        racer->velocity -= (racer->velocity * traction * 8.0f) * (updateRateF / 2.0f);
+        racer->velocity -= (racer->velocity * traction * 4.0f) * updateRateF;
     } else {
         racer->velocity -= (velSquare * traction) * (updateRateF / 2.0f);
     }
@@ -3290,7 +3290,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         }
         racer->velocity += surfaceTraction * (racer->pitch / (4.0f - velocitdiffY)) * updateRateF;
     }
-    racer->forwardVel -= ((racer->forwardVel + (racer->velocity * 0.05f)) * 0.125f) * updateRateF;
+    racer->forwardVel -= ((racer->forwardVel + (racer->velocity * 0.025f)) * 0.125f) * updateRateF;
     racer->unk1E8 = racer->steerAngle;
     racer->unk110 = gCurrentCarSteerVel;
     if (racer->unk1E0 != 0) {
@@ -3675,10 +3675,10 @@ void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateR
         }
         racer->unk1E8 = racer->steerAngle;
         if (gCurrentRacerInput & A_BUTTON) {
-            racer->velocity -= 0.5f * updateRateF;
+            racer->velocity -= 0.25f * updateRateF;
         }
         if (gCurrentRacerInput & B_BUTTON && gCurrentStickY < -25) {
-            racer->velocity += 0.5f * updateRateF;
+            racer->velocity += 0.25f * updateRateF;
         }
         canSteer = TRUE;
         racer->lateral_velocity -= (racer->lateral_velocity * 0.065f) * updateRateF;
@@ -3703,7 +3703,7 @@ void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateR
     gCurrentCarSteerVel = racer->unk110;
     if (racer->boostTimer) {
         if (racer->velocity > -20.0f) {
-            racer->velocity -= 1.6f * updateRateF;
+            racer->velocity -= 0.8f * updateRateF;
         }
     }
     yStick = gCurrentStickY;
