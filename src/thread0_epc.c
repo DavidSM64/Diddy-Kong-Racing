@@ -176,7 +176,7 @@ void func_800B7460(s32 *epc, s32 size, s32 mask) {
         sp840.cause = -1;
         sp840.unk130[0] = D_80129FB0[0];
         sp840.unk130[1] = D_80129FB0[1];
-        sp840.unk130[1] = D_80129FB0[2];
+        sp840.unk130[2] = D_80129FB0[2];
         bcopy(&sp840, &sp40, 0x1B0);
         bzero(&sp240, 0x200);
         v0 = func_80024594(&sp38, &size);
