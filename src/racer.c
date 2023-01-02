@@ -5672,7 +5672,7 @@ void func_8005A3C0(void) {
 
 /**
  * Antipiracy function that loops over an address of a function a number of times.
- * It compares the number it gets to a generatec checksum to determine if the game has been tampered with at all.
+ * It compares the number it gets to a generated checksum to determine if the game has been tampered with at all.
 */
 void compare_balloon_checksums(void) {
     s32 i;
