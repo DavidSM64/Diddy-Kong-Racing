@@ -12,7 +12,7 @@ typedef struct epcInfo {
 /*  0x08 */ s32 unk8;
 /*  0x0C */ s32 unkC;
 /*  0x10 */ s32 unk10;
-/*  0x14 */ s32 thread;
+/*  0x14 */ s32 thread[1];
 /*  0x18 */ s32 unk18;
 /*  0x1C */ s32 unk1C;
 /*  0x20 */ s64 at;
@@ -54,9 +54,7 @@ typedef struct epcInfo {
 /* 0x124 */ s32 badvaddr;
 /* 0x128 */ s32 unk128;
 /* 0x12C */ s32 unk12C;
-/* 0x130 */ f32 unk130;
-/* 0x134 */ f32 unk134;
-/* 0x138 */ f32 unk138;
+/* 0x130 */ f32 unk130[3];
 /* 0x13C */ u8 pad13C[0x74];
 } epcInfo;
 
@@ -69,6 +67,15 @@ typedef struct unk800D2470 {
 /*  0x10 */ u8 pad10[0x108];
 /* 0x118 */ s32 unk118;
 } unk800D2470;
+
+enum EPCScreenPage {
+    EPC_PAGE_REGISTER,
+    EPC_PAGE_STACK_TOP,
+    EPC_PAGE_STACK_MIDDLE,
+    EPC_PAGE_STACK_BOTTOM,
+    EPC_PAGE_UNK04,
+    EPC_PAGE_EXIT
+};
 
 void func_800B6E50(void);
 void func_800B6EE0(void);

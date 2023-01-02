@@ -481,7 +481,7 @@ void func_80027E24(s32 arg0) {
 void func_80027FC4(s32 arg0) {
     LevelObjectEntryCommon sp20;
 
-    func_8005A3D0();
+    compare_balloon_checksums();
     if (arg0 == -1) {
         D_8011B0B8 = NULL;
         return;

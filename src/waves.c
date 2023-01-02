@@ -255,12 +255,13 @@ GLOBAL_ASM("asm/non_matchings/waves/func_800BA4B8.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BA8E4.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BB2F4.s")
 
-void func_800BBDDC(s32 arg0) {
-    func_800BBE08();
-    func_800BBF78(arg0);
+void func_800BBDDC(LevelModel *level, LevelHeader *header) {
+    func_800BBE08(level, (unk800BBE08_arg1 *) header);
+    func_800BBF78(level);
 }
 
-void func_800BBE08(LevelModel *arg0, unk800BBE08_arg1 *arg1) {
+//TODO: arg1 should be a LevelHeader
+void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1) {
     s16 numSegments;
     s32 j;
     TriangleBatchInfo *curBatch;
@@ -269,11 +270,11 @@ void func_800BBE08(LevelModel *arg0, unk800BBE08_arg1 *arg1) {
     LevelModelSegmentBoundingBox *bb;
     LevelModelSegment *segment;
 
-    numSegments = arg0->numberOfSegments;
+    numSegments = level->numberOfSegments;
     curBatch = 0;
     
     for (i = 0; (curBatch == 0) && (i < numSegments); i++) {
-        segment = &arg0->segments[i];
+        segment = &level->segments[i];
         for (j = 0; (curBatch == 0) && (j < segment->numberOfBatches); j++) {
             if ((segment->batches[j].flags & 0x01002100) == 0x01002000) {
                 curBatch = &segment->batches[j];
@@ -286,13 +287,13 @@ void func_800BBE08(LevelModel *arg0, unk800BBE08_arg1 *arg1) {
     } else {
         i--;
     }
-    bb = &arg0->segmentsBoundingBoxes[i];
+    bb = &level->segmentsBoundingBoxes[i];
     D_8012A0A8 = bb->x2 - bb->x1;
     D_8012A0AC = bb->z2 - bb->z1;
     D_8012A0B0 = bb->x1;
     D_8012A0B4 = bb->z1;
     D_8012A07C = curBatch;
-    D_8012A080 = arg0->textures[curBatch->textureIndex].texture;
+    D_8012A080 = level->textures[curBatch->textureIndex].texture;
     temp_t6 = (curBatch->flags & 0x70000000) >> 0x1C;
     if (temp_t6 > 0) {
         D_800E3180 = arg1->unk70[temp_t6];

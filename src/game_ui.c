@@ -1872,7 +1872,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gMinimapRed, gMinimapGreen, gMinimapBlue, mapOpacity);
             }
             render_orthi_triangle_image(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (ObjectSegment* ) &objTrans.trans, (unk80068BF4* ) sp154, 0);
-            sp11C = (lvlMdl->unk3E - lvlMdl->unk3C) / (f32) (lvlMdl->unk46 - lvlMdl->unk44);
+            sp11C = (lvlMdl->upperXBounds - lvlMdl->lowerXBounds) / (f32) (lvlMdl->upperZBounds - lvlMdl->lowerZBounds);
             sp118 = coss_f((lvlMdl->unk24 * 0xFFFF) / 360);
             sp114 = sins_f((lvlMdl->unk24 * 0xFFFF) / 360);
             if (func_8000E4D8() && func_8001B288()) {

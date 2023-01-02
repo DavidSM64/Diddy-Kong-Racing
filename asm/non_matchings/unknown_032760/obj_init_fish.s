@@ -122,7 +122,7 @@ glabel obj_init_fish
 /* 0379EC 80036DEC 8FA50030 */  lw    $a1, 0x30($sp)
 /* 0379F0 80036DF0 8FA7002C */  lw    $a3, 0x2c($sp)
 /* 0379F4 80036DF4 02202025 */  move  $a0, $s1
-/* 0379F8 80036DF8 0C00455C */  jal   func_80011570
+/* 0379F8 80036DF8 0C00455C */  jal   move_object
 /* 0379FC 80036DFC 24060000 */   li    $a2, 0
 /* 037A00 80036E00 8FA90048 */  lw    $t1, 0x48($sp)
 /* 037A04 80036E04 02001825 */  move  $v1, $s0

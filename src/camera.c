@@ -1217,8 +1217,7 @@ void func_80069A40(Gfx **dlist) {
     D_80120D20--;
     D_80120D1C--;
 
-    // Fakematch?
-    { s32 temp = D_80120D20; if ((temp && temp) != 0){} }
+    { s32 temp = D_80120D20; if ((temp && temp) != 0){} } // Fakematch
 
     if (D_80120D1C > 0) {
         gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0(D_80120D88[D_80120D1C]), G_MTX_DKR_INDEX_1);
@@ -1257,12 +1256,15 @@ UNUSED void func_80069CB4(s32 xRotation, s32 yRotation, s32 zRotation) {
     gActiveCameraStack[gActiveCameraID].trans.z_rotation += zRotation;
 }
 
-ObjectSegment *func_80069CFC(void) {
+/**
+ * Returns the segment data of the active camera, but won't apply the offset for cutscenes.
+*/
+ObjectSegment *get_active_camera_segment_no_cutscenes(void) {
     return &gActiveCameraStack[gActiveCameraID];
 }
 
 /**
- * Returns the active segment data of the active camera.
+ * Returns the segment data of the active camera.
 */
 ObjectSegment *get_active_camera_segment(void) {
     if (gCutsceneCameraActive) {
@@ -1344,7 +1346,7 @@ UNUSED void debug_print_fixed_matrix_values(s16 *mtx) {
             rmonPrintf("%x  ", (u16)val & 0xFFFF);
         }
         rmonPrintf("\n");
-        if (!val){}
+        if (!val){} // Fakematch
     }
     rmonPrintf("\n");
 }

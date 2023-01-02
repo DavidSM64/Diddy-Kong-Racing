@@ -941,7 +941,7 @@ glabel func_8001F460
 /* 020DEC 800201EC AFA70068 */  sw    $a3, 0x68($sp)
 /* 020DF0 800201F0 0C01997A */  jal   set_object_stack_pos
 /* 020DF4 800201F4 AFA5005C */   sw    $a1, 0x5c($sp)
-/* 020DF8 800201F8 0C01A73F */  jal   func_80069CFC
+/* 020DF8 800201F8 0C01A73F */  jal   get_active_camera_segment_no_cutscenes
 /* 020DFC 800201FC 00000000 */   nop   
 /* 020E00 80020200 3C068012 */  lui   $a2, %hi(D_8011AE74) # $a2, 0x8012
 /* 020E04 80020204 8CC6AE74 */  lw    $a2, %lo(D_8011AE74)($a2)
@@ -1080,7 +1080,7 @@ glabel func_8001F460
 /* 021008 80020408 AFA70068 */  sw    $a3, 0x68($sp)
 /* 02100C 8002040C 0C01997A */  jal   set_object_stack_pos
 /* 021010 80020410 AFB90080 */   sw    $t9, 0x80($sp)
-/* 021014 80020414 0C01A73F */  jal   func_80069CFC
+/* 021014 80020414 0C01A73F */  jal   get_active_camera_segment_no_cutscenes
 /* 021018 80020418 00000000 */   nop   
 /* 02101C 8002041C 3C068012 */  lui   $a2, %hi(D_8011AE74) # $a2, 0x8012
 /* 021020 80020420 8CC6AE74 */  lw    $a2, %lo(D_8011AE74)($a2)
@@ -1322,7 +1322,7 @@ glabel func_8001F460
 /* 0213AC 800207AC 8FA7011C */  lw    $a3, 0x11c($sp)
 /* 0213B0 800207B0 8FA60120 */  lw    $a2, 0x120($sp)
 /* 0213B4 800207B4 8FA50124 */  lw    $a1, 0x124($sp)
-/* 0213B8 800207B8 0C00455C */  jal   func_80011570
+/* 0213B8 800207B8 0C00455C */  jal   move_object
 /* 0213BC 800207BC 00000000 */   nop   
 /* 0213C0 800207C0 9263002E */  lbu   $v1, 0x2e($s3)
 /* 0213C4 800207C4 24010001 */  li    $at, 1

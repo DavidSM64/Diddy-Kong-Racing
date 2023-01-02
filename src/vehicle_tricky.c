@@ -67,8 +67,8 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s16 sp56;
     s16 sp54;
     s16 sp52;
-    f32 xDiff;
-    f32 zDiff;
+    f32 diffX;
+    f32 diffZ;
     ObjectModel *objModel;
     s32 sp40;
     Object_68 *obj68;
@@ -123,14 +123,14 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
     }
     racer->attackType = ATTACK_NONE;
-    if (racer->unk148 != NULL) {
-        xDiff = obj->segment.x_velocity * obj->segment.x_velocity;
-        zDiff = obj->segment.z_velocity * obj->segment.z_velocity;
-        racer->velocity = -sqrtf((xDiff * xDiff) + (zDiff * zDiff));
+    if (racer->approachTarget != NULL) {
+        diffX = obj->segment.x_velocity * obj->segment.x_velocity;
+        diffZ = obj->segment.z_velocity * obj->segment.z_velocity;
+        racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
     }
     obj68 = *obj->unk68;
     objModel = obj68->objModel;
-    xDiff = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
+    diffX = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
     if (obj->segment.unk38.byte.unk3B != 3) {
         if (racer->velocity < -2.0) {
             obj->segment.unk38.byte.unk3B = 1;
@@ -146,11 +146,11 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->unkC += 2.0 * updateRateF;
     }
     while (racer->unkC < 0.0f) {
-        racer->unkC += xDiff;
+        racer->unkC += diffX;
         obj68->unk10 = -1;
     }
-    while (xDiff < racer->unkC) {
-        racer->unkC -= xDiff;
+    while (diffX < racer->unkC) {
+        racer->unkC -= diffX;
         obj68->unk10 = -1;
     }
     if (obj68->unk10 == -1 && obj->segment.unk38.byte.unk3B == 3) {
@@ -177,16 +177,16 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             break;
     }
     firstRacerObj = get_racer_object(0);
-    xDiff = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
-    zDiff = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
-    if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) < 700.0) {
-        sp40 = (arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+    diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
+    diffZ = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
+    if (sqrtf((diffX * diffX) + (diffZ * diffZ)) < 700.0) {
+        sp40 = (arctan2_f(diffX, diffZ) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         WRAP(sp40, -0x8000, 0x8000);
         CLAMP(sp40, -sp38, sp38);
         racer->headAngleTarget = sp40;
     }
     if (obj->segment.unk38.byte.unk3B == 1) {
-        if ((racer->unk1E7 & 0x1F) < 0xA) {
+        if ((racer->miscAnimCounter & 0x1F) < 0xA) {
             racer->headAngleTarget >>= 1;
         }
     }

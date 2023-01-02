@@ -384,7 +384,7 @@ glabel func_80049794
 /* 04A858 80049C58 0C014D71 */  jal   func_800535C4
 /* 04A85C 80049C5C 02002825 */   move  $a1, $s0
 /* 04A860 80049C60 02202025 */  move  $a0, $s1
-/* 04A864 80049C64 0C013050 */  jal   func_8004C140
+/* 04A864 80049C64 0C013050 */  jal   racer_attack_handler_plane
 /* 04A868 80049C68 02002825 */   move  $a1, $s0
 /* 04A86C 80049C6C 3C0D8012 */  lui   $t5, %hi(gCurrentPlayerIndex) # $t5, 0x8012
 /* 04A870 80049C70 8DADD55C */  lw    $t5, %lo(gCurrentPlayerIndex)($t5)
@@ -550,8 +550,8 @@ glabel func_80049794
 /* 04AAC8 80049EC8 E7A200C4 */  swc1  $f2, 0xc4($sp)
 .L80049ECC:
 /* 04AACC 80049ECC 862E0000 */  lh    $t6, ($s1)
-/* 04AAD0 80049ED0 3C058012 */  lui   $a1, %hi(D_8011D510) # $a1, 0x8012
-/* 04AAD4 80049ED4 24A5D510 */  addiu $a1, %lo(D_8011D510) # addiu $a1, $a1, -0x2af0
+/* 04AAD0 80049ED0 3C058012 */  lui   $a1, %hi(gCurrentRacerTransform) # $a1, 0x8012
+/* 04AAD4 80049ED4 24A5D510 */  addiu $a1, %lo(gCurrentRacerTransform) # addiu $a1, $a1, -0x2af0
 /* 04AAD8 80049ED8 A4AE0000 */  sh    $t6, ($a1)
 /* 04AADC 80049EDC 862F0002 */  lh    $t7, 2($s1)
 /* 04AAE0 80049EE0 3C013F80 */  li    $at, 0x3F800000 # 1.000000
@@ -606,7 +606,7 @@ glabel func_80049794
 /* 04ABA4 80049FA4 00000000 */   nop   
 /* 04ABA8 80049FA8 8FA400F8 */  lw    $a0, 0xf8($sp)
 /* 04ABAC 80049FAC 02202825 */  move  $a1, $s1
-/* 04ABB0 80049FB0 0C013028 */  jal   func_8004C0A0
+/* 04ABB0 80049FB0 0C013028 */  jal   apply_plane_tilt_anim
 /* 04ABB4 80049FB4 02003025 */   move  $a2, $s0
 .L80049FB8:
 /* 04ABB8 80049FB8 86020000 */  lh    $v0, ($s0)
@@ -2347,11 +2347,11 @@ glabel func_80049794
 /* 04C504 8004B904 820D0175 */  lb    $t5, 0x175($s0)
 /* 04C508 8004B908 00000000 */  nop   
 /* 04C50C 8004B90C 11A00007 */  beqz  $t5, .L8004B92C
-/* 04C510 8004B910 3C018012 */   lui   $at, %hi(D_8011D578) # $at, 0x8012
-/* 04C514 8004B914 C428D578 */  lwc1  $f8, %lo(D_8011D578)($at)
-/* 04C518 8004B918 3C018012 */  lui   $at, %hi(D_8011D57C) # $at, 0x8012
+/* 04C510 8004B910 3C018012 */   lui   $at, %hi(gRacerMagnetVelX) # $at, 0x8012
+/* 04C514 8004B914 C428D578 */  lwc1  $f8, %lo(gRacerMagnetVelX)($at)
+/* 04C518 8004B918 3C018012 */  lui   $at, %hi(gRacerMagnetVelZ) # $at, 0x8012
 /* 04C51C 8004B91C E628001C */  swc1  $f8, 0x1c($s1)
-/* 04C520 8004B920 C426D57C */  lwc1  $f6, %lo(D_8011D57C)($at)
+/* 04C520 8004B920 C426D57C */  lwc1  $f6, %lo(gRacerMagnetVelZ)($at)
 /* 04C524 8004B924 00000000 */  nop   
 /* 04C528 8004B928 E6260024 */  swc1  $f6, 0x24($s1)
 .L8004B92C:
@@ -2449,7 +2449,7 @@ glabel func_80049794
 /* 04C674 8004BA74 46006482 */  mul.s $f18, $f12, $f0
 /* 04C678 8004BA78 44065000 */  mfc1  $a2, $f10
 /* 04C67C 8004BA7C 44079000 */  mfc1  $a3, $f18
-/* 04C680 8004BA80 0C00455C */  jal   func_80011570
+/* 04C680 8004BA80 0C00455C */  jal   move_object
 /* 04C684 8004BA84 00000000 */   nop   
 /* 04C688 8004BA88 C7AC00EC */  lwc1  $f12, 0xec($sp)
 /* 04C68C 8004BA8C 10400006 */  beqz  $v0, .L8004BAA8
@@ -2468,7 +2468,7 @@ glabel func_80049794
 .L8004BABC:
 /* 04C6BC 8004BABC 02202025 */  move  $a0, $s1
 /* 04C6C0 8004BAC0 02002825 */  move  $a1, $s0
-/* 04C6C4 8004BAC4 0C0141D5 */  jal   func_80050754
+/* 04C6C4 8004BAC4 0C0141D5 */  jal   racer_approach_object
 /* 04C6C8 8004BAC8 E7AC00EC */   swc1  $f12, 0xec($sp)
 /* 04C6CC 8004BACC 3C028012 */  lui   $v0, %hi(gCurrentPlayerIndex) # $v0, 0x8012
 /* 04C6D0 8004BAD0 8C42D55C */  lw    $v0, %lo(gCurrentPlayerIndex)($v0)
@@ -2539,7 +2539,7 @@ glabel func_80049794
 /* 04C7BC 8004BBBC 820201D2 */  lb    $v0, 0x1d2($s0)
 /* 04C7C0 8004BBC0 3C0B8012 */  lui   $t3, %hi(gRaceStartTimer) # $t3, 0x8012
 /* 04C7C4 8004BBC4 1040000B */  beqz  $v0, .L8004BBF4
-/* 04C7C8 8004BBC8 3C058012 */   lui   $a1, %hi(D_8011D510) # $a1, 0x8012
+/* 04C7C8 8004BBC8 3C058012 */   lui   $a1, %hi(gCurrentRacerTransform) # $a1, 0x8012
 /* 04C7CC 8004BBCC 8FB900F8 */  lw    $t9, 0xf8($sp)
 /* 04C7D0 8004BBD0 00000000 */  nop   
 /* 04C7D4 8004BBD4 00597823 */  subu  $t7, $v0, $t9
@@ -2579,7 +2579,7 @@ glabel func_80049794
 /* 04C854 8004BC54 8D6BD540 */  lw    $t3, %lo(gRaceStartTimer)($t3)
 /* 04C858 8004BC58 24010064 */  li    $at, 100
 /* 04C85C 8004BC5C 15610005 */  bne   $t3, $at, .L8004BC74
-/* 04C860 8004BC60 24A5D510 */   addiu $a1, %lo(D_8011D510) # addiu $a1, $a1, -0x2af0
+/* 04C860 8004BC60 24A5D510 */   addiu $a1, %lo(gCurrentRacerTransform) # addiu $a1, $a1, -0x2af0
 /* 04C864 8004BC64 3C01C0A0 */  li    $at, 0xC0A00000 # -5.000000
 /* 04C868 8004BC68 44813000 */  mtc1  $at, $f6
 /* 04C86C 8004BC6C 00000000 */  nop   
@@ -2856,7 +2856,7 @@ glabel func_80049794
 /* 04CC5C 8004C05C AC590000 */  sw    $t9, ($v0)
 .L8004C060:
 /* 04CC60 8004C060 8FA700FC */  lw    $a3, 0xfc($sp)
-/* 04CC64 8004C064 0C01602D */  jal   func_800580B4
+/* 04CC64 8004C064 0C01602D */  jal   second_racer_camera_update
 /* 04CC68 8004C068 24060001 */   li    $a2, 1
 /* 04CC6C 8004C06C 83AD005F */  lb    $t5, 0x5f($sp)
 /* 04CC70 8004C070 02202025 */  move  $a0, $s1
