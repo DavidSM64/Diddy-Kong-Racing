@@ -2014,7 +2014,7 @@ void update_camera_loop(f32 updateRateF, Object *obj, Object_Racer *racer) {
     if (gCameraObject->zoom == ZOOM_FAR) {
         zoom -= 35.0f;
     }
-    gCameraObject->unk1C += (zoom - gCameraObject->unk1C) * 0.125f;
+    gCameraObject->unk1C += ((zoom - gCameraObject->unk1C) * 0.125f) * updateRateF;
     gCurrentRacerTransform.y_rotation = -gCameraObject->trans.y_rotation + 0x8000;
     gCurrentRacerTransform.x_rotation = -gCameraObject->trans.x_rotation;
     gCurrentRacerTransform.z_rotation = 0;
@@ -5101,7 +5101,7 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
             gDialogueCameraAngle = 0;
         }
     }
-    gCameraObject->trans.y_rotation -= gDialogueCameraAngle;
+    gCameraObject->trans.y_rotation -= gDialogueCameraAngle * updateRateF;
     gCameraObject->unk3A -= tempUpdateRateF;
     while (gCameraObject->unk3A < 0) {
         gCameraObject->unk3A += 5;
