@@ -256,7 +256,7 @@ GLOBAL_ASM("asm/non_matchings/waves/func_800BA8E4.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BB2F4.s")
 
 void func_800BBDDC(LevelModel *level, LevelHeader *header) {
-    func_800BBE08(level, header);
+    func_800BBE08(level, (unk800BBE08_arg1 *) header);
     func_800BBF78(level);
 }
 
