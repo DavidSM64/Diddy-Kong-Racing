@@ -189,24 +189,6 @@ typedef struct unk800179D0 {
 } unk800179D0;
 
 /* Unknown Size */
-typedef struct unk800179D0_2 {
-    s32 unk04;
-} unk800179D0_2;
-
-typedef struct unk8001D6E4_arg1_40 {
-           u8 pad0[0x71];
-/* 0x71 */ u8 unk71;
-} unk8001D6E4_arg1_40;
-
-typedef struct unk8001D6E4_arg1 {
-/* 0x00 */ s16 unk0;
-/* 0x02 */ s16 unk2;
-/* 0x04 */ s16 unk4;
-           u8  pad6[0x3A];
-/* 0x40 */ unk8001D6E4_arg1_40 *unk40;
-} unk8001D6E4_arg1;
-
-/* Unknown Size */
 typedef struct unk8000FD20_2 {
     u8 unk00[0x13];
     u8 unk13;
@@ -219,26 +201,10 @@ typedef struct unk8000FD20 {
 } unk8000FD20;
 
 /* Unknown Size */
-typedef struct unk_80016BC4_2 {
-    u8 pad0[0x104];
-    s8 unk104;
-} unk_80016BC4_2;
-
-/* Unknown Size */
 typedef struct unk_80016BC4_3 {
     u8 pad0[0x55];
     s8 unk55;
 } unk_80016BC4_3;
-
-/* Unknown Size. This might just be unk8000FD20. */
-typedef struct unk8000FD34 {
-    u8 pad0[0x40];
-    unk_80016BC4_3 *unk40;
-    u8 pad44[0x18];
-    unk_80016BC4_2 *unk5C;
-    u8 pad60[0x8];
-    s32* unk68;
-} unk8000FD34;
 
 typedef struct struct_8000FC6C {
     f32 unk0;
@@ -469,14 +435,14 @@ s32 func_8001B2F0(s32 mapId);
 void render_3d_billboard(Object *obj);
 void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 flags, u32 offset, f32 arg8);
 void func_8000B290(void);
-void func_80016BC4(unk8000FD34*);
+void func_80016BC4(Object *obj);
 s32 func_8001C48C(Object *obj);
 void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z);
 Object *func_8001B7A8(Object *racer, s32 position, f32 *distance);
-s32 func_8000FD34(unk8000FD34 *arg0, unk_80016BC4_2 *arg1);
+s32 func_8000FD34(Object *arg0, Object_5C *arg1);
 void func_8000E4E8(s32 index);
 void func_8000F648(Object *obj, s32 count, s32 objType);
-void func_8001709C();
+void func_8001709C(Object *obj);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

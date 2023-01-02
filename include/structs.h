@@ -572,12 +572,12 @@ typedef struct LevelModel {
 /* 0x26 */ u16 unk26;
            u8 pad28[0x10];
 /* 0x38 */ u32 minimapColor;
-/* 0x3C */ s16 unk3C;
-/* 0x3E */ s16 unk3E;
-/* 0x40 */ s16 unk40;
-/* 0x42 */ s16 unk42;
-/* 0x44 */ s16 unk44;
-/* 0x46 */ s16 unk46;
+/* 0x3C */ s16 lowerXBounds;
+/* 0x3E */ s16 upperXBounds;
+/* 0x40 */ s16 lowerYBounds;
+/* 0x42 */ s16 upperYBounds;
+/* 0x44 */ s16 lowerZBounds;
+/* 0x46 */ s16 upperZBounds;
 /* 0x48 */ s32 modelSize;
 } LevelModel;
 

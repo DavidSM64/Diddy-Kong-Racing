@@ -886,7 +886,7 @@ s32 func_8000FD20(unk8000FD20 *arg0, unk8000FD20_2 *arg1) {
     return 40;
 }
 
-s32 func_8000FD34(unk8000FD34 *arg0, unk_80016BC4_2 *arg1) {
+s32 func_8000FD34(Object *arg0, Object_5C *arg1) {
     arg0->unk5C = arg1;
     func_80016BC4(arg0);
     return 268;
@@ -1031,30 +1031,30 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
         return 0;
     }
     outOfBounds = FALSE;
-    x1 = (levelModel->unk3E + 1000.0);
+    x2 = (levelModel->upperXBounds + 1000.0);
     //@!bug should've campared against "obj->segment.trans.x_position"
-    if (newXPos > x1) {
+    if (newXPos > x2) {
         outOfBounds = TRUE;
     }
-    x2 = (levelModel->unk3C - 1000.0);
-    if (obj->segment.trans.x_position < x2) {
+    x1 = (levelModel->lowerXBounds - 1000.0);
+    if (obj->segment.trans.x_position < x1) {
         outOfBounds = TRUE;
     }
     if (1) { } if (1) { } if (1) { } // Fakematch
-    y1 = (levelModel->unk42 + 3000.0);
-    if (obj->segment.trans.y_position > y1) {
+    y2 = (levelModel->upperYBounds + 3000.0);
+    if (obj->segment.trans.y_position > y2) {
         outOfBounds = TRUE;
     }
-    y2 = (levelModel->unk40 - 500.00);
-    if (obj->segment.trans.y_position < y2) {
+    y1 = (levelModel->lowerYBounds - 500.00);
+    if (obj->segment.trans.y_position < y1) {
         outOfBounds = TRUE;
     }
-    z1 = (levelModel->unk46 + 1000.0);
-    if (obj->segment.trans.z_position > z1) {
+    z2 = (levelModel->upperZBounds + 1000.0);
+    if (obj->segment.trans.z_position > z2) {
         outOfBounds = TRUE;
     }
-    z2 = (levelModel->unk44 - 1000.0);
-    if (obj->segment.trans.z_position < z2) {
+    z1 = (levelModel->lowerZBounds - 1000.0);
+    if (obj->segment.trans.z_position < z1) {
         outOfBounds = TRUE;
     }
     if (D_800DC848 != 0) {
@@ -1543,24 +1543,24 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800159C8.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016500.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016748.s")
 
-void func_80016BC4(unk8000FD34 *arg0) {
+void func_80016BC4(Object *arg0) {
     s32 var_s0;
     s32 var_s1;
     s32 *temp_v0;
     s8 var_v1;
 
     arg0->unk5C->unk104 = 0;
-    func_8001709C();
+    func_8001709C(arg0);
     func_8001709C(arg0);
     var_s1 = 0;
-    var_v1 = arg0->unk40->unk55;
+    var_v1 = arg0->segment.header->numberOfModelIds;
     var_s0 = 0;
     if (var_v1 > 0) {
         do {
             temp_v0 = (s32 *) *(arg0->unk68 + var_s0);
             if (temp_v0 != NULL) {
                 func_8006017C(*temp_v0);
-                var_v1 = arg0->unk40->unk55;
+                var_v1 = arg0->segment.header->numberOfModelIds;
             }
             var_s1 += 1;
             var_s0 += 1;
