@@ -50,14 +50,14 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     s16 animFrame;
     s16 sp52;
     s32 objectID;
-    f32 zDiff;
+    f32 diffZ;
     Object_68 *gfxData;
     s32 timer;
     UNUSED s32 pad;
     s32 sp38;
     ObjectModel *model;
     Object *firstRacerObj;
-    f32 xDiff;
+    f32 diffX;
     s32 temp2;
     
     set_boss_voice_clip_offset(D_800DCE40);
@@ -106,21 +106,21 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     }
     racer->attackType = ATTACK_NONE;
     if (racer->approachTarget != 0) {
-        xDiff = obj->segment.x_velocity * obj->segment.x_velocity;
-        zDiff = obj->segment.z_velocity * obj->segment.z_velocity;
-        racer->velocity = -sqrtf((xDiff * xDiff) + (zDiff * zDiff));
+        diffX = obj->segment.x_velocity * obj->segment.x_velocity;
+        diffZ = obj->segment.z_velocity * obj->segment.z_velocity;
+        racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
     }
     gfxData = *obj->unk68;
     model = gfxData->objModel;
-    xDiff = (model->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
+    diffX = (model->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
     obj->segment.unk38.byte.unk3B = 1;
     racer->unkC += 2.0 * updateRateF;
     while (racer->unkC < 0.0f) {
-        racer->unkC += xDiff;
+        racer->unkC += diffX;
         gfxData->unk10 = -1;
     }
-    while (xDiff < racer->unkC) {
-        racer->unkC -= xDiff;
+    while (diffX < racer->unkC) {
+        racer->unkC -= diffX;
         gfxData->unk10 = -1;
     }
     if (gfxData->unk10 == -1 && obj->segment.unk38.byte.unk3B == 2) {
@@ -153,10 +153,10 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     break;
     }
     firstRacerObj = get_racer_object(0);
-    xDiff = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
-    zDiff = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
-    if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) < 700.0) {
-        timer = (arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+    diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
+    diffZ = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
+    if (sqrtf((diffX * diffX) + (diffZ * diffZ)) < 700.0) {
+        timer = (arctan2_f(diffX, diffZ) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         WRAP(timer, -0x8000, 0x8000);
         CLAMP(timer, -sp38, sp38);
         racer->headAngleTarget = timer;

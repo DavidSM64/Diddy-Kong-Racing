@@ -265,7 +265,7 @@ glabel func_8004F7F4
 /* 050778 8004FB78 02002825 */   move  $a1, $s0
 /* 05077C 8004FB7C 8FA600C0 */  lw    $a2, 0xc0($sp)
 /* 050780 8004FB80 02202025 */  move  $a0, $s1
-/* 050784 8004FB84 0C014FA7 */  jal   racer_attack_handler
+/* 050784 8004FB84 0C014FA7 */  jal   racer_attack_handler_car
 /* 050788 8004FB88 02002825 */   move  $a1, $s0
 /* 05078C 8004FB8C 820F01DB */  lb    $t7, 0x1db($s0)
 /* 050790 8004FB90 00000000 */  nop   
@@ -380,7 +380,7 @@ glabel func_8004F7F4
 /* 050920 8004FD20 27AB00B4 */  addiu $t3, $sp, 0xb4
 /* 050924 8004FD24 AFAB0010 */  sw    $t3, 0x10($sp)
 /* 050928 8004FD28 27A600B8 */  addiu $a2, $sp, 0xb8
-/* 05092C 8004FD2C 0C016420 */  jal   func_80059080
+/* 05092C 8004FD2C 0C016420 */  jal   set_position_goal_from_path
 /* 050930 8004FD30 27A700B0 */   addiu $a3, $sp, 0xb0
 /* 050934 8004FD34 920C01F0 */  lbu   $t4, 0x1f0($s0)
 # Used to access D_800E6620 and D_800E6620 + 4.
@@ -1035,7 +1035,7 @@ glabel func_8004F7F4
 .L800506C0:
 /* 0512C0 800506C0 02202025 */  move  $a0, $s1
 /* 0512C4 800506C4 02002825 */  move  $a1, $s0
-/* 0512C8 800506C8 0C01602D */  jal   func_800580B4
+/* 0512C8 800506C8 0C01602D */  jal   second_racer_camera_update
 /* 0512CC 800506CC 00003025 */   move  $a2, $zero
 /* 0512D0 800506D0 3C0A800E */  lui   $t2, %hi(gNumViewports) # $t2, 0x800e
 /* 0512D4 800506D4 8D4ACB98 */  lw    $t2, %lo(gNumViewports)($t2)

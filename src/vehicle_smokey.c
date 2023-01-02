@@ -27,8 +27,8 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s16 sp5E;
     s16 sp5C;
     s16 sp5A;
-    f32 xDiff;
-    f32 zDiff;
+    f32 diffX;
+    f32 diffZ;
     ObjectModel *objModel;
     Object_68 *obj68;
     s32 sp44;
@@ -86,9 +86,9 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     racer->attackType = ATTACK_NONE;
     if (racer->approachTarget != 0) {
-        xDiff = obj->segment.x_velocity * obj->segment.x_velocity;
-        zDiff = obj->segment.z_velocity * obj->segment.z_velocity;
-        racer->velocity = -sqrtf((xDiff * xDiff) + (zDiff * zDiff));
+        diffX = obj->segment.x_velocity * obj->segment.x_velocity;
+        diffZ = obj->segment.z_velocity * obj->segment.z_velocity;
+        racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
         if (racer->velocity > -0.5) {
             racer->velocity = 0.0f;
             obj->segment.x_velocity = 0.0f;
@@ -98,7 +98,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     obj68 = *obj->unk68;
     objModel = obj68->objModel;
-    xDiff = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
+    diffX = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
     var_f2 = (racer->velocity * updateRateF) * 0.45;
     if (var_f2 <= 0.0) {
         if (var_f2 > -2.0) {
@@ -141,12 +141,12 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     default:
         break;
     }
-    while (xDiff <= racer->unkC) {
-        racer->unkC -= xDiff;
+    while (diffX <= racer->unkC) {
+        racer->unkC -= diffX;
         obj68->unk10 = -1;
     }
     while (racer->unkC <= 0.0f) {
-        racer->unkC += xDiff;
+        racer->unkC += diffX;
         obj68->unk10 = -1;
     }
     if (obj->segment.unk38.byte.unk3B == 2 && racer->unk1E2 == 0 && racer->velocity < -6.5) {
@@ -207,10 +207,10 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     func_800AFC3C(obj, updateRate);
     fade_when_near_camera(obj, racer, 40);
     firstRacerObj = get_racer_object(0);
-    xDiff = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
-    zDiff = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
-    if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) < 700.0) {
-        sp44 = (arctan2_f(xDiff, zDiff) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+    diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
+    diffZ = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
+    if (sqrtf((diffX * diffX) + (diffZ * diffZ)) < 700.0) {
+        sp44 = (arctan2_f(diffX, diffZ) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         if (sp44 > 0x8000) {
             sp44 -= 0xFFFF;
         }
@@ -251,9 +251,9 @@ void func_8005E204(Object *obj, Object_Racer *racer, f32 arg2, s32 objectID, s32
     Object *newObj;
     s32 i;
     LevelObjectEntryCommon spawnObj;
-    f32 xDiff;
-    f32 zDiff;
-    f32 yDiff;
+    f32 diffX;
+    f32 diffZ;
+    f32 diffY;
 
     var_s6 = func_8000E988(&sp80, &sp7C);
     spawnObj.objectID = objectID;
@@ -267,10 +267,10 @@ void func_8005E204(Object *obj, Object_Racer *racer, f32 arg2, s32 objectID, s32
         if (temp_s1->behaviorId == BHV_UNK_6B) {
             temp_s2 = temp_s1->segment.unk3C_a.level_entry; 
             if ((s8) temp_s2->animation.z_rotation == racer->lap + 1 || (s8) temp_s2->animation.z_rotation == 0) {
-                xDiff = temp_s1->segment.trans.x_position - obj->segment.trans.x_position;
-                yDiff = temp_s1->segment.trans.y_position - obj->segment.trans.y_position;
-                zDiff = temp_s1->segment.trans.z_position - obj->segment.trans.z_position;
-                if (sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < (f32) ((s8) temp_s2->animation.x_rotation & 0xFF) * 4.0) {
+                diffX = temp_s1->segment.trans.x_position - obj->segment.trans.x_position;
+                diffY = temp_s1->segment.trans.y_position - obj->segment.trans.y_position;
+                diffZ = temp_s1->segment.trans.z_position - obj->segment.trans.z_position;
+                if (sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < (f32) ((s8) temp_s2->animation.x_rotation & 0xFF) * 4.0) {
                     if (temp_s1->unk78 == 0) {
                         temp_s1->unk78 = 1;
                         newObj = spawn_object(&spawnObj, 1);

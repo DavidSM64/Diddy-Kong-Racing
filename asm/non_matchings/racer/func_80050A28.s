@@ -64,8 +64,8 @@ glabel func_80050A28
 .L80050A74:
 /* 051674 80050A74 E60E0084 */  swc1  $f14, 0x84($s0)
 /* 051678 80050A78 E60E0088 */  swc1  $f14, 0x88($s0)
-/* 05167C 80050A7C 3C0E8012 */  lui   $t6, %hi(D_8011D586) # $t6, 0x8012
-/* 051680 80050A80 85CED586 */  lh    $t6, %lo(D_8011D586)($t6)
+/* 05167C 80050A7C 3C0E8012 */  lui   $t6, %hi(gDialogueCameraAngle) # $t6, 0x8012
+/* 051680 80050A80 85CED586 */  lh    $t6, %lo(gDialogueCameraAngle)($t6)
 /* 051684 80050A84 3C088012 */  lui   $t0, %hi(gCurrentRacerInput) # $t0, 0x8012
 /* 051688 80050A88 15C00041 */  bnez  $t6, .L80050B90
 /* 05168C 80050A8C 2508D528 */   addiu $t0, %lo(gCurrentRacerInput) # addiu $t0, $t0, -0x2ad8
@@ -1518,11 +1518,11 @@ glabel func_80050A28
 /* 052B88 80051F88 C7AA0084 */  lwc1  $f10, 0x84($sp)
 /* 052B8C 80051F8C C4C80020 */  lwc1  $f8, 0x20($a2)
 /* 052B90 80051F90 460A7482 */  mul.s $f18, $f14, $f10
-/* 052B94 80051F94 3C0D8012 */  lui   $t5, %hi(D_8011D586) # $t5, 0x8012
+/* 052B94 80051F94 3C0D8012 */  lui   $t5, %hi(gDialogueCameraAngle) # $t5, 0x8012
 /* 052B98 80051F98 3C01800E */  lui   $at, %hi(D_800E66A8 + 4) # $at, 0x800e
 /* 052B9C 80051F9C 46124101 */  sub.s $f4, $f8, $f18
 /* 052BA0 80051FA0 E4C40020 */  swc1  $f4, 0x20($a2)
-/* 052BA4 80051FA4 85ADD586 */  lh    $t5, %lo(D_8011D586)($t5)
+/* 052BA4 80051FA4 85ADD586 */  lh    $t5, %lo(gDialogueCameraAngle)($t5)
 /* 052BA8 80051FA8 00000000 */  nop   
 /* 052BAC 80051FAC 11A00003 */  beqz  $t5, .L80051FBC
 /* 052BB0 80051FB0 00000000 */   nop   

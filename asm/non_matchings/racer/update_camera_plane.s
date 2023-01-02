@@ -191,8 +191,8 @@ glabel update_camera_plane
 /* 04D130 8004C530 44093000 */  mfc1  $t1, $f6
 /* 04D134 8004C534 00000000 */  nop   
 .L8004C538:
-/* 04D138 8004C538 3C0D8012 */  lui   $t5, %hi(D_8011D586) # $t5, 0x8012
-/* 04D13C 8004C53C 85ADD586 */  lh    $t5, %lo(D_8011D586)($t5)
+/* 04D138 8004C538 3C0D8012 */  lui   $t5, %hi(gDialogueCameraAngle) # $t5, 0x8012
+/* 04D13C 8004C53C 85ADD586 */  lh    $t5, %lo(gDialogueCameraAngle)($t5)
 /* 04D140 8004C540 00000000 */  nop   
 /* 04D144 8004C544 11A00005 */  beqz  $t5, .L8004C55C
 /* 04D148 8004C548 00000000 */   nop   
@@ -587,7 +587,7 @@ glabel update_camera_plane
 /* 04D6E8 8004CAE8 46043280 */  add.s $f10, $f6, $f4
 /* 04D6EC 8004CAEC 8D190000 */  lw    $t9, ($t0)
 /* 04D6F0 8004CAF0 46105200 */  add.s $f8, $f10, $f16
-/* 04D6F4 8004CAF4 3C0E8012 */  lui   $t6, %hi(D_8011D586) # $t6, 0x8012
+/* 04D6F4 8004CAF4 3C0E8012 */  lui   $t6, %hi(gDialogueCameraAngle) # $t6, 0x8012
 /* 04D6F8 8004CAF8 E7280014 */  swc1  $f8, 0x14($t9)
 /* 04D6FC 8004CAFC 8D0A0000 */  lw    $t2, ($t0)
 /* 04D700 8004CB00 84EB0196 */  lh    $t3, 0x196($a3)
@@ -597,7 +597,7 @@ glabel update_camera_plane
 /* 04D710 8004CB10 00000000 */  nop   
 /* 04D714 8004CB14 15A00005 */  bnez  $t5, .L8004CB2C
 /* 04D718 8004CB18 00000000 */   nop   
-/* 04D71C 8004CB1C 85CED586 */  lh    $t6, %lo(D_8011D586)($t6)
+/* 04D71C 8004CB1C 85CED586 */  lh    $t6, %lo(gDialogueCameraAngle)($t6)
 /* 04D720 8004CB20 34018001 */  li    $at, 32769
 /* 04D724 8004CB24 11C00014 */  beqz  $t6, .L8004CB78
 /* 04D728 8004CB28 00000000 */   nop   

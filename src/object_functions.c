@@ -514,9 +514,9 @@ void obj_loop_effectbox(Object *obj, UNUSED s32 updateRate) {
     s32 numberOfObjects;
     LevelObjectEntry_EffectBox *level_entry;
     s32 i;
-    f32 xDiff;
-    f32 yDiff;
-    f32 zDiff;
+    f32 diffX;
+    f32 diffY;
+    f32 diffZ;
     f32 temp0;
     f32 temp1;
     f32 temp2;
@@ -533,20 +533,20 @@ void obj_loop_effectbox(Object *obj, UNUSED s32 updateRate) {
     temp4 = level_entry->unkA * 3;
     for (i = 0; i < numberOfObjects; i++)
     {
-        xDiff = objList[i]->segment.trans.x_position - obj->segment.trans.x_position;
-        yDiff = objList[i]->segment.trans.y_position - obj->segment.trans.y_position;
-        zDiff = objList[i]->segment.trans.z_position - obj->segment.trans.z_position;
-        if ((-temp3 < yDiff) && (yDiff < temp3)) {
-            temp5 = (xDiff * temp0) + (zDiff * temp1);
+        diffX = objList[i]->segment.trans.x_position - obj->segment.trans.x_position;
+        diffY = objList[i]->segment.trans.y_position - obj->segment.trans.y_position;
+        diffZ = objList[i]->segment.trans.z_position - obj->segment.trans.z_position;
+        if ((-temp3 < diffY) && (diffY < temp3)) {
+            temp5 = (diffX * temp0) + (diffZ * temp1);
             if ((-temp2 < temp5) && (temp5 < temp2)) {
-                temp5 = (-xDiff * temp1) + (zDiff * temp0);
+                temp5 = (-diffX * temp1) + (diffZ * temp0);
                 if ((-temp4 < temp5) && (temp5 < temp4)) {
                     curObj64 = &objList[i]->unk64->effect_box;
                     curObj64->unk1FE = level_entry->unkC;
                     curObj64->unk1FF = level_entry->unkD;
                     temp5 = temp3 / 2;
-                    if ((temp5 < yDiff) && (curObj64->unk1FE == 1)) {
-                        temp5 = (1.0 - ((yDiff - temp5) / temp5));
+                    if ((temp5 < diffY) && (curObj64->unk1FE == 1)) {
+                        temp5 = (1.0 - ((diffY - temp5) / temp5));
                         curObj64->unk1FF *= temp5;
                     }
                 }
@@ -864,9 +864,9 @@ void obj_init_airzippers_waterzippers(Object *obj, LevelObjectEntry_AirZippers_W
 void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 updateRate) {
     Object *curRacerObj;
     Object_Racer *racer;
-    f32 xDiff;
-    f32 yDiff;
-    f32 zDiff;
+    f32 diffX;
+    f32 diffY;
+    f32 diffZ;
     s32 numObjects;
     Object** racerObjs;
     s32 i;
@@ -882,10 +882,10 @@ void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 updateRate) {
             curRacerObj = racerObjs[i];
             racer = &curRacerObj->unk64->racer;
             if ((racer->unk1F5 == 0) && (racer->boostTimer < 15)) {
-                xDiff = curRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
-                yDiff = curRacerObj->segment.trans.y_position - obj->segment.trans.y_position;
-                zDiff = curRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                if ((s32) sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < 100) {
+                diffX = curRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
+                diffY = curRacerObj->segment.trans.y_position - obj->segment.trans.y_position;
+                diffZ = curRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
+                if ((s32) sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < 100) {
                     racer->unk1F5 = 1;
                     racer->unk14C = obj;
                 }
@@ -931,10 +931,10 @@ void obj_init_groundzipper(Object *arg0, LevelObjectEntry_GroundZipper *entry) {
 void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
     Object *curRacerObj;
     Object_Racer *racer;
-    f32 xDiff;
-    f32 yDiff;
+    f32 diffX;
+    f32 diffY;
     s32 numObjects;
-    f32 zDiff;
+    f32 diffZ;
     Object** racerObjs;
     s32 i;
 
@@ -947,10 +947,10 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
             curRacerObj = racerObjs[i];
             racer = &curRacerObj->unk64->racer;
             if ((racer->boostTimer < 15) && (racer->unk1E2 != 0)) {
-                xDiff = curRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
-                yDiff = curRacerObj->segment.trans.y_position - obj->segment.trans.y_position;
-                zDiff = curRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                if ((s32) sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < obj->unk78) {
+                diffX = curRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
+                diffY = curRacerObj->segment.trans.y_position - obj->segment.trans.y_position;
+                diffZ = curRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
+                if ((s32) sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < obj->unk78) {
                     if (racer->playerIndex != PLAYER_COMPUTER) {
                         play_sound_spatial(SOUND_ZIP_PAD_BOOST, curRacerObj->segment.trans.x_position, curRacerObj->segment.trans.y_position, curRacerObj->segment.trans.z_position, NULL);
                     }
@@ -1904,10 +1904,10 @@ void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
     Object_Racer *racer;
     s32 numberOfRacers;
     Settings *settings;
-    f32 xDiff;
-    f32 zDiff;
+    f32 diffX;
+    f32 diffZ;
     f32 dist;
-    f32 yDiff;
+    f32 diffY;
     Object_Exit *obj64;
     s32 enableWarp;
     Object** racerObjects;
@@ -1930,11 +1930,11 @@ void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
             for (i = 0; i < numberOfRacers; i++) {
                 racerObj = racerObjects[i];
                 racer = &racerObj->unk64->racer;
-                if ((racer->playerIndex != -1) && (racer->unk108 == 0)) {
-                    xDiff = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
-                    yDiff = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
-                    zDiff = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                    if ((sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < dist)) {
+                if ((racer->playerIndex != PLAYER_COMPUTER) && (racer->unk108 == 0)) {
+                    diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
+                    diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
+                    diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
+                    if ((sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < dist)) {
                         temp = (obj64->unk0 * racerObj->segment.trans.x_position) + (obj64->unk8 * racerObj->segment.trans.z_position) + obj64->unkC;
                         if (temp < 0.0f) {
                             racer->unk108 = obj;
@@ -2769,11 +2769,11 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
     Object *racerObj;
     Object_Racer *racer;
     s32 numberOfRacers;
-    f32 xDiff;
-    f32 yDiff;
+    f32 diffX;
+    f32 diffY;
     f32 halfDist;
     f32 dist;
-    f32 zDiff;
+    f32 diffZ;
     Object_Bonus *obj64;
     Object **racerObjects;
     s32 i;
@@ -2786,11 +2786,11 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
         for (i = 0; i < numberOfRacers; i++) {
             racerObj = racerObjects[i];
             racer = &racerObj->unk64->racer;
-            yDiff = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
-            if ((yDiff < halfDist) && (-halfDist < yDiff)) {
-                xDiff = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
-                zDiff = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                if ((sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < dist)) {
+            diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
+            if ((diffY < halfDist) && (-halfDist < diffY)) {
+                diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
+                diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
+                if ((sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < dist)) {
                     f32 temp = (obj64->unk0 * racerObj->segment.trans.x_position) + (obj64->unk8 * racerObj->segment.trans.z_position) + obj64->unkC;
                     if (temp < 0.0f) {
                         if ((s32) racer->bananas < 10) {

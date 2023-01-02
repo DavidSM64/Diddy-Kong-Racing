@@ -2031,7 +2031,7 @@ s32 func_8001C48C(Object *obj) {
     return -1;
 }
 
-s32 func_8001C524(f32 xDiff, f32 yDiff, f32 zDiff, s32 someFlag) {
+s32 func_8001C524(f32 diffX, f32 diffY, f32 diffZ, s32 someFlag) {
     UNUSED f32 pad[6];
     s32 sp64;
     f32 x;
@@ -2046,7 +2046,7 @@ s32 func_8001C524(f32 xDiff, f32 yDiff, f32 zDiff, s32 someFlag) {
     LevelObjectEntry_TTDoor *levelObj;
 
     if (someFlag) {
-        sp64 = func_8001C418(yDiff);
+        sp64 = func_8001C418(diffY);
     }
     dist = D_800E5644;
     result = 0xFF;
@@ -2062,9 +2062,9 @@ s32 func_8001C524(f32 xDiff, f32 yDiff, f32 zDiff, s32 someFlag) {
                 var_a0 = 0;
             }
             if (var_a0) {
-                x = segment->trans.x_position - xDiff;
-                y = segment->trans.y_position - yDiff;
-                z = segment->trans.z_position - zDiff;
+                x = segment->trans.x_position - diffX;
+                y = segment->trans.y_position - diffY;
+                z = segment->trans.z_position - diffZ;
                 len = sqrtf((x * x) + (y * y) + (z * z));
                 if (len < dist) {
                     dist = len;

@@ -47,8 +47,8 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s16 sp3E;
     s16 sp3C;
     s16 sp3A;
-    f32 zDiff;
-    f32 xDiff;
+    f32 diffZ;
+    f32 diffX;
     s32 sp2C;
     Object *someObj;
     Object *firstRacerObj;
@@ -108,9 +108,9 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     racer->attackType = ATTACK_NONE;
     if (racer->approachTarget != NULL) {
-        xDiff = obj->segment.x_velocity * obj->segment.x_velocity;
-        zDiff = obj->segment.z_velocity * obj->segment.z_velocity;
-        racer->velocity = -sqrtf((xDiff * xDiff) + (zDiff * zDiff));
+        diffX = obj->segment.x_velocity * obj->segment.x_velocity;
+        diffZ = obj->segment.z_velocity * obj->segment.z_velocity;
+        racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
         if (racer->velocity > -0.5) {
             racer->velocity = 0.0f;
             obj->segment.x_velocity = 0.0f;
@@ -121,13 +121,13 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->unkC += 2.0 * updateRateF;
     gfxData = *obj->unk68;
     objModel = gfxData->objModel;
-    xDiff = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
-    while (xDiff <= racer->unkC) {
-        racer->unkC -= xDiff;
+    diffX = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
+    while (diffX <= racer->unkC) {
+        racer->unkC -= diffX;
         gfxData->unk10 = -1;
     }
     while (racer->unkC <= 0.0f) {
-        racer->unkC += xDiff;
+        racer->unkC += diffX;
         gfxData->unk10 = -1;
     }
     if (obj->segment.unk38.byte.unk3B == 1 && gfxData->unk10 == -1) {

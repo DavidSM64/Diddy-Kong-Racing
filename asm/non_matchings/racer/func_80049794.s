@@ -2856,7 +2856,7 @@ glabel func_80049794
 /* 04CC5C 8004C05C AC590000 */  sw    $t9, ($v0)
 .L8004C060:
 /* 04CC60 8004C060 8FA700FC */  lw    $a3, 0xfc($sp)
-/* 04CC64 8004C064 0C01602D */  jal   func_800580B4
+/* 04CC64 8004C064 0C01602D */  jal   second_racer_camera_update
 /* 04CC68 8004C068 24060001 */   li    $a2, 1
 /* 04CC6C 8004C06C 83AD005F */  lb    $t5, 0x5f($sp)
 /* 04CC70 8004C070 02202025 */  move  $a0, $s1

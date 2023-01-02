@@ -611,7 +611,7 @@ glabel func_8004CC20
 /* 04E0F8 8004D4F8 8FA700DC */  lw    $a3, 0xdc($sp)
 /* 04E0FC 8004D4FC 02202025 */  move  $a0, $s1
 /* 04E100 8004D500 02002825 */  move  $a1, $s0
-/* 04E104 8004D504 0C01602D */  jal   func_800580B4
+/* 04E104 8004D504 0C01602D */  jal   second_racer_camera_update
 /* 04E108 8004D508 24060006 */   li    $a2, 6
 /* 04E10C 8004D50C 8E220060 */  lw    $v0, 0x60($s1)
 /* 04E110 8004D510 02202025 */  move  $a0, $s1
