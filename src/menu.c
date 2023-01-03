@@ -6955,16 +6955,16 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                         }
                         switch (gScreenMode) {
                         case 0:
-                            gScreenWidth = 304;
-                            change_vi(&gGlobalVI, 304, 224);
+                            gScreenWidth = SCREEN_WIDTH;
+                            change_vi(&gGlobalVI, SCREEN_WIDTH, SCREEN_HEIGHT);
                             break;
                         case 1:
-                            gScreenWidth = 360;
-                            change_vi(&gGlobalVI, 360, 224);
+                            gScreenWidth = SCREEN_WIDTH_16_10;
+                            change_vi(&gGlobalVI, SCREEN_WIDTH_16_10, SCREEN_HEIGHT);
                             break;
                         case 2:
-                            gScreenWidth = 408;
-                            change_vi(&gGlobalVI, 408, 224);
+                            gScreenWidth = SCREEN_WIDTH_WIDE;
+                            change_vi(&gGlobalVI, SCREEN_WIDTH_WIDE, SCREEN_HEIGHT);
                             break;
                         }
                         break;

@@ -25,6 +25,7 @@
 #define NUM_RACERS_4P 4 // Default is 4
 
 #define SCREEN_WIDTH 304
+#define SCREEN_WIDTH_16_10 360
 #define SCREEN_WIDTH_WIDE 408
 #define SCREEN_HEIGHT 224
 #define HIGH_RES_SCREEN_WIDTH 640
