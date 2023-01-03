@@ -55,18 +55,6 @@ s32 D_800DC69C = 0;       // Currently unknown, might be a different type.
 
 /************ .rodata ************/
 
-// Debug strings
-const char D_800E49F0[] = "audio manager: RCP audio interface bug caused DMA from bad address - move audiomgr.c in the makelist!\n";
-const char D_800E4A58[] = "audio: ai out of samples\n";
-const char D_800E4A74[] = "OH DEAR - No audio DMA buffers left\n";
-const char D_800E4A9C[] = "Dma not done\n";
-const char D_800E4AAC[] = "";
-const char D_800E49B0[] = "Bad soundState: voices =%d, states free =%d, states busy =%d, type %d data %x\n";
-const char D_800E4B00[] = "playing a playing sound\n";
-const char D_800E4B1C[] = "Nonsense sndp event\n";
-const char D_800E4B34[] = "Sound state allocate failed - sndId %d\n";
-const char D_800E4B5C[] = "Don't worry - game should cope OK\n";
-const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 
 /*********************************/
 
@@ -451,14 +439,6 @@ void func_8000488C(u8 *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800048D8.s")
 
-UNUSED void func_80004998(void) {
-    func_800048D8(1);
-}
-
-UNUSED void func_800049B8(void) {
-    func_800048D8(17);
-}
-
 void func_800049D8(void) {
     func_800048D8(3);
 }
@@ -484,7 +464,6 @@ u16 func_80004A3C(u8 arg0) {
 void func_80004A60(u8 arg0, u16 arg1) {
     OSIntMask mask;
     ALEventQueue *queue;
-    UNUSED s32 pad;
     ALEvent evt;
 
     mask = osSetIntMask(1);

@@ -815,7 +815,6 @@ void render_race_start(s32 arg0, s32 updateRate) {
             }
             if (D_80126D3C == 0 && func_80023568() == 0) {
                 f32 sp4C;
-                UNUSED s32 pad;
                 Object** racerGroup;
                 Object* randomRacer;
                 Object_Racer* racer;
@@ -872,7 +871,6 @@ void render_race_start(s32 arg0, s32 updateRate) {
 */
 void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
     s32 bananas;
-    UNUSED s16 pad;
     s32 temp_lo;
     u8 var_v1;
     if(racer->playerIndex == PLAYER_COMPUTER || (((gHUDNumPlayers < TWO_PLAYERS || D_800E2794[gHUDNumPlayers][racer->playerIndex] == PLAYER_THREE || gHudLevelHeader->race_type == RACETYPE_CHALLENGE_BANANAS || gHudLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) && racer->raceFinished == FALSE) && (gHUDNumPlayers < TWO_PLAYERS || (racer->lap < 1) || racer->lap_times[racer->lap] >= 180 || gHudLevelHeader->race_type & RACETYPE_CHALLENGE))) {
@@ -1041,9 +1039,6 @@ void render_race_finish_position(Object_64 *obj, s32 updateRate) {
         gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     }
 }
-
-
-UNUSED void func_800A4C34(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {}
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4C44.s")
 
@@ -1330,16 +1325,6 @@ void play_time_trial_end_message(s16 *playerID) {
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A6E30.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A718C.s")
 
-/**
- * Unused function that plays whichever T.T voice line is passed through.
- * Only if the game is currently running and no voice line is already playing.
-*/
-UNUSED void play_hud_voice_line(u16 soundId) {
-    if (gHUDVoiceSoundMask == NULL && !(is_game_paused())) {
-        play_sound_global(soundId, &gHUDVoiceSoundMask);
-    }
-}
-
 void func_800A7484(u16 arg0, f32 arg1, s32 arg2) {
     if (D_80126D74 == 0) {
         D_80126D7C = arg0;
@@ -1544,7 +1529,6 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     Object_Racer *someRacer;
     s32 i;
     s32 objectCount;
-    UNUSED s32 tempVar3;
     ObjectTransform_800A8474 objTrans;
     f32 sp11C;
     f32 sp118;
@@ -1552,7 +1536,6 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     u8 sp113;
     s32 mapOpacity;
     s32 opacity;
-    UNUSED s32 pad[2];
     s32 temp_s1_2;
     s32 var_a0_5;
     s32 spF4;
@@ -1561,12 +1544,10 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     s32 temp_s1_3;
     s32 spE4;
     s32 spE0;
-    UNUSED s32 pad9;
     Object *temp_v0_8;
     s32 tempVar2;
     s32 sp144;
     s32 racerCount;
-    UNUSED s32 pad2;
     ObjectSegment *someObjSeg;
     Object **racerGroup;
     s32 spBC;
@@ -1578,7 +1559,6 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     s32 temp_f6;
     s32 temp_s3;
     s32 temp;
-    UNUSED s32 pad3[4];
     
     func_800A0BD4(updateRate);
     
@@ -1978,7 +1958,6 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800AA3EC.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AA600.s")
 
 void func_800AAFD0(ObjectModel *objModel) {
-    UNUSED s32 pad;
     TextureHeader *texPtr;
     s32 triOffset;
     s32 vertOffset;

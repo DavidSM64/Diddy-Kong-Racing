@@ -225,10 +225,8 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
     Object *someObj;
     f32 var_f2;
     f32 updateRateF;
-    UNUSED s32 pad;
     Object_Fireball_Octoweapon *weapon;
     Object_Racer *racer;
-    UNUSED s32 pad2[6];
     ObjectInteraction *obj4C;
     s32 temp;
     f32 sp4C;
@@ -595,14 +593,12 @@ void obj_init_trophycab(Object *obj, LevelObjectEntry_TrophyCab *entry) {
 void obj_loop_trophycab(Object *obj, s32 updateRate) {
     Settings* settings;
     Object_TrophyCabinet *gfxData;
-    UNUSED f32 dist;
     LevelObjectEntryCommon newObject;
     LevelHeader* header;
     Object* tempObj;
     f32 diffX;
     s32 dialogueID;
     f32 diffZ;
-    UNUSED s32 pad2;
     s32 worldBalloons;
     s32 bossFlags;
 
@@ -1098,10 +1094,8 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     f32 tempPosY;
     Object_NPC *tt;
     Object *racerObj;
-    UNUSED s32 temp_sp60;
     s32 angleDiff;
     s32 index;
-    UNUSED s32 test;
     Object_Racer *racer;
     LevelHeader *header;
     struct TempStruct8 **sp48;
@@ -1562,9 +1556,6 @@ void obj_loop_dooropener(Object *obj, s32 updateRate) {
 void obj_init_overridepos(UNUSED Object *obj, UNUSED LevelObjectEntry_OverridePos *entry) {
 }
 
-UNUSED void func_80037D60(UNUSED s32 arg0, UNUSED s32 arg1) {
-}
-
 /**
  * Wizpig ship initilisation.
  * Does nothing.
@@ -1707,9 +1698,6 @@ void obj_loop_snowball(Object *obj, s32 updateRate) {
     func_8001F460(obj, updateRate, obj);
 }
 
-UNUSED void func_80038330(UNUSED s32 arg0, UNUSED s32 arg1) {
-}
-
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_char_select.s")
 
 void obj_loop_animcamera(Object *obj, s32 updateRate) {
@@ -1730,9 +1718,6 @@ void obj_loop_animcamera(Object *obj, s32 updateRate) {
             write_to_object_render_stack(obj64->unk30, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0x8000 - obj->segment.trans.y_rotation, -obj->segment.trans.x_rotation, obj->segment.trans.z_rotation);
         }
     }
-}
-
-UNUSED void func_800387C0(UNUSED s32 arg0, UNUSED s32 arg1) {
 }
 
 /**
@@ -3236,7 +3221,6 @@ void obj_init_bridge_whaleramp(Object *obj, LevelObjectEntry_Bridge_WhaleRamp *e
 */
 void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
     Object *racerObj;
-    UNUSED ObjectTransform *temp_v0_4;
     f32 temp_f2;
     Object_Bridge_WhaleRamp *whaleRamp;
     LevelObjectEntry_Bridge_WhaleRamp *entry;
@@ -4015,7 +3999,6 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
     Object_Racer *weaponOwner;
     Object_Weapon *weapon;
     Object *temp_s1_2;
-    UNUSED s32 pad;
     f32 offsetZ;
     f32 offsetY;
     f32 offsetX;
@@ -4625,7 +4608,6 @@ void obj_init_rangetrigger(UNUSED Object *obj, UNUSED LevelObjectEntry_RangeTrig
 }
 
 void obj_loop_rangetrigger(Object *obj, s32 updateRate) {
-    UNUSED s32 temp;
     LevelObjectEntry_RangeTrigger *level_entry;
     unk80042178 sp20;
 
@@ -4865,7 +4847,6 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
     s32 y1;
     s32 x2;
     s32 y2;
-    UNUSED s32 pad[5];
     char *levelName;
     Object *racerObj;
     f32 diffX;

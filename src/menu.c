@@ -59,7 +59,6 @@ s32 gOptionBlinkTimer;
 unk801263C0 D_801263C0;
 
 s32 gIgnorePlayerInput;
-UNUSED s32 sUnused_801263C8; // Set to 0 in menu_init, and never again.
 CharacterSelectData (*gCurrCharacterSelectData)[10]; //Some sort of character list? Cares if T.T. and Drumstick are unlocked
 
 s32 D_801263D0; //Compared for equality to gTrackIdForPreview
@@ -101,7 +100,6 @@ MenuElement *D_80126460;
 s8 gControllersYAxisDirection[4]; // Y axis (-1 = down, 1 = up) for controller
 s8 gControllersXAxis[4];
 s8 gControllersYAxis[4];
-s32 sUnused_80126470; // Set to 0 in the magic codes menu and 0xD000 elsewhere, otherwise unused.
 s32 gTrackSelectViewPortHalfX;
 s32 gTrackSelectViewPortHalfY;
 s32 gTrackSelectViewPortX;
@@ -162,7 +160,6 @@ s32 D_80126818;
 s32 D_8012681C;
 s16 D_80126820;
 s32 D_80126824;
-UNUSED s8 sUnused_80126828; // Set to 0 in menu_init, and never used again.
 s32 D_8012682C;
 s16 D_80126830;
 s32 D_80126834;
@@ -379,8 +376,6 @@ s32 D_800DF768 = 1;
 FadeTransition sMenuTransitionFadeInFast = FADE_TRANSITION(0, FADE_COLOR_BLACK, 10, -1);
 FadeTransition sMenuTransitionFadeIn = FADE_TRANSITION(0, FADE_COLOR_BLACK, 18, -1);
 FadeTransition sMenuTransitionFadeOut = FADE_TRANSITION(0x80, FADE_COLOR_BLACK, 18, 0);
-UNUSED FadeTransition sMenuTransitionFadeInWhite = FADE_TRANSITION(0, FADE_COLOR_WHITE, 18, -1);
-UNUSED FadeTransition sMenuTransitionFadeOutWhite = FADE_TRANSITION(0x80, FADE_COLOR_WHITE, 18, 0);
 
 s32 D_800DF794 = 4;
 MenuElement *D_800DF798 = NULL;
@@ -1783,8 +1778,6 @@ void menu_init(u32 menuId) {
     reset_controller_sticks();
     gIgnorePlayerInput = 1;
     gOptionBlinkTimer = 0;
-    sUnused_801263C8 = 0;
-    sUnused_80126828 = 0;
 
     //Needs to be one line
     for (i = 0; i < 4; i++) { D_80126808[i] = 0; }
@@ -1857,7 +1850,6 @@ void menu_init(u32 menuId) {
             break;
 #endif
     }
-    sUnused_80126470 = 0xD000;
 }
 
 /**
@@ -3984,7 +3976,6 @@ void menu_magic_codes_init(void) {
     gCheatInputCurrentColumn = 0;
     gOptionsMenuItemIndex = 0;
     gCheatInputStringLength = 0;
-    sUnused_80126470 = 0;
     D_80126C4C = -1;
     D_80126C58[0] = 0;
     gOptionBlinkTimer = 0;

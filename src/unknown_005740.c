@@ -45,18 +45,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006AC8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006BFC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006FC8.s")
 
-UNUSED void func_80007F78(void) {
-    D_800DC6D0 = 1;
-}
-
-UNUSED void func_80007F88(void) {
-    D_800DC6D0 = 0;
-}
-
-UNUSED u8 func_80007F94(void) {
-    return D_800DC6D0;
-}
-
 f32 func_80007FA4(f32 arg0) {
     f32 temp_f0;
     f32 temp_f12;

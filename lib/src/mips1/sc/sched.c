@@ -39,26 +39,6 @@ u64 gRetraceCounter64 = 0;
 
 /************ .rodata ************/
 
-const char D_800E7800[] = "(Audio task)";
-const char D_800E7810[] = "(Game task)";
-const char D_800E781C[] = "(DI task)\n";
-const char D_800E7828[] = "(DI benchmark test)\n";
-const char D_800E7840[] = "(Unknown task type %d)\n";
-const char D_800E7858[] = "\nRCP TASK INFO\n";
-const char D_800E7868[] = "-------------\n";
-const char D_800E7878[] = "\ttype\t\t= %u\n";
-const char D_800E7888[] = "\tflags\t\t= %u\n";
-const char D_800E7898[] = "\tucode_boot\t\t= %p\n";
-const char D_800E78AC[] = "\tucode_boot_size\t\t= %u\n";
-const char D_800E78C4[] = "\tucode\t\t= %p\n";
-const char D_800E78D4[] = "\tucode_size\t\t= %u\n";
-const char D_800E78E8[] = "\tucode_data\t\t= %p\n";
-const char D_800E78FC[] = "\tucode_data_size\t\t= %u\n";
-const char D_800E7914[] = "\toutput_buff\t\t= %p\n";
-const char D_800E7928[] = "\toutput_buff_size\t\t= %u\n";
-const char D_800E7944[] = "\tdata_ptr\t\t= %p\n";
-const char D_800E7958[] = "\tdata_size\t\t= %u\n";
-
 /************ .bss ************/
 
 s32 gCurRSPTaskIsSet;
@@ -145,12 +125,6 @@ OSMesgQueue *osScGetCmdQ(OSSched *sc) {
 
 OSMesgQueue *osScGetInterruptQ(OSSched *sc) {
     return &sc->interruptQ;
-}
-
-UNUSED void func_80079584(f32 *arg0, f32 *arg1, f32 *arg2) {
-    *arg0 = D_800DE740;
-    *arg1 = D_800DE748;
-    *arg2 = D_800DE74C;
 }
 
 static void __scMain(void *arg) {

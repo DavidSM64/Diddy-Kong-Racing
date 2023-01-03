@@ -69,13 +69,6 @@ void tick_thread30(void) {
 }
 
 /**
- * Returns the value in gThread30LoadDelay.
- */
-UNUSED s32 get_thread30_load_delay(void) {
-    return gThread30LoadDelay;
-}
-
-/**
  * Sets a level id and cutscene id to be loaded. Used in the tracks menu & credits menu.
  * Returns 1 if successful, or 0 if gThread30NeedToLoadLevel was already set.
  */

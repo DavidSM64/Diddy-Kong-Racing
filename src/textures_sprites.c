@@ -848,16 +848,6 @@ Gfx D_800DF410[][2] = {
 
 /************ .rodata ************/
 
-const char D_800E7B30[] = "Error: Texture no %x out of range on load. !!\n";
-const char D_800E7B60[] = "TEX Error: Palette memory overflow!!\n";
-const char D_800E7B88[] = "TEX Error: TexTab overflow!!\n";
-const char D_800E7BA8[] = "texFreeTexture: NULL tex!!\n";
-const char D_800E7BC4[] = "TEX Error: Tryed to deallocate non-existent texture!!\n";
-const char D_800E7BFC[] = "SRPBUF overflow!!\n";
-const char D_800E7C10[] = "Error: Sprite table overflow!!\n";
-const char D_800E7C30[] = "texFreeSprite: NULL sprite!!\n";
-const char D_800E7C50[] = "TEXSPR Error: Tryed to deallocate non-existent sprite!!\n";
-
 /*********************************/
 
 /************ .bss ************/
@@ -1408,20 +1398,6 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/get_texture_size_from_id.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C660.s")
-
-UNUSED s32 func_8007C860(s32 spriteIndex) {
-    if ((spriteIndex < 0) || (spriteIndex >= gNumberOfLoadedTextures)) {
-        return -1;
-    }
-    return ((TextureCacheEntry *) ((s32*) gTextureCache + spriteIndex * 2))->id;
-}
-
-UNUSED s32 func_8007C8A0(s32 spriteIndex) {
-    if ((spriteIndex < 0) || (spriteIndex >= D_80126358)) {
-        return -1;
-    }
-    return ((SpriteCacheEntry*) ((s32*) gSpriteCache + spriteIndex * 2))->id;
-}
 
 #ifdef NON_EQUIVALENT
 s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *numFramesOut, s32 *formatOut, s32 *sizeOut) {

@@ -292,7 +292,6 @@ void func_800ABC5C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
  * Decide whether to perform rain or snow logic, execute it, then set it to render right after.
  */
 void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
-    UNUSED s32 unused;
     gCurrWeatherDisplayList = *currDisplayList;
     gCurrWeatherMatrix = *currHudMat;
     gCurrWeatherVertexList = *currHudVerts;
@@ -319,8 +318,8 @@ void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currH
                 D_80127BB8[15] = 0;
             }
         }
-        D_80127BB4 = (D_80127BB0 * D_80127BB8[0]) >> (unused = 16);
-        D_80127BF8.unk4 = (D_80127BF8.unk0 + ((D_80127BF8.unk2 - D_80127BF8.unk0) * D_80127BB8[12])) >> (unused = 16);
+        D_80127BB4 = (D_80127BB0 * D_80127BB8[0]) >> (16);
+        D_80127BF8.unk4 = (D_80127BF8.unk0 + ((D_80127BF8.unk2 - D_80127BF8.unk0) * D_80127BB8[12])) >> (16);
 
         func_800AC0C8(updateRate, &D_80127BF8); // This is the snow physics that makes it move
         if ((D_80127BB4 > 0) && (D_80127BF8.unk4 < D_80127BF8.unk0)) {

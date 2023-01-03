@@ -219,52 +219,6 @@ s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
     return 0;
 }
 
-UNUSED void setup_ostask_xbus_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
-    DKR_OSTask *dkrtask;
-    s32 *mesgBuf;
-
-    mesgBuf = NULL;
-    dkrtask = &gGfxTaskBuf2[gfxBufCounter2];
-    gfxBufCounter2++;
-    if (gfxBufCounter2 == 2) {
-        gfxBufCounter2 = 0;
-    }
-    dkrtask->task.data_ptr = (u64 *) dlBegin;
-    dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
-    dkrtask->task.type = 1;
-    dkrtask->task.flags = 2;
-    dkrtask->task.ucode_boot = (u64 *) rspF3DDKRBootStart;
-    dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
-    dkrtask->task.ucode = (u64 *) rspF3DDKRXbusStart;
-    dkrtask->task.ucode_data = (u64 *) rspF3DDKRDataXbusStart;
-    dkrtask->task.ucode_data_size = 0x800;
-    dkrtask->task.dram_stack = (u64 *) gDramStack;
-    dkrtask->task.dram_stack_size = 0x400;
-    dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
-    dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
-    dkrtask->task.output_buff = NULL;
-    dkrtask->task.output_buff_size = 0;
-    dkrtask->next = NULL;
-    dkrtask->flags = OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP;
-    dkrtask->mesgQueue = &gGfxTaskMesgQueue;
-    dkrtask->mesg = gGfxTaskMesgNums;
-    dkrtask->frameBuffer = gVideoCurrFramebuffer;
-    dkrtask->unused58 = COLOUR_TAG_RED;
-    dkrtask->unused5C = COLOUR_TAG_RED;
-    dkrtask->unused60 = 0xFF;
-    dkrtask->unused64 = 0xFF;
-    dkrtask->unk68 = 0;
-    
-    if (recvMesg) {
-        dkrtask->mesgQueue = &D_80125EA0;
-    }
-    osWritebackDCacheAll();
-    osSendMesg(osScInterruptQ, dkrtask, 1);
-    if (recvMesg) {
-        osRecvMesg(&D_80125EA0, (OSMesg) &mesgBuf, 1);
-    }
-}
-
 void allocate_task_buffer(void) {
     gGfxSPTaskOutputBuffer = allocate_from_main_pool_safe(sizeof(u64) * FIFO_BUFFER_SIZE, COLOUR_TAG_WHITE);
 }
@@ -324,52 +278,6 @@ void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     }
 }
 
-UNUSED void setup_ostask_fifo_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
-    DKR_OSTask *dkrtask;
-    s32 *mesgBuf;
-
-    mesgBuf = NULL;
-    dkrtask = &gGfxTaskBuf[gfxBufCounter];
-    gfxBufCounter++;
-    // gfxBufCounter being 2 would mean an out of bounds access of gGfxTaskBuf
-    if (gfxBufCounter == 3) {
-        gfxBufCounter = 0;
-    }
-    
-    dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
-    dkrtask->task.data_ptr = (u64 *) dlBegin;
-    dkrtask->task.type = 1;
-    dkrtask->task.flags = 2;
-    dkrtask->task.ucode_boot = (u64 *) rspF3DDKRBootStart;
-    dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
-    dkrtask->task.ucode = (u64 *) rspF3DDKRFifoStart;
-    dkrtask->task.ucode_data = (u64 *) rspF3DDKRDataFifoStart;
-    dkrtask->task.ucode_data_size = 0x800;
-    dkrtask->task.dram_stack = (u64 *) gDramStack;
-    dkrtask->task.dram_stack_size = 0x400;
-    dkrtask->task.output_buff = (u64 *) gGfxSPTaskYieldBuffer;
-    dkrtask->task.output_buff_size = (u64 *) &D_80125EA0;
-    dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
-    dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
-    dkrtask->next = NULL;
-    dkrtask->flags = OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP | OS_SC_DRAM_DLIST;
-    dkrtask->mesgQueue = &gGfxTaskMesgQueue;
-    dkrtask->mesg = gGfxTaskMesgNums;
-    dkrtask->frameBuffer = gVideoCurrFramebuffer;
-    dkrtask->unused58 = COLOUR_TAG_RED;
-    dkrtask->unused5C = COLOUR_TAG_RED;
-    if (recvMesg) {
-        dkrtask->unused60 = 0xFF;
-        dkrtask->unused64 = 0xFF;
-    }
-    dkrtask->unk68 = 0;
-    osWritebackDCacheAll();
-    osSendMesg(osScInterruptQ, dkrtask, 1);
-    if (recvMesg) {
-        osRecvMesg(&gGfxTaskMesgQueue, (OSMesg) &mesgBuf, 1);
-    }
-}
-
 /**
  * Called from the main game loop, will halt until a message comes through saying the graphics task
  * has finished.
@@ -383,13 +291,6 @@ s32 wait_for_gfx_task(void) {
     osRecvMesg(&gGfxTaskMesgQueue, (OSMesg) &mesg, OS_MESG_BLOCK); 
     gGfxTaskIsRunning = FALSE;
     return (s32) mesg[1];
-}
-
-UNUSED void func_80077AAC(void *bufPtr, s32 bufSize, UNUSED s32 unused) {
-    osWritebackDCacheAll();
-    while (osDpGetStatus() & DPC_CLR_CMD_CTR) {}
-    osDpSetNextBuffer(bufPtr, bufSize);
-    while (osDpGetStatus() & DPC_CLR_CMD_CTR) {}
 }
 
 /**

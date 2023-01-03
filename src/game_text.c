@@ -233,7 +233,6 @@ void func_800C3158(s32 arg0, f32 arg1) {
 
 void func_800C31EC(s32 arg0) {
     char **entries;
-    UNUSED s32 pad;
     s32 size;
     s32 language;
     s32 temp;

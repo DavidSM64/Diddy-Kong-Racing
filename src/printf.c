@@ -58,7 +58,6 @@ const char D_800E8C28[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const char D_800E8C50[] = "";
 const char D_800E8C54[] = "(null)";
 const char D_800E8C5C[] = "(nil)";
-const char D_800E8C64[] = "*** diPrintf Error *** ---> Out of string space. (Print less text!)\n";
 
 /*********************************/
 
@@ -78,52 +77,8 @@ GLOBAL_ASM("asm/non_matchings/printf/func_800B3358.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B34B0.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3564.s")
 
-UNUSED void func_800B3678(Gfx **arg0, MatrixS **arg1, Vertex **arg2) {
-    UNUSED s32 pad;
-    UNUSED s32 pad2;
-    Object **temp_s0;
-    s32 sp38;
-    s32 sp34;
-
-    temp_s0 = func_8000E988(&sp38, &sp34);
-    for (; sp38 < sp34; sp38++) {
-        if (temp_s0[sp38]->segment.trans.unk6 & 0x8000) {
-            if ((s32) temp_s0[sp38]->segment.header & 0x8000) {
-                func_800B3740(temp_s0[sp38], arg0, arg1, arg2, 0);
-            }
-        }
-    }
-}
-
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3740.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B3E64.s")
-
-UNUSED unk800E2CF0 *func_800B4488(s32 idx) {
-    if (idx < gParticlesAssetTableCount) {
-        return gParticlesAssetTable[idx];
-    }
-    return gParticlesAssetTable[gParticlesAssetTableCount - 1];
-}
-
-UNUSED unk800E2CF0 *func_800B44D4(s32 *idx) {
-    *idx = *idx + 1;
-    while (*idx >= gParticlesAssetTableCount) {
-        *idx = *idx - gParticlesAssetTableCount;
-    }
-    return gParticlesAssetTable[*idx];
-}
-
-UNUSED unk800E2CF0 *func_800B452C(s32 *arg0) {
-    for (*arg0 = *arg0 - 1; *arg0 < 0; *arg0 += gParticlesAssetTableCount);
-    return gParticlesAssetTable[*arg0];
-}
-
-UNUSED ParticleBehavior *func_800B4578(s32 idx) {
-    if (idx < gParticleBehavioursAssetTableCount) {
-        return gParticleBehavioursAssetTable[idx];
-    }
-    return gParticleBehavioursAssetTable[gParticleBehavioursAssetTableCount - 1];
-}
 
 GLOBAL_ASM("asm/non_matchings/printf/func_800B45C4.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B461C.s")
@@ -206,11 +161,6 @@ void print_debug_strings(Gfx **dlist) {
         buffer += func_800B653C(dlist, (s8 *) buffer);
     }
     gDebugPrintBufferEnd = gDebugPrintBufferStart;
-}
-
-UNUSED void func_800B61E0(void) {
-    gDebugPrintBufferEnd = gDebugPrintBufferStart;
-    func_800B6EE0();
 }
 
 /**

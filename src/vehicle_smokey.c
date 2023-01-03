@@ -33,7 +33,6 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     Object_68 *obj68;
     s32 sp44;
     f32 var_f2;
-    UNUSED s32 pad;
     s16 newvar;
     Object *firstRacerObj;
     

@@ -75,7 +75,6 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     ObjectModel *objModel;
     Object_68 *obj68;
     s32 sp3C;
-    UNUSED s32 pad;
     Object *firstRacerObj;
 
     set_boss_voice_clip_offset(D_800DCE00);

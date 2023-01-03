@@ -53,7 +53,6 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     f32 diffZ;
     Object_68 *gfxData;
     s32 timer;
-    UNUSED s32 pad;
     s32 sp38;
     ObjectModel *model;
     Object *firstRacerObj;

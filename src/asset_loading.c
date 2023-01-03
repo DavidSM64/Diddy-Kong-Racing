@@ -61,58 +61,6 @@ u32 *load_asset_section_from_rom(u32 assetIndex) {
 }
 
 /**
- * Loads a gzip compressed asset from the ROM file.
- * Returns a pointer to the decompressed data.
- */
-UNUSED u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 extraMemory) {
-    s32 size;
-    s32 start;
-    s32 totalSpace;
-    u8 *gzipHeaderRamPos;
-    u8 *out;
-    if (gAssetsLookupTable[0] < assetIndex) {
-        return NULL;
-    }
-    assetIndex++;
-    out = (u8 *) (assetIndex + gAssetsLookupTable);
-    start = ((s32 *) out)[0];
-    size = ((s32 *) out)[1] - start;
-    gzipHeaderRamPos = (u8 *) allocate_from_main_pool_safe(8, COLOUR_TAG_WHITE);
-    dmacopy((u32) (start + __ASSETS_LUT_END), (u32) gzipHeaderRamPos, 8);
-    totalSpace = byteswap32(gzipHeaderRamPos) + extraMemory;
-    free_from_memory_pool(gzipHeaderRamPos);
-    out = (u8 *) allocate_from_main_pool_safe(totalSpace + extraMemory, COLOUR_TAG_GREY);
-    if (out == NULL){
-        return NULL;
-    }
-    gzipHeaderRamPos = (out + totalSpace) - size;
-    if (1) {} // Fakematch
-    dmacopy((u32) (start + __ASSETS_LUT_END), (u32) gzipHeaderRamPos, size);
-    gzip_inflate(gzipHeaderRamPos, out);
-    return out;
-}
-
-
-/**
- * Loads an asset section to a specific memory address.
- * Returns the size of asset section.
- */
-UNUSED s32 load_asset_section_from_rom_to_address(u32 assetIndex, u32 address) {
-    u32 start;
-    s32 size;
-    u32 *index;
-    if (gAssetsLookupTable[0] < assetIndex) {
-        return 0;
-    }
-    assetIndex++;
-    index = assetIndex + gAssetsLookupTable;
-    start = *index;
-    size = *(index + 1) - start;
-    dmacopy((u32) (start + __ASSETS_LUT_END), address, size);
-    return size;
-}
-
-/**
  * Loads part of an asset section to a specific memory address.
  * Returns the size argument.
  */

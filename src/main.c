@@ -16,7 +16,6 @@ u64 gThread3Stack[0x400];
 u64 *gThread3StackPointer; // stack pointer for thread 3
 OSThread gThread1; // OSThread for thread 1
 OSThread gThread3; // OSThread for thread 3
-UNUSED u64 gUnusedThreadStack[0x200]; //Thread1 stack?
 u8 gPlatformSet = FALSE;
 u8 gPlatform;
 

@@ -25,19 +25,6 @@ s32 D_800DE48C = 0;
 
 /************ .rodata ************/
 
-const char D_800E7590[] = "Region = %d	 loc = %x	 size = %x\t";
-const char D_800E75B4[] = "FREE";
-const char D_800E75BC[] = "ALLOCATED";
-const char D_800E75C8[] = "ALLOCATED,FIXED";
-const char D_800E75D8[] = "\n";
-const char D_800E75DC[] = "\n";
-const char D_800E75E0[] = "Region number = %d\t";
-const char D_800E75F4[] = "maxSlots = %d\t";
-const char D_800E7604[] = "slotsUsed = %d\t";
-const char D_800E7614[] = "loc = %x\t";
-const char D_800E7620[] = "size = %x\n";
-const char D_800E762C[] = "\n";
-
 const char D_800E7630[] = "DKRACING-ADV";
 const char D_800E7640[] = "DKRACING-ADV";
 const char D_800E7650[] = "DKRACING-TIMES";
@@ -46,14 +33,6 @@ const char D_800E7670[] = "DKRACING-ADV";
 const char D_800E7680[] = "DKRACING-ADV";
 const char D_800E7690[] = "DKRACING-TIMES";
 const char D_800E76A0[] = "DKRACING-TIMES";
-
-const char D_800E76B0[] = "WARNING : No Eprom\n";
-const char D_800E76C4[] = "WARNING : No Eprom\n";
-const char D_800E76D8[] = "WARNING : No Eprom\n";
-const char D_800E76EC[] = "WARNING : No Eprom\n";
-const char D_800E7700[] = "WARNING : No Eprom\n";
-const char D_800E7714[] = "WARNING : No Eprom\n";
-const char D_800E7728[] = "WARNING : No Eprom\n";
 
 const char D_800E773C[] = "DKRACING-GHOSTS"; // Used in func_80074B34
 const u8 D_800E774C[4] = { 0, 0, 0, 0 };     // Used in func_80074B34, but I'm confused to what this is for.
@@ -132,15 +111,6 @@ void func_80072298(u8 arg0) {
     func_80072708();
 }
 
-UNUSED s32 func_800722E8(s16 controllerIndex) {
-    s32 temp;
-    if (controllerIndex < 0 || controllerIndex >= 4) {
-        return 0;
-    }
-    temp = ((1 << func_80072250(controllerIndex)) & 0xFF);
-    return sRumblePaksPresent & temp;
-}
-
 void func_80072348(s16 controllerIndex, u8 arg1) {
     s32 index;
 
@@ -199,18 +169,6 @@ void func_80072578(s16 controllerIndex, s16 arg1, s16 arg2) {
         D_801241B8[index].unk6 = ((arg1 * arg1) * 0.1f);
         D_801241B8[index].unk2 = ((arg1 * arg1) * 0.1f);
         D_801241B8[index].unk4 = arg2;
-    }
-}
-
-UNUSED void func_8007267C(s16 controllerIndex) {
-    s16 index;
-
-    if (controllerIndex >= 0 && controllerIndex < 4) {
-        index = func_80072250(controllerIndex);
-        D_801241E7 |= 1 << index;
-        D_801241B8[index].unk4 = -1;
-        D_801241B8[index].unk0 = -1;
-        D_801241B8[index].unk8 = 0;
     }
 }
 
@@ -750,7 +708,6 @@ s32 read_game_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
 }
 
 s32 write_game_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
-    UNUSED s32 pad;
     char *fileExt;
     u8 *gameData; //Probably a struct where the first s32 is GAMD
     s32 ret;
@@ -821,7 +778,6 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     u8 *timeData; //Should probably be a struct or maybe an array?
     s32 ret;
     s32 fileSize;
-    UNUSED s32 pad;
     char *fileExt;
 
     fileSize = get_time_data_file_size(); // 512 bytes
@@ -1455,19 +1411,6 @@ void init_controller_paks(void) {
     osContStartReadData(sControllerMesgQueue);
 }
 
-UNUSED SIDeviceStatus check_for_rumble_pak(s32 controllerIndex) {
-    s32 ret;
-
-    ret = get_si_device_status(controllerIndex);
-    start_reading_controller_data(controllerIndex);
-
-    if (ret == RUMBLE_PAK) {
-        sRumblePaksPresent |= 1 << controllerIndex;
-    }
-
-    return ret;
-}
-
 //Inspects and repairs the Controller Pak's file system
 SIDeviceStatus repair_controller_pak(s32 controllerIndex) {
     s32 ret;
@@ -1663,9 +1606,7 @@ s32 delete_file(s32 controllerIndex, s32 fileNum) {
 
 // Copies a file from one controller pak to the other
 s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondControllerIndex) {
-    UNUSED s32 pad;
     char fileName[PFS_FILE_NAME_LEN];
-    UNUSED s32 pad2;
     char fileExt[PFS_FILE_EXT_LEN];
     OSPfsState state;
     s32 status;
@@ -1711,9 +1652,7 @@ s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondCont
 SIDeviceStatus get_file_number(s32 controllerIndex, char *fileName, char *fileExt, s32 *fileNumber) {
     u32 gameCode;
     char fileNameAsFontCodes[PFS_FILE_NAME_LEN];
-    UNUSED s32 pad;
     char fileExtAsFontCodes[PFS_FILE_EXT_LEN];
-    UNUSED s32 pad2;
     s32 ret;
 
     string_to_font_codes(fileName, fileNameAsFontCodes, PFS_FILE_NAME_LEN);
@@ -1774,7 +1713,6 @@ SIDeviceStatus read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u
 SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, char *fileName, char *fileExt, u8 *dataToWrite, s32 fileSize) {
     s32 temp;
     u8 fileNameAsFontCodes[PFS_FILE_NAME_LEN];
-    UNUSED s32 temp2;
     u8 fileExtAsFontCodes[PFS_FILE_EXT_LEN];
     s32 ret;
     s32 file_number;
@@ -1930,7 +1868,6 @@ char *string_to_font_codes(char *inString, char *outString, s32 stringLength) {
  */
 s32 get_file_type(s32 controllerIndex, s32 fileNum) {
     s32 *data;
-    UNUSED s32 pad;
     s32 ret;
 
     ret = 6;

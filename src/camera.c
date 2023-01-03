@@ -16,16 +16,6 @@ extern u32 osTvType;
 
 /************ .rodata ************/
 
-const char D_800E6F00[] = "Camera Error: Illegal mode!\n";
-const char D_800E6F20[] = "Camera Error: Illegal player no!\n";
-const char D_800E6F34[] = "cameraPushSprMtx: model stack overflow!!\n";
-const char D_800E6F70[] = "\nCam do 2D sprite called with NULL pointer!";
-const char D_800E6F9C[] = "CamDo2DSprite FrameNo Overflow !!!\n";
-const char D_800E6FC0[] = "cameraPushModelMtx: model stack overflow!!\n";
-const char D_800E6FEC[] = "camPushModelMtx: bsp stack overflow!!\n";
-const char D_800E7010[] = "camPopModelMtx: model stack negative overflow!!\n";
-const char D_800E7048[] = "camPopModelMtx: bsp stack negative overflow!!\n";
-
 /*********************************/
 
 /************ .data ************/
@@ -215,13 +205,6 @@ void func_800660D0(void) {
 }
 
 /**
- * Unused function that will return the current camera's FoV.
- */
-UNUSED f32 get_current_camera_fov(void) {
-    return gCurCamFOV;
-}
-
-/**
  * Set the FoV of the viewspace, then recalculate the perspective matrix.
  */
 void update_camera_fov(f32 camFieldOfView) {
@@ -230,18 +213,6 @@ void update_camera_fov(f32 camFieldOfView) {
         guPerspectiveF(D_80120EE0, &perspNorm, camFieldOfView, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
         f32_matrix_to_s16_matrix(&D_80120EE0, &D_80120FE0);
     }
-}
-
-/**
- * Unused function that recalculates the perspective matrix.
- */
-UNUSED void calculate_camera_perspective(void) {
-    guPerspectiveF(D_80120EE0, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-    f32_matrix_to_s16_matrix(&D_80120EE0, &D_80120FE0);
-}
-
-UNUSED Matrix *func_80066204(void) {
-    return &D_801210A0;
 }
 
 s32 get_viewport_count(void) {
@@ -603,17 +574,6 @@ void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32
     *y1 = gScreenViewports[viewPortIndex].y1;
     *x2 = gScreenViewports[viewPortIndex].x2;
     *y2 = gScreenViewports[viewPortIndex].y2;
-}
-
-/**
- * Unused function that sets the passed values to the framebuffer's size in coordinates.
- */
-UNUSED void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2) {
-    u32 widthAndHeight = get_video_width_and_height_as_s32();
-    *x1 = 0;
-    *y1 = 0;
-    *x2 = GET_VIDEO_WIDTH(widthAndHeight);
-    *y2 = GET_VIDEO_HEIGHT(widthAndHeight);
 }
 
 #ifdef NON_EQUIVALENT
@@ -1118,7 +1078,6 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
  * Sets transform and scale matrices to set position and size, loads the texture, sets the rendermodes, then draws the result onscreen.
 */
 void render_orthi_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, unk80068BF4 *arg4, s32 flags) {
-    UNUSED s32 pad;
     f32 scale;
     s32 index;
     Vertex *temp_v1;
@@ -1231,12 +1190,6 @@ void func_80069484(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale
 
 GLOBAL_ASM("asm/non_matchings/camera/func_80069790.s")
 
-UNUSED void func_800699E4(f32 *arg0, f32 *arg1, f32 *arg2) {
-    *arg0 = D_80120D28[D_80120D20];
-    *arg1 = D_80120D40[D_80120D20];
-    *arg2 = D_80120D58[D_80120D20];
-}
-
 void func_80069A40(Gfx **dlist) {
     D_80120D20--;
     D_80120D1C--;
@@ -1249,35 +1202,6 @@ void func_80069A40(Gfx **dlist) {
     else {
         gDkrInsertMatrix((*dlist)++, G_MWO_MATRIX_XX_XY_I, 0);
     }
-}
-
-UNUSED void func_80069ACC(f32 x, f32 y, f32 z) {
-    gActiveCameraStack[gActiveCameraID].trans.x_position += x;
-    gActiveCameraStack[gActiveCameraID].trans.y_position += y;
-    gActiveCameraStack[gActiveCameraID].trans.z_position += z;
-    gActiveCameraStack[gActiveCameraID].unk34_a.levelSegmentIndex =
-        get_level_segment_index_from_position(
-            gActiveCameraStack[gActiveCameraID].trans.x_position,
-            gActiveCameraStack[gActiveCameraID].trans.y_position,
-            gActiveCameraStack[gActiveCameraID].trans.z_position);
-}
-
-UNUSED void func_80069B70(f32 x, UNUSED f32 y, f32 z) {
-    gActiveCameraStack[gActiveCameraID].trans.x_position -= x * coss_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
-    gActiveCameraStack[gActiveCameraID].trans.z_position -= x * sins_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
-    gActiveCameraStack[gActiveCameraID].trans.x_position -= z * sins_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
-    gActiveCameraStack[gActiveCameraID].trans.z_position += z * coss_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
-    gActiveCameraStack[gActiveCameraID].unk34_a.levelSegmentIndex =
-        get_level_segment_index_from_position(
-            gActiveCameraStack[gActiveCameraID].trans.x_position,
-            gActiveCameraStack[gActiveCameraID].trans.y_position,
-            gActiveCameraStack[gActiveCameraID].trans.z_position);
-}
-
-UNUSED void func_80069CB4(s32 xRotation, s32 yRotation, s32 zRotation) {
-    gActiveCameraStack[gActiveCameraID].trans.y_rotation += xRotation;
-    gActiveCameraStack[gActiveCameraID].trans.x_rotation += yRotation;
-    gActiveCameraStack[gActiveCameraID].trans.z_rotation += zRotation;
 }
 
 /**
@@ -1356,42 +1280,6 @@ void set_camera_shake(f32 magnitude) {
     }
 }
 
-/**
- * Unused function that prints out the passed matrix values to the debug output.
- * This function prints in fixed point.
- */
-UNUSED void debug_print_fixed_matrix_values(s16 *mtx) {
-    s32 i, j;
-    s32 val;
-    for (i = 0; i < 4; i++) {
-        for (j = 0; j < 4; j++) {
-            val = mtx[i * 4 + j];
-            rmonPrintf("%x.", val);
-            val = mtx[((i + 4) * 4 + j)];
-            rmonPrintf("%x  ", (u16)val & 0xFFFF);
-        }
-        rmonPrintf("\n");
-        if (!val){} // Fakematch
-    }
-    rmonPrintf("\n");
-}
-
-/**
- * Unused function that prints out the passed matrix values to the debug output.
- * This function prints in floating point.
- */
-UNUSED void debug_print_float_matrix_values(f32 *mtx) {
-    s32 i, j;
-
-    for (i = 0; i < 4; i++) {
-        for (j = 0; j < 4; j++) {
-            rmonPrintf("%f  ", mtx[i * 4 + j]);
-        }
-        rmonPrintf("\n");
-    }
-    rmonPrintf("\n");
-}
-
 OSMesgQueue *get_si_mesg_queue(void) {
     return &sSIMesgQueue;
 }
@@ -1400,9 +1288,7 @@ OSMesgQueue *get_si_mesg_queue(void) {
  * Initialise the player controllers, and return the status when finished.
  */
 s32 init_controllers(void) {
-    UNUSED s32 *temp1; // Unused
     u8 bitpattern;
-    UNUSED s32 *temp2; // Unused
 
     osCreateMesgQueue(&sSIMesgQueue, &sSIMesgBuf, 1);
     osSetEventMesg(OS_EVENT_SI, &sSIMesgQueue, gSIMesg);

@@ -154,8 +154,6 @@ FadeTransition gDoorFadeTransition = FADE_TRANSITION(0, FADE_COLOR_BLACK, 50, -1
 /************ .rodata ************/
 
 const char gRacerDebugCoords[] = "%.1f,%.1f,%.1f\n";
-UNUSED const char gChecksumOverflowString[] = "Chk ovflow!!\n";
-UNUSED const char gRacerBackString[] = "Back\n";
 
 /*********************************/
 
@@ -165,7 +163,6 @@ f32 gCurrentCourseHeight;
 Vec3f gCurrentRacerWaterPos;
 s8 D_8011D504;
 ObjectCamera *gCameraObject;
-UNUSED s32 D_8011D50C;
 ObjectTransform gCurrentRacerTransform;
 u32 gCurrentRacerInput;
 u32 gCurrentButtonsPressed;
@@ -183,8 +180,6 @@ s8 D_8011D553;
 s32 gCurrentCarSteerVel;
 s32 D_8011D558;
 s32 gCurrentPlayerIndex;
-s16 D_8011D560; // Set, but never read.
-UNUSED s16 D_8011D562;
 f32 *gCurrentRacerMiscAssetPtr;
 f32 *D_8011D568;
 f32 gCurrentRacerWeightStat;
@@ -1501,14 +1496,11 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     f32 yVel;
     s32 numViewports;
     u8 tempZoom;
-    UNUSED s32 pad[2];
     f32 phi_f14;
     f32 phi_f18;
     f32 xVel;
     f32 zVel;
-    UNUSED s32 pad2;
     f32 sp34;
-    UNUSED s32 pad3;
     f32 brakeVar;
     f32 baseSpeed;
     s32 sp24 = 0x400;
@@ -1988,7 +1980,6 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8004CC20.s")
  */
 void update_camera_loop(f32 updateRateF, Object *obj, Object_Racer *racer) {
     s32 UpdateRate;
-    UNUSED f32 pad;
     s32 segmentIndex;
     s32 angle;
     f32 zoom;
@@ -2173,7 +2164,6 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     if (!D_8011D582) {
         tempRacer->transparency = 255;
     }
-    D_8011D560 = 0;
     D_8011D544 = 300.0f;
     tempRacer->unk1C9 = 6;
     tempRacer->unk1C6 = 100;
@@ -4088,7 +4078,6 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
     s32 sp38;
     f32 temp_f0_2;
     f32 velSquare;
-    UNUSED f32 pad;
     f32 traction;
     f32 forwardVel;
     f32 weight;
@@ -4354,10 +4343,8 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
     f32 distance;
     f32 scaleY;
     f32 scaleZ;
-    UNUSED s32 pad;
     s8 *miscAsset;
     Vertex *heldObjData;
-    UNUSED s32 playerIndex;
     u16 soundID = SOUND_NONE;
 
     if (racer->held_obj != NULL) {
@@ -4831,7 +4818,6 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
                 racer->boostType = BOOST_LARGE;
             }
             racer->boost_sound |= BOOST_RACE_START;
-            D_8011D560 = 7;
             gStartBoostTime = racer->boostTimer;
         }
         // For the AI, expert AI will match the players start, and master AI will get a good start always.
@@ -5471,13 +5457,11 @@ void set_position_goal_from_path(UNUSED Object *obj, Object_Racer *racer, f32 *x
 
 #ifdef NON_MATCHING
 void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
-    UNUSED s32 pad[2];
     s32 temp_v0;
     CheckpointNode *temp_v0_4;
     f32 posX[5];
     f32 posY[5];
     f32 posZ[5];
-    UNUSED s32 pad2;
     f32 tempX;
     s32 counter;
     f32 tempY;

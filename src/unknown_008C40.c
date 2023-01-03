@@ -18,17 +18,6 @@ s32 D_800DC6E0 = 0; // Currently unknown, might be a different type.
 
 /************ .rodata ************/
 
-const char D_800E4D00[] = "OUT OF AUDIO POINTS\n";
-const char D_800E4D18[] = "amAudioLineAddVertex: Exceeded maximum number of lines (%d)\n";
-const char D_800E4D58[] = "amAudioLineAddVertex: Exceeded maximum number of line vertices (%d)\n";
-const char D_800E4DA0[] = "amReverbLineAddVertex: Exceeded maximum number of lines (%d)\n";
-const char D_800E4DE0[] = "amReverbLineAddVertex: Exceeded maximum number of line vertices (%d)\n";
-
-const char D_800E4E28[] = "Audio line definition error (less than 2 vertices on line %d)\n";
-const char D_800E4E68[] = "Audio line definition error (line=%d, vertex=%d)\n";
-const char D_800E4E9C[] = "Reverb line definition error (less than 2 vertices on line %d)\n";
-const char D_800E4EDC[] = "Reverb line definition error (line=%d, vertex=%d)\n";
-
 /*********************************/
 
 /************ .bss ************/

@@ -63,8 +63,6 @@ s8 D_800DC92C[24] = {
 /************ .rodata ************/
 
 const char D_800E5DF0[] = "TT CAM";
-const char D_800E5DF8[] = "Solid Clipping x0=x1 Error!!!\n";
-const char D_800E5E10[] = "TrackGetHeight() - Overflow!!!\n";
 
 /*********************************/
 
@@ -79,7 +77,6 @@ ObjectSegment *D_8011B0B0; // Camera Object?
 
 s32 D_8011B0B4;
 Object *D_8011B0B8;
-UNUSED s32 gIsNearCurrBBox; // Set to true if the current visible segment is close to the camera. Never actually used though.
 s32 D_8011B0C0;
 s32 D_8011B0C4;
 s32 D_8011B0C8;
@@ -158,7 +155,6 @@ s32 *D_8011D370;
 s32 *D_8011D374;
 s32 D_8011D378;
 s32 D_8011D37C;
-UNUSED f32 gCurrBBoxDistanceToCamera; // Used in a comparison check, but functionally unused.
 u32 D_8011D384;
 unk8011D388 D_8011D388[4];
 unk8011D468 D_8011D468;
@@ -280,7 +276,6 @@ void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, s8** tris, s32 updat
     s8 flip;
     s32 posX;
     s32 posY;
-    UNUSED s32 pad;
 #ifdef PUPPYPRINT_DEBUG
     u32 first = osGetCount();
     u32 first2;
@@ -294,7 +289,6 @@ void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, s8** tris, s32 updat
     D_8011B0DC = 1;
     D_8011B0C4 = 0;
     D_8011B0C0 = 0;
-    gIsNearCurrBBox = 0;
     numViewports = set_active_viewports_and_object_stack_cap(D_8011D37C);
     if (is_game_paused()) {
         delta = 0;
@@ -909,7 +903,6 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
     s32 triangles;
     s32 color;
     //s32 hasTexture;
-    UNUSED s32 unused;
     s32 levelHeaderIndex;
     s32 texOffset;
     s32 sp78;
@@ -1058,30 +1051,6 @@ void add_segment_to_order(s32 segmentIndex, s32 *segmentsOrderIndex, u8 *segment
             segmentsOrder[(*segmentsOrderIndex)++] = segmentIndex;
         }
     }
-}
-
-/**
- * Checks if the active camera is currently inside this segment.
- * Has a small inner margin where it doesn't consider the camera inside.
- * Goes unused.
-*/
-UNUSED s32 check_if_inside_segment(Object *obj, s32 segmentIndex) {
-    LevelModelSegmentBoundingBox *bb;
-    s32 x, y, z;
-    if (segmentIndex >= gCurrentLevelModel->numberOfSegments) {
-        return FALSE;
-    }
-    bb = &gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex];
-    x = obj->segment.trans.x_position;
-    y = obj->segment.trans.y_position;
-    z = obj->segment.trans.z_position;
-    if ((x < (bb->x2 + 25)) && ((bb->x1 - 25) < x) &&
-        (z < (bb->z2 + 25)) && ((bb->z1 - 25) < z) &&
-        (y < (bb->y2 + 25)) && ((bb->y1 - 25) < y)) {
-        return TRUE;
-    }
-
-    return FALSE;
 }
 
 /**
@@ -1323,30 +1292,6 @@ s32 check_if_in_draw_range(Object *obj) {
         }
     }
     return TRUE;
-}
-
-UNUSED void func_8002AC00(s32 arg0, s32 arg1, s32 arg2) {
-    s32 index;
-    s32 index2;
-    u8 temp;
-
-    if (arg0 < gCurrentLevelModel->numberOfSegments && arg1 < gCurrentLevelModel->numberOfSegments) {
-        index = gCurrentLevelModel->segments[arg0].unk28;
-        index2 = arg1 >> 3;
-        temp = 1 << (arg1 & 7);
-        if (arg2 != 0) {
-            (&gCurrentLevelModel->segmentsBitfields[index])[index2] |= temp;
-        } else {
-            (&gCurrentLevelModel->segmentsBitfields[index])[index2] &= ~temp;
-        }
-    }
-}
-
-// These types are probably wrong because the vars are likely still unidentified structs, but the code matches still.
-UNUSED void func_8002ACA0(s32 *arg0, s32 *arg1, s32 *arg2) {
-    *arg0 = (unsigned) D_8011D378;
-    *arg1 = (unsigned) D_8011D370;
-    *arg2 = (unsigned) D_8011D374;
 }
 
 void func_8002ACC8(s32 arg0) {
@@ -2114,12 +2059,6 @@ void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 #endif
-
-UNUSED void func_80030FA0(void) {
-    D_8011B0B0 = get_active_camera_segment();
-    func_80031018();
-    set_and_normalize_D_8011AFE8((f32) D_8011D468.x / 65536.0f, (f32) D_8011D468.y / 65536.0f, (f32) D_8011D468.z / 65536.0f);
-}
 
 void func_80031018(void) {
     Matrix mf;

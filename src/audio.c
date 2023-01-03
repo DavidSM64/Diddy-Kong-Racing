@@ -38,11 +38,6 @@ u8 D_800DC670 = 0;
 
 /************ .rodata ************/
 
-// Debug strings
-UNUSED const char sAudioErrorString_01[] = "amSndPlay: Illegal sound effects table index\n";
-UNUSED const char sAudioErrorString_02[] = "amSndPlayDirect: Somebody tried to play illegal sound %d\n";
-UNUSED const char sAudioErrorString_03[] = "Invalid midi sequence index\n";
-
 /*********************************/
 
 /************ .bss ************/
@@ -102,7 +97,6 @@ void audio_init(OSSched *sc) {
     s32 *addrPtr;
     u32 seqfSize;
     u32 seq_max_len;
-    UNUSED u32 pad;
     audioMgrConfig audConfig;
 
     seq_max_len = 0;
@@ -136,7 +130,6 @@ void audio_init(OSSched *sc) {
     D_80115D0C = (u32 *) allocate_from_main_pool_safe((ALSeqFile_80115CF8->seqCount) * 4, COLOUR_TAG_CYAN);
 
     for (iCnt = 0; iCnt < ALSeqFile_80115CF8->seqCount; iCnt++) {
-        pad = (u32) (ALSeqFile_80115CF8 + 8 + iCnt * 8); // Fakematch
         D_80115D0C[iCnt] = ALSeqFile_80115CF8->seqArray[iCnt].len;
         if (D_80115D0C[iCnt] & 1) {
             D_80115D0C[iCnt]++;
@@ -731,19 +724,6 @@ void func_80001FB8(u16 soundID, void *soundState, u8 volume) {
     s32 new_var = ((s32) (sSoundEffectsPool[soundID].unk2 * (volume / 127.0f))) * 256;
     if (soundState) {
         func_800049F8((s32) soundState, 8, new_var);
-    }
-}
-
-UNUSED void func_8000208C(void *sndState, u8 arg1) {
-    if (sndState != NULL) {
-        func_800049F8((s32) sndState, 8, arg1 << 8);
-    }
-}
-
-UNUSED void func_800020BC(void *sndState, u32 arg1) {
-    u32 *temp = &arg1;
-    if (sndState != NULL) {
-        func_800049F8((s32) sndState, 16, *temp);
     }
 }
 

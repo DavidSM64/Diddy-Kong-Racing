@@ -117,21 +117,7 @@ u16 D_800DC864 = 0x0028;
 
 /************ .rodata ************/
 
-UNUSED const char sObjectOutofMemString[] = "Objects out of ram(1) !!\n";
-UNUSED const char sDoorNumberErrorString[] = "Door numbering error %d!!\n";
-UNUSED const char sObjectScopeErrorString[] = "objGetScope: Unknown scope for object %d\n";
-UNUSED const char sObjectListDataOverflowString[] = "ObjList (Part) Overflow %d!!!\n";
-UNUSED const char sObjectSetupError1String[] = "ObjSetupObject(1) Memory fail!!\n";
-UNUSED const char sObjectSetupError2String[] = "ObjSetupObject(2) Memory fail!!\n";
-UNUSED const char sObjectSetupError5String[] = "ObjSetupObject(5) Memory fail!!\n";
-UNUSED const char sObjectSetupError6String[] = "ObjSetupObject(6) Memory fail!!\n";
-UNUSED const char sObjectSetupError3String[] = "ObjSetupObject(3) Memory fail!!\n";
-UNUSED const char sObjectListOverflowString[] = "ObjList Overflow %d!!!\n";
-UNUSED const char sObjectSetupError4String[] = "ObjSetupObject(4) Memory fail!!\n";
-UNUSED const char sDuplicateCheckpointString[] = "Error: Multiple checkpoint no: %d !!\n";
-UNUSED const char sErrorChannelString[] = "ERROR Channel %d\n";
-UNUSED const char sReadOutErrorString[] = "RO error %d!!\n";
-UNUSED const char sPureAnguishString[] = "ARGHHHHHHHHH\n";
+const char sDuplicateCheckpointString[] = "Error: Multiple checkpoint no: %d !!\n";
 extern f32 D_800E5644;
 
 /*********************************/
@@ -993,11 +979,6 @@ s32 func_8001139C() {
  */
 s32 get_race_start_timer() {
     return gRaceStartCountdown;
-}
-
-// Unused function, purpose currently unknown.
-UNUSED s32 func_800113BC() {
-    return D_8011ADBC;
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800113CC.s")
@@ -1895,25 +1876,6 @@ f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2) {
     return var_f2;
 }
 
-UNUSED f32 func_8001B974(Object_Racer* racer) {
-    f32 distLeft;
-    s32 checkpointID;
-
-    if (gNumberOfCheckpoints <= 0) {
-        return 0.0f;
-    }
-    distLeft = 0.0f;
-    for (checkpointID = racer->checkpoint; checkpointID < gNumberOfCheckpoints; checkpointID++) {
-        distLeft += gTrackCheckpoints[checkpointID].distance;
-    }
-    checkpointID = racer->checkpoint - 1;
-    if (checkpointID < 0) {
-        checkpointID = gNumberOfCheckpoints - 1;
-    }
-    distLeft += (gTrackCheckpoints[checkpointID].distance * racer->checkpoint_distance);
-    return distLeft;
-}
-
 /**
  * Returns a pointer to a specific checkpoint.
 */
@@ -1982,33 +1944,6 @@ Object *get_racer_object_by_port(s32 index) {
         return NULL;
     }
     return gRacersByPort[index];
-}
-
-/**
- * Unused function that would've iterated through all active checkpoints to render their visual nodes.
- * The function it calls is completely stubbed out.
-*/
-UNUSED void debug_render_checkpoints(Gfx **dlist, MatrixS **mtx, Vertex **vtx) {
-    s32 i;
-
-    load_and_set_texture_no_offset(dlist, NULL, RENDER_Z_COMPARE);
-    if (gNumberOfCheckpoints > 3) {
-        for (i = 0; i < gNumberOfCheckpoints; i++) {
-            // Ground path
-            debug_render_checkpoint_node(i, 0, dlist, mtx, vtx);
-        }
-        for (i = 0; i < gNumberOfCheckpoints; i++){
-            // Air path
-            debug_render_checkpoint_node(i, 1, dlist, mtx, vtx);
-        }
-    }
-}
-
-/**
- * Would've rendered an individual checkpoint node. On https://noclip.website, with dev objects enabled, you can see a visual representation of
- * what these checkpoints would've looked like ingame.
-*/
-UNUSED void debug_render_checkpoint_node(UNUSED s32 checkpointID, UNUSED s32 pathID, UNUSED Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BC54.s")
@@ -2115,9 +2050,6 @@ Object *func_8001D214(s32 arg0) {
         return D_8011AF04[0][arg0];
     }
     return 0;
-}
-
-UNUSED void func_8001D23C(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }
 
 void func_8001D258(f32 arg0, f32 arg1, s16 arg2, s16 arg3, s16 arg4) {
@@ -2424,9 +2356,6 @@ f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
     new_var2 = temp_f12 + temp_f2;
     *arg3 = arg0[arg1 + 2] - arg0[arg1 + 1];
     return new_var2;
-}
-
-UNUSED void func_800228DC(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }
 
 void func_800228EC(s32 arg0) {
@@ -3168,9 +3097,6 @@ void run_object_loop_func(Object *obj, s32 updateRate) {
 #ifdef PUPPYPRINT_DEBUG
     profiler_add_obj(obj->behaviorId, osGetTime() - first);
 #endif
-}
-
-UNUSED void func_8002458C(UNUSED s32 arg0) {
 }
 
 s16 *func_80024594(s32 *arg0, s32 *arg1) {

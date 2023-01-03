@@ -10,21 +10,6 @@
 
 /************ .rodata ************/
 
-const char D_800E7210[] = "*** mmAlloc: size = 0 ***\n";
-const char D_800E722C[] = "*** mm Error *** ---> No more slots available.\n";
-const char D_800E725C[] = "\n*** mm Error *** ---> No suitble block found for allocation.\n";
-const char D_800E729C[] = "*** mmAllocAtAddr: size = 0 ***\n";
-const char D_800E72C0[] = "\n*** mm Error *** ---> No more slots available.\n";
-const char D_800E72F4[] = "\n*** mm Error *** ---> Can't allocate memory at desired address.\n";
-const char D_800E7338[] = "\n*** mm Error *** ---> Can't free ram at this location: %x\n";
-const char D_800E7374[] = "\n*** mm Error *** ---> No match found for mmFree.\n";
-const char D_800E73A8[] = "*** Slots still in use in region ***\n";
-const char D_800E73D0[] = "\n*** mm Error *** ---> stbf stack too deep!\n";
-const char D_800E7400[] = "\n*** mm Error *** ---> Can't fix the specified block.\n";
-const char D_800E7438[] = "\n*** mm Error *** ---> Can't unfix the specified block.\n";
-const char D_800E7474[] = "Colour %x >> %d\n";
-const char D_800E7488[] = "Unable to record %d slots, colours overflowed table.\n";
-
 /*********************************/
 
 /************ .bss ************/
@@ -73,7 +58,6 @@ void init_main_memory_pool(void) {
 MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots) {
     s32 size;
     MemoryPoolSlot *slots;
-    UNUSED s32 unused_2;
     s32 *flags = clear_status_register_flags();
     MemoryPoolSlot *newPool;
 
@@ -147,7 +131,6 @@ MemoryPoolSlot *allocate_from_main_pool(s32 size, u32 colourTag) {
 MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag) {
     s32 slotSize;
     MemoryPoolSlot *curSlot;
-    UNUSED s32 pad;
     MemoryPool *pool;
     MemoryPoolSlot *slots;
     s32 *flags;
@@ -313,7 +296,6 @@ void free_slot_containing_address(u8 *address) {
 void func_80071314(void) {
     MemoryPoolSlot *slotPos;
     MemoryPool *pool;
-    UNUSED s32 pad;
     s32 *flags;
     s32 poolIndex;
     s32 slotIndex;
@@ -602,76 +584,4 @@ s32 get_memory_colour_tag_count(u32 colourTag) {
         slot++;
     }
     return count;
-}
-
-/**
- * Prints out the counts for each color tag in the main pool.
- * Unused. 
- */
-void print_memory_colour_tags(void) {
-    stubbed_printf("RED %d\n", get_memory_colour_tag_count(COLOUR_TAG_RED));
-    stubbed_printf("GREEN %d\n", get_memory_colour_tag_count(COLOUR_TAG_GREEN));
-    stubbed_printf("BLUE %d\n", get_memory_colour_tag_count(COLOUR_TAG_BLUE));
-    stubbed_printf("YELLOW %d\n", get_memory_colour_tag_count(COLOUR_TAG_YELLOW));
-    stubbed_printf("MAGENTA %d\n", get_memory_colour_tag_count(COLOUR_TAG_MAGENTA));
-    stubbed_printf("CYAN %d\n", get_memory_colour_tag_count(COLOUR_TAG_CYAN));
-    stubbed_printf("WHITE %d\n", get_memory_colour_tag_count(COLOUR_TAG_WHITE));
-    stubbed_printf("GREY %d\n", get_memory_colour_tag_count(COLOUR_TAG_GREY));
-    stubbed_printf("ORANGE %d\n\n", get_memory_colour_tag_count(COLOUR_TAG_ORANGE));
-}
-
-/**
- * Draws the counts for each color tag in the main pool.
- * Unused. 
- * See: https://tcrf.net/Diddy_Kong_Racing#Current_Colors
- */
-void render_memory_colour_tags(void) {
-    set_render_printf_background_colour(0, 0, 0, 128);
-    render_printf("RED %d\n", get_memory_colour_tag_count(COLOUR_TAG_RED));
-    render_printf("GREEN %d\n", get_memory_colour_tag_count(COLOUR_TAG_GREEN));
-    render_printf("BLUE %d\n", get_memory_colour_tag_count(COLOUR_TAG_BLUE));
-    render_printf("YELLOW %d\n", get_memory_colour_tag_count(COLOUR_TAG_YELLOW));
-    render_printf("MAGENTA %d\n", get_memory_colour_tag_count(COLOUR_TAG_MAGENTA));
-    render_printf("CYAN %d\n", get_memory_colour_tag_count(COLOUR_TAG_CYAN));
-    render_printf("WHITE %d\n", get_memory_colour_tag_count(COLOUR_TAG_WHITE));
-    render_printf("GREY %d\n", get_memory_colour_tag_count(COLOUR_TAG_GREY));
-    render_printf("ORANGE %d\n\n", get_memory_colour_tag_count(COLOUR_TAG_ORANGE));
-}
-
-UNUSED void func_80071C74(void) {
-    s32 i;
-    s32 skip;
-    s32 index;
-    s32 index2;
-    s32 nextIndex;
-    MemoryPoolSlot *slot;
-    
-    for (i = 0; (gNumberOfMemoryPools ^ 0) >= i; i++) {
-        if (i && i) {} // Fakematch
-        slot = &gMemoryPools[i].slots[0];
-        index = 1;
-        index2 = -index;
-        do {
-            index = slot->flags;
-            nextIndex = slot->nextIndex;
-            skip = nextIndex == index2;
-            if (index) {
-                if (((((((((!slot->nextIndex) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) {
-                    if (nextIndex && nextIndex) {} // Fakematch
-                }
-            }
-            if (skip) {
-                continue;
-            }
-            slot = &gMemoryPools[i].slots[slot->nextIndex];
-        } while (nextIndex != (-1));
-    }
-}
-
-// Unused. Does nothing?
-void func_80071CE8(void) {
-    s32 i;
-    for (i = gNumberOfMemoryPools; i != -1; i--) {
-        // Nothing here. There might've been a printf or something similar.
-    }
 }

@@ -15,30 +15,8 @@
 
 /************ .rodata ************/
 
-// Need to move this to the correct file when we figure out where the lens flare code is.
-const char D_800E87F0[] = "\nMaximum limit of %d lens flare switches, per level, has been exceeded.";
-
 // This is most likely a file boundary. Not sure where the split occurs though.
 const int D_800E8838[2] = { 0, 0 };
-
-const char D_800E8840[] = "\n\nUnknown trigger type in initParticleTrigger %d, Max %d.\n\n";
-const char D_800E887C[] = "\n\nUnknown particle type in initParticleTrigger %d, Max %d.\n\n";
-const char D_800E88BC[] = "\n\nUnknown trigger type in initParticleTrigger %d, Max %d.\n\n";
-const char D_800E88F8[] = "Sprite Particle buffer is full.\n";
-const char D_800E891C[] = "Triangle Particle buffer is full.\n";
-const char D_800E8940[] = "Rectangle Particle buffer is full.\n";
-const char D_800E8964[] = "Line Particle buffer is full.\n";
-const char D_800E8980[] = "Point Particle buffer is full.\n";
-const char D_800E89A4[] = "\n\nCan't allocate space for unknown particle type.";
-const char D_800E89D8[] = "\n\nParticle has been freed twice, this is Super Safe, Honest!\n";
-const char D_800E8A18[] = "\n\nSprite Particle Buffer is empty.\n\n";
-const char D_800E8A40[] = "\n\nTriangle Particle Buffer is empty.\n\n";
-const char D_800E8A68[] = "\n\nRectangle Particle Buffer is empty.\n\n";
-const char D_800E8A90[] = "\n\nLine Particle buffer is empty.\n\n";
-const char D_800E8AB4[] = "\n\nPoint Particle buffer is empty.\n\n";
-const char D_800E8AD8[] = "\n\nCan't deallocate space for unknown particle type.\n\n";
-const char D_800E8B10[] = "\nError :: trigger %x has no reference to point %x";
-const char D_800E8B44[] = "\nError :: particle %x is not indexed correctly in trigger list %x (%d >> %p)";
 
 /*********************************/
 

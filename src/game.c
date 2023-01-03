@@ -47,19 +47,6 @@
 
 /************ .rodata ************/
 
-UNUSED const char sLevelErrorString[] = "LOADLEVEL Error: Level out of range\n";
-UNUSED const char sBossErrorString[] = "BossLev problem\n";
-UNUSED const char sAITableErrorString[] = "AITABLE Error: Table out of range\n";
-UNUSED const char sDebugVersionInfoString[] = "1.1605";
-UNUSED const char sDebugBuildDateString[] = "02/10/97 16:03";
-UNUSED const char sDebugUsernameString[] = "pmountain";
-
-const char D_800E7134[] = "BBB\n"; // Functionally unused.
-UNUSED const char sDebugCarString[] = "CAR";
-UNUSED const char sDebugHovercraftString[] = "HOV";
-UNUSED const char sDebugPlaneString[] = "PLN";
-UNUSED const char sDebugVehicleSwapString[] = "Swapping\n";
-
 /*********************************/
 
 /************ .data ************/
@@ -78,30 +65,16 @@ s16 D_800DD32C = 0;
 
 s8 D_800DD330 = 0;
 
-UNUSED char *sDebugRomBuildInfo[6] = {
-    NULL, NULL, NULL, // These could be a file boundary.
-    (char *)sDebugVersionInfoString,
-    (char *)sDebugBuildDateString,
-    (char *)sDebugUsernameString
-};
-
-UNUSED char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
-
 s8 sAntiPiracyTriggered = 0;
-UNUSED s32 D_800DD378 = 1;
 s32 D_800DD37C = 0;
 s32 gScreenStatus = OSMESG_SWAP_BUFFER;
 s32 sControllerStatus = 0;
-UNUSED s32 D_800DD388 = 0;
 s8 gSkipGfxTask = FALSE;
 s8 D_800DD390 = 0;
 s16 gLevelLoadTimer = 0;
 s8 D_800DD398 = 0;
 s8 D_800DD39C = 0;
 s8 D_800DD3A0 = FALSE;
-UNUSED s32 D_800DD3A4 = 0;
-UNUSED s32 D_800DD3A8 = 0;
-UNUSED s32 D_800DD3AC = 0;
 s32 gNumF3dCmdsPerPlayer[4] = { 4500, 7000, 11000, 11000 };
 s32 gNumHudVertsPerPlayer[4] = { 300, 600, 850, 900 };
 s32 gNumHudMatPerPlayer[4] = { 300, 400, 550, 600 };
@@ -112,11 +85,6 @@ FadeTransition D_800DD3F4 = FADE_TRANSITION(128, FADE_COLOR_BLACK, 20, 0);
 FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
 s32 sLogicUpdateRate = LOGIC_5FPS;
 FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
-// Unused?
-// CAR / HOV / PLN - So this is vehicle type?
-UNUSED char *D_800DD410[3] = {
-    (char *)sDebugCarString, (char *)sDebugHovercraftString, (char *)sDebugPlaneString
-};
 FadeTransition D_800DD41C = FADE_TRANSITION(0, FADE_COLOR_BLACK, 30, -1);
 FadeTransition D_800DD424 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 260, -1);
 /*******************************/
@@ -141,14 +109,12 @@ TempStruct5 *D_801211C0;
 s16 D_801211C8[20];
 Gfx *gDisplayLists[2];
 Gfx *gCurrDisplayList;
-UNUSED s32 D_801211FC;
 MatrixS *gHudMatrices[2];
 MatrixS *gGameCurrMatrix;
 Vertex *gHudVertices[2];
 Vertex *gGameCurrVertexList;
 TriangleList *gHudTriangles[2];
 TriangleList *gGameCurrTriList;
-UNUSED s32 D_80121230[8];
 s8 D_80121250[16]; //Settings4C
 OSSched gMainSched; // 0x288 / 648 bytes
 UNUSED u8 D_80121268[0x2000]; // 0x2000 / 8192 bytes Padding?
@@ -172,7 +138,6 @@ Vehicle D_8012351C; // Looks to be the current level's vehicle ID.
 s32 sBootDelayTimer;
 s8 D_80123524;
 s8 D_80123525;
-UNUSED s8 D_80123526; // Set to 0 then never used.
 s32 gCurrNumF3dCmdsPerPlayer;
 s32 gCurrNumHudMatPerPlayer;
 s32 gCurrNumHudTrisPerPlayer;
@@ -187,7 +152,6 @@ s32 gNMIMesgBuf[8];
 void func_8006A6B0(void) {
     s32 i;
     s32 temp;
-    UNUSED s32 pad;
     s32 checksumCount;
     u8 *header;
     s32 j;
@@ -251,123 +215,6 @@ void func_8006A6B0(void) {
     if (checksumCount != gFunc80068158Checksum) {
         disable_button_mask();
     }
-}
-
-UNUSED s16 func_8006ABB4(s32 arg0) {
-    if (arg0 < 0) {
-        return 0xE10;
-    }
-    if (arg0 >= gNumberOfLevelHeaders) {
-        return 0xE10;
-    }
-    return D_8012117C[arg0].unk4;
-}
-
-UNUSED s32 func_8006AC00(s32 arg0, s8 arg1, s8 arg2) {
-    if (arg0 < 0) {
-        arg0 = 0;
-    } else {
-        arg0++;
-    }
-    if (arg1 != 0x40) {
-        if (arg2 == -1) {
-            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
-                if (arg1 == D_8012117C[arg0].unk1) {
-                    return arg0;
-                }
-            }
-        } else if (arg1 == -1) {
-            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
-                if (arg2 == D_8012117C[arg0].unk0) {
-                    return arg0;
-                }
-            }
-        } else {
-            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
-                if ((arg1 == D_8012117C[arg0].unk1) && (arg2 == D_8012117C[arg0].unk0)) {
-                    return arg0;
-                }
-            }
-        }
-    } else {
-        if (arg2 == -1) {
-            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
-                if (D_8012117C[arg0].unk1 & 0x40) {
-                    return arg0;
-                }
-            }
-        } else {
-            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
-                if ((D_8012117C[arg0].unk1 & 0x40) && (arg2 == D_8012117C[arg0].unk0)) {
-                    return arg0;
-                }
-            }
-        }
-    }
-    return -1;
-}
-
-UNUSED s32 func_8006AE2C(s32 arg0, s8 arg1, s8 arg2) {
-    if(arg0 >= gNumberOfLevelHeaders){
-        arg0 = gNumberOfLevelHeaders;
-    }
-    arg0--;
-    if (arg1 != 0x40) {
-        if (arg2 == -1) {
-            for (; arg0 >= 0; arg0--) {
-                if (arg1 == D_8012117C[arg0].unk1) {
-                    return arg0;
-                }
-            }
-        } else if (arg1 == -1) {
-            for (; arg0 >= 0; arg0--) {
-                if (arg2 == D_8012117C[arg0].unk0) {
-                    return arg0;
-                }
-            }
-        } else {
-            for (; arg0 >= 0; arg0--) {
-                if ((arg1 == D_8012117C[arg0].unk1) && (arg2 == D_8012117C[arg0].unk0)) {
-                    return arg0;
-                }
-            }
-        }
-    } else {
-        if (arg2 == -1) {
-            for (; arg0 >= 0; arg0--) {
-                if (D_8012117C[arg0].unk1 & 0x40) {
-                    return arg0;
-                }
-            }
-        } else {
-            for (; arg0 >= 0; arg0--) {
-                if ((D_8012117C[arg0].unk1 & 0x40) && (arg2 == D_8012117C[arg0].unk0)) {
-                    return arg0;
-                }
-            }
-        }
-    }
-    return -1;
-}
-
-// Unused.
-s32 func_8006B018(s8 arg0) {
-    if ((arg0 >= 0) && (arg0 < 16)) {
-        return D_80121180[arg0];
-    }
-    return 0;
-}
-
-// Unused.
-s32 func_8006B054(s8 arg0) {
-    s32 out, i;
-    out = 0;
-    for (i = 0; i < gNumberOfLevelHeaders; i++) {
-        if (arg0 == D_8012117C[i].unk0) {
-            out++;
-        }
-    }
-    return out;
 }
 
 Vehicle get_map_default_vehicle(s32 mapId) {
@@ -693,14 +540,6 @@ LevelHeader *get_current_level_header(void) {
 }
 
 /**
- * Returns the amount of level headers there are in the game.
- * Goes unused.
- */
-UNUSED u8 get_total_level_header_count(void) {
-    return gNumberOfLevelHeaders - 1;
-}
-
-/**
  * Returns the name of the level from the passed ID
  */
 char *get_level_name(s32 levelId) {
@@ -761,7 +600,7 @@ void func_8006BEFC(void) {
 
 void func_8006BFC8(s8 *arg0) {
     s32 temp;
-    UNUSED s32 temp2;
+    s32 temp2;
     s16 phi_v1;
     s8 phi_s0;
     Settings *settings;
@@ -928,10 +767,6 @@ void init_game(void) {
     }
 
     osCreateScheduler(&gMainSched, &gSPTaskNum, /*priority*/ 13, (u8) mode, 1);
-    D_800DD3A0 = FALSE;
-    if (!func_8006EFB8()) {
-        D_800DD3A0 = TRUE;
-    }
     init_video(VIDEO_MODE_LOWRES_LPN, &gMainSched);
     init_PI_mesg_queue();
     setup_gfx_mesg_queues(&gMainSched);
@@ -1060,19 +895,6 @@ void main_game_loop(void) {
 #ifdef PUPPYPRINT_DEBUG
     profiler_add(gPuppyTimers.timers[PP_PAD], osGetCount() - first2);
 #endif
-    if (get_lockup_status()) {
-        render_epc_lock_up_display();
-        sRenderContext = DRAW_CRASH_SCREEN;
-    }
-    if (D_800DD3A0) {
-        debugLoopCounter = 0;
-        while (debugLoopCounter != 10000000) {
-            debugLoopCounter += 1;
-        }
-        if (debugLoopCounter >= 20000001) { // This shouldn't ever be true?
-            render_printf(D_800E7134 /* "BBB\n" */);
-        }
-    }
     switch (sRenderContext) {
         case DRAW_INTRO: // Pre-boot screen
 #ifdef PUPPYPRINT_DEBUG
@@ -1678,11 +1500,6 @@ s32 get_render_context(void) {
     return sRenderContext;
 }
 
-/* Unused function used to set the render context from outside this file */
-UNUSED void set_render_context(s32 changeTo) {
-    sRenderContext = changeTo;
-}
-
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     func_8006ECFC(0);
     sRenderContext = DRAW_MENU;
@@ -2038,11 +1855,6 @@ void func_8006E994(Settings *settings) {
     settings->wizpigAmulet = 0;
 }
 
-UNUSED void func_8006EA58(void) {
-    func_8006E770(gSettingsPtr, 3);
-    func_8006E994(gSettingsPtr);
-}
-
 Settings *get_settings(void) {
     return gSettingsPtr;
 }
@@ -2073,16 +1885,6 @@ s32 is_reset_pressed(void) {
 
 s32 func_8006EB14(void) {
     return gPlayableMapId;
-}
-
-/* Unused? */
-void func_8006EB24(void) {
-    D_800DD37C |= 0x01;
-}
-
-/* Unused? */
-void func_8006EB40(void) {
-    D_800DD37C |= 0x02;
 }
 
 void func_8006EB5C(void) {
@@ -2183,7 +1985,6 @@ void func_8006F140(s32 arg0) {
     if (gLevelLoadTimer == 0) {
         gLevelLoadTimer = 40;
         D_80123524 = 0;
-        D_80123526 = 0;
         if (arg0 == 1) {
             func_800C01D8(&D_800DD41C);
         }
