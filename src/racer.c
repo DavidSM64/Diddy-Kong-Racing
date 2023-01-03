@@ -719,7 +719,7 @@ void func_80045128(struct TempStruct2 *header) {
 GLOBAL_ASM("asm/non_matchings/racer/func_800452A0.s")
 GLOBAL_ASM("asm/non_matchings/racer/func_80045C48.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer) {
     UNUSED s32 temp2;
     UNUSED s32 pad0;
