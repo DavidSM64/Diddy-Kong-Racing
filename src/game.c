@@ -148,7 +148,7 @@ TriangleList *gGameCurrTriList;
 UNUSED s32 D_80121230[8];
 s8 D_80121250[16]; //Settings4C
 OSSched gMainSched; // 0x288 / 648 bytes
-UNUSED u8 D_80121268[0x2000]; // 0x2000 / 8192 bytes Padding?
+u8 gSchedStack[0x2000];
 s32 gSPTaskNum;
 s32 sRenderContext;
 s32 D_801234F0;

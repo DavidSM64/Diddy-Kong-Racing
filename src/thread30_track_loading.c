@@ -23,7 +23,7 @@ u8 leoDiskStack[16]; //technically should have a OS_LEO_STACKSIZE or something. 
 OSThread gThread30;
 OSMesgQueue gThread30MesgQueue;
 OSMesg gThread30Message;
-UNUSED u8 D_8012ACC0[0x1468]; // Unused? Might be another stack.
+u8 gBackgroundLoadStack[0x1468];
 
 // Currently defined in osViMgr.c
 // There are a few stacks defined next to each other. Maybe they are in their own separate file?
