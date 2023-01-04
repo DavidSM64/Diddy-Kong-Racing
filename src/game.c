@@ -866,30 +866,32 @@ void main_game_loop(void) {
     sTotalTime += OS_CYCLES_TO_USEC(sDeltaTime);
     sTotalTime -= 16666;
     // sub 25 frames.
-    if (sTotalTime >= 40000) {
-        if (gOverrideAA == FALSE) {
-            gOverrideTimer++;
-            if (gOverrideTimer > 30) {
-                gOverrideAA = TRUE;
-                gOverrideTimer = 0;
-                set_dither_filter();
+    if (gAntiAliasing) {
+        if (sTotalTime >= 40000) {
+            if (gOverrideAA == FALSE) {
+                gOverrideTimer++;
+                if (gOverrideTimer > 30) {
+                    gOverrideAA = TRUE;
+                    gOverrideTimer = 0;
+                    set_dither_filter();
+                }
+            } else {
+                if (gOverrideTimer > 0) {
+                    gOverrideTimer--;
+                }
             }
         } else {
-            if (gOverrideTimer > 0) {
-                gOverrideTimer--;
-            }
-        }
-    } else {
-        if (gOverrideAA == TRUE) {
-            gOverrideTimer++;
-            if (gOverrideTimer > 30) {
-                gOverrideAA = FALSE;
-                gOverrideTimer = 0;
-                set_dither_filter();
-            }
-        } else {
-            if (gOverrideTimer > 0) {
-                gOverrideTimer--;
+            if (gOverrideAA == TRUE) {
+                gOverrideTimer++;
+                if (gOverrideTimer > 30) {
+                    gOverrideAA = FALSE;
+                    gOverrideTimer = 0;
+                    set_dither_filter();
+                }
+            } else {
+                if (gOverrideTimer > 0) {
+                    gOverrideTimer--;
+                }
             }
         }
     }
