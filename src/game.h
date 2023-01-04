@@ -10,6 +10,7 @@
 
 extern Gfx *gDisplayLists[2];
 extern s32 sLogicUpdateRate;
+extern u8 gOverrideAA;
 
 enum RenderContext {
     DRAW_INTRO = -1,
