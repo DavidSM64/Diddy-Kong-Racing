@@ -1253,7 +1253,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     var_f14 = 5.0f;
     sp118 = -10000.0f;
-    temp_v0_10 = func_8002AD08(obj->segment.trans.y_position, &sp118, spD4); 
+    temp_v0_10 = get_wave_properties(obj->segment.trans.y_position, &sp118, spD4); 
     if (temp_v0_10) {
         var_f14 = racer->velocity;
         if (var_f14 < 0.0f) {
@@ -2449,7 +2449,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         if (tempRacer->vehicleID != VEHICLE_HOVERCRAFT) {
             waterHeight = -10000.0f;
             // So I assume this func exists to find the water height.
-            D_8011D504 = func_8002AD08(obj->segment.trans.y_position, &waterHeight, &gCurrentRacerWaterPos);
+            D_8011D504 = get_wave_properties(obj->segment.trans.y_position, &waterHeight, &gCurrentRacerWaterPos);
             if (D_8011D504) {
                 if (obj->segment.trans.y_position - 5.0f < waterHeight) {
                     tempRacer->unk1E5 = 5;
