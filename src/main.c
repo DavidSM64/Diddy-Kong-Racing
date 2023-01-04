@@ -223,12 +223,25 @@ u32 sTimerTemp = 0;
 u8 sProfilerPage = 0;
 u32 sPrevLoadTime = 0;
 u8 sPrevLoadTimer = 0;
-u32 gFreeMem = 0;
+u32 gFreeMem[12];
 u8 sPrintOrder[PP_RSP_GFX];
 u8 sObjPrintOrder[NUM_OBJECT_PRINTS];
 struct PuppyPrintTimers gPuppyTimers;
 char sPuppyPrintStrings[][16] = {
     PP_STRINGS
+};
+char sPuppyprintMemColours[][16] = {
+    "Red\t",
+    "Green",
+    "Blue\t",
+    "Yellow",
+    "Magenta",
+    "Cyan",
+    "White",
+    "Grey",
+    "GreyXLU",
+    "Orange",
+    "Black"
 };
 
 #define FRAMETIME_COUNT 10
@@ -313,14 +326,14 @@ void render_profiler(void) {
 
     if (get_buttons_pressed_from_player(PLAYER_ONE) & R_JPAD) {
         sProfilerPage++;
-        if (sProfilerPage == 3) {
+        if (sProfilerPage == 4) {
             sProfilerPage = 0;
         }
     }
     if (get_buttons_pressed_from_player(PLAYER_ONE) & L_JPAD) {
         sProfilerPage--;
         if (sProfilerPage == 255) {
-            sProfilerPage = 2;
+            sProfilerPage = 3;
         }
     }
 
@@ -342,7 +355,7 @@ void render_profiler(void) {
             gDPSetCombineMode(gCurrDisplayList++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
             gDPSetPrimColor(gCurrDisplayList++, 0, 0, 0, 0, 0, 160);
             gDPFillRectangle(gCurrDisplayList++, TEXT_OFFSET - 2, 8, 112, printY + 2);
-            gDPFillRectangle(gCurrDisplayList++, ((gScreenWidth/2) / 3) - 42, gScreenHeight - 30, ((gScreenWidth/2) / 3) + 62, gScreenHeight - 6);
+            gDPFillRectangle(gCurrDisplayList++, ((gScreenWidth/2) / 3) - 42, gScreenHeight - 40, ((gScreenWidth/2) / 3) + 62, gScreenHeight - 6);
             gDPPipeSync(gCurrDisplayList++);
             set_text_background_colour(0, 0, 0, 0);
             set_kerning(FALSE);
@@ -362,8 +375,8 @@ void render_profiler(void) {
                 puppyprintf(textBytes,  "(%d%%)", gPuppyTimers.rdpTime / 333);
                 draw_text(&gCurrDisplayList, 112 - 4, 40, textBytes, ALIGN_TOP_RIGHT);
             }
-            //puppyprintf(textBytes,  "RAM: %06X/%06X", gFreeMem, osGetMemSize());
-            //draw_text(&gCurrDisplayList, ((gScreenWidth/2) / 3) + 10, gScreenHeight - 38, textBytes, ALIGN_TOP_CENTER);
+            puppyprintf(textBytes,  "RAM: 0x%06X/0x%06X", gFreeMem[11], osGetMemSize());
+            draw_text(&gCurrDisplayList, ((gScreenWidth/2) / 3) + 10, gScreenHeight - 38, textBytes, ALIGN_TOP_CENTER);
             puppyprintf(textBytes,  "Tri: %d Vtx: %d", sTriCount, sVtxCount);
             draw_text(&gCurrDisplayList, ((gScreenWidth/2) / 3) + 10, gScreenHeight - 28, textBytes, ALIGN_TOP_CENTER);
             puppyprintf(textBytes, "Gfx: %d / %d", ((u32)gCurrDisplayList - (u32)gDisplayLists[gSPTaskNum]) / sizeof(Gfx), gCurrNumF3dCmdsPerPlayer);
@@ -407,6 +420,26 @@ void render_profiler(void) {
                     continue;
                 }
                 puppyprintf(textBytes,  "%d \t%dus (%d%%)", sObjPrintOrder[i], gPuppyTimers.objTimers[sObjPrintOrder[i]][PERF_TOTAL], gPuppyTimers.objTimers[sObjPrintOrder[i]][PERF_TOTAL] / 333);
+                draw_text(&gCurrDisplayList, gScreenWidth - 136, y, textBytes, ALIGN_TOP_LEFT);
+                y += 10;
+                if (y > gScreenHeight - 16) {
+                    break;
+                }
+            }
+            goto drawCore;
+            break;
+        case 3:
+            gDPPipeSync(gCurrDisplayList++);
+            gDPSetCycleType(gCurrDisplayList++, G_CYC_1CYCLE);
+            gDPSetRenderMode(gCurrDisplayList++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+            gDPSetCombineMode(gCurrDisplayList++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+            gDPSetPrimColor(gCurrDisplayList++, 0, 0, 0, 0, 0, 96);
+            gDPFillRectangle(gCurrDisplayList++, gScreenWidth - 144, 0, gScreenWidth, SCREEN_HEIGHT);
+            gDPPipeSync(gCurrDisplayList++);
+            set_text_background_colour(0, 0, 0, 0);
+            set_kerning(FALSE);
+            for (i = 0; i < sizeof(sPuppyprintMemColours) / 16; i++) {
+                puppyprintf(textBytes,  "%s:\t0x%X\n", sPuppyprintMemColours[i], gFreeMem[i]);
                 draw_text(&gCurrDisplayList, gScreenWidth - 136, y, textBytes, ALIGN_TOP_LEFT);
                 y += 10;
                 if (y > gScreenHeight - 16) {

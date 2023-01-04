@@ -41,13 +41,12 @@ void init_main_memory_pool(void) {
         ramEnd = 0x80800000;
     }
 #ifdef PUPPYPRINT_DEBUG
-    gFreeMem = ramEnd - (s32)(&gMainMemoryPool);
+    bzero(&gFreeMem, sizeof(gFreeMem));
+    gFreeMem[11] = ramEnd - (s32)(&gMainMemoryPool);
 #endif
     gNumberOfMemoryPools = -1;
-    if (1) {
-        // Create the main memory pool.
-        new_memory_pool(&gMainMemoryPool, ramEnd - (s32)(&gMainMemoryPool), MAIN_POOL_SLOT_COUNT);
-    }
+    // Create the main memory pool.
+    new_memory_pool(&gMainMemoryPool, ramEnd - (s32)(&gMainMemoryPool), MAIN_POOL_SLOT_COUNT);
     set_free_queue_state(2);
     gFreeQueueCount = 0;
 }
@@ -398,6 +397,47 @@ s32 get_memory_pool_index_containing_address(u8 *address) {
     return i;
 }
 
+#ifdef PUPPYPRINT_DEBUG
+void adjust_mem_value(s32 size, u32 colourTag) {
+    switch (colourTag){
+    case COLOUR_TAG_RED:
+        gFreeMem[0] -= size;
+        break;
+    case COLOUR_TAG_GREEN:
+        gFreeMem[1] -= size;
+        break;
+    case COLOUR_TAG_BLUE:
+        gFreeMem[2] -= size;
+        break;
+    case COLOUR_TAG_YELLOW:
+        gFreeMem[3] -= size;
+        break;
+    case COLOUR_TAG_MAGENTA:
+        gFreeMem[4] -= size;
+        break;
+    case COLOUR_TAG_CYAN:
+        gFreeMem[5] -= size;
+        break;
+    case COLOUR_TAG_WHITE:
+        gFreeMem[6] -= size;
+        break;
+    case COLOUR_TAG_GREY:
+        gFreeMem[7] -= size;
+        break;
+    case COLOUR_TAG_SEMITRANS_GREY:
+        gFreeMem[8] -= size;
+        break;
+    case COLOUR_TAG_ORANGE:
+        gFreeMem[9] -= size;
+        break;
+    case COLOUR_TAG_BLACK:
+        gFreeMem[10] -= size;
+        break;
+    }
+    gFreeMem[11] += size;
+}
+#endif
+
 void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
     s32 nextIndex;
     s32 prevIndex;
@@ -420,6 +460,9 @@ void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
     slot->flags = 0;
     if (nextIndex != -1) {
         if (nextSlot->flags == 0) {
+#ifdef PUPPYPRINT_DEBUG
+        adjust_mem_value(1, slot->colourTag);
+#endif
             slot->size += nextSlot->size;
             tempNextIndex = nextSlot->nextIndex;
             slot->nextIndex = tempNextIndex;
@@ -431,6 +474,9 @@ void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
         }
     }
     if (prevIndex != -1) {
+#ifdef PUPPYPRINT_DEBUG
+        adjust_mem_value(1, prevSlot->colourTag);
+#endif
         if (prevSlot->flags == 0) {
             prevSlot->size += slot->size;
             tempNextIndex = slot->nextIndex;
@@ -465,6 +511,9 @@ s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIs
     poolSlots[slotIndex].colourTag = colourTag;
     index = poolSlots[pool->curNumSlots].index;
     if (size < poolSize) {
+#ifdef PUPPYPRINT_DEBUG
+        adjust_mem_value(-size, colourTag);
+#endif
         index = (pool->curNumSlots + poolSlots)->index;
         pool->curNumSlots++;
         poolSlots[index].data = &poolSlots[slotIndex].data[size];
