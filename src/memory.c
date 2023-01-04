@@ -461,7 +461,7 @@ void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
     if (nextIndex != -1) {
         if (nextSlot->flags == 0) {
 #ifdef PUPPYPRINT_DEBUG
-        adjust_mem_value(1, slot->colourTag);
+        adjust_mem_value(slot->size, slot->colourTag);
 #endif
             slot->size += nextSlot->size;
             tempNextIndex = nextSlot->nextIndex;
@@ -474,10 +474,10 @@ void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
         }
     }
     if (prevIndex != -1) {
-#ifdef PUPPYPRINT_DEBUG
-        adjust_mem_value(1, prevSlot->colourTag);
-#endif
         if (prevSlot->flags == 0) {
+#ifdef PUPPYPRINT_DEBUG
+        adjust_mem_value(prevSlot->size, prevSlot->colourTag);
+#endif
             prevSlot->size += slot->size;
             tempNextIndex = slot->nextIndex;
             prevSlot->nextIndex = tempNextIndex;

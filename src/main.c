@@ -326,14 +326,14 @@ void render_profiler(void) {
 
     if (get_buttons_pressed_from_player(PLAYER_ONE) & R_JPAD) {
         sProfilerPage++;
-        if (sProfilerPage == 4) {
+        if (sProfilerPage == 3) {
             sProfilerPage = 0;
         }
     }
     if (get_buttons_pressed_from_player(PLAYER_ONE) & L_JPAD) {
         sProfilerPage--;
         if (sProfilerPage == 255) {
-            sProfilerPage = 3;
+            sProfilerPage = 2;
         }
     }
 
@@ -355,7 +355,7 @@ void render_profiler(void) {
             gDPSetCombineMode(gCurrDisplayList++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
             gDPSetPrimColor(gCurrDisplayList++, 0, 0, 0, 0, 0, 160);
             gDPFillRectangle(gCurrDisplayList++, TEXT_OFFSET - 2, 8, 112, printY + 2);
-            gDPFillRectangle(gCurrDisplayList++, ((gScreenWidth/2) / 3) - 42, gScreenHeight - 40, ((gScreenWidth/2) / 3) + 62, gScreenHeight - 6);
+            gDPFillRectangle(gCurrDisplayList++, ((gScreenWidth/2) / 3) - 42, gScreenHeight - 30, ((gScreenWidth/2) / 3) + 62, gScreenHeight - 6);
             gDPPipeSync(gCurrDisplayList++);
             set_text_background_colour(0, 0, 0, 0);
             set_kerning(FALSE);
@@ -375,8 +375,8 @@ void render_profiler(void) {
                 puppyprintf(textBytes,  "(%d%%)", gPuppyTimers.rdpTime / 333);
                 draw_text(&gCurrDisplayList, 112 - 4, 40, textBytes, ALIGN_TOP_RIGHT);
             }
-            puppyprintf(textBytes,  "RAM: 0x%06X/0x%06X", gFreeMem[11], osGetMemSize());
-            draw_text(&gCurrDisplayList, ((gScreenWidth/2) / 3) + 10, gScreenHeight - 38, textBytes, ALIGN_TOP_CENTER);
+            //puppyprintf(textBytes,  "RAM: 0x%06X/0x%06X", gFreeMem[11], osGetMemSize());
+            //draw_text(&gCurrDisplayList, ((gScreenWidth/2) / 3) + 10, gScreenHeight - 38, textBytes, ALIGN_TOP_CENTER);
             puppyprintf(textBytes,  "Tri: %d Vtx: %d", sTriCount, sVtxCount);
             draw_text(&gCurrDisplayList, ((gScreenWidth/2) / 3) + 10, gScreenHeight - 28, textBytes, ALIGN_TOP_CENTER);
             puppyprintf(textBytes, "Gfx: %d / %d", ((u32)gCurrDisplayList - (u32)gDisplayLists[gSPTaskNum]) / sizeof(Gfx), gCurrNumF3dCmdsPerPlayer);
