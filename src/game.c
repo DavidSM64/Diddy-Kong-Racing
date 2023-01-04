@@ -876,11 +876,9 @@ void main_game_loop(void) {
                     set_dither_filter();
                 }
             } else {
-                if (gOverrideTimer > 0) {
-                    gOverrideTimer--;
-                }
+                goto reduction;
             }
-        } else {
+        } else if (sTotalTime <= 33333) {
             if (gOverrideAA == TRUE) {
                 gOverrideTimer++;
                 if (gOverrideTimer > 30) {
@@ -889,9 +887,12 @@ void main_game_loop(void) {
                     set_dither_filter();
                 }
             } else {
-                if (gOverrideTimer > 0) {
-                    gOverrideTimer--;
-                }
+                goto reduction;
+            }
+        } else {
+            reduction:
+            if (gOverrideTimer > 0) {
+                gOverrideTimer--;
             }
         }
     }
