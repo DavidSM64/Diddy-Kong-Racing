@@ -246,6 +246,9 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     Object *temp_v0_3;
     s16 var_t4;
     s16 temp_v0_10;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first = osGetCount();
+#endif
 
     sp6E = racer->unk1CA;
     miscAsset1 = (s8 *) get_misc_asset(MISC_ASSET_UNK01);
@@ -537,6 +540,9 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
             }
         }
     }
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.timers[PP_AI], osGetCount() - first);
+#endif
 }
 #else
 GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
@@ -2205,7 +2211,9 @@ void update_player_racer(Object *obj, s32 updateRate) {
     struct LevelObjectEntryCommon newObject;
 #ifdef PUPPYPRINT_DEBUG
     u32 first = osGetCount();
+    u32 first2;
     u32 first3 = gPuppyTimers.timers[PP_COLLISION][perfIteration];
+    u32 first4 = gPuppyTimers.timers[PP_AI][perfIteration];
 #endif
 
     gNumViewports = get_viewport_count() + 1;
@@ -2371,7 +2379,13 @@ void update_player_racer(Object *obj, s32 updateRate) {
                 racer_enter_door(tempRacer, updateRate);
             }
         } else {
-            racer_AI_pathing_inputs(obj, tempRacer, updateRate);
+#ifdef PUPPYPRINT_DEBUG
+        first2 = osGetCount();
+#endif
+        racer_AI_pathing_inputs(obj, tempRacer, updateRate);
+#ifdef PUPPYPRINT_DEBUG
+        profiler_add(gPuppyTimers.timers[PP_AI], osGetCount() - first2);
+#endif
         }
         //Set the value that decides whether to get an empowered boost.
         if (!(gCurrentRacerInput & A_BUTTON)) {
@@ -2691,6 +2705,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     profiler_add(gPuppyTimers.timers[PP_RACER], osGetCount() - first);
     profiler_offset(gPuppyTimers.timers[PP_RACER], gPuppyTimers.timers[PP_COLLISION][perfIteration] - first3);
     profiler_offset(gPuppyTimers.timers[PP_RACER], gPuppyTimers.timers[PP_CAMERA][perfIteration]);
+    profiler_offset(gPuppyTimers.timers[PP_RACER], gPuppyTimers.timers[PP_AI][perfIteration] - first4);
 #endif
 }
 
@@ -5803,6 +5818,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     f32 temp_fv1_2;
 #ifdef PUPPYPRINT_DEBUG
     u32 first = osGetCount();
+    u32 first2;
     u32 first3 = gPuppyTimers.timers[PP_COLLISION][perfIteration];
 #endif
 
@@ -5884,7 +5900,13 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         racer->unk201 = 30;
     }
     if (racer->unk201 != 0) {
+#ifdef PUPPYPRINT_DEBUG
+        first2 = osGetCount();
+#endif
         racer_AI_pathing_inputs(obj, racer, updateRate);
+#ifdef PUPPYPRINT_DEBUG
+        profiler_add(gPuppyTimers.timers[PP_AI], osGetCount() - first2);
+#endif
         if (!(gCurrentRacerInput & A_BUTTON)) {
             racer->throttleReleased = TRUE;
         }
