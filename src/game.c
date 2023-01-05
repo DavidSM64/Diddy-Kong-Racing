@@ -871,7 +871,7 @@ void main_game_loop(void) {
         if (sTotalTime >= 40000) {
             if (gOverrideAA == FALSE) {
                 gOverrideTimer++;
-                if (gOverrideTimer > 30) {
+                if (gOverrideTimer > 15) {
                     gOverrideAA = TRUE;
                     gOverrideTimer = 0;
                     set_dither_filter();
@@ -897,6 +897,8 @@ void main_game_loop(void) {
             }
         }
     }
+    render_printf("%d\n", gOverrideAA);
+    render_printf("%d\n", gOverrideTimer);
     sLogicUpdateRate = LOGIC_60FPS;
     while (sTotalTime > 16666) {
         sTotalTime -= 16666;
