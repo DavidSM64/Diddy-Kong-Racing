@@ -144,7 +144,7 @@ TriangleList *gGameCurrTriList;
 UNUSED s32 D_80121230[8];
 s8 D_80121250[16]; //Settings4C
 OSSched gMainSched; // 0x288 / 648 bytes
-u8 gSchedStack[0x2000];
+u64 gSchedStack[0x400]; // osCreateSched passes gSPTaskNum as the stack, but it's really this.
 s32 gSPTaskNum;
 s32 sRenderContext;
 s32 D_801234F0;
@@ -237,11 +237,11 @@ void func_8006A6B0(void) {
         gLevelNames[temp] = (char *) &D_800DD310[gTempAssetTable[temp]];
     }
     free_from_memory_pool(gTempAssetTable);
+    // Antipiracy measure
     checksumCount = 0;
     for (j = 0; j < gFunc80068158Length; j++) {
         checksumCount += ((u8 *) (&func_80068158))[j];
     }
-    // Antipiracy measure
     if (checksumCount != gFunc80068158Checksum) {
         disable_button_mask();
     }
@@ -344,16 +344,14 @@ UNUSED s32 func_8006AE2C(s32 arg0, s8 arg1, s8 arg2) {
     return -1;
 }
 
-// Unused.
-s32 func_8006B018(s8 arg0) {
+UNUSED s32 func_8006B018(s8 arg0) {
     if ((arg0 >= 0) && (arg0 < 16)) {
         return D_80121180[arg0];
     }
     return 0;
 }
 
-// Unused.
-s32 func_8006B054(s8 arg0) {
+UNUSED s32 func_8006B054(s8 arg0) {
     s32 out, i;
     out = 0;
     for (i = 0; i < gNumberOfLevelHeaders; i++) {
