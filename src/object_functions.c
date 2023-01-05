@@ -253,7 +253,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         }
         move_object(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
         if (obj->unk4A == 298) {
-            if (func_8002AD08(obj->segment.trans.y_position, &sp4C, NULL)) {
+            if (get_wave_properties(obj->segment.trans.y_position, &sp4C, NULL)) {
                 obj->segment.trans.y_position = sp4C;
             }
         }

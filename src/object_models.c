@@ -19,12 +19,12 @@ s32 gFunc80024D54Length = 1980;
 
 /************ .rodata ************/
 
-const char D_800E6B20[] = "Error: Model no. out of range on load. !!\n";
-const char D_800E6B4C[] = "TEXTURE ERROR!!\n%d,%d\n";
-const char D_800E6B64[] = "Error: Model table overflow!!\n";
-const char D_800E6B84[] = "WARNING :: createModelInstance called with NULL pointer\n";
-const char D_800E6BC0[] = "ModFreeModel : NULL mod_inst!!\n";
-const char D_800E6BE0[] = "MOD Error: Tryed to deallocate non-existent model!!\n";
+UNUSED const char D_800E6B20[] = "Error: Model no. out of range on load. !!\n";
+UNUSED const char D_800E6B4C[] = "TEXTURE ERROR!!\n%d,%d\n";
+UNUSED const char D_800E6B64[] = "Error: Model table overflow!!\n";
+UNUSED const char D_800E6B84[] = "WARNING :: createModelInstance called with NULL pointer\n";
+UNUSED const char D_800E6BC0[] = "ModFreeModel : NULL mod_inst!!\n";
+UNUSED const char D_800E6BE0[] = "MOD Error: Tryed to deallocate non-existent model!!\n";
 
 /*********************************/
 
@@ -40,7 +40,7 @@ s16 *D_8011D638;
 s32 *D_8011D63C;
 s32 D_8011D640;
 s32 D_8011D644;
-s32 D_8011D648[66];
+UNUSED s32 D_8011D648[66]; // Appears to have no effect when removed entirely?
 
 /******************************/
 

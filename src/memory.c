@@ -8,20 +8,20 @@
 
 /************ .rodata ************/
 
-const char D_800E7210[] = "*** mmAlloc: size = 0 ***\n";
-const char D_800E722C[] = "*** mm Error *** ---> No more slots available.\n";
-const char D_800E725C[] = "\n*** mm Error *** ---> No suitble block found for allocation.\n";
-const char D_800E729C[] = "*** mmAllocAtAddr: size = 0 ***\n";
-const char D_800E72C0[] = "\n*** mm Error *** ---> No more slots available.\n";
-const char D_800E72F4[] = "\n*** mm Error *** ---> Can't allocate memory at desired address.\n";
-const char D_800E7338[] = "\n*** mm Error *** ---> Can't free ram at this location: %x\n";
-const char D_800E7374[] = "\n*** mm Error *** ---> No match found for mmFree.\n";
-const char D_800E73A8[] = "*** Slots still in use in region ***\n";
-const char D_800E73D0[] = "\n*** mm Error *** ---> stbf stack too deep!\n";
-const char D_800E7400[] = "\n*** mm Error *** ---> Can't fix the specified block.\n";
-const char D_800E7438[] = "\n*** mm Error *** ---> Can't unfix the specified block.\n";
-const char D_800E7474[] = "Colour %x >> %d\n";
-const char D_800E7488[] = "Unable to record %d slots, colours overflowed table.\n";
+UNUSED const char D_800E7210[] = "*** mmAlloc: size = 0 ***\n";
+UNUSED const char D_800E722C[] = "*** mm Error *** ---> No more slots available.\n";
+UNUSED const char D_800E725C[] = "\n*** mm Error *** ---> No suitble block found for allocation.\n";
+UNUSED const char D_800E729C[] = "*** mmAllocAtAddr: size = 0 ***\n";
+UNUSED const char D_800E72C0[] = "\n*** mm Error *** ---> No more slots available.\n";
+UNUSED const char D_800E72F4[] = "\n*** mm Error *** ---> Can't allocate memory at desired address.\n";
+UNUSED const char D_800E7338[] = "\n*** mm Error *** ---> Can't free ram at this location: %x\n";
+UNUSED const char D_800E7374[] = "\n*** mm Error *** ---> No match found for mmFree.\n";
+UNUSED const char D_800E73A8[] = "*** Slots still in use in region ***\n";
+UNUSED const char D_800E73D0[] = "\n*** mm Error *** ---> stbf stack too deep!\n";
+UNUSED const char D_800E7400[] = "\n*** mm Error *** ---> Can't fix the specified block.\n";
+UNUSED const char D_800E7438[] = "\n*** mm Error *** ---> Can't unfix the specified block.\n";
+UNUSED const char D_800E7474[] = "Colour %x >> %d\n";
+UNUSED const char D_800E7488[] = "Unable to record %d slots, colours overflowed table.\n";
 
 /*********************************/
 
@@ -35,7 +35,7 @@ MemoryPool gMemoryPools[4];
 #endif
 
 s32 gNumberOfMemoryPools;
-s32 D_801235C4;
+UNUSED s32 D_801235C4;
 FreeQueueSlot gFreeQueue[256];
 s32 gFreeQueueCount;
 s32 gFreeQueueState;
@@ -598,7 +598,7 @@ s32 get_memory_colour_tag_count(u32 colourTag) {
  * Prints out the counts for each color tag in the main pool.
  * Unused. 
  */
-void print_memory_colour_tags(void) {
+UNUSED void print_memory_colour_tags(void) {
     stubbed_printf("RED %d\n", get_memory_colour_tag_count(COLOUR_TAG_RED));
     stubbed_printf("GREEN %d\n", get_memory_colour_tag_count(COLOUR_TAG_GREEN));
     stubbed_printf("BLUE %d\n", get_memory_colour_tag_count(COLOUR_TAG_BLUE));
@@ -615,7 +615,7 @@ void print_memory_colour_tags(void) {
  * Unused. 
  * See: https://tcrf.net/Diddy_Kong_Racing#Current_Colors
  */
-void render_memory_colour_tags(void) {
+UNUSED void render_memory_colour_tags(void) {
     set_render_printf_background_colour(0, 0, 0, 128);
     render_printf("RED %d\n", get_memory_colour_tag_count(COLOUR_TAG_RED));
     render_printf("GREEN %d\n", get_memory_colour_tag_count(COLOUR_TAG_GREEN));
@@ -659,7 +659,7 @@ UNUSED void func_80071C74(void) {
 }
 
 // Unused. Does nothing?
-void func_80071CE8(void) {
+UNUSED void func_80071CE8(void) {
     s32 i;
     for (i = gNumberOfMemoryPools; i != -1; i--) {
         // Nothing here. There might've been a printf or something similar.

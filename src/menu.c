@@ -5585,7 +5585,7 @@ void menu_track_select_init(void) {
         D_800E0970[var_v0].unk3 = 1;
     }
     D_80126924 = 0;
-    func_80078AAC(func_8008F618);
+    set_background_draw_function(func_8008F618);
     func_80066940(0, 80, gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY >> 1), 240, (gTrackSelectViewPortHalfY >> 1) + gTrackSelectViewPortHalfY);
     func_80066610();
     func_80066818(0, 0);
@@ -6008,7 +6008,7 @@ void func_80090918(s32 updateRate) {
             }
         }
         if (gMenuDelay < -22) {
-            func_80078AAC(NULL);
+            set_background_draw_function(NULL);
             D_800E097C = 0;
         }
         if (gMenuDelay > 30) {

@@ -135,8 +135,8 @@ unk8011D0F8 D_8011D128[3];
 s32 D_8011D158[3]; // Unused? Or part of something bigger above?
 s32 D_8011D164;
 s32 D_8011D168[84];
-s32 D_8011D2B8[20];
-s32 D_8011D308;
+WaterProperties *gTrackWaves[20];
+s8 D_8011D308;
 LevelModel *D_8011D30C;
 s32 *D_8011D310;
 f32 D_8011D314;
@@ -1297,7 +1297,59 @@ s32 func_8002ACD4(f32 *arg0, f32 *arg1, f32 *arg2) {
     return D_8011B0F0;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002AD08.s")
+/**
+ * Iterates through active waves on the track, then saves its rotation vector and height if found.
+ * Returns zero if no waves are found, or if too high up.
+ * Two types exist: calm, which have no means of displacement, and wavy, which do.
+*/
+s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
+    s32 var_a0;
+    WaterProperties **wave;
+    s32 i;
+    s32 index;
+    s32 len;
+    f32 height;
+    
+    len = D_8011D308;
+    if (rotation != NULL) {
+        rotation->f[0] = 0.0f;
+        rotation->f[2] = 0.0f;
+        rotation->f[1] = 1.0f;
+    }
+    wave = gTrackWaves;
+    for (var_a0 = i = 0; i < len; i++) {
+        if (wave[i]->type == WATER_CALM || wave[i]->type == WATER_WAVY) {
+            var_a0++;
+        }
+    }
+    if (var_a0 == 0) {
+        return 0;
+    }
+    wave = gTrackWaves;
+    index = -1;
+    for (i = 0; i < len; i++) {
+        height = wave[i]->waveHeight;
+        if (wave[i]->type == WATER_CALM || wave[i]->type == WATER_WAVY) {
+            if (yPos < height + 25.0 && (wave[i]->rotY > 0.5 || var_a0 == 1)) {
+                index = i;
+            }
+        } else
+        if (index >= 0 && var_a0 >= 2 && yPos < height - 20.0) {
+            index = -1;
+        }
+    }
+    if (index < 0) {
+        return 0;
+    }
+    *waterHeight = gTrackWaves[index]->waveHeight;
+    if (rotation != NULL) {
+        rotation->f[0] = gTrackWaves[index]->rotX;
+        rotation->f[1] = gTrackWaves[index]->rotY;
+        rotation->f[2] = gTrackWaves[index]->rotZ;
+    }
+    return gTrackWaves[index]->type;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002B0F4.s")
 
 s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {

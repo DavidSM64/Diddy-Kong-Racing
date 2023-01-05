@@ -572,7 +572,7 @@ glabel L8009287C
 /* 093594 80092994 3C028012 */   lui   $v0, %hi(D_801269C8) # $v0, 0x8012
 /* 093598 80092998 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 09359C 8009299C AC3FF47C */  sw    $ra, %lo(gMenuDelay)($at)
-/* 0935A0 800929A0 0C01E2AB */  jal   func_80078AAC
+/* 0935A0 800929A0 0C01E2AB */  jal   set_background_draw_function
 /* 0935A4 800929A4 00002025 */   move  $a0, $zero
 /* 0935A8 800929A8 3C01800E */  lui   $at, %hi(D_800E097C) # $at, 0x800e
 /* 0935AC 800929AC 0C030060 */  jal   func_800C0180

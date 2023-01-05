@@ -12,17 +12,15 @@ extern u32 __osBaseCounter;
 extern u32 __osViIntrCount;
 
 OSDevMgr __osViDevMgr = {0};
-
-#define OS_VIM_STACKSIZE 4096
-u8 viThreadStack[2960]; // Should be OS_VIM_STACKSIZE?
-
-s32 gThread30Stack;
+u64 gThread30Stack[0x400];
+u64 *gThread30StackPointer;
 
 extern OSThread viThread;
 extern OSMesgQueue viEventQueue;
 extern OSMesg viEventBuf[5];
 extern OSIoMesg viRetraceMsg;
 extern OSIoMesg viCounterMsg;
+extern u64 gViMgrStack[0x20];
 
 void viMgrMain(void *arg);
 
@@ -55,7 +53,7 @@ void osCreateViManager(OSPri pri) {
         __osViDevMgr.acsQueue = NULL;
         __osViDevMgr.dma = NULL;
         __osViDevMgr.edma = NULL;
-        osCreateThread(&viThread, 0, viMgrMain, &__osViDevMgr, &viThreadStack[OS_VIM_STACKSIZE], pri);
+        osCreateThread(&viThread, 0, viMgrMain, &__osViDevMgr, &gViMgrStack[0x20], pri);
         __osViInit();
         osStartThread(&viThread);
         __osRestoreInt(savedMask);
