@@ -309,6 +309,10 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
     s32 sp2C;
     Object_64* racer;
 
+    if (gHideHUD && get_race_start_timer() == 0) {
+        return;
+    }
+
     D_80126D08 = get_current_viewport();
     if (D_8012718A) {
         arg3 = get_racer_object_by_port(1 - D_80126D08);
@@ -1559,6 +1563,10 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     s32 temp_f6;
     s32 temp_s3;
     s32 temp;
+
+    if (gHideHUD && get_race_start_timer() == 0) {
+        return;
+    }
     
     func_800A0BD4(updateRate);
     

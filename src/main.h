@@ -143,6 +143,5 @@ extern u32 gFreeMem[12];
 #endif
 int puppyprintf(char *dst, const char *fmt, ...);
 void crash_screen_init(void);
-extern s32 gAntiAliasing;
 
 #endif

@@ -735,7 +735,8 @@ void thread3_main(UNUSED void *unused) {
     }
 }
 
-s32 gAntiAliasing = TRUE;
+u8 gAntiAliasing = TRUE;
+u8 gHideHUD = FALSE;
 s8 gScreenMode = 0;
 s8 gScreenPos[2] = {0, 0};
 
@@ -1142,6 +1143,17 @@ void ingame_logic_loop(s32 updateRate) {
     for (i = 0; i < get_active_player_count(); i++) {
         buttonHeldInputs |= get_buttons_held_from_player(i);
         buttonPressedInputs |= get_buttons_pressed_from_player(i);
+    }
+    
+    if (get_buttons_pressed_from_player(0) & L_TRIG && !(get_buttons_held_from_player(0) & U_JPAD)) {
+        s32 soundID;
+        gHideHUD ^= 1;
+        if (gHideHUD == 0) {
+            soundID = SOUND_TING_HIGH;
+        } else {
+            soundID = SOUND_TING_LOW;
+        }
+        play_sound_global(soundID, NULL);
     }
 #ifndef NO_ANTIPIRACY
     // Spam the start button, making the game unplayable because it's constantly paused.
