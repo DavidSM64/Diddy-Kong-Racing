@@ -35,54 +35,10 @@ enum NumberOfPlayers {
     FOUR_PLAYERS  = 3
 };
 
-extern s8  gCurrentDefaultVehicle;
-extern u8  D_800DD318;
-extern s32 gIsInRace;
-extern s32 gFunc80068158Checksum;
-extern s32 gFunc80068158Length;
-extern s16 D_800DD328;
-extern s16 D_800DD32C;
-
-extern s8 D_800DD330;
-
-extern s8  sAntiPiracyTriggered;
-extern s32 D_800DD378;
-extern s32 D_800DD37C;
-extern s32 gScreenStatus;
-extern s32 sControllerStatus;
-extern s32 D_800DD388;
-extern s8  gSkipGfxTask;
-extern s8  D_800DD390;
-extern s16 gLevelLoadTimer;
-extern s8  D_800DD398;
-extern s8  D_800DD39C;
-extern s8  D_800DD3A0;
-extern s32 D_800DD3A4;
-extern s32 D_800DD3A8;
-extern s32 D_800DD3AC;
-
-
-extern s8  gDrawFrameTimer;
-extern FadeTransition D_800DD3F4;
-extern FadeTransition D_800DD408;
-// Unused?
-extern FadeTransition D_800DD3FC;
-
-// Unused?
-extern char *D_800DD410[3];
-extern FadeTransition D_800DD41C;
-extern FadeTransition D_800DD424;
-extern u16 *gVideoCurrFramebuffer;
-extern s32 gVideoLastFramebuffer;
-extern s32 gVideoLastDepthBuffer;
-
-void dmacopy_doubleword(s32 videoLastFrameBuffer, s32 VideoCurrFrameBuffer, s32 size);
-
 s16 func_8006ABB4(s32 arg0);
 s32 func_8006B018(s8 arg0);
 s32 func_8006B054(s8 arg0);
 Vehicle get_map_default_vehicle(s32 mapId);
-// Returns bitfield with (1 << Vehicle) set for every available vehicle.
 s32 get_map_available_vehicles(s32 mapId);
 s8 func_8006B14C(s32 mapId);
 s8 func_8006B190(s32 mapId);

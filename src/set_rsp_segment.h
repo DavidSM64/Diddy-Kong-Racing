@@ -3,6 +3,6 @@
 
 #include "PR/gbi.h"
 
-void set_rsp_segment(Gfx **dlist, s32 segment, s32 base);
+void set_rsp_segment(Gfx **dlist, s32 segment, void *base);
 
 #endif

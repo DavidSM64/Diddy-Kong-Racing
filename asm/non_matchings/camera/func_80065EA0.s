@@ -74,7 +74,7 @@ glabel func_80065EA0
 /* 066BA8 80065FA8 3C0EB000 */  lui   $t6, %hi(D_B0000578) # $t6, 0xb000
 /* 066BAC 80065FAC 304C0003 */  andi  $t4, $v0, 3
 /* 066BB0 80065FB0 11800006 */  beqz  $t4, .L80065FCC
-/* 066BB4 80065FB4 3C108012 */   lui   $s0, %hi(D_80120EE0) # $s0, 0x8012
+/* 066BB4 80065FB4 3C108012 */   lui   $s0, %hi(gPerspectiveMatrixF) # $s0, 0x8012
 .L80065FB8:
 /* 066BB8 80065FB8 8C620000 */  lw    $v0, ($v1)
 /* 066BBC 80065FBC 00000000 */  nop   
@@ -86,7 +86,7 @@ glabel func_80065EA0
 /* 066BD0 80065FD0 34018965 */  li    $at, 0x8965
 /* 066BD4 80065FD4 31F8FFFF */  andi  $t8, $t7, 0xffff
 /* 066BD8 80065FD8 13010003 */  beq   $t8, $at, .L80065FE8
-/* 066BDC 80065FDC 26100EE0 */   addiu $s0, %lo(D_80120EE0) # addiu $s0, $s0, 0xee0
+/* 066BDC 80065FDC 26100EE0 */   addiu $s0, %lo(gPerspectiveMatrixF) # addiu $s0, $s0, 0xee0
 /* 066BE0 80065FE0 24190001 */  li    $t9, 1
 /* 066BE4 80065FE4 A0990000 */  sb    $t9, ($a0)
 .L80065FE8:
@@ -106,8 +106,8 @@ glabel func_80065EA0
 /* 066C1C 8006601C E7A60014 */  swc1  $f6, 0x14($sp)
 /* 066C20 80066020 0C033248 */  jal   guPerspectiveF
 /* 066C24 80066024 E7A80018 */   swc1  $f8, 0x18($sp)
-/* 066C28 80066028 3C058012 */  lui   $a1, %hi(D_80120FE0) # $a1, 0x8012
-/* 066C2C 8006602C 24A50FE0 */  addiu $a1, %lo(D_80120FE0) # addiu $a1, $a1, 0xfe0
+/* 066C28 80066028 3C058012 */  lui   $a1, %hi(gPerspectiveMatrixS) # $a1, 0x8012
+/* 066C2C 8006602C 24A50FE0 */  addiu $a1, %lo(gPerspectiveMatrixS) # addiu $a1, $a1, 0xfe0
 /* 066C30 80066030 0C01BE1C */  jal   f32_matrix_to_s16_matrix
 /* 066C34 80066034 02002025 */   move  $a0, $s0
 /* 066C38 80066038 3C014270 */  li    $at, 0x42700000 # 60.000000

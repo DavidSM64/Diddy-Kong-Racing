@@ -11,19 +11,17 @@
 #include "math_util.h"
 #include "weather.h"
 
-extern u32 osTvType;
-
 /************ .rodata ************/
 
-const char D_800E6F00[] = "Camera Error: Illegal mode!\n";
-const char D_800E6F20[] = "Camera Error: Illegal player no!\n";
-const char D_800E6F34[] = "cameraPushSprMtx: model stack overflow!!\n";
-const char D_800E6F70[] = "\nCam do 2D sprite called with NULL pointer!";
-const char D_800E6F9C[] = "CamDo2DSprite FrameNo Overflow !!!\n";
-const char D_800E6FC0[] = "cameraPushModelMtx: model stack overflow!!\n";
-const char D_800E6FEC[] = "camPushModelMtx: bsp stack overflow!!\n";
-const char D_800E7010[] = "camPopModelMtx: model stack negative overflow!!\n";
-const char D_800E7048[] = "camPopModelMtx: bsp stack negative overflow!!\n";
+UNUSED const char D_800E6F00[] = "Camera Error: Illegal mode!\n";
+UNUSED const char D_800E6F20[] = "Camera Error: Illegal player no!\n";
+UNUSED const char D_800E6F34[] = "cameraPushSprMtx: model stack overflow!!\n";
+UNUSED const char D_800E6F70[] = "\nCam do 2D sprite called with NULL pointer!";
+UNUSED const char D_800E6F9C[] = "CamDo2DSprite FrameNo Overflow !!!\n";
+UNUSED const char D_800E6FC0[] = "cameraPushModelMtx: model stack overflow!!\n";
+UNUSED const char D_800E6FEC[] = "camPushModelMtx: bsp stack overflow!!\n";
+UNUSED const char D_800E7010[] = "camPopModelMtx: model stack negative overflow!!\n";
+UNUSED const char D_800E7048[] = "camPopModelMtx: bsp stack negative overflow!!\n";
 
 /*********************************/
 
@@ -109,7 +107,7 @@ ObjectSegment gActiveCameraStack[8];
 s32 gNumberOfViewports;
 s32 gActiveCameraID;
 s32 gOjbectRenderStackCap;
-s32 D_80120CEC;
+UNUSED s32 D_80120CEC;
 ObjectTransform D_80120CF0;
 s32 D_80120D08;
 s32 D_80120D0C;
@@ -127,11 +125,11 @@ u16 perspNorm;
 Matrix *D_80120D70[6];
 MatrixS *D_80120D88[6];
 Matrix D_80120DA0[5];
-Matrix D_80120EE0; // Perspective matrix?
+Matrix gPerspectiveMatrixF;
 Matrix D_80120F20;
 Matrix D_80120F60;
 Matrix D_80120FA0;
-MatrixS D_80120FE0;
+MatrixS gPerspectiveMatrixS;
 MatrixS D_80121020;
 Matrix D_80121060;
 Matrix D_801210A0;
@@ -173,8 +171,8 @@ void func_80065EA0(void) {
     if ((D_B0000578 & 0xFFFF) != 0x8965) {
         gAntiPiracyViewport = TRUE;
     }
-    guPerspectiveF(D_80120EE0, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-    f32_matrix_to_s16_matrix(D_80120EE0, D_80120FE0);
+    guPerspectiveF(gPerspectiveMatrixF, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+    f32_matrix_to_s16_matrix(gPerspectiveMatrixF, gPerspectiveMatrixS);
     gCurCamFOV = CAMERA_DEFAULT_FOV;
 }
 #else
@@ -219,8 +217,8 @@ UNUSED f32 get_current_camera_fov(void) {
 void update_camera_fov(f32 camFieldOfView) {
     if (CAMERA_MIN_FOV < camFieldOfView && camFieldOfView < CAMERA_MAX_FOV && camFieldOfView != gCurCamFOV) {
         gCurCamFOV = camFieldOfView;
-        guPerspectiveF(D_80120EE0, &perspNorm, camFieldOfView, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-        f32_matrix_to_s16_matrix(&D_80120EE0, &D_80120FE0);
+        guPerspectiveF(gPerspectiveMatrixF, &perspNorm, camFieldOfView, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+        f32_matrix_to_s16_matrix(&gPerspectiveMatrixF, &gPerspectiveMatrixS);
     }
 }
 
@@ -228,8 +226,8 @@ void update_camera_fov(f32 camFieldOfView) {
  * Unused function that recalculates the perspective matrix.
  */
 UNUSED void calculate_camera_perspective(void) {
-    guPerspectiveF(D_80120EE0, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-    f32_matrix_to_s16_matrix(&D_80120EE0, &D_80120FE0);
+    guPerspectiveF(gPerspectiveMatrixF, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+    f32_matrix_to_s16_matrix(&gPerspectiveMatrixF, &gPerspectiveMatrixS);
 }
 
 UNUSED Matrix *func_80066204(void) {
@@ -863,7 +861,7 @@ void func_80067D3C(Gfx **dlist, UNUSED MatrixS **mats) {
     D_80120CF0.z_position = -gActiveCameraStack[gActiveCameraID].trans.z_position;
 
     object_transform_to_matrix_2(D_80120F60, &D_80120CF0);
-    f32_matrix_mult(&D_80120F60, &D_80120EE0, &D_80120F20);
+    f32_matrix_mult(&D_80120F60, &gPerspectiveMatrixF, &D_80120F20);
 
     D_80120CF0.y_rotation = -0x8000 - gActiveCameraStack[gActiveCameraID].trans.y_rotation;
     D_80120CF0.x_rotation = -(gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.half.unk38);
@@ -923,7 +921,7 @@ void set_ortho_matrix_view(Gfx **dlist, MatrixS **mtx) {
 
 void func_8006807C(Gfx **dlist, MatrixS **mtx) {
     object_transform_to_matrix_2(D_80121060, &D_800DD288);
-    f32_matrix_mult(&D_80121060, &D_80120EE0, &D_80120F20);
+    f32_matrix_mult(&D_80121060, &gPerspectiveMatrixF, &D_80120F20);
     object_transform_to_matrix_2((float (*)[4]) D_80120D70[0], &D_800DD2A0);
     f32_matrix_mult(D_80120D70[0], &D_80120F20, &D_80121060);
     f32_matrix_to_s16_matrix(&D_80121060, *mtx);
@@ -1285,7 +1283,7 @@ Matrix *func_80069DA4(void) {
 }
 
 MatrixS *func_80069DB0(void) {
-    return &D_80120FE0;
+    return &gPerspectiveMatrixS;
 }
 
 Matrix *func_80069DBC(void) {
@@ -1462,9 +1460,9 @@ u32 get_buttons_pressed_from_player(s32 player) {
 }
 
 /**
- * Unused function that returns the buttons that are no longer pressed in that frame.
+ * Returns the buttons that are no longer pressed in that frame.
  */
-UNUSED u16 get_buttons_released_from_player(s32 player) {
+u16 get_buttons_released_from_player(s32 player) {
     return gControllerButtonsReleased[sPlayerID[player]];
 }
 
