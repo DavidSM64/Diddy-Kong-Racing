@@ -120,25 +120,25 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of January 2, 2023, this is our current score:
+As of January 5, 2023, this is our current score:
 ```
  ==================================================================
                ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------ 48.44% Complete -------------------------
-                    # Decompiled functions: 1461
-                    # GLOBAL_ASM remaining: 377
-                    # NON_MATCHING functions: 12
+ ------------------------ 48.57% Complete -------------------------
+                    # Decompiled functions: 1463
+                    # GLOBAL_ASM remaining: 375
+                    # NON_MATCHING functions: 11
                  # NON_EQUIVALENT WIP functions: 64
  -------------------------- Game Status ---------------------------
-             Balloons: 23/47, Keys: 2/4, Trophies: 2/5
+             Balloons: 24/47, Keys: 3/4, Trophies: 2/5
                T.T. Amulets: 2/4, Wizpig Amulets: 2/4
  ------------------------------------------------------------------
-            We are racing in Crescent Island. (Lap 3/3)
+             We are racing in Pirate Lagoon. (Lap 1/3)
  ==================================================================
                ADVENTURE TWO (Cleanup & Documentation)
- ------------------------ 18.52% Complete -------------------------
-                    # Documented functions: 365
-                   # Undocumented remaining: 1473
+ ------------------------ 18.65% Complete -------------------------
+                    # Documented functions: 368
+                   # Undocumented remaining: 1470
  -------------------------- Game Status ---------------------------
              Balloons: 10/47, Keys: 1/4, Trophies: 0/5
                T.T. Amulets: 1/4, Wizpig Amulets: 0/4
