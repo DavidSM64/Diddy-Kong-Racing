@@ -35,16 +35,11 @@ s32 sLockupDelay = 0;
 
 /*******************************/
 
-/************ .bss ************/
-
-/******************************/
-
 extern OSMesgQueue D_80129790;
 extern OSMesg D_801297A8;
 extern OSMesgQueue D_801297E8;
 extern OSMesg D_801297C8;
 extern u64 gEPCStack[0x200];
-
 extern s32 D_80129FB0[3];
 
 void func_800B6E50(void) {
@@ -317,7 +312,7 @@ void render_epc_lock_up_display(void) {
             break;
         case EPC_PAGE_UNK04:
             offset = (sLockupPage - 4) * 128;
-            for (temp = (u16 *) D_80129BB0[offset], i = 0; i < 16; i++) {
+            for (temp = (u16 *) &D_80129BB0[offset], i = 0; i < 16; i++) {
                 render_printf("  ");
                 for(j = 0; j < 8; j++) {
                     render_printf("%04x ", temp[0]);
