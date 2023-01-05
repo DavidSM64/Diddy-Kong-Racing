@@ -12,7 +12,7 @@ extern OSDevMgr __osPiDevMgr;
 
 // bss variables
 OSThread piThread;
-u64 D_8012A9B0_2[0x20];
+u64 gPIMgrStack[0x20];
 OSMesgQueue piEventQueue;
 OSMesg piEventBuf[2];
 
@@ -41,7 +41,7 @@ void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgC
         __osPiDevMgr.dma = osPiRawStartDma;
         __osPiDevMgr.edma = osEPiRawStartDma;
 
-        osCreateThread(&piThread, 0, __osDevMgrMain, &__osPiDevMgr, &D_8012A9B0_2[0x20], pri);
+        osCreateThread(&piThread, 0, __osDevMgrMain, &__osPiDevMgr, &gPIMgrStack[0x20], pri);
         osStartThread(&piThread);
         __osRestoreInt(savedMask);
         if (oldPri != -1) {
