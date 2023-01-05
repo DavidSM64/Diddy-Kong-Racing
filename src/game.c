@@ -144,7 +144,7 @@ TriangleList *gGameCurrTriList;
 UNUSED s32 D_80121230[8];
 s8 D_80121250[16]; //Settings4C
 OSSched gMainSched; // 0x288 / 648 bytes
-u64 gSchedStack[0x400]; // osCreateSched passes gSPTaskNum as the stack, but it's really this.
+u64 gSchedStack[0x400];
 s32 gSPTaskNum;
 s32 sRenderContext;
 s32 D_801234F0;
