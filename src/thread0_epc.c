@@ -15,9 +15,9 @@
 
 /************ .rodata ************/
 
-const char D_800E8E70[] = "\nAssertion failed: '%s' in file %s, line %d\n";
-const char D_800E8EA0[] = "\nAssertion failed: '%s' in file %s, line %d\n";
-const char D_800E8ED0[] = ">fault< ";
+UNUSED const char D_800E8E70[] = "\nAssertion failed: '%s' in file %s, line %d\n";
+UNUSED const char D_800E8EA0[] = "\nAssertion failed: '%s' in file %s, line %d\n";
+UNUSED const char D_800E8ED0[] = ">fault< ";
 const char D_800E8EDC[] = "CORE";
 const char D_800E8EE4[4] = { 0, 0, 0, 0 };
 const char sCoreFileName1[] = "CORE";
@@ -43,6 +43,7 @@ extern OSMesgQueue D_80129790;
 extern OSMesg D_801297A8;
 extern OSMesgQueue D_801297E8;
 extern OSMesg D_801297C8;
+extern u64 gEPCStack[0x200];
 
 extern s32 D_80129FB0[3];
 
@@ -83,24 +84,19 @@ void func_800B6F30(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {}
 // thread0_Assert("source", "env.c", 373);
 void thread0_Assert(UNUSED char *message, UNUSED char *fileName, UNUSED s32 lineNumber) {}
 
-#ifdef NON_EQUIVALENT
+/**
+ * Start the exception program counter thread.
+*/
 void thread0_create(void) {
     s32 i;
 
-    // Almost matching, just have an issue with argument 4.
-    // The -O2 compiler is too smart. :(
-    // It's possible D_801295E0 is a struct containing both the thread and stack pointer
-    osCreateThread(&D_801295E0, 0, thread0_Main, NULL, &D_801295E0, OS_PRIORITY_MAX);
-
-    osStartThread(&D_801295E0);
-
+    osCreateThread(&gEPCThread, 0, thread0_Main, 0, &gEPCStack[0x200], OS_PRIORITY_MAX);
+    osStartThread(&gEPCThread);
     for (i = 0; i < 3; i++) {
         D_80129FB0[i] = -1;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/thread0_epc/thread0_create.s")
-#endif
+
 
 #ifdef NON_EQUIVALENT
 void thread0_Main(UNUSED void *unused) { // Has regalloc issues

@@ -1300,6 +1300,7 @@ s32 func_8002ACD4(f32 *arg0, f32 *arg1, f32 *arg2) {
 /**
  * Iterates through active waves on the track, then saves its rotation vector and height if found.
  * Returns zero if no waves are found, or if too high up.
+ * Two types exist: calm, which have no means of displacement, and wavy, which do.
 */
 s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
     s32 var_a0;

@@ -912,7 +912,7 @@ void init_game(void) {
         mode = 28;
     }
 
-    osCreateScheduler(&gMainSched, &gSPTaskNum, /*priority*/ 13, (u8) mode, 1);
+    osCreateScheduler(&gMainSched, &gSchedStack[0x400], /*priority*/ 13, (u8) mode, 1);
     D_800DD3A0 = FALSE;
     if (!func_8006EFB8()) {
         D_800DD3A0 = TRUE;
