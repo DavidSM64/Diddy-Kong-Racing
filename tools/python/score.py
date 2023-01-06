@@ -126,6 +126,9 @@ class ScoreFile:
             except Exception:
                 pass
     
+    def get_number_of_functions(self):
+        return len(self.functions)
+
     def get_number_of_documented_functions(self):
         count = 0
         for func in self.functions:
@@ -167,6 +170,8 @@ def main():
     totalNumberOfNonEquivalent = 0
     totalSizeOfDecompiledFunctions = 0
     totalSizeOfDocumentedFunctions = 0
+    ignoreNumberDocumentedFunctions = 0
+    ignoreSizeDocumentedFunctions = 0
     
     srcFilenames = FileUtil.get_filenames_from_directory_recursive(SRC_DIRECTORY, extensions=('.c'))
     for filename in srcFilenames:
@@ -176,6 +181,7 @@ def main():
                 skipThis = True
                 break
         if not skipThis:
+            # Get score properties of dkr functions.
             scoreFile = ScoreFile(SRC_DIRECTORY + '/' + filename)
             totalNumberOfDecompiledFunctions += len(scoreFile.functions)
             totalNumberOfGlobalAsms += scoreFile.numGlobalAsms
@@ -185,14 +191,17 @@ def main():
             totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
             totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
             scoreFiles.append(scoreFile)
+    # Get score properties of libultra functions.
     srcFilenames = FileUtil.get_filenames_from_directory_recursive(LIB_SRC_DIRECTORY, extensions=('.c'))
     for filename in srcFilenames:
         scoreFile = ScoreFile(LIB_SRC_DIRECTORY + '/' + filename)
         totalNumberOfDecompiledFunctions += len(scoreFile.functions)
         totalNumberOfGlobalAsms += scoreFile.numGlobalAsms
-        totalNumberOfDocumentedFunctions += scoreFile.get_number_of_documented_functions()
+        #totalNumberOfDocumentedFunctions += scoreFile.get_number_of_documented_functions()
+        ignoreNumberDocumentedFunctions += scoreFile.get_number_of_functions()
         totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
-        totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
+        #totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
+        ignoreSizeDocumentedFunctions += scoreFile.get_size_of_functions()
         scoreFiles.append(scoreFile)
     
     
@@ -202,10 +211,10 @@ def main():
             totalSizeOfDecompiledFunctions += MAP_FILE.functionSizes[asm_function]
     
     adventureOnePercentage = (totalSizeOfDecompiledFunctions / CODE_SIZE) * 100
-    adventureTwoPercentage = (totalSizeOfDocumentedFunctions / CODE_SIZE) * 100
+    adventureTwoPercentage = (totalSizeOfDocumentedFunctions / (CODE_SIZE - ignoreSizeDocumentedFunctions)) * 100
     
     scoreDisplay = ScoreDisplay()
-    print(scoreDisplay.getDisplay(adventureOnePercentage, adventureTwoPercentage, adventureSelect, totalNumberOfDecompiledFunctions, totalNumberOfGlobalAsms, totalNumberOfNonMatching, totalNumberOfNonEquivalent, totalNumberOfDocumentedFunctions, totalNumberOfFunctions - totalNumberOfDocumentedFunctions))
+    print(scoreDisplay.getDisplay(adventureOnePercentage, adventureTwoPercentage, adventureSelect, totalNumberOfDecompiledFunctions, totalNumberOfGlobalAsms, totalNumberOfNonMatching, totalNumberOfNonEquivalent, totalNumberOfDocumentedFunctions, (totalNumberOfFunctions - ignoreNumberDocumentedFunctions) - totalNumberOfDocumentedFunctions))
     
     if showTopFiles > 0:
         if showTopFiles > len(scoreFiles):

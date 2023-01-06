@@ -892,7 +892,7 @@ glabel func_80019808
 /* 01B0BC 8001A4BC 0480000C */  bltz  $a0, .L8001A4F0
 /* 01B0C0 8001A4C0 00000000 */   nop   
 /* 01B0C4 8001A4C4 AFA80080 */  sw    $t0, 0x80($sp)
-/* 01B0C8 8001A4C8 0C01997A */  jal   set_object_stack_pos
+/* 01B0C8 8001A4C8 0C01997A */  jal   set_active_camera
 /* 01B0CC 8001A4CC AFAA0044 */   sw    $t2, 0x44($sp)
 /* 01B0D0 8001A4D0 0C01A73F */  jal   get_active_camera_segment_no_cutscenes
 /* 01B0D4 8001A4D4 00000000 */   nop   

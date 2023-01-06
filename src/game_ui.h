@@ -296,7 +296,7 @@ void play_time_trial_end_message(s16 *playerID);
 void func_800A7484(u16 arg0, f32 arg1, s32 arg2);
 void func_800A74EC(u16 arg0, s32 arg1);
 void func_800A83B4(LevelModel *model);
-s8 get_multiplayer_hud_setting(void);
+s8 get_hud_setting(void);
 void func_800AB194(s32 arg0);
 void func_800AB1AC(s32 arg0);
 void func_800AB1C8(void);

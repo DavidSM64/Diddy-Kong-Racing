@@ -3349,7 +3349,7 @@ void obj_init_skycontrol(Object *obj, LevelObjectEntry_SkyControl *entry) {
 
 void obj_loop_skycontrol(Object *obj, UNUSED s32 updateRate) {
     if (obj->interactObj->distance < obj->unk7C.word) {
-        func_80028044(obj->action);
+        set_skydome_visbility(obj->action);
     }
 }
 

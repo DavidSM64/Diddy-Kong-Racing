@@ -139,7 +139,7 @@ s32 func_8007EF64(s16 arg0);
 void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 offset);
 
 // There might be a file boundary here.
-void func_8007EF80(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 arg3);
+void func_8007EF80(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 updateRate);
 void func_8007F1E8(unk8007F1E8 *arg0);
 void init_pulsating_light_data(PulsatingLightData *data);
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
@@ -157,7 +157,7 @@ void func_8007CA68(s32 arg0, s32 arg1, s32 *arg2, s32 *arg3, s32 *arg4); // Non 
 MemoryPoolSlot *func_8007C12C(s32 arg0, s32 arg1); // Non Matching
 void func_8007AC70(void); // Non Matching
 void func_8007BF34(Gfx **dlist, s32 arg1); // Non Matching
-void func_8007BA5C(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3); // Non Matching
+void load_blinking_lights_texture(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3); // Non Matching
 void build_tex_display_list(TextureHeader *tex, u8 *addr);
 
 #endif

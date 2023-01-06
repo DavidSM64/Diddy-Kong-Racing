@@ -1140,7 +1140,7 @@ void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 node
 s32 func_80074B1C(void) {
     //func_80074EB8 Makes extensive use out of 0x1100, and even does a * 6 to it.
     //func_80075000 Uses 0x1100 once as well.
-    //Another possibility for 0x1100, seems to be from func_8007BA5C which seems to do (0xF5101100 & 0xFFFF);
+    //Another possibility for 0x1100, seems to be from load_blinking_lights_texture which seems to do (0xF5101100 & 0xFFFF);
     int x = 0x1100;
     return (&x)[0] * 6 + 0x100;
 }

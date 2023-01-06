@@ -9,7 +9,7 @@ glabel func_8009ECF0
 /* 09F90C 8009ED0C 3C038012 */  lui   $v1, %hi(gHUDNumPlayers) # $v1, 0x8012
 /* 09F910 8009ED10 24636D0C */  addiu $v1, %lo(gHUDNumPlayers) # addiu $v1, $v1, 0x6d0c
 /* 09F914 8009ED14 AC620000 */  sw    $v0, ($v1)
-/* 09F918 8009ED18 0C01994B */  jal   set_active_viewports_and_object_stack_cap
+/* 09F918 8009ED18 0C01994B */  jal   set_active_viewports_and_max
 /* 09F91C 8009ED1C 00402025 */   move  $a0, $v0
 /* 09F920 8009ED20 3C018012 */  lui   $at, %hi(gNumActivePlayers) # $at, 0x8012
 /* 09F924 8009ED24 0C01BAA4 */  jal   get_settings

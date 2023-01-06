@@ -137,7 +137,7 @@ u8 D_800E2794[4][4] = {
     {2, 2, 2, 2}
 };
 
-s8 gHudMultiplayerUIToggle[4] = {
+s8 gHudToggleSettings[4] = {
     1, 1, 1, 1
 };
 
@@ -364,8 +364,8 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         play_sound_global((SOUND_TING_HIGHEST - (D_800E2794[gHUDNumPlayers][racer->racer.playerIndex] == 0)), NULL);
                     }
                     if (get_buttons_pressed_from_player(D_80126D10) & R_CBUTTONS && racer->racer.raceFinished == FALSE && D_80126D34 && D_80126CD0 == 0) {
-                        gHudMultiplayerUIToggle[gHUDNumPlayers] = 1 - gHudMultiplayerUIToggle[gHUDNumPlayers];
-                        if (gHudMultiplayerUIToggle[gHUDNumPlayers] == 0) {
+                        gHudToggleSettings[gHUDNumPlayers] = 1 - gHudToggleSettings[gHUDNumPlayers];
+                        if (gHudToggleSettings[gHUDNumPlayers] == 0) {
                             play_sound_global(SOUND_TING_LOW, NULL);
                         } else {
                             play_sound_global(SOUND_TING_HIGH, NULL);
@@ -764,7 +764,7 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
                         D_80126CDC->unk4C4 += ((vel - D_80126CDC->unk4C4) / 8);
                     }
                 }
-                if (gHudMultiplayerUIToggle[gHUDNumPlayers] == 0) {
+                if (gHudToggleSettings[gHUDNumPlayers] == 0) {
                     if (D_80126CD3 & 2) {
                         opacity = 255.0f - ((D_80126CD0 * 255.0f) / D_8012718B);
                     } else {
@@ -1520,11 +1520,14 @@ void func_800A83B4(LevelModel *model) {
 }
 
 /**
- * Return's the HUD toggle setting of each player.
- * This shows either the lap count, banana count or neither.
+ * Returns the hud settings value for the mumber of active players.
+ * For player 1, it's switching between the minimap and speedometre.
+ * For 2 players, it's for toggling the minimap
+ * For 3 players, it's for toggling between the minimap and a spectator cam in viewport 4.
+ * For 4 players, it's for toggling the minimap.
 */
-s8 get_multiplayer_hud_setting(void) {
-    return gHudMultiplayerUIToggle[gHUDNumPlayers];
+s8 get_hud_setting(void) {
+    return gHudToggleSettings[gHUDNumPlayers];
 }
 
 /**
@@ -1613,7 +1616,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     gHUDCurrMatrix = *mtx;
     gHUDCurrVertex = *vtx;
     if (gHudLevelHeader->race_type == RACETYPE_CHALLENGE_EGGS) {
-        if (gNumActivePlayers == 2 && gHudMultiplayerUIToggle[gHUDNumPlayers] == 0) {
+        if (gNumActivePlayers == 2 && gHudToggleSettings[gHUDNumPlayers] == 0) {
             func_800A14F0(NULL, updateRate);
             reset_render_settings(&gHUDCurrDisplayList);
         } else {
@@ -1650,7 +1653,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
         }
     } else if (gHudLevelHeader->race_type == RACETYPE_CHALLENGE_BATTLE) {
         // Show life counter and icons in 2 player.
-        if (gNumActivePlayers == 2 && gHudMultiplayerUIToggle[gHUDNumPlayers] == 0) {
+        if (gNumActivePlayers == 2 && gHudToggleSettings[gHUDNumPlayers] == 0) {
             func_80068508(TRUE);
             func_8007BF1C(FALSE);
             set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
@@ -1732,7 +1735,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
             }
         }
     } else if (gHudLevelHeader->race_type == RACETYPE_CHALLENGE_BANANAS) {
-        if (gNumActivePlayers == 2 && gHudMultiplayerUIToggle[gHUDNumPlayers] == 0) {
+        if (gNumActivePlayers == 2 && gHudToggleSettings[gHUDNumPlayers] == 0) {
             temp_s0_2 = D_80126CDC->unk64C;
             temp_s1_2 = D_80126CDC->unk650;
             temp_s3 = D_80126CDC->unk40C;
@@ -1804,7 +1807,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
         }
         if((gHUDNumPlayers == THREE_PLAYERS && is_postrace_viewport_active()) || check_if_showing_cutscene_camera() || sp113) {
             goto test;
-        } else if(gHudMultiplayerUIToggle[gHUDNumPlayers] != 1) {
+        } else if(gHudToggleSettings[gHUDNumPlayers] != 1) {
         test:
             return;
         } else {

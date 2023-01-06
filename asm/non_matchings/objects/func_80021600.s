@@ -270,7 +270,7 @@ glabel func_80021600
 /* 022600 80021A00 00000000 */  nop   
 /* 022604 80021A04 81C40030 */  lb    $a0, 0x30($t6)
 /* 022608 80021A08 AFA9005C */  sw    $t1, 0x5c($sp)
-/* 02260C 80021A0C 0C01997A */  jal   set_object_stack_pos
+/* 02260C 80021A0C 0C01997A */  jal   set_active_camera
 /* 022610 80021A10 AFA6004C */   sw    $a2, 0x4c($sp)
 /* 022614 80021A14 0C01A73F */  jal   get_active_camera_segment_no_cutscenes
 /* 022618 80021A18 00000000 */   nop   
@@ -398,7 +398,7 @@ glabel func_80021600
 /* 0227F0 80021BF0 81640030 */  lb    $a0, 0x30($t3)
 /* 0227F4 80021BF4 AFA9005C */  sw    $t1, 0x5c($sp)
 /* 0227F8 80021BF8 AFB80074 */  sw    $t8, 0x74($sp)
-/* 0227FC 80021BFC 0C01997A */  jal   set_object_stack_pos
+/* 0227FC 80021BFC 0C01997A */  jal   set_active_camera
 /* 022800 80021C00 AFA50150 */   sw    $a1, 0x150($sp)
 /* 022804 80021C04 0C01A73F */  jal   get_active_camera_segment_no_cutscenes
 /* 022808 80021C08 00000000 */   nop   

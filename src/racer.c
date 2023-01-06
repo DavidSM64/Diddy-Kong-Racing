@@ -2146,7 +2146,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     tempRacer->unk220 = 0;
     tempRacer->unk21C = 0;
     if (tempRacer->playerIndex != PLAYER_COMPUTER && !D_8011D582) {
-        set_object_stack_pos(player);
+        set_active_camera(player);
         gCameraObject = (ObjectCamera *) get_active_camera_segment_no_cutscenes();
         gCameraObject->trans.z_rotation = 0;
         gCameraObject->trans.x_rotation = 0x400;
@@ -2344,7 +2344,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                 tempRacer->unk1B2 = 0;
             }
         }
-        set_object_stack_pos(tempRacer->playerIndex);
+        set_active_camera(tempRacer->playerIndex);
         gCameraObject = (ObjectCamera *) get_active_camera_segment_no_cutscenes();
         tempRacer->miscAnimCounter++; //!@Delta
         gCurrentPlayerIndex = tempRacer->playerIndex;

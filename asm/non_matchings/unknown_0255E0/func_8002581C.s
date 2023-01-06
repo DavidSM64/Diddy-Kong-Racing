@@ -44,9 +44,9 @@ glabel func_8002581C
 /* 0264B0 800258B0 AD0B0004 */   sw    $t3, 4($t0)
 /* 0264B4 800258B4 3C018012 */  lui   $at, %hi(D_8011D49C) # $at, 0x8012
 /* 0264B8 800258B8 A420D49C */  sh    $zero, %lo(D_8011D49C)($at)
-/* 0264BC 800258BC 3C108012 */  lui   $s0, %hi(D_8011B0B0) # $s0, 0x8012
+/* 0264BC 800258BC 3C108012 */  lui   $s0, %hi(gSceneActiveCamera) # $s0, 0x8012
 /* 0264C0 800258C0 3C018012 */  lui   $at, %hi(D_8011D49E) # $at, 0x8012
-/* 0264C4 800258C4 2610B0B0 */  addiu $s0, %lo(D_8011B0B0) # addiu $s0, $s0, -0x4f50
+/* 0264C4 800258C4 2610B0B0 */  addiu $s0, %lo(gSceneActiveCamera) # addiu $s0, $s0, -0x4f50
 /* 0264C8 800258C8 A420D49E */  sh    $zero, %lo(D_8011D49E)($at)
 /* 0264CC 800258CC 8E0C0000 */  lw    $t4, ($s0)
 /* 0264D0 800258D0 00000000 */  nop   
