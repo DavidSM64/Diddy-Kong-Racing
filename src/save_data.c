@@ -823,7 +823,7 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     func_800738A4(arg1, timeData + 4);
     ret = get_file_extension(controllerIndex, 4, (char *)&fileExt);
     if (ret == CONTROLLER_PAK_GOOD) {
-        ret = write_controller_pak_file(controllerIndex, -1, (char *)sDKRacingTimes4, (char *)&fileExt, timeData, fileSize);
+        ret = write_controller_pak_file(controllerIndex, -1, (char *) sDKRacingTimes4, (char *) &fileExt, timeData, fileSize);
     }
     free_from_memory_pool(timeData);
     if (ret != CONTROLLER_PAK_GOOD) {
