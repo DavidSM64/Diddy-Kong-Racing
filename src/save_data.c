@@ -779,7 +779,7 @@ s32 read_time_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
         return (controllerIndex << 30) | status;
     }
 
-    status = get_file_number(controllerIndex, (char *)sDKRacingTimes3, fileExt, &fileNumber);
+    status = get_file_number(controllerIndex, (char *) sDKRacingTimes3, fileExt, &fileNumber);
     if (status == CONTROLLER_PAK_GOOD) {
         status = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (fileSize == 0) {
