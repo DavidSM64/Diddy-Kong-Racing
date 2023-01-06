@@ -8,10 +8,6 @@
 #include "video.h"
 #include "main.h"
 
-/************ .rodata ************/
-
-/*********************************/
-
 /************ .bss ************/
 
 MemoryPool gMemoryPools[4];
@@ -22,7 +18,7 @@ MemoryPool gMemoryPools[4];
 #endif
 
 s32 gNumberOfMemoryPools;
-s32 D_801235C4;
+UNUSED s32 D_801235C4;
 FreeQueueSlot gFreeQueue[256];
 s32 gFreeQueueCount;
 s32 gFreeQueueState;

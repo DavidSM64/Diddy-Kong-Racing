@@ -21,7 +21,7 @@ s32 gLeoFound = FALSE;
 s32 __osLeoInterrupt(void);
 
 extern s32 osViClock; //This is defined in another file somehow
-extern s32 gThread30Stack; //TODO: This should be __osFinalrom. Is this reused?
+extern u64 *gThread30StackPointer; //TODO: This should be __osFinalrom. Is this reused?
 //u32 __osFinalrom;
 void osInitialize() {
    u32 pifdata;
@@ -29,7 +29,7 @@ void osInitialize() {
    u32 leostatus;
    u32 pistatus;
    //__osFinalrom = TRUE;
-   gThread30Stack = TRUE; //TODO: This should be __osFinalrom. Is this reused?
+   gThread30StackPointer = (u64 *) TRUE; //TODO: This should be __osFinalrom. Is this reused?
    __osSetSR(__osGetSR() | SR_CU1);    //enable fpu
    __osSetFpcCsr(FPCSR_FS | FPCSR_EV); //flush denorm to zero, enable invalid operation
 

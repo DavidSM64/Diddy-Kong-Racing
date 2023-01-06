@@ -308,7 +308,7 @@ extern s32 D_80127CC8;
 extern s32 D_80127CB4;
 extern s16 D_80127CB0;
 extern s16 D_80127CB2;
-extern OSThread D_801295E0;
+extern OSThread gEPCThread;
 
 extern ParticleBehavior **gParticleBehavioursAssetTable;
 extern s32 gParticleBehavioursAssetTableCount;

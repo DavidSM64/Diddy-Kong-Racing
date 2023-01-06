@@ -8,6 +8,7 @@
 #include "math_util.h"
 #include "game.h"
 #include "main.h"
+#include "unknown_0255E0.h"
 
 /************ .data ************/
 
@@ -1262,7 +1263,10 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
     }
 }
 
-void func_8007BA5C(Gfx **dlist, TextureHeader *texture_list, u32 flags, s32 texture_index) {
+/**
+ * Loads the texture and render settings for the blinking lights seen in Spaceport Alpha.
+*/
+void load_blinking_lights_texture(Gfx **dlist, TextureHeader *texture_list, u32 flags, s32 texture_index) {
     u16 *mblock;
     u16 *tblock;
     if ((texture_index != 0) && (texture_index < (texture_list->numOfTextures * 256))) {
@@ -1481,70 +1485,70 @@ s32 func_8007EF64(s16 arg0) {
 
 // There might be a file boundary here.
 
-void func_8007EF80(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 arg3) {
+void func_8007EF80(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 updateRate) {
     s32 bit23Set;
     s32 bit25Set;
     s32 bit26Set;
     s32 phi_a0;
 
-    bit23Set = *triangleBatchInfoFlags & 0x800000;
-    bit26Set = *triangleBatchInfoFlags & 0x04000000;
-    bit25Set = *triangleBatchInfoFlags & 0x02000000;
+    bit23Set = *triangleBatchInfoFlags & BATCH_FLAGS_UNK00800000;
+    bit26Set = *triangleBatchInfoFlags & BATCH_FLAGS_UNK04000000;
+    bit25Set = *triangleBatchInfoFlags & BATCH_FLAGS_UNK02000000;
     if (bit23Set) {
         if (!bit25Set) {
-            if (get_random_number_from_range(0, 1000) >= 986) {
-                *triangleBatchInfoFlags &= ~0x4000000;
-                *triangleBatchInfoFlags |= 0x02000000;
+            if (get_random_number_from_range(0, 1000) > 985) {
+                *triangleBatchInfoFlags &= ~BATCH_FLAGS_UNK04000000;
+                *triangleBatchInfoFlags |= BATCH_FLAGS_UNK02000000;
             }
         } else if (!bit26Set) {
-            *arg2 = *arg2 + (texture->frameAdvanceDelay * arg3);
+            *arg2 = *arg2 + (texture->frameAdvanceDelay * updateRate);
             if (*arg2 >= texture->numOfTextures) {
                 *arg2 = ((texture->numOfTextures * 2) - *arg2) - 1;
                 if (*arg2 < 0) {
                     *arg2 = 0;
-                    *triangleBatchInfoFlags &= ~(0x2000000 | 0x4000000);
+                    *triangleBatchInfoFlags &= ~(BATCH_FLAGS_UNK02000000 | BATCH_FLAGS_UNK04000000);
                     return;
                 }
-                *triangleBatchInfoFlags |= 0x04000000;
+                *triangleBatchInfoFlags |= BATCH_FLAGS_UNK04000000;
             }
         } else {
-            *arg2 = *arg2 - (texture->frameAdvanceDelay * arg3);
+            *arg2 = *arg2 - (texture->frameAdvanceDelay * updateRate);
             if (*arg2 < 0) {
                 *arg2 = 0;
-                *triangleBatchInfoFlags &= ~(0x2000000 | 0x4000000);
+                *triangleBatchInfoFlags &= ~(BATCH_FLAGS_UNK02000000 | BATCH_FLAGS_UNK04000000);
             }
         }
     } else {
         if (bit25Set) {
             if (!bit26Set) {
-                *arg2 += texture->frameAdvanceDelay * arg3;
+                *arg2 += texture->frameAdvanceDelay * updateRate;
             } else {
-                *arg2 -= texture->frameAdvanceDelay * arg3;
+                *arg2 -= texture->frameAdvanceDelay * updateRate;
             }
             do {
                 phi_a0 = 0;
                 if (*arg2 < 0) {
                     *arg2 = -*arg2;
-                    *triangleBatchInfoFlags &= ~0x4000000;
+                    *triangleBatchInfoFlags &= ~BATCH_FLAGS_UNK04000000;
                     phi_a0 = 1;
                 }
                 if (*arg2 >= texture->numOfTextures) {
                     *arg2 = ((texture->numOfTextures * 2) - *arg2) - 1;
-                    *triangleBatchInfoFlags |= 0x04000000;
+                    *triangleBatchInfoFlags |= BATCH_FLAGS_UNK04000000;
                     phi_a0 = 1;
                 }
             } while (phi_a0 != 0);
             return;
         }
         if (!bit26Set) {
-            *arg2 = *arg2 + (texture->frameAdvanceDelay * arg3);
+            *arg2 = *arg2 + (texture->frameAdvanceDelay * updateRate);
             if (*arg2 >= texture->numOfTextures) {
                 do {
                     *arg2 -= texture->numOfTextures;
                 } while (*arg2 >= texture->numOfTextures);
             }
         } else {
-            *arg2 = *arg2 - (texture->frameAdvanceDelay * arg3);
+            *arg2 = *arg2 - (texture->frameAdvanceDelay * updateRate);
             if (*arg2 < 0) {
                 do {
                     *arg2 += texture->numOfTextures;

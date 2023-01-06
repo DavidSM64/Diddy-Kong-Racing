@@ -25,18 +25,18 @@ s32 D_800DE48C = 0;
 
 /************ .rodata ************/
 
-const char D_800E7630[] = "DKRACING-ADV";
-const char D_800E7640[] = "DKRACING-ADV";
-const char D_800E7650[] = "DKRACING-TIMES";
-const char D_800E7660[] = "DKRACING-TIMES";
-const char D_800E7670[] = "DKRACING-ADV";
-const char D_800E7680[] = "DKRACING-ADV";
-const char D_800E7690[] = "DKRACING-TIMES";
-const char D_800E76A0[] = "DKRACING-TIMES";
+// File Names
+const char sDKRacingAdv1[] = "DKRACING-ADV";
+const char sDKRacingAdv2[] = "DKRACING-ADV";
+const char sDKRacingTimes1[] = "DKRACING-TIMES";
+const char sDKRacingTimes2[] = "DKRACING-TIMES";
+const char sDKRacingAdv3[] = "DKRACING-ADV";
+const char sDKRacingAdv4[] = "DKRACING-ADV";
+const char sDKRacingTimes3[] = "DKRACING-TIMES";
+const char sDKRacingTimes4[] = "DKRACING-TIMES";
 
-const char D_800E773C[] = "DKRACING-GHOSTS"; // Used in func_80074B34
-const u8 D_800E774C[4] = { 0, 0, 0, 0 };     // Used in func_80074B34, but I'm confused to what this is for.
-const char D_800E7750[] = "warning: corrupt ghost\n";
+const char sDKRacingGhosts[] = "DKRACING-GHOSTS";
+const char sDKRacingGhostFileExt[] = "";
 
 /*********************************/
 
@@ -484,7 +484,7 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         D_801241F0 = 0;
         D_801241F4 = 0;
         for (i = 2, sum = 5; i < 192; i++) {
-            sum += (s16) D_801241EC[i];
+            sum += D_801241EC[i];
         }
         sum -= func_80072C54(16);
         if (sum == 0) {
@@ -512,7 +512,6 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 void func_800738A4(Settings *settings, u8 *saveData) {
     s16 availableVehicles;
     s32 levelCount;
@@ -521,85 +520,80 @@ void func_800738A4(Settings *settings, u8 *saveData) {
     s32 vehicleCount;
     s16 sum;
 
-    // Fakematch?
-    if (1) {
-        get_number_of_levels_and_worlds(&levelCount, &worldCount);
-        D_801241EC = saveData;
-        D_801241F0 = 0;
-        D_801241F4 = 128;
-        func_80072E28(16, 0);
-        for (vehicleCount = 0, i = 0; i < levelCount; i++) {
-            if (func_8006B14C(i) == 0) {
-                availableVehicles = get_map_available_vehicles(i);
-                // Car Available
-                if (availableVehicles & 1) {
-                    func_80072E28(16, settings->flapTimesPtr[0][i]);
-                    func_80072E28(16, settings->flapInitialsPtr[0][i]);
-                    vehicleCount++;
-                }
-                // Hovercraft Available
-                if (availableVehicles & 2) {
-                    func_80072E28(16, settings->flapTimesPtr[1][i]);
-                    func_80072E28(16, settings->flapInitialsPtr[1][i]);
-                    vehicleCount++;
-                }
-                // Plane Available
-                if (availableVehicles & 4) {
-                    func_80072E28(16, settings->flapTimesPtr[2][i]);
-                    func_80072E28(16, settings->flapInitialsPtr[2][i]);
-                    vehicleCount++;
-                }
-                // How do we make the `b` instruction appear?
-                if (vehicleCount < 48) {
-                    continue;
-                } else {
-                    break;
-                }
+    get_number_of_levels_and_worlds(&levelCount, &worldCount);
+    D_801241EC = saveData;
+    D_801241F0 = 0;
+    D_801241F4 = 128;
+    func_80072E28(16, 0);
+    for (vehicleCount = 0, i = 0; i < levelCount; i++) {
+        if (func_8006B14C(i) == 0) {
+            availableVehicles = get_map_available_vehicles(i);
+            // Car Available
+            if (availableVehicles & 1) {
+                func_80072E28(16, settings->flapTimesPtr[0][i]);
+                func_80072E28(16, settings->flapInitialsPtr[0][i]);
+                vehicleCount++;
+            }
+            // Hovercraft Available
+            if (availableVehicles & 2) {
+                func_80072E28(16, settings->flapTimesPtr[1][i]);
+                func_80072E28(16, settings->flapInitialsPtr[1][i]);
+                vehicleCount++;
+            }
+            // Plane Available
+            if (availableVehicles & 4) {
+                func_80072E28(16, settings->flapTimesPtr[2][i]);
+                func_80072E28(16, settings->flapInitialsPtr[2][i]);
+                vehicleCount++;
+            }
+            if (vehicleCount >= 48) {
+                vehicleCount = 0; // Fakematch
+                break;
             }
         }
-        D_801241EC = saveData;
-        D_801241F0 = 0;
-        D_801241F4 = 128;
-        for (i = 2, sum = 5; i < 192; i++) {
-            sum += (s16) D_801241EC[i];
-        }
-        func_80072E28(16, sum);
-        D_801241EC = saveData + 192;
-        D_801241F0 = 0;
-        D_801241F4 = 128;
-        func_80072E28(16, 0);
-        for (i = 0; i < levelCount; i++) {
-            if (func_8006B14C(i) == 0) {
-                availableVehicles = get_map_available_vehicles(i);
-                // Car Available
-                if (availableVehicles & 1) {
-                    func_80072E28(16, settings->courseTimesPtr[0][i]);
-                    func_80072E28(16, settings->courseInitialsPtr[0][i]);
-                }
-                // Hovercraft Available
-                if (availableVehicles & 2) {
-                    func_80072E28(16, settings->courseTimesPtr[1][i]);
-                    func_80072E28(16, settings->courseInitialsPtr[1][i]);
-                }
-                // Plane Available
-                if (availableVehicles & 4) {
-                    func_80072E28(16, settings->courseTimesPtr[2][i]);
-                    func_80072E28(16, settings->courseInitialsPtr[2][i]);
-                }
-            }
-        }
-        D_801241EC = saveData + 192;
-        D_801241F0 = 0;
-        D_801241F4 = 128;
     }
+
+    if (vehicleCount) { } // Fakematch
+
+    D_801241EC = saveData;
+    D_801241F0 = 0;
+    D_801241F4 = 128;
+    for (i = 2, sum = 5; i < 192; i++) {
+        sum += D_801241EC[i];
+    }
+    func_80072E28(16, sum);
+    D_801241EC = saveData + 192;
+    D_801241F0 = 0;
+    D_801241F4 = 128;
+    func_80072E28(16, 0);
+    for (i = 0; i < levelCount; i++) {
+        if (func_8006B14C(i) == 0) {
+            availableVehicles = get_map_available_vehicles(i);
+            // Car Available
+            if (availableVehicles & 1) {
+                func_80072E28(16, settings->courseTimesPtr[0][i]);
+                func_80072E28(16, settings->courseInitialsPtr[0][i]);
+            }
+            // Hovercraft Available
+            if (availableVehicles & 2) {
+                func_80072E28(16, settings->courseTimesPtr[1][i]);
+                func_80072E28(16, settings->courseInitialsPtr[1][i]);
+            }
+            // Plane Available
+            if (availableVehicles & 4) {
+                func_80072E28(16, settings->courseTimesPtr[2][i]);
+                func_80072E28(16, settings->courseInitialsPtr[2][i]);
+            }
+        }
+    }
+    D_801241EC = saveData + 192;
+    D_801241F0 = 0;
+    D_801241F4 = 128;
     for (i = 2, sum = 5; i < 192; i++) {
         sum += D_801241EC[i];
     }
     func_80072E28(16, sum);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/save_data/func_800738A4.s")
-#endif
 
 s32 get_game_data_file_size(void) {
     return 256;
@@ -629,10 +623,10 @@ SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileE
                 continue;
             }
             if (fileType == 3) {
-                if((func_800CE050((u8 *) fileNames[fileNum], (char *)D_800E7630, strlen((char *)D_800E7640)) != 0)) {
+                if((func_800CE050((u8 *) fileNames[fileNum], (char *) sDKRacingAdv1, strlen((char *) sDKRacingAdv2)) != 0)) {
                     continue;
                 }
-            } else if((func_800CE050((u8 *) fileNames[fileNum], (char *)D_800E7650, strlen((char *)D_800E7660)) != 0))  {
+            } else if((func_800CE050((u8 *) fileNames[fileNum], (char *) sDKRacingTimes1, strlen((char *) sDKRacingTimes2)) != 0))  {
                 continue;
             }
 
@@ -673,8 +667,7 @@ s32 read_game_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
         start_reading_controller_data(controllerIndex);
         return (controllerIndex << 30) | ret;
     }
-    //D_800E7670 = "DKRACING-ADV"
-    ret = get_file_number(controllerIndex, (char *)D_800E7670, fileExt, &fileNumber);
+    ret = get_file_number(controllerIndex, (char *) sDKRacingAdv3, fileExt, &fileNumber);
     if (ret == CONTROLLER_PAK_GOOD) {
         ret = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (fileSize == 0) {
@@ -719,8 +712,7 @@ s32 write_game_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     func_800732E8(arg1, gameData + 4);
     ret = get_file_extension(controllerIndex, 3, (char *)&fileExt);
     if (ret == CONTROLLER_PAK_GOOD) {
-        // D_800E7680 = DKRACING-ADV
-        ret = write_controller_pak_file(controllerIndex, -1, (char *) D_800E7680, (char *)&fileExt, gameData, fileSize);
+        ret = write_controller_pak_file(controllerIndex, -1, (char *) sDKRacingAdv4, (char *) &fileExt, gameData, fileSize);
     }
     free_from_memory_pool(gameData);
     if (ret != CONTROLLER_PAK_GOOD) {
@@ -742,8 +734,7 @@ s32 read_time_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
         return (controllerIndex << 30) | status;
     }
 
-    //D_800E7690 = DKRACING-TIMES
-    status = get_file_number(controllerIndex, (char *)D_800E7690, fileExt, &fileNumber);
+    status = get_file_number(controllerIndex, (char *) sDKRacingTimes3, fileExt, &fileNumber);
     if (status == CONTROLLER_PAK_GOOD) {
         status = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (fileSize == 0) {
@@ -786,8 +777,7 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     func_800738A4(arg1, timeData + 4);
     ret = get_file_extension(controllerIndex, 4, (char *)&fileExt);
     if (ret == CONTROLLER_PAK_GOOD) {
-        //D_800E76A0 = DKRACING-TIMES
-        ret = write_controller_pak_file(controllerIndex, -1, (char *)D_800E76A0, (char *)&fileExt, timeData, fileSize);
+        ret = write_controller_pak_file(controllerIndex, -1, (char *) sDKRacingTimes4, (char *) &fileExt, timeData, fileSize);
     }
     free_from_memory_pool(timeData);
     if (ret != CONTROLLER_PAK_GOOD) {
@@ -1104,7 +1094,7 @@ void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 node
 s32 func_80074B1C(void) {
     //func_80074EB8 Makes extensive use out of 0x1100, and even does a * 6 to it.
     //func_80075000 Uses 0x1100 once as well.
-    //Another possibility for 0x1100, seems to be from func_8007BA5C which seems to do (0xF5101100 & 0xFFFF);
+    //Another possibility for 0x1100, seems to be from load_blinking_lights_texture which seems to do (0xF5101100 & 0xFFFF);
     int x = 0x1100;
     return (&x)[0] * 6 + 0x100;
 }
@@ -1136,9 +1126,7 @@ s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 *ghostCha
         *ghostTime = -1;
         *ghostCharacterId = -1;
     }
-    //D_800E773C = "DKRACING-GHOSTS"
-    //D_800E774C = ""
-    ret = get_file_number(controllerIndex, (char *) D_800E773C, (char *) D_800E774C, &fileNumber);
+    ret = get_file_number(controllerIndex, (char *) sDKRacingGhosts, (char *) sDKRacingGhostFileExt, &fileNumber);
     if (ret == CONTROLLER_PAK_GOOD) {
         fileData = allocate_from_main_pool_safe(GHSS_FILE_SIZE, COLOUR_TAG_BLACK);
         if (!(pfs[controllerIndex].status & PFS_INITIALIZED)) {
@@ -1228,10 +1216,6 @@ loop_10:
 GLOBAL_ASM("asm/non_matchings/save_data/func_80074B34.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/save_data/func_80074EB8.s")
-GLOBAL_ASM("asm/non_matchings/save_data/func_80075000.s")
-GLOBAL_ASM("asm/non_matchings/save_data/func_800753D8.s")
-
 typedef struct GhostHeaderAltUnk0 {
   u8 levelID;
   u8 vehicleID; // 0 = Car, 1 = Hovercraft, 2 = Plane
@@ -1251,6 +1235,222 @@ typedef struct GhostHeaderAlt {
       s16 unk2;
     };
 } GhostHeaderAlt;
+
+typedef struct GhostDataData {
+    s16 unk0;
+    s16 unk2;
+    u8 unk4;
+    u8 unk5;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+    u8 padB[10];
+    s16 unk16;
+    s16 unk18;
+    s16 unk1A;
+} GhostDataData;
+
+typedef struct GhostData {
+    /* 0x00 */ s32 headerId;
+    union {
+    /* 0x04 */ GhostHeader *ghostHeader;
+    /* 0x04 */ GhostDataData *ghostData;
+    };
+    /* 0x08 */ u8 unk8_pad[0x14];
+    /* 0x1C */ u8 unk1C;
+    /* 0x1E */ s16 unk1E;
+} GhostData;
+
+GLOBAL_ASM("asm/non_matchings/save_data/func_80074EB8.s")
+
+#ifdef NON_EQUIVALENT
+s32 func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, GhostHeader *ghostData) {
+    GhostHeaderAlt *sp70;
+    s32 sp58;
+    s32 fileSize;
+    s32 fileNumber;
+    s32 ret;
+    s32 ghostIndex;
+    s32 i;
+    GhostHeader *ghostFileData;
+    GhostHeaderAlt *ghostFileDataAlt;
+    GhostData *fileData;
+    GhostData *fileDataToWrite;
+
+    ret = get_si_device_status(controllerIndex);
+    if (ret != CONTROLLER_PAK_GOOD) {
+        start_reading_controller_data(controllerIndex);
+        return ret;
+    }
+    ret = get_file_number(controllerIndex, "DKRACING-GHOSTS", "", &fileNumber);
+    if (ret == CONTROLLER_PAK_CHANGED) {
+        start_reading_controller_data(controllerIndex);
+        return func_80074EB8(controllerIndex, levelId, vehicleId, ghostCharacterId, ghostTime, ghostNodeCount, &ghostData->unk0.levelID);
+    }
+    if (ret != CONTROLLER_PAK_GOOD) {
+        start_reading_controller_data(controllerIndex);
+        return ret;
+    } else {
+        ret = get_file_size(controllerIndex, fileNumber, &fileSize);
+        if (ret != CONTROLLER_PAK_GOOD) {
+            start_reading_controller_data(controllerIndex);
+            return ret;
+        } else {
+            fileData = allocate_from_main_pool_safe(fileSize + 0x100, COLOUR_TAG_BLACK);
+            ret = read_data_from_controller_pak(controllerIndex, fileNumber, fileData, fileSize);
+            start_reading_controller_data(controllerIndex);
+            if (ret != CONTROLLER_PAK_GOOD) {
+                free_from_memory_pool(fileData);
+            } else {
+                ret = CONTROLLER_PAK_BAD_DATA;
+                if (fileData->headerId == GHSS) {
+                    ghostFileData = &fileData->ghostHeader;
+                    ghostFileDataAlt = (GhostHeaderAlt *) &fileData->ghostHeader;
+
+                    for (i = 0, ghostIndex = -1; i < 6; i++) {
+                        if (levelId == ghostFileDataAlt[i].unk0.levelID && vehicleId == ghostFileDataAlt[i].unk0.vehicleID) {
+                            ghostIndex = i;
+                            break;
+                        }
+                    }
+
+                    if ((ghostIndex != -1) && (fileData[ghostFileDataAlt[ghostIndex].unk2].ghostHeader->time < ghostTime)) {
+                        ghostIndex = -2;
+                    }
+
+                    if (ghostIndex == -1) {
+                        ghostFileDataAlt = (GhostHeaderAlt *) &fileData->ghostHeader;
+                        for (i = 0; i < 6; i++) {
+                            if (ghostFileDataAlt[i].unk0.levelID == 0xFF) {
+                                ghostIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    if (ghostIndex == -2) {
+                        ret = CONTROLLER_PAK_GOOD;
+                    } else if (ghostIndex == -1) {
+                        ret = CONTROLLER_PAK_UNK6;
+                    } else {
+                        sp58 = (0x1100 - ghostFileData[ghostIndex].nodeCount) + ghostFileData[ghostIndex].unk2;
+                        fileDataToWrite = allocate_from_main_pool_safe(fileSize + 0x100, COLOUR_TAG_BLACK);
+                        fileDataToWrite->headerId = GHSS;
+                        sp70 = &fileDataToWrite->ghostHeader;
+                        fileDataToWrite->unk1C = 0xFF;
+                        fileDataToWrite->unk1E = (s16) (ghostFileData[3].unk2 + sp58);
+                        for (i = 0; i < 6; i++) {
+                            sp70[i].unk0.levelID = ghostFileData[i].unk0.levelID;
+                            sp70[i].unk0.vehicleID = ghostFileData[i].unk0.vehicleID;
+                            if (ghostIndex >= i) {
+                                sp70[i].unk2 = ghostFileData[i].unk2;
+                            } else {
+                                sp70[i].unk2 = (ghostFileData[i].unk2 + sp58);
+                            }
+                            bcopy(&fileData[ghostFileData[i].unk2], &fileDataToWrite[sp70[i].unk2], ghostFileData[i].nodeCount - ghostFileData[i].unk2);
+                        }
+                        func_80074AA8((GhostHeader *) &fileDataToWrite[sp70[ghostIndex].unk2], ghostCharacterId, ghostTime, ghostNodeCount, &ghostData->unk0.levelID);
+                        sp70[ghostIndex].unk0.levelID = levelId;
+                        sp70[ghostIndex].unk0.vehicleID = vehicleId;
+                        ret = write_controller_pak_file(controllerIndex, fileNumber, "DKRACING-GHOSTS", "", fileDataToWrite, fileSize);
+                        free_from_memory_pool(fileDataToWrite);
+                    }
+                }
+                free_from_memory_pool(fileData);
+            }
+        }
+    }
+    return ret;
+}
+#else
+GLOBAL_ASM("asm/non_matchings/save_data/func_80075000.s")
+#endif
+
+
+
+#ifdef NON_EQUIVALENT
+//I give up. Ghost data structs have be beat for now.
+
+s32 func_800753D8(s32 controllerIndex, s32 arg1) {
+    GhostData *dataToWrite;
+    s32 fileNumber;
+    s32 fileLength;
+    u8 *sp28;
+    u8 *sp20;
+    s16 temp_t9_2;
+    s16 temp_t9_3;
+    s32 temp_a3;
+    s32 temp_t8;
+    s32 temp_t8_2;
+    s32 var_at;
+    s32 ret;
+    s32 var_v1_4;
+    GhostDataData *temp_t1;
+    GhostData *fileData;
+    GhostData *temp_v0_6;
+    u8 *temp_v1;
+    u8 temp_t2_2;
+    u8 temp_t3;
+    u8 temp_t7;
+    u8 temp_t7_2;
+    u8 temp_t8_3;
+    u8 temp_t8_4;
+    GhostDataData *temp_v0_5;
+    u8 *temp_v0_8;
+    GhostDataData *var_v0;
+    u8 *var_v0_2;
+
+    ret = get_si_device_status(controllerIndex);
+    if (ret != CONTROLLER_PAK_GOOD) {
+        start_reading_controller_data(controllerIndex);
+        return ret;
+    }
+    ret = get_file_number(controllerIndex, "DKRACING-GHOSTS", "", &fileNumber);
+    if (ret == CONTROLLER_PAK_GOOD) {
+        ret = get_file_size(controllerIndex, fileNumber, &fileLength);
+        if (ret != CONTROLLER_PAK_GOOD) {
+            start_reading_controller_data(controllerIndex);
+            return ret;
+        }
+        fileData = (GhostData *)allocate_from_main_pool_safe(fileLength + 0x100, COLOUR_TAG_BLACK);
+        ret = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *)fileData, fileLength);
+        start_reading_controller_data(controllerIndex);
+        if (ret == CONTROLLER_PAK_GOOD) {
+            ret = CONTROLLER_PAK_BAD_DATA;
+            if (fileData->headerId == GHSS) {
+                temp_t8 = arg1 * 4;
+                temp_v0_5 = (GhostDataData *)&fileData[temp_t8];
+                temp_a3 = temp_v0_5->unk6 - temp_v0_5->unkA;
+                temp_v0_6 = (GhostData *)allocate_from_main_pool_safe(fileLength + 0x100, COLOUR_TAG_BLACK);
+                temp_v1 = fileData->ghostHeader;
+                dataToWrite = temp_v0_6;
+                temp_t1 = &temp_v1[temp_t8];
+                sp20 = temp_t1;
+                sp28 = temp_v1;
+                bcopy(fileData, temp_v0_6, temp_t1->unk2);
+                if (arg1 != 5) {
+                    bcopy(&fileData[temp_t1->unk6], &(&dataToWrite[temp_t1->unk6])[temp_a3], fileData->ghostData->unk1A - temp_t1->unk6);
+                }
+                var_v0 = &dataToWrite[arg1].ghostData;
+                for (var_v1_4 = arg1; var_v1_4 < 6; var_v1_4++) {
+                    var_v0[var_v1_4].unk2 = (var_v0[var_v1_4].unk6 + temp_a3);
+                    var_v0[var_v1_4].unk18 = var_v0[var_v1_4].unk4;
+                    var_v0[var_v1_4].unk1A = var_v0[var_v1_4].unk5;
+                }
+                dataToWrite->ghostData->unk1A = dataToWrite->ghostData->unk16;
+                ret = write_controller_pak_file(controllerIndex, fileNumber, "DKRACING-GHOSTS", "", (u8 *) dataToWrite, fileLength);
+            }
+            free_from_memory_pool(dataToWrite);
+        }
+        free_from_memory_pool(fileData);
+    } else {
+        start_reading_controller_data(controllerIndex);
+    }
+
+    return ret;
+}
+#else
+GLOBAL_ASM("asm/non_matchings/save_data/func_800753D8.s")
+#endif
 
 SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, s16 *arg4) {
     s32 i;
@@ -1280,7 +1480,7 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, 
             fileData = allocate_from_main_pool_safe(fileSize + 0x100, COLOUR_TAG_BLACK);
             ret = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *)fileData, fileSize);
             if (ret == CONTROLLER_PAK_GOOD) {
-                for (i = 0, var_s1 = (GhostHeaderAlt *)(&fileData[4]); i < 6; i++) {
+                for (i = 0, var_s1 = (GhostHeaderAlt *) (&fileData[4]); i < 6; i++) {
                     if (var_s1[i].unk0.levelID != 0xFF) {
                         if (calculate_ghost_header_checksum((GhostHeader *) &fileData[var_s1[i].unk2]) != ((GhostHeaderAlt*)&fileData[var_s1[i].unk2])->checksum) {
                             ret = CONTROLLER_PAK_BAD_DATA;
@@ -1289,7 +1489,7 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, 
                             arg1[i] = var_s1[i].unk0.levelID;
                             arg2[i] = var_s1[i].unk0.vehicleID;
                             arg3[i] = fileData[var_s1[i].unk2+2];
-                            arg4[i] = ((GhostHeaderAlt*)&fileData[var_s1[i].unk2] + 1)->checksum;
+                            arg4[i] = ((GhostHeaderAlt *) &fileData[var_s1[i].unk2] + 1)->checksum;
                         }
                     }
                 }

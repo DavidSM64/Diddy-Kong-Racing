@@ -23,11 +23,10 @@ u8 leoDiskStack[16]; //technically should have a OS_LEO_STACKSIZE or something. 
 OSThread gThread30;
 OSMesgQueue gThread30MesgQueue;
 OSMesg gThread30Message;
-UNUSED u8 D_8012ACC0[0x1468]; // Unused? Might be another stack.
 
 // Currently defined in osViMgr.c
 // There are a few stacks defined next to each other. Maybe they are in their own separate file?
-extern void *gThread30Stack;
+extern u64 gThread30Stack[0x400];
 
 /*****************************/
 
@@ -36,7 +35,7 @@ extern void *gThread30Stack;
  */
 void create_and_start_thread30(void) {
     osCreateMesgQueue(&gThread30MesgQueue, &gThread30Message, 2);
-    osCreateThread(&gThread30, 30, &thread30_track_loading, NULL, &gThread30Stack, 8);
+    osCreateThread(&gThread30, 30, &thread30_track_loading, NULL, &gThread30Stack[0x400], 8);
     osStartThread(&gThread30);
 }
 

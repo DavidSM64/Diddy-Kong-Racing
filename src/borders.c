@@ -39,7 +39,7 @@ void render_borders_for_multiplayer(Gfx **dlist) {
         case VIEWPORTS_COUNT_3_PLAYERS:
             levelHeader = get_current_level_header();
             // Draw black square in the bottom-right corner.
-            if (get_multiplayer_hud_setting() || (levelHeader->race_type & RACETYPE_CHALLENGE)) {
+            if (get_hud_setting() || (levelHeader->race_type & RACETYPE_CHALLENGE)) {
                 gDPFillRectangle((*dlist)++, width >> 1, height >> 1, width, height);
             }
             // There is no break statement here. This is intentional.

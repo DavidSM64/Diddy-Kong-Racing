@@ -21,18 +21,18 @@ glabel render_texture_rectangle_scaled
 /* 07994C 80078D4C 15C10009 */  bne   $t6, $at, .L80078D74
 /* 079950 80078D50 8FA800CC */   lw    $t0, 0xcc($sp)
 /* 079954 80078D54 8FA800CC */  lw    $t0, 0xcc($sp)
-/* 079958 80078D58 3C0E800E */  lui   $t6, %hi(D_800DE6A8) # $t6, 0x800e
+/* 079958 80078D58 3C0E800E */  lui   $t6, %hi(dTextureRectangleScaledOpa) # $t6, 0x800e
 /* 07995C 80078D5C 311800FF */  andi  $t8, $t0, 0xff
 /* 079960 80078D60 0018C900 */  sll   $t9, $t8, 4
-/* 079964 80078D64 25CEE6A8 */  addiu $t6, %lo(D_800DE6A8) # addiu $t6, $t6, -0x1958
+/* 079964 80078D64 25CEE6A8 */  addiu $t6, %lo(dTextureRectangleScaledOpa) # addiu $t6, $t6, -0x1958
 /* 079968 80078D68 10000007 */  b     .L80078D88
 /* 07996C 80078D6C 032E3821 */   addu  $a3, $t9, $t6
 /* 079970 80078D70 8FA800CC */  lw    $t0, 0xcc($sp)
 .L80078D74:
-/* 079974 80078D74 3C0E800E */  lui   $t6, %hi(D_800DE6E8) # $t6, 0x800e
+/* 079974 80078D74 3C0E800E */  lui   $t6, %hi(dTextureRectangleScaledXlu) # $t6, 0x800e
 /* 079978 80078D78 311800FF */  andi  $t8, $t0, 0xff
 /* 07997C 80078D7C 0018C900 */  sll   $t9, $t8, 4
-/* 079980 80078D80 25CEE6E8 */  addiu $t6, %lo(D_800DE6E8) # addiu $t6, $t6, -0x1918
+/* 079980 80078D80 25CEE6E8 */  addiu $t6, %lo(dTextureRectangleScaledXlu) # addiu $t6, $t6, -0x1918
 /* 079984 80078D84 032E3821 */  addu  $a3, $t9, $t6
 .L80078D88:
 /* 079988 80078D88 8E040000 */  lw    $a0, ($s0)

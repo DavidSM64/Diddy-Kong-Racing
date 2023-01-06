@@ -157,8 +157,9 @@ u16 D_80127CD0;
 u16 D_80127CD2;
 s32 D_80127CD4;
 s8 gDebugPrintBufferStart[2300];
-s32 gDebugPrintBufferEnd[1026];
-OSThread D_801295E0;
+u8 *gDebugPrintBufferEnd[2];
+u64 gEPCStack[0x200];
+OSThread gEPCThread;
 s32 D_80129790[6]; // Osmesg stuff
 s32 D_801297A8[8];
 s32 D_801297C8[8];

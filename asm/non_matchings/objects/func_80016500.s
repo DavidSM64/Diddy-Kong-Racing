@@ -141,7 +141,7 @@ glabel func_80016500
 /* 017308 80016708 24030003 */  li    $v1, 3
 .L8001670C:
 /* 01730C 8001670C A20901F6 */  sb    $t1, 0x1f6($s0)
-/* 017310 80016710 0C01997A */  jal   set_object_stack_pos
+/* 017310 80016710 0C01997A */  jal   set_active_camera
 /* 017314 80016714 AFA3003C */   sw    $v1, 0x3c($sp)
 /* 017318 80016718 0C01A748 */  jal   get_active_camera_segment
 /* 01731C 8001671C 00000000 */   nop   

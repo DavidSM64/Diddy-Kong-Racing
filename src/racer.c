@@ -161,7 +161,7 @@ const char gRacerDebugCoords[] = "%.1f,%.1f,%.1f\n";
 
 f32 gCurrentCourseHeight;
 Vec3f gCurrentRacerWaterPos;
-s8 D_8011D504;
+s8 gRacerWaveType;
 ObjectCamera *gCameraObject;
 ObjectTransform gCurrentRacerTransform;
 u32 gCurrentRacerInput;
@@ -1255,7 +1255,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     var_f14 = 5.0f;
     sp118 = -10000.0f;
-    temp_v0_10 = func_8002AD08(obj->segment.trans.y_position, &sp118, spD4); 
+    temp_v0_10 = get_wave_properties(obj->segment.trans.y_position, &sp118, spD4); 
     if (temp_v0_10) {
         var_f14 = racer->velocity;
         if (var_f14 < 0.0f) {
@@ -2144,7 +2144,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     tempRacer->unk220 = 0;
     tempRacer->unk21C = 0;
     if (tempRacer->playerIndex != PLAYER_COMPUTER && !D_8011D582) {
-        set_object_stack_pos(player);
+        set_active_camera(player);
         gCameraObject = (ObjectCamera *) get_active_camera_segment_no_cutscenes();
         gCameraObject->trans.z_rotation = 0;
         gCameraObject->trans.x_rotation = 0x400;
@@ -2347,7 +2347,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                 tempRacer->unk1B2 = 0;
             }
         }
-        set_object_stack_pos(tempRacer->playerIndex);
+        set_active_camera(tempRacer->playerIndex);
         gCameraObject = (ObjectCamera *) get_active_camera_segment_no_cutscenes();
         tempRacer->miscAnimCounter += updateRate;
         gCurrentPlayerIndex = tempRacer->playerIndex;
@@ -2457,9 +2457,8 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         if (tempRacer->vehicleID != VEHICLE_HOVERCRAFT) {
             waterHeight = -10000.0f;
-            // So I assume this func exists to find the water height.
-            D_8011D504 = func_8002AD08(obj->segment.trans.y_position, &waterHeight, &gCurrentRacerWaterPos);
-            if (D_8011D504) {
+            gRacerWaveType = get_wave_properties(obj->segment.trans.y_position, &waterHeight, &gCurrentRacerWaterPos);
+            if (gRacerWaveType) {
                 if (obj->segment.trans.y_position - 5.0f < waterHeight) {
                     tempRacer->unk1E5 = 5;
                     tempRacer->buoyancy = waterHeight - (obj->segment.trans.y_position - 5.0f);
@@ -3689,7 +3688,7 @@ void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateR
         racer->lateral_velocity -= (racer->lateral_velocity * 0.065f) * updateRateF;
         racer->velocity -= (racer->velocity * 0.065f) * updateRateF;
         obj->segment.y_velocity -= (obj->segment.y_velocity * 0.05f) * updateRateF;
-        rotate_racer_in_water(obj, racer, &gCurrentRacerWaterPos, D_8011D504, updateRate, gCurrentStickX, 6.0f);
+        rotate_racer_in_water(obj, racer, &gCurrentRacerWaterPos, gRacerWaveType, updateRate, gCurrentStickX, 6.0f);
     }
     if (racer->playerIndex == PLAYER_COMPUTER) {
         racer->unk1E8 = racer->steerAngle;

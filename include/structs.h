@@ -40,6 +40,17 @@ typedef struct Vec3s {
   };
 } Vec3s;
 
+typedef struct Vec3i {
+  union {
+    struct {
+      s32 x;
+      s32 y;
+      s32 z;
+    };
+    s32 i[3];
+  };
+} Vec3i;
+
 /* Size: 0x20 bytes */
 typedef struct TextureHeader {
   /* 0x00 */ u8 width;
@@ -363,8 +374,8 @@ typedef struct LevelHeader {
   /* 0xA2 */ s8 unkA2;
   /* 0xA3 */ s8 unkA3;
   /* 0xA4 */ TextureHeader *unkA4;
-  /* 0xA8 */ u16 unkA8;
-  /* 0xAA */ u16 unkAA;
+  /* 0xA8 */ s16 unkA8;
+  /* 0xAA */ s16 unkAA;
   /* 0xAC */ PulsatingLightData *pulseLightData;
 
   /* 0xB0 */ s16 unkB0;
@@ -378,7 +389,7 @@ typedef struct LevelHeader {
   /* 0xB9 */ u8 unkB9;
   /* 0xBA */ s16 unkBA;
   /* 0xBC */ u8 unkBC;
-  /* 0xBD */ u8 unkBD;
+  /* 0xBD */ s8 unkBD;
   /* 0xBE */ u8 unkBE;
   /* 0xBF */ u8 unkBF;
   /* 0xC0 */ u8 unkC0;
@@ -535,7 +546,7 @@ typedef struct LevelModelSegment {
            s16 *unk34;
 /* 0x38 */ s16 unk38;
            u8 pad3A[6];
-/* 0x40 */ u8 unk40;
+/* 0x40 */ u8 numberofOpaqueBatches;
            u8 pad41[0x3];
 } LevelModelSegment;
 

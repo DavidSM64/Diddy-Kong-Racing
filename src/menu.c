@@ -5615,7 +5615,7 @@ void menu_track_select_init(void) {
         D_800E0970[var_v0].unk3 = 1;
     }
     D_80126924 = 0;
-    func_80078AAC(func_8008F618);
+    set_background_draw_function(func_8008F618);
     func_80066940(0, 80, gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY >> 1), 240, (gTrackSelectViewPortHalfY >> 1) + gTrackSelectViewPortHalfY);
     func_80066610();
     func_80066818(0, 0);
@@ -6038,7 +6038,7 @@ void func_80090918(s32 updateRate) {
             }
         }
         if (gMenuDelay < -22) {
-            func_80078AAC(NULL);
+            set_background_draw_function(NULL);
             D_800E097C = 0;
         }
         if (gMenuDelay > 30) {
@@ -8191,8 +8191,8 @@ void func_8009BD5C(void) {
     f32 sp1C;
     f32 sp18;
 
-    set_active_viewports_and_object_stack_cap(0);
-    set_object_stack_pos(0);
+    set_active_viewports_and_max(0);
+    set_active_camera(0);
 
     temp_v0 = (unk80069D20 *)get_active_camera_segment();
 
@@ -8209,7 +8209,7 @@ void func_8009BD5C(void) {
     temp_v0->unk10 = -32.0f;
     temp_v0->unk14 = -32.0f;
 
-    set_and_normalize_D_8011AFE8(0, 0, -1);
+    update_envmap_position(0, 0, -1);
     func_80066CDC(&sMenuCurrDisplayList, &sMenuCurrHudMat);
 
     temp_v0->unk0 = sp2A;

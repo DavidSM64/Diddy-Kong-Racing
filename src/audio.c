@@ -29,8 +29,8 @@ s32 musicVolumeSliderPercentage = 256;
 s32 D_800DC658 = 0;
 u8 D_800DC65C = 0;
 u8 D_800DC660 = 0;
-s32 D_800DC664 = 0; // Currently unknown, might be a different type.
-s32 D_800DC668 = 0; // Currently unknown, might be a different type.
+UNUSED s32 D_800DC664 = 0;
+UNUSED s32 D_800DC668 = 0; // Currently unknown, might be a different type.
 s32 sMusicVolumeMultiplier = 256; // This is never not 256...
 u8 D_800DC670 = 0;
 
@@ -293,7 +293,7 @@ void handle_music_fade(u8 updateRate) {
         sMusicDelayTimer += updateRate;
         sMusicFadeVolume = ((f32)sMusicDelayTimer) / ((f32)sMusicDelayLength);
 
-        if ((f32)sMusicFadeVolume > 1.0f) {
+        if (sMusicFadeVolume > 1.0f) {
             sMusicDelayTimer = 0;
             sMusicDelayLength = 0;
             sMusicFadeVolume = 1.0f;
@@ -303,7 +303,7 @@ void handle_music_fade(u8 updateRate) {
 
         sMusicDelayTimer -= updateRate;
         sMusicFadeVolume = 1.0f - ((f32)sMusicDelayTimer) / ((f32)sMusicDelayLength);
-        if ((f32)sMusicFadeVolume < 0) {
+        if (sMusicFadeVolume < 0.0f) {
             sMusicDelayTimer = 0;
             sMusicDelayLength = 0;
             sMusicFadeVolume = 0.0f;
@@ -312,7 +312,6 @@ void handle_music_fade(u8 updateRate) {
     }
 
     if (D_800DC658 > 0) {
-        //reg_arg0 = updateRate;
         for (reg_s2 = 0; reg_s2 < D_800DC658;) {
             D_80115D48[reg_s2].unk2 -= updateRate;
             if (D_80115D48[reg_s2].unk2 <= 0) {
@@ -325,7 +324,6 @@ void handle_music_fade(u8 updateRate) {
                     D_80115D48[reg_s2].unk2 = D_80115D48[reg_s2 + 1].unk2;
                     D_80115D48[reg_s2].unk4 = D_80115D48[reg_s2 + 1].unk4;
                     j++;
-                    //break;
                 }
                 j++;
             } else {

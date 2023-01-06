@@ -273,7 +273,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         }
         move_object(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
         if (obj->unk4A == 298) {
-            if (func_8002AD08(obj->segment.trans.y_position, &sp4C, NULL)) {
+            if (get_wave_properties(obj->segment.trans.y_position, &sp4C, NULL)) {
                 obj->segment.trans.y_position = sp4C;
             }
         }
@@ -3371,7 +3371,7 @@ void obj_init_skycontrol(Object *obj, LevelObjectEntry_SkyControl *entry) {
 
 void obj_loop_skycontrol(Object *obj, UNUSED s32 updateRate) {
     if (obj->interactObj->distance < obj->unk7C.word) {
-        func_80028044(obj->action);
+        set_skydome_visbility(obj->action);
     }
 }
 

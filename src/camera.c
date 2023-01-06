@@ -12,11 +12,6 @@
 #include "weather.h"
 #include "main.h"
 
-extern u32 osTvType;
-
-/************ .rodata ************/
-
-/*********************************/
 
 /************ .data ************/
 
@@ -99,8 +94,8 @@ s16 gButtonMask = 0xFFFF;
 ObjectSegment gActiveCameraStack[8];
 s32 gNumberOfViewports;
 s32 gActiveCameraID;
-s32 gOjbectRenderStackCap;
-s32 D_80120CEC;
+s32 gViewportCap;
+UNUSED s32 D_80120CEC;
 ObjectTransform D_80120CF0;
 s32 D_80120D08;
 s32 D_80120D0C;
@@ -118,11 +113,11 @@ u16 perspNorm;
 Matrix *D_80120D70[6];
 MatrixS *D_80120D88[6];
 Matrix D_80120DA0[5];
-Matrix D_80120EE0; // Perspective matrix?
+Matrix gPerspectiveMatrixF;
 Matrix D_80120F20;
 Matrix D_80120F60;
 Matrix D_80120FA0;
-MatrixS D_80120FE0;
+MatrixS gPerspectiveMatrixS;
 MatrixS D_80121020;
 Matrix D_80121060;
 Matrix D_801210A0;
@@ -166,8 +161,8 @@ void func_80065EA0(void) {
         gAntiPiracyViewport = TRUE;
     }
 #endif
-    guPerspectiveF(D_80120EE0, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-    f32_matrix_to_s16_matrix(D_80120EE0, D_80120FE0);
+    guPerspectiveF(gPerspectiveMatrixF, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+    f32_matrix_to_s16_matrix(gPerspectiveMatrixF, gPerspectiveMatrixS);
     gCurCamFOV = CAMERA_DEFAULT_FOV;
 }
 /*#else
@@ -175,8 +170,8 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80065EA0.s")
 #endif*/
 
 void reset_perspective_matrix(void) {
-    guPerspectiveF(D_80120EE0, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-    f32_matrix_to_s16_matrix(D_80120EE0, D_80120FE0);
+    guPerspectiveF(gPerspectiveMatrixF, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+    f32_matrix_to_s16_matrix(gPerspectiveMatrixF, gPerspectiveMatrixS);
 }
 
 void func_80066060(s32 arg0, s32 arg1) {
@@ -210,11 +205,14 @@ void func_800660D0(void) {
 void update_camera_fov(f32 camFieldOfView) {
     if (CAMERA_MIN_FOV < camFieldOfView && camFieldOfView < CAMERA_MAX_FOV && camFieldOfView != gCurCamFOV) {
         gCurCamFOV = camFieldOfView;
-        guPerspectiveF(D_80120EE0, &perspNorm, camFieldOfView, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-        f32_matrix_to_s16_matrix(&D_80120EE0, &D_80120FE0);
+        guPerspectiveF(gPerspectiveMatrixF, &perspNorm, camFieldOfView, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
+        f32_matrix_to_s16_matrix(&gPerspectiveMatrixF, &gPerspectiveMatrixS);
     }
 }
 
+/**
+ * Returns the number of active viewports.
+*/
 s32 get_viewport_count(void) {
     return gNumberOfViewports;
 }
@@ -237,8 +235,8 @@ void func_80066230(Gfx **dlist, MatrixS **mats) {
     f32 sp1C;
     f32 sp18;
 
-    set_active_viewports_and_object_stack_cap(0);
-    set_object_stack_pos(0);
+    set_active_viewports_and_max(0);
+    set_active_camera(0);
     someStruct = get_active_camera_segment();
     sp2A = someStruct->trans.y_rotation;
     sp28 = someStruct->trans.x_rotation;
@@ -254,7 +252,7 @@ void func_80066230(Gfx **dlist, MatrixS **mats) {
     someStruct->trans.x_position = 0.0f;
     someStruct->trans.y_position = 0.0f;
     someStruct->trans.z_position = 0.0f;
-    set_and_normalize_D_8011AFE8(0.0f, 0.0f, -1.0f);
+    update_envmap_position(0.0f, 0.0f, -1.0f);
     func_80066CDC(dlist, mats);
     someStruct->unk38.half.unk38 = sp24;
     someStruct->trans.y_rotation = sp2A;
@@ -333,11 +331,11 @@ void disable_cutscene_camera(void) {
 }
 
 /**
- * Sets the cap for the object render stack.
+ * Sets the cap for the viewports. Usually reflecting how many there are.
  * If the number passed is within 1-4, then the stack cap is set to
  * how many active viewports there are.
 */
-s32 set_active_viewports_and_object_stack_cap(s32 num) {
+s32 set_active_viewports_and_max(s32 num) {
     if (num >= 0 && num < 4) {
         gNumberOfViewports = num;
     } else {
@@ -345,29 +343,29 @@ s32 set_active_viewports_and_object_stack_cap(s32 num) {
     }
     switch (gNumberOfViewports) {
         case VIEWPORTS_COUNT_1_PLAYER:
-            gOjbectRenderStackCap = 1;
+            gViewportCap = 1;
             break;
         case VIEWPORTS_COUNT_2_PLAYERS:
-            gOjbectRenderStackCap = 2;
+            gViewportCap = 2;
             break;
         case VIEWPORTS_COUNT_3_PLAYERS:
-            gOjbectRenderStackCap = 3;
+            gViewportCap = 3;
             break;
         case VIEWPORTS_COUNT_4_PLAYERS:
-            gOjbectRenderStackCap = 4;
+            gViewportCap = 4;
             break;
     }
-    if (gActiveCameraID >= gOjbectRenderStackCap) {
+    if (gActiveCameraID >= gViewportCap) {
         gActiveCameraID = 0;
     }
-    return gOjbectRenderStackCap;
+    return gViewportCap;
 }
 
 /**
- * Sets the object stack pos to the passed number.
+ * Sets the active viewport ID to the passed number.
  * If it's not within 1-4, then it's set to 0.
 */
-void set_object_stack_pos(s32 num) {
+void set_active_camera(s32 num) {
     if (num >= 0 && num < 4) {
         gActiveCameraID = num;
     } else {
@@ -831,7 +829,7 @@ void func_80067D3C(Gfx **dlist, UNUSED MatrixS **mats) {
     D_80120CF0.z_position = -gActiveCameraStack[gActiveCameraID].trans.z_position;
 
     object_transform_to_matrix_2(D_80120F60, &D_80120CF0);
-    f32_matrix_mult(&D_80120F60, &D_80120EE0, &D_80120F20);
+    f32_matrix_mult(&D_80120F60, &gPerspectiveMatrixF, &D_80120F20);
 
     D_80120CF0.y_rotation = -0x8000 - gActiveCameraStack[gActiveCameraID].trans.y_rotation;
     D_80120CF0.x_rotation = -(gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.half.unk38);
@@ -891,7 +889,7 @@ void set_ortho_matrix_view(Gfx **dlist, MatrixS **mtx) {
 
 void func_8006807C(Gfx **dlist, MatrixS **mtx) {
     object_transform_to_matrix_2(D_80121060, &D_800DD288);
-    f32_matrix_mult(&D_80121060, &D_80120EE0, &D_80120F20);
+    f32_matrix_mult(&D_80121060, &gPerspectiveMatrixF, &D_80120F20);
     object_transform_to_matrix_2((float (*)[4]) D_80120D70[0], &D_800DD2A0);
     f32_matrix_mult(D_80120D70[0], &D_80120F20, &D_80121060);
     f32_matrix_to_s16_matrix(&D_80121060, *mtx);
@@ -1233,7 +1231,7 @@ Matrix *func_80069DA4(void) {
 }
 
 MatrixS *func_80069DB0(void) {
-    return &D_80120FE0;
+    return &gPerspectiveMatrixS;
 }
 
 Matrix *func_80069DBC(void) {
@@ -1373,9 +1371,9 @@ u32 get_buttons_pressed_from_player(s32 player) {
 }
 
 /**
- * Unused function that returns the buttons that are no longer pressed in that frame.
+ * Returns the buttons that are no longer pressed in that frame.
  */
-UNUSED u16 get_buttons_released_from_player(s32 player) {
+u16 get_buttons_released_from_player(s32 player) {
     return gControllerButtonsReleased[sPlayerID[player]];
 }
 

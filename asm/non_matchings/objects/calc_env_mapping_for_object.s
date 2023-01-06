@@ -42,9 +42,9 @@ glabel calc_env_mapping_for_object
 /* 01E9F4 8001DDF4 3C138012 */  lui   $s3, %hi(D_8011AF68) # $s3, 0x8012
 /* 01E9F8 8001DDF8 184000C4 */  blez  $v0, .L8001E10C
 /* 01E9FC 8001DDFC 2673AF68 */   addiu $s3, %lo(D_8011AF68) # addiu $s3, $s3, -0x5098
-/* 01EA00 8001DE00 3C118012 */  lui   $s1, %hi(D_8011AFE8) # $s1, 0x8012
+/* 01EA00 8001DE00 3C118012 */  lui   $s1, %hi(gEnvmapPos) # $s1, 0x8012
 /* 01EA04 8001DE04 8FC60038 */  lw    $a2, 0x38($fp)
-/* 01EA08 8001DE08 2631AFE8 */  addiu $s1, %lo(D_8011AFE8) # addiu $s1, $s1, -0x5018
+/* 01EA08 8001DE08 2631AFE8 */  addiu $s1, %lo(gEnvmapPos) # addiu $s1, $s1, -0x5018
 .L8001DE0C:
 /* 01EA0C 8001DE0C 87B70062 */  lh    $s7, 0x62($sp)
 /* 01EA10 8001DE10 3C010002 */  lui   $at, 2

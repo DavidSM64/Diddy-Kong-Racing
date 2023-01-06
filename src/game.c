@@ -44,6 +44,7 @@
 #include "particles.h"
 #include "string.h"
 #include "stdarg.h"
+#include "math_util.h"
 
 /************ .rodata ************/
 
@@ -81,15 +82,12 @@ s32 gNumHudMatPerPlayer[4] = { 300, 400, 550, 600 };
 s32 gNumHudTrisPerPlayer[4] = { 20, 30, 40, 50 };
 s8 gDrawFrameTimer = 0;
 FadeTransition D_800DD3F4 = FADE_TRANSITION(128, FADE_COLOR_BLACK, 20, 0);
-// Unused?
-FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
+UNUSED FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
 s32 sLogicUpdateRate = LOGIC_5FPS;
 FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
 FadeTransition D_800DD41C = FADE_TRANSITION(0, FADE_COLOR_BLACK, 30, -1);
 FadeTransition D_800DD424 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 260, -1);
 /*******************************/
-
-extern s32 gShowControllerPakMenu;
 
 /************ .bss ************/
 
@@ -117,7 +115,7 @@ TriangleList *gHudTriangles[2];
 TriangleList *gGameCurrTriList;
 s8 D_80121250[16]; //Settings4C
 OSSched gMainSched; // 0x288 / 648 bytes
-UNUSED u8 D_80121268[0x2000]; // 0x2000 / 8192 bytes Padding?
+u64 gSchedStack[0x400];
 s32 gSPTaskNum;
 s32 sRenderContext;
 s32 D_801234F0;
@@ -208,6 +206,7 @@ void func_8006A6B0(void) {
         gLevelNames[temp] = (char *) &D_800DD310[gTempAssetTable[temp]];
     }
     free_from_memory_pool(gTempAssetTable);
+    // Antipiracy measure
     checksumCount = 0;
     for (j = 0; j < gFunc80068158Length; j++) {
         checksumCount += ((u8 *) (&func_80068158))[j];
@@ -767,7 +766,7 @@ void init_game(void) {
         mode = 28;
     }
 
-    osCreateScheduler(&gMainSched, &gSPTaskNum, /*priority*/ 13, (u8) mode, 1);
+    osCreateScheduler(&gMainSched, &gSchedStack[0x400], /*priority*/ 13, (u8) mode, 1);
     init_video(VIDEO_MODE_LOWRES_LPN, &gMainSched);
     init_PI_mesg_queue();
     setup_gfx_mesg_queues(&gMainSched);
@@ -833,9 +832,9 @@ void main_game_loop(void) {
     if (gScreenStatus == MESG_SKIP_BUFFER_SWAP) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
         set_rsp_segment(&gCurrDisplayList, 0, 0);
-        set_rsp_segment(&gCurrDisplayList, 1, (s32)gVideoCurrFramebuffer);
-        set_rsp_segment(&gCurrDisplayList, 2, gVideoLastDepthBuffer);
-        set_rsp_segment(&gCurrDisplayList, 4, (s32)gVideoCurrFramebuffer - 0x500);
+        set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoCurrFramebuffer);
+        set_rsp_segment(&gCurrDisplayList, 2, (s32) gVideoLastDepthBuffer);
+        set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoCurrFramebuffer - 0x500);
     }
     if (gDrawFrameTimer == 0) {
 #ifndef FIFO_UCODE
@@ -897,8 +896,6 @@ void main_game_loop(void) {
             }
         }
     }
-    render_printf("%d\n", gOverrideAA);
-    render_printf("%d\n", gOverrideTimer);
     sLogicUpdateRate = LOGIC_60FPS;
     while (sTotalTime > 16666) {
         sTotalTime -= 16666;
@@ -914,9 +911,9 @@ void main_game_loop(void) {
     gGameCurrTriList = gHudTriangles[gSPTaskNum];
 
     set_rsp_segment(&gCurrDisplayList, 0, 0);
-    set_rsp_segment(&gCurrDisplayList, 1, gVideoLastFramebuffer);
-    set_rsp_segment(&gCurrDisplayList, 2, gVideoLastDepthBuffer);
-    set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);
+    set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoLastFramebuffer);
+    set_rsp_segment(&gCurrDisplayList, 2, (s32) gVideoLastDepthBuffer);
+    set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoLastFramebuffer - 0x500);
 #ifdef PUPPYPRINT_DEBUG
     first2 = osGetCount();
 #endif
@@ -1055,7 +1052,7 @@ void main_game_loop(void) {
         if (osTvType == TV_TYPE_PAL) {
             framebufferSize = (s32)((SCREEN_WIDTH * SCREEN_HEIGHT * 2) * 1.1f);
         }
-        dmacopy_doubleword(gVideoLastFramebuffer, (s32)gVideoCurrFramebuffer, (s32)gVideoCurrFramebuffer + framebufferSize);
+        dmacopy_doubleword(gVideoLastFramebuffer, gVideoCurrFramebuffer, (s32) gVideoCurrFramebuffer + framebufferSize);
     }
     // tempLogicUpdateRate will be set to a value 2 or higher, based on the framerate.
     // the mul factor is hardcapped at 6, which happens at 10FPS. The mul factor

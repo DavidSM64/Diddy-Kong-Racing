@@ -429,7 +429,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos);
 Object *get_racer_object_by_port(s32 index);
 void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
 void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
-void set_and_normalize_D_8011AFE8(f32 arg0, f32 arg1, f32 arg2);
+void update_envmap_position(f32 arg0, f32 arg1, f32 arg2);
 s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1);
 s32 func_8001B2F0(s32 mapId);
 void render_3d_billboard(Object *obj);

@@ -52,8 +52,6 @@ enum ViewPortFlags {
     VIEWPORT_HEIGHT_CUSTOM = 0x0040
 };
 
-extern s8 gAntiPiracyViewport;
-
 /* Size: 0x34 bytes. */
 typedef struct ScreenViewport {
     /* 0x00 */ s32 x1;
@@ -80,25 +78,6 @@ typedef struct unk80068BF4 {
     s32 *unkC[2];
 } unk80068BF4;
 
-extern ScreenViewport gScreenViewports[4];
-
-// RSP Viewports
-extern Vp D_800DD148[20];
-
-extern ObjectTransform D_800DD288;
-
-extern ObjectTransform D_800DD2A0;
-
-extern Matrix gOrthoMatrix;
-
-extern u8 D_800DD2F8[8];
-
-extern s16 gButtonMask;
-
-extern f32 D_80120D58[5];
-extern f32 D_80120D40[6];
-extern f32 D_80120D28[6];
-
 typedef struct unk80068514_arg4 {
     s16 unk0;
     s16 unk2;
@@ -121,8 +100,8 @@ void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5);
 void write_to_object_render_stack(s32 arg0, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6);
 void disable_cutscene_camera(void);
 s8 check_if_showing_cutscene_camera(void);
-s32 set_active_viewports_and_object_stack_cap(s32 arg0);
-void set_object_stack_pos(s32 arg0);
+s32 set_active_viewports_and_max(s32 arg0);
+void set_active_camera(s32 arg0);
 void func_80066818(s32 viewPortIndex, s32 arg1);
 void func_80066894(s32 viewPortIndex, s32 arg1);
 s32 func_80066910(s32 viewPortIndex);
@@ -160,7 +139,7 @@ s8 clamp_joystick_y_axis(s32 player);
 s8 clamp_joystick(s8 stickMag);
 void disable_button_mask(void);
 s32 init_controllers(void);
-void func_80067D3C(Gfx **dlist, UNUSED MatrixS **mats);
+void func_80067D3C(Gfx **dlist, MatrixS **mats);
 void render_orthi_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, unk80068BF4 *arg4, s32 flags);
 s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags);
 void func_80069484(Gfx **arg0, MatrixS **arg1, ObjectTransform *arg2, f32 arg3, f32 arg4);

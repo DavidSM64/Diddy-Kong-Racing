@@ -87,8 +87,8 @@ void func_800B7144(void);
 void func_800B76B8(s32 arg0, s32 arg1);
 s32 get_lockup_status(void);
 void lockup_screen_loop(s32 arg0);
+void thread0_create(void);
 
-void thread0_create(void); // Non Matching
 void thread0_Main(UNUSED void *unused); // Non Matching
 void func_800B7460(s32 *epc, s32 size, s32 mask); // Non Matching
 void render_epc_lock_up_display(void); // Non Matching
