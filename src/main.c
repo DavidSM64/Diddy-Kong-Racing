@@ -223,6 +223,8 @@ u32 sTimerTemp = 0;
 u8 sProfilerPage = 0;
 u32 sPrevLoadTime = 0;
 u8 sPrevLoadTimer = 0;
+u8 gShowHiddenGeometry = FALSE;
+u8 gShowHiddenObjects = FALSE;
 u32 gFreeMem[12];
 u8 sPrintOrder[PP_RSP_GFX];
 u8 sObjPrintOrder[NUM_OBJECT_PRINTS];

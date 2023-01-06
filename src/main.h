@@ -139,6 +139,8 @@ extern u8 perfIteration;
 extern u32 sPrevLoadTime;
 extern u8 sPrevLoadTimer;
 extern u8 gProfilerOn;
+extern u8 gShowHiddenGeometry;
+extern u8 gShowHiddenObjects;
 extern u32 gFreeMem[12];
 #endif
 int puppyprintf(char *dst, const char *fmt, ...);
