@@ -74,7 +74,7 @@ MatrixS *gSceneCurrMatrix;
 Vertex *gSceneCurrVertexList;
 TriangleList *gSceneCurrTriList;
 
-ObjectSegment *D_8011B0B0; // Camera Object?
+ObjectSegment *gSceneActiveCamera; // Camera Object?
 
 s32 D_8011B0B4;
 Object *D_8011B0B8;
@@ -160,7 +160,7 @@ s32 D_8011D37C;
 UNUSED f32 gCurrBBoxDistanceToCamera; // Used in a comparison check, but functionally unused.
 u32 D_8011D384;
 unk8011D388 D_8011D388[4];
-unk8011D468 D_8011D468;
+Vec3i gScenePerspectivePos;
 s32 *D_8011D474;
 s32 D_8011D478;
 s32 D_8011D47C;
@@ -224,7 +224,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
     if (D_8011D384) {
         func_800B82B4(gCurrentLevelModel, gCurrentLevelHeader2, tmp_a2);
     }
-    set_active_viewports_and_object_stack_cap(arg2);
+    set_active_viewports_and_max(arg2);
     func_80027FC4(arg1);
     D_8011B110 = 0;
     D_8011B114 = 0x10000;
@@ -239,7 +239,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
     } else {
         func_800C01D8(&D_800DC874);
     }
-    set_active_viewports_and_object_stack_cap(D_8011D37C);
+    set_active_viewports_and_max(D_8011D37C);
     D_8011B0FC = 0;
     i = 0;
     do {
@@ -287,7 +287,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, s8 **tris, s32 updat
     D_8011B0C4 = 0;
     D_8011B0C0 = 0;
     gIsNearCurrBBox = 0;
-    numViewports = set_active_viewports_and_object_stack_cap(D_8011D37C);
+    numViewports = set_active_viewports_and_max(D_8011D37C);
     if (is_game_paused()) {
         tempUpdateRate = 0;
     } else {
@@ -353,7 +353,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, s8 **tris, s32 updat
         }
         func_8003093C(D_8011B0B4);
         gDPPipeSync(gSceneCurrDisplayList++);
-        set_object_stack_pos(D_8011B0B4);
+        set_active_camera(D_8011B0B4);
         func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
         func_8002A31C();
         if (numViewports < VIEWPORTS_COUNT_3_PLAYERS) {
@@ -387,7 +387,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, s8 **tris, s32 updat
             }
             func_8003093C(3);
             gDPPipeSync(gSceneCurrDisplayList++);
-            set_object_stack_pos(3);
+            set_active_camera(3);
             disable_cutscene_camera();
             func_800278E8(updateRate);
             func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
@@ -411,7 +411,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, s8 **tris, s32 updat
             }
             draw_text(&gSceneCurrDisplayList, posX, posY, (char *)(&gViewport4Text), ALIGN_TOP_LEFT);
         } else {
-            set_object_stack_pos(3);
+            set_active_camera(3);
             func_800278E8(updateRate);
         }
     }
@@ -629,23 +629,23 @@ void func_80028CD0(s32 updateRate) {
     s32 temp_v0;
     Object_Racer *racer;
 
-    D_8011B0B0 = get_active_camera_segment();
+    gSceneActiveCamera = get_active_camera_segment();
     sp3C = get_current_viewport();
     func_80031018();
-    set_and_normalize_D_8011AFE8((f32) D_8011D468.x / 65536.0f, (f32) D_8011D468.y / 65536.0f, (f32) D_8011D468.z / 65536.0f);
-    temp_v0 = D_8011B0B0->unk34_a.levelSegmentIndex;
+    update_envmap_position((f32) gScenePerspectivePos.x / 65536.0f, (f32) gScenePerspectivePos.y / 65536.0f, (f32) gScenePerspectivePos.z / 65536.0f);
+    temp_v0 = gSceneActiveCamera->unk34_a.levelSegmentIndex;
     if ((temp_v0 >= 0) && (temp_v0 < gCurrentLevelModel->numberOfSegments)) {
         D_8011B0D4 = (s32) gCurrentLevelModel->segments[temp_v0].unk28;
     } else {
         D_8011B0D4 = -1;
     }
-    D_8011D314 = D_8011B0B0->trans.x_position;
-    D_8011D318 = D_8011B0B0->trans.y_position;
-    D_8011D31C = D_8011B0B0->trans.z_position;
+    D_8011D314 = gSceneActiveCamera->trans.x_position;
+    D_8011D318 = gSceneActiveCamera->trans.y_position;
+    D_8011D31C = gSceneActiveCamera->trans.z_position;
     if (D_8011D384 != 0) {
         func_800B8B8C();
         racers = get_racer_objects(&numRacers);
-        if ((D_8011B0B0->unk34_a.unk36 != 7) && (numRacers > 0) && (!check_if_showing_cutscene_camera())) {
+        if ((gSceneActiveCamera->unk34_a.unk36 != 7) && (numRacers > 0) && (!check_if_showing_cutscene_camera())) {
             i = -1; 
             do {
                 i++;
@@ -653,7 +653,7 @@ void func_80028CD0(s32 updateRate) {
             } while((i < (numRacers - 1)) && (sp3C != (racer->playerIndex)));
             func_800B8C04(racers[i]->segment.trans.x_position, racers[i]->segment.trans.y_position, racers[i]->segment.trans.z_position, get_current_viewport(), updateRate);
         } else {
-            func_800B8C04((s32) D_8011B0B0->trans.x_position, (s32) D_8011B0B0->trans.y_position, (s32) D_8011B0B0->trans.z_position, get_current_viewport(), updateRate);
+            func_800B8C04((s32) gSceneActiveCamera->trans.x_position, (s32) gSceneActiveCamera->trans.y_position, (s32) gSceneActiveCamera->trans.z_position, get_current_viewport(), updateRate);
         }
     }
     get_current_level_header()->unk3 = 1;
@@ -926,11 +926,11 @@ void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentInde
 
     curNode = &gCurrentLevelModel->segmentsBspTree[nodeIndex];
     if (curNode->splitType == 0) {
-        camValue = D_8011B0B0->trans.x_position; // Camera X
+        camValue = gSceneActiveCamera->trans.x_position; // Camera X
     } else if (curNode->splitType == 1) {
-        camValue = D_8011B0B0->trans.y_position; // Camera Y
+        camValue = gSceneActiveCamera->trans.y_position; // Camera Y
     } else {
-        camValue = D_8011B0B0->trans.z_position; // Camera Z
+        camValue = gSceneActiveCamera->trans.z_position; // Camera Z
     }
 
     if (camValue < curNode->splitValue) {
@@ -2060,10 +2060,13 @@ void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 #endif
 
-UNUSED void func_80030FA0(void) {
-    D_8011B0B0 = get_active_camera_segment();
+/**
+ * Updates the stored perspective of the camera, as well as the envmap values derived from it.
+*/
+UNUSED void update_perspective_and_envmap(void) {
+    gSceneActiveCamera = get_active_camera_segment();
     func_80031018();
-    set_and_normalize_D_8011AFE8((f32) D_8011D468.x / 65536.0f, (f32) D_8011D468.y / 65536.0f, (f32) D_8011D468.z / 65536.0f);
+    update_envmap_position((f32) gScenePerspectivePos.x / 65536.0f, (f32) gScenePerspectivePos.y / 65536.0f, (f32) gScenePerspectivePos.z / 65536.0f);
 }
 
 void func_80031018(void) {
@@ -2074,9 +2077,9 @@ void func_80031018(void) {
     f32 y = 0.0f;
     f32 z = -65536.0f;
 
-    trans.z_rotation = D_8011B0B0->trans.z_rotation;
-    trans.x_rotation = D_8011B0B0->trans.x_rotation;
-    trans.y_rotation = D_8011B0B0->trans.y_rotation;
+    trans.z_rotation = gSceneActiveCamera->trans.z_rotation;
+    trans.x_rotation = gSceneActiveCamera->trans.x_rotation;
+    trans.y_rotation = gSceneActiveCamera->trans.y_rotation;
     trans.x_position = 0.0f;
     trans.y_position = 0.0f;
     trans.z_position = 0.0f;
@@ -2086,7 +2089,7 @@ void func_80031018(void) {
     guMtxXFMF(mf, x, y, z, &x, &y, &z);
 
     //Store x/y/z as integers
-    D_8011D468.x = (s32)x;
-    D_8011D468.y = (s32)y;
-    D_8011D468.z = (s32)z;
+    gScenePerspectivePos.x = (s32)x;
+    gScenePerspectivePos.y = (s32)y;
+    gScenePerspectivePos.z = (s32)z;
 }

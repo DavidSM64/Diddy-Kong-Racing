@@ -8035,8 +8035,8 @@ void func_8009BD5C(void) {
     f32 sp1C;
     f32 sp18;
 
-    set_active_viewports_and_object_stack_cap(0);
-    set_object_stack_pos(0);
+    set_active_viewports_and_max(0);
+    set_active_camera(0);
 
     temp_v0 = (unk80069D20 *)get_active_camera_segment();
 
@@ -8053,7 +8053,7 @@ void func_8009BD5C(void) {
     temp_v0->unk10 = -32.0f;
     temp_v0->unk14 = -32.0f;
 
-    set_and_normalize_D_8011AFE8(0, 0, -1);
+    update_envmap_position(0, 0, -1);
     func_80066CDC(&sMenuCurrDisplayList, &sMenuCurrHudMat);
 
     temp_v0->unk0 = sp2A;

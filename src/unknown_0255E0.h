@@ -66,12 +66,6 @@ typedef struct unk8011D388 {
     Object *unk34;
 } unk8011D388;
 
-typedef struct {
-    /* 0x00 */ s32 x;
-    /* 0x04 */ s32 y;
-    /* 0x08 */ s32 z;
-} unk8011D468;
-
 typedef struct WaterProperties {
     f32 waveHeight;
     f32 rotX;

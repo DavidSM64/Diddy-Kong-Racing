@@ -28,7 +28,7 @@ glabel func_80008438
 /* 00908C 8000848C AFA60270 */  sw    $a2, 0x270($sp)
 /* 009090 80008490 0C019884 */  jal   get_viewport_count
 /* 009094 80008494 AFA0024C */   sw    $zero, 0x24c($sp)
-/* 009098 80008498 0C01994B */  jal   set_active_viewports_and_object_stack_cap
+/* 009098 80008498 0C01994B */  jal   set_active_viewports_and_max
 /* 00909C 8000849C 00402025 */   move  $a0, $v0
 /* 0090A0 800084A0 0C01A75F */  jal   func_80069D7C
 /* 0090A4 800084A4 AFA200B0 */   sw    $v0, 0xb0($sp)

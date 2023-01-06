@@ -23,7 +23,7 @@ glabel func_80021104
 /* 021D54 80021154 14810020 */  bne   $a0, $at, .L800211D8
 /* 021D58 80021158 2881000A */   slti  $at, $a0, 0xa
 /* 021D5C 8002115C 80A40030 */  lb    $a0, 0x30($a1)
-/* 021D60 80021160 0C01997A */  jal   set_object_stack_pos
+/* 021D60 80021160 0C01997A */  jal   set_active_camera
 /* 021D64 80021164 AFA30018 */   sw    $v1, 0x18($sp)
 /* 021D68 80021168 0C01A73F */  jal   get_active_camera_segment_no_cutscenes
 /* 021D6C 8002116C 00000000 */   nop   

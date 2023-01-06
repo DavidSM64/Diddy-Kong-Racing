@@ -106,7 +106,7 @@ s16 gButtonMask = 0xFFFF;
 ObjectSegment gActiveCameraStack[8];
 s32 gNumberOfViewports;
 s32 gActiveCameraID;
-s32 gOjbectRenderStackCap;
+s32 gViewportCap;
 UNUSED s32 D_80120CEC;
 ObjectTransform D_80120CF0;
 s32 D_80120D08;
@@ -234,6 +234,9 @@ UNUSED Matrix *func_80066204(void) {
     return &D_801210A0;
 }
 
+/**
+ * Returns the number of active viewports.
+*/
 s32 get_viewport_count(void) {
     return gNumberOfViewports;
 }
@@ -256,8 +259,8 @@ void func_80066230(Gfx **dlist, MatrixS **mats) {
     f32 sp1C;
     f32 sp18;
 
-    set_active_viewports_and_object_stack_cap(0);
-    set_object_stack_pos(0);
+    set_active_viewports_and_max(0);
+    set_active_camera(0);
     someStruct = get_active_camera_segment();
     sp2A = someStruct->trans.y_rotation;
     sp28 = someStruct->trans.x_rotation;
@@ -273,7 +276,7 @@ void func_80066230(Gfx **dlist, MatrixS **mats) {
     someStruct->trans.x_position = 0.0f;
     someStruct->trans.y_position = 0.0f;
     someStruct->trans.z_position = 0.0f;
-    set_and_normalize_D_8011AFE8(0.0f, 0.0f, -1.0f);
+    update_envmap_position(0.0f, 0.0f, -1.0f);
     func_80066CDC(dlist, mats);
     someStruct->unk38.half.unk38 = sp24;
     someStruct->trans.y_rotation = sp2A;
@@ -352,11 +355,11 @@ void disable_cutscene_camera(void) {
 }
 
 /**
- * Sets the cap for the object render stack.
+ * Sets the cap for the viewports. Usually reflecting how many there are.
  * If the number passed is within 1-4, then the stack cap is set to
  * how many active viewports there are.
 */
-s32 set_active_viewports_and_object_stack_cap(s32 num) {
+s32 set_active_viewports_and_max(s32 num) {
     if (num >= 0 && num < 4) {
         gNumberOfViewports = num;
     } else {
@@ -364,29 +367,29 @@ s32 set_active_viewports_and_object_stack_cap(s32 num) {
     }
     switch (gNumberOfViewports) {
         case VIEWPORTS_COUNT_1_PLAYER:
-            gOjbectRenderStackCap = 1;
+            gViewportCap = 1;
             break;
         case VIEWPORTS_COUNT_2_PLAYERS:
-            gOjbectRenderStackCap = 2;
+            gViewportCap = 2;
             break;
         case VIEWPORTS_COUNT_3_PLAYERS:
-            gOjbectRenderStackCap = 3;
+            gViewportCap = 3;
             break;
         case VIEWPORTS_COUNT_4_PLAYERS:
-            gOjbectRenderStackCap = 4;
+            gViewportCap = 4;
             break;
     }
-    if (gActiveCameraID >= gOjbectRenderStackCap) {
+    if (gActiveCameraID >= gViewportCap) {
         gActiveCameraID = 0;
     }
-    return gOjbectRenderStackCap;
+    return gViewportCap;
 }
 
 /**
- * Sets the object stack pos to the passed number.
+ * Sets the active viewport ID to the passed number.
  * If it's not within 1-4, then it's set to 0.
 */
-void set_object_stack_pos(s32 num) {
+void set_active_camera(s32 num) {
     if (num >= 0 && num < 4) {
         gActiveCameraID = num;
     } else {

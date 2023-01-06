@@ -258,7 +258,7 @@ s32 D_8011AF34;
 s32 D_8011AF38[10];
 s32 D_8011AF60[2];
 s32 D_8011AF68[32];
-VertexPosition D_8011AFE8;
+VertexPosition gEnvmapPos;
 s16 D_8011AFEE;
 s32 D_8011AFF0;
 unk800179D0 *D_8011AFF4;
@@ -2113,7 +2113,10 @@ void func_8001D258(f32 arg0, f32 arg1, s16 arg2, s16 arg3, s16 arg4) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8001D2A0.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001D4B4.s")
 
-void set_and_normalize_D_8011AFE8(f32 x, f32 y, f32 z) {
+/**
+ * Take the normalised length of the position set by the perspective and set the world angle for the envmap.
+*/
+void update_envmap_position(f32 x, f32 y, f32 z) {
     f32 vecLength = sqrtf((x * x) + (y * y) + (z * z));
     f32 normalizedLength;
     if (vecLength != 0.0f) {
@@ -2122,9 +2125,9 @@ void set_and_normalize_D_8011AFE8(f32 x, f32 y, f32 z) {
         y *= normalizedLength;
         z *= normalizedLength;
     }
-    D_8011AFE8.x = x;
-    D_8011AFE8.y = y;
-    D_8011AFE8.z = z;
+    gEnvmapPos.x = x;
+    gEnvmapPos.y = y;
+    gEnvmapPos.z = z;
 }
 
 void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 arg3) {
