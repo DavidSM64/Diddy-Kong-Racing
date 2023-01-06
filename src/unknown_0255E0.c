@@ -381,7 +381,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, s8 **tris, s32 updat
     }
 
     if (numViewports == VIEWPORTS_COUNT_4_PLAYERS && get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS && get_current_level_race_type() != RACETYPE_CHALLENGE_BATTLE && get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) {
-        if (get_multiplayer_hud_setting() == 0) {
+        if (get_hud_setting() == 0) {
             if (flip) {
                 gSPSetGeometryMode(gSceneCurrDisplayList++, 0x1000);
             }
