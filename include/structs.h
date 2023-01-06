@@ -545,7 +545,7 @@ typedef struct LevelModelSegment {
            s16 *unk34;
 /* 0x38 */ s16 unk38;
            u8 pad3A[6];
-/* 0x40 */ u8 unk40;
+/* 0x40 */ u8 numberofOpaqueBatches;
            u8 pad41[0x3];
 } LevelModelSegment;
 
