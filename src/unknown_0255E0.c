@@ -61,7 +61,7 @@ s8 D_800DC92C[24] = {
 
 /************ .rodata ************/
 
-const char D_800E5DF0[] = "TT CAM";
+const char gViewport4Text[] = "TT CAM";
 const char D_800E5DF8[] = "Solid Clipping x0=x1 Error!!!\n";
 const char D_800E5E10[] = "TrackGetHeight() - Overflow!!!\n";
 
@@ -266,20 +266,18 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
 #endif
 
-// Regalloc
-#ifdef NON_MATCHING
-extern u32 D_A0000200;
 /**
- * The root function for rendering the entire scene
+ * The root function for rendering the entire scene.
+ * Handles drawing the track, objects and the majority of the HUD in single player.
 */
-void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, s8** tris, s32 updateRate) {
+void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, s8 **tris, s32 updateRate) {
     s32 i;
     s32 numViewports;
-    s32 delta;
+    s32 tempUpdateRate;
     s8 flip;
     s32 posX;
     s32 posY;
-    UNUSED s32 pad;
+    s32 j;
 
     gSceneCurrDisplayList = *dList;
     gSceneCurrMatrix = *mtx;
@@ -291,71 +289,76 @@ void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, s8** tris, s32 updat
     gIsNearCurrBBox = 0;
     numViewports = set_active_viewports_and_object_stack_cap(D_8011D37C);
     if (is_game_paused()) {
-        delta = 0;
+        tempUpdateRate = 0;
     } else {
-        delta = updateRate;
+        tempUpdateRate = updateRate;
     }
     if (D_8011D384) {
-        func_800B9C18(delta);
+        func_800B9C18(tempUpdateRate);
     }
     func_8002D8DC(2, 2, updateRate);
     for (i = 0; i < 7; i++) {
         if ((s32) gCurrentLevelHeader2->unk74[i] != -1) {
-            func_8007F24C(gCurrentLevelHeader2->unk74[i], delta);
+            func_8007F24C(gCurrentLevelHeader2->unk74[i], tempUpdateRate);
         }
     }
-    if (gCurrentLevelHeader2->pulseLightData != (PulsatingLightData* ) -1) {
-        update_pulsating_light_data(gCurrentLevelHeader2->pulseLightData, delta);
+
+    if (gCurrentLevelHeader2->pulseLightData != (PulsatingLightData *) -1) {
+        update_pulsating_light_data(gCurrentLevelHeader2->pulseLightData, tempUpdateRate);
     }
     D_8011B0E0 = 1;
-    if (gCurrentLevelHeader2->race_type == 7) {
+    if (gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_2) {
         D_8011B0E0 = 0;
         D_8011B0FC = 1;
     }
-    if (gCurrentLevelHeader2->race_type == 6 || gCurrentLevelHeader2->unkBD) {
+    if ((gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_1) || gCurrentLevelHeader2->unkBD) {
         D_8011B0FC = 1;
     }
-    if (gCurrentLevelHeader2->unk49 == -1) {
-        gCurrentLevelHeader2->unkA8 = (gCurrentLevelHeader2->unkA8 + (gCurrentLevelHeader2->unkA2 * delta)) & ((gCurrentLevelHeader2->unkA4->width << 9) - 1);
-        gCurrentLevelHeader2->unkAA = (gCurrentLevelHeader2->unkAA + (gCurrentLevelHeader2->unkA3 * delta)) & ((gCurrentLevelHeader2->unkA4->height << 9) - 1);
-        func_8007EF80(gCurrentLevelHeader2->unkA4, &D_8011B114, &D_8011B110, delta);
+    if (gCurrentLevelHeader2->unk49 == (-1)) {
+        i = (gCurrentLevelHeader2->unkA4->width << 9) - 1;
+        gCurrentLevelHeader2->unkA8 = (gCurrentLevelHeader2->unkA8 + (gCurrentLevelHeader2->unkA2 * tempUpdateRate)) & i;
+        i = (gCurrentLevelHeader2->unkA4->height << 9) - 1;
+        gCurrentLevelHeader2->unkAA = (gCurrentLevelHeader2->unkAA + (gCurrentLevelHeader2->unkA3 * tempUpdateRate)) & i;
+        func_8007EF80(gCurrentLevelHeader2->unkA4, &D_8011B114, &D_8011B110, tempUpdateRate);
     }
     flip = FALSE;
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
         flip = TRUE;
     }
-    if (D_A0000200 != 0xAC290000) {
+    // Antipiracy measure
+    if (*((u32 *) 0xA0000200) != 0xAC290000) {
         flip = TRUE;
     }
     reset_render_settings(&gSceneCurrDisplayList);
     gDkrDisableBillboard(gSceneCurrDisplayList++);
-    gSPClearGeometryMode(gSceneCurrDisplayList++, CVG_X_ALPHA);
+    gSPClearGeometryMode(gSceneCurrDisplayList++, 0x1000);
     gDPSetBlendColor(gSceneCurrDisplayList++, 0, 0, 0, 0x64);
     gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
     func_800AD40C();
-    func_80030838(numViewports, delta);
-    func_800AF404(delta);
+    func_80030838(numViewports, tempUpdateRate);
+    func_800AF404(tempUpdateRate);
     if (gCurrentLevelModel->unk1E > 0) {
-        func_80027E24(delta);
+        func_80027E24(tempUpdateRate);
     }
-    for (i = D_8011B0B4 = 0; i < numViewports;  D_8011B0B4++, i = D_8011B0B4) {
-        if (i == 0) {
-            if ((func_8000E184()) && (numViewports == 1)) {
+    for (j = D_8011B0B4 = 0; j < numViewports; D_8011B0B4++, j = D_8011B0B4) {
+        if (gCurrentLevelHeader2 && !gCurrentLevelHeader2 && !gCurrentLevelHeader2) {}
+        if (j == 0) {
+            if (func_8000E184() && numViewports == 1) {
                 D_8011B0B4 = 1;
             }
         }
         if (flip) {
-            gSPSetGeometryMode(gSceneCurrDisplayList++, CVG_X_ALPHA);
+            gSPSetGeometryMode(gSceneCurrDisplayList++, G_CULL_FRONT);
         }
         func_8003093C(D_8011B0B4);
         gDPPipeSync(gSceneCurrDisplayList++);
         set_object_stack_pos(D_8011B0B4);
         func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
         func_8002A31C();
-        if (numViewports < 2) {
+        if (numViewports < VIEWPORTS_COUNT_3_PLAYERS) {
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
-            if (gCurrentLevelHeader2->unk49 == -1) {
+            if (gCurrentLevelHeader2->unk49 == (-1)) {
                 func_80028050();
             } else {
                 render_skydome();
@@ -369,20 +372,18 @@ void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, s8** tris, s32 updat
         gDPPipeSync(gSceneCurrDisplayList++);
         func_80028CD0(updateRate);
         func_800AB308(-1, -512);
-        if (gCurrentLevelHeader2->weatherEnable > 0 && numViewports < 2) {
-            process_weather(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList, delta);
+        if ((gCurrentLevelHeader2->weatherEnable > 0) && (numViewports < 2)) {
+            process_weather(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList, tempUpdateRate);
         }
         func_800AD030(get_active_camera_segment());
         func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
         render_hud(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_racer_object_by_port(D_8011B0B4), updateRate);
     }
-    if ((numViewports == 3) && 
-        (get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS) &&
-        (get_current_level_race_type() != RACETYPE_CHALLENGE_BATTLE) &&
-        (get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS)) {
+
+    if (numViewports == VIEWPORTS_COUNT_4_PLAYERS && get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS && get_current_level_race_type() != RACETYPE_CHALLENGE_BATTLE && get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) {
         if (get_multiplayer_hud_setting() == 0) {
             if (flip) {
-                gSPSetGeometryMode(gSceneCurrDisplayList++, CVG_X_ALPHA);
+                gSPSetGeometryMode(gSceneCurrDisplayList++, 0x1000);
             }
             func_8003093C(3);
             gDPPipeSync(gSceneCurrDisplayList++);
@@ -395,21 +396,20 @@ void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, s8** tris, s32 updat
             draw_gradient_background();
             func_80067D3C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
-            
             gDPPipeSync(gSceneCurrDisplayList++);
             func_80028CD0(updateRate);
             func_800AB308(-1, -512);
             func_800AD030(get_active_camera_segment());
             func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
             set_text_font(0);
-            if (osTvType == 0) {
+            if (osTvType == TV_TYPE_PAL) {
                 posX = 166;
                 posY = 138;
             } else {
                 posX = 170;
                 posY = 125;
             }
-            draw_text(&gSceneCurrDisplayList, posX, posY, (char *) &D_800E5DF0, ALIGN_TOP_LEFT);
+            draw_text(&gSceneCurrDisplayList, posX, posY, (char *)(&gViewport4Text), ALIGN_TOP_LEFT);
         } else {
             set_object_stack_pos(3);
             func_800278E8(updateRate);
@@ -424,9 +424,6 @@ void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, s8** tris, s32 updat
     *vtx = gSceneCurrVertexList;
     *tris = gSceneCurrTriList;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_scene.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80025510.s")
 
@@ -821,8 +818,11 @@ skip:
     D_8011B0FC = 0;
 }
 
-#ifdef NON_MATCHING
-// nonOpaque: 0 for solid geometry, 1 for transparent geometry.
+/**
+ * Render a batch of level geometry.
+ * Since opaque and transparent are done in two separate runs, it will skip over the other.
+ * Has a special case for the flashing lights in Spaceport Alpha, too.
+*/
 void render_level_segment(s32 segmentId, s32 nonOpaque) {
     LevelModelSegment *segment;
     s32 i;
@@ -834,8 +834,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
     s32 vertices;
     s32 triangles;
     s32 color;
-    //s32 hasTexture;
-    UNUSED s32 unused;
+    s32 isInvisible;
     s32 levelHeaderIndex;
     s32 texOffset;
     s32 sp78;
@@ -843,92 +842,83 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
     s32 endPos;
     s32 batchFlags;
     s32 textureFlags;
-
+    numberVertices = (batchInfo + 1)->verticesOffset - batchInfo->verticesOffset;
     segment = &gCurrentLevelModel->segments[segmentId];
-    sp78 = (nonOpaque && D_8011D384) ? func_800B9228(segment) : FALSE;
-
+    sp78 = (nonOpaque && D_8011D384) ? (func_800B9228(segment)) : (0);
     if (nonOpaque) {
         startPos = segment->unk40;
         endPos = segment->numberOfBatches;
     } else {
         startPos = 0;
-        endPos = segment->unk40; // unk40 = Number of opaque batches.
+        endPos = segment->unk40;
     }
-    
     for (i = startPos; i < endPos; i++) {
         batchInfo = &segment->batches[i];
-        textureFlags = 0; // Texture flags
+        textureFlags = 0;
+        isInvisible = batchInfo->flags & 0x100;
+        if (isInvisible) {
+            continue;
+        }
         batchFlags = batchInfo->flags;
-        if (!(batchInfo->flags & RENDER_Z_UPDATE)) {
+        renderBatch = 0;
+        if (batchInfo->textureIndex == 0xFF) {
+            texture = 0;
+        } else {
+            texture = gCurrentLevelModel->textures[batchInfo->textureIndex].texture;
+            textureFlags = texture->flags;
+        }
+        batchFlags |= 10;
+        if (!(batchFlags & 0x10) && !(batchFlags & 0x800)) {
+            batchFlags |= D_8011B0FC;
+        }
+        if ((!(textureFlags & 4) && !(batchFlags & 0x2000)) || batchFlags & 0x800) {
+            renderBatch = TRUE;
+        }
+        if (nonOpaque) {
+            renderBatch = (renderBatch + 1) & 1;
+        }
+        if (sp78 && batchFlags & 0x2000) {
             renderBatch = FALSE;
-            if (batchInfo->textureIndex == 0xFF) {
-                texture = NULL; // Solid color only
-            } else 
-                if(1) // Probably fake.
-            {
-                texture = gCurrentLevelModel->textures[batchInfo->textureIndex].texture;
-                textureFlags = texture->flags;
-            }
-
-            batchFlags |= 10;
-            if (!(batchFlags & RENDER_UNK_0000010) && !(batchFlags & RENDER_DECAL)) { // 0x10 = Depth write
-                batchFlags |= D_8011B0FC;
-            }
-            // temp & 0x04 = Is interlaced texture
-            if ((!(textureFlags & 4) && !(batchFlags & RENDER_UNK_0002000)) || (batchFlags & 0x800)) {
-                renderBatch = TRUE;
-            }
-            if (nonOpaque) {
-                renderBatch = (renderBatch + 1) & 1; // Why not just do `renderBatch ^= 1;` or `renderBatch = !renderBatch`?
-            }
-            if (sp78 && (batchFlags & RENDER_UNK_0002000)) {
-                renderBatch = FALSE;
-            }
-            if (renderBatch) {
-                // Problem with this section.
+        }
+        if (renderBatch) {
+            numberTriangles = batchInfo->facesOffset;
+            do { //Fakematch
                 numberVertices = (batchInfo + 1)->verticesOffset - batchInfo->verticesOffset;
-                numberTriangles =  batchInfo->facesOffset;
                 numberTriangles = (batchInfo + 1)->facesOffset - numberTriangles;
-                vertices = (s32) &segment->vertices[batchInfo->verticesOffset];
-                triangles = (s32) &segment->triangles[batchInfo->facesOffset];
-                
-                texOffset = batchInfo->unk7 << 14;
-                
-                levelHeaderIndex = (batchFlags >> 28) & 7;
-                if (levelHeaderIndex != 0) { // This is unused, so this should always be false.
-                    // Got to get that match, even if it costs me my dignity. 
-                    gDPSetEnvColor(gSceneCurrDisplayList++, 
-                        ((LevelHeader_70*)(((u8**)(&((LevelHeader **)(gCurrentLevelHeader2))[levelHeaderIndex]))[0x1C]))->red,
-                        ((LevelHeader_70*)(((u8**)(&((LevelHeader **)(gCurrentLevelHeader2))[levelHeaderIndex]))[0x1C]))->green,
-                        ((LevelHeader_70*)(((u8**)(&((LevelHeader **)(gCurrentLevelHeader2))[levelHeaderIndex]))[0x1C]))->blue, 
-                        ((LevelHeader_70*)(((u8**)(&((LevelHeader **)(gCurrentLevelHeader2))[levelHeaderIndex]))[0x1C]))->alpha
-                    );
-                } else {
-                    gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
+                vertices = (s32)(&segment->vertices[batchInfo->verticesOffset]);
+            } while (0);
+            triangles = (s32) &segment->triangles[batchInfo->facesOffset];
+            texOffset = batchInfo->unk7 << 14;
+            levelHeaderIndex = (batchFlags >> 28) & 7;
+            if (levelHeaderIndex != (batchInfo->verticesOffset * 0)) {
+                gDPSetEnvColor(gSceneCurrDisplayList++, 
+                    ((LevelHeader_70 *)((u8 **)(&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->red, 
+                    ((LevelHeader_70 *)((u8 **)(&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->green, 
+                    ((LevelHeader_70 *)((u8 **)(&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->blue, 
+                    ((LevelHeader_70 *)((u8 **)(&((LevelHeader **) gCurrentLevelHeader2)[levelHeaderIndex]))[28])->alpha
+                );
+            } else {
+                gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
+            }
+            if (batchFlags & 0x40000) {
+                color = gCurrentLevelHeader2->pulseLightData->outColorValue;
+                gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, color, color, color, color);
+                func_8007BA5C(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
+                gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(vertices), numberVertices, 0);
+                gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, TRIN_ENABLE_TEXTURE);
+                gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+            } else {
+                load_and_set_texture(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
+                batchFlags = TRUE;
+                if (texture == NULL) {
+                    batchFlags = FALSE;
                 }
-                if (batchFlags & RENDER_UNK_0040000) { // Only gets used in Spaceport alpha for the pulsating lights in the outside section.
-                    color = gCurrentLevelHeader2->pulseLightData->outColorValue & 0xFF;
-                    gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, color, color, color, color);
-                    func_8007BA5C(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
-                    gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(vertices), numberVertices, 0);
-                    gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, TRIN_ENABLE_TEXTURE);
-                    gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255); // Reset the primitive color
-                } else {
-                    load_and_set_texture(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
-                    batchFlags = TRIN_ENABLE_TEXTURE;
-                    if(texture == NULL) {
-                        batchFlags = TRIN_DISABLE_TEXTURE;
-                    }
-                    gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(vertices), numberVertices, 0);
-                    gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, batchFlags);
-                }
+                gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(vertices), numberVertices, 0);
+                gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, batchFlags);
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/render_level_segment.s")
-#endif
 
 void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, s32 *segmentsOrderIndex) {
     BspTreeNode *curNode;

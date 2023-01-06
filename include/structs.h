@@ -362,8 +362,8 @@ typedef struct LevelHeader {
   /* 0xA2 */ s8 unkA2;
   /* 0xA3 */ s8 unkA3;
   /* 0xA4 */ TextureHeader *unkA4;
-  /* 0xA8 */ u16 unkA8;
-  /* 0xAA */ u16 unkAA;
+  /* 0xA8 */ s16 unkA8;
+  /* 0xAA */ s16 unkAA;
   /* 0xAC */ PulsatingLightData *pulseLightData;
 
   /* 0xB0 */ s16 unkB0;
@@ -377,7 +377,7 @@ typedef struct LevelHeader {
   /* 0xB9 */ u8 unkB9;
   /* 0xBA */ s16 unkBA;
   /* 0xBC */ u8 unkBC;
-  /* 0xBD */ u8 unkBD;
+  /* 0xBD */ s8 unkBD;
   /* 0xBE */ u8 unkBE;
   /* 0xBF */ u8 unkBF;
   /* 0xC0 */ u8 unkC0;

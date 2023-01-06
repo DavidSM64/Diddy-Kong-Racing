@@ -137,12 +137,11 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 arg2);
 void obj_loop_fogchanger(Object* obj);
 void func_80028CD0(s32 updateRate);
 s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation);
-
-
-//Non Matching
 void render_level_segment(s32 segmentId, s32 nonOpaque);
-void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5);
 void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, s8** tris, s32 updateRate);
+
+
+void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5);
 void func_8002C7D4(void);
 Gfx *func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportIndex);
 s32 func_80027568(void);
