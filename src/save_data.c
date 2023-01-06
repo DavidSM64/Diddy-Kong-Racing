@@ -757,7 +757,7 @@ s32 write_game_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
     func_800732E8(arg1, gameData + 4);
     ret = get_file_extension(controllerIndex, 3, (char *)&fileExt);
     if (ret == CONTROLLER_PAK_GOOD) {
-        ret = write_controller_pak_file(controllerIndex, -1, (char *) sDKRacingAdv4, (char *)&fileExt, gameData, fileSize);
+        ret = write_controller_pak_file(controllerIndex, -1, (char *) sDKRacingAdv4, (char *) &fileExt, gameData, fileSize);
     }
     free_from_memory_pool(gameData);
     if (ret != CONTROLLER_PAK_GOOD) {
