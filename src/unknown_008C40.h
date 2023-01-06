@@ -48,6 +48,8 @@ void func_800098A4(s32, s32, f32, f32, f32, s32, s32, s32, s32, s32, s32, s32, s
 void func_80008174(void); // Non Matching
 void func_80008040(void); // Non Matching
 s32 func_800090C0(f32, f32, s16); // Non Matching
-void func_80008438(Object**, s32, s32);
+void func_80008438(Object **arg0, s32 numRacers, s32 updateRate); // Non Matching
+void func_80006FC8(Object **arg0, s32 numRacers, ObjectSegment *arg2, u8 arg3, s32 updateRate); // Non Matching
+void func_80006BFC(Object *arg0, ObjectSegment *arg1, Object *arg2, s32 updateRate); // Non Matching
 
 #endif
