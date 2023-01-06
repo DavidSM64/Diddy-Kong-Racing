@@ -107,7 +107,7 @@ s32 set_active_viewports_and_max(s32 arg0);
 void set_active_camera(s32 arg0);
 void func_80066818(s32 viewPortIndex, s32 arg1);
 void func_80066894(s32 viewPortIndex, s32 arg1);
-s32 check_for_extended_bg_flag(s32 viewPortIndex);
+s32 check_viewport_background_flag(s32 viewPortIndex);
 void func_80066940(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2);
 void set_viewport_properties(s32 viewPortIndex, s32 x1, s32 x2, s32 y1, s32 y2);
 s32 copy_viewport_background_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32 *x2, s32 *y2);
@@ -146,7 +146,7 @@ void func_80067D3C(Gfx **dlist, MatrixS **mats);
 void render_orthi_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, unk80068BF4 *arg4, s32 flags);
 s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags);
 void func_80069484(Gfx **arg0, MatrixS **arg1, ObjectTransform *arg2, f32 arg3, f32 arg4);
-void func_80067A3C(Gfx **dlist);
+void set_viewport_scissor(Gfx **dlist);
 void func_80069A40(Gfx **dlist);
 
 // Non Matching

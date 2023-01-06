@@ -218,6 +218,10 @@ s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
     return 0;
 }
 
+/**
+ * Unused variant of the xbus task function.
+ * Probably intended to be a secondary task system, since it doesn't set the var saying there's a task running.
+ */
 UNUSED void setup_ostask_xbus_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
     s32 *mesgBuf;
@@ -318,6 +322,10 @@ UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     }
 }
 
+/**
+ * Unused variant of the FIFO task function.
+ * Probably intended to be a secondary task system, since it doesn't set the var saying there's a task running.
+ */
 UNUSED void setup_ostask_fifo_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
     s32 *mesgBuf;
@@ -325,7 +333,7 @@ UNUSED void setup_ostask_fifo_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     mesgBuf = NULL;
     dkrtask = &gGfxTaskBuf[gfxBufCounter];
     gfxBufCounter++;
-    // gfxBufCounter being 2 would mean an out of bounds access of gGfxTaskBuf
+    //!@bug - gfxBufCounter being 2 would mean an out of bounds access of gGfxTaskBuf
     if (gfxBufCounter == 3) {
         gfxBufCounter = 0;
     }
@@ -408,7 +416,7 @@ void set_background_fill_colour(s32 red, s32 green, s32 blue) {
  * over the colour buffer. DrawBG if set to 0 (which never happens) will completely skip
  * over clearing the colour buffer.
 */
-void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG) {
+void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
     s32 widthAndHeight;
     s32 w;
     s32 h;
@@ -421,66 +429,66 @@ void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG) {
     w = GET_VIDEO_WIDTH(widthAndHeight);
     h = GET_VIDEO_HEIGHT(widthAndHeight);
 
-    gDPPipeSync((*dlist)++);
-    gDPSetScissor((*dlist)++, 0, 0, 0, w - 1, h - 1);
-    gDPSetCycleType((*dlist)++, G_CYC_FILL);
-    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_DEPTH_BUFFER);
-    gDPSetFillColor((*dlist)++, GPACK_RGBA5551(255, 255, 240, 0) << 16 | GPACK_RGBA5551(255, 255, 240, 0));
-    gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
-    gDPPipeSync((*dlist)++);
-    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_COLOUR_BUFFER);
+    gDPPipeSync((*dList)++);
+    gDPSetScissor((*dList)++, 0, 0, 0, w - 1, h - 1);
+    gDPSetCycleType((*dList)++, G_CYC_FILL);
+    gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_DEPTH_BUFFER);
+    gDPSetFillColor((*dList)++, GPACK_RGBA5551(255, 255, 240, 0) << 16 | GPACK_RGBA5551(255, 255, 240, 0));
+    gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
+    gDPPipeSync((*dList)++);
+    gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_COLOUR_BUFFER);
     if (drawBG) {
-        if (check_for_extended_bg_flag(0)) {
+        if (check_viewport_background_flag(0)) {
             if (gChecquerBGEnabled) {
-                render_chequer_background(dlist);
+                render_chequer_background(dList);
             } else if (D_800DE4C4) {
-                func_80078190(dlist);
+                func_80078190(dList);
             } else if (gBackgroundDrawFunc.ptr != NULL) {
-                gBackgroundDrawFunc.function((Gfx *) dlist, mtx);
+                gBackgroundDrawFunc.function((Gfx *) dList, mtx);
             } else {
-                gDPSetFillColor((*dlist)++, sBackgroundFillColour);
-                gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
+                gDPSetFillColor((*dList)++, sBackgroundFillColour);
+                gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
             }
             if (copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2)) {
-                gDPSetCycleType((*dlist)++, G_CYC_1CYCLE);
-                gDPSetPrimColor((*dlist)++, 0, 0, sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 255);
-                gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
-                gDPSetRenderMode((*dlist)++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
-                gDPFillRectangle((*dlist)++, x1, y1, x2, y2);
+                gDPSetCycleType((*dList)++, G_CYC_1CYCLE);
+                gDPSetPrimColor((*dList)++, 0, 0, sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 255);
+                gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+                gDPSetRenderMode((*dList)++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+                gDPFillRectangle((*dList)++, x1, y1, x2, y2);
             }
         } else {
             if (gChecquerBGEnabled) {
-                render_chequer_background(dlist);
+                render_chequer_background(dList);
             } else if (D_800DE4C4) {
-                func_80078190(dlist);
+                func_80078190(dList);
             } else if (gBackgroundDrawFunc.ptr != NULL) {
-                gBackgroundDrawFunc.function((Gfx *) dlist, mtx);
+                gBackgroundDrawFunc.function((Gfx *) dList, mtx);
             } else {
-                gDPSetFillColor((*dlist)++, (GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1) << 16) | GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1));
-                gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
+                gDPSetFillColor((*dList)++, (GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1) << 16) | GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1));
+                gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
             }
         }
     }
-    gDPPipeSync((*dlist)++);
-    func_80067A3C(dlist);
+    gDPPipeSync((*dList)++);
+    set_viewport_scissor(dList);
 }
 
 /**
  * Gets the framebuffer width, then points to the start of segment 0x01 in memory.
  * afterwards, calls the draw command that initialises all the rendermodes, ready for use.
  */
-void init_rdp_and_framebuffer(Gfx **dlist) {
+void init_rdp_and_framebuffer(Gfx **dList) {
     s32 width = GET_VIDEO_WIDTH(get_video_width_and_height_as_s32());
-    gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, SEGMENT_COLOUR_BUFFER);
-    gDPSetDepthImage((*dlist)++, SEGMENT_DEPTH_BUFFER);
-    gSPDisplayList((*dlist)++, dRdpInit);
+    gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, width, SEGMENT_COLOUR_BUFFER);
+    gDPSetDepthImage((*dList)++, SEGMENT_DEPTH_BUFFER);
+    gSPDisplayList((*dList)++, dRdpInit);
 }
 
 /**
  * Calls the draw command that sets all the OtherModes, ready for use.
  */
-void init_rsp(Gfx **dlist) {
-    gSPDisplayList((*dlist)++, dRspInit);
+void init_rsp(Gfx **dList) {
+    gSPDisplayList((*dList)++, dRspInit);
 }
 
 /**
@@ -573,7 +581,7 @@ void set_background_draw_function(void *func) {
  * Texture rectangle coordinates use 10.2 precision and texture coords use 10.5 precision.
  * Typically, you do these shifts in the draw call itself, but Rare decided to do it beforehand.
 */
-void render_textured_rectangle(Gfx **dlist, DrawTexture *element, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha) {
+void render_textured_rectangle(Gfx **dList, DrawTexture *element, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha) {
     TextureHeader *tex;
     s32 i;
     s32 uly;
@@ -583,8 +591,8 @@ void render_textured_rectangle(Gfx **dlist, DrawTexture *element, s32 xPos, s32 
     s32 t;
     s32 s;
 
-    gSPDisplayList((*dlist)++, dTextureRectangleModes);
-    gDPSetPrimColor((*dlist)++, 0, 0, red, green, blue, alpha); 
+    gSPDisplayList((*dList)++, dTextureRectangleModes);
+    gDPSetPrimColor((*dList)++, 0, 0, red, green, blue, alpha); 
     xPos <<= 2;
     yPos <<= 2;
     for (i = 0; (tex = element[i].texture); i++) {
@@ -603,12 +611,12 @@ void render_textured_rectangle(Gfx **dlist, DrawTexture *element, s32 xPos, s32 
                 t = -(uly << 3);
                 uly = 0;
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
-            gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+            gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
+            gSPTextureRectangle((*dList)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
         }
     }
-    gDPPipeSync((*dlist)++);
-    gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+    gDPPipeSync((*dList)++);
+    gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_078050/render_texture_rectangle_scaled.s")

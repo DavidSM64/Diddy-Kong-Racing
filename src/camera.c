@@ -486,7 +486,7 @@ void func_80066894(s32 viewPortIndex, s32 arg1) {
  * Return's the current viewport's flag status for extended backgrounds.
  * Required to draw some extra things used in menus.
 */
-s32 check_for_extended_bg_flag(s32 viewPortIndex) {
+s32 check_viewport_background_flag(s32 viewPortIndex) {
     return gScreenViewports[viewPortIndex].flags & VIEWPORT_EXTRA_BG;
 }
 
@@ -755,7 +755,10 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
 GLOBAL_ASM("asm/non_matchings/camera/func_80066CDC.s")
 #endif
 
-void func_80067A3C(Gfx **dlist) {
+/**
+ * Takes the size of the screen as depicted by an active screen viewport, then sets the RDP scissor to match it.
+*/
+void set_viewport_scissor(Gfx **dlist) {
     s32 size;
     s32 lrx;
     s32 lry;
@@ -775,8 +778,8 @@ void func_80067A3C(Gfx **dlist) {
     numViewports = gNumberOfViewports;
 
     if (numViewports != 0) {
-        if (numViewports == 2) {
-            numViewports = 3;
+        if (numViewports == VIEWPORTS_COUNT_3_PLAYERS) {
+            numViewports = VIEWPORTS_COUNT_4_PLAYERS;
         }
         lrx = ulx = 0;
         lry = uly = 0;
@@ -965,7 +968,7 @@ void func_800682AC(Gfx **dlist) {
         gDPSetScissor((*dlist)++, G_SC_NON_INTERLACE, 0, 0, width - 1, height - 1);
         func_80068158(dlist, width >> 1, height >> 1, width >> 1, height >> 1);
     } else {
-        func_80067A3C(dlist);
+        set_viewport_scissor(dlist);
         func_80068158(dlist, 0, 0, 0, 0);
     }
     gActiveCameraID = 0;
