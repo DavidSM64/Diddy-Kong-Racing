@@ -711,7 +711,7 @@ s32 read_game_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
         start_reading_controller_data(controllerIndex);
         return (controllerIndex << 30) | ret;
     }
-    ret = get_file_number(controllerIndex, (char *)sDKRacingAdv3, fileExt, &fileNumber);
+    ret = get_file_number(controllerIndex, (char *) sDKRacingAdv3, fileExt, &fileNumber);
     if (ret == CONTROLLER_PAK_GOOD) {
         ret = get_file_size(controllerIndex, fileNumber, &fileSize);
         if (fileSize == 0) {
