@@ -1203,7 +1203,7 @@ s32 check_if_in_draw_range(Object *obj) {
                 temp2 = viewDistance - fadeDist;
                 if (temp2 > 0) {
                     fadeDist = dist - fadeDist;
-                    alpha = ((f64) (f32) (1.0f - (f64) ((fadeDist) / temp2)) * 255.0f);
+                    alpha = ((f32) (1.0 - ((fadeDist) / temp2)) * 255.0);
                 }
                 if (alpha == 0) {
                     alpha = 1;

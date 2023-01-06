@@ -4357,7 +4357,7 @@ void obj_loop_log(Object *obj, s32 updateRate) {
             obj->unk7C.word--;
         }
     }
-    obj->segment.trans.y_position -= (f64) (f32) obj->unk7C.word;
+    obj->segment.trans.y_position -= (f32) obj->unk7C.word * 1.0;
     if (obj->unk78 > 0) {
         obj->unk78 -= updateRate;
         if (obj->unk78 < 0) {

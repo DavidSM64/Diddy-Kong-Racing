@@ -295,7 +295,7 @@ void handle_music_fade(u8 updateRate) {
         sMusicDelayTimer += updateRate;
         sMusicFadeVolume = ((f32)sMusicDelayTimer) / ((f32)sMusicDelayLength);
 
-        if ((f64)sMusicFadeVolume > 1.0f) {
+        if (sMusicFadeVolume > 1.0) {
             sMusicDelayTimer = 0;
             sMusicDelayLength = 0;
             sMusicFadeVolume = 1.0f;
@@ -305,7 +305,7 @@ void handle_music_fade(u8 updateRate) {
 
         sMusicDelayTimer -= updateRate;
         sMusicFadeVolume = 1.0f - ((f32)sMusicDelayTimer) / ((f32)sMusicDelayLength);
-        if ((f64)sMusicFadeVolume < 0) {
+        if (sMusicFadeVolume < 0.0) {
             sMusicDelayTimer = 0;
             sMusicDelayLength = 0;
             sMusicFadeVolume = 0.0f;
@@ -314,7 +314,6 @@ void handle_music_fade(u8 updateRate) {
     }
 
     if (D_800DC658 > 0) {
-        //reg_arg0 = updateRate;
         for (reg_s2 = 0; reg_s2 < D_800DC658;) {
             D_80115D48[reg_s2].unk2 -= updateRate;
             if (D_80115D48[reg_s2].unk2 <= 0) {
@@ -327,7 +326,6 @@ void handle_music_fade(u8 updateRate) {
                     D_80115D48[reg_s2].unk2 = D_80115D48[reg_s2 + 1].unk2;
                     D_80115D48[reg_s2].unk4 = D_80115D48[reg_s2 + 1].unk4;
                     j++;
-                    //break;
                 }
                 j++;
             } else {
