@@ -214,7 +214,7 @@ s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
     dkrtask->unused60 = 0xFF;
     dkrtask->unused64 = 0xFF;
     osWritebackDCacheAll();
-    osSendMesg(osScInterruptQ, dkrtask, 1);
+    osSendMesg(osScInterruptQ, dkrtask, OS_MESG_BLOCK);
     return 0;
 }
 
@@ -224,7 +224,7 @@ s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
  */
 UNUSED void setup_ostask_xbus_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
-    s32 *mesgBuf;
+    OSMesg mesgBuf;
 
     mesgBuf = NULL;
     dkrtask = &gGfxTaskBuf2[gfxBufCounter2];
@@ -264,7 +264,7 @@ UNUSED void setup_ostask_xbus_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     osWritebackDCacheAll();
     osSendMesg(osScInterruptQ, dkrtask, 1);
     if (recvMesg) {
-        osRecvMesg(&D_80125EA0, (OSMesg) &mesgBuf, 1);
+        osRecvMesg(&D_80125EA0, &mesgBuf, OS_MESG_BLOCK);
     }
 }
 
@@ -276,7 +276,7 @@ UNUSED void setup_ostask_xbus_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
  */
 UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
-    s32 *mesgBuf;
+    OSMesg mesgBuf;
 
     mesgBuf = NULL;
     dkrtask = &gGfxTaskBuf2[gfxBufCounter2];
@@ -318,7 +318,7 @@ UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     osSendMesg(osScInterruptQ, dkrtask, 1);
     
     if (recvMesg) {
-        osRecvMesg(&D_80125EA0, (OSMesg) &mesgBuf, 1);
+        osRecvMesg(&D_80125EA0, &mesgBuf, OS_MESG_BLOCK);
     }
 }
 
@@ -328,7 +328,7 @@ UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
  */
 UNUSED void setup_ostask_fifo_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
-    s32 *mesgBuf;
+    OSMesg mesgBuf;
 
     mesgBuf = NULL;
     dkrtask = &gGfxTaskBuf[gfxBufCounter];
@@ -368,7 +368,7 @@ UNUSED void setup_ostask_fifo_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     osWritebackDCacheAll();
     osSendMesg(osScInterruptQ, dkrtask, 1);
     if (recvMesg) {
-        osRecvMesg(&gGfxTaskMesgQueue, (OSMesg) &mesgBuf, 1);
+        osRecvMesg(&gGfxTaskMesgQueue, &mesgBuf, OS_MESG_BLOCK);
     }
 }
 
