@@ -315,7 +315,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, s8 **tris, s32 updat
     if ((gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_1) || gCurrentLevelHeader2->unkBD) {
         D_8011B0FC = 1;
     }
-    if (gCurrentLevelHeader2->unk49 == (-1)) {
+    if (gCurrentLevelHeader2->unk49 == -1) {
         i = (gCurrentLevelHeader2->unkA4->width << 9) - 1;
         gCurrentLevelHeader2->unkA8 = (gCurrentLevelHeader2->unkA8 + (gCurrentLevelHeader2->unkA2 * tempUpdateRate)) & i;
         i = (gCurrentLevelHeader2->unkA4->height << 9) - 1;
