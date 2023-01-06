@@ -120,15 +120,15 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of January 5, 2023, this is our current score:
+As of January 6, 2023, this is our current score:
 ```
  ==================================================================
                ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------ 48.57% Complete -------------------------
-                    # Decompiled functions: 1463
-                    # GLOBAL_ASM remaining: 375
+ ------------------------ 48.68% Complete -------------------------
+                    # Decompiled functions: 1464
+                    # GLOBAL_ASM remaining: 374
                     # NON_MATCHING functions: 11
-                 # NON_EQUIVALENT WIP functions: 64
+                 # NON_EQUIVALENT WIP functions: 65
  -------------------------- Game Status ---------------------------
              Balloons: 24/47, Keys: 3/4, Trophies: 2/5
                T.T. Amulets: 2/4, Wizpig Amulets: 2/4
