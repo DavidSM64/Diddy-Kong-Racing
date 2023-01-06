@@ -66,7 +66,7 @@ void *D_80115D00;
 u8 D_80115D04;
 u8 D_80115D05;
 s32 musicTempo;
-u32 *D_80115D0C;
+u32 *gSeqLengthTable;
 ALBankFile *ALBankFile_80115D10; // And I have reason to believe these are voice clips.
 ALBankFile *ALBankFile_80115D14; // These are sound effects, I do not know if it is ALL the sound effects.
 
@@ -95,16 +95,20 @@ u32 D_80115F88;
 
 /******************************/
 
+/**
+ * Allocate memory for all of the audio systems, including sequence data, sound data and heaps.
+ * Afterwards, set up the audio thread and start it.
+*/
 void audio_init(OSSched *sc) {
     s32 iCnt;
     ALSynConfig synth_config;
     s32 *addrPtr;
     u32 seqfSize;
-    u32 seq_max_len;
+    u32 seqLength;
     UNUSED u32 pad;
     audioMgrConfig audConfig;
 
-    seq_max_len = 0;
+    seqLength = 0;
     alHeapInit(&gALHeap, gBssSectionStart, AUDIO_HEAP_SIZE);
 
     addrPtr = (s32 *) load_asset_section_from_rom(ASSET_AUDIO_TABLE);
@@ -132,16 +136,16 @@ void audio_init(OSSched *sc) {
     ALSeqFile_80115CF8 = allocate_from_main_pool_safe(seqfSize, COLOUR_TAG_CYAN);
     load_asset_to_address(ASSET_AUDIO, (u32) ALSeqFile_80115CF8, addrPtr[4], seqfSize);
     alSeqFileNew(ALSeqFile_80115CF8, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[4]));
-    D_80115D0C = (u32 *) allocate_from_main_pool_safe((ALSeqFile_80115CF8->seqCount) * 4, COLOUR_TAG_CYAN);
+    gSeqLengthTable = (u32 *) allocate_from_main_pool_safe((ALSeqFile_80115CF8->seqCount) * 4, COLOUR_TAG_CYAN);
 
     for (iCnt = 0; iCnt < ALSeqFile_80115CF8->seqCount; iCnt++) {
         pad = (u32) (ALSeqFile_80115CF8 + 8 + iCnt * 8); // Fakematch
-        D_80115D0C[iCnt] = ALSeqFile_80115CF8->seqArray[iCnt].len;
-        if (D_80115D0C[iCnt] & 1) {
-            D_80115D0C[iCnt]++;
+        gSeqLengthTable[iCnt] = ALSeqFile_80115CF8->seqArray[iCnt].len;
+        if (gSeqLengthTable[iCnt] & 1) {
+            gSeqLengthTable[iCnt]++;
         }
-        if (seq_max_len < D_80115D0C[iCnt]) {
-            seq_max_len = D_80115D0C[iCnt];
+        if (seqLength < gSeqLengthTable[iCnt]) {
+            seqLength = gSeqLengthTable[iCnt];
         }
     }
 
@@ -157,8 +161,8 @@ void audio_init(OSSched *sc) {
     gMusicPlayer = func_80002224(24, 120);
     set_voice_limit(gMusicPlayer, 18);
     gSndFxPlayer = func_80002224(16, 50);
-    D_80115CFC = allocate_from_main_pool_safe(seq_max_len, COLOUR_TAG_CYAN);
-    D_80115D00 = allocate_from_main_pool_safe(seq_max_len, COLOUR_TAG_CYAN);
+    D_80115CFC = allocate_from_main_pool_safe(seqLength, COLOUR_TAG_CYAN);
+    D_80115D00 = allocate_from_main_pool_safe(seqLength, COLOUR_TAG_CYAN);
     audConfig.unk04 = 150;
     audConfig.unk00 = 32;
     audConfig.maxChannels = 16;
@@ -818,7 +822,7 @@ void func_8000232C(ALSeqPlayer *arg0, void *arg1, u8 *arg2, ALCSeq *arg3) {
     u8 temp_a0_2;
 
     if ((alCSPGetState((ALCSPlayer* ) arg0) == 0) && (*arg2 != 0)) {
-        load_asset_to_address(ASSET_AUDIO, (u32) arg1, ALSeqFile_80115CF8->seqArray[*arg2].offset - get_rom_offset_of_asset(ASSET_AUDIO, 0), (s32) D_80115D0C[*arg2]);
+        load_asset_to_address(ASSET_AUDIO, (u32) arg1, ALSeqFile_80115CF8->seqArray[*arg2].offset - get_rom_offset_of_asset(ASSET_AUDIO, 0), (s32) gSeqLengthTable[*arg2]);
         alCSeqNew(arg3, arg1);
         alCSPSetSeq((ALCSPlayer* ) arg0, arg3);
         alCSPPlay((ALCSPlayer* ) arg0);

@@ -24,9 +24,9 @@ s32 sBackgroundFillColour = GPACK_RGBA5551(0, 0, 0, 1) | (GPACK_RGBA5551(0, 0, 0
 u32 D_800DE4C0 = 0x40;
 TextureHeader *D_800DE4C4 = 0;
 TextureHeader *D_800DE4C8 = 0;
-s32 D_800DE4CC = 0;
+s32 gChecquerBGEnabled = 0;
 
-unk800DE4D0 gBackgroundDrawFunc = { NULL };
+BackgroundFunction gBackgroundDrawFunc = { NULL };
 s32 gfxBufCounter = 0;
 s32 gfxBufCounter2 = 0;
 s32 gGfxTaskIsRunning = FALSE;
@@ -71,7 +71,7 @@ Gfx D_800DE598[] = {
     gsSPEndDisplayList(),
 };
 
-Gfx D_800DE5E0[] = {
+Gfx dChequerBGSettings[] = {
     gsDPPipeSync(),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
@@ -157,16 +157,16 @@ OSMesgQueue D_80125EC0;
 OSMesgQueue gGfxTaskMesgQueue;
 OSMesg D_80125EF0[8];
 OSMesg gGfxTaskMesgBuf[8];
-u8 D_80125F30;
-u8 D_80125F31;
-u8 D_80125F32;
-u8 D_80125F33;
-u8 D_80125F34;
-u8 D_80125F35;
-u8 D_80125F36;
-u8 D_80125F37;
-s32 D_80125F38;
-s32 D_80125F3C;
+u8 gChequerBGColourR1;
+u8 gChequerBGColourG1;
+u8 gChequerBGColourB1;
+u8 gChequerBGColourA1;
+u8 gChequerBGColourR2;
+u8 gChequerBGColourG2;
+u8 gChequerBGColourB2;
+u8 gChequerBGColourA2;
+s32 gChequerBGWidth;
+s32 gChequerBGHeight;
 
 DKR_OSTask gGfxTaskBuf[2];
 DKR_OSTask gGfxTaskBuf2[2];
@@ -194,7 +194,7 @@ s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
     dkrtask->unused5C = COLOUR_TAG_RED;
     dkrtask->task.data_ptr = (u64 *) dlBegin;
     dkrtask->task.data_size = ((s32) dlEnd - (s32) dlBegin) >> 3; // Shifted by 3, repsenting the size of the Gfx type.
-    dkrtask->task.type = 1;
+    dkrtask->task.type = M_GFXTASK;
     dkrtask->task.flags = 2;
     dkrtask->task.ucode_boot = (u64 *) rspF3DDKRBootStart;
     dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
@@ -230,7 +230,7 @@ UNUSED void setup_ostask_xbus_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     }
     dkrtask->task.data_ptr = (u64 *) dlBegin;
     dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
-    dkrtask->task.type = 1;
+    dkrtask->task.type = M_GFXTASK;
     dkrtask->task.flags = 2;
     dkrtask->task.ucode_boot = (u64 *) rspF3DDKRBootStart;
     dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
@@ -284,7 +284,7 @@ UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->task.data_ptr = (u64 *) dlBegin;
     dkrtask->task.ucode_boot = (u64 *) rspF3DDKRBootStart;
     dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
-    dkrtask->task.type = 1;
+    dkrtask->task.type = M_GFXTASK;
     dkrtask->task.flags = 2;
     dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
     dkrtask->task.ucode = (u64 *) rspF3DDKRFifoStart;
@@ -332,7 +332,7 @@ UNUSED void setup_ostask_fifo_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     
     dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
     dkrtask->task.data_ptr = (u64 *) dlBegin;
-    dkrtask->task.type = 1;
+    dkrtask->task.type = M_GFXTASK;
     dkrtask->task.flags = 2;
     dkrtask->task.ucode_boot = (u64 *) rspF3DDKRBootStart;
     dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
@@ -403,7 +403,6 @@ void set_background_fill_colour(s32 red, s32 green, s32 blue) {
     sBackgroundFillColour = GPACK_RGBA5551(red, green, blue, 1);
     sBackgroundFillColour |= (sBackgroundFillColour << 16);
 }
-
 /**
  * Clears the ZBuffer first, then decides how to draw the background which goes directly
  * over the colour buffer. DrawBG if set to 0 (which never happens) will completely skip
@@ -431,10 +430,10 @@ void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG) {
     gDPPipeSync((*dlist)++);
     gDPSetColorImage((*dlist)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_COLOUR_BUFFER);
     if (drawBG) {
-        if (func_80066910(0)) {
-            if (D_800DE4CC) {
-                func_800787FC(dlist);
-            } else if (D_800DE4C4 != 0) {
+        if (check_for_extended_bg_flag(0)) {
+            if (gChecquerBGEnabled) {
+                render_chequer_background(dlist);
+            } else if (D_800DE4C4) {
                 func_80078190(dlist);
             } else if (gBackgroundDrawFunc.ptr != NULL) {
                 gBackgroundDrawFunc.function((Gfx *) dlist, mtx);
@@ -450,9 +449,9 @@ void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG) {
                 gDPFillRectangle((*dlist)++, x1, y1, x2, y2);
             }
         } else {
-            if (D_800DE4CC) {
-                func_800787FC(dlist);
-            } else if (D_800DE4C4 != 0) {
+            if (gChecquerBGEnabled) {
+                render_chequer_background(dlist);
+            } else if (D_800DE4C4) {
                 func_80078190(dlist);
             } else if (gBackgroundDrawFunc.ptr != NULL) {
                 gBackgroundDrawFunc.function((Gfx *) dlist, mtx);
@@ -502,53 +501,63 @@ void func_80078170(TextureHeader *arg0, TextureHeader *arg1, u32 arg2) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078190.s")
 
-UNUSED void func_80078778(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    D_80125F30 = (arg0 >> 24) & 0xFF;
-    D_80125F31 = (arg0 >> 16) & 0xFF;
-    D_80125F32 = (arg0 >> 8) & 0xFF;
-    D_80125F33 = arg0 & 0xFF;
-    D_80125F34 = (arg1 >> 24) & 0xFF;
-    D_80125F35 = (arg1 >> 16) & 0xFF;
-    D_80125F36 = (arg1 >> 8) & 0xFF;
-    D_80125F37 = arg1 & 0xFF;
-    D_80125F38 = arg2;
-    D_80125F3C = arg3;
-    D_800DE4CC = 1;
+/**
+ * Enables the chequer background and sets up its properties.
+*/
+UNUSED void set_chequer_background(s32 colourA, s32 colourB, s32 width, s32 height) {
+    gChequerBGColourR1 = (colourA >> 24) & 0xFF;
+    gChequerBGColourG1 = (colourA >> 16) & 0xFF;
+    gChequerBGColourB1 = (colourA >> 8) & 0xFF;
+    gChequerBGColourA1 = colourA & 0xFF;
+    gChequerBGColourR2 = (colourB >> 24) & 0xFF;
+    gChequerBGColourG2 = (colourB >> 16) & 0xFF;
+    gChequerBGColourB2 = (colourB >> 8) & 0xFF;
+    gChequerBGColourA2 = colourB & 0xFF;
+    gChequerBGWidth = width;
+    gChequerBGHeight = height;
+    gChecquerBGEnabled = TRUE;
 }
 
-UNUSED void func_800787F0(void) {
-    D_800DE4CC = 0;
+/**
+ * Disables the chequer background.
+*/
+UNUSED void disable_chequer_background(void) {
+    gChecquerBGEnabled = FALSE;
 }
 
-void func_800787FC(Gfx **arg0) {
+/**
+ * Uses global chequerboard settings to render a background using two different alternating colours.
+ * Goes unused.
+*/
+void render_chequer_background(Gfx **dList) {
     s32 height;
     s32 width;
-    s32 var_t4; // Flips between 0 and 1
+    s32 flip; // Flips between 0 and 1
     s32 y;
     s32 x;
 
-    var_t4 = get_video_width_and_height_as_s32();
-    height = GET_VIDEO_HEIGHT(var_t4) & 0xFFFF;
-    width = GET_VIDEO_WIDTH(var_t4);
+    width = get_video_width_and_height_as_s32();
+    height = GET_VIDEO_HEIGHT(width) & 0xFFFF;
+    width = GET_VIDEO_WIDTH(width);
     
-    gSPDisplayList((*arg0)++, D_800DE5E0);
-    gDPSetPrimColor((*arg0)++, 0, 0, D_80125F30, D_80125F31, D_80125F32, D_80125F33);
+    gSPDisplayList((*dList)++, dChequerBGSettings);
+    gDPSetPrimColor((*dList)++, 0, 0, gChequerBGColourR1, gChequerBGColourG1, gChequerBGColourB1, gChequerBGColourA1);
 
-    for (y = 0, var_t4 = 0; y < height; y += D_80125F3C, var_t4 ^= 1) {
-        for (x = var_t4 * D_80125F38; x < width; x += D_80125F38 * 2) {
-            gDPFillRectangle((*arg0)++, x, y, x + D_80125F38, y + D_80125F3C);            
+    for (y = 0, flip = 0; y < height; y += gChequerBGHeight, flip ^= 1) {
+        for (x = flip * gChequerBGWidth; x < width; x += gChequerBGWidth * 2) {
+            gDPFillRectangle((*dList)++, x, y, x + gChequerBGWidth, y + gChequerBGHeight);            
         }
     }
     
-    gDPSetPrimColor((*arg0)++, 0, 0, D_80125F34, D_80125F35, D_80125F36, D_80125F37);
+    gDPSetPrimColor((*dList)++, 0, 0, gChequerBGColourR2, gChequerBGColourG2, gChequerBGColourB2, gChequerBGColourA2);
     
-    for (y = 0, var_t4 = 1; y < height; y += D_80125F3C, var_t4 ^= 1) {
-        for (x = var_t4 * D_80125F38; x < width; x += D_80125F38 * 2) {
-            gDPFillRectangle((*arg0)++, x, y, x + D_80125F38, y + D_80125F3C);            
+    for (y = 0, flip = 1; y < height; y += gChequerBGHeight, flip ^= 1) {
+        for (x = flip * gChequerBGWidth; x < width; x += gChequerBGWidth * 2) {
+            gDPFillRectangle((*dList)++, x, y, x + gChequerBGWidth, y + gChequerBGHeight);            
         }
     }
     
-    gDPPipeSync((*arg0)++);
+    gDPPipeSync((*dList)++);
 }
 
 /**

@@ -412,9 +412,9 @@ void func_80066610(void) {
     D_800DD134 = 1 - D_800DD134;
     for (i = 0; i < 4; i++) {
         if (gScreenViewports[i].flags & VIEWPORT_UNK_04) {
-            gScreenViewports[i].flags &= ~VIEWPORT_UNK_01;
+            gScreenViewports[i].flags &= ~VIEWPORT_EXTRA_BG;
         } else if (gScreenViewports[i].flags & VIEWPORT_UNK_02) {
-            gScreenViewports[i].flags |= VIEWPORT_UNK_01;
+            gScreenViewports[i].flags |= VIEWPORT_EXTRA_BG;
         }
         gScreenViewports[i].flags &= ~VIEWPORT_UNK_02 | VIEWPORT_UNK_04;
         if (gScreenViewports[i].flags & 1) {
@@ -466,7 +466,7 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80066610.s")
 
 void func_80066818(s32 viewPortIndex, s32 arg1) {
     if (arg1 != 0) {
-        gScreenViewports[viewPortIndex].flags |= VIEWPORT_UNK_01;
+        gScreenViewports[viewPortIndex].flags |= VIEWPORT_EXTRA_BG;
     } else {
         gScreenViewports[viewPortIndex].flags |= VIEWPORT_UNK_02;
     }
@@ -475,15 +475,19 @@ void func_80066818(s32 viewPortIndex, s32 arg1) {
 
 void func_80066894(s32 viewPortIndex, s32 arg1) {
     if (arg1 != 0) {
-        gScreenViewports[viewPortIndex].flags &= ~VIEWPORT_UNK_01;
+        gScreenViewports[viewPortIndex].flags &= ~VIEWPORT_EXTRA_BG;
     } else {
         gScreenViewports[viewPortIndex].flags |= VIEWPORT_UNK_04;
     }
     gScreenViewports[viewPortIndex].flags &= ~VIEWPORT_UNK_02;
 }
 
-s32 func_80066910(s32 viewPortIndex) {
-    return gScreenViewports[viewPortIndex].flags & VIEWPORT_UNK_01;
+/**
+ * Return's the current viewport's flag status for extended backgrounds.
+ * Required to draw some extra things used in menus.
+*/
+s32 check_for_extended_bg_flag(s32 viewPortIndex) {
+    return gScreenViewports[viewPortIndex].flags & VIEWPORT_EXTRA_BG;
 }
 
 // proposed name: resize_viewport
@@ -637,7 +641,7 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
     widthAndHeight = get_video_width_and_height_as_s32();
     temp_t0 = widthAndHeight >> 16;
     temp_a3 = temp_t0 >> 1;
-    if (gScreenViewports[gActiveCameraID].flags & VIEWPORT_UNK_01) {
+    if (gScreenViewports[gActiveCameraID].flags & VIEWPORT_EXTRA_BG) {
         gDPSetScissor((*dlist)++, SCISSOR_INTERLACE,
             gScreenViewports[gActiveCameraID].scissorX1,
             gScreenViewports[gActiveCameraID].scissorY1,
@@ -940,7 +944,7 @@ void func_80068158(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY) {
         height = -height;
         tempWidth = -width;
     }
-    if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_UNK_01)) {
+    if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_EXTRA_BG)) {
         D_800DD148[gActiveCameraID].vp.vtrans[0] = posX * 4;
         D_800DD148[gActiveCameraID].vp.vtrans[1] = posY * 4;
         D_800DD148[gActiveCameraID].vp.vscale[0] = tempWidth * 4;
@@ -957,7 +961,7 @@ void func_800682AC(Gfx **dlist) {
     widthAndHeight = get_video_width_and_height_as_s32();
     height = GET_VIDEO_HEIGHT(widthAndHeight);
     width = GET_VIDEO_WIDTH(widthAndHeight);
-    if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_UNK_01)) {
+    if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_EXTRA_BG)) {
         gDPSetScissor((*dlist)++, G_SC_NON_INTERLACE, 0, 0, width - 1, height - 1);
         func_80068158(dlist, width >> 1, height >> 1, width >> 1, height >> 1);
     } else {
