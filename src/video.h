@@ -73,8 +73,11 @@ enum VideoModes {
 
 extern s32 gVideoRefreshRate;
 extern f32 gVideoAspectRatio;
-extern u16 *gVideoCurrFramebuffer;
 extern u16 *gVideoDepthBuffer;
+extern u16 *gVideoCurrFramebuffer;
+extern u16 *gVideoLastFramebuffer;
+extern u16 *gVideoCurrDepthBuffer;
+extern u16 *gVideoLastDepthBuffer;
 
 extern OSViMode osViModeNtscLpn1, osViModePalLpn1, osViModeMpalLpn1, osViModePalLan1, osViModeNtscLan1, osViModeMpalLan1;
 

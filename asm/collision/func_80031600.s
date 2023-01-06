@@ -1,3 +1,18 @@
+.section .rodata
+
+glabel D_800E5F60
+.float -0.1
+glabel D_800E5F64
+.float -0.1
+glabel D_800E5F68
+.float 0.707
+glabel D_800E5F6C
+.float 0.45
+glabel D_800E5F70
+.float -0.1
+
+.section .text
+
 glabel func_80031600
 /* 032200 80031600 24080001 */  li    $t0, 1
 /* 032204 80031604 A3A80001 */  sb    $t0, 1($sp)

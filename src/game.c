@@ -41,6 +41,7 @@
 #include "object_models.h"
 #include "racer.h"
 #include "particles.h"
+#include "math_util.h"
 
 /************ .rodata ************/
 
@@ -105,20 +106,15 @@ s32 gNumHudMatPerPlayer[4] = { 300, 400, 550, 600 };
 s32 gNumHudTrisPerPlayer[4] = { 20, 30, 40, 50 };
 s8 gDrawFrameTimer = 0;
 FadeTransition D_800DD3F4 = FADE_TRANSITION(128, FADE_COLOR_BLACK, 20, 0);
-// Unused?
-FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
+UNUSED FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
 s32 sLogicUpdateRate = LOGIC_5FPS;
 FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
-// Unused?
-// CAR / HOV / PLN - So this is vehicle type?
 UNUSED char *D_800DD410[3] = {
     (char *)sDebugCarString, (char *)sDebugHovercraftString, (char *)sDebugPlaneString
 };
 FadeTransition D_800DD41C = FADE_TRANSITION(0, FADE_COLOR_BLACK, 30, -1);
 FadeTransition D_800DD424 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 260, -1);
 /*******************************/
-
-extern s32 gShowControllerPakMenu;
 
 /************ .bss ************/
 
@@ -148,7 +144,7 @@ TriangleList *gGameCurrTriList;
 UNUSED s32 D_80121230[8];
 s8 D_80121250[16]; //Settings4C
 OSSched gMainSched; // 0x288 / 648 bytes
-UNUSED u8 D_80121268[0x2000]; // 0x2000 / 8192 bytes Padding?
+u64 gSchedStack[0x400];
 s32 gSPTaskNum;
 s32 sRenderContext;
 s32 D_801234F0;
@@ -241,6 +237,7 @@ void func_8006A6B0(void) {
         gLevelNames[temp] = (char *) &D_800DD310[gTempAssetTable[temp]];
     }
     free_from_memory_pool(gTempAssetTable);
+    // Antipiracy measure
     checksumCount = 0;
     for (j = 0; j < gFunc80068158Length; j++) {
         checksumCount += ((u8 *) (&func_80068158))[j];
@@ -347,16 +344,14 @@ UNUSED s32 func_8006AE2C(s32 arg0, s8 arg1, s8 arg2) {
     return -1;
 }
 
-// Unused.
-s32 func_8006B018(s8 arg0) {
+UNUSED s32 func_8006B018(s8 arg0) {
     if ((arg0 >= 0) && (arg0 < 16)) {
         return D_80121180[arg0];
     }
     return 0;
 }
 
-// Unused.
-s32 func_8006B054(s8 arg0) {
+UNUSED s32 func_8006B054(s8 arg0) {
     s32 out, i;
     out = 0;
     for (i = 0; i < gNumberOfLevelHeaders; i++) {
@@ -567,7 +562,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     func_80000CBC();
     func_80031BB8(0x20);
     var_s0 = VEHICLE_CAR;
-    if (vehicleId >= VEHICLE_CAR && vehicleId < NUMBER_OF_VEHICLE_TYPES) {
+    if (vehicleId >= VEHICLE_CAR && vehicleId < NUMBER_OF_PLAYER_VEHICLES) {
         var_s0 = gCurrentLevelHeader->unk4F[vehicleId];
     }
     func_80017E74(var_s0);
@@ -917,7 +912,7 @@ void init_game(void) {
         mode = 28;
     }
 
-    osCreateScheduler(&gMainSched, &gSPTaskNum, /*priority*/ 13, (u8) mode, 1);
+    osCreateScheduler(&gMainSched, &gSchedStack[0x400], /*priority*/ 13, (u8) mode, 1);
     D_800DD3A0 = FALSE;
     if (!func_8006EFB8()) {
         D_800DD3A0 = TRUE;
@@ -969,9 +964,9 @@ void main_game_loop(void) {
     if (gScreenStatus == MESG_SKIP_BUFFER_SWAP) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
         set_rsp_segment(&gCurrDisplayList, 0, 0);
-        set_rsp_segment(&gCurrDisplayList, 1, (s32)gVideoCurrFramebuffer);
-        set_rsp_segment(&gCurrDisplayList, 2, gVideoLastDepthBuffer);
-        set_rsp_segment(&gCurrDisplayList, 4, (s32)gVideoCurrFramebuffer - 0x500);
+        set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoCurrFramebuffer);
+        set_rsp_segment(&gCurrDisplayList, 2, (s32) gVideoLastDepthBuffer);
+        set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoCurrFramebuffer - 0x500);
     }
     if (gDrawFrameTimer == 0) {
         setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
@@ -988,9 +983,9 @@ void main_game_loop(void) {
     gGameCurrTriList = gHudTriangles[gSPTaskNum];
 
     set_rsp_segment(&gCurrDisplayList, 0, 0);
-    set_rsp_segment(&gCurrDisplayList, 1, gVideoLastFramebuffer);
-    set_rsp_segment(&gCurrDisplayList, 2, gVideoLastDepthBuffer);
-    set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);
+    set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoLastFramebuffer);
+    set_rsp_segment(&gCurrDisplayList, 2, (s32) gVideoLastDepthBuffer);
+    set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoLastFramebuffer - 0x500);
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_background(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE); 
@@ -1061,7 +1056,7 @@ void main_game_loop(void) {
         if (osTvType == TV_TYPE_PAL) {
             framebufferSize = (s32)((SCREEN_WIDTH * SCREEN_HEIGHT * 2) * 1.1f);
         }
-        dmacopy_doubleword(gVideoLastFramebuffer, (s32)gVideoCurrFramebuffer, (s32)gVideoCurrFramebuffer + framebufferSize);
+        dmacopy_doubleword(gVideoLastFramebuffer, gVideoCurrFramebuffer, (s32) gVideoCurrFramebuffer + framebufferSize);
     }
     // tempLogicUpdateRate will be set to a value 2 or higher, based on the framerate.
     // the mul factor is hardcapped at 6, which happens at 10FPS. The mul factor

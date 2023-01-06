@@ -734,7 +734,7 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
         if (!check_if_showing_cutscene_camera()) {
             racer64 = obj->unk64;
             if (racer64->racer.raceFinished == FALSE) {
-                if (racer64->racer.unk1D6 == 2) {
+                if (racer64->racer.vehicleID == VEHICLE_PLANE) {
                     vel = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.y_velocity * obj->segment.y_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity));
                 } else {
                     vel = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity));
@@ -823,7 +823,7 @@ void render_race_start(s32 arg0, s32 updateRate) {
                 racerGroup = get_racer_objects(&numRacerObjects);
                 randomRacer = racerGroup[get_random_number_from_range(1, numRacerObjects) - 1];
                 racer = (Object_Racer*)randomRacer->unk64;
-                if (racer->unk1D6 == 0) {
+                if (racer->vehicleID == VEHICLE_CAR) {
                     if (get_random_number_from_range(0, 100) >= 96) {
                         sp4C = 1.25 - ((get_random_number_from_range(0, 7) * 0.5) / 7.0);
                         func_800095E8(76, randomRacer->segment.trans.x_position, randomRacer->segment.trans.y_position, randomRacer->segment.trans.z_position, 4, ((get_random_number_from_range(0, 7) * 63) / 7) + 24, sp4C * 100.0f, &D_80126D3C);
@@ -1872,7 +1872,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gMinimapRed, gMinimapGreen, gMinimapBlue, mapOpacity);
             }
             render_orthi_triangle_image(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (ObjectSegment* ) &objTrans.trans, (unk80068BF4* ) sp154, 0);
-            sp11C = (lvlMdl->unk3E - lvlMdl->unk3C) / (f32) (lvlMdl->unk46 - lvlMdl->unk44);
+            sp11C = (lvlMdl->upperXBounds - lvlMdl->lowerXBounds) / (f32) (lvlMdl->upperZBounds - lvlMdl->lowerZBounds);
             sp118 = coss_f((lvlMdl->unk24 * 0xFFFF) / 360);
             sp114 = sins_f((lvlMdl->unk24 * 0xFFFF) / 360);
             if (func_8000E4D8() && func_8001B288()) {
@@ -1929,7 +1929,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                         D_80126CDC->unk1E4 = 0;
                         D_80126CDC->unk1E6 = 14;
                     }
-                    if (func_8002341C() && someRacer->unk1D6 == 10) {
+                    if (func_8002341C() && someRacer->vehicleID == VEHICLE_CARPET) {
                         gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 0, 255, opacity);
                     } else {
                         gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gHudMinimapColours[someRacer->characterId].red, gHudMinimapColours[someRacer->characterId].green, gHudMinimapColours[someRacer->characterId].blue, opacity);

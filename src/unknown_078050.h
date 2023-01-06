@@ -71,7 +71,7 @@ void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
 void render_textured_rectangle(Gfx **dlist, DrawTexture *img, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha);
 void func_800787FC(Gfx** arg0);
 void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG);
-void func_80078AAC(void *arg0);
+void set_background_draw_function(void *arg0);
 
 //Non Matching
 void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 x, f32 y, f32 x_scale, f32 y_scale, u32 color, s32 flip);

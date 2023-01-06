@@ -19,12 +19,12 @@ s32 gFunc80024D54Length = 1980;
 
 /************ .rodata ************/
 
-const char D_800E6B20[] = "Error: Model no. out of range on load. !!\n";
-const char D_800E6B4C[] = "TEXTURE ERROR!!\n%d,%d\n";
-const char D_800E6B64[] = "Error: Model table overflow!!\n";
-const char D_800E6B84[] = "WARNING :: createModelInstance called with NULL pointer\n";
-const char D_800E6BC0[] = "ModFreeModel : NULL mod_inst!!\n";
-const char D_800E6BE0[] = "MOD Error: Tryed to deallocate non-existent model!!\n";
+UNUSED const char D_800E6B20[] = "Error: Model no. out of range on load. !!\n";
+UNUSED const char D_800E6B4C[] = "TEXTURE ERROR!!\n%d,%d\n";
+UNUSED const char D_800E6B64[] = "Error: Model table overflow!!\n";
+UNUSED const char D_800E6B84[] = "WARNING :: createModelInstance called with NULL pointer\n";
+UNUSED const char D_800E6BC0[] = "ModFreeModel : NULL mod_inst!!\n";
+UNUSED const char D_800E6BE0[] = "MOD Error: Tryed to deallocate non-existent model!!\n";
 
 /*********************************/
 
@@ -40,7 +40,7 @@ s16 *D_8011D638;
 s32 *D_8011D63C;
 s32 D_8011D640;
 s32 D_8011D644;
-s32 D_8011D648[66];
+UNUSED s32 D_8011D648[66]; // Appears to have no effect when removed entirely?
 
 /******************************/
 
@@ -63,10 +63,10 @@ void func_8005F850(void) {
     D_8011D644 = (s32) allocate_from_main_pool_safe(0xC00, COLOUR_TAG_GREEN);
     D_8011D640 = 0;
 
-    // Anti-tamper check.
+    // Antipiracy measure
     checksum = 0;
     for (i = 0; i < gFunc80024D54Length; i++) {
-        checksum += *(u8 *)(((s32)&render_scene) + i);
+        checksum += *(u8 *)(((s32) &render_scene) + i);
     }
     if (checksum != gTractionTableChecksum) {
         antipiracy_modify_surface_traction_table();

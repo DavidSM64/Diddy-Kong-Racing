@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x8005C2F0 */
 
-#include "unknown_05CEF0.h"
+#include "vehicle_misc.h"
 
 #include "structs.h"
 #include "types.h"
@@ -42,7 +42,7 @@ u16 D_800DCDE0[16] = {
 
 f32 D_8011D5C0;
 s8 D_8011D5C4;
-u16 *D_8011D5C8;
+u16 *gBossSoundIDOffset;
 s8 D_8011D5CC;
 
 /******************************/
@@ -60,51 +60,54 @@ void func_8005C2F0(Object *object, unk8005C2F0 *arg1) {
     D_8011D5C4 = 0;
 }
 
-#ifdef NON_MATCHING
-// Regalloc differences
-void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
+/**
+ * Top level function for updating the Tricky vehicle as seen in the Dino Domain boss.
+*/
+void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
     s16 sp56;
     s16 sp54;
     s16 sp52;
-    Object_Racer *temp_s0;
-    f32 temp_f14;
-    s32 var_at;
-    s32 var_v1;
-    f32 temp_f20;
-    s32 var_a1;
-    Object_68 *temp_v0_2;
-    Object *temp_v0_4;
+    f32 diffX;
+    f32 diffZ;
+    ObjectModel *objModel;
+    s32 sp40;
+    Object_68 *obj68;
+    s32 sp38;
+    UNUSED s32 pad;
+    Object *firstRacerObj;
 
-    func_8005CA78(D_800DCDE0);
+    set_boss_voice_clip_offset(D_800DCDE0);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
     sp56 = obj->segment.unk38.byte.unk3B;
     sp54 = obj->segment.animFrame;
-    sp52 = racer->unk16A;
+    sp52 = racer->headAngle;
     if (racer->raceFinished == TRUE) {
         func_80021400(130);
         racer->raceFinished++;
     }
-    var_v1 = *startTimer;
-    if ((racer->playerIndex == PLAYER_COMPUTER)  && (*startTimer != 100)) {
-        *startTimer -= 15;
-        if (*startTimer < 0) {
-            if (D_8011D5CC == 0) {
-                var_v1 = *startTimer;
-                func_8005CB04(0);
-                racer->boostTimer = 5;
+    sp40 = *startTimer;
+    if (racer->playerIndex == PLAYER_COMPUTER) {
+        if (*startTimer != 100) {
+            *startTimer -= 15;
+            if (*startTimer < 0) {
+                if (D_8011D5CC == 0) {
+                    func_8005CB04(0);
+                    racer->boostTimer = 5;
+                }
+                D_8011D5CC = 1;
+                *startTimer = 0;
+                *input |= A_BUTTON;
+            } else {
+                D_8011D5CC = 0;
             }
-            D_8011D5CC = 1;
-            *startTimer = 0;
-            *input |= A_BUTTON;
-        } else {
-            D_8011D5CC = 0;
         }
     }
+    
     func_8004F7F4(updateRate, updateRateF, obj, racer);
-    *startTimer = var_v1;
+    *startTimer = sp40;
     racer->lateral_velocity = 0.0f;
-    racer->unk16A = sp52;
+    racer->headAngle = sp52;
     obj->segment.unk38.byte.unk3B = sp56;
     obj->segment.animFrame = sp54;
     if ((racer->attackType != ATTACK_NONE) && (obj->segment.unk38.byte.unk3B != 3)) {
@@ -113,41 +116,42 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         obj->segment.y_velocity += 7.5;
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, NULL);
-        func_80069F28(12.0f);
+        set_camera_shake(12.0f);
         racer->velocity *= 0.3;
         racer->unkC = 0.0f;
     }
     racer->attackType = ATTACK_NONE;
-    if (racer->unk148 != NULL) {
-        temp_f20 = obj->segment.x_velocity * obj->segment.x_velocity;
-        temp_f14 = obj->segment.z_velocity * obj->segment.z_velocity;
-        racer->velocity = -sqrtf((temp_f20 * temp_f20) + (temp_f14 * temp_f14));
+    if (racer->approachTarget != NULL) {
+        diffX = obj->segment.x_velocity * obj->segment.x_velocity;
+        diffZ = obj->segment.z_velocity * obj->segment.z_velocity;
+        racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
     }
-    temp_v0_2 = *obj->unk68;
-    temp_f20 = ((temp_v0_2->objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17);
+    obj68 = *obj->unk68;
+    objModel = obj68->objModel;
+    diffX = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
     if (obj->segment.unk38.byte.unk3B != 3) {
         if (racer->velocity < -2.0) {
             obj->segment.unk38.byte.unk3B = 1;
-            racer->unkC -= racer->velocity * updateRateF * 0.5;
+            racer->unkC -= (racer->velocity * updateRateF) * 0.5;
         } else if ((racer->velocity < -0.1) || (racer->velocity > 0.1)) {
             obj->segment.unk38.byte.unk3B = 2;
-            racer->unkC -= racer->velocity * updateRateF * 2;
+            racer->unkC -= (racer->velocity * updateRateF) * 2;
         } else {
             obj->segment.unk38.byte.unk3B = 0;
-            racer->unkC += (1.0 * updateRateF);
+            racer->unkC += 1.0 * updateRateF;
         }
     } else {
-        racer->unkC += (2.0 * updateRateF);
+        racer->unkC += 2.0 * updateRateF;
     }
     while (racer->unkC < 0.0f) {
-        racer->unkC += temp_f20;
-        temp_v0_2->unk10 = -1;
+        racer->unkC += diffX;
+        obj68->unk10 = -1;
     }
-    while (temp_f20 < racer->unkC) {
-        racer->unkC -= temp_f20;
-        temp_v0_2->unk10 = -1;
+    while (diffX < racer->unkC) {
+        racer->unkC -= diffX;
+        obj68->unk10 = -1;
     }
-    if ((temp_v0_2->unk10 == -1) && (obj->segment.unk38.byte.unk3B == 3)) {
+    if (obj68->unk10 == -1 && obj->segment.unk38.byte.unk3B == 3) {
         obj->segment.unk38.byte.unk3B = racer->unk1CD;
     }
     sp54 = obj->segment.animFrame;
@@ -158,86 +162,76 @@ void func_8005C364(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         obj->unk74 |= 3;
     }
     func_800AFC3C(obj, updateRate);
-    func_8005D048(obj, racer, 120);
-
-    switch(obj->segment.unk38.byte.unk3B) {
+    fade_when_near_camera(obj, racer, 120);
+    switch( obj->segment.unk38.byte.unk3B) {
         case 1:
-            var_a1 = 0x2500;
+            sp38 = 0x2500;
             break;
         case 2:
-            var_a1 = 0x100;
+            sp38 = 0x100;
             break;
         default:
-            var_a1 = 0x1500;
+            sp38 = 0x1500;
             break;
     }
-
-    temp_v0_4 = get_racer_object(0);
-    temp_f20 = temp_v0_4->segment.trans.x_position - obj->segment.trans.x_position;
-    temp_f14 = temp_v0_4->segment.trans.z_position - obj->segment.trans.z_position;
-    if (sqrtf((temp_f20 * temp_f20) + (temp_f14 * temp_f14)) < 700.0) {
-        var_v1 = (arctan2_f(temp_f20, temp_f14) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
-        if (var_v1 > 0x8000) {
-            var_v1 += -0xFFFF;
-        }
-        if (var_v1 < -0x8000) {
-            var_v1 += 0xFFFF;
-        }
-        var_at = var_v1 < -var_a1;
-        if (var_a1 < var_v1) {
-            var_v1 = var_a1;
-            var_at = var_v1 < -var_a1;
-        }
-        if (var_at != 0) {
-            var_v1 = -var_a1;
-        }
-        racer->unk16C = var_v1;
+    firstRacerObj = get_racer_object(0);
+    diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
+    diffZ = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
+    if (sqrtf((diffX * diffX) + (diffZ * diffZ)) < 700.0) {
+        sp40 = (arctan2_f(diffX, diffZ) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+        WRAP(sp40, -0x8000, 0x8000);
+        CLAMP(sp40, -sp38, sp38);
+        racer->headAngleTarget = sp40;
     }
-    if ((obj->segment.unk38.byte.unk3B == 1) && ((racer->unk1E7 & 0x1F) < 10)) {
-        racer->unk16C >>= 1;
+    if (obj->segment.unk38.byte.unk3B == 1) {
+        if ((racer->miscAnimCounter & 0x1F) < 0xA) {
+            racer->headAngleTarget >>= 1;
+        }
     }
-    temp_s0 = (Object_Racer *)temp_v0_4->unk64;
-    if (D_8011D5C0 < temp_v0_4->segment.trans.y_position) {
-        D_8011D5C0 = temp_v0_4->segment.trans.y_position;
+    racer = (Object_Racer *) firstRacerObj->unk64;
+    if (D_8011D5C0 < firstRacerObj->segment.trans.y_position) {
+        D_8011D5C0 = firstRacerObj->segment.trans.y_position;
     }
-    if ((temp_v0_4->segment.trans.y_position + 400.0) < D_8011D5C0) {
-        if (!func_800C018C() && is_in_two_player_adventure()) {
+    if ((firstRacerObj->segment.trans.y_position + 400.0) < D_8011D5C0) {
+        if (func_800C018C() == 0 && is_in_two_player_adventure()) {
             func_8006F398();
         }
         func_8006F140(1);
     }
-    if ((obj == temp_v0_4->interactObj->obj) && (temp_v0_4->interactObj->unk14 & 8) && (obj->segment.unk38.byte.unk3B == 1)) {
-        temp_s0->attackType = ATTACK_SQUISHED;
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->unk14 & 8 && obj->segment.unk38.byte.unk3B == 1) {
+        racer->attackType = ATTACK_SQUISHED;
     }
-    if ((temp_s0->raceFinished != FALSE) && (D_8011D5C4 == 0)) {
-        D_8011D5C4 = 1;
-        func_8005CB68(temp_s0, &D_8011D5C4);
+    if (racer->raceFinished != FALSE) {
+        if (D_8011D5C4 == 0) {
+            D_8011D5C4 = 1;
+            func_8005CB68(racer, &D_8011D5C4);
+        }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005C364.s")
-#endif
 
-void func_8005CA78(u16 *arg0) {
-    D_8011D5C8 = arg0;
+/**
+ * Set the sound ID offset for a given boss clip.
+*/
+void set_boss_voice_clip_offset(u16 *soundID) {
+    gBossSoundIDOffset = soundID;
 }
 
-void func_8005CA84(f32 x, f32 y, f32 z, s32 arg3) {
+void func_8005CA84(f32 x, f32 y, f32 z, s32 offset) {
     s8 phi_v1 = get_random_number_from_range(0, 1);
-    if (arg3 == 0) {
+    if (offset == 0) {
         phi_v1 = 0;
     }
-    arg3 += phi_v1;
-    func_80009558(D_8011D5C8[arg3], x, y, z, 4, 0);
+    offset += phi_v1;
+    func_80009558(gBossSoundIDOffset[offset], x, y, z, 4, 0);
 }
 
-void func_8005CB04(s32 arg0) {
+void func_8005CB04(s32 offset) {
     s8 phi_v1 = get_random_number_from_range(0, 1);
-    if (arg0 == 0) {
+    if (offset == 0) {
         phi_v1 = 0;
     }
-    arg0 += phi_v1;
-    play_sound_global(D_8011D5C8[arg0], 0);
+    offset += phi_v1;
+    play_sound_global(gBossSoundIDOffset[offset], 0);
 }
 
 #ifdef NON_EQUIVALENT
@@ -379,12 +373,15 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
 GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005CB68.s")
 #endif
 
-void func_8005D048(Object *object, Object_Racer *arg1, s32 arg2) {
-    Object *sp1C = get_racer_object(0);
-    arg1->transparency = 0xFF;
+/**
+ * When close to the camera, fade the object so it doesn't block the screen.
+ */
+void fade_when_near_camera(Object *object, Object_Racer *racer, s32 distance) {
+    Object *player = get_racer_object(0);
+    racer->transparency = 255;
     if (!func_8001139C()) {
-        if ((object->segment.unk30 + arg2) < sp1C->segment.unk30) {
-            arg1->transparency = 0x40;
+        if ((object->segment.unk30 + distance) < player->segment.unk30) {
+            racer->transparency = 64;
         }
     }
 }

@@ -914,17 +914,17 @@ s32 gMenuSubOption = 0;
 s32 D_800E098C = 0; //Player ID or controllerIndex maybe?
 
 ColourRGBA D_800E0990[4] = {
-    {  64,  64, 255, 160 },
-    { 255,  64,  64, 160 },
-    { 208, 192,  32, 176 },
-    {  32, 192,  64, 176 },
+    {{{  64,  64, 255, 160 }}},
+    {{{ 255,  64,  64, 160 }}},
+    {{{ 208, 192,  32, 176 }}},
+    {{{  32, 192,  64, 176 }}},
 };
 
 ColourRGBA D_800E09A0[4] = {
-    {   0, 255,   0, 128 },
-    {   0, 255,   0,  96 },
-    {   0,   0, 255,  96 },
-    {   0,   0, 255, 128 },
+    {{{   0, 255,   0, 128 }}},
+    {{{   0, 255,   0,  96 }}},
+    {{{   0,   0, 255,  96 }}},
+    {{{   0,   0, 255, 128 }}},
 };
 
 // BAD CONTROLLER PAK / If you wish to change / Controller Pak or Rumble Pak, / please do so now.
@@ -2538,7 +2538,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
         gTitleDemoTimer = 0;
     }
     if ((gMenuDelay == 0) && (func_800214C4() || sp28)) {
-        if(gTitleDemoTimer){}
+        if(gTitleDemoTimer){} // Fakematch
         D_80126864 += 3;
         demo = &sTitleScreenDemoIds[D_80126864];
         if (demo[0] == -1) {
@@ -3860,7 +3860,7 @@ s32 menu_controller_pak_loop(s32 updateRate) {
                 switch (D_800DF460) {
                 case -1:
                     if (yStick < 0) {
-                        if(!xStick){}
+                        if(!xStick){} // Fakematch
                         D_800DF460 = 0;
                         playMoveSound = TRUE;
                     }
@@ -5585,7 +5585,7 @@ void menu_track_select_init(void) {
         D_800E0970[var_v0].unk3 = 1;
     }
     D_80126924 = 0;
-    func_80078AAC(func_8008F618);
+    set_background_draw_function(func_8008F618);
     func_80066940(0, 80, gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY >> 1), 240, (gTrackSelectViewPortHalfY >> 1) + gTrackSelectViewPortHalfY);
     func_80066610();
     func_80066818(0, 0);
@@ -6008,7 +6008,7 @@ void func_80090918(s32 updateRate) {
             }
         }
         if (gMenuDelay < -22) {
-            func_80078AAC(NULL);
+            set_background_draw_function(NULL);
             D_800E097C = 0;
         }
         if (gMenuDelay > 30) {
@@ -8110,9 +8110,9 @@ void update_controller_sticks(void) {
 
         gControllersYAxis[i] = YClamp;
         if (gControllersYAxis[i] < -STICK_DEADZONE) {
-            gControllersYAxisDelay[i]++;
+            gControllersYAxisDelay[i]++; //!@Delta
         } else if (gControllersYAxis[i] > STICK_DEADZONE) {
-            gControllersYAxisDelay[i]++;
+            gControllersYAxisDelay[i]++; //!@Delta
         } else {
             gControllersYAxisDelay[i] = 0;
         }
@@ -8124,9 +8124,9 @@ void update_controller_sticks(void) {
 
         gControllersXAxis[i] = XClamp;
         if (gControllersXAxis[i] < -STICK_DEADZONE) {
-            gControllersXAxisDelay[i]++;
+            gControllersXAxisDelay[i]++; //!@Delta
         } else if (gControllersXAxis[i] > STICK_DEADZONE) {
-            gControllersXAxisDelay[i]++;
+            gControllersXAxisDelay[i]++; //!@Delta
         } else {
             gControllersXAxisDelay[i] = 0;
         }
@@ -8841,7 +8841,7 @@ s32 tt_menu_loop(void) {
                 }
             }
             if ((buttonsPressed & A_BUTTON) && (sCurrentMenuID != TT_MENU_EXIT)) {
-                if(gPreviousMenuID && !gPreviousMenuID && !gPreviousMenuID){} // Fake match
+                if(gPreviousMenuID && !gPreviousMenuID && !gPreviousMenuID){} // Fakematch
                 switch (gDialogueItemSelection) {
                     case 1:
                         play_sound_global(SOUND_SELECT2, NULL);

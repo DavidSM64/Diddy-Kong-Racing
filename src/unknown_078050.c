@@ -26,7 +26,7 @@ TextureHeader *D_800DE4C4 = 0;
 TextureHeader *D_800DE4C8 = 0;
 s32 D_800DE4CC = 0;
 
-unk800DE4D0 D_800DE4D0 = { NULL };
+unk800DE4D0 gBackgroundDrawFunc = { NULL };
 s32 gfxBufCounter = 0;
 s32 gfxBufCounter2 = 0;
 s32 gGfxTaskIsRunning = FALSE;
@@ -105,7 +105,7 @@ Gfx D_800DE670[] = {
     gsSPEndDisplayList(),
 };
 
-Gfx D_800DE6A8[][2] = {
+Gfx dTextureRectangleScaledOpa[][2] = {
     {
         gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
         gsDPSetOtherMode(DKR_OMH_1CYC_BILERP_NOPERSP, DKR_OML_COMMON | G_RM_AA_OPA_SURF | G_RM_AA_OPA_SURF2),
@@ -124,7 +124,7 @@ Gfx D_800DE6A8[][2] = {
     },
 };
 
-Gfx D_800DE6E8[][2] = {
+Gfx dTextureRectangleScaledXlu[][2] = {
     {
         gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
         gsDPSetOtherMode(DKR_OMH_1CYC_BILERP_NOPERSP, DKR_OML_COMMON | G_RM_AA_XLU_SURF | G_RM_AA_XLU_SURF2),
@@ -436,8 +436,8 @@ void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG) {
                 func_800787FC(dlist);
             } else if (D_800DE4C4 != 0) {
                 func_80078190(dlist);
-            } else if (D_800DE4D0.ptr != NULL) {
-                D_800DE4D0.function((Gfx *) dlist, mtx);
+            } else if (gBackgroundDrawFunc.ptr != NULL) {
+                gBackgroundDrawFunc.function((Gfx *) dlist, mtx);
             } else {
                 gDPSetFillColor((*dlist)++, sBackgroundFillColour);
                 gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
@@ -454,8 +454,8 @@ void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG) {
                 func_800787FC(dlist);
             } else if (D_800DE4C4 != 0) {
                 func_80078190(dlist);
-            } else if (D_800DE4D0.ptr != NULL) {
-                D_800DE4D0.function((Gfx *) dlist, mtx);
+            } else if (gBackgroundDrawFunc.ptr != NULL) {
+                gBackgroundDrawFunc.function((Gfx *) dlist, mtx);
             } else {
                 gDPSetFillColor((*dlist)++, (GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1) << 16) | GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1));
                 gDPFillRectangle((*dlist)++, 0, 0, w - 1, h - 1);
@@ -502,8 +502,7 @@ void func_80078170(TextureHeader *arg0, TextureHeader *arg1, u32 arg2) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078190.s")
 
-// Unused
-void func_80078778(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+UNUSED void func_80078778(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     D_80125F30 = (arg0 >> 24) & 0xFF;
     D_80125F31 = (arg0 >> 16) & 0xFF;
     D_80125F32 = (arg0 >> 8) & 0xFF;
@@ -517,8 +516,7 @@ void func_80078778(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     D_800DE4CC = 1;
 }
 
-// Unused
-void func_800787F0(void) {
+UNUSED void func_800787F0(void) {
     D_800DE4CC = 0;
 }
 
@@ -553,8 +551,12 @@ void func_800787FC(Gfx **arg0) {
     gDPPipeSync((*arg0)++);
 }
 
-void func_80078AAC(void *arg0) {
-    D_800DE4D0.ptr = arg0;
+/**
+ * Sets the function pointer to whatever's passed through.
+ * If nonzero, will override the background drawing section.
+*/
+void set_background_draw_function(void *func) {
+    gBackgroundDrawFunc.ptr = func;
 }
 
 /**

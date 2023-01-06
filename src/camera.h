@@ -53,8 +53,6 @@ enum ViewPortFlags {
     VIEWPORT_HEIGHT_CUSTOM = 0x0040
 };
 
-extern s8 gAntiPiracyViewport;
-
 /* Size: 0x34 bytes. */
 typedef struct ScreenViewport {
     /* 0x00 */ s32 x1;
@@ -80,25 +78,6 @@ typedef struct unk80068BF4 {
     s32 *unk8;
     s32 *unkC[2];
 } unk80068BF4;
-
-extern ScreenViewport gScreenViewports[4];
-
-// RSP Viewports
-extern Vp D_800DD148[20];
-
-extern ObjectTransform D_800DD288;
-
-extern ObjectTransform D_800DD2A0;
-
-extern Matrix gOrthoMatrix;
-
-extern u8 D_800DD2F8[8];
-
-extern s16 gButtonMask;
-
-extern f32 D_80120D58[5];
-extern f32 D_80120D40[6];
-extern f32 D_80120D28[6];
 
 typedef struct unk80068514_arg4 {
     s16 unk0;
@@ -141,16 +120,15 @@ void func_80068158(Gfx **dlist, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_800682AC(Gfx **dlist);
 void func_80068408(Gfx **dlist, MatrixS **mats);
 void func_80068508(s32 arg0);
-ObjectSegment *func_80069CFC(void);
+ObjectSegment *get_active_camera_segment_no_cutscenes(void);
 ObjectSegment *get_active_camera_segment(void);
 ObjectSegment *func_80069D7C(void);
 Matrix *func_80069DA4(void);
 MatrixS *func_80069DB0(void);
 Matrix *func_80069DBC(void);
 f32 func_80069DC8(f32 x, f32 y, f32 z);
-void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
-void func_80069F28(f32 arg0);
-UNUSED void debug_print_float_matrix_values(f32 *mtx);
+void set_camera_shake_by_distance(f32 x, f32 y, f32 z, f32 dist, f32 magnitude);
+void set_camera_shake(f32 magnitude);
 OSMesgQueue *get_si_mesg_queue(void);
 void initialise_player_ids(void);
 void assign_player_ids(s8 *activePlayers);
@@ -158,13 +136,13 @@ u8 get_player_id(s32 player);
 void swap_player_1_and_2_ids(void);
 u16 get_buttons_held_from_player(s32 player);
 u32 get_buttons_pressed_from_player(s32 player);
-UNUSED u16 get_buttons_released_from_player(s32 player);
+u16 get_buttons_released_from_player(s32 player);
 s8 clamp_joystick_x_axis(s32 player);
 s8 clamp_joystick_y_axis(s32 player);
 s8 clamp_joystick(s8 stickMag);
 void disable_button_mask(void);
 s32 init_controllers(void);
-void func_80067D3C(Gfx **dlist, UNUSED MatrixS **mats);
+void func_80067D3C(Gfx **dlist, MatrixS **mats);
 void render_orthi_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, unk80068BF4 *arg4, s32 flags);
 s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags);
 void func_80069484(Gfx **arg0, MatrixS **arg1, ObjectTransform *arg2, f32 arg3, f32 arg4);

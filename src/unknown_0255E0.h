@@ -72,6 +72,19 @@ typedef struct {
     /* 0x08 */ s32 z;
 } unk8011D468;
 
+typedef struct WaterProperties {
+    f32 waveHeight;
+    f32 rotX;
+    f32 rotY;
+    f32 rotZ;
+    s8 type;
+} WaterProperties;
+
+enum WaveTypes {
+    WATER_CALM = 11,
+    WATER_WAVY = 14
+};
+
 extern s32 D_800DC870;
 extern unknown800DC874 D_800DC874;
 extern unknown800DC874 D_800DC87C;
@@ -123,6 +136,7 @@ void draw_gradient_background(void);
 void func_8002D8DC(s32 arg0, s32 arg1, s32 arg2);
 void obj_loop_fogchanger(Object* obj);
 void func_80028CD0(s32 updateRate);
+s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation);
 
 
 //Non Matching
@@ -134,7 +148,6 @@ Gfx *func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportInde
 s32 func_80027568(void);
 s32 func_8002CC30(LevelModelSegment*);
 s8 func_8002B0F4(s16, f32 xPos, f32 zPos, struct TempStruct8**);
-s8 func_8002AD08(f32 yPos, f32* waterHeight, f32*);
 void func_800278E8(s32);
 void func_80028050(void);
 void func_80028CD0(s32);
