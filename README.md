@@ -120,31 +120,31 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of January 5, 2023, this is our current score:
+As of January 6, 2023, this is our current score:
 ```
- ==================================================================
-               ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------ 48.57% Complete -------------------------
-                    # Decompiled functions: 1463
-                    # GLOBAL_ASM remaining: 375
-                    # NON_MATCHING functions: 11
-                 # NON_EQUIVALENT WIP functions: 64
- -------------------------- Game Status ---------------------------
-             Balloons: 24/47, Keys: 3/4, Trophies: 2/5
-               T.T. Amulets: 2/4, Wizpig Amulets: 2/4
- ------------------------------------------------------------------
-             We are racing in Pirate Lagoon. (Lap 1/3)
- ==================================================================
-               ADVENTURE TWO (Cleanup & Documentation)
- ------------------------ 18.65% Complete -------------------------
-                    # Documented functions: 368
-                   # Undocumented remaining: 1470
- -------------------------- Game Status ---------------------------
-             Balloons: 10/47, Keys: 1/4, Trophies: 0/5
-               T.T. Amulets: 1/4, Wizpig Amulets: 0/4
- ------------------------------------------------------------------
- We are collecting silver coins in Jungle Falls. (2/8 silver coins)
- ==================================================================
+ ================================================
+      ADVENTURE ONE (ASM -> C Decompilation)
+ --------------- 49.04% Complete ----------------
+           # Decompiled functions: 1466
+           # GLOBAL_ASM remaining: 372
+           # NON_MATCHING functions: 9
+        # NON_EQUIVALENT WIP functions: 65
+ ----------------- Game Status ------------------
+    Balloons: 24/47, Keys: 3/4, Trophies: 2/5
+      T.T. Amulets: 2/4, Wizpig Amulets: 2/4
+ ------------------------------------------------
+    We are racing in Pirate Lagoon. (Lap 2/3)
+ ================================================
+      ADVENTURE TWO (Cleanup & Documentation)
+ --------------- 21.36% Complete ----------------
+           # Documented functions: 378
+          # Undocumented remaining: 1195
+ ----------------- Game Status ------------------
+    Balloons: 12/47, Keys: 1/4, Trophies: 0/5
+      T.T. Amulets: 1/4, Wizpig Amulets: 0/4
+ ------------------------------------------------
+ We are racing in the rematch against Trickytops.
+ ================================================
 ```
 <!-- README_SCORE_END -->
 
