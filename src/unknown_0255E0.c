@@ -328,7 +328,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         flip = TRUE;
     }
     // Antipiracy measure
-    if (*((u32 *) 0xA0000200) != 0xAC290000) {
+    if (IO_READ(0x200) != 0xAC290000) {
         flip = TRUE;
     }
     reset_render_settings(&gSceneCurrDisplayList);
