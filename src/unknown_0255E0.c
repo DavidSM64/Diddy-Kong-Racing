@@ -385,7 +385,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     if (numViewports == VIEWPORTS_COUNT_4_PLAYERS && get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS && get_current_level_race_type() != RACETYPE_CHALLENGE_BATTLE && get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) {
         if (get_hud_setting() == 0) {
             if (flip) {
-                gSPSetGeometryMode(gSceneCurrDisplayList++, 0x1000);
+                gSPSetGeometryMode(gSceneCurrDisplayList++, G_CULL_FRONT);
             }
             func_8003093C(3);
             gDPPipeSync(gSceneCurrDisplayList++);
