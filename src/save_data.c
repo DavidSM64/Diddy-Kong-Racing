@@ -667,7 +667,7 @@ SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileE
                 continue;
             }
             if (fileType == 3) {
-                if((func_800CE050((u8 *) fileNames[fileNum], (char *)sDKRacingAdv1, strlen((char *)sDKRacingAdv2)) != 0)) {
+                if((func_800CE050((u8 *) fileNames[fileNum], (char *) sDKRacingAdv1, strlen((char *) sDKRacingAdv2)) != 0)) {
                     continue;
                 }
             } else if((func_800CE050((u8 *) fileNames[fileNum], (char *)sDKRacingTimes1, strlen((char *)sDKRacingTimes2)) != 0))  {
