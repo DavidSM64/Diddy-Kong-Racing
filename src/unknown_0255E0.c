@@ -21,6 +21,7 @@
 #include "lib/src/libc/rmonPrintf.h"
 #include "objects.h"
 #include "math_util.h"
+#include "printf.h"
 
 // Maximum size for a level model is 522.5 KiB
 #define LEVEL_MODEL_MAX_SIZE 0x82A00
@@ -342,7 +343,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, s8 **tris, s32 updat
         func_80027E24(tempUpdateRate);
     }
     for (j = D_8011B0B4 = 0; j < numViewports; D_8011B0B4++, j = D_8011B0B4) {
-        if (gCurrentLevelHeader2 && !gCurrentLevelHeader2 && !gCurrentLevelHeader2) {}
+        if (gCurrentLevelHeader2 && !gCurrentLevelHeader2 && !gCurrentLevelHeader2) {} // Fakematch
         if (j == 0) {
             if (func_8000E184() && numViewports == 1) {
                 D_8011B0B4 = 1;
@@ -444,7 +445,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027184.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027568.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800278E8.s")
 
-void func_80027E24(s32 arg0) {
+void func_80027E24(s32 updateRate) {
     s32 segmentNumber, batchNumber;
     LevelModelSegment *segment;
     TextureHeader *texture;
@@ -455,17 +456,17 @@ void func_80027E24(s32 arg0) {
     for (segmentNumber = 0; segmentNumber < gCurrentLevelModel->numberOfSegments; segmentNumber++) {
         batch = segment[segmentNumber].batches;
         for (batchNumber = 0; batchNumber < segment[segmentNumber].numberOfBatches; batchNumber++) {
-            if (batch[batchNumber].flags & 0x10000) {
+            if (batch[batchNumber].flags & BATCH_FLAGS_TEXTURE_ANIM) {
                 if (batch[batchNumber].textureIndex != 0xFF) {
                     texture = gCurrentLevelModel->textures[batch[batchNumber].textureIndex].texture;
                     if ((texture->numOfTextures != 0x100) && (texture->frameAdvanceDelay != 0)) {
                         temp = batch[batchNumber].unk7 << 6;
-                        if (batch[batchNumber].flags & 0x80000000) {
+                        if (batch[batchNumber].flags & BATCH_FLAGS_UNK80000000) {
                             temp |= batch[batchNumber].unk6;
-                            func_8007EF80(texture, &batch[batchNumber].flags, &temp, arg0);
+                            func_8007EF80(texture, &batch[batchNumber].flags, &temp, updateRate);
                             batch[batchNumber].unk6 = temp & 0x3F;
                         } else {
-                            func_8007EF80(texture, &batch[batchNumber].flags, &temp, arg0);
+                            func_8007EF80(texture, &batch[batchNumber].flags, &temp, updateRate);
                         }
                         batch[batchNumber].unk7 = (temp >> 6) & 0xFF;
                     }
@@ -631,7 +632,7 @@ void func_80028CD0(s32 updateRate) {
 
     gSceneActiveCamera = get_active_camera_segment();
     sp3C = get_current_viewport();
-    func_80031018();
+    compute_scene_camera_transform_matrix();
     update_envmap_position((f32) gScenePerspectivePos.x / 65536.0f, (f32) gScenePerspectivePos.y / 65536.0f, (f32) gScenePerspectivePos.z / 65536.0f);
     temp_v0 = gSceneActiveCamera->unk34_a.levelSegmentIndex;
     if ((temp_v0 >= 0) && (temp_v0 < gCurrentLevelModel->numberOfSegments)) {
@@ -855,7 +856,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
     for (i = startPos; i < endPos; i++) {
         batchInfo = &segment->batches[i];
         textureFlags = 0;
-        isInvisible = batchInfo->flags & 0x100;
+        isInvisible = batchInfo->flags & BATCH_FLAGS_HIDDEN;
         if (isInvisible) {
             continue;
         }
@@ -867,17 +868,17 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
             texture = gCurrentLevelModel->textures[batchInfo->textureIndex].texture;
             textureFlags = texture->flags;
         }
-        batchFlags |= 10;
-        if (!(batchFlags & 0x10) && !(batchFlags & 0x800)) {
+        batchFlags |= BATCH_FLAGS_UNK00000008 | BATCH_FLAGS_UNK00000002;
+        if (!(batchFlags & BATCH_FLAGS_DEPTH_WRITE) && !(batchFlags & BATCH_FLAGS_UNK00000800)) {
             batchFlags |= D_8011B0FC;
         }
-        if ((!(textureFlags & 4) && !(batchFlags & 0x2000)) || batchFlags & 0x800) {
+        if ((!(textureFlags & BATCH_FLAGS_UNK00000004) && !(batchFlags & BATCH_FLAGS_UNK00002000)) || batchFlags & BATCH_FLAGS_UNK00000800) {
             renderBatch = TRUE;
         }
         if (nonOpaque) {
             renderBatch = (renderBatch + 1) & 1;
         }
-        if (sp78 && batchFlags & 0x2000) {
+        if (sp78 && batchFlags & BATCH_FLAGS_UNK00002000) {
             renderBatch = FALSE;
         }
         if (renderBatch) {
@@ -885,7 +886,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
             do { //Fakematch
                 numberVertices = (batchInfo + 1)->verticesOffset - batchInfo->verticesOffset;
                 numberTriangles = (batchInfo + 1)->facesOffset - numberTriangles;
-                vertices = (s32)(&segment->vertices[batchInfo->verticesOffset]);
+                vertices = (s32) &segment->vertices[batchInfo->verticesOffset];
             } while (0);
             triangles = (s32) &segment->triangles[batchInfo->facesOffset];
             texOffset = batchInfo->unk7 << 14;
@@ -900,10 +901,10 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
             } else {
                 gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
             }
-            if (batchFlags & 0x40000) {
+            if (batchFlags & BATCH_FLAGS_PULSATING_LIGHTS) {
                 color = gCurrentLevelHeader2->pulseLightData->outColorValue;
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, color, color, color, color);
-                func_8007BA5C(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
+                load_blinking_lights_texture(&gSceneCurrDisplayList, texture, batchFlags, texOffset);
                 gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(vertices), numberVertices, 0);
                 gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(triangles), numberTriangles, TRIN_ENABLE_TEXTURE);
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -1718,7 +1719,7 @@ void func_8002D670(Object *obj, Object_50 *arg1) {
     }
 }
 
-void func_8002D8DC(s32 arg0, s32 arg1, s32 arg2) {
+void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
     s32 sp94;
     s32 sp90;
     Object *obj;
@@ -1796,7 +1797,7 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 arg2) {
                 obj58->unk8 = -1;
                 D_8011D0D4 = 1.0f;
                 obj58_4 = obj58->unk4;
-                if (obj58_4 != NULL && arg2 != 0 && obj58_4->unk12 != 0x100) {
+                if (obj58_4 != NULL && updateRate != 0 && obj58_4->unk12 != 0x100) {
                     obj58->unkC += obj58->unkE;
                     while (obj58_4->unk12 < obj58->unkC) {
                         obj58->unkC -= obj58_4->unk12;
@@ -2065,12 +2066,15 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
 */
 UNUSED void update_perspective_and_envmap(void) {
     gSceneActiveCamera = get_active_camera_segment();
-    func_80031018();
+    compute_scene_camera_transform_matrix();
     update_envmap_position((f32) gScenePerspectivePos.x / 65536.0f, (f32) gScenePerspectivePos.y / 65536.0f, (f32) gScenePerspectivePos.z / 65536.0f);
 }
 
-void func_80031018(void) {
-    Matrix mf;
+/**
+ * Take the current camera position and calculate the perspective position, for envmapping.
+*/
+void compute_scene_camera_transform_matrix(void) {
+    Matrix mtx;
     ObjectTransform trans;
 
     f32 x = 0.0f;
@@ -2085,8 +2089,8 @@ void func_80031018(void) {
     trans.z_position = 0.0f;
     trans.scale = 1.0f;
 
-    object_transform_to_matrix(mf, &trans);
-    guMtxXFMF(mf, x, y, z, &x, &y, &z);
+    object_transform_to_matrix(mtx, &trans);
+    guMtxXFMF(mtx, x, y, z, &x, &y, &z);
 
     //Store x/y/z as integers
     gScenePerspectivePos.x = (s32)x;

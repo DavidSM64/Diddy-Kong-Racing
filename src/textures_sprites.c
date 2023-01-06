@@ -1267,7 +1267,10 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
     }
 }
 
-void func_8007BA5C(Gfx **dlist, TextureHeader *texture_list, u32 flags, s32 texture_index) {
+/**
+ * Loads the texture and render settings for the blinking lights seen in Spaceport Alpha.
+*/
+void load_blinking_lights_texture(Gfx **dlist, TextureHeader *texture_list, u32 flags, s32 texture_index) {
     u16 *mblock;
     u16 *tblock;
     if ((texture_index != 0) && (texture_index < (texture_list->numOfTextures * 256))) {

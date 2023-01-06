@@ -9,6 +9,42 @@
 #define LOCAL_OFFSET_TO_RAM_ADDRESS(type, ptr) \
     ptr = (type)((s32)((u8*)ptr) + (s32)((u8*)mdl))
 
+enum TriangleBatchFlags {
+    BATCH_FLAGS_NONE = 0,
+    BATCH_FLAGS_UNK00000001 = (1 << 0),
+    BATCH_FLAGS_UNK00000002 = (1 << 1),
+    BATCH_FLAGS_UNK00000004 = (1 << 2),
+    BATCH_FLAGS_UNK00000008 = (1 << 3),
+    BATCH_FLAGS_DEPTH_WRITE = (1 << 4),
+    BATCH_FLAGS_UNK00000020 = (1 << 5),
+    BATCH_FLAGS_UNK00000040 = (1 << 6),
+    BATCH_FLAGS_UNK00000080 = (1 << 7),
+    BATCH_FLAGS_HIDDEN = (1 << 8),
+    BATCH_FLAGS_UNK00000200 = (1 << 9),
+    BATCH_FLAGS_UNK00000400 = (1 << 10),
+    BATCH_FLAGS_UNK00000800 = (1 << 11),
+    BATCH_FLAGS_UNK00001000 = (1 << 12),
+    BATCH_FLAGS_UNK00002000 = (1 << 13),
+    BATCH_FLAGS_UNK00004000 = (1 << 14),
+    BATCH_FLAGS_ENVMAP = (1 << 15),
+    BATCH_FLAGS_TEXTURE_ANIM = (1 << 16),
+    BATCH_FLAGS_UNK00020000 = (1 << 17),
+    BATCH_FLAGS_PULSATING_LIGHTS = (1 << 18),
+    BATCH_FLAGS_UNK00080000 = (1 << 19),
+    BATCH_FLAGS_UNK00100000 = (1 << 20),
+    BATCH_FLAGS_UNK00200000 = (1 << 21),
+    BATCH_FLAGS_UNK00400000 = (1 << 22),
+    BATCH_FLAGS_UNK00800000 = (1 << 23),
+    BATCH_FLAGS_UNK01000000 = (1 << 24),
+    BATCH_FLAGS_UNK02000000 = (1 << 25),
+    BATCH_FLAGS_UNK04000000 = (1 << 26),
+    BATCH_FLAGS_UNK08000000 = (1 << 27),
+    BATCH_FLAGS_UNK10000000 = (1 << 28),
+    BATCH_FLAGS_UNK20000000 = (1 << 29),
+    BATCH_FLAGS_UNK40000000 = (1 << 30),
+    BATCH_FLAGS_UNK80000000 = (1 << 31),
+};
+
 /* Size: 0x8 bytes */
 typedef struct unknown800DC874 {
     union {
@@ -115,8 +151,8 @@ void func_80030750(s32 arg0, s16 *arg1, s16 *arg2, u8 *arg3, u8 *arg4, u8 *arg5)
 void func_800307BC(s32 arg0);
 void func_80030838(s32 arg0, s32 arg1);
 void func_8003093C(s32 arg0);
-void func_80031018(void);
-void func_80027E24(s32 arg0);
+void compute_scene_camera_transform_matrix(void);
+void func_80027E24(s32 updateRate);
 s32 check_if_inside_segment(Object *obj, s32 segmentIndex);
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos);
 void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, s32 *segmentsOrderIndex);
