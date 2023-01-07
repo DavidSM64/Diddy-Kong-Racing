@@ -46,14 +46,14 @@ ScreenViewport gScreenViewports[4] = {
     { DEFAULT_VIEWPORT },
 };
 
-u32 D_800DD134 = 0;
+u32 gViewportWithBG = FALSE;
 
 Vertex D_800DD138 = {
     0, 0, 0, 255, 255, 255, 255
 };
 
 // RSP Viewports
-Vp D_800DD148[20] = {
+Vp gViewportStack[20] = {
     { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
     { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
     { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
@@ -397,15 +397,19 @@ void set_active_camera(s32 num) {
     }
 }
 
-void func_80066610(void) {
+/**
+ * Takes the size of each view frame and writes them to the viewport stack, using values compatable with the RSP.
+ * Only does this if extended backgrounds are enabled.
+*/
+void copy_viewports_to_stack(void) {
     s32 width;
     s32 height;
-    s32 s3;
+    s32 port;
     s32 yPos;
     s32 xPos;
     s32 i;
 
-    D_800DD134 = 1 - D_800DD134;
+    gViewportWithBG = 1 - gViewportWithBG;
     for (i = 0; i < 4; i++) {
         if (gScreenViewports[i].flags & VIEWPORT_UNK_04) {
             gScreenViewports[i].flags &= ~VIEWPORT_EXTRA_BG;
@@ -413,7 +417,7 @@ void func_80066610(void) {
             gScreenViewports[i].flags |= VIEWPORT_EXTRA_BG;
         }
         gScreenViewports[i].flags &= ~(VIEWPORT_UNK_02 | VIEWPORT_UNK_04);
-        if (gScreenViewports[i].flags & 1) {
+        if (gScreenViewports[i].flags & VIEWPORT_EXTRA_BG) {
             if (!(gScreenViewports[i].flags & VIEWPORT_X_CUSTOM)) {
                 xPos = (((gScreenViewports[i].x2 - gScreenViewports[i].x1) + 1) << 1) + (gScreenViewports[i].x1 * 4);
             } else {
@@ -441,16 +445,16 @@ void func_80066610(void) {
                 height = gScreenViewports[i].height;
                 height *= 2;
             }
-            s3 = i + (D_800DD134 * 5);
-            s3 += 10;
+            port = i + (gViewportWithBG * 5);
+            port += 10;
             if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
                 if (0) { } // Fakematch
                 width = -width;
             }
-            D_800DD148[s3].vp.vtrans[0] = xPos;
-            D_800DD148[s3].vp.vtrans[1] = yPos;
-            D_800DD148[s3].vp.vscale[0] = width;
-            D_800DD148[s3].vp.vscale[1] = height;
+            gViewportStack[port].vp.vtrans[0] = xPos;
+            gViewportStack[port].vp.vtrans[1] = yPos;
+            gViewportStack[port].vp.vscale[0] = width;
+            gViewportStack[port].vp.vscale[1] = height;
         }
     }
 }
@@ -903,11 +907,11 @@ void set_ortho_matrix_view(Gfx **dlist, MatrixS **mtx) {
     width = GET_VIDEO_WIDTH(widthAndHeight);
     f32_matrix_to_s16_matrix(&gOrthoMatrix, *mtx);
     D_80120D88[0] = *mtx;
-    D_800DD148[gActiveCameraID + 5].vp.vscale[0] = width * 2;
-    D_800DD148[gActiveCameraID + 5].vp.vscale[1] = width * 2;
-    D_800DD148[gActiveCameraID + 5].vp.vtrans[0] = width * 2;
-    D_800DD148[gActiveCameraID + 5].vp.vtrans[1] = height * 2;
-    gSPViewport((*dlist)++, OS_K0_TO_PHYSICAL(&D_800DD148[gActiveCameraID + 5]));
+    gViewportStack[gActiveCameraID + 5].vp.vscale[0] = width * 2;
+    gViewportStack[gActiveCameraID + 5].vp.vscale[1] = width * 2;
+    gViewportStack[gActiveCameraID + 5].vp.vtrans[0] = width * 2;
+    gViewportStack[gActiveCameraID + 5].vp.vtrans[1] = height * 2;
+    gSPViewport((*dlist)++, OS_K0_TO_PHYSICAL(&gViewportStack[gActiveCameraID + 5]));
     gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
     D_80120D1C = 0;
     D_80120D08 = 0;
@@ -939,13 +943,13 @@ void func_80068158(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY) {
         tempWidth = -width;
     }
     if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_EXTRA_BG)) {
-        D_800DD148[gActiveCameraID].vp.vtrans[0] = posX * 4;
-        D_800DD148[gActiveCameraID].vp.vtrans[1] = posY * 4;
-        D_800DD148[gActiveCameraID].vp.vscale[0] = tempWidth * 4;
-        D_800DD148[gActiveCameraID].vp.vscale[1] = height * 4;
-        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&D_800DD148[gActiveCameraID]));
+        gViewportStack[gActiveCameraID].vp.vtrans[0] = posX * 4;
+        gViewportStack[gActiveCameraID].vp.vtrans[1] = posY * 4;
+        gViewportStack[gActiveCameraID].vp.vscale[0] = tempWidth * 4;
+        gViewportStack[gActiveCameraID].vp.vscale[1] = height * 4;
+        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&gViewportStack[gActiveCameraID]));
     } else {
-        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&D_800DD148[gActiveCameraID + 10 + (D_800DD134 * 5)]));
+        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&gViewportStack[gActiveCameraID + 10 + (gViewportWithBG * 5)]));
     }
 }
 

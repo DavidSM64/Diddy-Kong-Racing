@@ -44,7 +44,7 @@ enum ViewportCount {
 };
 
 enum ViewPortFlags {
-    VIEWPORT_EXTRA_BG        = 0x0001,
+    VIEWPORT_EXTRA_BG      = 0x0001,
     VIEWPORT_UNK_02        = 0x0002,
     VIEWPORT_UNK_04        = 0x0004,
     VIEWPORT_X_CUSTOM      = 0x0008,
@@ -139,7 +139,7 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
 void func_80069484(Gfx **arg0, MatrixS **arg1, ObjectTransform *arg2, f32 arg3, f32 arg4);
 void set_viewport_scissor(Gfx **dlist);
 void func_80069A40(Gfx **dlist);
-void func_80066610(void);
+void copy_viewports_to_stack(void);
 
 // Non Matching
 void func_80065EA0(void);

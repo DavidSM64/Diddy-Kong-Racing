@@ -1038,7 +1038,7 @@ void main_game_loop(void) {
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
 
-    func_80066610();
+    copy_viewports_to_stack();
     if (gDrawFrameTimer != 1) {
         if (gSkipGfxTask == FALSE) {
             gScreenStatus = wait_for_gfx_task();
