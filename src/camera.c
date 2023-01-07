@@ -1118,7 +1118,7 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         temp_v1->g = 255;
         temp_v1->b = 255;
         temp_v1->a = 255;
-        gDkrVertices((*dList)++, OS_PHYSICAL_TO_K0(*vtx), (((s32)OS_PHYSICAL_TO_K0(*vtx)) & 6), 13);
+        gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(*vtx), 1, 0);
         (*vtx)++; // Can't be done in the macro?
         index = segment->animFrame;
         D_80120D1C ++;

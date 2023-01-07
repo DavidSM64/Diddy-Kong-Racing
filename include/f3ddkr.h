@@ -85,31 +85,13 @@
 	gMoveWd(pkt, G_MW_BILLBOARD, 0, 1)  
 
 #define gDkrDisableBillboard(pkt)           \
-	gMoveWd(pkt, G_MW_BILLBOARD, 0, 0)  
-
-#define gDkrVertices(pkt, address, no, v0)                         \
-{                                                                  \
-    Gfx *_g = (Gfx *)(pkt);                                        \
-                                                                   \
-    _g->words.w0 = (_SHIFTL(G_VTX, 24, 8) | _SHIFTL((no), 16, 8) | \
-            _SHIFTL((v0*2), 0, 16));                               \
-    _g->words.w1 = (unsigned int)(address);                        \
-}
+	gMoveWd(pkt, G_MW_BILLBOARD, 0, 0)
 
 #define gSPVertexDKR(pkt, v, n, v0) \
     gDma1p(pkt, G_VTX, v, (((n) * 8 + (n)) << 1) + 8,((n)-1)<<3|(((u32)(v) & 6))|(v0))
 
 #define TRIN_DISABLE_TEXTURE 0
 #define TRIN_ENABLE_TEXTURE 1
-
-#define gDkrTriangles(pkt, address, n, t)                              \
-{                                                                      \
-    Gfx *_g = (Gfx *)(pkt);                                            \
-                                                                       \
-    _g->words.w0 = (_SHIFTL(G_TRIN, 24, 8) | _SHIFTL((n - 1), 20, 4) | \
-            _SHIFTL((t), 16, 4) | _SHIFTL((n*16), 0, 16));             \
-    _g->words.w1 = (unsigned int)(address);                            \
-}
 
 #define gSPPolygon(dl, ptr, numTris, texEnabled) {                                                                              \
     Gfx *_g = (Gfx *)(dl);                                                                                                      \
