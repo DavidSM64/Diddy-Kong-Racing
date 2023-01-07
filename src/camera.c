@@ -108,7 +108,7 @@ s32 gNumberOfViewports;
 s32 gActiveCameraID;
 s32 gViewportCap;
 UNUSED s32 D_80120CEC;
-ObjectTransform D_80120CF0;
+ObjectTransform gCameraTransform;
 s32 D_80120D08;
 s32 D_80120D0C;
 f32 gCurCamFOV;
@@ -251,23 +251,23 @@ s32 get_current_viewport(void) {
 
 void func_80066230(Gfx **dlist, MatrixS **mats) {
     ObjectSegment *someStruct;
-    s16 sp2A;
-    s16 sp28;
-    s16 sp26;
+    s16 angleY;
+    s16 angleX;
+    s16 angleZ;
     s16 sp24;
-    f32 sp20;
-    f32 sp1C;
-    f32 sp18;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
 
     set_active_viewports_and_max(0);
     set_active_camera(0);
     someStruct = get_active_camera_segment();
-    sp2A = someStruct->trans.y_rotation;
-    sp28 = someStruct->trans.x_rotation;
-    sp26 = someStruct->trans.z_rotation;
-    sp20 = someStruct->trans.x_position;
-    sp1C = someStruct->trans.y_position;
-    sp18 = someStruct->trans.z_position;
+    angleY = someStruct->trans.y_rotation;
+    angleX = someStruct->trans.x_rotation;
+    angleZ = someStruct->trans.z_rotation;
+    posX = someStruct->trans.x_position;
+    posY = someStruct->trans.y_position;
+    posZ = someStruct->trans.z_position;
     sp24 = someStruct->unk38.half.unk38;
     someStruct->trans.z_rotation = 0;
     someStruct->trans.x_rotation = 0;
@@ -279,12 +279,12 @@ void func_80066230(Gfx **dlist, MatrixS **mats) {
     update_envmap_position(0.0f, 0.0f, -1.0f);
     func_80066CDC(dlist, mats);
     someStruct->unk38.half.unk38 = sp24;
-    someStruct->trans.y_rotation = sp2A;
-    someStruct->trans.x_rotation = sp28;
-    someStruct->trans.z_rotation = sp26;
-    someStruct->trans.x_position = sp20;
-    someStruct->trans.y_position = sp1C;
-    someStruct->trans.z_position = sp18;
+    someStruct->trans.y_rotation = angleY;
+    someStruct->trans.x_rotation = angleX;
+    someStruct->trans.z_rotation = angleZ;
+    someStruct->trans.x_position = posX;
+    someStruct->trans.y_position = posY;
+    someStruct->trans.z_position = posZ;
 }
 
 /**
@@ -485,8 +485,10 @@ s32 check_viewport_background_flag(s32 viewPortIndex) {
     return gScreenViewports[viewPortIndex].flags & VIEWPORT_EXTRA_BG;
 }
 
-// proposed name: resize_viewport
-void func_80066940(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2) {
+/**
+ * Sets the intended viewport to the size passed through by arguments.
+*/
+void resize_viewport(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2) {
     s32 widthAndHeight, width, height;
     s32 temp;
 
@@ -505,7 +507,7 @@ void func_80066940(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2) {
         y2 = temp;
     }
 
-    if ((x1 >= width) || (x2 < 0) || (y1 >= height) || (y2 < 0)) {
+    if (x1 >= width || x2 < 0 || y1 >= height || y2 < 0) {
         gScreenViewports[viewPortIndex].scissorX1 = 0;
         gScreenViewports[viewPortIndex].scissorY1 = 0;
         gScreenViewports[viewPortIndex].scissorX2 = 0;
@@ -854,32 +856,32 @@ void func_80067D3C(Gfx **dlist, UNUSED MatrixS **mats) {
         gActiveCameraID += 4;
     }
 
-    D_80120CF0.y_rotation = 0x8000 + gActiveCameraStack[gActiveCameraID].trans.y_rotation;
-    D_80120CF0.x_rotation = gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.half.unk38;
-    D_80120CF0.z_rotation = gActiveCameraStack[gActiveCameraID].trans.z_rotation;
+    gCameraTransform.y_rotation = 0x8000 + gActiveCameraStack[gActiveCameraID].trans.y_rotation;
+    gCameraTransform.x_rotation = gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.half.unk38;
+    gCameraTransform.z_rotation = gActiveCameraStack[gActiveCameraID].trans.z_rotation;
 
-    D_80120CF0.x_position = -gActiveCameraStack[gActiveCameraID].trans.x_position;
-    D_80120CF0.y_position = -gActiveCameraStack[gActiveCameraID].trans.y_position;
+    gCameraTransform.x_position = -gActiveCameraStack[gActiveCameraID].trans.x_position;
+    gCameraTransform.y_position = -gActiveCameraStack[gActiveCameraID].trans.y_position;
     if (D_80120D18 != 0) {
-        D_80120CF0.y_position -= gActiveCameraStack[gActiveCameraID].unk30;
+        gCameraTransform.y_position -= gActiveCameraStack[gActiveCameraID].unk30;
     }
-    D_80120CF0.z_position = -gActiveCameraStack[gActiveCameraID].trans.z_position;
+    gCameraTransform.z_position = -gActiveCameraStack[gActiveCameraID].trans.z_position;
 
-    object_transform_to_matrix_2(D_80120F60, &D_80120CF0);
+    object_transform_to_matrix_2(D_80120F60, &gCameraTransform);
     f32_matrix_mult(&D_80120F60, &gPerspectiveMatrixF, &D_80120F20);
 
-    D_80120CF0.y_rotation = -0x8000 - gActiveCameraStack[gActiveCameraID].trans.y_rotation;
-    D_80120CF0.x_rotation = -(gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.half.unk38);
-    D_80120CF0.z_rotation = -gActiveCameraStack[gActiveCameraID].trans.z_rotation;
-    D_80120CF0.scale = 1.0f;
-    D_80120CF0.x_position = gActiveCameraStack[gActiveCameraID].trans.x_position;
-    D_80120CF0.y_position = gActiveCameraStack[gActiveCameraID].trans.y_position;
+    gCameraTransform.y_rotation = -0x8000 - gActiveCameraStack[gActiveCameraID].trans.y_rotation;
+    gCameraTransform.x_rotation = -(gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.half.unk38);
+    gCameraTransform.z_rotation = -gActiveCameraStack[gActiveCameraID].trans.z_rotation;
+    gCameraTransform.scale = 1.0f;
+    gCameraTransform.x_position = gActiveCameraStack[gActiveCameraID].trans.x_position;
+    gCameraTransform.y_position = gActiveCameraStack[gActiveCameraID].trans.y_position;
     if (D_80120D18 != 0) {
-        D_80120CF0.y_position += gActiveCameraStack[gActiveCameraID].unk30;
+        gCameraTransform.y_position += gActiveCameraStack[gActiveCameraID].unk30;
     }
-    D_80120CF0.z_position = gActiveCameraStack[gActiveCameraID].trans.z_position;
+    gCameraTransform.z_position = gActiveCameraStack[gActiveCameraID].trans.z_position;
 
-    object_transform_to_matrix(D_80120FA0, &D_80120CF0);
+    object_transform_to_matrix(D_80120FA0, &gCameraTransform);
     f32_matrix_to_s16_matrix(&D_80120FA0, &D_80121020);
 
     gActiveCameraID = temp;
@@ -1031,18 +1033,18 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
         sp58 = D_80120D40[D_80120D20] - obj->segment.trans.y_position;
         var_f20 = D_80120D58[D_80120D20] - obj->segment.trans.z_position;
         sp50 = sqrtf((sp5C * sp5C) + (var_f20 * var_f20));
-        D_80120CF0.y_rotation = arctan2_f(sp5C, var_f20);
-        D_80120CF0.x_rotation = -arctan2_f(sp58, sp50);
-        D_80120CF0.z_rotation = sp34;
-        D_80120CF0.scale = obj->segment.trans.scale;
-        D_80120CF0.x_position = obj->segment.trans.x_position;
-        D_80120CF0.y_position = obj->segment.trans.y_position;
-        D_80120CF0.z_position = obj->segment.trans.z_position;
-        object_transform_to_matrix(D_80121060, &D_80120CF0);
+        gCameraTransform.y_rotation = arctan2_f(sp5C, var_f20);
+        gCameraTransform.x_rotation = -arctan2_f(sp58, sp50);
+        gCameraTransform.z_rotation = sp34;
+        gCameraTransform.scale = obj->segment.trans.scale;
+        gCameraTransform.x_position = obj->segment.trans.x_position;
+        gCameraTransform.y_position = obj->segment.trans.y_position;
+        gCameraTransform.z_position = obj->segment.trans.z_position;
+        object_transform_to_matrix(D_80121060, &gCameraTransform);
         D_80120D1C++;
-        f32_matrix_mult((Matrix*) D_80121060, (Matrix*)&D_80120D70[D_80120D1C-1][0][0], (Matrix*)&D_80120D70[D_80120D1C][0][0]);
-        f32_matrix_mult(D_80120D70[D_80120D1C], (Matrix*) D_80120F20, (Matrix*) D_80121060);
-        f32_matrix_to_s16_matrix((Matrix*) D_80121060, *mtx);
+        f32_matrix_mult((Matrix *) D_80121060, (Matrix *) &D_80120D70[D_80120D1C-1][0][0], (Matrix *) &D_80120D70[D_80120D1C][0][0]);
+        f32_matrix_mult(D_80120D70[D_80120D1C], (Matrix *) D_80120F20, (Matrix *) D_80121060);
+        f32_matrix_to_s16_matrix((Matrix *) D_80121060, *mtx);
         D_80120D88[D_80120D1C] = *mtx;
         gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), 0x80);
         gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(&D_800DD138), 1, 0);
@@ -1117,12 +1119,12 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         (*vtx)++; // Can't be done in the macro?
         index = segment->animFrame;
         D_80120D1C ++;
-        D_80120CF0.y_rotation = -segment->trans.y_rotation;
-        D_80120CF0.x_rotation = -segment->trans.x_rotation;
-        D_80120CF0.z_rotation = gActiveCameraStack[gActiveCameraID].trans.z_rotation + segment->trans.z_rotation;
-        D_80120CF0.x_position = 0.0f;
-        D_80120CF0.y_position = 0.0f;
-        D_80120CF0.z_position = 0.0f;
+        gCameraTransform.y_rotation = -segment->trans.y_rotation;
+        gCameraTransform.x_rotation = -segment->trans.x_rotation;
+        gCameraTransform.z_rotation = gActiveCameraStack[gActiveCameraID].trans.z_rotation + segment->trans.z_rotation;
+        gCameraTransform.x_position = 0.0f;
+        gCameraTransform.y_position = 0.0f;
+        gCameraTransform.z_position = 0.0f;
         if (gAdjustViewportHeight) {
             scale = segment->trans.scale;
             f32_matrix_from_scale(sp50, scale, scale, 1.0f);
@@ -1132,7 +1134,7 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
             scale = segment->trans.scale;
             f32_matrix_from_scale(D_80121060, scale, scale, 1.0f);
         }
-        object_transform_to_matrix_2(sp90, &D_80120CF0);
+        object_transform_to_matrix_2(sp90, &gCameraTransform);
         f32_matrix_mult(&D_80121060, &sp90, D_80120D70[D_80120D1C]);
         f32_matrix_to_s16_matrix(D_80120D70[D_80120D1C], *mtx);
         D_80120D88[D_80120D1C] = *mtx;
@@ -1187,14 +1189,14 @@ void func_80069484(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale
     tempX = gActiveCameraStack[index].trans.x_position - tempX;
     tempY = gActiveCameraStack[index].trans.y_position - tempY;
     tempZ = gActiveCameraStack[index].trans.z_position - tempZ;
-    D_80120CF0.y_rotation = -trans->y_rotation;
-    D_80120CF0.x_rotation = -trans->x_rotation;
-    D_80120CF0.z_rotation = -trans->z_rotation;
-    D_80120CF0.x_position = 0.0f;
-    D_80120CF0.y_position = 0.0f;
-    D_80120CF0.z_position = 0.0f;
-    D_80120CF0.scale = 1.0f;
-    object_transform_to_matrix_2(D_80121060, &D_80120CF0);
+    gCameraTransform.y_rotation = -trans->y_rotation;
+    gCameraTransform.x_rotation = -trans->x_rotation;
+    gCameraTransform.z_rotation = -trans->z_rotation;
+    gCameraTransform.x_position = 0.0f;
+    gCameraTransform.y_position = 0.0f;
+    gCameraTransform.z_position = 0.0f;
+    gCameraTransform.scale = 1.0f;
+    object_transform_to_matrix_2(D_80121060, &gCameraTransform);
     guMtxXFMF(D_80121060, tempX, tempY, tempZ, &tempX, &tempY, &tempZ);
     scaleFactor = 1.0f / trans->scale;
     tempX *= scaleFactor;
@@ -1378,9 +1380,9 @@ OSMesgQueue *get_si_mesg_queue(void) {
  * Initialise the player controllers, and return the status when finished.
  */
 s32 init_controllers(void) {
-    UNUSED s32 *temp1; // Unused
+    UNUSED s32 *temp1;
     u8 bitpattern;
-    UNUSED s32 *temp2; // Unused
+    UNUSED s32 *temp2;
 
     osCreateMesgQueue(&sSIMesgQueue, &sSIMesgBuf, 1);
     osSetEventMesg(OS_EVENT_SI, &sSIMesgQueue, gSIMesg);

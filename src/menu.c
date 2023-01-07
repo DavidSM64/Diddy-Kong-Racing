@@ -2309,10 +2309,10 @@ void menu_logos_screen_init(void) {
     sBootScreenTimer = 16.0f;
     set_background_fill_colour(0, 0, 0);
     if (osTvType == TV_TYPE_PAL) {
-        func_80066940(0, 0, 38, SCREEN_WIDTH, SCREEN_HEIGHT - 16);
+        resize_viewport(0, 0, 38, SCREEN_WIDTH, SCREEN_HEIGHT - 16);
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT + 44);
     } else {
-        func_80066940(0, 0, 40, SCREEN_WIDTH, SCREEN_HEIGHT - 44);
+        resize_viewport(0, 0, 40, SCREEN_WIDTH, SCREEN_HEIGHT - 44);
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
     copy_viewports_to_stack(); //Init viewports
@@ -5589,7 +5589,7 @@ void menu_track_select_init(void) {
     }
     D_80126924 = 0;
     set_background_draw_function(func_8008F618);
-    func_80066940(0, 80, gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY >> 1), 240, (gTrackSelectViewPortHalfY >> 1) + gTrackSelectViewPortHalfY);
+    resize_viewport(0, 80, gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY >> 1), 240, (gTrackSelectViewPortHalfY >> 1) + gTrackSelectViewPortHalfY);
     copy_viewports_to_stack();
     func_80066818(0, 0);
     D_800E097C = 1;
@@ -5989,7 +5989,7 @@ void func_80090918(s32 updateRate) {
         }
         var_t3 = (((var_t1 + 20) * gTrackSelectViewPortHalfY) / 40) + var_t0;
         var_a2 = var_t0 - (((var_t1 + 20) * gTrackSelectViewPortHalfY) / 40);
-        func_80066940(0, (var_t2 - (var_t1 * 4)) - 80, var_a2, (var_t1 * 4) + var_t2 + 80, var_t3);
+        resize_viewport(0, (var_t2 - (var_t1 * 4)) - 80, var_a2, (var_t1 * 4) + var_t2 + 80, var_t3);
         gMenuImageStack[4].unk8 = (f32) (sMenuImageProperties[4].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
         gMenuImageStack[6].unk8 = (f32) (sMenuImageProperties[6].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
         gMenuImageStack[5].unk8 = (f32) (sMenuImageProperties[5].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
@@ -7060,7 +7060,7 @@ void func_80094688(s32 arg0, s32 arg1) {
             func_80078170(D_80126BB8, D_80126BBC, D_80126BC0);
         }
         func_80066818(0, 1);
-        func_80066940(0, 0, 0, gTrackSelectViewPortX, gTrackSelectViewportY);
+        resize_viewport(0, 0, 0, gTrackSelectViewPortX, gTrackSelectViewportY);
     }
     adjust_audio_volume(VOLUME_LOWER_AMBIENT);
 }
@@ -7947,10 +7947,10 @@ void menu_credits_init(void) {
     D_80126BE0 = 0;
     set_background_fill_colour(0, 0, 0);
     if (osTvType == TV_TYPE_PAL) {
-        func_80066940(0, 0, 38, SCREEN_WIDTH, 224);
+        resize_viewport(0, 0, 38, SCREEN_WIDTH, 224);
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT + 44);
     } else {
-        func_80066940(0, 0, 40, SCREEN_WIDTH, 196);
+        resize_viewport(0, 0, 40, SCREEN_WIDTH, 196);
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
     copy_viewports_to_stack();
