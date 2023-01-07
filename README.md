@@ -120,7 +120,7 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of January 6, 2023, this is our current score:
+As of January 7, 2023, this is our current score:
 ```
  ================================================
       ADVENTURE ONE (ASM -> C Decompilation)
@@ -136,9 +136,9 @@ As of January 6, 2023, this is our current score:
     We are racing in Pirate Lagoon. (Lap 2/3)
  ================================================
       ADVENTURE TWO (Cleanup & Documentation)
- --------------- 21.36% Complete ----------------
-           # Documented functions: 378
-          # Undocumented remaining: 1195
+ --------------- 22.19% Complete ----------------
+           # Documented functions: 403
+          # Undocumented remaining: 1170
  ----------------- Game Status ------------------
     Balloons: 12/47, Keys: 1/4, Trophies: 0/5
       T.T. Amulets: 1/4, Wizpig Amulets: 0/4
