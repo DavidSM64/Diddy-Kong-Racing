@@ -1372,6 +1372,9 @@ UNUSED void debug_print_float_matrix_values(f32 *mtx) {
     rmonPrintf("\n");
 }
 
+/**
+ * Return the serial interface message queue.
+*/
 OSMesgQueue *get_si_mesg_queue(void) {
     return &sSIMesgQueue;
 }
