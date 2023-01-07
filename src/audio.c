@@ -52,13 +52,6 @@ UNUSED const char sAudioErrorString_03[] = "Invalid midi sequence index\n";
 u8 gBssSectionStart[AUDIO_HEAP_SIZE];
 
 ALHeap gALHeap;
-
-/* Unknown size */
-typedef struct unk80115CF8 {
-    u8 pad0[2];
-    s16 unk2;
-} unk80115CF8;
-
 ALSeqFile *ALSeqFile_80115CF8;
 void *D_80115CFC;
 
