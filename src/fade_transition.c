@@ -14,7 +14,7 @@
 
 /************ .data ************/
 
-s32 D_800E31A0 = 0;
+s32 gTransitionsDisabled = FALSE;
 s32 sLevelTransitionDelayTimer = 0; // Set when a level is loaded after a transition, to hold it for a few extra frames.
 s32 D_800E31A8 = 0;
 s32 sTransitionStatus = TRANSITION_NONE;
@@ -185,7 +185,7 @@ Gfx dTransitionShapeSettings[] = {
 
 /************ .bss ************/
 
-s32 gCurFaceTransition;
+s32 gCurFadeTransition;
 u8 gCurFadeRed;
 u8 gCurFadeGreen;
 u8 gCurFadeBlue;
@@ -197,7 +197,7 @@ s32 D_8012A744;
 s32 D_8012A748;
 s32 D_8012A74C;
 f32 sTransitionOpacity;
-f32 D_8012A754;
+f32 gTransitionOpacityVel;
 s32 D_8012A758;
 s32 D_8012A75C;
 s32 D_8012A760;
@@ -211,28 +211,36 @@ s32 D_8012A77C;
 
 /*****************************/
 
-void func_800C0170(void) {
-    D_800E31A0 = 1;
+/**
+ * Set the value indicating that a new screen transition can be started.
+*/
+void enable_new_screen_transitions(void) {
+    gTransitionsDisabled = TRUE;
 }
 
-void func_800C0180(void) {
-    D_800E31A0 = 0;
+/**
+ * Set the value indicating new transitions will not be created.
+*/
+void disable_new_screen_transitions(void) {
+    gTransitionsDisabled = FALSE;
 }
 
 //@bug: This doesn't seem to guarantee a return.
 u32 func_800C018C(void) {
-    u32 isActive = (sTransitionFadeTimer != 0);
-    if (isActive == 0) {
-        isActive = (sTransitionFlags != 0);
-        if (isActive != 0) {
+    u32 isActive = sTransitionFadeTimer != 0;
+    if (isActive == FALSE) {
+        isActive = sTransitionFlags != 0;
+        if (isActive) {
             return (D_800E31BC != 0);
         }
     }
 }
 
-s32 func_800C01D8(FadeTransition *transition) {
-    s32 new_var;
-    if (D_800E31A0 != NULL) {
+/**
+ * Reset the state then initialise the transition states based on the current transition data.
+*/
+s32 transition_begin(FadeTransition *transition) {
+    if (gTransitionsDisabled) {
         return 0;
     }
     transition_end();
@@ -242,10 +250,8 @@ s32 func_800C01D8(FadeTransition *transition) {
     sTransitionFadeTimer = transition->duration;
     D_800E31B8 = transition->duration;
     sTransitionFlags = transition->unk6;
-    new_var = transition->type;
-    D_800E31BC = !(new_var & 0x80);
-    new_var = transition->duration;
-    gCurFaceTransition = transition->type & 0x3F;
+    D_800E31BC = !(transition->type & 0x80);
+    gCurFadeTransition = transition->type & 0x3F;
     D_800E31A8 = transition->type & 0x40;
     sLevelTransitionDelayTimer = 0;
     if (!D_800E31BC && !sLevelTransitionDelayTimer) {
@@ -258,9 +264,9 @@ s32 func_800C01D8(FadeTransition *transition) {
         gCurFadeRed = transition->red;
         gCurFadeGreen = transition->green;
         gCurFadeBlue = transition->blue;
-        switch (gCurFaceTransition) {
+        switch (gCurFadeTransition) {
         case FADE_FULLSCREEN:
-            func_800C0780(transition);
+            transition_fullscreen_start(transition);
             break;
         case FADE_BARNDOOR_HORIZONTAL:
             func_800C0B00(transition, 12, 8, D_800E3230, D_800E32A0, D_800E32AC, D_800E32D0, D_800E32D0, D_800E32B8);
@@ -302,14 +308,14 @@ s32 handle_transitions(s32 updateRate) {
         if (sTransitionFadeTimer == 0) {
             sTransitionStatus = TRANSITION_LEVELSWAP;
         }
-//@bug Not yet confirmed as a bug, but sTransitionFlags will not be zero when ingame, leaving stray transitions up.
+//!@bug Not yet confirmed as a bug, but sTransitionFlags will not be zero when ingame, leaving stray transitions up.
         if ((sTransitionFadeTimer == 0) && (sTransitionFlags == 0)) {
             transition_end();
         } else {
             if (sTransitionFadeTimer > 0) {
                 sTransitionTaskNum[0] = 1 - sTransitionTaskNum[0]; // Haven't you heard of a XOR, Rareware employee?
             }
-            switch (gCurFaceTransition) {
+            switch (gCurFadeTransition) {
                 case FADE_FULLSCREEN:
                     func_800C0834(updateRate);
                     break;
@@ -335,40 +341,40 @@ s32 handle_transitions(s32 updateRate) {
  * The rendering portion of transitions.
  * First establishes an orthogonal matrix, then renders a transition effect onscreen.
  */
-void render_fade_transition(Gfx **dlist, MatrixS **mats, Vertex **verts) {
+void render_fade_transition(Gfx **dList, MatrixS **mats, Vertex **verts) {
     if (sTransitionStatus != TRANSITION_NONE) {
         if (osTvType == TV_TYPE_PAL) {
             set_ortho_matrix_height(1.4f);
         } else {
             set_ortho_matrix_height(1.2f);
         }
-        set_ortho_matrix_view(dlist, mats);
+        set_ortho_matrix_view(dList, mats);
         set_ortho_matrix_height(1.0f);
-        switch (gCurFaceTransition) {
+        switch (gCurFadeTransition) {
             case FADE_FULLSCREEN:
-                render_fade_fullscreen(dlist, mats, verts);
+                render_fade_fullscreen(dList, mats, verts);
                 break;
             case FADE_BARNDOOR_HORIZONTAL:
-                render_fade_barndoor_horizontal(dlist, mats, verts);
+                render_fade_barndoor_horizontal(dList, mats, verts);
                 break;
             case FADE_BARNDOOR_VERTICAL:
-                render_fade_barndoor_vertical(dlist, mats, verts);
+                render_fade_barndoor_vertical(dList, mats, verts);
                 break;
             case FADE_CIRCLE:
-                render_fade_circle(dlist, mats, verts);
+                render_fade_circle(dList, mats, verts);
                 break;
             case FADE_WAVES:
-                render_fade_waves(dlist, mats, verts);
+                render_fade_waves(dList, mats, verts);
                 break;
             case FADE_BARNDOOR_DIAGONAL:
-                render_fade_barndoor_diagonal(dlist, mats, verts);
+                render_fade_barndoor_diagonal(dList, mats, verts);
                 break;
             case FADE_DISABLED:
-                render_fade_disabled(dlist, mats, verts);
+                render_fade_disabled(dList, mats, verts);
                 break;
         }
 
-        func_80066CDC(dlist, mats);
+        func_80066CDC(dList, mats);
     }
 }
 
@@ -388,13 +394,16 @@ void transition_end(void) {
     sTransitionTaskNum[0] = 0;
 }
 
-void func_800C0780(FadeTransition *transition) {
+/**
+ * Sets the transition timer and opacity to positive or negative depending on whether to fade in or out.
+*/
+void transition_fullscreen_start(FadeTransition *transition) {
     if (transition->type & 0x80) {
         sTransitionOpacity = 255.0f;
-        D_8012A754 = -255.0f / (f32)sTransitionFadeTimer;
+        gTransitionOpacityVel = -255.0f / (f32) sTransitionFadeTimer;
     } else {
         sTransitionOpacity = 0.0f;
-        D_8012A754 = 255.0f / (f32)sTransitionFadeTimer;
+        gTransitionOpacityVel = 255.0f / (f32) sTransitionFadeTimer;
     }
     sTransitionStatus = TRANSITION_ACTIVE;
 }
@@ -406,16 +415,16 @@ void func_800C0834(s32 updateRate) {
         if ((sTransitionFadeTimer) > 0) {
             if (updateRate < sTransitionFadeTimer) {
                 sTransitionFadeTimer -= updateRate;
-                sTransitionOpacity += D_8012A754 * updateRate;
+                sTransitionOpacity += gTransitionOpacityVel * updateRate;
             } else {
                 updateRate -= sTransitionFadeTimer;
                 var_v0 = FALSE;
-                if (D_8012A754 < 0.0f) {
+                if (gTransitionOpacityVel < 0.0f) {
                     sTransitionOpacity = 0.0f;
                 } else {
                     sTransitionOpacity = 255.0f;
                 }
-                sTransitionFadeTimer = updateRate * 0; // Fakematch
+                sTransitionFadeTimer = 0 * updateRate; // Fakematch
             }
             if (sTransitionOpacity < 0.0f) {
                 sTransitionOpacity = 0.0f;
@@ -432,7 +441,7 @@ void func_800C0834(s32 updateRate) {
                 if (D_800E31A8 != 0) {
                     D_800E31A8 = 0;
                     sTransitionFadeTimer = D_800E31B8;
-                    D_8012A754 = -D_8012A754;
+                    gTransitionOpacityVel = -gTransitionOpacityVel;
                     var_v0 = FALSE;
                 }
             }
@@ -440,62 +449,71 @@ void func_800C0834(s32 updateRate) {
     } while (var_v0 == FALSE && (updateRate > 0));
 }
 
-void render_fade_fullscreen(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+/**
+ * Draws a simple fillrect covering the whole screen that fades in or out.
+*/
+void render_fade_fullscreen(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     s32 screenSize = get_video_width_and_height_as_s32();
-    gSPDisplayList((*dlist)++, dTransitionFadeSettings);
-    gDPSetPrimColor((*dlist)++, 0, 0, gCurFadeRed, gCurFadeGreen, gCurFadeBlue, gCurFadeAlpha);
-    gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
-    gDPFillRectangle((*dlist)++, 0, 0, screenSize & 0x3FF, (screenSize >> 16) & 0x3FF);
-    reset_render_settings(dlist);
+    gSPDisplayList((*dList)++, dTransitionFadeSettings);
+    gDPSetPrimColor((*dList)++, 0, 0, gCurFadeRed, gCurFadeGreen, gCurFadeBlue, gCurFadeAlpha);
+    gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+    gDPFillRectangle((*dList)++, 0, 0, screenSize & 0x3FF, (screenSize >> 16) & 0x3FF);
+    reset_render_settings(dList);
 }
 
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C0B00.s")
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1130.s")
 
-void render_fade_barndoor_horizontal(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
-    reset_render_settings(dlist);
-    gSPDisplayList((*dlist)++, dTransitionShapeSettings);
+/**
+ * Renders a transition effect on screen that will close in from both sides horizonally.
+*/
+void render_fade_barndoor_horizontal(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+    reset_render_settings(dList);
+    gSPDisplayList((*dList)++, dTransitionShapeSettings);
     // TODO: Need to clean this up.
-    gDkrVertices((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]])) & 6) | 0x58, 0x70);
-    gDkrTriangles((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]), 8, TRIN_DISABLE_TEXTURE);
-    reset_render_settings(dlist);
+    gDkrVertices((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]])) & 6) | 0x58, 0x70);
+    gDkrTriangles((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]), 8, TRIN_DISABLE_TEXTURE);
+    reset_render_settings(dList);
 }
 
-// This is exactly the same as render_fade_barndoor_horizontal; I wonder what gets changed then?
-void render_fade_barndoor_vertical(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
-    reset_render_settings(dlist);
-    gSPDisplayList((*dlist)++, dTransitionShapeSettings);
+/**
+ * Renders a transition effect on screen that will close in from both sides vertically.
+ * Codewase, exactly the same as above, but uses a different vertex layout to make the difference.
+*/
+void render_fade_barndoor_vertical(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+    reset_render_settings(dList);
+    gSPDisplayList((*dList)++, dTransitionShapeSettings);
     // TODO: Need to clean this up.
-    gDkrVertices((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]])) & 6) | 0x58, 0x70);
-    gDkrTriangles((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]), 8, TRIN_DISABLE_TEXTURE);
-    reset_render_settings(dlist);
+    gDkrVertices((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]])) & 6) | 0x58, 0x70);
+    gDkrTriangles((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]), 8, TRIN_DISABLE_TEXTURE);
+    reset_render_settings(dList);
 }
 
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C15D4.s")
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1EE8.s")
 
 #ifdef NON_EQUIVALENT
-void render_fade_circle(Gfx **dlist, MatrixS **mats, Vertex **verts) {
+void render_fade_circle(Gfx **dList, MatrixS **mats, Vertex **verts) {
     u8 *addr, *addr2;
-    reset_render_settings(dlist);
-    gSPDisplayList((*dlist)++, dTransitionShapeSettings);
+    reset_render_settings(dList);
+    gSPDisplayList((*dList)++, dTransitionShapeSettings);
     addr = OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]);
     addr2 = OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]);
-    gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
-    gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
+    gDkrVertices((*dList)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
+    gDkrTriangles((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
     addr += 0xB4;
     addr2 += 0x100;
-    gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
-    gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
+    gDkrVertices((*dList)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
+    gDkrTriangles((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
     addr += 0xB4;
     addr2 += 0x100;
-    gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
-    gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
+    gDkrVertices((*dList)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
+    gDkrTriangles((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
     addr += 0xB4;
     addr2 += 0x100;
-    gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
-    gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
-    reset_render_settings(dlist);
+    gDkrVertices((*dList)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
+    gDkrTriangles((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
+    reset_render_settings(dList);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_circle.s")
@@ -503,33 +521,36 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_circle.s")
 
 #ifdef NON_EQUIVALENT
 // This doesn't work properly.
-void render_fade_waves(Gfx **dlist, MatrixS **mats, Vertex **verts) {
+void render_fade_waves(Gfx **dList, MatrixS **mats, Vertex **verts) {
     s32 i;
-    reset_render_settings(dlist);
-    gSPDisplayList((*dlist)++, dTransitionShapeSettings);
+    reset_render_settings(dList);
+    gSPDisplayList((*dList)++, dTransitionShapeSettings);
     for(i = 0; i < 6; i++) {
         s32 index = sTransitionTaskNum[0] + i;
         if(i != 1 && i != 4) {
-            gDkrVertices((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[index])) & 6) | 0x78, 0x94);
-            gDkrTriangles((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 14, TRIN_DISABLE_TEXTURE);
+            gDkrVertices((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[index])) & 6) | 0x78, 0x94);
+            gDkrTriangles((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 14, TRIN_DISABLE_TEXTURE);
         } else {
-            gDkrVertices((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[index])) & 6) | 0x68, 0x82);
-            gDkrTriangles((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 12, TRIN_DISABLE_TEXTURE);
+            gDkrVertices((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[index])) & 6) | 0x68, 0x82);
+            gDkrTriangles((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 12, TRIN_DISABLE_TEXTURE);
         }
     }
-    reset_render_settings(dlist);
+    reset_render_settings(dList);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_waves.s")
 #endif
 
-void render_fade_barndoor_diagonal(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
-    reset_render_settings(dlist);
-    gSPDisplayList((*dlist)++, dTransitionShapeSettings);
+/**
+ * Renders a transition effect on screen that will close in from the opposite corners of the screen.
+*/
+void render_fade_barndoor_diagonal(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+    reset_render_settings(dList);
+    gSPDisplayList((*dList)++, dTransitionShapeSettings);
     // TODO: Need to clean this up.
-    gDkrVertices((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]])) & 6) | 0x48, 0x5E);
-    gDkrTriangles((*dlist)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]), 6, TRIN_DISABLE_TEXTURE);
-    reset_render_settings(dlist);
+    gDkrVertices((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]])) & 6) | 0x48, 0x5E);
+    gDkrTriangles((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]), 6, TRIN_DISABLE_TEXTURE);
+    reset_render_settings(dList);
 }
 
 void func_800C2640(UNUSED FadeTransition *transition) {
@@ -538,7 +559,7 @@ void func_800C2640(UNUSED FadeTransition *transition) {
     gLastFadeBlue <<= 0x10;
     gCurFadeAlpha = 0xFF;
     sTransitionOpacity = 255.0f;
-    D_8012A754 = 0.0f;
+    gTransitionOpacityVel = 0.0f;
     D_8012A744 = (s32) ((gCurFadeRed << 0x10) - gLastFadeRed) / (s32) sTransitionFadeTimer;
     D_8012A748 = (s32) ((gCurFadeGreen << 0x10) - gLastFadeGreen) / (s32) sTransitionFadeTimer;
     D_8012A74C = (s32) ((gCurFadeBlue << 0x10) - gLastFadeBlue) / (s32) sTransitionFadeTimer;
@@ -573,11 +594,11 @@ void func_800C27A0(s32 updateRate) {
     } while (var_v0 == FALSE);
 }
 
-void render_fade_disabled(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+void render_fade_disabled(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     s32 screenSize = get_video_width_and_height_as_s32();
-    gSPDisplayList((*dlist)++, dTransitionFadeSettings);
-    gDPSetPrimColor((*dlist)++, 0, 0, (gLastFadeRed >> 16), (gLastFadeGreen >> 16), (gLastFadeBlue >> 16), 255);
-    gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
-    gDPFillRectangle((*dlist)++, 0, 0, screenSize & 0x3FF, (screenSize >> 16) & 0x3FF);
-    reset_render_settings(dlist);
+    gSPDisplayList((*dList)++, dTransitionFadeSettings);
+    gDPSetPrimColor((*dList)++, 0, 0, (gLastFadeRed >> 16), (gLastFadeGreen >> 16), (gLastFadeBlue >> 16), 255);
+    gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
+    gDPFillRectangle((*dList)++, 0, 0, screenSize & 0x3FF, (screenSize >> 16) & 0x3FF);
+    reset_render_settings(dList);
 }

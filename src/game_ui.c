@@ -209,7 +209,7 @@ s32 D_800E283C[5] = {
 
 s8 D_80126CD0;
 s8 D_80126CD1;
-s8 D_80126CD2;
+s8 gShowHUD;
 s8 D_80126CD3;
 
 /**
@@ -336,7 +336,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                     D_80126CD0 = 0;
                 }
             }
-            if (D_80126CD2 == 0) {
+            if (gShowHUD == 0) {
                 racer = arg3->unk64;
                 if (D_8012718A) {
                     D_80126D10 = 1 - racer->racer.playerIndex;
@@ -1509,14 +1509,17 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7FBC.s")
 
-void func_800A83B4(LevelModel *model) {
+/**
+ * Loads the minimap sprite from the level data, then sets the global colours for the minimap.
+*/
+void minimap_init(LevelModel *model) {
     s32 sp2C;
     gMinimapRed = (model->minimapColor >> 16) & 0xFF;
     gMinimapGreen = (model->minimapColor >> 8) & 0xFF;
     gMinimapBlue = model->minimapColor & 0xFF;
-    load_sprite_info(model->unk20, &D_80126D1C, &D_80126D20, &sp2C, &sp2C, &sp2C);
-    func_8007CA68(model->unk20, 0, &D_80126D14, &D_80126D18, &sp2C);
-    model->unk20 = (s32)func_8007C12C(model->unk20, 1);
+    load_sprite_info(model->minimapSprite, &D_80126D1C, &D_80126D20, &sp2C, &sp2C, &sp2C);
+    func_8007CA68(model->minimapSprite, 0, &D_80126D14, &D_80126D18, &sp2C);
+    model->minimapSprite = (s32) func_8007C12C(model->minimapSprite, 1);
 }
 
 /**
@@ -1537,7 +1540,7 @@ s8 get_hud_setting(void) {
 void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate) {
     Object_Racer *curRacerObj;
     LevelModel *lvlMdl;
-    s32 sp154;
+    Sprite *minimap;
     Object **objectGroup;
     Object_Racer *tempVar4;
     Object_Racer *someRacer;
@@ -1819,7 +1822,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
             }
             someObjSeg = get_active_camera_segment();
             func_80068508(TRUE);
-            sp154 = lvlMdl->unk20;
+            minimap = (Sprite *) lvlMdl->minimapSprite;
             switch (gHUDNumPlayers) {
                 case TWO_PLAYERS:
                     D_80126D58 = 135;
@@ -1874,7 +1877,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
             } else {
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gMinimapRed, gMinimapGreen, gMinimapBlue, mapOpacity);
             }
-            render_orthi_triangle_image(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (ObjectSegment* ) &objTrans.trans, (unk80068BF4* ) sp154, 0);
+            render_ortho_triangle_image(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (ObjectSegment* ) &objTrans.trans, minimap, 0);
             sp11C = (lvlMdl->upperXBounds - lvlMdl->lowerXBounds) / (f32) (lvlMdl->upperZBounds - lvlMdl->lowerZBounds);
             sp118 = coss_f((lvlMdl->unk24 * 0xFFFF) / 360);
             sp114 = sins_f((lvlMdl->unk24 * 0xFFFF) / 360);
@@ -2030,11 +2033,16 @@ void func_800AB1AC(s32 arg0) {
     D_80126CD3 = arg0;
 }
 
-/* Unused? */
-void func_800AB1C8(void) {
+/**
+ * Sets the race start HUD procedure to the first step.
+*/
+UNUSED void reset_race_start_hud(void) {
     gRaceStartShowHudStep = 0;
 }
 
-void func_800AB1D4(u8 arg0) {
-    D_80126CD2 = 1 - arg0;
+/**
+ * Sets the visibility of the hud, hiding almost everything, leaving only the minimap.
+*/
+void set_hud_visibility(u8 setting) {
+    gShowHUD = 1 - setting;
 }

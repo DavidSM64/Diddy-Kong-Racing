@@ -237,9 +237,9 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
     func_8000CC7C(vehicle, arg4, arg2);
     func_8000B020(72, 64);
     if (arg0 == 0 && arg4 == 0) {
-        func_800C01D8(&D_800DC87C);
+        transition_begin(&D_800DC87C);
     } else {
-        func_800C01D8(&D_800DC874);
+        transition_begin(&D_800DC874);
     }
     set_active_viewports_and_max(D_8011D37C);
     D_8011B0FC = 0;
@@ -1466,7 +1466,7 @@ void func_8002C0C4(s32 modelId) {
     free_from_memory_pool(D_8011D30C);
     allocate_at_address_in_main_pool(temp_s4, (u8* ) D_8011D30C, COLOUR_TAG_YELLOW);
     set_free_queue_state(2);
-    func_800A83B4(gCurrentLevelModel);
+    minimap_init(gCurrentLevelModel);
 
     for(i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
         for(temp_s4 = 0; temp_s4 < gCurrentLevelModel->segments[i].numberOfBatches; temp_s4++) {
@@ -1526,7 +1526,7 @@ void func_8002C7D4(void) {
     free_from_memory_pool(D_8011D30C);
     free_from_memory_pool(D_8011D370);
     free_from_memory_pool(D_8011D374);
-    free_sprite((Sprite *) gCurrentLevelModel->unk20);
+    free_sprite((Sprite *) gCurrentLevelModel->minimapSprite);
     for(i = 0; i < MAXCONTROLLERS; i++) {
         free_from_memory_pool(D_8011D350[i]);
         free_from_memory_pool(D_8011D320[i]);

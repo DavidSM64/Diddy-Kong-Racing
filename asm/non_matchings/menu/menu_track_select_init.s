@@ -91,9 +91,9 @@ glabel menu_track_select_init
 /* 08F500 8008E900 0C023C03 */  jal   func_8008F00C
 /* 08F504 8008E904 AC3567D0 */   sw    $s5, %lo(D_801267D0)($at)
 /* 08F508 8008E908 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeOut) # $a0, 0x800e
-/* 08F50C 8008E90C 0C030076 */  jal   func_800C01D8
+/* 08F50C 8008E90C 0C030076 */  jal   transition_begin
 /* 08F510 8008E910 2484F77C */   addiu $a0, %lo(sMenuTransitionFadeOut) # addiu $a0, $a0, -0x884
-/* 08F514 8008E914 0C03005C */  jal   func_800C0170
+/* 08F514 8008E914 0C03005C */  jal   enable_new_screen_transitions
 /* 08F518 8008E918 00000000 */   nop   
 /* 08F51C 8008E91C 24040032 */  li    $a0, 50
 /* 08F520 8008E920 24050069 */  li    $a1, 105

@@ -1109,7 +1109,7 @@ void func_8006CC14(void) {
         gSkipGfxTask = TRUE;
     }
     func_8006BEFC();
-    func_800C01D8(&D_800DD3F4);
+    transition_begin(&D_800DD3F4);
     func_800AE270();
     func_800A003C();
     func_800C30CC();
@@ -1458,7 +1458,7 @@ void func_8006D8A4(void) {
     D_800DD390 = 0x2C;
     gIsPaused = 0;
     n_alSeqpDelete();
-    func_800C01D8(&D_800DD408);
+    transition_begin(&D_800DD408);
 }
 
 void func_8006D8E0(s32 arg0) {
@@ -1572,7 +1572,7 @@ void func_8006DBE4(void) {
         gIsLoading = TRUE;
         set_free_queue_state(0);
         func_8006BEFC();
-        func_800C01D8(&D_800DD3F4);
+        transition_begin(&D_800DD3F4);
         func_800AE270();
         func_800A003C();
         func_800C30CC();
@@ -2002,15 +2002,15 @@ void func_8006F140(s32 arg0) {
         D_80123524 = 0;
         D_80123526 = 0;
         if (arg0 == 1) {
-            func_800C01D8(&D_800DD41C);
+            transition_begin(&D_800DD41C);
         }
         if (arg0 == 3) {
             gLevelLoadTimer = 282;
-            func_800C01D8(&D_800DD424);
+            transition_begin(&D_800DD424);
         }
         if (arg0 == 4) {
             gLevelLoadTimer = 360;
-            func_800C01D8(&D_800DD424);
+            transition_begin(&D_800DD424);
         }
         if (arg0 == 0) {
             gLevelLoadTimer = 2;
@@ -2021,7 +2021,7 @@ void func_8006F140(s32 arg0) {
 // Unused?
 void func_8006F20C(void) {
     if (gLevelLoadTimer == 0) {
-        func_800C01D8(&D_800DD41C);
+        transition_begin(&D_800DD41C);
         gLevelLoadTimer = 40;
         D_80123524 = 1;
     }
@@ -2029,7 +2029,7 @@ void func_8006F20C(void) {
 
 void func_8006F254(void) {
     if (gLevelLoadTimer == 0) {
-        func_800C01D8(&D_800DD41C);
+        transition_begin(&D_800DD41C);
         gLevelLoadTimer = 40;
         D_80123524 = 2;
     }
@@ -2039,7 +2039,7 @@ void func_8006F29C(void) {
     if (gLevelLoadTimer == 0) {
         if ((gSettingsPtr->trophies & 0xFF) == 0xFF && !(gSettingsPtr->cutsceneFlags & CUTSCENE_LIGHTHOUSE_ROCKET) && gSettingsPtr->bosses & 1) {
             gSettingsPtr->cutsceneFlags |= CUTSCENE_LIGHTHOUSE_ROCKET;
-            func_800C01D8(&D_800DD41C);
+            transition_begin(&D_800DD41C);
             gLevelLoadTimer = 40;
             D_80123525 = 0x2D;
             D_80123524 = 3;
@@ -2050,7 +2050,7 @@ void func_8006F29C(void) {
 void func_8006F338(s32 arg0) {
     if (gLevelLoadTimer == 0) {
         D_80123525 = arg0;
-        func_800C01D8(&D_800DD41C);
+        transition_begin(&D_800DD41C);
         gLevelLoadTimer = 40;
         D_80123524 = 4;
     }

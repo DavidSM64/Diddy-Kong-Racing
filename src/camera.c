@@ -1101,7 +1101,7 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
 /**
  * Sets transform and scale matrices to set position and size, loads the texture, sets the rendermodes, then draws the result onscreen.
 */
-void render_orthi_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, unk80068BF4 *arg4, s32 flags) {
+void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, Sprite *sprite, s32 flags) {
     UNUSED s32 pad;
     f32 scale;
     s32 index;
@@ -1109,7 +1109,7 @@ void render_orthi_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
     Matrix sp90;
     Matrix sp50;
 
-    if (arg4 != NULL) {
+    if (sprite != NULL) {
         temp_v1 = *vtx;
         temp_v1->x = segment->trans.x_position;
         temp_v1->y = segment->trans.y_position;
@@ -1144,13 +1144,13 @@ void render_orthi_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*dList)++);
         if (D_80120D0C == 0) {
-            index =  (((u8) index) * arg4->unk0) >> 8;
+            index =  (((u8) index) * sprite->baseTextureId) >> 8;
         }
-        func_8007BF34(dList, arg4->unk6 | flags);
-        if (index >= arg4->unk0) {
-            index = arg4->unk0 - 1;
+        func_8007BF34(dList, sprite->unk6 | flags);
+        if (index >= sprite->baseTextureId) {
+            index = sprite->baseTextureId - 1;
         }
-        gSPDisplayList((*dList)++, arg4->unkC[index]);
+        gSPDisplayList((*dList)++, sprite->unkC[index]);
         if (--D_80120D1C == 0) {
             index = 0;
         } else {

@@ -70,15 +70,6 @@ typedef struct ScreenViewport {
     /* 0x30 */ s32 flags;
 } ScreenViewport;
 
-typedef struct unk80068BF4 {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s32 *unk8;
-    s32 *unkC[2];
-} unk80068BF4;
-
 typedef struct unk80068514_arg4 {
     s16 unk0;
     s16 unk2;
@@ -143,7 +134,7 @@ s8 clamp_joystick(s8 stickMag);
 void disable_button_mask(void);
 s32 init_controllers(void);
 void func_80067D3C(Gfx **dlist, MatrixS **mats);
-void render_orthi_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, unk80068BF4 *arg4, s32 flags);
+void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, Sprite *sprite, s32 flags);
 s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags);
 void func_80069484(Gfx **arg0, MatrixS **arg1, ObjectTransform *arg2, f32 arg3, f32 arg4);
 void set_viewport_scissor(Gfx **dlist);

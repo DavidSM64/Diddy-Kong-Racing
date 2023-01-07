@@ -653,7 +653,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
         }
         if (obj->action == 1) {
             func_800AB1AC(3);
-            func_800AB1D4(0U);
+            set_hud_visibility(0U);
             dialogueID = func_8009CFEC(4);
             if (dialogueID) {
                 obj->action = 0;
@@ -662,7 +662,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                     func_8006F254();
                     obj->action = 2;
                 } else {
-                    func_800AB1D4(1);
+                    set_hud_visibility(1);
                 }
             }
             func_8005A3B0();
@@ -2280,7 +2280,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 play_taj_voice_clip((racer64->racer.vehicleID + SOUND_VOICE_TAJ_ABRAKADABRA), 1);
             } else {
                 obj->action = TAJ_MODE_SET_CHALLENGE;
-                func_800C01D8(&D_800DC978);
+                transition_begin(&D_800DC978);
                 sp6B = 1;
                 play_taj_voice_clip(SOUND_WHOOSH4, 1);
                 taj->unk4 = 0.0f;
@@ -2306,7 +2306,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 func_8000E1EC(racerObj, D_8011D4E0 & 0xF);
                 obj->action = TAJ_MODE_TRANSFORM_END;
                 play_sound_global(SOUND_CYMBAL, NULL);
-                func_800C01D8(&D_800DC970);
+                transition_begin(&D_800DC970);
             }
         }
         break;
@@ -2327,7 +2327,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 racer64->racer.transparency = 255;
                 if (taj->unk4 == 0.0) {
                     if (D_8011D4E0 & 0x80) {
-                        func_800C01D8(&D_800DC978);
+                        transition_begin(&D_800DC978);
                         sp6B = 1;
                         obj->action = TAJ_MODE_SET_CHALLENGE;
                         play_sound_global(SOUND_WHOOSH4, NULL);

@@ -533,7 +533,7 @@ void handle_rain_lightning(s32 updateRate) {
         gThunderTimer -= updateRate;
         if (gThunderTimer <= 0) {
             if (D_800E2C6C >= 32769 && func_800C018C() == 0) {
-                func_800C01D8(&D_800E2C98);
+                transition_begin(&D_800E2C98);
             }
             play_sound_global(SOUND_LIGHTNING, NULL);
             gThunderTimer = 0;
