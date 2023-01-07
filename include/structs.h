@@ -102,7 +102,7 @@ typedef struct Sprite {
   /* 0x04 */ s16 numberOfInstances;
   /* 0x06 */ s16 unk6;
   /* 0x08 */ TextureHeader **frames;
-  /* 0x0C */ u8 *unkC[1]; // Actual size varies.
+  /* 0x0C */ u8 unkC[1]; // Actual size varies.
 } Sprite;
 
 /* Size: 0x20 bytes */

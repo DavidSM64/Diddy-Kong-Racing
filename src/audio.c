@@ -640,10 +640,13 @@ u32 func_80001C08(void) {
     return 0;
 }
 
-void func_80001C5C(u16 arg0) {
-    u32 s0;
-    for (s0 = 0; s0 < 64; s0++) {
-        set_sound_channel_volume(s0, arg0 << 8);
+/**
+ * Sets the volume of what I presume is all sound channels
+*/
+UNUSED void set_all_channel_volume(u16 volume) {
+    u32 i;
+    for (i = 0; i < 64; i++) {
+        set_sound_channel_volume(i, volume << 8);
     }
 }
 

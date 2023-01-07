@@ -107,7 +107,7 @@ void sfxSetRelativeVolume(u8 arg0);
 void sfxSetPan(ALPan pan);
 void play_sequence(u8 seqID);
 u32 func_80001C08(void);
-void func_80001C5C(u16 arg0);
+void set_all_channel_volume(u16 arg0);
 u16 func_80001CB8(u16 arg0);
 void play_sound_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **arg4);
 void func_80001F14(u16 soundID, s32 *arg1);

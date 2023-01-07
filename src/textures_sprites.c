@@ -1423,7 +1423,7 @@ UNUSED s32 func_8007C8A0(s32 spriteIndex) {
 }
 
 #ifdef NON_EQUIVALENT
-s32 load_sprite_info(s32 spriteID, s32 *numOfInstancesOut, s32 *unkOut, s32 *numFramesOut, s32 *formatOut, s32 *sizeOut) {
+s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *numFramesOut, s32 *formatOut, s32 *sizeOut) {
     TextureHeader *tex;
     s32 i, j;
     s32 start, size;
