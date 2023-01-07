@@ -21,10 +21,16 @@
     RENDER_PRINTF_CMD_ARG_BYTE(alpha)                        \
     RENDER_PRINTF_CMD_END
 
+// This is a bit hacky, but it matches.
 #define RENDER_PRINTF_CMD_SET_POSITION(x, y) \
+    u16 tempX, tempY;                        \
     RENDER_PRINTF_CMD_ARG_BYTE(0x82)         \
-    RENDER_PRINTF_CMD_ARG_SHORT(x)           \
-    RENDER_PRINTF_CMD_ARG_SHORT(y)           \
+    RENDER_PRINTF_CMD_ARG_BYTE(x & 0xFF)     \
+    tempX = x >> 8;                          \
+    RENDER_PRINTF_CMD_ARG_BYTE(tempX)        \
+    RENDER_PRINTF_CMD_ARG_BYTE(y & 0xFF)     \
+    tempY = y >> 8;                          \
+    RENDER_PRINTF_CMD_ARG_BYTE(tempY)        \
     RENDER_PRINTF_CMD_END
     
 #define RENDER_PRINTF_CMD_SET_BACKGROUND_COLOR(red, green, blue, alpha) \
