@@ -47,8 +47,8 @@ void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha);
 void func_800B695C(Gfx** dList, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
 s32 func_800B69FC(Gfx **dlist, s32 arg1);
 void print_debug_strings(Gfx **dList);
+void set_render_printf_position(u16 x, u16 y);
 
-void set_render_printf_position(u16 xpos, u16 ypos); // Non Matching
 s32 render_printf(const char *format, ...); // Non Matchingg
 void func_800B3740(Object *, Gfx **, MatrixS **, Vertex **, s32); // Non Matching
 s32 func_800B653C(Gfx**, s8*);

@@ -227,13 +227,25 @@ void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha) {
     RENDER_PRINTF_CMD_SET_BACKGROUND_COLOR(red, green, blue, alpha)
 }
 
-#ifdef NON_EQUIVALENT
-void set_render_printf_position(u16 xpos, u16 ypos) {
-    RENDER_PRINTF_CMD_SET_POSITION(xpos, ypos)
+// TODO: fix macro
+void set_render_printf_position(u16 x, u16 y) {
+    u16 tempX;
+    u16 tempY;
+    *gDebugPrintBufferEnd = 130;
+    gDebugPrintBufferEnd += 1;
+    gDebugPrintBufferEnd[0] = x & 0xFF;
+    gDebugPrintBufferEnd += 1;
+    tempX = x >> 8;
+    gDebugPrintBufferEnd[0] = tempX;
+    gDebugPrintBufferEnd += 1;
+    gDebugPrintBufferEnd[0] = y & 0xFF;
+    gDebugPrintBufferEnd += 1;
+    tempY = y >> 8;
+    gDebugPrintBufferEnd[0] = tempY;
+    gDebugPrintBufferEnd += 1;
+    gDebugPrintBufferEnd[0] = 0;
+    gDebugPrintBufferEnd += 1;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/printf/set_render_printf_position.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/printf/func_800B63F4.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B653C.s")
