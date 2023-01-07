@@ -102,15 +102,6 @@ typedef struct TextureCacheEntry {
     TextureHeader *texture;
 } TextureCacheEntry;
 
-typedef struct Sprite {
-    s16 baseTextureId;
-    s16 numberOfFrames; // 1 means static texture
-    s16 numberOfInstances;
-    s16 unk6;
-    TextureHeader **frames;
-    u8 unkC[1]; // Actual size varies.
-} Sprite;
-
 typedef struct SpriteCacheEntry {
     s32 id;
     Sprite *sprite;
@@ -149,12 +140,12 @@ void free_texture(TextureHeader *tex); // Non Matching
 TextureHeader *func_8007B380(s32 arg0); // Non Matching
 s32 get_texture_size_from_id(s32 arg0); // Non Matching
 s32 func_8007C860(s32 spriteIndex); // Non Matching
-s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut,
+s32 load_sprite_info(s32 spriteID, s32 *numOfInstancesOut, s32 *unkOut,
 	s32 *numFramesOut, s32 *formatOut, s32 *sizeOut); // Non Matching
 void free_sprite(Sprite *sprite); // Non Matching
 void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentColor); // Non Matching
-void func_8007CA68(s32 arg0, s32 arg1, s32 *arg2, s32 *arg3, s32 *arg4); // Non Matching
-MemoryPoolSlot *func_8007C12C(s32 arg0, s32 arg1); // Non Matching
+void func_8007CA68(s32 spriteID, s32 arg1, s32 *arg2, s32 *arg3, s32 *arg4); // Non Matching
+MemoryPoolSlot *func_8007C12C(s32 spriteID, s32 arg1); // Non Matching
 void func_8007AC70(void); // Non Matching
 void func_8007BF34(Gfx **dlist, s32 arg1); // Non Matching
 void load_blinking_lights_texture(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3); // Non Matching

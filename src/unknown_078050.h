@@ -16,7 +16,7 @@
 typedef union {
     void (*function)(Gfx*, Matrix *);
     void *ptr;
-} unk800DE4D0;
+} BackgroundFunction;
 
 typedef struct DKR_OSTask {
     struct DKR_OSTask *next;
@@ -44,7 +44,7 @@ extern s32 sBackgroundFillColour;
 extern u32 D_800DE4C0;
 extern TextureHeader *D_800DE4C4;
 extern TextureHeader *D_800DE4C8;
-extern s32 D_800DE4CC;
+extern s32 gChecquerBGEnabled;
 
 extern s32 gfxBufCounter;
 extern s32 gfxBufCounter2;
@@ -69,7 +69,7 @@ void func_80078170(TextureHeader *arg0, TextureHeader *arg1, u32 arg2);
 s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
 void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
 void render_textured_rectangle(Gfx **dlist, DrawTexture *img, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha);
-void func_800787FC(Gfx** arg0);
+void render_chequer_background(Gfx** dList);
 void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG);
 void set_background_draw_function(void *arg0);
 

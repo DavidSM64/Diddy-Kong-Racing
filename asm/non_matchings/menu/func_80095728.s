@@ -295,7 +295,7 @@ glabel L80095B34
 /* 096758 80095B58 0C000326 */  jal   set_music_fade_timer
 /* 09675C 80095B5C 2404FF80 */   li    $a0, -128
 /* 096760 80095B60 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
-/* 096764 80095B64 0C030076 */  jal   func_800C01D8
+/* 096764 80095B64 0C030076 */  jal   transition_begin
 /* 096768 80095B68 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 09676C 80095B6C 240D0008 */  li    $t5, 8
 /* 096770 80095B70 3C018012 */  lui   $at, %hi(D_801263E0) # $at, 0x8012
@@ -532,7 +532,7 @@ glabel L80095EC8
 /* 096AE4 80095EE4 29E10005 */  slti  $at, $t7, 5
 /* 096AE8 80095EE8 1420015A */  bnez  $at, .L80096454
 /* 096AEC 80095EEC ACAF0000 */   sw    $t7, ($a1)
-/* 096AF0 80095EF0 0C00025A */  jal   func_80000968
+/* 096AF0 80095EF0 0C00025A */  jal   adjust_audio_volume
 /* 096AF4 80095EF4 24040003 */   li    $a0, 3
 /* 096AF8 80095EF8 0C006DCE */  jal   func_8001B738
 /* 096AFC 80095EFC 00002025 */   move  $a0, $zero
@@ -544,7 +544,7 @@ glabel L80095EC8
 /* 096B14 80095F14 00002025 */   move  $a0, $zero
 /* 096B18 80095F18 AFA20054 */  sw    $v0, 0x54($sp)
 .L80095F1C:
-/* 096B1C 80095F1C 0C00025A */  jal   func_80000968
+/* 096B1C 80095F1C 0C00025A */  jal   adjust_audio_volume
 /* 096B20 80095F20 24040002 */   li    $a0, 2
 /* 096B24 80095F24 8FAD0054 */  lw    $t5, 0x54($sp)
 /* 096B28 80095F28 3C098012 */  lui   $t1, %hi(D_80126C14) # $t1, 0x8012
@@ -629,7 +629,7 @@ glabel L80095EC8
 /* 096C44 80096044 0C000326 */  jal   set_music_fade_timer
 /* 096C48 80096048 2404FF80 */   li    $a0, -128
 /* 096C4C 8009604C 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
-/* 096C50 80096050 0C030076 */  jal   func_800C01D8
+/* 096C50 80096050 0C030076 */  jal   transition_begin
 /* 096C54 80096054 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 096C58 80096058 240D0008 */  li    $t5, 8
 /* 096C5C 8009605C 3C018012 */  lui   $at, %hi(D_801263E0) # $at, 0x8012
@@ -787,7 +787,7 @@ glabel L80095EC8
 /* 096E6C 8009626C 0C000326 */  jal   set_music_fade_timer
 /* 096E70 80096270 2404FF80 */   li    $a0, -128
 /* 096E74 80096274 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
-/* 096E78 80096278 0C030076 */  jal   func_800C01D8
+/* 096E78 80096278 0C030076 */  jal   transition_begin
 /* 096E7C 8009627C 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 096E80 80096280 24190008 */  li    $t9, 8
 /* 096E84 80096284 3C018012 */  lui   $at, %hi(D_801263E0) # $at, 0x8012
@@ -953,7 +953,7 @@ glabel L800964AC
 /* 0970B8 800964B8 0C000326 */  jal   set_music_fade_timer
 /* 0970BC 800964BC 2404FF80 */   li    $a0, -128
 /* 0970C0 800964C0 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
-/* 0970C4 800964C4 0C030076 */  jal   func_800C01D8
+/* 0970C4 800964C4 0C030076 */  jal   transition_begin
 /* 0970C8 800964C8 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 0970CC 800964CC 24180008 */  li    $t8, 8
 /* 0970D0 800964D0 3C018012 */  lui   $at, %hi(D_801263E0) # $at, 0x8012

@@ -250,7 +250,7 @@ glabel menu_ghost_data_init
 /* 09AA38 80099E38 17200006 */  bnez  $t9, .L80099E54
 /* 09AA3C 80099E3C AC206498 */   sw    $zero, %lo(D_80126498)($at)
 /* 09AA40 80099E40 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeOut) # $a0, 0x800e
-/* 09AA44 80099E44 0C030076 */  jal   func_800C01D8
+/* 09AA44 80099E44 0C030076 */  jal   transition_begin
 /* 09AA48 80099E48 2484F77C */   addiu $a0, %lo(sMenuTransitionFadeOut) # addiu $a0, $a0, -0x884
 /* 09AA4C 80099E4C 10000004 */  b     .L80099E60
 /* 09AA50 80099E50 8FBF0044 */   lw    $ra, 0x44($sp)

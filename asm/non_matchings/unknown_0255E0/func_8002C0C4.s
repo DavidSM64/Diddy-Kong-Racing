@@ -306,7 +306,7 @@ glabel func_8002C0C4
 /* 02D140 8002C540 0C01C42C */  jal   set_free_queue_state
 /* 02D144 8002C544 24040002 */   li    $a0, 2
 /* 02D148 8002C548 8E240000 */  lw    $a0, ($s1)
-/* 02D14C 8002C54C 0C02A0ED */  jal   func_800A83B4
+/* 02D14C 8002C54C 0C02A0ED */  jal   minimap_init
 /* 02D150 8002C550 00000000 */   nop   
 /* 02D154 8002C554 8E320000 */  lw    $s2, ($s1)
 /* 02D158 8002C558 00006025 */  move  $t4, $zero

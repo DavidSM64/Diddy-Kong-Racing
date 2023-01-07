@@ -37,7 +37,7 @@ glabel func_8008B4C8
 /* 08C14C 8008B54C 0C01BAEA */  jal   func_8006EBA8
 /* 08C150 8008B550 AC32F47C */   sw    $s2, %lo(gMenuDelay)($at)
 /* 08C154 8008B554 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
-/* 08C158 8008B558 0C030076 */  jal   func_800C01D8
+/* 08C158 8008B558 0C030076 */  jal   transition_begin
 /* 08C15C 8008B55C 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 08C160 8008B560 3C028012 */  lui   $v0, %hi(D_801267D8) # $v0, 0x8012
 /* 08C164 8008B564 2411FFFF */  li    $s1, -1

@@ -88,7 +88,7 @@ glabel menu_options_loop
 /* 08509C 8008449C 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 0850A0 800844A0 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 0850A4 800844A4 AC39F47C */  sw    $t9, %lo(gMenuDelay)($at)
-/* 0850A8 800844A8 0C030076 */  jal   func_800C01D8
+/* 0850A8 800844A8 0C030076 */  jal   transition_begin
 /* 0850AC 800844AC 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 0850B0 800844B0 24040241 */  li    $a0, 577
 /* 0850B4 800844B4 0C000741 */  jal   play_sound_global
