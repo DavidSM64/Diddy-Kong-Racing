@@ -118,7 +118,7 @@ void alSndPNew(audioMgrConfig *c);
 void func_80004604(u8 *arg0, u8 arg1);
 u8 func_8000461C(u8 *arg0);
 void func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2);
-void func_8000488C();
+INCONSISTENT void func_8000488C();
 void func_800049D8(void);
 void func_800049F8(s32 soundMask, s16 type, u32 volume);
 u16 get_sound_channel_volume(u8 arg0);
