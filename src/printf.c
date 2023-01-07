@@ -227,24 +227,21 @@ void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha) {
     RENDER_PRINTF_CMD_SET_BACKGROUND_COLOR(red, green, blue, alpha)
 }
 
-// TODO: fix macro
+/**
+ * Sets the character position of further prints to the given coordinates.
+*/
 void set_render_printf_position(u16 x, u16 y) {
     u16 tempX;
     u16 tempY;
-    *gDebugPrintBufferEnd = 130;
-    gDebugPrintBufferEnd += 1;
-    gDebugPrintBufferEnd[0] = x & 0xFF;
-    gDebugPrintBufferEnd += 1;
+    // Only matches like this, so no fancier macro.
+    RENDER_PRINTF_CMD_ARG_BYTE(0x82)
+    RENDER_PRINTF_CMD_ARG_BYTE(x & 0xFF)
     tempX = x >> 8;
-    gDebugPrintBufferEnd[0] = tempX;
-    gDebugPrintBufferEnd += 1;
-    gDebugPrintBufferEnd[0] = y & 0xFF;
-    gDebugPrintBufferEnd += 1;
+    RENDER_PRINTF_CMD_ARG_BYTE(tempX)
+    RENDER_PRINTF_CMD_ARG_BYTE(y & 0xFF)
     tempY = y >> 8;
-    gDebugPrintBufferEnd[0] = tempY;
-    gDebugPrintBufferEnd += 1;
-    gDebugPrintBufferEnd[0] = 0;
-    gDebugPrintBufferEnd += 1;
+    RENDER_PRINTF_CMD_ARG_BYTE(tempY)
+    RENDER_PRINTF_CMD_ARG_BYTE(0)
 }
 
 GLOBAL_ASM("asm/non_matchings/printf/func_800B63F4.s")
