@@ -250,7 +250,7 @@ s32 get_current_viewport(void) {
 }
 
 void func_80066230(Gfx **dlist, MatrixS **mats) {
-    ObjectSegment *someStruct;
+    ObjectSegment *cam;
     s16 angleY;
     s16 angleX;
     s16 angleZ;
@@ -261,30 +261,30 @@ void func_80066230(Gfx **dlist, MatrixS **mats) {
 
     set_active_viewports_and_max(0);
     set_active_camera(0);
-    someStruct = get_active_camera_segment();
-    angleY = someStruct->trans.y_rotation;
-    angleX = someStruct->trans.x_rotation;
-    angleZ = someStruct->trans.z_rotation;
-    posX = someStruct->trans.x_position;
-    posY = someStruct->trans.y_position;
-    posZ = someStruct->trans.z_position;
-    sp24 = someStruct->unk38.half.unk38;
-    someStruct->trans.z_rotation = 0;
-    someStruct->trans.x_rotation = 0;
-    someStruct->trans.y_rotation = -0x8000;
-    someStruct->unk38.half.unk38 = 0;
-    someStruct->trans.x_position = 0.0f;
-    someStruct->trans.y_position = 0.0f;
-    someStruct->trans.z_position = 0.0f;
+    cam = get_active_camera_segment();
+    angleY = cam->trans.y_rotation;
+    angleX = cam->trans.x_rotation;
+    angleZ = cam->trans.z_rotation;
+    posX = cam->trans.x_position;
+    posY = cam->trans.y_position;
+    posZ = cam->trans.z_position;
+    sp24 = cam->unk38.half.unk38;
+    cam->trans.z_rotation = 0;
+    cam->trans.x_rotation = 0;
+    cam->trans.y_rotation = -0x8000;
+    cam->unk38.half.unk38 = 0;
+    cam->trans.x_position = 0.0f;
+    cam->trans.y_position = 0.0f;
+    cam->trans.z_position = 0.0f;
     update_envmap_position(0.0f, 0.0f, -1.0f);
     func_80066CDC(dlist, mats);
-    someStruct->unk38.half.unk38 = sp24;
-    someStruct->trans.y_rotation = angleY;
-    someStruct->trans.x_rotation = angleX;
-    someStruct->trans.z_rotation = angleZ;
-    someStruct->trans.x_position = posX;
-    someStruct->trans.y_position = posY;
-    someStruct->trans.z_position = posZ;
+    cam->unk38.half.unk38 = sp24;
+    cam->trans.y_rotation = angleY;
+    cam->trans.x_rotation = angleX;
+    cam->trans.z_rotation = angleZ;
+    cam->trans.x_position = posX;
+    cam->trans.y_position = posY;
+    cam->trans.z_position = posZ;
 }
 
 /**
