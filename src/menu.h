@@ -746,7 +746,7 @@ void menu_logos_screen_init(void);
 s32 menu_logo_screen_loop(s32 arg0);
 void init_title_screen_variables(void);
 void menu_title_screen_init(void);
-void func_80084118(void);
+void title_screen_exit(void);
 void menu_options_init(void);
 void render_options_menu_ui(s32 updateRate);
 void unload_big_font_1(void);

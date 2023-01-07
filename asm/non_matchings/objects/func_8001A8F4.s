@@ -26,7 +26,7 @@ glabel func_8001A8F4
 /* 01B550 8001A950 29210033 */  slti  $at, $t1, 0x33
 /* 01B554 8001A954 10200003 */  beqz  $at, .L8001A964
 /* 01B558 8001A958 00000000 */   nop   
-/* 01B55C 8001A95C 0C030076 */  jal   func_800C01D8
+/* 01B55C 8001A95C 0C030076 */  jal   transition_begin
 /* 01B560 8001A960 2484C858 */   addiu $a0, %lo(D_800DC858) # addiu $a0, $a0, -0x37a8
 .L8001A964:
 /* 01B564 8001A964 3C028012 */  lui   $v0, %hi(D_8011AD50) # $v0, 0x8012
@@ -157,7 +157,7 @@ glabel func_8001A8F4
 /* 01B73C 8001AB3C 24010001 */  li    $at, 1
 /* 01B740 8001AB40 14410055 */  bne   $v0, $at, .L8001AC98
 /* 01B744 8001AB44 2631AEF0 */   addiu $s1, %lo(gNumRacers) # addiu $s1, $s1, -0x5110
-/* 01B748 8001AB48 0C02AC75 */  jal   func_800AB1D4
+/* 01B748 8001AB48 0C02AC75 */  jal   set_hud_visibility
 /* 01B74C 8001AB4C 00002025 */   move  $a0, $zero
 /* 01B750 8001AB50 3C078012 */  lui   $a3, %hi(D_8011AD51) # $a3, 0x8012
 /* 01B754 8001AB54 24E7AD51 */  addiu $a3, %lo(D_8011AD51) # addiu $a3, $a3, -0x52af
@@ -278,7 +278,7 @@ glabel func_8001A8F4
 /* 01B900 8001AD00 1441000C */  bne   $v0, $at, .L8001AD34
 /* 01B904 8001AD04 2610ADC8 */   addiu $s0, %lo(D_8011ADC8) # addiu $s0, $s0, -0x5238
 /* 01B908 8001AD08 3C04800E */  lui   $a0, %hi(D_800DC860) # $a0, 0x800e
-/* 01B90C 8001AD0C 0C030076 */  jal   func_800C01D8
+/* 01B90C 8001AD0C 0C030076 */  jal   transition_begin
 /* 01B910 8001AD10 2484C860 */   addiu $a0, %lo(D_800DC860) # addiu $a0, $a0, -0x37a0
 /* 01B914 8001AD14 240B0004 */  li    $t3, 4
 /* 01B918 8001AD18 3C018012 */  lui   $at, %hi(D_8011AD50) # $at, 0x8012
@@ -319,7 +319,7 @@ glabel func_8001A8F4
 /* 01B99C 8001AD9C 10000003 */  b     .L8001ADAC
 /* 01B9A0 8001ADA0 00000000 */   nop   
 .L8001ADA4:
-/* 01B9A4 8001ADA4 0C02AC75 */  jal   func_800AB1D4
+/* 01B9A4 8001ADA4 0C02AC75 */  jal   set_hud_visibility
 /* 01B9A8 8001ADA8 24040001 */   li    $a0, 1
 .L8001ADAC:
 /* 01B9AC 8001ADAC 0C01A955 */  jal   get_buttons_pressed_from_player
@@ -346,7 +346,7 @@ glabel func_8001A8F4
 .L8001ADFC:
 /* 01B9FC 8001ADFC 12000003 */  beqz  $s0, .L8001AE0C
 /* 01BA00 8001AE00 3C04800E */   lui   $a0, %hi(D_800DC6F8) # $a0, 0x800e
-/* 01BA04 8001AE04 0C030076 */  jal   func_800C01D8
+/* 01BA04 8001AE04 0C030076 */  jal   transition_begin
 /* 01BA08 8001AE08 2484C6F8 */   addiu $a0, %lo(D_800DC6F8) # addiu $a0, $a0, -0x3908
 .L8001AE0C:
 /* 01BA0C 8001AE0C 0C01BC50 */  jal   func_8006F140

@@ -575,10 +575,10 @@ glabel L8009287C
 /* 0935A0 800929A0 0C01E2AB */  jal   set_background_draw_function
 /* 0935A4 800929A4 00002025 */   move  $a0, $zero
 /* 0935A8 800929A8 3C01800E */  lui   $at, %hi(D_800E097C) # $at, 0x800e
-/* 0935AC 800929AC 0C030060 */  jal   func_800C0180
+/* 0935AC 800929AC 0C030060 */  jal   disable_new_screen_transitions
 /* 0935B0 800929B0 AC20097C */   sw    $zero, %lo(D_800E097C)($at)
 /* 0935B4 800929B4 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
-/* 0935B8 800929B8 0C030076 */  jal   func_800C01D8
+/* 0935B8 800929B8 0C030076 */  jal   transition_begin
 /* 0935BC 800929BC 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 0935C0 800929C0 3C198012 */  lui   $t9, %hi(D_801269C8) # $t9, 0x8012
 /* 0935C4 800929C4 8F3969C8 */  lw    $t9, %lo(D_801269C8)($t9)

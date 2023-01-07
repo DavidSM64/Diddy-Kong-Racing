@@ -545,7 +545,7 @@ glabel func_800AA600
 /* 0AB9F8 800AADF8 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0AB9FC 800AADFC AFA00014 */  sw    $zero, 0x14($sp)
 /* 0ABA00 800AAE00 02003825 */  move  $a3, $s0
-/* 0ABA04 800AAE04 0C01A2FD */  jal   render_orthi_triangle_image
+/* 0ABA04 800AAE04 0C01A2FD */  jal   render_ortho_triangle_image
 /* 0ABA08 800AAE08 AFA30010 */   sw    $v1, 0x10($sp)
 /* 0ABA0C 800AAE0C 8FB800A8 */  lw    $t8, 0xa8($sp)
 /* 0ABA10 800AAE10 860B0004 */  lh    $t3, 4($s0)

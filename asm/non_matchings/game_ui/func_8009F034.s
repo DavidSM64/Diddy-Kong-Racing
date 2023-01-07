@@ -112,8 +112,8 @@ glabel func_8009F034
 .L8009F16C:
 /* 09FD6C 8009F16C 3C018012 */  lui   $at, %hi(D_80126CD1) # $at, 0x8012
 /* 09FD70 8009F170 A0206CD1 */  sb    $zero, %lo(D_80126CD1)($at)
-/* 09FD74 8009F174 3C018012 */  lui   $at, %hi(D_80126CD2) # $at, 0x8012
-/* 09FD78 8009F178 A0206CD2 */  sb    $zero, %lo(D_80126CD2)($at)
+/* 09FD74 8009F174 3C018012 */  lui   $at, %hi(gShowHUD) # $at, 0x8012
+/* 09FD78 8009F178 A0206CD2 */  sb    $zero, %lo(gShowHUD)($at)
 /* 09FD7C 8009F17C 3C018012 */  lui   $at, %hi(D_80126CD5) # $at, 0x8012
 /* 09FD80 8009F180 A0206CD5 */  sb    $zero, %lo(D_80126CD5)($at)
 /* 09FD84 8009F184 3C018012 */  lui   $at, %hi(D_80127189) # $at, 0x8012

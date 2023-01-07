@@ -43,7 +43,7 @@ enum ViewportCount {
 };
 
 enum ViewPortFlags {
-    VIEWPORT_UNK_01        = 0x0001,
+    VIEWPORT_EXTRA_BG        = 0x0001,
     VIEWPORT_UNK_02        = 0x0002,
     VIEWPORT_UNK_04        = 0x0004,
     VIEWPORT_X_CUSTOM      = 0x0008,
@@ -68,15 +68,6 @@ typedef struct ScreenViewport {
     /* 0x2C */ s32 scissorY2;
     /* 0x30 */ s32 flags;
 } ScreenViewport;
-
-typedef struct unk80068BF4 {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s32 *unk8;
-    s32 *unkC[2];
-} unk80068BF4;
 
 typedef struct unk80068514_arg4 {
     s16 unk0;
@@ -104,7 +95,7 @@ s32 set_active_viewports_and_max(s32 arg0);
 void set_active_camera(s32 arg0);
 void func_80066818(s32 viewPortIndex, s32 arg1);
 void func_80066894(s32 viewPortIndex, s32 arg1);
-s32 func_80066910(s32 viewPortIndex);
+s32 check_viewport_background_flag(s32 viewPortIndex);
 void func_80066940(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2);
 void set_viewport_properties(s32 viewPortIndex, s32 x1, s32 x2, s32 y1, s32 y2);
 s32 copy_viewport_background_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32 *x2, s32 *y2);
@@ -140,10 +131,10 @@ s8 clamp_joystick(s8 stickMag);
 void disable_button_mask(void);
 s32 init_controllers(void);
 void func_80067D3C(Gfx **dlist, MatrixS **mats);
-void render_orthi_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, unk80068BF4 *arg4, s32 flags);
+void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, Sprite *sprite, s32 flags);
 s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags);
 void func_80069484(Gfx **arg0, MatrixS **arg1, ObjectTransform *arg2, f32 arg3, f32 arg4);
-void func_80067A3C(Gfx **dlist);
+void set_viewport_scissor(Gfx **dlist);
 void func_80069A40(Gfx **dlist);
 void reset_perspective_matrix(void);
 

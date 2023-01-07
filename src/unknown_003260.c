@@ -36,7 +36,7 @@ extern OSIoMesg audDMAIOMesgBuf[NUM_DMA_MESSAGES];
 extern OSMesgQueue audDMAMessageQ;
 extern OSMesg audDMAMessageBuf[NUM_DMA_MESSAGES];
 extern unk800DC6BC D_80119BD0;
-extern u16 *D_80119C28;
+extern u16 *gSoundChannelVolume;
 
 /******************************/
 
@@ -352,9 +352,9 @@ void alSndPNew(audioMgrConfig *c) {
         alLink((ALLink *) (i + tmp1), (ALLink *) (i + tmp1 - 1));
     }
 
-    D_80119C28 = alHeapDBAlloc(0, 0, c->hp, 2, c->unk10);
+    gSoundChannelVolume = alHeapDBAlloc(0, 0, c->hp, 2, c->unk10);
     for (i = 0; i < c->unk10; i++) {
-        D_80119C28[i] = 32767;
+        gSoundChannelVolume[i] = 32767;
     }
 
     gAlSndPlayer->drvr = (ALSynth *) alGlobals;
@@ -453,28 +453,31 @@ void func_800049F8(s32 soundMask, s16 type, u32 volume) {
     }
 }
 
-u16 func_80004A3C(u8 arg0) {
-    return D_80119C28[arg0];
+/**
+ * Returns the volume level of the channel ID.
+*/
+u16 get_sound_channel_volume(u8 channel) {
+    return gSoundChannelVolume[channel];
 }
 
-//TODO: The structs used here are almost definitely wrong, but they do match,
-//      so it can at least show the pattern we're looking for.
-//arg0 = sound channel?
-//arg1 = volume?
-void func_80004A60(u8 arg0, u16 arg1) {
+//TODO: The structs used here are almost definitely wrong, but they do match, so it can at least show the pattern we're looking for.
+/**
+ * Looks for the intended audio channel in the main buffer and adjusts its volume
+*/
+void set_sound_channel_volume(u8 channel, u16 volume) {
     OSIntMask mask;
     ALEventQueue *queue;
     ALEvent evt;
 
     mask = osSetIntMask(1);
     queue = D_800DC6B0;
-    D_80119C28[arg0] = arg1;
+    gSoundChannelVolume[channel] = volume;
 
     while (queue != NULL) {
         //This is almost definitely the wrong struct list, but it matches so I'm not going to complain
-        if ((((ALInstrument *)queue->allocList.next->prev)->priority & 0x3F) == arg0) {
+        if ((((ALInstrument *) queue->allocList.next->prev)->priority & 0x3F) == channel) {
             evt.type = 0x800;
-            evt.msg.spseq.seq = (void *)queue;
+            evt.msg.spseq.seq = (void *) queue;
             alEvtqPostEvent(&gAlSndPlayer->evtq, &evt, 0);
         }
         queue = (ALEventQueue *) queue->freeList.next;

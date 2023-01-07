@@ -490,7 +490,7 @@ glabel menu_magic_codes_loop
 /* 08AFB0 8008A3B0 8FB90040 */  lw    $t9, 0x40($sp)
 /* 08AFB4 8008A3B4 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 08AFB8 8008A3B8 2484F774 */  addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
-/* 08AFBC 8008A3BC 0C030076 */  jal   func_800C01D8
+/* 08AFBC 8008A3BC 0C030076 */  jal   transition_begin
 /* 08AFC0 8008A3C0 AC39F47C */   sw    $t9, %lo(gMenuDelay)($at)
 .L8008A3C4:
 /* 08AFC4 8008A3C4 8FAF003C */  lw    $t7, 0x3c($sp)

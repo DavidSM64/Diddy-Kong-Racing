@@ -192,7 +192,7 @@ void func_800C2F1C(s32 arg0) {
 
 void func_800C3048(void) {
     D_8012A78C = -1;
-    gGameTextTable[0] = (GameTextTableStruct *) allocate_from_main_pool_safe(2048, COLOUR_TAG_GREEN);
+    gGameTextTable[0] = (GameTextTableStruct *) allocate_from_main_pool_safe(0x800, COLOUR_TAG_GREEN);
     D_8012A798[0] = (char *) &gGameTextTable[0]->entries[32];
     D_8012A798[1] = &D_8012A798[0][960];
     D_8012A7A4 = 0;

@@ -97,6 +97,15 @@ typedef struct DrawTexture {
     s16 yOffset; // Offset from the center of the screen.
 } DrawTexture;
 
+typedef struct Sprite {
+  /* 0x00 */ s16 baseTextureId;
+  /* 0x02 */ s16 numberOfFrames; // 1 means static texture
+  /* 0x04 */ s16 numberOfInstances;
+  /* 0x06 */ s16 unk6;
+  /* 0x08 */ TextureHeader **frames;
+  /* 0x0C */ u8 *unkC[1]; // Actual size varies.
+} Sprite;
+
 /* Size: 0x20 bytes */
 typedef struct MenuElement {
   // Element Position
@@ -561,11 +570,11 @@ typedef struct LevelModelSegmentBoundingBox {
 
 /* Size: 8 bytes */
 typedef struct BspTreeNode {
-    s16 leftNode;   // less than split value
-    s16 rightNode;  // greater or equal to split value?
-    u8  splitType;  // 0 = Camera X, 1 = Camera Y, 2 = Camera Z
-    u8  segmentIndex;
-    s16 splitValue; // Decides left or right
+/* 0x00 */ s16 leftNode;   // less than split value
+/* 0x02 */ s16 rightNode;  // greater or equal to split value?
+/* 0x04 */ u8  splitType;  // 0 = Camera X, 1 = Camera Y, 2 = Camera Z
+/* 0x05 */ u8  segmentIndex;
+/* 0x06 */ s16 splitValue; // Decides left or right
 } BspTreeNode;
 
 typedef struct LevelModel {
@@ -579,7 +588,7 @@ typedef struct LevelModel {
 /* 0x1A */ s16 numberOfSegments;
 /* 0x1C */ s16 unk1C;
 /* 0x1E */ s16 unk1E;
-/* 0x20 */ s32 unk20; //spriteIndex?
+/* 0x20 */ s32 minimapSprite;
 /* 0x24 */ u16 unk24;
 /* 0x26 */ u16 unk26;
            u8 pad28[0x10];

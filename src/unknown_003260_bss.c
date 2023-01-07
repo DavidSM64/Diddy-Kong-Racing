@@ -27,4 +27,4 @@ OSIoMesg audDMAIOMesgBuf[NUM_DMA_MESSAGES];
 OSMesgQueue audDMAMessageQ;
 OSMesg audDMAMessageBuf[NUM_DMA_MESSAGES];
 unk800DC6BC D_80119BD0;
-u16 *D_80119C28;
+u16 *gSoundChannelVolume;

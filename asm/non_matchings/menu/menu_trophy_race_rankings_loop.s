@@ -200,7 +200,7 @@ glabel menu_trophy_race_rankings_loop
 /* 099EB0 800992B0 0C000326 */  jal   set_music_fade_timer
 /* 099EB4 800992B4 AFAB002C */   sw    $t3, 0x2c($sp)
 /* 099EB8 800992B8 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
-/* 099EBC 800992BC 0C030076 */  jal   func_800C01D8
+/* 099EBC 800992BC 0C030076 */  jal   transition_begin
 /* 099EC0 800992C0 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 099EC4 800992C4 3C0D800E */  lui   $t5, %hi(D_800E0FE4) # $t5, 0x800e
 /* 099EC8 800992C8 8DAD0FE4 */  lw    $t5, %lo(D_800E0FE4)($t5)

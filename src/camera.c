@@ -388,9 +388,9 @@ void func_80066610(void) {
     D_800DD134 = 1 - D_800DD134;
     for (i = 0; i < 4; i++) {
         if (gScreenViewports[i].flags & VIEWPORT_UNK_04) {
-            gScreenViewports[i].flags &= ~VIEWPORT_UNK_01;
+            gScreenViewports[i].flags &= ~VIEWPORT_EXTRA_BG;
         } else if (gScreenViewports[i].flags & VIEWPORT_UNK_02) {
-            gScreenViewports[i].flags |= VIEWPORT_UNK_01;
+            gScreenViewports[i].flags |= VIEWPORT_EXTRA_BG;
         }
         gScreenViewports[i].flags &= ~VIEWPORT_UNK_02 | VIEWPORT_UNK_04;
         if (gScreenViewports[i].flags & 1) {
@@ -442,7 +442,7 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80066610.s")
 
 void func_80066818(s32 viewPortIndex, s32 arg1) {
     if (arg1 != 0) {
-        gScreenViewports[viewPortIndex].flags |= VIEWPORT_UNK_01;
+        gScreenViewports[viewPortIndex].flags |= VIEWPORT_EXTRA_BG;
     } else {
         gScreenViewports[viewPortIndex].flags |= VIEWPORT_UNK_02;
     }
@@ -451,15 +451,19 @@ void func_80066818(s32 viewPortIndex, s32 arg1) {
 
 void func_80066894(s32 viewPortIndex, s32 arg1) {
     if (arg1 != 0) {
-        gScreenViewports[viewPortIndex].flags &= ~VIEWPORT_UNK_01;
+        gScreenViewports[viewPortIndex].flags &= ~VIEWPORT_EXTRA_BG;
     } else {
         gScreenViewports[viewPortIndex].flags |= VIEWPORT_UNK_04;
     }
     gScreenViewports[viewPortIndex].flags &= ~VIEWPORT_UNK_02;
 }
 
-s32 func_80066910(s32 viewPortIndex) {
-    return gScreenViewports[viewPortIndex].flags & VIEWPORT_UNK_01;
+/**
+ * Return's the current viewport's flag status for extended backgrounds.
+ * Required to draw some extra things used in menus.
+*/
+s32 check_viewport_background_flag(s32 viewPortIndex) {
+    return gScreenViewports[viewPortIndex].flags & VIEWPORT_EXTRA_BG;
 }
 
 // proposed name: resize_viewport
@@ -602,7 +606,7 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
     widthAndHeight = get_video_width_and_height_as_s32();
     temp_t0 = widthAndHeight >> 16;
     temp_a3 = temp_t0 >> 1;
-    if (gScreenViewports[gActiveCameraID].flags & VIEWPORT_UNK_01) {
+    if (gScreenViewports[gActiveCameraID].flags & VIEWPORT_EXTRA_BG) {
         gDPSetScissor((*dlist)++, SCISSOR_INTERLACE,
             gScreenViewports[gActiveCameraID].scissorX1,
             gScreenViewports[gActiveCameraID].scissorY1,
@@ -716,7 +720,10 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
 GLOBAL_ASM("asm/non_matchings/camera/func_80066CDC.s")
 #endif
 
-void func_80067A3C(Gfx **dlist) {
+/**
+ * Takes the size of the screen as depicted by an active screen viewport, then sets the RDP scissor to match it.
+*/
+void set_viewport_scissor(Gfx **dlist) {
     s32 size;
     s32 lrx;
     s32 lry;
@@ -736,8 +743,8 @@ void func_80067A3C(Gfx **dlist) {
     numViewports = gNumberOfViewports;
 
     if (numViewports != 0) {
-        if (numViewports == 2) {
-            numViewports = 3;
+        if (numViewports == VIEWPORTS_COUNT_3_PLAYERS) {
+            numViewports = VIEWPORTS_COUNT_4_PLAYERS;
         }
         lrx = ulx = 0;
         lry = uly = 0;
@@ -907,7 +914,7 @@ void func_80068158(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY) {
         tempWidth = -width;
     }
 #endif
-    if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_UNK_01)) {
+    if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_EXTRA_BG)) {
         D_800DD148[gActiveCameraID].vp.vtrans[0] = posX * 4;
         D_800DD148[gActiveCameraID].vp.vtrans[1] = posY * 4;
         D_800DD148[gActiveCameraID].vp.vscale[0] = tempWidth * 4;
@@ -924,11 +931,11 @@ void func_800682AC(Gfx **dlist) {
     widthAndHeight = get_video_width_and_height_as_s32();
     height = GET_VIDEO_HEIGHT(widthAndHeight);
     width = GET_VIDEO_WIDTH(widthAndHeight);
-    if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_UNK_01)) {
+    if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_EXTRA_BG)) {
         gDPSetScissor((*dlist)++, G_SC_NON_INTERLACE, 0, 0, width - 1, height - 1);
         func_80068158(dlist, width >> 1, height >> 1, width >> 1, height >> 1);
     } else {
-        func_80067A3C(dlist);
+        set_viewport_scissor(dlist);
         func_80068158(dlist, 0, 0, 0, 0);
     }
     gActiveCameraID = 0;
@@ -1075,14 +1082,14 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
 /**
  * Sets transform and scale matrices to set position and size, loads the texture, sets the rendermodes, then draws the result onscreen.
 */
-void render_orthi_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, unk80068BF4 *arg4, s32 flags) {
+void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, Sprite *sprite, s32 flags) {
     f32 scale;
     s32 index;
     Vertex *temp_v1;
     Matrix sp90;
     Matrix sp50;
 
-    if (arg4 != NULL) {
+    if (sprite != NULL) {
         temp_v1 = *vtx;
         temp_v1->x = segment->trans.x_position;
         temp_v1->y = segment->trans.y_position * (SCREEN_WIDTH_FLOAT / (f32) gScreenWidth);
@@ -1091,7 +1098,7 @@ void render_orthi_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         temp_v1->g = 255;
         temp_v1->b = 255;
         temp_v1->a = 255;
-        gDkrVertices((*dList)++, OS_PHYSICAL_TO_K0(*vtx), (((s32)OS_PHYSICAL_TO_K0(*vtx)) & 6), 13);
+        gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(*vtx), 1, 0);
         (*vtx)++; // Can't be done in the macro?
         index = segment->animFrame;
         D_80120D1C ++;
@@ -1117,13 +1124,13 @@ void render_orthi_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*dList)++);
         if (D_80120D0C == 0) {
-            index =  (((u8) index) * arg4->unk0) >> 8;
+            index =  (((u8) index) * sprite->baseTextureId) >> 8;
         }
-        func_8007BF34(dList, arg4->unk6 | flags);
-        if (index >= arg4->unk0) {
-            index = arg4->unk0 - 1;
+        func_8007BF34(dList, sprite->unk6 | flags);
+        if (index >= sprite->baseTextureId) {
+            index = sprite->baseTextureId - 1;
         }
-        gSPDisplayList((*dList)++, arg4->unkC[index]);
+        gSPDisplayList((*dList)++, sprite->unkC[index]);
         if (--D_80120D1C == 0) {
             index = 0;
         } else {

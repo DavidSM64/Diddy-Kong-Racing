@@ -48,13 +48,6 @@ u8 D_800DC670 = 0;
 u8 gBssSectionStart[AUDIO_HEAP_SIZE];
 
 ALHeap gALHeap;
-
-/* Unknown size */
-typedef struct unk80115CF8 {
-    u8 pad0[2];
-    s16 unk2;
-} unk80115CF8;
-
 ALSeqFile *ALSeqFile_80115CF8;
 void *D_80115CFC;
 
@@ -62,7 +55,7 @@ void *D_80115D00;
 u8 D_80115D04;
 u8 D_80115D05;
 s32 musicTempo;
-u32 *D_80115D0C;
+u32 *gSeqLengthTable;
 ALBankFile *ALBankFile_80115D10; // And I have reason to believe these are voice clips.
 ALBankFile *ALBankFile_80115D14; // These are sound effects, I do not know if it is ALL the sound effects.
 
@@ -82,8 +75,8 @@ u8 D_80115D41;
 unk80115D48 D_80115D48[8];
 ALCSeq D_80115D88;
 ALCSeq D_80115E80;
-u8 D_80115F78;
-u8 D_80115F79;
+u8 gSkipResetChannels; // Stored and used by a single function, but redundant.
+u8 gAudioVolumeSetting;
 s32 D_80115F7C;
 s32 *gGlobalSoundMask;
 u32 *gSpatialSoundMask;
@@ -91,15 +84,19 @@ u32 D_80115F88;
 
 /******************************/
 
+/**
+ * Allocate memory for all of the audio systems, including sequence data, sound data and heaps.
+ * Afterwards, set up the audio thread and start it.
+*/
 void audio_init(OSSched *sc) {
     s32 iCnt;
     ALSynConfig synth_config;
     s32 *addrPtr;
     u32 seqfSize;
-    u32 seq_max_len;
+    u32 seqLength;
     audioMgrConfig audConfig;
 
-    seq_max_len = 0;
+    seqLength = 0;
     alHeapInit(&gALHeap, gBssSectionStart, AUDIO_HEAP_SIZE);
 
     addrPtr = (s32 *) load_asset_section_from_rom(ASSET_AUDIO_TABLE);
@@ -127,15 +124,15 @@ void audio_init(OSSched *sc) {
     ALSeqFile_80115CF8 = allocate_from_main_pool_safe(seqfSize, COLOUR_TAG_CYAN);
     load_asset_to_address(ASSET_AUDIO, (u32) ALSeqFile_80115CF8, addrPtr[4], seqfSize);
     alSeqFileNew(ALSeqFile_80115CF8, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[4]));
-    D_80115D0C = (u32 *) allocate_from_main_pool_safe((ALSeqFile_80115CF8->seqCount) * 4, COLOUR_TAG_CYAN);
+    gSeqLengthTable = (u32 *) allocate_from_main_pool_safe((ALSeqFile_80115CF8->seqCount) * 4, COLOUR_TAG_CYAN);
 
     for (iCnt = 0; iCnt < ALSeqFile_80115CF8->seqCount; iCnt++) {
-        D_80115D0C[iCnt] = ALSeqFile_80115CF8->seqArray[iCnt].len;
-        if (D_80115D0C[iCnt] & 1) {
-            D_80115D0C[iCnt]++;
+        gSeqLengthTable[iCnt] = ALSeqFile_80115CF8->seqArray[iCnt].len;
+        if (gSeqLengthTable[iCnt] & 1) {
+            gSeqLengthTable[iCnt]++;
         }
-        if (seq_max_len < D_80115D0C[iCnt]) {
-            seq_max_len = D_80115D0C[iCnt];
+        if (seqLength < gSeqLengthTable[iCnt]) {
+            seqLength = gSeqLengthTable[iCnt];
         }
     }
 
@@ -155,8 +152,8 @@ void audio_init(OSSched *sc) {
     gMusicPlayer = func_80002224(24, 120);
     set_voice_limit(gMusicPlayer, 18);
     gSndFxPlayer = func_80002224(16, 50);
-    D_80115CFC = allocate_from_main_pool_safe(seq_max_len, COLOUR_TAG_CYAN);
-    D_80115D00 = allocate_from_main_pool_safe(seq_max_len, COLOUR_TAG_CYAN);
+    D_80115CFC = allocate_from_main_pool_safe(seqLength, COLOUR_TAG_CYAN);
+    D_80115D00 = allocate_from_main_pool_safe(seqLength, COLOUR_TAG_CYAN);
     audConfig.unk04 = 150;
     audConfig.unk00 = 32;
     audConfig.maxChannels = 16;
@@ -164,64 +161,70 @@ void audio_init(OSSched *sc) {
     audConfig.hp = &gALHeap;
     alSndPNew(&audConfig);
     audioStartThread();
-    func_80000968(0);
+    adjust_audio_volume(VOLUME_NORMAL);
     free_from_memory_pool(addrPtr);
     set_sound_channel_count(10);
     D_800DC648 = 0;
     D_80115D40 = 0;
     D_80115D41 = 0;
     D_800DC658 = 0;
-    D_80115F78 = 0;
-    D_80115F79 = 0;
+    gSkipResetChannels = FALSE;
+    gAudioVolumeSetting = VOLUME_NORMAL;
     return;
 }
 
-void func_80000890(u8 arg0) {
-    if (!D_80115F79) {
-        D_80115F78 = arg0;
-        if (D_80115F78 == 0) {
+/**
+ * Depending on whether or not the audio volume is set to normal and the argument is false, reset sound effect channel volumes.
+*/
+void reset_sound_volume(u8 skipReset) {
+    if (gAudioVolumeSetting == VOLUME_NORMAL) {
+        gSkipResetChannels = skipReset;
+        if (gSkipResetChannels == FALSE) {
             sMusicVolumeMultiplier = 256;
             set_relative_volume_for_music(musicRelativeVolume);
-            func_80004A60(0, sMusicVolumeMultiplier * 128 - 1);
-            func_80004A60(1, sMusicVolumeMultiplier * 128 - 1);
-            func_80004A60(2, sMusicVolumeMultiplier * 128 - 1);
-            func_80004A60(4, sMusicVolumeMultiplier * 128 - 1);
+            set_sound_channel_volume(0, sMusicVolumeMultiplier * 128 - 1);
+            set_sound_channel_volume(1, sMusicVolumeMultiplier * 128 - 1);
+            set_sound_channel_volume(2, sMusicVolumeMultiplier * 128 - 1);
+            set_sound_channel_volume(4, sMusicVolumeMultiplier * 128 - 1);
         }
     }
 }
 
-void func_80000968(s32 arg0) {
-    switch (arg0) {
-        case 1:
-            func_80004A60(0, 0);
-            func_80004A60(1, 32767);
-            func_80004A60(2, 0);
-            func_80004A60(4, 0);
+/**
+ * Changes the volume of each sound channel depending on what value is passed through.
+*/
+void adjust_audio_volume(s32 behaviour) {
+    switch (behaviour) {
+        case VOLUME_LOWER: // Mute most sound effects and half the volume of music.
+            set_sound_channel_volume(0, 0);
+            set_sound_channel_volume(1, 32767);
+            set_sound_channel_volume(2, 0);
+            set_sound_channel_volume(4, 0);
             alCSPSetVol((ALCSPlayer *) gMusicPlayer, (s16) (musicRelativeVolume * musicVolumeSliderPercentage >> 2));
             alCSPSetVol((ALCSPlayer *) gSndFxPlayer, 0);
             break;
-        case 2:
-            func_80004A60(0, 0);
-            func_80004A60(1, 32767);
-            func_80004A60(2, 32767);
-            func_80004A60(4, 32767);
+        case VOLUME_LOWER_AMBIENT: // Mute the ambient channel, making course elements stop making noise.
+            set_sound_channel_volume(0, 0);
+            set_sound_channel_volume(1, 32767);
+            set_sound_channel_volume(2, 32767);
+            set_sound_channel_volume(4, 32767);
             break;
-        case 3:
-            func_80004A60(0, 0);
-            func_80004A60(1, 32767);
-            func_80004A60(2, 0);
-            func_80004A60(4, 0);
+        case VOLUME_UNK03:
+            set_sound_channel_volume(0, 0);
+            set_sound_channel_volume(1, 32767);
+            set_sound_channel_volume(2, 0);
+            set_sound_channel_volume(4, 0);
             break;
-        default:
-            func_80004A60(0, 32767);
-            func_80004A60(1, 32767);
-            func_80004A60(2, 32767);
-            func_80004A60(4, 32767);
+        default: // Restore sound back to normal.
+            set_sound_channel_volume(0, 32767);
+            set_sound_channel_volume(1, 32767);
+            set_sound_channel_volume(2, 32767);
+            set_sound_channel_volume(4, 32767);
             alCSPSetVol((ALCSPlayer *) gMusicPlayer, (s16) (musicRelativeVolume * musicVolumeSliderPercentage));
             alCSPSetVol((ALCSPlayer *) gSndFxPlayer, (s16) (sfxGetVolumeSlider() * sfxRelativeVolume));
             break;
     }
-    D_80115F79 = arg0;
+    gAudioVolumeSetting = behaviour;
 }
 
 void func_80000B18(void) {
@@ -635,10 +638,13 @@ u32 func_80001C08(void) {
     return 0;
 }
 
-void func_80001C5C(u16 arg0) {
-    u32 s0;
-    for (s0 = 0; s0 < 64; s0++) {
-        func_80004A60(s0, arg0 << 8);
+/**
+ * Sets the volume of what I presume is all sound channels
+*/
+UNUSED void set_all_channel_volume(u16 volume) {
+    u32 i;
+    for (i = 0; i < 64; i++) {
+        set_sound_channel_volume(i, volume << 8);
     }
 }
 
@@ -803,7 +809,7 @@ void func_8000232C(ALSeqPlayer *arg0, void *arg1, u8 *arg2, ALCSeq *arg3) {
     u8 temp_a0_2;
 
     if ((alCSPGetState((ALCSPlayer* ) arg0) == 0) && (*arg2 != 0)) {
-        load_asset_to_address(ASSET_AUDIO, (u32) arg1, ALSeqFile_80115CF8->seqArray[*arg2].offset - get_rom_offset_of_asset(ASSET_AUDIO, 0), (s32) D_80115D0C[*arg2]);
+        load_asset_to_address(ASSET_AUDIO, (u32) arg1, ALSeqFile_80115CF8->seqArray[*arg2].offset - get_rom_offset_of_asset(ASSET_AUDIO, 0), (s32) gSeqLengthTable[*arg2]);
         alCSeqNew(arg3, arg1);
         alCSPSetSeq((ALCSPlayer* ) arg0, arg3);
         alCSPPlay((ALCSPlayer* ) arg0);
