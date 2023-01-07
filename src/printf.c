@@ -175,17 +175,17 @@ GLOBAL_ASM("asm/non_matchings/printf/render_printf.s")
  * At the end of a frame, iterate through the debug text buffer and print it on screen.
  * Soft-clear the buffer afterwards by setting the endpoint to the start point.
  */
-void print_debug_strings(Gfx **dlist) {
+void print_debug_strings(Gfx **dList) {
     char *buffer;
     u32 widthAndHeight;
 
-    init_rdp_and_framebuffer(dlist);
+    init_rdp_and_framebuffer(dList);
     widthAndHeight = get_video_width_and_height_as_s32();
     D_80127CD2 = (widthAndHeight >> 0x10);
     D_80127CD0 = widthAndHeight & 0xFFFF;
-    gDPSetScissor((*dlist)++, 0, 0, 0, D_80127CD0, D_80127CD2);
+    gDPSetScissor((*dList)++, 0, 0, 0, D_80127CD0, D_80127CD2);
     func_800B6E50();
-    gSPDisplayList((*dlist)++, dDebugFontSettings);
+    gSPDisplayList((*dList)++, dDebugFontSettings);
     buffer = (char *) gDebugPrintBufferStart;
     func_800B6EE0();
     D_80127CCC = -1;
@@ -194,16 +194,16 @@ void print_debug_strings(Gfx **dlist) {
     D_80127CB2 = D_80127CAE;
     while ((s32)buffer != (s32)gDebugPrintBufferEnd) {
         D_80127CB8 = 0;
-        buffer += func_800B653C(dlist, (s8 *) buffer);
+        buffer += func_800B653C(dList, (s8 *) buffer);
     }
-    func_800B695C(dlist, (u16) D_80127CB0, (u16) D_80127CB2, D_80127CAC, D_80127CAE + 10);
+    func_800B695C(dList, (u16) D_80127CB0, (u16) D_80127CB2, D_80127CAC, D_80127CAE + 10);
     buffer = (char *) gDebugPrintBufferStart;
     func_800B6EE0();
     D_80127CCC = -1;
     D_80127CB4 = 0;
     while ((s32)buffer != (s32)gDebugPrintBufferEnd) {
         D_80127CB8 = 1;
-        buffer += func_800B653C(dlist, (s8 *) buffer);
+        buffer += func_800B653C(dList, (s8 *) buffer);
     }
     gDebugPrintBufferEnd = gDebugPrintBufferStart;
 }
@@ -248,7 +248,7 @@ void func_800B695C(Gfx **dList, u32 arg1, u32 arg2, u32 arg3, u32 arg4) {
     }
 }
 
-s32 func_800B69FC(Gfx **dlist, s32 arg1) {
+s32 func_800B69FC(Gfx **dList, s32 arg1) {
     s32 temp_a3;
     s32 temp_a2;
     u8* temp_v0_22;
@@ -256,7 +256,7 @@ s32 func_800B69FC(Gfx **dlist, s32 arg1) {
     if (arg1 < 64) {
         if (D_80127CCC != 0) {
             if (D_80127CB8 != 0) {
-                gDPLoadTextureBlock((*dlist)++, OS_PHYSICAL_TO_K0(gTexture0 + 1), G_IM_FMT_IA, G_IM_SIZ_8b, 192, 11, 0, 2, 2, 0, 0, 0, 0);
+                gDPLoadTextureBlock((*dList)++, OS_PHYSICAL_TO_K0(gTexture0 + 1), G_IM_FMT_IA, G_IM_SIZ_8b, 192, 11, 0, 2, 2, 0, 0, 0, 0);
             }
             D_80127CCC = 0;
         }
@@ -264,7 +264,7 @@ s32 func_800B69FC(Gfx **dlist, s32 arg1) {
     } else if (arg1 < 96) {
         if (D_80127CCC != 1) {
             if (D_80127CB8) {
-                gDPLoadTextureBlock((*dlist)++, OS_PHYSICAL_TO_K0(gTexture1 + 1), G_IM_FMT_IA, G_IM_SIZ_8b, 248, 11, 0, 2, 2, 0, 0, 0, 0);
+                gDPLoadTextureBlock((*dList)++, OS_PHYSICAL_TO_K0(gTexture1 + 1), G_IM_FMT_IA, G_IM_SIZ_8b, 248, 11, 0, 2, 2, 0, 0, 0, 0);
             }
             D_80127CCC = 1;
         }
@@ -273,7 +273,7 @@ s32 func_800B69FC(Gfx **dlist, s32 arg1) {
         arg1 -= 96;
         if (D_80127CCC != 2) {
             if (D_80127CB8 != 0) {
-                gDPLoadTextureBlock((*dlist)++, OS_PHYSICAL_TO_K0(gTexture2 + 1), G_IM_FMT_IA, G_IM_SIZ_8b, 192, 11, 0, 2, 2, 0, 0, 0, 0);
+                gDPLoadTextureBlock((*dList)++, OS_PHYSICAL_TO_K0(gTexture2 + 1), G_IM_FMT_IA, G_IM_SIZ_8b, 192, 11, 0, 2, 2, 0, 0, 0, 0);
             }
             D_80127CCC = 2;
         }
@@ -282,8 +282,8 @@ s32 func_800B69FC(Gfx **dlist, s32 arg1) {
     temp_a2 = temp_v0_22[0];
     temp_a3 = (temp_v0_22[1] - temp_a2) + 1;
     if (D_80127CB8) {
-        gDPSetCombineMode((*dlist)++, DKR_CC_UNK12, DKR_CC_UNK12);
-        gSPTextureRectangle((*dlist)++, (D_80127CAC << 2), (D_80127CAE << 2), ((D_80127CAC + temp_a3) << 2), ((D_80127CAE + 10) << 2), 0, (temp_a2 << 5), 0, 1024, 1024);
+        gDPSetCombineMode((*dList)++, DKR_CC_UNK12, DKR_CC_UNK12);
+        gSPTextureRectangle((*dList)++, (D_80127CAC << 2), (D_80127CAE << 2), ((D_80127CAC + temp_a3) << 2), ((D_80127CAE + 10) << 2), 0, (temp_a2 << 5), 0, 1024, 1024);
     }
     return temp_a3;
 }

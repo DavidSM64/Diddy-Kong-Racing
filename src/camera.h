@@ -139,9 +139,9 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
 void func_80069484(Gfx **arg0, MatrixS **arg1, ObjectTransform *arg2, f32 arg3, f32 arg4);
 void set_viewport_scissor(Gfx **dlist);
 void func_80069A40(Gfx **dlist);
+void func_80066610(void);
 
 // Non Matching
-void func_80066610(void);
 void func_80065EA0(void);
 s32 func_8006A1C4(s32 arg0, s32 logicUpdateRate);
 void func_80066CDC(Gfx **dlist, MatrixS **mats);

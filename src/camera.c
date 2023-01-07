@@ -46,7 +46,7 @@ ScreenViewport gScreenViewports[4] = {
     { DEFAULT_VIEWPORT },
 };
 
-s32 D_800DD134 = 0;
+u32 D_800DD134 = 0;
 
 Vertex D_800DD138 = {
     0, 0, 0, 255, 255, 255, 255
@@ -397,10 +397,6 @@ void set_active_camera(s32 num) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-
-// Has regalloc/stack issues
-// Proposed name: init_viewports
 void func_80066610(void) {
     s32 width;
     s32 height;
@@ -416,18 +412,16 @@ void func_80066610(void) {
         } else if (gScreenViewports[i].flags & VIEWPORT_UNK_02) {
             gScreenViewports[i].flags |= VIEWPORT_EXTRA_BG;
         }
-        gScreenViewports[i].flags &= ~VIEWPORT_UNK_02 | VIEWPORT_UNK_04;
+        gScreenViewports[i].flags &= ~(VIEWPORT_UNK_02 | VIEWPORT_UNK_04);
         if (gScreenViewports[i].flags & 1) {
             if (!(gScreenViewports[i].flags & VIEWPORT_X_CUSTOM)) {
-                // Issue here
-                xPos = (gScreenViewports[i].x1 * 4) + (((gScreenViewports[i].x2 - gScreenViewports[i].x1) + 1) * 2);
+                xPos = (((gScreenViewports[i].x2 - gScreenViewports[i].x1) + 1) << 1) + (gScreenViewports[i].x1 * 4);
             } else {
                 xPos = gScreenViewports[i].posX;
                 xPos *= 4;
             }
             if (!(gScreenViewports[i].flags & VIEWPORT_Y_CUSTOM)) {
-                // Issue here
-                yPos = (gScreenViewports[i].y1 * 4) + (((gScreenViewports[i].y2 - gScreenViewports[i].y1) + 1) * 2);
+                yPos = (((gScreenViewports[i].y2 - gScreenViewports[i].y1 + 1)) << 1) + (gScreenViewports[i].y1 * 4);
             } else {
                 yPos = gScreenViewports[i].posY;
                 yPos *= 4;
@@ -441,8 +435,7 @@ void func_80066610(void) {
                 width *= 2;
             }
             if (!(gScreenViewports[i].flags & VIEWPORT_HEIGHT_CUSTOM)) {
-                height = gScreenViewports[i].y2 - gScreenViewports[i].y1;
-                height += 1;
+                height = (gScreenViewports[i].y2 - gScreenViewports[i].y1) + 1;
                 height *= 2;
             } else {
                 height = gScreenViewports[i].height;
@@ -451,7 +444,8 @@ void func_80066610(void) {
             s3 = i + (D_800DD134 * 5);
             s3 += 10;
             if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
-                height = -height;
+                if (0) { } // Fakematch
+                width = -width;
             }
             D_800DD148[s3].vp.vtrans[0] = xPos;
             D_800DD148[s3].vp.vtrans[1] = yPos;
@@ -460,9 +454,6 @@ void func_80066610(void) {
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/camera/func_80066610.s")
-#endif
 
 void func_80066818(s32 viewPortIndex, s32 arg1) {
     if (arg1 != 0) {
