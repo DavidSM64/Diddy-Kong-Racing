@@ -470,9 +470,8 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1130.s")
 void render_fade_barndoor_horizontal(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     reset_render_settings(dList);
     gSPDisplayList((*dList)++, dTransitionShapeSettings);
-    // TODO: Need to clean this up.
-    gDkrVertices((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]])) & 6) | 0x58, 0x70);
-    gDkrTriangles((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]), 8, TRIN_DISABLE_TEXTURE);
+    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]), 12, 0);
+    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]), 8, TRIN_DISABLE_TEXTURE);
     reset_render_settings(dList);
 }
 
@@ -483,9 +482,8 @@ void render_fade_barndoor_horizontal(Gfx **dList, UNUSED MatrixS **mats, UNUSED 
 void render_fade_barndoor_vertical(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     reset_render_settings(dList);
     gSPDisplayList((*dList)++, dTransitionShapeSettings);
-    // TODO: Need to clean this up.
-    gDkrVertices((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]])) & 6) | 0x58, 0x70);
-    gDkrTriangles((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]), 8, TRIN_DISABLE_TEXTURE);
+    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]), 12, 0);
+    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]), 8, TRIN_DISABLE_TEXTURE);
     reset_render_settings(dList);
 }
 
@@ -499,20 +497,20 @@ void render_fade_circle(Gfx **dList, MatrixS **mats, Vertex **verts) {
     gSPDisplayList((*dList)++, dTransitionShapeSettings);
     addr = OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]);
     addr2 = OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]);
-    gDkrVertices((*dList)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
-    gDkrTriangles((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
+    gSPVertexDKR((*dList)++, addr, 18, 0);
+    gSPPolygon((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
     addr += 0xB4;
     addr2 += 0x100;
-    gDkrVertices((*dList)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
-    gDkrTriangles((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
+    gSPVertexDKR((*dList)++, addr, 18, 0);
+    gSPPolygon((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
     addr += 0xB4;
     addr2 += 0x100;
-    gDkrVertices((*dList)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
-    gDkrTriangles((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
+    gSPVertexDKR((*dList)++, addr, 18, 0);
+    gSPPolygon((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
     addr += 0xB4;
     addr2 += 0x100;
-    gDkrVertices((*dList)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6);
-    gDkrTriangles((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
+    gSPVertexDKR((*dList)++, addr, 18, 0);
+    gSPPolygon((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
     reset_render_settings(dList);
 }
 #else
@@ -528,11 +526,11 @@ void render_fade_waves(Gfx **dList, MatrixS **mats, Vertex **verts) {
     for(i = 0; i < 6; i++) {
         s32 index = sTransitionTaskNum[0] + i;
         if(i != 1 && i != 4) {
-            gDkrVertices((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[index])) & 6) | 0x78, 0x94);
-            gDkrTriangles((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 14, TRIN_DISABLE_TEXTURE);
+            gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), 16, 0);
+            gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 14, TRIN_DISABLE_TEXTURE);
         } else {
-            gDkrVertices((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[index])) & 6) | 0x68, 0x82);
-            gDkrTriangles((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 12, TRIN_DISABLE_TEXTURE);
+            gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), 14, 0);
+            gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 12, TRIN_DISABLE_TEXTURE);
         }
     }
     reset_render_settings(dList);
@@ -547,9 +545,8 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_waves.s")
 void render_fade_barndoor_diagonal(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     reset_render_settings(dList);
     gSPDisplayList((*dList)++, dTransitionShapeSettings);
-    // TODO: Need to clean this up.
-    gDkrVertices((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]), (((s32)OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]])) & 6) | 0x48, 0x5E);
-    gDkrTriangles((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]), 6, TRIN_DISABLE_TEXTURE);
+    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]), 10, 0);
+    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]), 6, TRIN_DISABLE_TEXTURE);
     reset_render_settings(dList);
 }
 
