@@ -741,7 +741,7 @@ void func_8006BEFC(void) {
     func_80031B60();
     func_8002C7D4();
     func_80008174();
-    func_80000968(0);
+    adjust_audio_volume(VOLUME_NORMAL);
     if (gCurrentLevelHeader->weatherEnable > 0) {
         free_weather_memory();
     }
@@ -1513,9 +1513,9 @@ void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     func_8006ECFC(0);
     sRenderContext = DRAW_MENU;
     D_801234F0 = 1;
-    func_80004A60(0, 32767);
-    func_80004A60(1, 32767);
-    func_80004A60(2, 32767);
+    set_sound_channel_volume(0, 32767);
+    set_sound_channel_volume(1, 32767);
+    set_sound_channel_volume(2, 32767);
     func_80065EA0();
 
     if (!gIsLoading) {

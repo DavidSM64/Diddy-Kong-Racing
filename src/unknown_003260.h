@@ -121,9 +121,9 @@ void func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2);
 void func_8000488C();
 void func_800049D8(void);
 void func_800049F8(s32 soundMask, s16 type, u32 volume);
-u16 func_80004A3C(u8 arg0);
+u16 get_sound_channel_volume(u8 arg0);
 ALDMAproc __amDmaNew(AMDMAState **state);
-void func_80004A60(u8 arg0, u16 arg1);
+void set_sound_channel_volume(u8 arg0, u16 arg1);
 void func_80002DF8(OSMesg mesg);
 
 // Non Matching

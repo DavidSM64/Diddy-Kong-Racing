@@ -5,6 +5,13 @@
 #include "audio_internal.h"
 #include "sched.h"
 
+enum AudioVolumeBehaviour {
+    VOLUME_NORMAL,
+    VOLUME_LOWER,
+    VOLUME_LOWER_AMBIENT,
+    VOLUME_UNK03,
+};
+
 /* Size: 0x0A bytes */
 typedef struct unk80115D18 {
  u16 unk0;
@@ -50,8 +57,8 @@ void alCSPStop(ALCSPlayer *seqp); //lib/src/al/unknown_0C91A0.c
 s32  alCSPGetState(ALCSPlayer *seqp); //lib/src/unknown_0C8650.c
 
 void audio_init(OSSched *arg0);
-void func_80000890(u8 arg0);
-void func_80000968(s32 arg0);
+void reset_sound_volume(u8 skipReset);
+void adjust_audio_volume(s32 arg0);
 void func_80000B18(void);
 void func_80000B28(void);
 void play_music(u8 seqID);

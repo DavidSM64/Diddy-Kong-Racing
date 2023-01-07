@@ -189,10 +189,10 @@ glabel func_8009ECF0
 /* 09FBC4 8009EFC4 0C01FC7A */  jal   func_8007F1E8
 /* 09FBC8 8009EFC8 00402025 */   move  $a0, $v0
 /* 09FBCC 8009EFCC 00002025 */  move  $a0, $zero
-/* 09FBD0 8009EFD0 0C001298 */  jal   func_80004A60
+/* 09FBD0 8009EFD0 0C001298 */  jal   set_sound_channel_volume
 /* 09FBD4 8009EFD4 24057FFF */   li    $a1, 32767
 /* 09FBD8 8009EFD8 24040002 */  li    $a0, 2
-/* 09FBDC 8009EFDC 0C001298 */  jal   func_80004A60
+/* 09FBDC 8009EFDC 0C001298 */  jal   set_sound_channel_volume
 /* 09FBE0 8009EFE0 24057FFF */   li    $a1, 32767
 /* 09FBE4 8009EFE4 3C10800E */  lui   $s0, %hi(D_800E2770) # $s0, 0x800e
 /* 09FBE8 8009EFE8 3C11800E */  lui   $s1, %hi(D_800E2790) # $s1, 0x800e

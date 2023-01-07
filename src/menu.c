@@ -2434,7 +2434,7 @@ void menu_title_screen_init(void) {
     func_800660C0();
     set_text_font(ASSET_FONTS_FUNFONT);
     load_font(ASSET_FONTS_BIGFONT);
-    func_80000890(0);
+    reset_sound_volume(FALSE);
     set_time_trial_enabled(FALSE);
     D_80126864 = 0;
     sTitleScreenDemoIds = (s8 *)get_misc_asset(MISC_ASSET_UNK42);
@@ -2624,7 +2624,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
         }
     }
     if (gMenuDelay > 30) {
-        func_80084118();
+        title_screen_exit();
         disable_new_screen_transitions();
         if (gTitleScreenCurrentOption == 0) {
             sp28 = 0;
@@ -2636,7 +2636,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
             }
             load_level_for_menu(ASSET_LEVEL_CHARACTERSELECT, -1, sp28);
             func_8008AEB4(0, NULL);
-            menu_init(3U);
+            menu_init(MENU_CHARACTER_SELECT);
             return 0;
         }
         D_800DF460 = 0;
@@ -2644,16 +2644,19 @@ s32 menu_title_screen_loop(s32 updateRate) {
         menu_init(MENU_OPTIONS);
         return 0;
     }
-    gIgnorePlayerInput = 0;
+    gIgnorePlayerInput = FALSE;
     return 0;
 }
 
-void func_80084118(void) {
+/**
+ * Unloads the title screen logo and sets all audio back to default.
+*/
+void title_screen_exit(void) {
     func_8009C4A8(sGameTitleTileTextures);
-    set_music_player_voice_limit(0x10);
+    set_music_player_voice_limit(16);
     func_800660D0();
     unload_font(ASSET_FONTS_BIGFONT);
-    func_80000890(1);
+    reset_sound_volume(TRUE);
 }
 
 void menu_options_init(void) {
@@ -2662,7 +2665,7 @@ void menu_options_init(void) {
     transition_begin(&sMenuTransitionFadeOut);
     load_font(ASSET_FONTS_BIGFONT);
     set_text_font(ASSET_FONTS_BIGFONT);
-    set_music_player_voice_limit(0x18);
+    set_music_player_voice_limit(24);
     play_music(SEQUENCE_MAIN_MENU);
     func_80000B18();
 }
@@ -6841,11 +6844,11 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
     s32 buttonsPressed;
 
     if (gMenuOptionCap == 0) {
-        func_80000968(0);
+        adjust_audio_volume(VOLUME_NORMAL);
         return 0;
     }
 
-    func_80000968(1);
+    adjust_audio_volume(VOLUME_LOWER);
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     update_controller_sticks();
 
@@ -6919,7 +6922,7 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                 return 4;
             }
             if (gMenuOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_CONTINUE]) {
-                func_80000968(0);
+                adjust_audio_volume(VOLUME_NORMAL);
                 return 1;
             }
             if ((gMenuOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_RESTARTRACE]) || (gMenuOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_RESTARTCHALLENGE])) {
@@ -6938,7 +6941,7 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                 return 12;
             }
             if (gMenuOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_ABANDONCHALLENGE]) {
-                func_80000968(0);
+                adjust_audio_volume(VOLUME_NORMAL);
                 return 7;
             }
             return 1;
@@ -7059,7 +7062,7 @@ void func_80094688(s32 arg0, s32 arg1) {
         func_80066818(0, 1);
         func_80066940(0, 0, 0, gTrackSelectViewPortX, gTrackSelectViewportY);
     }
-    func_80000968(2);
+    adjust_audio_volume(VOLUME_LOWER_AMBIENT);
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80094A5C.s")
@@ -7145,7 +7148,7 @@ void func_80096790(void) {
     D_80126BBC = 0;
 
     unload_big_font_4();
-    func_80000968(0);
+    adjust_audio_volume(VOLUME_NORMAL);
 }
 
 void menu_11_init(void) {

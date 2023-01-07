@@ -86,8 +86,8 @@ u8 D_80115D41;
 unk80115D48 D_80115D48[8];
 ALCSeq D_80115D88;
 ALCSeq D_80115E80;
-u8 D_80115F78;
-u8 D_80115F79;
+u8 gSkipResetChannels; // Stored and used by a single function, but redundant.
+u8 gAudioVolumeSetting;
 s32 D_80115F7C;
 s32 *gGlobalSoundMask;
 u32 *gSpatialSoundMask;
@@ -170,64 +170,70 @@ void audio_init(OSSched *sc) {
     audConfig.hp = &gALHeap;
     alSndPNew(&audConfig);
     audioStartThread();
-    func_80000968(0);
+    adjust_audio_volume(VOLUME_NORMAL);
     free_from_memory_pool(addrPtr);
     set_sound_channel_count(10);
     D_800DC648 = 0;
     D_80115D40 = 0;
     D_80115D41 = 0;
     D_800DC658 = 0;
-    D_80115F78 = 0;
-    D_80115F79 = 0;
+    gSkipResetChannels = FALSE;
+    gAudioVolumeSetting = VOLUME_NORMAL;
     return;
 }
 
-void func_80000890(u8 arg0) {
-    if (!D_80115F79) {
-        D_80115F78 = arg0;
-        if (D_80115F78 == 0) {
+/**
+ * Depending on whether or not the audio volume is set to normal and the argument is false, reset sound effect channel volumes.
+*/
+void reset_sound_volume(u8 skipReset) {
+    if (gAudioVolumeSetting == VOLUME_NORMAL) {
+        gSkipResetChannels = skipReset;
+        if (gSkipResetChannels == FALSE) {
             sMusicVolumeMultiplier = 256;
             set_relative_volume_for_music(musicRelativeVolume);
-            func_80004A60(0, sMusicVolumeMultiplier * 128 - 1);
-            func_80004A60(1, sMusicVolumeMultiplier * 128 - 1);
-            func_80004A60(2, sMusicVolumeMultiplier * 128 - 1);
-            func_80004A60(4, sMusicVolumeMultiplier * 128 - 1);
+            set_sound_channel_volume(0, sMusicVolumeMultiplier * 128 - 1);
+            set_sound_channel_volume(1, sMusicVolumeMultiplier * 128 - 1);
+            set_sound_channel_volume(2, sMusicVolumeMultiplier * 128 - 1);
+            set_sound_channel_volume(4, sMusicVolumeMultiplier * 128 - 1);
         }
     }
 }
 
-void func_80000968(s32 arg0) {
-    switch (arg0) {
-        case 1:
-            func_80004A60(0, 0);
-            func_80004A60(1, 32767);
-            func_80004A60(2, 0);
-            func_80004A60(4, 0);
+/**
+ * Changes the volume of each sound channel depending on what value is passed through.
+*/
+void adjust_audio_volume(s32 behaviour) {
+    switch (behaviour) {
+        case VOLUME_LOWER: // Mute most sound effects and half the volume of music.
+            set_sound_channel_volume(0, 0);
+            set_sound_channel_volume(1, 32767);
+            set_sound_channel_volume(2, 0);
+            set_sound_channel_volume(4, 0);
             alCSPSetVol((ALCSPlayer *) gMusicPlayer, (s16) (musicRelativeVolume * musicVolumeSliderPercentage >> 2));
             alCSPSetVol((ALCSPlayer *) gSndFxPlayer, 0);
             break;
-        case 2:
-            func_80004A60(0, 0);
-            func_80004A60(1, 32767);
-            func_80004A60(2, 32767);
-            func_80004A60(4, 32767);
+        case VOLUME_LOWER_AMBIENT: // Mute the ambient channel, making course elements stop making noise.
+            set_sound_channel_volume(0, 0);
+            set_sound_channel_volume(1, 32767);
+            set_sound_channel_volume(2, 32767);
+            set_sound_channel_volume(4, 32767);
             break;
-        case 3:
-            func_80004A60(0, 0);
-            func_80004A60(1, 32767);
-            func_80004A60(2, 0);
-            func_80004A60(4, 0);
+        case VOLUME_UNK03:
+            set_sound_channel_volume(0, 0);
+            set_sound_channel_volume(1, 32767);
+            set_sound_channel_volume(2, 0);
+            set_sound_channel_volume(4, 0);
             break;
-        default:
-            func_80004A60(0, 32767);
-            func_80004A60(1, 32767);
-            func_80004A60(2, 32767);
-            func_80004A60(4, 32767);
+        default: // Restore sound back to normal.
+            set_sound_channel_volume(0, 32767);
+            set_sound_channel_volume(1, 32767);
+            set_sound_channel_volume(2, 32767);
+            set_sound_channel_volume(4, 32767);
             alCSPSetVol((ALCSPlayer *) gMusicPlayer, (s16) (musicRelativeVolume * musicVolumeSliderPercentage));
             alCSPSetVol((ALCSPlayer *) gSndFxPlayer, (s16) (sfxGetVolumeSlider() * sfxRelativeVolume));
             break;
     }
-    D_80115F79 = arg0;
+    gAudioVolumeSetting = behaviour;
 }
 
 void func_80000B18(void) {
@@ -644,7 +650,7 @@ u32 func_80001C08(void) {
 void func_80001C5C(u16 arg0) {
     u32 s0;
     for (s0 = 0; s0 < 64; s0++) {
-        func_80004A60(s0, arg0 << 8);
+        set_sound_channel_volume(s0, arg0 << 8);
     }
 }
 
