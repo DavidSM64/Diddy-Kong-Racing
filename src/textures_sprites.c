@@ -1443,7 +1443,7 @@ s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *
         free_texture(tex);
         *sizeOut = 0;
         for (i = 0; i < gCurrentSprite->numberOfFrames; i++) {
-            for (j = gCurrentSprite->unkC[i]; j < gCurrentSprite->unkC[i + 1]; j++) {
+            for (j = (s32) gCurrentSprite->unkC[i]; j < (s32) gCurrentSprite->unkC[i + 1]; j++) {
                 *sizeOut += get_texture_size_from_id(gCurrentSprite->baseTextureId + j);
             }
         }
