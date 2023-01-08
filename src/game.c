@@ -807,7 +807,7 @@ u32 sPrevTime = 0;
 u32 sDeltaTime = 0;
 s32 sTotalTime = 0;
 u8 gOverrideAA = 0;
-u8 gOverrideTimer = 0;
+s32 gOverrideTimer = 0;
 
 /**
  * The main gameplay loop.
@@ -864,43 +864,30 @@ void main_game_loop(void) {
     sPrevTime = osGetTime();
     sTotalTime += OS_CYCLES_TO_USEC(sDeltaTime);
     sTotalTime -= 16666;
-    // sub 25 frames.
-    if (gAntiAliasing) {
-        if (sTotalTime >= 40000) {
-            if (gOverrideAA == FALSE) {
-                gOverrideTimer++;
-                if (gOverrideTimer > 15) {
-                    gOverrideAA = TRUE;
-                    gOverrideTimer = 0;
-                    set_dither_filter();
-                }
-            } else {
-                goto reduction;
-            }
-        } else if (sTotalTime <= 33333) {
-            if (gOverrideAA == TRUE) {
-                gOverrideTimer++;
-                if (gOverrideTimer > 30) {
-                    gOverrideAA = FALSE;
-                    gOverrideTimer = 0;
-                    set_dither_filter();
-                }
-            } else {
-                goto reduction;
-            }
-        } else {
-            reduction:
-            if (gOverrideTimer > 0) {
-                gOverrideTimer--;
-            }
-        }
-    }
     sLogicUpdateRate = LOGIC_60FPS;
     while (sTotalTime > 16666) {
         sTotalTime -= 16666;
         sLogicUpdateRate++;
         if (sLogicUpdateRate == 4) {
             sTotalTime = 0;
+        }
+    }
+    if (gAntiAliasing) {
+        gOverrideTimer -= 40000;
+        gOverrideTimer += MIN(OS_CYCLES_TO_USEC(sDeltaTime), 66666);
+        if (gOverrideTimer <= -125000) {
+            gOverrideTimer = -125000;
+            if (gOverrideAA == TRUE) {
+                gOverrideAA = FALSE;
+                set_dither_filter();
+            }
+        }
+        if (gOverrideTimer >= 125000) {
+            gOverrideTimer = 125000;
+            if (gOverrideAA == FALSE) {
+                gOverrideAA = TRUE;
+                set_dither_filter();
+            }
         }
     }
 

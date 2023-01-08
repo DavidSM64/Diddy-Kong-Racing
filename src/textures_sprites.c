@@ -1131,6 +1131,8 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
     flags = (flags & RENDER_UNK_8000000) ? flags & ~RENDER_FOG_ACTIVE : flags & ~RENDER_Z_UPDATE;
     if (gAntiAliasing == FALSE || gOverrideAA) {
         flags &= ~RENDER_ANTI_ALIASING;
+    } else {
+        flags |= RENDER_ANTI_ALIASING;
     }
 
     if ((flags != gCurrentRenderFlags) || (forceFlags)) {
