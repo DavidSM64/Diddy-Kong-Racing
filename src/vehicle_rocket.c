@@ -111,7 +111,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         diffX = obj->segment.x_velocity * obj->segment.x_velocity;
         diffZ = obj->segment.z_velocity * obj->segment.z_velocity;
         racer->velocity = -sqrtf((diffX * diffX) + (diffZ * diffZ));
-        if (racer->velocity > -0.5) {
+        if (racer->velocity > -0.5f) {
             racer->velocity = 0.0f;
             obj->segment.x_velocity = 0.0f;
             obj->segment.y_velocity = 0.0f;

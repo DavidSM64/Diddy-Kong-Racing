@@ -127,7 +127,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     objModel = gfxData->objModel;
     diffX = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 0x10) - 0x11;
     var_f12 = (racer->velocity * updateRateF) * 0.45f;
-    if (var_f12 <= 0.0) {
+    if (var_f12 <= 0.0f) {
         if (var_f12 > -2.0f) {
             var_f12 = -2.0f;
         }

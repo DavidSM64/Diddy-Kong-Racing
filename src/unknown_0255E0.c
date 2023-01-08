@@ -1360,7 +1360,7 @@ s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
                 index = i;
             }
         } else
-        if (index >= 0 && var_a0 >= 2 && yPos < height - 20.0) {
+        if (index >= 0 && var_a0 >= 2 && yPos < height - 20.0f) {
             index = -1;
         }
     }

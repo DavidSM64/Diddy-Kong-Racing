@@ -131,7 +131,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (obj->segment.unk38.byte.unk3B != 3) {
         if (racer->velocity < -2.0f) {
             obj->segment.unk38.byte.unk3B = 1;
-            racer->unkC -= (racer->velocity * updateRateF) * 0.5;
+            racer->unkC -= (racer->velocity * updateRateF) * 0.5f;
         } else if ((racer->velocity < -0.1f) || (racer->velocity > 0.1f)) {
             obj->segment.unk38.byte.unk3B = 2;
             racer->unkC -= (racer->velocity * updateRateF) * 2;
