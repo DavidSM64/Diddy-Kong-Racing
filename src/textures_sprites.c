@@ -896,21 +896,6 @@ void func_8007AE28(s32 flags) {
     D_80126378 &= ~flags;
 }
 
-/* Unused? */
-s32 func_8007AE44(void) {
-    return D_80126338[0];
-}
-
-/* Unused? */
-s32 func_8007AE54(void) {
-    return D_80126338[1];
-}
-
-/* Unused? */
-s32 func_8007AE64(void) {
-    return D_80126354;
-}
-
 #ifdef NON_EQUIVALENT
 // Minor matching issues with loops, but should be functionally the same.
 TextureHeader *load_texture(s32 arg0) {
@@ -1054,22 +1039,6 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/free_texture.s")
 void set_texture_colour_tag(s32 tagID) {
     gTexColourTag = tagID;
 }
-
-#ifdef NON_EQUIVALENT
-// Unused.
-TextureHeader *func_8007B380(s32 arg0) {
-    if ((arg0 < 0) || (arg0 >= gNumberOfLoadedTextures)) {
-        return 0;
-    }
-    // Regalloc issue here
-    if (gTextureCache[arg0].texture == (TextureHeader *)-1) {
-        return 0;
-    }
-    return gTextureCache[arg0].texture;
-}
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B380.s")
-#endif
 
 /**
  * Resets all render settings to the default state.

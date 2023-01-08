@@ -29,7 +29,6 @@ s16 *D_8011D638;
 s32 *D_8011D63C;
 s32 D_8011D640;
 s32 D_8011D644;
-UNUSED s32 D_8011D648[66]; // Appears to have no effect when removed entirely?
 
 /******************************/
 

@@ -754,16 +754,6 @@ Object **func_8000E988(s32 *arg0, s32 *cnt) {
     return gObjPtrList;
 }
 
-// Unused?
-s32 getObjectCount(void) {
-    return objCount;
-}
-
-// Unused?
-s32 func_8000E9C0(void) {
-    return D_8011AE64;
-}
-
 void func_8000E9D0(Object *arg0) {
     arg0->segment.trans.unk6 |= 0x8000;
     func_800245B4(arg0->segment.unk2C.half.upper | 0xC000);

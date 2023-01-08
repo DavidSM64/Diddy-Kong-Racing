@@ -267,11 +267,6 @@ void set_sndfx_player_voice_limit(u8 voiceLimit) {
     set_voice_limit(gSndFxPlayer, voiceLimit);
 }
 
-/* Unused? */
-void func_80000C68(u8 arg0) {
-    func_80063A90(gMusicPlayer, arg0);
-}
-
 /**
  * Enables the timer to start fading in or out the background music.
  * Give it a positive number to fade in, otherwise, give it a negative one to fade out.
@@ -401,15 +396,6 @@ void musicSetChlPan(u8 chan, ALPan pan) {
 void musicSetChlVol(u8 chan, u8 vol) {
     if (chan < 0x10) {
         alCSPSetChlVol((ALCSPlayer *) gMusicPlayer, chan, vol);
-    }
-}
-
-/* Unused?*/
-u8 musicGetChlVol(u8 chan) {
-    if (chan >= 16) {
-        return 0;
-    } else {
-        return alCSPGetChlVol((ALCSPlayer *) gMusicPlayer, chan);
     }
 }
 
@@ -571,14 +557,6 @@ u8 func_80001918(void) {
     return 0;
 }
 
-// Unused?
-u8 func_80001954(void) {
-    if (D_800DC65C != 0) {
-        return D_800DC65C;
-    }
-    return D_80115D04;
-}
-
 u8 func_80001980(void) {
     return D_80115D05;
 }
@@ -636,16 +614,6 @@ u32 func_80001C08(void) {
     }
     D_800DC644 = 0;
     return 0;
-}
-
-/**
- * Sets the volume of what I presume is all sound channels
-*/
-UNUSED void set_all_channel_volume(u16 volume) {
-    u32 i;
-    for (i = 0; i < 64; i++) {
-        set_sound_channel_volume(i, volume << 8);
-    }
 }
 
 u16 func_80001CB8(u16 arg0) {
@@ -748,19 +716,6 @@ void func_80002128(unk80115D18 **arg0, s32 *arg1, s32 *arg2) {
     }
     if (arg2 != NULL) {
         *arg2 = D_80115D20;
-    }
-}
-
-/* Unused? */
-void func_8000216C(unk80115D1C **arg0, s32 *arg1, s32 *arg2) {
-    if (arg0 != NULL) {
-        *arg0 = sMusicPool;
-    }
-    if (arg1 != NULL) {
-        *arg1 = sMusicPoolSize;
-    }
-    if (arg2 != NULL) {
-        *arg2 = D_80115D24;
     }
 }
 

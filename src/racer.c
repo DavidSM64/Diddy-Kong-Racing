@@ -1620,7 +1620,6 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
         gCameraObject->trans.y_position = obj->segment.trans.y_position + phi_f18;
     }
 
-    coss_f(racer->unk196 + 0x4000); // Unused function call that wasn't fully optimised out.
     gCameraObject->trans.z_position = obj->segment.trans.z_position + zVel;
     gCameraObject->trans.y_rotation = racer->unk196;
     segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, gCameraObject->trans.y_position, gCameraObject->trans.z_position);

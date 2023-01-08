@@ -82,7 +82,6 @@ s32 gNumHudMatPerPlayer[4] = { 300, 400, 550, 600 };
 s32 gNumHudTrisPerPlayer[4] = { 20, 30, 40, 50 };
 s8 gDrawFrameTimer = 0;
 FadeTransition D_800DD3F4 = FADE_TRANSITION(128, FADE_COLOR_BLACK, 20, 0);
-UNUSED FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
 s32 sLogicUpdateRate = LOGIC_5FPS;
 FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
 FadeTransition D_800DD41C = FADE_TRANSITION(0, FADE_COLOR_BLACK, 30, -1);
@@ -1972,11 +1971,6 @@ void func_8006ECAC(s32 arg0) {
     D_800DD37C = ((arg0 & 0x03) << 10) | 0x80;
 }
 
-/* Unused? */
-void func_8006ECC4(void) {
-    D_800DD37C |= 0x100;
-}
-
 //Always called after updating a value in sEepromSettings
 void func_8006ECE0(void) {
     D_800DD37C |= 0x200;
@@ -2043,15 +2037,6 @@ void func_8006F140(s32 arg0) {
         if (arg0 == 0) {
             gLevelLoadTimer = 2;
         }
-    }
-}
-
-// Unused?
-void func_8006F20C(void) {
-    if (gLevelLoadTimer == 0) {
-        transition_begin(&D_800DD41C);
-        gLevelLoadTimer = 40;
-        D_80123524 = 1;
     }
 }
 

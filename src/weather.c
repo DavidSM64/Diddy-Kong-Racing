@@ -367,18 +367,6 @@ void render_falling_snow(void) {
     }
 }
 
-// Unused
-void func_800AC850(void) {
-    D_800E2A84 = 1;
-}
-
-// Unused
-void func_800AC860(void) {
-    if (D_800E2A80 != 0) {
-        D_800E2A84 = 0;
-    }
-}
-
 void func_800AC880(s32 arg0) {
     if (arg0 == D_800E2A80) {
         D_800E2A80 = 0;
@@ -479,11 +467,6 @@ void func_800AD40C(void) {
         b = ((gLightningFrequency * -20) >> 16) + 1023;
         func_80030664(0, a, b, 0x1CU, 0xFU, 0x24U);
     }
-}
-
-// Unused.
-void func_800AD4AC(s32 arg0) {
-    D_800E2C6C = arg0;
 }
 
 /**

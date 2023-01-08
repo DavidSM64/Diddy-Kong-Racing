@@ -62,49 +62,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031CAC.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031F88.s")
 
-// Unused.
-void func_80032210(unk800DC950 *arg0) {
-    arg0->unk4 = 0;
-}
-
-// Unused.
-void func_80032218(unk800DC950 *arg0) {
-    arg0->unk4 = 1;
-}
-
-// Unused.
-void func_80032224(unk800DC950 *arg0) {
-    if (arg0->unk4 == 1) {
-        arg0->unk4 = 0;
-        return;
-    }
-    arg0->unk4 = 1;
-}
-
-// Unused.
-void func_80032248(unk800DC950 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
-    if (arg2 > 0) {
-        arg0->unk3C = arg2;
-        arg0->unk2C = ((arg1 << 0x10) - arg0->unk1C) / arg2;
-    }
-    if (arg4 > 0) {
-        arg0->unk3E = arg4;
-        arg0->unk30 = ((arg3 << 0x10) - arg0->unk20) / arg4;
-    }
-    if (arg6 > 0) {
-        arg0->unk34 = ((arg5 << 0x10) - arg0->unk24) / arg6;
-        arg0->unk40 = arg6;
-    }
-}
-
-// Unused.
-void func_80032344(unk800DC950 *arg0, s32 arg1, s32 arg2) {
-    if (arg2 > 0) {
-        arg0->unk42 = arg2;
-        arg0->unk38 = ((arg1 << 0x10) - arg0->unk28) / arg2;
-    }
-}
-
 void func_80032398(s32 arg0) {
     s32 i;
     for (i = 0; i < D_800DC95C; i++) {

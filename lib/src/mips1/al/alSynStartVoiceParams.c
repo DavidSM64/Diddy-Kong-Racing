@@ -9,11 +9,6 @@ void set_stereo_pan_mode(s32 panMode) {
     gStereoPanMode = panMode;
 }
 
-/* Unused. */
-s16 get_stereo_pan_mode(void) {
-    return gStereoPanMode;
-}
-
 s32 modify_panning(s32 pan) {
     switch(gStereoPanMode) {
         case STEREO:

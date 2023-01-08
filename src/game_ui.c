@@ -2025,13 +2025,6 @@ void func_800AB1AC(s32 arg0) {
 }
 
 /**
- * Sets the race start HUD procedure to the first step.
-*/
-UNUSED void reset_race_start_hud(void) {
-    gRaceStartShowHudStep = 0;
-}
-
-/**
  * Sets the visibility of the hud, hiding almost everything, leaving only the minimap.
 */
 void set_hud_visibility(u8 setting) {

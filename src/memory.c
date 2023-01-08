@@ -486,11 +486,6 @@ void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
     }
 }
 
-// Unused?
-MemoryPoolSlot *func_80071774(s32 poolIndex) {
-    return gMemoryPools[poolIndex].slots;
-}
-
 s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken, u32 colourTag) {
     MemoryPool *pool;
     MemoryPoolSlot *poolSlots;
