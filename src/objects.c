@@ -1070,7 +1070,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     obj->segment.trans.x_position = newXPos;
     obj->segment.trans.y_position = newYPos;
     obj->segment.trans.z_position = newZPos;
-    box = func_8002A2DC(obj->segment.unk2C.half.lower);
+    box = get_segment_bounding_box(obj->segment.unk2C.half.lower);
 
     //For some reason the XYZ positions are converted into integers for the next section
     intXPos = newXPos, intYPos = newYPos, intZPos = newZPos;

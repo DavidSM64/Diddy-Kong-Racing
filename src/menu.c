@@ -6985,7 +6985,7 @@ void func_80094688(s32 arg0, s32 arg1) {
     header = get_current_level_header();
     D_80126C28 = arg0;
     if (is_in_two_player_adventure()) {
-        func_800249E0(0);
+        set_scene_viewport_num(VIEWPORTS_COUNT_1_PLAYER);
     }
     D_80126A90 = 0;
     if (gNumberOfActivePlayers == 1 && gTrophyRaceWorldId == 0) {

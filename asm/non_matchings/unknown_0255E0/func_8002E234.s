@@ -302,7 +302,7 @@ glabel func_8002E234
 /* 02F290 8002E690 46003224 */  cvt.w.s $f8, $f6
 /* 02F294 8002E694 440E4000 */  mfc1  $t6, $f8
 /* 02F298 8002E698 44CDF800 */  ctc1  $t5, $31
-/* 02F29C 8002E69C 0C00A84D */  jal   func_8002A134
+/* 02F29C 8002E69C 0C00A84D */  jal   get_inside_segment_count_xyz
 /* 02F2A0 8002E6A0 AFAE0018 */   sw    $t6, 0x18($sp)
 /* 02F2A4 8002E6A4 3C018012 */  lui   $at, %hi(D_8011C230) # $at, 0x8012
 /* 02F2A8 8002E6A8 AC20C230 */  sw    $zero, %lo(D_8011C230)($at)

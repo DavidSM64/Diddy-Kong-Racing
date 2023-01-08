@@ -1315,7 +1315,7 @@ void func_800B22FC(Particle2 *arg0, s32 arg1) {
                 func_800B34B0(arg0);
             }
         }
-        temp_v0_2 = func_8002A2DC(arg0->unk2E);
+        temp_v0_2 = get_segment_bounding_box(arg0->unk2E);
         if (temp_v0_2 != NULL) {
             if (arg0->trans.x_position < temp_v0_2->x1 || temp_v0_2->x2 < arg0->trans.x_position || arg0->trans.y_position < temp_v0_2->y1 || temp_v0_2->y2 < arg0->trans.y_position || arg0->trans.z_position < temp_v0_2->z1 || temp_v0_2->z2 < arg0->trans.z_position) {
                 arg0->unk2E = get_level_segment_index_from_position(arg0->trans.x_position, arg0->trans.y_position, arg0->trans.z_position);

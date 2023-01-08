@@ -228,7 +228,7 @@ glabel func_8000CC7C
 /* 00DBAC 8000CFAC 240F0001 */  li    $t7, 1
 /* 00DBB0 8000CFB0 AFB90144 */  sw    $t9, 0x144($sp)
 /* 00DBB4 8000CFB4 A20F0000 */  sb    $t7, ($s0)
-/* 00DBB8 8000CFB8 0C009278 */  jal   func_800249E0
+/* 00DBB8 8000CFB8 0C009278 */  jal   set_scene_viewport_num
 /* 00DBBC 8000CFBC 24040001 */   li    $a0, 1
 .L8000CFC0:
 /* 00DBC0 8000CFC0 8FAE0068 */  lw    $t6, 0x68($sp)

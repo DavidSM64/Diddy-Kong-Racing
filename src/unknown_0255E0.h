@@ -131,17 +131,17 @@ extern s32 D_800DC928;
 
 extern s8 D_800DC92C[24];
 
-s32 func_800249E0(s32 arg0);
+s32 set_scene_viewport_num(s32 arg0);
 void func_800257D0(void);
-void func_80027FC4(s32 arg0);
+void spawn_skydome(s32 arg0);
 void set_skydome_visbility(s32 renderSky);
 void render_skydome(void);
 void func_80028FA0(s32 arg0);
 void add_segment_to_order(s32 segmentIndex, s32 *segmentsOrderIndex, u8 *segmentsOrder);
-s32 get_inside_segment_count(s32 x, s32 z, s32 *arg2);
-s32 func_8002A134(s32 *arg0, s16 xPos1, s16 yPos1, s16 zPos1, s16 xPos2, s16 yPos2, s16 zPos2);
-LevelModelSegment *func_8002A2C8(s32 arg0);
-LevelModelSegmentBoundingBox *func_8002A2DC(s32 arg0);
+s32 get_inside_segment_count_xz(s32 x, s32 z, s32 *arg2);
+s32 get_inside_segment_count_xyz(s32 *arg0, s16 xPos1, s16 yPos1, s16 zPos1, s16 xPos2, s16 yPos2, s16 zPos2);
+LevelModelSegment *get_segment(s32 arg0);
+LevelModelSegmentBoundingBox *get_segment_bounding_box(s32 arg0);
 void func_8002ACC8(s32 arg0);
 s32 func_8002ACD4(f32 *arg0, f32 *arg1, f32 *arg2);
 s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3);
