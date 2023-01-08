@@ -62,4 +62,7 @@
 
 #define ABSF(x) (x < 0.f ? -x : x)
 
+// Used to suppress warnings in the ./generate_ctx.sh script.
+#define INCONSISTENT 
+
 #endif

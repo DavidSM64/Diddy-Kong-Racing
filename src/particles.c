@@ -1303,7 +1303,7 @@ void func_800B22FC(Particle2 *arg0, s32 arg1) {
         }
         arg0->unk38.half.unk3A -= D_80127C80;
         if (arg0->unk38.half.unk3A <= 0) {
-            gParticlePtrList_addObject(arg0);
+            gParticlePtrList_addObject((Object*) arg0);
         } else {
             if (arg0->unk60_halfs.unk60 == 0) {
                 arg0->unk5C_halfs.unk5C += D_80127C80 * arg0->unk5C_halfs.unk5E;
