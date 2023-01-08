@@ -2420,7 +2420,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             set_music_player_voice_limit(levelHeader->voiceLimit);
             play_music(levelHeader->music);
             func_80001074(levelHeader->instruments);
-            func_800228EC(racer64->racer.vehicleID);
+            init_racer_for_challenge(racer64->racer.vehicleID);
             temp_v0_12 = func_8002342C(obj->segment.trans.x_position, obj->segment.trans.z_position);
             if (temp_v0_12 != NULL) {
                 obj->segment.trans.x_position = temp_v0_12->segment.trans.x_position;

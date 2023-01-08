@@ -6723,7 +6723,7 @@ void func_80093A40(void) {
     gMenuOptionCap = 1;
     if (gTrophyRaceWorldId == 0) {
         raceType = func_8006B14C(settings->courseId);
-        if ((settings->worldId == WORLD_CENTRAL_AREA) && (func_8002341C() != 0)) {
+        if ((settings->worldId == WORLD_CENTRAL_AREA) && (is_taj_challenge() != 0)) {
             gMenuOptionText[1] = gMenuText[ASSET_MENU_TEXT_ABANDONCHALLENGE];
             gMenuOptionCap = 2;
         } else if ((settings->worldId > WORLD_CENTRAL_AREA) && (raceType != RACETYPE_BOSS)) {

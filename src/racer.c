@@ -330,7 +330,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
             if (sp5C != NULL) {
                 sp3F = sp5C->racer.characterId;
             }
-            if (var_t0 < 7 && get_trophy_race_world_id() == 0 && func_80023568() == 0 && func_8002341C() == 0) {
+            if (var_t0 < 7 && get_trophy_race_world_id() == 0 && func_80023568() == 0 && is_taj_challenge() == 0) {
                 if (gRaceStartTimer == 100) {
                     racer->aiSkill = get_random_number_from_range(AI_MASTER, AI_HARD);
                 }
@@ -478,7 +478,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
                 }
                 break;
             }
-            temp_v0_10 = (u16) func_8002341C();
+            temp_v0_10 = (u16) is_taj_challenge();
             if (temp_v0_10 != 0 || temp_v0 != 0) {
                 racer->unk1CA = 0;
                 racer->unk1C9 = 0;
@@ -2058,7 +2058,7 @@ void update_carpet(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (racer->unk118 != 0) {
         func_80006AC8(obj);
     }
-    if (func_8002341C() && racer->vehicleID == VEHICLE_CARPET) {
+    if (is_taj_challenge() && racer->vehicleID == VEHICLE_CARPET) {
         obj->interactObj->unk14 = 0;
     }
     sp26 = obj->segment.animFrame;
@@ -2286,7 +2286,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             }
         }
         set_render_printf_background_colour(0, 0, 0, 128);
-        if (func_8002341C()) {
+        if (is_taj_challenge()) {
             gDialogueCameraAngle = 0;
         }
         context = get_render_context();
@@ -2530,7 +2530,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                     D_8011D580 = 1;
                 }
             }
-            if (func_8002341C()) {
+            if (is_taj_challenge()) {
                 if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
                     checkpointNode = find_next_checkpoint_node(tempRacer->checkpoint, tempRacer->unk1C8);
                     if (!tempRacer->unk15C) {
@@ -2568,7 +2568,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             }
             tempRacer->unk1A8 = tempVar;
         }
-        if (func_8002341C()) {
+        if (is_taj_challenge()) {
             if (tempRacer->unk15C) {
                 tempRacer->unk15C->segment.animFrame += 8 * updateRate;
             }
@@ -5803,7 +5803,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     
     racer->miscAnimCounter++; //!@Delta
     
-    if (func_8002341C() || func_80023568() || racer->vehicleID == VEHICLE_LOOPDELOOP || D_8011D544 > 120.0f || gRaceStartTimer != 0 || levelHeader->race_type & RACETYPE_CHALLENGE_BATTLE) {
+    if (is_taj_challenge() || func_80023568() || racer->vehicleID == VEHICLE_LOOPDELOOP || D_8011D544 > 120.0f || gRaceStartTimer != 0 || levelHeader->race_type & RACETYPE_CHALLENGE_BATTLE) {
         racer->unk201 = 30;
     }
     

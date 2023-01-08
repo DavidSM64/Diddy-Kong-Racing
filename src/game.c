@@ -565,7 +565,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     if (vehicleId >= VEHICLE_CAR && vehicleId < NUMBER_OF_PLAYER_VEHICLES) {
         var_s0 = gCurrentLevelHeader->unk4F[vehicleId];
     }
-    func_80017E74(var_s0);
+    set_taj_challenge_type(var_s0);
     var_s0 = settings->worldId;
     if (gCurrentLevelHeader->world != -1) {
         settings->worldId = gCurrentLevelHeader->world;
