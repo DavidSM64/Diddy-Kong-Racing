@@ -455,7 +455,7 @@ void func_8000C460(void) {
     D_8011AE7E = 1;
     D_8011AE7C = 0;
     D_8011AD44 = 0;
-    gIsTajChallenge = 0;
+    gIsTajChallenge = FALSE;
     D_8011AEF7 = 0;
     D_8011AF60[0] = 0;
     D_8011AE00 = 0;

@@ -188,7 +188,7 @@ void print_debug_strings(Gfx **dList) {
     gSPDisplayList((*dList)++, dDebugFontSettings);
     buffer = (char *) gDebugPrintBufferStart;
     func_800B6EE0();
-    D_80127CCC = -1;
+    gDebugFontTexture = -1;
     D_80127CB4 = 0;
     D_80127CB0 = D_80127CAC;
     D_80127CB2 = D_80127CAE;
@@ -199,7 +199,7 @@ void print_debug_strings(Gfx **dList) {
     func_800B695C(dList, (u16) D_80127CB0, (u16) D_80127CB2, D_80127CAC, D_80127CAE + 10);
     buffer = (char *) gDebugPrintBufferStart;
     func_800B6EE0();
-    D_80127CCC = -1;
+    gDebugFontTexture = -1;
     D_80127CB4 = 0;
     while ((s32)buffer != (s32)gDebugPrintBufferEnd) {
         D_80127CB8 = 1;
@@ -254,31 +254,31 @@ s32 func_800B69FC(Gfx **dList, s32 arg1) {
     u8* temp_v0_22;
 
     if (arg1 < 64) {
-        if (D_80127CCC != 0) {
+        if (gDebugFontTexture != 0) {
             if (D_80127CB8 != 0) {
                 gDPLoadTextureBlock((*dList)++, OS_PHYSICAL_TO_K0(gTexture0 + 1), G_IM_FMT_IA, G_IM_SIZ_8b, 192, 11, 0, 2, 2, 0, 0, 0, 0);
             }
-            D_80127CCC = 0;
+            gDebugFontTexture = 0;
         }
         arg1 -= 33;
     } else if (arg1 < 96) {
-        if (D_80127CCC != 1) {
+        if (gDebugFontTexture != 1) {
             if (D_80127CB8) {
                 gDPLoadTextureBlock((*dList)++, OS_PHYSICAL_TO_K0(gTexture1 + 1), G_IM_FMT_IA, G_IM_SIZ_8b, 248, 11, 0, 2, 2, 0, 0, 0, 0);
             }
-            D_80127CCC = 1;
+            gDebugFontTexture = 1;
         }
         arg1 -= 64;
     } else if (arg1 < 128) {
         arg1 -= 96;
-        if (D_80127CCC != 2) {
+        if (gDebugFontTexture != 2) {
             if (D_80127CB8 != 0) {
                 gDPLoadTextureBlock((*dList)++, OS_PHYSICAL_TO_K0(gTexture2 + 1), G_IM_FMT_IA, G_IM_SIZ_8b, 192, 11, 0, 2, 2, 0, 0, 0, 0);
             }
-            D_80127CCC = 2;
+            gDebugFontTexture = 2;
         }
     }
-    temp_v0_22 = &D_800E2EF4[(D_80127CCC << 6) + (arg1 * 2)];
+    temp_v0_22 = &D_800E2EF4[(gDebugFontTexture << 6) + (arg1 * 2)];
     temp_a2 = temp_v0_22[0];
     temp_a3 = (temp_v0_22[1] - temp_a2) + 1;
     if (D_80127CB8) {

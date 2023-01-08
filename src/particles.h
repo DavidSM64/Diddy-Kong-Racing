@@ -296,7 +296,7 @@ typedef struct Particle2 {
 extern unk800E2CF0 **gParticlesAssetTable;
 extern s32 gParticlesAssetTableCount;
 extern s32 D_80127CB8;
-extern s32 D_80127CCC;
+extern s32 gDebugFontTexture;
 extern u16 D_80127CAE;
 extern u16 D_80127CAC;
 extern u16 D_80127CD0;
