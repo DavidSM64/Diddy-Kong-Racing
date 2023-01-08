@@ -3068,13 +3068,13 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             if (SteeringVel >= 4) {
                 SteeringVel = 7 - SteeringVel;
             }
-            gCurrentCarSteerVel += (SteeringVel * 0x190) * updateRate;
+            gCurrentCarSteerVel += (SteeringVel * 0x190);
         } else if (gCurrentCarSteerVel < -0x1400 || (racer->drift_direction != 0 && gCurrentCarSteerVel < 0)) {
             SteeringVel = racer->miscAnimCounter & 7;
             if (SteeringVel >= 4) {
                 SteeringVel = 7 - SteeringVel;
             }
-            gCurrentCarSteerVel -= (SteeringVel * 0x190) * updateRate;
+            gCurrentCarSteerVel -= (SteeringVel * 0x190);
         }
     }
     surfaceTraction = 0.0f;

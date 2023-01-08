@@ -139,9 +139,6 @@ WaterProperties *gTrackWaves[20];
 s8 D_8011D308;
 LevelModel *D_8011D30C;
 s32 *D_8011D310;
-UNUSED f32 gPrevCameraX; // Set but never read
-UNUSED f32 gPrevCameraY; // Set but never read
-UNUSED f32 gPrevCameraZ; // Set but never read
 s32 *D_8011D320[4];
 unk8011D330 *D_8011D330;
 s32 D_8011D334;
@@ -712,9 +709,6 @@ void initialise_player_viewport_vars(s32 updateRate) {
     } else {
         gSceneStartSegment = -1;
     }
-    gPrevCameraX = gSceneActiveCamera->trans.x_position;
-    gPrevCameraY = gSceneActiveCamera->trans.y_position;
-    gPrevCameraZ = gSceneActiveCamera->trans.z_position;
     if (D_8011D384 != 0) {
         func_800B8B8C();
         racers = get_racer_objects(&numRacers);
@@ -2013,7 +2007,6 @@ void obj_loop_fogchanger(Object *obj) {
     s32 views;
     s32 playerIndex;
     s32 index;
-    UNUSED s32 pad;
     s32 fogFar;
     s32 i;
     s32 fogR;
@@ -2025,7 +2018,6 @@ void obj_loop_fogchanger(Object *obj) {
     LevelObjectEntry_FogChanger *sp44;
     Object **racers;
     Object_Racer *racer;
-    UNUSED s32 pad2;
     unk8011D388 *temp_v0_3;
     ObjectSegment *phi_s3;
     
