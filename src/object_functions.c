@@ -4057,7 +4057,7 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
     if (weapon->weaponID == WEAPON_ROCKET_HOMING) {
         func_8003EDD8(obj, updateRate, weapon);
     } else {
-        func_8003EC14(obj, updateRate, weapon);
+        rocket_prevent_overshoot(obj, updateRate, weapon);
     }
     //TODO: Fix these gotos.
     if (obj->interactObj->obj != NULL) {
@@ -4115,8 +4115,53 @@ block_37:
     }
 }
 
+/**
+ * If a collision target is found for a level 1 or 3 rocket, reverse the velocity and set the next position target
+ * to be right on top of them. This ensures a collision is garunteed this frame.
+ * This function also calls the function that plays the incoming rocket sound.
+*/
+void rocket_prevent_overshoot(Object* obj, s32 updateRate, Object_Weapon* rocket) {
+    Object *interactedObj;
+    f32 dist;
+    f32 diffX;
+    f32 diffY;
+    f32 diffZ;
+    s32 angle;
+    s32 angleDiff;
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003EC14.s")
+    if (obj->interactObj->distance < 80 || rocket->hitObj != NULL) {
+        interactedObj = obj->interactObj->obj;
+        if (interactedObj != NULL && interactedObj != rocket->owner && interactedObj->behaviorId == BHV_RACER) {
+            rocket->hitObj = interactedObj;
+        }
+    }
+    interactedObj = rocket->hitObj;
+    if (rocket->hitObj != NULL) {
+        diffX = interactedObj->segment.trans.x_position - obj->segment.trans.x_position;
+        diffY = interactedObj->segment.trans.y_position - obj->segment.trans.y_position;
+        diffZ = interactedObj->segment.trans.z_position - obj->segment.trans.z_position;
+        dist = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
+        if (dist > 0.0f) {
+            rocket->forwardVel = -25.0f;
+            angle = (arctan2_f(diffX, diffZ) - 0x8000) & 0xFFFF;
+            angleDiff = angle - (obj->segment.trans.y_rotation & 0xFFFF);
+            if (angleDiff > 0x8000) {
+                angleDiff -= 0xFFFF;
+            }
+            if (angleDiff < -0x8000) {
+                angleDiff += 0xFFFF;
+            }
+            if (angleDiff > 0x6000 || angleDiff < -0x6000) {
+                obj->interactObj->obj = (Object* ) interactedObj;
+                obj->interactObj->distance = 1;
+            }
+            obj->segment.trans.x_rotation = arctan2_f(diffY, dist);
+            obj->segment.trans.y_rotation = angle;
+        }
+    }
+    play_rocket_trailing_sound(obj, rocket, SOUND_INCOMING_ROCKET);
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003EDD8.s")
 
 void func_8003F0D0(void) {
@@ -4127,7 +4172,11 @@ void func_8003F0DC(void) {
     D_8011D4DC--;
 }
 
-void func_8003F0F8(Object *obj, struct Object_Weapon *weapon, u16 soundID) {
+/**
+ * Existing flying rockets that don't belong to that player will play a sound when flying.
+ * This will check if that player is close enough to hear it, and whether to update an existing sound or play a new one.
+*/
+void play_rocket_trailing_sound(Object *obj, struct Object_Weapon *weapon, u16 soundID) {
     Object *racer;
     Object **racerGroup;
     f32 distance;
@@ -4135,10 +4184,10 @@ void func_8003F0F8(Object *obj, struct Object_Weapon *weapon, u16 soundID) {
     f32 diffX;
     f32 diffZ;
     f32 diffY;
-    s32 var_s4;
+    s32 shouldPlaySound;
     s32 i;
 
-    var_s4 = FALSE;
+    shouldPlaySound = FALSE;
     racerGroup = get_racer_objects_by_port(&numRacers);
     for (i = 0; i < numRacers; i++) {
         racer = racerGroup[i];
@@ -4148,11 +4197,11 @@ void func_8003F0F8(Object *obj, struct Object_Weapon *weapon, u16 soundID) {
             diffZ = racer->segment.trans.z_position - obj->segment.trans.z_position;
             distance = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
             if (distance <= func_80001CB8(soundID)) {
-                var_s4 = TRUE;
+                shouldPlaySound = TRUE;
             }
         }
     }
-    if (var_s4) {
+    if (shouldPlaySound) {
         if (weapon->unk1C == 0) {
             if (D_8011D4DC < 8) {
                 func_80009558(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &weapon->unk1C);

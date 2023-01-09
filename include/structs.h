@@ -810,7 +810,7 @@ typedef struct Object_WeaponBalloon {
 typedef struct Object_Weapon {
   /* 0x00 */ struct Object *target;
   /* 0x04 */ struct Object *owner;
-  /* 0x08 */ s32 unk8;
+  /* 0x08 */ struct Object *hitObj;
   /* 0x0C */ f32 checkpointDist;
   /* 0x10 */ f32 forwardVel;
   /* 0x14 */ s32 unk14;

@@ -187,7 +187,7 @@ glabel func_8003EDD8
 .L8003F07C:
 /* 03FC7C 8003F07C 02002025 */  move  $a0, $s0
 /* 03FC80 8003F080 02202825 */  move  $a1, $s1
-/* 03FC84 8003F084 0C00FC3E */  jal   func_8003F0F8
+/* 03FC84 8003F084 0C00FC3E */  jal   play_rocket_trailing_sound
 /* 03FC88 8003F088 24060136 */   li    $a2, 310
 /* 03FC8C 8003F08C 0C0270F2 */  jal   get_number_of_active_players
 /* 03FC90 8003F090 00000000 */   nop   
