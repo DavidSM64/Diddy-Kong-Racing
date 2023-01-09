@@ -3950,6 +3950,11 @@ void obj_init_weapon(Object *obj, UNUSED LevelObjectEntry_Weapon *entry) {
     obj->unk7C.word = 0;
 }
 
+/**
+ * Racer weapon loop behaviour.
+ * Rockets will move forwards, or towards their victim.
+ * Statiuonary traps will drop to the floor and stay there for a while before self-detonating.
+*/
 void obj_loop_weapon(Object *obj, s32 updateRate) {
     Object_Weapon *weapon = &obj->unk64->weapon;
     switch (weapon->weaponID) {
@@ -4382,8 +4387,8 @@ void obj_init_texscroll(Object *obj, LevelObjectEntry_TexScroll *entry, s32 arg2
     if (obj64->unk0 >= numberOfTexturesInLevel) {
         obj64->unk0 = numberOfTexturesInLevel - 1;
     }
-    obj64->unk4 = (s16) entry->unkA;
-    obj64->unk6 = (s16) entry->unkB;
+    obj64->unk4 = entry->unkA;
+    obj64->unk6 = entry->unkB;
     if (arg2 == 0) {
         obj64->unk8 = 0;
         obj64->unkA = 0;
@@ -4404,6 +4409,11 @@ void obj_init_buoy_pirateship(Object *obj, UNUSED LevelObjectEntry_Buoy_PirateSh
     obj->interactObj->unk12 = 0;
 }
 
+/**
+ * Floating buoy loop behaviour.
+ * Exists to serve as an outer bound for water courses.
+ * All it does is stays afloat on water and scrolls through each texture.
+*/
 void obj_loop_buoy_pirateship(Object *obj, s32 updateRate) {
     if (obj->unk64 != NULL) {
         obj->segment.trans.y_position = func_800BEEB4(obj->unk64);
@@ -4427,14 +4437,18 @@ void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
     obj->segment.trans.y_rotation = entry->unkA << 6 << 4;
 }
 
+/**
+ * Spinning log loop behaviour.
+ * Exists as a physical obstruction, will start spinning around on the spot when hit.
+*/
 void obj_loop_log(Object *obj, s32 updateRate) {
     Object *racerObj;
     Object_Log *log;
     f32 cosine;
     f32 sine;
     Object_Racer *racer;
-    f32 temp;
-    f32 temp2;
+    f32 diffZ;
+    f32 diffX;
 
     log = (Object_Log *) obj->unk64;
     if (log != NULL) {
@@ -4455,12 +4469,12 @@ void obj_loop_log(Object *obj, s32 updateRate) {
         cosine = coss_f(-obj->segment.trans.y_rotation);
         
         // This looks a bit messy, but is required to match.
-        temp2 = obj->segment.trans.x_position - racerObj->segment.trans.x_position;
-        temp = obj->segment.trans.z_position - racerObj->segment.trans.z_position;
-        temp2 = (temp2 * cosine) + (temp * sine);
-        temp = (racerObj->segment.x_velocity * sine) - (racerObj->segment.z_velocity * cosine);
-        temp2 *= temp;
-        obj->unk78 -= (s32) (temp2 / 4);
+        diffX = obj->segment.trans.x_position - racerObj->segment.trans.x_position;
+        diffZ = obj->segment.trans.z_position - racerObj->segment.trans.z_position;
+        diffX = (diffX * cosine) + (diffZ * sine);
+        diffZ = (racerObj->segment.x_velocity * sine) - (racerObj->segment.z_velocity * cosine);
+        diffX *= diffZ;
+        obj->unk78 -= (s32) (diffX / 4);
         
         if (obj->unk78 > 0x200) {
             obj->unk78 = 0x200;
