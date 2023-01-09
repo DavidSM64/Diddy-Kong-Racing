@@ -813,7 +813,8 @@ typedef struct Object_Weapon {
   /* 0x08 */ struct Object *hitObj;
   /* 0x0C */ f32 checkpointDist;
   /* 0x10 */ f32 forwardVel;
-  /* 0x14 */ s32 unk14;
+  /* 0x14 */ s16 unk14;
+  /* 0x14 */ s16 unk16;
   /* 0x18 */ u8 weaponID;
   /* 0x19 */ s8 checkpoint;
   /* 0x19 */ s16 unk1A;

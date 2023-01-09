@@ -4055,7 +4055,7 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
         }
     }
     if (weapon->weaponID == WEAPON_ROCKET_HOMING) {
-        func_8003EDD8(obj, updateRate, weapon);
+        homing_rocket_prevent_overshoot(obj, updateRate, weapon);
     } else {
         rocket_prevent_overshoot(obj, updateRate, weapon);
     }
@@ -4162,7 +4162,74 @@ void rocket_prevent_overshoot(Object* obj, s32 updateRate, Object_Weapon* rocket
     play_rocket_trailing_sound(obj, rocket, SOUND_INCOMING_ROCKET);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003EDD8.s")
+/**
+ * If a collision target is found for a level 2 rocket, reverse the velocity and set the next position target
+ * to be right on top of them. This ensures a collision is garunteed this frame.
+ * This function also calls the function that plays the incoming rocket sound.
+*/
+void homing_rocket_prevent_overshoot(Object* obj, s32 updateRate, Object_Weapon* rocket) {
+    Object* targetObj;
+    Object_64* racer;
+    f32 dist;
+    f32 diffX;
+    f32 diffY;
+    f32 diffZ;
+    f32 distY; 
+    s32 sp58;
+    s32 angle;
+    s32 sineY;
+    s32 angleDiff;
+    s32 shift;
+
+    if (rocket->target != NULL) {
+        targetObj = rocket->target;
+        racer = targetObj->unk64;
+        rocket->unk14 = racer->racer.unk1BA >> 1;
+        rocket->unk16 = racer->racer.unk1BC >> 1;
+        diffX = targetObj->segment.trans.x_position - obj->segment.trans.x_position;
+        diffY = targetObj->segment.trans.y_position - obj->segment.trans.y_position;
+        diffZ = targetObj->segment.trans.z_position - obj->segment.trans.z_position;
+        dist = (diffX * diffX) + (diffZ * diffZ);
+        distY = diffY * diffY;
+        if (dist < 10000.0 && distY > 10000.0) {
+            rocket->target = NULL;
+            return;
+        }
+        dist = sqrtf(dist + distY);
+        if (dist > 300.0f && rocket->checkpoint != -1 && rocket->hitObj == NULL) {
+            sp58 = func_8001955C(obj, rocket->checkpoint, racer->racer.unk1C8, rocket->unk14, rocket->unk16, rocket->checkpointDist, &diffX, &diffY, &diffZ);
+            sineY = arctan2_f(diffY, 500.0f) & 0xFFFF;
+            shift = 3;
+        } else {
+            rocket->hitObj = targetObj;
+            rocket->forwardVel = -25.0f;
+            sp58 = NULL;
+        }
+        angle = (arctan2_f(diffX, diffZ) - 0x8000) & 0xFFFF;
+        angleDiff = angle - (obj->segment.trans.y_rotation & 0xFFFF);
+        WRAP(angleDiff, -0x8000, 0x8000);
+        if (sp58 != NULL) {
+            obj->segment.trans.y_rotation += (angleDiff * updateRate) >> shift;
+            angleDiff = sineY - (obj->segment.trans.x_rotation & 0xFFFF);
+            WRAP(angleDiff, -0x8000, 0x8000);
+            obj->segment.trans.x_rotation += (angleDiff * updateRate) >> shift;
+        } else {
+            if (angleDiff > 0x6000 || angleDiff < -0x6000) {
+                obj->interactObj->obj = targetObj;
+                obj->interactObj->distance = 1;
+            }
+            obj->segment.trans.x_rotation = arctan2_f(diffY, dist) & 0xFFFFu;
+            
+            obj->segment.trans.y_rotation = angle;
+        }
+        
+    }
+    play_rocket_trailing_sound(obj, rocket, SOUND_HOMING_ROCKET);
+    if (get_number_of_active_players() < 3) {
+        obj->unk74 |= 1;
+        func_800AFC3C(obj, updateRate);
+    }
+}
 
 void func_8003F0D0(void) {
     D_8011D4DC = 0;

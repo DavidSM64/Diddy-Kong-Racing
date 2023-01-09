@@ -457,6 +457,6 @@ s32 func_80021600(s32);
 void func_80036040(Object *, Object_64*);
 void func_8003F2E8(Object *, s32 updateRate);
 void rocket_prevent_overshoot(Object *, s32, Object_Weapon*);
-void func_8003EDD8(Object *, s32, Object_Weapon*);
+void homing_rocket_prevent_overshoot(Object *, s32, Object_Weapon*);
 
 #endif
