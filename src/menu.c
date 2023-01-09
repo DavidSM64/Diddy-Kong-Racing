@@ -9367,6 +9367,8 @@ typedef enum BenchmarkState {
     BENCHMARK_FINISHED // Show results.
 } BenchmarkState;
 
+#define BENCHMARK_DURATION_SECONDS 30
+
 s32 benchNumLvls = sizeof(benchLvlIds) / sizeof(s32);
 s32 benchSel;
 s32 benchSelStart;
@@ -9374,8 +9376,9 @@ s32 benchNumPlayers;
 s32 benchTimer;
 BenchmarkState benchState = BENCHMARK_NOT_STARTED;
 OSTime benchLastTime = 0;
+u8 gInsideBenchmark = FALSE;
 
-u8 benchFpsRecords[256];
+u8 benchFpsRecords[BENCHMARK_DURATION_SECONDS * 60];
 u8 benchFramesRecorded = 0;
 
 #define BENCH_DIAL_X 32
@@ -9402,6 +9405,7 @@ void menu_benchmark_init(void) {
         benchNumPlayers = 1;
     }
 
+    gInsideBenchmark = FALSE;
     benchSelStart = 0;
     gIgnorePlayerInput = 1;
     gMenuDelay = 20;
@@ -9481,7 +9485,7 @@ void run_benchmark() {
     s32 cutsceneId;
 
     benchFramesRecorded = 0;
-    benchTimer = 30 * 60;
+    benchTimer = BENCHMARK_DURATION_SECONDS * 60;
     benchLastTime = 0;
     osSetTime(0);
     cutsceneId = (benchLvlIds[benchSel] == ASSET_LEVEL_CENTRALAREAHUB) ? 1 : 100;
@@ -9699,6 +9703,7 @@ void record_fps() {
 
 s32 menu_benchmark_loop(s32 updateRate) {
     s32 inputResult;
+    char textBytes[16];
 
     // 0 = do nothing, 1 = go forward, -1 = go back
     inputResult = benchmark_check_inputs(updateRate);
@@ -9732,6 +9737,8 @@ s32 menu_benchmark_loop(s32 updateRate) {
             if (benchState == BENCHMARK_RUNNING_FADE_OUT && benchTimer <= 0){
                 stop_benchmark();
             }
+            puppyprintf(textBytes, "%02d:%02d:%01d", (benchTimer / 3600) % 60, (benchTimer / 60) % 60, (benchTimer / 6) % 10);
+            draw_text(&sMenuCurrDisplayList, gScreenWidth / 2, gScreenHeight - 16, textBytes, ALIGN_MIDDLE_CENTER);
             break;
         case BENCHMARK_FINISHED:
             switch(inputResult) {
