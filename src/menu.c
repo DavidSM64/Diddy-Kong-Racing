@@ -9925,7 +9925,6 @@ s32 menu_benchmark_loop(s32 updateRate) {
                 stop_benchmark();
             }
             set_text_font(FONT_COLOURFUL);
-            set_text_colour(255, 255, 255, 255, 255);
             puppyprintf(textBytes, "%02d:%02d:%01d", (benchTimer / 3600) % 60, (benchTimer / 60) % 60, (benchTimer / 6) % 10);
             draw_text(&sMenuCurrDisplayList, gScreenWidth / 2, gScreenHeight - 16, textBytes, ALIGN_MIDDLE_CENTER);
             break;
