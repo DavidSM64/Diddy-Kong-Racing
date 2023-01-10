@@ -1745,6 +1745,7 @@ GLOBAL_ASM("asm/non_matchings/game/func_8006DCF8.s")
 #endif
 
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
+    Vehicle vehicleID = VEHICLE_PLANE;
     if (!gIsLoading) {
         func_8006DBE4();
         if (get_thread30_level_id_to_load() == 0) {
@@ -1754,14 +1755,6 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
         }
     }
     if (levelId != (s32) SPECIAL_MAP_ID_NO_LEVEL) {
-        s32 vehicleID = VEHICLE_PLANE;
-#ifdef PUPPYPRINT_DEBUG
-        if (levelId != ASSET_LEVEL_CENTRALAREAHUB) {
-            vehicleID = get_map_default_vehicle(levelId);
-            if (vehicleID > VEHICLE_PLANE) {
-                vehicleID = VEHICLE_PLANE;
-            }
-        }
         switch (levelId) {
         case ASSET_LEVEL_TRICKYTOPS1:
             vehicleID = VEHICLE_TRICKY;
@@ -1778,11 +1771,16 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
         case ASSET_LEVEL_WIZPIG1:
             vehicleID = VEHICLE_WIZPIG;
             break;
-        case ASSET_LEVEL_WIZPIG2:
-            vehicleID = VEHICLE_ROCKET;
+        case ASSET_LEVEL_CENTRALAREAHUB:
+            vehicleID = VEHICLE_PLANE;
+            break;
+        default: 
+            vehicleID = get_map_default_vehicle(levelId);
+            if (vehicleID > VEHICLE_PLANE) {
+                vehicleID = VEHICLE_PLANE;
+            }
             break;
         }
-#endif
         func_8006ECFC(3);
         load_level_3(levelId, numberOfPlayers, 0, vehicleID, cutsceneId);
         gIsLoading = FALSE;

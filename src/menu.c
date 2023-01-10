@@ -9356,11 +9356,8 @@ s32 benchLvlIds[] = {
     ASSET_LEVEL_WHALEBAY, ASSET_LEVEL_CRESCENTISLAND, ASSET_LEVEL_PIRATELAGOON, ASSET_LEVEL_TREASURECAVES,
     ASSET_LEVEL_WINDMILLPLAINS, ASSET_LEVEL_GREENWOODVILLAGE, ASSET_LEVEL_BOULDERCANYON, ASSET_LEVEL_HAUNTEDWOODS,
     ASSET_LEVEL_SPACEDUSTALLEY, ASSET_LEVEL_SPACEPORTALPHA, ASSET_LEVEL_DARKMOONCAVERNS, ASSET_LEVEL_STARCITY,
-// Battle stages currently don't work. The A.I. racers are always in planes and don't do anything.
-    // ASSET_LEVEL_FIREMOUNTAIN, ASSET_LEVEL_ICICLEPYRAMID, ASSET_LEVEL_DARKWATERBEACH, ASSET_LEVEL_SMOKEYCASTLE,
-// Boss stages current don't work. The intro cutscene plays, but then softlocks.
-    //ASSET_LEVEL_TRICKYTOPS1, ASSET_LEVEL_BLUEY1, ASSET_LEVEL_BUBBLER1, ASSET_LEVEL_SMOKEY1, 
-    //ASSET_LEVEL_WIZPIG1, ASSET_LEVEL_WIZPIG2,
+    //ASSET_LEVEL_FIREMOUNTAIN, ASSET_LEVEL_ICICLEPYRAMID, ASSET_LEVEL_DARKWATERBEACH, ASSET_LEVEL_SMOKEYCASTLE,
+    ASSET_LEVEL_TRICKYTOPS1, ASSET_LEVEL_BLUEY1, ASSET_LEVEL_BUBBLER1, ASSET_LEVEL_SMOKEY1, ASSET_LEVEL_WIZPIG1,
 };
 
 typedef enum BenchmarkState {
@@ -9562,14 +9559,10 @@ void run_benchmark() {
     benchLastTime = 0;
     osSetTime(0);
     cutsceneId = (benchLvlIds[benchSel] == ASSET_LEVEL_CENTRALAREAHUB) ? 1 : 100;
-    /*if (benchLvlIds[benchSel] == ASSET_LEVEL_TRICKYTOPS1 || benchLvlIds[benchSel] == ASSET_LEVEL_BLUEY1 || 
-    benchLvlIds[benchSel] == ASSET_LEVEL_BUBBLER1 || benchLvlIds[benchSel] == ASSET_LEVEL_SMOKEY1 ||
-    benchLvlIds[benchSel] == ASSET_LEVEL_WIZPIG1 || benchLvlIds[benchSel] == ASSET_LEVEL_WIZPIG2) {
-        cutsceneId = 0;
-    }*/
     set_rng_seed(12345); // This is needed to make each run consistent.
     load_level_for_menu(benchLvlIds[benchSel], benchNumPlayers - 1, cutsceneId);
     func_8006DB20(get_map_default_vehicle(benchLvlIds[benchSel]));
+    func_8006BD10(1.0f);
     gLastBenchLevelID = benchLvlIds[benchSel];
     benchState = BENCHMARK_RUNNING;
 }

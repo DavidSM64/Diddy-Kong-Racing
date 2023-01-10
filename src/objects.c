@@ -958,7 +958,12 @@ void func_80011390(void) {
     D_8011ADAC = 0;
 }
 
+extern s32 benchState;
+
 s32 func_8001139C() {
+    if (benchState == 1) {
+        return 0;
+    }
     return D_8011ADB0;
 }
 
