@@ -2207,6 +2207,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     u32 first2;
     u32 first3 = gPuppyTimers.timers[PP_COLLISION][perfIteration];
     u32 first4 = gPuppyTimers.timers[PP_AI][perfIteration];
+    u32 first5 = gPuppyTimers.timers[PP_CAMERA][perfIteration];
 #endif
 
     gNumViewports = get_viewport_count() + 1;
@@ -2696,7 +2697,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
 #ifdef PUPPYPRINT_DEBUG
     profiler_add(gPuppyTimers.timers[PP_RACER], osGetCount() - first);
     profiler_offset(gPuppyTimers.timers[PP_RACER], gPuppyTimers.timers[PP_COLLISION][perfIteration] - first3);
-    profiler_offset(gPuppyTimers.timers[PP_RACER], gPuppyTimers.timers[PP_CAMERA][perfIteration]);
+    profiler_offset(gPuppyTimers.timers[PP_RACER], gPuppyTimers.timers[PP_CAMERA][perfIteration] - first5);
     profiler_offset(gPuppyTimers.timers[PP_RACER], gPuppyTimers.timers[PP_AI][perfIteration] - first4);
 #endif
 }
@@ -5809,9 +5810,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     Object_Racer *tempRacer;
     f32 temp_fv1_2;
 #ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
     u32 first2;
-    u32 first3 = gPuppyTimers.timers[PP_COLLISION][perfIteration];
 #endif
 
     gCurrentPlayerIndex = -1;
@@ -6011,7 +6010,13 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         racer->unk6C = obj->segment.trans.y_position;
         racer->unk70 = obj->segment.trans.z_position;
     } else {
+#ifdef PUPPYPRINT_DEBUG
+    u32 first = osGetCount();
+#endif
         func_8005B818(obj, racer, updateRate, updateRateF);
+#ifdef PUPPYPRINT_DEBUG
+    profiler_add(gPuppyTimers.timers[PP_AI], osGetCount() - first);
+#endif
         if (renderContext != DRAW_MENU) {
             func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
@@ -6087,10 +6092,6 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     }
     racer->unk1FE = 0xFF;
     set_racer_tail_lights(racer);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_RACER], osGetCount() - first);
-    profiler_offset(gPuppyTimers.timers[PP_RACER], gPuppyTimers.timers[PP_COLLISION][perfIteration] - first3);
-#endif
 }
 
 #ifdef NON_EQUIVALENT
