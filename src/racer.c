@@ -246,9 +246,6 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     Object *temp_v0_3;
     s16 var_t4;
     s16 temp_v0_10;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-#endif
 
     sp6E = racer->unk1CA;
     miscAsset1 = (s8 *) get_misc_asset(MISC_ASSET_UNK01);
@@ -540,9 +537,6 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
             }
         }
     }
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_AI], osGetCount() - first);
-#endif
 }
 #else
 GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")

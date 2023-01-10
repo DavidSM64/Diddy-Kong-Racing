@@ -1754,7 +1754,37 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
         }
     }
     if (levelId != (s32) SPECIAL_MAP_ID_NO_LEVEL) {
-        load_level_3(levelId, numberOfPlayers, 0, VEHICLE_PLANE, cutsceneId);
+        s32 vehicleID = VEHICLE_PLANE;
+#ifdef PUPPYPRINT_DEBUG
+        if (levelId != ASSET_LEVEL_CENTRALAREAHUB) {
+            vehicleID = get_map_default_vehicle(levelId);
+            if (vehicleID > VEHICLE_PLANE) {
+                vehicleID = VEHICLE_PLANE;
+            }
+        }
+        switch (levelId) {
+        case ASSET_LEVEL_TRICKYTOPS1:
+            vehicleID = VEHICLE_TRICKY;
+            break;
+        case ASSET_LEVEL_BLUEY1:
+            vehicleID = VEHICLE_BLUEY;
+            break;
+        case ASSET_LEVEL_BUBBLER1:
+            vehicleID = VEHICLE_BUBBLER;
+            break;
+        case ASSET_LEVEL_SMOKEY1:
+            vehicleID = VEHICLE_SMOKEY;
+            break;
+        case ASSET_LEVEL_WIZPIG1:
+            vehicleID = VEHICLE_WIZPIG;
+            break;
+        case ASSET_LEVEL_WIZPIG2:
+            vehicleID = VEHICLE_ROCKET;
+            break;
+        }
+#endif
+        func_8006ECFC(3);
+        load_level_3(levelId, numberOfPlayers, 0, vehicleID, cutsceneId);
         gIsLoading = FALSE;
         return;
     }

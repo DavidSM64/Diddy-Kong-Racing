@@ -9346,7 +9346,10 @@ s32 is_drumstick_unlocked(void) {
 
 // In menu.c after menu_title_screen_loop()
 
+#define ALL_LEVELS 0xFFFFFFFF
+
 s32 benchLvlIds[] = {
+    ALL_LEVELS,
     ASSET_LEVEL_CENTRALAREAHUB,
     ASSET_LEVEL_ANCIENTLAKE, ASSET_LEVEL_FOSSILCANYON, ASSET_LEVEL_JUNGLEFALLS, ASSET_LEVEL_HOTTOPVOLCANO,
     ASSET_LEVEL_EVERFROSTPEAK, ASSET_LEVEL_WALRUSCOVE, ASSET_LEVEL_SNOWBALLVALLEY, ASSET_LEVEL_FROSTYVILLAGE,
@@ -9354,7 +9357,7 @@ s32 benchLvlIds[] = {
     ASSET_LEVEL_WINDMILLPLAINS, ASSET_LEVEL_GREENWOODVILLAGE, ASSET_LEVEL_BOULDERCANYON, ASSET_LEVEL_HAUNTEDWOODS,
     ASSET_LEVEL_SPACEDUSTALLEY, ASSET_LEVEL_SPACEPORTALPHA, ASSET_LEVEL_DARKMOONCAVERNS, ASSET_LEVEL_STARCITY,
 // Battle stages currently don't work. The A.I. racers are always in planes and don't do anything.
-    //ASSET_LEVEL_FIREMOUNTAIN, ASSET_LEVEL_ICICLEPYRAMID, ASSET_LEVEL_DARKWATERBEACH, ASSET_LEVEL_SMOKEYCASTLE
+    // ASSET_LEVEL_FIREMOUNTAIN, ASSET_LEVEL_ICICLEPYRAMID, ASSET_LEVEL_DARKWATERBEACH, ASSET_LEVEL_SMOKEYCASTLE,
 // Boss stages current don't work. The intro cutscene plays, but then softlocks.
     //ASSET_LEVEL_TRICKYTOPS1, ASSET_LEVEL_BLUEY1, ASSET_LEVEL_BUBBLER1, ASSET_LEVEL_SMOKEY1, 
     //ASSET_LEVEL_WIZPIG1, ASSET_LEVEL_WIZPIG2,
@@ -9372,14 +9375,26 @@ typedef enum BenchmarkState {
 s32 benchNumLvls = sizeof(benchLvlIds) / sizeof(s32);
 s32 benchSel;
 s32 benchSelStart;
-s32 benchNumPlayers;
+s32 benchNumPlayers = 1;
 s32 benchTimer;
+u8 benchpage = 0;
+u8 gAutoBenchmark = FALSE;
+u8 gAutoBenchTimer = 0;
 BenchmarkState benchState = BENCHMARK_NOT_STARTED;
 OSTime benchLastTime = 0;
 u8 gInsideBenchmark = FALSE;
 
 u8 benchFpsRecords[BENCHMARK_DURATION_SECONDS * 60];
+u8 aaOvrRecord[BENCHMARK_DURATION_SECONDS * 60];
+u32 benchCPURecord[BENCHMARK_DURATION_SECONDS * 60];
+u32 benchRSPRecord[BENCHMARK_DURATION_SECONDS * 60];
+u32 benchRDPRecord[BENCHMARK_DURATION_SECONDS * 60];
 u8 benchFramesRecorded = 0;
+u8 gLastBenchLevelID = ASSET_LEVEL_OPTIONSBACKGROUND;
+s32 benchFrames = 0;
+u32 benchCPU = 0;
+u32 benchRSP = 0;
+u32 benchRDP = 0;
 
 #define BENCH_DIAL_X 32
 #define BENCH_DIAL_Y 48
@@ -9389,7 +9404,10 @@ u8 benchFramesRecorded = 0;
 #define NUM_ENTRYS_IN_BENCH_DIAL (BENCH_DIAL_HEIGHT - 4) / 16
 
 void menu_benchmark_init(void) {
-    load_level_for_menu(0x27, -1, 0);
+    if (gLastBenchLevelID == ASSET_LEVEL_CENTRALAREAHUB) {
+        gLastBenchLevelID = ASSET_LEVEL_OPTIONSBACKGROUND;
+    }
+    load_level_for_menu(gLastBenchLevelID, -1, 1);
     
     play_music(SEQUENCE_MAIN_MENU);
 
@@ -9401,7 +9419,13 @@ void menu_benchmark_init(void) {
 
     if(benchState == BENCHMARK_NOT_STARTED) {
         benchFramesRecorded = 0;
+        benchFrames = 0;
+        benchCPU = 0;
+        benchRSP = 0;
+        benchRDP = 0;
         benchSel = 0;
+        gAutoBenchmark = FALSE;
+        gAutoBenchTimer = 0;
         benchNumPlayers = 1;
     }
 
@@ -9409,6 +9433,7 @@ void menu_benchmark_init(void) {
     benchSelStart = 0;
     gIgnorePlayerInput = 1;
     gMenuDelay = 20;
+    benchpage = 0;
 }
 
 s32 benchmark_check_inputs(s32 updateRate) {
@@ -9472,9 +9497,48 @@ s32 benchmark_check_inputs(s32 updateRate) {
         }
     }
 
-    if(buttonsPressed & (A_BUTTON | START_BUTTON)) {
+    if (benchState == BENCHMARK_FINISHED) {
+        if (gAutoBenchmark == FALSE) {
+            if(buttonsPressed & L_TRIG) {
+                if(benchpage > 0) {
+                    benchpage--;
+                } else {
+                    benchpage = 3;
+                }
+            } else if(buttonsPressed & R_TRIG) {
+                if(benchpage < 3) {
+                    benchpage++;
+                } else {
+                    benchpage = 0;
+                }
+            }
+        } else {
+            gAutoBenchTimer += updateRate;
+            if (gAutoBenchTimer >= 180) {
+                gAutoBenchTimer = 0;
+                if (benchSel < benchNumLvls - 1) {
+                    benchpage++;
+                }
+                if (benchpage == 4) {
+                    benchpage = 0;
+                    if (benchSel < benchNumLvls - 1) {
+                        benchSel++;
+                        benchState = BENCHMARK_NOT_STARTED;
+                    } else {
+                        benchSel = 0;
+                        gAutoBenchmark = FALSE;
+                    }
+                    return 1;
+                }
+            }
+        }
+    }
+
+    if(buttonsPressed & (A_BUTTON | START_BUTTON) && gAutoBenchmark == FALSE) {
         return 1; // Run benchmark.
     } else if(buttonsPressed & (B_BUTTON)) {
+        gAutoBenchmark = FALSE;
+        gAutoBenchTimer = 0;
         return -1; // Go back to the title screen.
     }
 
@@ -9484,13 +9548,29 @@ s32 benchmark_check_inputs(s32 updateRate) {
 void run_benchmark() {
     s32 cutsceneId;
 
+    if (benchSel == 0) {
+        gAutoBenchmark = TRUE;
+        gAutoBenchTimer = 0;
+        benchSel = 2;
+    }
     benchFramesRecorded = 0;
+    benchFrames = 0;
+    benchCPU = 0;
+    benchRSP = 0;
+    benchRDP = 0;
     benchTimer = BENCHMARK_DURATION_SECONDS * 60;
     benchLastTime = 0;
     osSetTime(0);
     cutsceneId = (benchLvlIds[benchSel] == ASSET_LEVEL_CENTRALAREAHUB) ? 1 : 100;
+    /*if (benchLvlIds[benchSel] == ASSET_LEVEL_TRICKYTOPS1 || benchLvlIds[benchSel] == ASSET_LEVEL_BLUEY1 || 
+    benchLvlIds[benchSel] == ASSET_LEVEL_BUBBLER1 || benchLvlIds[benchSel] == ASSET_LEVEL_SMOKEY1 ||
+    benchLvlIds[benchSel] == ASSET_LEVEL_WIZPIG1 || benchLvlIds[benchSel] == ASSET_LEVEL_WIZPIG2) {
+        cutsceneId = 0;
+    }*/
     set_rng_seed(12345); // This is needed to make each run consistent.
     load_level_for_menu(benchLvlIds[benchSel], benchNumPlayers - 1, cutsceneId);
+    func_8006DB20(get_map_default_vehicle(benchLvlIds[benchSel]));
+    gLastBenchLevelID = benchLvlIds[benchSel];
     benchState = BENCHMARK_RUNNING;
 }
 
@@ -9510,6 +9590,19 @@ char *numPlayersDisplays[] = {
 char *fpsMarkers[] = {
     //"60", "55", "50", "45", "40", "35", // I don't know if there is enough height for these.
     "30", "25", "20", "15", "10", "5", "0"
+};
+
+
+char *hardwareMarkers[] = {
+    //"60", "55", "50", "45", "40", "35", // I don't know if there is enough height for these.
+    "66", "55", "44", "33", "22", "11", "0"
+};
+
+char *pageNames[] = {
+    "FPS",
+    "CPU",
+    "RSP",
+    "RDP"
 };
 
 int numberOfMarkers = sizeof(fpsMarkers) / sizeof(char*);
@@ -9539,12 +9632,19 @@ void render_benchmark_select_screen() {
     set_dialogue_font(6, ASSET_FONTS_FUNFONT);
 
     for(i = 0; i < benchNumLvls; i++) {
+        char *txt;
+        char *allLvl = {"All Levels"};
         if (i == benchSel) {
             set_current_text_colour(6, 255, 255, 255, 0, 255);
         } else {
             set_current_text_colour(6, 0, 0, 0, 160, 255);
         }
-        render_dialogue_text(6, POS_CENTRED, 4 + (i * 16) - (benchSelStart * 16), get_level_name(benchLvlIds[i]), 1, 4);
+        if (i == 0) {
+            txt = allLvl;
+        } else {
+            txt = get_level_name(benchLvlIds[i]);
+        }
+        render_dialogue_text(6, POS_CENTRED, 4 + (i * 16) - (benchSelStart * 16), txt, 1, 4);
     }
 
     render_dialogue_box(&sMenuCurrDisplayList, 0, 0, 6);
@@ -9591,9 +9691,26 @@ void get_avg_and_min_fps(s32 *outAvg, s32 *outMin) {
     min = MAX_FPS;
     count = 0;
     for(i = 0; i < benchFramesRecorded; i++) {
-        rec = benchFpsRecords[i];
+        switch (benchpage) {
+        case 0:
+            rec = benchFpsRecords[i];
+            break;
+        case 1:
+            rec = benchCPURecord[i];
+            break;
+        case 2:
+            rec = benchRSPRecord[i];
+            break;
+        case 3:
+            rec = benchRDPRecord[i];
+            break;
+        }
         count += rec;
-        if(rec < min) min = rec;
+        if (benchpage == 0) {
+            if(rec < min) min = rec;
+        } else {
+            if(rec > min) min = rec;
+        }
     }
 
     *outAvg = count / benchFramesRecorded;
@@ -9609,6 +9726,7 @@ void render_benchmark_results_screen() {
     s32 r, g, b;
     s32 halfMarkCount;
     s32 avgFps, minFps;
+    f32 divisor;
     char outBuf[64];
 
     set_text_font(ASSET_FONTS_BIGFONT);
@@ -9626,11 +9744,36 @@ void render_benchmark_results_screen() {
     set_text_colour(200, 200, 60, 80, 255);
     // sprintf seems to only work with a single variable at a time.
     get_avg_and_min_fps(&avgFps, &minFps);
-    sprintf(outBuf, "Avg FPS: %d", (s32) &avgFps);
-    draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
-    sprintf(outBuf, "Min FPS: %d", (s32) &minFps);
-    draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
-
+    switch (benchpage) {
+    case 0:
+        sprintf(outBuf, "Avg FPS: %d", (s32) &avgFps);
+        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
+        sprintf(outBuf, "Min FPS: %d", (s32) &minFps);
+        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
+        divisor = MAX_FPS;
+        break;
+    case 1:
+        sprintf(outBuf, "Avg CPU: %d", (s32) &avgFps);
+        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
+        sprintf(outBuf, "Max CPU: %d", (s32) &minFps);
+        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
+        divisor = 66666.0f;
+        break;
+    case 2:
+        sprintf(outBuf, "Avg RSP: %d", (s32) &avgFps);
+        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
+        sprintf(outBuf, "Max RSP: %d", (s32) &minFps);
+        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
+        divisor = 66666.0f;
+        break;
+    case 3:
+        sprintf(outBuf, "Avg RDP: %d", (s32) &avgFps);
+        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
+        sprintf(outBuf, "Max RDP: %d", (s32) &minFps);
+        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
+        divisor = 66666.0f;
+        break;
+    }
 
     assign_dialogue_box_id(6);
     set_current_dialogue_box_coords(6, BENCH_RESULT_DIAL_X, BENCH_RESULT_DIAL_Y, BENCH_RESULT_DIAL_X + BENCH_RESULT_DIAL_WIDTH, 
@@ -9644,7 +9787,18 @@ void render_benchmark_results_screen() {
     // Draw vert lines for record entries
     if(benchFramesRecorded > 0) {
         for(i = 0; i < numberOfMarkers; i++) {
-            render_dialogue_text(6, BENCH_RESULT_DIAL_WIDTH - 16, i * markerStride + 6, fpsMarkers[i], 1, 4);
+            char *str;
+            switch (benchpage) {
+            case 0:
+                str = fpsMarkers[i];
+                break;
+            case 1:
+            case 2:
+            case 3:
+                str = hardwareMarkers[i];
+                break;
+            }
+            render_dialogue_text(6, BENCH_RESULT_DIAL_WIDTH - 16, i * markerStride + 6, str, 1, 4);
         }
         render_dialogue_box(&sMenuCurrDisplayList, 0, 0, 6);
         gDPSetCycleType(sMenuCurrDisplayList++, G_CYC_FILL);
@@ -9655,9 +9809,28 @@ void render_benchmark_results_screen() {
 
         xOffset = BENCH_RESULT_DIAL_X + 8 + (entryStrideRemainder / 2);
         for(i = 0; i < benchFramesRecorded; i++) {
+            f32 value;
+            switch (benchpage) {
+            case 0:
+                value = benchFpsRecords[i];
+                break;
+            case 1:
+                value = benchCPURecord[i];
+                break;
+            case 2:
+                value = benchRSPRecord[i];
+                break;
+            case 3:
+                value = benchRDPRecord[i];
+                break;
+            }
             g = (i & 1) == 0 ? 100 : 130;
             b = (i & 1) == 0 ? 220 : 200;
-            barHeight = ((f32)benchFpsRecords[i] /(f32) MAX_FPS) * (f32)(markerStride * 6);
+            if (aaOvrRecord[i] == TRUE) {
+                g *= 0.66f;
+                b *= 0.66f;
+            }
+            barHeight = (value / divisor) * (f32)(markerStride * 6);
             bench_draw_line(xOffset + (i * entryStride), BENCH_RESULT_DIAL_Y + 11 + ((markerStride * 6) - barHeight) , entryStride, barHeight, 100, g, b);
             gDPPipeSync(sMenuCurrDisplayList++);
         }
@@ -9684,19 +9857,32 @@ void render_benchmark_results_screen() {
 
 }
 
-s32 benchFrames = 0;
+extern s32 gRaceStartTimer;
+extern s32 gRaceStartShowHudStep;
 
 void record_fps() {
     OSTime frameDiff;
     
     benchFrames++;
+    benchCPU += MIN(gPuppyTimers.cpuTime, 99999);
+    benchRSP += MIN(gPuppyTimers.rspTime, 99999);
+    benchRDP += MIN(gPuppyTimers.rdpTime, 99999);
 
     frameDiff = osGetTime() - benchLastTime;
+    gRaceStartTimer = 0;
 
     // If the time elapsed is greater than a second, then record the number of frames.
-    if (frameDiff >= 46882325 && benchFramesRecorded < 256) {
-        benchFpsRecords[benchFramesRecorded++] = benchFrames;
+    if (frameDiff >= 46882325 && benchFramesRecorded < 255) {
+        benchFpsRecords[benchFramesRecorded] = MIN(benchFrames, 60);
+        benchCPURecord[benchFramesRecorded] = benchCPU / benchFrames;
+        benchRSPRecord[benchFramesRecorded] = benchRSP / benchFrames;
+        benchRDPRecord[benchFramesRecorded] = benchRDP / benchFrames;
+        aaOvrRecord[benchFramesRecorded] = gOverrideAA || !gAntiAliasing;
+        benchFramesRecorded++;
         benchFrames = 0;
+        benchCPU = 0;
+        benchRSP = 0;
+        benchRDP = 0;
         benchLastTime += 46882325;
     }
 }
@@ -9715,6 +9901,7 @@ s32 menu_benchmark_loop(s32 updateRate) {
                     run_benchmark(); 
                     break;
                 case -1:
+                    gLastBenchLevelID = ASSET_LEVEL_OPTIONSBACKGROUND;
                     menu_init(MENU_TITLE);
                     break;
             }
@@ -9737,6 +9924,8 @@ s32 menu_benchmark_loop(s32 updateRate) {
             if (benchState == BENCHMARK_RUNNING_FADE_OUT && benchTimer <= 0){
                 stop_benchmark();
             }
+            set_text_font(FONT_COLOURFUL);
+            set_text_colour(255, 255, 255, 255, 255);
             puppyprintf(textBytes, "%02d:%02d:%01d", (benchTimer / 3600) % 60, (benchTimer / 60) % 60, (benchTimer / 6) % 10);
             draw_text(&sMenuCurrDisplayList, gScreenWidth / 2, gScreenHeight - 16, textBytes, ALIGN_MIDDLE_CENTER);
             break;
