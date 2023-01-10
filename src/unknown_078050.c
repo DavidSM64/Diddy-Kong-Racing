@@ -216,13 +216,19 @@ void allocate_task_buffer(void) {
 void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
     OSMesg mesgBuf;
+    u32 taskStart = 0x80600000;
+    u32 taskEnd = 0x80680000;
 
     gGfxTaskIsRunning = TRUE;
     dkrtask = &gGfxTaskBuf[gfxBufCounter];
     gfxBufCounter ^= 1;
 
-    if (gGfxSPTaskOutputBuffer == NULL) {
-        allocate_task_buffer();
+    if (gExpansionPak == FALSE) {
+        if (gGfxSPTaskOutputBuffer == NULL) {
+            allocate_task_buffer();
+        }
+        taskStart = (u32) gGfxSPTaskOutputBuffer;
+        taskEnd = (u32) (gGfxSPTaskOutputBuffer + (sizeof(u64) * FIFO_BUFFER_SIZE));
     }
     
     dkrtask->task.data_ptr = (u64 *) dlBegin;
@@ -236,8 +242,8 @@ void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->task.ucode_data_size = 0x800;
     dkrtask->task.dram_stack = (u64 *) gDramStack;
     dkrtask->task.dram_stack_size = 0x400;
-    dkrtask->task.output_buff = gGfxSPTaskOutputBuffer;
-    dkrtask->task.output_buff_size = (u64 *)((u8 *) gGfxSPTaskOutputBuffer + (sizeof(u64) * FIFO_BUFFER_SIZE));
+    dkrtask->task.output_buff = (u64 *) taskStart;
+    dkrtask->task.output_buff_size = (u64 *) taskEnd;
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
     dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
     dkrtask->next = 0;

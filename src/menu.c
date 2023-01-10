@@ -2515,6 +2515,8 @@ void func_8008377C(UNUSED s32 arg0, f32 arg1) {
     #define TITLE_SCREEN_MAX_OPTS 2
 #endif
 
+u8 gTitleScreenTimer = 300;
+
 s32 menu_title_screen_loop(s32 updateRate) {
     UNUSED s32 temp_v0_5;
     s32 sp28;
@@ -2524,6 +2526,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
     ObjectSegment* sp18;
     s8 var_a1;
 
+    gTitleScreenTimer -= updateRate;
     sp18 = get_active_camera_segment();
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     func_8008E4EC();
@@ -2640,6 +2643,18 @@ s32 menu_title_screen_loop(s32 updateRate) {
             enable_new_screen_transitions();
             play_sound_global(SOUND_SELECT2, 0);
         }
+    }
+    if (gTitleScreenTimer < 300) {
+        reset_render_settings(&sMenuCurrDisplayList);
+        set_text_background_colour(0, 0, 0, 255);
+        set_text_colour(255, 255, 255, 255, 255);
+        set_text_font(FONT_SMALL);
+        if (gExpansionPak) {
+            draw_text(&sMenuCurrDisplayList, 8, SCREEN_HEIGHT - 8, "Expansion Pak Found", ALIGN_BOTTOM_LEFT);
+        } else {
+            draw_text(&sMenuCurrDisplayList, 8, SCREEN_HEIGHT - 8, "Expansion Pak Missing", ALIGN_BOTTOM_LEFT);
+        }
+        reset_render_settings(&sMenuCurrDisplayList);
     }
     if (gMenuDelay > 30) {
         title_screen_exit();
@@ -9401,10 +9416,14 @@ u32 benchRDP = 0;
 #define NUM_ENTRYS_IN_BENCH_DIAL (BENCH_DIAL_HEIGHT - 4) / 16
 
 void menu_benchmark_init(void) {
+    s32 cutSceneID = 1;
     if (gLastBenchLevelID == ASSET_LEVEL_CENTRALAREAHUB) {
         gLastBenchLevelID = ASSET_LEVEL_OPTIONSBACKGROUND;
     }
-    load_level_for_menu(gLastBenchLevelID, -1, 1);
+    if (gLastBenchLevelID == ASSET_LEVEL_OPTIONSBACKGROUND) {
+        cutSceneID = 0;
+    }
+    load_level_for_menu(gLastBenchLevelID, -1, cutSceneID);
     
     play_music(SEQUENCE_MAIN_MENU);
 

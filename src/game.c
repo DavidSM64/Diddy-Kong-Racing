@@ -844,7 +844,7 @@ void main_game_loop(void) {
             gAntiAliasing ^= 1;
             set_dither_filter();
         }
-        if (suCodeSwitch == FALSE && IO_READ(DPC_BUFBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) {
+        if (suCodeSwitch == FALSE && IO_READ(DPC_BUFBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG) && gExpansionPak) {
     #endif
             setup_ostask_fifo(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
     #ifdef PUPPYPRINT_DEBUG
