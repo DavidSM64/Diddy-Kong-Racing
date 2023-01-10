@@ -28,7 +28,6 @@ s32 gChecquerBGEnabled = 0;
 
 BackgroundFunction gBackgroundDrawFunc = { NULL };
 s32 gfxBufCounter = 0;
-s32 gfxBufCounter2 = 0;
 s32 gGfxTaskIsRunning = FALSE;
 u64 *gGfxSPTaskOutputBuffer = NULL; 
 
@@ -158,19 +157,8 @@ OSMesgQueue D_80125EC0;
 OSMesgQueue gGfxTaskMesgQueue;
 OSMesg D_80125EF0[8];
 OSMesg gGfxTaskMesgBuf[8];
-u8 gChequerBGColourR1;
-u8 gChequerBGColourG1;
-u8 gChequerBGColourB1;
-u8 gChequerBGColourA1;
-u8 gChequerBGColourR2;
-u8 gChequerBGColourG2;
-u8 gChequerBGColourB2;
-u8 gChequerBGColourA2;
-s32 gChequerBGWidth;
-s32 gChequerBGHeight;
 
 DKR_OSTask gGfxTaskBuf[2];
-DKR_OSTask gGfxTaskBuf2[2];
 
 OSMesgQueue *osScInterruptQ;
 
