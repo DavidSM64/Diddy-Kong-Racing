@@ -546,7 +546,7 @@ void puppyprint_calculate_average_times(void) {
     rdp_profiler_update(gPuppyTimers.timers[PP_RDP_BUS], IO_READ(DPC_TMEM_REG));
     rdp_profiler_update(gPuppyTimers.timers[PP_RDP_TMM], IO_READ(DPC_PIPEBUSY_REG));
     IO_WRITE(DPC_STATUS_REG, DPC_CLR_CLOCK_CTR | DPC_CLR_CMD_CTR | DPC_CLR_PIPE_CTR | DPC_CLR_TMEM_CTR);
-    if ((sTimerTemp % 4) == 0) {
+    if ((sTimerTemp % 8) == 0) {
         s32 i;
         gPuppyTimers.cpuTime = 0;
         for (i = 1; i < PP_RDP_BUS; i++) {
@@ -632,8 +632,8 @@ s32 count_triangles_in_dlist(u8 *dlist, u8 *dlistEnd) {
 
 void count_triangles(u8 *dlist, u8 *dlistEnd) {
     u32 first = osGetCount();
-    sTimerTemp++;
-    if ((sTimerTemp % 16) == 0) {
+    sTimerTemp += sLogicUpdateRate;
+    if ((sTimerTemp % 32) == 0) {
         s32 first = osGetCount();
         sVtxCount = 0;
         sTriCount = count_triangles_in_dlist(dlist, dlistEnd);

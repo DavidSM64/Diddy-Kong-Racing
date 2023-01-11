@@ -64,13 +64,8 @@ void func_800C29F0(void) {
     D_8012A7BA = 0;
     sDialogueXPos1 = 32;
     sDialogueXPos2 = 288;
-    if (osTvType == TV_TYPE_PAL) {
-        sDialogueYPos1 = 224;
-        sDialogueYPos2 = 248;
-    } else {
-        sDialogueYPos1 = SCREEN_HEIGHT - 38;
-        sDialogueYPos2 = SCREEN_HEIGHT - 18;
-    }
+    sDialogueYPos1 = SCREEN_HEIGHT - 38;
+    sDialogueYPos2 = SCREEN_HEIGHT - 18;
     func_800C56D0(6);
 }
 
@@ -133,7 +128,7 @@ void func_800C2D6C(void) {
     while ((D_8012A7D0[0] != 0) && done == FALSE) {
         D_8012A7BA = D_8012A7D0[0] - 1;
         D_8012A7C0[(D_8012A7B8)] = D_8012A7D0;
-        D_8012A7AC = normalise_time(D_8012A7D0[7] * 6);
+        D_8012A7AC = (D_8012A7D0[7] * 6);
         D_8012A7D0 += 8;
         do {
             new_var = D_8012A7D0[0];
@@ -223,11 +218,7 @@ void func_800C314C(void) {
 }
 
 void func_800C3158(s32 arg0, f32 arg1) {
-    if (osTvType == TV_TYPE_PAL) {
-        D_800E3678 = arg1 * 50.0f;
-    } else {
-        D_800E3678 = arg1 * 60.0f;
-    }
+    D_800E3678 = arg1 * 60.0f;
     D_800E367C = arg0;
 }
 
@@ -314,7 +305,7 @@ void func_800C3440(s32 arg0) {
             if (D_8012A786 != 0) {
                 D_8012A785 -= arg0;
                 while (D_8012A785 < 0) {
-                    D_8012A785 += normalise_time(60);
+                    D_8012A785 += (60);
                     D_8012A786--;
                 }
                 if (D_8012A786 <= 0) {
@@ -419,13 +410,7 @@ s32 func_800C38B4(s32 arg0, TextBox *textbox) {
         case 1:
             textbox->left = var_s0[1] & 0xFF;
             textbox->top = D_8012A7A0[arg0 + 2] & 0xFF;
-            if (osTvType == 0) {
-                temp = textbox->top;
-                textbox->top = ((textbox->top * 0x108) / 240);
-                temp = textbox->top - temp;
-            } else {
-                temp = 0;
-            }
+            temp = 0;
             textbox->right = (D_8012A7A0[arg0 + 3] & 0xFF) + 0x41;
             textbox->bottom = (D_8012A7A0[arg0 + 4] & 0xFF) + temp;
             arg0 += 5;
@@ -468,7 +453,7 @@ s32 func_800C38B4(s32 arg0, TextBox *textbox) {
         case 7:
             if (D_8012A786 == 0) {
                 D_8012A786 = var_s0[1] & 0xFF;
-                D_8012A785 = normalise_time(0x3C);
+                D_8012A785 = (0x3C);
                 var_s0 = &D_8012A7A0[arg0];
             }
             arg0 += 2;

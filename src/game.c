@@ -743,7 +743,6 @@ s8 gScreenPos[2] = {0, 0};
  * This includes the memory pool. controllers, video, audio, core assets and more.
  */
 void init_game(void) {
-    s32 mode;
     s32 i;
 
     init_main_memory_pool();
@@ -757,15 +756,7 @@ void init_game(void) {
     gIsLoading = FALSE;
     gLevelDefaultVehicleID = VEHICLE_CAR;
 
-    if (osTvType == TV_TYPE_PAL) {
-        mode = 14;
-    } else if (osTvType == TV_TYPE_NTSC) {
-        mode = 0;
-    } else if (osTvType == TV_TYPE_MPAL) {
-        mode = 28;
-    }
-
-    osCreateScheduler(&gMainSched, &gSchedStack[0x400], /*priority*/ 13, (u8) mode, 1);
+    osCreateScheduler(&gMainSched, &gSchedStack[0x400], /*priority*/ 13, (u8) 0, 1);
     init_video(VIDEO_MODE_LOWRES_LPN, &gMainSched);
     init_PI_mesg_queue();
     setup_gfx_mesg_queues(&gMainSched);
@@ -1035,9 +1026,6 @@ void main_game_loop(void) {
 #endif
     if (gDrawFrameTimer == 2) {
         framebufferSize = SCREEN_WIDTH * SCREEN_HEIGHT * 2;
-        if (osTvType == TV_TYPE_PAL) {
-            framebufferSize = (s32)((SCREEN_WIDTH * SCREEN_HEIGHT * 2) * 1.1f);
-        }
         dmacopy_doubleword(gVideoLastFramebuffer, gVideoCurrFramebuffer, (s32) gVideoCurrFramebuffer + framebufferSize);
     }
     // tempLogicUpdateRate will be set to a value 2 or higher, based on the framerate.

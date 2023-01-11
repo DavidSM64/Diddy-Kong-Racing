@@ -866,7 +866,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             play_sound_spatial(0x107U, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0);
             play_random_character_voice(obj, 0x162, 8, 0x82);
         }
-        racer->boostTimer = normalise_time(45);
+        racer->boostTimer = (45);
         racer->boostType = BOOST_LARGE;
         if (racer->throttleReleased) {
             racer->boostType |= BOOST_SMALL_FAST;
@@ -1080,7 +1080,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->lateral_velocity = 0.0f;
     }
     if ((racer->boostTimer == 0) && (var_t1 == 3)) {
-        racer->boostTimer = normalise_time(45);
+        racer->boostTimer = (45);
         racer->boostType = BOOST_LARGE;
         if (racer->throttleReleased) {
         racer->boostType |= BOOST_SMALL_FAST;
@@ -1571,7 +1571,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     }
     phi_f14 += baseSpeed * 30.0f;
     if (gRaceStartTimer == 0) {
-        if (normalise_time(36) < racer->boostTimer) {
+        if ((36) < racer->boostTimer) {
             phi_f14 = -30.0f;
         } else if (racer->boostTimer > 0) {
             phi_f14 = 180.0f;
@@ -1891,7 +1891,7 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
         phi_f14 -= tempVel;
     }
     if (!gRaceStartTimer) {
-        if (normalise_time(36) < racer->boostTimer) {
+        if ((36) < racer->boostTimer) {
             phi_f14 = -30.0f;
         } else if (racer->boostTimer > 0) {
             phi_f14 = 180.0f;
@@ -2256,10 +2256,6 @@ void update_player_racer(Object *obj, s32 updateRate) {
     if (tempRacer->unk1FE == 1) {
         tempRacer->unk1F1 = 0;
     }
-    // PAL moves 20% faster.
-    if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2f;
-    }
     tempRacer->unk1F6 -= updateRate;
     if (tempRacer->unk1F6 < 0) {
         tempRacer->unk1F6 = 0;
@@ -2429,10 +2425,10 @@ void update_player_racer(Object *obj, s32 updateRate) {
         // Handle the race timer if it's currently active.
         if (gRaceStartTimer == 0 && header->laps > (tempRacer->unk194)) {
             // Keep it under 10 minutes.
-            if (tempRacer->lap_times[tempRacer->unk194] < normalise_time(36000) - updateRate) {
+            if (tempRacer->lap_times[tempRacer->unk194] < (36000) - updateRate) {
                 tempRacer->lap_times[tempRacer->unk194] += updateRate;
             } else {
-                tempRacer->lap_times[tempRacer->unk194] = normalise_time(36000);
+                tempRacer->lap_times[tempRacer->unk194] = (36000);
             }
         }
         // Assign a camera to human players.
@@ -3151,7 +3147,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     // If driving over a zip pad, apply a boost.
     if (racer->boostTimer == 0 && surfaceType == SURFACE_ZIP_PAD) {
-        racer->boostTimer = normalise_time(45);
+        racer->boostTimer = (45);
         racer->boostType = BOOST_LARGE;
         racer_play_sound(obj, SOUND_ZIP_PAD_BOOST);
         play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 0x82);
@@ -4146,7 +4142,7 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
         racer->lateral_velocity = 0.0f;
     }
     if (racer->boostTimer == 0 && surfaceType == SURFACE_ZIP_PAD) {
-        racer->boostTimer = normalise_time(45);
+        racer->boostTimer = (45);
         racer->boostType = BOOST_UNK3;
     }
     racer->velocity -= (velSquare * traction) * (updateRateF / 2.0f);
@@ -4488,17 +4484,17 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                         switch(weaponID) {
                             case WEAPON_NITRO_LEVEL_3:
                                  // IDO demands this to be on 1 line.
-                                racer->boostTimer = normalise_time(75); \
+                                racer->boostTimer = (75); \
                                 racer->boostType = BOOST_LARGE;
                                 break;
                             case WEAPON_NITRO_LEVEL_2:
                                  // Ditto
-                                racer->boostTimer = normalise_time(55); \
+                                racer->boostTimer = (55); \
                                 racer->boostType = BOOST_MEDIUM;
                                 break;
                             default:
                                  // :(
-                                racer->boostTimer = normalise_time(35); \
+                                racer->boostTimer = (35); \
                                 racer->boostType = BOOST_SMALL;
                                 break;
                         }
@@ -4813,14 +4809,14 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
                 }
             }
 			timer2 = 24 - timer;
-            racer->boostTimer = normalise_time(timer2 >> 1);
+            racer->boostTimer = (timer2 >> 1);
             if (timer2 == 24) {
                 racer_play_sound(obj, SOUND_SELECT);
-                racer->boostTimer = normalise_time(20);
+                racer->boostTimer = (20);
             }
-            if (racer->boostTimer < normalise_time(20)) {
+            if (racer->boostTimer < (20)) {
                 racer->boostType = BOOST_SMALL;
-            } else if (racer->boostTimer < normalise_time(35)) {
+            } else if (racer->boostTimer < (35)) {
                 racer->boostType = BOOST_MEDIUM;
             } else {
                 racer->boostType = BOOST_LARGE;
@@ -4833,11 +4829,11 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
             if (gStartBoostTime) {
                 racer->boostTimer = gStartBoostTime;
             } else {
-                racer->boostTimer = normalise_time(5);
+                racer->boostTimer = (5);
             }
-            if (racer->boostTimer < normalise_time(20)) {
+            if (racer->boostTimer < (20)) {
                 racer->boostType = BOOST_SMALL;
-            } else if (racer->boostTimer < normalise_time(35)) {
+            } else if (racer->boostTimer < (35)) {
                 racer->boostType = BOOST_MEDIUM;
             } else {
                 racer->boostType = BOOST_LARGE;
@@ -5247,7 +5243,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
         baseDistance += baseSpeed * 30.0f;
     }
     if (gRaceStartTimer == 0) {
-        if (normalise_time(36) < racer->boostTimer) {
+        if ((36) < racer->boostTimer) {
             baseDistance = -30.0f;
         } else if (racer->boostTimer > 0) {
             baseDistance = 180.0f;

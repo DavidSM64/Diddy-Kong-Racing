@@ -446,13 +446,8 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             func_800AD030(get_active_camera_segment());
             func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
             set_text_font(0);
-            if (osTvType == TV_TYPE_PAL) {
-                posX = 166;
-                posY = 138;
-            } else {
-                posX = 170;
-                posY = 125;
-            }
+            posX = 170;
+            posY = 125;
             draw_text(&gSceneCurrDisplayList, posX, posY, (char *)(&gViewport4Text), ALIGN_TOP_LEFT);
         } else {
             set_active_camera(3);
@@ -598,13 +593,8 @@ void draw_gradient_background(void) {
     gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), 4, 0);
     gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), 2, 0);
     set_twenty = 20;
-    if (osTvType == TV_TYPE_PAL) {
-        y0 = -180;
-        y1 = 180;
-    } else {
-        y0 = -150;
-        y1 = 150;
-    }
+    y0 = -150;
+    y1 = 150;
     if (get_viewport_count() == TWO_PLAYERS) {
         y0 >>= 1;
         y1 >>= 1;

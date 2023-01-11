@@ -19,16 +19,8 @@ void __osViInit(void) {
 	__osViNext = &vi[1];
 	__osViNext->retraceCount = 1;
 	__osViCurr->retraceCount = 1;
-	if (osTvType == OS_TV_TYPE_PAL) {
-		__osViNext->modep = &osViModePalLan1;
-        osViClock = VI_PAL_CLOCK;
-	} else if (osTvType == OS_TV_TYPE_MPAL) {
-		__osViNext->modep = &osViModeMpalLan1;
-        osViClock = VI_MPAL_CLOCK;
-	} else {
-		__osViNext->modep = &osViModeNtscLan1;
-        osViClock = VI_NTSC_CLOCK;
-	}
+	__osViNext->modep = &osViModeNtscLan1;
+    osViClock = VI_NTSC_CLOCK;
 	__osViNext->state = VI_STATE_BLACK;
 	__osViNext->control = __osViNext->modep->comRegs.ctrl;
 	while (IO_READ(VI_CURRENT_REG) > 10); //wait for vsync?

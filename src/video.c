@@ -48,19 +48,9 @@ u16 gScreenHeight;
  */
 void init_video(s32 videoModeIndex, OSSched *sc) {
     s32 i;
-    if (osTvType == TV_TYPE_PAL) {
-        gVideoRefreshRate = REFRESH_50HZ;
-        gVideoAspectRatio = ASPECT_RATIO_PAL;
-        gVideoHeightRatio = HEIGHT_RATIO_PAL;
-    } else if (osTvType == TV_TYPE_MPAL) {
-        gVideoRefreshRate = REFRESH_60HZ;
-        gVideoAspectRatio = ASPECT_RATIO_MPAL;
-        gVideoHeightRatio = HEIGHT_RATIO_MPAL;
-    } else {
-        gVideoRefreshRate = REFRESH_60HZ;
-        gVideoAspectRatio = ASPECT_RATIO_NTSC;
-        gVideoHeightRatio = HEIGHT_RATIO_NTSC;
-    }
+    gVideoRefreshRate = REFRESH_60HZ;
+    gVideoAspectRatio = ASPECT_RATIO_NTSC;
+    gVideoHeightRatio = HEIGHT_RATIO_NTSC;
 
     if (gExpansionPak) {
         gNumFrameBuffers++;
@@ -104,10 +94,6 @@ void change_vi(OSViMode *mode, int width, int height) {
     s32 addPAL = 0;
     s32 addX = 16;
     gGlobalVI = osViModeNtscLan1;
-
-    if (osTvType == TV_TYPE_PAL) {
-        addPAL = PAL_HEIGHT_DIFFERENCE;
-    }
 
     if (width == SCREEN_WIDTH_16_10) {
         addX = 20;

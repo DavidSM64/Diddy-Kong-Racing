@@ -81,8 +81,6 @@ typedef struct {
     s32 unk4;
 } unk80127BF8;
 
-extern u32 osTvType;
-
 void func_800AB308(s16 arg0, s16 arg1);
 void func_800AC880(s32 arg0);
 void func_800ACF60(Object *arg0);

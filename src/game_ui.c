@@ -20,8 +20,6 @@
 #include "unknown_003260.h"
 #include "printf.h"
 
-extern u32 osTvType;
-
 /************ .data ************/
 
 // Unused?
@@ -1460,11 +1458,11 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
             if (gHUDNumPlayers == ONE_PLAYER) {
                 func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk140);
             }
-            if (normalise_time(36000) < stopwatchTimer) {
-                stopwatchTimer = normalise_time(36000);
+            if ((36000) < stopwatchTimer) {
+                stopwatchTimer = (36000);
             }
             get_timestamp_from_frames(stopwatchTimer, &minutes, &seconds, &hundredths);
-            if (countingDown || (normalise_time(36000) == stopwatchTimer)) {
+            if (countingDown || ((36000) == stopwatchTimer)) {
                 if((timerHideCounter > updateRate)) {
                     timerHideCounter -= updateRate;
                 } else {
@@ -1631,12 +1629,6 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     D_80126CDC->unk66C = 221.0f;
                     D_80126CDC->unk670 = 197.0f;
                     D_80126CDC->unk650 = 165.0f;
-                    if (osTvType == TV_TYPE_PAL) {
-                        D_80126CDC->unk64C -= 4.0f;
-                        D_80126CDC->unk66C -= 4.0f;
-                        D_80126CDC->unk650 *= 1.1f;
-                        D_80126CDC->unk670 *= 1.1f;
-                    }
                     func_800A19A4(tempVar4, updateRate);
                     D_800E2834 = -2;
                     D_80126CDC->unk64C = temp_s0;
@@ -1673,18 +1665,9 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
                     func_80068508(TRUE);
                     D_80126CDC->unk64C = 225.0f;
-                    if (osTvType == TV_TYPE_PAL) {
-                        D_80126CDC->unk650 = 181.5f;
-                    } else {
-                        D_80126CDC->unk650 = 165.0f;
-                    }
-                    if (osTvType == TV_TYPE_PAL) {
-                        var_a0_5 = (66.0f - D_80126CDC->unk36C) - 4.0f;
-                        temp = -114.0f - D_80126CDC->unk370;
-                    } else {
-                        var_a0_5 = 66.0f - D_80126CDC->unk36C;
-                        temp = -100.0f - D_80126CDC->unk370;
-                    }
+                    D_80126CDC->unk650 = 165.0f;
+                    var_a0_5 = 66.0f - D_80126CDC->unk36C;
+                    temp = -100.0f - D_80126CDC->unk370;
                     D_80126CDC->unk36C += var_a0_5;
                     D_80126CDC->unk370 += temp; 
                     D_80126CDC->unkEC += var_a0_5;
@@ -1698,10 +1681,6 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     D_80126CDC->unk24C += var_a0_5;
                     D_80126CDC->unk250 -= temp;
                     D_80126CDC->unk646 = curRacerObj->characterId + 56;
-                    if (osTvType == TV_TYPE_PAL) {
-                        D_80126CDC->unk64C -= 4.0f;
-                        D_80126CDC->unk66C -= 4.0f;
-                    }
                     D_80126CD5 = TRUE;
                     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk640);
                     D_80126CD5 = FALSE;
@@ -1739,13 +1718,8 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
             for (sp144 = 0; sp144 < racerCount; sp144++) {
                 someRacer = (Object_Racer *) racerGroup[sp144]->unk64;
                 render_treasure_hud(someRacer);
-                if (osTvType == TV_TYPE_PAL) {
-                    D_80126CDC->unk650 += 66.0f;
-                    D_80126CDC->unk410 += 66.0f;
-                } else {
-                    D_80126CDC->unk650 += 55.0f;
-                    D_80126CDC->unk410 += 55.0f;
-                }
+                D_80126CDC->unk650 += 55.0f;
+                D_80126CDC->unk410 += 55.0f;
             }
             D_80126CDC->unk64C = temp_s0_2;
             D_80126CDC->unk650 = temp_s1_2;
@@ -1767,14 +1741,6 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 D_80126CDC->unk650 = 165.0f;
                 D_80126CDC->unk40C = 209.0f;
                 D_80126CDC->unk410 = 193.0f;
-                if (osTvType == TV_TYPE_PAL) {
-                    D_80126CDC->unk64C -= 4.0f;
-                    D_80126CDC->unk40C -= 4.0f;
-                    D_80126CDC->unk650 *= 1.1f;
-                    D_80126CDC->unk410 *= 1.1f;
-                    D_80126CDC->unk650 = (s32) D_80126CDC->unk650;
-                    D_80126CDC->unk410 = (s32) D_80126CDC->unk410;
-                }
                 render_treasure_hud(tempVar4);
                 D_80126CDC->unk64C = temp_s0_3;
                 D_80126CDC->unk650 = temp_s1_3;
@@ -1840,15 +1806,9 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     D_80126D5C = -98;
                     break;
             }
-            if (osTvType == TV_TYPE_PAL) {
-                D_80126D5C *= 1.2f;
-            }
             func_8007BF1C(FALSE);
             objTrans.trans.x_position = D_80126D58 + D_80126D24 + D_80126D28;
             objTrans.trans.y_position = D_80126D5C;
-            if (osTvType == TV_TYPE_PAL) {
-                objTrans.trans.x_position -= 4.0f;
-            }
             objTrans.trans.z_rotation = -someObjSeg->trans.z_rotation;
             objTrans.trans.x_rotation = 0;
             if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
@@ -1933,9 +1893,6 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                         gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gHudMinimapColours[someRacer->characterId].red, gHudMinimapColours[someRacer->characterId].green, gHudMinimapColours[someRacer->characterId].blue, opacity);
                     }
                     if (!(get_current_level_race_type() & RACETYPE_CHALLENGE) || (!someRacer->raceFinished)) {
-                        if (osTvType == TV_TYPE_PAL) {
-                            D_80126CDC->unk1EC -= 4.0f;
-                        }
                         if (get_current_level_race_type() == RACETYPE_CHALLENGE_BATTLE) {
                             switch (someRacer->unk212) {
                                 case 0:

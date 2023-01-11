@@ -2305,9 +2305,6 @@ void print_missing_controller_text(Gfx **dl, s32 updateRate) {
         set_text_colour(255, 255, 255, 0, 0xFF);
         set_text_background_colour(0, 0, 0, 0);
         posY = 208;
-        if (osTvType == TV_TYPE_PAL) {
-            posY = 234;
-        }
         draw_text(dl, POS_CENTRED, posY, gMenuText[ASSET_MENU_TEXT_CONTROLLERNOTCONNECTED], ALIGN_MIDDLE_CENTER);
     }
 }
@@ -2320,13 +2317,8 @@ void menu_logos_screen_init(void) {
     gMenuDelay = 0;
     sBootScreenTimer = 16.0f;
     set_background_fill_colour(0, 0, 0);
-    if (osTvType == TV_TYPE_PAL) {
-        func_80066940(0, 0, 38, gScreenWidth, SCREEN_HEIGHT - 16);
-        set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT + 44);
-    } else {
-        func_80066940(0, 0, 40, gScreenWidth, SCREEN_HEIGHT - 44);
-        set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
-    }
+    func_80066940(0, 0, 40, gScreenWidth, SCREEN_HEIGHT - 44);
+    set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
     func_80066610(); //Init viewports
     func_80066818(0, 1);
 }
@@ -2339,21 +2331,12 @@ s32 menu_logo_screen_loop(s32 updateRate) {
     s32 yOffset;
     s32 yOffsetShadow;
 
-    if (osTvType == TV_TYPE_PAL) {
-        yOffset = 26;
-        if (sBootScreenTimer < 2.6f && gMenuDelay == 0) {
-            transition_begin(&D_800E1DE8);
-            gMenuDelay = 1;
-        }
-        sBootScreenTimer -= updateRate / 50.0f;
-    } else {
-        yOffset = 0;
-        if (sBootScreenTimer < 2.17f && gMenuDelay == 0) {
-            transition_begin(&D_800E1DE8);
-            gMenuDelay = 1;
-        }
-        sBootScreenTimer -= updateRate / 60.0f;
+    yOffset = 0;
+    if (sBootScreenTimer < 2.17f && gMenuDelay == 0) {
+        transition_begin(&D_800E1DE8);
+        gMenuDelay = 1;
     }
+    sBootScreenTimer -= updateRate / 60.0f;
     if (sBootScreenTimer <= 0.0f) {
         func_80066894(0, 0);
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO);
@@ -2484,7 +2467,7 @@ void func_8008377C(UNUSED s32 arg0, f32 arg1) {
         }
         if (!is_controller_missing()) {
             i = 0; 
-            posY = (osTvType == TV_TYPE_PAL) ? SCREEN_HEIGHT - 22 : SCREEN_HEIGHT - 48;
+            posY = SCREEN_HEIGHT - 48;
             set_text_font(ASSET_FONTS_FUNFONT);
             set_text_background_colour(0, 0, 0, 0);
             while(gTitleMenuStrings[i] != NULL) {
@@ -2530,11 +2513,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
     sp18 = get_active_camera_segment();
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     func_8008E4EC();
-    if (osTvType == 0) {
-        sp1C = (f32) updateRate / 50.0f;
-    } else {
-        sp1C = (f32) updateRate / 60.0f;
-    }
+    sp1C = (f32) updateRate / 60.0f;
     if (gMenuDelay < 20) {
         func_8008377C(updateRate, sp1C);
     }
@@ -3590,10 +3569,6 @@ s32 menu_boot_loop(s32 updateRate) {
     out = 0;
 
     y = SCREEN_HEIGHT_HALF;
-    if (osTvType == TV_TYPE_PAL) {
-        y = SCREEN_HEIGHT_HALF_PAL;
-    }
-
     temp = y;
 
     switch (D_80126C20) {
@@ -3681,11 +3656,7 @@ void func_800887E8(void) {
     gOpacityDecayTimer = 0;
     func_8009C6D4(63);
     func_8008E4B0();
-    if (osTvType == TV_TYPE_PAL) {
-        sControllerPakMenuNumberOfRows = 8;
-    } else {
-        sControllerPakMenuNumberOfRows = 7;
-    }
+    sControllerPakMenuNumberOfRows = 7;
     load_font(ASSET_FONTS_BIGFONT);
 }
 
@@ -3781,11 +3752,7 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
             draw_text(&sMenuCurrDisplayList, POS_CENTRED, yPos, gMenuText[ASSET_MENU_TEXT_EXIT], ALIGN_TOP_CENTER); //EXIT
         }
         if ((D_801263E0 != 0) && (D_80126C10 == 0)) {
-            if (osTvType == TV_TYPE_PAL) {
-                yPos = 134;
-            } else {
-                yPos = SCREEN_HEIGHT_HALF;
-            }
+            yPos = SCREEN_HEIGHT_HALF;
             assign_dialogue_box_id(6);
             set_dialogue_font(6, ASSET_FONTS_FUNFONT);
             set_current_dialogue_box_coords(6, (gScreenWidth / 2) - 84, yPos - 28, (gScreenWidth / 2) + 84, yPos + 28);
@@ -4151,11 +4118,7 @@ void menu_magic_codes_list_init(void) {
     func_8009C6D4(0x3F);
     func_8008E4B0();
     transition_begin(&sMenuTransitionFadeOut);
-    if (osTvType == TV_TYPE_PAL) {
-        D_80126C70 = 0xB;
-    } else {
-        D_80126C70 = 0xA;
-    }
+    D_80126C70 = 0xA;
 }
 
 #ifdef NON_EQUIVALENT
@@ -4489,9 +4452,6 @@ void draw_character_select_text(UNUSED s32 arg0) {
         draw_text(&sMenuCurrDisplayList, (gScreenWidth / 2), 32, gMenuText[ASSET_MENU_TEXT_PLAYERSELECT], ALIGN_MIDDLE_CENTER);
         if (gNumberOfReadyPlayers == gNumberOfActivePlayers && gNumberOfActivePlayers > 0) {
             yPos = 208;
-            if (osTvType == TV_TYPE_PAL) {
-                yPos = 234;
-            }
             draw_text(&sMenuCurrDisplayList, (gScreenWidth / 2), yPos, (char *) D_800E8230 /* "OK?" */, ALIGN_MIDDLE_CENTER);
         }
         reset_render_settings(&sMenuCurrDisplayList);
@@ -4817,13 +4777,8 @@ void func_8008C698(UNUSED s32 updateRate) {
             D_80126460[((i ^ 0) * 2) + 3].filterAlpha = filterAlpha;
         }
 
-        if (osTvType == TV_TYPE_PAL) {
-            D_800DF79C = 0xC;
-            D_800DF7A0 = 0;
-        } else {
-            D_800DF79C = 0;
-            D_800DF7A0 = 0;
-        }
+        D_800DF79C = 0;
+        D_800DF7A0 = 0;
 
         draw_menu_elements(1, D_80126460, 1.0f);
         func_80080BC8(&sMenuCurrDisplayList);
@@ -5462,9 +5417,6 @@ s32 menu_file_select_loop(s32 updateRate) {
                         D_80126CC0 = 1;
                         D_800E0FB0 = 0;
                         i = 0;
-                        if (osTvType == TV_TYPE_PAL) {
-                            i = 12;
-                        }
                         func_80097874(i + 187, gFileSelectButtons[gSaveFileIndex].x + gFileSelectElementPos[0],
                             gFileSelectButtons[gSaveFileIndex].y + gFileSelectElementPos[1] + i, 0, &D_800E0FB0, gSavefileInfo[gSaveFileIndex].name, 3);
                         currentMenuDelay = 0;
@@ -6533,9 +6485,6 @@ void render_adventure_track_setup(UNUSED s32 arg0, s32 arg1, s32 arg2) {
     filename = NULL;
     settings = get_settings();
     yOffset = 0;
-    if (osTvType == TV_TYPE_PAL) {
-        yOffset = 12;
-    }
     sp58 = ((Settings4C *)((u8 *) settings->unk4C + gTrackIdForPreview))->unk2;
     gSPClearGeometryMode(sMenuCurrDisplayList++, G_CULL_FRONT);
     func_8009BD5C();
@@ -6840,7 +6789,7 @@ void func_80093D40(UNUSED s32 updateRate) {
         }
     }
 
-    baseYPos = (osTvType == TV_TYPE_PAL) ? SCREEN_HEIGHT_HALF_PAL : SCREEN_HEIGHT_HALF;
+    baseYPos = SCREEN_HEIGHT_HALF;
 
     yOffset = ((gMenuOptionCap * 16) + 28);
 
@@ -7194,7 +7143,7 @@ void func_80094688(s32 arg0, s32 arg1) {
     D_80126C1C = NULL;
     D_80126A98 = 0;
     if (header->race_type & RACETYPE_CHALLENGE) {
-        gIgnorePlayerInput = normalise_time(240); // 4 seconds
+        gIgnorePlayerInput = (240); // 4 seconds
     }
     if (D_80126C28) {
         D_801263E0 = 8;
@@ -7245,20 +7194,20 @@ void func_80094C14(s32 arg0) {
         gOpacityDecayTimer += arg0;
         switch (D_800DF460) {
             case 0:
-                if (normalise_time(240) < gOpacityDecayTimer) {
+                if ((240) < gOpacityDecayTimer) {
                     set_music_fade_timer(-256);
                     D_800DF460 = 1;
                 }
                 break;
             case 1:
-                if (normalise_time(300) < gOpacityDecayTimer) {
+                if ((300) < gOpacityDecayTimer) {
                     set_music_player_voice_limit(24);
                     play_music(SEQUENCE_MAIN_MENU);
                     set_music_fade_timer(256);
                 }
                 break;
         }
-        if (normalise_time(300) < gOpacityDecayTimer) {
+        if ((300) < gOpacityDecayTimer) {
             gOpacityDecayTimer = -1;
         }
     }
@@ -7756,11 +7705,7 @@ void draw_trophy_race_text(UNUSED s32 updateRate) {
     s8 *levelIds;
 
     levelIds = (s8 *)get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
-    if (osTvType == TV_TYPE_PAL) {
-        yPos = 18;
-    } else {
-        yPos = 0;
-    }
+    yPos = 0;
 
     worldName = get_level_name(get_hub_area_id(gTrophyRaceWorldId));
     levelName = get_level_name(levelIds[((gTrophyRaceWorldId - 1) * 6) + gTrophyRaceRound]);
@@ -8117,13 +8062,8 @@ void menu_credits_init(void) {
     D_80126BD8 = 0;
     D_80126BE0 = 0;
     set_background_fill_colour(0, 0, 0);
-    if (osTvType == TV_TYPE_PAL) {
-        func_80066940(0, 0, 38, SCREEN_WIDTH, 224);
-        set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT + 44);
-    } else {
-        func_80066940(0, 0, 40, SCREEN_WIDTH, 196);
-        set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
-    }
+    func_80066940(0, 0, 40, SCREEN_WIDTH, 196);
+    set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
     func_80066610();
     func_80066818(0, 1);
     func_8009C674(D_800E17D8);
@@ -9879,9 +9819,9 @@ void record_fps() {
     OSTime frameDiff;
     
     benchFrames++;
-    benchCPU += MIN(gPuppyTimers.cpuTime, 99999);
-    benchRSP += MIN(gPuppyTimers.rspTime, 99999);
-    benchRDP += MIN(gPuppyTimers.rdpTime, 99999);
+    benchCPU += MIN(gPuppyTimers.cpuTime, 200000);
+    benchRSP += MIN(gPuppyTimers.rspTime, 200000);
+    benchRDP += MIN(gPuppyTimers.rdpTime, 200000);
 
     frameDiff = osGetTime() - benchLastTime;
     gRaceStartTimer = 0;

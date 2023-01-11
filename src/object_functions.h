@@ -266,7 +266,6 @@ typedef struct VertexPosition {
 
 extern Triangle D_800DCAA8[8];
 extern VertexPosition D_800DCB28[6];
-extern u32 osTvType;
 
 f32 sins_f(s16); // No idea where it's located
 f32 coss_f(s16); // No idea where it's located

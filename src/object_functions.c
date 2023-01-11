@@ -233,9 +233,6 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
 
     someObj = (Object *) obj->unk78;
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2f;
-    }
     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON_2 && obj->unk7C.word < 0) {
         obj->segment.trans.x_position = 0.0f;
         obj->segment.trans.y_position = 0.0f;
@@ -460,9 +457,6 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
 
     sp4F = FALSE;
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2f;
-    }
     sp40 = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
     sp44 = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
     sp48 = obj->segment.trans.z_position + (obj->segment.z_velocity * updateRateF);
@@ -714,9 +708,6 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
 
     egg = (Object_CollectEgg *) obj->unk64;
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2f;
-    }
     switch (egg->unkB) {
     case 0:
         func_80036040(obj, (Object_64 *) egg);
@@ -975,7 +966,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
                     if (racer->playerIndex != PLAYER_COMPUTER) {
                         play_sound_spatial(SOUND_ZIP_PAD_BOOST, curRacerObj->segment.trans.x_position, curRacerObj->segment.trans.y_position, curRacerObj->segment.trans.z_position, NULL);
                     }
-                    racer->boostTimer = normalise_time(45);
+                    racer->boostTimer = (45);
                     racer->boostType = BOOST_LARGE;
                     if (racer->throttleReleased) {
                         racer->boostType |= BOOST_SMALL_FAST;
@@ -1102,9 +1093,6 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
 
     tempPosY = obj->segment.trans.y_position;
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2f;
-    }
     tt = (Object_NPC *) obj->unk64;
     if (obj->segment.animFrame == 0) {
         if (tt->unk4 > 1.0f) {
@@ -1783,9 +1771,6 @@ void obj_init_smoke(UNUSED Object *obj, UNUSED LevelObjectEntry_Smoke *entry) {
 
 void obj_loop_smoke(Object *obj, s32 updateRate) {
     f32 updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2f;
-    }
     obj->segment.trans.x_position += obj->segment.x_velocity * updateRateF;
     obj->segment.animFrame += updateRate * 16;
     obj->segment.trans.y_position += obj->segment.y_velocity * updateRateF;
@@ -1814,9 +1799,6 @@ void obj_loop_wardensmoke(Object *obj, s32 updateRate) {
     f32 updateRateF;
 
     updateRateF = (f32) updateRate;
-    if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2f;
-    }
     obj->segment.animFrame += updateRate * 4;
     obj->segment.trans.y_position += updateRateF * 0.25f;
     if (obj->segment.animFrame > 255) {
@@ -2067,9 +2049,6 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
 
     updateRateF2 = updateRate;
     updateRateF = updateRateF2;
-    if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2f;
-    }
     taj = (Object_NPC *) obj->unk64;
     levelHeader = get_current_level_header();
     obj->unk74 = 0;
@@ -2872,9 +2851,6 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
     s32 isPirated;
 
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2f;
-    }
     isPirated = FALSE;
 #ifndef NO_ANTIPIRACY
     // AntiPiracy check. Seems to set a flag that prevents collecting balloons.
@@ -3238,10 +3214,6 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
     entry = (LevelObjectEntry_Bridge_WhaleRamp *) obj->segment.unk3C_a.level_entry;
     updateRateF = updateRate;
     
-    if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2f;
-    }
-    
     if (entry->unkB != 3) {
         if (obj->unk78 != 0) {
             temp_f2 = (2.0f * (f32) entry->unkE);
@@ -3464,9 +3436,6 @@ void obj_loop_flycoin(Object *obj, s32 updateRate) {
     Object_Racer *racerObj;
 
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2f;
-    }
     obj->segment.y_velocity -= 0.5f * updateRateF;
     move_object(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
     obj->unk78 -= updateRate;
@@ -3549,9 +3518,6 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
     s32 racerPrevUnk180;
 
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2f;
-    }
     banana = (Object_Banana *) obj->unk64;
     obj->segment.animFrame += updateRate * 8;
     obj78 = (Object_78_Banana *) &obj->unk78;
@@ -3968,7 +3934,7 @@ void obj_init_weapon(Object *obj, UNUSED LevelObjectEntry_Weapon *entry) {
     obj->interactObj->unk11 = 0;
     obj->interactObj->unk10 = 0x18;
     obj->interactObj->unk12 = 0;
-    obj->unk78 = normalise_time(480);
+    obj->unk78 = (480);
     obj->unk7C.word = 0;
 }
 
@@ -4033,9 +3999,6 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
     object_transform_to_matrix(mtxf, &trans);
     guMtxXFMF(mtxf, 0.0f, 0.0f, weapon->forwardVel, &obj->segment.x_velocity, &obj->segment.y_velocity, &obj->segment.z_velocity);
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2f;
-    }
     offsetX = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
     offsetY = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
     offsetZ = obj->segment.trans.z_position + (obj->segment.z_velocity * updateRateF);
@@ -4084,7 +4047,7 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
     if (obj->interactObj->obj != NULL) {
         interactObj = obj->interactObj->obj;
         if (interactObj == weapon->owner) {
-            if (obj->unk78 < normalise_time(450) && obj->unk78 != 0) {
+            if (obj->unk78 < (450) && obj->unk78 != 0) {
                 goto block_25;
             }
             goto block_37;
@@ -4669,9 +4632,6 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
     Object *racerObj;
 
     updateRateF = updateRate;
-    if (osTvType == TV_TYPE_PAL) {
-        updateRateF *= 1.2f;
-    }
     frog = (Object_Frog *) obj->unk64;
     switch (frog->unk14) {
     case 0:
@@ -4874,13 +4834,8 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
             textWidth = (get_text_width(levelName, 0, 0) + 24) >> 1;
             x1 = (gScreenWidth / 2) - textWidth;
             x2 = textWidth + (gScreenWidth / 2);
-            if (osTvType == TV_TYPE_PAL) {
-                y1 = SCREEN_HEIGHT - 16;
-                y2 = SCREEN_HEIGHT - 16 + 24;
-            } else {
-                y1 = SCREEN_HEIGHT - 38;
-                y2 = SCREEN_HEIGHT - 38 + 20;
-            }
+            y1 = SCREEN_HEIGHT - 38;
+            y2 = SCREEN_HEIGHT - 38 + 20;
             assign_dialogue_box_id(4);
             set_current_dialogue_box_coords(4, x1, y1, x2, y2);
             set_current_dialogue_background_colour(4, 128, 64, 128, (temp_s0->unk6 * 160) >> 8);

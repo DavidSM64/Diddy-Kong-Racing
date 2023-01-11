@@ -453,7 +453,7 @@ void free_rain_memory(void) {
 }
 
 void func_800AD2C4(s32 arg0, s32 arg1, f32 arg2) {
-    D_800E2C78 = osTvType == TV_TYPE_PAL ? 50.0f * arg2 : 60.0f * arg2;
+    D_800E2C78 = 60.0f * arg2;
     D_800E2C68 = arg0;
     D_800E2C64 = (D_800E2C68 - gLightningFrequency) / D_800E2C78;
     D_800E2C74 = arg1;
