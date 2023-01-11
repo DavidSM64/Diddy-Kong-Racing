@@ -961,9 +961,11 @@ void func_80011390(void) {
 extern s32 benchState;
 
 s32 func_8001139C() {
+#ifdef PUPPYPRINT_DEBUG
     if (benchState == 1) {
         return 0;
     }
+#endif
     return D_8011ADB0;
 }
 
