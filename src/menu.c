@@ -9616,7 +9616,7 @@ void get_avg_and_min_fps(s32 *outAvg, s32 *outMin) {
         return;
     }
 
-    min = 0xFFFFFFFF;
+    min = 1000;
     count = 0;
     for(i = 0; i < benchFramesRecorded; i++) {
         switch (benchpage) {
