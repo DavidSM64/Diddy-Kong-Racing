@@ -92,11 +92,22 @@ s16 D_800DC7B8[52] = {
 
 // A table of which vehicles to use for boss races.
 // https://www.youtube.com/watch?v=WQJAtns_rMk
-s16 gBossVehicles[16] = {
-    0x0005, 0x0106, 0x0207, 0x0005,
-    0x0106, 0x010B, 0x010B, 0x0207,
-    0x000C, 0x020D, 0x0101, 0x0101,
-    0x0101, 0x0101, 0x0101, 0x0000,
+BossRaceVehicles gBossVehicles[] = {
+    {VEHICLE_CAR,           VEHICLE_TRICKY}, // Tricky 1
+    {VEHICLE_HOVERCRAFT,    VEHICLE_BLUEY}, // Bluey 1
+    {VEHICLE_PLANE,         VEHICLE_SMOKEY}, // Smokey 1
+    {VEHICLE_CAR,           VEHICLE_TRICKY}, // Tricky 2
+    {VEHICLE_HOVERCRAFT,    VEHICLE_BLUEY}, // Bluey 2
+    {VEHICLE_HOVERCRAFT,    VEHICLE_BUBBLER}, // Bubbler 1
+    {VEHICLE_HOVERCRAFT,    VEHICLE_BUBBLER}, // Bubbler 2
+    {VEHICLE_PLANE,         VEHICLE_SMOKEY}, // Smokey 2
+    {VEHICLE_CAR,           VEHICLE_WIZPIG}, // Wizpig 1
+    {VEHICLE_PLANE,         VEHICLE_ROCKET}, // Wizpig 2
+    {VEHICLE_HOVERCRAFT,    VEHICLE_HOVERCRAFT},
+    {VEHICLE_HOVERCRAFT,    VEHICLE_HOVERCRAFT},
+    {VEHICLE_HOVERCRAFT,    VEHICLE_HOVERCRAFT},
+    {VEHICLE_HOVERCRAFT,    VEHICLE_HOVERCRAFT},
+    {VEHICLE_HOVERCRAFT,    VEHICLE_HOVERCRAFT},
 };
 s8 D_800DC840[8] = { 9, 1, 2, 3, 4, 5, 7, 0 };
 
