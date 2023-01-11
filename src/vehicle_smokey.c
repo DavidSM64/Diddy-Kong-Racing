@@ -241,6 +241,8 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
 }
 
+extern u8 benchState;
+
 void func_8005E204(Object *obj, Object_Racer *racer, f32 arg2, s32 objectID, s32 arg4) {
     Object **var_s6;
     s32 sp80;
@@ -253,6 +255,12 @@ void func_8005E204(Object *obj, Object_Racer *racer, f32 arg2, s32 objectID, s32
     f32 diffX;
     f32 diffZ;
     f32 diffY;
+
+#ifdef PUPPYPRINT_DEBUG
+    if (benchState == 1) {
+        return;
+    }
+#endif
 
     var_s6 = func_8000E988(&sp80, &sp7C);
     spawnObj.objectID = objectID;

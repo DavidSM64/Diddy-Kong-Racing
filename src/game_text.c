@@ -395,7 +395,6 @@ s32 func_800C3564(void) {
 }
 
 s32 func_800C38B4(s32 arg0, TextBox *textbox) {
-    s32 temp;
     char *var_s0;
 
     var_s0 = &D_8012A7A0[arg0];
@@ -410,9 +409,8 @@ s32 func_800C38B4(s32 arg0, TextBox *textbox) {
         case 1:
             textbox->left = var_s0[1] & 0xFF;
             textbox->top = D_8012A7A0[arg0 + 2] & 0xFF;
-            temp = 0;
             textbox->right = (D_8012A7A0[arg0 + 3] & 0xFF) + 0x41;
-            textbox->bottom = (D_8012A7A0[arg0 + 4] & 0xFF) + temp;
+            textbox->bottom = (D_8012A7A0[arg0 + 4] & 0xFF);
             arg0 += 5;
             set_current_dialogue_box_coords(1, textbox->left, textbox->top, textbox->right, textbox->bottom);
             var_s0 = &D_8012A7A0[arg0];
