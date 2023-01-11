@@ -897,9 +897,7 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
         }
         if (var_v1 == 0) {
             func_8007BF1C(TRUE);
-            set_viewport_tv_type(TV_TYPE_NTSC);
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk360);
-            set_viewport_tv_type(TV_TYPE_PAL);
             func_8007BF1C(FALSE);
             D_80126CDC->unkF8 = var_v1;
             if (D_80126CDC->unk39B) {
@@ -913,18 +911,14 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
                         D_80126CDC->unk398++;
                     }
                 }
-                set_viewport_tv_type(TV_TYPE_NTSC);
                 func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk380);
-                set_viewport_tv_type(TV_TYPE_PAL);
             }
         } else {
             D_80126CDC->unkF8 = var_v1 + 128;
             func_80068508(0);
             func_8007BF1C(TRUE);
-            set_viewport_tv_type(TV_TYPE_NTSC);
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unkE0);
             func_8007BF1C(FALSE);
-            set_viewport_tv_type(TV_TYPE_PAL);
             func_80068508(1);
             D_80126CDC->unkF8 -= 128;
         }
@@ -1351,7 +1345,6 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
 
     racerObj = obj->unk64;
     if (racerObj->racer.raceFinished == FALSE) {
-        set_viewport_tv_type(TV_TYPE_NTSC);
         temp_a0 = (racerObj->racer.balloon_type * 3) + (racerObj->racer.balloon_level);
         if (D_80126CDC->unk5D != racerObj->racer.balloon_level) {
             if (racerObj->racer.balloon_level == 0) {
@@ -1418,7 +1411,6 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
             }
         }
         gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
-        set_viewport_tv_type(TV_TYPE_PAL);
     }
 }
 
