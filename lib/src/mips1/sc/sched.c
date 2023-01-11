@@ -52,6 +52,7 @@ s32 D_80126128[18];
 
 static void __scMain(void *arg);
 static s32 __scSchedule(OSSched *sc, OSScTask **sp, OSScTask **dp, s32 availRCP);
+extern OSViMode osViModeNtscLpn1, osViModePalLpn1, osViModeMpalLpn1, osViModePalLan1, osViModeNtscLan1, osViModeMpalLan1;
 
 void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 numFields) {
     sc->curRSPTask      = 0;
@@ -70,7 +71,7 @@ void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 num
      * Set up video manager, listen for Video, RSP, and RDP interrupts
      */
     osCreateViManager(OS_PRIORITY_VIMGR);    
-    osViSetMode(&osViModeTable[mode]);
+    osViSetMode(&osViModeNtscLan1);
     osViBlack(TRUE);
     osCreateMesgQueue(&sc->interruptQ, sc->intBuf, OS_SC_MAX_MESGS);
     osCreateMesgQueue(&sc->cmdQ, sc->cmdMsgBuf, OS_SC_MAX_MESGS);

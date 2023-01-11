@@ -26,7 +26,6 @@ void render_borders_for_multiplayer(Gfx **dlist) {
     width = GET_VIDEO_WIDTH(widthAndHeight);
     height = GET_VIDEO_HEIGHT(widthAndHeight);
     xOffset = width / 256;
-    width += 0; //Fake match?
     yOffset = height / 128;
     gDPSetCycleType((*dlist)++, G_CYC_FILL);
     gDPSetFillColor((*dlist)++, GPACK_RGBA5551(0, 0, 0, 1) << 16 | GPACK_RGBA5551(0, 0, 0, 1)); // Black fill color
@@ -48,45 +47,6 @@ void render_borders_for_multiplayer(Gfx **dlist) {
             // Draws 2 black lines in the middle of the screen. One vertical, another horizontal.
             gDPFillRectangle((*dlist)++, height * 0, (height >> 1) - yOffset, width, ((height >> 1) - yOffset) + yOffset);
             gDPFillRectangle((*dlist)++, x, 0, x + xOffset, height);
-            break;
-    }
-}
-
-/**
- * Appears to be largely the same as the function above, rendering after the UI.
- * This instead, renders slightly larger (around 1px) borders that are invisible.
- * The purpose of this function is unknown, because it has zero cosmetic effect.
- */
-void render_second_multiplayer_borders(Gfx **dlist) {
-    u32 screenSize;
-    u32 screenWidth;
-    u32 screenHeight;
-    u32 height;
-    u32 width;
-    u32 tempX;
-    u32 tempY;
-
-    screenSize = get_video_width_and_height_as_s32();
-    screenHeight = GET_VIDEO_HEIGHT(screenSize);
-    screenWidth = GET_VIDEO_WIDTH(screenSize);
-    height = (screenHeight / 128) << 1 << 1;
-    width = (screenWidth / 256) << 1 << 1;
-    gDPSetCycleType((*dlist)++, G_CYC_1CYCLE);
-    gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
-    gDPSetRenderMode((*dlist)++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
-    gDPSetPrimColor((*dlist)++, 0, 0, 0, 0, 0, 0);
-    switch(get_viewport_count()) {
-        case VIEWPORTS_COUNT_2_PLAYERS:
-            tempY = (screenHeight / 2) - (height / 2);
-            gDPFillRectangle((*dlist)++, 0, tempY, screenWidth, tempY + height);
-            break;
-        case VIEWPORTS_COUNT_3_PLAYERS:
-        case VIEWPORTS_COUNT_4_PLAYERS:
-            tempY = (screenHeight / 2) - (height / 2);
-            tempX = (screenWidth / 2) - (width / 2);
-            gDPFillRectangle((*dlist)++, 0, tempY, screenWidth, tempY + height);
-            tempX += 0; // Fakematch
-            gDPFillRectangle((*dlist)++, tempX, 0, tempX + width, screenHeight);
             break;
     }
 }

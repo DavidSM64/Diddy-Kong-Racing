@@ -24,7 +24,6 @@ s32 sBackgroundFillColour = GPACK_RGBA5551(0, 0, 0, 1) | (GPACK_RGBA5551(0, 0, 0
 u32 D_800DE4C0 = 0x40;
 TextureHeader *D_800DE4C4 = 0;
 TextureHeader *D_800DE4C8 = 0;
-s32 gChecquerBGEnabled = 0;
 
 BackgroundFunction gBackgroundDrawFunc = { NULL };
 s32 gfxBufCounter = 0;
@@ -36,7 +35,7 @@ Gfx dRspInit[] = {
                           G_FOG | G_LIGHTING | G_TEXTURE_GEN | G_TEXTURE_GEN_LINEAR | G_LOD),
     gsSPTexture(0, 0, 0, 0, 0),
     gsSPSetGeometryMode(G_SHADING_SMOOTH | G_SHADE),
-    gsSPClipRatio(FRUSTRATIO_2),
+    gsSPClipRatio(FRUSTRATIO_3),
     gsSPEndDisplayList(),
 };
 
@@ -67,18 +66,6 @@ Gfx D_800DE598[] = {
     gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
     gsDPPipeSync(),
     gsDPSetCombineMode(G_CC_DECALRGBA, G_CC_DECALRGBA),
-    gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_OPA_SURF | G_RM_OPA_SURF2),
-    gsSPEndDisplayList(),
-};
-
-Gfx dChequerBGSettings[] = {
-    gsDPPipeSync(),
-    gsDPSetTextureLOD(G_TL_TILE),
-    gsDPSetTextureLUT(G_TT_NONE),
-    gsDPSetAlphaCompare(G_AC_NONE),
-    gsSPClearGeometryMode(G_ZBUFFER | G_FOG),
-    gsDPPipeSync(),
-    gsDPSetCombineMode(G_CC_PRIMITIVE, G_CC_PRIMITIVE),
     gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_OPA_SURF | G_RM_OPA_SURF2),
     gsSPEndDisplayList(),
 };
@@ -147,10 +134,7 @@ Gfx dTextureRectangleScaledXlu[][2] = {
 
 /************ .bss ************/
 
-#define YIELD_BUFFER_SIZE 1
-
 u8 gDramStack[SP_DRAM_STACK_SIZE8];
-u8 gGfxSPTaskYieldBuffer[YIELD_BUFFER_SIZE];
 OSMesgQueue D_80125EA0;
 OSMesg D_80125EB8;
 OSMesgQueue D_80125EC0;
@@ -173,10 +157,8 @@ s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
 
     gGfxTaskIsRunning = TRUE;
     dkrtask = &gGfxTaskBuf[gfxBufCounter];
-    gfxBufCounter++;
-    if (gfxBufCounter == 2) {
-        gfxBufCounter = 0;
-    }
+    gfxBufCounter^=1;
+
     dkrtask->flags = OS_SC_LAST_TASK | OS_SC_SWAPBUFFER | OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP;
     dkrtask->mesgQueue = &gGfxTaskMesgQueue;
     dkrtask->task.data_ptr = (u64 *) dlBegin;
@@ -190,8 +172,6 @@ s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
     dkrtask->task.ucode_data_size = 0x800;
     dkrtask->task.dram_stack = (u64 *) gDramStack;
     dkrtask->task.dram_stack_size = 0x400;
-    dkrtask->task.output_buff = (u64 *) gGfxSPTaskYieldBuffer;
-    dkrtask->task.output_buff_size = (u64 *) &D_80125EA0;
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
     dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
     dkrtask->task.output_buff = NULL;
@@ -235,7 +215,7 @@ void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->task.ucode_boot = (u64 *) rspF3DDKRBootStart;
     dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
     dkrtask->task.type = M_GFXTASK;
-    dkrtask->task.flags = 0;
+    dkrtask->task.flags = 2;
     dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
     dkrtask->task.ucode = (u64 *) rspF3DDKRFifoStart;
     dkrtask->task.ucode_data = (u64 *) rspF3DDKRDataFifoStart;

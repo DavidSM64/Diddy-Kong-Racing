@@ -16,16 +16,9 @@
 
 /************ .rodata ************/
 
-const char D_800E8EDC[] = "CORE";
-const char D_800E8EE4[4] = { 0, 0, 0, 0 };
-
 /*********************************/
 
 /************ .data ************/
-
-s32 sLockupStatus = -1;
-s32 sLockupPage = EPC_PAGE_REGISTER;
-s32 sLockupDelay = 0;
 
 /*******************************/
 
@@ -84,8 +77,6 @@ void func_800B70D0(void) {
 
 void func_800B7144(void) {
 }
-
-GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B71B0.s")
 
 void func_800B7460(s32 *epc, s32 size, s32 mask) {
 }

@@ -109,8 +109,13 @@ void change_vi(OSViMode *mode, int width, int height) {
         addPAL = PAL_HEIGHT_DIFFERENCE;
     }
 
+    if (width == SCREEN_WIDTH_16_10) {
+        addX = 20;
+    } else if (width == SCREEN_WIDTH_WIDE) {
+        addX = 24;
+    }
+
     if (height < 240) {
-        //addX = 24;
         mode->comRegs.width = width;
         mode->comRegs.xScale = ((width + addX)*512)/320;
         // Y Scale
@@ -124,8 +129,8 @@ void change_vi(OSViMode *mode, int width, int height) {
         mode->fldRegs[0].vStart = (277-height + (gScreenPos[1] * 2)) << 16 | (271+height + (gScreenPos[1] * 2));
         mode->fldRegs[1].vStart = (277-height + (gScreenPos[1] * 2)) << 16 | (271+height + (gScreenPos[1] * 2));
     }
-        gVideoAspectRatio = (f32) width / (f32) height;
-        reset_perspective_matrix();
+    gVideoAspectRatio = (f32) width / (f32) height;
+    reset_perspective_matrix();
 }
 
 void set_dither_filter(void) {

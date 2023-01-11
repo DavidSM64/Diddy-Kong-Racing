@@ -44,7 +44,6 @@ enum RenderFlags {
 extern u32 gTexColourTag;
 extern s32 D_800DE7C4;
 
-extern Gfx D_800DF1A8[32][2];
 extern Gfx *gSceneCurrDisplayList;
 extern s32 D_8011B0FC;
 extern u32 D_8011D384;
