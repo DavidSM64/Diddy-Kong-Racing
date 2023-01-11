@@ -9591,36 +9591,11 @@ void stop_benchmark() {
     menu_init(MENU_BENCHMARK);
 }
 
-// Got lazy with this one.
-char *numPlayersDisplays[] = {
-    "Number players: 1", "Number players: 2", "Number players: 3", "Number players: 4"
-};
-
-#define MAX_FPS 30
-
-// Got lazy with this too.
-char *fpsMarkers[] = {
-    //"60", "55", "50", "45", "40", "35", // I don't know if there is enough height for these.
-    "30", "25", "20", "15", "10", "5", "0"
-};
-
-
-char *hardwareMarkers[] = {
-    //"60", "55", "50", "45", "40", "35", // I don't know if there is enough height for these.
-    "66", "55", "44", "33", "22", "11", "0"
-};
-
-char *pageNames[] = {
-    "FPS",
-    "CPU",
-    "RSP",
-    "RDP"
-};
-
-int numberOfMarkers = sizeof(fpsMarkers) / sizeof(char*);
+int numberOfMarkers;
 
 void render_benchmark_select_screen() {
     s32 i;
+    char outBuf[32];
 
     if (benchSel - benchSelStart >= NUM_ENTRYS_IN_BENCH_DIAL - 1) {
         benchSelStart = benchSel - NUM_ENTRYS_IN_BENCH_DIAL + 1;
@@ -9636,7 +9611,8 @@ void render_benchmark_select_screen() {
     draw_text(&sMenuCurrDisplayList, (gScreenWidth/2), 29, "BENCHMARK", ALIGN_MIDDLE_CENTER);
 
     set_text_font(ASSET_FONTS_FUNFONT);
-    draw_text(&sMenuCurrDisplayList, (gScreenWidth/2), SCREEN_HEIGHT - 8, numPlayersDisplays[benchNumPlayers-1], ALIGN_MIDDLE_CENTER);
+    puppyprintf(outBuf, "Players: %d", benchNumPlayers);
+    draw_text(&sMenuCurrDisplayList, (gScreenWidth/2), SCREEN_HEIGHT - 8, outBuf, ALIGN_MIDDLE_CENTER);
 
     assign_dialogue_box_id(6);
     set_current_dialogue_box_coords(6, BENCH_DIAL_X, BENCH_DIAL_Y, BENCH_DIAL_X + BENCH_DIAL_WIDTH, BENCH_DIAL_Y + BENCH_DIAL_HEIGHT);
@@ -9700,7 +9676,7 @@ void get_avg_and_min_fps(s32 *outAvg, s32 *outMin) {
         return;
     }
 
-    min = MAX_FPS;
+    min = 0xFFFFFFFF;
     count = 0;
     for(i = 0; i < benchFramesRecorded; i++) {
         switch (benchpage) {
@@ -9752,39 +9728,63 @@ void render_benchmark_results_screen() {
 
     draw_text(&sMenuCurrDisplayList, 20, 54, get_level_name(benchLvlIds[benchSel]), ALIGN_MIDDLE_LEFT);
     set_text_colour(60, 255, 120, 80, 255);
-    draw_text(&sMenuCurrDisplayList, 20, 71, numPlayersDisplays[benchNumPlayers-1], ALIGN_MIDDLE_LEFT);
+    puppyprintf(outBuf, "Players: %d", benchNumPlayers);
+    draw_text(&sMenuCurrDisplayList, 20, 71, outBuf, ALIGN_MIDDLE_LEFT);
     set_text_colour(200, 200, 60, 80, 255);
     // sprintf seems to only work with a single variable at a time.
     get_avg_and_min_fps(&avgFps, &minFps);
+    numberOfMarkers = 1;
     switch (benchpage) {
     case 0:
         sprintf(outBuf, "Avg FPS: %d", (s32) &avgFps);
         draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
         sprintf(outBuf, "Min FPS: %d", (s32) &minFps);
         draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
-        divisor = MAX_FPS;
+        g = 0;
+        for (i = 0; i < benchFramesRecorded; i++) {
+            if (benchFpsRecords[i] > g) {
+                g = benchFpsRecords[i];
+            }
+        }
+        divisor = 0;
+        while (g > 0) {
+            divisor += 5;
+            g -= 5;
+            numberOfMarkers++;
+        }
         break;
     case 1:
         sprintf(outBuf, "Avg CPU: %d", (s32) &avgFps);
         draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
         sprintf(outBuf, "Max CPU: %d", (s32) &minFps);
         draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
-        divisor = 66666.0f;
         break;
     case 2:
         sprintf(outBuf, "Avg RSP: %d", (s32) &avgFps);
         draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
         sprintf(outBuf, "Max RSP: %d", (s32) &minFps);
         draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
-        divisor = 66666.0f;
         break;
     case 3:
         sprintf(outBuf, "Avg RDP: %d", (s32) &avgFps);
         draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
         sprintf(outBuf, "Max RDP: %d", (s32) &minFps);
         draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
-        divisor = 66666.0f;
         break;
+    }
+
+    if (benchpage != 0) {
+        f32 t;
+        t = minFps;
+        divisor = 0.0f;
+        while (t > 0.0f) {
+            divisor += (100000.0f / 3.0f) / 3.0f;
+            t -= (100000.0f / 3.0f) / 3.0f;
+            numberOfMarkers++;
+        }
+        if (minFps == 0) {
+            divisor = 1.0f;
+        }
     }
 
     assign_dialogue_box_id(6);
@@ -9799,15 +9799,18 @@ void render_benchmark_results_screen() {
     // Draw vert lines for record entries
     if(benchFramesRecorded > 0) {
         for(i = 0; i < numberOfMarkers; i++) {
+            char numBytes[16][4];
             char *str;
             switch (benchpage) {
             case 0:
-                str = fpsMarkers[i];
+                puppyprintf(numBytes[i], "%d", ((numberOfMarkers - 1) - i) * 5);
+                str = numBytes[i];
                 break;
             case 1:
             case 2:
             case 3:
-                str = hardwareMarkers[i];
+                puppyprintf(numBytes[i], "%d", (s32)(((numberOfMarkers - 1) - i) * (f32)((100.0f/3.0f)/3.0f)));
+                str = numBytes[i];
                 break;
             }
             render_dialogue_text(6, BENCH_RESULT_DIAL_WIDTH - 16, i * markerStride + 6, str, 1, 4);
@@ -9842,8 +9845,8 @@ void render_benchmark_results_screen() {
                 g *= 0.66f;
                 b *= 0.66f;
             }
-            barHeight = (value / divisor) * (f32)(markerStride * 6);
-            bench_draw_line(xOffset + (i * entryStride), BENCH_RESULT_DIAL_Y + 11 + ((markerStride * 6) - barHeight) , entryStride, barHeight, 100, g, b);
+            barHeight = (value / divisor) * (f32)(markerStride * (numberOfMarkers - 1));
+            bench_draw_line(xOffset + (i * entryStride), BENCH_RESULT_DIAL_Y + 11 + ((markerStride * (numberOfMarkers - 1)) - barHeight) , entryStride, barHeight, 100, g, b);
             gDPPipeSync(sMenuCurrDisplayList++);
         }
         
