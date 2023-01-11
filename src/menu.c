@@ -9692,6 +9692,7 @@ void render_benchmark_results_screen() {
             g -= 5;
             numberOfMarkers++;
         }
+        divisor = MAX(divisor, 30.0f);
         break;
     case 1:
         sprintf(outBuf, "Avg CPU: %d", (s32) &avgFps);
@@ -9722,10 +9723,13 @@ void render_benchmark_results_screen() {
             t -= (100000.0f / 3.0f) / 3.0f;
             numberOfMarkers++;
         }
+        divisor = MAX(divisor, 66666.6f);
         if (minFps == 0) {
             divisor = 1.0f;
         }
     }
+
+    numberOfMarkers = MAX(numberOfMarkers, 7);
 
     assign_dialogue_box_id(6);
     set_current_dialogue_box_coords(6, BENCH_RESULT_DIAL_X, BENCH_RESULT_DIAL_Y, BENCH_RESULT_DIAL_X + BENCH_RESULT_DIAL_WIDTH, 

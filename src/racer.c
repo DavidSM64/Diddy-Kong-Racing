@@ -3467,7 +3467,7 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
                 angleVel = newAngle;
             }
         }
-        obj->segment.animFrame += (angleVel / 2) * (updateRate);
+        obj->segment.animFrame += angleVel;
         obj->segment.unk38.byte.unk3B = 0;
         if (angleVel) {} // Fakematch
         if (racer->unk1F3 & 4) {
@@ -3483,11 +3483,11 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
         if (racer->unk1F3 & 4) {
             actionStatus = 4 | 2;
         }
-        func_80052988(obj, racer, 2, 0, 32, 2, actionStatus, updateRate);
+        func_80052988(obj, racer, 2, 0, 32, 4, actionStatus, updateRate);
         racer->unk1F3 &= 0xFFFB;
         break;
     case 4: // Crash
-        func_80052988(obj, racer, 3, 0, 32, 1, 0, updateRate);
+        func_80052988(obj, racer, 3, 0, 32, 2, 0, updateRate);
         racer->unk1F3 &= 0xFFF7;
         break;
     case 5: // Horn
@@ -3495,19 +3495,19 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
         if (gCurrentRacerInput & Z_TRIG) {
             actionStatus = 4 | 2;
         }
-        func_80052988(obj, racer, 4, 0, 48, 2, actionStatus, updateRate);
+        func_80052988(obj, racer, 4, 0, 48, 4, actionStatus, updateRate);
         break;
     case 6:
         actionStatus = 3;
         if (racer->velocity > 0.0f && gCurrentRacerInput & B_BUTTON) {
             actionStatus = 4 | 2 | 1; // Reverse
         }
-        func_80052988(obj, racer, 1, 0, 80, 2, actionStatus, updateRate);
+        func_80052988(obj, racer, 1, 0, 80, 3, actionStatus, updateRate);
         break;
     case 7:
-        func_80052988(obj, racer, 5, 0, 96, 2, 0, updateRate);
+        func_80052988(obj, racer, 5, 0, 96, 4, 0, updateRate);
         if (racer->unk1F2 == 0) {
-            func_80052988(obj, racer, 5, 0, 96, 2, 0, updateRate);
+            func_80052988(obj, racer, 5, 0, 96, 4, 0, updateRate);
         }
         break;
     }
@@ -3523,13 +3523,13 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
     } else if (obj->segment.unk38.byte.unk3B == 0) {
         if (flags & 1) {
             if (obj->segment.animFrame > 40) {
-                obj->segment.animFrame -= (arg7 * 2) * sLogicUpdateRate;
+                obj->segment.animFrame -= arg7 * 4;
                 if (obj->segment.animFrame <= 40) {
                     obj->segment.unk38.byte.unk3B = action;
                     obj->segment.animFrame = arg3;
                 }
             } else {
-                obj->segment.animFrame += (arg7 * 2) * sLogicUpdateRate;
+                obj->segment.animFrame += arg7 * 4;
                 if (obj->segment.animFrame >= 40) {
                     obj->segment.unk38.byte.unk3B = action;
                     obj->segment.animFrame = arg3;
@@ -3543,7 +3543,7 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
     } else if (obj->segment.unk38.byte.unk3B == action) {
         if (flags & 2) {
             if (racer->unk1F3 & 0x80) {
-                obj->segment.animFrame -= arg5 * sLogicUpdateRate;
+                obj->segment.animFrame -= arg5;
                 if (obj->segment.animFrame <= 0) {
                     obj->segment.unk38.byte.unk3B = 0;
                     racer->unk1F2 = 0;
@@ -3551,7 +3551,7 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
                     racer->unk1F3 = 0;
                 }
             } else {
-                obj->segment.animFrame += arg5 * sLogicUpdateRate;
+                obj->segment.animFrame += arg5;
                 if (obj->segment.animFrame >= duration) {
                     obj->segment.animFrame = duration - 1;
                     if (!(flags & 4)) {
@@ -3560,7 +3560,7 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
                 }
             }
         } else {
-            obj->segment.animFrame += arg5 * sLogicUpdateRate;
+            obj->segment.animFrame += arg5;
             if (obj->segment.animFrame >= duration) {
                 obj->segment.unk38.byte.unk3B = 0;
                 racer->unk1F2 = 0;
