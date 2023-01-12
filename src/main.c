@@ -632,7 +632,7 @@ s32 count_triangles_in_dlist(u8 *dlist, u8 *dlistEnd) {
 
 void count_triangles(u8 *dlist, u8 *dlistEnd) {
     u32 first = osGetCount();
-    sTimerTemp += sLogicUpdateRate;
+    sTimerTemp++;
     if ((sTimerTemp % 32) == 0) {
         s32 first = osGetCount();
         sVtxCount = 0;
