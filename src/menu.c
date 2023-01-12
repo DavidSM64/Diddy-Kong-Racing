@@ -6904,9 +6904,9 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
         if (gMenuSubOption != 0) {
             if (gPauseSubmenu == 1) {
                 s32 moveDir = 0;
-                if (gControllersXAxisDirection[playerId] != 0) {
+                if (gControllersXAxisDirection[D_800E098C] != 0) {
                         play_sound_global(SOUND_SELECT2, NULL);
-                    if (gControllersXAxisDirection[playerId] > 0) {
+                    if (gControllersXAxisDirection[D_800E098C] > 0) {
                         moveDir = 1;
                     } else {
                         moveDir = -1;
@@ -9322,7 +9322,7 @@ typedef enum BenchmarkState {
     BENCHMARK_FINISHED // Show results.
 } BenchmarkState;
 
-#define BENCHMARK_DURATION_SECONDS 5
+#define BENCHMARK_DURATION_SECONDS 30
 
 s32 benchNumLvls = sizeof(benchLvlIds) / sizeof(s32);
 s32 benchSel;
