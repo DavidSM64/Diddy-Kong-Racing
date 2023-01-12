@@ -9322,7 +9322,7 @@ typedef enum BenchmarkState {
     BENCHMARK_FINISHED // Show results.
 } BenchmarkState;
 
-#define BENCHMARK_DURATION_SECONDS 30
+#define BENCHMARK_DURATION_SECONDS 5
 
 s32 benchNumLvls = sizeof(benchLvlIds) / sizeof(s32);
 s32 benchSel;
@@ -9585,25 +9585,8 @@ void render_benchmark_select_screen() {
 #define BENCH_RESULT_DIAL_USABLE_WIDTH (BENCH_RESULT_DIAL_WIDTH - 40)
 #define BAR_MUL 4.0f * ((f32)SCREEN_HEIGHT / 240.0f)
 
-u32 get_fill_color(s32 r, s32 g, s32 b) {
-    u16 rgba;
-
-    if(r > 255) r = 255;
-    if(g > 255) g = 255;
-    if(b > 255) b = 255;
-
-    r /= 8;
-    g /= 8;
-    b /= 8;
-
-    rgba = (r << 11) | (g << 6) | (b << 1) | 1;
-
-    return (rgba << 16) | rgba;
-}
-
 void bench_draw_line(s32 x, s32 y, s32 w, s32 h, s32 r, s32 g, s32 b) {
-    u32 color = get_fill_color(r, g, b);
-    gDPSetFillColor(sMenuCurrDisplayList++, color);
+    gDPSetFillColor(sMenuCurrDisplayList++, GPACK_RGBA5551(r, g, b, 1) | (GPACK_RGBA5551(r, g, b, 1) << 16));
     gDPFillRectangle(sMenuCurrDisplayList++, x, y, x + w - 1, y + h - 1);
 }
 
@@ -9656,6 +9639,10 @@ void render_benchmark_results_screen() {
     s32 avgFps, minFps;
     f32 divisor;
     char outBuf[64];
+    char *minStr = {"Min"};
+    char *maxStr = {"Max"};
+    char *useStr = minStr;
+    char *typeStr[] = {"FPS", "CPU", "RSP", "RDP"};
 
     set_text_font(ASSET_FONTS_BIGFONT);
     set_text_background_colour(0, 0, 0, 0);
@@ -9674,12 +9661,7 @@ void render_benchmark_results_screen() {
     // sprintf seems to only work with a single variable at a time.
     get_avg_and_min_fps(&avgFps, &minFps);
     numberOfMarkers = 1;
-    switch (benchpage) {
-    case 0:
-        sprintf(outBuf, "Avg FPS: %d", (s32) &avgFps);
-        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
-        sprintf(outBuf, "Min FPS: %d", (s32) &minFps);
-        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
+    if (benchpage == 0) {
         g = 0;
         for (i = 0; i < benchFramesRecorded; i++) {
             if (benchFpsRecords[i] > g) {
@@ -9693,28 +9675,7 @@ void render_benchmark_results_screen() {
             numberOfMarkers++;
         }
         divisor = MAX(divisor, 30.0f);
-        break;
-    case 1:
-        sprintf(outBuf, "Avg CPU: %d", (s32) &avgFps);
-        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
-        sprintf(outBuf, "Max CPU: %d", (s32) &minFps);
-        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
-        break;
-    case 2:
-        sprintf(outBuf, "Avg RSP: %d", (s32) &avgFps);
-        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
-        sprintf(outBuf, "Max RSP: %d", (s32) &minFps);
-        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
-        break;
-    case 3:
-        sprintf(outBuf, "Avg RDP: %d", (s32) &avgFps);
-        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
-        sprintf(outBuf, "Max RDP: %d", (s32) &minFps);
-        draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
-        break;
-    }
-
-    if (benchpage != 0) {
+    } else {
         f32 t;
         t = minFps;
         divisor = 0.0f;
@@ -9724,10 +9685,17 @@ void render_benchmark_results_screen() {
             numberOfMarkers++;
         }
         divisor = MAX(divisor, 66666.6f);
-        if (minFps == 0) {
+        if (minFps == 1000) {
             divisor = 1.0f;
         }
     }
+    puppyprintf(outBuf, "Avg %s: %d", typeStr[benchpage], avgFps);
+    draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 54, outBuf, ALIGN_MIDDLE_RIGHT);
+    if (benchpage != 0) {
+        useStr = maxStr;
+    }
+    puppyprintf(outBuf, "%s %s: %d", useStr, typeStr[benchpage], minFps);
+    draw_text(&sMenuCurrDisplayList, gScreenWidth - 20, 71, outBuf, ALIGN_MIDDLE_RIGHT);
 
     numberOfMarkers = MAX(numberOfMarkers, 7);
 
@@ -9741,7 +9709,7 @@ void render_benchmark_results_screen() {
     markerStride = (BENCH_RESULT_DIAL_HEIGHT) / (numberOfMarkers);
 
     // Draw vert lines for record entries
-    if(benchFramesRecorded > 0) {
+    if(benchFramesRecorded > 0 && minFps != 1000) {
         for(i = 0; i < numberOfMarkers; i++) {
             char numBytes[16][4];
             char *str;
