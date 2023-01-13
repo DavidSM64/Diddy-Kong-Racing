@@ -2498,7 +2498,7 @@ void func_8008377C(UNUSED s32 arg0, f32 arg1) {
     #define TITLE_SCREEN_MAX_OPTS 2
 #endif
 
-u8 gTitleScreenTimer = 300;
+u8 gTitleScreenTimer = 210;
 
 s32 menu_title_screen_loop(s32 updateRate) {
     UNUSED s32 temp_v0_5;
@@ -2509,7 +2509,11 @@ s32 menu_title_screen_loop(s32 updateRate) {
     ObjectSegment* sp18;
     s8 var_a1;
 
-    gTitleScreenTimer -= updateRate;
+    if (gTitleScreenTimer - updateRate > 0) {
+        gTitleScreenTimer -= updateRate;
+    } else {
+        gTitleScreenTimer = 0;
+    }
     sp18 = get_active_camera_segment();
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     func_8008E4EC();
@@ -2623,7 +2627,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
             play_sound_global(SOUND_SELECT2, 0);
         }
     }
-    if (gTitleScreenTimer < 300) {
+    if (gTitleScreenTimer > 0) {
         reset_render_settings(&sMenuCurrDisplayList);
         set_text_background_colour(0, 0, 0, 255);
         set_text_colour(255, 255, 255, 255, 255);

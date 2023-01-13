@@ -162,7 +162,7 @@ void func_80065EA0(void) {
     }
 #endif
     guPerspectiveF(gPerspectiveMatrixF, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-    f32_matrix_to_s16_matrix(gPerspectiveMatrixF, gPerspectiveMatrixS);
+    f32_matrix_to_s16_matrix(&gPerspectiveMatrixF, &gPerspectiveMatrixS);
     gCurCamFOV = CAMERA_DEFAULT_FOV;
 }
 /*#else
@@ -171,7 +171,7 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80065EA0.s")
 
 void reset_perspective_matrix(void) {
     guPerspectiveF(gPerspectiveMatrixF, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-    f32_matrix_to_s16_matrix(gPerspectiveMatrixF, gPerspectiveMatrixS);
+    f32_matrix_to_s16_matrix(&gPerspectiveMatrixF, &gPerspectiveMatrixS);
 }
 
 void func_80066060(s32 arg0, s32 arg1) {

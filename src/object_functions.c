@@ -590,9 +590,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
     LevelObjectEntryCommon newObject;
     LevelHeader* header;
     Object* tempObj;
-    f32 diffX;
     s32 dialogueID;
-    f32 diffZ;
     s32 worldBalloons;
     s32 bossFlags;
 
@@ -620,8 +618,6 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
     obj->unk54->unk28 = 0.0f;
     tempObj = get_racer_object(PLAYER_ONE);
     if (tempObj != NULL) {
-        diffX = obj->segment.trans.x_position - tempObj->segment.trans.x_position;
-        diffZ = obj->segment.trans.z_position - tempObj->segment.trans.z_position;
         bossFlags = settings->bosses;
         bossFlags |= 0x800;
         worldBalloons = (settings->balloonsPtr[settings->worldId] >= 8);
@@ -1899,7 +1895,6 @@ void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
     Object *racerObj;
     Object_Racer *racer;
     s32 numberOfRacers;
-    Settings *settings;
     f32 diffX;
     f32 diffZ;
     f32 dist;
@@ -1912,7 +1907,6 @@ void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
 
     obj64 = &obj->unk64->exit;
     enableWarp = TRUE;
-    settings = get_settings();
 #ifndef UNLOCK_ALL
     if ((obj64->unk14 == 0) && (settings->balloonsPtr[settings->worldId] == 8)) {
         enableWarp = FALSE;

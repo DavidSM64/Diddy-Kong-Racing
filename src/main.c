@@ -271,7 +271,7 @@ void rdp_profiler_update(u32 *time, u32 time2) {
 }
 
 void profiler_update(u32 *time, u32 time2) {
-    s32 tmm = (osGetCount() - time2);
+    u32 tmm = (osGetCount() - time2);
     if (tmm > OS_USEC_TO_CYCLES(99999)) {
         tmm =  OS_USEC_TO_CYCLES(99999);
     }
@@ -317,8 +317,7 @@ void profiler_add_obj(u32 objID, u32 time) {
 void render_profiler(void) {
     char textBytes[32];
     s32 printY;
-    s32 totalGfx;
-    s32 i;
+    u32 i;
     s32 y = 8;
     u32 memsize = osGetMemSize();
 
@@ -546,7 +545,7 @@ void puppyprint_calculate_average_times(void) {
     rdp_profiler_update(gPuppyTimers.timers[PP_RDP_BUS], IO_READ(DPC_TMEM_REG));
     rdp_profiler_update(gPuppyTimers.timers[PP_RDP_TMM], IO_READ(DPC_PIPEBUSY_REG));
     IO_WRITE(DPC_STATUS_REG, DPC_CLR_CLOCK_CTR | DPC_CLR_CMD_CTR | DPC_CLR_PIPE_CTR | DPC_CLR_TMEM_CTR);
-    if ((sTimerTemp % 8) == 0) {
+    if ((sTimerTemp % 4) == 0) {
         s32 i;
         gPuppyTimers.cpuTime = 0;
         for (i = 1; i < PP_RDP_BUS; i++) {
@@ -612,31 +611,30 @@ void puppyprint_update_rsp(u8 flags) {
     }
 }
 
-s32 count_triangles_in_dlist(u8 *dlist, u8 *dlistEnd) {
+void count_triangles_in_dlist(u8 *dlist, u8 *dlistEnd) {
     s32 triCount = 0;
+    s32 vtxCount = 0;
     while(dlist < dlistEnd) {
         switch(dlist[0]) {
             case G_TRIN: // TRIN
                 triCount += (dlist[1] >> 4) + 1;
                 break;
             case G_VTX:
-                sVtxCount += (dlist[1] >> 4) + 1;
+                vtxCount += (dlist[1] >> 4) + 1;
                 break;
-            case G_ENDDL: // ENDDL
-                return triCount;
         }
         dlist += 8;
     }
-    return triCount;
+    sTriCount = triCount;
+    sVtxCount = vtxCount;
 }
 
 void count_triangles(u8 *dlist, u8 *dlistEnd) {
     u32 first = osGetCount();
     sTimerTemp++;
-    if ((sTimerTemp % 32) == 0) {
+    if ((sTimerTemp % 16) == 0) {
         s32 first = osGetCount();
-        sVtxCount = 0;
-        sTriCount = count_triangles_in_dlist(dlist, dlistEnd);
+        count_triangles_in_dlist(dlist, dlistEnd);
         sTimerTemp = (s32) OS_CYCLES_TO_USEC(osGetCount() - first);
     }
     profiler_add(gPuppyTimers.timers[PP_PROFILER], osGetCount() - first);
