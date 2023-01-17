@@ -86,7 +86,7 @@ def collect_func_from_regex(filename, filetext, regex, data):
     for match in defs:
         typeAndName = cleanup_string(match.group(1)).split()
         funcType = cleanup_string(' '.join(typeAndName[0:-1]))
-        if funcType == 'return' or funcType == "else":
+        if funcType == 'return' or funcType == "else" or funcType.startswith('INCONSISTENT'):
             continue; # Skip false matches
         funcName = cleanup_string(typeAndName[-1])
         args = get_cleaned_args(match.group(2))
@@ -149,7 +149,7 @@ def collect_typedefs(filename, filetext, data):
         }
 
 # This regex extracts the type from a member.
-structMemTypeRegex = r"^[ \t]*(?:/[*][^*]*?[*]/)?[ \t]*?((?:[A-Za-z0-9_]+[ *\t]+)+)[ \t*]*(?:(?:(?:[A-Za-z0-9_*]+)(?:[ \t*]*[\[][^]]*[\]])?[ \t]*)|(?:[^\n;]*));"
+structMemTypeRegex = r"[ \t]*(?:/[*][^*]*?[*]/)?[ \t]*?((?:[A-Za-z0-9_]+[ *\t]+(?=[^{ ]))+)[ \t*]*(?:(?:(?:[A-Za-z0-9_*]+)(?:[ \t*]*[\[][^]]*[\]])?[ \t]*)|(?:[^\n;]*));"
 # Get all the types that are in the struct
 def get_struct_types(structText):
     defs = regex_get_matches(structText, structMemTypeRegex)

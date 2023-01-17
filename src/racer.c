@@ -5728,7 +5728,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
     }
     if ((racer->transitionTimer < -1 && gCurrentStickX < 10 && gCurrentStickX > -10) || racer->transitionTimer == -1) {
         if (check_if_showing_cutscene_camera() == 0) {
-            func_800C01D8(&gDoorFadeTransition);
+            transition_begin(&gDoorFadeTransition);
         }
         racer->transitionTimer = 60 - updateRate;
     }

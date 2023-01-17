@@ -236,7 +236,7 @@ glabel func_80022948
 /* 0238D8 80022CD8 0C01BCE2 */  jal   func_8006F388
 /* 0238DC 80022CDC 24040014 */   li    $a0, 20
 /* 0238E0 80022CE0 3C04800E */  lui   $a0, %hi(D_800DC6F0) # $a0, 0x800e
-/* 0238E4 80022CE4 0C030076 */  jal   func_800C01D8
+/* 0238E4 80022CE4 0C030076 */  jal   transition_begin
 /* 0238E8 80022CE8 2484C6F0 */   addiu $a0, %lo(D_800DC6F0) # addiu $a0, $a0, -0x3910
 .L80022CEC:
 /* 0238EC 80022CEC 8FBF001C */  lw    $ra, 0x1c($sp)

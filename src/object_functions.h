@@ -1,6 +1,7 @@
 #ifndef _OBJECT_FUNCTIONS_H_
 #define _OBJECT_FUNCTIONS_H_
 
+#include "macros.h"
 #include "types.h"
 #include "structs.h"
 #include "level_object_entries.h"
@@ -428,10 +429,10 @@ void obj_loop_exit(Object *obj, s32 updateRate);
 void obj_loop_fish(Object *obj, s32 updateRate);
 void obj_loop_scenery(Object *obj, s32 updateRate);
 void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry);
-void obj_init_butterfly();
+INCONSISTENT void obj_init_butterfly();
 void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry);
-void obj_init_animation();
-void obj_init_lensflareswitch();
+INCONSISTENT void obj_init_animation();
+INCONSISTENT void obj_init_lensflareswitch();
 void obj_init_lensflare(Object *obj, LevelObjectEntry_LensFlare *entry);
 void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry);
 void obj_init_door(Object *obj, LevelObjectEntry_Door *entry);

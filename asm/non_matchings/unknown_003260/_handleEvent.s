@@ -244,8 +244,8 @@ glabel L800035C4
 /* 0043D8 800037D8 46083283 */  div.s $f10, $f6, $f8
 /* 0043DC 800037DC 014B0019 */  multu $t2, $t3
 /* 0043E0 800037E0 31F8003F */  andi  $t8, $t7, 0x3f
-/* 0043E4 800037E4 3C0E8012 */  lui   $t6, %hi(D_80119C28) # $t6, 0x8012
-/* 0043E8 800037E8 8DCE9C28 */  lw    $t6, %lo(D_80119C28)($t6)
+/* 0043E4 800037E4 3C0E8012 */  lui   $t6, %hi(gSoundChannelVolume) # $t6, 0x8012
+/* 0043E8 800037E8 8DCE9C28 */  lw    $t6, %lo(gSoundChannelVolume)($t6)
 /* 0043EC 800037EC 0018C840 */  sll   $t9, $t8, 1
 /* 0043F0 800037F0 01D94021 */  addu  $t0, $t6, $t9
 /* 0043F4 800037F4 85090000 */  lh    $t1, ($t0)
@@ -590,8 +590,8 @@ glabel L80003C8C
 /* 0048B8 80003CB8 9248000D */  lbu   $t0, 0xd($s2)
 /* 0048BC 80003CBC 000A6040 */  sll   $t4, $t2, 1
 /* 0048C0 80003CC0 24013F01 */  li    $at, 16129
-/* 0048C4 80003CC4 3C198012 */  lui   $t9, %hi(D_80119C28) # $t9, 0x8012
-/* 0048C8 80003CC8 8F399C28 */  lw    $t9, %lo(D_80119C28)($t9)
+/* 0048C4 80003CC4 3C198012 */  lui   $t9, %hi(gSoundChannelVolume) # $t9, 0x8012
+/* 0048C8 80003CC8 8F399C28 */  lw    $t9, %lo(gSoundChannelVolume)($t9)
 /* 0048CC 80003CCC 00000000 */  nop   
 /* 0048D0 80003CD0 032C5821 */  addu  $t3, $t9, $t4
 /* 0048D4 80003CD4 856F0000 */  lh    $t7, ($t3)
@@ -654,8 +654,8 @@ glabel L80003C8C
 /* 0049AC 80003DAC 46049183 */  div.s $f6, $f18, $f4
 /* 0049B0 80003DB0 030E0019 */  multu $t8, $t6
 /* 0049B4 80003DB4 332C003F */  andi  $t4, $t9, 0x3f
-/* 0049B8 80003DB8 3C0F8012 */  lui   $t7, %hi(D_80119C28) # $t7, 0x8012
-/* 0049BC 80003DBC 8DEF9C28 */  lw    $t7, %lo(D_80119C28)($t7)
+/* 0049B8 80003DB8 3C0F8012 */  lui   $t7, %hi(gSoundChannelVolume) # $t7, 0x8012
+/* 0049BC 80003DBC 8DEF9C28 */  lw    $t7, %lo(gSoundChannelVolume)($t7)
 /* 0049C0 80003DC0 000C5840 */  sll   $t3, $t4, 1
 /* 0049C4 80003DC4 01EB6821 */  addu  $t5, $t7, $t3
 /* 0049C8 80003DC8 85A90000 */  lh    $t1, ($t5)
@@ -723,8 +723,8 @@ glabel L80003C8C
 /* 004AB4 80003EB4 92D90002 */  lbu   $t9, 2($s6)
 /* 004AB8 80003EB8 24013F01 */  li    $at, 16129
 /* 004ABC 80003EBC 3329003F */  andi  $t1, $t9, 0x3f
-/* 004AC0 80003EC0 3C0A8012 */  lui   $t2, %hi(D_80119C28) # $t2, 0x8012
-/* 004AC4 80003EC4 8D4A9C28 */  lw    $t2, %lo(D_80119C28)($t2)
+/* 004AC0 80003EC0 3C0A8012 */  lui   $t2, %hi(gSoundChannelVolume) # $t2, 0x8012
+/* 004AC4 80003EC4 8D4A9C28 */  lw    $t2, %lo(gSoundChannelVolume)($t2)
 /* 004AC8 80003EC8 00096040 */  sll   $t4, $t1, 1
 /* 004ACC 80003ECC 014C7821 */  addu  $t7, $t2, $t4
 /* 004AD0 80003ED0 85EB0000 */  lh    $t3, ($t7)

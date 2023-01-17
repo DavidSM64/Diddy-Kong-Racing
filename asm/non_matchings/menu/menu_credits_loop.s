@@ -31,11 +31,11 @@ glabel menu_credits_loop
 /* 09BF8C 8009B38C 00000000 */  nop   
 /* 09BF90 8009B390 15C00007 */  bnez  $t6, .L8009B3B0
 /* 09BF94 8009B394 00000000 */   nop   
-/* 09BF98 8009B398 0C030060 */  jal   func_800C0180
+/* 09BF98 8009B398 0C030060 */  jal   disable_new_screen_transitions
 /* 09BF9C 8009B39C 00000000 */   nop   
-/* 09BFA0 8009B3A0 0C030076 */  jal   func_800C01D8
+/* 09BFA0 8009B3A0 0C030076 */  jal   transition_begin
 /* 09BFA4 8009B3A4 00002025 */   move  $a0, $zero
-/* 09BFA8 8009B3A8 0C03005C */  jal   func_800C0170
+/* 09BFA8 8009B3A8 0C03005C */  jal   enable_new_screen_transitions
 /* 09BFAC 8009B3AC 00000000 */   nop   
 .L8009B3B0:
 /* 09BFB0 8009B3B0 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
@@ -632,12 +632,12 @@ glabel L8009BB9C
 /* 09C824 8009BC24 240E0001 */   li    $t6, 1
 .L8009BC28:
 /* 09C828 8009BC28 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
-/* 09C82C 8009BC2C 0C030060 */  jal   func_800C0180
+/* 09C82C 8009BC2C 0C030060 */  jal   disable_new_screen_transitions
 /* 09C830 8009BC30 AC2EF47C */   sw    $t6, %lo(gMenuDelay)($at)
 /* 09C834 8009BC34 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
-/* 09C838 8009BC38 0C030076 */  jal   func_800C01D8
+/* 09C838 8009BC38 0C030076 */  jal   transition_begin
 /* 09C83C 8009BC3C 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
-/* 09C840 8009BC40 0C03005C */  jal   func_800C0170
+/* 09C840 8009BC40 0C03005C */  jal   enable_new_screen_transitions
 /* 09C844 8009BC44 00000000 */   nop   
 /* 09C848 8009BC48 0C000326 */  jal   set_music_fade_timer
 /* 09C84C 8009BC4C 2404FF80 */   li    $a0, -128

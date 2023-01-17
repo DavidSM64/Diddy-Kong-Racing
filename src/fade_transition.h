@@ -36,25 +36,25 @@ typedef struct FadeTransition {
 
 extern u32 osTvType;
 
-void func_800C0170(void);
-void func_800C0180(void);
+void enable_new_screen_transitions(void);
+void disable_new_screen_transitions(void);
 u32 func_800C018C(void);
 void transition_end(void);
 s32 handle_transitions(s32 updateRate);
-void render_fade_transition(Gfx **dlist, MatrixS **mats, Vertex **verts);
-void render_fade_fullscreen(Gfx **dlist, MatrixS **mats, Vertex **verts);
-void render_fade_barndoor_horizontal(Gfx **dlist, MatrixS **mats, Vertex **verts);
-void render_fade_barndoor_vertical(Gfx **dlist, MatrixS **mats, Vertex **verts);
-void render_fade_barndoor_diagonal(Gfx **dlist, MatrixS **mats, Vertex **verts);
-void render_fade_disabled(Gfx **dlist, MatrixS **mats, Vertex **verts);
-void func_800C0780(FadeTransition *transition);
+void render_fade_transition(Gfx **dList, MatrixS **mats, Vertex **verts);
+void render_fade_fullscreen(Gfx **dList, MatrixS **mats, Vertex **verts);
+void render_fade_barndoor_horizontal(Gfx **dList, MatrixS **mats, Vertex **verts);
+void render_fade_barndoor_vertical(Gfx **dList, MatrixS **mats, Vertex **verts);
+void render_fade_barndoor_diagonal(Gfx **dList, MatrixS **mats, Vertex **verts);
+void render_fade_disabled(Gfx **dList, MatrixS **mats, Vertex **verts);
+void transition_fullscreen_start(FadeTransition *transition);
 void func_800C2640(FadeTransition *transition);
 void func_800C0834(s32 updateRate);
 void func_800C27A0(s32 updateRate);
-s32 func_800C01D8(FadeTransition *transition);
+s32 transition_begin(FadeTransition *transition);
 
-void render_fade_circle(Gfx **dlist, MatrixS **mats, Vertex **verts); //Non Matching
-void render_fade_waves(Gfx **dlist, MatrixS **mats, Vertex **verts); //Non Matching
+void render_fade_circle(Gfx **dList, MatrixS **mats, Vertex **verts); //Non Matching
+void render_fade_waves(Gfx **dList, MatrixS **mats, Vertex **verts); //Non Matching
 void func_800C1130(s32); //Non Matching
 void func_800C1EE8(s32); //Non Matching
 void func_800C0B00(FadeTransition *transition, s32, s32, s16*, s8*, s8*, s8*, s8*, s8*); //Non Matching
