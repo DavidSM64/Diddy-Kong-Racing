@@ -9,10 +9,11 @@
 #include "memory.h"
 #include "audio.h"
 #include "textures_sprites.h"
+#include "objects.h"
 
 /************ .data ************/
 
-s32 D_800DC6E0 = 0; // Currently unknown, might be a different type.
+u16 D_800DC6E0 = 0;
 
 /*******************************/
 
@@ -171,44 +172,38 @@ void func_800096F8(s32 arg0) {
     }
 }
 
-#if 0
-void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, u16 arg7, s32 arg8, u8 arg9, u8 argA, u32 *soundMask) {
-    void *temp_v0;
+void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, u16 arg7, u8 arg8, u8 arg9, u8 argA, u32 *soundMask) {
+    unk80119C50 *temp_v0;
 
-    if (soundMask != NULL) {
-        func_800245B4((s16) (soundId | 0xE000));
+    if (soundMask != 0) {
+        func_800245B4(soundId | 0xE000);
     }
-    if (D_800DC6E0 == 0x28) {
-        if (soundMask != NULL) {
+    if (D_800DC6E0 == 40) {
+        if (soundMask != 0) {
             *soundMask = 0;
         }
         func_800245B4(-0x55AB);
         return;
     }
-    temp_v0 = *(*D_80119C50 + (D_80119C4C * 4));
-    D_80119C4C -= 1;
-    temp_v0->unk0 = x;
-    temp_v0->unk4 = y;
-    temp_v0->unk8 = z;
-    temp_v0->unkC = soundId;
+    temp_v0 = D_80119C50[D_80119C4C--];
+    temp_v0->x = x;
+    temp_v0->y = y;
+    temp_v0->z = z;
+    temp_v0->soundId = soundId;
     temp_v0->unk11 = arg4;
     temp_v0->unk10 = arg5;
     temp_v0->unkE = arg6;
     temp_v0->unkF = arg9;
-    temp_v0->unk14 = (s32) arg7;
-    temp_v0->unk20 = (u8) arg8;
-    temp_v0->unk22 = 0;
-    temp_v0->unk1C = soundMask;
+    temp_v0->unk14 = arg7;
+    temp_v0->unk20 = arg8;
     temp_v0->unk21 = argA;
-    *(D_80119C44 + (D_800DC6E0 * 4)) = temp_v0;
-    D_800DC6E0 += 1;
-    if (soundMask != NULL) {
+    temp_v0->unk22 = 0;
+    temp_v0->soundMask = soundMask;
+    D_80119C44[D_800DC6E0++] = temp_v0;
+    if (soundMask != 0) {
         *soundMask = (u32) temp_v0;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000974C.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800098A4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009968.s")

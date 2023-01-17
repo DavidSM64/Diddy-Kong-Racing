@@ -20,10 +20,11 @@ s32 D_80119C30[2];
 s32 D_80119C38;
 s32 D_80119C3C;
 unk80115D18 *D_80119C40; // This should be in unknown_008C40?
-s32 D_80119C44;
+unk80119C50 **D_80119C44;
 s32 **D_80119C48;
-s32 D_80119C4C;
-s32 D_80119C50[2];
+u8 D_80119C4C;
+unk80119C50 **D_80119C50;
+s32 D_80119C54; //Padding?
 s32 D_80119C58; //Struct of size in func_8000A184 = 0x180 = 384 bytes
 s32 D_80119C5C; //Struct of size in func_8000A184 = 0x180 = 384 bytes Likely the same as above
 s32 D_80119C60[670];
