@@ -19,7 +19,7 @@ s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
 s32 D_80119C30[2];
 s32 D_80119C38;
 s32 D_80119C3C;
-s32 D_80119C40;
+unk80115D18 *D_80119C40; // This should be in unknown_008C40?
 s32 D_80119C44;
 s32 **D_80119C48;
 s32 D_80119C4C;

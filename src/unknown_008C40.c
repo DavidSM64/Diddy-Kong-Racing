@@ -34,6 +34,7 @@ const char D_800E4EDC[] = "Reverb line definition error (line=%d, vertex=%d)\n";
 /************ .bss ************/
 
 extern s8 D_8011AC18;
+extern unk80115D18 *D_80119C40;
 
 /*******************************/
 
@@ -135,9 +136,15 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
     return ret;
 }
 
-// Another function related to playing sound.
-// Play Sound at position?
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009558.s")
+/**
+ * Play Sound at position 
+ */
+void func_80009558(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u32 *soundMask) {
+    func_8000974C(D_80119C40[soundId].unk0, x, y, z, arg4, D_80119C40[soundId].unk3,
+        D_80119C40[soundId].unk2, D_80119C40[soundId].unk6, 0, D_80119C40[soundId].unk4,
+        D_80119C40[soundId].unk8, soundMask);
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800095E8.s")
 #if 0
 // I think this function is used to update the world position of any sound associated with the given soundmask.

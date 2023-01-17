@@ -129,6 +129,6 @@ void func_8000232C(ALSeqPlayer* arg0, void* arg1, u8* arg2, ALCSeq* arg3);
 void play_sound_global(u16 soundID, s32* soundMask); //Non matching.
 f32 audio_get_chr_select_anim_frac(void);
 void func_80009B7C(s32 *arg0, f32 x, f32 y, f32 z); // Non Matching
-void func_8000974C(s32, f32, f32, f32, s32, s32, s32, s32, s32, s32, s32, s32 *);
+void func_8000974C(s32, f32, f32, f32, s32, s32, s32, s32, s32, s32, s32, u32 *);
 
 #endif
