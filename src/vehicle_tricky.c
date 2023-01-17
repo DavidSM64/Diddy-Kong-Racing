@@ -222,7 +222,7 @@ void func_8005CA84(f32 x, f32 y, f32 z, s32 offset) {
         phi_v1 = 0;
     }
     offset += phi_v1;
-    func_80009558(gBossSoundIDOffset[offset], x, y, z, 4, 0);
+    play_sound_at_position(gBossSoundIDOffset[offset], x, y, z, 4, 0);
 }
 
 void func_8005CB04(s32 offset) {

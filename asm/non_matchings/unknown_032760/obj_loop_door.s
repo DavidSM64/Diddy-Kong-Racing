@@ -461,7 +461,7 @@ glabel obj_loop_door
 /* 03CC10 8003C010 AFB80014 */  sw    $t8, 0x14($sp)
 /* 03CC14 8003C014 AFA90040 */  sw    $t1, 0x40($sp)
 /* 03CC18 8003C018 AFA80044 */  sw    $t0, 0x44($sp)
-/* 03CC1C 8003C01C 0C002556 */  jal   func_80009558
+/* 03CC1C 8003C01C 0C002556 */  jal   play_sound_at_position
 /* 03CC20 8003C020 AFAE0010 */   sw    $t6, 0x10($sp)
 /* 03CC24 8003C024 8FA80044 */  lw    $t0, 0x44($sp)
 /* 03CC28 8003C028 8FA90040 */  lw    $t1, 0x40($sp)

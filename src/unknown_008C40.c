@@ -139,7 +139,7 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
 /**
  * Play Sound at position 
  */
-void func_80009558(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u32 *soundMask) {
+void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u32 *soundMask) {
     func_8000974C(D_80119C40[soundId].unk0, x, y, z, arg4, D_80119C40[soundId].unk3,
         D_80119C40[soundId].unk2, D_80119C40[soundId].unk6, 0, D_80119C40[soundId].unk4,
         D_80119C40[soundId].unk8, soundMask);

@@ -198,7 +198,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             newvar = 3;
         }
         if (sp5C == newvar && newvar + 1 == obj->segment.animFrame >> 4) {
-            func_80009558(SOUND_UNK_223, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, 0);
+            play_sound_at_position(SOUND_UNK_223, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, 0);
         }
     }
     if (racer->vehicleIDPrev == 7 && racer->playerIndex == PLAYER_COMPUTER && func_80023568()) {
@@ -282,7 +282,7 @@ void func_8005E204(Object *obj, Object_Racer *racer, f32 arg2, s32 objectID, s32
                             newObj->unk78_obj = temp_s1;
                             newObj->unk7C.word = (s8) temp_s2->animation.y_rotation * 60;
                             newObj->segment.animFrame = get_random_number_from_range(0, 255);
-                            func_80009558(arg4, newObj->segment.trans.x_position, newObj->segment.trans.y_position, newObj->segment.trans.z_position, 4, NULL);
+                            play_sound_at_position(arg4, newObj->segment.trans.x_position, newObj->segment.trans.y_position, newObj->segment.trans.z_position, 4, NULL);
                         }
                     }
                 } else {
