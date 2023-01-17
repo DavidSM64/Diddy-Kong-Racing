@@ -146,6 +146,7 @@ void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u32 *soun
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800095E8.s")
+
 #if 0
 // I think this function is used to update the world position of any sound associated with the given soundmask.
 //This matches, but it breaks update_player_racer
@@ -169,7 +170,46 @@ void func_800096F8(s32 arg0) {
         v0++;
     }
 }
+
+#if 0
+void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, u16 arg7, s32 arg8, u8 arg9, u8 argA, u32 *soundMask) {
+    void *temp_v0;
+
+    if (soundMask != NULL) {
+        func_800245B4((s16) (soundId | 0xE000));
+    }
+    if (D_800DC6E0 == 0x28) {
+        if (soundMask != NULL) {
+            *soundMask = 0;
+        }
+        func_800245B4(-0x55AB);
+        return;
+    }
+    temp_v0 = *(*D_80119C50 + (D_80119C4C * 4));
+    D_80119C4C -= 1;
+    temp_v0->unk0 = x;
+    temp_v0->unk4 = y;
+    temp_v0->unk8 = z;
+    temp_v0->unkC = soundId;
+    temp_v0->unk11 = arg4;
+    temp_v0->unk10 = arg5;
+    temp_v0->unkE = arg6;
+    temp_v0->unkF = arg9;
+    temp_v0->unk14 = (s32) arg7;
+    temp_v0->unk20 = (u8) arg8;
+    temp_v0->unk22 = 0;
+    temp_v0->unk1C = soundMask;
+    temp_v0->unk21 = argA;
+    *(D_80119C44 + (D_800DC6E0 * 4)) = temp_v0;
+    D_800DC6E0 += 1;
+    if (soundMask != NULL) {
+        *soundMask = (u32) temp_v0;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000974C.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800098A4.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009968.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800099EC.s")

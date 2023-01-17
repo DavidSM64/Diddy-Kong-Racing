@@ -24,6 +24,7 @@ typedef struct unk80115D18 {
  u8 unk9;
 } unk80115D18;
 
+
 /* Size: 0x03 bytes */
 typedef struct unk80115D1C {
     u8 unk0;
@@ -129,6 +130,6 @@ void func_8000232C(ALSeqPlayer* arg0, void* arg1, u8* arg2, ALCSeq* arg3);
 void play_sound_global(u16 soundID, s32* soundMask); //Non matching.
 f32 audio_get_chr_select_anim_frac(void);
 void func_80009B7C(s32 *arg0, f32 x, f32 y, f32 z); // Non Matching
-void func_8000974C(s32, f32, f32, f32, s32, s32, s32, s32, s32, s32, s32, u32 *);
+void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, u16 arg7, s32 arg8, u8 arg9, u8 argA, u32 *soundMask); // Non Matching
 
 #endif

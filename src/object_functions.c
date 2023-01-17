@@ -4199,7 +4199,7 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     Object_Audio *obj64;
 
     obj64 = &obj->unk64->audio;
-    obj64->unk0 = entry->unk8;
+    obj64->soundId = entry->unk8;
     obj64->unk2 = entry->unkA;
     obj64->unkC = entry->unkF;
     obj64->unk6 = entry->unkE;
@@ -4207,12 +4207,12 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     obj64->unk5 = entry->unkD;
     obj64->unkD = entry->unk10;
     obj64->unk8 = 0;
-    if (ALBankFile_80115D14_GetSoundDecayTime(obj64->unk0)) {
-        func_8000974C(obj64->unk0, entry->common.x, entry->common.y, entry->common.z,
+    if (ALBankFile_80115D14_GetSoundDecayTime(obj64->soundId)) {
+        func_8000974C(obj64->soundId, entry->common.x, entry->common.y, entry->common.z,
             9, obj64->unk5, obj64->unk4, obj64->unk2, obj64->unkC,
             obj64->unk6, obj64->unkD, &obj64->unk8);
     } else {
-        func_8000974C(obj64->unk0, entry->common.x, entry->common.y, entry->common.z,
+        func_8000974C(obj64->soundId, entry->common.x, entry->common.y, entry->common.z,
             10, obj64->unk5, obj64->unk4, obj64->unk2, obj64->unkC,
             obj64->unk6, obj64->unkD, &obj64->unk8);
     }

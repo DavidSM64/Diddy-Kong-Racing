@@ -1254,7 +1254,7 @@ typedef struct Object_Trigger {
 } Object_Trigger;
 
 typedef struct Object_Audio {
-  /* 0x00 */ u16 unk0;
+  /* 0x00 */ u16 soundId;
   /* 0x02 */ u16 unk2;
   /* 0x04 */ u8 unk4;
   /* 0x05 */ u8 unk5;
