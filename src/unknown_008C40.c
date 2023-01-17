@@ -10,6 +10,7 @@
 #include "audio.h"
 #include "textures_sprites.h"
 #include "objects.h"
+#include "unknown_003260.h"
 
 /************ .data ************/
 
@@ -237,7 +238,22 @@ s32 func_80009AB4(u8 arg0) {
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009B7C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009D6C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000A184.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000A2E8.s")
+
+void func_8000A2E8(s32 arg0) {
+    if (D_800DC6E0 != 0) {
+        if (D_80119C44[arg0]->unk18 != 0) {
+            func_8000488C(D_80119C44[arg0]->unk18);
+        }
+        if (D_80119C44[arg0]->soundMask != 0) {
+            *D_80119C44[arg0]->soundMask = 0;
+            func_800245B4(D_80119C44[arg0]->soundId | 0x5000);
+        }
+        D_80119C4C++;
+        D_80119C50[D_80119C4C] = D_80119C44[arg0];
+        D_80119C44[arg0] = D_80119C44[D_800DC6E0 - 1];
+        D_800DC6E0--;
+    }
+}
 
 typedef struct unk800A414_arg3 {
     f32 unk0;
