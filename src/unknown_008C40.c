@@ -12,6 +12,7 @@
 #include "objects.h"
 #include "unknown_003260.h"
 #include "unknown_0255E0.h"
+#include "math_util.h"
 
 /************ .data ************/
 
@@ -135,7 +136,32 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008174.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008438.s")
 
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800090C0.s")
+s32 func_800090C0(f32 arg0, f32 arg1, s32 arg2) {
+    s32 temp_v1;
+    s32 ret;
+    f32 sp1C;
+
+    sp1C = sqrtf((arg0 * arg0) + (arg1 * arg1));
+    temp_v1 = 0xFFFF - arctan2_f(arg0, arg1);
+
+    if (temp_v1 < arg2) {
+        if (sp1C <= 1.0f) {
+            ret = 64 - ((sins(arg2 - temp_v1) / 1024) * (sp1C * 1));
+        } else {
+            ret = 64 - (sins_2(arg2 - temp_v1) / 1024);
+        }
+    } else if (sp1C <= 1.0f) {
+        ret = (sins(temp_v1 - arg2) / 1024) * (sp1C * 1) + 64;
+    } else {
+        ret = (sins_2(temp_v1 - arg2) / 1024) + 64;
+    }
+
+    if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
+        ret = 128 - ret;
+    }
+
+    return ret;
+}
 
 //Best I can figure, this measures the distance between XYZ values.
 s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, f32 *outY, f32 *outZ) {

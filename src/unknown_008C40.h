@@ -41,6 +41,7 @@ void func_80008140(void);
 void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, u16 arg7, u8 arg8, u8 arg9, u8 argA, u32 *soundMask);
 void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u32 *soundMask);
 void func_8000A2E8(s32 arg0);
+s32 func_800090C0(f32, f32, s32);
 //void update_spatial_audio_position(Vec3f *arg0, f32 arg1, f32 arg2, f32 arg3);
 
 s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, f32 *outY, f32 *outZ);
@@ -50,7 +51,6 @@ void update_spatial_audio_position(s32, f32, f32, f32); //Not accurate, the real
 void func_800098A4(s32, s32, f32, f32, f32, s32, s32, s32, s32, s32, s32, s32, s32);
 void func_80008174(void); // Non Matching
 void func_80008040(void); // Non Matching
-s32 func_800090C0(f32, f32, s16); // Non Matching
 void func_80008438(Object **arg0, s32 numRacers, s32 updateRate); // Non Matching
 void func_80006FC8(Object **arg0, s32 numRacers, ObjectSegment *arg2, u8 arg3, s32 updateRate); // Non Matching
 void func_80006BFC(Object *arg0, ObjectSegment *arg1, Object *arg2, s32 updateRate); // Non Matching
