@@ -23,14 +23,15 @@ typedef struct unk8011A6D8_04 {
 
 /* Size: 0xC0 / 192 bytes - Thought it was a LevelHeader, but that didn't match other usages */
 typedef struct unk8011A6D8 {
-  /* 0x00 */ u8 unk0;
+  /* 0x00 */ f32 unk0;
   union {
     /* 0x04 */ unk8011A6D8_04 *unk4_01;
     /* 0x04 */ floatXYZVals *unk4_02;
   } unk4;
   /* 0x05 */ u8 pad05[0xB0];
   /* 0xB8 */ s8 unkB8;
-  /* 0xB9 */ u8 padB9[0x07];
+  /* 0xB9 */ u8 padB9[0x03];
+  /* 0xBC */ f32 unkBC;
 } unk8011A6D8;
 
 

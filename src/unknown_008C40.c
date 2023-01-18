@@ -21,16 +21,16 @@ u16 D_800DC6E0 = 0;
 
 /************ .rodata ************/
 
-const char D_800E4D00[] = "OUT OF AUDIO POINTS\n";
-const char D_800E4D18[] = "amAudioLineAddVertex: Exceeded maximum number of lines (%d)\n";
-const char D_800E4D58[] = "amAudioLineAddVertex: Exceeded maximum number of line vertices (%d)\n";
-const char D_800E4DA0[] = "amReverbLineAddVertex: Exceeded maximum number of lines (%d)\n";
-const char D_800E4DE0[] = "amReverbLineAddVertex: Exceeded maximum number of line vertices (%d)\n";
+UNUSED const char D_800E4D00[] = "OUT OF AUDIO POINTS\n";
+UNUSED const char D_800E4D18[] = "amAudioLineAddVertex: Exceeded maximum number of lines (%d)\n";
+UNUSED const char D_800E4D58[] = "amAudioLineAddVertex: Exceeded maximum number of line vertices (%d)\n";
+UNUSED const char D_800E4DA0[] = "amReverbLineAddVertex: Exceeded maximum number of lines (%d)\n";
+UNUSED const char D_800E4DE0[] = "amReverbLineAddVertex: Exceeded maximum number of line vertices (%d)\n";
 
-const char D_800E4E28[] = "Audio line definition error (less than 2 vertices on line %d)\n";
-const char D_800E4E68[] = "Audio line definition error (line=%d, vertex=%d)\n";
-const char D_800E4E9C[] = "Reverb line definition error (less than 2 vertices on line %d)\n";
-const char D_800E4EDC[] = "Reverb line definition error (line=%d, vertex=%d)\n";
+UNUSED const char D_800E4E28[] = "Audio line definition error (less than 2 vertices on line %d)\n";
+UNUSED const char D_800E4E68[] = "Audio line definition error (line=%d, vertex=%d)\n";
+UNUSED const char D_800E4E9C[] = "Reverb line definition error (less than 2 vertices on line %d)\n";
+UNUSED const char D_800E4EDC[] = "Reverb line definition error (line=%d, vertex=%d)\n";
 
 /*********************************/
 
@@ -80,7 +80,59 @@ void func_80008168(void) {
     D_8011AC18 = 0;
 }
 
+#ifdef NON_EQUIVALENT
+extern f32 D_80119C60[672];
+extern f32 D_8011A6E0[336];//[7][48];
+extern f32 D_8011A6DC[];
+void func_80008174(void) {
+    s32 i;
+    s32 j;
+
+    for (D_80119C4C = 0; D_80119C4C < 40; D_80119C4C++) {
+        D_80119C50[D_80119C4C] = D_80119C48[D_80119C4C];
+    }
+    D_80119C4C--;
+
+    for (i = 0; i < D_800DC6E0; i++) {
+        D_80119C44[i]->unk12 = 0;
+        if (D_80119C44[i]->unk18 != NULL) {
+            func_8000488C(D_80119C44[i]->unk18);
+        }
+    }
+    D_800DC6E0 = 0;
+
+    for (i = 0; i < ARRAY_COUNT(D_80119C60); i++) {
+        D_80119C58[i].unk16C = 0;
+        if (D_80119C58[i].unk178 != 0) {
+            if (D_80119C58[i].unk0 == 0) {
+                func_8000488C(D_80119C58[i].unk178);
+            } else if (D_80119C58[i].unk0 == 1) {
+                func_800018E0();
+            }
+            D_80119C58[i].unk178 = 0;
+        }
+        D_80119C58[i].unk17C = -1;
+
+        D_80119C60[i] = -100000.0;
+    }
+
+    for (i = 0; i < ARRAY_COUNT(D_8011A6E0); i++) {
+        D_8011A6D8[i].unkB8 = -1;
+        D_8011A6D8[i].unk0 = 0.0f;
+        D_8011A6D8[i].unkBC = 0.0f;
+        D_8011A6DC[i] = -100000.0;
+        D_8011A6E0[i] = -100000.0;
+        // for (j = 0; j < ARRAY_COUNT(D_8011A6E0[0]); j++) {
+        //     D_8011A6E0[i][j] = -100000.0;
+        // }
+    }
+    
+    D_8011AC18 = 0;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008174.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008438.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800090C0.s")
@@ -238,7 +290,7 @@ s32 func_80009AB4(u8 arg0) {
 }
 
 #ifdef NON_EQUIVALENT
-s32 func_80009D6C(unk8011A6D8 *, f32, f32, f32);    /* extern */
+u8 func_80009D6C(unk8011A6D8 *, f32, f32, f32);    /* extern */
 
 void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
     s32 j;

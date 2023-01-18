@@ -22,16 +22,16 @@ s32 D_80119C38;
 s32 D_80119C3C;
 unk80115D18 *D_80119C40; // This should be in unknown_008C40?
 unk80119C50 **D_80119C44;
-s32 **D_80119C48;
+unk80119C50 **D_80119C48; //0x24 struct size - 0x5A0 total size - should be 40 elements
 u8 D_80119C4C;
 unk80119C50 **D_80119C50;
 s32 D_80119C54; //Padding?
-s32 D_80119C58; //Struct of size in func_8000A184 = 0x180 = 384 bytes
+unk80119C58 *D_80119C58; //Struct of size in func_8000A184 = 0x180 = 384 bytes
 s32 D_80119C5C; //Struct of size in func_8000A184 = 0x180 = 384 bytes Likely the same as above
-s32 D_80119C60[670];
+f32 D_80119C60[670]; //array size of 672 looks to be required for func_80008174
 unk8011A6D8 *D_8011A6D8; //unk8011A6D8[]
 s32 D_8011A6DC;
-s32 D_8011A6E0[334];
+f32 D_8011A6E0[334];
 s32 D_8011AC18;
 s32 D_8011AC1C;
 s16 D_8011AC20[128];
