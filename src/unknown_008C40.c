@@ -11,6 +11,7 @@
 #include "textures_sprites.h"
 #include "objects.h"
 #include "unknown_003260.h"
+#include "unknown_0255E0.h"
 
 /************ .data ************/
 
@@ -37,6 +38,7 @@ const char D_800E4EDC[] = "Reverb line definition error (line=%d, vertex=%d)\n";
 
 extern s8 D_8011AC18;
 extern unk80115D18 *D_80119C40;
+extern unk8011A6D8 D_8011A6D8[];
 
 /*******************************/
 
@@ -235,7 +237,56 @@ s32 func_80009AB4(u8 arg0) {
     return ret;
 }
 
+#ifdef NON_EQUIVALENT
+s32 func_80009D6C(unk8011A6D8 *, f32, f32, f32);    /* extern */
+
+void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
+    s32 j;
+    f32 outX;
+    f32 outY;
+    f32 outZ;
+    s32 levelSegmentIndex;
+    f32 *yVals;
+    s32 distBetween;
+    s32 numOfYVals;
+    s32 temp_v0_4;
+    s32 volume;
+    s32 var_s6;
+    s32 i;
+    s32 k;
+
+    levelSegmentIndex = get_level_segment_index_from_position(x, y, z);
+    volume = 0;
+    var_s6 = 0x190;
+    for (i = 0; i < 7; i++) {
+        if (D_8011A6D8[i].unk0 != 0) {
+            if (func_80009AB4(i & 0xFF) != 0) {
+                for (j = 0; j < D_8011A6D8[i].unkB8; j++) {
+                    distBetween = func_800092A8(x, y, z, &D_8011A6D8[i].unk4.unk4_02[j], &outX, &outY, &outZ);
+                    if (distBetween < var_s6) {
+                        numOfYVals = func_8002BAB0(levelSegmentIndex, x, z, yVals);
+                        for (k = 0; k < numOfYVals; k++) {
+                            if (y < yVals[k]) {
+                                var_s6 = distBetween;
+                                temp_v0_4 = func_80009D6C(&D_8011A6D8[i], outX, outY, outZ);
+                                if (volume < temp_v0_4) {
+                                    volume = temp_v0_4 & 0xFF;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (soundState != NULL) {
+        func_800049F8((s32) soundState, 0x100, (u32) volume);
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009B7C.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009D6C.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000A184.s")
 

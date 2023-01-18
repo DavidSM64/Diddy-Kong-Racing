@@ -5,6 +5,7 @@
 
 #include "types.h"
 #include "macros.h"
+#include "unknown_008C40.h"
 
 /************ .data ************/
 
@@ -28,7 +29,7 @@ s32 D_80119C54; //Padding?
 s32 D_80119C58; //Struct of size in func_8000A184 = 0x180 = 384 bytes
 s32 D_80119C5C; //Struct of size in func_8000A184 = 0x180 = 384 bytes Likely the same as above
 s32 D_80119C60[670];
-s32 D_8011A6D8; //unk8011A6D8[]
+unk8011A6D8 *D_8011A6D8; //unk8011A6D8[]
 s32 D_8011A6DC;
 s32 D_8011A6E0[334];
 s32 D_8011AC18;
