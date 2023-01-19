@@ -329,7 +329,6 @@ void func_800A277C(s32, Object*, s32);
 void func_800A6254(Object_64* obj, s32 updateRate);
 void func_800A6E30(Object_64* obj, s32 updateRate);
 void func_800A7A60(Object*, Gfx**);
-void func_800095E8(s32, f32, f32, f32, s32, s32, f32, s32*);
 void func_800A0BD4(s32);
 void func_800A19A4(Object_Racer*, s32 updateRate);
 void func_800A1E48(s32, s32);
