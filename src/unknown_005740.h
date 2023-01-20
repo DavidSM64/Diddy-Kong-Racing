@@ -25,8 +25,12 @@ typedef struct unk80119C50 {
 
 /* Size: 0x180 / 384 bytes */
 typedef struct unk80119C58 {
-    /* 0x000 */ u8 unk0;
-    /* 0x001 */ u8 pad1[0x16A];
+    union {
+        /* 0x00 */ f32 unk0_01;
+        /* 0x00 */ u8 unk0_02;
+    } unk0;
+    /* 0x004 */ Vec3f *unk4;
+    /* 0x008 */ u8 pad9[0x164];
     /* 0x16C */ s32 unk16C;
     /* 0x170 */ s32 unk170;
     /* 0x174 */ u8 unk174;
@@ -49,7 +53,6 @@ extern unk80119C50 **D_80119C48;
 extern unk80119C50 **D_80119C44;
 extern unk80119C50 **D_80119C50;
 extern u8 D_80119C4C;
-extern unk80119C58 **D_80119C58;
 
 
 void func_800050D0(Object* obj, u32 buttonsPressed, u32 carInput, s32 updateRate);        /* extern */

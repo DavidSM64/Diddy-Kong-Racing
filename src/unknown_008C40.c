@@ -39,6 +39,7 @@ UNUSED const char D_800E4EDC[] = "Reverb line definition error (line=%d, vertex=
 
 extern s8 D_8011AC18;
 extern unk80115D18 *D_80119C40;
+extern unk80119C58 D_80119C58[];
 extern unk8011A6D8 D_8011A6D8[];
 
 /*******************************/
@@ -288,38 +289,56 @@ void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, 
     }
 }
 
-#ifdef NON_EQUIVALENT
 void func_800098A4(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6,
                    u8 arg7, u8 arg8, u16 arg9, u8 argA, u8 argB, u8 argC) {
     Vec3f *temp_a0;
     unk80119C58 *temp_v1;
 
     if ((argB < 7) && (argC < 30)) {
-        temp_v1 = D_80119C58[argB];
-        temp_a0 = &temp_v1[argC * 1]; //This can't be right...
+        temp_v1 = &D_80119C58[argB];
+        temp_a0 = &temp_v1->unk4 + argC * 3; //This can't be right...
         temp_a0->x = x;
         temp_a0->y = y;
         temp_a0->z = z;
         if (argC == 0) {
-            temp_v1->unk16C = soundId;
-            temp_v1->unk0 = arg0;
-            temp_v1->unk170 = arg9;
-            temp_v1->unk17D = argA;
-            temp_v1->unk174 = arg6;
-            temp_v1->unk175 = arg5;
-            temp_v1->unk176 = arg7;
-            temp_v1->unk17E = arg8;
+            (&D_80119C58[argB])->unk16C = soundId;
+            (&D_80119C58[argB])->unk0.unk0_02 = arg0;
+            (&D_80119C58[argB])->unk170 = arg9;
+            (&D_80119C58[argB])->unk17D = argA;
+            (&D_80119C58[argB])->unk174 = arg6;
+            (&D_80119C58[argB])->unk175 = arg5;
+            (&D_80119C58[argB])->unk176 = arg7;
+            (&D_80119C58[argB])->unk17E = arg8;
         }
-        if (temp_v1->unk17C < argC) {
-            temp_v1->unk17C = argC;
+        if ((&D_80119C58[argB])->unk17C < argC) {
+            (&D_80119C58[argB])->unk17C = argC;
+        }
+    }
+}
+
+#if 0
+void func_80009968(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
+    unk8011A6D8_04 *temp_a1;
+    unk8011A6D8 *temp_v1;
+
+    if ((arg4 < 7) && (arg5 < 15)) {
+        temp_v1 = &D_8011A6D8[arg4];
+        temp_a1 = (unk8011A6D8_04 *) &temp_v1->unk4 + arg5;
+        temp_a1->unk0 = x;
+        temp_a1->unk4 = y;
+        temp_a1->unk8 = z;
+        if (arg5 == 0) {
+            temp_v1->unk0.unk0_02 = (s8) (arg3);
+        }
+        if (temp_v1->unkB8 < arg5) {
+             temp_v1->unkB8 = arg5;
         }
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800098A4.s")
+GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009968.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009968.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800099EC.s")
 
 s32 func_80009AB4(u8 arg0) {

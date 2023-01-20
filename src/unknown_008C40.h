@@ -23,7 +23,10 @@ typedef struct unk8011A6D8_04 {
 
 /* Size: 0xC0 / 192 bytes - Thought it was a LevelHeader, but that didn't match other usages */
 typedef struct unk8011A6D8 {
-  /* 0x00 */ f32 unk0;
+  union {
+    /* 0x00 */ f32 unk0_01;
+    /* 0x00 */ s8 unk0_02;
+  } unk0;
   union {
     /* 0x04 */ unk8011A6D8_04 *unk4_01;
     /* 0x04 */ floatXYZVals *unk4_02;
@@ -46,7 +49,7 @@ void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 arg6,
 //void update_spatial_audio_position(Vec3f *arg0, f32 arg1, f32 arg2, f32 arg3);
 
 s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, f32 *outY, f32 *outZ);
-void func_80009968(f32, f32, f32, u8, u8, s32); // Non Matching
+void func_80009968(f32, f32, f32, u8, u8, u8); // Non Matching
 void update_spatial_audio_position(s32, f32, f32, f32); //Not accurate, the real one is above but it breaks update_player_racer
 // Yeah this one seems excessive, and it's Non Matching
 void func_800098A4(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6,
