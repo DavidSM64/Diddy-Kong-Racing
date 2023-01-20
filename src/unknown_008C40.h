@@ -46,14 +46,13 @@ void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u32 *soun
 void func_8000A2E8(s32 arg0);
 s32 func_800090C0(f32, f32, s32);
 void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 arg6, u32 *soundMask);
+void func_800098A4(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6,
+                   u8 arg7, u8 arg8, u16 arg9, u8 argA, u8 argB, u8 argC);
 //void update_spatial_audio_position(Vec3f *arg0, f32 arg1, f32 arg2, f32 arg3);
 
 s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, f32 *outY, f32 *outZ);
 void func_80009968(f32, f32, f32, u8, u8, u8); // Non Matching
 void update_spatial_audio_position(s32, f32, f32, f32); //Not accurate, the real one is above but it breaks update_player_racer
-// Yeah this one seems excessive, and it's Non Matching
-void func_800098A4(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6,
-                   u8 arg7, u8 arg8, u16 arg9, u8 argA, u8 argB, u8 argC);
 void func_80008174(void); // Non Matching
 void func_80008040(void); // Non Matching
 void func_80008438(Object **arg0, s32 numRacers, s32 updateRate); // Non Matching

@@ -316,19 +316,20 @@ void func_800098A4(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6,
     }
 }
 
-#if 0
+#ifdef NON_MATCHING
+// single regalloc diff
 void func_80009968(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
-    unk8011A6D8_04 *temp_a1;
+    Vec3f *temp_a1;
     unk8011A6D8 *temp_v1;
 
     if ((arg4 < 7) && (arg5 < 15)) {
         temp_v1 = &D_8011A6D8[arg4];
-        temp_a1 = (unk8011A6D8_04 *) &temp_v1->unk4 + arg5;
-        temp_a1->unk0 = x;
-        temp_a1->unk4 = y;
-        temp_a1->unk8 = z;
+        temp_a1 = (Vec3f *) &temp_v1->unk4 + arg5 * 1;
+        temp_a1->x = x;
+        temp_a1->y = y;
+        temp_a1->z = z;
         if (arg5 == 0) {
-            temp_v1->unk0.unk0_02 = (s8) (arg3);
+            temp_v1->unk0.unk0_02 = arg3 & 0xFF;
         }
         if (temp_v1->unkB8 < arg5) {
              temp_v1->unkB8 = arg5;
