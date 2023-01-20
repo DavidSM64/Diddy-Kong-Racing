@@ -30,6 +30,8 @@ typedef struct unk8011A6D8 {
   union {
     /* 0x04 */ unk8011A6D8_04 *unk4_01;
     /* 0x04 */ floatXYZVals *unk4_02;
+    /* 0x04 */ unk8011A6D8_04 **unk4_03;
+    /* 0x04 */ Vec3f **unk4_04;
   } unk4;
   /* 0x05 */ u8 pad05[0xB0];
   /* 0xB8 */ s8 unkB8;
