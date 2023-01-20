@@ -106,9 +106,9 @@ void func_80008174(void) {
     for (i = 0; i < ARRAY_COUNT(D_80119C60); i++) {
         D_80119C58[i].unk16C = 0;
         if (D_80119C58[i].unk178 != 0) {
-            if (D_80119C58[i].unk0 == 0) {
+            if (D_80119C58[i].unk0.unk0_02 == 0) {
                 func_8000488C(D_80119C58[i].unk178);
-            } else if (D_80119C58[i].unk0 == 1) {
+            } else if (D_80119C58[i].unk0.unk0_02 == 1) {
                 func_800018E0();
             }
             D_80119C58[i].unk178 = 0;
@@ -120,7 +120,7 @@ void func_80008174(void) {
 
     for (i = 0; i < ARRAY_COUNT(D_8011A6E0); i++) {
         D_8011A6D8[i].unkB8 = -1;
-        D_8011A6D8[i].unk0 = 0.0f;
+        D_8011A6D8[i].unk0.unk0_01 = 0.0f;
         D_8011A6D8[i].unkBC = 0.0f;
         D_8011A6DC[i] = -100000.0;
         D_8011A6E0[i] = -100000.0;
@@ -412,7 +412,7 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
     volume = 0;
     var_s6 = 0x190;
     for (i = 0; i < 7; i++) {
-        if (D_8011A6D8[i].unk0 != 0) {
+        if (D_8011A6D8[i].unk0.unk0_02 != 0) {
             if (func_80009AB4(i & 0xFF) != 0) {
                 for (j = 0; j < D_8011A6D8[i].unkB8; j++) {
                     distBetween = func_800092A8(x, y, z, &D_8011A6D8[i].unk4.unk4_02[j], &outX, &outY, &outZ);
