@@ -288,7 +288,37 @@ void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, 
     }
 }
 
+#ifdef NON_EQUIVALENT
+void func_800098A4(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6,
+                   u8 arg7, u8 arg8, u16 arg9, u8 argA, u8 argB, u8 argC) {
+    Vec3f *temp_a0;
+    unk80119C58 *temp_v1;
+
+    if ((argB < 7) && (argC < 30)) {
+        temp_v1 = D_80119C58[argB];
+        temp_a0 = &temp_v1[argC * 1]; //This can't be right...
+        temp_a0->x = x;
+        temp_a0->y = y;
+        temp_a0->z = z;
+        if (argC == 0) {
+            temp_v1->unk16C = soundId;
+            temp_v1->unk0 = arg0;
+            temp_v1->unk170 = arg9;
+            temp_v1->unk17D = argA;
+            temp_v1->unk174 = arg6;
+            temp_v1->unk175 = arg5;
+            temp_v1->unk176 = arg7;
+            temp_v1->unk17E = arg8;
+        }
+        if (temp_v1->unk17C < argC) {
+            temp_v1->unk17C = argC;
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800098A4.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009968.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800099EC.s")
 

@@ -28,10 +28,15 @@ typedef struct unk80119C58 {
     /* 0x000 */ u8 unk0;
     /* 0x001 */ u8 pad1[0x16A];
     /* 0x16C */ s32 unk16C;
-    /* 0x170 */ u8 pad170[0x008];
+    /* 0x170 */ s32 unk170;
+    /* 0x174 */ u8 unk174;
+    /* 0x175 */ u8 unk175;
+    /* 0x176 */ u8 unk176;
+    /* 0x177 */ u8 unk177;
     /* 0x178 */ s32 unk178;
     /* 0x17C */ s8 unk17C;
-    /* 0x17D */ u8 pad17D[0x003];
+    /* 0x17D */ u8 unk17D;
+    /* 0x17E */ u8 unk17E;
 } unk80119C58;
 
 
@@ -44,7 +49,7 @@ extern unk80119C50 **D_80119C48;
 extern unk80119C50 **D_80119C44;
 extern unk80119C50 **D_80119C50;
 extern u8 D_80119C4C;
-extern unk80119C58 *D_80119C58;
+extern unk80119C58 **D_80119C58;
 
 
 void func_800050D0(Object* obj, u32 buttonsPressed, u32 carInput, s32 updateRate);        /* extern */
