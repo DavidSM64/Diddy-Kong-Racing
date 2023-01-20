@@ -341,30 +341,28 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009968.s")
 #endif
 
 s32 func_800099EC(u8 arg0) {
-    s32 var_v1;
+    s32 ret;
     f32 *var_a2;
     f32 temp_f0;
-    s32 var_a0;
+    s32 i;
     unk80119C58 *temp_v0;
 
-    var_v1 = 1;
+    ret = 1;
     temp_v0 = &D_80119C58[arg0];
-    var_a2 = (Vec3f *) &temp_v0->unk4;
+    var_a2 = (f32 *) &temp_v0->unk4;
     if (temp_v0->unk17C <= 0) {
         return 0;
     }
-    var_a0 = 0;
-    if (temp_v0->unk17C > 0) {
-        do {
-            temp_f0 = *var_a2;
-            var_a0 += 1;
-            if ((temp_f0 == -100000.0) || ((temp_f0 + 1) == -100000.0) || ((temp_f0 + 2) == -100000.0)) {
-                var_v1 = 0;
-            }
-            var_a2 += 3;
-        } while (var_a0 < temp_v0->unk17C);
+
+    for (i = 0; i < temp_v0->unk17C; i++) {
+        temp_f0 = *var_a2;
+        if (temp_f0 == -100000.0 || temp_f0 + 1 == -100000.0 || temp_f0 + 2 == -100000.0) {
+            ret = 0;
+        }
+        var_a2 += 3;
     }
-    return var_v1;
+
+    return ret;
 }
 
 s32 func_80009AB4(u8 arg0) {
