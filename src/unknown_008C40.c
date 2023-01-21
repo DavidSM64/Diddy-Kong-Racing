@@ -441,7 +441,32 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009B7C.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009D6C.s")
+
+#ifdef NON_EQUIVALENT
+extern unk80119C58 **D_80119C5C;
+extern unk8011A6D8 **D_8011A6DC;
+void func_8000A184(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
+    s32 i, j;
+
+    for (i = 0; i < 7; i++) {
+        if (D_80119C58[i].unk16C != 0) {
+            for (j = 0; j < D_80119C58[i].unk17C; j++) {
+                func_8000A414(arg0, arg1, arg2, (floatXYZVals *) &D_80119C5C[i], 0xFF, 0xFF, 0);
+            }
+        }
+    }
+
+    for (i = 0; i < 7; i++) {
+        if (D_8011A6D8[i].unk0.unk0_02 != 0) {
+            for (j = 0; j < D_8011A6D8[i].unkB8; j++) {
+                func_8000A414(arg0, arg1, arg2, (floatXYZVals *) &D_8011A6DC[i], 0xFF, 0xFF, 0);
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000A184.s")
+#endif
 
 void func_8000A2E8(s32 arg0) {
     if (D_800DC6E0 != 0) {
@@ -459,93 +484,83 @@ void func_8000A2E8(s32 arg0) {
     }
 }
 
-typedef struct unk800A414_arg3 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
-} unk800A414_arg3;
+void func_8000A414(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *arg3, u8 red, u8 green, u8 blue) {
+    Gfx *temp_dlist;
+    Vertex *temp_verts;
+    Triangle *temp_tris;
+    s16 x1;
+    s16 y1;
+    s16 z1;
+    s16 x2;
+    s16 y2;
+    s16 z2;
 
-void func_8000A414(Gfx **arg0, Vertex **arg1, Triangle **arg2, unk800A414_arg3 *arg3, u8 arg4, u8 arg5, u8 arg6) {
-    Gfx *sp34;
-    Vertex *sp30;
-    Triangle *sp2C;
-    s16 sp2A;
-    s16 sp28;
-    s16 sp26;
-    s16 sp24;
-    s16 sp22;
-    s16 sp20;
-
-
-    sp2A =  arg3->unk0;
-    sp28 =  arg3->unk4;
-    sp26 =  arg3->unk8;
-    sp24 =  arg3->unkC;
-    sp22 =  arg3->unk10;
-    sp20 =  arg3->unk14;
-    sp34 = *arg0;
+    x1 =  arg3->x1;
+    y1 =  arg3->y1;
+    z1 =  arg3->z1;
+    x2 =  arg3->x2;
+    y2 =  arg3->y2;
+    z2 =  arg3->z2;
+    temp_dlist = *dlist;
     
-    sp30 = *arg1;
-    sp2C = *arg2;
-    load_and_set_texture_no_offset(&sp34, NULL, RENDER_NONE);
-    gSPVertexDKR(sp34++, OS_PHYSICAL_TO_K0(sp30), 4, 0);
-    gSPPolygon(sp34++, OS_PHYSICAL_TO_K0(sp2C), 2, 0);
-    sp30[0].x = sp2A;
-    sp30[0].y = (s16) (sp28 + 5);
-    sp30[0].z = sp26;
-    sp30[0].r = arg4;
-    sp30[0].g = arg5;
-    sp30[0].b = arg6;
-    sp30[0].a = 255;
-    sp30[1].x = sp2A;
-    sp30[1].y = (s16) (sp28 - 5);
-    sp30[1].z = sp26;
-    sp30[1].r = arg4;
-    sp30[1].g = arg5;
-    sp30[1].b = arg6;
-    sp30[1].a = 255;
-    sp30[2].x = sp24;
-    sp30[2].y = (s16) (sp22 + 5);
-    sp30[2].z = sp20;
-    sp30[2].r = 255;
-    sp30[2].g = 255;
-    sp30[2].b = 255;
-    sp30[2].a = 255;
-    sp30[3].x = sp24;
-    sp30[3].y = (s16) (sp22 - 5);
-    sp30[3].z = sp20;
-    sp30[3].r = 255;
-    sp30[3].g = 255;
-    sp30[3].b = 255;
-    sp30[3].a = 255;
-    sp30 += 4;
+    temp_verts = *verts;
+    temp_tris = *tris;
+    load_and_set_texture_no_offset(&temp_dlist, NULL, RENDER_NONE);
+    gSPVertexDKR(temp_dlist++, OS_PHYSICAL_TO_K0(temp_verts), 4, 0);
+    gSPPolygon(temp_dlist++, OS_PHYSICAL_TO_K0(temp_tris), 2, 0);
+    temp_verts[0].x = x1;
+    temp_verts[0].y = (y1 + 5);
+    temp_verts[0].z = z1;
+    temp_verts[0].r = red;
+    temp_verts[0].g = green;
+    temp_verts[0].b = blue;
+    temp_verts[0].a = 255;
+    temp_verts[1].x = x1;
+    temp_verts[1].y = (y1 - 5);
+    temp_verts[1].z = z1;
+    temp_verts[1].r = red;
+    temp_verts[1].g = green;
+    temp_verts[1].b = blue;
+    temp_verts[1].a = 255;
+    temp_verts[2].x = x2;
+    temp_verts[2].y = (y2 + 5);
+    temp_verts[2].z = z2;
+    temp_verts[2].r = 255;
+    temp_verts[2].g = 255;
+    temp_verts[2].b = 255;
+    temp_verts[2].a = 255;
+    temp_verts[3].x = x2;
+    temp_verts[3].y = (y2 - 5);
+    temp_verts[3].z = z2;
+    temp_verts[3].r = 255;
+    temp_verts[3].g = 255;
+    temp_verts[3].b = 255;
+    temp_verts[3].a = 255;
+    temp_verts += 4;
     
-    sp2C[0].flags = 0x40; // 0x40 = Draw backface.
-    sp2C[0].vi0 = 2;
-    sp2C[0].vi1 = 1;
-    sp2C[0].vi2 = 0;
-    sp2C[0].uv0.u = 0x3E0;
-    sp2C[0].uv0.v = 0x3E0;
-    sp2C[0].uv1.u = 0x3E0;
-    sp2C[0].uv1.v = 0;
-    sp2C[0].uv2.u = 1;
-    sp2C[0].uv2.v = 0;
-    sp2C[1].flags = 0x40;
-    sp2C[1].vi0 = 3;
-    sp2C[1].vi1 = 2;
-    sp2C[1].vi2 = 1;
-    sp2C[1].uv0.u = 1;
-    sp2C[1].uv0.v = 0x3E0;
-    sp2C[1].uv1.u = 0x3E0;
-    sp2C[1].uv1.v = 0x3E0;
-    sp2C[1].uv2.u = 1;
-    sp2C[1].uv2.v = 0;
-    sp2C += 2;
+    temp_tris[0].flags = 0x40; // 0x40 = Draw backface.
+    temp_tris[0].vi0 = 2;
+    temp_tris[0].vi1 = 1;
+    temp_tris[0].vi2 = 0;
+    temp_tris[0].uv0.u = 0x3E0;
+    temp_tris[0].uv0.v = 0x3E0;
+    temp_tris[0].uv1.u = 0x3E0;
+    temp_tris[0].uv1.v = 0;
+    temp_tris[0].uv2.u = 1;
+    temp_tris[0].uv2.v = 0;
+    temp_tris[1].flags = 0x40;
+    temp_tris[1].vi0 = 3;
+    temp_tris[1].vi1 = 2;
+    temp_tris[1].vi2 = 1;
+    temp_tris[1].uv0.u = 1;
+    temp_tris[1].uv0.v = 0x3E0;
+    temp_tris[1].uv1.u = 0x3E0;
+    temp_tris[1].uv1.v = 0x3E0;
+    temp_tris[1].uv2.u = 1;
+    temp_tris[1].uv2.v = 0;
+    temp_tris += 2;
     
-    *arg0 = sp34;
-    *arg1 = sp30;
-    *arg2 = sp2C;
+    *dlist = temp_dlist;
+    *verts = temp_verts;
+    *tris = temp_tris;
 }
