@@ -85,7 +85,7 @@ void func_80008168(void) {
 #ifdef NON_EQUIVALENT
 extern f32 D_80119C60[672];
 extern f32 D_8011A6E0[336];//[7][48];
-extern f32 D_8011A6DC[];
+extern unk8011A6D8 **D_8011A6DC;
 void func_80008174(void) {
     s32 i;
     s32 j;
@@ -122,7 +122,7 @@ void func_80008174(void) {
         D_8011A6D8[i].unkB8 = -1;
         D_8011A6D8[i].unk0.unk0_01 = 0.0f;
         D_8011A6D8[i].unkBC = 0.0f;
-        D_8011A6DC[i] = -100000.0;
+        D_8011A6DC[i]->unk0.unk0_01 = -100000.0;
         D_8011A6E0[i] = -100000.0;
         // for (j = 0; j < ARRAY_COUNT(D_8011A6E0[0]); j++) {
         //     D_8011A6E0[i][j] = -100000.0;
