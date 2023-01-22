@@ -4122,7 +4122,7 @@ block_37:
 
 /**
  * If a collision target is found for a level 1 or 3 rocket, reverse the velocity and set the next position target
- * to be right on top of them. This ensures a collision is garunteed this frame.
+ * to be right on top of them. This ensures a collision is guaranteed this frame.
  * This function also calls the function that plays the incoming rocket sound.
 */
 void rocket_prevent_overshoot(Object *obj, UNUSED s32 updateRate, Object_Weapon *rocket) {
