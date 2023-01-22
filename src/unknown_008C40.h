@@ -52,11 +52,11 @@ typedef struct unk800A414_arg3 {
 void func_80008168(void);
 void func_800096F8(s32);
 void func_80008140(void);
-void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, u16 arg7, u8 arg8, u8 arg9, u8 argA, u32 *soundMask);
-void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u32 *soundMask);
+void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, u16 arg7, u8 arg8, u8 arg9, u8 argA, s32 *soundMask);
+void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, s32 *soundMask);
 void func_8000A2E8(s32 arg0);
 s32 func_800090C0(f32, f32, s32);
-void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 arg6, u32 *soundMask);
+void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 arg6, s32 *soundMask);
 void func_800098A4(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6,
                    u8 arg7, u8 arg8, u16 arg9, u8 argA, u8 argB, u8 argC);
 //void update_spatial_audio_position(Vec3f *arg0, f32 arg1, f32 arg2, f32 arg3);

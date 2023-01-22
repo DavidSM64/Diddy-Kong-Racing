@@ -16,7 +16,7 @@ typedef struct unk80119C50 {
     /* 0x12 */ u8 unk12;
     /* 0x14 */ s32 unk14;
     /* 0x18 */ s32 unk18;
-    /* 0x1C */ u32 *soundMask;
+    /* 0x1C */ s32 *soundMask;
     /* 0x20 */ u8 unk20;
     /* 0x21 */ u8 unk21;
     /* 0x22 */ u8 unk22;
