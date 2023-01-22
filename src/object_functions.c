@@ -3953,7 +3953,7 @@ void obj_init_weapon(Object *obj, UNUSED LevelObjectEntry_Weapon *entry) {
 /**
  * Racer weapon loop behaviour.
  * Rockets will move forwards, or towards their victim.
- * Statiuonary traps will drop to the floor and stay there for a while before self-detonating.
+ * Stationary traps will drop to the floor and stay there for a while before self-detonating.
 */
 void obj_loop_weapon(Object *obj, s32 updateRate) {
     Object_Weapon *weapon = &obj->unk64->weapon;
