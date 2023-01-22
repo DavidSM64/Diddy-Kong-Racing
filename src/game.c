@@ -96,7 +96,7 @@ s8 D_800DD390 = 0;
 s16 gLevelLoadTimer = 0;
 s8 D_800DD398 = 0;
 s8 D_800DD39C = 0;
-s8 D_800DD3A0 = FALSE;
+s8 gDmemInvalid = FALSE;
 UNUSED s32 D_800DD3A4 = 0;
 UNUSED s32 D_800DD3A8 = 0;
 UNUSED s32 D_800DD3AC = 0;
@@ -893,7 +893,7 @@ void thread3_main(UNUSED void *unused) {
  * This includes the memory pool. controllers, video, audio, core assets and more.
  */
 void init_game(void) {
-    s32 mode;
+    s32 viMode;
 
     init_main_memory_pool();
     func_800C6170(); // Initialise gzip decompression related things
@@ -905,17 +905,17 @@ void init_game(void) {
     gLevelDefaultVehicleID = VEHICLE_CAR;
 
     if (osTvType == TV_TYPE_PAL) {
-        mode = 14;
+        viMode = OS_VI_PAL_LPN1;
     } else if (osTvType == TV_TYPE_NTSC) {
-        mode = 0;
+        viMode = OS_VI_NTSC_LPN1;
     } else if (osTvType == TV_TYPE_MPAL) {
-        mode = 28;
+        viMode = OS_VI_MPAL_LPN1;
     }
 
-    osCreateScheduler(&gMainSched, &gSchedStack[0x400], /*priority*/ 13, (u8) mode, 1);
-    D_800DD3A0 = FALSE;
-    if (!func_8006EFB8()) {
-        D_800DD3A0 = TRUE;
+    osCreateScheduler(&gMainSched, &gSchedStack[0x400], /*priority*/ 13, viMode, 1);
+    gDmemInvalid = FALSE;
+    if (check_dmem_validity() == FALSE) {
+        gDmemInvalid = TRUE;
     }
     init_video(VIDEO_MODE_LOWRES_LPN, &gMainSched);
     init_PI_mesg_queue();
@@ -994,12 +994,12 @@ void main_game_loop(void) {
         render_epc_lock_up_display();
         sRenderContext = DRAW_CRASH_SCREEN;
     }
-    if (D_800DD3A0) {
+    if (gDmemInvalid) {
         debugLoopCounter = 0;
         while (debugLoopCounter != 10000000) {
-            debugLoopCounter += 1;
+            debugLoopCounter++;
         }
-        if (debugLoopCounter >= 20000001) { // This shouldn't ever be true?
+        if (debugLoopCounter > 20000000) { // This shouldn't ever be true?
             render_printf(D_800E7134 /* "BBB\n" */);
         }
     }
@@ -1956,8 +1956,10 @@ void func_8006ECE0(void) {
 
 GLOBAL_ASM("asm/non_matchings/game/func_8006ECFC.s")
 
-s32 func_8006EFB8(void) {
-    //Could be SP_DMEM_START / CACHERR_EE / SR_FR / M_K0 / LEO_STATUS_BUFFER_MANAGER_INTERRUPT
+/**
+ * Returns FALSE if dmem doesn't begin with a -1. This is checked on every main game loop iteration.
+ */
+s32 check_dmem_validity(void) {
     if (IO_READ(SP_DMEM_START) != -1U) {
         return FALSE;
     }
@@ -2120,8 +2122,6 @@ s32 is_controller_missing(void) {
  * A false read, meaning you're caught running an illegitimate copy, will force the game to pause when you enter the world.
  */
 s32 check_imem_validity(void) {
-    /*(SP_STATUS_HALT | SP_STATUS_BROKE | SP_STATUS_DMA_BUSY | SP_STATUS_IO_FULL | SP_STATUS_INTR_BREAK | SP_STATUS_YIELD |
-    SP_STATUS_YIELDED | SP_STATUS_TASKDONE | SP_STATUS_TASKDONE | SP_STATUS_RSPSIGNAL | SP_STATUS_SIG5))*/
     if (IO_READ(SP_IMEM_START) != 0x17D7) {
         return FALSE;
     }

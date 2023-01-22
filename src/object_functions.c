@@ -166,7 +166,7 @@ void obj_loop_scenery(Object *obj, s32 updateRate) {
             obj78->unk4 -= updateRate;
         }
         if ((obj->interactObj->unk14 & 0x40) && ((s32) obj78->unk4 <= 0)) {
-            func_80009558(SOUND_TWANG, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+            play_sound_at_position(SOUND_TWANG, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
             obj78->unk0 = (s32*) obj->interactObj->obj;
             obj78->unk6 = 1820;
             obj78->unk4 = 10;
@@ -313,7 +313,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
             if (temp != 0) {
                 func_8000488C(temp);
             }
-            func_80009558(SOUND_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+            play_sound_at_position(SOUND_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
             gParticlePtrList_addObject(obj);
         }
     }
@@ -384,7 +384,7 @@ void obj_loop_lasergun(Object *obj, s32 updateRate) {
             spawnObj.z = obj->segment.trans.z_position;
             spawnObj.size = 8;
             spawnObj.objectID = 0xC6;
-            func_80009558(SOUND_LASER_GUN, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+            play_sound_at_position(SOUND_LASER_GUN, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
             laserBoltObj = spawn_object(&spawnObj, 1);
             if (laserBoltObj != NULL) {
                 laserBoltObj->segment.unk3C_a.level_entry = NULL;
@@ -1605,7 +1605,7 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
                                 newObj->segment.trans.x_rotation = -wizShipObj->segment.trans.x_rotation;
                                 newObj->unk78 = 0x3C; 
                                 guMtxXFMF(laserMtx, 0.0f, 0.0f, -30.0f, &newObj->segment.x_velocity, &newObj->segment.y_velocity, &newObj->segment.z_velocity);
-                                func_80009558(SOUND_LASER_GUN, wizShipObj->segment.trans.x_position, wizShipObj->segment.trans.y_position, wizShipObj->segment.trans.z_position, 4, NULL);
+                                play_sound_at_position(SOUND_LASER_GUN, wizShipObj->segment.trans.x_position, wizShipObj->segment.trans.y_position, wizShipObj->segment.trans.z_position, 4, NULL);
                             }
                         }
                     }
@@ -1674,7 +1674,7 @@ void obj_loop_snowball(Object *obj, s32 updateRate) {
     }
     if (obj64->unk24 != 0) {
         if (obj64->soundMask == 0) {
-            func_80009558(obj64->unk24, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &obj64->soundMask);
+            play_sound_at_position(obj64->unk24, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &obj64->soundMask);
         } else {
             update_spatial_audio_position(obj64->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
         }
@@ -1991,7 +1991,7 @@ void obj_loop_dino_whale(Object *obj, s32 updateRate) {
     if (obj->interactObj->distance < 0xFF) {
         if (obj->unk78 == 0) {
             obj->unk78 = 0x3C;
-            func_80009558(SOUND_VOICE_BRONTO_ROAR, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+            play_sound_at_position(SOUND_VOICE_BRONTO_ROAR, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
         }
     }
 }
@@ -2799,7 +2799,7 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
                     if (temp < 0.0f) {
                         if ((s32) racer->bananas < 10) {
                             racer->bananas = 10;
-                            func_80009558(SOUND_SELECT, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, 4, NULL);
+                            play_sound_at_position(SOUND_SELECT, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, 4, NULL);
                             play_sound_spatial(racer->characterId + SOUND_UNK_7B, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
                         }
                     }
@@ -3071,7 +3071,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
     }
     if (openDoor) {
         if (ttDoor->soundMask == NULL) {
-            func_80009558(SOUND_DOOR_OPEN, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &ttDoor->soundMask);
+            play_sound_at_position(SOUND_DOOR_OPEN, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &ttDoor->soundMask);
         }
     } else {
         if (ttDoor->soundMask) {
@@ -3248,7 +3248,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
         if (whaleRamp->unk4 == 0) {
             whaleRamp = whaleRamp;
             func_8001E36C(entry->unkA, &sp50, &sp4C, &sp48);
-            func_80009558(SOUND_DRAWBRIDGE_BELL, sp50, sp4C, sp48, 1, &whaleRamp->unk4);
+            play_sound_at_position(SOUND_DRAWBRIDGE_BELL, sp50, sp4C, sp48, 1, &whaleRamp->unk4);
         }
     } else {
         if (obj->segment.trans.x_rotation < 0) {
@@ -3256,7 +3256,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
             if (whaleRamp->unk4 == 0) {
                 whaleRamp = whaleRamp;
                 func_8001E36C(entry->unkA, &sp44, &sp40, &sp3C);
-                func_80009558(SOUND_DRAWBRIDGE_BELL, sp44, sp40, sp3C, 1, &whaleRamp->unk4);
+                play_sound_at_position(SOUND_DRAWBRIDGE_BELL, sp44, sp40, sp3C, 1, &whaleRamp->unk4);
             }
         } else {
             obj->segment.trans.x_rotation = 0;
@@ -3615,7 +3615,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
                 racer = (Object_Racer *) racerObj->unk64;
                 if ((get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) || racer->bananas < 2) {
                     racerPrevUnk180 = racer->unk180;
-                    func_80009558( SOUND_SELECT,  racerObj->segment.trans.x_position,  racerObj->segment.trans.y_position,  racerObj->segment.trans.z_position, 4, &racer->unk180);
+                    play_sound_at_position( SOUND_SELECT,  racerObj->segment.trans.x_position,  racerObj->segment.trans.y_position,  racerObj->segment.trans.z_position, 4, &racer->unk180);
                     if (racerPrevUnk180 != 0) {
                         func_800096F8(racerPrevUnk180);
                     }
@@ -3900,7 +3900,7 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
                         obj->unk7C.word = 0x10;
                     }
                     if (racer->playerIndex == PLAYER_COMPUTER) {
-                        func_80009558(SOUND_BALLOON_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                        play_sound_at_position(SOUND_BALLOON_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                     } else {
                         if (levelMask == racer->balloon_level) {
                             if (racer->raceFinished == FALSE) {
@@ -3912,7 +3912,7 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
                                     }
                                     play_sound_global(SOUND_COLLECT_ITEM + newvar, NULL);
                                 } else {
-                                    func_80009558(SOUND_BALLOON_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                                    play_sound_at_position(SOUND_BALLOON_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                                 }
                             }
                         } else if (racer->raceFinished == FALSE) {
@@ -4276,7 +4276,7 @@ void play_rocket_trailing_sound(Object *obj, struct Object_Weapon *weapon, u16 s
     if (shouldPlaySound) {
         if (weapon->unk1C == 0) {
             if (D_8011D4DC < 8) {
-                func_80009558(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &weapon->unk1C);
+                play_sound_at_position(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &weapon->unk1C);
                 D_8011D4DC += 1;
             }
         } else {
@@ -4312,7 +4312,7 @@ void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 arg4, f32 scale, s32 a
         newObj->segment.trans.scale = newObj->segment.trans.scale * 3.5 * scale;
     }
     if (arg4 != 0) {
-        func_80009558(arg4, x, y, z, 4, NULL);
+        play_sound_at_position(arg4, x, y, z, 4, NULL);
     }
 }
 
@@ -4320,7 +4320,7 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     Object_Audio *obj64;
 
     obj64 = &obj->unk64->audio;
-    obj64->unk0 = entry->unk8;
+    obj64->soundId = entry->unk8;
     obj64->unk2 = entry->unkA;
     obj64->unkC = entry->unkF;
     obj64->unk6 = entry->unkE;
@@ -4328,12 +4328,12 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     obj64->unk5 = entry->unkD;
     obj64->unkD = entry->unk10;
     obj64->unk8 = 0;
-    if (ALBankFile_80115D14_GetSoundDecayTime(obj64->unk0)) {
-        func_8000974C(obj64->unk0, entry->common.x, entry->common.y, entry->common.z,
+    if (ALBankFile_80115D14_GetSoundDecayTime(obj64->soundId)) {
+        func_8000974C(obj64->soundId, entry->common.x, entry->common.y, entry->common.z,
             9, obj64->unk5, obj64->unk4, obj64->unk2, obj64->unkC,
             obj64->unk6, obj64->unkD, &obj64->unk8);
     } else {
-        func_8000974C(obj64->unk0, entry->common.x, entry->common.y, entry->common.z,
+        func_8000974C(obj64->soundId, entry->common.x, entry->common.y, entry->common.z,
             10, obj64->unk5, obj64->unk4, obj64->unk2, obj64->unkC,
             obj64->unk6, obj64->unkD, &obj64->unk8);
     }
@@ -4796,7 +4796,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
             diffZ = obj->segment.trans.z_position - racerObj->segment.trans.z_position;
             if (frog->unk19 <= 0 && (diffX * diffX) + (diffY * diffY) + (diffZ * diffZ) < 40.0f * 40.0f) {
                 if (frog->unk15 != 0) {
-                    func_80009558(SOUND_VOICE_DRUMSTICK_POSITIVE2, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                    play_sound_at_position(SOUND_VOICE_DRUMSTICK_POSITIVE2, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                     set_eeprom_settings_value(2);
                     set_magic_code_flags(CHEAT_CONTROL_DRUMSTICK);
                     func_8006D8A4();
@@ -4804,7 +4804,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
                     break;
                 } else {
                     frog->unk14 = 2;
-                    func_80009558(SOUND_SPLAT, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                    play_sound_at_position(SOUND_SPLAT, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                 }
             } else {
                 frog->unk1C = 72.0f;
@@ -4840,9 +4840,9 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
                 frog->unk1A = arctan2_f(diffX, diffZ);
             }
             if (frog->unk15 != 0) {
-                func_80009558(SOUND_VOICE_DRUMSTICK_POSITIVE6, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                play_sound_at_position(SOUND_VOICE_DRUMSTICK_POSITIVE6, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
             } else {
-                func_80009558(SOUND_RIBBIT, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                play_sound_at_position(SOUND_RIBBIT, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
             }
             frog->unk14 = 1;
             frog->unk20 = obj->segment.trans.x_position;
@@ -4878,14 +4878,14 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
         if (frog->unk19 <= 0 && (frog->unk18 < 6 || frog->unk18 >= 27)) {
             if (func_80016DE8(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 40.0f, 0, (unk80042178 *) &racerObj) != 0) {
                 if (frog->unk15 != 0) {
-                    func_80009558(SOUND_VOICE_DRUMSTICK_POSITIVE2, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                    play_sound_at_position(SOUND_VOICE_DRUMSTICK_POSITIVE2, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                     set_eeprom_settings_value(2);
                     set_magic_code_flags(CHEAT_CONTROL_DRUMSTICK);
                     func_8006D8A4();
                     gParticlePtrList_addObject(obj);
                 } else {
                     frog->unk14 = 2;
-                    func_80009558(SOUND_SPLAT, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                    play_sound_at_position(SOUND_SPLAT, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                 }
             }
         }
@@ -4902,7 +4902,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
         frog->unk16 -= updateRate; 
         if (frog->unk16 < 0) {
             frog->unk14 = 4;
-            func_80009558(SOUND_PLOP2, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+            play_sound_at_position(SOUND_PLOP2, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
         }
         break;
     case 4:

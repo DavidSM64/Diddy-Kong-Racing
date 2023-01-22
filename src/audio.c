@@ -29,7 +29,7 @@ s32 D_800DC658 = 0;
 u8 D_800DC65C = 0;
 u8 D_800DC660 = 0;
 UNUSED s32 D_800DC664 = 0;
-UNUSED s32 D_800DC668 = 0; // Currently unknown, might be a different type.
+UNUSED s32 D_800DC668 = 0;
 s32 sMusicVolumeMultiplier = 256; // This is never not 256...
 u8 D_800DC670 = 0;
 
@@ -269,8 +269,7 @@ void set_sndfx_player_voice_limit(u8 voiceLimit) {
     set_voice_limit(gSndFxPlayer, voiceLimit);
 }
 
-/* Unused? */
-void func_80000C68(u8 arg0) {
+UNUSED void func_80000C68(u8 arg0) {
     func_80063A90(gMusicPlayer, arg0);
 }
 
@@ -406,8 +405,7 @@ void musicSetChlVol(u8 chan, u8 vol) {
     }
 }
 
-/* Unused?*/
-u8 musicGetChlVol(u8 chan) {
+UNUSED u8 musicGetChlVol(u8 chan) {
     if (chan >= 16) {
         return 0;
     } else {
@@ -573,8 +571,7 @@ u8 func_80001918(void) {
     return 0;
 }
 
-// Unused?
-u8 func_80001954(void) {
+UNUSED u8 func_80001954(void) {
     if (D_800DC65C != 0) {
         return D_800DC65C;
     }
@@ -766,8 +763,7 @@ void func_80002128(unk80115D18 **arg0, s32 *arg1, s32 *arg2) {
     }
 }
 
-/* Unused? */
-void func_8000216C(unk80115D1C **arg0, s32 *arg1, s32 *arg2) {
+UNUSED void func_8000216C(unk80115D1C **arg0, s32 *arg1, s32 *arg2) {
     if (arg0 != NULL) {
         *arg0 = sMusicPool;
     }
