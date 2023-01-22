@@ -4125,7 +4125,7 @@ block_37:
  * to be right on top of them. This ensures a collision is garunteed this frame.
  * This function also calls the function that plays the incoming rocket sound.
 */
-void rocket_prevent_overshoot(Object* obj, UNUSED s32 updateRate, Object_Weapon* rocket) {
+void rocket_prevent_overshoot(Object *obj, UNUSED s32 updateRate, Object_Weapon *rocket) {
     Object *interactedObj;
     f32 dist;
     f32 diffX;
@@ -4157,7 +4157,7 @@ void rocket_prevent_overshoot(Object* obj, UNUSED s32 updateRate, Object_Weapon*
                 angleDiff += 0xFFFF;
             }
             if (angleDiff > 0x6000 || angleDiff < -0x6000) {
-                obj->interactObj->obj = (Object* ) interactedObj;
+                obj->interactObj->obj = (Object *) interactedObj;
                 obj->interactObj->distance = 1;
             }
             obj->segment.trans.x_rotation = arctan2_f(diffY, dist);
@@ -4172,9 +4172,9 @@ void rocket_prevent_overshoot(Object* obj, UNUSED s32 updateRate, Object_Weapon*
  * to be right on top of them. This ensures a collision is garunteed this frame.
  * This function also calls the function that plays the incoming rocket sound.
 */
-void homing_rocket_prevent_overshoot(Object* obj, s32 updateRate, Object_Weapon* rocket) {
-    Object* targetObj;
-    Object_64* racer;
+void homing_rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon *rocket) {
+    Object *targetObj;
+    Object_64 *racer;
     f32 dist;
     f32 diffX;
     f32 diffY;
