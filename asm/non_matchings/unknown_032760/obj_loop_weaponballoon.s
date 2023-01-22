@@ -234,7 +234,7 @@ glabel obj_loop_weaponballoon
 /* 03F078 8003E478 8E070014 */  lw    $a3, 0x14($s0)
 /* 03F07C 8003E47C 240F0004 */  li    $t7, 4
 /* 03F080 8003E480 AFAF0010 */  sw    $t7, 0x10($sp)
-/* 03F084 8003E484 0C002556 */  jal   func_80009558
+/* 03F084 8003E484 0C002556 */  jal   play_sound_at_position
 /* 03F088 8003E488 AFA00014 */   sw    $zero, 0x14($sp)
 /* 03F08C 8003E48C 1000003D */  b     .L8003E584
 /* 03F090 8003E490 240D0001 */   li    $t5, 1
@@ -277,7 +277,7 @@ glabel obj_loop_weaponballoon
 /* 03F118 8003E518 8E060010 */  lw    $a2, 0x10($s0)
 /* 03F11C 8003E51C 8E070014 */  lw    $a3, 0x14($s0)
 /* 03F120 8003E520 AFA00014 */  sw    $zero, 0x14($sp)
-/* 03F124 8003E524 0C002556 */  jal   func_80009558
+/* 03F124 8003E524 0C002556 */  jal   play_sound_at_position
 /* 03F128 8003E528 AFAA0010 */   sw    $t2, 0x10($sp)
 /* 03F12C 8003E52C 10000015 */  b     .L8003E584
 /* 03F130 8003E530 240D0001 */   li    $t5, 1

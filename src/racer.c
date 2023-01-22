@@ -2629,7 +2629,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                 if (tempRacer->shieldSoundMask) {
                     update_spatial_audio_position(tempRacer->shieldSoundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
                 } else if (tempRacer->unk118) {
-                    func_80009558(SOUND_SHIELD, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &tempRacer->shieldSoundMask);
+                    play_sound_at_position(SOUND_SHIELD, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &tempRacer->shieldSoundMask);
                 }
             } else if (tempRacer->shieldSoundMask) {
                 func_800096F8(tempRacer->shieldSoundMask);
@@ -2675,7 +2675,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             } else {
                 tempRacer->unk210 = 0;
                 if (tempRacer->playerIndex == PLAYER_COMPUTER) {
-                    func_80009558(tempRacer->unk20E, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                    play_sound_at_position(tempRacer->unk20E, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                 } else {
                     play_sound_spatial(tempRacer->unk20E, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
                 }
@@ -4597,7 +4597,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                         }
                         if (soundID != SOUND_NONE) {
                             if (racer->playerIndex == PLAYER_COMPUTER) {
-                                func_80009558(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                                play_sound_at_position(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                             } else {
                                 if (racer->unk218) {
                                     func_8000488C(racer->unk218);
@@ -4729,7 +4729,7 @@ void play_random_character_voice(Object *obj, s32 soundID, s32 range, s32 flags)
                     soundIndex = (get_random_number_from_range(0, range - 1) * 12) + soundID;
                 }
             }
-            func_80009558(soundIndex, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, &tempRacer->soundMask);
+            play_sound_at_position(soundIndex, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, &tempRacer->soundMask);
             tempRacer->lastSoundID = soundIndex;
         }
     }
@@ -5998,7 +5998,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
             if (racer->shieldSoundMask) {
                 update_spatial_audio_position(racer->shieldSoundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
             } else if (racer->unk118 != 0) {
-                func_80009558(SOUND_SHIELD, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &racer->shieldSoundMask);
+                play_sound_at_position(SOUND_SHIELD, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &racer->shieldSoundMask);
             }
         } else {
             if (racer->shieldSoundMask) {

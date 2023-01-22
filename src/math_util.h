@@ -26,6 +26,7 @@ f32 coss_f(s16 angle);
 f32 sins_f(s16 angle);
 s32 coss(s16 angle);
 s32 sins(s16 angle);
+s32 sins_2(s16 angle);
 void set_rng_seed(s32 num);
 void save_rng_seed(s32 num);
 void load_rng_seed(s32 num);

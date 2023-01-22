@@ -19,6 +19,7 @@
 #include "unknown_078050.h"
 #include "unknown_003260.h"
 #include "printf.h"
+#include "unknown_008C40.h"
 
 extern u32 osTvType;
 
