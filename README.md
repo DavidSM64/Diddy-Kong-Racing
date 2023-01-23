@@ -120,31 +120,31 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of January 7, 2023, this is our current score:
+As of January 23, 2023, this is our current score:
 ```
- ================================================
-      ADVENTURE ONE (ASM -> C Decompilation)
- --------------- 49.04% Complete ----------------
-           # Decompiled functions: 1466
-           # GLOBAL_ASM remaining: 372
-           # NON_MATCHING functions: 9
-        # NON_EQUIVALENT WIP functions: 65
- ----------------- Game Status ------------------
-    Balloons: 24/47, Keys: 3/4, Trophies: 2/5
-      T.T. Amulets: 2/4, Wizpig Amulets: 2/4
- ------------------------------------------------
-    We are racing in Pirate Lagoon. (Lap 2/3)
- ================================================
-      ADVENTURE TWO (Cleanup & Documentation)
- --------------- 22.19% Complete ----------------
-           # Documented functions: 403
-          # Undocumented remaining: 1170
- ----------------- Game Status ------------------
-    Balloons: 12/47, Keys: 1/4, Trophies: 0/5
-      T.T. Amulets: 1/4, Wizpig Amulets: 0/4
- ------------------------------------------------
- We are racing in the rematch against Trickytops.
- ================================================
+ ===================================================================
+               ADVENTURE ONE (ASM -> C Decompilation)
+ ------------------------- 49.47% Complete -------------------------
+                    # Decompiled functions: 1477
+                     # GLOBAL_ASM remaining: 361
+                    # NON_MATCHING functions: 10
+                 # NON_EQUIVALENT WIP functions: 66
+ --------------------------- Game Status ---------------------------
+              Balloons: 24/47, Keys: 3/4, Trophies: 2/5
+               T.T. Amulets: 2/4, Wizpig Amulets: 2/4
+ -------------------------------------------------------------------
+              We are racing in Pirate Lagoon. (Lap 2/3)
+ ===================================================================
+                ADVENTURE TWO (Cleanup & Documentation)
+ ------------------------- 23.13% Complete -------------------------
+                     # Documented functions: 428
+                   # Undocumented remaining: 1145
+ --------------------------- Game Status ---------------------------
+              Balloons: 12/47, Keys: 1/4, Trophies: 0/5
+               T.T. Amulets: 1/4, Wizpig Amulets: 1/4
+ -------------------------------------------------------------------
+ We are participating in the Trophy Race of Dino Domain. (Round Two)
+ ===================================================================
 ```
 <!-- README_SCORE_END -->
 
