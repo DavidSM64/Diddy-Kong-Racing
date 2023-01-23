@@ -113,7 +113,7 @@ void audioStartThread(void);
 void audioStopThread(void);
 void set_sfx_volume_slider(u32 arg0);
 s32 sfxGetVolumeSlider(void);
-void set_sound_channel_count(s32 arg0);
+void set_sound_channel_count(s32 numChannels);
 void alSndPNew(audioMgrConfig *c);
 void func_80004604(u8 *arg0, u8 arg1);
 u8 func_8000461C(u8 *arg0);

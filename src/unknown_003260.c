@@ -401,7 +401,7 @@ void func_80004604(u8 *arg0, u8 arg1) {
         arg0[0x36] = arg1;
 }
 
-u8 func_8000461C(u8 *arg0) {
+UNUSED u8 func_8000461C(u8 *arg0) {
     if (arg0)
         return arg0[0x3F];
     return 0;
