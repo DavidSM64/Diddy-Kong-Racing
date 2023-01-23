@@ -307,6 +307,7 @@ GLOBAL_ASM("asm/non_matchings/waves/func_800BC6C8.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BCC70.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BDC80.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BE654.s")
+// Get water height probably.
 GLOBAL_ASM("asm/non_matchings/waves/func_800BEEB4.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BEFC4.s")
 

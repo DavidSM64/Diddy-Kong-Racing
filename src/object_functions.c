@@ -1674,7 +1674,7 @@ void obj_loop_snowball(Object *obj, s32 updateRate) {
     }
     if (obj64->unk24 != 0) {
         if (obj64->soundMask == 0) {
-            play_sound_at_position(obj64->unk24, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &obj64->soundMask);
+            play_sound_at_position(obj64->unk24, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, (s32 *) &obj64->soundMask);
         } else {
             update_spatial_audio_position(obj64->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
         }
@@ -2420,7 +2420,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             set_music_player_voice_limit(levelHeader->voiceLimit);
             play_music(levelHeader->music);
             func_80001074(levelHeader->instruments);
-            func_800228EC(racer64->racer.vehicleID);
+            init_racer_for_challenge(racer64->racer.vehicleID);
             temp_v0_12 = func_8002342C(obj->segment.trans.x_position, obj->segment.trans.z_position);
             if (temp_v0_12 != NULL) {
                 obj->segment.trans.x_position = temp_v0_12->segment.trans.x_position;
@@ -3071,7 +3071,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
     }
     if (openDoor) {
         if (ttDoor->soundMask == NULL) {
-            play_sound_at_position(SOUND_DOOR_OPEN, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &ttDoor->soundMask);
+            play_sound_at_position(SOUND_DOOR_OPEN, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, (s32 *) &ttDoor->soundMask);
         }
     } else {
         if (ttDoor->soundMask) {
@@ -3950,6 +3950,11 @@ void obj_init_weapon(Object *obj, UNUSED LevelObjectEntry_Weapon *entry) {
     obj->unk7C.word = 0;
 }
 
+/**
+ * Racer weapon loop behaviour.
+ * Rockets will move forwards, or towards their victim.
+ * Stationary traps will drop to the floor and stay there for a while before self-detonating.
+*/
 void obj_loop_weapon(Object *obj, s32 updateRate) {
     Object_Weapon *weapon = &obj->unk64->weapon;
     switch (weapon->weaponID) {
@@ -4055,9 +4060,9 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
         }
     }
     if (weapon->weaponID == WEAPON_ROCKET_HOMING) {
-        func_8003EDD8(obj, updateRate, weapon);
+        homing_rocket_prevent_overshoot(obj, updateRate, weapon);
     } else {
-        func_8003EC14(obj, updateRate, weapon);
+        rocket_prevent_overshoot(obj, updateRate, weapon);
     }
     //TODO: Fix these gotos.
     if (obj->interactObj->obj != NULL) {
@@ -4115,9 +4120,121 @@ block_37:
     }
 }
 
+/**
+ * If a collision target is found for a level 1 or 3 rocket, reverse the velocity and set the next position target
+ * to be right on top of them. This ensures a collision is guaranteed this frame.
+ * This function also calls the function that plays the incoming rocket sound.
+*/
+void rocket_prevent_overshoot(Object *obj, UNUSED s32 updateRate, Object_Weapon *rocket) {
+    Object *interactedObj;
+    f32 dist;
+    f32 diffX;
+    f32 diffY;
+    f32 diffZ;
+    s32 angle;
+    s32 angleDiff;
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003EC14.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003EDD8.s")
+    if (obj->interactObj->distance < 80 || rocket->hitObj != NULL) {
+        interactedObj = obj->interactObj->obj;
+        if (interactedObj != NULL && interactedObj != rocket->owner && interactedObj->behaviorId == BHV_RACER) {
+            rocket->hitObj = interactedObj;
+        }
+    }
+    interactedObj = rocket->hitObj;
+    if (rocket->hitObj != NULL) {
+        diffX = interactedObj->segment.trans.x_position - obj->segment.trans.x_position;
+        diffY = interactedObj->segment.trans.y_position - obj->segment.trans.y_position;
+        diffZ = interactedObj->segment.trans.z_position - obj->segment.trans.z_position;
+        dist = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
+        if (dist > 0.0f) {
+            rocket->forwardVel = -25.0f;
+            angle = (arctan2_f(diffX, diffZ) - 0x8000) & 0xFFFF;
+            angleDiff = angle - (obj->segment.trans.y_rotation & 0xFFFF);
+            if (angleDiff > 0x8000) {
+                angleDiff -= 0xFFFF;
+            }
+            if (angleDiff < -0x8000) {
+                angleDiff += 0xFFFF;
+            }
+            if (angleDiff > 0x6000 || angleDiff < -0x6000) {
+                obj->interactObj->obj = (Object *) interactedObj;
+                obj->interactObj->distance = 1;
+            }
+            obj->segment.trans.x_rotation = arctan2_f(diffY, dist);
+            obj->segment.trans.y_rotation = angle;
+        }
+    }
+    play_rocket_trailing_sound(obj, rocket, SOUND_INCOMING_ROCKET);
+}
+
+/**
+ * If a collision target is found for a level 2 rocket, reverse the velocity and set the next position target
+ * to be right on top of them. This ensures a collision is guaranteed this frame.
+ * This function also calls the function that plays the incoming rocket sound.
+*/
+void homing_rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon *rocket) {
+    Object *targetObj;
+    Object_64 *racer;
+    f32 dist;
+    f32 diffX;
+    f32 diffY;
+    f32 diffZ;
+    f32 distY; 
+    s32 sp58;
+    s32 angle;
+    s32 sineY;
+    s32 angleDiff;
+    s32 shift;
+
+    if (rocket->target != NULL) {
+        targetObj = rocket->target;
+        racer = targetObj->unk64;
+        rocket->unk14 = racer->racer.unk1BA >> 1;
+        rocket->unk16 = racer->racer.unk1BC >> 1;
+        diffX = targetObj->segment.trans.x_position - obj->segment.trans.x_position;
+        diffY = targetObj->segment.trans.y_position - obj->segment.trans.y_position;
+        diffZ = targetObj->segment.trans.z_position - obj->segment.trans.z_position;
+        dist = (diffX * diffX) + (diffZ * diffZ);
+        distY = diffY * diffY;
+        if (dist < 10000.0 && distY > 10000.0) {
+            rocket->target = NULL;
+            return;
+        }
+        dist = sqrtf(dist + distY);
+        if (dist > 300.0f && rocket->checkpoint != -1 && rocket->hitObj == NULL) {
+            sp58 = func_8001955C(obj, rocket->checkpoint, racer->racer.unk1C8, rocket->unk14, rocket->unk16, rocket->checkpointDist, &diffX, &diffY, &diffZ);
+            sineY = arctan2_f(diffY, 500.0f) & 0xFFFF;
+            shift = 3;
+        } else {
+            rocket->hitObj = targetObj;
+            rocket->forwardVel = -25.0f;
+            sp58 = NULL;
+        }
+        angle = (arctan2_f(diffX, diffZ) - 0x8000) & 0xFFFF;
+        angleDiff = angle - (obj->segment.trans.y_rotation & 0xFFFF);
+        WRAP(angleDiff, -0x8000, 0x8000);
+        if (sp58 != NULL) {
+            obj->segment.trans.y_rotation += (angleDiff * updateRate) >> shift;
+            angleDiff = sineY - (obj->segment.trans.x_rotation & 0xFFFF);
+            WRAP(angleDiff, -0x8000, 0x8000);
+            obj->segment.trans.x_rotation += (angleDiff * updateRate) >> shift;
+        } else {
+            if (angleDiff > 0x6000 || angleDiff < -0x6000) {
+                obj->interactObj->obj = targetObj;
+                obj->interactObj->distance = 1;
+            }
+            obj->segment.trans.x_rotation = arctan2_f(diffY, dist) & 0xFFFFu;
+            
+            obj->segment.trans.y_rotation = angle;
+        }
+        
+    }
+    play_rocket_trailing_sound(obj, rocket, SOUND_HOMING_ROCKET);
+    if (get_number_of_active_players() < 3) {
+        obj->unk74 |= 1;
+        func_800AFC3C(obj, updateRate);
+    }
+}
 
 void func_8003F0D0(void) {
     D_8011D4DC = 0;
@@ -4127,7 +4244,11 @@ void func_8003F0DC(void) {
     D_8011D4DC--;
 }
 
-void func_8003F0F8(Object *obj, struct Object_Weapon *weapon, u16 soundID) {
+/**
+ * Existing flying rockets that don't belong to that player will play a sound when flying.
+ * This will check if that player is close enough to hear it, and whether to update an existing sound or play a new one.
+*/
+void play_rocket_trailing_sound(Object *obj, struct Object_Weapon *weapon, u16 soundID) {
     Object *racer;
     Object **racerGroup;
     f32 distance;
@@ -4135,10 +4256,10 @@ void func_8003F0F8(Object *obj, struct Object_Weapon *weapon, u16 soundID) {
     f32 diffX;
     f32 diffZ;
     f32 diffY;
-    s32 var_s4;
+    s32 shouldPlaySound;
     s32 i;
 
-    var_s4 = FALSE;
+    shouldPlaySound = FALSE;
     racerGroup = get_racer_objects_by_port(&numRacers);
     for (i = 0; i < numRacers; i++) {
         racer = racerGroup[i];
@@ -4148,11 +4269,11 @@ void func_8003F0F8(Object *obj, struct Object_Weapon *weapon, u16 soundID) {
             diffZ = racer->segment.trans.z_position - obj->segment.trans.z_position;
             distance = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
             if (distance <= func_80001CB8(soundID)) {
-                var_s4 = TRUE;
+                shouldPlaySound = TRUE;
             }
         }
     }
-    if (var_s4) {
+    if (shouldPlaySound) {
         if (weapon->unk1C == 0) {
             if (D_8011D4DC < 8) {
                 play_sound_at_position(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &weapon->unk1C);
@@ -4210,11 +4331,11 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     if (ALBankFile_80115D14_GetSoundDecayTime(obj64->soundId)) {
         func_8000974C(obj64->soundId, entry->common.x, entry->common.y, entry->common.z,
             9, obj64->unk5, obj64->unk4, obj64->unk2, obj64->unkC,
-            obj64->unk6, obj64->unkD, &obj64->unk8);
+            obj64->unk6, obj64->unkD, (s32 *) &obj64->unk8);
     } else {
         func_8000974C(obj64->soundId, entry->common.x, entry->common.y, entry->common.z,
             10, obj64->unk5, obj64->unk4, obj64->unk2, obj64->unkC,
-            obj64->unk6, obj64->unkD, &obj64->unk8);
+            obj64->unk6, obj64->unkD, (s32 *) &obj64->unk8);
     }
     gParticlePtrList_addObject(obj);
 }
@@ -4266,8 +4387,8 @@ void obj_init_texscroll(Object *obj, LevelObjectEntry_TexScroll *entry, s32 arg2
     if (obj64->unk0 >= numberOfTexturesInLevel) {
         obj64->unk0 = numberOfTexturesInLevel - 1;
     }
-    obj64->unk4 = (s16) entry->unkA;
-    obj64->unk6 = (s16) entry->unkB;
+    obj64->unk4 = entry->unkA;
+    obj64->unk6 = entry->unkB;
     if (arg2 == 0) {
         obj64->unk8 = 0;
         obj64->unkA = 0;
@@ -4288,6 +4409,11 @@ void obj_init_buoy_pirateship(Object *obj, UNUSED LevelObjectEntry_Buoy_PirateSh
     obj->interactObj->unk12 = 0;
 }
 
+/**
+ * Floating buoy loop behaviour.
+ * Exists to serve as an outer bound for water courses.
+ * All it does is stays afloat on water and scrolls through each texture.
+*/
 void obj_loop_buoy_pirateship(Object *obj, s32 updateRate) {
     if (obj->unk64 != NULL) {
         obj->segment.trans.y_position = func_800BEEB4(obj->unk64);
@@ -4311,14 +4437,18 @@ void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
     obj->segment.trans.y_rotation = entry->unkA << 6 << 4;
 }
 
+/**
+ * Spinning log loop behaviour.
+ * Exists as a physical obstruction, will start spinning around on the spot when hit.
+*/
 void obj_loop_log(Object *obj, s32 updateRate) {
     Object *racerObj;
     Object_Log *log;
     f32 cosine;
     f32 sine;
     Object_Racer *racer;
-    f32 temp;
-    f32 temp2;
+    f32 diffZ;
+    f32 diffX;
 
     log = (Object_Log *) obj->unk64;
     if (log != NULL) {
@@ -4339,12 +4469,12 @@ void obj_loop_log(Object *obj, s32 updateRate) {
         cosine = coss_f(-obj->segment.trans.y_rotation);
         
         // This looks a bit messy, but is required to match.
-        temp2 = obj->segment.trans.x_position - racerObj->segment.trans.x_position;
-        temp = obj->segment.trans.z_position - racerObj->segment.trans.z_position;
-        temp2 = (temp2 * cosine) + (temp * sine);
-        temp = (racerObj->segment.x_velocity * sine) - (racerObj->segment.z_velocity * cosine);
-        temp2 *= temp;
-        obj->unk78 -= (s32) (temp2 / 4);
+        diffX = obj->segment.trans.x_position - racerObj->segment.trans.x_position;
+        diffZ = obj->segment.trans.z_position - racerObj->segment.trans.z_position;
+        diffX = (diffX * cosine) + (diffZ * sine);
+        diffZ = (racerObj->segment.x_velocity * sine) - (racerObj->segment.z_velocity * cosine);
+        diffX *= diffZ;
+        obj->unk78 -= (s32) (diffX / 4);
         
         if (obj->unk78 > 0x200) {
             obj->unk78 = 0x200;

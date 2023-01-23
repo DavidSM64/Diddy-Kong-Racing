@@ -222,13 +222,13 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
 /**
  * Play Sound at position 
  */
-void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u32 *soundMask) {
+void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, s32 *soundMask) {
     func_8000974C(D_80119C40[soundId].unk0, x, y, z, arg4, D_80119C40[soundId].unk3,
         D_80119C40[soundId].unk2, D_80119C40[soundId].unk6, 0, D_80119C40[soundId].unk4,
         D_80119C40[soundId].unk8, soundMask);
 }
 
-void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 arg6, u32 *soundMask) {
+void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 arg6, s32 *soundMask) {
     func_8000974C(soundId, x, y, z, arg4, 100, arg5, 15000, 0, arg6, 0x3F, soundMask);
 }
 
@@ -246,7 +246,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/update_spatial_audio_position.s")
 
 void func_800096F8(s32 arg0) {
     s32 i;
-    s32 *v0 = D_80119C44;
+    s32 *v0 = (s32 *) D_80119C44;
     for (i = 0; i < 40; i++) {
         if (arg0 == *v0) {
             func_8000A2E8(i);
@@ -256,7 +256,7 @@ void func_800096F8(s32 arg0) {
     }
 }
 
-void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, u16 arg7, u8 arg8, u8 arg9, u8 argA, u32 *soundMask) {
+void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, u16 arg7, u8 arg8, u8 arg9, u8 argA, s32 *soundMask) {
     unk80119C50 *temp_v0;
 
     if (soundMask != 0) {

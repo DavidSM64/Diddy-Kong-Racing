@@ -46,14 +46,14 @@ ScreenViewport gScreenViewports[4] = {
     { DEFAULT_VIEWPORT },
 };
 
-s32 D_800DD134 = 0;
+u32 gViewportWithBG = FALSE;
 
 Vertex D_800DD138 = {
     0, 0, 0, 255, 255, 255, 255
 };
 
 // RSP Viewports
-Vp D_800DD148[20] = {
+Vp gViewportStack[20] = {
     { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
     { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
     { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
@@ -108,7 +108,7 @@ s32 gNumberOfViewports;
 s32 gActiveCameraID;
 s32 gViewportCap;
 UNUSED s32 D_80120CEC;
-ObjectTransform D_80120CF0;
+ObjectTransform gCameraTransform;
 s32 D_80120D08;
 s32 D_80120D0C;
 f32 gCurCamFOV;
@@ -250,41 +250,41 @@ s32 get_current_viewport(void) {
 }
 
 void func_80066230(Gfx **dlist, MatrixS **mats) {
-    ObjectSegment *someStruct;
-    s16 sp2A;
-    s16 sp28;
-    s16 sp26;
+    ObjectSegment *cam;
+    s16 angleY;
+    s16 angleX;
+    s16 angleZ;
     s16 sp24;
-    f32 sp20;
-    f32 sp1C;
-    f32 sp18;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
 
     set_active_viewports_and_max(0);
     set_active_camera(0);
-    someStruct = get_active_camera_segment();
-    sp2A = someStruct->trans.y_rotation;
-    sp28 = someStruct->trans.x_rotation;
-    sp26 = someStruct->trans.z_rotation;
-    sp20 = someStruct->trans.x_position;
-    sp1C = someStruct->trans.y_position;
-    sp18 = someStruct->trans.z_position;
-    sp24 = someStruct->unk38.half.unk38;
-    someStruct->trans.z_rotation = 0;
-    someStruct->trans.x_rotation = 0;
-    someStruct->trans.y_rotation = -0x8000;
-    someStruct->unk38.half.unk38 = 0;
-    someStruct->trans.x_position = 0.0f;
-    someStruct->trans.y_position = 0.0f;
-    someStruct->trans.z_position = 0.0f;
+    cam = get_active_camera_segment();
+    angleY = cam->trans.y_rotation;
+    angleX = cam->trans.x_rotation;
+    angleZ = cam->trans.z_rotation;
+    posX = cam->trans.x_position;
+    posY = cam->trans.y_position;
+    posZ = cam->trans.z_position;
+    sp24 = cam->unk38.half.unk38;
+    cam->trans.z_rotation = 0;
+    cam->trans.x_rotation = 0;
+    cam->trans.y_rotation = -0x8000;
+    cam->unk38.half.unk38 = 0;
+    cam->trans.x_position = 0.0f;
+    cam->trans.y_position = 0.0f;
+    cam->trans.z_position = 0.0f;
     update_envmap_position(0.0f, 0.0f, -1.0f);
     func_80066CDC(dlist, mats);
-    someStruct->unk38.half.unk38 = sp24;
-    someStruct->trans.y_rotation = sp2A;
-    someStruct->trans.x_rotation = sp28;
-    someStruct->trans.z_rotation = sp26;
-    someStruct->trans.x_position = sp20;
-    someStruct->trans.y_position = sp1C;
-    someStruct->trans.z_position = sp18;
+    cam->unk38.half.unk38 = sp24;
+    cam->trans.y_rotation = angleY;
+    cam->trans.x_rotation = angleX;
+    cam->trans.z_rotation = angleZ;
+    cam->trans.x_position = posX;
+    cam->trans.y_position = posY;
+    cam->trans.z_position = posZ;
 }
 
 /**
@@ -397,37 +397,35 @@ void set_active_camera(s32 num) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-
-// Has regalloc/stack issues
-// Proposed name: init_viewports
-void func_80066610(void) {
+/**
+ * Takes the size of each view frame and writes them to the viewport stack, using values compatable with the RSP.
+ * Only does this if extended backgrounds are enabled.
+*/
+void copy_viewports_to_stack(void) {
     s32 width;
     s32 height;
-    s32 s3;
+    s32 port;
     s32 yPos;
     s32 xPos;
     s32 i;
 
-    D_800DD134 = 1 - D_800DD134;
+    gViewportWithBG = 1 - gViewportWithBG;
     for (i = 0; i < 4; i++) {
         if (gScreenViewports[i].flags & VIEWPORT_UNK_04) {
             gScreenViewports[i].flags &= ~VIEWPORT_EXTRA_BG;
         } else if (gScreenViewports[i].flags & VIEWPORT_UNK_02) {
             gScreenViewports[i].flags |= VIEWPORT_EXTRA_BG;
         }
-        gScreenViewports[i].flags &= ~VIEWPORT_UNK_02 | VIEWPORT_UNK_04;
-        if (gScreenViewports[i].flags & 1) {
+        gScreenViewports[i].flags &= ~(VIEWPORT_UNK_02 | VIEWPORT_UNK_04);
+        if (gScreenViewports[i].flags & VIEWPORT_EXTRA_BG) {
             if (!(gScreenViewports[i].flags & VIEWPORT_X_CUSTOM)) {
-                // Issue here
-                xPos = (gScreenViewports[i].x1 * 4) + (((gScreenViewports[i].x2 - gScreenViewports[i].x1) + 1) * 2);
+                xPos = (((gScreenViewports[i].x2 - gScreenViewports[i].x1) + 1) << 1) + (gScreenViewports[i].x1 * 4);
             } else {
                 xPos = gScreenViewports[i].posX;
                 xPos *= 4;
             }
             if (!(gScreenViewports[i].flags & VIEWPORT_Y_CUSTOM)) {
-                // Issue here
-                yPos = (gScreenViewports[i].y1 * 4) + (((gScreenViewports[i].y2 - gScreenViewports[i].y1) + 1) * 2);
+                yPos = (((gScreenViewports[i].y2 - gScreenViewports[i].y1 + 1)) << 1) + (gScreenViewports[i].y1 * 4);
             } else {
                 yPos = gScreenViewports[i].posY;
                 yPos *= 4;
@@ -441,28 +439,25 @@ void func_80066610(void) {
                 width *= 2;
             }
             if (!(gScreenViewports[i].flags & VIEWPORT_HEIGHT_CUSTOM)) {
-                height = gScreenViewports[i].y2 - gScreenViewports[i].y1;
-                height += 1;
+                height = (gScreenViewports[i].y2 - gScreenViewports[i].y1) + 1;
                 height *= 2;
             } else {
                 height = gScreenViewports[i].height;
                 height *= 2;
             }
-            s3 = i + (D_800DD134 * 5);
-            s3 += 10;
+            port = i + (gViewportWithBG * 5);
+            port += 10;
             if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
-                height = -height;
+                if (0) { } // Fakematch
+                width = -width;
             }
-            D_800DD148[s3].vp.vtrans[0] = xPos;
-            D_800DD148[s3].vp.vtrans[1] = yPos;
-            D_800DD148[s3].vp.vscale[0] = width;
-            D_800DD148[s3].vp.vscale[1] = height;
+            gViewportStack[port].vp.vtrans[0] = xPos;
+            gViewportStack[port].vp.vtrans[1] = yPos;
+            gViewportStack[port].vp.vscale[0] = width;
+            gViewportStack[port].vp.vscale[1] = height;
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/camera/func_80066610.s")
-#endif
 
 void func_80066818(s32 viewPortIndex, s32 arg1) {
     if (arg1 != 0) {
@@ -490,8 +485,10 @@ s32 check_viewport_background_flag(s32 viewPortIndex) {
     return gScreenViewports[viewPortIndex].flags & VIEWPORT_EXTRA_BG;
 }
 
-// proposed name: resize_viewport
-void func_80066940(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2) {
+/**
+ * Sets the intended viewport to the size passed through by arguments.
+*/
+void resize_viewport(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2) {
     s32 widthAndHeight, width, height;
     s32 temp;
 
@@ -510,7 +507,7 @@ void func_80066940(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2) {
         y2 = temp;
     }
 
-    if ((x1 >= width) || (x2 < 0) || (y1 >= height) || (y2 < 0)) {
+    if (x1 >= width || x2 < 0 || y1 >= height || y2 < 0) {
         gScreenViewports[viewPortIndex].scissorX1 = 0;
         gScreenViewports[viewPortIndex].scissorY1 = 0;
         gScreenViewports[viewPortIndex].scissorX2 = 0;
@@ -859,32 +856,32 @@ void func_80067D3C(Gfx **dlist, UNUSED MatrixS **mats) {
         gActiveCameraID += 4;
     }
 
-    D_80120CF0.y_rotation = 0x8000 + gActiveCameraStack[gActiveCameraID].trans.y_rotation;
-    D_80120CF0.x_rotation = gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.half.unk38;
-    D_80120CF0.z_rotation = gActiveCameraStack[gActiveCameraID].trans.z_rotation;
+    gCameraTransform.y_rotation = 0x8000 + gActiveCameraStack[gActiveCameraID].trans.y_rotation;
+    gCameraTransform.x_rotation = gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.half.unk38;
+    gCameraTransform.z_rotation = gActiveCameraStack[gActiveCameraID].trans.z_rotation;
 
-    D_80120CF0.x_position = -gActiveCameraStack[gActiveCameraID].trans.x_position;
-    D_80120CF0.y_position = -gActiveCameraStack[gActiveCameraID].trans.y_position;
+    gCameraTransform.x_position = -gActiveCameraStack[gActiveCameraID].trans.x_position;
+    gCameraTransform.y_position = -gActiveCameraStack[gActiveCameraID].trans.y_position;
     if (D_80120D18 != 0) {
-        D_80120CF0.y_position -= gActiveCameraStack[gActiveCameraID].unk30;
+        gCameraTransform.y_position -= gActiveCameraStack[gActiveCameraID].unk30;
     }
-    D_80120CF0.z_position = -gActiveCameraStack[gActiveCameraID].trans.z_position;
+    gCameraTransform.z_position = -gActiveCameraStack[gActiveCameraID].trans.z_position;
 
-    object_transform_to_matrix_2(D_80120F60, &D_80120CF0);
+    object_transform_to_matrix_2(D_80120F60, &gCameraTransform);
     f32_matrix_mult(&D_80120F60, &gPerspectiveMatrixF, &D_80120F20);
 
-    D_80120CF0.y_rotation = -0x8000 - gActiveCameraStack[gActiveCameraID].trans.y_rotation;
-    D_80120CF0.x_rotation = -(gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.half.unk38);
-    D_80120CF0.z_rotation = -gActiveCameraStack[gActiveCameraID].trans.z_rotation;
-    D_80120CF0.scale = 1.0f;
-    D_80120CF0.x_position = gActiveCameraStack[gActiveCameraID].trans.x_position;
-    D_80120CF0.y_position = gActiveCameraStack[gActiveCameraID].trans.y_position;
+    gCameraTransform.y_rotation = -0x8000 - gActiveCameraStack[gActiveCameraID].trans.y_rotation;
+    gCameraTransform.x_rotation = -(gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.half.unk38);
+    gCameraTransform.z_rotation = -gActiveCameraStack[gActiveCameraID].trans.z_rotation;
+    gCameraTransform.scale = 1.0f;
+    gCameraTransform.x_position = gActiveCameraStack[gActiveCameraID].trans.x_position;
+    gCameraTransform.y_position = gActiveCameraStack[gActiveCameraID].trans.y_position;
     if (D_80120D18 != 0) {
-        D_80120CF0.y_position += gActiveCameraStack[gActiveCameraID].unk30;
+        gCameraTransform.y_position += gActiveCameraStack[gActiveCameraID].unk30;
     }
-    D_80120CF0.z_position = gActiveCameraStack[gActiveCameraID].trans.z_position;
+    gCameraTransform.z_position = gActiveCameraStack[gActiveCameraID].trans.z_position;
 
-    object_transform_to_matrix(D_80120FA0, &D_80120CF0);
+    object_transform_to_matrix(D_80120FA0, &gCameraTransform);
     f32_matrix_to_s16_matrix(&D_80120FA0, &D_80121020);
 
     gActiveCameraID = temp;
@@ -912,11 +909,11 @@ void set_ortho_matrix_view(Gfx **dlist, MatrixS **mtx) {
     width = GET_VIDEO_WIDTH(widthAndHeight);
     f32_matrix_to_s16_matrix(&gOrthoMatrix, *mtx);
     D_80120D88[0] = *mtx;
-    D_800DD148[gActiveCameraID + 5].vp.vscale[0] = width * 2;
-    D_800DD148[gActiveCameraID + 5].vp.vscale[1] = width * 2;
-    D_800DD148[gActiveCameraID + 5].vp.vtrans[0] = width * 2;
-    D_800DD148[gActiveCameraID + 5].vp.vtrans[1] = height * 2;
-    gSPViewport((*dlist)++, OS_K0_TO_PHYSICAL(&D_800DD148[gActiveCameraID + 5]));
+    gViewportStack[gActiveCameraID + 5].vp.vscale[0] = width * 2;
+    gViewportStack[gActiveCameraID + 5].vp.vscale[1] = width * 2;
+    gViewportStack[gActiveCameraID + 5].vp.vtrans[0] = width * 2;
+    gViewportStack[gActiveCameraID + 5].vp.vtrans[1] = height * 2;
+    gSPViewport((*dlist)++, OS_K0_TO_PHYSICAL(&gViewportStack[gActiveCameraID + 5]));
     gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
     D_80120D1C = 0;
     D_80120D08 = 0;
@@ -948,13 +945,13 @@ void func_80068158(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY) {
         tempWidth = -width;
     }
     if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_EXTRA_BG)) {
-        D_800DD148[gActiveCameraID].vp.vtrans[0] = posX * 4;
-        D_800DD148[gActiveCameraID].vp.vtrans[1] = posY * 4;
-        D_800DD148[gActiveCameraID].vp.vscale[0] = tempWidth * 4;
-        D_800DD148[gActiveCameraID].vp.vscale[1] = height * 4;
-        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&D_800DD148[gActiveCameraID]));
+        gViewportStack[gActiveCameraID].vp.vtrans[0] = posX * 4;
+        gViewportStack[gActiveCameraID].vp.vtrans[1] = posY * 4;
+        gViewportStack[gActiveCameraID].vp.vscale[0] = tempWidth * 4;
+        gViewportStack[gActiveCameraID].vp.vscale[1] = height * 4;
+        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&gViewportStack[gActiveCameraID]));
     } else {
-        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&D_800DD148[gActiveCameraID + 10 + (D_800DD134 * 5)]));
+        gSPViewport((*dlist)++, OS_PHYSICAL_TO_K0(&gViewportStack[gActiveCameraID + 10 + (gViewportWithBG * 5)]));
     }
 }
 
@@ -1036,18 +1033,18 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
         sp58 = D_80120D40[D_80120D20] - obj->segment.trans.y_position;
         var_f20 = D_80120D58[D_80120D20] - obj->segment.trans.z_position;
         sp50 = sqrtf((sp5C * sp5C) + (var_f20 * var_f20));
-        D_80120CF0.y_rotation = arctan2_f(sp5C, var_f20);
-        D_80120CF0.x_rotation = -arctan2_f(sp58, sp50);
-        D_80120CF0.z_rotation = sp34;
-        D_80120CF0.scale = obj->segment.trans.scale;
-        D_80120CF0.x_position = obj->segment.trans.x_position;
-        D_80120CF0.y_position = obj->segment.trans.y_position;
-        D_80120CF0.z_position = obj->segment.trans.z_position;
-        object_transform_to_matrix(D_80121060, &D_80120CF0);
+        gCameraTransform.y_rotation = arctan2_f(sp5C, var_f20);
+        gCameraTransform.x_rotation = -arctan2_f(sp58, sp50);
+        gCameraTransform.z_rotation = sp34;
+        gCameraTransform.scale = obj->segment.trans.scale;
+        gCameraTransform.x_position = obj->segment.trans.x_position;
+        gCameraTransform.y_position = obj->segment.trans.y_position;
+        gCameraTransform.z_position = obj->segment.trans.z_position;
+        object_transform_to_matrix(D_80121060, &gCameraTransform);
         D_80120D1C++;
-        f32_matrix_mult((Matrix*) D_80121060, (Matrix*)&D_80120D70[D_80120D1C-1][0][0], (Matrix*)&D_80120D70[D_80120D1C][0][0]);
-        f32_matrix_mult(D_80120D70[D_80120D1C], (Matrix*) D_80120F20, (Matrix*) D_80121060);
-        f32_matrix_to_s16_matrix((Matrix*) D_80121060, *mtx);
+        f32_matrix_mult((Matrix *) D_80121060, (Matrix *) &D_80120D70[D_80120D1C-1][0][0], (Matrix *) &D_80120D70[D_80120D1C][0][0]);
+        f32_matrix_mult(D_80120D70[D_80120D1C], (Matrix *) D_80120F20, (Matrix *) D_80121060);
+        f32_matrix_to_s16_matrix((Matrix *) D_80121060, *mtx);
         D_80120D88[D_80120D1C] = *mtx;
         gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), 0x80);
         gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(&D_800DD138), 1, 0);
@@ -1122,12 +1119,12 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         (*vtx)++; // Can't be done in the macro?
         index = segment->animFrame;
         D_80120D1C ++;
-        D_80120CF0.y_rotation = -segment->trans.y_rotation;
-        D_80120CF0.x_rotation = -segment->trans.x_rotation;
-        D_80120CF0.z_rotation = gActiveCameraStack[gActiveCameraID].trans.z_rotation + segment->trans.z_rotation;
-        D_80120CF0.x_position = 0.0f;
-        D_80120CF0.y_position = 0.0f;
-        D_80120CF0.z_position = 0.0f;
+        gCameraTransform.y_rotation = -segment->trans.y_rotation;
+        gCameraTransform.x_rotation = -segment->trans.x_rotation;
+        gCameraTransform.z_rotation = gActiveCameraStack[gActiveCameraID].trans.z_rotation + segment->trans.z_rotation;
+        gCameraTransform.x_position = 0.0f;
+        gCameraTransform.y_position = 0.0f;
+        gCameraTransform.z_position = 0.0f;
         if (gAdjustViewportHeight) {
             scale = segment->trans.scale;
             f32_matrix_from_scale(sp50, scale, scale, 1.0f);
@@ -1137,7 +1134,7 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
             scale = segment->trans.scale;
             f32_matrix_from_scale(D_80121060, scale, scale, 1.0f);
         }
-        object_transform_to_matrix_2(sp90, &D_80120CF0);
+        object_transform_to_matrix_2(sp90, &gCameraTransform);
         f32_matrix_mult(&D_80121060, &sp90, D_80120D70[D_80120D1C]);
         f32_matrix_to_s16_matrix(D_80120D70[D_80120D1C], *mtx);
         D_80120D88[D_80120D1C] = *mtx;
@@ -1192,14 +1189,14 @@ void func_80069484(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale
     tempX = gActiveCameraStack[index].trans.x_position - tempX;
     tempY = gActiveCameraStack[index].trans.y_position - tempY;
     tempZ = gActiveCameraStack[index].trans.z_position - tempZ;
-    D_80120CF0.y_rotation = -trans->y_rotation;
-    D_80120CF0.x_rotation = -trans->x_rotation;
-    D_80120CF0.z_rotation = -trans->z_rotation;
-    D_80120CF0.x_position = 0.0f;
-    D_80120CF0.y_position = 0.0f;
-    D_80120CF0.z_position = 0.0f;
-    D_80120CF0.scale = 1.0f;
-    object_transform_to_matrix_2(D_80121060, &D_80120CF0);
+    gCameraTransform.y_rotation = -trans->y_rotation;
+    gCameraTransform.x_rotation = -trans->x_rotation;
+    gCameraTransform.z_rotation = -trans->z_rotation;
+    gCameraTransform.x_position = 0.0f;
+    gCameraTransform.y_position = 0.0f;
+    gCameraTransform.z_position = 0.0f;
+    gCameraTransform.scale = 1.0f;
+    object_transform_to_matrix_2(D_80121060, &gCameraTransform);
     guMtxXFMF(D_80121060, tempX, tempY, tempZ, &tempX, &tempY, &tempZ);
     scaleFactor = 1.0f / trans->scale;
     tempX *= scaleFactor;
@@ -1375,6 +1372,9 @@ UNUSED void debug_print_float_matrix_values(f32 *mtx) {
     rmonPrintf("\n");
 }
 
+/**
+ * Return the serial interface message queue.
+*/
 OSMesgQueue *get_si_mesg_queue(void) {
     return &sSIMesgQueue;
 }
@@ -1383,9 +1383,9 @@ OSMesgQueue *get_si_mesg_queue(void) {
  * Initialise the player controllers, and return the status when finished.
  */
 s32 init_controllers(void) {
-    UNUSED s32 *temp1; // Unused
+    UNUSED s32 *temp1;
     u8 bitpattern;
-    UNUSED s32 *temp2; // Unused
+    UNUSED s32 *temp2;
 
     osCreateMesgQueue(&sSIMesgQueue, &sSIMesgBuf, 1);
     osSetEventMesg(OS_EVENT_SI, &sSIMesgQueue, gSIMesg);

@@ -44,7 +44,7 @@ enum ViewportCount {
 };
 
 enum ViewPortFlags {
-    VIEWPORT_EXTRA_BG        = 0x0001,
+    VIEWPORT_EXTRA_BG      = 0x0001,
     VIEWPORT_UNK_02        = 0x0002,
     VIEWPORT_UNK_04        = 0x0004,
     VIEWPORT_X_CUSTOM      = 0x0008,
@@ -99,7 +99,7 @@ void set_active_camera(s32 arg0);
 void func_80066818(s32 viewPortIndex, s32 arg1);
 void func_80066894(s32 viewPortIndex, s32 arg1);
 s32 check_viewport_background_flag(s32 viewPortIndex);
-void func_80066940(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2);
+void resize_viewport(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2);
 void set_viewport_properties(s32 viewPortIndex, s32 x1, s32 x2, s32 y1, s32 y2);
 s32 copy_viewport_background_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32 *x2, s32 *y2);
 void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4);
@@ -139,9 +139,9 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
 void func_80069484(Gfx **arg0, MatrixS **arg1, ObjectTransform *arg2, f32 arg3, f32 arg4);
 void set_viewport_scissor(Gfx **dlist);
 void func_80069A40(Gfx **dlist);
+void copy_viewports_to_stack(void);
 
 // Non Matching
-void func_80066610(void);
 void func_80065EA0(void);
 s32 func_8006A1C4(s32 arg0, s32 logicUpdateRate);
 void func_80066CDC(Gfx **dlist, MatrixS **mats);

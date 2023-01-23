@@ -320,9 +320,9 @@ glabel menu_track_select_init
 /* 08F878 8008EC78 AFA90010 */  sw    $t1, 0x10($sp)
 /* 08F87C 8008EC7C 24050050 */  li    $a1, 80
 /* 08F880 8008EC80 240700F0 */  li    $a3, 240
-/* 08F884 8008EC84 0C019A50 */  jal   func_80066940
+/* 08F884 8008EC84 0C019A50 */  jal   resize_viewport
 /* 08F888 8008EC88 00433023 */   subu  $a2, $v0, $v1
-/* 08F88C 8008EC8C 0C019984 */  jal   func_80066610
+/* 08F88C 8008EC8C 0C019984 */  jal   copy_viewports_to_stack
 /* 08F890 8008EC90 00000000 */   nop   
 /* 08F894 8008EC94 00002025 */  move  $a0, $zero
 /* 08F898 8008EC98 0C019A06 */  jal   func_80066818

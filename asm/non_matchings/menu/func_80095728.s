@@ -204,7 +204,7 @@ glabel L80095964
 .L800959FC:
 /* 0965FC 800959FC 0000C012 */  mflo  $t8
 /* 096600 80095A00 0302C821 */  addu  $t9, $t8, $v0
-/* 096604 80095A04 0C019A50 */  jal   func_80066940
+/* 096604 80095A04 0C019A50 */  jal   resize_viewport
 /* 096608 80095A08 AFB90010 */   sw    $t9, 0x10($sp)
 /* 09660C 80095A0C 3C02800E */  lui   $v0, %hi(gMenuImageStack) # $v0, 0x800e
 /* 096610 80095A10 2442F75C */  addiu $v0, %lo(gMenuImageStack) # addiu $v0, $v0, -0x8a4

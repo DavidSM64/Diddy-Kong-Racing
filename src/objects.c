@@ -92,12 +92,21 @@ s16 D_800DC7B8[52] = {
 
 // A table of which vehicles to use for boss races.
 // https://www.youtube.com/watch?v=WQJAtns_rMk
-s16 gBossVehicles[16] = {
-    0x0005, 0x0106, 0x0207, 0x0005,
-    0x0106, 0x010B, 0x010B, 0x0207,
-    0x000C, 0x020D, 0x0101, 0x0101,
-    0x0101, 0x0101, 0x0101, 0x0000,
+BossRaceVehicles gBossVehicles[] = {
+    {VEHICLE_CAR,           VEHICLE_TRICKY}, // Tricky 1
+    {VEHICLE_HOVERCRAFT,    VEHICLE_BLUEY}, // Bluey 1
+    {VEHICLE_PLANE,         VEHICLE_SMOKEY}, // Smokey 1
+    {VEHICLE_CAR,           VEHICLE_TRICKY}, // Tricky 2
+    {VEHICLE_HOVERCRAFT,    VEHICLE_BLUEY}, // Bluey 2
+    {VEHICLE_HOVERCRAFT,    VEHICLE_BUBBLER}, // Bubbler 1
+    {VEHICLE_HOVERCRAFT,    VEHICLE_BUBBLER}, // Bubbler 2
+    {VEHICLE_PLANE,         VEHICLE_SMOKEY}, // Smokey 2
+    {VEHICLE_CAR,           VEHICLE_WIZPIG}, // Wizpig 1
+    {VEHICLE_PLANE,         VEHICLE_ROCKET}, // Wizpig 2
 };
+
+s8 D_800DC820[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+
 s8 D_800DC840[8] = { 9, 1, 2, 3, 4, 5, 7, 0 };
 
 s8 D_800DC848 = 0;
@@ -184,7 +193,7 @@ s32 gRaceStartCountdown;
 s32 D_8011ADBC;
 s32 D_8011ADC0;
 u8 D_8011ADC4;
-u8 D_8011ADC5;
+s8 D_8011ADC5;
 s32 D_8011ADC8;
 s8 (*D_8011ADCC)[8];
 f32 D_8011ADD0;
@@ -231,7 +240,7 @@ s32 gParticleCount;
 CheckpointNode *gTrackCheckpoints; // Array of structs, unknown number of members
 s32 gNumberOfCheckpoints;
 s32 D_8011AED4;
-s16 D_8011AED8;
+s16 gTajChallengeType;
 u32 (*D_8011AEDC)[64]; // Not sure about the number of elements
 s32 D_8011AEE0;
 Object *(*gRacers)[8];
@@ -242,7 +251,7 @@ Object **gRacersByPort;
 s32 gNumRacers;
 u8 gTimeTrialEnabled;
 u8 D_8011AEF5;
-u8 D_8011AEF6;
+u8 gIsTajChallenge;
 s8 D_8011AEF7;
 s32 D_8011AEF8;
 s32 D_8011AEFC;
@@ -455,7 +464,7 @@ void func_8000C460(void) {
     D_8011AE7E = 1;
     D_8011AE7C = 0;
     D_8011AD44 = 0;
-    D_8011AEF6 = 0;
+    gIsTajChallenge = FALSE;
     D_8011AEF7 = 0;
     D_8011AF60[0] = 0;
     D_8011AE00 = 0;
@@ -1070,7 +1079,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     obj->segment.trans.x_position = newXPos;
     obj->segment.trans.y_position = newYPos;
     obj->segment.trans.z_position = newZPos;
-    box = func_8002A2DC(obj->segment.unk2C.half.lower);
+    box = get_segment_bounding_box(obj->segment.unk2C.half.lower);
 
     //For some reason the XYZ positions are converted into integers for the next section
     intXPos = newXPos, intYPos = newYPos, intZPos = newZPos;
@@ -1657,13 +1666,19 @@ u32 func_800179D0(void) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80017A18.s")
 
-void func_80017E74(s32 arg0) {
-    D_8011AED8 = arg0;
+/**
+ * Sets the active Taj challenge.
+*/
+void set_taj_challenge_type(s32 vehicleID) {
+    gTajChallengeType = vehicleID;
     D_8011ADAC = 0;
 }
 
-s16 func_80017E88(void) {
-    return D_8011AED8;
+/**
+ * Returns which Taj challenge is currently active.
+*/
+UNUSED s16 get_taj_challenge_type(void) {
+    return gTajChallengeType;
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80017E98.s")
@@ -1950,6 +1965,9 @@ Object **get_racer_objects_by_position(s32 *numRacers) {
     return gRacersByPosition;
 }
 
+/**
+ * Returns the racer object specified by the ID
+*/
 Object *get_racer_object(s32 index) {
     if (gNumRacers == 0) {
         return NULL;
@@ -1960,6 +1978,9 @@ Object *get_racer_object(s32 index) {
     return (*gRacers)[index];
 }
 
+/**
+ * Returns the racer object specified by the player ID.
+*/
 Object *get_racer_object_by_port(s32 index) {
     if (gNumRacers == 0) {
         return NULL;
@@ -2408,16 +2429,16 @@ f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
 UNUSED void func_800228DC(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }
 
-void func_800228EC(s32 arg0) {
-    Object_Racer *object_64;
+void init_racer_for_challenge(s32 vehicleID) {
+    Object_Racer *racer;
 
     D_8011AEF7 = 3;
-    object_64 = &get_racer_object(0)->unk64->racer;
-    object_64->courseCheckpoint = 0;
-    object_64->checkpoint = 0;
-    object_64->lap = 0;
-    object_64->unk1BA = 0;
-    func_80017E74(arg0);
+    racer = &get_racer_object(0)->unk64->racer;
+    racer->courseCheckpoint = 0;
+    racer->checkpoint = 0;
+    racer->lap = 0;
+    racer->unk1BA = 0;
+    set_taj_challenge_type(vehicleID);
     func_8006F388(10);
 }
 
@@ -2450,8 +2471,11 @@ void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z) {
 GLOBAL_ASM("asm/non_matchings/objects/func_80022E18.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_800230D0.s")
 
-s8 func_8002341C(void) {
-    return D_8011AEF6;
+/**
+ * Returns true if a taj challenge is currently active.
+*/
+s8 is_taj_challenge(void) {
+    return gIsTajChallenge;
 }
 
 Object *func_8002342C(f32 x, f32 z) {
@@ -2505,6 +2529,10 @@ void func_800235D0(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800235DC.s")
 
+/**
+ * Run when an object is created.
+ * Used to do one-time things like initialising variables
+*/
 void run_object_init_func(Object *obj, void *entry, s32 arg2) {
     obj->behaviorId = obj->segment.header->behaviorId;
     switch (obj->behaviorId) {
@@ -2898,6 +2926,10 @@ s32 func_80023E30(s32 arg0) {
   return value;
 }
 
+/**
+ * Run every frame for most objects with set behaviours.
+ * One big switch statement for whichever object.
+*/
 void run_object_loop_func(Object *obj, s32 updateRate) {
     func_800B76B8(1, obj->unk4A);
     switch (obj->behaviorId) {

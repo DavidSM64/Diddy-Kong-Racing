@@ -565,7 +565,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     if (vehicleId >= VEHICLE_CAR && vehicleId < NUMBER_OF_PLAYER_VEHICLES) {
         var_s0 = gCurrentLevelHeader->unk4F[vehicleId];
     }
-    func_80017E74(var_s0);
+    set_taj_challenge_type(var_s0);
     var_s0 = settings->worldId;
     if (gCurrentLevelHeader->world != -1) {
         settings->worldId = gCurrentLevelHeader->world;
@@ -1038,7 +1038,7 @@ void main_game_loop(void) {
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
 
-    func_80066610();
+    copy_viewports_to_stack();
     if (gDrawFrameTimer != 1) {
         if (gSkipGfxTask == FALSE) {
             gScreenStatus = wait_for_gfx_task();
@@ -1725,6 +1725,7 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
         }
     }
     if (levelId != (s32) SPECIAL_MAP_ID_NO_LEVEL) {
+        //!@bug: Forcing the plane here makes all AI use plane paths. This can be seen most evidently in the Ancient Lake demo.
         load_level_3(levelId, numberOfPlayers, 0, VEHICLE_PLANE, cutsceneId);
         gIsLoading = FALSE;
         return;

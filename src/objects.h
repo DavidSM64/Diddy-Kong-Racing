@@ -139,14 +139,19 @@ enum ObjectBehaviours {
     BHV_UNK_7F
 };
 
-struct RacerShieldGfx {
+typedef struct RacerShieldGfx {
     s16 x_position;
     s16 y_position;
     s16 z_position;
     s16 y_offset;
     f32 scale;
     f32 turnSpeed;
-};
+} RacerShieldGfx;
+
+typedef struct BossRaceVehicles {
+    u8 playerVehicle;
+    u8 bossVehicle;
+} BossRaceVehicles;
 
 /* Size: 0x8 bytes */
 typedef struct unknown800DC6F0 {
@@ -273,50 +278,6 @@ typedef struct unk8001A7D8_arg0 {
     u8 unk49;
 } unk8001A7D8_arg0;
 
-extern unknown800DC6F0 D_800DC6F0;
-extern unknown800DC6F0 D_800DC6F8;
-
-extern s32 D_800DC700;
-extern s32 D_800DC704;
-extern s16 D_800DC708;
-extern s32 D_800DC70C;
-extern s16 D_800DC710;
-extern s32 D_800DC714;
-extern s32 D_800DC718;
-extern s8 D_800DC71C;
-extern s32 D_800DC720;
-extern s16 D_800DC724;
-extern s16 D_800DC728;
-extern s16 D_800DC72C;
-extern u8 gHasGhostToSave;
-extern s32 D_800DC734;
-extern u8 D_800DC738;
-extern s8 D_800DC73C;
-extern s8 D_800DC740;
-extern s8 D_800DC744;
-extern s8 D_800DC748;
-extern s32 D_800DC74C[2];
-extern s32 D_800DC754[2];
-extern s32 D_800DC760;
-extern s32 D_800DC768;
-
-extern f32 D_800DC76C[15];
-
-extern u16 D_800DC7A8[8];
-
-extern s16 D_800DC7B8[52];
-
-extern s16 gBossVehicles[16];
-
-extern s8 D_800DC840[8];
-
-extern s8 D_800DC848;
-extern s32 D_800DC858;
-extern s32 D_800DC85C;
-
-extern u8 D_800DC860;
-extern u16 D_800DC864;
-
 Object *func_8000BF44(s32 arg0);
 void allocate_object_pools(void);
 void func_8000C460(void);
@@ -361,8 +322,8 @@ void render_object(Object *this);
 void func_80013548(Object *arg0);
 void func_800142B8(void);
 u32 func_800179D0(void);
-void func_80017E74(s32 arg0);
-s16 func_80017E88(void);
+void set_taj_challenge_type(s32 arg0);
+s16 get_taj_challenge_type(void);
 Object *find_taj_object(void);
 void func_8001A8D4(s32 arg0);
 s16 func_8001AE44();
@@ -408,8 +369,8 @@ s32 func_800210CC(s8 arg0);
 s8 func_800214C4(void);
 f32 lerp(f32 *arg0, u32 arg1, f32 arg2);
 void func_800228DC(s32 arg0, s32 arg1, s32 arg2);
-void func_800228EC(s32 arg0);
-s8 func_8002341C(void);
+void init_racer_for_challenge(s32 arg0);
+s8 is_taj_challenge(void);
 s32 func_80023568(void);
 s8 func_800235C0(void);
 void func_800235D0(s32 arg0);
@@ -487,5 +448,6 @@ void func_8001E6EC(s8);
 void func_8001E89C(void);
 void func_800155B8(void);
 void func_800230D0(Object*, Object_Racer*);
+s32 func_8001955C(Object*, s8, u8, s16, s32, f32, f32*, f32*, f32*);
 
 #endif
