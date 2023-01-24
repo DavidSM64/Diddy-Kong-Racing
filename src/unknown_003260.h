@@ -148,6 +148,7 @@ u16 get_sound_channel_volume(u8 arg0);
 ALDMAproc __amDmaNew(AMDMAState **state);
 void set_sound_channel_volume(u8 channel, u16 volume);
 static void __amHandleDoneMsg(AudioInfo *info);
+u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex);
 
 // Non Matching
 ALMicroTime  _sndpVoiceHandler(void *node);

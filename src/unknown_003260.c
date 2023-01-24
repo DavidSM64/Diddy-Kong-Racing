@@ -398,9 +398,64 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/_sndpVoiceHandler.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/_handleEvent.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000410C.s")
+
+#if 0
+void func_8000418C(void *arg0) {
+    f32 sp28;
+    void *sp24;
+    s16 sp20;
+    f32 sp1C;
+    f32 temp_f6;
+
+    temp_f6 = alCents2Ratio((s32) arg0->unk8->unk4->unk5) * arg0->unk2C;
+    sp20 = 16;
+    sp1C = temp_f6;
+    sp24 = arg0;
+    sp28 = sp1C;
+    alEvtqPostEvent(&gAlSndPlayer->evtq, (ALEvent *) &sp20, 33333);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000418C.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800041FC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800042CC.s")
+
+u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
+    OSIntMask mask;
+    u16 freeListNextIndex;
+    u16 allocListNextIndex;
+    u16 freeListLastIndex;
+    ALLink *nextAllocList;
+    ALLink *nextFreeList;
+    ALLink *prevFreeList;
+    ALEventQueue *queue;
+
+    mask = osSetIntMask(OS_IM_NONE);
+    queue = (ALEventQueue *) &D_800DC6B0; //D_800DC6B0 could be a different type?
+    nextFreeList = queue->freeList.next;
+    nextAllocList = queue->allocList.next;
+    prevFreeList = queue->freeList.prev;
+
+    for (freeListNextIndex = 0; nextFreeList != 0; freeListNextIndex++) {
+        nextFreeList = (ALLink *) nextFreeList->next;
+    }
+
+    for (allocListNextIndex = 0; nextAllocList != 0; allocListNextIndex++) {
+        nextAllocList = (ALLink *) nextAllocList->next;
+    }
+
+    for (freeListLastIndex = 0; prevFreeList != 0; freeListLastIndex++) {
+        prevFreeList = (ALLink *) prevFreeList->prev;
+    }
+
+    *lastAllocListIndex = allocListNextIndex;
+    *lastFreeListIndex = freeListNextIndex;
+
+    osSetIntMask(mask);
+
+    return freeListLastIndex;
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004384.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004520.s")
 
