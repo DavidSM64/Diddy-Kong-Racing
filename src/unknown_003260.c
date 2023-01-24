@@ -145,7 +145,7 @@ void thread4_audio(UNUSED void *arg) {
         case 1:
             func_80002C00(D_80115F98[(((u32) audFrameCt % 3))+2], audioThreadUpdateMesg);
             osRecvMesg(&D_80116198, (OSMesg *) &audioThreadUpdateMesg, 1);
-            func_80002DF8(audioThreadUpdateMesg);
+            __amHandleDoneMsg(audioThreadUpdateMesg);
             break;
         case 4:
             // Mysterious void.
@@ -160,18 +160,26 @@ void thread4_audio(UNUSED void *arg) {
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002C00.s")
 
-void func_80002DF8(UNUSED OSMesg mesg) {
-    static s32 D_800DC6A0 = 1;
-    if ((osAiGetLength() >> 2) == 0) {
-        if (D_800DC6A0 == 0) {
-            D_800DC6A0 = 0;
-        }
+/******************************************************************************
+ *
+ * __amHandleDoneMsg. Really just debugging info in this frame. Checks
+ * to make sure we completed before we were out of samples.
+ *
+ *****************************************************************************/
+static void __amHandleDoneMsg(AudioInfo *info) {
+    s32    samplesLeft;
+    static int firstTime = 1;
+
+    samplesLeft = osAiGetLength()>>2;
+    if (samplesLeft == 0 && !firstTime) {
+        //stubbed_printf("audio: ai out of samples\n");    
+        firstTime = 0;
     }
 }
 
-s32 D_800DC6A4 = 0;       // Currently unknown, might be a different type.
-s32 D_800DC6A8 = 0;       // Currently unknown, might be a different type.
-s32 D_800DC6AC = 0;       // Currently unknown, might be a different type.
+UNUSED s32 D_800DC6A4 = 0;       // Currently unknown, might be a different type.
+UNUSED s32 D_800DC6A8 = 0;       // Currently unknown, might be a different type.
+UNUSED s32 D_800DC6AC = 0;       // Currently unknown, might be a different type.
 
 ALEventQueue *D_800DC6B0 = NULL;
 s32 D_800DC6B4 = 0; // Currently unknown, might be a different type.
@@ -471,7 +479,7 @@ void set_sound_channel_volume(u8 channel, u16 volume) {
     UNUSED s32 pad;
     ALEvent evt;
 
-    mask = osSetIntMask(1);
+    mask = osSetIntMask(OS_IM_NONE);
     queue = D_800DC6B0;
     gSoundChannelVolume[channel] = volume;
 

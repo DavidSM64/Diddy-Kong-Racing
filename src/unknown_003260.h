@@ -21,6 +21,29 @@
 #define AUDIO_STACKSIZE 0x3010
 #define NUM_DMA_MESSAGES 50
 
+/****  type define's for structures unique to audiomgr ****/
+typedef union {    
+
+    struct {
+        short     type;
+    } gen;
+
+    struct {
+        short     type;
+        struct    AudioInfo_s *info;
+    } done;
+    
+    OSScMsg       app;
+    
+} AudioMsg;
+
+typedef struct AudioInfo_s {
+    short         *data;          /* Output data pointer */
+    short         frameSamples;   /* # of samples synthesized in this frame */
+    OSScTask      task;           /* scheduler structure */
+    AudioMsg      msg;            /* completion message */
+} AudioInfo;
+
 typedef struct unk800DC6BC_40 {
     ALLink node;
     u8 pad0C[0x38];
@@ -72,7 +95,7 @@ typedef struct audioMgrConfig_s{
     u32 unk04;
     u32 maxChannels;
     ALHeap *hp;
-    u16  unk10;
+    u16  unk10; // Heap Size?
 } audioMgrConfig;
 
 typedef struct {
@@ -123,8 +146,8 @@ void func_800049D8(void);
 void func_800049F8(s32 soundMask, s16 type, u32 volume);
 u16 get_sound_channel_volume(u8 arg0);
 ALDMAproc __amDmaNew(AMDMAState **state);
-void set_sound_channel_volume(u8 arg0, u16 arg1);
-void func_80002DF8(OSMesg mesg);
+void set_sound_channel_volume(u8 channel, u16 volume);
+static void __amHandleDoneMsg(AudioInfo *info);
 
 // Non Matching
 ALMicroTime  _sndpVoiceHandler(void *node);
