@@ -20,6 +20,7 @@
 
 #define AUDIO_STACKSIZE 0x3010
 #define NUM_DMA_MESSAGES 50
+#define QUIT_MSG                10
 
 /****  type define's for structures unique to audiomgr ****/
 typedef union {    
@@ -55,7 +56,7 @@ typedef struct unk8000410C {
   /* 0x0C */ ALVoice voice;
   /* 0x28 */ s8 pad28[0x16];
   /* 0x3E */ u8 unk3E;
-} unk8000410C;
+} unk8000410C; //ALSoundState?
 
 /* Unknown Size */
 typedef struct unk800DC6BC {
@@ -72,6 +73,20 @@ typedef struct unk800DC6BC {
     ALMicroTime     curTime;
 } unk800DC6BC; //ALSndPlayer
 
+typedef struct {
+  /* 0x00 */ s8 pad00[0x0C];
+  /* 0x0C */ ALVoice     voice;
+    ALSound     *sound;         /* sound referenced here */
+    s16         priority;
+    f32         pitch;          /* current playback pitch                    */
+    s32         state;          /* play state for this sound                 */
+    s16         vol;            /* volume - combined with volume from bank   */
+    ALPan       pan;            /* pan - 0 = left, 127 = right               */
+    u8          fxMix;          /* wet/dry mix - 0 = dry, 127 = wet          */
+  /* 0x3C */ u8 pad3C[2];
+  /* 0x3E */ u8 unk3E;
+} ALSoundState;
+
 typedef union {
     ALEvent msg;
 
@@ -81,7 +96,42 @@ typedef union {
         u32 unk04;
     }snd_event;
 
-}ALSndpEvent;
+} ALEvent2;
+
+typedef union {
+
+    ALEvent             msg;
+
+    struct {
+        s16             type;
+        ALSoundState    *state;
+    } common;
+    
+    struct {
+        s16             type;
+        ALSoundState    *state;
+        s16             vol;
+    } vol;
+    
+    struct {
+        s16             type;
+        ALSoundState    *state;
+        f32             pitch;
+    } pitch;
+    
+    struct {
+        s16             type;
+        ALSoundState    *state;
+        ALPan           pan;
+    } pan;
+    
+    struct {
+        s16             type;
+        ALSoundState    *state;
+        u8              mix;
+    } fx;
+    
+} ALSndpEvent;
 
 typedef struct
 {
@@ -133,7 +183,7 @@ extern unk800DC6BC* gAlSndPlayer;
 extern s32 sfxVolumeSlider;
 extern s32 D_800DC6C4;
 
-extern void thread4_audio(void*);
+extern void __amMain(void*);
 void *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size); //lib/src/al
 void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount); //lib/src/unknown_0C9C90.c
 ALMicroTime alEvtqNextEvent(ALEventQueue *evtq, ALEvent *evt); //lib/src/unknown_0C9C90.c
@@ -157,16 +207,16 @@ ALDMAproc __amDmaNew(AMDMAState **state);
 void set_sound_channel_volume(u8 channel, u16 volume);
 static void __amHandleDoneMsg(AudioInfo *info);
 u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex);
-void func_8000410C(unk8000410C *state);
+void func_8000410C(ALSoundState *state);
+static void _removeEvents(ALEventQueue *, ALSoundState *, u16);
 
 // Non Matching
 ALMicroTime  _sndpVoiceHandler(void *node);
 void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32);
 void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2);
 void func_800048D8(s32);
-void func_80002C00(s32, OSMesg mesg);
+u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo);
 void _handleEvent(unk800DC6BC *snd, ALSndpEvent *event);
-void func_800041FC(ALEventQueue *, unk8000410C *, u16);
-void func_80004520(unk8000410C *);
+void func_80004520(ALSoundState *);
 
 #endif

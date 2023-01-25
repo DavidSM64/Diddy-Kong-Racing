@@ -112,7 +112,7 @@ void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
     osCreateMesgQueue(&gAudioMesgQueue, &D_80116178, 8);
     osCreateMesgQueue(&audDMAMessageQ, &audDMAMessageBuf, 50);
 
-    osCreateThread(&audioThread, 4, &thread4_audio, NULL, &dmaState, p);
+    osCreateThread(&audioThread, 4, &__amMain, NULL, &dmaState, p);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_003260/audioNewThread.s")
@@ -126,39 +126,68 @@ void audioStopThread(void) {
     osStopThread(&audioThread);
 }
 
+
+/******************************************************************************
+ *
+ * Audio Manager implementation. This thread wakes up at every retrace,
+ * and builds an audio task, which it returns to the scheduler, who then
+ * is responsible for its finally execution on the RSP. Once the task has
+ * finished execution, the scheduler sends back a message saying the task
+ * is complete. The audio is triple buffered because the switching to a new
+ * audio buffer does not occur exactly at the gfx swapbuffer time.  With
+ * 3 buffers you ensure that the program does not destroy data before it is
+ * played.
+ *
+ *****************************************************************************/
 /**
  * Main function for handling ingame audio. Loops continuously as long as the scheduler feeds it updates.
  */
-void thread4_audio(UNUSED void *arg) {
-    s32 audioThreadMarkExit;
-    s16 *audioThreadRetraceMesg;
-    OSMesg *audioThreadUpdateMesg;
+void __amMain(UNUSED void *arg) {
+    s32 done = 0;
+    AudioMsg *msg = NULL;
+    AudioInfo *lastInfo = 0;
 
-    audioThreadMarkExit = FALSE;
-    audioThreadRetraceMesg = NULL;
-    audioThreadUpdateMesg = NULL;
-
-    osScAddClient(gAudioSched, (OSScClient *) &audioStack, &gAudioMesgQueue, OS_SC_ID_AUDIO);
-    while (!audioThreadMarkExit) {
-        osRecvMesg(&gAudioMesgQueue, (OSMesg *) &audioThreadRetraceMesg, 1);
-        switch (*audioThreadRetraceMesg) {
-        case 1:
-            func_80002C00(D_80115F98[(((u32) audFrameCt % 3))+2], audioThreadUpdateMesg);
-            osRecvMesg(&D_80116198, (OSMesg *) &audioThreadUpdateMesg, 1);
-            __amHandleDoneMsg(audioThreadUpdateMesg);
+    osScAddClient(gAudioSched, (OSScClient *) &audioStack, &gAudioMesgQueue, OS_MESG_BLOCK);
+    while (!done) {
+        (void) osRecvMesg(&gAudioMesgQueue, (OSMesg *) &msg, 1);
+        switch (msg->gen.type) {
+        case OS_SC_RETRACE_MSG:
+            __amHandleFrameMsg(D_80115F98[(((u32) audFrameCt % 3))+2], lastInfo);
+            /* wait for done message */
+            osRecvMesg(&D_80116198, (OSMesg *) &lastInfo, OS_MESG_BLOCK);
+            __amHandleDoneMsg(lastInfo);
             break;
-        case 4:
-            // Mysterious void.
+        case OS_SC_PRE_NMI_MSG:
+            /* what should we really do here? quit? ramp down volume? */
             break;
-        case 10:
-            audioThreadMarkExit = TRUE;
+        case QUIT_MSG:
+            done = 1;
+            break;
+        default:
             break;
         }
     }
     alClose(&ALGlobals_801161D0);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002C00.s")
+/******************************************************************************
+ *
+ * __amHandleFrameMsg. First, clear the past audio dma's, then calculate 
+ * the number of samples you will need for this frame. This value varies
+ * due to the fact that audio is synchronised off of the video interupt 
+ * which can have a small amount of jitter in it. Varying the number of 
+ * samples slightly will allow you to stay in synch with the video. This
+ * is an advantageous thing to do, since if you are in synch with the 
+ * video, you will have fewer graphics yields. After you've calculated 
+ * the number of frames needed, call alAudioFrame, which will call all
+ * of the synthesizer's players (sequence player and sound player) to
+ * generate the audio task list. If you get a valid task list back, put
+ * it in a task structure and send a message to the scheduler to let it
+ * know that the next frame of audio is ready for processing.
+ *
+ *****************************************************************************/
+u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo);
+GLOBAL_ASM("asm/non_matchings/unknown_003260/__amHandleFrameMsg.s")
 
 /******************************************************************************
  *
@@ -166,7 +195,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80002C00.s")
  * to make sure we completed before we were out of samples.
  *
  *****************************************************************************/
-static void __amHandleDoneMsg(AudioInfo *info) {
+static void __amHandleDoneMsg(UNUSED AudioInfo *info) {
     s32    samplesLeft;
     static int firstTime = 1;
 
@@ -398,13 +427,13 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/_sndpVoiceHandler.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/_handleEvent.s")
 
-void func_8000410C(unk8000410C *state) {
+void func_8000410C(ALSoundState *state) {
     if (state->unk3E & 4) {
         alSynStopVoice(gAlSndPlayer->drvr, &state->voice);
         alSynFreeVoice(gAlSndPlayer->drvr, &state->voice);
     }
     func_80004520(state);
-    func_800041FC(&gAlSndPlayer->evtq, state, 0xFFFF);
+    _removeEvents(&gAlSndPlayer->evtq, state, 0xFFFF);
 }
 
 #if 0
@@ -426,7 +455,33 @@ void func_8000418C(void *arg0) {
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000418C.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800041FC.s")
+static void _removeEvents(ALEventQueue *evtq, ALSoundState *state, u16 eventType) {
+    ALLink              *thisNode;
+    ALLink              *nextNode;
+    ALEventListItem     *thisItem;
+    ALEventListItem     *nextItem;
+    ALSndpEvent        *thisEvent;
+    OSIntMask           mask;
+
+    mask = osSetIntMask(OS_IM_NONE);
+
+    thisNode = evtq->allocList.next;
+    while( thisNode != 0 ) {
+	nextNode = thisNode->next;
+        thisItem = (ALEventListItem *)thisNode;
+        nextItem = (ALEventListItem *)nextNode;
+        thisEvent = (ALSndpEvent *) &thisItem->evt;
+        if (thisEvent->common.state == state && (u16)thisEvent->msg.type & eventType){
+            if( nextItem )
+                nextItem->delta += thisItem->delta;
+            alUnlink(thisNode);
+            alLink(thisNode, &evtq->freeList);
+        }
+	thisNode = nextNode;
+    }
+
+    osSetIntMask(mask);
+}
 
 u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
     OSIntMask mask;
@@ -516,7 +571,7 @@ void func_800049D8(void) {
 }
 
 void func_800049F8(s32 soundMask, s16 type, u32 volume) {
-    ALSndpEvent sndEvt;
+    ALEvent2 sndEvt;
     sndEvt.snd_event.type = type;
     sndEvt.snd_event.state = (void *) soundMask;
     sndEvt.snd_event.unk04 = volume;
