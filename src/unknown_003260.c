@@ -14,12 +14,12 @@
 
 extern OSSched *gAudioSched;
 extern ALHeap *D_80115F94;
-extern Acmd *D_80115F98[2];
+extern Acmd *ACMDList[2];
 extern s32 D_80115FA0[3];
 extern OSThread audioThread;
 extern OSMesgQueue gAudioMesgQueue;
 extern OSMesg D_80116178[8];
-extern OSMesgQueue D_80116198;
+extern OSMesgQueue audioReplyMsgQ;
 extern OSMesg D_801161B0[8];
 extern ALGlobals ALGlobals_801161D0;
 extern u64 audioStack[AUDIO_STACKSIZE/sizeof(u64)];
@@ -44,11 +44,11 @@ extern u16 *gSoundChannelVolume;
 u32 audFrameCt = 0;
 u32 nextDMA = 0;
 u32 curAcmdList = 0;
-s8 D_800DC68C = 0;       // Anti Piracy - Sets random audio frequency?
+s8 gAntiPiracyAudioFreq = 0;       // Anti Piracy - Sets random audio frequency?
 s32 gFunc80019808Checksum = 0x35281;
 s32 gFunc80019808Length = 0xFD0;
-s32 D_800DC698 = 0;       // Currently unknown, might be a different type.
-s32 D_800DC69C = 0;       // Currently unknown, might be a different type.
+s16 *gLastAudioPtr = 0;
+s32 gLastAudioFrameSamples = 0;
 
 /*******************************/
 
@@ -112,7 +112,7 @@ void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
     // D_80119240[i].unk10 = alHeapDBAlloc(0, 0, c->heap, 1, 0x400);
     alHeapDBAlloc(0, 0, c->heap, 1, 120);
 
-    osCreateMesgQueue(&D_80116198, &D_801161B0, 8);
+    osCreateMesgQueue(&audioReplyMsgQ, &D_801161B0, 8);
     osCreateMesgQueue(&gAudioMesgQueue, &D_80116178, 8);
     osCreateMesgQueue(&audDMAMessageQ, &audDMAMessageBuf, 50);
 
@@ -156,9 +156,10 @@ void __amMain(UNUSED void *arg) {
         (void) osRecvMesg(&gAudioMesgQueue, (OSMesg *) &msg, 1);
         switch (msg->gen.type) {
         case OS_SC_RETRACE_MSG:
-            __amHandleFrameMsg(D_80115F98[(((u32) audFrameCt % 3))+2], lastInfo);
+            //TODO: Check type of ACMDList?
+            __amHandleFrameMsg((AudioInfo *) ACMDList[(((u32) audFrameCt % 3))+2], lastInfo);
             /* wait for done message */
-            osRecvMesg(&D_80116198, (OSMesg *) &lastInfo, OS_MESG_BLOCK);
+            osRecvMesg(&audioReplyMsgQ, (OSMesg *) &lastInfo, OS_MESG_BLOCK);
             __amHandleDoneMsg(lastInfo);
             break;
         case OS_SC_PRE_NMI_MSG:
@@ -194,7 +195,6 @@ void __amMain(UNUSED void *arg) {
 u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
     s16 *audioPtr;
     Acmd *cmdp;
-    s32 cmdLen;
     int samplesLeft = 0;
     OSScTask *t;
     u32 ret;
@@ -205,12 +205,15 @@ u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
     audioPtr = (s16 *) osVirtualToPhysical(info->data);
     
     if (lastInfo) {
-        s32 temp_a0, temp_t6;
+        s16 *outputDataPointer;
+        s32 frameSamples;
 
-        D_800DC698 = temp_a0 = lastInfo->data;
-        D_800DC69C = temp_t6 = lastInfo->frameSamples << 2;
-        osAiSetNextBuffer(temp_a0, temp_t6);
-        if (D_800DC68C != 0) {
+        gLastAudioPtr = outputDataPointer = lastInfo->data;
+        gLastAudioFrameSamples = frameSamples = lastInfo->frameSamples << 2;
+        osAiSetNextBuffer(outputDataPointer, frameSamples);
+
+        // Antipiracy measure
+        if (gAntiPiracyAudioFreq != 0) {
             osAiSetFrequency(get_random_number_from_range(0, 10000) + 22050);
         }
     }
@@ -220,34 +223,34 @@ u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
     /* this will vary slightly frame to frame, must recalculate every frame */
     samplesLeft = osAiGetLength() >> 2; /* divide by four, to convert bytes */
                                         /* to stereo 16 bit samples */
-    info->frameSamples = 16 + (framesize - samplesLeft + EXTRA_SAMPLES)& ~0xf;
-    if(info->frameSamples < minFrameSize)
+    info->frameSamples = (16 + (framesize - samplesLeft + EXTRA_SAMPLES)) & ~0xf;
+    if ((u32)info->frameSamples < minFrameSize)
         info->frameSamples = minFrameSize;
 
-    cmdp = alAudioFrame(D_80115F98[curAcmdList], &D_80119634, audioPtr,
+    cmdp = alAudioFrame(ACMDList[curAcmdList], &gAudioCmdLen, audioPtr,
                         info->frameSamples);
 
     t = &info->task;
     
     t->next      = 0;                    /* paranoia */
-    t->msgQ      = &D_80116198; /* reply to when finished */
+    t->msgQ      = &audioReplyMsgQ; /* reply to when finished */
     //TODO: This should be &info->msg, but the struct is likely modified.
-    t->msg       = (OSMesg)&info->data;   /* reply with this message */
+    t->msg       = (OSMesg) &info->data;   /* reply with this message */
     t->flags     = OS_SC_NEEDS_RSP;
     t->unk58 = -1;
     t->unk60 = 0xFF;
     t->unk5C = 0;
     t->unk64 = 0;
     
-    t->list.t.data_ptr    = (u64 *) D_80115F98[curAcmdList];
-    t->list.t.data_size   = (cmdp - D_80115F98[curAcmdList]) * sizeof(Acmd);
+    t->list.t.data_ptr    = (u64 *) ACMDList[curAcmdList];
+    t->list.t.data_size   = (cmdp - ACMDList[curAcmdList]) * sizeof(Acmd);
     t->list.t.type  = M_AUDTASK;
     t->list.t.ucode_boot = (u64 *)rspF3DDKRBootStart;
     t->list.t.ucode_boot_size =
         ((int) rspF3DDKRDramStart - (int) rspF3DDKRBootStart);
     t->list.t.flags  = OS_TASK_DP_WAIT;
-    t->list.t.ucode = (u64 *) rspUnknownStart;
-    t->list.t.ucode_data = (u64 *) rspUnknownDataStart;
+    t->list.t.ucode = (u64 *) aspMainTextStart;
+    t->list.t.ucode_data = (u64 *) aspMainDataStart;
     t->list.t.ucode_data_size = SP_UCODE_DATA_SIZE;
     t->list.t.yield_data_ptr = NULL;
     t->list.t.yield_data_size = 0;

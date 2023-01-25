@@ -142,10 +142,10 @@ glabel audioNewThread
 /* 003478 80002878 3C048012 */  lui   $a0, %hi(D_80119638) # $a0, 0x8012
 /* 00347C 8000287C 24849638 */  addiu $a0, %lo(D_80119638) # addiu $a0, $a0, -0x69c8
 /* 003480 80002880 240C0400 */  li    $t4, 1024
-/* 003484 80002884 3C08800E */  lui   $t0, %hi(D_800DC68C) # $t0, 0x800e
+/* 003484 80002884 3C08800E */  lui   $t0, %hi(gAntiPiracyAudioFreq) # $t0, 0x800e
 /* 003488 80002888 A48C0000 */  sh    $t4, ($a0)
 /* 00348C 8000288C 84860000 */  lh    $a2, ($a0)
-/* 003490 80002890 2508C68C */  addiu $t0, %lo(D_800DC68C) # addiu $t0, $t0, -0x3974
+/* 003490 80002890 2508C68C */  addiu $t0, %lo(gAntiPiracyAudioFreq) # addiu $t0, $t0, -0x3974
 /* 003494 80002894 3C0D8002 */  lui   $t5, %hi(func_80019808) # $t5, 0x8002
 /* 003498 80002898 AE420010 */  sw    $v0, 0x10($s2)
 /* 00349C 8000289C 25AD9808 */  addiu $t5, %lo(func_80019808) # addiu $t5, $t5, -0x67f8
@@ -171,9 +171,9 @@ glabel audioNewThread
 .L800028E8:
 /* 0034E8 800028E8 3C19800E */  lui   $t9, %hi(gFunc80019808Checksum) # $t9, 0x800e
 /* 0034EC 800028EC 8F39C690 */  lw    $t9, %lo(gFunc80019808Checksum)($t9)
-/* 0034F0 800028F0 3C108011 */  lui   $s0, %hi(D_80115F98) # $s0, 0x8011
+/* 0034F0 800028F0 3C108011 */  lui   $s0, %hi(ACMDList) # $s0, 0x8011
 /* 0034F4 800028F4 10790003 */  beq   $v1, $t9, .L80002904
-/* 0034F8 800028F8 26105F98 */   addiu $s0, %lo(D_80115F98) # addiu $s0, $s0, 0x5f98
+/* 0034F8 800028F8 26105F98 */   addiu $s0, %lo(ACMDList) # addiu $s0, $s0, 0x5f98
 /* 0034FC 800028FC 24090001 */  li    $t1, 1
 /* 003500 80002900 A1090000 */  sb    $t1, ($t0)
 .L80002904:
@@ -202,11 +202,11 @@ glabel audioNewThread
 /* 003558 80002958 01842823 */  subu  $a1, $t4, $a0
 /* 00355C 8000295C 0C01C3BE */  jal   allocate_at_address_in_main_pool
 /* 003560 80002960 00801025 */   move  $v0, $a0
-/* 003564 80002964 3C108011 */  lui   $s0, %hi(D_80115F98) # $s0, 0x8011
+/* 003564 80002964 3C108011 */  lui   $s0, %hi(ACMDList) # $s0, 0x8011
 /* 003568 80002968 3C118011 */  lui   $s1, %hi(D_80115FA0+4) # $s1, 0x8011
 /* 00356C 8000296C 00401825 */  move  $v1, $v0
 /* 003570 80002970 26315FA4 */  addiu $s1, %lo(D_80115FA0+4) # addiu $s1, $s1, 0x5fa4
-/* 003574 80002974 26105F98 */  addiu $s0, %lo(D_80115F98) # addiu $s0, $s0, 0x5f98
+/* 003574 80002974 26105F98 */  addiu $s0, %lo(ACMDList) # addiu $s0, $s0, 0x5f98
 .L80002978:
 /* 003578 80002978 8E660014 */  lw    $a2, 0x14($s3)
 /* 00357C 8000297C 240D0078 */  li    $t5, 120
@@ -224,10 +224,10 @@ glabel audioNewThread
 /* 0035AC 800029AC 000E7880 */  sll   $t7, $t6, 2
 /* 0035B0 800029B0 1611FFF1 */  bne   $s0, $s1, .L80002978
 /* 0035B4 800029B4 006F1821 */   addu  $v1, $v1, $t7
-/* 0035B8 800029B8 3C048011 */  lui   $a0, %hi(D_80116198) # $a0, 0x8011
+/* 0035B8 800029B8 3C048011 */  lui   $a0, %hi(audioReplyMsgQ) # $a0, 0x8011
 /* 0035BC 800029BC 3C058011 */  lui   $a1, %hi(D_801161B0) # $a1, 0x8011
 /* 0035C0 800029C0 24A561B0 */  addiu $a1, %lo(D_801161B0) # addiu $a1, $a1, 0x61b0
-/* 0035C4 800029C4 24846198 */  addiu $a0, %lo(D_80116198) # addiu $a0, $a0, 0x6198
+/* 0035C4 800029C4 24846198 */  addiu $a0, %lo(audioReplyMsgQ) # addiu $a0, $a0, 0x6198
 /* 0035C8 800029C8 0C032208 */  jal   osCreateMesgQueue
 /* 0035CC 800029CC 24060008 */   li    $a2, 8
 /* 0035D0 800029D0 3C048011 */  lui   $a0, %hi(gAudioMesgQueue) # $a0, 0x8011

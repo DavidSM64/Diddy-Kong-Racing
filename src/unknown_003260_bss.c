@@ -8,12 +8,12 @@
 #define NUM_ACMD_LISTS 2
 OSSched *gAudioSched;
 ALHeap *D_80115F94;
-Acmd *D_80115F98[NUM_ACMD_LISTS];
+Acmd *ACMDList[NUM_ACMD_LISTS];
 s32 D_80115FA0[3];
 OSThread audioThread;
 OSMesgQueue gAudioMesgQueue;
 OSMesg D_80116178[8];
-OSMesgQueue D_80116198;
+OSMesgQueue audioReplyMsgQ;
 OSMesg D_801161B0[8];
 ALGlobals ALGlobals_801161D0;
 u64 audioStack[AUDIO_STACKSIZE/sizeof(u64)];
@@ -22,7 +22,7 @@ AMDMABuffer dmaBuffs[50];
 u32 minFrameSize;
 u32 framesize;
 u32 maxFrameSize;
-u32 D_80119634;
+s32 gAudioCmdLen;
 u32 D_80119638;
 u32 D_8011963C;
 OSIoMesg audDMAIOMesgBuf[NUM_DMA_MESSAGES];

@@ -175,11 +175,9 @@ typedef struct {
 extern u32 audFrameCt;
 extern u32 nextDMA;
 extern u32 curAcmdList;
-extern s8 D_800DC68C;
+extern s8 gAntiPiracyAudioFreq;
 extern s32 gFunc80019808Checksum;
 extern s32 gFunc80019808Length;
-extern s32 D_800DC698;
-extern s32 D_800DC69C;
 extern s32 D_800DC6A0;
 extern s32 D_800DC6A4;
 extern s32 D_800DC6A8;
@@ -194,9 +192,9 @@ extern s32 sfxVolumeSlider;
 extern s32 D_800DC6C4;
 extern s8 rspF3DDKRBootStart[];
 extern s8 rspF3DDKRDramStart[];
-extern s8 rspUnknownDataStart[];
-extern s8 rspUnknownStart[];
-extern u32 D_80119634;
+extern s8 aspMainDataStart[];
+extern s8 aspMainTextStart[];
+extern s32 gAudioCmdLen;
 
 extern void __amMain(void*);
 Acmd *alAudioFrame(Acmd *cmdList, s32 *cmdLen, s16 *outBuf, s32 outLen);
