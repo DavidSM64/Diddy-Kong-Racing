@@ -3,7 +3,7 @@ glabel __amHandleFrameMsg
 /* 003804 80002C04 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 003808 80002C08 AFB00018 */  sw    $s0, 0x18($sp)
 /* 00380C 80002C0C 00808025 */  move  $s0, $a0
-/* 003810 80002C10 0C000C10 */  jal   func_80003040
+/* 003810 80002C10 0C000C10 */  jal   __clearAudioDMA
 /* 003814 80002C14 AFA5002C */   sw    $a1, 0x2c($sp)
 /* 003818 80002C18 8E040000 */  lw    $a0, ($s0)
 /* 00381C 80002C1C 0C03233C */  jal   osVirtualToPhysical
@@ -43,7 +43,7 @@ glabel __amHandleFrameMsg
 /* 0038A0 80002CA0 3C038012 */  lui   $v1, %hi(minFrameSize) # $v1, 0x8012
 /* 0038A4 80002CA4 8C639628 */  lw    $v1, %lo(minFrameSize)($v1)
 /* 0038A8 80002CA8 86070004 */  lh    $a3, 4($s0)
-/* 0038AC 80002CAC 3C0B800E */  lui   $t3, %hi(D_800DC688) # $t3, 0x800e
+/* 0038AC 80002CAC 3C0B800E */  lui   $t3, %hi(curAcmdList) # $t3, 0x800e
 /* 0038B0 80002CB0 00E3082B */  sltu  $at, $a3, $v1
 /* 0038B4 80002CB4 10200004 */  beqz  $at, .L80002CC8
 /* 0038B8 80002CB8 3C048011 */   lui   $a0, %hi(D_80115F98) # $a0, 0x8011
@@ -51,21 +51,21 @@ glabel __amHandleFrameMsg
 /* 0038C0 80002CC0 86070004 */  lh    $a3, 4($s0)
 /* 0038C4 80002CC4 00000000 */  nop   
 .L80002CC8:
-/* 0038C8 80002CC8 8D6BC688 */  lw    $t3, %lo(D_800DC688)($t3)
-/* 0038CC 80002CCC 3C058012 */  lui   $a1, %hi(nextDMA) # $a1, 0x8012
+/* 0038C8 80002CC8 8D6BC688 */  lw    $t3, %lo(curAcmdList)($t3)
+/* 0038CC 80002CCC 3C058012 */  lui   $a1, %hi(D_80119634) # $a1, 0x8012
 /* 0038D0 80002CD0 000B6080 */  sll   $t4, $t3, 2
 /* 0038D4 80002CD4 008C2021 */  addu  $a0, $a0, $t4
 /* 0038D8 80002CD8 8C845F98 */  lw    $a0, %lo(D_80115F98)($a0)
 /* 0038DC 80002CDC 8FA60024 */  lw    $a2, 0x24($sp)
 /* 0038E0 80002CE0 0C019525 */  jal   alAudioFrame
-/* 0038E4 80002CE4 24A59634 */   addiu $a1, %lo(nextDMA) # addiu $a1, $a1, -0x69cc
+/* 0038E4 80002CE4 24A59634 */   addiu $a1, %lo(D_80119634) # addiu $a1, $a1, -0x69cc
 /* 0038E8 80002CE8 3C0D8011 */  lui   $t5, %hi(D_80116198) # $t5, 0x8011
 /* 0038EC 80002CEC 24030002 */  li    $v1, 2
-/* 0038F0 80002CF0 3C06800E */  lui   $a2, %hi(D_800DC688) # $a2, 0x800e
+/* 0038F0 80002CF0 3C06800E */  lui   $a2, %hi(curAcmdList) # $a2, 0x800e
 /* 0038F4 80002CF4 25AD6198 */  addiu $t5, %lo(D_80116198) # addiu $t5, $t5, 0x6198
 /* 0038F8 80002CF8 240EFFFF */  li    $t6, -1
 /* 0038FC 80002CFC 240F00FF */  li    $t7, 255
-/* 003900 80002D00 24C6C688 */  addiu $a2, %lo(D_800DC688) # addiu $a2, $a2, -0x3978
+/* 003900 80002D00 24C6C688 */  addiu $a2, %lo(curAcmdList) # addiu $a2, $a2, -0x3978
 /* 003904 80002D04 AE000008 */  sw    $zero, 8($s0)
 /* 003908 80002D08 AE0D0058 */  sw    $t5, 0x58($s0)
 /* 00390C 80002D0C AE10005C */  sw    $s0, 0x5c($s0)
@@ -118,8 +118,8 @@ glabel __amHandleFrameMsg
 /* 0039C8 80002DC8 26050008 */  addiu $a1, $s0, 8
 /* 0039CC 80002DCC 0C03238C */  jal   osSendMesg
 /* 0039D0 80002DD0 00003025 */   move  $a2, $zero
-/* 0039D4 80002DD4 3C03800E */  lui   $v1, %hi(D_800DC688) # $v1, 0x800e
-/* 0039D8 80002DD8 2463C688 */  addiu $v1, %lo(D_800DC688) # addiu $v1, $v1, -0x3978
+/* 0039D4 80002DD4 3C03800E */  lui   $v1, %hi(curAcmdList) # $v1, 0x800e
+/* 0039D8 80002DD8 2463C688 */  addiu $v1, %lo(curAcmdList) # addiu $v1, $v1, -0x3978
 /* 0039DC 80002DDC 8C6D0000 */  lw    $t5, ($v1)
 /* 0039E0 80002DE0 8FBF001C */  lw    $ra, 0x1c($sp)
 /* 0039E4 80002DE4 8FB00018 */  lw    $s0, 0x18($sp)

@@ -41,9 +41,9 @@ extern u16 *gSoundChannelVolume;
 
 /************ .data ************/
 
-u32 audFrameCt = 0;       // Currently unknown, might be a different type.
-s32 D_800DC684 = 0;       // Currently unknown, might be a different type.
-s32 D_800DC688 = 0;       // Currently unknown, might be a different type.
+u32 audFrameCt = 0;
+u32 nextDMA = 0;
+u32 curAcmdList = 0;
 s32 D_800DC68C = 0;       // Currently unknown, might be a different type.
 s32 gFunc80019808Checksum = 0x35281;
 s32 gFunc80019808Length = 0xFD0;
@@ -72,6 +72,10 @@ const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 s32 __amDMA(s32 addr, s32 len, void *state);
 
 #ifdef NON_EQUIVALENT
+/******************************************************************************
+ * Audio Manager API
+ *****************************************************************************/
+//void amCreateAudioMgr(ALSynConfig *c, OSPri pri, amConfig *amc);
 void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
     u32 *reg_v0;
     void *reg_s0;
@@ -339,7 +343,69 @@ ALDMAproc __amDmaNew(AMDMAState **state) {
     return __amDMA;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80003040.s")
+/******************************************************************************
+ *
+ * __clearAudioDMA.  Routine to move dma buffers back to the unused list.
+ * First clear out your dma messageQ. Then check each buffer to see when
+ * it was last used. If that was more than FRAME_LAG frames ago, move it
+ * back to the unused list. 
+ *
+ *****************************************************************************/
+//static 
+void __clearAudioDMA(void)
+{
+    u32          i;
+    OSIoMesg     *iomsg = 0;
+    AMDMABuffer  *dmaPtr,*nextPtr;
+    
+    /*
+     * Don't block here. If dma's aren't complete, you've had an audio
+     * overrun. (Bad news, but go for it anyway, and try and recover.
+     */
+    for (i=0; i < nextDMA; i++)
+    {
+        if (osRecvMesg(&audDMAMessageQ,(OSMesg *)&iomsg,OS_MESG_NOBLOCK) == -1)
+#ifndef _FINALROM
+     ;//PRINTF("Dma not done\n");
+#else
+	 ;
+#endif
+
+#ifndef _FINALROM
+        // if (logging)
+        //     osLogEvent(log, 17, 2, iomsg->devAddr, iomsg->size);
+#endif
+    }
+
+    
+    dmaPtr = dmaState.firstUsed;
+    while(dmaPtr)
+    {
+        nextPtr = (AMDMABuffer*)dmaPtr->node.next;
+
+        /* remove old dma's from list */
+        /* Can change FRAME_LAG value.  Should be at least one.  */
+        /* Larger values mean more buffers needed, but fewer DMA's */
+        if(dmaPtr->lastFrame + FRAME_LAG  < audFrameCt) 
+        {
+            if(dmaState.firstUsed == dmaPtr)
+                dmaState.firstUsed = (AMDMABuffer*)dmaPtr->node.next;
+            alUnlink((ALLink*)dmaPtr);
+            if(dmaState.firstFree)
+                alLink((ALLink*)dmaPtr,(ALLink*)dmaState.firstFree);
+            else
+            {
+                dmaState.firstFree = dmaPtr;
+                dmaPtr->node.next = 0;
+                dmaPtr->node.prev = 0;
+            }
+        }
+        dmaPtr = nextPtr;
+    }
+    
+    nextDMA = 0;  /* reset */
+    audFrameCt++;
+}
 
 void set_sfx_volume_slider(u32 volume) {
     if (volume > 256) {

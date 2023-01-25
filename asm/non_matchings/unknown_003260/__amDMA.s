@@ -91,8 +91,8 @@ glabel __amDMA
 /* 003B78 80002F78 00EC3823 */  subu  $a3, $a3, $t4
 /* 003B7C 80002F7C AE070008 */  sw    $a3, 8($s0)
 /* 003B80 80002F80 8DADC680 */  lw    $t5, %lo(audFrameCt)($t5)
-/* 003B84 80002F84 3C08800E */  lui   $t0, %hi(D_800DC684) # $t0, 0x800e
-/* 003B88 80002F88 2508C684 */  addiu $t0, %lo(D_800DC684) # addiu $t0, $t0, -0x397c
+/* 003B84 80002F84 3C08800E */  lui   $t0, %hi(nextDMA) # $t0, 0x800e
+/* 003B88 80002F88 2508C684 */  addiu $t0, %lo(nextDMA) # addiu $t0, $t0, -0x397c
 /* 003B8C 80002F8C AE0D000C */  sw    $t5, 0xc($s0)
 /* 003B90 80002F90 8E030010 */  lw    $v1, 0x10($s0)
 /* 003B94 80002F94 8D020000 */  lw    $v0, ($t0)

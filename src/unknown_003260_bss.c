@@ -20,7 +20,7 @@ AMDMABuffer dmaBuffs[50];
 u32 minFrameSize;
 u32 framesize;
 u32 maxFrameSize;
-u32 nextDMA;
+u32 D_80119634;
 u32 D_80119638;
 u32 D_8011963C;
 OSIoMesg audDMAIOMesgBuf[NUM_DMA_MESSAGES];

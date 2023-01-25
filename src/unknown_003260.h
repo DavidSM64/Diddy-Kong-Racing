@@ -19,7 +19,13 @@
 #define AL_SNDP_FX_EVT (1 << 8)
 
 #define AUDIO_STACKSIZE 0x3010
-#define NUM_DMA_MESSAGES 50
+#define NUM_DMA_MESSAGES 50            /* The maximum number of DMAs any one frame can  */
+                                       /* have.                                         */
+
+#define FRAME_LAG               1      /* The number of frames to keep a dma buffer.    */
+                                       /* Increasing this number causes buffers to not  */
+                                       /* be deleted as quickly. This results in fewer  */
+                                       /* DMA's but you need more buffers.              */
 #define QUIT_MSG                10
 
 /****  type define's for structures unique to audiomgr ****/
@@ -163,8 +169,8 @@ typedef struct {
 } AMDMAState;
 
 extern u32 audFrameCt;
-extern s32 D_800DC684;
-extern s32 D_800DC688;
+extern u32 nextDMA;
+extern u32 curAcmdList;
 extern s32 D_800DC68C;
 extern s32 gFunc80019808Checksum;
 extern s32 gFunc80019808Length;
