@@ -49,6 +49,14 @@ typedef struct unk800DC6BC_40 {
     u8 pad0C[0x38];
 } unk800DC6BC_40; //ALSoundState
 
+
+typedef struct unk8000410C {
+  /* 0x00 */ s8 pad00[0x0C];
+  /* 0x0C */ ALVoice voice;
+  /* 0x28 */ s8 pad28[0x16];
+  /* 0x3E */ u8 unk3E;
+} unk8000410C;
+
 /* Unknown Size */
 typedef struct unk800DC6BC {
     ALPlayer        node;
@@ -149,6 +157,7 @@ ALDMAproc __amDmaNew(AMDMAState **state);
 void set_sound_channel_volume(u8 channel, u16 volume);
 static void __amHandleDoneMsg(AudioInfo *info);
 u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex);
+void func_8000410C(unk8000410C *state);
 
 // Non Matching
 ALMicroTime  _sndpVoiceHandler(void *node);
@@ -157,5 +166,7 @@ void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2);
 void func_800048D8(s32);
 void func_80002C00(s32, OSMesg mesg);
 void _handleEvent(unk800DC6BC *snd, ALSndpEvent *event);
+void func_800041FC(ALEventQueue *, unk8000410C *, u16);
+void func_80004520(unk8000410C *);
 
 #endif

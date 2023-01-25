@@ -397,7 +397,15 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/_sndpVoiceHandler.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_003260/_handleEvent.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000410C.s")
+
+void func_8000410C(unk8000410C *state) {
+    if (state->unk3E & 4) {
+        alSynStopVoice(gAlSndPlayer->drvr, &state->voice);
+        alSynFreeVoice(gAlSndPlayer->drvr, &state->voice);
+    }
+    func_80004520(state);
+    func_800041FC(&gAlSndPlayer->evtq, state, 0xFFFF);
+}
 
 #if 0
 void func_8000418C(void *arg0) {
