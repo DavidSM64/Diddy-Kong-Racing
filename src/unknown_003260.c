@@ -352,8 +352,7 @@ ALDMAproc __amDmaNew(AMDMAState **state) {
  *
  *****************************************************************************/
 //static 
-void __clearAudioDMA(void)
-{
+void __clearAudioDMA(void) {
     u32          i;
     OSIoMesg     *iomsg = 0;
     AMDMABuffer  *dmaPtr,*nextPtr;
@@ -362,39 +361,30 @@ void __clearAudioDMA(void)
      * Don't block here. If dma's aren't complete, you've had an audio
      * overrun. (Bad news, but go for it anyway, and try and recover.
      */
-    for (i=0; i < nextDMA; i++)
-    {
-        if (osRecvMesg(&audDMAMessageQ,(OSMesg *)&iomsg,OS_MESG_NOBLOCK) == -1)
-#ifndef _FINALROM
-     ;//PRINTF("Dma not done\n");
-#else
-	 ;
-#endif
-
-#ifndef _FINALROM
+    for (i = 0; i < nextDMA; i++) {
+        if (osRecvMesg(&audDMAMessageQ, (OSMesg *) &iomsg, OS_MESG_NOBLOCK) == -1)
+        { /* stubbed_printf("Dma not done\n"); */ }
         // if (logging)
         //     osLogEvent(log, 17, 2, iomsg->devAddr, iomsg->size);
-#endif
     }
 
     
     dmaPtr = dmaState.firstUsed;
-    while(dmaPtr)
-    {
-        nextPtr = (AMDMABuffer*)dmaPtr->node.next;
+    while(dmaPtr) {
+        nextPtr = (AMDMABuffer *) dmaPtr->node.next;
 
         /* remove old dma's from list */
         /* Can change FRAME_LAG value.  Should be at least one.  */
         /* Larger values mean more buffers needed, but fewer DMA's */
-        if(dmaPtr->lastFrame + FRAME_LAG  < audFrameCt) 
-        {
-            if(dmaState.firstUsed == dmaPtr)
-                dmaState.firstUsed = (AMDMABuffer*)dmaPtr->node.next;
-            alUnlink((ALLink*)dmaPtr);
-            if(dmaState.firstFree)
-                alLink((ALLink*)dmaPtr,(ALLink*)dmaState.firstFree);
-            else
-            {
+        if(dmaPtr->lastFrame + FRAME_LAG  < audFrameCt) {
+            if(dmaState.firstUsed == dmaPtr) {
+                dmaState.firstUsed = (AMDMABuffer *) dmaPtr->node.next;
+            }
+            alUnlink((ALLink *) dmaPtr);
+            if(dmaState.firstFree) {
+                alLink((ALLink *) dmaPtr, (ALLink *) dmaState.firstFree);
+            }
+            else {
                 dmaState.firstFree = dmaPtr;
                 dmaPtr->node.next = 0;
                 dmaPtr->node.prev = 0;
