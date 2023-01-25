@@ -2,11 +2,13 @@
 /* RAM_POS: 0x80002660 */
 
 #include "unknown_003260.h"
-// This file is needed, since there is a bss reordering issue with D_80119BD0 and gAlSndPlayer
+#include "PR/abi.h"
 
+// This file is needed, since there is a bss reordering issue with D_80119BD0 and gAlSndPlayer
+#define NUM_ACMD_LISTS 2
 OSSched *gAudioSched;
 ALHeap *D_80115F94;
-s32 D_80115F98[2];
+Acmd *D_80115F98[NUM_ACMD_LISTS];
 s32 D_80115FA0[3];
 OSThread audioThread;
 OSMesgQueue gAudioMesgQueue;

@@ -5,6 +5,7 @@
 #include "memory.h"
 #include "audio_internal.h"
 #include "video.h"
+#include "math_util.h"
 
 /************ .bss ************/
 
@@ -13,7 +14,7 @@
 
 extern OSSched *gAudioSched;
 extern ALHeap *D_80115F94;
-extern s32 D_80115F98[2];
+extern Acmd *D_80115F98[2];
 extern s32 D_80115FA0[3];
 extern OSThread audioThread;
 extern OSMesgQueue gAudioMesgQueue;
@@ -28,7 +29,6 @@ extern u32 minFrameSize;
 extern u32 framesize;
 extern u32 maxFrameSize;
 extern u32 nextDMA;
-extern u32 frameSize;
 extern u32 D_8011963c;
 extern u32 maxRSPCmds;
 extern OSIoMesg audDMAIOMesgBuf[NUM_DMA_MESSAGES];
@@ -44,7 +44,7 @@ extern u16 *gSoundChannelVolume;
 u32 audFrameCt = 0;
 u32 nextDMA = 0;
 u32 curAcmdList = 0;
-s32 D_800DC68C = 0;       // Currently unknown, might be a different type.
+s8 D_800DC68C = 0;       // Anti Piracy - Sets random audio frequency?
 s32 gFunc80019808Checksum = 0x35281;
 s32 gFunc80019808Length = 0xFD0;
 s32 D_800DC698 = 0;       // Currently unknown, might be a different type.
@@ -190,8 +190,75 @@ void __amMain(UNUSED void *arg) {
  * know that the next frame of audio is ready for processing.
  *
  *****************************************************************************/
-u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo);
-GLOBAL_ASM("asm/non_matchings/unknown_003260/__amHandleFrameMsg.s")
+//static
+u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
+    s16 *audioPtr;
+    Acmd *cmdp;
+    s32 cmdLen;
+    int samplesLeft = 0;
+    OSScTask *t;
+    u32 ret;
+
+    
+    __clearAudioDMA(); /* call once a frame, before doing alAudioFrame */
+
+    audioPtr = (s16 *) osVirtualToPhysical(info->data);
+    
+    if (lastInfo) {
+        s32 temp_a0, temp_t6;
+
+        D_800DC698 = temp_a0 = lastInfo->data;
+        D_800DC69C = temp_t6 = lastInfo->frameSamples << 2;
+        osAiSetNextBuffer(temp_a0, temp_t6);
+        if (D_800DC68C != 0) {
+            osAiSetFrequency(get_random_number_from_range(0, 10000) + 22050);
+        }
+    }
+
+    
+    /* calculate how many samples needed for this frame to keep the DAC full */
+    /* this will vary slightly frame to frame, must recalculate every frame */
+    samplesLeft = osAiGetLength() >> 2; /* divide by four, to convert bytes */
+                                        /* to stereo 16 bit samples */
+    info->frameSamples = 16 + (framesize - samplesLeft + EXTRA_SAMPLES)& ~0xf;
+    if(info->frameSamples < minFrameSize)
+        info->frameSamples = minFrameSize;
+
+    cmdp = alAudioFrame(D_80115F98[curAcmdList], &D_80119634, audioPtr,
+                        info->frameSamples);
+
+    t = &info->task;
+    
+    t->next      = 0;                    /* paranoia */
+    t->msgQ      = &D_80116198; /* reply to when finished */
+    //TODO: This should be &info->msg, but the struct is likely modified.
+    t->msg       = (OSMesg)&info->data;   /* reply with this message */
+    t->flags     = OS_SC_NEEDS_RSP;
+    t->unk58 = -1;
+    t->unk60 = 0xFF;
+    t->unk5C = 0;
+    t->unk64 = 0;
+    
+    t->list.t.data_ptr    = (u64 *) D_80115F98[curAcmdList];
+    t->list.t.data_size   = (cmdp - D_80115F98[curAcmdList]) * sizeof(Acmd);
+    t->list.t.type  = M_AUDTASK;
+    t->list.t.ucode_boot = (u64 *)rspF3DDKRBootStart;
+    t->list.t.ucode_boot_size =
+        ((int) rspF3DDKRDramStart - (int) rspF3DDKRBootStart);
+    t->list.t.flags  = OS_TASK_DP_WAIT;
+    t->list.t.ucode = (u64 *) rspUnknownStart;
+    t->list.t.ucode_data = (u64 *) rspUnknownDataStart;
+    t->list.t.ucode_data_size = SP_UCODE_DATA_SIZE;
+    t->list.t.yield_data_ptr = NULL;
+    t->list.t.yield_data_size = 0;
+    t->unk6C = 1;
+
+    ret = osSendMesg(osScGetCmdQ(gAudioSched), (OSMesg) t, OS_MESG_NOBLOCK);
+    
+    curAcmdList ^= 1; /* swap which acmd list you use each frame */    
+    
+    return ret;
+}
 
 /******************************************************************************
  *

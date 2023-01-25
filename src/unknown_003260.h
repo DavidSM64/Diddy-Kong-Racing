@@ -18,6 +18,8 @@
 #define AL_SNDP_END_EVT (1 << 7)
 #define AL_SNDP_FX_EVT (1 << 8)
 
+
+#define EXTRA_SAMPLES           96
 #define AUDIO_STACKSIZE 0x3010
 #define NUM_DMA_MESSAGES 50            /* The maximum number of DMAs any one frame can  */
                                        /* have.                                         */
@@ -44,6 +46,8 @@ typedef union {
     
 } AudioMsg;
 
+// TODO: Rare likely modified this struct as evidenced by __amHandleFrameMsg
+// using *data when it should have been using msg.
 typedef struct AudioInfo_s {
     short         *data;          /* Output data pointer */
     short         frameSamples;   /* # of samples synthesized in this frame */
@@ -171,7 +175,7 @@ typedef struct {
 extern u32 audFrameCt;
 extern u32 nextDMA;
 extern u32 curAcmdList;
-extern s32 D_800DC68C;
+extern s8 D_800DC68C;
 extern s32 gFunc80019808Checksum;
 extern s32 gFunc80019808Length;
 extern s32 D_800DC698;
@@ -188,8 +192,14 @@ extern unk800DC6BC* gAlSndPlayer;
 
 extern s32 sfxVolumeSlider;
 extern s32 D_800DC6C4;
+extern s8 rspF3DDKRBootStart[];
+extern s8 rspF3DDKRDramStart[];
+extern s8 rspUnknownDataStart[];
+extern s8 rspUnknownStart[];
+extern u32 D_80119634;
 
 extern void __amMain(void*);
+Acmd *alAudioFrame(Acmd *cmdList, s32 *cmdLen, s16 *outBuf, s32 outLen);
 void *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size); //lib/src/al
 void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount); //lib/src/unknown_0C9C90.c
 ALMicroTime alEvtqNextEvent(ALEventQueue *evtq, ALEvent *evt); //lib/src/unknown_0C9C90.c
@@ -215,6 +225,7 @@ static void __amHandleDoneMsg(AudioInfo *info);
 u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex);
 void func_8000410C(ALSoundState *state);
 static void _removeEvents(ALEventQueue *, ALSoundState *, u16);
+void __clearAudioDMA(void);
 
 // Non Matching
 ALMicroTime  _sndpVoiceHandler(void *node);
