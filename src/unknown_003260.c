@@ -71,8 +71,13 @@ const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 
 /*********************************/
 
-s32 __amDMA(s32 addr, s32 len, void *state);
+/**** private routines ****/
+static void __amMain(UNUSED void *arg);
+static s32 __amDMA(s32 addr, s32 len, void *state);
+static ALDMAproc __amDmaNew(AMDMAState **state);
+static u32  __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo);
 static void __amHandleDoneMsg(AudioInfo *info);
+static void __clearAudioDMA(void);
 static void _removeEvents(ALEventQueue *, ALSoundState *, u16);
 
 extern void alInit(ALGlobals *g, ALSynConfig *c);
@@ -197,7 +202,7 @@ void audioStopThread(void) {
 /**
  * Main function for handling ingame audio. Loops continuously as long as the scheduler feeds it updates.
  */
-void __amMain(UNUSED void *arg) {
+static void __amMain(UNUSED void *arg) {
     s32 done = 0;
     AudioMsg *msg = NULL;
     AudioInfo *lastInfo = 0;
@@ -242,8 +247,7 @@ void __amMain(UNUSED void *arg) {
  * know that the next frame of audio is ready for processing.
  *
  *****************************************************************************/
-//static
-u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
+static u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
     s16 *audioPtr;
     Acmd *cmdp;
     int samplesLeft = 0;
@@ -446,7 +450,7 @@ s32 __amDMA(s32 addr, s32 len, UNUSED void *state) {
  * to the dma routine.
  *
  *****************************************************************************/
-ALDMAproc __amDmaNew(AMDMAState **state) {
+static ALDMAproc __amDmaNew(AMDMAState **state) {
 
     if(!dmaState.initialized) {  /* only do this once */
         dmaState.firstUsed = 0;
@@ -467,8 +471,7 @@ ALDMAproc __amDmaNew(AMDMAState **state) {
  * back to the unused list. 
  *
  *****************************************************************************/
-//static 
-void __clearAudioDMA(void) {
+static void __clearAudioDMA(void) {
     u32          i;
     OSIoMesg     *iomsg = 0;
     AMDMABuffer  *dmaPtr,*nextPtr;
