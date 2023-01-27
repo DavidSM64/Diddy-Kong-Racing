@@ -225,14 +225,14 @@ glabel audioNewThread
 /* 0035B0 800029B0 1611FFF1 */  bne   $s0, $s1, .L80002978
 /* 0035B4 800029B4 006F1821 */   addu  $v1, $v1, $t7
 /* 0035B8 800029B8 3C048011 */  lui   $a0, %hi(audioReplyMsgQ) # $a0, 0x8011
-/* 0035BC 800029BC 3C058011 */  lui   $a1, %hi(D_801161B0) # $a1, 0x8011
-/* 0035C0 800029C0 24A561B0 */  addiu $a1, %lo(D_801161B0) # addiu $a1, $a1, 0x61b0
+/* 0035BC 800029BC 3C058011 */  lui   $a1, %hi(gAudioReplyMsgBuf) # $a1, 0x8011
+/* 0035C0 800029C0 24A561B0 */  addiu $a1, %lo(gAudioReplyMsgBuf) # addiu $a1, $a1, 0x61b0
 /* 0035C4 800029C4 24846198 */  addiu $a0, %lo(audioReplyMsgQ) # addiu $a0, $a0, 0x6198
 /* 0035C8 800029C8 0C032208 */  jal   osCreateMesgQueue
 /* 0035CC 800029CC 24060008 */   li    $a2, 8
 /* 0035D0 800029D0 3C048011 */  lui   $a0, %hi(gAudioMesgQueue) # $a0, 0x8011
-/* 0035D4 800029D4 3C058011 */  lui   $a1, %hi(D_80116178) # $a1, 0x8011
-/* 0035D8 800029D8 24A56178 */  addiu $a1, %lo(D_80116178) # addiu $a1, $a1, 0x6178
+/* 0035D4 800029D4 3C058011 */  lui   $a1, %hi(gAudioFrameMsgBuf) # $a1, 0x8011
+/* 0035D8 800029D8 24A56178 */  addiu $a1, %lo(gAudioFrameMsgBuf) # addiu $a1, $a1, 0x6178
 /* 0035DC 800029DC 24846160 */  addiu $a0, %lo(gAudioMesgQueue) # addiu $a0, $a0, 0x6160
 /* 0035E0 800029E0 0C032208 */  jal   osCreateMesgQueue
 /* 0035E4 800029E4 24060008 */   li    $a2, 8
