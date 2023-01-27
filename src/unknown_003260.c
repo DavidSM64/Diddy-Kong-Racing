@@ -6,6 +6,8 @@
 #include "audio_internal.h"
 #include "video.h"
 #include "math_util.h"
+#include "asset_loading.h"
+#include "objects.h"
 
 /************ .bss ************/
 
@@ -13,7 +15,7 @@
 // This was needed, since there is a bss reordering issue with D_80119BD0 and gAlSndPlayer
 
 extern OSSched *gAudioSched;
-extern ALHeap *D_80115F94;
+extern ALHeap *gAudioHeap;
 extern Acmd *ACMDList[2];
 extern s32 D_80115FA0[3];
 extern OSThread audioThread;
@@ -70,53 +72,102 @@ const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 /*********************************/
 
 s32 __amDMA(s32 addr, s32 len, void *state);
+static void __amHandleDoneMsg(AudioInfo *info);
+static void _removeEvents(ALEventQueue *, ALSoundState *, u16);
 
 #ifdef NON_EQUIVALENT
 /******************************************************************************
  * Audio Manager API
  *****************************************************************************/
+extern void alInit(ALGlobals *g, ALSynConfig *c);
+extern s16 gDMABufferLength;
+#define NUM_ACMD_LISTS 2
 //void amCreateAudioMgr(ALSynConfig *c, OSPri pri, amConfig *amc);
-void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2) {
-    u32 *reg_v0;
-    void *reg_s0;
-    u32 tmp_size;
-    s32 tmp;
+void audioNewThread(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     s32 i;
-    gAudioSched = arg2;
-    D_80115F94 = c->heap;
+    f32 fsize;
+    u32 *assetAudioTable;
+    u32 *asset8;
+    s32 assetSize;
+    s32 checksum;
+    s32 *asset;
+    s32 *heapAlloc;
+    u8 *crc_region_start;
+    u8 *crc_region;
+
+    gAudioSched = audSched;
+    gAudioHeap = c->heap;
+
     c->dmaproc = &__amDmaNew;
-    c->outputRate = osAiSetFrequency(22050);
-    framesize = (((f32)c->outputRate) * 2.0f) / gVideoRefreshRate;
-    if (framesize < 0) {
+    c->outputRate = osAiSetFrequency(OUTPUT_RATE);
+
+    fsize = (f32) c->outputRate * 2 / (f32) gVideoRefreshRate;
+    framesize = (s32) fsize;
+    if (framesize < fsize) {
+        framesize++;
+    }
+    if (framesize & 0xf) {
+        framesize = (framesize & ~0xf) + 0x10;
+    }
+    minFrameSize = framesize - 16;
+    maxFrameSize = framesize + EXTRA_SAMPLES + 16;
+
+    if (c->fxType[0] == AL_FX_CUSTOM) {
+        assetAudioTable = load_asset_section_from_rom(ASSET_AUDIO_TABLE);
+        assetSize = assetAudioTable[9] - assetAudioTable[8];
+        asset8 = allocate_from_main_pool_safe(assetSize, COLOUR_TAG_CYAN);
+        load_asset_to_address(39, asset8, assetAudioTable[8], assetSize);
+        c->params = asset8;
+        c[1].maxVVoices = 0;
+        alInit(&ALGlobals_801161D0, c);
+        free_from_memory_pool(assetAudioTable);
+    } else {
+        alInit(&ALGlobals_801161D0, c);
     }
 
-    // if (c->fxType == AL_FX_CUSTOM) {
-    //     reg_v0 = load_asset_section_from_rom(ASSET_AUDIO_TABLE);
-    //     tmp_size = reg_v0[9] - reg_v0[8];
-    //     reg_s0 = allocate_from_main_pool_safe(tmp_size, COLOUR_TAG_CYAN);
-    //     load_asset_to_address(39, reg_s0, reg_v0[8], tmp_size);
-    //     c->params = reg_s0;
-    //     c[1].maxVVoices = 0;
-    //     alInit(&ALGlobals_801161D0, c);
-    //     free_from_memory_pool(reg_s0);
-    // } else {
-    //     alInit(&ALGlobals_801161D0, c);
-    // }
-    // D_80119240[0].node.next = NULL;
-    // D_80119240[0].node.prev = NULL;
+    dmaBuffs[0].node.prev = 0;
+    dmaBuffs[0].node.next = 0;
 
-    // for (i = 0; i < 0x30; i++) {
-    //     alLink(&(D_80119240[i + 1].node), &(D_80119240[i].node));
-    //     D_80119240[i].unk10 = alHeapDBAlloc(0, 0, c->heap, 1, 0x400);
-    // }
-    // D_80119240[i].unk10 = alHeapDBAlloc(0, 0, c->heap, 1, 0x400);
-    alHeapDBAlloc(0, 0, c->heap, 1, 120);
+    for (i = 0; i < NUM_DMA_BUFFERS - 1; i++) {
+        alLink((ALLink *) &(dmaBuffs[i + 1]), (ALLink *) &(dmaBuffs[i]));
+        dmaBuffs[i].ptr = alHeapDBAlloc(0, 0, c->heap, 1, DMA_BUFFER_LENGTH);
+    }
+    /* last buffer already linked, but still needs buffer */
+    dmaBuffs[i].ptr = alHeapDBAlloc(0, 0, c->heap, 1, DMA_BUFFER_LENGTH);
 
-    osCreateMesgQueue(&audioReplyMsgQ, &D_801161B0, 8);
-    osCreateMesgQueue(&gAudioMesgQueue, &D_80116178, 8);
-    osCreateMesgQueue(&audDMAMessageQ, &audDMAMessageBuf, 50);
+    // Antipiracy measure
+    gDMABufferLength = DMA_BUFFER_LENGTH;
+    crc_region_start = (s32)&func_80019808 - gDMABufferLength;
+    crc_region = crc_region_start[gDMABufferLength];
+    checksum = 0;
+    gAntiPiracyAudioFreq = FALSE;
+    for (i = 0; i < gFunc80019808Length; i++) {
+        checksum += crc_region[i];
+        gDMABufferLength++;
+    }
+    if (checksum != gFunc80019808Checksum) {
+        gAntiPiracyAudioFreq = TRUE;
+    }
 
-    osCreateThread(&audioThread, 4, &__amMain, NULL, &dmaState, p);
+    for (i = 0; i < NUM_ACMD_LISTS; i++) {
+        ACMDList[i] = (Acmd *) alHeapDBAlloc(0, 0, c->heap, 1,
+            0xA000); //sizeof(Acmd) * DMA_BUFFER_LENGTH * 5?
+    }
+
+    assetSize = maxFrameSize * 12;
+    asset = allocate_at_address_in_main_pool(asset = assetSize, 0x803FFE00 - assetSize, COLOUR_TAG_CYAN);
+
+    for (i = 0; i < NUM_ACMD_LISTS - 1; i++) {
+        ACMDList[i + NUM_ACMD_LISTS] = (Acmd *) alHeapDBAlloc(0, 0, c->heap, 1, 120);
+        ACMDList[i + NUM_ACMD_LISTS]->words.w0 = asset;
+        asset += maxFrameSize;
+    }
+
+    osCreateMesgQueue(&audioReplyMsgQ, &D_801161B0, MAX_MESGS);
+    osCreateMesgQueue(&gAudioMesgQueue, &D_80116178, MAX_MESGS);
+    osCreateMesgQueue(&audDMAMessageQ, &audDMAMessageBuf, NUM_DMA_MESSAGES);
+
+    osCreateThread(&audioThread, 4, __amMain, 0, &dmaState, pri);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_003260/audioNewThread.s")
@@ -129,7 +180,6 @@ void audioStartThread(void) {
 void audioStopThread(void) {
     osStopThread(&audioThread);
 }
-
 
 /******************************************************************************
  *
@@ -214,7 +264,7 @@ u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
 
         // Antipiracy measure
         if (gAntiPiracyAudioFreq != 0) {
-            osAiSetFrequency(get_random_number_from_range(0, 10000) + 22050);
+            osAiSetFrequency(get_random_number_from_range(0, 10000) + OUTPUT_RATE);
         }
     }
 
@@ -307,7 +357,6 @@ s32 D_800DC6C4 = 0; // Currently unknown, might be a different type.
  *
  *****************************************************************************/
 #ifdef NON_EQUIVALENT
-#define DMA_BUFFER_LENGTH 0x400
 s32 __amDMA(s32 addr, s32 len, void *state) {
     void            *foundBuffer;
     s32             delta, addrEnd, buffEnd;

@@ -102,7 +102,7 @@ void audio_init(OSSched *sc) {
     audioMgrConfig audConfig;
 
     seqLength = 0;
-    alHeapInit(&gALHeap, gBssSectionStart, AUDIO_HEAP_SIZE);
+    alHeapInit(&gALHeap, gBssSectionStart, sizeof(gBssSectionStart));
 
     addrPtr = (s32 *) load_asset_section_from_rom(ASSET_AUDIO_TABLE);
     ALBankFile_80115D14 = (ALBankFile *) allocate_from_main_pool_safe(addrPtr[2] - addrPtr[1], COLOUR_TAG_CYAN);

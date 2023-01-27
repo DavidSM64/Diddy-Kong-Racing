@@ -7,7 +7,7 @@
 // This file is needed, since there is a bss reordering issue with D_80119BD0 and gAlSndPlayer
 #define NUM_ACMD_LISTS 2
 OSSched *gAudioSched;
-ALHeap *D_80115F94;
+ALHeap *gAudioHeap;
 Acmd *ACMDList[NUM_ACMD_LISTS];
 s32 D_80115FA0[3];
 OSThread audioThread;
@@ -23,7 +23,7 @@ u32 minFrameSize;
 u32 framesize;
 u32 maxFrameSize;
 s32 gAudioCmdLen;
-u32 D_80119638;
+s16 gDMABufferLength;
 u32 D_8011963C;
 OSIoMesg audDMAIOMesgBuf[NUM_DMA_MESSAGES];
 OSMesgQueue audDMAMessageQ;

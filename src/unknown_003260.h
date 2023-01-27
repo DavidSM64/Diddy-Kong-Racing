@@ -19,8 +19,13 @@
 #define AL_SNDP_FX_EVT (1 << 8)
 
 
+#define DMA_BUFFER_LENGTH 0x400
 #define EXTRA_SAMPLES           96
+#define OUTPUT_RATE             22050
+#define MAX_MESGS               8
 #define AUDIO_STACKSIZE 0x3010
+#define NUM_DMA_BUFFERS         50     /* max number of dma buffers needed.             */
+                                       /* Mainly dependent on sequences and sfx's       */
 #define NUM_DMA_MESSAGES 50            /* The maximum number of DMAs any one frame can  */
                                        /* have.                                         */
 
@@ -219,10 +224,8 @@ void func_800049F8(s32 soundMask, s16 type, u32 volume);
 u16 get_sound_channel_volume(u8 arg0);
 ALDMAproc __amDmaNew(AMDMAState **state);
 void set_sound_channel_volume(u8 channel, u16 volume);
-static void __amHandleDoneMsg(AudioInfo *info);
 u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex);
 void func_8000410C(ALSoundState *state);
-static void _removeEvents(ALEventQueue *, ALSoundState *, u16);
 void __clearAudioDMA(void);
 
 // Non Matching

@@ -10,10 +10,10 @@ glabel audioNewThread
 /* 003280 80002680 AFA5004C */  sw    $a1, 0x4c($sp)
 /* 003284 80002684 AC265F90 */  sw    $a2, %lo(gAudioSched)($at)
 /* 003288 80002688 8C8E0014 */  lw    $t6, 0x14($a0)
-/* 00328C 8000268C 3C018011 */  lui   $at, %hi(D_80115F94) # $at, 0x8011
+/* 00328C 8000268C 3C018011 */  lui   $at, %hi(gAudioHeap) # $at, 0x8011
 /* 003290 80002690 3C0F8000 */  lui   $t7, %hi(__amDmaNew) # $t7, 0x8000
 /* 003294 80002694 25EF3008 */  addiu $t7, %lo(__amDmaNew) # addiu $t7, $t7, 0x3008
-/* 003298 80002698 AC2E5F94 */  sw    $t6, %lo(D_80115F94)($at)
+/* 003298 80002698 AC2E5F94 */  sw    $t6, %lo(gAudioHeap)($at)
 /* 00329C 8000269C 00809825 */  move  $s3, $a0
 /* 0032A0 800026A0 AC8F0010 */  sw    $t7, 0x10($a0)
 /* 0032A4 800026A4 0C032180 */  jal   osAiSetFrequency
@@ -139,8 +139,8 @@ glabel audioNewThread
 /* 00346C 8000286C 00002825 */  move  $a1, $zero
 /* 003470 80002870 0C031DFC */  jal   alHeapDBAlloc
 /* 003474 80002874 24070001 */   li    $a3, 1
-/* 003478 80002878 3C048012 */  lui   $a0, %hi(D_80119638) # $a0, 0x8012
-/* 00347C 8000287C 24849638 */  addiu $a0, %lo(D_80119638) # addiu $a0, $a0, -0x69c8
+/* 003478 80002878 3C048012 */  lui   $a0, %hi(gDMABufferLength) # $a0, 0x8012
+/* 00347C 8000287C 24849638 */  addiu $a0, %lo(gDMABufferLength) # addiu $a0, $a0, -0x69c8
 /* 003480 80002880 240C0400 */  li    $t4, 1024
 /* 003484 80002884 3C08800E */  lui   $t0, %hi(gAntiPiracyAudioFreq) # $t0, 0x800e
 /* 003488 80002888 A48C0000 */  sh    $t4, ($a0)
