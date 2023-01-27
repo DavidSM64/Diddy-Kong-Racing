@@ -114,7 +114,7 @@ TriangleList *gHudTriangles[2];
 TriangleList *gGameCurrTriList;
 s8 D_80121250[16]; //Settings4C
 OSSched gMainSched; // 0x288 / 648 bytes
-u64 gSchedStack[0x400];
+u64 gSchedStack[0x40];
 s32 gSPTaskNum;
 s32 sRenderContext;
 s32 D_801234F0;
@@ -756,7 +756,7 @@ void init_game(void) {
     gIsLoading = FALSE;
     gLevelDefaultVehicleID = VEHICLE_CAR;
 
-    osCreateScheduler(&gMainSched, &gSchedStack[0x400], /*priority*/ 13, (u8) 0, 1);
+    osCreateScheduler(&gMainSched, &gSchedStack[0x40], /*priority*/ 13, (u8) 0, 1);
     init_video(VIDEO_MODE_LOWRES_LPN, &gMainSched);
     init_PI_mesg_queue();
     setup_gfx_mesg_queues(&gMainSched);

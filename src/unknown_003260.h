@@ -18,7 +18,7 @@
 #define AL_SNDP_END_EVT (1 << 7)
 #define AL_SNDP_FX_EVT (1 << 8)
 
-#define AUDIO_STACKSIZE 0x3010
+#define AUDIO_STACKSIZE 0x800
 #define NUM_DMA_MESSAGES 50
 
 typedef struct unk800DC6BC_40 {

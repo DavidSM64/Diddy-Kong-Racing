@@ -144,7 +144,7 @@ extern u64 osClockRate;
 
 struct {
     OSThread thread;
-    u64 stack[0x800 / sizeof(u64)];
+    u64 stack[0x400 / sizeof(u64)];
     OSMesgQueue mesgQueue;
     OSMesg mesg;
     u16 *framebuffer;
