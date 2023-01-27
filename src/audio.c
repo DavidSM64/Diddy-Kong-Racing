@@ -150,7 +150,7 @@ void audio_init(OSSched *sc) {
     synth_config.fxType[1] = 2;
     synth_config.outputRate = 0;
     synth_config.heap = &gALHeap;
-    audioNewThread(&synth_config, 12, sc);
+    amCreateAudioMgr(&synth_config, 12, sc);
     gMusicPlayer = func_80002224(24, 120);
     set_voice_limit(gMusicPlayer, 18);
     gSndFxPlayer = func_80002224(16, 50);

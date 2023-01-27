@@ -231,7 +231,7 @@ void __clearAudioDMA(void);
 // Non Matching
 ALMicroTime  _sndpVoiceHandler(void *node);
 void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32);
-void audioNewThread(ALSynConfig *c, OSPri p, OSSched *arg2);
+void amCreateAudioMgr(ALSynConfig *c, OSPri p, OSSched *arg2);
 void func_800048D8(s32);
 u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo);
 void _handleEvent(unk800DC6BC *snd, ALSndpEvent *event);
