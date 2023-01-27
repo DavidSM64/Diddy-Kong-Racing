@@ -75,7 +75,7 @@ s32 __amDMA(s32 addr, s32 len, void *state);
 static void __amHandleDoneMsg(AudioInfo *info);
 static void _removeEvents(ALEventQueue *, ALSoundState *, u16);
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 /******************************************************************************
  * Audio Manager API
  *****************************************************************************/
@@ -86,12 +86,11 @@ extern s16 gDMABufferLength;
 void audioNewThread(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     s32 i;
     f32 fsize;
-    s32 *asset;
+    uintptr_t *asset;
     u32 *assetAudioTable;
     s32 *asset8;
     s32 assetSize;
     s32 checksum;
-    s32 *heapAlloc;
     u8 *crc_region_start;
     u8 *crc_region;
     s32 funcChecksum;
@@ -117,7 +116,7 @@ void audioNewThread(ALSynConfig *c, OSPri pri, OSSched *audSched) {
         assetAudioTable = load_asset_section_from_rom(ASSET_AUDIO_TABLE);
         assetSize = assetAudioTable[9] - assetAudioTable[8];
         asset8 = allocate_from_main_pool_safe(assetSize, COLOUR_TAG_CYAN);
-        load_asset_to_address(39, asset8, assetAudioTable[8], assetSize);
+        load_asset_to_address(39, (u32) asset8, assetAudioTable[8], assetSize);
         c->params = asset8;
         c[1].maxVVoices = 0;
         alInit(&ALGlobals_801161D0, c);
@@ -138,8 +137,9 @@ void audioNewThread(ALSynConfig *c, OSPri pri, OSSched *audSched) {
 
     // Antipiracy measure
     gDMABufferLength = DMA_BUFFER_LENGTH;
-    crc_region_start = checksum = (s32)&func_80019808 - gDMABufferLength;
-    crc_region = crc_region_start[gDMABufferLength];
+    checksum = (s32) &func_80019808 - gDMABufferLength;
+    crc_region_start = (u8 *) checksum;
+    crc_region = &crc_region_start[gDMABufferLength];
     checksum = 0;
     gAntiPiracyAudioFreq = FALSE;
     for (i = 0; i < gFunc80019808Length; i++) {
@@ -157,17 +157,17 @@ void audioNewThread(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     }
 
     assetSize = maxFrameSize * 12;
-    asset = allocate_at_address_in_main_pool(assetSize, 0x803FFE00 - assetSize, COLOUR_TAG_CYAN);
+    asset = allocate_at_address_in_main_pool(assetSize, (u8 *)(0x803FFE00 - assetSize), COLOUR_TAG_CYAN);
 
     for (i = 0; i < NUM_ACMD_LISTS + 1; i++) {
         ACMDList[i + NUM_ACMD_LISTS] = (Acmd *) alHeapDBAlloc(0, 0, c->heap, 1, 120);
-        ACMDList[i + NUM_ACMD_LISTS]->words.w0 = asset;
+        ACMDList[i + NUM_ACMD_LISTS]->words.w0 = (uintptr_t) asset;
         asset += maxFrameSize;
     }
 
-    osCreateMesgQueue(&audioReplyMsgQ, &gAudioReplyMsgBuf, MAX_MESGS);
-    osCreateMesgQueue(&gAudioMesgQueue, &gAudioFrameMsgBuf, MAX_MESGS);
-    osCreateMesgQueue(&audDMAMessageQ, &audDMAMessageBuf, NUM_DMA_MESSAGES);
+    osCreateMesgQueue(&audioReplyMsgQ, gAudioReplyMsgBuf, MAX_MESGS);
+    osCreateMesgQueue(&gAudioMesgQueue, gAudioFrameMsgBuf, MAX_MESGS);
+    osCreateMesgQueue(&audDMAMessageQ, audDMAMessageBuf, NUM_DMA_MESSAGES);
 
     osCreateThread(&audioThread, 4, __amMain, 0, &dmaState, pri);
 }

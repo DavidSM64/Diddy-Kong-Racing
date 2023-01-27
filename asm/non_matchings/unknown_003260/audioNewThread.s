@@ -203,9 +203,9 @@ glabel audioNewThread
 /* 00355C 8000295C 0C01C3BE */  jal   allocate_at_address_in_main_pool
 /* 003560 80002960 00801025 */   move  $v0, $a0
 /* 003564 80002964 3C108011 */  lui   $s0, %hi(ACMDList) # $s0, 0x8011
-/* 003568 80002968 3C118011 */  lui   $s1, %hi(D_80115FA0+4) # $s1, 0x8011
+/* 003568 80002968 3C118011 */  lui   $s1, %hi(ACMDList+0xC) # $s1, 0x8011
 /* 00356C 8000296C 00401825 */  move  $v1, $v0
-/* 003570 80002970 26315FA4 */  addiu $s1, %lo(D_80115FA0+4) # addiu $s1, $s1, 0x5fa4
+/* 003570 80002970 26315FA4 */  addiu $s1, %lo(ACMDList+0xC) # addiu $s1, $s1, 0x5fa4
 /* 003574 80002974 26105F98 */  addiu $s0, %lo(ACMDList) # addiu $s0, $s0, 0x5f98
 .L80002978:
 /* 003578 80002978 8E660014 */  lw    $a2, 0x14($s3)
