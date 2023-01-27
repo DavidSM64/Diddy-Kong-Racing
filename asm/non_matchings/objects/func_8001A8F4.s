@@ -116,7 +116,7 @@ glabel func_8001A8F4
 /* 01B6A0 8001AAA0 00000000 */   nop   
 /* 01B6A4 8001AAA4 1040001C */  beqz  $v0, .L8001AB18
 /* 01B6A8 8001AAA8 00000000 */   nop   
-/* 01B6AC 8001AAAC 0C009278 */  jal   func_800249E0
+/* 01B6AC 8001AAAC 0C009278 */  jal   set_scene_viewport_num
 /* 01B6B0 8001AAB0 00002025 */   move  $a0, $zero
 /* 01B6B4 8001AAB4 0C01994B */  jal   set_active_viewports_and_max
 /* 01B6B8 8001AAB8 00002025 */   move  $a0, $zero

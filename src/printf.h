@@ -21,10 +21,16 @@
     RENDER_PRINTF_CMD_ARG_BYTE(alpha)                        \
     RENDER_PRINTF_CMD_END
 
+// This is a bit hacky, but it matches.
 #define RENDER_PRINTF_CMD_SET_POSITION(x, y) \
+    u16 tempX, tempY;                        \
     RENDER_PRINTF_CMD_ARG_BYTE(0x82)         \
-    RENDER_PRINTF_CMD_ARG_SHORT(x)           \
-    RENDER_PRINTF_CMD_ARG_SHORT(y)           \
+    RENDER_PRINTF_CMD_ARG_BYTE(x & 0xFF)     \
+    tempX = x >> 8;                          \
+    RENDER_PRINTF_CMD_ARG_BYTE(tempX)        \
+    RENDER_PRINTF_CMD_ARG_BYTE(y & 0xFF)     \
+    tempY = y >> 8;                          \
+    RENDER_PRINTF_CMD_ARG_BYTE(tempY)        \
     RENDER_PRINTF_CMD_END
     
 #define RENDER_PRINTF_CMD_SET_BACKGROUND_COLOR(red, green, blue, alpha) \
@@ -41,10 +47,10 @@ void func_800B5E88(void);
 void set_render_printf_colour(u8 red, u8 green, u8 blue, u8 alpha);
 void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha);
 void func_800B695C(Gfx** dList, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
-s32 func_800B69FC(Gfx **dlist, s32 arg1);
+s32 func_800B69FC(Gfx **dList, s32 arg1);
 void print_debug_strings(Gfx **dList);
+void set_render_printf_position(u16 x, u16 y);
 
-void set_render_printf_position(u16 xpos, u16 ypos); // Non Matching
 s32 render_printf(const char *format, ...); // Non Matchingg
 void func_800B3740(Object *, Gfx **, MatrixS **, Vertex **, s32); // Non Matching
 s32 func_800B653C(Gfx**, s8*);

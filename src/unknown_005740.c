@@ -5,6 +5,7 @@
 
 #include "types.h"
 #include "macros.h"
+#include "unknown_008C40.h"
 
 /************ .data ************/
 
@@ -19,17 +20,18 @@ s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
 s32 D_80119C30[2];
 s32 D_80119C38;
 s32 D_80119C3C;
-s32 D_80119C40;
-s32 D_80119C44;
-s32 **D_80119C48;
-s32 D_80119C4C;
-s32 D_80119C50[2];
-s32 D_80119C58; //Struct of size in func_8000A184 = 0x180 = 384 bytes
-s32 D_80119C5C; //Struct of size in func_8000A184 = 0x180 = 384 bytes Likely the same as above
-s32 D_80119C60[670];
-s32 D_8011A6D8; //unk8011A6D8[]
-s32 D_8011A6DC;
-s32 D_8011A6E0[334];
+unk80115D18 *D_80119C40; // This should be in unknown_008C40?
+unk80119C50 **D_80119C44;
+unk80119C50 **D_80119C48; //0x24 struct size - 0x5A0 total size - should be 40 elements
+u8 D_80119C4C;
+unk80119C50 **D_80119C50;
+s32 D_80119C54; //Padding?
+unk80119C58 **D_80119C58; //Struct of size in func_8000A184 = 0x180 = 384 bytes
+unk80119C58 **D_80119C5C; //Struct of size in func_8000A184 = 0x180 = 384 bytes Likely the same as above
+f32 D_80119C60[670]; //array size of 672 looks to be required for func_80008174
+unk8011A6D8 *D_8011A6D8; //unk8011A6D8[]
+unk8011A6D8 **D_8011A6DC; // Struct of size 0xC0
+f32 D_8011A6E0[334];
 s32 D_8011AC18;
 s32 D_8011AC1C;
 s16 D_8011AC20[128];

@@ -153,7 +153,7 @@ s32 D_8011D36C;
 s32 *D_8011D370;
 s32 *D_8011D374;
 s32 D_8011D378;
-s32 D_8011D37C;
+s32 gScenePlayerViewports;
 u32 D_8011D384;
 unk8011D388 D_8011D388[4];
 Vec3i gScenePerspectivePos;
@@ -180,8 +180,13 @@ s16 D_8011D4BC;
 
 /******************************/
 
-s32 func_800249E0(s32 arg0) {
-    D_8011D37C = arg0;
+/**
+ * Sets the number of expected viewports in the scene.
+ * Like most other viewport vars, it's 0-3 rather than 1-4.
+ * Set as an s32 for some reason.
+*/
+s32 set_scene_viewport_num(s32 numPorts) {
+    gScenePlayerViewports = numPorts;
     return 0;
 }
 
@@ -221,13 +226,13 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
         func_800B82B4(gCurrentLevelModel, gCurrentLevelHeader2, tmp_a2);
     }
     set_active_viewports_and_max(arg2);
-    func_80027FC4(arg1);
+    spawn_skydome(arg1);
     D_8011B110 = 0;
     D_8011B114 = 0x10000;
     func_80011390();
     func_8000C8F8(arg6, 0);
     func_8000C8F8(arg5, 1);
-    D_8011D37C = arg2;
+    gScenePlayerViewports = arg2;
     func_8000CC7C(vehicle, arg4, arg2);
     func_8000B020(72, 64);
     if (arg0 == 0 && arg4 == 0) {
@@ -235,7 +240,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
     } else {
         transition_begin(&D_800DC874);
     }
-    set_active_viewports_and_max(D_8011D37C);
+    set_active_viewports_and_max(gScenePlayerViewports);
     D_8011B0FC = 0;
     i = 0;
     do {
@@ -287,7 +292,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     gSceneRenderSkyDome = TRUE;
     D_8011B0C4 = 0;
     D_8011B0C0 = 0;
-    numViewports = set_active_viewports_and_max(D_8011D37C);
+    numViewports = set_active_viewports_and_max(gScenePlayerViewports);
     if (is_game_paused()) {
         tempUpdateRate = 0;
     } else {
@@ -529,21 +534,27 @@ void func_80027E24(s32 updateRate) {
     }
 }
 
-void func_80027FC4(s32 arg0) {
-    LevelObjectEntryCommon sp20;
+/**
+ * Spawns and initialises the skydome object seen ingame.
+ * Skipped if the object ID doesn't exist.
+ * Also compares a checksum which can potentially trigger anti-tamper measures.
+*/
+void spawn_skydome(s32 objectID) {
+    LevelObjectEntryCommon spawnObject;
 
+    // Antipiracy measure
     //compare_balloon_checksums();
-    if (arg0 == -1) {
+    if (objectID == -1) {
         gSkydomeSegment = NULL;
         return;
     }
-    sp20.x = 0;
-    sp20.y = 0;
-    sp20.z = 0;
-    sp20.size = 8;
-    sp20.objectID = arg0;
-    gSkydomeSegment = spawn_object(&sp20, 2);
-    if (gSkydomeSegment != 0) {
+    spawnObject.x = 0;
+    spawnObject.y = 0;
+    spawnObject.z = 0;
+    spawnObject.size = 8;
+    spawnObject.objectID = objectID;
+    gSkydomeSegment = spawn_object(&spawnObject, 2);
+    if (gSkydomeSegment != NULL) {
         gSkydomeSegment->segment.unk3C_a.level_entry = NULL;
         gSkydomeSegment->unk4A = -1;
     }
@@ -1102,7 +1113,7 @@ s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
  * Because there's a tiny margin, multiple segments can be considered populated,
  * meaning that sometimes it will 2 instead of 1.
 */
-s32 get_inside_segment_count(s32 x, s32 z, s32 *arg2) {
+s32 get_inside_segment_count_xz(s32 x, s32 z, s32 *arg2) {
     s32 i;
     s32 cnt = 0;
     LevelModelSegmentBoundingBox *bb;
@@ -1118,8 +1129,11 @@ s32 get_inside_segment_count(s32 x, s32 z, s32 *arg2) {
     return cnt;
 }
 
-s32 func_8002A134(s32 *arg0, s16 xPos1, s16 yPos1, s16 zPos1, s16 xPos2, s16 yPos2, s16 zPos2) {
-    s32 ret;
+/**
+ * Carbon copy of the above function, but takes into account the Y axis, too.
+*/
+s32 get_inside_segment_count_xyz(s32 *arg0, s16 xPos1, s16 yPos1, s16 zPos1, s16 xPos2, s16 yPos2, s16 zPos2) {
+    s32 cnt;
     s32 i;
     LevelModelSegmentBoundingBox *bb;
 
@@ -1131,34 +1145,39 @@ s32 func_8002A134(s32 *arg0, s16 xPos1, s16 yPos1, s16 zPos1, s16 xPos2, s16 yPo
     zPos2 += 4;
 
     i = 0;
-    ret = 0;
+    cnt = 0;
 
     while (i < gCurrentLevelModel->numberOfSegments) {
         bb = &gCurrentLevelModel->segmentsBoundingBoxes[i];
         if ((bb->x2 >= xPos1) && (xPos2 >= bb->x1) &&
             (bb->z2 >= zPos1) && (zPos2 >= bb->z1) &&
             (bb->y2 >= yPos1) && (yPos2 >= bb->y1)) {
-            ret++;
+            cnt++;
             *arg0++ = i;
         }
         i++;
     }
-
-    return ret;
+    return cnt;
 }
 
-LevelModelSegment *func_8002A2C8(s32 arg0) {
-    if (arg0 < 0 || gCurrentLevelModel->numberOfSegments < arg0)
+/**
+ * Returns this segment data.
+*/
+LevelModelSegment *get_segment(s32 segmentID) {
+    if (segmentID < 0 || gCurrentLevelModel->numberOfSegments < segmentID)
         return NULL;
 
-    return &gCurrentLevelModel->segments[arg0];
+    return &gCurrentLevelModel->segments[segmentID];
 }
 
-LevelModelSegmentBoundingBox *func_8002A2DC(s32 arg0) {
-    if (arg0 < 0 || gCurrentLevelModel->numberOfSegments < arg0)
+/**
+ * Returns the bounding box data of this segment.
+*/
+LevelModelSegmentBoundingBox *get_segment_bounding_box(s32 segmentID) {
+    if (segmentID < 0 || gCurrentLevelModel->numberOfSegments < segmentID)
         return NULL;
 
-    return &gCurrentLevelModel->segmentsBoundingBoxes[arg0];
+    return &gCurrentLevelModel->segmentsBoundingBoxes[segmentID];
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A31C.s")
@@ -1231,7 +1250,7 @@ s32 check_if_in_draw_range(Object *obj) {
         alpha = 255;
         viewDistance = obj->segment.header->drawDistance * obj->segment.header->drawDistance;
         if (obj->segment.header->drawDistance) {
-            if (D_8011D37C == 3) {
+            if (gScenePlayerViewports == VIEWPORTS_COUNT_4_PLAYERS) {
                 viewDistance *= 0.5f;
             }
 
@@ -1503,6 +1522,9 @@ void func_8002C71C(LevelModelSegment *segment) {
     segment->unk32 = numVerts;
 }
 
+/**
+ * Returns the current loaded level geometry
+*/
 LevelModel *get_current_level_model(void) {
     return gCurrentLevelModel;
 }
@@ -1782,7 +1804,7 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
     Object_58_4* obj58_4;
     Object_50 *obj50;
     Object_58* obj58;
-    s32 temp;
+    s32 playerIndex;
 
     D_8011B0CC = D_8011B0C8;
     if (arg0 == 1) {
@@ -1820,8 +1842,8 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
                 var_a0 = FALSE;
                 if (objHeader->unk32 == 2 && numViewports > ONE_PLAYER && numViewports <= FOUR_PLAYERS) {
                     if (obj->behaviorId == BHV_RACER) {
-                        temp = obj->unk64->racer.playerIndex;
-                        if (temp != PLAYER_COMPUTER) {
+                        playerIndex = obj->unk64->racer.playerIndex;
+                        if (playerIndex != PLAYER_COMPUTER) {
                             func_8002E234(obj, FALSE);
                             var_a0 = TRUE;
                         }
@@ -1857,8 +1879,8 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
                 
                 if (objHeader->unk32 == 2 && numViewports > ONE_PLAYER && numViewports <= FOUR_PLAYERS) {
                     if (obj->behaviorId == BHV_RACER) {
-                        temp = obj->unk64->racer.playerIndex;
-                        if (temp != -1) {
+                        playerIndex = obj->unk64->racer.playerIndex;
+                        if (playerIndex != PLAYER_COMPUTER) {
                             func_8002E234(obj, TRUE);
                         }
                     } else if (obj->behaviorId == BHV_WEAPON) {

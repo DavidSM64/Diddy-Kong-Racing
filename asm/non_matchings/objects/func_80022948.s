@@ -25,11 +25,11 @@ glabel func_80022948
 /* 0235A4 800229A4 0C006EB2 */  jal   get_racer_object
 /* 0235A8 800229A8 00002025 */   move  $a0, $zero
 /* 0235AC 800229AC 8C500064 */  lw    $s0, 0x64($v0)
-/* 0235B0 800229B0 3C018012 */  lui   $at, %hi(D_8011AEF6) # $at, 0x8012
+/* 0235B0 800229B0 3C018012 */  lui   $at, %hi(gIsTajChallenge) # $at, 0x8012
 /* 0235B4 800229B4 820C01D6 */  lb    $t4, 0x1d6($s0)
 /* 0235B8 800229B8 00402025 */  move  $a0, $v0
 /* 0235BC 800229BC 258D0001 */  addiu $t5, $t4, 1
-/* 0235C0 800229C0 A02DAEF6 */  sb    $t5, %lo(D_8011AEF6)($at)
+/* 0235C0 800229C0 A02DAEF6 */  sb    $t5, %lo(gIsTajChallenge)($at)
 /* 0235C4 800229C4 0C008C34 */  jal   func_800230D0
 /* 0235C8 800229C8 02002825 */   move  $a1, $s0
 /* 0235CC 800229CC 860E01A0 */  lh    $t6, 0x1a0($s0)

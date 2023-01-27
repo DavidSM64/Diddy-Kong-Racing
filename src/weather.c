@@ -552,7 +552,7 @@ void handle_rain_sound(UNUSED s32 updateRate) {
     if (gWeatherSoundMask) {
         update_spatial_audio_position(gWeatherSoundMask, xPos, yPos, zPos);
     } else {
-        func_80009558(SOUND_RAIN, xPos, yPos, zPos, 1, &gWeatherSoundMask);
+        play_sound_at_position(SOUND_RAIN, xPos, yPos, zPos, 1, &gWeatherSoundMask);
     }
 }
 

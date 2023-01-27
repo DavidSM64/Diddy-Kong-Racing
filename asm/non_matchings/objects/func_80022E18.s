@@ -180,8 +180,8 @@ glabel func_80022E18
 /* 023CB4 800230B4 0C01AF44 */  jal   func_8006BD10
 /* 023CB8 800230B8 00000000 */   nop   
 /* 023CBC 800230BC 8FBF0014 */  lw    $ra, 0x14($sp)
-/* 023CC0 800230C0 3C018012 */  lui   $at, %hi(D_8011AEF6) # $at, 0x8012
-/* 023CC4 800230C4 A020AEF6 */  sb    $zero, %lo(D_8011AEF6)($at)
+/* 023CC0 800230C0 3C018012 */  lui   $at, %hi(gIsTajChallenge) # $at, 0x8012
+/* 023CC4 800230C4 A020AEF6 */  sb    $zero, %lo(gIsTajChallenge)($at)
 /* 023CC8 800230C8 03E00008 */  jr    $ra
 /* 023CCC 800230CC 27BD0030 */   addiu $sp, $sp, 0x30
 

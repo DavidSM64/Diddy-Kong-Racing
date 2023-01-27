@@ -811,10 +811,11 @@ typedef struct Object_WeaponBalloon {
 typedef struct Object_Weapon {
   /* 0x00 */ struct Object *target;
   /* 0x04 */ struct Object *owner;
-  /* 0x08 */ s32 unk8;
+  /* 0x08 */ struct Object *hitObj;
   /* 0x0C */ f32 checkpointDist;
   /* 0x10 */ f32 forwardVel;
-  /* 0x14 */ s32 unk14;
+  /* 0x14 */ s16 unk14;
+  /* 0x14 */ s16 unk16;
   /* 0x18 */ u8 weaponID;
   /* 0x19 */ s8 checkpoint;
   /* 0x19 */ s16 unk1A;
@@ -1255,7 +1256,7 @@ typedef struct Object_Trigger {
 } Object_Trigger;
 
 typedef struct Object_Audio {
-  /* 0x00 */ u16 unk0;
+  /* 0x00 */ u16 soundId;
   /* 0x02 */ u16 unk2;
   /* 0x04 */ u8 unk4;
   /* 0x05 */ u8 unk5;

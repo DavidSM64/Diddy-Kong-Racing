@@ -70,7 +70,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     f32 diffX;
     f32 diffZ;
     ObjectModel *objModel;
-    s32 sp40;
+    s32 tempStartTimer;
     Object_68 *obj68;
     s32 sp38;
     Object *firstRacerObj;
@@ -85,26 +85,26 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         func_80021400(130);
         racer->raceFinished++;
     }
-    sp40 = *startTimer;
+    tempStartTimer = *startTimer;
     if (racer->playerIndex == PLAYER_COMPUTER) {
         if (*startTimer != 100) {
             *startTimer -= 15;
             if (*startTimer < 0) {
-                if (D_8011D5CC == 0) {
+                if (D_8011D5CC == FALSE) {
                     func_8005CB04(0);
                     racer->boostTimer = 5;
                 }
-                D_8011D5CC = 1;
+                D_8011D5CC = TRUE;
                 *startTimer = 0;
                 *input |= A_BUTTON;
             } else {
-                D_8011D5CC = 0;
+                D_8011D5CC = FALSE;
             }
         }
     }
     
     func_8004F7F4(updateRate, updateRateF, obj, racer);
-    *startTimer = sp40;
+    *startTimer = tempStartTimer;
     racer->lateral_velocity = 0.0f;
     racer->headAngle = sp52;
     obj->segment.unk38.byte.unk3B = sp56;
@@ -177,10 +177,10 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
     diffZ = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
     if (((diffX * diffX) + (diffZ * diffZ)) < 700.0f * 700.0f) {
-        sp40 = (arctan2_f(diffX, diffZ) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
-        WRAP(sp40, -0x8000, 0x8000);
-        CLAMP(sp40, -sp38, sp38);
-        racer->headAngleTarget = sp40;
+        tempStartTimer = (arctan2_f(diffX, diffZ) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+        WRAP(tempStartTimer, -0x8000, 0x8000);
+        CLAMP(tempStartTimer, -sp38, sp38);
+        racer->headAngleTarget = tempStartTimer;
     }
     if (obj->segment.unk38.byte.unk3B == 1) {
         if ((racer->miscAnimCounter & 0x3F) < 0xA) {
@@ -221,7 +221,7 @@ void func_8005CA84(f32 x, f32 y, f32 z, s32 offset) {
         phi_v1 = 0;
     }
     offset += phi_v1;
-    func_80009558(gBossSoundIDOffset[offset], x, y, z, 4, 0);
+    play_sound_at_position(gBossSoundIDOffset[offset], x, y, z, 4, 0);
 }
 
 void func_8005CB04(s32 offset) {

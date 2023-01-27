@@ -152,12 +152,14 @@ s32 D_80127CBC;
 s32 D_80127CC0;
 s32 D_80127CC4;
 s32 D_80127CC8;
-s32 D_80127CCC;
+s32 gDebugFontTexture;
 u16 D_80127CD0;
 u16 D_80127CD2;
 s32 D_80127CD4;
 s8 gDebugPrintBufferStart[2300];
-u8 *gDebugPrintBufferEnd[2];
+u8 *gDebugPrintBufferEnd;
+u64 gEPCStack[0x200];
+OSThread gEPCThread;
 s32 D_80129790[6]; // Osmesg stuff
 s32 D_801297A8[8];
 s32 D_801297C8[8];
@@ -1291,7 +1293,7 @@ void func_800B22FC(Particle2 *arg0, s32 arg1) {
                 func_800B34B0(arg0);
             }
         }
-        temp_v0_2 = func_8002A2DC(arg0->unk2E);
+        temp_v0_2 = get_segment_bounding_box(arg0->unk2E);
         if (temp_v0_2 != NULL) {
             if (arg0->trans.x_position < temp_v0_2->x1 || temp_v0_2->x2 < arg0->trans.x_position || arg0->trans.y_position < temp_v0_2->y1 || temp_v0_2->y2 < arg0->trans.y_position || arg0->trans.z_position < temp_v0_2->z1 || temp_v0_2->z2 < arg0->trans.z_position) {
                 arg0->unk2E = get_level_segment_index_from_position(arg0->trans.x_position, arg0->trans.y_position, arg0->trans.z_position);

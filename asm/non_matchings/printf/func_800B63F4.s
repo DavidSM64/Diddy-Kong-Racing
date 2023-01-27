@@ -22,8 +22,8 @@ glabel func_800B63F4
 /* 0B7040 800B6440 01C01825 */   move  $v1, $t6
 /* 0B7044 800B6444 91C50000 */  lbu   $a1, ($t6)
 /* 0B7048 800B6448 3C0A800E */  lui   $t2, %hi(D_800E2EF4) # $t2, 0x800e
-/* 0B704C 800B644C 3C068012 */  lui   $a2, %hi(D_80127CCC) # $a2, 0x8012
-/* 0B7050 800B6450 24C67CCC */  addiu $a2, %lo(D_80127CCC) # addiu $a2, $a2, 0x7ccc
+/* 0B704C 800B644C 3C068012 */  lui   $a2, %hi(gDebugFontTexture) # $a2, 0x8012
+/* 0B7050 800B6450 24C67CCC */  addiu $a2, %lo(gDebugFontTexture) # addiu $a2, $a2, 0x7ccc
 /* 0B7054 800B6454 254A2EF4 */  addiu $t2, %lo(D_800E2EF4) # addiu $t2, $t2, 0x2ef4
 /* 0B7058 800B6458 240C0002 */  li    $t4, 2
 /* 0B705C 800B645C 240B0001 */  li    $t3, 1

@@ -108,7 +108,7 @@ void func_8006EC48(s32 saveFileIndex);
 void func_8006ECAC(s32 arg0);
 void func_8006ECC4(void);
 void func_8006ECE0(void);
-s32 func_8006EFB8(void);
+s32 check_dmem_validity(void);
 void func_8006F140(s32 arg0);
 void func_8006F20C(void);
 void func_8006F254(void);

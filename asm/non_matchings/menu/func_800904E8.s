@@ -265,7 +265,7 @@ glabel func_800904E8
 /* 0914CC 800908CC 00C25021 */  addu  $t2, $a2, $v0
 /* 0914D0 800908D0 AFAA0010 */  sw    $t2, 0x10($sp)
 /* 0914D4 800908D4 AFAA0038 */  sw    $t2, 0x38($sp)
-/* 0914D8 800908D8 0C019A50 */  jal   func_80066940
+/* 0914D8 800908D8 0C019A50 */  jal   resize_viewport
 /* 0914DC 800908DC AFA60040 */   sw    $a2, 0x40($sp)
 /* 0914E0 800908E0 27AD0038 */  addiu $t5, $sp, 0x38
 /* 0914E4 800908E4 AFAD0010 */  sw    $t5, 0x10($sp)

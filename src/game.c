@@ -75,7 +75,7 @@ s8 D_800DD390 = 0;
 s16 gLevelLoadTimer = 0;
 s8 D_800DD398 = 0;
 s8 D_800DD39C = 0;
-s8 D_800DD3A0 = FALSE;
+s8 gDmemInvalid = FALSE;
 s32 gNumF3dCmdsPerPlayer[4] = { 4500, 7000, 11000, 11000 };
 s32 gNumHudVertsPerPlayer[4] = { 300, 600, 850, 900 };
 s32 gNumHudMatPerPlayer[4] = { 300, 400, 550, 600 };
@@ -418,7 +418,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     if (vehicleId >= VEHICLE_CAR && vehicleId < NUMBER_OF_PLAYER_VEHICLES) {
         var_s0 = gCurrentLevelHeader->unk4F[vehicleId];
     }
-    func_80017E74(var_s0);
+    set_taj_challenge_type(var_s0);
     var_s0 = settings->worldId;
     if (gCurrentLevelHeader->world != -1) {
         settings->worldId = gCurrentLevelHeader->world;
@@ -998,7 +998,7 @@ void main_game_loop(void) {
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
 
-    func_80066610();
+    copy_viewports_to_stack();
 #ifdef PUPPYPRINT_DEBUG
     profiler_add(gPuppyTimers.timers[PP_LOGIC], osGetCount() - first);
     for (i = 1; i < PP_THREAD0; i++) {
@@ -1981,8 +1981,10 @@ void func_8006ECE0(void) {
 
 GLOBAL_ASM("asm/non_matchings/game/func_8006ECFC.s")
 
-s32 func_8006EFB8(void) {
-    //Could be SP_DMEM_START / CACHERR_EE / SR_FR / M_K0 / LEO_STATUS_BUFFER_MANAGER_INTERRUPT
+/**
+ * Returns FALSE if dmem doesn't begin with a -1. This is checked on every main game loop iteration.
+ */
+s32 check_dmem_validity(void) {
     if (IO_READ(SP_DMEM_START) != -1U) {
         return FALSE;
     }
@@ -2150,8 +2152,6 @@ s32 is_controller_missing(void) {
  * A false read, meaning you're caught running an illegitimate copy, will force the game to pause when you enter the world.
  */
 s32 check_imem_validity(void) {
-    /*(SP_STATUS_HALT | SP_STATUS_BROKE | SP_STATUS_DMA_BUSY | SP_STATUS_IO_FULL | SP_STATUS_INTR_BREAK | SP_STATUS_YIELD |
-    SP_STATUS_YIELDED | SP_STATUS_TASKDONE | SP_STATUS_TASKDONE | SP_STATUS_RSPSIGNAL | SP_STATUS_SIG5))*/
     if (IO_READ(SP_IMEM_START) != 0x17D7) {
         return FALSE;
     }

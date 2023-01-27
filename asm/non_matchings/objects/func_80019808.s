@@ -785,8 +785,8 @@ glabel func_80019808
 /* 01AF30 8001A330 256BAEE4 */  addiu $t3, %lo(gRacers) # addiu $t3, $t3, -0x511c
 /* 01AF34 8001A334 1420FFF7 */  bnez  $at, .L8001A314
 /* 01AF38 8001A338 00A22825 */   or    $a1, $a1, $v0
-/* 01AF3C 8001A33C 3C198012 */  lui   $t9, %hi(D_8011AEF6) # $t9, 0x8012
-/* 01AF40 8001A340 8339AEF6 */  lb    $t9, %lo(D_8011AEF6)($t9)
+/* 01AF3C 8001A33C 3C198012 */  lui   $t9, %hi(gIsTajChallenge) # $t9, 0x8012
+/* 01AF40 8001A340 8339AEF6 */  lb    $t9, %lo(gIsTajChallenge)($t9)
 /* 01AF44 8001A344 87B80088 */  lh    $t8, 0x88($sp)
 /* 01AF48 8001A348 13200007 */  beqz  $t9, .L8001A368
 /* 01AF4C 8001A34C 3C0F8012 */   lui   $t7, %hi(D_8011AD3C) # $t7, 0x8012

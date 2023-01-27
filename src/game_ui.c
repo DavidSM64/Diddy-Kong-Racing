@@ -19,6 +19,7 @@
 #include "unknown_078050.h"
 #include "unknown_003260.h"
 #include "printf.h"
+#include "unknown_008C40.h"
 
 /************ .data ************/
 
@@ -437,7 +438,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         switch (get_current_level_race_type()) {
                             case RACETYPE_DEFAULT:
                             case RACETYPE_HORSESHOE_GULCH:
-                                if (func_8002341C() != 0) {
+                                if (is_taj_challenge() != 0) {
                                     func_800A263C(sp2C, arg3, updateRate);
                                 } else {
                                     func_800A0DC0(sp2C, arg3, updateRate);
@@ -1879,7 +1880,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                         D_80126CDC->unk1E4 = 0;
                         D_80126CDC->unk1E6 = 14;
                     }
-                    if (func_8002341C() && someRacer->vehicleID == VEHICLE_CARPET) {
+                    if (is_taj_challenge() && someRacer->vehicleID == VEHICLE_CARPET) {
                         gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 0, 255, opacity);
                     } else {
                         gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gHudMinimapColours[someRacer->characterId].red, gHudMinimapColours[someRacer->characterId].green, gHudMinimapColours[someRacer->characterId].blue, opacity);

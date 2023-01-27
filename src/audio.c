@@ -30,7 +30,7 @@ s32 D_800DC658 = 0;
 u8 D_800DC65C = 0;
 u8 D_800DC660 = 0;
 UNUSED s32 D_800DC664 = 0;
-UNUSED s32 D_800DC668 = 0; // Currently unknown, might be a different type.
+UNUSED s32 D_800DC668 = 0;
 s32 sMusicVolumeMultiplier = 256; // This is never not 256...
 u8 D_800DC670 = 0;
 
