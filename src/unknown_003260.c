@@ -357,22 +357,23 @@ s32 D_800DC6C4 = 0; // Currently unknown, might be a different type.
  * __clearAudioDMA routine.
  *
  *****************************************************************************/
-#ifdef NON_EQUIVALENT
-s32 __amDMA(s32 addr, s32 len, void *state) {
+s32 __amDMA(s32 addr, s32 len, UNUSED void *state) {
     void            *foundBuffer;
     s32             delta, addrEnd, buffEnd;
     AMDMABuffer     *dmaPtr, *lastDmaPtr;
+    UNUSED s32 pad;
 
     lastDmaPtr = 0;
+    delta = addr & 1;
     dmaPtr = dmaState.firstUsed;
     addrEnd = addr+len;
 
     /* first check to see if a currently existing buffer contains the
        sample that you need.  */
 
-    while(dmaPtr) {
+    while (dmaPtr) {
         buffEnd = dmaPtr->startAddr + DMA_BUFFER_LENGTH;
-        if(dmaPtr->startAddr > addr) /* since buffers are ordered */
+        if(dmaPtr->startAddr > (u32)addr) /* since buffers are ordered */
             break;                   /* abort if past possible */
 
         else if(addrEnd <= buffEnd) { /* yes, found a buffer with samples */
@@ -381,7 +382,7 @@ s32 __amDMA(s32 addr, s32 len, void *state) {
             return (int) osVirtualToPhysical(foundBuffer);
         }
         lastDmaPtr = dmaPtr;
-        dmaPtr = (AMDMABuffer*)dmaPtr->node.next;
+        dmaPtr = (AMDMABuffer * )dmaPtr->node.next;
     }
 
     /* get here, and you didn't find a buffer, so dma a new one */
@@ -389,29 +390,33 @@ s32 __amDMA(s32 addr, s32 len, void *state) {
     /* get a buffer from the free list */
     dmaPtr = dmaState.firstFree;
 
+    if (!dmaPtr && !lastDmaPtr) {
+        lastDmaPtr = dmaState.firstUsed;
+    }
+
     /*
      * if you get here and dmaPtr is null, send back the a bogus
      * pointer, it's better than nothing
      */
-    if(!dmaPtr) {
-	    return osVirtualToPhysical(dmaState.firstUsed);
+    if (!dmaPtr) {
+	    return (int) osVirtualToPhysical(lastDmaPtr->ptr) + delta;
     }
 
-    dmaState.firstFree = (AMDMABuffer*)dmaPtr->node.next;
-    alUnlink((ALLink*)dmaPtr);
+    dmaState.firstFree = (AMDMABuffer *) dmaPtr->node.next;
+    alUnlink((ALLink *) dmaPtr);
 
     /* add it to the used list */
-    if(lastDmaPtr) { /* if you have other dmabuffers used, add this one */
+    if (lastDmaPtr) { /* if you have other dmabuffers used, add this one */
                      /* to the list, after the last one checked above */
-        alLink((ALLink*)dmaPtr,(ALLink*)lastDmaPtr);
+        alLink((ALLink *) dmaPtr, (ALLink *) lastDmaPtr);
     }
-    else if(dmaState.firstUsed) { /* if this buffer is before any others */
+    else if (dmaState.firstUsed) { /* if this buffer is before any others */
                                   /* jam at begining of list */
         lastDmaPtr = dmaState.firstUsed;
         dmaState.firstUsed = dmaPtr;
-        dmaPtr->node.next = (ALLink*)lastDmaPtr;
+        dmaPtr->node.next = (ALLink *) lastDmaPtr;
         dmaPtr->node.prev = 0;
-        lastDmaPtr->node.prev = (ALLink*)dmaPtr;
+        lastDmaPtr->node.prev = (ALLink *) dmaPtr;
     }
     else { /* no buffers in list, this is the first one */
         dmaState.firstUsed = dmaPtr;
@@ -420,24 +425,15 @@ s32 __amDMA(s32 addr, s32 len, void *state) {
     }
 
     foundBuffer = dmaPtr->ptr;
-    delta = addr & 0x1;
     addr -= delta;
     dmaPtr->startAddr = addr;
     dmaPtr->lastFrame = audFrameCt;  /* mark it */
 
-    audDMAIOMesgBuf[nextDMA].hdr.pri      = OS_MESG_PRI_NORMAL;
-    audDMAIOMesgBuf[nextDMA].hdr.retQueue = &audDMAMessageQ;
-    audDMAIOMesgBuf[nextDMA].dramAddr     = foundBuffer;
-    audDMAIOMesgBuf[nextDMA].devAddr      = (u32)addr;
-    audDMAIOMesgBuf[nextDMA].size         = DMA_BUFFER_LENGTH;
-
-    osPiStartDma(&audDMAIOMesgBuf[nextDMA++], 1, 0, addr, foundBuffer, 0x400U, &audDMAMessageQ);
+    osPiStartDma(&audDMAIOMesgBuf[nextDMA++], OS_MESG_PRI_HIGH, OS_READ,
+                addr, foundBuffer, DMA_BUFFER_LENGTH, &audDMAMessageQ);
 
     return (int) osVirtualToPhysical(foundBuffer) + delta;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_003260/__amDMA.s")
-#endif
 
 /******************************************************************************
  *
