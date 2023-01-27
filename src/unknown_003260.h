@@ -226,15 +226,12 @@ ALDMAproc __amDmaNew(AMDMAState **state);
 void set_sound_channel_volume(u8 channel, u16 volume);
 u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex);
 void func_8000410C(ALSoundState *state);
-void __clearAudioDMA(void);
+void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched);
 
 // Non Matching
 ALMicroTime  _sndpVoiceHandler(void *node);
 void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32);
-void amCreateAudioMgr(ALSynConfig *c, OSPri p, OSSched *arg2);
 void func_800048D8(s32);
-u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo);
-void _handleEvent(unk800DC6BC *snd, ALSndpEvent *event);
 void func_80004520(ALSoundState *);
 
 #endif
