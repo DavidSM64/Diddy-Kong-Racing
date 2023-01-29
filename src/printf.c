@@ -135,8 +135,6 @@ void func_800B4A08(s32 arg0) {
     D_800E2EF0 = arg0;
 }
 
-//this is actually sprintf.
-//what we call sprintf is vsprintf.
 void func_800B4A14(char *s, char *format, ...) {
     va_list args;
     va_start(args, format);
