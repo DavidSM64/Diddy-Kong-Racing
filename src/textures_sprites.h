@@ -115,8 +115,8 @@ typedef struct TempTexHeader {
 /* 0x25 */ u8 pad25[3]; // padding
 } TempTexHeader;
 
-void texDisableModes(s32 flags);
 void texEnableModes(s32 flags);
+void texDisableModes(s32 flags);
 s32 func_8007AE44(void);
 s32 func_8007AE54(void);
 s32 func_8007AE64(void);
