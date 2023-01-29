@@ -81,15 +81,15 @@ GLOBAL_ASM("asm/non_matchings/printf/func_800B3564.s")
 UNUSED void func_800B3678(Gfx **arg0, MatrixS **arg1, Vertex **arg2) {
     UNUSED s32 pad;
     UNUSED s32 pad2;
-    Object **temp_s0;
-    s32 sp38;
-    s32 sp34;
+    Object **objects;
+    s32 iObj;
+    s32 nObjs;
 
-    temp_s0 = objGetObjList(&sp38, &sp34);
-    for (; sp38 < sp34; sp38++) {
-        if (temp_s0[sp38]->segment.trans.unk6 & 0x8000) {
-            if ((s32) temp_s0[sp38]->segment.header & 0x8000) {
-                func_800B3740(temp_s0[sp38], arg0, arg1, arg2, 0);
+    objects = objGetObjList(&iObj, &nObjs);
+    for (; iObj < nObjs; iObj++) {
+        if (objects[iObj]->segment.trans.unk6 & 0x8000) {
+            if ((s32) objects[iObj]->segment.header & 0x8000) {
+                func_800B3740(objects[iObj], arg0, arg1, arg2, 0);
             }
         }
     }
