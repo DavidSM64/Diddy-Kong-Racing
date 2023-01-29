@@ -38,7 +38,7 @@ extern u32 osTvType;
 
 void enable_new_screen_transitions(void);
 void disable_new_screen_transitions(void);
-u32 func_800C018C(void);
+u32 fxFadeOn(void);
 void transition_end(void);
 s32 handle_transitions(s32 updateRate);
 void render_fade_transition(Gfx **dList, MatrixS **mats, Vertex **verts);

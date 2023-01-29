@@ -736,7 +736,7 @@ UNUSED void func_8000208C(void *sndState, u8 arg1) {
     }
 }
 
-UNUSED void func_800020BC(void *sndState, u32 arg1) {
+UNUSED void amSndSetPitchDirect(void *sndState, u32 arg1) {
     u32 *temp = &arg1;
     if (sndState != NULL) {
         func_800049F8((s32) sndState, 16, *temp);

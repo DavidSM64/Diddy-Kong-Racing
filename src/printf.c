@@ -85,7 +85,7 @@ UNUSED void func_800B3678(Gfx **arg0, MatrixS **arg1, Vertex **arg2) {
     s32 sp38;
     s32 sp34;
 
-    temp_s0 = func_8000E988(&sp38, &sp34);
+    temp_s0 = objGetObjList(&sp38, &sp34);
     for (; sp38 < sp34; sp38++) {
         if (temp_s0[sp38]->segment.trans.unk6 & 0x8000) {
             if ((s32) temp_s0[sp38]->segment.header & 0x8000) {
@@ -129,12 +129,14 @@ GLOBAL_ASM("asm/non_matchings/printf/func_800B45C4.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B461C.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B4668.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B46BC.s")
-GLOBAL_ASM("asm/non_matchings/printf/func_800B4940.s")
+GLOBAL_ASM("asm/non_matchings/printf/_itoa.s")
 
 void func_800B4A08(s32 arg0) {
     D_800E2EF0 = arg0;
 }
 
+//this is actually sprintf.
+//what we call sprintf is vsprintf.
 void func_800B4A14(char *s, char *format, ...) {
     va_list args;
     va_start(args, format);
@@ -144,7 +146,7 @@ void func_800B4A14(char *s, char *format, ...) {
 
 GLOBAL_ASM("asm/non_matchings/printf/sprintf.s")
 
-void func_800B5E88(void) {
+void diPrintfInit(void) {
     gTexture0 = load_texture(0);
     gTexture1 = load_texture(1);
     gTexture2 = load_texture(2);

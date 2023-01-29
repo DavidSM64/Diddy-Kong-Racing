@@ -378,7 +378,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         }
         gDPPipeSync(gSceneCurrDisplayList++);
         initialise_player_viewport_vars(updateRate);
-        func_800AB308(-1, -512);
+        setWeatherLimits(-1, -512);
         if (gCurrentLevelHeader2->weatherEnable > 0 && numViewports < VIEWPORTS_COUNT_3_PLAYERS) {
             process_weather(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList, tempUpdateRate);
         }
@@ -405,7 +405,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             gDPPipeSync(gSceneCurrDisplayList++);
             initialise_player_viewport_vars(updateRate);
-            func_800AB308(-1, -512);
+            setWeatherLimits(-1, -512);
             func_800AD030(get_active_camera_segment());
             func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
             set_text_font(0);
@@ -1315,7 +1315,7 @@ UNUSED void func_8002AC00(s32 arg0, s32 arg1, s32 arg2) {
 }
 
 // These types are probably wrong because the vars are likely still unidentified structs, but the code matches still.
-UNUSED void func_8002ACA0(s32 *arg0, s32 *arg1, s32 *arg2) {
+UNUSED void dayGetTrackFade(s32 *arg0, s32 *arg1, s32 *arg2) {
     *arg0 = (unsigned) D_8011D378;
     *arg1 = (unsigned) D_8011D370;
     *arg2 = (unsigned) D_8011D374;
@@ -1652,7 +1652,7 @@ typedef struct unk8002D30C_a0 {
     struct unk8002D30C_a0 *unk08;
 } unk8002D30C_a0;
 
-void func_8002D30C(unk8002D30C_a0 *arg0, s32 arg1) {
+void trackMakeAbsolute(unk8002D30C_a0 *arg0, s32 arg1) {
     while(1) {
         if(!arg0) {
             return;
@@ -1664,7 +1664,7 @@ void func_8002D30C(unk8002D30C_a0 *arg0, s32 arg1) {
             arg0->unk08 = (unk8002D30C_a0 *)((s32)arg0->unk08 + arg1);
         }
 
-        func_8002D30C(arg0->unk04, arg1);
+        trackMakeAbsolute(arg0->unk04, arg1);
         arg0 = arg0->unk08;
     }
 }
@@ -1792,7 +1792,7 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
     D_8011D368 = 0;
     D_8011D36C = 0;
     numViewports = get_viewport_count();
-    objects = func_8000E988(&sp94, &sp90);
+    objects = objGetObjList(&sp94, &sp90);
     while (sp94 < sp90) {
         obj = objects[sp94];
         objHeader = obj->segment.header;

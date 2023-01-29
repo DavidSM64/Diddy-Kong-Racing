@@ -640,7 +640,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     settings->courseId = levelId;
     if (gCurrentLevelHeader->weatherEnable > 0) {
         func_800AB4A8(gCurrentLevelHeader->weatherType, gCurrentLevelHeader->weatherEnable, gCurrentLevelHeader->weatherVelX << 8, gCurrentLevelHeader->weatherVelY << 8, gCurrentLevelHeader->weatherVelZ << 8, gCurrentLevelHeader->weatherIntensity * 257, gCurrentLevelHeader->weatherOpacity * 257);
-        func_800AB308(-1, -0x200);
+        setWeatherLimits(-1, -0x200);
     }
     if (gCurrentLevelHeader->unk49 == -1) {
         gCurrentLevelHeader->unkA4 = load_texture((s32) gCurrentLevelHeader->unkA4);
@@ -731,7 +731,7 @@ char *get_level_name(s32 levelId) {
 }
 
 void func_8006BEFC(void) {
-    func_8006C164();
+    frontCleanupMultiSelect();
     set_background_prim_colour(0, 0, 0);
     free_from_memory_pool(gCurrentLevelHeader);
     func_800049D8();
@@ -806,7 +806,7 @@ void func_8006BFC8(s8 *arg0) {
     free_from_memory_pool(gTempAssetTable);
 }
 
-void func_8006C164(void) {
+void frontCleanupMultiSelect(void) {
     free_from_memory_pool(D_801211C0);
 }
 
@@ -896,7 +896,7 @@ void init_game(void) {
     s32 viMode;
 
     init_main_memory_pool();
-    func_800C6170(); // Initialise gzip decompression related things
+    rzipInit(); // Initialise gzip decompression related things
     sAntiPiracyTriggered = TRUE;
     if (check_imem_validity()) {
         sAntiPiracyTriggered = FALSE;
@@ -923,10 +923,10 @@ void init_game(void) {
     audio_init(&gMainSched);
     func_80008040(); // Should be very similar to func_8005F850
     sControllerStatus = init_controllers();
-    func_8007AC70(); // Should be very similar to func_8005F850
+    texInitTextures(); // Should be very similar to func_8005F850
     func_8005F850(); // Matched
     allocate_object_pools();
-    func_800B5E88();
+    diPrintfInit();
     func_800598D0();
     init_particle_assets();
     func_800AB1F0();

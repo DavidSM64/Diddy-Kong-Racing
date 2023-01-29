@@ -894,13 +894,13 @@ s16 D_80126384;
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007AC70.s")
+GLOBAL_ASM("asm/non_matchings/textures_sprites/texInitTextures.s")
 
-void func_8007AE0C(s32 flags) {
+void texDisableModes(s32 flags) {
     D_80126378 |= flags;
 }
 
-void func_8007AE28(s32 flags) {
+void texEnableModes(s32 flags) {
     D_80126378 &= ~flags;
 }
 

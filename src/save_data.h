@@ -65,7 +65,7 @@ SIDeviceStatus check_for_rumble_pak(s32 controllerIndex);
 SIDeviceStatus repair_controller_pak(s32 controllerIndex);
 SIDeviceStatus reformat_controller_pak(s32 controllerIndex);
 s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, char **fileNames, char **fileExtensions, u32 *fileSizes, u8 *fileTypes);
-void func_80076164(void);
+void packDirectoryFree(void);
 s32 get_free_space(s32 controllerIndex, u32 *bytesFree, s32 *notesFree);
 s32 delete_file(s32 controllerIndex, s32 fileNum);
 s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondControllerIndex);

@@ -43,7 +43,7 @@
 
 
 void func_800B4A08(s32 arg0);
-void func_800B5E88(void);
+void diPrintfInit(void);
 void set_render_printf_colour(u8 red, u8 green, u8 blue, u8 alpha);
 void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha);
 void func_800B695C(Gfx** dList, u32 arg1, u32 arg2, u32 arg3, u32 arg4);

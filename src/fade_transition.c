@@ -226,7 +226,7 @@ void disable_new_screen_transitions(void) {
 }
 
 //@bug: This doesn't seem to guarantee a return.
-u32 func_800C018C(void) {
+u32 fxFadeOn(void) {
     u32 isActive = sTransitionFadeTimer != 0;
     if (isActive == FALSE) {
         isActive = sTransitionFlags != 0;

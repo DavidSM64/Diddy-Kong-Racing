@@ -4544,7 +4544,7 @@ void obj_loop_weather(Object *obj, UNUSED s32 updateRate) {
     entry = (LevelObjectEntry_Weather *)obj->segment.unk3C_a.level_entry;
     if (((diffX * diffX) + (diffZ * diffZ)) <= dist){
       if (((!obj->segment.unk3C_a.level_entry) && (!obj->segment.unk3C_a.level_entry)) && (!obj->segment.unk3C_a.level_entry)){}  // Fakematch
-      func_800ABC5C(entry->unkA * 256, entry->unkC * 256, entry->unkE * 256, entry->unk10 * 257, entry->unk11 * 257, entry->unk12);
+      changeWeather(entry->unkA * 256, entry->unkC * 256, entry->unkE * 256, entry->unk10 * 257, entry->unk11 * 257, entry->unk12);
     }
   }
 }
@@ -4554,7 +4554,7 @@ void obj_init_lensflare(Object *obj, UNUSED LevelObjectEntry_LensFlare *entry) {
 }
 
 void obj_init_lensflareswitch(Object *obj, LevelObjectEntry_LensFlareSwitch *entry, UNUSED s32 arg2) {
-    func_800ACF60(obj);
+    cameraAddOverrideObject(obj);
     obj->segment.trans.scale = entry->unk8;
     obj->segment.trans.scale /= 40.0f;
 }

@@ -325,7 +325,7 @@ void func_800AEF88(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2);
 void func_800AF024(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2);
 void func_800AF0A4(Object *obj);
 void func_800AF0F0(Object *obj);
-void func_800AF1E0(Particle *arg0, s32 arg1, s32 arg2);
+void partInitTrigger(Particle *arg0, s32 arg1, s32 arg2);
 void func_800AF29C(Particle *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5);
 void func_800AF6E4(Object *obj, s32 arg1);
 void func_800B2260(Particle *arg0);

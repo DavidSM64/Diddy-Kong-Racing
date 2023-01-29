@@ -667,10 +667,10 @@ SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileE
                 continue;
             }
             if (fileType == 3) {
-                if((func_800CE050((u8 *) fileNames[fileNum], (char *) sDKRacingAdv1, strlen((char *) sDKRacingAdv2)) != 0)) {
+                if((_bcmp((u8 *) fileNames[fileNum], (char *) sDKRacingAdv1, strlen((char *) sDKRacingAdv2)) != 0)) {
                     continue;
                 }
-            } else if((func_800CE050((u8 *) fileNames[fileNum], (char *) sDKRacingTimes1, strlen((char *) sDKRacingTimes2)) != 0))  {
+            } else if((_bcmp((u8 *) fileNames[fileNum], (char *) sDKRacingTimes1, strlen((char *) sDKRacingTimes2)) != 0))  {
                 continue;
             }
 
@@ -1796,7 +1796,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
 }
 
 //Free D_800DE440
-void func_80076164(void) {
+void packDirectoryFree(void) {
     if (D_800DE440 != 0) {
         free_from_memory_pool(D_800DE440);
     }

@@ -2316,7 +2316,7 @@ void menu_logos_screen_init(void) {
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
     copy_viewports_to_stack(); //Init viewports
-    func_80066818(0, 1);
+    camEnableUserView(0, 1);
 }
 
 /**
@@ -2343,7 +2343,7 @@ s32 menu_logo_screen_loop(s32 updateRate) {
         sBootScreenTimer -= updateRate / 60.0f;
     }
     if (sBootScreenTimer <= 0.0f) {
-        func_80066894(0, 0);
+        camDisableUserView(0, 0);
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO);
         init_title_screen_variables();
         menu_init(MENU_TITLE);
@@ -3462,7 +3462,7 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
             D_80126AA0[i - 1][j] = 0;
         } while (&D_80126AA0 != &sCurrentControllerPakAllFileNames);
 
-        func_80076164(); //Free D_800DE440 from memory
+        packDirectoryFree(); //Free D_800DE440 from memory
         get_free_space(*controllerIndex, &sCurrentControllerPakFreeSpace, NULL); //Get Available Space in Controller Pak
         sCurrentControllerPakFreeSpace = sCurrentControllerPakFreeSpace / 256; //Bytes
         ret = pakStatus; //Really?
@@ -3583,7 +3583,7 @@ s32 menu_boot_loop(s32 updateRate) {
             }
             break;
         case 2:
-            if (gMenuDelay && func_800C018C() == 0) {
+            if (gMenuDelay && fxFadeOn() == 0) {
                 transition_begin(&sMenuTransitionFadeInFast);
             }
             temp = 300;
@@ -5440,7 +5440,7 @@ s32 menu_file_select_loop(s32 updateRate) {
         }
         gIsInTwoPlayerAdventure = (gNumberOfActivePlayers == 2);
         if (gIsInTwoPlayerAdventure) {
-            func_8000E1B8();
+            fontUseFont();
         }
         gNumberOfActivePlayers = 1;
         D_800E0FAC = 1;
@@ -5591,7 +5591,7 @@ void menu_track_select_init(void) {
     set_background_draw_function(func_8008F618);
     resize_viewport(0, 80, gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY >> 1), 240, (gTrackSelectViewPortHalfY >> 1) + gTrackSelectViewPortHalfY);
     copy_viewports_to_stack();
-    func_80066818(0, 0);
+    camEnableUserView(0, 0);
     D_800E097C = 1;
     func_8009C674(D_800E07C4);
     allocate_menu_images(D_800E07E0);
@@ -5808,7 +5808,7 @@ s32 menu_track_select_loop(s32 updateRate) {
 void func_8008F534(void) {
     s32 i;
 
-    func_80066894(0, 0);
+    camDisableUserView(0, 0);
     func_8009C4A8(D_800E07C4);
     set_free_queue_state(0);
     free_from_memory_pool(D_800E0970);
@@ -5925,7 +5925,7 @@ void func_8008FF1C(s32 updateRate) {
             }
             trackSelectY++;
         }
-        func_80066894(0, 1);
+        camDisableUserView(0, 1);
         func_8009BD5C();
         set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
         reset_render_settings(&sMenuCurrDisplayList);
@@ -5994,7 +5994,7 @@ void func_80090918(s32 updateRate) {
         gMenuImageStack[6].unk8 = (f32) (sMenuImageProperties[6].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
         gMenuImageStack[5].unk8 = (f32) (sMenuImageProperties[5].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
     }
-    func_80066818(0, 0);
+    camEnableUserView(0, 0);
     if (get_thread30_level_id_to_load() == 0) {
         if (gMenuDelay < 0) {
             sMenuMusicVolume -= updateRate * 4;
@@ -6023,7 +6023,7 @@ void func_80090918(s32 updateRate) {
             func_8008F00C(1);
         } else if (gMenuDelay < -30) {
             disable_new_screen_transitions();
-            func_80066894(0, 0);
+            camDisableUserView(0, 0);
             func_8008F00C(-1);
         }
     }
@@ -6108,7 +6108,7 @@ void render_track_select_setup_ui(s32 updateRate) {
     if ((gNumberOfActivePlayers == 2) && (D_801269C8 < 4) && (D_801263E0 >= 2)) {
         sp74 = TRUE;
     }
-    func_80066894(0, 1);
+    camDisableUserView(0, 1);
     func_8009BD5C();
     set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (gMenuDelay < 0) {
@@ -7059,7 +7059,7 @@ void func_80094688(s32 arg0, s32 arg1) {
         if (get_render_context() == 0) {
             func_80078170(D_80126BB8, D_80126BBC, D_80126BC0);
         }
-        func_80066818(0, 1);
+        camEnableUserView(0, 1);
         resize_viewport(0, 0, 0, gTrackSelectViewPortX, gTrackSelectViewportY);
     }
     adjust_audio_volume(VOLUME_LOWER_AMBIENT);
@@ -7954,7 +7954,7 @@ void menu_credits_init(void) {
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
     copy_viewports_to_stack();
-    func_80066818(0, 1);
+    camEnableUserView(0, 1);
     func_8009C674(D_800E17D8);
     allocate_menu_images(D_800E17F0);
     assign_racer_portrait_textures();
@@ -8022,7 +8022,7 @@ GLOBAL_ASM("asm/non_matchings/menu/menu_credits_loop.s")
 void func_8009BCF0(void) {
     set_music_player_voice_limit(0x12);
     disable_new_screen_transitions();
-    func_80066894(0, 0);
+    camDisableUserView(0, 0);
     set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO);
     func_8009C4A8(D_800E17D8);
     unload_font(ASSET_FONTS_BIGFONT);

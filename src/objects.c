@@ -582,7 +582,7 @@ u32 func_8000E0B0(void) {
     }
 }
 
-void func_8000E128(void) {
+void instShowBearBar(void) {
     D_800DC708 = 0x8000;
 }
 
@@ -611,7 +611,7 @@ void func_8000E194(void) {
     D_800DC740 = 0;
 }
 
-void func_8000E1B8(void) {
+void fontUseFont(void) {
     D_800DC73C = 0;
     D_800DC740 = 0;
 }
@@ -770,7 +770,7 @@ Object *get_object(s32 index) {
     return gObjPtrList[index];
 }
 
-Object **func_8000E988(s32 *arg0, s32 *cnt) {
+Object **objGetObjList(s32 *arg0, s32 *cnt) {
     *arg0 = D_8011AE60;
     *cnt = objCount;
     return gObjPtrList;
@@ -796,7 +796,7 @@ void func_8000E9D0(Object *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/objects/spawn_object.s")
 
-void func_8000F648(Object *obj, s32 count, s32 objType) {
+void objFreeAssets(Object *obj, s32 count, s32 objType) {
     s32 i;
     if (objType == 0) { // 3D model
         for (i = 0; i < count; i++) {
@@ -819,7 +819,7 @@ void func_8000F648(Object *obj, s32 count, s32 objType) {
     }
 }
 
-void func_8000F758(Object *obj) {
+void lightSetupLightSources(Object *obj) {
     s32 i;
     for(i = 0; i < obj->segment.header->unk5A; i++) {
         obj->unk70[i] = func_80031F88(obj, &obj->segment.header->unk24[i]);
@@ -837,7 +837,7 @@ s32 func_8000FAC4(Object *obj, Object_6C *arg1) {
     particleDataEntry = obj->segment.header->objectParticles;
     for(i = 0; i < obj->segment.header->unk57; i++) {
         if ((particleDataEntry[i].upper & 0xFFFF0000) == 0xFFFF0000) {
-            func_800AF1E0((Particle *) &obj->unk6C[i], (particleDataEntry[i].upper >> 8) & 0xFF, particleDataEntry[i].upper & 0xFF);
+            partInitTrigger((Particle *) &obj->unk6C[i], (particleDataEntry[i].upper >> 8) & 0xFF, particleDataEntry[i].upper & 0xFF);
         } else {
             func_800AF29C((Particle *) &obj->unk6C[i],
                 (particleDataEntry[i].upper >> 0x18) & 0xFF,
@@ -1349,7 +1349,7 @@ void func_80012E28(Object *this) {
     }
 }
 
-void func_80012F30(Object *obj) {
+void objUndoPlayerTumble(Object *obj) {
     if (obj->behaviorId == BHV_RACER) {
         Object_Racer *racer = &obj->unk64->racer;
         obj->segment.trans.y_rotation -= racer->y_rotation_offset;
@@ -2020,7 +2020,7 @@ UNUSED void debug_render_checkpoint_node(UNUSED s32 checkpointID, UNUSED s32 pat
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BC54.s")
 
-u32 func_8001BD94(s32 arg0) {
+u32 objGetObject(s32 arg0) {
     if (arg0 < 0 || arg0 >= D_8011AEE0) {
         return 0;
     }

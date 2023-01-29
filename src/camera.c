@@ -459,7 +459,7 @@ void copy_viewports_to_stack(void) {
     }
 }
 
-void func_80066818(s32 viewPortIndex, s32 arg1) {
+void camEnableUserView(s32 viewPortIndex, s32 arg1) {
     if (arg1 != 0) {
         gScreenViewports[viewPortIndex].flags |= VIEWPORT_EXTRA_BG;
     } else {
@@ -468,7 +468,7 @@ void func_80066818(s32 viewPortIndex, s32 arg1) {
     gScreenViewports[viewPortIndex].flags &= ~VIEWPORT_UNK_04;
 }
 
-void func_80066894(s32 viewPortIndex, s32 arg1) {
+void camDisableUserView(s32 viewPortIndex, s32 arg1) {
     if (arg1 != 0) {
         gScreenViewports[viewPortIndex].flags &= ~VIEWPORT_EXTRA_BG;
     } else {

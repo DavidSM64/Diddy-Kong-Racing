@@ -454,7 +454,7 @@ void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
 }
 
 // Unused?
-MemoryPoolSlot *func_80071774(s32 poolIndex) {
+MemoryPoolSlot *mmGetSlotPtr(s32 poolIndex) {
     return gMemoryPools[poolIndex].slots;
 }
 
@@ -628,7 +628,7 @@ UNUSED void render_memory_colour_tags(void) {
     render_printf("ORANGE %d\n\n", get_memory_colour_tag_count(COLOUR_TAG_ORANGE));
 }
 
-UNUSED void func_80071C74(void) {
+UNUSED void mmSlotPrint(void) {
     s32 i;
     s32 skip;
     s32 index;
