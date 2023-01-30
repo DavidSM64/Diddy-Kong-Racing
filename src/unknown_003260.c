@@ -361,7 +361,7 @@ s32 D_800DC6C4 = 0; // Currently unknown, might be a different type.
  * __clearAudioDMA routine.
  *
  *****************************************************************************/
-s32 __amDMA(s32 addr, s32 len, UNUSED void *state) {
+static s32 __amDMA(s32 addr, s32 len, UNUSED void *state) {
     void            *foundBuffer;
     s32             delta, addrEnd, buffEnd;
     AMDMABuffer     *dmaPtr, *lastDmaPtr;
