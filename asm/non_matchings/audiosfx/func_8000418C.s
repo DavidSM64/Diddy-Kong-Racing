@@ -9,9 +9,9 @@ glabel func_8000418C
 /* 004DA8 800041A8 0C032678 */  jal   alCents2Ratio
 /* 004DAC 800041AC AFA70030 */   sw    $a3, 0x30($sp)
 /* 004DB0 800041B0 8FA70030 */  lw    $a3, 0x30($sp)
-/* 004DB4 800041B4 3C04800E */  lui   $a0, %hi(gAlSndPlayer) # $a0, 0x800e
+/* 004DB4 800041B4 3C04800E */  lui   $a0, %hi(gAlSndPlayerPtr) # $a0, 0x800e
 /* 004DB8 800041B8 C4E4002C */  lwc1  $f4, 0x2c($a3)
-/* 004DBC 800041BC 8C84C6BC */  lw    $a0, %lo(gAlSndPlayer)($a0)
+/* 004DBC 800041BC 8C84C6BC */  lw    $a0, %lo(gAlSndPlayerPtr)($a0)
 /* 004DC0 800041C0 46040182 */  mul.s $f6, $f0, $f4
 /* 004DC4 800041C4 24180010 */  li    $t8, 16
 /* 004DC8 800041C8 A7B80020 */  sh    $t8, 0x20($sp)

@@ -113,7 +113,7 @@ extern void alSynAddPlayer(ALSynth *drvr, ALPlayer *client); //lib/src/unknown_0
 extern void alEvtqPostEvent(ALEventQueue *evtq, ALEvent *evt, ALMicroTime delta); //lib/src/unknown_0C9C90.c Non Matching
 
 void set_sfx_volume_slider(u32 volume);
-s32 sfxGetVolumeSlider(void);
+s32 get_sfx_volume_slider(void);
 void set_sound_channel_count(s32 numChannels);
 void alSndPNew(audioMgrConfig *c);
 void func_8000410C(ALSoundState *state);

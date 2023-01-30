@@ -223,7 +223,7 @@ void adjust_audio_volume(s32 behaviour) {
             set_sound_channel_volume(2, 32767);
             set_sound_channel_volume(4, 32767);
             alCSPSetVol((ALCSPlayer *) gMusicPlayer, (s16) (musicRelativeVolume * musicVolumeSliderPercentage));
-            alCSPSetVol((ALCSPlayer *) gSndFxPlayer, (s16) (sfxGetVolumeSlider() * sfxRelativeVolume));
+            alCSPSetVol((ALCSPlayer *) gSndFxPlayer, (s16) (get_sfx_volume_slider() * sfxRelativeVolume));
             break;
     }
     gAudioVolumeSetting = behaviour;
@@ -609,7 +609,7 @@ s32 musicGetVolSliderPercentage(void) {
 
 void sfxSetRelativeVolume(u8 arg0) {
     sfxRelativeVolume = arg0;
-    alCSPSetVol((ALCSPlayer *) gSndFxPlayer, (s16)(sfxGetVolumeSlider() * sfxRelativeVolume));
+    alCSPSetVol((ALCSPlayer *) gSndFxPlayer, (s16)(get_sfx_volume_slider() * sfxRelativeVolume));
 }
 
 void sfxSetPan(ALPan pan) {

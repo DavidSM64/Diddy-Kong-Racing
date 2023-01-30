@@ -12,12 +12,11 @@
 
 ALEventQueue *D_800DC6B0 = NULL;
 s32 D_800DC6B4 = 0; // Currently unknown, might be a different type.
-unk800DC6BC_40 *D_800DC6B8 = NULL;
-extern unk800DC6BC D_80119BD0;
-unk800DC6BC *gAlSndPlayer = &D_80119BD0;
+unk800DC6BC_40 *D_800DC6B8 = NULL; // Set but not used.
+unk800DC6BC gAlSndPlayer;
+unk800DC6BC *gAlSndPlayerPtr = &gAlSndPlayer;
 s32 sfxVolumeSlider = 256;
 s32 D_800DC6C4 = 0; // Currently unknown, might be a different type.
-unk800DC6BC D_80119BD0;
 u16 *gSoundChannelVolume;
 
 static void _removeEvents(ALEventQueue *, ALSoundState *, u16);
@@ -30,7 +29,7 @@ void set_sfx_volume_slider(u32 volume) {
     sfxVolumeSlider = volume;
 }
 
-s32 sfxGetVolumeSlider(void) {
+s32 get_sfx_volume_slider(void) {
     return sfxVolumeSlider;
 }
 
@@ -38,10 +37,10 @@ s32 sfxGetVolumeSlider(void) {
  * Sets the number of active sound channels to either the passed number, or the maximum amount, whichever's lower.
  */
 void set_sound_channel_count(s32 numChannels) {
-    if (gAlSndPlayer->soundChannelsMax >= numChannels) {
-        gAlSndPlayer->soundChannels = numChannels;
+    if (gAlSndPlayerPtr->soundChannelsMax >= numChannels) {
+        gAlSndPlayerPtr->soundChannels = numChannels;
     } else {
-        gAlSndPlayer->soundChannels = gAlSndPlayer->soundChannelsMax;
+        gAlSndPlayerPtr->soundChannels = gAlSndPlayerPtr->soundChannelsMax;
     }
 }
 
@@ -53,16 +52,16 @@ void alSndPNew(audioMgrConfig *c) {
     /*
      * Init member variables
      */
-    gAlSndPlayer->soundChannelsMax = c->maxChannels;
-    gAlSndPlayer->soundChannels = c->maxChannels;
-    gAlSndPlayer->unk3C = 0;
-    gAlSndPlayer->frameTime = 33000; //AL_USEC_PER_FRAME        /* time between API events */
-    gAlSndPlayer->unk40 = (unk800DC6BC_40 *) alHeapAlloc(c->hp, 1,
+    gAlSndPlayerPtr->soundChannelsMax = c->maxChannels;
+    gAlSndPlayerPtr->soundChannels = c->maxChannels;
+    gAlSndPlayerPtr->unk3C = 0;
+    gAlSndPlayerPtr->frameTime = 33000; //AL_USEC_PER_FRAME        /* time between API events */
+    gAlSndPlayerPtr->unk40 = (unk800DC6BC_40 *) alHeapAlloc(c->hp, 1,
                                                          c->unk00 * sizeof(unk800DC6BC_40));
-    alEvtqNew(&(gAlSndPlayer->evtq), alHeapAlloc(c->hp, 1, (c->unk04) * 28), c->unk04);
-    D_800DC6B8 = gAlSndPlayer->unk40;
+    alEvtqNew(&(gAlSndPlayerPtr->evtq), alHeapAlloc(c->hp, 1, (c->unk04) * 28), c->unk04);
+    D_800DC6B8 = gAlSndPlayerPtr->unk40;
     for (i = 1; i < c->unk00; i++) {
-        tmp1 = gAlSndPlayer->unk40;
+        tmp1 = gAlSndPlayerPtr->unk40;
         alLink((ALLink *) (i + tmp1), (ALLink *) (i + tmp1 - 1));
     }
 
@@ -77,18 +76,18 @@ void alSndPNew(audioMgrConfig *c) {
     /*
      * add ourselves to the driver
      */
-    gAlSndPlayer->drvr = (ALSynth *) alGlobals;
-    gAlSndPlayer->node.next = NULL;
-    gAlSndPlayer->node.handler = _sndpVoiceHandler;
-    gAlSndPlayer->node.clientData = gAlSndPlayer;
-    alSynAddPlayer(gAlSndPlayer->drvr, (ALPlayer *) gAlSndPlayer);
+    gAlSndPlayerPtr->drvr = (ALSynth *) alGlobals;
+    gAlSndPlayerPtr->node.next = NULL;
+    gAlSndPlayerPtr->node.handler = _sndpVoiceHandler;
+    gAlSndPlayerPtr->node.clientData = gAlSndPlayerPtr;
+    alSynAddPlayer(gAlSndPlayerPtr->drvr, (ALPlayer *) gAlSndPlayerPtr);
 
     /*
      * Start responding to API events
      */
     evt.type = 32;
-    alEvtqPostEvent(&gAlSndPlayer->evtq, (ALEvent *) &evt, gAlSndPlayer->frameTime);
-    gAlSndPlayer->nextDelta = alEvtqNextEvent(&gAlSndPlayer->evtq, &gAlSndPlayer->nextEvent);
+    alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent *) &evt, gAlSndPlayerPtr->frameTime);
+    gAlSndPlayerPtr->nextDelta = alEvtqNextEvent(&gAlSndPlayerPtr->evtq, &gAlSndPlayerPtr->nextEvent);
 }
 
 #ifdef NON_EQUIVALENT
@@ -115,18 +114,18 @@ ALMicroTime _sndpVoiceHandler(void *node) {
     return sndp->nextDelta;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_003260/_sndpVoiceHandler.s")
+GLOBAL_ASM("asm/non_matchings/audiosfx/_sndpVoiceHandler.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_003260/_handleEvent.s")
+GLOBAL_ASM("asm/non_matchings/audiosfx/_handleEvent.s")
 
 void func_8000410C(ALSoundState *state) {
     if (state->unk3E & 4) {
-        alSynStopVoice(gAlSndPlayer->drvr, &state->voice);
-        alSynFreeVoice(gAlSndPlayer->drvr, &state->voice);
+        alSynStopVoice(gAlSndPlayerPtr->drvr, &state->voice);
+        alSynFreeVoice(gAlSndPlayerPtr->drvr, &state->voice);
     }
     func_80004520(state);
-    _removeEvents(&gAlSndPlayer->evtq, state, 0xFFFF);
+    _removeEvents(&gAlSndPlayerPtr->evtq, state, 0xFFFF);
 }
 
 #if 0
@@ -142,10 +141,10 @@ void func_8000418C(void *arg0) {
     sp1C = temp_f6;
     sp24 = arg0;
     sp28 = sp1C;
-    alEvtqPostEvent(&gAlSndPlayer->evtq, (ALEvent *) &sp20, 33333);
+    alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent *) &sp20, 33333);
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_8000418C.s")
+GLOBAL_ASM("asm/non_matchings/audiosfx/func_8000418C.s")
 #endif
 
 static void _removeEvents(ALEventQueue *evtq, ALSoundState *state, u16 eventType) {
@@ -212,8 +211,8 @@ u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
     return freeListLastIndex;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004384.s")
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004520.s")
+GLOBAL_ASM("asm/non_matchings/audiosfx/func_80004384.s")
+GLOBAL_ASM("asm/non_matchings/audiosfx/func_80004520.s")
 
 void func_80004604(u8 *arg0, u8 arg1) {
     if (arg0)
@@ -234,7 +233,7 @@ void func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2) {
 void func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, s32 arg3) {
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004668.s")
+GLOBAL_ASM("asm/non_matchings/audiosfx/func_80004668.s")
 #endif
 
 //input typing not right (some type of struct)
@@ -245,11 +244,11 @@ void func_8000488C(u8 *arg0) {
     ((u32 *)(&sp_18))[1] = (u32)arg0;
     if (arg0) {
         arg0[0x3e] &= ~(1 << 4);
-        alEvtqPostEvent(&(gAlSndPlayer->evtq), &sp_18, 0);
+        alEvtqPostEvent(&(gAlSndPlayerPtr->evtq), &sp_18, 0);
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800048D8.s")
+GLOBAL_ASM("asm/non_matchings/audiosfx/func_800048D8.s")
 
 UNUSED void func_80004998(void) {
     func_800048D8(1);
@@ -269,7 +268,7 @@ void func_800049F8(s32 soundMask, s16 type, u32 volume) {
     sndEvt.snd_event.state = (void *) soundMask;
     sndEvt.snd_event.unk04 = volume;
     if (soundMask) {
-        alEvtqPostEvent(&(gAlSndPlayer->evtq), (ALEvent *) &sndEvt, 0);
+        alEvtqPostEvent(&(gAlSndPlayerPtr->evtq), (ALEvent *) &sndEvt, 0);
     }
 }
 
@@ -299,7 +298,7 @@ void set_sound_channel_volume(u8 channel, u16 volume) {
         if ((((ALInstrument *) queue->allocList.next->prev)->priority & 0x3F) == channel) {
             evt.type = 0x800;
             evt.msg.spseq.seq = (void *) queue;
-            alEvtqPostEvent(&gAlSndPlayer->evtq, &evt, 0);
+            alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &evt, 0);
         }
         queue = (ALEventQueue *) queue->freeList.next;
     }
