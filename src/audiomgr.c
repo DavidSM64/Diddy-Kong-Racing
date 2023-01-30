@@ -169,10 +169,10 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
 
     for (i = 0; i < NUM_DMA_BUFFERS - 1; i++) {
         alLink((ALLink *) &(dmaBuffs[i + 1]), (ALLink *) &(dmaBuffs[i]));
-        dmaBuffs[i].ptr = alHeapDBAlloc(0, 0, c->heap, 1, DMA_BUFFER_LENGTH);
+        dmaBuffs[i].ptr = alHeapAlloc(c->heap, 1, DMA_BUFFER_LENGTH);
     }
     /* last buffer already linked, but still needs buffer */
-    dmaBuffs[i].ptr = alHeapDBAlloc(0, 0, c->heap, 1, DMA_BUFFER_LENGTH);
+    dmaBuffs[i].ptr = alHeapAlloc(c->heap, 1, DMA_BUFFER_LENGTH);
 
     // Antipiracy measure
     gAntiPiracyCRCStart = DMA_BUFFER_LENGTH;
@@ -190,15 +190,14 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     }
 
     for (i = 0; i < NUM_ACMD_LISTS; i++) {
-        __am.ACMDList[i] = (Acmd *) alHeapDBAlloc(0, 0, c->heap, 1,
-            0xA000); //sizeof(Acmd) * DMA_BUFFER_LENGTH * 5?
+        __am.ACMDList[i] = (Acmd *) alHeapAlloc(c->heap, 1, 0xA000); //sizeof(Acmd) * DMA_BUFFER_LENGTH * 5?
     }
 
     asset = allocate_at_address_in_main_pool((maxFrameSize * 12), (u8 *)(0x803FFE00 - (maxFrameSize * 12)), COLOUR_TAG_CYAN);
 
     /**** initialize the done messages ****/
     for (i = 0; i < NUM_ACMD_LISTS + 1; i++) {
-        __am.ACMDList[i + NUM_ACMD_LISTS] = (Acmd *) alHeapDBAlloc(0, 0, c->heap, 1, 120);
+        __am.ACMDList[i + NUM_ACMD_LISTS] = (Acmd *) alHeapAlloc(c->heap, 1, 120);
         __am.ACMDList[i + NUM_ACMD_LISTS]->words.w0 = (uintptr_t) asset;
         asset += maxFrameSize;
     }

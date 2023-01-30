@@ -123,7 +123,7 @@ void audio_init(OSSched *sc) {
     ALBankFile_80115D10 = (ALBankFile *) allocate_from_main_pool_safe(addrPtr[ASSET_AUDIO_0], COLOUR_TAG_CYAN);
     load_asset_to_address(ASSET_AUDIO, (u32) ALBankFile_80115D10, 0, addrPtr[ASSET_AUDIO_0]);
     alBnkfNew(ALBankFile_80115D10, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[ASSET_AUDIO_0]));
-    ALSeqFile_80115CF8 = (ALSeqFile *) alHeapDBAlloc(0, 0, &gALHeap, 1, 4);
+    ALSeqFile_80115CF8 = (ALSeqFile *) alHeapAlloc(&gALHeap, 1, 4);
     load_asset_to_address(ASSET_AUDIO, (u32) ALSeqFile_80115CF8, addrPtr[ASSET_AUDIO_4], 4);
 
     seqfSize = (ALSeqFile_80115CF8->seqCount) * 8 + 4;
@@ -795,7 +795,7 @@ ALSeqPlayer *func_80002224(s32 _max_voices, s32 _max_events) {
     config.updateOsc = NULL;
     config.stopOsc = NULL;
 
-    cseqp = (ALCSPlayer *)alHeapDBAlloc(NULL, 0, &gALHeap, 1, sizeof(ALCSPlayer));
+    cseqp = (ALCSPlayer *)alHeapAlloc(&gALHeap, 1, sizeof(ALCSPlayer));
     alCSPNew(cseqp, &config);
     alCSPSetBank(cseqp, ALBankFile_80115D10->bankArray[0]);
     cseqp->unk36 = 0x7F;

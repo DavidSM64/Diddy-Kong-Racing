@@ -8,6 +8,7 @@
 #include "math_util.h"
 #include "asset_loading.h"
 #include "objects.h"
+#include "PR/libaudio.h"
 
 ALEventQueue *D_800DC6B0 = NULL;
 s32 D_800DC6B4 = 0; // Currently unknown, might be a different type.
@@ -47,40 +48,52 @@ void set_sound_channel_count(s32 numChannels) {
 void alSndPNew(audioMgrConfig *c) {
     u32 i;
     unk800DC6BC_40 *tmp1;
-    ALEvent sp_38;
+    ALEvent evt;
 
+    /*
+     * Init member variables
+     */
     gAlSndPlayer->soundChannelsMax = c->maxChannels;
     gAlSndPlayer->soundChannels = c->maxChannels;
     gAlSndPlayer->unk3C = 0;
-    gAlSndPlayer->frameTime = 33000;
-    gAlSndPlayer->unk40 = (unk800DC6BC_40 *)alHeapDBAlloc(0, 0, c->hp, 1, (c->unk00) << 6);
-    alEvtqNew(&(gAlSndPlayer->evtq), alHeapDBAlloc(0, 0, c->hp, 1, (c->unk04) * 28), c->unk04);
+    gAlSndPlayer->frameTime = 33000; //AL_USEC_PER_FRAME        /* time between API events */
+    gAlSndPlayer->unk40 = (unk800DC6BC_40 *) alHeapAlloc(c->hp, 1,
+                                                         c->unk00 * sizeof(unk800DC6BC_40));
+    alEvtqNew(&(gAlSndPlayer->evtq), alHeapAlloc(c->hp, 1, (c->unk04) * 28), c->unk04);
     D_800DC6B8 = gAlSndPlayer->unk40;
-    i = 1;
     for (i = 1; i < c->unk00; i++) {
         tmp1 = gAlSndPlayer->unk40;
         alLink((ALLink *) (i + tmp1), (ALLink *) (i + tmp1 - 1));
     }
 
-    gSoundChannelVolume = alHeapDBAlloc(0, 0, c->hp, 2, c->unk10);
+    /*
+     * init the event queue
+     */
+    gSoundChannelVolume = alHeapAlloc(c->hp, 2, c->unk10);
     for (i = 0; i < c->unk10; i++) {
         gSoundChannelVolume[i] = 32767;
     }
 
+    /*
+     * add ourselves to the driver
+     */
     gAlSndPlayer->drvr = (ALSynth *) alGlobals;
     gAlSndPlayer->node.next = NULL;
-    gAlSndPlayer->node.handler = &_sndpVoiceHandler;
+    gAlSndPlayer->node.handler = _sndpVoiceHandler;
     gAlSndPlayer->node.clientData = gAlSndPlayer;
-
     alSynAddPlayer(gAlSndPlayer->drvr, (ALPlayer *) gAlSndPlayer);
-    sp_38.type = 32;
-    alEvtqPostEvent(&(gAlSndPlayer->evtq), &sp_38, gAlSndPlayer->frameTime);
-    gAlSndPlayer->nextDelta = alEvtqNextEvent(&(gAlSndPlayer->evtq), &(gAlSndPlayer->nextEvent));
+
+    /*
+     * Start responding to API events
+     */
+    evt.type = 32;
+    alEvtqPostEvent(&gAlSndPlayer->evtq, (ALEvent *) &evt, gAlSndPlayer->frameTime);
+    gAlSndPlayer->nextDelta = alEvtqNextEvent(&gAlSndPlayer->evtq, &gAlSndPlayer->nextEvent);
 }
 
 #ifdef NON_EQUIVALENT
 ALMicroTime _sndpVoiceHandler(void *node) {
-    unk800DC6BC *sndp = (unk800DC6BC *)node;
+    unk800DC6BC *sndp = (unk800DC6BC *) node;
     ALSndpEvent evt;
 
     do {
