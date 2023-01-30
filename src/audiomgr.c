@@ -10,50 +10,52 @@
 #include "objects.h"
 #include "PR/abi.h"
 
-/************ .bss ************/
-
-#define NUM_ACMD_LISTS 2
 OSSched *gAudioSched;
 ALHeap *gAudioHeap;
 Acmd *ACMDList[NUM_ACMD_LISTS];
 s32 D_80115FA0[3];
 OSThread audioThread;
 OSMesgQueue gAudioMesgQueue;
-OSMesg gAudioFrameMsgBuf[8];
+OSMesg gAudioFrameMsgBuf[MAX_MESGS];
 OSMesgQueue audioReplyMsgQ;
-OSMesg gAudioReplyMsgBuf[8];
+OSMesg gAudioReplyMsgBuf[MAX_MESGS];
 ALGlobals ALGlobals_801161D0;
-u64 audioStack[AUDIO_STACKSIZE/sizeof(u64)];
+static u64 audioStack[AUDIO_STACKSIZE/sizeof(u64)];
+
 AMDMAState dmaState;
-AMDMABuffer dmaBuffs[50];
+AMDMABuffer dmaBuffs[NUM_DMA_BUFFERS];
+u32 audFrameCt = 0;
+u32 nextDMA = 0;
+u32 curAcmdList = 0;
 u32 minFrameSize;
 u32 framesize;
 u32 maxFrameSize;
 s32 gAudioCmdLen;
 s16 gDMABufferLength;
-u32 D_8011963C;
+
+/** Queues and storage for use with audio DMA's ****/
 OSIoMesg audDMAIOMesgBuf[NUM_DMA_MESSAGES];
 OSMesgQueue audDMAMessageQ;
 OSMesg audDMAMessageBuf[NUM_DMA_MESSAGES];
 
-/******************************/
-
-/************ .data ************/
-
-u32 audFrameCt = 0;
-u32 nextDMA = 0;
-u32 curAcmdList = 0;
-s8 gAntiPiracyAudioFreq = 0;       // Anti Piracy - Sets random audio frequency?
+/**** Anti Piracy - Sets random audio frequency ****/
+s8 gAntiPiracyAudioFreq = 0;
 s32 gFunc80019808Checksum = 0x35281;
 s32 gFunc80019808Length = 0xFD0;
-s16 *gLastAudioPtr = 0;
-s32 gLastAudioFrameSamples = 0;
 
-/*******************************/
+/**** Not really sure why these are here. They are set, but never used. ****/
+static s16 *gLastAudioPtr = 0;
+static s32 gLastAudioFrameSamples = 0;
 
-/************ .rodata ************/
+/**** private routines ****/
+static void __amMain(UNUSED void *arg);
+static s32 __amDMA(s32 addr, s32 len, void *state);
+static ALDMAproc __amDmaNew(AMDMAState **state);
+static u32  __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo);
+static void __amHandleDoneMsg(AudioInfo *info);
+static void __clearAudioDMA(void);
 
-// Debug strings
+/**** Debug strings ****/
 const char D_800E49F0[] = "audio manager: RCP audio interface bug caused DMA from bad address - move audiomgr.c in the makelist!\n";
 const char D_800E4A58[] = "audio: ai out of samples\n";
 const char D_800E4A74[] = "OH DEAR - No audio DMA buffers left\n";
@@ -65,19 +67,6 @@ const char D_800E4B1C[] = "Nonsense sndp event\n";
 const char D_800E4B34[] = "Sound state allocate failed - sndId %d\n";
 const char D_800E4B5C[] = "Don't worry - game should cope OK\n";
 const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
-
-/*********************************/
-
-/**** private routines ****/
-static void __amMain(UNUSED void *arg);
-static s32 __amDMA(s32 addr, s32 len, void *state);
-static ALDMAproc __amDmaNew(AMDMAState **state);
-static u32  __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo);
-static void __amHandleDoneMsg(AudioInfo *info);
-static void __clearAudioDMA(void);
-
-extern void alInit(ALGlobals *g, ALSynConfig *c);
-extern s16 gDMABufferLength;
 
 /******************************************************************************
  * Audio Manager API
@@ -203,6 +192,7 @@ static void __amMain(UNUSED void *arg) {
     AudioInfo *lastInfo = 0;
 
     osScAddClient(gAudioSched, (OSScClient *) &audioStack, &gAudioMesgQueue, OS_MESG_BLOCK);
+
     while (!done) {
         (void) osRecvMesg(&gAudioMesgQueue, (OSMesg *) &msg, 1);
         switch (msg->gen.type) {
@@ -223,6 +213,7 @@ static void __amMain(UNUSED void *arg) {
             break;
         }
     }
+
     alClose(&ALGlobals_801161D0);
 }
 

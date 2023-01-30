@@ -9,9 +9,6 @@
 #include "asset_loading.h"
 #include "objects.h"
 
-/************ .bss ************/
- 
-
 ALEventQueue *D_800DC6B0 = NULL;
 s32 D_800DC6B4 = 0; // Currently unknown, might be a different type.
 unk800DC6BC_40 *D_800DC6B8 = NULL;
