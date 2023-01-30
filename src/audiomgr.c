@@ -64,15 +64,9 @@ typedef struct {
 /**** audio manager globals ****/
 
 OSSched *gAudioSched;
-ALHeap *gAudioHeap;
-Acmd *ACMDList[NUM_ACMD_LISTS];
-s32 D_80115FA0[3];
-OSThread audioThread;
-OSMesgQueue gAudioMesgQueue;
-OSMesg gAudioFrameMsgBuf[MAX_MESGS];
-OSMesgQueue audioReplyMsgQ;
-OSMesg gAudioReplyMsgBuf[MAX_MESGS];
-ALGlobals ALGlobals_801161D0;
+ALHeap *gAudioHeap; // Set but not used
+
+AMAudioMgr      __am;
 static u64 audioStack[AUDIO_STACKSIZE/sizeof(u64)];
 
 AMDMAState dmaState;
@@ -163,10 +157,10 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
         load_asset_to_address(ASSET_AUDIO, (u32) asset8, assetAudioTable[ASSET_AUDIO_8], assetSize);
         c->params = asset8;
         c[1].maxVVoices = 0;
-        alInit(&ALGlobals_801161D0, c);
+        alInit(&__am.g, c);
         free_from_memory_pool(asset8);
     } else {
-        alInit(&ALGlobals_801161D0, c);
+        alInit(&__am.g, c);
     }
 
     dmaBuffs[0].node.prev = 0;
@@ -195,7 +189,7 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     }
 
     for (i = 0; i < NUM_ACMD_LISTS; i++) {
-        ACMDList[i] = (Acmd *) alHeapDBAlloc(0, 0, c->heap, 1,
+        __am.ACMDList[i] = (Acmd *) alHeapDBAlloc(0, 0, c->heap, 1,
             0xA000); //sizeof(Acmd) * DMA_BUFFER_LENGTH * 5?
     }
 
@@ -203,25 +197,25 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
 
     /**** initialize the done messages ****/
     for (i = 0; i < NUM_ACMD_LISTS + 1; i++) {
-        ACMDList[i + NUM_ACMD_LISTS] = (Acmd *) alHeapDBAlloc(0, 0, c->heap, 1, 120);
-        ACMDList[i + NUM_ACMD_LISTS]->words.w0 = (uintptr_t) asset;
+        __am.ACMDList[i + NUM_ACMD_LISTS] = (Acmd *) alHeapDBAlloc(0, 0, c->heap, 1, 120);
+        __am.ACMDList[i + NUM_ACMD_LISTS]->words.w0 = (uintptr_t) asset;
         asset += maxFrameSize;
     }
 
-    osCreateMesgQueue(&audioReplyMsgQ, gAudioReplyMsgBuf, MAX_MESGS);
-    osCreateMesgQueue(&gAudioMesgQueue, gAudioFrameMsgBuf, MAX_MESGS);
+    osCreateMesgQueue(&__am.audioReplyMsgQ, __am.audioReplyMsgBuf, MAX_MESGS);
+    osCreateMesgQueue(&__am.audioFrameMsgQ, __am.audioFrameMsgBuf, MAX_MESGS);
     osCreateMesgQueue(&audDMAMessageQ, audDMAMessageBuf, NUM_DMA_MESSAGES);
 
-    osCreateThread(&audioThread, 4, __amMain, 0,
+    osCreateThread(&__am.thread, 4, __amMain, 0,
                     (void *)(audioStack+AUDIO_STACKSIZE/sizeof(u64)), pri);
 }
 
 void audioStartThread(void) {
-    osStartThread(&audioThread);
+    osStartThread(&__am.thread);
 }
 
 void audioStopThread(void) {
-    osStopThread(&audioThread);
+    osStopThread(&__am.thread);
 }
 
 /******************************************************************************
@@ -244,16 +238,16 @@ static void __amMain(UNUSED void *arg) {
     AudioMsg *msg = NULL;
     AudioInfo *lastInfo = 0;
 
-    osScAddClient(gAudioSched, (OSScClient *) &audioStack, &gAudioMesgQueue, OS_MESG_BLOCK);
+    osScAddClient(gAudioSched, (OSScClient *) &audioStack, &__am.audioFrameMsgQ, OS_MESG_BLOCK);
 
     while (!done) {
-        (void) osRecvMesg(&gAudioMesgQueue, (OSMesg *) &msg, 1);
+        (void) osRecvMesg(&__am.audioFrameMsgQ, (OSMesg *) &msg, 1);
         switch (msg->gen.type) {
         case OS_SC_RETRACE_MSG:
             //TODO: Check type of ACMDList?
-            __amHandleFrameMsg((AudioInfo *) ACMDList[(((u32) audFrameCt % 3))+2], lastInfo);
+            __amHandleFrameMsg((AudioInfo *) __am.ACMDList[(((u32) audFrameCt % 3))+2], lastInfo);
             /* wait for done message */
-            osRecvMesg(&audioReplyMsgQ, (OSMesg *) &lastInfo, OS_MESG_BLOCK);
+            osRecvMesg(&__am.audioReplyMsgQ, (OSMesg *) &lastInfo, OS_MESG_BLOCK);
             __amHandleDoneMsg(lastInfo);
             break;
         case OS_SC_PRE_NMI_MSG:
@@ -267,7 +261,7 @@ static void __amMain(UNUSED void *arg) {
         }
     }
 
-    alClose(&ALGlobals_801161D0);
+    alClose(&__am.g);
 }
 
 /******************************************************************************
@@ -321,13 +315,13 @@ static u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
     if ((u32)info->frameSamples < minFrameSize)
         info->frameSamples = minFrameSize;
 
-    cmdp = alAudioFrame(ACMDList[curAcmdList], &gAudioCmdLen, audioPtr,
+    cmdp = alAudioFrame(__am.ACMDList[curAcmdList], &gAudioCmdLen, audioPtr,
                         info->frameSamples);
 
     t = &info->task;
     
     t->next      = 0;                    /* paranoia */
-    t->msgQ      = &audioReplyMsgQ; /* reply to when finished */
+    t->msgQ      = &__am.audioReplyMsgQ; /* reply to when finished */
     //TODO: This should be &info->msg, but the struct is likely modified.
     t->msg       = (OSMesg) &info->data;   /* reply with this message */
     t->flags     = OS_SC_NEEDS_RSP;
@@ -336,8 +330,8 @@ static u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
     t->unk5C = 0;
     t->unk64 = 0;
     
-    t->list.t.data_ptr    = (u64 *) ACMDList[curAcmdList];
-    t->list.t.data_size   = (cmdp - ACMDList[curAcmdList]) * sizeof(Acmd);
+    t->list.t.data_ptr    = (u64 *) __am.ACMDList[curAcmdList];
+    t->list.t.data_size   = (cmdp - __am.ACMDList[curAcmdList]) * sizeof(Acmd);
     t->list.t.type  = M_AUDTASK;
     t->list.t.ucode_boot = (u64 *)rspF3DDKRBootStart;
     t->list.t.ucode_boot_size =
