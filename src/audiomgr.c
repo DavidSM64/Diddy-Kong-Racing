@@ -67,28 +67,28 @@ OSSched *gAudioSched;
 ALHeap *gAudioHeap; // Set but not used
 
 AMAudioMgr      __am;
-static u64 audioStack[AUDIO_STACKSIZE/sizeof(u64)];
+static          u64 audioStack[AUDIO_STACKSIZE/sizeof(u64)];
 
-AMDMAState dmaState;
-AMDMABuffer dmaBuffs[NUM_DMA_BUFFERS];
-u32 audFrameCt = 0;
-u32 nextDMA = 0;
-u32 curAcmdList = 0;
-u32 minFrameSize;
-u32 framesize;
-u32 maxFrameSize;
-s32 gAudioCmdLen;
-s16 gDMABufferLength;
-
-/** Queues and storage for use with audio DMA's ****/
-OSIoMesg audDMAIOMesgBuf[NUM_DMA_MESSAGES];
-OSMesgQueue audDMAMessageQ;
-OSMesg audDMAMessageBuf[NUM_DMA_MESSAGES];
+AMDMAState      dmaState;
+AMDMABuffer     dmaBuffs[NUM_DMA_BUFFERS];
+u32             audFrameCt = 0;
+u32             nextDMA = 0;
+u32             curAcmdList = 0;
+u32             minFrameSize;
+u32             frameSize;
+u32             maxFrameSize;
+s32             gAudioCmdLen; // Set but not used
 
 /**** Anti Piracy - Sets random audio frequency ****/
-s8 gAntiPiracyAudioFreq = 0;
-s32 gFunc80019808Checksum = 0x35281;
-s32 gFunc80019808Length = 0xFD0;
+s16             gAntiPiracyCRCStart;
+s8              gAntiPiracyAudioFreq = FALSE;
+s32             gFunc80019808Checksum = 0x35281;
+s32             gFunc80019808Length = 0xFD0;
+
+/** Queues and storage for use with audio DMA's ****/
+OSIoMesg        audDMAIOMesgBuf[NUM_DMA_MESSAGES];
+OSMesgQueue     audDMAMessageQ;
+OSMesg          audDMAMessageBuf[NUM_DMA_MESSAGES];
 
 /**** Not really sure why these are here. They are set, but never used. ****/
 static s16 *gLastAudioPtr = 0;
@@ -101,6 +101,7 @@ static ALDMAproc __amDmaNew(AMDMAState **state);
 static u32  __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo);
 static void __amHandleDoneMsg(AudioInfo *info);
 static void __clearAudioDMA(void);
+
 
 /**** Debug strings ****/
 const char D_800E49F0[] = "audio manager: RCP audio interface bug caused DMA from bad address - move audiomgr.c in the makelist!\n";
@@ -140,15 +141,15 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
      * video field rate and the output rate
      */
     fsize = (f32) c->outputRate * 2 / (f32) gVideoRefreshRate;
-    framesize = (s32) fsize;
-    if (framesize < fsize) {
-        framesize++;
+    frameSize = (s32) fsize;
+    if (frameSize < fsize) {
+        frameSize++;
     }
-    if (framesize & 0xf) {
-        framesize = (framesize & ~0xf) + 0x10;
+    if (frameSize & 0xf) {
+        frameSize = (frameSize & ~0xf) + 0x10;
     }
-    minFrameSize = framesize - 16;
-    maxFrameSize = framesize + EXTRA_SAMPLES + 16;
+    minFrameSize = frameSize - 16;
+    maxFrameSize = frameSize + EXTRA_SAMPLES + 16;
 
     if (c->fxType[0] == AL_FX_CUSTOM) {
         assetAudioTable = load_asset_section_from_rom(ASSET_AUDIO_TABLE);
@@ -174,15 +175,15 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     dmaBuffs[i].ptr = alHeapDBAlloc(0, 0, c->heap, 1, DMA_BUFFER_LENGTH);
 
     // Antipiracy measure
-    gDMABufferLength = DMA_BUFFER_LENGTH;
-    checksum = (s32) &func_80019808 - gDMABufferLength;
+    gAntiPiracyCRCStart = DMA_BUFFER_LENGTH;
+    checksum = (s32) &func_80019808 - gAntiPiracyCRCStart;
     crc_region_start = (u8 *) checksum;
-    crc_region = &crc_region_start[gDMABufferLength];
+    crc_region = &crc_region_start[gAntiPiracyCRCStart];
     gAntiPiracyAudioFreq = FALSE;
     i = 0;
     for (checksum = 0; i < gFunc80019808Length; i++) {
         checksum += crc_region[i];
-        gDMABufferLength++;
+        gAntiPiracyCRCStart++;
     }
     if (checksum != gFunc80019808Checksum) {
         gAntiPiracyAudioFreq = TRUE;
@@ -311,7 +312,7 @@ static u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
     /* this will vary slightly frame to frame, must recalculate every frame */
     samplesLeft = osAiGetLength() >> 2; /* divide by four, to convert bytes */
                                         /* to stereo 16 bit samples */
-    info->frameSamples = (16 + (framesize - samplesLeft + EXTRA_SAMPLES)) & ~0xf;
+    info->frameSamples = (16 + (frameSize - samplesLeft + EXTRA_SAMPLES)) & ~0xf;
     if ((u32)info->frameSamples < minFrameSize)
         info->frameSamples = minFrameSize;
 
