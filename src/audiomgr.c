@@ -10,6 +10,59 @@
 #include "objects.h"
 #include "PR/abi.h"
 
+/****  type define's for structures unique to audiomgr ****/
+typedef union {
+
+    struct {
+        short     type;
+    } gen;
+
+    struct {
+        short     type;
+        struct    AudioInfo_s *info;
+    } done;
+
+    OSScMsg       app;
+
+} AudioMsg;
+
+// TODO: Rare likely modified this struct as evidenced by __amHandleFrameMsg
+// using *data when it should have been using msg.
+typedef struct AudioInfo_s {
+    short         *data;          /* Output data pointer */
+    short         frameSamples;   /* # of samples synthesized in this frame */
+    OSScTask      task;           /* scheduler structure */
+    AudioMsg      msg;            /* completion message */
+} AudioInfo;
+
+typedef struct {
+    Acmd          *ACMDList[NUM_ACMD_LISTS];
+    AudioInfo     *audioInfo[NUM_OUTPUT_BUFFERS];
+    OSThread      thread;
+    OSMesgQueue   audioFrameMsgQ;
+    OSMesg        audioFrameMsgBuf[MAX_MESGS];
+    OSMesgQueue   audioReplyMsgQ;
+    OSMesg        audioReplyMsgBuf[MAX_MESGS];
+    ALGlobals     g;
+} AMAudioMgr;
+
+typedef struct
+{
+    ALLink      node;
+    u32         startAddr;
+    u32         lastFrame;
+    char        *ptr;
+} AMDMABuffer;
+
+typedef struct {
+    u8 initialized;
+    AMDMABuffer *firstUsed;
+    AMDMABuffer *firstFree;
+} AMDMAState;
+
+
+/**** audio manager globals ****/
+
 OSSched *gAudioSched;
 ALHeap *gAudioHeap;
 Acmd *ACMDList[NUM_ACMD_LISTS];

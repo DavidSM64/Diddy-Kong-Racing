@@ -27,6 +27,7 @@
 #include "save_data.h"
 #include "unknown_078050.h"
 #include "audiosfx.h"
+#include "audiomgr.h"
 #include "unknown_032760.h"
 #include "textures_sprites.h"
 #include "PR/os_internal.h"
