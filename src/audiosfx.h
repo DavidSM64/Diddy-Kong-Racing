@@ -17,6 +17,9 @@
 #define AL_SNDP_DECAY_EVT (1 << 6)
 #define AL_SNDP_END_EVT (1 << 7)
 #define AL_SNDP_FX_EVT (1 << 8)
+#define AL_SNDP_UNK_9_EVT (1 << 9)
+#define AL_SNDP_UNK_10_EVT (1 << 10)
+#define AL_SNDP_UNK_11_EVT (1 << 11)
 
 typedef struct {
   /* 0x00 */ s8 pad00[0x0C];
@@ -116,6 +119,7 @@ void set_sfx_volume_slider(u32 volume);
 s32 get_sfx_volume_slider(void);
 void set_sound_channel_count(s32 numChannels);
 void alSndPNew(audioMgrConfig *c);
+ALMicroTime  _sndpVoiceHandler(void *node);
 void func_8000410C(ALSoundState *state);
 u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex);
 void func_80004604(u8 *arg0, u8 arg1);
@@ -126,10 +130,10 @@ u16 get_sound_channel_volume(u8 channel);
 void set_sound_channel_volume(u8 channel, u16 volume);
 
 // Non Matching
-ALMicroTime  _sndpVoiceHandler(void *node);
 void func_80004520(ALSoundState *);
 void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32);
 INCONSISTENT void func_8000488C();
 void func_800048D8(s32);
+void _handleEvent(ALSndPlayer *sndp, ALSndpEvent *event);
 
 #endif

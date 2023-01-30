@@ -85,22 +85,20 @@ void alSndPNew(audioMgrConfig *c) {
     /*
      * Start responding to API events
      */
-    evt.type = 32;
+    evt.type = AL_SNDP_API_EVT;
     alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent *) &evt, gAlSndPlayerPtr->frameTime);
     gAlSndPlayerPtr->nextDelta = alEvtqNextEvent(&gAlSndPlayerPtr->evtq, &gAlSndPlayerPtr->nextEvent);
 }
 
-#ifdef NON_EQUIVALENT
-void _handleEvent(ALSndPlayer *sndp, ALSndpEvent *event);
 ALMicroTime _sndpVoiceHandler(void *node) {
     unk800DC6BC *sndp = (unk800DC6BC *) node;
     ALSndpEvent evt;
+    u32 eventType = AL_SNDP_API_EVT;
 
     do {
         switch (sndp->nextEvent.type) {
             case (AL_SNDP_API_EVT):
-                //TODO cannot get this const to load into reg t7
-                evt.common.type = AL_SNDP_API_EVT;
+                evt.common.type = eventType;
                 alEvtqPostEvent(&sndp->evtq, (ALEvent *) &evt, sndp->frameTime);
                 break;
 
@@ -114,9 +112,6 @@ ALMicroTime _sndpVoiceHandler(void *node) {
     sndp->curTime += sndp->nextDelta;
     return sndp->nextDelta;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/audiosfx/_sndpVoiceHandler.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/audiosfx/_handleEvent.s")
 
@@ -297,7 +292,7 @@ void set_sound_channel_volume(u8 channel, u16 volume) {
     while (queue != NULL) {
         //This is almost definitely the wrong struct list, but it matches so I'm not going to complain
         if ((((ALInstrument *) queue->allocList.next->prev)->priority & 0x3F) == channel) {
-            evt.type = 0x800;
+            evt.type = AL_SNDP_UNK_11_EVT;
             evt.msg.spseq.seq = (void *) queue;
             alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &evt, 0);
         }
