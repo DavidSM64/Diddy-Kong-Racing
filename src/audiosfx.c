@@ -91,6 +91,7 @@ void alSndPNew(audioMgrConfig *c) {
 }
 
 #ifdef NON_EQUIVALENT
+void _handleEvent(ALSndPlayer *sndp, ALSndpEvent *event);
 ALMicroTime _sndpVoiceHandler(void *node) {
     unk800DC6BC *sndp = (unk800DC6BC *) node;
     ALSndpEvent evt;
@@ -99,12 +100,12 @@ ALMicroTime _sndpVoiceHandler(void *node) {
         switch (sndp->nextEvent.type) {
             case (AL_SNDP_API_EVT):
                 //TODO cannot get this const to load into reg t7
-                evt.snd_event.type = AL_SNDP_API_EVT;
-                alEvtqPostEvent(&sndp->evtq, (ALEvent *)&evt, sndp->frameTime);
+                evt.common.type = AL_SNDP_API_EVT;
+                alEvtqPostEvent(&sndp->evtq, (ALEvent *) &evt, sndp->frameTime);
                 break;
 
             default:
-                _handleEvent(sndp, (ALSndpEvent *)&sndp->nextEvent);
+                _handleEvent(sndp, (ALSndpEvent *) &sndp->nextEvent);
                 break;
         }
         sndp->nextDelta = alEvtqNextEvent(&sndp->evtq, &sndp->nextEvent);
