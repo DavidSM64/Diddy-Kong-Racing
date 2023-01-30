@@ -9,7 +9,8 @@
 #include "asset_enums.h"
 #include "asset_loading.h"
 #include "audio_internal.h"
-#include "unknown_003260.h"
+#include "audiomgr.h"
+#include "audiosfx.h"
 #include "sched.h"
 #include "lib/src/mips1/al/unknown_0646F0.h"
 

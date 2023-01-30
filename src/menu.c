@@ -25,7 +25,7 @@
 #include "unknown_078050.h"
 #include "save_data.h"
 #include "object_functions.h"
-#include "unknown_003260.h"
+#include "audiosfx.h"
 #include "racer.h"
 #include "unknown_078050.h"
 #include "unknown_0255E0.h"

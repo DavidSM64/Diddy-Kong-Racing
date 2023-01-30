@@ -24,7 +24,7 @@
 #include "unknown_005740.h"
 #include "game_ui.h"
 #include "object_models.h"
-#include "unknown_003260.h"
+#include "audiosfx.h"
 #include "collision.h"
 
 

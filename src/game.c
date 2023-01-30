@@ -26,7 +26,7 @@
 #include "camera.h"
 #include "save_data.h"
 #include "unknown_078050.h"
-#include "unknown_003260.h"
+#include "audiosfx.h"
 #include "unknown_032760.h"
 #include "textures_sprites.h"
 #include "PR/os_internal.h"
