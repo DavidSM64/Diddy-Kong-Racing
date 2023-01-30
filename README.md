@@ -120,30 +120,30 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of January 23, 2023, this is our current score:
+As of January 30, 2023, this is our current score:
 ```
  ===================================================================
                ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------- 49.47% Complete -------------------------
+ ------------------------- 49.76% Complete -------------------------
                     # Decompiled functions: 1477
-                     # GLOBAL_ASM remaining: 361
+                     # GLOBAL_ASM remaining: 354
                     # NON_MATCHING functions: 10
-                 # NON_EQUIVALENT WIP functions: 66
+                 # NON_EQUIVALENT WIP functions: 64
  --------------------------- Game Status ---------------------------
               Balloons: 24/47, Keys: 3/4, Trophies: 2/5
                T.T. Amulets: 2/4, Wizpig Amulets: 2/4
  -------------------------------------------------------------------
-              We are racing in Pirate Lagoon. (Lap 2/3)
+              We are racing in Pirate Lagoon. (Lap 3/3)
  ===================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 23.13% Complete -------------------------
-                     # Documented functions: 428
-                   # Undocumented remaining: 1145
+ ------------------------- 23.09% Complete -------------------------
+                     # Documented functions: 427
+                   # Undocumented remaining: 1139
  --------------------------- Game Status ---------------------------
               Balloons: 12/47, Keys: 1/4, Trophies: 0/5
                T.T. Amulets: 1/4, Wizpig Amulets: 1/4
  -------------------------------------------------------------------
- We are participating in the Trophy Race of Dino Domain. (Round Two)
+ We are participating in the Trophy Race of Dino Domain. (Round One)
  ===================================================================
 ```
 <!-- README_SCORE_END -->
