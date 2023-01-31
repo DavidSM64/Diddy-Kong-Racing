@@ -17,7 +17,7 @@
 #include "object_models.h"
 #include "unknown_0255E0.h"
 #include "unknown_078050.h"
-#include "unknown_003260.h"
+#include "audiosfx.h"
 #include "printf.h"
 #include "unknown_008C40.h"
 

@@ -2,8 +2,8 @@
 
 .include "macros.inc"
 
-glabel rspUnknownStart
-.incbin "./build/us_1.0/ucode/ucode_unknown.bin"
+glabel aspMainTextStart
+.incbin "./build/us_1.0/ucode/ucode_audio.bin"
 glabel rspF3DDKRBootStart
 .incbin "./build/us_1.0/ucode/ucode_boot.bin"
 glabel rspF3DDKRDramStart

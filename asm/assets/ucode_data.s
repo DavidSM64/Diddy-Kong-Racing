@@ -2,8 +2,8 @@
 
 .include "macros.inc"
 
-glabel rspUnknownDataStart
-.incbin "./build/us_1.0/ucode/data_unknown.bin"
+glabel aspMainDataStart
+.incbin "./build/us_1.0/ucode/data_audio.bin"
 glabel rspF3DDKRDataDramStart
 .incbin "./build/us_1.0/ucode/data_f3ddkr_dram.bin"
 glabel rspF3DDKRDataFifoStart

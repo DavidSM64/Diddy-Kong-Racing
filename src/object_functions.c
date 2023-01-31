@@ -22,7 +22,7 @@
 #include "unknown_032760.h"
 #include "game_ui.h"
 #include "waves.h"
-#include "unknown_003260.h"
+#include "audiosfx.h"
 #include "math_util.h"
 #include "game_text.h"
 #include "fade_transition.h"

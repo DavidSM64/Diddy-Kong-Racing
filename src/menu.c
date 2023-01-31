@@ -25,7 +25,7 @@
 #include "unknown_078050.h"
 #include "save_data.h"
 #include "object_functions.h"
-#include "unknown_003260.h"
+#include "audiosfx.h"
 #include "racer.h"
 #include "unknown_078050.h"
 #include "unknown_0255E0.h"
@@ -2840,7 +2840,7 @@ void menu_audio_options_init(void) {
     transition_begin(&sMenuTransitionFadeOut);
     func_8007FFEC(2);
     gMusicVolumeSliderValue = musicGetVolSliderPercentage();
-    gSfxVolumeSliderValue = sfxGetVolumeSlider();
+    gSfxVolumeSliderValue = get_sfx_volume_slider();
     if (gActiveMagicCodes & CHEAT_MUSIC_MENU) { // Check if "JUKEBOX" cheat is active
         gAudioMenuStrings[6].unkC = gMusicTestString;
         gAudioMenuStrings[3].unk2 = 0xD4;
