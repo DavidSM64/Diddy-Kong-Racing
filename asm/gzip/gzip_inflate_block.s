@@ -1,4 +1,4 @@
-glabel gzip_inflate_block
+glabel gzip_inflate_block /* Official name: inflate_block */
 /* 0C74C0 800C68C0 3C0B8013 */  lui   $t3, %hi(gzip_num_bits) # $t3, 0x8013
 /* 0C74C4 800C68C4 8D6BAAD4 */  lw    $t3, %lo(gzip_num_bits)($t3)
 /* 0C74C8 800C68C8 3C018013 */  lui   $at, %hi(D_8012AAD8) # $at, 0x8013

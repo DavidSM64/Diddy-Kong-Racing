@@ -1547,6 +1547,7 @@ SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, 
     return ret;
 }
 
+/* Official name: packOpen */
 SIDeviceStatus get_si_device_status(s32 controllerIndex) {
     OSMesg unusedMsg;
     s32 ret;
@@ -1603,6 +1604,7 @@ SIDeviceStatus get_si_device_status(s32 controllerIndex) {
     return NO_CONTROLLER_PAK;
 }
 
+/* Official name: packClose */
 s32 start_reading_controller_data(UNUSED s32 controllerIndex) {
     osContStartReadData(sControllerMesgQueue);
     return 0;
@@ -1657,6 +1659,7 @@ void init_controller_paks(void) {
     osContStartReadData(sControllerMesgQueue);
 }
 
+/* Official name: packIsPresent */
 UNUSED SIDeviceStatus check_for_rumble_pak(s32 controllerIndex) {
     s32 ret;
 
@@ -1671,6 +1674,7 @@ UNUSED SIDeviceStatus check_for_rumble_pak(s32 controllerIndex) {
 }
 
 //Inspects and repairs the Controller Pak's file system
+/* Official name: packRepair */
 SIDeviceStatus repair_controller_pak(s32 controllerIndex) {
     s32 ret;
     s32 status = get_si_device_status(controllerIndex);
@@ -1691,6 +1695,7 @@ SIDeviceStatus repair_controller_pak(s32 controllerIndex) {
 }
 
 //Reformat Controller Pak
+/* Official name: packFormat */
 SIDeviceStatus reformat_controller_pak(s32 controllerIndex) {
     s32 ret;
     s32 status = get_si_device_status(controllerIndex);
@@ -1910,6 +1915,7 @@ s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondCont
 //     s32 fileType;
 //     u8 game_name[PFS_FILE_NAME_LEN];
 // } fileStruct;
+/* Official name: packOpenFile */
 SIDeviceStatus get_file_number(s32 controllerIndex, char *fileName, char *fileExt, s32 *fileNumber) {
     u32 gameCode;
     char fileNameAsFontCodes[PFS_FILE_NAME_LEN];
@@ -1950,6 +1956,7 @@ SIDeviceStatus get_file_number(s32 controllerIndex, char *fileName, char *fileEx
     return CONTROLLER_PAK_BAD_DATA;
 }
 
+/* Official name: packReadFile */
 SIDeviceStatus read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u8 *data, s32 dataLength) {
     s32 readResult = osPfsReadWriteFile(&pfs[controllerIndex], fileNum, PFS_READ, 0, dataLength, data);
 
@@ -1973,6 +1980,7 @@ SIDeviceStatus read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u
 }
 
 //If fileNumber -1, it creates a new file?
+/* Official name: packWriteFile */
 SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, char *fileName, char *fileExt, u8 *dataToWrite, s32 fileSize) {
     s32 temp;
     u8 fileNameAsFontCodes[PFS_FILE_NAME_LEN];
@@ -2048,6 +2056,7 @@ SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, ch
 }
 
 //Get File size for given controller's Control Pak
+/* Official name: packFileSize */
 SIDeviceStatus get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize) {
     OSPfsState state;
 

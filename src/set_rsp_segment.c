@@ -9,6 +9,7 @@
 /**
  * Set the offset for the given address, so the RSP can get the correct physical address.
  * This is used for the colour and depth buffers.
+ * Official(?) name: segSetBase
  */
 void set_rsp_segment(Gfx **dlist, s32 segment, s32 base) {
     gSPSegment((*dlist)++, segment, base + K0BASE)

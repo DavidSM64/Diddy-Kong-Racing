@@ -762,6 +762,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_8000E898.s")
 
 /**
  * Returns the object at the current offset by ID.
+ * Official name: objGetObject
 */
 Object *get_object(s32 index) {
     if (index < 0 || index >= objCount) {
@@ -2136,6 +2137,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_8001D4B4.s")
 
 /**
  * Take the normalised length of the position set by the perspective and set the world angle for the envmap.
+ * Official name: setObjectViewNormal
 */
 void update_envmap_position(f32 x, f32 y, f32 z) {
     f32 vecLength = sqrtf((x * x) + (y * y) + (z * z));
@@ -2192,6 +2194,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_8001E13C.s")
 /**
  * Returns a pointer to the asset in the misc. section. If index is out of range, then this
  * function just returns the pointer to gAssetsMiscSection.
+ * Official name: objGetTable
  */
 s32 *get_misc_asset(s32 index) {
     if (index < 0 || index >= gAssetsMiscTableLength) {

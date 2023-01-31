@@ -44,7 +44,7 @@ enum ViewportCount {
 };
 
 enum ViewPortFlags {
-    VIEWPORT_EXTRA_BG      = 0x0001,
+    VIEWPORT_EXTRA_BG      = 0x0001, //official name (guessed): VIEWPORT_IS_USER_VIEW
     VIEWPORT_UNK_02        = 0x0002,
     VIEWPORT_UNK_04        = 0x0004,
     VIEWPORT_X_CUSTOM      = 0x0008,

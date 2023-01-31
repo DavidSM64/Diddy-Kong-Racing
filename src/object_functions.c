@@ -1338,6 +1338,7 @@ void obj_loop_posarrow(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
+/* Offical name: animInit */
 void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 arg2) {
     Object_Animator *obj64;
     LevelModel *levelModel;
@@ -3332,6 +3333,7 @@ void obj_init_seamonster(UNUSED Object *obj, UNUSED LevelObjectEntry_SeaMonster 
 void obj_loop_seamonster(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
+/* Official name: fogInit(?) */
 void obj_init_fogchanger(Object *obj, LevelObjectEntry_FogChanger *entry) {
     f32 temp_f0;
     temp_f0 = entry->unk8 * 8.0f;
@@ -4340,6 +4342,7 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     gParticlePtrList_addObject(obj);
 }
 
+/* Official name: audioLineInit */
 void obj_init_audioline(Object *obj, LevelObjectEntry_AudioLine *entry) {
     Object_AudioLine *obj64;
 
@@ -4372,6 +4375,7 @@ void obj_init_audioreverb(Object *obj, LevelObjectEntry_AudioReverb *entry) {
     gParticlePtrList_addObject(obj);
 }
 
+/* Official name: texscrollInit */
 void obj_init_texscroll(Object *obj, LevelObjectEntry_TexScroll *entry, s32 arg2) {
     Object_TexScroll *obj64;
     LevelModel *levelModel;
@@ -4397,6 +4401,7 @@ void obj_init_texscroll(Object *obj, LevelObjectEntry_TexScroll *entry, s32 arg2
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_texscroll.s")
 
+/* Official name: rgbalightInit */
 void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, UNUSED s32 arg2) {
     obj->unk64 = func_80031CAC(obj, entry);
 }
@@ -4504,6 +4509,7 @@ void obj_loop_log(Object *obj, s32 updateRate) {
     obj->unk5C->unk100 = NULL;
 }
 
+/* Official name: weatherInit */
 void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry) {
     f32 temp = entry->unk8;
     temp *= temp;
@@ -4684,6 +4690,7 @@ void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry) {
     temp->unk3 = entry->unkB;
 }
 
+/* Official name: bubblerInit */
 void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry) {
     func_800AF134((Particle *) obj->unk6C, entry->unk9, entry->unk8, 0, 0, 0);
     obj->unk78 = entry->unkA;
@@ -4714,6 +4721,7 @@ void obj_loop_unknown94(UNUSED Object *obj, s32 UNUSED updateRate) {
 void obj_init_rangetrigger(UNUSED Object *obj, UNUSED LevelObjectEntry_RangeTrigger *entry) {
 }
 
+/* Official name: rangetriggerControl */
 void obj_loop_rangetrigger(Object *obj, s32 updateRate) {
     UNUSED s32 temp;
     LevelObjectEntry_RangeTrigger *level_entry;

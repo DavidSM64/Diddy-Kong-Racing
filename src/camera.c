@@ -480,6 +480,7 @@ void camDisableUserView(s32 viewPortIndex, s32 arg1) {
 /**
  * Return's the current viewport's flag status for extended backgrounds.
  * Required to draw some extra things used in menus.
+ * Official name: camIsUserView
 */
 s32 check_viewport_background_flag(s32 viewPortIndex) {
     return gScreenViewports[viewPortIndex].flags & VIEWPORT_EXTRA_BG;
@@ -543,6 +544,7 @@ void resize_viewport(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2) {
 /**
  * Set the selected viewport's coordinate offsets and view size.
  * If you pass VIEWPORT_AUTO through, then the property will be automatically set when the game creates the viewports.
+ * Official name: camSetUserViewSpecial
  */
 void set_viewport_properties(s32 viewPortIndex, s32 posX, s32 posY, s32 width, s32 height) {
     if (posX != VIEWPORT_AUTO) {
@@ -576,6 +578,7 @@ void set_viewport_properties(s32 viewPortIndex, s32 posX, s32 posY, s32 width, s
 /**
  * Sets the passed values to be equal to the selected viewports scissor size, before drawing the background elements.
  * Usually, this is the same size as the viewport's size.
+ * Official name: camGetVisibleUserView
  */
 s32 copy_viewport_background_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32 *x2, s32 *y2) {
     //gDPFillRectangle values
@@ -591,6 +594,7 @@ s32 copy_viewport_background_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1,
 
 /**
  * Sets the passed values to the coordinate size of the passed viewport.
+ * Official name: camGetUserView
  */
 void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32 *x2, s32 *y2) {
     *x1 = gScreenViewports[viewPortIndex].x1;
@@ -1410,6 +1414,7 @@ GLOBAL_ASM("asm/non_matchings/camera/func_8006A1C4.s")
 
 /**
  * Set the first 4 player ID's to the controller numbers, so players can input in the menus after boot.
+ * Official name: joyResetMap
  */
 void initialise_player_ids(void) {
     s32 i;
@@ -1421,6 +1426,7 @@ void initialise_player_ids(void) {
 /**
  * Assign the first four player ID's to the index of the connected players.
  * Assign the next four player ID's to the index of the players who are not connected.
+ * Official name: joyCreateMap
  */
 void assign_player_ids(s8 *activePlayers) {
     s32 i;
@@ -1439,6 +1445,7 @@ void assign_player_ids(s8 *activePlayers) {
 
 /**
  * Returns the id of the selected index.
+ * Official name: joyGetController
  */
 u8 get_player_id(s32 player) {
     return sPlayerID[player];
@@ -1456,6 +1463,7 @@ void swap_player_1_and_2_ids(void) {
 
 /**
  * Returns the buttons that are currently pressed down on the controller.
+ * Official name: joyGetButtons
  */
 u16 get_buttons_held_from_player(s32 player) {
     return sControllerData[sPlayerID[player]].button;

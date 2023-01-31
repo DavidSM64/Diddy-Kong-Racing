@@ -135,9 +135,11 @@ void func_800B4A08(s32 arg0) {
     D_800E2EF0 = arg0;
 }
 
-void func_800B4A14(char *s, char *format, ...) {
+/* Official name: sprintf(?) */
+UNUSED void func_800B4A14(char *s, char *format, ...) {
     va_list args;
     va_start(args, format);
+    //!@bug Should be calling vsprintf here.
     sprintf(s, format, args);
     va_end(args);
 }
@@ -229,6 +231,7 @@ void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha) {
 
 /**
  * Sets the character position of further prints to the given coordinates.
+ * Official name: diPrintfSetXY
 */
 void set_render_printf_position(u16 x, u16 y) {
     RENDER_PRINTF_CMD_SET_POSITION(x, y)

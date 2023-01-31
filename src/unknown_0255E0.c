@@ -1102,6 +1102,7 @@ s32 get_inside_segment_count_xz(s32 x, s32 z, s32 *arg2) {
 
 /**
  * Carbon copy of the above function, but takes into account the Y axis, too.
+ * Official name: trackGetCubeBlockList
 */
 s32 get_inside_segment_count_xyz(s32 *arg0, s16 xPos1, s16 yPos1, s16 zPos1, s16 xPos2, s16 yPos2, s16 zPos2) {
     s32 cnt;
@@ -1143,6 +1144,7 @@ LevelModelSegment *get_segment(s32 segmentID) {
 
 /**
  * Returns the bounding box data of this segment.
+ * Official name: trackBlockDim
 */
 LevelModelSegmentBoundingBox *get_segment_bounding_box(s32 segmentID) {
     if (segmentID < 0 || gCurrentLevelModel->numberOfSegments < segmentID)

@@ -672,6 +672,7 @@ s32 func_8006BD88(void) {
 
 /**
  * Return the race type ID of the current level.
+ * Official name: levelGetType
  */
 u8 get_current_level_race_type(void) {
     return gCurrentLevelHeader->race_type;
@@ -1881,6 +1882,7 @@ s8 is_postrace_viewport_active(void) {
 
 /**
  * Sets and returns (nonzero) the message set when pressing the reset button.
+ * Official name: mainResetPressed
  */
 s32 is_reset_pressed(void) {
     if (gNMIMesgBuf[0] == 0) {
@@ -2107,6 +2109,7 @@ void pre_intro_loop(void) {
 
 /**
  * Returns TRUE if the game doesn't detect any controllers.
+ * Official name: mainDemoOnly
  */
 s32 is_controller_missing(void) {
     if (sControllerStatus == CONTROLLER_MISSING) {
