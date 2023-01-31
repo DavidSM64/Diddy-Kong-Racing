@@ -221,12 +221,12 @@ UNUSED u8 func_8000461C(u8 *arg0) {
     return 0;
 }
 
-void func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2) {
-    func_80004668(bnk, sndIndx, 0, arg2);
+s32 func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2) {
+    return func_80004668(bnk, sndIndx, 0, arg2);
 }
 
 #ifdef NON_EQUIVALENT
-void func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, s32 arg3) {
+s32 func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, s32 arg3) {
 }
 #else
 GLOBAL_ASM("asm/non_matchings/audiosfx/func_80004668.s")

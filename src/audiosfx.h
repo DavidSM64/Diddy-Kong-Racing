@@ -123,7 +123,7 @@ ALMicroTime  _sndpVoiceHandler(void *node);
 void func_8000410C(ALSoundState *state);
 u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex);
 void func_80004604(u8 *arg0, u8 arg1);
-void func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2);
+s32 func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2);
 void func_800049D8(void);
 void func_800049F8(s32 soundMask, s16 type, u32 volume);
 u16 get_sound_channel_volume(u8 channel);
@@ -131,9 +131,9 @@ void set_sound_channel_volume(u8 channel, u16 volume);
 
 // Non Matching
 void func_80004520(ALSoundState *);
-void func_80004668(ALBank *bnk, s16 sndIndx, u8, s32);
+s32 func_80004668(ALBank *bnk, s16 sndIndx, u8, s32);
 INCONSISTENT void func_8000488C();
 void func_800048D8(s32);
-void _handleEvent(ALSndPlayer *sndp, ALSndpEvent *event);
+void _handleEvent(unk800DC6BC *sndp, ALSndpEvent *event);
 
 #endif
