@@ -7,6 +7,6 @@
 //Takes a char pointer, the string to populate it with, and the length of that string.
 //Example:
 //func_800CE050(&gameName, "DKRACING-ADV", strlen("DKRACING-ADV"));
-s32 func_800CE050(u8 *stringToPopulate, char *string, u32 stringLen);
+extern int	func_800CE050(const void *, const void *, int);
 
 #endif

@@ -507,7 +507,154 @@ void func_80078170(TextureHeader *arg0, TextureHeader *arg1, u32 arg2) {
     D_800DE4C0 = arg2 << 2;
 }
 
+#if 1
+void func_80078190(Gfx **dlist) {
+    Gfx *temp_v1_17;
+    Gfx *temp_v1_18;
+    Gfx *temp_v1_19;
+    Gfx *temp_v1_20;
+    Gfx *temp_v1_21;
+    Gfx *temp_v1_22;
+    s16 temp_a3_2;
+    s32 temp_fp;
+    s32 videoHeight;
+    s32 videoWidth;
+    s32 texWidth;
+    s32 temp_t6_4;
+    s32 temp_t6_5;
+    s32 temp_t8_2;
+    s32 lry;
+    s32 texHeight;
+    s32 temp_t9_3;
+    s32 widthAndHeight;
+    s32 lrx;
+    s32 var_a2_2;
+    s32 var_a2_3;
+    s32 var_s2;
+    s32 var_s2_2;
+    s32 var_s2_3;
+    s32 var_s3;
+    s32 var_s3_2;
+    s32 ulx;
+    s32 var_v0_2;
+    s32 var_v0_3;
+    u32 uly;
+    u32 temp_t2_2;
+    u32 temp_t2_3;
+
+    widthAndHeight = get_video_width_and_height_as_s32();
+    videoHeight = GET_VIDEO_HEIGHT(widthAndHeight) & 0xFFFF;
+    videoWidth = GET_VIDEO_WIDTH(widthAndHeight);
+    gSPDisplayList((*dlist)++, D_800DE598);
+
+    if (D_800DE4C8 == NULL) {
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE4C4->cmd), D_800DE4C4->numberOfCommands);
+        texWidth = D_800DE4C4->width * 4;
+        texHeight = D_800DE4C4->height * 4;
+        var_s3 = 0;
+        var_s2 = 0;
+        if (videoHeight > 0) {
+            do {
+                ulx = -var_s3;
+                if (ulx < videoWidth) {
+                    lry = (var_s2 + texHeight) & 0xFFF;
+                    uly = var_s2 & 0xFFF;
+                    do {
+                        lrx = ulx + texWidth;
+                        if (ulx < 0) {
+                            gSPTextureRectangle((*dlist)++, 0, uly, lrx, lry, G_TX_RENDERTILE, ulx, 0, 1024, 1024);
+                        } else {
+
+                            gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, 0, 0, 1024, 1024);
+                        }
+                        ulx = lrx;
+                    } while (lrx < videoWidth);
+                }
+                var_s2 += texHeight;
+                var_s3 = (var_s3 + D_800DE4C0) & (texWidth - 1);
+            } while (var_s2 < videoHeight);
+        }
+    } else {
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE4C4->cmd), D_800DE4C4->numberOfCommands);
+        texWidth = D_800DE4C4->width * 4;
+        texHeight = D_800DE4C4->height * 4;
+        var_s2_2 = 0;
+        temp_fp = (D_800DE4C8->height * 4) + texHeight;
+        var_s3_2 = 0;
+        if (videoHeight > 0) {
+            do {
+                var_v0_2 = -var_s3_2;
+                if (var_v0_2 < videoWidth) {
+                    temp_t9_3 = (var_s2_2 + texHeight) & 0xFFF;
+                    temp_t2_2 = var_s2_2 & 0xFFF;
+                    do {
+                        var_a2_2 = var_v0_2 + texWidth;
+                        if (var_v0_2 < 0) {
+                            gSPTextureRectangle((*dlist)++, 0, temp_t2_2, var_a2_2, temp_t9_3, G_TX_RENDERTILE, var_v0_2, 0, 1024, 1024);
+                        } else {
+                            gSPTextureRectangle((*dlist)++, var_v0_2, temp_t2_2, var_a2_2, temp_t9_3, G_TX_RENDERTILE, 0, 0, 1024, 1024);
+                        }
+                        var_v0_2 = var_a2_2;
+                    } while (var_a2_2 < videoWidth);
+                }
+                var_s2_2 += temp_fp;
+                var_s3_2 = (var_s3_2 + D_800DE4C0) & (texWidth - 1);
+            } while (var_s2_2 < videoHeight);
+            var_s3_2 = 0;
+        }
+
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE4C8->cmd), D_800DE4C8->numberOfCommands);
+        var_s2_3 = texHeight;
+        temp_t8_2 = videoHeight * 4;
+        temp_t6_4 = videoWidth * 4;
+        if (var_s2_3 < temp_t8_2) {
+            do {
+                var_v0_3 = -var_s3_2;
+                if (var_v0_3 < temp_t6_4) {
+                    temp_t6_5 = (var_s2_3 + (D_800DE4C8->height * 4)) & 0xFFF;
+                    temp_t2_3 = var_s2_3 & 0xFFF;
+                    do {
+                        var_a2_3 = var_v0_3 + texWidth;
+                        if (var_v0_3 < 0) {
+                            temp_v1_17 = *dlist;
+                            var_a2_3 = var_v0_3 + texWidth;
+                            *dlist = temp_v1_17 + 8;
+                            temp_v1_17->words.w0 = ((var_a2_3 & 0xFFF) << 0xC) | 0xE4000000 | temp_t6_5;
+                            temp_v1_17->words.w1 = temp_t2_3;
+                            temp_v1_18 = *dlist;
+                            *dlist = temp_v1_18 + 8;
+                            temp_v1_18->words.w1 = var_v0_3 * -0x80000;
+                            temp_v1_18->words.w0 = 0xB3000000;
+                            temp_v1_19 = *dlist;
+                            *dlist = temp_v1_19 + 8;
+                            temp_v1_19->words.w1 = 0x04000400;
+                        } else {
+                            temp_v1_20 = *dlist;
+                            *dlist = temp_v1_20 + 8;
+                            temp_v1_20->words.w1 = ((var_v0_3 & 0xFFF) << 0xC) | temp_t2_3;
+                            temp_v1_20->words.w0 = ((var_a2_3 & 0xFFF) << 0xC) | 0xE4000000 | temp_t6_5;
+                            temp_v1_21 = *dlist;
+                            *dlist = temp_v1_21 + 8;
+                            temp_v1_21->words.w1 = 0;
+                            temp_v1_21->words.w0 = 0xB3000000;
+                            temp_v1_22 = *dlist;
+                            *dlist = temp_v1_22 + 8;
+                            temp_v1_22->words.w1 = 0x04000400;
+                        }
+                        (*dlist)->words.w0 = 0xB2000000;
+                        var_v0_3 = var_a2_3;
+                    } while (var_a2_3 < temp_t6_4);
+                }
+                var_s2_3 += temp_fp;
+                var_s3_2 = (var_s3_2 + D_800DE4C0) & (texWidth - 1);
+            } while (var_s2_3 < temp_t8_2);
+        }
+    }
+    gDPPipeSync((*dlist)++);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078190.s")
+#endif
 
 /**
  * Enables the chequer background and sets up its properties.

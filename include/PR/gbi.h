@@ -137,33 +137,33 @@
 
 /* IMMEDIATE commands: */
 #define G_IMMFIRST		-65
-#define G_TRI1			(G_IMMFIRST-0)
-#define G_CULLDL		(G_IMMFIRST-1)
-#define G_POPMTX		(G_IMMFIRST-2)
-#define G_MOVEWORD		(G_IMMFIRST-3)
-#define G_TEXTURE		(G_IMMFIRST-4)
-#define G_SETOTHERMODE_H	(G_IMMFIRST-5)
-#define G_SETOTHERMODE_L	(G_IMMFIRST-6)
-#define G_ENDDL			(G_IMMFIRST-7)
-#define G_SETGEOMETRYMODE	(G_IMMFIRST-8)
-#define G_CLEARGEOMETRYMODE	(G_IMMFIRST-9)
-#define G_LINE3D		(G_IMMFIRST-10)
-#define G_RDPHALF_1		(G_IMMFIRST-11)
-#define G_RDPHALF_2		(G_IMMFIRST-12)
+#define G_TRI1			(G_IMMFIRST-0)		//0xBF
+#define G_CULLDL		(G_IMMFIRST-1)		//0xBE
+#define G_POPMTX		(G_IMMFIRST-2)		//0xBD
+#define G_MOVEWORD		(G_IMMFIRST-3)		//0xBC
+#define G_TEXTURE		(G_IMMFIRST-4)		//0xBB
+#define G_SETOTHERMODE_H	(G_IMMFIRST-5)	//0xBA
+#define G_SETOTHERMODE_L	(G_IMMFIRST-6)	//0xB9
+#define G_ENDDL			(G_IMMFIRST-7)		//0xB8
+#define G_SETGEOMETRYMODE	(G_IMMFIRST-8)	//0xB7
+#define G_CLEARGEOMETRYMODE	(G_IMMFIRST-9)	//0xB6
+#define G_LINE3D		(G_IMMFIRST-10)		//0xB5
+#define G_RDPHALF_1		(G_IMMFIRST-11) 	//0xB4
+#define G_RDPHALF_2		(G_IMMFIRST-12) 	//0xB3
 #if (defined(F3DEX_GBI)||defined(F3DLP_GBI))
 #  define G_MODIFYVTX		(G_IMMFIRST-13)
 #  define G_TRI2		(G_IMMFIRST-14)
 #  define G_BRANCH_Z		(G_IMMFIRST-15)
 #  define G_LOAD_UCODE		(G_IMMFIRST-16)
 #else
-#  define G_RDPHALF_CONT	(G_IMMFIRST-13)
+#  define G_RDPHALF_CONT	(G_IMMFIRST-13)	/*0xB2*/
 #endif
 
 /* We are overloading 2 of the immediate commands
    to keep the byte alignment of dmem the same */
 
-#define G_SPRITE2D_SCALEFLIP    (G_IMMFIRST-1)
-#define G_SPRITE2D_DRAW         (G_IMMFIRST-2)
+#define G_SPRITE2D_SCALEFLIP    (G_IMMFIRST-1) //0xBE
+#define G_SPRITE2D_DRAW         (G_IMMFIRST-2) //0xBD
 
 /* RDP commands: */
 #define G_NOOP			0xc0	/*   0 */
