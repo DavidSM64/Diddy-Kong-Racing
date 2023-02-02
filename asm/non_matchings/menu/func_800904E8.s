@@ -275,7 +275,7 @@ glabel func_800904E8
 /* 0914F4 800908F4 0C019AEA */  jal   copy_viewport_background_size_to_coords
 /* 0914F8 800908F8 27A7003C */   addiu $a3, $sp, 0x3c
 /* 0914FC 800908FC 00002025 */  move  $a0, $zero
-/* 091500 80090900 0C019A06 */  jal   func_80066818
+/* 091500 80090900 0C019A06 */  jal   camEnableUserView
 /* 091504 80090904 00002825 */   move  $a1, $zero
 /* 091508 80090908 8FBF001C */  lw    $ra, 0x1c($sp)
 /* 09150C 8009090C 27BD0048 */  addiu $sp, $sp, 0x48

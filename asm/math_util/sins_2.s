@@ -1,6 +1,6 @@
 glabel coss_2
 /* 07148C 8007088C 24844000 */  addiu $a0, $a0, 0x4000
-glabel sins_2
+glabel sins_2 /* Official name: mathSin */
 /* 071490 80070890 00041440 */  sll   $v0, $a0, 0x11
 /* 071494 80070894 04430003 */  bgezl $v0, .L800708A4
 /* 071498 80070898 000450C2 */   srl   $t2, $a0, 3

@@ -894,13 +894,14 @@ s16 D_80126384;
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007AC70.s")
+GLOBAL_ASM("asm/non_matchings/textures_sprites/texInitTextures.s")
 
-void func_8007AE0C(s32 flags) {
+/* these two are possibly wrong */
+void texEnableModes(s32 flags) {
     D_80126378 |= flags;
 }
 
-void func_8007AE28(s32 flags) {
+void texDisableModes(s32 flags) {
     D_80126378 &= ~flags;
 }
 
@@ -1465,6 +1466,7 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CA68.s")
 
 #ifdef NON_EQUIVALENT
 // andi 0xff instead of a simple mov for j = i. s32 doesn't work.
+/* Official name: texFreeSprite */
 void free_sprite(Sprite *sprite) {
     s32 i;
     u8 j;
@@ -1594,6 +1596,7 @@ void func_8007F1E8(unk8007F1E8 *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007F24C.s")
 
+/* Official name: resetMixCycle */
 void init_pulsating_light_data(PulsatingLightData *data) {
     s32 i;
     data->currentFrame = 0;

@@ -60,6 +60,7 @@ void init_main_memory_pool(void) {
 
 /**
  * Creates a new memory pool that is sectioned off the main one.
+ * Official name: mmAllocRegion
  */
 MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots) {
     s32 size;
@@ -178,6 +179,7 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag
     return 0;
 }
 
+/* Official name: mmAllocR */
 void *allocate_from_pool_containing_slots(MemoryPoolSlot *slots, s32 size) {
     s32 i;
     for (i = gNumberOfMemoryPools; i != 0; i--) {
@@ -228,6 +230,7 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
 /**
  * Sets the state of the free queue. State is either 0, 1, or 2.
  * The free queue will get flushed if the state is set to 0.
+ * Official name: mmSetDelay
  */
 void set_free_queue_state(s32 state) {
     s32 *flags = clear_status_register_flags();
@@ -278,6 +281,7 @@ void clear_free_queue(void) {
     set_status_register_flags(flags);
 }
 
+/* Official name: heapFree */
 void free_slot_containing_address(u8 *address) {
     s32 slotIndex;
     s32 poolIndex;
@@ -390,6 +394,7 @@ s32 func_80071538(u8 *address) {
 
 /**
  * Returns the index of the memory pool containing the memory address.
+ * Official(?) name: getHeapIdxOf
  */
 s32 get_memory_pool_index_containing_address(u8 *address) {
     s32 i;
@@ -454,7 +459,7 @@ void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
 }
 
 // Unused?
-MemoryPoolSlot *func_80071774(s32 poolIndex) {
+MemoryPoolSlot *mmGetSlotPtr(s32 poolIndex) {
     return gMemoryPools[poolIndex].slots;
 }
 
@@ -495,6 +500,7 @@ s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIs
 
 /**
  * Returns the passed in address aligned to the next 16-byte boundary.
+ * Official name: mmAlign16
  */
 u8 *align16(u8 *address) {
     s32 remainder = (s32)address & 0xF;
@@ -507,6 +513,7 @@ u8 *align16(u8 *address) {
 /**
  * Returns the passed in address aligned to the next 8-byte boundary.
  * Unused.
+ * Official name: mmAlign8
  */
 u8 *align8(u8 *address) {
     s32 remainder = (s32)address & 0x7;
@@ -519,6 +526,7 @@ u8 *align8(u8 *address) {
 /**
  * Returns the passed in address aligned to the next 4-byte boundary.
  * Unused.
+ * Official name: mmAlign4
  */
 u8 *align4(u8 *address) {
     s32 remainder = (s32)address & 0x3;
@@ -628,7 +636,7 @@ UNUSED void render_memory_colour_tags(void) {
     render_printf("ORANGE %d\n\n", get_memory_colour_tag_count(COLOUR_TAG_ORANGE));
 }
 
-UNUSED void func_80071C74(void) {
+UNUSED void mmSlotPrint(void) {
     s32 i;
     s32 skip;
     s32 index;

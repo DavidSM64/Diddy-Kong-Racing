@@ -396,6 +396,7 @@ UNUSED void func_80077AAC(void *bufPtr, s32 bufSize, UNUSED s32 unused) {
 
 /**
  * Sets the primitive colour for the cyclemode fillrect background.
+ * Official name: rcpSetScreenColour
  */
 void set_background_prim_colour(u8 red, u8 green, u8 blue) {
     sBackgroundPrimColourR = red;
@@ -406,6 +407,7 @@ void set_background_prim_colour(u8 red, u8 green, u8 blue) {
 /**
  * Sets the fill colour for the fillmode fillrect background.
  * Uses RGBA5551
+ * Official name: rcpSetBorderColour
  */
 void set_background_fill_colour(s32 red, s32 green, s32 blue) {
     sBackgroundFillColour = GPACK_RGBA5551(red, green, blue, 1);
@@ -486,6 +488,7 @@ void init_rdp_and_framebuffer(Gfx **dList) {
 
 /**
  * Calls the draw command that sets all the OtherModes, ready for use.
+ * Official name: rcpInitSp or rcpInitDpNoSize
  */
 void init_rsp(Gfx **dList) {
     gSPDisplayList((*dList)++, dRspInit);

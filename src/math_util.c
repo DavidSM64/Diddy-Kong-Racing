@@ -60,6 +60,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_to_s32_matrix.s")
 #endif
 
 #ifdef NON_MATCHING
+/* Official name: mathMtxXFMF */
 void guMtxXFMF(Matrix mf, float x, float y, float z, float *ox, float *oy, float *oz) {
         *ox = mf[0][0]*x + mf[1][0]*y + mf[2][0]*z + mf[3][0];
         *oy = mf[0][1]*x + mf[1][1]*y + mf[2][1]*z + mf[3][1];
@@ -70,6 +71,7 @@ GLOBAL_ASM("asm/math_util/guMtxXFMF.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+/* Official name: mathMtxFastXFMF */
 void f32_matrix_dot(Matrix *mat1, Matrix *mat2, Matrix *output) {
     (*output)[0][0] = ((*mat2)[0][0] * (*mat1)[0][0]) + ((*mat2)[0][1] * (*mat1)[1][0]) + ((*mat2)[0][2] * (*mat1)[2][0]);
     (*output)[0][1] = ((*mat2)[0][0] * (*mat1)[0][1]) + ((*mat2)[0][1] * (*mat1)[1][1]) + ((*mat2)[0][2] * (*mat1)[2][1]);
@@ -80,6 +82,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_dot.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+/* Official name: mathMtxCatF */
 void f32_matrix_mult(Matrix *mat1, Matrix *mat2, Matrix *output) {
     s32 i;
     for(i = 0; i < 4; i++) {
@@ -94,6 +97,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_mult.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+/* Official name: mathMtxF2L */
 void f32_matrix_to_s16_matrix(Matrix *input, MatrixS *output) {
     s32 temp_f10;
     s32 temp_f4;
@@ -141,6 +145,7 @@ s32 get_rng_seed(void) {
 GLOBAL_ASM("asm/math_util/rng.s")
 
 #ifdef NON_EQUIVALENT
+/* Official name: fastShortReflection(?) */
 void s16_matrix_rotate(s16 *arg0[4][4], s16 arg1[4][4]) {
     s32 temp_t6;
 
@@ -227,6 +232,7 @@ GLOBAL_ASM("asm/math_util/object_transform_to_matrix.s")
 #endif
 
 #ifdef NON_MATCHING
+/* Official name: mathSquashY(?) */
 void f32_matrix_scale(Matrix *input, f32 scale) {
     input[0][1][0] *= scale;
     input[0][1][1] *= scale;
@@ -237,6 +243,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_scale.s")
 #endif
 
 #ifdef NON_MATCHING
+/* Official name: mathTransY(?) */
 void f32_matrix_y_scale(Matrix *input, f32 scale) {
     input[0][3][0] += input[0][1][0] * scale;
     input[0][3][1] += input[0][1][1] * scale;

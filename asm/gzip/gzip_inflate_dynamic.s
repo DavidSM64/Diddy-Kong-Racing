@@ -1,4 +1,4 @@
-glabel gzip_inflate_dynamic
+glabel gzip_inflate_dynamic /* Official name: inflate_dynamic */
 /* 0C75C4 800C69C4 27BDFAC0 */  addiu $sp, $sp, -0x540
 /* 0C75C8 800C69C8 AFB30028 */  sw    $s3, 0x28($sp)
 /* 0C75CC 800C69CC 3C138013 */  lui   $s3, %hi(gzip_num_bits) # $s3, 0x8013

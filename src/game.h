@@ -50,7 +50,7 @@ u8 get_total_level_header_count(void);
 char *get_level_name(s32 levelId);
 void func_8006BEFC(void);
 void func_8006BFC8(s8 *arg0);
-void func_8006C164(void);
+void frontCleanupMultiSelect(void);
 TempStruct5 *func_8006C18C(void);
 s8 func_8006C19C(void);
 void func_8006C1AC(s32 levelId, s32 entranceId, Vehicle vehicleId, s32 cutsceneId);

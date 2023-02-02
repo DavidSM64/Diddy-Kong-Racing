@@ -81,15 +81,15 @@ GLOBAL_ASM("asm/non_matchings/printf/func_800B3564.s")
 UNUSED void func_800B3678(Gfx **arg0, MatrixS **arg1, Vertex **arg2) {
     UNUSED s32 pad;
     UNUSED s32 pad2;
-    Object **temp_s0;
-    s32 sp38;
-    s32 sp34;
+    Object **objects;
+    s32 iObj;
+    s32 nObjs;
 
-    temp_s0 = func_8000E988(&sp38, &sp34);
-    for (; sp38 < sp34; sp38++) {
-        if (temp_s0[sp38]->segment.trans.unk6 & 0x8000) {
-            if ((s32) temp_s0[sp38]->segment.header & 0x8000) {
-                func_800B3740(temp_s0[sp38], arg0, arg1, arg2, 0);
+    objects = objGetObjList(&iObj, &nObjs);
+    for (; iObj < nObjs; iObj++) {
+        if (objects[iObj]->segment.trans.unk6 & 0x8000) {
+            if ((s32) objects[iObj]->segment.header & 0x8000) {
+                func_800B3740(objects[iObj], arg0, arg1, arg2, 0);
             }
         }
     }
@@ -129,22 +129,24 @@ GLOBAL_ASM("asm/non_matchings/printf/func_800B45C4.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B461C.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B4668.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B46BC.s")
-GLOBAL_ASM("asm/non_matchings/printf/func_800B4940.s")
+GLOBAL_ASM("asm/non_matchings/printf/_itoa.s")
 
 void func_800B4A08(s32 arg0) {
     D_800E2EF0 = arg0;
 }
 
-void func_800B4A14(char *s, char *format, ...) {
+/* Official name: sprintf(?) */
+UNUSED void func_800B4A14(char *s, char *format, ...) {
     va_list args;
     va_start(args, format);
+    //!@bug Should be calling vsprintf here.
     sprintf(s, format, args);
     va_end(args);
 }
 
 GLOBAL_ASM("asm/non_matchings/printf/sprintf.s")
 
-void func_800B5E88(void) {
+void diPrintfInit(void) {
     gTexture0 = load_texture(0);
     gTexture1 = load_texture(1);
     gTexture2 = load_texture(2);
@@ -229,6 +231,7 @@ void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha) {
 
 /**
  * Sets the character position of further prints to the given coordinates.
+ * Official name: diPrintfSetXY
 */
 void set_render_printf_position(u16 x, u16 y) {
     RENDER_PRINTF_CMD_SET_POSITION(x, y)

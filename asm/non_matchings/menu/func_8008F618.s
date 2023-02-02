@@ -14,7 +14,7 @@ glabel func_8008F618
 /* 090248 8008F648 AFB1001C */  sw    $s1, 0x1c($sp)
 /* 09024C 8008F64C 00002025 */  move  $a0, $zero
 /* 090250 8008F650 24050001 */  li    $a1, 1
-/* 090254 8008F654 0C019A25 */  jal   func_80066894
+/* 090254 8008F654 0C019A25 */  jal   camDisableUserView
 /* 090258 8008F658 AFA00058 */   sw    $zero, 0x58($sp)
 /* 09025C 8008F65C 02C02025 */  move  $a0, $s6
 /* 090260 8008F660 0C01988C */  jal   func_80066230
@@ -269,7 +269,7 @@ glabel func_8008F618
 .L8008FA14:
 /* 090614 8008FA14 00002025 */  move  $a0, $zero
 .L8008FA18:
-/* 090618 8008FA18 0C019A06 */  jal   func_80066818
+/* 090618 8008FA18 0C019A06 */  jal   camEnableUserView
 /* 09061C 8008FA1C 24050001 */   li    $a1, 1
 /* 090620 8008FA20 00001025 */  move  $v0, $zero
 .L8008FA24:

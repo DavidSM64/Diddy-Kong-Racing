@@ -18,6 +18,7 @@ static char *is_proutSyncPrintf(UNUSED char *str, UNUSED const char *buf, UNUSED
  * Like sprintf, but simpler. It just hardcodes NULL for the dst,
  * and calls a function that just hardcodes a fake pointer.
  * Could still be an earlier version of osSyncPrintf
+ * Official name: osSyncPrintf
  */
 void rmonPrintf(const char *format, ...) {
     va_list args;
