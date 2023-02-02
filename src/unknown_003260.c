@@ -396,7 +396,8 @@ GLOBAL_ASM("asm/non_matchings/unknown_003260/func_800042CC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004384.s")
 GLOBAL_ASM("asm/non_matchings/unknown_003260/func_80004520.s")
 
-void amSndSetVolXYZ(u8 *arg0, u8 arg1) {
+//possibly amSndSetVolXYZ
+void func_80004604(u8 *arg0, u8 arg1) {
     if (arg0)
         arg0[0x36] = arg1;
 }
