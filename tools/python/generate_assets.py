@@ -11,6 +11,8 @@ from file_util import FileUtil
 INCLUDE_DIRECTORY = './include'
 ASSETS_INCLUDE = INCLUDE_DIRECTORY + '/asset_sections.h'
 
+ASSETS_JSON_FILENAME = 'assets.meta.json'
+
 class GenerateAssets:
     def __init__(self, rootDir, version):
         self.ASSETS_ASM_DIR = rootDir + '/asm/assets'
@@ -34,7 +36,7 @@ class GenerateAssets:
         streamdata = createAssets.communicate()[0]
         if createAssets.returncode != 0:
             raise SystemExit("An error occured while generating /asm/assets files. Error code " + str(createAssets.returncode) + ". Aborting!")
-        with open(self.ASSETS_DIR + '/' + self.VERSION + '/assets.json') as jsonFile:
+        with open(self.ASSETS_DIR + '/' + self.VERSION + '/' + ASSETS_JSON_FILENAME) as jsonFile:
             assetsJSON = json.load(jsonFile)
             self.numAssets = len(assetsJSON['assets']['order'])
 
