@@ -509,29 +509,21 @@ void func_80078170(TextureHeader *arg0, TextureHeader *arg1, u32 arg2) {
 
 #if 1
 void func_80078190(Gfx **dlist) {
-    s32 bothTexturesHeight;
     s32 videoHeight;
     s32 videoWidth;
     s32 textureWidth;
-    s32 temp_t6_4;
-    s32 temp_t6_5;
-    s32 temp_t8_2;
-    s32 lry;
+    s32 vidWidthExpanded;
+    s32 vidHeightExpanded;
     s32 textureHeight;
     s32 nextTextureHeight;
-    s32 temp_t9_3;
+    s32 bothTexturesHeight;
     s32 widthAndHeight;
+    s32 lry;
     s32 lrx;
-    s32 var_a2_2;
-    s32 var_a2_3;
+    s32 uly;
+    s32 ulx;
     s32 yPos;
     s32 var_s3;
-    s32 ulx;
-    s32 var_v0_2;
-    s32 var_v0_3;
-    u32 uly;
-    u32 temp_t2_2;
-    u32 temp_t2_3;
 
     widthAndHeight = get_video_width_and_height_as_s32();
     videoHeight = GET_VIDEO_HEIGHT(widthAndHeight);
@@ -549,6 +541,7 @@ void func_80078190(Gfx **dlist) {
                 uly = yPos & 0xFFFF;
                 lrx = ulx + textureWidth;
                 if (ulx < 0) {
+                    ulx = -(var_s3 << 3);
                     gSPTextureRectangle((*dlist)++, 0, uly, lrx, lry, G_TX_RENDERTILE, ulx, 0, 1024, 1024);
                 } else {
                     gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, 0, 0, 1024, 1024);
@@ -558,49 +551,43 @@ void func_80078190(Gfx **dlist) {
         }
     } else {
         gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE4C4->cmd), D_800DE4C4->numberOfCommands);
-        textureWidth = D_800DE4C4->width << 2;
+        textureWidth = GET_VIDEO_WIDTH(D_800DE4C4->width) << 2;
         textureHeight = D_800DE4C4->height << 2;
         nextTextureHeight = D_800DE4C8->height << 2;
-        bothTexturesHeight = (nextTextureHeight) + textureHeight;
-        yPos = 0;
+        bothTexturesHeight = (D_800DE4C8->height << 2) + textureHeight;
         var_s3 = 0;
-        while (yPos < videoHeight) {
-            var_v0_2 = -var_s3;
-            if (var_v0_2 < videoWidth) {
-                temp_t9_3 = (yPos + textureHeight) & 0xFFF;
-                temp_t2_2 = yPos & 0xFFF;
-                do {
-                    var_a2_2 = var_v0_2 + textureWidth;
-                    if (var_v0_2 < 0) {
-                        gSPTextureRectangle((*dlist)++, 0, temp_t2_2, var_a2_2, temp_t9_3, G_TX_RENDERTILE, var_v0_2, 0, 1024, 1024);
-                    } else {
-                        gSPTextureRectangle((*dlist)++, var_v0_2, temp_t2_2, var_a2_2, temp_t9_3, G_TX_RENDERTILE, 0, 0, 1024, 1024);
-                    }
-                    var_v0_2 = var_a2_2;
-                } while (var_a2_2 < videoWidth);
+        for (yPos = 0; yPos < videoHeight; yPos += bothTexturesHeight) {
+            for (ulx = -var_s3; ulx < videoWidth; ulx = lrx) {
+                lry = (yPos + textureHeight) & 0xFFFF;
+                uly = yPos & 0xFFFF;
+                lrx = ulx + textureWidth;
+                if (ulx < 0) {
+                    ulx = -(var_s3 << 3);
+                    gSPTextureRectangle((*dlist)++, 0, uly, lrx, lry, G_TX_RENDERTILE, ulx, 0, 1024, 1024);
+                } else {
+                    gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, 0, 0, 1024, 1024);
+                }
             }
-            yPos += bothTexturesHeight;
             var_s3 = (var_s3 + D_800DE4C0) & (textureWidth - 1);
         }
 
         gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE4C8->cmd), D_800DE4C8->numberOfCommands);
-        temp_t8_2 = videoHeight * 4;
-        temp_t6_4 = videoWidth * 4;
+        textureWidth = D_800DE4C4->width << 2;
+        textureHeight = D_800DE4C4->height << 2;
+        vidHeightExpanded = videoHeight << 2;
+        vidWidthExpanded = videoWidth << 2;
         var_s3 = 0;
-        while (textureHeight < temp_t8_2) {
-            var_v0_3 = -var_s3;
-            if (var_v0_3 < temp_t6_4) {
-                temp_t6_5 = (textureHeight + nextTextureHeight) & 0xFFF;
-                temp_t2_3 = textureHeight & 0xFFF;
-                do {
-                    var_a2_3 = var_v0_3 + textureWidth;
-                    if (var_v0_3 < 0) {
-                        gSPTextureRectangle((*dlist)++, 0, temp_t2_3, var_a2_3, temp_t6_5, G_TX_RENDERTILE, var_v0_3, 0, 1024, 1024);
-                    } else {
-                        gSPTextureRectangle((*dlist)++, var_v0_3, temp_t2_3, var_a2_3, temp_t6_5, G_TX_RENDERTILE, var_v0_3, 0, 1024, 1024);
-                    }
-                    var_v0_3 = var_a2_3;
-                } while (var_a2_3 < temp_t6_4);
+        while (textureHeight < vidHeightExpanded) {
+            for (ulx = -var_s3; ulx < vidWidthExpanded; ulx = lrx) {
+                lry = (textureHeight + nextTextureHeight) & 0xFFFF;
+                uly = textureHeight & 0xFFFF;
+                lrx = ulx + textureWidth;
+                if (ulx < 0) {
+                    ulx = -(lrx << 3);
+                    gSPTextureRectangle((*dlist)++, 0, uly, lrx, lry, G_TX_RENDERTILE, ulx, 0, 1024, 1024);
+                } else {
+                    gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, 0, 0, 1024, 1024);
+                }
             }
             textureHeight += bothTexturesHeight;
             var_s3 = (var_s3 + D_800DE4C0) & (textureWidth - 1);
