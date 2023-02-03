@@ -105,7 +105,7 @@ void func_80032344(unk800DC950 *arg0, s32 arg1, s32 arg2) {
     }
 }
 
-void func_80032398(s32 arg0) {
+void lightUpdateLights(s32 arg0) {
     s32 i;
     for (i = 0; i < D_800DC95C; i++) {
         func_80032424(D_800DC950[i], arg0);

@@ -26,7 +26,7 @@ glabel func_80094D28
 /* 09596C 80094D6C 248463A0 */   addiu $a0, %lo(sMenuCurrDisplayList) # addiu $a0, $a0, 0x63a0
 .L80094D70:
 /* 095970 80094D70 00002025 */  move  $a0, $zero
-/* 095974 80094D74 0C019A25 */  jal   func_80066894
+/* 095974 80094D74 0C019A25 */  jal   camDisableUserView
 /* 095978 80094D78 24050001 */   li    $a1, 1
 /* 09597C 80094D7C 3C138012 */  lui   $s3, %hi(gOptionBlinkTimer) # $s3, 0x8012
 /* 095980 80094D80 8E7363BC */  lw    $s3, %lo(gOptionBlinkTimer)($s3)
@@ -602,7 +602,7 @@ glabel L80095588
 /* 0961AC 800955AC 00002025 */  move  $a0, $zero
 /* 0961B0 800955B0 15600016 */  bnez  $t3, .L8009560C
 /* 0961B4 800955B4 8FBF002C */   lw    $ra, 0x2c($sp)
-/* 0961B8 800955B8 0C019A06 */  jal   func_80066818
+/* 0961B8 800955B8 0C019A06 */  jal   camEnableUserView
 /* 0961BC 800955BC 24050001 */   li    $a1, 1
 /* 0961C0 800955C0 3C0C8000 */  lui   $t4, %hi(osTvType) # $t4, 0x8000
 /* 0961C4 800955C4 8D8C0300 */  lw    $t4, %lo(osTvType)($t4)

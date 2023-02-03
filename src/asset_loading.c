@@ -63,6 +63,7 @@ u32 *load_asset_section_from_rom(u32 assetIndex) {
 /**
  * Loads a gzip compressed asset from the ROM file.
  * Returns a pointer to the decompressed data.
+ * Official name: piRomLoadCompressed
  */
 UNUSED u8 *load_compressed_asset_from_rom(u32 assetIndex, s32 extraMemory) {
     s32 size;
@@ -115,6 +116,7 @@ UNUSED s32 load_asset_section_from_rom_to_address(u32 assetIndex, u32 address) {
 /**
  * Loads part of an asset section to a specific memory address.
  * Returns the size argument.
+ * Official name: piRomLoadSection
  */
 s32 load_asset_to_address(u32 assetIndex, u32 address, s32 assetOffset, s32 size) {
     u32 *index;
@@ -133,6 +135,7 @@ s32 load_asset_to_address(u32 assetIndex, u32 address, s32 assetOffset, s32 size
 
 /**
  * Returns a rom offset of an asset given its asset section and a local offset.
+ * Official name: piRomGetSectionPtr
  */
 u8 *get_rom_offset_of_asset(u32 assetIndex, u32 assetOffset) {
     u32 *index;
@@ -150,6 +153,7 @@ u8 *get_rom_offset_of_asset(u32 assetIndex, u32 assetOffset) {
 
 /**
  * Returns the size of an asset section.
+ * Official name: piRomGetFileSize
  */
 s32 get_size_of_asset_section(u32 assetIndex) {
     u32 *index;
@@ -167,6 +171,7 @@ s32 get_size_of_asset_section(u32 assetIndex) {
 
 /**
  * Copies data from the game cartridge to a ram address.
+ * Official name: romCopy
  */
 void dmacopy(u32 romOffset, u32 ramAddress, s32 numBytes) {
     OSMesg dmaMesg;

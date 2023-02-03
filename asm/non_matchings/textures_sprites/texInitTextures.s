@@ -1,4 +1,4 @@
-glabel func_8007AC70
+glabel texInitTextures
 /* 07B870 8007AC70 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 07B874 8007AC74 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 07B878 8007AC78 3C05FF00 */  lui   $a1, (0xFF00FFFF >> 16) # lui $a1, 0xff00

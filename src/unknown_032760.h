@@ -90,7 +90,7 @@ void func_80032218(unk800DC950 *arg0);
 void func_80032224(unk800DC950 *arg0);
 void func_80032248(unk800DC950 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
 void func_80032344(unk800DC950 *arg0, s32 arg1, s32 arg2);
-void func_80032398(s32 arg0);
+void lightUpdateLights(s32 arg0);
 void func_80032BAC(unk800DC950 *arg0);
 s32 func_80032C6C(void);
 f32 func_80033A14(unk800DC950 *arg0);

@@ -255,7 +255,7 @@ void func_8005E204(Object *obj, Object_Racer *racer, f32 arg2, s32 objectID, s32
     f32 diffZ;
     f32 diffY;
 
-    var_s6 = func_8000E988(&sp80, &sp7C);
+    var_s6 = objGetObjList(&sp80, &sp7C);
     spawnObj.objectID = objectID;
     spawnObj.size = (((objectID & 0x100) & 0xFFFF) >> 1) | 8;
     spawnObj.x = obj->segment.trans.x_position - (racer->ox1 * arg2);

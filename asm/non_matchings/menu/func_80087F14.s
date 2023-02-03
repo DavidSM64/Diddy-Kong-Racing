@@ -261,7 +261,7 @@ glabel func_80087F14
 /* 088EB8 800882B8 25080004 */  addiu $t0, $t0, 4
 /* 088EBC 800882BC 14BFFFBE */  bne   $a1, $ra, .L800881B8
 /* 088EC0 800882C0 A3200000 */   sb    $zero, ($t9)
-/* 088EC4 800882C4 0C01D859 */  jal   func_80076164
+/* 088EC4 800882C4 0C01D859 */  jal   packDirectoryFree
 /* 088EC8 800882C8 AFAA0078 */   sw    $t2, 0x78($sp)
 /* 088ECC 800882CC 8FAE0090 */  lw    $t6, 0x90($sp)
 /* 088ED0 800882D0 3C108012 */  lui   $s0, %hi(sCurrentControllerPakFreeSpace) # $s0, 0x8012

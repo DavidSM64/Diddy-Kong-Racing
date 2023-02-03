@@ -193,7 +193,7 @@ void func_800AB1F0(void) {
     D_80127C08 = 0;
 }
 
-void func_800AB308(s16 arg0, s16 arg1) {
+void setWeatherLimits(s16 arg0, s16 arg1) {
     if (D_80127BF8.unk2 < D_80127BF8.unk0) {
         D_80127BF8.unk0 = arg0;
         D_80127BF8.unk2 = arg1;
@@ -262,7 +262,7 @@ void func_800ABB34(void) {
 }
 
 
-void func_800ABC5C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+void changeWeather(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
     if ((arg5 > 0) && ((arg0 != D_80127BB8[5]) || (arg1 != D_80127BB8[8]) || (arg2 != D_80127BB8[11])
         || (arg3 != D_80127BB8[0]) || (arg4 != D_80127BB8[12]))) {
         D_80127BB8[5] = arg0;
@@ -389,7 +389,7 @@ void func_800AC880(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC8A8.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800ACA20.s")
 
-void func_800ACF60(Object *arg0) {
+void cameraAddOverrideObject(Object *arg0) {
     if (D_800E2A88 < 0x10) {
         D_80127C40[D_800E2A88] = arg0;
         D_800E2A88++;
@@ -532,7 +532,7 @@ void handle_rain_lightning(s32 updateRate) {
     if (gThunderTimer > 0) {
         gThunderTimer -= updateRate;
         if (gThunderTimer <= 0) {
-            if (D_800E2C6C >= 32769 && func_800C018C() == 0) {
+            if (D_800E2C6C >= 32769 && fxFadeOn() == 0) {
                 transition_begin(&D_800E2C98);
             }
             play_sound_global(SOUND_LIGHTNING, NULL);

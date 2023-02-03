@@ -1,4 +1,4 @@
-glabel func_800B4940
+glabel _itoa
 /* 0B5540 800B4940 27BDFFC8 */  addiu $sp, $sp, -0x38
 /* 0B5544 800B4944 8FAE0048 */  lw    $t6, 0x48($sp)
 /* 0B5548 800B4948 AFBF001C */  sw    $ra, 0x1c($sp)
@@ -34,14 +34,14 @@ glabel func_800B4940
 /* 0B55AC 800B49AC 2610FFFF */   addiu $s0, $s0, -1
 /* 0B55B0 800B49B0 00715021 */  addu  $t2, $v1, $s1
 /* 0B55B4 800B49B4 914B0000 */  lbu   $t3, ($t2)
-/* 0B55B8 800B49B8 00000000 */  nop   
+/* 0B55B8 800B49B8 00000000 */  nop
 /* 0B55BC 800B49BC A20B0000 */  sb    $t3, ($s0)
 /* 0B55C0 800B49C0 8FA70024 */  lw    $a3, 0x24($sp)
 /* 0B55C4 800B49C4 8FA60020 */  lw    $a2, 0x20($sp)
 /* 0B55C8 800B49C8 8FA5003C */  lw    $a1, 0x3c($sp)
 /* 0B55CC 800B49CC 8FA40038 */  lw    $a0, 0x38($sp)
 /* 0B55D0 800B49D0 0C033AB2 */  jal   __ull_div
-/* 0B55D4 800B49D4 00000000 */   nop   
+/* 0B55D4 800B49D4 00000000 */   nop
 /* 0B55D8 800B49D8 AFA20038 */  sw    $v0, 0x38($sp)
 /* 0B55DC 800B49DC AFA3003C */  sw    $v1, 0x3c($sp)
 /* 0B55E0 800B49E0 1440FFED */  bnez  $v0, .L800B4998

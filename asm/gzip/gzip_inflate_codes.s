@@ -1,4 +1,4 @@
-glabel gzip_inflate_codes
+glabel gzip_inflate_codes /* Official name: inflate_codes */
 /* 0C7C40 800C7040 27BDFFF0 */  addiu $sp, $sp, -0x10
 /* 0C7C44 800C7044 3C0B800F */  lui   $t3, %hi(gzip_mask_bits) # $t3, 0x800f
 /* 0C7C48 800C7048 AFB20008 */  sw    $s2, 8($sp)

@@ -224,6 +224,7 @@ s32 get_lockup_status(void) {
     return sLockupStatus;
 }
 
+/* Official name: diCpuTraceTick */
 void lockup_screen_loop(s32 updateRate) {
     sLockupDelay += updateRate;
     if (sLockupDelay > 60) {

@@ -193,7 +193,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         D_8011D5C0 = firstRacerObj->segment.trans.y_position;
     }
     if ((firstRacerObj->segment.trans.y_position + 400.0) < D_8011D5C0) {
-        if (func_800C018C() == 0 && is_in_two_player_adventure()) {
+        if (fxFadeOn() == 0 && is_in_two_player_adventure()) {
             func_8006F398();
         }
         func_8006F140(1);
@@ -318,7 +318,7 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
         if (settings->courseFlagsPtr[settings->courseId] & 2) {
             if (racerUnk1AC == 1) {
                 func_8006F140(4);
-                func_8000E128();
+                instShowBearBar();
             } else {
                 func_8006F140(3);
                 if (is_in_two_player_adventure()) {
@@ -358,7 +358,7 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
                 func_8006C1AC(miscAsset67CourseByte, 4, -1, 4);
             }
             func_8006F140(4);
-            func_8000E128();
+            instShowBearBar();
         } else {
             func_8006C1AC((s32)SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
             func_8006C1AC(miscAsset67CourseByte, 5, -1, 5);

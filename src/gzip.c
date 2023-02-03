@@ -22,13 +22,15 @@ s32 D_8012AAD8;
 
 /******************************/
 
-void func_800C6170(void) {
+void rzipInit(void) {
     D_800E3760 = (huft *)allocate_from_main_pool_safe(0x2800, COLOUR_TAG_BLACK);
     gAssetAddress = (s32 *)allocate_from_main_pool_safe(0x10, COLOUR_TAG_BLACK);
 }
 
 /**
  * Converts a little endian value to big endian.
+ * Official name: rzipUncompressSize
+ * (so, this probably expects a gzip header)
  */
 s32 byteswap32(u8 *arg0) {
     s32 value;
@@ -41,6 +43,7 @@ s32 byteswap32(u8 *arg0) {
 
 /**
  * Returns the uncompressed size of a gzip compressed asset.
+ * Official name: rzipUncompressSizeROM
  */
 s32 get_asset_uncompressed_size(s32 assetIndex, s32 assetOffset) {
     load_asset_to_address(assetIndex, (u32) gAssetAddress, assetOffset, 8);
@@ -50,6 +53,7 @@ s32 get_asset_uncompressed_size(s32 assetIndex, s32 assetOffset) {
 /**
  * Decompresses gzip data.
  * Returns the pointer to the decompressed data.
+ * Official name: rzipUncompress
  */
 u8 *gzip_inflate(u8 *compressedInput, u8 *decompressedOutput) {
     gzip_inflate_input = compressedInput + 5; // The compression header is 5 bytes.
@@ -60,6 +64,7 @@ u8 *gzip_inflate(u8 *compressedInput, u8 *decompressedOutput) {
     return decompressedOutput;
 }
 
+/* Official name: huft_build */
 void gzip_huft_build(u32 *b, u32 n, u32 s, u16 *d, u16 *e, huft **t, s32 *m) {
   u32 a;                   /* counter for codes of length k */
   u32 c[BMAX+1];           /* bit length count table */
