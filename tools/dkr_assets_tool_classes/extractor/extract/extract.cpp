@@ -4,6 +4,7 @@ Extract::Extract(std::string key, std::vector<uint8_t> data, std::string outFile
     this->key = key;
     this->data = data;
     this->outFilepath = outFilepath;
+    ensure_that_path_exists(outFilepath);
 }
 
 Extract::~Extract(){

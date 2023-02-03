@@ -124,7 +124,7 @@ void asset_includes(const std::vector<std::string>& args) {
     set_version(version);
 
     AssetEnumsHeader assetEnumsHeader(includeDir);
-    AssetAsmIncludes assetAsmIncludes(assetsDir + "/" + version, buildDir + "/" + version, assetsAsmDir);
+    AssetAsmIncludes assetAsmIncludes(assetsDir + "/" + version, buildDir + "/" + version + "/assets", assetsAsmDir);
 }
 
 void asset_compile(const std::vector<std::string>& args) {
