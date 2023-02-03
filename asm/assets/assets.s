@@ -7836,12 +7836,12 @@ glabel ASSET_GAME_TEXT_TABLE
 glabel ASSET_MENU_TEXT
 glabel ASSET_MENU_TEXT_ENGLISH
 .incbin "./build/us_1.0/assets/text/menu/english_menu_text.bin"
-glabel ASSET_MENU_TEXT_1
-.incbin "./build/us_1.0/assets/text/menu/unknown_8_1.bin"
-glabel ASSET_MENU_TEXT_2
-.incbin "./build/us_1.0/assets/text/menu/unknown_8_2.bin"
-glabel ASSET_MENU_TEXT_3
-.incbin "./build/us_1.0/assets/text/menu/unknown_8_3.bin"
+glabel ASSET_MENU_TEXT_FRENCH
+.incbin "./build/us_1.0/assets/text/menu/french_menu_text.bin"
+glabel ASSET_MENU_TEXT_GERMAN
+.incbin "./build/us_1.0/assets/text/menu/german_menu_text.bin"
+glabel ASSET_MENU_TEXT_JAPANESE
+.incbin "./build/us_1.0/assets/text/menu/japanese_menu_text.bin"
 glabel ASSET_MENU_TEXT_END
 
 /********** ASSET_MENU_TEXT_TABLE **********/
@@ -7850,9 +7850,9 @@ glabel ASSET_MENU_TEXT_END
 glabel ASSET_MENU_TEXT_TABLE
 .word 186 # Number of text entries for the languages
 .word ASSET_MENU_TEXT_ENGLISH - ASSET_MENU_TEXT
-.word ASSET_MENU_TEXT_1 - ASSET_MENU_TEXT
-.word ASSET_MENU_TEXT_2 - ASSET_MENU_TEXT
-.word ASSET_MENU_TEXT_3 - ASSET_MENU_TEXT
+.word ASSET_MENU_TEXT_FRENCH - ASSET_MENU_TEXT
+.word ASSET_MENU_TEXT_GERMAN - ASSET_MENU_TEXT
+.word ASSET_MENU_TEXT_JAPANESE - ASSET_MENU_TEXT
 .word ASSET_MENU_TEXT_END - ASSET_MENU_TEXT
 .word 0xFFFFFFFF
 

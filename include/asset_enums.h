@@ -2654,9 +2654,9 @@ typedef enum {
 
 typedef enum {
     ASSET_MENU_TEXT_ENGLISH,
-    ASSET_MENU_TEXT_1,
-    ASSET_MENU_TEXT_2,
-    ASSET_MENU_TEXT_3
+    ASSET_MENU_TEXT_FRENCH,
+    ASSET_MENU_TEXT_GERMAN,
+    ASSET_MENU_TEXT_JAPANESE
 } AssetMenuTextEnum;
 
 typedef enum {

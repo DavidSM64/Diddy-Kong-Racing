@@ -546,18 +546,22 @@
                 "table": 9,
                 "files": [
                     {
+                        "index": 0,
                         "filename": "english_menu_text",
                         "build-id": "ASSET_MENU_TEXT_ENGLISH"
                     },
                     {
+                        "index": 1,
                         "filename": "french_menu_text",
                         "build-id": "ASSET_MENU_TEXT_FRENCH"
                     },
                     {
+                        "index": 2,
                         "filename": "german_menu_text",
                         "build-id": "ASSET_MENU_TEXT_GERMAN"
                     },
                     {
+                        "index": 3,
                         "filename": "japanese_menu_text",
                         "build-id": "ASSET_MENU_TEXT_JAPANESE"
                     }
