@@ -11,7 +11,7 @@ std::string lastJsonFileName = "";
 json::JSON *lastJsonFile;
 std::unordered_map<std::string, json::JSON> jsonFileCache;
 
-#define ASSETS_FILENAME "assets.json"
+#define ASSETS_FILENAME "assets.meta.json"
 
 json::JSON load_assets_json(std::string assetsFolder, std::string jsonName) {
     std::string jsonFilepath = assetsFolder + "/" + jsonName;

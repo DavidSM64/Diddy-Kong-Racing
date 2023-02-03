@@ -218,77 +218,66 @@ CC_CHECK_CFLAGS += -Wno-builtin-declaration-mismatch -Wno-pointer-to-int-cast -W
 
 ####################### ASSETS #########################
 
-# All the asset subfolders to create in the build folder.
-ASSETS_DIRS := audio bin fonts ids levels levels/headers levels/models levels/names levels/objectMaps misc objects objects/animations objects/headers objects/models particles particles/behaviors particles/particles sprites text text/game text/menu textures textures/2d textures/3d tt_ghosts unknown_0 ucode
+###### Define section files into the ALL_ASSETS_BUILT variable ######
 
-DUMMY != mkdir -p $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(LIB_DIRS) $(ASM_DIRS) $(SRC_DIRS) $(ASSETS_DIRS)) >&2 || echo FAIL
-
-ASSETS_DIR = assets/$(VERSION)
 UCODE_DIR = ucode/$(VERSION)
+ASSETS := assets/$(VERSION)
+#BUILD_DIR := ./build/$(VERSION)
+ASSETS_BUILD_DIR := $(BUILD_DIR)/assets
 
 ASSETS_COPY = cp
 
-# Makes name uppercase, and also replaces '/' with '_' for subfolders.
-# Doing all those subst calls *should* be faster than `$(shell echo '$1' | tr '[:lower:]' '[:upper:]')
-GET_VAR_NAME = $(subst /,_,$(subst a,A,$(subst b,B,$(subst c,C,$(subst d,D,$(subst e,E,$(subst f,F,$(subst g,G,$(subst h,H,$(subst i,I,$(subst j,J,$(subst k,K,$(subst l,L,$(subst m,M,$(subst n,N,$(subst o,O,$(subst p,P,$(subst q,Q,$(subst r,R,$(subst s,S,$(subst t,T,$(subst u,U,$(subst v,V,$(subst w,W,$(subst x,X,$(subst y,Y,$(subst z,Z,$1)))))))))))))))))))))))))))
+# Add .json files
+JSON_FILES := $(shell find $(ASSETS) -type f -name '*.json')
+# Ignore .meta.json files
+IGNORE_JSON_FILES := $(shell find $(ASSETS) -type f -name '*.meta.json')
+JSON_FILES := $(filter-out $(IGNORE_JSON_FILES),$(JSON_FILES))
+# Add .cbin files
+CBIN_FILES := $(shell find $(ASSETS) -type f -name '*.cbin')
+# Add .bin files
+BIN_FILES := $(shell find $(ASSETS) -type f -name '*.bin')
+ALL_FILES := $(CBIN_FILES) $(BIN_FILES) $(JSON_FILES)
 
-# $1 = Input/Output directories name
-define DEFINE_BINARY_FILES
-ALL_ASSETS_BUILT += $(patsubst $($1_IN_DIR)/%.bin,$($1_OUT_DIR)/%.bin,$(wildcard $($1_IN_DIR)/*.bin))
-endef
-# $1 = Input/Output directories name
-define DEFINE_COMPRESSED_BINARY_FILES
-ALL_ASSETS_BUILT += $(patsubst $($1_IN_DIR)/%.cbin,$($1_OUT_DIR)/%.bin,$(wildcard $($1_IN_DIR)/*.cbin))
-endef
-# $1 = Input/Output directories name
-define DEFINE_JSON_FILES
-ALL_ASSETS_BUILT += $(patsubst $($1_IN_DIR)/%.json,$($1_OUT_DIR)/%.bin,$(wildcard $($1_IN_DIR)/*.json))
-endef
-# $1 = Input/Output directories name
-define DEFINE_JSON_AND_BINARY_FILES
-$(eval $(call DEFINE_JSON_FILES,$1))
-$(eval $(call DEFINE_BINARY_FILES,$1))
-endef
+ALL_FILES_OUT := $(foreach FILE,ALL_FILES,$($(FILE):$(ASSETS)%=$(ASSETS_BUILD_DIR)%))
+ALL_FILES_OUT := $(foreach FILE,ALL_FILES_OUT,$($(FILE):$.cbin%=$.bin%))
+ALL_FILES_OUT := $(foreach FILE,ALL_FILES_OUT,$($(FILE):$.json%=$.bin%))
 
-# $1 = folder name, $2 = define function
-define DEFINE_SECTION_FILES
-$(eval VAR_NAME := $(call GET_VAR_NAME,$1))
-$(eval $(VAR_NAME)_IN_DIR = $(ASSETS_DIR)/$1)
-$(eval $(VAR_NAME)_OUT_DIR = $(BUILD_DIR)/$1)
-$(eval $(call $2,$(VAR_NAME)))
+DIRECTORY = $(sort $(dir $(ALL_FILES_OUT))) $(addprefix $(BUILD_DIR)/,$(LIB_DIRS) $(ASM_DIRS) $(SRC_DIRS) ucode)
+
+DUMMY != mkdir -p $(DIRECTORY) >&2 || echo FAIL
+
+# $1 = asset path (e.g. assets/levels/models/...), $2 = cmd to run
+define DEFINE_ASSET_TARGET
+$(eval BASE_PATH := $(subst $(ASSETS),$(ASSETS_BUILD_DIR),$(basename $1)))
+$$(BASE_PATH).bin: $1
+	$2
+$(eval ALL_ASSETS_BUILT+=$(BASE_PATH).bin)
 endef
 
-###### Define section files into the ALL_ASSETS_BUILT variable ######
+# $1 = Print message
+define BIN_FILE_ACTION
+	$$(call print,$1:,$$<,$$@)
+	$$(V)$$(ASSETS_COPY) $$^ $$@
+endef
 
-$(call DEFINE_SECTION_FILES,audio,DEFINE_BINARY_FILES)
-$(call DEFINE_SECTION_FILES,bin,DEFINE_BINARY_FILES)
-$(call DEFINE_SECTION_FILES,fonts,DEFINE_JSON_AND_BINARY_FILES)
-$(call DEFINE_SECTION_FILES,ids,DEFINE_BINARY_FILES)
-$(call DEFINE_SECTION_FILES,levels,DEFINE_BINARY_FILES)
-$(call DEFINE_SECTION_FILES,levels/headers,DEFINE_JSON_FILES)
-$(call DEFINE_SECTION_FILES,levels/models,DEFINE_COMPRESSED_BINARY_FILES)
-$(call DEFINE_SECTION_FILES,levels/names,DEFINE_JSON_FILES)
-$(call DEFINE_SECTION_FILES,levels/objectMaps,DEFINE_COMPRESSED_BINARY_FILES)
-$(call DEFINE_SECTION_FILES,misc,DEFINE_BINARY_FILES)
-$(call DEFINE_SECTION_FILES,objects,DEFINE_BINARY_FILES)
-$(call DEFINE_SECTION_FILES,objects/animations,DEFINE_COMPRESSED_BINARY_FILES)
-$(call DEFINE_SECTION_FILES,objects/headers,DEFINE_BINARY_FILES)
-$(call DEFINE_SECTION_FILES,objects/models,DEFINE_COMPRESSED_BINARY_FILES)
-$(call DEFINE_SECTION_FILES,particles/behaviors,DEFINE_BINARY_FILES)
-$(call DEFINE_SECTION_FILES,particles/particles,DEFINE_BINARY_FILES)
-$(call DEFINE_SECTION_FILES,sprites,DEFINE_JSON_FILES)
-$(call DEFINE_SECTION_FILES,text/game,DEFINE_JSON_FILES)
-$(call DEFINE_SECTION_FILES,text/menu,DEFINE_JSON_FILES)
-$(call DEFINE_SECTION_FILES,textures/2d,DEFINE_JSON_FILES)
-$(call DEFINE_SECTION_FILES,textures/3d,DEFINE_JSON_FILES)
-$(call DEFINE_SECTION_FILES,tt_ghosts,DEFINE_JSON_FILES)
-$(call DEFINE_SECTION_FILES,unknown_0,DEFINE_BINARY_FILES)
+# $1 = Print message
+define CBIN_FILE_ACTION
+	$$(call print,$1:,$$<,$$@)
+	$$(V)$$(COMPRESS) $$^ $$@
+endef
+
+# $1 = Print message
+define JSON_FILE_ACTION
+	$$(call print,$1:,$$<,$$@)
+	$$(V)$$(BUILDER) $$< $$@
+endef
 
 # Microcode
 UCODE_IN_DIR = $(UCODE_DIR)
 UCODE_OUT_DIR = $(BUILD_DIR)/ucode
 UCODE = $(wildcard $(UCODE_IN_DIR)/*.bin)
 ALL_ASSETS_BUILT += $(patsubst $(UCODE_IN_DIR)/%.bin,$(UCODE_OUT_DIR)/%.bin,$(UCODE))
+
 
 ####################### LIBULTRA #########################
 
@@ -382,57 +371,10 @@ dkr.ld: $(BUILD_DIR)/enumsCache.bin
 
 ALL_ASSETS_BUILT += dkr.ld # This is a hack, but it works I guess.
 
-# All assets should output a .bin file
+$(foreach FILE,$(BIN_FILES),$(eval $(call DEFINE_ASSET_TARGET,$(FILE),$(call BIN_FILE_ACTION,Copying))))
+$(foreach FILE,$(CBIN_FILES),$(eval $(call DEFINE_ASSET_TARGET,$(FILE),$(call CBIN_FILE_ACTION,Compressing))))
+$(foreach FILE,$(JSON_FILES),$(eval $(call DEFINE_ASSET_TARGET,$(FILE),$(call JSON_FILE_ACTION,Building))))
 
-# $1 = folder name, $2 = Print Message
-define CREATE_BINARY_ASSET_TARGET
-$(eval VAR_NAME := $(call GET_VAR_NAME,$1))
-$$($$(VAR_NAME)_OUT_DIR)/%.bin: $$($$(VAR_NAME)_IN_DIR)/%.bin
-	$$(call print,$2:,$$<,$$@)
-	$$(V)$$(ASSETS_COPY) $$^ $$@
-endef
-
-# $1 = folder name, $2 = Print Message
-define CREATE_COMPRESSED_ASSET_TARGET
-$(eval VAR_NAME := $(call GET_VAR_NAME,$1))
-$$($$(VAR_NAME)_OUT_DIR)/%.bin: $$($$(VAR_NAME)_IN_DIR)/%.cbin
-	$$(call print,$2:,$$<,$$@)
-	$$(V)$$(COMPRESS) $$^ $$@
-endef
-
-# $1 = folder name, $2 = Print Message
-define CREATE_JSON_ASSET_TARGET
-$(eval VAR_NAME := $(call GET_VAR_NAME,$1))
-$$($$(VAR_NAME)_OUT_DIR)/%.bin: $$($$(VAR_NAME)_IN_DIR)/%.json $(BUILD_DIR)/enumsCache.bin
-	$$(call print,$2:,$$<,$$@)
-	$$(V)$$(BUILDER) $$< $$@
-endef
-
-$(eval $(call CREATE_BINARY_ASSET_TARGET,audio,Copying Audio Binary))
-$(eval $(call CREATE_BINARY_ASSET_TARGET,bin,Copying Bin Binary))
-$(eval $(call CREATE_BINARY_ASSET_TARGET,fonts,Copying Fonts Binary))
-$(eval $(call CREATE_JSON_ASSET_TARGET,fonts,Building Fonts))
-$(eval $(call CREATE_BINARY_ASSET_TARGET,ids,Copying IDs Binary))
-$(eval $(call CREATE_BINARY_ASSET_TARGET,levels,Copying Levels Binary))
-$(eval $(call CREATE_JSON_ASSET_TARGET,levels/headers,Building Level Header))
-$(eval $(call CREATE_COMPRESSED_ASSET_TARGET,levels/models,Compressing Level Model Binary))
-$(eval $(call CREATE_JSON_ASSET_TARGET,levels/names,Building Level Name))
-$(eval $(call CREATE_COMPRESSED_ASSET_TARGET,levels/objectMaps,Compressing Level Object Map Binary))
-$(eval $(call CREATE_BINARY_ASSET_TARGET,misc,Copying Misc Binary))
-$(eval $(call CREATE_BINARY_ASSET_TARGET,objects,Copying Object Binary))
-$(eval $(call CREATE_COMPRESSED_ASSET_TARGET,objects/animations,Compressing Object Animation Binary))
-$(eval $(call CREATE_BINARY_ASSET_TARGET,objects/headers,Copying Object Header Binary))
-$(eval $(call CREATE_COMPRESSED_ASSET_TARGET,objects/models,Compressing Object Model Binary))
-$(eval $(call CREATE_BINARY_ASSET_TARGET,particles/behaviors,Copying Particle Behavior Binary))
-$(eval $(call CREATE_BINARY_ASSET_TARGET,particles/particles,Copying Particle Binary))
-$(eval $(call CREATE_JSON_ASSET_TARGET,sprites,Building Sprite))
-$(eval $(call CREATE_JSON_ASSET_TARGET,text/game,Building Game Text))
-$(eval $(call CREATE_JSON_ASSET_TARGET,text/menu,Building Menu Text))
-$(eval $(call CREATE_JSON_ASSET_TARGET,textures/2d,Building Texture (2D)))
-$(eval $(call CREATE_JSON_ASSET_TARGET,textures/3d,Building Texture (3D)))
-$(eval $(call CREATE_JSON_ASSET_TARGET,tt_ghosts,Building T.T. Ghost))
-$(eval $(call CREATE_BINARY_ASSET_TARGET,unknown_0,Copying Unknown_0 Binary))
-    
 # Microcode target
 $(UCODE_OUT_DIR)/%.bin: $(UCODE_IN_DIR)/%.bin
 	$(call print,Copying:,$<,$@)

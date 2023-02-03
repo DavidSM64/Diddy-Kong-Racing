@@ -35,7 +35,7 @@ ExtractFonts::ExtractFonts(std::string key, std::vector<uint8_t> data, std::stri
         int texOffset = offset + 0x40;
         int16_t texIndex = get_big_endian_halfword(data, texOffset);
         while(texIndex != -1) {
-            json::JSON textureId = configJSON["assets"]["sections"][SECTION_TEXTURE_2D_INDEX]["child-build-ids"][texIndex];
+            json::JSON textureId = get_build_id_from_section("ASSET_TEXTURES_2D", texIndex);
             font["textures"].append(textureId);
             texOffset += 2;
             texIndex = get_big_endian_halfword(data, texOffset);
@@ -74,7 +74,7 @@ ExtractFonts::ExtractFonts(std::string key, std::vector<uint8_t> data, std::stri
         font["encoding"]["type"] = "ASCII";
 
         std::string fontJsonFilename = GAME_FONTS_FOLDERNAME;
-        fontJsonFilename += "/" + fontName + ".json";
+        fontJsonFilename += "/" + fontName + ".meta.json";
 
         out["fonts"][fontId] = fontJsonFilename;
         
