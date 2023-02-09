@@ -726,4 +726,119 @@ void render_textured_rectangle(Gfx **dList, DrawTexture *element, s32 xPos, s32 
     gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
 }
 
+#if 1
+void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 x, f32 y, f32 x_scale, f32 y_scale, u32 colour, s32 flip) {
+    Gfx (*dmaDlist)[2];
+    s32 width;
+    s32 height;
+    DrawTexture *var_s1;
+    TextureHeader *tex;
+    f32 xScale4x;
+    f32 yScale4x;
+    s32 x4x;
+    s32 y4x;
+    s32 temp_lo;
+    s32 flagBit12;
+    s32 flagBit13;
+    s32 widthAndHeight;
+    s32 temp_v1;
+    s32 temp_v1_2;
+    s32 dtdy;
+    s32 lrx;
+    s32 lry;
+    s32 t;
+    s32 uly;
+    s32 ulx;
+    s32 dsdx;
+    s32 s;
+    s32 dmaDlistIndex;
+    s32 i;
+
+    widthAndHeight = get_video_width_and_height_as_s32();
+    //If the colour is fully opaque
+    if ((colour & 0xFF) == 0xFF) {
+        dmaDlist = dTextureRectangleScaledOpa;
+    } else {
+        dmaDlist = dTextureRectangleScaledXlu;
+    }
+    
+    //dmaDlistIndex = (flip & 0xFF) << 4;
+    dmaDlistIndex = flip;
+    
+    gSPDisplayList((*dlist)++, D_800DE670);
+    gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dmaDlist[dmaDlistIndex]), numberOfGfxCommands(dmaDlist[0]))
+    gDPSetPrimColorRGBA((*dlist)++, colour);
+
+    tex = element->texture;
+    xScale4x = x_scale * 4.0f;
+    yScale4x = y_scale * 4.0f;
+    x4x = x * 4.0f;
+    y4x = y * 4.0f;
+    flagBit12 = flip & (1 << 12);
+    flagBit13 = flip & (1 << 13);
+    width = GET_VIDEO_WIDTH(widthAndHeight) * 4;
+    height = (GET_VIDEO_HEIGHT(widthAndHeight) & 0xFFFF) * 4;
+
+    if (tex != NULL) {
+        var_s1 = element;
+        do {
+            if (flagBit12 == 0) {
+                ulx = (s32) (var_s1->xOffset * xScale4x) + x4x;
+            } else {
+                lrx = x4x - (s32) (var_s1->xOffset * xScale4x);
+                ulx = lrx - (s32) (tex->width * xScale4x);
+            }
+            if (flagBit13 == 0) {
+                uly = (s32) (var_s1->yOffset * yScale4x) + y4x;
+            } else {
+                lry = y4x - (s32) (var_s1->yOffset * yScale4x);
+                uly = lry - (s32) (tex->height * yScale4x);
+            }
+            if ((ulx < width) && (uly < height)) {
+                if (flagBit12 == 0) {
+                    lrx = (s32) (tex->width * xScale4x) + ulx;
+                }
+                if (flagBit13 == 0) {
+                    lry = (s32) (tex->height * yScale4x) + uly;
+                }
+                if ((lrx > 0) && (lry > 0) && (ulx < lrx) && (uly < lry)) {
+                    temp_v1 = tex->width - 1;
+                    s = 0;
+                    t = 0;
+                    dsdx = (temp_v1 << 12) / (lrx - ulx);
+                    if (flagBit12 != 0) {
+                        s = temp_v1 << 5;
+                        dsdx = -dsdx;
+                    }
+                    temp_v1_2 = tex->height - 1;
+                    dtdy = (temp_v1_2 << 12) / (lry - uly);
+                    if (flagBit13 != 0) {
+                        t = temp_v1_2 << 5;
+                        dtdy = -dtdy;
+                    }
+                    if (ulx < 0) {
+                        temp_lo = -ulx * dsdx;
+                        ulx = 0;
+                        s += temp_lo >> 7;
+                    }
+                    if (uly < 0) {
+                        temp_lo = -uly * dtdy;
+                        uly = 0;
+                        t += temp_lo >> 7; // / 128
+                    }
+
+                    gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);                    
+                    gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, dsdx, dtdy);
+                }
+            }
+            var_s1 += 1;
+            tex = var_s1->texture;
+        } while (tex != NULL);
+    }
+    
+    gDPPipeSync((*dlist)++);
+    gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_078050/render_texture_rectangle_scaled.s")
+#endif
