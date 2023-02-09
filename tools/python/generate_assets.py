@@ -17,7 +17,7 @@ class GenerateAssets:
     def __init__(self, rootDir, version):
         self.ASSETS_ASM_DIR = rootDir + '/asm/assets'
         self.ASSETS_FILENAME = self.ASSETS_ASM_DIR + '/assets.s'
-        self.ASSETS_DIR = rootDir + '/assets'
+        self.ASSETS_DIR = rootDir + '/assets/vanilla'
         self.UCODE_DIR = rootDir + '/ucode/' + version
         self.UCODE_TEXT_FILENAME = self.ASSETS_ASM_DIR + '/ucode_text.s'
         self.UCODE_DATA_FILENAME = self.ASSETS_ASM_DIR + '/ucode_data.s'
