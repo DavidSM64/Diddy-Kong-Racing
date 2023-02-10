@@ -726,37 +726,34 @@ void render_textured_rectangle(Gfx **dList, DrawTexture *element, s32 xPos, s32 
     gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
 }
 
-#ifdef NON_MATCHING
 void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 x_scale, f32 y_scale, u32 colour, s32 flags) {
     TextureHeader *tex;
     Gfx *dmaDlist;
+    s32 i;
     s32 flagBit12;
     s32 flagBit13;
-    s32 i;
-    s32 s;
-    s32 t;
-    s32 dtdy;
-    s32 dsdx;
-    s32 ulx;
-    s32 uly;
-    s32 lrx;
-    s32 lry;
-    s32 height;
-    s32 width;
+    s32 s;   //the texture coordinate s of upper-left corner of rectangle (s10.5)
+    s32 t;   //the texture coordinate t of upper-left corner of rectangle (s10.5)
+    s32 dsdx;//the change in s for each change in x (s5.10)
+    s32 dtdy;//the change in t for each change in y (s5.10)
+    s32 ulx; //the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
+    s32 uly; //the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.height75)
+    s32 lrx; //the x-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
+    s32 lry; //the y-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
     s32 xPos4x;
     s32 yPos4x;
-    u8 dlistIndex;
+    s32 width;
+    s32 height;
 
     height = get_video_width_and_height_as_s32();
     width = GET_VIDEO_WIDTH(height) * 4;
     height = (GET_VIDEO_HEIGHT(height) & 0xFFFF) * 4;
-    dlistIndex = flags & 0xFF;
     
     //If the colour is fully opaque
     if ((colour & 0xFF) == 0xFF) {
-        dmaDlist = dTextureRectangleScaledOpa[dlistIndex];
+        dmaDlist = dTextureRectangleScaledOpa[(u8)flags & 0xFF];
     } else {
-        dmaDlist = dTextureRectangleScaledXlu[dlistIndex];
+        dmaDlist = dTextureRectangleScaledXlu[(u8)flags & 0xFF];
     }
     
     gSPDisplayList((*dlist)++, D_800DE670);
@@ -823,6 +820,3 @@ void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos
     gDPPipeSync((*dlist)++);
     gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_078050/render_texture_rectangle_scaled.s")
-#endif
