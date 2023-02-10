@@ -7,8 +7,8 @@ Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of February 10, 2023, this is our current score:
 
-    Decomp progress: 49.78%
-    Documentation progress: 23.09%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 49.78%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 23.09%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
