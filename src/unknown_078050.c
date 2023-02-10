@@ -726,12 +726,12 @@ void render_textured_rectangle(Gfx **dList, DrawTexture *element, s32 xPos, s32 
     gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
 }
 
-void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 x_scale, f32 y_scale, u32 colour, s32 flags) {
+void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale, u32 colour, s32 flags) {
     TextureHeader *tex;
     Gfx *dmaDlist;
     s32 i;
-    s32 flagBit12;
-    s32 flagBit13;
+    s32 bFlipX;
+    s32 bFlipY;
     s32 s;   //the texture coordinate s of upper-left corner of rectangle (s10.5)
     s32 t;   //the texture coordinate t of upper-left corner of rectangle (s10.5)
     s32 dsdx;//the change in s for each change in x (s5.10)
@@ -760,43 +760,43 @@ void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos
     gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dmaDlist), numberOfGfxCommands(dTextureRectangleScaledOpa[0]));
     gDPSetPrimColorRGBA((*dlist)++, colour);
     
-    flagBit12 = flags & (1 << 12);
-    flagBit13 = flags & (1 << 13);
-    x_scale *= 4;
-    y_scale *= 4;
+    bFlipX = flags & (1 << 12);
+    bFlipY = flags & (1 << 13);
+    xScale *= 4;
+    yScale *= 4;
     xPos4x = xPos * 4;
     yPos4x = yPos * 4;
 
     for (i = 0; (tex = element[i].texture); i++) {
-        if (!flagBit12) {
-            ulx = (s32) (element[i].xOffset * x_scale) + xPos4x;
+        if (!bFlipX) {
+            ulx = (s32) (element[i].xOffset * xScale) + xPos4x;
         } else {
-            lrx = xPos4x - (s32) (element[i].xOffset * x_scale);
-            ulx = lrx - (s32) (tex->width * x_scale);
+            lrx = xPos4x - (s32) (element[i].xOffset * xScale);
+            ulx = lrx - (s32) (tex->width * xScale);
         }
-        if (!flagBit13) {
-            uly = (s32) (element[i].yOffset * y_scale) + yPos4x;
+        if (!bFlipY) {
+            uly = (s32) (element[i].yOffset * yScale) + yPos4x;
         } else {
-            lry = yPos4x - (s32) (element[i].yOffset * y_scale);
-            uly = lry - (s32) (tex->height * y_scale);
+            lry = yPos4x - (s32) (element[i].yOffset * yScale);
+            uly = lry - (s32) (tex->height * yScale);
         }
         if (ulx < width && uly < height) {
-            if (!flagBit12) {
-                lrx = (s32) (tex->width * x_scale) + ulx;
+            if (!bFlipX) {
+                lrx = (s32) (tex->width * xScale) + ulx;
             }
-            if (!flagBit13) {
-                lry = (s32) (tex->height * y_scale) + uly;
+            if (!bFlipY) {
+                lry = (s32) (tex->height * yScale) + uly;
             }
             if (lrx > 0 && lry > 0 && ulx < lrx && uly < lry) {
                 dsdx = ((tex->width - 1) << 12) / (lrx - ulx);
-                if (flagBit12) {
+                if (bFlipX) {
                     s = (tex->width - 1) << 5;
                     dsdx = -dsdx;
                 } else {
                     s = 0;
                 }
                 dtdy = ((tex->height - 1) << 12) / (lry - uly);
-                if (flagBit13) {
+                if (bFlipY) {
                     t = (tex->height - 1) << 5;
                     dtdy = -dtdy;
                 } else {

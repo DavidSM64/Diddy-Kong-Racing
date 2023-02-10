@@ -72,9 +72,9 @@ void render_textured_rectangle(Gfx **dlist, DrawTexture *img, s32 xPos, s32 yPos
 void render_chequer_background(Gfx** dList);
 void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG);
 void set_background_draw_function(void *arg0);
+void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale, u32 colour, s32 flags);
 
 //Non Matching
-void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 x, f32 y, f32 x_scale, f32 y_scale, u32 color, s32 flip);
 void func_80078190(Gfx **dlist);
 
 #endif
