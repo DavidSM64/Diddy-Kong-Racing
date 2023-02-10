@@ -4,6 +4,14 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
+<!-- README_SCORE_SUMMARY_BEGIN -->
+As of February 10, 2023, this is our current score:
+
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 49.78%
+
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 23.09%
+<!-- README_SCORE_SUMMARY_END -->
+
 ---
 
 ## Dependencies
@@ -120,7 +128,7 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of January 30, 2023, this is our current score:
+As of February 10, 2023, this is our current score:
 ```
  ===================================================================
                ADVENTURE ONE (ASM -> C Decompilation)
