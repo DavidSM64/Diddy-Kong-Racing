@@ -21,7 +21,7 @@ score_updated = re.sub(
   open('README.md', 'r').read()
 )
 
-tabbed_summary = '\n'.join(['\t' + line for line in os.environ["NEW_SCORE_SUMMARY"].split('\n')])
+tabbed_summary = '\n'.join([(' ' * 4) + line for line in os.environ["NEW_SCORE_SUMMARY"].split('\n')])
 
 summary_updated = re.sub(
   fr'(?s).{BEGIN_SUMMARY}.*{END_SUMMARY}',
