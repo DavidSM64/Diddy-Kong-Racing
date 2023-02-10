@@ -25,7 +25,7 @@ tabbed_summary = '\n'.join([(' ' * 4) + line for line in os.environ["NEW_SCORE_S
 
 summary_updated = re.sub(
   fr'(?s).{BEGIN_SUMMARY}.*{END_SUMMARY}',
-  f'\n{BEGIN_SUMMARY}\n{DATE_STR}\n{tabbed_summary}\n{END_SUMMARY}',
+  f'\n{BEGIN_SUMMARY}\n{DATE_STR}\n\n{tabbed_summary}\n{END_SUMMARY}',
   score_updated
 )
 print(summary_updated, end='')
