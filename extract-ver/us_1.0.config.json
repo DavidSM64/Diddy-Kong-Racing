@@ -1480,11 +1480,6 @@
                         "filename": "volcano_wall3",
                         "build-id": "ASSET_TEX3D_DINO_VOLCANOWALL3",
                         "folder": "dino"
-                    },                                           
-                    {
-                        "filename": "grass4",
-                        "index": 625,
-                        "flip-tex": false
                     },
                     {
                         "index": 226,
@@ -3885,6 +3880,7 @@
                         "index": 625,
                         "filename": "smokey_shadow",
                         "build-id": "ASSET_TEX3D_OBJECTS_SMOKEYSHADOW",
+                        "flip-tex": false,
                         "folder": "objects"
                     },
                     {

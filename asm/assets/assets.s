@@ -1359,8 +1359,8 @@ glabel ASSET_TEX3D_OBJECTS_TTSHOE
 .incbin "./build/us_1.0/assets/textures/3d/objects/tt_shoe.bin"
 glabel ASSET_TEX3D_OBJECTS_BUBBLERTENTACLESBACKSIDE
 .incbin "./build/us_1.0/assets/textures/3d/objects/bubbler_tentacles_back_side.bin"
-glabel ASSET_TEX3D_625
-.incbin "./build/us_1.0/assets/textures/3d/unlabeled/grass4.bin"
+glabel ASSET_TEX3D_OBJECTS_SMOKEYSHADOW
+.incbin "./build/us_1.0/assets/textures/3d/objects/smokey_shadow.bin"
 glabel ASSET_TEX3D_OBJECTS_YELLOWDINOSAUREYE
 .incbin "./build/us_1.0/assets/textures/3d/objects/yellow_dinosaur_eye.bin"
 glabel ASSET_TEX3D_OBJECTS_GREENDINOSAUREYE
@@ -3542,7 +3542,7 @@ glabel ASSET_TEXTURES_3D_TABLE
 .word ASSET_TEX3D_OBJECTS_TTRIM - ASSET_TEXTURES_3D
 .word ASSET_TEX3D_OBJECTS_TTSHOE - ASSET_TEXTURES_3D
 .word ASSET_TEX3D_OBJECTS_BUBBLERTENTACLESBACKSIDE - ASSET_TEXTURES_3D
-.word ASSET_TEX3D_625 - ASSET_TEXTURES_3D
+.word ASSET_TEX3D_OBJECTS_SMOKEYSHADOW - ASSET_TEXTURES_3D
 .word ASSET_TEX3D_OBJECTS_YELLOWDINOSAUREYE - ASSET_TEXTURES_3D
 .word ASSET_TEX3D_OBJECTS_GREENDINOSAUREYE - ASSET_TEXTURES_3D
 .word ASSET_TEX3D_OBJECTS_RACERCOMMONBLACK2 - ASSET_TEXTURES_3D
