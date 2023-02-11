@@ -10310,8 +10310,8 @@
                     {
                         "index": 300,
                         "filename": "level_name",
-                        "build-id": "ASSET_TEX2D_HUD_LEVELNAME",
-                        "folder": "hud"
+                        "build-id": "ASSET_TEX2D_OBJECTS_LEVELNAME",
+                        "folder": "objects"
                     },
                     {
                         "index": 301,
@@ -14411,7 +14411,961 @@
                         "filename": "wizpig2",
                         "build-id": "ASSET_SPRITE_MINIMAP_WIZPIG2",
                         "folder": "minimap"
-                    }                    
+                    },
+                    {
+                            "index": 34,
+                            "filename": "rain_drop",
+                            "build-id": "ASSET_SPRITE_WEATHER_RAINDROP",
+                            "folder": "weather"
+                        },
+                        {
+                            "index": 35,
+                            "filename": "snowflake",
+                            "build-id": "ASSET_SPRITE_WEATHER_SNOWFLAKE",
+                            "folder": "weather"
+                        },
+                        {
+                            "index": 36,
+                            "filename": "lensflare1",
+                            "build-id": "ASSET_SPRITE_OBJECTS_LENSFLARE1",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 37,
+                            "filename": "lensflare2",
+                            "build-id": "ASSET_SPRITE_OBJECTS_LENSFLARE2",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 38,
+                            "filename": "lensflare3",
+                            "build-id": "ASSET_SPRITE_OBJECTS_LENSFLARE3",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 39,
+                            "filename": "brown_egg",
+                            "build-id": "ASSET_SPRITE_UNKNOWN_BROWNEGG",
+                            "folder": "unknown"
+                        },
+                        {
+                            "index": 40,
+                            "filename": "smoke",
+                            "build-id": "ASSET_SPRITE_PARTICLES_SMOKE",
+                            "folder": "particles"
+                        },
+                        {
+                            "index": 41,
+                            "filename": "smoke2",
+                            "build-id": "ASSET_SPRITE_PARTICLES_SMOKE2",
+                            "folder": "particles"
+                        },
+                        {
+                            "index": 42,
+                            "filename": "bubbles_small",
+                            "build-id": "ASSET_SPRITE_PARTICLES_BUBBLESSMALL",
+                            "folder": "particles"
+                        },
+                        {
+                            "index": 43,
+                            "filename": "smoke3",
+                            "build-id": "ASSET_SPRITE_PARTICLES_SMOKE3",
+                            "folder": "particles"
+                        },
+                        {
+                            "index": 44,
+                            "filename": "bubble_weapon",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BUBBLEWEAPON",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 45,
+                            "filename": "sparkle",
+                            "build-id": "ASSET_SPRITE_OBJECTS_SPARKLE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 46,
+                            "filename": "bomb_explosion_blue",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONBLUE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 47,
+                            "filename": "bomb_explosion_yellow",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONYELLOW",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 48,
+                            "filename": "bomb_explosion_red",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONRED",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 49,
+                            "filename": "bomb_explosion_green",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONGREEN",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 50,
+                            "filename": "bomb_explosion_cyan",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONCYAN",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 51,
+                            "filename": "bomb_explosion_white",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONWHITE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 52,
+                            "filename": "bomb_explosion_orange",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONORANGE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 53,
+                            "filename": "bomb_explosion_purple",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONPURPLE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 54,
+                            "filename": "rainbow",
+                            "build-id": "ASSET_SPRITE_OBJECTS_RAINBOW",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 55,
+                            "filename": "egg",
+                            "build-id": "ASSET_SPRITE_OBJECTS_EGG",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 56,
+                            "filename": "bomb",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BOMB",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 57,
+                            "filename": "oil_slick",
+                            "build-id": "ASSET_SPRITE_OBJECTS_OILSLICK",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 58,
+                            "filename": "eyes_in_dark",
+                            "build-id": "ASSET_SPRITE_OBJECTS_EYESINDARK",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 59,
+                            "filename": "timer_colon",
+                            "build-id": "ASSET_SPRITE_HUD_TIMERCOLON",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 60,
+                            "filename": "retical_homing",
+                            "build-id": "ASSET_SPRITE_HUD_RETICALHOMING",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 61,
+                            "filename": "debug_red_sphere",
+                            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGREDSPHERE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 62,
+                            "filename": "finish",
+                            "build-id": "ASSET_SPRITE_HUD_FINISH",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 63,
+                            "filename": "get_ready",
+                            "build-id": "ASSET_SPRITE_HUD_GETREADY",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 64,
+                            "filename": "go",
+                            "build-id": "ASSET_SPRITE_HUD_GO",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 65,
+                            "filename": "lap",
+                            "build-id": "ASSET_SPRITE_HUD_LAP",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 66,
+                            "filename": "forward_slash",
+                            "build-id": "ASSET_SPRITE_HUD_FORWARDSLASH",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 67,
+                            "filename": "time",
+                            "build-id": "ASSET_SPRITE_HUD_TIME",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 68,
+                            "filename": "place_numbers",
+                            "build-id": "ASSET_SPRITE_HUD_PLACENUMBERS",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 69,
+                            "filename": "timer_numbers",
+                            "build-id": "ASSET_SPRITE_HUD_TIMERNUMBERS",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 70,
+                            "filename": "timer_color_small",
+                            "build-id": "ASSET_SPRITE_HUD_TIMERCOLORSMALL",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 71,
+                            "filename": "timer_numbers_small",
+                            "build-id": "ASSET_SPRITE_HUD_TIMERNUMBERSSMALL",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 72,
+                            "filename": "go_small",
+                            "build-id": "ASSET_SPRITE_HUD_GOSMALL",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 73,
+                            "filename": "lap_small",
+                            "build-id": "ASSET_SPRITE_HUD_LAPSMALL",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 74,
+                            "filename": "get_ready2",
+                            "build-id": "ASSET_SPRITE_HUD_GETREADY2",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 75,
+                            "filename": "final_small",
+                            "build-id": "ASSET_SPRITE_HUD_FINALSMALL",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 76,
+                            "filename": "finish_small",
+                            "build-id": "ASSET_SPRITE_HUD_FINISHSMALL",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 77,
+                            "filename": "lap2_small",
+                            "build-id": "ASSET_SPRITE_HUD_LAP2SMALL",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 78,
+                            "filename": "way_small",
+                            "build-id": "ASSET_SPRITE_HUD_WAYSMALL",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 79,
+                            "filename": "wrong_small",
+                            "build-id": "ASSET_SPRITE_HUD_WRONGSMALL",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 80,
+                            "filename": "position_arrow",
+                            "build-id": "ASSET_SPRITE_OBJECTS_POSITIONARROW",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 81,
+                            "filename": "golden_balloon_icon",
+                            "build-id": "ASSET_SPRITE_HUD_GOLDENBALLOONICON",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 82,
+                            "filename": "silver_balloon_icon",
+                            "build-id": "ASSET_SPRITE_HUD_SILVERBALLOONICON",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 83,
+                            "filename": "level_name",
+                            "build-id": "ASSET_SPRITE_OBJECTS_LEVELNAME",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 84,
+                            "filename": "npc",
+                            "build-id": "ASSET_SPRITE_MINIMAP_NPC",
+                            "folder": "minimap"
+                        },
+                        {
+                            "index": 85,
+                            "filename": "player",
+                            "build-id": "ASSET_SPRITE_MINIMAP_PLAYER",
+                            "folder": "minimap"
+                        },
+                        {
+                            "index": 86,
+                            "filename": "weapon_icons",
+                            "build-id": "ASSET_SPRITE_HUD_WEAPONICONS",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 87,
+                            "filename": "weapon_icon_numbers",
+                            "build-id": "ASSET_SPRITE_HUD_WEAPONICONNUMBERS",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 88,
+                            "filename": "beta_character_icon",
+                            "build-id": "ASSET_SPRITE_UNUSED_BETACHARACTERICON",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 89,
+                            "filename": "final_lap_flag",
+                            "build-id": "ASSET_SPRITE_HUD_FINALLAPFLAG",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 90,
+                            "filename": "final",
+                            "build-id": "ASSET_SPRITE_HUD_FINAL",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 91,
+                            "filename": "lap_large",
+                            "build-id": "ASSET_SPRITE_HUD_LAPLARGE",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 92,
+                            "filename": "lap2_2",
+                            "build-id": "ASSET_SPRITE_HUD_LAP22",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 93,
+                            "filename": "way",
+                            "build-id": "ASSET_SPRITE_HUD_WAY",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 94,
+                            "filename": "wrong",
+                            "build-id": "ASSET_SPRITE_HUD_WRONG",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 95,
+                            "filename": "pro_am_logo",
+                            "build-id": "ASSET_SPRITE_UNUSED_PROAMLOGO",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 96,
+                            "filename": "speedometer_arrow",
+                            "build-id": "ASSET_SPRITE_HUD_SPEEDOMETERARROW",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 97,
+                            "filename": "first_place_one",
+                            "build-id": "ASSET_SPRITE_HUD_FIRSTPLACEONE",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 98,
+                            "filename": "first_place_st",
+                            "build-id": "ASSET_SPRITE_HUD_FIRSTPLACEST",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 99,
+                            "filename": "balloon_string",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BALLOONSTRING",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 100,
+                            "filename": "fireball_unknown",
+                            "build-id": "ASSET_SPRITE_UNKNOWN_FIREBALLUNKNOWN",
+                            "folder": "unknown"
+                        },
+                        {
+                            "index": 101,
+                            "filename": "fireball",
+                            "build-id": "ASSET_SPRITE_OBJECTS_FIREBALL",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 102,
+                            "filename": "wizghost",
+                            "build-id": "ASSET_SPRITE_OBJECTS_WIZGHOST",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 103,
+                            "filename": "unknown_light",
+                            "build-id": "ASSET_SPRITE_UNKNOWN_UNKNOWNLIGHT",
+                            "folder": "unknown"
+                        },
+                        {
+                            "index": 104,
+                            "filename": "small_star",
+                            "build-id": "ASSET_SPRITE_UNKNOWN_SMALLSTAR",
+                            "folder": "unknown"
+                        },
+                        {
+                            "index": 105,
+                            "filename": "buoy",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BUOY",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 106,
+                            "filename": "smartie_tree",
+                            "build-id": "ASSET_SPRITE_OBJECTS_SMARTIETREE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 107,
+                            "filename": "beach_tree",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BEACHTREE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 108,
+                            "filename": "blue_berry_bush",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BLUEBERRYBUSH",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 109,
+                            "filename": "rubber_snow_tree",
+                            "build-id": "ASSET_SPRITE_OBJECTS_RUBBERSNOWTREE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 110,
+                            "filename": "skinny_snow_tree",
+                            "build-id": "ASSET_SPRITE_OBJECTS_SKINNYSNOWTREE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 111,
+                            "filename": "xmas_tree",
+                            "build-id": "ASSET_SPRITE_OBJECTS_XMASTREE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 112,
+                            "filename": "alpine_snow_tree",
+                            "build-id": "ASSET_SPRITE_OBJECTS_ALPINESNOWTREE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 113,
+                            "filename": "rubber_tree",
+                            "build-id": "ASSET_SPRITE_OBJECTS_RUBBERTREE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 114,
+                            "filename": "palm_tree_top",
+                            "build-id": "ASSET_SPRITE_OBJECTS_PALMTREETOP",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 115,
+                            "filename": "palm_plant",
+                            "build-id": "ASSET_SPRITE_OBJECTS_PALMPLANT",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 116,
+                            "filename": "palm_tree_top_chea",
+                            "build-id": "ASSET_SPRITE_OBJECTS_PALMTREETOPCHEA",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 117,
+                            "filename": "fir_tree",
+                            "build-id": "ASSET_SPRITE_OBJECTS_FIRTREE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 118,
+                            "filename": "space_tree",
+                            "build-id": "ASSET_SPRITE_OBJECTS_SPACETREE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 119,
+                            "filename": "lamp_post",
+                            "build-id": "ASSET_SPRITE_OBJECTS_LAMPPOST",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 120,
+                            "filename": "white_buttercup",
+                            "build-id": "ASSET_SPRITE_FLOWERS_WHITEBUTTERCUP",
+                            "folder": "flowers"
+                        },
+                        {
+                            "index": 121,
+                            "filename": "yellow_bellflower",
+                            "build-id": "ASSET_SPRITE_FLOWERS_YELLOWBELLFLOWER",
+                            "folder": "flowers"
+                        },
+                        {
+                            "index": 122,
+                            "filename": "yellow_buttercup",
+                            "build-id": "ASSET_SPRITE_FLOWERS_YELLOWBUTTERCUP",
+                            "folder": "flowers"
+                        },
+                        {
+                            "index": 123,
+                            "filename": "blue_buttercup",
+                            "build-id": "ASSET_SPRITE_FLOWERS_BLUEBUTTERCUP",
+                            "folder": "flowers"
+                        },
+                        {
+                            "index": 124,
+                            "filename": "water_lily",
+                            "build-id": "ASSET_SPRITE_FLOWERS_WATERLILY",
+                            "folder": "flowers"
+                        },
+                        {
+                            "index": 125,
+                            "filename": "reed_no_leaf",
+                            "build-id": "ASSET_SPRITE_OBJECTS_REEDNOLEAF",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 126,
+                            "filename": "reed_leaves",
+                            "build-id": "ASSET_SPRITE_OBJECTS_REEDLEAVES",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 127,
+                            "filename": "read_one_leaf",
+                            "build-id": "ASSET_SPRITE_OBJECTS_READONELEAF",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 128,
+                            "filename": "snowman_tophat",
+                            "build-id": "ASSET_SPRITE_OBJECTS_SNOWMANTOPHAT",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 129,
+                            "filename": "bell",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BELL",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 130,
+                            "filename": "snowman",
+                            "build-id": "ASSET_SPRITE_OBJECTS_SNOWMAN",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 131,
+                            "filename": "torch_with_eyes",
+                            "build-id": "ASSET_SPRITE_UNUSED_TORCHWITHEYES",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 132,
+                            "filename": "debug_orb_red",
+                            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGORBRED",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 133,
+                            "filename": "debug_orb_yellow",
+                            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGORBYELLOW",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 134,
+                            "filename": "beta_ancient_lake_sign",
+                            "build-id": "ASSET_SPRITE_UNUSED_BETAANCIENTLAKESIGN",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 135,
+                            "filename": "debug_fog_changer",
+                            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGFOGCHANGER",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 136,
+                            "filename": "debug_anim_car",
+                            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGANIMCAR",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 137,
+                            "filename": "debug_sky_control",
+                            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGSKYCONTROL",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 138,
+                            "filename": "debug_camera_control",
+                            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGCAMERACONTROL",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 139,
+                            "filename": "debug_unknown_exit",
+                            "build-id": "ASSET_SPRITE_UNUSED_DEBUGUNKNOWNEXIT",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 140,
+                            "filename": "debug_unknown_traffic_light",
+                            "build-id": "ASSET_SPRITE_UNUSED_DEBUGUNKNOWNTRAFFICLIGHT",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 141,
+                            "filename": "debug_animator",
+                            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGANIMATOR",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 142,
+                            "filename": "debug_audio",
+                            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGAUDIO",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 143,
+                            "filename": "debug_audio_line",
+                            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGAUDIOLINE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 144,
+                            "filename": "debug_audio_seq_line",
+                            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGAUDIOSEQLINE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 145,
+                            "filename": "debug_audio_seq",
+                            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGAUDIOSEQ",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 146,
+                            "filename": "debug_audio_reverb",
+                            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGAUDIOREVERB",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 147,
+                            "filename": "balloon_boost",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BALLOONBOOST",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 148,
+                            "filename": "balloon_missle",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BALLOONMISSLE",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 149,
+                            "filename": "balloon_trap",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BALLOONTRAP",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 150,
+                            "filename": "balloon_shield",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BALLOONSHIELD",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 151,
+                            "filename": "balloon_magnet",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BALLOONMAGNET",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 152,
+                            "filename": "balloon_missle_gift",
+                            "build-id": "ASSET_SPRITE_UNUSED_BALLOONMISSLEGIFT",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 153,
+                            "filename": "balloon_boost_gift",
+                            "build-id": "ASSET_SPRITE_UNUSED_BALLOONBOOSTGIFT",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 154,
+                            "filename": "balloon_gold",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BALLOONGOLD",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 155,
+                            "filename": "balloon_silver",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BALLOONSILVER",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 156,
+                            "filename": "banana",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BANANA",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 157,
+                            "filename": "silver_coin",
+                            "build-id": "ASSET_SPRITE_OBJECTS_SILVERCOIN",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 158,
+                            "filename": "checkpoint_flag",
+                            "build-id": "ASSET_SPRITE_OBJECTS_CHECKPOINTFLAG",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 159,
+                            "filename": "rareware_coin",
+                            "build-id": "ASSET_SPRITE_UNUSED_RAREWARECOIN",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 160,
+                            "filename": "silver_coin_vertical",
+                            "build-id": "ASSET_SPRITE_UNUSED_SILVERCOINVERTICAL",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 161,
+                            "filename": "banana_icon",
+                            "build-id": "ASSET_SPRITE_HUD_BANANAICON",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 162,
+                            "filename": "sparkle",
+                            "build-id": "ASSET_SPRITE_PARTICLES_SPARKLE",
+                            "folder": "particles"
+                        },
+                        {
+                            "index": 163,
+                            "filename": "debug_egg_creator",
+                            "build-id": "ASSET_SPRITE_OBJECTS_DEBUGEGGCREATOR",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 164,
+                            "filename": "bonus_gem",
+                            "build-id": "ASSET_SPRITE_UNUSED_BONUSGEM",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 165,
+                            "filename": "indicator_icon_caution",
+                            "build-id": "ASSET_SPRITE_HUD_INDICATORICONCAUTION",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 166,
+                            "filename": "indicator_icon_down",
+                            "build-id": "ASSET_SPRITE_HUD_INDICATORICONDOWN",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 167,
+                            "filename": "indicator_icon_uturn",
+                            "build-id": "ASSET_SPRITE_HUD_INDICATORICONUTURN",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 168,
+                            "filename": "indicator_icon_turn",
+                            "build-id": "ASSET_SPRITE_HUD_INDICATORICONTURN",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 169,
+                            "filename": "indicator_icon_slight_turn",
+                            "build-id": "ASSET_SPRITE_HUD_INDICATORICONSLIGHTTURN",
+                            "folder": "hud"
+                        },
+                        {
+                            "index": 170,
+                            "filename": "smoke_object",
+                            "build-id": "ASSET_SPRITE_OBJECTS_SMOKEOBJECT",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 171,
+                            "filename": "smoke_cloud",
+                            "build-id": "ASSET_SPRITE_OBJECTS_SMOKECLOUD",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 172,
+                            "filename": "smoke_grass",
+                            "build-id": "ASSET_SPRITE_OBJECTS_SMOKEGRASS",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 173,
+                            "filename": "mist",
+                            "build-id": "ASSET_SPRITE_OBJECTS_MIST",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 174,
+                            "filename": "flaming_torch",
+                            "build-id": "ASSET_SPRITE_OBJECTS_FLAMINGTORCH",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 175,
+                            "filename": "splash",
+                            "build-id": "ASSET_SPRITE_UNUSED_SPLASH",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 176,
+                            "filename": "weapon_balloon_pop",
+                            "build-id": "ASSET_SPRITE_UNUSED_WEAPONBALLOONPOP",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 177,
+                            "filename": "lava_spurt",
+                            "build-id": "ASSET_SPRITE_OBJECTS_LAVASPURT",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 178,
+                            "filename": "unknown_small_pop",
+                            "build-id": "ASSET_SPRITE_UNKNOWN_UNKNOWNSMALLPOP",
+                            "folder": "unknown"
+                        },
+                        {
+                            "index": 179,
+                            "filename": "tyre0",
+                            "build-id": "ASSET_SPRITE_VEHICLE_PARTS_TYRE0",
+                            "folder": "vehicle_parts"
+                        },
+                        {
+                            "index": 180,
+                            "filename": "tyre1",
+                            "build-id": "ASSET_SPRITE_VEHICLE_PARTS_TYRE1",
+                            "folder": "vehicle_parts"
+                        },
+                        {
+                            "index": 181,
+                            "filename": "tyre2",
+                            "build-id": "ASSET_SPRITE_VEHICLE_PARTS_TYRE2",
+                            "folder": "vehicle_parts"
+                        },
+                        {
+                            "index": 182,
+                            "filename": "tyre3",
+                            "build-id": "ASSET_SPRITE_VEHICLE_PARTS_TYRE3",
+                            "folder": "vehicle_parts"
+                        },
+                        {
+                            "index": 183,
+                            "filename": "fan0",
+                            "build-id": "ASSET_SPRITE_VEHICLE_PARTS_FAN0",
+                            "folder": "vehicle_parts"
+                        },
+                        {
+                            "index": 184,
+                            "filename": "fan1",
+                            "build-id": "ASSET_SPRITE_VEHICLE_PARTS_FAN1",
+                            "folder": "vehicle_parts"
+                        },
+                        {
+                            "index": 185,
+                            "filename": "propeller0",
+                            "build-id": "ASSET_SPRITE_VEHICLE_PARTS_PROPELLER0",
+                            "folder": "vehicle_parts"
+                        },
+                        {
+                            "index": 186,
+                            "filename": "propeller1",
+                            "build-id": "ASSET_SPRITE_VEHICLE_PARTS_PROPELLER1",
+                            "folder": "vehicle_parts"
+                        },
+                        {
+                            "index": 187,
+                            "filename": "rare_letters",
+                            "build-id": "ASSET_SPRITE_UNUSED_RARELETTERS",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 188,
+                            "filename": "bolt_glow",
+                            "build-id": "ASSET_SPRITE_OBJECTS_BOLTGLOW",
+                            "folder": "objects"
+                        },
+                        {
+                            "index": 189,
+                            "filename": "icon_trophy",
+                            "build-id": "ASSET_SPRITE_MENU_ICONTROPHY",
+                            "folder": "menu"
+                        },
+                        {
+                            "index": 190,
+                            "filename": "icon_key",
+                            "build-id": "ASSET_SPRITE_MENU_ICONKEY",
+                            "folder": "menu"
+                        },
+                        {
+                            "index": 191,
+                            "filename": "icon_wizpig_amulet",
+                            "build-id": "ASSET_SPRITE_MENU_ICONWIZPIGAMULET",
+                            "folder": "menu"
+                        },
+                        {
+                            "index": 192,
+                            "filename": "icon_tt_amulet",
+                            "build-id": "ASSET_SPRITE_MENU_ICONTTAMULET",
+                            "folder": "menu"
+                        }                        
                 ]
             },
             {
@@ -15266,7 +16220,338 @@
                 "folder": "levels/models",
                 "table": 26,
                 "default-build-id-prefix": "ASSET_LEVELMODEL_",
-                "files": []
+                "files": [
+                    {
+                            "index": 0,
+                            "filename": "central_area_hub",
+                            "build-id": "ASSET_LEVELMODEL_CENTRALAREAHUB",
+                            "folder": "central_area"
+                        },
+                        {
+                            "index": 1,
+                            "filename": "bluey",
+                            "build-id": "ASSET_LEVELMODEL_BLUEY",
+                            "folder": "snowflake_mountain"
+                        },
+                        {
+                            "index": 2,
+                            "filename": "dragon_forest_hub",
+                            "build-id": "ASSET_LEVELMODEL_DRAGONFORESTHUB",
+                            "folder": "dragon_forest"
+                        },
+                        {
+                            "index": 3,
+                            "filename": "fossil_canyon",
+                            "build-id": "ASSET_LEVELMODEL_FOSSILCANYON",
+                            "folder": "dino_domain"
+                        },
+                        {
+                            "index": 4,
+                            "filename": "pirate_lagoon",
+                            "build-id": "ASSET_LEVELMODEL_PIRATELAGOON",
+                            "folder": "sherbet_island"
+                        },
+                        {
+                            "index": 5,
+                            "filename": "ancient_lake",
+                            "build-id": "ASSET_LEVELMODEL_ANCIENTLAKE",
+                            "folder": "dino_domain"
+                        },
+                        {
+                            "index": 6,
+                            "filename": "walrus_cove",
+                            "build-id": "ASSET_LEVELMODEL_WALRUSCOVE",
+                            "folder": "snowflake_mountain"
+                        },
+                        {
+                            "index": 7,
+                            "filename": "hot_top_volcano",
+                            "build-id": "ASSET_LEVELMODEL_HOTTOPVOLCANO",
+                            "folder": "dino_domain"
+                        },
+                        {
+                            "index": 8,
+                            "filename": "whale_bay",
+                            "build-id": "ASSET_LEVELMODEL_WHALEBAY",
+                            "folder": "sherbet_island"
+                        },
+                        {
+                            "index": 9,
+                            "filename": "snowball_valley",
+                            "build-id": "ASSET_LEVELMODEL_SNOWBALLVALLEY",
+                            "folder": "snowflake_mountain"
+                        },
+                        {
+                            "index": 10,
+                            "filename": "temple_track",
+                            "build-id": "ASSET_LEVELMODEL_TEMPLETRACK",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 11,
+                            "filename": "crescent_island",
+                            "build-id": "ASSET_LEVELMODEL_CRESCENTISLAND",
+                            "folder": "sherbet_island"
+                        },
+                        {
+                            "index": 12,
+                            "filename": "fire_mountain",
+                            "build-id": "ASSET_LEVELMODEL_FIREMOUNTAIN",
+                            "folder": "dino_domain"
+                        },
+                        {
+                            "index": 13,
+                            "filename": "dino_domain_hub",
+                            "build-id": "ASSET_LEVELMODEL_DINODOMAINHUB",
+                            "folder": "dino_domain"
+                        },
+                        {
+                            "index": 14,
+                            "filename": "everfrost_peak",
+                            "build-id": "ASSET_LEVELMODEL_EVERFROSTPEAK",
+                            "folder": "snowflake_mountain"
+                        },
+                        {
+                            "index": 15,
+                            "filename": "sherbet_island_hub",
+                            "build-id": "ASSET_LEVELMODEL_SHERBETISLANDHUB",
+                            "folder": "sherbet_island"
+                        },
+                        {
+                            "index": 16,
+                            "filename": "front_end",
+                            "build-id": "ASSET_LEVELMODEL_FRONTEND",
+                            "folder": "menu"
+                        },
+                        {
+                            "index": 17,
+                            "filename": "character_select",
+                            "build-id": "ASSET_LEVELMODEL_CHARACTERSELECT",
+                            "folder": "menu"
+                        },
+                        {
+                            "index": 18,
+                            "filename": "spaceport_alpha",
+                            "build-id": "ASSET_LEVELMODEL_SPACEPORTALPHA",
+                            "folder": "future_fun_land"
+                        },
+                        {
+                            "index": 19,
+                            "filename": "horseshoe_gulch",
+                            "build-id": "ASSET_LEVELMODEL_HORSESHOEGULCH",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 20,
+                            "filename": "greenwood_village",
+                            "build-id": "ASSET_LEVELMODEL_GREENWOODVILLAGE",
+                            "folder": "dragon_forest"
+                        },
+                        {
+                            "index": 21,
+                            "filename": "spacedust_alley",
+                            "build-id": "ASSET_LEVELMODEL_SPACEDUSTALLEY",
+                            "folder": "future_fun_land"
+                        },
+                        {
+                            "index": 22,
+                            "filename": "title_screen",
+                            "build-id": "ASSET_LEVELMODEL_TITLESCREEN",
+                            "folder": "menu"
+                        },
+                        {
+                            "index": 23,
+                            "filename": "boulder_canyon",
+                            "build-id": "ASSET_LEVELMODEL_BOULDERCANYON",
+                            "folder": "dragon_forest"
+                        },
+                        {
+                            "index": 24,
+                            "filename": "windmill_plains",
+                            "build-id": "ASSET_LEVELMODEL_WINDMILLPLAINS",
+                            "folder": "dragon_forest"
+                        },
+                        {
+                            "index": 25,
+                            "filename": "snowflake_mountain_hub",
+                            "build-id": "ASSET_LEVELMODEL_SNOWFLAKEMOUNTAINHUB",
+                            "folder": "snowflake_mountain"
+                        },
+                        {
+                            "index": 26,
+                            "filename": "smokey_castle",
+                            "build-id": "ASSET_LEVELMODEL_SMOKEYCASTLE",
+                            "folder": "dragon_forest"
+                        },
+                        {
+                            "index": 27,
+                            "filename": "darkwater_beach",
+                            "build-id": "ASSET_LEVELMODEL_DARKWATERBEACH",
+                            "folder": "sherbet_island"
+                        },
+                        {
+                            "index": 28,
+                            "filename": "icicle_pyramid",
+                            "build-id": "ASSET_LEVELMODEL_ICICLEPYRAMID",
+                            "folder": "snowflake_mountain"
+                        },
+                        {
+                            "index": 29,
+                            "filename": "frosty_village",
+                            "build-id": "ASSET_LEVELMODEL_FROSTYVILLAGE",
+                            "folder": "snowflake_mountain"
+                        },
+                        {
+                            "index": 30,
+                            "filename": "jungle_falls",
+                            "build-id": "ASSET_LEVELMODEL_JUNGLEFALLS",
+                            "folder": "dino_domain"
+                        },
+                        {
+                            "index": 31,
+                            "filename": "treasure_caves",
+                            "build-id": "ASSET_LEVELMODEL_TREASURECAVES",
+                            "folder": "sherbet_island"
+                        },
+                        {
+                            "index": 32,
+                            "filename": "haunted_woods",
+                            "build-id": "ASSET_LEVELMODEL_HAUNTEDWOODS",
+                            "folder": "dragon_forest"
+                        },
+                        {
+                            "index": 33,
+                            "filename": "darkmoon_caverns",
+                            "build-id": "ASSET_LEVELMODEL_DARKMOONCAVERNS",
+                            "folder": "future_fun_land"
+                        },
+                        {
+                            "index": 34,
+                            "filename": "star_city",
+                            "build-id": "ASSET_LEVELMODEL_STARCITY",
+                            "folder": "future_fun_land"
+                        },
+                        {
+                            "index": 35,
+                            "filename": "trophy_race",
+                            "build-id": "ASSET_LEVELMODEL_TROPHYRACE",
+                            "folder": "menu"
+                        },
+                        {
+                            "index": 36,
+                            "filename": "future_fun_land_hub",
+                            "build-id": "ASSET_LEVELMODEL_FUTUREFUNLANDHUB",
+                            "folder": "future_fun_land"
+                        },
+                        {
+                            "index": 37,
+                            "filename": "intro_sequence",
+                            "build-id": "ASSET_LEVELMODEL_INTROSEQUENCE",
+                            "folder": "cutscene"
+                        },
+                        {
+                            "index": 38,
+                            "filename": "smokey",
+                            "build-id": "ASSET_LEVELMODEL_SMOKEY",
+                            "folder": "dragon_forest"
+                        },
+                        {
+                            "index": 39,
+                            "filename": "trickytops",
+                            "build-id": "ASSET_LEVELMODEL_TRICKYTOPS",
+                            "folder": "dino_domain"
+                        },
+                        {
+                            "index": 40,
+                            "filename": "wizpig_mouth_sequence",
+                            "build-id": "ASSET_LEVELMODEL_WIZPIGMOUTHSEQUENCE",
+                            "folder": "cutscene"
+                        },
+                        {
+                            "index": 41,
+                            "filename": "rocket_sequence",
+                            "build-id": "ASSET_LEVELMODEL_ROCKETSEQUENCE",
+                            "folder": "cutscene"
+                        },
+                        {
+                            "index": 42,
+                            "filename": "wizpig1",
+                            "build-id": "ASSET_LEVELMODEL_WIZPIG1",
+                            "folder": "central_area"
+                        },
+                        {
+                            "index": 43,
+                            "filename": "ocean_track",
+                            "build-id": "ASSET_LEVELMODEL_OCEANTRACK",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 44,
+                            "filename": "volcano_track",
+                            "build-id": "ASSET_LEVELMODEL_VOLCANOTRACK",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 45,
+                            "filename": "snow_mountain_track",
+                            "build-id": "ASSET_LEVELMODEL_SNOWMOUNTAINTRACK",
+                            "folder": "unused"
+                        },
+                        {
+                            "index": 46,
+                            "filename": "party_sequence",
+                            "build-id": "ASSET_LEVELMODEL_PARTYSEQUENCE",
+                            "folder": "cutscene"
+                        },
+                        {
+                            "index": 47,
+                            "filename": "bluey_animation",
+                            "build-id": "ASSET_LEVELMODEL_BLUEYANIMATION",
+                            "folder": "cutscene"
+                        },
+                        {
+                            "index": 48,
+                            "filename": "wizpig1_animation",
+                            "build-id": "ASSET_LEVELMODEL_WIZPIG1ANIMATION",
+                            "folder": "cutscene"
+                        },
+                        {
+                            "index": 49,
+                            "filename": "bubbler",
+                            "build-id": "ASSET_LEVELMODEL_BUBBLER",
+                            "folder": "sherbet_island"
+                        },
+                        {
+                            "index": 50,
+                            "filename": "bubbler_animation",
+                            "build-id": "ASSET_LEVELMODEL_BUBBLERANIMATION",
+                            "folder": "cutscene"
+                        },
+                        {
+                            "index": 51,
+                            "filename": "wizpig2_animation",
+                            "build-id": "ASSET_LEVELMODEL_WIZPIG2ANIMATION",
+                            "folder": "cutscene"
+                        },
+                        {
+                            "index": 52,
+                            "filename": "wizpig2",
+                            "build-id": "ASSET_LEVELMODEL_WIZPIG2",
+                            "folder": "future_fun_land"
+                        },
+                        {
+                            "index": 53,
+                            "filename": "ending_part1",
+                            "build-id": "ASSET_LEVELMODEL_ENDINGPART1",
+                            "folder": "cutscene"
+                        },
+                        {
+                            "index": 54,
+                            "filename": "ending_part2",
+                            "build-id": "ASSET_LEVELMODEL_ENDINGPART2",
+                            "folder": "cutscene"
+                        }                        
+                ]
             },
             {
                 "build-id": "ASSET_OBJECT_MODELS_TABLE",

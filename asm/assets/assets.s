@@ -4925,8 +4925,8 @@ glabel ASSET_TEX2D_HUD_GOLDENBALLOONICON
 .incbin "./build/us_1.0/assets/textures/2d/hud/golden_balloon_icon.bin"
 glabel ASSET_TEX2D_HUD_SILVERBALLOONICON
 .incbin "./build/us_1.0/assets/textures/2d/hud/silver_balloon_icon.bin"
-glabel ASSET_TEX2D_HUD_LEVELNAME
-.incbin "./build/us_1.0/assets/textures/2d/hud/level_name.bin"
+glabel ASSET_TEX2D_OBJECTS_LEVELNAME
+.incbin "./build/us_1.0/assets/textures/2d/objects/level_name.bin"
 glabel ASSET_TEX2D_MINIMAP_NPC
 .incbin "./build/us_1.0/assets/textures/2d/minimap/npc.bin"
 glabel ASSET_TEX2D_MINIMAP_PLAYER
@@ -6443,7 +6443,7 @@ glabel ASSET_TEXTURES_2D_TABLE
 .word ASSET_TEX2D_HUD_SILVERCOINCOLLECTED - ASSET_TEXTURES_2D
 .word ASSET_TEX2D_HUD_GOLDENBALLOONICON - ASSET_TEXTURES_2D
 .word ASSET_TEX2D_HUD_SILVERBALLOONICON - ASSET_TEXTURES_2D
-.word ASSET_TEX2D_HUD_LEVELNAME - ASSET_TEXTURES_2D
+.word ASSET_TEX2D_OBJECTS_LEVELNAME - ASSET_TEXTURES_2D
 .word ASSET_TEX2D_MINIMAP_NPC - ASSET_TEXTURES_2D
 .word ASSET_TEX2D_MINIMAP_PLAYER - ASSET_TEXTURES_2D
 .word ASSET_TEX2D_HUD_WEAPONICONBOOST_0 - ASSET_TEXTURES_2D
@@ -7873,591 +7873,591 @@ glabel ASSET_SCREENS_TABLE
 
 .balign 16
 glabel ASSET_SPRITES
-glabel ASSET_SPRITES_0
-.incbin "./build/us_1.0/assets/sprites/unknown_12_0.bin"
-glabel ASSET_SPRITES_1
-.incbin "./build/us_1.0/assets/sprites/unknown_12_1.bin"
-glabel ASSET_SPRITES_2
-.incbin "./build/us_1.0/assets/sprites/unknown_12_2.bin"
-glabel ASSET_SPRITES_3
-.incbin "./build/us_1.0/assets/sprites/unknown_12_3.bin"
-glabel ASSET_SPRITES_4
-.incbin "./build/us_1.0/assets/sprites/unknown_12_4.bin"
-glabel ASSET_SPRITES_5
-.incbin "./build/us_1.0/assets/sprites/unknown_12_5.bin"
-glabel ASSET_SPRITES_6
-.incbin "./build/us_1.0/assets/sprites/unknown_12_6.bin"
-glabel ASSET_SPRITES_7
-.incbin "./build/us_1.0/assets/sprites/unknown_12_7.bin"
-glabel ASSET_SPRITES_8
-.incbin "./build/us_1.0/assets/sprites/unknown_12_8.bin"
-glabel ASSET_SPRITES_9
-.incbin "./build/us_1.0/assets/sprites/unknown_12_9.bin"
-glabel ASSET_SPRITES_10
-.incbin "./build/us_1.0/assets/sprites/unknown_12_10.bin"
-glabel ASSET_SPRITES_11
-.incbin "./build/us_1.0/assets/sprites/unknown_12_11.bin"
-glabel ASSET_SPRITES_12
-.incbin "./build/us_1.0/assets/sprites/unknown_12_12.bin"
-glabel ASSET_SPRITES_13
-.incbin "./build/us_1.0/assets/sprites/unknown_12_13.bin"
-glabel ASSET_SPRITES_14
-.incbin "./build/us_1.0/assets/sprites/unknown_12_14.bin"
-glabel ASSET_SPRITES_15
-.incbin "./build/us_1.0/assets/sprites/unknown_12_15.bin"
-glabel ASSET_SPRITES_16
-.incbin "./build/us_1.0/assets/sprites/unknown_12_16.bin"
-glabel ASSET_SPRITES_17
-.incbin "./build/us_1.0/assets/sprites/unknown_12_17.bin"
-glabel ASSET_SPRITES_18
-.incbin "./build/us_1.0/assets/sprites/unknown_12_18.bin"
-glabel ASSET_SPRITES_19
-.incbin "./build/us_1.0/assets/sprites/unknown_12_19.bin"
-glabel ASSET_SPRITES_20
-.incbin "./build/us_1.0/assets/sprites/unknown_12_20.bin"
-glabel ASSET_SPRITES_21
-.incbin "./build/us_1.0/assets/sprites/unknown_12_21.bin"
-glabel ASSET_SPRITES_22
-.incbin "./build/us_1.0/assets/sprites/unknown_12_22.bin"
-glabel ASSET_SPRITES_23
-.incbin "./build/us_1.0/assets/sprites/unknown_12_23.bin"
-glabel ASSET_SPRITES_24
-.incbin "./build/us_1.0/assets/sprites/unknown_12_24.bin"
-glabel ASSET_SPRITES_25
-.incbin "./build/us_1.0/assets/sprites/unknown_12_25.bin"
-glabel ASSET_SPRITES_26
-.incbin "./build/us_1.0/assets/sprites/unknown_12_26.bin"
-glabel ASSET_SPRITES_27
-.incbin "./build/us_1.0/assets/sprites/unknown_12_27.bin"
-glabel ASSET_SPRITES_28
-.incbin "./build/us_1.0/assets/sprites/unknown_12_28.bin"
-glabel ASSET_SPRITES_29
-.incbin "./build/us_1.0/assets/sprites/unknown_12_29.bin"
-glabel ASSET_SPRITES_30
-.incbin "./build/us_1.0/assets/sprites/unknown_12_30.bin"
-glabel ASSET_SPRITES_31
-.incbin "./build/us_1.0/assets/sprites/unknown_12_31.bin"
-glabel ASSET_SPRITES_32
-.incbin "./build/us_1.0/assets/sprites/unknown_12_32.bin"
-glabel ASSET_SPRITES_33
-.incbin "./build/us_1.0/assets/sprites/unknown_12_33.bin"
-glabel ASSET_SPRITES_34
-.incbin "./build/us_1.0/assets/sprites/unknown_12_34.bin"
-glabel ASSET_SPRITES_35
-.incbin "./build/us_1.0/assets/sprites/unknown_12_35.bin"
-glabel ASSET_SPRITES_36
-.incbin "./build/us_1.0/assets/sprites/unknown_12_36.bin"
-glabel ASSET_SPRITES_37
-.incbin "./build/us_1.0/assets/sprites/unknown_12_37.bin"
-glabel ASSET_SPRITES_38
-.incbin "./build/us_1.0/assets/sprites/unknown_12_38.bin"
-glabel ASSET_SPRITES_39
-.incbin "./build/us_1.0/assets/sprites/unknown_12_39.bin"
-glabel ASSET_SPRITES_40
-.incbin "./build/us_1.0/assets/sprites/unknown_12_40.bin"
-glabel ASSET_SPRITES_41
-.incbin "./build/us_1.0/assets/sprites/unknown_12_41.bin"
-glabel ASSET_SPRITES_42
-.incbin "./build/us_1.0/assets/sprites/unknown_12_42.bin"
-glabel ASSET_SPRITES_43
-.incbin "./build/us_1.0/assets/sprites/unknown_12_43.bin"
-glabel ASSET_SPRITES_44
-.incbin "./build/us_1.0/assets/sprites/unknown_12_44.bin"
-glabel ASSET_SPRITES_45
-.incbin "./build/us_1.0/assets/sprites/unknown_12_45.bin"
-glabel ASSET_SPRITES_46
-.incbin "./build/us_1.0/assets/sprites/unknown_12_46.bin"
-glabel ASSET_SPRITES_47
-.incbin "./build/us_1.0/assets/sprites/unknown_12_47.bin"
-glabel ASSET_SPRITES_48
-.incbin "./build/us_1.0/assets/sprites/unknown_12_48.bin"
-glabel ASSET_SPRITES_49
-.incbin "./build/us_1.0/assets/sprites/unknown_12_49.bin"
-glabel ASSET_SPRITES_50
-.incbin "./build/us_1.0/assets/sprites/unknown_12_50.bin"
-glabel ASSET_SPRITES_51
-.incbin "./build/us_1.0/assets/sprites/unknown_12_51.bin"
-glabel ASSET_SPRITES_52
-.incbin "./build/us_1.0/assets/sprites/unknown_12_52.bin"
-glabel ASSET_SPRITES_53
-.incbin "./build/us_1.0/assets/sprites/unknown_12_53.bin"
-glabel ASSET_SPRITES_54
-.incbin "./build/us_1.0/assets/sprites/unknown_12_54.bin"
-glabel ASSET_SPRITES_55
-.incbin "./build/us_1.0/assets/sprites/unknown_12_55.bin"
-glabel ASSET_SPRITES_56
-.incbin "./build/us_1.0/assets/sprites/unknown_12_56.bin"
-glabel ASSET_SPRITES_57
-.incbin "./build/us_1.0/assets/sprites/unknown_12_57.bin"
-glabel ASSET_SPRITES_58
-.incbin "./build/us_1.0/assets/sprites/unknown_12_58.bin"
-glabel ASSET_SPRITES_59
-.incbin "./build/us_1.0/assets/sprites/unknown_12_59.bin"
-glabel ASSET_SPRITES_60
-.incbin "./build/us_1.0/assets/sprites/unknown_12_60.bin"
-glabel ASSET_SPRITES_61
-.incbin "./build/us_1.0/assets/sprites/unknown_12_61.bin"
-glabel ASSET_SPRITES_62
-.incbin "./build/us_1.0/assets/sprites/unknown_12_62.bin"
-glabel ASSET_SPRITES_63
-.incbin "./build/us_1.0/assets/sprites/unknown_12_63.bin"
-glabel ASSET_SPRITES_64
-.incbin "./build/us_1.0/assets/sprites/unknown_12_64.bin"
-glabel ASSET_SPRITES_65
-.incbin "./build/us_1.0/assets/sprites/unknown_12_65.bin"
-glabel ASSET_SPRITES_66
-.incbin "./build/us_1.0/assets/sprites/unknown_12_66.bin"
-glabel ASSET_SPRITES_67
-.incbin "./build/us_1.0/assets/sprites/unknown_12_67.bin"
-glabel ASSET_SPRITES_68
-.incbin "./build/us_1.0/assets/sprites/unknown_12_68.bin"
-glabel ASSET_SPRITES_69
-.incbin "./build/us_1.0/assets/sprites/unknown_12_69.bin"
-glabel ASSET_SPRITES_70
-.incbin "./build/us_1.0/assets/sprites/unknown_12_70.bin"
-glabel ASSET_SPRITES_71
-.incbin "./build/us_1.0/assets/sprites/unknown_12_71.bin"
-glabel ASSET_SPRITES_72
-.incbin "./build/us_1.0/assets/sprites/unknown_12_72.bin"
-glabel ASSET_SPRITES_73
-.incbin "./build/us_1.0/assets/sprites/unknown_12_73.bin"
-glabel ASSET_SPRITES_74
-.incbin "./build/us_1.0/assets/sprites/unknown_12_74.bin"
-glabel ASSET_SPRITES_75
-.incbin "./build/us_1.0/assets/sprites/unknown_12_75.bin"
-glabel ASSET_SPRITES_76
-.incbin "./build/us_1.0/assets/sprites/unknown_12_76.bin"
-glabel ASSET_SPRITES_77
-.incbin "./build/us_1.0/assets/sprites/unknown_12_77.bin"
-glabel ASSET_SPRITES_78
-.incbin "./build/us_1.0/assets/sprites/unknown_12_78.bin"
-glabel ASSET_SPRITES_79
-.incbin "./build/us_1.0/assets/sprites/unknown_12_79.bin"
-glabel ASSET_SPRITES_80
-.incbin "./build/us_1.0/assets/sprites/unknown_12_80.bin"
-glabel ASSET_SPRITES_81
-.incbin "./build/us_1.0/assets/sprites/unknown_12_81.bin"
-glabel ASSET_SPRITES_82
-.incbin "./build/us_1.0/assets/sprites/unknown_12_82.bin"
-glabel ASSET_SPRITES_83
-.incbin "./build/us_1.0/assets/sprites/unknown_12_83.bin"
-glabel ASSET_SPRITES_84
-.incbin "./build/us_1.0/assets/sprites/unknown_12_84.bin"
-glabel ASSET_SPRITES_85
-.incbin "./build/us_1.0/assets/sprites/unknown_12_85.bin"
-glabel ASSET_SPRITES_86
-.incbin "./build/us_1.0/assets/sprites/unknown_12_86.bin"
-glabel ASSET_SPRITES_87
-.incbin "./build/us_1.0/assets/sprites/unknown_12_87.bin"
-glabel ASSET_SPRITES_88
-.incbin "./build/us_1.0/assets/sprites/unknown_12_88.bin"
-glabel ASSET_SPRITES_89
-.incbin "./build/us_1.0/assets/sprites/unknown_12_89.bin"
-glabel ASSET_SPRITES_90
-.incbin "./build/us_1.0/assets/sprites/unknown_12_90.bin"
-glabel ASSET_SPRITES_91
-.incbin "./build/us_1.0/assets/sprites/unknown_12_91.bin"
-glabel ASSET_SPRITES_92
-.incbin "./build/us_1.0/assets/sprites/unknown_12_92.bin"
-glabel ASSET_SPRITES_93
-.incbin "./build/us_1.0/assets/sprites/unknown_12_93.bin"
-glabel ASSET_SPRITES_94
-.incbin "./build/us_1.0/assets/sprites/unknown_12_94.bin"
-glabel ASSET_SPRITES_95
-.incbin "./build/us_1.0/assets/sprites/unknown_12_95.bin"
-glabel ASSET_SPRITES_96
-.incbin "./build/us_1.0/assets/sprites/unknown_12_96.bin"
-glabel ASSET_SPRITES_97
-.incbin "./build/us_1.0/assets/sprites/unknown_12_97.bin"
-glabel ASSET_SPRITES_98
-.incbin "./build/us_1.0/assets/sprites/unknown_12_98.bin"
-glabel ASSET_SPRITES_99
-.incbin "./build/us_1.0/assets/sprites/unknown_12_99.bin"
-glabel ASSET_SPRITES_100
-.incbin "./build/us_1.0/assets/sprites/unknown_12_100.bin"
-glabel ASSET_SPRITES_101
-.incbin "./build/us_1.0/assets/sprites/unknown_12_101.bin"
-glabel ASSET_SPRITES_102
-.incbin "./build/us_1.0/assets/sprites/unknown_12_102.bin"
-glabel ASSET_SPRITES_103
-.incbin "./build/us_1.0/assets/sprites/unknown_12_103.bin"
-glabel ASSET_SPRITES_104
-.incbin "./build/us_1.0/assets/sprites/unknown_12_104.bin"
-glabel ASSET_SPRITES_105
-.incbin "./build/us_1.0/assets/sprites/unknown_12_105.bin"
-glabel ASSET_SPRITES_106
-.incbin "./build/us_1.0/assets/sprites/unknown_12_106.bin"
-glabel ASSET_SPRITES_107
-.incbin "./build/us_1.0/assets/sprites/unknown_12_107.bin"
-glabel ASSET_SPRITES_108
-.incbin "./build/us_1.0/assets/sprites/unknown_12_108.bin"
-glabel ASSET_SPRITES_109
-.incbin "./build/us_1.0/assets/sprites/unknown_12_109.bin"
-glabel ASSET_SPRITES_110
-.incbin "./build/us_1.0/assets/sprites/unknown_12_110.bin"
-glabel ASSET_SPRITES_111
-.incbin "./build/us_1.0/assets/sprites/unknown_12_111.bin"
-glabel ASSET_SPRITES_112
-.incbin "./build/us_1.0/assets/sprites/unknown_12_112.bin"
-glabel ASSET_SPRITES_113
-.incbin "./build/us_1.0/assets/sprites/unknown_12_113.bin"
-glabel ASSET_SPRITES_114
-.incbin "./build/us_1.0/assets/sprites/unknown_12_114.bin"
-glabel ASSET_SPRITES_115
-.incbin "./build/us_1.0/assets/sprites/unknown_12_115.bin"
-glabel ASSET_SPRITES_116
-.incbin "./build/us_1.0/assets/sprites/unknown_12_116.bin"
-glabel ASSET_SPRITES_117
-.incbin "./build/us_1.0/assets/sprites/unknown_12_117.bin"
-glabel ASSET_SPRITES_118
-.incbin "./build/us_1.0/assets/sprites/unknown_12_118.bin"
-glabel ASSET_SPRITES_119
-.incbin "./build/us_1.0/assets/sprites/unknown_12_119.bin"
-glabel ASSET_SPRITES_120
-.incbin "./build/us_1.0/assets/sprites/unknown_12_120.bin"
-glabel ASSET_SPRITES_121
-.incbin "./build/us_1.0/assets/sprites/unknown_12_121.bin"
-glabel ASSET_SPRITES_122
-.incbin "./build/us_1.0/assets/sprites/unknown_12_122.bin"
-glabel ASSET_SPRITES_123
-.incbin "./build/us_1.0/assets/sprites/unknown_12_123.bin"
-glabel ASSET_SPRITES_124
-.incbin "./build/us_1.0/assets/sprites/unknown_12_124.bin"
-glabel ASSET_SPRITES_125
-.incbin "./build/us_1.0/assets/sprites/unknown_12_125.bin"
-glabel ASSET_SPRITES_126
-.incbin "./build/us_1.0/assets/sprites/unknown_12_126.bin"
-glabel ASSET_SPRITES_127
-.incbin "./build/us_1.0/assets/sprites/unknown_12_127.bin"
-glabel ASSET_SPRITES_128
-.incbin "./build/us_1.0/assets/sprites/unknown_12_128.bin"
-glabel ASSET_SPRITES_129
-.incbin "./build/us_1.0/assets/sprites/unknown_12_129.bin"
-glabel ASSET_SPRITES_130
-.incbin "./build/us_1.0/assets/sprites/unknown_12_130.bin"
-glabel ASSET_SPRITES_131
-.incbin "./build/us_1.0/assets/sprites/unknown_12_131.bin"
-glabel ASSET_SPRITES_132
-.incbin "./build/us_1.0/assets/sprites/unknown_12_132.bin"
-glabel ASSET_SPRITES_133
-.incbin "./build/us_1.0/assets/sprites/unknown_12_133.bin"
-glabel ASSET_SPRITES_134
-.incbin "./build/us_1.0/assets/sprites/unknown_12_134.bin"
-glabel ASSET_SPRITES_135
-.incbin "./build/us_1.0/assets/sprites/unknown_12_135.bin"
-glabel ASSET_SPRITES_136
-.incbin "./build/us_1.0/assets/sprites/unknown_12_136.bin"
-glabel ASSET_SPRITES_137
-.incbin "./build/us_1.0/assets/sprites/unknown_12_137.bin"
-glabel ASSET_SPRITES_138
-.incbin "./build/us_1.0/assets/sprites/unknown_12_138.bin"
-glabel ASSET_SPRITES_139
-.incbin "./build/us_1.0/assets/sprites/unknown_12_139.bin"
-glabel ASSET_SPRITES_140
-.incbin "./build/us_1.0/assets/sprites/unknown_12_140.bin"
-glabel ASSET_SPRITES_141
-.incbin "./build/us_1.0/assets/sprites/unknown_12_141.bin"
-glabel ASSET_SPRITES_142
-.incbin "./build/us_1.0/assets/sprites/unknown_12_142.bin"
-glabel ASSET_SPRITES_143
-.incbin "./build/us_1.0/assets/sprites/unknown_12_143.bin"
-glabel ASSET_SPRITES_144
-.incbin "./build/us_1.0/assets/sprites/unknown_12_144.bin"
-glabel ASSET_SPRITES_145
-.incbin "./build/us_1.0/assets/sprites/unknown_12_145.bin"
-glabel ASSET_SPRITES_146
-.incbin "./build/us_1.0/assets/sprites/unknown_12_146.bin"
-glabel ASSET_SPRITES_147
-.incbin "./build/us_1.0/assets/sprites/unknown_12_147.bin"
-glabel ASSET_SPRITES_148
-.incbin "./build/us_1.0/assets/sprites/unknown_12_148.bin"
-glabel ASSET_SPRITES_149
-.incbin "./build/us_1.0/assets/sprites/unknown_12_149.bin"
-glabel ASSET_SPRITES_150
-.incbin "./build/us_1.0/assets/sprites/unknown_12_150.bin"
-glabel ASSET_SPRITES_151
-.incbin "./build/us_1.0/assets/sprites/unknown_12_151.bin"
-glabel ASSET_SPRITES_152
-.incbin "./build/us_1.0/assets/sprites/unknown_12_152.bin"
-glabel ASSET_SPRITES_153
-.incbin "./build/us_1.0/assets/sprites/unknown_12_153.bin"
-glabel ASSET_SPRITES_154
-.incbin "./build/us_1.0/assets/sprites/unknown_12_154.bin"
-glabel ASSET_SPRITES_155
-.incbin "./build/us_1.0/assets/sprites/unknown_12_155.bin"
-glabel ASSET_SPRITES_156
-.incbin "./build/us_1.0/assets/sprites/unknown_12_156.bin"
-glabel ASSET_SPRITES_157
-.incbin "./build/us_1.0/assets/sprites/unknown_12_157.bin"
-glabel ASSET_SPRITES_158
-.incbin "./build/us_1.0/assets/sprites/unknown_12_158.bin"
-glabel ASSET_SPRITES_159
-.incbin "./build/us_1.0/assets/sprites/unknown_12_159.bin"
-glabel ASSET_SPRITES_160
-.incbin "./build/us_1.0/assets/sprites/unknown_12_160.bin"
-glabel ASSET_SPRITES_161
-.incbin "./build/us_1.0/assets/sprites/unknown_12_161.bin"
-glabel ASSET_SPRITES_162
-.incbin "./build/us_1.0/assets/sprites/unknown_12_162.bin"
-glabel ASSET_SPRITES_163
-.incbin "./build/us_1.0/assets/sprites/unknown_12_163.bin"
-glabel ASSET_SPRITES_164
-.incbin "./build/us_1.0/assets/sprites/unknown_12_164.bin"
-glabel ASSET_SPRITES_165
-.incbin "./build/us_1.0/assets/sprites/unknown_12_165.bin"
-glabel ASSET_SPRITES_166
-.incbin "./build/us_1.0/assets/sprites/unknown_12_166.bin"
-glabel ASSET_SPRITES_167
-.incbin "./build/us_1.0/assets/sprites/unknown_12_167.bin"
-glabel ASSET_SPRITES_168
-.incbin "./build/us_1.0/assets/sprites/unknown_12_168.bin"
-glabel ASSET_SPRITES_169
-.incbin "./build/us_1.0/assets/sprites/unknown_12_169.bin"
-glabel ASSET_SPRITES_170
-.incbin "./build/us_1.0/assets/sprites/unknown_12_170.bin"
-glabel ASSET_SPRITES_171
-.incbin "./build/us_1.0/assets/sprites/unknown_12_171.bin"
-glabel ASSET_SPRITES_172
-.incbin "./build/us_1.0/assets/sprites/unknown_12_172.bin"
-glabel ASSET_SPRITES_173
-.incbin "./build/us_1.0/assets/sprites/unknown_12_173.bin"
-glabel ASSET_SPRITES_174
-.incbin "./build/us_1.0/assets/sprites/unknown_12_174.bin"
-glabel ASSET_SPRITES_175
-.incbin "./build/us_1.0/assets/sprites/unknown_12_175.bin"
-glabel ASSET_SPRITES_176
-.incbin "./build/us_1.0/assets/sprites/unknown_12_176.bin"
-glabel ASSET_SPRITES_177
-.incbin "./build/us_1.0/assets/sprites/unknown_12_177.bin"
-glabel ASSET_SPRITES_178
-.incbin "./build/us_1.0/assets/sprites/unknown_12_178.bin"
-glabel ASSET_SPRITES_179
-.incbin "./build/us_1.0/assets/sprites/unknown_12_179.bin"
-glabel ASSET_SPRITES_180
-.incbin "./build/us_1.0/assets/sprites/unknown_12_180.bin"
-glabel ASSET_SPRITES_181
-.incbin "./build/us_1.0/assets/sprites/unknown_12_181.bin"
-glabel ASSET_SPRITES_182
-.incbin "./build/us_1.0/assets/sprites/unknown_12_182.bin"
-glabel ASSET_SPRITES_183
-.incbin "./build/us_1.0/assets/sprites/unknown_12_183.bin"
-glabel ASSET_SPRITES_184
-.incbin "./build/us_1.0/assets/sprites/unknown_12_184.bin"
-glabel ASSET_SPRITES_185
-.incbin "./build/us_1.0/assets/sprites/unknown_12_185.bin"
-glabel ASSET_SPRITES_186
-.incbin "./build/us_1.0/assets/sprites/unknown_12_186.bin"
-glabel ASSET_SPRITES_187
-.incbin "./build/us_1.0/assets/sprites/unknown_12_187.bin"
-glabel ASSET_SPRITES_188
-.incbin "./build/us_1.0/assets/sprites/unknown_12_188.bin"
-glabel ASSET_SPRITES_189
-.incbin "./build/us_1.0/assets/sprites/unknown_12_189.bin"
-glabel ASSET_SPRITES_190
-.incbin "./build/us_1.0/assets/sprites/unknown_12_190.bin"
-glabel ASSET_SPRITES_191
-.incbin "./build/us_1.0/assets/sprites/unknown_12_191.bin"
-glabel ASSET_SPRITES_192
-.incbin "./build/us_1.0/assets/sprites/unknown_12_192.bin"
+glabel ASSET_SPRITE_MINIMAP_FOSSILCANYON
+.incbin "./build/us_1.0/assets/sprites/minimap/fossil_canyon.bin"
+glabel ASSET_SPRITE_MINIMAP_ANCIENTLAKE
+.incbin "./build/us_1.0/assets/sprites/minimap/ancient_lake.bin"
+glabel ASSET_SPRITE_MINIMAP_PIRATELAGOON
+.incbin "./build/us_1.0/assets/sprites/minimap/pirate_lagoon.bin"
+glabel ASSET_SPRITE_MINIMAP_WHALEBAY
+.incbin "./build/us_1.0/assets/sprites/minimap/whale_bay.bin"
+glabel ASSET_SPRITE_MINIMAP_SNOWBALLVALLEY
+.incbin "./build/us_1.0/assets/sprites/minimap/snowball_valley.bin"
+glabel ASSET_SPRITE_MINIMAP_HOTTOPVOLCANO
+.incbin "./build/us_1.0/assets/sprites/minimap/hot_top_volcano.bin"
+glabel ASSET_SPRITE_MINIMAP_CRESCENTISLAND
+.incbin "./build/us_1.0/assets/sprites/minimap/crescent_island.bin"
+glabel ASSET_SPRITE_MINIMAP_UNUSED
+.incbin "./build/us_1.0/assets/sprites/minimap/unused.bin"
+glabel ASSET_SPRITE_MINIMAP_EVERFROSTPEAK
+.incbin "./build/us_1.0/assets/sprites/minimap/everfrost_peak.bin"
+glabel ASSET_SPRITE_MINIMAP_UNUSED2
+.incbin "./build/us_1.0/assets/sprites/minimap/unused2.bin"
+glabel ASSET_SPRITE_MINIMAP_WALRUSCOVE
+.incbin "./build/us_1.0/assets/sprites/minimap/walrus_cove.bin"
+glabel ASSET_SPRITE_MINIMAP_UNUSED3
+.incbin "./build/us_1.0/assets/sprites/minimap/unused3.bin"
+glabel ASSET_SPRITE_MINIMAP_BOULDERCANYON
+.incbin "./build/us_1.0/assets/sprites/minimap/boulder_canyon.bin"
+glabel ASSET_SPRITE_MINIMAP_SMOKEYCASTLE
+.incbin "./build/us_1.0/assets/sprites/minimap/smokey_castle.bin"
+glabel ASSET_SPRITE_MINIMAP_CENTRALAREA
+.incbin "./build/us_1.0/assets/sprites/minimap/central_area.bin"
+glabel ASSET_SPRITE_MINIMAP_FIREMOUNTAIN
+.incbin "./build/us_1.0/assets/sprites/minimap/fire_mountain.bin"
+glabel ASSET_SPRITE_MINIMAP_SPACEPORTALPHA
+.incbin "./build/us_1.0/assets/sprites/minimap/space_port_alpha.bin"
+glabel ASSET_SPRITE_MINIMAP_SPACEDUSTALLEY
+.incbin "./build/us_1.0/assets/sprites/minimap/spacedust_alley.bin"
+glabel ASSET_SPRITE_MINIMAP_TREASURECAVES
+.incbin "./build/us_1.0/assets/sprites/minimap/treasure_caves.bin"
+glabel ASSET_SPRITE_MINIMAP_GREENWOODVILLAGE
+.incbin "./build/us_1.0/assets/sprites/minimap/greenwood_village.bin"
+glabel ASSET_SPRITE_MINIMAP_DARKMOONCAVERNS
+.incbin "./build/us_1.0/assets/sprites/minimap/darkmoon_caverns.bin"
+glabel ASSET_SPRITE_MINIMAP_STARCITY
+.incbin "./build/us_1.0/assets/sprites/minimap/star_city.bin"
+glabel ASSET_SPRITE_MINIMAP_WINDMILLPLAINS
+.incbin "./build/us_1.0/assets/sprites/minimap/windmill_plains.bin"
+glabel ASSET_SPRITE_MINIMAP_FROSTYVILLAGE
+.incbin "./build/us_1.0/assets/sprites/minimap/frosty_village.bin"
+glabel ASSET_SPRITE_MINIMAP_DARKWATERBEACH
+.incbin "./build/us_1.0/assets/sprites/minimap/darkwater_beach.bin"
+glabel ASSET_SPRITE_MINIMAP_JUNGLEFALLS
+.incbin "./build/us_1.0/assets/sprites/minimap/jungle_falls.bin"
+glabel ASSET_SPRITE_MINIMAP_ICICLEPYRAMID
+.incbin "./build/us_1.0/assets/sprites/minimap/icicle_pyramid.bin"
+glabel ASSET_SPRITE_MINIMAP_HAUNTEDWOODS
+.incbin "./build/us_1.0/assets/sprites/minimap/haunted_woods.bin"
+glabel ASSET_SPRITE_MINIMAP_BLUEY
+.incbin "./build/us_1.0/assets/sprites/minimap/bluey.bin"
+glabel ASSET_SPRITE_MINIMAP_BUBBLER
+.incbin "./build/us_1.0/assets/sprites/minimap/bubbler.bin"
+glabel ASSET_SPRITE_MINIMAP_SMOKEY
+.incbin "./build/us_1.0/assets/sprites/minimap/smokey.bin"
+glabel ASSET_SPRITE_MINIMAP_TRICKYTOPS
+.incbin "./build/us_1.0/assets/sprites/minimap/trickytops.bin"
+glabel ASSET_SPRITE_MINIMAP_WIZPIG1
+.incbin "./build/us_1.0/assets/sprites/minimap/wizpig1.bin"
+glabel ASSET_SPRITE_MINIMAP_WIZPIG2
+.incbin "./build/us_1.0/assets/sprites/minimap/wizpig2.bin"
+glabel ASSET_SPRITE_WEATHER_RAINDROP
+.incbin "./build/us_1.0/assets/sprites/weather/rain_drop.bin"
+glabel ASSET_SPRITE_WEATHER_SNOWFLAKE
+.incbin "./build/us_1.0/assets/sprites/weather/snowflake.bin"
+glabel ASSET_SPRITE_OBJECTS_LENSFLARE1
+.incbin "./build/us_1.0/assets/sprites/objects/lensflare1.bin"
+glabel ASSET_SPRITE_OBJECTS_LENSFLARE2
+.incbin "./build/us_1.0/assets/sprites/objects/lensflare2.bin"
+glabel ASSET_SPRITE_OBJECTS_LENSFLARE3
+.incbin "./build/us_1.0/assets/sprites/objects/lensflare3.bin"
+glabel ASSET_SPRITE_UNKNOWN_BROWNEGG
+.incbin "./build/us_1.0/assets/sprites/unknown/brown_egg.bin"
+glabel ASSET_SPRITE_PARTICLES_SMOKE
+.incbin "./build/us_1.0/assets/sprites/particles/smoke.bin"
+glabel ASSET_SPRITE_PARTICLES_SMOKE2
+.incbin "./build/us_1.0/assets/sprites/particles/smoke2.bin"
+glabel ASSET_SPRITE_PARTICLES_BUBBLESSMALL
+.incbin "./build/us_1.0/assets/sprites/particles/bubbles_small.bin"
+glabel ASSET_SPRITE_PARTICLES_SMOKE3
+.incbin "./build/us_1.0/assets/sprites/particles/smoke3.bin"
+glabel ASSET_SPRITE_OBJECTS_BUBBLEWEAPON
+.incbin "./build/us_1.0/assets/sprites/objects/bubble_weapon.bin"
+glabel ASSET_SPRITE_OBJECTS_SPARKLE
+.incbin "./build/us_1.0/assets/sprites/objects/sparkle.bin"
+glabel ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONBLUE
+.incbin "./build/us_1.0/assets/sprites/objects/bomb_explosion_blue.bin"
+glabel ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONYELLOW
+.incbin "./build/us_1.0/assets/sprites/objects/bomb_explosion_yellow.bin"
+glabel ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONRED
+.incbin "./build/us_1.0/assets/sprites/objects/bomb_explosion_red.bin"
+glabel ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONGREEN
+.incbin "./build/us_1.0/assets/sprites/objects/bomb_explosion_green.bin"
+glabel ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONCYAN
+.incbin "./build/us_1.0/assets/sprites/objects/bomb_explosion_cyan.bin"
+glabel ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONWHITE
+.incbin "./build/us_1.0/assets/sprites/objects/bomb_explosion_white.bin"
+glabel ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONORANGE
+.incbin "./build/us_1.0/assets/sprites/objects/bomb_explosion_orange.bin"
+glabel ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONPURPLE
+.incbin "./build/us_1.0/assets/sprites/objects/bomb_explosion_purple.bin"
+glabel ASSET_SPRITE_OBJECTS_RAINBOW
+.incbin "./build/us_1.0/assets/sprites/objects/rainbow.bin"
+glabel ASSET_SPRITE_OBJECTS_EGG
+.incbin "./build/us_1.0/assets/sprites/objects/egg.bin"
+glabel ASSET_SPRITE_OBJECTS_BOMB
+.incbin "./build/us_1.0/assets/sprites/objects/bomb.bin"
+glabel ASSET_SPRITE_OBJECTS_OILSLICK
+.incbin "./build/us_1.0/assets/sprites/objects/oil_slick.bin"
+glabel ASSET_SPRITE_OBJECTS_EYESINDARK
+.incbin "./build/us_1.0/assets/sprites/objects/eyes_in_dark.bin"
+glabel ASSET_SPRITE_HUD_TIMERCOLON
+.incbin "./build/us_1.0/assets/sprites/hud/timer_colon.bin"
+glabel ASSET_SPRITE_HUD_RETICALHOMING
+.incbin "./build/us_1.0/assets/sprites/hud/retical_homing.bin"
+glabel ASSET_SPRITE_OBJECTS_DEBUGREDSPHERE
+.incbin "./build/us_1.0/assets/sprites/objects/debug_red_sphere.bin"
+glabel ASSET_SPRITE_HUD_FINISH
+.incbin "./build/us_1.0/assets/sprites/hud/finish.bin"
+glabel ASSET_SPRITE_HUD_GETREADY
+.incbin "./build/us_1.0/assets/sprites/hud/get_ready.bin"
+glabel ASSET_SPRITE_HUD_GO
+.incbin "./build/us_1.0/assets/sprites/hud/go.bin"
+glabel ASSET_SPRITE_HUD_LAP
+.incbin "./build/us_1.0/assets/sprites/hud/lap.bin"
+glabel ASSET_SPRITE_HUD_FORWARDSLASH
+.incbin "./build/us_1.0/assets/sprites/hud/forward_slash.bin"
+glabel ASSET_SPRITE_HUD_TIME
+.incbin "./build/us_1.0/assets/sprites/hud/time.bin"
+glabel ASSET_SPRITE_HUD_PLACENUMBERS
+.incbin "./build/us_1.0/assets/sprites/hud/place_numbers.bin"
+glabel ASSET_SPRITE_HUD_TIMERNUMBERS
+.incbin "./build/us_1.0/assets/sprites/hud/timer_numbers.bin"
+glabel ASSET_SPRITE_HUD_TIMERCOLORSMALL
+.incbin "./build/us_1.0/assets/sprites/hud/timer_color_small.bin"
+glabel ASSET_SPRITE_HUD_TIMERNUMBERSSMALL
+.incbin "./build/us_1.0/assets/sprites/hud/timer_numbers_small.bin"
+glabel ASSET_SPRITE_HUD_GOSMALL
+.incbin "./build/us_1.0/assets/sprites/hud/go_small.bin"
+glabel ASSET_SPRITE_HUD_LAPSMALL
+.incbin "./build/us_1.0/assets/sprites/hud/lap_small.bin"
+glabel ASSET_SPRITE_HUD_GETREADY2
+.incbin "./build/us_1.0/assets/sprites/hud/get_ready2.bin"
+glabel ASSET_SPRITE_HUD_FINALSMALL
+.incbin "./build/us_1.0/assets/sprites/hud/final_small.bin"
+glabel ASSET_SPRITE_HUD_FINISHSMALL
+.incbin "./build/us_1.0/assets/sprites/hud/finish_small.bin"
+glabel ASSET_SPRITE_HUD_LAP2SMALL
+.incbin "./build/us_1.0/assets/sprites/hud/lap2_small.bin"
+glabel ASSET_SPRITE_HUD_WAYSMALL
+.incbin "./build/us_1.0/assets/sprites/hud/way_small.bin"
+glabel ASSET_SPRITE_HUD_WRONGSMALL
+.incbin "./build/us_1.0/assets/sprites/hud/wrong_small.bin"
+glabel ASSET_SPRITE_OBJECTS_POSITIONARROW
+.incbin "./build/us_1.0/assets/sprites/objects/position_arrow.bin"
+glabel ASSET_SPRITE_HUD_GOLDENBALLOONICON
+.incbin "./build/us_1.0/assets/sprites/hud/golden_balloon_icon.bin"
+glabel ASSET_SPRITE_HUD_SILVERBALLOONICON
+.incbin "./build/us_1.0/assets/sprites/hud/silver_balloon_icon.bin"
+glabel ASSET_SPRITE_OBJECTS_LEVELNAME
+.incbin "./build/us_1.0/assets/sprites/objects/level_name.bin"
+glabel ASSET_SPRITE_MINIMAP_NPC
+.incbin "./build/us_1.0/assets/sprites/minimap/npc.bin"
+glabel ASSET_SPRITE_MINIMAP_PLAYER
+.incbin "./build/us_1.0/assets/sprites/minimap/player.bin"
+glabel ASSET_SPRITE_HUD_WEAPONICONS
+.incbin "./build/us_1.0/assets/sprites/hud/weapon_icons.bin"
+glabel ASSET_SPRITE_HUD_WEAPONICONNUMBERS
+.incbin "./build/us_1.0/assets/sprites/hud/weapon_icon_numbers.bin"
+glabel ASSET_SPRITE_UNUSED_BETACHARACTERICON
+.incbin "./build/us_1.0/assets/sprites/unused/beta_character_icon.bin"
+glabel ASSET_SPRITE_HUD_FINALLAPFLAG
+.incbin "./build/us_1.0/assets/sprites/hud/final_lap_flag.bin"
+glabel ASSET_SPRITE_HUD_FINAL
+.incbin "./build/us_1.0/assets/sprites/hud/final.bin"
+glabel ASSET_SPRITE_HUD_LAPLARGE
+.incbin "./build/us_1.0/assets/sprites/hud/lap_large.bin"
+glabel ASSET_SPRITE_HUD_LAP22
+.incbin "./build/us_1.0/assets/sprites/hud/lap2_2.bin"
+glabel ASSET_SPRITE_HUD_WAY
+.incbin "./build/us_1.0/assets/sprites/hud/way.bin"
+glabel ASSET_SPRITE_HUD_WRONG
+.incbin "./build/us_1.0/assets/sprites/hud/wrong.bin"
+glabel ASSET_SPRITE_UNUSED_PROAMLOGO
+.incbin "./build/us_1.0/assets/sprites/unused/pro_am_logo.bin"
+glabel ASSET_SPRITE_HUD_SPEEDOMETERARROW
+.incbin "./build/us_1.0/assets/sprites/hud/speedometer_arrow.bin"
+glabel ASSET_SPRITE_HUD_FIRSTPLACEONE
+.incbin "./build/us_1.0/assets/sprites/hud/first_place_one.bin"
+glabel ASSET_SPRITE_HUD_FIRSTPLACEST
+.incbin "./build/us_1.0/assets/sprites/hud/first_place_st.bin"
+glabel ASSET_SPRITE_OBJECTS_BALLOONSTRING
+.incbin "./build/us_1.0/assets/sprites/objects/balloon_string.bin"
+glabel ASSET_SPRITE_UNKNOWN_FIREBALLUNKNOWN
+.incbin "./build/us_1.0/assets/sprites/unknown/fireball_unknown.bin"
+glabel ASSET_SPRITE_OBJECTS_FIREBALL
+.incbin "./build/us_1.0/assets/sprites/objects/fireball.bin"
+glabel ASSET_SPRITE_OBJECTS_WIZGHOST
+.incbin "./build/us_1.0/assets/sprites/objects/wizghost.bin"
+glabel ASSET_SPRITE_UNKNOWN_UNKNOWNLIGHT
+.incbin "./build/us_1.0/assets/sprites/unknown/unknown_light.bin"
+glabel ASSET_SPRITE_UNKNOWN_SMALLSTAR
+.incbin "./build/us_1.0/assets/sprites/unknown/small_star.bin"
+glabel ASSET_SPRITE_OBJECTS_BUOY
+.incbin "./build/us_1.0/assets/sprites/objects/buoy.bin"
+glabel ASSET_SPRITE_OBJECTS_SMARTIETREE
+.incbin "./build/us_1.0/assets/sprites/objects/smartie_tree.bin"
+glabel ASSET_SPRITE_OBJECTS_BEACHTREE
+.incbin "./build/us_1.0/assets/sprites/objects/beach_tree.bin"
+glabel ASSET_SPRITE_OBJECTS_BLUEBERRYBUSH
+.incbin "./build/us_1.0/assets/sprites/objects/blue_berry_bush.bin"
+glabel ASSET_SPRITE_OBJECTS_RUBBERSNOWTREE
+.incbin "./build/us_1.0/assets/sprites/objects/rubber_snow_tree.bin"
+glabel ASSET_SPRITE_OBJECTS_SKINNYSNOWTREE
+.incbin "./build/us_1.0/assets/sprites/objects/skinny_snow_tree.bin"
+glabel ASSET_SPRITE_OBJECTS_XMASTREE
+.incbin "./build/us_1.0/assets/sprites/objects/xmas_tree.bin"
+glabel ASSET_SPRITE_OBJECTS_ALPINESNOWTREE
+.incbin "./build/us_1.0/assets/sprites/objects/alpine_snow_tree.bin"
+glabel ASSET_SPRITE_OBJECTS_RUBBERTREE
+.incbin "./build/us_1.0/assets/sprites/objects/rubber_tree.bin"
+glabel ASSET_SPRITE_OBJECTS_PALMTREETOP
+.incbin "./build/us_1.0/assets/sprites/objects/palm_tree_top.bin"
+glabel ASSET_SPRITE_OBJECTS_PALMPLANT
+.incbin "./build/us_1.0/assets/sprites/objects/palm_plant.bin"
+glabel ASSET_SPRITE_OBJECTS_PALMTREETOPCHEA
+.incbin "./build/us_1.0/assets/sprites/objects/palm_tree_top_chea.bin"
+glabel ASSET_SPRITE_OBJECTS_FIRTREE
+.incbin "./build/us_1.0/assets/sprites/objects/fir_tree.bin"
+glabel ASSET_SPRITE_OBJECTS_SPACETREE
+.incbin "./build/us_1.0/assets/sprites/objects/space_tree.bin"
+glabel ASSET_SPRITE_OBJECTS_LAMPPOST
+.incbin "./build/us_1.0/assets/sprites/objects/lamp_post.bin"
+glabel ASSET_SPRITE_FLOWERS_WHITEBUTTERCUP
+.incbin "./build/us_1.0/assets/sprites/flowers/white_buttercup.bin"
+glabel ASSET_SPRITE_FLOWERS_YELLOWBELLFLOWER
+.incbin "./build/us_1.0/assets/sprites/flowers/yellow_bellflower.bin"
+glabel ASSET_SPRITE_FLOWERS_YELLOWBUTTERCUP
+.incbin "./build/us_1.0/assets/sprites/flowers/yellow_buttercup.bin"
+glabel ASSET_SPRITE_FLOWERS_BLUEBUTTERCUP
+.incbin "./build/us_1.0/assets/sprites/flowers/blue_buttercup.bin"
+glabel ASSET_SPRITE_FLOWERS_WATERLILY
+.incbin "./build/us_1.0/assets/sprites/flowers/water_lily.bin"
+glabel ASSET_SPRITE_OBJECTS_REEDNOLEAF
+.incbin "./build/us_1.0/assets/sprites/objects/reed_no_leaf.bin"
+glabel ASSET_SPRITE_OBJECTS_REEDLEAVES
+.incbin "./build/us_1.0/assets/sprites/objects/reed_leaves.bin"
+glabel ASSET_SPRITE_OBJECTS_READONELEAF
+.incbin "./build/us_1.0/assets/sprites/objects/read_one_leaf.bin"
+glabel ASSET_SPRITE_OBJECTS_SNOWMANTOPHAT
+.incbin "./build/us_1.0/assets/sprites/objects/snowman_tophat.bin"
+glabel ASSET_SPRITE_OBJECTS_BELL
+.incbin "./build/us_1.0/assets/sprites/objects/bell.bin"
+glabel ASSET_SPRITE_OBJECTS_SNOWMAN
+.incbin "./build/us_1.0/assets/sprites/objects/snowman.bin"
+glabel ASSET_SPRITE_UNUSED_TORCHWITHEYES
+.incbin "./build/us_1.0/assets/sprites/unused/torch_with_eyes.bin"
+glabel ASSET_SPRITE_OBJECTS_DEBUGORBRED
+.incbin "./build/us_1.0/assets/sprites/objects/debug_orb_red.bin"
+glabel ASSET_SPRITE_OBJECTS_DEBUGORBYELLOW
+.incbin "./build/us_1.0/assets/sprites/objects/debug_orb_yellow.bin"
+glabel ASSET_SPRITE_UNUSED_BETAANCIENTLAKESIGN
+.incbin "./build/us_1.0/assets/sprites/unused/beta_ancient_lake_sign.bin"
+glabel ASSET_SPRITE_OBJECTS_DEBUGFOGCHANGER
+.incbin "./build/us_1.0/assets/sprites/objects/debug_fog_changer.bin"
+glabel ASSET_SPRITE_OBJECTS_DEBUGANIMCAR
+.incbin "./build/us_1.0/assets/sprites/objects/debug_anim_car.bin"
+glabel ASSET_SPRITE_OBJECTS_DEBUGSKYCONTROL
+.incbin "./build/us_1.0/assets/sprites/objects/debug_sky_control.bin"
+glabel ASSET_SPRITE_OBJECTS_DEBUGCAMERACONTROL
+.incbin "./build/us_1.0/assets/sprites/objects/debug_camera_control.bin"
+glabel ASSET_SPRITE_UNUSED_DEBUGUNKNOWNEXIT
+.incbin "./build/us_1.0/assets/sprites/unused/debug_unknown_exit.bin"
+glabel ASSET_SPRITE_UNUSED_DEBUGUNKNOWNTRAFFICLIGHT
+.incbin "./build/us_1.0/assets/sprites/unused/debug_unknown_traffic_light.bin"
+glabel ASSET_SPRITE_OBJECTS_DEBUGANIMATOR
+.incbin "./build/us_1.0/assets/sprites/objects/debug_animator.bin"
+glabel ASSET_SPRITE_OBJECTS_DEBUGAUDIO
+.incbin "./build/us_1.0/assets/sprites/objects/debug_audio.bin"
+glabel ASSET_SPRITE_OBJECTS_DEBUGAUDIOLINE
+.incbin "./build/us_1.0/assets/sprites/objects/debug_audio_line.bin"
+glabel ASSET_SPRITE_OBJECTS_DEBUGAUDIOSEQLINE
+.incbin "./build/us_1.0/assets/sprites/objects/debug_audio_seq_line.bin"
+glabel ASSET_SPRITE_OBJECTS_DEBUGAUDIOSEQ
+.incbin "./build/us_1.0/assets/sprites/objects/debug_audio_seq.bin"
+glabel ASSET_SPRITE_OBJECTS_DEBUGAUDIOREVERB
+.incbin "./build/us_1.0/assets/sprites/objects/debug_audio_reverb.bin"
+glabel ASSET_SPRITE_OBJECTS_BALLOONBOOST
+.incbin "./build/us_1.0/assets/sprites/objects/balloon_boost.bin"
+glabel ASSET_SPRITE_OBJECTS_BALLOONMISSLE
+.incbin "./build/us_1.0/assets/sprites/objects/balloon_missle.bin"
+glabel ASSET_SPRITE_OBJECTS_BALLOONTRAP
+.incbin "./build/us_1.0/assets/sprites/objects/balloon_trap.bin"
+glabel ASSET_SPRITE_OBJECTS_BALLOONSHIELD
+.incbin "./build/us_1.0/assets/sprites/objects/balloon_shield.bin"
+glabel ASSET_SPRITE_OBJECTS_BALLOONMAGNET
+.incbin "./build/us_1.0/assets/sprites/objects/balloon_magnet.bin"
+glabel ASSET_SPRITE_UNUSED_BALLOONMISSLEGIFT
+.incbin "./build/us_1.0/assets/sprites/unused/balloon_missle_gift.bin"
+glabel ASSET_SPRITE_UNUSED_BALLOONBOOSTGIFT
+.incbin "./build/us_1.0/assets/sprites/unused/balloon_boost_gift.bin"
+glabel ASSET_SPRITE_OBJECTS_BALLOONGOLD
+.incbin "./build/us_1.0/assets/sprites/objects/balloon_gold.bin"
+glabel ASSET_SPRITE_OBJECTS_BALLOONSILVER
+.incbin "./build/us_1.0/assets/sprites/objects/balloon_silver.bin"
+glabel ASSET_SPRITE_OBJECTS_BANANA
+.incbin "./build/us_1.0/assets/sprites/objects/banana.bin"
+glabel ASSET_SPRITE_OBJECTS_SILVERCOIN
+.incbin "./build/us_1.0/assets/sprites/objects/silver_coin.bin"
+glabel ASSET_SPRITE_OBJECTS_CHECKPOINTFLAG
+.incbin "./build/us_1.0/assets/sprites/objects/checkpoint_flag.bin"
+glabel ASSET_SPRITE_UNUSED_RAREWARECOIN
+.incbin "./build/us_1.0/assets/sprites/unused/rareware_coin.bin"
+glabel ASSET_SPRITE_UNUSED_SILVERCOINVERTICAL
+.incbin "./build/us_1.0/assets/sprites/unused/silver_coin_vertical.bin"
+glabel ASSET_SPRITE_HUD_BANANAICON
+.incbin "./build/us_1.0/assets/sprites/hud/banana_icon.bin"
+glabel ASSET_SPRITE_PARTICLES_SPARKLE
+.incbin "./build/us_1.0/assets/sprites/particles/sparkle.bin"
+glabel ASSET_SPRITE_OBJECTS_DEBUGEGGCREATOR
+.incbin "./build/us_1.0/assets/sprites/objects/debug_egg_creator.bin"
+glabel ASSET_SPRITE_UNUSED_BONUSGEM
+.incbin "./build/us_1.0/assets/sprites/unused/bonus_gem.bin"
+glabel ASSET_SPRITE_HUD_INDICATORICONCAUTION
+.incbin "./build/us_1.0/assets/sprites/hud/indicator_icon_caution.bin"
+glabel ASSET_SPRITE_HUD_INDICATORICONDOWN
+.incbin "./build/us_1.0/assets/sprites/hud/indicator_icon_down.bin"
+glabel ASSET_SPRITE_HUD_INDICATORICONUTURN
+.incbin "./build/us_1.0/assets/sprites/hud/indicator_icon_uturn.bin"
+glabel ASSET_SPRITE_HUD_INDICATORICONTURN
+.incbin "./build/us_1.0/assets/sprites/hud/indicator_icon_turn.bin"
+glabel ASSET_SPRITE_HUD_INDICATORICONSLIGHTTURN
+.incbin "./build/us_1.0/assets/sprites/hud/indicator_icon_slight_turn.bin"
+glabel ASSET_SPRITE_OBJECTS_SMOKEOBJECT
+.incbin "./build/us_1.0/assets/sprites/objects/smoke_object.bin"
+glabel ASSET_SPRITE_OBJECTS_SMOKECLOUD
+.incbin "./build/us_1.0/assets/sprites/objects/smoke_cloud.bin"
+glabel ASSET_SPRITE_OBJECTS_SMOKEGRASS
+.incbin "./build/us_1.0/assets/sprites/objects/smoke_grass.bin"
+glabel ASSET_SPRITE_OBJECTS_MIST
+.incbin "./build/us_1.0/assets/sprites/objects/mist.bin"
+glabel ASSET_SPRITE_OBJECTS_FLAMINGTORCH
+.incbin "./build/us_1.0/assets/sprites/objects/flaming_torch.bin"
+glabel ASSET_SPRITE_UNUSED_SPLASH
+.incbin "./build/us_1.0/assets/sprites/unused/splash.bin"
+glabel ASSET_SPRITE_UNUSED_WEAPONBALLOONPOP
+.incbin "./build/us_1.0/assets/sprites/unused/weapon_balloon_pop.bin"
+glabel ASSET_SPRITE_OBJECTS_LAVASPURT
+.incbin "./build/us_1.0/assets/sprites/objects/lava_spurt.bin"
+glabel ASSET_SPRITE_UNKNOWN_UNKNOWNSMALLPOP
+.incbin "./build/us_1.0/assets/sprites/unknown/unknown_small_pop.bin"
+glabel ASSET_SPRITE_VEHICLE_PARTS_TYRE0
+.incbin "./build/us_1.0/assets/sprites/vehicle_parts/tyre0.bin"
+glabel ASSET_SPRITE_VEHICLE_PARTS_TYRE1
+.incbin "./build/us_1.0/assets/sprites/vehicle_parts/tyre1.bin"
+glabel ASSET_SPRITE_VEHICLE_PARTS_TYRE2
+.incbin "./build/us_1.0/assets/sprites/vehicle_parts/tyre2.bin"
+glabel ASSET_SPRITE_VEHICLE_PARTS_TYRE3
+.incbin "./build/us_1.0/assets/sprites/vehicle_parts/tyre3.bin"
+glabel ASSET_SPRITE_VEHICLE_PARTS_FAN0
+.incbin "./build/us_1.0/assets/sprites/vehicle_parts/fan0.bin"
+glabel ASSET_SPRITE_VEHICLE_PARTS_FAN1
+.incbin "./build/us_1.0/assets/sprites/vehicle_parts/fan1.bin"
+glabel ASSET_SPRITE_VEHICLE_PARTS_PROPELLER0
+.incbin "./build/us_1.0/assets/sprites/vehicle_parts/propeller0.bin"
+glabel ASSET_SPRITE_VEHICLE_PARTS_PROPELLER1
+.incbin "./build/us_1.0/assets/sprites/vehicle_parts/propeller1.bin"
+glabel ASSET_SPRITE_UNUSED_RARELETTERS
+.incbin "./build/us_1.0/assets/sprites/unused/rare_letters.bin"
+glabel ASSET_SPRITE_OBJECTS_BOLTGLOW
+.incbin "./build/us_1.0/assets/sprites/objects/bolt_glow.bin"
+glabel ASSET_SPRITE_MENU_ICONTROPHY
+.incbin "./build/us_1.0/assets/sprites/menu/icon_trophy.bin"
+glabel ASSET_SPRITE_MENU_ICONKEY
+.incbin "./build/us_1.0/assets/sprites/menu/icon_key.bin"
+glabel ASSET_SPRITE_MENU_ICONWIZPIGAMULET
+.incbin "./build/us_1.0/assets/sprites/menu/icon_wizpig_amulet.bin"
+glabel ASSET_SPRITE_MENU_ICONTTAMULET
+.incbin "./build/us_1.0/assets/sprites/menu/icon_tt_amulet.bin"
 glabel ASSET_SPRITES_END
 
 /********** ASSET_SPRITES_TABLE **********/
 
 .balign 16
 glabel ASSET_SPRITES_TABLE
-.word ASSET_SPRITES_0 - ASSET_SPRITES
-.word ASSET_SPRITES_1 - ASSET_SPRITES
-.word ASSET_SPRITES_2 - ASSET_SPRITES
-.word ASSET_SPRITES_3 - ASSET_SPRITES
-.word ASSET_SPRITES_4 - ASSET_SPRITES
-.word ASSET_SPRITES_5 - ASSET_SPRITES
-.word ASSET_SPRITES_6 - ASSET_SPRITES
-.word ASSET_SPRITES_7 - ASSET_SPRITES
-.word ASSET_SPRITES_8 - ASSET_SPRITES
-.word ASSET_SPRITES_9 - ASSET_SPRITES
-.word ASSET_SPRITES_10 - ASSET_SPRITES
-.word ASSET_SPRITES_11 - ASSET_SPRITES
-.word ASSET_SPRITES_12 - ASSET_SPRITES
-.word ASSET_SPRITES_13 - ASSET_SPRITES
-.word ASSET_SPRITES_14 - ASSET_SPRITES
-.word ASSET_SPRITES_15 - ASSET_SPRITES
-.word ASSET_SPRITES_16 - ASSET_SPRITES
-.word ASSET_SPRITES_17 - ASSET_SPRITES
-.word ASSET_SPRITES_18 - ASSET_SPRITES
-.word ASSET_SPRITES_19 - ASSET_SPRITES
-.word ASSET_SPRITES_20 - ASSET_SPRITES
-.word ASSET_SPRITES_21 - ASSET_SPRITES
-.word ASSET_SPRITES_22 - ASSET_SPRITES
-.word ASSET_SPRITES_23 - ASSET_SPRITES
-.word ASSET_SPRITES_24 - ASSET_SPRITES
-.word ASSET_SPRITES_25 - ASSET_SPRITES
-.word ASSET_SPRITES_26 - ASSET_SPRITES
-.word ASSET_SPRITES_27 - ASSET_SPRITES
-.word ASSET_SPRITES_28 - ASSET_SPRITES
-.word ASSET_SPRITES_29 - ASSET_SPRITES
-.word ASSET_SPRITES_30 - ASSET_SPRITES
-.word ASSET_SPRITES_31 - ASSET_SPRITES
-.word ASSET_SPRITES_32 - ASSET_SPRITES
-.word ASSET_SPRITES_33 - ASSET_SPRITES
-.word ASSET_SPRITES_34 - ASSET_SPRITES
-.word ASSET_SPRITES_35 - ASSET_SPRITES
-.word ASSET_SPRITES_36 - ASSET_SPRITES
-.word ASSET_SPRITES_37 - ASSET_SPRITES
-.word ASSET_SPRITES_38 - ASSET_SPRITES
-.word ASSET_SPRITES_39 - ASSET_SPRITES
-.word ASSET_SPRITES_40 - ASSET_SPRITES
-.word ASSET_SPRITES_41 - ASSET_SPRITES
-.word ASSET_SPRITES_42 - ASSET_SPRITES
-.word ASSET_SPRITES_43 - ASSET_SPRITES
-.word ASSET_SPRITES_44 - ASSET_SPRITES
-.word ASSET_SPRITES_45 - ASSET_SPRITES
-.word ASSET_SPRITES_46 - ASSET_SPRITES
-.word ASSET_SPRITES_47 - ASSET_SPRITES
-.word ASSET_SPRITES_48 - ASSET_SPRITES
-.word ASSET_SPRITES_49 - ASSET_SPRITES
-.word ASSET_SPRITES_50 - ASSET_SPRITES
-.word ASSET_SPRITES_51 - ASSET_SPRITES
-.word ASSET_SPRITES_52 - ASSET_SPRITES
-.word ASSET_SPRITES_53 - ASSET_SPRITES
-.word ASSET_SPRITES_54 - ASSET_SPRITES
-.word ASSET_SPRITES_55 - ASSET_SPRITES
-.word ASSET_SPRITES_56 - ASSET_SPRITES
-.word ASSET_SPRITES_57 - ASSET_SPRITES
-.word ASSET_SPRITES_58 - ASSET_SPRITES
-.word ASSET_SPRITES_59 - ASSET_SPRITES
-.word ASSET_SPRITES_60 - ASSET_SPRITES
-.word ASSET_SPRITES_61 - ASSET_SPRITES
-.word ASSET_SPRITES_62 - ASSET_SPRITES
-.word ASSET_SPRITES_63 - ASSET_SPRITES
-.word ASSET_SPRITES_64 - ASSET_SPRITES
-.word ASSET_SPRITES_65 - ASSET_SPRITES
-.word ASSET_SPRITES_66 - ASSET_SPRITES
-.word ASSET_SPRITES_67 - ASSET_SPRITES
-.word ASSET_SPRITES_68 - ASSET_SPRITES
-.word ASSET_SPRITES_69 - ASSET_SPRITES
-.word ASSET_SPRITES_70 - ASSET_SPRITES
-.word ASSET_SPRITES_71 - ASSET_SPRITES
-.word ASSET_SPRITES_72 - ASSET_SPRITES
-.word ASSET_SPRITES_73 - ASSET_SPRITES
-.word ASSET_SPRITES_74 - ASSET_SPRITES
-.word ASSET_SPRITES_75 - ASSET_SPRITES
-.word ASSET_SPRITES_76 - ASSET_SPRITES
-.word ASSET_SPRITES_77 - ASSET_SPRITES
-.word ASSET_SPRITES_78 - ASSET_SPRITES
-.word ASSET_SPRITES_79 - ASSET_SPRITES
-.word ASSET_SPRITES_80 - ASSET_SPRITES
-.word ASSET_SPRITES_81 - ASSET_SPRITES
-.word ASSET_SPRITES_82 - ASSET_SPRITES
-.word ASSET_SPRITES_83 - ASSET_SPRITES
-.word ASSET_SPRITES_84 - ASSET_SPRITES
-.word ASSET_SPRITES_85 - ASSET_SPRITES
-.word ASSET_SPRITES_86 - ASSET_SPRITES
-.word ASSET_SPRITES_87 - ASSET_SPRITES
-.word ASSET_SPRITES_88 - ASSET_SPRITES
-.word ASSET_SPRITES_89 - ASSET_SPRITES
-.word ASSET_SPRITES_90 - ASSET_SPRITES
-.word ASSET_SPRITES_91 - ASSET_SPRITES
-.word ASSET_SPRITES_92 - ASSET_SPRITES
-.word ASSET_SPRITES_93 - ASSET_SPRITES
-.word ASSET_SPRITES_94 - ASSET_SPRITES
-.word ASSET_SPRITES_95 - ASSET_SPRITES
-.word ASSET_SPRITES_96 - ASSET_SPRITES
-.word ASSET_SPRITES_97 - ASSET_SPRITES
-.word ASSET_SPRITES_98 - ASSET_SPRITES
-.word ASSET_SPRITES_99 - ASSET_SPRITES
-.word ASSET_SPRITES_100 - ASSET_SPRITES
-.word ASSET_SPRITES_101 - ASSET_SPRITES
-.word ASSET_SPRITES_102 - ASSET_SPRITES
-.word ASSET_SPRITES_103 - ASSET_SPRITES
-.word ASSET_SPRITES_104 - ASSET_SPRITES
-.word ASSET_SPRITES_105 - ASSET_SPRITES
-.word ASSET_SPRITES_106 - ASSET_SPRITES
-.word ASSET_SPRITES_107 - ASSET_SPRITES
-.word ASSET_SPRITES_108 - ASSET_SPRITES
-.word ASSET_SPRITES_109 - ASSET_SPRITES
-.word ASSET_SPRITES_110 - ASSET_SPRITES
-.word ASSET_SPRITES_111 - ASSET_SPRITES
-.word ASSET_SPRITES_112 - ASSET_SPRITES
-.word ASSET_SPRITES_113 - ASSET_SPRITES
-.word ASSET_SPRITES_114 - ASSET_SPRITES
-.word ASSET_SPRITES_115 - ASSET_SPRITES
-.word ASSET_SPRITES_116 - ASSET_SPRITES
-.word ASSET_SPRITES_117 - ASSET_SPRITES
-.word ASSET_SPRITES_118 - ASSET_SPRITES
-.word ASSET_SPRITES_119 - ASSET_SPRITES
-.word ASSET_SPRITES_120 - ASSET_SPRITES
-.word ASSET_SPRITES_121 - ASSET_SPRITES
-.word ASSET_SPRITES_122 - ASSET_SPRITES
-.word ASSET_SPRITES_123 - ASSET_SPRITES
-.word ASSET_SPRITES_124 - ASSET_SPRITES
-.word ASSET_SPRITES_125 - ASSET_SPRITES
-.word ASSET_SPRITES_126 - ASSET_SPRITES
-.word ASSET_SPRITES_127 - ASSET_SPRITES
-.word ASSET_SPRITES_128 - ASSET_SPRITES
-.word ASSET_SPRITES_129 - ASSET_SPRITES
-.word ASSET_SPRITES_130 - ASSET_SPRITES
-.word ASSET_SPRITES_131 - ASSET_SPRITES
-.word ASSET_SPRITES_132 - ASSET_SPRITES
-.word ASSET_SPRITES_133 - ASSET_SPRITES
-.word ASSET_SPRITES_134 - ASSET_SPRITES
-.word ASSET_SPRITES_135 - ASSET_SPRITES
-.word ASSET_SPRITES_136 - ASSET_SPRITES
-.word ASSET_SPRITES_137 - ASSET_SPRITES
-.word ASSET_SPRITES_138 - ASSET_SPRITES
-.word ASSET_SPRITES_139 - ASSET_SPRITES
-.word ASSET_SPRITES_140 - ASSET_SPRITES
-.word ASSET_SPRITES_141 - ASSET_SPRITES
-.word ASSET_SPRITES_142 - ASSET_SPRITES
-.word ASSET_SPRITES_143 - ASSET_SPRITES
-.word ASSET_SPRITES_144 - ASSET_SPRITES
-.word ASSET_SPRITES_145 - ASSET_SPRITES
-.word ASSET_SPRITES_146 - ASSET_SPRITES
-.word ASSET_SPRITES_147 - ASSET_SPRITES
-.word ASSET_SPRITES_148 - ASSET_SPRITES
-.word ASSET_SPRITES_149 - ASSET_SPRITES
-.word ASSET_SPRITES_150 - ASSET_SPRITES
-.word ASSET_SPRITES_151 - ASSET_SPRITES
-.word ASSET_SPRITES_152 - ASSET_SPRITES
-.word ASSET_SPRITES_153 - ASSET_SPRITES
-.word ASSET_SPRITES_154 - ASSET_SPRITES
-.word ASSET_SPRITES_155 - ASSET_SPRITES
-.word ASSET_SPRITES_156 - ASSET_SPRITES
-.word ASSET_SPRITES_157 - ASSET_SPRITES
-.word ASSET_SPRITES_158 - ASSET_SPRITES
-.word ASSET_SPRITES_159 - ASSET_SPRITES
-.word ASSET_SPRITES_160 - ASSET_SPRITES
-.word ASSET_SPRITES_161 - ASSET_SPRITES
-.word ASSET_SPRITES_162 - ASSET_SPRITES
-.word ASSET_SPRITES_163 - ASSET_SPRITES
-.word ASSET_SPRITES_164 - ASSET_SPRITES
-.word ASSET_SPRITES_165 - ASSET_SPRITES
-.word ASSET_SPRITES_166 - ASSET_SPRITES
-.word ASSET_SPRITES_167 - ASSET_SPRITES
-.word ASSET_SPRITES_168 - ASSET_SPRITES
-.word ASSET_SPRITES_169 - ASSET_SPRITES
-.word ASSET_SPRITES_170 - ASSET_SPRITES
-.word ASSET_SPRITES_171 - ASSET_SPRITES
-.word ASSET_SPRITES_172 - ASSET_SPRITES
-.word ASSET_SPRITES_173 - ASSET_SPRITES
-.word ASSET_SPRITES_174 - ASSET_SPRITES
-.word ASSET_SPRITES_175 - ASSET_SPRITES
-.word ASSET_SPRITES_176 - ASSET_SPRITES
-.word ASSET_SPRITES_177 - ASSET_SPRITES
-.word ASSET_SPRITES_178 - ASSET_SPRITES
-.word ASSET_SPRITES_179 - ASSET_SPRITES
-.word ASSET_SPRITES_180 - ASSET_SPRITES
-.word ASSET_SPRITES_181 - ASSET_SPRITES
-.word ASSET_SPRITES_182 - ASSET_SPRITES
-.word ASSET_SPRITES_183 - ASSET_SPRITES
-.word ASSET_SPRITES_184 - ASSET_SPRITES
-.word ASSET_SPRITES_185 - ASSET_SPRITES
-.word ASSET_SPRITES_186 - ASSET_SPRITES
-.word ASSET_SPRITES_187 - ASSET_SPRITES
-.word ASSET_SPRITES_188 - ASSET_SPRITES
-.word ASSET_SPRITES_189 - ASSET_SPRITES
-.word ASSET_SPRITES_190 - ASSET_SPRITES
-.word ASSET_SPRITES_191 - ASSET_SPRITES
-.word ASSET_SPRITES_192 - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_FOSSILCANYON - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_ANCIENTLAKE - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_PIRATELAGOON - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_WHALEBAY - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_SNOWBALLVALLEY - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_HOTTOPVOLCANO - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_CRESCENTISLAND - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_UNUSED - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_EVERFROSTPEAK - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_UNUSED2 - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_WALRUSCOVE - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_UNUSED3 - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_BOULDERCANYON - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_SMOKEYCASTLE - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_CENTRALAREA - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_FIREMOUNTAIN - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_SPACEPORTALPHA - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_SPACEDUSTALLEY - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_TREASURECAVES - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_GREENWOODVILLAGE - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_DARKMOONCAVERNS - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_STARCITY - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_WINDMILLPLAINS - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_FROSTYVILLAGE - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_DARKWATERBEACH - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_JUNGLEFALLS - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_ICICLEPYRAMID - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_HAUNTEDWOODS - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_BLUEY - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_BUBBLER - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_SMOKEY - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_TRICKYTOPS - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_WIZPIG1 - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_WIZPIG2 - ASSET_SPRITES
+.word ASSET_SPRITE_WEATHER_RAINDROP - ASSET_SPRITES
+.word ASSET_SPRITE_WEATHER_SNOWFLAKE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_LENSFLARE1 - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_LENSFLARE2 - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_LENSFLARE3 - ASSET_SPRITES
+.word ASSET_SPRITE_UNKNOWN_BROWNEGG - ASSET_SPRITES
+.word ASSET_SPRITE_PARTICLES_SMOKE - ASSET_SPRITES
+.word ASSET_SPRITE_PARTICLES_SMOKE2 - ASSET_SPRITES
+.word ASSET_SPRITE_PARTICLES_BUBBLESSMALL - ASSET_SPRITES
+.word ASSET_SPRITE_PARTICLES_SMOKE3 - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BUBBLEWEAPON - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_SPARKLE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONBLUE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONYELLOW - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONRED - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONGREEN - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONCYAN - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONWHITE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONORANGE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BOMBEXPLOSIONPURPLE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_RAINBOW - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_EGG - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BOMB - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_OILSLICK - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_EYESINDARK - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_TIMERCOLON - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_RETICALHOMING - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_DEBUGREDSPHERE - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_FINISH - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_GETREADY - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_GO - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_LAP - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_FORWARDSLASH - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_TIME - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_PLACENUMBERS - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_TIMERNUMBERS - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_TIMERCOLORSMALL - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_TIMERNUMBERSSMALL - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_GOSMALL - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_LAPSMALL - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_GETREADY2 - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_FINALSMALL - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_FINISHSMALL - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_LAP2SMALL - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_WAYSMALL - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_WRONGSMALL - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_POSITIONARROW - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_GOLDENBALLOONICON - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_SILVERBALLOONICON - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_LEVELNAME - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_NPC - ASSET_SPRITES
+.word ASSET_SPRITE_MINIMAP_PLAYER - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_WEAPONICONS - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_WEAPONICONNUMBERS - ASSET_SPRITES
+.word ASSET_SPRITE_UNUSED_BETACHARACTERICON - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_FINALLAPFLAG - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_FINAL - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_LAPLARGE - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_LAP22 - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_WAY - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_WRONG - ASSET_SPRITES
+.word ASSET_SPRITE_UNUSED_PROAMLOGO - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_SPEEDOMETERARROW - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_FIRSTPLACEONE - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_FIRSTPLACEST - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BALLOONSTRING - ASSET_SPRITES
+.word ASSET_SPRITE_UNKNOWN_FIREBALLUNKNOWN - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_FIREBALL - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_WIZGHOST - ASSET_SPRITES
+.word ASSET_SPRITE_UNKNOWN_UNKNOWNLIGHT - ASSET_SPRITES
+.word ASSET_SPRITE_UNKNOWN_SMALLSTAR - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BUOY - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_SMARTIETREE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BEACHTREE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BLUEBERRYBUSH - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_RUBBERSNOWTREE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_SKINNYSNOWTREE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_XMASTREE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_ALPINESNOWTREE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_RUBBERTREE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_PALMTREETOP - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_PALMPLANT - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_PALMTREETOPCHEA - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_FIRTREE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_SPACETREE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_LAMPPOST - ASSET_SPRITES
+.word ASSET_SPRITE_FLOWERS_WHITEBUTTERCUP - ASSET_SPRITES
+.word ASSET_SPRITE_FLOWERS_YELLOWBELLFLOWER - ASSET_SPRITES
+.word ASSET_SPRITE_FLOWERS_YELLOWBUTTERCUP - ASSET_SPRITES
+.word ASSET_SPRITE_FLOWERS_BLUEBUTTERCUP - ASSET_SPRITES
+.word ASSET_SPRITE_FLOWERS_WATERLILY - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_REEDNOLEAF - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_REEDLEAVES - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_READONELEAF - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_SNOWMANTOPHAT - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BELL - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_SNOWMAN - ASSET_SPRITES
+.word ASSET_SPRITE_UNUSED_TORCHWITHEYES - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_DEBUGORBRED - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_DEBUGORBYELLOW - ASSET_SPRITES
+.word ASSET_SPRITE_UNUSED_BETAANCIENTLAKESIGN - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_DEBUGFOGCHANGER - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_DEBUGANIMCAR - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_DEBUGSKYCONTROL - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_DEBUGCAMERACONTROL - ASSET_SPRITES
+.word ASSET_SPRITE_UNUSED_DEBUGUNKNOWNEXIT - ASSET_SPRITES
+.word ASSET_SPRITE_UNUSED_DEBUGUNKNOWNTRAFFICLIGHT - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_DEBUGANIMATOR - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_DEBUGAUDIO - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_DEBUGAUDIOLINE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_DEBUGAUDIOSEQLINE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_DEBUGAUDIOSEQ - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_DEBUGAUDIOREVERB - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BALLOONBOOST - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BALLOONMISSLE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BALLOONTRAP - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BALLOONSHIELD - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BALLOONMAGNET - ASSET_SPRITES
+.word ASSET_SPRITE_UNUSED_BALLOONMISSLEGIFT - ASSET_SPRITES
+.word ASSET_SPRITE_UNUSED_BALLOONBOOSTGIFT - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BALLOONGOLD - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BALLOONSILVER - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BANANA - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_SILVERCOIN - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_CHECKPOINTFLAG - ASSET_SPRITES
+.word ASSET_SPRITE_UNUSED_RAREWARECOIN - ASSET_SPRITES
+.word ASSET_SPRITE_UNUSED_SILVERCOINVERTICAL - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_BANANAICON - ASSET_SPRITES
+.word ASSET_SPRITE_PARTICLES_SPARKLE - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_DEBUGEGGCREATOR - ASSET_SPRITES
+.word ASSET_SPRITE_UNUSED_BONUSGEM - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_INDICATORICONCAUTION - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_INDICATORICONDOWN - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_INDICATORICONUTURN - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_INDICATORICONTURN - ASSET_SPRITES
+.word ASSET_SPRITE_HUD_INDICATORICONSLIGHTTURN - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_SMOKEOBJECT - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_SMOKECLOUD - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_SMOKEGRASS - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_MIST - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_FLAMINGTORCH - ASSET_SPRITES
+.word ASSET_SPRITE_UNUSED_SPLASH - ASSET_SPRITES
+.word ASSET_SPRITE_UNUSED_WEAPONBALLOONPOP - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_LAVASPURT - ASSET_SPRITES
+.word ASSET_SPRITE_UNKNOWN_UNKNOWNSMALLPOP - ASSET_SPRITES
+.word ASSET_SPRITE_VEHICLE_PARTS_TYRE0 - ASSET_SPRITES
+.word ASSET_SPRITE_VEHICLE_PARTS_TYRE1 - ASSET_SPRITES
+.word ASSET_SPRITE_VEHICLE_PARTS_TYRE2 - ASSET_SPRITES
+.word ASSET_SPRITE_VEHICLE_PARTS_TYRE3 - ASSET_SPRITES
+.word ASSET_SPRITE_VEHICLE_PARTS_FAN0 - ASSET_SPRITES
+.word ASSET_SPRITE_VEHICLE_PARTS_FAN1 - ASSET_SPRITES
+.word ASSET_SPRITE_VEHICLE_PARTS_PROPELLER0 - ASSET_SPRITES
+.word ASSET_SPRITE_VEHICLE_PARTS_PROPELLER1 - ASSET_SPRITES
+.word ASSET_SPRITE_UNUSED_RARELETTERS - ASSET_SPRITES
+.word ASSET_SPRITE_OBJECTS_BOLTGLOW - ASSET_SPRITES
+.word ASSET_SPRITE_MENU_ICONTROPHY - ASSET_SPRITES
+.word ASSET_SPRITE_MENU_ICONKEY - ASSET_SPRITES
+.word ASSET_SPRITE_MENU_ICONWIZPIGAMULET - ASSET_SPRITES
+.word ASSET_SPRITE_MENU_ICONTTAMULET - ASSET_SPRITES
 .word ASSET_SPRITES_END - ASSET_SPRITES
 .word 0xFFFFFFFF
 
@@ -9558,61 +9558,61 @@ glabel ASSET_LEVEL_NAMES_END
 
 .balign 16
 glabel ASSET_LEVEL_MODELS_TABLE
-.word ASSET_LEVELMODEL_0 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_1 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_2 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_3 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_4 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_5 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_6 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_7 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_8 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_9 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_10 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_11 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_12 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_13 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_14 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_15 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_16 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_17 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_18 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_19 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_20 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_21 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_22 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_23 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_24 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_25 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_26 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_27 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_28 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_29 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_30 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_31 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_32 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_33 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_34 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_35 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_36 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_37 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_38 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_39 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_40 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_41 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_42 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_43 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_44 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_45 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_46 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_47 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_48 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_49 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_50 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_51 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_52 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_53 - ASSET_LEVEL_MODELS
-.word ASSET_LEVELMODEL_54 - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_CENTRALAREAHUB - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_BLUEY - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_DRAGONFORESTHUB - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_FOSSILCANYON - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_PIRATELAGOON - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_ANCIENTLAKE - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_WALRUSCOVE - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_HOTTOPVOLCANO - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_WHALEBAY - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_SNOWBALLVALLEY - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_TEMPLETRACK - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_CRESCENTISLAND - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_FIREMOUNTAIN - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_DINODOMAINHUB - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_EVERFROSTPEAK - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_SHERBETISLANDHUB - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_FRONTEND - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_CHARACTERSELECT - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_SPACEPORTALPHA - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_HORSESHOEGULCH - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_GREENWOODVILLAGE - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_SPACEDUSTALLEY - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_TITLESCREEN - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_BOULDERCANYON - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_WINDMILLPLAINS - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_SNOWFLAKEMOUNTAINHUB - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_SMOKEYCASTLE - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_DARKWATERBEACH - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_ICICLEPYRAMID - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_FROSTYVILLAGE - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_JUNGLEFALLS - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_TREASURECAVES - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_HAUNTEDWOODS - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_DARKMOONCAVERNS - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_STARCITY - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_TROPHYRACE - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_FUTUREFUNLANDHUB - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_INTROSEQUENCE - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_SMOKEY - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_TRICKYTOPS - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_WIZPIGMOUTHSEQUENCE - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_ROCKETSEQUENCE - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_WIZPIG1 - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_OCEANTRACK - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_VOLCANOTRACK - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_SNOWMOUNTAINTRACK - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_PARTYSEQUENCE - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_BLUEYANIMATION - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_WIZPIG1ANIMATION - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_BUBBLER - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_BUBBLERANIMATION - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_WIZPIG2ANIMATION - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_WIZPIG2 - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_ENDINGPART1 - ASSET_LEVEL_MODELS
+.word ASSET_LEVELMODEL_ENDINGPART2 - ASSET_LEVEL_MODELS
 .word ASSET_LEVEL_MODELS_END - ASSET_LEVEL_MODELS
 .word 0xFFFFFFFF
 
@@ -9620,116 +9620,116 @@ glabel ASSET_LEVEL_MODELS_TABLE
 
 .balign 16
 glabel ASSET_LEVEL_MODELS
-glabel ASSET_LEVELMODEL_0
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_0.bin"
-glabel ASSET_LEVELMODEL_1
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_1.bin"
-glabel ASSET_LEVELMODEL_2
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_2.bin"
-glabel ASSET_LEVELMODEL_3
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_3.bin"
-glabel ASSET_LEVELMODEL_4
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_4.bin"
-glabel ASSET_LEVELMODEL_5
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_5.bin"
-glabel ASSET_LEVELMODEL_6
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_6.bin"
-glabel ASSET_LEVELMODEL_7
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_7.bin"
-glabel ASSET_LEVELMODEL_8
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_8.bin"
-glabel ASSET_LEVELMODEL_9
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_9.bin"
-glabel ASSET_LEVELMODEL_10
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_10.bin"
-glabel ASSET_LEVELMODEL_11
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_11.bin"
-glabel ASSET_LEVELMODEL_12
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_12.bin"
-glabel ASSET_LEVELMODEL_13
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_13.bin"
-glabel ASSET_LEVELMODEL_14
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_14.bin"
-glabel ASSET_LEVELMODEL_15
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_15.bin"
-glabel ASSET_LEVELMODEL_16
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_16.bin"
-glabel ASSET_LEVELMODEL_17
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_17.bin"
-glabel ASSET_LEVELMODEL_18
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_18.bin"
-glabel ASSET_LEVELMODEL_19
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_19.bin"
-glabel ASSET_LEVELMODEL_20
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_20.bin"
-glabel ASSET_LEVELMODEL_21
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_21.bin"
-glabel ASSET_LEVELMODEL_22
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_22.bin"
-glabel ASSET_LEVELMODEL_23
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_23.bin"
-glabel ASSET_LEVELMODEL_24
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_24.bin"
-glabel ASSET_LEVELMODEL_25
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_25.bin"
-glabel ASSET_LEVELMODEL_26
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_26.bin"
-glabel ASSET_LEVELMODEL_27
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_27.bin"
-glabel ASSET_LEVELMODEL_28
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_28.bin"
-glabel ASSET_LEVELMODEL_29
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_29.bin"
-glabel ASSET_LEVELMODEL_30
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_30.bin"
-glabel ASSET_LEVELMODEL_31
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_31.bin"
-glabel ASSET_LEVELMODEL_32
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_32.bin"
-glabel ASSET_LEVELMODEL_33
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_33.bin"
-glabel ASSET_LEVELMODEL_34
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_34.bin"
-glabel ASSET_LEVELMODEL_35
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_35.bin"
-glabel ASSET_LEVELMODEL_36
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_36.bin"
-glabel ASSET_LEVELMODEL_37
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_37.bin"
-glabel ASSET_LEVELMODEL_38
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_38.bin"
-glabel ASSET_LEVELMODEL_39
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_39.bin"
-glabel ASSET_LEVELMODEL_40
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_40.bin"
-glabel ASSET_LEVELMODEL_41
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_41.bin"
-glabel ASSET_LEVELMODEL_42
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_42.bin"
-glabel ASSET_LEVELMODEL_43
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_43.bin"
-glabel ASSET_LEVELMODEL_44
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_44.bin"
-glabel ASSET_LEVELMODEL_45
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_45.bin"
-glabel ASSET_LEVELMODEL_46
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_46.bin"
-glabel ASSET_LEVELMODEL_47
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_47.bin"
-glabel ASSET_LEVELMODEL_48
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_48.bin"
-glabel ASSET_LEVELMODEL_49
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_49.bin"
-glabel ASSET_LEVELMODEL_50
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_50.bin"
-glabel ASSET_LEVELMODEL_51
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_51.bin"
-glabel ASSET_LEVELMODEL_52
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_52.bin"
-glabel ASSET_LEVELMODEL_53
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_53.bin"
-glabel ASSET_LEVELMODEL_54
-.incbin "./build/us_1.0/assets/levels/models/unknown_27_54.bin"
+glabel ASSET_LEVELMODEL_CENTRALAREAHUB
+.incbin "./build/us_1.0/assets/levels/models/central_area/central_area_hub.bin"
+glabel ASSET_LEVELMODEL_BLUEY
+.incbin "./build/us_1.0/assets/levels/models/snowflake_mountain/bluey.bin"
+glabel ASSET_LEVELMODEL_DRAGONFORESTHUB
+.incbin "./build/us_1.0/assets/levels/models/dragon_forest/dragon_forest_hub.bin"
+glabel ASSET_LEVELMODEL_FOSSILCANYON
+.incbin "./build/us_1.0/assets/levels/models/dino_domain/fossil_canyon.bin"
+glabel ASSET_LEVELMODEL_PIRATELAGOON
+.incbin "./build/us_1.0/assets/levels/models/sherbet_island/pirate_lagoon.bin"
+glabel ASSET_LEVELMODEL_ANCIENTLAKE
+.incbin "./build/us_1.0/assets/levels/models/dino_domain/ancient_lake.bin"
+glabel ASSET_LEVELMODEL_WALRUSCOVE
+.incbin "./build/us_1.0/assets/levels/models/snowflake_mountain/walrus_cove.bin"
+glabel ASSET_LEVELMODEL_HOTTOPVOLCANO
+.incbin "./build/us_1.0/assets/levels/models/dino_domain/hot_top_volcano.bin"
+glabel ASSET_LEVELMODEL_WHALEBAY
+.incbin "./build/us_1.0/assets/levels/models/sherbet_island/whale_bay.bin"
+glabel ASSET_LEVELMODEL_SNOWBALLVALLEY
+.incbin "./build/us_1.0/assets/levels/models/snowflake_mountain/snowball_valley.bin"
+glabel ASSET_LEVELMODEL_TEMPLETRACK
+.incbin "./build/us_1.0/assets/levels/models/unused/temple_track.bin"
+glabel ASSET_LEVELMODEL_CRESCENTISLAND
+.incbin "./build/us_1.0/assets/levels/models/sherbet_island/crescent_island.bin"
+glabel ASSET_LEVELMODEL_FIREMOUNTAIN
+.incbin "./build/us_1.0/assets/levels/models/dino_domain/fire_mountain.bin"
+glabel ASSET_LEVELMODEL_DINODOMAINHUB
+.incbin "./build/us_1.0/assets/levels/models/dino_domain/dino_domain_hub.bin"
+glabel ASSET_LEVELMODEL_EVERFROSTPEAK
+.incbin "./build/us_1.0/assets/levels/models/snowflake_mountain/everfrost_peak.bin"
+glabel ASSET_LEVELMODEL_SHERBETISLANDHUB
+.incbin "./build/us_1.0/assets/levels/models/sherbet_island/sherbet_island_hub.bin"
+glabel ASSET_LEVELMODEL_FRONTEND
+.incbin "./build/us_1.0/assets/levels/models/menu/front_end.bin"
+glabel ASSET_LEVELMODEL_CHARACTERSELECT
+.incbin "./build/us_1.0/assets/levels/models/menu/character_select.bin"
+glabel ASSET_LEVELMODEL_SPACEPORTALPHA
+.incbin "./build/us_1.0/assets/levels/models/future_fun_land/spaceport_alpha.bin"
+glabel ASSET_LEVELMODEL_HORSESHOEGULCH
+.incbin "./build/us_1.0/assets/levels/models/unused/horseshoe_gulch.bin"
+glabel ASSET_LEVELMODEL_GREENWOODVILLAGE
+.incbin "./build/us_1.0/assets/levels/models/dragon_forest/greenwood_village.bin"
+glabel ASSET_LEVELMODEL_SPACEDUSTALLEY
+.incbin "./build/us_1.0/assets/levels/models/future_fun_land/spacedust_alley.bin"
+glabel ASSET_LEVELMODEL_TITLESCREEN
+.incbin "./build/us_1.0/assets/levels/models/menu/title_screen.bin"
+glabel ASSET_LEVELMODEL_BOULDERCANYON
+.incbin "./build/us_1.0/assets/levels/models/dragon_forest/boulder_canyon.bin"
+glabel ASSET_LEVELMODEL_WINDMILLPLAINS
+.incbin "./build/us_1.0/assets/levels/models/dragon_forest/windmill_plains.bin"
+glabel ASSET_LEVELMODEL_SNOWFLAKEMOUNTAINHUB
+.incbin "./build/us_1.0/assets/levels/models/snowflake_mountain/snowflake_mountain_hub.bin"
+glabel ASSET_LEVELMODEL_SMOKEYCASTLE
+.incbin "./build/us_1.0/assets/levels/models/dragon_forest/smokey_castle.bin"
+glabel ASSET_LEVELMODEL_DARKWATERBEACH
+.incbin "./build/us_1.0/assets/levels/models/sherbet_island/darkwater_beach.bin"
+glabel ASSET_LEVELMODEL_ICICLEPYRAMID
+.incbin "./build/us_1.0/assets/levels/models/snowflake_mountain/icicle_pyramid.bin"
+glabel ASSET_LEVELMODEL_FROSTYVILLAGE
+.incbin "./build/us_1.0/assets/levels/models/snowflake_mountain/frosty_village.bin"
+glabel ASSET_LEVELMODEL_JUNGLEFALLS
+.incbin "./build/us_1.0/assets/levels/models/dino_domain/jungle_falls.bin"
+glabel ASSET_LEVELMODEL_TREASURECAVES
+.incbin "./build/us_1.0/assets/levels/models/sherbet_island/treasure_caves.bin"
+glabel ASSET_LEVELMODEL_HAUNTEDWOODS
+.incbin "./build/us_1.0/assets/levels/models/dragon_forest/haunted_woods.bin"
+glabel ASSET_LEVELMODEL_DARKMOONCAVERNS
+.incbin "./build/us_1.0/assets/levels/models/future_fun_land/darkmoon_caverns.bin"
+glabel ASSET_LEVELMODEL_STARCITY
+.incbin "./build/us_1.0/assets/levels/models/future_fun_land/star_city.bin"
+glabel ASSET_LEVELMODEL_TROPHYRACE
+.incbin "./build/us_1.0/assets/levels/models/menu/trophy_race.bin"
+glabel ASSET_LEVELMODEL_FUTUREFUNLANDHUB
+.incbin "./build/us_1.0/assets/levels/models/future_fun_land/future_fun_land_hub.bin"
+glabel ASSET_LEVELMODEL_INTROSEQUENCE
+.incbin "./build/us_1.0/assets/levels/models/cutscene/intro_sequence.bin"
+glabel ASSET_LEVELMODEL_SMOKEY
+.incbin "./build/us_1.0/assets/levels/models/dragon_forest/smokey.bin"
+glabel ASSET_LEVELMODEL_TRICKYTOPS
+.incbin "./build/us_1.0/assets/levels/models/dino_domain/trickytops.bin"
+glabel ASSET_LEVELMODEL_WIZPIGMOUTHSEQUENCE
+.incbin "./build/us_1.0/assets/levels/models/cutscene/wizpig_mouth_sequence.bin"
+glabel ASSET_LEVELMODEL_ROCKETSEQUENCE
+.incbin "./build/us_1.0/assets/levels/models/cutscene/rocket_sequence.bin"
+glabel ASSET_LEVELMODEL_WIZPIG1
+.incbin "./build/us_1.0/assets/levels/models/central_area/wizpig1.bin"
+glabel ASSET_LEVELMODEL_OCEANTRACK
+.incbin "./build/us_1.0/assets/levels/models/unused/ocean_track.bin"
+glabel ASSET_LEVELMODEL_VOLCANOTRACK
+.incbin "./build/us_1.0/assets/levels/models/unused/volcano_track.bin"
+glabel ASSET_LEVELMODEL_SNOWMOUNTAINTRACK
+.incbin "./build/us_1.0/assets/levels/models/unused/snow_mountain_track.bin"
+glabel ASSET_LEVELMODEL_PARTYSEQUENCE
+.incbin "./build/us_1.0/assets/levels/models/cutscene/party_sequence.bin"
+glabel ASSET_LEVELMODEL_BLUEYANIMATION
+.incbin "./build/us_1.0/assets/levels/models/cutscene/bluey_animation.bin"
+glabel ASSET_LEVELMODEL_WIZPIG1ANIMATION
+.incbin "./build/us_1.0/assets/levels/models/cutscene/wizpig1_animation.bin"
+glabel ASSET_LEVELMODEL_BUBBLER
+.incbin "./build/us_1.0/assets/levels/models/sherbet_island/bubbler.bin"
+glabel ASSET_LEVELMODEL_BUBBLERANIMATION
+.incbin "./build/us_1.0/assets/levels/models/cutscene/bubbler_animation.bin"
+glabel ASSET_LEVELMODEL_WIZPIG2ANIMATION
+.incbin "./build/us_1.0/assets/levels/models/cutscene/wizpig2_animation.bin"
+glabel ASSET_LEVELMODEL_WIZPIG2
+.incbin "./build/us_1.0/assets/levels/models/future_fun_land/wizpig2.bin"
+glabel ASSET_LEVELMODEL_ENDINGPART1
+.incbin "./build/us_1.0/assets/levels/models/cutscene/ending_part1.bin"
+glabel ASSET_LEVELMODEL_ENDINGPART2
+.incbin "./build/us_1.0/assets/levels/models/cutscene/ending_part2.bin"
 glabel ASSET_LEVEL_MODELS_END
 
 /********** ASSET_OBJECT_MODELS_TABLE **********/
