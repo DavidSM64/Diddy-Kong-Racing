@@ -549,45 +549,45 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
                 indicator = (IndicatorArrow *) &D_80126CDC->courseIndicator;
                 switch (type) {
                 case INDICATOR_LEFT:
-                    indicator->textureID = ASSET_TEX2D_33;
+                    indicator->textureID = 33;
                     indicator->unk0 = 0;
                     break;
                 case INDICATOR_LEFT_SHARP:
-                    indicator->textureID = ASSET_TEX2D_32;
+                    indicator->textureID = 32;
                     indicator->unk0 = 0;
                     break;
                 case INDICATOR_LEFT_UTURN:
-                    indicator->textureID = ASSET_TEX2D_31;
+                    indicator->textureID = 31;
                     indicator->unk0 = 0;
                     break;
                 case INDICATOR_RIGHT:
-                    indicator->textureID = ASSET_TEX2D_33;
+                    indicator->textureID = 33;
                     indicator->unk0 = -0x8000;
                     break;
                 case INDICATOR_RIGHT_SHARP:
-                    indicator->textureID = ASSET_TEX2D_32;
+                    indicator->textureID = 32;
                     indicator->unk0 = -0x8000;
                     break;
                 case INDICATOR_RIGHT_UTURN:
-                    indicator->textureID = ASSET_TEX2D_31;
+                    indicator->textureID = 31;
                     indicator->unk0 = -0x8000;
                     break;
                 case INDICATOR_UP:
-                    indicator->textureID = ASSET_TEX2D_30;
+                    indicator->textureID = 30;
                     indicator->unk0 = -0x8000;
                     indicator->unk2 = -0x8000;
                     break;
                 case INDICATOR_DOWN:
-                    indicator->textureID = ASSET_TEX2D_30;
+                    indicator->textureID = 30;
                     indicator->unk0 = 0;
                     break;
                 default: // INDICATOR_EXCLAMATION
-                    indicator->textureID = ASSET_TEX2D_29;
+                    indicator->textureID = 29;
                     indicator->unk0 = 0;
                     break;
                 }
                 // Flip the arrow direction on adventure 2.
-                if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS && racer->indicator_type < ASSET_TEX2D_30) {
+                if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS && racer->indicator_type < 30) {
                     indicator->unk0 = (s16) (0x8000 - indicator->unk0);
                 }
                 if (gHUDNumPlayers == ONE_PLAYER && racer->raceFinished == FALSE && racer->indicator_type && D_800E27B8 == 0) {
@@ -609,8 +609,8 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
                 indicator = (IndicatorArrow *) &D_80126CDC->courseIndicator;
                 indicator->unk0 = 0;
                 indicator->unk2 = 0;
-                indicator->textureID = ASSET_TEX2D_29;
-                if ((get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) && ((s32) racer->indicator_type < ASSET_TEX2D_30)) {
+                indicator->textureID = 29;
+                if ((get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) && ((s32) racer->indicator_type < 30)) {
                     indicator->unk0 = (s16) (0x8000 - indicator->unk0);
                 }
                 func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) indicator);
