@@ -748,18 +748,18 @@ void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos
     height = get_video_width_and_height_as_s32();
     width = GET_VIDEO_WIDTH(height) * 4;
     height = (GET_VIDEO_HEIGHT(height) & 0xFFFF) * 4;
-    
+
     //If the colour is fully opaque
     if ((colour & 0xFF) == 0xFF) {
         dmaDlist = dTextureRectangleScaledOpa[(u8)flags & 0xFF];
     } else {
         dmaDlist = dTextureRectangleScaledXlu[(u8)flags & 0xFF];
     }
-    
+
     gSPDisplayList((*dlist)++, D_800DE670);
     gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dmaDlist), numberOfGfxCommands(dTextureRectangleScaledOpa[0]));
     gDPSetPrimColorRGBA((*dlist)++, colour);
-    
+
     bFlipX = flags & (1 << 12);
     bFlipY = flags & (1 << 13);
     xScale *= 4;
@@ -811,12 +811,12 @@ void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos
                     uly = 0;
                 }
 
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);                    
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
                 gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, dsdx, dtdy);
             }
         }
     }
-    
+
     gDPPipeSync((*dlist)++);
     gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
 }
