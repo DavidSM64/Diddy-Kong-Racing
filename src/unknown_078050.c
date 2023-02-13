@@ -737,7 +737,7 @@ void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos
     s32 dsdx;//the change in s for each change in x (s5.10)
     s32 dtdy;//the change in t for each change in y (s5.10)
     s32 ulx; //the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
-    s32 uly; //the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.height75)
+    s32 uly; //the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
     s32 lrx; //the x-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
     s32 lry; //the y-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
     s32 xPos4x;

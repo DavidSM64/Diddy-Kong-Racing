@@ -2453,7 +2453,7 @@ void menu_title_screen_init(void) {
     gIsInTracksMode = FALSE;
 }
 
-void func_8008377C(UNUSED s32 arg0, f32 arg1) {
+void func_8008377C(UNUSED s32 updateRate, f32 arg1) {
     UNUSED u32 foo[2];
     s32 alpha;
     f32 scale;
@@ -2509,7 +2509,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
     sp18 = get_active_camera_segment();
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     func_8008E4EC();
-    if (osTvType == 0) {
+    if (osTvType == TV_TYPE_PAL) {
         sp1C = (f32) updateRate / 50.0f;
     } else {
         sp1C = (f32) updateRate / 60.0f;
