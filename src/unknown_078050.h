@@ -41,7 +41,6 @@ extern u8 sBackgroundPrimColourG;
 extern u8 sBackgroundPrimColourB;
 extern s32 sBackgroundFillColour;
 
-extern u32 D_800DE4C0;
 extern TextureHeader *D_800DE4C4;
 extern TextureHeader *D_800DE4C8;
 extern s32 gChecquerBGEnabled;

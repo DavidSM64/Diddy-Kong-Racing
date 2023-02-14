@@ -504,6 +504,7 @@ void setup_gfx_mesg_queues(OSSched *sc) {
     osCreateMesgQueue(&gGfxTaskMesgQueue, gGfxTaskMesgBuf, 8);
 }
 
+//Called after finishing a race. Sets values during single player races. Set to zero during trophy races.
 void func_80078170(TextureHeader *arg0, TextureHeader *arg1, u32 arg2) {
     D_800DE4C4 = arg0;
     D_800DE4C8 = arg1;
@@ -511,6 +512,8 @@ void func_80078170(TextureHeader *arg0, TextureHeader *arg1, u32 arg2) {
 }
 
 #ifdef NON_EQUIVALENT
+//Seems to render the background screen after a race finishes while you're at the menu deciding what to do next.
+//https://i.imgur.com/MHbUD2a.png is an example. The left is correct, and the right is incorrect rendering.
 void func_80078190(Gfx **dlist) {
     s32 texture1And2UpperHeight;
     s32 videoHeight;

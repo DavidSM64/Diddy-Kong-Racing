@@ -7029,7 +7029,7 @@ void func_80094688(s32 arg0, s32 arg1) {
         D_801263E0 = 8;
         gMenuDelay = 100;
     }
-    if (get_render_context()) {
+    if (get_render_context() != DRAW_GAME) {
         D_801263E0 = 7;
     }
     reset_controller_sticks();
@@ -7056,7 +7056,7 @@ void func_80094688(s32 arg0, s32 arg1) {
             D_80126BBC = 0;
         }
         D_80126BC0 = var_v1[2];
-        if (get_render_context() == 0) {
+        if (get_render_context() == DRAW_GAME) {
             func_80078170(D_80126BB8, D_80126BBC, D_80126BC0);
         }
         camEnableUserView(0, 1);

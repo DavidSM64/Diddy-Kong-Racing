@@ -2496,7 +2496,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             playerIDF = -(f32) playerID;
             CLAMP(tempRacer->velocity, playerIDF, playerID);
         }
-        if (context != 1 || func_8000E148()) {
+        if (context != DRAW_MENU || func_8000E148()) {
             func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
         lastCheckpointDist = tempRacer->checkpoint_distance;
