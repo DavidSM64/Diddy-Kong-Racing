@@ -1956,6 +1956,9 @@ void func_8006ECE0(void) {
     D_800DD37C |= 0x200;
 }
 
+/**
+ * Allocates an amount of memory for the number of players passed in.
+ */
 void func_8006ECFC(s32 numberOfPlayers) {
     s32 newVar;
     s32 totalSize;
@@ -2015,31 +2018,34 @@ s32 check_dmem_validity(void) {
     return TRUE;
 }
 
+/**
+ * Defaults allocations for 4 players
+ */
 void func_8006EFDC(void) {
-    s32 index;
+    s32 numberOfPlayers;
     s32 totalSize;
 
-    index = 3;
-    D_8012350C = index;
-    totalSize = (gNumF3dCmdsPerPlayer[index] * sizeof(Gwords))
-        + (gNumHudMatPerPlayer[index] * sizeof(Matrix))
-        + (gNumHudVertsPerPlayer[index] * sizeof(Vertex))
-        + (gNumHudTrisPerPlayer[index] * sizeof(Triangle));
+    numberOfPlayers = FOUR_PLAYERS;
+    D_8012350C = numberOfPlayers;
+    totalSize = (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords))
+        + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix))
+        + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex))
+        + (gNumHudTrisPerPlayer[numberOfPlayers] * sizeof(Triangle));
 
     gDisplayLists[0] = (Gfx *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_RED);
-    gHudMatrices[0] = (MatrixS *)((u8 *)gDisplayLists[0] + (gNumF3dCmdsPerPlayer[index] * sizeof(Gwords)));
-    gHudVertices[0] = (Vertex *)((u8 *)gHudMatrices[0] + (gNumHudMatPerPlayer[index] * sizeof(Matrix)));
-    gHudTriangles[0] = (TriangleList *)((u8 *)gHudVertices[0] + (gNumHudVertsPerPlayer[index] * sizeof(Vertex)));
+    gHudMatrices[0] = (MatrixS *)((u8 *)gDisplayLists[0] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
+    gHudVertices[0] = (Vertex *)((u8 *)gHudMatrices[0] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
+    gHudTriangles[0] = (TriangleList *)((u8 *)gHudVertices[0] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
     gDisplayLists[1] = (Gfx *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_YELLOW);
-    gHudMatrices[1] = (MatrixS *)((u8 *)gDisplayLists[1] + (gNumF3dCmdsPerPlayer[index] * sizeof(Gwords)));
-    gHudVertices[1] = (Vertex *)((u8 *)gHudMatrices[1] + (gNumHudMatPerPlayer[index] * sizeof(Matrix)));
-    gHudTriangles[1] = (TriangleList *)((u8 *)gHudVertices[1] + (gNumHudVertsPerPlayer[index] * sizeof(Vertex)));
+    gHudMatrices[1] = (MatrixS *)((u8 *)gDisplayLists[1] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
+    gHudVertices[1] = (Vertex *)((u8 *)gHudMatrices[1] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
+    gHudTriangles[1] = (TriangleList *)((u8 *)gHudVertices[1] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
-    gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[index];
-    gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[index];
-    gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[index];
-    gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[index];
+    gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[numberOfPlayers];
+    gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[numberOfPlayers];
+    gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[numberOfPlayers];
+    gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[numberOfPlayers];
 }
 
 void func_8006F140(s32 arg0) {
