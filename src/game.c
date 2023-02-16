@@ -1947,8 +1947,7 @@ void func_8006ECAC(s32 arg0) {
     D_800DD37C = ((arg0 & 0x03) << 10) | 0x80;
 }
 
-/* Unused? */
-void func_8006ECC4(void) {
+UNUSED void func_8006ECC4(void) {
     D_800DD37C |= 0x100;
 }
 
@@ -2016,38 +2015,32 @@ s32 check_dmem_validity(void) {
     return TRUE;
 }
 
-#ifdef NON_EQUIVALENT
-
-// Not close to matching, but should be the same functionality-wise.
 void func_8006EFDC(void) {
-    s32 size1, size2, size3, size4, totalSize;
+    s32 index;
+    s32 totalSize;
 
-    D_8012350C = 3;
+    index = 3;
+    D_8012350C = index;
+    totalSize = (gNumF3dCmdsPerPlayer[index] * sizeof(Gwords))
+        + (gNumHudMatPerPlayer[index] * sizeof(Matrix))
+        + (gNumHudVertsPerPlayer[index] * sizeof(Vertex))
+        + (gNumHudTrisPerPlayer[index] * sizeof(Triangle));
 
-    size1 = (gNumF3dCmdsPerPlayer[3] * sizeof(Gwords));
-    size2 = (gNumHudMatPerPlayer[3] * sizeof(Matrix));
-    size3 = (gNumHudVertsPerPlayer[3] * sizeof(Vertex));
-    size4 = (gNumHudTrisPerPlayer[3] * sizeof(Triangle));
-    totalSize = size1 + size2 + size3 + size4;
+    gDisplayLists[0] = (Gfx *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_RED);
+    gHudMatrices[0] = (MatrixS *)((u8 *)gDisplayLists[0] + (gNumF3dCmdsPerPlayer[index] * sizeof(Gwords)));
+    gHudVertices[0] = (Vertex *)((u8 *)gHudMatrices[0] + (gNumHudMatPerPlayer[index] * sizeof(Matrix)));
+    gHudTriangles[0] = (TriangleList *)((u8 *)gHudVertices[0] + (gNumHudVertsPerPlayer[index] * sizeof(Vertex)));
 
-    gDisplayLists[0] = (u8 *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_RED);
-    gHudMatrices[0] = (u8 *)gDisplayLists[0] + size1;
-    gHudVertices[0] = (u8 *)gHudMatrices[0] + size2;
-    gHudTriangles[0] = (u8 *)gHudVertices[0] + size3;
+    gDisplayLists[1] = (Gfx *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_YELLOW);
+    gHudMatrices[1] = (MatrixS *)((u8 *)gDisplayLists[1] + (gNumF3dCmdsPerPlayer[index] * sizeof(Gwords)));
+    gHudVertices[1] = (Vertex *)((u8 *)gHudMatrices[1] + (gNumHudMatPerPlayer[index] * sizeof(Matrix)));
+    gHudTriangles[1] = (TriangleList *)((u8 *)gHudVertices[1] + (gNumHudVertsPerPlayer[index] * sizeof(Vertex)));
 
-    gDisplayLists[1] = (u8 *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_YELLOW);
-    gHudMatrices[1] = (u8 *)gDisplayLists[1] + size1;
-    gHudVertices[1] = (u8 *)gHudMatrices[1] + size2;
-    gHudTriangles[1] = (u8 *)gHudVertices[1] + size3;
-
-    gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[3];
-    gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[3];
-    gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[3];
-    gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[3];
+    gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[index];
+    gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[index];
+    gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[index];
+    gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[index];
 }
-#else
-GLOBAL_ASM("asm/non_matchings/game/func_8006EFDC.s")
-#endif
 
 void func_8006F140(s32 arg0) {
     if (gLevelLoadTimer == 0) {
