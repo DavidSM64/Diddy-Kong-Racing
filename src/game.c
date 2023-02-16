@@ -1957,7 +1957,54 @@ void func_8006ECE0(void) {
     D_800DD37C |= 0x200;
 }
 
-GLOBAL_ASM("asm/non_matchings/game/func_8006ECFC.s")
+void func_8006ECFC(s32 numberOfPlayers) {
+    s32 newVar;
+    s32 totalSize;
+
+    if (numberOfPlayers != D_8012350C) {
+        newVar = numberOfPlayers;
+        D_8012350C = newVar;
+        set_free_queue_state(0);
+        free_from_memory_pool(gDisplayLists[0]);
+        free_from_memory_pool(gDisplayLists[1]);
+        totalSize =
+            ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords)))
+            + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix)))
+            + ((gNumHudVertsPerPlayer[newVar] * sizeof(Vertex)))
+            + ((gNumHudTrisPerPlayer[newVar] * sizeof(Triangle)));
+        gDisplayLists[0] = (Gfx *) allocate_at_address_in_main_pool(totalSize, (u8 *) gDisplayLists[0], COLOUR_TAG_RED);
+        gDisplayLists[1] = (Gfx *) allocate_at_address_in_main_pool(totalSize, (u8 *) gDisplayLists[1], COLOUR_TAG_YELLOW);
+        if ((gDisplayLists[0] == NULL) || gDisplayLists[1] == NULL) {
+            if (gDisplayLists[0] != NULL) {
+                free_from_memory_pool(gDisplayLists[0]);
+                gDisplayLists[0] = NULL;
+            }
+            if (gDisplayLists[1] != NULL) {
+                free_from_memory_pool(gDisplayLists[1]);
+                gDisplayLists[1] = NULL;
+            }
+            func_8006EFDC();
+        }
+        gHudMatrices[0] = (MatrixS *)((u8 *) gDisplayLists[0] + ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords))));
+        gHudTriangles[0] = (TriangleList *)((u8 *) gHudMatrices[0] + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix))));
+        gHudVertices[0] = (Vertex *)((u8 *) gHudTriangles[0] + ((gNumHudTrisPerPlayer[newVar] * sizeof(Triangle))));
+        gHudMatrices[1] = (MatrixS *)((u8 *) gDisplayLists[1] + ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords))));
+        gHudTriangles[1] = (TriangleList *)((u8 *) gHudMatrices[1] + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix))));
+        gHudVertices[1] = (Vertex *)((u8 *) gHudTriangles[1] + ((gNumHudTrisPerPlayer[newVar] * sizeof(Triangle))));
+        gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[newVar];
+        gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[newVar];
+        gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[newVar];
+        gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[newVar];
+        set_free_queue_state(2);
+    }
+    gCurrDisplayList = gDisplayLists[gSPTaskNum];
+    gGameCurrMatrix = gHudMatrices[gSPTaskNum];
+    gGameCurrTriList = gHudTriangles[gSPTaskNum];
+    gGameCurrVertexList = gHudVertices[gSPTaskNum];
+
+    gDPFullSync(gCurrDisplayList++);
+    gSPEndDisplayList(gCurrDisplayList++);
+}
 
 /**
  * Returns FALSE if dmem doesn't begin with a -1. This is checked on every main game loop iteration.
