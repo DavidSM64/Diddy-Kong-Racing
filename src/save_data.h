@@ -21,6 +21,8 @@
 // This is RARE's unique code
 #define COMPANY_CODE 0x3459
 
+#define NUMBER_OF_SAVE_FILES 3
+
 typedef enum {
     CONTROLLER_PAK_GOOD,
     NO_CONTROLLER_PAK,

@@ -1992,7 +1992,7 @@ SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, ch
     u32 game_code;
 
     ret = get_si_device_status(controllerIndex);
-    if (ret != 0) {
+    if (ret != CONTROLLER_PAK_GOOD) {
         start_reading_controller_data(controllerIndex);
         return ret;
     }

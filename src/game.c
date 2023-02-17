@@ -88,20 +88,6 @@ UNUSED char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
 
 s8 sAntiPiracyTriggered = 0;
 UNUSED s32 D_800DD378 = 1;
-/**
- * Bit 00: Read Eeprom Data Index Part 1
- * Bit 01: Read Eeprom Data Index Part 2
- * Bit 02: Read Save File from bits 8 and 9
- * Bit 03: Read All Save Files
- * Bit 04: Write Eeprom Data Index Part 1
- * Bit 05: Write Eeprom Data Index Part 2
- * Bit 06: Write Save Data from bits 10 and 11
- * Bit 07: Erase Save File from bits 10 and 11
- * Bit 08: Read Eeprom settings
- * Bit 09: Write Eeprom Settings
- * Bit 10: Save File Index Part 1
- * Bit 11: Save File Index Part 2
- */
 s32 gSaveDataFlags = 0;
 s32 gScreenStatus = OSMESG_SWAP_BUFFER;
 s32 sControllerStatus = 0;
@@ -1832,7 +1818,7 @@ void func_8006E770(Settings *settings, s32 arg1) {
 
     get_number_of_levels_and_worlds(&numLevels, &numWorlds);
     temp_v0 = (u16 *)get_misc_asset(MISC_ASSET_UNK17);
-    for (i = 0; i < 3; i++) { // 3 = number of save files?
+    for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) { // 3 = number of save files?
         for (j = 0; j < numLevels; j++) {
             index = (j * 12) + (i * 4);
             if (arg1 & 1) {
@@ -1910,44 +1896,76 @@ s32 func_8006EB14(void) {
     return gPlayableMapId;
 }
 
-UNUSED void func_8006EB24(void) {
-    gSaveDataFlags |= 0x01; //Set bit 0
+/**
+ * Sets the data to read eeprom from file 1
+ */
+UNUSED void set_to_eeprom_read_file_1(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_INDEX_VALUE & 1;
 }
 
-UNUSED void func_8006EB40(void) {
-    gSaveDataFlags |= 0x02; //Set bit 1
+/**
+ * Sets the data to read eeprom from file 2
+ */
+UNUSED void set_to_eeprom_read_file_2(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_INDEX_VALUE & 2;
 }
 
-void func_8006EB5C(void) {
-    gSaveDataFlags |= 0x03; //Set bit 0 and 1
+/**
+ * Sets the data to read eeprom from file 3
+ */
+void set_to_eeprom_read_file_3(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_INDEX_VALUE & 3;
 }
 
-void func_8006EB78(s32 saveFileIndex) {
-    gSaveDataFlags &= ~0x300; //0xFFFFFCFF - Wipe out bits 8 and 9
-    gSaveDataFlags |= (0x04 | ((saveFileIndex & 3) << 8)); //Place saveFileIndex at bits 8 and 9 and set bit 2
+/**
+ * Marks a flag to read the save file from the passed index from flash.
+ */
+void mark_read_save_file(s32 saveFileIndex) {
+    gSaveDataFlags &= ~0x300; //Wipe out bits 8 and 9
+    //Place saveFileIndex at bits 8 and 9 and set bit 2
+    gSaveDataFlags |= (SAVE_DATA_FLAG_READ_SAVE_DATA | ((saveFileIndex & 3) << 8));
 }
 
+/**
+ * Marks a flag to read all save file data from flash.
+ */
 void mark_read_all_save_files(void) {
-    gSaveDataFlags |= 0x08; //Set bit 3
+    gSaveDataFlags |= SAVE_DATA_FLAG_READ_ALL_SAVE_DATA; //Set bit 3
 }
 
-void func_8006EBC4(void) {
-    gSaveDataFlags |= 0x10; //Set bit 4
+/**
+ * Sets the data to write eeprom to file 1
+ */
+void set_to_eeprom_write_file_1(void) {
+    gSaveDataFlags |= 0x10;
 }
 
-void func_8006EBE0(void) {
-    gSaveDataFlags |= 0x20; //Set bit 5
+/**
+ * Sets the data to write eeprom to file 2
+ */
+void set_to_eeprom_write_file_2(void) {
+    gSaveDataFlags |= 0x20;
 }
 
-void func_8006EBFC(void) {
-    gSaveDataFlags |= 0x30; //Set bits 4 and 5
+/**
+ * Sets the data to write eeprom to file 3
+ */
+void set_to_eeprom_write_file_3(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_WRITE_EEPROM_BITS;
 }
 
+/**
+ * Forcefully marks a flag to write a save file to flash.
+ */
 void force_mark_write_save_file(s32 saveFileIndex) {
     gSaveDataFlags &= ~0xC00; //0xFFFFF3FF - Wipe out bits 10 and 11
     gSaveDataFlags |= (0x40 | ((saveFileIndex & 3) << 10)); //Set bit 6 and place saveFileIndex into bits 10 and 11
 }
 
+/**
+ * Marks a flag to write a save file to flash as long as we're not in tracks mode, and we're in the draw game render context.
+ * This should prevent save data from being overwritten outside of Adventure Mode.
+ */
 void safe_mark_write_save_file(s32 saveFileIndex) {
     if (sRenderContext == DRAW_GAME && !is_in_tracks_mode()) {
         gSaveDataFlags &= ~0xC00; //0xFFFFF3FF - Wipe out bits 10 and 11
@@ -1955,16 +1973,24 @@ void safe_mark_write_save_file(s32 saveFileIndex) {
     }
 }
 
+/**
+ * Marks a flag to erase a save file from flash later
+ */
 void mark_save_file_to_erase(s32 saveFileIndex) {
     //Set bit 7 and and place saveFileIndex into bits 10 and 11 while wiping everything else
     gSaveDataFlags = ((saveFileIndex & 0x03) << 10) | 0x80;
 }
 
+/**
+ * Marks a flag to read eeprom settings from flash later
+ */
 UNUSED void mark_read_eeprom_settings(void) {
     gSaveDataFlags |= 0x100; // Set bit 8
 }
 
-//Always called after updating a value in sEepromSettings
+/**
+ * Marks a flag to write eeprom settings to flash later
+ */
 void mark_write_eeprom_settings(void) {
     gSaveDataFlags |= 0x200; // Set bit 9
 }

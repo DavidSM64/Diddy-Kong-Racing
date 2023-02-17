@@ -97,7 +97,7 @@ u8 D_800DD2F8[8] = {
 
 s32 sNoControllerPluggedIn = FALSE; // Looks to be a boolean for whether a controller is plugged in. FALSE if plugged in, and TRUE if not.
 
-s16 gButtonMask = 0xFFFF;
+u16 gButtonMask = 0xFFFF;
 
 /*******************************/
 
@@ -138,9 +138,9 @@ OSMesg sSIMesgBuf;
 OSMesg gSIMesg;
 OSContStatus status;
 UNUSED s32 D_80121108[2]; //Padding?
-OSContPad sControllerData[8];
-u16 gControllerButtonsPressed[4];
-u16 gControllerButtonsReleased[4];
+OSContPad sControllerData[MAXCONTROLLERS*2];
+u16 gControllerButtonsPressed[MAXCONTROLLERS];
+u16 gControllerButtonsReleased[MAXCONTROLLERS];
 u8 sPlayerID[16];
 
 /******************************/
@@ -1413,66 +1413,45 @@ s32 init_controllers(void) {
 #ifdef NON_EQUIVALENT
 s32 func_8006A1C4(s32 saveDataFlags, s32 updateRate) {
     OSMesg unusedMsg;
-    //? temp_at;
-    OSContPad *var_a2;
-    OSContPad *var_a2_2;
-    OSContPad *var_v0;
-    OSContPad *var_v0_2;
     Settings **allSaves;
     Settings *settings;
-    s32 temp_a1;
-    s32 temp_a1_2;
-    s32 temp_t5;
-    s32 temp_v1;
-    s32 i;
-    s32 var_t5;
-    s32 var_t6;
-    s32 var_t9;
-    u16 *var_a3;
-    u16 *var_t0;
-    u16 temp_a0;
-    u16 temp_a0_2;
-    u16 temp_v1_2;
-    u16 temp_v1_3;
+    s32 i, j;
+    OSContPad *curCont;
+    OSContPad *prevCont;
 
     if (osRecvMesg(&sSIMesgQueue, &unusedMsg, OS_MESG_NOBLOCK) == 0) {
-        var_v0 = sControllerData;
-        var_a2 = sControllerData + 0x18;
-        // do {
-        //     temp_at = (unaligned s32) *var_v0;
-        //     var_v0 += 6;
-        //     *var_a2 = (unaligned s32) temp_at;
-        //     var_a2 += 6;
-        //     var_a2->unk-2 = (u16) var_v0->unk-2;
-        // } while ((u32) var_v0 < (u32) (sControllerData + 0x18));
+        //Back up old controller data?
+        for (i = 4; i < 8; i++) {
+            sControllerData[i] =  sControllerData[i-4];
+        }
         osContGetReadData(sControllerData);
         if (saveDataFlags != 0) {
             settings = get_settings();
-            if (saveDataFlags & (1 << 0| 1 << 1)) {
-                read_eeprom_data(settings, saveDataFlags & (1 << 0| 1 << 1));
+            if (SAVE_DATA_FLAG_READ_EEPROM_INDEX(saveDataFlags)) {
+                read_eeprom_data(settings, SAVE_DATA_FLAG_READ_EEPROM_INDEX(saveDataFlags));
             }
-            if (saveDataFlags & (1 << 3)) {
+            if (saveDataFlags & SAVE_DATA_FLAG_READ_ALL_SAVE_DATA) {
                 allSaves = get_all_save_files_ptr();
-                for (i = 0; i < 4; i++) {
+                for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
                     read_save_file(i, allSaves[i]);
                 }
             }
-            if (saveDataFlags & (1 << 2)) {
-                read_save_file((saveDataFlags >> 8) & (1 << 0| 1 << 1), settings);
+            if (saveDataFlags & SAVE_DATA_FLAG_READ_SAVE_DATA) {
+                read_save_file(SAVE_DATA_FLAG_READ_SAVE_FILE_INDEX(saveDataFlags), settings);
             }
-            if ((saveDataFlags & ((1 << 4) | (1 << 5))) >> 4) {
-                write_eeprom_data(settings, (saveDataFlags & ((1 << 4) | (1 << 5))) >> 4);
+            if (SAVE_DATA_FLAG_WRITE_EEPROM_INDEX(saveDataFlags)) {
+                write_eeprom_data(settings, SAVE_DATA_FLAG_WRITE_EEPROM_INDEX(saveDataFlags));
             }
-            if (saveDataFlags & (1 << 6)) {
-                write_save_data((saveDataFlags >> 10) & (1 << 0| 1 << 1), settings);
+            if (saveDataFlags & SAVE_DATA_FLAG_WRITE_SAVE_DATA) {
+                write_save_data(SAVE_DATA_FLAG_WRITE_SAVE_FILE_INDEX(saveDataFlags), settings);
             }
-            if (saveDataFlags & (1 << 7)) {
-                erase_save_file((saveDataFlags >> 10) & (1 << 0| 1 << 1), settings);
+            if (saveDataFlags & SAVE_DATA_FLAG_ERASE_SAVE_DATA) {
+                erase_save_file(SAVE_DATA_FLAG_WRITE_SAVE_FILE_INDEX(saveDataFlags), settings);
             }
-            if (saveDataFlags & (1 << 8)) {
+            if (saveDataFlags & SAVE_DATA_FLAG_READ_EEPROM_SETTINGS) {
                 read_eeprom_settings(get_eeprom_settings_pointer());
             }
-            if (saveDataFlags & (1 << 9)) {
+            if (saveDataFlags & SAVE_DATA_FLAG_WRITE_EEPROM_SETTINGS) {
                 write_eeprom_settings(get_eeprom_settings_pointer());
             }
             saveDataFlags = 0;
@@ -1480,32 +1459,15 @@ s32 func_8006A1C4(s32 saveDataFlags, s32 updateRate) {
         rumble_controllers(updateRate);
         osContStartReadData(&sSIMesgQueue);
     }
-    var_a3 = gControllerButtonsReleased;
-    var_t0 = gControllerButtonsPressed;
-    var_v0_2 = sControllerData;
-    var_a2_2 = sControllerData + 0x18;
-    // do {
-    //     if (sNoControllerPluggedIn != 0) {
-    //         var_v0_2->button = 0;
-    //     }
-    //     temp_v1_2 = var_v0_2->button;
-    //     temp_a0 = var_a2_2->button;
-    //     temp_a1 = temp_v1_2 ^ temp_a0;
-    //     var_t0->unk0 = temp_v1_2 & temp_a1 & (u16) gButtonMask;
-    //     *var_a3 = temp_a0 & temp_a1 & (u16) gButtonMask;
-    //     if (sNoControllerPluggedIn != 0) {
-    //         var_v0_2->unk6 = 0U;
-    //     }
-    //     temp_v1_3 = var_v0_2->unk6;
-    //     temp_a0_2 = var_a2_2->unk6;
-    //     var_a3 += 4;
-    //     temp_a1_2 = temp_v1_3 ^ temp_a0_2;
-    //     var_t0->unk2 = (s16) (temp_v1_3 & temp_a1_2 & (u16) gButtonMask);
-    //     var_a3->unk-2 = (s16) (temp_a0_2 & temp_a1_2 & (u16) gButtonMask);
-    //     var_a2_2 += 0xC;
-    //     var_v0_2 += 0xC;
-    //     var_t0 += 4;
-    // } while (var_a3 != sPlayerID);
+    for (i = 0, j = 4; i < 4; j++, i++) {
+        if (sNoControllerPluggedIn) {
+            sControllerData[i].button = 0;
+        }
+        curCont = &sControllerData[i];
+        prevCont = &sControllerData[j];
+        gControllerButtonsPressed[i] = curCont->button & (curCont->button ^ prevCont->button) & gButtonMask;
+        gControllerButtonsReleased[i] = prevCont->button & (curCont->button ^ prevCont->button) & gButtonMask;
+    }
     return saveDataFlags;
 }
 #else

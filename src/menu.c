@@ -3220,7 +3220,7 @@ s32 func_800867D4(void) {
 
     switch (D_80126A0C[D_80126BD4].unk0) {
         case 1: //Some other type of game data?
-            func_8006EB78(D_80126A0C[D_80126BD4].controllerIndex);
+            mark_read_save_file(D_80126A0C[D_80126BD4].controllerIndex);
             func_800861C8(D_80126A04, &D_80126A00);
             ret = func_800860A8(0, &D_80126A18, D_80126A04, &D_80126A00, get_game_data_file_size(), -1);
             break;
@@ -5194,7 +5194,7 @@ void func_8008D8BC(UNUSED s32 updateRate) {
         if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
             if (gSavefileInfo[gSaveFileIndex3].isStarted) {
                 play_sound_global(SOUND_SELECT2, NULL);
-                func_8006EB78(gSaveFileIndex3);
+                mark_read_save_file(gSaveFileIndex3);
                 gSaveFileIndex2 = gSaveFileIndex3;
                 D_80126494 = 1;
                 return;
@@ -5400,7 +5400,7 @@ s32 menu_file_select_loop(s32 updateRate) {
                 gSavefileInfo[gSaveFileIndex].isStarted = 1;
                 gSavefileInfo[gSaveFileIndex].balloonCount = 0;
                 settings->filename = compress_filename_string(gSavefileInfo[gSaveFileIndex].name, 3);
-                func_8006EB78(gSaveFileIndex);
+                mark_read_save_file(gSaveFileIndex);
                 set_music_fade_timer(-128);
                 transition_begin(&sMenuTransitionFadeIn);
                 gMenuDelay = 1;
@@ -5411,8 +5411,8 @@ s32 menu_file_select_loop(s32 updateRate) {
                 if (currentMenuDelay > 0) {
                     if (gSavefileInfo[gSaveFileIndex].isStarted != 0) {
                         play_sound_global(SOUND_SELECT2, NULL);
-                        func_8006EB78(gSaveFileIndex);
-                        set_music_fade_timer(-0x80);
+                        mark_read_save_file(gSaveFileIndex);
+                        set_music_fade_timer(-128);
                     } else {
                         D_80126CC0 = 1;
                         D_800E0FB0 = 0;
