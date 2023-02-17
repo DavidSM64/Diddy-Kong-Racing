@@ -47,13 +47,13 @@ glabel func_8006A1C4
 /* 06AE70 8006A270 32580008 */  andi  $t8, $s2, 8
 /* 06AE74 8006A274 1300000D */  beqz  $t8, .L8006A2AC
 /* 06AE78 8006A278 32590004 */   andi  $t9, $s2, 4
-/* 06AE7C 8006A27C 0C027124 */  jal   func_8009C490
+/* 06AE7C 8006A27C 0C027124 */  jal   get_all_save_files_ptr
 /* 06AE80 8006A280 00000000 */   nop   
 /* 06AE84 8006A284 00008025 */  move  $s0, $zero
 /* 06AE88 8006A288 00408825 */  move  $s1, $v0
 .L8006A28C:
 /* 06AE8C 8006A28C 8E250000 */  lw    $a1, ($s1)
-/* 06AE90 8006A290 0C01D081 */  jal   func_80074204
+/* 06AE90 8006A290 0C01D081 */  jal   read_save_file
 /* 06AE94 8006A294 02002025 */   move  $a0, $s0
 /* 06AE98 8006A298 26100001 */  addiu $s0, $s0, 1
 /* 06AE9C 8006A29C 24010003 */  li    $at, 3
@@ -65,7 +65,7 @@ glabel func_8006A1C4
 /* 06AEB0 8006A2B0 00122203 */   sra   $a0, $s2, 8
 /* 06AEB4 8006A2B4 308C0003 */  andi  $t4, $a0, 3
 /* 06AEB8 8006A2B8 8FA5004C */  lw    $a1, 0x4c($sp)
-/* 06AEBC 8006A2BC 0C01D081 */  jal   func_80074204
+/* 06AEBC 8006A2BC 0C01D081 */  jal   read_save_file
 /* 06AEC0 8006A2C0 01802025 */   move  $a0, $t4
 .L8006A2C4:
 /* 06AEC4 8006A2C4 32420030 */  andi  $v0, $s2, 0x30

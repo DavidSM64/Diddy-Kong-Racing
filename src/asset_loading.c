@@ -184,7 +184,7 @@ void dmacopy(u32 romOffset, u32 ramAddress, s32 numBytes) {
             numBytesToDMA = numBytes;
         }
         osPiStartDma(&gAssetsDmaIoMesg, OS_MESG_PRI_NORMAL, OS_READ, romOffset, (u32 *) ramAddress, numBytesToDMA, &gDmaMesgQueue);
-        osRecvMesg(&gDmaMesgQueue, &dmaMesg, 1);
+        osRecvMesg(&gDmaMesgQueue, &dmaMesg, OS_MESG_BLOCK);
         numBytes -= numBytesToDMA;
         romOffset += numBytesToDMA;
         ramAddress += numBytesToDMA;

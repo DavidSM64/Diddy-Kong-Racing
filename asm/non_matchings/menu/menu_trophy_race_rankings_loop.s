@@ -384,7 +384,7 @@ glabel menu_trophy_race_rankings_loop
 /* 09A168 80099568 A56E000E */  sh    $t6, 0xe($t3)
 /* 09A16C 8009956C 0C027068 */  jal   get_save_file_index
 /* 09A170 80099570 AFAC0034 */   sw    $t4, 0x34($sp)
-/* 09A174 80099574 0C01BB12 */  jal   func_8006EC48
+/* 09A174 80099574 0C01BB12 */  jal   safe_mark_write_save_file
 /* 09A178 80099578 00402025 */   move  $a0, $v0
 /* 09A17C 8009957C 8FAC0034 */  lw    $t4, 0x34($sp)
 /* 09A180 80099580 00000000 */  nop   

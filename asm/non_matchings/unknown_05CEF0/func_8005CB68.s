@@ -325,7 +325,7 @@ glabel func_8005CB68
 /* 05DC14 8005D014 25CF0001 */  addiu $t7, $t6, 1
 /* 05DC18 8005D018 0C027068 */  jal   get_save_file_index
 /* 05DC1C 8005D01C A3AF0043 */   sb    $t7, 0x43($sp)
-/* 05DC20 8005D020 0C01BB12 */  jal   func_8006EC48
+/* 05DC20 8005D020 0C01BB12 */  jal   safe_mark_write_save_file
 /* 05DC24 8005D024 00402025 */   move  $a0, $v0
 .L8005D028:
 /* 05DC28 8005D028 83AD0043 */  lb    $t5, 0x43($sp)

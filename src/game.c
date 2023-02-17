@@ -88,7 +88,21 @@ UNUSED char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
 
 s8 sAntiPiracyTriggered = 0;
 UNUSED s32 D_800DD378 = 1;
-s32 D_800DD37C = 0;
+/**
+ * Bit 00: Read Eeprom Data Index Part 1
+ * Bit 01: Read Eeprom Data Index Part 2
+ * Bit 02: Read Save File from bits 8 and 9
+ * Bit 03: Read All Save Files
+ * Bit 04: Write Eeprom Data Index Part 1
+ * Bit 05: Write Eeprom Data Index Part 2
+ * Bit 06: Write Save Data from bits 10 and 11
+ * Bit 07: Erase Save File from bits 10 and 11
+ * Bit 08: Read Eeprom settings
+ * Bit 09: Write Eeprom Settings
+ * Bit 10: Save File Index Part 1
+ * Bit 11: Save File Index Part 2
+ */
+s32 gSaveDataFlags = 0;
 s32 gScreenStatus = OSMESG_SWAP_BUFFER;
 s32 sControllerStatus = 0;
 UNUSED s32 D_800DD388 = 0;
@@ -871,7 +885,7 @@ s32 func_8006C300(void) {
 
 void thread3_main(UNUSED void *unused) {
     init_game();
-    D_800DD37C = func_8006A1C4(D_800DD37C, 0);
+    gSaveDataFlags = func_8006A1C4(gSaveDataFlags, 0);
     sBootDelayTimer = 0;
     sRenderContext = DRAW_INTRO;
     while (1) {
@@ -991,7 +1005,7 @@ void main_game_loop(void) {
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_background(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE); 
-    D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
+    gSaveDataFlags = func_8006A1C4(gSaveDataFlags, sLogicUpdateRate);
     if (get_lockup_status()) {
         render_epc_lock_up_display();
         sRenderContext = DRAW_CRASH_SCREEN;
@@ -1381,7 +1395,7 @@ void ingame_logic_loop(s32 updateRate) {
         gLevelLoadTimer = 0;
         gPostRaceViewPort = NULL;
         func_8006CC14();
-        func_8006EC48(get_save_file_index());
+        safe_mark_write_save_file(get_save_file_index());
         if (sp40 != 0) {
             gIsLoading = FALSE;
             switch (sp40) {
@@ -1442,7 +1456,7 @@ void ingame_logic_loop(s32 updateRate) {
             }
             load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
         } else {
-            func_8006EC48(get_save_file_index());
+            safe_mark_write_save_file(get_save_file_index());
             load_menu_with_level_background(MENU_TITLE, -1, 0);
         }
         D_801234FC = 0;
@@ -1451,7 +1465,7 @@ void ingame_logic_loop(s32 updateRate) {
         gPostRaceViewPort = NULL;
         func_8006CC14();
         load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
-        func_8006EC48(get_save_file_index());
+        safe_mark_write_save_file(get_save_file_index());
         D_801234F8 = 0;
     }
 }
@@ -1625,7 +1639,7 @@ void func_8006DCF8(s32 updateRate) {
         gIsPaused = FALSE;
         gPostRaceViewPort = NULL;
         load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
-        func_8006EC48(get_save_file_index());
+        safe_mark_write_save_file(get_save_file_index());
         return;
     }
     if ((menuLoopResult != -1) && (menuLoopResult & 0x100)) {
@@ -1642,7 +1656,7 @@ void func_8006DCF8(s32 updateRate) {
                 D_80123508 = 0x64;
                 sRenderContext = DRAW_GAME;
                 load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
-                func_8006EC48(get_save_file_index());
+                safe_mark_write_save_file(get_save_file_index());
                 break;
             case 1:
                 D_80123504 = 0;
@@ -1659,7 +1673,7 @@ void func_8006DCF8(s32 updateRate) {
                     D_80123508 = temp2;
                 }
                 load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
-                func_8006EC48(get_save_file_index());
+                safe_mark_write_save_file(get_save_file_index());
                 break;
             case 2:
                 sRenderContext = DRAW_GAME;
@@ -1777,7 +1791,7 @@ void calc_and_alloc_heap_for_settings(void) {
     gSettingsPtr->courseTimesPtr[1] = (u16 *)((u8 *)gSettingsPtr + sizes[12]);
     gSettingsPtr->courseTimesPtr[2] = (u16 *)((u8 *)gSettingsPtr + sizes[13]);
     gSettingsPtr->unk4C = (Settings4C *) &D_80121250;
-    D_800DD37C = 263;
+    gSaveDataFlags = 0x107; // Set bits 0/1/2/8 and wipe out all others
 }
 
 void func_8006E5BC(void) {
@@ -1896,64 +1910,63 @@ s32 func_8006EB14(void) {
     return gPlayableMapId;
 }
 
-/* Unused? */
-void func_8006EB24(void) {
-    D_800DD37C |= 0x01;
+UNUSED void func_8006EB24(void) {
+    gSaveDataFlags |= 0x01; //Set bit 0
 }
 
-/* Unused? */
-void func_8006EB40(void) {
-    D_800DD37C |= 0x02;
+UNUSED void func_8006EB40(void) {
+    gSaveDataFlags |= 0x02; //Set bit 1
 }
 
 void func_8006EB5C(void) {
-    D_800DD37C |= 0x03;
+    gSaveDataFlags |= 0x03; //Set bit 0 and 1
 }
 
 void func_8006EB78(s32 saveFileIndex) {
-    D_800DD37C &= -0x301;
-    D_800DD37C |= (0x04 | ((saveFileIndex & 3) << 8));
+    gSaveDataFlags &= ~0x300; //0xFFFFFCFF - Wipe out bits 8 and 9
+    gSaveDataFlags |= (0x04 | ((saveFileIndex & 3) << 8)); //Place saveFileIndex at bits 8 and 9 and set bit 2
 }
 
-void func_8006EBA8(void) {
-    D_800DD37C |= 0x08;
+void mark_read_all_save_files(void) {
+    gSaveDataFlags |= 0x08; //Set bit 3
 }
 
 void func_8006EBC4(void) {
-    D_800DD37C |= 0x10;
+    gSaveDataFlags |= 0x10; //Set bit 4
 }
 
 void func_8006EBE0(void) {
-    D_800DD37C |= 0x20;
+    gSaveDataFlags |= 0x20; //Set bit 5
 }
 
 void func_8006EBFC(void) {
-    D_800DD37C |= 0x30;
+    gSaveDataFlags |= 0x30; //Set bits 4 and 5
 }
 
-void func_8006EC18(s32 arg0) {
-    D_800DD37C &= -0xC01;
-    D_800DD37C |= (0x40 | ((arg0 & 3) << 0xA));
+void force_mark_write_save_file(s32 saveFileIndex) {
+    gSaveDataFlags &= ~0xC00; //0xFFFFF3FF - Wipe out bits 10 and 11
+    gSaveDataFlags |= (0x40 | ((saveFileIndex & 3) << 10)); //Set bit 6 and place saveFileIndex into bits 10 and 11
 }
 
-void func_8006EC48(s32 saveFileIndex) {
+void safe_mark_write_save_file(s32 saveFileIndex) {
     if (sRenderContext == DRAW_GAME && !is_in_tracks_mode()) {
-        D_800DD37C &= -0xC01;
-        D_800DD37C |= (0x40 | ((saveFileIndex & 3) << 0xA));
+        gSaveDataFlags &= ~0xC00; //0xFFFFF3FF - Wipe out bits 10 and 11
+        gSaveDataFlags |= (0x40 | ((saveFileIndex & 3) << 10));; //Set bit 6 and place saveFileIndex into bits 10 and 11
     }
 }
 
-void func_8006ECAC(s32 arg0) {
-    D_800DD37C = ((arg0 & 0x03) << 10) | 0x80;
+void mark_save_file_to_erase(s32 saveFileIndex) {
+    //Set bit 7 and and place saveFileIndex into bits 10 and 11 while wiping everything else
+    gSaveDataFlags = ((saveFileIndex & 0x03) << 10) | 0x80;
 }
 
-UNUSED void func_8006ECC4(void) {
-    D_800DD37C |= 0x100;
+UNUSED void mark_read_eeprom_settings(void) {
+    gSaveDataFlags |= 0x100; // Set bit 8
 }
 
 //Always called after updating a value in sEepromSettings
-void func_8006ECE0(void) {
-    D_800DD37C |= 0x200;
+void mark_write_eeprom_settings(void) {
+    gSaveDataFlags |= 0x200; // Set bit 9
 }
 
 /**
