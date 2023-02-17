@@ -140,7 +140,7 @@ s32 D_800E2C90 = 0;
 s32 gWeatherSoundMask = 0;
 
 
-FadeTransition D_800E2C98 = FADE_TRANSITION(0x40, FADE_COLOR_WHITE, 5, 2);
+FadeTransition D_800E2C98 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK1, FADE_COLOR_WHITE, 5, 2);
 
 /*******************************/
 

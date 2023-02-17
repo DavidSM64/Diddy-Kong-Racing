@@ -372,11 +372,11 @@ s32 sMenuMusicVolume = 0x7F;
 s32 sMenuGuiOpacity = 0xFF;
 s32 D_800DF768 = 1;
 
-FadeTransition sMenuTransitionFadeInFast = FADE_TRANSITION(0, FADE_COLOR_BLACK, 10, -1);
-FadeTransition sMenuTransitionFadeIn = FADE_TRANSITION(0, FADE_COLOR_BLACK, 18, -1);
-FadeTransition sMenuTransitionFadeOut = FADE_TRANSITION(0x80, FADE_COLOR_BLACK, 18, 0);
-UNUSED FadeTransition sMenuTransitionFadeInWhite = FADE_TRANSITION(0, FADE_COLOR_WHITE, 18, -1);
-UNUSED FadeTransition sMenuTransitionFadeOutWhite = FADE_TRANSITION(0x80, FADE_COLOR_WHITE, 18, 0);
+FadeTransition sMenuTransitionFadeInFast = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 10, -1);
+FadeTransition sMenuTransitionFadeIn = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 18, -1);
+FadeTransition sMenuTransitionFadeOut = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK2, FADE_COLOR_BLACK, 18, 0);
+UNUSED FadeTransition sMenuTransitionFadeInWhite = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 18, -1);
+UNUSED FadeTransition sMenuTransitionFadeOutWhite = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK2, FADE_COLOR_WHITE, 18, 0);
 
 s32 D_800DF794 = 4;
 MenuElement *D_800DF798 = NULL;
@@ -1483,11 +1483,11 @@ s16 D_800E1DC8[16] = {
     1, 1, -1, 1, -1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1
 };
 
-FadeTransition D_800E1DE8 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 120, -1);
+FadeTransition D_800E1DE8 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 120, -1);
 
 char gRareCopyrightString[24] = "(C) COPYRIGHT RARE 1997";
 
-FadeTransition D_800E1E08 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 52, -1);
+FadeTransition D_800E1E08 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 52, -1);
 
 char *D_800E1E10 = " (ADV.";
 
@@ -2453,7 +2453,7 @@ void menu_title_screen_init(void) {
     gIsInTracksMode = FALSE;
 }
 
-void func_8008377C(UNUSED s32 arg0, f32 arg1) {
+void func_8008377C(UNUSED s32 updateRate, f32 arg1) {
     UNUSED u32 foo[2];
     s32 alpha;
     f32 scale;
@@ -2509,7 +2509,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
     sp18 = get_active_camera_segment();
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     func_8008E4EC();
-    if (osTvType == 0) {
+    if (osTvType == TV_TYPE_PAL) {
         sp1C = (f32) updateRate / 50.0f;
     } else {
         sp1C = (f32) updateRate / 60.0f;
@@ -7029,7 +7029,7 @@ void func_80094688(s32 arg0, s32 arg1) {
         D_801263E0 = 8;
         gMenuDelay = 100;
     }
-    if (get_render_context()) {
+    if (get_render_context() != DRAW_GAME) {
         D_801263E0 = 7;
     }
     reset_controller_sticks();
@@ -7056,7 +7056,7 @@ void func_80094688(s32 arg0, s32 arg1) {
             D_80126BBC = 0;
         }
         D_80126BC0 = var_v1[2];
-        if (get_render_context() == 0) {
+        if (get_render_context() == DRAW_GAME) {
             func_80078170(D_80126BB8, D_80126BBC, D_80126BC0);
         }
         camEnableUserView(0, 1);

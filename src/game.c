@@ -106,15 +106,15 @@ s32 gNumHudVertsPerPlayer[4] = { 300, 600, 850, 900 };
 s32 gNumHudMatPerPlayer[4] = { 300, 400, 550, 600 };
 s32 gNumHudTrisPerPlayer[4] = { 20, 30, 40, 50 };
 s8 gDrawFrameTimer = 0;
-FadeTransition D_800DD3F4 = FADE_TRANSITION(128, FADE_COLOR_BLACK, 20, 0);
-UNUSED FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
+FadeTransition D_800DD3F4 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK2, FADE_COLOR_BLACK, 20, 0);
+UNUSED FadeTransition D_800DD3FC = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 20, -1);
 s32 sLogicUpdateRate = LOGIC_5FPS;
-FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
+FadeTransition D_800DD408 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 30, -1);
 UNUSED char *D_800DD410[3] = {
     (char *)sDebugCarString, (char *)sDebugHovercraftString, (char *)sDebugPlaneString
 };
-FadeTransition D_800DD41C = FADE_TRANSITION(0, FADE_COLOR_BLACK, 30, -1);
-FadeTransition D_800DD424 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 260, -1);
+FadeTransition D_800DD41C = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
+FadeTransition D_800DD424 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 260, -1);
 /*******************************/
 
 /************ .bss ************/
@@ -933,7 +933,7 @@ void init_game(void) {
     init_particle_assets();
     func_800AB1F0();
     calc_and_alloc_heap_for_settings();
-    func_8006EFDC();
+    default_alloc_heap_for_hud();
     load_fonts();
     init_controller_paks();
     func_80081218();
@@ -1088,7 +1088,7 @@ void func_8006CAE4(s32 arg0, s32 arg1, Vehicle vehicle) {
  * Needs a better name!
  */
 void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId) {
-    func_8006ECFC(numberOfPlayers);
+    calc_and_alloc_heap_for_hud(numberOfPlayers);
     set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
@@ -1512,7 +1512,7 @@ UNUSED void set_render_context(s32 changeTo) {
 }
 
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
-    func_8006ECFC(0);
+    calc_and_alloc_heap_for_hud(0);
     sRenderContext = DRAW_MENU;
     D_801234F0 = 1;
     set_sound_channel_volume(0, 32767);
@@ -1947,8 +1947,7 @@ void func_8006ECAC(s32 arg0) {
     D_800DD37C = ((arg0 & 0x03) << 10) | 0x80;
 }
 
-/* Unused? */
-void func_8006ECC4(void) {
+UNUSED void func_8006ECC4(void) {
     D_800DD37C |= 0x100;
 }
 
@@ -1957,7 +1956,57 @@ void func_8006ECE0(void) {
     D_800DD37C |= 0x200;
 }
 
-GLOBAL_ASM("asm/non_matchings/game/func_8006ECFC.s")
+/**
+ * Allocates an amount of memory for the number of players passed in.
+ */
+void calc_and_alloc_heap_for_hud(s32 numberOfPlayers) {
+    s32 newVar;
+    s32 totalSize;
+
+    if (numberOfPlayers != D_8012350C) {
+        newVar = numberOfPlayers;
+        D_8012350C = newVar;
+        set_free_queue_state(0);
+        free_from_memory_pool(gDisplayLists[0]);
+        free_from_memory_pool(gDisplayLists[1]);
+        totalSize =
+            ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords)))
+            + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix)))
+            + ((gNumHudVertsPerPlayer[newVar] * sizeof(Vertex)))
+            + ((gNumHudTrisPerPlayer[newVar] * sizeof(Triangle)));
+        gDisplayLists[0] = (Gfx *) allocate_at_address_in_main_pool(totalSize, (u8 *) gDisplayLists[0], COLOUR_TAG_RED);
+        gDisplayLists[1] = (Gfx *) allocate_at_address_in_main_pool(totalSize, (u8 *) gDisplayLists[1], COLOUR_TAG_YELLOW);
+        if ((gDisplayLists[0] == NULL) || gDisplayLists[1] == NULL) {
+            if (gDisplayLists[0] != NULL) {
+                free_from_memory_pool(gDisplayLists[0]);
+                gDisplayLists[0] = NULL;
+            }
+            if (gDisplayLists[1] != NULL) {
+                free_from_memory_pool(gDisplayLists[1]);
+                gDisplayLists[1] = NULL;
+            }
+            default_alloc_heap_for_hud();
+        }
+        gHudMatrices[0] = (MatrixS *)((u8 *) gDisplayLists[0] + ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords))));
+        gHudTriangles[0] = (TriangleList *)((u8 *) gHudMatrices[0] + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix))));
+        gHudVertices[0] = (Vertex *)((u8 *) gHudTriangles[0] + ((gNumHudTrisPerPlayer[newVar] * sizeof(Triangle))));
+        gHudMatrices[1] = (MatrixS *)((u8 *) gDisplayLists[1] + ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords))));
+        gHudTriangles[1] = (TriangleList *)((u8 *) gHudMatrices[1] + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix))));
+        gHudVertices[1] = (Vertex *)((u8 *) gHudTriangles[1] + ((gNumHudTrisPerPlayer[newVar] * sizeof(Triangle))));
+        gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[newVar];
+        gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[newVar];
+        gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[newVar];
+        gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[newVar];
+        set_free_queue_state(2);
+    }
+    gCurrDisplayList = gDisplayLists[gSPTaskNum];
+    gGameCurrMatrix = gHudMatrices[gSPTaskNum];
+    gGameCurrTriList = gHudTriangles[gSPTaskNum];
+    gGameCurrVertexList = gHudVertices[gSPTaskNum];
+
+    gDPFullSync(gCurrDisplayList++);
+    gSPEndDisplayList(gCurrDisplayList++);
+}
 
 /**
  * Returns FALSE if dmem doesn't begin with a -1. This is checked on every main game loop iteration.
@@ -1969,38 +2018,35 @@ s32 check_dmem_validity(void) {
     return TRUE;
 }
 
-#ifdef NON_EQUIVALENT
+/**
+ * Defaults allocations for 4 players
+ */
+void default_alloc_heap_for_hud(void) {
+    s32 numberOfPlayers;
+    s32 totalSize;
 
-// Not close to matching, but should be the same functionality-wise.
-void func_8006EFDC(void) {
-    s32 size1, size2, size3, size4, totalSize;
+    numberOfPlayers = FOUR_PLAYERS;
+    D_8012350C = numberOfPlayers;
+    totalSize = (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords))
+        + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix))
+        + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex))
+        + (gNumHudTrisPerPlayer[numberOfPlayers] * sizeof(Triangle));
 
-    D_8012350C = 3;
+    gDisplayLists[0] = (Gfx *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_RED);
+    gHudMatrices[0] = (MatrixS *)((u8 *)gDisplayLists[0] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
+    gHudVertices[0] = (Vertex *)((u8 *)gHudMatrices[0] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
+    gHudTriangles[0] = (TriangleList *)((u8 *)gHudVertices[0] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
-    size1 = (gNumF3dCmdsPerPlayer[3] * sizeof(Gwords));
-    size2 = (gNumHudMatPerPlayer[3] * sizeof(Matrix));
-    size3 = (gNumHudVertsPerPlayer[3] * sizeof(Vertex));
-    size4 = (gNumHudTrisPerPlayer[3] * sizeof(Triangle));
-    totalSize = size1 + size2 + size3 + size4;
+    gDisplayLists[1] = (Gfx *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_YELLOW);
+    gHudMatrices[1] = (MatrixS *)((u8 *)gDisplayLists[1] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
+    gHudVertices[1] = (Vertex *)((u8 *)gHudMatrices[1] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
+    gHudTriangles[1] = (TriangleList *)((u8 *)gHudVertices[1] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
-    gDisplayLists[0] = (u8 *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_RED);
-    gHudMatrices[0] = (u8 *)gDisplayLists[0] + size1;
-    gHudVertices[0] = (u8 *)gHudMatrices[0] + size2;
-    gHudTriangles[0] = (u8 *)gHudVertices[0] + size3;
-
-    gDisplayLists[1] = (u8 *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_YELLOW);
-    gHudMatrices[1] = (u8 *)gDisplayLists[1] + size1;
-    gHudVertices[1] = (u8 *)gHudMatrices[1] + size2;
-    gHudTriangles[1] = (u8 *)gHudVertices[1] + size3;
-
-    gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[3];
-    gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[3];
-    gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[3];
-    gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[3];
+    gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[numberOfPlayers];
+    gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[numberOfPlayers];
+    gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[numberOfPlayers];
+    gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[numberOfPlayers];
 }
-#else
-GLOBAL_ASM("asm/non_matchings/game/func_8006EFDC.s")
-#endif
 
 void func_8006F140(s32 arg0) {
     if (gLevelLoadTimer == 0) {
@@ -2024,8 +2070,7 @@ void func_8006F140(s32 arg0) {
     }
 }
 
-// Unused?
-void func_8006F20C(void) {
+UNUSED void func_8006F20C(void) {
     if (gLevelLoadTimer == 0) {
         transition_begin(&D_800DD41C);
         gLevelLoadTimer = 40;

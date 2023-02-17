@@ -504,13 +504,120 @@ void setup_gfx_mesg_queues(OSSched *sc) {
     osCreateMesgQueue(&gGfxTaskMesgQueue, gGfxTaskMesgBuf, 8);
 }
 
+//Called after finishing a race. Sets values during single player races. Set to zero during trophy races.
 void func_80078170(TextureHeader *arg0, TextureHeader *arg1, u32 arg2) {
     D_800DE4C4 = arg0;
     D_800DE4C8 = arg1;
     D_800DE4C0 = arg2 << 2;
 }
 
+#ifdef NON_EQUIVALENT
+//Seems to render the background screen after a race finishes while you're at the menu deciding what to do next.
+//https://i.imgur.com/MHbUD2a.png is an example. The left is correct, and the right is incorrect rendering.
+void func_80078190(Gfx **dlist) {
+    s32 texture1And2UpperHeight;
+    s32 videoHeight;
+    s32 videoWidth;
+    s32 upperVideoWidth;
+    s32 upperVideoHeight;
+    s32 texture1UpperWidth;
+    s32 texture1UpperHeight;
+    //s32 texture2UpperHeight;
+    s32 widthAndHeight;
+    s32 yPos;
+    s32 var_s3;
+    s32 uly; //the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
+    s32 ulx; //the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
+    s32 lry; //the y-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
+    s32 lrx; //the x-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
+    s32 t;   //the texture coordinate t of upper-left corner of rectangle (s10.5)
+    s32 s;   //the texture coordinate s of upper-left corner of rectangle (s10.5)
+
+    widthAndHeight = get_video_width_and_height_as_s32();
+    videoWidth = GET_VIDEO_WIDTH(widthAndHeight);
+    videoHeight = GET_VIDEO_HEIGHT(widthAndHeight);
+    gSPDisplayList((*dlist)++, D_800DE598);
+
+    if (D_800DE4C8 == NULL) {
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE4C4->cmd), D_800DE4C4->numberOfCommands);
+        upperVideoWidth = videoWidth << 2;
+        upperVideoHeight = videoHeight << 2;
+        texture1UpperWidth = D_800DE4C4->width << 2;
+        texture1UpperHeight = D_800DE4C4->height << 2;
+        var_s3 = 0;
+        for (yPos = 0; yPos < upperVideoHeight; yPos += texture1UpperHeight) {
+            uly = yPos;
+            lry = yPos + texture1UpperHeight;
+            ulx = -var_s3;
+            while (ulx < upperVideoWidth) {
+                lrx = ulx + texture1UpperWidth;
+                s = 0;
+                t = 0;
+                if (ulx < 0) {
+                    s = -(ulx << 3);
+                    gSPTextureRectangle((*dlist)++, 0, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                } else {
+                    gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                }
+                ulx = lrx;
+            }
+            var_s3 = (var_s3 + D_800DE4C0) & (texture1UpperWidth - 1);
+        }
+    } else {
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE4C4->cmd), D_800DE4C4->numberOfCommands);
+        upperVideoWidth = videoWidth << 2;
+        upperVideoHeight = videoHeight << 2;
+        texture1UpperWidth = D_800DE4C4->width << 2;
+        texture1UpperHeight = D_800DE4C4->height << 2;
+        //texture2UpperHeight = D_800DE4C8->height << 2;
+        texture1And2UpperHeight = (D_800DE4C8->height << 2) + texture1UpperHeight;
+        var_s3 = 0;
+        for (yPos = 0; yPos < upperVideoHeight; yPos += texture1And2UpperHeight) {
+            uly = yPos;
+            lry = yPos + texture1UpperHeight;
+            ulx = -var_s3;
+            while (ulx < upperVideoWidth) {
+                lrx = ulx + texture1UpperWidth;
+                s = 0;
+                t = 0;
+                if (ulx < 0) {
+                    s = -(ulx << 3);
+                    gSPTextureRectangle((*dlist)++, 0, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                } else {
+                    gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                }
+                ulx = lrx;
+            }
+            var_s3 = (var_s3 + D_800DE4C0) & (texture1UpperWidth - 1);
+        }
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE4C8->cmd), D_800DE4C8->numberOfCommands);
+        upperVideoWidth <<= 2;
+        upperVideoHeight <<= 2;
+        var_s3 = 0;
+        for (yPos = texture1UpperHeight; yPos < upperVideoHeight; yPos += texture1And2UpperHeight) {
+            uly = yPos;
+            lry = yPos + texture1And2UpperHeight;
+            ulx = -var_s3;
+            while (ulx < upperVideoWidth) {
+                lrx = ulx + texture1UpperWidth;
+                s = 0;
+                t = 0;
+                if (ulx < 0) {
+                    s = -(ulx << 3);
+                    gSPTextureRectangle((*dlist)++, 0, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                } else {
+                    gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, 1024, 1024);
+                }
+                ulx = lrx;
+            }
+            var_s3 = (var_s3 + D_800DE4C0) & (texture1UpperWidth - 1);
+        }
+    }
+    gDPPipeSync((*dlist)++);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078190.s")
+#endif
 
 /**
  * Enables the chequer background and sets up its properties.
@@ -622,4 +729,97 @@ void render_textured_rectangle(Gfx **dList, DrawTexture *element, s32 xPos, s32 
     gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_078050/render_texture_rectangle_scaled.s")
+void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale, u32 colour, s32 flags) {
+    TextureHeader *tex;
+    Gfx *dmaDlist;
+    s32 i;
+    s32 bFlipX;
+    s32 bFlipY;
+    s32 s;   //the texture coordinate s of upper-left corner of rectangle (s10.5)
+    s32 t;   //the texture coordinate t of upper-left corner of rectangle (s10.5)
+    s32 dsdx;//the change in s for each change in x (s5.10)
+    s32 dtdy;//the change in t for each change in y (s5.10)
+    s32 ulx; //the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
+    s32 uly; //the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
+    s32 lrx; //the x-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
+    s32 lry; //the y-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
+    s32 xPos4x;
+    s32 yPos4x;
+    s32 width;
+    s32 height;
+
+    height = get_video_width_and_height_as_s32();
+    width = GET_VIDEO_WIDTH(height) * 4;
+    height = (GET_VIDEO_HEIGHT(height) & 0xFFFF) * 4;
+
+    //If the colour is fully opaque
+    if ((colour & 0xFF) == 0xFF) {
+        dmaDlist = dTextureRectangleScaledOpa[(u8)flags & 0xFF];
+    } else {
+        dmaDlist = dTextureRectangleScaledXlu[(u8)flags & 0xFF];
+    }
+
+    gSPDisplayList((*dlist)++, D_800DE670);
+    gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dmaDlist), numberOfGfxCommands(dTextureRectangleScaledOpa[0]));
+    gDPSetPrimColorRGBA((*dlist)++, colour);
+
+    bFlipX = flags & (1 << 12);
+    bFlipY = flags & (1 << 13);
+    xScale *= 4;
+    yScale *= 4;
+    xPos4x = xPos * 4;
+    yPos4x = yPos * 4;
+
+    for (i = 0; (tex = element[i].texture); i++) {
+        if (!bFlipX) {
+            ulx = (s32) (element[i].xOffset * xScale) + xPos4x;
+        } else {
+            lrx = xPos4x - (s32) (element[i].xOffset * xScale);
+            ulx = lrx - (s32) (tex->width * xScale);
+        }
+        if (!bFlipY) {
+            uly = (s32) (element[i].yOffset * yScale) + yPos4x;
+        } else {
+            lry = yPos4x - (s32) (element[i].yOffset * yScale);
+            uly = lry - (s32) (tex->height * yScale);
+        }
+        if (ulx < width && uly < height) {
+            if (!bFlipX) {
+                lrx = (s32) (tex->width * xScale) + ulx;
+            }
+            if (!bFlipY) {
+                lry = (s32) (tex->height * yScale) + uly;
+            }
+            if (lrx > 0 && lry > 0 && ulx < lrx && uly < lry) {
+                dsdx = ((tex->width - 1) << 12) / (lrx - ulx);
+                if (bFlipX) {
+                    s = (tex->width - 1) << 5;
+                    dsdx = -dsdx;
+                } else {
+                    s = 0;
+                }
+                dtdy = ((tex->height - 1) << 12) / (lry - uly);
+                if (bFlipY) {
+                    t = (tex->height - 1) << 5;
+                    dtdy = -dtdy;
+                } else {
+                    t = 0;
+                }
+                if (ulx < 0) {
+                    s += (-ulx * dsdx) >> 7;
+                    ulx = 0;
+                }
+                if (uly < 0) {
+                    t += (-uly * dtdy) >> 7;
+                    uly = 0;
+                }
+
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
+                gSPTextureRectangle((*dlist)++, ulx, uly, lrx, lry, G_TX_RENDERTILE, s, t, dsdx, dtdy);
+            }
+        }
+    }
+
+    gDPPipeSync((*dlist)++);
+    gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+}
