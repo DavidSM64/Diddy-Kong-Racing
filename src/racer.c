@@ -146,7 +146,7 @@ s8 D_800DCDB0[16][2] = {
 // Checksum count for obj_loop_goldenballoon
 s32 gObjLoopGoldenBalloonChecksum = 0xA597;
 
-FadeTransition gDoorFadeTransition = FADE_TRANSITION(0, FADE_COLOR_BLACK, 50, -1);
+FadeTransition gDoorFadeTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 50, -1);
 
 /*******************************/
 

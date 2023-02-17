@@ -116,8 +116,8 @@ s32 check_imem_validity(void);
 void ingame_logic_loop(s32 updateRate);
 void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId);
 void func_8006A6B0(void);
-void func_8006ECFC(s32 numberOfPlayers);
-void func_8006EFDC(void);
+void calc_and_alloc_heap_for_hud(s32 numberOfPlayers);
+void default_alloc_heap_for_hud(void);
 
 //Non Matching
 void func_8006DCF8(s32 updateRate);

@@ -12,11 +12,17 @@
 #define FADE_BARNDOOR_DIAGONAL   5
 #define FADE_DISABLED            6
 
+//Fade transiton flags live at the top two bits of the fade type.
+#define FADE_FLAG_NONE 0
+#define FADE_FLAG_UNK1 (1 << 6)
+#define FADE_FLAG_UNK2 (1 << 7)
+#define FADE_FLAG_BOTH (2 << 6)
+
 #define FADE_COLOR(red, green, blue) red, green, blue
 #define FADE_COLOR_BLACK FADE_COLOR(0, 0, 0)
 #define FADE_COLOR_WHITE FADE_COLOR(255, 255, 255)
 
-#define FADE_TRANSITION(type, color, duration, unk6) { type, color, duration, unk6 }
+#define FADE_TRANSITION(type, flags, color, duration, unk6) { (type & 0x3F) | (flags & 0xC0), color, duration, unk6 }
 
 enum TransitionStatus {
     TRANSITION_LEVELSWAP = -1,

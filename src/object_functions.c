@@ -34,8 +34,8 @@
 /************ .data ************/
 
 // Unsure about the signed/unsigned with these arrays.
-FadeTransition D_800DC970 = FADE_TRANSITION(0x40, FADE_COLOR_WHITE, 7, 3);
-FadeTransition D_800DC978 = FADE_TRANSITION(0x00, FADE_COLOR_BLACK, 30, 0xFFFF);
+FadeTransition D_800DC970 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK1, FADE_COLOR_WHITE, 7, 3);
+FadeTransition D_800DC978 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, 0xFFFF);
 
 u16 D_800DC980[20] = {
     0xFF00, 0x0100, 0x0000, 0xFFFF,

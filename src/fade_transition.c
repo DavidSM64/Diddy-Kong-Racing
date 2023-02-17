@@ -250,9 +250,9 @@ s32 transition_begin(FadeTransition *transition) {
     sTransitionFadeTimer = transition->duration;
     D_800E31B8 = transition->duration;
     sTransitionFlags = transition->unk6;
-    D_800E31BC = !(transition->type & 0x80);
+    D_800E31BC = !(transition->type & FADE_FLAG_UNK2);
     gCurFadeTransition = transition->type & 0x3F;
-    D_800E31A8 = transition->type & 0x40;
+    D_800E31A8 = transition->type & FADE_FLAG_UNK1;
     sLevelTransitionDelayTimer = 0;
     if (!D_800E31BC && !sLevelTransitionDelayTimer) {
         sLevelTransitionDelayTimer = 2; 

@@ -106,15 +106,15 @@ s32 gNumHudVertsPerPlayer[4] = { 300, 600, 850, 900 };
 s32 gNumHudMatPerPlayer[4] = { 300, 400, 550, 600 };
 s32 gNumHudTrisPerPlayer[4] = { 20, 30, 40, 50 };
 s8 gDrawFrameTimer = 0;
-FadeTransition D_800DD3F4 = FADE_TRANSITION(128, FADE_COLOR_BLACK, 20, 0);
-UNUSED FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
+FadeTransition D_800DD3F4 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK2, FADE_COLOR_BLACK, 20, 0);
+UNUSED FadeTransition D_800DD3FC = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 20, -1);
 s32 sLogicUpdateRate = LOGIC_5FPS;
-FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
+FadeTransition D_800DD408 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 30, -1);
 UNUSED char *D_800DD410[3] = {
     (char *)sDebugCarString, (char *)sDebugHovercraftString, (char *)sDebugPlaneString
 };
-FadeTransition D_800DD41C = FADE_TRANSITION(0, FADE_COLOR_BLACK, 30, -1);
-FadeTransition D_800DD424 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 260, -1);
+FadeTransition D_800DD41C = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
+FadeTransition D_800DD424 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 260, -1);
 /*******************************/
 
 /************ .bss ************/
@@ -933,7 +933,7 @@ void init_game(void) {
     init_particle_assets();
     func_800AB1F0();
     calc_and_alloc_heap_for_settings();
-    func_8006EFDC();
+    default_alloc_heap_for_hud();
     load_fonts();
     init_controller_paks();
     func_80081218();
@@ -1088,7 +1088,7 @@ void func_8006CAE4(s32 arg0, s32 arg1, Vehicle vehicle) {
  * Needs a better name!
  */
 void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId) {
-    func_8006ECFC(numberOfPlayers);
+    calc_and_alloc_heap_for_hud(numberOfPlayers);
     set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
@@ -1512,7 +1512,7 @@ UNUSED void set_render_context(s32 changeTo) {
 }
 
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
-    func_8006ECFC(0);
+    calc_and_alloc_heap_for_hud(0);
     sRenderContext = DRAW_MENU;
     D_801234F0 = 1;
     set_sound_channel_volume(0, 32767);
@@ -1959,7 +1959,7 @@ void func_8006ECE0(void) {
 /**
  * Allocates an amount of memory for the number of players passed in.
  */
-void func_8006ECFC(s32 numberOfPlayers) {
+void calc_and_alloc_heap_for_hud(s32 numberOfPlayers) {
     s32 newVar;
     s32 totalSize;
 
@@ -1985,7 +1985,7 @@ void func_8006ECFC(s32 numberOfPlayers) {
                 free_from_memory_pool(gDisplayLists[1]);
                 gDisplayLists[1] = NULL;
             }
-            func_8006EFDC();
+            default_alloc_heap_for_hud();
         }
         gHudMatrices[0] = (MatrixS *)((u8 *) gDisplayLists[0] + ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords))));
         gHudTriangles[0] = (TriangleList *)((u8 *) gHudMatrices[0] + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix))));
@@ -2021,7 +2021,7 @@ s32 check_dmem_validity(void) {
 /**
  * Defaults allocations for 4 players
  */
-void func_8006EFDC(void) {
+void default_alloc_heap_for_hud(void) {
     s32 numberOfPlayers;
     s32 totalSize;
 
@@ -2070,8 +2070,7 @@ void func_8006F140(s32 arg0) {
     }
 }
 
-// Unused?
-void func_8006F20C(void) {
+UNUSED void func_8006F20C(void) {
     if (gLevelLoadTimer == 0) {
         transition_begin(&D_800DD41C);
         gLevelLoadTimer = 40;
