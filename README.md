@@ -5,11 +5,11 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of February 10, 2023, this is our current score:
+As of February 17, 2023, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 49.78%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 50.08%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 23.09%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 23.22%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -128,30 +128,30 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of February 10, 2023, this is our current score:
+As of February 17, 2023, this is our current score:
 ```
  ===================================================================
                ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------- 49.78% Complete -------------------------
-                    # Decompiled functions: 1478
-                     # GLOBAL_ASM remaining: 353
+ ------------------------- 50.08% Complete -------------------------
+                    # Decompiled functions: 1481
+                     # GLOBAL_ASM remaining: 350
                     # NON_MATCHING functions: 10
                  # NON_EQUIVALENT WIP functions: 63
  --------------------------- Game Status ---------------------------
-              Balloons: 24/47, Keys: 3/4, Trophies: 2/5
+              Balloons: 25/47, Keys: 3/4, Trophies: 2/5
                T.T. Amulets: 2/4, Wizpig Amulets: 2/4
  -------------------------------------------------------------------
-              We are racing in Pirate Lagoon. (Lap 3/3)
+             We are racing in Treasure Caves. (Lap 1/3)
  ===================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 23.09% Complete -------------------------
-                     # Documented functions: 427
-                   # Undocumented remaining: 1139
+ ------------------------- 23.22% Complete -------------------------
+                     # Documented functions: 429
+                   # Undocumented remaining: 1137
  --------------------------- Game Status ---------------------------
               Balloons: 12/47, Keys: 1/4, Trophies: 0/5
                T.T. Amulets: 1/4, Wizpig Amulets: 1/4
  -------------------------------------------------------------------
- We are participating in the Trophy Race of Dino Domain. (Round One)
+ We are participating in the Trophy Race of Dino Domain. (Round Two)
  ===================================================================
 ```
 <!-- README_SCORE_END -->
