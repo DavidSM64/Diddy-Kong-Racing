@@ -104,8 +104,8 @@ s32 gTrackSelectViewPortX;
 s32 gTrackSelectViewportY;
 s32 D_80126484;
 s32 D_80126488;
-s32 D_8012648C;
-s32 D_80126490;
+s32 gSaveFileIndex3;
+s32 gSaveFileIndex2;
 s32 D_80126494;
 s32 D_80126498;
 s32 D_8012649C;
@@ -3049,7 +3049,7 @@ void menu_save_options_init(void) {
     D_800DFC50[0].texture = D_80126550[TEXTURE_ICON_SAVE_CPAK];
     D_800DFC60[0].texture = D_80126550[TEXTURE_ICON_SAVE_BIN];
     func_8008E4B0();
-    func_8006EBA8();
+    mark_read_all_save_files();
     transition_begin(&sMenuTransitionFadeOut);
 }
 
@@ -4719,7 +4719,7 @@ void menu_game_select_init(void) {
     D_800DF460 = 0;
     D_801263E0 = 2;
     transition_begin(&sMenuTransitionFadeOut);
-    func_8006EBA8();
+    mark_read_all_save_files();
     func_8001B790();
     gOpacityDecayTimer = 1;
     func_8009C6D4(0x43);
@@ -4892,7 +4892,7 @@ void menu_file_select_init(void) {
     func_8009C674(D_800E0398);
     allocate_menu_images(D_800E03A4);
     func_8007FFEC(6);
-    func_8006EBA8();
+    mark_read_all_save_files();
     gOpacityDecayTimer = 1;
     gSaveFileIndex = 0;
     gMenuDelay = 0;
@@ -5010,12 +5010,12 @@ void render_file_select_menu(UNUSED s32 updateRate) {
     for (i = 0; i < 3; i++) {
         s2 = FALSE;
         if (D_80126484 != FALSE) {
-            if (D_80126494 == 0 && i == D_8012648C) {
+            if (D_80126494 == 0 && i == gSaveFileIndex3) {
                 s2 = TRUE;
-            } else if (D_80126494 > 0 && i == D_80126490) {
+            } else if (D_80126494 > 0 && i == gSaveFileIndex2) {
                 s2 = TRUE;
             }
-        } else if (D_80126488 != FALSE && i == D_8012648C) {
+        } else if (D_80126488 != FALSE && i == gSaveFileIndex3) {
             s2 = TRUE;
         } else if (D_801263E0 == 0 && i == gSaveFileIndex) {
             s2 = TRUE;
@@ -5110,13 +5110,13 @@ s32 func_8008D5F8(UNUSED s32 updateRate) {
                 return 1;
             case 1:
                 play_sound_global(SOUND_SELECT2, NULL);
-                D_8012648C = gSaveFileIndex;
+                gSaveFileIndex3 = gSaveFileIndex;
                 D_80126484 = TRUE;
                 D_80126494 = 0;
                 return 0;
             case 2:
                 play_sound_global(SOUND_SELECT2, NULL);
-                D_8012648C = gSaveFileIndex;
+                gSaveFileIndex3 = gSaveFileIndex;
                 D_80126488 = TRUE;
                 D_80126494 = 0;
                 return 0;
@@ -5192,35 +5192,35 @@ void func_8008D8BC(UNUSED s32 updateRate) {
             return;
         }
         if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
-            if (gSavefileInfo[D_8012648C].isStarted) {
+            if (gSavefileInfo[gSaveFileIndex3].isStarted) {
                 play_sound_global(SOUND_SELECT2, NULL);
-                func_8006EB78(D_8012648C);
-                D_80126490 = D_8012648C;
+                func_8006EB78(gSaveFileIndex3);
+                gSaveFileIndex2 = gSaveFileIndex3;
                 D_80126494 = 1;
                 return;
             }
             play_sound_global(SOUND_MENU_BACK3, NULL);
             return;
         }
-        prevValue = D_8012648C;
-        if ((xAxisDirection < 0) && (D_8012648C > 0)) {
-            D_8012648C--;
+        prevValue = gSaveFileIndex3;
+        if ((xAxisDirection < 0) && (gSaveFileIndex3 > 0)) {
+            gSaveFileIndex3--;
         }
-        if ((xAxisDirection > 0) && (D_8012648C < 2)) {
-            D_8012648C++;
+        if ((xAxisDirection > 0) && (gSaveFileIndex3 < 2)) {
+            gSaveFileIndex3++;
         }
-        if (prevValue != D_8012648C) {
+        if (prevValue != gSaveFileIndex3) {
             play_sound_global(SOUND_MENU_PICK2, NULL);
         }
     } else if (D_80126494 == 1) {
         if (buttonsPressed & B_BUTTON) {
             play_sound_global(SOUND_MENU_BACK3, NULL);
-            D_8012648C = D_80126490;
+            gSaveFileIndex3 = gSaveFileIndex2;
             D_80126494 = 0;
             return;
         }
         if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
-            if (!gSavefileInfo[D_80126490].isStarted) {
+            if (!gSavefileInfo[gSaveFileIndex2].isStarted) {
                 play_sound_global(SOUND_SELECT2, NULL);
                 D_80126494 = 2;
                 return;
@@ -5228,31 +5228,31 @@ void func_8008D8BC(UNUSED s32 updateRate) {
             play_sound_global(SOUND_MENU_BACK3, NULL);
             return;
         }
-        prevValue = D_80126490;
-        if ((xAxisDirection < 0) && (D_80126490 > 0)) {
-            D_80126490--;
+        prevValue = gSaveFileIndex2;
+        if ((xAxisDirection < 0) && (gSaveFileIndex2 > 0)) {
+            gSaveFileIndex2--;
         }
-        if ((xAxisDirection > 0) && (D_80126490 < 2)) {
-            D_80126490++;
+        if ((xAxisDirection > 0) && (gSaveFileIndex2 < 2)) {
+            gSaveFileIndex2++;
         }
-        if (prevValue != D_80126490) {
+        if (prevValue != gSaveFileIndex2) {
             play_sound_global(SOUND_MENU_PICK2, NULL);
         }
     } else {
         if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
             play_sound_global(SOUND_SELECT2, NULL);
-            func_8006EC18(D_80126490);
-            gSavefileInfo[D_80126490].isAdventure2 = FALSE;
-            gSavefileInfo[D_80126490].isStarted = TRUE;
-            gSavefileInfo[D_80126490].balloonCount = *settings->balloonsPtr;
+            force_mark_write_save_file(gSaveFileIndex2);
+            gSavefileInfo[gSaveFileIndex2].isAdventure2 = FALSE;
+            gSavefileInfo[gSaveFileIndex2].isStarted = TRUE;
+            gSavefileInfo[gSaveFileIndex2].balloonCount = *settings->balloonsPtr;
             if (settings->cutsceneFlags & CUTSCENE_ADVENTURE_TWO) {
-                gSavefileInfo[D_80126490].isAdventure2 = TRUE;
+                gSavefileInfo[gSaveFileIndex2].isAdventure2 = TRUE;
             }
-            for (i = 0; gSavefileInfo[D_8012648C].name[i] != '\0'; i++) {
-                gSavefileInfo[D_80126490].name[i] = gSavefileInfo[D_8012648C].name[i];
+            for (i = 0; gSavefileInfo[gSaveFileIndex3].name[i] != '\0'; i++) {
+                gSavefileInfo[gSaveFileIndex2].name[i] = gSavefileInfo[gSaveFileIndex3].name[i];
             }
-            gSavefileInfo[D_80126490].name[i] = '\0';
-            gSaveFileIndex = D_80126490;
+            gSavefileInfo[gSaveFileIndex2].name[i] = '\0';
+            gSaveFileIndex = gSaveFileIndex2;
             D_801263E0 = 0;
             D_80126484 = FALSE;
             return;
@@ -5283,7 +5283,7 @@ void func_8008DC7C(UNUSED s32 updateRate) {
             D_80126488 = FALSE;
             return;
         } else if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
-            if (gSavefileInfo[D_8012648C].isStarted != 0) {
+            if (gSavefileInfo[gSaveFileIndex3].isStarted != 0) {
                 play_sound_global(SOUND_SELECT2, NULL);
                 D_80126494 = 1;
                 return;
@@ -5292,37 +5292,37 @@ void func_8008DC7C(UNUSED s32 updateRate) {
             return;
         }
 
-        temp = D_8012648C;
+        temp = gSaveFileIndex3;
 
         //Left
         if (controllerXAxisDirection < 0) {
-            if (D_8012648C > 0) {
-                D_8012648C--;
+            if (gSaveFileIndex3 > 0) {
+                gSaveFileIndex3--;
             }
         }
 
         //Right
         if (controllerXAxisDirection > 0) {
-            if (D_8012648C < 2) {
-                D_8012648C++;
+            if (gSaveFileIndex3 < 2) {
+                gSaveFileIndex3++;
             }
         }
 
-        if (D_8012648C != temp) {
+        if (gSaveFileIndex3 != temp) {
             play_sound_global(SOUND_MENU_PICK2, NULL);
         }
     } else {
         if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
             play_sound_global(SOUND_SELECT2, NULL);
-            func_8006ECAC(D_8012648C);
-            gSavefileInfo[D_8012648C].isAdventure2 = 0;
-            gSavefileInfo[D_8012648C].isStarted = 0;
-            gSavefileInfo[D_8012648C].balloonCount = 0;
-            gSavefileInfo[D_8012648C].name[0] = 'D';
-            gSavefileInfo[D_8012648C].name[1] = 'K';
-            gSavefileInfo[D_8012648C].name[2] = 'R';
-            gSavefileInfo[D_8012648C].name[3] = '\0';
-            gSaveFileIndex = D_8012648C;
+            mark_save_file_to_erase(gSaveFileIndex3);
+            gSavefileInfo[gSaveFileIndex3].isAdventure2 = 0;
+            gSavefileInfo[gSaveFileIndex3].isStarted = 0;
+            gSavefileInfo[gSaveFileIndex3].balloonCount = 0;
+            gSavefileInfo[gSaveFileIndex3].name[0] = 'D';
+            gSavefileInfo[gSaveFileIndex3].name[1] = 'K';
+            gSavefileInfo[gSaveFileIndex3].name[2] = 'R';
+            gSavefileInfo[gSaveFileIndex3].name[3] = '\0';
+            gSaveFileIndex = gSaveFileIndex3;
             D_801263E0 = 0;
             D_80126488 = FALSE;
         } else if (buttonsPressed & B_BUTTON) {
@@ -8310,7 +8310,7 @@ s32 get_multiplayer_racer_count(void) {
     return (gMultiplayerSelectedNumberOfRacers + 1) << 1; // Doesn't match with multiply.
 }
 
-Settings **func_8009C490(void) {
+Settings **get_all_save_files_ptr(void) {
     return (Settings **)gSavefileData;
 }
 
@@ -9071,13 +9071,13 @@ u64 *get_eeprom_settings_pointer(void) {
 
 s32 set_eeprom_settings_value(u64 valueToSet) {
     sEepromSettings |= valueToSet;
-    func_8006ECE0();
+    mark_write_eeprom_settings();
     return TRUE;
 }
 
 s32 unset_eeprom_settings_value(u64 valueToUnset) {
     sEepromSettings &= ~valueToUnset;
-    func_8006ECE0();
+    mark_write_eeprom_settings();
     return TRUE;
 }
 
@@ -9129,7 +9129,7 @@ void set_language(s32 language) {
     sEepromSettings |= langFlag; //Then set them according to the selected lang
 
     load_menu_text(language);
-    func_8006ECE0();
+    mark_write_eeprom_settings();
 }
 
 /**

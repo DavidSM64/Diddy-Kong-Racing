@@ -220,7 +220,7 @@ void func_80072708(void) {
     D_800DE48C = 3;
 }
 
-void rumble_controllers(s32 arg0) {
+void rumble_controllers(s32 updateRate) {
     unk_801241B8 *temp;
     s32 pfsStatus;
     u8 i;
@@ -228,7 +228,7 @@ void rumble_controllers(s32 arg0) {
     u8 pfsBitPattern;
 
     if ((D_801241E6 != 0) || ((D_800DE48C != 0))) {
-        gRumbleDetectionTimer += arg0;
+        gRumbleDetectionTimer += updateRate;
         if (gRumbleDetectionTimer >= 121) {
             gRumbleDetectionTimer = 0;
             osPfsIsPlug(sControllerMesgQueue, &pfsBitPattern);
@@ -264,8 +264,8 @@ void rumble_controllers(s32 arg0) {
                         temp->unk8 = 0;
                         osMotorStop(&pfs[i]);
                     } else {
-                        temp->unk4 -= arg0;
-                        temp->unk8 += arg0;
+                        temp->unk4 -= updateRate;
+                        temp->unk8 += updateRate;
                         if (temp->unk8 < 0) {
                             continue;
                         } else if (temp->unk8 >= 601) {
@@ -833,7 +833,7 @@ s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1) {
 }
 
 // Returns TRUE / FALSE for whether a given save file is a new game. Also populates the settings object.
-s32 func_80074204(s32 saveFileNum, Settings *settings) {
+s32 read_save_file(s32 saveFileNum, Settings *settings) {
     s32 startingAddress;
     u64 *saveData;
     s32 address;
@@ -975,7 +975,7 @@ s32 write_save_data(s32 saveFileNum, Settings *settings) {
 /**
  * Read Eeprom Data for addresses 0x10 - 0x39
  * arg1 is a flag
- * arg1 is descended from (D_800DD37C & 3) so the first 2 bits of that value.
+ * arg1 is descended from (gSaveDataFlags & 3) so the first 2 bits of that value.
  * bit 1 is for 0x10 - 0x27
  * bit 2 is for 0x28 - 0x39
  */

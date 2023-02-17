@@ -143,7 +143,7 @@ void copy_viewports_to_stack(void);
 
 // Non Matching
 void func_80065EA0(void);
-s32 func_8006A1C4(s32 arg0, s32 logicUpdateRate);
+s32 func_8006A1C4(s32 saveDataFlags, s32 logicUpdateRate);
 void func_80066CDC(Gfx **dlist, MatrixS **mats);
 
 #endif
