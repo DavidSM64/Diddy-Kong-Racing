@@ -138,7 +138,8 @@ OSMesg sSIMesgBuf;
 OSMesg gSIMesg;
 OSContStatus status;
 UNUSED s32 D_80121108[2]; //Padding?
-OSContPad sControllerData[MAXCONTROLLERS*2];
+OSContPad sControllerCurrData[MAXCONTROLLERS];
+OSContPad sControllerPrevData[MAXCONTROLLERS];
 u16 gControllerButtonsPressed[MAXCONTROLLERS];
 u16 gControllerButtonsReleased[MAXCONTROLLERS];
 u8 sPlayerID[16];
@@ -1410,19 +1411,18 @@ s32 init_controllers(void) {
     return CONTROLLER_MISSING;
 }
 
-#ifdef NON_EQUIVALENT
 s32 func_8006A1C4(s32 saveDataFlags, s32 updateRate) {
-    OSMesg unusedMsg;
     Settings **allSaves;
+    OSMesg unusedMsg;
     Settings *settings;
-    s32 i, j;
+    s32 i;
 
     if (osRecvMesg(&sSIMesgQueue, &unusedMsg, OS_MESG_NOBLOCK) == 0) {
-        //Back up old controller data?
-        for (i = 4; i < 8; i++) {
-            sControllerData[i] =  sControllerData[i-4];
+        //Back up old controller data
+        for (i = 0; i < MAXCONTROLLERS; i++) {
+            sControllerPrevData[i] = sControllerCurrData[i];
         }
-        osContGetReadData(sControllerData);
+        osContGetReadData(sControllerCurrData);
         if (saveDataFlags != 0) {
             settings = get_settings();
             if (SAVE_DATA_FLAG_READ_EEPROM_INDEX(saveDataFlags)) {
@@ -1460,19 +1460,16 @@ s32 func_8006A1C4(s32 saveDataFlags, s32 updateRate) {
         rumble_controllers(updateRate);
         osContStartReadData(&sSIMesgQueue);
     }
-    for (i = 0, j = 4; i < 4; j++, i++) {
+    for (i = 0; i < MAXCONTROLLERS; i++) {
         if (sNoControllerPluggedIn) {
-            sControllerData[i].button = 0;
+            sControllerCurrData[i].button = 0;
         }
-        //TODO: This is the bad place that needs fixing
-        gControllerButtonsPressed[i] = sControllerData[i].button & (sControllerData[j].button ^ sControllerData[i].button) & gButtonMask;
-        gControllerButtonsReleased[i] = sControllerData[j].button & (sControllerData[i].button ^ sControllerData[j].button) & gButtonMask;
+        //XOR the diff between the last read of the controller data with the current read to see what buttosn have been pushed and released.
+        gControllerButtonsPressed[i]  = ((sControllerCurrData[i].button ^ sControllerPrevData[i].button) & sControllerCurrData[i].button) & gButtonMask;
+        gControllerButtonsReleased[i] = ((sControllerCurrData[i].button ^ sControllerPrevData[i].button) & sControllerPrevData[i].button) & gButtonMask;
     }
     return saveDataFlags;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/camera/func_8006A1C4.s")
-#endif
 
 /**
  * Set the first 4 player ID's to the controller numbers, so players can input in the menus after boot.
@@ -1528,7 +1525,7 @@ void swap_player_1_and_2_ids(void) {
  * Official name: joyGetButtons
  */
 u16 get_buttons_held_from_player(s32 player) {
-    return sControllerData[sPlayerID[player]].button;
+    return sControllerCurrData[sPlayerID[player]].button;
 }
 
 /**
@@ -1550,14 +1547,14 @@ u16 get_buttons_released_from_player(s32 player) {
  * Clamps the X joystick axis of the selected player to 70 and returns it.
  */
 s8 clamp_joystick_x_axis(s32 player) {
-    return clamp_joystick(sControllerData[sPlayerID[player]].stick_x);
+    return clamp_joystick(sControllerCurrData[sPlayerID[player]].stick_x);
 }
 
 /**
  * Clamps the Y joystick axis of the selected player to 70 and returns it.
  */
 s8 clamp_joystick_y_axis(s32 player) {
-    return clamp_joystick(sControllerData[sPlayerID[player]].stick_y);
+    return clamp_joystick(sControllerCurrData[sPlayerID[player]].stick_y);
 }
 
 /**
