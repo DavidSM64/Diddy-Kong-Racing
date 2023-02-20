@@ -1468,7 +1468,7 @@ s32 handle_save_data_and_read_controller(s32 saveDataFlags, s32 updateRate) {
         if (sNoControllerPluggedIn) {
             sControllerCurrData[i].button = 0;
         }
-        //XOR the diff between the last read of the controller data with the current read to see what buttosn have been pushed and released.
+        //XOR the diff between the last read of the controller data with the current read to see what buttons have been pushed and released.
         gControllerButtonsPressed[i]  = ((sControllerCurrData[i].button ^ sControllerPrevData[i].button) & sControllerCurrData[i].button) & gButtonMask;
         gControllerButtonsReleased[i] = ((sControllerCurrData[i].button ^ sControllerPrevData[i].button) & sControllerPrevData[i].button) & gButtonMask;
     }
