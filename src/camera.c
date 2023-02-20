@@ -1416,8 +1416,6 @@ s32 func_8006A1C4(s32 saveDataFlags, s32 updateRate) {
     Settings **allSaves;
     Settings *settings;
     s32 i, j;
-    OSContPad *curCont;
-    OSContPad *prevCont;
 
     if (osRecvMesg(&sSIMesgQueue, &unusedMsg, OS_MESG_NOBLOCK) == 0) {
         //Back up old controller data?
@@ -1466,10 +1464,9 @@ s32 func_8006A1C4(s32 saveDataFlags, s32 updateRate) {
         if (sNoControllerPluggedIn) {
             sControllerData[i].button = 0;
         }
-        curCont = &sControllerData[i];
-        prevCont = &sControllerData[j];
-        gControllerButtonsPressed[i] = curCont->button & (curCont->button ^ prevCont->button) & gButtonMask;
-        gControllerButtonsReleased[i] = prevCont->button & (curCont->button ^ prevCont->button) & gButtonMask;
+        //TODO: This is the bad place that needs fixing
+        gControllerButtonsPressed[i] = sControllerData[i].button & (sControllerData[j].button ^ sControllerData[i].button) & gButtonMask;
+        gControllerButtonsReleased[i] = sControllerData[j].button & (sControllerData[i].button ^ sControllerData[j].button) & gButtonMask;
     }
     return saveDataFlags;
 }

@@ -123,10 +123,10 @@ glabel func_8006A1C4
 /* 06AF78 8006A378 3C028012 */  lui   $v0, %hi(sControllerData) # $v0, 0x8012
 /* 06AF7C 8006A37C 3C088012 */  lui   $t0, %hi(gControllerButtonsPressed) # $t0, 0x8012
 /* 06AF80 8006A380 3C078012 */  lui   $a3, %hi(gControllerButtonsReleased) # $a3, 0x8012
-/* 06AF84 8006A384 3C0B8012 */  lui   $t3, %hi(sPlayerID) # $t3, 0x8012
+/* 06AF84 8006A384 3C0B8012 */  lui   $t3, %hi(gControllerButtonsReleased) # $t3, 0x8012
 /* 06AF88 8006A388 9529D304 */  lhu   $t1, %lo(gButtonMask)($t1)
 /* 06AF8C 8006A38C 8D4AD300 */  lw    $t2, %lo(sNoControllerPluggedIn)($t2)
-/* 06AF90 8006A390 256B1150 */  addiu $t3, %lo(sPlayerID) # addiu $t3, $t3, 0x1150
+/* 06AF90 8006A390 256B1150 */  addiu $t3, %lo(gControllerButtonsReleased+0x8) # addiu $t3, $t3, 0x1150
 /* 06AF94 8006A394 24E71148 */  addiu $a3, %lo(gControllerButtonsReleased) # addiu $a3, $a3, 0x1148
 /* 06AF98 8006A398 25081140 */  addiu $t0, %lo(gControllerButtonsPressed) # addiu $t0, $t0, 0x1140
 /* 06AF9C 8006A39C 24421110 */  addiu $v0, %lo(sControllerData) # addiu $v0, $v0, 0x1110
