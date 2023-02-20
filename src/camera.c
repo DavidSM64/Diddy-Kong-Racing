@@ -1437,23 +1437,26 @@ s32 func_8006A1C4(s32 saveDataFlags, s32 updateRate) {
                 }
             }
             if (saveDataFlags & SAVE_DATA_FLAG_READ_SAVE_DATA) {
-                read_save_file(SAVE_DATA_FLAG_READ_SAVE_FILE_INDEX(saveDataFlags), settings);
+                read_save_file(SAVE_DATA_FLAG_READ_SAVE_FILE_NUMBER(saveDataFlags), settings);
             }
             if (SAVE_DATA_FLAG_WRITE_EEPROM_INDEX(saveDataFlags)) {
                 write_eeprom_data(settings, SAVE_DATA_FLAG_WRITE_EEPROM_INDEX(saveDataFlags));
             }
             if (saveDataFlags & SAVE_DATA_FLAG_WRITE_SAVE_DATA) {
-                write_save_data(SAVE_DATA_FLAG_WRITE_SAVE_FILE_INDEX(saveDataFlags), settings);
+                write_save_data(SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER(saveDataFlags), settings);
             }
             if (saveDataFlags & SAVE_DATA_FLAG_ERASE_SAVE_DATA) {
-                erase_save_file(SAVE_DATA_FLAG_WRITE_SAVE_FILE_INDEX(saveDataFlags), settings);
+                erase_save_file(SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER(saveDataFlags), settings);
             }
+            // @bug These next two if statements check the same bits
+            // as the ones used to set the save file number to read from.
             if (saveDataFlags & SAVE_DATA_FLAG_READ_EEPROM_SETTINGS) {
                 read_eeprom_settings(get_eeprom_settings_pointer());
             }
             if (saveDataFlags & SAVE_DATA_FLAG_WRITE_EEPROM_SETTINGS) {
                 write_eeprom_settings(get_eeprom_settings_pointer());
             }
+            //Reset all flags
             saveDataFlags = 0;
         }
         rumble_controllers(updateRate);

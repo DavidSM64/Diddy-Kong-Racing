@@ -152,7 +152,7 @@ glabel L80086CDC
 .L80086D2C:
 /* 08792C 80086D2C 0C01B9DC */  jal   func_8006E770
 /* 087930 80086D30 24050003 */   li    $a1, 3
-/* 087934 80086D34 0C01BAFF */  jal   set_to_eeprom_write_file_3
+/* 087934 80086D34 0C01BAFF */  jal   mark_to_write_flap_and_course_times
 /* 087938 80086D38 00000000 */   nop   
 /* 08793C 80086D3C 3C0500FF */  lui   $a1, (0x00FFFFF0 >> 16) # lui $a1, 0xff
 /* 087940 80086D40 34A5FFF0 */  ori   $a1, (0x00FFFFF0 & 0xFFFF) # ori $a1, $a1, 0xfff0
@@ -367,7 +367,7 @@ glabel L80086F74
 /* 087C54 80087054 00C02825 */   move  $a1, $a2
 /* 087C58 80087058 AFA20038 */  sw    $v0, 0x38($sp)
 .L8008705C:
-/* 087C5C 8008705C 0C01BAD7 */  jal   set_to_eeprom_read_file_3
+/* 087C5C 8008705C 0C01BAD7 */  jal   mark_to_read_flap_and_course_times
 /* 087C60 80087060 00000000 */   nop   
 /* 087C64 80087064 10000059 */  b     .L800871CC
 /* 087C68 80087068 8FBF0014 */   lw    $ra, 0x14($sp)

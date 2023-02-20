@@ -1777,7 +1777,11 @@ void calc_and_alloc_heap_for_settings(void) {
     gSettingsPtr->courseTimesPtr[1] = (u16 *)((u8 *)gSettingsPtr + sizes[12]);
     gSettingsPtr->courseTimesPtr[2] = (u16 *)((u8 *)gSettingsPtr + sizes[13]);
     gSettingsPtr->unk4C = (Settings4C *) &D_80121250;
-    gSaveDataFlags = 0x107; // Set bits 0/1/2/8 and wipe out all others
+    gSaveDataFlags = // Set bits 0/1/2/8 and wipe out all others
+        SAVE_DATA_FLAG_READ_FLAP_TIMES |
+        SAVE_DATA_FLAG_READ_COURSE_TIMES |
+        SAVE_DATA_FLAG_READ_SAVE_DATA |
+        SAVE_DATA_FLAG_READ_EEPROM_SETTINGS;
 }
 
 void func_8006E5BC(void) {
@@ -1897,33 +1901,34 @@ s32 func_8006EB14(void) {
 }
 
 /**
- * Sets the data to read eeprom from file 1
+ * Marks a flag to read flap times from the eeprom
  */
-UNUSED void set_to_eeprom_read_file_1(void) {
-    gSaveDataFlags |= SAVE_DATA_FLAG_INDEX_VALUE & 1;
+UNUSED void mark_to_read_flap_times(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_READ_FLAP_TIMES;
 }
 
 /**
- * Sets the data to read eeprom from file 2
+ * Marks a flag to read course times from the eeprom
  */
-UNUSED void set_to_eeprom_read_file_2(void) {
-    gSaveDataFlags |= SAVE_DATA_FLAG_INDEX_VALUE & 2;
+UNUSED void mark_to_read_course_times(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_READ_COURSE_TIMES;
 }
 
 /**
- * Sets the data to read eeprom from file 3
+ * Marks a flag to read both flap times and course times from the eeprom
  */
-void set_to_eeprom_read_file_3(void) {
-    gSaveDataFlags |= SAVE_DATA_FLAG_INDEX_VALUE & 3;
+void mark_to_read_flap_and_course_times(void) {
+    gSaveDataFlags |= (SAVE_DATA_FLAG_READ_FLAP_TIMES | SAVE_DATA_FLAG_READ_COURSE_TIMES);
 }
 
 /**
  * Marks a flag to read the save file from the passed index from flash.
  */
 void mark_read_save_file(s32 saveFileIndex) {
-    gSaveDataFlags &= ~0x300; //Wipe out bits 8 and 9
+    //Wipe out bits 8 and 9
+    gSaveDataFlags &= ~(SAVE_DATA_FLAG_READ_EEPROM_SETTINGS | SAVE_DATA_FLAG_WRITE_EEPROM_SETTINGS);
     //Place saveFileIndex at bits 8 and 9 and set bit 2
-    gSaveDataFlags |= (SAVE_DATA_FLAG_READ_SAVE_DATA | ((saveFileIndex & 3) << 8));
+    gSaveDataFlags |= (SAVE_DATA_FLAG_READ_SAVE_DATA | ((saveFileIndex & SAVE_DATA_FLAG_INDEX_VALUE) << 8));
 }
 
 /**
@@ -1934,32 +1939,32 @@ void mark_read_all_save_files(void) {
 }
 
 /**
- * Sets the data to write eeprom to file 1
+ * Marks a flag to write flap times to the eeprom
  */
-void set_to_eeprom_write_file_1(void) {
-    gSaveDataFlags |= 0x10;
+void mark_to_write_flap_times(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_WRITE_FLAP_TIMES;
 }
 
 /**
- * Sets the data to write eeprom to file 2
+ * Marks a flag to write course times to the eeprom
  */
-void set_to_eeprom_write_file_2(void) {
-    gSaveDataFlags |= 0x20;
+void mark_to_write_course_times(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_WRITE_COURSE_TIMES;
 }
 
 /**
- * Sets the data to write eeprom to file 3
+ * Marks a flag to write both flap times and course times to the eeprom
  */
-void set_to_eeprom_write_file_3(void) {
-    gSaveDataFlags |= SAVE_DATA_FLAG_WRITE_EEPROM_BITS;
+void mark_to_write_flap_and_course_times(void) {
+    gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_FLAP_TIMES | SAVE_DATA_FLAG_WRITE_COURSE_TIMES);
 }
 
 /**
  * Forcefully marks a flag to write a save file to flash.
  */
 void force_mark_write_save_file(s32 saveFileIndex) {
-    gSaveDataFlags &= ~0xC00; //0xFFFFF3FF - Wipe out bits 10 and 11
-    gSaveDataFlags |= (0x40 | ((saveFileIndex & 3) << 10)); //Set bit 6 and place saveFileIndex into bits 10 and 11
+    gSaveDataFlags &= ~SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER_BITS; //Wipe out bits 10 and 11
+    gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_SAVE_DATA | ((saveFileIndex & 3) << 10)); //Set bit 6 and place saveFileIndex into bits 10 and 11
 }
 
 /**
@@ -1968,8 +1973,8 @@ void force_mark_write_save_file(s32 saveFileIndex) {
  */
 void safe_mark_write_save_file(s32 saveFileIndex) {
     if (sRenderContext == DRAW_GAME && !is_in_tracks_mode()) {
-        gSaveDataFlags &= ~0xC00; //0xFFFFF3FF - Wipe out bits 10 and 11
-        gSaveDataFlags |= (0x40 | ((saveFileIndex & 3) << 10));; //Set bit 6 and place saveFileIndex into bits 10 and 11
+        gSaveDataFlags &= ~SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER_BITS; //Wipe out bits 10 and 11
+        gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_SAVE_DATA | ((saveFileIndex & 3) << 10));; //Set bit 6 and place saveFileIndex into bits 10 and 11
     }
 }
 
@@ -1978,21 +1983,25 @@ void safe_mark_write_save_file(s32 saveFileIndex) {
  */
 void mark_save_file_to_erase(s32 saveFileIndex) {
     //Set bit 7 and and place saveFileIndex into bits 10 and 11 while wiping everything else
-    gSaveDataFlags = ((saveFileIndex & 0x03) << 10) | 0x80;
+    gSaveDataFlags = SAVE_DATA_FLAG_ERASE_SAVE_DATA | ((saveFileIndex & 3) << 10);
 }
 
 /**
  * Marks a flag to read eeprom settings from flash later
+ * @bug: Because this is the same bit used for reading save files,
+ *       it will change the save file number to read from
  */
 UNUSED void mark_read_eeprom_settings(void) {
-    gSaveDataFlags |= 0x100; // Set bit 8
+    gSaveDataFlags |= SAVE_DATA_FLAG_READ_EEPROM_SETTINGS; // Set bit 8
 }
 
 /**
  * Marks a flag to write eeprom settings to flash later
+ * @bug: Because this is the same bit used for reading save files,
+ *       it will change the save file number to read from
  */
 void mark_write_eeprom_settings(void) {
-    gSaveDataFlags |= 0x200; // Set bit 9
+    gSaveDataFlags |= SAVE_DATA_FLAG_WRITE_EEPROM_SETTINGS; // Set bit 9
 }
 
 /**

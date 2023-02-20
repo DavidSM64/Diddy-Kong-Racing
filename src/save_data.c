@@ -792,7 +792,7 @@ s32 read_time_data_from_controller_pak(s32 controllerIndex, char *fileExt, Setti
             status = read_data_from_controller_pak(controllerIndex, fileNumber, (u8 *)cpakData, fileSize);
             if (status == CONTROLLER_PAK_GOOD) {
                 if (*cpakData == TIMD) {
-                    func_80073588(settings, (u8 *) (cpakData + 1), 3);
+                    func_80073588(settings, (u8 *) (cpakData + 1), SAVE_DATA_FLAG_READ_FLAP_TIMES | SAVE_DATA_FLAG_READ_COURSE_TIMES);
                 } else {
                     status = CONTROLLER_PAK_BAD_DATA;
                 }
@@ -976,10 +976,10 @@ s32 write_save_data(s32 saveFileNum, Settings *settings) {
  * Read Eeprom Data for addresses 0x10 - 0x39
  * arg1 is a flag
  * arg1 is descended from (gSaveDataFlags & 3) so the first 2 bits of that value.
- * bit 1 is for 0x10 - 0x27
- * bit 2 is for 0x28 - 0x39
+ * bit 1 is for 0x10 - 0x27 - SAVE_DATA_FLAG_READ_FLAP_TIMES
+ * bit 2 is for 0x28 - 0x39 - SAVE_DATA_FLAG_READ_COURSE_TIMES
  */
-s32 read_eeprom_data(Settings *arg0, u8 arg1) {
+s32 read_eeprom_data(Settings *settings, u8 flags) {
     u64 *alloc;
     s32 i;
 
@@ -989,20 +989,20 @@ s32 read_eeprom_data(Settings *arg0, u8 arg1) {
 
     alloc = allocate_from_main_pool_safe(0x200, COLOUR_TAG_WHITE);
 
-    if (arg1 & 1) {
+    if (flags & SAVE_DATA_FLAG_READ_FLAP_TIMES) {
         s32 blocks = 24;
         for (i = 0; i < blocks; i++) {
             osEepromRead(get_si_mesg_queue(), i + 0x10, (u8 *)&alloc[i]);
         }
-        func_80073588(arg0, (u8 *) alloc, 1);
+        func_80073588(settings, (u8 *) alloc, SAVE_DATA_FLAG_READ_FLAP_TIMES);
     }
 
-    if (arg1 & 2) {
+    if (flags & SAVE_DATA_FLAG_READ_COURSE_TIMES) {
         s32 blocks = 24;
         for (i = 0; i < blocks; i++) {
             osEepromRead(get_si_mesg_queue(), i + 0x28, (u8 *)(&alloc[24] + i));
         }
-        func_80073588(arg0, (u8 *) alloc, 2);
+        func_80073588(settings, (u8 *) alloc, SAVE_DATA_FLAG_READ_COURSE_TIMES);
     }
 
     free_from_memory_pool(alloc);
@@ -1013,10 +1013,11 @@ s32 read_eeprom_data(Settings *arg0, u8 arg1) {
  * Write Eeprom Data for addresses 0x10 - 0x39
  * 0x80 - 0x1C8 in file
  * arg1 is a flag
- * bit 1 is for 0x10 - 0x27
- * bit 2 is for 0x28 - 0x39
+ * arg1 is descended from gSaveDataFlags bits 4 and 5.
+ * bit 1 is for 0x10 - 0x27 - SAVE_DATA_FLAG_READ_FLAP_TIMES
+ * bit 2 is for 0x28 - 0x39 - SAVE_DATA_FLAG_READ_COURSE_TIMES
  */
-s32 write_eeprom_data(Settings *arg0, u8 arg1) {
+s32 write_eeprom_data(Settings *settings, u8 flags) {
     u64 *alloc;
     s32 i;
 
@@ -1026,9 +1027,9 @@ s32 write_eeprom_data(Settings *arg0, u8 arg1) {
 
     alloc = allocate_from_main_pool_safe(0x200, COLOUR_TAG_WHITE);
 
-    func_800738A4(arg0, (u8 *)alloc);
+    func_800738A4(settings, (u8 *)alloc);
 
-    if (arg1 & 1) {
+    if (flags & SAVE_DATA_FLAG_READ_FLAP_TIMES) {
         s32 size = 24;
         if (1){} //Fake Match
         if (!is_reset_pressed()) {
@@ -1038,7 +1039,7 @@ s32 write_eeprom_data(Settings *arg0, u8 arg1) {
         }
     }
 
-    if (arg1 & 2) {
+    if (flags & SAVE_DATA_FLAG_READ_COURSE_TIMES) {
         s32 size = 24;
         if (!is_reset_pressed()) {
             for (i = 0; i != size; i++) {

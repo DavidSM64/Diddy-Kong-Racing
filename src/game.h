@@ -36,35 +36,39 @@ enum NumberOfPlayers {
 };
 
 /**
- * Bit 00: Read Eeprom Data Index Part 1
- * Bit 01: Read Eeprom Data Index Part 2
+ * Bit 00: Read Eeprom Data flap times
+ * Bit 01: Read Eeprom Data course times
  * Bit 02: Read Save File from bits 8 and 9
  * Bit 03: Read All Save Files
- * Bit 04: Write Eeprom Data Index Part 1
- * Bit 05: Write Eeprom Data Index Part 2
+ * Bit 04: Write Eeprom Data flap times
+ * Bit 05: Write Eeprom Data course times
  * Bit 06: Write Save Data from bits 10 and 11
  * Bit 07: Erase Save File from bits 10 and 11
- * Bit 08: Read Eeprom settings
- * Bit 09: Write Eeprom Settings
- * Bit 10: Save File Index Part 1
- * Bit 11: Save File Index Part 2
+ * Bit 08: Read Save File Number Part 1 @bug Also Read Eeprom settings
+ * Bit 09: Read Save File Number Part 2 @bug Also Write Eeprom Settings
+ * Bit 10: Write Save File Number Part 1
+ * Bit 11: Write Save File Number Part 2
  */
 extern s32 gSaveDataFlags;
 #define SAVE_DATA_FLAG_INDEX_VALUE (1 << 0 | 1 << 1) //2 bits for 4 different values
+
+#define SAVE_DATA_FLAG_READ_FLAP_TIMES (1 << 0)
+#define SAVE_DATA_FLAG_READ_COURSE_TIMES (1 << 1)
 #define SAVE_DATA_FLAG_READ_SAVE_DATA (1 << 2)
 #define SAVE_DATA_FLAG_READ_ALL_SAVE_DATA (1 << 3)
-#define SAVE_DATA_FLAG_WRITE_EEPROM_BITS (1 << 4 | 1 << 5)
+#define SAVE_DATA_FLAG_WRITE_FLAP_TIMES (1 << 4)
+#define SAVE_DATA_FLAG_WRITE_COURSE_TIMES (1 << 5)
 #define SAVE_DATA_FLAG_WRITE_SAVE_DATA (1 << 6)
 #define SAVE_DATA_FLAG_ERASE_SAVE_DATA (1 << 7)
-#define SAVE_DATA_FLAG_READ_EEPROM_SETTINGS (1 << 8)
-#define SAVE_DATA_FLAG_WRITE_EEPROM_SETTINGS (1 << 9)
-#define SAVE_DATA_FLAG_READ_SAVE_FILE_INDEX_BITS (1 << 8 | 1 << 9) //These are reused?
-#define SAVE_DATA_FLAG_WRITE_SAVE_FILE_INDEX_BITS (1 << 10 | 1 << 11)
+#define SAVE_DATA_FLAG_READ_EEPROM_SETTINGS (1 << 8) //@bug Bits 8 and 9 are reused for checking the read save file number
+#define SAVE_DATA_FLAG_WRITE_EEPROM_SETTINGS (1 << 9) // ^^
+#define SAVE_DATA_FLAG_READ_SAVE_FILE_NUMBER_BITS (1 << 8 | 1 << 9) //These are reused as above
+#define SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER_BITS (1 << 10 | 1 << 11)
 
-#define SAVE_DATA_FLAG_READ_EEPROM_INDEX(flags) (flags & SAVE_DATA_FLAG_INDEX_VALUE)
-#define SAVE_DATA_FLAG_WRITE_EEPROM_INDEX(flags) ((flags & SAVE_DATA_FLAG_WRITE_EEPROM_BITS) >> 4)
-#define SAVE_DATA_FLAG_WRITE_SAVE_FILE_INDEX(flags) ((flags >> 10) & SAVE_DATA_FLAG_INDEX_VALUE)
-#define SAVE_DATA_FLAG_READ_SAVE_FILE_INDEX(flags) ((flags >> 8) & SAVE_DATA_FLAG_INDEX_VALUE)
+#define SAVE_DATA_FLAG_READ_EEPROM_INDEX(flags) (flags & (SAVE_DATA_FLAG_READ_FLAP_TIMES | SAVE_DATA_FLAG_READ_COURSE_TIMES))
+#define SAVE_DATA_FLAG_WRITE_EEPROM_INDEX(flags) (flags & ((SAVE_DATA_FLAG_WRITE_FLAP_TIMES | SAVE_DATA_FLAG_WRITE_COURSE_TIMES) >> 4))
+#define SAVE_DATA_FLAG_READ_SAVE_FILE_NUMBER(flags) ((flags >> 8) & SAVE_DATA_FLAG_INDEX_VALUE)
+#define SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER(flags) ((flags >> 10) & SAVE_DATA_FLAG_INDEX_VALUE)
 
 Vehicle get_map_default_vehicle(s32 mapId);
 s32 get_map_available_vehicles(s32 mapId);
@@ -119,14 +123,14 @@ s8 is_game_paused(void);
 s8 is_postrace_viewport_active(void);
 s32 is_reset_pressed(void);
 s32 func_8006EB14(void);
-void set_to_eeprom_read_file_1(void);
-void set_to_eeprom_read_file_2(void);
-void set_to_eeprom_read_file_3(void);
+void mark_to_read_flap_times(void);
+void mark_to_read_course_times(void);
+void mark_to_read_flap_and_course_times(void);
 void mark_read_save_file(s32 saveFileIndex);
 void mark_read_all_save_files(void);
-void set_to_eeprom_write_file_1(void);
-void set_to_eeprom_write_file_2(void);
-void set_to_eeprom_write_file_3(void);
+void mark_to_write_flap_times(void);
+void mark_to_write_course_times(void);
+void mark_to_write_flap_and_course_times(void);
 void force_mark_write_save_file(s32 saveFileIndex);
 void safe_mark_write_save_file(s32 saveFileIndex);
 void mark_save_file_to_erase(s32 saveFileIndex);
