@@ -868,10 +868,9 @@ s32 func_8006C300(void) {
 /**
  * Main looping function for the main thread.
  */
-
 void thread3_main(UNUSED void *unused) {
     init_game();
-    gSaveDataFlags = func_8006A1C4(gSaveDataFlags, 0);
+    gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, 0);
     sBootDelayTimer = 0;
     sRenderContext = DRAW_INTRO;
     while (1) {
@@ -991,7 +990,7 @@ void main_game_loop(void) {
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_background(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE); 
-    gSaveDataFlags = func_8006A1C4(gSaveDataFlags, sLogicUpdateRate);
+    gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, sLogicUpdateRate);
     if (get_lockup_status()) {
         render_epc_lock_up_display();
         sRenderContext = DRAW_CRASH_SCREEN;

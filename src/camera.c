@@ -1411,7 +1411,11 @@ s32 init_controllers(void) {
     return CONTROLLER_MISSING;
 }
 
-s32 func_8006A1C4(s32 saveDataFlags, s32 updateRate) {
+/**
+ * Reads arg0 for a set of flags on whether to read, write, or erase any save data.
+ * Also reads the latest inputs from the controllers, and sets their values.
+ */
+s32 handle_save_data_and_read_controller(s32 saveDataFlags, s32 updateRate) {
     Settings **allSaves;
     OSMesg unusedMsg;
     Settings *settings;
