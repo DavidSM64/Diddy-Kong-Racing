@@ -43,6 +43,7 @@
 #include "racer.h"
 #include "particles.h"
 #include "math_util.h"
+#include "controller.h"
 
 /************ .rodata ************/
 
@@ -88,7 +89,7 @@ UNUSED char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
 
 s8 sAntiPiracyTriggered = 0;
 UNUSED s32 D_800DD378 = 1;
-s32 D_800DD37C = 0;
+s32 gSaveDataFlags = 0;
 s32 gScreenStatus = OSMESG_SWAP_BUFFER;
 s32 sControllerStatus = 0;
 UNUSED s32 D_800DD388 = 0;
@@ -868,10 +869,9 @@ s32 func_8006C300(void) {
 /**
  * Main looping function for the main thread.
  */
-
 void thread3_main(UNUSED void *unused) {
     init_game();
-    D_800DD37C = func_8006A1C4(D_800DD37C, 0);
+    gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, 0);
     sBootDelayTimer = 0;
     sRenderContext = DRAW_INTRO;
     while (1) {
@@ -991,7 +991,7 @@ void main_game_loop(void) {
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_background(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE); 
-    D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
+    gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, sLogicUpdateRate);
     if (get_lockup_status()) {
         render_epc_lock_up_display();
         sRenderContext = DRAW_CRASH_SCREEN;
@@ -1381,7 +1381,7 @@ void ingame_logic_loop(s32 updateRate) {
         gLevelLoadTimer = 0;
         gPostRaceViewPort = NULL;
         func_8006CC14();
-        func_8006EC48(get_save_file_index());
+        safe_mark_write_save_file(get_save_file_index());
         if (sp40 != 0) {
             gIsLoading = FALSE;
             switch (sp40) {
@@ -1442,7 +1442,7 @@ void ingame_logic_loop(s32 updateRate) {
             }
             load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
         } else {
-            func_8006EC48(get_save_file_index());
+            safe_mark_write_save_file(get_save_file_index());
             load_menu_with_level_background(MENU_TITLE, -1, 0);
         }
         D_801234FC = 0;
@@ -1451,7 +1451,7 @@ void ingame_logic_loop(s32 updateRate) {
         gPostRaceViewPort = NULL;
         func_8006CC14();
         load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
-        func_8006EC48(get_save_file_index());
+        safe_mark_write_save_file(get_save_file_index());
         D_801234F8 = 0;
     }
 }
@@ -1625,7 +1625,7 @@ void func_8006DCF8(s32 updateRate) {
         gIsPaused = FALSE;
         gPostRaceViewPort = NULL;
         load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
-        func_8006EC48(get_save_file_index());
+        safe_mark_write_save_file(get_save_file_index());
         return;
     }
     if ((menuLoopResult != -1) && (menuLoopResult & 0x100)) {
@@ -1642,7 +1642,7 @@ void func_8006DCF8(s32 updateRate) {
                 D_80123508 = 0x64;
                 sRenderContext = DRAW_GAME;
                 load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
-                func_8006EC48(get_save_file_index());
+                safe_mark_write_save_file(get_save_file_index());
                 break;
             case 1:
                 D_80123504 = 0;
@@ -1659,7 +1659,7 @@ void func_8006DCF8(s32 updateRate) {
                     D_80123508 = temp2;
                 }
                 load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
-                func_8006EC48(get_save_file_index());
+                safe_mark_write_save_file(get_save_file_index());
                 break;
             case 2:
                 sRenderContext = DRAW_GAME;
@@ -1777,7 +1777,11 @@ void calc_and_alloc_heap_for_settings(void) {
     gSettingsPtr->courseTimesPtr[1] = (u16 *)((u8 *)gSettingsPtr + sizes[12]);
     gSettingsPtr->courseTimesPtr[2] = (u16 *)((u8 *)gSettingsPtr + sizes[13]);
     gSettingsPtr->unk4C = (Settings4C *) &D_80121250;
-    D_800DD37C = 263;
+    gSaveDataFlags = // Set bits 0/1/2/8 and wipe out all others
+        SAVE_DATA_FLAG_READ_FLAP_TIMES |
+        SAVE_DATA_FLAG_READ_COURSE_TIMES |
+        SAVE_DATA_FLAG_READ_SAVE_DATA |
+        SAVE_DATA_FLAG_READ_EEPROM_SETTINGS;
 }
 
 void func_8006E5BC(void) {
@@ -1818,7 +1822,7 @@ void func_8006E770(Settings *settings, s32 arg1) {
 
     get_number_of_levels_and_worlds(&numLevels, &numWorlds);
     temp_v0 = (u16 *)get_misc_asset(MISC_ASSET_UNK17);
-    for (i = 0; i < 3; i++) { // 3 = number of save files?
+    for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         for (j = 0; j < numLevels; j++) {
             index = (j * 12) + (i * 4);
             if (arg1 & 1) {
@@ -1896,64 +1900,108 @@ s32 func_8006EB14(void) {
     return gPlayableMapId;
 }
 
-/* Unused? */
-void func_8006EB24(void) {
-    D_800DD37C |= 0x01;
+/**
+ * Marks a flag to read flap times from the eeprom
+ */
+UNUSED void mark_to_read_flap_times(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_READ_FLAP_TIMES;
 }
 
-/* Unused? */
-void func_8006EB40(void) {
-    D_800DD37C |= 0x02;
+/**
+ * Marks a flag to read course times from the eeprom
+ */
+UNUSED void mark_to_read_course_times(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_READ_COURSE_TIMES;
 }
 
-void func_8006EB5C(void) {
-    D_800DD37C |= 0x03;
+/**
+ * Marks a flag to read both flap times and course times from the eeprom
+ */
+void mark_to_read_flap_and_course_times(void) {
+    gSaveDataFlags |= (SAVE_DATA_FLAG_READ_FLAP_TIMES | SAVE_DATA_FLAG_READ_COURSE_TIMES);
 }
 
-void func_8006EB78(s32 saveFileIndex) {
-    D_800DD37C &= -0x301;
-    D_800DD37C |= (0x04 | ((saveFileIndex & 3) << 8));
+/**
+ * Marks a flag to read the save file from the passed index from flash.
+ */
+void mark_read_save_file(s32 saveFileIndex) {
+    //Wipe out bits 8 and 9
+    gSaveDataFlags &= ~(SAVE_DATA_FLAG_READ_EEPROM_SETTINGS | SAVE_DATA_FLAG_WRITE_EEPROM_SETTINGS);
+    //Place saveFileIndex at bits 8 and 9 and set bit 2
+    gSaveDataFlags |= (SAVE_DATA_FLAG_READ_SAVE_DATA | ((saveFileIndex & SAVE_DATA_FLAG_INDEX_VALUE) << 8));
 }
 
-void func_8006EBA8(void) {
-    D_800DD37C |= 0x08;
+/**
+ * Marks a flag to read all save file data from flash.
+ */
+void mark_read_all_save_files(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_READ_ALL_SAVE_DATA; //Set bit 3
 }
 
-void func_8006EBC4(void) {
-    D_800DD37C |= 0x10;
+/**
+ * Marks a flag to write flap times to the eeprom
+ */
+void mark_to_write_flap_times(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_WRITE_FLAP_TIMES;
 }
 
-void func_8006EBE0(void) {
-    D_800DD37C |= 0x20;
+/**
+ * Marks a flag to write course times to the eeprom
+ */
+void mark_to_write_course_times(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_WRITE_COURSE_TIMES;
 }
 
-void func_8006EBFC(void) {
-    D_800DD37C |= 0x30;
+/**
+ * Marks a flag to write both flap times and course times to the eeprom
+ */
+void mark_to_write_flap_and_course_times(void) {
+    gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_FLAP_TIMES | SAVE_DATA_FLAG_WRITE_COURSE_TIMES);
 }
 
-void func_8006EC18(s32 arg0) {
-    D_800DD37C &= -0xC01;
-    D_800DD37C |= (0x40 | ((arg0 & 3) << 0xA));
+/**
+ * Forcefully marks a flag to write a save file to flash.
+ */
+void force_mark_write_save_file(s32 saveFileIndex) {
+    gSaveDataFlags &= ~SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER_BITS; //Wipe out bits 10 and 11
+    gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_SAVE_DATA | ((saveFileIndex & 3) << 10)); //Set bit 6 and place saveFileIndex into bits 10 and 11
 }
 
-void func_8006EC48(s32 saveFileIndex) {
+/**
+ * Marks a flag to write a save file to flash as long as we're not in tracks mode, and we're in the draw game render context.
+ * This should prevent save data from being overwritten outside of Adventure Mode.
+ */
+void safe_mark_write_save_file(s32 saveFileIndex) {
     if (sRenderContext == DRAW_GAME && !is_in_tracks_mode()) {
-        D_800DD37C &= -0xC01;
-        D_800DD37C |= (0x40 | ((saveFileIndex & 3) << 0xA));
+        gSaveDataFlags &= ~SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER_BITS; //Wipe out bits 10 and 11
+        gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_SAVE_DATA | ((saveFileIndex & 3) << 10));; //Set bit 6 and place saveFileIndex into bits 10 and 11
     }
 }
 
-void func_8006ECAC(s32 arg0) {
-    D_800DD37C = ((arg0 & 0x03) << 10) | 0x80;
+/**
+ * Marks a flag to erase a save file from flash later
+ */
+void mark_save_file_to_erase(s32 saveFileIndex) {
+    //Set bit 7 and and place saveFileIndex into bits 10 and 11 while wiping everything else
+    gSaveDataFlags = SAVE_DATA_FLAG_ERASE_SAVE_DATA | ((saveFileIndex & 3) << 10);
 }
 
-UNUSED void func_8006ECC4(void) {
-    D_800DD37C |= 0x100;
+/**
+ * Marks a flag to read eeprom settings from flash later
+ * @bug: Because this is the same bit used for reading save files,
+ *       it will change the save file number to read from
+ */
+UNUSED void mark_read_eeprom_settings(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_READ_EEPROM_SETTINGS; // Set bit 8
 }
 
-//Always called after updating a value in sEepromSettings
-void func_8006ECE0(void) {
-    D_800DD37C |= 0x200;
+/**
+ * Marks a flag to write eeprom settings to flash later
+ * @bug: Because this is the same bit used for reading save files,
+ *       it will change the save file number to read from
+ */
+void mark_write_eeprom_settings(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_WRITE_EEPROM_SETTINGS; // Set bit 9
 }
 
 /**

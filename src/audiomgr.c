@@ -241,7 +241,7 @@ static void __amMain(UNUSED void *arg) {
     osScAddClient(gAudioSched, (OSScClient *) &audioStack, &__am.audioFrameMsgQ, OS_MESG_BLOCK);
 
     while (!done) {
-        (void) osRecvMesg(&__am.audioFrameMsgQ, (OSMesg *) &msg, 1);
+        (void) osRecvMesg(&__am.audioFrameMsgQ, (OSMesg *) &msg, OS_MESG_BLOCK);
         switch (msg->gen.type) {
         case OS_SC_RETRACE_MSG:
             //TODO: Check type of ACMDList?

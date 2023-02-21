@@ -30,6 +30,7 @@
 #include "object_models.h"
 #include "lib/src/libc/rmonPrintf.h"
 #include "collision.h"
+#include "controller.h"
 
 /************ .data ************/
 

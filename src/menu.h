@@ -818,7 +818,7 @@ s32 get_filtered_cheats(void);
 s32 get_number_of_active_players(void);
 s32 get_active_player_count(void);
 s32 get_multiplayer_racer_count(void);
-Settings** func_8009C490(void);
+Settings **get_all_save_files_ptr(void);
 void func_8009C49C(void);
 void func_8009C4A8(s16 *arg0);
 void func_8009C508(s32 arg0);

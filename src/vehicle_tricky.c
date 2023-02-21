@@ -365,7 +365,7 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
             func_8006F140(3);
         }
         arg1_ret++;
-        func_8006EC48(get_save_file_index());
+        safe_mark_write_save_file(get_save_file_index());
     }
     *arg1 = arg1_ret;
 }
