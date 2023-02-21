@@ -2,14 +2,7 @@
 /* RAM_POS: 0x8006A100 */
 
 #include "controller.h"
-#include "audio.h"
-#include "objects.h"
 #include "game.h"
-#include "unknown_0255E0.h"
-#include "video.h"
-#include "lib/src/libc/rmonPrintf.h"
-#include "math_util.h"
-#include "weather.h"
 
 s32 sNoControllerPluggedIn = FALSE; // Looks to be a boolean for whether a controller is plugged in. FALSE if plugged in, and TRUE if not.
 u16 gButtonMask = 0xFFFF; //Used when anti-cheat/anti-tamper has failed in func_8006A6B0()
