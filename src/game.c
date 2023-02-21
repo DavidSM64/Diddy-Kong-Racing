@@ -43,6 +43,7 @@
 #include "racer.h"
 #include "particles.h"
 #include "math_util.h"
+#include "controller.h"
 
 /************ .rodata ************/
 

@@ -120,19 +120,6 @@ Matrix *func_80069DBC(void);
 f32 func_80069DC8(f32 x, f32 y, f32 z);
 void set_camera_shake_by_distance(f32 x, f32 y, f32 z, f32 dist, f32 magnitude);
 void set_camera_shake(f32 magnitude);
-OSMesgQueue *get_si_mesg_queue(void);
-void initialise_player_ids(void);
-void assign_player_ids(s8 *activePlayers);
-u8 get_player_id(s32 player);
-void swap_player_1_and_2_ids(void);
-u16 get_buttons_held_from_player(s32 player);
-u32 get_buttons_pressed_from_player(s32 player);
-u16 get_buttons_released_from_player(s32 player);
-s8 clamp_joystick_x_axis(s32 player);
-s8 clamp_joystick_y_axis(s32 player);
-s8 clamp_joystick(s8 stickMag);
-void disable_button_mask(void);
-s32 init_controllers(void);
 void func_80067D3C(Gfx **dlist, MatrixS **mats);
 void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, Sprite *sprite, s32 flags);
 s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags);
@@ -140,7 +127,6 @@ void func_80069484(Gfx **arg0, MatrixS **arg1, ObjectTransform *arg2, f32 arg3, 
 void set_viewport_scissor(Gfx **dlist);
 void func_80069A40(Gfx **dlist);
 void copy_viewports_to_stack(void);
-s32 handle_save_data_and_read_controller(s32 saveDataFlags, s32 updateRate);
 
 // Non Matching
 void func_80065EA0(void);

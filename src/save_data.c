@@ -11,6 +11,7 @@
 #include "objects.h"
 #include "game.h"
 #include "unknown_0CEC50.h"
+#include "controller.h"
 
 /************ .data ************/
 

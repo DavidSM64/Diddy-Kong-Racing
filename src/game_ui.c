@@ -20,6 +20,7 @@
 #include "audiosfx.h"
 #include "printf.h"
 #include "unknown_008C40.h"
+#include "controller.h"
 
 extern u32 osTvType;
 
