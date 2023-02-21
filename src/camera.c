@@ -1164,32 +1164,25 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
     }
 }
 
-#if 1
 void func_80068FA8(Gfx **dlist, MatrixS **mtx, Object *arg2, Object *arg3, f32 shear) {
-
-    f32 arg2_shear;
-
+    UNUSED s32 pad;
     f32 cossf_x_arg2;
     f32 cossf_y_arg2;
-
     f32 sinsf_x_arg2;
     f32 sinsf_y_arg2;
     f32 sinsf_y_arg3;
     f32 sinsf_z_arg3;
     f32 arg2_scale;
-
     f32 cossf_x_arg3;
     f32 sinsf_x_arg3;
     f32 cossf_y_arg3;
     f32 cossf_z_arg3;
-
     f32 arg2_xPos;
     f32 arg2_yPos;
     f32 arg2_zPos;
     f32 arg3_xPos;
     f32 arg3_yPos;
     f32 arg3_zPos;
-
     Matrix matrix_mult;
 
     cossf_x_arg2 = coss_f(arg2->segment.trans.x_rotation);
@@ -1209,14 +1202,14 @@ void func_80068FA8(Gfx **dlist, MatrixS **mtx, Object *arg2, Object *arg3, f32 s
     arg3_yPos = arg3->segment.trans.y_position;
     arg3_zPos = arg3->segment.trans.z_position;
     arg2_scale = arg2->segment.trans.scale;
-    arg2_shear = (shear * arg2_scale);
+    shear *= arg2_scale;
     matrix_mult[0][0] = ((((cossf_z_arg3 * cossf_y_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3))) * cossf_y_arg2) + (-sinsf_y_arg2 * (cossf_x_arg3 * sinsf_y_arg3))) * arg2_scale;
     matrix_mult[0][1] = (((sinsf_z_arg3 * cossf_x_arg3) * cossf_y_arg2) + (-sinsf_y_arg2 * -sinsf_x_arg3)) * arg2_scale;
     matrix_mult[0][2] = ((((-sinsf_y_arg3 * cossf_z_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * cossf_y_arg3))) * cossf_y_arg2) + (-sinsf_y_arg2 * (cossf_x_arg3 * cossf_y_arg3))) * arg2_scale;
     matrix_mult[0][3] = 0.0f;
-    matrix_mult[1][0] = ((((-sinsf_z_arg3 * cossf_y_arg3) + (cossf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3))) * cossf_x_arg2) + (sinsf_x_arg2 * ((sinsf_y_arg2 * ((cossf_z_arg3 * cossf_y_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3)))) + (cossf_y_arg2 * (cossf_x_arg3 * sinsf_y_arg3))))) * arg2_shear;
-    matrix_mult[1][1] = (((cossf_z_arg3 * cossf_x_arg3) * cossf_x_arg2) + (sinsf_x_arg2 * ((sinsf_y_arg2 * (sinsf_z_arg3 * cossf_x_arg3)) + (cossf_y_arg2 * -sinsf_x_arg3)))) * arg2_shear;
-    matrix_mult[1][2] = ((((-sinsf_z_arg3 * -sinsf_y_arg3) + (cossf_z_arg3 * (sinsf_x_arg3 * cossf_y_arg3))) * cossf_x_arg2) + (sinsf_x_arg2 * ((sinsf_y_arg2 * ((-sinsf_y_arg3 * cossf_z_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * cossf_y_arg3)))) + (cossf_y_arg2 * (cossf_x_arg3 * cossf_y_arg3))))) * arg2_shear;
+    matrix_mult[1][0] = ((((-sinsf_z_arg3 * cossf_y_arg3) + (cossf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3))) * cossf_x_arg2) + (sinsf_x_arg2 * ((sinsf_y_arg2 * ((cossf_z_arg3 * cossf_y_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3)))) + (cossf_y_arg2 * (cossf_x_arg3 * sinsf_y_arg3))))) * shear;
+    matrix_mult[1][1] = (((cossf_z_arg3 * cossf_x_arg3) * cossf_x_arg2) + (sinsf_x_arg2 * ((sinsf_y_arg2 * (sinsf_z_arg3 * cossf_x_arg3)) + (cossf_y_arg2 * -sinsf_x_arg3)))) * shear;
+    matrix_mult[1][2] = ((((-sinsf_z_arg3 * -sinsf_y_arg3) + (cossf_z_arg3 * (sinsf_x_arg3 * cossf_y_arg3))) * cossf_x_arg2) + (sinsf_x_arg2 * ((sinsf_y_arg2 * ((-sinsf_y_arg3 * cossf_z_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * cossf_y_arg3)))) + (cossf_y_arg2 * (cossf_x_arg3 * cossf_y_arg3))))) * shear;
     matrix_mult[1][3] = 0.0f;
     matrix_mult[2][0] = ((-sinsf_x_arg2 * ((-sinsf_z_arg3 * cossf_y_arg3) + (cossf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3)))) + (cossf_x_arg2 * ((sinsf_y_arg2 * ((cossf_z_arg3 * cossf_y_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3)))) + (cossf_y_arg2 * (cossf_x_arg3 * sinsf_y_arg3))))) * arg2_scale;
     matrix_mult[2][1] = ((-sinsf_x_arg2 * (cossf_z_arg3 * cossf_x_arg3)) + (cossf_x_arg2 * ((sinsf_y_arg2 * (sinsf_z_arg3 * cossf_x_arg3)) + (cossf_y_arg2 * -sinsf_x_arg3)))) * arg2_scale;
@@ -1231,9 +1224,6 @@ void func_80068FA8(Gfx **dlist, MatrixS **mtx, Object *arg2, Object *arg3, f32 s
     f32_matrix_to_s16_matrix(&D_801210A0, *mtx);
     gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_1);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/camera/func_80068FA8.s")
-#endif
 
 void func_80069484(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale, f32 scaleY) {
     f32 tempX;

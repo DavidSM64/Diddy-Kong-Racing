@@ -424,7 +424,6 @@ s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpoint
 void func_80011134(Object *, s32);
 void func_800113CC(Object *, s32, s32, s32, s32);
 s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
-void func_80068FA8(Gfx**, MatrixS**, Object*, Object*, f32); /* extern */
 void func_800138A8(Object*, unk80068514_arg4*, ObjectTransformExt *, s32);
 Object *func_8002342C(f32 x, f32 z);
 void func_8006017C(s32);
