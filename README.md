@@ -5,11 +5,11 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of February 17, 2023, this is our current score:
+As of February 21, 2023, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 50.08%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 50.15%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 23.22%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 23.36%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -128,13 +128,13 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of February 17, 2023, this is our current score:
+As of February 21, 2023, this is our current score:
 ```
  ===================================================================
                ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------- 50.08% Complete -------------------------
-                    # Decompiled functions: 1481
-                     # GLOBAL_ASM remaining: 350
+ ------------------------- 50.15% Complete -------------------------
+                    # Decompiled functions: 1482
+                     # GLOBAL_ASM remaining: 349
                     # NON_MATCHING functions: 10
                  # NON_EQUIVALENT WIP functions: 63
  --------------------------- Game Status ---------------------------
@@ -144,9 +144,9 @@ As of February 17, 2023, this is our current score:
              We are racing in Treasure Caves. (Lap 1/3)
  ===================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 23.22% Complete -------------------------
-                     # Documented functions: 429
-                   # Undocumented remaining: 1137
+ ------------------------- 23.36% Complete -------------------------
+                     # Documented functions: 443
+                   # Undocumented remaining: 1123
  --------------------------- Game Status ---------------------------
               Balloons: 12/47, Keys: 1/4, Trophies: 0/5
                T.T. Amulets: 1/4, Wizpig Amulets: 1/4
