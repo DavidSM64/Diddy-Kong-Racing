@@ -1166,29 +1166,30 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
 
 #if 1
 void func_80068FA8(Gfx **dlist, MatrixS **mtx, Object *arg2, Object *arg3, f32 shear) {
+
+    f32 arg2_shear;
+
+    f32 cossf_x_arg2;
+    f32 cossf_y_arg2;
+
+    f32 sinsf_x_arg2;
+    f32 sinsf_y_arg2;
+    f32 sinsf_y_arg3;
+    f32 sinsf_z_arg3;
+    f32 arg2_scale;
+
+    f32 cossf_x_arg3;
+    f32 sinsf_x_arg3;
+    f32 cossf_y_arg3;
+    f32 cossf_z_arg3;
+
     f32 arg2_xPos;
     f32 arg2_yPos;
     f32 arg2_zPos;
-
     f32 arg3_xPos;
     f32 arg3_yPos;
     f32 arg3_zPos;
 
-    f32 cossf_x_arg2;
-    f32 cossf_y_arg2;
-    f32 sinsf_x_arg2;
-    f32 sinsf_y_arg2;
-
-    f32 sinsf_x_arg3;
-    f32 sinsf_y_arg3;
-    f32 sinsf_z_arg3;
-
-    f32 cossf_x_arg3;
-    f32 cossf_y_arg3;
-    f32 cossf_z_arg3;
-
-    f32 arg2_scale;
-    f32 arg2_shear;
     Matrix matrix_mult;
 
     cossf_x_arg2 = coss_f(arg2->segment.trans.x_rotation);
