@@ -1321,58 +1321,45 @@ void func_80069484(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale
     D_80120D58[index] = tempZ;
 }
 
-#ifdef NON_EQUIVALENT
 void func_80069790(Gfx **dlist, MatrixS **mtx, Object_68 *obj68, s16 headAngle) {
-    f32 spF4;
-    f32 spF0;
-    f32 spE4;
+    f32 coss_headAngle;
+    f32 sins_headAngle;
+    f32 f_unk16;
+    f32 f_unk18;
+    f32 f_unk1A;
+    f32 coss_unk1C;
+    f32 sins_unk1C;
     Matrix spA4_mat;
     Matrix sp64_mat;
-    f32 temp_f0;
-    f32 temp_f10;
-    f32 temp_f12;
-    f32 temp_f18;
-    f32 temp_f20;
-    f32 temp_f22;
-    f32 temp_f4;
-    f32 temp_f6;
-    f32 temp_f6_2;
 
-    spF4 = (f32) obj68->unk16;
-    spF0 = (f32) obj68->unk18;
-    temp_f6 = (f32) obj68->unk1A;
-    temp_f20 = coss_f(obj68->unk1C);
-    spE4 = sins_f(obj68->unk1C);
-    temp_f22 = coss_f(headAngle);
-    temp_f0 = sins_f(headAngle);
-    temp_f18 = temp_f22 * temp_f20;
-    temp_f10 = temp_f22 * spE4;
-    temp_f4 = temp_f0 * temp_f20;
-    temp_f6_2 = temp_f0 * spE4;
-    sp64_mat[0][0] = temp_f18;
-    sp64_mat[0][1] = temp_f10;
-    sp64_mat[0][2] = -temp_f0;
+    f_unk16 = (f32) obj68->unk16;
+    f_unk18 = (f32) obj68->unk18;
+    f_unk1A = (f32) obj68->unk1A;
+    coss_unk1C = coss_f(obj68->unk1C);
+    sins_unk1C = sins_f(obj68->unk1C);
+    coss_headAngle = coss_f(headAngle);
+    sins_headAngle = sins_f(headAngle);
+    sp64_mat[0][0] = (coss_headAngle * coss_unk1C);
+    sp64_mat[0][1] = (coss_headAngle * sins_unk1C);
+    sp64_mat[0][2] = -sins_headAngle;
     sp64_mat[0][3] = 0.0f;
-    sp64_mat[1][0] = -spE4;
-    sp64_mat[1][1] = temp_f20;
+    sp64_mat[1][0] = -sins_unk1C;
+    sp64_mat[1][1] = coss_unk1C;
     sp64_mat[1][2] = 0.0f;
     sp64_mat[1][3] = 0.0f;
-    sp64_mat[2][0] = temp_f4;
-    sp64_mat[2][1] = temp_f6_2;
-    sp64_mat[2][2] = temp_f22;
+    sp64_mat[2][0] = (sins_headAngle * coss_unk1C);
+    sp64_mat[2][1] = (sins_headAngle * sins_unk1C);
+    sp64_mat[2][2] = coss_headAngle;
     sp64_mat[2][3] = 0.0f;
-    sp64_mat[3][0] = (-spF4 * temp_f18) + (-spF0 * -spE4) + (-temp_f6 * temp_f4) + spF4;
-    sp64_mat[3][1] = (-spF4 * temp_f10) + (-spF0 * temp_f20) + (-temp_f6 * temp_f6_2) + spF0;
-    sp64_mat[3][2] = (-spF4 * -temp_f0) + (-temp_f6 * temp_f22) + temp_f6;
+    sp64_mat[3][0] = (-f_unk16 * (coss_headAngle * coss_unk1C)) + (-f_unk18 * -sins_unk1C) + (-f_unk1A * (sins_headAngle * coss_unk1C)) + f_unk16;
+    sp64_mat[3][1] = (-f_unk16 * (coss_headAngle * sins_unk1C)) + (-f_unk18 * coss_unk1C) + (-f_unk1A * (sins_headAngle * sins_unk1C)) + f_unk18;
+    sp64_mat[3][2] = (-f_unk16 * -sins_headAngle) + (-f_unk1A * coss_headAngle) + f_unk1A;
     sp64_mat[3][3] = 1.0f;
     f32_matrix_mult(&sp64_mat, &D_801210A0, &spA4_mat);
     f32_matrix_to_s16_matrix(&spA4_mat, *mtx);
     gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
     gDkrInsertMatrix((*dlist)++, G_MWO_MATRIX_XX_XY_I, G_MTX_DKR_INDEX_1);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/camera/func_80069790.s")
-#endif
 
 UNUSED void func_800699E4(f32 *arg0, f32 *arg1, f32 *arg2) {
     *arg0 = D_80120D28[D_80120D20];

@@ -127,6 +127,7 @@ void func_80069484(Gfx **arg0, MatrixS **arg1, ObjectTransform *arg2, f32 arg3, 
 void set_viewport_scissor(Gfx **dlist);
 void func_80069A40(Gfx **dlist);
 void copy_viewports_to_stack(void);
+void func_80069790(Gfx **dlist, MatrixS **mtx, Object_68 *obj68, s16 headAngle);
 
 // Non Matching
 void func_80065EA0(void);
