@@ -1164,7 +1164,7 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
     }
 }
 
-#ifdef NON_EQUIVALENT
+#if 1
 void func_80068FA8(Gfx **dlist, MatrixS** mtx, Object *arg2, Object *arg3, f32 shear) {
     Matrix matrix_mult;
     f32 sinsf_x_arg2;
@@ -1180,7 +1180,6 @@ void func_80068FA8(Gfx **dlist, MatrixS** mtx, Object *arg2, Object *arg3, f32 s
     f32 arg3_sinsf_z_and_cossf_x;
     f32 sinsf_y_arg3;
     f32 arg3_cossf_and_y;
-    f32 new_var;
     f32 temp_f10_4;
     f32 arg3_cossf_z_and_x;
     f32 temp_f14;
@@ -1214,44 +1213,40 @@ void func_80068FA8(Gfx **dlist, MatrixS** mtx, Object *arg2, Object *arg3, f32 s
     cossf_x_arg3 = coss_f(arg3->segment.trans.x_rotation);
     sinsf_x_arg3 = sins_f(arg3->segment.trans.x_rotation);
     cossf_y_arg3 = coss_f(arg3->segment.trans.y_rotation);
-    new_var = sinsf_y_arg2;
     sinsf_y_arg3 = sins_f(arg3->segment.trans.y_rotation);
     arg3_xPos = arg3->segment.trans.x_position;
     arg3_yPos = arg3->segment.trans.y_position;
     arg3_zPos = arg3->segment.trans.z_position;
-
     arg2_scale = arg2->segment.trans.scale;
-    arg2_shear = shear * arg2_scale;
+    
+    arg2_shear = (shear * arg2_scale);
 
-    temp_f18 = (cossf_z_arg3 * cossf_y_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3));
+    temp_f18 = ((cossf_z_arg3 * cossf_y_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3)));
 
-    arg3_cossf_x_and_sinsf_y = cossf_x_arg3 * sinsf_y_arg3;
+    arg3_cossf_x_and_sinsf_y = (cossf_x_arg3 * sinsf_y_arg3);
+
+    arg3_sinsf_z_and_cossf_x = (sinsf_z_arg3 * cossf_x_arg3);
+
+    arg3_sinsf_x_and_cossf_y = (sinsf_x_arg3 * cossf_y_arg3);
+
+    temp_f6_3 = ((-sinsf_y_arg3 * cossf_z_arg3) + (sinsf_z_arg3 * arg3_sinsf_x_and_cossf_y));
+
+    arg3_cossf_and_y = (cossf_x_arg3 * cossf_y_arg3);
+
+    temp_f6_5 = ((-sinsf_z_arg3 * cossf_y_arg3) + (cossf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3)));
+    temp_f10_4 = ((sinsf_y_arg2 * temp_f18) + (cossf_y_arg2 * arg3_cossf_x_and_sinsf_y));
+    arg3_cossf_z_and_x = (cossf_z_arg3 * cossf_x_arg3);
+
+    temp_f26_2 = ((sinsf_y_arg2 * arg3_sinsf_z_and_cossf_x) + (cossf_y_arg2 * -sinsf_x_arg3));
+    temp_f14 = ((-sinsf_z_arg3 * -sinsf_y_arg3) + (cossf_z_arg3 * arg3_sinsf_x_and_cossf_y));
+    temp_f6_7 = ((sinsf_y_arg2 * temp_f6_3) + (cossf_y_arg2 * arg3_cossf_and_y));
 
     matrix_mult[0][0] = ((temp_f18 * cossf_y_arg2) + (-sinsf_y_arg2 * arg3_cossf_x_and_sinsf_y)) * arg2_scale;
-
-    arg3_sinsf_z_and_cossf_x = sinsf_z_arg3 * cossf_x_arg3;
-
-    matrix_mult[0][1] = ((arg3_sinsf_z_and_cossf_x * cossf_y_arg2) + (-new_var * -sinsf_x_arg3)) * arg2_scale;
-
-    arg3_sinsf_x_and_cossf_y = sinsf_x_arg3 * cossf_y_arg3;
-
-    temp_f6_3 = (-sinsf_y_arg3 * cossf_z_arg3) + (sinsf_z_arg3 * arg3_sinsf_x_and_cossf_y);
-
-    arg3_cossf_and_y = cossf_x_arg3 * cossf_y_arg3;
-
+    matrix_mult[0][1] = ((arg3_sinsf_z_and_cossf_x * cossf_y_arg2) + (-sinsf_y_arg2 * -sinsf_x_arg3)) * arg2_scale;
     matrix_mult[0][2] = ((temp_f6_3 * cossf_y_arg2) + (-sinsf_x_arg3 * arg3_cossf_and_y)) * arg2_scale;
     matrix_mult[0][3] = 0.0f;
-
-    temp_f6_5 = (-sinsf_z_arg3 * cossf_y_arg3) + (cossf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3));
-    temp_f10_4 = (sinsf_y_arg2 * temp_f18) + (cossf_y_arg2 * arg3_cossf_x_and_sinsf_y);
-    arg3_cossf_z_and_x = cossf_z_arg3 * cossf_x_arg3;
     matrix_mult[1][0] = ((temp_f6_5 * cossf_x_arg2) + (sinsf_x_arg2 * temp_f10_4)) * arg2_shear;
-
-    temp_f26_2 = (sinsf_y_arg2 * arg3_sinsf_z_and_cossf_x) + (cossf_y_arg2 * -sinsf_x_arg3);
     matrix_mult[1][1] = ((arg3_cossf_z_and_x * cossf_x_arg2) + (sinsf_x_arg2 * temp_f26_2)) * arg2_shear;
-
-    temp_f14 = (-sinsf_z_arg3 * -sinsf_y_arg3) + (cossf_z_arg3 * arg3_sinsf_x_and_cossf_y);
-    temp_f6_7 = (sinsf_y_arg2 * temp_f6_3) + (cossf_y_arg2 * arg3_cossf_and_y);
     matrix_mult[1][2] = ((temp_f14 * cossf_x_arg2) + (sinsf_x_arg2 * temp_f6_7)) * arg2_shear;
     matrix_mult[1][3] = 0.0f;
     matrix_mult[2][0] = ((-sinsf_x_arg2 * temp_f6_5) + (cossf_x_arg2 * temp_f10_4)) * arg2_scale;
@@ -1260,7 +1255,7 @@ void func_80068FA8(Gfx **dlist, MatrixS** mtx, Object *arg2, Object *arg3, f32 s
     matrix_mult[2][3] = 0.0f;
     matrix_mult[3][0] = (temp_f18 * arg2_xPos) + (arg2_yPos * temp_f6_5) + (arg2_zPos * arg3_cossf_x_and_sinsf_y) + arg3_xPos;
     matrix_mult[3][1] = (arg3_sinsf_z_and_cossf_x * arg2_xPos) + (arg2_yPos * arg3_cossf_z_and_x) + (arg2_zPos * -sinsf_x_arg3) + arg3_yPos;
-    matrix_mult[3][2] = (temp_f6_3 * arg2_xPos) + (arg2_yPos * temp_f14) + (arg2_zPos * arg3_cossf_and_y) + arg3->segment.trans.z_position;
+    matrix_mult[3][2] = (temp_f6_3 * arg2_xPos) + (arg2_yPos * temp_f14) + (arg2_zPos * arg3_cossf_and_y) + arg3_zPos;
     matrix_mult[3][3] = 1.0f;
 
     f32_matrix_mult(&matrix_mult, &D_80120F20, &D_801210A0);
