@@ -52,28 +52,31 @@ Vertex D_800DD138 = {
     0, 0, 0, 255, 255, 255, 255
 };
 
+//The viewport z-range below is half of the max (511)
+#define G_HALFZ (G_MAXZ / 2) /* 9 bits of integer screen-Z precision */
+
 // RSP Viewports
 Vp gViewportStack[20] = {
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
-    { { { 0, 0, 511, 0 }, { 0, 0, 511, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
+    { { { 0, 0, G_HALFZ, 0 }, { 0, 0, G_HALFZ, 0 } } },
 };
 
 ObjectTransform D_800DD288 = {
@@ -193,6 +196,7 @@ void func_800660D0(void) {
 
 /**
  * Unused function that will return the current camera's FoV.
+ * Official Name: camGetFOV
  */
 UNUSED f32 get_current_camera_fov(void) {
     return gCurCamFOV;
@@ -200,6 +204,7 @@ UNUSED f32 get_current_camera_fov(void) {
 
 /**
  * Set the FoV of the viewspace, then recalculate the perspective matrix.
+ * Official Name: camSetFOV
  */
 void update_camera_fov(f32 camFieldOfView) {
     if (CAMERA_MIN_FOV < camFieldOfView && camFieldOfView < CAMERA_MAX_FOV && camFieldOfView != gCurCamFOV) {
@@ -329,6 +334,7 @@ void write_to_object_render_stack(s32 stackPos, f32 xPos, f32 yPos, f32 zPos, s1
 
 /**
  * Check if the misc camera view is active.
+ * Official name: camIsUserView
 */
 s8 check_if_showing_cutscene_camera(void) {
     return gCutsceneCameraActive;
@@ -336,6 +342,7 @@ s8 check_if_showing_cutscene_camera(void) {
 
 /**
  * Disable the cutscene camera, returning it to the conventional mode.
+ * Official name: camSetUserView
 */
 void disable_cutscene_camera(void) {
     gCutsceneCameraActive = FALSE;
@@ -375,6 +382,7 @@ s32 set_active_viewports_and_max(s32 num) {
 /**
  * Sets the active viewport ID to the passed number.
  * If it's not within 1-4, then it's set to 0.
+ * Official name: camSetView
 */
 void set_active_camera(s32 num) {
     if (num >= 0 && num < 4) {
@@ -467,7 +475,6 @@ void camDisableUserView(s32 viewPortIndex, s32 arg1) {
 /**
  * Return's the current viewport's flag status for extended backgrounds.
  * Required to draw some extra things used in menus.
- * Official name: camIsUserView
 */
 s32 check_viewport_background_flag(s32 viewPortIndex) {
     return gScreenViewports[viewPortIndex].flags & VIEWPORT_EXTRA_BG;
@@ -531,7 +538,6 @@ void resize_viewport(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2) {
 /**
  * Set the selected viewport's coordinate offsets and view size.
  * If you pass VIEWPORT_AUTO through, then the property will be automatically set when the game creates the viewports.
- * Official name: camSetUserViewSpecial
  */
 void set_viewport_properties(s32 viewPortIndex, s32 posX, s32 posY, s32 width, s32 height) {
     if (posX != VIEWPORT_AUTO) {
@@ -592,6 +598,7 @@ void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32
 
 /**
  * Unused function that sets the passed values to the framebuffer's size in coordinates.
+ * Official name: camGetWindowLimits
  */
 UNUSED void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2) {
     u32 widthAndHeight = get_video_width_and_height_as_s32();
@@ -745,6 +752,7 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80066CDC.s")
 
 /**
  * Takes the size of the screen as depicted by an active screen viewport, then sets the RDP scissor to match it.
+ * Official Name: camSetScissor
 */
 void set_viewport_scissor(Gfx **dlist) {
     s32 size;
@@ -837,6 +845,7 @@ void set_viewport_scissor(Gfx **dlist) {
     gDPSetScissor((*dlist)++, 0, 0, 0, width, height);
 }
 
+//Official Name: camGetPlayerProjMtx / camSetProjMtx - ??
 void func_80067D3C(Gfx **dlist, UNUSED MatrixS **mats) {
     s32 temp;
 
@@ -881,6 +890,7 @@ void func_80067D3C(Gfx **dlist, UNUSED MatrixS **mats) {
 /**
  * Sets the Y value of the Y axis in the matrix to the passed value.
  * This is used to vertically scale ortho geometry to look identical across NTSC and PAL systems.
+ * Official Name: camOrthoYAspect
  */
 void set_ortho_matrix_height(f32 value) {
     gOrthoMatrix[1][1] = value;
@@ -889,6 +899,7 @@ void set_ortho_matrix_height(f32 value) {
 /**
  * Sets the current matrix to represent an orthogonal view.
  * Used for drawing triangles on screen as HUD.
+ * Official Name: camStandardOrtho
 */
 void set_ortho_matrix_view(Gfx **dlist, MatrixS **mtx) {
     u32 widthAndHeight;
@@ -917,6 +928,7 @@ void set_ortho_matrix_view(Gfx **dlist, MatrixS **mtx) {
     }
 }
 
+//Official Name: camStandardPersp?
 void func_8006807C(Gfx **dlist, MatrixS **mtx) {
     object_transform_to_matrix_2(D_80121060, &D_800DD288);
     f32_matrix_mult(&D_80121060, &gPerspectiveMatrixF, &D_80120F20);
@@ -928,6 +940,7 @@ void func_8006807C(Gfx **dlist, MatrixS **mtx) {
     D_80120D08 = 0;
 }
 
+//Official Name: camSetViewport?
 void func_80068158(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY) {
     s32 tempWidth = (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) ? -width : width;
     // Antipiracy measure. Flips the screen upside down.
@@ -946,6 +959,7 @@ void func_80068158(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY) {
     }
 }
 
+//Official Name: camResetView?
 void func_800682AC(Gfx **dlist) {
     u32 widthAndHeight, width, height;
     gActiveCameraID = 4;
@@ -962,6 +976,7 @@ void func_800682AC(Gfx **dlist) {
     gActiveCameraID = 0;
 }
 
+//Official Name: camOffsetZero?
 void func_80068408(Gfx **dlist, MatrixS **mtx) {
     f32_matrix_from_position(D_80120D70[D_80120D1C], 0.0f, 0.0f, 0.0f);
     f32_matrix_mult(D_80120D70[D_80120D1C], &D_80120F20, &D_80121060);
@@ -1149,7 +1164,112 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
     }
 }
 
+#ifdef NON_EQUIVALENT
+void func_80068FA8(Gfx **dlist, MatrixS** mtx, Object *arg2, Object *arg3, f32 shear) {
+    f32 sinsf_x_arg2;
+    f32 sinsf_x_arg3;
+    f32 cossf_y_arg3;
+    f32 arg2_xPos;
+    f32 arg2_yPos;
+    f32 arg2_zPos;
+    f32 arg3_xPos;
+    f32 arg3_yPos;
+    f32 arg3_zPos;
+    Matrix matrix_mult;
+    f32 arg3_cossf_x_and_sinsf_y;
+    f32 arg3_sinsf_z_and_cossf_x;
+    f32 arg3_sinsf_x_and_y;
+    f32 sinsf_y_arg3;
+    f32 arg3_cossf_and_y;
+    f32 temp_f10_4;
+    f32 arg3_cossf_z_and_x;
+    f32 temp_f14;
+    f32 arg2_shear;
+    f32 temp_f18;
+    f32 cossf_z_arg3;
+    f32 cossf_y_arg2;
+    f32 sinsf_y_arg2;
+    f32 sinsf_z_arg3;
+    f32 temp_f26_2;
+    f32 cossf_x_arg3;
+    f32 arg2_scale;
+    f32 cossf_x_arg2;
+    f32 arg3_sinsf_x_and_cossf_y;
+    f32 temp_f6_3;
+    f32 temp_f6_5;
+    f32 temp_f6_7;
+
+    //arg2
+    cossf_x_arg2 = coss_f(arg2->segment.trans.x_rotation);
+    sinsf_x_arg2 = sins_f(arg2->segment.trans.x_rotation);
+    cossf_y_arg2 = coss_f(arg2->segment.trans.y_rotation);
+    sinsf_y_arg2 = sins_f(arg2->segment.trans.y_rotation);
+    arg2_xPos = arg2->segment.trans.x_position;
+    arg2_yPos = arg2->segment.trans.y_position;
+    arg2_zPos = arg2->segment.trans.z_position;
+
+    //arg3
+    cossf_z_arg3 = coss_f(arg3->segment.trans.z_rotation);
+    sinsf_z_arg3 = sins_f(arg3->segment.trans.z_rotation);
+    cossf_x_arg3 = coss_f(arg3->segment.trans.x_rotation);
+    sinsf_x_arg3 = sins_f(arg3->segment.trans.x_rotation);
+    cossf_y_arg3 = coss_f(arg3->segment.trans.y_rotation);
+    sinsf_y_arg3 = sins_f(arg3->segment.trans.y_rotation);
+    arg3_xPos = arg3->segment.trans.x_position;
+    arg3_yPos = arg3->segment.trans.y_position;
+    arg3_zPos = arg3->segment.trans.z_position;
+
+    arg2_scale = arg2->segment.trans.scale;
+    arg2_shear = shear * arg2_scale;
+    arg3_sinsf_x_and_y = sinsf_x_arg3 * sinsf_y_arg3;
+
+    temp_f18 = (cossf_z_arg3 * cossf_y_arg3) + (sinsf_z_arg3 * arg3_sinsf_x_and_y);
+
+    arg3_cossf_x_and_sinsf_y = cossf_x_arg3 * sinsf_y_arg3;
+
+    matrix_mult[0][0] = ((temp_f18 * cossf_y_arg2) + (-sinsf_y_arg2 * arg3_cossf_x_and_sinsf_y)) * arg2_scale;
+
+    arg3_sinsf_z_and_cossf_x = sinsf_z_arg3 * cossf_x_arg3;
+
+    matrix_mult[0][1] = ((arg3_sinsf_z_and_cossf_x * cossf_y_arg2) + (-sinsf_y_arg2 * -sinsf_x_arg3)) * arg2_scale;
+
+    arg3_sinsf_x_and_cossf_y = sinsf_x_arg3 * cossf_y_arg3;
+
+    temp_f6_3 = (-sinsf_y_arg3 * cossf_z_arg3) + (sinsf_z_arg3 * arg3_sinsf_x_and_cossf_y);
+
+    arg3_cossf_and_y = cossf_x_arg3 * cossf_y_arg3;
+
+    matrix_mult[0][2] = ((temp_f6_3 * cossf_y_arg2) + (-sinsf_x_arg3 * arg3_cossf_and_y)) * arg2_scale;
+    matrix_mult[0][3] = 0.0f;
+
+    temp_f6_5 = (-sinsf_z_arg3 * cossf_y_arg3) + (cossf_z_arg3 * arg3_sinsf_x_and_y);
+    temp_f10_4 = (sinsf_y_arg2 * temp_f18) + (cossf_y_arg2 * arg3_cossf_x_and_sinsf_y);
+    arg3_cossf_z_and_x = cossf_z_arg3 * cossf_x_arg3;
+    matrix_mult[1][0] = ((temp_f6_5 * cossf_x_arg2) + (sinsf_x_arg2 * temp_f10_4)) * arg2_shear;
+
+    temp_f26_2 = (sinsf_y_arg2 * arg3_sinsf_z_and_cossf_x) + (cossf_y_arg2 * -sinsf_x_arg3);
+    matrix_mult[1][1] = ((arg3_cossf_z_and_x * cossf_x_arg2) + (sinsf_x_arg2 * temp_f26_2)) * arg2_shear;
+
+    temp_f14 = (-sinsf_z_arg3 * -sinsf_y_arg3) + (cossf_z_arg3 * arg3_sinsf_x_and_cossf_y);
+    temp_f6_7 = (sinsf_y_arg2 * temp_f6_3) + (cossf_y_arg2 * arg3_cossf_and_y);
+    matrix_mult[1][2] = ((temp_f14 * cossf_x_arg2) + (sinsf_x_arg2 * temp_f6_7)) * arg2_shear;
+    matrix_mult[1][3] = 0.0f;
+    matrix_mult[2][0] = ((-sinsf_x_arg2 * temp_f6_5) + (cossf_x_arg2 * temp_f10_4)) * arg2_scale;
+    matrix_mult[2][1] = ((-sinsf_x_arg2 * arg3_cossf_z_and_x) + (cossf_x_arg2 * temp_f26_2)) * arg2_scale;
+    matrix_mult[2][2] = ((-sinsf_x_arg2 * temp_f14) + (cossf_x_arg2 * temp_f6_7)) * arg2_scale;
+    matrix_mult[2][3] = 0.0f;
+    matrix_mult[3][0] = (temp_f18 * arg2_xPos) + (arg2_yPos * temp_f6_5) + (arg2_zPos * arg3_cossf_x_and_sinsf_y) + arg3_xPos;
+    matrix_mult[3][1] = (arg3_sinsf_z_and_cossf_x * arg2_xPos) + (arg2_yPos * arg3_cossf_z_and_x) + (arg2_zPos * -sinsf_x_arg3) + arg3_yPos;
+    matrix_mult[3][2] = (temp_f6_3 * arg2_xPos) + (arg2_yPos * temp_f14) + (arg2_zPos * arg3_cossf_and_y) + arg3_zPos;
+    matrix_mult[3][3] = 1.0f;
+
+    f32_matrix_mult(&matrix_mult, &D_80120F20, &D_801210A0);
+    f32_matrix_to_s16_matrix(&D_801210A0, *mtx);
+    gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_1);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/camera/func_80068FA8.s")
+#endif
 
 void func_80069484(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale, f32 scaleY) {
     f32 tempX;
