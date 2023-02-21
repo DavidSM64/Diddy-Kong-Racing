@@ -1822,7 +1822,7 @@ void func_8006E770(Settings *settings, s32 arg1) {
 
     get_number_of_levels_and_worlds(&numLevels, &numWorlds);
     temp_v0 = (u16 *)get_misc_asset(MISC_ASSET_UNK17);
-    for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) { // 3 = number of save files?
+    for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         for (j = 0; j < numLevels; j++) {
             index = (j * 12) + (i * 4);
             if (arg1 & 1) {
