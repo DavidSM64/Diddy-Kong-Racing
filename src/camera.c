@@ -1165,8 +1165,7 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
 }
 
 #if 1
-void func_80068FA8(Gfx **dlist, MatrixS** mtx, Object *arg2, Object *arg3, f32 shear) {
-    Matrix matrix_mult;
+void func_80068FA8(Gfx **dlist, MatrixS **mtx, Object *arg2, Object *arg3, f32 shear) {
     f32 sinsf_x_arg2;
     f32 sinsf_x_arg3;
     f32 cossf_y_arg3;
@@ -1176,27 +1175,16 @@ void func_80068FA8(Gfx **dlist, MatrixS** mtx, Object *arg2, Object *arg3, f32 s
     f32 arg3_xPos;
     f32 arg3_yPos;
     f32 arg3_zPos;
-    f32 arg3_cossf_x_and_sinsf_y;
-    f32 arg3_sinsf_z_and_cossf_x;
     f32 sinsf_y_arg3;
-    f32 arg3_cossf_and_y;
-    f32 temp_f10_4;
-    f32 arg3_cossf_z_and_x;
-    f32 temp_f14;
     f32 arg2_shear;
-    f32 temp_f18;
     f32 cossf_z_arg3;
     f32 cossf_y_arg2;
     f32 sinsf_y_arg2;
     f32 sinsf_z_arg3;
-    f32 temp_f26_2;
     f32 cossf_x_arg3;
     f32 arg2_scale;
     f32 cossf_x_arg2;
-    f32 arg3_sinsf_x_and_cossf_y;
-    f32 temp_f6_3;
-    f32 temp_f6_5;
-    f32 temp_f6_7;
+    Matrix matrix_mult;
 
     //arg2
     cossf_x_arg2 = coss_f(arg2->segment.trans.x_rotation);
@@ -1221,41 +1209,21 @@ void func_80068FA8(Gfx **dlist, MatrixS** mtx, Object *arg2, Object *arg3, f32 s
     
     arg2_shear = (shear * arg2_scale);
 
-    temp_f18 = ((cossf_z_arg3 * cossf_y_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3)));
-
-    arg3_cossf_x_and_sinsf_y = (cossf_x_arg3 * sinsf_y_arg3);
-
-    arg3_sinsf_z_and_cossf_x = (sinsf_z_arg3 * cossf_x_arg3);
-
-    arg3_sinsf_x_and_cossf_y = (sinsf_x_arg3 * cossf_y_arg3);
-
-    temp_f6_3 = ((-sinsf_y_arg3 * cossf_z_arg3) + (sinsf_z_arg3 * arg3_sinsf_x_and_cossf_y));
-
-    arg3_cossf_and_y = (cossf_x_arg3 * cossf_y_arg3);
-
-    temp_f6_5 = ((-sinsf_z_arg3 * cossf_y_arg3) + (cossf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3)));
-    temp_f10_4 = ((sinsf_y_arg2 * temp_f18) + (cossf_y_arg2 * arg3_cossf_x_and_sinsf_y));
-    arg3_cossf_z_and_x = (cossf_z_arg3 * cossf_x_arg3);
-
-    temp_f26_2 = ((sinsf_y_arg2 * arg3_sinsf_z_and_cossf_x) + (cossf_y_arg2 * -sinsf_x_arg3));
-    temp_f14 = ((-sinsf_z_arg3 * -sinsf_y_arg3) + (cossf_z_arg3 * arg3_sinsf_x_and_cossf_y));
-    temp_f6_7 = ((sinsf_y_arg2 * temp_f6_3) + (cossf_y_arg2 * arg3_cossf_and_y));
-
-    matrix_mult[0][0] = ((temp_f18 * cossf_y_arg2) + (-sinsf_y_arg2 * arg3_cossf_x_and_sinsf_y)) * arg2_scale;
-    matrix_mult[0][1] = ((arg3_sinsf_z_and_cossf_x * cossf_y_arg2) + (-sinsf_y_arg2 * -sinsf_x_arg3)) * arg2_scale;
-    matrix_mult[0][2] = ((temp_f6_3 * cossf_y_arg2) + (-sinsf_x_arg3 * arg3_cossf_and_y)) * arg2_scale;
+    matrix_mult[0][0] = ((((cossf_z_arg3 * cossf_y_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3))) * cossf_y_arg2) + (-sinsf_y_arg2 * (cossf_x_arg3 * sinsf_y_arg3))) * arg2_scale;
+    matrix_mult[0][1] = (((sinsf_z_arg3 * cossf_x_arg3) * cossf_y_arg2) + (-sinsf_y_arg2 * -sinsf_x_arg3)) * arg2_scale;
+    matrix_mult[0][2] = ((((-sinsf_y_arg3 * cossf_z_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * cossf_y_arg3))) * cossf_y_arg2) + (-sinsf_x_arg3 * (cossf_x_arg3 * cossf_y_arg3))) * arg2_scale;
     matrix_mult[0][3] = 0.0f;
-    matrix_mult[1][0] = ((temp_f6_5 * cossf_x_arg2) + (sinsf_x_arg2 * temp_f10_4)) * arg2_shear;
-    matrix_mult[1][1] = ((arg3_cossf_z_and_x * cossf_x_arg2) + (sinsf_x_arg2 * temp_f26_2)) * arg2_shear;
-    matrix_mult[1][2] = ((temp_f14 * cossf_x_arg2) + (sinsf_x_arg2 * temp_f6_7)) * arg2_shear;
+    matrix_mult[1][0] = ((((-sinsf_z_arg3 * cossf_y_arg3) + (cossf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3))) * cossf_x_arg2) + (sinsf_x_arg2 * ((sinsf_y_arg2 * ((cossf_z_arg3 * cossf_y_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3)))) + (cossf_y_arg2 * (cossf_x_arg3 * sinsf_y_arg3))))) * arg2_shear;
+    matrix_mult[1][1] = (((cossf_z_arg3 * cossf_x_arg3) * cossf_x_arg2) + (sinsf_x_arg2 * ((sinsf_y_arg2 * (sinsf_z_arg3 * cossf_x_arg3)) + (cossf_y_arg2 * -sinsf_x_arg3)))) * arg2_shear;
+    matrix_mult[1][2] = ((((-sinsf_z_arg3 * -sinsf_y_arg3) + (cossf_z_arg3 * (sinsf_x_arg3 * cossf_y_arg3))) * cossf_x_arg2) + (sinsf_x_arg2 * ((sinsf_y_arg2 * ((-sinsf_y_arg3 * cossf_z_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * cossf_y_arg3)))) + (cossf_y_arg2 * (cossf_x_arg3 * cossf_y_arg3))))) * arg2_shear;
     matrix_mult[1][3] = 0.0f;
-    matrix_mult[2][0] = ((-sinsf_x_arg2 * temp_f6_5) + (cossf_x_arg2 * temp_f10_4)) * arg2_scale;
-    matrix_mult[2][1] = ((-sinsf_x_arg2 * arg3_cossf_z_and_x) + (cossf_x_arg2 * temp_f26_2)) * arg2_scale;
-    matrix_mult[2][2] = ((-sinsf_x_arg2 * temp_f14) + (cossf_x_arg2 * temp_f6_7)) * arg2_scale;
+    matrix_mult[2][0] = ((-sinsf_x_arg2 * ((-sinsf_z_arg3 * cossf_y_arg3) + (cossf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3)))) + (cossf_x_arg2 * ((sinsf_y_arg2 * ((cossf_z_arg3 * cossf_y_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3)))) + (cossf_y_arg2 * (cossf_x_arg3 * sinsf_y_arg3))))) * arg2_scale;
+    matrix_mult[2][1] = ((-sinsf_x_arg2 * (cossf_z_arg3 * cossf_x_arg3)) + (cossf_x_arg2 * ((sinsf_y_arg2 * (sinsf_z_arg3 * cossf_x_arg3)) + (cossf_y_arg2 * -sinsf_x_arg3)))) * arg2_scale;
+    matrix_mult[2][2] = ((-sinsf_x_arg2 * ((-sinsf_z_arg3 * -sinsf_y_arg3) + (cossf_z_arg3 * (sinsf_x_arg3 * cossf_y_arg3)))) + (cossf_x_arg2 * ((sinsf_y_arg2 * ((-sinsf_y_arg3 * cossf_z_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * cossf_y_arg3)))) + (cossf_y_arg2 * (cossf_x_arg3 * cossf_y_arg3))))) * arg2_scale;
     matrix_mult[2][3] = 0.0f;
-    matrix_mult[3][0] = (temp_f18 * arg2_xPos) + (arg2_yPos * temp_f6_5) + (arg2_zPos * arg3_cossf_x_and_sinsf_y) + arg3_xPos;
-    matrix_mult[3][1] = (arg3_sinsf_z_and_cossf_x * arg2_xPos) + (arg2_yPos * arg3_cossf_z_and_x) + (arg2_zPos * -sinsf_x_arg3) + arg3_yPos;
-    matrix_mult[3][2] = (temp_f6_3 * arg2_xPos) + (arg2_yPos * temp_f14) + (arg2_zPos * arg3_cossf_and_y) + arg3_zPos;
+    matrix_mult[3][0] = (((cossf_z_arg3 * cossf_y_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3))) * arg2_xPos) + (arg2_yPos * ((-sinsf_z_arg3 * cossf_y_arg3) + (cossf_z_arg3 * (sinsf_x_arg3 * sinsf_y_arg3)))) + (arg2_zPos * (cossf_x_arg3 * sinsf_y_arg3)) + arg3_xPos;
+    matrix_mult[3][1] = ((sinsf_z_arg3 * cossf_x_arg3) * arg2_xPos) + (arg2_yPos * (cossf_z_arg3 * cossf_x_arg3)) + (arg2_zPos * -sinsf_x_arg3) + arg3_yPos;
+    matrix_mult[3][2] = (((-sinsf_y_arg3 * cossf_z_arg3) + (sinsf_z_arg3 * (sinsf_x_arg3 * cossf_y_arg3))) * arg2_xPos) + (arg2_yPos * ((-sinsf_z_arg3 * -sinsf_y_arg3) + (cossf_z_arg3 * (sinsf_x_arg3 * cossf_y_arg3)))) + (arg2_zPos * (cossf_x_arg3 * cossf_y_arg3)) + arg3_zPos;
     matrix_mult[3][3] = 1.0f;
 
     f32_matrix_mult(&matrix_mult, &D_80120F20, &D_801210A0);
