@@ -1048,9 +1048,9 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
         gCameraTransform.z_position = obj->segment.trans.z_position;
         object_transform_to_matrix(D_80121060, &gCameraTransform);
         D_80120D1C++;
-        f32_matrix_mult((Matrix *) D_80121060, (Matrix *) &D_80120D70[D_80120D1C-1][0][0], (Matrix *) &D_80120D70[D_80120D1C][0][0]);
-        f32_matrix_mult(D_80120D70[D_80120D1C], (Matrix *) D_80120F20, (Matrix *) D_80121060);
-        f32_matrix_to_s16_matrix((Matrix *) D_80121060, *mtx);
+        f32_matrix_mult(&D_80121060, D_80120D70[D_80120D1C-1], D_80120D70[D_80120D1C]);
+        f32_matrix_mult(D_80120D70[D_80120D1C], &D_80120F20, &D_80121060);
+        f32_matrix_to_s16_matrix(&D_80121060, *mtx);
         D_80120D88[D_80120D1C] = *mtx;
         gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), 0x80);
         gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(&D_800DD138), 1, 0);
