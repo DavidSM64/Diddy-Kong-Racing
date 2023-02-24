@@ -1502,11 +1502,16 @@ void func_8006D968(s8 *arg0) {
     }
 }
 
-s32 get_render_context(void) {
+/**
+ * Gets the render context from outside this file
+ */
+RenderContext get_render_context(void) {
     return sRenderContext;
 }
 
-/* Unused function used to set the render context from outside this file */
+/**
+ *  Unused function used to set the render context from outside this file
+ */
 UNUSED void set_render_context(s32 changeTo) {
     sRenderContext = changeTo;
 }
