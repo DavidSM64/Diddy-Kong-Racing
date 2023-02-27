@@ -785,9 +785,7 @@ void func_8006BFC8(s8 *arg0) {
 
     phi_s0 = arg0[phi_s0];
 
-    // Check if CHEAT_ULTIMATE_AI is active
-    // This check works because a << 6 will but a 1 in the sign bit making it negative
-    if ((get_filtered_cheats() << 6) < 0) {
+    if (get_filtered_cheats() & CHEAT_ULTIMATE_AI) {
         phi_s0 = 9;
     }
     if (get_render_context() == DRAW_MENU) {
@@ -2106,18 +2104,18 @@ void func_8006F140(s32 arg0) {
         gLevelLoadTimer = 40;
         D_80123524 = 0;
         D_80123526 = 0;
-        if (arg0 == 1) {
+        if (arg0 == 1) { //FADE_BARNDOOR_HORIZONTAL?
             transition_begin(&D_800DD41C);
         }
-        if (arg0 == 3) {
+        if (arg0 == 3) { //FADE_CIRCLE?
             gLevelLoadTimer = 282;
             transition_begin(&D_800DD424);
         }
-        if (arg0 == 4) {
+        if (arg0 == 4) { //FADE_WAVES?
             gLevelLoadTimer = 360;
             transition_begin(&D_800DD424);
         }
-        if (arg0 == 0) {
+        if (arg0 == 0) { //FADE_FULLSCREEN?
             gLevelLoadTimer = 2;
         }
     }

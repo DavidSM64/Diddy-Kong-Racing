@@ -26,6 +26,7 @@
 #include "unknown_032760.h"
 #include "game_ui.h"
 #include "unknown_008C40.h"
+#include "controller.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
@@ -214,7 +215,7 @@ s32 objCount;
 s32 D_8011AE60;
 s32 D_8011AE64;
 Object *gObjectMemoryPool;
-s32 *D_8011AE6C;
+s32 *D_8011AE6C; //Object *?
 s32 D_8011AE70;
 Object **D_8011AE74;
 s16 D_8011AE78;
@@ -952,7 +953,206 @@ void gParticlePtrList_flush(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800101AC.s")
+
+#if 1
+void func_80010994(s32 updateRate) {
+    s32 sp54;
+    s32 sp44;
+    s32 sp38;
+    Object *temp_a0;
+    Object *temp_s0;
+    Object *temp_s0_2;
+    Object *temp_s0_4;
+    ObjectHeader *temp_a2;
+    ObjectInteraction *temp_v0_3;
+    Object_64 *temp_a1_2;
+    Particle2 *temp_s0_3;
+    s16 temp_v0_2;
+    s32 temp_a3;
+    s32 temp_objCount;
+    s32 i_var_a1;
+    s32 buttonsPressedFromAnyPlayer;
+    s32 var_at;
+    s32 var_s1;
+    s32 var_s1_2;
+    s32 i_var_s1_3;
+    s32 var_s1_4;
+    s32 var_s2;
+    s32 var_s2_2;
+    s32 var_s2_3;
+    s32 var_s2_4;
+    s32 var_s2_5;
+    s32 var_s2_6;
+    s32 var_s2_7;
+    s32 i;
+    s32 var_v0;
+    s32 var_v0_2;
+    s32 var_v0_3;
+    s32 var_v0_4;
+    s32 var_v1;
+    s8 var_a0;
+    u32 buttonsPressed;
+    Object_68 **temp_v1;
+    Object_Racer *temp_a1;
+    Object *temp_v0;
+
+    func_800245B4(-1);
+    gRaceStartCountdown = D_8011ADB0;
+    if ((D_8011ADB0 > 0) && (func_800A0190() != 0)) {
+        var_v0 = D_8011ADB0 - updateRate;
+        D_8011ADB0 = var_v0;
+        D_8011ADBC = 0;
+    } else {
+        D_8011ADBC += updateRate;
+        var_v0 = D_8011ADB0;
+    }
+    if (var_v0 <= 0) {
+        D_8011ADB0 = 0;
+    }
+    D_8011AD3D = 0;
+    D_8011AD20[1] = 1 - D_8011AD20[1];
+    D_8011AD22[D_8011AD20[1]] = 0;
+    for (i = 0; i < gNumRacers; i++) {
+        temp_v0 = gRacers[i];
+        temp_a1 = temp_v0->unk64;
+        temp_a1->prev_x_position = (f32) temp_v0->segment.trans.x_position;
+        temp_a1->prev_y_position = (f32) temp_v0->segment.trans.y_position;
+        temp_a1->prev_z_position = (f32) temp_v0->segment.trans.z_position;
+    }
+    func_800142B8();
+    func_800155B8();
+    func_8001E89C();
+    for (i = 0; i < D_8011AE70; i++) {
+        run_object_loop_func(D_8011AE6C[i], updateRate);
+    }
+    func_8001E6EC(1);
+    for (i = 0; i < D_8011AE70; i++) {
+        func_8001709C(D_8011AE6C[i]);
+    }
+    //for (i = 0; i < objCount) {
+    temp_objCount = objCount;
+    var_s2_3 = D_8011AE60 * 4;
+    if (D_8011AE60 < temp_objCount) {
+        do {
+            temp_s0 = *(gObjPtrList + var_s2_3);
+            if (!(temp_s0->segment.trans.unk6 & 0x8000)) {
+                if ((temp_s0->behaviorId != BHV_LIGHT_RGBA) && (temp_s0->behaviorId != BHV_WEAPON) && (temp_s0->behaviorId != BHV_FOG_CHANGER)) {
+                    if (temp_s0->interactObj != NULL) {
+                        if (temp_s0->interactObj->unk11 != 2) {
+                            run_object_loop_func(temp_s0, updateRate);
+                        }
+                    } else {
+                        run_object_loop_func(temp_s0, updateRate);
+                    }
+                    if (temp_s0->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+                        for (i_var_a1 = 0; i_var_a1 < temp_s0->segment.header->numberOfModelIds; i_var_a1++) {
+                            temp_v1 = temp_s0->unk68[i_var_a1];
+                            if (temp_v1 != NULL) {
+                                temp_v1[0]->objModel->unk52 = updateRate;
+                            }
+                        }
+                        if (temp_s0->segment.header->unk72 != 0xFF) {
+                            func_80014090(temp_s0, updateRate, temp_s0->segment.header);
+                        }
+                    }
+                }
+            }
+            var_s2_3 += 4;
+        } while (var_s2_3 < (temp_objCount * 4));
+    }
+    for (var_s1_2 = 0; var_s1_2 < gNumRacers; var_s1_2++) {
+        update_player_racer(*gRacers[var_s1_2], updateRate);
+    }
+    if (get_current_level_race_type() == 0) {
+        for (i_var_s1_3 = 0; i_var_s1_3 < gNumRacers; i_var_s1_3++) {
+            temp_a1_2 = gRacersByPosition[i_var_s1_3]->unk64;
+            if (gRacersByPosition[i_var_s1_3]->unk64->racer.playerIndex != -1) {
+                func_80043ECC(gRacersByPosition[i_var_s1_3], &temp_a1_2->racer, updateRate);
+                i_var_s1_3 = gNumRacers + 1; //Why not just break?
+            }
+        }
+    }
+    func_8000BADC(updateRate);
+    var_s2_5 = D_8011AE60 * 4;
+    if (D_8011AE60 < temp_objCount) {
+        var_v0_3 = temp_objCount * 4;
+        do {
+            temp_s0_2 = *(gObjPtrList + var_s2_5);
+            if ((!(temp_s0_2->segment.trans.unk6 & 0x8000) && (temp_s0_2->behaviorId == 5)) || (temp_s0_2->behaviorId == 0xF)) {
+                sp44 = var_v0_3;
+                run_object_loop_func(temp_s0_2, updateRate);
+            }
+            var_s2_5 += 4;
+        } while (var_s2_5 < var_v0_3);
+    }
+    if (D_8011AE64 > 0) {
+        var_v0_4 = temp_objCount * 4;
+        var_s2_6 = D_8011AE60 * 4;
+        if (D_8011AE60 < temp_objCount) {
+            do {
+                temp_s0_3 = *(gObjPtrList + var_s2_6);
+                if (temp_s0_3->trans.unk6 & 0x8000) {
+                    sp44 = var_v0_4;
+                    func_800B22FC(temp_s0_3, updateRate);
+                }
+                var_s2_6 += 4;
+            } while (var_s2_6 < var_v0_4);
+        }
+    }
+    lightUpdateLights(updateRate);
+    if (func_80032C6C() > 0) {
+        for (i = D_8011AE60; i < objCount; i++) {
+            if (!(gObjPtrList[i]->segment.trans.unk6 & 0x8000) && (gObjPtrList[i]->unk54 != NULL)) {
+                func_80032C7C(gObjPtrList[i]);
+            }
+        }
+    }
+    func_8001E6EC(0);
+    if (D_8011AEF7 != 0) {
+        func_80022948();
+    }
+    if (D_8011ADAC == 0) {
+        gParticlePtrList_flush();
+        func_80017E98();
+        func_8001BC54();
+        func_8001E93C();
+    }
+    if (gNumRacers != 0) {
+        if (D_8011AD4E == 0) {
+            func_80019808(updateRate);
+        } else {
+            func_8001A8F4(updateRate);
+        }
+    }
+    func_80008438(gRacersByPort, gNumRacers, updateRate);
+    D_8011ADAC = 1;
+    D_8011ADA8 = (f32) updateRate;
+    *D_8011AD24 = 0;
+    D_8011AD53 = 0;
+    func_8000E2B4();
+    func_8009CFB0();
+    func_800179D0();
+    if (D_8011AF00 == 1) {
+        if ((D_8011ADB0 == 0x50) && (D_8011AE7A == 0)) {
+            buttonsPressedFromAnyPlayer = 0;
+            for (i = 0; i < MAXCONTROLLERS; i++) {
+                buttonsPressed = get_buttons_pressed_from_player(i);
+                buttonsPressedFromAnyPlayer |= buttonsPressed;
+            }
+
+            if (buttonsPressedFromAnyPlayer & A_BUTTON) {
+                func_8001E45C(100);
+            } else if ((buttonsPressedFromAnyPlayer & CONT_B) && (get_trophy_race_world_id() == 0) && (is_in_tracks_mode() == 0)) {
+                func_8006F140(1); //FADE_BARNDOOR_HORIZONTAL?
+            }
+        }
+    } else if (D_8011AF00 == 0) {
+        D_8011AF00 = 1;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_80010994.s")
+#endif
 
 #ifdef NON_EQUIVALENT
 void func_80011134(Object *arg0, s32 arg1) {
