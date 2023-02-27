@@ -216,7 +216,7 @@ s32 objCount;
 s32 D_8011AE60;
 s32 D_8011AE64;
 Object *gObjectMemoryPool;
-s32 *D_8011AE6C; //Object *?
+Object **D_8011AE6C;
 s32 D_8011AE70;
 Object **D_8011AE74;
 s16 D_8011AE78;
@@ -357,7 +357,7 @@ void allocate_object_pools(void) {
     func_8001D258(0.67f, 0.33f, 0, -0x2000, 0);
     gObjectMemoryPool = (Object *) new_sub_memory_pool(OBJECT_POOL_SIZE, OBJECT_SLOT_COUNT);
     gParticlePtrList = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 200, COLOUR_TAG_BLUE);
-    D_8011AE6C = (s32 *) allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
+    D_8011AE6C = (Object **) allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
     D_8011AE74 = (Object **) allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     gTrackCheckpoints = (CheckpointNode *) allocate_from_main_pool_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
     D_8011AEDC = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
@@ -779,13 +779,11 @@ Object **objGetObjList(s32 *arg0, s32 *cnt) {
     return gObjPtrList;
 }
 
-// Unused?
-s32 getObjectCount(void) {
+UNUSED s32 getObjectCount(void) {
     return objCount;
 }
 
-// Unused?
-s32 func_8000E9C0(void) {
+UNUSED s32 func_8000E9C0(void) {
     return D_8011AE64;
 }
 
@@ -1037,7 +1035,8 @@ void func_80010994(s32 updateRate) {
     if (D_8011AE64 > 0) {
         for (i = D_8011AE60; i < objCount; i++) {
             if (gObjPtrList[i]->segment.trans.unk6 & 0x8000) {
-                func_800B22FC(gObjPtrList[i], updateRate);
+                //Why is this object being treated as a Particle2?
+                func_800B22FC((Particle2 *) gObjPtrList[i], updateRate);
             }
         }
     }
