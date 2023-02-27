@@ -150,7 +150,8 @@ extern f32 D_800E5644;
 // Currently defined in unknown_005740. Might need to be defined here.
 extern s16 D_8011AC20[128];
 
-s8 D_8011AD20[2];
+s8 D_8011AD20;
+s8 D_8011AD21;
 s8 D_8011AD22[2];
 s8 D_8011AD24[2];
 s8 D_8011AD26[2];
@@ -440,7 +441,7 @@ void func_8000C460(void) {
     D_8011AED4 = 0;
     gNumRacers = 0;
     D_8011AE78 = 0;
-    D_8011AD20[1] = 0;
+    D_8011AD21 = 0;
     D_8011AD22[0] = 0;
     D_8011AD22[1] = 0;
 
@@ -588,7 +589,7 @@ void instShowBearBar(void) {
 }
 
 s8 func_8000E138() {
-    return D_8011AD20[0];
+    return D_8011AD20;
 }
 
 s8 func_8000E148() {
@@ -954,7 +955,7 @@ void gParticlePtrList_flush(void) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800101AC.s")
 
-#if 1
+#ifdef NON_EQUIVALENT
 void func_80010994(s32 updateRate) {
     Object *temp_s0;
     Object_Racer *racer;
@@ -974,8 +975,8 @@ void func_80010994(s32 updateRate) {
         D_8011ADB0 = 0;
     }
     D_8011AD3D = 0;
-    D_8011AD20[1] = 1 - D_8011AD20[1];
-    D_8011AD22[D_8011AD20[1]] = 0;
+    D_8011AD21 = 1 - D_8011AD21;
+    D_8011AD22[D_8011AD21] = 0;
     for (i = 0; i < gNumRacers; i++) {
         racer = &(*gRacers)[i]->unk64->racer;
         racer->prev_x_position = (f32) (*gRacers)[i]->segment.trans.x_position;
@@ -2473,7 +2474,7 @@ void func_80021400(s32 arg0) {
 }
 
 s8 func_800214C4(void) {
-    return D_8011AD22[1 - D_8011AD20[1]];
+    return D_8011AD22[1 - D_8011AD21];
 }
 
 s8 func_800214E4(Object *obj, s32 updateRate) {
