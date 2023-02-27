@@ -99,7 +99,7 @@ endif
 # NOTE: If you are adding a tool here, make sure to update the Makefile in `/tools/ido-static-recomp/`!
 RECOMP_TOOLS := cc cfe uopt ugen as1 ujoin uld usplit umerge
 
-RECOMP_DIR := $(RECOMP_PROJECT)build5.3/out/
+RECOMP_DIR := $(RECOMP_PROJECT)build/5.3/out/
 RECOMP_TOOLS_PATHS = $(addprefix $(RECOMP_DIR),$(RECOMP_TOOLS))
 
 # Checks if all the recomp tools exist.
@@ -107,7 +107,7 @@ $(foreach p,$(RECOMP_TOOLS_PATHS),$(if $(wildcard $(p)),,$(info $(p) does not ex
 
 # If any of the tools do not exist, then recomp needs to run to build them.
 ifeq ($(runRecomp),yes)
-  DUMMY != cd $(RECOMP_PROJECT) && python3 build.py ido/5.3 -O2 && cp build5.3/out/usr/bin/cc build5.3/out/cc && cp build5.3/out/usr/lib/* build5.3/out/ && cd ../../ >&2 || echo FAIL
+  DUMMY != cd $(RECOMP_PROJECT) && make setup && make VERSION=5.3 && cp build/5.3/out/usr/bin/cc build/5.3/out/cc && cp build/5.3/out/usr/lib/* build/5.3/out/ && cd ../../ >&2 || echo FAIL
 endif
 
 ######## Extract Assets & Microcode ########
@@ -428,7 +428,7 @@ $(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR)/$(TARGET).z64
 $(BUILD_DIR)/$(TARGET).objdump: $(BUILD_DIR)/$(TARGET).elf
 	$(OBJDUMP) -D $< > $@
     
-$(GLOBAL_ASM_O_FILES): CC := $(PYTHON) tools/asm_processor/build.py $(CC) -- $(AS) $(ASFLAGS) --
+$(GLOBAL_ASM_O_FILES): CC := python3 tools/asm_processor/build.py $(CC) -- $(AS) $(ASFLAGS) --
 
 test: $(BUILD_DIR)/$(TARGET).z64
 	$(EMULATOR) $(EMU_FLAGS) $<
