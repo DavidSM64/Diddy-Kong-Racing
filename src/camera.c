@@ -158,6 +158,7 @@ void func_80065EA0(void) {
     gAntiPiracyViewport = 0;
     while (IO_READ(PI_STATUS_REG) & PI_STATUS_ERROR) {
     }
+    //0xB0000578 is a direct read from the ROM as opposed to RAM
     if ((D_B0000578 & 0xFFFF) != 0x8965) {
         gAntiPiracyViewport = TRUE;
     }
