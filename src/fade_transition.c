@@ -226,7 +226,7 @@ void disable_new_screen_transitions(void) {
 }
 
 //@bug: This doesn't seem to guarantee a return.
-u32 func_800C018C(void) {
+u32 fxFadeOn(void) {
     u32 isActive = sTransitionFadeTimer != 0;
     if (isActive == FALSE) {
         isActive = sTransitionFlags != 0;
@@ -250,9 +250,9 @@ s32 transition_begin(FadeTransition *transition) {
     sTransitionFadeTimer = transition->duration;
     D_800E31B8 = transition->duration;
     sTransitionFlags = transition->unk6;
-    D_800E31BC = !(transition->type & 0x80);
+    D_800E31BC = !(transition->type & FADE_FLAG_UNK2);
     gCurFadeTransition = transition->type & 0x3F;
-    D_800E31A8 = transition->type & 0x40;
+    D_800E31A8 = transition->type & FADE_FLAG_UNK1;
     sLevelTransitionDelayTimer = 0;
     if (!D_800E31BC && !sLevelTransitionDelayTimer) {
         sLevelTransitionDelayTimer = 2; 

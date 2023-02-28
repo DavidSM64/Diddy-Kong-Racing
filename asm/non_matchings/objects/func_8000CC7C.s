@@ -1390,7 +1390,7 @@ glabel L8000D98C
 /* 00EC00 8000E000 02402025 */   move  $a0, $s2
 /* 00EC04 8000E004 0C027068 */  jal   get_save_file_index
 /* 00EC08 8000E008 00000000 */   nop   
-/* 00EC0C 8000E00C 0C01BB12 */  jal   func_8006EC48
+/* 00EC0C 8000E00C 0C01BB12 */  jal   safe_mark_write_save_file
 /* 00EC10 8000E010 00402025 */   move  $a0, $v0
 .L8000E014:
 /* 00EC14 8000E014 8FAE0130 */  lw    $t6, 0x130($sp)

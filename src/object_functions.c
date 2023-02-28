@@ -22,7 +22,7 @@
 #include "unknown_032760.h"
 #include "game_ui.h"
 #include "waves.h"
-#include "unknown_003260.h"
+#include "audiosfx.h"
 #include "math_util.h"
 #include "game_text.h"
 #include "fade_transition.h"
@@ -31,12 +31,13 @@
 #include "lib/src/libc/rmonPrintf.h"
 #include "collision.h"
 #include "main.h"
+#include "controller.h"
 
 /************ .data ************/
 
 // Unsure about the signed/unsigned with these arrays.
-FadeTransition D_800DC970 = FADE_TRANSITION(0x40, FADE_COLOR_WHITE, 7, 3);
-FadeTransition D_800DC978 = FADE_TRANSITION(0x00, FADE_COLOR_BLACK, 30, 0xFFFF);
+FadeTransition D_800DC970 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK1, FADE_COLOR_WHITE, 7, 3);
+FadeTransition D_800DC978 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, 0xFFFF);
 
 u16 D_800DC980[20] = {
     0xFF00, 0x0100, 0x0000, 0xFFFF,
@@ -1341,6 +1342,7 @@ void obj_loop_posarrow(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
+/* Offical name: animInit */
 void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 arg2) {
     Object_Animator *obj64;
     LevelModel *levelModel;
@@ -3320,6 +3322,7 @@ void obj_init_seamonster(UNUSED Object *obj, UNUSED LevelObjectEntry_SeaMonster 
 void obj_loop_seamonster(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
+/* Official name: fogInit(?) */
 void obj_init_fogchanger(Object *obj, LevelObjectEntry_FogChanger *entry) {
     f32 temp_f0;
     temp_f0 = entry->unk8 * 8.0f;
@@ -4320,6 +4323,7 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     gParticlePtrList_addObject(obj);
 }
 
+/* Official name: audioLineInit */
 void obj_init_audioline(Object *obj, LevelObjectEntry_AudioLine *entry) {
     Object_AudioLine *obj64;
 
@@ -4352,6 +4356,7 @@ void obj_init_audioreverb(Object *obj, LevelObjectEntry_AudioReverb *entry) {
     gParticlePtrList_addObject(obj);
 }
 
+/* Official name: texscrollInit */
 void obj_init_texscroll(Object *obj, LevelObjectEntry_TexScroll *entry, s32 arg2) {
     Object_TexScroll *obj64;
     LevelModel *levelModel;
@@ -4377,6 +4382,7 @@ void obj_init_texscroll(Object *obj, LevelObjectEntry_TexScroll *entry, s32 arg2
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_texscroll.s")
 
+/* Official name: rgbalightInit */
 void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, UNUSED s32 arg2) {
     obj->unk64 = func_80031CAC(obj, entry);
 }
@@ -4484,6 +4490,7 @@ void obj_loop_log(Object *obj, s32 updateRate) {
     obj->unk5C->unk100 = NULL;
 }
 
+/* Official name: weatherInit */
 void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry) {
     f32 temp = entry->unk8;
     temp *= temp;
@@ -4524,7 +4531,7 @@ void obj_loop_weather(Object *obj, UNUSED s32 updateRate) {
     entry = (LevelObjectEntry_Weather *)obj->segment.unk3C_a.level_entry;
     if (((diffX * diffX) + (diffZ * diffZ)) <= dist){
       if (((!obj->segment.unk3C_a.level_entry) && (!obj->segment.unk3C_a.level_entry)) && (!obj->segment.unk3C_a.level_entry)){}  // Fakematch
-      func_800ABC5C(entry->unkA * 256, entry->unkC * 256, entry->unkE * 256, entry->unk10 * 257, entry->unk11 * 257, entry->unk12);
+      changeWeather(entry->unkA * 256, entry->unkC * 256, entry->unkE * 256, entry->unk10 * 257, entry->unk11 * 257, entry->unk12);
     }
   }
 }
@@ -4534,7 +4541,7 @@ void obj_init_lensflare(Object *obj, UNUSED LevelObjectEntry_LensFlare *entry) {
 }
 
 void obj_init_lensflareswitch(Object *obj, LevelObjectEntry_LensFlareSwitch *entry, UNUSED s32 arg2) {
-    func_800ACF60(obj);
+    cameraAddOverrideObject(obj);
     obj->segment.trans.scale = entry->unk8;
     obj->segment.trans.scale /= 40.0f;
 }
@@ -4664,6 +4671,7 @@ void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry) {
     temp->unk3 = entry->unkB;
 }
 
+/* Official name: bubblerInit */
 void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry) {
     func_800AF134((Particle *) obj->unk6C, entry->unk9, entry->unk8, 0, 0, 0);
     obj->unk78 = entry->unkA;
@@ -4694,6 +4702,7 @@ void obj_loop_unknown94(UNUSED Object *obj, s32 UNUSED updateRate) {
 void obj_init_rangetrigger(UNUSED Object *obj, UNUSED LevelObjectEntry_RangeTrigger *entry) {
 }
 
+/* Official name: rangetriggerControl */
 void obj_loop_rangetrigger(Object *obj, s32 updateRate) {
     LevelObjectEntry_RangeTrigger *level_entry;
     unk80042178 sp20;

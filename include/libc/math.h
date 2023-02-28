@@ -3,7 +3,7 @@
 
 #define M_PI 3.14159265358979323846
 
-float sinf(float);
+float sinf(float); //official name: fsin
 double sin(double);
 float cosf(float);
 double cos(double);

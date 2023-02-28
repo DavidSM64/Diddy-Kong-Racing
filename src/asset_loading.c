@@ -63,6 +63,7 @@ u32 *load_asset_section_from_rom(u32 assetIndex) {
 /**
  * Loads part of an asset section to a specific memory address.
  * Returns the size argument.
+ * Official name: piRomLoadSection
  */
 s32 load_asset_to_address(u32 assetIndex, u32 address, s32 assetOffset, s32 size) {
     u32 *index;
@@ -81,6 +82,7 @@ s32 load_asset_to_address(u32 assetIndex, u32 address, s32 assetOffset, s32 size
 
 /**
  * Returns a rom offset of an asset given its asset section and a local offset.
+ * Official name: piRomGetSectionPtr
  */
 u8 *get_rom_offset_of_asset(u32 assetIndex, u32 assetOffset) {
     u32 *index;
@@ -98,6 +100,7 @@ u8 *get_rom_offset_of_asset(u32 assetIndex, u32 assetOffset) {
 
 /**
  * Returns the size of an asset section.
+ * Official name: piRomGetFileSize
  */
 s32 get_size_of_asset_section(u32 assetIndex) {
     u32 *index;
@@ -115,6 +118,7 @@ s32 get_size_of_asset_section(u32 assetIndex) {
 
 /**
  * Copies data from the game cartridge to a ram address.
+ * Official name: romCopy
  */
 void dmacopy(u32 romOffset, u32 ramAddress, s32 numBytes) {
     OSMesg dmaMesg;
@@ -127,7 +131,7 @@ void dmacopy(u32 romOffset, u32 ramAddress, s32 numBytes) {
             numBytesToDMA = numBytes;
         }
         osPiStartDma(&gAssetsDmaIoMesg, OS_MESG_PRI_NORMAL, OS_READ, romOffset, (u32 *) ramAddress, numBytesToDMA, &gDmaMesgQueue);
-        osRecvMesg(&gDmaMesgQueue, &dmaMesg, 1);
+        osRecvMesg(&gDmaMesgQueue, &dmaMesg, OS_MESG_BLOCK);
         numBytes -= numBytesToDMA;
         romOffset += numBytesToDMA;
         ramAddress += numBytesToDMA;

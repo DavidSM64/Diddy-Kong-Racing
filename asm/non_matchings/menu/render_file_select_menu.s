@@ -274,10 +274,10 @@ glabel render_file_select_menu
 /* 08DD74 8008D174 3C088012 */   lui   $t0, %hi(D_80126488) # $t0, 0x8012
 /* 08DD78 8008D178 3C028012 */  lui   $v0, %hi(D_80126494) # $v0, 0x8012
 /* 08DD7C 8008D17C 8C426494 */  lw    $v0, %lo(D_80126494)($v0)
-/* 08DD80 8008D180 3C188012 */  lui   $t8, %hi(D_8012648C) # $t8, 0x8012
+/* 08DD80 8008D180 3C188012 */  lui   $t8, %hi(gSaveFileIndex3) # $t8, 0x8012
 /* 08DD84 8008D184 14400007 */  bnez  $v0, .L8008D1A4
 /* 08DD88 8008D188 00000000 */   nop   
-/* 08DD8C 8008D18C 8F18648C */  lw    $t8, %lo(D_8012648C)($t8)
+/* 08DD8C 8008D18C 8F18648C */  lw    $t8, %lo(gSaveFileIndex3)($t8)
 /* 08DD90 8008D190 00000000 */  nop   
 /* 08DD94 8008D194 16780003 */  bne   $s3, $t8, .L8008D1A4
 /* 08DD98 8008D198 00000000 */   nop   
@@ -285,8 +285,8 @@ glabel render_file_select_menu
 /* 08DDA0 8008D1A0 24120001 */   li    $s2, 1
 .L8008D1A4:
 /* 08DDA4 8008D1A4 1840001A */  blez  $v0, .L8008D210
-/* 08DDA8 8008D1A8 3C198012 */   lui   $t9, %hi(D_80126490) # $t9, 0x8012
-/* 08DDAC 8008D1AC 8F396490 */  lw    $t9, %lo(D_80126490)($t9)
+/* 08DDA8 8008D1A8 3C198012 */   lui   $t9, %hi(gSaveFileIndex2) # $t9, 0x8012
+/* 08DDAC 8008D1AC 8F396490 */  lw    $t9, %lo(gSaveFileIndex2)($t9)
 /* 08DDB0 8008D1B0 00000000 */  nop   
 /* 08DDB4 8008D1B4 16790016 */  bne   $s3, $t9, .L8008D210
 /* 08DDB8 8008D1B8 00000000 */   nop   
@@ -294,10 +294,10 @@ glabel render_file_select_menu
 /* 08DDC0 8008D1C0 24120001 */   li    $s2, 1
 .L8008D1C4:
 /* 08DDC4 8008D1C4 8D086488 */  lw    $t0, %lo(D_80126488)($t0)
-/* 08DDC8 8008D1C8 3C098012 */  lui   $t1, %hi(D_8012648C) # $t1, 0x8012
+/* 08DDC8 8008D1C8 3C098012 */  lui   $t1, %hi(gSaveFileIndex3) # $t1, 0x8012
 /* 08DDCC 8008D1CC 11000007 */  beqz  $t0, .L8008D1EC
 /* 08DDD0 8008D1D0 3C0A8012 */   lui   $t2, %hi(D_801263E0) # $t2, 0x8012
-/* 08DDD4 8008D1D4 8D29648C */  lw    $t1, %lo(D_8012648C)($t1)
+/* 08DDD4 8008D1D4 8D29648C */  lw    $t1, %lo(gSaveFileIndex3)($t1)
 /* 08DDD8 8008D1D8 00000000 */  nop   
 /* 08DDDC 8008D1DC 1669000C */  bne   $s3, $t1, .L8008D210
 /* 08DDE0 8008D1E0 00000000 */   nop   

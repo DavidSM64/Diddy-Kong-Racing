@@ -4,6 +4,14 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
+<!-- README_SCORE_SUMMARY_BEGIN -->
+As of February 21, 2023, this is our current score:
+
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 50.15%
+
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 23.36%
+<!-- README_SCORE_SUMMARY_END -->
+
 ---
 
 ## Dependencies
@@ -120,25 +128,25 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of January 23, 2023, this is our current score:
+As of February 21, 2023, this is our current score:
 ```
  ===================================================================
                ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------- 49.47% Complete -------------------------
-                    # Decompiled functions: 1477
-                     # GLOBAL_ASM remaining: 361
+ ------------------------- 50.15% Complete -------------------------
+                    # Decompiled functions: 1482
+                     # GLOBAL_ASM remaining: 349
                     # NON_MATCHING functions: 10
-                 # NON_EQUIVALENT WIP functions: 66
+                 # NON_EQUIVALENT WIP functions: 63
  --------------------------- Game Status ---------------------------
-              Balloons: 24/47, Keys: 3/4, Trophies: 2/5
+              Balloons: 25/47, Keys: 3/4, Trophies: 2/5
                T.T. Amulets: 2/4, Wizpig Amulets: 2/4
  -------------------------------------------------------------------
-              We are racing in Pirate Lagoon. (Lap 2/3)
+             We are racing in Treasure Caves. (Lap 1/3)
  ===================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 23.13% Complete -------------------------
-                     # Documented functions: 428
-                   # Undocumented remaining: 1145
+ ------------------------- 23.36% Complete -------------------------
+                     # Documented functions: 443
+                   # Undocumented remaining: 1123
  --------------------------- Game Status ---------------------------
               Balloons: 12/47, Keys: 1/4, Trophies: 0/5
                T.T. Amulets: 1/4, Wizpig Amulets: 1/4

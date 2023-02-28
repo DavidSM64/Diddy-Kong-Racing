@@ -1,4 +1,4 @@
-glabel render_printf
+glabel render_printf /* official name: diPrintf */
 /* 0B6ADC 800B5EDC 3C0E8013 */  lui   $t6, %hi(gDebugPrintBufferEnd) # $t6, 0x8013
 /* 0B6AE0 800B5EE0 8DCE85D8 */  lw    $t6, %lo(gDebugPrintBufferEnd)($t6)
 /* 0B6AE4 800B5EE4 27BDFFE0 */  addiu $sp, $sp, -0x20

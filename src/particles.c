@@ -444,7 +444,7 @@ void func_800AF134(Particle *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 a
     }
 }
 
-void func_800AF1E0(Particle *arg0, s32 arg1, s32 arg2) {
+void partInitTrigger(Particle *arg0, s32 arg1, s32 arg2) {
     ParticleBehavior *temp_v0;
 
     if (arg1 < gParticleBehavioursAssetTableCount) {

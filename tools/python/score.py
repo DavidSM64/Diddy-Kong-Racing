@@ -155,6 +155,7 @@ def main():
     parser = argparse.ArgumentParser(description="")
     parser.add_argument("-t", "--top", help="(Optional) Shows the top N files remaining.")
     parser.add_argument("-a", "--adventure", help="(Optional) Only shows adventure 1 or 2 based on passed in value.", choices=['1', '2'])
+    parser.add_argument("-s", "--summary", help="(Optional) Only prints the percentages for adventure 1 and 2", action='store_true')
     args = parser.parse_args()
     adventureSelect = 3 # Show both adventures by default
     if args.adventure != None:
@@ -213,6 +214,10 @@ def main():
     adventureOnePercentage = (totalSizeOfDecompiledFunctions / CODE_SIZE) * 100
     adventureTwoPercentage = (totalSizeOfDocumentedFunctions / (CODE_SIZE - ignoreSizeDocumentedFunctions)) * 100
     
+    if args.summary:
+        print(f"Decomp progress: {adventureOnePercentage:5.2f}%")
+        print(f"Documentation progress: {adventureTwoPercentage:5.2f}%")
+        sys.exit(0)
     scoreDisplay = ScoreDisplay()
     print(scoreDisplay.getDisplay(adventureOnePercentage, adventureTwoPercentage, adventureSelect, totalNumberOfDecompiledFunctions, totalNumberOfGlobalAsms, totalNumberOfNonMatching, totalNumberOfNonEquivalent, totalNumberOfDocumentedFunctions, (totalNumberOfFunctions - ignoreNumberDocumentedFunctions) - totalNumberOfDocumentedFunctions))
     

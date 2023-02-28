@@ -10,7 +10,7 @@
 #include "audio.h"
 #include "textures_sprites.h"
 #include "objects.h"
-#include "unknown_003260.h"
+#include "audiosfx.h"
 #include "unknown_0255E0.h"
 #include "math_util.h"
 

@@ -150,7 +150,7 @@ glabel func_8000FD54
 /* 010B68 8000FF68 02401025 */   move  $v0, $s2
 /* 010B6C 8000FF6C 8FA60034 */  lw    $a2, 0x34($sp)
 /* 010B70 8000FF70 02402025 */  move  $a0, $s2
-/* 010B74 8000FF74 0C003D92 */  jal   func_8000F648
+/* 010B74 8000FF74 0C003D92 */  jal   objFreeAssets
 /* 010B78 8000FF78 02802825 */   move  $a1, $s4
 /* 010B7C 8000FF7C 8FA40038 */  lw    $a0, 0x38($sp)
 /* 010B80 8000FF80 0C003211 */  jal   func_8000C844

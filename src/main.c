@@ -107,6 +107,7 @@ void find_expansion_pak(void) {
  * Where it all begins.
  * Once the boot procedure is finished in IPL3, this function is run.
  * It kicks things off by initialising thread1, which serves as the top level
+ * Official name: boot
 */
 void main(void) {
     osInitialize();
@@ -153,6 +154,7 @@ void draw_memory_error_screen(void) {
  * Initialise the crash handler thread, then initialise the main game thread.
  * Reset the start and endpoint of the game thread stack, then set thread priority to zero, effectively
  * stopping this thread, as it's no longer needed.
+ * Official name: main
 */
 void thread1_main(UNUSED void *unused) {
     //thread0_create();

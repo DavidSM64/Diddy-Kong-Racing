@@ -88,6 +88,7 @@ void func_800B76B8(s32 arg0, s32 arg1) {
 s32 get_lockup_status(void) {
 }
 
+/* Official name: diCpuTraceTick */
 void lockup_screen_loop(s32 updateRate) {
 }
 

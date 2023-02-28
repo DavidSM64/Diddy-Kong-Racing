@@ -57,7 +57,9 @@ public:
     bool is_correct_version(std::string version);
 private:
     
+    int get_file_index(json::JSON& files, int searchIndex);
     void extract_code_sections(int &romOffset);
+    void extract_asset_section(json::JSON &section, std::vector<std::vector<uint8_t>>& sectionsData, int i);
     void extract_asset_sections(int &romOffset);
     void execute_extraction();
     void extract();

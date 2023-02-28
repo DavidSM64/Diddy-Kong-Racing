@@ -1,4 +1,4 @@
-glabel gzip_inflate_stored
+glabel gzip_inflate_stored /* Official name: inflate_stored */
 /* 0C7B34 800C6F34 3C0D8013 */  lui   $t5, %hi(gzip_num_bits) # $t5, 0x8013
 /* 0C7B38 800C6F38 8DADAAD4 */  lw    $t5, %lo(gzip_num_bits)($t5)
 /* 0C7B3C 800C6F3C 3C0C8013 */  lui   $t4, %hi(gzip_bit_buffer) # $t4, 0x8013

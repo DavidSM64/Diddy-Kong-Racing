@@ -83,10 +83,6 @@ u8 D_800DD2F8[8] = {
     0, 0, 0, 0, 0, 0, 0, 0
 };
 
-s32 sNoControllerPluggedIn = FALSE; // Looks to be a boolean for whether a controller is plugged in. FALSE if plugged in, and TRUE if not.
-
-s16 gButtonMask = 0xFFFF;
-
 /*******************************/
 
 /************ .bss ************/
@@ -121,15 +117,6 @@ MatrixS gPerspectiveMatrixS;
 MatrixS D_80121020;
 Matrix D_80121060;
 Matrix D_801210A0;
-OSMesgQueue sSIMesgQueue;
-OSMesg sSIMesgBuf;
-OSMesg gSIMesg;
-OSContStatus status;
-UNUSED s32 D_80121108[2]; //Padding?
-OSContPad sControllerData[8];
-u16 gControllerButtonsPressed[4];
-u16 gControllerButtonsReleased[4];
-u8 sPlayerID[16];
 
 /******************************/
 
@@ -435,7 +422,7 @@ void copy_viewports_to_stack(void) {
     }
 }
 
-void func_80066818(s32 viewPortIndex, s32 arg1) {
+void camEnableUserView(s32 viewPortIndex, s32 arg1) {
     if (arg1 != 0) {
         gScreenViewports[viewPortIndex].flags |= VIEWPORT_EXTRA_BG;
     } else {
@@ -444,7 +431,7 @@ void func_80066818(s32 viewPortIndex, s32 arg1) {
     gScreenViewports[viewPortIndex].flags &= ~VIEWPORT_UNK_04;
 }
 
-void func_80066894(s32 viewPortIndex, s32 arg1) {
+void camDisableUserView(s32 viewPortIndex, s32 arg1) {
     if (arg1 != 0) {
         gScreenViewports[viewPortIndex].flags &= ~VIEWPORT_EXTRA_BG;
     } else {
@@ -456,6 +443,7 @@ void func_80066894(s32 viewPortIndex, s32 arg1) {
 /**
  * Return's the current viewport's flag status for extended backgrounds.
  * Required to draw some extra things used in menus.
+ * Official name: camIsUserView
 */
 s32 check_viewport_background_flag(s32 viewPortIndex) {
     return gScreenViewports[viewPortIndex].flags & VIEWPORT_EXTRA_BG;
@@ -519,6 +507,7 @@ void resize_viewport(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2) {
 /**
  * Set the selected viewport's coordinate offsets and view size.
  * If you pass VIEWPORT_AUTO through, then the property will be automatically set when the game creates the viewports.
+ * Official name: camSetUserViewSpecial
  */
 void set_viewport_properties(s32 viewPortIndex, s32 posX, s32 posY, s32 width, s32 height) {
     if (posX != VIEWPORT_AUTO) {
@@ -552,6 +541,7 @@ void set_viewport_properties(s32 viewPortIndex, s32 posX, s32 posY, s32 width, s
 /**
  * Sets the passed values to be equal to the selected viewports scissor size, before drawing the background elements.
  * Usually, this is the same size as the viewport's size.
+ * Official name: camGetVisibleUserView
  */
 s32 copy_viewport_background_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32 *x2, s32 *y2) {
     //gDPFillRectangle values
@@ -567,6 +557,7 @@ s32 copy_viewport_background_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1,
 
 /**
  * Sets the passed values to the coordinate size of the passed viewport.
+ * Official name: camGetUserView
  */
 void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32 *x2, s32 *y2) {
     *x1 = gScreenViewports[viewPortIndex].x1;
@@ -1280,149 +1271,4 @@ void set_camera_shake(f32 magnitude) {
     for (i = 0; i <= gNumberOfViewports; i++) {
         gActiveCameraStack[i].unk30 = magnitude;
     }
-}
-
-/**
- * Return the serial interface message queue.
-*/
-OSMesgQueue *get_si_mesg_queue(void) {
-    return &sSIMesgQueue;
-}
-
-/**
- * Initialise the player controllers, and return the status when finished.
- */
-s32 init_controllers(void) {
-    u8 bitpattern;
-
-    osCreateMesgQueue(&sSIMesgQueue, &sSIMesgBuf, 1);
-    osSetEventMesg(OS_EVENT_SI, &sSIMesgQueue, gSIMesg);
-    osContInit(&sSIMesgQueue, &bitpattern, &status);
-    osContStartReadData(&sSIMesgQueue);
-    initialise_player_ids();
-
-    sNoControllerPluggedIn = FALSE;
-
-    if ((bitpattern & CONT_ABSOLUTE) && (!(status.errno & CONT_NO_RESPONSE_ERROR))) {
-        return CONTROLLER_EXISTS;
-    }
-
-    if (!bitpattern) {} // Fakematch
-
-    sNoControllerPluggedIn = TRUE;
-
-    return CONTROLLER_MISSING;
-}
-
-GLOBAL_ASM("asm/non_matchings/camera/func_8006A1C4.s")
-
-/**
- * Set the first 4 player ID's to the controller numbers, so players can input in the menus after boot.
- */
-void initialise_player_ids(void) {
-    s32 i;
-    for (i = 0; i < MAXCONTROLLERS; i++) {
-        sPlayerID[i] = i;
-    }
-}
-
-/**
- * Assign the first four player ID's to the index of the connected players.
- * Assign the next four player ID's to the index of the players who are not connected.
- */
-void assign_player_ids(s8 *activePlayers) {
-    s32 i;
-    s32 temp = 0;
-    for (i = 0; i < MAXCONTROLLERS; i++) {
-        if (activePlayers[i]) {
-            sPlayerID[temp++] = i;
-        }
-    }
-    for (i = 0; i < MAXCONTROLLERS; i++) {
-        if (!activePlayers[i]) {
-            sPlayerID[temp++] = i;
-        }
-    }
-}
-
-/**
- * Returns the id of the selected index.
- */
-u8 get_player_id(s32 player) {
-    return sPlayerID[player];
-}
-
-/**
- * Swaps the ID's of the first two indexes.
- * This applies in 2 player adventure, so that player 2 can control the car in the overworld.
- */
-void swap_player_1_and_2_ids(void) {
-    u8 tempID = sPlayerID[0];
-    sPlayerID[0] = sPlayerID[1];
-    sPlayerID[1] = tempID;
-}
-
-/**
- * Returns the buttons that are currently pressed down on the controller.
- */
-u16 get_buttons_held_from_player(s32 player) {
-    return sControllerData[sPlayerID[player]].button;
-}
-
-/**
- * Returns the buttons that are newly pressed during that frame.
- * NOTE: This was a u16, but we only got a match in menu_ghost_data_loop when it was a u32 for some reason
- */
-u32 get_buttons_pressed_from_player(s32 player) {
-    return gControllerButtonsPressed[sPlayerID[player]];
-}
-
-/**
- * Returns the buttons that are no longer pressed in that frame.
- */
-u16 get_buttons_released_from_player(s32 player) {
-    return gControllerButtonsReleased[sPlayerID[player]];
-}
-
-/**
- * Clamps the X joystick axis of the selected player to 70 and returns it.
- */
-s8 clamp_joystick_x_axis(s32 player) {
-    return clamp_joystick(sControllerData[sPlayerID[player]].stick_x);
-}
-
-/**
- * Clamps the Y joystick axis of the selected player to 70 and returns it.
- */
-s8 clamp_joystick_y_axis(s32 player) {
-    return clamp_joystick(sControllerData[sPlayerID[player]].stick_y);
-}
-
-/**
- * Keeps the joysticks axis reads no higher than 70 (of a possible 127 or -128)
- * Will also pull the reading towards the centre.
- */
-s8 clamp_joystick(s8 stickMag) {
-    if (stickMag < JOYSTICK_DEADZONE && stickMag > -JOYSTICK_DEADZONE) {
-        return 0;
-    }
-    if (stickMag > 0) {
-        stickMag -= 8;
-        if (stickMag > JOYSTICK_MAX_RANGE) {
-            stickMag = JOYSTICK_MAX_RANGE;
-        }
-    } else {
-        stickMag += 8;
-        if (stickMag < -JOYSTICK_MAX_RANGE) {
-            stickMag = -JOYSTICK_MAX_RANGE;
-        }
-    }
-    return stickMag;
-}
-
-/**
- * Used when anti-cheat/anti-tamper has failed in func_8006A6B0()
- */
-void disable_button_mask(void) {
-    gButtonMask = 0;
 }

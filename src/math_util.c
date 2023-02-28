@@ -27,6 +27,24 @@ GLOBAL_ASM("asm/math_util/set_status_register_flags.s")
 GLOBAL_ASM("asm/math_util/set_D_800DD430.s")
 GLOBAL_ASM("asm/math_util/get_D_800DD430.s")
 
+#ifdef NON_EQUIVALENT // Untested
+UNUSED void s32_matrix_to_s16_matrix(s32 **input, s16 **output) {
+    s32 i;
+    for(i = 0; i < 4; i++){
+        output[i][2] = input[i][0];
+        output[i][3] = input[i+4][0];
+        output[i][6] = input[i][1];
+        output[i][7] = input[i+4][1];
+        output[i][0] = input[i][0] >> 16;
+        output[i][1] = input[i+4][0] >> 16;
+        output[i][4] = input[i][1] >> 16;
+        output[i][5] = input[i+4][1] >> 16;
+    }
+}
+#else
+GLOBAL_ASM("asm/math_util/s32_matrix_to_s16_matrix.s")
+#endif
+
 #ifdef NON_EQUIVALENT
 void f32_matrix_to_s32_matrix(Matrix *input, Matrix *output) {
     s32 i;
@@ -42,6 +60,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_to_s32_matrix.s")
 #endif
 
 #ifdef NON_MATCHING
+/* Official name: mathMtxXFMF */
 void guMtxXFMF(Matrix mf, float x, float y, float z, float *ox, float *oy, float *oz) {
         *ox = mf[0][0]*x + mf[1][0]*y + mf[2][0]*z + mf[3][0];
         *oy = mf[0][1]*x + mf[1][1]*y + mf[2][1]*z + mf[3][1];
@@ -52,6 +71,7 @@ GLOBAL_ASM("asm/math_util/guMtxXFMF.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+/* Official name: mathMtxFastXFMF */
 void f32_matrix_dot(Matrix *mat1, Matrix *mat2, Matrix *output) {
     (*output)[0][0] = ((*mat2)[0][0] * (*mat1)[0][0]) + ((*mat2)[0][1] * (*mat1)[1][0]) + ((*mat2)[0][2] * (*mat1)[2][0]);
     (*output)[0][1] = ((*mat2)[0][0] * (*mat1)[0][1]) + ((*mat2)[0][1] * (*mat1)[1][1]) + ((*mat2)[0][2] * (*mat1)[2][1]);
@@ -62,6 +82,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_dot.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+/* Official name: mathMtxCatF */
 void f32_matrix_mult(Matrix *mat1, Matrix *mat2, Matrix *output) {
     s32 i;
     for(i = 0; i < 4; i++) {
@@ -76,6 +97,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_mult.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+/* Official name: mathMtxF2L */
 void f32_matrix_to_s16_matrix(Matrix *input, MatrixS *output) {
     s32 temp_f10;
     s32 temp_f4;
@@ -123,6 +145,7 @@ s32 get_rng_seed(void) {
 GLOBAL_ASM("asm/math_util/rng.s")
 
 #ifdef NON_EQUIVALENT
+/* Official name: fastShortReflection(?) */
 void s16_matrix_rotate(s16 *arg0[4][4], s16 arg1[4][4]) {
     s32 temp_t6;
 
@@ -134,6 +157,29 @@ void s16_matrix_rotate(s16 *arg0[4][4], s16 arg1[4][4]) {
 }
 #else
 GLOBAL_ASM("asm/math_util/s16_matrix_rotate.s")
+#endif
+
+#ifdef NON_EQUIVALENT // Untested
+UNUSED void s16_matrix_to_s32_matrix(s16 **arg0, s32 **arg1) {
+    s32 i, j;
+    for(i = 0; i < 4; i++) {
+        for(j = 0; j < 4; j++) {
+            arg1[i][j] = (arg0[i][j] << 16) | arg0[i+4][j];
+        }
+    }
+}
+#else
+GLOBAL_ASM("asm/math_util/s16_matrix_to_s32_matrix.s")
+#endif
+
+#ifdef NON_EQUIVALENT // Untested
+UNUSED void s16_vec3_mult_by_s32_matrix_full(s32 **input, s16 *output) {
+    output[0] = ((output[0] * input[0][0]) + (output[1] * input[1][0]) + (output[2] * input[2][0]) + input[3][0]) >> 16;
+    output[1] = ((output[0] * input[0][1]) + (output[1] * input[1][1]) + (output[2] * input[2][1]) + input[3][1]) >> 16;
+    output[2] = ((output[0] * input[0][2]) + (output[1] * input[1][2]) + (output[2] * input[2][2]) + input[3][2]) >> 16;
+}
+#else
+GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix_full.s")
 #endif
 
 #ifdef NON_EQUIVALENT
@@ -186,6 +232,7 @@ GLOBAL_ASM("asm/math_util/object_transform_to_matrix.s")
 #endif
 
 #ifdef NON_MATCHING
+/* Official name: mathSquashY(?) */
 void f32_matrix_scale(Matrix *input, f32 scale) {
     input[0][1][0] *= scale;
     input[0][1][1] *= scale;
@@ -196,6 +243,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_scale.s")
 #endif
 
 #ifdef NON_MATCHING
+/* Official name: mathTransY(?) */
 void f32_matrix_y_scale(Matrix *input, f32 scale) {
     input[0][3][0] += input[0][1][0] * scale;
     input[0][3][1] += input[0][1][1] * scale;
@@ -522,10 +570,73 @@ GLOBAL_ASM("asm/math_util/atan2s.s")
 #endif
 GLOBAL_ASM("asm/math_util/arctan2_f.s")
 
+#ifdef NON_EQUIVALENT // Untested
+UNUSED s32 s32_matrix_cell_sqrt(s32 arg0) {
+    return (s32) (sqrtf((f32) arg0 / 65536.0f) * 65536.0f);
+}
+#else
+GLOBAL_ASM("asm/math_util/s32_matrix_cell_sqrt.s")
+#endif
+
+#ifdef NON_EQUIVALENT // Untested
+UNUSED s32 bad_int_sqrt(s32 arg0) {
+    return (s32) (sqrtf((f32) arg0 / 65536.0f) * 65536.0f);
+}
+#else
+GLOBAL_ASM("asm/math_util/bad_int_sqrt.s")
+#endif
+
 GLOBAL_ASM("asm/math_util/sins_f.s")
 GLOBAL_ASM("asm/math_util/coss_f.s")
 GLOBAL_ASM("asm/math_util/coss.s")
 GLOBAL_ASM("asm/math_util/sins_2.s")
+
+#ifdef NON_EQUIVALENT // Untested
+UNUSED s32 calc_dyn_lighting_for_level_segment(LevelModelSegment *segment, s32 *vec3_ints) {
+    s32 dotProduct;
+    s32 numVertsInBatch;
+    s32 vertCount;
+    s32 upperColor;
+    s32 alpha;
+    s32 numBatches;
+    s32 i, j;
+    Vertex *verts;
+    Vertex *verts2C;
+    TriangleBatchInfo *batches;
+
+    numBatches = segment->numberOfBatches;
+    batches = segment->batches;
+    vertCount = 0;
+    for(i = 0; i < numBatches; i++){
+        // batches[i].unk6 is 0xFF if vertex colors are used. Otherwise dynamic lighting is used.
+        if ((batches[i].unk6 - 0xFF) != 0) { 
+            verts = &segment->vertices[vertCount];
+            verts2C = &segment->unk2C[vertCount];
+            numVertsInBatch = batches[i+1].verticesOffset - batches[i].verticesOffset;
+            for(j = 0; j < numVertsInBatch; j++) {
+                alpha = verts2C[j].a;
+                dotProduct = (verts2C[j].x * vec3_ints[0]) + (verts2C[j].y * vec3_ints[1]) + (verts2C[j].z * vec3_ints[2]);
+                if (dotProduct > 0) {
+                    alpha += dotProduct >> 22;
+                    if (alpha > 128) {
+                        alpha = 128;
+                    }
+                }
+                upperColor = (alpha * (verts2C[j].r | (verts2C[j].g << 16))) >> 7;
+                verts[j].r = (s8) upperColor;
+                verts[j].g = (s8) (upperColor >> 16);
+                verts[j].b = (s8) ((u32) (alpha * verts2C[j].b) >> 7);
+            }
+            vertCount += numVertsInBatch;
+        } else {
+            vertCount += batches[i+1].verticesOffset - batches[i].verticesOffset;
+        }
+    }
+    return vertCount;
+}
+#else
+GLOBAL_ASM("asm/math_util/calc_dyn_lighting_for_level_segment.s")
+#endif
 
 #ifdef NON_MATCHING
 f32 area_triangle_2d(f32 x0, f32 z0, f32 x1, f32 z1, f32 x2, f32 z2) {

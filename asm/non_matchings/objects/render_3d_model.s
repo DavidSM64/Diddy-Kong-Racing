@@ -192,7 +192,7 @@ glabel render_3d_model
 /* 012F8C 8001238C E7A80010 */   swc1  $f8, 0x10($sp)
 /* 012F90 80012390 12600014 */  beqz  $s3, .L800123E4
 /* 012F94 80012394 AFA000B0 */   sw    $zero, 0xb0($sp)
-/* 012F98 80012398 0C004BCC */  jal   func_80012F30
+/* 012F98 80012398 0C004BCC */  jal   objUndoPlayerTumble
 /* 012F9C 8001239C 02402025 */   move  $a0, $s2
 /* 012FA0 800123A0 8258003B */  lb    $t8, 0x3b($s2)
 /* 012FA4 800123A4 02202025 */  move  $a0, $s1

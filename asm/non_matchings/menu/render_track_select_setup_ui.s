@@ -46,7 +46,7 @@ glabel render_track_select_setup_ui
 /* 091BC8 80090FC8 00000000 */   nop   
 /* 091BCC 80090FCC AFA90074 */  sw    $t1, 0x74($sp)
 .L80090FD0:
-/* 091BD0 80090FD0 0C019A25 */  jal   func_80066894
+/* 091BD0 80090FD0 0C019A25 */  jal   camDisableUserView
 /* 091BD4 80090FD4 24050001 */   li    $a1, 1
 /* 091BD8 80090FD8 0C026F57 */  jal   func_8009BD5C
 /* 091BDC 80090FDC 00000000 */   nop   

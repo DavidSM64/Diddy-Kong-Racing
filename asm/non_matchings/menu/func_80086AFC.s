@@ -47,7 +47,7 @@ glabel L80086B54
 /* 087798 80086B98 8FBF0014 */   lw    $ra, 0x14($sp)
 .L80086B9C:
 /* 08779C 80086B9C 90640006 */  lbu   $a0, 6($v1)
-/* 0877A0 80086BA0 0C01BB06 */  jal   func_8006EC18
+/* 0877A0 80086BA0 0C01BB06 */  jal   force_mark_write_save_file
 /* 0877A4 80086BA4 AFA60028 */   sw    $a2, 0x28($sp)
 /* 0877A8 80086BA8 3C098012 */  lui   $t1, %hi(D_80126BE4) # $t1, 0x8012
 /* 0877AC 80086BAC 25296BE4 */  addiu $t1, %lo(D_80126BE4) # addiu $t1, $t1, 0x6be4
@@ -111,7 +111,7 @@ glabel L80086B54
 /* 087890 80086C90 AFA20038 */   sw    $v0, 0x38($sp)
 .L80086C94:
 /* 087894 80086C94 90E40006 */  lbu   $a0, 6($a3)
-/* 087898 80086C98 0C01BB2B */  jal   func_8006ECAC
+/* 087898 80086C98 0C01BB2B */  jal   mark_save_file_to_erase
 /* 08789C 80086C9C 00000000 */   nop   
 /* 0878A0 80086CA0 3C198012 */  lui   $t9, %hi(D_80126BD4) # $t9, 0x8012
 /* 0878A4 80086CA4 8F396BD4 */  lw    $t9, %lo(D_80126BD4)($t9)
@@ -152,7 +152,7 @@ glabel L80086CDC
 .L80086D2C:
 /* 08792C 80086D2C 0C01B9DC */  jal   func_8006E770
 /* 087930 80086D30 24050003 */   li    $a1, 3
-/* 087934 80086D34 0C01BAFF */  jal   func_8006EBFC
+/* 087934 80086D34 0C01BAFF */  jal   mark_to_write_flap_and_course_times
 /* 087938 80086D38 00000000 */   nop   
 /* 08793C 80086D3C 3C0500FF */  lui   $a1, (0x00FFFFF0 >> 16) # lui $a1, 0xff
 /* 087940 80086D40 34A5FFF0 */  ori   $a1, (0x00FFFFF0 & 0xFFFF) # ori $a1, $a1, 0xfff0
@@ -213,7 +213,7 @@ glabel L80086D54
 /* 087A10 80086E10 000A7900 */  sll   $t7, $t2, 4
 /* 087A14 80086E14 016F6821 */  addu  $t5, $t3, $t7
 /* 087A18 80086E18 91A40006 */  lbu   $a0, 6($t5)
-/* 087A1C 80086E1C 0C01BB06 */  jal   func_8006EC18
+/* 087A1C 80086E1C 0C01BB06 */  jal   force_mark_write_save_file
 /* 087A20 80086E20 AFA60028 */   sw    $a2, 0x28($sp)
 /* 087A24 80086E24 3C098012 */  lui   $t1, %hi(D_80126BE4) # $t1, 0x8012
 /* 087A28 80086E28 25296BE4 */  addiu $t1, %lo(D_80126BE4) # addiu $t1, $t1, 0x6be4
@@ -367,7 +367,7 @@ glabel L80086F74
 /* 087C54 80087054 00C02825 */   move  $a1, $a2
 /* 087C58 80087058 AFA20038 */  sw    $v0, 0x38($sp)
 .L8008705C:
-/* 087C5C 8008705C 0C01BAD7 */  jal   func_8006EB5C
+/* 087C5C 8008705C 0C01BAD7 */  jal   mark_to_read_flap_and_course_times
 /* 087C60 80087060 00000000 */   nop   
 /* 087C64 80087064 10000059 */  b     .L800871CC
 /* 087C68 80087068 8FBF0014 */   lw    $ra, 0x14($sp)

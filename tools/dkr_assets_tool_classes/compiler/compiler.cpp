@@ -42,7 +42,7 @@ AssetCompiler::AssetCompiler() {
         recursively_copy_directory(vanillaDirPath + "/" + version, compiledDir);
 
         print_text("Reading package order...");
-        std::string packageOrderFilepath = packagesDirPath + "/order.json";
+        std::string packageOrderFilepath = packagesDirPath + "/order.meta.json";
 
         bool isVanilla = true;
 

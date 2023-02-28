@@ -27,7 +27,8 @@
 #include "camera.h"
 #include "save_data.h"
 #include "unknown_078050.h"
-#include "unknown_003260.h"
+#include "audiosfx.h"
+#include "audiomgr.h"
 #include "unknown_032760.h"
 #include "textures_sprites.h"
 #include "PR/os_internal.h"
@@ -45,6 +46,7 @@
 #include "string.h"
 #include "stdarg.h"
 #include "math_util.h"
+#include "controller.h"
 
 /************ .rodata ************/
 
@@ -67,7 +69,7 @@ s16 D_800DD32C = 0;
 s8 D_800DD330 = 0;
 
 s8 sAntiPiracyTriggered = 0;
-s32 D_800DD37C = 0;
+s32 gSaveDataFlags = 0;
 s32 gScreenStatus = OSMESG_SWAP_BUFFER;
 s32 sControllerStatus = 0;
 s8 gSkipGfxTask = FALSE;
@@ -81,11 +83,11 @@ s32 gNumHudVertsPerPlayer[4] = { 300, 600, 850, 900 };
 s32 gNumHudMatPerPlayer[4] = { 300, 400, 550, 600 };
 s32 gNumHudTrisPerPlayer[4] = { 20, 30, 40, 50 };
 s8 gDrawFrameTimer = 0;
-FadeTransition D_800DD3F4 = FADE_TRANSITION(128, FADE_COLOR_BLACK, 20, 0);
+FadeTransition D_800DD3F4 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK2, FADE_COLOR_BLACK, 20, 0);
 s32 sLogicUpdateRate = LOGIC_5FPS;
-FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
-FadeTransition D_800DD41C = FADE_TRANSITION(0, FADE_COLOR_BLACK, 30, -1);
-FadeTransition D_800DD424 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 260, -1);
+FadeTransition D_800DD408 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 30, -1);
+FadeTransition D_800DD41C = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
+FadeTransition D_800DD424 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 260, -1);
 /*******************************/
 
 /************ .bss ************/
@@ -493,7 +495,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     settings->courseId = levelId;
     if (gCurrentLevelHeader->weatherEnable > 0) {
         func_800AB4A8(gCurrentLevelHeader->weatherType, gCurrentLevelHeader->weatherEnable, gCurrentLevelHeader->weatherVelX << 8, gCurrentLevelHeader->weatherVelY << 8, gCurrentLevelHeader->weatherVelZ << 8, gCurrentLevelHeader->weatherIntensity * 257, gCurrentLevelHeader->weatherOpacity * 257);
-        func_800AB308(-1, -0x200);
+        setWeatherLimits(-1, -0x200);
     }
     if (gCurrentLevelHeader->unk49 == -1) {
         gCurrentLevelHeader->unkA4 = load_texture((s32) gCurrentLevelHeader->unkA4);
@@ -525,6 +527,7 @@ s32 func_8006BD88(void) {
 
 /**
  * Return the race type ID of the current level.
+ * Official name: levelGetType
  */
 u8 get_current_level_race_type(void) {
     return gCurrentLevelHeader->race_type;
@@ -576,7 +579,7 @@ char *get_level_name(s32 levelId) {
 }
 
 void func_8006BEFC(void) {
-    func_8006C164();
+    frontCleanupMultiSelect();
     set_background_prim_colour(0, 0, 0);
     free_from_memory_pool(gCurrentLevelHeader);
     func_800049D8();
@@ -651,7 +654,7 @@ void func_8006BFC8(s8 *arg0) {
     free_from_memory_pool(gTempAssetTable);
 }
 
-void func_8006C164(void) {
+void frontCleanupMultiSelect(void) {
     free_from_memory_pool(D_801211C0);
 }
 
@@ -711,10 +714,9 @@ s32 func_8006C300(void) {
 /**
  * Main looping function for the main thread.
  */
-
 void thread3_main(UNUSED void *unused) {
     init_game();
-    D_800DD37C = func_8006A1C4(D_800DD37C, 0);
+    gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, 0);
     sBootDelayTimer = 0;
     sRenderContext = DRAW_INTRO;
     while (1) {
@@ -746,7 +748,7 @@ void init_game(void) {
     s32 i;
 
     init_main_memory_pool();
-    func_800C6170(); // Initialise gzip decompression related things
+    rzipInit(); // Initialise gzip decompression related things
 #ifndef NO_ANTIPIRACY
     sAntiPiracyTriggered = TRUE;
     if (check_imem_validity()) {
@@ -763,15 +765,15 @@ void init_game(void) {
     audio_init(&gMainSched);
     func_80008040(); // Should be very similar to func_8005F850
     sControllerStatus = init_controllers();
-    func_8007AC70(); // Should be very similar to func_8005F850
+    texInitTextures(); // Should be very similar to func_8005F850
     func_8005F850(); // Matched
     allocate_object_pools();
-    func_800B5E88();
+    diPrintfInit();
     func_800598D0();
     init_particle_assets();
     func_800AB1F0();
     calc_and_alloc_heap_for_settings();
-    func_8006EFDC();
+    default_alloc_heap_for_hud();
     load_fonts();
     init_controller_paks();
     func_80081218();
@@ -901,7 +903,7 @@ void main_game_loop(void) {
     profiler_add(gPuppyTimers.timers[PP_BACKGROUND], osGetCount() - first2);
     first2 = osGetCount();
 #endif
-    D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
+    gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, sLogicUpdateRate);
 #ifdef PUPPYPRINT_DEBUG
     profiler_add(gPuppyTimers.timers[PP_PAD], osGetCount() - first2);
 #endif
@@ -1060,7 +1062,7 @@ void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehi
     u32 first = osGetCount();
     u32 first2;
 #endif
-    func_8006ECFC(numberOfPlayers);
+    calc_and_alloc_heap_for_hud(numberOfPlayers);
     set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
@@ -1393,7 +1395,7 @@ void ingame_logic_loop(s32 updateRate) {
         gLevelLoadTimer = 0;
         gPostRaceViewPort = NULL;
         func_8006CC14();
-        func_8006EC48(get_save_file_index());
+        safe_mark_write_save_file(get_save_file_index());
         if (sp40 != 0) {
             gIsLoading = FALSE;
             switch (sp40) {
@@ -1454,7 +1456,7 @@ void ingame_logic_loop(s32 updateRate) {
             }
             load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
         } else {
-            func_8006EC48(get_save_file_index());
+            safe_mark_write_save_file(get_save_file_index());
             load_menu_with_level_background(MENU_TITLE, -1, 0);
         }
         D_801234FC = 0;
@@ -1463,7 +1465,7 @@ void ingame_logic_loop(s32 updateRate) {
         gPostRaceViewPort = NULL;
         func_8006CC14();
         load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
-        func_8006EC48(get_save_file_index());
+        safe_mark_write_save_file(get_save_file_index());
         D_801234F8 = 0;
     }
 }
@@ -1519,7 +1521,7 @@ s32 get_render_context(void) {
 }
 
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
-    func_8006ECFC(0);
+    calc_and_alloc_heap_for_hud(0);
     sRenderContext = DRAW_MENU;
     D_801234F0 = 1;
     set_sound_channel_volume(0, 32767);
@@ -1640,7 +1642,7 @@ void func_8006DCF8(s32 updateRate) {
         gIsPaused = FALSE;
         gPostRaceViewPort = NULL;
         load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
-        func_8006EC48(get_save_file_index());
+        safe_mark_write_save_file(get_save_file_index());
         return;
     }
     if ((menuLoopResult != -1) && (menuLoopResult & 0x100)) {
@@ -1657,7 +1659,7 @@ void func_8006DCF8(s32 updateRate) {
                 D_80123508 = 0x64;
                 sRenderContext = DRAW_GAME;
                 load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
-                func_8006EC48(get_save_file_index());
+                safe_mark_write_save_file(get_save_file_index());
                 break;
             case 1:
                 D_80123504 = 0;
@@ -1674,7 +1676,7 @@ void func_8006DCF8(s32 updateRate) {
                     D_80123508 = temp2;
                 }
                 load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
-                func_8006EC48(get_save_file_index());
+                safe_mark_write_save_file(get_save_file_index());
                 break;
             case 2:
                 sRenderContext = DRAW_GAME;
@@ -1819,7 +1821,11 @@ void calc_and_alloc_heap_for_settings(void) {
     gSettingsPtr->courseTimesPtr[1] = (u16 *)((u8 *)gSettingsPtr + sizes[12]);
     gSettingsPtr->courseTimesPtr[2] = (u16 *)((u8 *)gSettingsPtr + sizes[13]);
     gSettingsPtr->unk4C = (Settings4C *) &D_80121250;
-    D_800DD37C = 263;
+    gSaveDataFlags = // Set bits 0/1/2/8 and wipe out all others
+        SAVE_DATA_FLAG_READ_FLAP_TIMES |
+        SAVE_DATA_FLAG_READ_COURSE_TIMES |
+        SAVE_DATA_FLAG_READ_SAVE_DATA |
+        SAVE_DATA_FLAG_READ_EEPROM_SETTINGS;
 }
 
 void func_8006E5BC(void) {
@@ -1861,7 +1867,7 @@ void func_8006E770(Settings *settings, s32 arg1) {
 
     get_number_of_levels_and_worlds(&numLevels, &numWorlds);
     temp_v0 = (u16 *)get_misc_asset(MISC_ASSET_UNK17);
-    for (i = 0; i < 3; i++) { // 3 = number of save files?
+    for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         for (j = 0; j < numLevels; j++) {
             index = (j * 12) + (i * 4);
             if (arg1 & 1) {
@@ -1921,6 +1927,7 @@ s8 is_postrace_viewport_active(void) {
 
 /**
  * Sets and returns (nonzero) the message set when pressing the reset button.
+ * Official name: mainResetPressed
  */
 s32 is_reset_pressed(void) {
     if (gNMIMesgBuf[0] == 0) {
@@ -1933,53 +1940,131 @@ s32 func_8006EB14(void) {
     return gPlayableMapId;
 }
 
-void func_8006EB5C(void) {
-    D_800DD37C |= 0x03;
+void mark_to_read_flap_and_course_times(void) {
+    gSaveDataFlags |= (SAVE_DATA_FLAG_READ_FLAP_TIMES | SAVE_DATA_FLAG_READ_COURSE_TIMES);
 }
 
-void func_8006EB78(s32 saveFileIndex) {
-    D_800DD37C &= -0x301;
-    D_800DD37C |= (0x04 | ((saveFileIndex & 3) << 8));
+/**
+ * Marks a flag to read the save file from the passed index from flash.
+ */
+void mark_read_save_file(s32 saveFileIndex) {
+    //Wipe out bits 8 and 9
+    gSaveDataFlags &= ~(SAVE_DATA_FLAG_READ_EEPROM_SETTINGS | SAVE_DATA_FLAG_WRITE_EEPROM_SETTINGS);
+    //Place saveFileIndex at bits 8 and 9 and set bit 2
+    gSaveDataFlags |= (SAVE_DATA_FLAG_READ_SAVE_DATA | ((saveFileIndex & SAVE_DATA_FLAG_INDEX_VALUE) << 8));
 }
 
-void func_8006EBA8(void) {
-    D_800DD37C |= 0x08;
+/**
+ * Marks a flag to read all save file data from flash.
+ */
+void mark_read_all_save_files(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_READ_ALL_SAVE_DATA; //Set bit 3
 }
 
-void func_8006EBC4(void) {
-    D_800DD37C |= 0x10;
+/**
+ * Marks a flag to write flap times to the eeprom
+ */
+void mark_to_write_flap_times(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_WRITE_FLAP_TIMES;
 }
 
-void func_8006EBE0(void) {
-    D_800DD37C |= 0x20;
+/**
+ * Marks a flag to write course times to the eeprom
+ */
+void mark_to_write_course_times(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_WRITE_COURSE_TIMES;
 }
 
-void func_8006EBFC(void) {
-    D_800DD37C |= 0x30;
+/**
+ * Marks a flag to write both flap times and course times to the eeprom
+ */
+void mark_to_write_flap_and_course_times(void) {
+    gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_FLAP_TIMES | SAVE_DATA_FLAG_WRITE_COURSE_TIMES);
 }
 
-void func_8006EC18(s32 arg0) {
-    D_800DD37C &= -0xC01;
-    D_800DD37C |= (0x40 | ((arg0 & 3) << 0xA));
+/**
+ * Forcefully marks a flag to write a save file to flash.
+ */
+void force_mark_write_save_file(s32 saveFileIndex) {
+    gSaveDataFlags &= ~SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER_BITS; //Wipe out bits 10 and 11
+    gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_SAVE_DATA | ((saveFileIndex & 3) << 10)); //Set bit 6 and place saveFileIndex into bits 10 and 11
 }
 
-void func_8006EC48(s32 saveFileIndex) {
+/**
+ * Marks a flag to write a save file to flash as long as we're not in tracks mode, and we're in the draw game render context.
+ * This should prevent save data from being overwritten outside of Adventure Mode.
+ */
+void safe_mark_write_save_file(s32 saveFileIndex) {
     if (sRenderContext == DRAW_GAME && !is_in_tracks_mode()) {
-        D_800DD37C &= -0xC01;
-        D_800DD37C |= (0x40 | ((saveFileIndex & 3) << 0xA));
+        gSaveDataFlags &= ~SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER_BITS; //Wipe out bits 10 and 11
+        gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_SAVE_DATA | ((saveFileIndex & 3) << 10));; //Set bit 6 and place saveFileIndex into bits 10 and 11
     }
 }
 
-void func_8006ECAC(s32 arg0) {
-    D_800DD37C = ((arg0 & 0x03) << 10) | 0x80;
+/**
+ * Marks a flag to erase a save file from flash later
+ */
+void mark_save_file_to_erase(s32 saveFileIndex) {
+    //Set bit 7 and and place saveFileIndex into bits 10 and 11 while wiping everything else
+    gSaveDataFlags = SAVE_DATA_FLAG_ERASE_SAVE_DATA | ((saveFileIndex & 3) << 10);
 }
 
 //Always called after updating a value in sEepromSettings
-void func_8006ECE0(void) {
-    D_800DD37C |= 0x200;
+void mark_write_eeprom_settings(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_WRITE_EEPROM_SETTINGS; // Set bit 9
 }
 
-GLOBAL_ASM("asm/non_matchings/game/func_8006ECFC.s")
+/**
+ * Allocates an amount of memory for the number of players passed in.
+ */
+void calc_and_alloc_heap_for_hud(s32 numberOfPlayers) {
+    s32 newVar;
+    s32 totalSize;
+
+    if (numberOfPlayers != D_8012350C) {
+        newVar = numberOfPlayers;
+        D_8012350C = newVar;
+        set_free_queue_state(0);
+        free_from_memory_pool(gDisplayLists[0]);
+        free_from_memory_pool(gDisplayLists[1]);
+        totalSize =
+            ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords)))
+            + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix)))
+            + ((gNumHudVertsPerPlayer[newVar] * sizeof(Vertex)))
+            + ((gNumHudTrisPerPlayer[newVar] * sizeof(Triangle)));
+        gDisplayLists[0] = (Gfx *) allocate_at_address_in_main_pool(totalSize, (u8 *) gDisplayLists[0], COLOUR_TAG_RED);
+        gDisplayLists[1] = (Gfx *) allocate_at_address_in_main_pool(totalSize, (u8 *) gDisplayLists[1], COLOUR_TAG_YELLOW);
+        if ((gDisplayLists[0] == NULL) || gDisplayLists[1] == NULL) {
+            if (gDisplayLists[0] != NULL) {
+                free_from_memory_pool(gDisplayLists[0]);
+                gDisplayLists[0] = NULL;
+            }
+            if (gDisplayLists[1] != NULL) {
+                free_from_memory_pool(gDisplayLists[1]);
+                gDisplayLists[1] = NULL;
+            }
+            default_alloc_heap_for_hud();
+        }
+        gHudMatrices[0] = (MatrixS *)((u8 *) gDisplayLists[0] + ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords))));
+        gHudTriangles[0] = (TriangleList *)((u8 *) gHudMatrices[0] + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix))));
+        gHudVertices[0] = (Vertex *)((u8 *) gHudTriangles[0] + ((gNumHudTrisPerPlayer[newVar] * sizeof(Triangle))));
+        gHudMatrices[1] = (MatrixS *)((u8 *) gDisplayLists[1] + ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords))));
+        gHudTriangles[1] = (TriangleList *)((u8 *) gHudMatrices[1] + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix))));
+        gHudVertices[1] = (Vertex *)((u8 *) gHudTriangles[1] + ((gNumHudTrisPerPlayer[newVar] * sizeof(Triangle))));
+        gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[newVar];
+        gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[newVar];
+        gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[newVar];
+        gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[newVar];
+        set_free_queue_state(2);
+    }
+    gCurrDisplayList = gDisplayLists[gSPTaskNum];
+    gGameCurrMatrix = gHudMatrices[gSPTaskNum];
+    gGameCurrTriList = gHudTriangles[gSPTaskNum];
+    gGameCurrVertexList = gHudVertices[gSPTaskNum];
+
+    gDPFullSync(gCurrDisplayList++);
+    gSPEndDisplayList(gCurrDisplayList++);
+}
 
 /**
  * Returns FALSE if dmem doesn't begin with a -1. This is checked on every main game loop iteration.
@@ -1991,38 +2076,35 @@ s32 check_dmem_validity(void) {
     return TRUE;
 }
 
-#ifdef NON_EQUIVALENT
+/**
+ * Defaults allocations for 4 players
+ */
+void default_alloc_heap_for_hud(void) {
+    s32 numberOfPlayers;
+    s32 totalSize;
 
-// Not close to matching, but should be the same functionality-wise.
-void func_8006EFDC(void) {
-    s32 size1, size2, size3, size4, totalSize;
+    numberOfPlayers = FOUR_PLAYERS;
+    D_8012350C = numberOfPlayers;
+    totalSize = (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords))
+        + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix))
+        + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex))
+        + (gNumHudTrisPerPlayer[numberOfPlayers] * sizeof(Triangle));
 
-    D_8012350C = 3;
+    gDisplayLists[0] = (Gfx *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_RED);
+    gHudMatrices[0] = (MatrixS *)((u8 *)gDisplayLists[0] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
+    gHudVertices[0] = (Vertex *)((u8 *)gHudMatrices[0] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
+    gHudTriangles[0] = (TriangleList *)((u8 *)gHudVertices[0] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
-    size1 = (gNumF3dCmdsPerPlayer[3] * sizeof(Gwords));
-    size2 = (gNumHudMatPerPlayer[3] * sizeof(Matrix));
-    size3 = (gNumHudVertsPerPlayer[3] * sizeof(Vertex));
-    size4 = (gNumHudTrisPerPlayer[3] * sizeof(Triangle));
-    totalSize = size1 + size2 + size3 + size4;
+    gDisplayLists[1] = (Gfx *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_YELLOW);
+    gHudMatrices[1] = (MatrixS *)((u8 *)gDisplayLists[1] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
+    gHudVertices[1] = (Vertex *)((u8 *)gHudMatrices[1] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
+    gHudTriangles[1] = (TriangleList *)((u8 *)gHudVertices[1] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
-    gDisplayLists[0] = (u8 *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_RED);
-    gHudMatrices[0] = (u8 *)gDisplayLists[0] + size1;
-    gHudVertices[0] = (u8 *)gHudMatrices[0] + size2;
-    gHudTriangles[0] = (u8 *)gHudVertices[0] + size3;
-
-    gDisplayLists[1] = (u8 *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_YELLOW);
-    gHudMatrices[1] = (u8 *)gDisplayLists[1] + size1;
-    gHudVertices[1] = (u8 *)gHudMatrices[1] + size2;
-    gHudTriangles[1] = (u8 *)gHudVertices[1] + size3;
-
-    gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[3];
-    gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[3];
-    gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[3];
-    gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[3];
+    gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[numberOfPlayers];
+    gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[numberOfPlayers];
+    gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[numberOfPlayers];
+    gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[numberOfPlayers];
 }
-#else
-GLOBAL_ASM("asm/non_matchings/game/func_8006EFDC.s")
-#endif
 
 void func_8006F140(s32 arg0) {
     if (gLevelLoadTimer == 0) {
@@ -2136,6 +2218,7 @@ void pre_intro_loop(void) {
 
 /**
  * Returns TRUE if the game doesn't detect any controllers.
+ * Official name: mainDemoOnly
  */
 s32 is_controller_missing(void) {
     if (sControllerStatus == CONTROLLER_MISSING) {

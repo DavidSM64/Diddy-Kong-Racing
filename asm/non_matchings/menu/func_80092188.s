@@ -173,7 +173,7 @@ glabel func_80092188
 .L800923FC:
 /* 092FFC 800923FC 00002025 */  move  $a0, $zero
 .L80092400:
-/* 093000 80092400 0C019A06 */  jal   func_80066818
+/* 093000 80092400 0C019A06 */  jal   camEnableUserView
 /* 093004 80092404 24050001 */   li    $a1, 1
 /* 093008 80092408 8FB90030 */  lw    $t9, 0x30($sp)
 /* 09300C 8009240C 3C04800E */  lui   $a0, %hi(gTrackIdForPreview) # $a0, 0x800e

@@ -7,7 +7,7 @@
 .set noreorder # dont insert nops after branches
 .set gp=64     # 64-bit instructions are used
 
-glabel bcopy
+glabel bcopy /* Official name: _bcopy */
 /* 0CA9A0 800C9DA0 10C0001A */  beqz  $a2, .L800C9E0C
 /* 0CA9A4 800C9DA4 00A03825 */   move  $a3, $a1
 /* 0CA9A8 800C9DA8 10850018 */  beq   $a0, $a1, .L800C9E0C

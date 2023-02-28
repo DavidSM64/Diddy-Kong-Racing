@@ -17,9 +17,10 @@
 #include "object_models.h"
 #include "unknown_0255E0.h"
 #include "unknown_078050.h"
-#include "unknown_003260.h"
+#include "audiosfx.h"
 #include "printf.h"
 #include "unknown_008C40.h"
+#include "controller.h"
 
 /************ .data ************/
 
@@ -391,8 +392,8 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 gDPPipeSync(gHUDCurrDisplayList++);
                 init_rsp(&gHUDCurrDisplayList);
                 init_rdp_and_framebuffer(&gHUDCurrDisplayList);
-                func_8007AE28(0xFFFFFFFF);
-                func_8007AE0C(RENDER_Z_COMPARE);
+                texDisableModes(0xFFFFFFFF);
+                texEnableModes(RENDER_Z_COMPARE);
                 func_8007BF1C(FALSE);
                 if (check_if_showing_cutscene_camera() == FALSE && D_80126D34 == 0 && racer->racer.playerIndex == PLAYER_ONE) {
                     if (D_80126D35 != 0) {
@@ -490,7 +491,7 @@ block_95:
                 *dList = gHUDCurrDisplayList;
                 *mtx = gHUDCurrMatrix;
                 *vertexList = gHUDCurrVertex;
-                func_8007AE28(0xFFFFFFFF);
+                texDisableModes(0xFFFFFFFF);
             }
         }
     }
@@ -551,45 +552,45 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
                 indicator = (IndicatorArrow *) &D_80126CDC->courseIndicator;
                 switch (type) {
                 case INDICATOR_LEFT:
-                    indicator->textureID = ASSET_TEX2D_33;
+                    indicator->textureID = 33;
                     indicator->unk0 = 0;
                     break;
                 case INDICATOR_LEFT_SHARP:
-                    indicator->textureID = ASSET_TEX2D_32;
+                    indicator->textureID = 32;
                     indicator->unk0 = 0;
                     break;
                 case INDICATOR_LEFT_UTURN:
-                    indicator->textureID = ASSET_TEX2D_31;
+                    indicator->textureID = 31;
                     indicator->unk0 = 0;
                     break;
                 case INDICATOR_RIGHT:
-                    indicator->textureID = ASSET_TEX2D_33;
+                    indicator->textureID = 33;
                     indicator->unk0 = -0x8000;
                     break;
                 case INDICATOR_RIGHT_SHARP:
-                    indicator->textureID = ASSET_TEX2D_32;
+                    indicator->textureID = 32;
                     indicator->unk0 = -0x8000;
                     break;
                 case INDICATOR_RIGHT_UTURN:
-                    indicator->textureID = ASSET_TEX2D_31;
+                    indicator->textureID = 31;
                     indicator->unk0 = -0x8000;
                     break;
                 case INDICATOR_UP:
-                    indicator->textureID = ASSET_TEX2D_30;
+                    indicator->textureID = 30;
                     indicator->unk0 = -0x8000;
                     indicator->unk2 = -0x8000;
                     break;
                 case INDICATOR_DOWN:
-                    indicator->textureID = ASSET_TEX2D_30;
+                    indicator->textureID = 30;
                     indicator->unk0 = 0;
                     break;
                 default: // INDICATOR_EXCLAMATION
-                    indicator->textureID = ASSET_TEX2D_29;
+                    indicator->textureID = 29;
                     indicator->unk0 = 0;
                     break;
                 }
                 // Flip the arrow direction on adventure 2.
-                if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS && racer->indicator_type < ASSET_TEX2D_30) {
+                if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS && racer->indicator_type < 30) {
                     indicator->unk0 = (s16) (0x8000 - indicator->unk0);
                 }
                 if (gHUDNumPlayers == ONE_PLAYER && racer->raceFinished == FALSE && racer->indicator_type && D_800E27B8 == 0) {
@@ -611,8 +612,8 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
                 indicator = (IndicatorArrow *) &D_80126CDC->courseIndicator;
                 indicator->unk0 = 0;
                 indicator->unk2 = 0;
-                indicator->textureID = ASSET_TEX2D_29;
-                if ((get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) && ((s32) racer->indicator_type < ASSET_TEX2D_30)) {
+                indicator->textureID = 29;
+                if ((get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) && ((s32) racer->indicator_type < 30)) {
                     indicator->unk0 = (s16) (0x8000 - indicator->unk0);
                 }
                 func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) indicator);

@@ -347,7 +347,7 @@ glabel func_800AF714
 /* 0B07FC 800AFBFC 1420FEE0 */  bnez  $at, .L800AF780
 /* 0B0800 800AFC00 01A0B825 */   move  $s7, $t5
 .L800AFC04:
-/* 0B0804 800AFC04 0C004BCC */  jal   func_80012F30
+/* 0B0804 800AFC04 0C004BCC */  jal   objUndoPlayerTumble
 /* 0B0808 800AFC08 02402025 */   move  $a0, $s2
 /* 0B080C 800AFC0C 8FBF003C */  lw    $ra, 0x3c($sp)
 /* 0B0810 800AFC10 8FB00018 */  lw    $s0, 0x18($sp)

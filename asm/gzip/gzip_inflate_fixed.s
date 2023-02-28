@@ -1,4 +1,4 @@
-glabel gzip_inflate_fixed
+glabel gzip_inflate_fixed /* Official name: inflate_fixed */
 /* 0C79DC 800C6DDC 27BDFAD0 */  addiu $sp, $sp, -0x530
 /* 0C79E0 800C6DE0 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0C79E4 800C6DE4 23AB0044 */  addi  $t3, $sp, 0x44

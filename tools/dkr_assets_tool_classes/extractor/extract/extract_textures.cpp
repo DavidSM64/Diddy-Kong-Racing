@@ -5,7 +5,7 @@ ExtractTextures::ExtractTextures(std::string key, std::vector<uint8_t> data, std
 : Extract(key, data, outFilepath) {
     std::string directory = get_directory_from_full_path(outFilepath);
     std::string filename = get_filename_from_full_path(outFilepath, true);
-    ensure_that_path_exists(directory + "/img/");
+    ensure_that_path_exists(directory);
     
     json::JSON out = json::Object();
     int format = data[2] & 0xF;
@@ -51,7 +51,7 @@ ExtractTextures::ExtractTextures(std::string key, std::vector<uint8_t> data, std
     
     out["compressed"] = data[0x1D] != 0;
     
-    out["img"] = "img/" + filename + ".png";
+    out["img"] = filename + ".png";
 
     out["write-size"] = (get_big_endian_halfword(data, 0x16) != 0);
     

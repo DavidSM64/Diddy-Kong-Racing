@@ -63,13 +63,12 @@ typedef struct OSScTask_s {
     OSTask              list;
     OSMesgQueue         *msgQ;
     OSMesg              msg;
-#ifndef _FINALROM                       /* all #ifdef items should    */
-    OSTime              startTime;      /* remain at the end!!, or    */
-    OSTime              totalTime;      /* possible conflict if       */
-#endif                                  /* FINALROM library used with */
-                                        /* non FINALROM code          */
-
+    s32                 unk58;
+    s32                 unk5C;
+    s32                 unk60;
+    s32                 unk64;
     s32                 unk68;          /* Added by Rare?             */
+    s32                 unk6C;
 } OSScTask;
 
 typedef struct SCClient_s {

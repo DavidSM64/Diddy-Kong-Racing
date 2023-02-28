@@ -325,7 +325,7 @@ glabel menu_track_select_init
 /* 08F88C 8008EC8C 0C019984 */  jal   copy_viewports_to_stack
 /* 08F890 8008EC90 00000000 */   nop   
 /* 08F894 8008EC94 00002025 */  move  $a0, $zero
-/* 08F898 8008EC98 0C019A06 */  jal   func_80066818
+/* 08F898 8008EC98 0C019A06 */  jal   camEnableUserView
 /* 08F89C 8008EC9C 00002825 */   move  $a1, $zero
 /* 08F8A0 8008ECA0 240A0001 */  li    $t2, 1
 /* 08F8A4 8008ECA4 3C01800E */  lui   $at, %hi(D_800E097C) # $at, 0x800e

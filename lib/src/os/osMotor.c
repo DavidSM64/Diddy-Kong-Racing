@@ -14,6 +14,7 @@ OSPifRam _MotorStopData[MAXCONTROLLERS];
 OSPifRam _MotorStartData[MAXCONTROLLERS];
 u8 _motorstopbuf[BLOCKSIZE];
 u8 _motorstartbuf[BLOCKSIZE];
+/* Official name: nosMotorStop */
 s32 osMotorStop(OSPfs *pfs) {
     int i;
     s32 ret;
@@ -97,6 +98,7 @@ static void _MakeMotorData(int channel, u16 address, u8 *buffer, OSPifRam *mdata
     ptr[0] = CONT_CMD_END;
 }
 
+/* Official name: nosMotorInit */
 s32 osMotorInit(OSMesgQueue *mq, OSPfs *pfs, int channel) {
     int i;
     s32 ret;

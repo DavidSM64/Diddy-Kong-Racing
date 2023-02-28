@@ -105,7 +105,7 @@ glabel func_8006DCF8
 /* 06EA74 8006DE74 00000000 */   nop   
 /* 06EA78 8006DE78 0C027068 */  jal   get_save_file_index
 /* 06EA7C 8006DE7C 00000000 */   nop   
-/* 06EA80 8006DE80 0C01BB12 */  jal   func_8006EC48
+/* 06EA80 8006DE80 0C01BB12 */  jal   safe_mark_write_save_file
 /* 06EA84 8006DE84 00402025 */   move  $a0, $v0
 /* 06EA88 8006DE88 10000114 */  b     .L8006E2DC
 /* 06EA8C 8006DE8C 8FBF0024 */   lw    $ra, 0x24($sp)
@@ -164,7 +164,7 @@ glabel L8006DF00
 /* 06EB54 8006DF54 00000000 */   nop   
 /* 06EB58 8006DF58 0C027068 */  jal   get_save_file_index
 /* 06EB5C 8006DF5C 00000000 */   nop   
-/* 06EB60 8006DF60 0C01BB12 */  jal   func_8006EC48
+/* 06EB60 8006DF60 0C01BB12 */  jal   safe_mark_write_save_file
 /* 06EB64 8006DF64 00402025 */   move  $a0, $v0
 /* 06EB68 8006DF68 100000DC */  b     .L8006E2DC
 /* 06EB6C 8006DF6C 8FBF0024 */   lw    $ra, 0x24($sp)
@@ -206,7 +206,7 @@ glabel L8006DF70
 /* 06EBF0 8006DFF0 00000000 */   nop   
 /* 06EBF4 8006DFF4 0C027068 */  jal   get_save_file_index
 /* 06EBF8 8006DFF8 00000000 */   nop   
-/* 06EBFC 8006DFFC 0C01BB12 */  jal   func_8006EC48
+/* 06EBFC 8006DFFC 0C01BB12 */  jal   safe_mark_write_save_file
 /* 06EC00 8006E000 00402025 */   move  $a0, $v0
 /* 06EC04 8006E004 100000B5 */  b     .L8006E2DC
 /* 06EC08 8006E008 8FBF0024 */   lw    $ra, 0x24($sp)

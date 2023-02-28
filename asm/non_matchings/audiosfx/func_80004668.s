@@ -24,9 +24,9 @@ glabel func_80004668
 /* 0052C0 800046C0 10000066 */  b     .L8000485C
 /* 0052C4 800046C4 00001025 */   move  $v0, $zero
 .L800046C8:
-/* 0052C8 800046C8 3C15800E */  lui   $s5, %hi(gAlSndPlayer) # $s5, 0x800e
+/* 0052C8 800046C8 3C15800E */  lui   $s5, %hi(gAlSndPlayerPtr) # $s5, 0x800e
 /* 0052CC 800046CC 8FB30064 */  lw    $s3, 0x64($sp)
-/* 0052D0 800046D0 26B5C6BC */  addiu $s5, %lo(gAlSndPlayer) # addiu $s5, $s5, -0x3944
+/* 0052D0 800046D0 26B5C6BC */  addiu $s5, %lo(gAlSndPlayerPtr) # addiu $s5, $s5, -0x3944
 /* 0052D4 800046D4 AFA40080 */  sw    $a0, 0x80($sp)
 /* 0052D8 800046D8 27B60050 */  addiu $s6, $sp, 0x50
 /* 0052DC 800046DC 8FA40080 */  lw    $a0, 0x80($sp)

@@ -24,9 +24,10 @@
 #include "unknown_005740.h"
 #include "game_ui.h"
 #include "object_models.h"
-#include "unknown_003260.h"
+#include "audiosfx.h"
 #include "collision.h"
 #include "main.h"
+#include "controller.h"
 
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
@@ -147,7 +148,7 @@ s8 D_800DCDB0[16][2] = {
 // Checksum count for obj_loop_goldenballoon
 s32 gObjLoopGoldenBalloonChecksum = 0xA597;
 
-FadeTransition gDoorFadeTransition = FADE_TRANSITION(0, FADE_COLOR_BLACK, 50, -1);
+FadeTransition gDoorFadeTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 50, -1);
 
 /*******************************/
 
@@ -2495,7 +2496,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             playerIDF = -(f32) playerID;
             CLAMP(tempRacer->velocity, playerIDF, playerID);
         }
-        if (context != 1 || func_8000E148()) {
+        if (context != DRAW_MENU || func_8000E148()) {
             func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
         lastCheckpointDist = tempRacer->checkpoint_distance;
