@@ -953,15 +953,16 @@ void gParticlePtrList_flush(void) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800101AC.s")
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
+//Minor regalloc diffs
 void func_80010994(s32 updateRate) {
-    Object *obj;
-    s32 new_var;
-    Object_Racer *racer;
-    u32 buttonsPressedFromAnyPlayer;
     s32 i;
-    s32 j;
-    s32 objCountTemp;
+    s32 tempVal;
+    Object_Racer *racer;
+    Object *obj;
+    s32 sp54;
+    Object_68 *obj68;
+    Object_64 *obj64;
 
     func_800245B4(-1);
     gRaceStartCountdown = D_8011ADB0;
@@ -978,13 +979,15 @@ void func_80010994(s32 updateRate) {
     D_8011AD21 = 1 - D_8011AD21;
     D_8011AD22[D_8011AD21] = 0;
     for (i = 0; i < gNumRacers; i++) {
-        racer = &(*gRacers)[i]->unk64->racer;
+        obj64 = (*gRacers)[i]->unk64;
+        racer = &obj64->racer;
         racer->prev_x_position = (f32) (*gRacers)[i]->segment.trans.x_position;
         racer->prev_y_position = (f32) (*gRacers)[i]->segment.trans.y_position;
         racer->prev_z_position = (f32) (*gRacers)[i]->segment.trans.z_position;
     }
     func_800142B8();
     func_800155B8();
+    i = D_8011AE60; //FAKEMATCH
     func_8001E89C();
     for (i = 0; i < D_8011AE70; i++) {
         run_object_loop_func(D_8011AE6C[i], updateRate);
@@ -993,11 +996,11 @@ void func_80010994(s32 updateRate) {
     for (i = 0; i < D_8011AE70; i++) {
         func_8001709C(D_8011AE6C[i]);
     }
-    objCountTemp = objCount;
-    for (i = D_8011AE60; i < objCountTemp; i++) {
+    tempVal = objCount;
+    for (i = D_8011AE60; i < tempVal; i++) {
         obj = gObjPtrList[i];
         if (!(obj->segment.trans.unk6 & 0x8000)) {
-            if ((obj->behaviorId != BHV_WEAPON) && (obj->behaviorId != BHV_LIGHT_RGBA) && (obj->behaviorId != BHV_FOG_CHANGER)) {
+            if ((obj->behaviorId != BHV_LIGHT_RGBA) && (obj->behaviorId != BHV_WEAPON) && (obj->behaviorId != BHV_FOG_CHANGER)) {
                 if (obj->interactObj != NULL) {
                     if (obj->interactObj->unk11 != 2) {
                         run_object_loop_func(obj, updateRate);
@@ -1006,9 +1009,15 @@ void func_80010994(s32 updateRate) {
                     run_object_loop_func(obj, updateRate);
                 }
                 if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
-                    for (j = 0; j < obj->segment.header->numberOfModelIds; j++) {
-                        if (obj->unk68[j] != NULL) {
-                            obj->unk68[j]->objModel->unk52 = updateRate;
+                    for (sp54 = 0; sp54 < obj->segment.header->numberOfModelIds; sp54++) {
+                        obj68 = obj->unk68[sp54];
+
+                        //FAKEMATCH
+                        if (!gObjPtrList){}
+
+                        if (obj68 != NULL) {
+                            if (1){ } //FAKEMATCH
+                            obj68->objModel->unk52 = updateRate;
                         }
                     }
                     if (obj->segment.header->unk72 != 0xFF) {
@@ -1023,22 +1032,23 @@ void func_80010994(s32 updateRate) {
     }
     if (get_current_level_race_type() == 0) {
         for (i = 0; i < gNumRacers; i++) {
-            racer = &gRacersByPosition[i]->unk64->racer; 
+            obj64 = gRacersByPosition[i]->unk64;
+            racer = &obj64->racer;
             if (racer->playerIndex != -1) {
                 func_80043ECC(gRacersByPosition[i], racer, updateRate);
-                i = gNumRacers + 1; //Why not just break?
+                i = gNumRacers; //Why not just break?
             }
         }
     }
     func_8000BADC(updateRate);
-    for (i = D_8011AE60; i < objCountTemp; i++) {
+    for (i = D_8011AE60; i < tempVal; i++) {
         obj = gObjPtrList[i];
         if ((!(obj->segment.trans.unk6 & 0x8000) && (obj->behaviorId == BHV_WEAPON)) || (obj->behaviorId == BHV_FOG_CHANGER)) {
             run_object_loop_func(obj, updateRate);
         }
     }
     if (D_8011AE64 > 0) {
-        for (i = D_8011AE60; i < objCountTemp; i++) {
+        for (i = D_8011AE60; i < tempVal; i++) {
             obj = gObjPtrList[i];
             if (obj->segment.trans.unk6 & 0x8000) {
                 //Why is this object being treated as a Particle2?
@@ -1046,6 +1056,7 @@ void func_80010994(s32 updateRate) {
             }
         }
     }
+    do { //FAKEMATCH
     lightUpdateLights(updateRate);
     if (func_80032C6C() > 0) {
         for (i = D_8011AE60; i < objCount; i++) {
@@ -1080,16 +1091,18 @@ void func_80010994(s32 updateRate) {
     func_8000E2B4();
     func_8009CFB0();
     func_800179D0();
+    } while(0); //FAKEMATCH
     if (D_8011AF00 == 1) {
         if ((D_8011ADB0 == 0x50) && (D_8011AE7A == 0)) {
-            buttonsPressedFromAnyPlayer = 0;
+            sp54 = 0;
             for (i = 0; i < MAXCONTROLLERS; i++) {
-                buttonsPressedFromAnyPlayer |= get_buttons_pressed_from_player(i);
+                tempVal = get_buttons_pressed_from_player(i);
+                sp54 |= tempVal;
             }
 
-            if (buttonsPressedFromAnyPlayer & A_BUTTON) {
+            if (sp54 & A_BUTTON) {
                 func_8001E45C(100);
-            } else if ((buttonsPressedFromAnyPlayer & CONT_B) && (get_trophy_race_world_id() == 0) && (is_in_tracks_mode() == 0)) {
+            } else if ((sp54 & B_BUTTON) && (get_trophy_race_world_id() == 0) && (is_in_tracks_mode() == 0)) {
                 func_8006F140(1); //FADE_BARNDOOR_HORIZONTAL?
             }
         }
