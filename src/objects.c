@@ -955,11 +955,13 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800101AC.s")
 
 #ifdef NON_EQUIVALENT
 void func_80010994(s32 updateRate) {
-    Object *temp_s0;
+    Object *obj;
+    s32 new_var;
     Object_Racer *racer;
     u32 buttonsPressedFromAnyPlayer;
     s32 i;
     s32 j;
+    s32 objCountTemp;
 
     func_800245B4(-1);
     gRaceStartCountdown = D_8011ADB0;
@@ -991,25 +993,26 @@ void func_80010994(s32 updateRate) {
     for (i = 0; i < D_8011AE70; i++) {
         func_8001709C(D_8011AE6C[i]);
     }
-    for (i = D_8011AE60; i < objCount; i++) {
-        temp_s0 = gObjPtrList[i];
-        if (!(temp_s0->segment.trans.unk6 & 0x8000)) {
-            if ((temp_s0->behaviorId != BHV_LIGHT_RGBA) && (temp_s0->behaviorId != BHV_WEAPON) && (temp_s0->behaviorId != BHV_FOG_CHANGER)) {
-                if (temp_s0->interactObj != NULL) {
-                    if (temp_s0->interactObj->unk11 != 2) {
-                        run_object_loop_func(temp_s0, updateRate);
+    objCountTemp = objCount;
+    for (i = D_8011AE60; i < objCountTemp; i++) {
+        obj = gObjPtrList[i];
+        if (!(obj->segment.trans.unk6 & 0x8000)) {
+            if ((obj->behaviorId != BHV_WEAPON) && (obj->behaviorId != BHV_LIGHT_RGBA) && (obj->behaviorId != BHV_FOG_CHANGER)) {
+                if (obj->interactObj != NULL) {
+                    if (obj->interactObj->unk11 != 2) {
+                        run_object_loop_func(obj, updateRate);
                     }
                 } else {
-                    run_object_loop_func(temp_s0, updateRate);
+                    run_object_loop_func(obj, updateRate);
                 }
-                if (temp_s0->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
-                    for (j = 0; j < temp_s0->segment.header->numberOfModelIds; j++) {
-                        if (temp_s0->unk68[j] != NULL) {
-                            temp_s0->unk68[j]->objModel->unk52 = updateRate;
+                if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+                    for (j = 0; j < obj->segment.header->numberOfModelIds; j++) {
+                        if (obj->unk68[j] != NULL) {
+                            obj->unk68[j]->objModel->unk52 = updateRate;
                         }
                     }
-                    if (temp_s0->segment.header->unk72 != 0xFF) {
-                        func_80014090(temp_s0, updateRate, temp_s0->segment.header);
+                    if (obj->segment.header->unk72 != 0xFF) {
+                        func_80014090(obj, updateRate, obj->segment.header);
                     }
                 }
             }
@@ -1020,31 +1023,35 @@ void func_80010994(s32 updateRate) {
     }
     if (get_current_level_race_type() == 0) {
         for (i = 0; i < gNumRacers; i++) {
-            if (gRacersByPosition[i]->unk64->racer.playerIndex != -1) {
-                func_80043ECC(gRacersByPosition[i], &gRacersByPosition[i]->unk64->racer, updateRate);
+            racer = &gRacersByPosition[i]->unk64->racer; 
+            if (racer->playerIndex != -1) {
+                func_80043ECC(gRacersByPosition[i], racer, updateRate);
                 i = gNumRacers + 1; //Why not just break?
             }
         }
     }
     func_8000BADC(updateRate);
-    for (i = D_8011AE60; i < objCount; i++) {
-        if ((!(gObjPtrList[i]->segment.trans.unk6 & 0x8000) && (gObjPtrList[i]->behaviorId == BHV_WEAPON)) || (gObjPtrList[i]->behaviorId == BHV_FOG_CHANGER)) {
-            run_object_loop_func(gObjPtrList[i], updateRate);
+    for (i = D_8011AE60; i < objCountTemp; i++) {
+        obj = gObjPtrList[i];
+        if ((!(obj->segment.trans.unk6 & 0x8000) && (obj->behaviorId == BHV_WEAPON)) || (obj->behaviorId == BHV_FOG_CHANGER)) {
+            run_object_loop_func(obj, updateRate);
         }
     }
     if (D_8011AE64 > 0) {
-        for (i = D_8011AE60; i < objCount; i++) {
-            if (gObjPtrList[i]->segment.trans.unk6 & 0x8000) {
+        for (i = D_8011AE60; i < objCountTemp; i++) {
+            obj = gObjPtrList[i];
+            if (obj->segment.trans.unk6 & 0x8000) {
                 //Why is this object being treated as a Particle2?
-                func_800B22FC((Particle2 *) gObjPtrList[i], updateRate);
+                func_800B22FC((Particle2 *) obj, updateRate);
             }
         }
     }
     lightUpdateLights(updateRate);
     if (func_80032C6C() > 0) {
         for (i = D_8011AE60; i < objCount; i++) {
-            if (!(gObjPtrList[i]->segment.trans.unk6 & 0x8000) && (gObjPtrList[i]->unk54 != NULL)) {
-                func_80032C7C(gObjPtrList[i]);
+            obj = gObjPtrList[i];
+            if (!(obj->segment.trans.unk6 & 0x8000) && (obj->unk54 != NULL)) {
+                func_80032C7C(obj);
             }
         }
     }
