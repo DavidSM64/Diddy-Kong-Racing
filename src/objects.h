@@ -449,5 +449,7 @@ void func_800155B8(void);
 void func_800230D0(Object*, Object_Racer*);
 s32 func_8001955C(Object*, s8, u8, s16, s32, f32, f32*, f32*, f32*);
 void func_80010994(s32 updateRate);
+void func_800159C8(Object *, Object *);
+void func_80016748(Object *, Object *);
 
 #endif

@@ -1688,7 +1688,92 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800143A8.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80014814.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80014B50.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80015348.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_800155B8.s")
+
+void func_800155B8(void) {
+    Object *obj2;
+    Object *obj;
+    ObjectInteraction *objInteract;
+    ObjectInteraction *objInteract2;
+    f32 xDiff;
+    f32 zDiff;
+    f32 var_f12;
+    s32 j;
+    s32 i;
+    s32 objsWithInteractives;
+    Object *objList[257]; //257 seems random, but it works for now.
+
+    objsWithInteractives = 0;
+    for (i = D_8011AE60; i < objCount; i++) {
+        obj = gObjPtrList[i];
+        if (!(obj->segment.trans.unk6 & 0x8000)) {
+            objInteract = obj->interactObj;
+            if (objInteract != NULL) {
+                objList[objsWithInteractives] = obj;
+                objsWithInteractives++;
+                if (objInteract->unk11 != 2) {
+                    objInteract->obj = NULL;
+                    objInteract->unk14 &= ~0x48;
+                    objInteract->distance = 0xFF;
+                }
+            }
+        }
+    }
+    
+    D_8011AE70 = 0;
+
+    for (i = 0; i < objsWithInteractives; i++) {
+        obj = objList[i];
+        objInteract = obj->interactObj;
+        if ((objInteract->unk11 == 2) && (D_8011AE70 < 20)) {
+            D_8011AE6C[D_8011AE70] = obj;
+            D_8011AE70++;
+        }
+        if (objInteract->unk14 & 4) {
+            for (j = 0; j < objsWithInteractives; j++) {
+                if (i != j) {
+                    obj2 = objList[j];
+                    objInteract2 = obj2->interactObj;
+                    if (objInteract2->unk14 & 3) {
+                        if (objInteract2->unk11 == 3) {
+                            func_80016748(obj, obj2);
+                        } else if (objInteract2->unk11 != 2) {
+                            xDiff = obj->segment.trans.x_position - obj2->segment.trans.x_position;
+                            zDiff = obj->segment.trans.z_position - obj2->segment.trans.z_position;
+                            if (objInteract2->unk14 & 0x20) {
+                                var_f12 = 0x400000; //4194304.0f;
+                            } else {
+                                var_f12 = 0x40000; //262144.0f;
+                            }
+                            if (((xDiff * xDiff) + (zDiff * zDiff)) < var_f12) {
+                                func_800159C8(obj, obj2);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (objInteract->unk14 & 0x100) {
+            for (j = 0; j < objsWithInteractives; j++) {
+                if (i != j) {
+                    obj2 = objList[j];
+                    objInteract2 = obj2->interactObj;
+                    if (objInteract2->unk11 == 3) {
+                        func_80016748(obj, obj2);
+                    }
+                }
+            }
+        }
+    }
+
+    for (i = 0; i < objsWithInteractives; i++) {
+        obj = objList[i];
+        objInteract = obj->interactObj;
+        objInteract->x_position = obj->segment.trans.x_position;
+        objInteract->y_position = obj->segment.trans.y_position;
+        objInteract->z_position = obj->segment.trans.z_position;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_800159C8.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016500.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016748.s")
