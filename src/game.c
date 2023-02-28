@@ -1771,7 +1771,7 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
             }
             break;
         }
-        func_8006ECFC(3);
+        calc_and_alloc_heap_for_hud(3);
         load_level_3(levelId, numberOfPlayers, 0, vehicleID, cutsceneId);
         gIsLoading = FALSE;
         return;

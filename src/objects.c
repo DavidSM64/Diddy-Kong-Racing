@@ -27,6 +27,7 @@
 #include "game_ui.h"
 #include "unknown_008C40.h"
 #include "main.h"
+#include "controller.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
@@ -136,7 +137,8 @@ extern f32 D_800E5644;
 // Currently defined in unknown_005740. Might need to be defined here.
 extern s16 D_8011AC20[128];
 
-s8 D_8011AD20[2];
+s8 D_8011AD20;
+s8 D_8011AD21;
 s8 D_8011AD22[2];
 s8 D_8011AD24[2];
 s8 D_8011AD26[2];
@@ -201,7 +203,7 @@ s32 objCount;
 s32 D_8011AE60;
 s32 D_8011AE64;
 Object *gObjectMemoryPool;
-s32 *D_8011AE6C;
+Object **D_8011AE6C;
 s32 D_8011AE70;
 Object **D_8011AE74;
 s16 D_8011AE78;
@@ -342,7 +344,7 @@ void allocate_object_pools(void) {
     func_8001D258(0.67f, 0.33f, 0, -0x2000, 0);
     gObjectMemoryPool = (Object *) new_sub_memory_pool(OBJECT_POOL_SIZE, OBJECT_SLOT_COUNT);
     gParticlePtrList = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 200, COLOUR_TAG_BLUE);
-    D_8011AE6C = (s32 *) allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
+    D_8011AE6C = (Object **) allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
     D_8011AE74 = (Object **) allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     gTrackCheckpoints = (CheckpointNode *) allocate_from_main_pool_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
     D_8011AEDC = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
@@ -426,7 +428,7 @@ void func_8000C460(void) {
     D_8011AED4 = 0;
     gNumRacers = 0;
     D_8011AE78 = 0;
-    D_8011AD20[1] = 0;
+    D_8011AD21 = 0;
     D_8011AD22[0] = 0;
     D_8011AD22[1] = 0;
 
@@ -574,7 +576,7 @@ void instShowBearBar(void) {
 }
 
 s8 func_8000E138() {
-    return D_8011AD20[0];
+    return D_8011AD20;
 }
 
 s8 func_8000E148() {
@@ -929,7 +931,213 @@ void gParticlePtrList_flush(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800101AC.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_80010994.s")
+
+void func_80010994(s32 updateRate) {
+    s32 i;
+    s32 tempVal;
+    Object_Racer *racer;
+    Object *obj;
+    s32 sp54;
+    Object_68 *obj68;
+    Object_64 *obj64;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first;
+#endif
+
+    func_800245B4(-1);
+    gRaceStartCountdown = D_8011ADB0;
+    if ((D_8011ADB0 > 0) && (func_800A0190() != 0)) {
+        D_8011ADB0 -= updateRate;
+        D_8011ADBC = 0;
+    } else {
+        D_8011ADBC += updateRate;
+    }
+    if (D_8011ADB0 <= 0) {
+        D_8011ADB0 = 0;
+    }
+    D_8011AD3D = 0;
+    D_8011AD21 = 1 - D_8011AD21;
+    D_8011AD22[D_8011AD21] = 0;
+    for (i = 0; i < gNumRacers; i++) {
+        obj64 = (*gRacers)[i]->unk64;
+        racer = &obj64->racer;
+        racer->prev_x_position = (f32) (*gRacers)[i]->segment.trans.x_position;
+        racer->prev_y_position = (f32) (*gRacers)[i]->segment.trans.y_position;
+        racer->prev_z_position = (f32) (*gRacers)[i]->segment.trans.z_position;
+    }
+    i = 1; //FAKEMATCH
+    func_800142B8();
+    func_800155B8();
+    func_8001E89C();
+    for (i = 0; i < D_8011AE70; i++) {
+#ifdef PUPPYPRINT_DEBUG
+        first = osGetCount();
+#endif
+        run_object_loop_func(D_8011AE6C[i], updateRate);
+#ifdef PUPPYPRINT_DEBUG
+        profiler_add_obj(D_8011AE6C[i]->behaviorId, osGetCount() - first);
+#endif
+    }
+    func_8001E6EC(1);
+    for (i = 0; i < D_8011AE70; i++) {
+#ifdef PUPPYPRINT_DEBUG
+        first = osGetCount();
+#endif
+        func_8001709C(D_8011AE6C[i]);
+#ifdef PUPPYPRINT_DEBUG
+        profiler_add_obj(D_8011AE6C[i]->behaviorId, osGetCount() - first);
+#endif
+    }
+    tempVal = objCount;
+    for (i = D_8011AE60; i < tempVal; i++) {
+#ifdef PUPPYPRINT_DEBUG
+        first = osGetCount();
+#endif
+        obj = gObjPtrList[i];
+        if (!(obj->segment.trans.unk6 & 0x8000)) {
+            if ((obj->behaviorId != BHV_LIGHT_RGBA) && (obj->behaviorId != BHV_WEAPON) && (obj->behaviorId != BHV_FOG_CHANGER)) {
+                if (obj->interactObj != NULL) {
+                    if (obj->interactObj->unk11 != 2) {
+                        run_object_loop_func(obj, updateRate);
+                    }
+                } else {
+                    run_object_loop_func(obj, updateRate);
+                }
+                if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+                    for (sp54 = 0; sp54 < obj->segment.header->numberOfModelIds; sp54++) {
+                        obj68 = obj->unk68[sp54];
+                        
+                        //FAKEMATCH
+                        if (!gObjPtrList){}
+                        
+                        if (obj68 != NULL) {
+                            if (1){ } //FAKEMATCH
+                            obj68->objModel->unk52 = updateRate;
+                        }
+                    }
+                    if (obj->segment.header->unk72 != 0xFF) {
+                        func_80014090(obj, updateRate, obj->segment.header);
+                    }
+                }
+            }
+        }
+#ifdef PUPPYPRINT_DEBUG
+        profiler_add_obj(obj->behaviorId, osGetCount() - first);
+#endif
+    }
+    for (i = 0; i < gNumRacers; i++) {
+#ifdef PUPPYPRINT_DEBUG
+        first = osGetCount();
+#endif
+        update_player_racer((*gRacers)[i], updateRate);
+#ifdef PUPPYPRINT_DEBUG
+        profiler_add_obj(BHV_RACER, osGetCount() - first);
+#endif
+    }
+    if (get_current_level_race_type() == 0) {
+        for (i = 0; i < gNumRacers; i++) {
+#ifdef PUPPYPRINT_DEBUG
+        first = osGetCount();
+#endif
+            obj64 = gRacersByPosition[i]->unk64;
+            racer = &obj64->racer;
+            if (racer->playerIndex != -1) {
+                func_80043ECC(gRacersByPosition[i], racer, updateRate);
+                i = gNumRacers; //Why not just break?
+            }
+#ifdef PUPPYPRINT_DEBUG
+        profiler_add_obj(BHV_RACER, osGetCount() - first);
+#endif
+        }
+    }
+    func_8000BADC(updateRate);
+    for (i = D_8011AE60; i < tempVal; i++) {
+#ifdef PUPPYPRINT_DEBUG
+        first = osGetCount();
+#endif
+        obj = gObjPtrList[i];
+        if ((!(obj->segment.trans.unk6 & 0x8000) && (obj->behaviorId == BHV_WEAPON)) || (obj->behaviorId == BHV_FOG_CHANGER)) {
+            run_object_loop_func(obj, updateRate);
+        }
+#ifdef PUPPYPRINT_DEBUG
+        profiler_add_obj(obj->behaviorId, osGetCount() - first);
+#endif
+    }
+    if (D_8011AE64 > 0) {
+        for (i = D_8011AE60; i < tempVal; i++) {
+#ifdef PUPPYPRINT_DEBUG
+        first = osGetCount();
+#endif
+            obj = gObjPtrList[i];
+            if (obj->segment.trans.unk6 & 0x8000) {
+                //Why is this object being treated as a Particle2?
+                func_800B22FC((Particle2 *) obj, updateRate);
+            }
+#ifdef PUPPYPRINT_DEBUG
+        profiler_add_obj(obj->behaviorId, osGetCount() - first);
+#endif
+        }
+    }
+    do { //FAKEMATCH
+    lightUpdateLights(updateRate);
+    if (func_80032C6C() > 0) {
+        for (i = D_8011AE60; i < objCount; i++) {
+#ifdef PUPPYPRINT_DEBUG
+        first = osGetCount();
+#endif
+            obj = gObjPtrList[i];
+            if (!(obj->segment.trans.unk6 & 0x8000) && (obj->unk54 != NULL)) {
+                func_80032C7C(obj);
+            }
+#ifdef PUPPYPRINT_DEBUG
+        profiler_add_obj(obj->behaviorId, osGetCount() - first);
+#endif
+        }
+    }
+    func_8001E6EC(0);
+    if (D_8011AEF7 != 0) {
+        func_80022948();
+    }
+    if (D_8011ADAC == 0) {
+        gParticlePtrList_flush();
+        func_80017E98();
+        func_8001BC54();
+        func_8001E93C();
+    }
+    if (gNumRacers != 0) {
+        if (D_8011AD4E == 0) {
+            func_80019808(updateRate);
+        } else {
+            func_8001A8F4(updateRate);
+        }
+    }
+    func_80008438(gRacersByPort, gNumRacers, updateRate);
+    D_8011ADAC = 1;
+    D_8011ADA8 = (f32) updateRate;
+    D_8011AD24[0] = 0;
+    D_8011AD53 = 0;
+    func_8000E2B4();
+    func_8009CFB0();
+    func_800179D0();
+    } while(0); //FAKEMATCH
+    if (D_8011AF00 == 1) {
+        if ((D_8011ADB0 == 0x50) && (D_8011AE7A == 0)) {
+            sp54 = 0;
+            for (i = 0; i < MAXCONTROLLERS; i++) {                
+                tempVal = get_buttons_pressed_from_player(i);
+                sp54 |= tempVal;
+            }
+
+            if (sp54 & A_BUTTON) {
+                func_8001E45C(100);
+            } else if ((sp54 & B_BUTTON) && (get_trophy_race_world_id() == 0) && (is_in_tracks_mode() == 0)) {
+                func_8006F140(1); //FADE_BARNDOOR_HORIZONTAL?
+            }
+        }
+    } else if (D_8011AF00 == 0) {
+        D_8011AF00 = 1;
+    }
+}
 
 #ifdef NON_EQUIVALENT
 void func_80011134(Object *arg0, s32 arg1) {
@@ -2286,7 +2494,7 @@ void func_80021400(s32 arg0) {
 }
 
 s8 func_800214C4(void) {
-    return D_8011AD22[1 - D_8011AD20[1]];
+    return D_8011AD22[1 - D_8011AD21];
 }
 
 s8 func_800214E4(Object *obj, s32 updateRate) {
@@ -2884,9 +3092,6 @@ s32 func_80023E30(s32 arg0) {
  * One big switch statement for whichever object.
 */
 void run_object_loop_func(Object *obj, s32 updateRate) {
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetTime();
-#endif
     func_800B76B8(1, obj->unk4A);
     switch (obj->behaviorId) {
         case BHV_SCENERY:
@@ -3129,9 +3334,6 @@ void run_object_loop_func(Object *obj, s32 updateRate) {
             break;
     }
     func_800B76B8(1, -1);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add_obj(obj->behaviorId, osGetTime() - first);
-#endif
 }
 
 s16 *func_80024594(s32 *arg0, s32 *arg1) {

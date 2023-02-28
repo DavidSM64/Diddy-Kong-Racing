@@ -9,6 +9,7 @@
 #include "asset_loading.h"
 #include "objects.h"
 #include "PR/abi.h"
+#include "main.h"
 
 /****  type define's for structures unique to audiomgr ****/
 typedef union {
@@ -129,6 +130,10 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     s32 checksum;
     u8 *crc_region_start;
     u8 *crc_region;
+    u32 ramEnd = 0x80400000;
+    if (gExpansionPak) {
+        ramEnd = 0x80800000;
+    }
 
     gAudioSched = audSched;
     gAudioHeap = c->heap;
@@ -193,7 +198,7 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
         __am.ACMDList[i] = (Acmd *) alHeapAlloc(c->heap, 1, 0xA000); //sizeof(Acmd) * DMA_BUFFER_LENGTH * 5?
     }
 
-    asset = allocate_at_address_in_main_pool((maxFrameSize * 12), (u8 *)(0x803FFE00 - (maxFrameSize * 12)), COLOUR_TAG_CYAN);
+    asset = allocate_at_address_in_main_pool((maxFrameSize * 12), (u8 *)((ramEnd - 0x100) - (maxFrameSize * 12)), COLOUR_TAG_CYAN);
 
     /**** initialize the done messages ****/
     for (i = 0; i < NUM_ACMD_LISTS + 1; i++) {
@@ -237,18 +242,33 @@ static void __amMain(UNUSED void *arg) {
     s32 done = 0;
     AudioMsg *msg = NULL;
     AudioInfo *lastInfo = 0;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first;
+#endif
 
     osScAddClient(gAudioSched, (OSScClient *) &audioStack, &__am.audioFrameMsgQ, OS_MESG_BLOCK);
 
     while (!done) {
         (void) osRecvMesg(&__am.audioFrameMsgQ, (OSMesg *) &msg, OS_MESG_BLOCK);
+#ifndef DISABLE_AUDIO
         switch (msg->gen.type) {
         case OS_SC_RETRACE_MSG:
             //TODO: Check type of ACMDList?
+#ifdef PUPPYPRINT_DEBUG
+        first = osGetCount();
+#endif
             __amHandleFrameMsg((AudioInfo *) __am.ACMDList[(((u32) audFrameCt % 3))+2], lastInfo);
-            /* wait for done message */
+#ifdef PUPPYPRINT_DEBUG
+            profiler_add(gPuppyTimers.timers[PP_AUDIO], osGetCount() - first);
+#endif
             osRecvMesg(&__am.audioReplyMsgQ, (OSMesg *) &lastInfo, OS_MESG_BLOCK);
+#ifdef PUPPYPRINT_DEBUG
+            first = osGetCount();
+#endif
             __amHandleDoneMsg(lastInfo);
+#ifdef PUPPYPRINT_DEBUG
+            profiler_add(gPuppyTimers.timers[PP_AUDIO], osGetCount() - first);
+#endif
             break;
         case OS_SC_PRE_NMI_MSG:
             /* what should we really do here? quit? ramp down volume? */
@@ -259,6 +279,7 @@ static void __amMain(UNUSED void *arg) {
         default:
             break;
         }
+#endif
     }
 
     alClose(&__am.g);

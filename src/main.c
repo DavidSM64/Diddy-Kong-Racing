@@ -8,6 +8,7 @@
 #include "lib/src/libc/xprintf.h"
 #include "string.h"
 #include "stdarg.h"
+#include "controller.h"
 
 /************ .bss ************/
 
@@ -229,7 +230,7 @@ u8 gShowHiddenGeometry = FALSE;
 u8 gShowHiddenObjects = FALSE;
 u32 gFreeMem[12];
 u8 sPrintOrder[PP_RSP_GFX];
-u8 sObjPrintOrder[NUM_OBJECT_PRINTS];
+u16 sObjPrintOrder[NUM_OBJECT_PRINTS];
 struct PuppyPrintTimers gPuppyTimers;
 char sPuppyPrintStrings[][16] = {
     PP_STRINGS
@@ -301,18 +302,19 @@ void profiler_reset_values(void) {
         gPuppyTimers.timers[i][PERF_AGGREGATE] -= gPuppyTimers.timers[i][perfIteration];
         gPuppyTimers.timers[i][perfIteration] = 0;
     }
-    for (i = 0; i < PP_RDP_BUS; i++) {
+    for (i = 0; i < NUM_OBJECT_PRINTS; i++) {
         gPuppyTimers.objTimers[i][PERF_AGGREGATE] -= gPuppyTimers.objTimers[i][perfIteration];
         gPuppyTimers.objTimers[i][perfIteration] = 0;
     }
 }
 
 void profiler_add_obj(u32 objID, u32 time) {
+    u32 tempTime = OS_CYCLES_TO_USEC(time);
     if (objID >= NUM_OBJECT_PRINTS) {
         return;
     }
-    gPuppyTimers.objTimers[objID][PERF_AGGREGATE] += time;
-    gPuppyTimers.objTimers[objID][perfIteration] += time;
+    gPuppyTimers.objTimers[objID][PERF_AGGREGATE] += tempTime;
+    gPuppyTimers.objTimers[objID][perfIteration] += tempTime;
 }
 
     #define TEXT_OFFSET 10
@@ -418,7 +420,7 @@ void render_profiler(void) {
             gDPPipeSync(gCurrDisplayList++);
             set_text_background_colour(0, 0, 0, 0);
             set_kerning(FALSE);
-            for (i = 0; i < PP_RSP_GFX; i++) {
+            for (i = 0; i < NUM_OBJECT_PRINTS; i++) {
                 if (gPuppyTimers.objTimers[sObjPrintOrder[i]][PERF_TOTAL] == 0) {
                     continue;
                 }
@@ -494,6 +496,14 @@ void swapu(u8* xp, u8* yp)
     *yp = temp;
 }
 
+
+void swapu16(u16* xp, u16* yp)
+{
+    u16 temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+
 void calculate_print_order(void) {
     u32 i, j, min_idx;
     for (i = 0; i < PP_RSP_GFX; i++) {
@@ -536,7 +546,7 @@ void calculate_obj_print_order(void) {
 
         // Swap the found minimum element
         // with the first element
-        swapu(&sObjPrintOrder[min_idx], &sObjPrintOrder[i]);
+        swapu16(&sObjPrintOrder[min_idx], &sObjPrintOrder[i]);
     }
 }
 
@@ -557,7 +567,7 @@ void puppyprint_calculate_average_times(void) {
             }
         }
         for (i = 1; i < NUM_OBJECT_PRINTS; i++) {
-            gPuppyTimers.objTimers[i][PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.objTimers[i][PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
+            gPuppyTimers.objTimers[i][PERF_TOTAL] = (gPuppyTimers.objTimers[i][PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         }
         gPuppyTimers.timers[PP_LOGIC][PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.timers[PP_LOGIC][PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         if (gPuppyTimers.timers[PP_LOGIC][PERF_TOTAL] > OS_CYCLES_TO_USEC(99999)) {

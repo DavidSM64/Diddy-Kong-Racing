@@ -321,7 +321,7 @@ void __scHandleRSP(OSSched *sc) {
         puppyprint_update_rsp(RSP_AUDIO_FINISHED);
 #endif
         gRSPAudTaskDoneTime = osGetCount();
-        gAudTaskTimer3 = (f32) (((f32) (gRSPAudTaskDoneTime - gRSPAudTaskFlushTime) * 60.0f) / OS_CPU_COUNTER_F);
+        gAudTaskTimer3 = (f32) (((f32) (gRSPAudTaskDoneTime - gRSPAudTaskFlushTime) * 60.0f) / (OS_CPU_COUNTER / 100));
         gAudTaskTimer1 = (f32) (gAudTaskTimer1 + gAudTaskTimer3);
         if (gAudTaskTimer0 < gAudTaskTimer3) {
             gAudTaskTimer0 = gAudTaskTimer3;
