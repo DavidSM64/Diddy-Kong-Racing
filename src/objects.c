@@ -1432,8 +1432,233 @@ void render_3d_billboard(Object *obj) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+void render_3d_model(Object *obj) {
+    s32 primColourValue;
+    s32 spB0;
+    s32 spAC;
+    s32 isNotOpaque;
+    s32 hasUnk54;
+    ObjectModel *objModel;
+    unk80068514_arg4 *sp74;
+    Object *temp_s0_2;
+    Object *heldObj;
+    Object_54 *obj54;
+    Object_64 *obj64;
+    Object_68 *obj68;
+    Vertex *temp_v0_10;
+    Vertex *temp_v0_14;
+    f32 xPos; //Array of 3?
+    f32 zPos;
+    f32 yPos;
+    s32 cicFailed;
+    s32 var_t1;
+    s32 billboardFlags;
+    s32 i;
+    s32 var_v0;
+    s8 temp_v1_4;
+    s8 var_t0_2;
+    s8 var_v0_2;
+    s32 alpha;
+    unk80068514_arg4 *temp_t4;
 
+    obj68 = obj->unk68[obj->segment.unk38.byte.unk3A];
+    if (obj68 != NULL) {
+        isNotOpaque = FALSE;
+        hasUnk54 = FALSE;
+        primColourValue = 255;
+        objModel = obj68->objModel;
+        if (obj->unk54 != NULL) {
+            isNotOpaque = TRUE;
+            hasUnk54 = TRUE;
+            primColourValue = (s32) (obj->unk54->unk0 * 255.0f * D_8011AD30);
+        }
+        if (obj->behaviorId == BHV_RACER) {
+            obj64 = obj->unk64;
+            func_80012E28(obj);
+        } else {
+            obj64 = NULL;
+        }
+        if (obj68->unk20 <= 0) {
+            obj->unk44 = (Vertex *) obj68->unk4[obj68->unk1F];
+            if (obj68->unk1E == 2) {
+                func_80061D30(obj);
+            }
+            if ((obj68->unk1E != 0) && (objModel->unk40 != NULL)) {
+                var_t1 = 1;
+                if ((obj64 != NULL) && (obj64->racer.vehicleID < 5) && (obj64->racer.playerIndex == -1)) {
+                    var_t1 = 0;
+                }
+                if (get_viewport_count() != 0) {
+                    var_t1 = 0;
+                }
+                if (obj->behaviorId == BHV_UNK_3F) {
+                    calc_dyn_light_and_env_map_for_object(objModel, obj, 0, D_8011AD30);
+                } else if (var_t1 != 0) {
+                    calc_dyn_light_and_env_map_for_object(objModel, obj, -1, D_8011AD30);
+                } else {
+                    func_800245F0(objModel, obj, D_8011AD30);
+                }
+            }
+            if ((obj64 != NULL) && (obj64->racer.playerIndex == PLAYER_COMPUTER) && (obj64->racer.vehicleID < VEHICLE_TRICKY)) {
+                obj68->unk20 = 2;
+            } else {
+                obj68->unk20 = 1;
+            }
+        }
+        obj->unk44 = (Vertex *) obj68->unk4[obj68->unk1F];
+        if (obj->behaviorId == BHV_DOOR) {
+            func_80011264(objModel, obj);
+        }
+        if ((objModel->unk52 != 0) && (objModel->unk50 > 0)) {
+            func_80011134(obj, (s32) objModel->unk52);
+            obj68->objModel->unk52 = 0;
+        }
+        func_80069484(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0.0f);
+        spB0 = 0;
+        if (obj64 != NULL) {
+            objUndoPlayerTumble(obj);
+            if ((obj->segment.unk38.byte.unk3B == 0) || (obj64->racer.vehicleID >= VEHICLE_TRICKY)) {
+                func_80069790(&gObjectCurrDisplayList, &gObjectCurrMatrix, obj68, obj64->racer.headAngle);
+                spB0 = 1;
+            } else {
+                obj64->racer.headAngle = 0;
+            }
+        }
+        alpha = obj->segment.unk38.byte.unk39;
+        if (alpha > 255) {
+            alpha = 255;
+        }
+        if (obj->behaviorId == BHV_ZIPPER_WATER) {
+            alpha = (u8) (alpha >> 1);
+        }
+        if (alpha < 255) {
+            isNotOpaque = TRUE;
+        }
+        if (hasUnk54 != 0) {
+            gDPSetEnvColor(gObjectCurrDisplayList++, obj->unk54->unk4, obj->unk54->unk5, obj->unk54->unk6, obj->unk54->unk7);
+        } else {
+            gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
+        }
+        if (obj->segment.header->unk71 != 0) {
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->unk54->unk18, obj->unk54->unk19, obj->unk54->unk1A, alpha);
+            func_8007B43C();
+        } else if (isNotOpaque) {
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, primColourValue, primColourValue, primColourValue, alpha);
+        } else {
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+        }
+        if (alpha < 255) {
+            var_v0 = func_800143A8(objModel, obj, 0, 4, spB0);
+        } else {
+            var_v0 = func_800143A8(objModel, obj, 0, 0, spB0);
+        }
+        if (obj->segment.header->unk71 != 0) {
+            if (isNotOpaque) {
+                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, primColourValue, primColourValue, primColourValue, alpha);
+            } else {
+                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+            }
+            func_8007B454();
+        }
+        if (obj->unk60 != NULL) {
+            spAC = obj->unk60->unk0;
+            if (obj64 != NULL) {
+                if (obj64->racer.vehicleID == 3) {
+                    spAC = 0;
+                }
+            }
+            for (i = 0; i < spAC; i++) {
+                temp_s0_2 = obj->unk60[i].unk4;
+                if (!(temp_s0_2->segment.trans.unk6 & 0x4000)) {
+                    temp_v1_4 = obj->unk60->unk2C[i];
+                    if ((temp_v1_4 >= 0) && (temp_v1_4 < objModel->unk18)) {
+                        temp_t4 = temp_s0_2->unk68[temp_s0_2->segment.unk38.byte.unk3A];
+                        temp_v0_10 = &obj->unk44[objModel->unk14[temp_v1_4]];
+                        xPos = (f32) temp_v0_10->x;
+                        yPos = (f32) temp_v0_10->y;
+                        zPos = (f32) temp_v0_10->z;
+                        temp_s0_2->segment.trans.x_position += xPos;
+                        temp_s0_2->segment.trans.y_position += yPos;
+                        temp_s0_2->segment.trans.z_position += zPos;
+                        if (temp_s0_2->segment.header->modelType = OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
+                            billboardFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
+                        } else {
+                            billboardFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE | RENDER_ANTI_ALIASING);
+                        }
+                        if (alpha < 0xFF) {
+                            billboardFlags |= RENDER_SEMI_TRANSPARENT;
+                        }
+                        cicFailed = FALSE;
+                        //Anti-Piracy check
+                        if (osCicId != 0x17D7) {
+                            cicFailed = TRUE;
+                        }
+                        if (!cicFailed) {
+                            var_v0_2 = (temp_s0_2->segment.trans.unk6 & 0x80) != 0;
+                            if (var_v0_2 != 0) {
+                                var_v0_2 = spAC == 3;
+                            }
+                            var_t0_2 = var_v0_2;
+                            if ((obj64 != NULL) && (obj64->racer.transparency < 255)) {
+                                var_t0_2 = 0;
+                            }
+                            if (var_t0_2 != 0) {
+                                func_80012C98(&gObjectCurrDisplayList);
+                                gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
+                                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, primColourValue, primColourValue, primColourValue, alpha);
+                            }
+                            temp_s0_2->unk78 = render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, temp_s0_2, temp_t4, billboardFlags);
+                            if (var_t0_2 != 0) {
+                                gDkrInsertMatrix(gObjectCurrDisplayList++, 0, 0);
+                                func_80012CE8(&gObjectCurrDisplayList);
+                            }
+                        }
+                        temp_s0_2->segment.trans.x_position -= xPos;
+                        temp_s0_2->segment.trans.y_position -= yPos;
+                        temp_s0_2->segment.trans.z_position -= zPos;
+                    }
+                }
+            }
+        }
+        if (obj64 != NULL) {
+            heldObj = obj64->racer.held_obj;
+            if (heldObj != NULL) {
+                if ((obj->segment.header->unk58 >= 0) && (obj->segment.header->unk58 < objModel->unk18)) {
+                    temp_v0_14 = &obj->unk44[objModel->unk14[obj->segment.header->unk58]];
+                    heldObj->segment.trans.x_position += (temp_v0_14->x - heldObj->segment.trans.x_position) * 0.25;
+                    heldObj->segment.trans.y_position += (temp_v0_14->y - heldObj->segment.trans.y_position) * 0.25;
+                    heldObj->segment.trans.z_position += (temp_v0_14->z - heldObj->segment.trans.z_position) * 0.25;
+                    if (heldObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
+                        render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, heldObj,
+                            (unk80068514_arg4 *) heldObj->unk68[heldObj->segment.unk38.byte.unk3A],
+                            (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE));
+                    }
+                }
+            }
+        }
+        if (var_v0 != -1) {
+            if (obj->segment.header->unk71 != 0) {
+                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->unk54->unk18, obj->unk54->unk19, obj->unk54->unk1A, alpha);
+                func_8007B43C();
+            }
+            func_800143A8(objModel, obj, var_v0, 4, spB0);
+            if (obj->segment.header->unk71 != 0) {
+                func_8007B454();
+            }
+        }
+        if ((isNotOpaque) || (obj->segment.header->unk71 != 0)) {
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+        }
+        if (hasUnk54) {
+            gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
+        }
+        func_80069A40(&gObjectCurrDisplayList);
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/render_3d_model.s")
+#endif
 
 void func_80012C30(void) {
     D_8011ADA4 = 0;

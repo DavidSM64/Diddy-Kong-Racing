@@ -278,6 +278,8 @@ typedef struct unk8001A7D8_arg0 {
     u8 unk49;
 } unk8001A7D8_arg0;
 
+extern s32 osCicId; // Used for an Anti-Piracy check in render_3d_model
+
 Object *func_8000BF44(s32 arg0);
 void allocate_object_pools(void);
 void func_8000C460(void);
@@ -451,5 +453,8 @@ s32 func_8001955C(Object*, s8, u8, s16, s32, f32, f32*, f32*, f32*);
 void func_80010994(s32 updateRate);
 void func_800159C8(Object *, Object *);
 void func_80016748(Object *, Object *);
+void func_80011264(ObjectModel *, Object *);
+void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
+void func_80061D30(Object *); //asm func in unknown_062930
 
 #endif
