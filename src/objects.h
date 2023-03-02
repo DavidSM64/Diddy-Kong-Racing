@@ -278,6 +278,7 @@ typedef struct unk8001A7D8_arg0 {
     u8 unk49;
 } unk8001A7D8_arg0;
 
+#define CIC_ID 6103
 extern s32 osCicId; // Used for an Anti-Piracy check in render_3d_model
 
 Object *func_8000BF44(s32 arg0);

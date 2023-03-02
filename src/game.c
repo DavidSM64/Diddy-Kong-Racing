@@ -2222,7 +2222,7 @@ s32 is_controller_missing(void) {
  * A false read, meaning you're caught running an illegitimate copy, will force the game to pause when you enter the world.
  */
 s32 check_imem_validity(void) {
-    if (IO_READ(SP_IMEM_START) != 0x17D7) {
+    if (IO_READ(SP_IMEM_START) != CIC_ID) {
         return FALSE;
     }
     return TRUE;

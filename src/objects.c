@@ -1434,21 +1434,19 @@ void render_3d_billboard(Object *obj) {
 
 #ifdef NON_EQUIVALENT
 void render_3d_model(Object *obj) {
-    s32 primColourValue;
+    s32 intensity;
     s32 spB0;
-    s32 spAC;
-    s32 isNotOpaque;
-    s32 hasUnk54;
+    s32 obj60_unk0;
+    s32 hasPrimCol;
+    s32 hasEnvCol;
     ObjectModel *objModel;
-    unk80068514_arg4 *sp74;
-    Object *temp_s0_2;
+    Object *loopObj;
     Object *heldObj;
-    Object_54 *obj54;
     Object_64 *obj64;
     Object_68 *obj68;
-    Vertex *temp_v0_10;
+    Vertex *vtx_unk44;
     Vertex *temp_v0_14;
-    f32 xPos; //Array of 3?
+    f32 xPos;
     f32 zPos;
     f32 yPos;
     s32 cicFailed;
@@ -1456,22 +1454,22 @@ void render_3d_model(Object *obj) {
     s32 billboardFlags;
     s32 i;
     s32 var_v0;
-    s8 temp_v1_4;
+    s8 vtx_idx;
     s8 var_t0_2;
-    s8 var_v0_2;
+    s32 var_v0_2;
     s32 alpha;
     unk80068514_arg4 *temp_t4;
 
     obj68 = obj->unk68[obj->segment.unk38.byte.unk3A];
     if (obj68 != NULL) {
-        isNotOpaque = FALSE;
-        hasUnk54 = FALSE;
-        primColourValue = 255;
+        hasPrimCol = FALSE;
+        hasEnvCol = FALSE;
+        intensity = 255;
         objModel = obj68->objModel;
         if (obj->unk54 != NULL) {
-            isNotOpaque = TRUE;
-            hasUnk54 = TRUE;
-            primColourValue = (s32) (obj->unk54->unk0 * 255.0f * D_8011AD30);
+            hasPrimCol = TRUE;
+            hasEnvCol = TRUE;
+            intensity = (s32) (obj->unk54->unk0 * 255.0f * D_8011AD30);
         }
         if (obj->behaviorId == BHV_RACER) {
             obj64 = obj->unk64;
@@ -1485,16 +1483,17 @@ void render_3d_model(Object *obj) {
                 func_80061D30(obj);
             }
             if ((obj68->unk1E != 0) && (objModel->unk40 != NULL)) {
-                var_t1 = 1;
-                if ((obj64 != NULL) && (obj64->racer.vehicleID < 5) && (obj64->racer.playerIndex == -1)) {
-                    var_t1 = 0;
-                }
-                if (get_viewport_count() != 0) {
-                    var_t1 = 0;
+                var_t1 = TRUE;
+                // Seems to be a check to see if the object being rendered is a player vehicle in single player mode only?
+                // This will set a flag changing how the object is lit I think.
+                if ((obj64 != NULL && obj64->racer.vehicleID < VEHICLE_TRICKY && obj64->racer.playerIndex == PLAYER_COMPUTER)
+                    || (get_viewport_count() != VIEWPORTS_COUNT_1_PLAYER))
+                {
+                    var_t1 = FALSE;
                 }
                 if (obj->behaviorId == BHV_UNK_3F) {
                     calc_dyn_light_and_env_map_for_object(objModel, obj, 0, D_8011AD30);
-                } else if (var_t1 != 0) {
+                } else if (var_t1) {
                     calc_dyn_light_and_env_map_for_object(objModel, obj, -1, D_8011AD30);
                 } else {
                     func_800245F0(objModel, obj, D_8011AD30);
@@ -1529,13 +1528,14 @@ void render_3d_model(Object *obj) {
         if (alpha > 255) {
             alpha = 255;
         }
+        // If the behavior is a water zipper, then halve it's transparency.
         if (obj->behaviorId == BHV_ZIPPER_WATER) {
-            alpha = (u8) (alpha >> 1);
+            alpha >>= 1;
         }
         if (alpha < 255) {
-            isNotOpaque = TRUE;
+            hasPrimCol = TRUE;
         }
-        if (hasUnk54 != 0) {
+        if (hasEnvCol) {
             gDPSetEnvColor(gObjectCurrDisplayList++, obj->unk54->unk4, obj->unk54->unk5, obj->unk54->unk6, obj->unk54->unk7);
         } else {
             gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
@@ -1543,8 +1543,8 @@ void render_3d_model(Object *obj) {
         if (obj->segment.header->unk71 != 0) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->unk54->unk18, obj->unk54->unk19, obj->unk54->unk1A, alpha);
             func_8007B43C();
-        } else if (isNotOpaque) {
-            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, primColourValue, primColourValue, primColourValue, alpha);
+        } else if (hasPrimCol) {
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
         } else {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
@@ -1554,50 +1554,48 @@ void render_3d_model(Object *obj) {
             var_v0 = func_800143A8(objModel, obj, 0, 0, spB0);
         }
         if (obj->segment.header->unk71 != 0) {
-            if (isNotOpaque) {
-                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, primColourValue, primColourValue, primColourValue, alpha);
+            if (hasPrimCol) {
+                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
             } else {
                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
             func_8007B454();
         }
         if (obj->unk60 != NULL) {
-            spAC = obj->unk60->unk0;
-            if (obj64 != NULL) {
-                if (obj64->racer.vehicleID == 3) {
-                    spAC = 0;
-                }
+            obj60_unk0 = obj->unk60->unk0;
+            if (obj64 != NULL && (obj64->racer.vehicleID == VEHICLE_FLYING_CAR)) {
+                obj60_unk0 = 0;
             }
-            for (i = 0; i < spAC; i++) {
-                temp_s0_2 = obj->unk60[i].unk4;
-                if (!(temp_s0_2->segment.trans.unk6 & 0x4000)) {
-                    temp_v1_4 = obj->unk60->unk2C[i];
-                    if ((temp_v1_4 >= 0) && (temp_v1_4 < objModel->unk18)) {
-                        temp_t4 = temp_s0_2->unk68[temp_s0_2->segment.unk38.byte.unk3A];
-                        temp_v0_10 = &obj->unk44[objModel->unk14[temp_v1_4]];
-                        xPos = (f32) temp_v0_10->x;
-                        yPos = (f32) temp_v0_10->y;
-                        zPos = (f32) temp_v0_10->z;
-                        temp_s0_2->segment.trans.x_position += xPos;
-                        temp_s0_2->segment.trans.y_position += yPos;
-                        temp_s0_2->segment.trans.z_position += zPos;
-                        if (temp_s0_2->segment.header->modelType = OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
+            for (i = 0; i < obj60_unk0; i++) {
+                loopObj = (Object *) obj->unk60[i].unk4;
+                if (!(loopObj->segment.trans.unk6 & 0x4000)) {
+                    vtx_idx = obj->unk60->unk2C[i];
+                    if ((vtx_idx >= 0) && (vtx_idx < objModel->unk18)) {
+                        temp_t4 = (unk80068514_arg4 *) loopObj->unk68[loopObj->segment.unk38.byte.unk3A];
+                        vtx_unk44 = &obj->unk44[objModel->unk14[vtx_idx]];
+                        xPos = (f32) vtx_unk44->x;
+                        yPos = (f32) vtx_unk44->y;
+                        zPos = (f32) vtx_unk44->z;
+                        loopObj->segment.trans.x_position += xPos;
+                        loopObj->segment.trans.y_position += yPos;
+                        loopObj->segment.trans.z_position += zPos;
+                        if (loopObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
                             billboardFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
                         } else {
                             billboardFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE | RENDER_ANTI_ALIASING);
                         }
-                        if (alpha < 0xFF) {
+                        if (alpha < 255) {
                             billboardFlags |= RENDER_SEMI_TRANSPARENT;
                         }
                         cicFailed = FALSE;
                         //Anti-Piracy check
-                        if (osCicId != 0x17D7) {
+                        if (osCicId != CIC_ID) {
                             cicFailed = TRUE;
                         }
                         if (!cicFailed) {
-                            var_v0_2 = (temp_s0_2->segment.trans.unk6 & 0x80) != 0;
+                            var_v0_2 = (loopObj->segment.trans.unk6 & 0x80) != 0;
                             if (var_v0_2 != 0) {
-                                var_v0_2 = spAC == 3;
+                                var_v0_2 = obj60_unk0 == 3;
                             }
                             var_t0_2 = var_v0_2;
                             if ((obj64 != NULL) && (obj64->racer.transparency < 255)) {
@@ -1606,17 +1604,17 @@ void render_3d_model(Object *obj) {
                             if (var_t0_2 != 0) {
                                 func_80012C98(&gObjectCurrDisplayList);
                                 gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
-                                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, primColourValue, primColourValue, primColourValue, alpha);
+                                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
                             }
-                            temp_s0_2->unk78 = render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, temp_s0_2, temp_t4, billboardFlags);
+                            loopObj->unk78 = render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, loopObj, temp_t4, billboardFlags);
                             if (var_t0_2 != 0) {
                                 gDkrInsertMatrix(gObjectCurrDisplayList++, 0, 0);
                                 func_80012CE8(&gObjectCurrDisplayList);
                             }
                         }
-                        temp_s0_2->segment.trans.x_position -= xPos;
-                        temp_s0_2->segment.trans.y_position -= yPos;
-                        temp_s0_2->segment.trans.z_position -= zPos;
+                        loopObj->segment.trans.x_position -= xPos;
+                        loopObj->segment.trans.y_position -= yPos;
+                        loopObj->segment.trans.z_position -= zPos;
                     }
                 }
             }
@@ -1647,10 +1645,10 @@ void render_3d_model(Object *obj) {
                 func_8007B454();
             }
         }
-        if ((isNotOpaque) || (obj->segment.header->unk71 != 0)) {
+        if ((hasPrimCol) || (obj->segment.header->unk71 != 0)) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
-        if (hasUnk54) {
+        if (hasEnvCol) {
             gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
         }
         func_80069A40(&gObjectCurrDisplayList);
