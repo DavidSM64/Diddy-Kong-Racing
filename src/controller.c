@@ -11,7 +11,6 @@ OSMesgQueue sSIMesgQueue;
 OSMesg sSIMesgBuf;
 OSMesg gSIMesg;
 OSContStatus status;
-UNUSED s32 D_80121108[2];
 OSContPad sControllerCurrData[MAXCONTROLLERS];
 OSContPad sControllerPrevData[MAXCONTROLLERS];
 u16 gControllerButtonsPressed[MAXCONTROLLERS];

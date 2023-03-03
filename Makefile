@@ -336,6 +336,10 @@ $(BUILD_DIR)/src/vehicle_wizpig.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/vehicle_wizpig.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/vehicle_rocket.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/vehicle_rocket.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/controller.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/controller.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/audiomgr.o: MIPSISET := -mips2
+$(BUILD_DIR)/src/audiomgr.o: OPT_FLAGS := -O3
 
 
 $(BUILD_DIR)/lib/src/mips1/sc/sched.o: MIPSISET := -mips2
