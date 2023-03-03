@@ -860,7 +860,7 @@ s32 func_8000FBCC(Object *arg0, Object_60 *arg1) {
     arg1->unk4 = NULL;
     objHeader = ((ObjectSegment*) arg0)->header;
     if (objHeader->unk32) {
-        arg1->unk4 = (s32 *) load_texture((s32) ((ObjectHeader *) objHeader)->unk34);
+        arg1->unk4 = (Object *) load_texture((s32) ((ObjectHeader *) objHeader)->unk34);
         objHeader = ((ObjectSegment*)arg0)->header;
     }
     ((Object_50*) arg1)->unk0 = (f32) objHeader->unk4;
@@ -1444,17 +1444,16 @@ void render_3d_model(Object *obj) {
     Object *heldObj;
     Object_64 *obj64;
     Object_68 *obj68;
-    Vertex *vtx_unk44;
     Vertex *temp_v0_14;
-    f32 xPos;
-    f32 zPos;
-    f32 yPos;
+    f32 posX;
+    f32 posZ;
+    f32 posY;
     s32 cicFailed;
     s32 var_t1;
     s32 billboardFlags;
     s32 i;
     s32 var_v0;
-    s8 vtx_idx;
+    s8 index;
     s8 var_t0_2;
     s32 var_v0_2;
     s32 alpha;
@@ -1484,11 +1483,10 @@ void render_3d_model(Object *obj) {
             }
             if ((obj68->unk1E != 0) && (objModel->unk40 != NULL)) {
                 var_t1 = TRUE;
-                // Seems to be a check to see if the object being rendered is a player vehicle in single player mode only?
-                // This will set a flag changing how the object is lit I think.
-                if ((obj64 != NULL && obj64->racer.vehicleID < VEHICLE_TRICKY && obj64->racer.playerIndex == PLAYER_COMPUTER)
-                    || (get_viewport_count() != VIEWPORTS_COUNT_1_PLAYER))
-                {
+                if (obj64 != NULL && obj64->racer.vehicleID < VEHICLE_TRICKY && obj64->racer.playerIndex == PLAYER_COMPUTER) {
+                    var_t1 = FALSE;
+                }
+                if (get_viewport_count() != VIEWPORTS_COUNT_1_PLAYER) {
                     var_t1 = FALSE;
                 }
                 if (obj->behaviorId == BHV_UNK_3F) {
@@ -1567,18 +1565,18 @@ void render_3d_model(Object *obj) {
                 obj60_unk0 = 0;
             }
             for (i = 0; i < obj60_unk0; i++) {
-                loopObj = (Object *) obj->unk60[i].unk4;
+                //This line right here breaks this function. Loading unk60 as an array is broken.
+                loopObj = obj->unk60[i].unk4;
                 if (!(loopObj->segment.trans.unk6 & 0x4000)) {
-                    vtx_idx = obj->unk60->unk2C[i];
-                    if ((vtx_idx >= 0) && (vtx_idx < objModel->unk18)) {
+                    index = obj->unk60->unk2C[i];
+                    if ((index >= 0) && (index < objModel->unk18)) {
                         temp_t4 = (unk80068514_arg4 *) loopObj->unk68[loopObj->segment.unk38.byte.unk3A];
-                        vtx_unk44 = &obj->unk44[objModel->unk14[vtx_idx]];
-                        xPos = (f32) vtx_unk44->x;
-                        yPos = (f32) vtx_unk44->y;
-                        zPos = (f32) vtx_unk44->z;
-                        loopObj->segment.trans.x_position += xPos;
-                        loopObj->segment.trans.y_position += yPos;
-                        loopObj->segment.trans.z_position += zPos;
+                        posX = obj->unk44[objModel->unk14[index]].x;
+                        posY = obj->unk44[objModel->unk14[index]].y;
+                        posZ = obj->unk44[objModel->unk14[index]].z;
+                        loopObj->segment.trans.x_position += posX;
+                        loopObj->segment.trans.y_position += posY;
+                        loopObj->segment.trans.z_position += posZ;
                         if (loopObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
                             billboardFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
                         } else {
@@ -1594,27 +1592,27 @@ void render_3d_model(Object *obj) {
                         }
                         if (!cicFailed) {
                             var_v0_2 = (loopObj->segment.trans.unk6 & 0x80) != 0;
-                            if (var_v0_2 != 0) {
+                            if (var_v0_2) {
                                 var_v0_2 = obj60_unk0 == 3;
                             }
                             var_t0_2 = var_v0_2;
                             if ((obj64 != NULL) && (obj64->racer.transparency < 255)) {
-                                var_t0_2 = 0;
+                                var_t0_2 = FALSE;
                             }
-                            if (var_t0_2 != 0) {
+                            if (var_t0_2) {
                                 func_80012C98(&gObjectCurrDisplayList);
                                 gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
                                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
                             }
                             loopObj->unk78 = render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, loopObj, temp_t4, billboardFlags);
-                            if (var_t0_2 != 0) {
+                            if (var_t0_2) {
                                 gDkrInsertMatrix(gObjectCurrDisplayList++, 0, 0);
                                 func_80012CE8(&gObjectCurrDisplayList);
                             }
                         }
-                        loopObj->segment.trans.x_position -= xPos;
-                        loopObj->segment.trans.y_position -= yPos;
-                        loopObj->segment.trans.z_position -= zPos;
+                        loopObj->segment.trans.x_position -= posX;
+                        loopObj->segment.trans.y_position -= posY;
+                        loopObj->segment.trans.z_position -= posZ;
                     }
                 }
             }
@@ -1623,14 +1621,15 @@ void render_3d_model(Object *obj) {
             heldObj = obj64->racer.held_obj;
             if (heldObj != NULL) {
                 if ((obj->segment.header->unk58 >= 0) && (obj->segment.header->unk58 < objModel->unk18)) {
+                    billboardFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
+                    temp_t4 = (unk80068514_arg4 *) heldObj->unk68[heldObj->segment.unk38.byte.unk3A];
                     temp_v0_14 = &obj->unk44[objModel->unk14[obj->segment.header->unk58]];
                     heldObj->segment.trans.x_position += (temp_v0_14->x - heldObj->segment.trans.x_position) * 0.25;
                     heldObj->segment.trans.y_position += (temp_v0_14->y - heldObj->segment.trans.y_position) * 0.25;
                     heldObj->segment.trans.z_position += (temp_v0_14->z - heldObj->segment.trans.z_position) * 0.25;
                     if (heldObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
                         render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, heldObj,
-                            (unk80068514_arg4 *) heldObj->unk68[heldObj->segment.unk38.byte.unk3A],
-                            (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE));
+                           temp_t4, billboardFlags);
                     }
                 }
             }

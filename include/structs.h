@@ -758,7 +758,7 @@ typedef struct Object_5C {
 
 typedef struct Object_60 {
     s32 unk0;
-    s32 *unk4; // Object* pointer
+    struct Object *unk4;
     u8 unk8[0x24];
     s8 *unk2C;
 } Object_60;
@@ -1646,7 +1646,7 @@ typedef struct ObjectSegment {
       struct {
           /* 0x0038 */ u8 unk38;
           /* 0x0039 */ u8 unk39;
-          /* 0x003A */ s8 unk3A;
+          /* 0x003A */ s8 unk3A; // Index value for unk68 array
           /* 0x003B */ s8 unk3B;
       } byte;
       struct {
