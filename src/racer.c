@@ -1564,7 +1564,6 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     get_viewport_count();
     if (racer->velocity < 0.0f) {
         yVel = -(racer->velocity * brakeVar) * 6.0f;
-        if (racer->velocity) {} // Fakematch
         if (yVel > 65.0f) {
             yVel = 65.0f;
         }
@@ -2105,7 +2104,6 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     tempRacer->steerVisualRotation = obj->segment.trans.y_rotation;
     tempRacer->x_rotation_vel = obj->segment.trans.z_rotation;
     tempRacer->unkC4 = 0.5f;
-    if (1) {} // Fakematch
     tempRacer->unk196 = tempRacer->steerVisualRotation;
     tempRacer->unkD8.x = obj->segment.trans.x_position;
     tempRacer->unkD8.y = obj->segment.trans.y_position + 30.0f;
@@ -2173,7 +2171,6 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     for (i = 0; i < 4; i++) { \
         D_8011D58C[i] = 0; 
     }
-    if (1) {} if (1) {} // Fakematch
     func_80043ECC(0, NULL, 0);
     D_8011D583 = i;
     gStartBoostTime = 0;
@@ -3093,7 +3090,6 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     // With multiple contact patches, average the surface properties across.
     if (velocitdiffY > 1.0f) {
-        i--; // fakematch
         traction /= velocitdiffY;
         surfaceTraction /= velocitdiffY;
     }
@@ -3399,7 +3395,6 @@ s32 turn_head_towards_object(Object *obj, Object_Racer *racer, Object *targetObj
         WRAP(intendedAngle, -0x8000, 0x8000);
         CLAMP(intendedAngle, -0x3000, 0x3000);
         racer->headAngleTarget = intendedAngle;
-        if (ret) {} // Fakematch
         ret = TRUE;
         if ((racer->miscAnimCounter & 0x3F) < 10) {
             racer->headAngleTarget = 0;
@@ -3470,7 +3465,6 @@ void func_8005250C(Object* obj, Object_Racer* racer, s32 updateRate) {
         }
         obj->segment.animFrame += angleVel;
         obj->segment.unk38.byte.unk3B = 0;
-        if (angleVel) {} // Fakematch
         if (racer->unk1F3 & 4) {
             racer->unk1F2 = 3;
             racer->unk1F3 &= 0xFFFB;
@@ -4791,7 +4785,6 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
         }
     }
     timer3 = get_race_start_timer();
-    if (gRaceStartTimer) {} // Fakematch
     // If the A button is held for the first time, 30 frames prior to starting,
     // decide how much boost to add based on when it was pressed.
     if (gRaceStartTimer > 0 && gRaceStartTimer < 30 && !racer->startInput) {
@@ -5341,7 +5334,6 @@ void update_camera_finish_challenge(UNUSED f32 updateRate, Object *obj, Object_R
     f32 xOffset;
 
     gCameraObject->trans.y_rotation += 0x200;
-    if (1) {} // Fakematch
     gCameraObject->trans.x_rotation = 0x400;
     gCameraObject->trans.z_rotation = 0;
     gCameraObject->unk1C = 150.0f;
@@ -5434,7 +5426,6 @@ void set_position_goal_from_path(UNUSED Object *obj, Object_Racer *racer, f32 *x
         if (magnitude < 0.0f) {
             magnitude = 0.0f;
         }
-        if (racer->checkpoint) {} // Fakematch
         splinePos = racer->checkpoint - 2;
         if (splinePos < 0) {
             splinePos += splineEnd;

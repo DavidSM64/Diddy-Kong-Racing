@@ -44,8 +44,6 @@ s32 init_controllers(void) {
         return CONTROLLER_EXISTS;
     }
 
-    if (!bitpattern) {} // Fakematch
-
     sNoControllerPluggedIn = TRUE;
 
     return CONTROLLER_MISSING;

@@ -373,7 +373,6 @@ void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, Ali
                     textureUly = 0;
                 }
                 gSPTextureRectangle((*dList)++, textureUlx, textureUly, textureLrx, newTempY, 0, textureS, textureT, 1 << 10, 1 << 10);
-                if (lastTextureIndex) {} // Fakematch
             }
             if (gCompactKerning && charSpace) {
                 charSpace--;

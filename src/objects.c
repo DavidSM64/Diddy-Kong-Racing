@@ -770,7 +770,6 @@ void func_8000E9D0(Object *arg0) {
     arg0->segment.trans.unk6 |= 0x8000;
     func_800245B4(arg0->segment.unk2C.half.upper | 0xC000);
     gObjPtrList[objCount++] = arg0;
-    if (1) {}  // Fakematch
     D_8011AE64++;
 }
 
@@ -920,7 +919,6 @@ void gParticlePtrList_flush(void) {
                 D_8011AE7C--;
             }
             objCount--;
-            if (0) {} // Fakematch
             for (j = search_indx; j < objCount; j++) {
                 gObjPtrList[j] = gObjPtrList[j + 1];
             }
@@ -965,7 +963,6 @@ void func_80010994(s32 updateRate) {
         racer->prev_y_position = (f32) (*gRacers)[i]->segment.trans.y_position;
         racer->prev_z_position = (f32) (*gRacers)[i]->segment.trans.z_position;
     }
-    i = 1; //FAKEMATCH
     func_800142B8();
     func_800155B8();
     func_8001E89C();
@@ -1007,11 +1004,7 @@ void func_80010994(s32 updateRate) {
                     for (sp54 = 0; sp54 < obj->segment.header->numberOfModelIds; sp54++) {
                         obj68 = obj->unk68[sp54];
                         
-                        //FAKEMATCH
-                        if (!gObjPtrList){}
-                        
                         if (obj68 != NULL) {
-                            if (1){ } //FAKEMATCH
                             obj68->objModel->unk52 = updateRate;
                         }
                     }
@@ -1078,7 +1071,6 @@ void func_80010994(s32 updateRate) {
 #endif
         }
     }
-    do { //FAKEMATCH
     lightUpdateLights(updateRate);
     if (func_80032C6C() > 0) {
         for (i = D_8011AE60; i < objCount; i++) {
@@ -1119,7 +1111,6 @@ void func_80010994(s32 updateRate) {
     func_8000E2B4();
     func_8009CFB0();
     func_800179D0();
-    } while(0); //FAKEMATCH
     if (D_8011AF00 == 1) {
         if ((D_8011ADB0 == 0x50) && (D_8011AE7A == 0)) {
             sp54 = 0;
@@ -1236,7 +1227,6 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     if (obj->segment.trans.x_position < x1) {
         outOfBounds = TRUE;
     }
-    if (1) { } if (1) { } if (1) { } // Fakematch
     y2 = (levelModel->upperYBounds + 3000.0f);
     if (obj->segment.trans.y_position > y2) {
         outOfBounds = TRUE;
@@ -1542,7 +1532,6 @@ void func_80012E28(Object *this) {
             tmp_f0 = (tmp_f0 < 0.0f) ? 0.0f : tmp_f0 * tmp_f0;
 
             temp = (1.0f - tmp_f0) * 24.0f + sp_20->unkD0;
-            if(0){} // Fakematch
             sp_1c = temp;
         }
         this->segment.trans.y_position = this->segment.trans.y_position + sp_1c;
@@ -2657,7 +2646,6 @@ Object *func_8002342C(f32 x, f32 z) {
             if (!(tempObj->segment.trans.unk6 & 0x8000) && tempObj->behaviorId == BHV_UNK_57) {
                 diffX = tempObj->segment.trans.x_position - x;
                 diffZ = tempObj->segment.trans.z_position - z;
-                tempObj = gObjPtrList[i]; // fakematch
                 distance = ((diffX * diffX) + (diffZ * diffZ));
                 if (bestDist < distance * distance) {
                     bestDist = sqrtf(distance);

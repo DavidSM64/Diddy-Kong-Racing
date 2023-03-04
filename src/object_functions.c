@@ -1274,7 +1274,6 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     }
     obj->segment.animFrame = 1.0f * tt->unk4;
     func_80061C0C(obj);
-    if (0) { } // Fakematch
     if (obj->unk7C.word > 0) {
         obj->unk7C.word -= updateRate;
     } else {
@@ -2101,10 +2100,6 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             racerObj->segment.trans.z_position - obj->segment.trans.z_position
         );
         arctan -= (racerObj->segment.trans.y_rotation & 0xFFFF);
-        if((arctan > 0x8000)) {
-            // Probably had a debug statement here.
-            if ((obj->action) && (!obj->action) && (!obj->action)){} // Fakematch
-        }
         if (var_a2) {
             obj->action = 1;
         } else {
@@ -2883,12 +2878,10 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
                     racer = &racerObj->unk64->racer;
                     if (racer->playerIndex == PLAYER_ONE) {
                         settings->balloonsPtr[settings->worldId]++;
-                        if(isPirated == 1) { } // Fakematch
                         if (settings->worldId != 0) {
                             settings->balloonsPtr[0]++;
                         }
                         settings->courseFlagsPtr[settings->courseId] |= flag;
-                        if (1) {} // Fakematch
                         play_sound_spatial(SOUND_COLLECT_BALLOON, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
                         obj->unk7C.word = 16;
                         obj->unk74 = 2;
@@ -4530,7 +4523,6 @@ void obj_loop_weather(Object *obj, UNUSED s32 updateRate) {
     dist = obj->unk78f;
     entry = (LevelObjectEntry_Weather *)obj->segment.unk3C_a.level_entry;
     if (((diffX * diffX) + (diffZ * diffZ)) <= dist){
-      if (((!obj->segment.unk3C_a.level_entry) && (!obj->segment.unk3C_a.level_entry)) && (!obj->segment.unk3C_a.level_entry)){}  // Fakematch
       changeWeather(entry->unkA * 256, entry->unkC * 256, entry->unkE * 256, entry->unk10 * 257, entry->unk11 * 257, entry->unk12);
     }
   }

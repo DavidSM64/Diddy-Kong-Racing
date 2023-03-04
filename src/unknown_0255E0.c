@@ -367,7 +367,6 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         func_80027E24(tempUpdateRate);
     }
     for (j = gSceneCurrentPlayerID = 0; j < numViewports; gSceneCurrentPlayerID++, j = gSceneCurrentPlayerID) {
-        if (gCurrentLevelHeader2 && !gCurrentLevelHeader2 && !gCurrentLevelHeader2) {} // Fakematch
         if (j == 0) {
             if (func_8000E184() && numViewports == VIEWPORTS_COUNT_2_PLAYERS) {
                 gSceneCurrentPlayerID = PLAYER_TWO;
@@ -967,11 +966,9 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
             continue;
         }
         numberTriangles = batchInfo->facesOffset;
-        do { //Fakematch
-            numberVertices = (batchInfo + 1)->verticesOffset - batchInfo->verticesOffset;
-            numberTriangles = (batchInfo + 1)->facesOffset - numberTriangles;
-            vertices = (s32) &segment->vertices[batchInfo->verticesOffset];
-        } while (0);
+        numberVertices = (batchInfo + 1)->verticesOffset - batchInfo->verticesOffset;
+        numberTriangles = (batchInfo + 1)->facesOffset - numberTriangles;
+        vertices = (s32) &segment->vertices[batchInfo->verticesOffset];
         triangles = (s32) &segment->triangles[batchInfo->facesOffset];
         texOffset = batchInfo->unk7 << 14;
         levelHeaderIndex = (batchFlags >> 28) & 7;
@@ -1449,8 +1446,6 @@ void func_8002C0C4(s32 modelId) {
     LOCAL_OFFSET_TO_RAM_ADDRESS(s32, gCurrentLevelModel->unkC);
     LOCAL_OFFSET_TO_RAM_ADDRESS(u8 *, gCurrentLevelModel->segmentsBitfields);
     LOCAL_OFFSET_TO_RAM_ADDRESS(BspTreeNode *, gCurrentLevelModel->segmentsBspTree);
-    
-    if(1){}if(1){}if(1){}if(1){}if(1){}if(1){} // Fakematch
     
     for(k = 0; k < gCurrentLevelModel->numberOfSegments; k++) {
         LOCAL_OFFSET_TO_RAM_ADDRESS(Vertex *, gCurrentLevelModel->segments[k].vertices);
@@ -2064,7 +2059,6 @@ void obj_loop_fogchanger(Object *obj) {
         if (index != PLAYER_COMPUTER) {
             x -= obj->segment.trans.x_position;
             z -= obj->segment.trans.z_position;
-            if (1) {} // Fakematch
             if ((x * x) + (z * z) < obj->unk78f) {
                 fogNear = sp44->unkC;
                 fogFar = sp44->unkE;

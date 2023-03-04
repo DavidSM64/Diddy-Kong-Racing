@@ -91,10 +91,6 @@ OSIoMesg        audDMAIOMesgBuf[NUM_DMA_MESSAGES];
 OSMesgQueue     audDMAMessageQ;
 OSMesg          audDMAMessageBuf[NUM_DMA_MESSAGES];
 
-/**** Not really sure why these are here. They are set, but never used. ****/
-static s16 *gLastAudioPtr = 0;
-static s32 gLastAudioFrameSamples = 0;
-
 /**** private routines ****/
 static void __amMain(UNUSED void *arg);
 static s32 __amDMA(s32 addr, s32 len, void *state);
@@ -102,20 +98,6 @@ static ALDMAproc __amDmaNew(AMDMAState **state);
 static u32  __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo);
 static void __amHandleDoneMsg(AudioInfo *info);
 static void __clearAudioDMA(void);
-
-
-/**** Debug strings ****/
-const char D_800E49F0[] = "audio manager: RCP audio interface bug caused DMA from bad address - move audiomgr.c in the makelist!\n";
-const char D_800E4A58[] = "audio: ai out of samples\n";
-const char D_800E4A74[] = "OH DEAR - No audio DMA buffers left\n";
-const char D_800E4A9C[] = "Dma not done\n";
-const char D_800E4AAC[] = "";
-const char D_800E49B0[] = "Bad soundState: voices =%d, states free =%d, states busy =%d, type %d data %x\n";
-const char D_800E4B00[] = "playing a playing sound\n";
-const char D_800E4B1C[] = "Nonsense sndp event\n";
-const char D_800E4B34[] = "Sound state allocate failed - sndId %d\n";
-const char D_800E4B5C[] = "Don't worry - game should cope OK\n";
-const char D_800E4B80[] = "WARNING: Attempt to stop NULL sound aborted\n";
 
 /******************************************************************************
  * Audio Manager API
@@ -178,7 +160,7 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     }
     /* last buffer already linked, but still needs buffer */
     dmaBuffs[i].ptr = alHeapAlloc(c->heap, 1, DMA_BUFFER_LENGTH);
-
+#ifndef NO_ANTIPIRACY
     // Antipiracy measure
     gAntiPiracyCRCStart = DMA_BUFFER_LENGTH;
     checksum = (s32) &func_80019808 - gAntiPiracyCRCStart;
@@ -193,7 +175,7 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     if (checksum != gFunc80019808Checksum) {
         gAntiPiracyAudioFreq = TRUE;
     }
-
+#endif
     for (i = 0; i < NUM_ACMD_LISTS; i++) {
         __am.ACMDList[i] = (Acmd *) alHeapAlloc(c->heap, 1, 0xA000); //sizeof(Acmd) * DMA_BUFFER_LENGTH * 5?
     }
@@ -317,14 +299,15 @@ static u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
         s16 *outputDataPointer;
         s32 frameSamples;
 
-        gLastAudioPtr = outputDataPointer = lastInfo->data;
-        gLastAudioFrameSamples = frameSamples = lastInfo->frameSamples << 2;
+        outputDataPointer = lastInfo->data;
+        frameSamples = lastInfo->frameSamples << 2;
         osAiSetNextBuffer(outputDataPointer, frameSamples);
-
+#ifndef NO_ANTIPIRACY
         // Antipiracy measure
         if (gAntiPiracyAudioFreq != 0) {
             osAiSetFrequency(get_random_number_from_range(0, 10000) + OUTPUT_RATE);
         }
+#endif
     }
 
     

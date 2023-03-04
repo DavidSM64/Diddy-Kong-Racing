@@ -348,7 +348,6 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
                     for (var_s0 = 0; levelId != someAsset[var_s0]; var_s0 += 2) { }
                     levelId = someAsset[var_s0 + 1];
                     entranceId = cutsceneId;
-                    if (cutsceneId) {} // Fakematch
                 }
             }
             if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD) {

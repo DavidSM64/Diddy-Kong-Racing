@@ -30,8 +30,6 @@ s32 musicVolumeSliderPercentage = 256;
 s32 D_800DC658 = 0;
 u8 D_800DC65C = 0;
 u8 D_800DC660 = 0;
-UNUSED s32 D_800DC664 = 0;
-UNUSED s32 D_800DC668 = 0;
 s32 sMusicVolumeMultiplier = 256; // This is never not 256...
 u8 D_800DC670 = 0;
 
@@ -64,7 +62,6 @@ unk80115D18 *sSoundEffectsPool;
 unk80115D1C *sMusicPool;
 
 s32 sSoundEffectsPoolCount;
-s32 sMusicPoolCount;
 u32 sSoundEffectsPoolSize;
 u32 sMusicPoolSize;
 s16 sMusicTempo;
@@ -113,7 +110,6 @@ void audio_init(OSSched *sc) {
     sMusicPoolSize = addrPtr[ASSET_AUDIO_6] - addrPtr[ASSET_AUDIO_5];
     sMusicPool = (unk80115D1C *) allocate_from_main_pool_safe(sMusicPoolSize, COLOUR_TAG_CYAN);
     load_asset_to_address(ASSET_AUDIO, (u32) sMusicPool, addrPtr[ASSET_AUDIO_5], sMusicPoolSize);
-    sMusicPoolCount = sMusicPoolSize / sizeof(unk80115D1C);
 
     ALBankFile_80115D10 = (ALBankFile *) allocate_from_main_pool_safe(addrPtr[ASSET_AUDIO_0], COLOUR_TAG_CYAN);
     load_asset_to_address(ASSET_AUDIO, (u32) ALBankFile_80115D10, 0, addrPtr[ASSET_AUDIO_0]);

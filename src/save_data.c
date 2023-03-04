@@ -254,7 +254,6 @@ void rumble_controllers(s32 updateRate) {
                                 }
                                 temp->unk6 += temp->unk2 + 4;
                             }
-                            if (1) { } // fakematch
                         }
                     }
                 }
@@ -548,13 +547,10 @@ void func_800738A4(Settings *settings, u8 *saveData) {
                 vehicleCount++;
             }
             if (vehicleCount >= 48) {
-                vehicleCount = 0; // Fakematch
                 break;
             }
         }
     }
-
-    if (vehicleCount) { } // Fakematch
 
     D_801241EC = saveData;
     D_801241F0 = 0;
@@ -1602,7 +1598,6 @@ void init_controller_paks(void) {
                 sControllerPaksPresent |= controllerBit;
             }
             else if (ret == PFS_ERR_ID_FATAL) {
-                if (controllerIndex) { } // Fakematch
                 ret = osMotorInit(sControllerMesgQueue, &pfs[controllerIndex], controllerIndex);
                 if (ret == 0) {
                     //If we found a rumble pak, set the bit that has one

@@ -81,7 +81,6 @@ MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlot
     gMemoryPools[poolCount].size = poolSize;
     pool = &gMemoryPools[poolCount++];
     firstSlot = slots;
-    if(0){} if (!pool->maxNumSlots){} // Fakematch
     for (i = 0; i < pool->maxNumSlots; i++) {
         firstSlot->index = i;
         firstSlot++;
@@ -134,7 +133,6 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag
     s32 currIndex;
         
     flags = clear_status_register_flags();
-    if (size) {} // Fakematch
     pool = &gMemoryPools[poolIndex];
     if ((pool->curNumSlots + 1) == (*pool).maxNumSlots) {
         set_status_register_flags(flags);
@@ -184,7 +182,6 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
     s32 *flags;
     
     flags = clear_status_register_flags();
-    if (!size){} // Fakematch
     if ((gMemoryPools[0].curNumSlots + 1) == gMemoryPools[0].maxNumSlots) {
         set_status_register_flags(flags);
     } else {
@@ -451,11 +448,9 @@ void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
     
     pool = &gMemoryPools[poolIndex];
     slots = pool->slots;
-    pool = pool; // Fakematch
     slot = &slots[slotIndex];
     nextIndex = slot->nextIndex;
     prevIndex = slot->prevIndex;
-    slot = slot; // Fakematch
     nextSlot = &slots[nextIndex];
     prevSlot = &slots[prevIndex];
     slot->flags = 0;
@@ -500,7 +495,6 @@ s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIs
     
     pool = &gMemoryPools[poolIndex];
     poolSlots = pool->slots;
-    pool = pool; // Fakematch
     poolSlots[slotIndex].flags = slotIsTaken;
     poolSize = poolSlots[slotIndex].size;
     poolSlots[slotIndex].size = size;
@@ -610,12 +604,6 @@ s32 func_800718A4(void) {
             }
         } while (var_a2 != (-1));
     }
-    var_a2 = 0;
-    if(!temp) { } // Fakematch
-    for (j = 0; colours[j] != 0 && j < 64; j++) { } // Fakematch
-    var_a2 = 0;
-    if(!temp) { } // Fakematch
-    temp = var_a2;
 }
 
 s32 get_memory_colour_tag_count(u32 colourTag) {

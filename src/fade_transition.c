@@ -420,7 +420,7 @@ void func_800C0834(s32 updateRate) {
                 } else {
                     sTransitionOpacity = 255.0f;
                 }
-                sTransitionFadeTimer = 0 * updateRate; // Fakematch
+                sTransitionFadeTimer = 0;
             }
             if (sTransitionOpacity < 0.0f) {
                 sTransitionOpacity = 0.0f;

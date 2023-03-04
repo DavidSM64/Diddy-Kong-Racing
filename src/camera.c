@@ -91,7 +91,6 @@ ObjectSegment gActiveCameraStack[8];
 s32 gNumberOfViewports;
 s32 gActiveCameraID;
 s32 gViewportCap;
-UNUSED s32 D_80120CEC;
 ObjectTransform gCameraTransform;
 s32 D_80120D08;
 s32 D_80120D0C;
@@ -101,7 +100,6 @@ s8 gAdjustViewportHeight;
 s32 D_80120D18;
 s32 D_80120D1C;
 s32 D_80120D20;
-UNUSED s32 D_80120D24;
 f32 D_80120D28[6];
 f32 D_80120D40[6];
 f32 D_80120D58[5];
@@ -140,8 +138,8 @@ void func_80065EA0(void) {
     D_80120D0C = 0;
     D_80120D18 = 0;
     gAdjustViewportHeight = 0;
-    gAntiPiracyViewport = 0;
 #ifndef NO_ANTIPIRACY
+    gAntiPiracyViewport = 0;
     while (IO_READ(PI_STATUS_REG) & PI_STATUS_ERROR) {
     }
     if ((D_B0000578 & 0xFFFF) != 0x8965) {
@@ -411,7 +409,6 @@ void copy_viewports_to_stack(void) {
             port = i + (gViewportWithBG * 5);
             port += 10;
             if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
-                if (0) { } // Fakematch
                 width = -width;
             }
             gViewportStack[port].vp.vtrans[0] = xPos;
@@ -1150,7 +1147,6 @@ void func_80069484(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale
     f32_matrix_to_s16_matrix(&D_801210A0, *mtx);
     D_80120D1C++;
     D_80120D88[0, D_80120D1C] = *mtx; // Should be [D_80120D1C], but only matches with [0, D_80120D1C]
-    if (1) { } if (1) { } if (1) { }; // Fakematch
     gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_1);
     guMtxXFMF(*D_80120D70[D_80120D1C], 0.0f, 0.0f, 0.0f, &tempX, &tempY, &tempZ);
     index = gActiveCameraID;
@@ -1186,8 +1182,6 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80069790.s")
 void func_80069A40(Gfx **dlist) {
     D_80120D20--;
     D_80120D1C--;
-
-    { s32 temp = D_80120D20; if ((temp && temp) != 0){} } // Fakematch
 
     if (D_80120D1C > 0) {
         gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0(D_80120D88[D_80120D1C]), G_MTX_DKR_INDEX_1);
