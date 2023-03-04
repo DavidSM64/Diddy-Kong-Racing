@@ -197,7 +197,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
                 obj->segment.unk38.byte.unk3B = 4;
             }
         } else {
-            if (-0.1 < racer->velocity && racer->velocity < 0.1f) {
+            if (-0.1f < racer->velocity && racer->velocity < 0.1f) {
                 if (obj->segment.unk38.byte.unk3B == 2) {
                     obj->segment.unk38.byte.unk3B = 1;
                     racer->unkC = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 0x10) - 0x11;

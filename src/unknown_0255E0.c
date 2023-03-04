@@ -1358,7 +1358,7 @@ s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
     for (i = 0; i < len; i++) {
         height = wave[i]->waveHeight;
         if (wave[i]->type == WATER_CALM || wave[i]->type == WATER_WAVY) {
-            if (yPos < height + 25.0 && (wave[i]->rotY > 0.5 || var_a0 == 1)) {
+            if (yPos < height + 25.0f && (wave[i]->rotY > 0.5f || var_a0 == 1)) {
                 index = i;
             }
         } else

@@ -728,7 +728,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
         obj->segment.y_velocity -= 0.5f;
         obj->segment.x_velocity *= 0.98f;
         obj->segment.z_velocity *= 0.98f;
-        obj->segment.y_velocity *= 0.95;
+        obj->segment.y_velocity *= 0.95f;
         if (obj->segment.trans.y_position < -2000.0f || (sp34 != 0 && (sp33 < 5 || sp33 >= 10))) {
             if (egg->unk4 != NULL) {
                 egg->unk4->action = 0;
@@ -3542,8 +3542,8 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             obj->segment.trans.z_position = tempPos[2];
             if (banana->unk9 != 2) {
                 obj->segment.y_velocity -= 1.0f;
-                obj->segment.x_velocity *= 0.95;
-                obj->segment.z_velocity *= 0.95;
+                obj->segment.x_velocity *= 0.95f;
+                obj->segment.z_velocity *= 0.95f;
             } else {
                 obj->segment.x_velocity = 0.0f;
                 obj->segment.y_velocity = 0.0f;
