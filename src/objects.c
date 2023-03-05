@@ -2656,7 +2656,30 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
 
 GLOBAL_ASM("asm/non_matchings/objects/calc_dynamic_lighting_for_object_1.s")
 GLOBAL_ASM("asm/non_matchings/objects/calc_env_mapping_for_object.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001E13C.s")
+
+UNUSED void func_8001E13C(s16 arg0, s16 *arg1, s16 *arg2, s16 *arg3, s16 *arg4, s16 *arg5, s16 *arg6) {
+    Object *obj;
+    Object_Racer *racer;
+    s32 i;
+
+    for (i = 0; i < objCount; i++) {
+        obj = gObjPtrList[i];
+        if (!(obj->segment.trans.unk6 & 0x8000)) {
+            if (obj->behaviorId == BHV_RACER) {
+                racer = &obj->unk64->racer;
+                if (arg0 == racer->playerIndex) {
+                    *arg1 = obj->segment.trans.x_position;
+                    *arg2 = obj->segment.trans.y_position;
+                    *arg3 = obj->segment.trans.z_position;
+                    *arg4 = obj->segment.trans.z_rotation;
+                    *arg5 = obj->segment.trans.x_rotation;
+                    *arg6 = obj->segment.trans.y_rotation;
+                    i = objCount; //Feels like it should be a break instead.
+                }
+            }
+        }
+    }
+}
 
 /**
  * Returns a pointer to the asset in the misc. section. If index is out of range, then this
