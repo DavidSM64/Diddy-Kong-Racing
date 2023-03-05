@@ -979,15 +979,15 @@ void func_80010994(s32 updateRate) {
     D_8011AD21 = 1 - D_8011AD21;
     D_8011AD22[D_8011AD21] = 0;
     for (i = 0; i < gNumRacers; i++) {
-        obj64 = (*gRacers)[i]->unk64;
-        racer = &obj64->racer;
+        obj = (*gRacers)[i];
+        racer = &obj->unk64->racer;
         racer->prev_x_position = (f32) (*gRacers)[i]->segment.trans.x_position;
         racer->prev_y_position = (f32) (*gRacers)[i]->segment.trans.y_position;
         racer->prev_z_position = (f32) (*gRacers)[i]->segment.trans.z_position;
     }
+    i = 1; //FAKEMATCH
     func_800142B8();
     func_800155B8();
-    i = D_8011AE60; //FAKEMATCH
     func_8001E89C();
     for (i = 0; i < D_8011AE70; i++) {
         run_object_loop_func(D_8011AE6C[i], updateRate);
@@ -1032,8 +1032,7 @@ void func_80010994(s32 updateRate) {
     }
     if (get_current_level_race_type() == 0) {
         for (i = 0; i < gNumRacers; i++) {
-            obj64 = gRacersByPosition[i]->unk64;
-            racer = &obj64->racer;
+            racer = &gRacersByPosition[i]->unk64->racer;
             if (racer->playerIndex != -1) {
                 func_80043ECC(gRacersByPosition[i], racer, updateRate);
                 i = gNumRacers; //Why not just break?
@@ -1145,7 +1144,35 @@ void func_80011134(Object *arg0, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/objects/func_80011134.s")
 #endif
 
+#ifdef NON_EQUIVALENT
+//This is a function for doors
+void func_80011264(ObjectModel *model, Object *obj) {
+    s32 temp_a2;
+    s32 i;
+    u8 textureIndex;
+    Object_Door *door;
+
+    if (model->unk50 > 0) {
+        door = &obj->unk64->door;
+        temp_a2 = (door->unk10 / 10) - 1;
+        for (i = 0; i < model->numberOfBatches; i++) {
+            if (model->batches[i].flags & 0x10000) {
+                textureIndex = model->batches[i].textureIndex;
+                if (textureIndex != 0xFF) { // 0xFF = No Texture
+                    if (model->textures[textureIndex].texture->numOfTextures > 0x900) {
+                        model->batches[i].unk7 = (door->unk10 % 10) * 4;
+                    }
+                    if (!(temp_a2 & 0x20000000)) {
+                        model->batches[i].unk7 = temp_a2 * 4;
+                    }
+                }
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_80011264.s")
+#endif
 
 void func_80011390(void) {
     D_8011ADAC = 0;
