@@ -220,7 +220,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     obj->segment.animFrame = racer->unkC;
     obj->unk74 = 0;
     if (obj->segment.unk38.byte.unk3B == 2) {
-        func_800113CC(obj, 2, sp3C, 0xAC, 0xAD);
+        func_800113CC(obj, 2, sp3C, SOUND_STOMP2, SOUND_STOMP3);
     }
     if (racer->playerIndex == PLAYER_COMPUTER) {
         if (func_80023568() != 0) {

@@ -2330,8 +2330,8 @@ void update_player_racer(Object *obj, s32 updateRate) {
             tempRacer->unk84 -= tempRacer->unk84 * 0.0625 * updateRateF;
             tempRacer->unk88 -= tempRacer->unk88 * 0.0625 * updateRateF;
         }
-        gCurrentRacerMiscAssetPtr = (f32*) get_misc_asset(obj->segment.header->pad5B[1]);
-        D_8011D568 = (f32 *) get_misc_asset(obj->segment.header->pad5B[2]);
+        gCurrentRacerMiscAssetPtr = (f32*) get_misc_asset(obj->segment.header->unk5C);
+        D_8011D568 = (f32 *) get_misc_asset(obj->segment.header->unk5D);
         
         if (obj->segment.y_velocity < 4.0 && (tempRacer->unk1E2 >= 3 || tempRacer->buoyancy != 0.0)) {
             tempRacer->unk1F1 = 0;

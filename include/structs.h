@@ -638,19 +638,20 @@ typedef struct ObjectHeader {
              u8 pad38[5];
   /* 0x3D */ u8 unk3D;
              u8 pad3E[12];
-             s16 unk4A;
-             s16 unk4C;
-             s16 drawDistance;
+  /* 0x4A */ s16 unk4A;
+  /* 0x4C */ s16 unk4C;
+  /* 0x4E */ s16 drawDistance;
              u8 pad50[3];
   /* 0x53 */ s8 modelType;
   /* 0x54 */ s8 behaviorId;
   /* 0x55 */ s8 numberOfModelIds; // size of array pointed by Object->unk68
-             u8 pad56;
+  /* 0x56 */ u8 pad56;
   /* 0x57 */ s8 unk57;
-             s8 unk58;
-             u8 pad59;
+  /* 0x58 */ s8 unk58;
+  /* 0x59 */ u8 pad59;
   /* 0x5A */ s8 unk5A;
-             u8 pad5B[0x2];
+  /* 0x5B */ u8 unk5B;
+  /* 0x5C */ u8 unk5C;
   /* 0x5D */ u8 unk5D; //Misc Asset index?
   /* 0x5E */ u8 pad5E[0x2];
   /* 0x60 */ char internalName[16];

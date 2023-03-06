@@ -1196,7 +1196,45 @@ UNUSED s32 func_800113BC() {
     return D_8011ADBC;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_800113CC.s")
+s32 func_800113CC(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoundId) {
+    s8 *asset;
+    f32 shakeDist;
+    f32 shakeMagnitude;
+    s32 animFrame;
+    s32 asset0;
+    s8 nextAsset;
+    s32 i;
+    s32 ret;
+    s32 soundId;
+
+    ret = 0;
+    if (arg1 < obj->segment.header->unk5B) {
+        //TODO: Figure this one out better. The index could be something like this: obj->segment.header->internalName[arg1 - 4]
+        asset = (s8 *) get_misc_asset(*(&obj->segment.header->unk5C + arg1));
+        asset0 = asset[0];
+        shakeDist = (asset[1] & 0xFF) * 8.0f;
+        shakeMagnitude = asset[2];
+        frame >>= 4;
+        animFrame = obj->segment.animFrame >> 4;
+        for (i = 0; i < asset0; i++) {
+            nextAsset = asset[i+3];
+            if (((animFrame >= nextAsset) && (frame < nextAsset)) || ((nextAsset >= animFrame) && (nextAsset < frame))) {
+                set_camera_shake_by_distance(obj->segment.trans.x_position, obj->segment.trans.y_position,
+                    obj->segment.trans.z_position, shakeDist, shakeMagnitude);
+                if (i & 1) {
+                    soundId = oddSoundId; //Always set to SOUND_STOMP2
+                } else {
+                    soundId = evenSoundId; //Always set to SOUND_STOMP3
+                }
+                play_sound_at_position(soundId, obj->segment.trans.x_position, obj->segment.trans.y_position,
+                    obj->segment.trans.z_position, 4, NULL);
+                ret = i + 1;
+                i = asset0; //Come on, just use break!
+            }
+        }
+    }
+    return ret;
+}
 
 s32 func_80011560(void) { //! @bug The developers probably intended this to be a void function.
     D_800DC848 = 1;
