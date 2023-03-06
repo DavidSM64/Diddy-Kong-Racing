@@ -38,14 +38,13 @@
 FadeTransition D_800DC970 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK1, FADE_COLOR_WHITE, 7, 3);
 FadeTransition D_800DC978 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, 0xFFFF);
 
-//Vertex[4]?
-u16 D_800DC980[20] = {
-    0xFF00, 0x0100, 0x0000, 0xFFFF,
-    0xFFFF, 0x0100, 0x0100, 0x0000,
-    0xFFFF, 0xFFFF, 0x0100, 0xFF00,
-    0x0000, 0xFFFF, 0xFFFF, 0xFF00,
-    0xFF00, 0x0000, 0xFFFF, 0xFFFF,
+Vertex D_800DC980[4] = {
+    { -256,  256, 0, 255, 255, 255, 255 },
+    {  256,  256, 0, 255, 255, 255, 255 },
+    {  256, -256, 0, 255, 255, 255, 255 },
+    { -256, -256, 0, 255, 255, 255, 255 },
 };
+
 u16 D_800DC9A8[20] = {
     0x0000, 0x0040, 0xFFC0, 0x0000,
     0xFFC0, 0xFFC0, 0x0000, 0x0040,
@@ -99,14 +98,14 @@ s8 D_800DCA9C[12] = {
 };
 
 Triangle D_800DCAA8[8] = {
-    { {{ 0, 0, 3, 1 }}, {  0, 0 }, { -1, -1 }, {  0, -1 } },
-    { {{ 0, 0, 2, 3 }}, {  0, 0 }, { -1,  0 }, { -1, -1 } },
-    { {{ 0, 2, 5, 3 }}, { -1, 0 }, {  0, -1 }, { -1, -1 } },
-    { {{ 0, 2, 4, 5 }}, { -1, 0 }, {  0,  0 }, {  0, -1 } },
-    { {{ 0, 0, 1, 3 }}, {  0, 0 }, {  0, -1 }, { -1, -1 } },
-    { {{ 0, 0, 3, 2 }}, {  0, 0 }, { -1, -1 }, { -1,  0 } },
-    { {{ 0, 2, 3, 5 }}, { -1, 0 }, { -1, -1 }, {  0, -1 } },
-    { {{ 0, 2, 5, 4 }}, { -1, 0 }, {  0, -1 }, {  0,  0 } },
+    { {{ 0, 0, 3, 1 }}, {{{  0, 0 }}}, {{{ -1, -1 }}}, {{{  0, -1 }}} },
+    { {{ 0, 0, 2, 3 }}, {{{  0, 0 }}}, {{{ -1,  0 }}}, {{{ -1, -1 }}} },
+    { {{ 0, 2, 5, 3 }}, {{{ -1, 0 }}}, {{{  0, -1 }}}, {{{ -1, -1 }}} },
+    { {{ 0, 2, 4, 5 }}, {{{ -1, 0 }}}, {{{  0,  0 }}}, {{{  0, -1 }}} },
+    { {{ 0, 0, 1, 3 }}, {{{  0, 0 }}}, {{{  0, -1 }}}, {{{ -1, -1 }}} },
+    { {{ 0, 0, 3, 2 }}, {{{  0, 0 }}}, {{{ -1, -1 }}}, {{{ -1,  0 }}} },
+    { {{ 0, 2, 3, 5 }}, {{{ -1, 0 }}}, {{{ -1, -1 }}}, {{{  0, -1 }}} },
+    { {{ 0, 2, 5, 4 }}, {{{ -1, 0 }}}, {{{  0, -1 }}}, {{{  0,  0 }}} },
 };
 
 VertexPosition D_800DCB28[6] = {
@@ -1033,9 +1032,9 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
                 obj->unk7C.word = 0;
             }
             obj64->vertices = D_800DC980;
-            obj64->texture = (u8 *) obj->unk68[obj->unk7C.word];
-            temp_t4 = (obj64->texture[0].width - 1) << 21;
-            temp_t5 = (obj64->texture[0].height - 1) << 5;
+            obj64->texture = (TextureHeader *) &obj->unk68[obj->unk7C.word]->texHeader;
+            temp_t4 = (obj64->texture->width - 1) << 21;
+            temp_t5 = (obj64->texture->height - 1) << 5;
             //0x40 = Draw backface
             obj64->triangles[0].vertices = (0x40 << 24) | (0 << 16) | (1 << 8) | 3;
             // obj64->triangles[0].flags = 0x40;
