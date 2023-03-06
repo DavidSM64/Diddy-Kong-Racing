@@ -856,8 +856,9 @@ typedef struct Object_Fish {
 } Object_Fish;
 
 typedef struct Object_Boost {
-  s32 unk70;
-  f32 unk74;
+  /* 0x000 */ u8 pad[0x70];
+  /* 0x070 */ u8 unk70;
+  /* 0x074 */ f32 unk74;
 } Object_Boost;
 
 typedef struct Object_EffectBox {

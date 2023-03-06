@@ -1352,7 +1352,6 @@ void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triang
 #ifdef NON_EQUIVALENT
 void func_80011AD0(Object *this) {
     f32 tmp_f0;
-    s32 offset;
     switch (this->behaviorId) {
         case BHV_CHARACTER_FLAG:
             if (this->unk7C.word >= 0) {
@@ -1361,20 +1360,13 @@ void func_80011AD0(Object *this) {
             }
             break;
         case BHV_BUTTERFLY:
-            offset = (this->unk64->butterfly.unkFC * 6);
-            offset *= 5;
-            offset *= 2;
-            offset += 128;
-            func_80011960(this, offset, 6, this->unk64->butterfly.triangles, 8, this->unk64->butterfly.texture, 10, 0, 1.0f);
+            func_80011960(this, &this->unk64->butterfly.vertices[this->unk64->butterfly.unkFC * 6], 6, this->unk64->butterfly.triangles, 8, this->unk64->butterfly.texture, 10, 0, 1.0f);
             break;
 
         case BHV_FISH:
-            tmp_f0 = this->segment.unk3C_a.level_entry->unk80011AD0.unkD;
-            offset = (this->unk64->fish.unkFC * 6);
-            offset *= 5;
-            offset *= 2;
-            offset += 128;
-            func_80011960(this, offset, 6, this->unk64->fish.triangles, 8, this->unk64->fish.texture, 26, 0, tmp_f0 * 0.01f);
+            //TODO: Fix this line
+            tmp_f0 = this->segment.unk3C_a.level_entry->midiFadePoint.unkC[1];
+            func_80011960(this, &this->unk64->fish.vertices[this->unk64->fish.unkFC * 6], 6, this->unk64->fish.triangles, 8, this->unk64->fish.texture, 26, 0, tmp_f0 * 0.01f);
             break;
 
         case BHV_BOOST:
