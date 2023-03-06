@@ -1350,43 +1350,39 @@ void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triang
 
 
 #ifdef NON_EQUIVALENT
-//f32 D_800E5550 = 0.01f;
 void func_80011AD0(Object *this) {
     f32 tmp_f0;
     s32 offset;
     switch (this->behaviorId) {
-        case 47:
-            //L80011B10
+        case BHV_CHARACTER_FLAG:
             if (this->unk7C.word >= 0) {
-                func_80011960(this, this->unk64->obj80011AD0.unk20, 4, this->unk64,
-                                2, this->unk64->obj80011AD0.unk24, 11, 0, 1.0f);
+                func_80011960(this, this->unk64->character_flag.vertices, 4, this->unk64->character_flag.triangles,
+                                2, this->unk64->character_flag.texture, 11, 0, 1.0f);
             }
             break;
-
-        case 61:
-            //L80011B58
-            offset = (this->unk64->obj80011AD0.unkFC * 6);
+        case BHV_BUTTERFLY:
+            offset = (this->unk64->butterfly.unkFC * 6);
             offset *= 5;
             offset *= 2;
             offset += 128;
-            func_80011960(this, offset, 6, this->unk64, 8, this->unk64->obj80011AD0.unkF8, 10, 0, 1.0f);
+            func_80011960(this, offset, 6, this->unk64->butterfly.triangles, 8, this->unk64->butterfly.texture, 10, 0, 1.0f);
             break;
 
-        case 3: //L80011BB4
+        case BHV_FISH:
             tmp_f0 = this->segment.unk3C_a.level_entry->unk80011AD0.unkD;
-            offset = (this->unk64->obj80011AD0.unkFC * 6);
+            offset = (this->unk64->fish.unkFC * 6);
             offset *= 5;
             offset *= 2;
             offset += 128;
-            func_80011960(this, offset, 6, this->unk64, 8, this->unk64->obj80011AD0.unkF8, 26, 0, tmp_f0 * 0.01f);
+            func_80011960(this, offset, 6, this->unk64->fish.triangles, 8, this->unk64->fish.texture, 26, 0, tmp_f0 * 0.01f);
             break;
 
-        case 89: //L80011C38
-            if ((this->unk78 != 0) && (this->unk64->obj80011AD0.unk70 > 0 || this->unk64->obj80011AD0.unk74 > 0.0f)) {
+        case BHV_BOOST:
+            if ((this->unk78 != 0) && (this->unk64->boost.unk70 > 0 || this->unk64->boost.unk74 > 0.0f)) {
                 func_800135B8(this);
             }
             break;
-    } //L80011C88
+    }
 }
 #else
 GLOBAL_ASM("asm/non_matchings/objects/func_80011AD0.s")

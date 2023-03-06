@@ -38,6 +38,7 @@
 FadeTransition D_800DC970 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK1, FADE_COLOR_WHITE, 7, 3);
 FadeTransition D_800DC978 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, 0xFFFF);
 
+//Vertex[4]?
 u16 D_800DC980[20] = {
     0xFF00, 0x0100, 0x0000, 0xFFFF,
     0xFFFF, 0x0100, 0x0100, 0x0000,
@@ -1028,21 +1029,30 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
             obj64 = &obj->unk64->character_flag;
             someObj64 = &someObj->unk64->racer;
             obj->unk7C.word = someObj64->characterId;
-            if (obj->unk7C.word < 0 || obj->unk7C.word >= 0xA) {
+            if (obj->unk7C.word < 0 || obj->unk7C.word >= 10) {
                 obj->unk7C.word = 0;
             }
-            obj64->unk20 = D_800DC980;
-            obj64->unk24 = (u8 *) obj->unk68[obj->unk7C.word];
-            temp_t4 = (obj64->unk24[0] - 1) << 0x15;
-            temp_t5 = (obj64->unk24[1] - 1) << 5;
-            obj64->unk0 = 0x40000103;
-            obj64->unk4 = 0;
-            obj64->unk8 = temp_t4;
-            obj64->unkC = temp_t5;
-            obj64->unk10 = 0x40010203;
-            obj64->unk14 = temp_t4;
-            obj64->unk18 = (s32)(temp_t4 | temp_t5);
-            obj64->unk1C = temp_t5;
+            obj64->vertices = D_800DC980;
+            obj64->texture = (u8 *) obj->unk68[obj->unk7C.word];
+            temp_t4 = (obj64->texture[0].width - 1) << 21;
+            temp_t5 = (obj64->texture[0].height - 1) << 5;
+            //0x40 = Draw backface
+            obj64->triangles[0].vertices = (0x40 << 24) | (0 << 16) | (1 << 8) | 3;
+            // obj64->triangles[0].flags = 0x40;
+            // obj64->triangles[0].vi0 = 0;
+            // obj64->triangles[0].vi1 = 1;
+            // obj64->triangles[0].vi2 = 3;
+            obj64->triangles[0].uv0.texCoords = 0;
+            obj64->triangles[0].uv1.texCoords = temp_t4;
+            obj64->triangles[0].uv2.texCoords = temp_t5;
+            obj64->triangles[1].vertices = (0x40 << 24) | (1 << 16) | (2 << 8) | 3;
+            // obj64->triangles[1].flags = 0x40;
+            // obj64->triangles[1].vi0 = 1;
+            // obj64->triangles[1].vi1 = 2;
+            // obj64->triangles[1].vi2 = 3;
+            obj64->triangles[1].uv0.texCoords = temp_t4;
+            obj64->triangles[1].uv1.texCoords = (temp_t4 | temp_t5);
+            obj64->triangles[1].uv2.texCoords = temp_t5;
         }
     }
 }

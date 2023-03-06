@@ -452,7 +452,12 @@ typedef struct Vertex {
 
 /* Size: 4 bytes */
 typedef struct TexCoords {
-    s16 u, v;
+    union {
+      struct {
+        s16 u, v;
+      };
+      u32 texCoords; // For convenience?
+    };
 } TexCoords;
 
 /* Size: 16 bytes */
@@ -836,6 +841,25 @@ typedef struct Object_Butterfly {
   /* 0x108 */ f32 unk108;
 } Object_Butterfly;
 
+typedef struct Object_Fish {
+  /* 0x000 */ Triangle triangles[8];
+  /* 0x080 */ Vertex vertices[12];
+  /* 0x0F8 */ TextureHeader *texture;
+  /* 0x0FC */ u8 unkFC;
+  /* 0x0FD */ u8 unkFD;
+  /* 0x0FE */ u8 unkFE;
+  /* 0x0FF */ u8 unkFF;
+  /* 0x100 */ s32 unk100;
+  /* 0x104 */ s16 unk104;
+  /* 0x106 */ s16 unk106;
+  /* 0x108 */ f32 unk108;
+} Object_Fish;
+
+typedef struct Object_Boost {
+  s32 unk70;
+  f32 unk74;
+} Object_Boost;
+
 typedef struct Object_EffectBox {
   /* 0x000 */ u8 pad0[0x1FE];
   /* 0x1FE */ u8 unk1FE;
@@ -861,16 +885,9 @@ typedef struct Object_UnkId58 {
 } Object_UnkId58;
 
 typedef struct Object_CharacterFlag {
-  /* 0x00 */ s32 unk0;
-  /* 0x04 */ s32 unk4;
-  /* 0x08 */ s32 unk8;
-  /* 0x0C */ s32 unkC;
-  /* 0x10 */ s32 unk10;
-  /* 0x14 */ s32 unk14;
-  /* 0x18 */ s32 unk18;
-  /* 0x1C */ s32 unk1C;
-  /* 0x20 */ u16 *unk20;
-  /* 0x24 */ u8  *unk24;
+  /* 0x00 */ Triangle triangles[2];
+  /* 0x20 */ Vertex *vertices;
+  /* 0x24 */ TextureHeader *texture;
 } Object_CharacterFlag;
 
 typedef struct Object_Snowball {
@@ -1414,6 +1431,8 @@ typedef struct Object_64 {
         Object_WeaponBalloon weapon_balloon;
         Object_Weapon weapon;
         Object_Butterfly butterfly;
+        Object_Fish fish;
+        Object_Boost boost;
         Object_EffectBox effect_box;
         Object_EggCreator egg_creator;
         Object_CollectEgg egg;
