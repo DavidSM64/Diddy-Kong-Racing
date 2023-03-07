@@ -408,13 +408,13 @@ void func_8000E4E8(s32 index);
 void objFreeAssets(Object *obj, s32 count, s32 objType);
 void func_8001709C(Object *obj);
 s32 func_800113CC(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoundId);
+void func_80011AD0(Object *this);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
 void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
 void gParticlePtrList_flush(void);
 void decrypt_magic_codes(s32 *arg0, s32 length);
-void func_80011AD0(Object *this);
 s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
 Object *spawn_object(void *entry, s32);
@@ -427,7 +427,7 @@ void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);  
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); /* extern */
 void func_80011134(Object *, s32);
 s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
-void func_800138A8(Object*, unk80068514_arg4*, ObjectTransformExt *, s32);
+void func_800138A8(ObjectSegment*, unk80068514_arg4*, Object *, s32);
 Object *func_8002342C(f32 x, f32 z);
 void func_8006017C(s32);
 void func_80012F94(Object *);

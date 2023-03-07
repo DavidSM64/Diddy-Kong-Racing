@@ -1821,7 +1821,34 @@ void func_80013548(Object *obj) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800135B8.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_800138A8.s")
+
+void func_800138A8(ObjectSegment *seg, unk80068514_arg4 *arg1, Object *obj, s32 flags) {
+    f32 x;
+    f32 y;
+    f32 z;
+    ObjectSegment *cameraSegment;
+    f32 posSq;
+
+    f32_vec3_apply_object_rotation(&seg->trans, &obj->segment.trans.x_position);
+    obj->segment.trans.x_position += seg->trans.x_position;
+    obj->segment.trans.y_position += seg->trans.y_position;
+    obj->segment.trans.z_position += seg->trans.z_position;
+    cameraSegment = get_active_camera_segment();
+    x = cameraSegment->trans.x_position - obj->segment.trans.x_position;
+    y = cameraSegment->trans.y_position - obj->segment.trans.y_position;
+    z = cameraSegment->trans.z_position - obj->segment.trans.z_position;
+    posSq = sqrtf((x * x) + (y  * y ) + (z * z));
+    if (posSq > 0.0) {
+        posSq = obj->segment.unk1A / posSq;
+        x *= posSq;
+        y *= posSq;
+        z *= posSq;
+    }
+    obj->segment.trans.x_position += x;
+    obj->segment.trans.y_position += y;
+    obj->segment.trans.z_position += z;
+    render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj, arg1, flags);
+}
 
 /**
  * Get the racer object data, and fetch set visual shield properties based on that racer.
