@@ -1037,10 +1037,6 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
             temp_t5 = (obj64->texture->height - 1) << 5;
             //0x40 = Draw backface
             obj64->triangles[0].vertices = (0x40 << 24) | (0 << 16) | (1 << 8) | 3;
-            // obj64->triangles[0].flags = 0x40;
-            // obj64->triangles[0].vi0 = 0;
-            // obj64->triangles[0].vi1 = 1;
-            // obj64->triangles[0].vi2 = 3;
             obj64->triangles[0].uv0.texCoords = 0;
             obj64->triangles[0].uv1.texCoords = temp_t4;
             obj64->triangles[0].uv2.texCoords = temp_t5;
