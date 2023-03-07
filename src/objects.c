@@ -2576,7 +2576,61 @@ Object *objGetObject(s32 arg0) {
     return (*D_8011AEDC)[arg0];
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001BDD4.s")
+Object *func_8001BDD4(Object *obj, s32 *cameraId) {
+    Object *nextCamera;
+    Object *prevCamera;
+    Object *currCamera;
+    s32 *cameraIndex;
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 prevCameraXYZ;
+    f32 currCameraXYZ;
+    f32 nextCameraXYZ;
+    s32 cameraIndex_Curr;
+    s32 cameraIndex_Prev;
+    s32 cameraIndex_Next;
+    cameraIndex = cameraId;
+    if (D_8011AEE0 == 0) {
+        return NULL;
+    }
+    cameraIndex_Next = *cameraIndex + 1;
+    cameraIndex_Curr = *cameraIndex;
+    cameraIndex_Prev = *cameraIndex - 1;
+    if (cameraIndex_Next >= D_8011AEE0) {
+        cameraIndex_Next = 0;
+    }
+    if (cameraIndex_Prev < 0) {
+        cameraIndex_Prev = D_8011AEE0 - 1;
+    }
+    currCamera = (*D_8011AEDC)[cameraIndex_Curr];
+    nextCamera = (*D_8011AEDC)[cameraIndex_Next];
+    prevCamera = (*D_8011AEDC)[cameraIndex_Prev];
+    x = currCamera->segment.trans.x_position - obj->segment.trans.x_position;
+    y = currCamera->segment.trans.y_position - obj->segment.trans.y_position;
+    z = currCamera->segment.trans.z_position - obj->segment.trans.z_position;
+    currCameraXYZ = (x * x) + (y * y) + (z * z);
+    x = nextCamera->segment.trans.x_position - obj->segment.trans.x_position;
+    y = nextCamera->segment.trans.y_position - obj->segment.trans.y_position;
+    z = nextCamera->segment.trans.z_position - obj->segment.trans.z_position;
+    nextCameraXYZ = (x * x) + (y * y) + (z * z);
+    x = prevCamera->segment.trans.x_position - obj->segment.trans.x_position;
+    y = prevCamera->segment.trans.y_position - obj->segment.trans.y_position;
+    z = prevCamera->segment.trans.z_position - obj->segment.trans.z_position;
+    prevCameraXYZ = (x * x) + (y * y) + (z * z);
+
+    if (nextCameraXYZ < currCameraXYZ) {
+        *cameraId = cameraIndex_Next;
+        currCamera = nextCamera;
+        currCameraXYZ = nextCameraXYZ;
+    }
+    if (prevCameraXYZ < currCameraXYZ) {
+        *cameraId = cameraIndex_Prev;
+        currCamera = prevCamera;
+    }
+    return currCamera;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BF20.s")
 
 s16 func_8001C418(f32 yPos) {
