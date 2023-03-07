@@ -1348,37 +1348,37 @@ void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triang
     func_80069A40(&gObjectCurrDisplayList);
 }
 
-
-#ifdef NON_EQUIVALENT
 void func_80011AD0(Object *this) {
     f32 tmp_f0;
+    Object_64 *obj64;
+
     switch (this->behaviorId) {
         case BHV_CHARACTER_FLAG:
             if (this->unk7C.word >= 0) {
-                func_80011960(this, this->unk64->character_flag.vertices, 4, this->unk64->character_flag.triangles,
-                                2, this->unk64->character_flag.texture, 11, 0, 1.0f);
+                obj64 = this->unk64;
+                func_80011960(this, obj64->character_flag.vertices, 4, obj64->character_flag.triangles,
+                                2, obj64->character_flag.texture, 11, 0, 1.0f);
             }
             break;
         case BHV_BUTTERFLY:
-            func_80011960(this, &this->unk64->butterfly.vertices[this->unk64->butterfly.unkFC * 6], 6, this->unk64->butterfly.triangles, 8, this->unk64->butterfly.texture, 10, 0, 1.0f);
+            obj64 = this->unk64;
+            func_80011960(this, &obj64->butterfly.vertices[obj64->butterfly.unkFC * 6], 6, obj64->butterfly.triangles, 8, obj64->butterfly.texture, 10, 0, 1.0f);
             break;
 
         case BHV_FISH:
-            //TODO: Fix this line
-            tmp_f0 = this->segment.unk3C_a.level_entry->midiFadePoint.unkC[1];
-            func_80011960(this, &this->unk64->fish.vertices[this->unk64->fish.unkFC * 6], 6, this->unk64->fish.triangles, 8, this->unk64->fish.texture, 26, 0, tmp_f0 * 0.01f);
+            obj64 = this->unk64;
+            tmp_f0 = this->segment.unk3C_a.level_entry->fish.unkC[1];
+            tmp_f0 *= 0.01f;
+            func_80011960(this, &obj64->fish.vertices[obj64->fish.unkFC * 6], 6, obj64->fish.triangles, 8, obj64->fish.texture, 26, 0, tmp_f0);
             break;
 
         case BHV_BOOST:
-            if ((this->unk78 != 0) && (this->unk64->boost.unk70 > 0 || this->unk64->boost.unk74 > 0.0f)) {
+            if ((this->unk78 != 0) && ((this->unk64->boost.unk70 > 0) || (this->unk64->boost.unk74 > 0.0f))) {
                 func_800135B8(this);
             }
             break;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/func_80011AD0.s")
-#endif
 
 /**
  * Render an object as a billboard.
