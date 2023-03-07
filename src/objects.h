@@ -57,7 +57,7 @@ enum ObjectBehaviours {
     BHV_COLLECT_EGG,
     BHV_EGG_CREATOR,
     BHV_CHARACTER_FLAG,
-    BHV_UNK_2F,
+    BHV_UNK_30,
     BHV_ANIMATION,
     BHV_ANIMATED_OBJECT,
     BHV_CAMERA_ANIMATION,
@@ -278,6 +278,9 @@ typedef struct unk8001A7D8_arg0 {
     u8 unk49;
 } unk8001A7D8_arg0;
 
+#define CIC_ID 6103
+extern s32 osCicId; // Used for an Anti-Piracy check in render_3d_model
+
 Object *func_8000BF44(s32 arg0);
 void allocate_object_pools(void);
 void func_8000C460(void);
@@ -345,7 +348,7 @@ Object **get_racer_objects_by_port(s32 *numRacers);
 Object **get_racer_objects_by_position(s32 *numRacers);
 Object *get_racer_object(s32 index);
 void debug_render_checkpoint_node(s32 checkpointID, s32 pathID, Gfx** dList, MatrixS **mtx, Vertex **vtx);
-u32 objGetObject(s32 arg0);
+Object *get_camera_object(s32 cameraIndex);
 void func_8001D1AC(void);
 void func_8001D1BC(s32 arg0);
 Object *func_8001D1E4(s32 *arg0);
@@ -404,13 +407,15 @@ s32 func_8000FD34(Object *arg0, Object_5C *arg1);
 void func_8000E4E8(s32 index);
 void objFreeAssets(Object *obj, s32 count, s32 objType);
 void func_8001709C(Object *obj);
+s32 func_800113CC(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoundId);
+void func_80011AD0(Object *this);
+Object *func_8001BDD4(Object *obj, s32 *cameraID);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
 void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
 void gParticlePtrList_flush(void);
 void decrypt_magic_codes(s32 *arg0, s32 length);
-void func_80011AD0(Object *this);
 s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
 Object *spawn_object(void *entry, s32);
@@ -422,16 +427,13 @@ void func_80022E18(s32);                                 /* extern */
 void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);       /* extern */
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); /* extern */
 void func_80011134(Object *, s32);
-void func_800113CC(Object *, s32, s32, s32, s32);
 s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
-void func_80068FA8(Gfx**, MatrixS**, Object*, Object*, f32); /* extern */
-void func_800138A8(Object*, unk80068514_arg4*, ObjectTransformExt *, s32);
+void func_800138A8(ObjectTransform*, unk80068514_arg4*, Object *, s32);
 Object *func_8002342C(f32 x, f32 z);
 void func_8006017C(s32);
 void func_80012F94(Object *);
 void render_3d_model(Object *);
 void func_800101AC(Object *, s32);
-Object *func_8001BDD4(Object *obj, s32 *cameraID);
 void func_800135B8(Object *);
 void func_8000CC7C(Vehicle, u32, s32);
 void func_8000B020(s32, s32);
@@ -450,5 +452,10 @@ void func_800155B8(void);
 void func_800230D0(Object*, Object_Racer*);
 s32 func_8001955C(Object*, s8, u8, s16, s32, f32, f32*, f32*, f32*);
 void func_80010994(s32 updateRate);
+void func_800159C8(Object *, Object *);
+void func_80016748(Object *, Object *);
+void func_80011264(ObjectModel *, Object *);
+void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
+void func_80061D30(Object *); //asm func in unknown_062930
 
 #endif

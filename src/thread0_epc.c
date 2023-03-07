@@ -159,8 +159,9 @@ void func_800B7460(s32 *epc, s32 size, s32 mask) {
     s16 *v0;
     s32 i;
 
-    if ((get_filtered_cheats() << 4) < 0) { // This is checking if the EPC cheat is active
-        bzero(&sp840, 0x1B0);
+    // This is checking if the EPC cheat is active
+    if (get_filtered_cheats() & CHEAT_EPC_LOCK_UP_DISPLAY) {
+        bzero(&sp840, sizeof(epcInfo));
         sp840.a0 = size;
         sp840.a1 = mask;
         sp840.epc = epc;
@@ -168,7 +169,7 @@ void func_800B7460(s32 *epc, s32 size, s32 mask) {
         sp840.unk130[0] = D_80129FB0[0];
         sp840.unk130[1] = D_80129FB0[1];
         sp840.unk130[2] = D_80129FB0[2];
-        bcopy(&sp840, &sp40, 0x1B0);
+        bcopy(&sp840, &sp40, sizeof(epcInfo));
         bzero(&sp240, 0x200);
         v0 = func_80024594(&sp38, &size);
         for (i = 0; i < size; i++) {

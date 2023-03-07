@@ -8,7 +8,7 @@
 #include "libc/math.h"
 #include "racer.h"
 
-enum RenderContext {
+typedef enum RenderContext {
     DRAW_INTRO = -1,
     DRAW_GAME,
     DRAW_MENU,
@@ -16,7 +16,7 @@ enum RenderContext {
     DRAW_UNK_03,
     DRAW_UNK_04,
     DRAW_CRASH_SCREEN
-};
+} RenderContext;
 
 /* Size: 6 bytes */
 typedef struct unk8012117C {
@@ -103,7 +103,7 @@ void func_8006D8A4(void);
 void func_8006D8E0(s32 arg0);
 void func_8006D8F0(s32 arg0);
 void func_8006D968(s8 *arg0);
-s32 get_render_context(void);
+RenderContext get_render_context(void);
 UNUSED void func_8006DA1C(s32 arg0);
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId);
 void set_level_default_vehicle(Vehicle arg0);

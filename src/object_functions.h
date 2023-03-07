@@ -246,7 +246,6 @@ typedef struct Object_LevelName_78 {
 } Object_LevelName_78;
 
 // Unsure about the signed/unsigned with these arrays.
-extern u16 D_800DC980[20];
 extern u16 D_800DC9A8[20];
 extern u16 D_800DC9D0[64];
 extern s8 D_800DCA50[8];

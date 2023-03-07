@@ -547,7 +547,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
 #endif
 
-void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate) {
+void func_80043ECC(Object *obj, Object_Racer *racer, s32 updateRate) {
     TempStruct5 *temp_v0;
     s8 *test;
     s8 phi_a0;
@@ -556,7 +556,7 @@ void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate) {
     static s8 D_8011D5BB;
     static s8 D_8011D5BC;
 
-    if (!arg0) {
+    if (!obj) {
         D_8011D5BA = 0;
         D_8011D5BB = 0;
         D_8011D5BC = 0;
@@ -2184,7 +2184,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
         D_8011D58C[i] = 0; 
     }
     if (1) {} if (1) {} // Fakematch
-    func_80043ECC(0, NULL, 0);
+    func_80043ECC(NULL, NULL, 0);
     D_8011D583 = i;
     gStartBoostTime = 0;
     tempRacer->lightFlags = 0;
@@ -2330,8 +2330,8 @@ void update_player_racer(Object *obj, s32 updateRate) {
             tempRacer->unk84 -= tempRacer->unk84 * 0.0625 * updateRateF;
             tempRacer->unk88 -= tempRacer->unk88 * 0.0625 * updateRateF;
         }
-        gCurrentRacerMiscAssetPtr = (f32*) get_misc_asset(obj->segment.header->pad5B[1]);
-        D_8011D568 = (f32 *) get_misc_asset(obj->segment.header->pad5B[2]);
+        gCurrentRacerMiscAssetPtr = (f32*) get_misc_asset(obj->segment.header->unk5C);
+        D_8011D568 = (f32 *) get_misc_asset(obj->segment.header->unk5D);
         
         if (obj->segment.y_velocity < 4.0 && (tempRacer->unk1E2 >= 3 || tempRacer->buoyancy != 0.0)) {
             tempRacer->unk1F1 = 0;
@@ -4457,7 +4457,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                         objDist = 10.0f;
                         velocity = -2.0f;
                         break;
-                    case WEAOON_BUBBLE_TRAP:
+                    case WEAPON_BUBBLE_TRAP:
                         objDist = 10.0f;
                         velocity = -2.0f;
                         objID = 46;
@@ -4589,7 +4589,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                             }
                             soundID = SOUND_SPLOINK2;
                             break;
-                        case WEAOON_BUBBLE_TRAP:
+                        case WEAPON_BUBBLE_TRAP:
                             soundID = SOUND_PLOP;
                             break;
                         case WEAPON_UNK_11:

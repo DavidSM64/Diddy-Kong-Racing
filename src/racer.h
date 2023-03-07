@@ -85,7 +85,7 @@ typedef enum WeaponType {
     WEAPON_MAGNET_LEVEL_2,
     WEAPON_NITRO_LEVEL_2,
     WEAPON_UNK_09,
-    WEAOON_BUBBLE_TRAP,
+    WEAPON_BUBBLE_TRAP,
     WEAPON_UNK_11,
     WEAPON_SHIELD_LEVEL_1,
     WEAPON_SHIELD_LEVEL_2,
@@ -195,7 +195,7 @@ void handle_racer_head_turning(Object *obj, Object_Racer *racer, s32 updateRate)
 void racer_approach_object(Object *obj, Object_Racer *racer, f32 divisor);
 void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer);
 void racer_AI_pathing_inputs(Object *obj, Object_Racer *racer, s32 updateRate);
-void func_80043ECC(s32 arg0, Object_Racer *racer, s32 updateRate);
+void func_80043ECC(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate);
 void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRate);
 void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);

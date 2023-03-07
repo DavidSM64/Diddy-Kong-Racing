@@ -5,6 +5,7 @@
 #include "structs.h"
 #include "libc/math.h"
 
+/* Size: 0x88 bytes */
 typedef struct unk800DC950 {
     u8 unk0;
     u8 unk1;
@@ -57,12 +58,6 @@ typedef struct unk800DC950 {
     f32 unk80;
     f32 unk84;
 } unk800DC950;
-
-/* Size: 0x88 bytes */
-typedef struct unk800DC954 {
-    unk800DC950 unk0;
-    u8 unk20[0x68];
-} unk800DC954;
 
 /* Size: 0x14 bytes */
 typedef struct unk800DC960 {
