@@ -243,8 +243,8 @@ CheckpointNode *gTrackCheckpoints; // Array of structs, unknown number of member
 s32 gNumberOfCheckpoints;
 s32 D_8011AED4;
 s16 gTajChallengeType;
-Object *(*D_8011AEDC)[64]; // Not sure about the number of elements
-s32 D_8011AEE0;
+Object *(*gCameraObjList)[20]; // Camera objects with a maximum of 20
+s32 gCameraObjCount; //The number of camera objects in the above list
 Object *(*gRacers)[8];
 // Similar to gRacers, but sorts the pointer by the players' current position in the race.
 Object **gRacersByPosition;
@@ -360,7 +360,7 @@ void allocate_object_pools(void) {
     D_8011AE6C = (Object **) allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
     D_8011AE74 = (Object **) allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     gTrackCheckpoints = (CheckpointNode *) allocate_from_main_pool_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
-    D_8011AEDC = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
+    gCameraObjList = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
     gRacers = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
     gRacersByPort = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
     gRacersByPosition = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
@@ -2567,13 +2567,44 @@ UNUSED void debug_render_checkpoints(Gfx **dlist, MatrixS **mtx, Vertex **vtx) {
 UNUSED void debug_render_checkpoint_node(UNUSED s32 checkpointID, UNUSED s32 pathID, UNUSED Gfx **dList, UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001BC54.s")
+void func_8001BC54(void) {
+    Object *objPtr;
+    Object *temp;
+    s32 continueLoop;
+    s32 i;
 
-Object *objGetObject(s32 arg0) {
-    if (arg0 < 0 || arg0 >= D_8011AEE0) {
-        return 0;
+    gCameraObjCount = 0;
+    for (i = 0; i < objCount; i++) {
+        objPtr = gObjPtrList[i];
+        if (!(objPtr->segment.trans.unk6 & 0x8000)) {
+            if (objPtr->behaviorId == BHV_CAMERA_CONTROL) {
+                if (gCameraObjCount < 20) {
+                    (*gCameraObjList)[gCameraObjCount] = objPtr;
+                    gCameraObjCount++;
+                }
+            }
+        }
     }
-    return (*D_8011AEDC)[arg0];
+
+    do {
+        continueLoop = TRUE;
+        for (i = 0; i < gCameraObjCount - 1; i++) {
+            objPtr = (*gCameraObjList)[i+1];
+            temp = (*gCameraObjList)[i];
+            if (temp->unk78 > objPtr->unk78) {
+                (*gCameraObjList)[i] = (*gCameraObjList)[i+1];
+                (*gCameraObjList)[i+1] = temp;
+                continueLoop = FALSE;
+            }
+        }
+    } while (!continueLoop);
+}
+
+Object *get_camera_object(s32 cameraIndex) {
+    if (cameraIndex < 0 || cameraIndex >= gCameraObjCount) {
+        return NULL;
+    }
+    return (*gCameraObjList)[cameraIndex];
 }
 
 Object *func_8001BDD4(Object *obj, s32 *cameraId) {
@@ -2591,21 +2622,21 @@ Object *func_8001BDD4(Object *obj, s32 *cameraId) {
     s32 cameraIndex_Prev;
     s32 cameraIndex_Next;
     cameraIndex = cameraId;
-    if (D_8011AEE0 == 0) {
+    if (gCameraObjCount == 0) {
         return NULL;
     }
     cameraIndex_Next = *cameraIndex + 1;
     cameraIndex_Curr = *cameraIndex;
     cameraIndex_Prev = *cameraIndex - 1;
-    if (cameraIndex_Next >= D_8011AEE0) {
+    if (cameraIndex_Next >= gCameraObjCount) {
         cameraIndex_Next = 0;
     }
     if (cameraIndex_Prev < 0) {
-        cameraIndex_Prev = D_8011AEE0 - 1;
+        cameraIndex_Prev = gCameraObjCount - 1;
     }
-    currCamera = (*D_8011AEDC)[cameraIndex_Curr];
-    nextCamera = (*D_8011AEDC)[cameraIndex_Next];
-    prevCamera = (*D_8011AEDC)[cameraIndex_Prev];
+    currCamera = (*gCameraObjList)[cameraIndex_Curr];
+    nextCamera = (*gCameraObjList)[cameraIndex_Next];
+    prevCamera = (*gCameraObjList)[cameraIndex_Prev];
     x = currCamera->segment.trans.x_position - obj->segment.trans.x_position;
     y = currCamera->segment.trans.y_position - obj->segment.trans.y_position;
     z = currCamera->segment.trans.z_position - obj->segment.trans.z_position;
