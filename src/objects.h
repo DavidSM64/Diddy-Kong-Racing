@@ -348,7 +348,7 @@ Object **get_racer_objects_by_port(s32 *numRacers);
 Object **get_racer_objects_by_position(s32 *numRacers);
 Object *get_racer_object(s32 index);
 void debug_render_checkpoint_node(s32 checkpointID, s32 pathID, Gfx** dList, MatrixS **mtx, Vertex **vtx);
-u32 objGetObject(s32 arg0);
+Object *objGetObject(s32 arg0);
 void func_8001D1AC(void);
 void func_8001D1BC(s32 arg0);
 Object *func_8001D1E4(s32 *arg0);

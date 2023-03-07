@@ -243,7 +243,7 @@ CheckpointNode *gTrackCheckpoints; // Array of structs, unknown number of member
 s32 gNumberOfCheckpoints;
 s32 D_8011AED4;
 s16 gTajChallengeType;
-u32 (*D_8011AEDC)[64]; // Not sure about the number of elements
+Object *(*D_8011AEDC)[64]; // Not sure about the number of elements
 s32 D_8011AEE0;
 Object *(*gRacers)[8];
 // Similar to gRacers, but sorts the pointer by the players' current position in the race.
@@ -2569,11 +2569,11 @@ UNUSED void debug_render_checkpoint_node(UNUSED s32 checkpointID, UNUSED s32 pat
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BC54.s")
 
-u32 objGetObject(s32 arg0) {
+Object *objGetObject(s32 arg0) {
     if (arg0 < 0 || arg0 >= D_8011AEE0) {
         return 0;
     }
-    return D_8011AEDC[0][arg0];
+    return (*D_8011AEDC)[arg0];
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BDD4.s")
