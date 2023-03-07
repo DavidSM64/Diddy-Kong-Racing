@@ -37,10 +37,10 @@ f32 D_800DC884[10] = {
     0.0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f
 };
 
-f32 D_800DC8AC[3][9] = {
-    { 50.0f, 0.0f, 32.0f,  -50.0f,   0.0f,  32.0f,  -50.0f, 100.0f,  32.0f },
-    { 0.0f,  0.0f, 32.0f,  130.0f,  60.0f, -68.0f,  130.0f, -60.0f, -68.0f },
-    { 0.0f,  0.0f, 32.0f, -130.0f, -60.0f, -68.0f, -130.0f,  60.0f, -68.0f },
+Vec3f D_800DC8AC[3][3] = {
+    { {{{ 50.0f, 0.0f, 32.0f }}}, {{{  -50.0f,   0.0f,  32.0f }}}, {{{  -50.0f, 100.0f,  32.0f }}} },
+    { {{{ 0.0f,  0.0f, 32.0f }}}, {{{  130.0f,  60.0f, -68.0f }}}, {{{  130.0f, -60.0f, -68.0f }}} },
+    { {{{ 0.0f,  0.0f, 32.0f }}}, {{{ -130.0f, -60.0f, -68.0f }}}, {{{ -130.0f,  60.0f, -68.0f }}} },
 };
 
 LevelModel *gCurrentLevelModel = NULL;
@@ -1169,23 +1169,23 @@ void func_8002A31C(void) {
 
     cameraMatrix = func_80069DA4();
     for (i = 0; i < ARRAY_COUNT(D_8011D0F8);) {
-        x = D_800DC8AC[i][0];
-        y = D_800DC8AC[i][1];
-        z = D_800DC8AC[i][2];
+        x = D_800DC8AC[i][0].x;
+        y = D_800DC8AC[i][0].y;
+        z = D_800DC8AC[i][0].z;
         ox1 = x;
         oy1 = y;
         oz1 = z;
         guMtxXFMF(*cameraMatrix, x, y, z, &ox1, &oy1, &oz1);
-        x = D_800DC8AC[i][3];
-        y = D_800DC8AC[i][4];
-        z = D_800DC8AC[i][5];
+        x = D_800DC8AC[i][1].x;
+        y = D_800DC8AC[i][1].y;
+        z = D_800DC8AC[i][1].z;
         ox2 = x;
         oy2 = y;
         oz2 = z;
         guMtxXFMF(*cameraMatrix, x, y, z, &ox2, &oy2, &oz2);
-        x = D_800DC8AC[i][6];
-        y = D_800DC8AC[i][7];
-        z = D_800DC8AC[i][8];
+        x = D_800DC8AC[i][2].x;
+        y = D_800DC8AC[i][2].y;
+        z = D_800DC8AC[i][2].z;
         ox3 = x;
         oy3 = y;
         oz3 = z;
