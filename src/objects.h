@@ -427,7 +427,7 @@ void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);  
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); /* extern */
 void func_80011134(Object *, s32);
 s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
-void func_800138A8(ObjectSegment*, unk80068514_arg4*, Object *, s32);
+void func_800138A8(ObjectTransform*, unk80068514_arg4*, Object *, s32);
 Object *func_8002342C(f32 x, f32 z);
 void func_8006017C(s32);
 void func_80012F94(Object *);

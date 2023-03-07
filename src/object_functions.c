@@ -3976,7 +3976,7 @@ void obj_loop_weapon(Object *obj, s32 updateRate) {
             break;
         case WEAPON_TRIPMINE:
         case WEAPON_OIL_SLICK:
-        case WEAOON_BUBBLE_TRAP:
+        case WEAPON_BUBBLE_TRAP:
         case WEAPON_UNK_11:
             func_8003F2E8(obj, updateRate);
             break;

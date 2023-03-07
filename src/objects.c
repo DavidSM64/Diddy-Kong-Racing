@@ -1398,7 +1398,7 @@ void render_3d_billboard(Object *obj) {
     intensity = 255;
     hasPrimCol = FALSE;
     hasEnvCol = FALSE;
-    flags = obj->segment.trans.unk6 | 0x100 | 0x8;
+    flags = obj->segment.trans.unk6 | RENDER_Z_UPDATE | RENDER_FOG_ACTIVE;
     if (obj->unk54 != NULL) {
         hasPrimCol = TRUE;
         hasEnvCol = TRUE;
@@ -1457,7 +1457,7 @@ void render_3d_billboard(Object *obj) {
     }
     
     // 5 = OilSlick, SmokeCloud, Bomb, BubbleWeapon
-    if(var_a0 != NULL || !(obj->behaviorId != BHV_WEAPON || obj->unk64->weapon.weaponID != WEAOON_BUBBLE_TRAP)) {
+    if(var_a0 != NULL || !(obj->behaviorId != BHV_WEAPON || obj->unk64->weapon.weaponID != WEAPON_BUBBLE_TRAP)) {
         sp60.trans.z_rotation = 0;
         sp60.trans.x_rotation = 0;
         sp60.trans.y_rotation = 0;
@@ -1473,9 +1473,10 @@ void render_3d_billboard(Object *obj) {
                 var_a0 = obj;
             }
         }
-        func_800138A8(var_a0, sp58, &sp60, 0x106);
+        func_800138A8(&var_a0->segment.trans, sp58, (Object *) &sp60,
+            RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE);
     } else {
-        render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, (Vertex **) &gObjectCurrVertexList, obj, sp58, flags);
+        render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj, sp58, flags);
     }
     if (hasPrimCol) {
         gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -1822,17 +1823,17 @@ void func_80013548(Object *obj) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800135B8.s")
 
-void func_800138A8(ObjectSegment *seg, unk80068514_arg4 *arg1, Object *obj, s32 flags) {
+void func_800138A8(ObjectTransform *trans, unk80068514_arg4 *arg1, Object *obj, s32 flags) {
     f32 x;
     f32 y;
     f32 z;
     ObjectSegment *cameraSegment;
     f32 posSq;
 
-    f32_vec3_apply_object_rotation(&seg->trans, &obj->segment.trans.x_position);
-    obj->segment.trans.x_position += seg->trans.x_position;
-    obj->segment.trans.y_position += seg->trans.y_position;
-    obj->segment.trans.z_position += seg->trans.z_position;
+    f32_vec3_apply_object_rotation(trans, &obj->segment.trans.x_position);
+    obj->segment.trans.x_position += trans->x_position;
+    obj->segment.trans.y_position += trans->y_position;
+    obj->segment.trans.z_position += trans->z_position;
     cameraSegment = get_active_camera_segment();
     x = cameraSegment->trans.x_position - obj->segment.trans.x_position;
     y = cameraSegment->trans.y_position - obj->segment.trans.y_position;

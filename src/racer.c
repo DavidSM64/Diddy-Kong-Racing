@@ -4457,7 +4457,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                         objDist = 10.0f;
                         velocity = -2.0f;
                         break;
-                    case WEAOON_BUBBLE_TRAP:
+                    case WEAPON_BUBBLE_TRAP:
                         objDist = 10.0f;
                         velocity = -2.0f;
                         objID = 46;
@@ -4589,7 +4589,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                             }
                             soundID = SOUND_SPLOINK2;
                             break;
-                        case WEAOON_BUBBLE_TRAP:
+                        case WEAPON_BUBBLE_TRAP:
                             soundID = SOUND_PLOP;
                             break;
                         case WEAPON_UNK_11:
