@@ -1041,10 +1041,6 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
             obj64->triangles[0].uv1.texCoords = temp_t4;
             obj64->triangles[0].uv2.texCoords = temp_t5;
             obj64->triangles[1].vertices = (0x40 << 24) | (1 << 16) | (2 << 8) | 3;
-            // obj64->triangles[1].flags = 0x40;
-            // obj64->triangles[1].vi0 = 1;
-            // obj64->triangles[1].vi1 = 2;
-            // obj64->triangles[1].vi2 = 3;
             obj64->triangles[1].uv0.texCoords = temp_t4;
             obj64->triangles[1].uv1.texCoords = (temp_t4 | temp_t5);
             obj64->triangles[1].uv2.texCoords = temp_t5;
