@@ -56,14 +56,6 @@ typedef struct unknown800DC874 {
 } unknown800DC874;
 
 /* Size: 0x10 bytes */
-typedef struct unk8011D0F8 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-} unk8011D0F8;
-
-/* Size: 0x10 bytes */
 typedef struct unk8011D330 {
     u8 pad0[0x10];
 } unk8011D330;
@@ -120,8 +112,6 @@ extern unknown800DC874 D_800DC874;
 extern unknown800DC874 D_800DC87C;
 
 extern f32 D_800DC884[10];
-
-extern f32 D_800DC8AC[27];
 
 extern LevelModel *gCurrentLevelModel;
 extern LevelHeader *gCurrentLevelHeader;

@@ -50,6 +50,18 @@ typedef struct Vec3i {
   };
 } Vec3i;
 
+typedef struct Vec4f {
+  union {
+    struct {
+      f32 x;
+      f32 y;
+      f32 z;
+      f32 w;
+    };
+    f32 f[4];
+  };
+} Vec4f;
+
 /* Size: 0x20 bytes */
 typedef struct TextureHeader {
   /* 0x00 */ u8 width;
