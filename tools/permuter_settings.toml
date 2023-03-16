@@ -9,4 +9,4 @@ compiler_type = "ido"
 "_SHIFTL" = "unsigned int"
 
 [decompme.compilers]
-"tools/ido-static-recomp/build5.3/out/cc" = "ido5.3"
+"tools/ido-static-recomp/build/5.3/out/cc" = "ido5.3"

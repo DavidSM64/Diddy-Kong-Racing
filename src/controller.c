@@ -10,8 +10,7 @@ u16 gButtonMask = 0xFFFF; //Used when anti-cheat/anti-tamper has failed in func_
 OSMesgQueue sSIMesgQueue;
 OSMesg sSIMesgBuf;
 OSMesg gSIMesg;
-OSContStatus status;
-UNUSED s32 D_80121108[2];
+OSContStatus status[MAXCONTROLLERS];
 OSContPad sControllerCurrData[MAXCONTROLLERS];
 OSContPad sControllerPrevData[MAXCONTROLLERS];
 u16 gControllerButtonsPressed[MAXCONTROLLERS];
@@ -37,13 +36,13 @@ s32 init_controllers(void) {
 
     osCreateMesgQueue(&sSIMesgQueue, &sSIMesgBuf, 1);
     osSetEventMesg(OS_EVENT_SI, &sSIMesgQueue, gSIMesg);
-    osContInit(&sSIMesgQueue, &bitpattern, &status);
+    osContInit(&sSIMesgQueue, &bitpattern, status);
     osContStartReadData(&sSIMesgQueue);
     initialise_player_ids();
 
     sNoControllerPluggedIn = FALSE;
 
-    if ((bitpattern & CONT_ABSOLUTE) && (!(status.errno & CONT_NO_RESPONSE_ERROR))) {
+    if ((bitpattern & CONT_ABSOLUTE) && (!(status[0].errno & CONT_NO_RESPONSE_ERROR))) {
         return CONTROLLER_EXISTS;
     }
 
