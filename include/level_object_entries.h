@@ -22,6 +22,8 @@ typedef struct LevelObjectEntry_Scenery {
 
 typedef struct LevelObjectEntry_Fish {
     /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ u8 pad8[0x4];
+    /* 0x0C */ u8 unkC[1]; //Unknown size
 } LevelObjectEntry_Fish;
 
 typedef struct LevelObjectEntry_Animator {

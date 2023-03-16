@@ -157,7 +157,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     obj->segment.animFrame = racer->unkC;
     obj->unk74 = 0;
     if (obj->segment.unk38.byte.unk3B == 1) {
-        func_800113CC(obj, 2, sp54, 172, 173);
+        func_800113CC(obj, 2, sp54, SOUND_STOMP2, SOUND_STOMP3);
         obj->unk74 |= 3;
     }
     func_800AFC3C(obj, updateRate);

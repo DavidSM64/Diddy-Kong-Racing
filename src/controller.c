@@ -19,6 +19,7 @@ u8 sPlayerID[16];
 
 /**
  * Return the serial interface message queue.
+ * Official name: joyMessageQ
  */
 OSMesgQueue *get_si_mesg_queue(void) {
     return &sSIMesgQueue;
@@ -26,6 +27,7 @@ OSMesgQueue *get_si_mesg_queue(void) {
 
 /**
  * Initialise the player controllers, and return the status when finished.
+ * Official name: joyInit
  */
 s32 init_controllers(void) {
     UNUSED s32 *temp1;
@@ -52,6 +54,7 @@ s32 init_controllers(void) {
 /**
  * Reads arg0 for a set of flags on whether to read, write, or erase any save data.
  * Also reads the latest inputs from the controllers, and sets their values.
+ * Official name: joyRead
  */
 s32 handle_save_data_and_read_controller(s32 saveDataFlags, s32 updateRate) {
     Settings **allSaves;
@@ -173,6 +176,7 @@ u16 get_buttons_held_from_player(s32 player) {
 /**
  * Returns the buttons that are newly pressed during that frame.
  * NOTE: This was a u16, but we only got a match in menu_ghost_data_loop when it was a u32 for some reason
+ * Official name: joyGetPressed
  */
 u32 get_buttons_pressed_from_player(s32 player) {
     return gControllerButtonsPressed[sPlayerID[player]];
@@ -180,6 +184,7 @@ u32 get_buttons_pressed_from_player(s32 player) {
 
 /**
  * Returns the buttons that are no longer pressed in that frame.
+ * Official name: joyGetReleased
  */
 u16 get_buttons_released_from_player(s32 player) {
     return gControllerButtonsReleased[sPlayerID[player]];
@@ -187,6 +192,7 @@ u16 get_buttons_released_from_player(s32 player) {
 
 /**
  * Clamps the X joystick axis of the selected player to 70 and returns it.
+ * Official name: joyGetStickX
  */
 s8 clamp_joystick_x_axis(s32 player) {
     return clamp_joystick(sControllerCurrData[sPlayerID[player]].stick_x);
@@ -194,6 +200,7 @@ s8 clamp_joystick_x_axis(s32 player) {
 
 /**
  * Clamps the Y joystick axis of the selected player to 70 and returns it.
+ * Official name: joyGetStickY
  */
 s8 clamp_joystick_y_axis(s32 player) {
     return clamp_joystick(sControllerCurrData[sPlayerID[player]].stick_y);
@@ -223,6 +230,7 @@ s8 clamp_joystick(s8 stickMag) {
 
 /**
  * Used when anti-cheat/anti-tamper has failed in func_8006A6B0()
+ * Official Name: joySetSecurity
  */
 void disable_button_mask(void) {
     gButtonMask = 0;

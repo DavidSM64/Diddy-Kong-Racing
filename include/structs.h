@@ -51,6 +51,18 @@ typedef struct Vec3i {
   };
 } Vec3i;
 
+typedef struct Vec4f {
+  union {
+    struct {
+      f32 x;
+      f32 y;
+      f32 z;
+      f32 w;
+    };
+    f32 f[4];
+  };
+} Vec4f;
+
 /* Size: 0x20 bytes */
 typedef struct TextureHeader {
   /* 0x00 */ u8 width;
@@ -453,7 +465,12 @@ typedef struct Vertex {
 
 /* Size: 4 bytes */
 typedef struct TexCoords {
-    s16 u, v;
+    union {
+      struct {
+        s16 u, v;
+      };
+      u32 texCoords; // For convenience?
+    };
 } TexCoords;
 
 /* Size: 16 bytes */
@@ -639,19 +656,20 @@ typedef struct ObjectHeader {
              u8 pad38[5];
   /* 0x3D */ u8 unk3D;
              u8 pad3E[12];
-             s16 unk4A;
-             s16 unk4C;
-             s16 drawDistance;
+  /* 0x4A */ s16 unk4A;
+  /* 0x4C */ s16 unk4C;
+  /* 0x4E */ s16 drawDistance;
              u8 pad50[3];
   /* 0x53 */ s8 modelType;
   /* 0x54 */ s8 behaviorId;
   /* 0x55 */ s8 numberOfModelIds; // size of array pointed by Object->unk68
-             u8 pad56;
+  /* 0x56 */ u8 pad56;
   /* 0x57 */ s8 unk57;
-             s8 unk58;
-             u8 pad59;
+  /* 0x58 */ s8 unk58;
+  /* 0x59 */ u8 pad59;
   /* 0x5A */ s8 unk5A;
-             u8 pad5B[0x2];
+  /* 0x5B */ u8 unk5B;
+  /* 0x5C */ u8 unk5C;
   /* 0x5D */ u8 unk5D; //Misc Asset index?
   /* 0x5E */ u8 pad5E[0x2];
   /* 0x60 */ char internalName[16];
@@ -759,7 +777,7 @@ typedef struct Object_5C {
 
 typedef struct Object_60 {
     s32 unk0;
-    s32 *unk4; // Object* pointer
+    struct Object *unk4;
     u8 unk8[0x24];
     s8 *unk2C;
 } Object_60;
@@ -836,6 +854,26 @@ typedef struct Object_Butterfly {
   /* 0x108 */ f32 unk108;
 } Object_Butterfly;
 
+typedef struct Object_Fish {
+  /* 0x000 */ Triangle triangles[8];
+  /* 0x080 */ Vertex vertices[12];
+  /* 0x0F8 */ TextureHeader *texture;
+  /* 0x0FC */ u8 unkFC;
+  /* 0x0FD */ u8 unkFD;
+  /* 0x0FE */ u8 unkFE;
+  /* 0x0FF */ u8 unkFF;
+  /* 0x100 */ s32 unk100;
+  /* 0x104 */ s16 unk104;
+  /* 0x106 */ s16 unk106;
+  /* 0x108 */ f32 unk108;
+} Object_Fish;
+
+typedef struct Object_Boost {
+  /* 0x000 */ u8 pad[0x70];
+  /* 0x070 */ u8 unk70;
+  /* 0x074 */ f32 unk74;
+} Object_Boost;
+
 typedef struct Object_EffectBox {
   /* 0x000 */ u8 pad0[0x1FE];
   /* 0x1FE */ u8 unk1FE;
@@ -861,16 +899,9 @@ typedef struct Object_UnkId58 {
 } Object_UnkId58;
 
 typedef struct Object_CharacterFlag {
-  /* 0x00 */ s32 unk0;
-  /* 0x04 */ s32 unk4;
-  /* 0x08 */ s32 unk8;
-  /* 0x0C */ s32 unkC;
-  /* 0x10 */ s32 unk10;
-  /* 0x14 */ s32 unk14;
-  /* 0x18 */ s32 unk18;
-  /* 0x1C */ s32 unk1C;
-  /* 0x20 */ u16 *unk20;
-  /* 0x24 */ u8  *unk24;
+  /* 0x00 */ Triangle triangles[2];
+  /* 0x20 */ Vertex *vertices;
+  /* 0x24 */ TextureHeader *texture;
 } Object_CharacterFlag;
 
 typedef struct Object_Snowball {
@@ -1414,6 +1445,8 @@ typedef struct Object_64 {
         Object_WeaponBalloon weapon_balloon;
         Object_Weapon weapon;
         Object_Butterfly butterfly;
+        Object_Fish fish;
+        Object_Boost boost;
         Object_EffectBox effect_box;
         Object_EggCreator egg_creator;
         Object_CollectEgg egg;
@@ -1463,7 +1496,11 @@ typedef struct Object_68 {
   };
   /* 0x04 */ s32 *unk4[3];
   /* 0x10 */ s16 unk10;
-  /* 0x14 */ u8 pad14[12];
+  /* 0x12 */ u8 pad12[4];
+  /* 0x16 */ s16 unk16;
+  /* 0x18 */ s16 unk18;
+  /* 0x1A */ s16 unk1A;
+  /* 0x1C */ s16 unk1C;
   /* 0x1E */ s8 unk1E;
   /* 0x1F */ s8 unk1F;
   /* 0x20 */ s8 unk20;
@@ -1643,7 +1680,7 @@ typedef struct ObjectSegment {
       struct {
           /* 0x0038 */ u8 unk38;
           /* 0x0039 */ u8 unk39;
-          /* 0x003A */ s8 unk3A;
+          /* 0x003A */ s8 unk3A; // Index value for unk68 array
           /* 0x003B */ s8 unk3B;
       } byte;
       struct {

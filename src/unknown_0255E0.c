@@ -38,14 +38,10 @@ f32 D_800DC884[10] = {
     0.0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f
 };
 
-f32 D_800DC8AC[27] = {
-    50.0f, 0.0f, 32.0f, -50.0f,
-    0.0f, 32.0f, -50.0f, 100.0f,
-    32.0f, 0.0f, 0.0f, 32.0f,
-    130.0f, 60.0f, -68.0f, 130.0f,
-    -60.0f, -68.0f, 0.0f, 0.0f,
-    32.0f, -130.0f, -60.0f, -68.0f,
-    -130.0f, 60.0f, -68.0f,
+Vec3f D_800DC8AC[3][3] = {
+    { {{{ 50.0f, 0.0f, 32.0f }}}, {{{  -50.0f,   0.0f,  32.0f }}}, {{{  -50.0f, 100.0f,  32.0f }}} },
+    { {{{ 0.0f,  0.0f, 32.0f }}}, {{{  130.0f,  60.0f, -68.0f }}}, {{{  130.0f, -60.0f, -68.0f }}} },
+    { {{{ 0.0f,  0.0f, 32.0f }}}, {{{ -130.0f, -60.0f, -68.0f }}}, {{{ -130.0f,  60.0f, -68.0f }}} },
 };
 
 LevelModel *gCurrentLevelModel = NULL;
@@ -130,8 +126,8 @@ s32 D_8011D0E8;
 s32 D_8011D0EC;
 s32 D_8011D0F0;
 s32 D_8011D0F4;
-unk8011D0F8 D_8011D0F8[3];
-unk8011D0F8 D_8011D128[3];
+Vec4f D_8011D0F8[3];
+Vec4f D_8011D128[3];
 s32 D_8011D158[3]; // Unused? Or part of something bigger above?
 s32 D_8011D164;
 s32 D_8011D168[84];
@@ -1179,7 +1175,64 @@ LevelModelSegmentBoundingBox *get_segment_bounding_box(s32 segmentID) {
     return &gCurrentLevelModel->segmentsBoundingBoxes[segmentID];
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002A31C.s")
+void func_8002A31C(void) {
+    f32 ox1;
+    f32 oy1;
+    f32 oz1;
+    f32 ox2;
+    f32 oy2;
+    f32 oz2;
+    f32 ox3;
+    f32 oy3;
+    f32 oz3;
+    Matrix *cameraMatrix;
+    f32 inverseMagnitude;
+    f32 x;
+    f32 y;
+    f32 z;
+    s32 i;
+    f32 w;
+
+    cameraMatrix = func_80069DA4();
+    for (i = 0; i < ARRAY_COUNT(D_8011D0F8);) {
+        x = D_800DC8AC[i][0].x;
+        y = D_800DC8AC[i][0].y;
+        z = D_800DC8AC[i][0].z;
+        ox1 = x;
+        oy1 = y;
+        oz1 = z;
+        guMtxXFMF(*cameraMatrix, x, y, z, &ox1, &oy1, &oz1);
+        x = D_800DC8AC[i][1].x;
+        y = D_800DC8AC[i][1].y;
+        z = D_800DC8AC[i][1].z;
+        ox2 = x;
+        oy2 = y;
+        oz2 = z;
+        guMtxXFMF(*cameraMatrix, x, y, z, &ox2, &oy2, &oz2);
+        x = D_800DC8AC[i][2].x;
+        y = D_800DC8AC[i][2].y;
+        z = D_800DC8AC[i][2].z;
+        ox3 = x;
+        oy3 = y;
+        oz3 = z;
+        guMtxXFMF(*cameraMatrix, x, y, z, &ox3, &oy3, &oz3);
+        x = ((oz2 - oz3) * oy1) + (oy2 * (oz3 - oz1)) + (oy3 * (oz1 - oz2));
+        y = ((ox2 - ox3) * oz1) + (oz2 * (ox3 - ox1)) + (oz3 * (ox1 - ox2));
+        z = ((oy2 - oy3) * ox1) + (ox2 * (oy3 - oy1)) + (ox3 * (oy1 - oy2));
+        inverseMagnitude = (1.0 / sqrtf((x * x) + (y * y) + (z * z)));
+        if (inverseMagnitude > 0.0) {
+            x *= inverseMagnitude;
+            y *= inverseMagnitude;
+            z *= inverseMagnitude;
+        }
+        w = -((ox1 * x) + (oy1 * y) + (oz1 * z));
+        D_8011D0F8[i].x = x;
+        D_8011D0F8[i].y = y;
+        D_8011D0F8[i].z = z;
+        D_8011D0F8[i].w = w;
+        i++;
+    }
+}
 
 /**
  * Takes a normalised (0-1) face direction of the active camera, then adds together a magnitude
@@ -1193,10 +1246,10 @@ s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb) {
     f32 dirX, dirY, dirZ, dirW;
     
     for (j = 0; j < 3; j++) {
-        dirX = D_8011D0F8[j].unk0;
-        dirY = D_8011D0F8[j].unk4;
-        dirZ = D_8011D0F8[j].unk8;
-        dirW = D_8011D0F8[j].unkC;
+        dirX = D_8011D0F8[j].x;
+        dirY = D_8011D0F8[j].y;
+        dirZ = D_8011D0F8[j].z;
+        dirW = D_8011D0F8[j].w;
         
         for (i = 0, isVisible = FALSE; i < 8 && !isVisible; i++) {
             if (i & 1) {
@@ -1301,10 +1354,10 @@ s32 check_if_in_draw_range(Object *obj) {
                 break;
         }
         for (i = 0; i < 3; i++) {
-            x = D_8011D0F8[i].unk0;
-            z = D_8011D0F8[i].unk8;
-            w = D_8011D0F8[i].unkC;
-            y = D_8011D0F8[i].unk4;
+            x = D_8011D0F8[i].x;
+            z = D_8011D0F8[i].z;
+            w = D_8011D0F8[i].w;
+            y = D_8011D0F8[i].y;
             accum = (x * obj->segment.trans.x_position) + (y * obj->segment.trans.y_position) + (z * obj->segment.trans.z_position) + w + obj->segment.unk34_a.unk34;
             if (accum < 0.0f) {
                 return FALSE;

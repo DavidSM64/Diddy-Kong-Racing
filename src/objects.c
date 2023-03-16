@@ -230,8 +230,8 @@ CheckpointNode *gTrackCheckpoints; // Array of structs, unknown number of member
 s32 gNumberOfCheckpoints;
 s32 D_8011AED4;
 s16 gTajChallengeType;
-u32 (*D_8011AEDC)[64]; // Not sure about the number of elements
-s32 D_8011AEE0;
+Object *(*gCameraObjList)[20]; // Camera objects with a maximum of 20
+s32 gCameraObjCount; //The number of camera objects in the above list
 Object *(*gRacers)[NUM_RACERS_1P];
 // Similar to gRacers, but sorts the pointer by the players' current position in the race.
 Object **gRacersByPosition;
@@ -347,7 +347,7 @@ void allocate_object_pools(void) {
     D_8011AE6C = (Object **) allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
     D_8011AE74 = (Object **) allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     gTrackCheckpoints = (CheckpointNode *) allocate_from_main_pool_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
-    D_8011AEDC = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
+    gCameraObjList = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
     gRacers = allocate_from_main_pool_safe(sizeof(uintptr_t) * (NUM_RACERS_1P + 2), COLOUR_TAG_BLUE);
     gRacersByPort = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * (NUM_RACERS_1P + 2), COLOUR_TAG_BLUE);
     gRacersByPosition = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * (NUM_RACERS_1P + 2), COLOUR_TAG_BLUE);
@@ -838,7 +838,7 @@ s32 func_8000FBCC(Object *arg0, Object_60 *arg1) {
     arg1->unk4 = NULL;
     objHeader = ((ObjectSegment*) arg0)->header;
     if (objHeader->unk32) {
-        arg1->unk4 = (s32 *) load_texture((s32) ((ObjectHeader *) objHeader)->unk34);
+        arg1->unk4 = (Object *) load_texture((s32) ((ObjectHeader *) objHeader)->unk34);
         objHeader = ((ObjectSegment*)arg0)->header;
     }
     ((Object_50*) arg1)->unk0 = (f32) objHeader->unk4;
@@ -930,6 +930,8 @@ void gParticlePtrList_flush(void) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800101AC.s")
 
+#ifdef NON_MATCHING
+//Minor regalloc diffs
 void func_80010994(s32 updateRate) {
     s32 i;
     s32 tempVal;
@@ -957,12 +959,13 @@ void func_80010994(s32 updateRate) {
     D_8011AD21 = 1 - D_8011AD21;
     D_8011AD22[D_8011AD21] = 0;
     for (i = 0; i < gNumRacers; i++) {
-        obj64 = (*gRacers)[i]->unk64;
-        racer = &obj64->racer;
+        obj = (*gRacers)[i];
+        racer = &obj->unk64->racer;
         racer->prev_x_position = (f32) (*gRacers)[i]->segment.trans.x_position;
         racer->prev_y_position = (f32) (*gRacers)[i]->segment.trans.y_position;
         racer->prev_z_position = (f32) (*gRacers)[i]->segment.trans.z_position;
     }
+    i = 1; //FAKEMATCH
     func_800142B8();
     func_800155B8();
     func_8001E89C();
@@ -1114,7 +1117,7 @@ void func_80010994(s32 updateRate) {
     if (D_8011AF00 == 1) {
         if ((D_8011ADB0 == 0x50) && (D_8011AE7A == 0)) {
             sp54 = 0;
-            for (i = 0; i < MAXCONTROLLERS; i++) {                
+            for (i = 0; i < MAXCONTROLLERS; i++) {
                 tempVal = get_buttons_pressed_from_player(i);
                 sp54 |= tempVal;
             }
@@ -1129,6 +1132,9 @@ void func_80010994(s32 updateRate) {
         D_8011AF00 = 1;
     }
 }
+#else
+GLOBAL_ASM("asm/non_matchings/objects/func_80010994.s")
+#endif
 
 #ifdef NON_EQUIVALENT
 void func_80011134(Object *arg0, s32 arg1) {
@@ -1161,7 +1167,35 @@ void func_80011134(Object *arg0, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/objects/func_80011134.s")
 #endif
 
+#ifdef NON_EQUIVALENT
+//This is a function for doors
+void func_80011264(ObjectModel *model, Object *obj) {
+    s32 temp_a2;
+    s32 i;
+    u8 textureIndex;
+    Object_Door *door;
+
+    if (model->unk50 > 0) {
+        door = &obj->unk64->door;
+        temp_a2 = (door->unk10 / 10) - 1;
+        for (i = 0; i < model->numberOfBatches; i++) {
+            if (model->batches[i].flags & 0x10000) {
+                textureIndex = model->batches[i].textureIndex;
+                if (textureIndex != 0xFF) { // 0xFF = No Texture
+                    if (model->textures[textureIndex].texture->numOfTextures > 0x900) {
+                        model->batches[i].unk7 = (door->unk10 % 10) * 4;
+                    }
+                    if (!(temp_a2 & 0x20000000)) {
+                        model->batches[i].unk7 = temp_a2 * 4;
+                    }
+                }
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_80011264.s")
+#endif
 
 void func_80011390(void) {
     D_8011ADAC = 0;
@@ -1187,7 +1221,45 @@ s32 get_race_start_timer() {
     return gRaceStartCountdown;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_800113CC.s")
+s32 func_800113CC(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoundId) {
+    s8 *asset;
+    f32 shakeDist;
+    f32 shakeMagnitude;
+    s32 animFrame;
+    s32 asset0;
+    s8 nextAsset;
+    s32 i;
+    s32 ret;
+    s32 soundId;
+
+    ret = 0;
+    if (arg1 < obj->segment.header->unk5B) {
+        //TODO: Figure this one out better. The index could be something like this: obj->segment.header->internalName[arg1 - 4]
+        asset = (s8 *) get_misc_asset(*(&obj->segment.header->unk5C + arg1));
+        asset0 = asset[0];
+        shakeDist = (asset[1] & 0xFF) * 8.0f;
+        shakeMagnitude = asset[2];
+        frame >>= 4;
+        animFrame = obj->segment.animFrame >> 4;
+        for (i = 0; i < asset0; i++) {
+            nextAsset = asset[i+3];
+            if (((animFrame >= nextAsset) && (frame < nextAsset)) || ((nextAsset >= animFrame) && (nextAsset < frame))) {
+                set_camera_shake_by_distance(obj->segment.trans.x_position, obj->segment.trans.y_position,
+                    obj->segment.trans.z_position, shakeDist, shakeMagnitude);
+                if (i & 1) {
+                    soundId = oddSoundId; //Always set to SOUND_STOMP2
+                } else {
+                    soundId = evenSoundId; //Always set to SOUND_STOMP3
+                }
+                play_sound_at_position(soundId, obj->segment.trans.x_position, obj->segment.trans.y_position,
+                    obj->segment.trans.z_position, 4, NULL);
+                ret = i + 1;
+                i = asset0; //Come on, just use break!
+            }
+        }
+    }
+    return ret;
+}
 
 s32 func_80011560(void) { //! @bug The developers probably intended this to be a void function.
     D_800DC848 = 1;
@@ -1299,49 +1371,37 @@ void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triang
     func_80069A40(&gObjectCurrDisplayList);
 }
 
-
-#ifdef NON_EQUIVALENT
-//f32 D_800E5550 = 0.01f;
 void func_80011AD0(Object *this) {
     f32 tmp_f0;
-    s32 offset;
+    Object_64 *obj64;
+
     switch (this->behaviorId) {
-        case 47:
-            //L80011B10
+        case BHV_CHARACTER_FLAG:
             if (this->unk7C.word >= 0) {
-                func_80011960(this, this->unk64->obj80011AD0.unk20, 4, this->unk64,
-                                2, this->unk64->obj80011AD0.unk24, 11, 0, 1.0f);
+                obj64 = this->unk64;
+                func_80011960(this, obj64->character_flag.vertices, 4, obj64->character_flag.triangles,
+                                2, obj64->character_flag.texture, 11, 0, 1.0f);
             }
             break;
-
-        case 61:
-            //L80011B58
-            offset = (this->unk64->obj80011AD0.unkFC * 6);
-            offset *= 5;
-            offset *= 2;
-            offset += 128;
-            func_80011960(this, offset, 6, this->unk64, 8, this->unk64->obj80011AD0.unkF8, 10, 0, 1.0f);
+        case BHV_BUTTERFLY:
+            obj64 = this->unk64;
+            func_80011960(this, &obj64->butterfly.vertices[obj64->butterfly.unkFC * 6], 6, obj64->butterfly.triangles, 8, obj64->butterfly.texture, 10, 0, 1.0f);
             break;
 
-        case 3: //L80011BB4
-            tmp_f0 = this->segment.unk3C_a.level_entry->unk80011AD0.unkD;
-            offset = (this->unk64->obj80011AD0.unkFC * 6);
-            offset *= 5;
-            offset *= 2;
-            offset += 128;
-            func_80011960(this, offset, 6, this->unk64, 8, this->unk64->obj80011AD0.unkF8, 26, 0, tmp_f0 * 0.01f);
+        case BHV_FISH:
+            obj64 = this->unk64;
+            tmp_f0 = this->segment.unk3C_a.level_entry->fish.unkC[1];
+            tmp_f0 *= 0.01f;
+            func_80011960(this, &obj64->fish.vertices[obj64->fish.unkFC * 6], 6, obj64->fish.triangles, 8, obj64->fish.texture, 26, 0, tmp_f0);
             break;
 
-        case 89: //L80011C38
-            if ((this->unk78 != 0) && (this->unk64->obj80011AD0.unk70 > 0 || this->unk64->obj80011AD0.unk74 > 0.0f)) {
+        case BHV_BOOST:
+            if ((this->unk78 != 0) && ((this->unk64->boost.unk70 > 0) || (this->unk64->boost.unk74 > 0.0f))) {
                 func_800135B8(this);
             }
             break;
-    } //L80011C88
+    }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/func_80011AD0.s")
-#endif
 
 /**
  * Render an object as a billboard.
@@ -1365,7 +1425,7 @@ void render_3d_billboard(Object *obj) {
     intensity = 255;
     hasPrimCol = FALSE;
     hasEnvCol = FALSE;
-    flags = obj->segment.trans.unk6 | 0x100 | 0x8;
+    flags = obj->segment.trans.unk6 | RENDER_Z_UPDATE | RENDER_FOG_ACTIVE;
     if (obj->unk54 != NULL) {
         hasPrimCol = TRUE;
         hasEnvCol = TRUE;
@@ -1424,7 +1484,7 @@ void render_3d_billboard(Object *obj) {
     }
     
     // 5 = OilSlick, SmokeCloud, Bomb, BubbleWeapon
-    if(var_a0 != NULL || !(obj->behaviorId != BHV_WEAPON || obj->unk64->weapon.weaponID != WEAOON_BUBBLE_TRAP)) {
+    if(var_a0 != NULL || !(obj->behaviorId != BHV_WEAPON || obj->unk64->weapon.weaponID != WEAPON_BUBBLE_TRAP)) {
         sp60.trans.z_rotation = 0;
         sp60.trans.x_rotation = 0;
         sp60.trans.y_rotation = 0;
@@ -1440,12 +1500,13 @@ void render_3d_billboard(Object *obj) {
                 var_a0 = obj;
             }
         }
-        func_800138A8(var_a0, sp58, &sp60, 0x106);
+        func_800138A8(&var_a0->segment.trans, sp58, (Object *) &sp60,
+            RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE);
     } else {
 #ifdef PUPPYPRINT_DEBUG
     first3 = osGetCount();
 #endif
-        render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, (Vertex **) &gObjectCurrVertexList, obj, sp58, flags);
+        render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj, sp58, flags);
 #ifdef PUPPYPRINT_DEBUG
     first3 = osGetCount() - first3;
 #endif
@@ -1462,8 +1523,230 @@ void render_3d_billboard(Object *obj) {
 #endif
 }
 
+#ifdef NON_EQUIVALENT
+void render_3d_model(Object *obj) {
+    s32 intensity;
+    s32 spB0;
+    s32 obj60_unk0;
+    s32 hasPrimCol;
+    s32 hasEnvCol;
+    ObjectModel *objModel;
+    Object *loopObj;
+    Object *heldObj;
+    Object_64 *obj64;
+    Object_68 *obj68;
+    Vertex *temp_v0_14;
+    f32 posX;
+    f32 posZ;
+    f32 posY;
+    s32 cicFailed;
+    s32 var_t1;
+    s32 billboardFlags;
+    s32 i;
+    s32 var_v0;
+    s8 index;
+    s8 var_t0_2;
+    s32 var_v0_2;
+    s32 alpha;
+    unk80068514_arg4 *temp_t4;
 
+    obj68 = obj->unk68[obj->segment.unk38.byte.unk3A];
+    if (obj68 != NULL) {
+        hasPrimCol = FALSE;
+        hasEnvCol = FALSE;
+        intensity = 255;
+        objModel = obj68->objModel;
+        if (obj->unk54 != NULL) {
+            hasPrimCol = TRUE;
+            hasEnvCol = TRUE;
+            intensity = (s32) (obj->unk54->unk0 * 255.0f * D_8011AD30);
+        }
+        if (obj->behaviorId == BHV_RACER) {
+            obj64 = obj->unk64;
+            func_80012E28(obj);
+        } else {
+            obj64 = NULL;
+        }
+        if (obj68->unk20 <= 0) {
+            obj->unk44 = (Vertex *) obj68->unk4[obj68->unk1F];
+            if (obj68->unk1E == 2) {
+                func_80061D30(obj);
+            }
+            if ((obj68->unk1E != 0) && (objModel->unk40 != NULL)) {
+                var_t1 = TRUE;
+                if (obj64 != NULL && obj64->racer.vehicleID < VEHICLE_TRICKY && obj64->racer.playerIndex == PLAYER_COMPUTER) {
+                    var_t1 = FALSE;
+                }
+                if (get_viewport_count() != VIEWPORTS_COUNT_1_PLAYER) {
+                    var_t1 = FALSE;
+                }
+                if (obj->behaviorId == BHV_UNK_3F) {
+                    calc_dyn_light_and_env_map_for_object(objModel, obj, 0, D_8011AD30);
+                } else if (var_t1) {
+                    calc_dyn_light_and_env_map_for_object(objModel, obj, -1, D_8011AD30);
+                } else {
+                    func_800245F0(objModel, obj, D_8011AD30);
+                }
+            }
+            if ((obj64 != NULL) && (obj64->racer.playerIndex == PLAYER_COMPUTER) && (obj64->racer.vehicleID < VEHICLE_TRICKY)) {
+                obj68->unk20 = 2;
+            } else {
+                obj68->unk20 = 1;
+            }
+        }
+        obj->unk44 = (Vertex *) obj68->unk4[obj68->unk1F];
+        if (obj->behaviorId == BHV_DOOR) {
+            func_80011264(objModel, obj);
+        }
+        if ((objModel->unk52 != 0) && (objModel->unk50 > 0)) {
+            func_80011134(obj, (s32) objModel->unk52);
+            obj68->objModel->unk52 = 0;
+        }
+        func_80069484(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0.0f);
+        spB0 = 0;
+        if (obj64 != NULL) {
+            objUndoPlayerTumble(obj);
+            if ((obj->segment.unk38.byte.unk3B == 0) || (obj64->racer.vehicleID >= VEHICLE_TRICKY)) {
+                func_80069790(&gObjectCurrDisplayList, &gObjectCurrMatrix, obj68, obj64->racer.headAngle);
+                spB0 = 1;
+            } else {
+                obj64->racer.headAngle = 0;
+            }
+        }
+        alpha = obj->segment.unk38.byte.unk39;
+        if (alpha > 255) {
+            alpha = 255;
+        }
+        // If the behavior is a water zipper, then halve it's transparency.
+        if (obj->behaviorId == BHV_ZIPPER_WATER) {
+            alpha >>= 1;
+        }
+        if (alpha < 255) {
+            hasPrimCol = TRUE;
+        }
+        if (hasEnvCol) {
+            gDPSetEnvColor(gObjectCurrDisplayList++, obj->unk54->unk4, obj->unk54->unk5, obj->unk54->unk6, obj->unk54->unk7);
+        } else {
+            gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
+        }
+        if (obj->segment.header->unk71 != 0) {
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->unk54->unk18, obj->unk54->unk19, obj->unk54->unk1A, alpha);
+            func_8007B43C();
+        } else if (hasPrimCol) {
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
+        } else {
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+        }
+        if (alpha < 255) {
+            var_v0 = func_800143A8(objModel, obj, 0, 4, spB0);
+        } else {
+            var_v0 = func_800143A8(objModel, obj, 0, 0, spB0);
+        }
+        if (obj->segment.header->unk71 != 0) {
+            if (hasPrimCol) {
+                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
+            } else {
+                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+            }
+            func_8007B454();
+        }
+        if (obj->unk60 != NULL) {
+            obj60_unk0 = obj->unk60->unk0;
+            if (obj64 != NULL && (obj64->racer.vehicleID == VEHICLE_FLYING_CAR)) {
+                obj60_unk0 = 0;
+            }
+            for (i = 0; i < obj60_unk0; i++) {
+                //This line right here breaks this function. Loading unk60 as an array is broken.
+                loopObj = obj->unk60[i].unk4;
+                if (!(loopObj->segment.trans.unk6 & 0x4000)) {
+                    index = obj->unk60->unk2C[i];
+                    if ((index >= 0) && (index < objModel->unk18)) {
+                        temp_t4 = (unk80068514_arg4 *) loopObj->unk68[loopObj->segment.unk38.byte.unk3A];
+                        posX = obj->unk44[objModel->unk14[index]].x;
+                        posY = obj->unk44[objModel->unk14[index]].y;
+                        posZ = obj->unk44[objModel->unk14[index]].z;
+                        loopObj->segment.trans.x_position += posX;
+                        loopObj->segment.trans.y_position += posY;
+                        loopObj->segment.trans.z_position += posZ;
+                        if (loopObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
+                            billboardFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
+                        } else {
+                            billboardFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE | RENDER_ANTI_ALIASING);
+                        }
+                        if (alpha < 255) {
+                            billboardFlags |= RENDER_SEMI_TRANSPARENT;
+                        }
+                        cicFailed = FALSE;
+                        //Anti-Piracy check
+                        if (osCicId != CIC_ID) {
+                            cicFailed = TRUE;
+                        }
+                        if (!cicFailed) {
+                            var_v0_2 = (loopObj->segment.trans.unk6 & 0x80) != 0;
+                            if (var_v0_2) {
+                                var_v0_2 = obj60_unk0 == 3;
+                            }
+                            var_t0_2 = var_v0_2;
+                            if ((obj64 != NULL) && (obj64->racer.transparency < 255)) {
+                                var_t0_2 = FALSE;
+                            }
+                            if (var_t0_2) {
+                                func_80012C98(&gObjectCurrDisplayList);
+                                gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
+                                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
+                            }
+                            loopObj->unk78 = render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, loopObj, temp_t4, billboardFlags);
+                            if (var_t0_2) {
+                                gDkrInsertMatrix(gObjectCurrDisplayList++, 0, 0);
+                                func_80012CE8(&gObjectCurrDisplayList);
+                            }
+                        }
+                        loopObj->segment.trans.x_position -= posX;
+                        loopObj->segment.trans.y_position -= posY;
+                        loopObj->segment.trans.z_position -= posZ;
+                    }
+                }
+            }
+        }
+        if (obj64 != NULL) {
+            heldObj = obj64->racer.held_obj;
+            if (heldObj != NULL) {
+                if ((obj->segment.header->unk58 >= 0) && (obj->segment.header->unk58 < objModel->unk18)) {
+                    billboardFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
+                    temp_t4 = (unk80068514_arg4 *) heldObj->unk68[heldObj->segment.unk38.byte.unk3A];
+                    temp_v0_14 = &obj->unk44[objModel->unk14[obj->segment.header->unk58]];
+                    heldObj->segment.trans.x_position += (temp_v0_14->x - heldObj->segment.trans.x_position) * 0.25;
+                    heldObj->segment.trans.y_position += (temp_v0_14->y - heldObj->segment.trans.y_position) * 0.25;
+                    heldObj->segment.trans.z_position += (temp_v0_14->z - heldObj->segment.trans.z_position) * 0.25;
+                    if (heldObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
+                        render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, heldObj,
+                           temp_t4, billboardFlags);
+                    }
+                }
+            }
+        }
+        if (var_v0 != -1) {
+            if (obj->segment.header->unk71 != 0) {
+                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->unk54->unk18, obj->unk54->unk19, obj->unk54->unk1A, alpha);
+                func_8007B43C();
+            }
+            func_800143A8(objModel, obj, var_v0, 4, spB0);
+            if (obj->segment.header->unk71 != 0) {
+                func_8007B454();
+            }
+        }
+        if ((hasPrimCol) || (obj->segment.header->unk71 != 0)) {
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+        }
+        if (hasEnvCol) {
+            gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
+        }
+        func_80069A40(&gObjectCurrDisplayList);
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/render_3d_model.s")
+#endif
 
 void func_80012C30(void) {
     D_8011ADA4 = 0;
@@ -1575,7 +1858,34 @@ void func_80013548(Object *obj) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800135B8.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_800138A8.s")
+
+void func_800138A8(ObjectTransform *trans, unk80068514_arg4 *arg1, Object *obj, s32 flags) {
+    f32 x;
+    f32 y;
+    f32 z;
+    ObjectSegment *cameraSegment;
+    f32 posSq;
+
+    f32_vec3_apply_object_rotation(trans, &obj->segment.trans.x_position);
+    obj->segment.trans.x_position += trans->x_position;
+    obj->segment.trans.y_position += trans->y_position;
+    obj->segment.trans.z_position += trans->z_position;
+    cameraSegment = get_active_camera_segment();
+    x = cameraSegment->trans.x_position - obj->segment.trans.x_position;
+    y = cameraSegment->trans.y_position - obj->segment.trans.y_position;
+    z = cameraSegment->trans.z_position - obj->segment.trans.z_position;
+    posSq = sqrtf((x * x) + (y  * y ) + (z * z));
+    if (posSq > 0.0) {
+        posSq = obj->segment.unk1A / posSq;
+        x *= posSq;
+        y *= posSq;
+        z *= posSq;
+    }
+    obj->segment.trans.x_position += x;
+    obj->segment.trans.y_position += y;
+    obj->segment.trans.z_position += z;
+    render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj, arg1, flags);
+}
 
 /**
  * Get the racer object data, and fetch set visual shield properties based on that racer.
@@ -1737,7 +2047,92 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800143A8.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80014814.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80014B50.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80015348.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_800155B8.s")
+
+void func_800155B8(void) {
+    Object *obj2;
+    Object *obj;
+    ObjectInteraction *objInteract;
+    ObjectInteraction *objInteract2;
+    f32 xDiff;
+    f32 zDiff;
+    f32 var_f12;
+    s32 j;
+    s32 i;
+    s32 objsWithInteractives;
+    Object *objList[257]; //257 seems random, but it works for now.
+
+    objsWithInteractives = 0;
+    for (i = D_8011AE60; i < objCount; i++) {
+        obj = gObjPtrList[i];
+        if (!(obj->segment.trans.unk6 & 0x8000)) {
+            objInteract = obj->interactObj;
+            if (objInteract != NULL) {
+                objList[objsWithInteractives] = obj;
+                objsWithInteractives++;
+                if (objInteract->unk11 != 2) {
+                    objInteract->obj = NULL;
+                    objInteract->unk14 &= ~0x48;
+                    objInteract->distance = 0xFF;
+                }
+            }
+        }
+    }
+    
+    D_8011AE70 = 0;
+
+    for (i = 0; i < objsWithInteractives; i++) {
+        obj = objList[i];
+        objInteract = obj->interactObj;
+        if ((objInteract->unk11 == 2) && (D_8011AE70 < 20)) {
+            D_8011AE6C[D_8011AE70] = obj;
+            D_8011AE70++;
+        }
+        if (objInteract->unk14 & 4) {
+            for (j = 0; j < objsWithInteractives; j++) {
+                if (i != j) {
+                    obj2 = objList[j];
+                    objInteract2 = obj2->interactObj;
+                    if (objInteract2->unk14 & 3) {
+                        if (objInteract2->unk11 == 3) {
+                            func_80016748(obj, obj2);
+                        } else if (objInteract2->unk11 != 2) {
+                            xDiff = obj->segment.trans.x_position - obj2->segment.trans.x_position;
+                            zDiff = obj->segment.trans.z_position - obj2->segment.trans.z_position;
+                            if (objInteract2->unk14 & 0x20) {
+                                var_f12 = 0x400000; //4194304.0f;
+                            } else {
+                                var_f12 = 0x40000; //262144.0f;
+                            }
+                            if (((xDiff * xDiff) + (zDiff * zDiff)) < var_f12) {
+                                func_800159C8(obj, obj2);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (objInteract->unk14 & 0x100) {
+            for (j = 0; j < objsWithInteractives; j++) {
+                if (i != j) {
+                    obj2 = objList[j];
+                    objInteract2 = obj2->interactObj;
+                    if (objInteract2->unk11 == 3) {
+                        func_80016748(obj, obj2);
+                    }
+                }
+            }
+        }
+    }
+
+    for (i = 0; i < objsWithInteractives; i++) {
+        obj = objList[i];
+        objInteract = obj->interactObj;
+        objInteract->x_position = obj->segment.trans.x_position;
+        objInteract->y_position = obj->segment.trans.y_position;
+        objInteract->z_position = obj->segment.trans.z_position;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_800159C8.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016500.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016748.s")
@@ -2162,16 +2557,101 @@ Object *get_racer_object_by_port(s32 index) {
     return gRacersByPort[index];
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001BC54.s")
+void func_8001BC54(void) {
+    Object *objPtr;
+    Object *temp;
+    s32 continueLoop;
+    s32 i;
 
-u32 objGetObject(s32 arg0) {
-    if (arg0 < 0 || arg0 >= D_8011AEE0) {
-        return 0;
+    gCameraObjCount = 0;
+    for (i = 0; i < objCount; i++) {
+        objPtr = gObjPtrList[i];
+        if (!(objPtr->segment.trans.unk6 & 0x8000)) {
+            if (objPtr->behaviorId == BHV_CAMERA_CONTROL) {
+                if (gCameraObjCount < 20) {
+                    (*gCameraObjList)[gCameraObjCount] = objPtr;
+                    gCameraObjCount++;
+                }
+            }
+        }
     }
-    return D_8011AEDC[0][arg0];
+
+    do {
+        continueLoop = TRUE;
+        for (i = 0; i < gCameraObjCount - 1; i++) {
+            objPtr = (*gCameraObjList)[i+1];
+            temp = (*gCameraObjList)[i];
+            if (temp->unk78 > objPtr->unk78) {
+                (*gCameraObjList)[i] = (*gCameraObjList)[i+1];
+                (*gCameraObjList)[i+1] = temp;
+                continueLoop = FALSE;
+            }
+        }
+    } while (!continueLoop);
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001BDD4.s")
+Object *get_camera_object(s32 cameraIndex) {
+    if (cameraIndex < 0 || cameraIndex >= gCameraObjCount) {
+        return NULL;
+    }
+    return (*gCameraObjList)[cameraIndex];
+}
+
+Object *func_8001BDD4(Object *obj, s32 *cameraId) {
+    Object *nextCamera;
+    Object *prevCamera;
+    Object *currCamera;
+    s32 *cameraIndex;
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 prevCameraXYZ;
+    f32 currCameraXYZ;
+    f32 nextCameraXYZ;
+    s32 cameraIndex_Curr;
+    s32 cameraIndex_Prev;
+    s32 cameraIndex_Next;
+    cameraIndex = cameraId;
+    if (gCameraObjCount == 0) {
+        return NULL;
+    }
+    cameraIndex_Next = *cameraIndex + 1;
+    cameraIndex_Curr = *cameraIndex;
+    cameraIndex_Prev = *cameraIndex - 1;
+    if (cameraIndex_Next >= gCameraObjCount) {
+        cameraIndex_Next = 0;
+    }
+    if (cameraIndex_Prev < 0) {
+        cameraIndex_Prev = gCameraObjCount - 1;
+    }
+    currCamera = (*gCameraObjList)[cameraIndex_Curr];
+    nextCamera = (*gCameraObjList)[cameraIndex_Next];
+    prevCamera = (*gCameraObjList)[cameraIndex_Prev];
+    x = currCamera->segment.trans.x_position - obj->segment.trans.x_position;
+    y = currCamera->segment.trans.y_position - obj->segment.trans.y_position;
+    z = currCamera->segment.trans.z_position - obj->segment.trans.z_position;
+    currCameraXYZ = (x * x) + (y * y) + (z * z);
+    x = nextCamera->segment.trans.x_position - obj->segment.trans.x_position;
+    y = nextCamera->segment.trans.y_position - obj->segment.trans.y_position;
+    z = nextCamera->segment.trans.z_position - obj->segment.trans.z_position;
+    nextCameraXYZ = (x * x) + (y * y) + (z * z);
+    x = prevCamera->segment.trans.x_position - obj->segment.trans.x_position;
+    y = prevCamera->segment.trans.y_position - obj->segment.trans.y_position;
+    z = prevCamera->segment.trans.z_position - obj->segment.trans.z_position;
+    prevCameraXYZ = (x * x) + (y * y) + (z * z);
+
+    if (nextCameraXYZ < currCameraXYZ) {
+        *cameraId = cameraIndex_Next;
+        currCamera = nextCamera;
+        currCameraXYZ = nextCameraXYZ;
+    }
+    if (prevCameraXYZ < currCameraXYZ) {
+        *cameraId = cameraIndex_Prev;
+        currCamera = prevCamera;
+    }
+    return currCamera;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8001BF20.s")
 
 s16 func_8001C418(f32 yPos) {
@@ -2339,7 +2819,30 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
 
 GLOBAL_ASM("asm/non_matchings/objects/calc_dynamic_lighting_for_object_1.s")
 GLOBAL_ASM("asm/non_matchings/objects/calc_env_mapping_for_object.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001E13C.s")
+
+UNUSED void func_8001E13C(s16 arg0, s16 *arg1, s16 *arg2, s16 *arg3, s16 *arg4, s16 *arg5, s16 *arg6) {
+    Object *obj;
+    Object_Racer *racer;
+    s32 i;
+
+    for (i = 0; i < objCount; i++) {
+        obj = gObjPtrList[i];
+        if (!(obj->segment.trans.unk6 & 0x8000)) {
+            if (obj->behaviorId == BHV_RACER) {
+                racer = &obj->unk64->racer;
+                if (arg0 == racer->playerIndex) {
+                    *arg1 = obj->segment.trans.x_position;
+                    *arg2 = obj->segment.trans.y_position;
+                    *arg3 = obj->segment.trans.z_position;
+                    *arg4 = obj->segment.trans.z_rotation;
+                    *arg5 = obj->segment.trans.x_rotation;
+                    *arg6 = obj->segment.trans.y_rotation;
+                    i = objCount; //Feels like it should be a break instead.
+                }
+            }
+        }
+    }
+}
 
 /**
  * Returns a pointer to the asset in the misc. section. If index is out of range, then this

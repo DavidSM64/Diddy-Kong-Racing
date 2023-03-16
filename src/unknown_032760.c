@@ -10,7 +10,7 @@
 /************ .data ************/
 
 unk800DC950 **D_800DC950 = NULL;
-unk800DC954 *D_800DC954 = NULL;
+unk800DC950 *D_800DC954 = NULL;
 s32 D_800DC958 = 0;
 s32 D_800DC95C = 0;
 unk800DC960 *D_800DC960 = NULL;
@@ -40,18 +40,18 @@ void func_80031B60(void) {
     D_800DC958 = 0;
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 // Regalloc issues
 void func_80031BB8(s32 count) {
     s32 i;
     func_80031B60();
     D_800DC958 = count;
-    D_800DC950 = allocate_from_main_pool_safe(D_800DC958 * (sizeof(s32 *) + sizeof(unk800DC954) + sizeof(unk800DC960) + sizeof(unk800DC964)), COLOUR_TAG_MAGENTA);
-    D_800DC954 = &D_800DC950[D_800DC958];
-    D_800DC960 = &D_800DC954[D_800DC958];
-    D_800DC964 = &D_800DC960[D_800DC958];
+    D_800DC950 = (unk800DC950 **) allocate_from_main_pool_safe(D_800DC958 * (sizeof(s32 *) + sizeof(unk800DC950) + sizeof(unk800DC960) + sizeof(unk800DC964)), COLOUR_TAG_MAGENTA);
+    D_800DC954 = (unk800DC950 *) &D_800DC950[D_800DC958];
+    D_800DC960 = (unk800DC960 *) &D_800DC954[D_800DC958];
+    D_800DC964 = (unk800DC964 *) &D_800DC960[D_800DC958];
     for (i = 0; i < D_800DC958; i++) {
-        D_800DC950[i] = &D_800DC954[i].unk0;
+        D_800DC950[i] = &D_800DC954[i];
     }
 }
 #else

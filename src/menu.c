@@ -4094,7 +4094,7 @@ void render_magic_codes_ui(s32 arg0) {
         }
         render_dialogue_box(&sMenuCurrDisplayList, 0, 0, 6);
     }
-    if ((get_filtered_cheats() << 3) < 0) {
+    if (get_filtered_cheats() & CHEAT_ROM_CHECKSUM) {
         calculate_and_display_rom_checksum();
     }
 }

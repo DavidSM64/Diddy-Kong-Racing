@@ -487,26 +487,29 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C15D4.s")
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1EE8.s")
 
 #ifdef NON_EQUIVALENT
-void render_fade_circle(Gfx **dList, MatrixS **mats, Vertex **verts) {
-    u8 *addr, *addr2;
+#define NUM_OF_VERTS 18
+#define NUM_OF_TRIS 16
+void render_fade_circle(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+    Vertex *vertsToRender;
+    Triangle *trisToRender;
     reset_render_settings(dList);
+    vertsToRender = (Vertex *) sTransitionVtx[sTransitionTaskNum[0]];
+    trisToRender = (Triangle *) sTransitionTris[sTransitionTaskNum[0]];
     gSPDisplayList((*dList)++, dTransitionShapeSettings);
-    addr = OS_PHYSICAL_TO_K0(sTransitionVtx[sTransitionTaskNum[0]]);
-    addr2 = OS_PHYSICAL_TO_K0(sTransitionTris[sTransitionTaskNum[0]]);
-    gSPVertexDKR((*dList)++, addr, 18, 0);
-    gSPPolygon((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
-    addr += 0xB4;
-    addr2 += 0x100;
-    gSPVertexDKR((*dList)++, addr, 18, 0);
-    gSPPolygon((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
-    addr += 0xB4;
-    addr2 += 0x100;
-    gSPVertexDKR((*dList)++, addr, 18, 0);
-    gSPPolygon((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
-    addr += 0xB4;
-    addr2 += 0x100;
-    gSPVertexDKR((*dList)++, addr, 18, 0);
-    gSPPolygon((*dList)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
+    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(vertsToRender), NUM_OF_VERTS, 0);
+    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
+    vertsToRender += NUM_OF_VERTS;
+    trisToRender += NUM_OF_TRIS;
+    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(vertsToRender), NUM_OF_VERTS, 0);
+    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
+    vertsToRender += NUM_OF_VERTS;
+    trisToRender += NUM_OF_TRIS;
+    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(vertsToRender), NUM_OF_VERTS, 0);
+    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
+    vertsToRender += NUM_OF_VERTS;
+    trisToRender += NUM_OF_TRIS;
+    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(vertsToRender), NUM_OF_VERTS, 0);
+    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
     reset_render_settings(dList);
 }
 #else
