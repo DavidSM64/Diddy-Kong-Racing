@@ -570,7 +570,8 @@ typedef struct LevelModelSegment {
 /* 0x32 */ s16 unk32;
            s16 *unk34;
 /* 0x38 */ s16 unk38;
-           u8 pad3A[6];
+           u8 pad3A[2];
+/* 0x3C */ s32 unk3C;
 /* 0x40 */ u8 numberofOpaqueBatches;
            u8 pad41[0x3];
 } LevelModelSegment;
@@ -654,7 +655,10 @@ typedef struct ObjectHeader {
   /* 0x32 */ s16 unk36;
              u8 pad38[5];
   /* 0x3D */ u8 unk3D;
-             u8 pad3E[12];
+             u8 pad3E[4];
+  /* 0x42 */ s16 unk42;
+  /* 0x44 */ s16 unk44;
+             u8 pad46[4];
   /* 0x4A */ s16 unk4A;
   /* 0x4C */ s16 unk4C;
   /* 0x4E */ s16 drawDistance;
