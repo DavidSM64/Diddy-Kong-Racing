@@ -475,6 +475,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_LEVEL][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_OBJGFX][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_DECAL][perfIteration]);
+    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_SHADOW][perfIteration]);
     profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_VOID][perfIteration]);
 #endif
 }
@@ -1779,8 +1780,8 @@ void render_floor_decal(Object *obj, Object_50 *arg1) {
         }
     }
 #ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_DECAL], osGetCount() - first);
-    profiler_offset(gPuppyTimers.timers[PP_DECAL], first3);
+    profiler_add(gPuppyTimers.timers[PP_SHADOW], osGetCount() - first);
+    profiler_offset(gPuppyTimers.timers[PP_SHADOW], first3);
 #endif
 }
 

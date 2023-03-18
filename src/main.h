@@ -56,6 +56,7 @@ enum TrackTimers {
     PP_OBJGFX,
     PP_VOID,
     PP_SEGMENTS,
+    PP_SHADOW,
 
     PP_THREAD0,
     PP_THREAD30,
