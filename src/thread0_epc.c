@@ -81,6 +81,7 @@ void thread0_Assert(UNUSED char *message, UNUSED char *fileName, UNUSED s32 line
 
 /**
  * Start the exception program counter thread.
+ * Official Name: diCpuTraceInit
 */
 void thread0_create(void) {
     s32 i;
@@ -93,26 +94,23 @@ void thread0_create(void) {
 }
 
 
-#ifdef NON_EQUIVALENT
 void thread0_Main(UNUSED void *unused) { // Has regalloc issues
     s32 sp34;
     s32 s0 = 0;
 
     osCreateMesgQueue(&D_80129790, &D_801297A8, 8);
-    osSetEventMesg(12, &D_80129790, 8);
-    osSetEventMesg(10, &D_80129790, 2);
+    osSetEventMesg(OS_EVENT_FAULT, &D_80129790, 8);
+    osSetEventMesg(OS_EVENT_CPU_BREAK, &D_80129790, 2);
     osCreatePiManager(150, &D_801297E8, &D_801297C8, 8);
 
     while (1) {
-        while (1) {
-            osRecvMesg(&D_80129790, &sp34, OS_MESG_BLOCK);
-            if (!(get_filtered_cheats() & CHEAT_EPC_LOCK_UP_DISPLAY)) {
-                continue;
-            }
-            s0 |= sp34;
-            if ((s0 & 8) || (s0 & 2)) {
-                break;
-            }
+        osRecvMesg(&D_80129790, &sp34, OS_MESG_BLOCK);
+        if (!(get_filtered_cheats() & CHEAT_EPC_LOCK_UP_DISPLAY)) {
+            continue;
+        }
+        s0 |= sp34;
+        if ((s0 & 8) == 0 && (s0 & 2) == 0) {
+            continue;
         }
         s0 &= ~8;
         func_800B70D0();
@@ -120,9 +118,6 @@ void thread0_Main(UNUSED void *unused) { // Has regalloc issues
         func_800B71B0();
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/thread0_epc/thread0_Main.s")
-#endif
 
 void func_800B70D0(void) {
     OSThread *node = __osGetActiveQueue();

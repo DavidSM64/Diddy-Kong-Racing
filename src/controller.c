@@ -217,12 +217,12 @@ s8 clamp_joystick(s8 stickMag) {
         return 0;
     }
     if (stickMag > 0) {
-        stickMag -= 8;
+        stickMag -= JOYSTICK_DEADZONE;
         if (stickMag > JOYSTICK_MAX_RANGE) {
             stickMag = JOYSTICK_MAX_RANGE;
         }
     } else {
-        stickMag += 8;
+        stickMag += JOYSTICK_DEADZONE;
         if (stickMag < -JOYSTICK_MAX_RANGE) {
             stickMag = -JOYSTICK_MAX_RANGE;
         }

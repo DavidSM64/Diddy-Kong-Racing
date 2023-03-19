@@ -129,6 +129,10 @@ GLOBAL_ASM("asm/non_matchings/printf/func_800B45C4.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B461C.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B4668.s")
 GLOBAL_ASM("asm/non_matchings/printf/func_800B46BC.s")
+
+// End of other file?
+// start of printf?
+
 GLOBAL_ASM("asm/non_matchings/printf/_itoa.s")
 
 void func_800B4A08(s32 arg0) {

@@ -33,7 +33,6 @@ void main(void) {
  * Initialise the crash handler thread, then initialise the main game thread.
  * Reset the start and endpoint of the game thread stack, then set thread priority to zero, effectively
  * stopping this thread, as it's no longer needed.
- * Official name: main
 */
 void thread1_main(UNUSED void *unused) {
     thread0_create();
@@ -41,7 +40,7 @@ void thread1_main(UNUSED void *unused) {
     gThread3Stack[0x400] = 0;
     gThread3Stack[0] = 0;
     osStartThread(&gThread3);
-    osSetThreadPri(NULL, 0);
+    osSetThreadPri(NULL, OS_PRIORITY_IDLE);
     while (1) {}
 }
 
