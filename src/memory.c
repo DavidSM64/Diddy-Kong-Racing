@@ -49,11 +49,14 @@ extern MemoryPoolSlot gMainMemoryPool;
  * Starts at 0x8012D3F0. Ends at 0x80400000. Contains 1600 allocation slots.
  */
 void init_main_memory_pool(void) {
+    s32 ramEnd;
     gNumberOfMemoryPools = -1;
-    if (1) {
-        // Create the main memory pool.
-        new_memory_pool(&gMainMemoryPool, RAM_END - (s32)(&gMainMemoryPool), MAIN_POOL_SLOT_COUNT);
+    if (FALSE) {
+        ramEnd = EXTENDED_RAM_END; //Value from JFG, not required to match
+    } else {
+        ramEnd = RAM_END;
     }
+    new_memory_pool(&gMainMemoryPool, ramEnd - (s32)(&gMainMemoryPool), MAIN_POOL_SLOT_COUNT);
     set_free_queue_state(2);
     gFreeQueueCount = 0;
 }
@@ -83,34 +86,33 @@ MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots) {
 MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlots) {
     MemoryPoolSlot *firstSlot;
     s32 poolCount;
-    MemoryPool *pool;
     s32 i;
+	s32 firstSlotSize;
     
-    poolCount = ++gNumberOfMemoryPools; \
+    poolCount = ++gNumberOfMemoryPools;
+	firstSlotSize = poolSize - (numSlots * sizeof(MemoryPoolSlot));
     gMemoryPools[poolCount].maxNumSlots = numSlots;
     gMemoryPools[poolCount].curNumSlots = 0;
     gMemoryPools[poolCount].slots = slots;
     gMemoryPools[poolCount].size = poolSize;
-    pool = &gMemoryPools[poolCount++];
     firstSlot = slots;
-    if(0){} if (!pool->maxNumSlots){} // Fakematch
-    for (i = 0; i < pool->maxNumSlots; i++) {
+    for (i = 0; i < gMemoryPools[poolCount].maxNumSlots; i++) {
         firstSlot->index = i;
         firstSlot++;
     }
-    firstSlot = &pool->slots[0];
+    firstSlot = &gMemoryPools[poolCount].slots[0];
     slots += numSlots;
     if ((s32) slots & 0xF) {
         firstSlot->data = (u8 *) _ALIGN16(slots);
     } else {
         firstSlot->data = (u8 *) slots;
     }
-    firstSlot->size = poolSize - (numSlots * sizeof(MemoryPoolSlot));
+    firstSlot->size = firstSlotSize;
     firstSlot->flags = 0;
     firstSlot->prevIndex = -1;
     firstSlot->nextIndex = -1;
-    pool->curNumSlots++;
-    return pool->slots;
+    gMemoryPools[poolCount].curNumSlots++;
+    return gMemoryPools[poolCount].slots;
 }
 
 /**
@@ -245,7 +247,8 @@ void set_free_queue_state(s32 state) {
 
 /**
  * Unallocates data from the pool that contains the data. Will free immediately if the free queue
- * state is set to 0, otherwise the data will just be marked for deletion.  
+ * state is set to 0, otherwise the data will just be marked for deletion.
+ * Official Name: mmFree
  */
 void free_from_memory_pool(void *data) {
     s32 *flags = clear_status_register_flags();

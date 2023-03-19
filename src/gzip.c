@@ -7,7 +7,7 @@
 
 /************ .data ************/
 
-huft *D_800E3760 = NULL;
+huft *D_800E3760 = NULL; //gzip_huft_alloc
 s32 *gAssetAddress = NULL;
 u8 *gzip_inflate_input = NULL;
 u8 *gzip_inflate_output = NULL;
@@ -18,7 +18,7 @@ u8 *gzip_inflate_output = NULL;
 
 u32 gzip_bit_buffer;
 u32 gzip_num_bits;
-s32 D_8012AAD8;
+s32 D_8012AAD8; //gzip_hufts
 
 /******************************/
 
