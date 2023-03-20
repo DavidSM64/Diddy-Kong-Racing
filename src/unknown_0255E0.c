@@ -802,8 +802,8 @@ void render_level_geometry_and_objects(void) {
             if (obj->segment.trans.unk6 & 0x8000) {
                 func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
-            } else if (obj->unk50 != NULL) {
-                render_floor_decal(obj, obj->unk50);
+            } else if (obj->shadow != NULL) {
+                render_object_shadow(obj, obj->shadow);
             }
             func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
             if (obj->unk58 != NULL && obj->segment.header->unk30 & 0x10) {
@@ -824,8 +824,8 @@ void render_level_geometry_and_objects(void) {
             if (obj->segment.trans.unk6 & 0x8000) {
                 func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
-            } else if (obj->unk50 != NULL) {
-                render_floor_decal(obj, obj->unk50);
+            } else if (obj->shadow != NULL) {
+                render_object_shadow(obj, obj->shadow);
             }
             func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
             if ((obj->unk58 != NULL) && (obj->segment.header->unk30 & 0x10)) {
@@ -869,8 +869,8 @@ void render_level_geometry_and_objects(void) {
                 if (obj->segment.trans.unk6 & 0x8000) {
                     func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                     goto skip;
-                } else if (obj->unk50 != NULL) {
-                    render_floor_decal(obj, obj->unk50);
+                } else if (obj->shadow != NULL) {
+                    render_object_shadow(obj, obj->shadow);
                 }
                 func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 if ((obj->unk58 != 0) && (obj->segment.header->unk30 & 0x10)) {
@@ -1715,9 +1715,10 @@ void trackMakeAbsolute(unk8002D30C_a0 *arg0, s32 arg1) {
 }
 
 /**
- * Render a flat model that projects itself on the floor.
+ * Render the shadow of an object on the ground as a decal.
+ * Can subdivide itself to wrap around the terrain properly, as the N64 lacks stencil buffering.
  */
-void render_floor_decal(Object *obj, Object_50 *arg1) {
+void render_object_shadow(Object *obj, ShadowData *shadow) {
     s32 i;
     s32 temp_a0;
     s32 temp_a3;
@@ -1736,25 +1737,25 @@ void render_floor_decal(Object *obj, Object_50 *arg1) {
 #endif
     
     if (obj->segment.header->unk32 != 0) {
-        if (arg1->unk8 != -1 && D_8011B0C4 == 0) {
+        if (shadow->unk8 != -1 && D_8011B0C4 == 0) {
             D_8011B0CC = D_8011B0C8;
             if (obj->segment.header->unk32 == 1) {
                 D_8011B0CC += 2;
             }
-            i = arg1->unk8;
+            i = shadow->unk8;
             D_8011D360 = (unk8011D360 *) D_8011D350[D_8011B0CC];
             D_8011D330 = (unk8011D330 *) D_8011D320[D_8011B0CC];
             D_8011D348 = (unk8011D348 *) D_8011D338[D_8011B0CC];
             someAlpha = D_8011D348[D_8011D360[i].unk6].unk9;
             flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
             if (someAlpha == 0 || obj->segment.unk38.byte.unk39 == 0) {
-                i = arg1->unkA;
+                i = shadow->unkA;
             } else if (someAlpha != 255 || obj->segment.unk38.byte.unk39 != 255) {
                 flags = RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE;
                 someAlpha = (obj->segment.unk38.byte.unk39 * someAlpha) >> 8;
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, someAlpha);
             }
-            while (i < arg1->unkA) {
+            while (i < shadow->unkA) {
 #ifdef PUPPYPRINT_DEBUG
     first2 = osGetCount();
 #endif
@@ -1785,7 +1786,7 @@ void render_floor_decal(Object *obj, Object_50 *arg1) {
 #endif
 }
 
-void func_8002D670(Object *obj, Object_50 *arg1) {
+void func_8002D670(Object *obj, ShadowData *shadow) {
     s32 i;
     s32 temp_a0;
     s32 temp_a3;
@@ -1801,21 +1802,21 @@ void func_8002D670(Object *obj, Object_50 *arg1) {
 #endif
 
     if (obj->segment.header->unk36 != 0) {
-        if ((arg1->unk8 != -1) && (D_8011B0C4 == 0)) {
+        if ((shadow->unk8 != -1) && (D_8011B0C4 == 0)) {
             D_8011B0D0 = D_8011B0C8;
-            i = arg1->unk8;
+            i = shadow->unk8;
             if (obj->segment.header->unk36 == 1) {
                 D_8011B0D0 = D_8011B0C8;
                 D_8011B0D0 += 2;
                 if (get_distance_to_active_camera(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position) > 768.0f * 768.0f) {
-                    i = arg1->unkA;
+                    i = shadow->unkA;
                 }
             }
             flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
             D_8011D360 = (unk8011D360* ) D_8011D350[D_8011B0D0];
             D_8011D330 = (unk8011D330* ) D_8011D320[D_8011B0D0];
             D_8011D348 = (unk8011D348* ) D_8011D338[D_8011B0D0];
-            while (i < arg1->unkA) {
+            while (i < shadow->unkA) {
 #ifdef PUPPYPRINT_DEBUG
     first2 = osGetCount();
 #endif
@@ -1846,14 +1847,14 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
     s32 sp90;
     Object *obj;
     ObjectHeader *objHeader;
-    f32 var_f20;
-    s32 temp_v1_2;
-    s32 temp_v1_3;
+    f32 dist;
+    s32 radius;
+    s32 radius2;
     s32 numViewports;
     Object **objects;
     s32 var_a0;
     Object_58_4* obj58_4;
-    Object_50 *obj50;
+    ShadowData *shadow;
     Object_58* obj58;
     s32 playerIndex;
 
@@ -1873,23 +1874,23 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
         obj = objects[sp94];
         objHeader = obj->segment.header;
         obj58 = obj->unk58;
-        obj50 = obj->unk50;
+        shadow = obj->shadow;
         sp94 += 1;
         if (!(obj->segment.trans.unk6 & 0x8000)) {
-            if (obj50 != NULL && obj50->unk0 > 0.0f && arg0 == objHeader->unk32) {
-                obj50->unk8 = -1;
+            if (shadow != NULL && shadow->scale > 0.0f && arg0 == objHeader->unk32) {
+                shadow->unk8 = -1;
             } 
             if (obj->segment.trans.unk6 & 0x4000) {
-                obj50 = NULL;
+                shadow = NULL;
             }
-            if ((obj50 != NULL && objHeader->unk32 == 2) || (obj58 != NULL && objHeader->unk36 == 2)) {
-                var_f20 = get_distance_to_active_camera(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+            if ((shadow != NULL && objHeader->unk32 == 2) || (obj58 != NULL && objHeader->unk36 == 2)) {
+                dist = get_distance_to_active_camera(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
             } else {
-                var_f20 = 0;
+                dist = 0;
             }
-            if (obj50 != NULL && obj50->unk0 > 0.0f && arg0 == objHeader->unk32) {
+            if (shadow != NULL && shadow->scale > 0.0f && arg0 == objHeader->unk32) {
                 D_8011D0D4 = 1.0f;
-                obj50->unk8 = -1;
+                shadow->unk8 = -1;
                 var_a0 = FALSE;
                 if (objHeader->unk32 == 2 && numViewports > ONE_PLAYER && numViewports <= FOUR_PLAYERS) {
                     if (obj->behaviorId == BHV_RACER) {
@@ -1903,11 +1904,11 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
                         var_a0 = TRUE;
                     }
                 } else {
-                    temp_v1_2 = objHeader->unk4A * objHeader->unk4A;
-                    temp_v1_3 = objHeader->unk4C * objHeader->unk4C;
-                    if (var_f20 < temp_v1_2) {
-                        if (temp_v1_3 < var_f20) {
-                            D_8011D0D4 = (temp_v1_2 - var_f20) / ( temp_v1_2 - temp_v1_3);
+                    radius = objHeader->unk4A * objHeader->unk4A;
+                    radius2 = objHeader->unk4C * objHeader->unk4C;
+                    if (dist < radius) {
+                        if (radius2 < dist) {
+                            D_8011D0D4 = (radius - dist) / ( radius - radius2);
                         }
                         func_8002E234(obj, FALSE);
                         var_a0 = TRUE;
@@ -1938,11 +1939,11 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
                         func_8002E234(obj, TRUE);
                     }
                 } else {
-                    temp_v1_2 = objHeader->unk4A * objHeader->unk4A;
-                    temp_v1_3 = objHeader->unk4C * objHeader->unk4C;
-                    if (var_f20 < temp_v1_2) {
-                        if (temp_v1_3 < var_f20) {
-                            D_8011D0D4 = (temp_v1_2 - var_f20) / (temp_v1_2 - temp_v1_3);
+                    radius = objHeader->unk4A * objHeader->unk4A;
+                    radius2 = objHeader->unk4C * objHeader->unk4C;
+                    if (dist < radius) {
+                        if (radius2 < dist) {
+                            D_8011D0D4 = (radius - dist) / (radius - radius2);
                         }
                         func_8002E234(obj, TRUE);
                     }

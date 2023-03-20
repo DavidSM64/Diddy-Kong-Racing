@@ -25,7 +25,7 @@ enum TriangleBatchFlags {
     BATCH_FLAGS_UNK00000800 = (1 << 11),
     BATCH_FLAGS_UNK00001000 = (1 << 12),
     BATCH_FLAGS_UNK00002000 = (1 << 13),
-    BATCH_FLAGS_UNK00004000 = (1 << 14),
+    BATCH_FLAGS_FORCE_NO_SHADOWS = (1 << 14),
     BATCH_FLAGS_ENVMAP = (1 << 15),
     BATCH_FLAGS_TEXTURE_ANIM = (1 << 16),
     BATCH_FLAGS_UNK00020000 = (1 << 17),
@@ -147,8 +147,8 @@ s32 check_if_inside_segment(Object *obj, s32 segmentIndex);
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos);
 void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, s32 *segmentsOrderIndex);
 void render_level_geometry_and_objects(void);
-void func_8002D670(Object *obj, Object_50 *arg1);
-void render_floor_decal(Object *obj, Object_50 *arg1);
+void func_8002D670(Object *obj, ShadowData *shadow);
+void render_object_shadow(Object *obj, ShadowData *shadow);
 s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb);
 s32 check_if_in_draw_range(Object *obj);
 void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbox, s32 arg2);

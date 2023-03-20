@@ -719,12 +719,12 @@ typedef struct ObjectInteraction {
     s8 unk17;
 } ObjectInteraction;
 
-typedef struct Object_50 {
-    f32 unk0;
-    u8 pad4[0x4];
+typedef struct ShadowData {
+    f32 scale;
+    TextureHeader *texture;
     s16 unk8;
     s16 unkA;
-} Object_50;
+} ShadowData;
 
 typedef struct Object_54 {
     f32 unk0;
@@ -1728,7 +1728,7 @@ typedef struct Object {
   /* 0x004C */ f32 unk4C_f32;
   };
   union {
-  /* 0x0050 */ Object_50 *unk50; //player + 0x2F4
+  /* 0x0050 */ ShadowData *shadow; //player + 0x2F4
   /* 0x0050 */ f32 unk50_f32;
   };
   union {

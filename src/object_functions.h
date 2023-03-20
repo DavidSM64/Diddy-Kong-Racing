@@ -217,10 +217,6 @@ typedef struct unk80042CD0 {
     s16 unk18;
 } unk80042CD0;
 
-typedef struct Object_50_Scenery {
-    f32 unk0;
-} Object_50_Scenery;
-
 //void func_80072348(s16 obj, u8 arg1);
 
 typedef struct unk80041A90_MidiFade {

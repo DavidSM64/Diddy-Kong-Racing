@@ -830,25 +830,27 @@ s32 func_8000FAC4(Object *obj, Object_6C *arg1) {
     return ((obj->segment.header->unk57 << 5) + 3) & ~3;
 }
 
-s32 func_8000FBCC(Object *arg0, Object_60 *arg1) {
-    s32 var_v0;
+/**
+ * Assigns shadow data to an object. Loads and assigns the shadow texture, too.
+ * Returns zero if the texture is missing.
+*/
+s32 init_object_shadow(Object *obj, ShadowData *shadow) {
     ObjectHeader *objHeader;
 
-    arg0->unk50 = (Object_50*) arg1;
-    arg1->unk4 = NULL;
-    objHeader = ((ObjectSegment*) arg0)->header;
+    obj->shadow = shadow;
+    shadow->texture = NULL;
+    objHeader = ((ObjectSegment *) obj)->header;
     if (objHeader->unk32) {
-        arg1->unk4 = (Object *) load_texture((s32) ((ObjectHeader *) objHeader)->unk34);
-        objHeader = ((ObjectSegment*)arg0)->header;
+        shadow->texture = (TextureHeader *) load_texture((s32) ((ObjectHeader *) objHeader)->unk34);
+        objHeader = ((ObjectSegment *) obj)->header;
     }
-    ((Object_50*) arg1)->unk0 = (f32) objHeader->unk4;
-    ((Object_50*) arg1)->unk8 = -1;
-    D_8011AE50 = (s32) ((Object_60*)arg1)->unk4;
-    var_v0 = 16;
-    if ((((ObjectSegment*) arg0)->header->unk32) && (arg1->unk4 == NULL)) {
+    shadow->scale = (f32) objHeader->unk4;
+    shadow->unk8 = -1;
+    D_8011AE50 = (s32) shadow->texture;
+    if (((ObjectSegment *) obj)->header->unk32 && shadow->texture == NULL) {
         return 0;
     }
-    return var_v0;
+    return 16;
 }
 
 s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1) {
@@ -939,7 +941,7 @@ void func_80010994(s32 updateRate) {
     Object *obj;
     s32 sp54;
     Object_68 *obj68;
-    Object_64 *obj64;
+    UNUSED Object_64 *obj64;
 #ifdef PUPPYPRINT_DEBUG
     u32 first;
 #endif
