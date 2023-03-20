@@ -139,7 +139,7 @@ void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
     }
     phi_f0 /= 64;
     obj->segment.trans.scale = obj->segment.header->scale * phi_f0;
-    ((Object_50_Scenery *)obj->unk50)->unk0 = obj->segment.header->unk4 * phi_f0;
+    obj->shadow->scale = obj->segment.header->unk4 * phi_f0;
     obj->segment.unk38.byte.unk3A = entry->unk8;
     obj->segment.trans.y_rotation = entry->unkA << 6 << 4;
     if (entry->unkB) {
@@ -895,7 +895,7 @@ void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
-void obj_init_groundzipper(Object *arg0, LevelObjectEntry_GroundZipper *entry) {
+void obj_init_groundzipper(Object *obj, LevelObjectEntry_GroundZipper *entry) {
     ObjectHeader *header;
     f32 objScale;
 
@@ -904,28 +904,28 @@ void obj_init_groundzipper(Object *arg0, LevelObjectEntry_GroundZipper *entry) {
         objScale = 10.0f;
     }
     objScale /= 64;
-    header = arg0->segment.header;
-    arg0->segment.trans.scale = header->scale * objScale;
-    arg0->unk50->unk0 = header->unk4 * objScale;
-    arg0->segment.trans.y_rotation = entry->rotation << 6 << 4;
-    if (arg0->segment.unk38.byte.unk3A >= arg0->segment.header->numberOfModelIds) {
-        arg0->segment.unk38.byte.unk3A = 0;
+    header = obj->segment.header;
+    obj->segment.trans.scale = header->scale * objScale;
+    obj->shadow->scale = header->unk4 * objScale;
+    obj->segment.trans.y_rotation = entry->rotation << 6 << 4;
+    if (obj->segment.unk38.byte.unk3A >= obj->segment.header->numberOfModelIds) {
+        obj->segment.unk38.byte.unk3A = 0;
     }
-    arg0->unk78 = (s32)(28.0f * objScale) + 15;
-    if (arg0->unk78 < 0) {
-        arg0->unk78 = 0;
+    obj->unk78 = (s32) (28.0f * objScale) + 15;
+    if (obj->unk78 < 0) {
+        obj->unk78 = 0;
     }
-    if (arg0->unk78 > 255) {
-        arg0->unk78 = 255;
+    if (obj->unk78 > 255) {
+        obj->unk78 = 255;
     }
-    arg0->interactObj->unk14 = 2;
-    arg0->interactObj->unk11 = 0;
-    arg0->interactObj->unk10 = 0x14;
-    arg0->interactObj->unk12 = 0;
-    arg0->interactObj->unk16 = -0x64;
-    arg0->interactObj->unk17 = 0x64;
+    obj->interactObj->unk14 = 2;
+    obj->interactObj->unk11 = 0;
+    obj->interactObj->unk10 = 0x14;
+    obj->interactObj->unk12 = 0;
+    obj->interactObj->unk16 = -0x64;
+    obj->interactObj->unk17 = 0x64;
     if (get_filtered_cheats() & CHEAT_TURN_OFF_ZIPPERS) {
-        gParticlePtrList_addObject(arg0);
+        gParticlePtrList_addObject(obj);
     }
 }
 
