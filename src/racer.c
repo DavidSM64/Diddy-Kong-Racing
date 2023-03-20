@@ -4585,7 +4585,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                             break;
                             case WEAPON_OIL_SLICK:
                             if (racer->vehicleID != VEHICLE_PLANE) {
-                                spawnedObj->unk50->unk0 = 0;
+                                spawnedObj->shadow->scale = 0;
                             }
                             soundID = SOUND_SPLOINK2;
                             break;
