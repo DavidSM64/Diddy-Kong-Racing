@@ -52,6 +52,6 @@ void print_debug_strings(Gfx **dList);
 void set_render_printf_position(u16 x, u16 y);
 
 s32 render_printf(const char *format, ...); // Non Matching
-s32 func_800B653C(Gfx**, s8*);
+s32 func_800B653C(Gfx**, char*);
 
 #endif
