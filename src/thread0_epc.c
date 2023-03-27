@@ -94,7 +94,7 @@ void thread0_create(void) {
 }
 
 
-void thread0_Main(UNUSED void *unused) { // Has regalloc issues
+void thread0_Main(UNUSED void *unused) {
     s32 sp34;
     s32 s0 = 0;
 
