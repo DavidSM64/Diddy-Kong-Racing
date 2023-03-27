@@ -7,6 +7,9 @@
 #include "macros.h"
 #include <PR/gu.h>
 
+typedef struct TexFontCoords {
+    u8 u, v;
+} TexFontCoords;
 
 #define RENDER_PRINTF_CMD_ARG_BYTE(val) *gDebugPrintBufferEnd = val; gDebugPrintBufferEnd++;
 #define RENDER_PRINTF_CMD_ARG_SHORT(val) RENDER_PRINTF_CMD_ARG_BYTE(val) RENDER_PRINTF_CMD_ARG_BYTE(val >> 8)
@@ -47,7 +50,7 @@ void diPrintfInit(void);
 void set_render_printf_colour(u8 red, u8 green, u8 blue, u8 alpha);
 void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha);
 void func_800B695C(Gfx** dList, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
-s32 func_800B69FC(Gfx **dList, s32 arg1);
+s32 func_800B69FC(Gfx **dList, s32 asciiVal);
 void print_debug_strings(Gfx **dList);
 void set_render_printf_position(u16 x, u16 y);
 
