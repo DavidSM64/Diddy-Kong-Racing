@@ -16,7 +16,6 @@
 #include "game.h"
 #include "racer.h"
 #include "particles.h"
-#include "unknown_0B3D40.h"
 #include "unknown_0255E0.h"
 #include "math_util.h"
 #include "camera.h"
