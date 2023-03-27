@@ -1083,6 +1083,7 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B380.s")
 /**
  * Resets all render settings to the default state.
  * The next draw call will be forced to apply all settings instead of skipping unecessary steps.
+ * Official Name: texDPInit
 */
 void reset_render_settings(Gfx **dlist) {
     D_8012637C = NULL;

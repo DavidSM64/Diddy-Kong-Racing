@@ -178,6 +178,7 @@ OSMesgQueue *osScInterruptQ;
 /**
  * Prepare the gfx task for the F3DDKR XBus microcode.
  * Sends a message to the scheduler to start processing an RSP task once set up.
+ * Official Name: rcpFast3d
  */
 s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
     DKR_OSTask *dkrtask;
