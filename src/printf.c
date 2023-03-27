@@ -276,45 +276,43 @@ void set_render_printf_position(u16 x, u16 y) {
 }
 
 #ifdef NON_EQUIVALENT
-s32 func_800B63F4(char *format, ...) {
-    char *s;
-    char ch;
-    s32 ret;
-    u8 *temp_v0_22;
+s32 func_800B63F4(const char *format, ...) {
+    s32 fontCharU;
+    s32 i;
+    s32 stringLength;
+    char s[255];
     va_list args;
     va_start(args, format);
 
-    ret = 0;
+    stringLength = 0;
     func_800B4A08(1);
     sprintf(&s, format, args);
     func_800B4A08(0);
-    while (*s != 0) {
-        ch = *s;
-        if (ch != '\n') {
-            if (ch == ' ') {
-                ret += 6;
+    for (i = 0; s[i] != '\0'; i++) {
+        if (s[i] != '\n') {
+            if (s[i] == ' ') {
+                stringLength += 6;
             } else {
-                if (ch < 0x40) {
-                    //Character is a symbol and not a letter
+                if (s[i] < 0x40) {
+                    //Character is a symbol or number and not a letter
                     gDebugFontTexture = 0;
-                    *s -= 0x21;
-                } else if (ch < 0x60) {
+                    s[i] -= 0x21;
+                } else if (s[i] < 0x60) {
                     //Character is a upper case letter
                     gDebugFontTexture = 1;
-                    *s -= 0x40;
-                } else if (ch < 0x80) {
+                    s[i] -= 0x40;
+                } else if (s[i] < 0x80) {
                     //Character is a lower case letter
                     gDebugFontTexture = 2;
-                    *s -= 0x60;
+                    s[i] -= 0x60;
                 }
-                temp_v0_22 = &gDebugFontCoords[gDebugFontTexture][*s * 2];
-                ret = ((ret + temp_v0_22[1]) - temp_v0_22[0]) + 1;
+                fontCharU = gDebugFontCoords[gDebugFontTexture][s[i]].u;
+                stringLength = ((stringLength + gDebugFontCoords[gDebugFontTexture][s[i]].v) - fontCharU) + 1;
             }
         }
-        s++;
     }
     va_end(args);
-    return ret;
+    return stringLength;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/printf/func_800B63F4.s")
