@@ -275,48 +275,51 @@ void set_render_printf_position(u16 x, u16 y) {
     RENDER_PRINTF_CMD_SET_POSITION(x, y)
 }
 
-#ifdef NON_EQUIVALENT
-s32 func_800B63F4(const char *format, ...) {
+/**
+ * Definitely has some fakematch shenanigans.
+ * This will return the length in pixels of a given string.
+*/
+UNUSED s32 func_800B63F4(const char *format, ...) {
+    s32 pad;
     s32 fontCharU;
-    s32 i;
     s32 stringLength;
     char s[255];
+    char *ch;
     va_list args;
     va_start(args, format);
 
     stringLength = 0;
     func_800B4A08(1);
-    sprintf(&s, format, args);
+    sprintf(s, format, args);
     func_800B4A08(0);
-    for (i = 0; s[i] != '\0'; i++) {
-        if (s[i] != '\n') {
-            if (s[i] == ' ') {
+    for (ch = &s[0]; *ch != '\0'; ch++) {
+        pad = *ch;
+        if (*ch != (0, '\n')) {
+            if (pad == ' ') {
                 stringLength += 6;
+                if (1){ }
             } else {
-                if (s[i] < 0x40) {
+                if (*ch < 0x40) {
                     //Character is a symbol or number and not a letter
                     gDebugFontTexture = 0;
-                    s[i] -= 0x21;
-                } else if (s[i] < 0x60) {
+                    *ch-= 0x21;
+                } else if (*ch < 0x60) {
                     //Character is a upper case letter
                     gDebugFontTexture = 1;
-                    s[i] -= 0x40;
-                } else if (s[i] < 0x80) {
+                    *ch -= 0x40;
+                } else if (*ch < 0x80) {
                     //Character is a lower case letter
                     gDebugFontTexture = 2;
-                    s[i] -= 0x60;
+                    *ch -= 0x60;
                 }
-                fontCharU = gDebugFontCoords[gDebugFontTexture][s[i]].u;
-                stringLength = ((stringLength + gDebugFontCoords[gDebugFontTexture][s[i]].v) - fontCharU) + 1;
+                fontCharU = gDebugFontCoords[gDebugFontTexture][*ch].u;
+                stringLength = ((stringLength + gDebugFontCoords[gDebugFontTexture][*ch].v) - fontCharU) + (pad = 1);
             }
         }
     }
     va_end(args);
     return stringLength;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/printf/func_800B63F4.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/printf/func_800B653C.s")
 
