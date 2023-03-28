@@ -161,33 +161,8 @@ s32 D_800E2EEC = 0x100;
 s32 D_80127C80;
 s32 D_80127C84;
 s32 D_80127C88[6];
-TextureHeader *gTexture0;
-TextureHeader *gTexture1;
-TextureHeader *gTexture2;
-u16 D_80127CAC;
-u16 D_80127CAE;
-s16 D_80127CB0;
-s16 D_80127CB2;
-s32 D_80127CB4;
-s32 D_80127CB8;
-s32 D_80127CBC;
-s32 D_80127CC0;
-s32 D_80127CC4;
-s32 D_80127CC8;
-s32 gDebugFontTexture;
-u16 D_80127CD0;
-u16 D_80127CD2;
-s32 D_80127CD4;
-char gDebugPrintBufferStart[2300];
-UNUSED s32 D_801285D4;
-char *gDebugPrintBufferEnd;
-u64 gEPCStack[0x200];
-OSThread gEPCThread;
-s32 D_80129790[6]; // Osmesg stuff
-s32 D_801297A8[8];
-s32 D_801297C8[8];
-s32 D_801297E8[6];
-
+//printf.c
+//thread0_epc
 /******************************/
 
 void func_800AE270(void) {

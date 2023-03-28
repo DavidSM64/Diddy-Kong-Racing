@@ -3,7 +3,6 @@
 
 #include "types.h"
 #include "structs.h"
-#include "particles.h"
 #include "macros.h"
 #include <PR/gu.h>
 

@@ -159,11 +159,26 @@ const char D_800E8C64[] = "*** diPrintf Error *** ---> Out of string space. (Pri
 
 /************ .bss ************/
 
-extern TextureHeader *gTexture0;
-extern TextureHeader *gTexture1;
-extern TextureHeader *gTexture2;
-extern char gDebugPrintBufferStart[];
-extern char *gDebugPrintBufferEnd;
+TextureHeader *gTexture0;
+TextureHeader *gTexture1;
+TextureHeader *gTexture2;
+u16 D_80127CAC;
+u16 D_80127CAE;
+s16 D_80127CB0;
+s16 D_80127CB2;
+s32 D_80127CB4;
+s32 D_80127CB8;
+s32 D_80127CBC;
+s32 D_80127CC0;
+s32 D_80127CC4;
+s32 D_80127CC8;
+s32 gDebugFontTexture;
+u16 D_80127CD0;
+u16 D_80127CD2;
+s32 D_80127CD4;
+char gDebugPrintBufferStart[2300];
+UNUSED s32 D_801285D4;
+char *gDebugPrintBufferEnd;
 
 /******************************/
 
