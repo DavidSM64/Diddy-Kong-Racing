@@ -1978,8 +1978,8 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
 }
 
 void func_800AA3EC(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspectRatio) {
-    LevelModel* lvlMdl; // sp2C
-    s32 pad24[2];
+    LevelModel* lvlMdl;
+    UNUSED s32 pad24[2];
     f32 scaledX;
     f32 scaledY;
     s32 a;
@@ -1987,12 +1987,12 @@ void func_800AA3EC(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspectRati
     
     lvlMdl = get_current_level_model();
     
- 	a = lvlMdl->upperXBounds - lvlMdl->lowerXBounds;
-	b = lvlMdl->upperZBounds - lvlMdl->lowerZBounds;
+    a = lvlMdl->upperXBounds - lvlMdl->lowerXBounds;
+    b = lvlMdl->upperZBounds - lvlMdl->lowerZBounds;
     scaledX = (60.0f * modelAspectRatio * lvlMdl->minimapXScale * (x - lvlMdl->lowerXBounds)) / (a);
     scaledY = (lvlMdl->minimapYScale * -60.0f * (z - lvlMdl->lowerZBounds)) / (b);
 
-    if (get_filtered_cheats() & 4) { // Is adventure 2?
+    if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) { // Is adventure 2?
         D_80126CDC->unk1EC = (((f32) gMinimapScreenX - ((scaledX * angleCos) + (scaledY * angleSin))) + (f32) lvlMdl->minimapOffsetXAdv2) - (f32) gMinimapDotOffsetX;
         D_80126CDC->unk1F0 = ((f32) (lvlMdl->minimapOffsetYAdv2 + gMinimapScreenY) - ((scaledX * angleSin) - (scaledY * angleCos))) + (f32) gMinimapDotOffsetY;
         return;
