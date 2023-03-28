@@ -162,13 +162,14 @@ const char D_800E8C64[] = "*** diPrintf Error *** ---> Out of string space. (Pri
 extern TextureHeader *gTexture0;
 extern TextureHeader *gTexture1;
 extern TextureHeader *gTexture2;
-extern u8 gDebugPrintBufferStart[];
-extern u8 *gDebugPrintBufferEnd;
+extern char gDebugPrintBufferStart[];
+extern char *gDebugPrintBufferEnd;
 
 /******************************/
 
 GLOBAL_ASM("asm/non_matchings/printf/_itoa.s")
 
+//Official Name: sprintfSetSpacingCodes
 void func_800B4A08(s32 arg0) {
     D_800E2EF0 = arg0;
 }
@@ -182,6 +183,7 @@ UNUSED void func_800B4A14(char *s, char *format, ...) {
     va_end(args);
 }
 
+//Official Name: vsprintf
 GLOBAL_ASM("asm/non_matchings/printf/sprintf.s")
 
 void diPrintfInit(void) {
@@ -191,12 +193,12 @@ void diPrintfInit(void) {
     gDebugPrintBufferEnd = gDebugPrintBufferStart;
 }
 
-#ifdef NON_EQUIVALENT
+//Official Name: diPrintf
 s32 render_printf(const char *format, ...) {
-    s32 written;
     va_list args;
+    s32 written;
     va_start(args, format);
-    if ((gDebugPrintBufferEnd - gDebugPrintBufferStart) >= 0x801) {
+    if ((gDebugPrintBufferEnd - gDebugPrintBufferStart) > 0x800) {
         return -1;
     }
     func_800B4A08(1);
@@ -207,9 +209,6 @@ s32 render_printf(const char *format, ...) {
     }
     return 0;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/printf/render_printf.s")
-#endif
 
 /**
  * At the end of a frame, iterate through the debug text buffer and print it on screen.
@@ -277,7 +276,7 @@ void set_render_printf_position(u16 x, u16 y) {
 
 /**
  * Definitely has some fakematch shenanigans.
- * This will return the length in pixels of a given string.
+ * This will return the length in pixels of a given string using the debug small font.
 */
 UNUSED s32 func_800B63F4(const char *format, ...) {
     s32 pad;
@@ -323,14 +322,14 @@ UNUSED s32 func_800B63F4(const char *format, ...) {
 
 GLOBAL_ASM("asm/non_matchings/printf/func_800B653C.s")
 
-void func_800B695C(Gfx **dList, u32 arg1, u32 arg2, u32 arg3, u32 arg4) {
-    if (!((arg1 == arg3) | (arg2 == arg4))) {
-        if (arg1 >= 2) {
-            arg1 -= 2;
+void func_800B695C(Gfx **dList, u32 ulx, u32 uly, u32 lrx, u32 lry) {
+    if (!((ulx == lrx) | (uly == lry))) {
+        if (ulx >= 2) {
+            ulx -= 2;
         }
-        arg3 += 2;
+        lrx += 2;
         gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
-        gDPFillRectangle((*dList)++, arg1, arg2, arg3, arg4);
+        gDPFillRectangle((*dList)++, ulx, uly, lrx, lry);
     }
 }
 

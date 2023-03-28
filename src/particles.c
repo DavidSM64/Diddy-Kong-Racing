@@ -178,9 +178,9 @@ s32 gDebugFontTexture;
 u16 D_80127CD0;
 u16 D_80127CD2;
 s32 D_80127CD4;
-s8 gDebugPrintBufferStart[2300];
+char gDebugPrintBufferStart[2300];
 UNUSED s32 D_801285D4;
-u8 *gDebugPrintBufferEnd;
+char *gDebugPrintBufferEnd;
 u64 gEPCStack[0x200];
 OSThread gEPCThread;
 s32 D_80129790[6]; // Osmesg stuff

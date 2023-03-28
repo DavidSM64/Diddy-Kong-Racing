@@ -49,12 +49,12 @@ void func_800B4A08(s32 arg0);
 void diPrintfInit(void);
 void set_render_printf_colour(u8 red, u8 green, u8 blue, u8 alpha);
 void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha);
-void func_800B695C(Gfx** dList, u32 arg1, u32 arg2, u32 arg3, u32 arg4);
+void func_800B695C(Gfx **dList, u32 ulx, u32 uly, u32 lrx, u32 lry);
 s32 func_800B69FC(Gfx **dList, s32 asciiVal);
 void print_debug_strings(Gfx **dList);
 void set_render_printf_position(u16 x, u16 y);
+s32 render_printf(const char *format, ...);
 
-s32 render_printf(const char *format, ...); // Non Matching
 s32 func_800B653C(Gfx**, char*);
 
 #endif
