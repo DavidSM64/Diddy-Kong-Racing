@@ -112,9 +112,9 @@ Acmd *alEnvmixerPull(void *filter, UNUSED s16 *outp, s32 outCount, s32 sampleOff
 #else
         // Something must have gone wrong when compiling this file, and the asserts got left in.
         if (samples >= 0) {} 
-        else { thread0_Assert("samples >= 0", "env.c", 104); }
+        else { assert_stub("samples >= 0", "env.c", 104); }
         if (samples <= AL_MAX_RSP_SAMPLES) {} 
-        else { thread0_Assert("samples <= AL_MAX_RSP_SAMPLES", "env.c", 105); }
+        else { assert_stub("samples <= AL_MAX_RSP_SAMPLES", "env.c", 105); }
 #endif
 
         
@@ -388,9 +388,8 @@ Acmd* _pullSubFrame(void *filter, s16 *inp, s16 *outp, s32 outCount,
     assert(source);
 #else
     // Something must have gone wrong when compiling this file, and the asserts got left in.
-    // The function happens to currently live in the thread0 file for some reason.
     if (source) {}
-    else { thread0_Assert("source", "env.c", 373); }
+    else { assert_stub("source", "env.c", 373); }
 #endif
     
     ptr = (*source->handler)(source, inp, outCount, sampleOffset, p);

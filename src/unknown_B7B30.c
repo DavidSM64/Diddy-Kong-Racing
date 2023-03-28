@@ -8,7 +8,7 @@ UNUSED void func_800B6F30(UNUSED int arg0, UNUSED int arg1, UNUSED int arg2) {}
 // Only called from two libultra funcs for some reason. 
 // This is likely an assert gone wrong.
 // Called from alEnvMixerPull, and _pullSubFrame
-// thread0_Assert("samples >= 0", "env.c", 104);
-// thread0_Assert("samples <= AL_MAX_RSP_SAMPLES", "env.c", 105);
-// thread0_Assert("source", "env.c", 373);
-void thread0_Assert(UNUSED char *message, UNUSED char *fileName, UNUSED s32 lineNumber) {}
+// assert_stub("samples >= 0", "env.c", 104);
+// assert_stub("samples <= AL_MAX_RSP_SAMPLES", "env.c", 105);
+// assert_stub("source", "env.c", 373);
+void assert_stub(UNUSED char *message, UNUSED char *fileName, UNUSED s32 lineNumber) {}
