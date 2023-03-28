@@ -598,17 +598,22 @@ typedef struct LevelModel {
 /* 0x00 */ TextureInfo *textures;
 /* 0x04 */ LevelModelSegment *segments;
 /* 0x08 */ LevelModelSegmentBoundingBox *segmentsBoundingBoxes;
-/* 0x0C */ s32 unkC;
+/* 0x0C */ int *collisionData; 
 /* 0x10 */ u8 *segmentsBitfields;
 /* 0x14 */ BspTreeNode *segmentsBspTree;
 /* 0x18 */ s16 numberOfTextures;
 /* 0x1A */ s16 numberOfSegments;
-/* 0x1C */ s16 unk1C;
-/* 0x1E */ s16 unk1E;
-/* 0x20 */ s32 minimapSprite;
-/* 0x24 */ u16 unk24;
-/* 0x26 */ u16 unk26;
-           u8 pad28[0x10];
+/* 0x1C */ s16 unk1C; // Unused? 
+/* 0x1E */ s16 numberOfAnimatedTextures;
+/* 0x20 */ s32 minimapSpriteIndex;
+/* 0x24 */ u16 minimapRotation; // angle for icons on minimap?
+/* 0x26 */ u16 unk26; // Unused? Common values: 0x0009, 0xFFFF, 0x0303
+/* 0x28 */ f32 minimapXScale;
+/* 0x2C */ f32 minimapYScale;
+/* 0x30 */ s16 minimapOffsetXAdv1; // minimap X offset (Adventure 1)
+/* 0x32 */ s16 minimapOffsetYAdv1; // minimap Y offset (Adventure 1)         
+/* 0x34 */ s16 minimapOffsetXAdv2; // minimap X offset (Adventure 2)
+/* 0x36 */ s16 minimapOffsetYAdv2; // minimap Y offset (Adventure 2)
 /* 0x38 */ u32 minimapColor;
 /* 0x3C */ s16 lowerXBounds;
 /* 0x3E */ s16 upperXBounds;

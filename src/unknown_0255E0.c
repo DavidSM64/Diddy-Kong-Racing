@@ -342,7 +342,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     func_800AD40C();
     func_80030838(numViewports, tempUpdateRate);
     func_800AF404(tempUpdateRate);
-    if (gCurrentLevelModel->unk1E > 0) {
+    if (gCurrentLevelModel->numberOfAnimatedTextures > 0) {
         func_80027E24(tempUpdateRate);
     }
     for (j = gSceneCurrentPlayerID = 0; j < numViewports; gSceneCurrentPlayerID++, j = gSceneCurrentPlayerID) {
@@ -1676,7 +1676,7 @@ void func_8002C0C4(s32 modelId) {
     LOCAL_OFFSET_TO_RAM_ADDRESS(TextureInfo *, gCurrentLevelModel->textures);
     LOCAL_OFFSET_TO_RAM_ADDRESS(LevelModelSegment *, gCurrentLevelModel->segments);
     LOCAL_OFFSET_TO_RAM_ADDRESS(LevelModelSegmentBoundingBox *, gCurrentLevelModel->segmentsBoundingBoxes);
-    LOCAL_OFFSET_TO_RAM_ADDRESS(s32, gCurrentLevelModel->unkC);
+    LOCAL_OFFSET_TO_RAM_ADDRESS(s32, gCurrentLevelModel->collisionData);
     LOCAL_OFFSET_TO_RAM_ADDRESS(u8 *, gCurrentLevelModel->segmentsBitfields);
     LOCAL_OFFSET_TO_RAM_ADDRESS(BspTreeNode *, gCurrentLevelModel->segmentsBspTree);
     
@@ -1774,7 +1774,7 @@ void func_8002C7D4(void) {
     free_from_memory_pool(D_8011D30C);
     free_from_memory_pool(D_8011D370);
     free_from_memory_pool(D_8011D374);
-    free_sprite((Sprite *) gCurrentLevelModel->minimapSprite);
+    free_sprite((Sprite *) gCurrentLevelModel->minimapSpriteIndex);
     for(i = 0; i < MAXCONTROLLERS; i++) {
         free_from_memory_pool(D_8011D350[i]);
         free_from_memory_pool(D_8011D320[i]);
