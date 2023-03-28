@@ -54,6 +54,9 @@ s32 func_800B69FC(Gfx **dList, s32 asciiVal);
 void print_debug_strings(Gfx **dList);
 void set_render_printf_position(u16 x, u16 y);
 s32 render_printf(const char *format, ...);
+void func_800B6E50(void);
+void func_800B6EE0(void);
+void func_800B6F04(void);
 
 s32 func_800B653C(Gfx**, char*);
 

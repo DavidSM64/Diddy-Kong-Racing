@@ -213,6 +213,7 @@ s32 render_printf(const char *format, ...) {
 /**
  * At the end of a frame, iterate through the debug text buffer and print it on screen.
  * Soft-clear the buffer afterwards by setting the endpoint to the start point.
+ * Official Name: diPrintfAll
  */
 void print_debug_strings(Gfx **dList) {
     char *buffer;
@@ -254,6 +255,7 @@ UNUSED void func_800B61E0(void) {
 
 /**
  * Set the colour of the current debug text.
+ * Official Name: diPrintfSetCol
  */
 void set_render_printf_colour(u8 red, u8 green, u8 blue, u8 alpha) {
     RENDER_PRINTF_CMD_SET_COLOR(red, green, blue, alpha)
@@ -261,6 +263,7 @@ void set_render_printf_colour(u8 red, u8 green, u8 blue, u8 alpha) {
 
 /**
  * Set the background colour of the current debug text.
+ * Official Name: diPrintfSetBG
  */
 void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha) {
     RENDER_PRINTF_CMD_SET_BACKGROUND_COLOR(red, green, blue, alpha)
@@ -373,4 +376,31 @@ s32 func_800B69FC(Gfx **dList, s32 asciiVal) {
         gSPTextureRectangle((*dList)++, (D_80127CAC << 2), (D_80127CAE << 2), ((D_80127CAC + fontCharWidth) << 2), ((D_80127CAE + 10) << 2), 0, (fontCharU << 5), 0, 1024, 1024);
     }
     return fontCharWidth;
+}
+
+void func_800B6E50(void) {
+    if (D_80127CD0 < 0x141) {
+        D_80127CBC = 0x10;
+        D_80127CC0 = D_80127CD0 - 0x10;
+    } else {
+        D_80127CBC = 0x20;
+        D_80127CC0 = D_80127CD0 - 0x20;
+    }
+    if (D_80127CD2 < 0xF1) {
+        D_80127CC4 = 0x10;
+        D_80127CC8 = D_80127CD2 - 0x10;
+    } else {
+        D_80127CC4 = 0x20;
+        D_80127CC8 = D_80127CD2 - 0x20;
+    }
+}
+
+void func_800B6EE0(void) {
+    D_80127CAC = D_80127CBC;
+    D_80127CAE = D_80127CC4;
+}
+
+void func_800B6F04(void) {
+    D_80127CAC = D_80127CBC;
+    D_80127CAE += 11;
 }
