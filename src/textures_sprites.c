@@ -922,6 +922,7 @@ s32 func_8007AE64(void) {
 
 #ifdef NON_EQUIVALENT
 // Minor matching issues with loops, but should be functionally the same.
+//Official Name: texLoadTexture
 TextureHeader *load_texture(s32 arg0) {
     s32 assetSection;
     s32 assetIndex;

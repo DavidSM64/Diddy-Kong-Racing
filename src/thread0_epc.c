@@ -41,7 +41,6 @@ s32 D_801297A8[8];
 s32 D_801297C8[8];
 s32 D_801297E8[6];
 
-
 /**
  * Start the exception program counter thread.
  * Official Name: diCpuTraceInit

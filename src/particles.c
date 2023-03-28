@@ -1464,3 +1464,5 @@ GLOBAL_ASM("asm/non_matchings/particles/func_800B45C4.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B461C.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B4668.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B46BC.s")
+//Official Name: memset
+GLOBAL_ASM("asm/non_matchings/particles/memset.s")

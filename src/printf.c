@@ -176,8 +176,7 @@ s32 gDebugFontTexture;
 u16 D_80127CD0;
 u16 D_80127CD2;
 s32 D_80127CD4;
-char gDebugPrintBufferStart[2300];
-UNUSED s32 D_801285D4;
+char gDebugPrintBufferStart[0x900];
 char *gDebugPrintBufferEnd;
 
 /******************************/
@@ -394,19 +393,19 @@ s32 func_800B69FC(Gfx **dList, s32 asciiVal) {
 }
 
 void func_800B6E50(void) {
-    if (D_80127CD0 < 0x141) {
-        D_80127CBC = 0x10;
-        D_80127CC0 = D_80127CD0 - 0x10;
+    if (D_80127CD0 <= 320) {
+        D_80127CBC = 16;
+        D_80127CC0 = D_80127CD0 - 16;
     } else {
-        D_80127CBC = 0x20;
-        D_80127CC0 = D_80127CD0 - 0x20;
+        D_80127CBC = 32;
+        D_80127CC0 = D_80127CD0 - 32;
     }
-    if (D_80127CD2 < 0xF1) {
-        D_80127CC4 = 0x10;
-        D_80127CC8 = D_80127CD2 - 0x10;
+    if (D_80127CD2 <= 240) {
+        D_80127CC4 = 16;
+        D_80127CC8 = D_80127CD2 - 16;
     } else {
-        D_80127CC4 = 0x20;
-        D_80127CC8 = D_80127CD2 - 0x20;
+        D_80127CC4 = 32;
+        D_80127CC8 = D_80127CD2 - 32;
     }
 }
 
