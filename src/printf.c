@@ -8,7 +8,6 @@
 #include "thread0_epc.h"
 #include "stdarg.h"
 #include "textures_sprites.h"
-#include "stdio.h"
 #include "unknown_078050.h"
 
 /************ .data ************/
@@ -164,8 +163,8 @@ TextureHeader *gTexture1;
 TextureHeader *gTexture2;
 u16 D_80127CAC;
 u16 D_80127CAE;
-s16 D_80127CB0;
-s16 D_80127CB2;
+u16 D_80127CB0;
+u16 D_80127CB2;
 s32 D_80127CB4;
 s32 D_80127CB8;
 s32 D_80127CBC;
@@ -188,17 +187,16 @@ void func_800B4A08(s32 arg0) {
     D_800E2EF0 = arg0;
 }
 
-/* Official name: sprintf(?) */
-UNUSED void func_800B4A14(char *s, char *format, ...) {
+/* Official name: sprintf */
+UNUSED void sprintf(char *s, char *format, ...) {
     va_list args;
     va_start(args, format);
-    //!@bug Should be calling vsprintf here.
-    sprintf(s, format, args);
+    vsprintf(s, format, args);
     va_end(args);
 }
 
 //Official Name: vsprintf
-GLOBAL_ASM("asm/non_matchings/printf/sprintf.s")
+GLOBAL_ASM("asm/non_matchings/printf/vsprintf.s")
 
 void diPrintfInit(void) {
     gTexture0 = load_texture(0);
@@ -216,7 +214,7 @@ s32 render_printf(const char *format, ...) {
         return -1;
     }
     func_800B4A08(1);
-    written = sprintf(gDebugPrintBufferEnd, format, args);
+    written = vsprintf(gDebugPrintBufferEnd, format, args);
     func_800B4A08(0);
     if (written > 0) {
         gDebugPrintBufferEnd = &gDebugPrintBufferEnd[written] + 1;
@@ -306,7 +304,7 @@ UNUSED s32 func_800B63F4(const char *format, ...) {
 
     stringLength = 0;
     func_800B4A08(1);
-    sprintf(s, format, args);
+    vsprintf(s, format, args);
     func_800B4A08(0);
     for (ch = &s[0]; *ch != '\0'; ch++) {
         pad = *ch;

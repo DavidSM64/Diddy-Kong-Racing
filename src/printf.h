@@ -58,5 +58,6 @@ void func_800B6EE0(void);
 void func_800B6F04(void);
 
 s32 func_800B653C(Gfx**, char*);
+int vsprintf(char *s, const char *fmt, ...);
 
 #endif

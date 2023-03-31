@@ -7,7 +7,7 @@ glabel jpt_800E8D88
 .word L800B52C4, amGetSfxCount, L800B5794, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, L800B4F84, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, L800B5AC4, L800B4E38, L800B52C4, L800B57A4, L800B5794, amGetSfxCount, L800B4E38, amGetSfxCount, amGetSfxCount, amGetSfxCount, amGetSfxCount, L800B5D78, L800B4F64, L800B5C8C, amGetSfxCount, amGetSfxCount, L800B5B48, amGetSfxCount, L800B4F44, amGetSfxCount, amGetSfxCount, L800B4FA4
 
 .text
-glabel sprintf
+glabel vsprintf
 /* 0B5640 800B4A40 27BDFE48 */  addiu $sp, $sp, -0x1b8
 /* 0B5644 800B4A44 AFBF004C */  sw    $ra, 0x4c($sp)
 /* 0B5648 800B4A48 AFBE0048 */  sw    $fp, 0x48($sp)
