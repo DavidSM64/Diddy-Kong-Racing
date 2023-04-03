@@ -1508,11 +1508,11 @@ s32 func_8007EF64(s16 arg0) {
 
 // There might be a file boundary here.
 
-void func_8007EF80(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 updateRate) {
+void texAnimateTexture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 updateRate) {
     s32 bit23Set;
     s32 bit25Set;
     s32 bit26Set;
-    s32 phi_a0;
+    s32 breakVar;
 
     bit23Set = *triangleBatchInfoFlags & BATCH_FLAGS_UNK00800000;
     bit26Set = *triangleBatchInfoFlags & BATCH_FLAGS_UNK04000000;
@@ -1524,61 +1524,53 @@ void func_8007EF80(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg
                 *triangleBatchInfoFlags |= BATCH_FLAGS_UNK02000000;
             }
         } else if (!bit26Set) {
-            *arg2 = *arg2 + (texture->frameAdvanceDelay * updateRate);
+            *arg2 += texture->frameAdvanceDelay * updateRate;
             if (*arg2 >= texture->numOfTextures) {
                 *arg2 = ((texture->numOfTextures * 2) - *arg2) - 1;
                 if (*arg2 < 0) {
                     *arg2 = 0;
                     *triangleBatchInfoFlags &= ~(BATCH_FLAGS_UNK02000000 | BATCH_FLAGS_UNK04000000);
-                    return;
+                } else {
+                    *triangleBatchInfoFlags |= BATCH_FLAGS_UNK04000000;
                 }
-                *triangleBatchInfoFlags |= BATCH_FLAGS_UNK04000000;
             }
         } else {
-            *arg2 = *arg2 - (texture->frameAdvanceDelay * updateRate);
+            *arg2 -= texture->frameAdvanceDelay * updateRate;
             if (*arg2 < 0) {
                 *arg2 = 0;
                 *triangleBatchInfoFlags &= ~(BATCH_FLAGS_UNK02000000 | BATCH_FLAGS_UNK04000000);
             }
         }
-    } else {
-        if (bit25Set) {
-            if (!bit26Set) {
-                *arg2 += texture->frameAdvanceDelay * updateRate;
-            } else {
-                *arg2 -= texture->frameAdvanceDelay * updateRate;
-            }
-            do {
-                phi_a0 = 0;
-                if (*arg2 < 0) {
-                    *arg2 = -*arg2;
-                    *triangleBatchInfoFlags &= ~BATCH_FLAGS_UNK04000000;
-                    phi_a0 = 1;
-                }
-                if (*arg2 >= texture->numOfTextures) {
-                    *arg2 = ((texture->numOfTextures * 2) - *arg2) - 1;
-                    *triangleBatchInfoFlags |= BATCH_FLAGS_UNK04000000;
-                    phi_a0 = 1;
-                }
-            } while (phi_a0 != 0);
-            return;
-        }
+    } else if (bit25Set) {
         if (!bit26Set) {
-            *arg2 = *arg2 + (texture->frameAdvanceDelay * updateRate);
-            if (*arg2 >= texture->numOfTextures) {
-                do {
-                    *arg2 -= texture->numOfTextures;
-                } while (*arg2 >= texture->numOfTextures);
-            }
+            *arg2 += texture->frameAdvanceDelay * updateRate;
         } else {
-            *arg2 = *arg2 - (texture->frameAdvanceDelay * updateRate);
-            if (*arg2 < 0) {
-                do {
-                    *arg2 += texture->numOfTextures;
-                } while (*arg2 < 0);
-            }
+            *arg2 -= texture->frameAdvanceDelay * updateRate;
         }
-    }
+        do {
+            breakVar = FALSE;
+            if (*arg2 < 0) {
+                *arg2 = -*arg2;
+                *triangleBatchInfoFlags &= ~BATCH_FLAGS_UNK04000000;
+                breakVar = TRUE;
+            }
+            if (*arg2 >= texture->numOfTextures) {
+                *arg2 = ((texture->numOfTextures * 2) - *arg2) - 1;
+                *triangleBatchInfoFlags |= BATCH_FLAGS_UNK04000000;
+                breakVar = TRUE;
+            }
+        } while (breakVar);
+    } else if (!bit26Set) {
+        *arg2 += texture->frameAdvanceDelay * updateRate;
+        while (*arg2 >= texture->numOfTextures) {
+            *arg2 -= texture->numOfTextures;
+        }
+    } else {
+        *arg2 -= texture->frameAdvanceDelay * updateRate;
+        while (*arg2 < 0) {
+            *arg2 += texture->numOfTextures;
+        }
+    }    
 }
 
 void func_8007F1E8(unk8007F1E8 *arg0) {
@@ -1610,6 +1602,9 @@ void init_pulsating_light_data(PulsatingLightData *data) {
     }
 }
 
+/**
+ * Official Name: updateMixCycle
+*/
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta) {
     s32 thisFrameIndex, nextFrameIndex;
 

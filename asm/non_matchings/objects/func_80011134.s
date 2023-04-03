@@ -49,7 +49,7 @@ glabel func_80011134
 /* 011DEC 800111EC AFB8005C */  sw    $t8, 0x5c($sp)
 /* 011DF0 800111F0 24A50008 */  addiu $a1, $a1, 8
 /* 011DF4 800111F4 27A6005C */  addiu $a2, $sp, 0x5c
-/* 011DF8 800111F8 0C01FBE0 */  jal   func_8007EF80
+/* 011DF8 800111F8 0C01FBE0 */  jal   texAnimateTexture
 /* 011DFC 800111FC 02C03825 */   move  $a3, $s6
 /* 011E00 80011200 8FB9005C */  lw    $t9, 0x5c($sp)
 /* 011E04 80011204 00000000 */  nop   

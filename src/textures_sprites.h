@@ -130,7 +130,7 @@ s32 func_8007EF64(s16 arg0);
 void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 offset);
 
 // There might be a file boundary here.
-void func_8007EF80(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 updateRate);
+void texAnimateTexture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 updateRate);
 void func_8007F1E8(unk8007F1E8 *arg0);
 void init_pulsating_light_data(PulsatingLightData *data);
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);

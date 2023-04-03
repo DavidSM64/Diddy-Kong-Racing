@@ -323,7 +323,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         gCurrentLevelHeader2->unkA8 = (gCurrentLevelHeader2->unkA8 + (gCurrentLevelHeader2->unkA2 * tempUpdateRate)) & i;
         i = (gCurrentLevelHeader2->unkA4->height << 9) - 1;
         gCurrentLevelHeader2->unkAA = (gCurrentLevelHeader2->unkAA + (gCurrentLevelHeader2->unkA3 * tempUpdateRate)) & i;
-        func_8007EF80(gCurrentLevelHeader2->unkA4, &D_8011B114, &D_8011B110, tempUpdateRate);
+        texAnimateTexture(gCurrentLevelHeader2->unkA4, &D_8011B114, &D_8011B110, tempUpdateRate);
     }
     flip = FALSE;
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
@@ -636,10 +636,10 @@ void func_80027E24(s32 updateRate) {
                         temp = batch[batchNumber].unk7 << 6;
                         if (batch[batchNumber].flags & BATCH_FLAGS_UNK80000000) {
                             temp |= batch[batchNumber].unk6;
-                            func_8007EF80(texture, &batch[batchNumber].flags, &temp, updateRate);
+                            texAnimateTexture(texture, &batch[batchNumber].flags, &temp, updateRate);
                             batch[batchNumber].unk6 = temp & 0x3F;
                         } else {
-                            func_8007EF80(texture, &batch[batchNumber].flags, &temp, updateRate);
+                            texAnimateTexture(texture, &batch[batchNumber].flags, &temp, updateRate);
                         }
                         batch[batchNumber].unk7 = (temp >> 6) & 0xFF;
                     }

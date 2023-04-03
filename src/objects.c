@@ -1135,7 +1135,7 @@ void func_80011134(Object *arg0, s32 arg1) {
             if (temp_v0 != 0xFF) {
                 var_t5 = temp_s3->textures[temp_v0].texture;
                 sp5C = var_s0->unk7 << 6;
-                func_8007EF80(var_t5, temp_s4[var_s1].flags, &sp5C, arg1);
+                texAnimateTexture(var_t5, temp_s4[var_s1].flags, &sp5C, arg1);
                 var_s0->unk7 = sp5C >> 6;
             }
         }
