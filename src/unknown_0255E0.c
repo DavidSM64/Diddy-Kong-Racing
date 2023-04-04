@@ -303,7 +303,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     func_8002D8DC(2, 2, updateRate);
     for (i = 0; i < 7; i++) {
         if ((s32) gCurrentLevelHeader2->unk74[i] != -1) {
-            func_8007F24C(gCurrentLevelHeader2->unk74[i], tempUpdateRate);
+            updateColourCycle(gCurrentLevelHeader2->unk74[i], tempUpdateRate);
         }
     }
 

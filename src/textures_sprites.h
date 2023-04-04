@@ -115,8 +115,8 @@ typedef struct TempTexHeader {
 /* 0x25 */ u8 pad25[3]; // padding
 } TempTexHeader;
 
-void texEnableModes(s32 flags);
 void texDisableModes(s32 flags);
+void texEnableModes(s32 flags);
 s32 func_8007AE44(void);
 s32 func_8007AE54(void);
 s32 func_8007AE64(void);
@@ -149,6 +149,6 @@ MemoryPoolSlot *func_8007C12C(s32 spriteID, s32 arg1); // Non Matching
 void texInitTextures(void); // Non Matching
 void func_8007BF34(Gfx **dlist, s32 arg1); // Non Matching
 void load_blinking_lights_texture(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3); // Non Matching
-void build_tex_display_list(TextureHeader *tex, u8 *addr);
+void build_tex_display_list(TextureHeader *tex, Gfx *dlist); //Non Matching
 
 #endif
