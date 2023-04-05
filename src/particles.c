@@ -1464,5 +1464,19 @@ GLOBAL_ASM("asm/non_matchings/particles/func_800B45C4.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B461C.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B4668.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B46BC.s")
-//Official Name: memset
-GLOBAL_ASM("asm/non_matchings/particles/memset.s")
+
+/**
+ * memset(void *s, int c, size_t n)
+ *
+ * s: start of area to clear
+ * c: char to fill with
+ * n: size of area to clear
+ */
+void *memset(void *s, int c, size_t n) {
+    u8 *var_v0 = s;
+
+    while (n-- > 0) {
+        *var_v0++ = c;
+    }
+    return s;
+}

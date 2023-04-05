@@ -1359,6 +1359,9 @@ void func_8007BF34(Gfx **dlist, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007BF34.s")
 #endif
 
+/**
+ * Official Name: texLoadSprite
+*/
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C12C.s")
 
 #ifdef NON_MATCHING
@@ -1781,7 +1784,7 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
             gDPLoadTextureBlock(
                 dlist++, //pkt
                 OS_PHYSICAL_TO_K0(tex + 1), //timg
-                G_IM_FMT_IA, //fmt
+                G_IM_FMT_RGBA, //fmt
                 G_IM_SIZ_32b, //siz //G_IM_SIZ_16b maybe?
                 width,
                 height,
@@ -1840,113 +1843,153 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
             }
         }
         if (texFormat == 1) {
-            dlist->words.w1 = (u32) (tex + 0x80000020);
-            temp_a3_7 = dlist + 8;
-            dlist->words.w0 = 0xFD100000;
-            temp_a3_7->words.w0 = 0xF5100000;
-            temp_v0_2 = (cmt & 3) << 0x12;
-            temp_v1_4 = (maskt & 0xF) << 0xE;
-            temp_a1_2 = (cms & 3) << 8;
-            temp_t6_2 = (masks & 0xF) * 0x10;
-            temp_a3_8 = temp_a3_7 + 8;
-            temp_a3_7->words.w1 = temp_v0_2 | 0x07000000 | temp_v1_4 | temp_a1_2 | temp_t6_2;
-            temp_t4_2 = width * 2;
-            temp_a3_8->words.w0 = 0xE6000000;
-            temp_a3_9 = temp_a3_8 + 8;
-            temp_a3_8->words.w1 = 0;
-            temp_a3_9->words.w0 = 0xF3000000;
-            sp30 = (((s32) (temp_t4_2 + 7) >> 3) & 0x1FF) << 9;
-            sp2C = temp_v0_2 | temp_v1_4 | temp_a1_2 | temp_t6_2;
-            temp_t0_2 = (width * height) - 1;
-            sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
-            temp_a3_10 = temp_a3_9 + 8;
-            if (temp_t0_2 < 0x7FF) {
-                var_ra_2 = temp_t0_2;
-            } else {
-                var_ra_2 = 0x7FF;
-            }
-            temp_t3 = temp_t4_2 / 8;
-            var_t2_3 = temp_t3;
-            if (temp_t3 <= 0) {
-                var_t2_3 = 1;
-            }
-            if (temp_t3 <= 0) {
-                var_a0_2 = 1;
-            } else {
-                var_a0_2 = temp_t3;
-            }
-            temp_a3_11 = temp_a3_10 + 8;
-            temp_a3_12 = temp_a3_11 + 8;
-            dlist = temp_a3_12 + 8;
-            temp_a3_9->words.w1 = (s32) ((((s32) (var_t2_3 + 0x7FF) / var_a0_2) & 0xFFF) | 0x07000000 | ((var_ra_2 & 0xFFF) << 0xC));
-            temp_a3_10->words.w0 = 0xE7000000;
-            temp_a3_10->words.w1 = 0;
-            temp_a3_11->words.w0 = sp30 | 0xF5100000;
-            temp_a3_11->words.w1 = sp2C;
-            temp_a3_12->words.w0 = 0xF2000000;
-            temp_a3_12->words.w1 = sp28;
+            gDPLoadTextureBlock(
+                dlist++, //pkt
+                OS_PHYSICAL_TO_K0(tex + 1), //timg
+                G_IM_FMT_RGBA, //fmt
+                G_IM_SIZ_16b, //siz
+                width,
+                height,
+                0, //palette
+                cms, //cms
+                cmt, //cmt
+                masks, //masks
+                maskt, //maskt
+                G_TX_NOLOD, //shifts
+                G_TX_NOLOD  //shiftt
+            );
+            // dlist->words.w0 = 0xFD100000;
+            // dlist->words.w1 = (u32) (tex + 0x80000020);
+            // temp_a3_7 = dlist + 8;
+            // temp_a3_7->words.w0 = 0xF5100000;
+            // temp_v0_2 = (cmt & 3) << 0x12;
+            // temp_v1_4 = (maskt & 0xF) << 0xE;
+            // temp_a1_2 = (cms & 3) << 8;
+            // temp_t6_2 = (masks & 0xF) * 0x10;
+            // temp_a3_8 = temp_a3_7 + 8;
+            // temp_a3_7->words.w1 = temp_v0_2 | 0x07000000 | temp_v1_4 | temp_a1_2 | temp_t6_2;
+            // temp_t4_2 = width * 2;
+            // temp_a3_8->words.w0 = 0xE6000000;
+            // temp_a3_9 = temp_a3_8 + 8;
+            // temp_a3_8->words.w1 = 0;
+            // temp_a3_9->words.w0 = 0xF3000000;
+            // temp_t0_2 = (width * height) - 1;
+            // temp_a3_10 = temp_a3_9 + 8;
+            // if (temp_t0_2 < 0x7FF) {
+            //     var_ra_2 = temp_t0_2;
+            // } else {
+            //     var_ra_2 = 0x7FF;
+            // }
+            // temp_t3 = temp_t4_2 / 8;
+            // var_t2_3 = temp_t3;
+            // if (temp_t3 <= 0) {
+            //     var_t2_3 = 1;
+            // }
+            // if (temp_t3 <= 0) {
+            //     var_a0_2 = 1;
+            // } else {
+            //     var_a0_2 = temp_t3;
+            // }
+            // temp_a3_11 = temp_a3_10 + 8;
+            // temp_a3_12 = temp_a3_11 + 8;
+            // dlist = temp_a3_12 + 8;
+            // temp_a3_9->words.w1 = (s32) ((((s32) (var_t2_3 + 0x7FF) / var_a0_2) & 0xFFF) | 0x07000000 | ((var_ra_2 & 0xFFF) << 0xC));
+            // temp_a3_10->words.w0 = 0xE7000000;
+            // temp_a3_10->words.w1 = 0;
+            // temp_a3_11->words.w1 = temp_v0_2 | temp_v1_4 | temp_a1_2 | temp_t6_2;
+            // temp_a3_11->words.w0 = (((s32) (temp_t4_2 + 7) >> 3) & 0x1FF) << 9 | 0xF5100000;
+            // temp_a3_12->words.w0 = 0xF2000000;
+            // temp_a3_12->words.w1 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
             if ((texFlags == 0) || (texFlags == 2)) {
                 tex->flags |= 4;
             }
         }
         if (texFormat == 7) {
-            temp_v0_3 = (cmt & 3) << 0x12;
-            temp_lo = width * height;
-            temp_a1_3 = (cms & 3) << 8;
-            temp_v1_5 = (maskt & 0xF) << 0xE;
-            temp_a2_2 = (masks & 0xF) * 0x10;
-            sp48 = tex + 0x80000020;
-            temp_t9 = temp_v0_3 | 0x07000000 | temp_v1_5 | temp_a1_3 | temp_a2_2;
-            sp2C = temp_v0_3 | temp_v1_5 | temp_a1_3 | temp_a2_2;
-            sp30 = temp_lo;
-            sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
+            gDPLoadTextureBlock(
+                dlist++, //pkt
+                OS_PHYSICAL_TO_K0(tex + 1), //timg
+                G_IM_FMT_CI, //fmt
+                G_IM_SIZ_16b, //siz
+                width,
+                height,
+                0, //palette
+                cms, //cms
+                cmt, //cmt
+                masks, //masks
+                maskt, //maskt
+                G_TX_NOLOD, //shifts
+                G_TX_NOLOD  //shiftt
+            );
+            // temp_v0_3 = (cmt & 3) << 0x12;
+            // temp_lo = width * height;
+            // temp_a1_3 = (cms & 3) << 8;
+            // temp_v1_5 = (maskt & 0xF) << 0xE;
+            // temp_a2_2 = (masks & 0xF) * 0x10;
+            // sp48 = tex + 0x80000020;
+            // temp_t9 = temp_v0_3 | 0x07000000 | temp_v1_5 | temp_a1_3 | temp_a2_2;
+            // sp2C = temp_v0_3 | temp_v1_5 | temp_a1_3 | temp_a2_2;
+            // sp30 = temp_lo;
+            // sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
+            // dlist->words.w0 = 0xFD500000;
+            // dlist->words.w1 = (u32) sp48;
+            // temp_a3_13 = dlist + 8;
+            // temp_a3_13->words.w0 = 0xF5500000;
+            // temp_a3_14 = temp_a3_13 + 8;
+            // temp_a3_13->words.w1 = temp_t9;
+            // temp_t0_3 = ((s32) (temp_lo + 3) >> 2) - 1;
+            // temp_a3_15 = temp_a3_14 + 8;
+            // temp_a3_14->words.w0 = 0xE6000000;
+            // temp_a3_14->words.w1 = 0;
+            // temp_a3_15->words.w0 = 0xF3000000;
+            // temp_a3_16 = temp_a3_15 + 8;
+            // if (temp_t0_3 < 0x7FF) {
+            //     var_a0_3 = temp_t0_3;
+            // } else {
+            //     var_a0_3 = 0x7FF;
+            // }
+            // temp_t1 = (s32) width / 16;
+            // temp_a3_17 = temp_a3_16 + 8;
+            // temp_a3_18 = temp_a3_17 + 8;
+            // temp_a3_19 = temp_a3_18 + 8;
+            // temp_a3_15->words.w1 = ((var_a0_3 & 0xFFF) << 0xC) | 0x07000000 | (((s32) (temp_t1 + 0x7FF) / temp_t1) & 0xFFF);
+            // temp_a3_16->words.w0 = 0xE7000000;
+            // temp_a3_16->words.w1 = 0;
+            // temp_a3_17->words.w0 = ((((s32) (((s32) width >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000;
+            // temp_a3_17->words.w1 = sp2C;
+            // temp_a3_18->words.w0 = 0xF2000000;
+            // temp_a3_18->words.w1 = sp28;
+            // temp_a3_20 = temp_a3_19 + 8;
+
+
+            //gDPLoadTLUT_pal16 ! - This one? - gDPLoadTLUT_pal16(0, (u32) temp_v0_4)
+            //gDPLoadTLUT_pal256
+            //gDPLoadTLUT Or this one with count 16
             temp_v0_4 = func_8007EF64(tex->ciPaletteOffset);
-            dlist->words.w0 = 0xFD500000;
-            temp_a3_13 = dlist + 8;
-            dlist->words.w1 = (u32) sp48;
-            temp_a3_13->words.w0 = 0xF5500000;
-            temp_a3_14 = temp_a3_13 + 8;
-            temp_a3_13->words.w1 = temp_t9;
-            temp_t0_3 = ((s32) (temp_lo + 3) >> 2) - 1;
-            temp_a3_15 = temp_a3_14 + 8;
-            temp_a3_14->words.w0 = 0xE6000000;
-            temp_a3_14->words.w1 = 0;
-            temp_a3_15->words.w0 = 0xF3000000;
-            temp_a3_16 = temp_a3_15 + 8;
-            if (temp_t0_3 < 0x7FF) {
-                var_a0_3 = temp_t0_3;
-            } else {
-                var_a0_3 = 0x7FF;
-            }
-            temp_t1 = (s32) width / 16;
-            temp_a3_17 = temp_a3_16 + 8;
-            temp_a3_18 = temp_a3_17 + 8;
-            temp_a3_19 = temp_a3_18 + 8;
-            temp_a3_15->words.w1 = ((var_a0_3 & 0xFFF) << 0xC) | 0x07000000 | (((s32) (temp_t1 + 0x7FF) / temp_t1) & 0xFFF);
-            temp_a3_16->words.w0 = 0xE7000000;
-            temp_a3_16->words.w1 = 0;
-            temp_a3_17->words.w0 = ((((s32) (((s32) width >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000;
-            temp_a3_17->words.w1 = sp2C;
-            temp_a3_18->words.w0 = 0xF2000000;
-            temp_a3_18->words.w1 = sp28;
-            temp_a3_20 = temp_a3_19 + 8;
-            temp_a3_19->words.w0 = 0xFD100000;
-            temp_a3_19->words.w1 = (u32) temp_v0_4;
-            temp_a3_21 = temp_a3_20 + 8;
-            temp_a3_20->words.w0 = 0xE8000000;
-            temp_a3_20->words.w1 = 0;
-            temp_a3_22 = temp_a3_21 + 8;
-            temp_a3_21->words.w1 = 0x07000000;
-            temp_a3_21->words.w0 = 0xF5000100;
-            temp_a3_23 = temp_a3_22 + 8;
-            temp_a3_22->words.w0 = 0xE6000000;
-            temp_a3_22->words.w1 = 0;
-            temp_a3_24 = temp_a3_23 + 8;
-            temp_a3_23->words.w0 = 0xF0000000;
-            temp_a3_23->words.w1 = 0x0703C000;
-            temp_a3_24->words.w0 = 0xE7000000;
-            temp_a3_24->words.w1 = 0;
-            dlist = temp_a3_24 + 8;
+            gDPLoadTLUT_pal16(dlist++, 0, temp_v0_4);
+            // //gDPSetTextureImage
+            // temp_a3_19->words.w0 = 0xFD100000;
+            // temp_a3_19->words.w1 = (u32) temp_v0_4;
+            // temp_a3_21 = temp_a3_20 + 8;
+            // //gDPTileSync
+            // temp_a3_20->words.w0 = 0xE8000000;
+            // temp_a3_20->words.w1 = 0;
+            // temp_a3_22 = temp_a3_21 + 8;
+            // //gDPSetTile
+            // temp_a3_21->words.w1 = 0x07000000;
+            // temp_a3_21->words.w0 = 0xF5000100;
+            // temp_a3_23 = temp_a3_22 + 8;
+            // //gDPLoadSync
+            // temp_a3_22->words.w0 = 0xE6000000;
+            // temp_a3_22->words.w1 = 0;
+            // temp_a3_24 = temp_a3_23 + 8;
+            // //gDPLoadTLUTCmd
+            // temp_a3_23->words.w0 = 0xF0000000;
+            // temp_a3_23->words.w1 = 0x0703C000;
+            // //gDPPipeSync
+            // temp_a3_24->words.w0 = 0xE7000000;
+            // temp_a3_24->words.w1 = 0;
+            // dlist = temp_a3_24 + 8;
+
             tex->flags |= 0x20;
             if ((texFlags == 0) || (texFlags == 2)) {
                 tex->flags |= 4;
