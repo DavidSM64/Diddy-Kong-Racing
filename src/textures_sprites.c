@@ -1506,7 +1506,7 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/free_sprite.s")
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CDC0.s")
 
-#ifdef NON_EQUIVALENT
+#if 1
 //HEAVILY WIP
 void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     s32 texFlags;
@@ -1525,21 +1525,6 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     Gfx *temp_a3_106;
     Gfx *temp_a3_107;
     Gfx *temp_a3_108;
-    Gfx *temp_a3_10;
-    Gfx *temp_a3_11;
-    Gfx *temp_a3_12;
-    Gfx *temp_a3_13;
-    Gfx *temp_a3_14;
-    Gfx *temp_a3_15;
-    Gfx *temp_a3_16;
-    Gfx *temp_a3_17;
-    Gfx *temp_a3_18;
-    Gfx *temp_a3_19;
-    Gfx *temp_a3_20;
-    Gfx *temp_a3_21;
-    Gfx *temp_a3_22;
-    Gfx *temp_a3_23;
-    Gfx *temp_a3_24;
     Gfx *temp_a3_25;
     Gfx *temp_a3_26;
     Gfx *temp_a3_27;
@@ -1595,7 +1580,6 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     Gfx *temp_a3_77;
     Gfx *temp_a3_78;
     Gfx *temp_a3_79;
-    Gfx *temp_a3_7;
     Gfx *temp_a3_80;
     Gfx *temp_a3_81;
     Gfx *temp_a3_82;
@@ -1606,7 +1590,6 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     Gfx *temp_a3_87;
     Gfx *temp_a3_88;
     Gfx *temp_a3_89;
-    Gfx *temp_a3_8;
     Gfx *temp_a3_90;
     Gfx *temp_a3_91;
     Gfx *temp_a3_92;
@@ -1617,7 +1600,6 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     Gfx *temp_a3_97;
     Gfx *temp_a3_98;
     Gfx *temp_a3_99;
-    Gfx *temp_a3_9;
     s32 temp_a1_10;
     s32 temp_a1_11;
     s32 temp_a1_12;
@@ -1625,8 +1607,6 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     s32 temp_a1_14;
     s32 temp_a1_15;
     s32 temp_a1_16;
-    s32 temp_a1_2;
-    s32 temp_a1_3;
     s32 temp_a1_4;
     s32 temp_a1_5;
     s32 temp_a1_6;
@@ -1634,7 +1614,6 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     s32 temp_a1_8;
     s32 temp_a1_9;
     s32 temp_a2_10;
-    s32 temp_a2_2;
     s32 temp_a2_3;
     s32 temp_a2_4;
     s32 temp_a2_5;
@@ -1642,7 +1621,6 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     s32 temp_a2_7;
     s32 temp_a2_8;
     s32 temp_a2_9;
-    s32 temp_lo;
     s32 temp_lo_2;
     s32 temp_t0_10;
     s32 temp_t0_11;
@@ -1651,25 +1629,19 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     s32 temp_t0_14;
     s32 temp_t0_15;
     s32 temp_t0_16;
-    s32 temp_t0_2;
-    s32 temp_t0_3;
     s32 temp_t0_4;
     s32 temp_t0_5;
     s32 temp_t0_6;
     s32 temp_t0_7;
     s32 temp_t0_8;
     s32 temp_t0_9;
-    s32 temp_t1;
     s32 temp_t1_2;
     s32 temp_t1_3;
-    s32 temp_t3;
     s32 temp_t3_2;
     s32 temp_t3_3;
     s32 temp_t3_4;
     s32 texFormat;
-    s32 temp_t4_2;
     s32 temp_t4_3;
-    s32 temp_t6_2;
     s32 temp_t6_3;
     s32 temp_t6_4;
     s32 temp_t7;
@@ -1685,8 +1657,6 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     s32 temp_v0_16;
     s32 temp_v0_17;
     s32 temp_v0_18;
-    s32 temp_v0_2;
-    s32 temp_v0_3;
     s32 temp_v0_4;
     s32 temp_v0_5;
     s32 temp_v0_6;
@@ -1702,8 +1672,6 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     s32 temp_v1_16;
     s32 temp_v1_17;
     s32 temp_v1_18;
-    s32 temp_v1_4;
-    s32 temp_v1_5;
     s32 temp_v1_6;
     s32 temp_v1_7;
     s32 temp_v1_8;
@@ -1715,8 +1683,6 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     s32 var_a0_14;
     s32 var_a0_15;
     s32 var_a0_16;
-    s32 var_a0_2;
-    s32 var_a0_3;
     s32 var_a0_4;
     s32 var_a0_5;
     s32 var_a0_6;
@@ -1724,21 +1690,18 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     s32 var_a0_8;
     s32 var_a0_9;
     s32 i;
-    s32 var_ra_2;
     s32 var_ra_3;
     s32 var_ra_4;
     s32 var_ra_5;
     s32 uClamp;
     s32 vClamp;
     s32 masks;
-    s32 var_t2_3;
     s32 var_t2_4;
     s32 var_t2_5;
     s32 var_t2_6;
     s32 maskt;
     s32 var_v0;
     u32 temp_t7_2;
-    u32 temp_t9;
     u8 height;
     u8 width;
 
@@ -1785,7 +1748,7 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
                 dlist++, //pkt
                 OS_PHYSICAL_TO_K0(tex + 1), //timg
                 G_IM_FMT_RGBA, //fmt
-                G_IM_SIZ_32b, //siz //G_IM_SIZ_16b maybe?
+                G_IM_SIZ_32b, //siz
                 width,
                 height,
                 0, //palette
@@ -1996,535 +1959,735 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
             }
         }
         if (texFormat == 4) {
-            dlist->words.w1 = (u32) (tex + 0x80000020);
-            temp_a3_25 = dlist + 8;
-            dlist->words.w0 = 0xFD700000;
-            temp_a3_25->words.w0 = 0xF5700000;
-            temp_v0_5 = (cmt & 3) << 0x12;
-            temp_v1_6 = (maskt & 0xF) << 0xE;
-            temp_a1_4 = (cms & 3) << 8;
-            temp_t7 = (masks & 0xF) * 0x10;
-            temp_a3_26 = temp_a3_25 + 8;
-            temp_a3_25->words.w1 = temp_v0_5 | 0x07000000 | temp_v1_6 | temp_a1_4 | temp_t7;
-            temp_t4_3 = width * 2;
-            temp_a3_26->words.w0 = 0xE6000000;
-            temp_a3_27 = temp_a3_26 + 8;
-            temp_a3_26->words.w1 = 0;
-            temp_a3_27->words.w0 = 0xF3000000;
-            sp30 = (((s32) (temp_t4_3 + 7) >> 3) & 0x1FF) << 9;
-            sp2C = temp_v0_5 | temp_v1_6 | temp_a1_4 | temp_t7;
-            temp_t0_4 = (width * height) - 1;
-            sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
-            temp_a3_28 = temp_a3_27 + 8;
-            temp_t3_2 = temp_t4_3 / 8;
-            var_t2_4 = temp_t3_2;
-            if (temp_t0_4 < 0x7FF) {
-                var_ra_3 = temp_t0_4;
-            } else {
-                var_ra_3 = 0x7FF;
-            }
-            var_a0_4 = temp_t3_2;
-            if (temp_t3_2 <= 0) {
-                var_t2_4 = 1;
-            }
-            if (temp_t3_2 <= 0) {
-                var_a0_4 = 1;
-            }
-            temp_a3_29 = temp_a3_28 + 8;
-            temp_a3_30 = temp_a3_29 + 8;
-            dlist = temp_a3_30 + 8;
-            temp_a3_27->words.w1 = (s32) ((((s32) (var_t2_4 + 0x7FF) / var_a0_4) & 0xFFF) | 0x07000000 | ((var_ra_3 & 0xFFF) << 0xC));
-            temp_a3_28->words.w0 = 0xE7000000;
-            temp_a3_28->words.w1 = 0;
-            temp_a3_29->words.w0 = sp30 | 0xF5700000;
-            temp_a3_29->words.w1 = sp2C;
-            temp_a3_30->words.w0 = 0xF2000000;
-            temp_a3_30->words.w1 = sp28;
+            gDPLoadTextureBlock(
+                dlist++, //pkt
+                OS_PHYSICAL_TO_K0(tex + 1), //timg
+                G_IM_FMT_IA, //fmt
+                G_IM_SIZ_16b, //siz
+                width,
+                height,
+                0, //palette
+                cms, //cms
+                cmt, //cmt
+                masks, //masks
+                maskt, //maskt
+                G_TX_NOLOD, //shifts
+                G_TX_NOLOD  //shiftt
+            );
+            // dlist->words.w1 = (u32) (tex + 0x80000020);
+            // temp_a3_25 = dlist + 8;
+            // dlist->words.w0 = 0xFD700000;
+            // temp_a3_25->words.w0 = 0xF5700000;
+            // temp_v0_5 = (cmt & 3) << 0x12;
+            // temp_v1_6 = (maskt & 0xF) << 0xE;
+            // temp_a1_4 = (cms & 3) << 8;
+            // temp_t7 = (masks & 0xF) * 0x10;
+            // temp_a3_26 = temp_a3_25 + 8;
+            // temp_a3_25->words.w1 = temp_v0_5 | 0x07000000 | temp_v1_6 | temp_a1_4 | temp_t7;
+            // temp_t4_3 = width * 2;
+            // temp_a3_26->words.w0 = 0xE6000000;
+            // temp_a3_27 = temp_a3_26 + 8;
+            // temp_a3_26->words.w1 = 0;
+            // temp_a3_27->words.w0 = 0xF3000000;
+            // sp30 = (((s32) (temp_t4_3 + 7) >> 3) & 0x1FF) << 9;
+            // sp2C = temp_v0_5 | temp_v1_6 | temp_a1_4 | temp_t7;
+            // temp_t0_4 = (width * height) - 1;
+            // sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
+            // temp_a3_28 = temp_a3_27 + 8;
+            // temp_t3_2 = temp_t4_3 / 8;
+            // var_t2_4 = temp_t3_2;
+            // if (temp_t0_4 < 0x7FF) {
+            //     var_ra_3 = temp_t0_4;
+            // } else {
+            //     var_ra_3 = 0x7FF;
+            // }
+            // var_a0_4 = temp_t3_2;
+            // if (temp_t3_2 <= 0) {
+            //     var_t2_4 = 1;
+            // }
+            // if (temp_t3_2 <= 0) {
+            //     var_a0_4 = 1;
+            // }
+            // temp_a3_29 = temp_a3_28 + 8;
+            // temp_a3_30 = temp_a3_29 + 8;
+            // dlist = temp_a3_30 + 8;
+            // temp_a3_27->words.w1 = (s32) ((((s32) (var_t2_4 + 0x7FF) / var_a0_4) & 0xFFF) | 0x07000000 | ((var_ra_3 & 0xFFF) << 0xC));
+            // temp_a3_28->words.w0 = 0xE7000000;
+            // temp_a3_28->words.w1 = 0;
+            // temp_a3_29->words.w0 = sp30 | 0xF5700000;
+            // temp_a3_29->words.w1 = sp2C;
+            // temp_a3_30->words.w0 = 0xF2000000;
+            // temp_a3_30->words.w1 = sp28;
             tex->flags |= 4;
         }
         if (texFormat == 5) {
-            dlist->words.w1 = (u32) (tex + 0x80000020);
-            temp_a3_31 = dlist + 8;
-            dlist->words.w0 = 0xFD700000;
-            temp_a3_31->words.w0 = 0xF5700000;
-            temp_v0_6 = (cmt & 3) << 0x12;
-            temp_v1_7 = (maskt & 0xF) << 0xE;
-            temp_a1_5 = (cms & 3) << 8;
-            temp_t9_2 = (masks & 0xF) * 0x10;
-            temp_a3_32 = temp_a3_31 + 8;
-            temp_a3_31->words.w1 = temp_v0_6 | 0x07000000 | temp_v1_7 | temp_a1_5 | temp_t9_2;
-            temp_a3_33 = temp_a3_32 + 8;
-            temp_a3_32->words.w0 = 0xE6000000;
-            temp_a3_32->words.w1 = 0;
-            temp_a3_33->words.w0 = 0xF3000000;
-            sp2C = temp_v0_6 | temp_v1_7 | temp_a1_5 | temp_t9_2;
-            temp_t0_5 = ((s32) ((width * height) + 1) >> 1) - 1;
-            sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
-            temp_a3_34 = temp_a3_33 + 8;
-            if (temp_t0_5 < 0x7FF) {
-                var_ra_4 = temp_t0_5;
-            } else {
-                var_ra_4 = 0x7FF;
-            }
-            temp_t3_3 = (s32) width / 8;
-            var_t2_5 = temp_t3_3;
-            if (temp_t3_3 <= 0) {
-                var_t2_5 = 1;
-            }
-            if (temp_t3_3 <= 0) {
-                var_a0_5 = 1;
-            } else {
-                var_a0_5 = temp_t3_3;
-            }
-            temp_a3_35 = temp_a3_34 + 8;
-            temp_a3_36 = temp_a3_35 + 8;
-            dlist = temp_a3_36 + 8;
-            temp_a3_33->words.w1 = (s32) ((((s32) (var_t2_5 + 0x7FF) / var_a0_5) & 0xFFF) | 0x07000000 | ((var_ra_4 & 0xFFF) << 0xC));
-            temp_a3_34->words.w0 = 0xE7000000;
-            temp_a3_34->words.w1 = 0;
-            temp_a3_35->words.w0 = ((((s32) (width + 7) >> 3) & 0x1FF) << 9) | 0xF5680000;
-            temp_a3_35->words.w1 = sp2C;
-            temp_a3_36->words.w0 = 0xF2000000;
-            temp_a3_36->words.w1 = sp28;
+            gDPLoadTextureBlock(
+                dlist++, //pkt
+                OS_PHYSICAL_TO_K0(tex + 1), //timg
+                G_IM_FMT_IA, //fmt
+                G_IM_SIZ_8b, //siz
+                width,
+                height,
+                0, //palette
+                cms, //cms
+                cmt, //cmt
+                masks, //masks
+                maskt, //maskt
+                G_TX_NOLOD, //shifts
+                G_TX_NOLOD  //shiftt
+            );
+            // dlist->words.w1 = (u32) (tex + 0x80000020);
+            // temp_a3_31 = dlist + 8;
+            // dlist->words.w0 = 0xFD700000;
+            // temp_a3_31->words.w0 = 0xF5700000;
+            // temp_v0_6 = (cmt & 3) << 0x12;
+            // temp_v1_7 = (maskt & 0xF) << 0xE;
+            // temp_a1_5 = (cms & 3) << 8;
+            // temp_t9_2 = (masks & 0xF) * 0x10;
+            // temp_a3_32 = temp_a3_31 + 8;
+            // temp_a3_31->words.w1 = temp_v0_6 | 0x07000000 | temp_v1_7 | temp_a1_5 | temp_t9_2;
+            // temp_a3_33 = temp_a3_32 + 8;
+            // temp_a3_32->words.w0 = 0xE6000000;
+            // temp_a3_32->words.w1 = 0;
+            // temp_a3_33->words.w0 = 0xF3000000;
+            // sp2C = temp_v0_6 | temp_v1_7 | temp_a1_5 | temp_t9_2;
+            // temp_t0_5 = ((s32) ((width * height) + 1) >> 1) - 1;
+            // sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
+            // temp_a3_34 = temp_a3_33 + 8;
+            // if (temp_t0_5 < 0x7FF) {
+            //     var_ra_4 = temp_t0_5;
+            // } else {
+            //     var_ra_4 = 0x7FF;
+            // }
+            // temp_t3_3 = (s32) width / 8;
+            // var_t2_5 = temp_t3_3;
+            // if (temp_t3_3 <= 0) {
+            //     var_t2_5 = 1;
+            // }
+            // if (temp_t3_3 <= 0) {
+            //     var_a0_5 = 1;
+            // } else {
+            //     var_a0_5 = temp_t3_3;
+            // }
+            // temp_a3_35 = temp_a3_34 + 8;
+            // temp_a3_36 = temp_a3_35 + 8;
+            // dlist = temp_a3_36 + 8;
+            // temp_a3_33->words.w1 = (s32) ((((s32) (var_t2_5 + 0x7FF) / var_a0_5) & 0xFFF) | 0x07000000 | ((var_ra_4 & 0xFFF) << 0xC));
+            // temp_a3_34->words.w0 = 0xE7000000;
+            // temp_a3_34->words.w1 = 0;
+            // temp_a3_35->words.w0 = ((((s32) (width + 7) >> 3) & 0x1FF) << 9) | 0xF5680000;
+            // temp_a3_35->words.w1 = sp2C;
+            // temp_a3_36->words.w0 = 0xF2000000;
+            // temp_a3_36->words.w1 = sp28;
             tex->flags |= 4;
         }
         if (texFormat == 6) {
-            dlist->words.w1 = (u32) (tex + 0x80000020);
-            temp_a3_37 = dlist + 8;
-            dlist->words.w0 = 0xFD700000;
-            temp_a3_37->words.w0 = 0xF5700000;
-            temp_v0_7 = (cmt & 3) << 0x12;
-            temp_v1_8 = (maskt & 0xF) << 0xE;
-            temp_a1_6 = (cms & 3) << 8;
-            temp_t6_3 = (masks & 0xF) * 0x10;
-            temp_a3_38 = temp_a3_37 + 8;
-            temp_a3_37->words.w1 = temp_v0_7 | 0x07000000 | temp_v1_8 | temp_a1_6 | temp_t6_3;
-            temp_a3_39 = temp_a3_38 + 8;
-            temp_a3_38->words.w0 = 0xE6000000;
-            temp_a3_38->words.w1 = 0;
-            temp_a3_39->words.w0 = 0xF3000000;
-            sp2C = temp_v0_7 | temp_v1_8 | temp_a1_6 | temp_t6_3;
-            temp_t0_6 = ((s32) ((width * height) + 3) >> 2) - 1;
-            sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
-            temp_a3_40 = temp_a3_39 + 8;
-            temp_t1_2 = (s32) width / 16;
-            temp_a3_41 = temp_a3_40 + 8;
-            var_a0_6 = 0x7FF;
-            sp30 = ((s32) (temp_t1_2 + 0x7FF) / temp_t1_2) & 0xFFF;
-            if (temp_t0_6 < 0x7FF) {
-                var_a0_6 = temp_t0_6;
-            }
-            temp_a3_39->words.w1 = ((var_a0_6 & 0xFFF) << 0xC) | 0x07000000 | sp30;
-            temp_a3_40->words.w0 = 0xE7000000;
-            temp_a3_40->words.w1 = 0;
-            temp_a3_41->words.w0 = ((((s32) (((s32) width >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5600000;
-            temp_a3_42 = temp_a3_41 + 8;
-            temp_a3_41->words.w1 = sp2C;
-            temp_a3_42->words.w0 = 0xF2000000;
-            dlist = temp_a3_42 + 8;
-            temp_a3_42->words.w1 = sp28;
+            gDPLoadTextureBlock(
+                dlist++, //pkt
+                OS_PHYSICAL_TO_K0(tex + 1), //timg
+                G_IM_FMT_IA, //fmt
+                G_IM_SIZ_4b, //siz
+                width,
+                height,
+                0, //palette
+                cms, //cms
+                cmt, //cmt
+                masks, //masks
+                maskt, //maskt
+                G_TX_NOLOD, //shifts
+                G_TX_NOLOD  //shiftt
+            );
+            // dlist->words.w1 = (u32) (tex + 0x80000020);
+            // temp_a3_37 = dlist + 8;
+            // dlist->words.w0 = 0xFD700000;
+            // temp_a3_37->words.w0 = 0xF5700000;
+            // temp_v0_7 = (cmt & 3) << 0x12;
+            // temp_v1_8 = (maskt & 0xF) << 0xE;
+            // temp_a1_6 = (cms & 3) << 8;
+            // temp_t6_3 = (masks & 0xF) * 0x10;
+            // temp_a3_38 = temp_a3_37 + 8;
+            // temp_a3_37->words.w1 = temp_v0_7 | 0x07000000 | temp_v1_8 | temp_a1_6 | temp_t6_3;
+            // temp_a3_39 = temp_a3_38 + 8;
+            // temp_a3_38->words.w0 = 0xE6000000;
+            // temp_a3_38->words.w1 = 0;
+            // temp_a3_39->words.w0 = 0xF3000000;
+            // sp2C = temp_v0_7 | temp_v1_8 | temp_a1_6 | temp_t6_3;
+            // temp_t0_6 = ((s32) ((width * height) + 3) >> 2) - 1;
+            // sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
+            // temp_a3_40 = temp_a3_39 + 8;
+            // temp_t1_2 = (s32) width / 16;
+            // temp_a3_41 = temp_a3_40 + 8;
+            // var_a0_6 = 0x7FF;
+            // sp30 = ((s32) (temp_t1_2 + 0x7FF) / temp_t1_2) & 0xFFF;
+            // if (temp_t0_6 < 0x7FF) {
+            //     var_a0_6 = temp_t0_6;
+            // }
+            // temp_a3_39->words.w1 = ((var_a0_6 & 0xFFF) << 0xC) | 0x07000000 | sp30;
+            // temp_a3_40->words.w0 = 0xE7000000;
+            // temp_a3_40->words.w1 = 0;
+            // temp_a3_41->words.w0 = ((((s32) (((s32) width >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5600000;
+            // temp_a3_42 = temp_a3_41 + 8;
+            // temp_a3_41->words.w1 = sp2C;
+            // temp_a3_42->words.w0 = 0xF2000000;
+            // dlist = temp_a3_42 + 8;
+            // temp_a3_42->words.w1 = sp28;
             tex->flags |= 4;
         }
         if (texFormat == 2) {
-            dlist->words.w1 = (u32) (tex + 0x80000020);
-            temp_a3_43 = dlist + 8;
-            dlist->words.w0 = 0xFD900000;
-            temp_a3_43->words.w0 = 0xF5900000;
-            temp_v0_8 = (cmt & 3) << 0x12;
-            temp_v1_9 = (maskt & 0xF) << 0xE;
-            temp_a1_7 = (cms & 3) << 8;
-            temp_t6_4 = (masks & 0xF) * 0x10;
-            temp_a3_44 = temp_a3_43 + 8;
-            temp_a3_43->words.w1 = temp_v0_8 | 0x07000000 | temp_v1_9 | temp_a1_7 | temp_t6_4;
-            temp_a3_45 = temp_a3_44 + 8;
-            temp_a3_44->words.w0 = 0xE6000000;
-            temp_a3_44->words.w1 = 0;
-            temp_a3_45->words.w0 = 0xF3000000;
-            sp2C = temp_v0_8 | temp_v1_9 | temp_a1_7 | temp_t6_4;
-            temp_t0_7 = ((s32) ((width * height) + 1) >> 1) - 1;
-            sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
-            temp_t8 = (((s32) (width + 7) >> 3) & 0x1FF) << 9;
-            temp_a3_46 = temp_a3_45 + 8;
-            temp_t3_4 = (s32) width / 8;
-            if (temp_t0_7 < 0x7FF) {
-                var_ra_5 = temp_t0_7;
-            } else {
-                var_ra_5 = 0x7FF;
-            }
-            var_t2_6 = temp_t3_4;
-            if (temp_t3_4 <= 0) {
-                var_t2_6 = 1;
-            }
-            if (temp_t3_4 <= 0) {
-                var_a0_7 = 1;
-            } else {
-                var_a0_7 = temp_t3_4;
-            }
-            temp_a3_47 = temp_a3_46 + 8;
-            temp_a3_48 = temp_a3_47 + 8;
-            dlist = temp_a3_48 + 8;
-            temp_a3_45->words.w1 = (s32) ((((s32) (var_t2_6 + 0x7FF) / var_a0_7) & 0xFFF) | 0x07000000 | ((var_ra_5 & 0xFFF) << 0xC));
-            temp_a3_46->words.w0 = 0xE7000000;
-            temp_a3_46->words.w1 = 0;
-            temp_a3_47->words.w0 = temp_t8 | 0xF5880000;
-            temp_a3_47->words.w1 = sp2C;
-            temp_a3_48->words.w0 = 0xF2000000;
-            temp_a3_48->words.w1 = sp28;
+            gDPLoadTextureBlock(
+                dlist++, //pkt
+                OS_PHYSICAL_TO_K0(tex + 1), //timg
+                G_IM_FMT_I, //fmt
+                G_IM_SIZ_8b, //siz
+                width,
+                height,
+                0, //palette
+                cms, //cms
+                cmt, //cmt
+                masks, //masks
+                maskt, //maskt
+                G_TX_NOLOD, //shifts
+                G_TX_NOLOD  //shiftt
+            );
+            // dlist->words.w1 = (u32) (tex + 0x80000020);
+            // temp_a3_43 = dlist + 8;
+            // dlist->words.w0 = 0xFD900000;
+            // temp_a3_43->words.w0 = 0xF5900000;
+            // temp_v0_8 = (cmt & 3) << 0x12;
+            // temp_v1_9 = (maskt & 0xF) << 0xE;
+            // temp_a1_7 = (cms & 3) << 8;
+            // temp_t6_4 = (masks & 0xF) * 0x10;
+            // temp_a3_44 = temp_a3_43 + 8;
+            // temp_a3_43->words.w1 = temp_v0_8 | 0x07000000 | temp_v1_9 | temp_a1_7 | temp_t6_4;
+            // temp_a3_45 = temp_a3_44 + 8;
+            // temp_a3_44->words.w0 = 0xE6000000;
+            // temp_a3_44->words.w1 = 0;
+            // temp_a3_45->words.w0 = 0xF3000000;
+            // sp2C = temp_v0_8 | temp_v1_9 | temp_a1_7 | temp_t6_4;
+            // temp_t0_7 = ((s32) ((width * height) + 1) >> 1) - 1;
+            // sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
+            // temp_t8 = (((s32) (width + 7) >> 3) & 0x1FF) << 9;
+            // temp_a3_46 = temp_a3_45 + 8;
+            // temp_t3_4 = (s32) width / 8;
+            // if (temp_t0_7 < 0x7FF) {
+            //     var_ra_5 = temp_t0_7;
+            // } else {
+            //     var_ra_5 = 0x7FF;
+            // }
+            // var_t2_6 = temp_t3_4;
+            // if (temp_t3_4 <= 0) {
+            //     var_t2_6 = 1;
+            // }
+            // if (temp_t3_4 <= 0) {
+            //     var_a0_7 = 1;
+            // } else {
+            //     var_a0_7 = temp_t3_4;
+            // }
+            // temp_a3_47 = temp_a3_46 + 8;
+            // temp_a3_48 = temp_a3_47 + 8;
+            // dlist = temp_a3_48 + 8;
+            // temp_a3_45->words.w1 = (s32) ((((s32) (var_t2_6 + 0x7FF) / var_a0_7) & 0xFFF) | 0x07000000 | ((var_ra_5 & 0xFFF) << 0xC));
+            // temp_a3_46->words.w0 = 0xE7000000;
+            // temp_a3_46->words.w1 = 0;
+            // temp_a3_47->words.w0 = temp_t8 | 0xF5880000;
+            // temp_a3_47->words.w1 = sp2C;
+            // temp_a3_48->words.w0 = 0xF2000000;
+            // temp_a3_48->words.w1 = sp28;
         }
         if (texFormat == 3) {
-            dlist->words.w1 = (u32) (tex + 0x80000020);
-            temp_a3_49 = dlist + 8;
-            dlist->words.w0 = 0xFD900000;
-            temp_a3_49->words.w0 = 0xF5900000;
-            temp_v0_9 = (cmt & 3) << 0x12;
-            temp_v1_10 = (maskt & 0xF) << 0xE;
-            temp_a1_8 = (cms & 3) << 8;
-            temp_t8_2 = (masks & 0xF) * 0x10;
-            temp_a3_50 = temp_a3_49 + 8;
-            temp_a3_49->words.w1 = temp_v0_9 | 0x07000000 | temp_v1_10 | temp_a1_8 | temp_t8_2;
-            temp_a3_51 = temp_a3_50 + 8;
-            temp_a3_50->words.w0 = 0xE6000000;
-            temp_a3_50->words.w1 = 0;
-            temp_a3_51->words.w0 = 0xF3000000;
-            sp2C = temp_v0_9 | temp_v1_10 | temp_a1_8 | temp_t8_2;
-            temp_t0_8 = ((s32) ((width * height) + 3) >> 2) - 1;
-            sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
-            temp_a3_52 = temp_a3_51 + 8;
-            temp_t1_3 = (s32) width / 16;
-            temp_a3_53 = temp_a3_52 + 8;
-            var_a0_8 = 0x7FF;
-            sp30 = ((s32) (temp_t1_3 + 0x7FF) / temp_t1_3) & 0xFFF;
-            if (temp_t0_8 < 0x7FF) {
-                var_a0_8 = temp_t0_8;
-            }
-            temp_a3_51->words.w1 = ((var_a0_8 & 0xFFF) << 0xC) | 0x07000000 | sp30;
-            temp_a3_52->words.w0 = 0xE7000000;
-            temp_a3_52->words.w1 = 0;
-            temp_a3_53->words.w0 = ((((s32) (((s32) width >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5800000;
-            temp_a3_54 = temp_a3_53 + 8;
-            temp_a3_53->words.w1 = sp2C;
-            temp_a3_54->words.w0 = 0xF2000000;
-            dlist = temp_a3_54 + 8;
-            temp_a3_54->words.w1 = sp28;
+            gDPLoadTextureBlock(
+                dlist++, //pkt
+                OS_PHYSICAL_TO_K0(tex + 1), //timg
+                G_IM_FMT_I, //fmt
+                G_IM_SIZ_4b, //siz
+                width,
+                height,
+                0, //palette
+                cms, //cms
+                cmt, //cmt
+                masks, //masks
+                maskt, //maskt
+                G_TX_NOLOD, //shifts
+                G_TX_NOLOD  //shiftt
+            );
+            // dlist->words.w1 = (u32) (tex + 0x80000020);
+            // temp_a3_49 = dlist + 8;
+            // dlist->words.w0 = 0xFD900000;
+            // temp_a3_49->words.w0 = 0xF5900000;
+            // temp_v0_9 = (cmt & 3) << 0x12;
+            // temp_v1_10 = (maskt & 0xF) << 0xE;
+            // temp_a1_8 = (cms & 3) << 8;
+            // temp_t8_2 = (masks & 0xF) * 0x10;
+            // temp_a3_50 = temp_a3_49 + 8;
+            // temp_a3_49->words.w1 = temp_v0_9 | 0x07000000 | temp_v1_10 | temp_a1_8 | temp_t8_2;
+            // temp_a3_51 = temp_a3_50 + 8;
+            // temp_a3_50->words.w0 = 0xE6000000;
+            // temp_a3_50->words.w1 = 0;
+            // temp_a3_51->words.w0 = 0xF3000000;
+            // sp2C = temp_v0_9 | temp_v1_10 | temp_a1_8 | temp_t8_2;
+            // temp_t0_8 = ((s32) ((width * height) + 3) >> 2) - 1;
+            // sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
+            // temp_a3_52 = temp_a3_51 + 8;
+            // temp_t1_3 = (s32) width / 16;
+            // temp_a3_53 = temp_a3_52 + 8;
+            // var_a0_8 = 0x7FF;
+            // sp30 = ((s32) (temp_t1_3 + 0x7FF) / temp_t1_3) & 0xFFF;
+            // if (temp_t0_8 < 0x7FF) {
+            //     var_a0_8 = temp_t0_8;
+            // }
+            // temp_a3_51->words.w1 = ((var_a0_8 & 0xFFF) << 0xC) | 0x07000000 | sp30;
+            // temp_a3_52->words.w0 = 0xE7000000;
+            // temp_a3_52->words.w1 = 0;
+            // temp_a3_53->words.w0 = ((((s32) (((s32) width >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5800000;
+            // temp_a3_54 = temp_a3_53 + 8;
+            // temp_a3_53->words.w1 = sp2C;
+            // temp_a3_54->words.w0 = 0xF2000000;
+            // dlist = temp_a3_54 + 8;
+            // temp_a3_54->words.w1 = sp28;
         }
-        tex->numberOfCommands = (s16) ((s32) (dlist - (s32)tex->cmd) >> 3);
+        tex->numberOfCommands = ((s32) (dlist - (s32)tex->cmd) >> 3);
         return;
     }
-    if (texFormat == 0) {
-        temp_a3_55 = dlist + 8;
-        dlist->words.w0 = 0xFD180000;
-        dlist->words.w1 = (u32) (tex + 0x80000020);
-        temp_a3_55->words.w0 = 0xF5180000;
-        temp_v0_10 = (cmt & 3) << 0x12;
-        temp_v1_11 = (maskt & 0xF) << 0xE;
-        temp_a1_9 = (cms & 3) << 8;
-        temp_a2_3 = (masks & 0xF) * 0x10;
-        temp_a3_56 = temp_a3_55 + 8;
-        temp_a3_55->words.w1 = temp_v0_10 | 0x07000000 | temp_v1_11 | temp_a1_9 | temp_a2_3;
-        temp_t0_9 = (width * height) - 1;
-        temp_a3_57 = temp_a3_56 + 8;
-        temp_a3_56->words.w0 = 0xE6000000;
-        temp_a3_56->words.w1 = 0;
-        temp_a3_57->words.w0 = 0xF3000000;
-        temp_a3_58 = temp_a3_57 + 8;
-        if (temp_t0_9 < 0x7FF) {
-            var_a0_9 = temp_t0_9;
-        } else {
-            var_a0_9 = 0x7FF;
-        }
-        temp_a3_57->words.w1 = ((var_a0_9 & 0xFFF) << 0xC) | 0x07000000;
-        temp_a3_58->words.w0 = 0xE7000000;
-        temp_a3_59 = temp_a3_58 + 8;
-        temp_a3_58->words.w1 = 0;
-        temp_a3_59->words.w1 = temp_v0_10 | temp_v1_11 | temp_a1_9 | temp_a2_3;
-        temp_a3_59->words.w0 = ((((s32) ((width * 2) + 7) >> 3) & 0x1FF) << 9) | 0xF5180000;
-        temp_a3_60 = temp_a3_59 + 8;
-        temp_a3_60->words.w0 = 0xF2000000;
-        temp_a3_60->words.w1 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
-        dlist = temp_a3_60 + 8;
+    if (texFormat == 0) {        
+        gDPLoadTextureBlockS(
+            dlist++, //pkt
+            OS_PHYSICAL_TO_K0(tex + 1), //timg
+            G_IM_FMT_RGBA, //fmt
+            G_IM_SIZ_32b, //siz
+            width,
+            height,
+            0, //palette
+            cms, //cms
+            cmt, //cmt
+            masks, //masks
+            maskt, //maskt
+            G_TX_NOLOD, //shifts
+            G_TX_NOLOD  //shiftt
+        );
+        // temp_a3_55 = dlist + 8;
+        // dlist->words.w0 = 0xFD180000;
+        // dlist->words.w1 = (u32) (tex + 0x80000020);
+        // temp_a3_55->words.w0 = 0xF5180000;
+        // temp_v0_10 = (cmt & 3) << 0x12;
+        // temp_v1_11 = (maskt & 0xF) << 0xE;
+        // temp_a1_9 = (cms & 3) << 8;
+        // temp_a2_3 = (masks & 0xF) * 0x10;
+        // temp_a3_56 = temp_a3_55 + 8;
+        // temp_a3_55->words.w1 = temp_v0_10 | 0x07000000 | temp_v1_11 | temp_a1_9 | temp_a2_3;
+        // temp_t0_9 = (width * height) - 1;
+        // temp_a3_57 = temp_a3_56 + 8;
+        // temp_a3_56->words.w0 = 0xE6000000;
+        // temp_a3_56->words.w1 = 0;
+        // temp_a3_57->words.w0 = 0xF3000000;
+        // temp_a3_58 = temp_a3_57 + 8;
+        // if (temp_t0_9 < 0x7FF) {
+        //     var_a0_9 = temp_t0_9;
+        // } else {
+        //     var_a0_9 = 0x7FF;
+        // }
+        // temp_a3_57->words.w1 = ((var_a0_9 & 0xFFF) << 0xC) | 0x07000000;
+        // temp_a3_58->words.w0 = 0xE7000000;
+        // temp_a3_59 = temp_a3_58 + 8;
+        // temp_a3_58->words.w1 = 0;
+        // temp_a3_59->words.w1 = temp_v0_10 | temp_v1_11 | temp_a1_9 | temp_a2_3;
+        // temp_a3_59->words.w0 = ((((s32) ((width * 2) + 7) >> 3) & 0x1FF) << 9) | 0xF5180000;
+        // temp_a3_60 = temp_a3_59 + 8;
+        // temp_a3_60->words.w0 = 0xF2000000;
+        // temp_a3_60->words.w1 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
+        // dlist = temp_a3_60 + 8;
         if ((texFlags == 0) || (texFlags == 2)) {
             tex->flags |= 4;
         }
     }
     if (texFormat == 1) {
-        temp_a3_61 = dlist + 8;
-        dlist->words.w0 = 0xFD100000;
-        dlist->words.w1 = (u32) (tex + 0x80000020);
-        temp_a3_61->words.w0 = 0xF5100000;
-        temp_v0_11 = (cmt & 3) << 0x12;
-        temp_v1_12 = (maskt & 0xF) << 0xE;
-        temp_a1_10 = (cms & 3) << 8;
-        temp_a2_4 = (masks & 0xF) * 0x10;
-        temp_a3_62 = temp_a3_61 + 8;
-        temp_a3_61->words.w1 = temp_v0_11 | 0x07000000 | temp_v1_12 | temp_a1_10 | temp_a2_4;
-        temp_a3_62->words.w0 = 0xE6000000;
-        temp_a3_63 = temp_a3_62 + 8;
-        temp_a3_62->words.w1 = 0;
-        temp_a3_63->words.w0 = 0xF3000000;
-        sp30 = (((s32) ((width * 2) + 7) >> 3) & 0x1FF) << 9;
-        sp2C = temp_v0_11 | temp_v1_12 | temp_a1_10 | temp_a2_4;
-        temp_t0_10 = (width * height) - 1;
-        sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
-        temp_a3_64 = temp_a3_63 + 8;
-        if (temp_t0_10 < 0x7FF) {
-            var_a0_10 = temp_t0_10;
-        } else {
-            var_a0_10 = 0x7FF;
-        }
-        temp_a3_63->words.w1 = ((var_a0_10 & 0xFFF) << 0xC) | 0x07000000;
-        temp_a3_64->words.w0 = 0xE7000000;
-        temp_a3_64->words.w1 = 0;
-        temp_a3_65 = temp_a3_64 + 8;
-        temp_a3_65->words.w0 = sp30 | 0xF5100000;
-        temp_a3_66 = temp_a3_65 + 8;
-        temp_a3_65->words.w1 = sp2C;
-        temp_a3_66->words.w0 = 0xF2000000;
-        dlist = temp_a3_66 + 8;
-        temp_a3_66->words.w1 = sp28;
-        if ((texFlags == 0) || (texFlags == 2)) {
-            tex->flags |= 4;
-        }
+        gDPLoadTextureBlockS(
+            dlist++, //pkt
+            OS_PHYSICAL_TO_K0(tex + 1), //timg
+            G_IM_FMT_RGBA, //fmt
+            G_IM_SIZ_16b, //siz
+            width,
+            height,
+            0, //palette
+            cms, //cms
+            cmt, //cmt
+            masks, //masks
+            maskt, //maskt
+            G_TX_NOLOD, //shifts
+            G_TX_NOLOD  //shiftt
+        );
+        // temp_a3_61 = dlist + 8;
+        // dlist->words.w0 = 0xFD100000;
+        // dlist->words.w1 = (u32) (tex + 0x80000020);
+        // temp_a3_61->words.w0 = 0xF5100000;
+        // temp_v0_11 = (cmt & 3) << 0x12;
+        // temp_v1_12 = (maskt & 0xF) << 0xE;
+        // temp_a1_10 = (cms & 3) << 8;
+        // temp_a2_4 = (masks & 0xF) * 0x10;
+        // temp_a3_62 = temp_a3_61 + 8;
+        // temp_a3_61->words.w1 = temp_v0_11 | 0x07000000 | temp_v1_12 | temp_a1_10 | temp_a2_4;
+        // temp_a3_62->words.w0 = 0xE6000000;
+        // temp_a3_63 = temp_a3_62 + 8;
+        // temp_a3_62->words.w1 = 0;
+        // temp_a3_63->words.w0 = 0xF3000000;
+        // sp30 = (((s32) ((width * 2) + 7) >> 3) & 0x1FF) << 9;
+        // sp2C = temp_v0_11 | temp_v1_12 | temp_a1_10 | temp_a2_4;
+        // temp_t0_10 = (width * height) - 1;
+        // sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
+        // temp_a3_64 = temp_a3_63 + 8;
+        // if (temp_t0_10 < 0x7FF) {
+        //     var_a0_10 = temp_t0_10;
+        // } else {
+        //     var_a0_10 = 0x7FF;
+        // }
+        // temp_a3_63->words.w1 = ((var_a0_10 & 0xFFF) << 0xC) | 0x07000000;
+        // temp_a3_64->words.w0 = 0xE7000000;
+        // temp_a3_64->words.w1 = 0;
+        // temp_a3_65 = temp_a3_64 + 8;
+        // temp_a3_65->words.w0 = sp30 | 0xF5100000;
+        // temp_a3_66 = temp_a3_65 + 8;
+        // temp_a3_65->words.w1 = sp2C;
+        // temp_a3_66->words.w0 = 0xF2000000;
+        // dlist = temp_a3_66 + 8;
+        // temp_a3_66->words.w1 = sp28;
+        // if ((texFlags == 0) || (texFlags == 2)) {
+        //     tex->flags |= 4;
+        // }
     }
     if (texFormat == 7) {
-        temp_v0_12 = (cmt & 3) << 0x12;
-        temp_lo_2 = width * height;
-        temp_a1_11 = (cms & 3) << 8;
-        temp_v1_13 = (maskt & 0xF) << 0xE;
-        temp_a2_5 = (masks & 0xF) * 0x10;
-        sp48 = tex + 0x80000020;
-        temp_t7_2 = temp_v0_12 | 0x07000000 | temp_v1_13 | temp_a1_11 | temp_a2_5;
-        sp2C = temp_v0_12 | temp_v1_13 | temp_a1_11 | temp_a2_5;
-        sp30 = temp_lo_2;
-        sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
-        temp_v0_13 = func_8007EF64(tex->ciPaletteOffset);
-        dlist->words.w0 = 0xFD500000;
-        temp_a3_67 = dlist + 8;
-        dlist->words.w1 = (u32) sp48;
-        temp_a3_67->words.w0 = 0xF5500000;
-        temp_a3_68 = temp_a3_67 + 8;
-        temp_a3_67->words.w1 = temp_t7_2;
-        temp_t0_11 = ((s32) (temp_lo_2 + 3) >> 2) - 1;
-        temp_a3_69 = temp_a3_68 + 8;
-        temp_a3_68->words.w0 = 0xE6000000;
-        temp_a3_68->words.w1 = 0;
-        temp_a3_69->words.w0 = 0xF3000000;
-        temp_a3_70 = temp_a3_69 + 8;
-        if (temp_t0_11 < 0x7FF) {
-            var_a0_11 = temp_t0_11;
-        } else {
-            var_a0_11 = 0x7FF;
-        }
-        temp_a3_69->words.w1 = ((var_a0_11 & 0xFFF) << 0xC) | 0x07000000;
-        temp_a3_70->words.w0 = 0xE7000000;
-        temp_a3_71 = temp_a3_70 + 8;
-        temp_a3_70->words.w1 = 0;
-        temp_a3_71->words.w0 = ((((s32) (((s32) width >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000;
-        temp_a3_72 = temp_a3_71 + 8;
-        temp_a3_71->words.w1 = sp2C;
-        temp_a3_72->words.w0 = 0xF2000000;
-        temp_a3_73 = temp_a3_72 + 8;
-        temp_a3_72->words.w1 = sp28;
-        temp_a3_74 = temp_a3_73 + 8;
-        temp_a3_73->words.w0 = 0xFD100000;
-        temp_a3_75 = temp_a3_74 + 8;
-        temp_a3_73->words.w1 = (u32) temp_v0_13;
-        temp_a3_74->words.w0 = 0xE8000000;
-        temp_a3_74->words.w1 = 0;
-        temp_a3_76 = temp_a3_75 + 8;
-        temp_a3_75->words.w1 = 0x07000000;
-        temp_a3_75->words.w0 = 0xF5000100;
-        temp_a3_77 = temp_a3_76 + 8;
-        temp_a3_76->words.w0 = 0xE6000000;
-        temp_a3_76->words.w1 = 0;
-        temp_a3_78 = temp_a3_77 + 8;
-        temp_a3_77->words.w0 = 0xF0000000;
-        temp_a3_77->words.w1 = 0x0703C000;
-        temp_a3_78->words.w0 = 0xE7000000;
-        temp_a3_78->words.w1 = 0;
-        dlist = temp_a3_78 + 8;
+        
+        gDPLoadTextureBlockS(
+            dlist++, //pkt
+            OS_PHYSICAL_TO_K0(tex + 1), //timg
+            G_IM_FMT_CI, //fmt
+            G_IM_SIZ_16b, //siz
+            width,
+            height,
+            0, //palette
+            cms, //cms
+            cmt, //cmt
+            masks, //masks
+            maskt, //maskt
+            G_TX_NOLOD, //shifts
+            G_TX_NOLOD  //shiftt
+        );
+        temp_v0_4 = func_8007EF64(tex->ciPaletteOffset);
+        gDPLoadTLUT_pal16(dlist++, 0, temp_v0_4);
+
+        // temp_v0_12 = (cmt & 3) << 0x12;
+        // temp_lo_2 = width * height;
+        // temp_a1_11 = (cms & 3) << 8;
+        // temp_v1_13 = (maskt & 0xF) << 0xE;
+        // temp_a2_5 = (masks & 0xF) * 0x10;
+        // sp48 = tex + 0x80000020;
+        // temp_t7_2 = temp_v0_12 | 0x07000000 | temp_v1_13 | temp_a1_11 | temp_a2_5;
+        // sp2C = temp_v0_12 | temp_v1_13 | temp_a1_11 | temp_a2_5;
+        // sp30 = temp_lo_2;
+        // sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
+        // temp_v0_13 = func_8007EF64(tex->ciPaletteOffset);
+        // dlist->words.w0 = 0xFD500000;
+        // temp_a3_67 = dlist + 8;
+        // dlist->words.w1 = (u32) sp48;
+        // temp_a3_67->words.w0 = 0xF5500000;
+        // temp_a3_68 = temp_a3_67 + 8;
+        // temp_a3_67->words.w1 = temp_t7_2;
+        // temp_t0_11 = ((s32) (temp_lo_2 + 3) >> 2) - 1;
+        // temp_a3_69 = temp_a3_68 + 8;
+        // temp_a3_68->words.w0 = 0xE6000000;
+        // temp_a3_68->words.w1 = 0;
+        // temp_a3_69->words.w0 = 0xF3000000;
+        // temp_a3_70 = temp_a3_69 + 8;
+        // if (temp_t0_11 < 0x7FF) {
+        //     var_a0_11 = temp_t0_11;
+        // } else {
+        //     var_a0_11 = 0x7FF;
+        // }
+        // temp_a3_69->words.w1 = ((var_a0_11 & 0xFFF) << 0xC) | 0x07000000;
+        // temp_a3_70->words.w0 = 0xE7000000;
+        // temp_a3_71 = temp_a3_70 + 8;
+        // temp_a3_70->words.w1 = 0;
+        // temp_a3_71->words.w0 = ((((s32) (((s32) width >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000;
+        // temp_a3_72 = temp_a3_71 + 8;
+        // temp_a3_71->words.w1 = sp2C;
+        // temp_a3_72->words.w0 = 0xF2000000;
+        // temp_a3_73 = temp_a3_72 + 8;
+        // temp_a3_72->words.w1 = sp28;
+        // temp_a3_74 = temp_a3_73 + 8;
+        // temp_a3_73->words.w0 = 0xFD100000;
+        // temp_a3_75 = temp_a3_74 + 8;
+        // temp_a3_73->words.w1 = (u32) temp_v0_13;
+        // temp_a3_74->words.w0 = 0xE8000000;
+        // temp_a3_74->words.w1 = 0;
+        // temp_a3_76 = temp_a3_75 + 8;
+        // temp_a3_75->words.w1 = 0x07000000;
+        // temp_a3_75->words.w0 = 0xF5000100;
+        // temp_a3_77 = temp_a3_76 + 8;
+        // temp_a3_76->words.w0 = 0xE6000000;
+        // temp_a3_76->words.w1 = 0;
+        // temp_a3_78 = temp_a3_77 + 8;
+        // temp_a3_77->words.w0 = 0xF0000000;
+        // temp_a3_77->words.w1 = 0x0703C000;
+        // temp_a3_78->words.w0 = 0xE7000000;
+        // temp_a3_78->words.w1 = 0;
+        // dlist = temp_a3_78 + 8;
+
         tex->flags |= 0x20;
         if ((texFlags == 0) || (texFlags == 2)) {
             tex->flags |= 4;
         }
     }
     if (texFormat == 4) {
-        temp_a3_79 = dlist + 8;
-        dlist->words.w0 = 0xFD700000;
-        dlist->words.w1 = (u32) (tex + 0x80000020);
-        temp_a3_79->words.w0 = 0xF5700000;
-        temp_v0_14 = (cmt & 3) << 0x12;
-        temp_v1_14 = (maskt & 0xF) << 0xE;
-        temp_a1_12 = (cms & 3) << 8;
-        temp_a2_6 = (masks & 0xF) * 0x10;
-        temp_a3_80 = temp_a3_79 + 8;
-        temp_a3_79->words.w1 = temp_v0_14 | 0x07000000 | temp_v1_14 | temp_a1_12 | temp_a2_6;
-        temp_a3_80->words.w0 = 0xE6000000;
-        temp_a3_81 = temp_a3_80 + 8;
-        temp_a3_80->words.w1 = 0;
-        temp_a3_81->words.w0 = 0xF3000000;
-        sp30 = (((s32) ((width * 2) + 7) >> 3) & 0x1FF) << 9;
-        sp2C = temp_v0_14 | temp_v1_14 | temp_a1_12 | temp_a2_6;
-        temp_t0_12 = (width * height) - 1;
-        sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
-        temp_a3_82 = temp_a3_81 + 8;
-        if (temp_t0_12 < 0x7FF) {
-            var_a0_12 = temp_t0_12;
-        } else {
-            var_a0_12 = 0x7FF;
-        }
-        temp_a3_81->words.w1 = ((var_a0_12 & 0xFFF) << 0xC) | 0x07000000;
-        temp_a3_82->words.w0 = 0xE7000000;
-        temp_a3_82->words.w1 = 0;
-        temp_a3_83 = temp_a3_82 + 8;
-        temp_a3_83->words.w0 = sp30 | 0xF5700000;
-        temp_a3_84 = temp_a3_83 + 8;
-        temp_a3_83->words.w1 = sp2C;
-        temp_a3_84->words.w0 = 0xF2000000;
-        dlist = temp_a3_84 + 8;
-        temp_a3_84->words.w1 = sp28;
+        gDPLoadTextureBlockS(
+            dlist++, //pkt
+            OS_PHYSICAL_TO_K0(tex + 1), //timg
+            G_IM_FMT_IA, //fmt
+            G_IM_SIZ_16b, //siz
+            width,
+            height,
+            0, //palette
+            cms, //cms
+            cmt, //cmt
+            masks, //masks
+            maskt, //maskt
+            G_TX_NOLOD, //shifts
+            G_TX_NOLOD  //shiftt
+        );
+        // temp_a3_79 = dlist + 8;
+        // dlist->words.w0 = 0xFD700000;
+        // dlist->words.w1 = (u32) (tex + 0x80000020);
+        // temp_a3_79->words.w0 = 0xF5700000;
+        // temp_v0_14 = (cmt & 3) << 0x12;
+        // temp_v1_14 = (maskt & 0xF) << 0xE;
+        // temp_a1_12 = (cms & 3) << 8;
+        // temp_a2_6 = (masks & 0xF) * 0x10;
+        // temp_a3_80 = temp_a3_79 + 8;
+        // temp_a3_79->words.w1 = temp_v0_14 | 0x07000000 | temp_v1_14 | temp_a1_12 | temp_a2_6;
+        // temp_a3_80->words.w0 = 0xE6000000;
+        // temp_a3_81 = temp_a3_80 + 8;
+        // temp_a3_80->words.w1 = 0;
+        // temp_a3_81->words.w0 = 0xF3000000;
+        // sp30 = (((s32) ((width * 2) + 7) >> 3) & 0x1FF) << 9;
+        // sp2C = temp_v0_14 | temp_v1_14 | temp_a1_12 | temp_a2_6;
+        // temp_t0_12 = (width * height) - 1;
+        // sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
+        // temp_a3_82 = temp_a3_81 + 8;
+        // if (temp_t0_12 < 0x7FF) {
+        //     var_a0_12 = temp_t0_12;
+        // } else {
+        //     var_a0_12 = 0x7FF;
+        // }
+        // temp_a3_81->words.w1 = ((var_a0_12 & 0xFFF) << 0xC) | 0x07000000;
+        // temp_a3_82->words.w0 = 0xE7000000;
+        // temp_a3_82->words.w1 = 0;
+        // temp_a3_83 = temp_a3_82 + 8;
+        // temp_a3_83->words.w0 = sp30 | 0xF5700000;
+        // temp_a3_84 = temp_a3_83 + 8;
+        // temp_a3_83->words.w1 = sp2C;
+        // temp_a3_84->words.w0 = 0xF2000000;
+        // dlist = temp_a3_84 + 8;
+        // temp_a3_84->words.w1 = sp28;
         tex->flags |= 4;
     }
     if (texFormat == 5) {
-        temp_a3_85 = dlist + 8;
-        dlist->words.w0 = 0xFD700000;
-        dlist->words.w1 = (u32) (tex + 0x80000020);
-        temp_a3_85->words.w0 = 0xF5700000;
-        temp_v0_15 = (cmt & 3) << 0x12;
-        temp_v1_15 = (maskt & 0xF) << 0xE;
-        temp_a1_13 = (cms & 3) << 8;
-        temp_a2_7 = (masks & 0xF) * 0x10;
-        temp_a3_86 = temp_a3_85 + 8;
-        temp_a3_85->words.w1 = temp_v0_15 | 0x07000000 | temp_v1_15 | temp_a1_13 | temp_a2_7;
-        temp_a3_87 = temp_a3_86 + 8;
-        temp_a3_86->words.w0 = 0xE6000000;
-        temp_a3_86->words.w1 = 0;
-        temp_a3_87->words.w0 = 0xF3000000;
-        sp2C = temp_v0_15 | temp_v1_15 | temp_a1_13 | temp_a2_7;
-        temp_t0_13 = ((s32) ((width * height) + 1) >> 1) - 1;
-        sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
-        temp_a3_88 = temp_a3_87 + 8;
-        if (temp_t0_13 < 0x7FF) {
-            var_a0_13 = temp_t0_13;
-        } else {
-            var_a0_13 = 0x7FF;
-        }
-        temp_a3_87->words.w1 = ((var_a0_13 & 0xFFF) << 0xC) | 0x07000000;
-        temp_a3_88->words.w0 = 0xE7000000;
-        temp_a3_89 = temp_a3_88 + 8;
-        temp_a3_88->words.w1 = 0;
-        temp_a3_89->words.w0 = ((((s32) (width + 7) >> 3) & 0x1FF) << 9) | 0xF5680000;
-        temp_a3_90 = temp_a3_89 + 8;
-        temp_a3_89->words.w1 = sp2C;
-        temp_a3_90->words.w0 = 0xF2000000;
-        dlist = temp_a3_90 + 8;
-        temp_a3_90->words.w1 = sp28;
+        gDPLoadTextureBlockS(
+            dlist++, //pkt
+            OS_PHYSICAL_TO_K0(tex + 1), //timg
+            G_IM_FMT_IA, //fmt
+            G_IM_SIZ_8b, //siz
+            width,
+            height,
+            0, //palette
+            cms, //cms
+            cmt, //cmt
+            masks, //masks
+            maskt, //maskt
+            G_TX_NOLOD, //shifts
+            G_TX_NOLOD  //shiftt
+        );
+        // temp_a3_85 = dlist + 8;
+        // dlist->words.w0 = 0xFD700000;
+        // dlist->words.w1 = (u32) (tex + 0x80000020);
+        // temp_a3_85->words.w0 = 0xF5700000;
+        // temp_v0_15 = (cmt & 3) << 0x12;
+        // temp_v1_15 = (maskt & 0xF) << 0xE;
+        // temp_a1_13 = (cms & 3) << 8;
+        // temp_a2_7 = (masks & 0xF) * 0x10;
+        // temp_a3_86 = temp_a3_85 + 8;
+        // temp_a3_85->words.w1 = temp_v0_15 | 0x07000000 | temp_v1_15 | temp_a1_13 | temp_a2_7;
+        // temp_a3_87 = temp_a3_86 + 8;
+        // temp_a3_86->words.w0 = 0xE6000000;
+        // temp_a3_86->words.w1 = 0;
+        // temp_a3_87->words.w0 = 0xF3000000;
+        // sp2C = temp_v0_15 | temp_v1_15 | temp_a1_13 | temp_a2_7;
+        // temp_t0_13 = ((s32) ((width * height) + 1) >> 1) - 1;
+        // sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
+        // temp_a3_88 = temp_a3_87 + 8;
+        // if (temp_t0_13 < 0x7FF) {
+        //     var_a0_13 = temp_t0_13;
+        // } else {
+        //     var_a0_13 = 0x7FF;
+        // }
+        // temp_a3_87->words.w1 = ((var_a0_13 & 0xFFF) << 0xC) | 0x07000000;
+        // temp_a3_88->words.w0 = 0xE7000000;
+        // temp_a3_89 = temp_a3_88 + 8;
+        // temp_a3_88->words.w1 = 0;
+        // temp_a3_89->words.w0 = ((((s32) (width + 7) >> 3) & 0x1FF) << 9) | 0xF5680000;
+        // temp_a3_90 = temp_a3_89 + 8;
+        // temp_a3_89->words.w1 = sp2C;
+        // temp_a3_90->words.w0 = 0xF2000000;
+        // dlist = temp_a3_90 + 8;
+        // temp_a3_90->words.w1 = sp28;
         tex->flags |= 4;
     }
     if (texFormat == 6) {
-        temp_a3_91 = dlist + 8;
-        dlist->words.w0 = 0xFD700000;
-        dlist->words.w1 = (u32) (tex + 0x80000020);
-        temp_a3_91->words.w0 = 0xF5700000;
-        temp_v0_16 = (cmt & 3) << 0x12;
-        temp_v1_16 = (maskt & 0xF) << 0xE;
-        temp_a1_14 = (cms & 3) << 8;
-        temp_a2_8 = (masks & 0xF) * 0x10;
-        temp_a3_92 = temp_a3_91 + 8;
-        temp_a3_91->words.w1 = temp_v0_16 | 0x07000000 | temp_v1_16 | temp_a1_14 | temp_a2_8;
-        temp_a3_93 = temp_a3_92 + 8;
-        temp_a3_92->words.w0 = 0xE6000000;
-        temp_a3_92->words.w1 = 0;
-        temp_a3_93->words.w0 = 0xF3000000;
-        sp2C = temp_v0_16 | temp_v1_16 | temp_a1_14 | temp_a2_8;
-        temp_t0_14 = ((s32) ((width * height) + 3) >> 2) - 1;
-        sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
-        temp_a3_94 = temp_a3_93 + 8;
-        if (temp_t0_14 < 0x7FF) {
-            var_a0_14 = temp_t0_14;
-        } else {
-            var_a0_14 = 0x7FF;
-        }
-        temp_a3_93->words.w1 = ((var_a0_14 & 0xFFF) << 0xC) | 0x07000000;
-        temp_a3_95 = temp_a3_94 + 8;
-        temp_a3_94->words.w0 = 0xE7000000;
-        temp_a3_94->words.w1 = 0;
-        temp_a3_95->words.w0 = ((((s32) (((s32) width >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5600000;
-        temp_a3_96 = temp_a3_95 + 8;
-        temp_a3_95->words.w1 = sp2C;
-        temp_a3_96->words.w0 = 0xF2000000;
-        dlist = temp_a3_96 + 8;
-        temp_a3_96->words.w1 = sp28;
+        gDPLoadTextureBlockS(
+            dlist++, //pkt
+            OS_PHYSICAL_TO_K0(tex + 1), //timg
+            G_IM_FMT_IA, //fmt
+            G_IM_SIZ_4b, //siz
+            width,
+            height,
+            0, //palette
+            cms, //cms
+            cmt, //cmt
+            masks, //masks
+            maskt, //maskt
+            G_TX_NOLOD, //shifts
+            G_TX_NOLOD  //shiftt
+        );
+        // temp_a3_91 = dlist + 8;
+        // dlist->words.w0 = 0xFD700000;
+        // dlist->words.w1 = (u32) (tex + 0x80000020);
+        // temp_a3_91->words.w0 = 0xF5700000;
+        // temp_v0_16 = (cmt & 3) << 0x12;
+        // temp_v1_16 = (maskt & 0xF) << 0xE;
+        // temp_a1_14 = (cms & 3) << 8;
+        // temp_a2_8 = (masks & 0xF) * 0x10;
+        // temp_a3_92 = temp_a3_91 + 8;
+        // temp_a3_91->words.w1 = temp_v0_16 | 0x07000000 | temp_v1_16 | temp_a1_14 | temp_a2_8;
+        // temp_a3_93 = temp_a3_92 + 8;
+        // temp_a3_92->words.w0 = 0xE6000000;
+        // temp_a3_92->words.w1 = 0;
+        // temp_a3_93->words.w0 = 0xF3000000;
+        // sp2C = temp_v0_16 | temp_v1_16 | temp_a1_14 | temp_a2_8;
+        // temp_t0_14 = ((s32) ((width * height) + 3) >> 2) - 1;
+        // sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
+        // temp_a3_94 = temp_a3_93 + 8;
+        // if (temp_t0_14 < 0x7FF) {
+        //     var_a0_14 = temp_t0_14;
+        // } else {
+        //     var_a0_14 = 0x7FF;
+        // }
+        // temp_a3_93->words.w1 = ((var_a0_14 & 0xFFF) << 0xC) | 0x07000000;
+        // temp_a3_95 = temp_a3_94 + 8;
+        // temp_a3_94->words.w0 = 0xE7000000;
+        // temp_a3_94->words.w1 = 0;
+        // temp_a3_95->words.w0 = ((((s32) (((s32) width >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5600000;
+        // temp_a3_96 = temp_a3_95 + 8;
+        // temp_a3_95->words.w1 = sp2C;
+        // temp_a3_96->words.w0 = 0xF2000000;
+        // dlist = temp_a3_96 + 8;
+        // temp_a3_96->words.w1 = sp28;
         tex->flags |= 4;
     }
     if (texFormat == 2) {
-        temp_a3_97 = dlist + 8;
-        dlist->words.w0 = 0xFD900000;
-        dlist->words.w1 = (u32) (tex + 0x80000020);
-        temp_a3_97->words.w0 = 0xF5900000;
-        temp_v0_17 = (cmt & 3) << 0x12;
-        temp_v1_17 = (maskt & 0xF) << 0xE;
-        temp_a1_15 = (cms & 3) << 8;
-        temp_a2_9 = (masks & 0xF) * 0x10;
-        temp_a3_98 = temp_a3_97 + 8;
-        temp_a3_97->words.w1 = temp_v0_17 | 0x07000000 | temp_v1_17 | temp_a1_15 | temp_a2_9;
-        temp_a3_99 = temp_a3_98 + 8;
-        temp_a3_98->words.w0 = 0xE6000000;
-        temp_a3_98->words.w1 = 0;
-        temp_a3_99->words.w0 = 0xF3000000;
-        sp2C = temp_v0_17 | temp_v1_17 | temp_a1_15 | temp_a2_9;
-        temp_t0_15 = ((s32) ((width * height) + 1) >> 1) - 1;
-        sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
-        temp_a3_100 = temp_a3_99 + 8;
-        if (temp_t0_15 < 0x7FF) {
-            var_a0_15 = temp_t0_15;
-        } else {
-            var_a0_15 = 0x7FF;
-        }
-        temp_a3_99->words.w1 = ((var_a0_15 & 0xFFF) << 0xC) | 0x07000000;
-        temp_a3_101 = temp_a3_100 + 8;
-        temp_a3_100->words.w0 = 0xE7000000;
-        temp_a3_100->words.w1 = 0;
-        temp_a3_101->words.w0 = ((((s32) (width + 7) >> 3) & 0x1FF) << 9) | 0xF5880000;
-        temp_a3_102 = temp_a3_101 + 8;
-        temp_a3_101->words.w1 = sp2C;
-        temp_a3_102->words.w0 = 0xF2000000;
-        dlist = temp_a3_102 + 8;
-        temp_a3_102->words.w1 = sp28;
+        gDPLoadTextureBlockS(
+            dlist++, //pkt
+            OS_PHYSICAL_TO_K0(tex + 1), //timg
+            G_IM_FMT_I, //fmt
+            G_IM_SIZ_8b, //siz
+            width,
+            height,
+            0, //palette
+            cms, //cms
+            cmt, //cmt
+            masks, //masks
+            maskt, //maskt
+            G_TX_NOLOD, //shifts
+            G_TX_NOLOD  //shiftt
+        );
+        // temp_a3_97 = dlist + 8;
+        // dlist->words.w0 = 0xFD900000;
+        // dlist->words.w1 = (u32) (tex + 0x80000020);
+        // temp_a3_97->words.w0 = 0xF5900000;
+        // temp_v0_17 = (cmt & 3) << 0x12;
+        // temp_v1_17 = (maskt & 0xF) << 0xE;
+        // temp_a1_15 = (cms & 3) << 8;
+        // temp_a2_9 = (masks & 0xF) * 0x10;
+        // temp_a3_98 = temp_a3_97 + 8;
+        // temp_a3_97->words.w1 = temp_v0_17 | 0x07000000 | temp_v1_17 | temp_a1_15 | temp_a2_9;
+        // temp_a3_99 = temp_a3_98 + 8;
+        // temp_a3_98->words.w0 = 0xE6000000;
+        // temp_a3_98->words.w1 = 0;
+        // temp_a3_99->words.w0 = 0xF3000000;
+        // sp2C = temp_v0_17 | temp_v1_17 | temp_a1_15 | temp_a2_9;
+        // temp_t0_15 = ((s32) ((width * height) + 1) >> 1) - 1;
+        // sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
+        // temp_a3_100 = temp_a3_99 + 8;
+        // if (temp_t0_15 < 0x7FF) {
+        //     var_a0_15 = temp_t0_15;
+        // } else {
+        //     var_a0_15 = 0x7FF;
+        // }
+        // temp_a3_99->words.w1 = ((var_a0_15 & 0xFFF) << 0xC) | 0x07000000;
+        // temp_a3_101 = temp_a3_100 + 8;
+        // temp_a3_100->words.w0 = 0xE7000000;
+        // temp_a3_100->words.w1 = 0;
+        // temp_a3_101->words.w0 = ((((s32) (width + 7) >> 3) & 0x1FF) << 9) | 0xF5880000;
+        // temp_a3_102 = temp_a3_101 + 8;
+        // temp_a3_101->words.w1 = sp2C;
+        // temp_a3_102->words.w0 = 0xF2000000;
+        // dlist = temp_a3_102 + 8;
+        // temp_a3_102->words.w1 = sp28;
     }
     if (texFormat == 3) {
-        temp_a3_103 = dlist + 8;
-        dlist->words.w0 = 0xFD900000;
-        dlist->words.w1 = (u32) (tex + 0x80000020);
-        temp_a3_103->words.w0 = 0xF5900000;
-        temp_v0_18 = (cmt & 3) << 0x12;
-        temp_v1_18 = (maskt & 0xF) << 0xE;
-        temp_a1_16 = (cms & 3) << 8;
-        temp_a2_10 = (masks & 0xF) * 0x10;
-        temp_a3_104 = temp_a3_103 + 8;
-        temp_a3_103->words.w1 = temp_v0_18 | 0x07000000 | temp_v1_18 | temp_a1_16 | temp_a2_10;
-        temp_a3_105 = temp_a3_104 + 8;
-        temp_a3_104->words.w0 = 0xE6000000;
-        temp_a3_104->words.w1 = 0;
-        temp_a3_105->words.w0 = 0xF3000000;
-        sp2C = temp_v0_18 | temp_v1_18 | temp_a1_16 | temp_a2_10;
-        temp_t0_16 = ((s32) ((width * height) + 3) >> 2) - 1;
-        sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
-        temp_a3_106 = temp_a3_105 + 8;
-        if (temp_t0_16 < 0x7FF) {
-            var_a0_16 = temp_t0_16;
-        } else {
-            var_a0_16 = 0x7FF;
-        }
-        temp_a3_105->words.w1 = ((var_a0_16 & 0xFFF) << 0xC) | 0x07000000;
-        temp_a3_107 = temp_a3_106 + 8;
-        temp_a3_106->words.w0 = 0xE7000000;
-        temp_a3_106->words.w1 = 0;
-        temp_a3_107->words.w0 = ((((s32) (((s32) width >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5800000;
-        temp_a3_108 = temp_a3_107 + 8;
-        temp_a3_107->words.w1 = sp2C;
-        temp_a3_108->words.w0 = 0xF2000000;
-        dlist = temp_a3_108 + 8;
-        temp_a3_108->words.w1 = sp28;
+        gDPLoadTextureBlockS(
+            dlist++, //pkt
+            OS_PHYSICAL_TO_K0(tex + 1), //timg
+            G_IM_FMT_I, //fmt
+            G_IM_SIZ_4b, //siz
+            width,
+            height,
+            0, //palette
+            cms, //cms
+            cmt, //cmt
+            masks, //masks
+            maskt, //maskt
+            G_TX_NOLOD, //shifts
+            G_TX_NOLOD  //shiftt
+        );
+        // temp_a3_103 = dlist + 8;
+        // dlist->words.w0 = 0xFD900000;
+        // dlist->words.w1 = (u32) (tex + 0x80000020);
+        // temp_a3_103->words.w0 = 0xF5900000;
+        // temp_v0_18 = (cmt & 3) << 0x12;
+        // temp_v1_18 = (maskt & 0xF) << 0xE;
+        // temp_a1_16 = (cms & 3) << 8;
+        // temp_a2_10 = (masks & 0xF) * 0x10;
+        // temp_a3_104 = temp_a3_103 + 8;
+        // temp_a3_103->words.w1 = temp_v0_18 | 0x07000000 | temp_v1_18 | temp_a1_16 | temp_a2_10;
+        // temp_a3_105 = temp_a3_104 + 8;
+        // temp_a3_104->words.w0 = 0xE6000000;
+        // temp_a3_104->words.w1 = 0;
+        // temp_a3_105->words.w0 = 0xF3000000;
+        // sp2C = temp_v0_18 | temp_v1_18 | temp_a1_16 | temp_a2_10;
+        // temp_t0_16 = ((s32) ((width * height) + 3) >> 2) - 1;
+        // sp28 = ((((width - 1) * 4) & 0xFFF) << 0xC) | (((height - 1) * 4) & 0xFFF);
+        // temp_a3_106 = temp_a3_105 + 8;
+        // if (temp_t0_16 < 0x7FF) {
+        //     var_a0_16 = temp_t0_16;
+        // } else {
+        //     var_a0_16 = 0x7FF;
+        // }
+        // temp_a3_105->words.w1 = ((var_a0_16 & 0xFFF) << 0xC) | 0x07000000;
+        // temp_a3_107 = temp_a3_106 + 8;
+        // temp_a3_106->words.w0 = 0xE7000000;
+        // temp_a3_106->words.w1 = 0;
+        // temp_a3_107->words.w0 = ((((s32) (((s32) width >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5800000;
+        // temp_a3_108 = temp_a3_107 + 8;
+        // temp_a3_107->words.w1 = sp2C;
+        // temp_a3_108->words.w0 = 0xF2000000;
+        // dlist = temp_a3_108 + 8;
+        // temp_a3_108->words.w1 = sp28;
     }
     tex->numberOfCommands = ((s32) (dlist - (s32)tex->cmd) >> 3);
 }
