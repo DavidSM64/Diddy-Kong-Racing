@@ -286,6 +286,9 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     s32 prevLevelID;
     Settings *settings;
     s32 offset;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first;
+#endif
 
     func_80072708();
     if (cutsceneId == -1) {
@@ -306,7 +309,13 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         set_sound_channel_count(16);
     }
     settings = get_settings();
+#ifdef PUPPYPRINT_DEBUG
+    first = osGetCount();
+#endif
     gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
+#ifdef PUPPYPRINT_DEBUG
+    gPrevLoadTimeDecompress += (osGetCount() - first);
+#endif
 
     for (i = 0; gTempAssetTable[i] != -1; i++) { }
     i--;
@@ -317,7 +326,16 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     offset = gTempAssetTable[levelId];
     size = gTempAssetTable[levelId + 1] - offset;
     gCurrentLevelHeader = (LevelHeader *) allocate_from_main_pool_safe(size, COLOUR_TAG_YELLOW);
+#ifdef PUPPYPRINT_DEBUG
+    first = osGetCount();
+#endif
     load_asset_to_address(ASSET_LEVEL_HEADERS, (u32) gCurrentLevelHeader, offset, size);
+#ifdef PUPPYPRINT_DEBUG
+    gPrevLoadTimeDecompress += (osGetCount() - first);
+#endif
+#ifdef PUPPYPRINT_DEBUG
+    first = osGetCount();
+#endif
     D_800DD330 = 0;
     prevLevelID = levelId;
     if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
@@ -380,8 +398,15 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         offset = gTempAssetTable[levelId];
         size = gTempAssetTable[levelId + 1] - offset;
         gCurrentLevelHeader = allocate_from_main_pool_safe(size, COLOUR_TAG_YELLOW);
+#ifdef PUPPYPRINT_DEBUG
+    first = osGetCount();
+#endif
         load_asset_to_address(ASSET_LEVEL_HEADERS, (u32) gCurrentLevelHeader, offset, size);
+#ifdef PUPPYPRINT_DEBUG
+    gPrevLoadTimeDecompress += (osGetCount() - first);
+#endif
     }
+
     free_from_memory_pool(gTempAssetTable);
     func_8006BFC8((s8 *) &gCurrentLevelHeader->unk20);
     func_8000CBC0();
@@ -477,7 +502,9 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         cutsceneId = 0x64;
     }
     func_8001E450(cutsceneId);
+
     func_800249F0(gCurrentLevelHeader->geometry, gCurrentLevelHeader->skybox, numberOfPlayers, vehicleId, entranceId, gCurrentLevelHeader->collectables, gCurrentLevelHeader->unkBA);
+
     if (gCurrentLevelHeader->fogNear == 0 && gCurrentLevelHeader->fogFar == 0 && gCurrentLevelHeader->fogR == 0 && gCurrentLevelHeader->fogG == 0 && gCurrentLevelHeader->fogB == 0) {
         for (var_s0 = 0; var_s0 < 4; var_s0++) {
             func_800307BC(var_s0);
@@ -486,6 +513,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         for (var_s0 = 0; var_s0 < 4; var_s0++) {
             func_80030664(var_s0, gCurrentLevelHeader->fogNear, gCurrentLevelHeader->fogFar, (u8) gCurrentLevelHeader->fogR, gCurrentLevelHeader->fogG, gCurrentLevelHeader->fogB);
         }
+
     }
     settings = get_settings();
     if (gCurrentLevelHeader->world != -1) {
@@ -604,6 +632,9 @@ void func_8006BFC8(s8 *arg0) {
     s16 phi_v1;
     s8 phi_s0;
     Settings *settings;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first;
+#endif
 
     phi_s0 = 0;
     if (!is_in_tracks_mode()) {
@@ -635,7 +666,13 @@ void func_8006BFC8(s8 *arg0) {
     if (get_render_context() == DRAW_MENU) {
         phi_s0 = 5;
     }
+#ifdef PUPPYPRINT_DEBUG
+    first = osGetCount();
+#endif
     gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
+#ifdef PUPPYPRINT_DEBUG
+    gPrevLoadTimeDecompress = osGetCount() - first;
+#endif
     phi_v1 = 0;
     while (-1 != (s32) gTempAssetTable[phi_v1]) {
         phi_v1++;
@@ -647,7 +684,13 @@ void func_8006BFC8(s8 *arg0) {
     temp2 = gTempAssetTable[phi_s0];
     temp = gTempAssetTable[phi_s0 + 1] - temp2;
     D_801211C0 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
+#ifdef PUPPYPRINT_DEBUG
+    first = osGetCount();
+#endif
     load_asset_to_address(ASSET_UNKNOWN_0, (u32) D_801211C0, temp2, temp);
+#ifdef PUPPYPRINT_DEBUG
+    gPrevLoadTimeDecompress = osGetCount() - first;
+#endif
     free_from_memory_pool(gTempAssetTable);
 }
 
@@ -1058,6 +1101,10 @@ void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehi
 #ifdef PUPPYPRINT_DEBUG
     u32 first = osGetCount();
     u32 first2;
+    gPrevLoadTimeDecompress = 0;
+    gPrevLoadTimeTexture = 0;
+    gPrevLoadTimeModel = 0;
+    gPrevLoadTimeObjects = 0;
 #endif
     calc_and_alloc_heap_for_hud(numberOfPlayers);
     set_free_queue_state(0);
@@ -1071,7 +1118,11 @@ void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehi
     set_free_queue_state(2);
     func_80072298(1);
 #ifdef PUPPYPRINT_DEBUG
-    sPrevLoadTime = OS_CYCLES_TO_USEC(osGetCount() - first);
+    sPrevLoadTimeTotal = OS_CYCLES_TO_USEC(osGetCount() - first);
+    gPrevLoadTimeDecompress = OS_CYCLES_TO_USEC(gPrevLoadTimeDecompress);
+    gPrevLoadTimeTexture = OS_CYCLES_TO_USEC(gPrevLoadTimeTexture);
+    gPrevLoadTimeModel = OS_CYCLES_TO_USEC(gPrevLoadTimeModel);
+    gPrevLoadTimeObjects = OS_CYCLES_TO_USEC(gPrevLoadTimeObjects);
     sPrevLoadTimer = 150;
 #endif
 }

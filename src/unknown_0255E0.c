@@ -191,6 +191,9 @@ void func_8002C0C4(s32 modelId);
 void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 arg5, u32 arg6) {
     s32 i;
     s32 tmp_a2;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first;
+#endif
 
     gCurrentLevelHeader2 = get_current_level_header();
     D_8011B0F8 = 0;
@@ -226,11 +229,17 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
     D_8011B110 = 0;
     D_8011B114 = 0x10000;
     func_80011390();
+#ifdef PUPPYPRINT_DEBUG
+    first = osGetCount();
+#endif
     func_8000C8F8(arg6, 0);
     func_8000C8F8(arg5, 1);
     gScenePlayerViewports = arg2;
     func_8000CC7C(vehicle, arg4, arg2);
     func_8000B020(72, 64);
+#ifdef PUPPYPRINT_DEBUG
+    gPrevLoadTimeObjects = osGetCount() - first;
+#endif
     if (arg0 == 0 && arg4 == 0) {
         transition_begin(&D_800DC87C);
     } else {
@@ -246,11 +255,15 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
     } while ((s32)&D_8011D338[++i] != (s32)&D_8011D348);
 
     D_8011B0C8 = 0;
+#ifdef PUPPYPRINT_DEBUG
+    first = osGetCount();
+#endif
     func_8002D8DC(1, 1, 0);
     func_8002D8DC(2, 2, 0);
     D_8011B0C8 = 1;
     func_8002D8DC(1, 1, 0);
     func_8002D8DC(2, 2, 0);
+    
     D_8011B0C8 = 0;
     if (gCurrentLevelHeader2->unkB7) {
         D_8011B0E1 = gCurrentLevelHeader2->unkB4;
@@ -258,6 +271,9 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
         D_8011B0E3 = gCurrentLevelHeader2->unkB6;
         func_80025510(arg2 + 1);
     }
+#ifdef PUPPYPRINT_DEBUG
+    gPrevLoadTimeModel = osGetCount() - first;
+#endif
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
@@ -1465,6 +1481,9 @@ void func_8002C0C4(s32 modelId) {
     s32 temp_s4;
     s32 temp;
     LevelModel *mdl;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first;
+#endif
     
     set_texture_colour_tag(COLOUR_TAG_GREEN);
     D_8011D30C = allocate_from_main_pool_safe(LEVEL_MODEL_MAX_SIZE, COLOUR_TAG_YELLOW);
@@ -1472,7 +1491,13 @@ void func_8002C0C4(s32 modelId) {
     D_8011D370 = allocate_from_main_pool_safe(0x7D0, COLOUR_TAG_YELLOW);
     D_8011D374 = allocate_from_main_pool_safe(0x1F4, COLOUR_TAG_YELLOW);
     D_8011D378 = 0;
+#ifdef PUPPYPRINT_DEBUG
+    first = osGetCount();
+#endif
     D_8011D310 = (s32*)load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
+#ifdef PUPPYPRINT_DEBUG
+    gPrevLoadTimeDecompress = osGetCount() - first;
+#endif
     
     for(i = 0; D_8011D310[i] != -1; i++);
     i--;
@@ -1488,8 +1513,14 @@ void func_8002C0C4(s32 modelId) {
     temp +=  (LEVEL_MODEL_MAX_SIZE - temp_s4);
     temp -= ((s32)temp % 16); // Align to 16-byte boundary.
     
+#ifdef PUPPYPRINT_DEBUG
+    first = osGetCount();
+#endif
     load_asset_to_address(ASSET_LEVEL_MODELS, temp, D_8011D310[modelId], temp_s4);
     gzip_inflate((u8*) temp, (u8*) gCurrentLevelModel);
+#ifdef PUPPYPRINT_DEBUG
+    gPrevLoadTimeDecompress = osGetCount() - first;
+#endif
     free_from_memory_pool(D_8011D310); // Done with the level models table, so free it.
     
     mdl = gCurrentLevelModel;
@@ -1507,9 +1538,19 @@ void func_8002C0C4(s32 modelId) {
         LOCAL_OFFSET_TO_RAM_ADDRESS(TriangleBatchInfo *, gCurrentLevelModel->segments[k].batches);
         LOCAL_OFFSET_TO_RAM_ADDRESS(u8 *, gCurrentLevelModel->segments[k].unk14);
     }
+
+#ifdef PUPPYPRINT_DEBUG
+    first = osGetCount();
+#endif
     for(k = 0; k < gCurrentLevelModel->numberOfTextures; k++) {
         gCurrentLevelModel->textures[k].texture = load_texture(((s32)gCurrentLevelModel->textures[k].texture) | 0x8000);
     }
+#ifdef PUPPYPRINT_DEBUG
+    gPrevLoadTimeTexture = osGetCount() - first;
+#endif
+#ifdef PUPPYPRINT_DEBUG
+    first = osGetCount();
+#endif
     j = (s32)gCurrentLevelModel + gCurrentLevelModel->modelSize;
     for(k = 0; k < gCurrentLevelModel->numberOfSegments; k++) {
         gCurrentLevelModel->segments[k].unk10 = (s16 *) j;
@@ -1526,6 +1567,9 @@ void func_8002C0C4(s32 modelId) {
     if (temp_s4 > LEVEL_MODEL_MAX_SIZE) {
         rmonPrintf("ERROR!! TrackMem overflow .. %d\n", temp_s4);
     }
+#ifdef PUPPYPRINT_DEBUG
+    gPrevLoadTimeModel = osGetCount() - first;
+#endif
     set_free_queue_state(0);
     free_from_memory_pool(D_8011D30C);
     allocate_at_address_in_main_pool(temp_s4, (u8* ) D_8011D30C, COLOUR_TAG_YELLOW);

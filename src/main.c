@@ -224,7 +224,11 @@ s32 sVtxCount = 0;
 s32 prevTime = 0;
 u32 sTimerTemp = 0;
 u8 sProfilerPage = 0;
-u32 sPrevLoadTime = 0;
+u32 sPrevLoadTimeTotal = 0;
+u32 gPrevLoadTimeDecompress = 0;
+u32 gPrevLoadTimeTexture = 0;
+u32 gPrevLoadTimeModel = 0;
+u32 gPrevLoadTimeObjects = 0;
 u8 sPrevLoadTimer = 0;
 u8 gShowHiddenGeometry = FALSE;
 u8 gShowHiddenObjects = FALSE;
@@ -319,7 +323,7 @@ void profiler_add_obj(u32 objID, u32 time) {
 
     #define TEXT_OFFSET 10
 void render_profiler(void) {
-    char textBytes[32];
+    char textBytes[80];
     s32 printY;
     u32 i;
     s32 y = 8;
@@ -461,9 +465,17 @@ void render_profiler(void) {
         gDPSetRenderMode(gCurrDisplayList++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
         gDPSetCombineMode(gCurrDisplayList++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
         gDPSetPrimColor(gCurrDisplayList++, 0, 0, 0, 0, 0, 160);
-        gDPFillRectangle(gCurrDisplayList++, (gScreenWidth/2) - 56, gScreenHeight - 42, (gScreenWidth/2) + 56, gScreenHeight - 28);
-        puppyprintf(textBytes, "Level loaded in %2.3fs", sPrevLoadTime / 1000000.0f);
-        draw_text(&gCurrDisplayList, gScreenWidth/2, gScreenHeight - 32, textBytes, ALIGN_MIDDLE_CENTER);
+        gDPFillRectangle(gCurrDisplayList++, (gScreenWidth/2) - 64, gScreenHeight - 74, (gScreenWidth/2) + 64, gScreenHeight - 12);
+        puppyprintf(textBytes, "Assets loaded in %2.3fs", gPrevLoadTimeDecompress / 1000000.0f);
+        draw_text(&gCurrDisplayList, gScreenWidth/2, gScreenHeight - 62, textBytes, ALIGN_MIDDLE_CENTER);
+        puppyprintf(textBytes, "Models loaded in %2.3fs", gPrevLoadTimeModel / 1000000.0f);
+        draw_text(&gCurrDisplayList, gScreenWidth/2, gScreenHeight - 50, textBytes, ALIGN_MIDDLE_CENTER);
+        puppyprintf(textBytes, "Objects loaded in %2.3fs", gPrevLoadTimeObjects / 1000000.0f);
+        draw_text(&gCurrDisplayList, gScreenWidth/2, gScreenHeight - 38, textBytes, ALIGN_MIDDLE_CENTER);
+        puppyprintf(textBytes, "Textures loaded in %2.3fs", gPrevLoadTimeTexture / 1000000.0f);
+        draw_text(&gCurrDisplayList, gScreenWidth/2, gScreenHeight - 26, textBytes, ALIGN_MIDDLE_CENTER);
+        puppyprintf(textBytes, "Level loaded in %2.3fs", sPrevLoadTimeTotal / 1000000.0f);
+        draw_text(&gCurrDisplayList, gScreenWidth/2, gScreenHeight - 14, textBytes, ALIGN_MIDDLE_CENTER);
         if (sPrevLoadTimer - sLogicUpdateRate > 0) {
             sPrevLoadTimer -= sLogicUpdateRate;
         } else {
