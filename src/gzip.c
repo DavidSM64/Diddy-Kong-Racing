@@ -4,6 +4,7 @@
 #include "gzip.h"
 #include "asset_loading.h"
 #include "PR/os_libc.h"
+#include "main.h"
 
 /************ .data ************/
 
@@ -56,11 +57,17 @@ s32 get_asset_uncompressed_size(s32 assetIndex, s32 assetOffset) {
  * Official name: rzipUncompress
  */
 u8 *gzip_inflate(u8 *compressedInput, u8 *decompressedOutput) {
+#ifdef PUPPYPRINT_DEBUG
+    u32 first = osGetCount();
+#endif
     gzip_inflate_input = compressedInput + 5; // The compression header is 5 bytes.
     gzip_inflate_output = decompressedOutput;
     gzip_num_bits = 0;
     gzip_bit_buffer = 0;
     while (gzip_inflate_block() != 0) {} // Keep calling gzip_inflate_block() until it returns 0.
+#ifdef PUPPYPRINT_DEBUG
+    gPrevLoadTimeDecompress += (osGetCount() - first);
+#endif
     return decompressedOutput;
 }
 

@@ -887,6 +887,20 @@ TextureHeader *load_texture(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/load_texture.s")
 #endif
 
+TextureHeader *load_texture(s32 arg0) {
+    TextureHeader *tex;
+#ifdef PUPPYPRINT_DEBUG
+    u32 first = osGetCount();
+    u32 first2 = gPrevLoadTimeDecompress + gPrevLoadTimeDMA;
+#endif
+    tex = load_texture2(arg0);
+#ifdef PUPPYPRINT_DEBUG
+    gPrevLoadTimeTexture = osGetCount() - first;
+    gPrevLoadTimeTexture -= (gPrevLoadTimeDecompress + gPrevLoadTimeDMA) - first2;
+#endif
+    return tex;
+}
+
 #ifdef NON_EQUIVALENT
 void free_texture(TextureHeader *tex) {
     s32 i;

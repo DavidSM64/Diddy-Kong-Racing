@@ -1,4 +1,4 @@
-glabel load_texture
+glabel load_texture2
 /* 07BA74 8007AE74 27BDFF90 */  addiu $sp, $sp, -0x70
 /* 07BA78 8007AE78 308EFFFF */  andi  $t6, $a0, 0xffff
 /* 07BA7C 8007AE7C AFB30024 */  sw    $s3, 0x24($sp)

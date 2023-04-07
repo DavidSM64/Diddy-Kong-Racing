@@ -139,6 +139,7 @@ void profiler_add_obj(u32 objID, u32 time);
 extern u8 perfIteration;
 extern u32 sPrevLoadTimeTotal;
 extern u32 gPrevLoadTimeDecompress;
+extern u32 gPrevLoadTimeDMA;
 extern u32 gPrevLoadTimeTexture;
 extern u32 gPrevLoadTimeModel;
 extern u32 gPrevLoadTimeObjects;

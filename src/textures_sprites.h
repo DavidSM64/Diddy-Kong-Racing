@@ -150,4 +150,6 @@ void func_8007BF34(Gfx **dlist, s32 arg1); // Non Matching
 void load_blinking_lights_texture(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3); // Non Matching
 void build_tex_display_list(TextureHeader *tex, u8 *addr);
 
+TextureHeader *load_texture2(s32 arg0);
+
 #endif
