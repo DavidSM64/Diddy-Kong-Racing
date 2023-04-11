@@ -218,7 +218,8 @@ void audioStartThread(void) {
 }
 
 /**
- * Official Name: amGoStop*/
+ * Official Name: amGoStop
+ */
 void audioStopThread(void) {
     osStopThread(&__am.thread);
 }
