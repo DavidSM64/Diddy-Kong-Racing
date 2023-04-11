@@ -894,7 +894,35 @@ s16 D_80126384;
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/textures_sprites/texInitTextures.s")
+void texInitTextures(void) {
+    s32 i;
+
+    gTextureCache = allocate_from_main_pool_safe(0x15E0, COLOUR_TAG_MAGENTA);
+    gCiPalettes = allocate_from_main_pool_safe(0x280, 0xFF00FFFF);
+    gNumberOfLoadedTextures = 0;
+    gCiPalettesSize = 0;
+    D_80126320[0] = (s32 *) load_asset_section_from_rom(ASSET_TEXTURES_2D_TABLE);
+    D_80126320[1] = (s32 *) load_asset_section_from_rom(ASSET_TEXTURES_3D_TABLE);    
+    
+    for (i = 0; D_80126320[0][i] != -1; i++) { }
+    D_80126338[0] = --i;
+    
+    for (i = 0; D_80126320[1][i] != -1; i++) { }
+    D_80126338[1] = --i;
+    
+    gSpriteCache = allocate_from_main_pool_safe(0x320, COLOUR_TAG_MAGENTA);
+    gCurrentSprite = allocate_from_main_pool_safe(0x200, COLOUR_TAG_MAGENTA);
+    D_80126358 = 0;
+    gSpriteOffsetTable = (s32 *) load_asset_section_from_rom(ASSET_SPRITES_TABLE);
+    D_80126354 = 0;
+    while (gSpriteOffsetTable[D_80126354] != -1) {
+        D_80126354++;
+    }
+    D_80126354--;
+
+    gTempTextureHeader = allocate_from_main_pool_safe(0x28, COLOUR_TAG_MAGENTA);
+    D_80126344 = 0;
+}
 
 void texDisableModes(s32 flags) {
     D_80126378 |= flags;
@@ -1506,7 +1534,7 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/free_sprite.s")
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CDC0.s")
 
-#if 1
+#ifdef NON_EQUIVALENT
 //HEAVILY WIP
 void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     s32 texFlags;
@@ -1601,7 +1629,7 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
         if (texFormat == 3) {
             gDPLoadTextureBlock(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_I, G_IM_SIZ_4b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
         }
-        tex->numberOfCommands = ((s32) (dlist - (s32)tex->cmd) >> 3);
+        tex->numberOfCommands = ((s32) ((s32)dlist - (s32)tex->cmd) >> 3);
     } else {
         
         if (texFormat == 0) {
@@ -1644,7 +1672,7 @@ void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
         if (texFormat == 3) {
             gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_I, G_IM_SIZ_4b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
         }
-        tex->numberOfCommands = ((s32) (dlist - (s32)tex->cmd) >> 3);
+        tex->numberOfCommands = ((s32) ((s32)dlist - (s32)tex->cmd) >> 3);
     }
 }
 #else

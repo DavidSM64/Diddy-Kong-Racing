@@ -7,6 +7,7 @@ compiler_type = "ido"
 "fast3d_cmd" = "void"
 "OS_PHYSICAL_TO_K0" = "void *"
 "_SHIFTL" = "unsigned int"
+"G_IM_.*" = "unsigned int"
 
 [decompme.compilers]
 "tools/ido-static-recomp/build/5.3/out/cc" = "ido5.3"
