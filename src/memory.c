@@ -88,10 +88,10 @@ MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlot
     MemoryPoolSlot *firstSlot;
     s32 poolCount;
     s32 i;
-	s32 firstSlotSize;
+    s32 firstSlotSize;
     
     poolCount = ++gNumberOfMemoryPools;
-	firstSlotSize = poolSize - (numSlots * sizeof(MemoryPoolSlot));
+    firstSlotSize = poolSize - (numSlots * sizeof(MemoryPoolSlot));
     gMemoryPools[poolCount].maxNumSlots = numSlots;
     gMemoryPools[poolCount].curNumSlots = 0;
     gMemoryPools[poolCount].slots = slots;

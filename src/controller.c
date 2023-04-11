@@ -10,9 +10,9 @@ u16 gButtonMask = 0xFFFF; //Used when anti-cheat/anti-tamper has failed in func_
 OSMesgQueue sSIMesgQueue;
 OSMesg sSIMesgBuf;
 OSMesg gSIMesg;
-OSContStatus status[MAXCONTROLLERS];
-OSContPad sControllerCurrData[MAXCONTROLLERS];
-OSContPad sControllerPrevData[MAXCONTROLLERS];
+OSContStatus gControllerStatus[MAXCONTROLLERS];
+OSContPad gControllerCurrData[MAXCONTROLLERS];
+OSContPad gControllerPrevData[MAXCONTROLLERS];
 u16 gControllerButtonsPressed[MAXCONTROLLERS];
 u16 gControllerButtonsReleased[MAXCONTROLLERS];
 u8 sPlayerID[16];
@@ -36,13 +36,13 @@ s32 init_controllers(void) {
 
     osCreateMesgQueue(&sSIMesgQueue, &sSIMesgBuf, 1);
     osSetEventMesg(OS_EVENT_SI, &sSIMesgQueue, gSIMesg);
-    osContInit(&sSIMesgQueue, &bitpattern, status);
+    osContInit(&sSIMesgQueue, &bitpattern, gControllerStatus);
     osContStartReadData(&sSIMesgQueue);
     initialise_player_ids();
 
     sNoControllerPluggedIn = FALSE;
 
-    if ((bitpattern & CONT_ABSOLUTE) && (!(status[0].errno & CONT_NO_RESPONSE_ERROR))) {
+    if ((bitpattern & CONT_ABSOLUTE) && (!(gControllerStatus[0].errno & CONT_NO_RESPONSE_ERROR))) {
         return CONTROLLER_EXISTS;
     }
 
@@ -67,9 +67,9 @@ s32 handle_save_data_and_read_controller(s32 saveDataFlags, s32 updateRate) {
     if (osRecvMesg(&sSIMesgQueue, &unusedMsg, OS_MESG_NOBLOCK) == 0) {
         //Back up old controller data
         for (i = 0; i < MAXCONTROLLERS; i++) {
-            sControllerPrevData[i] = sControllerCurrData[i];
+            gControllerPrevData[i] = gControllerCurrData[i];
         }
-        osContGetReadData(sControllerCurrData);
+        osContGetReadData(gControllerCurrData);
         if (saveDataFlags != 0) {
             settings = get_settings();
             if (SAVE_DATA_FLAG_READ_EEPROM_INDEX(saveDataFlags)) {
@@ -109,11 +109,11 @@ s32 handle_save_data_and_read_controller(s32 saveDataFlags, s32 updateRate) {
     }
     for (i = 0; i < MAXCONTROLLERS; i++) {
         if (sNoControllerPluggedIn) {
-            sControllerCurrData[i].button = 0;
+            gControllerCurrData[i].button = 0;
         }
         //XOR the diff between the last read of the controller data with the current read to see what buttons have been pushed and released.
-        gControllerButtonsPressed[i]  = ((sControllerCurrData[i].button ^ sControllerPrevData[i].button) & sControllerCurrData[i].button) & gButtonMask;
-        gControllerButtonsReleased[i] = ((sControllerCurrData[i].button ^ sControllerPrevData[i].button) & sControllerPrevData[i].button) & gButtonMask;
+        gControllerButtonsPressed[i]  = ((gControllerCurrData[i].button ^ gControllerPrevData[i].button) & gControllerCurrData[i].button) & gButtonMask;
+        gControllerButtonsReleased[i] = ((gControllerCurrData[i].button ^ gControllerPrevData[i].button) & gControllerPrevData[i].button) & gButtonMask;
     }
     return saveDataFlags;
 }
@@ -172,7 +172,7 @@ void swap_player_1_and_2_ids(void) {
  * Official name: joyGetButtons
  */
 u16 get_buttons_held_from_player(s32 player) {
-    return sControllerCurrData[sPlayerID[player]].button;
+    return gControllerCurrData[sPlayerID[player]].button;
 }
 
 /**
@@ -197,7 +197,7 @@ u16 get_buttons_released_from_player(s32 player) {
  * Official name: joyGetStickX
  */
 s8 clamp_joystick_x_axis(s32 player) {
-    return clamp_joystick(sControllerCurrData[sPlayerID[player]].stick_x);
+    return clamp_joystick(gControllerCurrData[sPlayerID[player]].stick_x);
 }
 
 /**
@@ -205,7 +205,7 @@ s8 clamp_joystick_x_axis(s32 player) {
  * Official name: joyGetStickY
  */
 s8 clamp_joystick_y_axis(s32 player) {
-    return clamp_joystick(sControllerCurrData[sPlayerID[player]].stick_y);
+    return clamp_joystick(gControllerCurrData[sPlayerID[player]].stick_y);
 }
 
 /**

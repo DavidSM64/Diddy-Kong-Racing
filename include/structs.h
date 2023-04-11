@@ -598,7 +598,7 @@ typedef struct LevelModel {
 /* 0x00 */ TextureInfo *textures;
 /* 0x04 */ LevelModelSegment *segments;
 /* 0x08 */ LevelModelSegmentBoundingBox *segmentsBoundingBoxes;
-/* 0x0C */ int *collisionData; 
+/* 0x0C */ u8 *unkC; //Unused? 
 /* 0x10 */ u8 *segmentsBitfields;
 /* 0x14 */ BspTreeNode *segmentsBspTree;
 /* 0x18 */ s16 numberOfTextures;
