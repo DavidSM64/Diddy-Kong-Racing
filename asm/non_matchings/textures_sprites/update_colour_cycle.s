@@ -1,4 +1,4 @@
-glabel updateColourCycle
+glabel update_colour_cycle
 /* 07FE4C 8007F24C 8C8E0000 */  lw    $t6, ($a0)
 /* 07FE50 8007F250 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 07FE54 8007F254 29C10002 */  slti  $at, $t6, 2

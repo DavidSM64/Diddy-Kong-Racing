@@ -1044,7 +1044,7 @@ glabel func_800A277C
 /* 0A4290 800A3690 3C048012 */  lui   $a0, %hi(D_80127194) # $a0, 0x8012
 /* 0A4294 800A3694 8C847194 */  lw    $a0, %lo(D_80127194)($a0)
 /* 0A4298 800A3698 8FA500C8 */  lw    $a1, 0xc8($sp)
-/* 0A429C 800A369C 0C01FC93 */  jal   updateColourCycle
+/* 0A429C 800A369C 0C01FC93 */  jal   update_colour_cycle
 /* 0A42A0 800A36A0 00000000 */   nop   
 /* 0A42A4 800A36A4 0C031059 */  jal   set_kerning
 /* 0A42A8 800A36A8 00002025 */   move  $a0, $zero

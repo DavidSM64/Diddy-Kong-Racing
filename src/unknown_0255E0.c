@@ -303,7 +303,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     func_8002D8DC(2, 2, updateRate);
     for (i = 0; i < 7; i++) {
         if ((s32) gCurrentLevelHeader2->unk74[i] != -1) {
-            updateColourCycle(gCurrentLevelHeader2->unk74[i], tempUpdateRate);
+            update_colour_cycle(gCurrentLevelHeader2->unk74[i], tempUpdateRate);
         }
     }
 
@@ -323,7 +323,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         gCurrentLevelHeader2->unkA8 = (gCurrentLevelHeader2->unkA8 + (gCurrentLevelHeader2->unkA2 * tempUpdateRate)) & i;
         i = (gCurrentLevelHeader2->unkA4->height << 9) - 1;
         gCurrentLevelHeader2->unkAA = (gCurrentLevelHeader2->unkAA + (gCurrentLevelHeader2->unkA3 * tempUpdateRate)) & i;
-        texAnimateTexture(gCurrentLevelHeader2->unkA4, &D_8011B114, &D_8011B110, tempUpdateRate);
+        tex_animate_texture(gCurrentLevelHeader2->unkA4, &D_8011B114, &D_8011B110, tempUpdateRate);
     }
     flip = FALSE;
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
@@ -636,10 +636,10 @@ void func_80027E24(s32 updateRate) {
                         temp = batch[batchNumber].unk7 << 6;
                         if (batch[batchNumber].flags & BATCH_FLAGS_UNK80000000) {
                             temp |= batch[batchNumber].unk6;
-                            texAnimateTexture(texture, &batch[batchNumber].flags, &temp, updateRate);
+                            tex_animate_texture(texture, &batch[batchNumber].flags, &temp, updateRate);
                             batch[batchNumber].unk6 = temp & 0x3F;
                         } else {
-                            texAnimateTexture(texture, &batch[batchNumber].flags, &temp, updateRate);
+                            tex_animate_texture(texture, &batch[batchNumber].flags, &temp, updateRate);
                         }
                         batch[batchNumber].unk7 = (temp >> 6) & 0xFF;
                     }

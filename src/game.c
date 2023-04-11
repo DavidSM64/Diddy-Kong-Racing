@@ -925,7 +925,7 @@ void init_game(void) {
     audio_init(&gMainSched);
     func_80008040(); // Should be very similar to func_8005F850
     sControllerStatus = init_controllers();
-    texInitTextures(); // Should be very similar to func_8005F850
+    tex_init_textures();
     func_8005F850(); // Matched
     allocate_object_pools();
     diPrintfInit();

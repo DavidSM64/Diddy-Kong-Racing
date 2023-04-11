@@ -186,7 +186,7 @@ void func_800278E8(s32);
 void func_80028050(void);
 void initialise_player_viewport_vars(s32);
 void func_8002A31C(void);
-void updateColourCycle(s8*, s32);
+void update_colour_cycle(s8*, s32);
 void func_800AD030(ObjectSegment*);
 void func_800B9C18(s32);
 void func_800BA8E4(Gfx**, MatrixS**, s32);

@@ -390,8 +390,8 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 gDPPipeSync(gHUDCurrDisplayList++);
                 init_rsp(&gHUDCurrDisplayList);
                 init_rdp_and_framebuffer(&gHUDCurrDisplayList);
-                texEnableModes(0xFFFFFFFF);
-                texDisableModes(RENDER_Z_COMPARE);
+                tex_enable_modes(0xFFFFFFFF);
+                tex_disable_modes(RENDER_Z_COMPARE);
                 func_8007BF1C(FALSE);
                 if (check_if_showing_cutscene_camera() == FALSE && D_80126D34 == 0 && racer->racer.playerIndex == PLAYER_ONE) {
                     if (D_80126D35 != 0) {
@@ -489,7 +489,7 @@ block_95:
                 *dList = gHUDCurrDisplayList;
                 *mtx = gHUDCurrMatrix;
                 *vertexList = gHUDCurrVertex;
-                texEnableModes(0xFFFFFFFF);
+                tex_enable_modes(0xFFFFFFFF);
             }
         }
     }

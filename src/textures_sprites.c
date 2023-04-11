@@ -894,7 +894,7 @@ s16 D_80126384;
 
 /******************************/
 
-void texInitTextures(void) {
+void tex_init_textures(void) {
     s32 i;
 
     gTextureCache = allocate_from_main_pool_safe(0x15E0, COLOUR_TAG_MAGENTA);
@@ -924,11 +924,17 @@ void texInitTextures(void) {
     D_80126344 = 0;
 }
 
-void texDisableModes(s32 flags) {
+/**
+ * Official Name: texDisableModes
+*/
+void tex_disable_modes(s32 flags) {
     D_80126378 |= flags;
 }
 
-void texEnableModes(s32 flags) {
+/**
+ * Official Name: texEnableModes
+*/
+void tex_enable_modes(s32 flags) {
     D_80126378 &= ~flags;
 }
 
@@ -1682,10 +1688,10 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/build_tex_display_list.s")
 s32 func_8007EF64(s16 arg0) {
     return (s32) (arg0 + gCiPalettes);
 }
-
-// There might be a file boundary here.
-
-void texAnimateTexture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 updateRate) {
+/**
+ * Official Name: texAnimateTexture
+*/
+void tex_animate_texture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 updateRate) {
     s32 bit23Set;
     s32 bit25Set;
     s32 bit26Set;
@@ -1765,9 +1771,14 @@ void func_8007F1E8(unk8007F1E8 *arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/textures_sprites/updateColourCycle.s")
+/**
+ * Official name: updateColourCycle
+*/
+GLOBAL_ASM("asm/non_matchings/textures_sprites/update_colour_cycle.s")
 
-/* Official name: resetMixCycle */
+/**
+ * Official name: resetMixCycle
+*/
 void init_pulsating_light_data(PulsatingLightData *data) {
     s32 i;
     data->currentFrame = 0;
