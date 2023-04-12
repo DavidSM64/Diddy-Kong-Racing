@@ -209,6 +209,7 @@ void func_8006A6B0(void) {
     }
     free_from_memory_pool(gTempAssetTable);
     // Antipiracy measure
+#ifndef NO_ANTIPIRACY
     checksumCount = 0;
     for (j = 0; j < gFunc80068158Length; j++) {
         checksumCount += ((u8 *) (&func_80068158))[j];
@@ -216,6 +217,7 @@ void func_8006A6B0(void) {
     if (checksumCount != gFunc80068158Checksum) {
         disable_button_mask();
     }
+#endif
 }
 
 Vehicle get_map_default_vehicle(s32 mapId) {
