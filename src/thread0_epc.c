@@ -36,7 +36,7 @@ s32 sLockupDelay = 0;
 
 u64 gEPCStack[0x200];
 OSThread gEPCThread;
-OSMesgQueue D_80129790; // Osmesg stuff
+OSMesgQueue D_80129790;
 OSMesg D_801297A8[8];
 OSMesg D_801297C8[8];
 OSMesgQueue D_801297E8;
