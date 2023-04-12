@@ -36,10 +36,10 @@ s32 sLockupDelay = 0;
 
 u64 gEPCStack[0x200];
 OSThread gEPCThread;
-s32 D_80129790[6]; // Osmesg stuff
-s32 D_801297A8[8];
-s32 D_801297C8[8];
-s32 D_801297E8[6];
+OSMesgQueue D_80129790; // Osmesg stuff
+OSMesg D_801297A8[8];
+OSMesg D_801297C8[8];
+OSMesgQueue D_801297E8;
 
 /**
  * Start the exception program counter thread.
@@ -60,13 +60,13 @@ void thread0_Main(UNUSED void *unused) {
     s32 sp34;
     s32 s0 = 0;
 
-    osCreateMesgQueue(&D_80129790, &D_801297A8, 8);
-    osSetEventMesg(OS_EVENT_FAULT, &D_80129790, 8);
-    osSetEventMesg(OS_EVENT_CPU_BREAK, &D_80129790, 2);
-    osCreatePiManager(150, &D_801297E8, &D_801297C8, 8);
+    osCreateMesgQueue(&D_80129790, D_801297A8, 8);
+    osSetEventMesg(OS_EVENT_FAULT, &D_80129790, (OSMesg) 8);
+    osSetEventMesg(OS_EVENT_CPU_BREAK, &D_80129790, (OSMesg) 2);
+    osCreatePiManager(150, &D_801297E8, D_801297C8, 8);
 
     while (1) {
-        osRecvMesg(&D_80129790, &sp34, OS_MESG_BLOCK);
+        osRecvMesg(&D_80129790, (OSMesg) &sp34, OS_MESG_BLOCK);
         if (!(get_filtered_cheats() & CHEAT_EPC_LOCK_UP_DISPLAY)) {
             continue;
         }
