@@ -69,7 +69,7 @@ s16 D_800DD32C = 0;
 s8 D_800DD330 = 0;
 
 s8 sAntiPiracyTriggered = 0;
-s32 gSaveDataFlags = 0;
+s32 gSaveDataFlags = 0; //Official Name: load_save_flags
 s32 gScreenStatus = OSMESG_SWAP_BUFFER;
 s32 sControllerStatus = 0;
 s8 gSkipGfxTask = FALSE;
@@ -144,7 +144,8 @@ s32 gCurrNumHudVertsPerPlayer;
 OSScClient *gNMISched[3];
 OSMesg gNMIOSMesg;
 OSMesgQueue gNMIMesgQueue;
-s32 gNMIMesgBuf[8];
+s32 gNMIMesgBuf; //Official Name: resetPressed
+s32 D_80123568[6]; // BSS Padding
 
 /******************************/
 
@@ -762,6 +763,7 @@ s8 gScreenPos[2] = {0, 0};
 /**
  * Setup all of the necessary pieces required for the game to function.
  * This includes the memory pool. controllers, video, audio, core assets and more.
+ * Official Name: mainInitGame
  */
 void init_game(void) {
     s32 i;
@@ -784,7 +786,7 @@ void init_game(void) {
     audio_init(&gMainSched);
     func_80008040(); // Should be very similar to func_8005F850
     sControllerStatus = init_controllers();
-    texInitTextures(); // Should be very similar to func_8005F850
+    tex_init_textures();
     func_8005F850(); // Matched
     allocate_object_pools();
     diPrintfInit();
@@ -799,7 +801,7 @@ void init_game(void) {
     create_and_start_thread30();
     osCreateMesgQueue(&gNMIMesgQueue, &gNMIOSMesg, 1);
     osScAddClient(&gMainSched, (OSScClient*) gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);
-    gNMIMesgBuf[0] = 0;
+    gNMIMesgBuf = 0;
     D_80123504 = 0;
     D_80123508 = 0;
     gSPTaskNum = 0;
@@ -1962,10 +1964,10 @@ s8 is_postrace_viewport_active(void) {
  * Official name: mainResetPressed
  */
 s32 is_reset_pressed(void) {
-    if (gNMIMesgBuf[0] == 0) {
-        gNMIMesgBuf[0] = (s32)((osRecvMesg(&gNMIMesgQueue, NULL, OS_MESG_NOBLOCK) + 1) != 0);
+    if (gNMIMesgBuf == 0) {
+        gNMIMesgBuf = (s32)((osRecvMesg(&gNMIMesgQueue, NULL, OS_MESG_NOBLOCK) + 1) != 0);
     }
-    return gNMIMesgBuf[0];
+    return gNMIMesgBuf;
 }
 
 s32 func_8006EB14(void) {
@@ -2016,6 +2018,7 @@ void mark_to_write_flap_and_course_times(void) {
 
 /**
  * Forcefully marks a flag to write a save file to flash.
+ * Official Name: mainSaveGame
  */
 void force_mark_write_save_file(s32 saveFileIndex) {
     gSaveDataFlags &= ~SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER_BITS; //Wipe out bits 10 and 11
@@ -2025,6 +2028,7 @@ void force_mark_write_save_file(s32 saveFileIndex) {
 /**
  * Marks a flag to write a save file to flash as long as we're not in tracks mode, and we're in the draw game render context.
  * This should prevent save data from being overwritten outside of Adventure Mode.
+ * Official Name: mainSaveGame2
  */
 void safe_mark_write_save_file(s32 saveFileIndex) {
     if (sRenderContext == DRAW_GAME && !is_in_tracks_mode()) {

@@ -114,8 +114,8 @@ typedef struct TempTexHeader {
 /* 0x25 */ u8 pad25[3]; // padding
 } TempTexHeader;
 
-void texEnableModes(s32 flags);
-void texDisableModes(s32 flags);
+void tex_disable_modes(s32 flags);
+void tex_enable_modes(s32 flags);
 s32 func_8007AE44(void);
 s32 func_8007AE54(void);
 s32 func_8007AE64(void);
@@ -129,7 +129,7 @@ s32 func_8007EF64(s16 arg0);
 void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 offset);
 
 // There might be a file boundary here.
-void func_8007EF80(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 updateRate);
+void tex_animate_texture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 updateRate);
 void func_8007F1E8(unk8007F1E8 *arg0);
 void init_pulsating_light_data(PulsatingLightData *data);
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
@@ -145,10 +145,10 @@ void free_sprite(Sprite *sprite); // Non Matching
 void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentColor); // Non Matching
 void func_8007CA68(s32 spriteID, s32 arg1, s32 *arg2, s32 *arg3, s32 *arg4); // Non Matching
 MemoryPoolSlot *func_8007C12C(s32 spriteID, s32 arg1); // Non Matching
-void texInitTextures(void); // Non Matching
+void tex_init_textures(void); // Non Matching
 void func_8007BF34(Gfx **dlist, s32 arg1); // Non Matching
 void load_blinking_lights_texture(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3); // Non Matching
-void build_tex_display_list(TextureHeader *tex, u8 *addr);
+void build_tex_display_list(TextureHeader *tex, Gfx *dlist); //Non Matching
 
 TextureHeader *load_texture2(s32 arg0);
 

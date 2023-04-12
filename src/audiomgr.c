@@ -197,10 +197,16 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
                     (void *)(audioStack+AUDIO_STACKSIZE/sizeof(u64)), pri);
 }
 
+/**
+ * Official Name: amGo
+*/
 void audioStartThread(void) {
     osStartThread(&__am.thread);
 }
 
+/**
+ * Official Name: amGoStop
+ */
 void audioStopThread(void) {
     osStopThread(&__am.thread);
 }

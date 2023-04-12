@@ -21,7 +21,7 @@ s32 gNumberOfMemoryPools;
 UNUSED s32 D_801235C4;
 FreeQueueSlot gFreeQueue[256];
 s32 gFreeQueueCount;
-s32 gFreeQueueState;
+s32 gFreeQueueState; //Official Name: mmDelay
 
 extern MemoryPoolSlot gMainMemoryPool;
 
@@ -30,11 +30,12 @@ extern MemoryPoolSlot gMainMemoryPool;
 /**
  * Creates the main memory pool. 
  * Starts at 0x8012D3F0. Ends at 0x80400000. Contains 1600 allocation slots.
+ * Official Name: mmInit
  */
 void init_main_memory_pool(void) {
-    u32 ramEnd = 0x80400000;
+    u32 ramEnd = RAM_END;
     if (gExpansionPak) {
-        ramEnd = 0x80800000;
+        ramEnd = EXTENDED_RAM_END;
     }
 #ifdef PUPPYPRINT_DEBUG
     bzero(&gFreeMem, sizeof(gFreeMem));
@@ -71,33 +72,33 @@ MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots) {
 MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlots) {
     MemoryPoolSlot *firstSlot;
     s32 poolCount;
-    MemoryPool *pool;
     s32 i;
+    s32 firstSlotSize;
     
-    poolCount = ++gNumberOfMemoryPools; \
+    poolCount = ++gNumberOfMemoryPools;
+    firstSlotSize = poolSize - (numSlots * sizeof(MemoryPoolSlot));
     gMemoryPools[poolCount].maxNumSlots = numSlots;
     gMemoryPools[poolCount].curNumSlots = 0;
     gMemoryPools[poolCount].slots = slots;
     gMemoryPools[poolCount].size = poolSize;
-    pool = &gMemoryPools[poolCount++];
     firstSlot = slots;
-    for (i = 0; i < pool->maxNumSlots; i++) {
+    for (i = 0; i < gMemoryPools[poolCount].maxNumSlots; i++) {
         firstSlot->index = i;
         firstSlot++;
     }
-    firstSlot = &pool->slots[0];
+    firstSlot = &gMemoryPools[poolCount].slots[0];
     slots += numSlots;
     if ((s32) slots & 0xF) {
         firstSlot->data = (u8 *) _ALIGN16(slots);
     } else {
         firstSlot->data = (u8 *) slots;
     }
-    firstSlot->size = poolSize - (numSlots * sizeof(MemoryPoolSlot));
+    firstSlot->size = firstSlotSize;
     firstSlot->flags = 0;
     firstSlot->prevIndex = -1;
     firstSlot->nextIndex = -1;
-    pool->curNumSlots++;
-    return pool->slots;
+    gMemoryPools[poolCount].curNumSlots++;
+    return gMemoryPools[poolCount].slots;
 }
 
 /**
@@ -140,7 +141,8 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag
     }
     currIndex = -1;
     if (size & 0xF) {
-        size = (size & ~0xF) + 0x10;
+        size = (size & ~0xF);
+        size += 0x10;
     }
     slots = pool->slots;
     slotSize = 0x7FFFFFFF;
@@ -175,6 +177,7 @@ void *allocate_from_pool_containing_slots(MemoryPoolSlot *slots, s32 size) {
     return (void *)NULL;
 }
 
+/* Official Name: mmAllocAtAddr */
 void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
     s32 i;
     MemoryPoolSlot *curSlot;
@@ -185,28 +188,28 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
     if ((gMemoryPools[0].curNumSlots + 1) == gMemoryPools[0].maxNumSlots) {
         set_status_register_flags(flags);
     } else {
-    if (size & 0xF) {
-        size = _ALIGN16(size);
-    }
-    slots = gMemoryPools[0].slots;
-    for (i = 0; i != -1; i = curSlot->nextIndex) {
-        curSlot = &slots[i];
-        if (curSlot->flags == 0) {
-            if ((u32) address >= (u32) curSlot->data && (u32)address + size <= (u32) curSlot->data + curSlot->size)  {
-                if (address == (u8 *) curSlot->data) {
-                    allocate_memory_pool_slot(0, i, size, 1, 0, colorTag);
-                    set_status_register_flags(flags);
-                    return curSlot->data;
-                } else {
-                    i = allocate_memory_pool_slot(0, i, (u32) address - (u32) curSlot->data, 0, 1, colorTag);
-                    allocate_memory_pool_slot(0, i, size, 1, 0, colorTag);
-                    set_status_register_flags(flags);
-                    return (slots + i)->data;
+        if (size & 0xF) {
+            size = _ALIGN16(size);
+        }
+        slots = gMemoryPools[0].slots;
+        for (i = 0; i != -1; i = curSlot->nextIndex) {
+            curSlot = &slots[i];
+            if (curSlot->flags == 0) {
+                if ((u32) address >= (u32) curSlot->data && (u32)address + size <= (u32) curSlot->data + curSlot->size)  {
+                    if (address == (u8 *) curSlot->data) {
+                        allocate_memory_pool_slot(0, i, size, 1, 0, colorTag);
+                        set_status_register_flags(flags);
+                        return curSlot->data;
+                    } else {
+                        i = allocate_memory_pool_slot(0, i, (u32) address - (u32) curSlot->data, 0, 1, colorTag);
+                        allocate_memory_pool_slot(0, i, size, 1, 0, colorTag);
+                        set_status_register_flags(flags);
+                        return (slots + i)->data;
+                    }
                 }
             }
         }
-    }
-    set_status_register_flags(flags);
+        set_status_register_flags(flags);
     }
     return 0;
 }
@@ -229,7 +232,8 @@ void set_free_queue_state(s32 state) {
 
 /**
  * Unallocates data from the pool that contains the data. Will free immediately if the free queue
- * state is set to 0, otherwise the data will just be marked for deletion.  
+ * state is set to 0, otherwise the data will just be marked for deletion.
+ * Official Name: mmFree
  */
 void free_from_memory_pool(void *data) {
     s32 *flags = clear_status_register_flags();
@@ -242,7 +246,8 @@ void free_from_memory_pool(void *data) {
 }
 
 /**
- * Frees all the addresses in the free queue. 
+ * Frees all the addresses in the free queue.
+ * Official Name: mmFreeTick
  */
 void clear_free_queue(void) {
     s32 i;
@@ -281,7 +286,7 @@ void free_slot_containing_address(u8 *address) {
         
         if (address == (u8 *) slot->data) {
             if (slot->flags == 1 || slot->flags == 4) {
-            free_memory_pool_slot(poolIndex, slotIndex);
+                free_memory_pool_slot(poolIndex, slotIndex);
             }
             break;
         }
@@ -377,7 +382,6 @@ s32 func_80071538(u8 *address) {
 
 /**
  * Returns the index of the memory pool containing the memory address.
- * Official(?) name: getHeapIdxOf
  */
 s32 get_memory_pool_index_containing_address(u8 *address) {
     s32 i;

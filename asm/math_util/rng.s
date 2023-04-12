@@ -1,3 +1,4 @@
+/* Official Name: mathRnd */
 glabel get_random_number_from_range
 /* 07054C 8006F94C 3C08800E */  lui   $t0, %hi(gCurrentRNGSeed) # $t0, 0x800e
 /* 070550 8006F950 8D08D434 */  lw    $t0, %lo(gCurrentRNGSeed)($t0)

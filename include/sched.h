@@ -68,7 +68,7 @@ typedef struct OSScTask_s {
     s32                 unk60;
     s32                 unk64;
     s32                 unk68;          /* Added by Rare?             */
-    s32                 unk6C;
+    s32                 unk6C;          /* Task ID, used in debug functions in JFG */
 } OSScTask;
 
 typedef struct SCClient_s {

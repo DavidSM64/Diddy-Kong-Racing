@@ -22,8 +22,11 @@ extern s16 gArcTanTable[];
 
 /******************************/
 
+/* Official Name: disableInterrupts*/
 GLOBAL_ASM("asm/math_util/clear_status_register_flags.s")
+/* Official Name: enableInterrupts */
 GLOBAL_ASM("asm/math_util/set_status_register_flags.s")
+/* Official Name: setIntDisFlag */
 GLOBAL_ASM("asm/math_util/set_D_800DD430.s")
 GLOBAL_ASM("asm/math_util/get_D_800DD430.s")
 
@@ -124,6 +127,7 @@ void f32_matrix_to_s16_matrix(Matrix *input, MatrixS *output) {
 GLOBAL_ASM("asm/math_util/f32_matrix_to_s16_matrix.s")
 #endif
 
+/* Official Name: mathSeed */
 void set_rng_seed(s32 num) {
     gCurrentRNGSeed = num;
 }
@@ -142,10 +146,11 @@ s32 get_rng_seed(void) {
     return gCurrentRNGSeed;
 }
 
+/* Official Name: mathRnd */
 GLOBAL_ASM("asm/math_util/rng.s")
 
 #ifdef NON_EQUIVALENT
-/* Official name: fastShortReflection(?) */
+/* Official name: fastShortReflection */
 void s16_matrix_rotate(s16 *arg0[4][4], s16 arg1[4][4]) {
     s32 temp_t6;
 
@@ -193,6 +198,7 @@ GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+/* Official Name: mathRpyXyzMtx */
 void object_transform_to_matrix(Matrix arg0, ObjectTransform *trans) {
     f32 yRotSine;
     f32 yRotCosine;

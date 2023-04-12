@@ -15,7 +15,7 @@ u16 *gVideoDepthBuffer = NULL;
 
 /************ .bss ************/
 
-s32 gVideoRefreshRate;
+s32 gVideoRefreshRate; //Official Name: viFramesPerSecond
 f32 gVideoAspectRatio;
 f32 gVideoHeightRatio;
 OSMesg gVideoMesgBuf[8];
@@ -45,6 +45,7 @@ u16 gScreenHeight;
 /**
  * Set up the framebuffers and the VI.
  * Framebuffers are allocated at runtime.
+ * Official Name: viInit
  */
 void init_video(s32 videoModeIndex, OSSched *sc) {
     s32 i;
@@ -83,6 +84,7 @@ void set_video_mode_index(s32 videoModeIndex) {
 /**
  * Return the current framebuffer dimensions as a single s32 value.
  * The high 16 bits are the height of the frame, and the low 16 bits are the width.
+ * Official Name: viGetCurrentSize?
  */
 s32 get_video_width_and_height_as_s32(void) {
     return (gScreenHeight << 16) | gScreenWidth;

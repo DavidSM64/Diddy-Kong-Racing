@@ -16,7 +16,6 @@
 #include "game.h"
 #include "racer.h"
 #include "particles.h"
-#include "printf.h"
 #include "unknown_0255E0.h"
 #include "math_util.h"
 #include "camera.h"
@@ -1159,7 +1158,7 @@ void func_80011134(Object *arg0, s32 arg1) {
             if (temp_v0 != 0xFF) {
                 var_t5 = temp_s3->textures[temp_v0].texture;
                 sp5C = var_s0->unk7 << 6;
-                func_8007EF80(var_t5, temp_s4[var_s1].flags, &sp5C, arg1);
+                tex_animate_texture(var_t5, temp_s4[var_s1].flags, &sp5C, arg1);
                 var_s0->unk7 = sp5C >> 6;
             }
         }

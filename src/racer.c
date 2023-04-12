@@ -28,6 +28,7 @@
 #include "collision.h"
 #include "main.h"
 #include "controller.h"
+#include "particles.h"
 
 
 #define MAX_NUMBER_OF_GHOST_NODES 360

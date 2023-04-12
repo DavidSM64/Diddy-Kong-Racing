@@ -68,10 +68,10 @@ OSDevMgr __osPiDevMgr = {
 /************ .bss ************/
 
 s32 gNumberOfFonts;
-FontData *gFonts;
-DialogueBoxBackground *gDialogueBoxBackground;
-DialogueTextElement *gDialogueText;
-s32 gCompactKerning; // Boolean value, seems to be related to X placement of menus on the X Axis?
+FontData *gFonts; //Official Name: Font
+DialogueBoxBackground *gDialogueBoxBackground; //Official Name: Window
+DialogueTextElement *gDialogueText; //Official Name: String
+s32 gCompactKerning; // Official Name: squash - Boolean value, seems to be related to X placement of menus on the X Axis?
 s8 sDialogueBoxCloseTimer;
 
 /******************************/
@@ -201,6 +201,7 @@ void set_text_font(s32 fontID) {
 
 /**
  * Sets the colour of the current dialogue box's text.
+ * Official Name: fontColour
  */
 void set_text_colour(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
     gDialogueBoxBackground[0].textColourR = red;
@@ -212,6 +213,7 @@ void set_text_colour(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
 
 /**
  * Sets the colour of the current dialogue box's text background.
+ * Official Name: fontBackground
  */
 void set_text_background_colour(s32 red, s32 green, s32 blue, s32 alpha) {
     gDialogueBoxBackground[0].textBGColourR = red;
@@ -222,6 +224,7 @@ void set_text_background_colour(s32 red, s32 green, s32 blue, s32 alpha) {
 
 /**
  * Builds the background settings, then renders the given text at a given position.
+ * Official Name: fontPrintWindowXY?
  */
 void draw_text(Gfx **displayList, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags) {
 #ifdef PUPPYPRINT_DEBUG
@@ -393,6 +396,7 @@ void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, Ali
 /**
  * Start from the beginning of the line then add to an offset from the starting position.
  * Returns the width of the string.
+ * Official Name: fontStringWidth
  */
 s32 get_text_width(char *text, s32 x, s32 font) {
     s32 diffX, thisDiffX;
@@ -437,6 +441,7 @@ s32 get_text_width(char *text, s32 x, s32 font) {
 
 /**
  * Sets the position and size of the current dialogue box.
+ * Official Name: fontWindowSize
  */
 void set_current_dialogue_box_coords(s32 dialogueBoxID, s32 x1, s32 y1, s32 x2, s32 y2) {
     if (dialogueBoxID > 0 && dialogueBoxID < DIALOGUEBOXBACKGROUND_COUNT) {
@@ -464,6 +469,7 @@ void set_current_dialogue_box_coords(s32 dialogueBoxID, s32 x1, s32 y1, s32 x2, 
 
 /**
  * Sets the active front of the current dialogue box.
+ * Official Name: fontWindowUseFont
  */
 void set_dialogue_font(s32 dialogueBoxID, s32 font) {
     if (dialogueBoxID >= 0 && dialogueBoxID < DIALOGUEBOXBACKGROUND_COUNT) {
@@ -473,8 +479,10 @@ void set_dialogue_font(s32 dialogueBoxID, s32 font) {
         }
     }
 }
+
 /**
  * Sets the background colour of the current dialogue box.
+ * Official Name: fontWindowColour
  */
 void set_current_dialogue_background_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha) {
     if (dialogueBoxID > 0 && dialogueBoxID < DIALOGUEBOXBACKGROUND_COUNT) {
@@ -488,6 +496,7 @@ void set_current_dialogue_background_colour(s32 dialogueBoxID, s32 red, s32 gree
 
 /**
  * Sets the text colour of the current dialogue box.
+ * Official Name: fontWindowFontColour
  */
 void set_current_text_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
     DialogueBoxBackground *temp;
@@ -504,6 +513,7 @@ void set_current_text_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s3
 
 /**
  * Sets text background colour of the current dialogue box.
+ * Official Name: fontWindowFontBackground
  */
 void set_current_text_background_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha) {
     DialogueBoxBackground *dialogueBox;
@@ -520,6 +530,7 @@ void set_current_text_background_colour(s32 dialogueBoxID, s32 red, s32 green, s
 /**
  * Draws the text portion of a dialogue box that's passed through.
  * Binds the text to the box, then returns it.
+ * Official Name: fontWindowAddStringXY
  */
 void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s32 number, s32 flags) {
     s32 width;
@@ -604,6 +615,7 @@ void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s3
 
 /**
  * Unused function that moved a dialogue box ID to the front of the list.
+ * Official Name: fontWindowFlushStrings
  */
 void assign_dialogue_box_id(s32 dialogueBoxID) {
     DialogueBoxBackground *dialogueBox;
@@ -630,6 +642,7 @@ void open_dialogue_box(s32 dialogueBoxID) {
 
 /**
  * Mark the selected dialogue box as closed
+ * Official Name: fontWindowDisable
  */
 void close_dialogue_box(s32 dialogueBoxID) {
     gDialogueBoxBackground[dialogueBoxID].flags &= DIALOGUE_BOX_CLOSED;
@@ -643,6 +656,7 @@ void func_800C56D0(s32 dialogueBoxID) {
  * Main function to render each dialogue box entry.
  * Contains a timer that counts down two frames before closing a dialogue box
  * when the player exits out of one.
+ * Official Name: fontWindowsDraw
  */
 void render_dialogue_boxes(Gfx **dlist, MatrixS **mat, Vertex **verts) {
     s32 i;
@@ -668,6 +682,7 @@ void render_dialogue_boxes(Gfx **dlist, MatrixS **mat, Vertex **verts) {
 
 /**
  * Convert an integer to a string.
+ * Official Name: fontStringAddNumber
  */
 void s32_to_string(char **outString, s32 number) {
     u8 digit;
@@ -731,6 +746,7 @@ void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
 
 /**
  * Render the selected dialogue box. Background first, then text.
+ * Official Name: fontWindowDraw
  */
 void render_dialogue_box(Gfx **dlist, MatrixS **mat, Vertex **verts, s32 dialogueBoxID) {
     DialogueBoxBackground *dialogueBox;

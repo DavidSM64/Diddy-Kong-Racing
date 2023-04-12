@@ -5,6 +5,8 @@
 #include "types.h"
 #include "macros.h"
 
+#define RAM_END 0x80400000
+#define EXTENDED_RAM_END 0x80800000
 #define MAIN_POOL_SLOT_COUNT 1600
 
 // Animation related?

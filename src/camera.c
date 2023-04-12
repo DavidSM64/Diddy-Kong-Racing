@@ -123,7 +123,9 @@ Matrix D_801210A0;
 
 //#ifdef NON_EQUIVALENT
 extern s32 D_B0000578;
-
+/**
+ * Official Name: camInit
+*/
 void func_80065EA0(void) {
     s32 i, j;
     for (i = 0; i < 5; i++) {

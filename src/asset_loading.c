@@ -26,6 +26,7 @@ extern u8 __ASSETS_LUT_START[], __ASSETS_LUT_END[]; // __ASSETS_LUT_START = 0xEC
  * Set up the peripheral interface message queues and scheduling.
  * This will send messages when DMA reads are finished.
  * After, allocate space and load the asset table into RAM.
+ * Official Name: piInit
 */
 void init_PI_mesg_queue(void) {
     u32 assetTableSize;
@@ -40,6 +41,7 @@ void init_PI_mesg_queue(void) {
 
 /**
  * Returns the memory address containing an asset section loaded from ROM.
+ * Official Name: piRomLoad
  */
 u32 *load_asset_section_from_rom(u32 assetIndex) {
     u32 *index;
