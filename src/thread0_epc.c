@@ -1,5 +1,5 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
-/* RAM_POS: 0x800B6E50 */
+/* RAM_POS: 0x800B6F50 */
 
 #include "thread0_epc.h"
 #include "types.h"
@@ -11,7 +11,6 @@
 #include "controller.h"
 #include "game.h"
 #include "stacks.h"
-#include "particles.h"
 
 /************ .rodata ************/
 
@@ -35,52 +34,16 @@ s32 sLockupDelay = 0;
 
 /*******************************/
 
-extern OSMesgQueue D_80129790;
-extern OSMesg D_801297A8;
-extern OSMesgQueue D_801297E8;
-extern OSMesg D_801297C8;
-extern u64 gEPCStack[0x200];
-extern s32 D_80129FB0[3];
-
-void func_800B6E50(void) {
-    if (D_80127CD0 < 0x141) {
-        D_80127CBC = 0x10;
-        D_80127CC0 = D_80127CD0 - 0x10;
-    } else {
-        D_80127CBC = 0x20;
-        D_80127CC0 = D_80127CD0 - 0x20;
-    }
-    if (D_80127CD2 < 0xF1) {
-        D_80127CC4 = 0x10;
-        D_80127CC8 = D_80127CD2 - 0x10;
-    } else {
-        D_80127CC4 = 0x20;
-        D_80127CC8 = D_80127CD2 - 0x20;
-    }
-}
-
-void func_800B6EE0(void) {
-    D_80127CAC = D_80127CBC;
-    D_80127CAE = D_80127CC4;
-}
-
-void func_800B6F04(void) {
-    D_80127CAC = D_80127CBC;
-    D_80127CAE += 11;
-}
-
-void func_800B6F30(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {}
-
-// Only called from two libultra funcs for some reason. 
-// This is likely an assert gone wrong.
-// Called from alEnvMixerPull, and _pullSubFrame
-// thread0_Assert("samples >= 0", "env.c", 104);
-// thread0_Assert("samples <= AL_MAX_RSP_SAMPLES", "env.c", 105);
-// thread0_Assert("source", "env.c", 373);
-void thread0_Assert(UNUSED char *message, UNUSED char *fileName, UNUSED s32 lineNumber) {}
+u64 gEPCStack[0x200];
+OSThread gEPCThread;
+s32 D_80129790[6]; // Osmesg stuff
+s32 D_801297A8[8];
+s32 D_801297C8[8];
+s32 D_801297E8[6];
 
 /**
  * Start the exception program counter thread.
+ * Official Name: diCpuTraceInit
 */
 void thread0_create(void) {
     s32 i;
@@ -93,26 +56,23 @@ void thread0_create(void) {
 }
 
 
-#ifdef NON_EQUIVALENT
-void thread0_Main(UNUSED void *unused) { // Has regalloc issues
+void thread0_Main(UNUSED void *unused) {
     s32 sp34;
     s32 s0 = 0;
 
     osCreateMesgQueue(&D_80129790, &D_801297A8, 8);
-    osSetEventMesg(12, &D_80129790, 8);
-    osSetEventMesg(10, &D_80129790, 2);
+    osSetEventMesg(OS_EVENT_FAULT, &D_80129790, 8);
+    osSetEventMesg(OS_EVENT_CPU_BREAK, &D_80129790, 2);
     osCreatePiManager(150, &D_801297E8, &D_801297C8, 8);
 
     while (1) {
-        while (1) {
-            osRecvMesg(&D_80129790, &sp34, OS_MESG_BLOCK);
-            if (!(get_filtered_cheats() & CHEAT_EPC_LOCK_UP_DISPLAY)) {
-                continue;
-            }
-            s0 |= sp34;
-            if ((s0 & 8) || (s0 & 2)) {
-                break;
-            }
+        osRecvMesg(&D_80129790, &sp34, OS_MESG_BLOCK);
+        if (!(get_filtered_cheats() & CHEAT_EPC_LOCK_UP_DISPLAY)) {
+            continue;
+        }
+        s0 |= sp34;
+        if ((s0 & 8) == 0 && (s0 & 2) == 0) {
+            continue;
         }
         s0 &= ~8;
         func_800B70D0();
@@ -120,9 +80,6 @@ void thread0_Main(UNUSED void *unused) { // Has regalloc issues
         func_800B71B0();
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/thread0_epc/thread0_Main.s")
-#endif
 
 void func_800B70D0(void) {
     OSThread *node = __osGetActiveQueue();

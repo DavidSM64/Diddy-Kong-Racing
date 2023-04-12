@@ -145,7 +145,7 @@ glabel __osException
 /* 0D3A8C 800D2E8C 112A00B0 */  beq   $t1, $t2, .L800D3150
 /* 0D3A90 800D2E90 00000000 */   nop   
 /* 0D3A94 800D2E94 240A002C */  li    $t2, 44
-/* 0D3A98 800D2E98 112A00FF */  beq   $t1, $t2, .L800D3298
+/* 0D3A98 800D2E98 112A00FF */  beq   $t1, $t2, handle_CpU
 /* 0D3A9C 800D2E9C 00000000 */   nop   
 /* 0D3AA0 800D2EA0 240A0000 */  li    $t2, 0
 /* 0D3AA4 800D2EA4 152A00C3 */  bne   $t1, $t2, .L800D31B4

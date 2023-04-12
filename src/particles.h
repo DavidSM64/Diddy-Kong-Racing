@@ -293,26 +293,6 @@ typedef struct Particle2 {
   /* 0x0077 */ u8 unk77;
 } Particle2;
 
-extern unk800E2CF0 **gParticlesAssetTable;
-extern s32 gParticlesAssetTableCount;
-extern s32 D_80127CB8;
-extern s32 gDebugFontTexture;
-extern u16 D_80127CAE;
-extern u16 D_80127CAC;
-extern u16 D_80127CD0;
-extern s32 D_80127CBC;
-extern s32 D_80127CC0;
-extern u16 D_80127CD2;
-extern s32 D_80127CC4;
-extern s32 D_80127CC8;
-extern s32 D_80127CB4;
-extern s16 D_80127CB0;
-extern s16 D_80127CB2;
-extern OSThread gEPCThread;
-
-extern ParticleBehavior **gParticleBehavioursAssetTable;
-extern s32 gParticleBehavioursAssetTableCount;
-
 void func_800AE270(void);
 void func_800AE2A0(void);
 void func_800AE2D8(void);
@@ -354,5 +334,8 @@ void func_800B3240(Particle2 *);
 void func_800B3358(Particle2 *);
 void func_800B34B0(Particle2 *);
 void func_800B3564(Particle2 *);
+void func_800B3740(Object *, Gfx **, MatrixS **, Vertex **, s32); // Non Matching
+void func_800B4668(Object*, s32, s32, s32);
+void func_800B46BC(Object*, s32, s32, s32);
 
 #endif

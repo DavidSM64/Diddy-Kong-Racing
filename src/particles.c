@@ -161,33 +161,8 @@ s32 D_800E2EEC = 0x100;
 s32 D_80127C80;
 s32 D_80127C84;
 s32 D_80127C88[6];
-TextureHeader *gTexture0;
-TextureHeader *gTexture1;
-TextureHeader *gTexture2;
-u16 D_80127CAC;
-u16 D_80127CAE;
-s16 D_80127CB0;
-s16 D_80127CB2;
-s32 D_80127CB4;
-s32 D_80127CB8;
-s32 D_80127CBC;
-s32 D_80127CC0;
-s32 D_80127CC4;
-s32 D_80127CC8;
-s32 gDebugFontTexture;
-u16 D_80127CD0;
-u16 D_80127CD2;
-s32 D_80127CD4;
-s8 gDebugPrintBufferStart[2300];
-UNUSED s32 D_801285D4;
-u8 *gDebugPrintBufferEnd;
-u64 gEPCStack[0x200];
-OSThread gEPCThread;
-s32 D_80129790[6]; // Osmesg stuff
-s32 D_801297A8[8];
-s32 D_801297C8[8];
-s32 D_801297E8[6];
-
+//printf.c
+//thread0_epc
 /******************************/
 
 void func_800AE270(void) {
@@ -1432,3 +1407,76 @@ void func_800B2FBC(Particle2 *arg0) {
     }
 }
 
+GLOBAL_ASM("asm/non_matchings/particles/func_800B3140.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B3240.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B3358.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B34B0.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B3564.s")
+
+UNUSED void func_800B3678(Gfx **arg0, MatrixS **arg1, Vertex **arg2) {
+    UNUSED s32 pad;
+    UNUSED s32 pad2;
+    Object **objects;
+    s32 iObj;
+    s32 nObjs;
+
+    objects = objGetObjList(&iObj, &nObjs);
+    for (; iObj < nObjs; iObj++) {
+        if (objects[iObj]->segment.trans.unk6 & 0x8000) {
+            if ((s32) objects[iObj]->segment.header & 0x8000) {
+                func_800B3740(objects[iObj], arg0, arg1, arg2, 0);
+            }
+        }
+    }
+}
+
+GLOBAL_ASM("asm/non_matchings/particles/func_800B3740.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B3E64.s")
+
+UNUSED unk800E2CF0 *func_800B4488(s32 idx) {
+    if (idx < gParticlesAssetTableCount) {
+        return gParticlesAssetTable[idx];
+    }
+    return gParticlesAssetTable[gParticlesAssetTableCount - 1];
+}
+
+UNUSED unk800E2CF0 *func_800B44D4(s32 *idx) {
+    *idx = *idx + 1;
+    while (*idx >= gParticlesAssetTableCount) {
+        *idx = *idx - gParticlesAssetTableCount;
+    }
+    return gParticlesAssetTable[*idx];
+}
+
+UNUSED unk800E2CF0 *func_800B452C(s32 *arg0) {
+    for (*arg0 = *arg0 - 1; *arg0 < 0; *arg0 += gParticlesAssetTableCount);
+    return gParticlesAssetTable[*arg0];
+}
+
+UNUSED ParticleBehavior *func_800B4578(s32 idx) {
+    if (idx < gParticleBehavioursAssetTableCount) {
+        return gParticleBehavioursAssetTable[idx];
+    }
+    return gParticleBehavioursAssetTable[gParticleBehavioursAssetTableCount - 1];
+}
+
+GLOBAL_ASM("asm/non_matchings/particles/func_800B45C4.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B461C.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B4668.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B46BC.s")
+
+/**
+ * memset(void *s, int c, size_t n)
+ *
+ * s: start of area to clear
+ * c: char to fill with
+ * n: size of area to clear
+ */
+void *memset(void *s, int c, size_t n) {
+    u8 *var_v0 = s;
+
+    while (n-- > 0) {
+        *var_v0++ = c;
+    }
+    return s;
+}

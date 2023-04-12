@@ -243,8 +243,8 @@ s32 gHUDNumPlayers;
 s32 D_80126D10;
 s32 D_80126D14;
 s32 D_80126D18;
-s32 D_80126D1C;
-s32 D_80126D20;
+s32 gMinimapDotOffsetX;
+s32 gMinimapDotOffsetY;
 s32 D_80126D24;
 s32 D_80126D28;
 u16 D_80126D2C;
@@ -263,8 +263,8 @@ s32 D_80126D50;
 u8 gMinimapRed;
 u8 gMinimapGreen;
 u8 gMinimapBlue;
-s32 D_80126D58;
-s32 D_80126D5C;
+s32 gMinimapScreenX;
+s32 gMinimapScreenY;
 LevelHeader *gHudLevelHeader;
 u8 D_80126D64;
 u8 D_80126D65;
@@ -390,8 +390,8 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 gDPPipeSync(gHUDCurrDisplayList++);
                 init_rsp(&gHUDCurrDisplayList);
                 init_rdp_and_framebuffer(&gHUDCurrDisplayList);
-                texDisableModes(0xFFFFFFFF);
-                texEnableModes(RENDER_Z_COMPARE);
+                tex_enable_modes(0xFFFFFFFF);
+                tex_disable_modes(RENDER_Z_COMPARE);
                 func_8007BF1C(FALSE);
                 if (check_if_showing_cutscene_camera() == FALSE && D_80126D34 == 0 && racer->racer.playerIndex == PLAYER_ONE) {
                     if (D_80126D35 != 0) {
@@ -489,7 +489,7 @@ block_95:
                 *dList = gHUDCurrDisplayList;
                 *mtx = gHUDCurrMatrix;
                 *vertexList = gHUDCurrVertex;
-                texDisableModes(0xFFFFFFFF);
+                tex_enable_modes(0xFFFFFFFF);
             }
         }
     }
@@ -1519,9 +1519,9 @@ void minimap_init(LevelModel *model) {
     gMinimapRed = (model->minimapColor >> 16) & 0xFF;
     gMinimapGreen = (model->minimapColor >> 8) & 0xFF;
     gMinimapBlue = model->minimapColor & 0xFF;
-    load_sprite_info(model->minimapSprite, &D_80126D1C, &D_80126D20, &sp2C, &sp2C, &sp2C);
-    func_8007CA68(model->minimapSprite, 0, &D_80126D14, &D_80126D18, &sp2C);
-    model->minimapSprite = (s32) func_8007C12C(model->minimapSprite, 1);
+    load_sprite_info(model->minimapSpriteIndex, &gMinimapDotOffsetX, &gMinimapDotOffsetY, &sp2C, &sp2C, &sp2C);
+    func_8007CA68(model->minimapSpriteIndex, 0, &D_80126D14, &D_80126D18, &sp2C);
+    model->minimapSpriteIndex = (s32) func_8007C12C(model->minimapSpriteIndex, 1);
 }
 
 /**
@@ -1824,38 +1824,38 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
             }
             someObjSeg = get_active_camera_segment();
             func_80068508(TRUE);
-            minimap = (Sprite *) lvlMdl->minimapSprite;
+            minimap = (Sprite *) lvlMdl->minimapSpriteIndex;
             switch (gHUDNumPlayers) {
                 case TWO_PLAYERS:
-                    D_80126D58 = 135;
-                    D_80126D5C = -D_80126D20 / 2;
+                    gMinimapScreenX = 135;
+                    gMinimapScreenY = -gMinimapDotOffsetY / 2;
                     break;
                 case THREE_PLAYERS:
                     if (get_current_level_race_type() == RACETYPE_CHALLENGE_EGGS || 
                         get_current_level_race_type() == RACETYPE_CHALLENGE_BATTLE || 
                         get_current_level_race_type() == RACETYPE_CHALLENGE_BANANAS) {
-                        D_80126D58 = (D_80126D1C / 2) - 8;
-                        D_80126D5C =  -D_80126D20 / 2;
+                        gMinimapScreenX = (gMinimapDotOffsetX / 2) - 8;
+                        gMinimapScreenY =  -gMinimapDotOffsetY / 2;
                     } else {
-                        D_80126D58 = ( D_80126D1C / 2) + 72;
-                        D_80126D5C = -60 - (D_80126D20 / 2);
+                        gMinimapScreenX = ( gMinimapDotOffsetX / 2) + 72;
+                        gMinimapScreenY = -60 - (gMinimapDotOffsetY / 2);
                     }
                     break;
                 case FOUR_PLAYERS:
-                    D_80126D58 = (D_80126D1C / 2) - 8;
-                    D_80126D5C = -D_80126D20 / 2;
+                    gMinimapScreenX = (gMinimapDotOffsetX / 2) - 8;
+                    gMinimapScreenY = -gMinimapDotOffsetY / 2;
                     break;
                 default:
-                    D_80126D58 = 135;
-                    D_80126D5C = -98;
+                    gMinimapScreenX = 135;
+                    gMinimapScreenY = -98;
                     break;
             }
             if (osTvType == TV_TYPE_PAL) {
-                D_80126D5C *= 1.2;
+                gMinimapScreenY *= 1.2;
             }
             func_8007BF1C(FALSE);
-            objTrans.trans.x_position = D_80126D58 + D_80126D24 + D_80126D28;
-            objTrans.trans.y_position = D_80126D5C;
+            objTrans.trans.x_position = gMinimapScreenX + D_80126D24 + D_80126D28;
+            objTrans.trans.y_position = gMinimapScreenY;
             if (osTvType == TV_TYPE_PAL) {
                 objTrans.trans.x_position -= 4.0f;
             }
@@ -1863,7 +1863,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
             objTrans.trans.x_rotation = 0;
             if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
                 objTrans.trans.y_rotation = -0x8000;
-                objTrans.trans.x_position -= D_80126D1C;
+                objTrans.trans.x_position -= gMinimapDotOffsetX;
             } else {
                 objTrans.trans.y_rotation = 0;
             }
@@ -1881,8 +1881,8 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
             }
             render_ortho_triangle_image(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (ObjectSegment* ) &objTrans.trans, minimap, 0);
             sp11C = (lvlMdl->upperXBounds - lvlMdl->lowerXBounds) / (f32) (lvlMdl->upperZBounds - lvlMdl->lowerZBounds);
-            sp118 = coss_f((lvlMdl->unk24 * 0xFFFF) / 360);
-            sp114 = sins_f((lvlMdl->unk24 * 0xFFFF) / 360);
+            sp118 = coss_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
+            sp114 = sins_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
             if (func_8000E4D8() && func_8001B288()) {
                 temp_v0_8 = func_8001B2E0();
                 if (temp_v0_8 != NULL) {
@@ -1927,7 +1927,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     if (someRacer->playerIndex != PLAYER_COMPUTER) {
                         D_80126CDC->unk1F0 -= 1.0f;
                         D_80126CDC->unk1E6 = 27;
-                        D_80126CDC->unk1E4 = (objectGroup[i]->segment.trans.y_rotation - ((lvlMdl->unk24 * 0xFFFF) / 360)) & 0xFFFF;
+                        D_80126CDC->unk1E4 = (objectGroup[i]->segment.trans.y_rotation - ((lvlMdl->minimapRotation * 0xFFFF) / 360)) & 0xFFFF;
                         
                         if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
                             D_80126CDC->unk1E4 = 0xFFFF - D_80126CDC->unk1E4;
@@ -1977,8 +1977,32 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     }
 }
 
+void func_800AA3EC(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspectRatio) {
+    LevelModel* lvlMdl;
+    UNUSED s32 pad24[2];
+    f32 scaledX;
+    f32 scaledY;
+    s32 a;
+    s32 b;
+    
+    lvlMdl = get_current_level_model();
+    
+    a = lvlMdl->upperXBounds - lvlMdl->lowerXBounds;
+    b = lvlMdl->upperZBounds - lvlMdl->lowerZBounds;
+    scaledX = (60.0f * modelAspectRatio * lvlMdl->minimapXScale * (x - lvlMdl->lowerXBounds)) / (a);
+    scaledY = (lvlMdl->minimapYScale * -60.0f * (z - lvlMdl->lowerZBounds)) / (b);
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800AA3EC.s")
+    if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) { // Is adventure 2?
+        D_80126CDC->unk1EC = (((f32) gMinimapScreenX - ((scaledX * angleCos) + (scaledY * angleSin))) + (f32) lvlMdl->minimapOffsetXAdv2) - (f32) gMinimapDotOffsetX;
+        D_80126CDC->unk1F0 = ((f32) (lvlMdl->minimapOffsetYAdv2 + gMinimapScreenY) - ((scaledX * angleSin) - (scaledY * angleCos))) + (f32) gMinimapDotOffsetY;
+        return;
+    }
+    // Final x position on minimap
+    D_80126CDC->unk1EC = ((f32) gMinimapScreenX + ((scaledX * angleCos) + (scaledY * angleSin)) + (f32) lvlMdl->minimapOffsetXAdv1) - (f32) gMinimapDotOffsetX;
+    // Final y position on minimap
+    D_80126CDC->unk1F0 = ((f32) (lvlMdl->minimapOffsetYAdv1 + gMinimapScreenY) - ((scaledX * angleSin) - (scaledY * angleCos))) + (f32) gMinimapDotOffsetY;
+}
+
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AA600.s")
 
 void func_800AAFD0(ObjectModel *objModel) {

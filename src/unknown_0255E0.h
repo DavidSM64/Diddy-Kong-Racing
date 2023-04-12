@@ -73,6 +73,21 @@ typedef struct unk8011D360 {
     s16 unk6;
 } unk8011D360;
 
+/* Size: 0x10 bytes */
+typedef struct unk8011D474 {
+    TriangleList *unk0;
+    TriangleList *unk4;
+    Vertex *unk8;
+    Vertex *unkC;
+} unk8011D474;
+
+/* Size: 0x8 bytes */
+typedef struct unk8011D478 {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+} unk8011D478;
+
 /* Size: 0x38 bytes */
 typedef struct unk8011D388 {
     s32 unk0;
@@ -163,7 +178,7 @@ void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, TriangleList** tris,
 
 void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5);
 void func_8002C7D4(void);
-Gfx *func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportIndex);
+void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportIndex);
 s32 func_80027568(void);
 s32 func_8002CC30(LevelModelSegment*);
 s8 func_8002B0F4(s16, f32 xPos, f32 zPos, struct TempStruct8**);
@@ -171,7 +186,7 @@ void func_800278E8(s32);
 void func_80028050(void);
 void initialise_player_viewport_vars(s32);
 void func_8002A31C(void);
-void func_8007F24C(s8*, s32);
+void update_colour_cycle(s8*, s32);
 void func_800AD030(ObjectSegment*);
 void func_800B9C18(s32);
 void func_800BA8E4(Gfx**, MatrixS**, s32);

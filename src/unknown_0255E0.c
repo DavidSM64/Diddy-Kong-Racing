@@ -22,6 +22,7 @@
 #include "objects.h"
 #include "math_util.h"
 #include "printf.h"
+#include "collision.h"
 
 // Maximum size for a level model is 522.5 KiB
 #define LEVEL_MODEL_MAX_SIZE 0x82A00
@@ -39,8 +40,8 @@ f32 D_800DC884[10] = {
 
 Vec3f D_800DC8AC[3][3] = {
     { {{{ 50.0f, 0.0f, 32.0f }}}, {{{  -50.0f,   0.0f,  32.0f }}}, {{{  -50.0f, 100.0f,  32.0f }}} },
-    { {{{ 0.0f,  0.0f, 32.0f }}}, {{{  130.0f,  60.0f, -68.0f }}}, {{{  130.0f, -60.0f, -68.0f }}} },
-    { {{{ 0.0f,  0.0f, 32.0f }}}, {{{ -130.0f, -60.0f, -68.0f }}}, {{{ -130.0f,  60.0f, -68.0f }}} },
+    { {{{  0.0f, 0.0f, 32.0f }}}, {{{  130.0f,  60.0f, -68.0f }}}, {{{  130.0f, -60.0f, -68.0f }}} },
+    { {{{  0.0f, 0.0f, 32.0f }}}, {{{ -130.0f, -60.0f, -68.0f }}}, {{{ -130.0f,  60.0f, -68.0f }}} },
 };
 
 LevelModel *gCurrentLevelModel = NULL;
@@ -123,7 +124,7 @@ f32 D_8011D0D4;
 s32 D_8011D0D8;
 s32 D_8011D0DC;
 s32 D_8011D0E0;
-s32 D_8011D0E4;
+f32 D_8011D0E4;
 s32 D_8011D0E8;
 s32 D_8011D0EC;
 s32 D_8011D0F0;
@@ -159,14 +160,14 @@ UNUSED f32 gCurrBBoxDistanceToCamera; // Used in a comparison check, but functio
 u32 D_8011D384;
 unk8011D388 D_8011D388[4];
 Vec3i gScenePerspectivePos;
-s32 *D_8011D474;
-s32 D_8011D478;
-s32 D_8011D47C;
-s32 D_8011D480[2];
-Vertex **D_8011D488;
+unk8011D474 *D_8011D474; // 0x10 bytes struct?
+unk8011D478 *D_8011D478; // 0x8 bytes struct?
+s16 **D_8011D47C;
+Vertex *D_8011D480[2];
+Vertex *D_8011D488;
 s32 D_8011D48C;
-s32 D_8011D490[2];
-Vertex **D_8011D498;
+TriangleList *D_8011D490[2];
+Vertex *D_8011D498;
 s16 D_8011D49C;
 s16 D_8011D49E;
 f32 D_8011D4A0;
@@ -302,7 +303,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     func_8002D8DC(2, 2, updateRate);
     for (i = 0; i < 7; i++) {
         if ((s32) gCurrentLevelHeader2->unk74[i] != -1) {
-            func_8007F24C(gCurrentLevelHeader2->unk74[i], tempUpdateRate);
+            update_colour_cycle(gCurrentLevelHeader2->unk74[i], tempUpdateRate);
         }
     }
 
@@ -322,7 +323,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         gCurrentLevelHeader2->unkA8 = (gCurrentLevelHeader2->unkA8 + (gCurrentLevelHeader2->unkA2 * tempUpdateRate)) & i;
         i = (gCurrentLevelHeader2->unkA4->height << 9) - 1;
         gCurrentLevelHeader2->unkAA = (gCurrentLevelHeader2->unkAA + (gCurrentLevelHeader2->unkA3 * tempUpdateRate)) & i;
-        func_8007EF80(gCurrentLevelHeader2->unkA4, &D_8011B114, &D_8011B110, tempUpdateRate);
+        tex_animate_texture(gCurrentLevelHeader2->unkA4, &D_8011B114, &D_8011B110, tempUpdateRate);
     }
     flip = FALSE;
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
@@ -341,7 +342,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     func_800AD40C();
     func_80030838(numViewports, tempUpdateRate);
     func_800AF404(tempUpdateRate);
-    if (gCurrentLevelModel->unk1E > 0) {
+    if (gCurrentLevelModel->numberOfAnimatedTextures > 0) {
         func_80027E24(tempUpdateRate);
     }
     for (j = gSceneCurrentPlayerID = 0; j < numViewports; gSceneCurrentPlayerID++, j = gSceneCurrentPlayerID) {
@@ -438,7 +439,177 @@ void func_800257D0(void) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+
+void func_80026070(LevelModelSegmentBoundingBox *, f32, f32, f32);
+void func_80026430(LevelModelSegment *, f32, f32, f32);
+void func_80026C14(s16 arg0, s16 arg1, s32 arg2);
+void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3);
+
+void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
+    Vertex *spAC;
+    s8 *spA8;
+    s8 sp7C;
+    LevelModelSegmentBoundingBox *bbox;
+    Vertex *temp_t6;
+    f32 yCameraCoss;
+    f32 x1Sins;
+    f32 x2Sins;
+    f32 z2Coss;
+    f32 temp_f22;
+    f32 yCameraSins;
+    f32 z1Coss;
+    s16 *var_a0;
+    s16 temp_s3;
+    s32 temp_t3_2;
+    s16 var_s0;
+    s16 i;
+    s16 var_s4;
+    s16 var_v1;
+    s32 temp_t3;
+    s32 temp_t4;
+    s32 continueLoop;
+    s16 check1;
+    s16 check2;
+    s16 check3;
+    s16 check4;
+    s8 *temp_t3_3;
+    s8 *temp_t7;
+    s8 *temp_v0_4;
+    s8 *var_t6;
+    s8 temp_t3_4;
+    u8 segmentIndex;
+
+    D_8011D490[0] = D_8011D474[viewportIndex].unk0;
+    D_8011D490[1] = D_8011D474[viewportIndex].unk4;
+    D_8011D480[0] = D_8011D474[viewportIndex].unk8;
+    D_8011D480[1] = D_8011D474[viewportIndex].unkC;
+    load_and_set_texture_no_offset(&gSceneCurrDisplayList, NULL, RENDER_ANTI_ALIASING | RENDER_Z_COMPARE);
+    D_8011D49C = 0;
+    D_8011D49E = 0;
+    yCameraSins = sins_f(gSceneActiveCamera->trans.y_rotation * -1);
+    yCameraCoss = coss_f(gSceneActiveCamera->trans.y_rotation * -1);
+    D_8011D4AC = (gSceneActiveCamera->trans.x_position + (yCameraSins * 250.0));
+    D_8011D4B0 = (gSceneActiveCamera->trans.z_position + (yCameraCoss * 250.0));
+    D_8011D4A0 = -yCameraCoss;
+    D_8011D4A4 = yCameraSins;
+    temp_f22 = -((yCameraSins * D_8011D4AC) + (yCameraCoss * D_8011D4B0));
+    D_8011D4A8 = -((D_8011D4A0 * D_8011D4AC) + (D_8011D4A4 * D_8011D4B0));
+    for (i = 0; i < numberOfSegments; i++) {
+        segmentIndex = segmentIds[i];
+        bbox = &gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex];
+        x1Sins = bbox->x1 * yCameraSins;
+        z1Coss = bbox->z1 * yCameraCoss;
+        x2Sins = bbox->x2 * yCameraSins;
+        z2Coss = bbox->z2 * yCameraCoss;
+        check1 = FALSE;
+        check2 = FALSE;
+        check3 = FALSE;
+        check4 = FALSE;
+        if ((x1Sins + z1Coss + temp_f22) <= 0.0) {
+            check1 = TRUE;
+        }
+        if ((x2Sins + z1Coss + temp_f22) <= 0.0) {
+            check2 = TRUE;
+        }
+        if ((x1Sins + z2Coss + temp_f22) <= 0.0) {
+            check3 = TRUE;
+        }
+        if ((x2Sins + z2Coss + temp_f22) <= 0.0) {
+            check4 = TRUE;
+        }
+        if (((s16) ((s16) (check1 + check2) + check3) + check4) & 3) {
+            func_80026430(bbox, yCameraSins, yCameraCoss, temp_f22);
+            if (gCurrentLevelModel->segments[segmentIndex].unk3C & 2) {
+                func_80026070(bbox, yCameraSins, yCameraCoss, temp_f22);
+            }
+        }
+    }
+    func_80026C14( 300, (gCurrentLevelModel->lowerYBounds - 195), 1);
+    func_80026C14(-300, (gCurrentLevelModel->lowerYBounds - 195), 1);
+    func_80026C14( 300, (gCurrentLevelModel->upperYBounds + 195), 0);
+    func_80026C14(-300, (gCurrentLevelModel->upperYBounds + 195), 0);
+    if (D_8011D49E < D_8011D4BA && D_8011D49E != 0) {
+        continueLoop = TRUE;
+        do {
+            for (i = 0; i < D_8011D49E - 1; i++) {
+                if (D_8011D478[i].unk8 < D_8011D478[i].unk0) {
+                    temp_t3 = D_8011D478[i].unk8;
+                    D_8011D478[i].unk8 = D_8011D478[i].unk0;
+                    temp_t4 = D_8011D478[i+1].unk0;
+                    D_8011D478[i].unk0 = temp_t3;
+                    D_8011D478[i+1].unk0 = D_8011D478[i].unk4;
+                    D_8011D478[i].unk4 = temp_t4;
+                    continueLoop = FALSE;
+                }
+            }
+        } while (!continueLoop);
+        var_s0 = 0;
+        for (i = 0; i < D_8011D49E; i++) {
+            temp_t3_2 = D_8011D478[var_s0].unk8 * 2;
+            if (D_8011D47C[temp_t3_2][0] == -1) {
+                D_8011D478[i].unk4 = (s8) (D_8011D478[i].unk8 | 2);
+                D_8011D47C[temp_t3_2][0] = (s8) i;
+            } else {
+                D_8011D47C[temp_t3_2][0] = (s8) i;
+            }
+        }
+        temp_t6 = gSceneCurrVertexList;
+        gSceneCurrVertexList = D_8011D480[D_8011D4B4];
+        temp_t7 = gSceneCurrTriList;
+        gSceneCurrTriList = D_8011D490[D_8011D4B4];
+        D_8011D4B4 = 1 - D_8011D4B4;
+        var_s4 = D_8011D478->unk0;
+        D_8011D488 = gSceneCurrVertexList;
+        D_8011D498 = gSceneCurrTriList;
+        D_8011D4B6 = 0;
+        D_8011D4B8 = 0;
+        spAC = temp_t6;
+        spA8 = temp_t7;
+        for (i = 0; i < D_8011D49E; i++) {
+            if ((i < D_8011D49E) != 0) {
+                var_a0 = &D_8011D478[i].unk0;
+                if (var_s4 == *var_a0) {
+                    temp_t3_3 = &(&sp7C)[var_s0];
+                    if (var_a0[3] & 2) {
+                        var_s0++;
+                        *temp_t3_3 = var_a0[7];
+                    } else {
+                        for (var_v1 = 0; var_v1 < var_s0; var_v1++) {
+                            var_t6 = &(&sp7C)[var_v1];
+                            if (*var_t6 == var_a0[7]) {
+                                var_s0 -= 1;
+                                while (var_v1 < var_s0) {
+                                    temp_v0_4 = &(&sp7C)[var_v1];
+                                    temp_t3_4 = temp_v0_4[1];
+                                    temp_v0_4[0] = temp_t3_4;
+                                    var_v1++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (i < D_8011D49E) {
+                temp_s3 = D_8011D478[i].unk0;
+                if (var_s4 != temp_s3) {
+                    func_80026E54(var_s0, &sp7C, (f32) temp_s3, (f32) var_s4);
+                    var_s4 = temp_s3;
+                }
+            }
+        }
+        if (D_8011D4B6 != 0) {
+            gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(D_8011D488), D_8011D4B6, 0);
+            gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(D_8011D498), (D_8011D4B6  >> 1), TRIN_DISABLE_TEXTURE);
+        }
+        gSceneCurrVertexList = spAC;
+        gSceneCurrTriList = spA8;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002581C.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80026070.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80026430.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80026C14.s")
@@ -465,10 +636,10 @@ void func_80027E24(s32 updateRate) {
                         temp = batch[batchNumber].unk7 << 6;
                         if (batch[batchNumber].flags & BATCH_FLAGS_UNK80000000) {
                             temp |= batch[batchNumber].unk6;
-                            func_8007EF80(texture, &batch[batchNumber].flags, &temp, updateRate);
+                            tex_animate_texture(texture, &batch[batchNumber].flags, &temp, updateRate);
                             batch[batchNumber].unk6 = temp & 0x3F;
                         } else {
-                            func_8007EF80(texture, &batch[batchNumber].flags, &temp, updateRate);
+                            tex_animate_texture(texture, &batch[batchNumber].flags, &temp, updateRate);
                         }
                         batch[batchNumber].unk7 = (temp >> 6) & 0xFF;
                     }
@@ -1505,7 +1676,7 @@ void func_8002C0C4(s32 modelId) {
     LOCAL_OFFSET_TO_RAM_ADDRESS(TextureInfo *, gCurrentLevelModel->textures);
     LOCAL_OFFSET_TO_RAM_ADDRESS(LevelModelSegment *, gCurrentLevelModel->segments);
     LOCAL_OFFSET_TO_RAM_ADDRESS(LevelModelSegmentBoundingBox *, gCurrentLevelModel->segmentsBoundingBoxes);
-    LOCAL_OFFSET_TO_RAM_ADDRESS(s32, gCurrentLevelModel->unkC);
+    LOCAL_OFFSET_TO_RAM_ADDRESS(u8 *, gCurrentLevelModel->unkC);
     LOCAL_OFFSET_TO_RAM_ADDRESS(u8 *, gCurrentLevelModel->segmentsBitfields);
     LOCAL_OFFSET_TO_RAM_ADDRESS(BspTreeNode *, gCurrentLevelModel->segmentsBspTree);
     
@@ -1603,7 +1774,7 @@ void func_8002C7D4(void) {
     free_from_memory_pool(D_8011D30C);
     free_from_memory_pool(D_8011D370);
     free_from_memory_pool(D_8011D374);
-    free_sprite((Sprite *) gCurrentLevelModel->minimapSprite);
+    free_sprite((Sprite *) gCurrentLevelModel->minimapSpriteIndex);
     for(i = 0; i < MAXCONTROLLERS; i++) {
         free_from_memory_pool(D_8011D350[i]);
         free_from_memory_pool(D_8011D320[i]);
@@ -1931,7 +2102,134 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
     D_8011D360[D_8011D364].unk6 = D_8011D36C;
 }
 
+#ifdef NON_EQUIVALENT
+void func_8002DE30(Object *obj) {
+    s32 sp94;
+    s32 sp90;
+    s32 sp8C;
+    s32 sp88;
+    s32 i;
+    s32 sp5C;
+    LevelModelSegment *segment;
+    ObjectHeader *objHeader;
+    Triangle *temp_t0;
+    TriangleBatchInfo *batches;
+    Vertex *vert;
+    f32 temp_f0_2;
+    s16 temp_v0_3;
+    s16 segmentIndex;
+    s16 var_a1;
+    s16 var_a2;
+    s16 facesOffset;
+    s32 obj_yPos;
+    s32 temp_v0;
+    s32 temp_v0_2;
+    s32 var_s4;
+    s32 var_s7;
+    s32 var_t2;
+    s32 var_v1;
+    u32 temp_v1_2;
+    u8 *var_a0;
+    u8 temp_t7;
+    s32 vertsOffset;
+
+    objHeader = obj->segment.header;
+    obj_yPos = obj->segment.trans.y_position;
+    sp94 = obj_yPos + objHeader->unk44;
+    sp90 = obj_yPos + objHeader->unk42;
+    segmentIndex = obj->segment.unk2C.half.lower;
+    var_s7 = 0;
+    if (segmentIndex != -1) {
+        //func_800314DC = collision
+        temp_v0 = func_800314DC(&gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex], 
+            (obj->segment.trans.x_position - 16.0f),
+            (obj->segment.trans.z_position - 16.0f),
+            (obj->segment.trans.x_position + 16.0f),
+            (obj->segment.trans.z_position + 16.0f));
+
+        segment = &gCurrentLevelModel->segments[segmentIndex];
+        for (i = 0; i < segment->numberOfBatches; i++) {
+            vertsOffset = segment->batches[i].verticesOffset;
+            
+        }
+
+        i = 0;
+        segment = &gCurrentLevelModel->segments[segmentIndex];
+        var_t2 = 0;
+        if  (segment->numberOfBatches > 0) {
+            batches = segment->batches;
+            vertsOffset = batches->verticesOffset;
+loop_3:
+            temp_v1_2 = batches->flags;
+            if (!(temp_v1_2 & 0x6900)) {
+                facesOffset = batches->facesOffset;
+                vert = &segment->vertices[vertsOffset];
+                if ((facesOffset < batches[1].textureIndex) != 0) {
+                    var_s4 = facesOffset * 2;
+                    if (var_s7 == 0) {
+loop_6:
+                        temp_v0_2 = *(segment->unk10 + var_s4) & temp_v0;
+                        if ((temp_v0_2 & 0xFF) && (temp_v0_2 & 0xFF00)) {
+                            temp_t0 = &segment->triangles[facesOffset];
+                            temp_t7 = temp_t0->verticesArray[1];
+                            var_a0 = &temp_t0->verticesArray[1];
+                            var_v1 = 1;
+                            var_a1 = vert[temp_t7].y;
+                            var_a2 = var_a1;
+                            do {
+                                var_v1 += 1;
+                                temp_v0_3 = vert[var_a0[1]].y;
+                                if (temp_v0_3 < var_a1) {
+                                    var_a1 = temp_v0_3;
+                                } else if (var_a2 < temp_v0_3) {
+                                    var_a2 = temp_v0_3;
+                                }
+                                var_a0 += 1;
+                            } while (var_v1 != 3);
+                            if ((var_a2 >= sp90) && (sp94 >= var_a1)) {
+                                sp88 = temp_v0;
+                                sp5C = var_t2;
+                                if (point_triangle_2d_xz_intersection(
+                                        obj->segment.trans.x_position, 
+                                        obj->segment.trans.z_position, 
+                                        &vert[temp_t7].x,
+                                        &vert[temp_t0->verticesArray[2]].x,
+                                        &vert[temp_t0->verticesArray[3]].x
+                                ) != 0) {
+                                    var_s7 = 1;
+                                    obj->unk54->unk0 += (((1.0f - D_800DC884[temp_v1_2]) - obj->unk54->unk0) * 0.2);
+                                }
+                            }
+                        }
+                        facesOffset += 1;
+                        batches = &segment->batches[var_t2];
+                        var_s4 += 2;
+                        if (facesOffset < batches[1].textureIndex) {
+                            if (var_s7 != 0) {
+
+                            } else {
+                                goto loop_6;
+                            }
+                        }
+                    }
+                }
+            }
+            var_t2 += 0xC;
+            i++;
+            batches += 0xC;
+            if (i < segment->numberOfBatches) {
+                if (var_s7 != 0) {
+
+                } else {
+                    goto loop_3;
+                }
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002DE30.s")
+#endif
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002E234.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002E904.s")
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002EEEC.s")

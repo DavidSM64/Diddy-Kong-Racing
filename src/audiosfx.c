@@ -270,6 +270,7 @@ void func_800049F8(s32 soundMask, s16 type, u32 volume) {
 
 /**
  * Returns the volume level of the channel ID.
+ * Official Name: gsSndpGetMasterVolume
 */
 u16 get_sound_channel_volume(u8 channel) {
     return gSoundChannelVolume[channel];
@@ -278,6 +279,7 @@ u16 get_sound_channel_volume(u8 channel) {
 //TODO: The structs used here are almost definitely wrong, but they do match, so it can at least show the pattern we're looking for.
 /**
  * Looks for the intended audio channel in the main buffer and adjusts its volume
+ * Official Name: gsSndpSetMasterVolume
 */
 void set_sound_channel_volume(u8 channel, u16 volume) {
     OSIntMask mask;

@@ -30,7 +30,7 @@ UNUSED s32 D_800DE7BC = 0;
 
 /************ .bss ************/
 
-s32 gVideoRefreshRate;
+s32 gVideoRefreshRate; //Official Name: viFramesPerSecond
 f32 gVideoAspectRatio;
 f32 gVideoHeightRatio;
 UNUSED s32 D_8012617C;
@@ -59,6 +59,7 @@ OSScClient gVideoSched;
 /**
  * Set up the framebuffers and the VI.
  * Framebuffers are allocated at runtime.
+ * Official Name: viInit
  */
 void init_video(s32 videoModeIndex, OSSched *sc) {
     if (osTvType == TV_TYPE_PAL) {
@@ -125,6 +126,7 @@ UNUSED void set_video_width_and_height_from_index(s32 fbIndex) {
 /**
  * Return the current framebuffer dimensions as a single s32 value.
  * The high 16 bits are the height of the frame, and the low 16 bits are the width.
+ * Official Name: viGetCurrentSize?
  */
 s32 get_video_width_and_height_as_s32(void) {
     return (gVideoFbHeights[gVideoCurrFbIndex] << 16) | gVideoFbWidths[gVideoCurrFbIndex];
