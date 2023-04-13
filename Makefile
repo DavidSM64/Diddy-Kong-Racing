@@ -156,7 +156,7 @@ else
   OBJCOPY = $(CROSS)objcopy --pad-to=0x101000 --gap-fill=0xFF
 endif
 
-MIPSISET := -mips1
+MIPSISET := -mips2
 OPT_FLAGS := -O2 -Xfullwarn #include -Xfullwarn here since it's not supported with -O3
 
 INCLUDE_DIRS := include $(BUILD_DIR) $(BUILD_DIR)/include src include/libc .
@@ -292,72 +292,30 @@ $(BUILD_DIR)/lib/src/al/env.o: OPT_FLAGS := -O2 -Xfullwarn
 #$(BUILD_DIR)/lib/src/libc/llcvt.o: OPT_FLAGS :=
 #$(BUILD_DIR)/lib/src/libc/llcvt.o: MIPSISET := -mips3 32
 
-$(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
-$(BUILD_DIR)/lib/src/mips1/%.o: MIPSISET := -mips1
-$(BUILD_DIR)/lib/src/os/osMotor.o: MIPSISET := -mips2
-$(BUILD_DIR)/lib/src/al/env.o: MIPSISET := -mips2
-
 ####################### MATH UTIL #########################
-
-$(BUILD_DIR)/src/math_util.o: MIPSISET := -mips2
-$(BUILD_DIR)/src/collision.o: MIPSISET := -mips2
-
-$(BUILD_DIR)/src/video.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/video.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/borders.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/borders.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/set_rsp_segment.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/set_rsp_segment.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/screen_asset.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/screen_asset.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/thread30.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/thread30.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/src/asset_loading.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/asset_loading.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/main.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/main.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/font.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/font.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/audio.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/audio.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/memory.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/memory.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/game_text.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/game_text.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/gzip.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/gzip.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/vehicle_bluey.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/vehicle_bluey.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/vehicle_bubbler.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/vehicle_bubbler.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/vehicle_smokey.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/vehicle_smokey.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/vehicle_wizpig.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/vehicle_wizpig.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/vehicle_rocket.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/vehicle_rocket.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/controller.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/controller.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/audiomgr.o: MIPSISET := -mips2
 $(BUILD_DIR)/src/audiomgr.o: OPT_FLAGS := -O3
 
 
-$(BUILD_DIR)/lib/src/mips1/sc/sched.o: MIPSISET := -mips2
 $(BUILD_DIR)/lib/src/mips1/sc/sched.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/mips1/os/osCreatePiManager.o: MIPSISET := -mips2
 #$(BUILD_DIR)/lib/src/mips1/os/osCreatePiManager.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/mips1/al/alAuxBusPull.o: MIPSISET := -mips2
-$(BUILD_DIR)/lib/src/mips1/al/alFxNew.o: MIPSISET := -mips2
-$(BUILD_DIR)/lib/src/mips1/al/alSynAllocFX.o: MIPSISET := -mips2
-$(BUILD_DIR)/lib/src/mips1/al/alSynSetPan.o: MIPSISET := -mips2
-$(BUILD_DIR)/lib/src/mips1/al/alSynStartVoiceParams.o: MIPSISET := -mips2
-$(BUILD_DIR)/lib/src/mips1/al/reverb.o: MIPSISET := -mips2
-$(BUILD_DIR)/lib/src/mips1/al/seqplayer.o: MIPSISET := -mips2
-$(BUILD_DIR)/lib/src/mips1/al/synthesizer.o: MIPSISET := -mips2
-$(BUILD_DIR)/lib/src/mips1/al/unknown_0646F0.o: MIPSISET := -mips2
-$(BUILD_DIR)/lib/src/mips1/al/unknown_0647A0.o: MIPSISET := -mips2
-$(BUILD_DIR)/lib/src/mips1/al/unknown_064690.o: MIPSISET := -mips2
-$(BUILD_DIR)/lib/src/mips1/al/unknown_064800.o: MIPSISET := -mips2
 
 ######################## Targets #############################
 
