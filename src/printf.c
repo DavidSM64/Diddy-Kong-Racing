@@ -298,7 +298,7 @@ UNUSED s32 func_800B63F4(const char *format, ...) {
     s32 fontCharU;
     s32 stringLength;
     char s[255];
-    char *ch;
+    u8 *ch;
     va_list args;
     va_start(args, format);
 
@@ -306,7 +306,7 @@ UNUSED s32 func_800B63F4(const char *format, ...) {
     func_800B4A08(1);
     vsprintf(s, format, args);
     func_800B4A08(0);
-    for (ch = &s[0]; *ch != '\0'; ch++) {
+    for (ch = (u8 *) &s[0]; *ch != '\0'; ch++) {
         pad = *ch;
         if (*ch != (0, '\n')) {
             if (pad == ' ') {
