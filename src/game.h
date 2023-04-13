@@ -15,6 +15,7 @@ extern u8 gOverrideAA;
 extern u8 gHideHUD;
 extern s8 gScreenMode;
 extern s8 gScreenPos[2];
+extern s32 gMapId;
 
 typedef enum RenderContext {
     DRAW_INTRO = -1,

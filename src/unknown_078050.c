@@ -7,6 +7,8 @@
 #include "macros.h"
 #include "video.h"
 #include "camera.h"
+#include "game.h"
+#include "printf.h"
 //#include "lib/src/unknown_0D24D0.h"
 
 /************ .data ************/
@@ -209,7 +211,7 @@ void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
             allocate_task_buffer();
         }
         taskStart = (u32) gGfxSPTaskOutputBuffer;
-        taskEnd = (u32) (gGfxSPTaskOutputBuffer + (sizeof(u64) * FIFO_BUFFER_SIZE));
+        taskEnd = (u32) (gGfxSPTaskOutputBuffer + (FIFO_BUFFER_SIZE));
     }
     
     dkrtask->task.data_ptr = (u64 *) dlBegin;
@@ -292,6 +294,7 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
     s32 y1;
     s32 x2;
     s32 y2;
+    u32 skip = TRUE;
 
     widthAndHeight = get_video_width_and_height_as_s32();
     w = GET_VIDEO_WIDTH(widthAndHeight);
@@ -305,6 +308,11 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
     gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
     gDPPipeSync((*dList)++);
     gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_COLOUR_BUFFER);
+
+    if (gMapId == ASSET_LEVEL_CENTRALAREAHUB || gMapId == ASSET_LEVEL_WHALEBAY || gMapId == ASSET_LEVEL_PIRATELAGOON || gMapId == ASSET_LEVEL_DINODOMAINHUB) {
+        skip = FALSE;
+    }
+
     if (drawBG) {
         if (check_viewport_background_flag(0)) {
             if (D_800DE4C4) {
@@ -312,6 +320,9 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
             } else if (gBackgroundDrawFunc.ptr != NULL) {
                 gBackgroundDrawFunc.function((Gfx *) dList, mtx);
             } else {
+                if (skip) {
+                    return;
+                }
                 gDPSetFillColor((*dList)++, sBackgroundFillColour);
                 gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
             }
@@ -328,6 +339,9 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
             } else if (gBackgroundDrawFunc.ptr != NULL) {
                 gBackgroundDrawFunc.function((Gfx *) dList, mtx);
             } else {
+                if (skip) {
+                    return;
+                }
                 gDPSetFillColor((*dList)++, (GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1) << 16) | GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1));
                 gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
             }
