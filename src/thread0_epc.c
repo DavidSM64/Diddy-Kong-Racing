@@ -24,10 +24,10 @@
 
 u64 gEPCStack[0x200];
 OSThread gEPCThread;
-s32 D_80129790[6]; // Osmesg stuff
-s32 D_801297A8[8];
-s32 D_801297C8[8];
-s32 D_801297E8[6];
+OSMesgQueue D_80129790;
+OSMesg D_801297A8[8];
+OSMesg D_801297C8[8];
+OSMesgQueue D_801297E8;
 
 /**
  * Start the exception program counter thread.
