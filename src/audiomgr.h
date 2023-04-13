@@ -39,7 +39,7 @@
                                        /* DMA's but you need more buffers.              */
 
 
-#define AUDIO_STACKSIZE         0x3010
+#define AUDIO_STACKSIZE         0x1000
 
 #define MAX_SEQ_LENGTH  20000
 
