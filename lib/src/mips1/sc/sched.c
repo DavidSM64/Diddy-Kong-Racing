@@ -213,6 +213,9 @@ void func_80079760(OSSched *sc) {
 UNUSED void dummy_80079808() {}
 UNUSED void dummy_80079810() {}
 
+void swap_front_ready_framebuffers(void);
+extern s32 gVideoHasReadyFrame;
+
 void __scHandleRetrace(OSSched *sc) {
     OSScTask *rspTask = NULL;
     OSScClient *client;
@@ -222,6 +225,11 @@ void __scHandleRetrace(OSSched *sc) {
     u8 set_curRSPTask_NULL = FALSE;
     u8 set_curRDPTask_NULL = FALSE;
     OSScTask *unkTask;
+
+    if (gVideoHasReadyFrame) {
+        gVideoHasReadyFrame = FALSE;
+        swap_front_ready_framebuffers();
+    }
 
     if (sc->curRSPTask) {
         gCurRSPTaskCounter++;

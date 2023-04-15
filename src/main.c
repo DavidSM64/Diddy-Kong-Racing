@@ -137,9 +137,9 @@ void draw_memory_error_screen(void) {
     set_text_font(FONT_SMALL);
     draw_text(dlist++, SCREEN_WIDTH_HALF, SCREEN_HEIGHT_HALF, "Expansion Pak Required", ALIGN_MIDDLE_CENTER);
     set_rsp_segment(&dlist, 0, 0);
-    set_rsp_segment(&dlist, 1, (s32) gVideoLastFramebuffer);
+    set_rsp_segment(&dlist, 1, (s32) gVideoFrontFramebuffer);
     set_rsp_segment(&dlist, 2, gVideoLastDepthBuffer);
-    set_rsp_segment(&dlist, 4, (s32) gVideoLastFramebuffer - 0x500);
+    set_rsp_segment(&dlist, 4, (s32) gVideoFrontFramebuffer - 0x500);
     init_rsp(&dlist);
     init_rdp_and_framebuffer(&dlist);
     setup_ostask_xbus(gDisplayLists[0], dlist, 0);
@@ -147,7 +147,7 @@ void draw_memory_error_screen(void) {
     gSPEndDisplayList(dlist++);
     wait_for_gfx_task();
     osViBlack(FALSE);
-    osViSwapBuffer(gVideoLastFramebuffer);
+    osViSwapBuffer(gVideoFrontFramebuffer);
 }
 #endif
 

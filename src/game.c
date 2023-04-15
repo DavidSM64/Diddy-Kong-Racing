@@ -847,9 +847,9 @@ void main_game_loop(void) {
     if (gScreenStatus == MESG_SKIP_BUFFER_SWAP) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
         set_rsp_segment(&gCurrDisplayList, 0, 0);
-        set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoCurrFramebuffer);
-        set_rsp_segment(&gCurrDisplayList, 2, (s32) gVideoLastDepthBuffer);
-        set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoCurrFramebuffer - 0x500);
+        set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoWriteFramebuffer);
+        set_rsp_segment(&gCurrDisplayList, 2, (s32) gVideoFrontDepthBuffer);
+        set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoWriteFramebuffer - 0x500);
     }
     if (gDrawFrameTimer == 0) {
 #ifndef FIFO_UCODE
@@ -913,9 +913,9 @@ void main_game_loop(void) {
     gGameCurrTriList = gHudTriangles[gSPTaskNum];
 
     set_rsp_segment(&gCurrDisplayList, 0, 0);
-    set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoLastFramebuffer);
-    set_rsp_segment(&gCurrDisplayList, 2, (s32) gVideoLastDepthBuffer);
-    set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoLastFramebuffer - 0x500);
+    set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoFrontFramebuffer);
+    set_rsp_segment(&gCurrDisplayList, 2, (s32) gVideoFrontDepthBuffer);
+    set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoFrontFramebuffer - 0x500);
 #ifdef PUPPYPRINT_DEBUG
     first2 = osGetCount();
 #endif
@@ -1051,7 +1051,7 @@ void main_game_loop(void) {
 #endif
     if (gDrawFrameTimer == 2) {
         framebufferSize = SCREEN_WIDTH * SCREEN_HEIGHT * 2;
-        dmacopy_doubleword(gVideoLastFramebuffer, gVideoCurrFramebuffer, (s32) gVideoCurrFramebuffer + framebufferSize);
+        dmacopy_doubleword(gVideoFrontFramebuffer, gVideoWriteFramebuffer, (s32) gVideoWriteFramebuffer + framebufferSize);
     }
     // tempLogicUpdateRate will be set to a value 2 or higher, based on the framerate.
     // the mul factor is hardcapped at 6, which happens at 10FPS. The mul factor

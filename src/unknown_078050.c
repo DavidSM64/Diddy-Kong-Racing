@@ -180,7 +180,7 @@ s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
     dkrtask->task.output_buff = NULL;
     dkrtask->task.output_buff_size = NULL;
     dkrtask->next = NULL;
-    dkrtask->frameBuffer = gVideoCurrFramebuffer;
+    dkrtask->frameBuffer = gVideoWriteFramebuffer;
     osWritebackDCacheAll();
     osSendMesg(osScInterruptQ, dkrtask, OS_MESG_BLOCK);
     return 0;
@@ -233,7 +233,7 @@ void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->flags = OS_SC_LAST_TASK | OS_SC_SWAPBUFFER | OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP;
     dkrtask->mesgQueue = &gGfxTaskMesgQueue;
     dkrtask->mesg = gGfxTaskMesgNums;
-    dkrtask->frameBuffer = gVideoCurrFramebuffer;
+    dkrtask->frameBuffer = gVideoWriteFramebuffer;
     dkrtask->unk68 = 0;
     
     if (recvMesg) {

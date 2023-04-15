@@ -24,13 +24,18 @@ OSViMode gTvViMode;
 s32 gVideoFbWidths[3];
 s32 gVideoFbHeights[3];
 u16 *gVideoFramebuffers[3];
-s32 gVideoCurrFbIndex;
+s32 gVideoWriteFbIndex;
+s32 gVideoReadyFbIndex;
+s32 gVideoFrontFbIndex;
 s32 gVideoModeIndex;
 s32 sBlackScreenTimer;
-u16 *gVideoCurrFramebuffer;
-u16 *gVideoLastFramebuffer;
-u16 *gVideoCurrDepthBuffer;
-u16 *gVideoLastDepthBuffer;
+u16 *gVideoWriteFramebuffer;
+u16 *gVideoReadyFramebuffer;
+u16 *gVideoFrontFramebuffer;
+u16 *gVideoWriteDepthBuffer;
+u16 *gVideoReadyDepthBuffer;
+u16 *gVideoFrontDepthBuffer;
+s32 gVideoHasReadyFrame;
 u8 D_801262E4;
 u8 gVideoDeltaCounter;
 u8 gVideoDeltaTime;
@@ -63,8 +68,15 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
         gVideoFramebuffers[i] = 0;
         init_framebuffer(i);
     }
-    gVideoCurrFbIndex = 1;
-    swap_framebuffers();
+    gVideoWriteFbIndex = 0;
+    gVideoReadyFbIndex = 1;
+    gVideoFrontFbIndex = 2;
+    gVideoWriteFramebuffer = gVideoFramebuffers[gVideoWriteFbIndex];
+    gVideoReadyFramebuffer = gVideoFramebuffers[gVideoReadyFbIndex];
+    gVideoFrontFramebuffer = gVideoFramebuffers[gVideoFrontFbIndex];
+    gVideoFrontDepthBuffer = gVideoDepthBuffer;
+    gVideoWriteDepthBuffer = gVideoDepthBuffer;
+    gVideoHasReadyFrame = FALSE;
     osCreateMesgQueue((OSMesgQueue *)&gVideoMesgQueue, gVideoMesgBuf, ARRAY_COUNT(gVideoMesgBuf));
     osScAddClient(sc, &gVideoSched, (OSMesgQueue *)&gVideoMesgQueue, OS_SC_ID_VIDEO);
     init_vi_settings();
@@ -185,6 +197,8 @@ void reset_video_delta_time(void) {
     gVideoDeltaTime = 2;
 }
 
+void swap_back_framebuffers(void);
+
 /**
  * Wait for the finished message from the scheduler while counting up a timer,
  * then update the current framebuffer index.
@@ -203,38 +217,36 @@ s32 swap_framebuffer_when_ready(s32 mesg) {
         }
     }
     if (mesg != MESG_SKIP_BUFFER_SWAP) {
-        swap_framebuffers();
+        swap_back_framebuffers();
+        gVideoHasReadyFrame = TRUE;
     }
     while (osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_NOBLOCK) != -1) {
         tempUpdateRate++;
     }
 
-    /*while (tempUpdateRate < gVideoDeltaTime) {
-        osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_BLOCK);
-        tempUpdateRate++;
-    }*/
-
-    //render_printf
-
-    osViSwapBuffer(gVideoLastFramebuffer);
-    //osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_BLOCK);
+    osViSwapBuffer(gVideoFrontFramebuffer);
     return tempUpdateRate;
 }
 
 void func_8007AB24(u8 arg0) {
     D_801262E4 = arg0;
 }
-/**
- * Flips the current framebuffer index, swapping to the other framebuffer
- * for the next frame, then update the current and previous framebuffer pointers.
- */
-void swap_framebuffers(void) {
-    gVideoLastFramebuffer = gVideoFramebuffers[gVideoCurrFbIndex];
-    gVideoLastDepthBuffer = gVideoDepthBuffer;
-    gVideoCurrFbIndex++;
-    if (gVideoCurrFbIndex == gNumFrameBuffers) {
-        gVideoCurrFbIndex = 0;
-    }
-    gVideoCurrFramebuffer = gVideoFramebuffers[gVideoCurrFbIndex];
-    gVideoCurrDepthBuffer = gVideoDepthBuffer;
+
+void swap_front_ready_framebuffers(void) {
+    s32 tmp = gVideoFrontFbIndex;
+    gVideoFrontFbIndex = gVideoReadyFbIndex;
+    gVideoReadyFbIndex = tmp;
+
+    gVideoFrontFramebuffer = gVideoFramebuffers[gVideoFrontFbIndex];
+    gVideoReadyFramebuffer = gVideoFramebuffers[gVideoReadyFbIndex];
 }
+
+void swap_back_framebuffers(void) {
+    s32 tmp = gVideoWriteFbIndex;
+    gVideoWriteFbIndex = gVideoReadyFbIndex;
+    gVideoReadyFbIndex = tmp;
+
+    gVideoWriteFramebuffer = gVideoFramebuffers[gVideoWriteFbIndex];
+    gVideoReadyFramebuffer = gVideoFramebuffers[gVideoReadyFbIndex];
+}
+

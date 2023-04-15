@@ -325,8 +325,8 @@ void thread2_crash_screen(UNUSED void *arg) {
     osSetEventMesg(OS_EVENT_FAULT, &gCrashScreen.mesgQueue, (OSMesg) 2);
     do {
         osRecvMesg(&gCrashScreen.mesgQueue, &mesg, 1);
-        if (gVideoLastFramebuffer) {
-            gCrashScreen.framebuffer = (u16 *) gVideoLastFramebuffer; 
+        if (gVideoFrontFramebuffer) {
+            gCrashScreen.framebuffer = (u16 *) gVideoFrontFramebuffer; 
         }
         thread = get_crashed_thread();
     } while (thread == NULL);
