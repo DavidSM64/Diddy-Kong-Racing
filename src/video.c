@@ -59,18 +59,18 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
     gVideoAspectRatio = ASPECT_RATIO_NTSC;
     gVideoHeightRatio = HEIGHT_RATIO_NTSC;
 
-    if (gExpansionPak) {
-        gNumFrameBuffers++;
-    }
+    
 
     reset_video_delta_time();
     set_video_mode_index(videoModeIndex);
-    if (gExpansionPak == FALSE) {
-        for (i = 0; i < gNumFrameBuffers; i++) {
-            gVideoFramebuffers[i] = 0;
-            init_framebuffer(i);
-        }
-    } else {
+    // I run this even with an expansion pak just to use up the memory.
+    // Means I don't run into any issues if I test without a pak that just happened to work with.
+    for (i = 0; i < 2; i++) {
+        gVideoFramebuffers[i] = 0;
+        init_framebuffer(i);
+    }
+    if (gExpansionPak) {
+        gNumFrameBuffers++;
         gVideoFramebuffers[0] = (u16 *) 0x80500000;
         gVideoFramebuffers[1] = (u16 *) 0x80500000;
         gVideoFramebuffers[2] = (u16 *) 0x80500000;
@@ -177,10 +177,10 @@ void init_framebuffer(s32 index) {
         free_from_memory_pool(gVideoFramebuffers[index]);
     }
 
-    gVideoFramebuffers[index] = allocate_from_main_pool_safe((width * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+    gVideoFramebuffers[index] = allocate_from_main_pool_safe((SCREEN_WIDTH * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
     gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
     if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = allocate_from_main_pool_safe((width * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+            gVideoDepthBuffer = allocate_from_main_pool_safe((SCREEN_WIDTH * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
             gVideoDepthBuffer = (u16 *)(((s32)gVideoDepthBuffer + 0x3F) & ~0x3F);
     }
 }
