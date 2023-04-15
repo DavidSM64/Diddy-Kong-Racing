@@ -72,8 +72,8 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
     if (gExpansionPak) {
         gNumFrameBuffers++;
         gVideoFramebuffers[0] = (u16 *) 0x80500000;
-        gVideoFramebuffers[1] = (u16 *) 0x80500000;
-        gVideoFramebuffers[2] = (u16 *) 0x80500000;
+        gVideoFramebuffers[1] = (u16 *) 0x80600000;
+        gVideoFramebuffers[2] = (u16 *) 0x80700000;
         gVideoDepthBuffer = (u16 *) 0x80400000;
     }
     gVideoWriteFbIndex = 0;
