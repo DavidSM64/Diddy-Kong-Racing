@@ -6,6 +6,7 @@
 #include "camera.h"
 #include "game.h"
 #include "main.h"
+#include "printf.h"
 
 /************ .data ************/
 
@@ -64,9 +65,16 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
 
     reset_video_delta_time();
     set_video_mode_index(videoModeIndex);
-    for (i = 0; i < gNumFrameBuffers; i++) {
-        gVideoFramebuffers[i] = 0;
-        init_framebuffer(i);
+    if (gExpansionPak == FALSE) {
+        for (i = 0; i < gNumFrameBuffers; i++) {
+            gVideoFramebuffers[i] = 0;
+            init_framebuffer(i);
+        }
+    } else {
+        gVideoFramebuffers[0] = (u16 *) 0x80500000;
+        gVideoFramebuffers[1] = (u16 *) 0x80500000;
+        gVideoFramebuffers[2] = (u16 *) 0x80500000;
+        gVideoDepthBuffer = (u16 *) 0x80400000;
     }
     gVideoWriteFbIndex = 0;
     gVideoReadyFbIndex = 1;
@@ -169,24 +177,13 @@ void init_framebuffer(s32 index) {
         free_from_memory_pool(gVideoFramebuffers[index]);
     }
 
-    if (gExpansionPak) {
-        width = SCREEN_WIDTH_WIDE;
-    } else {
-        width = SCREEN_WIDTH;
-    }
-    if (gExpansionPak) {
-        gVideoFramebuffers[index] = (u16 *) 0x80500000 + (((width * SCREEN_HEIGHT * 2) + 0x30) * index);
-    } else {
-        gVideoFramebuffers[index] = allocate_from_main_pool_safe((width * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
-    }
+    gVideoFramebuffers[index] = allocate_from_main_pool_safe((width * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
     gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
     if (gVideoDepthBuffer == NULL) {
-        gVideoDepthBuffer = allocate_from_main_pool_safe((width * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
-        gVideoDepthBuffer = (u16 *)(((s32)gVideoDepthBuffer + 0x3F) & ~0x3F);
+            gVideoDepthBuffer = allocate_from_main_pool_safe((width * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+            gVideoDepthBuffer = (u16 *)(((s32)gVideoDepthBuffer + 0x3F) & ~0x3F);
     }
 }
-
-#include "printf.h"
 
 /**
  * Sets the video counters to their default values.

@@ -34,9 +34,9 @@ extern MemoryPoolSlot gMainMemoryPool;
  */
 void init_main_memory_pool(void) {
     u32 ramEnd = RAM_END;
-    if (gExpansionPak) {
+    /*if (gExpansionPak) {
         ramEnd = EXTENDED_RAM_END;
-    }
+    }*/
 #ifdef PUPPYPRINT_DEBUG
     bzero(&gFreeMem, sizeof(gFreeMem));
     gFreeMem[11] = ramEnd - (s32)(&gMainMemoryPool);

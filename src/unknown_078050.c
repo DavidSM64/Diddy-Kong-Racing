@@ -199,8 +199,8 @@ void allocate_task_buffer(void) {
 void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
     OSMesg mesgBuf;
-    u32 taskStart = 0x80600000;
-    u32 taskEnd = 0x80680000;
+    u32 taskStart = 0x80680000;
+    u32 taskEnd = 0x808E0000;
 
     gGfxTaskIsRunning = TRUE;
     dkrtask = &gGfxTaskBuf[gfxBufCounter];
