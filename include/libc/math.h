@@ -3,11 +3,8 @@
 
 #define M_PI 3.14159265358979323846
 
-f32 sinf(f32); //official name: fsin
-double sin(double);
+f32 sinf(f32 x); //official name: fsin
 f32 cosf(f32 x);
-double cos(double);
-
-float sqrtf(float);
+f32 sqrtf(f32 x);
 
 #endif
