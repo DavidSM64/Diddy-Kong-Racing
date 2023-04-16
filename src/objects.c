@@ -941,9 +941,6 @@ void func_80010994(s32 updateRate) {
     s32 sp54;
     Object_68 *obj68;
     UNUSED Object_64 *obj64;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first;
-#endif
 
     func_800245B4(-1);
     gRaceStartCountdown = D_8011ADB0;
@@ -971,29 +968,14 @@ void func_80010994(s32 updateRate) {
     func_800155B8();
     func_8001E89C();
     for (i = 0; i < D_8011AE70; i++) {
-#ifdef PUPPYPRINT_DEBUG
-        first = osGetCount();
-#endif
         run_object_loop_func(D_8011AE6C[i], updateRate);
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add_obj(D_8011AE6C[i]->behaviorId, osGetCount() - first);
-#endif
     }
     func_8001E6EC(1);
     for (i = 0; i < D_8011AE70; i++) {
-#ifdef PUPPYPRINT_DEBUG
-        first = osGetCount();
-#endif
         func_8001709C(D_8011AE6C[i]);
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add_obj(D_8011AE6C[i]->behaviorId, osGetCount() - first);
-#endif
     }
     tempVal = objCount;
     for (i = D_8011AE60; i < tempVal; i++) {
-#ifdef PUPPYPRINT_DEBUG
-        first = osGetCount();
-#endif
         obj = gObjPtrList[i];
         if (!(obj->segment.trans.unk6 & 0x8000)) {
             if ((obj->behaviorId != BHV_LIGHT_RGBA) && (obj->behaviorId != BHV_WEAPON) && (obj->behaviorId != BHV_FOG_CHANGER)) {
@@ -1018,76 +1000,43 @@ void func_80010994(s32 updateRate) {
                 }
             }
         }
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add_obj(obj->behaviorId, osGetCount() - first);
-#endif
     }
     for (i = 0; i < gNumRacers; i++) {
-#ifdef PUPPYPRINT_DEBUG
-        first = osGetCount();
-#endif
         update_player_racer((*gRacers)[i], updateRate);
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add_obj(BHV_RACER, osGetCount() - first);
-#endif
     }
     if (get_current_level_race_type() == 0) {
         for (i = 0; i < gNumRacers; i++) {
-#ifdef PUPPYPRINT_DEBUG
-        first = osGetCount();
-#endif
             obj64 = gRacersByPosition[i]->unk64;
             racer = &obj64->racer;
             if (racer->playerIndex != -1) {
                 func_80043ECC(gRacersByPosition[i], racer, updateRate);
                 i = gNumRacers; //Why not just break?
             }
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add_obj(BHV_RACER, osGetCount() - first);
-#endif
         }
     }
     func_8000BADC(updateRate);
     for (i = D_8011AE60; i < tempVal; i++) {
-#ifdef PUPPYPRINT_DEBUG
-        first = osGetCount();
-#endif
         obj = gObjPtrList[i];
         if ((!(obj->segment.trans.unk6 & 0x8000) && (obj->behaviorId == BHV_WEAPON)) || (obj->behaviorId == BHV_FOG_CHANGER)) {
             run_object_loop_func(obj, updateRate);
         }
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add_obj(obj->behaviorId, osGetCount() - first);
-#endif
     }
     if (D_8011AE64 > 0) {
         for (i = D_8011AE60; i < tempVal; i++) {
-#ifdef PUPPYPRINT_DEBUG
-        first = osGetCount();
-#endif
             obj = gObjPtrList[i];
             if (obj->segment.trans.unk6 & 0x8000) {
                 //Why is this object being treated as a Particle2?
                 func_800B22FC((Particle2 *) obj, updateRate);
             }
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add_obj(obj->behaviorId, osGetCount() - first);
-#endif
         }
     }
     lightUpdateLights(updateRate);
     if (func_80032C6C() > 0) {
         for (i = D_8011AE60; i < objCount; i++) {
-#ifdef PUPPYPRINT_DEBUG
-        first = osGetCount();
-#endif
             obj = gObjPtrList[i];
             if (!(obj->segment.trans.unk6 & 0x8000) && (obj->unk54 != NULL)) {
                 func_80032C7C(obj);
             }
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add_obj(obj->behaviorId, osGetCount() - first);
-#endif
         }
     }
     func_8001E6EC(0);
@@ -1418,10 +1367,6 @@ void render_3d_billboard(Object *obj) {
     ObjectTransformExt sp60;
     Object *var_a0;
     unk80068514_arg4* sp58;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-    u32 first3 = 0;
-#endif
 
     intensity = 255;
     hasPrimCol = FALSE;
@@ -1504,13 +1449,7 @@ void render_3d_billboard(Object *obj) {
         func_800138A8(&var_a0->segment.trans, sp58, (Object *) &sp60,
             RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE);
     } else {
-#ifdef PUPPYPRINT_DEBUG
-    first3 = osGetCount();
-#endif
         render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj, sp58, flags);
-#ifdef PUPPYPRINT_DEBUG
-    first3 = osGetCount() - first3;
-#endif
     }
     if (hasPrimCol) {
         gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -1518,10 +1457,6 @@ void render_3d_billboard(Object *obj) {
     if (hasEnvCol) {
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     }
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_BILLBOARD], osGetCount() - first);
-    profiler_offset(gPuppyTimers.timers[PP_BILLBOARD], first3);
-#endif
 }
 
 #ifdef NON_EQUIVALENT
@@ -2779,9 +2714,6 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
     s16 environmentMappingEnabled;
     s32 dynamicLightingEnabled;
     s16 i;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first =  osGetCount();
-#endif
 
     dynamicLightingEnabled = 0;
     environmentMappingEnabled = 0;
@@ -2805,16 +2737,9 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
             calc_dynamic_lighting_for_object_2(object, model, arg2, arg3);
         }
     }
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add(gPuppyTimers.timers[PP_LIGHT], osGetCount() - first);
-        first = osGetCount();
-#endif
     if (environmentMappingEnabled) {
         // Calculates environment mapping for the object
         calc_env_mapping_for_object(model, object->segment.trans.z_rotation, object->segment.trans.x_rotation, object->segment.trans.y_rotation);
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add(gPuppyTimers.timers[PP_ENVMAP], osGetCount() - first);
-#endif
     }
 }
 

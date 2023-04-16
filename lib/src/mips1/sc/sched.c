@@ -141,10 +141,6 @@ static void __scMain(void *arg) {
 
         osRecvMesg(&sc->interruptQ, (OSMesg *)&msg, OS_MESG_BLOCK);
 
-#ifdef PUPPYPRINT_DEBUG
-        first = osGetCount();
-#endif
-
         switch ((int) msg) {
             case (VIDEO_MSG):
                 __scHandleRetrace(sc);
@@ -179,9 +175,6 @@ static void __scMain(void *arg) {
                     __scExec(sc, sp, dp);
                 break;
         }
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add(gPuppyTimers.timers[PP_SCHED], osGetCount() - first);
-#endif
     }
 }
 

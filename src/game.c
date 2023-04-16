@@ -289,9 +289,6 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     s32 prevLevelID;
     Settings *settings;
     s32 offset;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first;
-#endif
 
     func_80072708();
     if (cutsceneId == -1) {
@@ -614,9 +611,6 @@ void func_8006BFC8(s8 *arg0) {
     s16 phi_v1;
     s8 phi_s0;
     Settings *settings;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first;
-#endif
 
     phi_s0 = 0;
     if (!is_in_tracks_mode()) {
@@ -648,13 +642,7 @@ void func_8006BFC8(s8 *arg0) {
     if (get_render_context() == DRAW_MENU) {
         phi_s0 = 5;
     }
-#ifdef PUPPYPRINT_DEBUG
-    first = osGetCount();
-#endif
     gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
-#ifdef PUPPYPRINT_DEBUG
-    gPrevLoadTimeDecompress = osGetCount() - first;
-#endif
     phi_v1 = 0;
     while (-1 != (s32) gTempAssetTable[phi_v1]) {
         phi_v1++;
@@ -666,13 +654,7 @@ void func_8006BFC8(s8 *arg0) {
     temp2 = gTempAssetTable[phi_s0];
     temp = gTempAssetTable[phi_s0 + 1] - temp2;
     D_801211C0 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
-#ifdef PUPPYPRINT_DEBUG
-    first = osGetCount();
-#endif
     load_asset_to_address(ASSET_UNKNOWN_0, (u32) D_801211C0, temp2, temp);
-#ifdef PUPPYPRINT_DEBUG
-    gPrevLoadTimeDecompress = osGetCount() - first;
-#endif
     free_from_memory_pool(gTempAssetTable);
 }
 
@@ -834,10 +816,6 @@ void main_game_loop(void) {
     s32 framebufferSize;
     s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
 #ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-    u32 first2;
-    u32 first3;
-    s32 i;
     if (get_buttons_held_from_player(0) & U_JPAD && get_buttons_pressed_from_player(0) & L_TRIG) {
         gProfilerOn ^= 1;
     }
@@ -916,58 +894,16 @@ void main_game_loop(void) {
     set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoFrontFramebuffer);
     set_rsp_segment(&gCurrDisplayList, 2, (s32) gVideoFrontDepthBuffer);
     set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoFrontFramebuffer - 0x500);
-#ifdef PUPPYPRINT_DEBUG
-    first2 = osGetCount();
-#endif
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_background(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE); 
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_BACKGROUND], osGetCount() - first2);
-    first2 = osGetCount();
-#endif
     gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, sLogicUpdateRate);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_PAD], osGetCount() - first2);
-#endif
     switch (sRenderContext) {
         case DRAW_INTRO: // Pre-boot screen
-#ifdef PUPPYPRINT_DEBUG
-            first2 = osGetCount();
-            first3 = gPuppyTimers.timers[PP_BACKGROUND][perfIteration];
-#endif
             pre_intro_loop();
-#ifdef PUPPYPRINT_DEBUG
-            profiler_add(gPuppyTimers.timers[PP_MENU], osGetCount() - first2);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_SCENE][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_LIGHT][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_ENVMAP][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_TEXT][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_WAVES][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_PARTICLES][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_VOID][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_BACKGROUND][perfIteration] - first3);
-#endif
             break;
         case DRAW_MENU: // In a menu
-#ifdef PUPPYPRINT_DEBUG
-            first2 = osGetCount();
-            first3 = gPuppyTimers.timers[PP_BACKGROUND][perfIteration];
-#endif
             func_8006DCF8(sLogicUpdateRate);
-#ifdef PUPPYPRINT_DEBUG
-            profiler_add(gPuppyTimers.timers[PP_MENU], osGetCount() - first2);
-            profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_COLLISION][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_OBJECTS][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_SCENE][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_LIGHT][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_ENVMAP][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_TEXT][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_WAVES][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_PARTICLES][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_VOID][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_BACKGROUND][perfIteration] - first3);
-#endif
             break;
         case DRAW_GAME: // In game (Controlling a character)
             ingame_logic_loop(sLogicUpdateRate);
@@ -981,55 +917,29 @@ void main_game_loop(void) {
     // menus & gameplay.
 
     handle_music_fade(sLogicUpdateRate);
-#ifdef PUPPYPRINT_DEBUG
-    first2 = osGetCount();
-#endif
     print_debug_strings(&gCurrDisplayList);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_TEXT], osGetCount() - first2);
-    first2 = osGetCount();
-    first3 = gPuppyTimers.timers[PP_TEXT][perfIteration];
-#endif
     render_dialogue_boxes(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     close_dialogue_box(4);
     assign_dialogue_box_id(4);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_DIALOGUE], osGetCount() - first2);
-    profiler_offset(gPuppyTimers.timers[PP_DIALOGUE], gPuppyTimers.timers[PP_TEXT][perfIteration] - first3);
-    first2 = osGetCount();
-#endif
     // handle_transitions will perform the logic of transitions and return the transition ID.
     if (handle_transitions(sLogicUpdateRate)) {
         render_fade_transition(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     }
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_TRANSITION], osGetCount() - first2);
-#endif
     if ((sBootDelayTimer >= 8) && (is_controller_missing())) {
         print_missing_controller_text(&gCurrDisplayList, sLogicUpdateRate);
     }
 
 #ifdef PUPPYPRINT_DEBUG
-    first2 = osGetCount();
-    first3 = gPuppyTimers.timers[PP_TEXT][perfIteration];
     if (gProfilerOn) {
         render_profiler();
         count_triangles((u8*) gDisplayLists[gSPTaskNum], (u8*) gCurrDisplayList);
     }
-    profiler_add(gPuppyTimers.timers[PP_PROFILER], osGetCount() - first2);
-    profiler_offset(gPuppyTimers.timers[PP_PROFILER], gPuppyTimers.timers[PP_TEXT][perfIteration] - first3);
 #endif
 
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
 
     copy_viewports_to_stack();
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_LOGIC], osGetCount() - first);
-    for (i = 1; i < PP_THREAD0; i++) {
-        profiler_offset(gPuppyTimers.timers[PP_LOGIC], gPuppyTimers.timers[i][perfIteration]);
-    }
-#endif
     if (gDrawFrameTimer != 1) {
         if (gSkipGfxTask == FALSE) {
             gScreenStatus = wait_for_gfx_task();
@@ -1081,15 +991,6 @@ void func_8006CAE4(s32 arg0, s32 arg1, Vehicle vehicle) {
  * Needs a better name!
  */
 void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId) {
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-    u32 first2;
-    gPrevLoadTimeDecompress = 0;
-    gPrevLoadTimeTexture = 0;
-    gPrevLoadTimeModel = 0;
-    gPrevLoadTimeObjects = 0;
-    gPrevLoadTimeDMA = 0;
-#endif
     calc_and_alloc_heap_for_hud(numberOfPlayers);
     set_free_queue_state(0);
     func_80065EA0();
@@ -1101,15 +1002,6 @@ void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehi
     osSetTime(0);
     set_free_queue_state(2);
     func_80072298(1);
-#ifdef PUPPYPRINT_DEBUG
-    sPrevLoadTimeTotal = OS_CYCLES_TO_USEC(osGetCount() - first);
-    gPrevLoadTimeDMA = OS_CYCLES_TO_USEC(gPrevLoadTimeDMA);
-    gPrevLoadTimeDecompress = OS_CYCLES_TO_USEC(gPrevLoadTimeDecompress);
-    gPrevLoadTimeTexture = OS_CYCLES_TO_USEC(gPrevLoadTimeTexture);
-    gPrevLoadTimeModel = OS_CYCLES_TO_USEC(gPrevLoadTimeModel);
-    gPrevLoadTimeObjects = OS_CYCLES_TO_USEC(gPrevLoadTimeObjects);
-    sPrevLoadTimer = 250;
-#endif
 }
 
 // Guessing this is the "unload everything ready for level swap" function.
@@ -1138,10 +1030,6 @@ void func_8006CC14(void) {
 */
 void ingame_logic_loop(s32 updateRate) {
     s32 buttonPressedInputs, buttonHeldInputs, i, sp40, sp3C;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first;
-    u32 first3;
-#endif
 
     sp40 = 0;
     buttonHeldInputs = 0;
@@ -1171,17 +1059,7 @@ void ingame_logic_loop(s32 updateRate) {
 #endif
     // Update all objects
     if (!gIsPaused) {
-#ifdef PUPPYPRINT_DEBUG
-    first = osGetCount();
-    first3 = gPuppyTimers.timers[PP_WAVES][perfIteration];
-#endif
         func_80010994(updateRate);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_OBJECTS], osGetCount() - first);
-    profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_COLLISION][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_RACER][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_WAVES][perfIteration] - first3);
-#endif
         if (check_if_showing_cutscene_camera() == 0 || func_8001139C()) {
             if ((buttonPressedInputs & START_BUTTON) && (func_8006C2F0() == 0) && (D_800DD390 == 0)
                 && (sRenderContext == DRAW_GAME) && (gPostRaceViewPort == NULL) && (gLevelLoadTimer == 0) && (D_800DD398 == 0)) {
@@ -1263,11 +1141,6 @@ void ingame_logic_loop(s32 updateRate) {
             n_alSeqpDelete();
         }
     }
-    
-#ifdef PUPPYPRINT_DEBUG
-    first = osGetCount();
-    first3 = gPuppyTimers.timers[PP_TEXT][perfIteration];
-#endif
     if (gIsPaused) {
         i = render_pause_menu(&gCurrDisplayList, updateRate);
         switch (i - 1) {
@@ -1320,10 +1193,6 @@ void ingame_logic_loop(s32 updateRate) {
     render_borders_for_multiplayer(&gCurrDisplayList);
     render_minimap_and_misc_hud(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
     //render_second_multiplayer_borders(&gCurrDisplayList);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_HUD], osGetCount() - first);
-    profiler_offset(gPuppyTimers.timers[PP_HUD], gPuppyTimers.timers[PP_TEXT][perfIteration] - first3);
-#endif
     if (D_800DD39C != 0) {
         if (func_800214C4() != 0) {
             gPlayableMapId = ASSET_LEVEL_FUTUREFUNLANDHUB;
@@ -1630,15 +1499,7 @@ void func_8006DBE4(void) {
 
 void func_8006DC58(s32 updateRate) {
     if (get_thread30_level_id_to_load() == 0) {
-#ifdef PUPPYPRINT_DEBUG
-        u32 first = osGetCount();
-#endif
         func_80010994(updateRate);
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add(gPuppyTimers.timers[PP_OBJECTS], osGetCount() - first);
-        profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_COLLISION][perfIteration]);
-        profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_RACER][perfIteration]);
-#endif
         gParticlePtrList_flush();
         func_8001BF20();
         render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);

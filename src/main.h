@@ -24,6 +24,7 @@ enum rspFlags {
     RSP_GFX_FINISHED,
     RSP_GFX_PAUSED,
     RSP_GFX_RESUME,
+    RDP_GFX_FINISHED,
 };
 
 enum TrackTimers {

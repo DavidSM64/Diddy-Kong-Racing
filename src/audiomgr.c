@@ -230,9 +230,6 @@ static void __amMain(UNUSED void *arg) {
     s32 done = 0;
     AudioMsg *msg = NULL;
     AudioInfo *lastInfo = 0;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first;
-#endif
 
     osScAddClient(gAudioSched, (OSScClient *) &audioStack, &__am.audioFrameMsgQ, OS_MESG_BLOCK);
 
@@ -242,21 +239,9 @@ static void __amMain(UNUSED void *arg) {
         switch (msg->gen.type) {
         case OS_SC_RETRACE_MSG:
             //TODO: Check type of ACMDList?
-#ifdef PUPPYPRINT_DEBUG
-        first = osGetCount();
-#endif
             __amHandleFrameMsg((AudioInfo *) __am.ACMDList[(((u32) audFrameCt % 3))+2], lastInfo);
-#ifdef PUPPYPRINT_DEBUG
-            profiler_add(gPuppyTimers.timers[PP_AUDIO], osGetCount() - first);
-#endif
             osRecvMesg(&__am.audioReplyMsgQ, (OSMesg *) &lastInfo, OS_MESG_BLOCK);
-#ifdef PUPPYPRINT_DEBUG
-            first = osGetCount();
-#endif
             __amHandleDoneMsg(lastInfo);
-#ifdef PUPPYPRINT_DEBUG
-            profiler_add(gPuppyTimers.timers[PP_AUDIO], osGetCount() - first);
-#endif
             break;
         case OS_SC_PRE_NMI_MSG:
             /* what should we really do here? quit? ramp down volume? */

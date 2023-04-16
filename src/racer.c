@@ -2201,13 +2201,6 @@ void update_player_racer(Object *obj, s32 updateRate) {
     f32 stretch;
     s32 i;
     struct LevelObjectEntryCommon newObject;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-    u32 first2;
-    u32 first3 = gPuppyTimers.timers[PP_COLLISION][perfIteration];
-    u32 first4 = gPuppyTimers.timers[PP_AI][perfIteration];
-    u32 first5 = gPuppyTimers.timers[PP_CAMERA][perfIteration];
-#endif
 
     gNumViewports = get_viewport_count() + 1;
     gCurrentSurfaceType = SURFACE_DEFAULT;
@@ -2368,13 +2361,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                 racer_enter_door(tempRacer, updateRate);
             }
         } else {
-#ifdef PUPPYPRINT_DEBUG
-        first2 = osGetCount();
-#endif
-        racer_AI_pathing_inputs(obj, tempRacer, updateRate);
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add(gPuppyTimers.timers[PP_AI], osGetCount() - first2);
-#endif
+            racer_AI_pathing_inputs(obj, tempRacer, updateRate);
         }
         //Set the value that decides whether to get an empowered boost.
         if (!(gCurrentRacerInput & A_BUTTON)) {
@@ -2689,12 +2676,6 @@ void update_player_racer(Object *obj, s32 updateRate) {
             tempRacer->unk194 = tempRacer->lap;
         }
     }
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_RACER], osGetCount() - first);
-    profiler_offset(gPuppyTimers.timers[PP_RACER], gPuppyTimers.timers[PP_COLLISION][perfIteration] - first3);
-    profiler_offset(gPuppyTimers.timers[PP_RACER], gPuppyTimers.timers[PP_CAMERA][perfIteration] - first5);
-    profiler_offset(gPuppyTimers.timers[PP_RACER], gPuppyTimers.timers[PP_AI][perfIteration] - first4);
-#endif
 }
 
 /**
@@ -4990,9 +4971,6 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
 	f32 dialogueAngle;
     s32 tempUpdateRateF;
 	s32 angle;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-#endif
 
     if (gCurrentButtonsPressed & U_CBUTTONS && func_800A0190()) {
         gCameraObject->zoom++;
@@ -5092,9 +5070,6 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
         gCameraObject->unk3A += 5;
         gCameraObject->unk30 = -gCameraObject->unk30 * 0.75f;
     }
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_CAMERA], osGetCount() - first);
-#endif
 }
 
 /**
@@ -5798,9 +5773,6 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     CheckpointNode *checkpoint;
     Object_Racer *tempRacer;
     f32 temp_fv1_2;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first2;
-#endif
 
     gCurrentPlayerIndex = -1;
     renderContext = get_render_context();
@@ -5880,13 +5852,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         racer->unk201 = 30;
     }
     if (racer->unk201 != 0) {
-#ifdef PUPPYPRINT_DEBUG
-        first2 = osGetCount();
-#endif
         racer_AI_pathing_inputs(obj, racer, updateRate);
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add(gPuppyTimers.timers[PP_AI], osGetCount() - first2);
-#endif
         if (!(gCurrentRacerInput & A_BUTTON)) {
             racer->throttleReleased = TRUE;
         }
@@ -5999,13 +5965,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         racer->unk6C = obj->segment.trans.y_position;
         racer->unk70 = obj->segment.trans.z_position;
     } else {
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-#endif
         func_8005B818(obj, racer, updateRate, updateRateF);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_AI], osGetCount() - first);
-#endif
         if (renderContext != DRAW_MENU) {
             func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }

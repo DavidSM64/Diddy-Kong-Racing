@@ -192,10 +192,6 @@ void func_8002C0C4(s32 modelId);
 void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 arg5, u32 arg6) {
     s32 i;
     s32 tmp_a2;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first;
-    u32 first2;
-#endif
 
     gCurrentLevelHeader2 = get_current_level_header();
     D_8011B0F8 = 0;
@@ -231,19 +227,11 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
     D_8011B110 = 0;
     D_8011B114 = 0x10000;
     func_80011390();
-#ifdef PUPPYPRINT_DEBUG
-    first = osGetCount();
-    first2 = gPrevLoadTimeDecompress + gPrevLoadTimeDMA + gPrevLoadTimeTexture;
-#endif
     func_8000C8F8(arg6, 0);
     func_8000C8F8(arg5, 1);
     gScenePlayerViewports = arg2;
     func_8000CC7C(vehicle, arg4, arg2);
     func_8000B020(72, 64);
-#ifdef PUPPYPRINT_DEBUG
-    gPrevLoadTimeObjects = osGetCount() - first;
-    gPrevLoadTimeObjects -= (gPrevLoadTimeDecompress + gPrevLoadTimeDMA + gPrevLoadTimeTexture) - first2;
-#endif
     if (arg0 == 0 && arg4 == 0) {
         transition_begin(&D_800DC87C);
     } else {
@@ -259,9 +247,6 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
     } while ((s32)&D_8011D338[++i] != (s32)&D_8011D348);
 
     D_8011B0C8 = 0;
-#ifdef PUPPYPRINT_DEBUG
-    first = osGetCount();
-#endif
     func_8002D8DC(1, 1, 0);
     func_8002D8DC(2, 2, 0);
     D_8011B0C8 = 1;
@@ -275,9 +260,6 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
         D_8011B0E3 = gCurrentLevelHeader2->unkB6;
         func_80025510(arg2 + 1);
     }
-#ifdef PUPPYPRINT_DEBUG
-    gPrevLoadTimeModel = osGetCount() - first;
-#endif
 }
 /*#else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
@@ -295,11 +277,6 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     s32 posX;
     s32 posY;
     s32 j;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-    u32 first2;
-    u32 first3;
-#endif
 
     gSceneCurrDisplayList = *dList;
     gSceneCurrMatrix = *mtx;
@@ -315,13 +292,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         tempUpdateRate = updateRate;
     }
     if (D_8011D384) {
-#ifdef PUPPYPRINT_DEBUG
-        first2 = osGetCount();
-#endif
         func_800B9C18(tempUpdateRate);
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add(gPuppyTimers.timers[PP_WAVES], osGetCount() - first2);
-#endif
     }
     func_8002D8DC(2, 2, updateRate);
     for (i = 0; i < 7; i++) {
@@ -364,21 +335,9 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     gDPSetBlendColor(gSceneCurrDisplayList++, 0, 0, 0, 0x64);
     gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
-#ifdef PUPPYPRINT_DEBUG
-        first2 = osGetCount();
-#endif
     func_800AD40C();
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add(gPuppyTimers.timers[PP_WEATHER], osGetCount() - first2);
-#endif
     func_80030838(numViewports, tempUpdateRate);
-#ifdef PUPPYPRINT_DEBUG
-        first2 = osGetCount();
-#endif
     func_800AF404(tempUpdateRate);
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add(gPuppyTimers.timers[PP_PARTICLES], osGetCount() - first2);
-#endif
     if (gCurrentLevelModel->numberOfAnimatedTextures > 0) {
         func_80027E24(tempUpdateRate);
     }
@@ -400,17 +359,11 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         if (numViewports < VIEWPORTS_COUNT_3_PLAYERS) {
 #endif
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
-#ifdef PUPPYPRINT_DEBUG
-        first2 = osGetCount();
-#endif
             if (gCurrentLevelHeader2->unk49 == -1) {
                 func_80028050();
             } else {
                 render_skydome();
             }
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add(gPuppyTimers.timers[PP_BACKGROUND], osGetCount() - first2);
-#endif
 #ifndef DISABLE_MULTIPLAYER_CUTBACKS
         } else {
             func_8006807C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
@@ -423,25 +376,11 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         initialise_player_viewport_vars(updateRate);
         setWeatherLimits(-1, -512);
         if (gCurrentLevelHeader2->weatherEnable > 0 && numViewports < VIEWPORTS_COUNT_3_PLAYERS) {
-#ifdef PUPPYPRINT_DEBUG
-            first2 = osGetCount();
-#endif
             process_weather(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList, tempUpdateRate);
-#ifdef PUPPYPRINT_DEBUG
-            profiler_add(gPuppyTimers.timers[PP_WEATHER], osGetCount() - first2);
-#endif
         }
         func_800AD030(get_active_camera_segment());
         func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
-#ifdef PUPPYPRINT_DEBUG
-        first2 = osGetCount();
-        first3 = gPuppyTimers.timers[PP_TEXT][perfIteration];
-#endif
         render_hud(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_racer_object_by_port(gSceneCurrentPlayerID), updateRate);
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add(gPuppyTimers.timers[PP_HUD], osGetCount() - first2);
-        profiler_offset(gPuppyTimers.timers[PP_HUD], gPuppyTimers.timers[PP_TEXT][perfIteration] - first3);
-#endif
     }
 
     if (numViewports == VIEWPORTS_COUNT_4_PLAYERS && get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS && get_current_level_race_type() != RACETYPE_CHALLENGE_BATTLE && get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) {
@@ -482,22 +421,6 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     *mtx = gSceneCurrMatrix;
     *vtx = gSceneCurrVertexList;
     *tris = gSceneCurrTriList;
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_SCENE], osGetCount() - first);
-    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_HUD][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_WEATHER][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_LIGHT][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_ENVMAP][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_WAVES][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_BACKGROUND][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_PARTICLES][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_BILLBOARD][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_LEVEL][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_OBJGFX][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_DECAL][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_SHADOW][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_SCENE], gPuppyTimers.timers[PP_VOID][perfIteration]);
-#endif
 }
 
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80025510.s")
@@ -935,9 +858,6 @@ void render_level_geometry_and_objects(void) {
     u8 objectsVisible[LEVEL_SEGMENT_MAX];
     s32 s0;
     Object *obj;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first;
-#endif
 
     func_80012C30();
 
@@ -1075,15 +995,9 @@ skip:
         }
     }
 
-#ifdef PUPPYPRINT_DEBUG
-    first = osGetCount();
-#endif
     if (D_800DC924 && func_80027568()) {
         func_8002581C(segmentIds, numberOfSegments, get_current_viewport());
     }
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_VOID], osGetCount() - first);
-#endif
     D_8011B0FC = 0;
 }
 
@@ -1655,9 +1569,6 @@ void func_8002C0C4(s32 modelId) {
     s32 temp_s4;
     s32 temp;
     LevelModel *mdl;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first;
-#endif
     
     set_texture_colour_tag(COLOUR_TAG_GREEN);
     D_8011D30C = allocate_from_main_pool_safe(LEVEL_MODEL_MAX_SIZE, COLOUR_TAG_YELLOW);
@@ -1703,9 +1614,6 @@ void func_8002C0C4(s32 modelId) {
     for(k = 0; k < gCurrentLevelModel->numberOfTextures; k++) {
         gCurrentLevelModel->textures[k].texture = load_texture(((s32)gCurrentLevelModel->textures[k].texture) | 0x8000);
     }
-#ifdef PUPPYPRINT_DEBUG
-    first = osGetCount();
-#endif
     j = (s32)gCurrentLevelModel + gCurrentLevelModel->modelSize;
     for(k = 0; k < gCurrentLevelModel->numberOfSegments; k++) {
         gCurrentLevelModel->segments[k].unk10 = (s16 *) j;
@@ -1722,9 +1630,6 @@ void func_8002C0C4(s32 modelId) {
     if (temp_s4 > LEVEL_MODEL_MAX_SIZE) {
         rmonPrintf("ERROR!! TrackMem overflow .. %d\n", temp_s4);
     }
-#ifdef PUPPYPRINT_DEBUG
-    gPrevLoadTimeModel = osGetCount() - first;
-#endif
     set_free_queue_state(0);
     free_from_memory_pool(D_8011D30C);
     allocate_at_address_in_main_pool(temp_s4, (u8* ) D_8011D30C, COLOUR_TAG_YELLOW);
@@ -1929,11 +1834,6 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
     s32 new_var;
     s32 new_var2;
     s32 someAlpha;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-    u32 first2 = 0;
-    u32 first3 = 0;
-#endif
     
     if (obj->segment.header->unk32 != 0) {
         if (shadow->unk8 != -1 && D_8011B0C4 == 0) {
@@ -1955,13 +1855,7 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, someAlpha);
             }
             while (i < shadow->unkA) {
-#ifdef PUPPYPRINT_DEBUG
-    first2 = osGetCount();
-#endif
                 load_and_set_texture_no_offset(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, flags);
-#ifdef PUPPYPRINT_DEBUG
-    first3 += osGetCount() - first2;
-#endif
                 // I hope we can clean this part up.
                 temp2 = new_var2 = D_8011D360[i].unk4; // Fakematch
                 temp3 = new_var = D_8011D360[i].unk6;
@@ -1979,10 +1873,6 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
             }
         }
     }
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_SHADOW], osGetCount() - first);
-    profiler_offset(gPuppyTimers.timers[PP_SHADOW], first3);
-#endif
 }
 
 void func_8002D670(Object *obj, ShadowData *shadow) {
@@ -1994,11 +1884,6 @@ void func_8002D670(Object *obj, ShadowData *shadow) {
     s32 flags;
     UNUSED s32 temp2;
     UNUSED s32 temp3;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-    u32 first2 = 0;
-    u32 first3 = 0;
-#endif
 
     if (obj->segment.header->unk36 != 0) {
         if ((shadow->unk8 != -1) && (D_8011B0C4 == 0)) {
@@ -2016,13 +1901,7 @@ void func_8002D670(Object *obj, ShadowData *shadow) {
             D_8011D330 = (unk8011D330* ) D_8011D320[D_8011B0D0];
             D_8011D348 = (unk8011D348* ) D_8011D338[D_8011B0D0];
             while (i < shadow->unkA) {
-#ifdef PUPPYPRINT_DEBUG
-    first2 = osGetCount();
-#endif
                 load_and_set_texture_no_offset(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, flags);
-#ifdef PUPPYPRINT_DEBUG
-    first3 += osGetCount() - first2;
-#endif
                 temp2 = D_8011D360[i].unk4; // Fakematch
                 temp3 = D_8011D360[i].unk6; // Fakematch
                 temp_a3 = D_8011D360[i+1].unk4 - D_8011D360[i].unk4;
@@ -2035,10 +1914,6 @@ void func_8002D670(Object *obj, ShadowData *shadow) {
             }
         }
     }
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_DECAL], osGetCount() - first);
-    profiler_offset(gPuppyTimers.timers[PP_DECAL], first3);
-#endif
 }
 
 void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
