@@ -226,11 +226,6 @@ void __scHandleRetrace(OSSched *sc) {
     u8 set_curRDPTask_NULL = FALSE;
     OSScTask *unkTask;
 
-    if (gVideoHasReadyFrame) {
-        gVideoHasReadyFrame = FALSE;
-        swap_front_ready_framebuffers();
-    }
-
     if (sc->curRSPTask) {
         gCurRSPTaskCounter++;
     }

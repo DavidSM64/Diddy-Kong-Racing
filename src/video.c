@@ -195,6 +195,7 @@ void reset_video_delta_time(void) {
 }
 
 void swap_back_framebuffers(void);
+void swap_front_ready_framebuffers(void);
 
 /**
  * Wait for the finished message from the scheduler while counting up a timer,
@@ -214,8 +215,12 @@ s32 swap_framebuffer_when_ready(s32 mesg) {
         }
     }
     if (mesg != MESG_SKIP_BUFFER_SWAP) {
-        swap_back_framebuffers();
-        gVideoHasReadyFrame = TRUE;
+        if (osViGetCurrentFramebuffer() == gVideoReadyFramebuffer) {
+            swap_back_framebuffers();
+        } else {
+            swap_back_framebuffers();
+            swap_front_ready_framebuffers();
+         }
     }
     while (osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_NOBLOCK) != -1) {
         tempUpdateRate++;
