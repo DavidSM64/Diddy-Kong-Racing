@@ -7,16 +7,17 @@
 #include "stdlib.h"
 #include "string.h"
 
+#define BUFF_LEN 0x18
+
 extern char ldigs[];
 extern char udigs[];
-#define BUFF_LEN 0x18
 
 void _Litob(printf_struct *args, char type) {
     char buff[BUFF_LEN];
     const char *digs;
     s32 base;
     s32 i;
-    unsigned long long us64val;
+    u64 us64val;
 
     if (type == 'X') {
         digs = udigs;
