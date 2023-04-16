@@ -5,7 +5,7 @@
 
 float sinf(float); //official name: fsin
 double sin(double);
-float cosf(float);
+f32 cosf(f32 x);
 double cos(double);
 
 float sqrtf(float);
