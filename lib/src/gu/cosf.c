@@ -22,6 +22,7 @@ f32 cosf(f32 x) {
 	f64 result;
 	s32 ix; // int x
 	s32 xpt;
+	
 	ix = *(s32 *) &x;
 	xpt = (ix >> 22) & 0x1FF;
 
@@ -31,8 +32,10 @@ f32 cosf(f32 x) {
 		} else {
 			xabs = -x;
 		}
+
 		dx = xabs;
 		dn = dx * rpi_cosf.d + 0.5;
+
 		if (0 <= dn) {
 			n = dn + 0.5;
 		} else {

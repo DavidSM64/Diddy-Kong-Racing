@@ -22,16 +22,14 @@ f32 sinf(f32 x) {
 	s32 ix; // int x
 	s32 xpt;
 
-	ix = *(s32 *)&x;
+	ix = *(s32 *) &x;
 	xpt = (ix >> 22) & 0x1FF;
 
 	if (xpt < 255) {
 		dx = x;
 		if (xpt >= 230) {
 			xsq = dx * dx;
-
 			poly = (((((P_sinf[4].d * xsq) + P_sinf[3].d) * xsq) + P_sinf[2].d) * xsq) + P_sinf[1].d;
-
 			result = ((dx * xsq) * poly) + dx;
 
 			return result;
@@ -42,7 +40,6 @@ f32 sinf(f32 x) {
 
 	if (xpt < 310) {
 		dx = x;
-
 		dn = dx * rpi_sinf.d;
 
 		if (dn >= 0) {
@@ -53,14 +50,10 @@ f32 sinf(f32 x) {
 		}
 
 		dn = n;
-
 		dx -= dn * pihi_sinf.d;
 		dx -= dn * pilo_sinf.d;
-
 		xsq = dx * dx;
-
 		poly = (((((P_sinf[4].d * xsq) + P_sinf[3].d) * xsq) + P_sinf[2].d) * xsq) + P_sinf[1].d;
-
 		result = ((dx * xsq) * poly) + dx;
 
 		if ((n & 1) == 0) {
