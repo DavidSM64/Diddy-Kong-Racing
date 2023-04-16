@@ -3,20 +3,7 @@
 
 #include "types.h"
 #include "macros.h"
-
-typedef union {
-	/* 0x0 */ double d;
-	/* 0x0 */ struct
-	{
-		/* 0x0 */ unsigned int hi;
-		/* 0x4 */ unsigned int lo;
-	} word;
-} du;
-
-typedef union {
-	/* 0x0 */ float f;
-	/* 0x0 */ unsigned int i;
-} fu;
+#include "guint.h"
 
 extern du P_cosf[];
 extern du rpi_cosf;
