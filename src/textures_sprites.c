@@ -10,6 +10,10 @@
 #include "main.h"
 #include "unknown_0255E0.h"
 
+#define TEX_HEADER_COUNT 175
+#define TEX_SPRITE_COUNT 50
+#define TEX_PALLETE_COUNT 20
+
 /************ .data ************/
 
 u32 gTexColourTag = COLOUR_TAG_MAGENTA;
@@ -727,14 +731,14 @@ Gfx D_800DF410[][2] = {
 
 /************ .bss ************/
 
-s32 *D_80126320[2];
+s32 *gTextureAssetTable[2];
 
 TextureCacheEntry *gTextureCache;
 
 u8 *gCiPalettes;
 s32 gNumberOfLoadedTextures;
 s32 D_80126334;
-s32 D_80126338[2];
+s32 gTextureAssetID[2];
 s32 gCiPalettesSize;
 s32 D_80126344;
 s32 *gSpriteOffsetTable;
@@ -763,21 +767,21 @@ s16 D_80126384;
 void tex_init_textures(void) {
     s32 i;
 
-    gTextureCache = allocate_from_main_pool_safe(0x15E0, COLOUR_TAG_MAGENTA);
-    gCiPalettes = allocate_from_main_pool_safe(0x280, 0xFF00FFFF);
+    gTextureCache = allocate_from_main_pool_safe(sizeof(TextureHeader) * TEX_HEADER_COUNT, COLOUR_TAG_MAGENTA);
+    gCiPalettes = allocate_from_main_pool_safe(0x280, COLOUR_TAG_MAGENTA);
     gNumberOfLoadedTextures = 0;
     gCiPalettesSize = 0;
-    D_80126320[0] = (s32 *) load_asset_section_from_rom(ASSET_TEXTURES_2D_TABLE);
-    D_80126320[1] = (s32 *) load_asset_section_from_rom(ASSET_TEXTURES_3D_TABLE);    
+    gTextureAssetTable[TEX_TABLE_2D] = (s32 *) load_asset_section_from_rom(ASSET_TEXTURES_2D_TABLE);
+    gTextureAssetTable[TEX_TABLE_3D] = (s32 *) load_asset_section_from_rom(ASSET_TEXTURES_3D_TABLE);    
     
-    for (i = 0; D_80126320[0][i] != -1; i++) { }
-    D_80126338[0] = --i;
+    for (i = 0; gTextureAssetTable[TEX_TABLE_2D][i] != -1; i++) { }
+    gTextureAssetID[TEX_TABLE_2D] = --i;
     
-    for (i = 0; D_80126320[1][i] != -1; i++) { }
-    D_80126338[1] = --i;
+    for (i = 0; gTextureAssetTable[TEX_TABLE_3D][i] != -1; i++) { }
+    gTextureAssetID[TEX_TABLE_3D] = --i;
     
-    gSpriteCache = allocate_from_main_pool_safe(0x320, COLOUR_TAG_MAGENTA);
-    gCurrentSprite = allocate_from_main_pool_safe(0x200, COLOUR_TAG_MAGENTA);
+    gSpriteCache = allocate_from_main_pool_safe(sizeof(Sprite) * TEX_SPRITE_COUNT, COLOUR_TAG_MAGENTA);
+    gCurrentSprite = allocate_from_main_pool_safe(sizeof(Sprite) * 32, COLOUR_TAG_MAGENTA);
     D_80126358 = 0;
     gSpriteOffsetTable = (s32 *) load_asset_section_from_rom(ASSET_SPRITES_TABLE);
     D_80126354 = 0;
@@ -834,7 +838,7 @@ TextureHeader *load_texture(s32 arg0) {
         assetIndex = arg0 & 0x7FFF;
         assetSection = ASSET_TEXTURES_3D;
     }
-    if ((assetIndex >= D_80126338[assetTable]) || (assetIndex < 0)) {
+    if ((assetIndex >= gTextureAssetID[assetTable]) || (assetIndex < 0)) {
         arg0 = 0;
     }
     for (i = 0; i < gNumberOfLoadedTextures; i++) {
@@ -844,8 +848,8 @@ TextureHeader *load_texture(s32 arg0) {
             return tex;
         }
     }
-    assetOffset = D_80126320[assetTable][assetIndex];
-    assetSize = D_80126320[assetTable][assetIndex + 1] - assetOffset;
+    assetOffset = gTextureAssetTable[assetTable][assetIndex];
+    assetSize = gTextureAssetTable[assetTable][assetIndex + 1] - assetOffset;
     load_asset_to_address(assetSection, gTempTextureHeader, assetOffset, 0x28);
     numberOfTextures = (gTempTextureHeader->header.numOfTextures >> 8) & 0xFFFF;
 
@@ -1289,11 +1293,11 @@ s32 get_texture_size_from_id(s32 arg0) {
         assetSection = ASSET_TEXTURES_3D;
         assetTable = 1;
     }
-    if ((assetIndex >= D_80126338[assetTable]) || (assetIndex < 0)) {
+    if ((assetIndex >= gTextureAssetID[assetTable]) || (assetIndex < 0)) {
         return 0;
     }
-    start = D_80126320[assetTable][assetIndex];
-    size = D_80126320[assetTable][assetIndex + 1] - start;
+    start = gTextureAssetTable[assetTable][assetIndex];
+    size = gTextureAssetTable[assetTable][assetIndex + 1] - start;
     if (gTempTextureHeader->header.isCompressed) {
         load_asset_to_address(assetSection, gTempTextureHeader, start, 0x28);
         size = byteswap32(&gTempTextureHeader->uncompressedSize);

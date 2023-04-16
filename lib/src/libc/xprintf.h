@@ -57,6 +57,6 @@ typedef struct {
 #define FLAGS_HASH  8
 #define FLAGS_ZERO  16
 s32 _Printf(outfun prout, char *dst, const char *fmt, va_list args);
-void _Litob(printf_struct *args, u8 type);
+void _Litob(printf_struct *args, char type);
 void _Ldtob(printf_struct *args, u8 type);
 #endif

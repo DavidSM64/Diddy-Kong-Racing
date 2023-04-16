@@ -20,9 +20,9 @@ glabel func_8007C660
 /* 07D2A0 8007C6A0 3C138012 */  lui   $s3, %hi(D_80126370) # $s3, 0x8012
 /* 07D2A4 8007C6A4 26736370 */  addiu $s3, %lo(D_80126370) # addiu $s3, $s3, 0x6370
 /* 07D2A8 8007C6A8 8E780000 */  lw    $t8, ($s3)
-/* 07D2AC 8007C6AC 3C108012 */  lui   $s0, %hi(D_80126338) # $s0, 0x8012
+/* 07D2AC 8007C6AC 3C108012 */  lui   $s0, %hi(gTextureAssetID) # $s0, 0x8012
 /* 07D2B0 8007C6B0 17000059 */  bnez  $t8, .L8007C818
-/* 07D2B4 8007C6B4 26106338 */   addiu $s0, %lo(D_80126338) # addiu $s0, $s0, 0x6338
+/* 07D2B4 8007C6B4 26106338 */   addiu $s0, %lo(gTextureAssetID) # addiu $s0, $s0, 0x6338
 /* 07D2B8 8007C6B8 8E040000 */  lw    $a0, ($s0)
 /* 07D2BC 8007C6BC 3C05FF00 */  lui   $a1, (0xFF00FFFF >> 16) # lui $a1, 0xff00
 /* 07D2C0 8007C6C0 0C01C327 */  jal   allocate_from_main_pool_safe
