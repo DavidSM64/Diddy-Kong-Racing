@@ -152,9 +152,11 @@ s32 D_80123568[6]; // BSS Padding
 void func_8006A6B0(void) {
     s32 i;
     s32 temp;
-    s32 checksumCount;
     u8 *header;
+#ifndef NO_ANTIPIRACY
+    s32 checksumCount;
     s32 j;
+#endif
     header = allocate_from_main_pool_safe(sizeof(LevelHeader), COLOUR_TAG_YELLOW);
     gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
     i = 0;
@@ -812,7 +814,6 @@ s32 gOverrideTimer = 0;
  * Contains all game logic, audio and graphics processing.
  */
 void main_game_loop(void) {
-    s32 debugLoopCounter;
     s32 framebufferSize;
     s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
 #ifdef PUPPYPRINT_DEBUG

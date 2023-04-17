@@ -34,9 +34,9 @@ extern MemoryPoolSlot gMainMemoryPool;
  */
 void init_main_memory_pool(void) {
     u32 ramEnd = RAM_END;
-    /*if (gExpansionPak) {
+    if (gUseExpansionMemory) {
         ramEnd = EXTENDED_RAM_END;
-    }*/
+    }
     gNumberOfMemoryPools = -1;
     // Create the main memory pool.
     new_memory_pool(&gMainMemoryPool, ramEnd - (s32)(&gMainMemoryPool), MAIN_POOL_SLOT_COUNT);

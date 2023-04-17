@@ -94,12 +94,19 @@ u32 osGetMemSize(void) {
 void find_expansion_pak(void) {
 #ifdef FORCE_4MB_MEMORY
     gExpansionPak = FALSE;
+    gUseExpansionMemory = FALSE;
     return;
 #endif
     if (osGetMemSize() == 0x800000) {
         gExpansionPak = TRUE;
+#ifndef EXPANSION_PAK_SUPPORT
+        gUseExpansionMemory = FALSE;
+#else
+        gUseExpansionMemory = TRUE;
+#endif
     } else {
         gExpansionPak = FALSE;
+        gUseExpansionMemory = FALSE;
     }
 }
 
@@ -119,7 +126,7 @@ void main(void) {
 
 extern OSSched gMainSched;
 
-#ifdef EXPANSION_PAK
+#ifdef EXPANSION_PAK_REQUIRED
 void draw_memory_error_screen(void) {
     Gfx *dlist;
     init_main_memory_pool();
@@ -161,7 +168,7 @@ void thread1_main(UNUSED void *unused) {
     //thread0_create();
     crash_screen_init();
     find_expansion_pak();
-#ifdef EXPANSION_PAK
+#ifdef EXPANSION_PAK_REQUIRED
     if (!gExpansionPak) {
         draw_memory_error_screen();
     } else {
@@ -171,7 +178,7 @@ void thread1_main(UNUSED void *unused) {
         gThread3Stack[0] = 0;
         osStartThread(&gThread3);
         osSetThreadPri(NULL, OS_PRIORITY_IDLE);
-#ifdef EXPANSION_PAK
+#ifdef EXPANSION_PAK_REQUIRED
     }
 #endif
     while (1) {}
@@ -323,7 +330,11 @@ void profiler_add_obj(u32 objID, u32 time) {
 }
 
 void profiler_snapshot(s32 eventID) {
-    gPuppyTimers.threadTimes[gPuppyTimers.threadIteration[eventID / 2]][eventID] = osGetCount();
+    u32 snapshot = gPuppyTimers.threadIteration[eventID / 2];
+    if (snapshot > NUM_THREAD_ITERATIONS - 1) {
+        snapshot = NUM_THREAD_ITERATIONS - 1;
+    }
+    gPuppyTimers.threadTimes[snapshot][eventID] = osGetCount();
     // Thread endings are even numbers.
     if (eventID % 2) {
         gPuppyTimers.threadIteration[eventID / 2]++;
@@ -338,7 +349,7 @@ void render_profiler(void) {
     s32 y = 8;
     u32 memsize = osGetMemSize();
 
-#ifdef FORCE_4MB_MEMORY
+#ifndef EXPANSION_PAK_SUPPORT
     memsize = 0x400000;
 #endif
 
@@ -586,6 +597,7 @@ void puppyprint_calculate_average_times(void) {
     s32 j;
     u32 highTime = 0;
     u32 lowTime = 0xFFFFFFFF;
+    u32 first = osGetCount();
     /*for (i = 1; i < PP_RDP_BUS; i++) {
         gPuppyTimers.timers[i][PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyTimers.timers[i][PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
         if (i < PP_RSP_AUD - 1) {
@@ -627,8 +639,11 @@ void puppyprint_calculate_average_times(void) {
     gPuppyTimers.cpuTime = gPuppyTimers.cpuTotal[PERF_TOTAL];
     bzero(&gPuppyTimers.threadIteration, sizeof(gPuppyTimers.threadIteration));
     bzero(&gPuppyTimers.threadTimes, sizeof(gPuppyTimers.threadTimes));
-    calculate_print_order();
-    calculate_obj_print_order();
+    if (sProfilerPage == 1) {
+        calculate_print_order();
+    } else if (sProfilerPage == 2) {
+        calculate_obj_print_order();
+    }
 }
 
 void puppyprint_update_rsp(u8 flags) {

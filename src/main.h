@@ -129,6 +129,7 @@ enum PPProfilerEvent {
 #define NUM_PERF_ITERATIONS 32
 #define PERF_AGGREGATE NUM_PERF_ITERATIONS
 #define PERF_TOTAL NUM_PERF_ITERATIONS + 1
+#define NUM_THREAD_ITERATIONS 8
 typedef u32 PPTimer[NUM_PERF_ITERATIONS + 2];
 
 struct PuppyPrintTimers {
@@ -140,7 +141,7 @@ struct PuppyPrintTimers {
     u32 rspAudioBufTime; // Buffer that keeps track of the current Audio task;
     PPTimer timers[PP_TIMES_TOTAL];
     PPTimer cpuTotal;
-    u32 threadTimes[16][NUM_THREAD_TIMERS];
+    u32 threadTimes[NUM_THREAD_ITERATIONS][NUM_THREAD_TIMERS];
     u8 threadIteration[NUM_THREAD_TIMERS / 2];
     u16 objTimers[NUM_OBJECT_PRINTS][NUM_PERF_ITERATIONS + 2];
 };

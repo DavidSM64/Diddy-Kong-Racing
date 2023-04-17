@@ -697,7 +697,7 @@ void draw_gradient_background(void) {
     Vertex *verts;
     Triangle *tris;
     s32 also_one;
-    s64 set_twenty;
+    s32 set_twenty;
         
     verts = (Vertex *) gSceneCurrVertexList;
     tris = (Triangle *) gSceneCurrTriList;
@@ -1345,7 +1345,7 @@ void func_8002A31C(void) {
  * There's a large unused portion at the bottom writing to two vars, that are never later read.
 */
 s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb) {
-    s64 sp48;
+    s32 sp48;
     s32 i, j;
     s32 isVisible;
     f32 dirX, dirY, dirZ, dirW;

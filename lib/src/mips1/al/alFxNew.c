@@ -94,7 +94,7 @@ static s32 NULL_PARAMS[10] = {
 void init_lpfilter(ALLowPass *lp) {
     s32		i, temp;
     s16		fc;
-    f64		ffc, fcoef;
+    f32		ffc, fcoef;
 
     temp = lp->fc * SCALE;
     fc = temp >> 15;
@@ -105,7 +105,7 @@ void init_lpfilter(ALLowPass *lp) {
 	lp->fcvec.fccoef[i] = 0;
     
     lp->fcvec.fccoef[i++] = fc;
-    fcoef = ffc = (f64)fc/SCALE;
+    fcoef = ffc = (f32)fc/SCALE;
 
     for (; i<16; i++){
 	fcoef *= ffc;

@@ -10,6 +10,7 @@
 #include "objects.h"
 #include "PR/abi.h"
 #include "main.h"
+#include "memory.h"
 
 /****  type define's for structures unique to audiomgr ****/
 typedef union {
@@ -109,13 +110,15 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     u32 *assetAudioTable;
     s32 *asset8;
     s32 assetSize;
+#ifndef NO_ANTIPIRACY
     s32 checksum;
     u8 *crc_region_start;
     u8 *crc_region;
-    u32 ramEnd = 0x80400000;
-    /*if (gExpansionPak) {
-        ramEnd = 0x80800000;
-    }*/
+#endif
+    u32 ramEnd = RAM_END;
+    if (gUseExpansionMemory) {
+        ramEnd = EXTENDED_RAM_END;
+    }
 
     gAudioSched = audSched;
     gAudioHeap = c->heap;

@@ -22,9 +22,9 @@ f32 gVideoHeightRatio;
 OSMesg gVideoMesgBuf[8];
 OSMesgQueue gVideoMesgQueue[8];
 OSViMode gTvViMode;
-s32 gVideoFbWidths[3];
-s32 gVideoFbHeights[3];
-u16 *gVideoFramebuffers[3];
+s32 gVideoFbWidths[NUM_FRAMEBUFFERS];
+s32 gVideoFbHeights[NUM_FRAMEBUFFERS];
+u16 *gVideoFramebuffers[NUM_FRAMEBUFFERS];
 s32 gVideoWriteFbIndex;
 s32 gVideoReadyFbIndex;
 s32 gVideoFrontFbIndex;
@@ -36,13 +36,14 @@ u16 *gVideoFrontFramebuffer;
 u16 *gVideoWriteDepthBuffer;
 u16 *gVideoReadyDepthBuffer;
 u16 *gVideoFrontDepthBuffer;
+u8 gFrameBufferIndex = 0;
 s32 gVideoHasReadyFrame;
 u8 D_801262E4;
 u8 gVideoDeltaCounter;
 u8 gVideoDeltaTime;
 OSScClient gVideoSched;
-u8 gNumFrameBuffers = 2;
 u8 gExpansionPak = FALSE;
+u8 gUseExpansionMemory = FALSE;
 u16 gScreenWidth = SCREEN_WIDTH;
 u16 gScreenHeight;
 
@@ -66,24 +67,30 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
     // I run this even with an expansion pak just to use up the memory.
     // Means I don't run into any issues if I test without a pak that just happened to work with.
     if (SCREEN_WIDTH * SCREEN_HEIGHT <= 320 * 240) {
-        for (i = 0; i < 2; i++) {
+        for (i = 0; i < NUM_FRAMEBUFFERS; i++) {
             gVideoFramebuffers[i] = 0;
             init_framebuffer(i);
         }
     }
+// If Enforced 4MB is on, move framebuffers to expansion memory
+#if !defined(EXPANSION_PAK_SUPPORT) && !defined(FORCE_4MB_MEMORY)
     if (gExpansionPak) {
-        gNumFrameBuffers++;
         gVideoFramebuffers[0] = (u16 *) 0x80500000;
         gVideoFramebuffers[1] = (u16 *) 0x80600000;
+    #ifdef TRIPLE_BUFFERING
         gVideoFramebuffers[2] = (u16 *) 0x80700000;
+    #endif
         gVideoDepthBuffer = (u16 *) 0x80400000;
     }
+#endif
     gVideoWriteFbIndex = 0;
+    gVideoWriteFramebuffer = gVideoFramebuffers[gVideoWriteFbIndex];
+#ifdef TRIPLE_BUFFERING
     gVideoReadyFbIndex = 1;
     gVideoFrontFbIndex = 2;
-    gVideoWriteFramebuffer = gVideoFramebuffers[gVideoWriteFbIndex];
     gVideoReadyFramebuffer = gVideoFramebuffers[gVideoReadyFbIndex];
     gVideoFrontFramebuffer = gVideoFramebuffers[gVideoFrontFbIndex];
+#endif
     gVideoFrontDepthBuffer = gVideoDepthBuffer;
     gVideoWriteDepthBuffer = gVideoDepthBuffer;
     gVideoHasReadyFrame = FALSE;
@@ -188,7 +195,6 @@ void init_vi_settings(void) {
  * Will also allocate the depthbuffer if it does not already exist.
  */
 void init_framebuffer(s32 index) {
-    s32 width;
     if (gVideoFramebuffers[index] != 0) {
         func_80071538((u8 *) gVideoFramebuffers[index]);
         free_from_memory_pool(gVideoFramebuffers[index]);
@@ -213,6 +219,7 @@ void reset_video_delta_time(void) {
 
 void swap_back_framebuffers(void);
 void swap_front_ready_framebuffers(void);
+void swap_framebuffers(void);
 
 /**
  * Wait for the finished message from the scheduler while counting up a timer,
@@ -232,12 +239,16 @@ s32 swap_framebuffer_when_ready(s32 mesg) {
         }
     }
     if (mesg != MESG_SKIP_BUFFER_SWAP) {
+#ifdef TRIPLE_BUFFERING
         if (osViGetCurrentFramebuffer() == gVideoReadyFramebuffer) {
             swap_back_framebuffers();
         } else {
             swap_back_framebuffers();
             swap_front_ready_framebuffers();
          }
+#else
+        swap_framebuffers();
+#endif
     }
     while (osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_NOBLOCK) != -1) {
         tempUpdateRate++;
@@ -251,6 +262,7 @@ void func_8007AB24(u8 arg0) {
     D_801262E4 = arg0;
 }
 
+#ifdef TRIPLE_BUFFERING
 void swap_front_ready_framebuffers(void) {
     s32 tmp = gVideoFrontFbIndex;
     gVideoFrontFbIndex = gVideoReadyFbIndex;
@@ -268,4 +280,9 @@ void swap_back_framebuffers(void) {
     gVideoWriteFramebuffer = gVideoFramebuffers[gVideoWriteFbIndex];
     gVideoReadyFramebuffer = gVideoFramebuffers[gVideoReadyFbIndex];
 }
-
+#else
+void swap_framebuffers(void) {
+    gVideoWriteFbIndex ^= 1;
+    gVideoFrontFramebuffer = gVideoFramebuffers[gVideoWriteFbIndex];
+}
+#endif

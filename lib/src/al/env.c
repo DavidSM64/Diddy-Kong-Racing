@@ -61,14 +61,14 @@ static s16 eqpower[ EQPOWER_LENGTH ] = {
     405,      0
 };
 
-extern	f64	__pow(f64, f64);
+extern	f32	__pow(f32, f32);
 
 /*
  * prototypes for private enveloper functions
  */
 static  Acmd *_pullSubFrame(void *filter, s16 *inp, s16 *outp, s32 outCount,
                             s32 sampleOffset, Acmd *p) ;
-static  s16 _getRate(f64 vol, f64 tgt, s32 count, u16* ratel);
+static  s16 _getRate(f32 vol, f32 tgt, s32 count, u16* ratel);
 
 static f32 _getVol(f32 ivol, s32 samples, s16 ratem, u16 ratel);
 extern u32 osVirtualToPhysical(void *);
@@ -408,11 +408,11 @@ Acmd* _pullSubFrame(void *filter, s16 *inp, s16 *outp, s32 outCount,
          * Calculate derived parameters
          */
         e->ltgt = (e->volume * eqpower[e->pan]) >> 15;
-        e->lratm = _getRate((f64)e->cvolL, (f64)e->ltgt,
+        e->lratm = _getRate((f32)e->cvolL, (f32)e->ltgt,
                             e->segEnd, &(e->lratl));
         e->rtgt = (e->volume *
                    eqpower[EQPOWER_LENGTH - e->pan - 1]) >> 15;
-        e->rratm = _getRate((f64)e->cvolR, (f64)e->rtgt, e->segEnd,
+        e->rratm = _getRate((f32)e->cvolR, (f32)e->rtgt, e->segEnd,
                             &(e->rratl));
 
         aSetVolume(ptr++, A_LEFT | A_VOL, e->cvolL, 0, 0);
@@ -438,10 +438,10 @@ Acmd* _pullSubFrame(void *filter, s16 *inp, s16 *outp, s32 outCount,
 #define EXP_MASK  0x7f800000
 #define MANT_MASK 0x807fffff
 
-f64
-_frexpf(f64 value, s32 *eptr)
+f32
+_frexpf(f32 value, s32 *eptr)
 {
-    f64 absvalue;
+    f32 absvalue;
 
     *eptr = 0;
     if (value == 0.0f)/* nothing to do for zero */
@@ -454,14 +454,14 @@ _frexpf(f64 value, s32 *eptr)
     return (value > 0.0f ? absvalue : -absvalue);
 }
 
-f64
-_ldexpf(f64 in, s32 ex)
+f32
+_ldexpf(f32 in, s32 ex)
 {
     s32 exp;
     
     if ( ex ) {
 	exp = 1 << ex;
-	in *= (f64)exp;
+	in *= (f32)exp;
     }
 
     return ( in );
@@ -479,10 +479,10 @@ _ldexpf(f64 in, s32 ex)
 */
 
 static
-s16 _getRate(f64 vol, f64 tgt, s32 count, u16* ratel)
+s16 _getRate(f32 vol, f32 tgt, s32 count, u16* ratel)
 {
     s16         s;    
-    f64         a;
+    f32         a;
     
     if (count == 0){
         if (tgt >= vol){
