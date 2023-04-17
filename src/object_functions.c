@@ -937,7 +937,6 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
 
     obj->segment.trans.unk6 &= 0xBFFF;
     obj->segment.trans.unk6 |= 0x1000;
-    get_racer_object(0); // Unused. I guess the developers forgot to remove this?
     if ((s32) obj->interactObj->distance < obj->unk78) {
         racerObjs = get_racer_objects(&numObjects);
         for (i = 0; i < numObjects; i++) {
