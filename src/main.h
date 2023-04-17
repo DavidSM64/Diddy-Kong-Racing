@@ -82,6 +82,8 @@ enum PPProfilerEvent {
     THREAD3_END,
     THREAD4_START,
     THREAD4_END,
+    THREAD30_START,
+    THREAD30_END,
 
     NUM_THREAD_TIMERS
 };

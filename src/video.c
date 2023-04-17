@@ -65,9 +65,11 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
     set_video_mode_index(videoModeIndex);
     // I run this even with an expansion pak just to use up the memory.
     // Means I don't run into any issues if I test without a pak that just happened to work with.
-    for (i = 0; i < 2; i++) {
-        gVideoFramebuffers[i] = 0;
-        init_framebuffer(i);
+    if (SCREEN_WIDTH * SCREEN_HEIGHT <= 320 * 240) {
+        for (i = 0; i < 2; i++) {
+            gVideoFramebuffers[i] = 0;
+            init_framebuffer(i);
+        }
     }
     if (gExpansionPak) {
         gNumFrameBuffers++;
@@ -117,13 +119,12 @@ void change_vi(OSViMode *mode, int width, int height) {
     s32 addX = 16;
     gGlobalVI = osViModeNtscLan1;
 
-    if (width == SCREEN_WIDTH_16_10) {
-        addX = 20;
-    } else if (width == SCREEN_WIDTH_WIDE) {
-        addX = 24;
-    }
-
     if (height < 240) {
+        if (width == SCREEN_WIDTH_16_10) {
+            addX = 20;
+        } else if (width == SCREEN_WIDTH_WIDE) {
+            addX = 24;
+        }
         mode->comRegs.width = width;
         mode->comRegs.xScale = ((width + addX)*512)/320;
         // Y Scale
@@ -136,6 +137,22 @@ void change_vi(OSViMode *mode, int width, int height) {
         mode->comRegs.hStart = (428-304 + (gScreenPos[0] * 2)) << 16 | (428+304 + (gScreenPos[0] * 2));
         mode->fldRegs[0].vStart = (277-height + (gScreenPos[1] * 2)) << 16 | (271+height + (gScreenPos[1] * 2));
         mode->fldRegs[1].vStart = (277-height + (gScreenPos[1] * 2)) << 16 | (271+height + (gScreenPos[1] * 2));
+    } else if (height == 240) {
+        mode->comRegs.width = width;
+        mode->comRegs.xScale = (width*512)/320;
+        mode->fldRegs[0].origin = width*2;
+        mode->fldRegs[1].origin = width*4;
+        mode->fldRegs[0].yScale = ((height*1024)/240);
+        mode->fldRegs[1].yScale = ((height*1024)/240);
+    } else {
+        mode->comRegs.width = width;
+        mode->comRegs.xScale = (width*512)/320;
+        mode->comRegs.ctrl |= 0x40;
+        mode->fldRegs[0].origin = width*2;
+        mode->fldRegs[1].origin = width*4;
+        mode->fldRegs[0].yScale = 0x2000000|((height*1024)/240);
+        mode->fldRegs[1].yScale = 0x2000000|((height*1024)/240);
+        mode->fldRegs[0].vStart = mode->fldRegs[1].vStart-0x20002;
     }
     gVideoAspectRatio = (f32) width / (f32) height;
     reset_perspective_matrix();
