@@ -24,7 +24,6 @@ enum rspFlags {
     RSP_GFX_FINISHED,
     RSP_GFX_PAUSED,
     RSP_GFX_RESUME,
-    RDP_GFX_FINISHED,
 };
 
 enum TrackTimers {
@@ -74,6 +73,19 @@ enum TrackTimers {
     PP_TIMES_TOTAL
 };
 
+enum PPProfilerEvent {
+    idk,
+    idk2,
+    THREAD5_START,
+    THREAD5_END,
+    THREAD3_START,
+    THREAD3_END,
+    THREAD4_START,
+    THREAD4_END,
+
+    NUM_THREAD_TIMERS
+};
+
 #define PP_STRINGS \
     {"Unknown"}, \
     {"Collision"}, \
@@ -116,6 +128,7 @@ enum TrackTimers {
 #define PERF_AGGREGATE NUM_PERF_ITERATIONS
 #define PERF_TOTAL NUM_PERF_ITERATIONS + 1
 typedef u32 PPTimer[NUM_PERF_ITERATIONS + 2];
+
 struct PuppyPrintTimers {
     u32 cpuTime; // Sum of multiple CPU timings, and what will be displayed.
     u32 rspTime; // Sum of multiple RSP timings, and publicly shamed on the street.
@@ -124,6 +137,9 @@ struct PuppyPrintTimers {
     u32 rspGfxBufTime; // Buffer that keeps track of the current Gfx task;
     u32 rspAudioBufTime; // Buffer that keeps track of the current Audio task;
     PPTimer timers[PP_TIMES_TOTAL];
+    PPTimer cpuTotal;
+    u32 threadTimes[16][NUM_THREAD_TIMERS];
+    u8 threadIteration[NUM_THREAD_TIMERS / 2];
     u16 objTimers[NUM_OBJECT_PRINTS][NUM_PERF_ITERATIONS + 2];
 };
 extern struct PuppyPrintTimers gPuppyTimers;
@@ -137,6 +153,9 @@ void count_triangles(u8 *dlist, u8 *dlistEnd);
 void calculate_and_update_fps(void);
 void puppyprint_calculate_average_times(void);
 void profiler_add_obj(u32 objID, u32 time);
+void update_rdp_profiling(void);
+void profiler_snapshot(s32 eventID);
+
 extern u8 perfIteration;
 extern u32 sPrevLoadTimeTotal;
 extern u32 gPrevLoadTimeDecompress;
@@ -149,6 +168,10 @@ extern u8 gProfilerOn;
 extern u8 gShowHiddenGeometry;
 extern u8 gShowHiddenObjects;
 extern u32 gFreeMem[12];
+#else
+
+#define update_rdp_profiling()
+#define profiler_snapshot(eventID)
 #endif
 int puppyprintf(char *dst, const char *fmt, ...);
 void crash_screen_init(void);

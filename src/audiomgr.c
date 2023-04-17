@@ -240,7 +240,9 @@ static void __amMain(UNUSED void *arg) {
         case OS_SC_RETRACE_MSG:
             //TODO: Check type of ACMDList?
             __amHandleFrameMsg((AudioInfo *) __am.ACMDList[(((u32) audFrameCt % 3))+2], lastInfo);
+            profiler_snapshot(THREAD3_END);
             osRecvMesg(&__am.audioReplyMsgQ, (OSMesg *) &lastInfo, OS_MESG_BLOCK);
+            profiler_snapshot(THREAD3_START);
             __amHandleDoneMsg(lastInfo);
             break;
         case OS_SC_PRE_NMI_MSG:

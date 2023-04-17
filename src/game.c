@@ -820,6 +820,7 @@ void main_game_loop(void) {
         gProfilerOn ^= 1;
     }
     profiler_reset_values();
+    profiler_snapshot(THREAD4_START);
 #endif
 
     if (gScreenStatus == MESG_SKIP_BUFFER_SWAP) {
@@ -935,6 +936,7 @@ void main_game_loop(void) {
         count_triangles((u8*) gDisplayLists[gSPTaskNum], (u8*) gCurrDisplayList);
     }
 #endif
+    profiler_snapshot(THREAD4_END);
 
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);

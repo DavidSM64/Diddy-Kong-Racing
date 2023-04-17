@@ -140,6 +140,7 @@ static void __scMain(void *arg) {
     while (1) {
 
         osRecvMesg(&sc->interruptQ, (OSMesg *)&msg, OS_MESG_BLOCK);
+        profiler_snapshot(THREAD5_START);
 
         switch ((int) msg) {
             case (VIDEO_MSG):
@@ -152,6 +153,7 @@ static void __scMain(void *arg) {
 
             case (RDP_DONE_MSG):
                 __scHandleRDP(sc);
+                update_rdp_profiling();
                 break;
 
             case (UNK_MSG):
@@ -175,6 +177,7 @@ static void __scMain(void *arg) {
                     __scExec(sc, sp, dp);
                 break;
         }
+        profiler_snapshot(THREAD5_END);
     }
 }
 
