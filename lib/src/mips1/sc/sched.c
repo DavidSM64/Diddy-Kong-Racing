@@ -46,7 +46,6 @@ s32 gCurRDPTaskIsSet;
 OSTime gYieldTime;
 u32 gRSPAudTaskFlushTime;
 u32 gRSPAudTaskDoneTime;
-UNUSED s32 D_80126128[18];
 
 /*******************************/
 

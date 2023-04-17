@@ -663,7 +663,7 @@ void puppyprint_update_rsp(u8 flags) {
         break;
     case RSP_GFX_FINISHED:
         gPuppyTimers.timers[PP_RSP_GFX][PERF_AGGREGATE] -= gPuppyTimers.timers[PP_RSP_GFX][perfIteration];
-        gPuppyTimers.timers[PP_RSP_GFX][perfIteration] = (u32) (osGetCount() - gPuppyTimers.rspGfxBufTime) + gPuppyTimers.rspPauseTime;
+        gPuppyTimers.timers[PP_RSP_GFX][perfIteration] = (u32) (osGetCount() - gPuppyTimers.rspGfxBufTime) - gPuppyTimers.rspPauseTime;
         if (gPuppyTimers.timers[PP_RSP_GFX][perfIteration] > OS_USEC_TO_CYCLES(99999)) {
             gPuppyTimers.timers[PP_RSP_GFX][perfIteration] = OS_USEC_TO_CYCLES(99999);
         }
