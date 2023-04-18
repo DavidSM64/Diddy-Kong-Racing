@@ -1490,7 +1490,7 @@ void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehi
     func_8001BF20();
     osSetTime(0);
     set_free_queue_state(2);
-    puppyprint_log("Level (%s) loaded in %2.3fs.", get_level_name(levelId), OS_CYCLES_TO_USEC(osGetCount() - first) / 1000000.0f);
+    puppyprint_log("Level (%s) (Menu) loaded in %2.3fs.", get_level_name(levelId), OS_CYCLES_TO_USEC(osGetCount() - first) / 1000000.0f);
 }
 
 void func_8006DBE4(void) {
