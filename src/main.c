@@ -452,8 +452,12 @@ void puppyprint_render_breakdown(void) {
     char textBytes[24];
     s32 y;
     s32 i;
+
+    y = 8;
     draw_blank_box(gScreenWidth - 144, 0, gScreenWidth, gScreenHeight, 0x00000064);
     gDPPipeSync(gCurrDisplayList++);
+    set_text_font(ASSET_FONTS_SMALLFONT);
+    set_text_colour(255, 255, 255, 255, 255);
     set_text_background_colour(0, 0, 0, 0);
     set_kerning(FALSE);
     for (i = 0; i < PP_RSP_GFX; i++) {
@@ -473,10 +477,25 @@ void puppyprint_render_memory(void) {
     char textBytes[24];
     s32 y;
     s32 i;
+    u32 memSize;
+
+#ifndef FORCE_4MB_MEMORY
+    memSize = osGetMemSize();
+#else
+    memSize = 0x400000;
+#endif
+
+    y = 36;
     draw_blank_box(gScreenWidth - 144, 0, gScreenWidth, gScreenHeight, 0x00000064);
     gDPPipeSync(gCurrDisplayList++);
+    set_text_font(ASSET_FONTS_SMALLFONT);
+    set_text_colour(255, 255, 255, 255, 255);
     set_text_background_colour(0, 0, 0, 0);
     set_kerning(FALSE);
+    puppyprintf(textBytes, "Free:\t0x%X\n", gFreeMem[11]);
+    draw_text(&gCurrDisplayList, gScreenWidth - 136, 8, textBytes, ALIGN_TOP_LEFT);
+    puppyprintf(textBytes, "Total:\t0x%X\n", memSize);
+    draw_text(&gCurrDisplayList, gScreenWidth - 136, 18, textBytes, ALIGN_TOP_LEFT);
     for (i = 0; i < sizeof(sPuppyprintMemColours) / 16; i++) {
         puppyprintf(textBytes,  "%s:\t0x%X\n", sPuppyprintMemColours[i], gFreeMem[i]);
         draw_text(&gCurrDisplayList, gScreenWidth - 136, y, textBytes, ALIGN_TOP_LEFT);
@@ -491,8 +510,12 @@ void puppyprint_render_objects(void) {
     char textBytes[24];
     s32 y;
     s32 i;
+
+    y = 8;
     draw_blank_box(gScreenWidth - 144, 0, gScreenWidth, gScreenHeight, 0x00000064);
     gDPPipeSync(gCurrDisplayList++);
+    set_text_font(ASSET_FONTS_SMALLFONT);
+    set_text_colour(255, 255, 255, 255, 255);
     set_text_background_colour(0, 0, 0, 0);
     set_kerning(FALSE);
     for (i = 0; i < NUM_OBJECT_PRINTS; i++) {
