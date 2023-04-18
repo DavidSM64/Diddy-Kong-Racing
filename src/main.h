@@ -190,13 +190,15 @@ void profiler_add_obj(u32 objID, u32 time);
 void update_rdp_profiling(void);
 void profiler_snapshot(s32 eventID);
 void puppyprint_log(const char *str, ...);
-void get_platform(void);
 #define profiler_begin_timer() u32 first = osGetCount();
 #define profiler_begin_timer2() u32 first2 = osGetCount();
 #define profiler_begin_timer3() u32 first3 = osGetCount();
 #define profiler_reset_timer() first = osGetCount();
 #define profiler_reset_timer2() first2 = osGetCount();
 #define profiler_reset_timer3() first3 = osGetCount();
+#define profiler_get_timer() first
+#define profiler_get_timer2() first2
+#define profiler_get_timer3() first3
 
 extern u8 perfIteration;
 extern u32 sPrevLoadTimeTotal;
@@ -219,13 +221,21 @@ extern u32 gFreeMem[12];
 #define profiler_reset_timer()
 #define profiler_reset_timer2()
 #define profiler_reset_timer3()
+#define profiler_get_timer() 0
+#define profiler_get_timer2() 0
+#define profiler_get_timer3() 0
 #define profiler_add(x, y)
 #define profiler_add_obj(x, y)
 #define profiler_update(x, y)
 #define profiler_offset(x, y)
-#define puppyprint_log(x, y)
+#ifdef __sgi
+#define puppyprint_log
+#else
+#define puppyprint_log(...)
+#endif
 #endif
 int puppyprintf(char *dst, const char *fmt, ...);
 void crash_screen_init(void);
+void get_platform(void);
 
 #endif
