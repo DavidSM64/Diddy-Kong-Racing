@@ -10,6 +10,7 @@
 #include "stdarg.h"
 #include "controller.h"
 #include "printf.h"
+#include "particles.h"
 
 /************ .bss ************/
 
@@ -26,36 +27,32 @@ u8 gPlatform;
 u32 get_clockspeed(void);
 void skGetId(u32 *arg);
 
-void get_platform(void)
-{
-    /*u32 notiQue;
-    if (get_clockspeed() == 0 || (u32)IO_READ(DPC_PIPEBUSY_REG) + (u32)IO_READ(DPC_TMEM_REG) + (u32)IO_READ(DPC_BUFBUSY_REG))
-    {
+void get_platform(void) {
+    u32 notiQue;
+    /*if ((u32) IO_READ(DPC_PIPEBUSY_REG) + (u32) IO_READ(DPC_TMEM_REG) + (u32) IO_READ(DPC_BUFBUSY_REG)) {
         gPlatform &= ~EMULATOR;
         gPlatform |= CONSOLE;
-    }
-    else
-    {
+        puppyprint_log("N64 Console Detected");
+    } else {
         gPlatform &= ~CONSOLE;
         gPlatform |= EMULATOR;
+        puppyprint_log("N64 Emulator Detected");
     }*/
 
-    /*if (IS_VC())
-    {
+    /*if (IS_VC()) {
         gPlatform &= ~CONSOLE;
         gPlatform |= EMULATOR;
         gPlatform |= VC;
-    }
-    else
-    {*/
+        puppyprint_log("Virtual Console Detected");
+    } else {*/
         //gPlatform &= ~VC;
     //}
 
     /*skGetId(&notiQue);
-    if (!notiQue)
-    {
+    if (!notiQue) {
         gPlatform |= IQUE;
         gPlatform &= EMULATOR;
+        puppyprint_log("iQue Player Detected");
     }*/
 }
 
@@ -95,16 +92,19 @@ void find_expansion_pak(void) {
 #ifdef FORCE_4MB_MEMORY
     gExpansionPak = FALSE;
     gUseExpansionMemory = FALSE;
+    puppyprint_log("4MB Memory Forced.");
     return;
 #endif
     if (osGetMemSize() == 0x800000) {
         gExpansionPak = TRUE;
+        puppyprint_log("Expansion Pak Detected");
 #ifndef EXPANSION_PAK_SUPPORT
         gUseExpansionMemory = FALSE;
 #else
         gUseExpansionMemory = TRUE;
 #endif
     } else {
+        puppyprint_log("Expansion Pak Missing");
         gExpansionPak = FALSE;
         gUseExpansionMemory = FALSE;
     }
@@ -187,27 +187,13 @@ void thread1_main(UNUSED void *unused) {
     while (1) {}
 }
 
-/**
- * Increments the start and endpoint of the stack.
- * They should have an equal value, so if they don't, that triggers a printout saying a stack wraparound has occured.
-*/
-void thread3_verify_stack(void) {
-    gThread3Stack[0x400]++;
-    gThread3Stack[0]++;
-    if ((gThread3Stack[0x400] != gThread3Stack[0])) {
-        rmonPrintf("WARNING: Stack overflow/underflow!!!\n");
-    }
-}
-
 s32 _Printf(outfun prout, char *dst, const char *fmt, va_list args);
 
-static char *proutSprintf(char *dst, const char *src, size_t count)
-{
+static char *proutSprintf(char *dst, const char *src, size_t count) {
     return (char *)memcpy((u8 *)dst, (u8 *)src, count) + count;
 }
 
-int puppyprintf(char *dst, const char *fmt, ...)
-{
+int puppyprintf(char *dst, const char *fmt, ...) {
     s32 ans;
     va_list ap;
     va_start(ap, fmt);
@@ -324,6 +310,7 @@ void puppyprint_input(void) {
     if (get_buttons_pressed_from_player(0) & L_TRIG) {
         gPuppyPrint.menuOpen ^= 1;
         gPuppyPrint.page = gPuppyPrint.menuOption;
+        gPuppyPrint.pageScroll = 0;
     }
 
     if (gPuppyPrint.menuOpen) {
@@ -345,6 +332,17 @@ void puppyprint_input(void) {
         } else if (gPuppyPrint.menuScroll > gPuppyPrint.menuOption) {
             gPuppyPrint.menuScroll--;
         }
+    }
+
+    if (gPuppyPrint.page == PAGE_LOG) {
+        if (get_buttons_held_from_player(0) & D_JPAD) {
+            gPuppyPrint.pageScroll += sLogicUpdateRate * 2;
+        } else if (get_buttons_held_from_player(0) & U_JPAD) {
+            gPuppyPrint.pageScroll -= sLogicUpdateRate * 2;
+            if (gPuppyPrint.pageScroll < 0) {
+                gPuppyPrint.pageScroll = 0;
+            }
+        } 
     }
 }
 
@@ -543,6 +541,46 @@ void puppyprint_render_objects(void) {
     }
 }
 
+void puppyprint_render_log(void) {
+    s32 i;
+    s32 y;
+    s32 sineTime = 192 + (sinf(sTimerTemp * 75.0f) * 64.0f);
+    s32 firstDraw = TRUE;
+    draw_blank_box(0, 0, gScreenWidth, gScreenHeight, 0x00000064);
+    set_text_font(ASSET_FONTS_SMALLFONT);
+    set_text_colour(255, 255, 255, 255, 255);
+    set_text_background_colour(0, 0, 0, 0);
+    set_kerning(FALSE);
+
+    if (gPuppyPrint.pageScroll > (NUM_LOG_LINES) * 10) {
+        gPuppyPrint.pageScroll = (NUM_LOG_LINES) * 10;
+    }
+
+    y = -4 - gPuppyPrint.pageScroll;
+    for (i = NUM_LOG_LINES; i > 0; i--) {
+        if (gPuppyPrint.logText[i] == NULL) {
+            continue;
+        }
+        if (y <= -20 || y >= gScreenHeight) {
+            firstDraw = FALSE;
+            y += 10;
+            continue;
+        }
+        if (firstDraw) {
+            set_text_colour(255, sineTime, sineTime, 255, 255);
+        } else {
+            set_text_colour(255, 255, 255, 255, 255);
+        }
+        draw_text(&gCurrDisplayList, 8, y, gPuppyPrint.logText[i], ALIGN_TOP_LEFT);
+        y += 10;
+        firstDraw = FALSE;
+    }
+
+    if (get_buttons_pressed_from_player(0) & R_JPAD) {
+        puppyprint_log("Plop :)");
+    }
+}
+
 void render_page_menu(void) {
     char textBytes[16];
     u32 i;
@@ -593,6 +631,9 @@ void render_profiler(void) {
     case PAGE_OBJECTS:
         puppyprint_render_objects();
         break;
+    case PAGE_LOG:
+        puppyprint_render_log();
+        break;
     }
 
     if (gPuppyPrint.menuOpen) {
@@ -600,6 +641,30 @@ void render_profiler(void) {
     }
 }
 
+static char *write_to_buf(char *buffer, const char *data, size_t size) {
+    return (char *) memcpy(buffer, data, size) + size;
+}
+
+void puppyprint_log(const char *str, ...) {
+    s32 i;
+    char textBytes[255];
+    va_list arguments;
+
+    memset(textBytes, 0, sizeof(textBytes));
+    va_start(arguments, str);
+    if ((_Printf(write_to_buf, textBytes, str, arguments)) <= 0) {
+        va_end(arguments);
+        return;
+    }
+#ifdef UNF
+    osSyncPrintf(textBytes);
+#endif
+    for (i = 0; i < (NUM_LOG_LINES - 1); i++) {
+        memcpy(gPuppyPrint.logText[i], gPuppyPrint.logText[i + 1], 127);
+    }
+    memcpy(gPuppyPrint.logText[NUM_LOG_LINES - 1], textBytes, 127);
+    va_end(arguments);
+}
 
 void swapu(u8* xp, u8* yp) {
     u8 temp = *xp;

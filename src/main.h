@@ -11,8 +11,11 @@ extern char gAssertString[64];
 
 void main(void);
 void thread1_main(void *);
-void thread3_verify_stack(void);
 
+#define CONSOLE 1
+#define EMULATOR 2
+#define VC 4
+#define IQUE 8
 
 #ifdef PUPPYPRINT_DEBUG
 
@@ -146,6 +149,7 @@ enum PPProfilerEvent {
 #define PERF_AGGREGATE NUM_PERF_ITERATIONS
 #define PERF_TOTAL NUM_PERF_ITERATIONS + 1
 #define NUM_THREAD_ITERATIONS 8
+#define NUM_LOG_LINES 32
 typedef u32 PPTimer[NUM_PERF_ITERATIONS + 2];
 
 struct PuppyPrint {
@@ -163,11 +167,13 @@ struct PuppyPrint {
     u16 objTimers[NUM_OBJECT_PRINTS][NUM_PERF_ITERATIONS + 2]; // Timers for individual object IDs
     u32 mainTimerPoints[2][PP_MAIN_TIMES_TOTAL]; // Timers for individual threads.
     u16 menuScroll; // Page menu scroll value to offset the text.
+    s16 pageScroll; // Generic scroller var for a page. Reset when swapped.
     u8 threadIteration[NUM_THREAD_TIMERS / 2]; // Number of times the respective thread has looped.
     u8 enabled; // Show the profiler
     u8 menuOpen; // Whether the page menu's open
     u8 page; // Current viewed page.
     s8 menuOption; // Current option in the page menu.
+    char logText[NUM_LOG_LINES][127];
 };
 
 extern struct PuppyPrint gPuppyPrint;
@@ -183,6 +189,8 @@ void puppyprint_calculate_average_times(void);
 void profiler_add_obj(u32 objID, u32 time);
 void update_rdp_profiling(void);
 void profiler_snapshot(s32 eventID);
+void puppyprint_log(const char *str, ...);
+void get_platform(void);
 #define profiler_begin_timer() u32 first = osGetCount();
 #define profiler_begin_timer2() u32 first2 = osGetCount();
 #define profiler_begin_timer3() u32 first3 = osGetCount();
@@ -215,6 +223,7 @@ extern u32 gFreeMem[12];
 #define profiler_add_obj(x, y)
 #define profiler_update(x, y)
 #define profiler_offset(x, y)
+#define puppyprint_log(x, y)
 #endif
 int puppyprintf(char *dst, const char *fmt, ...);
 void crash_screen_init(void);

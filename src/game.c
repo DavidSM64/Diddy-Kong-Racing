@@ -737,7 +737,6 @@ void thread3_main(UNUSED void *unused) {
             while (1); // Infinite loop
         }
         main_game_loop();
-        thread3_verify_stack();
     }
 }
 
@@ -795,6 +794,7 @@ void init_game(void) {
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
+    get_platform();
 
     osSetTime(0);
 }
@@ -991,6 +991,7 @@ void func_8006CAE4(s32 arg0, s32 arg1, Vehicle vehicle) {
  * Needs a better name!
  */
 void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId) {
+    profiler_begin_timer();
     calc_and_alloc_heap_for_hud(numberOfPlayers);
     set_free_queue_state(0);
     func_80065EA0();
@@ -1002,6 +1003,7 @@ void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehi
     osSetTime(0);
     set_free_queue_state(2);
     func_80072298(1);
+    puppyprint_log("Level ID (%d) loaded in %2.3fs.", levelId, OS_CYCLES_TO_USEC(osGetCount() - first) / 1000000.0f);
 }
 
 // Guessing this is the "unload everything ready for level swap" function.
@@ -1478,6 +1480,7 @@ Vehicle get_level_default_vehicle(void) {
  * Needs a better name!
  */
 void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
+    profiler_begin_timer();
     set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
@@ -1487,6 +1490,7 @@ void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehi
     func_8001BF20();
     osSetTime(0);
     set_free_queue_state(2);
+    puppyprint_log("Level ID (%d) loaded in %2.3fs.", levelId, OS_CYCLES_TO_USEC(osGetCount() - first) / 1000000.0f);
 }
 
 void func_8006DBE4(void) {
