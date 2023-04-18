@@ -893,6 +893,9 @@ void render_level_geometry_and_objects(void) {
     }
 
     reset_render_settings(&gSceneCurrDisplayList);
+#ifdef PUPPYPRINT_DEBUG
+    gPuppyPrint.mainTimerPoints[0][PP_OBJGFX] = osGetCount();
+#endif
     func_80015348(sp160, sp16C - 1);
     sp158 = 0x200 << (get_current_viewport() & 1);
 
@@ -999,6 +1002,9 @@ skip:
         func_8002581C(segmentIds, numberOfSegments, get_current_viewport());
     }
     D_8011B0FC = 0;
+#ifdef PUPPYPRINT_DEBUG
+    gPuppyPrint.mainTimerPoints[1][PP_OBJGFX] = osGetCount();
+#endif
 }
 
 /**

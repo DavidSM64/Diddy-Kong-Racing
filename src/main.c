@@ -440,7 +440,7 @@ void puppyprint_render_overview(void) {
     draw_text(&gCurrDisplayList, ((gScreenWidth/2) / 3) + 10, gScreenHeight - 18, textBytes, ALIGN_TOP_CENTER);
 
     // Draw important timings on the top right.
-    draw_blank_box(gScreenWidth - 124, 8, gScreenWidth - 8, 64, 0x0000007F);
+    draw_blank_box(gScreenWidth - 124, 8, gScreenWidth - 8, 74, 0x0000007F);
     puppyprintf(textBytes,  "Game: %dus", gPuppyPrint.gameTime[PERF_TOTAL]);
     draw_text(&gCurrDisplayList, gScreenWidth - 122, 10, textBytes, ALIGN_TOP_LEFT);
     puppyprintf(textBytes,  "(%d%%)", gPuppyPrint.gameTime[PERF_TOTAL] / 333);
@@ -753,6 +753,8 @@ void calculate_core_timers(void) {
 
     gPuppyPrint.coreTimers[PP_OBJECTS][perfIteration] -= gPuppyPrint.coreTimers[PP_RACER][perfIteration];
     gPuppyPrint.coreTimers[PP_OBJECTS][PERF_AGGREGATE] -= gPuppyPrint.coreTimers[PP_RACER][perfIteration];
+    gPuppyPrint.coreTimers[PP_LEVELGFX][perfIteration] -= gPuppyPrint.coreTimers[PP_OBJGFX][perfIteration];
+    gPuppyPrint.coreTimers[PP_LEVELGFX][PERF_AGGREGATE] -= gPuppyPrint.coreTimers[PP_OBJGFX][perfIteration];
 }
 
 /// Add whichever times you wish to create aggregates of.

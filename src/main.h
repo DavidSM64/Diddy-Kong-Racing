@@ -50,7 +50,8 @@ enum rspFlags {
 };
 
 enum MainTimers {
-    PP_SCENE,
+    PP_LEVELGFX,
+    PP_OBJGFX,
     PP_OBJECTS,
     PP_RACER,
     PP_PROFILER_CALC,
@@ -60,7 +61,8 @@ enum MainTimers {
 };
 
 #define PP_MAINDRAW \
-    {"Scene"}, \
+    {"Lvl Gfx"}, \
+    {"Obj Gfx"}, \
     {"Objects"}, \
     {"Racers"}, \
     {"Audio"},
@@ -86,8 +88,6 @@ enum TrackTimers {
     PP_BACKGROUND,
     PP_DECAL,
     PP_BILLBOARD,
-    PP_LEVEL,
-    PP_OBJGFX,
     PP_VOID,
     PP_SEGMENTS,
 
@@ -138,8 +138,6 @@ enum PPProfilerEvent {
     {"BG\t"}, \
     {"Decals"}, \
     {"Billboards"}, \
-    {"Level Gfx"}, \
-    {"Obj Gfx"}, \
     {"Void"},
 
 
