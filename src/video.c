@@ -43,10 +43,10 @@ u16 *gVideoFramebuffers[2];
 s32 gVideoCurrFbIndex;
 s32 gVideoModeIndex;
 s32 sBlackScreenTimer;
-u16 *gVideoCurrFramebuffer;
-u16 *gVideoLastFramebuffer;
+u16 *gVideoCurrFramebuffer; //Official Name: currentScreen
+u16 *gVideoLastFramebuffer; //Official Name: otherScreen
 u16 *gVideoCurrDepthBuffer;
-u16 *gVideoLastDepthBuffer;
+u16 *gVideoLastDepthBuffer; //Official Name: otherZbuf
 u8 D_801262E4;
 UNUSED OSMesg D_801262E8[8];
 u8 gVideoDeltaCounter;
@@ -126,7 +126,7 @@ UNUSED void set_video_width_and_height_from_index(s32 fbIndex) {
 /**
  * Return the current framebuffer dimensions as a single s32 value.
  * The high 16 bits are the height of the frame, and the low 16 bits are the width.
- * Official Name: viGetCurrentSize?
+ * Official Name: viGetCurrentSize
  */
 s32 get_video_width_and_height_as_s32(void) {
     return (gVideoFbHeights[gVideoCurrFbIndex] << 16) | gVideoFbWidths[gVideoCurrFbIndex];
