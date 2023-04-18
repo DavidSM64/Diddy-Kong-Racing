@@ -9789,13 +9789,13 @@ void render_benchmark_results_screen() {
 extern s32 gRaceStartTimer;
 extern s32 gRaceStartShowHudStep;
 
-void record_fps() {
+void record_fps(void) {
     OSTime frameDiff;
     
     benchFrames++;
-    benchCPU += MIN(gPuppyTimers.cpuTime, 200000);
-    benchRSP += MIN(gPuppyTimers.rspTime, 200000);
-    benchRDP += MIN(gPuppyTimers.rdpTime, 200000);
+    benchCPU += MIN(gPuppyPrint.cpuTime[PERF_TOTAL], 200000);
+    benchRSP += MIN(gPuppyPrint.rspTime, 200000);
+    benchRDP += MIN(gPuppyPrint.rdpTime, 200000);
 
     frameDiff = osGetTime() - benchLastTime;
     gRaceStartTimer = 0;

@@ -16,6 +16,29 @@ void thread3_verify_stack(void);
 
 #ifdef PUPPYPRINT_DEBUG
 
+enum DebugPages {
+    PAGE_MINIMAL,
+    PAGE_OVERVIEW,
+    PAGE_BREAKDOWN,
+    PAGE_OBJECTS,
+    PAGE_MEMORY,
+    PAGE_AUDIO,
+    PAGE_LOG,
+    PAGE_COVERAGE,
+
+    PAGE_COUNT
+};
+
+#define PP_PAGES \
+    {"Minimal"}, \
+    {"Overview"}, \
+    {"Breakdown"}, \
+    {"Objects"}, \
+    {"Memory"}, \
+    {"Audio"}, \
+    {"Logging\t"}, \
+    {"Coverage"}
+
 enum rspFlags {
     RSP_NONE,
     RSP_AUDIO_START,
@@ -124,7 +147,6 @@ enum PPProfilerEvent {
     {"Sched"},
 
 
-
 #define NUM_OBJECT_PRINTS 250
 #define NUM_PERF_ITERATIONS 32
 #define PERF_AGGREGATE NUM_PERF_ITERATIONS
@@ -132,20 +154,27 @@ enum PPProfilerEvent {
 #define NUM_THREAD_ITERATIONS 8
 typedef u32 PPTimer[NUM_PERF_ITERATIONS + 2];
 
-struct PuppyPrintTimers {
-    u32 cpuTime; // Sum of multiple CPU timings, and what will be displayed.
+struct PuppyPrint {
+    PPTimer cpuTime; // Sum of multiple CPU timings, and what will be displayed.
     u32 rspTime; // Sum of multiple RSP timings, and publicly shamed on the street.
     u32 rdpTime; // Sum of multiple RDP timings, and hung by its entrails for all to see.
     u32 rspPauseTime; // Buffer that keeps track of the halt time of the Gfx task.
-    u32 rspGfxBufTime; // Buffer that keeps track of the current Gfx task;
-    u32 rspAudioBufTime; // Buffer that keeps track of the current Audio task;
-    PPTimer timers[PP_TIMES_TOTAL];
-    PPTimer cpuTotal;
-    u32 threadTimes[NUM_THREAD_ITERATIONS][NUM_THREAD_TIMERS];
-    u8 threadIteration[NUM_THREAD_TIMERS / 2];
-    u16 objTimers[NUM_OBJECT_PRINTS][NUM_PERF_ITERATIONS + 2];
+    u32 rspGfxBufTime; // Buffer that keeps track of the current Gfx task.
+    u32 rspAudioBufTime; // Buffer that keeps track of the current Audio task.
+    PPTimer timers[PP_TIMES_TOTAL]; // Large collection of timers for various things.
+    PPTimer audTime; // Normalised total for audio processing time.
+    PPTimer gameTime; // Normalised total for game processing time.
+    u32 threadTimes[NUM_THREAD_ITERATIONS][NUM_THREAD_TIMERS]; // Timers for individual threads.
+    u16 objTimers[NUM_OBJECT_PRINTS][NUM_PERF_ITERATIONS + 2]; // Timers for individual object IDs
+    u16 menuScroll; // Page menu scroll value to offset the text.
+    u8 threadIteration[NUM_THREAD_TIMERS / 2]; // Number of times the respective thread has looped.
+    u8 enabled; // Show the profiler
+    u8 menuOpen; // Whether the page menu's open
+    u8 page; // Current viewed page.
+    s8 menuOption; // Current option in the page menu.
 };
-extern struct PuppyPrintTimers gPuppyTimers;
+
+extern struct PuppyPrint gPuppyPrint;
 extern void profiler_update(u32 *time, u32 time2);
 extern void puppyprint_update_rsp(u8 flags);
 extern void profiler_add(u32 *time, u32 offset);
@@ -167,7 +196,6 @@ extern u32 gPrevLoadTimeTexture;
 extern u32 gPrevLoadTimeModel;
 extern u32 gPrevLoadTimeObjects;
 extern u8 sPrevLoadTimer;
-extern u8 gProfilerOn;
 extern u8 gShowHiddenGeometry;
 extern u8 gShowHiddenObjects;
 extern u32 gFreeMem[12];

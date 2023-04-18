@@ -817,9 +817,6 @@ void main_game_loop(void) {
     s32 framebufferSize;
     s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
 #ifdef PUPPYPRINT_DEBUG
-    if (get_buttons_held_from_player(0) & U_JPAD && get_buttons_pressed_from_player(0) & L_TRIG) {
-        gProfilerOn ^= 1;
-    }
     profiler_reset_values();
     profiler_snapshot(THREAD4_START);
 #endif
@@ -932,7 +929,7 @@ void main_game_loop(void) {
     }
 
 #ifdef PUPPYPRINT_DEBUG
-    if (gProfilerOn) {
+    if (gPuppyPrint.enabled) {
         render_profiler();
         count_triangles((u8*) gDisplayLists[gSPTaskNum], (u8*) gCurrDisplayList);
     }

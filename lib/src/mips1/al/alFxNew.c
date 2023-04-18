@@ -162,7 +162,7 @@ void alFxNew(ALFx *r, ALSynConfig *c, s16 bus, UNUSED ALHeap *hp) {
             * where
             *		120,000/ln(2) = 173123.40...
             */
-    #define CONVERT 173123.404906676
+    #define CONVERT 173123.404906676f
     #define LENGTH	(d->output - d->input)
             d->rsgain 	 = (((f32) param[j++])/CONVERT) * LENGTH;
             d->rsval	 = 1.0f;
