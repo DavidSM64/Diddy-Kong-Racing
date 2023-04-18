@@ -94,9 +94,7 @@ void thread30_track_loading(UNUSED void *arg) {
             osRecvMesg(&gThread30MesgQueue, &mesg, OS_MESG_BLOCK);
         } while (mesg != (OSMesg) OS_MESG_TYPE_LOOPBACK);
         // -1 means there won't be any racers loaded.
-        profiler_snapshot(THREAD30_START);
         load_level_for_menu(gThread30LevelIdToLoad, -1, gThread30CutsceneIdToLoad);
         gThread30NeedToLoadLevel = FALSE;
-        profiler_snapshot(THREAD30_END);
     }
 }

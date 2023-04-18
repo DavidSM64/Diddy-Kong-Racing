@@ -49,26 +49,37 @@ enum rspFlags {
     RSP_GFX_RESUME,
 };
 
-enum TrackTimers {
-    PP_LOGIC,
-    PP_COLLISION,
+enum MainTimers {
+    PP_SCENE,
     PP_OBJECTS,
     PP_RACER,
+    PP_PROFILER_CALC,
+    PP_PROFILER_DRAW,
+
+    PP_MAIN_TIMES_TOTAL
+};
+
+#define PP_MAINDRAW \
+    {"Scene"}, \
+    {"Objects"}, \
+    {"Racers"}, \
+    {"Audio"},
+
+enum TrackTimers {
+    PP_COLLISION,
     PP_LIGHT,
     PP_ENVMAP,
     PP_HUD,
-    PP_SCENE,
     PP_DMA,
     PP_PAD,
     PP_TEXT,
-    PP_MENU,
     PP_TEXTURES,
+    PP_SHADOW,
     PP_PARTICLES,
     PP_AI,
     PP_WEATHER,
     PP_WAVES,
     PP_DIALOGUE,
-    PP_PROFILER,
     PP_TRANSITION,
     PP_CAMERA,
     PP_MATRIX,
@@ -79,12 +90,6 @@ enum TrackTimers {
     PP_OBJGFX,
     PP_VOID,
     PP_SEGMENTS,
-    PP_SHADOW,
-
-    PP_THREAD0,
-    PP_THREAD30,
-    PP_AUDIO,
-    PP_SCHED,
 
     PP_RSP_GFX,
     PP_RSP_AUD,
@@ -114,8 +119,6 @@ enum PPProfilerEvent {
 #define PP_STRINGS \
     {"Unknown"}, \
     {"Collision"}, \
-    {"Objects"}, \
-    {"Racers"}, \
     {"Lighting"}, \
     {"Envmaps"}, \
     {"HUD\t"}, \
@@ -123,14 +126,12 @@ enum PPProfilerEvent {
     {"DMA"}, \
     {"Pad\t"}, \
     {"Text"}, \
-    {"Menu"}, \
     {"Textures"}, \
     {"Particles"}, \
     {"AI\t"}, \
     {"Weather"}, \
     {"Water"}, \
     {"Dialogue"}, \
-    {"Profiler"}, \
     {"Transition"}, \
     {"Camera"}, \
     {"Matrix"}, \
@@ -139,12 +140,7 @@ enum PPProfilerEvent {
     {"Billboards"}, \
     {"Level Gfx"}, \
     {"Obj Gfx"}, \
-    {"Void"}, \
-    {"Segments"}, \
-    {"Thread0"}, \
-    {"Thread30"}, \
-    {"Audio"}, \
-    {"Sched"},
+    {"Void"},
 
 
 #define NUM_OBJECT_PRINTS 250
@@ -162,10 +158,12 @@ struct PuppyPrint {
     u32 rspGfxBufTime; // Buffer that keeps track of the current Gfx task.
     u32 rspAudioBufTime; // Buffer that keeps track of the current Audio task.
     PPTimer timers[PP_TIMES_TOTAL]; // Large collection of timers for various things.
+    PPTimer coreTimers[PP_MAIN_TIMES_TOTAL]; // Large collection of timers for various things.
     PPTimer audTime; // Normalised total for audio processing time.
     PPTimer gameTime; // Normalised total for game processing time.
     u32 threadTimes[NUM_THREAD_ITERATIONS][NUM_THREAD_TIMERS]; // Timers for individual threads.
     u16 objTimers[NUM_OBJECT_PRINTS][NUM_PERF_ITERATIONS + 2]; // Timers for individual object IDs
+    u32 mainTimerPoints[2][PP_MAIN_TIMES_TOTAL]; // Timers for individual threads.
     u16 menuScroll; // Page menu scroll value to offset the text.
     u8 threadIteration[NUM_THREAD_TIMERS / 2]; // Number of times the respective thread has looped.
     u8 enabled; // Show the profiler
@@ -177,7 +175,7 @@ struct PuppyPrint {
 extern struct PuppyPrint gPuppyPrint;
 extern void profiler_update(u32 *time, u32 time2);
 extern void puppyprint_update_rsp(u8 flags);
-extern void profiler_add(u32 *time, u32 offset);
+extern void profiler_add(u32 time, u32 offset);
 void profiler_offset(u32 *time, u32 offset);
 void profiler_reset_values(void);
 void render_profiler(void);
@@ -187,6 +185,12 @@ void puppyprint_calculate_average_times(void);
 void profiler_add_obj(u32 objID, u32 time);
 void update_rdp_profiling(void);
 void profiler_snapshot(s32 eventID);
+#define profiler_begin_timer() u32 first = osGetCount();
+#define profiler_begin_timer2() u32 first2 = osGetCount();
+#define profiler_begin_timer3() u32 first3 = osGetCount();
+#define profiler_reset_timer() first = osGetCount();
+#define profiler_reset_timer2() first2 = osGetCount();
+#define profiler_reset_timer3() first3 = osGetCount();
 
 extern u8 perfIteration;
 extern u32 sPrevLoadTimeTotal;
@@ -203,6 +207,16 @@ extern u32 gFreeMem[12];
 
 #define update_rdp_profiling()
 #define profiler_snapshot(eventID)
+#define profiler_begin_timer()
+#define profiler_begin_timer2()
+#define profiler_begin_timer3()
+#define profiler_reset_timer()
+#define profiler_reset_timer2()
+#define profiler_reset_timer3()
+#define profiler_add(x, y)
+#define profiler_add_obj(x, y)
+#define profiler_update(x, y)
+#define profiler_offset(x, y)
 #endif
 int puppyprintf(char *dst, const char *fmt, ...);
 void crash_screen_init(void);

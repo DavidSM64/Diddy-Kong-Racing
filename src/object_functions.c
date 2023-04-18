@@ -132,11 +132,16 @@ s16 D_8011D4E2; // Taj Voice clips
 /******************************/
 
 void func_80031130(s32 arg0, f32* arg1, f32* arg2, s32 arg3) {
+    profiler_begin_timer();
     func_80031130_2(arg0, arg1, arg2, arg3);
+    profiler_add(PP_COLLISION, first);
 }
 
 s32 func_80031600(f32* arg0, f32* arg1, f32* arg2, s8* arg3, s32 arg4, s32* arg5) {
-    s32 ret = func_80031600_2(arg0, arg1, arg2, arg3, arg4, arg5);
+    s32 ret;
+    profiler_begin_timer();
+    ret = func_80031600_2(arg0, arg1, arg2, arg3, arg4, arg5);
+    profiler_add(PP_COLLISION, first);
     return ret;
 }
 

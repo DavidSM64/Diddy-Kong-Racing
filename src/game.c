@@ -1080,7 +1080,13 @@ void ingame_logic_loop(s32 updateRate) {
     }
     gParticlePtrList_flush();
     func_8001BF20();
+#ifdef PUPPYPRINT_DEBUG
+    gPuppyPrint.mainTimerPoints[0][PP_SCENE] = osGetCount();
+#endif
     render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
+#ifdef PUPPYPRINT_DEBUG
+    gPuppyPrint.mainTimerPoints[1][PP_SCENE] = osGetCount();
+#endif
     if (sRenderContext == DRAW_GAME) {
         // Ignore the user's L/R/Z buttons.
         buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
@@ -1502,7 +1508,13 @@ void func_8006DC58(s32 updateRate) {
         func_80010994(updateRate);
         gParticlePtrList_flush();
         func_8001BF20();
+#ifdef PUPPYPRINT_DEBUG
+        gPuppyPrint.mainTimerPoints[0][PP_SCENE] = osGetCount();
+#endif
         render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
+#ifdef PUPPYPRINT_DEBUG
+        gPuppyPrint.mainTimerPoints[1][PP_SCENE] = osGetCount();
+#endif
         func_800C3440(updateRate);
         init_rdp_and_framebuffer(&gCurrDisplayList);
         //render_borders_for_multiplayer(&gCurrDisplayList);

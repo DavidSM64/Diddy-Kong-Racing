@@ -941,6 +941,9 @@ void func_80010994(s32 updateRate) {
     s32 sp54;
     Object_68 *obj68;
     UNUSED Object_64 *obj64;
+#ifdef PUPPYPRINT_DEBUG
+    gPuppyPrint.mainTimerPoints[0][PP_OBJECTS] = osGetCount();
+#endif
 
     func_800245B4(-1);
     gRaceStartCountdown = D_8011ADB0;
@@ -1001,6 +1004,9 @@ void func_80010994(s32 updateRate) {
             }
         }
     }
+#ifdef PUPPYPRINT_DEBUG
+    gPuppyPrint.mainTimerPoints[0][PP_RACER] = osGetCount();
+#endif
     for (i = 0; i < gNumRacers; i++) {
         update_player_racer((*gRacers)[i], updateRate);
     }
@@ -1014,6 +1020,9 @@ void func_80010994(s32 updateRate) {
             }
         }
     }
+#ifdef PUPPYPRINT_DEBUG
+    gPuppyPrint.mainTimerPoints[1][PP_RACER] = osGetCount();
+#endif
     func_8000BADC(updateRate);
     for (i = D_8011AE60; i < tempVal; i++) {
         obj = gObjPtrList[i];
@@ -1081,6 +1090,9 @@ void func_80010994(s32 updateRate) {
     } else if (D_8011AF00 == 0) {
         D_8011AF00 = 1;
     }
+#ifdef PUPPYPRINT_DEBUG
+    gPuppyPrint.mainTimerPoints[1][PP_OBJECTS] = osGetCount();
+#endif
 }
 #else
 GLOBAL_ASM("asm/non_matchings/objects/func_80010994.s")
