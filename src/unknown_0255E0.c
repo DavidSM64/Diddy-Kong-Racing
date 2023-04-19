@@ -911,7 +911,7 @@ void render_level_geometry_and_objects(void) {
         if (objFlags & sp158) {
             s0 = 0;
         }
-        if (obj != NULL && s0 == 0xFF && check_if_in_draw_range(obj) && (objectsVisible[obj->segment.unk2C.half.lower + 1] || obj->segment.unk34_a.unk34 > 1000.0f)) {
+        if (obj != NULL && s0 == 0xFF && (objectsVisible[obj->segment.unk2C.half.lower + 1] || obj->segment.unk34_a.unk34 > 1000.0f) && check_if_in_draw_range(obj)) {
             if (obj->segment.trans.unk6 & 0x8000) {
                 func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
