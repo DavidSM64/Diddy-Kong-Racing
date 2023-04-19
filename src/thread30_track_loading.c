@@ -42,6 +42,7 @@ void create_and_start_thread30(void) {
 
 /**
  * Stop thread30()
+ * Official Name: amStop
  */
 void stop_thread30(void) {
     osStopThread(&gThread30);
@@ -63,7 +64,7 @@ void tick_thread30(void) {
         gThread30LoadDelay--;
         if (gThread30LoadDelay == 0) {
             // Signal thread30 that the level needs to load.
-            osSendMesg(&gThread30MesgQueue, (OSMesg *) OS_MESG_TYPE_LOOPBACK, 0);
+            osSendMesg(&gThread30MesgQueue, (OSMesg *) OS_MESG_TYPE_LOOPBACK, OS_MESG_NOBLOCK);
         }
     }
 }
@@ -90,9 +91,10 @@ void thread30_track_loading(UNUSED void *arg) {
     OSMesg mesg = 0;
     while (TRUE) {
         // Wait for a signal from the main thread
-        do {
-            osRecvMesg(&gThread30MesgQueue, &mesg, OS_MESG_BLOCK);
-        } while (mesg != (OSMesg) OS_MESG_TYPE_LOOPBACK);
+        osRecvMesg(&gThread30MesgQueue, &mesg, OS_MESG_BLOCK);
+        if (mesg != (OSMesg) OS_MESG_TYPE_LOOPBACK) {
+            continue;
+        }
         // -1 means there won't be any racers loaded.
         load_level_for_menu(gThread30LevelIdToLoad, -1, gThread30CutsceneIdToLoad);
         gThread30NeedToLoadLevel = FALSE;

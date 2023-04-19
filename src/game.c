@@ -719,6 +719,7 @@ s32 func_8006C300(void) {
 
 /**
  * Main looping function for the main thread.
+ * Official Name: mainThread
  */
 void thread3_main(UNUSED void *unused) {
     init_game();

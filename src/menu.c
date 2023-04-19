@@ -9202,6 +9202,7 @@ u64 get_eeprom_settings(void) {
 /**
  * Returns the current language being used by the game.
  * 0 = English, 1 = German, 2 = French, 3 = Japanese
+ * Official Name: frontGetLanguage
  */
 s32 get_language(void) {
     s32 language = LANGUAGE_ENGLISH;

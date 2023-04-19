@@ -41,6 +41,9 @@ enum RenderFlags {
     RENDER_UNK_8000000 = (1 << 27),
 };
 
+#define TEX_TABLE_2D 0
+#define TEX_TABLE_3D 1
+
 extern u32 gTexColourTag;
 extern s32 D_800DE7C4;
 
@@ -116,8 +119,8 @@ typedef struct TempTexHeader {
 
 void tex_disable_modes(s32 flags);
 void tex_enable_modes(s32 flags);
-s32 func_8007AE44(void);
-s32 func_8007AE54(void);
+s32 get_loaded_2D_textures(void);
+s32 get_loaded_3D_textures(void);
 s32 func_8007AE64(void);
 void set_texture_colour_tag(s32 tagID);
 void reset_render_settings(Gfx **dlist);
