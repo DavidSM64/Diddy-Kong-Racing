@@ -929,10 +929,12 @@ void main_game_loop(void) {
     }
 
 #ifdef PUPPYPRINT_DEBUG
+    gPuppyPrint.mainTimerPoints[0][PP_PROFILER_DRAW] = osGetCount();
     if (gPuppyPrint.enabled) {
         render_profiler();
         count_triangles((u8*) gDisplayLists[gSPTaskNum], (u8*) gCurrDisplayList);
     }
+    gPuppyPrint.mainTimerPoints[1][PP_PROFILER_DRAW] = osGetCount();
 #endif
     profiler_snapshot(THREAD4_END);
 
@@ -953,11 +955,14 @@ void main_game_loop(void) {
         disable_cutscene_camera();
     }
 #ifdef PUPPYPRINT_DEBUG
+    gPuppyPrint.mainTimerPoints[0][PP_PROFILER_CALC] = osGetCount();
     calculate_and_update_fps();
     puppyprint_calculate_average_times();
     perfIteration++;
-    if (perfIteration == NUM_PERF_ITERATIONS - 1)
+    if (perfIteration == NUM_PERF_ITERATIONS - 1) {
         perfIteration = 0;
+    }
+    gPuppyPrint.mainTimerPoints[1][PP_PROFILER_CALC] = osGetCount();
 #endif
     if (gDrawFrameTimer == 2) {
         framebufferSize = SCREEN_WIDTH * SCREEN_HEIGHT * 2;

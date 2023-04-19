@@ -946,13 +946,14 @@ void render_level_geometry_and_objects(void) {
             }
         }
     }
-
+#ifdef PUPPYPRINT_DEBUG
+    gPuppyPrint.mainTimerPoints[1][PP_OBJGFX] = osGetCount();
+#endif
     if (gDrawLevelSegments) {
         for (i = numberOfSegments - 1; i >= 0; i--) {
             render_level_segment(segmentIds[i], TRUE); // Render transparent segments
         }
     }
-
     if (D_8011D384 != 0) {
         func_800BA8E4(&gSceneCurrDisplayList, &gSceneCurrMatrix, get_current_viewport());
     }
@@ -961,6 +962,9 @@ void render_level_geometry_and_objects(void) {
     load_and_set_texture_no_offset(&gSceneCurrDisplayList, 0, RENDER_FOG_ACTIVE | RENDER_Z_COMPARE);
     func_80012C3C(&gSceneCurrDisplayList);
 
+#ifdef PUPPYPRINT_DEBUG
+    gPuppyPrint.mainTimerPoints[0][PP_PARTICLEGFX] = osGetCount();
+#endif
     // Particles and FX
     for (i = sp16C - 1; i >= sp160; i--) {
         obj = get_object(i);
@@ -1003,7 +1007,7 @@ skip:
     }
     D_8011B0FC = 0;
 #ifdef PUPPYPRINT_DEBUG
-    gPuppyPrint.mainTimerPoints[1][PP_OBJGFX] = osGetCount();
+    gPuppyPrint.mainTimerPoints[1][PP_PARTICLEGFX] = osGetCount();
 #endif
 }
 

@@ -448,7 +448,7 @@ void puppyprint_render_overview(void) {
     puppyprintf(textBytes,  "(%d%%)", gPuppyPrint.audTime[PERF_TOTAL] / 333);
     draw_text(&gCurrDisplayList, gScreenWidth - 8 - 4, 20, textBytes, ALIGN_TOP_RIGHT);
     y = 32;
-    for (i = 0; i < PP_MAIN_TIMES_TOTAL - 2; i++) {
+    for (i = 0; i < PP_MAIN_TIMES_TOTAL - PP_MAIN_TIME_OFFSET; i++) {
         puppyprintf(textBytes,  "%s: %dus", sPuppyPrintMainTimerStrings[i], gPuppyPrint.coreTimers[i][PERF_TOTAL]);
         draw_text(&gCurrDisplayList, gScreenWidth - 122, y, textBytes, ALIGN_TOP_LEFT);
         puppyprintf(textBytes,  "(%d%%)", gPuppyPrint.coreTimers[i][PERF_TOTAL] / 333);
@@ -820,6 +820,10 @@ void calculate_core_timers(void) {
     gPuppyPrint.coreTimers[PP_OBJECTS][PERF_AGGREGATE] -= gPuppyPrint.coreTimers[PP_RACER][perfIteration];
     gPuppyPrint.coreTimers[PP_LEVELGFX][perfIteration] -= gPuppyPrint.coreTimers[PP_OBJGFX][perfIteration];
     gPuppyPrint.coreTimers[PP_LEVELGFX][PERF_AGGREGATE] -= gPuppyPrint.coreTimers[PP_OBJGFX][perfIteration];
+    gPuppyPrint.coreTimers[PP_LEVELGFX][perfIteration] -= gPuppyPrint.coreTimers[PP_PARTICLEGFX][perfIteration];
+    gPuppyPrint.coreTimers[PP_LEVELGFX][PERF_AGGREGATE] -= gPuppyPrint.coreTimers[PP_PARTICLEGFX][perfIteration];
+    gPuppyPrint.coreTimers[PP_LEVELGFX][perfIteration] += gPuppyPrint.coreTimers[PP_PARTICLEGFX][perfIteration];
+    gPuppyPrint.coreTimers[PP_LEVELGFX][PERF_AGGREGATE] += gPuppyPrint.coreTimers[PP_PARTICLEGFX][perfIteration];
 }
 
 /// Add whichever times you wish to create aggregates of.
@@ -867,10 +871,12 @@ void puppyprint_calculate_average_times(void) {
     bzero(&gPuppyPrint.threadIteration, sizeof(gPuppyPrint.threadIteration));
     bzero(&gPuppyPrint.threadTimes, sizeof(gPuppyPrint.threadTimes));
     bzero(&gPuppyPrint.mainTimerPoints, sizeof(gPuppyPrint.mainTimerPoints));
-    if (gPuppyPrint.page == PAGE_BREAKDOWN) {
-        calculate_print_order();
-    } else if (gPuppyPrint.page == PAGE_OBJECTS) {
-        calculate_obj_print_order();
+    if (gPuppyPrint.enabled) {
+        if (gPuppyPrint.page == PAGE_BREAKDOWN) {
+            calculate_print_order();
+        } else if (gPuppyPrint.page == PAGE_OBJECTS) {
+            calculate_obj_print_order();
+        }
     }
 }
 

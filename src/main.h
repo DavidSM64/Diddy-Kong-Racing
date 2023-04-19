@@ -57,10 +57,12 @@ enum MainTimers {
     PP_OBJGFX,
     PP_OBJECTS,
     PP_RACER,
+    PP_PARTICLEGFX,
     PP_PROFILER_CALC,
     PP_PROFILER_DRAW,
 
-    PP_MAIN_TIMES_TOTAL
+    PP_MAIN_TIMES_TOTAL,
+    PP_MAIN_TIME_OFFSET = 3 // This exists to skip the profiler times.
 };
 
 #define PP_MAINDRAW \
