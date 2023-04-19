@@ -1491,28 +1491,27 @@ void render_3d_billboard(Object *obj) {
     }
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
+//Stack diffs only
 void render_3d_model(Object *obj) {
     s32 i;
-    s32 alpha;    
+    s32 alpha;
+    Object_Racer *racerObj; 
     Object *loopObj;
-    Object *heldObj;
-    Object_Racer *racerObj;
     s32 intensity;
     s32 spB0;
     s32 cicFailed;
     s32 obj60_unk0;
     s32 hasOpacity;
     s32 hasEnvCol;
-    s8 var_v0_2;
     s32 var_v0;
     f32 vtxX;
     f32 vtxZ;
     f32 vtxY;
-    s16 new_var;
+    s8 var_v0_2;
+    s8 index;
     s32 flags;
     Object_68 *obj68;
-    s8 index;
     ObjectModel *objModel;
     Object_68 *something;
 
@@ -1672,24 +1671,20 @@ void render_3d_model(Object *obj) {
         }
         // This section draws the egg sprite being held by a racer.
         if (racerObj != NULL) {
-            heldObj = racerObj->held_obj;
-            if (heldObj != NULL) {
-                //Fakematch IF?
-                if (1) {
-                    index = obj->segment.header->unk58;
-                    if (index >= 0 && index < objModel->unk18) {
-                        flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
-                        something = heldObj->unk68[heldObj->segment.unk38.byte.unk3A];
-                        new_var = objModel->unk14[index];
-                        vtxX = obj->unk44[new_var].x;
-                        vtxY = obj->unk44[new_var].y;
-                        vtxZ = obj->unk44[new_var].z;
-                        heldObj->segment.trans.x_position += (vtxX - heldObj->segment.trans.x_position) * 0.25;
-                        heldObj->segment.trans.y_position += (vtxY - heldObj->segment.trans.y_position) * 0.25;
-                        heldObj->segment.trans.z_position += (vtxZ - heldObj->segment.trans.z_position) * 0.25;
-                        if (heldObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
-                            render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, heldObj, (unk80068514_arg4 *)something, flags);
-                        }
+            loopObj = racerObj->held_obj;
+            if (loopObj != NULL) {
+                index = obj->segment.header->unk58;
+                if (index >= 0 && index < objModel->unk18) {
+                    flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
+                    something = loopObj->unk68[loopObj->segment.unk38.byte.unk3A];
+                    vtxX = obj->unk44[objModel->unk14[index]].x;
+                    vtxY = obj->unk44[objModel->unk14[index]].y;
+                    vtxZ = obj->unk44[objModel->unk14[index]].z;
+                    loopObj->segment.trans.x_position += (vtxX - loopObj->segment.trans.x_position) * 0.25;
+                    loopObj->segment.trans.y_position += (vtxY - loopObj->segment.trans.y_position) * 0.25;
+                    loopObj->segment.trans.z_position += (vtxZ - loopObj->segment.trans.z_position) * 0.25;
+                    if (loopObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
+                        render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, loopObj, (unk80068514_arg4 *)something, flags);
                     }
                 }
             }
