@@ -9,6 +9,7 @@
 #include "asset_loading.h"
 #include "objects.h"
 #include "PR/abi.h"
+#include "menu.h"
 
 /****  type define's for structures unique to audiomgr ****/
 typedef union {
@@ -252,8 +253,15 @@ static void __amMain(UNUSED void *arg) {
         case OS_SC_RETRACE_MSG:
             //TODO: Check type of ACMDList?
             __amHandleFrameMsg((AudioInfo *) __am.ACMDList[(((u32) audFrameCt % 3))+2], lastInfo);
+#ifdef BENCHMARK
+            gAudFinish[gNumAudTimers] = osGetCount();
+            gNumAudTimers++;
+#endif
             /* wait for done message */
             osRecvMesg(&__am.audioReplyMsgQ, (OSMesg *) &lastInfo, OS_MESG_BLOCK);
+#ifdef BENCHMARK
+            gAudStart[gNumAudTimers] = osGetCount();
+#endif
             __amHandleDoneMsg(lastInfo);
             break;
         case OS_SC_PRE_NMI_MSG:

@@ -93,12 +93,10 @@ typedef enum MENU_ID {
     MENU_BOOT,
     MENU_UNUSED_27,
     MENU_CAUTION,
+#ifdef BENCHMARK
     MENU_BENCHMARK
+#endif
 } MENU_ID;
-
-// Benchmark menu functions.
-void menu_benchmark_init(void);
-s32 menu_benchmark_loop(s32 updateRate);
 
 typedef enum PakError {
     PAK_ERROR_NONE,
@@ -1077,5 +1075,37 @@ typedef enum MenuTextures {
     NUM_MENU_TEXTURES
 
 } MenuTextures;
+
+#ifdef BENCHMARK
+
+enum RSPProfile {
+    RSP_GFX_START,
+    RSP_GFX_FINISHED,
+    RSP_GFX_PAUSED,
+    RSP_GFX_RESUME,
+    RSP_AUDIO_START,
+    RSP_AUDIO_FINISHED
+};
+
+// Benchmark menu functions.
+void menu_benchmark_init(void);
+s32 menu_benchmark_loop(s32 updateRate);
+void update_rsp(u8 flags);
+void update_rdp(void);
+
+extern u32 gAudStart[4];
+extern u32 gAudFinish[4];
+extern u32 gGameStart;
+extern u32 gGameFinish;
+extern u8 gNumAudTimers;
+extern u32 gBenchCPU;
+extern u32 gBenchRSPTotal;
+extern u32 gBenchRSPGfx[2][4];
+extern u32 gBenchRSPAud[2][4];
+extern u8 gBenchRSPIterGfx;
+extern u8 gBenchRSPIterAud;
+extern u8 gPerfIteration;
+
+#endif
 
 #endif

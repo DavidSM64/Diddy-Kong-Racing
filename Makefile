@@ -15,11 +15,19 @@ $(eval $(call validate-option,NON_MATCHING,0 1))
 COMPILE_ASSETS ?= 0
 $(eval $(call validate-option,COMPILE_ASSETS,0 1))
 
+# Enable level benchmarking tool, giving detailed information on level performance over time.
+USE_BENCHMARK ?= 1
+$(eval $(call validate-option,BENCHMARK,0 1))
+
 ifeq ($(COMPILE_ASSETS),1)
   DUMMY != ./tools/dkr_assets_tool -c $(VERSION) ./assets >&2 || echo FAIL
   ifeq ($(DUMMY),FAIL)
     $(error Failed to compile assets)
   endif
+endif
+
+ifeq ($(USE_BENCHMARK),1)
+  DEFINES += BENCHMARK=1
 endif
 
 ifeq ($(VERSION),us_1.0)

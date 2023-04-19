@@ -961,6 +961,12 @@ void main_game_loop(void) {
     s32 debugLoopCounter;
     s32 framebufferSize;
     s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
+#ifdef BENCHMARK
+    s32 i;
+    u32 lowTime;
+    u32 highTime;
+    gGameStart = osGetCount();
+#endif
 
     //osSetTime(0);
 
@@ -1037,6 +1043,58 @@ void main_game_loop(void) {
     if ((sBootDelayTimer >= 8) && (is_controller_missing())) {
         print_missing_controller_text(&gCurrDisplayList, sLogicUpdateRate);
     }
+#ifdef BENCHMARK
+    /*Calculate CPU. Take the first and last point of game and audio and find the earliest and latest snapshots.*/
+    gGameFinish = osGetCount();
+    lowTime = 0xFFFFFFFF;
+    highTime = 0;
+    for (i = 0; i < gNumAudTimers; i++) {
+        if (gAudStart[i] < lowTime && gAudStart[i] != 0) {
+            lowTime = gAudStart[i];
+        }
+        if (gAudFinish[i] > highTime) {
+            highTime = gAudFinish[i];
+        }
+    }
+    if (gGameStart < lowTime) {
+            lowTime = gGameStart;
+    }
+    if (gGameFinish > highTime) {
+        highTime = gGameFinish;
+    }
+    gNumAudTimers = 0;
+    bzero(&gAudStart, sizeof(gAudStart));
+    bzero(&gAudFinish, sizeof(gAudFinish));
+    gBenchCPU = highTime - lowTime;
+    gPerfIteration++;
+    if (gPerfIteration >= 4) {
+        gPerfIteration = 0;
+    }
+
+    lowTime = 0xFFFFFFFF;
+    highTime = 0;
+    for (i = 0; i < gBenchRSPIterGfx; i++) {
+        if (gBenchRSPGfx[0][i] < lowTime && gBenchRSPGfx[0][i] != 0) {
+            lowTime = gBenchRSPGfx[0][i];
+        }
+        if (gBenchRSPGfx[1][i] > highTime) {
+            highTime = gBenchRSPGfx[1][i];
+        }
+    }
+    gBenchRSPIterGfx = 0;
+    for (i = 0; i < gBenchRSPIterAud; i++) {
+        if (gBenchRSPAud[0][i] < lowTime && gBenchRSPAud[0][i] != 0) {
+            lowTime = gBenchRSPAud[0][i];
+        }
+        if (gBenchRSPAud[1][i] > highTime) {
+            highTime = gBenchRSPAud[1][i];
+        }
+    }
+    bzero(&gBenchRSPGfx, sizeof(gBenchRSPGfx));
+    bzero(&gBenchRSPAud, sizeof(gBenchRSPAud));
+    gBenchRSPIterAud = 0;
+    gBenchRSPTotal = highTime - lowTime;
+#endif
 
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
@@ -1734,8 +1792,37 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
         }
     }
     if (levelId != (s32) SPECIAL_MAP_ID_NO_LEVEL) {
+        Vehicle vehicleID = VEHICLE_PLANE;
+#ifdef BENCHMARK
+        switch (levelId) {
+        case ASSET_LEVEL_TRICKYTOPS1:
+            vehicleID = VEHICLE_TRICKY;
+            break;
+        case ASSET_LEVEL_BLUEY1:
+            vehicleID = VEHICLE_BLUEY;
+            break;
+        case ASSET_LEVEL_BUBBLER1:
+            vehicleID = VEHICLE_BUBBLER;
+            break;
+        case ASSET_LEVEL_SMOKEY1:
+            vehicleID = VEHICLE_SMOKEY;
+            break;
+        case ASSET_LEVEL_WIZPIG1:
+            vehicleID = VEHICLE_WIZPIG;
+            break;
+        case ASSET_LEVEL_CENTRALAREAHUB:
+            vehicleID = VEHICLE_PLANE;
+            break;
+        default: 
+            vehicleID = get_map_default_vehicle(levelId);
+            if (vehicleID > VEHICLE_PLANE) {
+                vehicleID = VEHICLE_PLANE;
+            }
+            break;
+        }
+#endif
         //!@bug: Forcing the plane here makes all AI use plane paths. This can be seen most evidently in the Ancient Lake demo.
-        load_level_3(levelId, numberOfPlayers, 0, VEHICLE_PLANE, cutsceneId);
+        load_level_3(levelId, numberOfPlayers, 0, vehicleID, cutsceneId);
         gIsLoading = FALSE;
         return;
     }

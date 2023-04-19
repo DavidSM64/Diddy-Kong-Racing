@@ -8,6 +8,7 @@
 #include "f3ddkr.h"
 #include "libultra_internal.h"
 #include "viint.h"
+#include "menu.h"
 
 /*
  * private typedefs and defines
@@ -178,6 +179,9 @@ static void __scMain(void *arg) {
 
             case (RDP_DONE_MSG):
                 __scHandleRDP(sc);
+#ifdef BENCHMARK
+                update_rdp();
+#endif
                 break;
 
             case (UNK_MSG):
@@ -326,6 +330,14 @@ void __scHandleRSP(OSSched *sc) {
     t = sc->curRSPTask;
     sc->curRSPTask = NULL;
 
+#ifdef BENCHMARK
+    if (t->list.t.type == M_AUDTASK) {
+        update_rsp(RSP_AUDIO_FINISHED);
+    } else if (t->list.t.type == M_GFXTASK) {
+        update_rsp(RSP_GFX_FINISHED);
+    }
+#endif
+
     //Rare seems to have edited this function, most specifically here.
     //This should probably have all been behind a debug #ifdef as none of these values are used.
     if (t->list.t.type == M_AUDTASK) {
@@ -466,6 +478,14 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp) {
             osWritebackDCacheAll();  /* flush the cache */
             gRSPAudTaskFlushTime = osGetCount();
         }
+
+#ifdef BENCHMARK
+        if (sp->list.t.type == M_AUDTASK) {
+            update_rsp(RSP_AUDIO_START);
+        } else if (sp->list.t.type == M_GFXTASK) {
+            update_rsp(RSP_GFX_START);
+        }
+#endif
         
         sp->state &= ~(OS_SC_YIELD | OS_SC_YIELDED);
         osSpTaskLoad(&sp->list);
