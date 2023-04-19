@@ -4,6 +4,7 @@
 #include "font.h"
 #include "menu.h"
 #include "textures_sprites.h"
+#include "camera.h"
 
 /************ .data ************/
 
@@ -32,15 +33,7 @@ s8 sDialogueBoxIsOpen = FALSE;
 
 // Descending powers of 10
 s32 gDescPowsOf10[9] = {
-    1000000000,
-    100000000,
-    10000000,
-    1000000,
-    100000,
-    10000,
-    1000,
-    100,
-    10,
+    1000000000, 100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10,
 };
 
 // The dialogue box will draw in pieces, using properties from each line. It starts with a box
@@ -64,20 +57,22 @@ s8 sDialogueBoxDimensions[48] = {
 #undef INWARDS
 #undef OUTWARDS
 
-OSDevMgr __osPiDevMgr = { 0, NULL, NULL, NULL, NULL, NULL, NULL, };
+OSDevMgr __osPiDevMgr = {
+    0, NULL, NULL, NULL, NULL, NULL, NULL,
+};
 
 /*******************************/
 
 /************ .bss ************/
 
 s32 gNumberOfFonts;
-FontData *gFonts;
-DialogueBoxBackground *gDialogueBoxBackground;
-unk8012A7EC *D_8012A7EC;
-s32 D_8012A7F0; //Boolean value, seems to be related to X placement of menus on the X Axis?
+FontData *gFonts; //Official Name: Font
+DialogueBoxBackground *gDialogueBoxBackground; //Official Name: Window
+DialogueTextElement *gDialogueText; //Official Name: String
+s32 gCompactKerning; // Official Name: squash - Boolean value, seems to be related to X placement of menus on the X Axis?
 s8 sDialogueBoxCloseTimer;
-s32 D_8012A7F8;
-s32 D_8012A7FC;
+UNUSED s32 D_8012A7F8;
+UNUSED s32 D_8012A7FC;
 
 /******************************/
 
@@ -90,16 +85,17 @@ void load_fonts(void) {
 
     fontAssetData = load_asset_section_from_rom(ASSET_FONTS);
 
-    gFonts = (FontData *)(fontAssetData); // ???
+    gFonts = (FontData *) (fontAssetData); // ???
     gNumberOfFonts = *(fontAssetData);
-    gFonts = (FontData *)(fontAssetData + 1);
+    gFonts = (FontData *) (fontAssetData + 1);
 
     for (i = 0; i < gNumberOfFonts; i++) {
-        gFonts[i].unk28[0] = 0;
+        gFonts[i].loadedFonts[0] = 0;
     }
 
-    gDialogueBoxBackground = (DialogueBoxBackground *)allocate_from_main_pool_safe(DIALOGUEBOXBACKGROUND_TOTAL_SIZE + unk8012A7EC_TOTAL_SIZE, COLOUR_TAG_YELLOW);
-    D_8012A7EC = (unk8012A7EC *)&gDialogueBoxBackground[DIALOGUEBOXBACKGROUND_COUNT];
+    gDialogueBoxBackground = (DialogueBoxBackground *) allocate_from_main_pool_safe(
+        DIALOGUEBOXBACKGROUND_TOTAL_SIZE + DialogueTextElement_TOTAL_SIZE, COLOUR_TAG_YELLOW);
+    gDialogueText = (DialogueTextElement *) &gDialogueBoxBackground[DIALOGUEBOXBACKGROUND_COUNT];
 
     for (i = 0; i < DIALOGUEBOXBACKGROUND_COUNT; i++) {
         gDialogueBoxBackground[i].xpos = 0;
@@ -124,55 +120,67 @@ void load_fonts(void) {
         gDialogueBoxBackground[i].textBGColourA = 0;
         gDialogueBoxBackground[i].opacity = 255;
         gDialogueBoxBackground[i].font = FONT_UNK_FF;
-        gDialogueBoxBackground[i].flags = (i != 0) ? DIALOGUE_BOX_UNK_01 : 0;
-        gDialogueBoxBackground[i].unk20 = 0;
-        gDialogueBoxBackground[i].unk22 = 0;
+        gDialogueBoxBackground[i].flags = (i != 0) ? DIALOGUE_BOX_VERTS : 0;
+        gDialogueBoxBackground[i].textOffsetX = 0;
+        gDialogueBoxBackground[i].textOffsetY = 0;
         gDialogueBoxBackground[i].textBox = 0;
     }
-    for (i = 0; i < unk8012A7EC_COUNT; i++) {
-        D_8012A7EC[i].unk1 = 255;
-        D_8012A7EC[i].text = NULL;
-        D_8012A7EC[i].textColourR = 255;
-        D_8012A7EC[i].textColourG = 255;
-        D_8012A7EC[i].textColourB = 255;
-        D_8012A7EC[i].textColourA = 0;
-        D_8012A7EC[i].textBGColourR = 255;
-        D_8012A7EC[i].textBGColourG = 255;
-        D_8012A7EC[i].textBGColourB = 255;
-        D_8012A7EC[i].textBGColourA = 0;
-        D_8012A7EC[i].nextBox = NULL;
+    for (i = 0; i < DIALOGUETEXTELEMENT_COUNT; i++) {
+        gDialogueText[i].number = 255;
+        gDialogueText[i].text = NULL;
+        gDialogueText[i].textColourR = 255;
+        gDialogueText[i].textColourG = 255;
+        gDialogueText[i].textColourB = 255;
+        gDialogueText[i].textColourA = 0;
+        gDialogueText[i].textBGColourR = 255;
+        gDialogueText[i].textBGColourG = 255;
+        gDialogueText[i].textBGColourB = 255;
+        gDialogueText[i].textBGColourA = 0;
+        gDialogueText[i].nextBox = NULL;
     }
     load_font(ASSET_FONTS_FUNFONT);
     load_font(ASSET_FONTS_SMALLFONT);
-    D_8012A7F0 = 0;
+    gCompactKerning = FALSE;
 }
 
-void func_800C4164(s32 arg0) {
-    D_8012A7F0 = arg0;
+/**
+ * Sets text kerning to true or false.
+ * If false, text displayed will be monospaced.
+*/
+void set_kerning(s32 setting) {
+    gCompactKerning = setting;
 }
 
+/**
+ * Load the texture assets of the given font into RAM.
+ * This is required before any text using this font can be displayed in a scene.
+*/
 void load_font(s32 fontID) {
     if (fontID < gNumberOfFonts) {
         FontData *fontData = &gFonts[fontID];
-        fontData->unk28[0]++;
-        if (fontData->unk28[0] == 1) {
+        fontData->loadedFonts[0]++;
+        if (fontData->loadedFonts[0] == 1) {
             s32 i = 0;
-            while (i < 32 && fontData->unk40[i] != -1) {
-                fontData->texturePointers[i] = load_texture(fontData->unk40[i]);
+            while (i < 32 && fontData->textureID[i] != -1) {
+                fontData->texturePointers[i] = load_texture(fontData->textureID[i]);
                 i++;
             }
         }
     }
 }
 
+/**
+ * Free a font's assets from RAM.
+ * Highly recommended to do for any existing font when unloading a scene to prevent leaks.
+*/
 void unload_font(s32 fontID) {
     if (fontID < gNumberOfFonts) {
         FontData *fontData = &gFonts[fontID];
-        if (fontData->unk28[0] > 0) {
-            fontData->unk28[0]--;
-            if (fontData->unk28[0] == 0) {
+        if (fontData->loadedFonts[0] > 0) {
+            fontData->loadedFonts[0]--;
+            if (fontData->loadedFonts[0] == 0) {
                 s32 i = 0;
-                while (i < 32 && fontData->unk40[i] != -1) {
+                while (i < 32 && fontData->textureID[i] != -1) {
                     free_texture(fontData->texturePointers[i]);
                     fontData->texturePointers[i] = NULL;
                     i++;
@@ -191,27 +199,31 @@ void set_text_font(s32 fontID) {
     }
 }
 
-UNUSED TextureHeader *func_800C4318(s32 font, u8 arg1) {
+/**
+ * Returns the address of the loaded font ID if it exists.
+ * Goes unused.
+ */
+UNUSED TextureHeader *get_loaded_font(s32 font, u8 index) {
     FontData *fontData;
     u8 pointerIndex;
 
     if (font < gNumberOfFonts) {
         fontData = &gFonts[font];
-        if (fontData->unk28[0] != 0) {
-            arg1 -= 32;
-            pointerIndex = fontData->unk100[arg1].unk0;
+        if (fontData->loadedFonts[0] != 0) {
+            index -= 32;
+            pointerIndex = fontData->letter[index].textureID;
             if (pointerIndex != 0xFF) {
                 return fontData->texturePointers[pointerIndex];
             }
             return NULL;
         }
     }
-    // @bug: No return statement. The function will return whatever happens to be in v0
-    //       before this function was called.
+    //!@bug: No return statement. The function will return whatever happens to be in v0 before this function was called.
 }
 
 /**
  * Sets the colour of the current dialogue box's text.
+ * Official Name: fontColour
  */
 void set_text_colour(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
     gDialogueBoxBackground[0].textColourR = red;
@@ -223,6 +235,7 @@ void set_text_colour(s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
 
 /**
  * Sets the colour of the current dialogue box's text background.
+ * Official Name: fontBackground
  */
 void set_text_background_colour(s32 red, s32 green, s32 blue, s32 alpha) {
     gDialogueBoxBackground[0].textBGColourR = red;
@@ -231,42 +244,54 @@ void set_text_background_colour(s32 red, s32 green, s32 blue, s32 alpha) {
     gDialogueBoxBackground[0].textBGColourA = alpha;
 }
 
-// Unused?
-void func_800C4404(Gfx **displayList, char *text, AlignmentFlags alignmentFlags) {
-    func_800C45A4(displayList, &gDialogueBoxBackground[0], text, alignmentFlags, 1.0f);
+/**
+ * Unused text draw function that just calls the function without any modifications.
+ */
+UNUSED void draw_text_plain_unused(Gfx **displayList, char *text, AlignmentFlags alignmentFlags) {
+    render_text_string(displayList, &gDialogueBoxBackground[0], text, alignmentFlags, 1.0f);
 }
 
 /**
  * Builds the background settings, then renders the given text at a given position.
+ * Official Name: fontPrintWindowXY?
  */
 void draw_text(Gfx **displayList, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags) {
     DialogueBoxBackground *temp = &gDialogueBoxBackground[0];
     temp->xpos = (xpos == POS_CENTRED) ? temp->width >> 1 : xpos;
     temp->ypos = (ypos == POS_CENTRED) ? temp->height >> 1 : ypos;
-    func_800C45A4(displayList, temp, text, alignmentFlags, 1.0f);
+    render_text_string(displayList, temp, text, alignmentFlags, 1.0f);
 }
 
-UNUSED void func_800C44C0(Gfx **displayList, s32 dialogueBoxID, char *text, AlignmentFlags alignmentFlags) {
+/**
+ * Unused text draw function that would draw text in the current dialogue box.
+ */
+UNUSED void draw_dialogue_text_unused(Gfx **displayList, s32 dialogueBoxID, char *text, AlignmentFlags alignmentFlags) {
     if (dialogueBoxID >= 0 && dialogueBoxID < DIALOGUEBOXBACKGROUND_COUNT) {
         DialogueBoxBackground *temp = &gDialogueBoxBackground[dialogueBoxID];
-        func_800C45A4(displayList, temp, text, alignmentFlags, 1.0f);
+        render_text_string(displayList, temp, text, alignmentFlags, 1.0f);
     }
 }
 
-UNUSED void func_800C4510(Gfx **displayList, s32 dialogueBoxID, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags) {
+/**
+ * Unused text draw function that would draw text in the current dialogue box while overriding position.
+ * Official Name: fontPrintWindowXY
+ */
+UNUSED void draw_dialogue_text_pos_unused(Gfx **displayList, s32 dialogueBoxID, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags) {
     if (dialogueBoxID >= 0 && dialogueBoxID < DIALOGUEBOXBACKGROUND_COUNT) {
         DialogueBoxBackground *temp = &gDialogueBoxBackground[dialogueBoxID];
         temp->xpos = (xpos == POS_CENTRED) ? temp->width >> 1 : xpos;
         temp->ypos = (ypos == POS_CENTRED) ? temp->height >> 1 : ypos;
-        func_800C45A4(displayList, temp, text, alignmentFlags, 1.0f);
+        render_text_string(displayList, temp, text, alignmentFlags, 1.0f);
     }
 }
 
-#ifdef NON_MATCHING
-//A few minor regalloc differences are all that's left.
-void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, AlignmentFlags alignmentFlags, f32 arg4) {
-    s32 temp_f4;
-    s32 temp_t9;
+/**
+ * Loops through a string, then draws each character onscreen.
+ * Will also draw a fillrect if text backgrounds are enabled.
+ */
+void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, AlignmentFlags alignmentFlags, f32 scisScale) {
+    s32 scisOffset;
+    s32 scisPos;
     s32 ypos;
     s32 xpos;
     TextureHeader *texture;
@@ -280,159 +305,151 @@ void func_800C45A4(Gfx **dlist, DialogueBoxBackground *arg1, char *text, Alignme
     s32 textureHeight;
     s32 xAlignmentDiff;
     s32 yAlignmentDiff;
-    s32 newTempY;
-    s32 var_t0;
+    s32 lastTextureIndex;
+    s32 charIndex;
+    s32 charSpace;
     s32 newData;
     s32 textureIndex;
-    s32 lastTextureIndex;
     FontData *fontData;
-    s32 charIndex;
-    char curChar;
-
-    lastTextureIndex = -1;
+    s32 newTempX;
+    s32 newTempY;
+    u8 curChar;
     xAlignmentDiff = -1;
-
+    lastTextureIndex = -1;
     if (text != NULL) {
-        xpos = arg1->xpos;
-        ypos = arg1->ypos;
-        fontData = &gFonts[arg1->font];
-        gSPDisplayList((*dlist)++, dDialogueBoxBegin);
-        if (arg1 != gDialogueBoxBackground) {
-            temp_f4 = (((arg1->y2 - arg1->y1) + 1) / (f32)2) * arg4;
-            temp_t9 = (arg1->y1 + arg1->y2) >> 1;
-            gDPSetScissor((*dlist)++, 
-                G_SC_NON_INTERLACE, 
-                arg1->x1, 
-                temp_t9 - temp_f4, 
-                arg1->x2, 
-                temp_t9 + temp_f4
-            );
+        textureLry = 0;
+        xpos = box->xpos;
+        ypos = box->ypos;
+        fontData = &gFonts[box->font];
+        gSPDisplayList((*dList)++, dDialogueBoxBegin);
+        if (box != gDialogueBoxBackground) {
+            scisOffset = (((box->y2 - box->y1) + 1) / (f32) 2) * scisScale;
+            scisPos = (box->y1 + box->y2) >> 1;
+            gDPSetScissor((*dList)++, 0, box->x1, scisPos - scisOffset, box->x2, scisPos + scisOffset);
         }
-        if (alignmentFlags & 5) {
-            xAlignmentDiff = func_800C4DA0(text, xpos, arg1->font);
-            if (alignmentFlags & 1) {
+        if (alignmentFlags & (HORZ_ALIGN_RIGHT | HORZ_ALIGN_CENTER)) {
+            xAlignmentDiff = get_text_width(text, xpos, box->font);
+            if (alignmentFlags & HORZ_ALIGN_RIGHT) {
                 xpos = (xpos - xAlignmentDiff) + 1;
             } else {
                 xpos -= xAlignmentDiff >> 1;
             }
         }
-        if (alignmentFlags & 2) {
-            ypos = (ypos - fontData->unk22) + 1;
+        if (alignmentFlags & VERT_ALIGN_BOTTOM) {
+            ypos = (ypos - fontData->y) + 1;
         }
-        if (alignmentFlags & 8) {
-            ypos -= fontData->unk22 >> 1;
+        if (alignmentFlags & VERT_ALIGN_MIDDLE) {
+            ypos -= fontData->y >> 1;
         }
-        if (arg1->textBGColourA != 0) {
-            gDPSetEnvColor((*dlist)++, arg1->textBGColourR, arg1->textBGColourG, arg1->textBGColourB, arg1->textBGColourA);
+        if (box->textBGColourA != 0) {
+            gDPSetEnvColor((*dList)++, box->textBGColourR, box->textBGColourG, box->textBGColourB, box->textBGColourA);
             if (xAlignmentDiff == -1) {
-                xAlignmentDiff = func_800C4DA0(text, xpos, arg1->font);
+                xAlignmentDiff = get_text_width(text, xpos, box->font);
             }
-            newTempY = (fontData->unk22 + ypos - 1);
-            gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(dDialogueBoxDrawModes[1]), 2);
-            gDPFillRectangle((*dlist)++,
-                (xpos + arg1->x1),
-                (ypos + arg1->y1),
-                (xpos + arg1->x1 + (0, xAlignmentDiff) - 1), //0 comma operator is likely a fakematch
-                (newTempY + arg1->y1)
-            );
-            gDPPipeSync((*dlist)++);
+            newTempX = xpos + xAlignmentDiff - 1;
+            newTempY = ypos + fontData->y - 1;
+            gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dDialogueBoxDrawModes[1]), 2);
+            gDPFillRectangle((*dList)++, xpos + box->x1, ypos + box->y1, newTempX + box->x1, newTempY + box->y1);
+            gDPPipeSync((*dList)++);
         }
-        gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, arg1->opacity);
-        gDPSetEnvColor((*dlist)++, arg1->textColourR, arg1->textColourG, arg1->textColourB, arg1->textColourA);
-        gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(dDialogueBoxDrawModes[0]), 2);
-        gDPPipeSync((*dlist)++);
-        xpos += arg1->unk20;
-        ypos += arg1->unk22;
-        for (charIndex = 0; text[charIndex] != '\0' && arg1->y2 >= ypos; xpos += var_t0, charIndex++) {
+        gDPSetPrimColor((*dList)++, textureLry, 0, 255, 255, 255, box->opacity);
+        gDPSetEnvColor((*dList)++, box->textColourR, box->textColourG, box->textColourB, box->textColourA);
+        gDkrDmaDisplayList((*dList)++, OS_K0_TO_PHYSICAL(dDialogueBoxDrawModes[0]), 2);
+        gDPPipeSync((*dList)++);
+        xpos += box->textOffsetX;
+        ypos += box->textOffsetY;
+        for (charIndex = 0; (text[charIndex] != '\0') && (box->y2 >= ypos);
+             xpos += charSpace, charIndex++) {
             curChar = text[charIndex];
-            newData = 0;
-            var_t0 = 0;
-            //Check the ASCII Range
-            if ((curChar < 0x21) || (curChar >= 0x80)) {
-                switch (curChar ) {
-                    case ' ': //Space
-                        xpos += fontData->unk24;
+            newData = FALSE;
+            charSpace = 0;
+            if (curChar <= 0x20 || curChar >= 0x80) {
+                switch (curChar) {
+                    case ' ': // Space
+                        xpos += fontData->charWidth;
                         break;
-                    case '\n': //Line Feed
-                        xpos = arg1->unk20;
-                        ypos += fontData->unk22;
+                    case '\n': // Line Feed
+                        xpos = box->textOffsetX;
+                        ypos += fontData->y;
                         break;
-                    case '\t': //Tab
-                        xpos += fontData->unk26 - ((xpos - arg1->unk20) % fontData->unk26);
+                    case '\t': // Tab
+                        xpos += fontData->charHeight - ((xpos - box->textOffsetX) % fontData->charHeight);
                         break;
-                    case '\v': //VT - Vertical Tab
-                        ypos += fontData->unk22;
+                    case '\v': // VT - Vertical Tab
+                        ypos += fontData->y;
                         break;
-                    case '\r': //Carriage Return
-                        xpos = arg1->unk20;
+                    case '\r': // Carriage Return
+                        xpos = box->textOffsetX;
                         break;
                     default:
-                        xpos += fontData->unk24;
+                        xpos += fontData->charWidth;
                         break;
                 }
             } else {
-                curChar -= 0x20; //Convert lowercase to upper case
-                textureIndex = fontData->unk100[curChar].unk0;
+                curChar -= 0x20; // Convert lower case to upper case ASCII
+                textureIndex = fontData->letter[curChar].textureID;
                 if (textureIndex != 0xFF) {
-                    newData = 1;
+                    newData = TRUE;
                     if (lastTextureIndex != textureIndex) {
                         lastTextureIndex = textureIndex;
                         texture = fontData->texturePointers[textureIndex];
-                        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(texture->cmd), texture->numberOfCommands);
+                        gDkrDmaDisplayList((*dList)++, OS_PHYSICAL_TO_K0(texture->cmd), texture->numberOfCommands);
                     }
-                    textureWidth = fontData->unk100[curChar].unk2;
-                    textureHeight = fontData->unk100[curChar].unk3;
-                    textureS = fontData->unk100[curChar].unk4;
-                    textureT = fontData->unk100[curChar].unk5;
-                    xAlignmentDiff = fontData->unk100[curChar].unk6;
-                    yAlignmentDiff = fontData->unk100[curChar].unk7;
-                    var_t0 = (fontData->unk20 == 0) ? fontData->unk100[curChar].unk1 : fontData->unk20;
+                    textureWidth = fontData->letter[curChar].width;
+                    textureHeight = fontData->letter[curChar].height;
+                    textureS = fontData->letter[curChar].s;
+                    textureT = fontData->letter[curChar].t;
+                    xAlignmentDiff = fontData->letter[curChar].lrx;
+                    yAlignmentDiff = fontData->letter[curChar].lry;
+                    charSpace =
+                        (fontData->x == 0) ? (fontData->letter[curChar].ulx) : (fontData->x);
+                    newData = TRUE;
                 }
             }
             if (newData) {
-                textureUlx = ((arg1->x1 + xpos) + textureWidth) * 4;
-                textureUly = (arg1->y1 + ypos + textureHeight) * 4;
+                textureUlx = ((box->x1 + xpos) + textureWidth) * 4;
+                textureUly = ((box->y1 + ypos) + textureHeight) * 4;
                 textureLrx = (xAlignmentDiff * 4) + textureUlx;
-                textureLry = (yAlignmentDiff * 4) + textureUly;
-                textureS *= 32; //upper left coordinate for the texture derived from X
-                textureT *= 32; //upper left coordinate for the texture derived from Y
+                newTempY = (yAlignmentDiff * 4) + textureUly;
+                textureS *= 32;
+                textureT *= 32;
                 if ((textureUlx < 0) && (textureLrx > 0)) {
-                    textureS += -textureUlx * 8;
+                    textureS += (-textureUlx) * 8;
                     textureUlx = 0;
                 }
-                if ((textureUly < 0) && (textureLry > 0)) {
+                if ((textureUly <= (0 - 1)) && (newTempY > 0)) {
                     textureT += -textureUly * 8;
                     textureUly = 0;
                 }
-                gSPTextureRectangle((*dlist)++, textureUlx, textureUly, textureLrx, textureLry, 0, textureS, textureT, 1024, 1024);
+                gSPTextureRectangle((*dList)++, textureUlx, textureUly, textureLrx, newTempY, 0, textureS, textureT, 1 << 10, 1 << 10);
+                if (lastTextureIndex) {} // Fakematch
             }
-            if (D_8012A7F0 && (var_t0 != 0)) {
-                var_t0--;
+            if (gCompactKerning && charSpace) {
+                charSpace--;
             }
         }
 
-        arg1->xpos = xpos - arg1->unk20;
-        arg1->ypos = ypos - arg1->unk22;
-
-        gDPPipeSync((*dlist)++);
-
-        if (arg1 != gDialogueBoxBackground) {
-            func_80067A3C(dlist);
+        box->xpos = xpos - box->textOffsetX;
+        box->ypos = ypos - box->textOffsetY;
+        gDPPipeSync((*dList)++);
+        if (box != gDialogueBoxBackground) {
+            set_viewport_scissor(dList);
         }
-
-        func_8007B3D0(dlist);
-        gDPPipeSync((*dlist)++);
+        reset_render_settings(dList);
+        gDPPipeSync((*dList)++);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/font/func_800C45A4.s")
-#endif
 
-s32 func_800C4DA0(char *text, s32 x, s32 font) {
+/**
+ * Start from the beginning of the line then add to an offset from the starting position.
+ * Returns the width of the string.
+ * Official Name: fontStringWidth
+ */
+s32 get_text_width(char *text, s32 x, s32 font) {
     s32 diffX, thisDiffX;
     FontData *fontData;
     s32 index;
-    char ch;
+    u8 ch;
 
     if (text == NULL) {
         return 0;
@@ -445,54 +462,62 @@ s32 func_800C4DA0(char *text, s32 x, s32 font) {
     for (index = 0; text[index] != '\0'; index++) {
         thisDiffX = diffX;
         ch = text[index];
-        if ((ch < 0x21) || (ch >= 0x80)) {
+        if (ch <= 0x20 || ch >= 0x80) {
             if (ch == '\t') { // Tab character
-                diffX += fontData->unk26 - (diffX % fontData->unk26);
+                diffX += fontData->charHeight - (diffX % fontData->charHeight);
             } else {
-                diffX += fontData->unk24;
+                diffX += fontData->charWidth;
             }
         } else {
-            ch -= 0x20; //Convert lower case to upper case ASCII
-            
-            if (fontData->unk100[ch].unk0 != 0xFF) {
-                if (fontData->unk20 == 0) {
-                    diffX += fontData->unk100[ch].unk1;
+            ch -= 0x20; // Convert lower case to upper case ASCII
+
+            if (fontData->letter[ch].textureID != 0xFF) {
+                if (fontData->x == 0) {
+                    diffX += fontData->letter[ch].ulx;
                 } else {
-                    diffX += fontData->unk20;
+                    diffX += fontData->x;
                 }
             }
         }
-        if (D_8012A7F0 != 0 && diffX != thisDiffX) {
+        if (gCompactKerning && diffX != thisDiffX) {
             diffX--;
         }
     }
     return diffX - x;
 }
 
+/**
+ * Sets the position and size of the current dialogue box.
+ * Official Name: fontWindowSize
+ */
 void set_current_dialogue_box_coords(s32 dialogueBoxID, s32 x1, s32 y1, s32 x2, s32 y2) {
     if (dialogueBoxID > 0 && dialogueBoxID < DIALOGUEBOXBACKGROUND_COUNT) {
         DialogueBoxBackground *temp = &gDialogueBoxBackground[dialogueBoxID];
         temp->xpos = 0;
         temp->ypos = 0;
         if (x1 < x2) {
-            temp->x1 = (s16)x1;
-            temp->x2 = (s16)x2;
+            temp->x1 = (s16) x1;
+            temp->x2 = (s16) x2;
         } else {
-            temp->x2 = (s16)x1;
-            temp->x1 = (s16)x2;
+            temp->x2 = (s16) x1;
+            temp->x1 = (s16) x2;
         }
         if (y1 < y2) {
-            temp->y1 = (s16)y1;
-            temp->y2 = (s16)y2;
+            temp->y1 = (s16) y1;
+            temp->y2 = (s16) y2;
         } else {
-            temp->y2 = (s16)y1;
-            temp->y1 = (s16)y2;
+            temp->y2 = (s16) y1;
+            temp->y1 = (s16) y2;
         }
         temp->width = (temp->x2 - temp->x1) + 1;
         temp->height = (temp->y2 - temp->y1) + 1;
     }
 }
 
+/**
+ * Sets the active front of the current dialogue box.
+ * Official Name: fontWindowUseFont
+ */
 void set_dialogue_font(s32 dialogueBoxID, s32 font) {
     if (dialogueBoxID >= 0 && dialogueBoxID < DIALOGUEBOXBACKGROUND_COUNT) {
         DialogueBoxBackground *temp = &gDialogueBoxBackground[dialogueBoxID];
@@ -502,6 +527,10 @@ void set_dialogue_font(s32 dialogueBoxID, s32 font) {
     }
 }
 
+/**
+ * Sets the background colour of the current dialogue box.
+ * Official Name: fontWindowColour
+ */
 void set_current_dialogue_background_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha) {
     if (dialogueBoxID > 0 && dialogueBoxID < DIALOGUEBOXBACKGROUND_COUNT) {
         DialogueBoxBackground *temp = &gDialogueBoxBackground[dialogueBoxID];
@@ -512,6 +541,10 @@ void set_current_dialogue_background_colour(s32 dialogueBoxID, s32 red, s32 gree
     }
 }
 
+/**
+ * Sets the text colour of the current dialogue box.
+ * Official Name: fontWindowFontColour
+ */
 void set_current_text_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha, s32 opacity) {
     DialogueBoxBackground *temp;
     if (dialogueBoxID <= 0 || dialogueBoxID >= DIALOGUEBOXBACKGROUND_COUNT) {
@@ -525,6 +558,10 @@ void set_current_text_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s3
     temp->opacity = opacity;
 }
 
+/**
+ * Sets text background colour of the current dialogue box.
+ * Official Name: fontWindowFontBackground
+ */
 void set_current_text_background_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha) {
     DialogueBoxBackground *dialogueBox;
     if (dialogueBoxID <= 0 || dialogueBoxID >= DIALOGUEBOXBACKGROUND_COUNT) {
@@ -537,50 +574,66 @@ void set_current_text_background_colour(s32 dialogueBoxID, s32 red, s32 green, s
     dialogueBox->textBGColourA = alpha;
 }
 
-// Unused?
-void func_800C5094(s32 dialogueBoxID, s32 arg1, s32 arg2) {
+/**
+ * Sets the positional text offset of the current dialogue box.
+ * Goes unused.
+ */
+UNUSED void set_current_text_offset(s32 dialogueBoxID, s32 x, s32 y) {
     DialogueBoxBackground *dialogueBox;
     if (dialogueBoxID <= 0 || dialogueBoxID >= DIALOGUEBOXBACKGROUND_COUNT) {
         return;
     }
     dialogueBox = &gDialogueBoxBackground[dialogueBoxID];
-    dialogueBox->unk20 += arg1;
-    dialogueBox->unk22 += arg2;
+    dialogueBox->textOffsetX += x;
+    dialogueBox->textOffsetY += y;
 }
 
-// Unused?
-void func_800C50D8(s32 dialogueBoxID) {
+/**
+ * Resets the positional text offset of the current dialogue box.
+ * Goes unused.
+ */
+UNUSED void reset_current_text_offset(s32 dialogueBoxID) {
     DialogueBoxBackground *dialogueBox;
     if (dialogueBoxID <= 0 || dialogueBoxID >= DIALOGUEBOXBACKGROUND_COUNT) {
         return;
     }
     dialogueBox = &gDialogueBoxBackground[dialogueBoxID];
-    dialogueBox->unk20 = 0;
-    dialogueBox->unk22 = 0;
+    dialogueBox->textOffsetX = 0;
+    dialogueBox->textOffsetY = 0;
 }
 
-// Unused?
-void func_800C510C(s32 dialogueBoxID, char *text, s32 arg2, s32 arg3) {
-    render_dialogue_text(dialogueBoxID, gDialogueBoxBackground[dialogueBoxID].xpos, gDialogueBoxBackground[dialogueBoxID].ypos, text, arg2, arg3);
+/**
+ * Calls the basic dialogue text draw function passing through the global dialogue box ID.
+ * Goes unused.
+ */
+UNUSED void func_800C510C(s32 dialogueBoxID, char *text, s32 number, s32 flags) {
+    render_dialogue_text(dialogueBoxID, gDialogueBoxBackground[dialogueBoxID].xpos,
+                         gDialogueBoxBackground[dialogueBoxID].ypos, text, number, flags);
 }
 
-#ifdef NON_EQUIVALENT
-void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s32 arg4, s32 flags) {
-    char parsedNumber;
+/**
+ * Draws the text portion of a dialogue box that's passed through.
+ * Binds the text to the box, then returns it.
+ * Official Name: fontWindowAddStringXY
+ */
+void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s32 number, s32 flags) {
+    s32 width;
+    UNUSED s32 var_a0;
+    char buffer[256];
+    DialogueTextElement *ret;
     DialogueBox *textBox;
-    FontData *fontData;
-    s32 temp_v0_2;
     s32 i;
-    unk8012A7EC *ret;
     DialogueBoxBackground *bg;
+    FontData *fontData;
+    DialogueBox **textBoxPtr;
 
     if (text == NULL) {
         return NULL;
     }
-    
-    for (i = 0, ret = NULL; (i < 64) && (ret == NULL); i++) {
-        if (D_8012A7EC[i].unk1 == 0xFF) {
-            ret = &D_8012A7EC[i];
+
+    for (i = 0, ret = NULL; i < 64 && ret == NULL; i++) {
+        if (gDialogueText[i].number == 255) {
+            ret = &gDialogueText[i];
         }
     }
 
@@ -594,41 +647,41 @@ void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s3
         }
         if (bg->font != FONT_UNK_FF) {
             fontData = &gFonts[bg->font];
-            if (flags & 5) {
-                parse_string_with_number(text, &parsedNumber, arg4);
-                temp_v0_2 = func_800C4DA0(&parsedNumber, posX, bg->font);
-                if (flags & 1) {
-                    posX = (posX - temp_v0_2) + 1;
+            if (flags & (HORZ_ALIGN_CENTER | HORZ_ALIGN_RIGHT)) {
+                parse_string_with_number(text, buffer, number);
+                width = get_text_width(buffer, posX, bg->font);
+                if (flags & HORZ_ALIGN_RIGHT) {
+                    posX = (posX - width) + 1;
                 } else {
-                    posX = posX - (temp_v0_2 >> 1);
+                    posX = posX - (width >> 1);
                 }
             }
-            if (flags & 2) {
-                posY = (posY - fontData->unk22) + 1;
+            if (flags & VERT_ALIGN_BOTTOM) {
+                posY = (posY - fontData->y) + 1;
             }
-            if (flags & 8) {
-                posY -= fontData->unk22 >> 1;
+            if (flags & VERT_ALIGN_MIDDLE) {
+                posY -= fontData->y >> 1;
             }
         }
         if (bg->textBox == NULL) {
             bg->textBox = (DialogueBox *) ret;
             ret->nextBox = NULL;
         } else {
-            textBox = bg->textBox;
-            //Feels like this should be a while loop, but it matches worse
-            if ((bg->textBox != NULL) && (arg4 < bg->textBox->textNum)) {
-                do {
-                    textBox = textBox->nextBox;
-                } while (textBox != NULL && arg4 < textBox->textNum);
+            textBoxPtr = &bg->textBox;
+            textBox = *textBoxPtr;
+            while (textBox != NULL && number < textBox->textNum) {
+                textBoxPtr = &textBox->nextBox;
+                textBox = textBox->nextBox;
             }
+            *textBoxPtr = (DialogueBox *) ret;
             ret->nextBox = textBox;
         }
-        ret->unk1 = arg4;
+        ret->number = number;
         ret->text = text;
         ret->posX = posX;
-        ret->unkC = 0;
-        ret->unkE = 0;
         ret->posY = posY;
+        ret->offsetX = 0;
+        ret->offsetY = 0;
         ret->textColourR = bg->textColourR;
         ret->textColourG = bg->textColourG;
         ret->textColourB = bg->textColourB;
@@ -644,14 +697,10 @@ void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s3
 
     return ret;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/font/render_dialogue_text.s")
-#endif
 
 /**
  * Unused function that moved a dialogue box ID to the front of the stack.
  */
-
 UNUSED void move_dialogue_box_to_front(s32 dialogueBoxID, DialogueBox *dialogueBox) {
     DialogueBoxBackground *dialogueBoxTemp;
     DialogueBox *dialogueTextBox;
@@ -672,8 +721,8 @@ UNUSED void move_dialogue_box_to_front(s32 dialogueBoxID, DialogueBox *dialogueB
 
 /**
  * Unused function that moved a dialogue box ID to the front of the list.
+ * Official Name: fontWindowFlushStrings
  */
-
 void assign_dialogue_box_id(s32 dialogueBoxID) {
     DialogueBoxBackground *dialogueBox;
     DialogueBox *dialogueTextBox, *dialogueTextBoxTemp;
@@ -690,30 +739,34 @@ void assign_dialogue_box_id(s32 dialogueBoxID) {
     }
 }
 
-UNUSED void func_800C54E8(s32 dialogueBoxID, unk800C54E8 *arg1, s32 arg2, s32 arg3, s32 arg4) {
+/**
+ * Unused function that set the offset of the text in the current dialogue box based on alignment flags.
+ * Goes unused, as does the whole text offset system.
+ */
+UNUSED void align_text_in_box(s32 dialogueBoxID, DialogueTextElement *box, s32 x, s32 y, s32 flags) {
     FontData *fontData;
     DialogueBoxBackground *dialogueBox;
 
     dialogueBox = &gDialogueBoxBackground[dialogueBoxID];
 
-    if (arg1 != NULL) {
-        if (arg1->unk19 != 0xFF) {
-            fontData = &gFonts[arg1->unk19];
-            if (arg4 != 4) {
-                switch (arg4) {
-                    case 1:
-                        arg3 *= fontData->unk22;
+    if (box != NULL) {
+        if (box->font != FONT_UNK_FF) {
+            fontData = &gFonts[box->font];
+            if (flags != ALIGN_TOP_CENTER) {
+                switch (flags) {
+                    case ALIGN_TOP_RIGHT:
+                        y *= fontData->y;
                         break;
-                    case 2:
-                        arg3 *= (dialogueBox->height / fontData->unk22) * fontData->unk22;
+                    case ALIGN_BOTTOM_LEFT:
+                        y *= (dialogueBox->height / fontData->y) * fontData->y;
                         break;
                 }
-                arg1->unkC += arg2;
-                arg1->unkE += arg3;
+                box->offsetX += x;
+                box->offsetY += y;
                 return;
             }
-            arg1->unkC = 0;
-            arg1->unkE = 0;
+            box->offsetX = 0;
+            box->offsetY = 0;
             return;
         }
     }
@@ -728,6 +781,7 @@ void open_dialogue_box(s32 dialogueBoxID) {
 
 /**
  * Mark the selected dialogue box as closed
+ * Official Name: fontWindowDisable
  */
 void close_dialogue_box(s32 dialogueBoxID) {
     gDialogueBoxBackground[dialogueBoxID].flags &= DIALOGUE_BOX_CLOSED;
@@ -736,27 +790,24 @@ void close_dialogue_box(s32 dialogueBoxID) {
 /**
  * Mark the selected dialogue box as an unknown value
  */
-UNUSED void func_800C564C(s32 dialogueBoxID) {
+UNUSED void set_dialogue_box_unused_flag(s32 dialogueBoxID) {
     gDialogueBoxBackground[dialogueBoxID].flags |= DIALOGUE_BOX_UNUSED_01;
 }
 
 /**
- * Mark the selected dialogue box with every flag
+ * Clear every flag from the selected dialogue box.
  */
-UNUSED void func_800C5678(s32 dialogueBoxID) {
+UNUSED void dialogue_box_clear_flags(s32 dialogueBoxID) {
     gDialogueBoxBackground[dialogueBoxID].flags &= DIALOGUE_BOX_UNUSED_02;
 }
 
 /**
- * Mark the selected dialogue box as
+ * Mark the selected dialogue box as using triangles to draw.
  */
-UNUSED void func_800C56A4(s32 dialogueBoxID) {
-    gDialogueBoxBackground[dialogueBoxID].flags |= DIALOGUE_BOX_UNK_01;
+UNUSED void enable_dialogue_box_vertices(s32 dialogueBoxID) {
+    gDialogueBoxBackground[dialogueBoxID].flags |= DIALOGUE_BOX_VERTS;
 }
 
-/**
- * Mark the selected dialogue box as open with
- */
 void func_800C56D0(s32 dialogueBoxID) {
     gDialogueBoxBackground[dialogueBoxID].flags &= DIALOGUE_BOX_UNK_02;
 }
@@ -765,8 +816,9 @@ void func_800C56D0(s32 dialogueBoxID) {
  * Main function to render each dialogue box entry.
  * Contains a timer that counts down two frames before closing a dialogue box
  * when the player exits out of one.
+ * Official Name: fontWindowsDraw
  */
-void render_dialogue_boxes(Gfx **dlist, Mtx **mat, VertexList **verts) {
+void render_dialogue_boxes(Gfx **dlist, MatrixS **mat, Vertex **verts) {
     s32 i;
 
     if (sDialogueBoxIsOpen) {
@@ -779,7 +831,7 @@ void render_dialogue_boxes(Gfx **dlist, Mtx **mat, VertexList **verts) {
 
     for (i = 1; i < DIALOGUEBOXBACKGROUND_COUNT; i++) {
         if (gDialogueBoxBackground[i].flags & DIALOGUE_BOX_OPEN) {
-            if (gDialogueBoxBackground[i].flags & DIALOGUE_BOX_UNK_01) {
+            if (gDialogueBoxBackground[i].flags & DIALOGUE_BOX_VERTS) {
                 render_dialogue_box(dlist, mat, verts, i);
             } else {
                 render_dialogue_box(dlist, NULL, NULL, i);
@@ -788,6 +840,10 @@ void render_dialogue_boxes(Gfx **dlist, Mtx **mat, VertexList **verts) {
     }
 }
 
+/**
+ * Convert an integer to a string.
+ * Official Name: fontStringAddNumber
+ */
 void s32_to_string(char **outString, s32 number) {
     u8 digit;
     s32 i;
@@ -806,7 +862,7 @@ void s32_to_string(char **outString, s32 number) {
     // Loop through digit places.
     hasDigit = FALSE;
     i = 0;
-    while(i < 9) {
+    while (i < 9) {
         pow = gDescPowsOf10[i++];
         digit = '0';
         if (number >= pow) {
@@ -837,7 +893,7 @@ void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
     u32 width = GET_VIDEO_WIDTH(widthAndHeight);
     u32 height = GET_VIDEO_HEIGHT(widthAndHeight);
 
-    if (lrx >= 0 && (u32)ulx < width && lry >= 0 && (u32)uly < height) {
+    if (lrx >= 0 && (u32) ulx < width && lry >= 0 && (u32) uly < height) {
         if (ulx < 0) {
             ulx = 0;
         }
@@ -850,8 +906,9 @@ void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry) {
 
 /**
  * Render the selected dialogue box. Background first, then text.
+ * Official Name: fontWindowDraw
  */
-void render_dialogue_box(Gfx **dlist, Mtx **mat, VertexList **verts, s32 dialogueBoxID) {
+void render_dialogue_box(Gfx **dlist, MatrixS **mat, Vertex **verts, s32 dialogueBoxID) {
     DialogueBoxBackground *dialogueBox;
     DialogueBox *dialogueTextBox;
     s32 i;
@@ -866,7 +923,7 @@ void render_dialogue_box(Gfx **dlist, Mtx **mat, VertexList **verts, s32 dialogu
         gSPDisplayList((*dlist)++, dDialogueBoxBegin);
         gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dDialogueBoxDrawModes[1]), 2);
         gDPSetEnvColor((*dlist)++, 0, 0, 0, 0);
-        if ((dialogueBox->x2 - dialogueBox->x1) < 10 || (dialogueBox->y2 - dialogueBox->y1) < 10) {
+        if (dialogueBox->x2 - dialogueBox->x1 < 10 || dialogueBox->y2 - dialogueBox->y1 < 10) {
             render_fill_rectangle(dlist, dialogueBox->x1 - 2, dialogueBox->y1 - 2, dialogueBox->x2 + 2, dialogueBox->y2 + 2);
         } else {
             render_fill_rectangle(dlist, dialogueBox->x1 - 2, dialogueBox->y1 + 2, dialogueBox->x1 + 2, dialogueBox->y2 - 2);
@@ -875,7 +932,8 @@ void render_dialogue_box(Gfx **dlist, Mtx **mat, VertexList **verts, s32 dialogu
             render_fill_rectangle(dlist, dialogueBox->x1 - 2, dialogueBox->y2 - 2, dialogueBox->x2 + 2, dialogueBox->y2 + 2);
         }
         gDPPipeSync((*dlist)++);
-        gDPSetEnvColor((*dlist)++, dialogueBox->backgroundColourR, dialogueBox->backgroundColourG, dialogueBox->backgroundColourB, dialogueBox->backgroundColourA);
+        gDPSetEnvColor((*dlist)++, dialogueBox->backgroundColourR, dialogueBox->backgroundColourG,
+                       dialogueBox->backgroundColourB, dialogueBox->backgroundColourA);
         // Loops through sDialogueBoxDimensions, rendering fillrects until it forms a rounded rectangle.
         // The array determines the width and height of each entry before drawing it.
         for (i = 0; sDialogueBoxDimensions[i] >= 0; i += 5) {
@@ -888,7 +946,7 @@ void render_dialogue_box(Gfx **dlist, Mtx **mat, VertexList **verts, s32 dialogu
         gDPPipeSync((*dlist)++);
     }
     if (mat != NULL && verts != NULL) {
-        if (!sDialogueBoxIsOpen) {
+        if (sDialogueBoxIsOpen == FALSE) {
             dialogue_open_stub();
             sDialogueBoxIsOpen = TRUE;
         }
@@ -911,7 +969,7 @@ void render_dialogue_box(Gfx **dlist, Mtx **mat, VertexList **verts, s32 dialogu
         dialogueBox->opacity = dialogueTextBox->opacity;
         dialogueBox->font = dialogueTextBox->font;
         parse_string_with_number(dialogueTextBox->text, text, dialogueTextBox->textNum);
-        func_800C45A4(dlist, dialogueBox, text, 0, 1.0f);
+        render_text_string(dlist, dialogueBox, text, 0, 1.0f);
         dialogueTextBox = dialogueTextBox->nextBox;
     }
 }
@@ -927,7 +985,7 @@ void parse_string_with_number(char *input, char *output, s32 number) {
             s32_to_string(&output, number);
             input++;
         } else {
-            *output = (signed char)*input; //It's either this cast, or change the function signature
+            *output = (signed char) *input; // It's either this cast, or change the function signature
             input++;
             output++;
         }

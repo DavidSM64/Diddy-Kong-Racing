@@ -4,8 +4,8 @@ glabel jpt_800E84B0
 
 .text
 glabel menu_save_options_loop
-/* 088760 80087B60 3C038012 */  lui   $v1, %hi(D_801263BC) # $v1, 0x8012
-/* 088764 80087B64 246363BC */  addiu $v1, %lo(D_801263BC) # addiu $v1, $v1, 0x63bc
+/* 088760 80087B60 3C038012 */  lui   $v1, %hi(gOptionBlinkTimer) # $v1, 0x8012
+/* 088764 80087B64 246363BC */  addiu $v1, %lo(gOptionBlinkTimer) # addiu $v1, $v1, 0x63bc
 /* 088768 80087B68 8C6E0000 */  lw    $t6, ($v1)
 /* 08876C 80087B6C 27BDFFC8 */  addiu $sp, $sp, -0x38
 /* 088770 80087B70 01C47821 */  addu  $t7, $t6, $a0
@@ -130,8 +130,8 @@ glabel L80087D18
 /* 088920 80087D20 10000053 */  b     .L80087E70
 /* 088924 80087D24 AC38F47C */   sw    $t8, %lo(gMenuDelay)($at)
 glabel L80087D28
-/* 088928 80087D28 3C108012 */  lui   $s0, %hi(D_801263D8) # $s0, 0x8012
-/* 08892C 80087D2C 261063D8 */  addiu $s0, %lo(D_801263D8) # addiu $s0, $s0, 0x63d8
+/* 088928 80087D28 3C108012 */  lui   $s0, %hi(gOpacityDecayTimer) # $s0, 0x8012
+/* 08892C 80087D2C 261063D8 */  addiu $s0, %lo(gOpacityDecayTimer) # addiu $s0, $s0, 0x63d8
 /* 088930 80087D30 8E190000 */  lw    $t9, ($s0)
 /* 088934 80087D34 240A0002 */  li    $t2, 2
 /* 088938 80087D38 27280001 */  addiu $t0, $t9, 1
@@ -199,8 +199,8 @@ glabel L80087E04
 /* 088A14 80087E14 10000016 */  b     .L80087E70
 /* 088A18 80087E18 AC22F47C */   sw    $v0, %lo(gMenuDelay)($at)
 glabel L80087E1C
-/* 088A1C 80087E1C 3C108012 */  lui   $s0, %hi(D_801263D8) # $s0, 0x8012
-/* 088A20 80087E20 261063D8 */  addiu $s0, %lo(D_801263D8) # addiu $s0, $s0, 0x63d8
+/* 088A1C 80087E1C 3C108012 */  lui   $s0, %hi(gOpacityDecayTimer) # $s0, 0x8012
+/* 088A20 80087E20 261063D8 */  addiu $s0, %lo(gOpacityDecayTimer) # addiu $s0, $s0, 0x63d8
 /* 088A24 80087E24 8E0D0000 */  lw    $t5, ($s0)
 /* 088A28 80087E28 00000000 */  nop   
 /* 088A2C 80087E2C 25AE0001 */  addiu $t6, $t5, 1
@@ -227,7 +227,7 @@ glabel L80087E1C
 /* 088A78 80087E78 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 088A7C 80087E7C 11000003 */  beqz  $t0, .L80087E8C
 /* 088A80 80087E80 00000000 */   nop   
-/* 088A84 80087E84 0C030076 */  jal   func_800C01D8
+/* 088A84 80087E84 0C030076 */  jal   transition_begin
 /* 088A88 80087E88 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 .L80087E8C:
 /* 088A8C 80087E8C 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012

@@ -37,7 +37,7 @@ glabel func_8002B0F4
 /* 02BD80 8002B180 ACE00000 */  sw    $zero, ($a3)
 /* 02BD84 8002B184 27A600B0 */  addiu $a2, $sp, 0xb0
 /* 02BD88 8002B188 02C02025 */  move  $a0, $s6
-/* 02BD8C 8002B18C 0C00A817 */  jal   func_8002A05C
+/* 02BD8C 8002B18C 0C00A817 */  jal   get_inside_segment_count_xz
 /* 02BD90 8002B190 02802825 */   move  $a1, $s4
 /* 02BD94 8002B194 10400004 */  beqz  $v0, .L8002B1A8
 /* 02BD98 8002B198 AFA20108 */   sw    $v0, 0x108($sp)
@@ -429,10 +429,10 @@ glabel func_8002B0F4
 /* 02C344 8002B744 32A50003 */  andi  $a1, $s5, 3
 /* 02C348 8002B748 10A0000F */  beqz  $a1, .L8002B788
 /* 02C34C 8002B74C 00A02025 */   move  $a0, $a1
-/* 02C350 8002B750 3C198012 */  lui   $t9, %hi(D_8011D2B8) # $t9, 0x8012
+/* 02C350 8002B750 3C198012 */  lui   $t9, %hi(gTrackWaves) # $t9, 0x8012
 /* 02C354 8002B754 3C0F8012 */  lui   $t7, %hi(D_8011D128) # $t7, 0x8012
 /* 02C358 8002B758 25EFD128 */  addiu $t7, %lo(D_8011D128) # addiu $t7, $t7, -0x2ed8
-/* 02C35C 8002B75C 2739D2B8 */  addiu $t9, %lo(D_8011D2B8) # addiu $t9, $t9, -0x2d48
+/* 02C35C 8002B75C 2739D2B8 */  addiu $t9, %lo(gTrackWaves) # addiu $t9, $t9, -0x2d48
 /* 02C360 8002B760 00007080 */  sll   $t6, $zero, 2
 /* 02C364 8002B764 0000C100 */  sll   $t8, $zero, 4
 /* 02C368 8002B768 030F1021 */  addu  $v0, $t8, $t7
@@ -457,8 +457,8 @@ glabel func_8002B0F4
 /* 02C3AC 8002B7AC 2739D128 */  addiu $t9, %lo(D_8011D128) # addiu $t9, $t9, -0x2ed8
 /* 02C3B0 8002B7B0 000E7080 */  sll   $t6, $t6, 2
 /* 02C3B4 8002B7B4 01D91021 */  addu  $v0, $t6, $t9
-/* 02C3B8 8002B7B8 3C0F8012 */  lui   $t7, %hi(D_8011D2B8) # $t7, 0x8012
-/* 02C3BC 8002B7BC 25EFD2B8 */  addiu $t7, %lo(D_8011D2B8) # addiu $t7, $t7, -0x2d48
+/* 02C3B8 8002B7B8 3C0F8012 */  lui   $t7, %hi(gTrackWaves) # $t7, 0x8012
+/* 02C3BC 8002B7BC 25EFD2B8 */  addiu $t7, %lo(gTrackWaves) # addiu $t7, $t7, -0x2d48
 /* 02C3C0 8002B7C0 0007C080 */  sll   $t8, $a3, 2
 /* 02C3C4 8002B7C4 030F1821 */  addu  $v1, $t8, $t7
 /* 02C3C8 8002B7C8 24450014 */  addiu $a1, $v0, 0x14
@@ -485,8 +485,8 @@ glabel func_8002B0F4
 /* 02C410 8002B810 30580003 */  andi  $t8, $v0, 3
 /* 02C414 8002B814 13000014 */  beqz  $t8, .L8002B868
 /* 02C418 8002B818 03004025 */   move  $t0, $t8
-/* 02C41C 8002B81C 3C0E8012 */  lui   $t6, %hi(D_8011D2B8) # $t6, 0x8012
-/* 02C420 8002B820 25CED2B8 */  addiu $t6, %lo(D_8011D2B8) # addiu $t6, $t6, -0x2d48
+/* 02C41C 8002B81C 3C0E8012 */  lui   $t6, %hi(gTrackWaves) # $t6, 0x8012
+/* 02C420 8002B820 25CED2B8 */  addiu $t6, %lo(gTrackWaves) # addiu $t6, $t6, -0x2d48
 /* 02C424 8002B824 00007880 */  sll   $t7, $zero, 2
 /* 02C428 8002B828 01EE1821 */  addu  $v1, $t7, $t6
 .L8002B82C:
@@ -507,8 +507,8 @@ glabel func_8002B0F4
 /* 02C460 8002B860 24630004 */   addiu $v1, $v1, 4
 /* 02C464 8002B864 10E9003C */  beq   $a3, $t1, .L8002B958
 .L8002B868:
-/* 02C468 8002B868 3C188012 */   lui   $t8, %hi(D_8011D2B8) # $t8, 0x8012
-/* 02C46C 8002B86C 2718D2B8 */  addiu $t8, %lo(D_8011D2B8) # addiu $t8, $t8, -0x2d48
+/* 02C468 8002B868 3C188012 */   lui   $t8, %hi(gTrackWaves) # $t8, 0x8012
+/* 02C46C 8002B86C 2718D2B8 */  addiu $t8, %lo(gTrackWaves) # addiu $t8, $t8, -0x2d48
 /* 02C470 8002B870 0009C880 */  sll   $t9, $t1, 2
 /* 02C474 8002B874 00077880 */  sll   $t7, $a3, 2
 /* 02C478 8002B878 01F81821 */  addu  $v1, $t7, $t8
@@ -576,8 +576,8 @@ glabel func_8002B0F4
 /* 02C558 8002B958 10C0FFAA */  beqz  $a2, .L8002B804
 /* 02C55C 8002B95C 24060001 */   li    $a2, 1
 /* 02C560 8002B960 8FB90134 */  lw    $t9, 0x134($sp)
-/* 02C564 8002B964 3C0E8012 */  lui   $t6, %hi(D_8011D2B8) # $t6, 0x8012
-/* 02C568 8002B968 25CED2B8 */  addiu $t6, %lo(D_8011D2B8) # addiu $t6, $t6, -0x2d48
+/* 02C564 8002B964 3C0E8012 */  lui   $t6, %hi(gTrackWaves) # $t6, 0x8012
+/* 02C568 8002B968 25CED2B8 */  addiu $t6, %lo(gTrackWaves) # addiu $t6, $t6, -0x2d48
 /* 02C56C 8002B96C 3C018012 */  lui   $at, %hi(D_8011D308) # $at, 0x8012
 /* 02C570 8002B970 AF2E0000 */  sw    $t6, ($t9)
 /* 02C574 8002B974 A035D308 */  sb    $s5, %lo(D_8011D308)($at)

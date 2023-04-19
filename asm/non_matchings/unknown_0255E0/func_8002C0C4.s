@@ -15,7 +15,7 @@ glabel func_8002C0C4
 /* 02CCE0 8002C0E0 AFB30020 */  sw    $s3, 0x20($sp)
 /* 02CCE4 8002C0E4 AFB10018 */  sw    $s1, 0x18($sp)
 /* 02CCE8 8002C0E8 AFB00014 */  sw    $s0, 0x14($sp)
-/* 02CCEC 8002C0EC 0C01ECDD */  jal   func_8007B374
+/* 02CCEC 8002C0EC 0C01ECDD */  jal   set_texture_colour_tag
 /* 02CCF0 8002C0F0 348400FF */   ori   $a0, (0x00FF00FF & 0xFFFF) # ori $a0, $a0, 0xff
 /* 02CCF4 8002C0F4 3C150008 */  lui   $s5, (0x00082A00 >> 16) # lui $s5, 8
 /* 02CCF8 8002C0F8 36B52A00 */  ori   $s5, (0x00082A00 & 0xFFFF) # ori $s5, $s5, 0x2a00
@@ -306,7 +306,7 @@ glabel func_8002C0C4
 /* 02D140 8002C540 0C01C42C */  jal   set_free_queue_state
 /* 02D144 8002C544 24040002 */   li    $a0, 2
 /* 02D148 8002C548 8E240000 */  lw    $a0, ($s1)
-/* 02D14C 8002C54C 0C02A0ED */  jal   func_800A83B4
+/* 02D14C 8002C54C 0C02A0ED */  jal   minimap_init
 /* 02D150 8002C550 00000000 */   nop   
 /* 02D154 8002C554 8E320000 */  lw    $s2, ($s1)
 /* 02D158 8002C558 00006025 */  move  $t4, $zero
@@ -418,7 +418,7 @@ glabel func_8002C0C4
 /* 02D2E8 8002C6E8 24C60044 */   addiu $a2, $a2, 0x44
 .L8002C6EC:
 /* 02D2EC 8002C6EC 3C04FF00 */  lui   $a0, (0xFF00FFFF >> 16) # lui $a0, 0xff00
-/* 02D2F0 8002C6F0 0C01ECDD */  jal   func_8007B374
+/* 02D2F0 8002C6F0 0C01ECDD */  jal   set_texture_colour_tag
 /* 02D2F4 8002C6F4 3484FFFF */   ori   $a0, (0xFF00FFFF & 0xFFFF) # ori $a0, $a0, 0xffff
 /* 02D2F8 8002C6F8 8FBF002C */  lw    $ra, 0x2c($sp)
 /* 02D2FC 8002C6FC 8FB00014 */  lw    $s0, 0x14($sp)

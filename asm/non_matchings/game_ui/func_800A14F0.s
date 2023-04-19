@@ -10,10 +10,10 @@ glabel func_800A14F0
 /* 0A20F4 800A14F4 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0A20F8 800A14F8 AFA40060 */  sw    $a0, 0x60($sp)
 /* 0A20FC 800A14FC AFA50064 */  sw    $a1, 0x64($sp)
-/* 0A2100 800A1500 0C006E9D */  jal   get_object_struct_array
+/* 0A2100 800A1500 0C006E9D */  jal   get_racer_objects
 /* 0A2104 800A1504 27A40050 */   addiu $a0, $sp, 0x50
-/* 0A2108 800A1508 3C0E8012 */  lui   $t6, %hi(D_80126D37) # $t6, 0x8012
-/* 0A210C 800A150C 91CE6D37 */  lbu   $t6, %lo(D_80126D37)($t6)
+/* 0A2108 800A1508 3C0E8012 */  lui   $t6, %hi(gNumActivePlayers) # $t6, 0x8012
+/* 0A210C 800A150C 91CE6D37 */  lbu   $t6, %lo(gNumActivePlayers)($t6)
 /* 0A2110 800A1510 8FAB0060 */  lw    $t3, 0x60($sp)
 /* 0A2114 800A1514 240C0002 */  li    $t4, 2
 /* 0A2118 800A1518 158E005C */  bne   $t4, $t6, .L800A168C
@@ -197,8 +197,8 @@ glabel func_800A14F0
 /* 0A23B0 800A17B0 46803320 */  cvt.s.w $f12, $f6
 .L800A17B4:
 /* 0A23B4 800A17B4 8D0D0000 */  lw    $t5, ($t0)
-/* 0A23B8 800A17B8 3C038012 */  lui   $v1, %hi(D_80126D37) # $v1, 0x8012
-/* 0A23BC 800A17BC 90636D37 */  lbu   $v1, %lo(D_80126D37)($v1)
+/* 0A23B8 800A17B8 3C038012 */  lui   $v1, %hi(gNumActivePlayers) # $v1, 0x8012
+/* 0A23BC 800A17BC 90636D37 */  lbu   $v1, %lo(gNumActivePlayers)($v1)
 /* 0A23C0 800A17C0 8DA20064 */  lw    $v0, 0x64($t5)
 /* 0A23C4 800A17C4 28610003 */  slti  $at, $v1, 3
 /* 0A23C8 800A17C8 14200006 */  bnez  $at, .L800A17E4
@@ -220,9 +220,9 @@ glabel func_800A14F0
 /* 0A2404 800A1804 C4218728 */  lwc1  $f1, %lo(D_800E8728)($at)
 /* 0A2408 800A1808 C420872C */  lwc1  $f0, %lo(D_800E8728 + 4)($at)
 /* 0A240C 800A180C 3C01425C */  li    $at, 0x425C0000 # 55.000000
-/* 0A2410 800A1810 3C038012 */  lui   $v1, %hi(D_80126D37) # $v1, 0x8012
+/* 0A2410 800A1810 3C038012 */  lui   $v1, %hi(gNumActivePlayers) # $v1, 0x8012
 /* 0A2414 800A1814 3C068012 */  lui   $a2, %hi(D_80126CDC) # $a2, 0x8012
-/* 0A2418 800A1818 90636D37 */  lbu   $v1, %lo(D_80126D37)($v1)
+/* 0A2418 800A1818 90636D37 */  lbu   $v1, %lo(gNumActivePlayers)($v1)
 /* 0A241C 800A181C 44811000 */  mtc1  $at, $f2
 /* 0A2420 800A1820 8FA7002C */  lw    $a3, 0x2c($sp)
 /* 0A2424 800A1824 8FA80028 */  lw    $t0, 0x28($sp)

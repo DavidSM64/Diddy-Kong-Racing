@@ -83,9 +83,9 @@ typedef struct {
 
 extern u32 osTvType;
 
-void func_800AB308(s16 arg0, s16 arg1);
+void setWeatherLimits(s16 arg0, s16 arg1);
 void func_800AC880(s32 arg0);
-void func_800ACF60(Object *arg0);
+void cameraAddOverrideObject(Object *arg0);
 void free_rain_memory(void);
 void func_800AD2C4(s32 arg0, s32 arg1, f32 arg2);
 void func_800AD40C(void);
@@ -94,17 +94,19 @@ void handle_rain_sound(s32 updateRate);
 void render_rain_splashes(s32 updateRate);
 void handle_rain_lightning(s32 updateRate);
 void render_rain_overlay(unk800E2C2C*, s32);
-void process_weather(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
-
-f32 cosine_s(s16);
-f32 sine_s(s16);
-s32 func_8007082C(s16);
-s32 func_80070830(s16);
+void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris, s32 updateRate);
+void render_falling_snow(void);
 void free_weather_memory(void);
+void changeWeather(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
+
+s32 coss(s16);
+s32 sins(s16);
 void func_800AB1F0(void);
 s32 func_800AC0C8(s32, unk80127BF8 *);
-void func_8006F6EC(Matrix *arg0, Matrix *arg1, Matrix *arg2);
+void f32_matrix_dot(Matrix *arg0, Matrix *arg1, Matrix *arg2);
 void func_800AC21C(void);
-void func_800AC5A4(void);
+void func_800AC8A8(Object *);
+void func_800ACA20(Gfx**, MatrixS**, Vertex**, ObjectSegment*);
+void func_800AB4A8(s32 weatherType, s32 weatherEnable, s32 velX, s32 velY, s32 velZ, s32 intensity, s32 opacity);
 
 #endif

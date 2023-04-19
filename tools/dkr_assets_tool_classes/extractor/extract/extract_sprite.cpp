@@ -6,7 +6,7 @@ json::JSON &configJSON)
     json::JSON out = json::Object();
     
     out["type"] = "Sprites";
-    out["start-texture"] = configJSON["assets"]["sections"][4]["child-build-ids"][get_big_endian_halfword(data, 0)];
+    out["start-texture"] = get_build_id_from_section("ASSET_TEXTURES_2D", get_big_endian_halfword(data, 0));
     //out["number-of-frames"] = get_big_endian_halfword(data, 2);
     out["unk4"] = get_big_endian_halfword(data, 4);
     out["unk6"] = get_big_endian_halfword(data, 6);

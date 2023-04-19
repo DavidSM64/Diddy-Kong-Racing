@@ -5,6 +5,12 @@
 #include "gzip.h"
 #include "asset_loading.h"
 #include "memory.h"
+#include "math_util.h"
+#include "unknown_0255E0.h"
+
+#define TEX_HEADER_COUNT 175
+#define TEX_SPRITE_COUNT 50
+#define TEX_PALLETE_COUNT 20
 
 /************ .data ************/
 
@@ -859,14 +865,14 @@ const char D_800E7C50[] = "TEXSPR Error: Tryed to deallocate non-existent sprite
 
 /************ .bss ************/
 
-s32 *D_80126320[2];
+s32 *gTextureAssetTable[2];
 
 TextureCacheEntry *gTextureCache;
 
 u8 *gCiPalettes;
 s32 gNumberOfLoadedTextures;
 s32 D_80126334;
-s32 D_80126338[2];
+s32 gTextureAssetID[2];
 s32 gCiPalettesSize;
 s32 D_80126344;
 s32 *gSpriteOffsetTable;
@@ -883,42 +889,82 @@ s32 D_80126368;
 
 TempTexHeader *gTempTextureHeader;
 s32 D_80126370;
-s32 D_80126374;
+s32 gCurrentRenderFlags;
 s32 D_80126378; // Set in Game UI
 TextureHeader *D_8012637C;
 s16 D_80126380;
-s16 D_80126382;
+s16 gForceFlags;
 s16 D_80126384;
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007AC70.s")
+void tex_init_textures(void) {
+    s32 i;
 
-void func_8007AE0C(s32 arg0) {
-    D_80126378 |= arg0;
+    gTextureCache = allocate_from_main_pool_safe(sizeof(TextureHeader) * TEX_HEADER_COUNT, COLOUR_TAG_MAGENTA);
+    gCiPalettes = allocate_from_main_pool_safe(0x280, COLOUR_TAG_MAGENTA);
+    gNumberOfLoadedTextures = 0;
+    gCiPalettesSize = 0;
+    gTextureAssetTable[TEX_TABLE_2D] = (s32 *) load_asset_section_from_rom(ASSET_TEXTURES_2D_TABLE);
+    gTextureAssetTable[TEX_TABLE_3D] = (s32 *) load_asset_section_from_rom(ASSET_TEXTURES_3D_TABLE);    
+    
+    for (i = 0; gTextureAssetTable[TEX_TABLE_2D][i] != -1; i++) { }
+    gTextureAssetID[TEX_TABLE_2D] = --i;
+    
+    for (i = 0; gTextureAssetTable[TEX_TABLE_3D][i] != -1; i++) { }
+    gTextureAssetID[TEX_TABLE_3D] = --i;
+    
+    gSpriteCache = allocate_from_main_pool_safe(sizeof(Sprite) * TEX_SPRITE_COUNT, COLOUR_TAG_MAGENTA);
+    gCurrentSprite = allocate_from_main_pool_safe(sizeof(Sprite) * 32, COLOUR_TAG_MAGENTA);
+    D_80126358 = 0;
+    gSpriteOffsetTable = (s32 *) load_asset_section_from_rom(ASSET_SPRITES_TABLE);
+    D_80126354 = 0;
+    while (gSpriteOffsetTable[D_80126354] != -1) {
+        D_80126354++;
+    }
+    D_80126354--;
+
+    gTempTextureHeader = allocate_from_main_pool_safe(0x28, COLOUR_TAG_MAGENTA);
+    D_80126344 = 0;
 }
 
-void func_8007AE28(s32 arg0) {
-    D_80126378 &= ~arg0;
+/**
+ * Official Name: texDisableModes
+*/
+void tex_disable_modes(s32 flags) {
+    D_80126378 |= flags;
 }
 
-/* Unused? */
-s32 func_8007AE44(void) {
-    return D_80126338[0];
+/**
+ * Official Name: texEnableModes
+*/
+void tex_enable_modes(s32 flags) {
+    D_80126378 &= ~flags;
 }
 
-/* Unused? */
-s32 func_8007AE54(void) {
-    return D_80126338[1];
+/**
+ * Return the texture asset ID table for 2D textures.
+ * Goes unused.
+*/
+UNUSED s32 get_loaded_2D_textures(void) {
+    return gTextureAssetID[TEX_TABLE_2D];
 }
 
-/* Unused? */
-s32 func_8007AE64(void) {
+/**
+ * Return the texture asset ID table for 3D textures.
+ * Goes unused.
+*/
+UNUSED s32 get_loaded_3D_textures(void) {
+    return gTextureAssetID[TEX_TABLE_3D];
+}
+
+UNUSED s32 func_8007AE64(void) {
     return D_80126354;
 }
 
 #ifdef NON_EQUIVALENT
 // Minor matching issues with loops, but should be functionally the same.
+//Official Name: texLoadTexture
 TextureHeader *load_texture(s32 arg0) {
     s32 assetSection;
     s32 assetIndex;
@@ -946,7 +992,7 @@ TextureHeader *load_texture(s32 arg0) {
         assetIndex = arg0 & 0x7FFF;
         assetSection = ASSET_TEXTURES_3D;
     }
-    if ((assetIndex >= D_80126338[assetTable]) || (assetIndex < 0)) {
+    if ((assetIndex >= gTextureAssetID[assetTable]) || (assetIndex < 0)) {
         arg0 = 0;
     }
     for (i = 0; i < gNumberOfLoadedTextures; i++) {
@@ -956,8 +1002,8 @@ TextureHeader *load_texture(s32 arg0) {
             return tex;
         }
     }
-    assetOffset = D_80126320[assetTable][assetIndex];
-    assetSize = D_80126320[assetTable][assetIndex + 1] - assetOffset;
+    assetOffset = gTextureAssetTable[assetTable][assetIndex];
+    assetSize = gTextureAssetTable[assetTable][assetIndex + 1] - assetOffset;
     load_asset_to_address(assetSection, gTempTextureHeader, assetOffset, 0x28);
     numberOfTextures = (gTempTextureHeader->header.numOfTextures >> 8) & 0xFFFF;
 
@@ -1034,6 +1080,9 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/load_texture.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+/**
+ * Official Name: texFreeTexture
+*/
 void free_texture(TextureHeader *tex) {
     s32 i;
     if (tex != NULL) {
@@ -1053,8 +1102,13 @@ void free_texture(TextureHeader *tex) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/free_texture.s")
 #endif
 
-void func_8007B374(s32 arg0) {
-    gTexColourTag = arg0;
+/**
+ * Set the colour tag that determines which memory pool textures will be loaded into.
+ * By default, this generally stays as COLOUR_TAG_MAGENTA
+ * Official Name: setTexMemColour
+*/
+void set_texture_colour_tag(s32 tagID) {
+    gTexColourTag = tagID;
 }
 
 #ifdef NON_EQUIVALENT
@@ -1073,25 +1127,30 @@ TextureHeader *func_8007B380(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B380.s")
 #endif
 
-void func_8007B3D0(Gfx **dlist) {
+/**
+ * Resets all render settings to the default state.
+ * The next draw call will be forced to apply all settings instead of skipping unecessary steps.
+ * Official Name: texDPInit
+*/
+void reset_render_settings(Gfx **dlist) {
     D_8012637C = NULL;
-    D_80126374 = 0;
+    gCurrentRenderFlags = RENDER_NONE;
     D_80126380 = 0;
-    D_80126382 = 1;
-    D_80126378 = 0;
-    D_80126384 = 0;
+    gForceFlags = TRUE;
+    D_80126378 = RENDER_NONE;
+    D_80126384 = FALSE;
     gDPPipeSync((*dlist)++);
     gSPSetGeometryMode((*dlist)++, G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER);
 }
 
 void func_8007B43C(void) {
-    D_80126384 = 1;
-    D_80126382 = 1;
+    D_80126384 = TRUE;
+    gForceFlags = TRUE;
 }
 
 void func_8007B454(void) {
-    D_80126384 = 0;
-    D_80126382 = 1;
+    D_80126384 = FALSE;
+    gForceFlags = TRUE;
 }
 
 typedef struct Struct_Unk_8007B46C {
@@ -1102,35 +1161,45 @@ typedef struct Struct_Unk_8007B46C {
     u8 pad17[3];
 } Struct_Unk_8007B46C;
 
+/**
+ * Official Name: texFrame
+*/
 Struct_Unk_8007B46C *func_8007B46C(Struct_Unk_8007B46C *arg0, s32 arg1) {
     if (arg1 > 0) {
         if (arg1 < arg0->unk12 << 8) {
-            arg0 = ((u8*)arg0) + ((arg1 >> 16) * arg0->unk16);
+            arg0 = (Struct_Unk_8007B46C *) (((u8*)arg0) + ((arg1 >> 16) * arg0->unk16));
         } else {
-            arg0 = ((u8*)arg0) + ((arg0->unk12 >> 8) - 1) * arg0->unk16;
+            arg0 = (Struct_Unk_8007B46C *) (((u8*)arg0) + ((arg0->unk12 >> 8) - 1) * arg0->unk16);
         }
     }
     return arg0;
 }
 
-void func_8007B4C8(Gfx **dlist, TextureHeader *arg1, u32 flags) {
-    func_8007B4E8(dlist, arg1, flags, 0);
+/**
+ * A version of the function below that chooses not to pass along an offset.
+*/
+void load_and_set_texture_no_offset(Gfx **dlist, TextureHeader *texhead, u32 flags) {
+    load_and_set_texture(dlist, texhead, flags, 0);
 }
 
-#ifdef NON_EQUIVALENT
-void func_8007B4E8(Gfx **dlist, TextureHeader *texhead, u32 flags, s32 arg3) {
-    s32 bitfield;
-    s16 temp_D_80126382;
+/**
+ * Load a texture from memory into texture memory.
+ * Also set render mode, combine mode and othermodes based on flags.
+ * Also tracks which modes are active, to prevent setting them again if they're already active.
+ * A number can be attached that adds a texture address offset. An example of this being used is
+ * the numbered doors in the hub, to change what number is written on it.
+*/
+void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 texOffset) {
+    s32 forceFlags;
     s32 doPipeSync;
-    s32 temp_bitfield;
     s32 dlIndex;
 
-    temp_D_80126382 = D_80126382;
+    forceFlags = gForceFlags;
     doPipeSync = TRUE;
 
     if (texhead != NULL) {
-        if ((arg3 != 0) && (arg3 < (texhead->numOfTextures << 8))) {
-            texhead += ((arg3 >> 16) * texhead->textureSize);
+        if (texOffset && (texOffset < texhead->numOfTextures << 8)) {
+            texhead = (TextureHeader *) ((s8 *) texhead + ((texOffset >> 16) * texhead->textureSize));
         }
 
         flags |= texhead->flags;
@@ -1140,179 +1209,159 @@ void func_8007B4E8(Gfx **dlist, TextureHeader *texhead, u32 flags, s32 arg3) {
             doPipeSync = FALSE;
         }
         if (D_80126380 == 0) {
+            forceFlags = TRUE;
             D_80126380 = 1;
-            temp_D_80126382 = 1;
         }
     } else if (D_80126380 != 0) {
+        forceFlags = TRUE;
         D_80126380 = 0;
-        temp_D_80126382 = 1;
     }
 
-    //This version produces a better score, but I'm not sure it's actually better.
-    //bitfield = flags & (D_80126384 ? 0x827 : 0x0800093F);
-    if (D_80126384 != 0) {
-        bitfield = flags & 0x827;
-    } else {
-        bitfield = flags & 0x0800093F;
-    }
+    flags = (D_80126384) ? (flags & (RENDER_DECAL | RENDER_COLOUR_INDEX | RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT)) : (flags & (RENDER_UNK_8000000 | RENDER_DECAL | RENDER_Z_UPDATE | RENDER_COLOUR_INDEX | RENDER_UNK_0000010 | RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING));
+    flags &= ~D_80126378;
+    flags = (flags & RENDER_UNK_8000000) ? flags & ~RENDER_FOG_ACTIVE : flags & ~RENDER_Z_UPDATE;
 
-    if (((bitfield & ~D_80126378) * 16) < 0) {
-        bitfield &= ~D_80126378 & ~8;
-    } else {
-        bitfield &= ~D_80126378 & ~0x100;
-    }
-
-    // Ugly version of the two if statements here that matches the same
-    // bitfield = D_80126384 ? flags & 0x827 : flags & 0x0800093F;
-    // bitfield = ((bitfield & ~D_80126378) * 16) < 0 ? bitfield & ~D_80126378 & ~8 : bitfield & ~D_80126378 & ~0x100;
-
-    temp_bitfield = bitfield;
-    if ((bitfield != D_80126374) || (temp_D_80126382 != 0)) {
+    if ((flags != gCurrentRenderFlags) || (forceFlags)) {
         if (doPipeSync) {
             gDPPipeSync((*dlist)++);
         }
 
-        if (((D_80126374 & 0x08000000) != (bitfield & 0x08000000)) || ((D_80126382 != 0))) {
-            if ((bitfield & 0x08000000) || (D_80126384 != 0)) {
+        if (((flags & RENDER_UNK_8000000) != (gCurrentRenderFlags & RENDER_UNK_8000000)) || ((gForceFlags))) {
+            if ((flags & RENDER_UNK_8000000) || (D_80126384)) {
                 gSPClearGeometryMode((*dlist)++, G_FOG);
             } else {
                 gSPSetGeometryMode((*dlist)++, G_FOG);
             }
         }
 
-        if (((D_80126374 & 2) != (bitfield & 2)) || (D_80126382 != 0)) {
-            if (bitfield & 2) {
+        if (((flags & RENDER_Z_COMPARE) != (gCurrentRenderFlags & RENDER_Z_COMPARE)) || (gForceFlags)) {
+            if (flags & RENDER_Z_COMPARE) {
                 gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
             } else {
                 gSPClearGeometryMode((*dlist)++, G_ZBUFFER);
             }
         }
 
-        D_80126382 = 0;
-        D_80126374 = bitfield;
-        if (D_80126380 == 0) {
-            if (bitfield & 0x08000000) {
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEEE8[bitfield & 3]), numberOfGfxCommands(D_800DEEE8[0]));
+        gForceFlags = FALSE;
+        gCurrentRenderFlags = flags;
+        if (!D_80126380) {
+            if (flags & RENDER_UNK_8000000) {
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEEE8[flags & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE)]), numberOfGfxCommands(D_800DEEE8[0]));
+                return;
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEF28[bitfield & 0xF]), numberOfGfxCommands(D_800DEF28[0]));
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEF28[flags & (RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING)]), numberOfGfxCommands(D_800DEF28[0]));
             return;
         }
 
-        if (D_80126384 != 0) {
-            if ((bitfield & 0x800) && (bitfield & 2)) {
+        if (D_80126384) {
+            if ((flags & RENDER_DECAL) && (flags & RENDER_Z_COMPARE)) {
                 dlIndex = 0;
-                if (bitfield & 1) {
-                    dlIndex |= 1;
+                if (flags & RENDER_ANTI_ALIASING) {
+                    dlIndex |= 1; // Anti Aliasing
                 }
-                if (bitfield & 4) {
-                    dlIndex |= 2;
+                if (flags & RENDER_SEMI_TRANSPARENT) {
+                    dlIndex |= 2; // Z Compare
                 }
-                if (bitfield & 0x20) {
-                    dlIndex |= 4;
+                if (flags & RENDER_COLOUR_INDEX) {
+                    dlIndex |= 4; // Colour Index
                 }
                 gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DF028[dlIndex]), numberOfGfxCommands(D_800DF028[0]));
                 return;
             }
-            if (bitfield & 0x20) {
-                temp_bitfield = (bitfield ^ 0x20) | 8;
+            if (flags & RENDER_COLOUR_INDEX) {
+                flags = (flags ^ RENDER_COLOUR_INDEX) | RENDER_FOG_ACTIVE;
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DF0A8[temp_bitfield]), numberOfGfxCommands(D_800DF0A8[0]));
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DF0A8[flags]), numberOfGfxCommands(D_800DF0A8[0]));
             return;
         }
 
-        if ((bitfield & 0x800) && (bitfield & 2)) {
+        if ((flags & RENDER_DECAL) && (flags & RENDER_Z_COMPARE)) {
             dlIndex = 0;
-            if (bitfield & 1) {
-                dlIndex |= 1;
+            if (flags & RENDER_ANTI_ALIASING) {
+                dlIndex |= 1; // Anti Aliasing
             }
-            if (bitfield & 4) {
-                dlIndex |= 2;
+            if (flags & RENDER_SEMI_TRANSPARENT) {
+                dlIndex |= 2; // Z Compare
             }
-            if (bitfield & 8) {
-                dlIndex |= 4;
+            if (flags & RENDER_FOG_ACTIVE) {
+                dlIndex |= 4; // Fog
             }
-            if (bitfield & 0x20) {
-                dlIndex |= 8;
+            if (flags & RENDER_COLOUR_INDEX) {
+                dlIndex |= 8; // Colour Index
             }
             gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEDE8[dlIndex]), numberOfGfxCommands(D_800DEDE8[0]));
             return;
         }
 
-        if (bitfield & 0x10) {
-            dlIndex = bitfield & 7;
-            if (bitfield & 8) {
-                dlIndex |= 8;
+        if (flags & RENDER_UNK_0000010) {
+            dlIndex = flags & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT);
+            if (flags & RENDER_FOG_ACTIVE) {
+                dlIndex |= 8; // Fog
             }
             gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DECE8[dlIndex]), numberOfGfxCommands(D_800DECE8[0]));
             return;
         }
 
-        bitfield &= ~0x800;
-        if (bitfield & 0x08000000) {
-            dlIndex = bitfield & 3;
-            if (bitfield & 0x100) {
-                dlIndex |= 4;
+        flags &= ~RENDER_DECAL;
+        if (flags & RENDER_UNK_8000000) {
+            dlIndex = flags & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE);
+            if (flags & RENDER_Z_UPDATE) {
+                dlIndex |= 4; // Z write
             } else {
                 gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
-                D_80126374 |= 2;
+                gCurrentRenderFlags |= RENDER_Z_COMPARE;
             }
             gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE7C8[dlIndex]), numberOfGfxCommands(D_800DE7C8[0]));
             return;
         }
 
-        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE8E8[bitfield]), numberOfGfxCommands(D_800DE8E8[0]));
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE8E8[flags]), numberOfGfxCommands(D_800DE8E8[0]));
         return;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B4E8.s")
-#endif
 
-#ifdef NON_EQUIVALENT
-//Reasonaby certain I have the macros correct, but I'm less certain about the arg1 stuff
-//arg1 could be a multidimensional array maybe?
-void func_8007BA5C(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3) {
-    s32 index = flags & 0x1F;
-
-    if ((arg3 != 0) && (arg3 < (arg1->numOfTextures * 256))) {
-        arg1 += ((arg3 >> 16) * arg1->textureSize);
+/**
+ * Loads the texture and render settings for the blinking lights seen in Spaceport Alpha.
+*/
+void load_blinking_lights_texture(Gfx **dlist, TextureHeader *texture_list, u32 flags, s32 texture_index) {
+    u16 *mblock;
+    u16 *tblock;
+    if ((texture_index != 0) && (texture_index < (texture_list->numOfTextures * 256))) {
+        texture_list = (TextureHeader *) ((s32) texture_list + ((texture_index >> 16) * texture_list->textureSize));
     }
-    if (arg1->width == 64) {
-        gDPLoadMultiBlock((*dlist)++, (u32)OS_PHYSICAL_TO_K0(arg1)+sizeof(TextureHeader), 0x100, 1,
+    mblock = (u16*)(texture_list + 1);
+    tblock = mblock + 0x400;
+    if (texture_list->width == 64) {
+        gDPLoadMultiBlock((*dlist)++, OS_K0_TO_PHYSICAL(mblock), 256, 1,
             G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 16, 0, 0, 0, 6, 4, 0, 0);
-
-        gDPLoadTextureBlock((*dlist)++, (u32)OS_PHYSICAL_TO_K0(arg1)+(sizeof(TextureHeader)*65),
+        gDPLoadTextureBlock((*dlist)++, OS_K0_TO_PHYSICAL(tblock),
             G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 16, 0, 0, 0, 6, 4, 0, 0);
     } else {
-        gDPLoadMultiBlock((*dlist)++, (u32)OS_PHYSICAL_TO_K0(arg1)+sizeof(TextureHeader), 0x100, 1,
+        gDPLoadMultiBlock((*dlist)++, OS_K0_TO_PHYSICAL(mblock), 256, 1,
             G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, 0, 0, 0, 5, 5, 0, 0);
-
-        gDPLoadTextureBlock((*dlist)++, (u32)OS_PHYSICAL_TO_K0(arg1)+(sizeof(TextureHeader)*65),
+        gDPLoadTextureBlock((*dlist)++, OS_K0_TO_PHYSICAL(tblock),
             G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, 0, 0, 0, 5, 5, 0, 0);
     }
 
     gDPPipeSync((*dlist)++);
-
-    D_8012637C = NULL;
+    D_8012637C = 0;
+    flags &= 0x1F;
     gSPSetGeometryMode((*dlist)++, G_FOG);
 
-    if (index & G_TEXTURE_ENABLE) {
+    if (flags & G_TEXTURE_ENABLE) {
         gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
     } else {
         gSPClearGeometryMode((*dlist)++, G_ZBUFFER);
     }
-    D_80126382 = 1;
-    D_80126374 = 0;
-    gDkrDmaDisplayList((*dlist)++, (u32) OS_PHYSICAL_TO_K0(D_800DF1A8[index]), numberOfGfxCommands(D_800DF1A8[0]));
+    gForceFlags = TRUE;
+    gCurrentRenderFlags = RENDER_NONE;
+    gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DF1A8[flags]), numberOfGfxCommands(D_800DF1A8[0]));
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007BA5C.s")
-#endif
 
 
 void func_8007BF1C(s32 arg0) {
     D_800DE7C4 = arg0;
-    D_80126382 = 1;
+    gForceFlags = TRUE;
 }
 
 #ifdef NON_EQUIVALENT
@@ -1322,25 +1371,25 @@ void func_8007BF34(Gfx **dlist, s32 arg1) {
     s32 temp_t8;
     s32 temp_v0_3;
 
-    if ((arg1 != D_80126374) || (D_80126382 != 0)) {
+    if ((arg1 != gCurrentRenderFlags) || (gForceFlags != 0)) {
         gDPPipeSync((*dlist)++);
-        if (((D_80126374 * 16) < 0) || (D_80126382 != 0)) {
+        if (((gCurrentRenderFlags * 16) < 0) || (gForceFlags != 0)) {
             gSPSetGeometryMode((*dlist)++, G_FOG);
         }
         temp_a1 = arg1 & 0xF7FFFFFF & ~D_80126378;
         temp_v0_3 = temp_a1 & 2;
-        if (((D_80126374 & 2) != temp_v0_3) || (D_80126382 != 0)) {
+        if (((gCurrentRenderFlags & 2) != temp_v0_3) || (gForceFlags != 0)) {
             if (temp_v0_3 != 0) {
                 gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
             } else {
                 gSPClearGeometryMode((*dlist)++, G_ZBUFFER);
             }
         }
-        D_80126382 = 0;
-        D_80126374 = temp_a1;
+        gForceFlags = 0;
+        gCurrentRenderFlags = temp_a1;
         temp_t8 = temp_a1 & ~0x800;
         if (D_800DE7C4 == 0) {
-            if ((D_80126374 & 0x200) != 0) {
+            if ((gCurrentRenderFlags & 0x200) != 0) {
                 gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE848[((temp_t8 >> 1) & 1) * 16]), numberOfGfxCommands(D_800DE848[0]));
             } else {
                 gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE868[(temp_t8 - 16) * 16]), numberOfGfxCommands(D_800DE868[0]));
@@ -1356,6 +1405,9 @@ void func_8007BF34(Gfx **dlist, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007BF34.s")
 #endif
 
+/**
+ * Official Name: texLoadSprite
+*/
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C12C.s")
 
 #ifdef NON_MATCHING
@@ -1392,11 +1444,11 @@ s32 get_texture_size_from_id(s32 arg0) {
         assetSection = ASSET_TEXTURES_3D;
         assetTable = 1;
     }
-    if ((assetIndex >= D_80126338[assetTable]) || (assetIndex < 0)) {
+    if ((assetIndex >= gTextureAssetID[assetTable]) || (assetIndex < 0)) {
         return 0;
     }
-    start = D_80126320[assetTable][assetIndex];
-    size = D_80126320[assetTable][assetIndex + 1] - start;
+    start = gTextureAssetTable[assetTable][assetIndex];
+    size = gTextureAssetTable[assetTable][assetIndex + 1] - start;
     if (gTempTextureHeader->header.isCompressed) {
         load_asset_to_address(assetSection, gTempTextureHeader, start, 0x28);
         size = byteswap32(&gTempTextureHeader->uncompressedSize);
@@ -1410,28 +1462,19 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/get_texture_size_from_id.s")
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C660.s")
 
-#ifdef NON_MATCHING
 UNUSED s32 func_8007C860(s32 spriteIndex) {
     if ((spriteIndex < 0) || (spriteIndex >= gNumberOfLoadedTextures)) {
         return -1;
     }
-    return gTextureCache[spriteIndex].id;
+    return ((TextureCacheEntry *) ((s32*) gTextureCache + spriteIndex * 2))->id;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C860.s")
-#endif
 
-#ifdef NON_MATCHING
 UNUSED s32 func_8007C8A0(s32 spriteIndex) {
     if ((spriteIndex < 0) || (spriteIndex >= D_80126358)) {
         return -1;
     }
-    // I need to skip a register here.
-    return gSpriteCache[spriteIndex].id;
+    return ((SpriteCacheEntry*) ((s32*) gSpriteCache + spriteIndex * 2))->id;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C8A0.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *numFramesOut, s32 *formatOut, s32 *sizeOut) {
@@ -1454,7 +1497,7 @@ s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *
         free_texture(tex);
         *sizeOut = 0;
         for (i = 0; i < gCurrentSprite->numberOfFrames; i++) {
-            for (j = gCurrentSprite->unkC[i]; j < gCurrentSprite->unkC[i + 1]; j++) {
+            for (j = (s32) gCurrentSprite->unkC[i]; j < (s32) gCurrentSprite->unkC[i + 1]; j++) {
                 *sizeOut += get_texture_size_from_id(gCurrentSprite->baseTextureId + j);
             }
         }
@@ -1476,6 +1519,7 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CA68.s")
 
 #ifdef NON_EQUIVALENT
 // andi 0xff instead of a simple mov for j = i. s32 doesn't work.
+/* Official name: texFreeSprite */
 void free_sprite(Sprite *sprite) {
     s32 i;
     u8 j;
@@ -1507,85 +1551,221 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/free_sprite.s")
 #endif
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CDC0.s")
+
+#ifdef NON_EQUIVALENT
+//HEAVILY WIP
+void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
+    s32 texFlags;
+    s32 cms;
+    s32 cmt;
+    s32 texFormat;
+    s32 temp_v0_4;
+    s32 i;
+    s32 uClamp;
+    s32 vClamp;
+    s32 masks;
+    s32 maskt;
+    u8 height;
+    u8 width;
+    s32 var_v0;
+
+    tex->cmd = (s32 *) dlist;
+    texFormat = tex->format & 0xF;
+    texFlags = (tex->format >> 4) & 0xF;
+    height = tex->height;
+    width = tex->width;
+    var_v0 = 1;
+    masks = 1;
+    maskt = 1;
+    uClamp = TRUE;
+    vClamp = TRUE;
+    for (i = 0; i < 7; i++) {
+        if (var_v0 < width) {
+            masks = i + 1;
+        }
+        if (var_v0 == width) {
+            uClamp = FALSE;
+        }
+        if (var_v0 < height) {
+            maskt = i + 1;
+        }
+        if (var_v0 == height) {
+            vClamp = FALSE;
+        }
+        var_v0 <<= 1;
+    }
+    if (uClamp || (tex->flags & 0x40)) {
+        cms = 2;
+        masks = 0;
+    } else {
+        cms = 0;
+    }
+    if (vClamp || (tex->flags & 0x80)) {
+        cmt = 2;
+        maskt = 0;
+    } else {
+        cmt = 0;
+    }
+    if (!(tex->flags & 0x400)) {
+        if (texFormat == 0) {
+            gDPLoadTextureBlock(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_32b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+            if ((texFlags == 0) || (texFlags == 2)) {
+                tex->flags |= 4;
+            }
+        }
+        if (texFormat == 1) {
+            gDPLoadTextureBlock(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+            if ((texFlags == 0) || (texFlags == 2)) {
+                tex->flags |= 4;
+            }
+        }
+        if (texFormat == 7) {
+            gDPLoadTextureBlock(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_CI, G_IM_SIZ_16b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+            temp_v0_4 = func_8007EF64(tex->ciPaletteOffset);
+            gDPLoadTLUT_pal16(dlist++, 0, temp_v0_4);
+
+            tex->flags |= 0x20;
+            if ((texFlags == 0) || (texFlags == 2)) {
+                tex->flags |= 4;
+            }
+        }
+        if (texFormat == 4) {
+            gDPLoadTextureBlock(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_IA, G_IM_SIZ_16b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+            tex->flags |= 4;
+        }
+        if (texFormat == 5) {
+            gDPLoadTextureBlock(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_IA, G_IM_SIZ_8b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+            tex->flags |= 4;
+        }
+        if (texFormat == 6) {
+            gDPLoadTextureBlock(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_IA, G_IM_SIZ_4b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+            tex->flags |= 4;
+        }
+        if (texFormat == 2) {
+            gDPLoadTextureBlock(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_I, G_IM_SIZ_8b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+        }
+        if (texFormat == 3) {
+            gDPLoadTextureBlock(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_I, G_IM_SIZ_4b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+        }
+        tex->numberOfCommands = ((s32) ((s32)dlist - (s32)tex->cmd) >> 3);
+    } else {
+        
+        if (texFormat == 0) {
+            gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_32b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+            if ((texFlags == 0) || (texFlags == 2)) {
+                tex->flags |= 4;
+            }
+        }
+        if (texFormat == 1) {
+            gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_RGBA, G_IM_SIZ_16b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+            if ((texFlags == 0) || (texFlags == 2)) {
+                tex->flags |= 4;
+            }
+        }
+        if (texFormat == 7) {
+            gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_CI, G_IM_SIZ_16b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+            temp_v0_4 = func_8007EF64(tex->ciPaletteOffset);
+            gDPLoadTLUT_pal16(dlist++, 0, temp_v0_4);
+
+            tex->flags |= 0x20;
+            if ((texFlags == 0) || (texFlags == 2)) {
+                tex->flags |= 4;
+            }
+        }
+        if (texFormat == 4) {
+            gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_IA, G_IM_SIZ_16b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+            tex->flags |= 4;
+        }
+        if (texFormat == 5) {
+            gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_IA, G_IM_SIZ_8b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+            tex->flags |= 4;
+        }
+        if (texFormat == 6) {
+            gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_IA, G_IM_SIZ_4b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+            tex->flags |= 4;
+        }
+        if (texFormat == 2) {
+            gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_I, G_IM_SIZ_8b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+        }
+        if (texFormat == 3) {
+            gDPLoadTextureBlockS(dlist++, OS_PHYSICAL_TO_K0(tex + 1), G_IM_FMT_I, G_IM_SIZ_4b, width, height, 0, cms, cmt, masks, maskt, G_TX_NOLOD, G_TX_NOLOD);
+        }
+        tex->numberOfCommands = ((s32) ((s32)dlist - (s32)tex->cmd) >> 3);
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/textures_sprites/build_tex_display_list.s")
+#endif
 
 s32 func_8007EF64(s16 arg0) {
-    return arg0 + gCiPalettes;
+    return (s32) (arg0 + gCiPalettes);
 }
-
-// There might be a file boundary here.
-
-void func_8007EF80(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 arg3) {
+/**
+ * Official Name: texAnimateTexture
+*/
+void tex_animate_texture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 updateRate) {
     s32 bit23Set;
     s32 bit25Set;
     s32 bit26Set;
-    s32 phi_a0;
+    s32 breakVar;
 
-    bit23Set = *triangleBatchInfoFlags & 0x800000;
-    bit26Set = *triangleBatchInfoFlags & 0x04000000;
-    bit25Set = *triangleBatchInfoFlags & 0x02000000;
+    bit23Set = *triangleBatchInfoFlags & BATCH_FLAGS_UNK00800000;
+    bit26Set = *triangleBatchInfoFlags & BATCH_FLAGS_UNK04000000;
+    bit25Set = *triangleBatchInfoFlags & BATCH_FLAGS_UNK02000000;
     if (bit23Set) {
         if (!bit25Set) {
-            if (get_random_number_from_range(0, 1000) >= 986) {
-                *triangleBatchInfoFlags &= ~0x4000000;
-                *triangleBatchInfoFlags |= 0x02000000;
+            if (get_random_number_from_range(0, 1000) > 985) {
+                *triangleBatchInfoFlags &= ~BATCH_FLAGS_UNK04000000;
+                *triangleBatchInfoFlags |= BATCH_FLAGS_UNK02000000;
             }
         } else if (!bit26Set) {
-            *arg2 = *arg2 + (texture->frameAdvanceDelay * arg3);
+            *arg2 += texture->frameAdvanceDelay * updateRate;
             if (*arg2 >= texture->numOfTextures) {
                 *arg2 = ((texture->numOfTextures * 2) - *arg2) - 1;
                 if (*arg2 < 0) {
                     *arg2 = 0;
-                    *triangleBatchInfoFlags &= ~(0x2000000 | 0x4000000);
-                    return;
+                    *triangleBatchInfoFlags &= ~(BATCH_FLAGS_UNK02000000 | BATCH_FLAGS_UNK04000000);
+                } else {
+                    *triangleBatchInfoFlags |= BATCH_FLAGS_UNK04000000;
                 }
-                *triangleBatchInfoFlags |= 0x04000000;
             }
         } else {
-            *arg2 = *arg2 - (texture->frameAdvanceDelay * arg3);
+            *arg2 -= texture->frameAdvanceDelay * updateRate;
             if (*arg2 < 0) {
                 *arg2 = 0;
-                *triangleBatchInfoFlags &= ~(0x2000000 | 0x4000000);
+                *triangleBatchInfoFlags &= ~(BATCH_FLAGS_UNK02000000 | BATCH_FLAGS_UNK04000000);
             }
+        }
+    } else if (bit25Set) {
+        if (!bit26Set) {
+            *arg2 += texture->frameAdvanceDelay * updateRate;
+        } else {
+            *arg2 -= texture->frameAdvanceDelay * updateRate;
+        }
+        do {
+            breakVar = FALSE;
+            if (*arg2 < 0) {
+                *arg2 = -*arg2;
+                *triangleBatchInfoFlags &= ~BATCH_FLAGS_UNK04000000;
+                breakVar = TRUE;
+            }
+            if (*arg2 >= texture->numOfTextures) {
+                *arg2 = ((texture->numOfTextures * 2) - *arg2) - 1;
+                *triangleBatchInfoFlags |= BATCH_FLAGS_UNK04000000;
+                breakVar = TRUE;
+            }
+        } while (breakVar);
+    } else if (!bit26Set) {
+        *arg2 += texture->frameAdvanceDelay * updateRate;
+        while (*arg2 >= texture->numOfTextures) {
+            *arg2 -= texture->numOfTextures;
         }
     } else {
-        if (bit25Set) {
-            if (!bit26Set) {
-                *arg2 += texture->frameAdvanceDelay * arg3;
-            } else {
-                *arg2 -= texture->frameAdvanceDelay * arg3;
-            }
-            do {
-                phi_a0 = 0;
-                if (*arg2 < 0) {
-                    *arg2 = -*arg2;
-                    *triangleBatchInfoFlags &= ~0x4000000;
-                    phi_a0 = 1;
-                }
-                if (*arg2 >= texture->numOfTextures) {
-                    *arg2 = ((texture->numOfTextures * 2) - *arg2) - 1;
-                    *triangleBatchInfoFlags |= 0x04000000;
-                    phi_a0 = 1;
-                }
-            } while (phi_a0 != 0);
-            return;
+        *arg2 -= texture->frameAdvanceDelay * updateRate;
+        while (*arg2 < 0) {
+            *arg2 += texture->numOfTextures;
         }
-        if (!bit26Set) {
-            *arg2 = *arg2 + (texture->frameAdvanceDelay * arg3);
-            if (*arg2 >= texture->numOfTextures) {
-                do {
-                    *arg2 -= texture->numOfTextures;
-                } while (*arg2 >= texture->numOfTextures);
-            }
-        } else {
-            *arg2 = *arg2 - (texture->frameAdvanceDelay * arg3);
-            if (*arg2 < 0) {
-                do {
-                    *arg2 += texture->numOfTextures;
-                } while (*arg2 < 0);
-            }
-        }
-    }
+    }    
 }
 
 void func_8007F1E8(unk8007F1E8 *arg0) {
@@ -1603,8 +1783,14 @@ void func_8007F1E8(unk8007F1E8 *arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007F24C.s")
+/**
+ * Official name: updateColourCycle
+*/
+GLOBAL_ASM("asm/non_matchings/textures_sprites/update_colour_cycle.s")
 
+/**
+ * Official name: resetMixCycle
+*/
 void init_pulsating_light_data(PulsatingLightData *data) {
     s32 i;
     data->currentFrame = 0;
@@ -1616,6 +1802,9 @@ void init_pulsating_light_data(PulsatingLightData *data) {
     }
 }
 
+/**
+ * Official Name: updateMixCycle
+*/
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta) {
     s32 thisFrameIndex, nextFrameIndex;
 

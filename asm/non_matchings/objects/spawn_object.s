@@ -456,7 +456,7 @@ glabel L8000EDE0
 /* 00FCC4 8000F0C4 10600009 */  beqz  $v1, .L8000F0EC
 /* 00FCC8 8000F0C8 02402025 */   move  $a0, $s2
 /* 00FCCC 8000F0CC 8FA60064 */  lw    $a2, 0x64($sp)
-/* 00FCD0 8000F0D0 0C003D92 */  jal   func_8000F648
+/* 00FCD0 8000F0D0 0C003D92 */  jal   objFreeAssets
 /* 00FCD4 8000F0D4 02602825 */   move  $a1, $s3
 /* 00FCD8 8000F0D8 87A4004E */  lh    $a0, 0x4e($sp)
 /* 00FCDC 8000F0DC 0C003211 */  jal   func_8000C844
@@ -494,14 +494,14 @@ glabel L8000EDE0
 /* 00FD54 8000F154 31AF0002 */  andi  $t7, $t5, 2
 /* 00FD58 8000F158 11E0000F */  beqz  $t7, .L8000F198
 /* 00FD5C 8000F15C 00C02825 */   move  $a1, $a2
-/* 00FD60 8000F160 0C003EF3 */  jal   func_8000FBCC
+/* 00FD60 8000F160 0C003EF3 */  jal   init_object_shadow
 /* 00FD64 8000F164 AFA60048 */   sw    $a2, 0x48($sp)
 /* 00FD68 8000F168 8FA60048 */  lw    $a2, 0x48($sp)
 /* 00FD6C 8000F16C 1440000A */  bnez  $v0, .L8000F198
 /* 00FD70 8000F170 00C23021 */   addu  $a2, $a2, $v0
 /* 00FD74 8000F174 8FA60064 */  lw    $a2, 0x64($sp)
 /* 00FD78 8000F178 02402025 */  move  $a0, $s2
-/* 00FD7C 8000F17C 0C003D92 */  jal   func_8000F648
+/* 00FD7C 8000F17C 0C003D92 */  jal   objFreeAssets
 /* 00FD80 8000F180 02602825 */   move  $a1, $s3
 /* 00FD84 8000F184 87A4004E */  lh    $a0, 0x4e($sp)
 /* 00FD88 8000F188 0C003211 */  jal   func_8000C844
@@ -529,7 +529,7 @@ glabel L8000EDE0
 /* 00FDDC 8000F1DC 8FA60064 */  lw    $a2, 0x64($sp)
 .L8000F1E0:
 /* 00FDE0 8000F1E0 02402025 */  move  $a0, $s2
-/* 00FDE4 8000F1E4 0C003D92 */  jal   func_8000F648
+/* 00FDE4 8000F1E4 0C003D92 */  jal   objFreeAssets
 /* 00FDE8 8000F1E8 02602825 */   move  $a1, $s3
 /* 00FDEC 8000F1EC 87A4004E */  lh    $a0, 0x4e($sp)
 /* 00FDF0 8000F1F0 0C003211 */  jal   func_8000C844
@@ -582,7 +582,7 @@ glabel L8000EDE0
 /* 00FE9C 8000F29C 00C23021 */  addu  $a2, $a2, $v0
 .L8000F2A0:
 /* 00FEA0 8000F2A0 8209005A */  lb    $t1, 0x5a($s0)
-/* 00FEA4 8000F2A4 3C048012 */  lui   $a0, %hi(D_8011AE68) # $a0, 0x8012
+/* 00FEA4 8000F2A4 3C048012 */  lui   $a0, %hi(gObjectMemoryPool) # $a0, 0x8012
 /* 00FEA8 8000F2A8 19200007 */  blez  $t1, .L8000F2C8
 /* 00FEAC 8000F2AC 00D22823 */   subu  $a1, $a2, $s2
 /* 00FEB0 8000F2B0 AE460070 */  sw    $a2, 0x70($s2)
@@ -592,7 +592,7 @@ glabel L8000EDE0
 /* 00FEC0 8000F2C0 00CF3021 */  addu  $a2, $a2, $t7
 /* 00FEC4 8000F2C4 00D22823 */  subu  $a1, $a2, $s2
 .L8000F2C8:
-/* 00FEC8 8000F2C8 8C84AE68 */  lw    $a0, %lo(D_8011AE68)($a0)
+/* 00FEC8 8000F2C8 8C84AE68 */  lw    $a0, %lo(gObjectMemoryPool)($a0)
 /* 00FECC 8000F2CC 00A08825 */  move  $s1, $a1
 /* 00FED0 8000F2D0 0C01C3A4 */  jal   allocate_from_pool_containing_slots
 /* 00FED4 8000F2D4 02408025 */   move  $s0, $s2
@@ -616,7 +616,7 @@ glabel L8000EDE0
 /* 00FF18 8000F318 8FA60064 */  lw    $a2, 0x64($sp)
 .L8000F31C:
 /* 00FF1C 8000F31C 02002025 */  move  $a0, $s0
-/* 00FF20 8000F320 0C003D92 */  jal   func_8000F648
+/* 00FF20 8000F320 0C003D92 */  jal   objFreeAssets
 /* 00FF24 8000F324 02602825 */   move  $a1, $s3
 /* 00FF28 8000F328 87A4004E */  lh    $a0, 0x4e($sp)
 /* 00FF2C 8000F32C 0C003211 */  jal   func_8000C844
@@ -799,7 +799,7 @@ glabel L8000EDE0
 /* 0101B0 8000F5B0 8FA60064 */  lw    $a2, 0x64($sp)
 .L8000F5B4:
 /* 0101B4 8000F5B4 02402025 */  move  $a0, $s2
-/* 0101B8 8000F5B8 0C003D92 */  jal   func_8000F648
+/* 0101B8 8000F5B8 0C003D92 */  jal   objFreeAssets
 /* 0101BC 8000F5BC 02602825 */   move  $a1, $s3
 /* 0101C0 8000F5C0 87A4004E */  lh    $a0, 0x4e($sp)
 /* 0101C4 8000F5C4 0C003211 */  jal   func_8000C844
@@ -822,7 +822,7 @@ glabel L8000EDE0
 /* 010200 8000F600 00000000 */  nop   
 /* 010204 8000F604 19C00003 */  blez  $t6, .L8000F614
 /* 010208 8000F608 00000000 */   nop   
-/* 01020C 8000F60C 0C003DD6 */  jal   func_8000F758
+/* 01020C 8000F60C 0C003DD6 */  jal   lightSetupLightSources
 /* 010210 8000F610 02402025 */   move  $a0, $s2
 .L8000F614:
 /* 010214 8000F614 0C01867D */  jal   func_800619F4

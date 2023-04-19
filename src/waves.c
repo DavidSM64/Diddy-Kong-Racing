@@ -7,6 +7,7 @@
 #include "libultra_internal.h"
 #include "memory.h"
 #include "textures_sprites.h"
+#include "objects.h"
 
 /************ .data ************/
 
@@ -64,12 +65,12 @@ s16 D_800E3144[26] = {
 s32 *D_800E3178 = NULL;
 s32 D_800E317C = 0;
 s32 D_800E3180 = 0;
-s32 *D_800E3184 = NULL;
-s32 *D_800E3188 = NULL;
+unk800E3184 *D_800E3184 = NULL;
+s32 D_800E3188 = NULL;
 s32 D_800E318C = 0;
-s32 *D_800E3190 = NULL;
+unk800E3190 *D_800E3190 = NULL;
 s32 *D_800E3194 = NULL;
-s32 D_800E3198 = 0;
+Object *D_800E3198 = 0;
 s32 D_800E319C = 0;
 
 /*******************************/
@@ -88,23 +89,14 @@ const char D_800E9260[] = "\nError :: can not add another wave swell, reached li
 
 s32 D_80129FC0;
 s32 D_80129FC4;
-s32 D_80129FC8;
-s32 D_80129FCC;
-s32 D_80129FD0[4];
-s32 D_80129FE0[2];
-s32 D_80129FE8;
-s32 D_80129FF0[6];
-s32 D_8012A008;
-s32 D_8012A00C;
-s32 D_8012A010;
-s32 D_8012A014;
+unk80129FC8 D_80129FC8[1];
 s32 D_8012A018;
 s32 D_8012A01C;
 s32 D_8012A020[2];
 s32 D_8012A028[20];
 s32 D_8012A078;
-s32 D_8012A07C;
-s32 D_8012A080;
+TriangleBatchInfo *D_8012A07C;
+TextureHeader *D_8012A080;
 s32 D_8012A084;
 s32 D_8012A088;
 s32 D_8012A08C;
@@ -136,9 +128,10 @@ s32 D_8012A5F4;
 s32 D_8012A5F8;
 s32 D_8012A5FC;
 s32 D_8012A600[72];
-s32 D_8012A720;
-s32 D_8012A724;
-s32 D_8012A728[2];
+f32 D_8012A720;
+f32 D_8012A724;
+s32 D_8012A728;
+s32 D_8012A72C;
 
 /*****************************/
 
@@ -190,7 +183,38 @@ void func_800B7D20(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/waves/func_800B7EB4.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800B8134.s")
+
+void func_800B8134(unk800B8134 *arg0) {
+    if (D_8012A078 != 2) {
+        D_80129FC8->unk0 = arg0->unk56;
+    } else {
+        D_80129FC8->unk0 = 4;
+    }
+    D_80129FC8->unk4 = arg0->unk57;
+    D_80129FC8->unk8 = arg0->unk58;
+    D_80129FC8->unkC = arg0->unk5A * 0.00390625f;
+    D_80129FC8->unk10 = arg0->unk59 << 8;
+    D_80129FC8->unk14 = arg0->unk5C;
+    D_80129FC8->unk18 = arg0->unk5E * 0.00390625f;
+    D_80129FC8->unk1C = arg0->unk5D << 8;
+    D_80129FC8->unk20 = arg0->unk60 & ~1;
+    if (D_8012A078 != 2) {
+        D_80129FC8->unk24 = arg0->unk6E;
+    } else {
+        D_80129FC8->unk24 = 3;
+    }
+    D_80129FC8->unk28 = arg0->unk71;
+    D_80129FC8->unk2C = arg0->unk68 & 0xFFFF;
+    D_80129FC8->unk30 = arg0->unk6A;
+    D_80129FC8->unk34 = arg0->unk6B;
+    D_80129FC8->unk38 = arg0->unk6C;
+    D_80129FC8->unk3C = arg0->unk6D;
+    D_80129FC8->unk40 = arg0->unk62 * 0.00390625f;
+    D_80129FC8->unk44 = arg0->unk64 * 0.00390625f;
+    D_80129FC8->unk48 = arg0->unk66 * 0.00390625f;
+    D_80129FC8->unk4C = arg0->unk70;
+}
+
 GLOBAL_ASM("asm/non_matchings/waves/func_800B82B4.s")
 
 void func_800B8B8C(void) {
@@ -231,23 +255,185 @@ GLOBAL_ASM("asm/non_matchings/waves/func_800BA4B8.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BA8E4.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BB2F4.s")
 
-void func_800BBDDC(s32 arg0) {
-    func_800BBE08();
-    func_800BBF78(arg0);
+void func_800BBDDC(LevelModel *level, LevelHeader *header) {
+    func_800BBE08(level, (unk800BBE08_arg1 *) header);
+    func_800BBF78(level);
 }
 
-GLOBAL_ASM("asm/non_matchings/waves/func_800BBE08.s")
+//TODO: arg1 should be a LevelHeader
+void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1) {
+    s16 numSegments;
+    s32 j;
+    TriangleBatchInfo *curBatch;
+    s32 i;
+    s32 temp_t6;
+    LevelModelSegmentBoundingBox *bb;
+    LevelModelSegment *segment;
+
+    numSegments = level->numberOfSegments;
+    curBatch = 0;
+    
+    for (i = 0; (curBatch == 0) && (i < numSegments); i++) {
+        segment = &level->segments[i];
+        for (j = 0; (curBatch == 0) && (j < segment->numberOfBatches); j++) {
+            if ((segment->batches[j].flags & 0x01002100) == 0x01002000) {
+                curBatch = &segment->batches[j];
+            }
+        }
+    }
+    
+    if (curBatch == 0) {
+        i = 0;
+    } else {
+        i--;
+    }
+    bb = &level->segmentsBoundingBoxes[i];
+    D_8012A0A8 = bb->x2 - bb->x1;
+    D_8012A0AC = bb->z2 - bb->z1;
+    D_8012A0B0 = bb->x1;
+    D_8012A0B4 = bb->z1;
+    D_8012A07C = curBatch;
+    D_8012A080 = level->textures[curBatch->textureIndex].texture;
+    temp_t6 = (curBatch->flags & 0x70000000) >> 0x1C;
+    if (temp_t6 > 0) {
+        D_800E3180 = arg1->unk70[temp_t6];
+    } else {
+        D_800E3180 = 0;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/waves/func_800BBF78.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BC6C8.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BCC70.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BDC80.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BE654.s")
+// Get water height probably.
 GLOBAL_ASM("asm/non_matchings/waves/func_800BEEB4.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BEFC4.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800BF3E4.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800BF524.s")
+
+void func_800BF3E4(s32 arg0) {
+    s32 i;
+    s32 k;
+    s32 j;
+    s32 m;
+    unk800E3184 *temp_a1;
+
+    if (D_800E3190 != NULL) {
+        
+        for (i = 0, m = 0; i < D_800E3188 && m == 0; i++) {
+            if (arg0 == D_800E3194[i]) {
+                m = -1;
+            }
+        }
+        if (m != 0) {
+            i--;
+            for (j = 0; j < D_800E318C; j++) {
+                for (k = 0, temp_a1 = &D_800E3184[j]; k < 8 && temp_a1->unk0[k] != 0xFF; k++) {
+                    if (i == temp_a1->unk0[k]) {
+                        while (k < 7) {
+                            temp_a1->unk0[k] = temp_a1->unk0[k + 1];
+                            k++;
+                        }
+                        temp_a1->unk0[k] = 0xFF;
+                        k++;
+                    }
+                }
+            }
+            D_800E3194[j] = 0;
+            D_800E3188 -= 1;
+        }
+    }
+}
+
+void func_800BF524(Object *obj) {
+    LevelObjectEntry800BF524 *temp_v0;
+    s32 var_v1;
+
+    temp_v0 = (LevelObjectEntry800BF524 *) obj->segment.unk3C_a.level_entry;
+    var_v1 = 0;
+    if (temp_v0->unk10 != 0) {
+        var_v1 = 1;
+    }
+    if (temp_v0->unk11 != 0) {
+        var_v1 |= 2;
+    }
+    func_800BF634(obj, obj->segment.trans.x_position, obj->segment.trans.z_position, (f32)temp_v0->unkA, temp_v0->unk9 << 8,  
+        (f32)temp_v0->unk8 * 0.0625, (f32)temp_v0->unkE, (f32)temp_v0->unkC * 0.0625, var_v1);
+}
+
+
 GLOBAL_ASM("asm/non_matchings/waves/func_800BF634.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BF9F8.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800BFC54.s")
-GLOBAL_ASM("asm/non_matchings/waves/func_800BFE98.s")
-GLOBAL_ASM("asm/non_matchings/waves/obj_loop_wavepower.s")
+
+UNUSED void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4) {
+    if (arg0 != NULL) {
+        arg0->unk10 = (arg0->unk10 + arg1);
+        if (arg0->unk10 < 1.0) {
+            arg0->unk10 = 1.0f;
+        }
+        arg0->unk0 = (arg0->unkC - arg0->unk10);
+        arg0->unk4 = (arg0->unkC + arg0->unk10);
+        arg0->unk28 += arg2;
+        if (osTvType == TV_TYPE_PAL) {
+            arg0->unk1C = arg0->unk28 * 20971.52;//(f64) (0x80000 / 25.0);
+        } else {
+            arg0->unk1C = arg0->unk28 * 17476.27;//(f64) ((0x80000 / 1.2) / 25.0);
+        }
+        arg0->unk2C = (arg0->unk2C + arg3);
+        if (arg0->unk2C < 1.0) {
+            arg0->unk2C = 1.0f;
+        }
+        arg0->unk20 = (65536.0f / arg0->unk2C);
+        arg0->unk24 = (arg0->unk24 + arg4);
+    }
+}
+
+void func_800BFE98(s32 arg0) {
+    s32 i;
+
+    for(i = 0; i < 32; i++) {
+        if (D_800E3194[i] != 0) {
+            D_800E3190[i].unk1A += ((0, D_800E3190[i].unk1C * arg0)) >> 4;
+        }
+    }
+}
+
+void obj_loop_wavepower(Object *obj) {
+    LevelObjectEntry_WavePower *entry;
+    s32 numRacers;
+    Object *racerObj;
+    Object_Racer *racer;
+    Object **racers;
+    s32 i;
+    f32 diffY;
+    f32 diffZ;
+    f32 diffX;
+    f32 distance;
+
+    if (obj != D_800E3198) {
+        racers = get_racer_objects(&numRacers);
+        if (numRacers > 0) {
+            racerObj = NULL;
+            for (i = 0; i < numRacers && racerObj == NULL; i++) {
+                racer = (Object_Racer *) racers[i]->unk64;
+                if (racer->playerIndex == 0) {
+                    racerObj = racers[i];
+                }
+            }
+            if (racerObj != NULL) {
+                entry = (LevelObjectEntry_WavePower *) obj->segment.unk3C_a.level_entry;
+                distance = entry->radius;
+                distance *= distance;
+                diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
+                diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
+                diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
+                if (((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < distance) {
+                    D_8012A720 = ((f32) entry->unkA * (1.0f / 256.0f));
+                    D_8012A724 = ((D_8012A720 -  D_80129FC8->unk40) / (f32) entry->unkC);
+                    D_8012A728 = (s32) entry->unkC;
+                    D_800E3198 = obj;
+                }
+            }
+        }
+    }
+}

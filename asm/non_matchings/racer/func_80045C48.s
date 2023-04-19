@@ -19,7 +19,7 @@ glabel func_80045C48
 /* 04688C 80045C8C AFA400E8 */  sw    $a0, 0xe8($sp)
 /* 046890 80045C90 AFA600F0 */  sw    $a2, 0xf0($sp)
 /* 046894 80045C94 AFA000C4 */  sw    $zero, 0xc4($sp)
-/* 046898 80045C98 0C006E99 */  jal   func_8001BA64
+/* 046898 80045C98 0C006E99 */  jal   get_checkpoint_count
 /* 04689C 80045C9C AC20D538 */   sw    $zero, %lo(gCurrentStickY)($at)
 /* 0468A0 80045CA0 14400005 */  bnez  $v0, .L80045CB8
 /* 0468A4 80045CA4 00409025 */   move  $s2, $v0
@@ -69,7 +69,7 @@ glabel func_80045C48
 /* 046940 80045D40 AFA70034 */  sw    $a3, 0x34($sp)
 /* 046944 80045D44 AFA60038 */  sw    $a2, 0x38($sp)
 /* 046948 80045D48 AFA30030 */  sw    $v1, 0x30($sp)
-/* 04694C 80045D4C 0C006E87 */  jal   func_8001BA1C
+/* 04694C 80045D4C 0C006E87 */  jal   find_next_checkpoint_node
 /* 046950 80045D50 02002025 */   move  $a0, $s0
 /* 046954 80045D54 8FA60038 */  lw    $a2, 0x38($sp)
 /* 046958 80045D58 C4520010 */  lwc1  $f18, 0x10($v0)
@@ -363,7 +363,7 @@ glabel func_80045C48
 /* 046D90 80046190 AFA70034 */  sw    $a3, 0x34($sp)
 /* 046D94 80046194 AFA60038 */  sw    $a2, 0x38($sp)
 /* 046D98 80046198 AFA30030 */  sw    $v1, 0x30($sp)
-/* 046D9C 8004619C 0C006E87 */  jal   func_8001BA1C
+/* 046D9C 8004619C 0C006E87 */  jal   find_next_checkpoint_node
 /* 046DA0 800461A0 02002025 */   move  $a0, $s0
 /* 046DA4 800461A4 862901BA */  lh    $t1, 0x1ba($s1)
 /* 046DA8 800461A8 C448001C */  lwc1  $f8, 0x1c($v0)
@@ -410,19 +410,19 @@ glabel func_80045C48
 /* 046E44 80046244 4406A000 */  mfc1  $a2, $f20
 /* 046E48 80046248 27A400B0 */  addiu $a0, $sp, 0xb0
 /* 046E4C 8004624C 00002825 */  move  $a1, $zero
-/* 046E50 80046250 0C00898F */  jal   func_8002263C
+/* 046E50 80046250 0C00898F */  jal   cubic_spline_interpolation
 /* 046E54 80046254 27A7005C */   addiu $a3, $sp, 0x5c
 /* 046E58 80046258 4406A000 */  mfc1  $a2, $f20
 /* 046E5C 8004625C E7A0008C */  swc1  $f0, 0x8c($sp)
 /* 046E60 80046260 27A400A0 */  addiu $a0, $sp, 0xa0
 /* 046E64 80046264 00002825 */  move  $a1, $zero
-/* 046E68 80046268 0C00898F */  jal   func_8002263C
+/* 046E68 80046268 0C00898F */  jal   cubic_spline_interpolation
 /* 046E6C 8004626C 27A70058 */   addiu $a3, $sp, 0x58
 /* 046E70 80046270 4406A000 */  mfc1  $a2, $f20
 /* 046E74 80046274 E7A00088 */  swc1  $f0, 0x88($sp)
 /* 046E78 80046278 27A40090 */  addiu $a0, $sp, 0x90
 /* 046E7C 8004627C 00002825 */  move  $a1, $zero
-/* 046E80 80046280 0C00898F */  jal   func_8002263C
+/* 046E80 80046280 0C00898F */  jal   cubic_spline_interpolation
 /* 046E84 80046284 27A70054 */   addiu $a3, $sp, 0x54
 /* 046E88 80046288 C7A2005C */  lwc1  $f2, 0x5c($sp)
 /* 046E8C 8004628C C7B00058 */  lwc1  $f16, 0x58($sp)

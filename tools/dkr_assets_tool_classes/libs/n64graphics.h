@@ -1,6 +1,10 @@
 #ifndef N64GRAPHICS_H_
 #define N64GRAPHICS_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 // intermediate formats
@@ -96,5 +100,9 @@ const char *n64graphics_get_read_version(void);
 
 // get version of underlying graphics writing library
 const char *n64graphics_get_write_version(void);
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif // N64GRAPHICS_H_

@@ -1,6 +1,6 @@
 glabel menu_options_loop
-/* 084F5C 8008435C 3C038012 */  lui   $v1, %hi(D_801263BC) # $v1, 0x8012
-/* 084F60 80084360 246363BC */  addiu $v1, %lo(D_801263BC) # addiu $v1, $v1, 0x63bc
+/* 084F5C 8008435C 3C038012 */  lui   $v1, %hi(gOptionBlinkTimer) # $v1, 0x8012
+/* 084F60 80084360 246363BC */  addiu $v1, %lo(gOptionBlinkTimer) # addiu $v1, $v1, 0x63bc
 /* 084F64 80084364 8C6E0000 */  lw    $t6, ($v1)
 /* 084F68 80084368 3C09800E */  lui   $t1, %hi(gMenuDelay) # $t1, 0x800e
 /* 084F6C 8008436C 2529F47C */  addiu $t1, %lo(gMenuDelay) # addiu $t1, $t1, -0xb84
@@ -88,7 +88,7 @@ glabel menu_options_loop
 /* 08509C 8008449C 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 0850A0 800844A0 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 0850A4 800844A4 AC39F47C */  sw    $t9, %lo(gMenuDelay)($at)
-/* 0850A8 800844A8 0C030076 */  jal   func_800C01D8
+/* 0850A8 800844A8 0C030076 */  jal   transition_begin
 /* 0850AC 800844AC 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 0850B0 800844B0 24040241 */  li    $a0, 577
 /* 0850B4 800844B4 0C000741 */  jal   play_sound_global

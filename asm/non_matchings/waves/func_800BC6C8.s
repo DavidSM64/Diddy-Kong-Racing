@@ -29,7 +29,7 @@ glabel func_800BC6C8
 /* 0BD328 800BC728 01E02025 */  move  $a0, $t7
 /* 0BD32C 800BC72C AFA20234 */  sw    $v0, 0x234($sp)
 /* 0BD330 800BC730 AFA50028 */  sw    $a1, 0x28($sp)
-/* 0BD334 800BC734 0C01C1F1 */  jal   cosine_s
+/* 0BD334 800BC734 0C01C1F1 */  jal   sins_f
 /* 0BD338 800BC738 AFAB0244 */   sw    $t3, 0x244($sp)
 /* 0BD33C 800BC73C 3C0A8013 */  lui   $t2, %hi(D_80129FC8) # $t2, 0x8013
 /* 0BD340 800BC740 8FAB0244 */  lw    $t3, 0x244($sp)

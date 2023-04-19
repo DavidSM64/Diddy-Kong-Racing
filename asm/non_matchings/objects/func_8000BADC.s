@@ -57,8 +57,8 @@ glabel func_8000BADC
 /* 00C77C 8000BB7C 24630001 */  addiu $v1, $v1, 1
 /* 00C780 8000BB80 1420FFF3 */  bnez  $at, .L8000BB50
 /* 00C784 8000BB84 A06AFFFF */   sb    $t2, -1($v1)
-/* 00C788 8000BB88 3C0E8012 */  lui   $t6, %hi(gObjectCount) # $t6, 0x8012
-/* 00C78C 8000BB8C 8DCEAEF0 */  lw    $t6, %lo(gObjectCount)($t6)
+/* 00C788 8000BB88 3C0E8012 */  lui   $t6, %hi(gNumRacers) # $t6, 0x8012
+/* 00C78C 8000BB8C 8DCEAEF0 */  lw    $t6, %lo(gNumRacers)($t6)
 /* 00C790 8000BB90 00004025 */  move  $t0, $zero
 /* 00C794 8000BB94 19C000DD */  blez  $t6, .L8000BF0C
 /* 00C798 8000BB98 00009025 */   move  $s2, $zero
@@ -66,10 +66,10 @@ glabel func_8000BADC
 /* 00C7A0 8000BBA0 44819000 */  mtc1  $at, $f18
 /* 00C7A4 8000BBA4 44912000 */  mtc1  $s1, $f4
 /* 00C7A8 8000BBA8 3C013F80 */  li    $at, 0x3F800000 # 1.000000
-/* 00C7AC 8000BBAC 3C138012 */  lui   $s3, %hi(gObjectStructArrayPtr) # $s3, 0x8012
+/* 00C7AC 8000BBAC 3C138012 */  lui   $s3, %hi(gRacers) # $s3, 0x8012
 /* 00C7B0 8000BBB0 44817000 */  mtc1  $at, $f14
 /* 00C7B4 8000BBB4 44806000 */  mtc1  $zero, $f12
-/* 00C7B8 8000BBB8 2673AEE4 */  addiu $s3, %lo(gObjectStructArrayPtr) # addiu $s3, $s3, -0x511c
+/* 00C7B8 8000BBB8 2673AEE4 */  addiu $s3, %lo(gRacers) # addiu $s3, $s3, -0x511c
 /* 00C7BC 8000BBBC 24090002 */  li    $t1, 2
 /* 00C7C0 8000BBC0 46802420 */  cvt.s.w $f16, $f4
 .L8000BBC4:
@@ -269,7 +269,7 @@ glabel func_8000BADC
 /* 00CA98 8000BE98 A0580001 */  sb    $t8, 1($v0)
 /* 00CA9C 8000BE9C A04C0002 */  sb    $t4, 2($v0)
 /* 00CAA0 8000BEA0 820D0175 */  lb    $t5, 0x175($s0)
-/* 00CAA4 8000BEA4 3C0C8012 */  lui   $t4, %hi(gObjectCount) # $t4, 0x8012
+/* 00CAA4 8000BEA4 3C0C8012 */  lui   $t4, %hi(gNumRacers) # $t4, 0x8012
 /* 00CAA8 8000BEA8 11A0000B */  beqz  $t5, .L8000BED8
 /* 00CAAC 8000BEAC 00000000 */   nop   
 /* 00CAB0 8000BEB0 904F0003 */  lbu   $t7, 3($v0)
@@ -294,7 +294,7 @@ glabel func_8000BADC
 .L8000BEF4:
 /* 00CAF4 8000BEF4 A0400003 */  sb    $zero, 3($v0)
 .L8000BEF8:
-/* 00CAF8 8000BEF8 8D8CAEF0 */  lw    $t4, %lo(gObjectCount)($t4)
+/* 00CAF8 8000BEF8 8D8CAEF0 */  lw    $t4, %lo(gNumRacers)($t4)
 /* 00CAFC 8000BEFC 25080001 */  addiu $t0, $t0, 1
 /* 00CB00 8000BF00 010C082A */  slt   $at, $t0, $t4
 /* 00CB04 8000BF04 1420FF2F */  bnez  $at, .L8000BBC4

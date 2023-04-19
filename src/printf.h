@@ -3,10 +3,14 @@
 
 #include "types.h"
 #include "structs.h"
+#include "macros.h"
 #include <PR/gu.h>
 
+typedef struct TexFontCoords {
+    u8 u, v;
+} TexFontCoords;
 
-#define RENDER_PRINTF_CMD_ARG_BYTE(val) *D_801285D8 = val; D_801285D8++;
+#define RENDER_PRINTF_CMD_ARG_BYTE(val) *gDebugPrintBufferEnd = val; gDebugPrintBufferEnd++;
 #define RENDER_PRINTF_CMD_ARG_SHORT(val) RENDER_PRINTF_CMD_ARG_BYTE(val) RENDER_PRINTF_CMD_ARG_BYTE(val >> 8)
 
 #define RENDER_PRINTF_CMD_END RENDER_PRINTF_CMD_ARG_BYTE(0)
@@ -19,10 +23,16 @@
     RENDER_PRINTF_CMD_ARG_BYTE(alpha)                        \
     RENDER_PRINTF_CMD_END
 
+// This is a bit hacky, but it matches.
 #define RENDER_PRINTF_CMD_SET_POSITION(x, y) \
+    u16 tempX, tempY;                        \
     RENDER_PRINTF_CMD_ARG_BYTE(0x82)         \
-    RENDER_PRINTF_CMD_ARG_SHORT(x)           \
-    RENDER_PRINTF_CMD_ARG_SHORT(y)           \
+    RENDER_PRINTF_CMD_ARG_BYTE(x & 0xFF)     \
+    tempX = x >> 8;                          \
+    RENDER_PRINTF_CMD_ARG_BYTE(tempX)        \
+    RENDER_PRINTF_CMD_ARG_BYTE(y & 0xFF)     \
+    tempY = y >> 8;                          \
+    RENDER_PRINTF_CMD_ARG_BYTE(tempY)        \
     RENDER_PRINTF_CMD_END
     
 #define RENDER_PRINTF_CMD_SET_BACKGROUND_COLOR(red, green, blue, alpha) \
@@ -35,13 +45,19 @@
 
 
 void func_800B4A08(s32 arg0);
-void func_800B5E88(void);
+void diPrintfInit(void);
 void set_render_printf_colour(u8 red, u8 green, u8 blue, u8 alpha);
 void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha);
+void func_800B695C(Gfx **dList, u32 ulx, u32 uly, u32 lrx, u32 lry);
+s32 func_800B69FC(Gfx **dList, s32 asciiVal);
+void print_debug_strings(Gfx **dList);
+void set_render_printf_position(u16 x, u16 y);
+s32 render_printf(const char *format, ...);
+void func_800B6E50(void);
+void func_800B6EE0(void);
+void func_800B6F04(void);
 
-void set_render_printf_position(u16 xpos, u16 ypos); // Non Matching
-s32 render_printf(const char *format, ...); // Non Matching
-void print_debug_strings(Gfx **arg0); // Non Matching
-void func_800B3740(Object *, Gfx **, Mtx **, VertexList **, s32); // Non Matching
+s32 func_800B653C(Gfx**, char*);
+int vsprintf(char *s, const char *fmt, ...);
 
 #endif

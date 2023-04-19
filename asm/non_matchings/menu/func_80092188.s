@@ -82,14 +82,14 @@ glabel func_80092188
 /* 092EA4 800922A4 24490019 */   addiu $t1, $v0, 0x19
 /* 092EA8 800922A8 29210015 */  slti  $at, $t1, 0x15
 /* 092EAC 800922AC 14200002 */  bnez  $at, .L800922B8
-/* 092EB0 800922B0 3C028012 */   lui   $v0, %hi(D_80126478) # $v0, 0x8012
+/* 092EB0 800922B0 3C028012 */   lui   $v0, %hi(gTrackSelectViewPortHalfY) # $v0, 0x8012
 /* 092EB4 800922B4 24090014 */  li    $t1, 20
 .L800922B8:
 /* 092EB8 800922B8 05210002 */  bgez  $t1, .L800922C4
 /* 092EBC 800922BC 00000000 */   nop   
 /* 092EC0 800922C0 00004825 */  move  $t1, $zero
 .L800922C4:
-/* 092EC4 800922C4 8C426478 */  lw    $v0, %lo(D_80126478)($v0)
+/* 092EC4 800922C4 8C426478 */  lw    $v0, %lo(gTrackSelectViewPortHalfY)($v0)
 /* 092EC8 800922C8 252F0014 */  addiu $t7, $t1, 0x14
 /* 092ECC 800922CC 01E20019 */  multu $t7, $v0
 /* 092ED0 800922D0 24010028 */  li    $at, 40
@@ -106,7 +106,7 @@ glabel func_80092188
 /* 092EFC 800922FC 0000C012 */  mflo  $t8
 /* 092F00 80092300 03025021 */  addu  $t2, $t8, $v0
 /* 092F04 80092304 AFAA0010 */  sw    $t2, 0x10($sp)
-/* 092F08 80092308 0C019A50 */  jal   func_80066940
+/* 092F08 80092308 0C019A50 */  jal   resize_viewport
 /* 092F0C 8009230C 00583023 */   subu  $a2, $v0, $t8
 /* 092F10 80092310 8FA90048 */  lw    $t1, 0x48($sp)
 /* 092F14 80092314 3C0141A0 */  li    $at, 0x41A00000 # 20.000000
@@ -157,30 +157,30 @@ glabel func_80092188
 .L800923C0:
 /* 092FC0 800923C0 1020000E */  beqz  $at, .L800923FC
 /* 092FC4 800923C4 00002025 */   move  $a0, $zero
-/* 092FC8 800923C8 3C018012 */  lui   $at, %hi(D_801263D8) # $at, 0x8012
+/* 092FC8 800923C8 3C018012 */  lui   $at, %hi(gOpacityDecayTimer) # $at, 0x8012
 /* 092FCC 800923CC 0C023C03 */  jal   func_8008F00C
-/* 092FD0 800923D0 AC2063D8 */   sw    $zero, %lo(D_801263D8)($at)
-/* 092FD4 800923D4 3C028012 */  lui   $v0, %hi(D_80126478) # $v0, 0x8012
-/* 092FD8 800923D8 8C426478 */  lw    $v0, %lo(D_80126478)($v0)
+/* 092FD0 800923D0 AC2063D8 */   sw    $zero, %lo(gOpacityDecayTimer)($at)
+/* 092FD4 800923D4 3C028012 */  lui   $v0, %hi(gTrackSelectViewPortHalfY) # $v0, 0x8012
+/* 092FD8 800923D8 8C426478 */  lw    $v0, %lo(gTrackSelectViewPortHalfY)($v0)
 /* 092FDC 800923DC 00002025 */  move  $a0, $zero
 /* 092FE0 800923E0 00021843 */  sra   $v1, $v0, 1
 /* 092FE4 800923E4 00627021 */  addu  $t6, $v1, $v0
 /* 092FE8 800923E8 AFAE0010 */  sw    $t6, 0x10($sp)
 /* 092FEC 800923EC 24050050 */  li    $a1, 80
 /* 092FF0 800923F0 240700F0 */  li    $a3, 240
-/* 092FF4 800923F4 0C019A50 */  jal   func_80066940
+/* 092FF4 800923F4 0C019A50 */  jal   resize_viewport
 /* 092FF8 800923F8 00433023 */   subu  $a2, $v0, $v1
 .L800923FC:
 /* 092FFC 800923FC 00002025 */  move  $a0, $zero
 .L80092400:
-/* 093000 80092400 0C019A06 */  jal   func_80066818
+/* 093000 80092400 0C019A06 */  jal   camEnableUserView
 /* 093004 80092404 24050001 */   li    $a1, 1
 /* 093008 80092408 8FB90030 */  lw    $t9, 0x30($sp)
 /* 09300C 8009240C 3C04800E */  lui   $a0, %hi(gTrackIdForPreview) # $a0, 0x800e
 /* 093010 80092410 172001F0 */  bnez  $t9, .L80092BD4
 /* 093014 80092414 8FBF001C */   lw    $ra, 0x1c($sp)
 /* 093018 80092418 8C84F4C4 */  lw    $a0, %lo(gTrackIdForPreview)($a0)
-/* 09301C 8009241C 0C01AC3E */  jal   func_8006B0F8
+/* 09301C 8009241C 0C01AC3E */  jal   get_map_available_vehicles
 /* 093020 80092420 00000000 */   nop   
 /* 093024 80092424 3C0C8012 */  lui   $t4, %hi(D_801263E0) # $t4, 0x8012
 /* 093028 80092428 258C63E0 */  addiu $t4, %lo(D_801263E0) # addiu $t4, $t4, 0x63e0
@@ -572,13 +572,13 @@ glabel L8009287C
 /* 093594 80092994 3C028012 */   lui   $v0, %hi(D_801269C8) # $v0, 0x8012
 /* 093598 80092998 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 09359C 8009299C AC3FF47C */  sw    $ra, %lo(gMenuDelay)($at)
-/* 0935A0 800929A0 0C01E2AB */  jal   func_80078AAC
+/* 0935A0 800929A0 0C01E2AB */  jal   set_background_draw_function
 /* 0935A4 800929A4 00002025 */   move  $a0, $zero
 /* 0935A8 800929A8 3C01800E */  lui   $at, %hi(D_800E097C) # $at, 0x800e
-/* 0935AC 800929AC 0C030060 */  jal   func_800C0180
+/* 0935AC 800929AC 0C030060 */  jal   disable_new_screen_transitions
 /* 0935B0 800929B0 AC20097C */   sw    $zero, %lo(D_800E097C)($at)
 /* 0935B4 800929B4 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
-/* 0935B8 800929B8 0C030076 */  jal   func_800C01D8
+/* 0935B8 800929B8 0C030076 */  jal   transition_begin
 /* 0935BC 800929BC 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 0935C0 800929C0 3C198012 */  lui   $t9, %hi(D_801269C8) # $t9, 0x8012
 /* 0935C4 800929C4 8F3969C8 */  lw    $t9, %lo(D_801269C8)($t9)
@@ -702,7 +702,7 @@ glabel L8009287C
 .L80092B68:
 /* 093768 80092B68 3C048012 */  lui   $a0, %hi(gPlayerSelectVehicle) # $a0, 0x8012
 /* 09376C 80092B6C 808469C0 */  lb    $a0, %lo(gPlayerSelectVehicle)($a0)
-/* 093770 80092B70 0C01B6C5 */  jal   func_8006DB14
+/* 093770 80092B70 0C01B6C5 */  jal   set_level_default_vehicle
 /* 093774 80092B74 00000000 */   nop   
 /* 093778 80092B78 3C0E800E */  lui   $t6, %hi(gNumberOfActivePlayers) # $t6, 0x800e
 /* 09377C 80092B7C 8DCEF4BC */  lw    $t6, %lo(gNumberOfActivePlayers)($t6)

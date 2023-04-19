@@ -29,7 +29,7 @@ glabel draw_menu_elements
 /* 082E44 80082244 26D663A0 */  addiu $s6, %lo(sMenuCurrDisplayList) # addiu $s6, $s6, 0x63a0
 /* 082E48 80082248 3C058012 */  lui   $a1, %hi(sMenuCurrHudMat) # $a1, 0x8012
 /* 082E4C 8008224C 24A563A8 */  addiu $a1, %lo(sMenuCurrHudMat) # addiu $a1, $a1, 0x63a8
-/* 082E50 80082250 0C019FCB */  jal   func_80067F2C
+/* 082E50 80082250 0C019FCB */  jal   set_ortho_matrix_view
 /* 082E54 80082254 02C02025 */   move  $a0, $s6
 /* 082E58 80082258 8E110014 */  lw    $s1, 0x14($s0)
 /* 082E5C 8008225C 3C013B80 */  li    $at, 0x3B800000 # 0.003906
@@ -167,7 +167,7 @@ glabel L800823E8
 glabel L80082454
 /* 083054 80082454 12A00003 */  beqz  $s5, .L80082464
 /* 083058 80082458 02C02025 */   move  $a0, $s6
-/* 08305C 8008245C 0C01ECF4 */  jal   func_8007B3D0
+/* 08305C 8008245C 0C01ECF4 */  jal   reset_render_settings
 /* 083060 80082460 0000A825 */   move  $s5, $zero
 .L80082464:
 /* 083064 80082464 92180010 */  lbu   $t8, 0x10($s0)
@@ -194,7 +194,7 @@ glabel L80082454
 glabel L800824B8
 /* 0830B8 800824B8 12A00005 */  beqz  $s5, .L800824D0
 /* 0830BC 800824BC 02C02025 */   move  $a0, $s6
-/* 0830C0 800824C0 0C01ECF4 */  jal   func_8007B3D0
+/* 0830C0 800824C0 0C01ECF4 */  jal   reset_render_settings
 /* 0830C4 800824C4 0000A825 */   move  $s5, $zero
 /* 0830C8 800824C8 8E110014 */  lw    $s1, 0x14($s0)
 /* 0830CC 800824CC 00000000 */  nop   
@@ -282,7 +282,7 @@ glabel L8008256C
 glabel L80082608
 /* 083208 80082608 12A00003 */  beqz  $s5, .L80082618
 /* 08320C 8008260C 02C02025 */   move  $a0, $s6
-/* 083210 80082610 0C01ECF4 */  jal   func_8007B3D0
+/* 083210 80082610 0C01ECF4 */  jal   reset_render_settings
 /* 083214 80082614 0000A825 */   move  $s5, $zero
 .L80082618:
 /* 083218 80082618 0C01A142 */  jal   func_80068508
@@ -428,7 +428,7 @@ glabel L800827C0
 .L80082838:
 /* 083438 80082838 12A00004 */  beqz  $s5, .L8008284C
 /* 08343C 8008283C 240200FF */   li    $v0, 255
-/* 083440 80082840 0C01ECF4 */  jal   func_8007B3D0
+/* 083440 80082840 0C01ECF4 */  jal   reset_render_settings
 /* 083444 80082844 02C02025 */   move  $a0, $s6
 /* 083448 80082848 240200FF */  li    $v0, 255
 .L8008284C:

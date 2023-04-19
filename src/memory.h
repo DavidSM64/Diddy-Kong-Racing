@@ -6,6 +6,7 @@
 #include "macros.h"
 
 #define RAM_END 0x80400000
+#define EXTENDED_RAM_END 0x80800000
 #define MAIN_POOL_SLOT_COUNT 1600
 
 // Animation related?
@@ -24,6 +25,8 @@
 #define COLOUR_TAG_WHITE 0xFFFFFFFF
 // ???
 #define COLOUR_TAG_GREY 0x7F7F7FFF
+// ???
+#define COLOUR_TAG_SEMITRANS_GREY 0x80808080
 // ???
 #define COLOUR_TAG_ORANGE 0xFF7F7FFF
 // ???
@@ -48,7 +51,7 @@ typedef struct MemoryPoolSlot {
 /* 0x0A */ s16 prevIndex;
 /* 0x0C */ s16 nextIndex;
 /* 0x0E */ s16 index;
-/* 0x10 */ u32 colorTag;
+/* 0x10 */ u32 colourTag;
 } MemoryPoolSlot;
 
 /* Size: 0x10 bytes */
@@ -73,13 +76,13 @@ typedef struct unk800B7D10 {
 
 //Functions below don't have files or matches yet
 unk800B7D10 *get_stack_pointer(void); // Non Matching with own file?
-s32 *func_8006F510(void); // Non Matching unknown_070110
-void func_8006F53C(s32*); // Non Matching unknown_070110
+s32 *clear_status_register_flags(void); // Non Matching math_util
+void set_status_register_flags(s32*); // Non Matching math_util
 
 void init_main_memory_pool(void);
 MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots);
-void *allocate_from_main_pool_safe(s32 size, u32 colorTag);
-MemoryPoolSlot *allocate_from_main_pool(s32 size, u32 colorTag);
+void *allocate_from_main_pool_safe(s32 size, u32 colourTag);
+MemoryPoolSlot *allocate_from_main_pool(s32 size, u32 colourTag);
 void *allocate_from_pool_containing_slots(MemoryPoolSlot *slots, s32 size);
 void set_free_queue_state(s32 state);
 void free_from_memory_pool(void *data);
@@ -94,12 +97,12 @@ u8 *align4(u8 *address);
 void print_memory_colour_tags(void);
 void render_memory_colour_tags(void);
 void func_80071CE8(void);
-
-MemoryPoolSlot *allocate_from_memory_pool(s32 memoryPoolIndex, s32 size, u32 colorTag); // Non Matching
-MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlots); // Non Matching
-void free_memory_pool_slot(s32 poolIndex, s32 slotIndex); // Non Matching
-void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag); // Non Matching
-void free_slot_containing_address(u8 *address); // Non Matching
-s32 get_memory_colour_tag_count(s32 arg0); // Non Matching
+MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlots);
+void free_memory_pool_slot(s32 poolIndex, s32 slotIndex);
+s32 allocate_memory_pool_slot(s32 memoryPoolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken, u32 colourTag);
+s32 get_memory_colour_tag_count(u32 colourTag);
+void free_slot_containing_address(u8 *address);
+MemoryPoolSlot *allocate_from_memory_pool(s32 memoryPoolIndex, s32 size, u32 colourTag);
+void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colourTag);
 
 #endif

@@ -14,8 +14,8 @@ glabel func_800A0BD4
 /* 0A1804 800A0C04 00447023 */  subu  $t6, $v0, $a0
 /* 0A1808 800A0C08 1DC0000A */  bgtz  $t6, .L800A0C34
 /* 0A180C 800A0C0C AC6E0000 */   sw    $t6, ($v1)
-/* 0A1810 800A0C10 3C058012 */  lui   $a1, %hi(D_80126D40) # $a1, 0x8012
-/* 0A1814 800A0C14 24A56D40 */  addiu $a1, %lo(D_80126D40) # addiu $a1, $a1, 0x6d40
+/* 0A1810 800A0C10 3C058012 */  lui   $a1, %hi(gHUDVoiceSoundMask) # $a1, 0x8012
+/* 0A1814 800A0C14 24A56D40 */  addiu $a1, %lo(gHUDVoiceSoundMask) # addiu $a1, $a1, 0x6d40
 /* 0A1818 800A0C18 8CB80000 */  lw    $t8, ($a1)
 /* 0A181C 800A0C1C AC600000 */  sw    $zero, ($v1)
 /* 0A1820 800A0C20 17000004 */  bnez  $t8, .L800A0C34
@@ -101,11 +101,11 @@ glabel func_800A0BD4
 /* 0A1940 800A0D40 11600018 */  beqz  $t3, .L800A0DA4
 /* 0A1944 800A0D44 8FBF002C */   lw    $ra, 0x2c($sp)
 /* 0A1948 800A0D48 918C2772 */  lbu   $t4, %lo(D_800E2770+2)($t4)
-/* 0A194C 800A0D4C 3C028012 */  lui   $v0, %hi(D_80126D37) # $v0, 0x8012
+/* 0A194C 800A0D4C 3C028012 */  lui   $v0, %hi(gNumActivePlayers) # $v0, 0x8012
 /* 0A1950 800A0D50 15800014 */  bnez  $t4, .L800A0DA4
 /* 0A1954 800A0D54 8FBF002C */   lw    $ra, 0x2c($sp)
 /* 0A1958 800A0D58 A0600000 */  sb    $zero, ($v1)
-/* 0A195C 800A0D5C 90426D37 */  lbu   $v0, %lo(D_80126D37)($v0)
+/* 0A195C 800A0D5C 90426D37 */  lbu   $v0, %lo(gNumActivePlayers)($v0)
 /* 0A1960 800A0D60 24010001 */  li    $at, 1
 /* 0A1964 800A0D64 14410006 */  bne   $v0, $at, .L800A0D80
 /* 0A1968 800A0D68 24010002 */   li    $at, 2

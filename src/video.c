@@ -7,8 +7,8 @@
 /************ .data ************/
 
 u16 *gVideoDepthBuffer = NULL;
-s32 D_800DE774 = 0; // Currently unknown, might be a different type.
-s8 D_800DE778 = 2;
+UNUSED s32 D_800DE774 = 0;
+UNUSED s8 D_800DE778 = 2;
 
 VideoModeResolution gVideoModeResolutions[] = {
     {          SCREEN_WIDTH,          SCREEN_HEIGHT }, // 320x240
@@ -21,16 +21,19 @@ VideoModeResolution gVideoModeResolutions[] = {
     { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
 };
 
-s32 D_800DE7BC = 0; // Currently unknown, might be a different type.
+// This value exists in order to make sure there are no out of bounds accesses of gVideoModeResolutions
+#define NUM_RESOLUTION_MODES ((sizeof(gVideoModeResolutions) / sizeof(VideoModeResolution)) - 1)
+
+UNUSED s32 D_800DE7BC = 0;
 
 /*******************************/
 
 /************ .bss ************/
 
-s32 gVideoRefreshRate;
+s32 gVideoRefreshRate; //Official Name: viFramesPerSecond
 f32 gVideoAspectRatio;
 f32 gVideoHeightRatio;
-s32 D_8012617C;
+UNUSED s32 D_8012617C;
 OSMesg gVideoMesgBuf[8];
 OSMesgQueue gVideoMesgQueue[8];
 OSViMode gTvViMode;
@@ -39,16 +42,16 @@ s32 gVideoFbHeights[2];
 u16 *gVideoFramebuffers[2];
 s32 gVideoCurrFbIndex;
 s32 gVideoModeIndex;
-s32 D_801262D0;
-u16 *gVideoCurrFramebuffer;
-u16 *gVideoLastFramebuffer;
+s32 sBlackScreenTimer;
+u16 *gVideoCurrFramebuffer; //Official Name: currentScreen
+u16 *gVideoLastFramebuffer; //Official Name: otherScreen
 u16 *gVideoCurrDepthBuffer;
-u16 *gVideoLastDepthBuffer;
+u16 *gVideoLastDepthBuffer; //Official Name: otherZbuf
 u8 D_801262E4;
-s32 D_801262E8[8];
-u8 D_80126308;
-u8 D_80126309;
-s32 D_8012630C;
+UNUSED OSMesg D_801262E8[8];
+u8 gVideoDeltaCounter;
+u8 gVideoDeltaTime;
+UNUSED s32 D_8012630C;
 OSScClient gVideoSched;
 
 /******************************/
@@ -56,6 +59,7 @@ OSScClient gVideoSched;
 /**
  * Set up the framebuffers and the VI.
  * Framebuffers are allocated at runtime.
+ * Official Name: viInit
  */
 void init_video(s32 videoModeIndex, OSSched *sc) {
     if (osTvType == TV_TYPE_PAL) {
@@ -79,10 +83,10 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
         }
     }
 
-    func_8007A974();
+    reset_video_delta_time();
     set_video_mode_index(videoModeIndex);
-    gVideoFramebuffers[0] = 0;
-    gVideoFramebuffers[1] = 0;
+    gVideoFramebuffers[0] = NULL;
+    gVideoFramebuffers[1] = NULL;
     init_framebuffer(0);
     init_framebuffer(1);
     gVideoCurrFbIndex = 1;
@@ -90,9 +94,9 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
     osCreateMesgQueue((OSMesgQueue *)&gVideoMesgQueue, gVideoMesgBuf, ARRAY_COUNT(gVideoMesgBuf));
     osScAddClient(sc, &gVideoSched, (OSMesgQueue *)&gVideoMesgQueue, OS_SC_ID_VIDEO);
     init_vi_settings();
-    D_801262D0 = 12;
+    sBlackScreenTimer = 12;
     osViBlack(TRUE);
-    D_80126308 = 0;
+    gVideoDeltaCounter = 0;
     D_801262E4 = 3;
 }
 
@@ -115,13 +119,14 @@ UNUSED s32 get_video_mode_index(void) {
  * Since only one kind of video mode is ever used, this function is never called.
  */
 UNUSED void set_video_width_and_height_from_index(s32 fbIndex) {
-    gVideoFbWidths[fbIndex] = gVideoModeResolutions[gVideoModeIndex & 7].width;
-    gVideoFbHeights[fbIndex] = gVideoModeResolutions[gVideoModeIndex & 7].height;
+    gVideoFbWidths[fbIndex] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].width;
+    gVideoFbHeights[fbIndex] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].height;
 }
 
 /**
  * Return the current framebuffer dimensions as a single s32 value.
  * The high 16 bits are the height of the frame, and the low 16 bits are the width.
+ * Official Name: viGetCurrentSize
  */
 s32 get_video_width_and_height_as_s32(void) {
     return (gVideoFbHeights[gVideoCurrFbIndex] << 16) | gVideoFbWidths[gVideoCurrFbIndex];
@@ -144,12 +149,12 @@ void init_vi_settings(void) {
         viModeTableIndex = OS_VI_MPAL_LPN1;
     }
 
-    switch (gVideoModeIndex & 7) {
-        case 0:
+    switch (gVideoModeIndex & NUM_RESOLUTION_MODES) {
+        case VIDEO_MODE_LOWRES_LAN:
             stubbed_printf("320 by 240 Point sampled, Non interlaced.\n");
             osViSetMode(&osViModeTable[viModeTableIndex]);
             break;
-        case 1:
+        case VIDEO_MODE_LOWRES_LPN:
             //@bug: The video mode being set here is Point sampled
             //but the printf implies it was intended to be Anti-aliased.
             //By my understanding, this is the case we will always hit in code,
@@ -171,7 +176,7 @@ void init_vi_settings(void) {
             }
             osViSetMode(&gTvViMode);
             break;
-        case 2:
+        case VIDEO_MODE_MEDRES_LPN:
             stubbed_printf("640 by 240 Point sampled, Non interlaced.\n");
             tvViMode = &osViModeNtscLpn1;
             if (osTvType == TV_TYPE_PAL) {
@@ -187,7 +192,7 @@ void init_vi_settings(void) {
             gTvViMode.fldRegs[1].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
             osViSetMode(&gTvViMode);
             break;
-        case 3:
+        case VIDEO_MODE_MEDRES_LAN:
             stubbed_printf("640 by 240 Anti-aliased, Non interlaced.\n");
             tvViMode = &osViModeNtscLan1;
             if (osTvType == TV_TYPE_PAL) {
@@ -202,19 +207,19 @@ void init_vi_settings(void) {
             gTvViMode.fldRegs[1].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
             osViSetMode(&gTvViMode);
             break;
-        case 4:
+        case VIDEO_MODE_HIGHRES_HPN:
             stubbed_printf("640 by 480 Point sampled, Interlaced.\n");
             osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HPN1]);
             break;
-        case 5:
+        case VIDEO_MODE_HIGHRES_HAN:
             stubbed_printf("640 by 480 Anti-aliased, Interlaced.\n");
             osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HAN1]);
             break;
-        case 6:
+        case VIDEO_MODE_HIGHRES_HPF:
             stubbed_printf("640 by 480 Point sampled, Interlaced, De-flickered.\n");
             osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HPF1]);
             break;
-        case 7:
+        case VIDEO_MODE_HIGHRES_HAF:
             stubbed_printf("640 by 480 Anti-aliased, Interlaced, De-flickered.\n");
             osViSetMode(&osViModeTable[viModeTableIndex + OS_VI_NTSC_HAF1]);
             break;
@@ -233,9 +238,9 @@ void init_framebuffer(s32 index) {
         func_80071538((u8 *)gVideoFramebuffers[index]);
         free_from_memory_pool(gVideoFramebuffers[index]);
     }
-    gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & 7].width;
-    gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & 7].height;
-    if (gVideoModeIndex >= 2) {
+    gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].width;
+    gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].height;
+    if (gVideoModeIndex >= VIDEO_MODE_MIDRES_MASK) {
         gVideoFramebuffers[index] = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
         gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
         if (gVideoDepthBuffer == NULL) {
@@ -252,59 +257,64 @@ void init_framebuffer(s32 index) {
     }
 }
 
-void func_8007A974(void) {
-    D_80126308 = 0;
-    D_80126309 = 2;
+/**
+ * Sets the video counters to their default values.
+ * Another renmant from an unused system.
+ */
+void reset_video_delta_time(void) {
+    gVideoDeltaCounter = 0;
+    gVideoDeltaTime = 2;
 }
 
-#ifdef NON_EQUIVALENT
-// regalloc & stack issues
-s32 func_8007A98C(s32 arg0) {
-    s32 tempUpdateRate;
+/**
+ * Wait for the finished message from the scheduler while counting up a timer,
+ * then update the current framebuffer index.
+ * This function also has a section where it counts a timer that goes no higher
+ * than an update magnitude of 2. It's only purpose is to be used as a divisor
+ * in the unused function, get_video_refresh_speed.
+ */
+s32 swap_framebuffer_when_ready(s32 mesg) {
+    u8 tempUpdateRate;
 
     tempUpdateRate = LOGIC_60FPS;
-    if (D_801262D0 != 0) {
-        D_801262D0--;
-        if (D_801262D0 == 0) {
+    if (sBlackScreenTimer) {
+        sBlackScreenTimer--;
+        if (sBlackScreenTimer == 0) {
             osViBlack(FALSE);
         }
     }
-    if (arg0 != 8) {
+    if (mesg != MESG_SKIP_BUFFER_SWAP) {
         swap_framebuffers();
     }
-    while (osRecvMesg(&gVideoMesgQueue, NULL, OS_MESG_NOBLOCK) != -1) {
-        tempUpdateRate += 1;
-        tempUpdateRate &= 0xFF;
+    while (osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_NOBLOCK) != -1) {
+        tempUpdateRate++;
     }
 
-    if (tempUpdateRate < D_80126309) {
-        if (D_80126308 < 0x14) {
-            D_80126308++;
+    if (tempUpdateRate < gVideoDeltaTime) {
+        if (gVideoDeltaCounter < 20) {
+            gVideoDeltaCounter++;
         }
-        if (D_80126308 == 0x14) {
-            D_80126309 = tempUpdateRate;
-            D_80126308 = 0;
+        if (gVideoDeltaCounter == 20) {
+            gVideoDeltaTime = tempUpdateRate;
+            gVideoDeltaCounter = 0;
         }
     } else {
-        D_80126308 = 0;
-        if ((D_80126309 >= tempUpdateRate) || (D_801262E4 > tempUpdateRate)) {
-            D_80126309 = tempUpdateRate;
+        gVideoDeltaCounter = 0;
+        if ((gVideoDeltaTime < tempUpdateRate) && (D_801262E4 >= tempUpdateRate)) {
+            gVideoDeltaTime = tempUpdateRate;
         }
     }
-    while (tempUpdateRate < D_80126309) {
-        osRecvMesg(&gVideoMesgQueue, NULL, OS_MESG_BLOCK);
-        tempUpdateRate += 1;
-        tempUpdateRate &= 0xFF;
+    while (tempUpdateRate < gVideoDeltaTime) {
+        osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_BLOCK);
+        tempUpdateRate++;
     }
+
     osViSwapBuffer(gVideoLastFramebuffer);
-    osRecvMesg(&gVideoMesgQueue, NULL, OS_MESG_BLOCK);
+    osRecvMesg(gVideoMesgQueue, NULL, OS_MESG_BLOCK);
     return tempUpdateRate;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/video/func_8007A98C.s")
-#endif
 
-void func_8007AB24(s8 arg0) {
+void func_8007AB24(u8 arg0) {
     D_801262E4 = arg0;
 }
 
@@ -314,7 +324,7 @@ void func_8007AB24(s8 arg0) {
  * Perhaps may have been used originally to calculate the factor in which to handle frameskipping with.
  */
 UNUSED s32 get_video_refresh_speed(void) {
-    return (s32)((f32)gVideoRefreshRate / (f32)D_80126309);
+    return (s32)((f32)gVideoRefreshRate / (f32)gVideoDeltaTime);
 }
 
 /**

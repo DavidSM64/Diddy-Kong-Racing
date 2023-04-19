@@ -25,7 +25,7 @@ ExtractConfig::ExtractConfig(std::string configFilepath, std::string outDirector
         std::string packagesDir = outDirectory + "/assets/" + EXT_DIR_NAME + "/" + configJSON["subfolder"].ToString();
         create_directory(packagesDir);
         json::JSON orderJson = json::Array();
-        write_json(orderJson, packagesDir + "/order.json");
+        write_json(orderJson, packagesDir + "/order.meta.json");
     }
 }
 
@@ -147,6 +147,207 @@ std::vector<std::vector<uint8_t>> get_section_files(std::vector<uint8_t>& sectio
     return out;
 }
 
+int ExtractConfig::get_file_index(json::JSON &files, int searchIndex) {
+    int numFiles = files.length();
+
+    for (int i = 0; i < numFiles; i++) {
+        if (files[i]["index"].ToInt() == searchIndex) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+void ExtractConfig::extract_asset_section(json::JSON &section, std::vector<std::vector<uint8_t>> &sectionsData, int i) {
+    std::string folder = this->outBaseDirectory + "/" + section["folder"].ToString();
+    std::string type = section["type"].ToString();
+    std::string build_id = section["build-id"].ToString();
+
+    if (type != "NoExtract") {
+        create_directory(folder);
+    }
+
+    json::JSON sectionOut = json::Object();
+
+    sectionOut["type"] = type;
+
+    std::string defaultSubdirectory = "";
+
+    if (section.hasKey("files-default-folder")) {
+        defaultSubdirectory = section["files-default-folder"].ToString();
+    }
+
+    if (section.hasKey("folder") && !section["folder"].IsNull()) {
+        sectionOut["folder"] = section["folder"];
+    }
+
+    if (section.hasKey("table")) {
+        int tableIndex = section["table"].ToInt();
+        sectionOut["table"] = assetsJson["assets"]["order"][tableIndex];
+
+        std::vector<std::vector<uint8_t>> sectionFiles
+            = get_section_files(sectionsData[i], sectionsData[tableIndex], type, sectionOut);
+        int numberOfSectionFiles = sectionFiles.size();
+
+        if (numberOfSectionFiles > 0) {
+            sectionOut["files"] = json::Object();
+            sectionOut["files"]["order"] = json::Array();
+            sectionOut["files"]["sections"] = json::Object();
+        }
+
+        bool sectionHasFilesSubsection = section.hasKey("files");
+        bool flipTextureDefault = false;
+        bool hasDefaultBuildIdPrefix = section.hasKey("default-build-id-prefix");
+        std::string buildIdPrefix = "";
+
+        if (hasDefaultBuildIdPrefix) {
+            buildIdPrefix = section["default-build-id-prefix"].ToString();
+        }
+
+        if (type == "Textures") {
+            if (section.hasKey("flip-textures-by-default")) {
+                flipTextureDefault = section["flip-textures-by-default"].ToBool();
+            }
+        }
+
+        for (int j = 0; j < numberOfSectionFiles; j++) {
+            std::unordered_map<std::string, std::string>* tags = nullptr;
+            std::string filename = "";
+            std::string key = "";
+            std::string subfolder = "";
+            json::JSON filesInfo;
+            int localFileIndex = -1;
+            bool flipTexture = flipTextureDefault;
+            if (sectionHasFilesSubsection) {
+                localFileIndex = get_file_index(section["files"], j);
+                if (localFileIndex >= 0) {
+                    filesInfo = section["files"][localFileIndex];
+                    if (filesInfo.hasKey("filename")) {
+                        filename = filesInfo["filename"].ToString();
+                    }
+                    if (filesInfo.hasKey("build-id")) {
+                        key = filesInfo["build-id"].ToString();
+                    }
+                    if (filesInfo.hasKey("flip-tex")) {
+                        flipTexture = filesInfo["flip-tex"].ToBool();
+                    }
+                    if (filesInfo.hasKey("folder")) {
+                        subfolder = filesInfo["folder"].ToString();
+                    } else if (defaultSubdirectory.length() > 0) {
+                        subfolder = defaultSubdirectory;
+                    }
+                }
+                else {
+                    if (defaultSubdirectory.length() > 0) {
+                        subfolder = defaultSubdirectory;
+                    }
+                }
+            }
+            if (filename == "") {
+                std::stringstream filenameStream;
+                filenameStream << "unknown_" << i << "_" << j;
+                filename = filenameStream.str();
+            }
+            if (key == "") {
+                std::stringstream keyStream;
+                if (hasDefaultBuildIdPrefix) {
+                    keyStream << buildIdPrefix << j;
+                } else {
+                    keyStream << build_id << "_" << j;
+                }
+                key = keyStream.str();
+            }
+            make_uppercase(key);
+            sectionOut["files"]["order"].append(key);
+            sectionOut["files"]["sections"][key] = json::Object();
+            sectionOut["files"]["sections"][key]["filename"] = filename + get_extension_from_type(type);
+            if (subfolder.length() > 0) {
+                sectionOut["files"]["sections"][key]["filename"] = subfolder + "/" + sectionOut["files"]["sections"][key]["filename"].ToString();
+            }
+
+            if (type == "GameText") {
+                if (tags == nullptr) {
+                    tags = new std::unordered_map<std::string, std::string>();
+                }
+                (*tags)["text-type"] = (sectionOut["_textTypes"][j].ToInt() == 1) ? "Dialog" : "Textbox";
+            }
+            else if (type == "MenuText") {
+                if (tags == nullptr) {
+                    tags = new std::unordered_map<std::string, std::string>();
+                }
+                (*tags)["text-entry-count"] = sectionOut["_text-entry-count"].ToString();
+                int numberOfEntries = stoi((*tags)["text-entry-count"]);
+                for (int k = 0; k < numberOfEntries; k++) {
+                    if (!section["menu-text-build-ids"][k].IsNull()) {
+                        (*tags)["text-entry-build-id_" + std::to_string(k)] = section["menu-text-build-ids"][k].ToString();
+                    }
+                }
+                if (!sectionOut.hasKey("menu-text-build-ids")) {
+                    sectionOut["menu-text-build-ids"] = section["menu-text-build-ids"];
+                }
+                sectionOut["files"]["sections"][key]["language"] = section["language-order"][j];
+            }
+            else if (type == "Textures") {
+                if (tags == nullptr) {
+                    tags = new std::unordered_map<std::string, std::string>();
+                }
+                (*tags)["flip-texture_" + key] = flipTexture ? "true" : "false";
+            }
+            if (subfolder.length() > 0) {
+                subfolder = folder + "/" + subfolder;
+            } else {
+                subfolder = folder;
+            }
+            extractions.push_back(ExtractInfo(key, type, subfolder, filename, sectionFiles[j], tags));
+        }
+
+        if (type == "GameText") {
+            sectionOut.erase("_textTypes");
+        } else if (type == "MenuText") {
+            sectionOut.erase("_text-entry-count");
+        }
+    } else {
+        if (type != "Table" && type != "NoExtract" && type != "Empty") {
+            // No lookup table associated, so the section is assumed to be 1 file.
+            std::string filename = "";
+            if (section.hasKey("files")) {
+                filename = section["files"][0]["filename"].ToString();
+            }
+            if (filename == "") {
+                std::stringstream filenameStream;
+                filenameStream << "unknown_" << i;
+                filename = filenameStream.str();
+            }
+            sectionOut["filename"] = filename + get_extension_from_type(type);
+            extractions.push_back(ExtractInfo(build_id, type, folder, filename, sectionsData[i]));
+
+            if (type == "Fonts") {
+                //sectionOut["fonts"] = json::Object();
+                sectionOut["fonts-order"] = json::Array();
+                for (auto& fontName : section["font-names"].ArrayRange()) {
+                    std::string fontid = "ASSET_FONTS_" + fontName.ToString();
+                    make_uppercase(fontid);
+                    //sectionOut["fonts"][fontid] = fontName.ToString() + ".json";
+                    sectionOut["fonts-order"].append(fontid);
+                }
+            }
+        } else if (type == "Table") {
+            sectionOut["for"] = section["for"];
+        }
+    }
+
+    if (type != "Table" && type != "NoExtract" && type != "Empty") {
+        std::string sectionFilename = build_id + ".meta.json";
+        make_lowercase(sectionFilename);
+        write_json(sectionOut, this->outBaseDirectory + "/" + sectionFilename);
+        assetsJson["assets"]["sections"][build_id] = sectionFilename;
+    }
+    else {
+        assetsJson["assets"]["sections"][build_id] = sectionOut;
+    }
+}
+
 void ExtractConfig::extract_asset_sections(int &romOffset) {
     /* Make sure the assets section has the correct number of entries. */
     json::JSON assetSections = configJSON["assets"]["sections"];
@@ -188,137 +389,7 @@ void ExtractConfig::extract_asset_sections(int &romOffset) {
     }
     // Second loop for everything else
     for(int i = 0; i < numAssetSections; i++) {
-        json::JSON section = assetSections[i];
-        std::string folder = this->outBaseDirectory + "/" + section["folder"].ToString();
-        std::string type = section["type"].ToString();
-        std::string build_id = section["build-id"].ToString();
-        
-        if(type != "NoExtract") {
-            create_directory(folder);
-        }
-        
-        json::JSON sectionOut = json::Object();
-        
-        sectionOut["type"] = type;
-        
-        if(section.hasKey("folder") && !section["folder"].IsNull()) {
-            sectionOut["folder"] = section["folder"];
-        }
-        
-        if(section.hasKey("table")) {
-            int tableIndex = section["table"].ToInt();
-            sectionOut["table"] = assetsJson["assets"]["order"][tableIndex];
-            
-            std::vector<std::vector<uint8_t>> sectionFiles 
-                = get_section_files(sectionsData[i], sectionsData[tableIndex], type, sectionOut);
-            int numberOfSectionFiles = sectionFiles.size();
-            
-            if(numberOfSectionFiles > 0) {
-                sectionOut["files"] = json::Object();
-                sectionOut["files"]["order"] = json::Array();
-                sectionOut["files"]["sections"] = json::Object();
-            }
-                
-            for(int j = 0; j < numberOfSectionFiles; j++) {
-                std::unordered_map<std::string, std::string> *tags = nullptr;
-                std::string filename = "";
-                std::string key = "";
-                if(section.hasKey("filenames")) {
-                    filename = section["filenames"][j].ToString();
-                }
-                if(section.hasKey("child-build-ids")) {
-                    key = section["child-build-ids"][j].ToString();
-                }
-                if(filename == "") {
-                    std::stringstream filenameStream;
-                    filenameStream << "unknown_" << i << "_" << j;
-                    filename = filenameStream.str();
-                }
-                if(key == "") {
-                    std::stringstream keyStream;
-                    keyStream << build_id << "_" << j;
-                    key = keyStream.str();
-                }
-                make_uppercase(key);
-                sectionOut["files"]["order"].append(key);
-                sectionOut["files"]["sections"][key] = json::Object();
-                sectionOut["files"]["sections"][key]["filename"] = filename + get_extension_from_type(type);
-                
-                if(type == "GameText") {
-                    if(tags == nullptr) {
-                        tags = new std::unordered_map<std::string, std::string>();
-                    }
-                    (*tags)["text-type"] = (sectionOut["_textTypes"][j].ToInt() == 1) ? "Dialog" : "Textbox";
-                } else if(type == "MenuText") {
-                    if(tags == nullptr) {
-                        tags = new std::unordered_map<std::string, std::string>();
-                    }
-                    (*tags)["text-entry-count"] = sectionOut["_text-entry-count"].ToString();
-                    int numberOfEntries = stoi((*tags)["text-entry-count"]);
-                    for(int k = 0; k < numberOfEntries; k++) {
-                        if(!section["menu-text-build-ids"][k].IsNull()) {
-                            (*tags)["text-entry-build-id_" + std::to_string(k)] = section["menu-text-build-ids"][k].ToString();
-                        }
-                    }
-                    if(!sectionOut.hasKey("menu-text-build-ids")) {
-                        sectionOut["menu-text-build-ids"] = section["menu-text-build-ids"];
-                    }
-                    sectionOut["files"]["sections"][key]["language"] = section["language-order"][j];
-                } else if (type == "Textures") {
-                    if(tags == nullptr) {
-                        tags = new std::unordered_map<std::string, std::string>();
-                    }
-                    (*tags)["flip-texture_" + key] = section["flip-textures"][j].ToInt() == 1 ? "true" : "false";
-                }
-                
-                extractions.push_back(ExtractInfo(key, type, folder, filename, sectionFiles[j], tags));
-            }
-            
-            if(type == "GameText") {
-                sectionOut.erase("_textTypes");
-            } else if(type == "MenuText") {
-                sectionOut.erase("_text-entry-count");
-            }
-            
-        } else {
-            if(type != "Table" && type != "NoExtract" && type != "Empty") {
-                // No lookup table associated, so the section is assumed to be 1 file.
-                std::string filename = "";
-                if(section.hasKey("filenames")) {
-                    filename = section["filenames"][0].ToString();
-                }
-                if(filename == "") {
-                    std::stringstream filenameStream;
-                    filenameStream << "unknown_" << i;
-                    filename = filenameStream.str();
-                }
-                sectionOut["filename"] = filename + get_extension_from_type(type);
-                extractions.push_back(ExtractInfo(build_id, type, folder, filename, sectionsData[i]));
-
-                if(type == "Fonts") {
-                    //sectionOut["fonts"] = json::Object();
-                    sectionOut["fonts-order"] = json::Array();
-                    for(auto& fontName : section["font-names"].ArrayRange()) {
-                        std::string fontid = "ASSET_FONTS_" + fontName.ToString();
-                        make_uppercase(fontid);
-                        //sectionOut["fonts"][fontid] = fontName.ToString() + ".json";
-                        sectionOut["fonts-order"].append(fontid);
-                    }
-                }
-
-            } else if (type == "Table") {
-                sectionOut["for"] = section["for"];
-            }
-        }
-
-        if(type != "Table" && type != "NoExtract" && type != "Empty") {
-            std::string sectionFilename = build_id + ".json";
-            make_lowercase(sectionFilename);
-            write_json(sectionOut, this->outBaseDirectory + "/" + sectionFilename);
-            assetsJson["assets"]["sections"][build_id] = sectionFilename;
-        } else {
-            assetsJson["assets"]["sections"][build_id] = sectionOut;
-        }
+        extract_asset_section(assetSections[i], sectionsData, i);
     }
 }
 
@@ -333,8 +404,8 @@ void write_vanilla_warning_file(std::string baseDirectory) {
 void ExtractConfig::execute_extraction() {
     // These braces are important, because I want the ThreadPool to call its destructor by going out of scope.
     {
-        ThreadPool pool(std::thread::hardware_concurrency()); 
-        //ThreadPool pool(1);
+       //ThreadPool pool(std::thread::hardware_concurrency()); // TODO: Solve race condition issues.
+        ThreadPool pool(1);
         
         for(int i = 0; i < extractions.size(); i++) {
             std::string key = extractions[i].key;
@@ -359,7 +430,7 @@ void ExtractConfig::execute_extraction() {
                 } else if(type == "Textures") {
                     ExtractTextures(key, data, outFilepath + ".json", tags);
                 } else if(type == "Sprites") {
-                    ExtractSprite(key, data, outFilepath + ".json", configJSON);
+                    ExtractSprite(key, data, outFilepath + ".json", assetsJson);
                 } else if(type == "Fonts") {
                     ExtractFonts(key, data, outFilepath + ".json", folder, configJSON);
                 } else if(is_binary_type(type)) {
@@ -380,7 +451,7 @@ void ExtractConfig::extract() {
     extract_code_sections(romOffset);
     extract_asset_sections(romOffset);
     
-    std::string jsonFilename = outBaseDirectory + "/assets.json";
+    std::string jsonFilename = outBaseDirectory + "/assets.meta.json";
     write_json(assetsJson, jsonFilename);
 
     execute_extraction();

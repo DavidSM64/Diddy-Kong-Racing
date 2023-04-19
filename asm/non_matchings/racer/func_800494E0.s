@@ -3,7 +3,7 @@ glabel D_800E64A0
 .double 0.16666666666666666
 
 .text
-glabel func_800494E0
+glabel rotate_racer_in_water
 /* 04A0E0 800494E0 27BDFF78 */  addiu $sp, $sp, -0x88
 /* 04A0E4 800494E4 8FB80098 */  lw    $t8, 0x98($sp)
 /* 04A0E8 800494E8 00077600 */  sll   $t6, $a3, 0x18
@@ -64,8 +64,8 @@ glabel func_800494E0
 /* 04A1BC 800495BC E6300014 */  swc1  $f16, 0x14($s1)
 .L800495C0:
 /* 04A1C0 800495C0 86280000 */  lh    $t0, ($s1)
-/* 04A1C4 800495C4 3C058012 */  lui   $a1, %hi(D_8011D510) # $a1, 0x8012
-/* 04A1C8 800495C8 24A5D510 */  addiu $a1, %lo(D_8011D510) # addiu $a1, $a1, -0x2af0
+/* 04A1C4 800495C4 3C058012 */  lui   $a1, %hi(gCurrentRacerTransform) # $a1, 0x8012
+/* 04A1C8 800495C8 24A5D510 */  addiu $a1, %lo(gCurrentRacerTransform) # addiu $a1, $a1, -0x2af0
 /* 04A1CC 800495CC 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 04A1D0 800495D0 44815000 */  mtc1  $at, $f10
 /* 04A1D4 800495D4 00084823 */  negu  $t1, $t0
@@ -77,7 +77,7 @@ glabel func_800494E0
 /* 04A1EC 800495EC E4A00014 */  swc1  $f0, 0x14($a1)
 /* 04A1F0 800495F0 E7A20044 */  swc1  $f2, 0x44($sp)
 /* 04A1F4 800495F4 27A40048 */  addiu $a0, $sp, 0x48
-/* 04A1F8 800495F8 0C01BF9D */  jal   func_8006FE74
+/* 04A1F8 800495F8 0C01BF9D */  jal   object_transform_to_matrix_2
 /* 04A1FC 800495FC E4AA0008 */   swc1  $f10, 8($a1)
 /* 04A200 80049600 8E050000 */  lw    $a1, ($s0)
 /* 04A204 80049604 8E060004 */  lw    $a2, 4($s0)

@@ -69,7 +69,7 @@ typedef enum MENU_ID {
     MENU_UNUSED_2,
     MENU_CHARACTER_SELECT,
     MENU_UNUSED_4,
-    MENU_UNKNOWN_5,
+    MENU_TRACK_SELECT_ADVENTURE,
     MENU_FILE_SELECT,
     MENU_UNUSED_7,
     MENU_UNUSED_8,
@@ -133,8 +133,26 @@ typedef struct unk80126460 {
 typedef struct unk801263C0 {
     s8 unk0;
     s8 unk1;
-    s16 unk2;
+    union {
+        struct {
+            s8 unk2a;
+            s8 unk3;
+        };
+        s16 unk2;
+    };
 } unk801263C0;
+
+typedef struct unk80126C54 {
+    union {
+        struct {
+            u8 unk0;
+            u8 unk1;
+            u8 unk2;
+            u8 unk3;
+        };
+        s32 unk0_s32;
+    };
+} unk80126C54;
 
 /* Size: 0x30 bytes */
 typedef struct unk800DF83C {
@@ -162,25 +180,38 @@ typedef struct unk800DFA3C {
     u8  unk9;
     u8  unkA;
     u8  unkB;
-    u32* unkC;
+    char *unkC;
 } unk800DFA3C;
 
-typedef struct unk800E03CC {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-} unk800E03CC;
+typedef struct ButtonElement {
+    s16 x;
+    s16 y;
+    s16 width;
+    s16 height;
+    s16 borderWidth; // The glowing border that goes around this button
+    s16 borderHeight;
+    s16 colourMin; // The border oscillates between two colours in RGBA5551 format.
+    s16 colourMax;
+} ButtonElement;
+
+typedef struct ButtonTextElement {
+    s16 x;
+    s16 y;
+    s16 width;
+    s16 height;
+    s16 borderWidth;
+    s16 borderHeight;
+    s16 textPos[8];
+} ButtonTextElement;
 
 /* Size: 0xE bytes. */
-typedef struct unk801263CC {
-    u8 pad0[0xC];
-    s16 unkC;
-} unk801263CC;
+typedef struct CharacterSelectData {
+    u8 upInput[2];
+    u8 downInput[2];
+    u8 rightInput[4];
+    u8 LeftInput[4];
+    s16 voiceID;
+} CharacterSelectData;
 
 /* Size: 0x0C Bytes */
 typedef struct SavefileInfo {
@@ -207,6 +238,15 @@ typedef struct unk800861C8 {
     u32 fileSize; // Game Data File Size
 } unk800861C8;
 
+/* Size: 0x10 bytes */
+typedef struct unk800E0970 {
+    s8 unk0;
+    s8 unk1;
+    s8 unk2;
+    s8 unk3;
+    s8 pad4[12];
+} unk800E0970;
+
 /* Unknown size */
 typedef struct unk80069D20 {
     s16 unk0;
@@ -228,6 +268,25 @@ typedef struct TitleScreenDemos {
     s8 numberOfPlayers;
     s8 cutsceneId;
 } TitleScreenDemos;
+
+#define X_TILE_SIZE 320
+
+/* Size 0x10 bytes */
+typedef struct TrackRenderDetails {
+  /* 0x00 */ u8 *hubName;
+  /* 0x04 */ u8 *trackName;
+  /* 0x08 */ s16 xOff;
+  /* 0x0A */ s16 yOff;
+  /* 0x0C */ u8 visible;
+  /* 0x0D */ u8 opacity;
+    union {
+        struct {
+            /* 0x0E */ u8 copyViewPort;
+            /* 0x0F */ u8 border;
+        };
+        /* 0x0E */ u16 viewPort;
+    };
+} TrackRenderDetails;
 
 extern s8  D_800DF450;
 extern f32 D_800DF454;
@@ -268,8 +327,8 @@ extern s32 gSaveFileIndex;
 extern s32 D_800DF4D0;
 extern s32 gTrackIdToLoad;
 extern s8 D_800DF4D8;
-extern s8 D_800DF4DC;
-extern s8 D_800DF4E0;
+extern s8 gNextTajChallengeMenu;
+extern s8 gNeedToCloseDialogueBox;
 extern s8 D_800DF4E4[4];
 extern s32 D_800DF4E8;
 extern s8 gDialogueOptionTangible;
@@ -289,7 +348,7 @@ extern s32 sMenuGuiOpacity;
 extern s32 D_800DF768;
 
 extern s32 D_800DF794;
-extern s32 D_800DF798;
+extern MenuElement *D_800DF798;
 extern s32 D_800DF79C;
 
 extern s32 D_800DF7A0;
@@ -366,18 +425,6 @@ extern u8 D_800DFDB4[10][2];
 extern s16 D_800DFDC8[2];
 extern s16 D_800DFDCC[2];
 
-// Not sure what this is
-extern s32 D_800DFDD0[28];
-
-// Not sure what this is
-extern s32 D_800DFE40[32];
-
-// Not sure what this is
-extern s32 D_800DFEC0[32];
-
-// Not sure what this is
-extern s32 D_800DFF40[36];
-
 extern s32 D_800DFFD0;
 extern s32 D_800DFFD4;
 
@@ -391,54 +438,50 @@ extern s16 D_800E0398[6];
 
 extern s16 D_800E03A4[6];
 
-extern unk800E03CC D_800E03CC[3];
+extern ButtonElement gFileSelectButtons[3];
 
-extern s16 D_800E03FC[10];
+extern s16 gFileSelectElementPos[10];
 
 extern s32 gMultiplayerSelectedNumberOfRacers;
 extern s32 D_800E0414;
 extern s32 D_800E0418;
 
-extern DrawTexture D_800E041C[2];
-extern DrawTexture D_800E042C[2];
-extern DrawTexture D_800E043C[2];
-extern DrawTexture D_800E044C[2];
+extern DrawTexture gMenuSelectionArrowUp[2];
+extern DrawTexture gMenuSelectionArrowLeft[2];
+extern DrawTexture gMenuSelectionArrowDown[2];
+extern DrawTexture gMenuSelectionArrowRight[2];
 
-extern DrawTexture D_800E045C[3];
-extern DrawTexture D_800E0474[3];
-extern DrawTexture D_800E048C[3];
-extern DrawTexture D_800E04A4[3];
-extern DrawTexture D_800E04BC[3];
-extern DrawTexture D_800E04D4[2];
-extern DrawTexture D_800E04E4[2];
-extern DrawTexture D_800E04F4[2];
-extern DrawTexture D_800E0504[2];
-extern DrawTexture D_800E0514[2];
-extern DrawTexture D_800E0524[2];
-extern DrawTexture D_800E0534[2];
-extern DrawTexture D_800E0544[2];
-extern DrawTexture D_800E0554[2];
-extern DrawTexture D_800E0564[2];
-extern DrawTexture D_800E0574[2];
-extern DrawTexture D_800E0584[2];
-extern DrawTexture D_800E0594[2];
-extern DrawTexture D_800E05A4[2];
-extern DrawTexture D_800E05B4[2];
-extern DrawTexture D_800E05C4[2];
+extern DrawTexture gRaceSelectionCarTex[3];
+extern DrawTexture gRaceSelectionHoverTex[3];
+extern DrawTexture gRaceSelectionPlaneTex[3];
+extern DrawTexture gRaceSelectionTTOn[3];
+extern DrawTexture gRaceSelectionTTOff[3];
+extern DrawTexture gRaceSelectionCarOptHighlight[2];
+extern DrawTexture gRaceSelectionCarOpt[2];
+extern DrawTexture gRaceSelectionHoverOptHighlight[2];
+extern DrawTexture gRaceSelectionHoverOpt[2];
+extern DrawTexture gRaceSelectionPlaneOptHighlight[2];
+extern DrawTexture gRaceSelectionPlaneOpt[2];
+extern DrawTexture gRaceSelectionTTOnOptHighlight[2];
+extern DrawTexture gRaceSelectionTTOffOptHighlight[2];
+extern DrawTexture gRaceSelectionTTOnOpt[2];
+extern DrawTexture gRaceSelectionTTOffOpt[2];
+extern DrawTexture gRaceSelectionPlayer1Texture[2];
+extern DrawTexture gRaceSelectionPlayer2Texture[2];
+extern DrawTexture gRaceSelectionPlayer3Texture[2];
+extern DrawTexture gRaceSelectionPlayer4Texture[2];
+extern DrawTexture gRaceSelectionVehicleTitleTexture[2];
+extern DrawTexture gRaceSelectionTTTitleTexture[2];
+extern DrawTexture D_800E05D4[4];
+extern DrawTexture D_800E05F4[4];
+extern DrawTexture gRaceSelectionTTTexture[2];
 
-// These are probably structs
-extern s32 D_800E05D4[8];
-extern s32 D_800E05F4[8];
-
-extern DrawTexture D_800E0614[2];
-
-extern DrawTexture *D_800E0624[9];
+extern DrawTexture *gRaceSelectionImages[9];
 
 extern DrawTexture *D_800E0648[6];
-
 extern DrawTexture *D_800E0660[6];
 
-extern DrawTexture *D_800E0678[4];
+extern DrawTexture *gMenuSelectionArrows[4];
 
 extern u16 D_800E0688[20];
 
@@ -448,9 +491,9 @@ extern s16 D_800E06C4[8];
 
 extern s16 D_800E06D4[8];
 
-extern s16 D_800E06E4[14];
+extern ButtonTextElement gTwoPlayerRacerCountMenu;
 
-extern s16 D_800E0700[8];
+extern ButtonElement D_800E0700;
 
 extern s16 D_800E0710[16];
 
@@ -467,15 +510,15 @@ extern s16 D_800E0830[8];
 
 extern s16 D_800E0840[148];
 
-extern s32 D_800E0968;
+extern Vertex *D_800E0968;
 extern s32 D_800E096C;
-extern s32 *D_800E0970;
+extern unk800E0970 *D_800E0970;
 extern s32 D_800E0974;
-extern f32* D_800E0978;
+extern char* gQMarkPtr;
 extern s32 D_800E097C;
 extern s32 D_800E0980;
-extern s32 D_800E0984;
-extern s32 D_800E0988;
+extern s32 gMenuOptionCap;
+extern s32 gMenuSubOption;
 extern s32 D_800E098C;
 
 extern s16 D_800E0A24[14];
@@ -517,7 +560,7 @@ extern MenuElement D_800E0E4C[9];
 // Valid characters for name input. Must be u8, not char.
 extern u8 gFileNameValidChars[32];
 
-extern s32 D_800E0F8C;
+extern char D_800E0F8C;
 extern s32 D_800E0F90;
 extern s32 D_800E0F94;
 extern s32 D_800E0F98;
@@ -562,7 +605,7 @@ extern s16 D_800E1754[10];
 
 extern s16 D_800E1768[12];
 
-//extern u32 D_800E1780[22];
+//extern u32 dCreditsFade[22];
 
 extern s16 D_800E17D8[12];
 
@@ -615,10 +658,6 @@ extern s16 D_800E1DC8[16];
 
 extern char gRareCopyrightString[24];
 
-//Probably a FadeTransition
-//extern FadeTransition D_800E1E08;
-extern s16 D_800E1E08[4];
-
 extern char *D_800E1E10;
 
 extern s32 D_800E1E14;
@@ -645,7 +684,7 @@ extern char *sInsertControllerPakMenuText[3];
 extern char *sNoControllerPakMenuText[5];
 extern char *sInsertRumblePakMenuText[4];
 extern s32 *D_80126C2C;
-extern Settings *D_80126530[4];
+extern Settings *gSavefileData[4];
 
 extern DrawTexture D_800DFC10[2];
 extern DrawTexture D_800DFC20[2];
@@ -653,13 +692,9 @@ extern DrawTexture D_800DFC30[2];
 extern DrawTexture D_800DFC40[2];
 extern DrawTexture D_800DFC50[2];
 extern DrawTexture D_800DFC60[2];
-extern TextureHeader *D_8012665C;
-extern TextureHeader *D_80126660;
-extern TextureHeader *D_80126664;
 extern Gfx *sMenuCurrDisplayList;
-extern Mtx *sMenuCurrHudMat;
 extern const char D_800E8208[];
-extern s32 D_801263BC;
+extern s32 gOptionBlinkTimer;
 extern s32 D_801263E0;
 extern s32 D_80126A00;
 extern unk800861C8 *D_80126A04;
@@ -667,6 +702,29 @@ extern s32 D_80126A08;
 extern unk800861C8 *D_80126A0C; //Allocated 2560 bytes in menu_save_options_init. Possibly an array of 2 large structs.
 extern f32 D_80126BDC;
 extern f32 D_80126BEC;
+extern SavefileInfo gSavefileInfo[4];
+
+extern s8 gControllersXAxisDirection[4];
+extern s8 gControllersYAxisDirection[4];
+extern TextureHeader *D_80126550[128];
+extern s32 D_801267D0;
+extern u8 D_801269C4[4];
+extern f32 gTrackSelectX;
+extern f32 gTrackSelectY;
+extern f32 D_801269E8;
+extern f32 D_801269EC;
+extern s8 gPlayerSelectVehicle[4];
+extern s16 gFFLUnlocked;
+extern s32 gOpacityDecayTimer;
+extern s32 gTrackSelectViewportY;
+extern s16 gFFLUnlocked;
+extern s32 D_80126924;
+extern s32 D_80126928;
+extern s32 D_8012692C;
+extern TrackRenderDetails gTrackSelectRenderDetails[9];
+extern s32 D_801269F0;
+extern s32 gSelectedTrackX;
+extern s32 gSelectedTrackY;
 
 s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
 
@@ -674,16 +732,16 @@ void func_8007FF88(void);
 void func_80080E6C(void);
 void func_800813C0(void);
 void menu_init(u32 menuId);
-s32 menu_loop(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate);
+s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris, s32 updateRate);
 void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 fontID);
-void func_80081E54(s32 arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
+void func_80081E54(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5);
 void func_800828B8(void);
 void print_missing_controller_text(Gfx **dl, s32 updateRate);
 void menu_logos_screen_init(void);
 s32 menu_logo_screen_loop(s32 arg0);
 void init_title_screen_variables(void);
 void menu_title_screen_init(void);
-void func_80084118(void);
+void title_screen_exit(void);
 void menu_options_init(void);
 void render_options_menu_ui(s32 updateRate);
 void unload_big_font_1(void);
@@ -716,23 +774,23 @@ void func_8008CACC(void);
 void menu_file_select_init(void);
 void render_menu_image(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
 void func_8008E428(void);
-void func_8008E45C(void);
+void assign_vehicle_icon_textures(void);
 void func_8008E4B0(void);
 void func_8008F534(void);
 void func_80090ED8(s32 updateRate);
-s32 func_80092BE0(s32 arg0);
-void menu_5_init(void);
+s32 func_80092BE0(s32 mapId);
+void menu_adventure_track_init(void);
 void func_80093A0C(void);
 void n_alSynRemovePlayer(void);
 void n_alSeqpDelete(void);
-void func_80094604(void);
+void assign_racer_portrait_textures(void);
 void func_80094C14(s32 arg0);
 void func_80096790(void);
 void menu_11_init(void);
 void func_800976CC(void);
 void decompress_filename_string(u32 compressedFilename, char *output, s32 length);
 s32 compress_filename_string(char *filename, s32 length);
-void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 arg5, s32 arg6);
+void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *arg5, s32 arg6);
 void unload_big_font_4(void);
 void func_80098208(void);
 void draw_trophy_race_text(UNUSED s32 updateRate);
@@ -744,7 +802,7 @@ void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
 void menu_23_init(void);
 void func_8009AF18(void);
 void menu_credits_init(void);
-void func_8009B1E4(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+void render_credits_fade(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_8009BCF0(void);
 void func_8009BD5C(void);
 void func_8009BE54();
@@ -765,7 +823,7 @@ s32 get_filtered_cheats(void);
 s32 get_number_of_active_players(void);
 s32 get_active_player_count(void);
 s32 get_multiplayer_racer_count(void);
-Settings** func_8009C490(void);
+Settings **get_all_save_files_ptr(void);
 void func_8009C49C(void);
 void func_8009C4A8(s16 *arg0);
 void func_8009C508(s32 arg0);
@@ -780,14 +838,14 @@ void set_option_text_colour(s32 condition);
 void render_dialogue_option(char *text, s32 yOffset, s32 optionID);
 void handle_menu_joystick_input(void);
 void func_8009D324(void);
-void func_8009D330(s32 arg0);
+void set_next_taj_challenge_menu(s32 arg0);
 void set_menu_id_if_option_equal(s32 IDToCheck, s32 IDToSet);
 s32 taj_menu_loop(void);
 s32 dialogue_race_defeat(void);
 s32 trophy_race_cabinet_menu_loop(void);
 void dialogue_open_stub(void);
 void dialogue_close_stub(void);
-f32 func_8009E9B0(DialogueBoxBackground *arg0, Gfx **dlist, Mtx **mat, VertexList **vtx);
+f32 func_8009E9B0(DialogueBoxBackground *arg0, Gfx **dlist, MatrixS **mat, Vertex **vtx);
 u64 *get_eeprom_settings_pointer(void);
 s32 set_eeprom_settings_value(u64 valueToSet);
 s32 unset_eeprom_settings_value(u64 valueToUnset);
@@ -801,21 +859,29 @@ s32 is_tt_unlocked(void);
 s32 is_drumstick_unlocked(void);
 s32 menu_character_select_loop(s32 updateRate);
 s32 menu_caution_loop(s32 updateRate);
-void func_8008DC7C(UNUSED s32 arg0);
-s32 menu_5_loop(s32 updateRate);
+void func_8008DC7C(UNUSED s32 updateRate);
+s32 menu_adventure_track_loop(s32 updateRate);
 void func_80095624(s32 status);
 s32 menu_boot_loop(s32 arg0);
 void menu_magic_codes_init(void);
-s32 menu_game_select_loop(s32 arg0);
+s32 menu_game_select_loop(s32 updateRate);
 s32 menu_ghost_data_loop(s32 updateRate);
 s32 menu_trophy_race_round_loop(s32 updateRate);
 void render_controller_pak_ui(UNUSED s32 updateRate);
 PakError check_for_controller_pak_errors(void);
 void func_80093A40(void);
-s32 func_80094170(UNUSED Gfx **dl, s32 updateRate);
+s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate);
 s32 menu_track_select_loop(s32 updateRate);
 s32 func_800867D4(void);
+s32 menu_enter_filename_loop(s32 updateRate);
+s32 menu_file_select_loop(s32 updateRate);
+s32 func_8008D5F8(s32 updateRate);
+void func_8008C168(s32 updateRate);
+void func_8008C698(s32 updateRate);
 void func_80083098(f32);
+void func_8008F00C(s32);
+void render_track_selection_viewport_border(ObjectModel *objMdl);
+void render_adventure_track_setup(UNUSED s32 updateRate, s32 arg1, s32 arg2);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -828,7 +894,6 @@ s32 menu_magic_codes_list_loop(s32 arg0);
 void calculate_and_display_rom_checksum(void);
 void randomise_ai_racer_slots(s32 arg0);
 void menu_game_select_init(void);
-void func_8008C698(s32 arg0);
 void render_file_select_menu(s32 arg0);
 void func_8008FF1C(s32 updateRate);
 void func_800904E8(s32 updateRate);
@@ -844,11 +909,9 @@ s32 tt_menu_loop(void);
 void menu_track_select_init(void);
 void menu_trophy_race_rankings_init(void);
 void func_8009E3D0(void);
-void func_8008C168(s32);
 s32 menu_title_screen_loop(s32 updateRate);
 s32 menu_save_options_loop(s32 updateRate);
 s32 menu_magic_codes_loop(s32 updateRate);
-s32 menu_file_select_loop(s32 updateRate);
 s32 menu_results_loop(s32 updateRate);
 s32 menu_trophy_race_rankings_loop(s32 updateRate);
 s32 menu_23_loop(s32 updateRate);
@@ -861,12 +924,158 @@ void func_8009C6D4(s32 arg0);
 void func_8008B358(void);
 void func_8008B4C8(void);
 void func_8008B758(s8 *activePlayers);
-void func_8006F564(s8 arg0);
+void set_D_800DD430(s8 arg0);
 void func_80099E8C(s32 updateRate);
-void func_80092E94(UNUSED s32 updateRate, s32 arg1, s32 arg2);
 s32 func_800998E0(s32 arg0);
 void func_80081218(void);
-void func_80080580(Gfx **arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, void *arg8);
+void func_80080580(Gfx **arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, void *arg8);
 void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
+void render_enter_filename_ui(UNUSED s32 unused);
+void func_8008D8BC(s32 updateRate);
+void renderTrackSelect(s32 arg0, s32 arg1, s8 *arg2, s8 *arg3, s32 arg4, s32 arg5, s32 arg6, DrawTexture *arg7, s32 arg8);
+//Possible names
+//void renderTrackSelect(s32 xPos, s32 yPos, char *levelName, char *arg3, s32 colour, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
+s32 func_80095728(Gfx **gfx, MatrixS **mtx, Vertex **vtx, s32 updateRate);
+s32 func_8008F618(Gfx **dlist, MatrixS **mat);
+void func_80093D40(UNUSED s32 updateRate);
+void func_80080BC8(Gfx **);
+void func_8009963C(void);
+void func_80081C04(s32 num, s32 x, s32 y, u8 r, u8 g, u8 b, u8 a, u8 font, u8 alignment);
+void func_80080E90(Gfx **dList, s32 x, s32 y, u8 BGr, u8 BGg, u8 BGb, u8 BGa, u8 r, u8 g, u8 b, u8 a);
+void func_80084854(void);
+
+typedef enum MenuTextures {
+/* 0x00 */ TEXTURE_UNK_00,
+/* 0x01 */ TEXTURE_UNK_01,
+/* 0x02 */ TEXTURE_UNK_02,
+/* 0x03 */ TEXTURE_UNK_03,
+/* 0x04 */ TEXTURE_UNK_04,
+/* 0x05 */ TEXTURE_UNK_05,
+/* 0x06 */ TEXTURE_UNK_06,
+/* 0x07 */ TEXTURE_UNK_07,
+/* 0x08 */ TEXTURE_UNK_08,
+/* 0x09 */ TEXTURE_UNK_09,
+/* 0x0A */ TEXTURE_UNK_0A,
+/* 0x0B */ TEXTURE_UNK_0B,
+/* 0x0C */ TEXTURE_UNK_0C,
+/* 0x0D */ TEXTURE_UNK_0D,
+/* 0x0E */ TEXTURE_BACKGROUND_DINO_DOMAIN_TOP,
+/* 0x0F */ TEXTURE_BACKGROUND_DINO_DOMAIN_BOTTOM,
+/* 0x10 */ TEXTURE_BACKGROUND_SHERBERT_ISLAND_TOP,
+/* 0x11 */ TEXTURE_BACKGROUND_SHERBERT_ISLAND_BOTTOM,
+/* 0x12 */ TEXTURE_BACKGROUND_SNOWFLAKE_MOUNTAIN_TOP,
+/* 0x13 */ TEXTURE_BACKGROUND_SNOWFLAKE_MOUNTAIN_BOTTOM,
+/* 0x14 */ TEXTURE_BACKGROUND_DRAGON_FOREST_TOP,
+/* 0x15 */ TEXTURE_BACKGROUND_DRAGON_FOREST_BOTTOM,
+/* 0x16 */ TEXTURE_BACKGROUND_FUTURE_FUN_LAND_TOP,
+/* 0x17 */ TEXTURE_BACKGROUND_FUTURE_FUN_LAND_BOTTOM,
+/* 0x18 */ TEXTURE_ICON_VEHICLE_CAR_TOP,
+/* 0x19 */ TEXTURE_ICON_VEHICLE_CAR_BOTTOM,
+/* 0x1A */ TEXTURE_ICON_VEHICLE_HOVERCRAFT_TOP,
+/* 0x1B */ TEXTURE_ICON_VEHICLE_HOVERCRAFT_BOTTOM,
+/* 0x1C */ TEXTURE_ICON_VEHICLE_PLANE_TOP,
+/* 0x1D */ TEXTURE_ICON_VEHICLE_PLANE_BOTTOM,
+/* 0x1E */ TEXTURE_ICON_VEHICLE_SELECT_CAR,
+/* 0x1F */ TEXTURE_ICON_VEHICLE_SELECT_CAR_HIGHLIGHT,
+/* 0x20 */ TEXTURE_ICON_VEHICLE_SELECT_HOVERCRAFT,
+/* 0x21 */ TEXTURE_ICON_VEHICLE_SELECT_HOVERCRAFT_HIGHLIGHT,
+/* 0x22 */ TEXTURE_ICON_VEHICLE_SELECT_PLANE,
+/* 0x23 */ TEXTURE_ICON_VEHICLE_SELECT_PLANE_HIGHLIGHT,
+/* 0x24 */ TEXTURE_ICON_TIMETRIAL_ON_TOP,
+/* 0x25 */ TEXTURE_ICON_TIMETRIAL_ON_BOTTOM,
+/* 0x26 */ TEXTURE_ICON_TIMETRIAL_OFF_TOP,
+/* 0x27 */ TEXTURE_ICON_TIMETRIAL_OFF_BOTTOM,
+/* 0x28 */ TEXTURE_ICON_TIMETRIAL_OPT_ON,
+/* 0x29 */ TEXTURE_ICON_TIMETRIAL_OPT_OFF,
+/* 0x2A */ TEXTURE_ICON_TIMETRIAL_OPT_ON_HIGHLIGHT,
+/* 0x2B */ TEXTURE_ICON_TIMETRIAL_OPT_OFF_HIGHLIGHT,
+/* 0x2C */ TEXTURE_ICON_PLAYER_1,
+/* 0x2D */ TEXTURE_ICON_PLAYER_2,
+/* 0x2E */ TEXTURE_ICON_PLAYER_3,
+/* 0x2F */ TEXTURE_ICON_PLAYER_4,
+/* 0x30 */ TEXTURE_ICON_VEHICLE_TITLE,
+/* 0x31 */ TEXTURE_ICON_TT_TITLE,
+/* 0x32 */ TEXTURE_ICON_PORTRAIT_KRUNCH,
+/* 0x33 */ TEXTURE_ICON_PORTRAIT_DIDDY,
+/* 0x34 */ TEXTURE_ICON_PORTRAIT_DRUMSTICK,
+/* 0x35 */ TEXTURE_ICON_PORTRAIT_BUMPER,
+/* 0x36 */ TEXTURE_ICON_PORTRAIT_BANJO,
+/* 0x37 */ TEXTURE_ICON_PORTRAIT_CONKER,
+/* 0x38 */ TEXTURE_ICON_PORTRAIT_TIPTUP,
+/* 0x39 */ TEXTURE_ICON_PORTRAIT_TT,
+/* 0x3A */ TEXTURE_ICON_PORTRAIT_PIPSY,
+/* 0x3B */ TEXTURE_ICON_PORTRAIT_TIMBER,
+/* 0x3C */ TEXTURE_ICON_ARROW_LEFT,
+/* 0x3D */ TEXTURE_ICON_ARROW_UP,
+/* 0x3E */ TEXTURE_ICON_ARROW_RIGHT,
+/* 0x3F */ TEXTURE_ICON_ARROW_DOWN,
+/* 0x40 */ TEXTURE_ICON_BALLOON_GOLD,
+/* 0x41 */ TEXTURE_ICON_BALLOON_DIAMOND,
+/* 0x42 */ TEXTURE_ICON_MARKER_CROSS,
+/* 0x43 */ TEXTURE_SURFACE_BUTTON_WOOD,
+/* 0x44 */ TEXTURE_UNK_44,
+/* 0x45 */ TEXTURE_UNK_45,
+/* 0x46 */ TEXTURE_ICON_SAVE_BIN,
+/* 0x47 */ TEXTURE_ICON_SAVE_N64,
+/* 0x48 */ TEXTURE_ICON_SAVE_TT,
+/* 0x49 */ TEXTURE_ICON_SAVE_CPAK,
+/* 0x4A */ TEXTURE_ICON_SAVE_FILECABINET,
+/* 0x4B */ TEXTURE_ICON_SAVE_GHOSTS,
+/* 0x4C */ TEXTURE_UNK_4C,
+/* 0x4D */ TEXTURE_UNK_4D,
+/* 0x4E */ TEXTURE_UNK_4E,
+/* 0x4F */ TEXTURE_UNK_4F,
+/* 0x50 */ TEXTURE_TITLE_SEGMENT_01,
+/* 0x51 */ TEXTURE_TITLE_SEGMENT_02,
+/* 0x52 */ TEXTURE_TITLE_SEGMENT_03,
+/* 0x53 */ TEXTURE_TITLE_SEGMENT_04,
+/* 0x54 */ TEXTURE_TITLE_SEGMENT_05,
+/* 0x55 */ TEXTURE_TITLE_SEGMENT_06,
+/* 0x56 */ TEXTURE_TITLE_SEGMENT_07,
+/* 0x57 */ TEXTURE_TITLE_SEGMENT_08,
+/* 0x58 */ TEXTURE_TITLE_SEGMENT_09,
+/* 0x59 */ TEXTURE_TITLE_SEGMENT_10,
+/* 0x5A */ TEXTURE_TITLE_SEGMENT_11,
+/* 0x5B */ TEXTURE_UNK_5B,
+/* 0x5C */ TEXTURE_UNK_5C,
+/* 0x5D */ TEXTURE_UNK_5D,
+/* 0x5E */ TEXTURE_ICON_TT_HEAD,
+/* 0x5F */ TEXTURE_UNK_5F,
+/* 0x60 */ TEXTURE_UNK_60,
+/* 0x61 */ TEXTURE_UNK_61,
+/* 0x62 */ TEXTURE_UNK_62,
+/* 0x63 */ TEXTURE_UNK_63,
+/* 0x64 */ TEXTURE_UNK_64,
+/* 0x65 */ TEXTURE_UNK_65,
+/* 0x66 */ TEXTURE_UNK_66,
+/* 0x67 */ TEXTURE_UNK_67,
+/* 0x68 */ TEXTURE_UNK_68,
+/* 0x69 */ TEXTURE_UNK_69,
+/* 0x6A */ TEXTURE_UNK_6A,
+/* 0x6B */ TEXTURE_UNK_6B,
+/* 0x6C */ TEXTURE_UNK_6C,
+/* 0x6D */ TEXTURE_UNK_6D,
+/* 0x6E */ TEXTURE_UNK_6E,
+/* 0x6F */ TEXTURE_UNK_6F,
+/* 0x70 */ TEXTURE_UNK_70,
+/* 0x71 */ TEXTURE_UNK_71,
+/* 0x72 */ TEXTURE_UNK_72,
+/* 0x73 */ TEXTURE_UNK_73,
+/* 0x74 */ TEXTURE_UNK_74,
+/* 0x75 */ TEXTURE_UNK_75,
+/* 0x76 */ TEXTURE_UNK_76,
+/* 0x77 */ TEXTURE_UNK_77,
+/* 0x78 */ TEXTURE_UNK_78,
+/* 0x79 */ TEXTURE_UNK_79,
+/* 0x7A */ TEXTURE_UNK_7A,
+/* 0x7B */ TEXTURE_UNK_7B,
+/* 0x7C */ TEXTURE_UNK_7C,
+/* 0x7D */ TEXTURE_UNK_7D,
+/* 0x7E */ TEXTURE_UNK_7E,
+/* 0x7F */ TEXTURE_UNK_7F,
+
+    NUM_MENU_TEXTURES
+
+} MenuTextures;
 
 #endif

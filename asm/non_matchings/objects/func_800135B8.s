@@ -43,11 +43,11 @@ glabel func_800135B8
 /* 014240 80013640 AFA50028 */   sw    $a1, 0x28($sp)
 /* 014244 80013644 8FAF0078 */  lw    $t7, 0x78($sp)
 /* 014248 80013648 44802000 */  mtc1  $zero, $f4
-/* 01424C 8001364C 3C108012 */  lui   $s0, %hi(D_8011AE8C) # $s0, 0x8012
-/* 014250 80013650 2610AE8C */  addiu $s0, %lo(D_8011AE8C) # addiu $s0, $s0, -0x5174
-/* 014254 80013654 3C058012 */  lui   $a1, %hi(D_8011AE90) # $a1, 0x8012
+/* 01424C 8001364C 3C108012 */  lui   $s0, %hi(gObjectCurrDisplayList) # $s0, 0x8012
+/* 014250 80013650 2610AE8C */  addiu $s0, %lo(gObjectCurrDisplayList) # addiu $s0, $s0, -0x5174
+/* 014254 80013654 3C058012 */  lui   $a1, %hi(gObjectCurrMatrix) # $a1, 0x8012
 /* 014258 80013658 8DE60078 */  lw    $a2, 0x78($t7)
-/* 01425C 8001365C 24A5AE90 */  addiu $a1, %lo(D_8011AE90) # addiu $a1, $a1, -0x5170
+/* 01425C 8001365C 24A5AE90 */  addiu $a1, %lo(gObjectCurrMatrix) # addiu $a1, $a1, -0x5170
 /* 014260 80013660 02002025 */  move  $a0, $s0
 /* 014264 80013664 3C073F80 */  lui   $a3, 0x3f80
 /* 014268 80013668 0C01A521 */  jal   func_80069484
@@ -55,7 +55,7 @@ glabel func_800135B8
 /* 014270 80013670 8FB80078 */  lw    $t8, 0x78($sp)
 /* 014274 80013674 00000000 */  nop   
 /* 014278 80013678 8F040078 */  lw    $a0, 0x78($t8)
-/* 01427C 8001367C 0C004BCC */  jal   func_80012F30
+/* 01427C 8001367C 0C004BCC */  jal   objUndoPlayerTumble
 /* 014280 80013680 00000000 */   nop   
 /* 014284 80013684 8FA30050 */  lw    $v1, 0x50($sp)
 /* 014288 80013688 00000000 */  nop   
@@ -71,21 +71,21 @@ glabel func_800135B8
 /* 0142B0 800136B0 92390072 */  lbu   $t9, 0x72($s1)
 /* 0142B4 800136B4 00000000 */  nop   
 /* 0142B8 800136B8 00196700 */  sll   $t4, $t9, 0x1c
-/* 0142BC 800136BC 0C01C1FE */  jal   sine_s
+/* 0142BC 800136BC 0C01C1FE */  jal   coss_f
 /* 0142C0 800136C0 000C2403 */   sra   $a0, $t4, 0x10
 /* 0142C4 800136C4 8FA30050 */  lw    $v1, 0x50($sp)
-/* 0142C8 800136C8 3C058012 */  lui   $a1, %hi(D_8011AE90) # $a1, 0x8012
+/* 0142C8 800136C8 3C058012 */  lui   $a1, %hi(gObjectCurrMatrix) # $a1, 0x8012
 /* 0142CC 800136CC C4700010 */  lwc1  $f16, 0x10($v1)
 /* 0142D0 800136D0 C464000C */  lwc1  $f4, 0xc($v1)
 /* 0142D4 800136D4 46100482 */  mul.s $f18, $f0, $f16
-/* 0142D8 800136D8 3C068012 */  lui   $a2, %hi(D_8011AE94) # $a2, 0x8012
+/* 0142D8 800136D8 3C068012 */  lui   $a2, %hi(gObjectCurrVertexList) # $a2, 0x8012
 /* 0142DC 800136DC 3C0CFA00 */  lui   $t4, 0xfa00
 /* 0142E0 800136E0 240DFFFF */  li    $t5, -1
 /* 0142E4 800136E4 46049180 */  add.s $f6, $f18, $f4
-/* 0142E8 800136E8 24C6AE94 */  addiu $a2, %lo(D_8011AE94) # addiu $a2, $a2, -0x516c
+/* 0142E8 800136E8 24C6AE94 */  addiu $a2, %lo(gObjectCurrVertexList) # addiu $a2, $a2, -0x516c
 /* 0142EC 800136EC E7A6005C */  swc1  $f6, 0x5c($sp)
 /* 0142F0 800136F0 922E0070 */  lbu   $t6, 0x70($s1)
-/* 0142F4 800136F4 24A5AE90 */  addiu $a1, %lo(D_8011AE90) # addiu $a1, $a1, -0x5170
+/* 0142F4 800136F4 24A5AE90 */  addiu $a1, %lo(gObjectCurrMatrix) # addiu $a1, $a1, -0x5170
 /* 0142F8 800136F8 29C10002 */  slti  $at, $t6, 2
 /* 0142FC 800136FC 10200005 */  beqz  $at, .L80013714
 /* 014300 80013700 02002025 */   move  $a0, $s0
@@ -125,7 +125,7 @@ glabel func_800135B8
 /* 014380 80013780 240D010A */  li    $t5, 266
 /* 014384 80013784 8F2C0078 */  lw    $t4, 0x78($t9)
 /* 014388 80013788 AFAD0014 */  sw    $t5, 0x14($sp)
-/* 01438C 8001378C 0C01A145 */  jal   func_80068514
+/* 01438C 8001378C 0C01A145 */  jal   render_sprite_billboard
 /* 014390 80013790 AFAC0010 */   sw    $t4, 0x10($sp)
 /* 014394 80013794 922E0070 */  lbu   $t6, 0x70($s1)
 /* 014398 80013798 24010002 */  li    $at, 2
@@ -134,7 +134,7 @@ glabel func_800135B8
 /* 0143A4 800137A4 8FAF0048 */  lw    $t7, 0x48($sp)
 /* 0143A8 800137A8 2406000E */  li    $a2, 14
 /* 0143AC 800137AC 8DE5007C */  lw    $a1, 0x7c($t7)
-/* 0143B0 800137B0 0C01ED3A */  jal   func_8007B4E8
+/* 0143B0 800137B0 0C01ED3A */  jal   load_and_set_texture
 /* 0143B4 800137B4 00003825 */   move  $a3, $zero
 /* 0143B8 800137B8 8FB80048 */  lw    $t8, 0x48($sp)
 /* 0143BC 800137BC 8FAD0078 */  lw    $t5, 0x78($sp)

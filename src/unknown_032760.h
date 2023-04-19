@@ -5,6 +5,7 @@
 #include "structs.h"
 #include "libc/math.h"
 
+/* Size: 0x88 bytes */
 typedef struct unk800DC950 {
     u8 unk0;
     u8 unk1;
@@ -58,12 +59,6 @@ typedef struct unk800DC950 {
     f32 unk84;
 } unk800DC950;
 
-/* Size: 0x88 bytes */
-typedef struct unk800DC954 {
-    unk800DC950 unk0;
-    u8 unk20[0x68];
-} unk800DC954;
-
 /* Size: 0x14 bytes */
 typedef struct unk800DC960 {
     s32 unk0;
@@ -82,7 +77,7 @@ typedef struct unk800DC964 {
 
 extern unk800DC950 **D_800DC950;
 
-f32 sine_s(s16); //?
+f32 coss_f(s16); //?
 
 void func_80031B60(void);
 void func_80032210(unk800DC950 *arg0);
@@ -90,11 +85,12 @@ void func_80032218(unk800DC950 *arg0);
 void func_80032224(unk800DC950 *arg0);
 void func_80032248(unk800DC950 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
 void func_80032344(unk800DC950 *arg0, s32 arg1, s32 arg2);
-void func_80032398(s32 arg0);
+void lightUpdateLights(s32 arg0);
 void func_80032BAC(unk800DC950 *arg0);
 s32 func_80032C6C(void);
 f32 func_80033A14(unk800DC950 *arg0);
 f32 func_80033C08(unk800DC950 *arg0);
+Object_64 *func_80031CAC(Object *, LevelObjectEntry_RgbaLight *entry);
 
 //Non Matching
 void func_80031BB8(s32 count);

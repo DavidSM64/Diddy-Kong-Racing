@@ -1,7 +1,7 @@
 glabel func_800143A8
 /* 014FA8 800143A8 27BDFF50 */  addiu $sp, $sp, -0xb0
-/* 014FAC 800143AC 3C0E8012 */  lui   $t6, %hi(D_8011AE8C) # $t6, 0x8012
-/* 014FB0 800143B0 8DCEAE8C */  lw    $t6, %lo(D_8011AE8C)($t6)
+/* 014FAC 800143AC 3C0E8012 */  lui   $t6, %hi(gObjectCurrDisplayList) # $t6, 0x8012
+/* 014FB0 800143B0 8DCEAE8C */  lw    $t6, %lo(gObjectCurrDisplayList)($t6)
 /* 014FB4 800143B4 AFBF003C */  sw    $ra, 0x3c($sp)
 /* 014FB8 800143B8 AFBE0038 */  sw    $fp, 0x38($sp)
 /* 014FBC 800143BC AFB70034 */  sw    $s7, 0x34($sp)
@@ -100,7 +100,7 @@ glabel func_800143A8
 /* 015114 80014514 27A40074 */  addiu $a0, $sp, 0x74
 /* 015118 80014518 02402825 */  move  $a1, $s2
 /* 01511C 8001451C AFAA00AC */  sw    $t2, 0xac($sp)
-/* 015120 80014520 0C01ED3A */  jal   func_8007B4E8
+/* 015120 80014520 0C01ED3A */  jal   load_and_set_texture
 /* 015124 80014524 AFAB0048 */   sw    $t3, 0x48($sp)
 /* 015128 80014528 8FAA00AC */  lw    $t2, 0xac($sp)
 /* 01512C 8001452C 8FAB0048 */  lw    $t3, 0x48($sp)
@@ -114,8 +114,8 @@ glabel func_800143A8
 /* 015148 80014548 AFAA00AC */  sw    $t2, 0xac($sp)
 /* 01514C 8001454C 0C01ED1B */  jal   func_8007B46C
 /* 015150 80014550 AFAB0048 */   sw    $t3, 0x48($sp)
-/* 015154 80014554 3C068012 */  lui   $a2, %hi(D_8011AE8C) # $a2, 0x8012
-/* 015158 80014558 24C6AE8C */  addiu $a2, %lo(D_8011AE8C) # addiu $a2, $a2, -0x5174
+/* 015154 80014554 3C068012 */  lui   $a2, %hi(gObjectCurrDisplayList) # $a2, 0x8012
+/* 015158 80014558 24C6AE8C */  addiu $a2, %lo(gObjectCurrDisplayList) # addiu $a2, $a2, -0x5174
 /* 01515C 8001455C 8CC30000 */  lw    $v1, ($a2)
 /* 015160 80014560 3C010700 */  lui   $at, 0x700
 /* 015164 80014564 246F0008 */  addiu $t7, $v1, 8
@@ -287,7 +287,7 @@ glabel func_800143A8
 /* 0153D4 800147D4 8FAE0074 */  lw    $t6, 0x74($sp)
 .L800147D8:
 /* 0153D8 800147D8 8FBF003C */  lw    $ra, 0x3c($sp)
-/* 0153DC 800147DC 3C018012 */  lui   $at, %hi(D_8011AE8C) # $at, 0x8012
+/* 0153DC 800147DC 3C018012 */  lui   $at, %hi(gObjectCurrDisplayList) # $at, 0x8012
 /* 0153E0 800147E0 8FB00018 */  lw    $s0, 0x18($sp)
 /* 0153E4 800147E4 8FB1001C */  lw    $s1, 0x1c($sp)
 /* 0153E8 800147E8 8FB20020 */  lw    $s2, 0x20($sp)
@@ -300,5 +300,5 @@ glabel func_800143A8
 /* 015404 80014804 27BD00B0 */  addiu $sp, $sp, 0xb0
 /* 015408 80014808 01401025 */  move  $v0, $t2
 /* 01540C 8001480C 03E00008 */  jr    $ra
-/* 015410 80014810 AC2EAE8C */   sw    $t6, %lo(D_8011AE8C)($at)
+/* 015410 80014810 AC2EAE8C */   sw    $t6, %lo(gObjectCurrDisplayList)($at)
 

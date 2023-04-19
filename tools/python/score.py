@@ -2,30 +2,49 @@ import re
 import sys
 import argparse
 import time
+import os
 from file_util import FileUtil
 from score_display import ScoreDisplay
 
 ASM_FOLDERS = [
-    './asm/unknown_0251F0',
-    './asm/unknown_031D30',
-    './asm/unknown_062930',
-    './asm/unknown_070110',
-    './asm/gzip',
+    './asm',
     './lib/asm',
-    './lib/asm/exception',
 ]
 
+BLACKLIST = [
+    '/non_matchings/'
+]
+
+BLACKLIST_C = [
+    'math_util.c',
+    'collision.c',
+]
+
+filelist = []
+
+for asmDir in ASM_FOLDERS:
+    for root, dirs, files in os.walk(asmDir):
+        for file in files:
+            fullPath = os.path.join(root,file)
+            skipThis = False
+            for blackListEntry in BLACKLIST:
+                if blackListEntry in fullPath:
+                    skipThis = True
+                    break
+            if not skipThis and fullPath.endswith('.s'):
+                filelist.append(fullPath)
+
 # These will automatically be added to the adventure one percentage.
-ASM_LABELS = [ 'entrypoint' ]
-for folder in ASM_FOLDERS:
-    GLABEL_REGEX = r'glabel ([0-9A-Za-z_]+)'
-    filenames = FileUtil.get_filenames_from_directory(folder, extensions=('.s',))
-    for filename in filenames:
-        with open(folder + '/' + filename, 'r') as asmFile:
-            text = asmFile.read()
-            matches = re.finditer(GLABEL_REGEX, text, re.MULTILINE)
-            for matchNum, match in enumerate(matches, start=1):
-                ASM_LABELS.append(match.groups()[0])
+ASM_LABELS = []
+GLABEL_REGEX = r'glabel ([0-9A-Za-z_]+)'
+for filename in filelist:
+    with open(filename, 'r') as asmFile:
+        text = asmFile.read()
+        matches = re.finditer(GLABEL_REGEX, text, re.MULTILINE)
+        for matchNum, match in enumerate(matches, start=1):
+            glabel = match.groups()[0]
+            if not glabel in ASM_LABELS:
+                ASM_LABELS.append(glabel)
 
 BUILD_DIRECTORY = './build/us_1.0'
 SRC_DIRECTORY = './src'
@@ -107,6 +126,9 @@ class ScoreFile:
             except Exception:
                 pass
     
+    def get_number_of_functions(self):
+        return len(self.functions)
+
     def get_number_of_documented_functions(self):
         count = 0
         for func in self.functions:
@@ -133,6 +155,7 @@ def main():
     parser = argparse.ArgumentParser(description="")
     parser.add_argument("-t", "--top", help="(Optional) Shows the top N files remaining.")
     parser.add_argument("-a", "--adventure", help="(Optional) Only shows adventure 1 or 2 based on passed in value.", choices=['1', '2'])
+    parser.add_argument("-s", "--summary", help="(Optional) Only prints the percentages for adventure 1 and 2", action='store_true')
     args = parser.parse_args()
     adventureSelect = 3 # Show both adventures by default
     if args.adventure != None:
@@ -148,26 +171,38 @@ def main():
     totalNumberOfNonEquivalent = 0
     totalSizeOfDecompiledFunctions = 0
     totalSizeOfDocumentedFunctions = 0
+    ignoreNumberDocumentedFunctions = 0
+    ignoreSizeDocumentedFunctions = 0
     
     srcFilenames = FileUtil.get_filenames_from_directory_recursive(SRC_DIRECTORY, extensions=('.c'))
     for filename in srcFilenames:
-        scoreFile = ScoreFile(SRC_DIRECTORY + '/' + filename)
-        totalNumberOfDecompiledFunctions += len(scoreFile.functions)
-        totalNumberOfGlobalAsms += scoreFile.numGlobalAsms
-        totalNumberOfNonMatching += scoreFile.numNonMatchings
-        totalNumberOfNonEquivalent += scoreFile.numNonEquivalents
-        totalNumberOfDocumentedFunctions += scoreFile.get_number_of_documented_functions()
-        totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
-        totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
-        scoreFiles.append(scoreFile)
+        skipThis = False
+        for blackListEntry in BLACKLIST_C:
+            if blackListEntry in filename:
+                skipThis = True
+                break
+        if not skipThis:
+            # Get score properties of dkr functions.
+            scoreFile = ScoreFile(SRC_DIRECTORY + '/' + filename)
+            totalNumberOfDecompiledFunctions += len(scoreFile.functions)
+            totalNumberOfGlobalAsms += scoreFile.numGlobalAsms
+            totalNumberOfNonMatching += scoreFile.numNonMatchings
+            totalNumberOfNonEquivalent += scoreFile.numNonEquivalents
+            totalNumberOfDocumentedFunctions += scoreFile.get_number_of_documented_functions()
+            totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
+            totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
+            scoreFiles.append(scoreFile)
+    # Get score properties of libultra functions.
     srcFilenames = FileUtil.get_filenames_from_directory_recursive(LIB_SRC_DIRECTORY, extensions=('.c'))
     for filename in srcFilenames:
         scoreFile = ScoreFile(LIB_SRC_DIRECTORY + '/' + filename)
         totalNumberOfDecompiledFunctions += len(scoreFile.functions)
         totalNumberOfGlobalAsms += scoreFile.numGlobalAsms
-        totalNumberOfDocumentedFunctions += scoreFile.get_number_of_documented_functions()
+        #totalNumberOfDocumentedFunctions += scoreFile.get_number_of_documented_functions()
+        ignoreNumberDocumentedFunctions += scoreFile.get_number_of_functions()
         totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
-        totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
+        #totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
+        ignoreSizeDocumentedFunctions += scoreFile.get_size_of_functions()
         scoreFiles.append(scoreFile)
     
     
@@ -177,10 +212,14 @@ def main():
             totalSizeOfDecompiledFunctions += MAP_FILE.functionSizes[asm_function]
     
     adventureOnePercentage = (totalSizeOfDecompiledFunctions / CODE_SIZE) * 100
-    adventureTwoPercentage = (totalSizeOfDocumentedFunctions / CODE_SIZE) * 100
+    adventureTwoPercentage = (totalSizeOfDocumentedFunctions / (CODE_SIZE - ignoreSizeDocumentedFunctions)) * 100
     
+    if args.summary:
+        print(f"Decomp progress: {adventureOnePercentage:5.2f}%")
+        print(f"Documentation progress: {adventureTwoPercentage:5.2f}%")
+        sys.exit(0)
     scoreDisplay = ScoreDisplay()
-    print(scoreDisplay.getDisplay(adventureOnePercentage, adventureTwoPercentage, adventureSelect, totalNumberOfDecompiledFunctions, totalNumberOfGlobalAsms, totalNumberOfNonMatching, totalNumberOfNonEquivalent, totalNumberOfDocumentedFunctions, totalNumberOfFunctions - totalNumberOfDocumentedFunctions))
+    print(scoreDisplay.getDisplay(adventureOnePercentage, adventureTwoPercentage, adventureSelect, totalNumberOfDecompiledFunctions, totalNumberOfGlobalAsms, totalNumberOfNonMatching, totalNumberOfNonEquivalent, totalNumberOfDocumentedFunctions, (totalNumberOfFunctions - ignoreNumberDocumentedFunctions) - totalNumberOfDocumentedFunctions))
     
     if showTopFiles > 0:
         if showTopFiles > len(scoreFiles):

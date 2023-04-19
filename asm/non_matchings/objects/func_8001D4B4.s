@@ -29,7 +29,7 @@ glabel func_8001D4B4
 /* 01E120 8001D520 E7A00020 */  swc1  $f0, 0x20($sp)
 /* 01E124 8001D524 A7A80028 */  sh    $t0, 0x28($sp)
 /* 01E128 8001D528 A7A9002A */  sh    $t1, 0x2a($sp)
-/* 01E12C 8001D52C 0C01C0C8 */  jal   func_80070320
+/* 01E12C 8001D52C 0C01C0C8 */  jal   f32_vec3_apply_object_rotation
 /* 01E130 8001D530 E7A60024 */   swc1  $f6, 0x24($sp)
 /* 01E134 8001D534 C7A8001C */  lwc1  $f8, 0x1c($sp)
 /* 01E138 8001D538 8FA60030 */  lw    $a2, 0x30($sp)

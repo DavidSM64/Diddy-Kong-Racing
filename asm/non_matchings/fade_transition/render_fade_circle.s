@@ -3,7 +3,7 @@ glabel render_fade_circle
 /* 0C2E78 800C2278 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0C2E7C 800C227C AFA40018 */  sw    $a0, 0x18($sp)
 /* 0C2E80 800C2280 AFA5001C */  sw    $a1, 0x1c($sp)
-/* 0C2E84 800C2284 0C01ECF4 */  jal   func_8007B3D0
+/* 0C2E84 800C2284 0C01ECF4 */  jal   reset_render_settings
 /* 0C2E88 800C2288 AFA60020 */   sw    $a2, 0x20($sp)
 /* 0C2E8C 800C228C 3C03800E */  lui   $v1, %hi(sTransitionTaskNum) # $v1, 0x800e
 /* 0C2E90 800C2290 8C6331D0 */  lw    $v1, %lo(sTransitionTaskNum)($v1)
@@ -90,7 +90,7 @@ glabel render_fade_circle
 /* 0C2FD4 800C23D4 ACAA0000 */  sw    $t2, ($a1)
 /* 0C2FD8 800C23D8 8FA40018 */  lw    $a0, 0x18($sp)
 /* 0C2FDC 800C23DC 24A20008 */  addiu $v0, $a1, 8
-/* 0C2FE0 800C23E0 0C01ECF4 */  jal   func_8007B3D0
+/* 0C2FE0 800C23E0 0C01ECF4 */  jal   reset_render_settings
 /* 0C2FE4 800C23E4 AC820000 */   sw    $v0, ($a0)
 /* 0C2FE8 800C23E8 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 0C2FEC 800C23EC 27BD0018 */  addiu $sp, $sp, 0x18

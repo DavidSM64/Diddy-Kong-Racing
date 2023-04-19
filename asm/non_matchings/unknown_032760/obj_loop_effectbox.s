@@ -18,7 +18,7 @@ glabel obj_loop_effectbox
 /* 0357B4 80034BB4 8C90003C */  lw    $s0, 0x3c($a0)
 /* 0357B8 80034BB8 00803025 */  move  $a2, $a0
 /* 0357BC 80034BBC AFA60098 */  sw    $a2, 0x98($sp)
-/* 0357C0 80034BC0 0C006E9D */  jal   get_object_struct_array
+/* 0357C0 80034BC0 0C006E9D */  jal   get_racer_objects
 /* 0357C4 80034BC4 27A4008C */   addiu $a0, $sp, 0x8c
 /* 0357C8 80034BC8 AFA20094 */  sw    $v0, 0x94($sp)
 /* 0357CC 80034BCC 9204000B */  lbu   $a0, 0xb($s0)
@@ -26,14 +26,14 @@ glabel obj_loop_effectbox
 /* 0357D4 80034BD4 00047200 */  sll   $t6, $a0, 8
 /* 0357D8 80034BD8 000E2023 */  negu  $a0, $t6
 /* 0357DC 80034BDC 00047C00 */  sll   $t7, $a0, 0x10
-/* 0357E0 80034BE0 0C01C1FE */  jal   sine_s
+/* 0357E0 80034BE0 0C01C1FE */  jal   coss_f
 /* 0357E4 80034BE4 000F2403 */   sra   $a0, $t7, 0x10
 /* 0357E8 80034BE8 9204000B */  lbu   $a0, 0xb($s0)
 /* 0357EC 80034BEC 46000506 */  mov.s $f20, $f0
 /* 0357F0 80034BF0 0004CA00 */  sll   $t9, $a0, 8
 /* 0357F4 80034BF4 00192023 */  negu  $a0, $t9
 /* 0357F8 80034BF8 00044400 */  sll   $t0, $a0, 0x10
-/* 0357FC 80034BFC 0C01C1F1 */  jal   cosine_s
+/* 0357FC 80034BFC 0C01C1F1 */  jal   sins_f
 /* 035800 80034C00 00082403 */   sra   $a0, $t0, 0x10
 /* 035804 80034C04 920A0008 */  lbu   $t2, 8($s0)
 /* 035808 80034C08 24020003 */  li    $v0, 3

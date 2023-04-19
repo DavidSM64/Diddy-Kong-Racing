@@ -72,7 +72,7 @@ UNUSED void render_screen(Gfx **dlist, u8 *screenAddress) {
 
         // Draw the texture.
         gSPTextureRectangle((*dlist)++, 0, (y_pos << 2), SCREEN_WIDTH << 2,
-            ((y_pos + SCREEN_HEIGHT_PART) << 2), 0, 0, 0, 1 << 12, 1 << 10);
+            ((y_pos + SCREEN_HEIGHT_PART) << 2), G_TX_RENDERTILE, 0, 0, 1 << 12, 1 << 10);
 
         // Advance to the next slice.
         screenAddress += SCREEN_WIDTH * SCREEN_HEIGHT_PART * 2;

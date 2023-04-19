@@ -25,8 +25,8 @@ glabel menu_magic_codes_list_loop
 /* 08B580 8008A980 8C42F47C */  lw    $v0, %lo(gMenuDelay)($v0)
 /* 08B584 8008A984 00000000 */  nop   
 .L8008A988:
-/* 08B588 8008A988 3C038012 */  lui   $v1, %hi(D_801263BC) # $v1, 0x8012
-/* 08B58C 8008A98C 246363BC */  addiu $v1, %lo(D_801263BC) # addiu $v1, $v1, 0x63bc
+/* 08B588 8008A988 3C038012 */  lui   $v1, %hi(gOptionBlinkTimer) # $v1, 0x8012
+/* 08B58C 8008A98C 246363BC */  addiu $v1, %lo(gOptionBlinkTimer) # addiu $v1, $v1, 0x63bc
 /* 08B590 8008A990 8C780000 */  lw    $t8, ($v1)
 /* 08B594 8008A994 2841FFED */  slti  $at, $v0, -0x13
 /* 08B598 8008A998 0304C821 */  addu  $t9, $t8, $a0
@@ -242,7 +242,7 @@ glabel menu_magic_codes_list_loop
 /* 08B8A8 8008ACA8 11200007 */  beqz  $t1, .L8008ACC8
 /* 08B8AC 8008ACAC 3C04800E */   lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 08B8B0 8008ACB0 AC29F47C */  sw    $t1, %lo(gMenuDelay)($at)
-/* 08B8B4 8008ACB4 0C030076 */  jal   func_800C01D8
+/* 08B8B4 8008ACB4 0C030076 */  jal   transition_begin
 /* 08B8B8 8008ACB8 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 08B8BC 8008ACBC 24040241 */  li    $a0, 577
 /* 08B8C0 8008ACC0 0C000741 */  jal   play_sound_global

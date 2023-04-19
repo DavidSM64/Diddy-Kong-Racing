@@ -87,7 +87,7 @@ glabel func_800AC8A8
 /* 0AD5D4 800AC9D4 E4A00000 */  swc1  $f0, ($a1)
 /* 0AD5D8 800AC9D8 E4A00004 */  swc1  $f0, 4($a1)
 /* 0AD5DC 800AC9DC A7AE001E */  sh    $t6, 0x1e($sp)
-/* 0AD5E0 800AC9E0 0C01C124 */  jal   func_80070490
+/* 0AD5E0 800AC9E0 0C01C124 */  jal   f32_vec3_apply_object_rotation3
 /* 0AD5E4 800AC9E4 E4A40008 */   swc1  $f4, 8($a1)
 /* 0AD5E8 800AC9E8 3C058012 */  lui   $a1, %hi(D_80127C30) # $a1, 0x8012
 /* 0AD5EC 800AC9EC 24A57C30 */  addiu $a1, %lo(D_80127C30) # addiu $a1, $a1, 0x7c30

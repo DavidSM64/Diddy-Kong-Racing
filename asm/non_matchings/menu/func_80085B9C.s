@@ -59,7 +59,7 @@ glabel L80085C30
 /* 08684C 80085C4C AFA6004C */  sw    $a2, 0x4c($sp)
 /* 086850 80085C50 AFA70048 */  sw    $a3, 0x48($sp)
 /* 086854 80085C54 AFA80044 */  sw    $t0, 0x44($sp)
-/* 086858 80085C58 0C019FCB */  jal   func_80067F2C
+/* 086858 80085C58 0C019FCB */  jal   set_ortho_matrix_view
 /* 08685C 80085C5C AFA90040 */   sw    $t1, 0x40($sp)
 /* 086860 80085C60 00002025 */  move  $a0, $zero
 /* 086864 80085C64 00002825 */  move  $a1, $zero
@@ -105,18 +105,18 @@ glabel L80085C30
 /* 086904 80085D04 8FAE004C */  lw    $t6, 0x4c($sp)
 /* 086908 80085D08 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
 /* 08690C 80085D0C 11C0001F */  beqz  $t6, .L80085D8C
-/* 086910 80085D10 3C188012 */   lui   $t8, %hi(D_801263BC) # $t8, 0x8012
+/* 086910 80085D10 3C188012 */   lui   $t8, %hi(gOptionBlinkTimer) # $t8, 0x8012
 /* 086914 80085D14 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
 /* 086918 80085D18 00009025 */  move  $s2, $zero
 /* 08691C 80085D1C 15E00003 */  bnez  $t7, .L80085D2C
-/* 086920 80085D20 3C11800E */   lui   $s1, %hi(D_800E043C) # $s1, 0x800e
+/* 086920 80085D20 3C11800E */   lui   $s1, %hi(gMenuSelectionArrowDown) # $s1, 0x800e
 /* 086924 80085D24 10000002 */  b     .L80085D30
 /* 086928 80085D28 24100084 */   li    $s0, 132
 .L80085D2C:
 /* 08692C 80085D2C 24100078 */  li    $s0, 120
 .L80085D30:
-/* 086930 80085D30 8F1863BC */  lw    $t8, %lo(D_801263BC)($t8)
-/* 086934 80085D34 2631043C */  addiu $s1, %lo(D_800E043C) # addiu $s1, $s1, 0x43c
+/* 086930 80085D30 8F1863BC */  lw    $t8, %lo(gOptionBlinkTimer)($t8)
+/* 086934 80085D34 2631043C */  addiu $s1, %lo(gMenuSelectionArrowDown) # addiu $s1, $s1, 0x43c
 /* 086938 80085D38 3319001F */  andi  $t9, $t8, 0x1f
 /* 08693C 80085D3C 00195043 */  sra   $t2, $t9, 1
 /* 086940 80085D40 020A8021 */  addu  $s0, $s0, $t2

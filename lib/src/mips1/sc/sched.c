@@ -20,19 +20,18 @@
 
 /************ .data ************/
 
-// Unsure about if this is an array or struct.
-s32 D_800DE730[] = { 0, 0 };
-s32 D_800DE738[] = { 0, 8 };
+s32 D_800DE730[] = { OSMESG_SWAP_BUFFER, OSMESG_SWAP_BUFFER };
+s32 gBootBlackoutMesg[] = { OSMESG_SWAP_BUFFER, MESG_SKIP_BUFFER_SWAP };
 
-f32 D_800DE740 = 0;
-f32 D_800DE744 = 0;
-f32 D_800DE748 = 0;
-f32 D_800DE74C = 0;
+f32 gAudTaskTimer0 = 0;
+f32 gAudTaskTimer1 = 0;
+f32 gAudTaskTimer2 = 0;
+f32 gAudTaskTimer3 = 0;
 
-u32 gRetraceCounter32 = 0;
+s32 gRetraceCounter32 = 0;
 s32 gCurRSPTaskCounter = 0;
 s32 gCurRDPTaskCounter = 0;
-static u32 gUnusedVar = 0;
+UNUSED s32 D_800DE75C = 0;
 u64 gRetraceCounter64 = 0;
 
 /*******************************/
@@ -64,9 +63,9 @@ const char D_800E7958[] = "\tdata_size\t\t= %u\n";
 s32 gCurRSPTaskIsSet;
 s32 gCurRDPTaskIsSet;
 OSTime gYieldTime;
-s32 D_80126120;
-u32 gRSPAudTaskCount;
-s32 D_80126128[18];
+u32 gRSPAudTaskFlushTime;
+u32 gRSPAudTaskDoneTime;
+UNUSED s32 D_80126128[18];
 
 /*******************************/
 
@@ -147,11 +146,13 @@ OSMesgQueue *osScGetInterruptQ(OSSched *sc) {
     return &sc->interruptQ;
 }
 
-// Unused.
-void func_80079584(f32 *arg0, f32 *arg1, f32 *arg2) {
-    *arg0 = D_800DE740;
-    *arg1 = D_800DE748;
-    *arg2 = D_800DE74C;
+/**
+ * Official Name: osScGetAudioSPStats
+*/
+UNUSED void scGetAudioTaskTimers(f32 *timer0, f32 *timer1, f32 *timer2) {
+    *timer0 = gAudTaskTimer0;
+    *timer1 = gAudTaskTimer2;
+    *timer2 = gAudTaskTimer3;
 }
 
 static void __scMain(void *arg) {
@@ -221,8 +222,8 @@ void func_80079760(OSSched *sc) {
     }
 }
 
-void dummy_80079808() {}
-void dummy_80079810() {}
+UNUSED void dummy_80079808() {}
+UNUSED void dummy_80079810() {}
 
 void __scHandleRetrace(OSSched *sc) {
     OSScTask *rspTask = NULL;
@@ -255,7 +256,7 @@ void __scHandleRetrace(OSSched *sc) {
 
     if ((gCurRDPTaskCounter > 10) && (sc->curRDPTask)) {
         if (sc->curRDPTask->unk68 == 0) {
-            osSendMesg(sc->curRDPTask->msgQ, &D_800DE738, OS_MESG_BLOCK);
+            osSendMesg(sc->curRDPTask->msgQ, &gBootBlackoutMesg, OS_MESG_BLOCK);
         }
 
         set_curRDPTask_NULL = TRUE;
@@ -318,31 +319,29 @@ void __scHandleRetrace(OSSched *sc) {
     }
 }
 
-//Keeping this defined here because it seems too specific to this function
-#define OS_CPU_COUNTER_F (f32)(OS_CPU_COUNTER / 100.0f)
-
 void __scHandleRSP(OSSched *sc) {
     OSScTask *t, *sp = 0, *dp = 0;
     s32 state;
-    s32 temp_hi;
 
     t = sc->curRSPTask;
     sc->curRSPTask = NULL;
 
     //Rare seems to have edited this function, most specifically here.
-    //Still need to do better for a match, but this does work
+    //This should probably have all been behind a debug #ifdef as none of these values are used.
     if (t->list.t.type == M_AUDTASK) {
-        gRSPAudTaskCount = osGetCount();
-        D_800DE74C = (f32) (((f32) (gRSPAudTaskCount - D_80126120) * 60.0f) / OS_CPU_COUNTER_F);
-        D_800DE744 = (f32) (D_800DE744 + D_800DE74C);
-        if (D_800DE740 < D_800DE74C) {
-            D_800DE740 = D_800DE74C;
+        gRSPAudTaskDoneTime = osGetCount();
+
+        gAudTaskTimer3 = ((gRSPAudTaskDoneTime - gRSPAudTaskFlushTime) * 60.0f) / (OS_CPU_COUNTER / 100);
+        gAudTaskTimer1 += gAudTaskTimer3;
+
+        if (gAudTaskTimer0 < gAudTaskTimer3) {
+            gAudTaskTimer0 = gAudTaskTimer3;
         }
-        temp_hi = (s32) gRetraceCounter32 % 1000;
-        if ((temp_hi == 1) || (temp_hi == 2)) {
-            D_800DE748 = (f32) (D_800DE744 / 500.0f);
-            D_800DE744 = 0.0f;
-            D_800DE740 = 0.0f;
+
+        if ((gRetraceCounter32 % 1000 == 1) || (gRetraceCounter32 % 1000 == 2)) {
+            gAudTaskTimer2 = gAudTaskTimer1 / 500.0f;
+            gAudTaskTimer1 = 0.0f;
+            gAudTaskTimer0 = 0.0f;
         }
     }
 
@@ -380,7 +379,7 @@ void __scHandleRDP(OSSched *sc) {
     t = sc->curRDPTask;
     sc->curRDPTask = 0;
 
-    t->state &= -2;
+    t->state &= ~OS_SC_NEEDS_RDP;
 
     __scTaskComplete(sc, t);
 
@@ -465,7 +464,7 @@ void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp) {
     if (sp) {
         if (sp->list.t.type == M_AUDTASK) {
             osWritebackDCacheAll();  /* flush the cache */
-            D_80126120 = osGetCount();
+            gRSPAudTaskFlushTime = osGetCount();
         }
         
         sp->state &= ~(OS_SC_YIELD | OS_SC_YIELDED);

@@ -21,7 +21,7 @@ glabel render_rain_splashes
 /* 0AE2A4 800AD6A4 29014001 */  slti  $at, $t0, 0x4001
 /* 0AE2A8 800AD6A8 142000C0 */  bnez  $at, .L800AD9AC
 /* 0AE2AC 800AD6AC 00000000 */   nop   
-/* 0AE2B0 800AD6B0 0C006EC6 */  jal   func_8001BB18
+/* 0AE2B0 800AD6B0 0C006EC6 */  jal   get_racer_object_by_port
 /* 0AE2B4 800AD6B4 AFA8007C */   sw    $t0, 0x7c($sp)
 /* 0AE2B8 800AD6B8 3C06800E */  lui   $a2, %hi(D_800E2C84) # $a2, 0x800e
 /* 0AE2BC 800AD6BC 24C62C84 */  addiu $a2, %lo(D_800E2C84) # addiu $a2, $a2, 0x2c84
@@ -73,7 +73,7 @@ glabel render_rain_splashes
 /* 0AE368 800AD768 00102400 */  sll   $a0, $s0, 0x10
 /* 0AE36C 800AD76C 00045403 */  sra   $t2, $a0, 0x10
 /* 0AE370 800AD770 E7A6005C */  swc1  $f6, 0x5c($sp)
-/* 0AE374 800AD774 0C01C1F1 */  jal   cosine_s
+/* 0AE374 800AD774 0C01C1F1 */  jal   sins_f
 /* 0AE378 800AD778 01402025 */   move  $a0, $t2
 /* 0AE37C 800AD77C C7A8005C */  lwc1  $f8, 0x5c($sp)
 /* 0AE380 800AD780 8FAB0050 */  lw    $t3, 0x50($sp)
@@ -83,7 +83,7 @@ glabel render_rain_splashes
 /* 0AE390 800AD790 00046403 */  sra   $t4, $a0, 0x10
 /* 0AE394 800AD794 46105480 */  add.s $f18, $f10, $f16
 /* 0AE398 800AD798 01802025 */  move  $a0, $t4
-/* 0AE39C 800AD79C 0C01C1FE */  jal   sine_s
+/* 0AE39C 800AD79C 0C01C1FE */  jal   coss_f
 /* 0AE3A0 800AD7A0 E7B20058 */   swc1  $f18, 0x58($sp)
 /* 0AE3A4 800AD7A4 C7A4005C */  lwc1  $f4, 0x5c($sp)
 /* 0AE3A8 800AD7A8 8FA20050 */  lw    $v0, 0x50($sp)
@@ -223,8 +223,8 @@ glabel render_rain_splashes
 /* 0AE5A8 800AD9A8 AC800000 */  sw    $zero, ($a0)
 .L800AD9AC:
 /* 0AE5AC 800AD9AC 3C10800E */  lui   $s0, %hi(D_800E2B4C) # $s0, 0x800e
-/* 0AE5B0 800AD9B0 3C118012 */  lui   $s1, %hi(gWeatherDisplayListHead) # $s1, 0x8012
-/* 0AE5B4 800AD9B4 26317C0C */  addiu $s1, %lo(gWeatherDisplayListHead) # addiu $s1, $s1, 0x7c0c
+/* 0AE5B0 800AD9B0 3C118012 */  lui   $s1, %hi(gCurrWeatherDisplayList) # $s1, 0x8012
+/* 0AE5B4 800AD9B4 26317C0C */  addiu $s1, %lo(gCurrWeatherDisplayList) # addiu $s1, $s1, 0x7c0c
 /* 0AE5B8 800AD9B8 26102B4C */  addiu $s0, %lo(D_800E2B4C) # addiu $s0, $s0, 0x2b4c
 .L800AD9BC:
 /* 0AE5BC 800AD9BC 86080006 */  lh    $t0, 6($s0)
@@ -265,14 +265,14 @@ glabel render_rain_splashes
 /* 0AE640 800ADA40 01215825 */  or    $t3, $t1, $at
 /* 0AE644 800ADA44 AC4B0004 */  sw    $t3, 4($v0)
 /* 0AE648 800ADA48 8D8C2C8C */  lw    $t4, %lo(gRainSplashGfx)($t4)
-/* 0AE64C 800ADA4C 3C058012 */  lui   $a1, %hi(D_80127C10) # $a1, 0x8012
-/* 0AE650 800ADA50 3C068012 */  lui   $a2, %hi(D_80127C14) # $a2, 0x8012
+/* 0AE64C 800ADA4C 3C058012 */  lui   $a1, %hi(gCurrWeatherMatrix) # $a1, 0x8012
+/* 0AE650 800ADA50 3C068012 */  lui   $a2, %hi(gCurrWeatherVertexList) # $a2, 0x8012
 /* 0AE654 800ADA54 240D010E */  li    $t5, 270
 /* 0AE658 800ADA58 AFAD0014 */  sw    $t5, 0x14($sp)
-/* 0AE65C 800ADA5C 24C67C14 */  addiu $a2, %lo(D_80127C14) # addiu $a2, $a2, 0x7c14
-/* 0AE660 800ADA60 24A57C10 */  addiu $a1, %lo(D_80127C10) # addiu $a1, $a1, 0x7c10
+/* 0AE65C 800ADA5C 24C67C14 */  addiu $a2, %lo(gCurrWeatherVertexList) # addiu $a2, $a2, 0x7c14
+/* 0AE660 800ADA60 24A57C10 */  addiu $a1, %lo(gCurrWeatherMatrix) # addiu $a1, $a1, 0x7c10
 /* 0AE664 800ADA64 02003825 */  move  $a3, $s0
-/* 0AE668 800ADA68 0C01A145 */  jal   func_80068514
+/* 0AE668 800ADA68 0C01A145 */  jal   render_sprite_billboard
 /* 0AE66C 800ADA6C AFAC0010 */   sw    $t4, 0x10($sp)
 .L800ADA70:
 /* 0AE670 800ADA70 3C0E800E */  lui   $t6, %hi(gRainGfx) # $t6, 0x800e

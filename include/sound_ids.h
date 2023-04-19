@@ -12,7 +12,7 @@
 
 // Anything I've labelled as UNK, without a comment, is something I didn't get an audible sound from.
 enum SoundID {
-/* 0x0000 */ SOUND_UNK00,
+/* 0x0000 */ SOUND_NONE,
 /* 0x0001 */ SOUND_CAR_SLIDE,
 /* 0x0002 */ SOUND_CAR_SLIDE2, // Not sure what this is for. I thought it was for the brakes originally, but there's clearly a brake
 /* 0x0003 */ SOUND_INTRO_PLANE,
@@ -38,8 +38,8 @@ enum SoundID {
 /* 0x0017 */ SOUND_EXPLOSION2, // Not sure what this one's for.
 /* 0x0018 */ SOUND_VOICE_TT_GET_READY,
 /* 0x0019 */ SOUND_VOICE_TT_GO,
-/* 0x001A */ SOUND_UNK_1A,
-/* 0x001B */ SOUND_UNK_1B,
+/* 0x001A */ SOUND_LAND_GRASS,
+/* 0x001B */ SOUND_LAND_SAND,
 /* 0x001C */ SOUND_CAR_BRAKE,
 /* 0x001D */ SOUND_UNK_1D,
 /* 0x001E */ SOUND_UNK_1E,
@@ -266,7 +266,7 @@ enum SoundID {
 /* 0x00FB */ SOUND_VOICE_BLUEY_HAHA4,
 /* 0x00FC */ SOUND_UNK_FC,
 /* 0x00FD */ SOUND_CROWD,
-/* 0x00FE */ SOUND_MENU_PICK4,
+/* 0x00FE */ SOUND_HUD_LAP_TICK,
 /* 0x00FF */ SOUND_UNK_FF,
 /* 0x0100 */ SOUND_VOICE_TT_LAP2,
 /* 0x0101 */ SOUND_VOICE_TT_FINAL_LAP,
@@ -558,7 +558,7 @@ enum SoundID {
 /* 0x021F */ SOUND_VOICE_DIDDY_NEGATIVE8,
 /* 0x0220 */ SOUND_VOICE_BLUEY_REMATCH4, // "If you can beat me again..."
 /* 0x0221 */ SOUND_VOICE_BLUEY_TROPHY2, // "Goodbye kid"
-/* 0x0222 */ SOUND_UNK_222, // I'm guessing rolling snowballs
+/* 0x0222 */ SOUND_DOOR_OPEN,
 /* 0x0223 */ SOUND_UNK_223, // The sound of hitting something
 /* 0x0224 */ SOUND_UNK_224, // Same
 /* 0x0225 */ SOUND_VOICE_TRICKY_OW,

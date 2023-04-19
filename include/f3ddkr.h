@@ -19,6 +19,7 @@
 #define DKR_CC_UNK9 PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0
 #define DKR_CC_UNK10 TEXEL0, 0, SCALE, 0, 0, 0, 0, TEXEL0
 #define DKR_CC_UNK11 ENVIRONMENT, TEXEL0, ENV_ALPHA, TEXEL0, TEXEL0, 0, PRIMITIVE, 0
+#define	DKR_CC_UNK12  0, 0, 0, ENVIRONMENT, 0, 0, 0, TEXEL0
 
 #define	DKR_CC_ENVIRONMENT   0, 0, 0, ENVIRONMENT, 0, 0, 0, ENVIRONMENT
 #define DKR_CC_DECALFADEPRIM 0, 0, 0, TEXEL0, TEXEL0, 0, PRIMITIVE, 0
@@ -76,28 +77,26 @@
 #define G_MTX_DKR_INDEX_2 0x80
 #define G_MW_BILLBOARD 0x02 //0x01 = billboarding enabled, 0x00 = disabled
 #define G_MW_MVMATRIX 0x0A  //Specifies the index of the modelview matrix. 
-#define gDkrInsertMatrix(pkt, where, num)				\
+
+#define gDkrInsertMatrix(pkt, where, num)   \
 	gMoveWd(pkt, G_MW_MVMATRIX, where, num)
 
-#define gDkrVertices(pkt, address, no, v0)                         \
-{                                                                  \
-    Gfx *_g = (Gfx *)(pkt);                                        \
-                                                                   \
-    _g->words.w0 = (_SHIFTL(G_VTX, 24, 8) | _SHIFTL((no), 16, 8) | \
-            _SHIFTL((v0*2), 0, 16));                               \
-    _g->words.w1 = (unsigned int)(address);                        \
-}
+#define gDkrEnableBillboard(pkt)            \
+	gMoveWd(pkt, G_MW_BILLBOARD, 0, 1)  
+
+#define gDkrDisableBillboard(pkt)           \
+	gMoveWd(pkt, G_MW_BILLBOARD, 0, 0)
+
+#define gSPVertexDKR(pkt, v, n, v0) \
+    gDma1p(pkt, G_VTX, v, (((n) * 8 + (n)) << 1) + 8,((n)-1)<<3|(((u32)(v) & 6))|(v0))
 
 #define TRIN_DISABLE_TEXTURE 0
 #define TRIN_ENABLE_TEXTURE 1
 
-#define gDkrTriangles(pkt, address, n, t)                              \
-{                                                                      \
-    Gfx *_g = (Gfx *)(pkt);                                            \
-                                                                       \
-    _g->words.w0 = (_SHIFTL(G_TRIN, 24, 8) | _SHIFTL((n - 1), 20, 4) | \
-            _SHIFTL((t), 16, 4) | _SHIFTL((n*16), 0, 16));             \
-    _g->words.w1 = (unsigned int)(address);                            \
+#define gSPPolygon(dl, ptr, numTris, texEnabled) {                                                                              \
+    Gfx *_g = (Gfx *)(dl);                                                                                                      \
+    _g->words.w0 = _SHIFTL(((numTris - 1) << 4) | (texEnabled), 16, 8) | _SHIFTL(G_TRIN, 24, 8) | _SHIFTL((numTris*16), 0, 16); \
+    _g->words.w1 = (unsigned int)(ptr);                                                                                         \
 }
 
 #define numberOfGfxCommands(gfxCmds) (sizeof(gfxCmds) / sizeof(Gwords))

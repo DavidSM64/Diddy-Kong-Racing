@@ -87,7 +87,7 @@ glabel func_80012F94
 /* 013CA4 800130A4 01E27821 */  addu  $t7, $t7, $v0
 /* 013CA8 800130A8 000F7840 */  sll   $t7, $t7, 1
 /* 013CAC 800130AC 00AF2821 */  addu  $a1, $a1, $t7
-/* 013CB0 800130B0 0C019888 */  jal   func_80066220
+/* 013CB0 800130B0 0C019888 */  jal   get_current_viewport
 /* 013CB4 800130B4 AFA50038 */   sw    $a1, 0x38($sp)
 /* 013CB8 800130B8 8FAA0024 */  lw    $t2, 0x24($sp)
 /* 013CBC 800130BC 8FA50038 */  lw    $a1, 0x38($sp)

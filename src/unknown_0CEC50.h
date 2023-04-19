@@ -4,9 +4,9 @@
 #include "types.h"
 #include "structs.h"
 
-//Takes a char pointer, the string to populate it with, and the length of that string.
+//Compares two strings to check for equality
 //Example:
-//func_800CE050(&gameName, "DKRACING-ADV", strlen("DKRACING-ADV"));
-s32 func_800CE050(u8 *stringToPopulate, char *string, u32 stringLen);
+//_bcmp(&gameName, "DKRACING-ADV", strlen("DKRACING-ADV"));
+extern int	_bcmp(const void *, const void *, int);
 
 #endif

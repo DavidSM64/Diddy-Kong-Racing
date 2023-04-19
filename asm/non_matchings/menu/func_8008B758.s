@@ -10,11 +10,11 @@ glabel func_8008B758
 /* 08C378 8008B778 3C108012 */  lui   $s0, %hi(D_801263C0) # $s0, 0x8012
 /* 08C37C 8008B77C 3C168012 */  lui   $s6, %hi(gPlayersCharacterArray) # $s6, 0x8012
 /* 08C380 8008B780 3C17800E */  lui   $s7, %hi(gNumberOfReadyPlayers) # $s7, 0x800e
-/* 08C384 8008B784 3C1E8012 */  lui   $fp, %hi(D_801263CC) # $fp, 0x8012
+/* 08C384 8008B784 3C1E8012 */  lui   $fp, %hi(gCurrCharacterSelectData) # $fp, 0x8012
 /* 08C388 8008B788 AFBF0044 */  sw    $ra, 0x44($sp)
 /* 08C38C 8008B78C AFB20028 */  sw    $s2, 0x28($sp)
 /* 08C390 8008B790 AFB10024 */  sw    $s1, 0x24($sp)
-/* 08C394 8008B794 27DE63CC */  addiu $fp, %lo(D_801263CC) # addiu $fp, $fp, 0x63cc
+/* 08C394 8008B794 27DE63CC */  addiu $fp, %lo(gCurrCharacterSelectData) # addiu $fp, $fp, 0x63cc
 /* 08C398 8008B798 26F7F480 */  addiu $s7, %lo(gNumberOfReadyPlayers) # addiu $s7, $s7, -0xb80
 /* 08C39C 8008B79C 26D663E8 */  addiu $s6, %lo(gPlayersCharacterArray) # addiu $s6, $s6, 0x63e8
 /* 08C3A0 8008B7A0 261063C0 */  addiu $s0, %lo(D_801263C0) # addiu $s0, $s0, 0x63c0
@@ -130,7 +130,7 @@ glabel func_8008B758
 /* 08C53C 8008B93C 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e
 /* 08C540 8008B940 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 08C544 8008B944 AC2FF47C */  sw    $t7, %lo(gMenuDelay)($at)
-/* 08C548 8008B948 0C030076 */  jal   func_800C01D8
+/* 08C548 8008B948 0C030076 */  jal   transition_begin
 /* 08C54C 8008B94C 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 08C550 8008B950 1000006A */  b     .L8008BAFC
 /* 08C554 8008B954 8FA2004C */   lw    $v0, 0x4c($sp)

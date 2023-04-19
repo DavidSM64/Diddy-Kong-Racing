@@ -49,12 +49,12 @@ glabel func_800A7FBC
 /* 0A8C70 800A8070 8FAA0088 */  lw    $t2, 0x88($sp)
 /* 0A8C74 800A8074 2415000A */  li    $s5, 10
 /* 0A8C78 800A8078 0155001A */  div   $zero, $t2, $s5
-/* 0A8C7C 800A807C 3C108012 */  lui   $s0, %hi(D_80126CFC) # $s0, 0x8012
-/* 0A8C80 800A8080 3C118012 */  lui   $s1, %hi(D_80126D00) # $s1, 0x8012
-/* 0A8C84 800A8084 3C128012 */  lui   $s2, %hi(D_80126D04) # $s2, 0x8012
-/* 0A8C88 800A8088 26526D04 */  addiu $s2, %lo(D_80126D04) # addiu $s2, $s2, 0x6d04
-/* 0A8C8C 800A808C 26316D00 */  addiu $s1, %lo(D_80126D00) # addiu $s1, $s1, 0x6d00
-/* 0A8C90 800A8090 26106CFC */  addiu $s0, %lo(D_80126CFC) # addiu $s0, $s0, 0x6cfc
+/* 0A8C7C 800A807C 3C108012 */  lui   $s0, %hi(gHUDCurrDisplayList) # $s0, 0x8012
+/* 0A8C80 800A8080 3C118012 */  lui   $s1, %hi(gHUDCurrMatrix) # $s1, 0x8012
+/* 0A8C84 800A8084 3C128012 */  lui   $s2, %hi(gHUDCurrVertex) # $s2, 0x8012
+/* 0A8C88 800A8088 26526D04 */  addiu $s2, %lo(gHUDCurrVertex) # addiu $s2, $s2, 0x6d04
+/* 0A8C8C 800A808C 26316D00 */  addiu $s1, %lo(gHUDCurrMatrix) # addiu $s1, $s1, 0x6d00
+/* 0A8C90 800A8090 26106CFC */  addiu $s0, %lo(gHUDCurrDisplayList) # addiu $s0, $s0, 0x6cfc
 /* 0A8C94 800A8094 27B30060 */  addiu $s3, $sp, 0x60
 /* 0A8C98 800A8098 A7B40066 */  sh    $s4, 0x66($sp)
 /* 0A8C9C 800A809C 16A00002 */  bnez  $s5, .L800A80A8

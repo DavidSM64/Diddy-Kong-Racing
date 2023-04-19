@@ -44,7 +44,7 @@ glabel func_800BA8E4
 /* 0BB580 800BA980 8DF80000 */  lw    $t8, ($t7)
 /* 0BB584 800BA984 AFA000DC */  sw    $zero, 0xdc($sp)
 /* 0BB588 800BA988 02202025 */  move  $a0, $s1
-/* 0BB58C 800BA98C 0C01ECF4 */  jal   func_8007B3D0
+/* 0BB58C 800BA98C 0C01ECF4 */  jal   reset_render_settings
 /* 0BB590 800BA990 AC389FC4 */   sw    $t8, %lo(D_80129FC4)($at)
 /* 0BB594 800BA994 8E270000 */  lw    $a3, ($s1)
 /* 0BB598 800BA998 3C1F8013 */  lui   $ra, %hi(D_80129FC8) # $ra, 0x8013

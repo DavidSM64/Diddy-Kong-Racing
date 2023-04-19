@@ -4,18 +4,25 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
+<!-- README_SCORE_SUMMARY_BEGIN -->
+As of April 11, 2023, this is our current score:
+
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 51.01%
+
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 23.43%
+<!-- README_SCORE_SUMMARY_END -->
+
 ---
 
 ## Dependencies
 
 * `libcapstone-dev`
-* `libssl-dev`
 * `gcc`, Version 8.0 or higher
 * `make`, Version 4.2 or higher
 * `python3`
 * `wget`
 
-`sudo apt install build-essential pkg-config git python3 libssl-dev wget libcapstone-dev`
+`sudo apt install build-essential pkg-config git python3 wget libcapstone-dev`
 
 ### binutils
 
@@ -30,6 +37,13 @@ You are not required to install a binutils package, but it does speed up the ini
     **b.** If you use a byte-swapped or little-endian ROM, then it will automatically be converted to a big-endian (.z64) ROM file.  
 3. Run `make` in the main directory.  
     **a.** Use the `-jN` argument to use `N` number of threads to speed up building. For example, if you have a system with 4 cores / 4 threads, you should do `make -j4`.
+
+### Building on MacOS
+1. `brew install gcc capstone coreutils`
+2. Put GNU-coreutils `bin` on path using by adding `PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"` to your shell rcfile (or update any GNU-util usage in `Makefile` and `tools/Makefile` to use the `g`-prefixed versions).
+3. Download latest `macos` build of `ido-static-recomp` from [here](https://github.com/decompals/ido-static-recomp/releases/), and add `cp` the binaries to `tools/ido-static-recomp/build5.3/out`.
+4. Take a look at [this gist](https://gist.github.com/tonyspumoni/fc1b4c9217c5f2821a9fc4cbf69b51ef) to see what other updates are needed to get the build to pass, and apply them if they are relevant to your environment. You may need to add specific `-I` and `-L` flags to get things like `openssl` and `gcc-12` includes/libs included.
+5. `make` from repository root should work now.
 
 ## Modding
 If you are modifying the code in the repo, then you should add `NON_MATCHING=1` to the make command.  
@@ -113,32 +127,34 @@ s32 is_drumstick_unlocked(void) {
 }
 ```
 
-As of September 27th, 2022, this is our current score:
+<!-- README_SCORE_BEGIN -->
+As of April 11, 2023, this is our current score:
 ```
- ======================================================== 
-          ADVENTURE ONE (ASM -> C Decompilation)          
- ------------------- 31.46% Complete -------------------- 
-               # Decompiled functions: 1273               
-               # GLOBAL_ASM remaining: 561                
-               # NON_MATCHING functions: 15               
-           # NON_EQUIVALENT WIP functions: 101            
- --------------------- Game Status ---------------------- 
-        Balloons: 16/47, Keys: 2/4, Trophies: 1/5         
-          T.T. Amulets: 1/4, Wizpig Amulets: 1/4          
- -------------------------------------------------------- 
-        We are racing in Frosty Village. (Lap 3/3)        
- ======================================================== 
-          ADVENTURE TWO (Cleanup & Documentation)         
- -------------------  5.39% Complete -------------------- 
-               # Documented functions: 195                
-              # Undocumented remaining: 1639              
- --------------------- Game Status ---------------------- 
-         Balloons: 3/47, Keys: 0/4, Trophies: 0/5         
-          T.T. Amulets: 0/4, Wizpig Amulets: 0/4          
- -------------------------------------------------------- 
- We are collecting the fourth balloon on Timber's Island. 
- ========================================================
+ ===================================================================
+               ADVENTURE ONE (ASM -> C Decompilation)
+ ------------------------- 51.01% Complete -------------------------
+                    # Decompiled functions: 1498
+                     # GLOBAL_ASM remaining: 334
+                    # NON_MATCHING functions: 12
+                 # NON_EQUIVALENT WIP functions: 64
+ --------------------------- Game Status ---------------------------
+              Balloons: 25/47, Keys: 3/4, Trophies: 2/5
+               T.T. Amulets: 2/4, Wizpig Amulets: 2/4
+ -------------------------------------------------------------------
+             We are racing in Treasure Caves. (Lap 3/3)
+ ===================================================================
+                ADVENTURE TWO (Cleanup & Documentation)
+ ------------------------- 23.43% Complete -------------------------
+                     # Documented functions: 449
+                   # Undocumented remaining: 1118
+ --------------------------- Game Status ---------------------------
+              Balloons: 12/47, Keys: 1/4, Trophies: 0/5
+               T.T. Amulets: 1/4, Wizpig Amulets: 1/4
+ -------------------------------------------------------------------
+ We are participating in the Trophy Race of Dino Domain. (Round Two)
+ ===================================================================
 ```
+<!-- README_SCORE_END -->
 
 ---
 

@@ -10,7 +10,7 @@
 /************ .data ************/
 
 unk800DC950 **D_800DC950 = NULL;
-unk800DC954 *D_800DC954 = NULL;
+unk800DC950 *D_800DC954 = NULL;
 s32 D_800DC958 = 0;
 s32 D_800DC95C = 0;
 unk800DC960 *D_800DC960 = NULL;
@@ -40,18 +40,18 @@ void func_80031B60(void) {
     D_800DC958 = 0;
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 // Regalloc issues
 void func_80031BB8(s32 count) {
     s32 i;
     func_80031B60();
     D_800DC958 = count;
-    D_800DC950 = allocate_from_main_pool_safe(D_800DC958 * (sizeof(s32 *) + sizeof(unk800DC954) + sizeof(unk800DC960) + sizeof(unk800DC964)), COLOUR_TAG_MAGENTA);
-    D_800DC954 = &D_800DC950[D_800DC958];
-    D_800DC960 = &D_800DC954[D_800DC958];
-    D_800DC964 = &D_800DC960[D_800DC958];
+    D_800DC950 = (unk800DC950 **) allocate_from_main_pool_safe(D_800DC958 * (sizeof(s32 *) + sizeof(unk800DC950) + sizeof(unk800DC960) + sizeof(unk800DC964)), COLOUR_TAG_MAGENTA);
+    D_800DC954 = (unk800DC950 *) &D_800DC950[D_800DC958];
+    D_800DC960 = (unk800DC960 *) &D_800DC954[D_800DC958];
+    D_800DC964 = (unk800DC964 *) &D_800DC960[D_800DC958];
     for (i = 0; i < D_800DC958; i++) {
-        D_800DC950[i] = &D_800DC954[i].unk0;
+        D_800DC950[i] = &D_800DC954[i];
     }
 }
 #else
@@ -62,18 +62,15 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031CAC.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031F88.s")
 
-// Unused.
-void func_80032210(unk800DC950 *arg0) {
+UNUSED void func_80032210(unk800DC950 *arg0) {
     arg0->unk4 = 0;
 }
 
-// Unused.
-void func_80032218(unk800DC950 *arg0) {
+UNUSED void func_80032218(unk800DC950 *arg0) {
     arg0->unk4 = 1;
 }
 
-// Unused.
-void func_80032224(unk800DC950 *arg0) {
+UNUSED void func_80032224(unk800DC950 *arg0) {
     if (arg0->unk4 == 1) {
         arg0->unk4 = 0;
         return;
@@ -81,8 +78,7 @@ void func_80032224(unk800DC950 *arg0) {
     arg0->unk4 = 1;
 }
 
-// Unused.
-void func_80032248(unk800DC950 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
+UNUSED void func_80032248(unk800DC950 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
     if (arg2 > 0) {
         arg0->unk3C = arg2;
         arg0->unk2C = ((arg1 << 0x10) - arg0->unk1C) / arg2;
@@ -97,15 +93,14 @@ void func_80032248(unk800DC950 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s3
     }
 }
 
-// Unused.
-void func_80032344(unk800DC950 *arg0, s32 arg1, s32 arg2) {
+UNUSED void func_80032344(unk800DC950 *arg0, s32 arg1, s32 arg2) {
     if (arg2 > 0) {
         arg0->unk42 = arg2;
         arg0->unk38 = ((arg1 << 0x10) - arg0->unk28) / arg2;
     }
 }
 
-void func_80032398(s32 arg0) {
+void lightUpdateLights(s32 arg0) {
     s32 i;
     for (i = 0; i < D_800DC95C; i++) {
         func_80032424(D_800DC950[i], arg0);
@@ -349,11 +344,11 @@ f32 func_80033A14(unk800DC950 *arg0) {
             out *= temp;
             break;
         case 3:
-            temp = sine_s(sqrtf(D_8011D4C0) * arg0->unk6C * 16384.0f);
+            temp = coss_f(sqrtf(D_8011D4C0) * arg0->unk6C * 16384.0f);
             out *= temp;
             break;
         case 4:
-            temp = sine_s(sqrtf(D_8011D4C0) * arg0->unk6C * 16384.0f);
+            temp = coss_f(sqrtf(D_8011D4C0) * arg0->unk6C * 16384.0f);
             temp *= temp;
             out *= temp;
             break;

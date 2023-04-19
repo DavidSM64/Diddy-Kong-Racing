@@ -20,7 +20,7 @@ glabel func_80027568
 /* 028194 80027594 E7B6001C */  swc1  $f22, 0x1c($sp)
 /* 028198 80027598 E7B50010 */  swc1  $f21, 0x10($sp)
 /* 02819C 8002759C E7B40014 */  swc1  $f20, 0x14($sp)
-/* 0281A0 800275A0 0C006E9D */  jal   get_object_struct_array
+/* 0281A0 800275A0 0C006E9D */  jal   get_racer_objects
 /* 0281A4 800275A4 27A400C4 */   addiu $a0, $sp, 0xc4
 /* 0281A8 800275A8 8FAE00C4 */  lw    $t6, 0xc4($sp)
 /* 0281AC 800275AC 00403025 */  move  $a2, $v0
@@ -29,12 +29,12 @@ glabel func_80027568
 /* 0281B8 800275B8 100000BC */  b     .L800278AC
 /* 0281BC 800275BC 00001025 */   move  $v0, $zero
 .L800275C0:
-/* 0281C0 800275C0 0C019944 */  jal   func_80066510
+/* 0281C0 800275C0 0C019944 */  jal   check_if_showing_cutscene_camera
 /* 0281C4 800275C4 AFA60080 */   sw    $a2, 0x80($sp)
 /* 0281C8 800275C8 8FA60080 */  lw    $a2, 0x80($sp)
 /* 0281CC 800275CC 1440000A */  bnez  $v0, .L800275F8
-/* 0281D0 800275D0 3C0F8012 */   lui   $t7, %hi(D_8011B0B0) # $t7, 0x8012
-/* 0281D4 800275D4 8DEFB0B0 */  lw    $t7, %lo(D_8011B0B0)($t7)
+/* 0281D0 800275D0 3C0F8012 */   lui   $t7, %hi(gSceneActiveCamera) # $t7, 0x8012
+/* 0281D4 800275D4 8DEFB0B0 */  lw    $t7, %lo(gSceneActiveCamera)($t7)
 /* 0281D8 800275D8 00000000 */  nop   
 /* 0281DC 800275DC 85E20036 */  lh    $v0, 0x36($t7)
 /* 0281E0 800275E0 00000000 */  nop   
@@ -47,7 +47,7 @@ glabel func_80027568
 /* 0281F8 800275F8 100000AC */  b     .L800278AC
 /* 0281FC 800275FC 00001025 */   move  $v0, $zero
 .L80027600:
-/* 028200 80027600 0C019888 */  jal   func_80066220
+/* 028200 80027600 0C019888 */  jal   get_current_viewport
 /* 028204 80027604 AFA60080 */   sw    $a2, 0x80($sp)
 /* 028208 80027608 8FB800C4 */  lw    $t8, 0xc4($sp)
 /* 02820C 8002760C 8FA60080 */  lw    $a2, 0x80($sp)
@@ -78,8 +78,8 @@ glabel func_80027568
 /* 028264 80027664 10000091 */  b     .L800278AC
 /* 028268 80027668 00001025 */   move  $v0, $zero
 .L8002766C:
-/* 02826C 8002766C 3C068012 */  lui   $a2, %hi(D_8011B0B0) # $a2, 0x8012
-/* 028270 80027670 8CC6B0B0 */  lw    $a2, %lo(D_8011B0B0)($a2)
+/* 02826C 8002766C 3C068012 */  lui   $a2, %hi(gSceneActiveCamera) # $a2, 0x8012
+/* 028270 80027670 8CC6B0B0 */  lw    $a2, %lo(gSceneActiveCamera)($a2)
 /* 028274 80027674 2565000C */  addiu $a1, $t3, 0xc
 /* 028278 80027678 2407FFFF */  li    $a3, -1
 /* 02827C 8002767C AFAB007C */  sw    $t3, 0x7c($sp)
@@ -104,13 +104,13 @@ glabel func_80027568
 /* 0282C4 800276C4 8DA40000 */  lw    $a0, ($t5)
 /* 0282C8 800276C8 3C018000 */  lui   $at, 0x8000
 /* 0282CC 800276CC 18800003 */  blez  $a0, .L800276DC
-/* 0282D0 800276D0 3C058012 */   lui   $a1, %hi(D_8011B0B0) # $a1, 0x8012
+/* 0282D0 800276D0 3C058012 */   lui   $a1, %hi(gSceneActiveCamera) # $a1, 0x8012
 /* 0282D4 800276D4 1000006C */  b     .L80027888
 /* 0282D8 800276D8 0081F825 */   or    $ra, $a0, $at
 .L800276DC:
 /* 0282DC 800276DC 948F0000 */  lhu   $t7, ($a0)
 /* 0282E0 800276E0 8FE80018 */  lw    $t0, 0x18($ra)
-/* 0282E4 800276E4 8CA5B0B0 */  lw    $a1, %lo(D_8011B0B0)($a1)
+/* 0282E4 800276E4 8CA5B0B0 */  lw    $a1, %lo(gSceneActiveCamera)($a1)
 /* 0282E8 800276E8 000FC100 */  sll   $t8, $t7, 4
 /* 0282EC 800276EC 01181821 */  addu  $v1, $t0, $t8
 /* 0282F0 800276F0 C4620000 */  lwc1  $f2, ($v1)

@@ -2,7 +2,7 @@
 #define _TYPES_H_
 
 #ifndef NULL
-#define NULL    (void *)0
+#define NULL 0
 #endif
 
 #define TRUE 1
@@ -40,6 +40,7 @@ typedef s32 ptrdiff_t;
 //#endif
 
 typedef float Matrix[4][4];
+typedef s32 MatrixS[4][4];
 typedef s16 VertexList;
 typedef s8 TriangleList;
 

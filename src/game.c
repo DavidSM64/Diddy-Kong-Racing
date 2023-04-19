@@ -19,20 +19,21 @@
 #include "gzip.h"
 #include "printf.h"
 #include "thread0_epc.h"
-#include "thread30.h"
+#include "thread30_track_loading.h"
 #include "weather.h"
 #include "audio.h"
 #include "objects.h"
 #include "camera.h"
 #include "save_data.h"
 #include "unknown_078050.h"
-#include "unknown_003260.h"
+#include "audiosfx.h"
+#include "audiomgr.h"
 #include "unknown_032760.h"
 #include "textures_sprites.h"
 #include "PR/os_internal.h"
 #include "printf.h"
 #include "fade_transition.h"
-#include "unknown_077C50.h"
+#include "borders.h"
 #include "unknown_008C40.h"
 #include "unknown_0255E0.h"
 #include "game_text.h"
@@ -41,30 +42,32 @@
 #include "object_models.h"
 #include "racer.h"
 #include "particles.h"
+#include "math_util.h"
+#include "controller.h"
 
 /************ .rodata ************/
 
-const char D_800E70B0[] = "LOADLEVEL Error: Level out of range\n";
-const char D_800E70D8[] = "BossLev problem\n";
-const char D_800E70EC[] = "AITABLE Error: Table out of range\n";
-const char D_800E7110[] = "1.1605";
-const char D_800E7118[] = "02/10/97 16:03";
-const char D_800E7128[] = "pmountain";
+UNUSED const char sLevelErrorString[] = "LOADLEVEL Error: Level out of range\n";
+UNUSED const char sBossErrorString[] = "BossLev problem\n";
+UNUSED const char sAITableErrorString[] = "AITABLE Error: Table out of range\n";
+UNUSED const char sDebugVersionInfoString[] = "1.1605";
+UNUSED const char sDebugBuildDateString[] = "02/10/97 16:03";
+UNUSED const char sDebugUsernameString[] = "pmountain";
 
-const char D_800E7134[] = "BBB\n";
-const char D_800E713C[] = "CAR";
-const char D_800E7140[] = "HOV";
-const char D_800E7144[] = "PLN";
-const char D_800E7148[] = "Swapping\n";
+const char D_800E7134[] = "BBB\n"; // Functionally unused.
+UNUSED const char sDebugCarString[] = "CAR";
+UNUSED const char sDebugHovercraftString[] = "HOV";
+UNUSED const char sDebugPlaneString[] = "PLN";
+UNUSED const char sDebugVehicleSwapString[] = "Swapping\n";
 
 /*********************************/
 
 /************ .data ************/
 
-s8 *D_800DD310 = NULL; // Currently unknown, might be a different type.
-s8 D_800DD314 = -1;
+char *D_800DD310 = NULL; // Currently unknown, might be a different type.
+s8 gCurrentDefaultVehicle = -1;
 u8 D_800DD318 = 0;
-s32 D_800DD31C = 0;
+s32 gIsInRace = 0;
 
 // Updated automatically from calc_func_checksums.py
 s32 gFunc80068158Checksum = 0x585E;
@@ -75,59 +78,52 @@ s16 D_800DD32C = 0;
 
 s8 D_800DD330 = 0;
 
-// Unused
-char *D_800DD334[6] = {
+UNUSED char *sDebugRomBuildInfo[6] = {
     NULL, NULL, NULL, // These could be a file boundary.
-    (char *)D_800E7110,
-    (char *)D_800E7118,
-    (char *)D_800E7128
+    (char *)sDebugVersionInfoString,
+    (char *)sDebugBuildDateString,
+    (char *)sDebugUsernameString
 };
 
-// Unused
-char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
+UNUSED char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
 
 s8 sAntiPiracyTriggered = 0;
-s32 D_800DD378 = 1;
-s32 D_800DD37C = 0;
-s32 D_800DD380 = 0;
+UNUSED s32 D_800DD378 = 1;
+s32 gSaveDataFlags = 0; //Official Name: load_save_flags
+s32 gScreenStatus = OSMESG_SWAP_BUFFER;
 s32 sControllerStatus = 0;
-s32 D_800DD388 = 0; // Currently unknown, might be a different type.
-s8 D_800DD38C = 0;
+UNUSED s32 D_800DD388 = 0;
+s8 gSkipGfxTask = FALSE;
 s8 D_800DD390 = 0;
-s16 D_800DD394 = 0;
+s16 gLevelLoadTimer = 0;
 s8 D_800DD398 = 0;
 s8 D_800DD39C = 0;
-s8 D_800DD3A0 = FALSE;
-s32 D_800DD3A4 = 0; // Currently unknown, might be a different type.
-s32 D_800DD3A8 = 0; // Currently unknown, might be a different type.
-s32 D_800DD3AC = 0; // Currently unknown, might be a different type.
+s8 gDmemInvalid = FALSE;
+UNUSED s32 D_800DD3A4 = 0;
+UNUSED s32 D_800DD3A8 = 0;
+UNUSED s32 D_800DD3AC = 0;
 s32 gNumF3dCmdsPerPlayer[4] = { 4500, 7000, 11000, 11000 };
 s32 gNumHudVertsPerPlayer[4] = { 300, 600, 850, 900 };
 s32 gNumHudMatPerPlayer[4] = { 300, 400, 550, 600 };
 s32 gNumHudTrisPerPlayer[4] = { 20, 30, 40, 50 };
-s8 D_800DD3F0 = 0;
-FadeTransition D_800DD3F4 = FADE_TRANSITION(128, FADE_COLOR_BLACK, 20, 0);
-// Unused?
-FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
+s8 gDrawFrameTimer = 0;
+FadeTransition D_800DD3F4 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK2, FADE_COLOR_BLACK, 20, 0);
+UNUSED FadeTransition D_800DD3FC = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 20, -1);
 s32 sLogicUpdateRate = LOGIC_5FPS;
-FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
-// Unused?
-// CAR / HOV / PLN - So this is vehicle type?
-char *D_800DD410[3] = {
-    (char *)D_800E713C, (char *)D_800E7140, (char *)D_800E7144
+FadeTransition D_800DD408 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 30, -1);
+UNUSED char *D_800DD410[3] = {
+    (char *)sDebugCarString, (char *)sDebugHovercraftString, (char *)sDebugPlaneString
 };
-FadeTransition D_800DD41C = FADE_TRANSITION(0, FADE_COLOR_BLACK, 30, -1);
-FadeTransition D_800DD424 = FADE_TRANSITION(0, FADE_COLOR_BLACK, 260, -1);
+FadeTransition D_800DD41C = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
+FadeTransition D_800DD424 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 260, -1);
 /*******************************/
-
-extern s32 gShowControllerPakMenu;
 
 /************ .bss ************/
 
 s32 *gTempAssetTable;
-s32 D_80121164;
+s32 gMapId;
 LevelHeader *gCurrentLevelHeader;
-u8 **gLevelNames;
+char **gLevelNames;
 s32 gNumberOfLevelHeaders;
 s32 gNumberOfWorlds;
 
@@ -140,21 +136,22 @@ TempStruct5 *D_801211C0;
 s16 D_801211C8[20];
 Gfx *gDisplayLists[2];
 Gfx *gCurrDisplayList;
-s32 D_801211FC;
-Mtx *gHudMatrices[2];
-Mtx *gCurrHudMat;
-VertexList *gHudVertices[2];
-VertexList *gCurrHudVerts;
+UNUSED s32 D_801211FC;
+MatrixS *gHudMatrices[2];
+MatrixS *gGameCurrMatrix;
+Vertex *gHudVertices[2];
+Vertex *gGameCurrVertexList;
 TriangleList *gHudTriangles[2];
-TriangleList *gCurrHudTris;
-s32 D_80121230[8];
+TriangleList *gGameCurrTriList;
+UNUSED s32 D_80121230[8];
 s8 D_80121250[16]; //Settings4C
 OSSched gMainSched; // 0x288 / 648 bytes
-s8 D_80121268[8192]; // 0x2000 / 8192 bytes Padding?
+u64 gSchedStack[0x400];
 s32 gSPTaskNum;
 s32 sRenderContext;
 s32 D_801234F0;
-s32 D_801234F4;
+// Similar to gMapId, but is 0 if not currently playing a level (e.g. start menu).
+s32 gPlayableMapId;
 s32 D_801234F8;
 s32 D_801234FC;
 s32 D_80123500;
@@ -162,109 +159,98 @@ s32 D_80123504;
 s32 D_80123508;
 s32 D_8012350C;
 Settings *gSettingsPtr;
-s8 D_80123514;
+s8 gIsLoading;
 s8 gIsPaused;
-s8 D_80123516;
-s32 D_80123518;
-s32 D_8012351C;
+s8 gPostRaceViewPort;
+Vehicle gLevelDefaultVehicleID;
+Vehicle D_8012351C; // Looks to be the current level's vehicle ID.
 s32 sBootDelayTimer;
 s8 D_80123524;
 s8 D_80123525;
-s8 D_80123526;
+UNUSED s8 D_80123526; // Set to 0 then never used.
 s32 gCurrNumF3dCmdsPerPlayer;
 s32 gCurrNumHudMatPerPlayer;
 s32 gCurrNumHudTrisPerPlayer;
 s32 gCurrNumHudVertsPerPlayer;
 OSScClient *gNMISched[3];
-OSMesg gNMIMesgBuf;
+OSMesg gNMIOSMesg;
 OSMesgQueue gNMIMesgQueue;
-s32 D_80123560[8];
+s32 gNMIMesgBuf; //Official Name: resetPressed
+s32 D_80123568[6]; // BSS Padding
 
 /******************************/
 
-#ifdef NON_MATCHING
-// Only has regalloc issues.
 void func_8006A6B0(void) {
-  s32 i;
-  s32 temp;
-  s32 count;
-  s32 checksumCount;
-  u8 *sp44;
-  s32 temp2;
-
-  sp44 = allocate_from_main_pool_safe(sizeof(LevelHeader), COLOUR_TAG_YELLOW);
-  gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
-  i = 0;
-  while (i < 16) {
-    D_80121180[i++] = 0;
-  }
-  gNumberOfLevelHeaders = 0;
-  while (gTempAssetTable[gNumberOfLevelHeaders] != -1) {
-    gNumberOfLevelHeaders++;
-  }
-  gNumberOfLevelHeaders--;
-  D_8012117C = allocate_from_main_pool_safe(gNumberOfLevelHeaders * sizeof(unk8012117C), COLOUR_TAG_YELLOW);
-  gCurrentLevelHeader = sp44;
-  gNumberOfWorlds = -1;
-  for (i = 0; i < gNumberOfLevelHeaders; i++) {
-    load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, gTempAssetTable[i], sizeof(LevelHeader));
-    if (gNumberOfWorlds < gCurrentLevelHeader->world) {
-      gNumberOfWorlds = gCurrentLevelHeader->world;
+    s32 i;
+    s32 temp;
+    UNUSED s32 pad;
+    s32 checksumCount;
+    u8 *header;
+    s32 j;
+    header = allocate_from_main_pool_safe(sizeof(LevelHeader), COLOUR_TAG_YELLOW);
+    gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
+    i = 0;
+    while (i < 16) {
+        D_80121180[i++] = 0;
     }
-    if ((gCurrentLevelHeader->race_type >= 0) && (gCurrentLevelHeader->race_type < 16)) {
-      D_80121180[gCurrentLevelHeader->race_type]++;
+    gNumberOfLevelHeaders = 0;
+    while (gTempAssetTable[gNumberOfLevelHeaders] != -1) {
+        gNumberOfLevelHeaders++;
     }
-    D_8012117C[i].unk0 = gCurrentLevelHeader->world;
-    D_8012117C[i].unk1 = gCurrentLevelHeader->race_type;
-    D_8012117C[i].unk2 = ((u16)gCurrentLevelHeader->available_vehicles) << 4;
-    D_8012117C[i].unk2 |= gCurrentLevelHeader->vehicle & 0xF;
-    D_8012117C[i].unk3 = 1;
-    D_8012117C[i].unk4 = gCurrentLevelHeader->unkB0;
-  }
-
-  gNumberOfWorlds++;
-  D_80121178 = allocate_from_main_pool_safe(gNumberOfWorlds, COLOUR_TAG_YELLOW);
-  for (i = 0; i < gNumberOfWorlds; i++) {
-    D_80121178[i] = -1;
-  }
-  for (i = 0; i < gNumberOfLevelHeaders; i++) {
-    if ((D_8012117C[i].unk1 == 5) != 0) {
-      D_80121178[D_8012117C[i].unk0] = i;
+    gNumberOfLevelHeaders--;
+    D_8012117C = allocate_from_main_pool_safe(gNumberOfLevelHeaders * sizeof(unk8012117C), COLOUR_TAG_YELLOW);
+    gCurrentLevelHeader = (LevelHeader *) header;
+    gNumberOfWorlds = -1;
+    for (i = 0; i < gNumberOfLevelHeaders; i++) {
+        load_asset_to_address(ASSET_LEVEL_HEADERS, (u32) gCurrentLevelHeader, gTempAssetTable[i], sizeof(LevelHeader));
+        if (gNumberOfWorlds < gCurrentLevelHeader->world) {
+            gNumberOfWorlds = gCurrentLevelHeader->world;
+        }
+        if ((gCurrentLevelHeader->race_type >= 0) && (gCurrentLevelHeader->race_type < 16)) {
+            D_80121180[gCurrentLevelHeader->race_type]++;
+        }
+        D_8012117C[i].unk0 = gCurrentLevelHeader->world;
+        D_8012117C[i].unk1 = gCurrentLevelHeader->race_type;
+        D_8012117C[i].unk2 = ((u16) gCurrentLevelHeader->available_vehicles) << 4;
+        D_8012117C[i].unk2 |= gCurrentLevelHeader->vehicle & 0xF;
+        D_8012117C[i].unk3 = 1;
+        D_8012117C[i].unk4 = gCurrentLevelHeader->unkB0;
     }
-  }
-  free_from_memory_pool(gTempAssetTable);
-  free_from_memory_pool(sp44);
-
-  gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_NAMES_TABLE);
-
-  for (i = 0; gTempAssetTable[i] != (-1); i++){}
-  i--;
-
-  temp = gTempAssetTable[i];
-  temp -= gTempAssetTable[0];
-
-  gLevelNames = allocate_from_main_pool_safe(i * sizeof(s32), COLOUR_TAG_YELLOW);
-  D_800DD310 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
-  load_asset_to_address(ASSET_LEVEL_NAMES, D_800DD310, 0, temp);
-  for (count = 0; count < i; count++) {
-    gLevelNames[count] = &D_800DD310[gTempAssetTable[count]];
-  }
-  free_from_memory_pool(gTempAssetTable);
-
-  checksumCount = 0;
-  for (i = 0; i < gFunc80068158Length; i++) {
-    checksumCount += ((u8 *) (&func_80068158))[i];
-  }
-  if (checksumCount != gFunc80068158Checksum) {
-    disable_button_mask();
-  }
+    gNumberOfWorlds++;
+    D_80121178 = allocate_from_main_pool_safe(gNumberOfWorlds, COLOUR_TAG_YELLOW);
+    for (i = 0; i < gNumberOfWorlds; i++) {
+        D_80121178[i] = -1;
+    }
+    for (i = 0; i < gNumberOfLevelHeaders; i++) {
+        if ((D_8012117C[i].unk1 == 5)) {
+            D_80121178[D_8012117C[i].unk0] = i;
+        }
+    }
+    free_from_memory_pool(gTempAssetTable);
+    free_from_memory_pool(header);
+    gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_NAMES_TABLE);
+    for (i = 0; gTempAssetTable[i] != (-1); i++){ }
+    i--;
+    temp = gTempAssetTable[0];
+    temp = gTempAssetTable[i] - temp;
+    gLevelNames = allocate_from_main_pool_safe(i * sizeof(s32), COLOUR_TAG_YELLOW);
+    D_800DD310 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
+    load_asset_to_address(ASSET_LEVEL_NAMES, (u32) D_800DD310, 0, temp);
+    for (temp = 0; temp < i; temp++) {
+        gLevelNames[temp] = (char *) &D_800DD310[gTempAssetTable[temp]];
+    }
+    free_from_memory_pool(gTempAssetTable);
+    // Antipiracy measure
+    checksumCount = 0;
+    for (j = 0; j < gFunc80068158Length; j++) {
+        checksumCount += ((u8 *) (&func_80068158))[j];
+    }
+    if (checksumCount != gFunc80068158Checksum) {
+        disable_button_mask();
+    }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/game/func_8006A6B0.s")
-#endif
 
-// Unused.
-s16 func_8006ABB4(s32 arg0) {
+UNUSED s16 func_8006ABB4(s32 arg0) {
     if (arg0 < 0) {
         return 0xE10;
     }
@@ -274,22 +260,101 @@ s16 func_8006ABB4(s32 arg0) {
     return D_8012117C[arg0].unk4;
 }
 
-// Unused?
-GLOBAL_ASM("asm/non_matchings/game/func_8006AC00.s")
+UNUSED s32 func_8006AC00(s32 arg0, s8 arg1, s8 arg2) {
+    if (arg0 < 0) {
+        arg0 = 0;
+    } else {
+        arg0++;
+    }
+    if (arg1 != 0x40) {
+        if (arg2 == -1) {
+            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
+                if (arg1 == D_8012117C[arg0].unk1) {
+                    return arg0;
+                }
+            }
+        } else if (arg1 == -1) {
+            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
+                if (arg2 == D_8012117C[arg0].unk0) {
+                    return arg0;
+                }
+            }
+        } else {
+            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
+                if ((arg1 == D_8012117C[arg0].unk1) && (arg2 == D_8012117C[arg0].unk0)) {
+                    return arg0;
+                }
+            }
+        }
+    } else {
+        if (arg2 == -1) {
+            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
+                if (D_8012117C[arg0].unk1 & 0x40) {
+                    return arg0;
+                }
+            }
+        } else {
+            for (; arg0 < gNumberOfLevelHeaders; arg0++) {
+                if ((D_8012117C[arg0].unk1 & 0x40) && (arg2 == D_8012117C[arg0].unk0)) {
+                    return arg0;
+                }
+            }
+        }
+    }
+    return -1;
+}
 
-// Unused?
-GLOBAL_ASM("asm/non_matchings/game/func_8006AE2C.s")
+UNUSED s32 func_8006AE2C(s32 arg0, s8 arg1, s8 arg2) {
+    if(arg0 >= gNumberOfLevelHeaders){
+        arg0 = gNumberOfLevelHeaders;
+    }
+    arg0--;
+    if (arg1 != 0x40) {
+        if (arg2 == -1) {
+            for (; arg0 >= 0; arg0--) {
+                if (arg1 == D_8012117C[arg0].unk1) {
+                    return arg0;
+                }
+            }
+        } else if (arg1 == -1) {
+            for (; arg0 >= 0; arg0--) {
+                if (arg2 == D_8012117C[arg0].unk0) {
+                    return arg0;
+                }
+            }
+        } else {
+            for (; arg0 >= 0; arg0--) {
+                if ((arg1 == D_8012117C[arg0].unk1) && (arg2 == D_8012117C[arg0].unk0)) {
+                    return arg0;
+                }
+            }
+        }
+    } else {
+        if (arg2 == -1) {
+            for (; arg0 >= 0; arg0--) {
+                if (D_8012117C[arg0].unk1 & 0x40) {
+                    return arg0;
+                }
+            }
+        } else {
+            for (; arg0 >= 0; arg0--) {
+                if ((D_8012117C[arg0].unk1 & 0x40) && (arg2 == D_8012117C[arg0].unk0)) {
+                    return arg0;
+                }
+            }
+        }
+    }
+    return -1;
+}
 
-// Unused.
-s32 func_8006B018(s8 arg0) {
+UNUSED s32 func_8006B018(s8 arg0) {
     if ((arg0 >= 0) && (arg0 < 16)) {
         return D_80121180[arg0];
     }
     return 0;
 }
 
-// Unused.
-s32 func_8006B054(s8 arg0) {
+UNUSED s32 func_8006B054(s8 arg0) {
     s32 out, i;
     out = 0;
     for (i = 0; i < gNumberOfLevelHeaders; i++) {
@@ -300,16 +365,16 @@ s32 func_8006B054(s8 arg0) {
     return out;
 }
 
-s32 func_8006B0AC(s32 arg0) {
-    if (arg0 > 0 && arg0 < gNumberOfLevelHeaders) {
-        return D_8012117C[arg0].unk2 & 0xF;
+Vehicle get_map_default_vehicle(s32 mapId) {
+    if (mapId > 0 && mapId < gNumberOfLevelHeaders) {
+        return D_8012117C[mapId].unk2 & 0xF;
     }
-    return 0;
+    return VEHICLE_CAR;
 }
 
-s32 func_8006B0F8(s32 arg0) {
-    if (arg0 > 0 && arg0 < gNumberOfLevelHeaders) {
-        s32 temp = D_8012117C[arg0].unk2;
+s32 get_map_available_vehicles(s32 mapId) {
+    if (mapId > 0 && mapId < gNumberOfLevelHeaders) {
+        s32 temp = D_8012117C[mapId].unk2;
         if (temp != 0) {
             return (temp >> 4) & 0xF;
         }
@@ -317,16 +382,16 @@ s32 func_8006B0F8(s32 arg0) {
     return 1;
 }
 
-s8 func_8006B14C(s32 arg0) {
-    if (arg0 >= 0 && arg0 < gNumberOfLevelHeaders) {
-        return D_8012117C[arg0].unk1;
+s8 func_8006B14C(s32 mapId) {
+    if (mapId >= 0 && mapId < gNumberOfLevelHeaders) {
+        return D_8012117C[mapId].unk1;
     }
     return -1;
 }
 
-s8 func_8006B190(s32 arg0) {
-    if (arg0 >= 0 && arg0 < gNumberOfLevelHeaders) {
-        return D_8012117C[arg0].unk0;
+s8 func_8006B190(s32 mapId) {
+    if (mapId >= 0 && mapId < gNumberOfLevelHeaders) {
+        return D_8012117C[mapId].unk0;
     }
     return 0;
 }
@@ -347,38 +412,40 @@ void get_number_of_levels_and_worlds(s32 *outLevelCount, s32 *outWorldCount) {
     *outWorldCount = gNumberOfWorlds;
 }
 
-s32 func_8006B240(void) {
-    return D_800DD31C;
+/**
+ * Returns true if the current event is a regular race or a boss race.
+ * Returns false if it's a menu, challenge or hubworld.
+*/
+s32 check_if_in_race(void) {
+    return gIsInRace;
 }
 
-// This isn't matching, but there shouldn't be any issues (hopefully).
-#ifdef NON_EQUIVALENT
-
-void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId, s32 cutsceneId) {
-    s32 maxLevelCount;
-    s32 sp44;
-    s32 noPlayers;
-    s32 phi_s0;
-    s32 vehicle;
+/**
+ * Loads and sets up the level header, then loads and sets of the level geometry.
+ * Sets weather, fog and active cutscenes where applicable.
+*/
+void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
+    s8 *someAsset;
     s32 i;
     s32 size;
-    s32 offset;
-    s32 temp;
-    s32 phi_v1_2;
-    s32 phi_v0_2;
-    s8 *someAsset;
+    s32 var_s0;
+    s32 wizpig;
+    s32 numPlayers;
+    s32 prevLevelID;
     Settings *settings;
+    s32 offset;
 
     func_80072708();
     if (cutsceneId == -1) {
         cutsceneId = 0;
     }
     if (numberOfPlayers == ZERO_PLAYERS) {
-        noPlayers = TRUE;
+        numPlayers = 1;
         numberOfPlayers = ONE_PLAYER;
     } else {
-        noPlayers = FALSE;
+        numPlayers = 0;
     }
+    
     if (numberOfPlayers == ONE_PLAYER) {
         set_sound_channel_count(8);
     } else if (numberOfPlayers == TWO_PLAYERS) {
@@ -386,187 +453,187 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
     } else {
         set_sound_channel_count(16);
     }
-
     settings = get_settings();
-    gTempAssetTable = load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
-    maxLevelCount = 0;
-    while (gTempAssetTable[maxLevelCount] != -1) {
-        maxLevelCount++;
+    gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
+
+    for (i = 0; gTempAssetTable[i] != -1; i++) { }
+    i--;
+    if (levelId >= i) {
+        levelId = ASSET_LEVEL_CENTRALAREAHUB;
     }
-    maxLevelCount--;
-    if (levelId >= maxLevelCount) {
-        levelId = 0;
-    }
+
     offset = gTempAssetTable[levelId];
     size = gTempAssetTable[levelId + 1] - offset;
-    gCurrentLevelHeader = (LevelHeader *)allocate_from_main_pool_safe(size, COLOUR_TAG_YELLOW);
-    load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, offset, size);
+    gCurrentLevelHeader = (LevelHeader *) allocate_from_main_pool_safe(size, COLOUR_TAG_YELLOW);
+    load_asset_to_address(ASSET_LEVEL_HEADERS, (u32) gCurrentLevelHeader, offset, size);
     D_800DD330 = 0;
-    sp44 = levelId;
+    prevLevelID = levelId;
     if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
         func_8006C2E4();
     }
     if (func_8006C2F0() == 0) {
         if (D_800DD32C == 0) {
             if (gCurrentLevelHeader->race_type == RACETYPE_BOSS) {
-                phi_v1_2 = settings->courseFlagsPtr[levelId];
-                phi_v0_2 = FALSE;
-                if (gCurrentLevelHeader->world == 0 || gCurrentLevelHeader->world == 5) {
-                    phi_v0_2 = TRUE;
+                var_s0 = settings->courseFlagsPtr[levelId];
+                wizpig = FALSE;
+                if (gCurrentLevelHeader->world == WORLD_CENTRAL_AREA || gCurrentLevelHeader->world == WORLD_FUTURE_FUN_LAND) {
+                    wizpig = TRUE;
                 }
-                if (!(phi_v1_2 & 1) || phi_v0_2) {
+                if (!(var_s0 & 1) || wizpig) {
                     func_8006C1AC(levelId, entranceId, vehicleId, cutsceneId);
                     if (settings->bosses & (1 << settings->worldId)) {
                         cutsceneId = 7;
                     } else {
                         cutsceneId = 3;
                     }
-                    if (phi_v0_2) {
+                    if (wizpig) {
                         cutsceneId = 0;
-                        if (phi_v1_2 & 1) {
-                            D_800DD330 = (u8)2;
+                        if (var_s0 & 1) {
+                            D_800DD330 = 2;
                         }
                     }
-                    someAsset = get_misc_asset(MISC_ASSET_UNK43);
-                    phi_s0 = 0;
-                    while (levelId != someAsset[phi_s0 + 1]) {
-                        phi_s0++;
-                    }
-                    levelId = someAsset[phi_s0 + 1];
+                    someAsset = (s8 *) get_misc_asset(MISC_ASSET_UNK43);
+                    for (var_s0 = 0; levelId != someAsset[var_s0]; var_s0 += 2) { }
+                    levelId = someAsset[var_s0 + 1];
                     entranceId = cutsceneId;
+                    if (cutsceneId) {} // Fakematch
                 }
             }
             if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD) {
-                s32 curWorld = gCurrentLevelHeader->world;
-                if (curWorld > 0 && curWorld < 5) {
-                    if (settings->keys & (1 << curWorld)) {
-                        s32 temp_v0_5 = 0x4000 << (curWorld + 0x1F);
-                        if (!(settings->cutsceneFlags & temp_v0_5)) {
-                            // Trigger World Key unlocking Challenge Door cutscene.
-                            func_8006C1AC(levelId, entranceId, vehicleId, cutsceneId);
-                            settings->cutsceneFlags |= temp_v0_5;
-                            levelId = get_misc_asset(MISC_ASSET_UNK44)[curWorld - 1];
-                            entranceId = 0;
-                            cutsceneId = 5;
-                        }
+                if (gCurrentLevelHeader->world > WORLD_CENTRAL_AREA && gCurrentLevelHeader->world < WORLD_FUTURE_FUN_LAND) {
+                    var_s0 = gCurrentLevelHeader->world;
+                    if (settings->keys & (1 << var_s0) && !(settings->cutsceneFlags & (0x4000 << (var_s0 + 31)))) {
+                        // Trigger World Key unlocking Challenge Door cutscene.
+                        func_8006C1AC(levelId, entranceId, vehicleId, cutsceneId);
+                        settings->cutsceneFlags |= 0x4000 << (var_s0 + 31);
+                        someAsset = (s8 *) get_misc_asset(MISC_ASSET_UNK44);
+                        levelId = someAsset[var_s0 - 1];
+                        entranceId = 0;
+                        cutsceneId = 5;
                     }
                 }
             }
-            if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD && gCurrentLevelHeader->world == 0 && !(settings->cutsceneFlags & 0x2000) && settings->wizpigAmulet >= 4) {
+            if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD && gCurrentLevelHeader->world == WORLD_CENTRAL_AREA && !(settings->cutsceneFlags & 0x2000) && settings->wizpigAmulet >= 4) {
                 // Trigger wizpig face cutscene
-                s32 savedEntranceId = entranceId;
-                s32 savedCutsceneId = cutsceneId;
-                cutsceneId = 0;
+                func_8006C1AC(levelId, entranceId, vehicleId, cutsceneId);
                 entranceId = 0;
-                func_8006C1AC(levelId, savedEntranceId, vehicleId, savedCutsceneId);
+                cutsceneId = 0;
                 settings->cutsceneFlags |= 0x2000;
-                levelId = get_misc_asset(MISC_ASSET_UNK44)[1];
+                levelId = ((s8 *) get_misc_asset(MISC_ASSET_UNK44))[4];
             }
         }
     }
     D_800DD32C = 0;
-    if (sp44 != levelId) {
+    if (prevLevelID != levelId) {
         free_from_memory_pool(gCurrentLevelHeader);
         offset = gTempAssetTable[levelId];
         size = gTempAssetTable[levelId + 1] - offset;
         gCurrentLevelHeader = allocate_from_main_pool_safe(size, COLOUR_TAG_YELLOW);
-        load_asset_to_address(ASSET_LEVEL_HEADERS, gCurrentLevelHeader, offset, size);
+        load_asset_to_address(ASSET_LEVEL_HEADERS, (u32) gCurrentLevelHeader, offset, size);
     }
     free_from_memory_pool(gTempAssetTable);
-    func_8006BFC8(&gCurrentLevelHeader->unk20);
+    func_8006BFC8((s8 *) &gCurrentLevelHeader->unk20);
     func_8000CBC0();
-    D_80121164 = levelId;
-    for (i = 0; i < 7; i++) {
-        if ((s32)gCurrentLevelHeader->unk74[i] != -1) {
-            gCurrentLevelHeader->unk74[i] = get_misc_asset((s32)gCurrentLevelHeader->unk74[i]);
-            func_8007F1E8(gCurrentLevelHeader->unk74[i]);
+    gMapId = levelId;
+    for (var_s0 = 0; var_s0 < 7; var_s0++) {
+        if ((s32) gCurrentLevelHeader->unk74[var_s0] != -1) {
+            gCurrentLevelHeader->unk74[var_s0] = (s8 *) get_misc_asset((s32) gCurrentLevelHeader->unk74[var_s0]);
+            func_8007F1E8((unk8007F1E8 *) gCurrentLevelHeader->unk74[var_s0]);
         }
     }
+
     if (cutsceneId == 0x64) {
-        if (get_trophy_race_world_id() != 0 && gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
-            cutsceneId = 0;
-        } else if (is_in_tracks_mode() == 1 && gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
-            cutsceneId = 0;
+        if (get_trophy_race_world_id() != 0) {
+            if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
+                cutsceneId = CUTSCENE_NONE;
+            }
+        } else if (is_in_tracks_mode() == 1) {
+            if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
+                cutsceneId = CUTSCENE_NONE;
+            }
         }
     }
     if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT || gCurrentLevelHeader->race_type == RACETYPE_BOSS) {
-        D_800DD31C = 1;
+        gIsInRace = TRUE;
     } else {
-        D_800DD31C = 0;
+        gIsInRace = FALSE;
     }
-    if (noPlayers && gCurrentLevelHeader->race_type != RACETYPE_CUTSCENE_2) {
+    if (numPlayers && gCurrentLevelHeader->race_type != RACETYPE_CUTSCENE_2) {
         gCurrentLevelHeader->race_type = RACETYPE_CUTSCENE_1;
     }
     set_music_player_voice_limit(gCurrentLevelHeader->voiceLimit);
     func_80000CBC();
     func_80031BB8(0x20);
-    vehicle = VEHICLE_CAR;
-    if (vehicleId >= VEHICLE_CAR && vehicleId < NUMBER_OF_VEHICLE_TYPES) {
-        vehicle = gCurrentLevelHeader->unk4F[vehicleId];
+    var_s0 = VEHICLE_CAR;
+    if (vehicleId >= VEHICLE_CAR && vehicleId < NUMBER_OF_PLAYER_VEHICLES) {
+        var_s0 = gCurrentLevelHeader->unk4F[vehicleId];
     }
-    func_80017E74(vehicle);
-    temp = settings->worldId;
+    set_taj_challenge_type(var_s0);
+    var_s0 = settings->worldId;
     if (gCurrentLevelHeader->world != -1) {
         settings->worldId = gCurrentLevelHeader->world;
     }
     settings->courseId = levelId;
-    if (temp == 0 && settings->worldId > 0) {
-        D_800DD314 = func_8006DB2C();
+    if (var_s0 == 0 && settings->worldId > 0) {
+        gCurrentDefaultVehicle = get_level_default_vehicle();
     }
-    if (settings->worldId == 0 && temp > 0 && D_800DD314 != -1) {
-        vehicleId = D_800DD314;
+    if (settings->worldId == 0 && var_s0 > 0 && gCurrentDefaultVehicle != -1) {
+        vehicleId = gCurrentDefaultVehicle;
     }
     func_8006DB20(vehicleId);
     if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD) {
-        if (settings->worldId > 0) {
-            s32 temp_s0_5 = 8 << (settings->worldId + 31);
+        if (settings->worldId - 1 >= 0) {
+            var_s0 = 8 << (settings->worldId + 31);
             if (settings->worldId == 5) {
                 if (settings->balloonsPtr[0] >= 47) {
                     if (settings->ttAmulet >= 4) {
-                        if ((settings->cutsceneFlags & temp_s0_5) == 0) {
-                            settings->cutsceneFlags |= temp_s0_5;
+                        if ((settings->cutsceneFlags & var_s0) == 0) {
+                            settings->cutsceneFlags |= var_s0;
                             cutsceneId = 5;
                         }
                     }
                 }
             } else {
                 if (settings->balloonsPtr[settings->worldId] >= 4) {
-                    if ((settings->cutsceneFlags & temp_s0_5) == 0) {
-                        settings->cutsceneFlags |= temp_s0_5;
+                    if (!(settings->cutsceneFlags & var_s0)) {
+                        settings->cutsceneFlags |= var_s0;
                         cutsceneId = 5;
                     }
                 }
+                var_s0 <<= 5;
                 if (settings->balloonsPtr[settings->worldId] >= 8) {
-                    s32 temp3 = temp_s0_5 << 5;
-                    if (!(settings->cutsceneFlags & temp3)) {
-                        settings->cutsceneFlags |= temp3;
+                    if (!(settings->cutsceneFlags & var_s0)) {
+                        settings->cutsceneFlags |= var_s0;
                         cutsceneId = 5;
                     }
                 }
             }
         }
     }
+
+    var_s0 = settings->courseFlagsPtr[levelId];
     if (numberOfPlayers != ONE_PLAYER && gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
         cutsceneId = 0x64;
     }
-    if ((gCurrentLevelHeader->race_type == RACETYPE_DEFAULT || (gCurrentLevelHeader->race_type & RACETYPE_CHALLENGE)) && is_in_two_player_adventure()) {
+    if ((gCurrentLevelHeader->race_type == RACETYPE_DEFAULT || gCurrentLevelHeader->race_type & RACETYPE_CHALLENGE) && is_in_two_player_adventure()) {
         D_800DD318 = 1;
         cutsceneId = 0x64;
     } else {
         D_800DD318 = 0;
+
     }
-    if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT && !noPlayers && is_time_trial_enabled()) {
+    if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT && numPlayers == 0 && is_time_trial_enabled()) {
         cutsceneId = 0x64;
     }
     func_8001E450(cutsceneId);
     func_800249F0(gCurrentLevelHeader->geometry, gCurrentLevelHeader->skybox, numberOfPlayers, vehicleId, entranceId, gCurrentLevelHeader->collectables, gCurrentLevelHeader->unkBA);
     if (gCurrentLevelHeader->fogNear == 0 && gCurrentLevelHeader->fogFar == 0 && gCurrentLevelHeader->fogR == 0 && gCurrentLevelHeader->fogG == 0 && gCurrentLevelHeader->fogB == 0) {
-        for (i = 0; i < 4; i++) {
-            func_800307BC(i);
+        for (var_s0 = 0; var_s0 < 4; var_s0++) {
+            func_800307BC(var_s0);
         }
     } else {
-        for (i = 0; i < 4; i++) {
-            func_80030664(i, gCurrentLevelHeader->fogNear, gCurrentLevelHeader->fogFar, (u8)gCurrentLevelHeader->fogR, gCurrentLevelHeader->fogG, gCurrentLevelHeader->fogB);
+        for (var_s0 = 0; var_s0 < 4; var_s0++) {
+            func_80030664(var_s0, gCurrentLevelHeader->fogNear, gCurrentLevelHeader->fogFar, (u8) gCurrentLevelHeader->fogR, gCurrentLevelHeader->fogG, gCurrentLevelHeader->fogB);
         }
     }
     settings = get_settings();
@@ -575,34 +642,23 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId,
     }
     settings->courseId = levelId;
     if (gCurrentLevelHeader->weatherEnable > 0) {
-        func_800AB4A8(
-            gCurrentLevelHeader->weatherType,
-            gCurrentLevelHeader->weatherEnable,
-            gCurrentLevelHeader->weatherVelX << 8,
-            gCurrentLevelHeader->weatherVelY << 8,
-            gCurrentLevelHeader->weatherVelZ << 8,
-            gCurrentLevelHeader->weatherIntensity * 0x101,
-            gCurrentLevelHeader->weatherOpacity * 0x101);
-        func_800AB308(-1, -0x200);
+        func_800AB4A8(gCurrentLevelHeader->weatherType, gCurrentLevelHeader->weatherEnable, gCurrentLevelHeader->weatherVelX << 8, gCurrentLevelHeader->weatherVelY << 8, gCurrentLevelHeader->weatherVelZ << 8, gCurrentLevelHeader->weatherIntensity * 257, gCurrentLevelHeader->weatherOpacity * 257);
+        setWeatherLimits(-1, -0x200);
     }
     if (gCurrentLevelHeader->unk49 == -1) {
-        gCurrentLevelHeader->unkA4 = load_texture(gCurrentLevelHeader->unkA4);
-        gCurrentLevelHeader->unkA8 = (u16)0;
-        gCurrentLevelHeader->unkAA = (u16)0;
+        gCurrentLevelHeader->unkA4 = load_texture((s32) gCurrentLevelHeader->unkA4);
+        gCurrentLevelHeader->unkA8 = 0;
+        gCurrentLevelHeader->unkAA = 0;
     }
-    if ((s32)gCurrentLevelHeader->pulseLightData != -1) {
-        // Only used in spaceport alpha for some pulsating lights.
-        gCurrentLevelHeader->pulseLightData = get_misc_asset((s32)gCurrentLevelHeader->pulseLightData);
+    if ((s32) gCurrentLevelHeader->pulseLightData != -1) {
+        gCurrentLevelHeader->pulseLightData = (PulsatingLightData *) get_misc_asset((s32) gCurrentLevelHeader->pulseLightData);
         init_pulsating_light_data(gCurrentLevelHeader->pulseLightData);
     }
     update_camera_fov(gCurrentLevelHeader->cameraFOV);
     set_background_prim_colour(gCurrentLevelHeader->bgColorRed, gCurrentLevelHeader->bgColorGreen, gCurrentLevelHeader->bgColorBlue);
-    func_8007A974();
+    reset_video_delta_time();
     func_8007AB24(gCurrentLevelHeader->unk4[numberOfPlayers]);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/game/load_level.s")
-#endif
 
 void func_8006BD10(f32 arg0) {
     if (gCurrentLevelHeader->music != 0) {
@@ -614,27 +670,37 @@ void func_8006BD10(f32 arg0) {
 }
 
 s32 func_8006BD88(void) {
-    return D_80121164;
+    return gMapId;
 }
 
+/**
+ * Return the race type ID of the current level.
+ * Official name: levelGetType
+ */
 u8 get_current_level_race_type(void) {
     return gCurrentLevelHeader->race_type;
 }
 
+/**
+ * Return the header data of the current level.
+ */
 LevelHeader *get_current_level_header(void) {
     return gCurrentLevelHeader;
 }
 
-/* Unused? */
-u8 func_8006BDC0(void) {
+/**
+ * Returns the amount of level headers there are in the game.
+ * Goes unused.
+ */
+UNUSED u8 get_total_level_header_count(void) {
     return gNumberOfLevelHeaders - 1;
 }
 
 /**
  * Returns the name of the level from the passed ID
  */
-u8 *get_level_name(s32 levelId) {
-    u8 *levelName;
+char *get_level_name(s32 levelId) {
+    char *levelName;
     u8 numberOfNullPointers = 0;
 
     if (levelId < 0 || levelId >= gNumberOfLevelHeaders) {
@@ -669,7 +735,7 @@ u8 *get_level_name(s32 levelId) {
 }
 
 void func_8006BEFC(void) {
-    func_8006C164();
+    frontCleanupMultiSelect();
     set_background_prim_colour(0, 0, 0);
     free_from_memory_pool(gCurrentLevelHeader);
     func_800049D8();
@@ -679,7 +745,7 @@ void func_8006BEFC(void) {
     func_80031B60();
     func_8002C7D4();
     func_80008174();
-    func_80000968(0);
+    adjust_audio_volume(VOLUME_NORMAL);
     if (gCurrentLevelHeader->weatherEnable > 0) {
         free_weather_memory();
     }
@@ -690,7 +756,8 @@ void func_8006BEFC(void) {
 }
 
 void func_8006BFC8(s8 *arg0) {
-    s32 temp, temp2;
+    s32 temp;
+    UNUSED s32 temp2;
     s16 phi_v1;
     s8 phi_s0;
     Settings *settings;
@@ -719,17 +786,15 @@ void func_8006BFC8(s8 *arg0) {
 
     phi_s0 = arg0[phi_s0];
 
-    // Check if CHEAT_ULTIMATE_AI is active
-    // This check works because a << 6 will but a 1 in the sign bit making it negative
-    if ((get_filtered_cheats() << 6) < 0) {
+    if (get_filtered_cheats() & CHEAT_ULTIMATE_AI) {
         phi_s0 = 9;
     }
     if (get_render_context() == DRAW_MENU) {
         phi_s0 = 5;
     }
-    gTempAssetTable = load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
+    gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
     phi_v1 = 0;
-    while (-1U != gTempAssetTable[phi_v1]) {
+    while (-1 != (s32) gTempAssetTable[phi_v1]) {
         phi_v1++;
     }
     phi_v1--;
@@ -739,11 +804,11 @@ void func_8006BFC8(s8 *arg0) {
     temp2 = gTempAssetTable[phi_s0];
     temp = gTempAssetTable[phi_s0 + 1] - temp2;
     D_801211C0 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
-    load_asset_to_address(ASSET_UNKNOWN_0, D_801211C0, temp2, temp);
+    load_asset_to_address(ASSET_UNKNOWN_0, (u32) D_801211C0, temp2, temp);
     free_from_memory_pool(gTempAssetTable);
 }
 
-void func_8006C164(void) {
+void frontCleanupMultiSelect(void) {
     free_from_memory_pool(D_801211C0);
 }
 
@@ -756,7 +821,7 @@ s8 func_8006C19C(void) {
 }
 
 // Push a stack onto D_801211C8
-void func_8006C1AC(s32 levelId, s32 entranceId, s32 vehicleId, s32 cutsceneId) {
+void func_8006C1AC(s32 levelId, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
     D_801211C8[D_800DD328++] = levelId;
     D_801211C8[D_800DD328++] = entranceId;
     D_801211C8[D_800DD328++] = vehicleId;
@@ -802,11 +867,11 @@ s32 func_8006C300(void) {
 
 /**
  * Main looping function for the main thread.
+ * Official Name: mainThread
  */
-
 void thread3_main(UNUSED void *unused) {
     init_game();
-    D_800DD37C = func_8006A1C4(D_800DD37C, 0);
+    gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, 0);
     sBootDelayTimer = 0;
     sRenderContext = DRAW_INTRO;
     while (1) {
@@ -828,54 +893,55 @@ void thread3_main(UNUSED void *unused) {
 /**
  * Setup all of the necessary pieces required for the game to function.
  * This includes the memory pool. controllers, video, audio, core assets and more.
+ * Official Name: mainInitGame
  */
 void init_game(void) {
-    s32 mode;
+    s32 viMode;
 
     init_main_memory_pool();
-    func_800C6170();
+    rzipInit(); // Initialise gzip decompression related things
     sAntiPiracyTriggered = TRUE;
     if (check_imem_validity()) {
         sAntiPiracyTriggered = FALSE;
     }
-    D_80123514 = FALSE;
-    D_80123518 = 0;
+    gIsLoading = FALSE;
+    gLevelDefaultVehicleID = VEHICLE_CAR;
 
     if (osTvType == TV_TYPE_PAL) {
-        mode = 14;
+        viMode = OS_VI_PAL_LPN1;
     } else if (osTvType == TV_TYPE_NTSC) {
-        mode = 0;
+        viMode = OS_VI_NTSC_LPN1;
     } else if (osTvType == TV_TYPE_MPAL) {
-        mode = 28;
+        viMode = OS_VI_MPAL_LPN1;
     }
 
-    osCreateScheduler(&gMainSched, &gSPTaskNum, /*priority*/ 13, (u8)mode, 1);
-    D_800DD3A0 = FALSE;
-    if (!func_8006EFB8()) {
-        D_800DD3A0 = TRUE;
+    osCreateScheduler(&gMainSched, &gSchedStack[0x400], /*priority*/ 13, viMode, 1);
+    gDmemInvalid = FALSE;
+    if (check_dmem_validity() == FALSE) {
+        gDmemInvalid = TRUE;
     }
-    init_video(1, &gMainSched);
-    func_80076BA0();
-    func_80078100(&gMainSched);
+    init_video(VIDEO_MODE_LOWRES_LPN, &gMainSched);
+    init_PI_mesg_queue();
+    setup_gfx_mesg_queues(&gMainSched);
     audio_init(&gMainSched);
     func_80008040(); // Should be very similar to func_8005F850
     sControllerStatus = init_controllers();
-    func_8007AC70(); // Should be very similar to func_8005F850
+    tex_init_textures();
     func_8005F850(); // Matched
-    func_8000BF8C();
-    func_800B5E88();
+    allocate_object_pools();
+    diPrintfInit();
     func_800598D0();
     init_particle_assets();
     func_800AB1F0();
     calc_and_alloc_heap_for_settings();
-    func_8006EFDC();
+    default_alloc_heap_for_hud();
     load_fonts();
     init_controller_paks();
     func_80081218();
     create_and_start_thread30();
-    osCreateMesgQueue(&gNMIMesgQueue, &gNMIMesgBuf, 1);
-    osScAddClient(&gMainSched, gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);
-    D_80123560[0] = 0;
+    osCreateMesgQueue(&gNMIMesgQueue, &gNMIOSMesg, 1);
+    osScAddClient(&gMainSched, (OSScClient*) gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);
+    gNMIMesgBuf = 0;
     D_80123504 = 0;
     D_80123508 = 0;
     gSPTaskNum = 0;
@@ -898,45 +964,45 @@ void main_game_loop(void) {
 
     //osSetTime(0);
 
-    if (D_800DD380 == 8) {
+    if (gScreenStatus == MESG_SKIP_BUFFER_SWAP) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
         set_rsp_segment(&gCurrDisplayList, 0, 0);
-        set_rsp_segment(&gCurrDisplayList, 1, (s32)gVideoCurrFramebuffer);
-        set_rsp_segment(&gCurrDisplayList, 2, gVideoLastDepthBuffer);
-        set_rsp_segment(&gCurrDisplayList, 4, (s32)gVideoCurrFramebuffer - 0x500);
+        set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoCurrFramebuffer);
+        set_rsp_segment(&gCurrDisplayList, 2, (s32) gVideoLastDepthBuffer);
+        set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoCurrFramebuffer - 0x500);
     }
-    if (D_800DD3F0 == 0) {
+    if (gDrawFrameTimer == 0) {
         setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
         gSPTaskNum += 1;
         gSPTaskNum &= 1;
     }
-    if (D_800DD3F0 != 0) {
-        D_800DD3F0 -= 1;
+    if (gDrawFrameTimer) {
+        gDrawFrameTimer--;
     }
 
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
-    gCurrHudMat = gHudMatrices[gSPTaskNum];
-    gCurrHudVerts = gHudVertices[gSPTaskNum];
-    gCurrHudTris = gHudTriangles[gSPTaskNum];
+    gGameCurrMatrix = gHudMatrices[gSPTaskNum];
+    gGameCurrVertexList = gHudVertices[gSPTaskNum];
+    gGameCurrTriList = gHudTriangles[gSPTaskNum];
 
     set_rsp_segment(&gCurrDisplayList, 0, 0);
-    set_rsp_segment(&gCurrDisplayList, 1, gVideoLastFramebuffer);
-    set_rsp_segment(&gCurrDisplayList, 2, gVideoLastDepthBuffer);
-    set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);
+    set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoLastFramebuffer);
+    set_rsp_segment(&gCurrDisplayList, 2, (s32) gVideoLastDepthBuffer);
+    set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoLastFramebuffer - 0x500);
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
-    render_background(&gCurrDisplayList, &gCurrHudMat, 1);
-    D_800DD37C = func_8006A1C4(D_800DD37C, sLogicUpdateRate);
+    render_background(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE); 
+    gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, sLogicUpdateRate);
     if (get_lockup_status()) {
         render_epc_lock_up_display();
         sRenderContext = DRAW_CRASH_SCREEN;
     }
-    if (D_800DD3A0) {
+    if (gDmemInvalid) {
         debugLoopCounter = 0;
         while (debugLoopCounter != 10000000) {
-            debugLoopCounter += 1;
+            debugLoopCounter++;
         }
-        if (debugLoopCounter >= 20000001) { // This shouldn't ever be true?
+        if (debugLoopCounter > 20000000) { // This shouldn't ever be true?
             render_printf(D_800E7134 /* "BBB\n" */);
         }
     }
@@ -949,7 +1015,7 @@ void main_game_loop(void) {
             func_8006DCF8(sLogicUpdateRate);
             break;
         case DRAW_GAME: // In game (Controlling a character)
-            func_8006CCF0(sLogicUpdateRate);
+            ingame_logic_loop(sLogicUpdateRate);
             break;
         case DRAW_CRASH_SCREEN: // EPC (lockup display)
             lockup_screen_loop(sLogicUpdateRate);
@@ -961,12 +1027,12 @@ void main_game_loop(void) {
 
     handle_music_fade(sLogicUpdateRate);
     print_debug_strings(&gCurrDisplayList);
-    render_dialogue_boxes(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
+    render_dialogue_boxes(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     close_dialogue_box(4);
     assign_dialogue_box_id(4);
     // handle_transitions will perform the logic of transitions and return the transition ID.
     if (handle_transitions(sLogicUpdateRate)) {
-        render_fade_transition(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
+        render_fade_transition(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     }
     if ((sBootDelayTimer >= 8) && (is_controller_missing())) {
         print_missing_controller_text(&gCurrDisplayList, sLogicUpdateRate);
@@ -975,31 +1041,31 @@ void main_game_loop(void) {
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
 
-    func_80066610();
-    if (D_800DD3F0 != 1) {
-        if (D_800DD38C == 0) {
-            D_800DD380 = func_80077A54();
+    copy_viewports_to_stack();
+    if (gDrawFrameTimer != 1) {
+        if (gSkipGfxTask == FALSE) {
+            gScreenStatus = wait_for_gfx_task();
         }
     } else {
-        D_800DD3F0 = 0;
+        gDrawFrameTimer = 0;
     }
-    D_800DD38C = 0;
+    gSkipGfxTask = FALSE;
     clear_free_queue();
     if (!gIsPaused) {
-        func_80066520();
+        disable_cutscene_camera();
     }
-    if (D_800DD3F0 == 2) {
+    if (gDrawFrameTimer == 2) {
         framebufferSize = SCREEN_WIDTH * SCREEN_HEIGHT * 2;
         if (osTvType == TV_TYPE_PAL) {
             framebufferSize = (s32)((SCREEN_WIDTH * SCREEN_HEIGHT * 2) * 1.1f);
         }
-        func_80070B04(gVideoLastFramebuffer, (s32)gVideoCurrFramebuffer, (s32)gVideoCurrFramebuffer + framebufferSize);
+        dmacopy_doubleword(gVideoLastFramebuffer, gVideoCurrFramebuffer, (s32) gVideoCurrFramebuffer + framebufferSize);
     }
     // tempLogicUpdateRate will be set to a value 2 or higher, based on the framerate.
     // the mul factor is hardcapped at 6, which happens at 10FPS. The mul factor
     // affects frameskipping, to maintain consistent game speed, through the (many)
     // dropped frames in DKR.
-    tempLogicUpdateRate = func_8007A98C(D_800DD380);
+    tempLogicUpdateRate = swap_framebuffer_when_ready(gScreenStatus);
     sLogicUpdateRate = tempLogicUpdateRate;
     tempLogicUpdateRateMax = LOGIC_10FPS;
     if (tempLogicUpdateRate > tempLogicUpdateRateMax) {
@@ -1007,14 +1073,14 @@ void main_game_loop(void) {
     }
 }
 
-void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {
+void func_8006CAE4(s32 arg0, s32 arg1, Vehicle vehicle) {
     D_80123500 = arg0 - 1;
     if (arg1 == -1) {
-        D_801234F4 = get_track_id_to_load();
+        gPlayableMapId = get_track_id_to_load();
     } else {
-        D_801234F4 = arg1;
+        gPlayableMapId = arg1;
     }
-    load_level_2(D_801234F4, D_80123500, D_80123504, arg2);
+    load_level_2(gPlayableMapId, D_80123500, D_80123504, vehicle);
 }
 
 /**
@@ -1022,8 +1088,8 @@ void func_8006CAE4(s32 arg0, s32 arg1, s32 arg2) {
  * which is the value at D_80123508. Also does some other stuff.
  * Needs a better name!
  */
-void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId) {
-    func_8006ECFC(numberOfPlayers);
+void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId) {
+    calc_and_alloc_heap_for_hud(numberOfPlayers);
     set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
@@ -1039,14 +1105,14 @@ void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleI
 // Guessing this is the "unload everything ready for level swap" function.
 void func_8006CC14(void) {
     set_free_queue_state(0);
-    if (D_800DD38C == 0) {
-        if (D_800DD3F0 != 1) {
-            func_80077A54();
+    if (gSkipGfxTask == FALSE) {
+        if (gDrawFrameTimer != 1) {
+            wait_for_gfx_task();
         }
-        D_800DD38C = 1;
+        gSkipGfxTask = TRUE;
     }
     func_8006BEFC();
-    func_800C01D8(&D_800DD3F4);
+    transition_begin(&D_800DD3F4);
     func_800AE270();
     func_800A003C();
     func_800C30CC();
@@ -1056,25 +1122,32 @@ void func_8006CC14(void) {
     set_free_queue_state(2);
 }
 
-void func_8006CCF0(s32 updateRate) {
+/**
+ * The main behaviour function involving all of the ingame stuff.
+ * Involves the updating of all objects and setting up the render scene.
+*/
+void ingame_logic_loop(s32 updateRate) {
     s32 buttonPressedInputs, buttonHeldInputs, i, sp40, sp3C;
 
     sp40 = 0;
     buttonHeldInputs = 0;
     buttonPressedInputs = 0;
 
+    // Get input data for all 4 players.
     for (i = 0; i < get_active_player_count(); i++) {
         buttonHeldInputs |= get_buttons_held_from_player(i);
         buttonPressedInputs |= get_buttons_pressed_from_player(i);
     }
+    // Spam the start button, making the game unplayable because it's constantly paused.
     if (sAntiPiracyTriggered) {
         buttonPressedInputs |= START_BUTTON;
     }
+    // Update all objects
     if (!gIsPaused) {
         func_80010994(updateRate);
-        if (func_80066510() == 0 || func_8001139C()) {
+        if (check_if_showing_cutscene_camera() == 0 || func_8001139C()) {
             if ((buttonPressedInputs & START_BUTTON) && (func_8006C2F0() == 0) && (D_800DD390 == 0)
-                && (sRenderContext == DRAW_GAME) && (D_80123516 == 0) && (D_800DD394 == 0) && (D_800DD398 == 0)) {
+                && (sRenderContext == DRAW_GAME) && (gPostRaceViewPort == NULL) && (gLevelLoadTimer == 0) && (D_800DD398 == 0)) {
                 buttonPressedInputs = 0;
                 gIsPaused = TRUE;
                 func_80093A40();
@@ -1087,56 +1160,56 @@ void func_8006CCF0(s32 updateRate) {
     if (D_800DD398 < 0) {
         D_800DD398 = 0;
     }
-    if (D_80123516 != 0) {
+    if (gPostRaceViewPort) {
         gIsPaused = FALSE;
     }
     gParticlePtrList_flush();
     func_8001BF20();
-    func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
+    render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
     if (sRenderContext == DRAW_GAME) {
         // Ignore the user's L/R/Z buttons.
         buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
     }
-    if (D_80123516 != 0) {
-        i = func_80095728(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate);
-        switch (i - 1) {
-            case 1:
+    if (gPostRaceViewPort) {
+        i = func_80095728(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate); 
+        switch (i) {
+            case 2:
                 buttonHeldInputs |= (L_TRIG | Z_TRIG);
                 break;
-            case 0:
-                D_80123516 = 0;
+            case 1:
+                gPostRaceViewPort = NULL;
                 func_8006D8F0(-1);
                 break;
-            case 3:
-                func_8006C2E4();
+            case 4:
+                func_8006C2E4(); 
                 D_800DD390 = 0;
                 buttonHeldInputs |= (L_TRIG | R_TRIG);
                 break;
-            case 4:
+            case 5:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 1;
                 break;
-            case 7:
+            case 8:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 2;
                 break;
-            case 8:
+            case 9:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 3;
                 break;
-            case 9:
+            case 10:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 4;
                 break;
-            case 10:
+            case 11:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 5;
                 break;
-            case 11:
+            case 12:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 6;
                 break;
-            case 12:
+            case 13:
                 buttonHeldInputs |= L_TRIG,
                 sp40 = 7;
                 break;
@@ -1154,7 +1227,7 @@ void func_8006CCF0(s32 updateRate) {
         }
     }
     if (gIsPaused) {
-        i = func_80094170(&gCurrDisplayList, updateRate);
+        i = render_pause_menu(&gCurrDisplayList, updateRate);
         switch (i - 1) {
             case 0:
                 gIsPaused = FALSE;
@@ -1203,11 +1276,11 @@ void func_8006CCF0(s32 updateRate) {
     }
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_borders_for_multiplayer(&gCurrDisplayList);
-    func_800A8474(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, updateRate);
-    func_80077268(&gCurrDisplayList);
+    render_minimap_and_misc_hud(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
+    render_second_multiplayer_borders(&gCurrDisplayList);
     if (D_800DD39C != 0) {
         if (func_800214C4() != 0) {
-            D_801234F4 = 0x23;
+            gPlayableMapId = ASSET_LEVEL_FUTUREFUNLANDHUB;
             D_801234F8 = 1;
             D_80123504 = 0;
             D_800DD39C = 0;
@@ -1218,14 +1291,14 @@ void func_8006CCF0(s32 updateRate) {
         D_800DD390 -= updateRate;
         if (D_800DD390 <= 0) {
             D_800DD390 = 0;
-            func_8006C1AC(0, 0, 0, 0);
-            func_8006C1AC(0x2B, 0, -1, 0xA);
+            func_8006C1AC(ASSET_LEVEL_CENTRALAREAHUB, 0, VEHICLE_CAR, 0);
+            func_8006C1AC(ASSET_LEVEL_WIZPIGAMULETSEQUENCE, 0, -1, 0xA);
             sp3C = TRUE;
         }
     }
-    if (D_800DD394 > 0) {
-        D_800DD394 -= updateRate;
-        if (D_800DD394 <= 0) {
+    if (gLevelLoadTimer > 0) {
+        gLevelLoadTimer -= updateRate;
+        if (gLevelLoadTimer <= 0) {
             buttonHeldInputs = L_TRIG;
             sp3C = TRUE;
             switch (D_80123524) {
@@ -1242,23 +1315,23 @@ void func_8006CCF0(s32 updateRate) {
                     // fall-through
                 case 4:
                     D_801234F8 = 1;
-                    D_801234F4 = D_80123525;
+                    gPlayableMapId = D_80123525;
                     D_80123504 = 0;
                     D_80123508 = 0;
                     buttonHeldInputs = 0;
                     break;
             }
             D_80123524 = 0;
-            D_800DD394 = 0;
+            gLevelLoadTimer = 0;
         }
     }
     if (sp3C) {
         if (func_8006C2F0() != 0) {
-            func_8006C22C(&D_801234F4, &D_80123504, &i, &D_80123508);
+            func_8006C22C(&gPlayableMapId, &D_80123504, &i, &D_80123508);
             func_8006F42C();
-            if (D_801234F4 < 0) {
-                if (D_801234F4 == -1 || D_801234F4 == -10) {
-                    if (D_801234F4 == -10 && is_in_two_player_adventure()) {
+            if (gPlayableMapId < 0) {
+                if (gPlayableMapId == (s32)SPECIAL_MAP_ID_NO_LEVEL || gPlayableMapId == (s32)SPECIAL_MAP_ID_UNK_NEG10) {
+                    if (gPlayableMapId == (s32)SPECIAL_MAP_ID_UNK_NEG10 && is_in_two_player_adventure()) {
                         func_8006F398();
                     }
                     buttonHeldInputs |= L_TRIG;
@@ -1277,17 +1350,17 @@ void func_8006CCF0(s32 updateRate) {
     } else {
         sp3C = func_8006C300();
         if (func_8006C2F0()) {
-            if (D_800DD394 == 0) {
+            if (gLevelLoadTimer == 0) {
                 i = func_800214C4();
                 if ((i != 0) || ((buttonPressedInputs & A_BUTTON) && (sp3C != 0))) {
                     if (sp3C != 0) {
                         func_80000B28();
                     }
                     func_8006F42C();
-                    func_8006C22C(&D_801234F4, &D_80123504, &i, &D_80123508);
-                    if (D_801234F4 < 0) {
-                        if (D_801234F4 == -1 || D_801234F4 == -10) {
-                            if (D_801234F4 == -10 && is_in_two_player_adventure()) {
+                    func_8006C22C(&gPlayableMapId, &D_80123504, &i, &D_80123508);
+                    if (gPlayableMapId < 0) {
+                        if (gPlayableMapId == -1 || gPlayableMapId == -10) {
+                            if (gPlayableMapId == -10 && is_in_two_player_adventure()) {
                                 func_8006F398();
                             }
                             buttonHeldInputs |= L_TRIG;
@@ -1306,12 +1379,12 @@ void func_8006CCF0(s32 updateRate) {
     }
     if (((buttonHeldInputs & L_TRIG) && (sRenderContext == DRAW_GAME)) || (D_801234FC != 0)) {
         gIsPaused = FALSE;
-        D_800DD394 = 0;
-        D_80123516 = 0;
+        gLevelLoadTimer = 0;
+        gPostRaceViewPort = NULL;
         func_8006CC14();
-        func_8006EC48(get_save_file_index());
+        safe_mark_write_save_file(get_save_file_index());
         if (sp40 != 0) {
-            D_80123514 = FALSE;
+            gIsLoading = FALSE;
             switch (sp40) {
                 case 1:
                     // Go to track select menu from "Select Track" option in tracks menu.
@@ -1343,9 +1416,9 @@ void func_8006CCF0(s32 updateRate) {
                     load_menu_with_level_background(MENU_CHARACTER_SELECT, 0x16, i);
                     break;
                 case 7:
-                    D_80123514 = TRUE;
+                    gIsLoading = TRUE;
                     load_menu_with_level_background(MENU_UNKNOWN_23, -1, 0);
-                    D_80123514 = FALSE;
+                    gIsLoading = FALSE;
                     break;
                 case 8:
                     load_menu_with_level_background(MENU_CREDITS, -1, 0);
@@ -1355,31 +1428,31 @@ void func_8006CCF0(s32 updateRate) {
             if (D_80121250[2] == -1) {
                 load_menu_with_level_background(MENU_UNUSED_8, -1, 0);
             } else {
-                D_80123514 = TRUE;
-                load_menu_with_level_background(MENU_UNKNOWN_5, -1, -1);
+                gIsLoading = TRUE;
+                load_menu_with_level_background(MENU_TRACK_SELECT_ADVENTURE, -1, -1);
             }
         } else if (!(buttonHeldInputs & R_TRIG)) {
             if (!(buttonHeldInputs & Z_TRIG)) {
-                D_801234F4 = D_80121250[0];
+                gPlayableMapId = D_80121250[0];
                 D_80123504 = D_80121250[15];
                 D_80123508 = D_80121250[D_80121250[1] + 8];
-                D_80123518 = func_8006B0AC(D_801234F4);
+                gLevelDefaultVehicleID = get_map_default_vehicle(gPlayableMapId);
                 if (D_80123508 < 0) {
                     D_80123508 = 0x64;
                 }
             }
-            load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
+            load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
         } else {
-            func_8006EC48(get_save_file_index());
+            safe_mark_write_save_file(get_save_file_index());
             load_menu_with_level_background(MENU_TITLE, -1, 0);
         }
         D_801234FC = 0;
     }
     if (D_801234F8 != 0) {
-        D_80123516 = 0;
+        gPostRaceViewPort = NULL;
         func_8006CC14();
-        load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
-        func_8006EC48(get_save_file_index());
+        load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+        safe_mark_write_save_file(get_save_file_index());
         D_801234F8 = 0;
     }
 }
@@ -1388,17 +1461,17 @@ void func_8006D8A4(void) {
     D_800DD390 = 0x2C;
     gIsPaused = 0;
     n_alSeqpDelete();
-    func_800C01D8(&D_800DD408);
+    transition_begin(&D_800DD408);
 }
 
 void func_8006D8E0(s32 arg0) {
-    D_80123516 = arg0 + 1;
+    gPostRaceViewPort = arg0 + 1;
 }
 
 void func_8006D8F0(UNUSED s32 arg0) {
     s32 temp;
     if (sRenderContext != DRAW_UNK_04) {
-        D_801234F4 = D_80121250[0];
+        gPlayableMapId = D_80121250[0];
         D_80123504 = 0;
         D_80123508 = 0x64;
         temp = D_80121250[1];
@@ -1415,7 +1488,7 @@ void func_8006D8F0(UNUSED s32 arg0) {
 void func_8006D968(s8 *arg0) {
     s32 i;
     if (sRenderContext != DRAW_UNK_04) {
-        D_80121250[0] = D_801234F4;
+        D_80121250[0] = gPlayableMapId;
         for (i = 0; i < 2; i++) {
             D_80121250[i + 2] = arg0[i + 8];
             D_80121250[i + 4] = arg0[i + 10];
@@ -1430,30 +1503,36 @@ void func_8006D968(s8 *arg0) {
     }
 }
 
-s32 get_render_context(void) {
+/**
+ * Gets the render context from outside this file
+ */
+RenderContext get_render_context(void) {
     return sRenderContext;
 }
 
-/* Unused function used to set the render context from outside this file */
+/**
+ *  Unused function used to set the render context from outside this file
+ *  Official Name: mainSetMode?
+ */
 UNUSED void set_render_context(s32 changeTo) {
     sRenderContext = changeTo;
 }
 
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
-    func_8006ECFC(0);
+    calc_and_alloc_heap_for_hud(0);
     sRenderContext = DRAW_MENU;
     D_801234F0 = 1;
-    func_80004A60(0, 32767);
-    func_80004A60(1, 32767);
-    func_80004A60(2, 32767);
+    set_sound_channel_volume(0, 32767);
+    set_sound_channel_volume(1, 32767);
+    set_sound_channel_volume(2, 32767);
     func_80065EA0();
 
-    if (!D_80123514) {
-        D_80123514 = FALSE;
+    if (!gIsLoading) {
+        gIsLoading = FALSE;
         if (levelId < 0) {
-            D_80123514 = TRUE;
+            gIsLoading = TRUE;
         } else {
-            load_level_3(levelId, -1, 0, 2, cutsceneId);
+            load_level_3(levelId, -1, 0, VEHICLE_PLANE, cutsceneId);
         }
     }
     if (menuId == MENU_UNUSED_2 || menuId == MENU_LOGOS || menuId == MENU_TITLE) {
@@ -1463,23 +1542,29 @@ void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     D_80123504 = 0;
 }
 
-void func_8006DB14(s32 arg0) {
-    D_80123518 = arg0;
+/**
+ * Set the default vehicle option from the current loaded level.
+ */
+void set_level_default_vehicle(Vehicle vehicleID) {
+    gLevelDefaultVehicleID = vehicleID;
 }
 
-void func_8006DB20(s32 vehicleId) {
+void func_8006DB20(Vehicle vehicleId) {
     D_8012351C = vehicleId;
 }
 
-s32 func_8006DB2C(void) {
-    return D_80123518;
+/**
+ * Get the default vehicle option, set by a loaded level.
+ */
+Vehicle get_level_default_vehicle(void) {
+    return gLevelDefaultVehicleID;
 }
 
 /**
  * Calls load_level() with the same arguments, but also does some other stuff.
  * Needs a better name!
  */
-void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleId, s32 cutsceneId) {
+void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
     set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
@@ -1492,17 +1577,17 @@ void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, s32 vehicleI
 }
 
 void func_8006DBE4(void) {
-    if (!D_80123514) {
-        D_80123514 = TRUE;
+    if (!gIsLoading) {
+        gIsLoading = TRUE;
         set_free_queue_state(0);
         func_8006BEFC();
-        func_800C01D8(&D_800DD3F4);
+        transition_begin(&D_800DD3F4);
         func_800AE270();
         func_800A003C();
         func_800C30CC();
         set_free_queue_state(2);
     }
-    D_80123514 = FALSE;
+    gIsLoading = FALSE;
 }
 
 void func_8006DC58(s32 updateRate) {
@@ -1510,11 +1595,11 @@ void func_8006DC58(s32 updateRate) {
         func_80010994(updateRate);
         gParticlePtrList_flush();
         func_8001BF20();
-        func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
+        render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
         func_800C3440(updateRate);
         init_rdp_and_framebuffer(&gCurrDisplayList);
         render_borders_for_multiplayer(&gCurrDisplayList);
-        func_80077268(&gCurrDisplayList);
+        render_second_multiplayer_borders(&gCurrDisplayList);
     }
 }
 
@@ -1524,11 +1609,11 @@ void func_8006DCF8(s32 updateRate) {
     s32 menuLoopResult, temp, temp2, tempResult;
 
     gIsPaused = FALSE;
-    D_80123516 = 0;
-    if (!D_80123514 && D_801234F0) {
+    gPostRaceViewPort = NULL;
+    if (!gIsLoading && D_801234F0) {
         func_8006DC58(updateRate);
     }
-    menuLoopResult = menu_loop(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, updateRate);
+    menuLoopResult = menu_loop(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
     D_801234F0 = TRUE;
     if (menuLoopResult == -2) {
         D_801234F0 = FALSE;
@@ -1539,37 +1624,37 @@ void func_8006DCF8(s32 updateRate) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
         gDPFullSync(gCurrDisplayList++);
         gSPEndDisplayList(gCurrDisplayList++);
-        D_801234F4 = menuLoopResult & 0x7F;
-        D_80123518 = func_8006B0AC(D_801234F4);
+        gPlayableMapId = menuLoopResult & 0x7F;
+        gLevelDefaultVehicleID = get_map_default_vehicle(gPlayableMapId);
         D_80123504 = 0;
         D_80123508 = 0x64;
         sRenderContext = DRAW_GAME;
         gIsPaused = FALSE;
-        D_80123516 = 0;
-        load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
-        func_8006EC48(get_save_file_index());
+        gPostRaceViewPort = NULL;
+        load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+        safe_mark_write_save_file(get_save_file_index());
         return;
     }
     if ((menuLoopResult != -1) && (menuLoopResult & 0x100)) {
         func_8006CC14();
         gIsPaused = FALSE;
-        D_80123516 = 0;
+        gPostRaceViewPort = NULL;
         switch (menuLoopResult & 0x7F) {
             case 5:
                 load_menu_with_level_background(MENU_TRACK_SELECT, -1, 1);
                 break;
             case 14:
-                D_801234F4 = 0;
+                gPlayableMapId = ASSET_LEVEL_CENTRALAREAHUB;
                 D_80123504 = 0;
                 D_80123508 = 0x64;
                 sRenderContext = DRAW_GAME;
-                load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
-                func_8006EC48(get_save_file_index());
+                load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+                safe_mark_write_save_file(get_save_file_index());
                 break;
             case 1:
                 D_80123504 = 0;
                 D_80123508 = 0x64;
-                D_801234F4 = D_80121250[0];
+                gPlayableMapId = D_80121250[0];
                 sRenderContext = DRAW_GAME;
                 // Minor issue with these 2 if statements
                 temp2 = D_80121250[D_80121250[1] + 8];
@@ -1580,20 +1665,20 @@ void func_8006DCF8(s32 updateRate) {
                 if (temp2 >= 0) {
                     D_80123508 = temp2;
                 }
-                load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
-                func_8006EC48(get_save_file_index());
+                load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+                safe_mark_write_save_file(get_save_file_index());
                 break;
             case 2:
                 sRenderContext = DRAW_GAME;
-                load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
+                load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
                 break;
             case 3:
                 sRenderContext = DRAW_GAME;
-                D_801234F4 = D_80121250[0];
+                gPlayableMapId = D_80121250[0];
                 D_80123504 = D_80121250[15];
                 D_80123508 = D_80121250[D_80121250[1] + 8];
-                D_80123518 = func_8006B0AC(D_801234F4);
-                load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
+                gLevelDefaultVehicleID = get_map_default_vehicle(gPlayableMapId);
+                load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
                 break;
             default:
                 load_menu_with_level_background(MENU_TITLE, -1, 0);
@@ -1609,16 +1694,16 @@ void func_8006DCF8(s32 updateRate) {
         gSPEndDisplayList(gCurrDisplayList++);
         temp = menuLoopResult & 0x7F;
         D_80121250[1] = temp;
-        D_80121250[0] = D_801234F4;
-        D_801234F4 = D_80121250[temp + 2];
+        D_80121250[0] = gPlayableMapId;
+        gPlayableMapId = D_80121250[temp + 2];
         D_80123504 = D_80121250[temp + 4];
         sRenderContext = DRAW_GAME;
         D_80123508 = D_80121250[temp + 12];
         temp = get_player_selected_vehicle(0);
-        D_80123500 = gSettingsPtr->gObjectCount - 1;
-        load_level_2(D_801234F4, D_80123500, D_80123504, temp);
+        D_80123500 = gSettingsPtr->gNumRacers - 1;
+        load_level_2(gPlayableMapId, D_80123500, D_80123504, temp);
         D_801234FC = 0;
-        D_80123518 = D_8012351C;
+        gLevelDefaultVehicleID = D_8012351C;
         return;
     }
     if (menuLoopResult > 0) {
@@ -1627,7 +1712,7 @@ void func_8006DCF8(s32 updateRate) {
         gDPFullSync(gCurrDisplayList++);
         gSPEndDisplayList(gCurrDisplayList++);
         sRenderContext = DRAW_GAME;
-        func_8006CAE4(menuLoopResult, -1, D_80123518);
+        func_8006CAE4(menuLoopResult, -1, gLevelDefaultVehicleID);
         if (gSettingsPtr->newGame && !is_in_tracks_mode()) {
             func_80000B28();
             gSettingsPtr->newGame = FALSE;
@@ -1640,7 +1725,7 @@ GLOBAL_ASM("asm/non_matchings/game/func_8006DCF8.s")
 #endif
 
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
-    if (!D_80123514) {
+    if (!gIsLoading) {
         func_8006DBE4();
         if (get_thread30_level_id_to_load() == 0) {
             gCurrDisplayList = gDisplayLists[gSPTaskNum];
@@ -1648,12 +1733,13 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
             gSPEndDisplayList(gCurrDisplayList++);
         }
     }
-    if (levelId != -1) {
-        load_level_3(levelId, numberOfPlayers, 0, 2, cutsceneId);
-        D_80123514 = FALSE;
+    if (levelId != (s32) SPECIAL_MAP_ID_NO_LEVEL) {
+        //!@bug: Forcing the plane here makes all AI use plane paths. This can be seen most evidently in the Ancient Lake demo.
+        load_level_3(levelId, numberOfPlayers, 0, VEHICLE_PLANE, cutsceneId);
+        gIsLoading = FALSE;
         return;
     }
-    D_80123514 = TRUE;
+    gIsLoading = TRUE;
 }
 
 void calc_and_alloc_heap_for_settings(void) {
@@ -1697,17 +1783,21 @@ void calc_and_alloc_heap_for_settings(void) {
     gSettingsPtr->courseTimesPtr[0] = (u16 *)((u8 *)gSettingsPtr + sizes[11]);
     gSettingsPtr->courseTimesPtr[1] = (u16 *)((u8 *)gSettingsPtr + sizes[12]);
     gSettingsPtr->courseTimesPtr[2] = (u16 *)((u8 *)gSettingsPtr + sizes[13]);
-    gSettingsPtr->unk4C = &D_80121250;
-    D_800DD37C = 263;
+    gSettingsPtr->unk4C = (Settings4C *) &D_80121250;
+    gSaveDataFlags = // Set bits 0/1/2/8 and wipe out all others
+        SAVE_DATA_FLAG_READ_FLAP_TIMES |
+        SAVE_DATA_FLAG_READ_COURSE_TIMES |
+        SAVE_DATA_FLAG_READ_SAVE_DATA |
+        SAVE_DATA_FLAG_READ_EEPROM_SETTINGS;
 }
 
 void func_8006E5BC(void) {
     s32 i, j;
-    gSettingsPtr->gObjectCount = get_number_of_active_players();
+    gSettingsPtr->gNumRacers = get_number_of_active_players();
     for (i = 0; i < 8; i++) {
         gSettingsPtr->racers[i].best_times = 0;
         gSettingsPtr->racers[i].character = get_character_id_from_slot(i);
-        if (gSettingsPtr->gObjectCount >= 2) {
+        if (gSettingsPtr->gNumRacers >= 2) {
             gSettingsPtr->racers[i].starting_position = i;
         } else if (is_in_two_player_adventure()) {
             gSettingsPtr->racers[i].starting_position = 5 - i;
@@ -1739,7 +1829,7 @@ void func_8006E770(Settings *settings, s32 arg1) {
 
     get_number_of_levels_and_worlds(&numLevels, &numWorlds);
     temp_v0 = (u16 *)get_misc_asset(MISC_ASSET_UNK17);
-    for (i = 0; i < 3; i++) { // 3 = number of save files?
+    for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         for (j = 0; j < numLevels; j++) {
             index = (j * 12) + (i * 4);
             if (arg1 & 1) {
@@ -1760,7 +1850,7 @@ void func_8006E994(Settings *settings) {
     s32 sp1C;
 
     get_number_of_levels_and_worlds(&sp1C, &sp20);
-    settings->newGame = 1;
+    settings->newGame = TRUE;
 
     for (i = 0; i < sp20; i++) {
         settings->balloonsPtr[i] = 0;
@@ -1795,173 +1885,270 @@ s8 is_game_paused(void) {
     return gIsPaused;
 }
 
-s8 func_8006EAB0(void) {
-    return D_80123516;
+/**
+ * Returns the status of the post-race shrunken viewport.
+*/
+s8 is_postrace_viewport_active(void) {
+    return gPostRaceViewPort;
 }
 
 /**
  * Sets and returns (nonzero) the message set when pressing the reset button.
+ * Official name: mainResetPressed
  */
 s32 is_reset_pressed(void) {
-    if (D_80123560[0] == 0) {
-        D_80123560[0] = (s32)((osRecvMesg(&gNMIMesgQueue, NULL, OS_MESG_NOBLOCK) + 1) != 0);
+    if (gNMIMesgBuf == 0) {
+        gNMIMesgBuf = (s32)((osRecvMesg(&gNMIMesgQueue, NULL, OS_MESG_NOBLOCK) + 1) != 0);
     }
-    return D_80123560[0];
+    return gNMIMesgBuf;
 }
 
 s32 func_8006EB14(void) {
-    return D_801234F4;
+    return gPlayableMapId;
 }
 
-/* Unused? */
-void func_8006EB24(void) {
-    D_800DD37C |= 0x01;
+/**
+ * Marks a flag to read flap times from the eeprom
+ */
+UNUSED void mark_to_read_flap_times(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_READ_FLAP_TIMES;
 }
 
-/* Unused? */
-void func_8006EB40(void) {
-    D_800DD37C |= 0x02;
+/**
+ * Marks a flag to read course times from the eeprom
+ */
+UNUSED void mark_to_read_course_times(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_READ_COURSE_TIMES;
 }
 
-void func_8006EB5C(void) {
-    D_800DD37C |= 0x03;
+/**
+ * Marks a flag to read both flap times and course times from the eeprom
+ */
+void mark_to_read_flap_and_course_times(void) {
+    gSaveDataFlags |= (SAVE_DATA_FLAG_READ_FLAP_TIMES | SAVE_DATA_FLAG_READ_COURSE_TIMES);
 }
 
-void func_8006EB78(s32 arg0) {
-    D_800DD37C &= -0x301;
-    D_800DD37C |= (0x04 | ((arg0 & 3) << 8));
+/**
+ * Marks a flag to read the save file from the passed index from flash.
+ */
+void mark_read_save_file(s32 saveFileIndex) {
+    //Wipe out bits 8 and 9
+    gSaveDataFlags &= ~(SAVE_DATA_FLAG_READ_EEPROM_SETTINGS | SAVE_DATA_FLAG_WRITE_EEPROM_SETTINGS);
+    //Place saveFileIndex at bits 8 and 9 and set bit 2
+    gSaveDataFlags |= (SAVE_DATA_FLAG_READ_SAVE_DATA | ((saveFileIndex & SAVE_DATA_FLAG_INDEX_VALUE) << 8));
 }
 
-void func_8006EBA8(void) {
-    D_800DD37C |= 0x08;
+/**
+ * Marks a flag to read all save file data from flash.
+ */
+void mark_read_all_save_files(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_READ_ALL_SAVE_DATA; //Set bit 3
 }
 
-void func_8006EBC4(void) {
-    D_800DD37C |= 0x10;
+/**
+ * Marks a flag to write flap times to the eeprom
+ */
+void mark_to_write_flap_times(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_WRITE_FLAP_TIMES;
 }
 
-void func_8006EBE0(void) {
-    D_800DD37C |= 0x20;
+/**
+ * Marks a flag to write course times to the eeprom
+ */
+void mark_to_write_course_times(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_WRITE_COURSE_TIMES;
 }
 
-void func_8006EBFC(void) {
-    D_800DD37C |= 0x30;
+/**
+ * Marks a flag to write both flap times and course times to the eeprom
+ */
+void mark_to_write_flap_and_course_times(void) {
+    gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_FLAP_TIMES | SAVE_DATA_FLAG_WRITE_COURSE_TIMES);
 }
 
-void func_8006EC18(s32 arg0) {
-    D_800DD37C &= -0xC01;
-    D_800DD37C |= (0x40 | ((arg0 & 3) << 0xA));
+/**
+ * Forcefully marks a flag to write a save file to flash.
+ * Official Name: mainSaveGame
+ */
+void force_mark_write_save_file(s32 saveFileIndex) {
+    gSaveDataFlags &= ~SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER_BITS; //Wipe out bits 10 and 11
+    gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_SAVE_DATA | ((saveFileIndex & 3) << 10)); //Set bit 6 and place saveFileIndex into bits 10 and 11
 }
 
-void func_8006EC48(s32 saveFileIndex) {
+/**
+ * Marks a flag to write a save file to flash as long as we're not in tracks mode, and we're in the draw game render context.
+ * This should prevent save data from being overwritten outside of Adventure Mode.
+ * Official Name: mainSaveGame2
+ */
+void safe_mark_write_save_file(s32 saveFileIndex) {
     if (sRenderContext == DRAW_GAME && !is_in_tracks_mode()) {
-        D_800DD37C &= -0xC01;
-        D_800DD37C |= (0x40 | ((saveFileIndex & 3) << 0xA));
+        gSaveDataFlags &= ~SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER_BITS; //Wipe out bits 10 and 11
+        gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_SAVE_DATA | ((saveFileIndex & 3) << 10));; //Set bit 6 and place saveFileIndex into bits 10 and 11
     }
 }
 
-void func_8006ECAC(s32 arg0) {
-    D_800DD37C = ((arg0 & 0x03) << 10) | 0x80;
+/**
+ * Marks a flag to erase a save file from flash later
+ */
+void mark_save_file_to_erase(s32 saveFileIndex) {
+    //Set bit 7 and and place saveFileIndex into bits 10 and 11 while wiping everything else
+    gSaveDataFlags = SAVE_DATA_FLAG_ERASE_SAVE_DATA | ((saveFileIndex & 3) << 10);
 }
 
-/* Unused? */
-void func_8006ECC4(void) {
-    D_800DD37C |= 0x100;
+/**
+ * Marks a flag to read eeprom settings from flash later
+ * @bug: Because this is the same bit used for reading save files,
+ *       it will change the save file number to read from
+ */
+UNUSED void mark_read_eeprom_settings(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_READ_EEPROM_SETTINGS; // Set bit 8
 }
 
-//Always called after updating a value in sEepromSettings
-void func_8006ECE0(void) {
-    D_800DD37C |= 0x200;
+/**
+ * Marks a flag to write eeprom settings to flash later
+ * @bug: Because this is the same bit used for reading save files,
+ *       it will change the save file number to read from
+ */
+void mark_write_eeprom_settings(void) {
+    gSaveDataFlags |= SAVE_DATA_FLAG_WRITE_EEPROM_SETTINGS; // Set bit 9
 }
 
-GLOBAL_ASM("asm/non_matchings/game/func_8006ECFC.s")
+/**
+ * Allocates an amount of memory for the number of players passed in.
+ */
+void calc_and_alloc_heap_for_hud(s32 numberOfPlayers) {
+    s32 newVar;
+    s32 totalSize;
 
-s32 func_8006EFB8(void) {
-    //Could be SP_DMEM_START / CACHERR_EE / SR_FR / M_K0 / LEO_STATUS_BUFFER_MANAGER_INTERRUPT
+    if (numberOfPlayers != D_8012350C) {
+        newVar = numberOfPlayers;
+        D_8012350C = newVar;
+        set_free_queue_state(0);
+        free_from_memory_pool(gDisplayLists[0]);
+        free_from_memory_pool(gDisplayLists[1]);
+        totalSize =
+            ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords)))
+            + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix)))
+            + ((gNumHudVertsPerPlayer[newVar] * sizeof(Vertex)))
+            + ((gNumHudTrisPerPlayer[newVar] * sizeof(Triangle)));
+        gDisplayLists[0] = (Gfx *) allocate_at_address_in_main_pool(totalSize, (u8 *) gDisplayLists[0], COLOUR_TAG_RED);
+        gDisplayLists[1] = (Gfx *) allocate_at_address_in_main_pool(totalSize, (u8 *) gDisplayLists[1], COLOUR_TAG_YELLOW);
+        if ((gDisplayLists[0] == NULL) || gDisplayLists[1] == NULL) {
+            if (gDisplayLists[0] != NULL) {
+                free_from_memory_pool(gDisplayLists[0]);
+                gDisplayLists[0] = NULL;
+            }
+            if (gDisplayLists[1] != NULL) {
+                free_from_memory_pool(gDisplayLists[1]);
+                gDisplayLists[1] = NULL;
+            }
+            default_alloc_heap_for_hud();
+        }
+        gHudMatrices[0] = (MatrixS *)((u8 *) gDisplayLists[0] + ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords))));
+        gHudTriangles[0] = (TriangleList *)((u8 *) gHudMatrices[0] + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix))));
+        gHudVertices[0] = (Vertex *)((u8 *) gHudTriangles[0] + ((gNumHudTrisPerPlayer[newVar] * sizeof(Triangle))));
+        gHudMatrices[1] = (MatrixS *)((u8 *) gDisplayLists[1] + ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords))));
+        gHudTriangles[1] = (TriangleList *)((u8 *) gHudMatrices[1] + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix))));
+        gHudVertices[1] = (Vertex *)((u8 *) gHudTriangles[1] + ((gNumHudTrisPerPlayer[newVar] * sizeof(Triangle))));
+        gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[newVar];
+        gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[newVar];
+        gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[newVar];
+        gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[newVar];
+        set_free_queue_state(2);
+    }
+    gCurrDisplayList = gDisplayLists[gSPTaskNum];
+    gGameCurrMatrix = gHudMatrices[gSPTaskNum];
+    gGameCurrTriList = gHudTriangles[gSPTaskNum];
+    gGameCurrVertexList = gHudVertices[gSPTaskNum];
+
+    gDPFullSync(gCurrDisplayList++);
+    gSPEndDisplayList(gCurrDisplayList++);
+}
+
+/**
+ * Returns FALSE if dmem doesn't begin with a -1. This is checked on every main game loop iteration.
+ */
+s32 check_dmem_validity(void) {
     if (IO_READ(SP_DMEM_START) != -1U) {
         return FALSE;
     }
     return TRUE;
 }
 
-#ifdef NON_EQUIVALENT
+/**
+ * Defaults allocations for 4 players
+ */
+void default_alloc_heap_for_hud(void) {
+    s32 numberOfPlayers;
+    s32 totalSize;
 
-// Not close to matching, but should be the same functionality-wise.
-void func_8006EFDC(void) {
-    s32 size1, size2, size3, size4, totalSize;
+    numberOfPlayers = FOUR_PLAYERS;
+    D_8012350C = numberOfPlayers;
+    totalSize = (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords))
+        + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix))
+        + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex))
+        + (gNumHudTrisPerPlayer[numberOfPlayers] * sizeof(Triangle));
 
-    D_8012350C = 3;
+    gDisplayLists[0] = (Gfx *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_RED);
+    gHudMatrices[0] = (MatrixS *)((u8 *)gDisplayLists[0] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
+    gHudVertices[0] = (Vertex *)((u8 *)gHudMatrices[0] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
+    gHudTriangles[0] = (TriangleList *)((u8 *)gHudVertices[0] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
-    size1 = (gNumF3dCmdsPerPlayer[3] * sizeof(Gwords));
-    size2 = (gNumHudMatPerPlayer[3] * sizeof(Mtx));
-    size3 = (gNumHudVertsPerPlayer[3] * sizeof(Vertex));
-    size4 = (gNumHudTrisPerPlayer[3] * sizeof(Triangle));
-    totalSize = size1 + size2 + size3 + size4;
+    gDisplayLists[1] = (Gfx *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_YELLOW);
+    gHudMatrices[1] = (MatrixS *)((u8 *)gDisplayLists[1] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
+    gHudVertices[1] = (Vertex *)((u8 *)gHudMatrices[1] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
+    gHudTriangles[1] = (TriangleList *)((u8 *)gHudVertices[1] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
-    gDisplayLists[0] = (u8 *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_RED);
-    gHudMatrices[0] = (u8 *)gDisplayLists[0] + size1;
-    gHudVertices[0] = (u8 *)gHudMatrices[0] + size2;
-    gHudTriangles[0] = (u8 *)gHudVertices[0] + size3;
-
-    gDisplayLists[1] = (u8 *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_YELLOW);
-    gHudMatrices[1] = (u8 *)gDisplayLists[1] + size1;
-    gHudVertices[1] = (u8 *)gHudMatrices[1] + size2;
-    gHudTriangles[1] = (u8 *)gHudVertices[1] + size3;
-
-    gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[3];
-    gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[3];
-    gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[3];
-    gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[3];
+    gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[numberOfPlayers];
+    gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[numberOfPlayers];
+    gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[numberOfPlayers];
+    gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[numberOfPlayers];
 }
-#else
-GLOBAL_ASM("asm/non_matchings/game/func_8006EFDC.s")
-#endif
 
 void func_8006F140(s32 arg0) {
-    if (D_800DD394 == 0) {
-        D_800DD394 = 0x28;
+    if (gLevelLoadTimer == 0) {
+        gLevelLoadTimer = 40;
         D_80123524 = 0;
         D_80123526 = 0;
-        if (arg0 == 1) {
-            func_800C01D8(&D_800DD41C);
+        if (arg0 == 1) { //FADE_BARNDOOR_HORIZONTAL?
+            transition_begin(&D_800DD41C);
         }
-        if (arg0 == 3) {
-            D_800DD394 = 0x11A;
-            func_800C01D8(&D_800DD424);
+        if (arg0 == 3) { //FADE_CIRCLE?
+            gLevelLoadTimer = 282;
+            transition_begin(&D_800DD424);
         }
-        if (arg0 == 4) {
-            D_800DD394 = 0x168;
-            func_800C01D8(&D_800DD424);
+        if (arg0 == 4) { //FADE_WAVES?
+            gLevelLoadTimer = 360;
+            transition_begin(&D_800DD424);
         }
-        if (arg0 == 0) {
-            D_800DD394 = 2;
+        if (arg0 == 0) { //FADE_FULLSCREEN?
+            gLevelLoadTimer = 2;
         }
     }
 }
 
-// Unused?
-void func_8006F20C(void) {
-    if (D_800DD394 == 0) {
-        func_800C01D8(&D_800DD41C);
-        D_800DD394 = 0x28;
+UNUSED void func_8006F20C(void) {
+    if (gLevelLoadTimer == 0) {
+        transition_begin(&D_800DD41C);
+        gLevelLoadTimer = 40;
         D_80123524 = 1;
     }
 }
 
 void func_8006F254(void) {
-    if (D_800DD394 == 0) {
-        func_800C01D8(&D_800DD41C);
-        D_800DD394 = 0x28;
+    if (gLevelLoadTimer == 0) {
+        transition_begin(&D_800DD41C);
+        gLevelLoadTimer = 40;
         D_80123524 = 2;
     }
 }
 
 void func_8006F29C(void) {
-    if (D_800DD394 == 0) {
-        if ((gSettingsPtr->trophies & 0xFF) == 0xFF && !(gSettingsPtr->cutsceneFlags & 1) && gSettingsPtr->bosses & 1) {
-            gSettingsPtr->cutsceneFlags |= 1;
-            func_800C01D8(&D_800DD41C);
-            D_800DD394 = 0x28;
+    if (gLevelLoadTimer == 0) {
+        if ((gSettingsPtr->trophies & 0xFF) == 0xFF && !(gSettingsPtr->cutsceneFlags & CUTSCENE_LIGHTHOUSE_ROCKET) && gSettingsPtr->bosses & 1) {
+            gSettingsPtr->cutsceneFlags |= CUTSCENE_LIGHTHOUSE_ROCKET;
+            transition_begin(&D_800DD41C);
+            gLevelLoadTimer = 40;
             D_80123525 = 0x2D;
             D_80123524 = 3;
         }
@@ -1969,10 +2156,10 @@ void func_8006F29C(void) {
 }
 
 void func_8006F338(s32 arg0) {
-    if (D_800DD394 == 0) {
+    if (gLevelLoadTimer == 0) {
         D_80123525 = arg0;
-        func_800C01D8(&D_800DD41C);
-        D_800DD394 = 0x28;
+        transition_begin(&D_800DD41C);
+        gLevelLoadTimer = 40;
         D_80123524 = 4;
     }
 }
@@ -2001,7 +2188,7 @@ void func_8006F398(void) {
 }
 
 void func_8006F42C(void) {
-    D_800DD3F0 = 2;
+    gDrawFrameTimer = 2;
 }
 
 /**
@@ -2025,6 +2212,7 @@ void pre_intro_loop(void) {
 
 /**
  * Returns TRUE if the game doesn't detect any controllers.
+ * Official name: mainDemoOnly
  */
 s32 is_controller_missing(void) {
     if (sControllerStatus == CONTROLLER_MISSING) {
@@ -2040,9 +2228,7 @@ s32 is_controller_missing(void) {
  * A false read, meaning you're caught running an illegitimate copy, will force the game to pause when you enter the world.
  */
 s32 check_imem_validity(void) {
-    /*(SP_STATUS_HALT | SP_STATUS_BROKE | SP_STATUS_DMA_BUSY | SP_STATUS_IO_FULL | SP_STATUS_INTR_BREAK | SP_STATUS_YIELD |
-    SP_STATUS_YIELDED | SP_STATUS_TASKDONE | SP_STATUS_TASKDONE | SP_STATUS_RSPSIGNAL | SP_STATUS_SIG5))*/
-    if (IO_READ(SP_IMEM_START) != 0x17D7) {
+    if (IO_READ(SP_IMEM_START) != CIC_ID) {
         return FALSE;
     }
     return TRUE;

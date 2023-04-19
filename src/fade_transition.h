@@ -12,11 +12,17 @@
 #define FADE_BARNDOOR_DIAGONAL   5
 #define FADE_DISABLED            6
 
+//Fade transiton flags live at the top two bits of the fade type.
+#define FADE_FLAG_NONE 0
+#define FADE_FLAG_UNK1 (1 << 6)
+#define FADE_FLAG_UNK2 (1 << 7)
+#define FADE_FLAG_BOTH (2 << 6)
+
 #define FADE_COLOR(red, green, blue) red, green, blue
 #define FADE_COLOR_BLACK FADE_COLOR(0, 0, 0)
 #define FADE_COLOR_WHITE FADE_COLOR(255, 255, 255)
 
-#define FADE_TRANSITION(type, color, duration, unk6) { type, color, duration, unk6 }
+#define FADE_TRANSITION(type, flags, color, duration, unk6) { (type & 0x3F) | (flags & 0xC0), color, duration, unk6 }
 
 enum TransitionStatus {
     TRANSITION_LEVELSWAP = -1,
@@ -36,28 +42,28 @@ typedef struct FadeTransition {
 
 extern u32 osTvType;
 
-void func_800C0170(void);
-void func_800C0180(void);
-u32 func_800C018C(void);
+void enable_new_screen_transitions(void);
+void disable_new_screen_transitions(void);
+u32 fxFadeOn(void);
 void transition_end(void);
 s32 handle_transitions(s32 updateRate);
-void render_fade_transition(Gfx **dlist, Mtx **mats, VertexList **verts);
-void render_fade_fullscreen(Gfx **dlist, Mtx **mats, VertexList **verts);
-void render_fade_barndoor_horizontal(Gfx **dlist, Mtx **mats, VertexList **verts);
-void render_fade_barndoor_vertical(Gfx **dlist, Mtx **mats, VertexList **verts);
-void render_fade_barndoor_diagonal(Gfx **dlist, Mtx **mats, VertexList **verts);
-void render_fade_disabled(Gfx **dlist, Mtx **mats, VertexList **verts);
-void func_800C0780(FadeTransition *transition);
+void render_fade_transition(Gfx **dList, MatrixS **mats, Vertex **verts);
+void render_fade_fullscreen(Gfx **dList, MatrixS **mats, Vertex **verts);
+void render_fade_barndoor_horizontal(Gfx **dList, MatrixS **mats, Vertex **verts);
+void render_fade_barndoor_vertical(Gfx **dList, MatrixS **mats, Vertex **verts);
+void render_fade_barndoor_diagonal(Gfx **dList, MatrixS **mats, Vertex **verts);
+void render_fade_disabled(Gfx **dList, MatrixS **mats, Vertex **verts);
+void transition_fullscreen_start(FadeTransition *transition);
+void func_800C2640(FadeTransition *transition);
+void func_800C0834(s32 updateRate);
+void func_800C27A0(s32 updateRate);
+s32 transition_begin(FadeTransition *transition);
 
-void render_fade_circle(Gfx **dlist, Mtx **mats, VertexList **verts); //Non Matching
-void render_fade_waves(Gfx **dlist, Mtx **mats, VertexList **verts); //Non Matching
-void func_800C0834(s32); //Non Matching
+void render_fade_circle(Gfx **dList, MatrixS **mats, Vertex **verts); //Non Matching
+void render_fade_waves(Gfx **dList, MatrixS **mats, Vertex **verts); //Non Matching
 void func_800C1130(s32); //Non Matching
 void func_800C1EE8(s32); //Non Matching
-void func_800C27A0(s32 arg0); //Non Matching
 void func_800C0B00(FadeTransition *transition, s32, s32, s16*, s8*, s8*, s8*, s8*, s8*); //Non Matching
 void func_800C15D4(FadeTransition *transition); //Non Matching
-void func_800C2640(FadeTransition *transition); //Non Matching
-s32 func_800C01D8(FadeTransition *transition); //Non Matching
 
 #endif

@@ -16,6 +16,9 @@
 #define OS_SC_ID_VIDEO  2
 #define OS_SC_ID_PRENMI 3
 
+#define OSMESG_SWAP_BUFFER 0
+#define MESG_SKIP_BUFFER_SWAP 8
+
 /*
  * OSScTask state
  */
@@ -60,13 +63,12 @@ typedef struct OSScTask_s {
     OSTask              list;
     OSMesgQueue         *msgQ;
     OSMesg              msg;
-#ifndef _FINALROM                       /* all #ifdef items should    */
-    OSTime              startTime;      /* remain at the end!!, or    */
-    OSTime              totalTime;      /* possible conflict if       */
-#endif                                  /* FINALROM library used with */
-                                        /* non FINALROM code          */
-
+    s32                 unk58;
+    s32                 unk5C;
+    s32                 unk60;
+    s32                 unk64;
     s32                 unk68;          /* Added by Rare?             */
+    s32                 unk6C;          /* Task ID, used in debug functions in JFG */
 } OSScTask;
 
 typedef struct SCClient_s {

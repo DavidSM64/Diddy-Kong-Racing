@@ -23,9 +23,9 @@ glabel func_80021104
 /* 021D54 80021154 14810020 */  bne   $a0, $at, .L800211D8
 /* 021D58 80021158 2881000A */   slti  $at, $a0, 0xa
 /* 021D5C 8002115C 80A40030 */  lb    $a0, 0x30($a1)
-/* 021D60 80021160 0C01997A */  jal   func_800665E8
+/* 021D60 80021160 0C01997A */  jal   set_active_camera
 /* 021D64 80021164 AFA30018 */   sw    $v1, 0x18($sp)
-/* 021D68 80021168 0C01A73F */  jal   func_80069CFC
+/* 021D68 80021168 0C01A73F */  jal   get_active_camera_segment_no_cutscenes
 /* 021D6C 8002116C 00000000 */   nop   
 /* 021D70 80021170 8FA30018 */  lw    $v1, 0x18($sp)
 /* 021D74 80021174 C444000C */  lwc1  $f4, 0xc($v0)
@@ -57,8 +57,8 @@ glabel func_80021104
 /* 021DD8 800211D8 1420001C */  bnez  $at, .L8002124C
 /* 021DDC 800211DC 28810012 */   slti  $at, $a0, 0x12
 /* 021DE0 800211E0 1020001A */  beqz  $at, .L8002124C
-/* 021DE4 800211E4 3C188012 */   lui   $t8, %hi(gObjectStructArrayPtr) # $t8, 0x8012
-/* 021DE8 800211E8 8F18AEE4 */  lw    $t8, %lo(gObjectStructArrayPtr)($t8)
+/* 021DE4 800211E4 3C188012 */   lui   $t8, %hi(gRacers) # $t8, 0x8012
+/* 021DE8 800211E8 8F18AEE4 */  lw    $t8, %lo(gRacers)($t8)
 /* 021DEC 800211EC 0004C880 */  sll   $t9, $a0, 2
 /* 021DF0 800211F0 03194021 */  addu  $t0, $t8, $t9
 /* 021DF4 800211F4 8D02FFD8 */  lw    $v0, -0x28($t0)

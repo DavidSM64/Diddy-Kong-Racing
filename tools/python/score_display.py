@@ -75,7 +75,7 @@ class ScoreDisplay:
         
     def makeLine(self, char, length, title=None):
         if title == None:
-            return ' ' + (char * length) + ' \n'
+            return ' ' + (char * length) + '\n'
         else:
             lineSideLength = (length - len(title) - 2) // 2
             leftLength = lineSideLength
@@ -84,11 +84,12 @@ class ScoreDisplay:
                 rightLength += 1
             if leftLength + rightLength <= 0:
                 if leftLength + rightLength == 0:
-                    return '  ' + title + ' \n'
+                    return '  ' + title + '\n'
                 else:
-                    return ' ' + title + ' \n'
+                    return ' ' + title + '\n'
             else:
-                return ' ' + (char * leftLength) + ' ' + title + ' ' + (char * rightLength) + ' \n'
+                return ' ' + (char * leftLength) + ' ' + title + \
+                        (' ' + char * rightLength if char != ' ' else '') + '\n'
         
     def getGameStatusDisplay(self, status, dashLen):
         out = ''

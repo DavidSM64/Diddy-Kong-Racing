@@ -1,7 +1,7 @@
 glabel func_800A1C04
 /* 0A2804 800A1C04 27BDFFC0 */  addiu $sp, $sp, -0x40
-/* 0A2808 800A1C08 3C0F8012 */  lui   $t7, %hi(D_80126D37) # $t7, 0x8012
-/* 0A280C 800A1C0C 91EF6D37 */  lbu   $t7, %lo(D_80126D37)($t7)
+/* 0A2808 800A1C08 3C0F8012 */  lui   $t7, %hi(gNumActivePlayers) # $t7, 0x8012
+/* 0A280C 800A1C0C 91EF6D37 */  lbu   $t7, %lo(gNumActivePlayers)($t7)
 /* 0A2810 800A1C10 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0A2814 800A1C14 AFA40040 */  sw    $a0, 0x40($sp)
 /* 0A2818 800A1C18 AFA50044 */  sw    $a1, 0x44($sp)
@@ -19,16 +19,16 @@ glabel func_800A1C04
 /* 0A2844 800A1C44 AFA70038 */   sw    $a3, 0x38($sp)
 /* 0A2848 800A1C48 8FA40040 */  lw    $a0, 0x40($sp)
 /* 0A284C 800A1C4C 8FA50048 */  lw    $a1, 0x48($sp)
-/* 0A2850 800A1C50 0C028F39 */  jal   func_800A3CE4
+/* 0A2850 800A1C50 0C028F39 */  jal   render_race_start
 /* 0A2854 800A1C54 00000000 */   nop   
 /* 0A2858 800A1C58 8FA40044 */  lw    $a0, 0x44($sp)
 /* 0A285C 800A1C5C 8FA50048 */  lw    $a1, 0x48($sp)
-/* 0A2860 800A1C60 0C029D48 */  jal   func_800A7520
+/* 0A2860 800A1C60 0C029D48 */  jal   render_weapon_hud
 /* 0A2864 800A1C64 00000000 */   nop   
-/* 0A2868 800A1C68 0C006E9D */  jal   get_object_struct_array
+/* 0A2868 800A1C68 0C006E9D */  jal   get_racer_objects
 /* 0A286C 800A1C6C 27A40034 */   addiu $a0, $sp, 0x34
-/* 0A2870 800A1C70 3C038012 */  lui   $v1, %hi(D_80126D37) # $v1, 0x8012
-/* 0A2874 800A1C74 90636D37 */  lbu   $v1, %lo(D_80126D37)($v1)
+/* 0A2870 800A1C70 3C038012 */  lui   $v1, %hi(gNumActivePlayers) # $v1, 0x8012
+/* 0A2874 800A1C74 90636D37 */  lbu   $v1, %lo(gNumActivePlayers)($v1)
 /* 0A2878 800A1C78 8FA70038 */  lw    $a3, 0x38($sp)
 /* 0A287C 800A1C7C 24010001 */  li    $at, 1
 /* 0A2880 800A1C80 10610005 */  beq   $v1, $at, .L800A1C98
@@ -149,7 +149,7 @@ glabel func_800A1C04
 /* 0A2A20 800A1E20 8FBF0014 */   lw    $ra, 0x14($sp)
 /* 0A2A24 800A1E24 8FA50048 */  lw    $a1, 0x48($sp)
 .L800A1E28:
-/* 0A2A28 800A1E28 0C029055 */  jal   func_800A4154
+/* 0A2A28 800A1E28 0C029055 */  jal   render_racer_bananas
 /* 0A2A2C 800A1E2C 00E02025 */   move  $a0, $a3
 .L800A1E30:
 /* 0A2A30 800A1E30 0C01A142 */  jal   func_80068508

@@ -3,15 +3,38 @@
 
 #include "sound_ids.h"
 #include "sequence_ids.h"
+#include "asset_enums.h"
 
 /* All the enums defined here can be used in asset files */
+
+// Alias for brevity.
+typedef AssetLevelHeadersEnum MapId;
+
+// There are a few instances of comparing MapId with special, negative values.
+typedef enum SpecialMapId {
+    SPECIAL_MAP_ID_UNK_NEG10 = -10,
+    SPECIAL_MAP_ID_UNK_NEG2 = -2,
+    SPECIAL_MAP_ID_NO_LEVEL = -1,
+} SpecialMapId;
 
 typedef enum Vehicle {
     VEHICLE_CAR,
     VEHICLE_HOVERCRAFT,
     VEHICLE_PLANE,
+    VEHICLE_FLYING_CAR,
+    VEHICLE_LOOPDELOOP,
+    VEHICLE_TRICKY,
+    VEHICLE_BLUEY,
+    VEHICLE_SMOKEY,
+    VEHICLE_PTERODACTYL,
+    VEHICLE_SNOWBALL,
+    VEHICLE_CARPET,
+    VEHICLE_BUBBLER,
+    VEHICLE_WIZPIG,
+    VEHICLE_ROCKET,
 
-    NUMBER_OF_VEHICLE_TYPES
+    NUMBER_OF_VEHICLE_TYPES,
+    NUMBER_OF_PLAYER_VEHICLES = 3
 } Vehicle;
 
 typedef enum CameraMode {
@@ -101,8 +124,8 @@ typedef enum MiscAsset {
     MISC_ASSET_UNK12,
     MISC_ASSET_UNK13,
     MISC_ASSET_UNK14,
-    MISC_ASSET_UNK15,
-    MISC_ASSET_UNK16,
+    MISC_ASSET_SHIELD_DATA,
+    MISC_ASSET_MAGNET_DATA,
     MISC_ASSET_UNK17,
     MISC_ASSET_UNK18,
     MISC_ASSET_UNK19,
@@ -163,7 +186,7 @@ typedef enum SurfaceType {
     SURFACE_DEFAULT,
     SURFACE_GRASS,
     SURFACE_SAND,
-    SURFACE_UNK03,
+    SURFACE_ZIP_PAD,
     SURFACE_STONE,
     SURFACE_UNK05,
     SURFACE_UNK06,

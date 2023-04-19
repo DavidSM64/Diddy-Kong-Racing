@@ -6,8 +6,8 @@ glabel D_800E5630
 glabel func_8001955C
 /* 01A15C 8001955C 27BDFF40 */  addiu $sp, $sp, -0xc0
 /* 01A160 80019560 AFB60040 */  sw    $s6, 0x40($sp)
-/* 01A164 80019564 3C168012 */  lui   $s6, %hi(D_8011AED0) # $s6, 0x8012
-/* 01A168 80019568 8ED6AED0 */  lw    $s6, %lo(D_8011AED0)($s6)
+/* 01A164 80019564 3C168012 */  lui   $s6, %hi(gNumberOfCheckpoints) # $s6, 0x8012
+/* 01A168 80019568 8ED6AED0 */  lw    $s6, %lo(gNumberOfCheckpoints)($s6)
 /* 01A16C 8001956C AFA600C8 */  sw    $a2, 0xc8($sp)
 /* 01A170 80019570 30CE00FF */  andi  $t6, $a2, 0xff
 /* 01A174 80019574 01C03025 */  move  $a2, $t6
@@ -44,7 +44,7 @@ glabel func_8001955C
 /* 01A1E8 800195E8 27B50094 */  addiu $s5, $sp, 0x94
 .L800195EC:
 /* 01A1EC 800195EC 02202025 */  move  $a0, $s1
-/* 01A1F0 800195F0 0C006E87 */  jal   func_8001BA1C
+/* 01A1F0 800195F0 0C006E87 */  jal   find_next_checkpoint_node
 /* 01A1F4 800195F4 02802825 */   move  $a1, $s4
 /* 01A1F8 800195F8 C448001C */  lwc1  $f8, 0x1c($v0)
 /* 01A1FC 800195FC C44A0008 */  lwc1  $f10, 8($v0)
@@ -98,19 +98,19 @@ glabel func_8001955C
 /* 01A2B4 800196B4 00000000 */  nop   
 .L800196B8:
 /* 01A2B8 800196B8 4406A000 */  mfc1  $a2, $f20
-/* 01A2BC 800196BC 0C00898F */  jal   func_8002263C
+/* 01A2BC 800196BC 0C00898F */  jal   cubic_spline_interpolation
 /* 01A2C0 800196C0 27A70070 */   addiu $a3, $sp, 0x70
 /* 01A2C4 800196C4 4406A000 */  mfc1  $a2, $f20
 /* 01A2C8 800196C8 E7A00080 */  swc1  $f0, 0x80($sp)
 /* 01A2CC 800196CC 27A40094 */  addiu $a0, $sp, 0x94
 /* 01A2D0 800196D0 00002825 */  move  $a1, $zero
-/* 01A2D4 800196D4 0C00898F */  jal   func_8002263C
+/* 01A2D4 800196D4 0C00898F */  jal   cubic_spline_interpolation
 /* 01A2D8 800196D8 27A7006C */   addiu $a3, $sp, 0x6c
 /* 01A2DC 800196DC 4406A000 */  mfc1  $a2, $f20
 /* 01A2E0 800196E0 46000586 */  mov.s $f22, $f0
 /* 01A2E4 800196E4 27A40084 */  addiu $a0, $sp, 0x84
 /* 01A2E8 800196E8 00002825 */  move  $a1, $zero
-/* 01A2EC 800196EC 0C00898F */  jal   func_8002263C
+/* 01A2EC 800196EC 0C00898F */  jal   cubic_spline_interpolation
 /* 01A2F0 800196F0 27A70068 */   addiu $a3, $sp, 0x68
 /* 01A2F4 800196F4 C7A20070 */  lwc1  $f2, 0x70($sp)
 /* 01A2F8 800196F8 C7AE006C */  lwc1  $f14, 0x6c($sp)

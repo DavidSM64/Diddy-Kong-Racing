@@ -8,7 +8,7 @@ glabel func_80074B34
 /* 07574C 80074B4C 0C01D637 */  jal   get_si_device_status
 /* 075750 80074B50 AFA00040 */   sw    $zero, 0x40($sp)
 /* 075754 80074B54 10400007 */  beqz  $v0, .L80074B74
-/* 075758 80074B58 3C05800E */   lui   $a1, %hi(D_800E773C) # $a1, 0x800e
+/* 075758 80074B58 3C05800E */   lui   $a1, %hi(sDKRacingGhosts) # $a1, 0x800e
 /* 07575C 80074B5C 8FA40058 */  lw    $a0, 0x58($sp)
 /* 075760 80074B60 0C01D6BB */  jal   start_reading_controller_data
 /* 075764 80074B64 AFA2004C */   sw    $v0, 0x4c($sp)
@@ -17,9 +17,9 @@ glabel func_80074B34
 /* 075770 80074B70 8FBF001C */   lw    $ra, 0x1c($sp)
 .L80074B74:
 /* 075774 80074B74 8FA20064 */  lw    $v0, 0x64($sp)
-/* 075778 80074B78 24A5773C */  addiu $a1, %lo(D_800E773C) # addiu $a1, $a1, 0x773c
+/* 075778 80074B78 24A5773C */  addiu $a1, %lo(sDKRacingGhosts) # addiu $a1, $a1, 0x773c
 /* 07577C 80074B7C 10400006 */  beqz  $v0, .L80074B98
-/* 075780 80074B80 3C06800E */   lui   $a2, %hi(D_800E774C) # $a2, 0x800e
+/* 075780 80074B80 3C06800E */   lui   $a2, %hi(sDKRacingGhostFileExt) # $a2, 0x800e
 /* 075784 80074B84 8FAF0068 */  lw    $t7, 0x68($sp)
 /* 075788 80074B88 240EFFFF */  li    $t6, -1
 /* 07578C 80074B8C 3418FFFF */  li    $t8, 65535
@@ -27,7 +27,7 @@ glabel func_80074B34
 /* 075794 80074B94 A4580000 */  sh    $t8, ($v0)
 .L80074B98:
 /* 075798 80074B98 8FA40058 */  lw    $a0, 0x58($sp)
-/* 07579C 80074B9C 24C6774C */  addiu $a2, %lo(D_800E774C) # addiu $a2, $a2, 0x774c
+/* 07579C 80074B9C 24C6774C */  addiu $a2, %lo(sDKRacingGhostFileExt) # addiu $a2, $a2, 0x774c
 /* 0757A0 80074BA0 0C01D93A */  jal   get_file_number
 /* 0757A4 80074BA4 27A70048 */   addiu $a3, $sp, 0x48
 /* 0757A8 80074BA8 144000A1 */  bnez  $v0, .L80074E30

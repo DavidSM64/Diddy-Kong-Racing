@@ -44,7 +44,7 @@ glabel func_800ACA20
 /* 0AD6C8 800ACAC8 E7AA00E0 */   swc1  $f10, 0xe0($sp)
 /* 0AD6CC 800ACACC 27A500D8 */  addiu $a1, $sp, 0xd8
 /* 0AD6D0 800ACAD0 00A03025 */  move  $a2, $a1
-/* 0AD6D4 800ACAD4 0C01BDBB */  jal   func_8006F6EC
+/* 0AD6D4 800ACAD4 0C01BDBB */  jal   f32_matrix_dot
 /* 0AD6D8 800ACAD8 00402025 */   move  $a0, $v0
 /* 0AD6DC 800ACADC 3C1E8012 */  lui   $fp, %hi(D_80127C30) # $fp, 0x8012
 /* 0AD6E0 800ACAE0 27DE7C30 */  addiu $fp, %lo(D_80127C30) # addiu $fp, $fp, 0x7c30
@@ -218,7 +218,7 @@ glabel func_800ACA20
 /* 0AD964 800ACD64 8D6F0000 */  lw    $t7, ($t3)
 /* 0AD968 800ACD68 24180104 */  li    $t8, 260
 /* 0AD96C 800ACD6C AFB80014 */  sw    $t8, 0x14($sp)
-/* 0AD970 800ACD70 0C01A145 */  jal   func_80068514
+/* 0AD970 800ACD70 0C01A145 */  jal   render_sprite_billboard
 /* 0AD974 800ACD74 AFAF0010 */   sw    $t7, 0x10($sp)
 /* 0AD978 800ACD78 8E0E0010 */  lw    $t6, 0x10($s0)
 /* 0AD97C 800ACD7C 26100010 */  addiu $s0, $s0, 0x10
@@ -325,7 +325,7 @@ glabel func_800ACA20
 /* 0ADB04 800ACF04 AC400004 */  sw    $zero, 4($v0)
 /* 0ADB08 800ACF08 24430008 */  addiu $v1, $v0, 8
 /* 0ADB0C 800ACF0C AE230000 */  sw    $v1, ($s1)
-/* 0ADB10 800ACF10 0C01ECF4 */  jal   func_8007B3D0
+/* 0ADB10 800ACF10 0C01ECF4 */  jal   reset_render_settings
 /* 0ADB14 800ACF14 02202025 */   move  $a0, $s1
 .L800ACF18:
 /* 0ADB18 800ACF18 8FBF005C */  lw    $ra, 0x5c($sp)

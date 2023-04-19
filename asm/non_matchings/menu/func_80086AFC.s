@@ -47,7 +47,7 @@ glabel L80086B54
 /* 087798 80086B98 8FBF0014 */   lw    $ra, 0x14($sp)
 .L80086B9C:
 /* 08779C 80086B9C 90640006 */  lbu   $a0, 6($v1)
-/* 0877A0 80086BA0 0C01BB06 */  jal   func_8006EC18
+/* 0877A0 80086BA0 0C01BB06 */  jal   force_mark_write_save_file
 /* 0877A4 80086BA4 AFA60028 */   sw    $a2, 0x28($sp)
 /* 0877A8 80086BA8 3C098012 */  lui   $t1, %hi(D_80126BE4) # $t1, 0x8012
 /* 0877AC 80086BAC 25296BE4 */  addiu $t1, %lo(D_80126BE4) # addiu $t1, $t1, 0x6be4
@@ -58,9 +58,9 @@ glabel L80086B54
 /* 0877C0 80086BC0 0018C900 */  sll   $t9, $t8, 4
 /* 0877C4 80086BC4 01D95021 */  addu  $t2, $t6, $t9
 /* 0877C8 80086BC8 914C0006 */  lbu   $t4, 6($t2)
-/* 0877CC 80086BCC 3C038012 */  lui   $v1, %hi(D_80126530) # $v1, 0x8012
+/* 0877CC 80086BCC 3C038012 */  lui   $v1, %hi(gSavefileData) # $v1, 0x8012
 /* 0877D0 80086BD0 8FA60028 */  lw    $a2, 0x28($sp)
-/* 0877D4 80086BD4 24636530 */  addiu $v1, %lo(D_80126530) # addiu $v1, $v1, 0x6530
+/* 0877D4 80086BD4 24636530 */  addiu $v1, %lo(gSavefileData) # addiu $v1, $v1, 0x6530
 /* 0877D8 80086BD8 000C5880 */  sll   $t3, $t4, 2
 /* 0877DC 80086BDC 006B6821 */  addu  $t5, $v1, $t3
 /* 0877E0 80086BE0 8DB80000 */  lw    $t8, ($t5)
@@ -111,7 +111,7 @@ glabel L80086B54
 /* 087890 80086C90 AFA20038 */   sw    $v0, 0x38($sp)
 .L80086C94:
 /* 087894 80086C94 90E40006 */  lbu   $a0, 6($a3)
-/* 087898 80086C98 0C01BB2B */  jal   func_8006ECAC
+/* 087898 80086C98 0C01BB2B */  jal   mark_save_file_to_erase
 /* 08789C 80086C9C 00000000 */   nop   
 /* 0878A0 80086CA0 3C198012 */  lui   $t9, %hi(D_80126BD4) # $t9, 0x8012
 /* 0878A4 80086CA4 8F396BD4 */  lw    $t9, %lo(D_80126BD4)($t9)
@@ -120,8 +120,8 @@ glabel L80086B54
 /* 0878B0 80086CB0 00196100 */  sll   $t4, $t9, 4
 /* 0878B4 80086CB4 030C7021 */  addu  $t6, $t8, $t4
 /* 0878B8 80086CB8 91CA0006 */  lbu   $t2, 6($t6)
-/* 0878BC 80086CBC 3C038012 */  lui   $v1, %hi(D_80126530) # $v1, 0x8012
-/* 0878C0 80086CC0 24636530 */  addiu $v1, %lo(D_80126530) # addiu $v1, $v1, 0x6530
+/* 0878BC 80086CBC 3C038012 */  lui   $v1, %hi(gSavefileData) # $v1, 0x8012
+/* 0878C0 80086CC0 24636530 */  addiu $v1, %lo(gSavefileData) # addiu $v1, $v1, 0x6530
 /* 0878C4 80086CC4 000A5880 */  sll   $t3, $t2, 2
 /* 0878C8 80086CC8 006B7821 */  addu  $t7, $v1, $t3
 /* 0878CC 80086CCC 8DF90000 */  lw    $t9, ($t7)
@@ -152,7 +152,7 @@ glabel L80086CDC
 .L80086D2C:
 /* 08792C 80086D2C 0C01B9DC */  jal   func_8006E770
 /* 087930 80086D30 24050003 */   li    $a1, 3
-/* 087934 80086D34 0C01BAFF */  jal   func_8006EBFC
+/* 087934 80086D34 0C01BAFF */  jal   mark_to_write_flap_and_course_times
 /* 087938 80086D38 00000000 */   nop   
 /* 08793C 80086D3C 3C0500FF */  lui   $a1, (0x00FFFFF0 >> 16) # lui $a1, 0xff
 /* 087940 80086D40 34A5FFF0 */  ori   $a1, (0x00FFFFF0 & 0xFFFF) # ori $a1, $a1, 0xfff0
@@ -176,7 +176,7 @@ glabel L80086D54
 /* 087984 80086D84 10410075 */  beq   $v0, $at, .L80086F5C
 /* 087988 80086D88 24010008 */   li    $at, 8
 /* 08798C 80086D8C 1041005B */  beq   $v0, $at, .L80086EFC
-/* 087990 80086D90 3C038012 */   lui   $v1, %hi(D_80126530) # $v1, 0x8012
+/* 087990 80086D90 3C038012 */   lui   $v1, %hi(gSavefileData) # $v1, 0x8012
 /* 087994 80086D94 1000010D */  b     .L800871CC
 /* 087998 80086D98 8FBF0014 */   lw    $ra, 0x14($sp)
 .L80086D9C:
@@ -213,7 +213,7 @@ glabel L80086D54
 /* 087A10 80086E10 000A7900 */  sll   $t7, $t2, 4
 /* 087A14 80086E14 016F6821 */  addu  $t5, $t3, $t7
 /* 087A18 80086E18 91A40006 */  lbu   $a0, 6($t5)
-/* 087A1C 80086E1C 0C01BB06 */  jal   func_8006EC18
+/* 087A1C 80086E1C 0C01BB06 */  jal   force_mark_write_save_file
 /* 087A20 80086E20 AFA60028 */   sw    $a2, 0x28($sp)
 /* 087A24 80086E24 3C098012 */  lui   $t1, %hi(D_80126BE4) # $t1, 0x8012
 /* 087A28 80086E28 25296BE4 */  addiu $t1, %lo(D_80126BE4) # addiu $t1, $t1, 0x6be4
@@ -224,9 +224,9 @@ glabel L80086D54
 /* 087A3C 80086E3C 00187100 */  sll   $t6, $t8, 4
 /* 087A40 80086E40 018E5021 */  addu  $t2, $t4, $t6
 /* 087A44 80086E44 914B0006 */  lbu   $t3, 6($t2)
-/* 087A48 80086E48 3C038012 */  lui   $v1, %hi(D_80126530) # $v1, 0x8012
+/* 087A48 80086E48 3C038012 */  lui   $v1, %hi(gSavefileData) # $v1, 0x8012
 /* 087A4C 80086E4C 8FA60028 */  lw    $a2, 0x28($sp)
-/* 087A50 80086E50 24636530 */  addiu $v1, %lo(D_80126530) # addiu $v1, $v1, 0x6530
+/* 087A50 80086E50 24636530 */  addiu $v1, %lo(gSavefileData) # addiu $v1, $v1, 0x6530
 /* 087A54 80086E54 000B7880 */  sll   $t7, $t3, 2
 /* 087A58 80086E58 006F6821 */  addu  $t5, $v1, $t7
 /* 087A5C 80086E5C 8DB80000 */  lw    $t8, ($t5)
@@ -270,18 +270,18 @@ glabel L80086D54
 /* 087AF4 80086EF4 100000B4 */  b     .L800871C8
 /* 087AF8 80086EF8 AF2F0050 */   sw    $t7, 0x50($t9)
 .L80086EFC:
-/* 087AFC 80086EFC 24636530 */  addiu $v1, %lo(D_80126530) # addiu $v1, $v1, 0x6530
+/* 087AFC 80086EFC 24636530 */  addiu $v1, %lo(gSavefileData) # addiu $v1, $v1, 0x6530
 /* 087B00 80086F00 8C66000C */  lw    $a2, 0xc($v1)
 /* 087B04 80086F04 90E40006 */  lbu   $a0, 6($a3)
 /* 087B08 80086F08 8CE50008 */  lw    $a1, 8($a3)
 /* 087B0C 80086F0C 0C01CF87 */  jal   read_game_data_from_controller_pak
 /* 087B10 80086F10 00000000 */   nop   
-/* 087B14 80086F14 3C038012 */  lui   $v1, %hi(D_80126530) # $v1, 0x8012
+/* 087B14 80086F14 3C038012 */  lui   $v1, %hi(gSavefileData) # $v1, 0x8012
 /* 087B18 80086F18 3C088012 */  lui   $t0, %hi(D_80126A04) # $t0, 0x8012
 /* 087B1C 80086F1C 3C098012 */  lui   $t1, %hi(D_80126BE4) # $t1, 0x8012
 /* 087B20 80086F20 25296BE4 */  addiu $t1, %lo(D_80126BE4) # addiu $t1, $t1, 0x6be4
 /* 087B24 80086F24 25086A04 */  addiu $t0, %lo(D_80126A04) # addiu $t0, $t0, 0x6a04
-/* 087B28 80086F28 24636530 */  addiu $v1, %lo(D_80126530) # addiu $v1, $v1, 0x6530
+/* 087B28 80086F28 24636530 */  addiu $v1, %lo(gSavefileData) # addiu $v1, $v1, 0x6530
 /* 087B2C 80086F2C 144000A6 */  bnez  $v0, .L800871C8
 /* 087B30 80086F30 AFA20038 */   sw    $v0, 0x38($sp)
 /* 087B34 80086F34 8D380000 */  lw    $t8, ($t1)
@@ -367,7 +367,7 @@ glabel L80086F74
 /* 087C54 80087054 00C02825 */   move  $a1, $a2
 /* 087C58 80087058 AFA20038 */  sw    $v0, 0x38($sp)
 .L8008705C:
-/* 087C5C 8008705C 0C01BAD7 */  jal   func_8006EB5C
+/* 087C5C 8008705C 0C01BAD7 */  jal   mark_to_read_flap_and_course_times
 /* 087C60 80087060 00000000 */   nop   
 /* 087C64 80087064 10000059 */  b     .L800871CC
 /* 087C68 80087068 8FBF0014 */   lw    $ra, 0x14($sp)

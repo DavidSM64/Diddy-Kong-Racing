@@ -13,6 +13,7 @@
 #define SCREEN_HEIGHT 240
 #define SCREEN_WIDTH_HALF (SCREEN_WIDTH / 2)
 #define SCREEN_HEIGHT_HALF (SCREEN_HEIGHT / 2)
+#define SCREEN_HEIGHT_HALF_PAL (SCREEN_HEIGHT_HALF + 12)
 
 #define SCREEN_WIDTH_FLOAT ((float)(SCREEN_WIDTH))
 #define SCREEN_HEIGHT_FLOAT ((float)(SCREEN_HEIGHT))
@@ -43,7 +44,7 @@ enum ViewportCount {
 };
 
 enum ViewPortFlags {
-    VIEWPORT_UNK_01        = 0x0001,
+    VIEWPORT_EXTRA_BG      = 0x0001, //official name (guessed): VIEWPORT_IS_USER_VIEW
     VIEWPORT_UNK_02        = 0x0002,
     VIEWPORT_UNK_04        = 0x0004,
     VIEWPORT_X_CUSTOM      = 0x0008,
@@ -51,8 +52,6 @@ enum ViewPortFlags {
     VIEWPORT_WIDTH_CUSTOM  = 0x0020,
     VIEWPORT_HEIGHT_CUSTOM = 0x0040
 };
-
-extern s8 D_800DD060;
 
 /* Size: 0x34 bytes. */
 typedef struct ScreenViewport {
@@ -71,45 +70,16 @@ typedef struct ScreenViewport {
     /* 0x30 */ s32 flags;
 } ScreenViewport;
 
-/* Size: 6 bytes */
-typedef struct ControllerData {
-    u16 buttonData; // Buttons
-    s8 rawStickX;
-    s8 rawStickY;
-    s8 unk4;
-    s8 unk6;
-} ControllerData;
-
-extern ScreenViewport gScreenViewports[4];
-
-// Not sure about the typing here
-extern s16 D_800DD138[8];
-
-// RSP Viewports
-extern Vp D_800DD148[20];
-
-extern ObjectTransform D_800DD288;
-
-extern ObjectTransform D_800DD2A0;
-
-extern Matrix gOrthoMatrix;
-
-extern u8 D_800DD2F8[8];
-
-extern s16 gButtonMask;
-
-extern f32 D_80120D58[5];
-extern f32 D_80120D40[6];
-extern f32 D_80120D28[6];
-
-//TODO: Figure out where these functions live: unknown_070110?
-    void func_8006F870(Matrix *, Matrix *); //unknown_070110
-    void func_800705F8(Matrix *, f32, f32, f32); //From unknown_070110
-    void func_8006FE74(Matrix *, ObjectTransform *); // Non Matching unknown_070110?
-    void func_8006F768(Matrix *, Matrix *, Matrix *); // Non Matching unknown_070110?
+typedef struct unk80068514_arg4 {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    Gfx *unk8[1];
+} unk80068514_arg4;
 
 void func_80066060(s32 arg0, s32 arg1);
-void func_80066098(s8 arg0);
+void set_viewport_tv_type(s8 arg0);
 void func_800660C0(void);
 void func_800660D0(void);
 UNUSED f32 get_current_camera_fov(void);
@@ -117,60 +87,51 @@ void update_camera_fov(f32 camFieldOfView);
 UNUSED void calculate_camera_perspective(void);
 Matrix *func_80066204(void);
 s32 get_viewport_count(void);
-s32 func_80066220(void);
-void func_80066230(Gfx **dlist, Mtx **arg1);
-f32 func_80066348(f32 xPos, f32 yPos, f32 zPos);
+s32 get_current_viewport(void);
+void func_80066230(Gfx **dlist, MatrixS **arg1);
+f32 get_distance_to_active_camera(f32 xPos, f32 yPos, f32 zPos);
 void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5);
-void func_80066488(s32 arg0, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6);
-void func_80066520(void);
-s8 func_80066510(void);
-s32 func_8006652C(s32 arg0);
-void func_800665E8(s32 arg0);
-void func_80066818(s32 viewPortIndex, s32 arg1);
-void func_80066894(s32 viewPortIndex, s32 arg1);
-s32 func_80066910(s32 viewPortIndex);
-void func_80066940(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2);
+void write_to_object_render_stack(s32 arg0, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6);
+void disable_cutscene_camera(void);
+s8 check_if_showing_cutscene_camera(void);
+s32 set_active_viewports_and_max(s32 arg0);
+void set_active_camera(s32 arg0);
+void camEnableUserView(s32 viewPortIndex, s32 arg1);
+void camDisableUserView(s32 viewPortIndex, s32 arg1);
+s32 check_viewport_background_flag(s32 viewPortIndex);
+void resize_viewport(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2);
 void set_viewport_properties(s32 viewPortIndex, s32 x1, s32 x2, s32 y1, s32 y2);
 s32 copy_viewport_background_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32 *x2, s32 *y2);
 void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *arg1, s32 *arg2, s32 *arg3, s32 *arg4);
 void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2);
 void set_ortho_matrix_height(f32 value);
-void func_80067F2C(Gfx **dlist, Mtx **mats);
-void func_8006807C(Gfx **dlist, Mtx **mats);
+void set_ortho_matrix_view(Gfx **dlist, MatrixS **mats);
+void func_8006807C(Gfx **dlist, MatrixS **mats);
 void func_80068158(Gfx **dlist, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_800682AC(Gfx **dlist);
-void func_80068408(Gfx **dlist, Mtx **mats);
+void func_80068408(Gfx **dlist, MatrixS **mats);
 void func_80068508(s32 arg0);
-ObjectSegment *func_80069CFC(void);
-ObjectSegment *func_80069D20(void);
+ObjectSegment *get_active_camera_segment_no_cutscenes(void);
+ObjectSegment *get_active_camera_segment(void);
 ObjectSegment *func_80069D7C(void);
 Matrix *func_80069DA4(void);
-Matrix *func_80069DB0(void);
+MatrixS *func_80069DB0(void);
 Matrix *func_80069DBC(void);
 f32 func_80069DC8(f32 x, f32 y, f32 z);
-void func_80069E14(f32 arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
-void func_80069F28(f32 arg0);
-UNUSED void debug_print_float_matrix_values(f32 *mtx);
-OSMesgQueue *get_si_mesg_queue(void);
-void initialise_player_ids(void);
-void assign_player_ids(s8 *activePlayers);
-u8 get_player_id(s32 player);
-void swap_player_1_and_2_ids(void);
-u16 get_buttons_held_from_player(s32 player);
-u32 get_buttons_pressed_from_player(s32 player);
-UNUSED u16 get_buttons_released_from_player(s32 player);
-s8 clamp_joystick_x_axis(s32 player);
-s8 clamp_joystick_y_axis(s32 player);
-s8 clamp_joystick(s8 stickMag);
-void disable_button_mask(void);
-s32 init_controllers(void);
-void func_80067D3C(Gfx **dlist, UNUSED Mtx **mats);
+void set_camera_shake_by_distance(f32 x, f32 y, f32 z, f32 dist, f32 magnitude);
+void set_camera_shake(f32 magnitude);
+void func_80067D3C(Gfx **dlist, MatrixS **mats);
+void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, ObjectSegment *segment, Sprite *sprite, s32 flags);
+s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags);
+void func_80069484(Gfx **arg0, MatrixS **arg1, ObjectTransform *arg2, f32 arg3, f32 arg4);
+void set_viewport_scissor(Gfx **dlist);
+void func_80069A40(Gfx **dlist);
+void copy_viewports_to_stack(void);
+void func_80069790(Gfx **dlist, MatrixS **mtx, Object_68 *obj68, s16 headAngle);
+void func_80068FA8(Gfx **dlist, MatrixS **mtx, Object *arg2, Object *arg3, f32 shear);
 
 // Non Matching
-void func_80067A3C(Gfx **dlist);
-void func_80066610(void);
 void func_80065EA0(void);
-s32 func_8006A1C4(s32 arg0, s32 logicUpdateRate);
-void func_80066CDC(Gfx **dlist, Mtx **mats);
+void func_80066CDC(Gfx **dlist, MatrixS **mats);
 
 #endif

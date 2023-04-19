@@ -72,8 +72,8 @@ glabel render_magic_codes_list_menu_text
 /* 08B27C 8008A67C 2A010020 */  slti  $at, $s0, 0x20
 /* 08B280 8008A680 1420FFF6 */  bnez  $at, .L8008A65C
 /* 08B284 8008A684 01A01025 */   move  $v0, $t5
-/* 08B288 8008A688 3C1E8012 */  lui   $fp, %hi(D_801263BC) # $fp, 0x8012
-/* 08B28C 8008A68C 8FDE63BC */  lw    $fp, %lo(D_801263BC)($fp)
+/* 08B288 8008A688 3C1E8012 */  lui   $fp, %hi(gOptionBlinkTimer) # $fp, 0x8012
+/* 08B28C 8008A68C 8FDE63BC */  lw    $fp, %lo(gOptionBlinkTimer)($fp)
 /* 08B290 8008A690 24120036 */  li    $s2, 54
 /* 08B294 8008A694 001E70C0 */  sll   $t6, $fp, 3
 /* 08B298 8008A698 29C10100 */  slti  $at, $t6, 0x100
@@ -207,12 +207,12 @@ glabel render_magic_codes_list_menu_text
 /* 08B478 8008A878 10000014 */  b     .L8008A8CC
 /* 08B47C 8008A87C 8FBF004C */   lw    $ra, 0x4c($sp)
 .L8008A880:
-/* 08B480 8008A880 3C0D8012 */  lui   $t5, %hi(D_801263BC) # $t5, 0x8012
-/* 08B484 8008A884 8DAD63BC */  lw    $t5, %lo(D_801263BC)($t5)
+/* 08B480 8008A880 3C0D8012 */  lui   $t5, %hi(gOptionBlinkTimer) # $t5, 0x8012
+/* 08B484 8008A884 8DAD63BC */  lw    $t5, %lo(gOptionBlinkTimer)($t5)
 /* 08B488 8008A888 02A02025 */  move  $a0, $s5
 /* 08B48C 8008A88C 31AE0008 */  andi  $t6, $t5, 8
 /* 08B490 8008A890 11C0000D */  beqz  $t6, .L8008A8C8
-/* 08B494 8008A894 3C05800E */   lui   $a1, %hi(D_800E043C) # $a1, 0x800e
+/* 08B494 8008A894 3C05800E */   lui   $a1, %hi(gMenuSelectionArrowDown) # $a1, 0x800e
 /* 08B498 8008A898 240F00FF */  li    $t7, 255
 /* 08B49C 8008A89C 241800FF */  li    $t8, 255
 /* 08B4A0 8008A8A0 241900FF */  li    $t9, 255
@@ -221,7 +221,7 @@ glabel render_magic_codes_list_menu_text
 /* 08B4AC 8008A8AC AFB90018 */  sw    $t9, 0x18($sp)
 /* 08B4B0 8008A8B0 AFB80014 */  sw    $t8, 0x14($sp)
 /* 08B4B4 8008A8B4 AFAF0010 */  sw    $t7, 0x10($sp)
-/* 08B4B8 8008A8B8 24A5043C */  addiu $a1, %lo(D_800E043C) # addiu $a1, $a1, 0x43c
+/* 08B4B8 8008A8B8 24A5043C */  addiu $a1, %lo(gMenuSelectionArrowDown) # addiu $a1, $a1, 0x43c
 /* 08B4BC 8008A8BC 240600A0 */  li    $a2, 160
 /* 08B4C0 8008A8C0 0C01E2AE */  jal   render_textured_rectangle
 /* 08B4C4 8008A8C4 26470008 */   addiu $a3, $s2, 8

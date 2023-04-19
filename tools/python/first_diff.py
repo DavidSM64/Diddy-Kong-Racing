@@ -35,7 +35,7 @@ if args.make:
     check_call(["ninja", "baseroms/dkr.z64"])
 
 baseimg = f"baseroms/dkr.z64"
-basemap = f"build/dkr.map"
+basemap = f"expected/build//us_1.0/dkr.map"
 
 myimg =   f"build/us_1.0/dkr.z64"
 mymap = f"build/us_1.0/dkr.map"

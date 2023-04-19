@@ -1,7 +1,7 @@
 glabel func_800230D0
 /* 023CD0 800230D0 27BDFFA0 */  addiu $sp, $sp, -0x60
-/* 023CD4 800230D4 3C028012 */  lui   $v0, %hi(D_8011AED0) # $v0, 0x8012
-/* 023CD8 800230D8 8C42AED0 */  lw    $v0, %lo(D_8011AED0)($v0)
+/* 023CD4 800230D4 3C028012 */  lui   $v0, %hi(gNumberOfCheckpoints) # $v0, 0x8012
+/* 023CD8 800230D8 8C42AED0 */  lw    $v0, %lo(gNumberOfCheckpoints)($v0)
 /* 023CDC 800230DC AFB10018 */  sw    $s1, 0x18($sp)
 /* 023CE0 800230E0 AFB00014 */  sw    $s0, 0x14($sp)
 /* 023CE4 800230E4 00808025 */  move  $s0, $a0
@@ -63,8 +63,8 @@ glabel func_800230D0
 /* 023DB4 800231B4 8604002E */   lh    $a0, 0x2e($s0)
 .L800231B8:
 /* 023DB8 800231B8 00026900 */  sll   $t5, $v0, 4
-/* 023DBC 800231BC 3C0E8012 */  lui   $t6, %hi(D_8011AECC) # $t6, 0x8012
-/* 023DC0 800231C0 8DCEAECC */  lw    $t6, %lo(D_8011AECC)($t6)
+/* 023DBC 800231BC 3C0E8012 */  lui   $t6, %hi(gTrackCheckpoints) # $t6, 0x8012
+/* 023DC0 800231C0 8DCEAECC */  lw    $t6, %lo(gTrackCheckpoints)($t6)
 /* 023DC4 800231C4 01A26823 */  subu  $t5, $t5, $v0
 /* 023DC8 800231C8 000D6880 */  sll   $t5, $t5, 2
 /* 023DCC 800231CC 3C01420C */  li    $at, 0x420C0000 # 35.000000
@@ -128,8 +128,8 @@ glabel func_800230D0
 /* 023EA8 800232A8 A63901A0 */  sh    $t9, 0x1a0($s1)
 .L800232AC:
 /* 023EAC 800232AC A2200192 */  sb    $zero, 0x192($s1)
-/* 023EB0 800232B0 3C0A8012 */  lui   $t2, %hi(D_8011AED0) # $t2, 0x8012
-/* 023EB4 800232B4 8D4AAED0 */  lw    $t2, %lo(D_8011AED0)($t2)
+/* 023EB0 800232B0 3C0A8012 */  lui   $t2, %hi(gNumberOfCheckpoints) # $t2, 0x8012
+/* 023EB4 800232B4 8D4AAED0 */  lw    $t2, %lo(gNumberOfCheckpoints)($t2)
 /* 023EB8 800232B8 82290193 */  lb    $t1, 0x193($s1)
 /* 023EBC 800232BC 862C01A0 */  lh    $t4, 0x1a0($s1)
 /* 023EC0 800232C0 012A0019 */  multu $t1, $t2
@@ -200,9 +200,9 @@ glabel func_800230D0
 /* 023FC4 800233C4 A23801D6 */  sb    $t8, 0x1d6($s1)
 /* 023FC8 800233C8 1081000F */  beq   $a0, $at, .L80023408
 /* 023FCC 800233CC 8FBF001C */   lw    $ra, 0x1c($sp)
-/* 023FD0 800233D0 0C01997A */  jal   func_800665E8
+/* 023FD0 800233D0 0C01997A */  jal   set_active_camera
 /* 023FD4 800233D4 AFA8005C */   sw    $t0, 0x5c($sp)
-/* 023FD8 800233D8 0C01A73F */  jal   func_80069CFC
+/* 023FD8 800233D8 0C01A73F */  jal   get_active_camera_segment_no_cutscenes
 /* 023FDC 800233DC 00000000 */   nop   
 /* 023FE0 800233E0 C612000C */  lwc1  $f18, 0xc($s0)
 /* 023FE4 800233E4 8FA8005C */  lw    $t0, 0x5c($sp)

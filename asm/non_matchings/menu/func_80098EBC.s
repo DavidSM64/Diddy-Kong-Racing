@@ -1,6 +1,6 @@
 glabel func_80098EBC
-/* 099ABC 80098EBC 3C028012 */  lui   $v0, %hi(D_801263BC) # $v0, 0x8012
-/* 099AC0 80098EC0 244263BC */  addiu $v0, %lo(D_801263BC) # addiu $v0, $v0, 0x63bc
+/* 099ABC 80098EBC 3C028012 */  lui   $v0, %hi(gOptionBlinkTimer) # $v0, 0x8012
+/* 099AC0 80098EC0 244263BC */  addiu $v0, %lo(gOptionBlinkTimer) # addiu $v0, $v0, 0x63bc
 /* 099AC4 80098EC4 8C4E0000 */  lw    $t6, ($v0)
 /* 099AC8 80098EC8 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 099ACC 80098ECC 01C47821 */  addu  $t7, $t6, $a0

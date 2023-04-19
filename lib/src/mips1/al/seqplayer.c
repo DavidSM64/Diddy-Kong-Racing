@@ -8,7 +8,7 @@
 void __setInstChanState(ALSeqPlayer *seqp, ALInstrument *inst, s32 chan);
 void __resetPerfChanState(ALSeqPlayer *seqp, s32 chan) ;
 
-void dummy_8000A710(s32 arg0, s32 arg1) {
+UNUSED void dummy_8000A710(UNUSED s32 arg0, UNUSED s32 arg1) {
 }
 
 ALVoiceState *__mapVoice(ALSeqPlayer *seqp, u8 key, u8 vel, u8 channel)

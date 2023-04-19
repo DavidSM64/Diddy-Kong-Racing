@@ -21,6 +21,8 @@
 // This is RARE's unique code
 #define COMPANY_CODE 0x3459
 
+#define NUMBER_OF_SAVE_FILES 3
+
 typedef enum {
     CONTROLLER_PAK_GOOD,
     NO_CONTROLLER_PAK,
@@ -38,6 +40,7 @@ extern s8 *D_800DE440;
 extern u8 gN64FontCodes[68];
 extern s32 D_800DE48C;
 extern OSPfs pfs[MAXCONTROLLERS];
+size_t strlen(const char *str);
 
 u8 func_80072250(s32 arg0);
 void func_80072298(u8 arg0);
@@ -50,8 +53,8 @@ s32 write_game_data_to_controller_pak(s32 controllerIndex, Settings *arg1);
 s32 read_time_data_from_controller_pak(s32 controllerIndex, char *fileExt, Settings *settings);
 s32 write_time_data_to_controller_pak(s32 controllerIndex, Settings *arg1);
 s32 write_save_data(s32 saveFileNum, Settings *settings);
-s32 read_eeprom_data(Settings *arg0, u8 arg1);
-s32 write_eeprom_data(Settings *arg0, u8 arg1);
+s32 read_eeprom_data(Settings *settings, u8 flags);
+s32 write_eeprom_data(Settings *settings, u8 flags);
 s32 calculate_eeprom_settings_checksum(u64 eepromSettings);
 s32 read_eeprom_settings(u64 *eepromSettings);
 s32 write_eeprom_settings(u64 *eepromSettings);
@@ -64,7 +67,7 @@ SIDeviceStatus check_for_rumble_pak(s32 controllerIndex);
 SIDeviceStatus repair_controller_pak(s32 controllerIndex);
 SIDeviceStatus reformat_controller_pak(s32 controllerIndex);
 s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, char **fileNames, char **fileExtensions, u32 *fileSizes, u8 *fileTypes);
-void func_80076164(void);
+void packDirectoryFree(void);
 s32 get_free_space(s32 controllerIndex, u32 *bytesFree, s32 *notesFree);
 s32 delete_file(s32 controllerIndex, s32 fileNum);
 s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondControllerIndex);
@@ -74,26 +77,29 @@ SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, ch
 SIDeviceStatus get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize);
 char *font_codes_to_string(char *inString, char *outString, s32 stringLength);
 s32 get_file_type(s32 controllerIndex, s32 fileNum);
+void func_80072578(s16 controllerIndex, s16 arg1, s16 arg2);
+void func_80072348(s16 controllerIndex, u8 arg1);
+void func_80072424(s16 controllerIndex, u8 arg1, f32 arg2);
+void rumble_controllers(s32 updateRate);
+void init_controller_paks(void);
+void func_80072E28(s32 arg0, u32 arg1);
+s32 func_80072C54(s32 arg0);
+void populate_settings_from_save_data(Settings *settings, u8 *saveData);
+s32 read_save_file(s32 saveFileNum, Settings *settings);
+void erase_save_file(s32 saveFileNum, Settings *settings);
+SIDeviceStatus func_800756D4(s32 controllerIndex, u8 *arg1, u8 *arg2, u8 *arg3, s16 *arg4);
+SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileExt);
+void func_80073588(Settings *settings, u8 *saveData, u8 arg2);
+void func_800732E8(Settings *settings, u8 *saveData);
+void func_800738A4(Settings *settings, u8 *saveData);
 
-s32 func_800738A4(Settings *arg0, u8 *arg1); //Non matching
-void func_800732E8(Settings *arg0, u8 *arg1); //Non matching
-void func_80073588(Settings *arg0, u64 *eepromData, s32 arg2); //Non matching
-s32 func_80073C5C(s32 controllerIndex, s32 arg1, char **arg2); //Non matching
-void func_8007306C(Settings *arg0, s32 arg1); //Non matching
 //Using some context, and best guesses, these could be the names of the variables
-s32 func_80074B34(s32 controllerIndex, s16 levelID, s16 vehicleID, s16 *ghostCharacterID, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *arg6); //Non matching
-u8 func_80074204(s32 arg0, Settings *arg1); //Non Matching
-void func_8007431C(s32 arg0, Settings *arg1); //Non Matching
-s32 func_80072E28(s32, s32); //Non Matching arg2 seems to be many different types
-void init_controller_paks(void); //Non Matching
+s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 *ghostCharacterId, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *ghostData); //Non matching
 char *string_to_font_codes(char *inString, char *outString, s32 stringLength);
 
 //Reasonably certain about these names for now.
 s32 func_80074EB8(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, u8 *dest);
 s32 func_80075000(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, GhostHeader *arg6);
 s32 func_800753D8(s32 controllerIndex, s32 arg1);
-//Pretty bad signature, but at can confidently state arg0 is controllerIndex.
-s32 func_800756D4(s32 controllerIndex, s8 *arg1, void *arg2, u8 *arg3, void *arg4);
-void func_80072348(s16 arg0, u8 arg1);
 
 #endif

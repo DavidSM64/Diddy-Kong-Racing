@@ -1,5 +1,5 @@
-#ifndef _PRINTF_H_
-#define _PRINTF_H_
+#ifndef _XPRINTF_H_
+#define _XPRINTF_H_
 #include "types.h"
 #include <stdarg.h>
 
@@ -57,6 +57,6 @@ typedef struct {
 #define FLAGS_HASH  8
 #define FLAGS_ZERO  16
 s32 _Printf(outfun prout, char *dst, const char *fmt, va_list args);
-void _Litob(printf_struct *args, u8 type);
+void _Litob(printf_struct *args, char type);
 void _Ldtob(printf_struct *args, u8 type);
 #endif

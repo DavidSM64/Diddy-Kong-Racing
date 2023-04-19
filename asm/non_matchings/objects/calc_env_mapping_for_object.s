@@ -32,19 +32,19 @@ glabel calc_env_mapping_for_object
 /* 01E9CC 8001DDCC E7A00090 */  swc1  $f0, 0x90($sp)
 /* 01E9D0 8001DDD0 E7A00094 */  swc1  $f0, 0x94($sp)
 /* 01E9D4 8001DDD4 AFAA0074 */  sw    $t2, 0x74($sp)
-/* 01E9D8 8001DDD8 0C01BF0C */  jal   func_8006FC30
+/* 01E9D8 8001DDD8 0C01BF0C */  jal   object_transform_to_matrix
 /* 01E9DC 8001DDDC E7A40088 */   swc1  $f4, 0x88($sp)
 /* 01E9E0 8001DDE0 02202025 */  move  $a0, $s1
-/* 01E9E4 8001DDE4 0C01BD78 */  jal   func_8006F5E0
+/* 01E9E4 8001DDE4 0C01BD78 */  jal   f32_matrix_to_s32_matrix
 /* 01E9E8 8001DDE8 27A500D8 */   addiu $a1, $sp, 0xd8
 /* 01E9EC 8001DDEC A7A00062 */  sh    $zero, 0x62($sp)
 /* 01E9F0 8001DDF0 87C20028 */  lh    $v0, 0x28($fp)
 /* 01E9F4 8001DDF4 3C138012 */  lui   $s3, %hi(D_8011AF68) # $s3, 0x8012
 /* 01E9F8 8001DDF8 184000C4 */  blez  $v0, .L8001E10C
 /* 01E9FC 8001DDFC 2673AF68 */   addiu $s3, %lo(D_8011AF68) # addiu $s3, $s3, -0x5098
-/* 01EA00 8001DE00 3C118012 */  lui   $s1, %hi(D_8011AFE8) # $s1, 0x8012
+/* 01EA00 8001DE00 3C118012 */  lui   $s1, %hi(gEnvmapPos) # $s1, 0x8012
 /* 01EA04 8001DE04 8FC60038 */  lw    $a2, 0x38($fp)
-/* 01EA08 8001DE08 2631AFE8 */  addiu $s1, %lo(D_8011AFE8) # addiu $s1, $s1, -0x5018
+/* 01EA08 8001DE08 2631AFE8 */  addiu $s1, %lo(gEnvmapPos) # addiu $s1, $s1, -0x5018
 .L8001DE0C:
 /* 01EA0C 8001DE0C 87B70062 */  lh    $s7, 0x62($sp)
 /* 01EA10 8001DE10 3C010002 */  lui   $at, 2
@@ -138,13 +138,13 @@ glabel calc_env_mapping_for_object
 /* 01EB50 8001DF50 000EA403 */  sra   $s4, $t6, 0x10
 /* 01EB54 8001DF54 24A5AFEE */  addiu $a1, %lo(D_8011AFEE) # addiu $a1, $a1, -0x5012
 /* 01EB58 8001DF58 27A400D8 */  addiu $a0, $sp, 0xd8
-/* 01EB5C 8001DF5C 0C01BED8 */  jal   func_8006FB60
+/* 01EB5C 8001DF5C 0C01BED8 */  jal   s16_vec3_mult_by_s32_matrix
 /* 01EB60 8001DF60 A62D000A */   sh    $t5, 0xa($s1)
 /* 01EB64 8001DF64 8FB90070 */  lw    $t9, 0x70($sp)
 /* 01EB68 8001DF68 02202025 */  move  $a0, $s1
 /* 01EB6C 8001DF6C 17200003 */  bnez  $t9, .L8001DF7C
 /* 01EB70 8001DF70 3C058012 */   lui   $a1, %hi(D_8011AFEE) # $a1, 0x8012
-/* 01EB74 8001DF74 0C01BE6E */  jal   func_8006F9B8
+/* 01EB74 8001DF74 0C01BE6E */  jal   s16_matrix_rotate
 /* 01EB78 8001DF78 24A5AFEE */   addiu $a1, %lo(D_8011AFEE) # addiu $a1, $a1, -0x5012
 .L8001DF7C:
 /* 01EB7C 8001DF7C 86220006 */  lh    $v0, 6($s1)

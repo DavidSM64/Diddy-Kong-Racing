@@ -180,24 +180,24 @@ glabel render_3d_model
 /* 012F60 80012360 A5C00052 */  sh    $zero, 0x52($t6)
 .L80012364:
 /* 012F64 80012364 44804000 */  mtc1  $zero, $f8
-/* 012F68 80012368 3C118012 */  lui   $s1, %hi(D_8011AE8C) # $s1, 0x8012
+/* 012F68 80012368 3C118012 */  lui   $s1, %hi(gObjectCurrDisplayList) # $s1, 0x8012
 /* 012F6C 8001236C 3C078012 */  lui   $a3, %hi(D_8011AD28) # $a3, 0x8012
-/* 012F70 80012370 2631AE8C */  addiu $s1, %lo(D_8011AE8C) # addiu $s1, $s1, -0x5174
+/* 012F70 80012370 2631AE8C */  addiu $s1, %lo(gObjectCurrDisplayList) # addiu $s1, $s1, -0x5174
 /* 012F74 80012374 8CE7AD28 */  lw    $a3, %lo(D_8011AD28)($a3)
-/* 012F78 80012378 3C058012 */  lui   $a1, %hi(D_8011AE90) # $a1, 0x8012
-/* 012F7C 8001237C 24A5AE90 */  addiu $a1, %lo(D_8011AE90) # addiu $a1, $a1, -0x5170
+/* 012F78 80012378 3C058012 */  lui   $a1, %hi(gObjectCurrMatrix) # $a1, 0x8012
+/* 012F7C 8001237C 24A5AE90 */  addiu $a1, %lo(gObjectCurrMatrix) # addiu $a1, $a1, -0x5170
 /* 012F80 80012380 02202025 */  move  $a0, $s1
 /* 012F84 80012384 02403025 */  move  $a2, $s2
 /* 012F88 80012388 0C01A521 */  jal   func_80069484
 /* 012F8C 8001238C E7A80010 */   swc1  $f8, 0x10($sp)
 /* 012F90 80012390 12600014 */  beqz  $s3, .L800123E4
 /* 012F94 80012394 AFA000B0 */   sw    $zero, 0xb0($sp)
-/* 012F98 80012398 0C004BCC */  jal   func_80012F30
+/* 012F98 80012398 0C004BCC */  jal   objUndoPlayerTumble
 /* 012F9C 8001239C 02402025 */   move  $a0, $s2
 /* 012FA0 800123A0 8258003B */  lb    $t8, 0x3b($s2)
 /* 012FA4 800123A4 02202025 */  move  $a0, $s1
 /* 012FA8 800123A8 13000006 */  beqz  $t8, .L800123C4
-/* 012FAC 800123AC 3C058012 */   lui   $a1, %hi(D_8011AE90) # $a1, 0x8012
+/* 012FAC 800123AC 3C058012 */   lui   $a1, %hi(gObjectCurrMatrix) # $a1, 0x8012
 /* 012FB0 800123B0 827901D6 */  lb    $t9, 0x1d6($s3)
 /* 012FB4 800123B4 00000000 */  nop   
 /* 012FB8 800123B8 2B210005 */  slti  $at, $t9, 5
@@ -205,7 +205,7 @@ glabel render_3d_model
 /* 012FC0 800123C0 00000000 */   nop   
 .L800123C4:
 /* 012FC4 800123C4 8667016A */  lh    $a3, 0x16a($s3)
-/* 012FC8 800123C8 24A5AE90 */  addiu $a1, %lo(D_8011AE90) # addiu $a1, $a1, -0x5170
+/* 012FC8 800123C8 24A5AE90 */  addiu $a1, %lo(gObjectCurrMatrix) # addiu $a1, $a1, -0x5170
 /* 012FCC 800123CC 0C01A5E4 */  jal   func_80069790
 /* 012FD0 800123D0 02003025 */   move  $a2, $s0
 /* 012FD4 800123D4 240D0001 */  li    $t5, 1
@@ -546,10 +546,10 @@ glabel render_3d_model
 /* 0134AC 800128AC 00000000 */  nop   
 /* 0134B0 800128B0 AC4D0004 */  sw    $t5, 4($v0)
 .L800128B4:
-/* 0134B4 800128B4 3C058012 */  lui   $a1, %hi(D_8011AE90) # $a1, 0x8012
-/* 0134B8 800128B8 3C068012 */  lui   $a2, %hi(D_8011AE94) # $a2, 0x8012
-/* 0134BC 800128BC 24C6AE94 */  addiu $a2, %lo(D_8011AE94) # addiu $a2, $a2, -0x516c
-/* 0134C0 800128C0 24A5AE90 */  addiu $a1, %lo(D_8011AE90) # addiu $a1, $a1, -0x5170
+/* 0134B4 800128B4 3C058012 */  lui   $a1, %hi(gObjectCurrMatrix) # $a1, 0x8012
+/* 0134B8 800128B8 3C068012 */  lui   $a2, %hi(gObjectCurrVertexList) # $a2, 0x8012
+/* 0134BC 800128BC 24C6AE94 */  addiu $a2, %lo(gObjectCurrVertexList) # addiu $a2, $a2, -0x516c
+/* 0134C0 800128C0 24A5AE90 */  addiu $a1, %lo(gObjectCurrMatrix) # addiu $a1, $a1, -0x5170
 /* 0134C4 800128C4 02202025 */  move  $a0, $s1
 /* 0134C8 800128C8 02003825 */  move  $a3, $s0
 /* 0134CC 800128CC AFAC0010 */  sw    $t4, 0x10($sp)
@@ -559,7 +559,7 @@ glabel render_3d_model
 /* 0134DC 800128DC AFAB0030 */  sw    $t3, 0x30($sp)
 /* 0134E0 800128E0 E7A00094 */  swc1  $f0, 0x94($sp)
 /* 0134E4 800128E4 E7A20090 */  swc1  $f2, 0x90($sp)
-/* 0134E8 800128E8 0C01A145 */  jal   func_80068514
+/* 0134E8 800128E8 0C01A145 */  jal   render_sprite_billboard
 /* 0134EC 800128EC E7AC008C */   swc1  $f12, 0x8c($sp)
 /* 0134F0 800128F0 83A8008A */  lb    $t0, 0x8a($sp)
 /* 0134F4 800128F4 8FAA00BC */  lw    $t2, 0xbc($sp)
@@ -659,11 +659,11 @@ glabel render_3d_model
 /* 01365C 80012A5C 460042A1 */  cvt.d.s $f10, $f8
 /* 013660 80012A60 462E5102 */  mul.d $f4, $f10, $f14
 /* 013664 80012A64 460081A1 */  cvt.d.s $f6, $f16
-/* 013668 80012A68 3C058012 */  lui   $a1, %hi(D_8011AE90) # $a1, 0x8012
-/* 01366C 80012A6C 3C068012 */  lui   $a2, %hi(D_8011AE94) # $a2, 0x8012
-/* 013670 80012A70 24C6AE94 */  addiu $a2, %lo(D_8011AE94) # addiu $a2, $a2, -0x516c
+/* 013668 80012A68 3C058012 */  lui   $a1, %hi(gObjectCurrMatrix) # $a1, 0x8012
+/* 01366C 80012A6C 3C068012 */  lui   $a2, %hi(gObjectCurrVertexList) # $a2, 0x8012
+/* 013670 80012A70 24C6AE94 */  addiu $a2, %lo(gObjectCurrVertexList) # addiu $a2, $a2, -0x516c
 /* 013674 80012A74 46243200 */  add.d $f8, $f6, $f4
-/* 013678 80012A78 24A5AE90 */  addiu $a1, %lo(D_8011AE90) # addiu $a1, $a1, -0x5170
+/* 013678 80012A78 24A5AE90 */  addiu $a1, %lo(gObjectCurrMatrix) # addiu $a1, $a1, -0x5170
 /* 01367C 80012A7C 462042A0 */  cvt.s.d $f10, $f8
 /* 013680 80012A80 240E010A */  li    $t6, 266
 /* 013684 80012A84 46121101 */  sub.s $f4, $f2, $f18
@@ -692,7 +692,7 @@ glabel render_3d_model
 /* 0136E0 80012AE0 17010005 */  bne   $t8, $at, .L80012AF8
 /* 0136E4 80012AE4 8FAF009C */   lw    $t7, 0x9c($sp)
 /* 0136E8 80012AE8 AFAC0010 */  sw    $t4, 0x10($sp)
-/* 0136EC 80012AEC 0C01A145 */  jal   func_80068514
+/* 0136EC 80012AEC 0C01A145 */  jal   render_sprite_billboard
 /* 0136F0 80012AF0 AFAE0014 */   sw    $t6, 0x14($sp)
 /* 0136F4 80012AF4 8FAF009C */  lw    $t7, 0x9c($sp)
 .L80012AF8:

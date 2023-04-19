@@ -6,7 +6,7 @@ glabel func_80059BF0
 /* 05A800 80059C00 00803025 */  move  $a2, $a0
 /* 05A804 80059C04 85040164 */  lh    $a0, 0x164($t0)
 /* 05A808 80059C08 AFA60028 */  sw    $a2, 0x28($sp)
-/* 05A80C 80059C0C 0C01C1FE */  jal   sine_s
+/* 05A80C 80059C0C 0C01C1FE */  jal   coss_f
 /* 05A810 80059C10 AFA80020 */   sw    $t0, 0x20($sp)
 /* 05A814 80059C14 8FA80020 */  lw    $t0, 0x20($sp)
 /* 05A818 80059C18 E7A00018 */  swc1  $f0, 0x18($sp)
@@ -15,7 +15,7 @@ glabel func_80059BF0
 /* 05A824 80059C24 00000000 */  nop   
 /* 05A828 80059C28 01CF2023 */  subu  $a0, $t6, $t7
 /* 05A82C 80059C2C 0004C400 */  sll   $t8, $a0, 0x10
-/* 05A830 80059C30 0C01C1FE */  jal   sine_s
+/* 05A830 80059C30 0C01C1FE */  jal   coss_f
 /* 05A834 80059C34 00182403 */   sra   $a0, $t8, 0x10
 /* 05A838 80059C38 C7A40018 */  lwc1  $f4, 0x18($sp)
 /* 05A83C 80059C3C 44803000 */  mtc1  $zero, $f6
@@ -65,7 +65,7 @@ glabel func_80059BF0
 /* 05A8E4 80059CE4 28E10168 */  slti  $at, $a3, 0x168
 /* 05A8E8 80059CE8 1420000D */  bnez  $at, .L80059D20
 /* 05A8EC 80059CEC A52F0000 */   sh    $t7, ($t1)
-/* 05A8F0 80059CF0 0C01BAAC */  jal   func_8006EAB0
+/* 05A8F0 80059CF0 0C01BAAC */  jal   is_postrace_viewport_active
 /* 05A8F4 80059CF4 00000000 */   nop   
 /* 05A8F8 80059CF8 3C0A8012 */  lui   $t2, %hi(D_8011D59C) # $t2, 0x8012
 /* 05A8FC 80059CFC 14400044 */  bnez  $v0, .L80059E10

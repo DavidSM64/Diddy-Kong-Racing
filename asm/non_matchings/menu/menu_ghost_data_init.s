@@ -230,19 +230,19 @@ glabel menu_ghost_data_init
 /* 09A9E8 80099DE8 8FAF0048 */  lw    $t7, 0x48($sp)
 /* 09A9EC 80099DEC AC980040 */  sw    $t8, 0x40($a0)
 /* 09A9F0 80099DF0 00F6C021 */  addu  $t8, $a3, $s6
-/* 09A9F4 80099DF4 0C023917 */  jal   func_8008E45C
+/* 09A9F4 80099DF4 0C023917 */  jal   assign_vehicle_icon_textures
 /* 09A9F8 80099DF8 AF0F0018 */   sw    $t7, 0x18($t8)
-/* 09A9FC 80099DFC 0C025181 */  jal   func_80094604
+/* 09A9FC 80099DFC 0C025181 */  jal   assign_racer_portrait_textures
 /* 09AA00 80099E00 00000000 */   nop   
 /* 09AA04 80099E04 0C02392C */  jal   func_8008E4B0
 /* 09AA08 80099E08 00000000 */   nop   
-/* 09AA0C 80099E0C 3C018012 */  lui   $at, %hi(D_801263BC) # $at, 0x8012
-/* 09AA10 80099E10 AC2063BC */  sw    $zero, %lo(D_801263BC)($at)
+/* 09AA0C 80099E0C 3C018012 */  lui   $at, %hi(gOptionBlinkTimer) # $at, 0x8012
+/* 09AA10 80099E10 AC2063BC */  sw    $zero, %lo(gOptionBlinkTimer)($at)
 /* 09AA14 80099E14 3C018012 */  lui   $at, %hi(D_801263E0) # $at, 0x8012
 /* 09AA18 80099E18 AC2063E0 */  sw    $zero, %lo(D_801263E0)($at)
-/* 09AA1C 80099E1C 3C018012 */  lui   $at, %hi(D_801263D8) # $at, 0x8012
+/* 09AA1C 80099E1C 3C018012 */  lui   $at, %hi(gOpacityDecayTimer) # $at, 0x8012
 /* 09AA20 80099E20 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
-/* 09AA24 80099E24 AC2063D8 */  sw    $zero, %lo(D_801263D8)($at)
+/* 09AA24 80099E24 AC2063D8 */  sw    $zero, %lo(gOpacityDecayTimer)($at)
 /* 09AA28 80099E28 8FB90070 */  lw    $t9, 0x70($sp)
 /* 09AA2C 80099E2C 2442F47C */  addiu $v0, %lo(gMenuDelay) # addiu $v0, $v0, -0xb84
 /* 09AA30 80099E30 AC400000 */  sw    $zero, ($v0)
@@ -250,7 +250,7 @@ glabel menu_ghost_data_init
 /* 09AA38 80099E38 17200006 */  bnez  $t9, .L80099E54
 /* 09AA3C 80099E3C AC206498 */   sw    $zero, %lo(D_80126498)($at)
 /* 09AA40 80099E40 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeOut) # $a0, 0x800e
-/* 09AA44 80099E44 0C030076 */  jal   func_800C01D8
+/* 09AA44 80099E44 0C030076 */  jal   transition_begin
 /* 09AA48 80099E48 2484F77C */   addiu $a0, %lo(sMenuTransitionFadeOut) # addiu $a0, $a0, -0x884
 /* 09AA4C 80099E4C 10000004 */  b     .L80099E60
 /* 09AA50 80099E50 8FBF0044 */   lw    $ra, 0x44($sp)

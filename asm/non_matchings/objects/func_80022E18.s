@@ -13,11 +13,11 @@ glabel func_80022E18
 /* 023A44 80022E44 24040001 */  li    $a0, 1
 /* 023A48 80022E48 0C02AC6B */  jal   func_800AB1AC
 /* 023A4C 80022E4C A4580054 */   sh    $t8, 0x54($v0)
-/* 023A50 80022E50 3C078012 */  lui   $a3, %hi(gObjectStructArrayPtr) # $a3, 0x8012
-/* 023A54 80022E54 3C068012 */  lui   $a2, %hi(gObjectCount) # $a2, 0x8012
+/* 023A50 80022E50 3C078012 */  lui   $a3, %hi(gRacers) # $a3, 0x8012
+/* 023A54 80022E54 3C068012 */  lui   $a2, %hi(gNumRacers) # $a2, 0x8012
 /* 023A58 80022E58 00002825 */  move  $a1, $zero
-/* 023A5C 80022E5C 24C6AEF0 */  addiu $a2, %lo(gObjectCount) # addiu $a2, $a2, -0x5110
-/* 023A60 80022E60 24E7AEE4 */  addiu $a3, %lo(gObjectStructArrayPtr) # addiu $a3, $a3, -0x511c
+/* 023A5C 80022E5C 24C6AEF0 */  addiu $a2, %lo(gNumRacers) # addiu $a2, $a2, -0x5110
+/* 023A60 80022E60 24E7AEE4 */  addiu $a3, %lo(gRacers) # addiu $a3, $a3, -0x511c
 /* 023A64 80022E64 00001025 */  move  $v0, $zero
 .L80022E68:
 /* 023A68 80022E68 8CF90000 */  lw    $t9, ($a3)
@@ -41,14 +41,14 @@ glabel func_80022E18
 /* 023AB0 80022EB0 8D640004 */  lw    $a0, 4($t3)
 /* 023AB4 80022EB4 0C003FEE */  jal   gParticlePtrList_addObject
 /* 023AB8 80022EB8 00000000 */   nop   
-/* 023ABC 80022EBC 3C078012 */  lui   $a3, %hi(gObjectStructArrayPtr) # $a3, 0x8012
-/* 023AC0 80022EC0 24E7AEE4 */  addiu $a3, %lo(gObjectStructArrayPtr) # addiu $a3, $a3, -0x511c
+/* 023ABC 80022EBC 3C078012 */  lui   $a3, %hi(gRacers) # $a3, 0x8012
+/* 023AC0 80022EC0 24E7AEE4 */  addiu $a3, %lo(gRacers) # addiu $a3, $a3, -0x511c
 /* 023AC4 80022EC4 8CEC0000 */  lw    $t4, ($a3)
-/* 023AC8 80022EC8 3C0E8012 */  lui   $t6, %hi(D_8011AEE8) # $t6, 0x8012
-/* 023ACC 80022ECC 8DCEAEE8 */  lw    $t6, %lo(D_8011AEE8)($t6)
+/* 023AC8 80022EC8 3C0E8012 */  lui   $t6, %hi(gRacersByPosition) # $t6, 0x8012
+/* 023ACC 80022ECC 8DCEAEE8 */  lw    $t6, %lo(gRacersByPosition)($t6)
 /* 023AD0 80022ED0 8D8D0000 */  lw    $t5, ($t4)
-/* 023AD4 80022ED4 3C068012 */  lui   $a2, %hi(gObjectCount) # $a2, 0x8012
-/* 023AD8 80022ED8 24C6AEF0 */  addiu $a2, %lo(gObjectCount) # addiu $a2, $a2, -0x5110
+/* 023AD4 80022ED4 3C068012 */  lui   $a2, %hi(gNumRacers) # $a2, 0x8012
+/* 023AD8 80022ED8 24C6AEF0 */  addiu $a2, %lo(gNumRacers) # addiu $a2, $a2, -0x5110
 /* 023ADC 80022EDC 240F0001 */  li    $t7, 1
 /* 023AE0 80022EE0 ADCD0000 */  sw    $t5, ($t6)
 /* 023AE4 80022EE4 ACCF0000 */  sw    $t7, ($a2)
@@ -116,14 +116,14 @@ glabel func_80022E18
 /* 023BCC 80022FCC 0305C824 */  and   $t9, $t8, $a1
 /* 023BD0 80022FD0 13200005 */  beqz  $t9, .L80022FE8
 /* 023BD4 80022FD4 00403025 */   move  $a2, $v0
-/* 023BD8 80022FD8 0C0274CC */  jal   func_8009D330
+/* 023BD8 80022FD8 0C0274CC */  jal   set_next_taj_challenge_menu
 /* 023BDC 80022FDC 24040005 */   li    $a0, 5
 /* 023BE0 80022FE0 10000013 */  b     .L80023030
 /* 023BE4 80022FE4 8FAB001C */   lw    $t3, 0x1c($sp)
 .L80022FE8:
 /* 023BE8 80022FE8 24E40006 */  addiu $a0, $a3, 6
 /* 023BEC 80022FEC AFA5002C */  sw    $a1, 0x2c($sp)
-/* 023BF0 80022FF0 0C0274CC */  jal   func_8009D330
+/* 023BF0 80022FF0 0C0274CC */  jal   set_next_taj_challenge_menu
 /* 023BF4 80022FF4 AFA60020 */   sw    $a2, 0x20($sp)
 /* 023BF8 80022FF8 8FA60020 */  lw    $a2, 0x20($sp)
 /* 023BFC 80022FFC 8FA5002C */  lw    $a1, 0x2c($sp)
@@ -132,12 +132,12 @@ glabel func_80022E18
 /* 023C08 80023008 01054825 */  or    $t1, $t0, $a1
 /* 023C0C 8002300C 0C027068 */  jal   get_save_file_index
 /* 023C10 80023010 A4C90014 */   sh    $t1, 0x14($a2)
-/* 023C14 80023014 0C01BB12 */  jal   func_8006EC48
+/* 023C14 80023014 0C01BB12 */  jal   safe_mark_write_save_file
 /* 023C18 80023018 00402025 */   move  $a0, $v0
 /* 023C1C 8002301C 10000004 */  b     .L80023030
 /* 023C20 80023020 8FAB001C */   lw    $t3, 0x1c($sp)
 .L80023024:
-/* 023C24 80023024 0C0274CC */  jal   func_8009D330
+/* 023C24 80023024 0C0274CC */  jal   set_next_taj_challenge_menu
 /* 023C28 80023028 24040004 */   li    $a0, 4
 /* 023C2C 8002302C 8FAB001C */  lw    $t3, 0x1c($sp)
 .L80023030:
@@ -152,7 +152,7 @@ glabel func_80022E18
 /* 023C4C 8002304C 00000000 */   nop   
 /* 023C50 80023050 0C000611 */  jal   func_80001844
 /* 023C54 80023054 00000000 */   nop   
-/* 023C58 80023058 0C0274CC */  jal   func_8009D330
+/* 023C58 80023058 0C0274CC */  jal   set_next_taj_challenge_menu
 /* 023C5C 8002305C 00002025 */   move  $a0, $zero
 /* 023C60 80023060 0C00205A */  jal   func_80008168
 /* 023C64 80023064 00000000 */   nop   
@@ -180,8 +180,8 @@ glabel func_80022E18
 /* 023CB4 800230B4 0C01AF44 */  jal   func_8006BD10
 /* 023CB8 800230B8 00000000 */   nop   
 /* 023CBC 800230BC 8FBF0014 */  lw    $ra, 0x14($sp)
-/* 023CC0 800230C0 3C018012 */  lui   $at, %hi(D_8011AEF6) # $at, 0x8012
-/* 023CC4 800230C4 A020AEF6 */  sb    $zero, %lo(D_8011AEF6)($at)
+/* 023CC0 800230C0 3C018012 */  lui   $at, %hi(gIsTajChallenge) # $at, 0x8012
+/* 023CC4 800230C4 A020AEF6 */  sb    $zero, %lo(gIsTajChallenge)($at)
 /* 023CC8 800230C8 03E00008 */  jr    $ra
 /* 023CCC 800230CC 27BD0030 */   addiu $sp, $sp, 0x30
 

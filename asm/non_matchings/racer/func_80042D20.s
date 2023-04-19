@@ -46,7 +46,7 @@ glabel func_80042D20
 /* 043954 80042D54 0C01AF6C */  jal   get_current_level_header
 /* 043958 80042D58 AFA20044 */   sw    $v0, 0x44($sp)
 /* 04395C 80042D5C AFA20050 */  sw    $v0, 0x50($sp)
-/* 043960 80042D60 0C006EAB */  jal   func_8001BAAC
+/* 043960 80042D60 0C006EAB */  jal   get_racer_objects_by_position
 /* 043964 80042D64 27A40068 */   addiu $a0, $sp, 0x68
 /* 043968 80042D68 0C01B063 */  jal   func_8006C18C
 /* 04396C 80042D6C AFA20060 */   sw    $v0, 0x60($sp)
@@ -355,7 +355,7 @@ glabel func_80042D20
 /* 043DDC 800431DC 00000000 */   nop   
 /* 043DE0 800431E0 AFA9005C */  sw    $t1, 0x5c($sp)
 /* 043DE4 800431E4 A7AC0034 */  sh    $t4, 0x34($sp)
-/* 043DE8 800431E8 0C008D07 */  jal   func_8002341C
+/* 043DE8 800431E8 0C008D07 */  jal   is_taj_challenge
 /* 043DEC 800431EC A7AD0078 */   sh    $t5, 0x78($sp)
 /* 043DF0 800431F0 8FA9005C */  lw    $t1, 0x5c($sp)
 /* 043DF4 800431F4 87AC0034 */  lh    $t4, 0x34($sp)
@@ -571,7 +571,7 @@ glabel func_80042D20
 /* 044100 80043500 AFA9005C */  sw    $t1, 0x5c($sp)
 /* 044104 80043504 A3AA004B */  sb    $t2, 0x4b($sp)
 /* 044108 80043508 A7AC0034 */  sh    $t4, 0x34($sp)
-/* 04410C 8004350C 0C011114 */  jal   func_80044450
+/* 04410C 8004350C 0C011114 */  jal   roll_percent_chance
 /* 044110 80043510 A7AD0078 */   sh    $t5, 0x78($sp)
 /* 044114 80043514 8FA9005C */  lw    $t1, 0x5c($sp)
 /* 044118 80043518 83AA004B */  lb    $t2, 0x4b($sp)
@@ -592,7 +592,7 @@ glabel func_80042D20
 /* 044150 80043550 AFA9005C */  sw    $t1, 0x5c($sp)
 /* 044154 80043554 A3AA004B */  sb    $t2, 0x4b($sp)
 /* 044158 80043558 A7AC0034 */  sh    $t4, 0x34($sp)
-/* 04415C 8004355C 0C011114 */  jal   func_80044450
+/* 04415C 8004355C 0C011114 */  jal   roll_percent_chance
 /* 044160 80043560 A7AD0078 */   sh    $t5, 0x78($sp)
 /* 044164 80043564 8FA9005C */  lw    $t1, 0x5c($sp)
 /* 044168 80043568 83AA004B */  lb    $t2, 0x4b($sp)
@@ -603,10 +603,10 @@ glabel func_80042D20
 /* 04417C 8004357C A2000172 */  sb    $zero, 0x172($s0)
 .L80043580:
 /* 044180 80043580 820F01D3 */  lb    $t7, 0x1d3($s0)
-/* 044184 80043584 3C19800E */  lui   $t9, %hi(D_800DCD90) # $t9, 0x800e
+/* 044184 80043584 3C19800E */  lui   $t9, %hi(gRacerAIBalloonActionTable) # $t9, 0x800e
 /* 044188 80043588 15E00016 */  bnez  $t7, .L800435E4
 /* 04418C 8004358C 032AC821 */   addu  $t9, $t9, $t2
-/* 044190 80043590 8339CD90 */  lb    $t9, %lo(D_800DCD90)($t9)
+/* 044190 80043590 8339CD90 */  lb    $t9, %lo(gRacerAIBalloonActionTable)($t9)
 /* 044194 80043594 24010004 */  li    $at, 4
 /* 044198 80043598 17210012 */  bne   $t9, $at, .L800435E4
 /* 04419C 8004359C 00000000 */   nop   
@@ -614,7 +614,7 @@ glabel func_80042D20
 /* 0441A4 800435A4 AFA9005C */  sw    $t1, 0x5c($sp)
 /* 0441A8 800435A8 A3AA004B */  sb    $t2, 0x4b($sp)
 /* 0441AC 800435AC A7AC0034 */  sh    $t4, 0x34($sp)
-/* 0441B0 800435B0 0C011114 */  jal   func_80044450
+/* 0441B0 800435B0 0C011114 */  jal   roll_percent_chance
 /* 0441B4 800435B4 A7AD0078 */   sh    $t5, 0x78($sp)
 /* 0441B8 800435B8 8FA9005C */  lw    $t1, 0x5c($sp)
 /* 0441BC 800435BC 83AA004B */  lb    $t2, 0x4b($sp)
@@ -629,9 +629,9 @@ glabel func_80042D20
 /* 0441E0 800435E0 AC2ED530 */  sw    $t6, %lo(gCurrentButtonsReleased)($at)
 .L800435E4:
 /* 0441E4 800435E4 820F0173 */  lb    $t7, 0x173($s0)
-/* 0441E8 800435E8 3C19800E */  lui   $t9, %hi(D_800DCD90) # $t9, 0x800e
+/* 0441E8 800435E8 3C19800E */  lui   $t9, %hi(gRacerAIBalloonActionTable) # $t9, 0x800e
 /* 0441EC 800435EC 11E00065 */  beqz  $t7, .L80043784
-/* 0441F0 800435F0 2739CD90 */   addiu $t9, %lo(D_800DCD90) # addiu $t9, $t9, -0x3270
+/* 0441F0 800435F0 2739CD90 */   addiu $t9, %lo(gRacerAIBalloonActionTable) # addiu $t9, $t9, -0x3270
 /* 0441F4 800435F4 01591821 */  addu  $v1, $t2, $t9
 /* 0441F8 800435F8 80780000 */  lb    $t8, ($v1)
 /* 0441FC 800435FC 24010001 */  li    $at, 1
@@ -662,7 +662,7 @@ glabel func_80042D20
 /* 04425C 8004365C AFA3002C */  sw    $v1, 0x2c($sp)
 /* 044260 80043660 AFA9005C */  sw    $t1, 0x5c($sp)
 /* 044264 80043664 A7AC0034 */  sh    $t4, 0x34($sp)
-/* 044268 80043668 0C011114 */  jal   func_80044450
+/* 044268 80043668 0C011114 */  jal   roll_percent_chance
 /* 04426C 8004366C A7AD0078 */   sh    $t5, 0x78($sp)
 /* 044270 80043670 8FA3002C */  lw    $v1, 0x2c($sp)
 /* 044274 80043674 8FA9005C */  lw    $t1, 0x5c($sp)
@@ -714,7 +714,7 @@ glabel func_80042D20
 .L80043728:
 /* 044328 80043728 AFA9005C */  sw    $t1, 0x5c($sp)
 /* 04432C 8004372C A7AC0034 */  sh    $t4, 0x34($sp)
-/* 044330 80043730 0C011114 */  jal   func_80044450
+/* 044330 80043730 0C011114 */  jal   roll_percent_chance
 /* 044334 80043734 A7AD0078 */   sh    $t5, 0x78($sp)
 /* 044338 80043738 8FA9005C */  lw    $t1, 0x5c($sp)
 /* 04433C 8004373C 87AC0034 */  lh    $t4, 0x34($sp)
@@ -751,7 +751,7 @@ glabel func_80042D20
 /* 0443B0 800437B0 87A4003A */  lh    $a0, 0x3a($sp)
 /* 0443B4 800437B4 AFA9005C */  sw    $t1, 0x5c($sp)
 /* 0443B8 800437B8 A7AC0034 */  sh    $t4, 0x34($sp)
-/* 0443BC 800437BC 0C011114 */  jal   func_80044450
+/* 0443BC 800437BC 0C011114 */  jal   roll_percent_chance
 /* 0443C0 800437C0 A7AD0078 */   sh    $t5, 0x78($sp)
 /* 0443C4 800437C4 8FA9005C */  lw    $t1, 0x5c($sp)
 /* 0443C8 800437C8 87AC0034 */  lh    $t4, 0x34($sp)
@@ -866,7 +866,7 @@ glabel func_80042D20
 /* 04455C 8004395C 00000000 */  nop   
 /* 044560 80043960 A20F01CA */  sb    $t7, 0x1ca($s0)
 /* 044564 80043964 87A4003C */  lh    $a0, 0x3c($sp)
-/* 044568 80043968 0C011114 */  jal   func_80044450
+/* 044568 80043968 0C011114 */  jal   roll_percent_chance
 /* 04456C 8004396C AFA9005C */   sw    $t1, 0x5c($sp)
 /* 044570 80043970 8FA9005C */  lw    $t1, 0x5c($sp)
 /* 044574 80043974 10400005 */  beqz  $v0, .L8004398C
@@ -1057,7 +1057,7 @@ glabel func_80042D20
 /* 044830 80043C30 00000000 */  nop   
 /* 044834 80043C34 A60E01BA */  sh    $t6, 0x1ba($s0)
 .L80043C38:
-/* 044838 80043C38 0C008D07 */  jal   func_8002341C
+/* 044838 80043C38 0C008D07 */  jal   is_taj_challenge
 /* 04483C 80043C3C 00000000 */   nop   
 /* 044840 80043C40 00021C00 */  sll   $v1, $v0, 0x10
 /* 044844 80043C44 0002CC00 */  sll   $t9, $v0, 0x10

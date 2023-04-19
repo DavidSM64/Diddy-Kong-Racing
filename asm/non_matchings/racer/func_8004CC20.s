@@ -110,8 +110,8 @@ glabel func_8004CC20
 /* 04D980 8004CD80 0C015D7B */  jal   func_800575EC
 /* 04D984 8004CD84 A6000164 */   sh    $zero, 0x164($s0)
 /* 04D988 8004CD88 862F0000 */  lh    $t7, ($s1)
-/* 04D98C 8004CD8C 3C058012 */  lui   $a1, %hi(D_8011D510) # $a1, 0x8012
-/* 04D990 8004CD90 24A5D510 */  addiu $a1, %lo(D_8011D510) # addiu $a1, $a1, -0x2af0
+/* 04D98C 8004CD8C 3C058012 */  lui   $a1, %hi(gCurrentRacerTransform) # $a1, 0x8012
+/* 04D990 8004CD90 24A5D510 */  addiu $a1, %lo(gCurrentRacerTransform) # addiu $a1, $a1, -0x2af0
 /* 04D994 8004CD94 A4AF0000 */  sh    $t7, ($a1)
 /* 04D998 8004CD98 86380002 */  lh    $t8, 2($s1)
 /* 04D99C 8004CD9C 44800000 */  mtc1  $zero, $f0
@@ -124,7 +124,7 @@ glabel func_8004CC20
 /* 04D9B8 8004CDB8 E4A00010 */  swc1  $f0, 0x10($a1)
 /* 04D9BC 8004CDBC E4A00014 */  swc1  $f0, 0x14($a1)
 /* 04D9C0 8004CDC0 A4B90004 */  sh    $t9, 4($a1)
-/* 04D9C4 8004CDC4 0C01BF0C */  jal   func_8006FC30
+/* 04D9C4 8004CDC4 0C01BF0C */  jal   object_transform_to_matrix
 /* 04D9C8 8004CDC8 E4AA0008 */   swc1  $f10, 8($a1)
 /* 04D9CC 8004CDCC 44800000 */  mtc1  $zero, $f0
 /* 04D9D0 8004CDD0 260B0044 */  addiu $t3, $s0, 0x44
@@ -535,7 +535,7 @@ glabel func_8004CC20
 /* 04DFD4 8004D3D4 46026402 */  mul.s $f16, $f12, $f2
 /* 04DFD8 8004D3D8 44063000 */  mfc1  $a2, $f6
 /* 04DFDC 8004D3DC 44078000 */  mfc1  $a3, $f16
-/* 04DFE0 8004D3E0 0C00455C */  jal   func_80011570
+/* 04DFE0 8004D3E0 0C00455C */  jal   move_object
 /* 04DFE4 8004D3E4 00000000 */   nop   
 /* 04DFE8 8004D3E8 3C098012 */  lui   $t1, %hi(gCurrentPlayerIndex) # $t1, 0x8012
 /* 04DFEC 8004D3EC 2529D55C */  addiu $t1, %lo(gCurrentPlayerIndex) # addiu $t1, $t1, -0x2aa4
@@ -573,8 +573,8 @@ glabel func_8004CC20
 /* 04E060 8004D460 C6240014 */  lwc1  $f4, 0x14($s1)
 /* 04E064 8004D464 46088281 */  sub.s $f10, $f16, $f8
 /* 04E068 8004D468 862E0000 */  lh    $t6, ($s1)
-/* 04E06C 8004D46C 3C058012 */  lui   $a1, %hi(D_8011D510) # $a1, 0x8012
-/* 04E070 8004D470 24A5D510 */  addiu $a1, %lo(D_8011D510) # addiu $a1, $a1, -0x2af0
+/* 04E06C 8004D46C 3C058012 */  lui   $a1, %hi(gCurrentRacerTransform) # $a1, 0x8012
+/* 04E070 8004D470 24A5D510 */  addiu $a1, %lo(gCurrentRacerTransform) # addiu $a1, $a1, -0x2af0
 /* 04E074 8004D474 000E7823 */  negu  $t7, $t6
 /* 04E078 8004D478 44807000 */  mtc1  $zero, $f14
 /* 04E07C 8004D47C 46023002 */  mul.s $f0, $f6, $f2
@@ -595,7 +595,7 @@ glabel func_8004CC20
 /* 04E0B8 8004D4B8 E4AE000C */  swc1  $f14, 0xc($a1)
 /* 04E0BC 8004D4BC E4AE0010 */  swc1  $f14, 0x10($a1)
 /* 04E0C0 8004D4C0 E4AE0014 */  swc1  $f14, 0x14($a1)
-/* 04E0C4 8004D4C4 0C01BF9D */  jal   func_8006FE74
+/* 04E0C4 8004D4C4 0C01BF9D */  jal   object_transform_to_matrix_2
 /* 04E0C8 8004D4C8 E4A80008 */   swc1  $f8, 8($a1)
 /* 04E0CC 8004D4CC 8E25001C */  lw    $a1, 0x1c($s1)
 /* 04E0D0 8004D4D0 8E260020 */  lw    $a2, 0x20($s1)
@@ -611,7 +611,7 @@ glabel func_8004CC20
 /* 04E0F8 8004D4F8 8FA700DC */  lw    $a3, 0xdc($sp)
 /* 04E0FC 8004D4FC 02202025 */  move  $a0, $s1
 /* 04E100 8004D500 02002825 */  move  $a1, $s0
-/* 04E104 8004D504 0C01602D */  jal   func_800580B4
+/* 04E104 8004D504 0C01602D */  jal   second_racer_camera_update
 /* 04E108 8004D508 24060006 */   li    $a2, 6
 /* 04E10C 8004D50C 8E220060 */  lw    $v0, 0x60($s1)
 /* 04E110 8004D510 02202025 */  move  $a0, $s1

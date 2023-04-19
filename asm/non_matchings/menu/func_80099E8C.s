@@ -20,11 +20,11 @@ glabel func_80099E8C
 /* 09AAC0 80099EC0 AFB1003C */  sw    $s1, 0x3c($sp)
 /* 09AAC4 80099EC4 AFB00038 */  sw    $s0, 0x38($sp)
 /* 09AAC8 80099EC8 24A563A8 */  addiu $a1, %lo(sMenuCurrHudMat) # addiu $a1, $a1, 0x63a8
-/* 09AACC 80099ECC 0C019FCB */  jal   func_80067F2C
+/* 09AACC 80099ECC 0C019FCB */  jal   set_ortho_matrix_view
 /* 09AAD0 80099ED0 02E02025 */   move  $a0, $s7
 /* 09AAD4 80099ED4 3C0E8000 */  lui   $t6, %hi(osTvType) # $t6, 0x8000
 /* 09AAD8 80099ED8 8DCE0300 */  lw    $t6, %lo(osTvType)($t6)
-/* 09AADC 80099EDC 3C188012 */  lui   $t8, %hi(D_801263D8) # $t8, 0x8012
+/* 09AADC 80099EDC 3C188012 */  lui   $t8, %hi(gOpacityDecayTimer) # $t8, 0x8012
 /* 09AAE0 80099EE0 15C00004 */  bnez  $t6, .L80099EF4
 /* 09AAE4 80099EE4 24040002 */   li    $a0, 2
 /* 09AAE8 80099EE8 240F000C */  li    $t7, 12
@@ -33,7 +33,7 @@ glabel func_80099E8C
 .L80099EF4:
 /* 09AAF4 80099EF4 AFA000D0 */  sw    $zero, 0xd0($sp)
 .L80099EF8:
-/* 09AAF8 80099EF8 8F1863D8 */  lw    $t8, %lo(D_801263D8)($t8)
+/* 09AAF8 80099EF8 8F1863D8 */  lw    $t8, %lo(gOpacityDecayTimer)($t8)
 /* 09AAFC 80099EFC 0C0310BB */  jal   set_text_font
 /* 09AB00 80099F00 AFB800E4 */   sw    $t8, 0xe4($sp)
 /* 09AB04 80099F04 00002025 */  move  $a0, $zero
@@ -98,8 +98,8 @@ glabel func_80099E8C
 /* 09ABF0 80099FF0 100001ED */  b     .L8009A7A8
 /* 09ABF4 80099FF4 8FBF005C */   lw    $ra, 0x5c($sp)
 .L80099FF8:
-/* 09ABF8 80099FF8 3C028012 */  lui   $v0, %hi(D_801263BC) # $v0, 0x8012
-/* 09ABFC 80099FFC 8C4263BC */  lw    $v0, %lo(D_801263BC)($v0)
+/* 09ABF8 80099FF8 3C028012 */  lui   $v0, %hi(gOptionBlinkTimer) # $v0, 0x8012
+/* 09ABFC 80099FFC 8C4263BC */  lw    $v0, %lo(gOptionBlinkTimer)($v0)
 /* 09AC00 8009A000 AFA900E8 */  sw    $t1, 0xe8($sp)
 /* 09AC04 8009A004 000250C0 */  sll   $t2, $v0, 3
 /* 09AC08 8009A008 29410100 */  slti  $at, $t2, 0x100
@@ -314,16 +314,16 @@ glabel func_80099E8C
 /* 09AF28 8009A328 240FFFFF */   li    $t7, -1
 /* 09AF2C 8009A32C 24010002 */  li    $at, 2
 /* 09AF30 8009A330 10410007 */  beq   $v0, $at, .L8009A350
-/* 09AF34 8009A334 3C05800E */   lui   $a1, %hi(D_800E048C) # $a1, 0x800e
-/* 09AF38 8009A338 3C05800E */  lui   $a1, %hi(D_800E045C) # $a1, 0x800e
+/* 09AF34 8009A334 3C05800E */   lui   $a1, %hi(gRaceSelectionPlaneTex) # $a1, 0x800e
+/* 09AF38 8009A338 3C05800E */  lui   $a1, %hi(gRaceSelectionCarTex) # $a1, 0x800e
 /* 09AF3C 8009A33C 10000005 */  b     .L8009A354
-/* 09AF40 8009A340 24A5045C */   addiu $a1, %lo(D_800E045C) # addiu $a1, $a1, 0x45c
+/* 09AF40 8009A340 24A5045C */   addiu $a1, %lo(gRaceSelectionCarTex) # addiu $a1, $a1, 0x45c
 .L8009A344:
-/* 09AF44 8009A344 3C05800E */  lui   $a1, %hi(D_800E0474) # $a1, 0x800e
+/* 09AF44 8009A344 3C05800E */  lui   $a1, %hi(gRaceSelectionHoverTex) # $a1, 0x800e
 /* 09AF48 8009A348 10000002 */  b     .L8009A354
-/* 09AF4C 8009A34C 24A50474 */   addiu $a1, %lo(D_800E0474) # addiu $a1, $a1, 0x474
+/* 09AF4C 8009A34C 24A50474 */   addiu $a1, %lo(gRaceSelectionHoverTex) # addiu $a1, $a1, 0x474
 .L8009A350:
-/* 09AF50 8009A350 24A5048C */  addiu $a1, %lo(D_800E048C) # addiu $a1, $a1, 0x48c
+/* 09AF50 8009A350 24A5048C */  addiu $a1, %lo(gRaceSelectionPlaneTex) # addiu $a1, $a1, 0x48c
 .L8009A354:
 /* 09AF54 8009A354 862B0008 */  lh    $t3, 8($s1)
 /* 09AF58 8009A358 862D000A */  lh    $t5, 0xa($s1)
@@ -342,7 +342,7 @@ glabel func_80099E8C
 /* 09AF8C 8009A38C E7A00010 */  swc1  $f0, 0x10($sp)
 /* 09AF90 8009A390 0C01E340 */  jal   render_texture_rectangle_scaled
 /* 09AF94 8009A394 E7A00014 */   swc1  $f0, 0x14($sp)
-/* 09AF98 8009A398 0C01ECF4 */  jal   func_8007B3D0
+/* 09AF98 8009A398 0C01ECF4 */  jal   reset_render_settings
 /* 09AF9C 8009A39C 02E02025 */   move  $a0, $s7
 /* 09AFA0 8009A3A0 8638000C */  lh    $t8, 0xc($s1)
 /* 09AFA4 8009A3A4 3C02800E */  lui   $v0, %hi(gMenuImageStack) # $v0, 0x800e
@@ -540,19 +540,19 @@ glabel func_80099E8C
 /* 09B290 8009A690 0C0316D6 */  jal   render_dialogue_box
 /* 09B294 8009A694 24070007 */   li    $a3, 7
 .L8009A698:
-/* 09B298 8009A698 3C098012 */  lui   $t1, %hi(D_801263BC) # $t1, 0x8012
-/* 09B29C 8009A69C 8D2963BC */  lw    $t1, %lo(D_801263BC)($t1)
-/* 09B2A0 8009A6A0 3C028012 */  lui   $v0, %hi(D_801263D8) # $v0, 0x8012
+/* 09B298 8009A698 3C098012 */  lui   $t1, %hi(gOptionBlinkTimer) # $t1, 0x8012
+/* 09B29C 8009A69C 8D2963BC */  lw    $t1, %lo(gOptionBlinkTimer)($t1)
+/* 09B2A0 8009A6A0 3C028012 */  lui   $v0, %hi(gOpacityDecayTimer) # $v0, 0x8012
 /* 09B2A4 8009A6A4 312A0010 */  andi  $t2, $t1, 0x10
 /* 09B2A8 8009A6A8 1140003E */  beqz  $t2, .L8009A7A4
 /* 09B2AC 8009A6AC 3C0B8012 */   lui   $t3, %hi(D_801264D4) # $t3, 0x8012
-/* 09B2B0 8009A6B0 8C4263D8 */  lw    $v0, %lo(D_801263D8)($v0)
+/* 09B2B0 8009A6B0 8C4263D8 */  lw    $v0, %lo(gOpacityDecayTimer)($v0)
 /* 09B2B4 8009A6B4 8D6B64D4 */  lw    $t3, %lo(D_801264D4)($t3)
 /* 09B2B8 8009A6B8 244C0003 */  addiu $t4, $v0, 3
 /* 09B2BC 8009A6BC 018B082A */  slt   $at, $t4, $t3
 /* 09B2C0 8009A6C0 1020001C */  beqz  $at, .L8009A734
-/* 09B2C4 8009A6C4 3C10800E */   lui   $s0, %hi(D_800E043C) # $s0, 0x800e
-/* 09B2C8 8009A6C8 2610043C */  addiu $s0, %lo(D_800E043C) # addiu $s0, $s0, 0x43c
+/* 09B2C4 8009A6C4 3C10800E */   lui   $s0, %hi(gMenuSelectionArrowDown) # $s0, 0x800e
+/* 09B2C8 8009A6C8 2610043C */  addiu $s0, %lo(gMenuSelectionArrowDown) # addiu $s0, $s0, 0x43c
 /* 09B2CC 8009A6CC 240D0080 */  li    $t5, 128
 /* 09B2D0 8009A6D0 AFAD001C */  sw    $t5, 0x1c($sp)
 /* 09B2D4 8009A6D4 02002825 */  move  $a1, $s0
@@ -576,13 +576,13 @@ glabel func_80099E8C
 /* 09B31C 8009A71C 2406009F */  li    $a2, 159
 /* 09B320 8009A720 0C01E2AE */  jal   render_textured_rectangle
 /* 09B324 8009A724 26470001 */   addiu $a3, $s2, 1
-/* 09B328 8009A728 3C028012 */  lui   $v0, %hi(D_801263D8) # $v0, 0x8012
-/* 09B32C 8009A72C 8C4263D8 */  lw    $v0, %lo(D_801263D8)($v0)
+/* 09B328 8009A728 3C028012 */  lui   $v0, %hi(gOpacityDecayTimer) # $v0, 0x8012
+/* 09B32C 8009A72C 8C4263D8 */  lw    $v0, %lo(gOpacityDecayTimer)($v0)
 /* 09B330 8009A730 00000000 */  nop   
 .L8009A734:
 /* 09B334 8009A734 18400019 */  blez  $v0, .L8009A79C
-/* 09B338 8009A738 3C10800E */   lui   $s0, %hi(D_800E041C) # $s0, 0x800e
-/* 09B33C 8009A73C 2610041C */  addiu $s0, %lo(D_800E041C) # addiu $s0, $s0, 0x41c
+/* 09B338 8009A738 3C10800E */   lui   $s0, %hi(gMenuSelectionArrowUp) # $s0, 0x800e
+/* 09B33C 8009A73C 2610041C */  addiu $s0, %lo(gMenuSelectionArrowUp) # addiu $s0, $s0, 0x41c
 /* 09B340 8009A740 24090080 */  li    $t1, 128
 /* 09B344 8009A744 AFA9001C */  sw    $t1, 0x1c($sp)
 /* 09B348 8009A748 02002825 */  move  $a1, $s0
@@ -607,7 +607,7 @@ glabel func_80099E8C
 /* 09B394 8009A794 0C01E2AE */  jal   render_textured_rectangle
 /* 09B398 8009A798 24070034 */   li    $a3, 52
 .L8009A79C:
-/* 09B39C 8009A79C 0C01ECF4 */  jal   func_8007B3D0
+/* 09B39C 8009A79C 0C01ECF4 */  jal   reset_render_settings
 /* 09B3A0 8009A7A0 02E02025 */   move  $a0, $s7
 .L8009A7A4:
 /* 09B3A4 8009A7A4 8FBF005C */  lw    $ra, 0x5c($sp)

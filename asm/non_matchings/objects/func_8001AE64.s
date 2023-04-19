@@ -9,11 +9,11 @@ glabel func_8001AE64
 /* 01BA80 8001AE80 A0400114 */  sb    $zero, 0x114($v0)
 /* 01BA84 8001AE84 A0400116 */  sb    $zero, 0x116($v0)
 /* 01BA88 8001AE88 A0400115 */  sb    $zero, 0x115($v0)
-/* 01BA8C 8001AE8C 3C0E8012 */  lui   $t6, %hi(D_8011AEE8) # $t6, 0x8012
-/* 01BA90 8001AE90 8DCEAEE8 */  lw    $t6, %lo(D_8011AEE8)($t6)
-/* 01BA94 8001AE94 3C198012 */  lui   $t9, %hi(gObjectCount) # $t9, 0x8012
+/* 01BA8C 8001AE8C 3C0E8012 */  lui   $t6, %hi(gRacersByPosition) # $t6, 0x8012
+/* 01BA90 8001AE90 8DCEAEE8 */  lw    $t6, %lo(gRacersByPosition)($t6)
+/* 01BA94 8001AE94 3C198012 */  lui   $t9, %hi(gNumRacers) # $t9, 0x8012
 /* 01BA98 8001AE98 8DCF0000 */  lw    $t7, ($t6)
-/* 01BA9C 8001AE9C 8F39AEF0 */  lw    $t9, %lo(gObjectCount)($t9)
+/* 01BA9C 8001AE9C 8F39AEF0 */  lw    $t9, %lo(gNumRacers)($t9)
 /* 01BAA0 8001AEA0 8DF80064 */  lw    $t8, 0x64($t7)
 /* 01BAA4 8001AEA4 00404025 */  move  $t0, $v0
 /* 01BAA8 8001AEA8 34108CA1 */  li    $s0, 36001
@@ -23,8 +23,8 @@ glabel func_8001AE64
 /* 01BAB8 8001AEB8 AFB80034 */   sw    $t8, 0x34($sp)
 /* 01BABC 8001AEBC 00006025 */  move  $t4, $zero
 .L8001AEC0:
-/* 01BAC0 8001AEC0 3C0E8012 */  lui   $t6, %hi(D_8011AEE8) # $t6, 0x8012
-/* 01BAC4 8001AEC4 8DCEAEE8 */  lw    $t6, %lo(D_8011AEE8)($t6)
+/* 01BAC0 8001AEC0 3C0E8012 */  lui   $t6, %hi(gRacersByPosition) # $t6, 0x8012
+/* 01BAC4 8001AEC4 8DCEAEE8 */  lw    $t6, %lo(gRacersByPosition)($t6)
 /* 01BAC8 8001AEC8 00000000 */  nop   
 /* 01BACC 8001AECC 01CC7821 */  addu  $t7, $t6, $t4
 /* 01BAD0 8001AED0 8DF80000 */  lw    $t8, ($t7)
@@ -109,8 +109,8 @@ glabel func_8001AE64
 /* 01BC00 8001B000 A1190114 */  sb    $t9, 0x114($t0)
 /* 01BC04 8001B004 AFA70034 */  sw    $a3, 0x34($sp)
 .L8001B008:
-/* 01BC08 8001B008 3C0E8012 */  lui   $t6, %hi(gObjectCount) # $t6, 0x8012
-/* 01BC0C 8001B00C 8DCEAEF0 */  lw    $t6, %lo(gObjectCount)($t6)
+/* 01BC08 8001B008 3C0E8012 */  lui   $t6, %hi(gNumRacers) # $t6, 0x8012
+/* 01BC0C 8001B00C 8DCEAEF0 */  lw    $t6, %lo(gNumRacers)($t6)
 /* 01BC10 8001B010 25AD0001 */  addiu $t5, $t5, 1
 /* 01BC14 8001B014 01AE082A */  slt   $at, $t5, $t6
 /* 01BC18 8001B018 1420FFA9 */  bnez  $at, .L8001AEC0
@@ -228,15 +228,15 @@ glabel func_8001AE64
 /* 01BDB8 8001B1B8 0C016661 */  jal   func_80059984
 /* 01BDBC 8001B1BC 00402025 */   move  $a0, $v0
 /* 01BDC0 8001B1C0 240F0001 */  li    $t7, 1
-/* 01BDC4 8001B1C4 3C01800E */  lui   $at, %hi(D_800DC730) # $at, 0x800e
+/* 01BDC4 8001B1C4 3C01800E */  lui   $at, %hi(gHasGhostToSave) # $at, 0x800e
 /* 01BDC8 8001B1C8 240B0005 */  li    $t3, 5
-/* 01BDCC 8001B1CC A02FC730 */  sb    $t7, %lo(D_800DC730)($at)
+/* 01BDCC 8001B1CC A02FC730 */  sb    $t7, %lo(gHasGhostToSave)($at)
 .L8001B1D0:
 /* 01BDD0 8001B1D0 3C198000 */  lui   $t9, %hi(osTvType) # $t9, 0x8000
 /* 01BDD4 8001B1D4 8F390300 */  lw    $t9, %lo(osTvType)($t9)
 /* 01BDD8 8001B1D8 00107080 */  sll   $t6, $s0, 2
 /* 01BDDC 8001B1DC 17200010 */  bnez  $t9, .L8001B220
-/* 01BDE0 8001B1E0 3C188012 */   lui   $t8, %hi(D_8011AE80) # $t8, 0x8012
+/* 01BDE0 8001B1E0 3C188012 */   lui   $t8, %hi(gTTGhostTimeToBeat) # $t8, 0x8012
 /* 01BDE4 8001B1E4 01D07023 */  subu  $t6, $t6, $s0
 /* 01BDE8 8001B1E8 000E7040 */  sll   $t6, $t6, 1
 /* 01BDEC 8001B1EC 01CB001A */  div   $zero, $t6, $t3
@@ -255,7 +255,7 @@ glabel func_8001AE64
 /* 01BE18 8001B218 00000000 */  nop   
 /* 01BE1C 8001B21C 00000000 */  nop   
 .L8001B220:
-/* 01BE20 8001B220 8718AE80 */  lh    $t8, %lo(D_8011AE80)($t8)
+/* 01BE20 8001B220 8718AE80 */  lh    $t8, %lo(gTTGhostTimeToBeat)($t8)
 /* 01BE24 8001B224 8FA40034 */  lw    $a0, 0x34($sp)
 /* 01BE28 8001B228 0218082A */  slt   $at, $s0, $t8
 /* 01BE2C 8001B22C 10200010 */  beqz  $at, .L8001B270
@@ -272,12 +272,12 @@ glabel func_8001AE64
 /* 01BE58 8001B258 10000008 */  b     .L8001B27C
 /* 01BE5C 8001B25C 8FBF001C */   lw    $ra, 0x1c($sp)
 .L8001B260:
-/* 01BE60 8001B260 0C029B6D */  jal   func_800A6DB4
+/* 01BE60 8001B260 0C029B6D */  jal   play_time_trial_end_message
 /* 01BE64 8001B264 00000000 */   nop   
 /* 01BE68 8001B268 10000004 */  b     .L8001B27C
 /* 01BE6C 8001B26C 8FBF001C */   lw    $ra, 0x1c($sp)
 .L8001B270:
-/* 01BE70 8001B270 0C029B6D */  jal   func_800A6DB4
+/* 01BE70 8001B270 0C029B6D */  jal   play_time_trial_end_message
 /* 01BE74 8001B274 00000000 */   nop   
 .L8001B278:
 /* 01BE78 8001B278 8FBF001C */  lw    $ra, 0x1c($sp)

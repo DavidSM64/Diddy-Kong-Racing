@@ -22,13 +22,13 @@ glabel func_8000CC7C
 /* 00D898 8000CC98 A020ADC4 */  sb    $zero, %lo(D_8011ADC4)($at)
 /* 00D89C 8000CC9C 3C118012 */  lui   $s1, %hi(D_8011AF00) # $s1, 0x8012
 /* 00D8A0 8000CCA0 AFBE0038 */  sw    $fp, 0x38($sp)
-/* 00D8A4 8000CCA4 3C018012 */  lui   $at, %hi(gObjectCount) # $at, 0x8012
+/* 00D8A4 8000CCA4 3C018012 */  lui   $at, %hi(gNumRacers) # $at, 0x8012
 /* 00D8A8 8000CCA8 0080F025 */  move  $fp, $a0
 /* 00D8AC 8000CCAC 2631AF00 */  addiu $s1, %lo(D_8011AF00) # addiu $s1, $s1, -0x5100
 /* 00D8B0 8000CCB0 AFBF003C */  sw    $ra, 0x3c($sp)
 /* 00D8B4 8000CCB4 AFB30024 */  sw    $s3, 0x24($sp)
 /* 00D8B8 8000CCB8 AFB00018 */  sw    $s0, 0x18($sp)
-/* 00D8BC 8000CCBC AC20AEF0 */  sw    $zero, %lo(gObjectCount)($at)
+/* 00D8BC 8000CCBC AC20AEF0 */  sw    $zero, %lo(gNumRacers)($at)
 /* 00D8C0 8000CCC0 00A08025 */  move  $s0, $a1
 /* 00D8C4 8000CCC4 00C09825 */  move  $s3, $a2
 /* 00D8C8 8000CCC8 AFB70034 */  sw    $s7, 0x34($sp)
@@ -214,11 +214,11 @@ glabel func_8000CC7C
 /* 00DB74 8000CF74 81780000 */  lb    $t8, ($t3)
 /* 00DB78 8000CF78 3C10800E */  lui   $s0, %hi(D_800DC740) # $s0, 0x800e
 /* 00DB7C 8000CF7C 240D0008 */  li    $t5, 8
-/* 00DB80 8000CF80 3C018012 */  lui   $at, %hi(gObjectCount) # $at, 0x8012
+/* 00DB80 8000CF80 3C018012 */  lui   $at, %hi(gNumRacers) # $at, 0x8012
 /* 00DB84 8000CF84 A5980000 */  sh    $t8, ($t4)
 /* 00DB88 8000CF88 2610C740 */  addiu $s0, %lo(D_800DC740) # addiu $s0, $s0, -0x38c0
 /* 00DB8C 8000CF8C 26620001 */  addiu $v0, $s3, 1
-/* 00DB90 8000CF90 AC2DAEF0 */  sw    $t5, %lo(gObjectCount)($at)
+/* 00DB90 8000CF90 AC2DAEF0 */  sw    $t5, %lo(gNumRacers)($at)
 /* 00DB94 8000CF94 AFA20144 */  sw    $v0, 0x144($sp)
 /* 00DB98 8000CF98 A2000000 */  sb    $zero, ($s0)
 /* 00DB9C 8000CF9C 0C01B067 */  jal   func_8006C19C
@@ -228,7 +228,7 @@ glabel func_8000CC7C
 /* 00DBAC 8000CFAC 240F0001 */  li    $t7, 1
 /* 00DBB0 8000CFB0 AFB90144 */  sw    $t9, 0x144($sp)
 /* 00DBB4 8000CFB4 A20F0000 */  sb    $t7, ($s0)
-/* 00DBB8 8000CFB8 0C009278 */  jal   func_800249E0
+/* 00DBB8 8000CFB8 0C009278 */  jal   set_scene_viewport_num
 /* 00DBBC 8000CFBC 24040001 */   li    $a0, 1
 .L8000CFC0:
 /* 00DBC0 8000CFC0 8FAE0068 */  lw    $t6, 0x68($sp)
@@ -258,9 +258,9 @@ glabel func_8000CC7C
 /* 00DC18 8000D018 24010002 */   li    $at, 2
 .L8000D01C:
 /* 00DC1C 8000D01C 8FAD0144 */  lw    $t5, 0x144($sp)
-/* 00DC20 8000D020 3C018012 */  lui   $at, %hi(gObjectCount) # $at, 0x8012
+/* 00DC20 8000D020 3C018012 */  lui   $at, %hi(gNumRacers) # $at, 0x8012
 /* 00DC24 8000D024 0C01B0BC */  jal   func_8006C2F0
-/* 00DC28 8000D028 AC2DAEF0 */   sw    $t5, %lo(gObjectCount)($at)
+/* 00DC28 8000D028 AC2DAEF0 */   sw    $t5, %lo(gNumRacers)($at)
 /* 00DC2C 8000D02C 14400010 */  bnez  $v0, .L8000D070
 /* 00DC30 8000D030 3C03800E */   lui   $v1, %hi(D_800DC708) # $v1, 0x800e
 /* 00DC34 8000D034 2463C708 */  addiu $v1, %lo(D_800DC708) # addiu $v1, $v1, -0x38f8
@@ -277,23 +277,23 @@ glabel func_8000CC7C
 /* 00DC5C 8000D05C 8FB80064 */   lw    $t8, 0x64($sp)
 /* 00DC60 8000D060 0C027110 */  jal   get_multiplayer_racer_count
 /* 00DC64 8000D064 00000000 */   nop   
-/* 00DC68 8000D068 3C018012 */  lui   $at, %hi(gObjectCount) # $at, 0x8012
-/* 00DC6C 8000D06C AC22AEF0 */  sw    $v0, %lo(gObjectCount)($at)
+/* 00DC68 8000D068 3C018012 */  lui   $at, %hi(gNumRacers) # $at, 0x8012
+/* 00DC6C 8000D06C AC22AEF0 */  sw    $v0, %lo(gNumRacers)($at)
 .L8000D070:
 /* 00DC70 8000D070 8FB80064 */  lw    $t8, 0x64($sp)
 .L8000D074:
 /* 00DC74 8000D074 3C058012 */  lui   $a1, %hi(D_8011AD3C) # $a1, 0x8012
 /* 00DC78 8000D078 13000005 */  beqz  $t8, .L8000D090
 /* 00DC7C 8000D07C 24A5AD3C */   addiu $a1, %lo(D_8011AD3C) # addiu $a1, $a1, -0x52c4
-/* 00DC80 8000D080 3C068012 */  lui   $a2, %hi(gObjectCount) # $a2, 0x8012
-/* 00DC84 8000D084 24C6AEF0 */  addiu $a2, %lo(gObjectCount) # addiu $a2, $a2, -0x5110
+/* 00DC80 8000D080 3C068012 */  lui   $a2, %hi(gNumRacers) # $a2, 0x8012
+/* 00DC84 8000D084 24C6AEF0 */  addiu $a2, %lo(gNumRacers) # addiu $a2, $a2, -0x5110
 /* 00DC88 8000D088 240D0004 */  li    $t5, 4
 /* 00DC8C 8000D08C ACCD0000 */  sw    $t5, ($a2)
 .L8000D090:
 /* 00DC90 8000D090 8FB90068 */  lw    $t9, 0x68($sp)
-/* 00DC94 8000D094 3C068012 */  lui   $a2, %hi(gObjectCount) # $a2, 0x8012
+/* 00DC94 8000D094 3C068012 */  lui   $a2, %hi(gNumRacers) # $a2, 0x8012
 /* 00DC98 8000D098 24010008 */  li    $at, 8
-/* 00DC9C 8000D09C 24C6AEF0 */  addiu $a2, %lo(gObjectCount) # addiu $a2, $a2, -0x5110
+/* 00DC9C 8000D09C 24C6AEF0 */  addiu $a2, %lo(gNumRacers) # addiu $a2, $a2, -0x5110
 /* 00DCA0 8000D0A0 17210006 */  bne   $t9, $at, .L8000D0BC
 /* 00DCA4 8000D0A4 A0A00000 */   sb    $zero, ($a1)
 /* 00DCA8 8000D0A8 24070001 */  li    $a3, 1
@@ -512,11 +512,11 @@ glabel func_8000CC7C
 /* 00DF80 8000D380 24190001 */  li    $t9, 1
 /* 00DF84 8000D384 01F50019 */  multu $t7, $s5
 /* 00DF88 8000D388 A0590000 */  sb    $t9, ($v0)
-/* 00DF8C 8000D38C 3C038012 */  lui   $v1, %hi(gObjectCount) # $v1, 0x8012
+/* 00DF8C 8000D38C 3C038012 */  lui   $v1, %hi(gNumRacers) # $v1, 0x8012
 /* 00DF90 8000D390 0000C012 */  mflo  $t8
 /* 00DF94 8000D394 02F86821 */  addu  $t5, $s7, $t8
 /* 00DF98 8000D398 A1B2005A */  sb    $s2, 0x5a($t5)
-/* 00DF9C 8000D39C 8C63AEF0 */  lw    $v1, %lo(gObjectCount)($v1)
+/* 00DF9C 8000D39C 8C63AEF0 */  lw    $v1, %lo(gNumRacers)($v1)
 /* 00DFA0 8000D3A0 00000000 */  nop   
 /* 00DFA4 8000D3A4 00609025 */  move  $s2, $v1
 .L8000D3A8:
@@ -544,7 +544,7 @@ glabel func_8000CC7C
 /* 00DFF4 8000D3F4 832E004D */  lb    $t6, 0x4d($t9)
 /* 00DFF8 8000D3F8 2419FFFF */  li    $t9, -1
 /* 00DFFC 8000D3FC 15C00004 */  bnez  $t6, .L8000D410
-/* 00E000 8000D400 3C038012 */   lui   $v1, %hi(gObjectCount) # $v1, 0x8012
+/* 00E000 8000D400 3C038012 */   lui   $v1, %hi(gNumRacers) # $v1, 0x8012
 /* 00E004 8000D404 3C018012 */  lui   $at, %hi(gIsNonCarRacers) # $at, 0x8012
 /* 00E008 8000D408 10000004 */  b     .L8000D41C
 /* 00E00C 8000D40C A020AE02 */   sb    $zero, %lo(gIsNonCarRacers)($at)
@@ -554,7 +554,7 @@ glabel func_8000CC7C
 /* 00E018 8000D418 A02FAE02 */  sb    $t7, %lo(gIsNonCarRacers)($at)
 .L8000D41C:
 /* 00E01C 8000D41C 8FB80078 */  lw    $t8, 0x78($sp)
-/* 00E020 8000D420 8C63AEF0 */  lw    $v1, %lo(gObjectCount)($v1)
+/* 00E020 8000D420 8C63AEF0 */  lw    $v1, %lo(gNumRacers)($v1)
 /* 00E024 8000D424 830D00B8 */  lb    $t5, 0xb8($t8)
 /* 00E028 8000D428 3C018012 */  lui   $at, %hi(D_8011AD24+1) # $at, 0x8012
 /* 00E02C 8000D42C A3B90127 */  sb    $t9, 0x127($sp)
@@ -628,20 +628,20 @@ glabel func_8000CC7C
 /* 00E120 8000D520 3C188012 */   lui   $t8, %hi(D_8011AD24+1) # $t8, 0x8012
 /* 00E124 8000D524 3C0E8012 */  lui   $t6, %hi(D_8011AD24+1) # $t6, 0x8012
 /* 00E128 8000D528 81CEAD25 */  lb    $t6, %lo(D_8011AD24+1)($t6)
-# Indexing into D_800DC820 only reading the MSB?
-/* 00E12C 8000D52C 3C1E800E */  lui   $fp, %hi(D_800DC820) # $fp, 0x800e
+# Indexing into gBossVehicles only reading the MSB?
+/* 00E12C 8000D52C 3C1E800E */  lui   $fp, %hi(gBossVehicles) # $fp, 0x800e
 /* 00E130 8000D530 000E7840 */  sll   $t7, $t6, 1
 /* 00E134 8000D534 03CFF021 */  addu  $fp, $fp, $t7
-/* 00E138 8000D538 83DEC820 */  lb    $fp, %lo(D_800DC820)($fp)
+/* 00E138 8000D538 83DEC820 */  lb    $fp, %lo(gBossVehicles)($fp)
 /* 00E13C 8000D53C 10000028 */  b     .L8000D5E0
 /* 00E140 8000D540 00000000 */   nop   
 .L8000D544:
 /* 00E144 8000D544 8318AD25 */  lb    $t8, %lo(D_8011AD24+1)($t8)
-# Indexing into D_800DC820 only reading the LSB?
-/* 00E148 8000D548 3C1E800E */  lui   $fp, %hi(D_800DC820) # $fp, 0x800e
+# Indexing into gBossVehicles only reading the LSB?
+/* 00E148 8000D548 3C1E800E */  lui   $fp, %hi(gBossVehicles) # $fp, 0x800e
 /* 00E14C 8000D54C 00186840 */  sll   $t5, $t8, 1
 /* 00E150 8000D550 03CDF021 */  addu  $fp, $fp, $t5
-/* 00E154 8000D554 83DEC821 */  lb    $fp, %lo(D_800DC820+1)($fp)
+/* 00E154 8000D554 83DEC821 */  lb    $fp, %lo(gBossVehicles+1)($fp)
 /* 00E158 8000D558 10000021 */  b     .L8000D5E0
 /* 00E15C 8000D55C 00000000 */   nop   
 .L8000D560:
@@ -803,17 +803,17 @@ glabel func_8000CC7C
 /* 00E394 8000D794 8FA60054 */  lw    $a2, 0x54($sp)
 /* 00E398 8000D798 8F0F0000 */  lw    $t7, ($t8)
 /* 00E39C 8000D79C 8FA7005C */  lw    $a3, 0x5c($sp)
-/* 00E3A0 8000D7A0 3C0D8012 */  lui   $t5, %hi(gObjectStructArrayPtr) # $t5, 0x8012
+/* 00E3A0 8000D7A0 3C0D8012 */  lui   $t5, %hi(gRacers) # $t5, 0x8012
 /* 00E3A4 8000D7A4 A44F0000 */  sh    $t7, ($v0)
-/* 00E3A8 8000D7A8 8DADAEE4 */  lw    $t5, %lo(gObjectStructArrayPtr)($t5)
-/* 00E3AC 8000D7AC 3C198012 */  lui   $t9, %hi(D_8011AEE8) # $t9, 0x8012
+/* 00E3A8 8000D7A8 8DADAEE4 */  lw    $t5, %lo(gRacers)($t5)
+/* 00E3AC 8000D7AC 3C198012 */  lui   $t9, %hi(gRacersByPosition) # $t9, 0x8012
 /* 00E3B0 8000D7B0 01A67021 */  addu  $t6, $t5, $a2
 /* 00E3B4 8000D7B4 ADC20000 */  sw    $v0, ($t6)
-/* 00E3B8 8000D7B8 8F39AEE8 */  lw    $t9, %lo(D_8011AEE8)($t9)
-/* 00E3BC 8000D7BC 3C0F8012 */  lui   $t7, %hi(D_8011AEEC) # $t7, 0x8012
+/* 00E3B8 8000D7B8 8F39AEE8 */  lw    $t9, %lo(gRacersByPosition)($t9)
+/* 00E3BC 8000D7BC 3C0F8012 */  lui   $t7, %hi(gRacersByPort) # $t7, 0x8012
 /* 00E3C0 8000D7C0 0326C021 */  addu  $t8, $t9, $a2
 /* 00E3C4 8000D7C4 AF020000 */  sw    $v0, ($t8)
-/* 00E3C8 8000D7C8 8DEFAEEC */  lw    $t7, %lo(D_8011AEEC)($t7)
+/* 00E3C8 8000D7C8 8DEFAEEC */  lw    $t7, %lo(gRacersByPort)($t7)
 /* 00E3CC 8000D7CC 00146880 */  sll   $t5, $s4, 2
 /* 00E3D0 8000D7D0 01ED7021 */  addu  $t6, $t7, $t5
 /* 00E3D4 8000D7D4 ADC20000 */  sw    $v0, ($t6)
@@ -946,8 +946,8 @@ glabel L8000D98C
 /* 00E58C 8000D98C 8FA40068 */  lw    $a0, 0x68($sp)
 /* 00E590 8000D990 24020005 */  li    $v0, 5
 .L8000D994:
-/* 00E594 8000D994 3C038012 */  lui   $v1, %hi(gObjectCount) # $v1, 0x8012
-/* 00E598 8000D998 8C63AEF0 */  lw    $v1, %lo(gObjectCount)($v1)
+/* 00E594 8000D994 3C038012 */  lui   $v1, %hi(gNumRacers) # $v1, 0x8012
+/* 00E598 8000D998 8C63AEF0 */  lw    $v1, %lo(gNumRacers)($v1)
 /* 00E59C 8000D99C 26100001 */  addiu $s0, $s0, 1
 /* 00E5A0 8000D9A0 0203082A */  slt   $at, $s0, $v1
 /* 00E5A4 8000D9A4 1420FEA6 */  bnez  $at, .L8000D440
@@ -1043,9 +1043,9 @@ glabel L8000D98C
 /* 00E6EC 8000DAEC 00002025 */   move  $a0, $zero
 /* 00E6F0 8000DAF0 3C10800E */  lui   $s0, %hi(D_800DC728) # $s0, 0x800e
 /* 00E6F4 8000DAF4 AE220000 */  sw    $v0, ($s1)
-/* 00E6F8 8000DAF8 3C01800E */  lui   $at, %hi(D_800DC730) # $at, 0x800e
+/* 00E6F8 8000DAF8 3C01800E */  lui   $at, %hi(gHasGhostToSave) # $at, 0x800e
 /* 00E6FC 8000DAFC 2610C728 */  addiu $s0, %lo(D_800DC728) # addiu $s0, $s0, -0x38d8
-/* 00E700 8000DB00 A020C730 */  sb    $zero, %lo(D_800DC730)($at)
+/* 00E700 8000DB00 A020C730 */  sb    $zero, %lo(gHasGhostToSave)($at)
 /* 00E704 8000DB04 860E0000 */  lh    $t6, ($s0)
 /* 00E708 8000DB08 00000000 */  nop   
 /* 00E70C 8000DB0C 29C10005 */  slti  $at, $t6, 5
@@ -1106,8 +1106,8 @@ glabel L8000D98C
 /* 00E7E0 8000DBE0 0C006D3F */  jal   func_8001B4FC
 /* 00E7E4 8000DBE4 00402025 */   move  $a0, $v0
 /* 00E7E8 8000DBE8 10400029 */  beqz  $v0, .L8000DC90
-/* 00E7EC 8000DBEC 3C188012 */   lui   $t8, %hi(D_8011AE84) # $t8, 0x8012
-/* 00E7F0 8000DBF0 8718AE84 */  lh    $t8, %lo(D_8011AE84)($t8)
+/* 00E7EC 8000DBEC 3C188012 */   lui   $t8, %hi(gMapDefaultVehicle) # $t8, 0x8012
+/* 00E7F0 8000DBF0 8718AE84 */  lh    $t8, %lo(gMapDefaultVehicle)($t8)
 /* 00E7F4 8000DBF4 3C02800E */  lui   $v0, %hi(D_800DC7B8) # $v0, 0x800e
 /* 00E7F8 8000DBF8 00187080 */  sll   $t6, $t8, 2
 /* 00E7FC 8000DBFC 01D87021 */  addu  $t6, $t6, $t8
@@ -1148,16 +1148,16 @@ glabel L8000D98C
 /* 00E888 8000DC88 00000000 */  nop   
 /* 00E88C 8000DC8C A26D01F7 */  sb    $t5, 0x1f7($s3)
 .L8000DC90:
-/* 00E890 8000DC90 3C0E8012 */  lui   $t6, %hi(gObjectCount) # $t6, 0x8012
-/* 00E894 8000DC94 8DCEAEF0 */  lw    $t6, %lo(gObjectCount)($t6)
+/* 00E890 8000DC90 3C0E8012 */  lui   $t6, %hi(gNumRacers) # $t6, 0x8012
+/* 00E894 8000DC94 8DCEAEF0 */  lw    $t6, %lo(gNumRacers)($t6)
 /* 00E898 8000DC98 24180064 */  li    $t8, 100
 /* 00E89C 8000DC9C 3C018012 */  lui   $at, %hi(D_8011ADB0) # $at, 0x8012
 /* 00E8A0 8000DCA0 19C00068 */  blez  $t6, .L8000DE44
 /* 00E8A4 8000DCA4 AC38ADB0 */   sw    $t8, %lo(D_8011ADB0)($at)
 /* 00E8A8 8000DCA8 0000A825 */  move  $s5, $zero
 .L8000DCAC:
-/* 00E8AC 8000DCAC 3C198012 */  lui   $t9, %hi(gObjectStructArrayPtr) # $t9, 0x8012
-/* 00E8B0 8000DCB0 8F39AEE4 */  lw    $t9, %lo(gObjectStructArrayPtr)($t9)
+/* 00E8AC 8000DCAC 3C198012 */  lui   $t9, %hi(gRacers) # $t9, 0x8012
+/* 00E8B0 8000DCB0 8F39AEE4 */  lw    $t9, %lo(gRacers)($t9)
 /* 00E8B4 8000DCB4 00008025 */  move  $s0, $zero
 /* 00E8B8 8000DCB8 03357821 */  addu  $t7, $t9, $s5
 /* 00E8BC 8000DCBC 8DF10000 */  lw    $s1, ($t7)
@@ -1259,10 +1259,10 @@ glabel L8000D98C
 .L8000DE1C:
 /* 00EA1C 8000DE1C 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 00EA20 8000DE20 44810000 */  mtc1  $at, $f0
-/* 00EA24 8000DE24 3C0D8012 */  lui   $t5, %hi(gObjectCount) # $t5, 0x8012
+/* 00EA24 8000DE24 3C0D8012 */  lui   $t5, %hi(gNumRacers) # $t5, 0x8012
 /* 00EA28 8000DE28 E6600090 */  swc1  $f0, 0x90($s3)
 /* 00EA2C 8000DE2C E660008C */  swc1  $f0, 0x8c($s3)
-/* 00EA30 8000DE30 8DADAEF0 */  lw    $t5, %lo(gObjectCount)($t5)
+/* 00EA30 8000DE30 8DADAEF0 */  lw    $t5, %lo(gNumRacers)($t5)
 /* 00EA34 8000DE34 26520001 */  addiu $s2, $s2, 1
 /* 00EA38 8000DE38 024D082A */  slt   $at, $s2, $t5
 /* 00EA3C 8000DE3C 1420FF9B */  bnez  $at, .L8000DCAC
@@ -1324,7 +1324,7 @@ glabel L8000D98C
 /* 00EB04 8000DF04 A420AD4E */  sh    $zero, %lo(D_8011AD4E)($at)
 /* 00EB08 8000DF08 3C018012 */  lui   $at, %hi(D_8011ADB4) # $at, 0x8012
 /* 00EB0C 8000DF0C AC20ADB4 */  sw    $zero, %lo(D_8011ADB4)($at)
-/* 00EB10 8000DF10 0C0274CC */  jal   func_8009D330
+/* 00EB10 8000DF10 0C0274CC */  jal   set_next_taj_challenge_menu
 /* 00EB14 8000DF14 00002025 */   move  $a0, $zero
 /* 00EB18 8000DF18 92F90048 */  lbu   $t9, 0x48($s7)
 /* 00EB1C 8000DF1C 00000000 */  nop   
@@ -1386,11 +1386,11 @@ glabel L8000D98C
 /* 00EBF0 8000DFF0 A6ED0014 */  sh    $t5, 0x14($s7)
 /* 00EBF4 8000DFF4 0C01486E */  jal   func_800521B8
 /* 00EBF8 8000DFF8 24040002 */   li    $a0, 2
-/* 00EBFC 8000DFFC 0C0274CC */  jal   func_8009D330
+/* 00EBFC 8000DFFC 0C0274CC */  jal   set_next_taj_challenge_menu
 /* 00EC00 8000E000 02402025 */   move  $a0, $s2
 /* 00EC04 8000E004 0C027068 */  jal   get_save_file_index
 /* 00EC08 8000E008 00000000 */   nop   
-/* 00EC0C 8000E00C 0C01BB12 */  jal   func_8006EC48
+/* 00EC0C 8000E00C 0C01BB12 */  jal   safe_mark_write_save_file
 /* 00EC10 8000E010 00402025 */   move  $a0, $v0
 .L8000E014:
 /* 00EC14 8000E014 8FAE0130 */  lw    $t6, 0x130($sp)

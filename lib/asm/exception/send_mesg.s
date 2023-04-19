@@ -47,7 +47,7 @@ glabel send_mesg
 .L800D3290:
 /* 0D3E90 800D3290 02400008 */  jr    $s2
 /* 0D3E94 800D3294 00000000 */   nop   
-.L800D3298:
+glabel handle_CpU
 /* 0D3E98 800D3298 3C013000 */  lui   $at, 0x3000
 /* 0D3E9C 800D329C 01014824 */  and   $t1, $t0, $at
 /* 0D3EA0 800D32A0 00094F02 */  srl   $t1, $t1, 0x1c

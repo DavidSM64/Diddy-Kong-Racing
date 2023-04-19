@@ -8,7 +8,7 @@ glabel func_8000C718
 /* 00D330 8000C730 90650000 */  lbu   $a1, ($v1)
 /* 00D334 8000C734 3C0C8012 */  lui   $t4, %hi(gAssetsObjectHeadersTable) # $t4, 0x8012
 /* 00D338 8000C738 10A0000B */  beqz  $a1, .L8000C768
-/* 00D33C 8000C73C 3C048012 */   lui   $a0, %hi(D_8011AE68) # $a0, 0x8012
+/* 00D33C 8000C73C 3C048012 */   lui   $a0, %hi(gObjectMemoryPool) # $a0, 0x8012
 /* 00D340 8000C740 24B80001 */  addiu $t8, $a1, 1
 /* 00D344 8000C744 A0780000 */  sb    $t8, ($v1)
 /* 00D348 8000C748 8FA80028 */  lw    $t0, 0x28($sp)
@@ -26,7 +26,7 @@ glabel func_8000C718
 /* 00D374 8000C774 018B1021 */  addu  $v0, $t4, $t3
 /* 00D378 8000C778 8C460000 */  lw    $a2, ($v0)
 /* 00D37C 8000C77C 8C4D0004 */  lw    $t5, 4($v0)
-/* 00D380 8000C780 8C84AE68 */  lw    $a0, %lo(D_8011AE68)($a0)
+/* 00D380 8000C780 8C84AE68 */  lw    $a0, %lo(gObjectMemoryPool)($a0)
 /* 00D384 8000C784 01A62823 */  subu  $a1, $t5, $a2
 /* 00D388 8000C788 AFA50020 */  sw    $a1, 0x20($sp)
 /* 00D38C 8000C78C AFAB0018 */  sw    $t3, 0x18($sp)

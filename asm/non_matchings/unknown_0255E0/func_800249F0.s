@@ -107,9 +107,9 @@ glabel func_800249F0
 /* 025770 80024B70 00000000 */   nop   
 .L80024B74:
 /* 025774 80024B74 8FA40030 */  lw    $a0, 0x30($sp)
-/* 025778 80024B78 0C01994B */  jal   func_8006652C
+/* 025778 80024B78 0C01994B */  jal   set_active_viewports_and_max
 /* 02577C 80024B7C 00000000 */   nop   
-/* 025780 80024B80 0C009FF1 */  jal   func_80027FC4
+/* 025780 80024B80 0C009FF1 */  jal   spawn_skydome
 /* 025784 80024B84 02402025 */   move  $a0, $s2
 /* 025788 80024B88 3C018012 */  lui   $at, %hi(D_8011B110) # $at, 0x8012
 /* 02578C 80024B8C AC20B110 */  sw    $zero, %lo(D_8011B110)($at)
@@ -125,8 +125,8 @@ glabel func_800249F0
 /* 0257B4 80024BB4 24050001 */   li    $a1, 1
 /* 0257B8 80024BB8 8FB00038 */  lw    $s0, 0x38($sp)
 /* 0257BC 80024BBC 8FA80030 */  lw    $t0, 0x30($sp)
-/* 0257C0 80024BC0 3C138012 */  lui   $s3, %hi(D_8011D37C) # $s3, 0x8012
-/* 0257C4 80024BC4 2673D37C */  addiu $s3, %lo(D_8011D37C) # addiu $s3, $s3, -0x2c84
+/* 0257C0 80024BC0 3C138012 */  lui   $s3, %hi(gScenePlayerViewports) # $s3, 0x8012
+/* 0257C4 80024BC4 2673D37C */  addiu $s3, %lo(gScenePlayerViewports) # addiu $s3, $s3, -0x2c84
 /* 0257C8 80024BC8 8FA40034 */  lw    $a0, 0x34($sp)
 /* 0257CC 80024BCC 8FA60030 */  lw    $a2, 0x30($sp)
 /* 0257D0 80024BD0 02002825 */  move  $a1, $s0
@@ -140,16 +140,16 @@ glabel func_800249F0
 /* 0257F0 80024BF0 16000006 */  bnez  $s0, .L80024C0C
 /* 0257F4 80024BF4 00000000 */   nop   
 /* 0257F8 80024BF8 3C04800E */  lui   $a0, %hi(D_800DC87C) # $a0, 0x800e
-/* 0257FC 80024BFC 0C030076 */  jal   func_800C01D8
+/* 0257FC 80024BFC 0C030076 */  jal   transition_begin
 /* 025800 80024C00 2484C87C */   addiu $a0, %lo(D_800DC87C) # addiu $a0, $a0, -0x3784
 /* 025804 80024C04 10000004 */  b     .L80024C18
 /* 025808 80024C08 8E640000 */   lw    $a0, ($s3)
 .L80024C0C:
-/* 02580C 80024C0C 0C030076 */  jal   func_800C01D8
+/* 02580C 80024C0C 0C030076 */  jal   transition_begin
 /* 025810 80024C10 2484C874 */   addiu $a0, %lo(D_800DC874) # addiu $a0, $a0, -0x378c
 /* 025814 80024C14 8E640000 */  lw    $a0, ($s3)
 .L80024C18:
-/* 025818 80024C18 0C01994B */  jal   func_8006652C
+/* 025818 80024C18 0C01994B */  jal   set_active_viewports_and_max
 /* 02581C 80024C1C 00000000 */   nop   
 /* 025820 80024C20 8E690000 */  lw    $t1, ($s3)
 /* 025824 80024C24 3C018012 */  lui   $at, %hi(D_8011B0FC) # $at, 0x8012

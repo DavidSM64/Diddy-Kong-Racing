@@ -10,6 +10,8 @@
 #include "camera.h"
 #include "unknown_0255E0.h"
 #include "unknown_008C40.h"
+#include "textures_sprites.h"
+#include "math_util.h"
 
 /************ .data ************/
 
@@ -24,11 +26,11 @@ s32 *D_800E28D4 = 0;
 unk800E2850 D_800E28D8 = { NULL, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 // Not sure about typing for the following.
-s32 D_800E2904 = 0;
+Vertex *D_800E2904 = 0;
 s32 D_800E2908 = 0;
 s32 *D_800E290C = NULL;
 s32 *D_800E2910 = NULL;
-s32 *D_800E2914[2] = { NULL, NULL };
+Vertex *D_800E2914[2] = { NULL, NULL };
 s32 *D_800E291C = NULL; // List of Ids
 s32 D_800E2920 = 0;
 
@@ -138,7 +140,7 @@ s32 D_800E2C90 = 0;
 s32 gWeatherSoundMask = 0;
 
 
-FadeTransition D_800E2C98 = FADE_TRANSITION(0x40, FADE_COLOR_WHITE, 5, 2);
+FadeTransition D_800E2C98 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK1, FADE_COLOR_WHITE, 5, 2);
 
 /*******************************/
 
@@ -151,10 +153,10 @@ unk80127BF8 D_80127BF8;
 s32 D_80127C00;
 s32 D_80127C04;
 s32 D_80127C08;
-Gfx *gWeatherDisplayListHead;
-Mtx *D_80127C10;
-VertexList *D_80127C14;
-TriangleList *D_80127C18;
+Gfx *gCurrWeatherDisplayList;
+MatrixS *gCurrWeatherMatrix;
+Vertex *gCurrWeatherVertexList;
+TriangleList *gCurrWeatherTriList;
 ObjectSegment *D_80127C1C;
 Matrix *D_80127C20;
 s32 D_80127C24;
@@ -191,7 +193,7 @@ void func_800AB1F0(void) {
     D_80127C08 = 0;
 }
 
-void func_800AB308(s16 arg0, s16 arg1) {
+void setWeatherLimits(s16 arg0, s16 arg1) {
     if (D_80127BF8.unk2 < D_80127BF8.unk0) {
         D_80127BF8.unk0 = arg0;
         D_80127BF8.unk2 = arg1;
@@ -250,9 +252,9 @@ void func_800ABB34(void) {
     phi_s1 = 0;
 
     for(i = 0; i < D_800E28D8.unk4; i++) {
-        D_800E28D8.unk0[i].unk0 = func_8007082C(phi_s1 & 0xFFFF) << 3;
+        D_800E28D8.unk0[i].unk0 = coss(phi_s1 & 0xFFFF) << 3;
         D_800E28D8.unk0[i].unk4 = 0xFFFC0000;
-        D_800E28D8.unk0[i].unk8 = func_80070830(phi_s1 & 0xFFFF) << 1;
+        D_800E28D8.unk0[i].unk8 = sins(phi_s1 & 0xFFFF) << 1;
         phi_s1 += temp_v0;
     }
 
@@ -260,7 +262,7 @@ void func_800ABB34(void) {
 }
 
 
-void func_800ABC5C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+void changeWeather(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
     if ((arg5 > 0) && ((arg0 != D_80127BB8[5]) || (arg1 != D_80127BB8[8]) || (arg2 != D_80127BB8[11])
         || (arg3 != D_80127BB8[0]) || (arg4 != D_80127BB8[12]))) {
         D_80127BB8[5] = arg0;
@@ -288,13 +290,13 @@ void func_800ABC5C(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
  * The root function for handling all weather.
  * Decide whether to perform rain or snow logic, execute it, then set it to render right after.
  */
-void process_weather(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
+void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
     UNUSED s32 unused;
-    gWeatherDisplayListHead = *currDisplayList;
-    D_80127C10 = *currHudMat;
-    D_80127C14 = *currHudVerts;
-    D_80127C18 = *currHudTris;
-    D_80127C1C = func_80069D20();
+    gCurrWeatherDisplayList = *currDisplayList;
+    gCurrWeatherMatrix = *currHudMat;
+    gCurrWeatherVertexList = *currHudVerts;
+    gCurrWeatherTriList = *currHudTris;
+    D_80127C1C = get_active_camera_segment();
     D_80127C20 = func_80069DBC();
     if (gWeatherType != WEATHER_SNOW) {
         handle_weather_rain(updateRate);
@@ -321,21 +323,61 @@ void process_weather(Gfx **currDisplayList, Mtx **currHudMat, VertexList **currH
 
         func_800AC0C8(updateRate, &D_80127BF8); // This is the snow physics that makes it move
         if ((D_80127BB4 > 0) && (D_80127BF8.unk4 < D_80127BF8.unk0)) {
-            D_800E2904 = (s32) D_800E2914[D_80127C08];
+            D_800E2904 = D_800E2914[D_80127C08];
             func_800AC21C(); // Both of these funcs are needed to render.
-            func_800AC5A4();
+            render_falling_snow();
             D_80127C08 = 1 - D_80127C08;
         }
     }
-    *currDisplayList = gWeatherDisplayListHead;
-    *currHudMat = D_80127C10;
-    *currHudVerts = D_80127C14;
-    *currHudTris = D_80127C18;
+    *currDisplayList = gCurrWeatherDisplayList;
+    *currHudMat = gCurrWeatherMatrix;
+    *currHudVerts = gCurrWeatherVertexList;
+    *currHudTris = gCurrWeatherTriList;
 }
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC0C8.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC21C.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC5A4.s")
+
+/**
+ * Load and execute the draw commands for the falling snowflakes, seen with snowy weather enabled.
+ */
+void render_falling_snow(void) {
+    s32 i;
+    u32 mtx;
+
+    if (D_800E28D8.unk8 != NULL) {
+        D_80127C00 = 4;
+        D_80127C04 = 2;
+        if (D_800E2908 >= 4) {
+            i = 0;
+            mtx = (u32) func_80069DB0();
+            gSPMatrix(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx ^ 0), G_MTX_DKR_INDEX_0);
+            gDkrInsertMatrix(gCurrWeatherDisplayList++, G_MTX_DKR_INDEX_0, 0);
+            load_and_set_texture_no_offset(&gCurrWeatherDisplayList, D_800E28D8.unk8, RENDER_Z_COMPARE);
+            while (i + D_80127C00 < D_800E2908) {
+                mtx = (u32) &D_800E2904[i];
+                gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx), D_80127C00, 0);
+                gSPPolygon(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(D_800E290C), D_80127C04, 1);
+                i += D_80127C00;
+            }
+            mtx = (u32) &D_800E2904[i];
+            gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx), (D_800E2908 - i), 0);
+            gSPPolygon(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(D_800E290C), ((s32) (D_800E2908 - i) >> 1), 1);
+        }
+    }
+}
+
+// Unused
+void func_800AC850(void) {
+    D_800E2A84 = 1;
+}
+
+// Unused
+void func_800AC860(void) {
+    if (D_800E2A80 != 0) {
+        D_800E2A84 = 0;
+    }
+}
 
 void func_800AC880(s32 arg0) {
     if (arg0 == D_800E2A80) {
@@ -347,7 +389,7 @@ void func_800AC880(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC8A8.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800ACA20.s")
 
-void func_800ACF60(Object *arg0) {
+void cameraAddOverrideObject(Object *arg0) {
     if (D_800E2A88 < 0x10) {
         D_80127C40[D_800E2A88] = arg0;
         D_800E2A88++;
@@ -467,14 +509,14 @@ void handle_weather_rain(s32 updateRate) {
         render_rain_splashes(updateRate);
         handle_rain_lightning(updateRate);
         if (gLightningFrequency >= 256) {
-            func_80067F2C(&gWeatherDisplayListHead, &D_80127C10);
+            set_ortho_matrix_view(&gCurrWeatherDisplayList, &gCurrWeatherMatrix);
             for(i = 0; i < 2; i++) {
                 render_rain_overlay(&gRainGfx[i], updateRate);
             }
-            gDPSetPrimColor(gWeatherDisplayListHead++, 0, 0, 255, 255, 255, 255);
-            gDPSetEnvColor(gWeatherDisplayListHead++, 255, 255, 255, 0);
-            func_8007B3D0(&gWeatherDisplayListHead); // Pipesync and some stuff idk yet
-            func_800682AC(&gWeatherDisplayListHead); // Looks to create a viewport scissor.
+            gDPSetPrimColor(gCurrWeatherDisplayList++, 0, 0, 255, 255, 255, 255);
+            gDPSetEnvColor(gCurrWeatherDisplayList++, 255, 255, 255, 0);
+            reset_render_settings(&gCurrWeatherDisplayList); // Pipesync and some stuff idk yet
+            func_800682AC(&gCurrWeatherDisplayList); // Looks to create a viewport scissor.
         }
     }
 }
@@ -490,8 +532,8 @@ void handle_rain_lightning(s32 updateRate) {
     if (gThunderTimer > 0) {
         gThunderTimer -= updateRate;
         if (gThunderTimer <= 0) {
-            if (D_800E2C6C >= 32769 && func_800C018C() == 0) {
-                func_800C01D8(&D_800E2C98);
+            if (D_800E2C6C >= 32769 && fxFadeOn() == 0) {
+                transition_begin(&D_800E2C98);
             }
             play_sound_global(SOUND_LIGHTNING, NULL);
             gThunderTimer = 0;
@@ -519,15 +561,15 @@ void handle_rain_sound(UNUSED s32 updateRate) {
     f32 sineOffset;
 
     length = 1152.0f - (f32) (gLightningFrequency >> 6);
-    cosOffset = cosine_s(D_80127C1C->trans.y_rotation) * length;
-    sineOffset = sine_s(D_80127C1C->trans.y_rotation) * length;
+    cosOffset = sins_f(D_80127C1C->trans.y_rotation) * length;
+    sineOffset = coss_f(D_80127C1C->trans.y_rotation) * length;
     xPos = D_80127C1C->trans.x_position + (sineOffset - cosOffset);
     yPos = D_80127C1C->trans.y_position;
     zPos = D_80127C1C->trans.z_position + (-sineOffset - cosOffset);
     if (gWeatherSoundMask) {
         update_spatial_audio_position(gWeatherSoundMask, xPos, yPos, zPos);
     } else {
-        func_80009558(SOUND_RAIN, xPos, yPos, zPos, 1, &gWeatherSoundMask);
+        play_sound_at_position(SOUND_RAIN, xPos, yPos, zPos, 1, &gWeatherSoundMask);
     }
 }
 
