@@ -44,7 +44,7 @@ Vec3f D_800DC8AC[3][3] = {
     { {{{  0.0f, 0.0f, 32.0f }}}, {{{ -130.0f, -60.0f, -68.0f }}}, {{{ -130.0f,  60.0f, -68.0f }}} },
 };
 
-LevelModel *gCurrentLevelModel = NULL;
+LevelModel *gCurrentLevelModel = NULL; //Official Name: track
 LevelHeader *gCurrentLevelHeader2 = NULL;
 
 s32 D_800DC920 = -1;
@@ -1208,6 +1208,7 @@ UNUSED s32 check_if_inside_segment(Object *obj, s32 segmentIndex) {
  * Iterates through every existing segment to see which one the active camera is inside.
  * Uses mainly a two dimensional axis check here, instead of the function above.
  * Returns the segment currently inside.
+ * Official Name: trackGetBlock
 */
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
     LevelModelSegmentBoundingBox *bb;
@@ -1756,6 +1757,7 @@ void func_8002C71C(LevelModelSegment *segment) {
 
 /**
  * Returns the current loaded level geometry
+ * Official Name: trackGetTrack
 */
 LevelModel *get_current_level_model(void) {
     return gCurrentLevelModel;

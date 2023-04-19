@@ -457,6 +457,6 @@ void func_800159C8(Object *, Object *);
 void func_80016748(Object *, Object *);
 void func_80011264(ObjectModel *, Object *);
 void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
-void func_80061D30(Object *); //asm func in unknown_062930
+s32 func_80061D30(Object *); //asm func in unknown_062930
 
 #endif
