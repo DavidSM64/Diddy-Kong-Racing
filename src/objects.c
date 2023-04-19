@@ -1491,27 +1491,25 @@ void render_3d_billboard(Object *obj) {
     }
 }
 
-#ifdef NON_MATCHING
-//Stack diffs only
 void render_3d_model(Object *obj) {
     s32 i;
-    s32 alpha;
-    Object_Racer *racerObj; 
-    Object *loopObj;
     s32 intensity;
+    s32 alpha;
     s32 spB0;
-    s32 cicFailed;
     s32 obj60_unk0;
     s32 hasOpacity;
     s32 hasEnvCol;
-    s32 var_v0;
-    f32 vtxX;
-    f32 vtxZ;
-    f32 vtxY;
-    s8 var_v0_2;
-    s8 index;
     s32 flags;
+    s32 var_v0;
+    s32 cicFailed;
+    f32 vtxX;
+    f32 vtxY;
+    f32 vtxZ;
+    s8 index;
+    s8 var_v0_2;
+    Object *loopObj;
     Object_68 *obj68;
+    Object_Racer *racerObj; 
     ObjectModel *objModel;
     Object_68 *something;
 
@@ -1568,7 +1566,7 @@ void render_3d_model(Object *obj) {
             func_80011134(obj, objModel->unk52);
             obj68->objModel->unk52 = 0;
         }
-        func_80069484(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0.0f);
+        func_80069484(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0);
         spB0 = FALSE;
         if (racerObj != NULL) {
             objUndoPlayerTumble(obj);
@@ -1708,9 +1706,6 @@ void render_3d_model(Object *obj) {
         func_80069A40(&gObjectCurrDisplayList);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/render_3d_model.s")
-#endif
 
 void func_80012C30(void) {
     D_8011ADA4 = 0;
