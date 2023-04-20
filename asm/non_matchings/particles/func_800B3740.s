@@ -129,7 +129,7 @@ glabel func_800B3740
 /* 0B4524 800B3924 AFA30030 */  sw    $v1, 0x30($sp)
 /* 0B4528 800B3928 AFAA0038 */  sw    $t2, 0x38($sp)
 /* 0B452C 800B392C AFAB003C */  sw    $t3, 0x3c($sp)
-/* 0B4530 800B3930 0C01A521 */  jal   func_80069484
+/* 0B4530 800B3930 0C01A521 */  jal   camera_push_model_mtx
 /* 0B4534 800B3934 E7A40010 */   swc1  $f4, 0x10($sp)
 /* 0B4538 800B3938 8FA30030 */  lw    $v1, 0x30($sp)
 /* 0B453C 800B393C 86270018 */  lh    $a3, 0x18($s1)

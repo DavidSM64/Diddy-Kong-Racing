@@ -1,3 +1,4 @@
+/* Official Name: mathOneFloatRPY */
 glabel f32_vec3_apply_object_rotation
 /* 070F20 80070320 27BDFFF8 */  addiu $sp, $sp, -8
 /* 070F24 80070324 FFBF0000 */  sd    $ra, ($sp)

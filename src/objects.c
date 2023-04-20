@@ -1341,7 +1341,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
 
 void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 flags, u32 texOffset, f32 arg8) {
     s32 hasTexture = FALSE;
-    func_80069484(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, arg8, 0.0f);
+    camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, arg8, 0.0f);
     gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     if (tex != NULL) {
@@ -1526,7 +1526,7 @@ void render_3d_model(Object *obj) {
         }
         if (obj->behaviorId == BHV_RACER) {
             racerObj = (Object_Racer *) obj->unk64;
-            func_80012E28(obj);
+            object_do_player_tumble(obj);
         } else {
             racerObj = NULL;
         }
@@ -1566,10 +1566,10 @@ void render_3d_model(Object *obj) {
             func_80011134(obj, objModel->unk52);
             obj68->objModel->unk52 = 0;
         }
-        func_80069484(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0);
+        camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0);
         spB0 = FALSE;
         if (racerObj != NULL) {
-            objUndoPlayerTumble(obj);
+            object_undo_player_tumble(obj);
             if (obj->segment.unk38.byte.unk3B == 0 || racerObj->vehicleID >= VEHICLE_TRICKY) {
                 func_80069790(&gObjectCurrDisplayList, &gObjectCurrMatrix, obj68, racerObj->headAngle);
                 spB0 = TRUE;
@@ -1733,6 +1733,9 @@ void func_80012CE8(Gfx **dlist) {
     }
 }
 
+/**
+ * Official Name: objPrintObject
+*/
 void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object) {
     f32 scale;
     if (object->segment.trans.unk6 & 0x5000)
@@ -1750,7 +1753,11 @@ void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object) {
     func_800B76B8(2, -1);
 }
 
-void func_80012E28(Object *this) {
+
+/**
+ * Official Name: objDoPlayerTumble
+*/
+void object_do_player_tumble(Object *this) {
     UNUSED s32 unused1;
     Object_Racer *sp_20;
     f32 tmp_f2;
@@ -1782,7 +1789,10 @@ void func_80012E28(Object *this) {
     }
 }
 
-void objUndoPlayerTumble(Object *obj) {
+/**
+ * Official Name: objUndoPlayerTumble
+*/
+void object_undo_player_tumble(Object *obj) {
     if (obj->behaviorId == BHV_RACER) {
         Object_Racer *racer = &obj->unk64->racer;
         obj->segment.trans.y_rotation -= racer->y_rotation_offset;
