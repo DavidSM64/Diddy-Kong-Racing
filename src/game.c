@@ -643,7 +643,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     settings->courseId = levelId;
     if (gCurrentLevelHeader->weatherEnable > 0) {
         func_800AB4A8(gCurrentLevelHeader->weatherType, gCurrentLevelHeader->weatherEnable, gCurrentLevelHeader->weatherVelX << 8, gCurrentLevelHeader->weatherVelY << 8, gCurrentLevelHeader->weatherVelZ << 8, gCurrentLevelHeader->weatherIntensity * 257, gCurrentLevelHeader->weatherOpacity * 257);
-        setWeatherLimits(-1, -0x200);
+        set_weather_limits(-1, -0x200);
     }
     if (gCurrentLevelHeader->unk49 == -1) {
         gCurrentLevelHeader->unkA4 = load_texture((s32) gCurrentLevelHeader->unkA4);
@@ -932,7 +932,7 @@ void init_game(void) {
     diPrintfInit();
     func_800598D0();
     init_particle_assets();
-    func_800AB1F0();
+    init_weather();
     calc_and_alloc_heap_for_settings();
     default_alloc_heap_for_hud();
     load_fonts();

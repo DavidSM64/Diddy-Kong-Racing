@@ -375,7 +375,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         }
         gDPPipeSync(gSceneCurrDisplayList++);
         initialise_player_viewport_vars(updateRate);
-        setWeatherLimits(-1, -512);
+        set_weather_limits(-1, -512);
         if (gCurrentLevelHeader2->weatherEnable > 0 && numViewports < VIEWPORTS_COUNT_3_PLAYERS) {
             process_weather(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList, tempUpdateRate);
         }
@@ -402,7 +402,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             gDPPipeSync(gSceneCurrDisplayList++);
             initialise_player_viewport_vars(updateRate);
-            setWeatherLimits(-1, -512);
+            set_weather_limits(-1, -512);
             func_800AD030(get_active_camera_segment());
             func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
             set_text_font(0);

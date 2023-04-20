@@ -167,7 +167,10 @@ Object *D_80127C40[16];
 
 /******************************/
 
-void func_800AB1F0(void) {
+/**
+ * Official Name: initWeather
+*/
+void init_weather(void) {
     D_800E28D8.unk0 = 0;
     D_800E28D8.unk4 = 0;
     D_800E28D4 = 0;
@@ -193,7 +196,10 @@ void func_800AB1F0(void) {
     D_80127C08 = 0;
 }
 
-void setWeatherLimits(s16 arg0, s16 arg1) {
+/**
+ * Official Name: setWeatherLimits
+*/
+void set_weather_limits(s16 arg0, s16 arg1) {
     if (D_80127BF8.unk2 < D_80127BF8.unk0) {
         D_80127BF8.unk0 = arg0;
         D_80127BF8.unk2 = arg1;
@@ -220,6 +226,7 @@ void setWeatherLimits(s16 arg0, s16 arg1) {
 /**
  * Free the weather assets from memory.
  * If it's raining, then free those too.
+ * Official Name: freeWeather
  */
 void free_weather_memory(void) {
     TextureHeader *tempTex;
