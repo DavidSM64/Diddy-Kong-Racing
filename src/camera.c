@@ -1153,7 +1153,7 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         if (index >= sprite->baseTextureId) {
             index = sprite->baseTextureId - 1;
         }
-        gSPDisplayList((*dList)++, sprite->unkC[index]);
+        gSPDisplayList((*dList)++, sprite->unkC.ptr[index]);
         if (--D_80120D1C == 0) {
             index = 0;
         } else {
