@@ -483,8 +483,8 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     D_8011D49E = 0;
     yCameraSins = sins_f(gSceneActiveCamera->trans.y_rotation * -1);
     yCameraCoss = coss_f(gSceneActiveCamera->trans.y_rotation * -1);
-    D_8011D4AC = (gSceneActiveCamera->trans.x_position + (yCameraSins * 250.0));
-    D_8011D4B0 = (gSceneActiveCamera->trans.z_position + (yCameraCoss * 250.0));
+    D_8011D4AC = (gSceneActiveCamera->trans.x_position + (yCameraSins * 250.0f));
+    D_8011D4B0 = (gSceneActiveCamera->trans.z_position + (yCameraCoss * 250.0f));
     D_8011D4A0 = -yCameraCoss;
     D_8011D4A4 = yCameraSins;
     temp_f22 = -((yCameraSins * D_8011D4AC) + (yCameraCoss * D_8011D4B0));
@@ -500,16 +500,16 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
         check2 = FALSE;
         check3 = FALSE;
         check4 = FALSE;
-        if ((x1Sins + z1Coss + temp_f22) <= 0.0) {
+        if ((x1Sins + z1Coss + temp_f22) <= 0.0f) {
             check1 = TRUE;
         }
-        if ((x2Sins + z1Coss + temp_f22) <= 0.0) {
+        if ((x2Sins + z1Coss + temp_f22) <= 0.0f) {
             check2 = TRUE;
         }
-        if ((x1Sins + z2Coss + temp_f22) <= 0.0) {
+        if ((x1Sins + z2Coss + temp_f22) <= 0.0f) {
             check3 = TRUE;
         }
-        if ((x2Sins + z2Coss + temp_f22) <= 0.0) {
+        if ((x2Sins + z2Coss + temp_f22) <= 0.0f) {
             check4 = TRUE;
         }
         if (((s16) ((s16) (check1 + check2) + check3) + check4) & 3) {
@@ -1335,7 +1335,7 @@ void func_8002A31C(void) {
         y = ((ox2 - ox3) * oz1) + (oz2 * (ox3 - ox1)) + (oz3 * (ox1 - ox2));
         z = ((oy2 - oy3) * ox1) + (ox2 * (oy3 - oy1)) + (ox3 * (oy1 - oy2));
         inverseMagnitude = (1.0 / sqrtf((x * x) + (y * y) + (z * z)));
-        if (inverseMagnitude > 0.0) {
+        if (inverseMagnitude > 0.0f) {
             x *= inverseMagnitude;
             y *= inverseMagnitude;
             z *= inverseMagnitude;
@@ -2134,7 +2134,7 @@ loop_6:
                                         &vert[temp_t0->verticesArray[3]].x
                                 ) != 0) {
                                     var_s7 = 1;
-                                    obj->unk54->unk0 += (((1.0f - D_800DC884[temp_v1_2]) - obj->unk54->unk0) * 0.2);
+                                    obj->unk54->unk0 += (((1.0f - D_800DC884[temp_v1_2]) - obj->unk54->unk0) * 0.2f);
                                 }
                             }
                         }

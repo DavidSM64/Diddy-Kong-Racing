@@ -1663,9 +1663,9 @@ void render_3d_model(Object *obj) {
                     billboardFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
                     temp_t4 = (unk80068514_arg4 *) heldObj->unk68[heldObj->segment.unk38.byte.unk3A];
                     temp_v0_14 = &obj->unk44[objModel->unk14[obj->segment.header->unk58]];
-                    heldObj->segment.trans.x_position += (temp_v0_14->x - heldObj->segment.trans.x_position) * 0.25;
-                    heldObj->segment.trans.y_position += (temp_v0_14->y - heldObj->segment.trans.y_position) * 0.25;
-                    heldObj->segment.trans.z_position += (temp_v0_14->z - heldObj->segment.trans.z_position) * 0.25;
+                    heldObj->segment.trans.x_position += (temp_v0_14->x - heldObj->segment.trans.x_position) * 0.25f;
+                    heldObj->segment.trans.y_position += (temp_v0_14->y - heldObj->segment.trans.y_position) * 0.25f;
+                    heldObj->segment.trans.z_position += (temp_v0_14->z - heldObj->segment.trans.z_position) * 0.25f;
                     if (heldObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
                         render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, heldObj,
                            temp_t4, billboardFlags);
@@ -1823,7 +1823,7 @@ void func_800138A8(ObjectTransform *trans, unk80068514_arg4 *arg1, Object *obj, 
     y = cameraSegment->trans.y_position - obj->segment.trans.y_position;
     z = cameraSegment->trans.z_position - obj->segment.trans.z_position;
     posSq = sqrtf((x * x) + (y  * y ) + (z * z));
-    if (posSq > 0.0) {
+    if (posSq > 0.0f) {
         posSq = obj->segment.unk1A / posSq;
         x *= posSq;
         y *= posSq;

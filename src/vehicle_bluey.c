@@ -137,7 +137,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
         sp3C = TRUE;
     }
     if (obj->segment.unk38.byte.unk3B != 4) {
-        if (racer->velocity < -2.0) {
+        if (racer->velocity < -2.0f) {
             if (sp3C) {
                 if (racer->unk1CD != 3) {
                     racer->unkC = 40.0f;

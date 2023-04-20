@@ -3046,7 +3046,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
     if (angle < -0x200) {
         angle = -0x200; 
     }
-    obj->segment.trans.y_rotation -= angle;
+    obj->segment.trans.y_rotation -= angle * updateRate;
     if (angle == 0) {
         openDoor = FALSE;
     }
@@ -4163,7 +4163,7 @@ void homing_rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon 
         diffZ = targetObj->segment.trans.z_position - obj->segment.trans.z_position;
         dist = (diffX * diffX) + (diffZ * diffZ);
         distY = diffY * diffY;
-        if (dist < 10000.0 && distY > 10000.0) {
+        if (dist < 10000.0f && distY > 10000.0f) {
             rocket->target = NULL;
             return;
         }
