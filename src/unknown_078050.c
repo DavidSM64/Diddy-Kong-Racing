@@ -433,6 +433,7 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
     h = GET_VIDEO_HEIGHT(widthAndHeight);
 
     gDPPipeSync((*dList)++);
+    //!@bug: the scissor does not need the off by one here, despite being intended for fill mode.
     gDPSetScissor((*dList)++, 0, 0, 0, w - 1, h - 1);
     gDPSetCycleType((*dList)++, G_CYC_FILL);
     gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_DEPTH_BUFFER);
