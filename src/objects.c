@@ -1792,7 +1792,152 @@ void objUndoPlayerTumble(Object *obj) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+void func_80012F94(Object *obj) {
+    u8 *bossAsset;
+    ObjectModel *temp_a1_3;
+    Object_Racer *objRacer;
+    Object_68 **var_v0;
+    f32 ret1;
+    f32 var_f0_2;
+    f32 ret2;
+    u8 *var_a1;
+    s32 temp_f6;
+    s32 temp_v1;
+    s32 bossVehicleId;
+    s32 racerLightTimer;
+    s32 batchNum;
+    s32 var_v1;
+    s32 firstNonEmptyUnk68ObjectIndex;
+    s32 var_t0;
+    s32 numberOfModels;
+
+    ret1 = 1.0f;
+    ret2 = 1.0f;
+    if (!(obj->segment.trans.unk6 & 0x8000)) {
+        if (obj->segment.header->behaviorId == BHV_RACER) {
+            objRacer = (Object_Racer *) obj->unk64;
+            objRacer->unk201 = 30;
+            if (objRacer->unk206 > 0) {
+                ret2 = 1.0f - (objRacer->unk206 * 0.05f);
+                if (ret2 < 0.2f) {
+                    ret2 = 0.2f;
+                }
+            }
+            if (objRacer->playerIndex != PLAYER_COMPUTER && objRacer->raceFinished) {
+                var_t0 = 0;
+                batchNum = 0;
+            } else {
+                var_t0 = 1;
+                if (obj->behaviorId == BHV_UNK_3A) { //Ghost Object?
+                    batchNum = 0;
+                } else {
+                    //Loads vehicles between VEHICLE_TRICKY and VEHICLE_SMOKEY. So all boss vehicles except wizpig.
+                    bossVehicleId = objRacer->vehicleID + VEHICLE_TRICKY;
+                    if (objRacer->vehicleID >= NUMBER_OF_PLAYER_VEHICLES) {
+                        bossVehicleId = VEHICLE_TRICKY;
+                    }
+                    bossAsset = (u8 *) get_misc_asset(bossVehicleId); //40 bytes of data u8[8][5]?
+                    bossAsset = &bossAsset[(get_viewport_count() * 10)];
+                    var_a1 = bossAsset;
+                    if (get_current_viewport() != objRacer->playerIndex) {
+                        var_a1 += 5;
+                    }
+                    var_f0_2 = obj->segment.unk30;
+                    temp_v1 = (s32) var_f0_2 >> 3;
+                    if (var_f0_2 < 0.0f) {
+                        var_f0_2 = 0.0f;
+                    } else if (var_f0_2 > 3500.0f) {
+                        var_f0_2 = 3500.0f;
+                    }
+                    obj->segment.trans.scale *= (var_f0_2 / 2700.0f) + 1.0f;
+                    batchNum = 0;
+                    //ASSET_MISC_4 is just 10 floats of 1.0f. One for each playable character.
+                    temp_f6 = (s32) ((f32) temp_v1 * *((f32 *)get_misc_asset(ASSET_MISC_4)[objRacer->characterId]));
+                    if (temp_f6 < -50) {
+                        var_t0 = 5;
+                    } else {
+                        var_v1 = MIN(temp_f6 >> 1, 0);
+                        if (var_v1 < var_a1[0]) {
+                            var_t0 = 0;
+                        } else if (var_v1 < var_a1[1]) {
+                            var_t0 = 1;
+                        } else if (var_v1 < var_a1[2]) {
+                            var_t0 = 2;
+                        } else if (var_v1 < var_a1[3]) {
+                            var_t0 = 3;
+                        } else if (var_v1 < var_a1[4]) {
+                            var_t0 = 4;
+                        } else {                            
+                            var_t0 = 5;
+                        }
+                    }
+                }
+            }
+            
+            firstNonEmptyUnk68ObjectIndex = 0;
+            var_v0 = &obj->unk68[firstNonEmptyUnk68ObjectIndex];
+
+            while (*var_v0 == NULL) {
+                firstNonEmptyUnk68ObjectIndex++;
+                var_v0++;
+            }
+
+            numberOfModels = obj->segment.header->numberOfModelIds - 1;
+            var_v0 = &obj->unk68[numberOfModels];
+
+            while (*var_v0 == NULL) {
+                numberOfModels--;
+                var_v0--;
+            }
+
+            if (var_t0 < firstNonEmptyUnk68ObjectIndex) {
+                var_t0 = firstNonEmptyUnk68ObjectIndex;
+            }
+            if (numberOfModels < var_t0) {
+                var_t0 = numberOfModels;
+            }
+            obj->segment.unk38.byte.unk3A = var_t0;
+            if ((obj->unk54 != NULL) && (obj->unk54->unk0 < 0.6f)) {
+                objRacer->lightFlags |= RACER_LIGHT_NIGHT;
+            } else {
+                objRacer->lightFlags &= ~RACER_LIGHT_NIGHT;
+            }
+            racerLightTimer = objRacer->lightFlags & RACER_LIGHT_TIMER;
+            temp_a1_3 = obj->unk68[obj->segment.unk38.byte.unk3A]->objModel;
+            if (racerLightTimer != 0) {
+                racerLightTimer--;
+                if (objRacer->lightFlags & RACER_LIGHT_BRAKE) {
+                    racerLightTimer += 1;
+                    objRacer->lightFlags = (objRacer->lightFlags & ~RACER_LIGHT_UNK10) | RACER_LIGHT_UNK20;
+                } else if (objRacer->lightFlags & RACER_LIGHT_NIGHT) {
+                    racerLightTimer += 3;
+                    objRacer->lightFlags = (objRacer->lightFlags & ~RACER_LIGHT_UNK20) | RACER_LIGHT_UNK10;
+                } else if (objRacer->lightFlags & RACER_LIGHT_UNK20) {
+                    racerLightTimer += 1;
+                } else {
+                    racerLightTimer += 3;
+                }
+            }
+            for (; batchNum < temp_a1_3->numberOfBatches; batchNum++) {
+                if ((temp_a1_3->batches[batchNum].flags & 0x810000) == 0x10000) {
+                    temp_a1_3->batches[batchNum].unk7 = racerLightTimer;
+                }
+            }
+            obj->segment.trans.x_position += objRacer->carBobX;
+            obj->segment.trans.y_position += objRacer->carBobY;
+            obj->segment.trans.z_position += objRacer->carBobZ;
+            ret1 = objRacer->stretch_height;
+        } else if (obj->behaviorId == BHV_FROG) {
+            ret1 = obj->unk64->frog.unk30;
+        }
+    }
+    D_8011AD28 = ret1;
+    D_8011AD30 = ret2;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
+#endif
 
 void render_object(Object *this) {
     func_80012F94(this);
