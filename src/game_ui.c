@@ -269,7 +269,7 @@ LevelHeader *gHudLevelHeader;
 u8 D_80126D64;
 u8 D_80126D65;
 u8 D_80126D66;
-u8 D_80126D67;
+u8 gStopwatchFaceID;
 u8 D_80126D68;
 u8 D_80126D69;
 s32 gWrongWayNagTimer;

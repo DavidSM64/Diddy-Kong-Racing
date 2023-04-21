@@ -97,9 +97,9 @@ glabel func_800A36CC
 /* 0A4430 800A3830 25AD6D66 */  addiu $t5, %lo(D_80126D66) # addiu $t5, $t5, 0x6d66
 /* 0A4434 800A3834 A1B00000 */  sb    $s0, ($t5)
 /* 0A4438 800A3838 A3F10000 */  sb    $s1, ($ra)
-/* 0A443C 800A383C 3C018012 */  lui   $at, %hi(D_80126D67) # $at, 0x8012
+/* 0A443C 800A383C 3C018012 */  lui   $at, %hi(gStopwatchFaceID) # $at, 0x8012
 /* 0A4440 800A3840 93AE002F */  lbu   $t6, 0x2f($sp)
-/* 0A4444 800A3844 A0396D67 */  sb    $t9, %lo(D_80126D67)($at)
+/* 0A4444 800A3844 A0396D67 */  sb    $t9, %lo(gStopwatchFaceID)($at)
 /* 0A4448 800A3848 3C018012 */  lui   $at, %hi(D_80126D69) # $at, 0x8012
 /* 0A444C 800A384C 93AF0033 */  lbu   $t7, 0x33($sp)
 /* 0A4450 800A3850 A02E6D69 */  sb    $t6, %lo(D_80126D69)($at)

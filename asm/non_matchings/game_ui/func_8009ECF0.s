@@ -161,8 +161,8 @@ glabel func_8009ECF0
 /* 09FB54 8009EF54 A0226D66 */  sb    $v0, %lo(D_80126D66)($at)
 /* 09FB58 8009EF58 3C018012 */  lui   $at, %hi(D_80126D65) # $at, 0x8012
 /* 09FB5C 8009EF5C A0206D65 */  sb    $zero, %lo(D_80126D65)($at)
-/* 09FB60 8009EF60 3C018012 */  lui   $at, %hi(D_80126D67) # $at, 0x8012
-/* 09FB64 8009EF64 A0226D67 */  sb    $v0, %lo(D_80126D67)($at)
+/* 09FB60 8009EF60 3C018012 */  lui   $at, %hi(gStopwatchFaceID) # $at, 0x8012
+/* 09FB64 8009EF64 A0226D67 */  sb    $v0, %lo(gStopwatchFaceID)($at)
 /* 09FB68 8009EF68 3C018012 */  lui   $at, %hi(D_80126D69) # $at, 0x8012
 /* 09FB6C 8009EF6C 24190001 */  li    $t9, 1
 /* 09FB70 8009EF70 A0396D69 */  sb    $t9, %lo(D_80126D69)($at)
