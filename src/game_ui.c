@@ -290,8 +290,8 @@ s32 D_80127190;
 s32 D_80127194;
 s32 D_80127198[6];
 
-// ????
-u8 gGfxTaskYieldData[0xA00];
+// This should really be in 
+u8 gGfxTaskYieldData[OS_YIELD_DATA_SIZE];
 
 /******************************/
 
