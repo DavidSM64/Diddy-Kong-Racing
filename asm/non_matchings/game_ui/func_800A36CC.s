@@ -8,7 +8,7 @@ glabel func_800A36CC
 /* 0A42E4 800A36E4 AFA40020 */  sw    $a0, 0x20($sp)
 /* 0A42E8 800A36E8 AFA50024 */  sw    $a1, 0x24($sp)
 /* 0A42EC 800A36EC AFA60028 */  sw    $a2, 0x28($sp)
-/* 0A42F0 800A36F0 0C003936 */  jal   func_8000E4D8
+/* 0A42F0 800A36F0 0C003936 */  jal   is_in_time_trial
 /* 0A42F4 800A36F4 AFA7002C */   sw    $a3, 0x2c($sp)
 /* 0A42F8 800A36F8 10400058 */  beqz  $v0, .L800A385C
 /* 0A42FC 800A36FC 3C0E8012 */   lui   $t6, %hi(D_80126CF4) # $t6, 0x8012

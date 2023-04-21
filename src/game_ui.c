@@ -426,7 +426,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
                 gDPSetEnvColor(gHUDCurrDisplayList++, 255, 255, 255, 0);
                 sp2C = func_8001139C(&gHUDCurrDisplayList) >> 1;
-                if (func_8000E4D8()) {
+                if (is_in_time_trial()) {
                     func_800A277C(sp2C, arg3, updateRate);
                 } else {
                     if (func_8001E440(sp2C) == 10) {
@@ -463,7 +463,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 }
                 if (racer->racer.raceFinished == 1) {
                     func_80068508(1);
-                    if (func_8000E4D8()) {
+                    if (is_in_time_trial()) {
                         func_800A6E30(racer, updateRate);
                     } else if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER && racer->racer.unk1AC == 1) {
                         if (is_in_two_player_adventure()) {
@@ -716,6 +716,7 @@ void render_hud_hubworld(Object *obj, s32 updateRate) {
     }
 }
 
+// render_hud_time_trial
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A277C.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A36CC.s")
 
@@ -1883,7 +1884,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
             sp11C = (lvlMdl->upperXBounds - lvlMdl->lowerXBounds) / (f32) (lvlMdl->upperZBounds - lvlMdl->lowerZBounds);
             sp118 = coss_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
             sp114 = sins_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
-            if (func_8000E4D8() && func_8001B288()) {
+            if (is_in_time_trial() && func_8001B288()) {
                 temp_v0_8 = func_8001B2E0();
                 if (temp_v0_8 != NULL) {
                     func_800AA3EC(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114, sp118, sp11C);

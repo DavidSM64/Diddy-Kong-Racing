@@ -936,12 +936,12 @@ glabel func_80019808
 /* 01B158 8001A558 24016C07 */  li    $at, 0x6C07
 /* 01B15C 8001A55C 31EEFFFF */  andi  $t6, $t7, 0xffff
 /* 01B160 8001A560 11C10004 */  beq   $t6, $at, .L8001A574
-/* 01B164 8001A564 3C188012 */   lui   $t8, %hi(D_8011AEF5) # $t8, 0x8012
+/* 01B164 8001A564 3C188012 */   lui   $t8, %hi(gIsTimeTrial) # $t8, 0x8012
 /* 01B168 8001A568 00142600 */  sll   $a0, $s4, 0x18
 /* 01B16C 8001A56C 0004CE03 */  sra   $t9, $a0, 0x18
 /* 01B170 8001A570 03202025 */  move  $a0, $t9
 .L8001A574:
-/* 01B174 8001A574 9318AEF5 */  lbu   $t8, %lo(D_8011AEF5)($t8)
+/* 01B174 8001A574 9318AEF5 */  lbu   $t8, %lo(gIsTimeTrial)($t8)
 /* 01B178 8001A578 3C13800E */  lui   $s3, %hi(D_800DC744) # $s3, 0x800e
 /* 01B17C 8001A57C 17000016 */  bnez  $t8, .L8001A5D8
 /* 01B180 8001A580 2673C744 */   addiu $s3, %lo(D_800DC744) # addiu $s3, $s3, -0x38bc
