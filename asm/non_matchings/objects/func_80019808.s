@@ -463,13 +463,13 @@ glabel func_80019808
 /* 01AAA0 80019EA0 00000000 */   nop   
 .L80019EA4:
 /* 01AAA4 80019EA4 00003025 */  move  $a2, $zero
-/* 01AAA8 80019EA8 0C01B06B */  jal   func_8006C1AC
+/* 01AAA8 80019EA8 0C01B06B */  jal   push_level_property_stack
 /* 01AAAC 80019EAC 00003825 */   move  $a3, $zero
 /* 01AAB0 80019EB0 92C70016 */  lbu   $a3, 0x16($s6)
 /* 01AAB4 80019EB4 2404002C */  li    $a0, 44
 /* 01AAB8 80019EB8 00002825 */  move  $a1, $zero
 /* 01AABC 80019EBC 2406FFFF */  li    $a2, -1
-/* 01AAC0 80019EC0 0C01B06B */  jal   func_8006C1AC
+/* 01AAC0 80019EC0 0C01B06B */  jal   push_level_property_stack
 /* 01AAC4 80019EC4 24E7FFFF */   addiu $a3, $a3, -1
 /* 01AAC8 80019EC8 0C006A35 */  jal   func_8001A8D4
 /* 01AACC 80019ECC 02802025 */   move  $a0, $s4
@@ -936,12 +936,12 @@ glabel func_80019808
 /* 01B158 8001A558 24016C07 */  li    $at, 0x6C07
 /* 01B15C 8001A55C 31EEFFFF */  andi  $t6, $t7, 0xffff
 /* 01B160 8001A560 11C10004 */  beq   $t6, $at, .L8001A574
-/* 01B164 8001A564 3C188012 */   lui   $t8, %hi(D_8011AEF5) # $t8, 0x8012
+/* 01B164 8001A564 3C188012 */   lui   $t8, %hi(gIsTimeTrial) # $t8, 0x8012
 /* 01B168 8001A568 00142600 */  sll   $a0, $s4, 0x18
 /* 01B16C 8001A56C 0004CE03 */  sra   $t9, $a0, 0x18
 /* 01B170 8001A570 03202025 */  move  $a0, $t9
 .L8001A574:
-/* 01B174 8001A574 9318AEF5 */  lbu   $t8, %lo(D_8011AEF5)($t8)
+/* 01B174 8001A574 9318AEF5 */  lbu   $t8, %lo(gIsTimeTrial)($t8)
 /* 01B178 8001A578 3C13800E */  lui   $s3, %hi(D_800DC744) # $s3, 0x800e
 /* 01B17C 8001A57C 17000016 */  bnez  $t8, .L8001A5D8
 /* 01B180 8001A580 2673C744 */   addiu $s3, %lo(D_800DC744) # addiu $s3, $s3, -0x38bc

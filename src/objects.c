@@ -238,7 +238,7 @@ Object **gRacersByPosition;
 Object **gRacersByPort;
 s32 gNumRacers;
 u8 gTimeTrialEnabled;
-u8 D_8011AEF5;
+u8 gIsTimeTrial;
 u8 gIsTajChallenge;
 s8 D_8011AEF7;
 s32 D_8011AEF8;
@@ -383,7 +383,7 @@ void allocate_object_pools(void) {
     gObjPtrList = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * OBJECT_SLOT_COUNT, COLOUR_TAG_BLUE);
     D_8011ADC4 = 0;
     gTimeTrialEnabled = 0;
-    D_8011AEF5 = 0;
+    gIsTimeTrial = FALSE;
     D_8011ADA8 = 2.0f;
     func_8000C460();
 }
@@ -701,8 +701,11 @@ u8 is_time_trial_enabled() {
     return gTimeTrialEnabled;
 }
 
-u8 func_8000E4D8(void) {
-    return D_8011AEF5;
+/**
+ * Returns true if the player is currently performaing a time trial.
+*/
+u8 is_in_time_trial(void) {
+    return gIsTimeTrial;
 }
 
 void func_8000E4E8(s32 index) {
@@ -2246,11 +2249,11 @@ s8 func_8001A7D8(unk8001A7D8_arg0 *arg0) {
     }
     D_8011ADC4 = 0;
     if (!(arg0->unk4[arg0->unk49] & 2)) {
-        if (D_8011AEF5 == 0) {
+        if (!gIsTimeTrial) {
             D_8011ADC4 = 1;
             arg0->unk4[arg0->unk49] |= 2;
         }
-    } else if (gIsSilverCoinRace && racer->silverCoinCount >= 8 && D_8011AEF5 == 0) {
+    } else if (gIsSilverCoinRace && racer->silverCoinCount >= 8 && !gIsTimeTrial) {
         D_8011ADC4 = 1;
             arg0->unk4[arg0->unk49] |= 4;
     }
@@ -2844,7 +2847,7 @@ void func_8001E45C(s32 arg0) {
         D_8011ADAC = 0;
         D_8011AE7E = (u8)1;
         if (get_render_context() == DRAW_MENU) {
-            func_8006F42C();
+            set_frame_blackout_timer();
         }
     }
 }

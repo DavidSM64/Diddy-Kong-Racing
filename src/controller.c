@@ -5,7 +5,7 @@
 #include "game.h"
 
 s32 sNoControllerPluggedIn = FALSE; // Looks to be a boolean for whether a controller is plugged in. FALSE if plugged in, and TRUE if not.
-u16 gButtonMask = 0xFFFF; //Used when anti-cheat/anti-tamper has failed in func_8006A6B0()
+u16 gButtonMask = 0xFFFF; //Used when anti-cheat/anti-tamper has failed in init_level_globals()
 
 OSMesgQueue sSIMesgQueue;
 OSMesg sSIMesgBuf;
@@ -229,7 +229,7 @@ s8 clamp_joystick(s8 stickMag) {
 }
 
 /**
- * Used when anti-cheat/anti-tamper has failed in func_8006A6B0()
+ * Used when anti-cheat/anti-tamper has failed in init_level_globals()
  * Official Name: joySetSecurity
  */
 void disable_button_mask(void) {

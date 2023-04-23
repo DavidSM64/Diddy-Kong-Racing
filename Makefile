@@ -24,6 +24,7 @@ endif
 
 ifeq ($(VERSION),us_1.0)
   DEFINES += VERSION_US_1_0=1
+  DEFINES += F3DDKR_GBI=1
 endif
 ifeq ($(NON_MATCHING),1)
   DEFINES += NON_MATCHING=1

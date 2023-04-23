@@ -288,22 +288,22 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
             }
             if (settings->worldId == WORLD_CENTRAL_AREA) {
                 if (racerUnk1AC == 1) {
-                    func_8006C1AC((s32)SPECIAL_MAP_ID_UNK_NEG2, 0, VEHICLE_CAR, 0);
-                    func_8006C1AC(miscAsset68Byte5, 0, -1, 0);
-                    func_8006C1AC(miscAsset67CourseByte, 0, -1, 1);
+                    push_level_property_stack((s32)SPECIAL_MAP_ID_UNK_NEG2, 0, VEHICLE_CAR, 0);
+                    push_level_property_stack(miscAsset68Byte5, 0, -1, 0);
+                    push_level_property_stack(miscAsset67CourseByte, 0, -1, 1);
                 } else {
-                    func_8006C1AC((s32)SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
-                    func_8006C1AC(miscAsset67CourseByte, 0, -1, 2);
+                    push_level_property_stack((s32)SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
+                    push_level_property_stack(miscAsset67CourseByte, 0, -1, 2);
                 }
             } else if (racerUnk1AC == 1) {
                 set_eeprom_settings_value(1); //Set Adventure Two Unlocked
-                func_8006C1AC((s32)SPECIAL_MAP_ID_UNK_NEG2, 0, VEHICLE_CAR, 0);
-                func_8006C1AC(miscAsset68Byte7, 0, -1, 0);
-                func_8006C1AC(miscAsset68Byte6, 0, -1, 0);
-                func_8006C1AC(miscAsset67CourseByte, 0, -1, 1);
+                push_level_property_stack((s32)SPECIAL_MAP_ID_UNK_NEG2, 0, VEHICLE_CAR, 0);
+                push_level_property_stack(miscAsset68Byte7, 0, -1, 0);
+                push_level_property_stack(miscAsset68Byte6, 0, -1, 0);
+                push_level_property_stack(miscAsset67CourseByte, 0, -1, 1);
             } else {
-                func_8006C1AC((s32)SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
-                func_8006C1AC(miscAsset67CourseByte, 0, -1, 2);
+                push_level_property_stack((s32)SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
+                push_level_property_stack(miscAsset67CourseByte, 0, -1, 2);
             }
             if (racerUnk1AC == 1) {
                 func_8006F140(4);
@@ -332,8 +332,8 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
             settings->courseFlagsPtr[settings->courseId] |= 2;
             if (!(settings->bosses & bossId)) {
                 settings->bosses |= bossId;
-                func_8006C1AC((s32)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
-                func_8006C1AC(miscAsset67CourseByte, 4, -1, 4);
+                push_level_property_stack((s32)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
+                push_level_property_stack(miscAsset67CourseByte, 4, -1, 4);
             } else if (!(settings->bosses & (bossId << 6))) {
                 settings->bosses |= bossId << 6;
                 var_t1 = 0;
@@ -345,22 +345,22 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
                     settings->wizpigAmulet = var_t1;
                 }
                 if (var_t1 != 0) {
-                    func_8006C1AC((s32)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
-                    func_8006C1AC(ASSET_LEVELNAME_WIZPIGAMULETSEQUENCE, 0, -1, settings->wizpigAmulet - 1);
-                    func_8006C1AC(miscAsset67CourseByte, 6, -1, 6);
+                    push_level_property_stack((s32)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
+                    push_level_property_stack(ASSET_LEVELNAME_WIZPIGAMULETSEQUENCE, 0, -1, settings->wizpigAmulet - 1);
+                    push_level_property_stack(miscAsset67CourseByte, 6, -1, 6);
                 } else {
-                    func_8006C1AC((s32)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
-                    func_8006C1AC(miscAsset67CourseByte, 4, -1, 4);
+                    push_level_property_stack((s32)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
+                    push_level_property_stack(miscAsset67CourseByte, 4, -1, 4);
                 }
             } else {
-                func_8006C1AC((s32)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
-                func_8006C1AC(miscAsset67CourseByte, 4, -1, 4);
+                push_level_property_stack((s32)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
+                push_level_property_stack(miscAsset67CourseByte, 4, -1, 4);
             }
             func_8006F140(4);
             instShowBearBar();
         } else {
-            func_8006C1AC((s32)SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
-            func_8006C1AC(miscAsset67CourseByte, 5, -1, 5);
+            push_level_property_stack((s32)SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
+            push_level_property_stack(miscAsset67CourseByte, 5, -1, 5);
             func_8006F140(3);
         }
         arg1_ret++;

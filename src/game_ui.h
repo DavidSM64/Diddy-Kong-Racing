@@ -283,7 +283,7 @@ typedef struct ObjectTransform_800A8474 {
     s16 unk18;
 } ObjectTransform_800A8474;
 
-extern u8 gGfxTaskYieldData[0xA00];
+extern u8 gGfxTaskYieldData[OS_YIELD_DATA_SIZE];
 
 u8 func_800A0190(void);
 void func_800A0B74(void);
