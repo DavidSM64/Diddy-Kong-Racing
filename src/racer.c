@@ -1609,7 +1609,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
             yVel *= 2.0f;
         }
     }
-    gCameraObject->trans.y_position -= yVel;
+    gCameraObject->trans.y_position -= yVel * (updateRate / 2.0f);
     gCameraObject->trans.z_rotation = 0;
     if (gRaceStartTimer) {
         gCameraObject->trans.y_position = obj->segment.trans.y_position + phi_f18;
