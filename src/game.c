@@ -70,7 +70,6 @@ s8 D_800DD330 = 0;
 
 s8 sAntiPiracyTriggered = 0;
 s32 gSaveDataFlags = 0; //Official Name: load_save_flags
-s32 gScreenStatus = OSMESG_SWAP_BUFFER;
 s32 sControllerStatus = 0;
 s8 gSkipGfxTask = FALSE;
 s8 D_800DD390 = 0;
@@ -88,6 +87,7 @@ s32 sLogicUpdateRate = LOGIC_5FPS;
 FadeTransition D_800DD408 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 30, -1);
 FadeTransition D_800DD41C = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
 FadeTransition D_800DD424 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 260, -1);
+s32 gNumGfxTasksAtScheduler = 0;
 /*******************************/
 
 /************ .bss ************/
@@ -142,8 +142,8 @@ s32 gCurrNumHudMatPerPlayer;
 s32 gCurrNumHudTrisPerPlayer;
 s32 gCurrNumHudVertsPerPlayer;
 OSScClient *gNMISched[3];
-OSMesg gNMIOSMesg;
-OSMesgQueue gNMIMesgQueue;
+OSMesg gGameMesgBuf[3];
+OSMesgQueue gGameMesgQueue;
 s32 gNMIMesgBuf; //Official Name: resetPressed
 s32 D_80123568[6]; // BSS Padding
 
@@ -152,9 +152,11 @@ s32 D_80123568[6]; // BSS Padding
 void func_8006A6B0(void) {
     s32 i;
     s32 temp;
-    s32 checksumCount;
     u8 *header;
+#ifndef NO_ANTIPIRACY
+    s32 checksumCount;
     s32 j;
+#endif
     header = allocate_from_main_pool_safe(sizeof(LevelHeader), COLOUR_TAG_YELLOW);
     gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
     i = 0;
@@ -289,9 +291,6 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     s32 prevLevelID;
     Settings *settings;
     s32 offset;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first;
-#endif
 
     func_80072708();
     if (cutsceneId == -1) {
@@ -614,9 +613,6 @@ void func_8006BFC8(s8 *arg0) {
     s16 phi_v1;
     s8 phi_s0;
     Settings *settings;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first;
-#endif
 
     phi_s0 = 0;
     if (!is_in_tracks_mode()) {
@@ -648,13 +644,7 @@ void func_8006BFC8(s8 *arg0) {
     if (get_render_context() == DRAW_MENU) {
         phi_s0 = 5;
     }
-#ifdef PUPPYPRINT_DEBUG
-    first = osGetCount();
-#endif
     gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
-#ifdef PUPPYPRINT_DEBUG
-    gPrevLoadTimeDecompress = osGetCount() - first;
-#endif
     phi_v1 = 0;
     while (-1 != (s32) gTempAssetTable[phi_v1]) {
         phi_v1++;
@@ -666,13 +656,7 @@ void func_8006BFC8(s8 *arg0) {
     temp2 = gTempAssetTable[phi_s0];
     temp = gTempAssetTable[phi_s0 + 1] - temp2;
     D_801211C0 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
-#ifdef PUPPYPRINT_DEBUG
-    first = osGetCount();
-#endif
     load_asset_to_address(ASSET_UNKNOWN_0, (u32) D_801211C0, temp2, temp);
-#ifdef PUPPYPRINT_DEBUG
-    gPrevLoadTimeDecompress = osGetCount() - first;
-#endif
     free_from_memory_pool(gTempAssetTable);
 }
 
@@ -735,27 +719,43 @@ s32 func_8006C300(void) {
 
 /**
  * Main looping function for the main thread.
+ * Official Name: mainThread
  */
 void thread3_main(UNUSED void *unused) {
+    OSMesg mesg;
+
     init_game();
     gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, 0);
     sBootDelayTimer = 0;
     sRenderContext = DRAW_INTRO;
+
     while (1) {
-        if (is_reset_pressed()) {
+        while (gNumGfxTasksAtScheduler < 2) {
+            main_game_loop();
+        }
+
+        osRecvMesg(&gGameMesgQueue, &mesg, OS_MESG_BLOCK);
+
+        switch ((s32) mesg) {
+        case OS_SC_DONE_MSG:
+            gNumGfxTasksAtScheduler--;
+            break;
+
+        case OS_SC_PRE_NMI_MSG:
+            gNMIMesgBuf = TRUE;
             func_80072708();
             audioStopThread();
             stop_thread30();
             __osSpSetStatus(SP_SET_HALT | SP_CLR_INTR_BREAK | SP_CLR_YIELD | SP_CLR_YIELDED | SP_CLR_TASKDONE | SP_CLR_RSPSIGNAL
-                            | SP_CLR_CPUSIGNAL | SP_CLR_SIG5 | SP_CLR_SIG6 | SP_CLR_SIG7);
+                    | SP_CLR_CPUSIGNAL | SP_CLR_SIG5 | SP_CLR_SIG6 | SP_CLR_SIG7);
             osDpSetStatus(DPC_SET_XBUS_DMEM_DMA | DPC_CLR_FREEZE | DPC_CLR_FLUSH | DPC_CLR_TMEM_CTR | DPC_CLR_PIPE_CTR
-                            | DPC_CLR_CMD_CTR | DPC_CLR_CMD_CTR);
-            while (1); // Infinite loop
+                    | DPC_CLR_CMD_CTR | DPC_CLR_CMD_CTR);
+            while (1);
+            break;
         }
-        main_game_loop();
-        thread3_verify_stack();
     }
 }
+
 
 u8 gAntiAliasing = TRUE;
 u8 gHideHUD = FALSE;
@@ -781,7 +781,7 @@ void init_game(void) {
     gIsLoading = FALSE;
     gLevelDefaultVehicleID = VEHICLE_CAR;
 
-    osCreateScheduler(&gMainSched, &gSchedStack[0x40], /*priority*/ 13, (u8) 0, 1);
+    osCreateScheduler(&gMainSched, &gSchedStack[0x40], OS_SC_PRIORITY, (u8) 0, 1);
     init_video(VIDEO_MODE_LOWRES_LPN, &gMainSched);
     init_PI_mesg_queue();
     setup_gfx_mesg_queues(&gMainSched);
@@ -801,8 +801,8 @@ void init_game(void) {
     init_controller_paks();
     func_80081218();
     create_and_start_thread30();
-    osCreateMesgQueue(&gNMIMesgQueue, &gNMIOSMesg, 1);
-    osScAddClient(&gMainSched, (OSScClient*) gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);
+    osCreateMesgQueue(&gGameMesgQueue, gGameMesgBuf, 3);
+    osScAddClient(&gMainSched, (OSScClient*) gNMISched, &gGameMesgQueue, OS_SC_ID_VIDEO);
     gNMIMesgBuf = 0;
     D_80123504 = 0;
     D_80123508 = 0;
@@ -811,6 +811,7 @@ void init_game(void) {
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
+    get_platform();
 
     osSetTime(0);
 }
@@ -825,69 +826,94 @@ s32 sTotalTime = 0;
 u8 gOverrideAA = 0;
 s32 gOverrideTimer = 0;
 
+extern s32 gVideoSkipNextRate;
+extern u8 D_801262E4;
+
+s32 calculate_updaterate(void) {
+    static u32 prevtime = 0;
+    static s32 remainder = 0;
+    s32 total;
+    s32 rate;
+
+    u32 now = osGetCount();
+
+    if (gVideoSkipNextRate) {
+        rate = 1;
+        remainder = 0;
+        gVideoSkipNextRate = FALSE;
+    } else {
+        if (now > prevtime) {
+            total = (u32) (now - prevtime) + remainder;
+        } else {
+            // Counter has reset since last time
+            total = (0xffffffff - prevtime) + 1 + now + remainder;
+        }
+
+        if (total < (OS_CPU_COUNTER / 30)) { // 30-60 fps
+            rate = 1;
+        } else if (total < (OS_CPU_COUNTER / 20)) { // 20-30 fps
+            rate = 2;
+        } else if (total < (OS_CPU_COUNTER / 15)) {
+            rate = 3;
+        } else if (total < (OS_CPU_COUNTER / 12)) {
+            rate = 4;
+        } else if (total < (OS_CPU_COUNTER / 10)) {
+            rate = 5;
+        } else {
+            rate = 6;
+        }
+
+        remainder = total - rate * (OS_CPU_COUNTER / 60);
+
+        if (rate > D_801262E4) {
+            rate = D_801262E4;
+        }
+    }
+
+    prevtime = now;
+
+    return rate;
+}
+
+
 /**
  * The main gameplay loop.
  * Contains all game logic, audio and graphics processing.
  */
 void main_game_loop(void) {
-    s32 debugLoopCounter;
     s32 framebufferSize;
     s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
 #ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-    u32 first2;
-    u32 first3;
-    s32 i;
-    if (get_buttons_held_from_player(0) & U_JPAD && get_buttons_pressed_from_player(0) & L_TRIG) {
-        gProfilerOn ^= 1;
-    }
     profiler_reset_values();
+    profiler_snapshot(THREAD4_START);
 #endif
 
-    if (gScreenStatus == MESG_SKIP_BUFFER_SWAP) {
-        gCurrDisplayList = gDisplayLists[gSPTaskNum];
-        set_rsp_segment(&gCurrDisplayList, 0, 0);
-        set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoCurrFramebuffer);
-        set_rsp_segment(&gCurrDisplayList, 2, (s32) gVideoLastDepthBuffer);
-        set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoCurrFramebuffer - 0x500);
-    }
-    if (gDrawFrameTimer == 0) {
-#ifndef FIFO_UCODE
-        setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
-#else
-    #ifdef PUPPYPRINT_DEBUG
-        if (get_buttons_pressed_from_player(PLAYER_ONE) & D_JPAD) {
-            gAntiAliasing ^= 1;
-            set_dither_filter();
-        }
-        if (suCodeSwitch == FALSE && IO_READ(DPC_BUFBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG) && gExpansionPak) {
-    #endif
-            setup_ostask_fifo(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
-    #ifdef PUPPYPRINT_DEBUG
-        } else {
-            setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
-        }
-    #endif
-#endif
-        gSPTaskNum += 1;
-        gSPTaskNum &= 1;
-    }
-    if (gDrawFrameTimer) {
-        gDrawFrameTimer--;
-    }
-
-    sDeltaTime = osGetTime() - sPrevTime;
-    sPrevTime = osGetTime();
-    sTotalTime += OS_CYCLES_TO_USEC(sDeltaTime);
-    sTotalTime -= 16666;
-    sLogicUpdateRate = LOGIC_60FPS;
-    while (sTotalTime > 16666) {
+    /*if (gVideoSkipNextRate) {
+        sLogicUpdateRate = LOGIC_60FPS;
+        sTotalTime = 0;
+        sPrevTime = 0;
+        gVideoSkipNextRate = FALSE;
+    } else {
+        sDeltaTime = osGetCount() - sPrevTime;
+        sPrevTime = osGetCount();
+        sTotalTime += OS_CYCLES_TO_USEC(sDeltaTime);
         sTotalTime -= 16666;
-        sLogicUpdateRate++;
-        if (sLogicUpdateRate == 4) {
-            sTotalTime = 0;
+        sLogicUpdateRate = LOGIC_60FPS;
+        while (sTotalTime > 16666) {
+            sTotalTime -= 16666;
+            sLogicUpdateRate++;
+            if (sLogicUpdateRate == 4) {
+                sTotalTime = 0;
+            }
+            if (sLogicUpdateRate > D_801262E4) {
+                sLogicUpdateRate = D_801262E4;
+            }
+
         }
-    }
+    }*/
+
+    sLogicUpdateRate = calculate_updaterate();
+
     if (gAntiAliasing) {
         gOverrideTimer -= 40000;
         gOverrideTimer += MIN(OS_CYCLES_TO_USEC(sDeltaTime), 66666);
@@ -916,58 +942,16 @@ void main_game_loop(void) {
     set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoLastFramebuffer);
     set_rsp_segment(&gCurrDisplayList, 2, (s32) gVideoLastDepthBuffer);
     set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoLastFramebuffer - 0x500);
-#ifdef PUPPYPRINT_DEBUG
-    first2 = osGetCount();
-#endif
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
     render_background(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE); 
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_BACKGROUND], osGetCount() - first2);
-    first2 = osGetCount();
-#endif
     gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, sLogicUpdateRate);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_PAD], osGetCount() - first2);
-#endif
     switch (sRenderContext) {
         case DRAW_INTRO: // Pre-boot screen
-#ifdef PUPPYPRINT_DEBUG
-            first2 = osGetCount();
-            first3 = gPuppyTimers.timers[PP_BACKGROUND][perfIteration];
-#endif
             pre_intro_loop();
-#ifdef PUPPYPRINT_DEBUG
-            profiler_add(gPuppyTimers.timers[PP_MENU], osGetCount() - first2);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_SCENE][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_LIGHT][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_ENVMAP][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_TEXT][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_WAVES][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_PARTICLES][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_VOID][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_BACKGROUND][perfIteration] - first3);
-#endif
             break;
         case DRAW_MENU: // In a menu
-#ifdef PUPPYPRINT_DEBUG
-            first2 = osGetCount();
-            first3 = gPuppyTimers.timers[PP_BACKGROUND][perfIteration];
-#endif
             func_8006DCF8(sLogicUpdateRate);
-#ifdef PUPPYPRINT_DEBUG
-            profiler_add(gPuppyTimers.timers[PP_MENU], osGetCount() - first2);
-            profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_COLLISION][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_OBJECTS][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_SCENE][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_LIGHT][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_ENVMAP][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_TEXT][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_WAVES][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_PARTICLES][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_VOID][perfIteration]);
-            profiler_offset(gPuppyTimers.timers[PP_MENU], gPuppyTimers.timers[PP_BACKGROUND][perfIteration] - first3);
-#endif
             break;
         case DRAW_GAME: // In game (Controlling a character)
             ingame_logic_loop(sLogicUpdateRate);
@@ -981,58 +965,35 @@ void main_game_loop(void) {
     // menus & gameplay.
 
     handle_music_fade(sLogicUpdateRate);
-#ifdef PUPPYPRINT_DEBUG
-    first2 = osGetCount();
-#endif
     print_debug_strings(&gCurrDisplayList);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_TEXT], osGetCount() - first2);
-    first2 = osGetCount();
-    first3 = gPuppyTimers.timers[PP_TEXT][perfIteration];
-#endif
     render_dialogue_boxes(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     close_dialogue_box(4);
     assign_dialogue_box_id(4);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_DIALOGUE], osGetCount() - first2);
-    profiler_offset(gPuppyTimers.timers[PP_DIALOGUE], gPuppyTimers.timers[PP_TEXT][perfIteration] - first3);
-    first2 = osGetCount();
-#endif
     // handle_transitions will perform the logic of transitions and return the transition ID.
     if (handle_transitions(sLogicUpdateRate)) {
         render_fade_transition(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     }
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_TRANSITION], osGetCount() - first2);
-#endif
     if ((sBootDelayTimer >= 8) && (is_controller_missing())) {
         print_missing_controller_text(&gCurrDisplayList, sLogicUpdateRate);
     }
 
 #ifdef PUPPYPRINT_DEBUG
-    first2 = osGetCount();
-    first3 = gPuppyTimers.timers[PP_TEXT][perfIteration];
-    if (gProfilerOn) {
+    gPuppyPrint.mainTimerPoints[0][PP_PROFILER_DRAW] = osGetCount();
+    if (gPuppyPrint.enabled) {
         render_profiler();
         count_triangles((u8*) gDisplayLists[gSPTaskNum], (u8*) gCurrDisplayList);
     }
-    profiler_add(gPuppyTimers.timers[PP_PROFILER], osGetCount() - first2);
-    profiler_offset(gPuppyTimers.timers[PP_PROFILER], gPuppyTimers.timers[PP_TEXT][perfIteration] - first3);
+    gPuppyPrint.mainTimerPoints[1][PP_PROFILER_DRAW] = osGetCount();
 #endif
+    profiler_snapshot(THREAD4_END);
 
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
 
     copy_viewports_to_stack();
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_LOGIC], osGetCount() - first);
-    for (i = 1; i < PP_THREAD0; i++) {
-        profiler_offset(gPuppyTimers.timers[PP_LOGIC], gPuppyTimers.timers[i][perfIteration]);
-    }
-#endif
     if (gDrawFrameTimer != 1) {
         if (gSkipGfxTask == FALSE) {
-            gScreenStatus = wait_for_gfx_task();
+            wait_for_gfx_task();
         }
     } else {
         gDrawFrameTimer = 0;
@@ -1043,25 +1004,45 @@ void main_game_loop(void) {
         disable_cutscene_camera();
     }
 #ifdef PUPPYPRINT_DEBUG
+    gPuppyPrint.mainTimerPoints[0][PP_PROFILER_CALC] = osGetCount();
     calculate_and_update_fps();
     puppyprint_calculate_average_times();
     perfIteration++;
-    if (perfIteration == NUM_PERF_ITERATIONS - 1)
+    if (perfIteration == NUM_PERF_ITERATIONS - 1) {
         perfIteration = 0;
+    }
+    gPuppyPrint.mainTimerPoints[1][PP_PROFILER_CALC] = osGetCount();
 #endif
     if (gDrawFrameTimer == 2) {
         framebufferSize = SCREEN_WIDTH * SCREEN_HEIGHT * 2;
         dmacopy_doubleword(gVideoLastFramebuffer, gVideoCurrFramebuffer, (s32) gVideoCurrFramebuffer + framebufferSize);
     }
-    // tempLogicUpdateRate will be set to a value 2 or higher, based on the framerate.
-    // the mul factor is hardcapped at 6, which happens at 10FPS. The mul factor
-    // affects frameskipping, to maintain consistent game speed, through the (many)
-    // dropped frames in DKR.
-    tempLogicUpdateRate = swap_framebuffer_when_ready(gScreenStatus);
-    sLogicUpdateRate = tempLogicUpdateRate;
-    tempLogicUpdateRateMax = LOGIC_10FPS;
-    if (tempLogicUpdateRate > tempLogicUpdateRateMax) {
-        sLogicUpdateRate = tempLogicUpdateRateMax;
+
+    swap_framebuffer_when_ready();
+
+    if (gDrawFrameTimer == 0) {
+#ifndef FIFO_UCODE
+        setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
+#else
+    #ifdef PUPPYPRINT_DEBUG
+        if (get_buttons_pressed_from_player(PLAYER_ONE) & D_JPAD) {
+            gAntiAliasing ^= 1;
+            set_dither_filter();
+        }
+        if (suCodeSwitch == FALSE && IO_READ(DPC_BUFBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG) && gExpansionPak) {
+    #endif
+            setup_ostask_fifo(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
+    #ifdef PUPPYPRINT_DEBUG
+        } else {
+            setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
+        }
+    #endif
+#endif
+        gNumGfxTasksAtScheduler++;
+        gSPTaskNum ^= 1;
+    }
+    if (gDrawFrameTimer) {
+        gDrawFrameTimer--;
     }
 }
 
@@ -1081,15 +1062,7 @@ void func_8006CAE4(s32 arg0, s32 arg1, Vehicle vehicle) {
  * Needs a better name!
  */
 void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId) {
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-    u32 first2;
-    gPrevLoadTimeDecompress = 0;
-    gPrevLoadTimeTexture = 0;
-    gPrevLoadTimeModel = 0;
-    gPrevLoadTimeObjects = 0;
-    gPrevLoadTimeDMA = 0;
-#endif
+    profiler_begin_timer();
     calc_and_alloc_heap_for_hud(numberOfPlayers);
     set_free_queue_state(0);
     func_80065EA0();
@@ -1099,17 +1072,10 @@ void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehi
     func_800AE728(8, 0x10, 0x96, 0x64, 0x32, 0);
     func_8001BF20();
     osSetTime(0);
+    sPrevTime = 0;
     set_free_queue_state(2);
     func_80072298(1);
-#ifdef PUPPYPRINT_DEBUG
-    sPrevLoadTimeTotal = OS_CYCLES_TO_USEC(osGetCount() - first);
-    gPrevLoadTimeDMA = OS_CYCLES_TO_USEC(gPrevLoadTimeDMA);
-    gPrevLoadTimeDecompress = OS_CYCLES_TO_USEC(gPrevLoadTimeDecompress);
-    gPrevLoadTimeTexture = OS_CYCLES_TO_USEC(gPrevLoadTimeTexture);
-    gPrevLoadTimeModel = OS_CYCLES_TO_USEC(gPrevLoadTimeModel);
-    gPrevLoadTimeObjects = OS_CYCLES_TO_USEC(gPrevLoadTimeObjects);
-    sPrevLoadTimer = 250;
-#endif
+    puppyprint_log("Level [%s] loaded in %2.3fs.", get_level_name(levelId), OS_CYCLES_TO_USEC(osGetCount() - profiler_get_timer()) / 1000000.0f);
 }
 
 // Guessing this is the "unload everything ready for level swap" function.
@@ -1138,10 +1104,6 @@ void func_8006CC14(void) {
 */
 void ingame_logic_loop(s32 updateRate) {
     s32 buttonPressedInputs, buttonHeldInputs, i, sp40, sp3C;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first;
-    u32 first3;
-#endif
 
     sp40 = 0;
     buttonHeldInputs = 0;
@@ -1171,17 +1133,7 @@ void ingame_logic_loop(s32 updateRate) {
 #endif
     // Update all objects
     if (!gIsPaused) {
-#ifdef PUPPYPRINT_DEBUG
-    first = osGetCount();
-    first3 = gPuppyTimers.timers[PP_WAVES][perfIteration];
-#endif
         func_80010994(updateRate);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_OBJECTS], osGetCount() - first);
-    profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_COLLISION][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_RACER][perfIteration]);
-    profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_WAVES][perfIteration] - first3);
-#endif
         if (check_if_showing_cutscene_camera() == 0 || func_8001139C()) {
             if ((buttonPressedInputs & START_BUTTON) && (func_8006C2F0() == 0) && (D_800DD390 == 0)
                 && (sRenderContext == DRAW_GAME) && (gPostRaceViewPort == NULL) && (gLevelLoadTimer == 0) && (D_800DD398 == 0)) {
@@ -1202,7 +1154,13 @@ void ingame_logic_loop(s32 updateRate) {
     }
     gParticlePtrList_flush();
     func_8001BF20();
+#ifdef PUPPYPRINT_DEBUG
+    gPuppyPrint.mainTimerPoints[0][PP_LEVELGFX] = osGetCount();
+#endif
     render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
+#ifdef PUPPYPRINT_DEBUG
+    gPuppyPrint.mainTimerPoints[1][PP_LEVELGFX] = osGetCount();
+#endif
     if (sRenderContext == DRAW_GAME) {
         // Ignore the user's L/R/Z buttons.
         buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
@@ -1263,11 +1221,6 @@ void ingame_logic_loop(s32 updateRate) {
             n_alSeqpDelete();
         }
     }
-    
-#ifdef PUPPYPRINT_DEBUG
-    first = osGetCount();
-    first3 = gPuppyTimers.timers[PP_TEXT][perfIteration];
-#endif
     if (gIsPaused) {
         i = render_pause_menu(&gCurrDisplayList, updateRate);
         switch (i - 1) {
@@ -1320,10 +1273,6 @@ void ingame_logic_loop(s32 updateRate) {
     render_borders_for_multiplayer(&gCurrDisplayList);
     render_minimap_and_misc_hud(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
     //render_second_multiplayer_borders(&gCurrDisplayList);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_HUD], osGetCount() - first);
-    profiler_offset(gPuppyTimers.timers[PP_HUD], gPuppyTimers.timers[PP_TEXT][perfIteration] - first3);
-#endif
     if (D_800DD39C != 0) {
         if (func_800214C4() != 0) {
             gPlayableMapId = ASSET_LEVEL_FUTUREFUNLANDHUB;
@@ -1603,6 +1552,7 @@ Vehicle get_level_default_vehicle(void) {
  * Needs a better name!
  */
 void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
+    profiler_begin_timer();
     set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
@@ -1611,7 +1561,9 @@ void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehi
     func_800AE728(4, 4, 0x6E, 0x30, 0x20, 0);
     func_8001BF20();
     osSetTime(0);
+    sPrevTime = 0;
     set_free_queue_state(2);
+    puppyprint_log("Level (%s) (Menu) loaded in %2.3fs.", get_level_name(levelId), OS_CYCLES_TO_USEC(osGetCount() - profiler_get_timer()) / 1000000.0f);
 }
 
 void func_8006DBE4(void) {
@@ -1630,18 +1582,16 @@ void func_8006DBE4(void) {
 
 void func_8006DC58(s32 updateRate) {
     if (get_thread30_level_id_to_load() == 0) {
-#ifdef PUPPYPRINT_DEBUG
-        u32 first = osGetCount();
-#endif
         func_80010994(updateRate);
-#ifdef PUPPYPRINT_DEBUG
-        profiler_add(gPuppyTimers.timers[PP_OBJECTS], osGetCount() - first);
-        profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_COLLISION][perfIteration]);
-        profiler_offset(gPuppyTimers.timers[PP_OBJECTS], gPuppyTimers.timers[PP_RACER][perfIteration]);
-#endif
         gParticlePtrList_flush();
         func_8001BF20();
+#ifdef PUPPYPRINT_DEBUG
+        gPuppyPrint.mainTimerPoints[0][PP_LEVELGFX] = osGetCount();
+#endif
         render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
+#ifdef PUPPYPRINT_DEBUG
+        gPuppyPrint.mainTimerPoints[1][PP_LEVELGFX] = osGetCount();
+#endif
         func_800C3440(updateRate);
         init_rdp_and_framebuffer(&gCurrDisplayList);
         //render_borders_for_multiplayer(&gCurrDisplayList);
@@ -1966,9 +1916,6 @@ s8 is_postrace_viewport_active(void) {
  * Official name: mainResetPressed
  */
 s32 is_reset_pressed(void) {
-    if (gNMIMesgBuf == 0) {
-        gNMIMesgBuf = (s32)((osRecvMesg(&gNMIMesgQueue, NULL, OS_MESG_NOBLOCK) + 1) != 0);
-    }
     return gNMIMesgBuf;
 }
 

@@ -71,17 +71,17 @@ extern u8 gExpansionPak;
 extern s32 gVideoRefreshRate;
 extern f32 gVideoAspectRatio;
 extern u16 *gVideoDepthBuffer;
-extern u16 *gVideoLastFramebuffer;
+extern u16 *gVideoCurrFramebuffer; //Official Name: currentScreen
+extern u16 *gVideoLastFramebuffer; //Official Name: otherScreen
 extern u16 *gVideoCurrDepthBuffer;
-extern u16 *gVideoLastDepthBuffer;
-extern u16 *gVideoCurrFramebuffer;
+extern u16 *gVideoLastDepthBuffer; //Official Name: otherZbuf
 extern s32 D_800DE774;
 extern s8  D_800DE778;
 extern u16 *gVideoFramebuffers[];
-extern s32 gVideoCurrFbIndex;
 extern u16 gScreenWidth;
 extern u16 gScreenHeight;
 extern OSViMode gGlobalVI;
+extern u8 gUseExpansionMemory;
 
 extern OSViMode osViModeNtscLpn1, osViModePalLpn1, osViModeMpalLpn1, osViModePalLan1, osViModeNtscLan1, osViModeMpalLan1;
 
@@ -106,7 +106,7 @@ void memory_copy(u8 *src, u8 *dest, s32 len);
 void set_dither_filter(void);
 
 //Non Matching
-s32 swap_framebuffer_when_ready(s32 arg0);
+s32 swap_framebuffer_when_ready(void);
 
 void change_vi(OSViMode *mode, int width, int height);
 

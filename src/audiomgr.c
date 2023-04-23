@@ -10,6 +10,7 @@
 #include "objects.h"
 #include "PR/abi.h"
 #include "main.h"
+#include "memory.h"
 
 /****  type define's for structures unique to audiomgr ****/
 typedef union {
@@ -109,12 +110,14 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     u32 *assetAudioTable;
     s32 *asset8;
     s32 assetSize;
+#ifndef NO_ANTIPIRACY
     s32 checksum;
     u8 *crc_region_start;
     u8 *crc_region;
-    u32 ramEnd = 0x80400000;
-    if (gExpansionPak) {
-        ramEnd = 0x80800000;
+#endif
+    u32 ramEnd = RAM_END;
+    if (gUseExpansionMemory) {
+        ramEnd = EXTENDED_RAM_END;
     }
 
     gAudioSched = audSched;
@@ -230,9 +233,6 @@ static void __amMain(UNUSED void *arg) {
     s32 done = 0;
     AudioMsg *msg = NULL;
     AudioInfo *lastInfo = 0;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first;
-#endif
 
     osScAddClient(gAudioSched, (OSScClient *) &audioStack, &__am.audioFrameMsgQ, OS_MESG_BLOCK);
 
@@ -242,21 +242,11 @@ static void __amMain(UNUSED void *arg) {
         switch (msg->gen.type) {
         case OS_SC_RETRACE_MSG:
             //TODO: Check type of ACMDList?
-#ifdef PUPPYPRINT_DEBUG
-        first = osGetCount();
-#endif
             __amHandleFrameMsg((AudioInfo *) __am.ACMDList[(((u32) audFrameCt % 3))+2], lastInfo);
-#ifdef PUPPYPRINT_DEBUG
-            profiler_add(gPuppyTimers.timers[PP_AUDIO], osGetCount() - first);
-#endif
+            profiler_snapshot(THREAD3_END);
             osRecvMesg(&__am.audioReplyMsgQ, (OSMesg *) &lastInfo, OS_MESG_BLOCK);
-#ifdef PUPPYPRINT_DEBUG
-            first = osGetCount();
-#endif
+            profiler_snapshot(THREAD3_START);
             __amHandleDoneMsg(lastInfo);
-#ifdef PUPPYPRINT_DEBUG
-            profiler_add(gPuppyTimers.timers[PP_AUDIO], osGetCount() - first);
-#endif
             break;
         case OS_SC_PRE_NMI_MSG:
             /* what should we really do here? quit? ramp down volume? */
@@ -346,7 +336,7 @@ static u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
     t->list.t.ucode_boot = (u64 *)rspF3DDKRBootStart;
     t->list.t.ucode_boot_size =
         ((int) rspF3DDKRDramStart - (int) rspF3DDKRBootStart);
-    t->list.t.flags  = OS_TASK_DP_WAIT;
+    t->list.t.flags  = 0;
     t->list.t.ucode = (u64 *) aspMainTextStart;
     t->list.t.ucode_data = (u64 *) aspMainDataStart;
     t->list.t.ucode_data_size = SP_UCODE_DATA_SIZE;
@@ -354,11 +344,11 @@ static u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
     t->list.t.yield_data_size = 0;
     t->unk6C = 1;
 
-    ret = osSendMesg(osScGetCmdQ(gAudioSched), (OSMesg) t, OS_MESG_NOBLOCK);
-    
-    curAcmdList ^= 1; /* swap which acmd list you use each frame */    
-    
-    return ret;
+    osScSubmitAudTask(gAudioSched, t);
+
+    curAcmdList ^= 1; /* swap which acmd list you use each frame */
+
+    return 0;
 }
 
 /******************************************************************************

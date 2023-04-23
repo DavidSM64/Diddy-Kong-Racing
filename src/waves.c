@@ -388,9 +388,6 @@ void obj_loop_wavepower(Object *obj) {
     f32 diffZ;
     f32 diffX;
     f32 distance;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-#endif
 
     if (obj != D_800E3198) {
         racers = get_racer_objects(&numRacers);
@@ -418,7 +415,4 @@ void obj_loop_wavepower(Object *obj) {
             }
         }
     }
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_WAVES], osGetCount() - first);
-#endif
 }

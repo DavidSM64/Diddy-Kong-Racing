@@ -873,12 +873,12 @@ Particle2 *func_800B1130(unk800B1CB8 *arg0, Particle *arg1) {
     }
     sp24 = partBeh->unk50;
     if (partBeh->unk5C & 0x20000) {
-        sp24 += (f32) get_random_number_from_range(-partBeh->unk8C, partBeh->unk8C) * 0.00001525878906;
+        sp24 += (f32) get_random_number_from_range(-partBeh->unk8C, partBeh->unk8C) * 0.00001525878906f;
     }
     var_v0->unk8 = sp38->unk10 * sp24;
     sp24 = partBeh->unk54;
     if (partBeh->unk5C & 0x40000) {
-        sp24 += (f32) get_random_number_from_range(-partBeh->unk90, partBeh->unk90) * 0.00001525878906;
+        sp24 += (f32) get_random_number_from_range(-partBeh->unk90, partBeh->unk90) * 0.00001525878906f;
     }
     if (partBeh->flags & 0x1000) {
         var_v0->unk28 = sqrtf((arg0->unk1C * arg0->unk1C) + (arg0->unk20 * arg0->unk20) + (arg0->unk24 * arg0->unk24)) * sp24 * 0.1f;

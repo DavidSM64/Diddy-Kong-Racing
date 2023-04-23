@@ -94,7 +94,7 @@ static s32 NULL_PARAMS[10] = {
 void init_lpfilter(ALLowPass *lp) {
     s32		i, temp;
     s16		fc;
-    f64		ffc, fcoef;
+    f32		ffc, fcoef;
 
     temp = lp->fc * SCALE;
     fc = temp >> 15;
@@ -105,7 +105,7 @@ void init_lpfilter(ALLowPass *lp) {
 	lp->fcvec.fccoef[i] = 0;
     
     lp->fcvec.fccoef[i++] = fc;
-    fcoef = ffc = (f64)fc/SCALE;
+    fcoef = ffc = (f32)fc/SCALE;
 
     for (; i<16; i++){
 	fcoef *= ffc;
@@ -162,7 +162,7 @@ void alFxNew(ALFx *r, ALSynConfig *c, s16 bus, UNUSED ALHeap *hp) {
             * where
             *		120,000/ln(2) = 173123.40...
             */
-    #define CONVERT 173123.404906676
+    #define CONVERT 173123.404906676f
     #define LENGTH	(d->output - d->input)
             d->rsgain 	 = (((f32) param[j++])/CONVERT) * LENGTH;
             d->rsval	 = 1.0f;

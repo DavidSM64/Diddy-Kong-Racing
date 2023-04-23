@@ -43,10 +43,10 @@ f32 sinf(f32 x) {
 		dn = dx * rpi_sinf.d;
 
 		if (dn >= 0) {
-			n = dn + 0.5;
+			n = dn + 0.5f;
 		}
 		else {
-			n = dn - 0.5;
+			n = dn - 0.5f;
 		}
 
 		dn = n;

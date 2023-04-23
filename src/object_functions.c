@@ -132,24 +132,17 @@ s16 D_8011D4E2; // Taj Voice clips
 /******************************/
 
 void func_80031130(s32 arg0, f32* arg1, f32* arg2, s32 arg3) {
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-#endif
+    profiler_begin_timer();
     func_80031130_2(arg0, arg1, arg2, arg3);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_COLLISION], osGetCount() - first);
-#endif
+    profiler_add(PP_COLLISION, first);
 }
 
 s32 func_80031600(f32* arg0, f32* arg1, f32* arg2, s8* arg3, s32 arg4, s32* arg5) {
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-#endif
-    s32 ret = func_80031600_2(arg0, arg1, arg2, arg3, arg4, arg5);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_COLLISION], osGetCount() - first);
-#endif
-return ret;
+    s32 ret;
+    profiler_begin_timer();
+    ret = func_80031600_2(arg0, arg1, arg2, arg3, arg4, arg5);
+    profiler_add(PP_COLLISION, first);
+    return ret;
 }
 
 void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
@@ -949,7 +942,6 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
 
     obj->segment.trans.unk6 &= 0xBFFF;
     obj->segment.trans.unk6 |= 0x1000;
-    get_racer_object(0); // Unused. I guess the developers forgot to remove this?
     if ((s32) obj->interactObj->distance < obj->unk78) {
         racerObjs = get_racer_objects(&numObjects);
         for (i = 0; i < numObjects; i++) {
@@ -3054,7 +3046,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
     if (angle < -0x200) {
         angle = -0x200; 
     }
-    obj->segment.trans.y_rotation -= angle;
+    obj->segment.trans.y_rotation -= angle * updateRate;
     if (angle == 0) {
         openDoor = FALSE;
     }
@@ -4171,7 +4163,7 @@ void homing_rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon 
         diffZ = targetObj->segment.trans.z_position - obj->segment.trans.z_position;
         dist = (diffX * diffX) + (diffZ * diffZ);
         distY = diffY * diffY;
-        if (dist < 10000.0 && distY > 10000.0) {
+        if (dist < 10000.0f && distY > 10000.0f) {
             rocket->target = NULL;
             return;
         }

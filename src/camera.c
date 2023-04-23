@@ -318,7 +318,6 @@ s8 check_if_showing_cutscene_camera(void) {
 
 /**
  * Disable the cutscene camera, returning it to the conventional mode.
- * Official name: camSetUserView
 */
 void disable_cutscene_camera(void) {
     gCutsceneCameraActive = FALSE;
@@ -457,6 +456,7 @@ s32 check_viewport_background_flag(s32 viewPortIndex) {
 
 /**
  * Sets the intended viewport to the size passed through by arguments.
+ * Official Name: camSetUserView
 */
 void resize_viewport(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2) {
     s32 widthAndHeight, width, height;
@@ -968,10 +968,6 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
     s32 sp34;
     s32 result;
     s32 var_s2;
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-    u32 first3 = 0;
-#endif
 
     result = TRUE;
     if (flags & RENDER_ANTI_ALIASING) {
@@ -1051,13 +1047,7 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
     if (flags & RENDER_SEMI_TRANSPARENT) {
         flags |= RENDER_ANTI_ALIASING;
     }
-#ifdef PUPPYPRINT_DEBUG
-    first3 = osGetCount();
-#endif
     func_8007BF34(dlist, arg4->unk6 | (flags & (RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING)));
-#ifdef PUPPYPRINT_DEBUG
-    first3 = osGetCount() - first3;
-#endif
     if (!(flags & RENDER_Z_UPDATE)) {
         gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
     }
@@ -1070,10 +1060,6 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
     }
     gDkrInsertMatrix((*dlist)++, 0, var_s2 << 6);
     gDkrDisableBillboard((*dlist)++);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_BILLBOARD], osGetCount() - first);
-    profiler_offset(gPuppyTimers.timers[PP_BILLBOARD], first3);
-#endif
     return result;
 }
 

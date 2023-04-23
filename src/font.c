@@ -227,16 +227,10 @@ void set_text_background_colour(s32 red, s32 green, s32 blue, s32 alpha) {
  * Official Name: fontPrintWindowXY?
  */
 void draw_text(Gfx **displayList, s32 xpos, s32 ypos, char *text, AlignmentFlags alignmentFlags) {
-#ifdef PUPPYPRINT_DEBUG
-    u32 first = osGetCount();
-#endif
     DialogueBoxBackground *temp = &gDialogueBoxBackground[0];
     temp->xpos = (xpos == POS_CENTRED) ? temp->width >> 1 : xpos;
     temp->ypos = (ypos == POS_CENTRED) ? temp->height >> 1 : ypos;
     render_text_string(displayList, temp, text, alignmentFlags, 1.0f);
-#ifdef PUPPYPRINT_DEBUG
-    profiler_add(gPuppyTimers.timers[PP_TEXT], osGetCount() - first);
-#endif
 }
 
 /**
