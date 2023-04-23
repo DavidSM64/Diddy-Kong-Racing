@@ -17,8 +17,6 @@ void thread1_main(void *);
 #define VC 4
 #define IQUE 8
 
-#ifdef PUPPYPRINT_DEBUG
-
 enum DebugPages {
     PAGE_MINIMAL,
     PAGE_OVERVIEW,
@@ -146,6 +144,8 @@ enum PPProfilerEvent {
     {"Void"},
 
 
+#ifdef PUPPYPRINT_DEBUG
+
 #define NUM_OBJECT_PRINTS 250
 #define NUM_PERF_ITERATIONS 32
 #define PERF_AGGREGATE NUM_PERF_ITERATIONS
@@ -217,6 +217,7 @@ extern u32 gFreeMem[12];
 
 #define update_rdp_profiling()
 #define profiler_snapshot(eventID)
+#define puppyprint_update_rsp(eventID)
 #define profiler_begin_timer()
 #define profiler_begin_timer2()
 #define profiler_begin_timer3()

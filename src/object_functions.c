@@ -1898,10 +1898,12 @@ void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
     Object** racerObjects;
     s32 i;
     f32 temp;
+    Settings *settings;
 
     obj64 = &obj->unk64->exit;
     enableWarp = TRUE;
 #ifndef UNLOCK_ALL
+    settings = get_settings();
     if ((obj64->unk14 == 0) && (settings->balloonsPtr[settings->worldId] == 8)) {
         enableWarp = FALSE;
     }
