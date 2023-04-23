@@ -93,29 +93,29 @@ glabel func_8005CB68
 /* 05D8BC 8005CCBC 2404FFFE */  li    $a0, -2
 /* 05D8C0 8005CCC0 00002825 */  move  $a1, $zero
 /* 05D8C4 8005CCC4 00003025 */  move  $a2, $zero
-/* 05D8C8 8005CCC8 0C01B06B */  jal   func_8006C1AC
+/* 05D8C8 8005CCC8 0C01B06B */  jal   push_level_property_stack
 /* 05D8CC 8005CCCC 00003825 */   move  $a3, $zero
 /* 05D8D0 8005CCD0 8FA4002C */  lw    $a0, 0x2c($sp)
 /* 05D8D4 8005CCD4 00002825 */  move  $a1, $zero
 /* 05D8D8 8005CCD8 2406FFFF */  li    $a2, -1
-/* 05D8DC 8005CCDC 0C01B06B */  jal   func_8006C1AC
+/* 05D8DC 8005CCDC 0C01B06B */  jal   push_level_property_stack
 /* 05D8E0 8005CCE0 00003825 */   move  $a3, $zero
 /* 05D8E4 8005CCE4 02002025 */  move  $a0, $s0
 /* 05D8E8 8005CCE8 00002825 */  move  $a1, $zero
 /* 05D8EC 8005CCEC 2406FFFF */  li    $a2, -1
-/* 05D8F0 8005CCF0 0C01B06B */  jal   func_8006C1AC
+/* 05D8F0 8005CCF0 0C01B06B */  jal   push_level_property_stack
 /* 05D8F4 8005CCF4 24070001 */   li    $a3, 1
 /* 05D8F8 8005CCF8 10000031 */  b     .L8005CDC0
 /* 05D8FC 8005CCFC 8FB90034 */   lw    $t9, 0x34($sp)
 .L8005CD00:
 /* 05D900 8005CD00 00002825 */  move  $a1, $zero
 /* 05D904 8005CD04 00003025 */  move  $a2, $zero
-/* 05D908 8005CD08 0C01B06B */  jal   func_8006C1AC
+/* 05D908 8005CD08 0C01B06B */  jal   push_level_property_stack
 /* 05D90C 8005CD0C 00003825 */   move  $a3, $zero
 /* 05D910 8005CD10 02002025 */  move  $a0, $s0
 /* 05D914 8005CD14 00002825 */  move  $a1, $zero
 /* 05D918 8005CD18 2406FFFF */  li    $a2, -1
-/* 05D91C 8005CD1C 0C01B06B */  jal   func_8006C1AC
+/* 05D91C 8005CD1C 0C01B06B */  jal   push_level_property_stack
 /* 05D920 8005CD20 24070002 */   li    $a3, 2
 /* 05D924 8005CD24 10000026 */  b     .L8005CDC0
 /* 05D928 8005CD28 8FB90034 */   lw    $t9, 0x34($sp)
@@ -128,34 +128,34 @@ glabel func_8005CB68
 /* 05D940 8005CD40 2404FFFE */  li    $a0, -2
 /* 05D944 8005CD44 00002825 */  move  $a1, $zero
 /* 05D948 8005CD48 00003025 */  move  $a2, $zero
-/* 05D94C 8005CD4C 0C01B06B */  jal   func_8006C1AC
+/* 05D94C 8005CD4C 0C01B06B */  jal   push_level_property_stack
 /* 05D950 8005CD50 00003825 */   move  $a3, $zero
 /* 05D954 8005CD54 8FA40024 */  lw    $a0, 0x24($sp)
 /* 05D958 8005CD58 00002825 */  move  $a1, $zero
 /* 05D95C 8005CD5C 2406FFFF */  li    $a2, -1
-/* 05D960 8005CD60 0C01B06B */  jal   func_8006C1AC
+/* 05D960 8005CD60 0C01B06B */  jal   push_level_property_stack
 /* 05D964 8005CD64 00003825 */   move  $a3, $zero
 /* 05D968 8005CD68 8FA40028 */  lw    $a0, 0x28($sp)
 /* 05D96C 8005CD6C 00002825 */  move  $a1, $zero
 /* 05D970 8005CD70 2406FFFF */  li    $a2, -1
-/* 05D974 8005CD74 0C01B06B */  jal   func_8006C1AC
+/* 05D974 8005CD74 0C01B06B */  jal   push_level_property_stack
 /* 05D978 8005CD78 00003825 */   move  $a3, $zero
 /* 05D97C 8005CD7C 02002025 */  move  $a0, $s0
 /* 05D980 8005CD80 00002825 */  move  $a1, $zero
 /* 05D984 8005CD84 2406FFFF */  li    $a2, -1
-/* 05D988 8005CD88 0C01B06B */  jal   func_8006C1AC
+/* 05D988 8005CD88 0C01B06B */  jal   push_level_property_stack
 /* 05D98C 8005CD8C 24070001 */   li    $a3, 1
 /* 05D990 8005CD90 1000000B */  b     .L8005CDC0
 /* 05D994 8005CD94 8FB90034 */   lw    $t9, 0x34($sp)
 .L8005CD98:
 /* 05D998 8005CD98 00002825 */  move  $a1, $zero
 /* 05D99C 8005CD9C 00003025 */  move  $a2, $zero
-/* 05D9A0 8005CDA0 0C01B06B */  jal   func_8006C1AC
+/* 05D9A0 8005CDA0 0C01B06B */  jal   push_level_property_stack
 /* 05D9A4 8005CDA4 00003825 */   move  $a3, $zero
 /* 05D9A8 8005CDA8 02002025 */  move  $a0, $s0
 /* 05D9AC 8005CDAC 00002825 */  move  $a1, $zero
 /* 05D9B0 8005CDB0 2406FFFF */  li    $a2, -1
-/* 05D9B4 8005CDB4 0C01B06B */  jal   func_8006C1AC
+/* 05D9B4 8005CDB4 0C01B06B */  jal   push_level_property_stack
 /* 05D9B8 8005CDB8 24070002 */   li    $a3, 2
 /* 05D9BC 8005CDBC 8FB90034 */  lw    $t9, 0x34($sp)
 .L8005CDC0:
@@ -226,12 +226,12 @@ glabel func_8005CB68
 /* 05DAA8 8005CEA8 2404FFFF */  li    $a0, -1
 /* 05DAAC 8005CEAC 00002825 */  move  $a1, $zero
 /* 05DAB0 8005CEB0 00003025 */  move  $a2, $zero
-/* 05DAB4 8005CEB4 0C01B06B */  jal   func_8006C1AC
+/* 05DAB4 8005CEB4 0C01B06B */  jal   push_level_property_stack
 /* 05DAB8 8005CEB8 00003825 */   move  $a3, $zero
 /* 05DABC 8005CEBC 02002025 */  move  $a0, $s0
 /* 05DAC0 8005CEC0 24050004 */  li    $a1, 4
 /* 05DAC4 8005CEC4 2406FFFF */  li    $a2, -1
-/* 05DAC8 8005CEC8 0C01B06B */  jal   func_8006C1AC
+/* 05DAC8 8005CEC8 0C01B06B */  jal   push_level_property_stack
 /* 05DACC 8005CECC 24070004 */   li    $a3, 4
 /* 05DAD0 8005CED0 1000003D */  b     .L8005CFC8
 /* 05DAD4 8005CED4 00000000 */   nop   
@@ -262,43 +262,43 @@ glabel func_8005CB68
 /* 05DB2C 8005CF2C 00002825 */  move  $a1, $zero
 /* 05DB30 8005CF30 00003025 */  move  $a2, $zero
 /* 05DB34 8005CF34 00003825 */  move  $a3, $zero
-/* 05DB38 8005CF38 0C01B06B */  jal   func_8006C1AC
+/* 05DB38 8005CF38 0C01B06B */  jal   push_level_property_stack
 /* 05DB3C 8005CF3C AFAA0044 */   sw    $t2, 0x44($sp)
 /* 05DB40 8005CF40 8FAA0044 */  lw    $t2, 0x44($sp)
 /* 05DB44 8005CF44 2404002B */  li    $a0, 43
 /* 05DB48 8005CF48 91470017 */  lbu   $a3, 0x17($t2)
 /* 05DB4C 8005CF4C 00002825 */  move  $a1, $zero
 /* 05DB50 8005CF50 2406FFFF */  li    $a2, -1
-/* 05DB54 8005CF54 0C01B06B */  jal   func_8006C1AC
+/* 05DB54 8005CF54 0C01B06B */  jal   push_level_property_stack
 /* 05DB58 8005CF58 24E7FFFF */   addiu $a3, $a3, -1
 /* 05DB5C 8005CF5C 02002025 */  move  $a0, $s0
 /* 05DB60 8005CF60 24050006 */  li    $a1, 6
 /* 05DB64 8005CF64 2406FFFF */  li    $a2, -1
-/* 05DB68 8005CF68 0C01B06B */  jal   func_8006C1AC
+/* 05DB68 8005CF68 0C01B06B */  jal   push_level_property_stack
 /* 05DB6C 8005CF6C 24070006 */   li    $a3, 6
 /* 05DB70 8005CF70 10000015 */  b     .L8005CFC8
 /* 05DB74 8005CF74 00000000 */   nop   
 .L8005CF78:
 /* 05DB78 8005CF78 00002825 */  move  $a1, $zero
 /* 05DB7C 8005CF7C 00003025 */  move  $a2, $zero
-/* 05DB80 8005CF80 0C01B06B */  jal   func_8006C1AC
+/* 05DB80 8005CF80 0C01B06B */  jal   push_level_property_stack
 /* 05DB84 8005CF84 00003825 */   move  $a3, $zero
 /* 05DB88 8005CF88 02002025 */  move  $a0, $s0
 /* 05DB8C 8005CF8C 24050004 */  li    $a1, 4
 /* 05DB90 8005CF90 2406FFFF */  li    $a2, -1
-/* 05DB94 8005CF94 0C01B06B */  jal   func_8006C1AC
+/* 05DB94 8005CF94 0C01B06B */  jal   push_level_property_stack
 /* 05DB98 8005CF98 24070004 */   li    $a3, 4
 /* 05DB9C 8005CF9C 1000000A */  b     .L8005CFC8
 /* 05DBA0 8005CFA0 00000000 */   nop   
 .L8005CFA4:
 /* 05DBA4 8005CFA4 00002825 */  move  $a1, $zero
 /* 05DBA8 8005CFA8 00003025 */  move  $a2, $zero
-/* 05DBAC 8005CFAC 0C01B06B */  jal   func_8006C1AC
+/* 05DBAC 8005CFAC 0C01B06B */  jal   push_level_property_stack
 /* 05DBB0 8005CFB0 00003825 */   move  $a3, $zero
 /* 05DBB4 8005CFB4 02002025 */  move  $a0, $s0
 /* 05DBB8 8005CFB8 24050004 */  li    $a1, 4
 /* 05DBBC 8005CFBC 2406FFFF */  li    $a2, -1
-/* 05DBC0 8005CFC0 0C01B06B */  jal   func_8006C1AC
+/* 05DBC0 8005CFC0 0C01B06B */  jal   push_level_property_stack
 /* 05DBC4 8005CFC4 24070004 */   li    $a3, 4
 .L8005CFC8:
 /* 05DBC8 8005CFC8 0C01BC50 */  jal   func_8006F140
@@ -310,12 +310,12 @@ glabel func_8005CB68
 .L8005CFE0:
 /* 05DBE0 8005CFE0 00002825 */  move  $a1, $zero
 /* 05DBE4 8005CFE4 00003025 */  move  $a2, $zero
-/* 05DBE8 8005CFE8 0C01B06B */  jal   func_8006C1AC
+/* 05DBE8 8005CFE8 0C01B06B */  jal   push_level_property_stack
 /* 05DBEC 8005CFEC 00003825 */   move  $a3, $zero
 /* 05DBF0 8005CFF0 02002025 */  move  $a0, $s0
 /* 05DBF4 8005CFF4 24050005 */  li    $a1, 5
 /* 05DBF8 8005CFF8 2406FFFF */  li    $a2, -1
-/* 05DBFC 8005CFFC 0C01B06B */  jal   func_8006C1AC
+/* 05DBFC 8005CFFC 0C01B06B */  jal   push_level_property_stack
 /* 05DC00 8005D000 24070005 */   li    $a3, 5
 /* 05DC04 8005D004 0C01BC50 */  jal   func_8006F140
 /* 05DC08 8005D008 24040003 */   li    $a0, 3

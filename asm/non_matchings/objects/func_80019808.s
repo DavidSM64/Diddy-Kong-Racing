@@ -463,13 +463,13 @@ glabel func_80019808
 /* 01AAA0 80019EA0 00000000 */   nop   
 .L80019EA4:
 /* 01AAA4 80019EA4 00003025 */  move  $a2, $zero
-/* 01AAA8 80019EA8 0C01B06B */  jal   func_8006C1AC
+/* 01AAA8 80019EA8 0C01B06B */  jal   push_level_property_stack
 /* 01AAAC 80019EAC 00003825 */   move  $a3, $zero
 /* 01AAB0 80019EB0 92C70016 */  lbu   $a3, 0x16($s6)
 /* 01AAB4 80019EB4 2404002C */  li    $a0, 44
 /* 01AAB8 80019EB8 00002825 */  move  $a1, $zero
 /* 01AABC 80019EBC 2406FFFF */  li    $a2, -1
-/* 01AAC0 80019EC0 0C01B06B */  jal   func_8006C1AC
+/* 01AAC0 80019EC0 0C01B06B */  jal   push_level_property_stack
 /* 01AAC4 80019EC4 24E7FFFF */   addiu $a3, $a3, -1
 /* 01AAC8 80019EC8 0C006A35 */  jal   func_8001A8D4
 /* 01AACC 80019ECC 02802025 */   move  $a0, $s4

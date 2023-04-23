@@ -259,7 +259,7 @@ glabel func_8000CC7C
 .L8000D01C:
 /* 00DC1C 8000D01C 8FAD0144 */  lw    $t5, 0x144($sp)
 /* 00DC20 8000D020 3C018012 */  lui   $at, %hi(gNumRacers) # $at, 0x8012
-/* 00DC24 8000D024 0C01B0BC */  jal   func_8006C2F0
+/* 00DC24 8000D024 0C01B0BC */  jal   get_level_property_stack_pos
 /* 00DC28 8000D028 AC2DAEF0 */   sw    $t5, %lo(gNumRacers)($at)
 /* 00DC2C 8000D02C 14400010 */  bnez  $v0, .L8000D070
 /* 00DC30 8000D030 3C03800E */   lui   $v1, %hi(D_800DC708) # $v1, 0x800e

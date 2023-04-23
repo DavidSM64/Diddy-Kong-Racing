@@ -3393,7 +3393,7 @@ s32 turn_head_towards_object(Object *obj, Object_Racer *racer, Object *targetObj
         racer->headAngleTarget = intendedAngle;
         if (ret) {} // Fakematch
         ret = TRUE;
-        if ((racer->miscAnimCounter & 0x1F) < 0xA) {
+        if ((racer->miscAnimCounter & 0x1F) < 10) {
             racer->headAngleTarget = 0;
         }
     }

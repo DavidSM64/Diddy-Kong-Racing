@@ -19,13 +19,13 @@ typedef enum RenderContext {
 } RenderContext;
 
 /* Size: 6 bytes */
-typedef struct unk8012117C {
-    s8 unk0;
-    s8 unk1;
-    s8 unk2;
+typedef struct LevelBaseProperties {
+    s8 world;
+    s8 raceType;
+    s8 vehicles;
     s8 unk3;
     s16 unk4;
-} unk8012117C;
+} LevelBaseProperties;
 
 enum NumberOfPlayers {
     ZERO_PLAYERS  = -1, // A.I. Only
@@ -33,6 +33,14 @@ enum NumberOfPlayers {
     TWO_PLAYERS   = 1,
     THREE_PLAYERS = 2,
     FOUR_PLAYERS  = 3
+};
+
+enum CutsceneIDs {
+    CUTSCENE_ID_NONE   = 0,
+    CUTSCENE_ID_UNK_3  = 3,
+    CUTSCENE_ID_UNK_5  = 5,
+    CUTSCENE_ID_UNK_7  = 7,
+    CUTSCENE_ID_UNK_64 = 0x64
 };
 
 /**
@@ -88,10 +96,10 @@ void func_8006BFC8(s8 *arg0);
 void frontCleanupMultiSelect(void);
 TempStruct5 *func_8006C18C(void);
 s8 func_8006C19C(void);
-void func_8006C1AC(s32 levelId, s32 entranceId, Vehicle vehicleId, s32 cutsceneId);
-void func_8006C22C(s32 *levelId, s32 *entranceId, s32 *vehicleId, s32 *cutsceneId);
-void func_8006C2E4(void);
-s16 func_8006C2F0(void);
+void push_level_property_stack(s32 levelId, s32 entranceId, Vehicle vehicleId, s32 cutsceneId);
+void pop_level_property_stack(s32 *levelId, s32 *entranceId, s32 *vehicleId, s32 *cutsceneId);
+void clear_level_property_stack(void);
+s16 get_level_property_stack_pos(void);
 s32 func_8006C300(void);
 void thread3_main(UNUSED void *unused);
 void init_game(void);
@@ -150,7 +158,7 @@ s32 is_controller_missing(void);
 s32 check_imem_validity(void);
 void ingame_logic_loop(s32 updateRate);
 void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId);
-void func_8006A6B0(void);
+void init_level_globals(void);
 void calc_and_alloc_heap_for_hud(s32 numberOfPlayers);
 void default_alloc_heap_for_hud(void);
 
