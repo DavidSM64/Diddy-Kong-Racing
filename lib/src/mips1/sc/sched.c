@@ -12,9 +12,10 @@
 
 static void __scTaskComplete(OSSched *sc, OSScTask *t) {
     if (t->list.t.type == M_GFXTASK) {
-        if (sc->scheduledFB == NULL) {
+        if (sc->retraceCount >= 2 && sc->scheduledFB == NULL) {
             sc->scheduledFB = t->framebuffer;
             osViSwapBuffer(t->framebuffer);
+            sc->retraceCount = 0;
         } else {
             sc->queuedFB = t->framebuffer;
         }
@@ -74,34 +75,38 @@ static void __scHandlePrenmi(OSSched *sc) {
     osSendMesg(sc->gfxmq, (OSMesg) OS_SC_PRE_NMI_MSG, OS_MESG_NOBLOCK);
 }
 
+u32 gRetraceTimer = 0;
+
 static void __scHandleRetrace(OSSched *sc) {
-    if (sc->scheduledFB && osViGetCurrentFramebuffer() == sc->scheduledFB) {
-        if (sc->queuedFB) {
-            sc->scheduledFB = sc->queuedFB;
-            sc->queuedFB = NULL;
-            osViSwapBuffer(sc->scheduledFB);
-        } else {
-            sc->scheduledFB = NULL;
-        }
-    }
-
-    sc->alt ^= 1;
-
-    if (sc->audmq && sc->alt == 0) {
-        osSendMesg(sc->audmq, &sc->retraceMsg, OS_MESG_NOBLOCK);
-
-        if (sc->nextAudTask) {
-            sc->doAudio = 1;
-
-            if (sc->curRSPTask && sc->curRSPTask->list.t.type == M_GFXTASK) {
-                puppyprint_update_rsp(RSP_GFX_PAUSED);
-                sc->curRSPTask->state |= OS_SC_YIELD;
-                osSpTaskYield();
+	sc->retraceCount += 2;
+    if (sc->retraceCount >= 2 && sc->scheduledFB && osViGetCurrentFramebuffer() == sc->scheduledFB) {
+            if (sc->queuedFB) {
+                sc->scheduledFB = sc->queuedFB;
+                sc->queuedFB = NULL;
+                osViSwapBuffer(sc->scheduledFB);
+                sc->retraceCount = 0;
+            } else {
+                sc->scheduledFB = NULL;
             }
         }
-    }
 
-    __scTryDispatch(sc);
+        sc->alt ^= 1;
+
+        if (sc->audmq && sc->alt == 0) {
+            osSendMesg(sc->audmq, &sc->retraceMsg, OS_MESG_NOBLOCK);
+
+            if (sc->nextAudTask) {
+                sc->doAudio = 1;
+
+                if (sc->curRSPTask && sc->curRSPTask->list.t.type == M_GFXTASK) {
+                    puppyprint_update_rsp(RSP_GFX_PAUSED);
+                    sc->curRSPTask->state |= OS_SC_YIELD;
+                    osSpTaskYield();
+                }
+            }
+        }
+
+        __scTryDispatch(sc);
 }
 
 static void __scHandleRSP(OSSched *sc) {

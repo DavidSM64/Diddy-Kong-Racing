@@ -98,6 +98,7 @@ typedef struct {
   void        *scheduledFB;
   void        *queuedFB;
   s32         alt;
+  s32         retraceCount;
   s32         doAudio;
 } OSSched;
 

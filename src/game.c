@@ -827,7 +827,6 @@ u8 gOverrideAA = 0;
 s32 gOverrideTimer = 0;
 
 extern s32 gVideoSkipNextRate;
-extern u8 D_801262E4;
 
 s32 calculate_updaterate(void) {
     static u32 prevtime = 0;
@@ -864,10 +863,6 @@ s32 calculate_updaterate(void) {
         }
 
         remainder = total - rate * (OS_CPU_COUNTER / 60);
-
-        if (rate > D_801262E4) {
-            rate = D_801262E4;
-        }
     }
 
     prevtime = now;
