@@ -12,7 +12,7 @@
 
 static void __scTaskComplete(OSSched *sc, OSScTask *t) {
     if (t->list.t.type == M_GFXTASK) {
-        if (sc->retraceCount >= 2 && sc->scheduledFB == NULL) {
+        if (sc->retraceCount >= REFRESH_RATE && sc->scheduledFB == NULL) {
             sc->scheduledFB = t->framebuffer;
             osViSwapBuffer(t->framebuffer);
             sc->retraceCount = 0;
@@ -78,8 +78,8 @@ static void __scHandlePrenmi(OSSched *sc) {
 u32 gRetraceTimer = 0;
 
 static void __scHandleRetrace(OSSched *sc) {
-	sc->retraceCount += 2;
-    if (sc->retraceCount >= 2 && sc->scheduledFB && osViGetCurrentFramebuffer() == sc->scheduledFB) {
+	sc->retraceCount++;
+    if (sc->retraceCount >= REFRESH_RATE && sc->scheduledFB && osViGetCurrentFramebuffer() == sc->scheduledFB) {
             if (sc->queuedFB) {
                 sc->scheduledFB = sc->queuedFB;
                 sc->queuedFB = NULL;
