@@ -6927,8 +6927,8 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                 return 1;
             }
             if ((gMenuOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_RESTARTRACE]) || (gMenuOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_RESTARTCHALLENGE])) {
-                if ((gIsInTracksMode == 0) && (D_800E0758[func_8006EB14()] != -1)) {
-                    func_80000FDC(D_800E0758[func_8006EB14()], 0, 1.0f);
+                if ((gIsInTracksMode == 0) && (D_800E0758[get_ingame_map_id()] != -1)) {
+                    func_80000FDC(D_800E0758[get_ingame_map_id()], 0, 1.0f);
                 }
                 return 2;
             }

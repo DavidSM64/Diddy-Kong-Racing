@@ -149,7 +149,7 @@ OSSched gMainSched; // 0x288 / 648 bytes
 u64 gSchedStack[0x400];
 s32 gSPTaskNum;
 s32 sRenderContext;
-s32 D_801234F0;
+s32 D_801234F0; // I don't think this is ever not 1
 // Similar to gMapId, but is 0 if not currently playing a level (e.g. start menu).
 s32 gPlayableMapId;
 s32 D_801234F8;
@@ -1117,22 +1117,22 @@ void main_game_loop(void) {
     }
 }
 
-void func_8006CAE4(s32 arg0, s32 arg1, Vehicle vehicle) {
-    D_80123500 = arg0 - 1;
-    if (arg1 == -1) {
+void func_8006CAE4(s32 numPlayers, s32 trackID, Vehicle vehicle) {
+    D_80123500 = numPlayers - 1;
+    if (trackID == -1) {
         gPlayableMapId = get_track_id_to_load();
     } else {
-        gPlayableMapId = arg1;
+        gPlayableMapId = trackID; // Unused, because arg1 is always -1.
     }
-    load_level_2(gPlayableMapId, D_80123500, D_80123504, vehicle);
+    load_level_game(gPlayableMapId, D_80123500, D_80123504, vehicle);
 }
 
 /**
  * Calls load_level() with the same arguments except for the cutsceneId,
  * which is the value at D_80123508. Also does some other stuff.
- * Needs a better name!
+ * Used when ingame.
  */
-void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId) {
+void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId) {
     alloc_displaylist_heap(numberOfPlayers);
     set_free_queue_state(0);
     func_80065EA0();
@@ -1485,7 +1485,7 @@ void ingame_logic_loop(s32 updateRate) {
                     D_80123508 = 0x64;
                 }
             }
-            load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+            load_level_game(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
         } else {
             safe_mark_write_save_file(get_save_file_index());
             load_menu_with_level_background(MENU_TITLE, -1, 0);
@@ -1495,7 +1495,7 @@ void ingame_logic_loop(s32 updateRate) {
     if (D_801234F8 != 0) {
         gPostRaceViewPort = NULL;
         func_8006CC14();
-        load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+        load_level_game(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
         safe_mark_write_save_file(get_save_file_index());
         D_801234F8 = 0;
     }
@@ -1561,10 +1561,14 @@ UNUSED void set_render_context(s32 changeTo) {
     sRenderContext = changeTo;
 }
 
+/**
+ * Sets up and loads a level to be used in the background of the menu that's about to be set up.
+ * Used for every kind of menu that's not ingame.
+*/
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     alloc_displaylist_heap(0);
     sRenderContext = DRAW_MENU;
-    D_801234F0 = 1;
+    D_801234F0 = TRUE;
     set_sound_channel_volume(0, 32767);
     set_sound_channel_volume(1, 32767);
     set_sound_channel_volume(2, 32767);
@@ -1575,7 +1579,7 @@ void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
         if (levelId < 0) {
             gIsLoading = TRUE;
         } else {
-            load_level_3(levelId, -1, 0, VEHICLE_PLANE, cutsceneId);
+            load_level_menu(levelId, -1, 0, VEHICLE_PLANE, cutsceneId);
         }
     }
     if (menuId == MENU_UNUSED_2 || menuId == MENU_LOGOS || menuId == MENU_TITLE) {
@@ -1605,9 +1609,9 @@ Vehicle get_level_default_vehicle(void) {
 
 /**
  * Calls load_level() with the same arguments, but also does some other stuff.
- * Needs a better name!
+ * Used for menus.
  */
-void load_level_3(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
+void load_level_menu(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
     set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
@@ -1674,7 +1678,7 @@ void func_8006DCF8(s32 updateRate) {
         sRenderContext = DRAW_GAME;
         gIsPaused = FALSE;
         gPostRaceViewPort = NULL;
-        load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+        load_level_game(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
         safe_mark_write_save_file(get_save_file_index());
         return;
     }
@@ -1691,7 +1695,7 @@ void func_8006DCF8(s32 updateRate) {
                 D_80123504 = 0;
                 D_80123508 = 0x64;
                 sRenderContext = DRAW_GAME;
-                load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+                load_level_game(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
                 safe_mark_write_save_file(get_save_file_index());
                 break;
             case 1:
@@ -1708,12 +1712,12 @@ void func_8006DCF8(s32 updateRate) {
                 if (temp2 >= 0) {
                     D_80123508 = temp2;
                 }
-                load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+                load_level_game(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
                 safe_mark_write_save_file(get_save_file_index());
                 break;
             case 2:
                 sRenderContext = DRAW_GAME;
-                load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+                load_level_game(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
                 break;
             case 3:
                 sRenderContext = DRAW_GAME;
@@ -1721,7 +1725,7 @@ void func_8006DCF8(s32 updateRate) {
                 D_80123504 = D_80121250[15];
                 D_80123508 = D_80121250[D_80121250[1] + 8];
                 gLevelDefaultVehicleID = get_map_default_vehicle(gPlayableMapId);
-                load_level_2(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+                load_level_game(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
                 break;
             default:
                 load_menu_with_level_background(MENU_TITLE, -1, 0);
@@ -1744,7 +1748,7 @@ void func_8006DCF8(s32 updateRate) {
         D_80123508 = D_80121250[temp + 12];
         temp = get_player_selected_vehicle(0);
         D_80123500 = gSettingsPtr->gNumRacers - 1;
-        load_level_2(gPlayableMapId, D_80123500, D_80123504, temp);
+        load_level_game(gPlayableMapId, D_80123500, D_80123504, temp);
         D_801234FC = 0;
         gLevelDefaultVehicleID = D_8012351C;
         return;
@@ -1778,7 +1782,7 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
     }
     if (levelId != (s32) SPECIAL_MAP_ID_NO_LEVEL) {
         //!@bug: Forcing the plane here makes all AI use plane paths. This can be seen most evidently in the Ancient Lake demo.
-        load_level_3(levelId, numberOfPlayers, 0, VEHICLE_PLANE, cutsceneId);
+        load_level_menu(levelId, numberOfPlayers, 0, VEHICLE_PLANE, cutsceneId);
         gIsLoading = FALSE;
         return;
     }
@@ -1917,6 +1921,10 @@ UNUSED void func_8006EA58(void) {
     func_8006E994(gSettingsPtr);
 }
 
+/**
+ * Return the global game settings.
+ * This is where global game records and perferences are stored.
+*/
 Settings *get_settings(void) {
     return gSettingsPtr;
 }
@@ -1946,7 +1954,10 @@ s32 is_reset_pressed(void) {
     return gNMIMesgBuf;
 }
 
-s32 func_8006EB14(void) {
+/**
+ * Returns the current map ID if ingame, since this var is only set ingame.
+*/
+s32 get_ingame_map_id(void) {
     return gPlayableMapId;
 }
 
