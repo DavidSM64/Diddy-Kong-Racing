@@ -837,7 +837,7 @@ s32 calculate_updaterate(void) {
     u32 now = osGetCount();
 
     if (gVideoSkipNextRate) {
-        rate = 1;
+        rate = LOGIC_60FPS;
         remainder = 0;
         gVideoSkipNextRate = FALSE;
     } else {
@@ -849,17 +849,17 @@ s32 calculate_updaterate(void) {
         }
 
         if (total < (OS_CPU_COUNTER / 30)) { // 30-60 fps
-            rate = 1;
+            rate = LOGIC_60FPS;
         } else if (total < (OS_CPU_COUNTER / 20)) { // 20-30 fps
-            rate = 2;
+            rate = LOGIC_30FPS;
         } else if (total < (OS_CPU_COUNTER / 15)) {
-            rate = 3;
+            rate = LOGIC_20FPS;
         } else if (total < (OS_CPU_COUNTER / 12)) {
-            rate = 4;
+            rate = LOGIC_15FPS;
         } else if (total < (OS_CPU_COUNTER / 10)) {
-            rate = 5;
+            rate = LOGIC_12FPS;
         } else {
-            rate = 6;
+            rate = LOGIC_10FPS;
         }
 
         remainder = total - rate * (OS_CPU_COUNTER / 60);
