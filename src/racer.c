@@ -1590,8 +1590,8 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
         gCameraObject->unk1C = phi_f14;
         gCameraObject->unk20 = phi_f18;
     }
-    gCameraObject->unk1C += (phi_f14 - gCameraObject->unk1C) * 0.125;
-    gCameraObject->unk20 += (phi_f18 - gCameraObject->unk20) * 0.125;
+    gCameraObject->unk1C += (phi_f14 - gCameraObject->unk1C) * 0.125; //!@Delta
+    gCameraObject->unk20 += (phi_f18 - gCameraObject->unk20) * 0.125; //!@Delta
     sp34 = sins_f(gCameraObject->trans.x_rotation - sp24);
     phi_f18 = coss_f(gCameraObject->trans.x_rotation - sp24);
     phi_f18 = (gCameraObject->unk1C * sp34) + (gCameraObject->unk20 * phi_f18);
@@ -3110,7 +3110,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     // Degrade lateral velocity
     if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
         if (!(racer->velocity > -2.0) && racer->drift_direction == 0 && racer->raceFinished == FALSE) {
-            racer->lateral_velocity += (racer->velocity * gCurrentStickX) / miscAsset[racer->characterId];
+            racer->lateral_velocity += (racer->velocity * gCurrentStickX) / miscAsset[racer->characterId]; //!@Delta
             if (racer->playerIndex == PLAYER_COMPUTER) {
                 racer->lateral_velocity *= 0.9;
             }
@@ -3154,9 +3154,9 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     // Slow down gradually when not acellerating and almost at a standstill
     if (velSquare < 1.0f && !(gCurrentRacerInput & A_BUTTON)) {
-        racer->velocity -= racer->velocity * traction * 8.0f;
+        racer->velocity -= racer->velocity * traction * 8.0f; //!@Delta
     } else {
-        racer->velocity -= velSquare * traction;
+        racer->velocity -= velSquare * traction; //!@Delta
     }
     if (sp60) {
         if (racer->unk1EE <= 15) {
@@ -3236,11 +3236,11 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             if (racer->vehicleIDPrev >= 5) {
                 tempVel *= 0.3;
             }
-            racer->velocity += tempVel;
+            racer->velocity += tempVel; //!@Delta
             racer->brake = 0.0f;
         }
     }
-    tempVel = (racer->brake * surfaceTraction) * 0.32;
+    tempVel = (racer->brake * surfaceTraction) * 0.32; //!@Delta
     racer->velocity -= surfaceTraction * racer->throttle;
     if (racer->velocity > -0.04 && racer->velocity < 0.04) {
         racer->velocity = 0.0f;
@@ -3277,7 +3277,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         }
         racer->velocity += surfaceTraction * (racer->pitch / (4.0f - velocityDiff)) * updateRateF;
     }
-    racer->forwardVel -= (racer->forwardVel + (racer->velocity * 0.05)) * 0.125;
+    racer->forwardVel -= (racer->forwardVel + (racer->velocity * 0.05)) * 0.125; //!@Delta
     racer->unk1E8 = racer->steerAngle;
     racer->unk110 = gCurrentCarSteerVel;
     if (racer->unk1E0 != 0) {
@@ -3516,13 +3516,13 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
     } else if (obj->segment.unk38.byte.unk3B == 0) {
         if (flags & 1) {
             if (obj->segment.animFrame > 40) {
-                obj->segment.animFrame -= arg7 * 4; //!@Delta
+                obj->segment.animFrame -= arg7 * 4;
                 if (obj->segment.animFrame <= 40) {
                     obj->segment.unk38.byte.unk3B = action;
                     obj->segment.animFrame = arg3;
                 }
             } else {
-                obj->segment.animFrame += arg7 * 4; //!@Delta
+                obj->segment.animFrame += arg7 * 4;
                 if (obj->segment.animFrame >= 40) {
                     obj->segment.unk38.byte.unk3B = action;
                     obj->segment.animFrame = arg3;
@@ -3738,7 +3738,7 @@ void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateR
     angle = yStick - ((u16) obj->segment.trans.x_rotation);
     angle = angle > 0x8000 ? angle - 0xFFFF : angle;
     angle = angle < -0x8000 ? angle + 0xFFFF : angle;
-    obj->segment.trans.x_rotation += (angle >> 3);
+    obj->segment.trans.x_rotation += (angle >> 3); //!@Delta
     obj->segment.y_velocity -= weight * updateRateF;
     if (racer->buoyancy == 0.0) {
         steerAngle = -obj->segment.y_velocity * 20.0;
@@ -4063,6 +4063,8 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
 /**
  * Gets, sets and works with car velocity while grounded.
  * It also handles turn velocity, too.
+ * This function has a large number of timing incorrect physics, responsible for boss vehicles being
+ * inconsistently fast, depending on framerate.
  */
 void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
     s32 xStick;
@@ -4111,9 +4113,9 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
     xStick *= updateRate;
     temp = (s32) ((xStick >> 1) * gCurrentRacerHandlingStat); 
     temp2 = temp;
-    racer->steerVisualRotation -= temp2;
+    racer->steerVisualRotation -= temp2; //!@Delta
     handle_car_steering(racer);
-    racer->lateral_velocity *= 0.9;
+    racer->lateral_velocity *= 0.9; //!@Delta
     surfaceType = SURFACE_DEFAULT;
     traction = 0.0f;
     if (racer->wheel_surfaces[0] != SURFACE_NONE) {
@@ -4183,7 +4185,7 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
             racer->velocity += reverseVel; //!@Delta
         }
     }
-	forwardVel = (vel * racer->brake) * 0.32;
+	forwardVel = (vel * racer->brake) * 0.32; //!@Delta
     racer->velocity -= vel * racer->throttle; //!@Delta
     if (racer->velocity > -0.04 && racer->velocity < 0.04) {
         racer->velocity = 0.0f;
@@ -5835,7 +5837,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     }
     if (racer->unk204 > 0) {
         racer->unk204 -= updateRate;
-        racer->velocity *= 0.8f;
+        racer->velocity *= 0.8f; //!@Delta
     }
     if (racer->unk206 > 0) {
         racer->unk18A = racer->unk206;
