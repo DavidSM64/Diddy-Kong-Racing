@@ -2628,7 +2628,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         if (tempRacer->unk180) {
             update_spatial_audio_position(tempRacer->unk180, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
         }
-        if (func_8000E4D8() && tempRacer->playerIndex == PLAYER_ONE && gRaceStartTimer == 0) {
+        if (is_in_time_trial() && tempRacer->playerIndex == PLAYER_ONE && gRaceStartTimer == 0) {
             func_80059BF0(obj, updateRate);
         }
         if (tempRacer->soundMask) {
