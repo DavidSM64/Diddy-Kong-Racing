@@ -290,7 +290,7 @@ s32 D_80127190;
 s32 D_80127194;
 s32 D_80127198[6];
 
-// This should really be in 
+// Not sure why this ended up here, and not in unknown_078050.c along with the rest of the task data.
 u8 gGfxTaskYieldData[OS_YIELD_DATA_SIZE];
 
 /******************************/
