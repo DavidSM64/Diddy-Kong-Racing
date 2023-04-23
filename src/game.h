@@ -22,7 +22,7 @@ typedef enum RenderContext {
 typedef struct LevelGlobalData {
     s8 world;
     s8 raceType;
-    s8 vehicles;
+    s8 vehicles; // Upper half: available vehicle, Lower half: default vehicle.
     s8 unk3; // Unused.
     s16 unk4; // Unused.
 } LevelGlobalData;
@@ -80,8 +80,8 @@ extern s32 gSaveDataFlags;
 
 Vehicle get_map_default_vehicle(s32 mapId);
 s32 get_map_available_vehicles(s32 mapId);
-s8 func_8006B14C(s32 mapId);
-s8 func_8006B190(s32 mapId);
+s8 get_map_race_type(s32 mapId);
+s8 get_map_world_id(s32 mapId);
 s32 get_hub_area_id(s32 worldId);
 void get_number_of_levels_and_worlds(s32 *outLevelCount, s32 *outWorldCount);
 s32 check_if_in_race(void);
@@ -152,15 +152,15 @@ void func_8006F29C(void);
 void func_8006F338(s32 arg0);
 void func_8006F388(u8 arg0);
 void func_8006F398(void);
-void func_8006F42C(void);
+void set_frame_blackout_timer(void);
 void pre_intro_loop(void);
 s32 is_controller_missing(void);
 s32 check_imem_validity(void);
 void ingame_logic_loop(s32 updateRate);
 void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId);
 void init_level_globals(void);
-void calc_and_alloc_heap_for_hud(s32 numberOfPlayers);
-void default_alloc_heap_for_hud(void);
+void alloc_displaylist_heap(s32 numberOfPlayers);
+void default_alloc_displaylist_heap(void);
 
 //Non Matching
 void func_8006DCF8(s32 updateRate);

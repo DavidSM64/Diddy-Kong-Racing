@@ -2913,7 +2913,7 @@ void func_8001E45C(s32 arg0) {
         D_8011ADAC = 0;
         D_8011AE7E = (u8)1;
         if (get_render_context() == DRAW_MENU) {
-            func_8006F42C();
+            set_frame_blackout_timer();
         }
     }
 }

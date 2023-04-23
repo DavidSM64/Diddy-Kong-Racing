@@ -147,7 +147,7 @@ glabel func_80099E8C
 /* 09ACAC 8009A0AC 27B30088 */  addiu $s3, $sp, 0x88
 .L8009A0B0:
 /* 09ACB0 8009A0B0 93C40000 */  lbu   $a0, ($fp)
-/* 09ACB4 8009A0B4 0C01AC64 */  jal   func_8006B190
+/* 09ACB4 8009A0B4 0C01AC64 */  jal   get_map_world_id
 /* 09ACB8 8009A0B8 00000000 */   nop   
 /* 09ACBC 8009A0BC 2443FFFF */  addiu $v1, $v0, -1
 /* 09ACC0 8009A0C0 04600004 */  bltz  $v1, .L8009A0D4

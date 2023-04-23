@@ -137,11 +137,11 @@ s16 gLevelPropertyStack[5 * 4]; // Stores level info for cutscenes. 5 sets of fo
 Gfx *gDisplayLists[2];
 Gfx *gCurrDisplayList;
 UNUSED s32 D_801211FC;
-MatrixS *gHudMatrices[2];
+MatrixS *gMatrixHeap[2];
 MatrixS *gGameCurrMatrix;
-Vertex *gHudVertices[2];
+Vertex *gVertexHeap[2];
 Vertex *gGameCurrVertexList;
-TriangleList *gHudTriangles[2];
+TriangleList *gTriangleHeap[2];
 TriangleList *gGameCurrTriList;
 UNUSED s32 D_80121230[8];
 s8 D_80121250[16]; //Settings4C
@@ -157,7 +157,7 @@ s32 D_801234FC;
 s32 D_80123500;
 s32 D_80123504;
 s32 D_80123508;
-s32 D_8012350C;
+s32 gPrevPlayerCount;
 Settings *gSettingsPtr;
 s8 gIsLoading;
 s8 gIsPaused;
@@ -367,7 +367,10 @@ UNUSED s32 func_8006B018(s8 arg0) {
     return 0;
 }
 
-UNUSED s32 func_8006B054(s8 worldID) {
+/**
+ * Returns the number of levels that belong to one hub world.
+*/
+UNUSED s32 get_world_level_count(s8 worldID) {
     s32 out, i;
     out = 0;
     for (i = 0; i < gNumberOfLevelHeaders; i++) {
@@ -378,6 +381,9 @@ UNUSED s32 func_8006B054(s8 worldID) {
     return out;
 }
 
+/**
+ * Returns the default vehicle from the set map ID.
+*/
 Vehicle get_map_default_vehicle(s32 mapId) {
     if (mapId > 0 && mapId < gNumberOfLevelHeaders) {
         return gGlobalLevelTable[mapId].vehicles & 0xF;
@@ -385,6 +391,9 @@ Vehicle get_map_default_vehicle(s32 mapId) {
     return VEHICLE_CAR;
 }
 
+/**
+ * Returns the available vehicles from the set map ID.
+*/
 s32 get_map_available_vehicles(s32 mapId) {
     if (mapId > 0 && mapId < gNumberOfLevelHeaders) {
         s32 temp = gGlobalLevelTable[mapId].vehicles;
@@ -392,17 +401,23 @@ s32 get_map_available_vehicles(s32 mapId) {
             return (temp >> 4) & 0xF;
         }
     }
-    return 1;
+    return VEHICLE_HOVERCRAFT;
 }
 
-s8 func_8006B14C(s32 mapId) {
+/**
+ * Returns the race type from the set map ID.
+*/
+s8 get_map_race_type(s32 mapId) {
     if (mapId >= 0 && mapId < gNumberOfLevelHeaders) {
         return gGlobalLevelTable[mapId].raceType;
     }
     return -1;
 }
 
-s8 func_8006B190(s32 mapId) {
+/**
+ * Returns the world ID from the set map ID.
+*/
+s8 get_map_world_id(s32 mapId) {
     if (mapId >= 0 && mapId < gNumberOfLevelHeaders) {
         return gGlobalLevelTable[mapId].world;
     }
@@ -963,7 +978,7 @@ void init_game(void) {
     init_particle_assets();
     func_800AB1F0();
     calc_and_alloc_heap_for_settings();
-    default_alloc_heap_for_hud();
+    default_alloc_displaylist_heap();
     load_fonts();
     init_controller_paks();
     func_80081218();
@@ -1010,9 +1025,9 @@ void main_game_loop(void) {
     }
 
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
-    gGameCurrMatrix = gHudMatrices[gSPTaskNum];
-    gGameCurrVertexList = gHudVertices[gSPTaskNum];
-    gGameCurrTriList = gHudTriangles[gSPTaskNum];
+    gGameCurrMatrix = gMatrixHeap[gSPTaskNum];
+    gGameCurrVertexList = gVertexHeap[gSPTaskNum];
+    gGameCurrTriList = gTriangleHeap[gSPTaskNum];
 
     set_rsp_segment(&gCurrDisplayList, 0, 0);
     set_rsp_segment(&gCurrDisplayList, 1, (s32) gVideoLastFramebuffer);
@@ -1118,7 +1133,7 @@ void func_8006CAE4(s32 arg0, s32 arg1, Vehicle vehicle) {
  * Needs a better name!
  */
 void load_level_2(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId) {
-    calc_and_alloc_heap_for_hud(numberOfPlayers);
+    alloc_displaylist_heap(numberOfPlayers);
     set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
@@ -1357,7 +1372,7 @@ void ingame_logic_loop(s32 updateRate) {
     if (sp3C) {
         if (get_level_property_stack_pos() != 0) {
             pop_level_property_stack(&gPlayableMapId, &D_80123504, &i, &D_80123508);
-            func_8006F42C();
+            set_frame_blackout_timer();
             if (gPlayableMapId < 0) {
                 if (gPlayableMapId == (s32)SPECIAL_MAP_ID_NO_LEVEL || gPlayableMapId == (s32)SPECIAL_MAP_ID_UNK_NEG10) {
                     if (gPlayableMapId == (s32)SPECIAL_MAP_ID_UNK_NEG10 && is_in_two_player_adventure()) {
@@ -1385,7 +1400,7 @@ void ingame_logic_loop(s32 updateRate) {
                     if (sp3C != 0) {
                         func_80000B28();
                     }
-                    func_8006F42C();
+                    set_frame_blackout_timer();
                     pop_level_property_stack(&gPlayableMapId, &D_80123504, &i, &D_80123508);
                     if (gPlayableMapId < 0) {
                         if (gPlayableMapId == -1 || gPlayableMapId == -10) {
@@ -1547,7 +1562,7 @@ UNUSED void set_render_context(s32 changeTo) {
 }
 
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
-    calc_and_alloc_heap_for_hud(0);
+    alloc_displaylist_heap(0);
     sRenderContext = DRAW_MENU;
     D_801234F0 = 1;
     set_sound_channel_volume(0, 32767);
@@ -2044,21 +2059,21 @@ void mark_write_eeprom_settings(void) {
 /**
  * Allocates an amount of memory for the number of players passed in.
  */
-void calc_and_alloc_heap_for_hud(s32 numberOfPlayers) {
-    s32 newVar;
+void alloc_displaylist_heap(s32 numberOfPlayers) {
+    s32 num;
     s32 totalSize;
 
-    if (numberOfPlayers != D_8012350C) {
-        newVar = numberOfPlayers;
-        D_8012350C = newVar;
+    if (numberOfPlayers != gPrevPlayerCount) {
+        gPrevPlayerCount = numberOfPlayers;
+        num = numberOfPlayers;
         set_free_queue_state(0);
         free_from_memory_pool(gDisplayLists[0]);
         free_from_memory_pool(gDisplayLists[1]);
         totalSize =
-            ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords)))
-            + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix)))
-            + ((gNumHudVertsPerPlayer[newVar] * sizeof(Vertex)))
-            + ((gNumHudTrisPerPlayer[newVar] * sizeof(Triangle)));
+            ((gNumF3dCmdsPerPlayer[num] * sizeof(Gwords)))
+            + ((gNumHudMatPerPlayer[num] * sizeof(Matrix)))
+            + ((gNumHudVertsPerPlayer[num] * sizeof(Vertex)))
+            + ((gNumHudTrisPerPlayer[num] * sizeof(Triangle)));
         gDisplayLists[0] = (Gfx *) allocate_at_address_in_main_pool(totalSize, (u8 *) gDisplayLists[0], COLOUR_TAG_RED);
         gDisplayLists[1] = (Gfx *) allocate_at_address_in_main_pool(totalSize, (u8 *) gDisplayLists[1], COLOUR_TAG_YELLOW);
         if ((gDisplayLists[0] == NULL) || gDisplayLists[1] == NULL) {
@@ -2070,24 +2085,24 @@ void calc_and_alloc_heap_for_hud(s32 numberOfPlayers) {
                 free_from_memory_pool(gDisplayLists[1]);
                 gDisplayLists[1] = NULL;
             }
-            default_alloc_heap_for_hud();
+            default_alloc_displaylist_heap();
         }
-        gHudMatrices[0] = (MatrixS *)((u8 *) gDisplayLists[0] + ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords))));
-        gHudTriangles[0] = (TriangleList *)((u8 *) gHudMatrices[0] + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix))));
-        gHudVertices[0] = (Vertex *)((u8 *) gHudTriangles[0] + ((gNumHudTrisPerPlayer[newVar] * sizeof(Triangle))));
-        gHudMatrices[1] = (MatrixS *)((u8 *) gDisplayLists[1] + ((gNumF3dCmdsPerPlayer[newVar] * sizeof(Gwords))));
-        gHudTriangles[1] = (TriangleList *)((u8 *) gHudMatrices[1] + ((gNumHudMatPerPlayer[newVar] * sizeof(Matrix))));
-        gHudVertices[1] = (Vertex *)((u8 *) gHudTriangles[1] + ((gNumHudTrisPerPlayer[newVar] * sizeof(Triangle))));
-        gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[newVar];
-        gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[newVar];
-        gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[newVar];
-        gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[newVar];
+        gMatrixHeap[0] = (MatrixS *)((u8 *) gDisplayLists[0] + ((gNumF3dCmdsPerPlayer[num] * sizeof(Gwords))));
+        gTriangleHeap[0] = (TriangleList *)((u8 *) gMatrixHeap[0] + ((gNumHudMatPerPlayer[num] * sizeof(Matrix))));
+        gVertexHeap[0] = (Vertex *)((u8 *) gTriangleHeap[0] + ((gNumHudTrisPerPlayer[num] * sizeof(Triangle))));
+        gMatrixHeap[1] = (MatrixS *)((u8 *) gDisplayLists[1] + ((gNumF3dCmdsPerPlayer[num] * sizeof(Gwords))));
+        gTriangleHeap[1] = (TriangleList *)((u8 *) gMatrixHeap[1] + ((gNumHudMatPerPlayer[num] * sizeof(Matrix))));
+        gVertexHeap[1] = (Vertex *)((u8 *) gTriangleHeap[1] + ((gNumHudTrisPerPlayer[num] * sizeof(Triangle))));
+        gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[num];
+        gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[num];
+        gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[num];
+        gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[num];
         set_free_queue_state(2);
     }
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
-    gGameCurrMatrix = gHudMatrices[gSPTaskNum];
-    gGameCurrTriList = gHudTriangles[gSPTaskNum];
-    gGameCurrVertexList = gHudVertices[gSPTaskNum];
+    gGameCurrMatrix = gMatrixHeap[gSPTaskNum];
+    gGameCurrTriList = gTriangleHeap[gSPTaskNum];
+    gGameCurrVertexList = gVertexHeap[gSPTaskNum];
 
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
@@ -2106,26 +2121,26 @@ s32 check_dmem_validity(void) {
 /**
  * Defaults allocations for 4 players
  */
-void default_alloc_heap_for_hud(void) {
+void default_alloc_displaylist_heap(void) {
     s32 numberOfPlayers;
     s32 totalSize;
 
     numberOfPlayers = FOUR_PLAYERS;
-    D_8012350C = numberOfPlayers;
+    gPrevPlayerCount = numberOfPlayers;
     totalSize = (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords))
         + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix))
         + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex))
         + (gNumHudTrisPerPlayer[numberOfPlayers] * sizeof(Triangle));
 
-    gDisplayLists[0] = (Gfx *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_RED);
-    gHudMatrices[0] = (MatrixS *)((u8 *)gDisplayLists[0] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
-    gHudVertices[0] = (Vertex *)((u8 *)gHudMatrices[0] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
-    gHudTriangles[0] = (TriangleList *)((u8 *)gHudVertices[0] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
+    gDisplayLists[0] = (Gfx *) allocate_from_main_pool_safe(totalSize, COLOUR_TAG_RED);
+    gMatrixHeap[0] = (MatrixS *) ((u8 *) gDisplayLists[0] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
+    gVertexHeap[0] = (Vertex *) ((u8 *) gMatrixHeap[0] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
+    gTriangleHeap[0] = (TriangleList *) ((u8 *) gVertexHeap[0] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
-    gDisplayLists[1] = (Gfx *)allocate_from_main_pool_safe(totalSize, COLOUR_TAG_YELLOW);
-    gHudMatrices[1] = (MatrixS *)((u8 *)gDisplayLists[1] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
-    gHudVertices[1] = (Vertex *)((u8 *)gHudMatrices[1] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
-    gHudTriangles[1] = (TriangleList *)((u8 *)gHudVertices[1] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
+    gDisplayLists[1] = (Gfx *) allocate_from_main_pool_safe(totalSize, COLOUR_TAG_YELLOW);
+    gMatrixHeap[1] = (MatrixS *) ((u8 *) gDisplayLists[1] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
+    gVertexHeap[1] = (Vertex *) ((u8 *) gMatrixHeap[1] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
+    gTriangleHeap[1] = (TriangleList *) ((u8 *) gVertexHeap[1] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
     gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[numberOfPlayers];
     gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[numberOfPlayers];
@@ -2215,7 +2230,11 @@ void func_8006F398(void) {
     }
 }
 
-void func_8006F42C(void) {
+/**
+ * Sets the timer to delay drawing new frames.
+ * When set to 2, the game will copy the previous framebuffer over to the next.
+*/
+void set_frame_blackout_timer(void) {
     gDrawFrameTimer = 2;
 }
 
