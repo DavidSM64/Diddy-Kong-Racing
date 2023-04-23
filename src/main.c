@@ -47,6 +47,7 @@ void thread1_main(UNUSED void *unused) {
 /**
  * Increments the start and endpoint of the stack.
  * They should have an equal value, so if they don't, that triggers a printout saying a stack wraparound has occured.
+ * Official Name: bootCheckStack
 */
 void thread3_verify_stack(void) {
     gThread3Stack[0x400]++;

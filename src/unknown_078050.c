@@ -377,6 +377,7 @@ UNUSED void setup_ostask_fifo_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
  * Called from the main game loop, will halt until a message comes through saying the graphics task
  * has finished.
  * Alternatively, if no task is active, then it will just skip.
+ * Official Name: rcpWaitDP
  */
 s32 wait_for_gfx_task(void) {
     OSMesg *mesg = NULL;
@@ -418,6 +419,7 @@ void set_background_fill_colour(s32 red, s32 green, s32 blue) {
  * Clears the ZBuffer first, then decides how to draw the background which goes directly
  * over the colour buffer. DrawBG if set to 0 (which never happens) will completely skip
  * over clearing the colour buffer.
+ * Official Name: rcpClearScreen
 */
 void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
     s32 widthAndHeight;
@@ -514,8 +516,11 @@ void func_80078170(TextureHeader *arg0, TextureHeader *arg1, u32 arg2) {
 }
 
 #ifdef NON_EQUIVALENT
-//Seems to render the background screen after a race finishes while you're at the menu deciding what to do next.
-//https://i.imgur.com/MHbUD2a.png is an example. The left is correct, and the right is incorrect rendering.
+/**
+ * Seems to render the background screen after a race finishes while you're at the menu deciding what to do next.
+ * https://i.imgur.com/MHbUD2a.png is an example. The left is correct, and the right is incorrect rendering.
+ * Official Name: rcpMosaicClear
+*/
 void func_80078190(Gfx **dlist) {
     s32 texture1And2UpperHeight;
     s32 videoHeight;
@@ -648,6 +653,7 @@ UNUSED void disable_chequer_background(void) {
 /**
  * Uses global chequerboard settings to render a background using two different alternating colours.
  * Goes unused.
+ * Official Name: rcpCheckClear
 */
 void render_chequer_background(Gfx **dList) {
     s32 height;

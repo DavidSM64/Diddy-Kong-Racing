@@ -217,6 +217,7 @@ UNUSED void func_8007267C(s16 controllerIndex) {
     }
 }
 
+/* Official Name: RumbleKill? */
 void func_80072708(void) {
     D_800DE48C = 3;
 }
@@ -1717,6 +1718,7 @@ SIDeviceStatus reformat_controller_pak(s32 controllerIndex) {
     return ret;
 }
 
+/* Official Name: packDirectory */
 s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, char **fileNames, char **fileExtensions, u32 *fileSizes, u8 *fileTypes) {
     OSPfsState state;
     s32 ret;
@@ -1811,7 +1813,8 @@ void packDirectoryFree(void) {
 }
 
 //Get Available Space in Controller Pak
-//Upper bytes of return value couldl be controllerIndex
+//Upper bytes of return value could be controllerIndex
+/* Official Name: packFreeSpace */
 s32 get_free_space(s32 controllerIndex, u32 *bytesFree, s32 *notesFree) {
     s32 ret;
     s32 bytesNotUsed;
@@ -1847,6 +1850,7 @@ s32 get_free_space(s32 controllerIndex, u32 *bytesFree, s32 *notesFree) {
     return ret;
 }
 
+/* Official Name: packDeleteFile */
 s32 delete_file(s32 controllerIndex, s32 fileNum) {
     OSPfsState state;
     s32 ret;
@@ -1871,6 +1875,7 @@ s32 delete_file(s32 controllerIndex, s32 fileNum) {
 }
 
 // Copies a file from one controller pak to the other
+/* Official Name: packCopyFile */
 s32 copy_controller_pak_data(s32 controllerIndex, s32 fileNumber, s32 secondControllerIndex) {
     UNUSED s32 pad;
     char fileName[PFS_FILE_NAME_LEN];
@@ -2030,8 +2035,7 @@ SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, ch
                 ret = CONTROLLER_PAK_GOOD;
             } else if (temp == PFS_DATA_FULL || temp == PFS_DIR_FULL) {
                 ret = CONTROLLER_PAK_FULL;
-            }
-            else {
+            } else {
                 ret = CONTROLLER_PAK_BAD_DATA;
             }
         }

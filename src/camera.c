@@ -345,7 +345,6 @@ s8 check_if_showing_cutscene_camera(void) {
 
 /**
  * Disable the cutscene camera, returning it to the conventional mode.
- * Official name: camSetUserView
 */
 void disable_cutscene_camera(void) {
     gCutsceneCameraActive = FALSE;
@@ -485,6 +484,7 @@ s32 check_viewport_background_flag(s32 viewPortIndex) {
 
 /**
  * Sets the intended viewport to the size passed through by arguments.
+ * Official Name: camSetUserView
 */
 void resize_viewport(s32 viewPortIndex, s32 x1, s32 y1, s32 x2, s32 y2) {
     s32 widthAndHeight, width, height;

@@ -146,6 +146,9 @@ OSMesgQueue *osScGetInterruptQ(OSSched *sc) {
     return &sc->interruptQ;
 }
 
+/**
+ * Official Name: osScGetAudioSPStats
+*/
 UNUSED void scGetAudioTaskTimers(f32 *timer0, f32 *timer1, f32 *timer2) {
     *timer0 = gAudTaskTimer0;
     *timer1 = gAudTaskTimer2;

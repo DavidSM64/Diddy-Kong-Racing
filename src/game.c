@@ -912,6 +912,7 @@ s32 func_8006C300(void) {
 
 /**
  * Main looping function for the main thread.
+ * Official Name: mainThread
  */
 void thread3_main(UNUSED void *unused) {
     init_game();
@@ -1556,6 +1557,7 @@ RenderContext get_render_context(void) {
 
 /**
  *  Unused function used to set the render context from outside this file
+ *  Official Name: mainSetMode?
  */
 UNUSED void set_render_context(s32 changeTo) {
     sRenderContext = changeTo;
