@@ -7,6 +7,7 @@
 #include "libultra_internal.h"
 
 #define OS_SC_RETRACE_MSG       1
+#define OS_SC_DONE_MSG          2
 #define OS_SC_PRE_NMI_MSG       4
 #define OS_SC_AUDIO_MSG         5
 #define OS_SC_MAX_MESGS         8
@@ -14,10 +15,11 @@
 #define OS_SC_ID_NONE   0
 #define OS_SC_ID_AUDIO  1
 #define OS_SC_ID_VIDEO  2
-#define OS_SC_ID_PRENMI 3
 
 #define OSMESG_SWAP_BUFFER 0
 #define MESG_SKIP_BUFFER_SWAP 8
+
+#define OS_SC_PRIORITY 13
 
 /*
  * OSScTask state
@@ -86,16 +88,17 @@ typedef struct {
   /* 0x78 */  OSMesgQueue cmdQ;
   /* 0x90 */  OSMesg      cmdMsgBuf[OS_SC_MAX_MESGS]; //0x8 per OSMesg
   /* 0xB0 */  OSThread    thread;
-  /* 0x260 */ OSScClient  *clientList;
-  /* 0x264 */ OSScTask    *audioListHead;
-  /* 0x268 */ OSScTask    *gfxListHead;
-  /* 0x26C */ OSScTask    *audioListTail;
-  /* 0x270 */ OSScTask    *gfxListTail;
-  /* 0x274 */ OSScTask    *curRSPTask;
-  /* 0x278 */ OSScTask    *curRDPTask;
-  /* 0x27C */ OSScTask    *unkTask; //Rare added?
-  /* 0x280 */ u32         frameCount;
-  /* 0x284 */ s32         doAudio;
+  OSMesgQueue *audmq;
+  OSMesgQueue *gfxmq;
+  OSScTask    *nextAudTask;
+  OSScTask    *curRSPTask;
+  OSScTask    *curRDPTask;
+  OSScTask    *nextGfxTask;
+  OSScTask    *nextGfxTask2;
+  void        *scheduledFB;
+  void        *queuedFB;
+  s32         alt;
+  s32         doAudio;
 } OSSched;
 
 typedef struct{
@@ -106,21 +109,9 @@ extern OSViMode osViModeTable[];
 
 /*******************************/
 
-void __scYield(OSSched *sc);
-void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp);
 void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 numFields);
 void osScAddClient(OSSched *sc, OSScClient *c, OSMesgQueue *msgQ, u8 id);
-void osScRemoveClient(OSSched *sc, OSScClient *c);
-OSMesgQueue *osScGetCmdQ(OSSched *sc);
-OSMesgQueue *osScGetInterruptQ(OSSched *sc);
-void func_80079584(f32 *arg0, f32 *arg1, f32 *arg2);
-void func_80079760(OSSched *sc);
-void __scHandleRDP(OSSched *sc);
-void __scHandleRSP(OSSched *sc);
-OSScTask *__scTaskReady(OSScTask *t);
-s32 __scTaskComplete(OSSched *sc, OSScTask *t);
-void __scAppendList(OSSched *sc, OSScTask *t);
-void __scExec(OSSched *sc, OSScTask *sp, OSScTask *dp);
-void __scHandleRetrace(OSSched *sc);
+void osScSubmitAudTask(OSSched *sc, OSScTask *t);
+void osScSubmitGfxTask(OSSched *sc, OSScTask *t);
 
 #endif

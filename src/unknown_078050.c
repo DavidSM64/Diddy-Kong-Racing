@@ -13,11 +13,6 @@
 
 /************ .data ************/
 
-s16 gGfxTaskMesgNums[16] = {
-    2, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0
-};
-
 u8 sBackgroundPrimColourR = 0;
 u8 sBackgroundPrimColourG = 0;
 u8 sBackgroundPrimColourB = 0;
@@ -28,7 +23,6 @@ TextureHeader *D_800DE4C4 = 0;
 TextureHeader *D_800DE4C8 = 0;
 
 BackgroundFunction gBackgroundDrawFunc = { NULL };
-s32 gfxBufCounter = 0;
 s32 gGfxTaskIsRunning = FALSE;
 u64 *gGfxSPTaskOutputBuffer = NULL; 
 
@@ -140,13 +134,68 @@ u8 gDramStack[SP_DRAM_STACK_SIZE8];
 OSMesgQueue D_80125EA0;
 OSMesg D_80125EB8;
 OSMesgQueue D_80125EC0;
-OSMesgQueue gGfxTaskMesgQueue;
 OSMesg D_80125EF0[8];
-OSMesg gGfxTaskMesgBuf[8];
 
-DKR_OSTask gGfxTaskBuf[2];
+extern OSMesgQueue gGameMesgQueue;
+extern OSSched gMainSched;
+extern s32 gNumGfxTasksAtScheduler;
 
-OSMesgQueue *osScInterruptQ;
+DKR_OSTask gRdpTaskA = {
+    NULL, // next
+    0, // state
+    OS_SC_LAST_TASK | OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP, // flags
+    NULL, // frameBuffer
+    {
+        // task
+        M_GFXTASK, // type
+        2, // flags
+        (u64 *) rspF3DDKRBootStart, // ucode_boot
+        0, // ucode_boot_size
+        (u64 *) rspF3DDKRXbusStart, // ucode
+        0, // ucode_size
+        (u64 *) rspF3DDKRDataXbusStart, // ucode_data
+        SP_UCODE_DATA_SIZE, // ucode_data_size
+        (u64 *) gDramStack, // dram_stack
+        SP_DRAM_STACK_SIZE8, // dram_stack_size
+        NULL, // output_buff
+        0, // output_buff_size
+        0, // data_ptr
+        0, // data_size
+        (u64 *) gGfxTaskYieldData, // yield_data_ptr
+        sizeof(gGfxTaskYieldData), // yield_data_size
+    },
+    &gGameMesgQueue, // mesgQueue
+};
+
+DKR_OSTask gRdpTaskB = {
+    NULL, // next
+    0, // state
+    OS_SC_LAST_TASK | OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP, // flags
+    NULL, // frameBuffer
+    {
+        // task
+        M_GFXTASK, // type
+        2, // flags
+        (u64 *) rspF3DDKRBootStart, // ucode_boot
+        0, // ucode_boot_size
+        (u64 *) rspF3DDKRXbusStart, // ucode
+        0, // ucode_size
+        (u64 *) rspF3DDKRDataXbusStart, // ucode_data
+        SP_UCODE_DATA_SIZE, // ucode_data_size
+        (u64 *) gDramStack, // dram_stack
+        SP_DRAM_STACK_SIZE8, // dram_stack_size
+        NULL, // output_buff
+        0, // output_buff_size
+        0, // data_ptr
+        0, // data_size
+        (u64 *) gGfxTaskYieldData, // yield_data_ptr
+        sizeof(gGfxTaskYieldData), // yield_data_size
+    },
+    &gGameMesgQueue, // mesgQueue
+};
+
+DKR_OSTask *gRdpCurTask = &gRdpTaskA;
+
 
 /*******************************/
 
@@ -159,32 +208,20 @@ s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
     DKR_OSTask *dkrtask;
 
     gGfxTaskIsRunning = TRUE;
-    dkrtask = &gGfxTaskBuf[gfxBufCounter];
-    gfxBufCounter^=1;
 
-    dkrtask->flags = OS_SC_LAST_TASK | OS_SC_SWAPBUFFER | OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP;
-    dkrtask->mesgQueue = &gGfxTaskMesgQueue;
+    dkrtask = gRdpCurTask;
+    dkrtask->flags = OS_SC_LAST_TASK | OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP;
     dkrtask->task.data_ptr = (u64 *) dlBegin;
     dkrtask->task.data_size = ((s32) dlEnd - (s32) dlBegin) >> 3; // Shifted by 3, repsenting the size of the Gfx type.
-    dkrtask->task.type = M_GFXTASK;
-    dkrtask->task.flags = 2;
-    dkrtask->task.ucode_boot = (u64 *) rspF3DDKRBootStart;
     dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
-    dkrtask->task.ucode = (u64 *) rspF3DDKRXbusStart;
-    dkrtask->task.ucode_data = (u64 *) rspF3DDKRDataXbusStart;
-    dkrtask->task.ucode_data_size = 0x800;
-    dkrtask->task.dram_stack = (u64 *) gDramStack;
-    dkrtask->task.dram_stack_size = 0x400;
-    dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
-    dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
-    dkrtask->task.output_buff = NULL;
-    dkrtask->task.output_buff_size = NULL;
-    dkrtask->next = NULL;
-    dkrtask->frameBuffer = gVideoWriteFramebuffer;
+    dkrtask->frameBuffer = gVideoCurrFramebuffer;
+
     osWritebackDCacheAll();
-    osSendMesg(osScInterruptQ, dkrtask, OS_MESG_BLOCK);
+    osScSubmitGfxTask(&gMainSched, (void *) dkrtask);
+    gRdpCurTask = (DKR_OSTask *) ((u32) gRdpCurTask ^ (u32) &gRdpTaskA ^ (u32) &gRdpTaskB);
     return 0;
 }
+
 
 void allocate_task_buffer(void) {
     gGfxSPTaskOutputBuffer = allocate_from_main_pool_safe(sizeof(u64) * FIFO_BUFFER_SIZE, COLOUR_TAG_WHITE);
@@ -198,13 +235,10 @@ void allocate_task_buffer(void) {
  */
 void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
-    OSMesg mesgBuf;
     u32 taskStart = 0x80680000;
     u32 taskEnd = 0x806E0000;
 
     gGfxTaskIsRunning = TRUE;
-    dkrtask = &gGfxTaskBuf[gfxBufCounter];
-    gfxBufCounter ^= 1;
 
     if (gExpansionPak == FALSE) {
         if (gGfxSPTaskOutputBuffer == NULL) {
@@ -213,38 +247,21 @@ void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
         taskStart = (u32) gGfxSPTaskOutputBuffer;
         taskEnd = (u32) (gGfxSPTaskOutputBuffer + (FIFO_BUFFER_SIZE));
     }
-    
-    dkrtask->task.data_ptr = (u64 *) dlBegin;
-    dkrtask->task.ucode_boot = (u64 *) rspF3DDKRBootStart;
-    dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
-    dkrtask->task.type = M_GFXTASK;
-    dkrtask->task.flags = 2;
-    dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
+
+    dkrtask = gRdpCurTask;
+    dkrtask->flags = OS_SC_LAST_TASK | OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP;
     dkrtask->task.ucode = (u64 *) rspF3DDKRFifoStart;
     dkrtask->task.ucode_data = (u64 *) rspF3DDKRDataFifoStart;
-    dkrtask->task.ucode_data_size = 0x800;
-    dkrtask->task.dram_stack = (u64 *) gDramStack;
-    dkrtask->task.dram_stack_size = 0x400;
+    dkrtask->task.data_ptr = (u64 *) dlBegin;
+    dkrtask->task.data_size = ((s32) dlEnd - (s32) dlBegin) >> 3; // Shifted by 3, repsenting the size of the Gfx type.
+    dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
     dkrtask->task.output_buff = (u64 *) taskStart;
     dkrtask->task.output_buff_size = (u64 *) taskEnd;
-    dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
-    dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
-    dkrtask->next = 0;
-    dkrtask->flags = OS_SC_LAST_TASK | OS_SC_SWAPBUFFER | OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP;
-    dkrtask->mesgQueue = &gGfxTaskMesgQueue;
-    dkrtask->mesg = gGfxTaskMesgNums;
-    dkrtask->frameBuffer = gVideoWriteFramebuffer;
-    dkrtask->unk68 = 0;
-    
-    if (recvMesg) {
-        dkrtask->mesgQueue =  &D_80125EA0;
-    }
+    dkrtask->frameBuffer = gVideoCurrFramebuffer;
+
     osWritebackDCacheAll();
-    osSendMesg(osScInterruptQ, dkrtask, 1);
-    
-    if (recvMesg) {
-        osRecvMesg(&D_80125EA0, &mesgBuf, OS_MESG_BLOCK);
-    }
+    osScSubmitGfxTask(&gMainSched, (void *) dkrtask);
+    gRdpCurTask = (DKR_OSTask *) ((u32) gRdpCurTask ^ (u32) &gRdpTaskA ^ (u32) &gRdpTaskB);
 }
 
 /**
@@ -253,14 +270,17 @@ void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
  * Alternatively, if no task is active, then it will just skip.
  * Official Name: rcpWaitDP
  */
-s32 wait_for_gfx_task(void) {
-    OSMesg *mesg = NULL;
-    if (gGfxTaskIsRunning == FALSE) { 
-        return 0;
+void wait_for_gfx_task(void) {
+    OSMesg mesg;
+
+    while (gNumGfxTasksAtScheduler > 0) {
+        osRecvMesg(&gGameMesgQueue, &mesg, OS_MESG_BLOCK);
+
+        if ((s32) mesg == OS_SC_DONE_MSG) {
+            gNumGfxTasksAtScheduler--;
+        }
     }
-    osRecvMesg(&gGfxTaskMesgQueue, (OSMesg) &mesg, OS_MESG_BLOCK); 
-    gGfxTaskIsRunning = FALSE;
-    return (s32) mesg[1];
+
 }
 
 /**
@@ -373,10 +393,8 @@ void init_rsp(Gfx **dList) {
  * Initialise the mesg queues for the gfx tasks, that interface with the scheduler.
  */
 void setup_gfx_mesg_queues(OSSched *sc) {
-    osScInterruptQ = osScGetInterruptQ(sc);
     osCreateMesgQueue(&D_80125EA0, &D_80125EB8, 1);
     osCreateMesgQueue(&D_80125EC0, D_80125EF0, 8);
-    osCreateMesgQueue(&gGfxTaskMesgQueue, gGfxTaskMesgBuf, 8);
 }
 
 //Called after finishing a race. Sets values during single player races. Set to zero during trophy races.

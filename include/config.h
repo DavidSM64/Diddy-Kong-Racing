@@ -29,8 +29,8 @@
 /* -----------------------Performance--------------------- */
 // These tweaks can be used to improve performance
 #define FIFO_UCODE                          // Allow usage of the faster FIFO microcode. Emulators will still use xbus. Requires 96KB memory to work.
-#define DISABLE_MULTIPLAYER_CUTBACKS        // Disable the measures Rare took to improve performance in multiplayer. Performance will suffer.
-// #define TRIPLE_BUFFERING                    // Uses more memory, but provides a much smoother gameplay experience. You may struggle to fit this in 4MB.
+// #define DISABLE_MULTIPLAYER_CUTBACKS        // Disable the measures Rare took to improve performance in multiplayer. Performance will suffer.
+#define TRIPLE_BUFFERING                    // Uses more memory, but provides a much smoother gameplay experience. You may struggle to fit this in 4MB.
 #define SCREEN_WIDTH            304         // Default width is 320. Recommended to be 304 for 4MB users.
 #define SCREEN_WIDTH_16_10      360         // Default width is 384. Recommended to be 360 for 4MB users.
 #define SCREEN_WIDTH_WIDE       408         // Default width is 424. Recommended to be 408 for 4MB users.

@@ -35,7 +35,7 @@ typedef struct DKR_OSTask {
     s32 unused6C;
 } DKR_OSTask;
 
-extern s16 gGfxTaskMesgNums[16];
+extern OSMesgQueue gGfxTaskMesgQueue;
 
 extern u8 sBackgroundPrimColourR;
 extern u8 sBackgroundPrimColourG;
@@ -58,7 +58,7 @@ extern s8 rspF3DDKRDataXbusStart[];
 extern s8 rspF3DDKRFifoStart[];
 extern s8 rspF3DDKRDataFifoStart[];
 
-s32 wait_for_gfx_task(void);
+void wait_for_gfx_task(void);
 void func_80077AAC(void *bufPtr, s32 arg1, UNUSED s32 arg2);
 void set_background_prim_colour(u8 arg0, u8 arg1, u8 arg2);
 void set_background_fill_colour(s32 red, s32 green, s32 blue);
