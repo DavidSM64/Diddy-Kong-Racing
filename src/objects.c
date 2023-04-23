@@ -2266,7 +2266,7 @@ s8 func_8001A7D8(unk8001A7D8_arg0 *arg0) {
     }
     D_8011ADC4 = 0;
     if (!(arg0->unk4[arg0->unk49] & 2)) {
-        if (gIsTimeTrial == FALSE) {
+        if (!gIsTimeTrial) {
             D_8011ADC4 = 1;
             arg0->unk4[arg0->unk49] |= 2;
         }
