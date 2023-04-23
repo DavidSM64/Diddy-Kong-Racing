@@ -222,6 +222,7 @@ void func_80072708(void) {
     D_800DE48C = 3;
 }
 
+/* Official Name: rumbleTick */
 void rumble_controllers(s32 updateRate) {
     unk_801241B8 *temp;
     s32 pfsStatus;

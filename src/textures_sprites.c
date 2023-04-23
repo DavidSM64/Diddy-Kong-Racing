@@ -1515,13 +1515,13 @@ s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *
     start = gSpriteOffsetTable[spriteIndex];
     size = gSpriteOffsetTable[spriteIndex + 1] - start;
     load_asset_to_address(ASSET_SPRITES, gCurrentSprite, start, size);
-    tex = load_texture(gCurrentSprite->unkC[0] + gCurrentSprite->baseTextureId);
+    tex = load_texture(gCurrentSprite->unkC.val[0] + gCurrentSprite->baseTextureId);
     if (tex != NULL) {
         *formatOut = tex->format & 0xF;
         free_texture(tex);
         *sizeOut = 0;
         for (i = 0; i < gCurrentSprite->numberOfFrames; i++) {
-            for (j = (s32) gCurrentSprite->unkC[i]; j < (s32) gCurrentSprite->unkC[i + 1]; j++) {
+            for (j = gCurrentSprite->unkC.val[i]; j < (s32) gCurrentSprite->unkC.val[i + 1]; j++) {
                 *sizeOut += get_texture_size_from_id(gCurrentSprite->baseTextureId + j);
             }
         }
