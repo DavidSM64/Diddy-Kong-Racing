@@ -90,9 +90,9 @@ static void __scHandleRetrace(OSSched *sc) {
             }
         }
 
-        sc->alt ^= 1;
+        sc->audioFlip ^= 1;
 
-        if (sc->audmq && sc->alt == 0) {
+        if (sc->audmq && sc->audioFlip == 0) {
             osSendMesg(sc->audmq, &sc->retraceMsg, OS_MESG_NOBLOCK);
 
             if (sc->nextAudTask) {
@@ -219,7 +219,7 @@ void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 num
     sc->queuedFB        = NULL;
     sc->retraceMsg.type = OS_SC_RETRACE_MSG;
     sc->prenmiMsg.type  = OS_SC_PRE_NMI_MSG;
-    sc->alt             = 0;
+    sc->audioFlip       = 0;
     sc->retraceCount    = 0;
 
     osCreateViManager(OS_PRIORITY_VIMGR);

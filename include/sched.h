@@ -97,14 +97,10 @@ typedef struct {
   OSScTask    *nextGfxTask2;
   void        *scheduledFB;
   void        *queuedFB;
-  s32         alt;
-  s32         retraceCount;
-  s32         doAudio;
+  u8          audioFlip;
+  u8          retraceCount;
+  u8          doAudio;
 } OSSched;
-
-typedef struct{
-    u8 pad00[0x50];
-} unk800E3900;
 
 extern OSViMode osViModeTable[];
 
