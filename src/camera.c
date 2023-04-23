@@ -1384,11 +1384,15 @@ ObjectSegment *get_active_camera_segment(void) {
     return &gActiveCameraStack[gActiveCameraID];
 }
 
-ObjectSegment *func_80069D7C(void) {
+/**
+ * Returns the segment data of the active cutscene camera.
+ * If no cutscene is active, return player 1's camera.
+*/
+ObjectSegment *get_cutscene_camera_segment(void) {
     if (gCutsceneCameraActive) {
         return &gActiveCameraStack[4];
     }
-    return &gActiveCameraStack[0];
+    return &gActiveCameraStack[PLAYER_ONE];
 }
 
 Matrix *func_80069DA4(void) {

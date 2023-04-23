@@ -55,9 +55,9 @@ glabel func_8000CC7C
 /* 00D91C 8000CD1C 11C00005 */  beqz  $t6, .L8000CD34
 .L8000CD20:
 /* 00D920 8000CD20 3C148012 */   lui   $s4, %hi(gTimeTrialEnabled) # $s4, 0x8012
-/* 00D924 8000CD24 3C018012 */  lui   $at, %hi(D_8011AEF5) # $at, 0x8012
+/* 00D924 8000CD24 3C018012 */  lui   $at, %hi(gIsTimeTrial) # $at, 0x8012
 /* 00D928 8000CD28 2694AEF4 */  addiu $s4, %lo(gTimeTrialEnabled) # addiu $s4, $s4, -0x510c
-/* 00D92C 8000CD2C A020AEF5 */  sb    $zero, %lo(D_8011AEF5)($at)
+/* 00D92C 8000CD2C A020AEF5 */  sb    $zero, %lo(gIsTimeTrial)($at)
 /* 00D930 8000CD30 A2800000 */  sb    $zero, ($s4)
 .L8000CD34:
 /* 00D934 8000CD34 3C148012 */  lui   $s4, %hi(gTimeTrialEnabled) # $s4, 0x8012
@@ -71,7 +71,7 @@ glabel func_8000CC7C
 /* 00D954 8000CD54 00000000 */  nop   
 /* 00D958 8000CD58 17000008 */  bnez  $t8, .L8000CD7C
 /* 00D95C 8000CD5C 00000000 */   nop   
-/* 00D960 8000CD60 0C01A75F */  jal   func_80069D7C
+/* 00D960 8000CD60 0C01A75F */  jal   get_cutscene_camera_segment
 /* 00D964 8000CD64 00000000 */   nop   
 /* 00D968 8000CD68 AFA20074 */  sw    $v0, 0x74($sp)
 /* 00D96C 8000CD6C 9059003B */  lbu   $t9, 0x3b($v0)
@@ -234,13 +234,13 @@ glabel func_8000CC7C
 /* 00DBC0 8000CFC0 8FAE0068 */  lw    $t6, 0x68($sp)
 /* 00DBC4 8000CFC4 24010005 */  li    $at, 5
 /* 00DBC8 8000CFC8 15C10002 */  bne   $t6, $at, .L8000CFD4
-/* 00DBCC 8000CFCC 3C0D8012 */   lui   $t5, %hi(D_8011AEF5) # $t5, 0x8012
+/* 00DBCC 8000CFCC 3C0D8012 */   lui   $t5, %hi(gIsTimeTrial) # $t5, 0x8012
 /* 00DBD0 8000CFD0 A2800000 */  sb    $zero, ($s4)
 .L8000CFD4:
 /* 00DBD4 8000CFD4 92980000 */  lbu   $t8, ($s4)
-/* 00DBD8 8000CFD8 3C018012 */  lui   $at, %hi(D_8011AEF5) # $at, 0x8012
-/* 00DBDC 8000CFDC A038AEF5 */  sb    $t8, %lo(D_8011AEF5)($at)
-/* 00DBE0 8000CFE0 91ADAEF5 */  lbu   $t5, %lo(D_8011AEF5)($t5)
+/* 00DBD8 8000CFD8 3C018012 */  lui   $at, %hi(gIsTimeTrial) # $at, 0x8012
+/* 00DBDC 8000CFDC A038AEF5 */  sb    $t8, %lo(gIsTimeTrial)($at)
+/* 00DBE0 8000CFE0 91ADAEF5 */  lbu   $t5, %lo(gIsTimeTrial)($t5)
 /* 00DBE4 8000CFE4 24190005 */  li    $t9, 5
 /* 00DBE8 8000CFE8 11A00003 */  beqz  $t5, .L8000CFF8
 /* 00DBEC 8000CFEC 8FAF0068 */   lw    $t7, 0x68($sp)
@@ -259,7 +259,7 @@ glabel func_8000CC7C
 .L8000D01C:
 /* 00DC1C 8000D01C 8FAD0144 */  lw    $t5, 0x144($sp)
 /* 00DC20 8000D020 3C018012 */  lui   $at, %hi(gNumRacers) # $at, 0x8012
-/* 00DC24 8000D024 0C01B0BC */  jal   func_8006C2F0
+/* 00DC24 8000D024 0C01B0BC */  jal   get_level_property_stack_pos
 /* 00DC28 8000D028 AC2DAEF0 */   sw    $t5, %lo(gNumRacers)($at)
 /* 00DC2C 8000D02C 14400010 */  bnez  $v0, .L8000D070
 /* 00DC30 8000D030 3C03800E */   lui   $v1, %hi(D_800DC708) # $v1, 0x800e
@@ -978,7 +978,7 @@ glabel L8000D98C
 /* 00E5FC 8000D9FC 2673AE58 */  addiu $s3, %lo(gObjPtrList) # addiu $s3, $s3, -0x51a8
 .L8000DA00:
 /* 00E600 8000DA00 8E6E0000 */  lw    $t6, ($s3)
-/* 00E604 8000DA04 3C0D8012 */  lui   $t5, %hi(D_8011AEF5) # $t5, 0x8012
+/* 00E604 8000DA04 3C0D8012 */  lui   $t5, %hi(gIsTimeTrial) # $t5, 0x8012
 /* 00E608 8000DA08 01D5C821 */  addu  $t9, $t6, $s5
 /* 00E60C 8000DA0C 8F310000 */  lw    $s1, ($t9)
 /* 00E610 8000DA10 00000000 */  nop   
@@ -989,7 +989,7 @@ glabel L8000D98C
 /* 00E624 8000DA24 320F0020 */  andi  $t7, $s0, 0x20
 /* 00E628 8000DA28 11E0000B */  beqz  $t7, .L8000DA58
 /* 00E62C 8000DA2C 320E0040 */   andi  $t6, $s0, 0x40
-/* 00E630 8000DA30 91ADAEF5 */  lbu   $t5, %lo(D_8011AEF5)($t5)
+/* 00E630 8000DA30 91ADAEF5 */  lbu   $t5, %lo(gIsTimeTrial)($t5)
 /* 00E634 8000DA34 00000000 */  nop   
 /* 00E638 8000DA38 11A00007 */  beqz  $t5, .L8000DA58
 /* 00E63C 8000DA3C 00000000 */   nop   
@@ -1028,8 +1028,8 @@ glabel L8000D98C
 /* 00E6B0 8000DAB0 2631AD38 */  addiu $s1, %lo(D_8011AD38) # addiu $s1, $s1, -0x52c8
 /* 00E6B4 8000DAB4 2418FFFF */  li    $t8, -1
 /* 00E6B8 8000DAB8 AE380000 */  sw    $t8, ($s1)
-/* 00E6BC 8000DABC 3C0F8012 */  lui   $t7, %hi(D_8011AEF5) # $t7, 0x8012
-/* 00E6C0 8000DAC0 91EFAEF5 */  lbu   $t7, %lo(D_8011AEF5)($t7)
+/* 00E6BC 8000DABC 3C0F8012 */  lui   $t7, %hi(gIsTimeTrial) # $t7, 0x8012
+/* 00E6C0 8000DAC0 91EFAEF5 */  lbu   $t7, %lo(gIsTimeTrial)($t7)
 /* 00E6C4 8000DAC4 00000000 */  nop   
 /* 00E6C8 8000DAC8 11E00071 */  beqz  $t7, .L8000DC90
 /* 00E6CC 8000DACC 00000000 */   nop   
@@ -1273,8 +1273,8 @@ glabel L8000D98C
 /* 00EA4C 8000DE4C 1300000B */  beqz  $t8, .L8000DE7C
 /* 00EA50 8000DE50 240D0050 */   li    $t5, 80
 /* 00EA54 8000DE54 15C00009 */  bnez  $t6, .L8000DE7C
-/* 00EA58 8000DE58 3C198012 */   lui   $t9, %hi(D_8011AEF5) # $t9, 0x8012
-/* 00EA5C 8000DE5C 9339AEF5 */  lbu   $t9, %lo(D_8011AEF5)($t9)
+/* 00EA58 8000DE58 3C198012 */   lui   $t9, %hi(gIsTimeTrial) # $t9, 0x8012
+/* 00EA5C 8000DE5C 9339AEF5 */  lbu   $t9, %lo(gIsTimeTrial)($t9)
 /* 00EA60 8000DE60 3C0F8012 */  lui   $t7, %hi(D_8011AD3C) # $t7, 0x8012
 /* 00EA64 8000DE64 17200005 */  bnez  $t9, .L8000DE7C
 /* 00EA68 8000DE68 00000000 */   nop   

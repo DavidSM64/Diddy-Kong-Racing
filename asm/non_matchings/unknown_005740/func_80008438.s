@@ -30,7 +30,7 @@ glabel func_80008438
 /* 009094 80008494 AFA0024C */   sw    $zero, 0x24c($sp)
 /* 009098 80008498 0C01994B */  jal   set_active_viewports_and_max
 /* 00909C 8000849C 00402025 */   move  $a0, $v0
-/* 0090A0 800084A0 0C01A75F */  jal   func_80069D7C
+/* 0090A0 800084A0 0C01A75F */  jal   get_cutscene_camera_segment
 /* 0090A4 800084A4 AFA200B0 */   sw    $v0, 0xb0($sp)
 /* 0090A8 800084A8 3C15800E */  lui   $s5, %hi(D_800DC6E0) # $s5, 0x800e
 /* 0090AC 800084AC 26B5C6E0 */  addiu $s5, %lo(D_800DC6E0) # addiu $s5, $s5, -0x3920

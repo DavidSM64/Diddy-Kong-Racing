@@ -117,8 +117,8 @@ glabel func_8001AE64
 /* 01BC1C 8001B01C 258C0004 */   addiu $t4, $t4, 4
 .L8001B020:
 /* 01BC20 8001B020 A1000117 */  sb    $zero, 0x117($t0)
-/* 01BC24 8001B024 3C0F8012 */  lui   $t7, %hi(D_8011AEF5) # $t7, 0x8012
-/* 01BC28 8001B028 91EFAEF5 */  lbu   $t7, %lo(D_8011AEF5)($t7)
+/* 01BC24 8001B024 3C0F8012 */  lui   $t7, %hi(gIsTimeTrial) # $t7, 0x8012
+/* 01BC28 8001B028 91EFAEF5 */  lbu   $t7, %lo(gIsTimeTrial)($t7)
 /* 01BC2C 8001B02C 240B0005 */  li    $t3, 5
 /* 01BC30 8001B030 11E00091 */  beqz  $t7, .L8001B278
 /* 01BC34 8001B034 241F0018 */   li    $ra, 24

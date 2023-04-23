@@ -301,7 +301,7 @@ s8 check_if_silver_coin_race();
 void func_8000E1EC(Object *obj, s32 vehicleID);
 void set_time_trial_enabled(s32 arg0);
 u8 is_time_trial_enabled();
-u8 func_8000E4D8(void);
+u8 is_in_time_trial(void);
 Object *get_object(s32 index);
 Object **objGetObjList(s32 *arg0, s32 *cnt);
 s32 getObjectCount(void);

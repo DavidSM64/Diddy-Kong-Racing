@@ -102,9 +102,9 @@ glabel func_800A277C
 /* 0A3494 800A2894 00000000 */  nop   
 .L800A2898:
 /* 0A3498 800A2898 8C700050 */  lw    $s0, 0x50($v1)
-/* 0A349C 800A289C 3C128012 */  lui   $s2, %hi(D_80126D67) # $s2, 0x8012
+/* 0A349C 800A289C 3C128012 */  lui   $s2, %hi(gStopwatchFaceID) # $s2, 0x8012
 /* 0A34A0 800A28A0 12000384 */  beqz  $s0, .L800A36B4
-/* 0A34A4 800A28A4 26526D67 */   addiu $s2, %lo(D_80126D67) # addiu $s2, $s2, 0x6d67
+/* 0A34A4 800A28A4 26526D67 */   addiu $s2, %lo(gStopwatchFaceID) # addiu $s2, $s2, 0x6d67
 /* 0A34A8 800A28A8 92580000 */  lbu   $t8, ($s2)
 /* 0A34AC 800A28AC 8E190068 */  lw    $t9, 0x68($s0)
 /* 0A34B0 800A28B0 A218003B */  sb    $t8, 0x3b($s0)

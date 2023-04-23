@@ -386,7 +386,7 @@ void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
     for (i = 2; i < 40; i++) { var_a0 -= saveData[i]; } // Must be one line
     if (var_a0 == 0) {
         for (i = 0, var_s1 = 0; i < levelCount; i++) {
-            temp_v0 = func_8006B14C(i);
+            temp_v0 = get_map_race_type(i);
             if ((temp_v0 == 0) || (temp_v0 & 0x40) || (temp_v0 == 8)) {
                 temp_v1 = func_80072C54(2);
                 if (temp_v1 > 0) {
@@ -439,7 +439,7 @@ void func_800732E8(Settings *settings, u8 *saveData) {
     D_801241F4 = 128;
     func_80072E28(16, 0);
     for (i = 0, var_s0 = 0; i < levelCount; i++) {
-        temp_v0 = func_8006B14C(i);
+        temp_v0 = get_map_race_type(i);
          if ((temp_v0 == 0) || (temp_v0 & 0x40) || (temp_v0 == 8)) {
             courseStatus = 0;
             // Map visited
@@ -505,7 +505,7 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         sum -= func_80072C54(16);
         if (sum == 0) {
             for (i = 0; i < levelCount; i++) {
-                if (func_8006B14C(i) == 0) {
+                if (get_map_race_type(i) == 0) {
                     availableVehicles = get_map_available_vehicles(i);
                     // Car Available
                     if (availableVehicles & 1) {
@@ -536,7 +536,7 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
         sum -= func_80072C54(16);
         if (sum == 0) {
             for (i = 0; i < levelCount; i++) {
-                if (func_8006B14C(i) == 0) {
+                if (get_map_race_type(i) == 0) {
                     availableVehicles = get_map_available_vehicles(i);
                     // Car Available
                     if (availableVehicles & 1) {
@@ -573,7 +573,7 @@ void func_800738A4(Settings *settings, u8 *saveData) {
     D_801241F4 = 128;
     func_80072E28(16, 0);
     for (vehicleCount = 0, i = 0; i < levelCount; i++) {
-        if (func_8006B14C(i) == 0) {
+        if (get_map_race_type(i) == 0) {
             availableVehicles = get_map_available_vehicles(i);
             // Car Available
             if (availableVehicles & 1) {
@@ -614,7 +614,7 @@ void func_800738A4(Settings *settings, u8 *saveData) {
     D_801241F4 = 128;
     func_80072E28(16, 0);
     for (i = 0; i < levelCount; i++) {
-        if (func_8006B14C(i) == 0) {
+        if (get_map_race_type(i) == 0) {
             availableVehicles = get_map_available_vehicles(i);
             // Car Available
             if (availableVehicles & 1) {
