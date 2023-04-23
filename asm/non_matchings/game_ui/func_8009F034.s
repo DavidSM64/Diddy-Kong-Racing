@@ -679,7 +679,7 @@ glabel func_8009F034
 /* 0A05A8 8009F9A8 00000000 */  nop   
 /* 0A05AC 8009F9AC A32C037D */  sb    $t4, 0x37d($t9)
 .L8009F9B0:
-/* 0A05B0 8009F9B0 0C003936 */  jal   func_8000E4D8
+/* 0A05B0 8009F9B0 0C003936 */  jal   is_in_time_trial
 /* 0A05B4 8009F9B4 AFA70090 */   sw    $a3, 0x90($sp)
 /* 0A05B8 8009F9B8 3C058012 */  lui   $a1, %hi(D_80126CDC) # $a1, 0x8012
 /* 0A05BC 8009F9BC 8FA70090 */  lw    $a3, 0x90($sp)

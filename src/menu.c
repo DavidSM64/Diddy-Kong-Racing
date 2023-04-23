@@ -6428,7 +6428,7 @@ void menu_adventure_track_init(void) {
     gMenuDelay = 0;
     mapId = settings->unk4C->unk2;
     gPlayerSelectVehicle[PLAYER_ONE] = get_map_default_vehicle(mapId);
-    result = func_8006B14C(mapId);
+    result = get_map_race_type(mapId);
     if ((result == 5) || (result == 8) || (!(result & 0x40) && (!(settings->courseFlagsPtr[mapId] & 2)))) {
         temp = D_800E0758[mapId];
         if (temp != -1) {
@@ -6464,8 +6464,8 @@ void menu_adventure_track_init(void) {
         load_level_for_menu(mapId, -1, 1);
     }
     assign_dialogue_box_id(7);
-    if (func_8006B14C(mapId) & 0x40) {
-        func_800C31EC(func_8006B190(mapId) + 0x3B);
+    if (get_map_race_type(mapId) & 0x40) {
+        func_800C31EC(get_map_world_id(mapId) + 0x3B);
     }
 }
 
@@ -6506,7 +6506,7 @@ void render_adventure_track_setup(UNUSED s32 arg0, s32 arg1, s32 arg2) {
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 46,  levelName, ALIGN_MIDDLE_CENTER);
             set_text_colour(255, 255, 255, 0, 255);
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 43,  levelName, ALIGN_MIDDLE_CENTER);
-            if (!(func_8006B14C(sp58) & 0x40)) {
+            if (!(get_map_race_type(sp58) & 0x40)) {
                 if (arg2 == 0) {
                     if (is_time_trial_enabled()) {
                         if (func_80092BE0(sp58) >= 0) {
@@ -6609,7 +6609,7 @@ s32 menu_adventure_track_loop(s32 updateRate) {
     if (settings->courseFlagsPtr[mapId] & 4) {
         sp1C = 2;
     }
-    if (func_8006B14C(mapId) & 0x40) {
+    if (get_map_race_type(mapId) & 0x40) {
         sp28 = TRUE;
     }
     sp20 = FALSE;
@@ -6723,7 +6723,7 @@ void func_80093A40(void) {
     gMenuOptionText[0] = gMenuText[ASSET_MENU_TEXT_CONTINUE];
     gMenuOptionCap = 1;
     if (gTrophyRaceWorldId == 0) {
-        raceType = func_8006B14C(settings->courseId);
+        raceType = get_map_race_type(settings->courseId);
         if ((settings->worldId == WORLD_CENTRAL_AREA) && (is_taj_challenge() != 0)) {
             gMenuOptionText[1] = gMenuText[ASSET_MENU_TEXT_ABANDONCHALLENGE];
             gMenuOptionCap = 2;
@@ -6927,8 +6927,8 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                 return 1;
             }
             if ((gMenuOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_RESTARTRACE]) || (gMenuOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_RESTARTCHALLENGE])) {
-                if ((gIsInTracksMode == 0) && (D_800E0758[func_8006EB14()] != -1)) {
-                    func_80000FDC(D_800E0758[func_8006EB14()], 0, 1.0f);
+                if ((gIsInTracksMode == 0) && (D_800E0758[get_ingame_map_id()] != -1)) {
+                    func_80000FDC(D_800E0758[get_ingame_map_id()], 0, 1.0f);
                 }
                 return 2;
             }
@@ -8266,7 +8266,7 @@ s32 get_filtered_cheats(void) {
     if (!check_if_in_race()) {
         cheats &= ~CHEAT_MIRRORED_TRACKS; // Disable mirroring
     }
-    if (func_8006B14C(get_settings()->courseId) & 0x40) {
+    if (get_map_race_type(get_settings()->courseId) & 0x40) {
         cheats &= CHEATS_ALLOWED_IN_CHALLENGES;
     }
     if (gIsInAdventureTwo && check_if_in_race()) {
