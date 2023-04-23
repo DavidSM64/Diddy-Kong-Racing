@@ -128,7 +128,7 @@ s32 gNumberOfLevelHeaders;
 s32 gNumberOfWorlds;
 
 s8 *D_80121178;
-LevelBaseProperties *gLevelPropertyTable;
+LevelGlobalData *gGlobalLevelTable;
 
 s32 D_80121180[16];
 
@@ -181,7 +181,7 @@ s32 D_80123568[6]; // BSS Padding
 /******************************/
 
 /**
- * Allocates memory for gLevelPropertyTable, then populates it with relevant data from every level header.
+ * Allocates memory for gGlobalLevelTable, then populates it with relevant data from every level header.
  * The level headers are streamed from ROM.
  * Additionally loads other globally accessed information, like level names, then runs a checksum compare, for good measure.
 */
@@ -203,7 +203,7 @@ void init_level_globals(void) {
         gNumberOfLevelHeaders++;
     }
     gNumberOfLevelHeaders--;
-    gLevelPropertyTable = allocate_from_main_pool_safe(gNumberOfLevelHeaders * sizeof(LevelBaseProperties), COLOUR_TAG_YELLOW);
+    gGlobalLevelTable = allocate_from_main_pool_safe(gNumberOfLevelHeaders * sizeof(LevelGlobalData), COLOUR_TAG_YELLOW);
     gCurrentLevelHeader = (LevelHeader *) header;
     gNumberOfWorlds = -1;
     for (i = 0; i < gNumberOfLevelHeaders; i++) {
@@ -214,12 +214,12 @@ void init_level_globals(void) {
         if ((gCurrentLevelHeader->race_type >= 0) && (gCurrentLevelHeader->race_type < 16)) {
             D_80121180[gCurrentLevelHeader->race_type]++;
         }
-        gLevelPropertyTable[i].world = gCurrentLevelHeader->world;
-        gLevelPropertyTable[i].raceType = gCurrentLevelHeader->race_type;
-        gLevelPropertyTable[i].vehicles = ((u16) gCurrentLevelHeader->available_vehicles) << 4;
-        gLevelPropertyTable[i].vehicles |= gCurrentLevelHeader->vehicle & 0xF;
-        gLevelPropertyTable[i].unk3 = 1;
-        gLevelPropertyTable[i].unk4 = gCurrentLevelHeader->unkB0;
+        gGlobalLevelTable[i].world = gCurrentLevelHeader->world;
+        gGlobalLevelTable[i].raceType = gCurrentLevelHeader->race_type;
+        gGlobalLevelTable[i].vehicles = ((u16) gCurrentLevelHeader->available_vehicles) << 4;
+        gGlobalLevelTable[i].vehicles |= gCurrentLevelHeader->vehicle & 0xF;
+        gGlobalLevelTable[i].unk3 = 1;
+        gGlobalLevelTable[i].unk4 = gCurrentLevelHeader->unkB0;
     }
     gNumberOfWorlds++;
     D_80121178 = allocate_from_main_pool_safe(gNumberOfWorlds, COLOUR_TAG_YELLOW);
@@ -227,8 +227,8 @@ void init_level_globals(void) {
         D_80121178[i] = -1;
     }
     for (i = 0; i < gNumberOfLevelHeaders; i++) {
-        if ((gLevelPropertyTable[i].raceType == 5)) {
-            D_80121178[gLevelPropertyTable[i].world] = i;
+        if ((gGlobalLevelTable[i].raceType == 5)) {
+            D_80121178[gGlobalLevelTable[i].world] = i;
         }
     }
     free_from_memory_pool(gTempAssetTable);
@@ -262,7 +262,7 @@ UNUSED s16 func_8006ABB4(s32 levelID) {
     if (levelID >= gNumberOfLevelHeaders) {
         return 0xE10;
     }
-    return gLevelPropertyTable[levelID].unk4;
+    return gGlobalLevelTable[levelID].unk4;
 }
 
 /**
@@ -278,19 +278,19 @@ UNUSED s32 search_level_properties_forwards(s32 levelID, s8 raceType, s8 worldID
     if (raceType != RACETYPE_CHALLENGE) {
         if (worldID == -1) {
             for (; levelID < gNumberOfLevelHeaders; levelID++) {
-                if (raceType == gLevelPropertyTable[levelID].raceType) {
+                if (raceType == gGlobalLevelTable[levelID].raceType) {
                     return levelID;
                 }
             }
         } else if (raceType == -1) {
             for (; levelID < gNumberOfLevelHeaders; levelID++) {
-                if (worldID == gLevelPropertyTable[levelID].world) {
+                if (worldID == gGlobalLevelTable[levelID].world) {
                     return levelID;
                 }
             }
         } else {
             for (; levelID < gNumberOfLevelHeaders; levelID++) {
-                if ((raceType == gLevelPropertyTable[levelID].raceType) && (worldID == gLevelPropertyTable[levelID].world)) {
+                if ((raceType == gGlobalLevelTable[levelID].raceType) && (worldID == gGlobalLevelTable[levelID].world)) {
                     return levelID;
                 }
             }
@@ -298,13 +298,13 @@ UNUSED s32 search_level_properties_forwards(s32 levelID, s8 raceType, s8 worldID
     } else {
         if (worldID == -1) {
             for (; levelID < gNumberOfLevelHeaders; levelID++) {
-                if (gLevelPropertyTable[levelID].raceType & RACETYPE_CHALLENGE) {
+                if (gGlobalLevelTable[levelID].raceType & RACETYPE_CHALLENGE) {
                     return levelID;
                 }
             }
         } else {
             for (; levelID < gNumberOfLevelHeaders; levelID++) {
-                if ((gLevelPropertyTable[levelID].raceType & RACETYPE_CHALLENGE) && (worldID == gLevelPropertyTable[levelID].world)) {
+                if ((gGlobalLevelTable[levelID].raceType & RACETYPE_CHALLENGE) && (worldID == gGlobalLevelTable[levelID].world)) {
                     return levelID;
                 }
             }
@@ -325,19 +325,19 @@ UNUSED s32 search_level_properties_backwards(s32 levelID, s8 raceType, s8 worldI
     if (raceType != RACETYPE_CHALLENGE) {
         if (worldID == -1) {
             for (; levelID >= 0; levelID--) {
-                if (raceType == gLevelPropertyTable[levelID].raceType) {
+                if (raceType == gGlobalLevelTable[levelID].raceType) {
                     return levelID;
                 }
             }
         } else if (raceType == -1) {
             for (; levelID >= 0; levelID--) {
-                if (worldID == gLevelPropertyTable[levelID].world) {
+                if (worldID == gGlobalLevelTable[levelID].world) {
                     return levelID;
                 }
             }
         } else {
             for (; levelID >= 0; levelID--) {
-                if ((raceType == gLevelPropertyTable[levelID].raceType) && (worldID == gLevelPropertyTable[levelID].world)) {
+                if ((raceType == gGlobalLevelTable[levelID].raceType) && (worldID == gGlobalLevelTable[levelID].world)) {
                     return levelID;
                 }
             }
@@ -345,13 +345,13 @@ UNUSED s32 search_level_properties_backwards(s32 levelID, s8 raceType, s8 worldI
     } else {
         if (worldID == -1) {
             for (; levelID >= 0; levelID--) {
-                if (gLevelPropertyTable[levelID].raceType & RACETYPE_CHALLENGE) {
+                if (gGlobalLevelTable[levelID].raceType & RACETYPE_CHALLENGE) {
                     return levelID;
                 }
             }
         } else {
             for (; levelID >= 0; levelID--) {
-                if ((gLevelPropertyTable[levelID].raceType & RACETYPE_CHALLENGE) && (worldID == gLevelPropertyTable[levelID].world)) {
+                if ((gGlobalLevelTable[levelID].raceType & RACETYPE_CHALLENGE) && (worldID == gGlobalLevelTable[levelID].world)) {
                     return levelID;
                 }
             }
@@ -371,7 +371,7 @@ UNUSED s32 func_8006B054(s8 worldID) {
     s32 out, i;
     out = 0;
     for (i = 0; i < gNumberOfLevelHeaders; i++) {
-        if (worldID == gLevelPropertyTable[i].world) {
+        if (worldID == gGlobalLevelTable[i].world) {
             out++;
         }
     }
@@ -380,14 +380,14 @@ UNUSED s32 func_8006B054(s8 worldID) {
 
 Vehicle get_map_default_vehicle(s32 mapId) {
     if (mapId > 0 && mapId < gNumberOfLevelHeaders) {
-        return gLevelPropertyTable[mapId].vehicles & 0xF;
+        return gGlobalLevelTable[mapId].vehicles & 0xF;
     }
     return VEHICLE_CAR;
 }
 
 s32 get_map_available_vehicles(s32 mapId) {
     if (mapId > 0 && mapId < gNumberOfLevelHeaders) {
-        s32 temp = gLevelPropertyTable[mapId].vehicles;
+        s32 temp = gGlobalLevelTable[mapId].vehicles;
         if (temp != 0) {
             return (temp >> 4) & 0xF;
         }
@@ -397,14 +397,14 @@ s32 get_map_available_vehicles(s32 mapId) {
 
 s8 func_8006B14C(s32 mapId) {
     if (mapId >= 0 && mapId < gNumberOfLevelHeaders) {
-        return gLevelPropertyTable[mapId].raceType;
+        return gGlobalLevelTable[mapId].raceType;
     }
     return -1;
 }
 
 s8 func_8006B190(s32 mapId) {
     if (mapId >= 0 && mapId < gNumberOfLevelHeaders) {
-        return gLevelPropertyTable[mapId].world;
+        return gGlobalLevelTable[mapId].world;
     }
     return 0;
 }

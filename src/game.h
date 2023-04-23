@@ -19,13 +19,13 @@ typedef enum RenderContext {
 } RenderContext;
 
 /* Size: 6 bytes */
-typedef struct LevelBaseProperties {
+typedef struct LevelGlobalData {
     s8 world;
     s8 raceType;
     s8 vehicles;
-    s8 unk3;
-    s16 unk4;
-} LevelBaseProperties;
+    s8 unk3; // Unused.
+    s16 unk4; // Unused.
+} LevelGlobalData;
 
 enum NumberOfPlayers {
     ZERO_PLAYERS  = -1, // A.I. Only
