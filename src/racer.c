@@ -1582,8 +1582,8 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
         gCameraObject->unk1C = phi_f14;
         gCameraObject->unk20 = phi_f18;
     }
-    gCameraObject->unk1C += ((phi_f14 - gCameraObject->unk1C) * 0.125f) * updateRate;
-    gCameraObject->unk20 += ((phi_f18 - gCameraObject->unk20) * 0.125f) * updateRate;
+    gCameraObject->unk1C += ((phi_f14 - gCameraObject->unk1C) * 0.0625f) * updateRate;
+    gCameraObject->unk20 += ((phi_f18 - gCameraObject->unk20) * 0.0625f) * updateRate;
     sp34 = sins_f(gCameraObject->trans.x_rotation - sp24);
     phi_f18 = coss_f(gCameraObject->trans.x_rotation - sp24);
     phi_f18 = (gCameraObject->unk1C * sp34) + (gCameraObject->unk20 * phi_f18);
@@ -1709,7 +1709,7 @@ void apply_plane_tilt_anim(s32 updateRate, Object *obj, Object_Racer *racer) {
                 animAdd = animDiff;
             }
         }
-        obj->segment.animFrame += animAdd;
+        obj->segment.animFrame += animAdd; //!@Delta
     }
 }
 
@@ -1902,10 +1902,10 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
         gCameraObject->unk1C = phi_f14;
         gCameraObject->unk20 = baseFloat1;
     }
-    gCameraObject->unk1C += (phi_f14 - gCameraObject->unk1C) * 0.125f;
-    gCameraObject->unk20 += (baseFloat1 - gCameraObject->unk20) * 0.125f;
-    phi_f14 = cosine_s(gCameraObject->trans.x_rotation - 0x400);
-    xOffset = sine_s(gCameraObject->trans.x_rotation - 0x400);
+    gCameraObject->unk1C += (phi_f14 - gCameraObject->unk1C) * 0.125;
+    gCameraObject->unk20 += (baseFloat1 - gCameraObject->unk20) * 0.125;
+    phi_f14 = sins_f(gCameraObject->trans.x_rotation - 0x400);
+    xOffset = coss_f(gCameraObject->trans.x_rotation - 0x400);
     baseFloat3 = phi_f14;
     baseFloat2 = (gCameraObject->unk1C * baseFloat3) - (gCameraObject->unk20 * xOffset);
     baseFloat1 = ((gCameraObject->unk1C) * (gCameraObject->unk1C));
@@ -1918,15 +1918,15 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
     temp_f16 = obj->segment.trans.y_position;
     yOffset = gCameraObject->trans.y_position - (temp_f16 + baseFloat1);
     if (racer->unk1E0 == 1 || racer->unk1E0 == -1) {
-        racer->unk74 = 8.0f;
+        racer->unk74 = 8.0;
     }
     if (racer->unk1E0 == 2 || racer->unk1E0 == -2) {
-        racer->unk74 = 8.0f;
+        racer->unk74 = 8.0;
     }
-    if (racer->unk74 > 2.0f) {
-        racer->unk74 -= 0.2f;
+    if (racer->unk74 > 2.0) {
+        racer->unk74 -= 0.2;
     } else {
-        racer->unk74 = 2.0f;
+        racer->unk74 = 2.0;
     }
     yVel = racer->unk74;
     yVel = (yOffset * updateRate) / yVel;
@@ -2806,7 +2806,7 @@ typedef struct unk_Object_60 {
 void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
     s32 soundID;
     f32 scale;
-    f32 velocitdiffY;
+    f32 velocityDiff;
     s32 sp68; // 68
     s32 surfaceType;
     s32 sp60; // 60
@@ -2834,7 +2834,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     racer->unk88 = 0.0f;
     // Apply bobbing if there's no dialogue camera rotation active.
     if (gDialogueCameraAngle == 0) {
-        scale = (f32) D_800DCDB0[0][racer->steerVisualRotation & 0x1F] * 0.025f;
+        scale = (f32) D_800DCDB0[0][(racer->miscAnimCounter / 2) & 0x1F] * 0.025f;
         racer->carBobX = -racer->roll * scale;
         racer->carBobY = -racer->yaw * scale;
         racer->carBobZ = -racer->pitch * scale;
@@ -2922,7 +2922,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             racer->y_rotation_vel = -0x8000;
         }
         if (racer->drifting == 0) {
-            racer->steerVisualRotation += racer->y_rotation_vel * updateRate;
+            racer->steerVisualRotation += racer->y_rotation_vel;
             racer->unk19E = racer->y_rotation_vel;
             racer->y_rotation_vel = 0;
             racer->velocity = -racer->velocity;
@@ -3038,17 +3038,17 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             if (SteeringVel >= 4) {
                 SteeringVel = 7 - SteeringVel;
             }
-            gCurrentCarSteerVel += (SteeringVel * 0x190);
+            gCurrentCarSteerVel += SteeringVel * 0x190;
         } else if (gCurrentCarSteerVel < -0x1400 || (racer->drift_direction != 0 && gCurrentCarSteerVel < 0)) {
             SteeringVel = racer->miscAnimCounter & 7;
             if (SteeringVel >= 4) {
                 SteeringVel = 7 - SteeringVel;
             }
-            gCurrentCarSteerVel -= (SteeringVel * 0x190);
+            gCurrentCarSteerVel -= SteeringVel * 0x190;
         }
     }
     surfaceTraction = 0.0f;
-    velocitdiffY = 0.0f;
+    velocityDiff = 0.0f;
     sp68 = 0; // Number of wheels contacting grass or sand
     stoneWheels = 0; // Number of wheels contacting the stone surface type
     // Iterate through each wheel and find which surface they're on.
@@ -3067,13 +3067,13 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             if (racer->wheel_surfaces[i] == SURFACE_STONE) {
                 stoneWheels++;
             }
-            velocitdiffY += 1.0f;
+            velocityDiff += 1.0f;
         }
     }
     // With multiple contact patches, average the surface properties across.
-    if (velocitdiffY > 1.0f) {
-        traction /= velocitdiffY;
-        surfaceTraction /= velocitdiffY;
+    if (velocityDiff > 1.0f) {
+        traction /= velocityDiff;
+        surfaceTraction /= velocityDiff;
     }
     // If on the Taj pad and the horn is honked, summon Taj
     if (racer->playerIndex == PLAYER_ONE && racer->unk1E2 != 0 && surfaceType == SURFACE_TAJ_PAD && gCurrentButtonsPressed & Z_TRIG) {
@@ -3192,9 +3192,9 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     // Convert the velocity value to an int
     velocityS = (s32) tempVel;
     miscAsset = &gCurrentRacerMiscAssetPtr[velocityS];
-    velocitdiffY = tempVel - velocityS;
+    velocityDiff = tempVel - velocityS;
     // Calculate the velocity multiplier based on current velocity
-    surfaceTraction = (f32) ((miscAsset[1] * velocitdiffY) + (miscAsset[0] * (1.0f - velocitdiffY)));
+    surfaceTraction = (f32) ((miscAsset[1] * velocityDiff) + (miscAsset[0] * (1.0f - velocityDiff)));
     surfaceTraction = (surfaceTraction * 1.7f);
     surfaceTraction *= topSpeed;
     // Force the throttle wide open if boosting
@@ -3202,11 +3202,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         if (gRaceStartTimer == 0) {
             racer->throttle = 1.0f;
             if (surfaceTraction != 0.0f) {
-                if (is_in_adventure_two()) {
-                    surfaceTraction = 1.25f;
-                } else {
-                    surfaceTraction = 1.0f;
-                }
+                surfaceTraction = 2.0f;
             }
             racer->boostTimer -= updateRate;
         }
@@ -3222,22 +3218,22 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
             if (racer->vehicleIDPrev >= 5) {
                 tempVel *= 0.3f;
             }
-            racer->velocity += tempVel * updateRateF;
+            racer->velocity += tempVel * (updateRateF / 2.0f);;
             racer->brake = 0.0f;
         }
     }
     tempVel = (racer->brake * surfaceTraction) * 0.32f;
-    racer->velocity -= (surfaceTraction * racer->throttle) * updateRateF;
+    racer->velocity -= (surfaceTraction * racer->throttle) * (updateRateF / 2.0f);
     if (racer->velocity > -0.04f && racer->velocity < 0.04f) {
         racer->velocity = 0.0f;
     }
     if (racer->velocity < 0.0f) {
-        racer->velocity += tempVel * updateRateF;
+        racer->velocity += tempVel * (updateRateF / 2.0f);
         if (racer->velocity > 0.0f) {
             racer->velocity = 0.0f;
         }
     } else {
-        racer->velocity -= tempVel * updateRateF;
+        racer->velocity -= tempVel * (updateRateF / 2.0f);
         if (racer->velocity < 0.0f) {
             racer->velocity = 0.0f;
         }
@@ -3249,19 +3245,19 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     if (racer->brake < 0.9f && racer->vehicleIDPrev < 5 && gRaceStartTimer == 0) {
         if (racer->pitch < 0.0f) {
-            velocitdiffY = -racer->pitch;
-            velocitdiffY -= 0.3f;
-            if (velocitdiffY < 0.0f) {
-                velocitdiffY = 0.0f;
+            velocityDiff = -racer->pitch;
+            velocityDiff -= 0.3f;
+            if (velocityDiff < 0.0f) {
+                velocityDiff = 0.0f;
             }
-            if (velocitdiffY > 0.1f) {
-                velocitdiffY = 0.1f;
+            if (velocityDiff > 0.1f) {
+                velocityDiff = 0.1f;
             }
-            velocitdiffY *= 35.0f;
+            velocityDiff *= 35.0f;
         } else {
-            velocitdiffY = 0.0f;
+            velocityDiff = 0.0f;
         }
-        racer->velocity += surfaceTraction * (racer->pitch / (4.0f - velocitdiffY)) * updateRateF;
+        racer->velocity += surfaceTraction * (racer->pitch / (4.0f - velocityDiff)) * updateRateF;
     }
     racer->forwardVel -= ((racer->forwardVel + (racer->velocity * 0.025f)) * 0.125f) * updateRateF;
     racer->unk1E8 = racer->steerAngle;
@@ -3500,13 +3496,13 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
     } else if (obj->segment.unk38.byte.unk3B == 0) {
         if (flags & 1) {
             if (obj->segment.animFrame > 40) {
-                obj->segment.animFrame -= arg7 * 4;
+                obj->segment.animFrame -= arg7 * 4; //!@Delta
                 if (obj->segment.animFrame <= 40) {
                     obj->segment.unk38.byte.unk3B = action;
                     obj->segment.animFrame = arg3;
                 }
             } else {
-                obj->segment.animFrame += arg7 * 4;
+                obj->segment.animFrame += arg7 * 4; //!@Delta
                 if (obj->segment.animFrame >= 40) {
                     obj->segment.unk38.byte.unk3B = action;
                     obj->segment.animFrame = arg3;
@@ -3520,7 +3516,7 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
     } else if (obj->segment.unk38.byte.unk3B == action) {
         if (flags & 2) {
             if (racer->unk1F3 & 0x80) {
-                obj->segment.animFrame -= arg5;
+                obj->segment.animFrame -= arg5; //!@Delta
                 if (obj->segment.animFrame <= 0) {
                     obj->segment.unk38.byte.unk3B = 0;
                     racer->unk1F2 = 0;
@@ -3528,7 +3524,7 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
                     racer->unk1F3 = 0;
                 }
             } else {
-                obj->segment.animFrame += arg5;
+                obj->segment.animFrame += arg5; //!@Delta
                 if (obj->segment.animFrame >= duration) {
                     obj->segment.animFrame = duration - 1;
                     if (!(flags & 4)) {
@@ -3537,7 +3533,7 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
                 }
             }
         } else {
-            obj->segment.animFrame += arg5;
+            obj->segment.animFrame += arg5; //!@Delta
             if (obj->segment.animFrame >= duration) {
                 obj->segment.unk38.byte.unk3B = 0;
                 racer->unk1F2 = 0;
@@ -3580,7 +3576,7 @@ void racer_spinout_car(Object *obj, Object_Racer *racer, s32 updateRate, f32 upd
         racer->y_rotation_vel += updateRate * 0x500;
         if (racer->y_rotation_vel > 0 && angleVel < 0) {
             racer->spinout_timer -= updateRate;
-            if (gCurrentStickX > 50 && racer->spinout_timer == 1) {
+            if (gCurrentStickX > 50 && racer->spinout_timer <= 1) {
                 racer->spinout_timer = 0;
             }
         }
@@ -3588,7 +3584,7 @@ void racer_spinout_car(Object *obj, Object_Racer *racer, s32 updateRate, f32 upd
         racer->y_rotation_vel -= updateRate * 0x500;
         if (racer->y_rotation_vel < 0 && angleVel > 0) {
             racer->spinout_timer += updateRate;
-            if (gCurrentStickX < -50 && racer->spinout_timer == -1) {
+            if (gCurrentStickX < -50 && racer->spinout_timer >= -1) {
                 racer->spinout_timer = 0;
             }
         }
@@ -3623,7 +3619,7 @@ void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateR
         racer->steerVisualRotation -= (u16) ((steerAngle * 6 * updateRate) >> 1);
         angle = -(u16) racer->x_rotation_vel;
         WRAP(angle, -0x8000, 0x8000);
-        racer->x_rotation_vel += (angle >> 3);
+        racer->x_rotation_vel += (angle >> 3); //!@Delta
     }
     if (racer->unk18) {
         func_8000488C((void *) racer->unk18);
@@ -3670,7 +3666,7 @@ void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateR
         angle = -racer->steerAngle;
         angle *= 6;
     }
-    racer->steerVisualRotation -= (angle & 0xFFFF);
+    racer->steerVisualRotation -= angle & 0xFFFF;
     gCurrentCarSteerVel = racer->unk110;
     if (racer->boostTimer) {
         if (racer->velocity > -20.0f) {
@@ -3762,7 +3758,7 @@ void handle_car_steering(Object_Racer *racer) {
         velScale = vel * 58.0f;
     }
     // Set the steering velocity based on the car's steering value, scaled with the temp forward velocity value.
-    gCurrentCarSteerVel -= racer->steerAngle * velScale;
+    gCurrentCarSteerVel -= (racer->steerAngle * velScale);
     // If the car is reversing, then flip the steering.
     if (racer->velocity > 0.0f) {
         gCurrentCarSteerVel = -gCurrentCarSteerVel;
@@ -4031,19 +4027,19 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
         }
     } else {
         tempVel = racer->velocity - yVel;
-        if (tempVel > 0.25f * updateRateF){
-            racer->velocity -= (tempVel - 0.25f) * updateRateF;
+        if (tempVel > 0.5) {
+            racer->velocity -= tempVel - 0.5; //!@Delta
         }
-        if (tempVel < -0.25f * updateRateF){
-            racer->velocity -= (tempVel + 0.25f) * updateRateF;
+        if (tempVel < -0.5) {
+            racer->velocity -= tempVel + 0.5; //!@Delta
         }
         tempVel = racer->lateral_velocity - hVel;
         if (tempVel && tempVel) {}
-        if (tempVel > 0.25f * updateRateF){
-            racer->lateral_velocity -= (tempVel - 0.25f) * updateRateF;
+        if (tempVel > 0.5) {
+            racer->lateral_velocity -= tempVel - 0.5; //!@Delta
         }
-        if (tempVel < -0.25f * updateRateF){
-            racer->lateral_velocity -= (tempVel + 0.25f) * updateRateF;
+        if (tempVel < -0.5) {
+            racer->lateral_velocity -= tempVel + 0.5; //!@Delta
         }
     }
 }
@@ -4153,12 +4149,8 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
     if (racer->boostTimer > 0) {
         if (gRaceStartTimer == 0) {
             racer->throttle = 1.0f;
-            if (vel != 0.0f) {
-                if (is_in_adventure_two()) {
-                    vel = 1.25f;
-                } else {
-                    vel = 1.0f;
-                }
+            if (vel != 0.0) {
+                vel = 2.0f;
             }
             racer->boostTimer -= updateRate;
         }
@@ -4174,17 +4166,17 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
         }
     }
 	forwardVel = (vel * racer->brake) * 0.32f;
-    racer->velocity -= (vel * racer->throttle) * updateRateF;
+    racer->velocity -= (vel * racer->throttle) * (updateRateF / 2.0f);
     if (racer->velocity > -0.04f && racer->velocity < 0.04f) {
         racer->velocity = 0.0f;
     }
     if (racer->velocity < 0.0f) {
-        racer->velocity += forwardVel * updateRateF;
+        racer->velocity += forwardVel * (updateRateF / 2.0f);
         if (racer->velocity > 0.0f) {
             racer->velocity = 0.0f;
         }
     } else {
-        racer->velocity -= forwardVel * updateRateF;
+        racer->velocity -= forwardVel * (updateRateF / 2.0f);
         if (racer->velocity < 0.0f) {
             racer->velocity = 0.0f;
         }
@@ -4197,9 +4189,6 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
     }
     if (racer->brake < 0.9f && gRaceStartTimer == 0) {
         racer->velocity += weight * (racer->pitch / 4.0f) * updateRateF;
-    }
-    if (racer->vehicleID == VEHICLE_HOVERCRAFT && is_in_adventure_two()) {
-        weight *= 2.0f;
     }
     obj->segment.y_velocity -= weight * updateRateF;
 }
@@ -4740,31 +4729,12 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
     f32 cap;
     s32 timer2;
     s32 timer3;
+
+    // If you want to change the baseline speed of vehicles, this is what you change.
+    speedMultiplier = 1.0f;
     // Set the player's top speed to 0 before the race starts, so you can't jump the start.
     if (gRaceStartTimer) {
         speedMultiplier = 0.0f;
-    } else {
-        switch (racer->vehicleID) {
-            case VEHICLE_CAR: speedMultiplier = 0.5f; break;
-            case VEHICLE_HOVERCRAFT: speedMultiplier = 1.0f; break;
-            case VEHICLE_PLANE: speedMultiplier = 1.0f; break;
-            case VEHICLE_LOOPDELOOP: speedMultiplier = 1.0f; break;
-            case VEHICLE_TRICKY: speedMultiplier = 0.5f; break;
-            case VEHICLE_BLUEY: speedMultiplier = 0.5f; break;
-            case VEHICLE_BUBBLER: speedMultiplier = 0.5f; break;
-            case VEHICLE_SMOKEY: speedMultiplier = 0.5f; break;
-            case VEHICLE_WIZPIG: speedMultiplier = 1.0f; break;
-            case VEHICLE_ROCKET: speedMultiplier = 1.0f; break;
-            default: speedMultiplier = 1.0f; break;
-        }
-    }
-    
-    if (is_in_adventure_two()) {
-        if (racer->vehicleID >= VEHICLE_TRICKY) {
-            speedMultiplier *= 2.5f;
-        } else {
-            speedMultiplier *= 2.0f;
-        }
     }
     timer3 = get_race_start_timer();
     // If the A button is held for the first time, 30 frames prior to starting,
@@ -5169,7 +5139,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
         baseDistance -= 53.0f;
         yVel -= 5.0f;
         brakeVar = 0.0f;
-        baseSpeed *= 0.25f;
+        baseSpeed *= 0.25;
         break;
     }
     if (racer->unk1E2 > 2 || racer->unk1E5 != 0) {
@@ -5196,13 +5166,13 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
         }
         gCameraObject->trans.x_rotation += (tempAngle * delta) >> 4;
     }
-    if (racer->velocity < 0.0f) {
+    if (racer->velocity < 0.0) {
         tempVel = 6.0f;
         if (racer->drift_direction) {
             tempVel = 3.0f;
         }
         tempVel = -(racer->velocity * brakeVar) * tempVel;
-        if (65.0f < tempVel) {
+        if (65.0 < tempVel) {
             tempVel = 65.0f;
         }
         baseDistance -= tempVel;
@@ -5213,7 +5183,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
         baseDistance += baseSpeed * 30.0f;
     }
     if (gRaceStartTimer == 0) {
-        if ((36) < racer->boostTimer) {
+        if (normalise_time(36) < racer->boostTimer) {
             baseDistance = -30.0f;
         } else if (racer->boostTimer > 0) {
             baseDistance = 180.0f;
@@ -5223,8 +5193,8 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
         gCameraObject->unk1C = baseDistance;
         gCameraObject->unk20 = yVel;
     }
-    gCameraObject->unk1C += (baseDistance - gCameraObject->unk1C) * 0.125f;
-    gCameraObject->unk20 += (yVel - gCameraObject->unk20) * 0.125f;
+    gCameraObject->unk1C += (baseDistance - gCameraObject->unk1C) * 0.125;
+    gCameraObject->unk20 += (yVel - gCameraObject->unk20) * 0.125;
     cosOffset = sins_f(gCameraObject->trans.x_rotation - baseAngle);
     sineOffset = coss_f(gCameraObject->trans.x_rotation - baseAngle);
     lateralOffset = gCameraObject->unk1C;
@@ -5234,14 +5204,14 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     cosOffset = coss_f(-racer->unk196 + 0x8000) * lateralOffset;
     baseDistance = 0.0f;
     if (gCurrentRacerInput & A_BUTTON) {
-        baseDistance = racer->lateral_velocity * 1.2f;
+        baseDistance = racer->lateral_velocity * 1.3;
         if (baseDistance > 0.0f) {
-            baseDistance -= 1.5f;
+            baseDistance -= 1.5;
             if (baseDistance < 0.0f) {
                 baseDistance = 0.0f;
             }
         } else {
-            baseDistance += 1.5f;
+            baseDistance += 1.5;
             if (baseDistance > 0.0f) {
                 baseDistance = 0.0f;
             }
@@ -5250,11 +5220,11 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     if (racer->drift_direction) {
         baseDistance = -(f32) racer->drift_direction * 12.0f;
     }
-    racer->unkC8 += (baseDistance - racer->unkC8) * 0.125f;
+    racer->unkC8 += (baseDistance - racer->unkC8) * 0.125;
     if (racer->spinout_timer) {
-        racer->camera_zoom -= racer->camera_zoom * 0.25f;
+        racer->camera_zoom -= racer->camera_zoom * 0.25;
     } else {
-        racer->camera_zoom += (10.0f - racer->camera_zoom) * 0.25f;
+        racer->camera_zoom += (10.0 - racer->camera_zoom) * 0.25;
     }
     xOffset = obj->segment.trans.x_position - (racer->ox1 * racer->camera_zoom);
     yOffset = obj->segment.trans.y_position - (racer->oy1 * racer->camera_zoom);
@@ -5263,18 +5233,18 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     baseDistance = xOffset + tempVel;
     gCameraObject->trans.x_position = sineOffset + baseDistance;
     yOffset += yVel;
-    temp_f16 = (gCameraObject->trans.y_position - yOffset) * 0.25f;
-    if (temp_f16 < -2.0f) {
-        gCameraObject->trans.y_position -= temp_f16 + 2.0f;
+    temp_f16 = (gCameraObject->trans.y_position - yOffset) * 0.25;
+    if (temp_f16 < -2.0) {
+        gCameraObject->trans.y_position -= temp_f16 + 2.0;
     }
-    gCameraObject->trans.y_position -= temp_f16 * 0.25f;
+    gCameraObject->trans.y_position -= temp_f16 * 0.25;
     if (temp_f16 > 0.0f || gRaceStartTimer) {
         gCameraObject->trans.y_position = yOffset;
     }
     gCameraObject->trans.z_position = zOffset + (-coss_f(racer->unk196 + 0x4000) * racer->unkC8) + cosOffset;
     gCameraObject->trans.y_rotation = racer->unk196;
     newAngle = gCameraObject->trans.z_rotation;
-    if ((racer->drift_direction && racer->brake > 0.0f)|| gDialogueCameraAngle) {
+    if ((racer->drift_direction && racer->brake > 0.0) || gDialogueCameraAngle) {
         newAngle = 0;
     }
     angle = obj->segment.trans.z_rotation;
@@ -5842,7 +5812,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     }
     if (racer->unk204 > 0) {
         racer->unk204 -= updateRate;
-        racer->velocity -= (racer->velocity * 0.2f) * updateRateF;
+        racer->velocity -= (racer->velocity * 0.1f) * updateRateF;
     }
     if (racer->unk206 > 0) {
         racer->unk18A = racer->unk206;
@@ -5934,7 +5904,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         }
         if (checkpoint->unk36[racer->unk1CA] == 4) {
             if (racer->velocity < -4.0f) {
-                racer->velocity -= (racer->velocity * 0.1f) * updateRateF;
+                racer->velocity -= (racer->velocity * 0.05f) * updateRateF;
             }
         }
         if (var_t2 == 0) {
