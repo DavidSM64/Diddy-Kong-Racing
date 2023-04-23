@@ -3109,7 +3109,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     miscAsset = (f32 *) get_misc_asset(MISC_ASSET_UNK08);
     // Degrade lateral velocity
     if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
-        if (!(racer->velocity > -2.0) && racer->drift_direction == 0 && racer->raceFinished == FALSE) {
+        if (!(racer->velocity > -2.0) && racer->drift_direction == 0 && !racer->raceFinished) {
             racer->lateral_velocity += (racer->velocity * gCurrentStickX) / miscAsset[racer->characterId]; //!@Delta
             if (racer->playerIndex == PLAYER_COMPUTER) {
                 racer->lateral_velocity *= 0.9;
