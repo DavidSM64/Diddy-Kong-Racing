@@ -64,7 +64,7 @@ UNUSED const char sDebugVehicleSwapString[] = "Swapping\n";
 
 /************ .data ************/
 
-char *gTempLevelNames = NULL; // Currently unknown, might be a different type.
+char *gTempLevelNames = NULL;
 s8 gCurrentDefaultVehicle = -1;
 u8 D_800DD318 = FALSE;
 s32 gIsInRace = 0;
@@ -187,7 +187,7 @@ s32 D_80123568[6]; // BSS Padding
 */
 void init_level_globals(void) {
     s32 i;
-    s32 temp;
+    s32 size;
     UNUSED s32 pad;
     s32 checksumCount;
     u8 *header;
@@ -236,13 +236,12 @@ void init_level_globals(void) {
     gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_NAMES_TABLE);
     for (i = 0; gTempAssetTable[i] != (-1); i++) { }
     i--;
-    temp = gTempAssetTable[0];
-    temp = gTempAssetTable[i] - temp;
+    size = gTempAssetTable[i] - gTempAssetTable[0];
     gLevelNames = allocate_from_main_pool_safe(i * sizeof(s32), COLOUR_TAG_YELLOW);
-    gTempLevelNames = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
-    load_asset_to_address(ASSET_LEVEL_NAMES, (u32) gTempLevelNames, 0, temp);
-    for (temp = 0; temp < i; temp++) {
-        gLevelNames[temp] = (char *) &gTempLevelNames[gTempAssetTable[temp]];
+    gTempLevelNames = allocate_from_main_pool_safe(size, COLOUR_TAG_YELLOW);
+    load_asset_to_address(ASSET_LEVEL_NAMES, (u32) gTempLevelNames, 0, size);
+    for (size = 0; size < i; size++) {
+        gLevelNames[size] = (char *) &gTempLevelNames[gTempAssetTable[size]];
     }
     free_from_memory_pool(gTempAssetTable);
     // Antipiracy measure
