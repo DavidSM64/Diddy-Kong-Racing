@@ -5010,9 +5010,9 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
     gCameraObject->trans.y_position += gCameraObject->y_velocity + gCameraObject->unk30;
     gCameraObject->trans.z_position += gCameraObject->z_velocity;
     if (!gRaceStartTimer && !gDialogueCameraAngle) {
-        gCameraObject->x_velocity = gCameraObject->x_velocity * 0.95f;
-        gCameraObject->y_velocity = gCameraObject->y_velocity * 0.95f;
-        gCameraObject->z_velocity = gCameraObject->z_velocity * 0.95f;
+        gCameraObject->x_velocity -= (gCameraObject->x_velocity * 0.025f) * updateRateF;
+        gCameraObject->y_velocity -= (gCameraObject->y_velocity * 0.025f) * updateRateF;
+        gCameraObject->z_velocity -= (gCameraObject->z_velocity * 0.025f) * updateRateF;
     }
     angle = gDialogueCameraAngle;
     if (angle > 0x1400) {
