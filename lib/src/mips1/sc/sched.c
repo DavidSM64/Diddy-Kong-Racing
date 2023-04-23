@@ -49,7 +49,7 @@ static void __scExec(OSSched *sc, OSScTask *t) {
 
 static void __scTryDispatch(OSSched *sc) {
     if (sc->curRSPTask == NULL) {
-        if (sc->doAudio) {
+        if (sc->nextAudTask) {
             OSScTask *t = sc->nextAudTask;
             sc->nextAudTask = NULL;
             sc->doAudio = 0;
@@ -96,7 +96,11 @@ static void __scHandleRetrace(OSSched *sc) {
             osSendMesg(sc->audmq, &sc->retraceMsg, OS_MESG_NOBLOCK);
 
             if (sc->nextAudTask) {
+#ifdef DISABLE_AUDIO
+                sc->doAudio = 0;
+#else
                 sc->doAudio = 1;
+#endif
 
                 if (sc->curRSPTask && sc->curRSPTask->list.t.type == M_GFXTASK) {
                     puppyprint_update_rsp(RSP_GFX_PAUSED);
@@ -165,6 +169,7 @@ void osScSubmitAudTask(OSSched *sc, OSScTask *t) {
 
     t->state = OS_SC_NEEDS_RSP;
     sc->nextAudTask = t;
+    __scTryDispatch(sc);
 
     osSetThreadPri(0, prevpri);
 }
@@ -215,6 +220,7 @@ void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 num
     sc->retraceMsg.type = OS_SC_RETRACE_MSG;
     sc->prenmiMsg.type  = OS_SC_PRE_NMI_MSG;
     sc->alt             = 0;
+    sc->retraceCount    = 0;
 
     osCreateViManager(OS_PRIORITY_VIMGR);
     osViSetMode(&osViModeNtscLan1);
