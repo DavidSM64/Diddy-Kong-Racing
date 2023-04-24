@@ -822,7 +822,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     sp11C = sp11C * 3.0f;
     spF4 = (sp11C * sp11C) / 9.0f;
-    if (racer->unk108 != 0) {
+    if (racer->exitObj != 0) {
         racer->throttle = 0.5f;
     }
     if (racer->velocity > 0.0) {
@@ -2360,7 +2360,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         tempVar = tempRacer->playerIndex;
         if (tempRacer->playerIndex != PLAYER_COMPUTER) {
-            if (tempRacer->unk108 == 0) {
+            if (tempRacer->exitObj == 0) {
                 if (func_8000E158()) {
                     tempVar = 1 - tempVar;
                 }
@@ -4695,7 +4695,7 @@ void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate) {
  */
 void racer_play_sound(Object *obj, s32 soundID) {
     Object_Racer *racer = &obj->unk64->racer;
-    if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->unk108 == 0) {
+    if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->exitObj == 0) {
         play_sound_spatial(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
     }
 }
@@ -4717,7 +4717,7 @@ void play_random_character_voice(Object *obj, s32 soundID, s32 range, s32 flags)
     Object_Racer *tempRacer;
 
     tempRacer = (Object_Racer *) obj->unk64;
-    if (tempRacer->unk108 == 0 && (!(flags & 0x80) || gCurrentPlayerIndex != PLAYER_COMPUTER)) {
+    if (tempRacer->exitObj == 0 && (!(flags & 0x80) || gCurrentPlayerIndex != PLAYER_COMPUTER)) {
         if (flags == 2) {
             if (tempRacer->soundMask != NULL && soundID != tempRacer->unk2A) {
                 func_800096F8(tempRacer->soundMask);
@@ -4990,7 +4990,7 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
     if (racer->raceFinished == TRUE && gCameraObject->mode != CAMERA_FINISH_CHALLENGE) {
             gCameraObject->mode = CAMERA_FINISH_RACE;
     }
-    if (racer->unk108) {
+    if (racer->exitObj) {
         gCameraObject->mode = CAMERA_FIXED;
     }
     // Set the camera behaviour based on current mode.
@@ -5697,13 +5697,13 @@ void compare_balloon_checksums(void) {
  * After a timer hits 0, execute the transition.
  */
 void racer_enter_door(Object_Racer* racer, s32 updateRate) {
-    struct Object_Exit *temp_a3;
+    struct Object_Exit *exit;
     f32 updateRateF;
     s32 angle;
 
-    temp_a3 = (struct Object_Exit *) racer->unk108->unk64;
+    exit = (struct Object_Exit *) racer->exitObj->unk64;
     racer->playerIndex = PLAYER_COMPUTER;
-    angle = (u16) arctan2_f(temp_a3->unk0, temp_a3->unk8)  - (racer->steerVisualRotation & 0xFFFF);
+    angle = (u16) arctan2_f(exit->directionX, exit->directionZ)  - (racer->steerVisualRotation & 0xFFFF);
     WRAP(angle, -0x8000, 0x8000);
     angle = -angle >> 5;
     gCurrentStickX = angle;
@@ -5717,8 +5717,8 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
         gCurrentRacerInput |= B_BUTTON;
     }
     updateRateF = (f32) updateRate;
-    gCameraObject->trans.x_position += (temp_a3->unk0 * updateRateF) * 1.5;
-    gCameraObject->trans.z_position += (temp_a3->unk8 * updateRateF) * 1.5;
+    gCameraObject->trans.x_position += (exit->directionX * updateRateF) * 1.5;
+    gCameraObject->trans.z_position += (exit->directionZ * updateRateF) * 1.5;
     if (gCurrentStickX > 75) { gCurrentStickX = 75; gCurrentRacerInput |= A_BUTTON | B_BUTTON; } // Only matches if it's on the same line
     if (gCurrentStickX < -75) {
         gCurrentStickX = -75;
@@ -5740,7 +5740,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
     if (racer->transitionTimer > 0) {
         racer->transitionTimer -= updateRate;
         if (racer->transitionTimer <= 0) {
-            func_8006D968((s8* ) racer->unk108->segment.unk3C_a.level_entry);
+            func_8006D968((s8* ) racer->exitObj->segment.unk3C_a.level_entry);
             racer->transitionTimer = 0;
         }
     }

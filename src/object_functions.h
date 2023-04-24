@@ -12,6 +12,12 @@
 #define TIME_JIFFIES_PER_SECOND 60
 #define TIME_SECONDS(sec) sec * TIME_JIFFIES_PER_SECOND
 
+enum BossRaceWarps {
+    WARP_STANDARD = -1,
+    WARP_BOSS_FIRST,
+    WARP_BOSS_REMATCH,
+};
+
 enum TajBehaviours {
     TAJ_MODE_ROAM,
     TAJ_MODE_APPROACH_PLAYER,
