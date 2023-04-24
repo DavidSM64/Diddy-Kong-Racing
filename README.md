@@ -5,11 +5,11 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of April 11, 2023, this is our current score:
+As of April 24, 2023, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 51.01%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 51.18%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 23.43%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 24.34%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -128,31 +128,31 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of April 11, 2023, this is our current score:
+As of April 24, 2023, this is our current score:
 ```
- ===================================================================
-               ADVENTURE ONE (ASM -> C Decompilation)
- ------------------------- 51.01% Complete -------------------------
-                    # Decompiled functions: 1498
-                     # GLOBAL_ASM remaining: 334
-                    # NON_MATCHING functions: 12
-                 # NON_EQUIVALENT WIP functions: 64
- --------------------------- Game Status ---------------------------
-              Balloons: 25/47, Keys: 3/4, Trophies: 2/5
-               T.T. Amulets: 2/4, Wizpig Amulets: 2/4
- -------------------------------------------------------------------
-             We are racing in Treasure Caves. (Lap 3/3)
- ===================================================================
-                ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 23.43% Complete -------------------------
-                     # Documented functions: 449
-                   # Undocumented remaining: 1118
- --------------------------- Game Status ---------------------------
-              Balloons: 12/47, Keys: 1/4, Trophies: 0/5
-               T.T. Amulets: 1/4, Wizpig Amulets: 1/4
- -------------------------------------------------------------------
- We are participating in the Trophy Race of Dino Domain. (Round Two)
- ===================================================================
+ =================================================
+      ADVENTURE ONE (ASM -> C Decompilation)
+ ---------------- 51.18% Complete ----------------
+           # Decompiled functions: 1501
+            # GLOBAL_ASM remaining: 331
+           # NON_MATCHING functions: 12
+        # NON_EQUIVALENT WIP functions: 64
+ ------------------ Game Status ------------------
+     Balloons: 25/47, Keys: 3/4, Trophies: 2/5
+      T.T. Amulets: 2/4, Wizpig Amulets: 2/4
+ -------------------------------------------------
+    We are racing in Treasure Caves. (Lap 3/3)
+ =================================================
+       ADVENTURE TWO (Cleanup & Documentation)
+ ---------------- 24.34% Complete ----------------
+            # Documented functions: 485
+          # Undocumented remaining: 1079
+ ------------------ Game Status ------------------
+     Balloons: 12/47, Keys: 1/4, Trophies: 1/5
+      T.T. Amulets: 1/4, Wizpig Amulets: 1/4
+ -------------------------------------------------
+ We are racing Taj in the Car Challenge. (Lap 1/3)
+ =================================================
 ```
 <!-- README_SCORE_END -->
 
