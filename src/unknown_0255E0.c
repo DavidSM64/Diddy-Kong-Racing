@@ -31,6 +31,7 @@
 /************ .data ************/
 
 s32 D_800DC870 = 0; // Currently unknown, might be a different type.
+//!@bug These two transition effects are marked to not clear when done, meaning they stay active the whole time.
 unknown800DC874 D_800DC874 = { { -128 }, 40, -1 };
 unknown800DC874 D_800DC87C = { { -125 }, 70, -1 };
 
