@@ -969,7 +969,6 @@ void func_80010994(s32 updateRate) {
         racer->prev_y_position = (f32) (*gRacers)[i]->segment.trans.y_position;
         racer->prev_z_position = (f32) (*gRacers)[i]->segment.trans.z_position;
     }
-    i = 1; //FAKEMATCH
     func_800142B8();
     func_800155B8();
     func_8001E89C();

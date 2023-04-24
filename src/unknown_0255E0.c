@@ -1839,8 +1839,6 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
     Vertex *vtx;
     Triangle *tri;
     s32 flags;
-    UNUSED s32 temp2;
-    s32 temp3;
     s32 new_var;
     s32 new_var2;
     s32 someAlpha;
@@ -1867,12 +1865,12 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
             while (i < shadow->unkA) {
                 load_and_set_texture_no_offset(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, flags);
                 // I hope we can clean this part up.
-                temp2 = new_var2 = D_8011D360[i].unk4; // Fakematch
-                temp3 = new_var = D_8011D360[i].unk6;
+                new_var2 = D_8011D360[i].unk4;
+                new_var = D_8011D360[i].unk6;
                 temp_a3 = D_8011D360[i+1].unk4 - new_var2;
                 temp_a0 = D_8011D360[i+1].unk6 - new_var;
                 tri = (Triangle *) &D_8011D330[new_var2];
-                vtx = (Vertex *) &D_8011D348[temp3];
+                vtx = (Vertex *) &D_8011D348[new_var];
                 gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), temp_a0, 0);
                 gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(tri), temp_a3, 1);
                 i++;
@@ -1892,8 +1890,6 @@ void func_8002D670(Object *obj, ShadowData *shadow) {
     Vertex *vtx;
     Triangle *tri;
     s32 flags;
-    UNUSED s32 temp2;
-    UNUSED s32 temp3;
 
     if (obj->segment.header->unk36 != 0) {
         if ((shadow->unk8 != -1) && (D_8011B0C4 == 0)) {
@@ -1912,8 +1908,6 @@ void func_8002D670(Object *obj, ShadowData *shadow) {
             D_8011D348 = (unk8011D348* ) D_8011D338[D_8011B0D0];
             while (i < shadow->unkA) {
                 load_and_set_texture_no_offset(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, flags);
-                temp2 = D_8011D360[i].unk4; // Fakematch
-                temp3 = D_8011D360[i].unk6; // Fakematch
                 temp_a3 = D_8011D360[i+1].unk4 - D_8011D360[i].unk4;
                 temp_a0 = D_8011D360[i+1].unk6 - D_8011D360[i].unk6;
                 tri = &((Triangle *) D_8011D330)[D_8011D360[i].unk4];
