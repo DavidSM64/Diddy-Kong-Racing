@@ -294,7 +294,7 @@ glabel func_8001A8F4
 /* 01B93C 8001AD3C 8FBF001C */   lw    $ra, 0x1c($sp)
 /* 01B940 8001AD40 0C00A3E8 */  jal   set_anti_aliasing
 /* 01B944 8001AD44 24040001 */   li    $a0, 1
-/* 01B948 8001AD48 0C0168EC */  jal   func_8005A3B0
+/* 01B948 8001AD48 0C0168EC */  jal   disable_racer_input
 /* 01B94C 8001AD4C 00000000 */   nop   
 /* 01B950 8001AD50 0C01AF66 */  jal   get_current_level_race_type
 /* 01B954 8001AD54 00000000 */   nop   

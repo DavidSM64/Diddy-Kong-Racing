@@ -666,7 +666,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                     set_hud_visibility(1);
                 }
             }
-            func_8005A3B0();
+            disable_racer_input();
         }
         obj->unk5C->unk100 = NULL;
         if (worldBalloons) {
@@ -1136,7 +1136,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         }
     }
     if (obj->action != TT_MODE_ROAM) {
-        func_8005A3B0();
+        disable_racer_input();
         func_800AB194(3);
     }
     if (obj->action >= TT_MODE_TURN_TOWARDS_PLAYER) {
@@ -1150,7 +1150,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         obj->segment.unk38.byte.unk3B = 0;
         tt->unkD = 255;
         if (distance < 100.0) {
-            func_8005A3C0();
+            racer_set_dialogue_camera();
         }
         if (distance > 10.0) {
             angleDiff = (arctan2_f(diffX / distance, diffZ / distance) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
@@ -1181,7 +1181,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         func_8006F388(1);
         break;
     case TT_MODE_TURN_TOWARDS_PLAYER:
-        func_8005A3C0();
+        racer_set_dialogue_camera();
         obj->segment.unk38.byte.unk3B = 0;
         tt->animFrameF += 3.0 * updateRateF;
         angleDiff = (racerObj->segment.trans.y_rotation - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
@@ -1212,7 +1212,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         obj->segment.z_velocity = diffZ * 0.05;
         obj->segment.unk38.byte.unk3B = 1;
         tt->animFrameF += 1.0 * updateRateF;
-        func_8005A3C0();
+        racer_set_dialogue_camera();
         if (index == 3) {
             obj->action = TT_MODE_DIALOGUE_END;
             if (is_time_trial_enabled()) {
@@ -1230,7 +1230,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         break;
     case TT_MODE_DIALOGUE_END:
         tt->animFrameF += 1.0 * updateRateF;
-        func_8005A3C0();
+        racer_set_dialogue_camera();
         if (obj->unk7C.word < 140) {
             obj->unk7C.word += 60;
             obj->action = TT_MODE_ROAM;
@@ -2134,7 +2134,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     }
 
     if (!(obj->action == TAJ_MODE_ROAM || obj->action == TAJ_MODE_RACE || obj->action == TAJ_MODE_TELEPORT_AWAY_BEGIN || obj->action == TAJ_MODE_TELEPORT_AWAY_END)) {
-            func_8005A3B0();
+            disable_racer_input();
             func_800AB194(3);
     }
 
@@ -2173,7 +2173,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         obj->segment.unk38.byte.unk3B = 0;
         taj->unkD = 0xFF;
         if (distance < 100.0) {
-            func_8005A3C0();
+            racer_set_dialogue_camera();
         }
         if (distance > 10.0) {
             arctan = (arctan2_f(xPosDiff / distance, zPosDiff / distance) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
@@ -2201,7 +2201,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         move_object(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
         break;
     case TAJ_MODE_TURN_TOWARDS_PLAYER:
-        func_8005A3C0();
+        racer_set_dialogue_camera();
         obj->segment.unk38.byte.unk3B = 0;
         taj->animFrameF += updateRateF * 2.0;
         arctan = (racerObj->segment.trans.y_rotation - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
@@ -2246,12 +2246,12 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             arctan = 16;
         }
         obj->segment.trans.y_rotation = obj->segment.trans.y_rotation + (arctan >> 4);
-        func_8005A3C0();
+        racer_set_dialogue_camera();
         break;
     case TAJ_MODE_DIALOGUE:
         obj->segment.unk38.byte.unk3B = 4;
         taj->animFrameF += updateRateF * 1.0;
-        func_8005A3C0();
+        racer_set_dialogue_camera();
         if (var_a2_2 == 3 || var_a2_2 == 4) {
             obj->action = (var_a2_2 == 4) ? TAJ_MODE_END_DIALOGUE_UNUSED : TAJ_MODE_END_DIALOGUE;
             taj->animFrameF = 0.1f;
@@ -2294,7 +2294,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         break;
     case TAJ_MODE_TRANSFORM_BEGIN:
         obj->segment.unk38.byte.unk3B = 5;
-        func_8005A3C0();
+        racer_set_dialogue_camera();
         taj->animFrameF += updateRateF * 2.0;
         if (taj->animFrameF > 25.0) {
             obj->unk74 = 11;
@@ -2316,7 +2316,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
         break;
     case TAJ_MODE_TRANSFORM_END:
-        func_8005A3C0();
+        racer_set_dialogue_camera();
         if (racerObj != NULL) {
             if (taj->animFrameF != 0.0f) {
                 taj->animFrameF += 8.0;
