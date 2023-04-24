@@ -1198,7 +1198,7 @@ void ingame_logic_loop(s32 updateRate) {
             }
         }
     } else {
-        func_80028FA0(1);
+        set_anti_aliasing(TRUE);
     }
     D_800DD398 -= updateRate;
     if (D_800DD398 < 0) {

@@ -97,7 +97,7 @@ f32 D_8011B0EC;
 s32 D_8011B0F0;
 s32 D_8011B0F4;
 s32 D_8011B0F8;
-s32 D_8011B0FC;
+s32 gAntiAliasing;
 s32 D_8011B100;
 s32 D_8011B104;
 s32 D_8011B108;
@@ -245,7 +245,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
         transition_begin(&D_800DC874);
     }
     set_active_viewports_and_max(gScenePlayerViewports);
-    D_8011B0FC = 0;
+    gAntiAliasing = 0;
     i = 0;
     do {
         D_8011D350[i] = allocate_from_main_pool_safe(3200, COLOUR_TAG_YELLOW);
@@ -314,10 +314,10 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     gDrawLevelSegments = TRUE;
     if (gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_2) {
         gDrawLevelSegments = FALSE;
-        D_8011B0FC = 1;
+        gAntiAliasing = TRUE;
     }
     if (gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_1 || gCurrentLevelHeader2->unkBD) {
-        D_8011B0FC = 1;
+        gAntiAliasing = TRUE;
     }
     if (gCurrentLevelHeader2->unk49 == -1) {
         i = (gCurrentLevelHeader2->unkA4->width << 9) - 1;
@@ -807,8 +807,6 @@ void render_skydome(void) {
     }
 }
 
-void func_800B8C04(s32, s32, s32, s32, s32); 
-
 /**
  * Sets up all of the required variables for the player's view perspective.
  * This includes setting up the camera index, viewport and 
@@ -852,9 +850,12 @@ void initialise_player_viewport_vars(s32 updateRate) {
     render_level_geometry_and_objects();
 }
 
-
-void func_80028FA0(s32 arg0) {
-    D_8011B0FC = arg0;
+/**
+ * Enable or disable anti aliasing.
+ * Improves visual quality at the cost of performance.
+*/
+void set_anti_aliasing(s32 setting) {
+    gAntiAliasing = setting;
 }
 
 /**
@@ -877,7 +878,7 @@ void render_level_geometry_and_objects(void) {
     func_80012C30();
 
     if (get_settings()->courseId == ASSET_LEVEL_OPENINGSEQUENCE) {
-        D_8011B0FC = 1;
+        gAntiAliasing = 1;
     }
 
     sp160 = func_80014814(&sp16C);
@@ -1013,7 +1014,7 @@ skip:
     if (D_800DC924 && func_80027568()) {
         func_8002581C(segmentIds, numberOfSegments, get_current_viewport());
     }
-    D_8011B0FC = 0;
+    gAntiAliasing = FALSE;
 }
 
 /**
@@ -1060,14 +1061,14 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
         batchFlags = batchInfo->flags;
         renderBatch = 0;
         if (batchInfo->textureIndex == 0xFF) {
-            texture = 0;
+            texture = FALSE;
         } else {
             texture = gCurrentLevelModel->textures[batchInfo->textureIndex].texture;
             textureFlags = texture->flags;
         }
         batchFlags |= BATCH_FLAGS_UNK00000008 | BATCH_FLAGS_UNK00000002;
         if (!(batchFlags & BATCH_FLAGS_DEPTH_WRITE) && !(batchFlags & BATCH_FLAGS_UNK00000800)) {
-            batchFlags |= D_8011B0FC;
+            batchFlags |= gAntiAliasing;
         }
         if ((!(textureFlags & RENDER_SEMI_TRANSPARENT) && !(batchFlags & BATCH_FLAGS_UNK00002000)) || batchFlags & BATCH_FLAGS_UNK00000800) {
             renderBatch = TRUE;

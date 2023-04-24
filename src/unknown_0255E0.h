@@ -146,7 +146,7 @@ void func_800257D0(void);
 void spawn_skydome(s32 arg0);
 void set_skydome_visbility(s32 renderSky);
 void render_skydome(void);
-void func_80028FA0(s32 arg0);
+void set_anti_aliasing(s32 settings);
 void add_segment_to_order(s32 segmentIndex, s32 *segmentsOrderIndex, u8 *segmentsOrder);
 s32 get_inside_segment_count_xz(s32 x, s32 z, s32 *arg2);
 s32 get_inside_segment_count_xyz(s32 *arg0, s16 xPos1, s16 yPos1, s16 zPos1, s16 xPos2, s16 yPos2, s16 zPos2);
