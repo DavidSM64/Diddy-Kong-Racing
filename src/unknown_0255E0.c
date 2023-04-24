@@ -32,8 +32,8 @@
 /************ .data ************/
 
 s32 D_800DC870 = 0; // Currently unknown, might be a different type.
-unknown800DC874 D_800DC874 = { { -128 }, 40, -1 };
-unknown800DC874 D_800DC87C = { { -125 }, 70, -1 };
+unknown800DC874 D_800DC874 = { { -128 }, 40, 0 };
+unknown800DC874 D_800DC87C = { { -125 }, 70, 0 };
 
 f32 D_800DC884[10] = {
     0.0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f

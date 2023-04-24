@@ -297,8 +297,8 @@ s32 transition_begin(FadeTransition *transition) {
  * return, which will then call the bit that renders the transitions.
  */
 s32 handle_transitions(s32 updateRate) {
-    if (sLevelTransitionDelayTimer) {
-        sLevelTransitionDelayTimer--;
+    if (sLevelTransitionDelayTimer > 0) {
+        sLevelTransitionDelayTimer -= updateRate;
         updateRate = LOGIC_NULL;
     } else if (updateRate >= LOGIC_10FPS) { // Redundant because the logic update rate is clamped before this function is called.
         updateRate = LOGIC_12FPS;
@@ -313,7 +313,7 @@ s32 handle_transitions(s32 updateRate) {
             transition_end();
         } else {
             if (sTransitionFadeTimer > 0) {
-                sTransitionTaskNum[0] = 1 - sTransitionTaskNum[0]; // Haven't you heard of a XOR, Rareware employee?
+                sTransitionTaskNum[0] ^= 1;
             }
             switch (gCurFadeTransition) {
                 case FADE_FULLSCREEN:
