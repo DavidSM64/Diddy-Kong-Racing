@@ -2375,14 +2375,14 @@ void obj_loop_fogchanger(Object *obj) {
     Object_Racer *racer;
     UNUSED s32 pad2;
     FogData *fog;
-    ObjectSegment *phi_s3;
+    ObjectSegment *camera;
     
     racers = NULL;
     fogChanger = (LevelObjectEntry_FogChanger *) obj->segment.unk3C_a.level_entry;
-    phi_s3 = NULL;
+    camera = NULL;
     
     if (check_if_showing_cutscene_camera()) {
-        phi_s3 = func_80069D7C();
+        camera = get_cutscene_camera_segment();
         views = get_viewport_count() + 1;
     } else {
         racers = get_racer_objects(&views);
@@ -2400,8 +2400,8 @@ void obj_loop_fogchanger(Object *obj) {
             }
         } else if (i <= PLAYER_FOUR && obj != gFogData[i].fogChanger) {
             index = i;
-            x = phi_s3[i].trans.x_position;
-            z = phi_s3[i].trans.z_position;
+            x = camera[i].trans.x_position;
+            z = camera[i].trans.z_position;
         }
         if (index != PLAYER_COMPUTER) {
             x -= obj->segment.trans.x_position;
