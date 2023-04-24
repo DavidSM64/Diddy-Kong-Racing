@@ -2023,7 +2023,6 @@ void func_80039320(s16 voiceClip) {
     //Set to SOUND_VOICE_TAJ_CHALLENGE_RACE in func_800CC7C
     D_8011D4E2 = voiceClip;
 }
-#include "printf.h"
 /**
  * Hub world Taj loop behaviour.
  * Handles all the behaviour for the Taj NPC found in the overworld.
