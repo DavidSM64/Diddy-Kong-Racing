@@ -4798,7 +4798,7 @@ s32 menu_game_select_loop(s32 updateRate) {
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
 
     if (gOpacityDecayTimer) {
-        gOpacityDecayTimer++;
+        gOpacityDecayTimer += updateRate;
         if (gOpacityDecayTimer >= 3) {
             func_800828B8();
             gOpacityDecayTimer = 0;
@@ -5344,7 +5344,7 @@ s32 menu_file_select_loop(s32 updateRate) {
     settings = get_settings();
     func_8008C168(updateRate);
     if (gOpacityDecayTimer) {
-        gOpacityDecayTimer++;
+        gOpacityDecayTimer += updateRate;
         
         if (gOpacityDecayTimer >= 3) {
             for (i = 0; i < 3; i++) {
