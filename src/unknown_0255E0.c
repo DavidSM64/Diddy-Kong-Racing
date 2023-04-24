@@ -390,7 +390,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             if (flip) {
                 gSPSetGeometryMode(gSceneCurrDisplayList++, G_CULL_FRONT);
             }
-            apply_fog(3);
+            apply_fog(PLAYER_FOUR);
             gDPPipeSync(gSceneCurrDisplayList++);
             set_active_camera(3);
             disable_cutscene_camera();
