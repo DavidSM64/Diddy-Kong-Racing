@@ -2627,6 +2627,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
             play_sound_global(SOUND_SELECT2, 0);
         }
     }
+#ifdef SKIP_INTRO
     if (gTitleScreenTimer > 0) {
         reset_render_settings(&sMenuCurrDisplayList);
         set_text_background_colour(0, 0, 0, 255);
@@ -2639,6 +2640,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
         }
         reset_render_settings(&sMenuCurrDisplayList);
     }
+#endif
     if (gMenuDelay > 30) {
         title_screen_exit();
         disable_new_screen_transitions();
