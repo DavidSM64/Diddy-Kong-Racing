@@ -23,8 +23,8 @@ glabel func_80030DE0
 /* 031A2C 80030E2C 000E70C0 */   sll   $t6, $t6, 3
 /* 031A30 80030E30 00408825 */  move  $s1, $v0
 .L80030E34:
-/* 031A34 80030E34 3C0F8012 */  lui   $t7, %hi(D_8011D388) # $t7, 0x8012
-/* 031A38 80030E38 25EFD388 */  addiu $t7, %lo(D_8011D388) # addiu $t7, $t7, -0x2c78
+/* 031A34 80030E34 3C0F8012 */  lui   $t7, %hi(gFogData) # $t7, 0x8012
+/* 031A38 80030E38 25EFD388 */  addiu $t7, %lo(gFogData) # addiu $t7, $t7, -0x2c78
 /* 031A3C 80030E3C 01CF1021 */  addu  $v0, $t6, $t7
 /* 031A40 80030E40 8C590000 */  lw    $t9, ($v0)
 /* 031A44 80030E44 0005C400 */  sll   $t8, $a1, 0x10

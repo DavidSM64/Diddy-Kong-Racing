@@ -88,26 +88,31 @@ typedef struct unk8011D478 {
     s32 unk8;
 } unk8011D478;
 
+// In this struct, data is rightshifted 16 bytes, so make the smooth transition more precise.
+typedef struct EnvironmentFog {
+    s32 r;
+    s32 g;
+    s32 b;
+    s32 near;
+    s32 far;
+} EnvironmentFog;
+
+typedef struct EnvironmentFogCompact {
+    u8 r;
+    u8 g;
+    u8 b;
+    s16 near;
+    s16 far;
+} EnvironmentFogCompact;
+
 /* Size: 0x38 bytes */
-typedef struct unk8011D388 {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-    s32 unk20;
-    s32 unk24;
-    u8  unk28;
-    u8  unk29;
-    u8  unk2A;
-    s16 unk2C;
-    s16 unk2E;
-    s32 unk30;
-    Object *unk34;
-} unk8011D388;
+typedef struct FogData {
+    EnvironmentFog fog;                 // Current fog properties. What you'll actually see ingame.
+    EnvironmentFog addFog;              // Fog override. This will apply over the current fog to give a smooth transition effect.
+    EnvironmentFogCompact intendedFog;  // Fog properties the game will try to be if the switch timer is 0.
+    s32 switchTimer;
+    Object *fogChanger;
+} FogData;
 
 typedef struct WaterProperties {
     f32 waveHeight;
@@ -152,10 +157,10 @@ s32 func_8002ACD4(f32 *arg0, f32 *arg1, f32 *arg2);
 s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3);
 void func_8002C71C(LevelModelSegment *segment);
 LevelModel *get_current_level_model(void);
-void func_80030750(s32 arg0, s16 *arg1, s16 *arg2, u8 *arg3, u8 *arg4, u8 *arg5);
-void func_800307BC(s32 arg0);
-void func_80030838(s32 arg0, s32 arg1);
-void func_8003093C(s32 arg0);
+void get_fog_settings(s32 playerID, s16 *near, s16 *far, u8 *r, u8 *g, u8 *b);
+void reset_fog(s32 playerID);
+void update_fog(s32 playerID, s32 updateRate);
+void apply_fog(s32 playerID);
 void compute_scene_camera_transform_matrix(void);
 void func_80027E24(s32 updateRate);
 s32 check_if_inside_segment(Object *obj, s32 segmentIndex);

@@ -1124,8 +1124,8 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
                     play_char_horn_sound(racerObj, racer);
                 }
                 obj->action = TT_MODE_APPROACH_PLAYER;
-                func_80030750(0, &tt->unk20, &tt->unk22, &tt->unk11, &tt->unk12, &tt->unk13);
-                func_80030DE0(0, 0x80, 0x80, 0xFF, 0x384, 0x3E6, 0xF0);
+                get_fog_settings(PLAYER_ONE, &tt->fogNear, &tt->fogFar, &tt->fogR, &tt->fogG, &tt->fogB);
+                func_80030DE0(PLAYER_ONE, 128, 128, 255, 900, 998, 240);
                 func_800012E8();
                 play_music(SEQUENCE_TTS_THEME);
                 if (racerObj != NULL) {
@@ -1220,7 +1220,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             } else {
                 play_tt_voice_clip(SOUND_VOICE_TT_OK, 1);
             }
-            func_80030DE0(0, tt->unk11, tt->unk12, tt->unk13, tt->unk20, tt->unk22, 0xB4);
+            func_80030DE0(PLAYER_ONE, tt->fogR, tt->fogG, tt->fogB, tt->fogNear, tt->fogFar, 180);
             play_music(header->music);
             func_80001074(header->instruments);
             racer->unk118 = func_80004B40(racer->characterId, racer->vehicleID);
@@ -2125,8 +2125,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->action = 10;
             sp6B = 1;
         }
-        func_80030750(0, &taj->unk20, &taj->unk22, &taj->unk11, &taj->unk12, &taj->unk13);
-        func_80030DE0(0, 0xFF, 0, 0x78, 0x3C0, 0x44C, 0xF0);
+        get_fog_settings(PLAYER_ONE, &taj->fogNear, &taj->fogFar, &taj->fogR, &taj->fogG, &taj->fogB);
+        func_80030DE0(PLAYER_ONE, 255, 0, 120, 960, 1100, 240);
         taj->unk4 = 0.0f;
     }
 
@@ -2256,7 +2256,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->segment.unk38.byte.unk3B = 2;
             taj->unk1C = 0;
             play_taj_voice_clip(SOUND_VOICE_TAJ_BYE, 1);
-            func_80030DE0(0, taj->unk11, taj->unk12, taj->unk13, taj->unk20, taj->unk22, 0xB4);
+            func_80030DE0(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
             set_music_player_voice_limit(levelHeader->voiceLimit);
             play_music(levelHeader->music);
             func_80001074(levelHeader->instruments);
@@ -2419,7 +2419,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->segment.unk38.byte.unk39 -= var_a2;
         } else {
             racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.vehicleID);
-            func_80030DE0(0, taj->unk11, taj->unk12, taj->unk13, taj->unk20, taj->unk22, 0xB4);
+            func_80030DE0(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
             set_music_player_voice_limit(levelHeader->voiceLimit);
             play_music(levelHeader->music);
             func_80001074(levelHeader->instruments);
