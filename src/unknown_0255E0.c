@@ -2356,7 +2356,7 @@ void apply_fog(s32 playerID) {
  * Used in courses to make less, or more dense.
 */
 void obj_loop_fogchanger(Object *obj) {
-    s32 temp3;
+    s32 nearTemp;
     s32 fogNear;
     s32 views;
     s32 playerIndex;
@@ -2369,8 +2369,8 @@ void obj_loop_fogchanger(Object *obj) {
     s32 fogB;
     f32 x;
     f32 z;
-    s32 temp_a1;
-    LevelObjectEntry_FogChanger *sp44;
+    s32 switchTimer;
+    LevelObjectEntry_FogChanger *fogChanger;
     Object **racers;
     Object_Racer *racer;
     UNUSED s32 pad2;
@@ -2378,7 +2378,7 @@ void obj_loop_fogchanger(Object *obj) {
     ObjectSegment *phi_s3;
     
     racers = NULL;
-    sp44 = (LevelObjectEntry_FogChanger *) obj->segment.unk3C_a.level_entry;
+    fogChanger = (LevelObjectEntry_FogChanger *) obj->segment.unk3C_a.level_entry;
     phi_s3 = NULL;
     
     if (check_if_showing_cutscene_camera()) {
@@ -2408,16 +2408,17 @@ void obj_loop_fogchanger(Object *obj) {
             z -= obj->segment.trans.z_position;
             if (1) {} // Fakematch
             if ((x * x) + (z * z) < obj->unk78f) {
-                fogNear = sp44->unkC;
-                fogFar = sp44->unkE;
-                fogR = sp44->unk9;
-                fogG = sp44->unkA;
-                fogB = sp44->unkB;
-                temp_a1 = sp44->unk10;
+                fogNear = fogChanger->near;
+                fogFar = fogChanger->far;
+                fogR = fogChanger->r;
+                fogG = fogChanger->g;
+                fogB = fogChanger->b;
+                switchTimer = fogChanger->switchTimer;
+                // Swap near and far if they're the wrong way around.
                 if (fogFar < fogNear) {
-                    temp3 = fogNear;
+                    nearTemp = fogNear;
                     fogNear = fogFar;
-                    fogFar = temp3;
+                    fogFar = nearTemp;
                 }
                 if (fogFar > 1023) {
                     fogFar = 1023;
@@ -2431,12 +2432,12 @@ void obj_loop_fogchanger(Object *obj) {
                 fog->intendedFog.b = fogB;
                 fog->intendedFog.near = fogNear;
                 fog->intendedFog.far = fogFar;
-                fog->addFog.r = ((fogR << 16) - fog->fog.r) / temp_a1;
-                fog->addFog.g = ((fogG << 16) - fog->fog.g) / temp_a1;
-                fog->addFog.b = ((fogB << 16) - fog->fog.b) / temp_a1;
-                fog->addFog.near = ((fogNear << 16) - fog->fog.near) / temp_a1;
-                fog->addFog.far = ((fogFar << 16) - fog->fog.far) / temp_a1;
-                fog->switchTimer = temp_a1;
+                fog->addFog.r = ((fogR << 16) - fog->fog.r) / switchTimer;
+                fog->addFog.g = ((fogG << 16) - fog->fog.g) / switchTimer;
+                fog->addFog.b = ((fogB << 16) - fog->fog.b) / switchTimer;
+                fog->addFog.near = ((fogNear << 16) - fog->fog.near) / switchTimer;
+                fog->addFog.far = ((fogFar << 16) - fog->fog.far) / switchTimer;
+                fog->switchTimer = switchTimer;
                 fog->fogChanger = obj;
             }
         }

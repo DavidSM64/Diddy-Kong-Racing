@@ -3337,10 +3337,10 @@ void obj_loop_seamonster(UNUSED Object *obj, UNUSED s32 updateRate) {
 
 /* Official name: fogInit(?) */
 void obj_init_fogchanger(Object *obj, LevelObjectEntry_FogChanger *entry) {
-    f32 temp_f0;
-    temp_f0 = entry->unk8 * 8.0f;
-    temp_f0 = temp_f0 * temp_f0;
-    obj->unk78f = temp_f0;
+    f32 dist;
+    dist = entry->distance * 8.0f;
+    dist = dist * dist;
+    obj->unk78f = dist;
 }
 
 void obj_init_skycontrol(Object *obj, LevelObjectEntry_SkyControl *entry) {

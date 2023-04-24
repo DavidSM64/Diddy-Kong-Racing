@@ -156,13 +156,13 @@ typedef struct LevelObjectEntry_Door {
 
 typedef struct LevelObjectEntry_FogChanger {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 unk8;
-    /* 0x09 */ u8 unk9;
-    /* 0x0A */ u8 unkA;
-    /* 0x0B */ u8 unkB;
-    /* 0x0C */ s16 unkC;
-    /* 0x0E */ s16 unkE;
-    /* 0x10 */ s16 unk10;
+    /* 0x08 */ u8 distance;
+    /* 0x09 */ u8 r;
+    /* 0x0A */ u8 g;
+    /* 0x0B */ u8 b;
+    /* 0x0C */ s16 near;
+    /* 0x0E */ s16 far;
+    /* 0x10 */ s16 switchTimer;
 } LevelObjectEntry_FogChanger;
 
 typedef struct LevelObjectEntry_AiNode {
