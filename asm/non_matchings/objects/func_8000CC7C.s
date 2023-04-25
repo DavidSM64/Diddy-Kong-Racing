@@ -71,7 +71,7 @@ glabel func_8000CC7C
 /* 00D954 8000CD54 00000000 */  nop   
 /* 00D958 8000CD58 17000008 */  bnez  $t8, .L8000CD7C
 /* 00D95C 8000CD5C 00000000 */   nop   
-/* 00D960 8000CD60 0C01A75F */  jal   func_80069D7C
+/* 00D960 8000CD60 0C01A75F */  jal   get_cutscene_camera_segment
 /* 00D964 8000CD64 00000000 */   nop   
 /* 00D968 8000CD68 AFA20074 */  sw    $v0, 0x74($sp)
 /* 00D96C 8000CD6C 9059003B */  lbu   $t9, 0x3b($v0)

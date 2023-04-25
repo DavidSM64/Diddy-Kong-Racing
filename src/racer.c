@@ -192,8 +192,8 @@ f32 gRacerMagnetVelZ;
 u8 D_8011D580;
 s8 gCurrentSurfaceType;
 s8 D_8011D582;
-s8 D_8011D583;
-s8 D_8011D584;
+s8 gRacerDialogueCamera;
+s8 gRacerInputBlocked;
 s8 gStartBoostTime;
 s16 gDialogueCameraAngle;
 s8 D_8011D588[4];
@@ -818,7 +818,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     sp11C = sp11C * 3.0f;
     spF4 = (sp11C * sp11C) / 9.0f;
-    if (racer->unk108 != 0) {
+    if (racer->exitObj != 0) {
         racer->throttle = 0.5f;
     }
     if (racer->velocity > 0.0f) {
@@ -1173,8 +1173,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         obj->segment.x_velocity += racer->ox1 * spF0;
         obj->segment.y_velocity += racer->oy1 * spF0;
         obj->segment.z_velocity += racer->oz1 * spF0;
-        if (((racer->unk1E2 != 0) && (D_8011D584 == 0)) && (gRaceStartTimer == 0)) {
-        temp_f2 = (gCurrentRacerWeightStat * updateRateF) * 0.25f;
+        if (((racer->unk1E2 != 0) && (gRacerInputBlocked == 0)) && (gRaceStartTimer == 0)) {
+        temp_f2 = (gCurrentRacerWeightStat * updateRateF) * 0.25;
         sp11C = racer->pitch * temp_f2;
         temp_f2 = temp_f2 * racer->roll;
         obj->segment.x_velocity += (racer->ox1 * sp11C) + (racer->ox3 * temp_f2);
@@ -1218,8 +1218,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         var_f16 += racer->unk11C;
         var_f12 += racer->unk120;
         }
-        if (D_8011D584 != 0) {
-        if ((var_f16 > 0.5f) || (var_f16 < (-0.5f))) {
+        if (gRacerInputBlocked != 0) {
+        if ((var_f16 > 0.5) || (var_f16 < (-0.5))) {
             var_f16 *= 0.65;
         } else {
             var_f16 = 0.0f;
@@ -2151,9 +2151,9 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
         update_player_camera(obj, tempRacer, 1.0f);
     }
     if (!D_8011D582) {
-        D_8011D583 = 0;
+        gRacerDialogueCamera = FALSE;
         gDialogueCameraAngle = 0;
-        D_8011D584 = 0;
+        gRacerInputBlocked = FALSE;
     }
     obj->interactObj->unk14 = 5;
     obj->interactObj->unk11 = 0;
@@ -2173,7 +2173,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
         D_8011D58C[i] = 0; 
     }
     func_80043ECC(NULL, NULL, 0);
-    D_8011D583 = i;
+    gRacerDialogueCamera = i;
     gStartBoostTime = 0;
     tempRacer->lightFlags = 0;
 }
@@ -2343,7 +2343,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         tempVar = tempRacer->playerIndex;
         if (tempRacer->playerIndex != PLAYER_COMPUTER) {
-            if (tempRacer->unk108 == 0) {
+            if (tempRacer->exitObj == 0) {
                 if (func_8000E158()) {
                     tempVar = 1 - tempVar;
                 }
@@ -2367,7 +2367,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         if (!(gCurrentRacerInput & A_BUTTON)) {
             tempRacer->throttleReleased = TRUE;
         }
-        if (check_if_showing_cutscene_camera() || gRaceStartTimer == 100 || tempRacer->unk1F1 || D_8011D584 || tempRacer->approachTarget || tempRacer->unk204 > 0) {
+        if (check_if_showing_cutscene_camera() || gRaceStartTimer == 100 || tempRacer->unk1F1 || gRacerInputBlocked || tempRacer->approachTarget || tempRacer->unk204 > 0) {
             gCurrentStickX = 0;
             gCurrentStickY = 0;
             gCurrentRacerInput = 0;
@@ -2573,7 +2573,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         tempRacer->playerIndex = gCurrentPlayerIndex;
         update_player_camera(obj, tempRacer, updateRateF);
-        D_8011D583 = 0;
+        gRacerDialogueCamera = FALSE;
         if (tempRacer->approachTarget) {
             tempRacer->approachTarget = NULL;
             tempRacer->velocity = 0.0f;
@@ -2634,7 +2634,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         if (tempRacer->soundMask) {
             update_spatial_audio_position(tempRacer->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
         }
-        D_8011D584 = 0;
+        gRacerInputBlocked = 0;
         if (tempRacer->unk150 && gRaceStartTimer == 0) {
             s8 *yAsset;
             tempRacer->unk150->segment.trans.x_position = obj->segment.trans.x_position;
@@ -4673,7 +4673,7 @@ void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate) {
  */
 void racer_play_sound(Object *obj, s32 soundID) {
     Object_Racer *racer = &obj->unk64->racer;
-    if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->unk108 == 0) {
+    if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->exitObj == 0) {
         play_sound_spatial(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
     }
 }
@@ -4695,7 +4695,7 @@ void play_random_character_voice(Object *obj, s32 soundID, s32 range, s32 flags)
     Object_Racer *tempRacer;
 
     tempRacer = (Object_Racer *) obj->unk64;
-    if (tempRacer->unk108 == 0 && (!(flags & 0x80) || gCurrentPlayerIndex != PLAYER_COMPUTER)) {
+    if (tempRacer->exitObj == 0 && (!(flags & 0x80) || gCurrentPlayerIndex != PLAYER_COMPUTER)) {
         if (flags == 2) {
             if (tempRacer->soundMask != NULL && soundID != tempRacer->unk2A) {
                 func_800096F8(tempRacer->soundMask);
@@ -4965,7 +4965,7 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
     if (racer->raceFinished == TRUE && gCameraObject->mode != CAMERA_FINISH_CHALLENGE) {
             gCameraObject->mode = CAMERA_FINISH_RACE;
     }
-    if (racer->unk108) {
+    if (racer->exitObj) {
         gCameraObject->mode = CAMERA_FIXED;
     }
     // Set the camera behaviour based on current mode.
@@ -5023,7 +5023,7 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
     }
     angle = ((angle >> 4) + 4);
     tempUpdateRateF = updateRateF;
-    if (D_8011D583) {
+    if (gRacerDialogueCamera) {
         gDialogueCameraAngle += (tempUpdateRateF * angle);
         if (gDialogueCameraAngle > 0x2800) {
             gDialogueCameraAngle = 0x2800;
@@ -5637,12 +5637,20 @@ s16 func_80059E20(void) {
 
 GLOBAL_ASM("asm/non_matchings/racer/set_ghost_position_and_rotation.s")
 
-void func_8005A3B0(void) {
-    D_8011D584 = 1;
+/**
+ * Blocks the player's movement until the end of their update cycle.
+ * Called for every frame the player shouldn't be able to drive.
+*/
+void disable_racer_input(void) {
+    gRacerInputBlocked = TRUE;
 }
 
-void func_8005A3C0(void) {
-    D_8011D583 = 1;
+/**
+ * Tells the camera to start rotating to the side for the dialogue camera.
+ * Called for every frame the player should experience subtle cinematography.
+*/
+void racer_set_dialogue_camera(void) {
+    gRacerDialogueCamera = TRUE;
 }
 
 /**
@@ -5669,13 +5677,13 @@ void compare_balloon_checksums(void) {
  * After a timer hits 0, execute the transition.
  */
 void racer_enter_door(Object_Racer* racer, s32 updateRate) {
-    struct Object_Exit *temp_a3;
+    struct Object_Exit *exit;
     f32 updateRateF;
     s32 angle;
 
-    temp_a3 = (struct Object_Exit *) racer->unk108->unk64;
+    exit = (struct Object_Exit *) racer->exitObj->unk64;
     racer->playerIndex = PLAYER_COMPUTER;
-    angle = (u16) arctan2_f(temp_a3->unk0, temp_a3->unk8)  - (racer->steerVisualRotation & 0xFFFF);
+    angle = (u16) arctan2_f(exit->directionX, exit->directionZ)  - (racer->steerVisualRotation & 0xFFFF);
     WRAP(angle, -0x8000, 0x8000);
     angle = -angle >> 5;
     gCurrentStickX = angle;
@@ -5689,8 +5697,8 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
         gCurrentRacerInput |= B_BUTTON;
     }
     updateRateF = (f32) updateRate;
-    gCameraObject->trans.x_position += (temp_a3->unk0 * updateRateF) * 1.5f;
-    gCameraObject->trans.z_position += (temp_a3->unk8 * updateRateF) * 1.5f;
+    gCameraObject->trans.x_position += (exit->directionX * updateRateF) * 1.5f;
+    gCameraObject->trans.z_position += (exit->directionZ * updateRateF) * 1.5f;
     if (gCurrentStickX > 75) {
         gCurrentStickX = 75; 
         gCurrentRacerInput |= A_BUTTON | B_BUTTON; 
@@ -5715,7 +5723,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
     if (racer->transitionTimer > 0) {
         racer->transitionTimer -= updateRate;
         if (racer->transitionTimer <= 0) {
-            func_8006D968((s8* ) racer->unk108->segment.unk3C_a.level_entry);
+            func_8006D968((s8* ) racer->exitObj->segment.unk3C_a.level_entry);
             racer->transitionTimer = 0;
         }
     }
@@ -5993,7 +6001,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     if (racer->soundMask != 0) {
         update_spatial_audio_position(racer->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
     }
-    D_8011D584 = 0;
+    gRacerInputBlocked = FALSE;
     if ((racer->unk150 != NULL) && (gRaceStartTimer == 0)) {
         s8 *temp;
         racer->unk150->segment.trans.x_position = obj->segment.trans.x_position;

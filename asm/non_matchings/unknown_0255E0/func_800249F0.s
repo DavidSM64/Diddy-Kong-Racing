@@ -152,12 +152,12 @@ glabel func_800249F0
 /* 025818 80024C18 0C01994B */  jal   set_active_viewports_and_max
 /* 02581C 80024C1C 00000000 */   nop   
 /* 025820 80024C20 8E690000 */  lw    $t1, ($s3)
-/* 025824 80024C24 3C018012 */  lui   $at, %hi(D_8011B0FC) # $at, 0x8012
+/* 025824 80024C24 3C018012 */  lui   $at, %hi(gAntiAliasing) # $at, 0x8012
 /* 025828 80024C28 3C13FFFF */  lui   $s3, (0xFFFF00FF >> 16) # lui $s3, 0xffff
 /* 02582C 80024C2C 3C118012 */  lui   $s1, %hi(D_8011D350) # $s1, 0x8012
 /* 025830 80024C30 3C128012 */  lui   $s2, %hi(D_8011D320) # $s2, 0x8012
 /* 025834 80024C34 3C108012 */  lui   $s0, %hi(D_8011D338) # $s0, 0x8012
-/* 025838 80024C38 AC20B0FC */  sw    $zero, %lo(D_8011B0FC)($at)
+/* 025838 80024C38 AC20B0FC */  sw    $zero, %lo(gAntiAliasing)($at)
 /* 02583C 80024C3C 2610D338 */  addiu $s0, %lo(D_8011D338) # addiu $s0, $s0, -0x2cc8
 /* 025840 80024C40 2652D320 */  addiu $s2, %lo(D_8011D320) # addiu $s2, $s2, -0x2ce0
 /* 025844 80024C44 2631D350 */  addiu $s1, %lo(D_8011D350) # addiu $s1, $s1, -0x2cb0

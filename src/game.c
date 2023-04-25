@@ -511,7 +511,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
 
     if (gCurrentLevelHeader->fogNear == 0 && gCurrentLevelHeader->fogFar == 0 && gCurrentLevelHeader->fogR == 0 && gCurrentLevelHeader->fogG == 0 && gCurrentLevelHeader->fogB == 0) {
         for (var_s0 = 0; var_s0 < 4; var_s0++) {
-            func_800307BC(var_s0);
+            reset_fog(var_s0);
         }
     } else {
         for (var_s0 = 0; var_s0 < 4; var_s0++) {
@@ -1171,7 +1171,7 @@ void ingame_logic_loop(s32 updateRate) {
             }
         }
     } else {
-        func_80028FA0(1);
+        set_anti_aliasing(TRUE);
     }
     D_800DD398 -= updateRate;
     if (D_800DD398 < 0) {

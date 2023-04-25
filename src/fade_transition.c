@@ -308,7 +308,6 @@ s32 handle_transitions(s32 updateRate) {
         if (sTransitionFadeTimer == 0) {
             sTransitionStatus = TRANSITION_LEVELSWAP;
         }
-//!@bug Not yet confirmed as a bug, but sTransitionFlags will not be zero when ingame, leaving stray transitions up.
         if ((sTransitionFadeTimer == 0) && (sTransitionFlags == 0)) {
             transition_end();
         } else {

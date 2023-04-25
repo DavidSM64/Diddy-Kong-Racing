@@ -32,6 +32,7 @@
 /************ .data ************/
 
 s32 D_800DC870 = 0; // Currently unknown, might be a different type.
+//!@bug These two transition effects are marked to not clear when done, meaning they stay active the whole time.
 unknown800DC874 D_800DC874 = { { -128 }, 40, 0 };
 unknown800DC874 D_800DC87C = { { -125 }, 70, 0 };
 
@@ -94,7 +95,7 @@ f32 D_8011B0EC;
 s32 D_8011B0F0;
 s32 D_8011B0F4;
 s32 D_8011B0F8;
-s32 D_8011B0FC;
+s32 gAntiAliasing;
 s32 D_8011B100;
 s32 D_8011B104;
 s32 D_8011B108;
@@ -152,7 +153,7 @@ s32 *D_8011D374;
 s32 D_8011D378;
 s32 gScenePlayerViewports;
 u32 D_8011D384;
-unk8011D388 D_8011D388[4];
+FogData gFogData[4];
 Vec3i gScenePerspectivePos;
 unk8011D474 *D_8011D474; // 0x10 bytes struct?
 unk8011D478 *D_8011D478; // 0x8 bytes struct?
@@ -238,7 +239,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
         transition_begin(&D_800DC874);
     }
     set_active_viewports_and_max(gScenePlayerViewports);
-    D_8011B0FC = 0;
+    gAntiAliasing = 0;
     i = 0;
     do {
         D_8011D350[i] = allocate_from_main_pool_safe(3200, COLOUR_TAG_YELLOW);
@@ -307,10 +308,10 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     gDrawLevelSegments = TRUE;
     if (gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_2) {
         gDrawLevelSegments = FALSE;
-        D_8011B0FC = 1;
+        gAntiAliasing = TRUE;
     }
     if (gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_1 || gCurrentLevelHeader2->unkBD) {
-        D_8011B0FC = 1;
+        gAntiAliasing = TRUE;
     }
     if (gCurrentLevelHeader2->unk49 == -1) {
         i = (gCurrentLevelHeader2->unkA4->width << 9) - 1;
@@ -336,7 +337,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gSceneCurrDisplayList++, 255, 255, 255, 0);
     func_800AD40C();
-    func_80030838(numViewports, tempUpdateRate);
+    update_fog(numViewports, tempUpdateRate);
     func_800AF404(tempUpdateRate);
     if (gCurrentLevelModel->numberOfAnimatedTextures > 0) {
         func_80027E24(tempUpdateRate);
@@ -350,7 +351,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         if (flip) {
             gSPSetGeometryMode(gSceneCurrDisplayList++, G_CULL_FRONT);
         }
-        func_8003093C(gSceneCurrentPlayerID);
+        apply_fog(gSceneCurrentPlayerID);
         gDPPipeSync(gSceneCurrDisplayList++);
         set_active_camera(gSceneCurrentPlayerID);
         func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
@@ -388,7 +389,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             if (flip) {
                 gSPSetGeometryMode(gSceneCurrDisplayList++, G_CULL_FRONT);
             }
-            func_8003093C(3);
+            apply_fog(PLAYER_FOUR);
             gDPPipeSync(gSceneCurrDisplayList++);
             set_active_camera(3);
             disable_cutscene_camera();
@@ -795,8 +796,6 @@ void render_skydome(void) {
     }
 }
 
-void func_800B8C04(s32, s32, s32, s32, s32); 
-
 /**
  * Sets up all of the required variables for the player's view perspective.
  * This includes setting up the camera index, viewport and 
@@ -837,9 +836,12 @@ void initialise_player_viewport_vars(s32 updateRate) {
     render_level_geometry_and_objects();
 }
 
-
-void func_80028FA0(s32 arg0) {
-    D_8011B0FC = arg0;
+/**
+ * Enable or disable anti aliasing.
+ * Improves visual quality at the cost of performance.
+*/
+void set_anti_aliasing(s32 setting) {
+    gAntiAliasing = setting;
 }
 
 /**
@@ -862,7 +864,7 @@ void render_level_geometry_and_objects(void) {
     func_80012C30();
 
     if (get_settings()->courseId == ASSET_LEVEL_OPENINGSEQUENCE) {
-        D_8011B0FC = 1;
+        gAntiAliasing = 1;
     }
 
     sp160 = func_80014814(&sp16C);
@@ -1005,7 +1007,7 @@ skip:
     if (D_800DC924 && func_80027568()) {
         func_8002581C(segmentIds, numberOfSegments, get_current_viewport());
     }
-    D_8011B0FC = 0;
+    gAntiAliasing = FALSE;
 #ifdef PUPPYPRINT_DEBUG
     gPuppyPrint.mainTimerPoints[1][PP_PARTICLEGFX] = osGetCount();
 #endif
@@ -1055,14 +1057,19 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
         batchFlags = batchInfo->flags;
         renderBatch = 0;
         if (batchInfo->textureIndex == 0xFF) {
-            texture = 0;
+            texture = FALSE;
         } else {
             texture = gCurrentLevelModel->textures[batchInfo->textureIndex].texture;
             textureFlags = texture->flags;
         }
         batchFlags |= BATCH_FLAGS_UNK00000008 | BATCH_FLAGS_UNK00000002;
+        
         if (!(batchFlags & BATCH_FLAGS_DEPTH_WRITE) && !(batchFlags & BATCH_FLAGS_UNK00000800)) {
-            batchFlags |= D_8011B0FC;
+            if (gDisableAA || gOverrideAA) {
+                batchFlags &= ~RENDER_ANTI_ALIASING;
+            } else {
+                batchFlags |= RENDER_ANTI_ALIASING;
+            }
         }
         if ((!(textureFlags & RENDER_SEMI_TRANSPARENT) && !(batchFlags & BATCH_FLAGS_UNK00002000)) || batchFlags & BATCH_FLAGS_UNK00000800) {
             renderBatch = TRUE;
@@ -2190,80 +2197,95 @@ void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5) {
     if (min >= max - 5) {
         min = max - 5;
     }
-    D_8011D388[arg0].unk20 = 0;
-    D_8011D388[arg0].unk24 = 0;
-    D_8011D388[arg0].unk14 = 0;
-    D_8011D388[arg0].unk18 = 0;
-    D_8011D388[arg0].unk1C = 0;
-    D_8011D388[arg0].unk0 = arg3 << 0x10;
-    D_8011D388[arg0].unk4 = arg4 << 0x10;
-    D_8011D388[arg0].unk8 = arg5 << 0x10;
-    D_8011D388[arg0].unkC = min << 0x10;
-    D_8011D388[arg0].unk10 = max << 0x10;
-    D_8011D388[arg0].unk28 = arg3;
-    D_8011D388[arg0].unk2C = min;
-    D_8011D388[arg0].unk2E = max;
-    D_8011D388[arg0].unk30 = 0;
-    D_8011D388[arg0].unk34 = 0;
-    D_8011D388[arg0].unk29 = arg4;
-    D_8011D388[arg0].unk2A = arg5;
+    gFogData[arg0].addFog.near = 0;
+    gFogData[arg0].addFog.far = 0;
+    gFogData[arg0].addFog.r = 0;
+    gFogData[arg0].addFog.g = 0;
+    gFogData[arg0].addFog.b = 0;
+    gFogData[arg0].fog.r = arg3 << 0x10;
+    gFogData[arg0].fog.g = arg4 << 0x10;
+    gFogData[arg0].fog.b = arg5 << 0x10;
+    gFogData[arg0].fog.near = min << 0x10;
+    gFogData[arg0].fog.far = max << 0x10;
+    gFogData[arg0].intendedFog.r = arg3;
+    gFogData[arg0].intendedFog.near = min;
+    gFogData[arg0].intendedFog.far = max;
+    gFogData[arg0].switchTimer = 0;
+    gFogData[arg0].fogChanger = 0;
+    gFogData[arg0].intendedFog.g = arg4;
+    gFogData[arg0].intendedFog.b = arg5;
 }
 
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030664.s")
 #endif
 
-void func_80030750(s32 arg0, s16 *arg1, s16 *arg2, u8 *arg3, u8 *arg4, u8 *arg5) {
-    *arg1 = D_8011D388[arg0].unkC >> 0x10;
-    *arg2 = D_8011D388[arg0].unk10 >> 0x10;
-    *arg3 = D_8011D388[arg0].unk0 >> 0x10;
-    *arg4 = D_8011D388[arg0].unk4 >> 0x10;
-    *arg5 = D_8011D388[arg0].unk8 >> 0x10;
+/**
+ * Writes the current fog settings to the arguments.
+ * Pre-shifts the data, so the raw values are correct.
+*/
+void get_fog_settings(s32 playerID, s16 *near, s16 *far, u8 *r, u8 *g, u8 *b) {
+    *near = gFogData[playerID].fog.near >> 16;
+    *far = gFogData[playerID].fog.far >> 16;
+    *r = gFogData[playerID].fog.r >> 16;
+    *g = gFogData[playerID].fog.g >> 16;
+    *b = gFogData[playerID].fog.b >> 16;
 }
 
-void func_800307BC(s32 arg0) {
-    D_8011D388[arg0].unk20 = 0;
-    D_8011D388[arg0].unk24 = 0;
-    D_8011D388[arg0].unk14 = 0;
-    D_8011D388[arg0].unk18 = 0;
-    D_8011D388[arg0].unk1C = 0;
-    D_8011D388[arg0].unkC = 0x03FA0000;
-    D_8011D388[arg0].unk10 = 0x03FF0000;
-    D_8011D388[arg0].unk28 = D_8011D388[arg0].unk0 >> 0x10;
-    D_8011D388[arg0].unk29 = D_8011D388[arg0].unk4 >> 0x10;
-    D_8011D388[arg0].unk2A = D_8011D388[arg0].unk8 >> 0x10;
-    D_8011D388[arg0].unk2C = 0x03FA;
-    D_8011D388[arg0].unk2E = 0x03FF;
-    D_8011D388[arg0].unk30 = 0;
-    D_8011D388[arg0].unk34 = 0;
+/**
+ * Sets the fog of the player ID to the default values.
+ * Current fog attributes are rightshifted 16 bytes.
+*/
+void reset_fog(s32 playerID) {
+    gFogData[playerID].addFog.near = 0;
+    gFogData[playerID].addFog.far = 0;
+    gFogData[playerID].addFog.r = 0;
+    gFogData[playerID].addFog.g = 0;
+    gFogData[playerID].addFog.b = 0;
+    gFogData[playerID].fog.near = 1018 << 16;
+    gFogData[playerID].fog.far = 1023 << 16;
+    gFogData[playerID].intendedFog.r = gFogData[playerID].fog.r >> 16;
+    gFogData[playerID].intendedFog.g = gFogData[playerID].fog.g >> 16;
+    gFogData[playerID].intendedFog.b = gFogData[playerID].fog.b >> 16;
+    gFogData[playerID].intendedFog.near = 1018;
+    gFogData[playerID].intendedFog.far = 1023;
+    gFogData[playerID].switchTimer = 0;
+    gFogData[playerID].fogChanger = NULL;
 }
 
-void func_80030838(s32 arg0, s32 arg1) {
+/**
+ * If the fog override timer is active, apply that and slowly degrade.
+ * Otherwise, set the current fog to the intended fog settings.
+*/
+void update_fog(s32 viewportCount, s32 updateRate) {
     s32 i;
-    for (i = 0; i < arg0; i++) {
-        if (D_8011D388[i].unk30 > 0) {
-            if (arg1 < D_8011D388[i].unk30) {
-                D_8011D388[i].unk0 += D_8011D388[i].unk14 * arg1;
-                D_8011D388[i].unk4 += D_8011D388[i].unk18 * arg1;
-                D_8011D388[i].unk8 += D_8011D388[i].unk1C * arg1;
-                D_8011D388[i].unkC += D_8011D388[i].unk20 * arg1;
-                D_8011D388[i].unk10 += D_8011D388[i].unk24 * arg1;
-                D_8011D388[i].unk30 -= arg1;
+    for (i = 0; i < viewportCount; i++) {
+        if (gFogData[i].switchTimer > 0) {
+            if (updateRate < gFogData[i].switchTimer) {
+                gFogData[i].fog.r += gFogData[i].addFog.r * updateRate;
+                gFogData[i].fog.g += gFogData[i].addFog.g * updateRate;
+                gFogData[i].fog.b += gFogData[i].addFog.b * updateRate;
+                gFogData[i].fog.near += gFogData[i].addFog.near * updateRate;
+                gFogData[i].fog.far += gFogData[i].addFog.far * updateRate;
+                gFogData[i].switchTimer -= updateRate;
             } else {
-                D_8011D388[i].unk0 = D_8011D388[i].unk28 << 0x10;
-                D_8011D388[i].unk4 = D_8011D388[i].unk29 << 0x10;
-                D_8011D388[i].unk8 = D_8011D388[i].unk2A << 0x10;
-                D_8011D388[i].unkC = D_8011D388[i].unk2C << 0x10;
-                D_8011D388[i].unk10 = D_8011D388[i].unk2E << 0x10;
-                D_8011D388[i].unk30 = 0;
+                gFogData[i].fog.r = gFogData[i].intendedFog.r << 16;
+                gFogData[i].fog.g = gFogData[i].intendedFog.g << 16;
+                gFogData[i].fog.b = gFogData[i].intendedFog.b << 16;
+                gFogData[i].fog.near = gFogData[i].intendedFog.near << 16;
+                gFogData[i].fog.far = gFogData[i].intendedFog.far << 16;
+                gFogData[i].switchTimer = 0;
             }
         }
     }
 }
 
-void func_8003093C(s32 arg0) {
-    gDPSetFogColor(gSceneCurrDisplayList++, D_8011D388[arg0].unk0 >> 0x10, D_8011D388[arg0].unk4 >> 0x10, D_8011D388[arg0].unk8 >> 0x10, 0xFF);
-    gSPFogPosition(gSceneCurrDisplayList++, D_8011D388[arg0].unkC >> 0x10, D_8011D388[arg0].unk10 >> 0x10);
+/**
+ * Sets the fog settings for the active viewport based on the parameters of the environment data.
+*/
+void apply_fog(s32 playerID) {
+    gDPSetFogColor(gSceneCurrDisplayList++, gFogData[playerID].fog.r >> 0x10, gFogData[playerID].fog.g >> 0x10, gFogData[playerID].fog.b >> 0x10, 0xFF);
+    gSPFogPosition(gSceneCurrDisplayList++, gFogData[playerID].fog.near >> 0x10, gFogData[playerID].fog.far >> 0x10);
 }
 
 /**
@@ -2271,7 +2293,7 @@ void func_8003093C(s32 arg0) {
  * Used in courses to make less, or more dense.
 */
 void obj_loop_fogchanger(Object *obj) {
-    s32 temp3;
+    s32 nearTemp;
     s32 fogNear;
     s32 views;
     s32 playerIndex;
@@ -2283,19 +2305,19 @@ void obj_loop_fogchanger(Object *obj) {
     s32 fogB;
     f32 x;
     f32 z;
-    s32 temp_a1;
-    LevelObjectEntry_FogChanger *sp44;
+    s32 switchTimer;
+    LevelObjectEntry_FogChanger *fogChanger;
     Object **racers;
     Object_Racer *racer;
-    unk8011D388 *temp_v0_3;
-    ObjectSegment *phi_s3;
+    FogData *fog;
+    ObjectSegment *camera;
     
     racers = NULL;
-    sp44 = (LevelObjectEntry_FogChanger *) obj->segment.unk3C_a.level_entry;
-    phi_s3 = NULL;
+    fogChanger = (LevelObjectEntry_FogChanger *) obj->segment.unk3C_a.level_entry;
+    camera = NULL;
     
     if (check_if_showing_cutscene_camera()) {
-        phi_s3 = func_80069D7C();
+        camera = get_cutscene_camera_segment();
         views = get_viewport_count() + 1;
     } else {
         racers = get_racer_objects(&views);
@@ -2306,30 +2328,31 @@ void obj_loop_fogchanger(Object *obj) {
         if (racers != NULL) {
             racer = &racers[i]->unk64->racer;
             playerIndex = racer->playerIndex;
-            if (playerIndex >= PLAYER_ONE && playerIndex <= PLAYER_FOUR && obj != D_8011D388[playerIndex].unk34) {
+            if (playerIndex >= PLAYER_ONE && playerIndex <= PLAYER_FOUR && obj != gFogData[playerIndex].fogChanger) {
                 index = playerIndex;
                 x = racers[i]->segment.trans.x_position;
                 z = racers[i]->segment.trans.z_position;
             }
-        } else if (i <= PLAYER_FOUR && obj != D_8011D388[i].unk34) {
+        } else if (i <= PLAYER_FOUR && obj != gFogData[i].fogChanger) {
             index = i;
-            x = phi_s3[i].trans.x_position;
-            z = phi_s3[i].trans.z_position;
+            x = camera[i].trans.x_position;
+            z = camera[i].trans.z_position;
         }
         if (index != PLAYER_COMPUTER) {
             x -= obj->segment.trans.x_position;
             z -= obj->segment.trans.z_position;
             if ((x * x) + (z * z) < obj->unk78f) {
-                fogNear = sp44->unkC;
-                fogFar = sp44->unkE;
-                fogR = sp44->unk9;
-                fogG = sp44->unkA;
-                fogB = sp44->unkB;
-                temp_a1 = sp44->unk10;
+                fogNear = fogChanger->near;
+                fogFar = fogChanger->far;
+                fogR = fogChanger->r;
+                fogG = fogChanger->g;
+                fogB = fogChanger->b;
+                switchTimer = fogChanger->switchTimer;
+                // Swap near and far if they're the wrong way around.
                 if (fogFar < fogNear) {
-                    temp3 = fogNear;
+                    nearTemp = fogNear;
                     fogNear = fogFar;
-                    fogFar = temp3;
+                    fogFar = nearTemp;
                 }
                 if (fogFar > 1023) {
                     fogFar = 1023;
@@ -2337,19 +2360,19 @@ void obj_loop_fogchanger(Object *obj) {
                 if (fogNear >= fogFar - 5) {
                     fogNear = fogFar - 5;
                 }
-                temp_v0_3 = &D_8011D388[index];
-                temp_v0_3->unk28 = fogR;
-                temp_v0_3->unk29 = fogG;
-                temp_v0_3->unk2A = fogB;
-                temp_v0_3->unk2C = fogNear;
-                temp_v0_3->unk2E = fogFar;
-                temp_v0_3->unk14 = ((fogR << 16) - temp_v0_3->unk0) / temp_a1;
-                temp_v0_3->unk18 = ((fogG << 16) - temp_v0_3->unk4) / temp_a1;
-                temp_v0_3->unk1C = ((fogB << 16) - temp_v0_3->unk8) / temp_a1;
-                temp_v0_3->unk20 = ((fogNear << 16) - temp_v0_3->unkC) / temp_a1;
-                temp_v0_3->unk24 = ((fogFar << 16) - temp_v0_3->unk10) / temp_a1;
-                temp_v0_3->unk30 = temp_a1;
-                temp_v0_3->unk34 = obj;
+                fog = &gFogData[index];
+                fog->intendedFog.r = fogR;
+                fog->intendedFog.g = fogG;
+                fog->intendedFog.b = fogB;
+                fog->intendedFog.near = fogNear;
+                fog->intendedFog.far = fogFar;
+                fog->addFog.r = ((fogR << 16) - fog->fog.r) / switchTimer;
+                fog->addFog.g = ((fogG << 16) - fog->fog.g) / switchTimer;
+                fog->addFog.b = ((fogB << 16) - fog->fog.b) / switchTimer;
+                fog->addFog.near = ((fogNear << 16) - fog->fog.near) / switchTimer;
+                fog->addFog.far = ((fogFar << 16) - fog->fog.far) / switchTimer;
+                fog->switchTimer = switchTimer;
+                fog->fogChanger = obj;
             }
         }
     }
@@ -2358,9 +2381,9 @@ void obj_loop_fogchanger(Object *obj) {
 #ifdef NON_EQUIVALENT
 void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
     s32 max, min;
-    unk8011D388 *entry;
+    FogData *entry;
 
-    entry = &D_8011D388[arg0];
+    entry = &gFogData[arg0];
     max = arg5;
     min = arg4;
     if (arg5 < arg4) {
@@ -2373,18 +2396,18 @@ void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s
     if (min >= max - 5) {
         min = max - 5;
     }
-    entry->unk28 = arg1;
-    entry->unk29 = arg2;
-    entry->unk2A = arg3;
-    entry->unk2C = min;
-    entry->unk2E = max;
-    entry->unk14 = ((arg1 << 16) - entry->unk0) / arg6;
-    entry->unk18 = ((arg2 << 16) - entry->unk4) / arg6;
-    entry->unk1C = ((arg3 << 16) - entry->unk8) / arg6;
-    entry->unk20 = ((min << 16) - entry->unkC) / arg6;
-    entry->unk24 = ((max << 16) - entry->unk10) / arg6;
-    entry->unk30 = arg6;
-    entry->unk34 = 0;
+    entry->intendedFog.r = arg1;
+    entry->intendedFog.g = arg2;
+    entry->intendedFog.b = arg3;
+    entry->intendedFog.near = min;
+    entry->intendedFog.far = max;
+    entry->addFog.r = ((arg1 << 16) - entry->fog.r) / arg6;
+    entry->addFog.g = ((arg2 << 16) - entry->fog.g) / arg6;
+    entry->addFog.b = ((arg3 << 16) - entry->fog.b) / arg6;
+    entry->addFog.near = ((min << 16) - entry->fog.near) / arg6;
+    entry->addFog.far = ((max << 16) - entry->fog.far) / arg6;
+    entry->switchTimer = arg6;
+    entry->fogChanger = 0;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
@@ -2410,7 +2433,7 @@ void compute_scene_camera_transform_matrix(void) {
     guMtxXFMF(mtx, x, y, z, &x, &y, &z);
 
     //Store x/y/z as integers
-    gScenePerspectivePos.x = (s32)x;
-    gScenePerspectivePos.y = (s32)y;
-    gScenePerspectivePos.z = (s32)z;
+    gScenePerspectivePos.x = (s32) x;
+    gScenePerspectivePos.y = (s32) y;
+    gScenePerspectivePos.z = (s32) z;
 }

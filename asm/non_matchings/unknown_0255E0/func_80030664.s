@@ -34,8 +34,8 @@ glabel func_80030664
 .L800306DC:
 /* 0312DC 800306DC 93A30013 */  lbu   $v1, 0x13($sp)
 /* 0312E0 800306E0 93A80017 */  lbu   $t0, 0x17($sp)
-/* 0312E4 800306E4 3C0E8012 */  lui   $t6, %hi(D_8011D388) # $t6, 0x8012
-/* 0312E8 800306E8 25CED388 */  addiu $t6, %lo(D_8011D388) # addiu $t6, $t6, -0x2c78
+/* 0312E4 800306E4 3C0E8012 */  lui   $t6, %hi(gFogData) # $t6, 0x8012
+/* 0312E8 800306E8 25CED388 */  addiu $t6, %lo(gFogData) # addiu $t6, $t6, -0x2c78
 /* 0312EC 800306EC 000D68C0 */  sll   $t5, $t5, 3
 /* 0312F0 800306F0 01AE1021 */  addu  $v0, $t5, $t6
 /* 0312F4 800306F4 00077C00 */  sll   $t7, $a3, 0x10

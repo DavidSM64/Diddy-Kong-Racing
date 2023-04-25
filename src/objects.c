@@ -2629,8 +2629,8 @@ s32 func_8001C48C(Object *obj) {
 s32 func_8001C524(f32 diffX, f32 diffY, f32 diffZ, s32 someFlag) {
     UNUSED f32 pad[6];
     s32 sp64;
-    f32 x;
     f32 len;
+    f32 x;
     f32 z;
     f32 y;
     f32 dist;
