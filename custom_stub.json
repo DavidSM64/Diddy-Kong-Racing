@@ -1,0 +1,20 @@
+{
+  "compressed" : true,
+  "flags" : {
+    "flag-01" : false,
+    "flag-04" : false,
+    "flag-10" : false,
+    "interlaced" : false,
+    "wrap-s" : "Clamp",
+    "wrap-t" : "Clamp"
+  },
+  "flipped-image" : true,
+  "format" : "IA4",
+  "frame-count" : 1,
+  "height" : 1,
+  "img" : "stub.png",
+  "tex-type" : 0,
+  "type" : "Textures",
+  "width" : 1,
+  "write-size" : true
+}
