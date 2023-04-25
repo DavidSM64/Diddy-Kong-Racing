@@ -26,7 +26,6 @@
 #define EXPANSION_PAK_SUPPORT               // Allow the game to use the expansion pak if it's inserted. Disabling this will move Framebuffers to expansion RAM for extra performance.
 //#define FORCE_4MB_MEMORY                    // Pretend the expansion pak is not installed. 
 
-#define THREAD1_STACK           0x100
 #define THREAD2_STACK           0x400
 #define THREAD3_STACK           0x2000
 #define THREAD4_STACK           0x1000

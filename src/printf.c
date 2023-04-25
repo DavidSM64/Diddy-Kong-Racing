@@ -210,7 +210,6 @@ s32 render_printf(const char *format, ...) {
     s32 written;
     va_start(args, format);
     if ((gDebugPrintBufferEnd - gDebugPrintBufferStart) > 0x800) {
-        stubbed_printf("*** diPrintf Error *** ---> Out of string space. (Print less text!)\n");
         return -1;
     }
     func_800B4A08(1);

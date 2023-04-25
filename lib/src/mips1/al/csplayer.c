@@ -11,8 +11,6 @@
 
 /************ .rodata ************/
 
-const char D_800E6C20[] = "CSP: oh oh \n";
-
 /*********************************/
 
 void __CSPPostNextSeqEvent(ALCSPlayer *seqp);

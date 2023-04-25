@@ -79,12 +79,6 @@ s32 D_800E319C = 0;
 
 /************ .rodata ************/
 
-const char D_800E9160[] = "\nCouldn't find a block to pick wave details from.\nUsing block 0 as default.";
-const char D_800E91AC[] = "\n\nBlock may be specified using 'P' on water group node.";
-const char D_800E91E4[] = "\nError :: can not remove a wave swell object which doesn't exist !";
-const char D_800E9228[] = "\nError :: more than eight swells overlap on column %d.";
-const char D_800E9260[] = "\nError :: can not add another wave swell, reached limit of %d.";
-
 /*********************************/
 
 /************ .bss ************/

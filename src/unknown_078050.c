@@ -210,7 +210,6 @@ s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
     gGfxTaskIsRunning = TRUE;
 
     dkrtask = gRdpCurTask;
-    dkrtask->flags = OS_SC_LAST_TASK | OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP;
     dkrtask->task.data_ptr = (u64 *) dlBegin;
     dkrtask->task.data_size = ((s32) dlEnd - (s32) dlBegin) >> 3; // Shifted by 3, repsenting the size of the Gfx type.
     dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
@@ -220,11 +219,6 @@ s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
     osScSubmitGfxTask(&gMainSched, (void *) dkrtask);
     gRdpCurTask = (DKR_OSTask *) ((u32) gRdpCurTask ^ (u32) &gRdpTaskA ^ (u32) &gRdpTaskB);
     return 0;
-}
-
-
-void allocate_task_buffer(void) {
-    gGfxSPTaskOutputBuffer = allocate_from_main_pool_safe(sizeof(u64) * FIFO_BUFFER_SIZE, COLOUR_TAG_WHITE);
 }
 
 /**
@@ -240,16 +234,15 @@ void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
 
     gGfxTaskIsRunning = TRUE;
 
-    if (gExpansionPak == FALSE) {
-        if (gGfxSPTaskOutputBuffer == NULL) {
-            allocate_task_buffer();
-        }
-        taskStart = (u32) gGfxSPTaskOutputBuffer;
-        taskEnd = (u32) (gGfxSPTaskOutputBuffer + (FIFO_BUFFER_SIZE));
+#ifdef EXPANSION_PAK_SUPPORT
+    if (gGfxSPTaskOutputBuffer == NULL) {
+        gGfxSPTaskOutputBuffer = allocate_from_main_pool_safe(sizeof(u64) * FIFO_BUFFER_SIZE, COLOUR_TAG_WHITE);
     }
+    taskStart = (u32) gGfxSPTaskOutputBuffer;
+    taskEnd = (u32) (gGfxSPTaskOutputBuffer + (FIFO_BUFFER_SIZE));
+#endif
 
     dkrtask = gRdpCurTask;
-    dkrtask->flags = OS_SC_LAST_TASK | OS_SC_NEEDS_RDP | OS_SC_NEEDS_RSP;
     dkrtask->task.ucode = (u64 *) rspF3DDKRFifoStart;
     dkrtask->task.ucode_data = (u64 *) rspF3DDKRDataFifoStart;
     dkrtask->task.data_ptr = (u64 *) dlBegin;
