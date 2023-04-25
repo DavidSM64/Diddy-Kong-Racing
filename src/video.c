@@ -65,7 +65,7 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
     // I run this even with an expansion pak just to use up the memory.
     // Means I don't run into any issues if I test without a pak that just happened to work with.
     if (SCREEN_WIDTH * SCREEN_HEIGHT <= 320 * 240) {
-        for (i = 0; i < 2; i++) {
+        for (i = 0; i < NUM_FRAMEBUFFERS; i++) {
             gVideoFramebuffers[i] = 0;
             init_framebuffer(i);
         }

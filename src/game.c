@@ -789,8 +789,11 @@ void thread3_main(UNUSED void *unused) {
     }
 }
 
-
+#ifndef FIFO_UCODE
+u8 gDisableAA = TRUE;
+#else
 u8 gDisableAA = FALSE;
+#endif
 u8 gHideHUD = FALSE;
 s8 gScreenMode = 0;
 s8 gScreenPos[2] = {0, 0};
@@ -1057,14 +1060,12 @@ void main_game_loop(void) {
             gDisableAA ^= 1;
             set_dither_filter();
         }
-        if (suCodeSwitch == FALSE && IO_READ(DPC_BUFBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG) && gExpansionPak) {
     #endif
+        if (suCodeSwitch == FALSE && IO_READ(DPC_BUFBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG) && gExpansionPak) {
             setup_ostask_fifo(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
-    #ifdef PUPPYPRINT_DEBUG
         } else {
             setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
         }
-    #endif
 #endif
         gNumGfxTasksAtScheduler++;
         gSPTaskNum ^= 1;

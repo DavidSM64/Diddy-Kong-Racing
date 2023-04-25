@@ -333,7 +333,8 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
     gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_COLOUR_BUFFER);
 
     if (gMapId == ASSET_LEVEL_CENTRALAREAHUB || gMapId == ASSET_LEVEL_WHALEBAY || gMapId == ASSET_LEVEL_PIRATELAGOON || 
-        gMapId == ASSET_LEVEL_DINODOMAINHUB || gMapId == ASSET_LEVEL_DINODOMAINTROPHYANIM) {
+        gMapId == ASSET_LEVEL_DINODOMAINHUB || gMapId == ASSET_LEVEL_DINODOMAINTROPHYANIM || gMapId == ASSET_LEVEL_OPTIONSBACKGROUND ||
+        gMapId == ASSET_LEVEL_FRONTEND) {
         skip = FALSE;
     }
 
@@ -349,13 +350,13 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
                     gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
                 }
             }
-			if (copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2)) {
+			/*if (copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2)) {
                 gDPSetCycleType((*dList)++, G_CYC_1CYCLE);
                 gDPSetPrimColor((*dList)++, 0, 0, sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 255);
                 gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
                 gDPSetRenderMode((*dList)++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
                 gDPFillRectangle((*dList)++, x1, y1, x2, y2);
-            }
+            }*/
         } else {
             if (D_800DE4C4) {
                 func_80078190(dList);
