@@ -3670,7 +3670,7 @@ void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateR
     gCurrentCarSteerVel = racer->unk110;
     if (racer->boostTimer) {
         if (racer->velocity > -20.0f) {
-            racer->velocity -= 0.8f * updateRateF;
+            racer->velocity -= 0.55f * updateRateF;
         }
     }
     yStick = gCurrentStickY;
