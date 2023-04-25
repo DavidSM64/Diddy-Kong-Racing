@@ -182,15 +182,20 @@ void init_vi_settings(void) {
  * Will also allocate the depthbuffer if it does not already exist.
  */
 void init_framebuffer(s32 index) {
+    s32 width = SCREEN_WIDTH;
     if (gVideoFramebuffers[index] != 0) {
         func_80071538((u8 *) gVideoFramebuffers[index]);
         free_from_memory_pool(gVideoFramebuffers[index]);
     }
-
-    gVideoFramebuffers[index] = allocate_from_main_pool_safe((SCREEN_WIDTH * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+#ifdef EXPANSION_PAK_SUPPORT
+    if (gExpansionPak) {
+        width = SCREEN_WIDTH_WIDE;
+    }
+#endif
+    gVideoFramebuffers[index] = allocate_from_main_pool_safe((width * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
     gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
     if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = allocate_from_main_pool_safe((SCREEN_WIDTH * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+            gVideoDepthBuffer = allocate_from_main_pool_safe((width * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
             gVideoDepthBuffer = (u16 *)(((s32)gVideoDepthBuffer + 0x3F) & ~0x3F);
     }
 }
