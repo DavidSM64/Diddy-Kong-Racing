@@ -9791,9 +9791,11 @@ void render_benchmark_results_screen() {
 
 extern s32 gRaceStartTimer;
 extern s32 gRaceStartShowHudStep;
+extern f32 gFPS;
 
 void record_fps(void) {
     OSTime frameDiff;
+    char textBytes[12];
     
     benchFrames++;
     benchCPU += MIN(gPuppyPrint.cpuTime[PERF_TOTAL], 200000);
@@ -9802,6 +9804,10 @@ void record_fps(void) {
 
     frameDiff = osGetTime() - benchLastTime;
     gRaceStartTimer = 0;
+
+    puppyprintf(textBytes, "FPS: %2.2f", gFPS);
+    
+    draw_text(&sMenuCurrDisplayList, 32, 32, textBytes, ALIGN_TOP_LEFT);
 
     // If the time elapsed is greater than a second, then record the number of frames.
     if (frameDiff >= 46882325 && benchFramesRecorded < 255) {

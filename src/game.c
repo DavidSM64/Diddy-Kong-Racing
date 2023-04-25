@@ -792,7 +792,7 @@ void thread3_main(UNUSED void *unused) {
 #ifndef FIFO_UCODE
 u8 gDisableAA = TRUE;
 #else
-u8 gDisableAA = FALSE;
+u8 gDisableAA = TRUE;
 #endif
 u8 gHideHUD = FALSE;
 s8 gScreenMode = 0;

@@ -11,6 +11,7 @@
 #include "PR/libultra.h"
 #include "video.h"
 #include "textures_sprites.h"
+#include "game.h"
 
 /************ .data ************/
 
@@ -298,7 +299,12 @@ s32 transition_begin(FadeTransition *transition) {
  */
 s32 handle_transitions(s32 updateRate) {
     if (sLevelTransitionDelayTimer > 0) {
-        sLevelTransitionDelayTimer--;
+        // Required to prevent desync in the intro sequence.
+        if (gMapId == ASSET_LEVEL_OPENINGSEQUENCE) {
+            sLevelTransitionDelayTimer--;
+        } else {
+            sLevelTransitionDelayTimer -= updateRate;
+        }
         updateRate = LOGIC_NULL;
     } else if (updateRate >= LOGIC_10FPS) { // Redundant because the logic update rate is clamped before this function is called.
         updateRate = LOGIC_12FPS;
