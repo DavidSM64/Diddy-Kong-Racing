@@ -283,7 +283,7 @@ glabel func_8001A8F4
 /* 01B914 8001AD14 240B0004 */  li    $t3, 4
 /* 01B918 8001AD18 3C018012 */  lui   $at, %hi(D_8011AD50) # $at, 0x8012
 /* 01B91C 8001AD1C A02BAD50 */  sb    $t3, %lo(D_8011AD50)($at)
-/* 01B920 8001AD20 0C00A3E8 */  jal   func_80028FA0
+/* 01B920 8001AD20 0C00A3E8 */  jal   set_anti_aliasing
 /* 01B924 8001AD24 24040001 */   li    $a0, 1
 /* 01B928 8001AD28 3C028012 */  lui   $v0, %hi(D_8011AD50) # $v0, 0x8012
 /* 01B92C 8001AD2C 8042AD50 */  lb    $v0, %lo(D_8011AD50)($v0)
@@ -292,9 +292,9 @@ glabel func_8001A8F4
 /* 01B934 8001AD34 24010004 */  li    $at, 4
 /* 01B938 8001AD38 1441003E */  bne   $v0, $at, .L8001AE34
 /* 01B93C 8001AD3C 8FBF001C */   lw    $ra, 0x1c($sp)
-/* 01B940 8001AD40 0C00A3E8 */  jal   func_80028FA0
+/* 01B940 8001AD40 0C00A3E8 */  jal   set_anti_aliasing
 /* 01B944 8001AD44 24040001 */   li    $a0, 1
-/* 01B948 8001AD48 0C0168EC */  jal   func_8005A3B0
+/* 01B948 8001AD48 0C0168EC */  jal   disable_racer_input
 /* 01B94C 8001AD4C 00000000 */   nop   
 /* 01B950 8001AD50 0C01AF66 */  jal   get_current_level_race_type
 /* 01B954 8001AD54 00000000 */   nop   

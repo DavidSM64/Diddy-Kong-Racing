@@ -1017,12 +1017,12 @@ typedef struct Object_Wizpig2 {
 } Object_Wizpig2;
 
 typedef struct Object_Exit {
-  /* 0x00 */ f32 unk0;
-  /* 0x04 */ f32 unk4;
-  /* 0x08 */ f32 unk8;
-  /* 0x0C */ f32 unkC;
-  /* 0x10 */ s32 unk10;
-  /* 0x14 */ s8 unk14;
+  /* 0x00 */ f32 directionX;
+  /* 0x04 */ f32 directionY;
+  /* 0x08 */ f32 directionZ;
+  /* 0x0C */ f32 rotationDiff; // Rotational offset, to test intersection when the exit is rotated.
+  /* 0x10 */ s32 radius; // Activation radius.
+  /* 0x14 */ s8 bossFlag; // Dictates boss level version. 0 is first encounter, 1 is rematch. -1 means no boss.
 } Object_Exit;
 
 /* Size: 0x224 - 548 bytes */
@@ -1088,7 +1088,7 @@ typedef struct Object_Racer {
   /* 0x0E4 */ Vec3f unkE4;
   /* 0x0F0 */ Vec3f unkF0;
   /* 0x0FC */ Vec3f unkFC;
-  /* 0x108 */ struct Object *unk108;
+  /* 0x108 */ struct Object *exitObj;
   /* 0x10C */ s32 unk10C;
   /* 0x110 */ s32 unk110;
   /* 0x114 */ s32 unk114;
@@ -1260,17 +1260,6 @@ typedef struct Object_ModeChange {
   /* 0x14 */ u8 vehicleID;
 } Object_ModeChange;
 
-typedef struct Object_GoldenBalloon {
-  /* 0x00 */ f32 unk0;
-  /* 0x04 */ u8 pad4[0x8];
-  /* 0x0C */ u8 unkC;
-  /* 0x0D */ u8 unkD;
-  /* 0x0E */ u8 unkE;
-  /* 0x0F */ u8 unkF;
-  /* 0x10 */ s8 unk10;
-  /* 0x14 */ f32 unk14;
-} Object_GoldenBalloon;
-
 typedef struct Object_Door {
   /* 0x00 */ f32 unk0;
   /* 0x04 */ u8 pad4[0x4];
@@ -1353,22 +1342,22 @@ typedef struct Object_FogChanger {
 
 typedef struct Object_NPC {
    /* 0x00 */ f32 unk0;
-   /* 0x04 */ f32 unk4;
+   /* 0x04 */ f32 animFrameF;
    /* 0x08 */ s32 unk8;
    /* 0x0C */ s8 unkC;
    /* 0x0D */ u8 unkD;
    /* 0x0E */ u8 unkE;
    /* 0x0F */ u8 unkF;
    /* 0x10 */ u8 unk10;
-   /* 0x11 */ u8 unk11;
-   /* 0x12 */ u8 unk12;
-   /* 0x13 */ u8 unk13;
-   /* 0x14 */ f32 unk14;
+   /* 0x11 */ u8 fogR;
+   /* 0x12 */ u8 fogG;
+   /* 0x13 */ u8 fogB;
+   /* 0x14 */ f32 forwardVel;
    /* 0x18 */ f32 unk18;
    /* 0x1C */ s16 unk1C;
    /* 0x1E */ s16 unk1E;
-   /* 0x20 */ s16 unk20;
-   /* 0x22 */ s16 unk22;
+   /* 0x20 */ s16 fogNear;
+   /* 0x22 */ s16 fogFar;
    /* 0x24 */ s32 unk24;
    /* 0x28 */ s16 unk28;
    /* 0x2A */ s16 unk2A;
@@ -1474,7 +1463,6 @@ typedef struct Object_64 {
         Object_Racer racer;
         Object_Bonus bonus;
         Object_ModeChange mode_change;
-        Object_GoldenBalloon golden_balloon;
         Object_Door door;
         Object_Trigger trigger;
         Object_Audio audio;

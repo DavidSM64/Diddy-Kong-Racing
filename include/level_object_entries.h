@@ -57,7 +57,7 @@ typedef struct LevelObjectEntry_Exit {
     /* 0x0A */ s8 overworldSpawnIndex;
 
     /* 0x0B */ u8 padB[5];
-    /* 0x10 */ u8 unk10;
+    /* 0x10 */ u8 radius; // Activation radius.
     /* 0x11 */ u8 unk11;
     /* 0x12 */ u8 pad12[5];
     
@@ -119,9 +119,9 @@ typedef struct LevelObjectEntry_Dino_Whale {
 
 typedef struct LevelObjectEntry_Checkpoint {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 unk8;
+    /* 0x08 */ u8 scale;
     /* 0x09 */ u8 unk9;
-    /* 0x0A */ u8 unkA;
+    /* 0x0A */ u8 yRotation;
     /* 0x0B */ s8 unkB;
     /* 0x0C */ s8 unkC;
     /* 0x0D */ s8 unkD;
@@ -156,13 +156,13 @@ typedef struct LevelObjectEntry_Door {
 
 typedef struct LevelObjectEntry_FogChanger {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 unk8;
-    /* 0x09 */ u8 unk9;
-    /* 0x0A */ u8 unkA;
-    /* 0x0B */ u8 unkB;
-    /* 0x0C */ s16 unkC;
-    /* 0x0E */ s16 unkE;
-    /* 0x10 */ s16 unk10;
+    /* 0x08 */ u8 distance;
+    /* 0x09 */ u8 r;
+    /* 0x0A */ u8 g;
+    /* 0x0B */ u8 b;
+    /* 0x0C */ s16 near;
+    /* 0x0E */ s16 far;
+    /* 0x10 */ s16 switchTimer;
 } LevelObjectEntry_FogChanger;
 
 typedef struct LevelObjectEntry_AiNode {
@@ -474,9 +474,9 @@ typedef struct LevelObjectEntry_FlyCoin {
 
 typedef struct LevelObjectEntry_GoldenBalloon {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ s8 unk8;
+    /* 0x08 */ s8 balloonID;
     /* 0x09 */ u8 scale;
-    /* 0x0A */ s8 unkA;
+    /* 0x0A */ s8 challengeID;
 } LevelObjectEntry_GoldenBalloon;
 
 typedef struct LevelObjectEntry_Laserbolt {
