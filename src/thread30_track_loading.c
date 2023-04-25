@@ -27,7 +27,7 @@ OSMesg gThread30Message;
 
 // Currently defined in osViMgr.c
 // There are a few stacks defined next to each other. Maybe they are in their own separate file?
-extern u64 gThread30Stack[0x200];
+extern u64 gThread30Stack[0x400];
 
 /*****************************/
 
@@ -36,7 +36,7 @@ extern u64 gThread30Stack[0x200];
  */
 void create_and_start_thread30(void) {
     osCreateMesgQueue(&gThread30MesgQueue, &gThread30Message, 2);
-    osCreateThread(&gThread30, 30, &thread30_track_loading, NULL, &gThread30Stack[0x200], 8);
+    osCreateThread(&gThread30, 30, &thread30_track_loading, NULL, &gThread30Stack[0x400], 8);
     osStartThread(&gThread30);
 }
 
