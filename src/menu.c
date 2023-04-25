@@ -6858,7 +6858,7 @@ void func_80093D40(UNUSED s32 updateRate) {
                     puppyprintf(gPauseOptionStack[i], "%s: %d", gPauseConfigOpt[i], gScreenPos[1]);
                     break;
                 case 3:
-                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gAntiAliasing]);
+                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gDisableAA]);
                     break;
                 }
                 render_dialogue_text(7, POS_CENTRED, yOffset + 8 + (i * 16), gPauseOptionStack[i], 1, 12);
@@ -6951,7 +6951,7 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                         change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
                         break;
                     case 4:
-                        gAntiAliasing ^= 1;
+                        gDisableAA ^= 1;
                         set_dither_filter();
                         break;
                     }
@@ -9809,7 +9809,7 @@ void record_fps(void) {
         benchCPURecord[benchFramesRecorded] = benchCPU / benchFrames;
         benchRSPRecord[benchFramesRecorded] = benchRSP / benchFrames;
         benchRDPRecord[benchFramesRecorded] = benchRDP / benchFrames;
-        aaOvrRecord[benchFramesRecorded] = gOverrideAA || !gAntiAliasing;
+        aaOvrRecord[benchFramesRecorded] = gOverrideAA || gDisableAA;
         benchFramesRecorded++;
         benchFrames = 0;
         benchCPU = 0;

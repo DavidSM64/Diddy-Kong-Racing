@@ -1056,7 +1056,8 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
     flags = (D_80126384) ? (flags & (RENDER_DECAL | RENDER_COLOUR_INDEX | RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT)) : (flags & (RENDER_UNK_8000000 | RENDER_DECAL | RENDER_Z_UPDATE | RENDER_COLOUR_INDEX | RENDER_UNK_0000010 | RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING));
     flags &= ~D_80126378;
     flags = (flags & RENDER_UNK_8000000) ? flags & ~RENDER_FOG_ACTIVE : flags & ~RENDER_Z_UPDATE;
-    if (gAntiAliasing == FALSE || gOverrideAA) {
+    // This is just here until object rendering can be blanket handled too, rather than by each material.
+    if (gDisableAA || gOverrideAA) {
         flags &= ~RENDER_ANTI_ALIASING;
     } else {
         flags |= RENDER_ANTI_ALIASING;

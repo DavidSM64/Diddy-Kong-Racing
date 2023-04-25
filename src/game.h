@@ -10,7 +10,7 @@
 
 extern Gfx *gDisplayLists[2];
 extern s32 sLogicUpdateRate;
-extern u8 gAntiAliasing;
+extern u8 gDisableAA;
 extern u8 gOverrideAA;
 extern u8 gHideHUD;
 extern s8 gScreenMode;
