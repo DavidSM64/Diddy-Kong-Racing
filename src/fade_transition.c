@@ -298,7 +298,7 @@ s32 transition_begin(FadeTransition *transition) {
  */
 s32 handle_transitions(s32 updateRate) {
     if (sLevelTransitionDelayTimer > 0) {
-        sLevelTransitionDelayTimer -= updateRate;
+        sLevelTransitionDelayTimer--;
         updateRate = LOGIC_NULL;
     } else if (updateRate >= LOGIC_10FPS) { // Redundant because the logic update rate is clamped before this function is called.
         updateRate = LOGIC_12FPS;
