@@ -15,7 +15,7 @@
 /************ .bss ************/
 
 u64 *gThread1StackPointer; // stack pointer for thread 1
-u64 gThread3Stack[0x400];
+u64 gThread3Stack[THREAD3_STACK / sizeof(u64)];
 u64 *gThread3StackPointer; // stack pointer for thread 3
 OSThread gThread1; // OSThread for thread 1
 OSThread gThread3; // OSThread for thread 3
@@ -177,7 +177,7 @@ void thread1_main(UNUSED void *unused) {
     } else {
 #endif
         osCreateThread(&gThread3, 3, &thread3_main, 0, &gThread3StackPointer, 10);
-        gThread3Stack[0x400] = 0;
+        gThread3Stack[THREAD3_STACK / sizeof(u64)] = 0;
         gThread3Stack[0] = 0;
         osStartThread(&gThread3);
         osSetThreadPri(NULL, OS_PRIORITY_IDLE);

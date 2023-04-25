@@ -116,7 +116,7 @@ TriangleList *gTriangleHeap[2];
 TriangleList *gGameCurrTriList;
 s8 D_80121250[16]; //Settings4C
 OSSched gMainSched; // 0x288 / 648 bytes
-u64 gSchedStack[0x40];
+u64 gSchedStack[THREAD5_STACK / sizeof(u64)];
 s32 gSPTaskNum;
 s32 sRenderContext;
 s32 D_801234F0; // I don't think this is ever not 1

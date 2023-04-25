@@ -6,13 +6,14 @@
 #include "libultra_internal.h"
 #include "viint.h"
 #include "osint.h"
+#include "config.h"
 
 extern OSTime __osCurrentTime;
 extern u32 __osBaseCounter;
 extern u32 __osViIntrCount;
 
 OSDevMgr __osViDevMgr = {0};
-u64 gThread30Stack[0x400];
+u64 gThread30Stack[THREAD30_STACK / sizeof(u64)];
 u64 *gThread30StackPointer;
 
 extern OSThread viThread;

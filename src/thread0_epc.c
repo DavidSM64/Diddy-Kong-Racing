@@ -22,7 +22,7 @@
 
 /*******************************/
 
-u64 gEPCStack[0x200];
+u64 gEPCStack[THREAD3_STACK / sizeof(u64)];
 OSThread gEPCThread;
 OSMesgQueue D_80129790;
 OSMesg D_801297A8[8];
