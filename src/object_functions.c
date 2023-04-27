@@ -839,7 +839,7 @@ void obj_loop_rocketsignpost(Object *obj, UNUSED s32 updateRate) {
             if (playerObj == obj4C->obj) {
                 // Detect if the player honks or slams into the signpost.
                 if ((get_buttons_pressed_from_player(PLAYER_ONE) & Z_TRIG) || playerObj == obj->unk5C->unk100) {
-                    func_8006F29C();
+                    begin_lighthouse_rocket_cutscene();
                 }
             }
         }
@@ -905,6 +905,10 @@ void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
+/**
+ * Ground Zipper init behaviour.
+ * Sets scale and angle based on entry data.
+*/
 void obj_init_groundzipper(Object *obj, LevelObjectEntry_GroundZipper *entry) {
     ObjectHeader *header;
     f32 objScale;
@@ -939,6 +943,11 @@ void obj_init_groundzipper(Object *obj, LevelObjectEntry_GroundZipper *entry) {
     }
 }
 
+/**
+ * Ground Zipper loop behaviour.
+ * Searches for a racer among its interactions.
+ * If a racer passes over it, initiate a boost, which can be empowered by releasing the A button.
+*/
 void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
     Object *curRacerObj;
     Object_Racer *racer;
@@ -979,6 +988,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
+// This I'm quite sure is related to time trial checkpoints.
 void obj_init_unknown58(Object *obj, UNUSED LevelObjectEntry_Unknown58 *entry) {
     obj->unk78 = 0;
     obj->unk7C.word = (s32) obj->segment.header;
@@ -1884,8 +1894,8 @@ void obj_init_teleport(Object *obj, UNUSED LevelObjectEntry_Teleport *entry) {
 void obj_loop_teleport(Object *obj, UNUSED s32 updateRate) {
     if (obj->action != 0) {
         LevelObjectEntry_Teleport *level_entry = &obj->segment.unk3C_a.level_entry->teleport;
-        if (obj->interactObj->distance < 0x78) {
-            func_8006F338(level_entry->unk8);
+        if (obj->interactObj->distance < 120) {
+            begin_level_teleport(level_entry->levelID);
             obj->action = 0;
             play_sound_global(SOUND_WHOOSH2, NULL);
             func_80000FDC(SOUND_VOICE_TT_FUTURE_FUN_LAND, 0, 1.0f);
@@ -4534,9 +4544,9 @@ void obj_loop_log(Object *obj, s32 updateRate) {
 
 /* Official name: weatherInit */
 void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry) {
-    f32 temp = entry->unk8;
-    temp *= temp;
-    obj->unk78f = temp;
+    f32 radius = entry->radius;
+    radius *= radius;
+    obj->unk78f = radius;
 }
 
 /**
@@ -4584,7 +4594,7 @@ void obj_init_lensflare(Object *obj, UNUSED LevelObjectEntry_LensFlare *entry) {
 
 void obj_init_lensflareswitch(Object *obj, LevelObjectEntry_LensFlareSwitch *entry, UNUSED s32 arg2) {
     cameraAddOverrideObject(obj);
-    obj->segment.trans.scale = entry->unk8;
+    obj->segment.trans.scale = entry->radius;
     obj->segment.trans.scale /= 40.0f;
 }
 
@@ -5002,17 +5012,17 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
         diffZ = obj->segment.trans.z_position - racerObj->segment.trans.z_position;
         temp_s0 = (Object_LevelName_78 *) &obj->unk78;
         if ((diffX * diffX) + (diffZ * diffZ) < temp_s0->radius) {
-            temp_s0->unk6 += updateRate * 16;
-            if (temp_s0->unk6 > 256) {
-                temp_s0->unk6 = 256;
+            temp_s0->opacity += updateRate * 16;
+            if (temp_s0->opacity > 256) {
+                temp_s0->opacity = 256;
             }
         } else {
-            temp_s0->unk6 -= updateRate * 16;
-            if (temp_s0->unk6 < 0) {
-                temp_s0->unk6 = 0;
+            temp_s0->opacity -= updateRate * 16;
+            if (temp_s0->opacity < 0) {
+                temp_s0->opacity = 0;
             }
         }
-        if (temp_s0->unk6 > 0) {
+        if (temp_s0->opacity > 0) {
             levelName = get_level_name(temp_s0->unk4);
             textWidth = (get_text_width(levelName, 0, 0) + 24) >> 1;
             x1 = SCREEN_WIDTH_HALF - textWidth;
@@ -5026,10 +5036,10 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
             }
             assign_dialogue_box_id(4);
             set_current_dialogue_box_coords(4, x1, y1, x2, y2);
-            set_current_dialogue_background_colour(4, 128, 64, 128, (temp_s0->unk6 * SCREEN_WIDTH_HALF) >> 8);
+            set_current_dialogue_background_colour(4, 128, 64, 128, (temp_s0->opacity * SCREEN_WIDTH_HALF) >> 8);
             set_current_text_background_colour(4, 0, 0, 0, 0);
-            set_dialogue_font(4, 0);
-            set_current_text_colour(4, 255, 255, 255, 0, (temp_s0->unk6 * 255) >> 8);
+            set_dialogue_font(4, FONT_COLOURFUL);
+            set_current_text_colour(4, 255, 255, 255, 0, (temp_s0->opacity * 255) >> 8);
             render_dialogue_text(4, (x2 - x1) >> 1, ((y2 - y1) >> 1) + 2, levelName, 1, 12);
             open_dialogue_box(4);
         }

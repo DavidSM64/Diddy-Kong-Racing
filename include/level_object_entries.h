@@ -252,7 +252,7 @@ typedef struct LevelObjectEntry_Buoy_PirateShip {
 
 typedef struct LevelObjectEntry_Weather {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ s16 unk8;
+    /* 0x08 */ s16 radius;
     /* 0x0A */ s16 unkA;
     /* 0x0C */ s16 unkC;
     /* 0x0E */ s16 unkE;
@@ -295,7 +295,7 @@ typedef struct LevelObjectEntry_LensFlare {
 
 typedef struct LevelObjectEntry_LensFlareSwitch {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ s16 unk8;
+    /* 0x08 */ s16 radius;
 } LevelObjectEntry_LensFlareSwitch;
 
 typedef struct LevelObjectEntry_CollectEgg {
@@ -535,7 +535,7 @@ typedef struct LevelObjectEntry_Snowball {
 
 typedef struct LevelObjectEntry_Teleport {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ s8 unk8;
+    /* 0x08 */ s8 levelID;
 } LevelObjectEntry_Teleport;
 
 typedef struct LevelObjectEntry_Lighthouse_RocketSignpost {

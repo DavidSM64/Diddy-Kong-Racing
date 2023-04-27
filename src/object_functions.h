@@ -252,7 +252,7 @@ typedef struct Object_78_Banana {
 typedef struct Object_LevelName_78 {
     f32 radius;
     s16 unk4;
-    s16 unk6;
+    s16 opacity;
 } Object_LevelName_78;
 
 // Unsure about the signed/unsigned with these arrays.
