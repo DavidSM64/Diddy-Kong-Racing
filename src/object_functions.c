@@ -954,6 +954,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
                 if ((s32) ((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < obj->unk78 * obj->unk78) {
                     if (racer->playerIndex != PLAYER_COMPUTER) {
                         play_sound_spatial(SOUND_ZIP_PAD_BOOST, curRacerObj->segment.trans.x_position, curRacerObj->segment.trans.y_position, curRacerObj->segment.trans.z_position, NULL);
+                        play_random_character_voice(curRacerObj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 0x82);
                     }
                     racer->boostTimer = (45);
                     racer->boostType = BOOST_LARGE;

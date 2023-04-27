@@ -3202,7 +3202,11 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         if (gRaceStartTimer == 0) {
             racer->throttle = 1.0f;
             if (surfaceTraction != 0.0f) {
-                surfaceTraction = 2.0f;
+                if (is_in_adventure_two()) {
+                    surfaceTraction = ADVENTURE_TWO_BOOST_SPEED;
+                } else {
+                    surfaceTraction = 2.0f;
+                }
             }
             racer->boostTimer -= updateRate;
         }
@@ -4115,6 +4119,7 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
         racer->lateral_velocity = 0.0f;
     }
     if (racer->boostTimer == 0 && surfaceType == SURFACE_ZIP_PAD) {
+        play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 0x82);
         racer->boostTimer = (45);
         racer->boostType = BOOST_UNK3;
     }
@@ -4189,6 +4194,9 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
     }
     if (racer->brake < 0.9f && gRaceStartTimer == 0) {
         racer->velocity += weight * (racer->pitch / 4.0f) * updateRateF;
+    }
+    if (is_in_adventure_two() && racer->vehicleID == VEHICLE_HOVERCRAFT) {
+        weight *= ADVENTURE_TWO_SPEED;
     }
     obj->segment.y_velocity -= weight * updateRateF;
 }
@@ -4447,6 +4455,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                     case WEAPON_NITRO_LEVEL_1:
                     case WEAPON_NITRO_LEVEL_2:
                     case WEAPON_NITRO_LEVEL_3:
+                        play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 0x82);
                         switch(weaponID) {
                             case WEAPON_NITRO_LEVEL_3:
                                  // IDO demands this to be on 1 line.
@@ -4731,7 +4740,11 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
     s32 timer3;
 
     // If you want to change the baseline speed of vehicles, this is what you change.
-    speedMultiplier = 1.0f;
+    if (is_in_adventure_two()) {
+        speedMultiplier = ADVENTURE_TWO_SPEED;
+    } else {
+        speedMultiplier = 1.0f;
+    }
     // Set the player's top speed to 0 before the race starts, so you can't jump the start.
     if (gRaceStartTimer) {
         speedMultiplier = 0.0f;
@@ -4758,6 +4771,7 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
             racer->boostTimer = (timer2 >> 1);
             if (timer2 == 24) {
                 racer_play_sound(obj, SOUND_SELECT);
+                play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 0x82);
                 racer->boostTimer = (20);
             }
             if (racer->boostTimer < (20)) {

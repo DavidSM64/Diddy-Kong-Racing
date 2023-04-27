@@ -13,6 +13,8 @@
 #define NUM_RACERS_2P 8                     // Default is 6
 #define NUM_RACERS_3P 4                     // Default is 4
 #define NUM_RACERS_4P 4                     // Default is 4
+#define ADVENTURE_TWO_SPEED         2.0f    // Global speed multiplier for adventure 2. Default is 1.0f, but set it higher for high speed action
+#define ADVENTURE_TWO_BOOST_SPEED   1.5f    // Global boost multiplier for adventure 2. Default is 2.0f, but set it lower to make boosting controllable.
 
 /* -------------------------Debug------------------------- */
 #define PUPPYPRINT_DEBUG                    // Enable debug features
@@ -23,7 +25,7 @@
 
 /* -------------------------Memory------------------------ */
 //#define EXPANSION_PAK_REQUIRED              // Enable expansion pak requirement
-#define EXPANSION_PAK_SUPPORT               // Allow the game to use the expansion pak if it's inserted. Disabling this will move Framebuffers to expansion RAM for extra performance.
+//#define EXPANSION_PAK_SUPPORT               // Allow the game to use the expansion pak if it's inserted. Disabling this will move Framebuffers to expansion RAM for extra performance.
 //#define FORCE_4MB_MEMORY                    // Pretend the expansion pak is not installed. 
 
 #define THREAD2_STACK           0x400
