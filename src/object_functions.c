@@ -2681,25 +2681,25 @@ void obj_loop_checkpoint(UNUSED Object *obj, UNUSED s32 updateRate) {
  * Sets direction and vehicleID based off spawn info.
 */
 void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
-    f32 phi_f0;
+    f32 radius;
     Object_ModeChange *obj64;
-    phi_f0 = entry->unk8 & 0xFF;
-    if (phi_f0 < 5) {
-        phi_f0 = 5;
+    radius = entry->radius & 0xFF;
+    if (radius < 5) {
+        radius = 5;
     }
     obj64 = &obj->unk64->mode_change;
-    phi_f0 /= 128;
-    obj->segment.trans.scale = phi_f0;
+    radius /= 128;
+    obj->segment.trans.scale = radius;
     obj->segment.trans.y_rotation = entry->unk9 << 6 << 4;
-    obj64->unk0 = sins_f(obj->segment.trans.y_rotation);
-    obj64->unk4 = 0.0f;
-    obj64->unk8 = coss_f(obj->segment.trans.y_rotation);
-    obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
-    obj64->unk10 = entry->unk8;
+    obj64->directionX = sins_f(obj->segment.trans.y_rotation);
+    obj64->directionY = 0.0f;
+    obj64->directionZ = coss_f(obj->segment.trans.y_rotation);
+    obj64->rotationDiff = -((obj64->directionX * obj->segment.trans.x_position) + (obj64->directionZ * obj->segment.trans.z_position));
+    obj64->radius = entry->radius;
     obj64->vehicleID = entry->vehicleID;
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
-    obj->interactObj->hitboxRadius = entry->unk8;
+    obj->interactObj->hitboxRadius = entry->radius;
     obj->interactObj->unk12 = 0;
 }
 
@@ -2722,8 +2722,8 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
     f32 dist;
     
     modeChange = (Object_ModeChange *) obj->unk64;
-    if (obj->interactObj->distance < modeChange->unk10) {
-        radiusF = modeChange->unk10;
+    if (obj->interactObj->distance < modeChange->radius) {
+        radiusF = modeChange->radius;
         racerObjects = get_racer_objects(&numRacers);
         for (i = 0; i < numRacers; i++) {
             racerObj = racerObjects[i];
@@ -2734,7 +2734,7 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
                 diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
                 dist = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
                 if (dist < radiusF) {
-                    dist = ((modeChange->unk0 * racerObj->segment.trans.x_position) + (modeChange->unk8 * racerObj->segment.trans.z_position) + modeChange->unkC);
+                    dist = ((modeChange->directionX * racerObj->segment.trans.x_position) + (modeChange->directionZ * racerObj->segment.trans.z_position) + modeChange->rotationDiff);
                     if (dist < 0.0f) {
                         racer->unk1E0 = 0;
                         if (modeChange->vehicleID == VEHICLE_CAR) {
@@ -2766,25 +2766,25 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
 
 
 void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry) {
-    f32 phi_f0;
+    f32 radius;
     Object_Bonus *obj64;
-    phi_f0 = entry->unk8 & 0xFF;
-    if (phi_f0 < 5) {
-        phi_f0 = 5;
+    radius = entry->radius & 0xFF;
+    if (radius < 5) {
+        radius = 5;
     }
     obj64 = &obj->unk64->bonus;
-    phi_f0 /= 128;
-    obj->segment.trans.scale = phi_f0;
+    radius /= 128;
+    obj->segment.trans.scale = radius;
     obj->segment.trans.y_rotation = entry->unk9 << 6 << 4;
-    obj64->unk0 = sins_f(obj->segment.trans.y_rotation);
-    obj64->unk4 = 0.0f;
-    obj64->unk8 = coss_f(obj->segment.trans.y_rotation);
-    obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
-    obj64->unk10 = entry->unk8;
+    obj64->directionX = sins_f(obj->segment.trans.y_rotation);
+    obj64->directionY = 0.0f;
+    obj64->directionZ = coss_f(obj->segment.trans.y_rotation);
+    obj64->rotationDiff = -((obj64->directionX * obj->segment.trans.x_position) + (obj64->directionZ * obj->segment.trans.z_position));
+    obj64->radius = entry->radius;
     obj64->unk14 = entry->unkA;
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
-    obj->interactObj->hitboxRadius = entry->unk8;
+    obj->interactObj->hitboxRadius = entry->radius;
     obj->interactObj->unk12 = 0;
 }
 
@@ -2802,8 +2802,8 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
     s32 i;
 
     obj64 = &obj->unk64->bonus;
-    if (obj->interactObj->distance < obj64->unk10) {
-        dist = obj64->unk10;
+    if (obj->interactObj->distance < obj64->radius) {
+        dist = obj64->radius;
         halfDist = dist * 0.5;
         racerObjects = get_racer_objects(&numberOfRacers);
         for (i = 0; i < numberOfRacers; i++) {
@@ -2814,7 +2814,7 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
                 diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
                 if ((sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < dist)) {
-                    f32 temp = (obj64->unk0 * racerObj->segment.trans.x_position) + (obj64->unk8 * racerObj->segment.trans.z_position) + obj64->unkC;
+                    f32 temp = (obj64->directionX * racerObj->segment.trans.x_position) + (obj64->directionZ * racerObj->segment.trans.z_position) + obj64->rotationDiff;
                     if (temp < 0.0f) {
                         if ((s32) racer->bananas < 10) {
                             racer->bananas = 10;
@@ -3362,9 +3362,9 @@ void obj_init_fogchanger(Object *obj, LevelObjectEntry_FogChanger *entry) {
 void obj_init_skycontrol(Object *obj, LevelObjectEntry_SkyControl *entry) {
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
-    obj->interactObj->hitboxRadius = entry->unk9;
+    obj->interactObj->hitboxRadius = entry->radius;
     obj->action = entry->unk8;
-    obj->unk7C.word = entry->unk9;
+    obj->unk7C.word = entry->radius;
 }
 
 void obj_loop_skycontrol(Object *obj, UNUSED s32 updateRate) {

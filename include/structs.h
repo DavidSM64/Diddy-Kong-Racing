@@ -1243,20 +1243,20 @@ typedef struct Object_Racer {
 } Object_Racer;
 
 typedef struct Object_Bonus {
-  /* 0x00 */ f32 unk0;
-  /* 0x04 */ f32 unk4;
-  /* 0x08 */ f32 unk8;
-  /* 0x0C */ f32 unkC;
-  /* 0x10 */ s32 unk10;
+  /* 0x00 */ f32 directionX;
+  /* 0x04 */ f32 directionY;
+  /* 0x08 */ f32 directionZ;
+  /* 0x0C */ f32 rotationDiff; // Rotational offset, to test intersection when the exit is rotated.
+  /* 0x10 */ s32 radius; // Activation radius.
   /* 0x14 */ s8 unk14;
 } Object_Bonus;
 
 typedef struct Object_ModeChange {
-  /* 0x00 */ f32 unk0;
-  /* 0x04 */ f32 unk4;
-  /* 0x08 */ f32 unk8;
-  /* 0x0C */ f32 unkC;
-  /* 0x10 */ s32 unk10;
+  /* 0x00 */ f32 directionX;
+  /* 0x04 */ f32 directionY;
+  /* 0x08 */ f32 directionZ;
+  /* 0x0C */ f32 rotationDiff; // Rotational offset, to test intersection when the exit is rotated.
+  /* 0x10 */ s32 radius; // Activation radius.
   /* 0x14 */ u8 vehicleID;
 } Object_ModeChange;
 
