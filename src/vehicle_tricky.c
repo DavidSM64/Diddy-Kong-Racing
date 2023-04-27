@@ -48,10 +48,10 @@ s8 D_8011D5CC;
 /******************************/
 
 void func_8005C2F0(Object *object, unk8005C2F0 *arg1) {
-    object->interactObj->flags = INTERACT_FLAGS_UNK_0001 | INTERACT_FLAGS_UNK_0004;
+    object->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0004;
     object->interactObj->unk11 = 0;
     object->interactObj->hitboxRadius = 30;
-    object->interactObj->unk12 = 0;
+    object->interactObj->pushForce = 0;
     arg1->unkC = 0.0f;
     D_8011D5C0 = object->segment.trans.y_position;
     if (arg1->unk118 != 0) {
@@ -198,7 +198,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         func_8006F140(1);
     }
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & 8 && obj->segment.unk38.byte.unk3B == 1) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.unk38.byte.unk3B == 1) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != FALSE) {

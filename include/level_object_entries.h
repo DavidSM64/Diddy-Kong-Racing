@@ -15,7 +15,7 @@ typedef struct LevelObjectEntry_Racer {
 typedef struct LevelObjectEntry_Scenery {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8;
-    /* 0x09 */ u8 unk9;
+    /* 0x09 */ u8 radius;
     /* 0x0A */ u8 unkA;
     /* 0x0B */ u8 unkB;
 } LevelObjectEntry_Scenery;
@@ -230,7 +230,7 @@ typedef struct LevelObjectEntry_TexScroll {
 typedef struct LevelObjectEntry_ModeChange {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 radius;
-    /* 0x09 */ u8 unk9;
+    /* 0x09 */ u8 yRotation;
     /* 0x0A */ u8 vehicleID;
 } LevelObjectEntry_ModeChange;
 
@@ -285,7 +285,7 @@ typedef struct LevelObjectEntry_SeaMonster {
 typedef struct LevelObjectEntry_Bonus {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 radius;
-    /* 0x09 */ u8 unk9;
+    /* 0x09 */ u8 yRotation;
     /* 0x0A */ u8 unkA;
 } LevelObjectEntry_Bonus;
 

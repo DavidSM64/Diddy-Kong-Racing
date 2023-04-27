@@ -2159,10 +2159,10 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
         gDialogueCameraAngle = 0;
         gRacerInputBlocked = FALSE;
     }
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001 | INTERACT_FLAGS_UNK_0004;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0004;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 15;
-    obj->interactObj->unk12 = 0x14;
+    obj->interactObj->pushForce = 0x14;
     tempRacer->unk1EE = 0;
     if (!D_8011D582) {
         tempRacer->transparency = 255;

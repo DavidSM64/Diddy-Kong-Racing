@@ -131,22 +131,22 @@ s16 D_8011D4E2; // Taj Voice clips
 /******************************/
 
 void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
-    f32 phi_f0;
+    f32 radius;
     obj->segment.trans.unk6 |= 2;
-    phi_f0 = entry->unk9 & 0xFF;
-    if (phi_f0 < 10) {
-        phi_f0 = 10;
+    radius = entry->radius & 0xFF;
+    if (radius < 10) {
+        radius = 10;
     }
-    phi_f0 /= 64;
-    obj->segment.trans.scale = obj->segment.header->scale * phi_f0;
-    obj->shadow->scale = obj->segment.header->unk4 * phi_f0;
+    radius /= 64;
+    obj->segment.trans.scale = obj->segment.header->scale * radius;
+    obj->shadow->scale = obj->segment.header->shadowScale * radius;
     obj->segment.unk38.byte.unk3A = entry->unk8;
     obj->segment.trans.y_rotation = entry->unkA << 6 << 4;
     if (entry->unkB) {
-        obj->interactObj->flags = INTERACT_FLAGS_UNK_0001;
+        obj->interactObj->flags = INTERACT_FLAGS_SOLID;
         obj->interactObj->unk11 = 1;
         obj->interactObj->hitboxRadius = 20;
-        obj->interactObj->unk12 = 0;
+        obj->interactObj->pushForce = 0;
         obj->interactObj->unk16 = -5;
         obj->interactObj->unk17 = entry->unkB;
     }
@@ -157,6 +157,10 @@ void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
     obj->unk7C.word = 0;
 }
 
+/**
+ * Level scenery loop behaviour.
+ * When hit by a racer, give it an elastic behaviour as feedback.
+*/
 void obj_loop_scenery(Object *obj, s32 updateRate) {
 	Object78_80033DD0 *obj78;
 	s32 temp_v0;
@@ -166,9 +170,9 @@ void obj_loop_scenery(Object *obj, s32 updateRate) {
         if (obj->unk7C.half.upper > 0) {
             obj78->unk4 -= updateRate;
         }
-        if ((obj->interactObj->flags & 0x40) && ((s32) obj78->unk4 <= 0)) {
+        if (obj->interactObj->flags & INTERACT_FLAGS_COLLIDED && obj78->unk4 <= 0) {
             play_sound_at_position(SOUND_TWANG, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
-            obj78->unk0 = (s32*) obj->interactObj->obj;
+            obj78->unk0 = (s32 *) obj->interactObj->obj;
             obj78->unk6 = 1820;
             obj78->unk4 = 10;
             if (get_number_of_active_players() < 2) {
@@ -185,7 +189,7 @@ void obj_loop_scenery(Object *obj, s32 updateRate) {
         } else if (obj78->unk4 <= 0) {
             obj78->unk0 = 0;
         }
-        obj->segment.trans.z_rotation = (s16) obj78->unk6;
+        obj->segment.trans.z_rotation = obj78->unk6;
         obj78->unk6 = (obj78->unk6 * -200) >> 8;
     }
 }
@@ -560,7 +564,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_effectbox.s")
 #endif
 
 void obj_init_trophycab(Object *obj, LevelObjectEntry_TrophyCab *entry) {
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 2;
     obj->segment.trans.y_rotation = entry->rotation << 6 << 4; // Not sure about the values here.
 }
@@ -680,7 +684,7 @@ void obj_init_collectegg(Object *obj, UNUSED LevelObjectEntry_CollectEgg *entry)
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 20;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
 }
 
 /**
@@ -818,10 +822,10 @@ void obj_init_lighthouse_rocketsignpost(Object *obj, LevelObjectEntry_Lighthouse
     if (obj->segment.unk38.byte.unk3A >= obj->segment.header->numberOfModelIds) {
         obj->segment.unk38.byte.unk3A = 0;
     }
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 20;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
 }
 
 void obj_loop_rocketsignpost(Object *obj, UNUSED s32 updateRate) {
@@ -861,7 +865,7 @@ void obj_init_airzippers_waterzippers(Object *obj, LevelObjectEntry_AirZippers_W
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 20;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
     if (get_filtered_cheats() & CHEAT_TURN_OFF_ZIPPERS) {
         gParticlePtrList_addObject(obj);
     }
@@ -912,7 +916,7 @@ void obj_init_groundzipper(Object *obj, LevelObjectEntry_GroundZipper *entry) {
     objScale /= 64;
     header = obj->segment.header;
     obj->segment.trans.scale = header->scale * objScale;
-    obj->shadow->scale = header->unk4 * objScale;
+    obj->shadow->scale = header->shadowScale * objScale;
     obj->segment.trans.y_rotation = entry->rotation << 6 << 4;
     if (obj->segment.unk38.byte.unk3A >= obj->segment.header->numberOfModelIds) {
         obj->segment.unk38.byte.unk3A = 0;
@@ -927,7 +931,7 @@ void obj_init_groundzipper(Object *obj, LevelObjectEntry_GroundZipper *entry) {
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 20;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
     obj->interactObj->unk16 = -0x64;
     obj->interactObj->unk17 = 0x64;
     if (get_filtered_cheats() & CHEAT_TURN_OFF_ZIPPERS) {
@@ -1058,10 +1062,10 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80036040.s")
 
 void obj_init_stopwatchman(Object *obj, UNUSED LevelObjectEntry_StopWatchMan *entry) {
     Object_TT *temp;
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 30;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
     temp = &obj->unk64->tt;
     temp->unkD = 0xFF;
     temp->unk0 = 0.0f;
@@ -1125,7 +1129,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     index = get_buttons_pressed_from_player(PLAYER_ONE);
     if (obj->action == TT_MODE_ROAM && distance < 300.0 && obj->unk7C.word == 0) {
         if (angleDiff > -0x2000 && angleDiff < 0x2000) {
-            if ((obj->interactObj->flags & 8 && racerObj == obj->interactObj->obj) || index & Z_TRIG) {
+            if ((obj->interactObj->flags & INTERACT_FLAGS_PUSHING && racerObj == obj->interactObj->obj) || index & Z_TRIG) {
                 if (index & Z_TRIG) {
                     play_char_horn_sound(racerObj, racer);
                 }
@@ -1643,10 +1647,10 @@ void obj_loop_vehicleanim(Object *obj, s32 updateRate) {
 }
 
 void obj_init_hittester(Object *obj, UNUSED LevelObjectEntry_HitTester *entry) {
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001 | INTERACT_FLAGS_UNK_0080;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0080;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 20;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
 }
 
 void obj_loop_hittester(Object *obj, s32 updateRate) {
@@ -1654,24 +1658,24 @@ void obj_loop_hittester(Object *obj, s32 updateRate) {
 }
 
 void obj_init_dynamic_lighting_object(Object *obj, UNUSED LevelObjectEntry_DynamicLightingObject *entry) {
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 20;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
 }
 
 void obj_init_unknown96(Object *obj, UNUSED LevelObjectEntry_Unknown96 *entry) {
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001 | INTERACT_FLAGS_UNK_0080;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0080;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 20;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
 }
 
 void obj_init_snowball(Object *obj, UNUSED LevelObjectEntry_Snowball *entry) {
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 20;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
 }
 
 void obj_loop_snowball(Object *obj, s32 updateRate) {
@@ -1741,13 +1745,13 @@ void obj_loop_animcar(Object *obj, s32 updateRate) {
 
 void obj_init_infopoint(Object *obj, LevelObjectEntry_InfoPoint *entry) {
     if (entry->unk8[1] != 0) {
-        obj->interactObj->flags = INTERACT_FLAGS_UNK_0001 | INTERACT_FLAGS_UNK_0020;
+        obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0020;
     } else {
         obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE | INTERACT_FLAGS_UNK_0020;
     }
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 15;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
     obj->unk78 = (entry->unk8[2] << 16) | entry->unk8[0]; // Not sure about the values here.
     obj->unk7C.word = entry->unk8[1];
     obj->segment.trans.y_rotation = entry->unkB << 10; // Not sure about the values here.
@@ -1871,7 +1875,7 @@ void obj_init_teleport(Object *obj, UNUSED LevelObjectEntry_Teleport *entry) {
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 15;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
     if (get_settings()->cutsceneFlags & CUTSCENE_LIGHTHOUSE_ROCKET) {
         obj->action = 1;
     }
@@ -1909,7 +1913,7 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = entry->radius;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
 }
 
 void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
@@ -1982,10 +1986,10 @@ void obj_loop_setuppoint(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
 void obj_init_dino_whale(Object *obj, UNUSED LevelObjectEntry_Dino_Whale *entry) {
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 3;
     obj->interactObj->hitboxRadius = 20;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
 }
 
 void obj_loop_dino_whale(Object *obj, s32 updateRate) {
@@ -2010,10 +2014,10 @@ void obj_loop_dino_whale(Object *obj, s32 updateRate) {
 
 void obj_init_parkwarden(Object *obj, UNUSED LevelObjectEntry_Parkwarden *entry) {
     Object_NPC *temp;
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 30;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
     temp = &obj->unk64->npc;
     temp->unkD = 0xFF;
     temp->unk0 = 0.0f;
@@ -2089,7 +2093,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         (obj->action == NULL) &&
         (distance < 300.0) &&
         (
-            ((obj->interactObj->flags & 8) && (racerObj == obj->interactObj->obj)) ||
+            ((obj->interactObj->flags & INTERACT_FLAGS_PUSHING) && (racerObj == obj->interactObj->obj)) ||
             (buttonsPressed & Z_TRIG)
         )
     ) {
@@ -2108,7 +2112,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             var_a2 = TRUE;
         }
     }
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     if ((func_80052188() || (var_a2)) && ((obj->action == 0 || obj->action == 31))) {
         func_800012E8();
         set_music_player_voice_limit(24);
@@ -2690,7 +2694,7 @@ void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     obj64 = &obj->unk64->mode_change;
     radius /= 128;
     obj->segment.trans.scale = radius;
-    obj->segment.trans.y_rotation = entry->unk9 << 6 << 4;
+    obj->segment.trans.y_rotation = entry->yRotation << 6 << 4;
     obj64->directionX = sins_f(obj->segment.trans.y_rotation);
     obj64->directionY = 0.0f;
     obj64->directionZ = coss_f(obj->segment.trans.y_rotation);
@@ -2700,7 +2704,7 @@ void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = entry->radius;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
 }
 
 /**
@@ -2775,7 +2779,7 @@ void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry) {
     obj64 = &obj->unk64->bonus;
     radius /= 128;
     obj->segment.trans.scale = radius;
-    obj->segment.trans.y_rotation = entry->unk9 << 6 << 4;
+    obj->segment.trans.y_rotation = entry->yRotation << 6 << 4;
     obj64->directionX = sins_f(obj->segment.trans.y_rotation);
     obj64->directionY = 0.0f;
     obj64->directionZ = coss_f(obj->segment.trans.y_rotation);
@@ -2785,7 +2789,7 @@ void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry) {
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = entry->radius;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
 }
 
 void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
@@ -2827,6 +2831,7 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
         }
     }
 }
+
 void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) {
     Object_NPC *obj64;
     f32 scalef;
@@ -2842,7 +2847,7 @@ void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) 
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 4;
     obj->interactObj->hitboxRadius = 20;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
     scalef = entry->scale & 0xFF;
     if (scalef < 10.0f) {
         scalef = 10.0f;
@@ -2978,10 +2983,10 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     obj->segment.trans.scale = obj->segment.header->scale * phi_f0;
     obj64->unk13 = (u8) entry->unkF;
     obj64->unk14 = (s8) entry->unk11;
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001 | INTERACT_FLAGS_UNK_0020;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0020;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 20;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
     if (obj->segment.unk38.byte.unk3A >= obj->segment.header->numberOfModelIds) {
         obj->segment.unk38.byte.unk3A = 0;
     }
@@ -3009,10 +3014,10 @@ void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
     }
     phi_f0 /= 64;
     obj->segment.trans.scale = obj->segment.header->scale * phi_f0;
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001 | INTERACT_FLAGS_UNK_0020;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0020;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 20;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
     if (obj->segment.unk38.byte.unk3A >= obj->segment.header->numberOfModelIds) {
         obj->segment.unk38.byte.unk3A = 0;
     }
@@ -3134,7 +3139,7 @@ void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = entry->scale;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
 }
 
 
@@ -3199,10 +3204,10 @@ void obj_init_bridge_whaleramp(Object *obj, LevelObjectEntry_Bridge_WhaleRamp *e
     obj->segment.unk38.byte.unk3A = entry->unk8;
     obj->segment.trans.y_rotation = entry->unk9 << 6 << 4;
     temp->unk0 = obj->segment.trans.y_position;
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001 | INTERACT_FLAGS_UNK_0020;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0020;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 20;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
     temp->unk4 = 0;
     if (obj->segment.unk38.byte.unk3A >= obj->segment.header->numberOfModelIds) {
         obj->segment.unk38.byte.unk3A = 0;
@@ -3334,7 +3339,7 @@ void obj_init_rampswitch(Object *obj, LevelObjectEntry_RampSwitch *entry) {
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 20;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
     obj->action = entry->unk8;
 }
 
@@ -3965,7 +3970,7 @@ void obj_init_weapon(Object *obj, UNUSED LevelObjectEntry_Weapon *entry) {
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 24;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
     obj->unk78 = normalise_time(480);
     obj->unk7C.word = 0;
 }
@@ -4426,10 +4431,10 @@ void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, UNUSED s
 
 void obj_init_buoy_pirateship(Object *obj, UNUSED LevelObjectEntry_Buoy_PirateShip *entry, UNUSED s32 arg2) {
     obj->unk64 = func_800BE654(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position);
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 30;
-    obj->interactObj->unk12 = 0;
+    obj->interactObj->pushForce = 0;
 }
 
 /**
@@ -4447,7 +4452,7 @@ void obj_loop_buoy_pirateship(Object *obj, s32 updateRate) {
 void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
     f32 phi_f0;
     obj->unk64 = func_800BE654(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position);
-    obj->interactObj->flags = INTERACT_FLAGS_UNK_0001;
+    obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 30;
     phi_f0 = entry->unk9 & 0xFF;

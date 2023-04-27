@@ -644,7 +644,7 @@ typedef struct ObjectHeader24 {
 
 typedef struct ObjectHeader {
              u8 pad0[0x4];
-  /* 0x04 */ f32 unk4;
+  /* 0x04 */ f32 shadowScale;
   /* 0x08 */ f32 unk8;
   /* 0x0C */ f32 scale;
   /* 0x10 */ s32 *modelIds;
@@ -720,7 +720,7 @@ typedef struct ObjectInteraction {
     f32 z_position;
     u8 hitboxRadius;
     u8 unk11;
-    u8 unk12;
+    u8 pushForce;
     u8 distance;
     s16 flags;
     s8 unk16;

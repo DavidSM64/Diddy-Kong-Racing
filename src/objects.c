@@ -868,7 +868,7 @@ s32 init_object_shadow(Object *obj, ShadowData *shadow) {
         shadow->texture = (TextureHeader *) load_texture((s32) ((ObjectHeader *) objHeader)->unk34);
         objHeader = ((ObjectSegment *) obj)->header;
     }
-    shadow->scale = (f32) objHeader->unk4;
+    shadow->scale = objHeader->shadowScale;
     shadow->unk8 = -1;
     D_8011AE50 = (s32) shadow->texture;
     if (((ObjectSegment *) obj)->header->unk32 && shadow->texture == NULL) {
