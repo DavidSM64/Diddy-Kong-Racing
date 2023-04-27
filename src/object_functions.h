@@ -51,6 +51,14 @@ enum SilvereCoinBehaviours {
     SILVER_COIN_INACTIVE
 };
 
+enum EggPickupStatus {
+    EGG_SPAWNED,
+    EGG_UNK_01,
+    EGG_MOVING,
+    EGG_IN_BASE,
+    EGG_HATCHED
+};
+
 typedef struct Object78_80033DD0 {
 	s32 *unk0;
 	s16 unk4;

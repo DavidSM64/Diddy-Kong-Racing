@@ -153,7 +153,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     firstRacerObj = get_racer_object(0);
     racer = (Object_Racer*)firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->unk14 & 8 && obj->segment.unk38.byte.unk3B == 1) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & 8 && obj->segment.unk38.byte.unk3B == 1) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != 0) {

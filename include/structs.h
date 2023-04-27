@@ -718,11 +718,11 @@ typedef struct ObjectInteraction {
     f32 x_position;
     f32 y_position;
     f32 z_position;
-    u8 unk10;
+    u8 hitboxRadius;
     u8 unk11;
     u8 unk12;
     u8 distance;
-    s16 unk14;
+    s16 flags;
     s8 unk16;
     s8 unk17;
 } ObjectInteraction;
@@ -896,9 +896,9 @@ typedef struct Object_EggCreator {
 typedef struct Object_CollectEgg {
   /* 0x0 */ u8 pad0[4];
   /* 0x4 */ struct Object *unk4;
-  /* 0x8 */ s16 unk8;
-  /* 0xA */ s8 unkA;
-  /* 0xB */ s8 unkB;
+  /* 0x8 */ s16 hatchTimer;
+  /* 0xA */ s8 racerID;
+  /* 0xB */ s8 status;
 } Object_CollectEgg;
 
 typedef struct Object_UnkId58 {
@@ -1170,7 +1170,7 @@ typedef struct Object_Racer {
   /* 0x1CC */ s8 aiSkill;
   /* 0x1CD */ u8 unk1CD;
   /* 0x1CE */ u8 unk1CE;
-  /* 0x1CF */ s8 unk1CF;
+  /* 0x1CF */ s8 eggHudCounter;
   /* 0x1D0 */ s8 spectateCamID;
   /* 0x1D1 */ s8 unk1D1;
   /* 0x1D2 */ s8 unk1D2;
