@@ -45,7 +45,7 @@ Vec3f D_800DC8AC[3][3] = {
     { {{{  0.0f, 0.0f, 32.0f }}}, {{{ -130.0f, -60.0f, -68.0f }}}, {{{ -130.0f,  60.0f, -68.0f }}} },
 };
 
-LevelModel *gCurrentLevelModel = NULL;
+LevelModel *gCurrentLevelModel = NULL; //Official Name: track
 LevelHeader *gCurrentLevelHeader2 = NULL;
 
 s32 D_800DC920 = -1;
@@ -376,7 +376,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         }
         gDPPipeSync(gSceneCurrDisplayList++);
         initialise_player_viewport_vars(updateRate);
-        setWeatherLimits(-1, -512);
+        set_weather_limits(-1, -512);
         if (gCurrentLevelHeader2->weatherEnable > 0 && numViewports < VIEWPORTS_COUNT_3_PLAYERS) {
             process_weather(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList, tempUpdateRate);
         }
@@ -403,7 +403,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             gDPPipeSync(gSceneCurrDisplayList++);
             initialise_player_viewport_vars(updateRate);
-            setWeatherLimits(-1, -512);
+            set_weather_limits(-1, -512);
             func_800AD030(get_active_camera_segment());
             func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
             set_text_font(0);
@@ -1210,6 +1210,7 @@ UNUSED s32 check_if_inside_segment(Object *obj, s32 segmentIndex) {
  * Iterates through every existing segment to see which one the active camera is inside.
  * Uses mainly a two dimensional axis check here, instead of the function above.
  * Returns the segment currently inside.
+ * Official Name: trackGetBlock
 */
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos) {
     LevelModelSegmentBoundingBox *bb;
@@ -1488,7 +1489,7 @@ s32 check_if_in_draw_range(Object *obj) {
                 obj64 = obj->unk64;
                 obj->segment.unk38.byte.unk39 = ((obj64->racer.transparency + 1) * alpha) >> 8;
                 break;
-            case BHV_UNK_3A:
+            case BHV_UNK_3A: //Ghost Object?
                 obj64 = obj->unk64;
                 obj->segment.unk38.byte.unk39 = obj64->racer.transparency;
                 break;
@@ -1758,6 +1759,7 @@ void func_8002C71C(LevelModelSegment *segment) {
 
 /**
  * Returns the current loaded level geometry
+ * Official Name: trackGetTrack
 */
 LevelModel *get_current_level_model(void) {
     return gCurrentLevelModel;

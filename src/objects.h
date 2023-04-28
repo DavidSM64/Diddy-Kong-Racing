@@ -340,7 +340,7 @@ void func_80012C3C(Gfx** dlist);
 void func_80012C98(Gfx **dlist);
 void func_80012CE8(Gfx **dlist);
 void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object);
-void objUndoPlayerTumble(Object *obj);
+void object_undo_player_tumble(Object *obj);
 void render_object(Object *this);
 void func_80013548(Object *arg0);
 void func_800142B8(void);
@@ -402,7 +402,7 @@ void run_object_loop_func(Object *obj, s32 arg1);
 void func_8002458C(s32 arg0);
 s16 *func_80024594(s32 *arg0, s32 *arg1);
 void func_800245B4(s16 arg0);
-void func_80012E28(Object *this);
+void object_do_player_tumble(Object *this);
 f32 catmull_rom_interpolation(f32*, s32, f32);
 f32 cubic_spline_interpolation(f32 *data, s32 index, f32 x, f32 *derivative);
 s32 func_80031F88(Object*, ObjectHeader24 *);
@@ -477,6 +477,6 @@ void func_800159C8(Object *, Object *);
 void func_80016748(Object *, Object *);
 void func_80011264(ObjectModel *, Object *);
 void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
-void func_80061D30(Object *); //asm func in unknown_062930
+s32 func_80061D30(Object *); //asm func in unknown_062930
 
 #endif

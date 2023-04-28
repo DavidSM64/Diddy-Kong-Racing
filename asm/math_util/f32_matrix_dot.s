@@ -1,3 +1,4 @@
+/* Official name: mathMtxFastXFMF */
 glabel f32_matrix_dot
 /* 0702EC 8006F6EC C4A40000 */  lwc1  $f4, ($a1)
 /* 0702F0 8006F6F0 C48A0000 */  lwc1  $f10, ($a0)

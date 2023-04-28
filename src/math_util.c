@@ -9,7 +9,7 @@
 #include "structs.h"
 
 extern s32 D_800DD430;
-extern s32 gCurrentRNGSeed;
+extern s32 gCurrentRNGSeed; //Official Name: rngSeed
 extern s32 gPrevRNGSeed;
 extern s16 gSineTable[];
 extern s16 gArcTanTable[];
@@ -198,7 +198,6 @@ GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix.s")
 #endif
 
 #ifdef NON_EQUIVALENT
-/* Official Name: mathRpyXyzMtx */
 void object_transform_to_matrix(Matrix arg0, ObjectTransform *trans) {
     f32 yRotSine;
     f32 yRotCosine;
@@ -238,7 +237,7 @@ GLOBAL_ASM("asm/math_util/object_transform_to_matrix.s")
 #endif
 
 #ifdef NON_MATCHING
-/* Official name: mathSquashY(?) */
+/* Official name: mathSquashY */
 void f32_matrix_scale(Matrix *input, f32 scale) {
     input[0][1][0] *= scale;
     input[0][1][1] *= scale;
@@ -249,7 +248,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_scale.s")
 #endif
 
 #ifdef NON_MATCHING
-/* Official name: mathTransY(?) */
+/* Official name: mathTransY */
 void f32_matrix_y_scale(Matrix *input, f32 scale) {
     input[0][3][0] += input[0][1][0] * scale;
     input[0][3][1] += input[0][1][1] * scale;
@@ -298,6 +297,8 @@ void object_transform_to_matrix_2(Matrix mtx, ObjectTransform *trans) {
 #else
 GLOBAL_ASM("asm/math_util/object_transform_to_matrix_2.s")
 #endif
+
+GLOBAL_ASM("asm/math_util/func_80070058.s")
 
 #ifdef NON_MATCHING
 void f32_matrix_from_rotation_and_scale(Matrix mtx, s32 angle, f32 arg2, f32 arg3) {
@@ -364,6 +365,7 @@ GLOBAL_ASM("asm/math_util/s16_vec3_apply_object_rotation.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+/* Official Name: mathOneFloatRPY */
 void f32_vec3_apply_object_rotation(ObjectTransform *trans, f32 *vec3_f32) {
     f32 yRotSine;
     f32 yRotCosine;
@@ -405,6 +407,7 @@ GLOBAL_ASM("asm/math_util/f32_vec3_apply_object_rotation.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+/* Official Name: mathOneFloatYPR */
 void f32_vec3_apply_object_rotation2(ObjectTransform *trans, f32 *arg1) {
     f32 yRotSine;
     f32 yRotCosine;
@@ -442,6 +445,7 @@ GLOBAL_ASM("asm/math_util/f32_vec3_apply_object_rotation2.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+/* Official Name: mathOneFloatPY */
 void f32_vec3_apply_object_rotation3(ObjectTransform *trans, f32 *vec3_f32) {
     f32 xRotSine;
     f32 xRotCosine;

@@ -1,3 +1,4 @@
+/* Official name: fastShortReflection */
 glabel s16_matrix_rotate
 /* 0705B8 8006F9B8 84880000 */  lh    $t0, ($a0)
 /* 0705BC 8006F9BC 84AB0000 */  lh    $t3, ($a1)

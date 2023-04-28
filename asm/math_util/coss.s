@@ -1,4 +1,4 @@
-glabel coss
+glabel coss /* Official Name: mathCosInterp */
 /* 07142C 8007082C 24844000 */  addiu $a0, $a0, 0x4000
 glabel sins /* Official name: mathSinInterp */
 /* 071430 80070830 00041440 */  sll   $v0, $a0, 0x11

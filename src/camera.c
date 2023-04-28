@@ -1153,7 +1153,7 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         if (index >= sprite->baseTextureId) {
             index = sprite->baseTextureId - 1;
         }
-        gSPDisplayList((*dList)++, sprite->unkC[index]);
+        gSPDisplayList((*dList)++, sprite->unkC.ptr[index]);
         if (--D_80120D1C == 0) {
             index = 0;
         } else {
@@ -1225,7 +1225,10 @@ void func_80068FA8(Gfx **dlist, MatrixS **mtx, Object *arg2, Object *arg3, f32 s
     gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_1);
 }
 
-void func_80069484(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale, f32 scaleY) {
+/**
+ * Official Name: camPushModelMtx
+*/
+void camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f32 scale, f32 scaleY) {
     f32 tempX;
     f32 tempY;
     f32 tempZ;

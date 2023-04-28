@@ -15,7 +15,7 @@ glabel func_800AF714
 /* 0B0348 800AF748 8C970074 */  lw    $s7, 0x74($a0)
 /* 0B034C 800AF74C 827E01D6 */  lb    $fp, 0x1d6($s3)
 /* 0B0350 800AF750 00809025 */  move  $s2, $a0
-/* 0B0354 800AF754 0C004B8A */  jal   func_80012E28
+/* 0B0354 800AF754 0C004B8A */  jal   object_do_player_tumble
 /* 0B0358 800AF758 00008025 */   move  $s0, $zero
 /* 0B035C 800AF75C 8E4E0040 */  lw    $t6, 0x40($s2)
 /* 0B0360 800AF760 24160002 */  li    $s6, 2
@@ -347,7 +347,7 @@ glabel func_800AF714
 /* 0B07FC 800AFBFC 1420FEE0 */  bnez  $at, .L800AF780
 /* 0B0800 800AFC00 01A0B825 */   move  $s7, $t5
 .L800AFC04:
-/* 0B0804 800AFC04 0C004BCC */  jal   objUndoPlayerTumble
+/* 0B0804 800AFC04 0C004BCC */  jal   object_undo_player_tumble
 /* 0B0808 800AFC08 02402025 */   move  $a0, $s2
 /* 0B080C 800AFC0C 8FBF003C */  lw    $ra, 0x3c($sp)
 /* 0B0810 800AFC10 8FB00018 */  lw    $s0, 0x18($sp)

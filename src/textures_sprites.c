@@ -888,7 +888,7 @@ s32 D_80126364;
 s32 D_80126368;
 
 TempTexHeader *gTempTextureHeader;
-s32 D_80126370;
+u8 *D_80126370;
 s32 gCurrentRenderFlags;
 s32 D_80126378; // Set in Game UI
 TextureHeader *D_8012637C;
@@ -1460,7 +1460,31 @@ s32 get_texture_size_from_id(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/get_texture_size_from_id.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C660.s")
+UNUSED u8 func_8007C660(s32 arg0) {
+    Sprite *temp_s1;
+    s32 j;
+    s32 i;
+    s32 temp_v1;
+
+    if (arg0 & 0x8000) {
+        return 0;
+    }
+    if (D_80126370 == 0) {
+        D_80126370 = (u8 *) allocate_from_main_pool_safe(gTextureAssetID[TEX_TABLE_2D], COLOUR_TAG_MAGENTA);
+        for (i = 0; i < gTextureAssetID[TEX_TABLE_2D]; i++) {
+            D_80126370[i] = 0;
+        }
+        for (i = 0; i < D_80126354; i++) {
+            temp_s1 = gCurrentSprite;
+            load_asset_to_address(ASSET_SPRITES, (u32) temp_s1, gSpriteOffsetTable[i], gSpriteOffsetTable[i + 1] - gSpriteOffsetTable[i]);
+            temp_v1 = temp_s1->unkC.val[temp_s1->numberOfFrames];
+            for (j = 0; j < temp_v1; j++) {
+                D_80126370[temp_s1->baseTextureId + j] = 1;
+            }
+        }
+    }
+    return D_80126370[arg0];
+}
 
 UNUSED s32 func_8007C860(s32 spriteIndex) {
     if ((spriteIndex < 0) || (spriteIndex >= gNumberOfLoadedTextures)) {
@@ -1491,13 +1515,13 @@ s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *
     start = gSpriteOffsetTable[spriteIndex];
     size = gSpriteOffsetTable[spriteIndex + 1] - start;
     load_asset_to_address(ASSET_SPRITES, gCurrentSprite, start, size);
-    tex = load_texture(gCurrentSprite->unkC[0] + gCurrentSprite->baseTextureId);
+    tex = load_texture(gCurrentSprite->unkC.val[0] + gCurrentSprite->baseTextureId);
     if (tex != NULL) {
         *formatOut = tex->format & 0xF;
         free_texture(tex);
         *sizeOut = 0;
         for (i = 0; i < gCurrentSprite->numberOfFrames; i++) {
-            for (j = (s32) gCurrentSprite->unkC[i]; j < (s32) gCurrentSprite->unkC[i + 1]; j++) {
+            for (j = gCurrentSprite->unkC.val[i]; j < (s32) gCurrentSprite->unkC.val[i + 1]; j++) {
                 *sizeOut += get_texture_size_from_id(gCurrentSprite->baseTextureId + j);
             }
         }
