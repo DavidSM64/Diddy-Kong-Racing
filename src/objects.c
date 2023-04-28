@@ -1811,6 +1811,7 @@ void func_80012F94(Object *obj) {
     ObjectModel *temp_a1_3;
     Object_Racer *objRacer;
     Object_68 **var_v0;
+    Object_68 *new_var;
     f32 ret1;
     f32 var_f0_2;
     f32 ret2;
@@ -1841,16 +1842,17 @@ void func_80012F94(Object *obj) {
                 var_t0 = 0;
                 batchNum = 0;
             } else {
-                var_t0 = 1;
                 if (obj->behaviorId == BHV_UNK_3A) { //Ghost Object?
+                    var_t0 = 1;
                     batchNum = 0;
                 } else {
                     //Loads vehicles between VEHICLE_TRICKY and VEHICLE_SMOKEY. So all boss vehicles except wizpig.
-                    bossVehicleId = objRacer->vehicleID + VEHICLE_TRICKY;
+                    var_t0 = objRacer->vehicleID + VEHICLE_TRICKY;
                     if (objRacer->vehicleID >= NUMBER_OF_PLAYER_VEHICLES) {
-                        bossVehicleId = VEHICLE_TRICKY;
+                        var_t0 = VEHICLE_TRICKY;
                     }
-                    bossAsset = (u8 *) get_misc_asset(bossVehicleId); //40 bytes of data u8[8][5]?
+                    batchNum = 0;
+                    bossAsset = (u8 *) get_misc_asset(var_t0); //40 bytes of data u8[8][5]?
                     bossAsset = &bossAsset[(get_viewport_count() * 10)];
                     var_a1 = bossAsset;
                     if (get_current_viewport() != objRacer->playerIndex) {
@@ -1858,19 +1860,19 @@ void func_80012F94(Object *obj) {
                     }
                     var_f0_2 = obj->segment.unk30;
                     temp_v1 = (s32) var_f0_2 >> 3;
-                    if (var_f0_2 < 0.0f) {
+                    if (obj->segment.unk30 < 0.0f) {
                         var_f0_2 = 0.0f;
                     } else if (var_f0_2 > 3500.0f) {
                         var_f0_2 = 3500.0f;
                     }
                     obj->segment.trans.scale *= (var_f0_2 / 2700.0f) + 1.0f;
-                    batchNum = 0;
-                    //ASSET_MISC_4 is just 10 floats of 1.0f. One for each playable character.
                     temp_f6 = (s32) ((f32) temp_v1 * *((f32 *)get_misc_asset(ASSET_MISC_4)[objRacer->characterId]));
+                    //ASSET_MISC_4 is just 10 floats of 1.0f. One for each playable character.
                     if (temp_f6 < -50) {
                         var_t0 = 5;
                     } else {
-                        var_v1 = MIN(temp_f6 >> 1, 0);
+                        racerLightTimer = MIN(temp_f6 >> 1, 0);
+                        var_v1 = racerLightTimer;
                         if (var_v1 < var_a1[0]) {
                             var_t0 = 0;
                         } else if (var_v1 < var_a1[1]) {
@@ -1881,13 +1883,13 @@ void func_80012F94(Object *obj) {
                             var_t0 = 3;
                         } else if (var_v1 < var_a1[4]) {
                             var_t0 = 4;
-                        } else {                            
+                        } else {
                             var_t0 = 5;
                         }
                     }
                 }
             }
-            
+
             firstNonEmptyUnk68ObjectIndex = 0;
             var_v0 = &obj->unk68[firstNonEmptyUnk68ObjectIndex];
 
@@ -1917,7 +1919,8 @@ void func_80012F94(Object *obj) {
                 objRacer->lightFlags &= ~RACER_LIGHT_NIGHT;
             }
             racerLightTimer = objRacer->lightFlags & RACER_LIGHT_TIMER;
-            temp_a1_3 = obj->unk68[obj->segment.unk38.byte.unk3A]->objModel;
+            new_var = obj->unk68[obj->segment.unk38.byte.unk3A];
+            temp_a1_3 = new_var->objModel;
             if (racerLightTimer != 0) {
                 racerLightTimer--;
                 if (objRacer->lightFlags & RACER_LIGHT_BRAKE) {
@@ -1932,7 +1935,8 @@ void func_80012F94(Object *obj) {
                     racerLightTimer += 3;
                 }
             }
-            for (; batchNum < temp_a1_3->numberOfBatches; batchNum++) {
+            racerLightTimer *= 4;
+            for (batchNum = 0; batchNum < temp_a1_3->numberOfBatches; batchNum++) {
                 if ((temp_a1_3->batches[batchNum].flags & 0x810000) == 0x10000) {
                     temp_a1_3->batches[batchNum].unk7 = racerLightTimer;
                 }
@@ -1942,7 +1946,7 @@ void func_80012F94(Object *obj) {
             obj->segment.trans.z_position += objRacer->carBobZ;
             ret1 = objRacer->stretch_height;
         } else if (obj->behaviorId == BHV_FROG) {
-            ret1 = obj->unk64->frog.unk30;
+            ret1 = obj->unk64->frog.scaleY;
         }
     }
     D_8011AD28 = ret1;
