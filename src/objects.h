@@ -139,6 +139,26 @@ enum ObjectBehaviours {
     BHV_UNK_7F
 };
 
+enum ObjectInteractionFlags {
+    INTERACT_FLAGS_NONE,
+    INTERACT_FLAGS_SOLID = (1 << 0),
+    INTERACT_FLAGS_TANGIBLE = (1 << 1),
+    INTERACT_FLAGS_UNK_0004 = (1 << 2),
+    INTERACT_FLAGS_PUSHING = (1 << 3),
+    INTERACT_FLAGS_UNK_0010 = (1 << 4),
+    INTERACT_FLAGS_UNK_0020 = (1 << 5),
+    INTERACT_FLAGS_COLLIDED = (1 << 6),
+    INTERACT_FLAGS_UNK_0080 = (1 << 7),
+    INTERACT_FLAGS_UNK_0100 = (1 << 8),
+    INTERACT_FLAGS_UNK_0200 = (1 << 9),
+    INTERACT_FLAGS_UNK_0400 = (1 << 10),
+    INTERACT_FLAGS_UNK_0800 = (1 << 11),
+    INTERACT_FLAGS_UNK_1000 = (1 << 12),
+    INTERACT_FLAGS_UNK_2000 = (1 << 13),
+    INTERACT_FLAGS_UNK_4000 = (1 << 14),
+    INTERACT_FLAGS_UNK_8000 = (1 << 15),
+};
+
 typedef struct RacerShieldGfx {
     s16 x_position;
     s16 y_position;

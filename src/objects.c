@@ -868,7 +868,7 @@ s32 init_object_shadow(Object *obj, ShadowData *shadow) {
         shadow->texture = (TextureHeader *) load_texture((s32) ((ObjectHeader *) objHeader)->unk34);
         objHeader = ((ObjectSegment *) obj)->header;
     }
-    shadow->scale = (f32) objHeader->unk4;
+    shadow->scale = objHeader->shadowScale;
     shadow->unk8 = -1;
     D_8011AE50 = (s32) shadow->texture;
     if (((ObjectSegment *) obj)->header->unk32 && shadow->texture == NULL) {
@@ -2039,7 +2039,7 @@ void func_800155B8(void) {
                 objsWithInteractives++;
                 if (objInteract->unk11 != 2) {
                     objInteract->obj = NULL;
-                    objInteract->unk14 &= ~0x48;
+                    objInteract->flags &= ~(INTERACT_FLAGS_COLLIDED | INTERACT_FLAGS_PUSHING);
                     objInteract->distance = 0xFF;
                 }
             }
@@ -2055,18 +2055,18 @@ void func_800155B8(void) {
             D_8011AE6C[D_8011AE70] = obj;
             D_8011AE70++;
         }
-        if (objInteract->unk14 & 4) {
+        if (objInteract->flags & INTERACT_FLAGS_UNK_0004) {
             for (j = 0; j < objsWithInteractives; j++) {
                 if (i != j) {
                     obj2 = objList[j];
                     objInteract2 = obj2->interactObj;
-                    if (objInteract2->unk14 & 3) {
+                    if (objInteract2->flags & 3) {
                         if (objInteract2->unk11 == 3) {
                             func_80016748(obj, obj2);
                         } else if (objInteract2->unk11 != 2) {
                             xDiff = obj->segment.trans.x_position - obj2->segment.trans.x_position;
                             zDiff = obj->segment.trans.z_position - obj2->segment.trans.z_position;
-                            if (objInteract2->unk14 & 0x20) {
+                            if (objInteract2->flags & INTERACT_FLAGS_UNK_0020) {
                                 var_f12 = 0x400000; //4194304.0f;
                             } else {
                                 var_f12 = 0x40000; //262144.0f;
@@ -2079,7 +2079,7 @@ void func_800155B8(void) {
                 }
             }
         }
-        if (objInteract->unk14 & 0x100) {
+        if (objInteract->flags & INTERACT_FLAGS_UNK_0100) {
             for (j = 0; j < objsWithInteractives; j++) {
                 if (i != j) {
                     obj2 = objList[j];
@@ -2714,7 +2714,7 @@ s32 func_8001C524(f32 diffX, f32 diffY, f32 diffZ, s32 someFlag) {
         if (segment) {
             levelObj = &((segment->unk3C_a.level_entry)->ttDoor);
             var_a0 = 1;
-            if (someFlag && (sp64 != levelObj->unkE)) {
+            if (someFlag && (sp64 != levelObj->doorID)) {
                 var_a0 = 0;
             }
             if ((someFlag == 2) && (levelObj->unk8 != 3)) {

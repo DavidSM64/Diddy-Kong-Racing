@@ -644,7 +644,7 @@ typedef struct ObjectHeader24 {
 
 typedef struct ObjectHeader {
              u8 pad0[0x4];
-  /* 0x04 */ f32 unk4;
+  /* 0x04 */ f32 shadowScale;
   /* 0x08 */ f32 unk8;
   /* 0x0C */ f32 scale;
   /* 0x10 */ s32 *modelIds;
@@ -718,11 +718,11 @@ typedef struct ObjectInteraction {
     f32 x_position;
     f32 y_position;
     f32 z_position;
-    u8 unk10;
+    u8 hitboxRadius;
     u8 unk11;
-    u8 unk12;
+    u8 pushForce;
     u8 distance;
-    s16 unk14;
+    s16 flags;
     s8 unk16;
     s8 unk17;
 } ObjectInteraction;
@@ -799,8 +799,8 @@ typedef struct Object_LaserGun {
   /* 0x0C */ s16 fireTimer;
   /* 0x0E */ s8 targeting;
   /* 0x0F */ s8 fireRate;
-  /* 0x10 */ u8 unk10;
-  /* 0x11 */ u8 unk11;
+  /* 0x10 */ u8 laserDuration;
+  /* 0x11 */ u8 radius;
 } Object_LaserGun;
 
 typedef struct Object_Laser {
@@ -817,8 +817,8 @@ typedef struct Object_TrophyCabinet {
 typedef struct Object_Animator {
   /* 0x00 */ s16 segmentId;
   /* 0x02 */ s16 batchId;
-  /* 0x04 */ s16 xSpeedFactor;
-  /* 0x06 */ s16 ySpeedFactor;
+  /* 0x04 */ s16 speedFactorX;
+  /* 0x06 */ s16 speedFactorY;
   /* 0x08 */ s16 xSpeed;
   /* 0x0A */ s16 ySpeed;
 } Object_Animator;
@@ -890,15 +890,15 @@ typedef struct Object_EffectBox {
 
 typedef struct Object_EggCreator {
   /* 0x0 */ u8 pad0[4];
-  /* 0x4 */ struct Object *unk4;
+  /* 0x4 */ struct Object *currentEgg;
 } Object_EggCreator;
 
 typedef struct Object_CollectEgg {
   /* 0x0 */ u8 pad0[4];
   /* 0x4 */ struct Object *unk4;
-  /* 0x8 */ s16 unk8;
-  /* 0xA */ s8 unkA;
-  /* 0xB */ s8 unkB;
+  /* 0x8 */ s16 hatchTimer;
+  /* 0xA */ s8 racerID;
+  /* 0xB */ s8 status;
 } Object_CollectEgg;
 
 typedef struct Object_UnkId58 {
@@ -937,7 +937,7 @@ typedef struct Object_TTDoor {
   /* 0x08 */ s32 unk8;
   /* 0x0C */ s16 unkC;
   /* 0x0C */ s8 unkE;
-  /* 0x0F */ u8 unkF;
+  /* 0x0F */ u8 doorID;
   /* 0x10 */ u8 pad10[2];
   /* 0x12 */ u8 unk12;
   /* 0x13 */ s8 unk13;
@@ -979,7 +979,7 @@ typedef struct Object_AudioReverb {
 } Object_AudioReverb;
 
 typedef struct Object_TexScroll {
-  /* 0x0 */ s16 unk0;
+  /* 0x0 */ s16 numTextures;
   /* 0x2 */ s16 pad2;
   /* 0x4 */ s16 unk4;
   /* 0x6 */ s16 unk6;
@@ -988,23 +988,23 @@ typedef struct Object_TexScroll {
 } Object_TexScroll;
 
 typedef struct Object_Frog {
-  /* 0x00 */ f32 unk0;
-  /* 0x04 */ f32 unk4;
-  /* 0x08 */ f32 unk8;
-  /* 0x0C */ f32 unkC;
-  /* 0x10 */ f32 unk10;
-  /* 0x14 */ u8 unk14;
-  /* 0x15 */ u8 unk15;
-  /* 0x16 */ s16 unk16;
-  /* 0x18 */ s8 unk18;
-  /* 0x19 */ s8 unk19;
-  /* 0x1A */ s16 unk1A;
-  /* 0x1C */ f32 unk1C;
-  /* 0x20 */ f32 unk20;
-  /* 0x24 */ f32 unk24;
-  /* 0x28 */ f32 unk28;
-  /* 0x2C */ f32 unk2C;
-  /* 0x30 */ f32 unk30;
+  /* 0x00 */ f32 homeX;
+  /* 0x04 */ f32 homeY;
+  /* 0x08 */ f32 homeZ;
+  /* 0x0C */ f32 homeRadius;
+  /* 0x10 */ f32 homeRadiusSquare;
+  /* 0x14 */ u8 action;
+  /* 0x15 */ u8 drumstick;
+  /* 0x16 */ s16 hopTimer;
+  /* 0x18 */ s8 hopFrame; // Animation frame while jumping
+  /* 0x19 */ s8 squishCooldown;
+  /* 0x1A */ s16 hopDirection;
+  /* 0x1C */ f32 forwardVel;
+  /* 0x20 */ f32 hopStartX;
+  /* 0x24 */ f32 hopStartZ;
+  /* 0x28 */ f32 hopTargetX;
+  /* 0x2C */ f32 hopTargetZ;
+  /* 0x30 */ f32 scaleY;
 } Object_Frog;
 
 typedef struct Object_Wizpig2 {
@@ -1103,7 +1103,7 @@ typedef struct Object_Racer {
   /* 0x140 */ struct Object *magnetTargetObj;
   /* 0x144 */ struct Object *held_obj;
   /* 0x148 */ struct Object *approachTarget;
-  /* 0x14C */ struct Object *unk14C;
+  /* 0x14C */ struct Object *zipperObj;
   /* 0x150 */ struct Object *unk150;
   /* 0x154 */ struct Object *unk154;
   /* 0x158 */ struct Object *unk158;
@@ -1170,7 +1170,7 @@ typedef struct Object_Racer {
   /* 0x1CC */ s8 aiSkill;
   /* 0x1CD */ u8 unk1CD;
   /* 0x1CE */ u8 unk1CE;
-  /* 0x1CF */ s8 unk1CF;
+  /* 0x1CF */ s8 eggHudCounter;
   /* 0x1D0 */ s8 spectateCamID;
   /* 0x1D1 */ s8 unk1D1;
   /* 0x1D2 */ s8 unk1D2;
@@ -1205,7 +1205,7 @@ typedef struct Object_Racer {
   /* 0x1F2 */ u8 unk1F2;
   /* 0x1F3 */ u8 unk1F3;
   /* 0x1F4 */ u8 startInput;
-  /* 0x1F5 */ u8 unk1F5;
+  /* 0x1F5 */ u8 zipperDirCorrection;
   /* 0x1F6 */ s8 unk1F6;
   /* 0x1F7 */ u8 transparency;
   /* 0x290 */ u8 indicator_type;
@@ -1243,20 +1243,20 @@ typedef struct Object_Racer {
 } Object_Racer;
 
 typedef struct Object_Bonus {
-  /* 0x00 */ f32 unk0;
-  /* 0x04 */ f32 unk4;
-  /* 0x08 */ f32 unk8;
-  /* 0x0C */ f32 unkC;
-  /* 0x10 */ s32 unk10;
+  /* 0x00 */ f32 directionX;
+  /* 0x04 */ f32 directionY;
+  /* 0x08 */ f32 directionZ;
+  /* 0x0C */ f32 rotationDiff; // Rotational offset, to test intersection when the exit is rotated.
+  /* 0x10 */ s32 radius; // Activation radius.
   /* 0x14 */ s8 unk14;
 } Object_Bonus;
 
 typedef struct Object_ModeChange {
-  /* 0x00 */ f32 unk0;
-  /* 0x04 */ f32 unk4;
-  /* 0x08 */ f32 unk8;
-  /* 0x0C */ f32 unkC;
-  /* 0x10 */ s32 unk10;
+  /* 0x00 */ f32 directionX;
+  /* 0x04 */ f32 directionY;
+  /* 0x08 */ f32 directionZ;
+  /* 0x0C */ f32 rotationDiff; // Rotational offset, to test intersection when the exit is rotated.
+  /* 0x10 */ s32 radius; // Activation radius.
   /* 0x14 */ u8 vehicleID;
 } Object_ModeChange;
 
@@ -1412,7 +1412,7 @@ typedef struct Object_Log {
 
 typedef struct Object_Fireball_Octoweapon {
     u8 pad0[0x1C];
-    s32 unk1C;
+    s32 soundMask;
 } Object_Fireball_Octoweapon;
 
 typedef struct Object_AnimatedObject {
