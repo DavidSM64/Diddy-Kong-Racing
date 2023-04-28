@@ -1625,12 +1625,16 @@ void render_3d_model(Object *obj) {
                         if (alpha < 255) {
                             flags |= RENDER_SEMI_TRANSPARENT;
                         }
+#ifndef NO_ANTIPIRACY
                         cicFailed = FALSE;
                         //Anti-Piracy check
                         if (osCicId != CIC_ID) {
                             cicFailed = TRUE;
                         }
                         if (!cicFailed) {
+#else
+                        if (1) {
+#endif
                             var_v0_2 = (loopObj->segment.trans.unk6 & 0x80 && obj60_unk0 == 3);
                             if (racerObj != NULL && racerObj->transparency < 255) {
                                 var_v0_2 = FALSE;
