@@ -72,7 +72,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (sp2C == 0x64) {
         D_8011D610 = 0;
     }
-    racer->unk1F5 = 0;
+    racer->zipperDirCorrection = FALSE;
     if (racer->playerIndex == PLAYER_COMPUTER) {
         if (*startTimer != 100) {
         *startTimer -= 30;

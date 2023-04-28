@@ -2714,7 +2714,7 @@ s32 func_8001C524(f32 diffX, f32 diffY, f32 diffZ, s32 someFlag) {
         if (segment) {
             levelObj = &((segment->unk3C_a.level_entry)->ttDoor);
             var_a0 = 1;
-            if (someFlag && (sp64 != levelObj->unkE)) {
+            if (someFlag && (sp64 != levelObj->doorID)) {
                 var_a0 = 0;
             }
             if ((someFlag == 2) && (levelObj->unk8 != 3)) {

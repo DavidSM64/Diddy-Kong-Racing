@@ -70,7 +70,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (sp28 == 0x64) {
         D_8011D600 = 0;
     }
-    racer->unk1F5 = 0;
+    racer->zipperDirCorrection = FALSE;
     if (racer->playerIndex == PLAYER_COMPUTER) {
         if (*startTimer != 100) {
             *startTimer -= 30;

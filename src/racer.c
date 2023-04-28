@@ -846,13 +846,13 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         if (1) { } if (1) { } if (1) { } if (1) { } if (1) { } 
         
         
-    if (racer->unk1F5 != 0) {
+    if (racer->zipperDirCorrection != 0) {
         gCurrentStickX = 0;
         racer->magnetTimer = 0;
         racer->steerAngle = 0;
         racer->spinout_timer = 0;
         racer->unk1E0 = 0;
-        var_v1 = racer->unk14C->segment.trans.y_rotation - (racer->steerVisualRotation & 0xFFFF);
+        var_v1 = racer->zipperObj->segment.trans.y_rotation - (racer->steerVisualRotation & 0xFFFF);
         if (var_v1 > 0x8000) {
         var_v1 -= 0xFFFF;
         }
@@ -870,7 +870,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         if (racer->throttleReleased) {
             racer->boostType |= BOOST_SMALL_FAST;
         }
-        racer->unk1F5 = 0;
+        racer->zipperDirCorrection = 0;
         func_80072348(racer->playerIndex, 8U);
         } else {
         obj->segment.x_velocity = ((f64) obj->segment.x_velocity) * 0.75f;
@@ -1129,7 +1129,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     temp = 1.0f;
     racer->unk196 += (((s32) ((((f32) var_v1) * 1.75) * temp)) * updateRate) >> 6;
-    if (racer->unk1F5 == 0) {
+    if (racer->zipperDirCorrection == 0) {
         if ((gCurrentPlayerIndex == PLAYER_COMPUTER) && (racer->raceFinished == 0)) {
         var_f16 = racer->lateral_velocity * 0.25;
         temp_f0 = var_f16 * 0.35;
@@ -1805,7 +1805,7 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
         baseFloat2 = 110.0f;
         baseFloat1 = 42.0f;
     }
-    if (((!(gCurrentRacerInput & 0x10)) || racer->unk1E2 < 3) && !racer->unk1F5) {
+    if (((!(gCurrentRacerInput & 0x10)) || racer->unk1E2 < 3) && !racer->zipperDirCorrection) {
         angle = (-racer->steerVisualRotation - (racer->unk196 & 0xFFFF)) + 0x8000;
         if (angle > 0x8000) {
             angle -= 0xFFFF;
@@ -6090,7 +6090,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     sp11C = get_checkpoint_count();
     if (sp11C != 0) {
         racer->unk1C9 = 0;
-        racer->unk1F5 = 0;
+        racer->zipperDirCorrection = 0;
         racer->attackType = ATTACK_NONE;
         racer->lateral_velocity = 0;
         sp94 = 20.0f;

@@ -59,6 +59,14 @@ enum EggPickupStatus {
     EGG_HATCHED
 };
 
+enum FrogActions {
+    FROG_IDLE,
+    FROG_HOP,
+    FROG_SQUISH,
+    FROG_FLAT,
+    FROG_UNSQUISH
+};
+
 typedef struct Object78_80033DD0 {
 	s32 *unk0;
 	s16 unk4;
@@ -71,14 +79,6 @@ typedef struct unk80034B4C {
     u8 pad1A[0x5E];
     s32 unk78;
 } unk80034B4C;
-
-typedef struct unk8003564C {
-    s8 unk0;
-    s8 unk1;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-} unk8003564C;
 
 typedef struct unk80035E20 {
     u8 pad0[0x40];
@@ -251,7 +251,7 @@ typedef struct Object_78_Banana {
 
 typedef struct Object_LevelName_78 {
     f32 radius;
-    s16 unk4;
+    s16 levelID;
     s16 opacity;
 } Object_LevelName_78;
 
