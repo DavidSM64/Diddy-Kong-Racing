@@ -594,7 +594,7 @@ glabel func_800AA600
 /* 0ABAB4 800AAEB4 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0ABAB8 800AAEB8 02003025 */  move  $a2, $s0
 /* 0ABABC 800AAEBC 3C073F80 */  lui   $a3, 0x3f80
-/* 0ABAC0 800AAEC0 0C01A521 */  jal   func_80069484
+/* 0ABAC0 800AAEC0 0C01A521 */  jal   camera_push_model_mtx
 /* 0ABAC4 800AAEC4 E7B20010 */   swc1  $f18, 0x10($sp)
 /* 0ABAC8 800AAEC8 3C098012 */  lui   $t1, %hi(D_80126CF4) # $t1, 0x8012
 /* 0ABACC 800AAECC 86190006 */  lh    $t9, 6($s0)

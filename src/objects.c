@@ -1224,7 +1224,10 @@ s32 func_800113CC(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoun
     }
     return ret;
 }
-
+/**
+ * Looks like it sets D_800DC848 to TRUE, and that will disable the check for out of bounds moves in move_object
+ * Official Name: objMoveXYZnocheck
+*/
 s32 func_80011560(void) { //! @bug The developers probably intended this to be a void function.
     D_800DC848 = 1;
     // No return value!
@@ -1233,6 +1236,7 @@ s32 func_80011560(void) { //! @bug The developers probably intended this to be a
 /**
  * Sets the new position of the object using the differences given.
  * Compares against the outer edges of the level geometry to decide wether or not to apply a segment ID.
+ * Official Name: objMoveXYZ
 */
 s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     s32 segmentID;
@@ -1323,7 +1327,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
 
 void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 flags, u32 texOffset, f32 arg8) {
     s32 hasTexture = FALSE;
-    func_80069484(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, arg8, 0.0f);
+    camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, arg8, 0.0f);
     gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     if (tex != NULL) {
@@ -1473,72 +1477,68 @@ void render_3d_billboard(Object *obj) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 void render_3d_model(Object *obj) {
+    s32 i;
     s32 intensity;
+    s32 alpha;
     s32 spB0;
     s32 obj60_unk0;
-    s32 hasPrimCol;
+    s32 hasOpacity;
     s32 hasEnvCol;
-    ObjectModel *objModel;
-    Object *loopObj;
-    Object *heldObj;
-    Object_64 *obj64;
-    Object_68 *obj68;
-    Vertex *temp_v0_14;
-    f32 posX;
-    f32 posZ;
-    f32 posY;
-    s32 cicFailed;
-    s32 var_t1;
-    s32 billboardFlags;
-    s32 i;
+    s32 flags;
     s32 var_v0;
+    s32 cicFailed;
+    f32 vtxX;
+    f32 vtxY;
+    f32 vtxZ;
     s8 index;
-    s8 var_t0_2;
-    s32 var_v0_2;
-    s32 alpha;
-    unk80068514_arg4 *temp_t4;
+    s8 var_v0_2;
+    Object *loopObj;
+    Object_68 *obj68;
+    Object_Racer *racerObj; 
+    ObjectModel *objModel;
+    Object_68 *something;
 
     obj68 = obj->unk68[obj->segment.unk38.byte.unk3A];
     if (obj68 != NULL) {
-        hasPrimCol = FALSE;
+        objModel = obj68->objModel;
+        hasOpacity = FALSE;
         hasEnvCol = FALSE;
         intensity = 255;
-        objModel = obj68->objModel;
         if (obj->unk54 != NULL) {
-            hasPrimCol = TRUE;
-            hasEnvCol = TRUE;
             intensity = (s32) (obj->unk54->unk0 * 255.0f * D_8011AD30);
+            hasOpacity = TRUE;
+            hasEnvCol = TRUE;
         }
         if (obj->behaviorId == BHV_RACER) {
-            obj64 = obj->unk64;
-            func_80012E28(obj);
+            racerObj = (Object_Racer *) obj->unk64;
+            object_do_player_tumble(obj);
         } else {
-            obj64 = NULL;
+            racerObj = NULL;
         }
         if (obj68->unk20 <= 0) {
             obj->unk44 = (Vertex *) obj68->unk4[obj68->unk1F];
             if (obj68->unk1E == 2) {
                 func_80061D30(obj);
             }
-            if ((obj68->unk1E != 0) && (objModel->unk40 != NULL)) {
-                var_t1 = TRUE;
-                if (obj64 != NULL && obj64->racer.vehicleID < VEHICLE_TRICKY && obj64->racer.playerIndex == PLAYER_COMPUTER) {
-                    var_t1 = FALSE;
+            if (obj68->unk1E && objModel->unk40 != NULL) {
+                flags = TRUE;
+                if (racerObj != NULL && racerObj->vehicleID < VEHICLE_TRICKY && racerObj->playerIndex == PLAYER_COMPUTER) {
+                    flags = FALSE;
                 }
                 if (get_viewport_count() != VIEWPORTS_COUNT_1_PLAYER) {
-                    var_t1 = FALSE;
+                    flags = FALSE;
                 }
-                if (obj->behaviorId == BHV_UNK_3F) {
+                obj->unk44 = (Vertex *) obj68->unk4[obj68->unk1F];
+                if (obj->behaviorId == BHV_UNK_3F) { // 63 = stopwatchicon, stopwatchhand
                     calc_dyn_light_and_env_map_for_object(objModel, obj, 0, D_8011AD30);
-                } else if (var_t1) {
+                } else if (flags) {
                     calc_dyn_light_and_env_map_for_object(objModel, obj, -1, D_8011AD30);
                 } else {
                     func_800245F0(objModel, obj, D_8011AD30);
                 }
             }
-            if ((obj64 != NULL) && (obj64->racer.playerIndex == PLAYER_COMPUTER) && (obj64->racer.vehicleID < VEHICLE_TRICKY)) {
+            if ((racerObj != NULL) && (racerObj->playerIndex == PLAYER_COMPUTER) && (racerObj->vehicleID < VEHICLE_TRICKY)) {
                 obj68->unk20 = 2;
             } else {
                 obj68->unk20 = 1;
@@ -1548,19 +1548,19 @@ void render_3d_model(Object *obj) {
         if (obj->behaviorId == BHV_DOOR) {
             func_80011264(objModel, obj);
         }
-        if ((objModel->unk52 != 0) && (objModel->unk50 > 0)) {
-            func_80011134(obj, (s32) objModel->unk52);
+        if (objModel->unk52 && objModel->unk50 > 0) {
+            func_80011134(obj, objModel->unk52);
             obj68->objModel->unk52 = 0;
         }
-        func_80069484(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0.0f);
-        spB0 = 0;
-        if (obj64 != NULL) {
-            objUndoPlayerTumble(obj);
-            if ((obj->segment.unk38.byte.unk3B == 0) || (obj64->racer.vehicleID >= VEHICLE_TRICKY)) {
-                func_80069790(&gObjectCurrDisplayList, &gObjectCurrMatrix, obj68, obj64->racer.headAngle);
-                spB0 = 1;
+        camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, D_8011AD28, 0);
+        spB0 = FALSE;
+        if (racerObj != NULL) {
+            object_undo_player_tumble(obj);
+            if (obj->segment.unk38.byte.unk3B == 0 || racerObj->vehicleID >= VEHICLE_TRICKY) {
+                func_80069790(&gObjectCurrDisplayList, &gObjectCurrMatrix, obj68, racerObj->headAngle);
+                spB0 = TRUE;
             } else {
-                obj64->racer.headAngle = 0;
+                racerObj->headAngle = 0;
             }
         }
         alpha = obj->segment.unk38.byte.unk39;
@@ -1572,17 +1572,17 @@ void render_3d_model(Object *obj) {
             alpha >>= 1;
         }
         if (alpha < 255) {
-            hasPrimCol = TRUE;
+            hasOpacity = TRUE;
         }
         if (hasEnvCol) {
             gDPSetEnvColor(gObjectCurrDisplayList++, obj->unk54->unk4, obj->unk54->unk5, obj->unk54->unk6, obj->unk54->unk7);
         } else {
             gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
         }
-        if (obj->segment.header->unk71 != 0) {
+        if (obj->segment.header->unk71) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->unk54->unk18, obj->unk54->unk19, obj->unk54->unk1A, alpha);
             func_8007B43C();
-        } else if (hasPrimCol) {
+        } else if (hasOpacity) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
         } else {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -1592,8 +1592,8 @@ void render_3d_model(Object *obj) {
         } else {
             var_v0 = func_800143A8(objModel, obj, 0, 0, spB0);
         }
-        if (obj->segment.header->unk71 != 0) {
-            if (hasPrimCol) {
+        if (obj->segment.header->unk71) {
+            if (hasOpacity) {
                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
             } else {
                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -1602,29 +1602,28 @@ void render_3d_model(Object *obj) {
         }
         if (obj->unk60 != NULL) {
             obj60_unk0 = obj->unk60->unk0;
-            if (obj64 != NULL && (obj64->racer.vehicleID == VEHICLE_FLYING_CAR)) {
+            if (racerObj != NULL && racerObj->vehicleID == VEHICLE_FLYING_CAR) {
                 obj60_unk0 = 0;
             }
             for (i = 0; i < obj60_unk0; i++) {
-                //This line right here breaks this function. Loading unk60 as an array is broken.
-                loopObj = obj->unk60[i].unk4;
+                loopObj = ((Object **) obj->unk60)[i + 1];
                 if (!(loopObj->segment.trans.unk6 & 0x4000)) {
                     index = obj->unk60->unk2C[i];
-                    if ((index >= 0) && (index < objModel->unk18)) {
-                        temp_t4 = (unk80068514_arg4 *) loopObj->unk68[loopObj->segment.unk38.byte.unk3A];
-                        posX = obj->unk44[objModel->unk14[index]].x;
-                        posY = obj->unk44[objModel->unk14[index]].y;
-                        posZ = obj->unk44[objModel->unk14[index]].z;
-                        loopObj->segment.trans.x_position += posX;
-                        loopObj->segment.trans.y_position += posY;
-                        loopObj->segment.trans.z_position += posZ;
+                    if (index >= 0 && index < objModel->unk18) {
+                        something = loopObj->unk68[loopObj->segment.unk38.byte.unk3A];
+                        vtxX = obj->unk44[objModel->unk14[index]].x;
+                        vtxY = obj->unk44[objModel->unk14[index]].y;
+                        vtxZ = obj->unk44[objModel->unk14[index]].z;
+                        loopObj->segment.trans.x_position += vtxX;
+                        loopObj->segment.trans.y_position += vtxY;
+                        loopObj->segment.trans.z_position += vtxZ;
                         if (loopObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
-                            billboardFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
+                            flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
                         } else {
-                            billboardFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE | RENDER_ANTI_ALIASING);
+                            flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE | RENDER_ANTI_ALIASING);
                         }
                         if (alpha < 255) {
-                            billboardFlags |= RENDER_SEMI_TRANSPARENT;
+                            flags |= RENDER_SEMI_TRANSPARENT;
                         }
                         cicFailed = FALSE;
                         //Anti-Piracy check
@@ -1632,60 +1631,59 @@ void render_3d_model(Object *obj) {
                             cicFailed = TRUE;
                         }
                         if (!cicFailed) {
-                            var_v0_2 = (loopObj->segment.trans.unk6 & 0x80) != 0;
+                            var_v0_2 = (loopObj->segment.trans.unk6 & 0x80 && obj60_unk0 == 3);
+                            if (racerObj != NULL && racerObj->transparency < 255) {
+                                var_v0_2 = FALSE;
+                            }
                             if (var_v0_2) {
-                                var_v0_2 = obj60_unk0 == 3;
-                            }
-                            var_t0_2 = var_v0_2;
-                            if ((obj64 != NULL) && (obj64->racer.transparency < 255)) {
-                                var_t0_2 = FALSE;
-                            }
-                            if (var_t0_2) {
                                 func_80012C98(&gObjectCurrDisplayList);
                                 gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
                                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
                             }
-                            loopObj->unk78 = render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, loopObj, temp_t4, billboardFlags);
-                            if (var_t0_2) {
+                            loopObj->unk78 = render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, loopObj, (unk80068514_arg4 *) something, flags);
+                            if (var_v0_2) {
                                 gDkrInsertMatrix(gObjectCurrDisplayList++, 0, 0);
                                 func_80012CE8(&gObjectCurrDisplayList);
                             }
                         }
-                        loopObj->segment.trans.x_position -= posX;
-                        loopObj->segment.trans.y_position -= posY;
-                        loopObj->segment.trans.z_position -= posZ;
+                        loopObj->segment.trans.x_position -= vtxX;
+                        loopObj->segment.trans.y_position -= vtxY;
+                        loopObj->segment.trans.z_position -= vtxZ;
                     }
                 }
             }
         }
-        if (obj64 != NULL) {
-            heldObj = obj64->racer.held_obj;
-            if (heldObj != NULL) {
-                if ((obj->segment.header->unk58 >= 0) && (obj->segment.header->unk58 < objModel->unk18)) {
-                    billboardFlags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
-                    temp_t4 = (unk80068514_arg4 *) heldObj->unk68[heldObj->segment.unk38.byte.unk3A];
-                    temp_v0_14 = &obj->unk44[objModel->unk14[obj->segment.header->unk58]];
-                    heldObj->segment.trans.x_position += (temp_v0_14->x - heldObj->segment.trans.x_position) * 0.25f;
-                    heldObj->segment.trans.y_position += (temp_v0_14->y - heldObj->segment.trans.y_position) * 0.25f;
-                    heldObj->segment.trans.z_position += (temp_v0_14->z - heldObj->segment.trans.z_position) * 0.25f;
-                    if (heldObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
-                        render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, heldObj,
-                           temp_t4, billboardFlags);
+        // This section draws the egg sprite being held by a racer.
+        if (racerObj != NULL) {
+            loopObj = racerObj->held_obj;
+            if (loopObj != NULL) {
+                index = obj->segment.header->unk58;
+                if (index >= 0 && index < objModel->unk18) {
+                    flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
+                    something = loopObj->unk68[loopObj->segment.unk38.byte.unk3A];
+                    vtxX = obj->unk44[objModel->unk14[index]].x;
+                    vtxY = obj->unk44[objModel->unk14[index]].y;
+                    vtxZ = obj->unk44[objModel->unk14[index]].z;
+                    loopObj->segment.trans.x_position += (vtxX - loopObj->segment.trans.x_position) * 0.25f;
+                    loopObj->segment.trans.y_position += (vtxY - loopObj->segment.trans.y_position) * 0.25f;
+                    loopObj->segment.trans.z_position += (vtxZ - loopObj->segment.trans.z_position) * 0.25f;
+                    if (loopObj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
+                        render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, loopObj, (unk80068514_arg4 *)something, flags);
                     }
                 }
             }
         }
         if (var_v0 != -1) {
-            if (obj->segment.header->unk71 != 0) {
+            if (obj->segment.header->unk71) {
                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->unk54->unk18, obj->unk54->unk19, obj->unk54->unk1A, alpha);
                 func_8007B43C();
             }
             func_800143A8(objModel, obj, var_v0, 4, spB0);
-            if (obj->segment.header->unk71 != 0) {
+            if (obj->segment.header->unk71) {
                 func_8007B454();
             }
         }
-        if ((hasPrimCol) || (obj->segment.header->unk71 != 0)) {
+        if ((hasOpacity) || (obj->segment.header->unk71)) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
         if (hasEnvCol) {
@@ -1694,9 +1692,6 @@ void render_3d_model(Object *obj) {
         func_80069A40(&gObjectCurrDisplayList);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/render_3d_model.s")
-#endif
 
 void func_80012C30(void) {
     D_8011ADA4 = 0;
@@ -1724,6 +1719,9 @@ void func_80012CE8(Gfx **dlist) {
     }
 }
 
+/**
+ * Official Name: objPrintObject
+*/
 void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object) {
     f32 scale;
     if (object->segment.trans.unk6 & 0x5000)
@@ -1741,7 +1739,11 @@ void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object) {
     func_800B76B8(2, -1);
 }
 
-void func_80012E28(Object *this) {
+
+/**
+ * Official Name: objDoPlayerTumble
+*/
+void object_do_player_tumble(Object *this) {
     UNUSED s32 unused1;
     Object_Racer *sp_20;
     f32 tmp_f2;
@@ -1772,7 +1774,10 @@ void func_80012E28(Object *this) {
     }
 }
 
-void objUndoPlayerTumble(Object *obj) {
+/**
+ * Official Name: objUndoPlayerTumble
+*/
+void object_undo_player_tumble(Object *obj) {
     if (obj->behaviorId == BHV_RACER) {
         Object_Racer *racer = &obj->unk64->racer;
         obj->segment.trans.y_rotation -= racer->y_rotation_offset;
@@ -1782,7 +1787,156 @@ void objUndoPlayerTumble(Object *obj) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+void func_80012F94(Object *obj) {
+    u8 *bossAsset;
+    ObjectModel *temp_a1_3;
+    Object_Racer *objRacer;
+    Object_68 **var_v0;
+    Object_68 *new_var;
+    f32 ret1;
+    f32 var_f0_2;
+    f32 ret2;
+    u8 *var_a1;
+    s32 temp_f6;
+    s32 temp_v1;
+    s32 bossVehicleId;
+    s32 racerLightTimer;
+    s32 batchNum;
+    s32 var_v1;
+    s32 firstNonEmptyUnk68ObjectIndex;
+    s32 var_t0;
+    s32 numberOfModels;
+
+    ret1 = 1.0f;
+    ret2 = 1.0f;
+    if (!(obj->segment.trans.unk6 & 0x8000)) {
+        if (obj->segment.header->behaviorId == BHV_RACER) {
+            objRacer = (Object_Racer *) obj->unk64;
+            objRacer->unk201 = 30;
+            if (objRacer->unk206 > 0) {
+                ret2 = 1.0f - (objRacer->unk206 * 0.05f);
+                if (ret2 < 0.2f) {
+                    ret2 = 0.2f;
+                }
+            }
+            if (objRacer->playerIndex != PLAYER_COMPUTER && objRacer->raceFinished) {
+                var_t0 = 0;
+                batchNum = 0;
+            } else {
+                if (obj->behaviorId == BHV_UNK_3A) { //Ghost Object?
+                    var_t0 = 1;
+                    batchNum = 0;
+                } else {
+                    //Loads vehicles between VEHICLE_TRICKY and VEHICLE_SMOKEY. So all boss vehicles except wizpig.
+                    var_t0 = objRacer->vehicleID + VEHICLE_TRICKY;
+                    if (objRacer->vehicleID >= NUMBER_OF_PLAYER_VEHICLES) {
+                        var_t0 = VEHICLE_TRICKY;
+                    }
+                    batchNum = 0;
+                    bossAsset = (u8 *) get_misc_asset(var_t0); //40 bytes of data u8[8][5]?
+                    bossAsset = &bossAsset[(get_viewport_count() * 10)];
+                    var_a1 = bossAsset;
+                    if (get_current_viewport() != objRacer->playerIndex) {
+                        var_a1 += 5;
+                    }
+                    var_f0_2 = obj->segment.unk30;
+                    temp_v1 = (s32) var_f0_2 >> 3;
+                    if (obj->segment.unk30 < 0.0f) {
+                        var_f0_2 = 0.0f;
+                    } else if (var_f0_2 > 3500.0f) {
+                        var_f0_2 = 3500.0f;
+                    }
+                    obj->segment.trans.scale *= (var_f0_2 / 2700.0f) + 1.0f;
+                    temp_f6 = (s32) ((f32) temp_v1 * *((f32 *)get_misc_asset(ASSET_MISC_4)[objRacer->characterId]));
+                    //ASSET_MISC_4 is just 10 floats of 1.0f. One for each playable character.
+                    if (temp_f6 < -50) {
+                        var_t0 = 5;
+                    } else {
+                        racerLightTimer = MIN(temp_f6 >> 1, 0);
+                        var_v1 = racerLightTimer;
+                        if (var_v1 < var_a1[0]) {
+                            var_t0 = 0;
+                        } else if (var_v1 < var_a1[1]) {
+                            var_t0 = 1;
+                        } else if (var_v1 < var_a1[2]) {
+                            var_t0 = 2;
+                        } else if (var_v1 < var_a1[3]) {
+                            var_t0 = 3;
+                        } else if (var_v1 < var_a1[4]) {
+                            var_t0 = 4;
+                        } else {
+                            var_t0 = 5;
+                        }
+                    }
+                }
+            }
+
+            firstNonEmptyUnk68ObjectIndex = 0;
+            var_v0 = &obj->unk68[firstNonEmptyUnk68ObjectIndex];
+
+            while (*var_v0 == NULL) {
+                firstNonEmptyUnk68ObjectIndex++;
+                var_v0++;
+            }
+
+            numberOfModels = obj->segment.header->numberOfModelIds - 1;
+            var_v0 = &obj->unk68[numberOfModels];
+
+            while (*var_v0 == NULL) {
+                numberOfModels--;
+                var_v0--;
+            }
+
+            if (var_t0 < firstNonEmptyUnk68ObjectIndex) {
+                var_t0 = firstNonEmptyUnk68ObjectIndex;
+            }
+            if (numberOfModels < var_t0) {
+                var_t0 = numberOfModels;
+            }
+            obj->segment.unk38.byte.unk3A = var_t0;
+            if ((obj->unk54 != NULL) && (obj->unk54->unk0 < 0.6f)) {
+                objRacer->lightFlags |= RACER_LIGHT_NIGHT;
+            } else {
+                objRacer->lightFlags &= ~RACER_LIGHT_NIGHT;
+            }
+            racerLightTimer = objRacer->lightFlags & RACER_LIGHT_TIMER;
+            new_var = obj->unk68[obj->segment.unk38.byte.unk3A];
+            temp_a1_3 = new_var->objModel;
+            if (racerLightTimer != 0) {
+                racerLightTimer--;
+                if (objRacer->lightFlags & RACER_LIGHT_BRAKE) {
+                    racerLightTimer += 1;
+                    objRacer->lightFlags = (objRacer->lightFlags & ~RACER_LIGHT_UNK10) | RACER_LIGHT_UNK20;
+                } else if (objRacer->lightFlags & RACER_LIGHT_NIGHT) {
+                    racerLightTimer += 3;
+                    objRacer->lightFlags = (objRacer->lightFlags & ~RACER_LIGHT_UNK20) | RACER_LIGHT_UNK10;
+                } else if (objRacer->lightFlags & RACER_LIGHT_UNK20) {
+                    racerLightTimer += 1;
+                } else {
+                    racerLightTimer += 3;
+                }
+            }
+            racerLightTimer *= 4;
+            for (batchNum = 0; batchNum < temp_a1_3->numberOfBatches; batchNum++) {
+                if ((temp_a1_3->batches[batchNum].flags & 0x810000) == 0x10000) {
+                    temp_a1_3->batches[batchNum].unk7 = racerLightTimer;
+                }
+            }
+            obj->segment.trans.x_position += objRacer->carBobX;
+            obj->segment.trans.y_position += objRacer->carBobY;
+            obj->segment.trans.z_position += objRacer->carBobZ;
+            ret1 = objRacer->stretch_height;
+        } else if (obj->behaviorId == BHV_FROG) {
+            ret1 = obj->unk64->frog.scaleY;
+        }
+    }
+    D_8011AD28 = ret1;
+    D_8011AD30 = ret2;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
+#endif
 
 void render_object(Object *this) {
     func_80012F94(this);

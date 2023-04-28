@@ -81,7 +81,7 @@ typedef struct {
     s32 unk4;
 } unk80127BF8;
 
-void setWeatherLimits(s16 arg0, s16 arg1);
+void set_weather_limits(s16 arg0, s16 arg1);
 void func_800AC880(s32 arg0);
 void cameraAddOverrideObject(Object *arg0);
 void free_rain_memory(void);
@@ -99,7 +99,7 @@ void changeWeather(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
 
 s32 coss(s16);
 s32 sins(s16);
-void func_800AB1F0(void);
+void init_weather(void);
 s32 func_800AC0C8(s32, unk80127BF8 *);
 void f32_matrix_dot(Matrix *arg0, Matrix *arg1, Matrix *arg2);
 void func_800AC21C(void);

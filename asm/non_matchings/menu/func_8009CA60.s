@@ -167,7 +167,7 @@ glabel func_8009CA60
 /* 09D8E0 8009CCE0 AFA8002C */  sw    $t0, 0x2c($sp)
 /* 09D8E4 8009CCE4 02002025 */  move  $a0, $s0
 /* 09D8E8 8009CCE8 01B83021 */  addu  $a2, $t5, $t8
-/* 09D8EC 8009CCEC 0C01A521 */  jal   func_80069484
+/* 09D8EC 8009CCEC 0C01A521 */  jal   camera_push_model_mtx
 /* 09D8F0 8009CCF0 E7B00010 */   swc1  $f16, 0x10($sp)
 /* 09D8F4 8009CCF4 3C0B800E */  lui   $t3, %hi(gMenuImageStack) # $t3, 0x800e
 /* 09D8F8 8009CCF8 256BF75C */  addiu $t3, %lo(gMenuImageStack) # addiu $t3, $t3, -0x8a4

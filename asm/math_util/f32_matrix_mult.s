@@ -1,3 +1,4 @@
+/* Official name: mathMtxCatF */
 glabel f32_matrix_mult
 /* 070368 8006F768 27BDFFF8 */  addiu $sp, $sp, -8
 /* 07036C 8006F76C F7A20000 */  sdc1  $f2, ($sp)

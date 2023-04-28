@@ -128,25 +128,25 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of April 24, 2023, this is our current score:
+As of April 28, 2023, this is our current score:
 ```
  =================================================
       ADVENTURE ONE (ASM -> C Decompilation)
- ---------------- 51.18% Complete ----------------
-           # Decompiled functions: 1501
-            # GLOBAL_ASM remaining: 331
+ ---------------- 51.57% Complete ----------------
+           # Decompiled functions: 1503
+            # GLOBAL_ASM remaining: 329
            # NON_MATCHING functions: 12
         # NON_EQUIVALENT WIP functions: 64
  ------------------ Game Status ------------------
-     Balloons: 25/47, Keys: 3/4, Trophies: 2/5
+     Balloons: 26/47, Keys: 3/4, Trophies: 2/5
       T.T. Amulets: 2/4, Wizpig Amulets: 2/4
  -------------------------------------------------
-    We are racing in Treasure Caves. (Lap 3/3)
+ We are racing the octopus boss Bubbler. (Lap 1/3)
  =================================================
        ADVENTURE TWO (Cleanup & Documentation)
- ---------------- 25.01% Complete ----------------
-            # Documented functions: 511
-          # Undocumented remaining: 1053
+ ---------------- 25.19% Complete ----------------
+            # Documented functions: 516
+          # Undocumented remaining: 1048
  ------------------ Game Status ------------------
      Balloons: 12/47, Keys: 1/4, Trophies: 1/5
       T.T. Amulets: 1/4, Wizpig Amulets: 1/4
