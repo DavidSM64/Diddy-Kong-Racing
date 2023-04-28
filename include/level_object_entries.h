@@ -415,8 +415,8 @@ typedef struct LevelObjectEntry_TreasureSucker {
 typedef struct LevelObjectEntry_Log {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8;
-    /* 0x09 */ u8 unk9;
-    /* 0x0A */ u8 unkA;
+    /* 0x09 */ u8 radius;
+    /* 0x0A */ u8 angleY;
 } LevelObjectEntry_Log;
 
 typedef struct LevelObjectEntry_LavaSpurt {

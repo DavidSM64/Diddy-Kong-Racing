@@ -3831,7 +3831,11 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate) {
     }
 }
 
-
+/**
+ * Challenge Key init behaviour.
+ * Sets hitbox info based off spawn info.
+ * Deletes itself in tracks mode, or if it's already been collected.
+ */
 void obj_init_worldkey(Object *obj, LevelObjectEntry_WorldKey *entry) {
     Settings *settings;
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
@@ -3847,6 +3851,7 @@ void obj_init_worldkey(Object *obj, LevelObjectEntry_WorldKey *entry) {
 }
 
 /**
+ * Challenge Key loop behaviour.
  * Rotates the key and checks to see if the player grabbed it.
  */
 void obj_loop_worldkey(Object *worldKeyObj, s32 updateRate) {
@@ -3877,6 +3882,11 @@ void obj_loop_worldkey(Object *worldKeyObj, s32 updateRate) {
     worldKeyObj->segment.trans.y_rotation += updateRate * 0x100;
 }
 
+/**
+ * Weapon Balloon init behaviour.
+ * Sets scale and rotation based off spawn info.
+ * Sets model ID based on balloon ID.
+*/
 void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) {
     s32 cheats;
     Object_WeaponBalloon *obj64;
@@ -4037,12 +4047,25 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_weaponballoon.s")
 #endif
 
+/**
+ * Balloon Burst Effect init behaviour.
+ * Does nothing.
+*/
 void obj_init_wballoonpop(UNUSED Object *obj, UNUSED LevelObjectEntry_WBalloonPop *entry) {
 }
 
+/**
+ * Balloon Burst Effect loop behaviour.
+ * Does nothing.
+*/
 void obj_loop_wballoonpop(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
+/**
+ * Racer weapon init behaviour.
+ * Sets hitbox info so racers can interact with it.
+ * Also sets a timer to remove the object after that many frames.
+*/
 void obj_init_weapon(Object *obj, UNUSED LevelObjectEntry_Weapon *entry) {
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
@@ -4506,6 +4529,10 @@ void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, UNUSED s
     obj->unk64 = func_80031CAC(obj, entry);
 }
 
+/**
+ * Floating buoy init behaviour.
+ * Sets hitbox data from spawn info.
+*/
 void obj_init_buoy_pirateship(Object *obj, UNUSED LevelObjectEntry_Buoy_PirateShip *entry, UNUSED s32 arg2) {
     obj->unk64 = func_800BE654(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position);
     obj->interactObj->flags = INTERACT_FLAGS_SOLID;
@@ -4526,20 +4553,24 @@ void obj_loop_buoy_pirateship(Object *obj, s32 updateRate) {
     obj->segment.animFrame += updateRate * 8;
 }
 
+/**
+ * Spinning log init behaviour.
+ * Sets scale, angle and hitbox data based off the spawn info.
+*/
 void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
-    f32 phi_f0;
+    f32 radius;
     obj->unk64 = func_800BE654(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position);
     obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 30;
-    phi_f0 = entry->unk9 & 0xFF;
-    if (phi_f0 < 10.0f) {
-        phi_f0 = 10.0f;
+    radius = entry->radius & 0xFF;
+    if (radius < 10.0f) {
+        radius = 10.0f;
     }
-    phi_f0 /= 64;
-    obj->segment.trans.scale = obj->segment.header->scale * phi_f0;
+    radius /= 64;
+    obj->segment.trans.scale = obj->segment.header->scale * radius;
     obj->segment.unk38.byte.unk3A = entry->unk8;
-    obj->segment.trans.y_rotation = entry->unkA << 6 << 4;
+    obj->segment.trans.y_rotation = entry->angleY << 6 << 4;
 }
 
 /**
@@ -4622,22 +4653,22 @@ void obj_init_weather(Object *obj, LevelObjectEntry_Weather *entry) {
  * Can be used to stop, start or change the intensity of the current weather.
 */
 void obj_loop_weather(Object *obj, UNUSED s32 updateRate) {
-  s32 currViewport;
-  s32 numberOfObjects;
-  Object_Racer *curObj64;
-  Object **objects;
-  Object *curObj;
-  LevelObjectEntry_Weather *entry;
-  f32 diffX;
-  f32 diffZ;
-  s32 cur;
-  s32 last;
-  f32 dist;
-    
-  currViewport = get_current_viewport();
-  objects = get_racer_objects(&numberOfObjects);
-  cur = -1;
-  if (numberOfObjects != 0) {
+    s32 currViewport;
+    s32 numberOfObjects;
+    Object_Racer *curObj64;
+    Object **objects;
+    Object *curObj;
+    LevelObjectEntry_Weather *entry;
+    f32 diffX;
+    f32 diffZ;
+    s32 cur;
+    s32 last;
+    f32 dist;
+        
+    currViewport = get_current_viewport();
+    objects = get_racer_objects(&numberOfObjects);
+    cur = -1;
+    if (numberOfObjects != 0) {
     last = numberOfObjects - 1;
     do {
       curObj = objects[cur + 1];
@@ -4648,9 +4679,9 @@ void obj_loop_weather(Object *obj, UNUSED s32 updateRate) {
     diffZ = obj->segment.trans.z_position - curObj->segment.trans.z_position;
     dist = obj->unk78f;
     entry = (LevelObjectEntry_Weather *)obj->segment.unk3C_a.level_entry;
-    if (((diffX * diffX) + (diffZ * diffZ)) <= dist){
-      if (((!obj->segment.unk3C_a.level_entry) && (!obj->segment.unk3C_a.level_entry)) && (!obj->segment.unk3C_a.level_entry)){}  // Fakematch
-      changeWeather(entry->unkA * 256, entry->unkC * 256, entry->unkE * 256, entry->unk10 * 257, entry->unk11 * 257, entry->unk12);
+    if ((diffX * diffX) + (diffZ * diffZ) <= dist){
+        if (((!obj->segment.unk3C_a.level_entry) && (!obj->segment.unk3C_a.level_entry)) && (!obj->segment.unk3C_a.level_entry)){}  // Fakematch
+        changeWeather(entry->unkA * 256, entry->unkC * 256, entry->unkE * 256, entry->unk10 * 257, entry->unk11 * 257, entry->unk12);
     }
   }
 }
