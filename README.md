@@ -144,14 +144,14 @@ As of April 24, 2023, this is our current score:
     We are racing in Treasure Caves. (Lap 3/3)
  =================================================
        ADVENTURE TWO (Cleanup & Documentation)
- ---------------- 24.34% Complete ----------------
-            # Documented functions: 485
-          # Undocumented remaining: 1079
+ ---------------- 25.01% Complete ----------------
+            # Documented functions: 511
+          # Undocumented remaining: 1053
  ------------------ Game Status ------------------
      Balloons: 12/47, Keys: 1/4, Trophies: 1/5
       T.T. Amulets: 1/4, Wizpig Amulets: 1/4
  -------------------------------------------------
- We are racing Taj in the Car Challenge. (Lap 1/3)
+ We are racing Taj in the Car Challenge. (Lap 2/3)
  =================================================
 ```
 <!-- README_SCORE_END -->

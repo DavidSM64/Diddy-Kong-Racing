@@ -85,7 +85,7 @@ s8 gDrawFrameTimer = 0;
 FadeTransition D_800DD3F4 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK2, FADE_COLOR_BLACK, 20, 0);
 s32 sLogicUpdateRate = LOGIC_5FPS;
 FadeTransition D_800DD408 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 30, -1);
-FadeTransition D_800DD41C = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
+FadeTransition gLevelFadeOutTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
 FadeTransition D_800DD424 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 260, -1);
 s32 gNumGfxTasksAtScheduler = 0;
 /*******************************/
@@ -136,7 +136,7 @@ Vehicle gLevelDefaultVehicleID;
 Vehicle D_8012351C; // Looks to be the current level's vehicle ID.
 s32 sBootDelayTimer;
 s8 D_80123524;
-s8 D_80123525;
+s8 gNextMap;
 s32 gCurrNumF3dCmdsPerPlayer;
 s32 gCurrNumHudMatPerPlayer;
 s32 gCurrNumHudTrisPerPlayer;
@@ -1339,7 +1339,7 @@ void ingame_logic_loop(s32 updateRate) {
                     // fall-through
                 case 4:
                     D_801234F8 = 1;
-                    gPlayableMapId = D_80123525;
+                    gPlayableMapId = gNextMap;
                     D_80123504 = 0;
                     D_80123508 = 0;
                     buttonHeldInputs = 0;
@@ -2134,8 +2134,8 @@ void func_8006F140(s32 arg0) {
     if (gLevelLoadTimer == 0) {
         gLevelLoadTimer = 40;
         D_80123524 = 0;
-        if (arg0 == 1) {
-            transition_begin(&D_800DD41C);
+        if (arg0 == 1) { //FADE_BARNDOOR_HORIZONTAL?
+            transition_begin(&gLevelFadeOutTransition);
         }
         if (arg0 == 3) { //FADE_CIRCLE?
             gLevelLoadTimer = 282;
@@ -2153,28 +2153,35 @@ void func_8006F140(s32 arg0) {
 
 void func_8006F254(void) {
     if (gLevelLoadTimer == 0) {
-        transition_begin(&D_800DD41C);
+        transition_begin(&gLevelFadeOutTransition);
         gLevelLoadTimer = 40;
         D_80123524 = 2;
     }
 }
 
-void func_8006F29C(void) {
+/**
+ * Check if all available trophy races and Wizpig 1 has been beaten, and if the cutscene has not yet played.
+*/
+void begin_lighthouse_rocket_cutscene(void) {
     if (gLevelLoadTimer == 0) {
         if ((gSettingsPtr->trophies & 0xFF) == 0xFF && !(gSettingsPtr->cutsceneFlags & CUTSCENE_LIGHTHOUSE_ROCKET) && gSettingsPtr->bosses & 1) {
             gSettingsPtr->cutsceneFlags |= CUTSCENE_LIGHTHOUSE_ROCKET;
-            transition_begin(&D_800DD41C);
+            transition_begin(&gLevelFadeOutTransition);
             gLevelLoadTimer = 40;
-            D_80123525 = 0x2D;
+            gNextMap = ASSET_LEVEL_ROCKETSEQUENCE;
             D_80123524 = 3;
         }
     }
 }
 
-void func_8006F338(s32 arg0) {
+/**
+ * Begin a transition, then set the next level to the passed argument.
+ * This is used only to warp to Future Fun Land from the hub area.
+*/
+void begin_level_teleport(s32 levelID) {
     if (gLevelLoadTimer == 0) {
-        D_80123525 = arg0;
-        transition_begin(&D_800DD41C);
+        gNextMap = levelID;
+        transition_begin(&gLevelFadeOutTransition);
         gLevelLoadTimer = 40;
         D_80123524 = 4;
     }
