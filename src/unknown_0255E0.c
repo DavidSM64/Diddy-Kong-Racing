@@ -137,8 +137,8 @@ s32 D_8011D164;
 s32 D_8011D168[84];
 WaterProperties *gTrackWaves[20];
 s8 D_8011D308;
-LevelModel *D_8011D30C;
-s32 *D_8011D310;
+LevelModel *gTrackModelHeap;
+s32 *gLevelModelTable;
 UNUSED f32 gPrevCameraX; // Set but never read
 UNUSED f32 gPrevCameraY; // Set but never read
 UNUSED f32 gPrevCameraZ; // Set but never read
@@ -319,7 +319,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     if (gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_1 || gCurrentLevelHeader2->unkBD) {
         gAntiAliasing = TRUE;
     }
-    if (gCurrentLevelHeader2->unk49 == -1) {
+    if (gCurrentLevelHeader2->skyDome == -1) {
         i = (gCurrentLevelHeader2->unkA4->width << 9) - 1;
         gCurrentLevelHeader2->unkA8 = (gCurrentLevelHeader2->unkA8 + (gCurrentLevelHeader2->unkA2 * tempUpdateRate)) & i;
         i = (gCurrentLevelHeader2->unkA4->height << 9) - 1;
@@ -363,7 +363,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         func_8002A31C();
         if (numViewports < VIEWPORTS_COUNT_3_PLAYERS) {
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
-            if (gCurrentLevelHeader2->unk49 == -1) {
+            if (gCurrentLevelHeader2->skyDome == -1) {
                 func_80028050();
             } else {
                 render_skydome();
@@ -795,7 +795,7 @@ void render_skydome(void) {
         return;
 
     cam = get_active_camera_segment();
-    if (gCurrentLevelHeader2->unk49 == 0) {
+    if (gCurrentLevelHeader2->skyDome == 0) {
         gSkydomeSegment->segment.trans.x_position = cam->trans.x_position;
         gSkydomeSegment->segment.trans.y_position = cam->trans.y_position;
         gSkydomeSegment->segment.trans.z_position = cam->trans.z_position;
@@ -864,24 +864,24 @@ void set_anti_aliasing(s32 setting) {
  * Afterwards, render particles.
 */
 void render_level_geometry_and_objects(void) {
-    s32 sp16C;
+    s32 objCount;
     s32 numberOfSegments;
     s32 objFlags;
     s32 sp160;
     s32 i;
-    s32 sp158;
+    s32 visibleFlags;
     u8 segmentIds[LEVEL_SEGMENT_MAX];
     u8 objectsVisible[LEVEL_SEGMENT_MAX];
-    s32 s0;
+    s32 visible;
     Object *obj;
 
     func_80012C30();
 
     if (get_settings()->courseId == ASSET_LEVEL_OPENINGSEQUENCE) {
-        gAntiAliasing = 1;
+        gAntiAliasing = TRUE;
     }
 
-    sp160 = func_80014814(&sp16C);
+    sp160 = func_80014814(&objCount);
 
     if (gCurrentLevelModel->numberOfSegments > 1) {
         numberOfSegments = 0;
@@ -909,22 +909,22 @@ void render_level_geometry_and_objects(void) {
     }
 
     reset_render_settings(&gSceneCurrDisplayList);
-    func_80015348(sp160, sp16C - 1);
-    sp158 = OBJ_FLAGS_INVIS_PLAYER1 << (get_current_viewport() & 1);
+    func_80015348(sp160, objCount - 1);
+    visibleFlags = OBJ_FLAGS_INVIS_PLAYER1 << (get_current_viewport() & 1);
 
-    for (i = sp160; i < sp16C; i++) {
+    for (i = sp160; i < objCount; i++) {
         obj = get_object(i);
-        s0 = 0xFF;
+        visible = 255;
         objFlags = obj->segment.trans.flags;
         if (objFlags & OBJ_FLAGS_UNK_0080) {
-            s0 = 0;
+            visible = 0;
         } else if (!(objFlags & OBJ_FLAGS_DEACTIVATED)) {
-            s0 = obj->segment.unk38.byte.unk39;
+            visible = obj->segment.unk38.byte.unk39;
         }
-        if (objFlags & sp158) {
-            s0 = 0;
+        if (objFlags & visibleFlags) {
+            visible = 0;
         }
-        if (obj != NULL && s0 == 0xFF && check_if_in_draw_range(obj) && (objectsVisible[obj->segment.unk2C.half.lower + 1] || obj->segment.unk34_a.unk34 > 1000.0)) {
+        if (obj != NULL && visible == 255 && check_if_in_draw_range(obj) && (objectsVisible[obj->segment.unk2C.half.lower + 1] || obj->segment.unk34_a.unk34 > 1000.0)) {
             if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
                 func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
@@ -938,15 +938,15 @@ void render_level_geometry_and_objects(void) {
         }
     }
 
-    for (i = sp16C - 1; i >= sp160; i--) {
+    for (i = objCount - 1; i >= sp160; i--) {
         obj = get_object(i);
         objFlags = obj->segment.trans.flags;
-        if (objFlags & sp158) {
-            s0 = FALSE;
+        if (objFlags & visibleFlags) {
+            visible = FALSE;
         } else {
-            s0 = TRUE;
+            visible = TRUE;
         }
-        if (obj != NULL && s0 && objFlags & OBJ_FLAGS_UNK_0100 && objectsVisible[obj->segment.unk2C.half.lower + 1] && check_if_in_draw_range(obj)) {
+        if (obj != NULL && visible && objFlags & OBJ_FLAGS_UNK_0100 && objectsVisible[obj->segment.unk2C.half.lower + 1] && check_if_in_draw_range(obj)) {
             if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
                 func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
@@ -975,23 +975,23 @@ void render_level_geometry_and_objects(void) {
     func_80012C3C(&gSceneCurrDisplayList);
 
     // Particles and FX
-    for (i = sp16C - 1; i >= sp160; i--) {
+    for (i = objCount - 1; i >= sp160; i--) {
         obj = get_object(i);
-        s0 = 0xFF;
+        visible = 255;
         objFlags = obj->segment.trans.flags;
         if (objFlags & OBJ_FLAGS_UNK_0080) {
-            s0 = 1;
+            visible = TRUE;
         } else if (!(objFlags & OBJ_FLAGS_DEACTIVATED)) {
-            s0 = obj->segment.unk38.byte.unk39;
+            visible = obj->segment.unk38.byte.unk39;
         }
-        if (objFlags & sp158) {
-            s0 = 0;
+        if (objFlags & visibleFlags) {
+            visible = FALSE;
         }
-        if ((obj->behaviorId == BHV_RACER) && (s0 >= 0xFF)) {
-            s0 = 0;
+        if (obj->behaviorId == BHV_RACER && visible >= 255) {
+            visible = FALSE;
         }
-        if (obj != NULL && s0 < 0xFF && objectsVisible[obj->segment.unk2C.half.lower + 1] && check_if_in_draw_range(obj)) {
-            if (s0 > 0) {
+        if (obj != NULL && visible < 255 && objectsVisible[obj->segment.unk2C.half.lower + 1] && check_if_in_draw_range(obj)) {
+            if (visible > 0) {
                 if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
                     func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                     goto skip;
@@ -1649,30 +1649,30 @@ void func_8002C0C4(s32 modelId) {
     LevelModel *mdl;
     
     set_texture_colour_tag(COLOUR_TAG_GREEN);
-    D_8011D30C = allocate_from_main_pool_safe(LEVEL_MODEL_MAX_SIZE, COLOUR_TAG_YELLOW);
-    gCurrentLevelModel = D_8011D30C;
+    gTrackModelHeap = allocate_from_main_pool_safe(LEVEL_MODEL_MAX_SIZE, COLOUR_TAG_YELLOW);
+    gCurrentLevelModel = gTrackModelHeap;
     D_8011D370 = allocate_from_main_pool_safe(0x7D0, COLOUR_TAG_YELLOW);
     D_8011D374 = allocate_from_main_pool_safe(0x1F4, COLOUR_TAG_YELLOW);
     D_8011D378 = 0;
-    D_8011D310 = (s32*)load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
+    gLevelModelTable = (s32*)load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
     
-    for(i = 0; D_8011D310[i] != -1; i++);
+    for(i = 0; gLevelModelTable[i] != -1; i++);
     i--;
     if (modelId >= i) {
         modelId = 0;
     }
     
-    //offset = D_8011D310[modelId];
-    temp_s4 = D_8011D310[modelId + 1] - D_8011D310[modelId];
+    //offset = gLevelModelTable[modelId];
+    temp_s4 = gLevelModelTable[modelId + 1] - gLevelModelTable[modelId];
 
     // temp = compressedRamAddr
     temp = (s32) gCurrentLevelModel;
     temp +=  (LEVEL_MODEL_MAX_SIZE - temp_s4);
     temp -= ((s32)temp % 16); // Align to 16-byte boundary.
     
-    load_asset_to_address(ASSET_LEVEL_MODELS, temp, D_8011D310[modelId], temp_s4);
+    load_asset_to_address(ASSET_LEVEL_MODELS, temp, gLevelModelTable[modelId], temp_s4);
     gzip_inflate((u8*) temp, (u8*) gCurrentLevelModel);
-    free_from_memory_pool(D_8011D310); // Done with the level models table, so free it.
+    free_from_memory_pool(gLevelModelTable); // Done with the level models table, so free it.
     
     mdl = gCurrentLevelModel;
     
@@ -1711,8 +1711,8 @@ void func_8002C0C4(s32 modelId) {
         rmonPrintf("ERROR!! TrackMem overflow .. %d\n", temp_s4);
     }
     set_free_queue_state(0);
-    free_from_memory_pool(D_8011D30C);
-    allocate_at_address_in_main_pool(temp_s4, (u8* ) D_8011D30C, COLOUR_TAG_YELLOW);
+    free_from_memory_pool(gTrackModelHeap);
+    allocate_at_address_in_main_pool(temp_s4, (u8* ) gTrackModelHeap, COLOUR_TAG_YELLOW);
     set_free_queue_state(2);
     minimap_init(gCurrentLevelModel);
 
@@ -1765,21 +1765,24 @@ LevelModel *get_current_level_model(void) {
     return gCurrentLevelModel;
 }
 
-void func_8002C7D4(void) {
+/**
+ * Frees and unloads level data from RAM.
+*/
+void free_level(void) {
     s32 i;
 
     func_8000B290();
     if (D_8011D384 != 0) {
         func_800B7D20();
     }
-    for(i = 0; i < gCurrentLevelModel->numberOfTextures; i++) {
+    for (i = 0; i < gCurrentLevelModel->numberOfTextures; i++) {
         free_texture(gCurrentLevelModel->textures[i].texture);
     }
-    free_from_memory_pool(D_8011D30C);
+    free_from_memory_pool(gTrackModelHeap);
     free_from_memory_pool(D_8011D370);
     free_from_memory_pool(D_8011D374);
     free_sprite((Sprite *) gCurrentLevelModel->minimapSpriteIndex);
-    for(i = 0; i < MAXCONTROLLERS; i++) {
+    for (i = 0; i < MAXCONTROLLERS; i++) {
         free_from_memory_pool(D_8011D350[i]);
         free_from_memory_pool(D_8011D320[i]);
         free_from_memory_pool(D_8011D338[i]);
@@ -2514,7 +2517,7 @@ void compute_scene_camera_transform_matrix(void) {
     guMtxXFMF(mtx, x, y, z, &x, &y, &z);
 
     //Store x/y/z as integers
-    gScenePerspectivePos.x = (s32) x;
-    gScenePerspectivePos.y = (s32) y;
-    gScenePerspectivePos.z = (s32) z;
+    gScenePerspectivePos.x = x;
+    gScenePerspectivePos.y = y;
+    gScenePerspectivePos.z = z;
 }

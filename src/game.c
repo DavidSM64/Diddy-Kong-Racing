@@ -97,7 +97,7 @@ s8 gSkipGfxTask = FALSE;
 s8 D_800DD390 = 0;
 s16 gLevelLoadTimer = 0;
 s8 D_800DD398 = 0;
-s8 D_800DD39C = 0;
+s8 gFutureFunLandLevelTarget = FALSE;
 s8 gDmemInvalid = FALSE;
 UNUSED s32 D_800DD3A4 = 0;
 UNUSED s32 D_800DD3A8 = 0;
@@ -165,7 +165,7 @@ s8 gPostRaceViewPort;
 Vehicle gLevelDefaultVehicleID;
 Vehicle D_8012351C; // Looks to be the current level's vehicle ID.
 s32 sBootDelayTimer;
-s8 D_80123524;
+s8 gLevelLoadType;
 s8 gNextMap;
 UNUSED s8 D_80123526; // Set to 0 then never used.
 s32 gCurrNumF3dCmdsPerPlayer;
@@ -679,7 +679,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         func_800AB4A8(gCurrentLevelHeader->weatherType, gCurrentLevelHeader->weatherEnable, gCurrentLevelHeader->weatherVelX << 8, gCurrentLevelHeader->weatherVelY << 8, gCurrentLevelHeader->weatherVelZ << 8, gCurrentLevelHeader->weatherIntensity * 257, gCurrentLevelHeader->weatherOpacity * 257);
         set_weather_limits(-1, -0x200);
     }
-    if (gCurrentLevelHeader->unk49 == -1) {
+    if (gCurrentLevelHeader->skyDome == -1) {
         gCurrentLevelHeader->unkA4 = load_texture((s32) gCurrentLevelHeader->unkA4);
         gCurrentLevelHeader->unkA8 = 0;
         gCurrentLevelHeader->unkAA = 0;
@@ -777,14 +777,14 @@ void func_8006BEFC(void) {
     func_800018E0();
     func_800012E8();
     func_80031B60();
-    func_8002C7D4();
+    free_level();
     func_80008174();
     adjust_audio_volume(VOLUME_NORMAL);
     if (gCurrentLevelHeader->weatherEnable > 0) {
         free_weather_memory();
     }
-    //! @bug this will never be true because unk49 is signed.
-    if (gCurrentLevelHeader->unk49 == 0xFF) {
+    //! @bug this will never be true because skyDome is signed.
+    if (gCurrentLevelHeader->skyDome == 0xFF) {
         free_texture(gCurrentLevelHeader->unkA4);
     }
 }
@@ -1322,12 +1322,12 @@ void ingame_logic_loop(s32 updateRate) {
     render_borders_for_multiplayer(&gCurrDisplayList);
     render_minimap_and_misc_hud(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
     render_second_multiplayer_borders(&gCurrDisplayList);
-    if (D_800DD39C != 0) {
+    if (gFutureFunLandLevelTarget) {
         if (func_800214C4() != 0) {
             gPlayableMapId = ASSET_LEVEL_FUTUREFUNLANDHUB;
             D_801234F8 = 1;
             D_80123504 = 0;
-            D_800DD39C = 0;
+            gFutureFunLandLevelTarget = FALSE;
         }
     }
     sp3C = FALSE;
@@ -1335,8 +1335,8 @@ void ingame_logic_loop(s32 updateRate) {
         D_800DD390 -= updateRate;
         if (D_800DD390 <= 0) {
             D_800DD390 = 0;
-            push_level_property_stack(ASSET_LEVEL_CENTRALAREAHUB, 0, VEHICLE_CAR, 0);
-            push_level_property_stack(ASSET_LEVEL_WIZPIGAMULETSEQUENCE, 0, -1, 0xA);
+            push_level_property_stack(ASSET_LEVEL_CENTRALAREAHUB, 0, VEHICLE_CAR, CUTSCENE_ID_NONE);
+            push_level_property_stack(ASSET_LEVEL_WIZPIGAMULETSEQUENCE, 0, -1, CUTSCENE_ID_UNK_A);
             sp3C = TRUE;
         }
     }
@@ -1345,19 +1345,19 @@ void ingame_logic_loop(s32 updateRate) {
         if (gLevelLoadTimer <= 0) {
             buttonHeldInputs = L_TRIG;
             sp3C = TRUE;
-            switch (D_80123524) {
-                case 1:
+            switch (gLevelLoadType) {
+                case LEVEL_LOAD_UNK1:
                     buttonHeldInputs = (L_TRIG | Z_TRIG);
                     break;
-                case 2:
+                case LEVEL_LOAD_TROPHY_RACE:
                     sp40 = 3;
                     func_80098208();
                     D_801234FC = 2;
                     break;
-                case 3:
-                    D_800DD39C = 1;
+                case LEVEL_LOAD_LIGHTHOUSE_CUTSCENE:
+                    gFutureFunLandLevelTarget = TRUE;
                     // fall-through
-                case 4:
+                case LEVEL_LOAD_FUTURE_FUN_LAND:
                     D_801234F8 = 1;
                     gPlayableMapId = gNextMap;
                     D_80123504 = 0;
@@ -1365,7 +1365,7 @@ void ingame_logic_loop(s32 updateRate) {
                     buttonHeldInputs = 0;
                     break;
             }
-            D_80123524 = 0;
+            gLevelLoadType = LEVEL_LOAD_NORMAL;
             gLevelLoadTimer = 0;
         }
     }
@@ -2163,7 +2163,7 @@ void default_alloc_displaylist_heap(void) {
 void func_8006F140(s32 arg0) {
     if (gLevelLoadTimer == 0) {
         gLevelLoadTimer = 40;
-        D_80123524 = 0;
+        gLevelLoadType = LEVEL_LOAD_NORMAL;
         D_80123526 = 0;
         if (arg0 == 1) { //FADE_BARNDOOR_HORIZONTAL?
             transition_begin(&gLevelFadeOutTransition);
@@ -2186,15 +2186,18 @@ UNUSED void func_8006F20C(void) {
     if (gLevelLoadTimer == 0) {
         transition_begin(&gLevelFadeOutTransition);
         gLevelLoadTimer = 40;
-        D_80123524 = 1;
+        gLevelLoadType = LEVEL_LOAD_UNK1;
     }
 }
 
-void func_8006F254(void) {
+/**
+ * Begins a fade transition, then signals to the level loading that it wants to be a trophy race.
+*/
+void begin_trophy_race_teleport(void) {
     if (gLevelLoadTimer == 0) {
         transition_begin(&gLevelFadeOutTransition);
         gLevelLoadTimer = 40;
-        D_80123524 = 2;
+        gLevelLoadType = LEVEL_LOAD_TROPHY_RACE;
     }
 }
 
@@ -2208,7 +2211,7 @@ void begin_lighthouse_rocket_cutscene(void) {
             transition_begin(&gLevelFadeOutTransition);
             gLevelLoadTimer = 40;
             gNextMap = ASSET_LEVEL_ROCKETSEQUENCE;
-            D_80123524 = 3;
+            gLevelLoadType = LEVEL_LOAD_LIGHTHOUSE_CUTSCENE;
         }
     }
 }
@@ -2222,7 +2225,7 @@ void begin_level_teleport(s32 levelID) {
         gNextMap = levelID;
         transition_begin(&gLevelFadeOutTransition);
         gLevelLoadTimer = 40;
-        D_80123524 = 4;
+        gLevelLoadType = LEVEL_LOAD_FUTURE_FUN_LAND;
     }
 }
 

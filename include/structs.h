@@ -362,7 +362,7 @@ typedef struct LevelHeader {
 
   /* 0x44 */ u8 unk44[0x5];
 
-  /* 0x49 */ s8 unk49;
+  /* 0x49 */ s8 skyDome;
   /* 0x4A */ s8 playerIndex;
   /* 0x4B */ s8 laps;
   /* 0x4C */ s8 race_type;

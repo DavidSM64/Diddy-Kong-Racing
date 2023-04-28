@@ -693,7 +693,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                 obj->action = 0;
                 func_8009CF68(4);
                 if (dialogueID == 1) {
-                    func_8006F254();
+                    begin_trophy_race_teleport();
                     obj->action = 2;
                 } else {
                     set_hud_visibility(1);

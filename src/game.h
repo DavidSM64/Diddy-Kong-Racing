@@ -40,7 +40,16 @@ enum CutsceneIDs {
     CUTSCENE_ID_UNK_3  = 3,
     CUTSCENE_ID_UNK_5  = 5,
     CUTSCENE_ID_UNK_7  = 7,
+    CUTSCENE_ID_UNK_A  = 0x0A,
     CUTSCENE_ID_UNK_64 = 0x64
+};
+
+enum LevelLoadType {
+    LEVEL_LOAD_NORMAL,
+    LEVEL_LOAD_UNK1,
+    LEVEL_LOAD_TROPHY_RACE,
+    LEVEL_LOAD_LIGHTHOUSE_CUTSCENE,
+    LEVEL_LOAD_FUTURE_FUN_LAND,
 };
 
 /**
@@ -147,7 +156,7 @@ void mark_write_eeprom_settings(void);
 s32 check_dmem_validity(void);
 void func_8006F140(s32 arg0);
 void func_8006F20C(void);
-void func_8006F254(void);
+void begin_trophy_race_teleport(void);
 void begin_lighthouse_rocket_cutscene(void);
 void begin_level_teleport(s32 arg0);
 void func_8006F388(u8 arg0);

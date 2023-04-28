@@ -182,7 +182,7 @@ void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, TriangleList** tris,
 
 
 void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5);
-void func_8002C7D4(void);
+void free_level(void);
 void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportIndex);
 s32 func_80027568(void);
 s32 func_8002CC30(LevelModelSegment*);
