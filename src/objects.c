@@ -1747,7 +1747,7 @@ void func_80012CE8(Gfx **dlist) {
 */
 void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object) {
     f32 scale;
-    if (object->segment.trans.flags & (OBJ_FLAGS_INVISIBLE | OBJ_FLAGS_INVIS_SHADOW))
+    if (object->segment.trans.flags & (OBJ_FLAGS_INVISIBLE | OBJ_FLAGS_SHADOW_ONLY))
         return;
     func_800B76B8(2, object->unk4A);
     gObjectCurrDisplayList = *dlist;

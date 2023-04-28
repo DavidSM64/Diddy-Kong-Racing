@@ -1018,7 +1018,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
     s32 i;
 
     obj->segment.trans.flags &= (0xFFFF - OBJ_FLAGS_INVISIBLE);
-    obj->segment.trans.flags |= OBJ_FLAGS_INVIS_SHADOW;
+    obj->segment.trans.flags |= OBJ_FLAGS_SHADOW_ONLY;
     get_racer_object(0); // Unused. I guess the developers forgot to remove this?
     if ((s32) obj->interactObj->distance < obj->unk78) {
         racerObjs = get_racer_objects(&numObjects);

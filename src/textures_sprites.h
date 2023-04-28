@@ -55,7 +55,7 @@ typedef enum TransFlags {
     OBJ_FLAGS_INVIS_PLAYER1 = (1 << 9), // Player 1 cannot see this.
     OBJ_FLAGS_INVIS_PLAYER2 = (1 << 10), // Player 2 cannot see this.
     OBJ_FLAGS_UNK_0800 = (1 << 11),
-    OBJ_FLAGS_INVIS_SHADOW = (1 << 12), // Still has a shadow, but the model is invisible.
+    OBJ_FLAGS_SHADOW_ONLY = (1 << 12), // Still has a shadow, but the model is invisible.
     OBJ_FLAGS_UNK_2000 = (1 << 13),
     OBJ_FLAGS_INVISIBLE = (1 << 14), // Invisible, and hidden shadow too.
     OBJ_FLAGS_DEACTIVATED = (1 << 15), // Object is invisible and inactive.
