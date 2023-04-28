@@ -2162,7 +2162,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0004;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 15;
-    obj->interactObj->pushForce = 0x14;
+    obj->interactObj->pushForce = 20;
     tempRacer->unk1EE = 0;
     if (!D_8011D582) {
         tempRacer->transparency = 255;
@@ -2459,7 +2459,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                 }
             }
             if (tempRacer->unk1E5 > 0 && obj->segment.trans.y_position < waterHeight + 5.0f) {
-                obj->interactObj->flags |= 0x10;
+                obj->interactObj->flags |= INTERACT_FLAGS_UNK_0010;
             } else {
                 obj->interactObj->flags &= 0xFFEF;
             }

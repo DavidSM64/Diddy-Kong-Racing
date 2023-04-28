@@ -2039,7 +2039,7 @@ void func_800155B8(void) {
                 objsWithInteractives++;
                 if (objInteract->unk11 != 2) {
                     objInteract->obj = NULL;
-                    objInteract->flags &= ~0x48;
+                    objInteract->flags &= ~(INTERACT_FLAGS_COLLIDED | INTERACT_FLAGS_PUSHING);
                     objInteract->distance = 0xFF;
                 }
             }
@@ -2055,7 +2055,7 @@ void func_800155B8(void) {
             D_8011AE6C[D_8011AE70] = obj;
             D_8011AE70++;
         }
-        if (objInteract->flags & 4) {
+        if (objInteract->flags & INTERACT_FLAGS_UNK_0004) {
             for (j = 0; j < objsWithInteractives; j++) {
                 if (i != j) {
                     obj2 = objList[j];
@@ -2066,7 +2066,7 @@ void func_800155B8(void) {
                         } else if (objInteract2->unk11 != 2) {
                             xDiff = obj->segment.trans.x_position - obj2->segment.trans.x_position;
                             zDiff = obj->segment.trans.z_position - obj2->segment.trans.z_position;
-                            if (objInteract2->flags & 0x20) {
+                            if (objInteract2->flags & INTERACT_FLAGS_UNK_0020) {
                                 var_f12 = 0x400000; //4194304.0f;
                             } else {
                                 var_f12 = 0x40000; //262144.0f;
@@ -2079,7 +2079,7 @@ void func_800155B8(void) {
                 }
             }
         }
-        if (objInteract->flags & 0x100) {
+        if (objInteract->flags & INTERACT_FLAGS_UNK_0100) {
             for (j = 0; j < objsWithInteractives; j++) {
                 if (i != j) {
                     obj2 = objList[j];

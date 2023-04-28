@@ -4127,7 +4127,7 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
     Matrix mtxf;
     ObjectTransform trans;
 
-    obj->interactObj->flags |= 0x100;
+    obj->interactObj->flags |= INTERACT_FLAGS_UNK_0100;
     weapon = (Object_Weapon *) obj->unk64;
     posX = obj->segment.trans.x_position;
     posY = obj->segment.trans.y_position;
