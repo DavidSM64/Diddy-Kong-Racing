@@ -70,7 +70,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (sp28 == 0x64) {
         D_8011D600 = 0;
     }
-    racer->unk1F5 = 0;
+    racer->zipperDirCorrection = FALSE;
     if (racer->playerIndex == PLAYER_COMPUTER) {
         if (*startTimer != 100) {
             *startTimer -= 30;
@@ -231,7 +231,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     fade_when_near_camera(obj, racer, 0x28);
     firstRacerObj = get_racer_object(0);
     racer = (Object_Racer *) firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->unk14 & 8 && obj->segment.unk38.byte.unk3B == 1) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.unk38.byte.unk3B == 1) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {
