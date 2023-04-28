@@ -790,7 +790,7 @@ UNUSED s32 func_8000E9C0(void) {
 }
 
 void func_8000E9D0(Object *arg0) {
-    arg0->segment.trans.unk6 |= 0x8000;
+    arg0->segment.trans.flags |= OBJ_FLAGS_DEACTIVATED;
     func_800245B4(arg0->segment.unk2C.half.upper | 0xC000);
     gObjPtrList[objCount++] = arg0;
     if (1) {}  // Fakematch
@@ -1003,7 +1003,7 @@ void func_80010994(s32 updateRate) {
     tempVal = objCount;
     for (i = D_8011AE60; i < tempVal; i++) {
         obj = gObjPtrList[i];
-        if (!(obj->segment.trans.unk6 & 0x8000)) {
+        if (!(obj->segment.trans.flags & 0x8000)) {
             if ((obj->behaviorId != BHV_LIGHT_RGBA) && (obj->behaviorId != BHV_WEAPON) && (obj->behaviorId != BHV_FOG_CHANGER)) {
                 if (obj->interactObj != NULL) {
                     if (obj->interactObj->unk11 != 2) {
@@ -1046,14 +1046,14 @@ void func_80010994(s32 updateRate) {
     func_8000BADC(updateRate);
     for (i = D_8011AE60; i < tempVal; i++) {
         obj = gObjPtrList[i];
-        if ((!(obj->segment.trans.unk6 & 0x8000) && (obj->behaviorId == BHV_WEAPON)) || (obj->behaviorId == BHV_FOG_CHANGER)) {
+        if ((!(obj->segment.trans.flags & 0x8000) && (obj->behaviorId == BHV_WEAPON)) || (obj->behaviorId == BHV_FOG_CHANGER)) {
             run_object_loop_func(obj, updateRate);
         }
     }
     if (D_8011AE64 > 0) {
         for (i = D_8011AE60; i < tempVal; i++) {
             obj = gObjPtrList[i];
-            if (obj->segment.trans.unk6 & 0x8000) {
+            if (obj->segment.trans.flags & 0x8000) {
                 //Why is this object being treated as a Particle2?
                 func_800B22FC((Particle2 *) obj, updateRate);
             }
@@ -1064,7 +1064,7 @@ void func_80010994(s32 updateRate) {
     if (func_80032C6C() > 0) {
         for (i = D_8011AE60; i < objCount; i++) {
             obj = gObjPtrList[i];
-            if (!(obj->segment.trans.unk6 & 0x8000) && (obj->unk54 != NULL)) {
+            if (!(obj->segment.trans.flags & 0x8000) && (obj->unk54 != NULL)) {
                 func_80032C7C(obj);
             }
         }
@@ -1406,7 +1406,7 @@ void render_3d_billboard(Object *obj) {
     intensity = 255;
     hasPrimCol = FALSE;
     hasEnvCol = FALSE;
-    flags = obj->segment.trans.unk6 | RENDER_Z_UPDATE | RENDER_FOG_ACTIVE;
+    flags = obj->segment.trans.flags | RENDER_Z_UPDATE | RENDER_FOG_ACTIVE;
     if (obj->unk54 != NULL) {
         hasPrimCol = TRUE;
         hasEnvCol = TRUE;
@@ -1494,6 +1494,12 @@ void render_3d_billboard(Object *obj) {
     }
 }
 
+/**
+ * Renders a 3D object, with support for vehicle part entities as part of the process.
+ * Loads materials, and sets environment and/or primitive colours based on the material type.
+ * Computes the view matrix for the model, and calls a function to draw meshes.
+ * Loops through racers to find vehicle parts, which are wheels and propellers.
+*/
 void render_3d_model(Object *obj) {
     s32 i;
     s32 intensity;
@@ -1624,7 +1630,7 @@ void render_3d_model(Object *obj) {
             }
             for (i = 0; i < obj60_unk0; i++) {
                 loopObj = ((Object **) obj->unk60)[i + 1];
-                if (!(loopObj->segment.trans.unk6 & 0x4000)) {
+                if (!(loopObj->segment.trans.flags & OBJ_FLAGS_INVISIBLE)) {
                     index = obj->unk60->unk2C[i];
                     if (index >= 0 && index < objModel->unk18) {
                         something = loopObj->unk68[loopObj->segment.unk38.byte.unk3A];
@@ -1648,7 +1654,7 @@ void render_3d_model(Object *obj) {
                             cicFailed = TRUE;
                         }
                         if (!cicFailed) {
-                            var_v0_2 = (loopObj->segment.trans.unk6 & 0x80 && obj60_unk0 == 3);
+                            var_v0_2 = (loopObj->segment.trans.flags & OBJ_FLAGS_UNK_0080 && obj60_unk0 == 3);
                             if (racerObj != NULL && racerObj->transparency < 255) {
                                 var_v0_2 = FALSE;
                             }
@@ -1741,7 +1747,7 @@ void func_80012CE8(Gfx **dlist) {
 */
 void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object) {
     f32 scale;
-    if (object->segment.trans.unk6 & 0x5000)
+    if (object->segment.trans.flags & (OBJ_FLAGS_INVISIBLE | OBJ_FLAGS_INVIS_SHADOW))
         return;
     func_800B76B8(2, object->unk4A);
     gObjectCurrDisplayList = *dlist;
@@ -1828,7 +1834,7 @@ void func_80012F94(Object *obj) {
 
     ret1 = 1.0f;
     ret2 = 1.0f;
-    if (!(obj->segment.trans.unk6 & 0x8000)) {
+    if (!(obj->segment.trans.flags & 0x8000)) {
         if (obj->segment.header->behaviorId == BHV_RACER) {
             objRacer = (Object_Racer *) obj->unk64;
             objRacer->unk201 = 30;
@@ -1958,7 +1964,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
 
 void render_object(Object *this) {
     func_80012F94(this);
-    if (this->segment.trans.unk6 & 0x8000) {
+    if (this->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
         func_800B3740(this, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, 0x8000);
     } else {
         if (this->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL)
@@ -1972,7 +1978,7 @@ void render_object(Object *this) {
 }
 
 void func_80013548(Object *obj) {
-    if (!(obj->segment.trans.unk6 & 0x8000) && obj->segment.header->behaviorId == BHV_RACER) {
+    if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && obj->segment.header->behaviorId == BHV_RACER) {
         obj->segment.trans.x_position -= obj->unk64->racer.carBobX;
         obj->segment.trans.y_position -= obj->unk64->racer.carBobY;
         obj->segment.trans.z_position -= obj->unk64->racer.carBobZ;
@@ -2153,7 +2159,7 @@ void func_800142B8(void) {
 
     for (; i < objCount; i++) {
         currObj = gObjPtrList[i];
-        if ((currObj->segment.trans.unk6 & 0x8000) == 0 && currObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        if ((currObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) == 0 && currObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
             for (j = 0; j < currObj->segment.header->numberOfModelIds; j++) {
                 curr_68 = currObj->unk68[j];
                 if (curr_68 != NULL && curr_68->unk20 > 0) {
@@ -2186,7 +2192,7 @@ void func_800155B8(void) {
     objsWithInteractives = 0;
     for (i = D_8011AE60; i < objCount; i++) {
         obj = gObjPtrList[i];
-        if (!(obj->segment.trans.unk6 & 0x8000)) {
+        if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             objInteract = obj->interactObj;
             if (objInteract != NULL) {
                 objList[objsWithInteractives] = obj;
@@ -2400,7 +2406,7 @@ Object *find_taj_object(void) {
     Object *current_obj;
     for (i = D_8011AE60; i < objCount; i++) {
         current_obj = gObjPtrList[i];
-        if (!(current_obj->segment.trans.unk6 & 0x8000) && (current_obj->behaviorId == 62)) {
+        if (!(current_obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (current_obj->behaviorId == BHV_PARK_WARDEN)) {
             return current_obj;
         }
     }
@@ -2734,7 +2740,7 @@ void func_8001BC54(void) {
     gCameraObjCount = 0;
     for (i = 0; i < objCount; i++) {
         objPtr = gObjPtrList[i];
-        if (!(objPtr->segment.trans.unk6 & 0x8000)) {
+        if (!(objPtr->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             if (objPtr->behaviorId == BHV_CAMERA_CONTROL) {
                 if (gCameraObjCount < 20) {
                     (*gCameraObjList)[gCameraObjCount] = objPtr;
@@ -2988,7 +2994,7 @@ UNUSED void func_8001E13C(s16 arg0, s16 *arg1, s16 *arg2, s16 *arg3, s16 *arg4, 
 
     for (i = 0; i < objCount; i++) {
         obj = gObjPtrList[i];
-        if (!(obj->segment.trans.unk6 & 0x8000)) {
+        if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             if (obj->behaviorId == BHV_RACER) {
                 racer = &obj->unk64->racer;
                 if (arg0 == racer->playerIndex) {
@@ -3043,7 +3049,7 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
         current_obj = gObjPtrList[i];
 
         if (current_obj != NULL
-        && !(current_obj->segment.trans.unk6 & 0x8000)
+        && !(current_obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)
         && current_obj->behaviorId == BHV_RAMP_SWITCH
         && current_obj->action == arg0) {
             *arg1 = current_obj->segment.trans.x_position;
@@ -3157,7 +3163,7 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
 
     animObj = (Object_AnimatedObject *) obj->unk64;
     if (animObj->unk3A != 0) {
-        obj->segment.trans.unk6 |= 0x4000;
+        obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
     }
     if (animObj->unk36 == -1) {
         return animObj->unk3A;
@@ -3169,7 +3175,7 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
         animObj->unk36 = -2;
     }
     if (animObj->unk36 <= 0) {
-        obj->segment.trans.unk6 |= 0x4000;
+        obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
         i = 0;
         if (D_8011AE78 > 0) {
             temp_v1 = animObj->unk28;
@@ -3310,7 +3316,7 @@ Object *func_8002342C(f32 x, f32 z) {
     if (objCount > 0) {
         do {
             tempObj = gObjPtrList[i];
-            if (!(tempObj->segment.trans.unk6 & 0x8000) && tempObj->behaviorId == BHV_UNK_57) {
+            if (!(tempObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && tempObj->behaviorId == BHV_UNK_57) {
                 diffX = tempObj->segment.trans.x_position - x;
                 diffZ = tempObj->segment.trans.z_position - z;
                 tempObj = gObjPtrList[i]; // fakematch

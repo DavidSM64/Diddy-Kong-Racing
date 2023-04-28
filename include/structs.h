@@ -1605,7 +1605,7 @@ typedef struct ObjectTransform {
   /* 0x0000 */ s16 y_rotation;
   /* 0x0002 */ s16 x_rotation;
   /* 0x0004 */ s16 z_rotation;
-  /* 0x0006 */ s16 unk6; // Flags?
+  /* 0x0006 */ s16 flags;
   /* 0x0008 */ f32 scale;
   /* 0x000C */ f32 x_position;
   /* 0x0010 */ f32 y_position;

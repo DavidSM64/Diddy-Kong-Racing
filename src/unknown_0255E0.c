@@ -910,22 +910,22 @@ void render_level_geometry_and_objects(void) {
 
     reset_render_settings(&gSceneCurrDisplayList);
     func_80015348(sp160, sp16C - 1);
-    sp158 = 0x200 << (get_current_viewport() & 1);
+    sp158 = OBJ_FLAGS_INVIS_PLAYER1 << (get_current_viewport() & 1);
 
     for (i = sp160; i < sp16C; i++) {
         obj = get_object(i);
         s0 = 0xFF;
-        objFlags = obj->segment.trans.unk6;
-        if (objFlags & 0x80) {
+        objFlags = obj->segment.trans.flags;
+        if (objFlags & OBJ_FLAGS_UNK_0080) {
             s0 = 0;
-        } else if (!(objFlags & 0x8000)) {
+        } else if (!(objFlags & OBJ_FLAGS_DEACTIVATED)) {
             s0 = obj->segment.unk38.byte.unk39;
         }
         if (objFlags & sp158) {
             s0 = 0;
         }
         if (obj != NULL && s0 == 0xFF && check_if_in_draw_range(obj) && (objectsVisible[obj->segment.unk2C.half.lower + 1] || obj->segment.unk34_a.unk34 > 1000.0)) {
-            if (obj->segment.trans.unk6 & 0x8000) {
+            if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
                 func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
             } else if (obj->shadow != NULL) {
@@ -940,14 +940,14 @@ void render_level_geometry_and_objects(void) {
 
     for (i = sp16C - 1; i >= sp160; i--) {
         obj = get_object(i);
-        objFlags = obj->segment.trans.unk6;
+        objFlags = obj->segment.trans.flags;
         if (objFlags & sp158) {
             s0 = FALSE;
         } else {
             s0 = TRUE;
         }
-        if (obj != NULL && s0 && objFlags & 0x100 && objectsVisible[obj->segment.unk2C.half.lower + 1] && check_if_in_draw_range(obj)) {
-            if (obj->segment.trans.unk6 & 0x8000) {
+        if (obj != NULL && s0 && objFlags & OBJ_FLAGS_UNK_0100 && objectsVisible[obj->segment.unk2C.half.lower + 1] && check_if_in_draw_range(obj)) {
+            if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
                 func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
             } else if (obj->shadow != NULL) {
@@ -978,10 +978,10 @@ void render_level_geometry_and_objects(void) {
     for (i = sp16C - 1; i >= sp160; i--) {
         obj = get_object(i);
         s0 = 0xFF;
-        objFlags = obj->segment.trans.unk6;
-        if (objFlags & 0x80) {
+        objFlags = obj->segment.trans.flags;
+        if (objFlags & OBJ_FLAGS_UNK_0080) {
             s0 = 1;
-        } else if (!(objFlags & 0x8000)) {
+        } else if (!(objFlags & OBJ_FLAGS_DEACTIVATED)) {
             s0 = obj->segment.unk38.byte.unk39;
         }
         if (objFlags & sp158) {
@@ -992,7 +992,7 @@ void render_level_geometry_and_objects(void) {
         }
         if (obj != NULL && s0 < 0xFF && objectsVisible[obj->segment.unk2C.half.lower + 1] && check_if_in_draw_range(obj)) {
             if (s0 > 0) {
-                if (obj->segment.trans.unk6 & 0x8000) {
+                if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
                     func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                     goto skip;
                 } else if (obj->shadow != NULL) {
@@ -1458,7 +1458,7 @@ s32 check_if_in_draw_range(Object *obj) {
     s32 temp2;
     f32 dist;
 
-    if (!(obj->segment.trans.unk6 & 0x8000)) {
+    if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
         alpha = 255;
         viewDistance = obj->segment.header->drawDistance;
         if (obj->segment.header->drawDistance) {
@@ -2030,11 +2030,11 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
         obj58 = obj->unk58;
         shadow = obj->shadow;
         sp94 += 1;
-        if (!(obj->segment.trans.unk6 & 0x8000)) {
+        if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             if (shadow != NULL && shadow->scale > 0.0f && arg0 == objHeader->unk32) {
                 shadow->unk8 = -1;
             } 
-            if (obj->segment.trans.unk6 & 0x4000) {
+            if (obj->segment.trans.flags & OBJ_FLAGS_INVISIBLE) {
                 shadow = NULL;
             }
             if ((shadow != NULL && objHeader->unk32 == 2) || (obj58 != NULL && objHeader->unk36 == 2)) {

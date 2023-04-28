@@ -137,7 +137,7 @@ s16 D_8011D4E2; // Taj Voice clips
 */
 void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
     f32 radius;
-    obj->segment.trans.unk6 |= 2;
+    obj->segment.trans.flags |= OBJ_FLAGS_UNK_0002;
     radius = entry->radius & 0xFF;
     if (radius < 10) {
         radius = 10;
@@ -743,7 +743,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
         func_80036040(obj, (Object_64 *) egg);
         break;
     case EGG_MOVING:
-        obj->segment.trans.unk6 &= 0xBFFF;
+        obj->segment.trans.flags &= (0xFFFF - OBJ_FLAGS_INVISIBLE);
         dir[0] = obj->segment.trans.x_position + (obj->segment.x_velocity * updateRateF);
         dir[1] = obj->segment.trans.y_position + (obj->segment.y_velocity * updateRateF);
         dir[2] = obj->segment.trans.z_position + (obj->segment.z_velocity * updateRateF);
@@ -942,11 +942,11 @@ void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 updateRate) {
     s32 i;
 
     if (find_non_car_racers() == FALSE) {
-        obj->segment.trans.unk6 |= 0x4000;
+        obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
     } else {
-        obj->segment.trans.unk6 &= 0xBFFF;
+        obj->segment.trans.flags &= (0xFFFF - OBJ_FLAGS_INVISIBLE);
     }
-    if (obj->interactObj->distance < 100 && !(obj->segment.trans.unk6 & 0x4000)) {
+    if (obj->interactObj->distance < 100 && !(obj->segment.trans.flags & OBJ_FLAGS_INVISIBLE)) {
         racerObjs = get_racer_objects(&numObjects);
         for (i = 0; i < numObjects; i++) {
             curRacerObj = racerObjs[i];
@@ -1017,8 +1017,8 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
     Object** racerObjs;
     s32 i;
 
-    obj->segment.trans.unk6 &= 0xBFFF;
-    obj->segment.trans.unk6 |= 0x1000;
+    obj->segment.trans.flags &= (0xFFFF - OBJ_FLAGS_INVISIBLE);
+    obj->segment.trans.flags |= OBJ_FLAGS_INVIS_SHADOW;
     get_racer_object(0); // Unused. I guess the developers forgot to remove this?
     if ((s32) obj->interactObj->distance < obj->unk78) {
         racerObjs = get_racer_objects(&numObjects);
@@ -1393,9 +1393,9 @@ void obj_init_lavaspurt(Object *obj, LevelObjectEntry_LavaSpurt *entry) {
 void obj_loop_lavaspurt(Object *obj, s32 updateRate) {
     if (obj->unk78 > 0) {
         obj->unk78 -= updateRate;
-        obj->segment.trans.unk6 |= 0x4000;
+        obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
     } else {
-        obj->segment.trans.unk6 &= ~0x4000;
+        obj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
         obj->segment.animFrame += updateRate * 4;
         if (obj->segment.animFrame > 255) {
             obj->segment.animFrame = 0;
@@ -1405,7 +1405,7 @@ void obj_loop_lavaspurt(Object *obj, s32 updateRate) {
 }
 
 void obj_init_posarrow(Object *obj, UNUSED LevelObjectEntry_PosArrow *entry) {
-    obj->segment.trans.unk6 |= 0x4000;
+    obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
 }
 
 void obj_loop_posarrow(Object *obj, UNUSED s32 updateRate) {
@@ -1414,13 +1414,13 @@ void obj_loop_posarrow(Object *obj, UNUSED s32 updateRate) {
     Object *someObj;
     s32 numberOfObjects;
 
-    obj->segment.trans.unk6 |= 0x4000;
+    obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
     someObjList = get_racer_objects_by_position(&numberOfObjects);
     if (obj->unk78 < numberOfObjects) {
         someObj = someObjList[obj->unk78];
         someObj64 = &someObj->unk64->pos_arrow;
         if (someObj64->unk0 == -1) {
-            obj->segment.trans.unk6 &= ~0x4000;
+            obj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
             someObj64->unk150 = obj;
         }
         obj->segment.animFrame = obj->unk78 * 127;
@@ -1783,7 +1783,7 @@ void obj_loop_animcamera(Object *obj, s32 updateRate) {
     Object_AnimCamera *obj64;
 
     temp_v0 = func_8001F460(obj, updateRate, obj);
-    obj->segment.trans.unk6 |= 0x4000;
+    obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
     obj64 = &obj->unk64->anim_camera;
     if (temp_v0 == 0) {
         if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER) {
@@ -1813,7 +1813,7 @@ void obj_loop_animcar(Object *obj, s32 updateRate) {
         racerObj = get_racer_object(racerID - 1);
     }
     obj->unk7C.word = func_8001F460(obj, updateRate, obj);
-    obj->segment.trans.unk6 |= 0x4000;
+    obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
     if (obj->unk7C.word == 0 && racerObj != NULL) {
         Object_Racer *racer = &racerObj->unk64->racer;
         racer->approachTarget = obj;
@@ -1840,9 +1840,9 @@ void obj_loop_infopoint(Object *obj, UNUSED s32 updateRate) {
     Object *playerObj;
 
     if (obj->unk7C.word == 0) {
-        obj->segment.trans.unk6 |= 0x4000;
+        obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
     } else {
-        obj->segment.trans.unk6 &= ~0x4000;
+        obj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
     }
 
     interactObj = obj->interactObj;
@@ -2979,9 +2979,9 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
             gParticlePtrList_addObject(obj);
         }
     } else {
-        obj->segment.trans.unk6 |= 0x4000;
+        obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
         if (obj->action == 0) {
-            obj->segment.trans.unk6 &= 0xBFFF;
+            obj->segment.trans.flags &= (0xFFFF - OBJ_FLAGS_INVISIBLE);
             doubleSpeed = updateRate * 2;
             if (obj->segment.unk38.byte.unk39 < (255 - doubleSpeed)) {
                 obj->segment.unk38.byte.unk39 += doubleSpeed;
@@ -3004,7 +3004,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
                         play_sound_spatial(SOUND_COLLECT_BALLOON, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
                         obj->unk7C.word = 16;
                         obj->unk74 = 2;
-                        obj->segment.trans.unk6 |= 0x4000;
+                        obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
                         func_800AFC3C(obj, updateRate);
                     }
                 }
@@ -3636,7 +3636,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
     obj->segment.animFrame += updateRate * 8;
     obj78 = (Object_78_Banana *) &obj->unk78;
     if (obj->unk78 == -1) {
-        obj->segment.trans.unk6 |= 0x4000; 
+        obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE; 
         obj78->unk6 -= updateRate;
         obj->unk74 = 1;
         func_800AFC3C(obj, updateRate);
@@ -3763,7 +3763,7 @@ void obj_init_silvercoin_adv2(Object *obj, UNUSED LevelObjectEntry_SilverCoinAdv
         }
     }
     if (obj->action == SILVER_COIN_INACTIVE) {
-        obj->segment.trans.unk6 |= 0x600;
+        obj->segment.trans.flags |= OBJ_FLAGS_INVIS_PLAYER1 | OBJ_FLAGS_INVIS_PLAYER2;
         gParticlePtrList_addObject(obj);
     }
 }
@@ -3787,7 +3787,7 @@ void obj_init_silvercoin(Object *obj, UNUSED LevelObjectEntry_SilverCoin *entry)
         }
     }
     if (obj->action == SILVER_COIN_INACTIVE) {
-        obj->segment.trans.unk6 |= 0x600;
+        obj->segment.trans.flags |= OBJ_FLAGS_INVIS_PLAYER2 | OBJ_FLAGS_INVIS_PLAYER1;
         gParticlePtrList_addObject(obj);
     }
 }
@@ -3815,7 +3815,7 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate) {
                     if (racer->raceFinished == FALSE && !(obj->action & (SILVER_COIN_COLLECTED << racer->playerIndex))) {
                         obj->action |= SILVER_COIN_COLLECTED << racer->playerIndex;
                         obj->unk7C.word = 0x10;
-                        obj->segment.trans.unk6 |= 0x200 << racer->playerIndex;
+                        obj->segment.trans.flags |= OBJ_FLAGS_INVIS_PLAYER1 << racer->playerIndex;
                         play_sequence(SEQUENCE_SILVER_COIN_1 + racer->silverCoinCount);
                         racer->silverCoinCount++;
                     }
@@ -3957,9 +3957,9 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
         obj->segment.trans.scale = 0.001f;
     }
     if (obj->segment.trans.scale < 0.1) {
-        obj->segment.trans.unk6 |= 0x4000;
+        obj->segment.trans.flags |= 0x4000;
     } else {
-        obj->segment.trans.unk6 &= 0xBFFF;
+        obj->segment.trans.flags &= 0xBFFF;
     }
     if (obj->unk7C.word > 0) {
         obj->unk74 = 1;

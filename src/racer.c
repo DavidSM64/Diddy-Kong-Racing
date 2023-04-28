@@ -2655,7 +2655,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             tempRacer->unk150->segment.trans.scale = obj->segment.unk30 / 265.0f;
             if (obj->segment.unk30 < 1500.0 || get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
                 tempObj = tempRacer->unk150;
-                tempObj->segment.trans.unk6 |= 0x4000;
+                tempObj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
             }
             if (tempRacer->unk150->segment.trans.scale < 1.0) {
                 tempRacer->unk150->segment.trans.scale = 1.0f;
@@ -6028,7 +6028,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         racer->unk150->segment.trans.z_position = obj->segment.trans.z_position;
         racer->unk150->segment.trans.scale = obj->segment.unk30 / 265.0f;
         if (obj->segment.unk30 < 1500.0) {
-            racer->unk150->segment.trans.unk6 |= 0x4000;
+            racer->unk150->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
         }
         if (racer->unk150->segment.trans.scale < 1.0) {
             racer->unk150->segment.trans.scale = 1.0f;
