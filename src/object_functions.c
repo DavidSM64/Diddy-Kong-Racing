@@ -2894,10 +2894,10 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
             if ((diffY < halfDist) && (-halfDist < diffY)) {
                 diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                if ((sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < dist)) {
+                if (sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < dist) {
                     f32 temp = (obj64->directionX * racerObj->segment.trans.x_position) + (obj64->directionZ * racerObj->segment.trans.z_position) + obj64->rotationDiff;
                     if (temp < 0.0f) {
-                        if ((s32) racer->bananas < 10) {
+                        if (racer->bananas < 10) {
                             racer->bananas = 10;
                             play_sound_at_position(SOUND_SELECT, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, 4, NULL);
                             play_sound_spatial(racer->characterId + SOUND_UNK_7B, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
@@ -3700,7 +3700,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
         } else {
             obj78->unk4 = 0;
         }
-        if (obj->interactObj->distance < 0x78) {
+        if (obj->interactObj->distance < 120) {
             if (get_current_level_race_type() == RACETYPE_CHALLENGE_BANANAS) {
                 racerObj = obj->interactObj->obj;
                 if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
@@ -3717,7 +3717,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
                 racer = (Object_Racer *) racerObj->unk64;
                 if ((get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) || racer->bananas < 2) {
                     prevSoundMask = racer->bananaSoundMask;
-                    play_sound_at_position( SOUND_SELECT,  racerObj->segment.trans.x_position,  racerObj->segment.trans.y_position,  racerObj->segment.trans.z_position, 4, &racer->bananaSoundMask);
+                    play_sound_at_position(SOUND_SELECT, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, 4, &racer->bananaSoundMask);
                     if (prevSoundMask) {
                         func_800096F8(prevSoundMask);
                     }
