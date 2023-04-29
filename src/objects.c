@@ -57,9 +57,9 @@ s8 D_800DC744 = 0;
 s8 D_800DC748 = 0;
 s32 D_800DC74C[2] = {0, 0}; // Have a feeling these are both the same array.
 s32 D_800DC754[2] = {0, 0};
-Object *gShieldEffectObject = NULL; // Currently unknown, might be a different type.
+Object *gShieldEffectObject = NULL;
 s32 D_800DC760 = 9; // Currently unknown, might be a different type.
-Object *gMagnetEffectObject = NULL; // Currently unknown, might be a different type.
+Object *gMagnetEffectObject = NULL;
 s32 D_800DC768 = 0; // Currently unknown, might be a different type.
 
 f32 D_800DC76C[15] = {

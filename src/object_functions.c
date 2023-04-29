@@ -1739,7 +1739,7 @@ void obj_loop_hittester(Object *obj, s32 updateRate) {
 }
 
 /**
- * Rolling snowball init behaviour.
+ * Dynamically Lit Prop init behaviour.
  * Sets hitbox to add solidity.
  */
 void obj_init_dynamic_lighting_object(Object *obj, UNUSED LevelObjectEntry_DynamicLightingObject *entry) {
