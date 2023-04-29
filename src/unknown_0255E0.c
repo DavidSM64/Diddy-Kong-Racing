@@ -1592,7 +1592,7 @@ void func_8002C0C4(s32 modelId) {
     D_8011D370 = allocate_from_main_pool_safe(0x7D0, COLOUR_TAG_YELLOW);
     D_8011D374 = allocate_from_main_pool_safe(0x1F4, COLOUR_TAG_YELLOW);
     D_8011D378 = 0;
-    D_8011D310 = (s32*)load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
+    D_8011D310 = (s32*) load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
     alloc_ghost_pool();
     
     for(i = 0; D_8011D310[i] != -1; i++);
