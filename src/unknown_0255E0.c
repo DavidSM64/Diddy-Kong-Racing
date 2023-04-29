@@ -1586,10 +1586,9 @@ void func_8002C0C4(s32 modelId) {
     s32 temp_s4;
     s32 temp;
     LevelModel *mdl;
+    s32 levelSize = 0;
     
     set_texture_colour_tag(COLOUR_TAG_GREEN);
-    D_8011D30C = allocate_from_main_pool_safe(LEVEL_MODEL_MAX_SIZE, COLOUR_TAG_YELLOW);
-    gCurrentLevelModel = D_8011D30C;
     D_8011D370 = allocate_from_main_pool_safe(0x7D0, COLOUR_TAG_YELLOW);
     D_8011D374 = allocate_from_main_pool_safe(0x1F4, COLOUR_TAG_YELLOW);
     D_8011D378 = 0;
@@ -1605,10 +1604,14 @@ void func_8002C0C4(s32 modelId) {
     //offset = D_8011D310[modelId];
     temp_s4 = D_8011D310[modelId + 1] - D_8011D310[modelId];
 
+    levelSize = get_asset_uncompressed_size(ASSET_LEVEL_MODELS, D_8011D310[modelId]);
+    levelSize = MIN(levelSize * 2, LEVEL_MODEL_MAX_SIZE);
+    D_8011D30C = allocate_from_main_pool_safe(levelSize, COLOUR_TAG_YELLOW);
+    gCurrentLevelModel = D_8011D30C;
 
     // temp = compressedRamAddr
     temp = (s32) gCurrentLevelModel;
-    temp +=  (LEVEL_MODEL_MAX_SIZE - temp_s4);
+    temp +=  ((levelSize) - temp_s4);
     temp -= ((s32)temp % 16); // Align to 16-byte boundary.
     
     load_asset_to_address(ASSET_LEVEL_MODELS, temp, D_8011D310[modelId], temp_s4);
@@ -1646,7 +1649,7 @@ void func_8002C0C4(s32 modelId) {
         j = (s32) align16(((u8 *) (gCurrentLevelModel->segments[k].unk32 * 2)) + j);
     }
     temp_s4 = j - (s32)gCurrentLevelModel;
-    if (temp_s4 > LEVEL_MODEL_MAX_SIZE) {
+    if (temp_s4 > levelSize) {
         rmonPrintf("ERROR!! TrackMem overflow .. %d\n", temp_s4);
     }
     set_free_queue_state(0);
