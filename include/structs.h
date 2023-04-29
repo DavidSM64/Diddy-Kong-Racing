@@ -1189,7 +1189,7 @@ typedef struct Object_Racer {
   /* 0x1DC */ u8 wheel_surfaces[4];
   /* 0x1E0 */ s8 unk1E0;
   /* 0x1E1 */ s8 steerAngle;
-  /* 0x1E2 */ s8 unk1E2;
+  /* 0x1E2 */ s8 groundedWheels;
   /* 0x1E3 */ s8 unk1E3;
   /* 0x1E4 */ s8 unk1E4;
   /* 0x1E5 */ s8 waterTimer; // Set to a value, then counts down when leaving water.
@@ -1264,7 +1264,7 @@ typedef struct Object_ModeChange {
 } Object_ModeChange;
 
 typedef struct Object_Door {
-  /* 0x00 */ f32 unk0;
+  /* 0x00 */ f32 homeY;
   /* 0x04 */ u8 pad4[0x4];
   /* 0x08 */ s32 unk8;
   /* 0x0A */ s16 padA;

@@ -57,9 +57,9 @@ s8 D_800DC744 = 0;
 s8 D_800DC748 = 0;
 s32 D_800DC74C[2] = {0, 0}; // Have a feeling these are both the same array.
 s32 D_800DC754[2] = {0, 0};
-Object *D_800DC75C = NULL; // Currently unknown, might be a different type.
+Object *gShieldEffectObject = NULL; // Currently unknown, might be a different type.
 s32 D_800DC760 = 9; // Currently unknown, might be a different type.
-Object *D_800DC764 = NULL; // Currently unknown, might be a different type.
+Object *gMagnetEffectObject = NULL; // Currently unknown, might be a different type.
 s32 D_800DC768 = 0; // Currently unknown, might be a different type.
 
 f32 D_800DC76C[15] = {
@@ -310,7 +310,7 @@ void func_8000B290(void) {
         D_800DC74C[0] = 0;
         D_800DC74C[1] = 0;
     }
-    var_s0 = (struct TempStruct9 *) get_misc_asset(0x14);
+    var_s0 = (struct TempStruct9 *) get_misc_asset(MISC_ASSET_UNK14);
     for (i = 0; i < 10; i++) {
         temp_a0_2 = var_s0[i].unk78;
         if (temp_a0_2 != 0) {
@@ -323,13 +323,13 @@ void func_8000B290(void) {
             var_s0[i].unk7C = 0;
         }
     }
-    if (D_800DC75C)
-        gParticlePtrList_addObject(D_800DC75C);
-    D_800DC75C = NULL;
+    if (gShieldEffectObject)
+        gParticlePtrList_addObject(gShieldEffectObject);
+    gShieldEffectObject = NULL;
 
-    if (D_800DC764)
-        gParticlePtrList_addObject(D_800DC764);
-    D_800DC764 = NULL;
+    if (gMagnetEffectObject)
+        gParticlePtrList_addObject(gMagnetEffectObject);
+    gMagnetEffectObject = NULL;
     gParticlePtrList_flush();
 }
 
@@ -1272,7 +1272,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     }
     outOfBounds = FALSE;
     x2 = (levelModel->upperXBounds + 1000.0);
-    //@!bug should've campared against "obj->segment.trans.x_position"
+    //!@bug should've campared against "obj->segment.trans.x_position"
     if (newXPos > x2) {
         outOfBounds = TRUE;
     }
@@ -1396,7 +1396,7 @@ void render_3d_billboard(Object *obj) {
     s32 alpha;
     s32 hasPrimCol;
     s32 hasEnvCol;
-    ObjectTransformExt sp60;
+    ObjectTransformExt objTrans;
     Object *var_a0;
     unk80068514_arg4* sp58;
 
@@ -1463,23 +1463,22 @@ void render_3d_billboard(Object *obj) {
     
     // 5 = OilSlick, SmokeCloud, Bomb, BubbleWeapon
     if(var_a0 != NULL || !(obj->behaviorId != BHV_WEAPON || obj->unk64->weapon.weaponID != WEAPON_BUBBLE_TRAP)) {
-        sp60.trans.z_rotation = 0;
-        sp60.trans.x_rotation = 0;
-        sp60.trans.y_rotation = 0;
-        sp60.trans.scale = obj->segment.trans.scale;
-        sp60.trans.x_position = 0.0f;
-        sp60.trans.z_position = 0.0f;
-        sp60.trans.y_position = 12.0f;
-        sp60.unk18 = obj->segment.animFrame;
-        sp60.unk1A = 32;
+        objTrans.trans.z_rotation = 0;
+        objTrans.trans.x_rotation = 0;
+        objTrans.trans.y_rotation = 0;
+        objTrans.trans.scale = obj->segment.trans.scale;
+        objTrans.trans.x_position = 0.0f;
+        objTrans.trans.z_position = 0.0f;
+        objTrans.trans.y_position = 12.0f;
+        objTrans.unk18 = obj->segment.animFrame;
+        objTrans.unk1A = 32;
         if (var_a0 == NULL) {
             var_a0 = (Object *) obj->unk64->weapon.target;
             if (var_a0 == NULL) {
                 var_a0 = obj;
             }
         }
-        func_800138A8(&var_a0->segment.trans, sp58, (Object *) &sp60,
-            RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE);
+        func_800138A8(&var_a0->segment.trans, sp58, (Object *) &objTrans, RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE);
     } else {
         render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj, sp58, flags);
     }
@@ -2022,13 +2021,13 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
     ObjectModel *mdl;
     struct RacerShieldGfx* shield;
     s32 shieldType;
-    s32 var_a1;
+    s32 vehicleID;
     s32 var_a2;
     f32 scale;
     f32 shear;
 
     racer = (Object_Racer *) obj->unk64;
-    if (racer->shieldTimer > 0 && D_800DC75C != NULL) {
+    if (racer->shieldTimer > 0 && gShieldEffectObject != NULL) {
         gObjectCurrDisplayList = *dList;
         gObjectCurrMatrix = *mtx;
         gObjectCurrVertexList = *vtxList;
@@ -2036,23 +2035,23 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         if (var_a2 > 10) {
             var_a2 = 0;
         }
-        var_a1 = racer->vehicleID;
-        if (var_a1 >= NUMBER_OF_PLAYER_VEHICLES) {
-            var_a1 = 0;
+        vehicleID = racer->vehicleID;
+        if (vehicleID >= NUMBER_OF_PLAYER_VEHICLES) {
+            vehicleID = VEHICLE_CAR;
         }
         shield = ((struct RacerShieldGfx *) get_misc_asset(MISC_ASSET_SHIELD_DATA));
-        var_a1 =  (var_a1 * 10) + var_a2;
-        shield = shield + var_a1;
-        D_800DC75C->segment.trans.x_position = shield->x_position;
-        D_800DC75C->segment.trans.y_position = shield->y_position;
-        D_800DC75C->segment.trans.z_position = shield->z_position;
-        D_800DC75C->segment.trans.y_position += shield->y_offset * sins_f(D_8011B010[var_a2] * 0x200);
+        vehicleID =  (vehicleID * 10) + var_a2;
+        shield = shield + vehicleID;
+        gShieldEffectObject->segment.trans.x_position = shield->x_position;
+        gShieldEffectObject->segment.trans.y_position = shield->y_position;
+        gShieldEffectObject->segment.trans.z_position = shield->z_position;
+        gShieldEffectObject->segment.trans.y_position += shield->y_offset * sins_f(D_8011B010[var_a2] * 0x200);
         shear = (coss_f(D_8011B010[var_a2] * 0x400) * 0.05f) + 0.95f;
-        D_800DC75C->segment.trans.scale = shield->scale * shear;
+        gShieldEffectObject->segment.trans.scale = shield->scale * shear;
         shear = shear * shield->turnSpeed;
-        D_800DC75C->segment.trans.y_rotation = D_8011B010[var_a2] * 0x800;
-        D_800DC75C->segment.trans.x_rotation = 0x800;
-        D_800DC75C->segment.trans.z_rotation = 0;
+        gShieldEffectObject->segment.trans.y_rotation = D_8011B010[var_a2] * 0x800;
+        gShieldEffectObject->segment.trans.x_rotation = 0x800;
+        gShieldEffectObject->segment.trans.z_rotation = 0;
         shieldType = racer->shieldType;
         if (shieldType != SHIELD_NONE) {
             shieldType--;
@@ -2061,19 +2060,19 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             shieldType = SHIELD_LEVEL3 - 1;
         }
         scale = ((f32) shieldType * 0.1) + 1.0f;
-        D_800DC75C->segment.trans.scale *= scale;
+        gShieldEffectObject->segment.trans.scale *= scale;
         shear *= scale;
-        gfxData = D_800DC75C->unk68[shieldType];
+        gfxData = gShieldEffectObject->unk68[shieldType];
         mdl = gfxData->objModel;
-        D_800DC75C->unk44 = (Vertex *) gfxData->unk4[gfxData->unk1F];
+        gShieldEffectObject->unk44 = (Vertex *) gfxData->unk4[gfxData->unk1F];
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
         if (racer->shieldTimer < 64) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, racer->shieldTimer * 4);
         } else {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
-        func_80068FA8(&gObjectCurrDisplayList, &gObjectCurrMatrix, D_800DC75C, obj, shear);
-        func_800143A8(mdl, D_800DC75C, 0, 4, 0);
+        func_80068FA8(&gObjectCurrDisplayList, &gObjectCurrMatrix, gShieldEffectObject, obj, shear);
+        func_800143A8(mdl, gShieldEffectObject, 0, 4, 0);
         gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
         if (racer->shieldTimer < 64) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -2093,7 +2092,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
     Object_68 *gfxData;
     ObjectModel *mdl;
     f32* magnet;
-    s32 var_a0;
+    s32 vehicleID;
     s32 var_t0;
     s32 opacity;
     f32 shear;
@@ -2102,39 +2101,39 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
     racer = (Object_Racer *) obj->unk64;
     var_t0 = racer->unk2 * 4;
     if (D_8011B07B[var_t0]) {
-        if (D_800DC764 != NULL) {
+        if (gMagnetEffectObject != NULL) {
             gObjectCurrDisplayList = *dList;
             gObjectCurrMatrix = *mtx;
             gObjectCurrVertexList = *vtxList;
             magnet = (f32 *) get_misc_asset(MISC_ASSET_MAGNET_DATA);
-            var_a0 = racer->vehicleID;
-            if (var_a0 < VEHICLE_CAR || var_a0 >= NUMBER_OF_PLAYER_VEHICLES) {
-                var_a0 = 0;
+            vehicleID = racer->vehicleID;
+            if (vehicleID < VEHICLE_CAR || vehicleID >= NUMBER_OF_PLAYER_VEHICLES) {
+                vehicleID = VEHICLE_CAR;
             }
-            magnet = &magnet[var_a0 * 5];
+            magnet = &magnet[vehicleID * 5];
             var_t0 = racer->unk2;
             if (var_t0 > 10) {
                 var_t0 = 0;
             }
-            D_800DC764->segment.trans.x_position = magnet[0];
-            D_800DC764->segment.trans.y_position = magnet[1];
-            D_800DC764->segment.trans.z_position = magnet[2];
+            gMagnetEffectObject->segment.trans.x_position = magnet[0];
+            gMagnetEffectObject->segment.trans.y_position = magnet[1];
+            gMagnetEffectObject->segment.trans.z_position = magnet[2];
             magnet += 3;
             shear = (coss_f((D_8011B078[(var_t0 * 4) + 1] * 0x400)) * 0.02f) + 0.98f;
-            D_800DC764->segment.trans.scale = magnet[0] * shear;
+            gMagnetEffectObject->segment.trans.scale = magnet[0] * shear;
             magnet += 1;
             shear = magnet[0] * shear;
-            D_800DC764->segment.trans.y_rotation = D_8011B078[(var_t0 * 4) + 2] * 0x1000;
-            D_800DC764->segment.trans.x_rotation = 0;
-            D_800DC764->segment.trans.z_rotation = 0;
-            gfxData = *D_800DC764->unk68;
+            gMagnetEffectObject->segment.trans.y_rotation = D_8011B078[(var_t0 * 4) + 2] * 0x1000;
+            gMagnetEffectObject->segment.trans.x_rotation = 0;
+            gMagnetEffectObject->segment.trans.z_rotation = 0;
+            gfxData = *gMagnetEffectObject->unk68;
             mdl = gfxData->objModel;
-            D_800DC764->unk44 = (Vertex *) gfxData->unk4[gfxData->unk1F];
+            gMagnetEffectObject->unk44 = (Vertex *) gfxData->unk4[gfxData->unk1F];
             opacity = (((D_8011B078[(var_t0 * 4) + 1] * 8) & 0x7F) + 0x80);
             func_8007F594(&gObjectCurrDisplayList, 2, 0xFFFFFF00 | opacity, gMagnetColours[racer->magnetModelID]);
-            func_80068FA8(&gObjectCurrDisplayList, &gObjectCurrMatrix, D_800DC764, obj, shear);
+            func_80068FA8(&gObjectCurrDisplayList, &gObjectCurrMatrix, gMagnetEffectObject, obj, shear);
             D_800DC720 = TRUE;
-            func_800143A8(mdl, D_800DC764, 0, 4, 0);
+            func_800143A8(mdl, gMagnetEffectObject, 0, 4, 0);
             D_800DC720 = FALSE;
             gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -2874,7 +2873,7 @@ s32 func_8001C524(f32 diffX, f32 diffY, f32 diffZ, s32 someFlag) {
             if (someFlag && (sp64 != levelObj->doorID)) {
                 var_a0 = 0;
             }
-            if ((someFlag == 2) && (levelObj->unk8 != 3)) {
+            if ((someFlag == 2) && (levelObj->angleY != 3)) {
                 var_a0 = 0;
             }
             if (var_a0) {
@@ -3357,7 +3356,7 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
     obj->behaviorId = obj->segment.header->behaviorId;
     switch (obj->behaviorId) {
         case BHV_RACER:
-            obj_init_racer(obj, (LevelObjectEntry_CharacterFlag *) entry);
+            obj_init_racer(obj, (LevelObjectEntry_Racer *) entry);
             break;
         case BHV_SCENERY:
             obj_init_scenery(obj, (LevelObjectEntry_Scenery*) entry);

@@ -300,8 +300,8 @@ glabel func_8000BADC
 /* 00CB04 8000BF04 1420FF2F */  bnez  $at, .L8000BBC4
 /* 00CB08 8000BF08 26520004 */   addiu $s2, $s2, 4
 .L8000BF0C:
-/* 00CB0C 8000BF0C 3C04800E */  lui   $a0, %hi(D_800DC764) # $a0, 0x800e
-/* 00CB10 8000BF10 8C84C764 */  lw    $a0, %lo(D_800DC764)($a0)
+/* 00CB0C 8000BF0C 3C04800E */  lui   $a0, %hi(gMagnetEffectObject) # $a0, 0x800e
+/* 00CB10 8000BF10 8C84C764 */  lw    $a0, %lo(gMagnetEffectObject)($a0)
 /* 00CB14 8000BF14 00000000 */  nop   
 /* 00CB18 8000BF18 10800004 */  beqz  $a0, .L8000BF2C
 /* 00CB1C 8000BF1C 8FBF002C */   lw    $ra, 0x2c($sp)

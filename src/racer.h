@@ -191,7 +191,7 @@ void update_camera_finish_race(f32 arg0, Object *obj, Object_Racer *racer);
 void update_camera_fixed(f32 arg0, Object *obj, Object_Racer *racer);
 void handle_racer_head_turning(Object *obj, Object_Racer *racer, s32 updateRate);
 void racer_approach_object(Object *obj, Object_Racer *racer, f32 divisor);
-void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer);
+void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer);
 void racer_AI_pathing_inputs(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80043ECC(Object *obj, Object_Racer *racer, s32 updateRate);
 void func_80055A84(Object *obj, Object_Racer *racer, s32 updateRate);

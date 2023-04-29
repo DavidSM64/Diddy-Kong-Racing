@@ -336,7 +336,7 @@ void obj_loop_setuppoint(Object *obj, s32 updateRate);
 void obj_init_dino_whale(Object *obj, LevelObjectEntry_Dino_Whale *entry);
 void obj_loop_dino_whale(Object *obj, s32 updateRate);
 void obj_init_parkwarden(Object *obj, LevelObjectEntry_Parkwarden *entry);
-void func_80039320(s16 voiceClip);
+void set_taj_voice_line(s16 voiceClip);
 void play_taj_voice_clip(u16 soundID, s32 interrupt);
 void obj_loop_gbparkwarden(Object *obj, s32 updateRate);
 f32 get_npc_pos_y(void);
