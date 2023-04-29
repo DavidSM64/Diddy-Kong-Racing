@@ -22,8 +22,6 @@
 #include "unknown_008C40.h"
 #include "controller.h"
 
-extern u32 osTvType;
-
 /************ .data ************/
 
 // Unused?
@@ -130,7 +128,7 @@ unk800E2770 D_800E2770[2] = {
     { 0, 0xFF, 0, 0, 0, 0, 0 },
 };
 
-u8 D_800E2790 = 1;
+u8 gShowCourseDirections = TRUE;
 
 u8 D_800E2794[4][4] = {
     {1, 1, 1, 1}, 
@@ -349,9 +347,9 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 if (func_8001E440() != 10) {
                     if (gHUDNumPlayers == ONE_PLAYER) {
                         if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->racer.raceFinished == FALSE && ((gHudLevelHeader->race_type == RACETYPE_DEFAULT) || gHudLevelHeader->race_type == RACETYPE_HORSESHOE_GULCH) && D_80126D34) {
-                            D_800E2790 = 1 - D_800E2790;
-                            play_sound_global((SOUND_TING_HIGHER + D_800E2790), NULL);
-                            if (D_800E2790) {
+                            gShowCourseDirections = 1 - gShowCourseDirections;
+                            play_sound_global((SOUND_TING_HIGHER + gShowCourseDirections), NULL);
+                            if (gShowCourseDirections) {
                                 D_800E27B8 = 0x78;
                             } else {
                                 D_800E27B8 = 0;
@@ -541,7 +539,7 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
     s32 type;
     IndicatorArrow *indicator;
 
-    if (D_800E2790) {
+    if (gShowCourseDirections) {
         timer = racer->indicator_timer;
         if (timer > 0) {
             type = racer->indicator_type;
