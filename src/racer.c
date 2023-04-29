@@ -5567,7 +5567,10 @@ void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *
     *hundredths = (((frameCount - (*minutes * (REFRESH_60HZ * 60))) - (*seconds * REFRESH_60HZ)) * 100) / REFRESH_60HZ;
 }
 
-void func_800598D0(void) {
+/**
+ * Allocate the ghost data heap into memory.
+*/
+void allocate_ghost_data(void) {
     gGhostData[0] = allocate_from_main_pool_safe((sizeof(GhostNode) + sizeof(GhostDataFrame)) * MAX_NUMBER_OF_GHOST_NODES, COLOUR_TAG_RED);
     gGhostData[1] = (GhostHeader *) ((GhostNode *) gGhostData[0] + MAX_NUMBER_OF_GHOST_NODES);
     gGhostData[2] = NULL; // T.T. Ghost
@@ -6286,7 +6289,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
 GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
 #endif
 
-// This gets called if an anti-piracy checksum fails in func_8005F850.
+// This gets called if an anti-piracy checksum fails in allocate_object_model_pools.
 /**
  * Triggered upon failure of an anti-tamper test. Sets the first index of the surface speed
  * table to an unreasonable value, wrecking drivability while on it.

@@ -285,7 +285,7 @@ typedef struct TrackRenderDetails {
 
 extern s8  D_800DF450;
 extern f32 D_800DF454;
-extern s32 D_800DF458;
+extern s32 gResetTitleScale;
 extern s32 gTitleScreenCurrentOption;
 extern s32 D_800DF460;
 extern s32 D_800DF464;
@@ -725,7 +725,7 @@ s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
 
 void func_8007FF88(void);
 void func_80080E6C(void);
-void func_800813C0(void);
+void reset_title_logo_scale(void);
 void menu_init(u32 menuId);
 s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris, s32 updateRate);
 void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 fontID);

@@ -30,21 +30,24 @@ UNUSED const char D_800E6BE0[] = "MOD Error: Tryed to deallocate non-existent mo
 
 /************ .bss ************/
 
-s32 *D_8011D620;
+s32 *gObjectModelTable;
 unk8011D624 *D_8011D624; // Array of unk8011D624
 s32 *D_8011D628;
 s32 D_8011D62C;
 s32 D_8011D630;
 s32 D_8011D634;
-s16 *D_8011D638;
-s32 *D_8011D63C;
+s16 *gAnimationTable;
+s32 *gObjectAnimationTable;
 s32 D_8011D640;
 s32 D_8011D644;
 UNUSED s32 D_8011D648[66]; // Appears to have no effect when removed entirely?
 
 /******************************/
 
-void func_8005F850(void) {
+/**
+ * Allocate memory for object model ID's and animation tables.
+*/
+void allocate_object_model_pools(void) {
     s32 i;
     s32 checksum;
 
@@ -52,14 +55,14 @@ void func_8005F850(void) {
     D_8011D628 = allocate_from_main_pool_safe(0x190, COLOUR_TAG_GREEN);
     D_8011D62C = 0;
     D_8011D634 = 0;
-    D_8011D620 = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_MODELS_TABLE);
+    gObjectModelTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_MODELS_TABLE);
     D_8011D630 = 0;
-    while (D_8011D620[D_8011D630] != -1) {
+    while (gObjectModelTable[D_8011D630] != -1) {
         D_8011D630++;
     }
     D_8011D630--;
-    D_8011D638 = (s16 *) load_asset_section_from_rom(ASSET_ANIMATION_IDS);
-    D_8011D63C = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_ANIMATIONS_TABLE);
+    gAnimationTable = (s16 *) load_asset_section_from_rom(ASSET_ANIMATION_IDS);
+    gObjectAnimationTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_ANIMATIONS_TABLE);
     D_8011D644 = (s32) allocate_from_main_pool_safe(0xC00, COLOUR_TAG_GREEN);
     D_8011D640 = 0;
 

@@ -163,7 +163,7 @@ void func_800575EC(Object *obj, Object_Racer *racer);
 void handle_base_steering(Object_Racer *racer, s32 updateRate, f32 updateRateF);
 void second_racer_camera_update(Object *obj, Object_Racer *racer, s32 mode, f32 arg3);
 void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *hundredths);
-void func_800598D0(void);
+void allocate_ghost_data(void);
 void func_80059944(void);
 void func_80059984(s32 arg0);
 s32 func_800599A8(void);

@@ -154,9 +154,9 @@ s32 D_801234F0; // I don't think this is ever not 1
 s32 gPlayableMapId;
 s32 D_801234F8;
 s32 D_801234FC;
-s32 D_80123500;
-s32 D_80123504;
-s32 D_80123508;
+s32 gGameNumPlayers;
+s32 gGameCurrentEntrance;
+s32 gGameCurrentCutscene;
 s32 gPrevPlayerCount;
 Settings *gSettingsPtr;
 s8 gIsLoading;
@@ -960,6 +960,7 @@ void init_game(void) {
     }
 
     osCreateScheduler(&gMainSched, &gSchedStack[0x400], /*priority*/ 13, viMode, 1);
+    // Antipiracy measure.
     gDmemInvalid = FALSE;
     if (check_dmem_validity() == FALSE) {
         gDmemInvalid = TRUE;
@@ -968,26 +969,26 @@ void init_game(void) {
     init_PI_mesg_queue();
     setup_gfx_mesg_queues(&gMainSched);
     audio_init(&gMainSched);
-    func_80008040(); // Should be very similar to func_8005F850
+    func_80008040(); // Should be very similar to allocate_object_model_pools
     sControllerStatus = init_controllers();
     tex_init_textures();
-    func_8005F850(); // Matched
+    allocate_object_model_pools();
     allocate_object_pools();
     diPrintfInit();
-    func_800598D0();
+    allocate_ghost_data();
     init_particle_assets();
     init_weather();
     calc_and_alloc_heap_for_settings();
     default_alloc_displaylist_heap();
     load_fonts();
     init_controller_paks();
-    func_80081218();
+    func_80081218(); // init_save_data
     create_and_start_thread30();
     osCreateMesgQueue(&gNMIMesgQueue, &gNMIOSMesg, 1);
     osScAddClient(&gMainSched, (OSScClient*) gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);
     gNMIMesgBuf = 0;
-    D_80123504 = 0;
-    D_80123508 = 0;
+    gGameCurrentEntrance = 0;
+    gGameCurrentCutscene = 0;
     gSPTaskNum = 0;
 
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
@@ -1118,18 +1119,18 @@ void main_game_loop(void) {
 }
 
 void func_8006CAE4(s32 numPlayers, s32 trackID, Vehicle vehicle) {
-    D_80123500 = numPlayers - 1;
+    gGameNumPlayers = numPlayers - 1;
     if (trackID == -1) {
         gPlayableMapId = get_track_id_to_load();
     } else {
         gPlayableMapId = trackID; // Unused, because arg1 is always -1.
     }
-    load_level_game(gPlayableMapId, D_80123500, D_80123504, vehicle);
+    load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, vehicle);
 }
 
 /**
  * Calls load_level() with the same arguments except for the cutsceneId,
- * which is the value at D_80123508. Also does some other stuff.
+ * which is the value at gGameCurrentCutscene. Also does some other stuff.
  * Used when ingame.
  */
 void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId) {
@@ -1137,7 +1138,7 @@ void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     set_free_queue_state(0);
     func_80065EA0();
     func_800C3048();
-    load_level(levelId, numberOfPlayers, entranceId, vehicleId, D_80123508);
+    load_level(levelId, numberOfPlayers, entranceId, vehicleId, gGameCurrentCutscene);
     func_8009ECF0(get_viewport_count());
     func_800AE728(8, 0x10, 0x96, 0x64, 0x32, 0);
     func_8001BF20();
@@ -1326,7 +1327,7 @@ void ingame_logic_loop(s32 updateRate) {
         if (func_800214C4() != 0) {
             gPlayableMapId = ASSET_LEVEL_FUTUREFUNLANDHUB;
             D_801234F8 = 1;
-            D_80123504 = 0;
+            gGameCurrentEntrance = 0;
             gFutureFunLandLevelTarget = FALSE;
         }
     }
@@ -1360,8 +1361,8 @@ void ingame_logic_loop(s32 updateRate) {
                 case LEVEL_LOAD_FUTURE_FUN_LAND:
                     D_801234F8 = 1;
                     gPlayableMapId = gNextMap;
-                    D_80123504 = 0;
-                    D_80123508 = 0;
+                    gGameCurrentEntrance = 0;
+                    gGameCurrentCutscene = 0;
                     buttonHeldInputs = 0;
                     break;
             }
@@ -1371,7 +1372,7 @@ void ingame_logic_loop(s32 updateRate) {
     }
     if (sp3C) {
         if (get_level_property_stack_pos() != 0) {
-            pop_level_property_stack(&gPlayableMapId, &D_80123504, &i, &D_80123508);
+            pop_level_property_stack(&gPlayableMapId, &gGameCurrentEntrance, &i, &gGameCurrentCutscene);
             set_frame_blackout_timer();
             if (gPlayableMapId < 0) {
                 if (gPlayableMapId == (s32)SPECIAL_MAP_ID_NO_LEVEL || gPlayableMapId == (s32)SPECIAL_MAP_ID_UNK_NEG10) {
@@ -1401,7 +1402,7 @@ void ingame_logic_loop(s32 updateRate) {
                         func_80000B28();
                     }
                     set_frame_blackout_timer();
-                    pop_level_property_stack(&gPlayableMapId, &D_80123504, &i, &D_80123508);
+                    pop_level_property_stack(&gPlayableMapId, &gGameCurrentEntrance, &i, &gGameCurrentCutscene);
                     if (gPlayableMapId < 0) {
                         if (gPlayableMapId == -1 || gPlayableMapId == -10) {
                             if (gPlayableMapId == -10 && is_in_two_player_adventure()) {
@@ -1478,14 +1479,14 @@ void ingame_logic_loop(s32 updateRate) {
         } else if (!(buttonHeldInputs & R_TRIG)) {
             if (!(buttonHeldInputs & Z_TRIG)) {
                 gPlayableMapId = D_80121250[0];
-                D_80123504 = D_80121250[15];
-                D_80123508 = D_80121250[D_80121250[1] + 8];
+                gGameCurrentEntrance = D_80121250[15];
+                gGameCurrentCutscene = D_80121250[D_80121250[1] + 8];
                 gLevelDefaultVehicleID = get_map_default_vehicle(gPlayableMapId);
-                if (D_80123508 < 0) {
-                    D_80123508 = 0x64;
+                if (gGameCurrentCutscene < 0) {
+                    gGameCurrentCutscene = 0x64;
                 }
             }
-            load_level_game(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+            load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
         } else {
             safe_mark_write_save_file(get_save_file_index());
             load_menu_with_level_background(MENU_TITLE, -1, 0);
@@ -1495,7 +1496,7 @@ void ingame_logic_loop(s32 updateRate) {
     if (D_801234F8 != 0) {
         gPostRaceViewPort = NULL;
         func_8006CC14();
-        load_level_game(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+        load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
         safe_mark_write_save_file(get_save_file_index());
         D_801234F8 = 0;
     }
@@ -1516,14 +1517,14 @@ void func_8006D8F0(UNUSED s32 arg0) {
     s32 temp;
     if (sRenderContext != DRAW_UNK_04) {
         gPlayableMapId = D_80121250[0];
-        D_80123504 = 0;
-        D_80123508 = 0x64;
+        gGameCurrentEntrance = 0;
+        gGameCurrentCutscene = 0x64;
         temp = D_80121250[1];
         if (D_80121250[15] >= 0) {
-            D_80123504 = D_80121250[15];
+            gGameCurrentEntrance = D_80121250[15];
         }
         if (D_80121250[temp + 8] >= 0) {
-            D_80123508 = D_80121250[temp + 8];
+            gGameCurrentCutscene = D_80121250[temp + 8];
         }
         D_801234F8 = 1;
     }
@@ -1567,7 +1568,7 @@ UNUSED void set_render_context(s32 changeTo) {
  * Used for every kind of menu that's not ingame.
 */
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
-    alloc_displaylist_heap(0);
+    alloc_displaylist_heap(PLAYER_ONE);
     sRenderContext = DRAW_MENU;
     D_801234F0 = TRUE;
     set_sound_channel_volume(0, 32767);
@@ -1584,10 +1585,10 @@ void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
         }
     }
     if (menuId == MENU_UNUSED_2 || menuId == MENU_LOGOS || menuId == MENU_TITLE) {
-        func_800813C0();
+        reset_title_logo_scale();
     }
     menu_init(menuId);
-    D_80123504 = 0;
+    gGameCurrentEntrance = 0;
 }
 
 /**
@@ -1674,12 +1675,12 @@ void func_8006DCF8(s32 updateRate) {
         gSPEndDisplayList(gCurrDisplayList++);
         gPlayableMapId = menuLoopResult & 0x7F;
         gLevelDefaultVehicleID = get_map_default_vehicle(gPlayableMapId);
-        D_80123504 = 0;
-        D_80123508 = 0x64;
+        gGameCurrentEntrance = 0;
+        gGameCurrentCutscene = 0x64;
         sRenderContext = DRAW_GAME;
         gIsPaused = FALSE;
         gPostRaceViewPort = NULL;
-        load_level_game(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+        load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
         safe_mark_write_save_file(get_save_file_index());
         return;
     }
@@ -1693,40 +1694,40 @@ void func_8006DCF8(s32 updateRate) {
                 break;
             case 14:
                 gPlayableMapId = ASSET_LEVEL_CENTRALAREAHUB;
-                D_80123504 = 0;
-                D_80123508 = 0x64;
+                gGameCurrentEntrance = 0;
+                gGameCurrentCutscene = 0x64;
                 sRenderContext = DRAW_GAME;
-                load_level_game(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+                load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
                 safe_mark_write_save_file(get_save_file_index());
                 break;
             case 1:
-                D_80123504 = 0;
-                D_80123508 = 0x64;
+                gGameCurrentEntrance = 0;
+                gGameCurrentCutscene = 0x64;
                 gPlayableMapId = D_80121250[0];
                 sRenderContext = DRAW_GAME;
                 // Minor issue with these 2 if statements
                 temp2 = D_80121250[D_80121250[1] + 8];
                 temp = D_80121250[15];
                 if (temp >= 0) {
-                    D_80123504 = temp;
+                    gGameCurrentEntrance = temp;
                 }
                 if (temp2 >= 0) {
-                    D_80123508 = temp2;
+                    gGameCurrentCutscene = temp2;
                 }
-                load_level_game(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+                load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
                 safe_mark_write_save_file(get_save_file_index());
                 break;
             case 2:
                 sRenderContext = DRAW_GAME;
-                load_level_game(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+                load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
                 break;
             case 3:
                 sRenderContext = DRAW_GAME;
                 gPlayableMapId = D_80121250[0];
-                D_80123504 = D_80121250[15];
-                D_80123508 = D_80121250[D_80121250[1] + 8];
+                gGameCurrentEntrance = D_80121250[15];
+                gGameCurrentCutscene = D_80121250[D_80121250[1] + 8];
                 gLevelDefaultVehicleID = get_map_default_vehicle(gPlayableMapId);
-                load_level_game(gPlayableMapId, D_80123500, D_80123504, gLevelDefaultVehicleID);
+                load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
                 break;
             default:
                 load_menu_with_level_background(MENU_TITLE, -1, 0);
@@ -1744,12 +1745,12 @@ void func_8006DCF8(s32 updateRate) {
         D_80121250[1] = temp;
         D_80121250[0] = gPlayableMapId;
         gPlayableMapId = D_80121250[temp + 2];
-        D_80123504 = D_80121250[temp + 4];
+        gGameCurrentEntrance = D_80121250[temp + 4];
         sRenderContext = DRAW_GAME;
-        D_80123508 = D_80121250[temp + 12];
+        gGameCurrentCutscene = D_80121250[temp + 12];
         temp = get_player_selected_vehicle(0);
-        D_80123500 = gSettingsPtr->gNumRacers - 1;
-        load_level_game(gPlayableMapId, D_80123500, D_80123504, temp);
+        gGameNumPlayers = gSettingsPtr->gNumRacers - 1;
+        load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, temp);
         D_801234FC = 0;
         gLevelDefaultVehicleID = D_8012351C;
         return;
