@@ -1790,7 +1790,7 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
             }
             break;
         }
-        alloc_displaylist_heap(3);
+        alloc_displaylist_heap(THREE_PLAYERS);
         load_level_menu(levelId, numberOfPlayers, 0, vehicleID, cutsceneId);
         gIsLoading = FALSE;
         return;
