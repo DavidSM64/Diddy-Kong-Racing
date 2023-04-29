@@ -1,6 +1,4 @@
 .late_rodata
-glabel D_800E5644
-.float 50000.0
 glabel D_800E5648
 .double 1.2
 glabel D_800E5650

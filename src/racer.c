@@ -5026,7 +5026,7 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
     dialogueAngle = gDialogueCameraAngle / 10240.0f; // Goes between 0-1
     gCameraObject->x_velocity = (((obj->segment.trans.x_position + (91.75 * racer->ox1) + (90.0 * racer->ox3)) - gCameraObject->trans.x_position) * dialogueAngle);
     gCameraObject->z_velocity = (((obj->segment.trans.z_position + (91.75 * racer->oz1) + (90.0 * racer->oz3)) - gCameraObject->trans.z_position) * dialogueAngle);
-    gCameraObject->y_velocity = (((func_8003ACAC() + 48.5) - gCameraObject->trans.y_position) * dialogueAngle);
+    gCameraObject->y_velocity = (((get_npc_pos_y() + 48.5) - gCameraObject->trans.y_position) * dialogueAngle);
     gCameraObject->unk38 =  -gCameraObject->trans.x_rotation * dialogueAngle;
     gCameraObject->trans.x_position += gCameraObject->x_velocity;
     gCameraObject->trans.y_position += gCameraObject->y_velocity + gCameraObject->unk30;

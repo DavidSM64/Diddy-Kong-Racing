@@ -121,7 +121,7 @@ VertexPosition D_800DCB28[6] = {
 
 /************ .bss ************/
 
-f32 D_8011D4D0;
+f32 gNPCPosY;
 s32 gTajSoundMask;
 s32 gTTSoundMask;
 s32 D_8011D4DC;
@@ -234,7 +234,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         obj->segment.trans.x_position = 0.0f;
         obj->segment.trans.y_position = 0.0f;
         obj->segment.trans.z_position = 0.0f;
-        func_80011560();
+        ignore_bounds_check();
         move_object(obj, someObj->segment.trans.x_position, someObj->segment.trans.y_position, someObj->segment.trans.z_position);
     } else {
         diff = (someObj->segment.trans.x_position - obj->segment.trans.x_position) * 0.1;
@@ -1347,7 +1347,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     obj->segment.trans.x_rotation = 0;
     obj->segment.trans.z_rotation = 0;
     if (obj->action != TT_MODE_ROAM) {
-        D_8011D4D0 = obj->segment.trans.y_position;
+        gNPCPosY = obj->segment.trans.y_position;
     }
     obj->segment.animFrame = 1.0 * tt->animFrameF;
     func_80061C0C(obj);
@@ -2602,12 +2602,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 obj->segment.trans.y_rotation += ((var_a2 * updateRate) >> 4);
                 xPosDiff = sins_f(obj->segment.trans.y_rotation + 0x8000);
                 zPosDiff = coss_f(obj->segment.trans.y_rotation + 0x8000);
-                move_object(
-                    obj,
-                    (updateRateF2 * xPosDiff) * 1.1,
-                    0.0f,
-                    (updateRateF2 * zPosDiff) * 1.1
-                );
+                move_object(obj, (updateRateF2 * xPosDiff) * 1.1, 0.0f, (updateRateF2 * zPosDiff) * 1.1);
                 taj->animFrameF += updateRate * 2.2;
             }
         }
@@ -2703,7 +2698,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     obj->segment.trans.x_rotation = 0;
     obj->segment.trans.z_rotation = 0;
     if (obj->action != TAJ_MODE_ROAM) {
-        D_8011D4D0 = obj->segment.trans.y_position;
+        gNPCPosY = obj->segment.trans.y_position;
     }
     if (sp6B != 0) {
         func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0xC, SOUND_NONE, 1.0f, 0);
@@ -2730,8 +2725,11 @@ void play_taj_voice_clip(u16 soundID, s32 interrupt) {
 void obj_loop_gbparkwarden(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
-f32 func_8003ACAC(void) {
-    return D_8011D4D0;
+/**
+ * Return the Y pos of an NPC when they're in dialogue.
+*/
+f32 get_npc_pos_y(void) {
+    return gNPCPosY;
 }
 
 /**
@@ -5007,11 +5005,11 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
         obj->segment.trans.z_position = frog->hopStartZ;
         obj->segment.x_velocity = frog->hopTargetX * cosine;
         obj->segment.z_velocity = frog->hopTargetZ * cosine;
-        func_80011560();
+        ignore_bounds_check();
         move_object(obj, obj->segment.x_velocity, 0.0f, obj->segment.z_velocity);
         if (func_8002BAB0(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, &sp6C) != 0) {
             obj->segment.trans.y_position = 0.0f;
-            func_80011560();
+            ignore_bounds_check();
             move_object(obj, 0.0f, sp6C, 0.0f);
         }
         if (frog->squishCooldown <= 0 && (frog->hopFrame < 6 || frog->hopFrame >= 27)) {

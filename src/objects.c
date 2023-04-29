@@ -70,24 +70,24 @@ f32 D_800DC76C[15] = {
 };
 
 u16 D_800DC7A8[8] = {
-    0x0001, 0x0002, 0x0003, 0x0004,
-    0x0051, 0x0054, 0x0055, 0x0056,
+    BHV_RACER, BHV_SCENERY, BHV_FISH, BHV_ANIMATOR,
+    BHV_ANIMATED_OBJECT_2, BHV_WIZPIG_SHIP, BHV_ANIMATED_OBJECT_3, BHV_ANIMATED_OBJECT_4,
 };
 
 s16 D_800DC7B8[52] = {
-    0x00ED, 0x00FF, 0x0037, 0x0038,
-    0x0039, 0x003A, 0x0057, 0x0058,
-    0x0059, 0x005A, 0x00F3, 0x00FD,
-    0x0042, 0x0043, 0x0044, 0x0045,
-    0x005B, 0x005C, 0x005D, 0x005E,
-    0x00F4, 0x0101, 0x0001, 0x0002,
-    0x0003, 0x0004, 0x0051, 0x0054,
-    0x0055, 0x0056, 0x00ED, 0x00FF,
-    0x0001, 0x0002, 0x0003, 0x0004,
-    0x0051, 0x0054, 0x0055, 0x0056,
+    0x00ED, 0x00FF, BHV_TRIGGER, BHV_VEHICLE_ANIMATION,
+    BHV_ZIPPER_WATER, BHV_UNK_3A, BHV_UNK_57, BHV_SILVER_COIN,
+    BHV_BOOST, BHV_WARDEN_SMOKE, 0x00F3, 0x00FD,
+    BHV_TREASURE_SUCKER, BHV_LOG, BHV_LAVA_SPURT, BHV_POS_ARROW,
+    BHV_UNK_5B, BHV_UNK_5C, BHV_ZIPPER_AIR, BHV_UNK_5E,
+    0x00F4, 0x0101, BHV_RACER, BHV_SCENERY,
+    BHV_FISH, BHV_ANIMATOR, BHV_ANIMATED_OBJECT_2, BHV_WIZPIG_SHIP,
+    BHV_ANIMATED_OBJECT_3, BHV_ANIMATED_OBJECT_4, 0x00ED, 0x00FF,
+    BHV_RACER, BHV_SCENERY, BHV_FISH, BHV_ANIMATOR,
+    BHV_ANIMATED_OBJECT_2, BHV_WIZPIG_SHIP, BHV_ANIMATED_OBJECT_3, BHV_ANIMATED_OBJECT_4,
     0x00ED, 0x00FF, 0x00D9, 0x00DF,
     0x00E0, 0x0105, 0x008A, 0x00DA,
-    0x00E8, 0x0115, 0x0118, 0x0000,
+    0x00E8, 0x0115, 0x0118, BHV_NONE,
 };
 
 // A table of which vehicles to use for boss races.
@@ -109,7 +109,7 @@ s8 D_800DC820[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
 s8 D_800DC840[8] = { 9, 1, 2, 3, 4, 5, 7, 0 };
 
-s8 D_800DC848 = 0;
+s8 gNoBoundsCheck = FALSE;
 u32 gMagnetColours[3] = {
     ((255 << 24) | (64 << 16) |  (16 << 8) | 0), // Level 1
     ((16 << 24) |  (64 << 16) |  (255 << 8) | 0), // Level 2
@@ -140,15 +140,12 @@ UNUSED const char sDuplicateCheckpointString[] = "Error: Multiple checkpoint no:
 UNUSED const char sErrorChannelString[] = "ERROR Channel %d\n";
 UNUSED const char sReadOutErrorString[] = "RO error %d!!\n";
 UNUSED const char sPureAnguishString[] = "ARGHHHHHHHHH\n";
-extern f32 D_800E5644;
 
 /*********************************/
 
 /************ .bss ************/
 
-// Currently defined in unknown_005740. Might need to be defined here.
-extern s16 D_8011AC20[128];
-
+s16 D_8011AC20[128];
 s8 D_8011AD20;
 s8 D_8011AD21;
 s8 D_8011AD22[2];
@@ -647,7 +644,7 @@ void func_8000E1EC(Object *obj, s32 vehicleID) {
 
 void func_8000E2B4(void) {
     Object *player;
-    LevelObjectEntry8000E2B4 sp2C;
+    LevelObjectEntry8000E2B4 spawnObj;
     Settings *settings;
     Object_Racer *player_64;
     s16 object_id;
@@ -660,24 +657,24 @@ void func_8000E2B4(void) {
         return;
     }
     settings = get_settings();
-    sp2C.unkE = 0;
-    sp2C.common.size = 0x10;
+    spawnObj.unkE = 0;
+    spawnObj.common.size = 16;
     if (gOverworldVehicle < 5) {
         object_id = ((s16 *) D_800DC7A8)[settings->racers[0].character + gOverworldVehicle * 10];
     } else {
         object_id = D_800DC7B8[gOverworldVehicle + 37];
     }
     set_level_default_vehicle(gOverworldVehicle);
-    sp2C.common.size = sp2C.common.size | ((s32) (object_id & 0x100) >> 1);
-    sp2C.unkA = 0;
-    sp2C.unk8 = 0;
-    sp2C.common.objectID = object_id;
-    sp2C.common.x = D_8011AD46;
-    sp2C.common.y = D_8011AD48;
-    sp2C.common.z = D_8011AD4A;
-    sp2C.unkC = D_8011AD4C;
+    spawnObj.common.size = spawnObj.common.size | ((s32) (object_id & 0x100) >> 1);
+    spawnObj.unkA = 0;
+    spawnObj.unk8 = 0;
+    spawnObj.common.objectID = object_id;
+    spawnObj.common.x = D_8011AD46;
+    spawnObj.common.y = D_8011AD48;
+    spawnObj.common.z = D_8011AD4A;
+    spawnObj.unkC = D_8011AD4C;
     func_800521B8(1);
-    player = spawn_object(&sp2C, 0x11);
+    player = spawn_object(&spawnObj, 0x11);
     gNumRacers = 1;
     (*gRacers)[0] = player;
     gRacersByPort[0] = player;
@@ -1240,11 +1237,11 @@ s32 func_800113CC(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoun
     return ret;
 }
 /**
- * Looks like it sets D_800DC848 to TRUE, and that will disable the check for out of bounds moves in move_object
+ * Make the next call of move_object never mark the object as out of bounds.
  * Official Name: objMoveXYZnocheck
 */
-s32 func_80011560(void) { //! @bug The developers probably intended this to be a void function.
-    D_800DC848 = 1;
+s32 ignore_bounds_check(void) { //! @bug The developers probably intended this to be a void function.
+    gNoBoundsCheck = TRUE;
     // No return value!
 }
 
@@ -1270,7 +1267,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     newYPos = obj->segment.trans.y_position + yPos;
     newZPos = obj->segment.trans.z_position + zPos;
     if (levelModel == NULL) {
-        D_800DC848 = 0;
+        gNoBoundsCheck = FALSE;
         return 0;
     }
     outOfBounds = FALSE;
@@ -1300,11 +1297,11 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     if (obj->segment.trans.z_position < z1) {
         outOfBounds = TRUE;
     }
-    if (D_800DC848 != 0) {
+    if (gNoBoundsCheck) {
         outOfBounds = FALSE;
     }
     
-    D_800DC848 = 0;
+    gNoBoundsCheck = FALSE;
     if (outOfBounds) {
         obj->segment.unk2C.half.lower = -1;
         return 1;
@@ -2867,7 +2864,7 @@ s32 func_8001C524(f32 diffX, f32 diffY, f32 diffZ, s32 someFlag) {
     if (someFlag) {
         sp64 = func_8001C418(diffY);
     }
-    dist = D_800E5644;
+    dist = (f32) 50000.0;
     result = 0xFF;
     for (numSteps = 0; numSteps != 128; numSteps++) {
         segment = (ObjectSegment*) (*D_8011AF04)[numSteps];
@@ -3618,131 +3615,131 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
     }
 }
 
-s32 func_80023E30(s32 arg0) {
+s32 func_80023E30(s32 objectID) {
   s32 value = 0;
-  switch (arg0 - 1){
-    case 0x00:
+  switch (objectID){
+    case BHV_RACER:
       value = 0x1F;
       break;
-    case 0x01:
+    case BHV_SCENERY:
       value = 0x13;
       break;
-    case 0x04:
+    case BHV_WEAPON:
       value = 0x16;
       break;
-    case 0x0B:
+    case BHV_DINO_WHALE:
       value = 0x1B;
       break;
-    case 0x0D:
-    case 0x6E:
+    case BHV_DOOR:
+    case BHV_TT_DOOR:
       value = 0x30;
       break;
-    case 0x10:
-    case 0x4C:
+    case BHV_WEAPON_BALLOON:
+    case BHV_GOLDEN_BALLOON:
       value = 0x12;
       break;
-    case 0x45:
-    case 0x47:
-    case 0x5F:
-    case 0x60:
+    case BHV_HIT_TESTER:
+    case BHV_HIT_TESTER_2:
+    case BHV_SNOWBALL:
+    case BHV_SNOWBALL_2:
       value = 0x3B;
       break;
-    case 0x64:
-    case 0x65:
-    case 0x66:
-    case 0x67:
+    case BHV_SNOWBALL_3:
+    case BHV_SNOWBALL_4:
+    case BHV_HIT_TESTER_3:
+    case BHV_HIT_TESTER_4:
       value = 0x3A;
       break;
-    case 0x17:
+    case BHV_UNK_18:
       value = 0x04;
       break;
-    case 0x1E:
+    case BHV_STOPWATCH_MAN:
       value = 0x1B;
       break;
-    case 0x1F:
-    case 0x3F:
-    case 0x57:
-    case 0x6D:
+    case BHV_BANANA:
+    case BHV_WORLD_KEY:
+    case BHV_SILVER_COIN:
+    case BHV_SILVER_COIN_2:
       value = 0x12;
       break;
-    case 0x42:
+    case BHV_LOG:
       value = 0x30;
       break;
-    case 0x25:
+    case BHV_BRIDGE_WHALE_RAMP:
       value = 0x39;
       break;
-    case 0x26:
+    case BHV_RAMP_SWITCH:
       value = 0x12;
       break;
-    case 0x27:
+    case BHV_SEA_MONSTER:
       value = 0x09;
       break;
-    case 0x2C:
+    case BHV_COLLECT_EGG:
       value = 0x12;
       break;
-    case 0x2F:
+    case BHV_UNK_30:
       value = 0x09;
       break;
-    case 0x3E:
+    case BHV_UNK_3F:
       value = 0x09;
       break;
-    case 0x31:
-    case 0x37:
-    case 0x4F:
-    case 0x53:
-    case 0x55:
-    case 0x72:
+    case BHV_ANIMATED_OBJECT:
+    case BHV_VEHICLE_ANIMATION:
+    case BHV_PARK_WARDEN_2:
+    case BHV_WIZPIG_SHIP:
+    case BHV_ANIMATED_OBJECT_4:
+    case BHV_PIG_ROCKETEER:
       value = 0x0B;
       break;
-    case 0x35:
+    case BHV_CHARACTER_SELECT:
       value = 0x0B;
       break;
-    case 0x49:
-    case 0x5E:
-    case 0x62:
-    case 0x63:
+    case BHV_TROPHY_CABINET:
+    case BHV_DYNAMIC_LIGHT_OBJECT_2:
+    case BHV_ROCKET_SIGNPOST:
+    case BHV_ROCKET_SIGNPOST_2:
       value = 0x31;
       break;
-    case 0x5A:
+    case BHV_UNK_5B:
       value = 0x01;
       break;
-    case 0x50:
+    case BHV_ANIMATED_OBJECT_2:
       value = 0x0A;
       break;
-    case 0x06:
-    case 0x0C:
-    case 0x11:
-    case 0x19:
-    case 0x1D:
-    case 0x23:
-    case 0x28:
-    case 0x33:
-    case 0x36:
-    case 0x38:
-    case 0x43:
-    case 0x4D:
-    case 0x4E:
-    case 0x5C:
-    case 0x61:
-    case 0x6B:
-    case 0x73:
+    case BHV_EXIT:
+    case BHV_CHECKPOINT:
+    case BHV_WEAPON_2:
+    case BHV_SKY_CONTROL:
+    case BHV_MODECHANGE:
+    case BHV_BUOY_PIRATE_SHIP:
+    case BHV_BONUS:
+    case BHV_INFO_POINT:
+    case BHV_TRIGGER:
+    case BHV_ZIPPER_WATER:
+    case BHV_LAVA_SPURT:
+    case BHV_LASER_BOLT:
+    case BHV_LASER_GUN:
+    case BHV_ZIPPER_AIR:
+    case BHV_TELEPORT:
+    case BHV_FIREBALL_OCTOWEAPON:
+    case BHV_FIREBALL_OCTOWEAPON_2:
       value = 0x10;
       break;
-    case 0x51:
+    case BHV_ZIPPER_GROUND:
       value = 0x12;
       break;
-    case 0x30:
-    case 0x32:
-    case 0x3C:
+    case BHV_ANIMATION:
+    case BHV_CAMERA_ANIMATION:
+    case BHV_BUTTERFLY:
       value = 0x02;
       break;
-    case 0x3D:
+    case BHV_PARK_WARDEN:
       value = 0x1B;
       break;
-    case 0x6C:
+    case BHV_FROG:
       value = 0x0B;
       break;
-    case 0x71:
+    case BHV_UNK_72:
       value = 0x01;
       break;
   }
