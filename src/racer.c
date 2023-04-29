@@ -2136,7 +2136,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     tempRacer->unk1FD = 0;
     tempRacer->magnetSoundMask = NULL;
     tempRacer->shieldSoundMask = NULL;
-    tempRacer->unk180 = 0;
+    tempRacer->bananaSoundMask = NULL;
     tempRacer->weaponSoundMask = NULL;
     tempRacer->unk220 = 0;
     tempRacer->unk21C = 0;
@@ -2635,8 +2635,8 @@ void update_player_racer(Object *obj, s32 updateRate) {
                 tempRacer->shieldType = SHIELD_NONE;
             }
         }
-        if (tempRacer->unk180) {
-            update_spatial_audio_position(tempRacer->unk180, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+        if (tempRacer->bananaSoundMask) {
+            update_spatial_audio_position(tempRacer->bananaSoundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
         }
         if (is_in_time_trial() && tempRacer->playerIndex == PLAYER_ONE && gRaceStartTimer == 0) {
             func_80059BF0(obj, updateRate);

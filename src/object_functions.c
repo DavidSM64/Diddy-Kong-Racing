@@ -3626,7 +3626,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
     s8 sp43;
     Object_Banana *banana;
     Object_78_Banana *obj78;
-    s32 racerPrevUnk180;
+    s32 prevSoundMask;
 
     updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
@@ -3716,14 +3716,13 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) { 
                 racer = (Object_Racer *) racerObj->unk64;
                 if ((get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) || racer->bananas < 2) {
-                    racerPrevUnk180 = racer->unk180;
-                    play_sound_at_position( SOUND_SELECT,  racerObj->segment.trans.x_position,  racerObj->segment.trans.y_position,  racerObj->segment.trans.z_position, 4, &racer->unk180);
-                    if (racerPrevUnk180 != 0) {
-                        func_800096F8(racerPrevUnk180);
+                    prevSoundMask = racer->bananaSoundMask;
+                    play_sound_at_position( SOUND_SELECT,  racerObj->segment.trans.x_position,  racerObj->segment.trans.y_position,  racerObj->segment.trans.z_position, 4, &racer->bananaSoundMask);
+                    if (prevSoundMask) {
+                        func_800096F8(prevSoundMask);
                     }
-                    if ((racer->playerIndex != PLAYER_COMPUTER) && racer->bananas == 9) {
-                        play_sound_spatial(racer->characterId + SOUND_UNK_7B, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL
-                        );
+                    if (racer->playerIndex != PLAYER_COMPUTER && racer->bananas == 9) {
+                        play_sound_spatial(racer->characterId + SOUND_UNK_7B, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
                     }
                     racer->bananas++;
                     if (banana->spawner != NULL) {
