@@ -144,6 +144,8 @@ typedef struct Unknown80046524 {
     s8 unk3A;
 } Unknown80046524;
 
+void alloc_ghost_pool(void);
+void free_ghost_pool(void);
 s32 roll_percent_chance(s32 chance);
 void apply_plane_tilt_anim(s32 updateRate, Object *obj, Object_Racer *racer);
 void racer_attack_handler_plane(Object *obj, Object_Racer *racer);

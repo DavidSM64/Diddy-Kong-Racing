@@ -1595,6 +1595,7 @@ void func_8002C0C4(s32 modelId) {
     D_8011D374 = allocate_from_main_pool_safe(0x1F4, COLOUR_TAG_YELLOW);
     D_8011D378 = 0;
     D_8011D310 = (s32*)load_asset_section_from_rom(ASSET_LEVEL_MODELS_TABLE);
+    alloc_ghost_pool();
     
     for(i = 0; D_8011D310[i] != -1; i++);
     i--;
@@ -1727,6 +1728,7 @@ void func_8002C7D4(void) {
         gParticlePtrList_addObject(gSkydomeSegment);
         gParticlePtrList_flush();
     }
+    free_ghost_pool();
     func_8000C604();
     gCurrentLevelModel = NULL;
 }

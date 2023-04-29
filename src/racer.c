@@ -5553,9 +5553,29 @@ void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *
     *hundredths = (((frameCount - (*minutes * (REFRESH_60HZ * 60))) - (*seconds * REFRESH_60HZ)) * 100) / REFRESH_60HZ;
 }
 
+/**
+ * Vanilla DKR loads this globally.
+ * I decided to call this instead when loading a track.
+*/
+void alloc_ghost_pool(void) {
+    if (is_time_trial_enabled()) {
+        gGhostData[0] = allocate_from_main_pool_safe((sizeof(GhostNode) + sizeof(GhostDataFrame)) * MAX_NUMBER_OF_GHOST_NODES, COLOUR_TAG_RED);
+        gGhostData[1] = (GhostHeader *) ((GhostNode *) gGhostData[0] + MAX_NUMBER_OF_GHOST_NODES);
+    }
+}
+
+/**
+ * Called when unloading a track.
+*/
+void free_ghost_pool(void) {
+    if (gGhostData[0]) {
+        free_from_memory_pool(gGhostData[0]);
+    }
+}
+
 void func_800598D0(void) {
-    gGhostData[0] = allocate_from_main_pool_safe((sizeof(GhostNode) + sizeof(GhostDataFrame)) * MAX_NUMBER_OF_GHOST_NODES, COLOUR_TAG_RED);
-    gGhostData[1] = (GhostHeader *) ((GhostNode *) gGhostData[0] + MAX_NUMBER_OF_GHOST_NODES);
+    gGhostData[0] = NULL;
+    gGhostData[1] = NULL;
     gGhostData[2] = NULL; // T.T. Ghost
     D_8011D5A0[0] = 0;
     D_8011D5A0[1] = 0;
