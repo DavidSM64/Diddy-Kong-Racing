@@ -210,9 +210,9 @@ s16 D_8011D5A0[2];
 s16 gTTGhostNodeCount; // Gets assigned, but never used?
 s16 D_8011D5A8[2];
 s16 D_8011D5AC;
-s8 D_8011D5AE;
+s8 gRacerWaveCount;
 s8 D_8011D5AF;
-struct TempStruct8 **D_8011D5B0;
+WaterProperties **gRacerCurrentWave;
 s32 D_8011D5B4;
 s16 D_8011D5B8;
 
@@ -551,16 +551,16 @@ GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
 void func_80043ECC(Object *obj, Object_Racer *racer, s32 updateRate) {
     TempStruct5 *temp_v0;
     s8 *test;
-    s8 phi_a0;
+    s8 balloonType;
     s32 i;
     static s8 D_8011D5BA;
     static s8 D_8011D5BB;
-    static s8 D_8011D5BC;
+    static s8 sBalloonLevelAI;
 
     if (!obj) {
         D_8011D5BA = 0;
         D_8011D5BB = 0;
-        D_8011D5BC = 0;
+        sBalloonLevelAI = 0;
         return;
     }
     temp_v0 = func_8006C18C();
@@ -582,22 +582,22 @@ void func_80043ECC(Object *obj, Object_Racer *racer, s32 updateRate) {
         D_8011D5BA = 0;
     }
     if (racer->balloon_quantity) {
-        if (D_8011D5BC < racer->balloon_level) {
+        if (sBalloonLevelAI < racer->balloon_level) {
             temp_v0->unk8[1][0] += temp_v0->unk8[1][2];
             temp_v0->unk8[1][1] += temp_v0->unk8[1][3];
         }
-        D_8011D5BC = racer->balloon_level;
+        sBalloonLevelAI = racer->balloon_level;
     } else {
-        D_8011D5BC = 0;
+        sBalloonLevelAI = 0;
     }
     test = (s8 *) get_misc_asset(MISC_ASSET_UNK0C);
     if ((gCurrentButtonsReleased & Z_TRIG) && racer->balloon_quantity) {
         if (racer->balloon_level < 3) {
-            phi_a0 = test[racer->balloon_type * 3 + racer->balloon_level];
+            balloonType = test[racer->balloon_type * 3 + racer->balloon_level];
         } else {
-            phi_a0 = racer->balloon_type;
+            balloonType = racer->balloon_type;
         }
-        if (gRacerAIBalloonActionTable[phi_a0] == 1) {
+        if (gRacerAIBalloonActionTable[balloonType] == 1) {
             temp_v0->unk8[2][0] += temp_v0->unk8[2][2];
             temp_v0->unk8[2][1] += temp_v0->unk8[2][3];
         }
@@ -1260,17 +1260,17 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         var_f14 = var_f14 * 0.8;
         if ((obj->segment.trans.y_position - var_f14) < sp118) {
             racer->buoyancy = sp118 - (obj->segment.trans.y_position - var_f14);
-            racer->unk1E5 = 5;
+            racer->waterTimer = 5;
         } else {
             racer->buoyancy = 0.0f;
         }
     }
-    if (racer->unk1E5 > 0) {
-        racer->unk1E5--;
+    if (racer->waterTimer > 0) {
+        racer->waterTimer--;
     } else {
         racer->buoyancy = 0.0f;
     }
-    if ((racer->unk1E5 > 0) && (obj->segment.trans.y_position < (sp118 + var_f14))) {
+    if ((racer->waterTimer > 0) && (obj->segment.trans.y_position < (sp118 + var_f14))) {
         obj->interactObj->flags |= 0x10;
     } else {
         obj->interactObj->flags &= 0xFFEF;
@@ -1368,7 +1368,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     gCurrentRacerTransform.z_position = 0.0f;
     object_transform_to_matrix_2((f32 (*)[4]) sp68, &gCurrentRacerTransform);
     guMtxXFMF(sp68, obj->segment.x_velocity, obj->segment.y_velocity, obj->segment.z_velocity, &racer->lateral_velocity, (f32 *) (&racer->unk34), &racer->velocity);
-    if ((racer->unk1E2 == 0) && (racer->unk1E5 == 0)) {
+    if ((racer->unk1E2 == 0) && (racer->waterTimer == 0)) {
         var_v1 = (((-gCurrentStickY) * 0x40) & 0xFFFF) - (obj->segment.trans.x_rotation & 0xFFFF);
         if (var_v1 > 0x8000) {
             var_v1 -= 0xFFFF;
@@ -2092,7 +2092,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     obj->segment.trans.x_rotation = racer->unkA;
     obj->segment.trans.z_rotation = racer->unk8;
     player = racer->unkE;
-    tempRacer->unk194 = 0;
+    tempRacer->countLap = 0;
     tempRacer->stretch_height = 1.0f;
     tempRacer->stretch_height_cap = 1.0f;
     // Decide which player ID to assign to this object. Human players get a value from 0-3.
@@ -2137,7 +2137,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_CharacterFlag *racer) {
     tempRacer->magnetSoundMask = NULL;
     tempRacer->shieldSoundMask = NULL;
     tempRacer->unk180 = 0;
-    tempRacer->unk218 = 0;
+    tempRacer->weaponSoundMask = NULL;
     tempRacer->unk220 = 0;
     tempRacer->unk21C = 0;
     if (tempRacer->playerIndex != PLAYER_COMPUTER && !D_8011D582) {
@@ -2212,7 +2212,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     gCurrentSurfaceType = SURFACE_DEFAULT;
     gRaceStartTimer = func_8001139C();
     updateRateF = updateRate;
-    tempRacer = (Object_Racer *)obj->unk64;
+    tempRacer = (Object_Racer *) obj->unk64;
     // Cap all of the velocities on the different axes.
     // Unfortunately, Rareware didn't appear to use a clamp macro here, which would've saved a lot of real estate.
     if (obj->segment.x_velocity > 50.0) {
@@ -2419,24 +2419,24 @@ void update_player_racer(Object *obj, s32 updateRate) {
             gCurrentRacerInput = 0;
         }
         // Handle the race timer if it's currently active.
-        if (gRaceStartTimer == 0 && header->laps > (tempRacer->unk194)) {
+        if (gRaceStartTimer == 0 && header->laps > (tempRacer->countLap)) {
             // Keep it under 10 minutes.
-            if (tempRacer->lap_times[tempRacer->unk194] < normalise_time(36000) - updateRate) {
-                tempRacer->lap_times[tempRacer->unk194] += updateRate;
+            if (tempRacer->lap_times[tempRacer->countLap] < normalise_time(36000) - updateRate) {
+                tempRacer->lap_times[tempRacer->countLap] += updateRate;
             } else {
-                tempRacer->lap_times[tempRacer->unk194] = normalise_time(36000);
+                tempRacer->lap_times[tempRacer->countLap] = normalise_time(36000);
             }
         }
         // Assign a camera to human players.
         if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
             gCameraObject = (ObjectCamera *) get_active_camera_segment_no_cutscenes();
         }
-        D_8011D5AE = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, (struct TempStruct8 **) &D_8011D5B0);
-        if (D_8011D5AE) {
-            for (i = 0; i < D_8011D5AE; i++) {
-                if (D_8011D5B0[i]->unk10 == 0xF) {
-                    if (D_8011D5B0[i]->unk0 < gCurrentCourseHeight) {
-                        gCurrentCourseHeight = D_8011D5B0[i]->unk0;
+        gRacerWaveCount = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, &gRacerCurrentWave);
+        if (gRacerWaveCount) {
+            for (i = 0; i < gRacerWaveCount; i++) {
+                if (gRacerCurrentWave[i]->type == WATER_UNK_F) {
+                    if (gRacerCurrentWave[i]->waveHeight < gCurrentCourseHeight) {
+                        gCurrentCourseHeight = gRacerCurrentWave[i]->waveHeight;
                     }
                 }
             }
@@ -2446,19 +2446,19 @@ void update_player_racer(Object *obj, s32 updateRate) {
             gRacerWaveType = get_wave_properties(obj->segment.trans.y_position, &waterHeight, &gCurrentRacerWaterPos);
             if (gRacerWaveType) {
                 if (obj->segment.trans.y_position - 5.0f < waterHeight) {
-                    tempRacer->unk1E5 = 5;
+                    tempRacer->waterTimer = 5;
                     tempRacer->buoyancy = waterHeight - (obj->segment.trans.y_position - 5.0f);
                 } else {
                     tempRacer->buoyancy = 0.0f;
                 }
             } else {
-                if (tempRacer->unk1E5 > 0) {
-                    tempRacer->unk1E5--;
+                if (tempRacer->waterTimer > 0) {
+                    tempRacer->waterTimer--;
                 } else {
                     tempRacer->buoyancy = 0.0f;
                 }
             }
-            if (tempRacer->unk1E5 > 0 && obj->segment.trans.y_position < waterHeight + 5.0f) {
+            if (tempRacer->waterTimer > 0 && obj->segment.trans.y_position < waterHeight + 5.0f) {
                 obj->interactObj->flags |= INTERACT_FLAGS_UNK_0010;
             } else {
                 obj->interactObj->flags &= 0xFFEF;
@@ -2500,7 +2500,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             func_8005C270(tempRacer);
         }
         checkpointNode = find_next_checkpoint_node(tempRacer->checkpoint, tempRacer->unk1C8);
-        if (tempRacer->playerIndex == PLAYER_COMPUTER && checkpointNode->unk36[tempRacer->unk1CA] == 5 && tempRacer->unk1E5) {
+        if (tempRacer->playerIndex == PLAYER_COMPUTER && checkpointNode->unk36[tempRacer->unk1CA] == 5 && tempRacer->waterTimer) {
             tempRacer->unk1C8 = 1;
         }
         if (checkpointNode->unk36[tempRacer->unk1CA] == 6) {
@@ -2664,17 +2664,17 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         tempRacer->unk1FE = -1;
         set_racer_tail_lights(tempRacer);
-        if (tempRacer->unk20E) {
-            if (tempRacer->unk210 > updateRate) {
-                tempRacer->unk210 -= updateRate;
+        if (tempRacer->delaySoundID) {
+            if (tempRacer->delaySoundTimer > updateRate) {
+                tempRacer->delaySoundTimer -= updateRate;
             } else {
-                tempRacer->unk210 = 0;
+                tempRacer->delaySoundTimer = 0;
                 if (tempRacer->playerIndex == PLAYER_COMPUTER) {
-                    play_sound_at_position(tempRacer->unk20E, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                    play_sound_at_position(tempRacer->delaySoundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                 } else {
-                    play_sound_spatial(tempRacer->unk20E, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
+                    play_sound_spatial(tempRacer->delaySoundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
                 }
-                tempRacer->unk20E = 0;
+                tempRacer->delaySoundID = SOUND_NONE;
             }
         }
         if (header->race_type & RACETYPE_CHALLENGE && header->race_type != RACETYPE_CHALLENGE_EGGS) {
@@ -2682,8 +2682,8 @@ void update_player_racer(Object *obj, s32 updateRate) {
         } else {
             tempRacer->unk212 = 0;
         }
-        if (tempRacer->unk194 < tempRacer->lap) {
-            tempRacer->unk194 = tempRacer->lap;
+        if (tempRacer->countLap < tempRacer->lap) {
+            tempRacer->countLap = tempRacer->lap;
         }
     }
 }
@@ -4326,10 +4326,9 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
     f32 distance;
     f32 scaleY;
     f32 scaleZ;
-    UNUSED s32 pad;
+    UNUSED s32 pad[2];
     s8 *miscAsset;
     Vertex *heldObjData;
-    UNUSED s32 playerIndex;
     u16 soundID = SOUND_NONE;
 
     if (racer->held_obj != NULL) {
@@ -4391,9 +4390,9 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
             if (gCurrentButtonsPressed & Z_TRIG) {
                 func_800A74EC(318, racer->playerIndex);
             }
-            if (racer->unk195) {
+            if (racer->magnetLevel3) {
                 if (racer->magnetTimer == 0) {
-                    racer->unk195 = 0;
+                    racer->magnetLevel3 = FALSE;
                 } else {
                     return;
                 }
@@ -4484,7 +4483,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                         }
                         if (weaponID == WEAPON_NITRO_LEVEL_3) {
                             racer_play_sound(obj, SOUND_NITRO_LEVEL3_CHARGE);
-                            func_800570A4(obj, 0x233, 0x1E);
+                            racer_play_sound_after_delay(obj, SOUND_NITRO_LEVEL3_BOOST, 30);
                         } else {
                             racer_play_sound(obj, SOUND_NITRO_BOOST);
                         }
@@ -4503,7 +4502,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                         if (racer->playerIndex != PLAYER_COMPUTER) {
                             if (intendedTarget != NULL) {
                                 racer->magnetTimer = 90;
-                                racer->unk184 = (weaponID - 5) >> 1;
+                                racer->magnetModelID = (weaponID - WEAPON_MAGNET_LEVEL_1) >> 1;
                             }
                             if (racer->raceFinished == FALSE) {
                                 func_80072348(racer->playerIndex, 15);
@@ -4515,10 +4514,10 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                         racer->magnetTargetObj = NULL;
                         if (racer->playerIndex != PLAYER_COMPUTER) {
                             if (magnetTarget != NULL) {
-                                magnetTarget->racer.unk195 = 1;
+                                magnetTarget->racer.magnetLevel3 = TRUE;
                                 magnetTarget->racer.magnetTimer = 120;
                                 magnetTarget->racer.magnetTargetObj = obj;
-                                magnetTarget->racer.unk184 = 2;
+                                magnetTarget->racer.magnetModelID = MAGNET_LEVEL3;
                             }
                             if (racer->raceFinished == FALSE) {
                                 func_80072348(racer->playerIndex, 15);
@@ -4558,7 +4557,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                         spawnedObj->segment.z_velocity = obj->segment.z_velocity - (racer->oz1 * velocity);
                         spawnedObj->segment.trans.y_rotation = obj->segment.trans.y_rotation;
                         spawnedObj->segment.trans.x_rotation = obj->segment.trans.x_rotation;
-                        if (racer->vehicleID == VEHICLE_HOVERCRAFT && racer->unk1E5) {
+                        if (racer->vehicleID == VEHICLE_HOVERCRAFT && racer->waterTimer) {
                             if (spawnedObj->segment.trans.x_rotation > -0x400 && spawnedObj->segment.trans.x_rotation < 0x400) {
                                 spawnedObj->segment.trans.x_rotation = 0;
                             }
@@ -4596,10 +4595,10 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                             if (racer->playerIndex == PLAYER_COMPUTER) {
                                 play_sound_at_position(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                             } else {
-                                if (racer->unk218) {
-                                    func_8000488C(racer->unk218);
+                                if (racer->weaponSoundMask) {
+                                    func_8000488C(racer->weaponSoundMask);
                                 }
-                                play_sound_spatial(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, (s32** ) &racer->unk218);
+                                play_sound_spatial(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, (s32** ) &racer->weaponSoundMask);
                             }
                         }
                     }
@@ -4670,7 +4669,7 @@ void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate) {
     diffZ /= vel;
     magnetTarget = racer->magnetTargetObj->unk64;
     vel = -magnetTarget->racer.velocity;
-    if (vel < 8.0 && racer->unk195 == 0) {
+    if (vel < 8.0 && racer->magnetLevel3 == FALSE) {
         vel = 8.0f;
     }
     if (vel > 20.0) {
@@ -4678,25 +4677,30 @@ void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate) {
     }
     gRacerMagnetVelX = (vel + 5.0f) * diffX;
     gRacerMagnetVelZ = (vel + 5.0f) * diffZ;
-    if (magnetTarget->racer.shieldTimer != 0 && racer->unk195 == 0) {
+    if (magnetTarget->racer.shieldTimer && racer->magnetLevel3 == FALSE) {
         racer->magnetTimer = 0;
     }
 }
 
 /**
  * Play a spatial sound, emitting from the position of the racer object.
+ * Only affects human players that aren't in the middle of going through an exit.
  */
 void racer_play_sound(Object *obj, s32 soundID) {
     Object_Racer *racer = &obj->unk64->racer;
-    if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->exitObj == 0) {
+    if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->exitObj == NULL) {
         play_sound_spatial(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
     }
 }
 
-void func_800570A4(Object *obj, s32 arg1, s32 arg2) {
-    Object_Racer *temp = &obj->unk64->racer;
-    temp->unk20E = arg1;
-    temp->unk210 = arg2;
+/**
+ * Set a timer and sound ID.
+ * When that timer counts zero in the racer's update loop, it plays the sound passed through here.
+*/
+void racer_play_sound_after_delay(Object *obj, s32 soundID, s32 delay) {
+    Object_Racer *racer = &obj->unk64->racer;
+    racer->delaySoundID = soundID;
+    racer->delaySoundTimer = delay;
 }
 
 /**
@@ -5160,7 +5164,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
         baseSpeed *= 0.25;
         break;
     }
-    if (racer->unk1E2 > 2 || racer->unk1E5 != 0) {
+    if (racer->unk1E2 > 2 || racer->waterTimer != 0) {
         angle = (obj->segment.trans.x_rotation);
         if (angle > 0) {
             angle -= 0x71C;
@@ -5569,6 +5573,7 @@ void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *
 
 /**
  * Allocate the ghost data heap into memory.
+ * The path node pool is globally loaded, despite only being used in time trial.
 */
 void allocate_ghost_data(void) {
     gGhostData[0] = allocate_from_main_pool_safe((sizeof(GhostNode) + sizeof(GhostDataFrame)) * MAX_NUMBER_OF_GHOST_NODES, COLOUR_TAG_RED);
@@ -5633,7 +5638,7 @@ s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime) {
         if (gGhostData[2] != NULL) {
             *outTime = ghost->time;
             gTTGhostNodeCount = ghost->nodeCount;
-            bcopy((u8 *)ghost + 8, gGhostData[2], size - sizeof(GhostHeader));
+            bcopy((u8 *) ghost + 8, gGhostData[2], size - sizeof(GhostHeader));
             free_from_memory_pool(ghost);
             return 0;
         }
@@ -5882,11 +5887,11 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
             racer_activate_magnet(obj, racer, updateRate);
         }
         if (racer->vehicleID != VEHICLE_HOVERCRAFT) {
-            racer->unk1E5 = 0;
+            racer->waterTimer = 0;
             racer->buoyancy = 0;
-            D_8011D5AE = 0;
+            gRacerWaveCount = 0;
         } else {
-            D_8011D5AE = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, (struct TempStruct8 **) &D_8011D5B0);
+            gRacerWaveCount = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, &gRacerCurrentWave);
         }
         func_8002ACC8(0);
         if ((racer->approachTarget != NULL) || (gRaceStartTimer != 0) || (racer->unk204 > 0)) {
@@ -5924,7 +5929,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         checkpoint = find_next_checkpoint_node(racer->checkpoint, racer->unk1C8);
         if (checkpoint->unk36[racer->unk1CA] == 5) {
             racer->unk201 = 30;
-            if (racer->unk1E5 != 0) {
+            if (racer->waterTimer) {
                 racer->unk1C8 = 1;
             }
         }
@@ -6257,7 +6262,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         }
         func_80042D20(obj, racer, updateRate);
         handle_racer_items(obj, racer, updateRate);
-        racer->unk1E5 = 0;
+        racer->waterTimer = 0;
         obj->interactObj->x_position = obj->segment.trans.x_position;
         obj->interactObj->y_position = obj->segment.trans.y_position;
         obj->interactObj->z_position = obj->segment.trans.z_position;

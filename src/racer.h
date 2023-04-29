@@ -7,14 +7,6 @@
 
 #define SEGMENT_NONE -1 // If the level in question does not use segmentation.
 
-struct TempStruct8 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
-    s8 unk10;
-};
-
 typedef enum ActivePlayers {
     PLAYER_COMPUTER = -1,
     PLAYER_ONE,
@@ -72,6 +64,12 @@ typedef enum ShieldType {
     SHIELD_LEVEL2,
     SHIELD_LEVEL3
 } ShieldType;
+
+typedef enum MagnetType {
+    MAGNET_LEVEL1,
+    MAGNET_LEVEL2,
+    MAGNET_LEVEL3
+} MagnetType;
 
 typedef enum WeaponType {
     WEAPON_NONE = -1,
@@ -158,7 +156,7 @@ void func_800535C4(Object *obj, Object_Racer *racer);
 void handle_car_velocity_control(Object_Racer *racer);
 void play_char_horn_sound(Object *obj, Object_Racer *racer);
 void racer_play_sound(Object *obj, s32 soundID);
-void func_800570A4(Object *obj, s32 arg1, s32 arg2);
+void racer_play_sound_after_delay(Object *obj, s32 arg1, s32 arg2);
 void func_800575EC(Object *obj, Object_Racer *racer);
 void handle_base_steering(Object_Racer *racer, s32 updateRate, f32 updateRateF);
 void second_racer_camera_update(Object *obj, Object_Racer *racer, s32 mode, f32 arg3);

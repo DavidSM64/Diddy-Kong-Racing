@@ -110,10 +110,10 @@ s8 D_800DC820[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 s8 D_800DC840[8] = { 9, 1, 2, 3, 4, 5, 7, 0 };
 
 s8 D_800DC848 = 0;
-u32 D_800DC84C[3] = {
-    0xFF401000,
-    0x1040FF00,
-    0x10FF4000,
+u32 gMagnetColours[3] = {
+    ((255 << 24) | (64 << 16) |  (16 << 8) | 0), // Level 1
+    ((16 << 24) |  (64 << 16) |  (255 << 8) | 0), // Level 2
+    ((16 << 24) |  (255 << 16) | (64 << 8) | 0), // Level 3
 };
 s32 D_800DC858 = 0;          // Currently unknown, might be a different type.
 s32 D_800DC85C = 0x0028FFFF; // Currently unknown, might be a different type.
@@ -2134,7 +2134,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             mdl = gfxData->objModel;
             D_800DC764->unk44 = (Vertex *) gfxData->unk4[gfxData->unk1F];
             opacity = (((D_8011B078[(var_t0 * 4) + 1] * 8) & 0x7F) + 0x80);
-            func_8007F594(&gObjectCurrDisplayList, 2, 0xFFFFFF00 | opacity, D_800DC84C[racer->unk184]);
+            func_8007F594(&gObjectCurrDisplayList, 2, 0xFFFFFF00 | opacity, gMagnetColours[racer->magnetModelID]);
             func_80068FA8(&gObjectCurrDisplayList, &gObjectCurrMatrix, D_800DC764, obj, shear);
             D_800DC720 = TRUE;
             func_800143A8(mdl, D_800DC764, 0, 4, 0);

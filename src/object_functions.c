@@ -1160,7 +1160,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     UNUSED s32 test;
     Object_Racer *racer;
     LevelHeader *header;
-    struct TempStruct8 **sp48;
+    struct WaterProperties **water;
 
     tempPosY = obj->segment.trans.y_position;
     updateRateF = updateRate;
@@ -1334,12 +1334,12 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         break;
     }
     obj->segment.trans.y_position = tempPosY;
-    index = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, (struct TempStruct8 **) &sp48);
+    index = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, &water);
      if(index != 0) {
         index--;
         while(index >= 0) {
-            if ((sp48[index]->unk10 != 11) && (sp48[index]->unk10 != 14) && (sp48[index]->unk8 > 0.0)) {
-                obj->segment.trans.y_position = sp48[index]->unk0;
+            if ((water[index]->type != WATER_CALM) && (water[index]->type != WATER_WAVY) && (water[index]->rotY > 0.0)) {
+                obj->segment.trans.y_position = water[index]->waveHeight;
             }
             index--;
         }
@@ -2122,7 +2122,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     f32 zPosDiff;
     f32 distance;
     f32 sp98_yPos;
-    struct TempStruct8 **sp94;
+    struct WaterProperties **water;
     Object *racerObj;
     s32 sp3C;
     Object *temp_v0_12;
@@ -2690,12 +2690,12 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         break;
     }
     obj->segment.trans.y_position = sp98_yPos;
-    var_a2 = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, (struct TempStruct8 **) &sp94);
+    var_a2 = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, &water);
     if(var_a2 != 0) {
         var_a2--;
         while(var_a2 >= 0) {
-            if ((sp94[var_a2]->unk10 != 11) && (sp94[var_a2]->unk10 != 14) && (sp94[var_a2]->unk8 > 0.0)) {
-                obj->segment.trans.y_position = sp94[var_a2]->unk0;
+            if ((water[var_a2]->type != WATER_CALM) && (water[var_a2]->type != WATER_WAVY) && (water[var_a2]->rotY > 0.0)) {
+                obj->segment.trans.y_position = water[var_a2]->waveHeight;
             }
             var_a2--;
         }
