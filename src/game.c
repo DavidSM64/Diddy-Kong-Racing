@@ -149,7 +149,7 @@ OSSched gMainSched; // 0x288 / 648 bytes
 u64 gSchedStack[0x400];
 s32 gSPTaskNum;
 s32 sRenderContext;
-s32 D_801234F0; // I don't think this is ever not 1
+s32 gRenderMenu; // I don't think this is ever not 1
 // Similar to gMapId, but is 0 if not currently playing a level (e.g. start menu).
 s32 gPlayableMapId;
 s32 D_801234F8;
@@ -768,7 +768,10 @@ char *get_level_name(s32 levelId) {
     return levelName;
 }
 
-void func_8006BEFC(void) {
+/**
+ * Call multiple functions to stop and free audio, then free track, weather and wave data.
+*/
+void clear_audio_and_track(void) {
     frontCleanupMultiSelect();
     set_background_prim_colour(0, 0, 0);
     free_from_memory_pool(gCurrentLevelHeader);
@@ -777,7 +780,7 @@ void func_8006BEFC(void) {
     func_800018E0();
     func_800012E8();
     func_80031B60();
-    free_level();
+    free_track();
     func_80008174();
     adjust_audio_volume(VOLUME_NORMAL);
     if (gCurrentLevelHeader->weatherEnable > 0) {
@@ -1147,8 +1150,12 @@ void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     func_80072298(1);
 }
 
-// Guessing this is the "unload everything ready for level swap" function.
-void func_8006CC14(void) {
+/**
+ * Call numerous functions to clear data in RAM.
+ * Then call to free particles, HUD and text.
+ * Waits for a GFX task before unloading.
+*/
+void unload_level_game(void) {
     set_free_queue_state(0);
     if (gSkipGfxTask == FALSE) {
         if (gDrawFrameTimer != 1) {
@@ -1156,7 +1163,7 @@ void func_8006CC14(void) {
         }
         gSkipGfxTask = TRUE;
     }
-    func_8006BEFC();
+    clear_audio_and_track();
     transition_begin(&D_800DD3F4);
     func_800AE270();
     func_800A003C();
@@ -1426,7 +1433,7 @@ void ingame_logic_loop(s32 updateRate) {
         gIsPaused = FALSE;
         gLevelLoadTimer = 0;
         gPostRaceViewPort = NULL;
-        func_8006CC14();
+        unload_level_game();
         safe_mark_write_save_file(get_save_file_index());
         if (sp40 != 0) {
             gIsLoading = FALSE;
@@ -1495,7 +1502,7 @@ void ingame_logic_loop(s32 updateRate) {
     }
     if (D_801234F8 != 0) {
         gPostRaceViewPort = NULL;
-        func_8006CC14();
+        unload_level_game();
         load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
         safe_mark_write_save_file(get_save_file_index());
         D_801234F8 = 0;
@@ -1570,7 +1577,7 @@ UNUSED void set_render_context(s32 changeTo) {
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     alloc_displaylist_heap(PLAYER_ONE);
     sRenderContext = DRAW_MENU;
-    D_801234F0 = TRUE;
+    gRenderMenu = TRUE;
     set_sound_channel_volume(0, 32767);
     set_sound_channel_volume(1, 32767);
     set_sound_channel_volume(2, 32767);
@@ -1625,11 +1632,15 @@ void load_level_menu(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     set_free_queue_state(2);
 }
 
-void func_8006DBE4(void) {
+/**
+ * Call numerous functions to clear data in RAM.
+ * Then call to free particles, HUD and text.
+*/
+void unload_level_menu(void) {
     if (!gIsLoading) {
         gIsLoading = TRUE;
         set_free_queue_state(0);
-        func_8006BEFC();
+        clear_audio_and_track();
         transition_begin(&D_800DD3F4);
         func_800AE270();
         func_800A003C();
@@ -1639,7 +1650,11 @@ void func_8006DBE4(void) {
     gIsLoading = FALSE;
 }
 
-void func_8006DC58(s32 updateRate) {
+/**
+ * Used in menus, update objects and draw the game.
+ * In the tracks menu, this only runs if there's a track actively loaded.
+*/
+void update_menu_scene(s32 updateRate) {
     if (get_thread30_level_id_to_load() == 0) {
         func_80010994(updateRate);
         gParticlePtrList_flush();
@@ -1659,17 +1674,17 @@ void func_8006DCF8(s32 updateRate) {
 
     gIsPaused = FALSE;
     gPostRaceViewPort = NULL;
-    if (!gIsLoading && D_801234F0) {
-        func_8006DC58(updateRate);
+    if (!gIsLoading && gRenderMenu) {
+        update_menu_scene(updateRate);
     }
     menuLoopResult = menu_loop(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
-    D_801234F0 = TRUE;
+    gRenderMenu = TRUE;
     if (menuLoopResult == -2) {
-        D_801234F0 = FALSE;
+        gRenderMenu = FALSE;
         return;
     }
     if ((menuLoopResult != -1) && (menuLoopResult & 0x200)) {
-        func_8006DBE4();
+        unload_level_menu();
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
         gDPFullSync(gCurrDisplayList++);
         gSPEndDisplayList(gCurrDisplayList++);
@@ -1685,7 +1700,7 @@ void func_8006DCF8(s32 updateRate) {
         return;
     }
     if ((menuLoopResult != -1) && (menuLoopResult & 0x100)) {
-        func_8006CC14();
+        unload_level_game();
         gIsPaused = FALSE;
         gPostRaceViewPort = NULL;
         switch (menuLoopResult & 0x7F) {
@@ -1736,7 +1751,7 @@ void func_8006DCF8(s32 updateRate) {
         return;
     }
     if ((menuLoopResult & 0x80) && (menuLoopResult != -1)) {
-        func_8006DBE4();
+        unload_level_menu();
         // Minor issue here.
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
         gDPFullSync(gCurrDisplayList++);
@@ -1756,7 +1771,7 @@ void func_8006DCF8(s32 updateRate) {
         return;
     }
     if (menuLoopResult > 0) {
-        func_8006DBE4();
+        unload_level_menu();
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
         gDPFullSync(gCurrDisplayList++);
         gSPEndDisplayList(gCurrDisplayList++);
@@ -1775,7 +1790,7 @@ GLOBAL_ASM("asm/non_matchings/game/func_8006DCF8.s")
 
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
     if (!gIsLoading) {
-        func_8006DBE4();
+        unload_level_menu();
         if (get_thread30_level_id_to_load() == 0) {
             gCurrDisplayList = gDisplayLists[gSPTaskNum];
             gDPFullSync(gCurrDisplayList++);

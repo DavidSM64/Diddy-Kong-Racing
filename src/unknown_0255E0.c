@@ -1768,7 +1768,7 @@ LevelModel *get_current_level_model(void) {
 /**
  * Frees and unloads level data from RAM.
 */
-void free_level(void) {
+void free_track(void) {
     s32 i;
 
     func_8000B290();
