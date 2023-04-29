@@ -182,7 +182,10 @@ void crash_screen_draw_glyph(s32 x, s32 y, s32 glyph) {
         rowMask = *data++;
 
         for (j = 0; j < 6; j++) {
-            *ptr++ = (bit & rowMask) ? 0xffff : 1;
+            if ((bit & rowMask)) {
+                *ptr = 0xFFFF;
+            }
+            *ptr++;
             bit >>= 1;
         }
         ptr += gCrashScreen.width - 6;

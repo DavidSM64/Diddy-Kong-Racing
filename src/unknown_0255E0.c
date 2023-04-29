@@ -1577,12 +1577,7 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
     }
 }
 
-void calculate_level_ram_size(LevelModel *mdl) {
-    
-}
-
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002BAB0.s")
-u32 gLastLevelModelSize = 0;
 #ifdef NON_MATCHING
 // Loads a level track from the index in the models table.
 // Has regalloc issues.
@@ -1615,13 +1610,10 @@ void func_8002C0C4(s32 modelId) {
     temp = (s32) gCurrentLevelModel;
     temp +=  (LEVEL_MODEL_MAX_SIZE - temp_s4);
     temp -= ((s32)temp % 16); // Align to 16-byte boundary.
-    gLastLevelModelSize = get_asset_uncompressed_size(ASSET_LEVEL_MODELS, D_8011D310[modelId]);
-    puppyprint_log("Levle is %X/%X bytes.", gLastLevelModelSize, LEVEL_MODEL_MAX_SIZE);
     
     load_asset_to_address(ASSET_LEVEL_MODELS, temp, D_8011D310[modelId], temp_s4);
     gzip_inflate((u8*) temp, (u8*) gCurrentLevelModel);
     free_from_memory_pool(D_8011D310); // Done with the level models table, so free it.
-    calculate_level_ram_size(gCurrentLevelModel); // 
     
     mdl = gCurrentLevelModel;
     

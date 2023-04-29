@@ -47,6 +47,7 @@
 #include "stdarg.h"
 #include "math_util.h"
 #include "controller.h"
+#include "math_util.h"
 
 /************ .rodata ************/
 
@@ -1755,6 +1756,7 @@ GLOBAL_ASM("asm/non_matchings/game/func_8006DCF8.s")
 
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
     Vehicle vehicleID = VEHICLE_PLANE;
+    u32 numPlayerDLs = numberOfPlayers;
     if (!gIsLoading) {
         func_8006DBE4();
         if (get_thread30_level_id_to_load() == 0) {
@@ -1790,7 +1792,8 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
             }
             break;
         }
-        alloc_displaylist_heap(THREE_PLAYERS);
+        CLAMP(numPlayerDLs, PLAYER_ONE, PLAYER_THREE);
+        alloc_displaylist_heap(numPlayerDLs);
         load_level_menu(levelId, numberOfPlayers, 0, vehicleID, cutsceneId);
         gIsLoading = FALSE;
         return;

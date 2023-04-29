@@ -28,7 +28,7 @@
 //#define EXPANSION_PAK_SUPPORT               // Allow the game to use the expansion pak if it's inserted. Disabling this will move Framebuffers to expansion RAM for extra performance.
 //#define FORCE_4MB_MEMORY                    // Pretend the expansion pak is not installed.
 
-#define NUM_GFX_COMMANDS        {3000, 4500, 6000, 6000} /* How many graphics commands can be ran per frame. Default is 4500, 7000, 11000, 11000 */
+#define NUM_GFX_COMMANDS        {3200, 4500, 6000, 6000} /* How many graphics commands can be ran per frame. Default is 4500, 7000, 11000, 11000 */
 #define NUM_VERTICES            {200, 400, 650, 700} /* How many vertices are allowed per frame. Default is 300, 600, 850, 900 */
 #define NUM_MATRICES            {200, 300, 450, 500} /* How many matrices are allowed per frame. Default is 300, 400, 550, 600 */
 #define NUM_HUD_VERTS           {20, 30, 40, 50} /* How many triangles the HUD can use per frame. Default is 20, 30, 40, 50 */
