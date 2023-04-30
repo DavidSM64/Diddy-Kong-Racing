@@ -65,4 +65,7 @@
 // Used to suppress warnings in the ./generate_ctx.sh script.
 #define INCONSISTENT 
 
+// Used to make a u32 colour value look clearer. Transforms 0xFF0000FF to 255, 0, 0, 255
+#define COLOUR_RGBA32(r, g, b, a) (((r << 24) | (g << 16) |  (b << 8) | a))
+
 #endif

@@ -111,9 +111,9 @@ s8 D_800DC840[8] = { 9, 1, 2, 3, 4, 5, 7, 0 };
 
 s8 gNoBoundsCheck = FALSE;
 u32 gMagnetColours[3] = {
-    ((255 << 24) | (64 << 16) |  (16 << 8) | 0), // Level 1
-    ((16 << 24) |  (64 << 16) |  (255 << 8) | 0), // Level 2
-    ((16 << 24) |  (255 << 16) | (64 << 8) | 0), // Level 3
+    COLOUR_RGBA32(255, 64, 16, 0), // Level 1
+    COLOUR_RGBA32(16, 64, 255, 0), // Level 2
+    COLOUR_RGBA32(16, 255, 64, 0), // Level 3
 };
 s32 D_800DC858 = 0;          // Currently unknown, might be a different type.
 s32 D_800DC85C = 0x0028FFFF; // Currently unknown, might be a different type.
@@ -1000,7 +1000,7 @@ void func_80010994(s32 updateRate) {
     tempVal = objCount;
     for (i = D_8011AE60; i < tempVal; i++) {
         obj = gObjPtrList[i];
-        if (!(obj->segment.trans.flags & 0x8000)) {
+        if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             if ((obj->behaviorId != BHV_LIGHT_RGBA) && (obj->behaviorId != BHV_WEAPON) && (obj->behaviorId != BHV_FOG_CHANGER)) {
                 if (obj->interactObj != NULL) {
                     if (obj->interactObj->unk11 != 2) {
@@ -1830,7 +1830,7 @@ void func_80012F94(Object *obj) {
 
     ret1 = 1.0f;
     ret2 = 1.0f;
-    if (!(obj->segment.trans.flags & 0x8000)) {
+    if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
         if (obj->segment.header->behaviorId == BHV_RACER) {
             objRacer = (Object_Racer *) obj->unk64;
             objRacer->unk201 = 30;
