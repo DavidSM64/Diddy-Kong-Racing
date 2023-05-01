@@ -144,14 +144,14 @@ As of April 28, 2023, this is our current score:
  We are racing the octopus boss Bubbler. (Lap 1/3)
  =================================================
        ADVENTURE TWO (Cleanup & Documentation)
- ---------------- 25.19% Complete ----------------
-            # Documented functions: 516
-          # Undocumented remaining: 1048
+ ---------------- 25.60% Complete ----------------
+            # Documented functions: 541
+          # Undocumented remaining: 1023
  ------------------ Game Status ------------------
      Balloons: 12/47, Keys: 1/4, Trophies: 1/5
       T.T. Amulets: 1/4, Wizpig Amulets: 1/4
  -------------------------------------------------
- We are racing Taj in the Car Challenge. (Lap 2/3)
+ We are racing Taj in the Car Challenge. (Lap 3/3)
  =================================================
 ```
 <!-- README_SCORE_END -->

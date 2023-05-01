@@ -214,7 +214,7 @@ glabel func_8000B750
 /* 00C660 8000BA60 AFAA0038 */  sw    $t2, 0x38($sp)
 /* 00C664 8000BA64 0C01C0C8 */  jal   f32_vec3_apply_object_rotation
 /* 00C668 8000BA68 E7A8007C */   swc1  $f8, 0x7c($sp)
-/* 00C66C 8000BA6C 0C004558 */  jal   func_80011560
+/* 00C66C 8000BA6C 0C004558 */  jal   ignore_bounds_check
 /* 00C670 8000BA70 00000000 */   nop   
 /* 00C674 8000BA74 8FA20080 */  lw    $v0, 0x80($sp)
 /* 00C678 8000BA78 C7AA0074 */  lwc1  $f10, 0x74($sp)

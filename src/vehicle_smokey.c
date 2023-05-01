@@ -149,7 +149,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->unkC += diffX;
         obj68->unk10 = -1;
     }
-    if (obj->segment.unk38.byte.unk3B == 2 && racer->unk1E2 == 0 && racer->velocity < -6.5) {
+    if (obj->segment.unk38.byte.unk3B == 2 && racer->groundedWheels == 0 && racer->velocity < -6.5) {
         obj->segment.unk38.byte.unk3B = 3;
         racer->unkC = 0.0f;
     }
@@ -181,7 +181,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
                 obj->segment.unk38.byte.unk3B = 1;
                 racer->unkC = 0.0f;
             }
-            if (obj->segment.unk38.byte.unk3B == 4 && racer->unk1E2 != 0 && racer->velocity > -6.0) {
+            if (obj->segment.unk38.byte.unk3B == 4 && racer->groundedWheels && racer->velocity > -6.0) {
                 obj->segment.unk38.byte.unk3B = 3;
                 racer->unkC = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
             }

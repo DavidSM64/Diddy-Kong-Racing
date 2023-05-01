@@ -114,10 +114,10 @@ glabel func_8000B020
 /* 00BDD8 8000B1D8 02E02025 */  move  $a0, $s7
 /* 00BDDC 8000B1DC 0C003A95 */  jal   spawn_object
 /* 00BDE0 8000B1E0 00002825 */   move  $a1, $zero
-/* 00BDE4 8000B1E4 3C01800E */  lui   $at, %hi(D_800DC75C) # $at, 0x800e
+/* 00BDE4 8000B1E4 3C01800E */  lui   $at, %hi(gShieldEffectObject) # $at, 0x800e
 /* 00BDE8 8000B1E8 3C108012 */  lui   $s0, %hi(D_8011B078) # $s0, 0x8012
 /* 00BDEC 8000B1EC 3C118012 */  lui   $s1, %hi(gSceneCurrDisplayList) # $s1, 0x8012
-/* 00BDF0 8000B1F0 AC22C75C */  sw    $v0, %lo(D_800DC75C)($at)
+/* 00BDF0 8000B1F0 AC22C75C */  sw    $v0, %lo(gShieldEffectObject)($at)
 /* 00BDF4 8000B1F4 2631B0A0 */  addiu $s1, %lo(gSceneCurrDisplayList) # addiu $s1, $s1, -0x4f60
 /* 00BDF8 8000B1F8 2610B078 */  addiu $s0, %lo(D_8011B078) # addiu $s0, $s0, -0x4f88
 .L8000B1FC:
@@ -144,7 +144,7 @@ glabel func_8000B020
 /* 00BE4C 8000B24C 0C003A95 */  jal   spawn_object
 /* 00BE50 8000B250 00002825 */   move  $a1, $zero
 /* 00BE54 8000B254 8FBF003C */  lw    $ra, 0x3c($sp)
-/* 00BE58 8000B258 3C01800E */  lui   $at, %hi(D_800DC764) # $at, 0x800e
+/* 00BE58 8000B258 3C01800E */  lui   $at, %hi(gMagnetEffectObject) # $at, 0x800e
 /* 00BE5C 8000B25C C7B50010 */  lwc1  $f21, 0x10($sp)
 /* 00BE60 8000B260 C7B40014 */  lwc1  $f20, 0x14($sp)
 /* 00BE64 8000B264 8FB0001C */  lw    $s0, 0x1c($sp)
@@ -155,7 +155,7 @@ glabel func_8000B020
 /* 00BE78 8000B278 8FB50030 */  lw    $s5, 0x30($sp)
 /* 00BE7C 8000B27C 8FB60034 */  lw    $s6, 0x34($sp)
 /* 00BE80 8000B280 8FB70038 */  lw    $s7, 0x38($sp)
-/* 00BE84 8000B284 AC22C764 */  sw    $v0, %lo(D_800DC764)($at)
+/* 00BE84 8000B284 AC22C764 */  sw    $v0, %lo(gMagnetEffectObject)($at)
 /* 00BE88 8000B288 03E00008 */  jr    $ra
 /* 00BE8C 8000B28C 27BD0068 */   addiu $sp, $sp, 0x68
 

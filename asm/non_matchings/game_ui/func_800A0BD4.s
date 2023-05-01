@@ -25,8 +25,8 @@ glabel func_800A0BD4
 /* 0A1830 800A0C30 00000000 */   nop   
 .L800A0C34:
 /* 0A1834 800A0C34 3C10800E */  lui   $s0, %hi(D_800E2770) # $s0, 0x800e
-/* 0A1838 800A0C38 3C13800E */  lui   $s3, %hi(D_800E2790) # $s3, 0x800e
-/* 0A183C 800A0C3C 26732790 */  addiu $s3, %lo(D_800E2790) # addiu $s3, $s3, 0x2790
+/* 0A1838 800A0C38 3C13800E */  lui   $s3, %hi(gShowCourseDirections) # $s3, 0x800e
+/* 0A183C 800A0C3C 26732790 */  addiu $s3, %lo(gShowCourseDirections) # addiu $s3, $s3, 0x2790
 /* 0A1840 800A0C40 26102770 */  addiu $s0, %lo(D_800E2770) # addiu $s0, $s0, 0x2770
 /* 0A1844 800A0C44 2414007F */  li    $s4, 127
 /* 0A1848 800A0C48 2412007F */  li    $s2, 127

@@ -117,7 +117,7 @@ glabel obj_init_fish
 /* 0379D8 80036DD8 E6280014 */  swc1  $f8, 0x14($s1)
 /* 0379DC 80036DDC E7AE0030 */  swc1  $f14, 0x30($sp)
 /* 0379E0 80036DE0 46045401 */  sub.s $f16, $f10, $f4
-/* 0379E4 80036DE4 0C004558 */  jal   func_80011560
+/* 0379E4 80036DE4 0C004558 */  jal   ignore_bounds_check
 /* 0379E8 80036DE8 E7B0002C */   swc1  $f16, 0x2c($sp)
 /* 0379EC 80036DEC 8FA50030 */  lw    $a1, 0x30($sp)
 /* 0379F0 80036DF0 8FA7002C */  lw    $a3, 0x2c($sp)

@@ -362,7 +362,7 @@ typedef struct LevelHeader {
 
   /* 0x44 */ u8 unk44[0x5];
 
-  /* 0x49 */ s8 unk49;
+  /* 0x49 */ s8 skyDome;
   /* 0x4A */ s8 playerIndex;
   /* 0x4B */ s8 laps;
   /* 0x4C */ s8 race_type;
@@ -1127,8 +1127,8 @@ typedef struct Object_Racer {
   /* 0x176 */ s16 unk176;
   /* 0x178 */ void *magnetSoundMask;
   /* 0x17C */ s32 shieldSoundMask;
-  /* 0x180 */ s32 unk180; // Soundmask for banana pickup, whether that's the only use I do not yet know.
-  /* 0x184 */ s8 unk184;
+  /* 0x180 */ s32 bananaSoundMask;
+  /* 0x184 */ s8 magnetModelID;
   /* 0x185 */ s8 bananas;
   /* 0x186 */ u8 unk186;
   /* 0x187 */ s8 attackType;
@@ -1140,8 +1140,8 @@ typedef struct Object_Racer {
   /* 0x190 */ s16 courseCheckpoint;
   /* 0x192 */ s8 checkpoint;
   /* 0x193 */ s8 lap;
-  /* 0x194 */ s8 unk194;
-  /* 0x195 */ s8 unk195;
+  /* 0x194 */ s8 countLap;
+  /* 0x195 */ s8 magnetLevel3;
   /* 0x196 */ s16 unk196;
   /* 0x198 */ s16 unk198;
   /* 0x19A */ s16 unk19A;
@@ -1189,10 +1189,10 @@ typedef struct Object_Racer {
   /* 0x1DC */ u8 wheel_surfaces[4];
   /* 0x1E0 */ s8 unk1E0;
   /* 0x1E1 */ s8 steerAngle;
-  /* 0x1E2 */ s8 unk1E2;
+  /* 0x1E2 */ s8 groundedWheels;
   /* 0x1E3 */ s8 unk1E3;
   /* 0x1E4 */ s8 unk1E4;
-  /* 0x1E5 */ s8 unk1E5;
+  /* 0x1E5 */ s8 waterTimer; // Set to a value, then counts down when leaving water.
   /* 0x1E6 */ s8 drift_direction;
   /* 0x1E7 */ s8 miscAnimCounter;
   /* 0x1E8 */ s8 unk1E8;
@@ -1231,8 +1231,8 @@ typedef struct Object_Racer {
   /* 0x20B */ u8 unk20B;
   /* 0x20C */ u8 throttleReleased;
   /* 0x20D */ u8 unk20D;
-  /* 0x20E */ u16 unk20E;
-  /* 0x210 */ u8 unk210;
+  /* 0x20E */ u16 delaySoundID;
+  /* 0x210 */ u8 delaySoundTimer;
   /* 0x211 */ s8 unk211;
   /* 0x212 */ s8 unk212;
   /* 0x213 */ s8 unk213;
@@ -1240,7 +1240,7 @@ typedef struct Object_Racer {
   /* 0x215 */ s8 unk215;
   /* 0x216 */ u8 unk216;
   /* 0x217 */ u8 unk217;
-  /* 0x218 */ void *unk218;
+  /* 0x218 */ s32 weaponSoundMask;
   /* 0x21C */ s32 unk21C;
   /* 0x220 */ s32 unk220;
 } Object_Racer;
@@ -1264,7 +1264,7 @@ typedef struct Object_ModeChange {
 } Object_ModeChange;
 
 typedef struct Object_Door {
-  /* 0x00 */ f32 unk0;
+  /* 0x00 */ f32 homeY;
   /* 0x04 */ u8 pad4[0x4];
   /* 0x08 */ s32 unk8;
   /* 0x0A */ s16 padA;
@@ -1605,7 +1605,7 @@ typedef struct ObjectTransform {
   /* 0x0000 */ s16 y_rotation;
   /* 0x0002 */ s16 x_rotation;
   /* 0x0004 */ s16 z_rotation;
-  /* 0x0006 */ s16 unk6; // Flags?
+  /* 0x0006 */ s16 flags;
   /* 0x0008 */ f32 scale;
   /* 0x000C */ f32 x_position;
   /* 0x0010 */ f32 y_position;

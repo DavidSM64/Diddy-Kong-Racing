@@ -57,9 +57,9 @@ s8 D_800DC744 = 0;
 s8 D_800DC748 = 0;
 s32 D_800DC74C[2] = {0, 0}; // Have a feeling these are both the same array.
 s32 D_800DC754[2] = {0, 0};
-Object *D_800DC75C = NULL; // Currently unknown, might be a different type.
+Object *gShieldEffectObject = NULL;
 s32 D_800DC760 = 9; // Currently unknown, might be a different type.
-Object *D_800DC764 = NULL; // Currently unknown, might be a different type.
+Object *gMagnetEffectObject = NULL;
 s32 D_800DC768 = 0; // Currently unknown, might be a different type.
 
 f32 D_800DC76C[15] = {
@@ -70,24 +70,24 @@ f32 D_800DC76C[15] = {
 };
 
 u16 D_800DC7A8[8] = {
-    0x0001, 0x0002, 0x0003, 0x0004,
-    0x0051, 0x0054, 0x0055, 0x0056,
+    BHV_RACER, BHV_SCENERY, BHV_FISH, BHV_ANIMATOR,
+    BHV_ANIMATED_OBJECT_2, BHV_WIZPIG_SHIP, BHV_ANIMATED_OBJECT_3, BHV_ANIMATED_OBJECT_4,
 };
 
 s16 D_800DC7B8[52] = {
-    0x00ED, 0x00FF, 0x0037, 0x0038,
-    0x0039, 0x003A, 0x0057, 0x0058,
-    0x0059, 0x005A, 0x00F3, 0x00FD,
-    0x0042, 0x0043, 0x0044, 0x0045,
-    0x005B, 0x005C, 0x005D, 0x005E,
-    0x00F4, 0x0101, 0x0001, 0x0002,
-    0x0003, 0x0004, 0x0051, 0x0054,
-    0x0055, 0x0056, 0x00ED, 0x00FF,
-    0x0001, 0x0002, 0x0003, 0x0004,
-    0x0051, 0x0054, 0x0055, 0x0056,
+    0x00ED, 0x00FF, BHV_TRIGGER, BHV_VEHICLE_ANIMATION,
+    BHV_ZIPPER_WATER, BHV_UNK_3A, BHV_UNK_57, BHV_SILVER_COIN,
+    BHV_BOOST, BHV_WARDEN_SMOKE, 0x00F3, 0x00FD,
+    BHV_TREASURE_SUCKER, BHV_LOG, BHV_LAVA_SPURT, BHV_POS_ARROW,
+    BHV_UNK_5B, BHV_UNK_5C, BHV_ZIPPER_AIR, BHV_UNK_5E,
+    0x00F4, 0x0101, BHV_RACER, BHV_SCENERY,
+    BHV_FISH, BHV_ANIMATOR, BHV_ANIMATED_OBJECT_2, BHV_WIZPIG_SHIP,
+    BHV_ANIMATED_OBJECT_3, BHV_ANIMATED_OBJECT_4, 0x00ED, 0x00FF,
+    BHV_RACER, BHV_SCENERY, BHV_FISH, BHV_ANIMATOR,
+    BHV_ANIMATED_OBJECT_2, BHV_WIZPIG_SHIP, BHV_ANIMATED_OBJECT_3, BHV_ANIMATED_OBJECT_4,
     0x00ED, 0x00FF, 0x00D9, 0x00DF,
     0x00E0, 0x0105, 0x008A, 0x00DA,
-    0x00E8, 0x0115, 0x0118, 0x0000,
+    0x00E8, 0x0115, 0x0118, BHV_NONE,
 };
 
 // A table of which vehicles to use for boss races.
@@ -109,11 +109,11 @@ s8 D_800DC820[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 
 s8 D_800DC840[8] = { 9, 1, 2, 3, 4, 5, 7, 0 };
 
-s8 D_800DC848 = 0;
-u32 D_800DC84C[3] = {
-    0xFF401000,
-    0x1040FF00,
-    0x10FF4000,
+s8 gNoBoundsCheck = FALSE;
+u32 gMagnetColours[3] = {
+    COLOUR_RGBA32(255, 64, 16, 0), // Level 1
+    COLOUR_RGBA32(16, 64, 255, 0), // Level 2
+    COLOUR_RGBA32(16, 255, 64, 0), // Level 3
 };
 s32 D_800DC858 = 0;          // Currently unknown, might be a different type.
 s32 D_800DC85C = 0x0028FFFF; // Currently unknown, might be a different type.
@@ -140,15 +140,12 @@ UNUSED const char sDuplicateCheckpointString[] = "Error: Multiple checkpoint no:
 UNUSED const char sErrorChannelString[] = "ERROR Channel %d\n";
 UNUSED const char sReadOutErrorString[] = "RO error %d!!\n";
 UNUSED const char sPureAnguishString[] = "ARGHHHHHHHHH\n";
-extern f32 D_800E5644;
 
 /*********************************/
 
 /************ .bss ************/
 
-// Currently defined in unknown_005740. Might need to be defined here.
-extern s16 D_8011AC20[128];
-
+s16 D_8011AC20[128];
 s8 D_8011AD20;
 s8 D_8011AD21;
 s8 D_8011AD22[2];
@@ -313,7 +310,7 @@ void func_8000B290(void) {
         D_800DC74C[0] = 0;
         D_800DC74C[1] = 0;
     }
-    var_s0 = (struct TempStruct9 *) get_misc_asset(0x14);
+    var_s0 = (struct TempStruct9 *) get_misc_asset(MISC_ASSET_UNK14);
     for (i = 0; i < 10; i++) {
         temp_a0_2 = var_s0[i].unk78;
         if (temp_a0_2 != 0) {
@@ -326,13 +323,13 @@ void func_8000B290(void) {
             var_s0[i].unk7C = 0;
         }
     }
-    if (D_800DC75C)
-        gParticlePtrList_addObject(D_800DC75C);
-    D_800DC75C = NULL;
+    if (gShieldEffectObject)
+        gParticlePtrList_addObject(gShieldEffectObject);
+    gShieldEffectObject = NULL;
 
-    if (D_800DC764)
-        gParticlePtrList_addObject(D_800DC764);
-    D_800DC764 = NULL;
+    if (gMagnetEffectObject)
+        gParticlePtrList_addObject(gMagnetEffectObject);
+    gMagnetEffectObject = NULL;
     gParticlePtrList_flush();
 }
 
@@ -647,7 +644,7 @@ void func_8000E1EC(Object *obj, s32 vehicleID) {
 
 void func_8000E2B4(void) {
     Object *player;
-    LevelObjectEntry8000E2B4 sp2C;
+    LevelObjectEntry8000E2B4 spawnObj;
     Settings *settings;
     Object_Racer *player_64;
     s16 object_id;
@@ -660,24 +657,24 @@ void func_8000E2B4(void) {
         return;
     }
     settings = get_settings();
-    sp2C.unkE = 0;
-    sp2C.common.size = 0x10;
+    spawnObj.unkE = 0;
+    spawnObj.common.size = 16;
     if (gOverworldVehicle < 5) {
         object_id = ((s16 *) D_800DC7A8)[settings->racers[0].character + gOverworldVehicle * 10];
     } else {
         object_id = D_800DC7B8[gOverworldVehicle + 37];
     }
     set_level_default_vehicle(gOverworldVehicle);
-    sp2C.common.size = sp2C.common.size | ((s32) (object_id & 0x100) >> 1);
-    sp2C.unkA = 0;
-    sp2C.unk8 = 0;
-    sp2C.common.objectID = object_id;
-    sp2C.common.x = D_8011AD46;
-    sp2C.common.y = D_8011AD48;
-    sp2C.common.z = D_8011AD4A;
-    sp2C.unkC = D_8011AD4C;
+    spawnObj.common.size = spawnObj.common.size | ((s32) (object_id & 0x100) >> 1);
+    spawnObj.unkA = 0;
+    spawnObj.unk8 = 0;
+    spawnObj.common.objectID = object_id;
+    spawnObj.common.x = D_8011AD46;
+    spawnObj.common.y = D_8011AD48;
+    spawnObj.common.z = D_8011AD4A;
+    spawnObj.unkC = D_8011AD4C;
     func_800521B8(1);
-    player = spawn_object(&sp2C, 0x11);
+    player = spawn_object(&spawnObj, 0x11);
     gNumRacers = 1;
     (*gRacers)[0] = player;
     gRacersByPort[0] = player;
@@ -790,7 +787,7 @@ UNUSED s32 func_8000E9C0(void) {
 }
 
 void func_8000E9D0(Object *arg0) {
-    arg0->segment.trans.unk6 |= 0x8000;
+    arg0->segment.trans.flags |= OBJ_FLAGS_DEACTIVATED;
     func_800245B4(arg0->segment.unk2C.half.upper | 0xC000);
     gObjPtrList[objCount++] = arg0;
     if (1) {}  // Fakematch
@@ -1003,7 +1000,7 @@ void func_80010994(s32 updateRate) {
     tempVal = objCount;
     for (i = D_8011AE60; i < tempVal; i++) {
         obj = gObjPtrList[i];
-        if (!(obj->segment.trans.unk6 & 0x8000)) {
+        if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             if ((obj->behaviorId != BHV_LIGHT_RGBA) && (obj->behaviorId != BHV_WEAPON) && (obj->behaviorId != BHV_FOG_CHANGER)) {
                 if (obj->interactObj != NULL) {
                     if (obj->interactObj->unk11 != 2) {
@@ -1046,14 +1043,14 @@ void func_80010994(s32 updateRate) {
     func_8000BADC(updateRate);
     for (i = D_8011AE60; i < tempVal; i++) {
         obj = gObjPtrList[i];
-        if ((!(obj->segment.trans.unk6 & 0x8000) && (obj->behaviorId == BHV_WEAPON)) || (obj->behaviorId == BHV_FOG_CHANGER)) {
+        if ((!(obj->segment.trans.flags & 0x8000) && (obj->behaviorId == BHV_WEAPON)) || (obj->behaviorId == BHV_FOG_CHANGER)) {
             run_object_loop_func(obj, updateRate);
         }
     }
     if (D_8011AE64 > 0) {
         for (i = D_8011AE60; i < tempVal; i++) {
             obj = gObjPtrList[i];
-            if (obj->segment.trans.unk6 & 0x8000) {
+            if (obj->segment.trans.flags & 0x8000) {
                 //Why is this object being treated as a Particle2?
                 func_800B22FC((Particle2 *) obj, updateRate);
             }
@@ -1064,7 +1061,7 @@ void func_80010994(s32 updateRate) {
     if (func_80032C6C() > 0) {
         for (i = D_8011AE60; i < objCount; i++) {
             obj = gObjPtrList[i];
-            if (!(obj->segment.trans.unk6 & 0x8000) && (obj->unk54 != NULL)) {
+            if (!(obj->segment.trans.flags & 0x8000) && (obj->unk54 != NULL)) {
                 func_80032C7C(obj);
             }
         }
@@ -1240,11 +1237,11 @@ s32 func_800113CC(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoun
     return ret;
 }
 /**
- * Looks like it sets D_800DC848 to TRUE, and that will disable the check for out of bounds moves in move_object
+ * Make the next call of move_object never mark the object as out of bounds.
  * Official Name: objMoveXYZnocheck
 */
-s32 func_80011560(void) { //! @bug The developers probably intended this to be a void function.
-    D_800DC848 = 1;
+s32 ignore_bounds_check(void) { //! @bug The developers probably intended this to be a void function.
+    gNoBoundsCheck = TRUE;
     // No return value!
 }
 
@@ -1270,12 +1267,12 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     newYPos = obj->segment.trans.y_position + yPos;
     newZPos = obj->segment.trans.z_position + zPos;
     if (levelModel == NULL) {
-        D_800DC848 = 0;
+        gNoBoundsCheck = FALSE;
         return 0;
     }
     outOfBounds = FALSE;
     x2 = (levelModel->upperXBounds + 1000.0);
-    //@!bug should've campared against "obj->segment.trans.x_position"
+    //!@bug should've campared against "obj->segment.trans.x_position"
     if (newXPos > x2) {
         outOfBounds = TRUE;
     }
@@ -1300,11 +1297,11 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     if (obj->segment.trans.z_position < z1) {
         outOfBounds = TRUE;
     }
-    if (D_800DC848 != 0) {
+    if (gNoBoundsCheck) {
         outOfBounds = FALSE;
     }
     
-    D_800DC848 = 0;
+    gNoBoundsCheck = FALSE;
     if (outOfBounds) {
         obj->segment.unk2C.half.lower = -1;
         return 1;
@@ -1399,14 +1396,14 @@ void render_3d_billboard(Object *obj) {
     s32 alpha;
     s32 hasPrimCol;
     s32 hasEnvCol;
-    ObjectTransformExt sp60;
+    ObjectTransformExt objTrans;
     Object *var_a0;
     unk80068514_arg4* sp58;
 
     intensity = 255;
     hasPrimCol = FALSE;
     hasEnvCol = FALSE;
-    flags = obj->segment.trans.unk6 | RENDER_Z_UPDATE | RENDER_FOG_ACTIVE;
+    flags = obj->segment.trans.flags | RENDER_Z_UPDATE | RENDER_FOG_ACTIVE;
     if (obj->unk54 != NULL) {
         hasPrimCol = TRUE;
         hasEnvCol = TRUE;
@@ -1466,23 +1463,22 @@ void render_3d_billboard(Object *obj) {
     
     // 5 = OilSlick, SmokeCloud, Bomb, BubbleWeapon
     if(var_a0 != NULL || !(obj->behaviorId != BHV_WEAPON || obj->unk64->weapon.weaponID != WEAPON_BUBBLE_TRAP)) {
-        sp60.trans.z_rotation = 0;
-        sp60.trans.x_rotation = 0;
-        sp60.trans.y_rotation = 0;
-        sp60.trans.scale = obj->segment.trans.scale;
-        sp60.trans.x_position = 0.0f;
-        sp60.trans.z_position = 0.0f;
-        sp60.trans.y_position = 12.0f;
-        sp60.unk18 = obj->segment.animFrame;
-        sp60.unk1A = 32;
+        objTrans.trans.z_rotation = 0;
+        objTrans.trans.x_rotation = 0;
+        objTrans.trans.y_rotation = 0;
+        objTrans.trans.scale = obj->segment.trans.scale;
+        objTrans.trans.x_position = 0.0f;
+        objTrans.trans.z_position = 0.0f;
+        objTrans.trans.y_position = 12.0f;
+        objTrans.unk18 = obj->segment.animFrame;
+        objTrans.unk1A = 32;
         if (var_a0 == NULL) {
             var_a0 = (Object *) obj->unk64->weapon.target;
             if (var_a0 == NULL) {
                 var_a0 = obj;
             }
         }
-        func_800138A8(&var_a0->segment.trans, sp58, (Object *) &sp60,
-            RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE);
+        func_800138A8(&var_a0->segment.trans, sp58, (Object *) &objTrans, RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE);
     } else {
         render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj, sp58, flags);
     }
@@ -1494,6 +1490,12 @@ void render_3d_billboard(Object *obj) {
     }
 }
 
+/**
+ * Renders a 3D object, with support for vehicle part entities as part of the process.
+ * Loads materials, and sets environment and/or primitive colours based on the material type.
+ * Computes the view matrix for the model, and calls a function to draw meshes.
+ * Loops through racers to find vehicle parts, which are wheels and propellers.
+*/
 void render_3d_model(Object *obj) {
     s32 i;
     s32 intensity;
@@ -1624,7 +1626,7 @@ void render_3d_model(Object *obj) {
             }
             for (i = 0; i < obj60_unk0; i++) {
                 loopObj = ((Object **) obj->unk60)[i + 1];
-                if (!(loopObj->segment.trans.unk6 & 0x4000)) {
+                if (!(loopObj->segment.trans.flags & OBJ_FLAGS_INVISIBLE)) {
                     index = obj->unk60->unk2C[i];
                     if (index >= 0 && index < objModel->unk18) {
                         something = loopObj->unk68[loopObj->segment.unk38.byte.unk3A];
@@ -1648,7 +1650,7 @@ void render_3d_model(Object *obj) {
                             cicFailed = TRUE;
                         }
                         if (!cicFailed) {
-                            var_v0_2 = (loopObj->segment.trans.unk6 & 0x80 && obj60_unk0 == 3);
+                            var_v0_2 = (loopObj->segment.trans.flags & OBJ_FLAGS_UNK_0080 && obj60_unk0 == 3);
                             if (racerObj != NULL && racerObj->transparency < 255) {
                                 var_v0_2 = FALSE;
                             }
@@ -1741,7 +1743,7 @@ void func_80012CE8(Gfx **dlist) {
 */
 void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object) {
     f32 scale;
-    if (object->segment.trans.unk6 & 0x5000)
+    if (object->segment.trans.flags & (OBJ_FLAGS_INVISIBLE | OBJ_FLAGS_SHADOW_ONLY))
         return;
     func_800B76B8(2, object->unk4A);
     gObjectCurrDisplayList = *dlist;
@@ -1828,7 +1830,7 @@ void func_80012F94(Object *obj) {
 
     ret1 = 1.0f;
     ret2 = 1.0f;
-    if (!(obj->segment.trans.unk6 & 0x8000)) {
+    if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
         if (obj->segment.header->behaviorId == BHV_RACER) {
             objRacer = (Object_Racer *) obj->unk64;
             objRacer->unk201 = 30;
@@ -1958,7 +1960,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
 
 void render_object(Object *this) {
     func_80012F94(this);
-    if (this->segment.trans.unk6 & 0x8000) {
+    if (this->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
         func_800B3740(this, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, 0x8000);
     } else {
         if (this->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL)
@@ -1972,7 +1974,7 @@ void render_object(Object *this) {
 }
 
 void func_80013548(Object *obj) {
-    if (!(obj->segment.trans.unk6 & 0x8000) && obj->segment.header->behaviorId == BHV_RACER) {
+    if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && obj->segment.header->behaviorId == BHV_RACER) {
         obj->segment.trans.x_position -= obj->unk64->racer.carBobX;
         obj->segment.trans.y_position -= obj->unk64->racer.carBobY;
         obj->segment.trans.z_position -= obj->unk64->racer.carBobZ;
@@ -2019,13 +2021,13 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
     ObjectModel *mdl;
     struct RacerShieldGfx* shield;
     s32 shieldType;
-    s32 var_a1;
+    s32 vehicleID;
     s32 var_a2;
     f32 scale;
     f32 shear;
 
     racer = (Object_Racer *) obj->unk64;
-    if (racer->shieldTimer > 0 && D_800DC75C != NULL) {
+    if (racer->shieldTimer > 0 && gShieldEffectObject != NULL) {
         gObjectCurrDisplayList = *dList;
         gObjectCurrMatrix = *mtx;
         gObjectCurrVertexList = *vtxList;
@@ -2033,23 +2035,23 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         if (var_a2 > 10) {
             var_a2 = 0;
         }
-        var_a1 = racer->vehicleID;
-        if (var_a1 >= NUMBER_OF_PLAYER_VEHICLES) {
-            var_a1 = 0;
+        vehicleID = racer->vehicleID;
+        if (vehicleID >= NUMBER_OF_PLAYER_VEHICLES) {
+            vehicleID = VEHICLE_CAR;
         }
         shield = ((struct RacerShieldGfx *) get_misc_asset(MISC_ASSET_SHIELD_DATA));
-        var_a1 =  (var_a1 * 10) + var_a2;
-        shield = shield + var_a1;
-        D_800DC75C->segment.trans.x_position = shield->x_position;
-        D_800DC75C->segment.trans.y_position = shield->y_position;
-        D_800DC75C->segment.trans.z_position = shield->z_position;
-        D_800DC75C->segment.trans.y_position += shield->y_offset * sins_f(D_8011B010[var_a2] * 0x200);
+        vehicleID =  (vehicleID * 10) + var_a2;
+        shield = shield + vehicleID;
+        gShieldEffectObject->segment.trans.x_position = shield->x_position;
+        gShieldEffectObject->segment.trans.y_position = shield->y_position;
+        gShieldEffectObject->segment.trans.z_position = shield->z_position;
+        gShieldEffectObject->segment.trans.y_position += shield->y_offset * sins_f(D_8011B010[var_a2] * 0x200);
         shear = (coss_f(D_8011B010[var_a2] * 0x400) * 0.05f) + 0.95f;
-        D_800DC75C->segment.trans.scale = shield->scale * shear;
+        gShieldEffectObject->segment.trans.scale = shield->scale * shear;
         shear = shear * shield->turnSpeed;
-        D_800DC75C->segment.trans.y_rotation = D_8011B010[var_a2] * 0x800;
-        D_800DC75C->segment.trans.x_rotation = 0x800;
-        D_800DC75C->segment.trans.z_rotation = 0;
+        gShieldEffectObject->segment.trans.y_rotation = D_8011B010[var_a2] * 0x800;
+        gShieldEffectObject->segment.trans.x_rotation = 0x800;
+        gShieldEffectObject->segment.trans.z_rotation = 0;
         shieldType = racer->shieldType;
         if (shieldType != SHIELD_NONE) {
             shieldType--;
@@ -2058,19 +2060,19 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             shieldType = SHIELD_LEVEL3 - 1;
         }
         scale = ((f32) shieldType * 0.1) + 1.0f;
-        D_800DC75C->segment.trans.scale *= scale;
+        gShieldEffectObject->segment.trans.scale *= scale;
         shear *= scale;
-        gfxData = D_800DC75C->unk68[shieldType];
+        gfxData = gShieldEffectObject->unk68[shieldType];
         mdl = gfxData->objModel;
-        D_800DC75C->unk44 = (Vertex *) gfxData->unk4[gfxData->unk1F];
+        gShieldEffectObject->unk44 = (Vertex *) gfxData->unk4[gfxData->unk1F];
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
         if (racer->shieldTimer < 64) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, racer->shieldTimer * 4);
         } else {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
-        func_80068FA8(&gObjectCurrDisplayList, &gObjectCurrMatrix, D_800DC75C, obj, shear);
-        func_800143A8(mdl, D_800DC75C, 0, 4, 0);
+        func_80068FA8(&gObjectCurrDisplayList, &gObjectCurrMatrix, gShieldEffectObject, obj, shear);
+        func_800143A8(mdl, gShieldEffectObject, 0, 4, 0);
         gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
         if (racer->shieldTimer < 64) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -2090,7 +2092,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
     Object_68 *gfxData;
     ObjectModel *mdl;
     f32* magnet;
-    s32 var_a0;
+    s32 vehicleID;
     s32 var_t0;
     s32 opacity;
     f32 shear;
@@ -2099,39 +2101,39 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
     racer = (Object_Racer *) obj->unk64;
     var_t0 = racer->unk2 * 4;
     if (D_8011B07B[var_t0]) {
-        if (D_800DC764 != NULL) {
+        if (gMagnetEffectObject != NULL) {
             gObjectCurrDisplayList = *dList;
             gObjectCurrMatrix = *mtx;
             gObjectCurrVertexList = *vtxList;
             magnet = (f32 *) get_misc_asset(MISC_ASSET_MAGNET_DATA);
-            var_a0 = racer->vehicleID;
-            if (var_a0 < VEHICLE_CAR || var_a0 >= NUMBER_OF_PLAYER_VEHICLES) {
-                var_a0 = 0;
+            vehicleID = racer->vehicleID;
+            if (vehicleID < VEHICLE_CAR || vehicleID >= NUMBER_OF_PLAYER_VEHICLES) {
+                vehicleID = VEHICLE_CAR;
             }
-            magnet = &magnet[var_a0 * 5];
+            magnet = &magnet[vehicleID * 5];
             var_t0 = racer->unk2;
             if (var_t0 > 10) {
                 var_t0 = 0;
             }
-            D_800DC764->segment.trans.x_position = magnet[0];
-            D_800DC764->segment.trans.y_position = magnet[1];
-            D_800DC764->segment.trans.z_position = magnet[2];
+            gMagnetEffectObject->segment.trans.x_position = magnet[0];
+            gMagnetEffectObject->segment.trans.y_position = magnet[1];
+            gMagnetEffectObject->segment.trans.z_position = magnet[2];
             magnet += 3;
             shear = (coss_f((D_8011B078[(var_t0 * 4) + 1] * 0x400)) * 0.02f) + 0.98f;
-            D_800DC764->segment.trans.scale = magnet[0] * shear;
+            gMagnetEffectObject->segment.trans.scale = magnet[0] * shear;
             magnet += 1;
             shear = magnet[0] * shear;
-            D_800DC764->segment.trans.y_rotation = D_8011B078[(var_t0 * 4) + 2] * 0x1000;
-            D_800DC764->segment.trans.x_rotation = 0;
-            D_800DC764->segment.trans.z_rotation = 0;
-            gfxData = *D_800DC764->unk68;
+            gMagnetEffectObject->segment.trans.y_rotation = D_8011B078[(var_t0 * 4) + 2] * 0x1000;
+            gMagnetEffectObject->segment.trans.x_rotation = 0;
+            gMagnetEffectObject->segment.trans.z_rotation = 0;
+            gfxData = *gMagnetEffectObject->unk68;
             mdl = gfxData->objModel;
-            D_800DC764->unk44 = (Vertex *) gfxData->unk4[gfxData->unk1F];
+            gMagnetEffectObject->unk44 = (Vertex *) gfxData->unk4[gfxData->unk1F];
             opacity = (((D_8011B078[(var_t0 * 4) + 1] * 8) & 0x7F) + 0x80);
-            func_8007F594(&gObjectCurrDisplayList, 2, 0xFFFFFF00 | opacity, D_800DC84C[racer->unk184]);
-            func_80068FA8(&gObjectCurrDisplayList, &gObjectCurrMatrix, D_800DC764, obj, shear);
+            func_8007F594(&gObjectCurrDisplayList, 2, 0xFFFFFF00 | opacity, gMagnetColours[racer->magnetModelID]);
+            func_80068FA8(&gObjectCurrDisplayList, &gObjectCurrMatrix, gMagnetEffectObject, obj, shear);
             D_800DC720 = TRUE;
-            func_800143A8(mdl, D_800DC764, 0, 4, 0);
+            func_800143A8(mdl, gMagnetEffectObject, 0, 4, 0);
             D_800DC720 = FALSE;
             gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -2153,7 +2155,7 @@ void func_800142B8(void) {
 
     for (; i < objCount; i++) {
         currObj = gObjPtrList[i];
-        if ((currObj->segment.trans.unk6 & 0x8000) == 0 && currObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        if ((currObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) == 0 && currObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
             for (j = 0; j < currObj->segment.header->numberOfModelIds; j++) {
                 curr_68 = currObj->unk68[j];
                 if (curr_68 != NULL && curr_68->unk20 > 0) {
@@ -2186,7 +2188,7 @@ void func_800155B8(void) {
     objsWithInteractives = 0;
     for (i = D_8011AE60; i < objCount; i++) {
         obj = gObjPtrList[i];
-        if (!(obj->segment.trans.unk6 & 0x8000)) {
+        if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             objInteract = obj->interactObj;
             if (objInteract != NULL) {
                 objList[objsWithInteractives] = obj;
@@ -2400,7 +2402,7 @@ Object *find_taj_object(void) {
     Object *current_obj;
     for (i = D_8011AE60; i < objCount; i++) {
         current_obj = gObjPtrList[i];
-        if (!(current_obj->segment.trans.unk6 & 0x8000) && (current_obj->behaviorId == 62)) {
+        if (!(current_obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (current_obj->behaviorId == BHV_PARK_WARDEN)) {
             return current_obj;
         }
     }
@@ -2734,7 +2736,7 @@ void func_8001BC54(void) {
     gCameraObjCount = 0;
     for (i = 0; i < objCount; i++) {
         objPtr = gObjPtrList[i];
-        if (!(objPtr->segment.trans.unk6 & 0x8000)) {
+        if (!(objPtr->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             if (objPtr->behaviorId == BHV_CAMERA_CONTROL) {
                 if (gCameraObjCount < 20) {
                     (*gCameraObjList)[gCameraObjCount] = objPtr;
@@ -2861,7 +2863,7 @@ s32 func_8001C524(f32 diffX, f32 diffY, f32 diffZ, s32 someFlag) {
     if (someFlag) {
         sp64 = func_8001C418(diffY);
     }
-    dist = D_800E5644;
+    dist = (f32) 50000.0;
     result = 0xFF;
     for (numSteps = 0; numSteps != 128; numSteps++) {
         segment = (ObjectSegment*) (*D_8011AF04)[numSteps];
@@ -2871,7 +2873,7 @@ s32 func_8001C524(f32 diffX, f32 diffY, f32 diffZ, s32 someFlag) {
             if (someFlag && (sp64 != levelObj->doorID)) {
                 var_a0 = 0;
             }
-            if ((someFlag == 2) && (levelObj->unk8 != 3)) {
+            if ((someFlag == 2) && (levelObj->angleY != 3)) {
                 var_a0 = 0;
             }
             if (var_a0) {
@@ -2988,7 +2990,7 @@ UNUSED void func_8001E13C(s16 arg0, s16 *arg1, s16 *arg2, s16 *arg3, s16 *arg4, 
 
     for (i = 0; i < objCount; i++) {
         obj = gObjPtrList[i];
-        if (!(obj->segment.trans.unk6 & 0x8000)) {
+        if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             if (obj->behaviorId == BHV_RACER) {
                 racer = &obj->unk64->racer;
                 if (arg0 == racer->playerIndex) {
@@ -3043,7 +3045,7 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
         current_obj = gObjPtrList[i];
 
         if (current_obj != NULL
-        && !(current_obj->segment.trans.unk6 & 0x8000)
+        && !(current_obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)
         && current_obj->behaviorId == BHV_RAMP_SWITCH
         && current_obj->action == arg0) {
             *arg1 = current_obj->segment.trans.x_position;
@@ -3157,7 +3159,7 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
 
     animObj = (Object_AnimatedObject *) obj->unk64;
     if (animObj->unk3A != 0) {
-        obj->segment.trans.unk6 |= 0x4000;
+        obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
     }
     if (animObj->unk36 == -1) {
         return animObj->unk3A;
@@ -3169,7 +3171,7 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
         animObj->unk36 = -2;
     }
     if (animObj->unk36 <= 0) {
-        obj->segment.trans.unk6 |= 0x4000;
+        obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
         i = 0;
         if (D_8011AE78 > 0) {
             temp_v1 = animObj->unk28;
@@ -3310,7 +3312,7 @@ Object *func_8002342C(f32 x, f32 z) {
     if (objCount > 0) {
         do {
             tempObj = gObjPtrList[i];
-            if (!(tempObj->segment.trans.unk6 & 0x8000) && tempObj->behaviorId == BHV_UNK_57) {
+            if (!(tempObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && tempObj->behaviorId == BHV_UNK_57) {
                 diffX = tempObj->segment.trans.x_position - x;
                 diffZ = tempObj->segment.trans.z_position - z;
                 tempObj = gObjPtrList[i]; // fakematch
@@ -3354,7 +3356,7 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
     obj->behaviorId = obj->segment.header->behaviorId;
     switch (obj->behaviorId) {
         case BHV_RACER:
-            obj_init_racer(obj, (LevelObjectEntry_CharacterFlag *) entry);
+            obj_init_racer(obj, (LevelObjectEntry_Racer *) entry);
             break;
         case BHV_SCENERY:
             obj_init_scenery(obj, (LevelObjectEntry_Scenery*) entry);
@@ -3612,131 +3614,131 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
     }
 }
 
-s32 func_80023E30(s32 arg0) {
+s32 func_80023E30(s32 objectID) {
   s32 value = 0;
-  switch (arg0 - 1){
-    case 0x00:
+  switch (objectID){
+    case BHV_RACER:
       value = 0x1F;
       break;
-    case 0x01:
+    case BHV_SCENERY:
       value = 0x13;
       break;
-    case 0x04:
+    case BHV_WEAPON:
       value = 0x16;
       break;
-    case 0x0B:
+    case BHV_DINO_WHALE:
       value = 0x1B;
       break;
-    case 0x0D:
-    case 0x6E:
+    case BHV_DOOR:
+    case BHV_TT_DOOR:
       value = 0x30;
       break;
-    case 0x10:
-    case 0x4C:
+    case BHV_WEAPON_BALLOON:
+    case BHV_GOLDEN_BALLOON:
       value = 0x12;
       break;
-    case 0x45:
-    case 0x47:
-    case 0x5F:
-    case 0x60:
+    case BHV_HIT_TESTER:
+    case BHV_HIT_TESTER_2:
+    case BHV_SNOWBALL:
+    case BHV_SNOWBALL_2:
       value = 0x3B;
       break;
-    case 0x64:
-    case 0x65:
-    case 0x66:
-    case 0x67:
+    case BHV_SNOWBALL_3:
+    case BHV_SNOWBALL_4:
+    case BHV_HIT_TESTER_3:
+    case BHV_HIT_TESTER_4:
       value = 0x3A;
       break;
-    case 0x17:
+    case BHV_UNK_18:
       value = 0x04;
       break;
-    case 0x1E:
+    case BHV_STOPWATCH_MAN:
       value = 0x1B;
       break;
-    case 0x1F:
-    case 0x3F:
-    case 0x57:
-    case 0x6D:
+    case BHV_BANANA:
+    case BHV_WORLD_KEY:
+    case BHV_SILVER_COIN:
+    case BHV_SILVER_COIN_2:
       value = 0x12;
       break;
-    case 0x42:
+    case BHV_LOG:
       value = 0x30;
       break;
-    case 0x25:
+    case BHV_BRIDGE_WHALE_RAMP:
       value = 0x39;
       break;
-    case 0x26:
+    case BHV_RAMP_SWITCH:
       value = 0x12;
       break;
-    case 0x27:
+    case BHV_SEA_MONSTER:
       value = 0x09;
       break;
-    case 0x2C:
+    case BHV_COLLECT_EGG:
       value = 0x12;
       break;
-    case 0x2F:
+    case BHV_UNK_30:
       value = 0x09;
       break;
-    case 0x3E:
+    case BHV_UNK_3F:
       value = 0x09;
       break;
-    case 0x31:
-    case 0x37:
-    case 0x4F:
-    case 0x53:
-    case 0x55:
-    case 0x72:
+    case BHV_ANIMATED_OBJECT:
+    case BHV_VEHICLE_ANIMATION:
+    case BHV_PARK_WARDEN_2:
+    case BHV_WIZPIG_SHIP:
+    case BHV_ANIMATED_OBJECT_4:
+    case BHV_PIG_ROCKETEER:
       value = 0x0B;
       break;
-    case 0x35:
+    case BHV_CHARACTER_SELECT:
       value = 0x0B;
       break;
-    case 0x49:
-    case 0x5E:
-    case 0x62:
-    case 0x63:
+    case BHV_TROPHY_CABINET:
+    case BHV_DYNAMIC_LIGHT_OBJECT_2:
+    case BHV_ROCKET_SIGNPOST:
+    case BHV_ROCKET_SIGNPOST_2:
       value = 0x31;
       break;
-    case 0x5A:
+    case BHV_UNK_5B:
       value = 0x01;
       break;
-    case 0x50:
+    case BHV_ANIMATED_OBJECT_2:
       value = 0x0A;
       break;
-    case 0x06:
-    case 0x0C:
-    case 0x11:
-    case 0x19:
-    case 0x1D:
-    case 0x23:
-    case 0x28:
-    case 0x33:
-    case 0x36:
-    case 0x38:
-    case 0x43:
-    case 0x4D:
-    case 0x4E:
-    case 0x5C:
-    case 0x61:
-    case 0x6B:
-    case 0x73:
+    case BHV_EXIT:
+    case BHV_CHECKPOINT:
+    case BHV_WEAPON_2:
+    case BHV_SKY_CONTROL:
+    case BHV_MODECHANGE:
+    case BHV_BUOY_PIRATE_SHIP:
+    case BHV_BONUS:
+    case BHV_INFO_POINT:
+    case BHV_TRIGGER:
+    case BHV_ZIPPER_WATER:
+    case BHV_LAVA_SPURT:
+    case BHV_LASER_BOLT:
+    case BHV_LASER_GUN:
+    case BHV_ZIPPER_AIR:
+    case BHV_TELEPORT:
+    case BHV_FIREBALL_OCTOWEAPON:
+    case BHV_FIREBALL_OCTOWEAPON_2:
       value = 0x10;
       break;
-    case 0x51:
+    case BHV_ZIPPER_GROUND:
       value = 0x12;
       break;
-    case 0x30:
-    case 0x32:
-    case 0x3C:
+    case BHV_ANIMATION:
+    case BHV_CAMERA_ANIMATION:
+    case BHV_BUTTERFLY:
       value = 0x02;
       break;
-    case 0x3D:
+    case BHV_PARK_WARDEN:
       value = 0x1B;
       break;
-    case 0x6C:
+    case BHV_FROG:
       value = 0x0B;
       break;
-    case 0x71:
+    case BHV_UNK_72:
       value = 0x01;
       break;
   }
