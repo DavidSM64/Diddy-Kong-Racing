@@ -4949,7 +4949,7 @@ void render_menu_image(s32 imageID, s32 xOffset, s32 yOffset, s32 red, s32 green
     func_8009CA60(imageID);
 }
 
-#ifdef NON_EQUIVALENT
+//#ifdef NON_EQUIVALENT
 // Shouldn't have any major issues.
 void render_file_select_menu(UNUSED s32 updateRate) {
     s32 s2;
@@ -4959,12 +4959,8 @@ void render_file_select_menu(UNUSED s32 updateRate) {
     u8 tempName[8];
     u32 color;
     s32 i;
-
-    if (osTvType == TV_TYPE_PAL) {
-        y = 12;
-    } else {
-        y = 0;
-    }
+    s32 buttonX;
+    y = 0;
 
     func_8009BD5C();
     set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
@@ -4974,7 +4970,15 @@ void render_file_select_menu(UNUSED s32 updateRate) {
         } else {
             color = 0x6A9073FF;
         }
-        func_80080580(0, gFileSelectButtons[i].x - 0xA0, 0x78 - gFileSelectButtons[i].y, gFileSelectButtons[i].width,
+        buttonX = gFileSelectButtons[i].x - (gScreenWidth / 2);
+#if SCREEN_HEIGHT < 240
+        if (i == 0) { // Hacky, but until I can mess with ortho scaling individually, is a necessary evil.
+            buttonX -= 5;
+        } else if (i == 2) {
+            buttonX += 5;
+        }
+#endif
+        func_80080580(0, buttonX, (gScreenHeight / 2) - gFileSelectButtons[i].y, gFileSelectButtons[i].width,
             gFileSelectButtons[i].height, gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, color, D_80126550[TEXTURE_SURFACE_BUTTON_WOOD]);
     }
     func_80080BC8(&sMenuCurrDisplayList);
@@ -5045,29 +5049,29 @@ void render_file_select_menu(UNUSED s32 updateRate) {
     }
     set_text_font(ASSET_FONTS_BIGFONT);
     set_text_colour(0, 0, 0, 255, 128);
-    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 19, gMenuText[ASSET_MENU_TEXT_GAMESELECT], ALIGN_TOP_CENTER);
+    draw_text(&sMenuCurrDisplayList, (gScreenWidth / 2) + 1, 19, gMenuText[ASSET_MENU_TEXT_GAMESELECT], ALIGN_TOP_CENTER);
     set_text_colour(255, 255, 255, 0, 255);
-    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 16, gMenuText[ASSET_MENU_TEXT_GAMESELECT], ALIGN_TOP_CENTER);
+    draw_text(&sMenuCurrDisplayList, (gScreenWidth / 2), 16, gMenuText[ASSET_MENU_TEXT_GAMESELECT], ALIGN_TOP_CENTER);
     set_text_colour(255, 255, 255, 0, 255);
     y += 0xBB;
     if (D_80126484 != FALSE) {
         if (D_80126494 == 0) {
             set_text_font(ASSET_FONTS_FUNFONT);
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[ASSET_MENU_TEXT_GAMETOCOPY], ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, (gScreenWidth / 2), y, gMenuText[ASSET_MENU_TEXT_GAMETOCOPY], ALIGN_MIDDLE_CENTER);
         } else if (D_80126494 == 1) {
             set_text_font(ASSET_FONTS_FUNFONT);
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[ASSET_MENU_TEXT_GAMETOCOPYTO], ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, (gScreenWidth / 2), y, gMenuText[ASSET_MENU_TEXT_GAMETOCOPYTO], ALIGN_MIDDLE_CENTER);
         } else {
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, &D_800E8234, ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, (gScreenWidth / 2), y, &D_800E8234, ALIGN_MIDDLE_CENTER);
         }
         return;
     }
     if (D_80126488 != FALSE) {
         if (D_80126494 == 0) {
             set_text_font(ASSET_FONTS_FUNFONT);
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[ASSET_MENU_TEXT_GAMETOERASE], ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, (gScreenWidth / 2), y, gMenuText[ASSET_MENU_TEXT_GAMETOERASE], ALIGN_MIDDLE_CENTER);
         } else {
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, &D_800E8238, ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, (gScreenWidth / 2), y, &D_800E8238, ALIGN_MIDDLE_CENTER);
         }
         return;
     }
@@ -5085,9 +5089,9 @@ void render_file_select_menu(UNUSED s32 updateRate) {
         return;
     }
 }
-#else
+/*#else
 GLOBAL_ASM("asm/non_matchings/menu/render_file_select_menu.s")
-#endif
+#endif*/
 
 s32 func_8008D5F8(UNUSED s32 updateRate) {
     u32 buttonsPressed;
