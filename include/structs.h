@@ -85,7 +85,7 @@ typedef struct TextureHeader {
       // 0x80 = V clamp flag. 0 = Wrap, 1 = Clamp
   /* 0x08 */ s16 ciPaletteOffset;
   /* 0x0A */ s16 numberOfCommands; // initialized in RAM; Number of commands in the texture display list. (Usually 0x07)
-  /* 0x0C */ s32* cmd; // initialized in RAM; Pointer to texture display list.
+  /* 0x0C */ s32 *cmd; // initialized in RAM; Pointer to texture display list.
   /* 0x10 */ u8 unk10;
   /* 0x11 */ u8 unk11;
   /* 0x12 */ u16 numOfTextures; // For animated textures, static textures are just 0x01. Each texture has it's own header.

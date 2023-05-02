@@ -93,7 +93,6 @@ extern Gfx D_800DF3A8[6];
 extern Gfx D_800DF3D8[7];
 extern Gfx D_800DF410[3][2];
 
-
 /* Size: 8 bytes */
 typedef struct unk8007F1E8_18 {
     s32 unk0;
@@ -157,6 +156,7 @@ void tex_animate_texture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s3
 void func_8007F1E8(unk8007F1E8 *arg0);
 void init_pulsating_light_data(PulsatingLightData *data);
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
+TextureHeader *func_8007B46C(TextureHeader *arg0, s32 arg1);
 
 TextureHeader *load_texture(s32 arg0); // Non Matching
 void free_texture(TextureHeader *tex); // Non Matching

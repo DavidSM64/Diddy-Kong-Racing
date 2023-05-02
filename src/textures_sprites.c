@@ -1153,26 +1153,18 @@ void func_8007B454(void) {
     gForceFlags = TRUE;
 }
 
-typedef struct Struct_Unk_8007B46C {
-    u8 pad0[0x12];
-    u16 unk12;
-    u8 pad14[2];
-    s16 unk16;
-    u8 pad17[3];
-} Struct_Unk_8007B46C;
-
 /**
  * Official Name: texFrame
 */
-Struct_Unk_8007B46C *func_8007B46C(Struct_Unk_8007B46C *arg0, s32 arg1) {
+TextureHeader *func_8007B46C(TextureHeader *texHead, s32 arg1) {
     if (arg1 > 0) {
-        if (arg1 < arg0->unk12 << 8) {
-            arg0 = (Struct_Unk_8007B46C *) (((u8*)arg0) + ((arg1 >> 16) * arg0->unk16));
+        if (arg1 < texHead->numOfTextures << 8) {
+            texHead = (TextureHeader *) (((u8 *)texHead) + ((arg1 >> 16) * texHead->textureSize));
         } else {
-            arg0 = (Struct_Unk_8007B46C *) (((u8*)arg0) + ((arg0->unk12 >> 8) - 1) * arg0->unk16);
+            texHead = (TextureHeader *) (((u8 *)texHead) + ((texHead->numOfTextures >> 8) - 1) * texHead->textureSize);
         }
     }
-    return arg0;
+    return texHead;
 }
 
 /**
