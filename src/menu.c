@@ -178,7 +178,7 @@ s32 D_8012685C;
 s32 D_80126860;
 s32 D_80126864;
 s16 gTitleDemoTimer;
-s32 D_8012686C;
+s32 gTitleRevealTimer;
 f32 D_80126870;
 s8 *sTitleScreenDemoIds; //Misc Asset 66 - title_screen_demo_ids.bin - 12 or 13 values.
 s32 D_80126878[24];
@@ -292,7 +292,7 @@ s32 D_80126CC0;
 
 s8 D_800DF450 = 0;
 f32 D_800DF454 = 1.0f;
-s32 D_800DF458 = 1;
+s32 gResetTitleScale = 1;
 s32 gTitleScreenCurrentOption = 0; // 0 = "Start", 1 = "Options"
 s32 D_800DF460 = 0; // Currently selected menu index? Reused in different menus.
 s32 D_800DF464 = 4; // Currently unknown, might be a different type.
@@ -1727,6 +1727,7 @@ void func_80080E6C(void) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80080E90.s")
 
+// init_save_data
 #ifdef NON_EQUIVALENT
 // Should be functionally equivalent.
 void func_80081218(void) {
@@ -1764,8 +1765,11 @@ void func_80081218(void) {
 GLOBAL_ASM("asm/non_matchings/menu/func_80081218.s")
 #endif
 
-void func_800813C0(void) {
-    D_800DF458 = 1;
+/**
+ * Sets the title reveal timer to zero when the menu boots, meaning it may not automatically appear.
+*/
+void reset_title_logo_scale(void) {
+    gResetTitleScale = TRUE;
 }
 
 /**
@@ -1782,7 +1786,6 @@ void menu_init(u32 menuId) {
 
     //Needs to be one line
     for (i = 0; i < 4; i++) { D_80126808[i] = 0; }
-
     func_80001844();
     switch (gCurrentMenuId) {
         case MENU_LOGOS:
@@ -2414,11 +2417,11 @@ void menu_title_screen_init(void) {
     initialise_player_ids();
     play_music(SEQUENCE_NONE2);
     sMenuMusicVolume = musicGetRelativeVolume();
-    if (D_800DF458) {
-        D_8012686C = 0;
-        D_800DF458 = 0;
+    if (gResetTitleScale) {
+        gTitleRevealTimer = 0;
+        gResetTitleScale = FALSE;
     } else {
-        D_8012686C = 1;
+        gTitleRevealTimer = 1;
     }
     D_80126870 = 0;
     D_801263E0 = 0;
@@ -2456,10 +2459,10 @@ void func_8008377C(UNUSED s32 updateRate, f32 arg1) {
     s32 i;
     s32 posY;
 
-    if (D_8012686C != 0) {
+    if (gTitleRevealTimer) {
         set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
-        scale = (f32) D_8012686C * 0.03125f;
-        sMenuGuiOpacity = (D_8012686C * 8) - 1;
+        scale = (f32) gTitleRevealTimer * 0.03125f;
+        sMenuGuiOpacity = (gTitleRevealTimer * 8) - 1;
         func_80068508(0);
         if (scale != 1.0f) {
             render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, (gScreenWidth / 2.0f), 52.0f, scale, scale, 0xFFFFFFFE, 1);
@@ -2549,8 +2552,8 @@ s32 menu_title_screen_loop(s32 updateRate) {
             D_80126864 = 0;
             demo = &sTitleScreenDemoIds[D_80126864];
         }
-        if (D_8012686C == 0) {
-            D_8012686C = 1;
+        if (gTitleRevealTimer == 0) {
+            gTitleRevealTimer = 1;
         }
         var_a1 = demo[1];
         gTitleDemoTimer = 0;
@@ -2567,14 +2570,14 @@ s32 menu_title_screen_loop(s32 updateRate) {
             gOpacityDecayTimer = 0;
         }
     }
-    if (D_8012686C != 0) {
-        if (D_8012686C < 32) {
-            if (D_8012686C == 1) {
+    if (gTitleRevealTimer) {
+        if (gTitleRevealTimer < 32) {
+            if (gTitleRevealTimer == 1) {
                 play_sound_global(SOUND_WHOOSH1, 0);
             }
-            D_8012686C += updateRate;
-            if (D_8012686C >= 32) {
-                D_8012686C = 32;
+            gTitleRevealTimer += updateRate;
+            if (gTitleRevealTimer >= 32) {
+                gTitleRevealTimer = 32;
                 sp18->unk30 = 8.0f;
                 play_sound_global(SOUND_EXPLOSION, 0);
             }
@@ -2602,9 +2605,9 @@ s32 menu_title_screen_loop(s32 updateRate) {
             set_relative_volume_for_music(*((s8*)&sMenuMusicVolume + 3));
         }
     }
-    if (D_8012686C == 0) {
+    if (gTitleRevealTimer == 0) {
         if (D_801267D8[4] & (A_BUTTON | START_BUTTON)) {
-            D_8012686C = 1;
+            gTitleRevealTimer = 1;
         }
     } else if ((gMenuDelay == 0) && !is_controller_missing()) {
         s32 temp0 = gTitleScreenCurrentOption;

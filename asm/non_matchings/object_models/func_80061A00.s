@@ -1,7 +1,7 @@
 glabel func_80061A00
 /* 062600 80061A00 27BDFFB8 */  addiu $sp, $sp, -0x48
-/* 062604 80061A04 3C0E8012 */  lui   $t6, %hi(D_8011D638) # $t6, 0x8012
-/* 062608 80061A08 8DCED638 */  lw    $t6, %lo(D_8011D638)($t6)
+/* 062604 80061A04 3C0E8012 */  lui   $t6, %hi(gAnimationTable) # $t6, 0x8012
+/* 062608 80061A08 8DCED638 */  lw    $t6, %lo(gAnimationTable)($t6)
 /* 06260C 80061A0C 00057840 */  sll   $t7, $a1, 1
 /* 062610 80061A10 AFBF003C */  sw    $ra, 0x3c($sp)
 /* 062614 80061A14 AFBE0038 */  sw    $fp, 0x38($sp)
@@ -50,8 +50,8 @@ glabel func_80061A00
 /* 0626B0 80061AB0 0010A080 */  sll   $s4, $s0, 2
 /* 0626B4 80061AB4 00008825 */  move  $s1, $zero
 .L80061AB8:
-/* 0626B8 80061AB8 3C088012 */  lui   $t0, %hi(D_8011D63C) # $t0, 0x8012
-/* 0626BC 80061ABC 8D08D63C */  lw    $t0, %lo(D_8011D63C)($t0)
+/* 0626B8 80061AB8 3C088012 */  lui   $t0, %hi(gObjectAnimationTable) # $t0, 0x8012
+/* 0626BC 80061ABC 8D08D63C */  lw    $t0, %lo(gObjectAnimationTable)($t0)
 /* 0626C0 80061AC0 24040020 */  li    $a0, 32
 /* 0626C4 80061AC4 01141021 */  addu  $v0, $t0, $s4
 /* 0626C8 80061AC8 8C520000 */  lw    $s2, ($v0)

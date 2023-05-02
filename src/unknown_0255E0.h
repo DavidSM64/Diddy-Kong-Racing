@@ -124,7 +124,8 @@ typedef struct WaterProperties {
 
 enum WaveTypes {
     WATER_CALM = 11,
-    WATER_WAVY = 14
+    WATER_WAVY = 14,
+    WATER_UNK_F = 15
 };
 
 extern s32 D_800DC870;
@@ -182,11 +183,11 @@ void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, TriangleList** tris,
 
 
 void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5);
-void func_8002C7D4(void);
+void free_track(void);
 void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportIndex);
 s32 func_80027568(void);
 s32 func_8002CC30(LevelModelSegment*);
-s8 func_8002B0F4(s16, f32 xPos, f32 zPos, struct TempStruct8**);
+s8 func_8002B0F4(s16, f32 xPos, f32 zPos, WaterProperties***); // Definitely not triple pointer, but easiest way to fix warns.
 void func_800278E8(s32);
 void func_80028050(void);
 void initialise_player_viewport_vars(s32);

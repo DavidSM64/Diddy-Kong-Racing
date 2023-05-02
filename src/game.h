@@ -49,7 +49,16 @@ enum CutsceneIDs {
     CUTSCENE_ID_UNK_3  = 3,
     CUTSCENE_ID_UNK_5  = 5,
     CUTSCENE_ID_UNK_7  = 7,
+    CUTSCENE_ID_UNK_A  = 0x0A,
     CUTSCENE_ID_UNK_64 = 0x64
+};
+
+enum LevelLoadType {
+    LEVEL_LOAD_NORMAL,
+    LEVEL_LOAD_UNK1,
+    LEVEL_LOAD_TROPHY_RACE,
+    LEVEL_LOAD_LIGHTHOUSE_CUTSCENE,
+    LEVEL_LOAD_FUTURE_FUN_LAND,
 };
 
 /**
@@ -100,7 +109,7 @@ u8 get_current_level_race_type(void);
 LevelHeader *get_current_level_header(void);
 u8 get_total_level_header_count(void);
 char *get_level_name(s32 levelId);
-void func_8006BEFC(void);
+void clear_audio_and_track(void);
 void func_8006BFC8(s8 *arg0);
 void frontCleanupMultiSelect(void);
 TempStruct5 *func_8006C18C(void);
@@ -115,7 +124,7 @@ void init_game(void);
 void main_game_loop(void);
 void func_8006CAE4(s32 numPlayers, s32 trackID, Vehicle vehicle);
 void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId);
-void func_8006CC14(void);
+void unload_level_game(void);
 void func_8006D8A4(void);
 void func_8006D8E0(s32 arg0);
 void func_8006D8F0(s32 arg0);
@@ -126,8 +135,8 @@ void set_level_default_vehicle(Vehicle arg0);
 void func_8006DB20(Vehicle vehicleId);
 Vehicle get_level_default_vehicle(void);
 void load_level_menu(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId);
-void func_8006DBE4(void);
-void func_8006DC58(s32 arg0);
+void unload_level_menu(void);
+void update_menu_scene(s32 arg0);
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId);
 void calc_and_alloc_heap_for_settings(void);
 void func_8006E5BC(void);
@@ -155,7 +164,7 @@ void mark_write_eeprom_settings(void);
 s32 check_dmem_validity(void);
 void func_8006F140(s32 arg0);
 void func_8006F20C(void);
-void func_8006F254(void);
+void begin_trophy_race_teleport(void);
 void begin_lighthouse_rocket_cutscene(void);
 void begin_level_teleport(s32 arg0);
 void func_8006F388(u8 arg0);

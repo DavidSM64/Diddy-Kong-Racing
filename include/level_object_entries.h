@@ -10,6 +10,10 @@ typedef struct LevelObjectEntryCommon {
 
 typedef struct LevelObjectEntry_Racer {
     /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ s16 angleZ;    
+    /* 0x0A */ s16 angleX;
+    /* 0x0C */ s16 angleY;
+    /* 0x0E */ s16 playerIndex;
 } LevelObjectEntry_Racer;
 
 typedef struct LevelObjectEntry_Scenery {
@@ -110,7 +114,7 @@ typedef struct LevelObjectEntry_SetupPoint {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8;
     /* 0x09 */ u8 unk9;
-    /* 0x0A */ u8 unkA;
+    /* 0x0A */ u8 angleY;
 } LevelObjectEntry_SetupPoint;
 
 typedef struct LevelObjectEntry_Dino_Whale {
@@ -308,10 +312,10 @@ typedef struct LevelObjectEntry_EggCreator {
 
 typedef struct LevelObjectEntry_CharacterFlag {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ s16 unk8;    
-    /* 0x0A */ s16 unkA;
-    /* 0x0C */ s16 unkC;
-    /* 0x0E */ s16 unkE;
+    /* 0x08 */ s16 angleZ;    
+    /* 0x0A */ s16 radius;
+    /* 0x0C */ s16 angleY;
+    /* 0x0E */ s16 playerIndex;
 } LevelObjectEntry_CharacterFlag;
 
 /*
@@ -571,11 +575,11 @@ typedef struct LevelObjectEntry_SilverCoinAdv2 {
 
 typedef struct LevelObjectEntry_TTDoor {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 unk8;
+    /* 0x08 */ u8 angleY;
     /* 0x09 */ u8 unk9;
     /* 0x0A */ u8 unkA;
     /* 0x0B */ u8 unkB;
-    /* 0x0C */ u8 unkC;
+    /* 0x0C */ u8 radius;
     /* 0x0D */ u8 padD;
     /* 0x0E */ s8 doorID;
 } LevelObjectEntry_TTDoor;

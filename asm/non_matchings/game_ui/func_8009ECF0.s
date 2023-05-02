@@ -195,8 +195,8 @@ glabel func_8009ECF0
 /* 09FBDC 8009EFDC 0C001298 */  jal   set_sound_channel_volume
 /* 09FBE0 8009EFE0 24057FFF */   li    $a1, 32767
 /* 09FBE4 8009EFE4 3C10800E */  lui   $s0, %hi(D_800E2770) # $s0, 0x800e
-/* 09FBE8 8009EFE8 3C11800E */  lui   $s1, %hi(D_800E2790) # $s1, 0x800e
-/* 09FBEC 8009EFEC 26312790 */  addiu $s1, %lo(D_800E2790) # addiu $s1, $s1, 0x2790
+/* 09FBE8 8009EFE8 3C11800E */  lui   $s1, %hi(gShowCourseDirections) # $s1, 0x800e
+/* 09FBEC 8009EFEC 26312790 */  addiu $s1, %lo(gShowCourseDirections) # addiu $s1, $s1, 0x2790
 /* 09FBF0 8009EFF0 26102770 */  addiu $s0, %lo(D_800E2770) # addiu $s0, $s0, 0x2770
 .L8009EFF4:
 /* 09FBF4 8009EFF4 8E040004 */  lw    $a0, 4($s0)

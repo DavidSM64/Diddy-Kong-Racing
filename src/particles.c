@@ -1284,9 +1284,9 @@ void func_800B22FC(Particle2 *arg0, s32 arg1) {
                 arg0->unk5C_halfs.unk5C += D_80127C80 * arg0->unk5C_halfs.unk5E;
                 if (arg0->unk5C_halfs.unk5C < 0xFF) {
                     if (arg0->unk40 & 0x1000) {
-                        arg0->trans.unk6 |= 0x100;
+                        arg0->trans.flags |= OBJ_FLAGS_UNK_0100;
                     } else {
-                        arg0->trans.unk6 |=  0x80;
+                        arg0->trans.flags |=  OBJ_FLAGS_UNK_0080;
                     }
                 }
             } else {
@@ -1399,7 +1399,7 @@ UNUSED void func_800B3678(Gfx **arg0, MatrixS **arg1, Vertex **arg2) {
 
     objects = objGetObjList(&iObj, &nObjs);
     for (; iObj < nObjs; iObj++) {
-        if (objects[iObj]->segment.trans.unk6 & 0x8000) {
+        if (objects[iObj]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
             if ((s32) objects[iObj]->segment.header & 0x8000) {
                 func_800B3740(objects[iObj], arg0, arg1, arg2, 0);
             }

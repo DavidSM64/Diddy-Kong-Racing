@@ -104,15 +104,15 @@ glabel func_80049794
 /* 04A450 80049850 820C01D7 */  lb    $t4, 0x1d7($s0)
 /* 04A454 80049854 2401000C */  li    $at, 12
 /* 04A458 80049858 118100A0 */  beq   $t4, $at, .L80049ADC
-/* 04A45C 8004985C 3C028012 */   lui   $v0, %hi(D_8011D5AE) # $v0, 0x8012
-/* 04A460 80049860 8042D5AE */  lb    $v0, %lo(D_8011D5AE)($v0)
-/* 04A464 80049864 3C198012 */  lui   $t9, %hi(D_8011D5B0) # $t9, 0x8012
+/* 04A45C 8004985C 3C028012 */   lui   $v0, %hi(gRacerWaveCount) # $v0, 0x8012
+/* 04A460 80049860 8042D5AE */  lb    $v0, %lo(gRacerWaveCount)($v0)
+/* 04A464 80049864 3C198012 */  lui   $t9, %hi(gRacerCurrentWave) # $t9, 0x8012
 /* 04A468 80049868 1040009C */  beqz  $v0, .L80049ADC
 /* 04A46C 8004986C 2443FFFF */   addiu $v1, $v0, -1
 /* 04A470 80049870 0460001A */  bltz  $v1, .L800498DC
 /* 04A474 80049874 00602025 */   move  $a0, $v1
-/* 04A478 80049878 3C0D8012 */  lui   $t5, %hi(D_8011D5B0) # $t5, 0x8012
-/* 04A47C 8004987C 8DADD5B0 */  lw    $t5, %lo(D_8011D5B0)($t5)
+/* 04A478 80049878 3C0D8012 */  lui   $t5, %hi(gRacerCurrentWave) # $t5, 0x8012
+/* 04A47C 8004987C 8DADD5B0 */  lw    $t5, %lo(gRacerCurrentWave)($t5)
 /* 04A480 80049880 00047080 */  sll   $t6, $a0, 2
 /* 04A484 80049884 3C0140A0 */  li    $at, 0x40A00000 # 5.000000
 /* 04A488 80049888 01AE1021 */  addu  $v0, $t5, $t6
@@ -138,7 +138,7 @@ glabel func_80049794
 /* 04A4D4 800498D4 4501FFF6 */  bc1t  .L800498B0
 /* 04A4D8 800498D8 00000000 */   nop   
 .L800498DC:
-/* 04A4DC 800498DC 8F39D5B0 */  lw    $t9, %lo(D_8011D5B0)($t9)
+/* 04A4DC 800498DC 8F39D5B0 */  lw    $t9, %lo(gRacerCurrentWave)($t9)
 /* 04A4E0 800498E0 00042880 */  sll   $a1, $a0, 2
 /* 04A4E4 800498E4 C62C0010 */  lwc1  $f12, 0x10($s1)
 /* 04A4E8 800498E8 14830003 */  bne   $a0, $v1, .L800498F8
@@ -207,8 +207,8 @@ glabel func_80049794
 /* 04A5D0 800499D0 1041000F */  beq   $v0, $at, .L80049A10
 /* 04A5D4 800499D4 00000000 */   nop   
 /* 04A5D8 800499D8 1122000D */  beq   $t1, $v0, .L80049A10
-/* 04A5DC 800499DC 3C0E8012 */   lui   $t6, %hi(D_8011D5B0) # $t6, 0x8012
-/* 04A5E0 800499E0 8DCED5B0 */  lw    $t6, %lo(D_8011D5B0)($t6)
+/* 04A5DC 800499DC 3C0E8012 */   lui   $t6, %hi(gRacerCurrentWave) # $t6, 0x8012
+/* 04A5E0 800499E0 8DCED5B0 */  lw    $t6, %lo(gRacerCurrentWave)($t6)
 /* 04A5E4 800499E4 3C01800E */  lui   $at, %hi(D_800E64B0 + 4) # $at, 0x800e
 /* 04A5E8 800499E8 01C57821 */  addu  $t7, $t6, $a1
 /* 04A5EC 800499EC 8DF80004 */  lw    $t8, 4($t7)

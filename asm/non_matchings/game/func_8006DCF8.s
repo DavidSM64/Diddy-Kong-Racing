@@ -15,12 +15,12 @@ glabel func_8006DCF8
 /* 06E918 8006DD18 AFA40030 */  sw    $a0, 0x30($sp)
 /* 06E91C 8006DD1C 15C00008 */  bnez  $t6, .L8006DD40
 /* 06E920 8006DD20 A0203516 */   sb    $zero, %lo(gPostRaceViewPort)($at)
-/* 06E924 8006DD24 3C0F8012 */  lui   $t7, %hi(D_801234F0) # $t7, 0x8012
-/* 06E928 8006DD28 8DEF34F0 */  lw    $t7, %lo(D_801234F0)($t7)
+/* 06E924 8006DD24 3C0F8012 */  lui   $t7, %hi(gRenderMenu) # $t7, 0x8012
+/* 06E928 8006DD28 8DEF34F0 */  lw    $t7, %lo(gRenderMenu)($t7)
 /* 06E92C 8006DD2C 00000000 */  nop   
 /* 06E930 8006DD30 11E00004 */  beqz  $t7, .L8006DD44
 /* 06E934 8006DD34 8FB80030 */   lw    $t8, 0x30($sp)
-/* 06E938 8006DD38 0C01B716 */  jal   func_8006DC58
+/* 06E938 8006DD38 0C01B716 */  jal   update_menu_scene
 /* 06E93C 8006DD3C 00000000 */   nop   
 .L8006DD40:
 /* 06E940 8006DD40 8FB80030 */  lw    $t8, 0x30($sp)
@@ -37,21 +37,21 @@ glabel func_8006DCF8
 /* 06E968 8006DD68 0C020569 */  jal   menu_loop
 /* 06E96C 8006DD6C AFB80010 */   sw    $t8, 0x10($sp)
 /* 06E970 8006DD70 24190001 */  li    $t9, 1
-/* 06E974 8006DD74 3C018012 */  lui   $at, %hi(D_801234F0) # $at, 0x8012
-/* 06E978 8006DD78 AC3934F0 */  sw    $t9, %lo(D_801234F0)($at)
+/* 06E974 8006DD74 3C018012 */  lui   $at, %hi(gRenderMenu) # $at, 0x8012
+/* 06E978 8006DD78 AC3934F0 */  sw    $t9, %lo(gRenderMenu)($at)
 /* 06E97C 8006DD7C 2401FFFE */  li    $at, -2
 /* 06E980 8006DD80 14410004 */  bne   $v0, $at, .L8006DD94
 /* 06E984 8006DD84 AFA2002C */   sw    $v0, 0x2c($sp)
-/* 06E988 8006DD88 3C018012 */  lui   $at, %hi(D_801234F0) # $at, 0x8012
+/* 06E988 8006DD88 3C018012 */  lui   $at, %hi(gRenderMenu) # $at, 0x8012
 /* 06E98C 8006DD8C 10000152 */  b     .L8006E2D8
-/* 06E990 8006DD90 AC2034F0 */   sw    $zero, %lo(D_801234F0)($at)
+/* 06E990 8006DD90 AC2034F0 */   sw    $zero, %lo(gRenderMenu)($at)
 .L8006DD94:
 /* 06E994 8006DD94 2403FFFF */  li    $v1, -1
 /* 06E998 8006DD98 1043003D */  beq   $v0, $v1, .L8006DE90
 /* 06E99C 8006DD9C 304C0200 */   andi  $t4, $v0, 0x200
 /* 06E9A0 8006DDA0 1180003B */  beqz  $t4, .L8006DE90
 /* 06E9A4 8006DDA4 00000000 */   nop   
-/* 06E9A8 8006DDA8 0C01B6F9 */  jal   func_8006DBE4
+/* 06E9A8 8006DDA8 0C01B6F9 */  jal   unload_level_menu
 /* 06E9AC 8006DDAC 00000000 */   nop   
 /* 06E9B0 8006DDB0 3C0D8012 */  lui   $t5, %hi(gSPTaskNum) # $t5, 0x8012
 /* 06E9B4 8006DDB4 8DAD34E8 */  lw    $t5, %lo(gSPTaskNum)($t5)
@@ -77,12 +77,12 @@ glabel func_8006DCF8
 /* 06EA04 8006DE04 31C4007F */  andi  $a0, $t6, 0x7f
 /* 06EA08 8006DE08 0C01AC2B */  jal   get_map_default_vehicle
 /* 06EA0C 8006DE0C AD040000 */   sw    $a0, ($t0)
-/* 06EA10 8006DE10 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
+/* 06EA10 8006DE10 3C098012 */  lui   $t1, %hi(gGameCurrentEntrance) # $t1, 0x8012
 /* 06EA14 8006DE14 3C0A8012 */  lui   $t2, %hi(gLevelDefaultVehicleID) # $t2, 0x8012
-/* 06EA18 8006DE18 3C0B8012 */  lui   $t3, %hi(D_80123508) # $t3, 0x8012
-/* 06EA1C 8006DE1C 256B3508 */  addiu $t3, %lo(D_80123508) # addiu $t3, $t3, 0x3508
+/* 06EA18 8006DE18 3C0B8012 */  lui   $t3, %hi(gGameCurrentCutscene) # $t3, 0x8012
+/* 06EA1C 8006DE1C 256B3508 */  addiu $t3, %lo(gGameCurrentCutscene) # addiu $t3, $t3, 0x3508
 /* 06EA20 8006DE20 254A3518 */  addiu $t2, %lo(gLevelDefaultVehicleID) # addiu $t2, $t2, 0x3518
-/* 06EA24 8006DE24 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
+/* 06EA24 8006DE24 25293504 */  addiu $t1, %lo(gGameCurrentEntrance) # addiu $t1, $t1, 0x3504
 /* 06EA28 8006DE28 24180064 */  li    $t8, 100
 /* 06EA2C 8006DE2C AD420000 */  sw    $v0, ($t2)
 /* 06EA30 8006DE30 AD200000 */  sw    $zero, ($t1)
@@ -93,10 +93,10 @@ glabel func_8006DCF8
 /* 06EA44 8006DE44 A0203515 */  sb    $zero, %lo(gIsPaused)($at)
 /* 06EA48 8006DE48 3C018012 */  lui   $at, %hi(gPostRaceViewPort) # $at, 0x8012
 /* 06EA4C 8006DE4C A0203516 */  sb    $zero, %lo(gPostRaceViewPort)($at)
-/* 06EA50 8006DE50 3C038012 */  lui   $v1, %hi(D_80123500) # $v1, 0x8012
+/* 06EA50 8006DE50 3C038012 */  lui   $v1, %hi(gGameNumPlayers) # $v1, 0x8012
 /* 06EA54 8006DE54 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
 /* 06EA58 8006DE58 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
-/* 06EA5C 8006DE5C 24633500 */  addiu $v1, %lo(D_80123500) # addiu $v1, $v1, 0x3500
+/* 06EA5C 8006DE5C 24633500 */  addiu $v1, %lo(gGameNumPlayers) # addiu $v1, $v1, 0x3500
 /* 06EA60 8006DE60 8C650000 */  lw    $a1, ($v1)
 /* 06EA64 8006DE64 8D040000 */  lw    $a0, ($t0)
 /* 06EA68 8006DE68 8D470000 */  lw    $a3, ($t2)
@@ -114,7 +114,7 @@ glabel func_8006DCF8
 /* 06EA94 8006DE94 30590100 */   andi  $t9, $v0, 0x100
 /* 06EA98 8006DE98 13200098 */  beqz  $t9, .L8006E0FC
 /* 06EA9C 8006DE9C 304C0080 */   andi  $t4, $v0, 0x80
-/* 06EAA0 8006DEA0 0C01B305 */  jal   func_8006CC14
+/* 06EAA0 8006DEA0 0C01B305 */  jal   unload_level_game
 /* 06EAA4 8006DEA4 00000000 */   nop   
 /* 06EAA8 8006DEA8 8FAC002C */  lw    $t4, 0x2c($sp)
 /* 06EAAC 8006DEAC 3C018012 */  lui   $at, %hi(gIsPaused) # $at, 0x8012
@@ -141,10 +141,10 @@ glabel L8006DEE8
 /* 06EAFC 8006DEFC 8FBF0024 */   lw    $ra, 0x24($sp)
 glabel L8006DF00
 /* 06EB00 8006DF00 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
-/* 06EB04 8006DF04 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
-/* 06EB08 8006DF08 3C0B8012 */  lui   $t3, %hi(D_80123508) # $t3, 0x8012
-/* 06EB0C 8006DF0C 256B3508 */  addiu $t3, %lo(D_80123508) # addiu $t3, $t3, 0x3508
-/* 06EB10 8006DF10 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
+/* 06EB04 8006DF04 3C098012 */  lui   $t1, %hi(gGameCurrentEntrance) # $t1, 0x8012
+/* 06EB08 8006DF08 3C0B8012 */  lui   $t3, %hi(gGameCurrentCutscene) # $t3, 0x8012
+/* 06EB0C 8006DF0C 256B3508 */  addiu $t3, %lo(gGameCurrentCutscene) # addiu $t3, $t3, 0x3508
+/* 06EB10 8006DF10 25293504 */  addiu $t1, %lo(gGameCurrentEntrance) # addiu $t1, $t1, 0x3504
 /* 06EB14 8006DF14 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
 /* 06EB18 8006DF18 240F0064 */  li    $t7, 100
 /* 06EB1C 8006DF1C AD000000 */  sw    $zero, ($t0)
@@ -152,10 +152,10 @@ glabel L8006DF00
 /* 06EB24 8006DF24 AD6F0000 */  sw    $t7, ($t3)
 /* 06EB28 8006DF28 3C018012 */  lui   $at, %hi(sRenderContext) # $at, 0x8012
 /* 06EB2C 8006DF2C AC2034EC */  sw    $zero, %lo(sRenderContext)($at)
-/* 06EB30 8006DF30 3C038012 */  lui   $v1, %hi(D_80123500) # $v1, 0x8012
+/* 06EB30 8006DF30 3C038012 */  lui   $v1, %hi(gGameNumPlayers) # $v1, 0x8012
 /* 06EB34 8006DF34 3C0A8012 */  lui   $t2, %hi(gLevelDefaultVehicleID) # $t2, 0x8012
 /* 06EB38 8006DF38 254A3518 */  addiu $t2, %lo(gLevelDefaultVehicleID) # addiu $t2, $t2, 0x3518
-/* 06EB3C 8006DF3C 24633500 */  addiu $v1, %lo(D_80123500) # addiu $v1, $v1, 0x3500
+/* 06EB3C 8006DF3C 24633500 */  addiu $v1, %lo(gGameNumPlayers) # addiu $v1, $v1, 0x3500
 /* 06EB40 8006DF40 8C650000 */  lw    $a1, ($v1)
 /* 06EB44 8006DF44 8D470000 */  lw    $a3, ($t2)
 /* 06EB48 8006DF48 8D260000 */  lw    $a2, ($t1)
@@ -173,10 +173,10 @@ glabel L8006DF70
 /* 06EB74 8006DF74 24A51250 */  addiu $a1, %lo(D_80121250) # addiu $a1, $a1, 0x1250
 /* 06EB78 8006DF78 80B80000 */  lb    $t8, ($a1)
 /* 06EB7C 8006DF7C 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
-/* 06EB80 8006DF80 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
-/* 06EB84 8006DF84 3C0B8012 */  lui   $t3, %hi(D_80123508) # $t3, 0x8012
-/* 06EB88 8006DF88 256B3508 */  addiu $t3, %lo(D_80123508) # addiu $t3, $t3, 0x3508
-/* 06EB8C 8006DF8C 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
+/* 06EB80 8006DF80 3C098012 */  lui   $t1, %hi(gGameCurrentEntrance) # $t1, 0x8012
+/* 06EB84 8006DF84 3C0B8012 */  lui   $t3, %hi(gGameCurrentCutscene) # $t3, 0x8012
+/* 06EB88 8006DF88 256B3508 */  addiu $t3, %lo(gGameCurrentCutscene) # addiu $t3, $t3, 0x3508
+/* 06EB8C 8006DF8C 25293504 */  addiu $t1, %lo(gGameCurrentEntrance) # addiu $t1, $t1, 0x3504
 /* 06EB90 8006DF90 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
 /* 06EB94 8006DF94 24190064 */  li    $t9, 100
 /* 06EB98 8006DF98 AD200000 */  sw    $zero, ($t1)
@@ -192,9 +192,9 @@ glabel L8006DF70
 .L8006DFC0:
 /* 06EBC0 8006DFC0 00A36021 */  addu  $t4, $a1, $v1
 /* 06EBC4 8006DFC4 81820008 */  lb    $v0, 8($t4)
-/* 06EBC8 8006DFC8 3C038012 */  lui   $v1, %hi(D_80123500) # $v1, 0x8012
+/* 06EBC8 8006DFC8 3C038012 */  lui   $v1, %hi(gGameNumPlayers) # $v1, 0x8012
 /* 06EBCC 8006DFCC 04400002 */  bltz  $v0, .L8006DFD8
-/* 06EBD0 8006DFD0 24633500 */   addiu $v1, %lo(D_80123500) # addiu $v1, $v1, 0x3500
+/* 06EBD0 8006DFD0 24633500 */   addiu $v1, %lo(gGameNumPlayers) # addiu $v1, $v1, 0x3500
 /* 06EBD4 8006DFD4 AD620000 */  sw    $v0, ($t3)
 .L8006DFD8:
 /* 06EBD8 8006DFD8 254A3518 */  addiu $t2, %lo(gLevelDefaultVehicleID) # addiu $t2, $t2, 0x3518
@@ -213,14 +213,14 @@ glabel L8006DF70
 glabel L8006E00C
 /* 06EC0C 8006E00C 3C018012 */  lui   $at, %hi(sRenderContext) # $at, 0x8012
 /* 06EC10 8006E010 AC2034EC */  sw    $zero, %lo(sRenderContext)($at)
-/* 06EC14 8006E014 3C038012 */  lui   $v1, %hi(D_80123500) # $v1, 0x8012
+/* 06EC14 8006E014 3C038012 */  lui   $v1, %hi(gGameNumPlayers) # $v1, 0x8012
 /* 06EC18 8006E018 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
-/* 06EC1C 8006E01C 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
+/* 06EC1C 8006E01C 3C098012 */  lui   $t1, %hi(gGameCurrentEntrance) # $t1, 0x8012
 /* 06EC20 8006E020 3C0A8012 */  lui   $t2, %hi(gLevelDefaultVehicleID) # $t2, 0x8012
 /* 06EC24 8006E024 254A3518 */  addiu $t2, %lo(gLevelDefaultVehicleID) # addiu $t2, $t2, 0x3518
-/* 06EC28 8006E028 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
+/* 06EC28 8006E028 25293504 */  addiu $t1, %lo(gGameCurrentEntrance) # addiu $t1, $t1, 0x3504
 /* 06EC2C 8006E02C 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
-/* 06EC30 8006E030 24633500 */  addiu $v1, %lo(D_80123500) # addiu $v1, $v1, 0x3500
+/* 06EC30 8006E030 24633500 */  addiu $v1, %lo(gGameNumPlayers) # addiu $v1, $v1, 0x3500
 /* 06EC34 8006E034 8C650000 */  lw    $a1, ($v1)
 /* 06EC38 8006E038 8D040000 */  lw    $a0, ($t0)
 /* 06EC3C 8006E03C 8D260000 */  lw    $a2, ($t1)
@@ -240,21 +240,21 @@ glabel L8006E054
 /* 06EC70 8006E070 80AE000F */  lb    $t6, 0xf($a1)
 /* 06EC74 8006E074 83190008 */  lb    $t9, 8($t8)
 /* 06EC78 8006E078 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
-/* 06EC7C 8006E07C 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
-/* 06EC80 8006E080 3C0B8012 */  lui   $t3, %hi(D_80123508) # $t3, 0x8012
-/* 06EC84 8006E084 256B3508 */  addiu $t3, %lo(D_80123508) # addiu $t3, $t3, 0x3508
-/* 06EC88 8006E088 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
+/* 06EC7C 8006E07C 3C098012 */  lui   $t1, %hi(gGameCurrentEntrance) # $t1, 0x8012
+/* 06EC80 8006E080 3C0B8012 */  lui   $t3, %hi(gGameCurrentCutscene) # $t3, 0x8012
+/* 06EC84 8006E084 256B3508 */  addiu $t3, %lo(gGameCurrentCutscene) # addiu $t3, $t3, 0x3508
+/* 06EC88 8006E088 25293504 */  addiu $t1, %lo(gGameCurrentEntrance) # addiu $t1, $t1, 0x3504
 /* 06EC8C 8006E08C 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
 /* 06EC90 8006E090 AD040000 */  sw    $a0, ($t0)
 /* 06EC94 8006E094 AD2E0000 */  sw    $t6, ($t1)
 /* 06EC98 8006E098 0C01AC2B */  jal   get_map_default_vehicle
 /* 06EC9C 8006E09C AD790000 */   sw    $t9, ($t3)
-/* 06ECA0 8006E0A0 3C038012 */  lui   $v1, %hi(D_80123500) # $v1, 0x8012
+/* 06ECA0 8006E0A0 3C038012 */  lui   $v1, %hi(gGameNumPlayers) # $v1, 0x8012
 /* 06ECA4 8006E0A4 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
-/* 06ECA8 8006E0A8 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
-/* 06ECAC 8006E0AC 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
+/* 06ECA8 8006E0A8 3C098012 */  lui   $t1, %hi(gGameCurrentEntrance) # $t1, 0x8012
+/* 06ECAC 8006E0AC 25293504 */  addiu $t1, %lo(gGameCurrentEntrance) # addiu $t1, $t1, 0x3504
 /* 06ECB0 8006E0B0 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
-/* 06ECB4 8006E0B4 24633500 */  addiu $v1, %lo(D_80123500) # addiu $v1, $v1, 0x3500
+/* 06ECB4 8006E0B4 24633500 */  addiu $v1, %lo(gGameNumPlayers) # addiu $v1, $v1, 0x3500
 /* 06ECB8 8006E0B8 3C0A8012 */  lui   $t2, %hi(gLevelDefaultVehicleID) # $t2, 0x8012
 /* 06ECBC 8006E0BC 254A3518 */  addiu $t2, %lo(gLevelDefaultVehicleID) # addiu $t2, $t2, 0x3518
 /* 06ECC0 8006E0C0 8C650000 */  lw    $a1, ($v1)
@@ -280,7 +280,7 @@ glabel L8006E0E0
 /* 06ED00 8006E100 00000000 */   nop   
 /* 06ED04 8006E104 10430045 */  beq   $v0, $v1, .L8006E21C
 /* 06ED08 8006E108 00000000 */   nop   
-/* 06ED0C 8006E10C 0C01B6F9 */  jal   func_8006DBE4
+/* 06ED0C 8006E10C 0C01B6F9 */  jal   unload_level_menu
 /* 06ED10 8006E110 00000000 */   nop   
 /* 06ED14 8006E114 3C0D8012 */  lui   $t5, %hi(gSPTaskNum) # $t5, 0x8012
 /* 06ED18 8006E118 8DAD34E8 */  lw    $t5, %lo(gSPTaskNum)($t5)
@@ -312,15 +312,15 @@ glabel L8006E0E0
 /* 06ED80 8006E180 A0AF0000 */  sb    $t7, ($a1)
 /* 06ED84 8006E184 80780002 */  lb    $t8, 2($v1)
 /* 06ED88 8006E188 80790004 */  lb    $t9, 4($v1)
-/* 06ED8C 8006E18C 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
-/* 06ED90 8006E190 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
+/* 06ED8C 8006E18C 3C098012 */  lui   $t1, %hi(gGameCurrentEntrance) # $t1, 0x8012
+/* 06ED90 8006E190 25293504 */  addiu $t1, %lo(gGameCurrentEntrance) # addiu $t1, $t1, 0x3504
 /* 06ED94 8006E194 3C018012 */  lui   $at, %hi(sRenderContext) # $at, 0x8012
 /* 06ED98 8006E198 AD180000 */  sw    $t8, ($t0)
 /* 06ED9C 8006E19C AD390000 */  sw    $t9, ($t1)
 /* 06EDA0 8006E1A0 AC2034EC */  sw    $zero, %lo(sRenderContext)($at)
 /* 06EDA4 8006E1A4 806C000C */  lb    $t4, 0xc($v1)
-/* 06EDA8 8006E1A8 3C0B8012 */  lui   $t3, %hi(D_80123508) # $t3, 0x8012
-/* 06EDAC 8006E1AC 256B3508 */  addiu $t3, %lo(D_80123508) # addiu $t3, $t3, 0x3508
+/* 06EDA8 8006E1A8 3C0B8012 */  lui   $t3, %hi(gGameCurrentCutscene) # $t3, 0x8012
+/* 06EDAC 8006E1AC 256B3508 */  addiu $t3, %lo(gGameCurrentCutscene) # addiu $t3, $t3, 0x3508
 /* 06EDB0 8006E1B0 00002025 */  move  $a0, $zero
 /* 06EDB4 8006E1B4 0C027094 */  jal   get_player_selected_vehicle
 /* 06EDB8 8006E1B8 AD6C0000 */   sw    $t4, ($t3)
@@ -329,11 +329,11 @@ glabel L8006E0E0
 /* 06EDC4 8006E1C4 8E0D0000 */  lw    $t5, ($s0)
 /* 06EDC8 8006E1C8 3C088012 */  lui   $t0, %hi(gPlayableMapId) # $t0, 0x8012
 /* 06EDCC 8006E1CC 91AE004A */  lbu   $t6, 0x4a($t5)
-/* 06EDD0 8006E1D0 3C098012 */  lui   $t1, %hi(D_80123504) # $t1, 0x8012
-/* 06EDD4 8006E1D4 25293504 */  addiu $t1, %lo(D_80123504) # addiu $t1, $t1, 0x3504
+/* 06EDD0 8006E1D0 3C098012 */  lui   $t1, %hi(gGameCurrentEntrance) # $t1, 0x8012
+/* 06EDD4 8006E1D4 25293504 */  addiu $t1, %lo(gGameCurrentEntrance) # addiu $t1, $t1, 0x3504
 /* 06EDD8 8006E1D8 250834F4 */  addiu $t0, %lo(gPlayableMapId) # addiu $t0, $t0, 0x34f4
-/* 06EDDC 8006E1DC 3C038012 */  lui   $v1, %hi(D_80123500) # $v1, 0x8012
-/* 06EDE0 8006E1E0 24633500 */  addiu $v1, %lo(D_80123500) # addiu $v1, $v1, 0x3500
+/* 06EDDC 8006E1DC 3C038012 */  lui   $v1, %hi(gGameNumPlayers) # $v1, 0x8012
+/* 06EDE0 8006E1E0 24633500 */  addiu $v1, %lo(gGameNumPlayers) # addiu $v1, $v1, 0x3500
 /* 06EDE4 8006E1E4 8D040000 */  lw    $a0, ($t0)
 /* 06EDE8 8006E1E8 8D260000 */  lw    $a2, ($t1)
 /* 06EDEC 8006E1EC 25C5FFFF */  addiu $a1, $t6, -1
@@ -351,7 +351,7 @@ glabel L8006E0E0
 .L8006E21C:
 /* 06EE1C 8006E21C 1840002F */  blez  $v0, .L8006E2DC
 /* 06EE20 8006E220 8FBF0024 */   lw    $ra, 0x24($sp)
-/* 06EE24 8006E224 0C01B6F9 */  jal   func_8006DBE4
+/* 06EE24 8006E224 0C01B6F9 */  jal   unload_level_menu
 /* 06EE28 8006E228 00000000 */   nop   
 /* 06EE2C 8006E22C 3C198012 */  lui   $t9, %hi(gSPTaskNum) # $t9, 0x8012
 /* 06EE30 8006E230 8F3934E8 */  lw    $t9, %lo(gSPTaskNum)($t9)

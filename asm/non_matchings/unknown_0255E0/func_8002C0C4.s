@@ -23,10 +23,10 @@ glabel func_8002C0C4
 /* 02CD00 8002C100 34A500FF */  ori   $a1, (0xFFFF00FF & 0xFFFF) # ori $a1, $a1, 0xff
 /* 02CD04 8002C104 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 02CD08 8002C108 02A02025 */   move  $a0, $s5
-/* 02CD0C 8002C10C 3C038012 */  lui   $v1, %hi(D_8011D30C) # $v1, 0x8012
+/* 02CD0C 8002C10C 3C038012 */  lui   $v1, %hi(gTrackModelHeap) # $v1, 0x8012
 /* 02CD10 8002C110 3C11800E */  lui   $s1, %hi(gCurrentLevelModel) # $s1, 0x800e
 /* 02CD14 8002C114 2631C918 */  addiu $s1, %lo(gCurrentLevelModel) # addiu $s1, $s1, -0x36e8
-/* 02CD18 8002C118 2463D30C */  addiu $v1, %lo(D_8011D30C) # addiu $v1, $v1, -0x2cf4
+/* 02CD18 8002C118 2463D30C */  addiu $v1, %lo(gTrackModelHeap) # addiu $v1, $v1, -0x2cf4
 /* 02CD1C 8002C11C 3C05FFFF */  lui   $a1, (0xFFFF00FF >> 16) # lui $a1, 0xffff
 /* 02CD20 8002C120 AC620000 */  sw    $v0, ($v1)
 /* 02CD24 8002C124 AE220000 */  sw    $v0, ($s1)
@@ -45,8 +45,8 @@ glabel func_8002C0C4
 /* 02CD58 8002C158 AC20D378 */  sw    $zero, %lo(D_8011D378)($at)
 /* 02CD5C 8002C15C 0C01DB16 */  jal   load_asset_section_from_rom
 /* 02CD60 8002C160 2404001A */   li    $a0, 26
-/* 02CD64 8002C164 3C148012 */  lui   $s4, %hi(D_8011D310) # $s4, 0x8012
-/* 02CD68 8002C168 2694D310 */  addiu $s4, %lo(D_8011D310) # addiu $s4, $s4, -0x2cf0
+/* 02CD64 8002C164 3C148012 */  lui   $s4, %hi(gLevelModelTable) # $s4, 0x8012
+/* 02CD68 8002C168 2694D310 */  addiu $s4, %lo(gLevelModelTable) # addiu $s4, $s4, -0x2cf0
 /* 02CD6C 8002C16C AE820000 */  sw    $v0, ($s4)
 /* 02CD70 8002C170 8C4F0000 */  lw    $t7, ($v0)
 /* 02CD74 8002C174 2403FFFF */  li    $v1, -1
@@ -293,12 +293,12 @@ glabel func_8002C0C4
 .L8002C510:
 /* 02D110 8002C510 0C01C42C */  jal   set_free_queue_state
 /* 02D114 8002C514 00002025 */   move  $a0, $zero
-/* 02D118 8002C518 3C048012 */  lui   $a0, %hi(D_8011D30C) # $a0, 0x8012
-/* 02D11C 8002C51C 8C84D30C */  lw    $a0, %lo(D_8011D30C)($a0)
+/* 02D118 8002C518 3C048012 */  lui   $a0, %hi(gTrackModelHeap) # $a0, 0x8012
+/* 02D11C 8002C51C 8C84D30C */  lw    $a0, %lo(gTrackModelHeap)($a0)
 /* 02D120 8002C520 0C01C450 */  jal   free_from_memory_pool
 /* 02D124 8002C524 00000000 */   nop   
-/* 02D128 8002C528 3C058012 */  lui   $a1, %hi(D_8011D30C) # $a1, 0x8012
-/* 02D12C 8002C52C 8CA5D30C */  lw    $a1, %lo(D_8011D30C)($a1)
+/* 02D128 8002C528 3C058012 */  lui   $a1, %hi(gTrackModelHeap) # $a1, 0x8012
+/* 02D12C 8002C52C 8CA5D30C */  lw    $a1, %lo(gTrackModelHeap)($a1)
 /* 02D130 8002C530 3C06FFFF */  lui   $a2, (0xFFFF00FF >> 16) # lui $a2, 0xffff
 /* 02D134 8002C534 34C600FF */  ori   $a2, (0xFFFF00FF & 0xFFFF) # ori $a2, $a2, 0xff
 /* 02D138 8002C538 0C01C3BE */  jal   allocate_at_address_in_main_pool

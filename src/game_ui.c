@@ -128,7 +128,7 @@ unk800E2770 D_800E2770[2] = {
     { 0, 0xFF, 0, 0, 0, 0, 0 },
 };
 
-u8 D_800E2790 = 1;
+u8 gShowCourseDirections = TRUE;
 
 u8 D_800E2794[4][4] = {
     {1, 1, 1, 1}, 
@@ -351,9 +351,9 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 if (func_8001E440() != 10) {
                     if (gHUDNumPlayers == ONE_PLAYER) {
                         if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->racer.raceFinished == FALSE && ((gHudLevelHeader->race_type == RACETYPE_DEFAULT) || gHudLevelHeader->race_type == RACETYPE_HORSESHOE_GULCH) && D_80126D34) {
-                            D_800E2790 = 1 - D_800E2790;
-                            play_sound_global((SOUND_TING_HIGHER + D_800E2790), NULL);
-                            if (D_800E2790) {
+                            gShowCourseDirections = 1 - gShowCourseDirections;
+                            play_sound_global((SOUND_TING_HIGHER + gShowCourseDirections), NULL);
+                            if (gShowCourseDirections) {
                                 D_800E27B8 = 0x78;
                             } else {
                                 D_800E27B8 = 0;
@@ -543,7 +543,7 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
     s32 type;
     IndicatorArrow *indicator;
 
-    if (D_800E2790) {
+    if (gShowCourseDirections) {
         timer = racer->indicator_timer;
         if (timer > 0) {
             type = racer->indicator_type;
@@ -1049,7 +1049,7 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A4C44.s")
 void render_lap_count(Object_Racer *racer, s32 updateRate) {
     if (racer->raceFinished == FALSE && (gHUDNumPlayers <= ONE_PLAYER || racer->lap <= 0 || racer->lap_times[racer->lap] >= 180) 
             && (gHUDNumPlayers <= ONE_PLAYER || D_800E2794[gHUDNumPlayers][racer->playerIndex] == 3)) {
-        if (gHudLevelHeader->laps == (0, racer->unk194 + 1) && gHUDNumPlayers < THREE_PLAYERS) {
+        if (gHudLevelHeader->laps == (0, racer->countLap + 1) && gHUDNumPlayers < THREE_PLAYERS) {
             D_80126CDC->unk21A += updateRate;
             if (D_80126CDC->unk21A > 6) {
                 D_80126CDC->unk218++;
@@ -1061,10 +1061,10 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk200);
         }
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk60);
-        if (racer->unk194 >= gHudLevelHeader->laps - 1) {
+        if (racer->countLap >= gHudLevelHeader->laps - 1) {
             D_80126CDC->unk98 = gHudLevelHeader->laps;
         } else {
-            D_80126CDC->unk98 = racer->unk194 + 1;
+            D_80126CDC->unk98 = racer->countLap + 1;
         }
         D_80126CDC->unkD8 = gHudLevelHeader->laps;
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk80);
@@ -1443,7 +1443,7 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
                 }
             } else {
                 stopwatchTimer = 0;
-                for (i = 0; racer->unk194 >= i && i < gHudLevelHeader->laps; i++) {
+                for (i = 0; i <= racer->countLap && i < gHudLevelHeader->laps; i++) {
                     stopwatchTimer += racer->lap_times[i];
                 }
                 countingDown = stopwatchTimer == 0 || racer->raceFinished || is_game_paused();
