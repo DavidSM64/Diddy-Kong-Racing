@@ -14,6 +14,7 @@
 #include "sched.h"
 #include "video.h"
 #include "lib/src/mips1/al/unknown_0646F0.h"
+#include "racer.h"
 
 /************ .data ************/
 
@@ -762,7 +763,7 @@ void func_8000232C(ALSeqPlayer *seqp, void *arg1, u8 *arg2, ALCSeq *seq) {
         alCSPPlay((ALCSPlayer* ) seqp);
         if (seqp == gMusicPlayer) {
             set_relative_volume_for_music(sMusicPool[*arg2].unk0);
-            temp_a0 = sMusicPool[*arg2].unk1;
+            temp_a0 = sMusicPool[*arg2].unk1 * gTimeDilation[0];
             if (temp_a0 != 0) {
                 musicSetTempo((s32) temp_a0);
             } else {
