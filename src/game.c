@@ -541,6 +541,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     update_camera_fov(gCurrentLevelHeader->cameraFOV);
     set_background_prim_colour(gCurrentLevelHeader->bgColorRed, gCurrentLevelHeader->bgColorGreen, gCurrentLevelHeader->bgColorBlue);
     reset_video_delta_time();
+    reset_time_dialation();
     func_8007AB24(gCurrentLevelHeader->unk4[numberOfPlayers]);
 }
 
@@ -1156,7 +1157,7 @@ void ingame_logic_loop(s32 updateRate) {
         buttonPressedInputs |= get_buttons_pressed_from_player(i);
     }
     
-    if (get_buttons_pressed_from_player(0) & L_TRIG && !(get_buttons_held_from_player(0) & U_JPAD)) {
+    /*if (get_buttons_pressed_from_player(0) & L_TRIG && !(get_buttons_held_from_player(0) & U_JPAD)) {
         s32 soundID;
         gHideHUD ^= 1;
         if (gHideHUD == 0) {
@@ -1165,7 +1166,7 @@ void ingame_logic_loop(s32 updateRate) {
             soundID = SOUND_TING_LOW;
         }
         play_sound_global(soundID, NULL);
-    }
+    }*/
 #ifndef NO_ANTIPIRACY
     // Spam the start button, making the game unplayable because it's constantly paused.
     if (sAntiPiracyTriggered) {
@@ -1174,6 +1175,7 @@ void ingame_logic_loop(s32 updateRate) {
 #endif
     // Update all objects
     if (!gIsPaused) {
+        update_time_dialation(updateRate);
         func_80010994(updateRate);
         if (check_if_showing_cutscene_camera() == 0 || func_8001139C()) {
             if ((buttonPressedInputs & START_BUTTON) && (get_level_property_stack_pos() == 0) && (D_800DD390 == 0)
@@ -1635,6 +1637,7 @@ void unload_level_menu(void) {
 */
 void update_menu_scene(s32 updateRate) {
     if (get_thread30_level_id_to_load() == 0) {
+        update_time_dialation(updateRate);
         func_80010994(updateRate);
         gParticlePtrList_flush();
         func_8001BF20();

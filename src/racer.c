@@ -146,6 +146,9 @@ s8 D_800DCDB0[16][2] = {
     {0x03, 0xFD},
 };
 
+f32 gTimeDilation[10];
+s16 gTimeDilationTimer[10];
+
 // Checksum count for obj_loop_goldenballoon
 s32 gObjLoopGoldenBalloonChecksum = 0xA597;
 
@@ -1627,6 +1630,7 @@ f32 rotate_racer_in_water(Object *obj, Object_Racer *racer, Vec3f *pos, s8 arg3,
     f32 updateRateF;
 
     updateRateF = updateRate;
+    updateRateF *= gTimeDilation[racer->characterId];
     if (arg3 == 14) {
         velocity = racer->velocity;
         if (velocity < 0.0f) {
@@ -2200,6 +2204,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
     gRaceStartTimer = func_8001139C();
     updateRateF = updateRate;
     tempRacer = (Object_Racer *) obj->unk64;
+    updateRateF *= gTimeDilation[tempRacer->characterId];
     // Cap all of the velocities on the different axes.
     // Unfortunately, Rareware didn't appear to use a clamp macro here, which would've saved a lot of real estate.
     if (obj->segment.x_velocity > 50.0f) {
@@ -3782,6 +3787,7 @@ void func_800535C4(Object *obj, Object_Racer *racer) {
  */
 void handle_car_velocity_control(Object_Racer *racer) {
     f32 updateRateF = sLogicUpdateRate;
+    updateRateF *= gTimeDilation[racer->characterId];
     if (racer->throttle > 0.0f) {
         racer->throttle -= 0.05f * updateRateF;
     }
@@ -5354,6 +5360,7 @@ void update_camera_fixed(f32 updateRate, Object *obj, Object_Racer *racer) {
     f32 diffX;
     f32 diffZ;
     updateRateF = (s32) updateRate;
+    updateRateF *= gTimeDilation[racer->characterId];
     diffX = gCameraObject->trans.x_position - obj->segment.trans.x_position;
     diffZ = gCameraObject->trans.z_position - obj->segment.trans.z_position;
     gCameraObject->trans.y_rotation += ((((-atan2s(diffX, diffZ)) - gCameraObject->trans.y_rotation) + 0x8000) * updateRateF) >> 4;
@@ -5733,6 +5740,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
         gCurrentRacerInput |= B_BUTTON;
     }
     updateRateF = (f32) updateRate;
+    updateRateF *= gTimeDilation[racer->characterId];
     gCameraObject->trans.x_position += (exit->directionX * updateRateF) * 1.5f;
     gCameraObject->trans.z_position += (exit->directionZ * updateRateF) * 1.5f;
     if (gCurrentStickX > 75) {

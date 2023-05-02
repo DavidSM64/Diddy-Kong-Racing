@@ -24,6 +24,7 @@
 #include "types.h"
 #include "macros.h"
 #include "audio_internal.h"
+#include "racer.h"
 
 void alSynSetPitch(ALSynth *synth, ALVoice *v, f32 pitch)
 {
@@ -43,7 +44,7 @@ void alSynSetPitch(ALSynth *synth, ALVoice *v, f32 pitch)
          */
         update->delta  = synth->paramSamples + v->pvoice->offset;
         update->type   = AL_FILTER_SET_PITCH;
-        update->data.f = pitch;
+        update->data.f = pitch * gTimeDilation[0];
         update->next   = 0;
 
         f = v->pvoice->channelKnob;

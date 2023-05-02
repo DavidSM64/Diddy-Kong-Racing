@@ -3908,3 +3908,44 @@ void func_800245B4(s16 arg0) {
         D_800DC700 = 0;
     }
 }
+
+void reset_time_dialation(void) {
+    s32 i;
+    for (i = 0; i < 10; i++) {
+        gTimeDilation[i] = 1.0f;
+        gTimeDilationTimer[i] = 0;
+    }
+}
+
+void update_time_dialation(s32 updateRate) {
+    s32 i;
+    s32 k;
+    s32 numRacers;
+    f32 tickCount = ((f32) updateRate) * 0.005f;
+
+    /*if (get_buttons_pressed_from_player(0) & L_TRIG) {
+        gTimeDilationTimer[get_random_number_from_range(0, 10)] = 300;
+    }*/
+
+    for (i = 0; i < 10; i++) {
+        if (gTimeDilation[i] < 1.0f) {
+            gTimeDilation[i] += tickCount;
+        } else {
+            gTimeDilation[i] = 1.0f;
+        }
+        if (gTimeDilationTimer[i] > 0) {
+            for (k = 0; k < 10; k++) {
+                if (gTimeDilationTimer[k] <= 0) {
+                    if (gTimeDilation[k] > 0.5f) {
+                        gTimeDilation[k] -= tickCount * 2.0f;
+                    } else {
+                        gTimeDilation[k] = 0.5f;
+                    }
+                }
+            }
+        }
+        if (gTimeDilationTimer[i] > 0) {
+            gTimeDilationTimer[i] -= updateRate;
+        }
+    }
+}

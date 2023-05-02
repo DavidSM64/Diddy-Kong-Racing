@@ -478,4 +478,7 @@ void func_80011264(ObjectModel *, Object *);
 void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
 s32 func_80061D30(Object *); //asm func in unknown_062930
 
+void reset_time_dialation(void);
+void update_time_dialation(s32 updateRate);
+
 #endif

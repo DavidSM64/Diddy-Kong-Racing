@@ -7,6 +7,9 @@
 
 #define SEGMENT_NONE -1 // If the level in question does not use segmentation.
 
+extern f32 gTimeDilation[];
+extern s16 gTimeDilationTimer[];
+
 typedef enum ActivePlayers {
     PLAYER_COMPUTER = -1,
     PLAYER_ONE,

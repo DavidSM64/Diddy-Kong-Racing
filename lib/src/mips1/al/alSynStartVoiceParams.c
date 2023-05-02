@@ -2,6 +2,7 @@
 /* RAM_POS: 0x80065BD0 */
 
 #include "alSynStartVoiceParams.h"
+#include "racer.h"
 
 s16 gStereoPanMode = STEREO;
 
@@ -36,7 +37,7 @@ void alSynStartVoiceParams(ALSynth *s, ALVoice *v, ALWaveTable *w, f32 pitch, s1
             update->pan = modify_panning(pan);
             update->volume = vol;
             update->fxMix = fxmix;
-            update->pitch = pitch;
+            update->pitch = pitch * gTimeDilation[0];
             update->samples = __timeToSamples(s, t);
             update->wave = w;
             f = v->pvoice->channelKnob;
