@@ -58,8 +58,8 @@ void func_800C2640(FadeTransition *transition);
 void func_800C0834(s32 updateRate);
 void func_800C27A0(s32 updateRate);
 s32 transition_begin(FadeTransition *transition);
+void render_fade_circle(Gfx **dList, MatrixS **mats, Vertex **verts);
 
-void render_fade_circle(Gfx **dList, MatrixS **mats, Vertex **verts); //Non Matching
 void render_fade_waves(Gfx **dList, MatrixS **mats, Vertex **verts); //Non Matching
 void func_800C1130(s32); //Non Matching
 void func_800C1EE8(s32); //Non Matching

@@ -612,7 +612,7 @@ UNUSED void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2) 
 }
 
 #ifdef NON_EQUIVALENT
-
+//Altetnative attempt: https://decomp.me/scratch/rcJYo
 // Still a work-in-progress but it doesn't seem to cause any problems,
 // which is why it is labeled under NON_EQUIVALENT
 

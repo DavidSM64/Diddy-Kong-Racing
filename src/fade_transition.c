@@ -489,35 +489,31 @@ void render_fade_barndoor_vertical(Gfx **dList, UNUSED MatrixS **mats, UNUSED Ve
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C15D4.s")
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1EE8.s")
 
-#ifdef NON_EQUIVALENT
 #define NUM_OF_VERTS 18
 #define NUM_OF_TRIS 16
 void render_fade_circle(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     Vertex *vertsToRender;
     Triangle *trisToRender;
+    Gfx *gfx;
+    s32 i;
+
     reset_render_settings(dList);
+    gfx = *dList;
+
     vertsToRender = (Vertex *) sTransitionVtx[sTransitionTaskNum[0]];
     trisToRender = (Triangle *) sTransitionTris[sTransitionTaskNum[0]];
-    gSPDisplayList((*dList)++, dTransitionShapeSettings);
-    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(vertsToRender), NUM_OF_VERTS, 0);
-    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
-    vertsToRender += NUM_OF_VERTS;
-    trisToRender += NUM_OF_TRIS;
-    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(vertsToRender), NUM_OF_VERTS, 0);
-    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
-    vertsToRender += NUM_OF_VERTS;
-    trisToRender += NUM_OF_TRIS;
-    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(vertsToRender), NUM_OF_VERTS, 0);
-    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
-    vertsToRender += NUM_OF_VERTS;
-    trisToRender += NUM_OF_TRIS;
-    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(vertsToRender), NUM_OF_VERTS, 0);
-    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
+    gSPDisplayList(gfx++, dTransitionShapeSettings);
+
+    for (i = 0; i < 4; i++) {
+        gSPVertexDKR(gfx++, OS_PHYSICAL_TO_K0(vertsToRender), NUM_OF_VERTS, 0);
+        gSPPolygon(gfx++, OS_PHYSICAL_TO_K0(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
+        vertsToRender += NUM_OF_VERTS;
+        trisToRender += NUM_OF_TRIS;
+    }
+
+    *dList = gfx;
     reset_render_settings(dList);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_circle.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 // This doesn't work properly.

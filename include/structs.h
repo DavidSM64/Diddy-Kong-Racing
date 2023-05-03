@@ -76,8 +76,8 @@ typedef struct TextureHeader {
       // 6 = IA4
       // 7 = CI4 (16 colors)
       // 8 = CI8 (64 colors)
-  /* 0x03 */ u8 unk3;
-  /* 0x04 */ u8 unk4;
+  /* 0x03 */ s8 unk3;
+  /* 0x04 */ s8 unk4;
   /* 0x05 */ u8 numberOfInstances; // Always 1 in the ROM.
   /* 0x06 */ s16 flags;
       // 0x04 = Interlaced texture
