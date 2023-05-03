@@ -1430,7 +1430,98 @@ UNUSED void func_800B3678(Gfx **arg0, MatrixS **arg1, Vertex **arg2) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+void func_800B3E64(Object *);
+void func_800B3740(Object *obj, Gfx **dlist, MatrixS **mtx, Vertex **arg3, s32 flags) {
+    s32 renderFlags;
+    s32 alpha;
+    s32 temp;
+    unk800B0698_44 *sp30;
+    Vertex *vtx;
+
+    renderFlags = (RENDER_FOG_ACTIVE | RENDER_Z_COMPARE);
+    
+    if ((obj->segment.unk40 & flags) && (D_800E2CDC < 0x200)) {
+        return;
+    }
+    alpha = (obj->unk5C_halfs.unk5C >> 8) & 0xFF;
+    if(alpha <= 0) {
+        return;
+    }
+    if ((obj->segment.unk2C.half.upper != 4) && (obj->segment.unk2C.half.upper != 3)) {
+        gDPSetEnvColor((*dlist)++, obj->unk6C_bytes.unk6C, obj->unk6C_bytes.unk6D, obj->unk6C_bytes.unk6E, obj->unk6C_bytes.unk6F);
+        if (alpha != 255) {
+            renderFlags = (RENDER_Z_UPDATE | RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE);
+            gDPSetPrimColor((*dlist)++, 0, 0, obj->unk4A, obj->unk4A, obj->unk4A, alpha);
+        } else {
+            gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+        }
+        if (obj->segment.unk2C.half.upper == 0x80) {
+            sp30 = obj->unk44_0;
+            temp = obj->segment.animFrame;
+            obj->segment.animFrame = temp >> 8;
+            obj->segment.animFrame = (obj->segment.animFrame * 255) / (sp30->unk0);
+            render_sprite_billboard(dlist, mtx, arg3, obj, (unk80068514_arg4 *) obj->unk44_0, renderFlags);
+            obj->segment.animFrame = temp;
+        } else {
+            sp30 = obj->unk44_0;
+            if (sp30->unk0Ptr != 0) {
+                camera_push_model_mtx(dlist, mtx, &obj->segment.trans, 1.0f, 0.0f);
+                load_and_set_texture(dlist, (TextureHeader *) sp30->unk0Ptr, renderFlags, obj->segment.animFrame << 8);
+                gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(sp30->unk0struct.unk8), sp30->unk0struct.unk4, 0);
+                gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL(sp30->unk0struct.unkC), sp30->unk0struct.unk6, 1);
+                func_80069A40(dlist);
+            }
+        }
+        if ((alpha != 255) || (obj->unk4A != 255)) {
+            gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+        }
+        if (obj->unk6C_bytes.unk6F != 0) {
+            gDPSetEnvColor((*dlist)++, 255, 255, 255, 0);
+        }
+    } else {
+        renderFlags = (RENDER_UNK_8000000 | RENDER_Z_UPDATE | RENDER_FOG_ACTIVE | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING);
+        gDPSetEnvColor((*dlist)++, 255, 255, 255, 0);
+        if (obj->segment.unk2C.half.upper == 4) {
+            if (obj->segment.unk38.half.unk3A > 0) {
+                gDPSetPrimColor((*dlist)++, 0, 0, obj->unk4A, obj->unk4A, obj->unk4A, 255);
+                if (obj->unk74_bytes.fourth == 0) {
+                    func_800B3E64(obj);
+                }
+                sp30 = obj->unk44_0;
+                temp = obj->unk74_bytes.second;
+                temp <<= 3;
+                vtx = &sp30->unk0struct.unk8[temp];
+                load_and_set_texture(dlist, (TextureHeader *) sp30->unk0Ptr, renderFlags, obj->segment.animFrame << 8);
+                gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(vtx), sp30->unk0struct.unk4, 0);
+                gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL(sp30->unk0struct.unkC), sp30->unk0struct.unk6, 1);
+                if (obj->unk4A != 255) {
+                    gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+                }
+            }
+        } else if (obj->segment.unk2C.half.upper == 3) {
+            gDPSetPrimColor((*dlist)++, 0, 0, obj->unk4A, obj->unk4A, obj->unk4A, alpha);
+            if (obj->unk68_bytes.unk68 >= 2) {
+                sp30 = obj->unk44_0;
+                load_and_set_texture(dlist, (TextureHeader *) sp30->unk0Ptr, renderFlags, obj->segment.animFrame << 8);
+                gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(sp30->unk0struct.unk8), sp30->unk0struct.unk4, 0);
+                gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL(sp30->unk0struct.unkC),  sp30->unk0struct.unk6, 1);
+            } else if (obj->unk68_bytes.unk68 > 0) {
+                sp30 = obj->unk44_0;
+                load_and_set_texture(dlist, (TextureHeader *) sp30->unk0Ptr, renderFlags, obj->segment.animFrame << 8);
+                gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(sp30->unk0struct.unk8), 4, 0);
+                gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL(&sp30->unk0struct.unkC[sp30->unk0struct.unk6]), 1, 1);
+            }
+            if ((alpha != 255) || (obj->unk4A != 255)) {
+                gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/particles/func_800B3740.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/particles/func_800B3E64.s")
 
 UNUSED unk800E2CF0 *func_800B4488(s32 idx) {

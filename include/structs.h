@@ -1703,14 +1703,20 @@ typedef struct ObjectSegment {
 } ObjectSegment;
 
 typedef struct unk800B0698_44_0 {
-    u8 pad0[0x12];
-    u16 unk12;
+    u8 pad0[0x3];
+    /* 0x04 */ s16 unk4;
+    /* 0x06 */ s16 unk6;
+    /* 0x08 */ Vertex *unk8;
+    /* 0x0C */ Triangle *unkC;
+    /* 0x10 */ u16 unk10;
+    /* 0x12 */ u16 unk12;
 } unk800B0698_44_0;
 
 typedef struct unk800B0698_44 {
     union {
         unk800B0698_44_0 *unk0Ptr;
         s16 unk0;
+        struct unk800B0698_44_0 unk0struct;
     };
 } unk800B0698_44;
 
@@ -1775,6 +1781,12 @@ typedef struct Object {
           /* 0x006C */ s16 unk6C;
           /* 0x006E */ s16 unk6E;
       } unk6C_halfs;
+      struct {
+          /* 0x006C */ u8 unk6C;
+          /* 0x006D */ u8 unk6D;
+          /* 0x006E */ u8 unk6E;
+          /* 0x006F */ u8 unk6F;
+      } unk6C_bytes;
   };
   union {
     /* 0x0070 */ u32 *unk70;
@@ -1786,9 +1798,9 @@ typedef struct Object {
   /* 0x0074 */ s32 unk74_signed;
   struct {
   /* 0x0074 */ u8 first;
-  /* 0x0074 */ u8 second;
-  /* 0x0074 */ u8 third;
-  /* 0x0074 */ u8 fourth;
+  /* 0x0075 */ u8 second;
+  /* 0x0076 */ u8 third;
+  /* 0x0077 */ s8 fourth;
   } unk74_bytes;
   };
 

@@ -517,20 +517,27 @@ void render_fade_circle(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **vert
 
 #ifdef NON_EQUIVALENT
 // This doesn't work properly.
-void render_fade_waves(Gfx **dList, MatrixS **mats, Vertex **verts) {
+void render_fade_waves(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+    Gfx *gfx;
     s32 i;
+
     reset_render_settings(dList);
-    gSPDisplayList((*dList)++, dTransitionShapeSettings);
+    gfx = *dList;
+
+    gSPDisplayList(gfx++, dTransitionShapeSettings);
+
     for(i = 0; i < 6; i++) {
         s32 index = sTransitionTaskNum[0] + i;
         if(i != 1 && i != 4) {
-            gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), 16, 0);
-            gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 14, TRIN_DISABLE_TEXTURE);
+            gSPVertexDKR(gfx++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), 14, 0);
+            gSPPolygon(gfx++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 14, TRIN_DISABLE_TEXTURE);
         } else {
-            gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), 14, 0);
-            gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 12, TRIN_DISABLE_TEXTURE);
+            gSPVertexDKR(gfx++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), 16, 0);
+            gSPPolygon(gfx++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 12, TRIN_DISABLE_TEXTURE);
         }
     }
+
+    *dList = gfx;
     reset_render_settings(dList);
 }
 #else
