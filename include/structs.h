@@ -495,6 +495,7 @@ typedef struct Triangle {
 /* Size: 12 bytes */
 typedef struct TriangleBatchInfo {
 /* 0x00 */ u8  textureIndex; // 0xFF = No texture
+/* 0x01 */ s8  unk1;
 /* 0x02 */ s16 verticesOffset;
 /* 0x04 */ s16 facesOffset;
 /* 0x06 */ u8  unk6; // 0xFF = vertex colors, otherwise use dynamic lighting normals (Objects only)
