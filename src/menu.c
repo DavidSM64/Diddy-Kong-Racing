@@ -1712,7 +1712,10 @@ void func_80080518(f32 arg0, f32 arg1) {
     D_800E1DC4 = (s32) (arg1 * 32.0f);
 }
 
+//https://decomp.me/scratch/W0adv
 GLOBAL_ASM("asm/non_matchings/menu/func_80080580.s")
+
+//https://decomp.me/scratch/lS3f5
 GLOBAL_ASM("asm/non_matchings/menu/func_80080BC8.s")
 
 void func_80080E6C(void) {
@@ -1720,6 +1723,7 @@ void func_80080E6C(void) {
     D_800E1DB4 = (s32)(1 - D_800E1DB4);
 }
 
+//https://decomp.me/scratch/IZ1Gq
 GLOBAL_ASM("asm/non_matchings/menu/func_80080E90.s")
 
 // init_save_data
@@ -5833,6 +5837,7 @@ void func_8008F534(void) {
     set_D_800DD430(0);
 }
 
+//https://decomp.me/scratch/ubeU1
 GLOBAL_ASM("asm/non_matchings/menu/func_8008F618.s")
 GLOBAL_ASM("asm/non_matchings/menu/renderTrackSelect.s")
 
@@ -8406,6 +8411,7 @@ void allocate_and_set_menu_image_properties(s32 imageID) {
 void func_8009CA58(void) {
 }
 
+//https://decomp.me/scratch/rfLCI
 GLOBAL_ASM("asm/non_matchings/menu/func_8009CA60.s")
 
 /**

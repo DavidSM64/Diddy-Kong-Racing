@@ -1774,6 +1774,12 @@ typedef struct Object {
           /* 0x0068 */ s16 unk68;
           /* 0x006A */ s16 unk6A;
       } unk68_halfs;
+      struct {
+          /* 0x0068 */ u8 unk68;
+          /* 0x0069 */ u8 unk69;
+          /* 0x006A */ u8 unk6A;
+          /* 0x006B */ u8 unk6B;
+      } unk68_bytes;
   };
   union {
   /* 0x006C */ Object_6C *unk6C; //player + 0x370

@@ -446,7 +446,7 @@ void func_80026070(LevelModelSegmentBoundingBox *, f32, f32, f32);
 void func_80026430(LevelModelSegment *, f32, f32, f32);
 void func_80026C14(s16 arg0, s16 arg1, s32 arg2);
 void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3);
-
+//Alternative Attempt: https://decomp.me/scratch/2C6dJ
 void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     Vertex *spAC;
     s8 *spA8;
@@ -684,6 +684,7 @@ void set_skydome_visbility(s32 renderSky) {
     gSceneRenderSkyDome = renderSky;
 }
 
+//https://decomp.me/scratch/jmbc1
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028050.s")
 
 /**
