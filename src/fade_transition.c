@@ -515,34 +515,40 @@ void render_fade_circle(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **vert
     reset_render_settings(dList);
 }
 
-#ifdef NON_EQUIVALENT
-// This doesn't work properly.
-void render_fade_waves(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+void render_fade_waves(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     Gfx *gfx;
     s32 i;
-
-    reset_render_settings(dList);
-    gfx = *dList;
-
+    Vertex *v;
+    Triangle *t;
+    reset_render_settings(dlist);
+    gfx = *dlist;
+    v = (Vertex *)sTransitionVtx[sTransitionTaskNum[0]];
+    t = (Triangle *)sTransitionTris[sTransitionTaskNum[0]];
     gSPDisplayList(gfx++, dTransitionShapeSettings);
-
+    /*
+    i == 0 -> Left third wave?
+    i == 1 -> Middle third wave?
+    i == 2 -> Right third wave?
+    i == 3 -> Left third mask? ("mask" being pure black square in this context)
+    i == 4 -> Middle third mask?
+    i == 5 -> Right third mask?
+    */
     for(i = 0; i < 6; i++) {
-        s32 index = sTransitionTaskNum[0] + i;
-        if(i != 1 && i != 4) {
-            gSPVertexDKR(gfx++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), 14, 0);
-            gSPPolygon(gfx++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 14, TRIN_DISABLE_TEXTURE);
+        if(i == 1 || i == 4) { // Is middle third?
+            gSPVertexDKR(gfx++, OS_PHYSICAL_TO_K0(v), 14, 0);
+            gSPPolygon(gfx++, OS_PHYSICAL_TO_K0(t), 12, TRIN_DISABLE_TEXTURE);
+            v += 14;
+            t += 12;
         } else {
-            gSPVertexDKR(gfx++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), 16, 0);
-            gSPPolygon(gfx++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 12, TRIN_DISABLE_TEXTURE);
+            gSPVertexDKR(gfx++, OS_PHYSICAL_TO_K0(v), 16, 0);
+            gSPPolygon(gfx++, OS_PHYSICAL_TO_K0(t), 14, TRIN_DISABLE_TEXTURE);
+            v += 16;
+            t += 14;
         }
     }
-
-    *dList = gfx;
-    reset_render_settings(dList);
+    *dlist = gfx;
+    reset_render_settings(dlist);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_waves.s")
-#endif
 
 /**
  * Renders a transition effect on screen that will close in from the opposite corners of the screen.
