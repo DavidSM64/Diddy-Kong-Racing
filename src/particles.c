@@ -1430,14 +1430,12 @@ UNUSED void func_800B3678(Gfx **arg0, MatrixS **arg1, Vertex **arg2) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-void func_800B3E64(Object *);
-void func_800B3740(Object *obj, Gfx **dlist, MatrixS **mtx, Vertex **arg3, s32 flags) {
+void func_800B3740(Object *obj, Gfx **dlist, MatrixS **mtx, Vertex **vtx, s32 flags) {
     s32 renderFlags;
     s32 alpha;
     s32 temp;
     unk800B0698_44 *sp30;
-    Vertex *vtx;
+    Vertex *tempvtx;
 
     renderFlags = (RENDER_FOG_ACTIVE | RENDER_Z_COMPARE);
     
@@ -1457,11 +1455,10 @@ void func_800B3740(Object *obj, Gfx **dlist, MatrixS **mtx, Vertex **arg3, s32 f
             gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
         }
         if (obj->segment.unk2C.half.upper == 0x80) {
-            sp30 = obj->unk44_0;
             temp = obj->segment.animFrame;
-            obj->segment.animFrame = temp >> 8;
-            obj->segment.animFrame = (obj->segment.animFrame * 255) / (sp30->unk0);
-            render_sprite_billboard(dlist, mtx, arg3, obj, (unk80068514_arg4 *) obj->unk44_0, renderFlags);
+            obj->segment.animFrame >>= 8;
+            obj->segment.animFrame = (obj->segment.animFrame * 255) / (obj->unk44_0->unk0);
+            render_sprite_billboard(dlist, mtx, vtx, obj, (unk80068514_arg4 *) obj->unk44_0, renderFlags);
             obj->segment.animFrame = temp;
         } else {
             sp30 = obj->unk44_0;
@@ -1491,9 +1488,9 @@ void func_800B3740(Object *obj, Gfx **dlist, MatrixS **mtx, Vertex **arg3, s32 f
                 sp30 = obj->unk44_0;
                 temp = obj->unk74_bytes.second;
                 temp <<= 3;
-                vtx = &sp30->unk0struct.unk8[temp];
+                tempvtx = &sp30->unk0struct.unk8[temp];
                 load_and_set_texture(dlist, (TextureHeader *) sp30->unk0Ptr, renderFlags, obj->segment.animFrame << 8);
-                gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(vtx), sp30->unk0struct.unk4, 0);
+                gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(tempvtx), sp30->unk0struct.unk4, 0);
                 gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL(sp30->unk0struct.unkC), sp30->unk0struct.unk6, 1);
                 if (obj->unk4A != 255) {
                     gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
@@ -1518,9 +1515,6 @@ void func_800B3740(Object *obj, Gfx **dlist, MatrixS **mtx, Vertex **arg3, s32 f
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/particles/func_800B3740.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800B3E64.s")
 

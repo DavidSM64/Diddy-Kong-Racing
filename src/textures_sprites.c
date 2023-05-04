@@ -1568,24 +1568,17 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/free_sprite.s")
 
 #ifdef NON_MATCHING
 void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2) {
-    s32 pad[2];
+    UNUSED s32 pad[2];
     s32 sprUnk4;
     s32 sprUnk6;
     s32 y0;
-    s32 temp_a3_3;
     s32 x0;
     s32 x1;
     s32 y1;
-    s16 temp_t8;
-    s32 temp_t9;
     s32 xTemp;
     s32 yTemp;
-    s32 var_s3;
     s32 left;
     s32 var_t5;
-    s32 vertIndex2;
-    s32 vertIndex0;
-    s32 vertIndex1;
     s32 curVertIndex;
     s32 j;
     s32 texWidth;
