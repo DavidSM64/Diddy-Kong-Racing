@@ -476,7 +476,7 @@ void render_fade_barndoor_horizontal(Gfx **dList, UNUSED MatrixS **mats, UNUSED 
 
 /**
  * Renders a transition effect on screen that will close in from both sides vertically.
- * Codewase, exactly the same as above, but uses a different vertex layout to make the difference.
+ * Codewise, exactly the same as above, but uses a different vertex layout to make the difference.
 */
 void render_fade_barndoor_vertical(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     reset_render_settings(dList);

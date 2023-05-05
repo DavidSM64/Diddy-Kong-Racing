@@ -619,25 +619,35 @@ UNUSED void copy_framebuffer_size_to_coords(s32 *x1, s32 *y1, s32 *x2, s32 *y2) 
 #define SCISSOR_INTERLACE G_SC_NON_INTERLACE
 
 void func_80066CDC(Gfx **dlist, MatrixS **mats) {
-    u32 sp58_vidHeight;
-    u32 sp54_vidWidth;
+    u32 sp58_y;
+    u32 sp54_x;
     u32 sp50_altPosY;
     u32 sp4C_altPosX;
     u32 posX;
     u32 posY;
-    u32 videoWidthHalf;
-    u32 videoHeightHalf;
+    u32 x;
+    u32 y;
     u32 videoHeight;
     u32 videoWidth;
     u32 widthAndHeight;
+    s32 savedCameraID;
+    s32 originalCameraID;
+    s32 tempCameraID;
+    s32 viewports;
 
-    if (func_8000E184() && gNumberOfViewports == 0) {
+    originalCameraID = gActiveCameraID;
+    savedCameraID = gActiveCameraID;
+
+    if (func_8000E184() && gNumberOfViewports == VIEWPORTS_COUNT_1_PLAYER) {
         gActiveCameraID = 1;
+        savedCameraID = 0;
     }
     widthAndHeight = get_video_width_and_height_as_s32();
     videoHeight = GET_VIDEO_HEIGHT(widthAndHeight);
     videoWidth = GET_VIDEO_WIDTH(widthAndHeight);
-    if (gScreenViewports[gActiveCameraID].flags & VIEWPORT_EXTRA_BG) {
+    if (gScreenViewports[savedCameraID].flags & VIEWPORT_EXTRA_BG) {
+        tempCameraID = gActiveCameraID;
+        gActiveCameraID = savedCameraID;
         gDPSetScissor((*dlist)++, SCISSOR_INTERLACE,
             gScreenViewports[gActiveCameraID].scissorX1,
             gScreenViewports[gActiveCameraID].scissorY1,
@@ -645,30 +655,33 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
             gScreenViewports[gActiveCameraID].scissorY2
         );
         func_80068158(dlist, 0, 0, 0, 0);
+        gActiveCameraID = tempCameraID;
         if (mats != 0) {
             func_80067D3C(dlist, mats);
         }
+        gActiveCameraID = originalCameraID;
         return;
     }
-    if (gNumberOfViewports == VIEWPORTS_COUNT_3_PLAYERS) {
-        gNumberOfViewports = VIEWPORTS_COUNT_4_PLAYERS;
+    viewports = gNumberOfViewports;
+    if (viewports == VIEWPORTS_COUNT_3_PLAYERS) {
+        viewports = VIEWPORTS_COUNT_4_PLAYERS;
     }
-    videoHeightHalf = videoHeight >> 1;
-    videoWidthHalf = videoWidth >> 1;
-    sp54_vidWidth = videoWidthHalf;
-    sp58_vidHeight = videoHeightHalf;
+    y = videoHeight >> 1;
+    x = videoWidth >> 1;
+    sp54_x = x;
+    sp58_y = y;
     if (osTvType == TV_TYPE_PAL) {
-        sp58_vidHeight = 145;
+        sp58_y = 145;
     }
 
-    switch (gNumberOfViewports) {
+    switch (viewports) {
         case VIEWPORTS_COUNT_1_PLAYER:
-            posY = sp58_vidHeight;
+            posY = sp58_y;
             if (osTvType == TV_TYPE_PAL) {
                 posY -= 18;
             }
             gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, videoWidth, videoHeight);
-            posX = videoWidthHalf;
+            posX = x;
             break;
         case VIEWPORTS_COUNT_2_PLAYERS:
             if (gActiveCameraID == 0) {
@@ -676,58 +689,58 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
                 if (osTvType == TV_TYPE_PAL) {
                     posY -= 12;
                 }
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, videoWidth, (videoHeightHalf - (videoHeight >> 7)));
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, videoWidth, (y - (videoHeight >> 7)));
             } else {
-                posY = videoHeightHalf;
+                posY = y;
                 posY += videoHeight >> 2;
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, (videoHeightHalf + (videoHeight >> 7)), videoWidth, (videoHeight - (videoHeight >> 7)));
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, (y + (videoHeight >> 7)), videoWidth, (videoHeight - (videoHeight >> 7)));
             }
-            posX = videoWidthHalf;
+            posX = x;
             break;
         case VIEWPORTS_COUNT_3_PLAYERS:
             if (gActiveCameraID == 0) {
-                posY = sp58_vidHeight;
+                posY = sp58_y;
                 posX = videoWidth >> 2;
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, videoWidthHalf - (videoWidth >> 8), videoHeight);
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, x - (videoWidth >> 8), videoHeight);
             } else {
-                posY = sp58_vidHeight;
-                posX = videoWidthHalf;
-                posX += videoWidth >> 2;
-                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, videoWidthHalf + (videoWidth >> 8), 0, videoWidth - (videoWidth >> 8), videoHeight);
+                posY = sp58_y;
+                //posX = x;
+                posX = x + (videoWidth >> 2);
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, x + (videoWidth >> 8), 0, videoWidth - (videoWidth >> 8), videoHeight);
             }
             break;
         case VIEWPORTS_COUNT_4_PLAYERS:
-            sp58_vidHeight >>= 1;
-            sp54_vidWidth = videoWidthHalf >> 1;
+            sp58_y >>= 1;
+            sp54_x = x >> 1;
             posY = 0;
             posX = 0;
             switch (gActiveCameraID) {
                 case 0:
                     //Using posX and posY here is not smart since IDO can't optimize out the zero now.
                     //Why here of all places did they do this instead of just setting zero like everywhere else?
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, posX, posY, (videoWidthHalf - (videoWidth >> 8)), (videoHeightHalf - (videoHeight >> 7)));
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, posX, posY, (x - (videoWidth >> 8)), (y - (videoHeight >> 7)));
+                    break;
                 case 1:
-                    posX += videoWidthHalf;
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, (videoWidthHalf + (videoWidth >> 8)), 0, ((videoWidthHalf * 2) - (videoWidth >> 8)), (videoHeightHalf - (videoHeight >> 7)));
+                    posX = x;
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, (sp54_x + (videoWidth >> 8)), 0, ((sp54_x + sp54_x) - (videoWidth >> 8)), (y - (videoHeight >> 7)));
                     break;
                 case 2:
-                    posY += videoHeightHalf;
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, videoHeightHalf + (videoHeight >> 7), videoWidthHalf - (videoWidth >> 8), (videoHeightHalf * 2) - (videoHeight >> 7));
+                    posY = y;
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, y + (videoHeight >> 7), x - (videoWidth >> 8), (y + y) - (videoHeight >> 7));
                     break;
                 case 3:
-                    posY += videoHeightHalf;
-                    posX += videoWidthHalf;
-                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, videoWidthHalf + (videoWidth >> 8), videoHeightHalf + (videoHeight >> 7), (videoWidthHalf * 2) - (videoWidth >> 8), (videoHeightHalf * 2) - (videoHeight >> 7));
-                    break;
-                default:
+                    posY = y;
+                    posX = x;
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, (sp54_x + (videoWidth >> 8)), y + (videoHeight >> 7), (x + x) - (videoWidth >> 8), (y + y) - (videoHeight >> 7));
                     break;
             }
-            posY += sp58_vidHeight;
-            posX += sp54_vidWidth;
+            posY += sp58_y;
+            posX += sp54_x;
             if (osTvType == TV_TYPE_PAL) {
-                posY -= 6;
-                if (gActiveCameraID < 2) {
+                if (gActiveCameraID <= VIEWPORTS_COUNT_2_PLAYERS) {
                     posY -= 20;
+                } else {
+                    posY -= 6;
                 }
             }
             break;
@@ -741,10 +754,11 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
     if (osTvType == TV_TYPE_PAL) {
         posX -= 4;
     }
-    func_80068158(dlist, sp54_vidWidth, sp58_vidHeight, posX, posY);
+    func_80068158(dlist, sp54_x, sp58_y, posX, posY);
     if (mats != NULL) {
         func_80067D3C(dlist, mats);
     }
+    gActiveCameraID = originalCameraID;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/camera/func_80066CDC.s")
