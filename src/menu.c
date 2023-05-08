@@ -263,7 +263,7 @@ char **D_80126C1C;
 s32 D_80126C20;
 s32 D_80126C24;
 s8 D_80126C28;
-s32 *D_80126C2C;
+unk80080BC8 (*D_80126C2C)[2];
 u16 (*gCheatsAssetData)[30]; // Cheat table.
 s32 D_80126C34;
 s32 gNumberOfCheats;
@@ -1438,31 +1438,36 @@ s8 D_800E1CD0[32] = {
     16, 17, 18, 16, 18, 19, 0, 0
 };
 
-s8 D_800E1CF0[60] = {
-    0, 0, 3, 0, 2, 1, 0, 0,
-    2, 1, 1, 1, 2, 1, 3, 0,
-    3, 3, 2, 1, 3, 3, 2, 2,
-    1, 2, 2, 2, 3, 3, 1, 2,
-    3, 3, 0, 3, 0, 0, 1, 1,
-    1, 2, 0, 0, 1, 2, 0, 3,
-    1, 1, 2, 1, 2, 2, 1, 1,
-    2, 2, 1, 2
+// UV coordinate indices
+u8 D_800E1CF0[5][12] = {
+    { 0, 0, 3, 0, 2, 1, 0, 0, 2, 1, 1, 1 }, 
+    { 2, 1, 3, 0, 3, 3, 2, 1, 3, 3, 2, 2 }, 
+    { 1, 2, 2, 2, 3, 3, 1, 2, 3, 3, 0, 3 }, 
+    { 0, 0, 1, 1, 1, 2, 0, 0, 1, 2, 0, 3 }, 
+    { 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 1, 2 }
 };
 
-u16 D_800E1D2C[40] = {
-    0x0000, 0x0000, 0x0100, 0x0000, 0x01FF, 0x00FF, 0x0001, 0x00FF,
-    0x01FF, 0x00FF, 0x0100, 0x0000, 0x0100, 0xFF00, 0x01FF, 0xFF01,
-    0x0001, 0xFF01, 0x01FF, 0xFF01, 0x0100, 0xFF00, 0x0000, 0xFF00,
-    0x0000, 0x0000, 0x0001, 0x00FF, 0x0001, 0xFF01, 0x0000, 0xFF00,
-    0x0001, 0x00FF, 0x01FF, 0x00FF, 0x01FF, 0xFF01, 0x0001, 0xFF01
+// Position offsets, why are there 10?
+u16 D_800E1D2C[10][4] = {
+    {   0,    0, 256,    0 },
+    { 511,  255,   1,  255 },
+    { 511,  255, 256,    0 },
+    { 256, -256, 511, -255 },
+    {   1, -255, 511, -255 },
+    { 256, -256,   0, -256 },
+    {   0,    0,   1,  255 },
+    {   1, -255,   0, -256 },
+    {   1,  255, 511,  255 },
+    { 511, -255,   1, -255 }
 };
 
-s16 D_800E1D7C[20] = {
-    0x00D8, 0x00D8, 0x00D8, 0x0100,
-    0x00B0, 0x00B0, 0x00B0, 0x0100,
-    0x0060, 0x0060, 0x0060, 0x0100,
-    0x0088, 0x0088, 0x0088, 0x0100,
-    0x0100, 0x0100, 0x0100, 0x0100
+// Colours
+s16 D_800E1D7C[5][4] = {
+    { 216, 216, 216, 256 },
+    { 176, 176, 176, 256 },
+    {  96,  96,  96, 256 },
+    { 136, 136, 136, 256 },
+    { 256, 256, 256, 256 }
 };
 
 s32 *D_800E1DA4[2] = {
@@ -1713,7 +1718,95 @@ void func_80080518(f32 arg0, f32 arg1) {
 }
 
 //https://decomp.me/scratch/W0adv
+#ifdef NON_EQUIVALENT
+void func_80080580(Gfx** dlist, s32 x, s32 y, s32 x0, s32 y0, s32 x1, s32 y1, s32 colour, TextureHeader* tex) {
+    s32 uVals[4];
+    s32 vVals[4];
+    Vertex* verts;
+    Triangle* tris;
+    s32 j;
+    s32 i;
+    s32 texEnabled;
+
+    //((unk80080BC8*)((u8*)D_80126C2C[D_800E1DB8] + (D_800E1DB4 * 4)))->texture = tex;
+    ((unk80080BC8*)((u8*)D_80126C2C + (D_800E1DB8 << 5) + (D_800E1DB4 * 4)))->texture = tex;
+    //(&(*D_80126C2C)[D_800E1DB8] + (D_800E1DB4 * 4))->texture = tex;
+    if (tex != NULL) {
+        uVals[0] = 0;
+        vVals[0] = 0;
+        uVals[1] = D_800E1DC0 * x1;
+        uVals[2] = (x0 - x1) * D_800E1DC0;
+        uVals[3] = D_800E1DC0 * x0;
+        vVals[1] = D_800E1DC4 * y1;
+        vVals[2] = (y0 - y1) * D_800E1DC4;
+        vVals[3] = D_800E1DC4 * y0;
+        tris = ((unk80080BC8*)((u8*)D_80126C2C + (D_800E1DB8 << 5) + (D_800E1DB4 * 4)))->triangles;
+        for (i = 0; i < 5; i++) {
+            tris[i*2].uv0.u = uVals[D_800E1CF0[i][0]];
+            tris[i*2].uv0.v = vVals[D_800E1CF0[i][1]];
+            tris[i*2].uv1.u = uVals[D_800E1CF0[i][2]];
+            tris[i*2].uv1.v = vVals[D_800E1CF0[i][3]];
+            tris[i*2].uv2.u = uVals[D_800E1CF0[i][4]];
+            tris[i*2].uv2.v = vVals[D_800E1CF0[i][5]];
+            tris[i*2+1].uv0.u = uVals[D_800E1CF0[i][6]];
+            tris[i*2+1].uv0.v = vVals[D_800E1CF0[i][7]];
+            tris[i*2+1].uv1.u = uVals[D_800E1CF0[i][8]];
+            tris[i*2+1].uv1.v = vVals[D_800E1CF0[i][9]];
+            tris[i*2+1].uv2.u = uVals[D_800E1CF0[i][10]];
+            tris[i*2+1].uv2.v = vVals[D_800E1CF0[i][11]];
+        }
+    }
+    verts = ((unk80080BC8*)((u8*)D_80126C2C + (D_800E1DB8 << 5) + (D_800E1DB4 * 4)))->vertices;
+    for (i = 0; i < 5; i++) {
+        for(j = 0; j < 4; j++) {
+            verts[j].x = x;
+            verts[j].y = y;
+            verts[j].x += (D_800E1D2C[j][0] * x0);
+            verts[j].x += (D_800E1D2C[j][1] * x1);
+            verts[j].y += (D_800E1D2C[j][2] * y0);
+            verts[j].y += (D_800E1D2C[j][3] * y1);
+            verts[j].z = 0;
+            verts[j].r = (s32) (D_800E1D7C[i][0] * ((colour >> 0x18) & 0xFF)) >> 8;
+            verts[j].g = (s32) (D_800E1D7C[i][1] * ((colour >> 0x10) & 0xFF)) >> 8;
+            verts[j].b = (s32) (D_800E1D7C[i][2] * ((colour >> 8) & 0xFF)) >> 8;
+            verts[j].a = (s32) (D_800E1D7C[i][3] * (colour & 0xFF)) >> 8;
+        }
+    }
+    if (dlist != NULL) {
+        ((unk80080BC8*)((u8*)D_80126C2C + (D_800E1DB8 << 5) + (D_800E1DB4 * 4)))->unk18 = 1;
+        gSPDisplayList((*dlist)++, &dMenuHudSettings); 
+        if (tex != NULL) {
+            texEnabled = TRUE;
+            gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudSettings[8]), 2);
+            gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(tex->cmd), tex->numberOfCommands);
+        } else {
+            texEnabled = FALSE;
+            gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudSettings[6]), 2);
+        }
+        gDPPipeSync((*dlist)++);
+        /*
+        temp_v0_6 = *dlist;
+        *dlist = temp_v0_6 + 8;
+        temp_v0_6->words.w0 = (((((*(D_80126C2C + (D_800E1DB8 << 5) + (D_800E1DB4 * 4)) + 0x80000000) & 6) | 0x98) & 0xFF) << 0x10) | 0x04000000 | 0x170;
+        temp_v0_6->words.w1 = *(D_80126C2C + (D_800E1DB8 << 5) + (D_800E1DB4 * 4)) + 0x80000000;
+        */
+        gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(((unk80080BC8*)((u8*)D_80126C2C + (i * 32) + (D_800E1DB4 * 4)))->vertices), 20, 0); 
+        /* 
+        temp_v0_7 = *dlist;
+        *dlist = temp_v0_7 + 8;
+        temp_v0_7->words.w0 = (((texEnabled | 0x90) & 0xFF) << 0x10) | 0x05000000 | 0xA0;
+        temp_v0_7->words.w1 = (D_80126C2C + (D_800E1DB8 << 5) + (D_800E1DB4 * 4))->unk8 + 0x80000000;
+        */
+        gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL(((unk80080BC8*)((u8*)D_80126C2C + (i * 32) + (D_800E1DB4 * 4)))->triangles), 10, texEnabled);
+        reset_render_settings(dlist);
+    } else {
+        ((unk80080BC8*)((u8*)D_80126C2C + (D_800E1DB8 * 32) + (D_800E1DB4 * 4)))->unk18 = 0;
+    }
+    D_800E1DB8++;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/func_80080580.s")
+#endif
 
 //https://decomp.me/scratch/lS3f5
 GLOBAL_ASM("asm/non_matchings/menu/func_80080BC8.s")
