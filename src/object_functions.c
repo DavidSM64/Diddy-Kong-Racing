@@ -540,9 +540,6 @@ void obj_loop_torch_mist(Object *obj, s32 updateRate) {
     obj->segment.animFrame += obj->unk78 * updateRate;
 }
 
-void obj_init_effectbox(UNUSED Object *obj, UNUSED LevelObjectEntry_EffectBox *entry) {
-}
-
 #ifdef NON_MATCHING
 // Has regalloc issues
 
@@ -940,7 +937,8 @@ void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 updateRate) {
     } else {
         obj->segment.trans.flags &= (0xFFFF - OBJ_FLAGS_INVISIBLE);
     }
-    if (obj->interactObj->distance < 100 && !(obj->segment.trans.flags & OBJ_FLAGS_INVISIBLE)) {
+
+    if (obj->interactObj->distance < 100) {
         racerObjs = get_racer_objects(&numObjects);
         for (i = 0; i < numObjects; i++) {
             curRacerObj = racerObjs[i];
@@ -949,7 +947,7 @@ void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 updateRate) {
                 diffX = curRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 diffY = curRacerObj->segment.trans.y_position - obj->segment.trans.y_position;
                 diffZ = curRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                if ((s32) sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < 100) {
+                if ((s32) ((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < 100 * 100) {
                     racer->zipperDirCorrection = TRUE;
                     racer->zipperObj = obj;
                 }
@@ -1839,9 +1837,6 @@ void obj_loop_infopoint(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
-void obj_init_smoke(UNUSED Object *obj, UNUSED LevelObjectEntry_Smoke *entry) {
-}
-
 void obj_loop_smoke(Object *obj, s32 updateRate) {
     f32 updateRateF = updateRate;
     obj->segment.trans.x_position += obj->segment.x_velocity * updateRateF;
@@ -1854,18 +1849,12 @@ void obj_loop_smoke(Object *obj, s32 updateRate) {
     }
 }
 
-void obj_init_unknown25(UNUSED Object *obj, UNUSED LevelObjectEntry_Unknown25 *entry) {
-}
-
 void obj_loop_unknown25(Object *obj, s32 updateRate) {
     obj->segment.animFrame += updateRate * 8;
     if (obj->segment.animFrame > 255) {
         gParticlePtrList_addObject(obj);
         obj->segment.animFrame = 255;
     }
-}
-
-void obj_init_wardensmoke(UNUSED Object *obj, UNUSED LevelObjectEntry_WardenSmoke *entry) {
 }
 
 void obj_loop_wardensmoke(Object *obj, s32 updateRate) {
@@ -1978,6 +1967,18 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = entry->radius;
     obj->interactObj->pushForce = 0;
+
+#ifndef UNLOCK_ALL
+    settings = get_settings();
+    // Disable the warp if it's for the first boss encounter, having collected every balloon.
+    if ((exit->bossFlag == WARP_BOSS_FIRST) && (settings->balloonsPtr[settings->worldId] == 8)) {
+        gParticlePtrList_addObject(obj);
+    }
+    // Disable the warp if it's for the second boss encounter, having not collected every balloon.
+    if ((exit->bossFlag == WARP_BOSS_REMATCH) && (settings->balloonsPtr[settings->worldId] < 8)) {
+        gParticlePtrList_addObject(obj);
+    }
+#endif
 }
 
 /**
@@ -1999,37 +2000,21 @@ void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
     f32 rotDiff;
 
     exit = &obj->unk64->exit;
-    enableWarp = TRUE;
-#ifndef UNLOCK_ALL
-    settings = get_settings();
-    // Disable the warp if it's for the first boss encounter, having collected every balloon.
-    if ((exit->bossFlag == WARP_BOSS_FIRST) && (settings->balloonsPtr[settings->worldId] == 8)) {
-        enableWarp = FALSE;
-    }
-    // Disable the warp if it's for the second boss encounter, having not collected every balloon.
-    if ((exit->bossFlag == WARP_BOSS_REMATCH) && (settings->balloonsPtr[settings->worldId] < 8)) {
-        enableWarp = FALSE;
-    }
-#else
-    enableWarp = TRUE;
-#endif
-    if (enableWarp) {
-        if (obj->interactObj->distance < exit->radius) {
-            dist = exit->radius;
-            racerObjects = get_racer_objects(&numberOfRacers);
-            for (i = 0; i < numberOfRacers; i++) {
-                racerObj = racerObjects[i];
-                racer = &racerObj->unk64->racer;
-                if ((racer->playerIndex != PLAYER_COMPUTER) && (racer->exitObj == NULL)) {
-                    diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
-                    diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
-                    diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                    if ((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ) < dist * dist) {
-                        rotDiff = (exit->directionX * racerObj->segment.trans.x_position) + (exit->directionZ * racerObj->segment.trans.z_position) + exit->rotationDiff;
-                        if (rotDiff < 0.0f) {
-                            racer->exitObj = obj;
-                            racer->transitionTimer = -120;
-                        }
+    if (obj->interactObj->distance < exit->radius) {
+        dist = exit->radius;
+        racerObjects = get_racer_objects(&numberOfRacers);
+        for (i = 0; i < numberOfRacers; i++) {
+            racerObj = racerObjects[i];
+            racer = &racerObj->unk64->racer;
+            if ((racer->playerIndex != PLAYER_COMPUTER) && (racer->exitObj == NULL)) {
+                diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
+                diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
+                diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
+                if ((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ) < dist * dist) {
+                    rotDiff = (exit->directionX * racerObj->segment.trans.x_position) + (exit->directionZ * racerObj->segment.trans.z_position) + exit->rotationDiff;
+                    if (rotDiff < 0.0f) {
+                        racer->exitObj = obj;
+                        racer->transitionTimer = -120;
                     }
                 }
             }
@@ -2043,16 +2028,10 @@ void obj_init_cameracontrol(Object *obj, LevelObjectEntry_CameraControl *entry) 
     func_80011390();
 }
 
-void obj_loop_cameracontrol(UNUSED Object *obj, UNUSED s32 updateRate) {
-}
-
 void obj_init_setuppoint(Object *obj, LevelObjectEntry_SetupPoint *entry) {
     obj->action = entry->unk8;
     obj->unk7C.word = entry->unk9;
     obj->segment.trans.y_rotation = entry->angleY << 6 << 4; // Not sure about the values here.
-}
-
-void obj_loop_setuppoint(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
 /**
@@ -2723,9 +2702,6 @@ void play_taj_voice_clip(u16 soundID, s32 interrupt) {
     if (!gTajSoundMask) {
         play_sound_global(soundID, &gTajSoundMask);
     }
-}
-
-void obj_loop_gbparkwarden(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
 /**
@@ -4796,15 +4772,6 @@ void obj_loop_bubbler(Object *obj, s32 updateRate) {
 void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry) {
     obj->unk64 = (Object_64 *) ((s32) get_misc_asset(MISC_ASSET_UNK14) + (entry->unk8[0] << 7));
     obj->segment.unk3C_a.level_entry = NULL;
-}
-
-void obj_init_unknown94(UNUSED Object *obj, UNUSED LevelObjectEntry_Unknown94 *entry, UNUSED s32 arg2) {
-}
-
-void obj_loop_unknown94(UNUSED Object *obj, s32 UNUSED updateRate) {
-}
-
-void obj_init_rangetrigger(UNUSED Object *obj, UNUSED LevelObjectEntry_RangeTrigger *entry) {
 }
 
 /* Official name: rangetriggerControl */

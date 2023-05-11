@@ -3299,12 +3299,6 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
         case BHV_ANIMATOR:
             obj_init_animator(obj, (LevelObjectEntry_Animator *) entry, arg2);
             break;
-        case BHV_SMOKE:
-            obj_init_smoke(obj, (LevelObjectEntry_Smoke *) entry);
-            break;
-        case BHV_UNK_19:
-            obj_init_unknown25(obj, (LevelObjectEntry_Unknown25 *) entry);
-            break;
         case BHV_BOMB_EXPLOSION:
             obj_init_bombexplosion(obj, (LevelObjectEntry_BombExplosion *) entry);
             break;
@@ -3469,9 +3463,6 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
         case BHV_MIDI_CHANNEL_SET:
             obj_init_midichset(obj, (LevelObjectEntry_Midichset *) entry);
             break;
-        case BHV_EFFECT_BOX:
-            obj_init_effectbox(obj, (LevelObjectEntry_EffectBox *) entry);
-            break;
         case BHV_TROPHY_CABINET:
             obj_init_trophycab(obj, (LevelObjectEntry_TrophyCab *) entry);
             break;
@@ -3496,21 +3487,12 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
         case BHV_SILVER_COIN:
             obj_init_silvercoin(obj, (LevelObjectEntry_SilverCoin *) entry);
             break;
-        case BHV_WARDEN_SMOKE:
-            obj_init_wardensmoke(obj, (LevelObjectEntry_WardenSmoke *) entry);
-            break;
-        case BHV_UNK_5E:
-            obj_init_unknown94(obj, (LevelObjectEntry_Unknown94 *) entry, arg2);
-            break;
         case BHV_TELEPORT:
             obj_init_teleport(obj, (LevelObjectEntry_Teleport *) entry);
             break;
         case BHV_ROCKET_SIGNPOST:
         case BHV_ROCKET_SIGNPOST_2:
             obj_init_lighthouse_rocketsignpost(obj, (LevelObjectEntry_Lighthouse_RocketSignpost *) entry);
-            break;
-        case BHV_RANGE_TRIGGER:
-            obj_init_rangetrigger(obj, (LevelObjectEntry_RangeTrigger *) entry);
             break;
         case BHV_FIREBALL_OCTOWEAPON:
         case BHV_FIREBALL_OCTOWEAPON_2:
@@ -3687,12 +3669,6 @@ void run_object_loop_func(Object *obj, s32 updateRate) {
         case BHV_EXIT:
             obj_loop_exit(obj, updateRate);
             break;
-        case BHV_CAMERA_CONTROL:
-            obj_loop_cameracontrol(obj, updateRate);
-            break;
-        case BHV_SETUP_POINT:
-            obj_loop_setuppoint(obj, updateRate);
-            break;
         case BHV_DINO_WHALE:
             obj_loop_dino_whale(obj, updateRate);
             break;
@@ -3809,9 +3785,9 @@ void run_object_loop_func(Object *obj, s32 updateRate) {
         case BHV_LAVA_SPURT:
             obj_loop_lavaspurt(obj, updateRate);
             break;
-        case BHV_POS_ARROW:
+        /*case BHV_POS_ARROW:
             obj_loop_posarrow(obj, updateRate);
-            break;
+            break;*/
         case BHV_HIT_TESTER:
         case BHV_HIT_TESTER_2:
         case BHV_HIT_TESTER_3:
@@ -3845,9 +3821,6 @@ void run_object_loop_func(Object *obj, s32 updateRate) {
         case BHV_LASER_GUN:
             obj_loop_lasergun(obj, updateRate);
             break;
-        case BHV_PARK_WARDEN_2:
-            obj_loop_gbparkwarden(obj, updateRate);
-            break;
         case BHV_ZIPPER_GROUND:
             obj_loop_groundzipper(obj, updateRate);
             break;
@@ -3860,9 +3833,6 @@ void run_object_loop_func(Object *obj, s32 updateRate) {
             break;
         case BHV_WARDEN_SMOKE:
             obj_loop_wardensmoke(obj, updateRate);
-            break;
-        case BHV_UNK_5E:
-            obj_loop_unknown94(obj, updateRate);
             break;
         case BHV_TELEPORT:
             obj_loop_teleport(obj, updateRate);

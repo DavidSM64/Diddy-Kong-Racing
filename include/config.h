@@ -22,11 +22,11 @@
 #define DEFAULT_CHARACTER 7                 // If you skip character select, pick a default character.
 #define UNLOCK_ALL                          // Unlock all characters, tracks and adventure 2.
 //#define DISABLE_AUDIO                       // Disable all ingame audio, and prevent the RSP from working on audio tasks.
+//#define FORCE_4MB_MEMORY                    // Pretend the expansion pak is not installed.
 
 /* -------------------------Memory------------------------ */
 //#define EXPANSION_PAK_REQUIRED              // Enable expansion pak requirement
 //#define EXPANSION_PAK_SUPPORT               // Allow the game to use the expansion pak if it's inserted. Disabling this will move Framebuffers to expansion RAM for extra performance.
-//#define FORCE_4MB_MEMORY                    // Pretend the expansion pak is not installed.
 
 #define NUM_GFX_COMMANDS        {3200, 4500, 6000, 6000} /* How many graphics commands can be ran per frame. Default is 4500, 7000, 11000, 11000 */
 #define NUM_VERTICES            {200, 400, 650, 700} /* How many vertices are allowed per frame. Default is 300, 600, 850, 900 */
