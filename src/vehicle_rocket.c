@@ -142,7 +142,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         someObj = func_8000BF44(-1);
         if (someObj != NULL) {
             rocket = (Object_WizpigRocket *) someObj->unk64;
-            someObj->unk78 = 0;
+            someObj->properties.racer.unk0 = 0;
             if (rocket != NULL) {
                 rocket->unk72 += updateRate;
                 rocket->unk70 = 2;

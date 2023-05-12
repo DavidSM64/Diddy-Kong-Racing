@@ -6,6 +6,7 @@
 #include "types.h"
 #include "enums.h"
 #include "level_object_entries.h"
+#include "object_properties.h"
 
 // Stolen from PD
 // This hacky structure allows coords to be accessed using
@@ -898,7 +899,7 @@ typedef struct Object_EggCreator {
 
 typedef struct Object_CollectEgg {
   /* 0x0 */ u8 pad0[4];
-  /* 0x4 */ struct Object *unk4;
+  /* 0x4 */ struct Object *spawnerObj;
   /* 0x8 */ s16 hatchTimer;
   /* 0xA */ s8 racerID;
   /* 0xB */ s8 status;
@@ -1791,21 +1792,7 @@ typedef struct Object {
   } unk74_bytes;
   };
 
-  union {
-  /* 0x0078 */ s32 unk78;
-  /* 0x0078 */ ObjectTransform *trans78;
-  /* 0x0078 */ s32 action;
-  /* 0x0078 */ f32 unk78f;
-  /* 0x0078 */ struct Object *unk78_obj;
-  };
-
-  union {
-      struct {
-          s16 upper;
-          s16 lower;
-      } half;
-      s32 word;
-  } unk7C;
+  ObjProperties properties;
 
   /* 0x0080 */ void *unk80;
   /* 0x0084 */ u32 unk84;

@@ -207,7 +207,7 @@ typedef struct LevelObjectEntry_Unknown25 {
 
 typedef struct LevelObjectEntry_SkyControl {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 unk8;
+    /* 0x08 */ u8 setting;
     /* 0x09 */ u8 radius;
 } LevelObjectEntry_SkyControl;
 
@@ -413,7 +413,7 @@ typedef struct LevelObjectEntry_BananaCreator {
 
 typedef struct LevelObjectEntry_TreasureSucker {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ s8 unk8;
+    /* 0x08 */ s8 playerID;
 } LevelObjectEntry_TreasureSucker;
 
 typedef struct LevelObjectEntry_Log {
@@ -598,8 +598,8 @@ typedef struct LevelObjectEntry_OctoBubble {
 
 typedef struct LevelObjectEntry_LevelName {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ s8 unk8;
-    /* 0x09 */ s8 unk9;
+    /* 0x08 */ s8 levelID;
+    /* 0x09 */ s8 radius;
 } LevelObjectEntry_LevelName;
 
 typedef struct LevelObjectEntry_Midichset {

@@ -2413,7 +2413,7 @@ void obj_loop_fogchanger(Object *obj) {
             x -= obj->segment.trans.x_position;
             z -= obj->segment.trans.z_position;
             if (1) {} // Fakematch
-            if ((x * x) + (z * z) < obj->unk78f) {
+            if ((x * x) + (z * z) < obj->properties.distance.radius) {
                 fogNear = fogChanger->near;
                 fogFar = fogChanger->far;
                 fogR = fogChanger->r;

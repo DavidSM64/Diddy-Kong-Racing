@@ -649,10 +649,10 @@ void func_800B0010(Object *arg0, Object *arg1, unk800B03C0_arg2 *arg2, Object *a
             arg0->segment.x_velocity += (f32) get_random_number_from_range(-arg3->unk74_signed, arg3->unk74_signed) * 0.00001525878906;
         }
         if (sp3C & 0x200) {
-            arg0->segment.y_velocity += (f32) get_random_number_from_range(-arg3->unk78,  arg3->unk78) * 0.00001525878906;
+            arg0->segment.y_velocity += (f32) get_random_number_from_range(-arg3->properties.common.unk0,  arg3->properties.common.unk0) * 0.00001525878906;
         }
         if (sp3C & 0x400) {
-            arg0->segment.z_velocity += (f32) get_random_number_from_range(-arg3->unk7C.word, arg3->unk7C.word) * 0.00001525878906;
+            arg0->segment.z_velocity += (f32) get_random_number_from_range(-arg3->properties.common.unk4, arg3->properties.common.unk4) * 0.00001525878906;
         }
     }
     switch (arg3->segment.trans_unk.unk0 & 0x70) {

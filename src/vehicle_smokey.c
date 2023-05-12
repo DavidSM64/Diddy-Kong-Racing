@@ -271,22 +271,22 @@ void func_8005E204(Object *obj, Object_Racer *racer, f32 arg2, s32 objectID, s32
                 diffY = temp_s1->segment.trans.y_position - obj->segment.trans.y_position;
                 diffZ = temp_s1->segment.trans.z_position - obj->segment.trans.z_position;
                 if (sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < (f32) ((s8) temp_s2->animation.x_rotation & 0xFF) * 4.0) {
-                    if (temp_s1->unk78 == 0) {
-                        temp_s1->unk78 = 1;
+                    if (temp_s1->properties.racer.unk0 == 0) {
+                        temp_s1->properties.racer.unk0 = (Object *) 1; // ???
                         newObj = spawn_object(&spawnObj, 1);
                         if (newObj != NULL) {
                             newObj->segment.unk3C_a.level_entry = NULL;
                             newObj->segment.x_velocity = obj->segment.x_velocity;
                             newObj->segment.y_velocity = obj->segment.y_velocity;
                             newObj->segment.z_velocity = obj->segment.z_velocity;
-                            newObj->unk78_obj = temp_s1;
-                            newObj->unk7C.word = (s8) temp_s2->animation.y_rotation * 60;
+                            newObj->properties.racer.unk0 = temp_s1;
+                            newObj->properties.racer.unk4 = (s8) temp_s2->animation.y_rotation * 60;
                             newObj->segment.animFrame = get_random_number_from_range(0, 255);
                             play_sound_at_position(arg4, newObj->segment.trans.x_position, newObj->segment.trans.y_position, newObj->segment.trans.z_position, 4, NULL);
                         }
                     }
                 } else {
-                    temp_s1->unk78 = 0;
+                    temp_s1->properties.racer.unk0 = 0;
                 }
             }
         }

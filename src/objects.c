@@ -1359,7 +1359,7 @@ void func_80011AD0(Object *this) {
 
     switch (this->behaviorId) {
         case BHV_CHARACTER_FLAG:
-            if (this->unk7C.word >= 0) {
+            if (this->properties.characterFlag.characterID >= 0) {
                 obj64 = this->unk64;
                 func_80011960(this, obj64->character_flag.vertices, 4, obj64->character_flag.triangles,
                                 2, obj64->character_flag.texture, 11, 0, 1.0f);
@@ -1378,7 +1378,7 @@ void func_80011AD0(Object *this) {
             break;
 
         case BHV_BOOST:
-            if ((this->unk78 != 0) && ((this->unk64->boost.unk70 > 0) || (this->unk64->boost.unk74 > 0.0f))) {
+            if ((this->properties.common.unk0 != 0) && ((this->unk64->boost.unk70 > 0) || (this->unk64->boost.unk74 > 0.0f))) {
                 func_800135B8(this);
             }
             break;
@@ -1413,9 +1413,9 @@ void render_3d_billboard(Object *obj) {
     if (obj->behaviorId == BHV_BOMB_EXPLOSION) {
         //!@bug Never true, because the type is u8.
         if (obj->segment.unk38.byte.unk39 > 255) {
-            obj->segment.unk38.byte.unk39 = obj->unk7C.word & 0xFF;
+            obj->segment.unk38.byte.unk39 = obj->properties.bombExplosion.unk4 & 0xFF;
         } else {
-            obj->segment.unk38.byte.unk39 = (obj->segment.unk38.byte.unk39 * (obj->unk7C.word & 0xFF)) >> 8;
+            obj->segment.unk38.byte.unk39 = (obj->segment.unk38.byte.unk39 * (obj->properties.bombExplosion.unk4 & 0xFF)) >> 8;
         }
     }
     
@@ -1455,8 +1455,8 @@ void render_3d_billboard(Object *obj) {
     sp58 = (unk80068514_arg4 *) obj->unk68[obj->segment.unk38.byte.unk3A];
     var_a0 = NULL;
     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON_2) {
-        var_a0 = (Object *) obj->trans78;
-        if (obj->unk7C.word > 0) {
+        var_a0 = obj->properties.fireball.obj;
+        if (obj->properties.fireball.timer > 0) {
             var_a0 = obj;
         }
     }
@@ -1659,7 +1659,7 @@ void render_3d_model(Object *obj) {
                                 gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
                                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
                             }
-                            loopObj->unk78 = render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, loopObj, (unk80068514_arg4 *) something, flags);
+                            loopObj->properties.common.unk0 = render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, loopObj, (unk80068514_arg4 *) something, flags);
                             if (var_v0_2) {
                                 gDkrInsertMatrix(gObjectCurrDisplayList++, 0, 0);
                                 func_80012CE8(&gObjectCurrDisplayList);
@@ -2751,7 +2751,7 @@ void func_8001BC54(void) {
         for (i = 0; i < gCameraObjCount - 1; i++) {
             objPtr = (*gCameraObjList)[i+1];
             temp = (*gCameraObjList)[i];
-            if (temp->unk78 > objPtr->unk78) {
+            if (temp->properties.common.unk0 > objPtr->properties.common.unk0) {
                 (*gCameraObjList)[i] = (*gCameraObjList)[i+1];
                 (*gCameraObjList)[i+1] = temp;
                 continueLoop = FALSE;
@@ -3047,7 +3047,7 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
         if (current_obj != NULL
         && !(current_obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)
         && current_obj->behaviorId == BHV_RAMP_SWITCH
-        && current_obj->action == arg0) {
+        && current_obj->properties.common.unk0 == arg0) {
             *arg1 = current_obj->segment.trans.x_position;
             *arg2 = current_obj->segment.trans.y_position;
             *arg3 = current_obj->segment.trans.z_position;
@@ -3107,7 +3107,7 @@ s32 func_8001F3EC(s32 arg0){
 
     count = 0;
     for (i = 0; i < D_8011AE78; i++) {
-        if (D_8011AE74[i]->unk7C.word == arg0){
+        if (D_8011AE74[i]->properties.common.unk4 == arg0){
             count++;
         }
     }
@@ -3137,7 +3137,7 @@ void func_80021400(s32 arg0) {
     arg0 &= 0xFF; //?
 
 
-    for (i = 0; i < D_8011AE78 && (arg0 != (D_8011AE74[i]->unk7C.word & 0xFF)); i++) {}
+    for (i = 0; i < D_8011AE78 && (arg0 != (D_8011AE74[i]->properties.common.unk4 & 0xFF)); i++) {}
 
     if (i < D_8011AE78) {
         if (D_8011AE74[i]->unk64 != NULL) {
@@ -3175,11 +3175,11 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
         i = 0;
         if (D_8011AE78 > 0) {
             temp_v1 = animObj->unk28;
-            if (temp_v1 != (s32) (*D_8011AE74)->unk7C.word) {
+            if (temp_v1 != (s32) (*D_8011AE74)->properties.common.unk4) {
 loop_11:
                 i++;
                 if (i < D_8011AE78) {
-                    if (temp_v1 != (s32) D_8011AE74[i]->unk7C.word) {
+                    if (temp_v1 != (s32) D_8011AE74[i]->properties.common.unk4) {
                         goto loop_11;
                     }
                 }

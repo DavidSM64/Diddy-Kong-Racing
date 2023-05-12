@@ -4919,7 +4919,7 @@ void drop_bananas(Object *obj, Object_Racer *racer, s32 number) {
                             bananaObj->segment.y_velocity -= racer->oy3 * variance;
                             bananaObj->segment.z_velocity -= (racer->oz3 - racer->oz1) * variance;
                         }
-                        bananaObj->action = 1;
+                        bananaObj->properties.banana.unk0 = 1;
                     }
                 }
                 number--;
