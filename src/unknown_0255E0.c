@@ -823,7 +823,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
     viewportID = get_current_viewport();
     compute_scene_camera_transform_matrix();
     update_envmap_position((f32) gScenePerspectivePos.x / 65536.0f, (f32) gScenePerspectivePos.y / 65536.0f, (f32) gScenePerspectivePos.z / 65536.0f);
-    segmentIndex = gSceneActiveCamera->unk34_a.levelSegmentIndex;
+    segmentIndex = gSceneActiveCamera->object.cameraSegmentID;
     if (segmentIndex > -1 && (segmentIndex < gCurrentLevelModel->numberOfSegments)) {
         gSceneStartSegment = gCurrentLevelModel->segments[segmentIndex].unk28;
     } else {
@@ -835,7 +835,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
     if (D_8011D384 != 0) {
         func_800B8B8C();
         racers = get_racer_objects(&numRacers);
-        if (gSceneActiveCamera->unk34_a.unk36 != 7 && numRacers > 0 && !check_if_showing_cutscene_camera()) {
+        if (gSceneActiveCamera->object.unk36 != 7 && numRacers > 0 && !check_if_showing_cutscene_camera()) {
             i = -1; 
             do {
                 i++;
@@ -919,12 +919,12 @@ void render_level_geometry_and_objects(void) {
         if (objFlags & OBJ_FLAGS_UNK_0080) {
             visible = 0;
         } else if (!(objFlags & OBJ_FLAGS_DEACTIVATED)) {
-            visible = obj->segment.unk38.byte.unk39;
+            visible = obj->segment.object.opacity;
         }
         if (objFlags & visibleFlags) {
             visible = 0;
         }
-        if (obj != NULL && visible == 255 && check_if_in_draw_range(obj) && (objectsVisible[obj->segment.unk2C.half.lower + 1] || obj->segment.unk34_a.unk34 > 1000.0)) {
+        if (obj != NULL && visible == 255 && check_if_in_draw_range(obj) && (objectsVisible[obj->segment.object.segmentID + 1] || obj->segment.camera.unk34 > 1000.0)) {
             if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
                 func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
@@ -946,7 +946,7 @@ void render_level_geometry_and_objects(void) {
         } else {
             visible = TRUE;
         }
-        if (obj != NULL && visible && objFlags & OBJ_FLAGS_UNK_0100 && objectsVisible[obj->segment.unk2C.half.lower + 1] && check_if_in_draw_range(obj)) {
+        if (obj != NULL && visible && objFlags & OBJ_FLAGS_UNK_0100 && objectsVisible[obj->segment.object.segmentID + 1] && check_if_in_draw_range(obj)) {
             if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
                 func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
@@ -982,7 +982,7 @@ void render_level_geometry_and_objects(void) {
         if (objFlags & OBJ_FLAGS_UNK_0080) {
             visible = TRUE;
         } else if (!(objFlags & OBJ_FLAGS_DEACTIVATED)) {
-            visible = obj->segment.unk38.byte.unk39;
+            visible = obj->segment.object.opacity;
         }
         if (objFlags & visibleFlags) {
             visible = FALSE;
@@ -990,7 +990,7 @@ void render_level_geometry_and_objects(void) {
         if (obj->behaviorId == BHV_RACER && visible >= 255) {
             visible = FALSE;
         }
-        if (obj != NULL && visible < 255 && objectsVisible[obj->segment.unk2C.half.lower + 1] && check_if_in_draw_range(obj)) {
+        if (obj != NULL && visible < 255 && objectsVisible[obj->segment.object.segmentID + 1] && check_if_in_draw_range(obj)) {
             if (visible > 0) {
                 if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
                     func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
@@ -1487,11 +1487,11 @@ s32 check_if_in_draw_range(Object *obj) {
         switch (obj->behaviorId) {
             case BHV_RACER:
                 obj64 = obj->unk64;
-                obj->segment.unk38.byte.unk39 = ((obj64->racer.transparency + 1) * alpha) >> 8;
+                obj->segment.object.opacity = ((obj64->racer.transparency + 1) * alpha) >> 8;
                 break;
             case BHV_UNK_3A: //Ghost Object?
                 obj64 = obj->unk64;
-                obj->segment.unk38.byte.unk39 = obj64->racer.transparency;
+                obj->segment.object.opacity = obj64->racer.transparency;
                 break;
             case BHV_ANIMATED_OBJECT: // Cutscene object?
             case BHV_CAMERA_ANIMATION:
@@ -1502,14 +1502,14 @@ s32 check_if_in_draw_range(Object *obj) {
             case BHV_HIT_TESTER_2: // animated objects?
             case BHV_ANIMATED_OBJECT_2: // space ships
                 obj64 = obj->unk64;
-                obj->segment.unk38.byte.unk39 = obj64->effect_box.pad0[0x42];
+                obj->segment.object.opacity = obj64->effect_box.pad0[0x42];
                 break;
             case BHV_PARK_WARDEN:
             case BHV_GOLDEN_BALLOON:
             case BHV_PARK_WARDEN_2: // GBParkwarden
                 break;
             default:
-                obj->segment.unk38.byte.unk39 = alpha;
+                obj->segment.object.opacity = alpha;
                 break;
         }
         for (i = 0; i < 3; i++) {
@@ -1517,7 +1517,7 @@ s32 check_if_in_draw_range(Object *obj) {
             z = D_8011D0F8[i].z;
             w = D_8011D0F8[i].w;
             y = D_8011D0F8[i].y;
-            accum = (x * obj->segment.trans.x_position) + (y * obj->segment.trans.y_position) + (z * obj->segment.trans.z_position) + w + obj->segment.unk34_a.unk34;
+            accum = (x * obj->segment.trans.x_position) + (y * obj->segment.trans.y_position) + (z * obj->segment.trans.z_position) + w + obj->segment.camera.unk34;
             if (accum < 0.0f) {
                 return FALSE;
             }
@@ -1624,12 +1624,12 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
         arg2[2] = 0.0f;
         arg2[1] = 1.0f;
     }
-    if ((obj->segment.unk2C.half.lower < 0) || (obj->segment.unk2C.half.lower >= gCurrentLevelModel->numberOfSegments)) {
+    if ((obj->segment.object.segmentID < 0) || (obj->segment.object.segmentID >= gCurrentLevelModel->numberOfSegments)) {
         return FALSE;
     }
-    seg = &gCurrentLevelModel->segments[obj->segment.unk2C.half.lower];
+    seg = &gCurrentLevelModel->segments[obj->segment.object.segmentID];
     if ((seg->unk2B != 0) && (D_8011D384 != 0) && (arg3 == 1)) {
-        *arg1 = func_800BB2F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, arg2);
+        *arg1 = func_800BB2F4(obj->segment.object.segmentID, obj->segment.trans.x_position, obj->segment.trans.z_position, arg2);
         return TRUE;
     } else {
         *arg1 = seg->unk38;
@@ -1931,11 +1931,11 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
             D_8011D348 = (unk8011D348 *) D_8011D338[D_8011B0CC];
             someAlpha = D_8011D348[D_8011D360[i].unk6].unk9;
             flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
-            if (someAlpha == 0 || obj->segment.unk38.byte.unk39 == 0) {
+            if (someAlpha == 0 || obj->segment.object.opacity == 0) {
                 i = shadow->unkA;
-            } else if (someAlpha != 255 || obj->segment.unk38.byte.unk39 != 255) {
+            } else if (someAlpha != 255 || obj->segment.object.opacity != 255) {
                 flags = RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE;
-                someAlpha = (obj->segment.unk38.byte.unk39 * someAlpha) >> 8;
+                someAlpha = (obj->segment.object.opacity * someAlpha) >> 8;
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, someAlpha);
             }
             while (i < shadow->unkA) {
@@ -2144,7 +2144,7 @@ void func_8002DE30(Object *obj) {
     obj_yPos = obj->segment.trans.y_position;
     sp94 = obj_yPos + objHeader->unk44;
     sp90 = obj_yPos + objHeader->unk42;
-    segmentIndex = obj->segment.unk2C.half.lower;
+    segmentIndex = obj->segment.object.segmentID;
     var_s7 = 0;
     if (segmentIndex != -1) {
         //func_800314DC = collision

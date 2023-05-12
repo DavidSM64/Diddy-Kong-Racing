@@ -1641,6 +1641,26 @@ typedef struct ParticleProperties {
     };
 } ParticleProperties;
 
+typedef struct SegmentPropertiesObject {
+    /* 0x002C */ s16 unk2C;
+    /* 0x002E */ s16 segmentID;
+    /* 0x0030 */ f32 distanceToCamera;
+    /* 0x0034 */ s16 cameraSegmentID;
+    /* 0x0036 */ s16 unk36;
+    /* 0x0038 */ u8 unk38;
+    /* 0x0039 */ u8 opacity;
+    /* 0x003A */ s8 numModelIDs;
+    /* 0x003B */ s8 animationID;
+} SegmentPropertiesObject;
+
+typedef struct SegmentPropertiesCamera {
+    /* 0x002C */ f32 unk2C;
+    /* 0x0030 */ f32 distanceToCamera;
+    /* 0x0034 */ f32 unk34;
+    /* 0x0038 */ s16 unk38;
+    /* 0x003A */ s16 unk3A;
+} SegmentPropertiesCamera;
+
 /* Size: 0x44 bytes */
 typedef struct ObjectSegment {
   /* 0x0000 */ ObjectTransform trans;
@@ -1650,38 +1670,10 @@ typedef struct ObjectSegment {
   /* 0x0020 */ f32 y_velocity;
   /* 0x0024 */ f32 z_velocity;
   /* 0x0028 */ f32 unk28;
-
   union {
-      struct {
-          /* 0x002C */ s16 upper;
-          /* 0x002E */ s16 lower;
-      } half;
-      /* 0x002C */ f32 word;
-  } unk2C;
-
-  /* 0x0030 */ f32 unk30;
-
-  union {
-    /* 0x0034 */ f32 unk34;
-                 struct {
-        /* 0x0034 */ s16 levelSegmentIndex;
-        /* 0x0036 */ s16 unk36;
-                 };
-  } unk34_a;
-
-  union {
-      struct {
-          /* 0x0038 */ u8 unk38;
-          /* 0x0039 */ u8 unk39;
-          /* 0x003A */ s8 unk3A; // Index value for unk68 array
-          /* 0x003B */ s8 unk3B;
-      } byte;
-      struct {
-          /* 0x0038 */ s16 unk38;
-          /* 0x003A */ s16 unk3A;
-      } half;
-  } unk38;
-
+      SegmentPropertiesObject object;
+      SegmentPropertiesCamera camera;
+  };
   /* 0x003C */ LevelObjectEntry* level_entry;
   /* 0x0040 */ ObjectHeader *header;
 } ObjectSegment;

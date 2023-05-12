@@ -79,7 +79,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     set_boss_voice_clip_offset(D_800DCDE0);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
-    sp56 = obj->segment.unk38.byte.unk3B;
+    sp56 = obj->segment.object.animationID;
     sp54 = obj->segment.animFrame;
     sp52 = racer->headAngle;
     if (racer->raceFinished == TRUE) {
@@ -108,11 +108,11 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     *startTimer = tempStartTimer;
     racer->lateral_velocity = 0.0f;
     racer->headAngle = sp52;
-    obj->segment.unk38.byte.unk3B = sp56;
+    obj->segment.object.animationID = sp56;
     obj->segment.animFrame = sp54;
-    if ((racer->attackType != ATTACK_NONE) && (obj->segment.unk38.byte.unk3B != 3)) {
-        racer->unk1CD = obj->segment.unk38.byte.unk3B;
-        obj->segment.unk38.byte.unk3B = 3;
+    if ((racer->attackType != ATTACK_NONE) && (obj->segment.object.animationID != 3)) {
+        racer->unk1CD = obj->segment.object.animationID;
+        obj->segment.object.animationID = 3;
         obj->segment.y_velocity += 7.5;
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, NULL);
@@ -128,16 +128,16 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     obj68 = *obj->unk68;
     objModel = obj68->objModel;
-    diffX = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
-    if (obj->segment.unk38.byte.unk3B != 3) {
+    diffX = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
+    if (obj->segment.object.animationID != 3) {
         if (racer->velocity < -2.0) {
-            obj->segment.unk38.byte.unk3B = 1;
+            obj->segment.object.animationID = 1;
             racer->unkC -= (racer->velocity * updateRateF) * 0.5;
         } else if ((racer->velocity < -0.1) || (racer->velocity > 0.1)) {
-            obj->segment.unk38.byte.unk3B = 2;
+            obj->segment.object.animationID = 2;
             racer->unkC -= (racer->velocity * updateRateF) * 2;
         } else {
-            obj->segment.unk38.byte.unk3B = 0;
+            obj->segment.object.animationID = 0;
             racer->unkC += 1.0 * updateRateF;
         }
     } else {
@@ -151,19 +151,19 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->unkC -= diffX;
         obj68->unk10 = -1;
     }
-    if (obj68->unk10 == -1 && obj->segment.unk38.byte.unk3B == 3) {
-        obj->segment.unk38.byte.unk3B = racer->unk1CD;
+    if (obj68->unk10 == -1 && obj->segment.object.animationID == 3) {
+        obj->segment.object.animationID = racer->unk1CD;
     }
     sp54 = obj->segment.animFrame;
     obj->segment.animFrame = racer->unkC;
     obj->unk74 = 0;
-    if (obj->segment.unk38.byte.unk3B == 1) {
+    if (obj->segment.object.animationID == 1) {
         func_800113CC(obj, 2, sp54, SOUND_STOMP2, SOUND_STOMP3);
         obj->unk74 |= 3;
     }
     func_800AFC3C(obj, updateRate);
     fade_when_near_camera(obj, racer, 120);
-    switch( obj->segment.unk38.byte.unk3B) {
+    switch( obj->segment.object.animationID) {
         case 1:
             sp38 = 0x2500;
             break;
@@ -183,7 +183,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         CLAMP(tempStartTimer, -sp38, sp38);
         racer->headAngleTarget = tempStartTimer;
     }
-    if (obj->segment.unk38.byte.unk3B == 1) {
+    if (obj->segment.object.animationID == 1) {
         if ((racer->miscAnimCounter & 0x1F) < 0xA) {
             racer->headAngleTarget >>= 1;
         }
@@ -198,7 +198,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         func_8006F140(1);
     }
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.unk38.byte.unk3B == 1) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == 1) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != FALSE) {
@@ -380,7 +380,7 @@ void fade_when_near_camera(Object *object, Object_Racer *racer, s32 distance) {
     Object *player = get_racer_object(0);
     racer->transparency = 255;
     if (!func_8001139C()) {
-        if ((object->segment.unk30 + distance) < player->segment.unk30) {
+        if ((object->segment.object.distanceToCamera + distance) < player->segment.object.distanceToCamera) {
             racer->transparency = 64;
         }
     }

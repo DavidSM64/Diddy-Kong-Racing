@@ -145,7 +145,7 @@ void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
     radius /= 64;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
     obj->shadow->scale = obj->segment.header->shadowScale * radius;
-    obj->segment.unk38.byte.unk3A = entry->unk8;
+    obj->segment.object.numModelIDs = entry->unk8;
     obj->segment.trans.y_rotation = entry->unkA << 6 << 4;
     if (entry->solid) {
         obj->interactObj->flags = INTERACT_FLAGS_SOLID;
@@ -155,8 +155,8 @@ void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
         obj->interactObj->unk16 = -5;
         obj->interactObj->unk17 = entry->solid;
     }
-    if (obj->segment.unk38.byte.unk3A >= obj->segment.header->numberOfModelIds) {
-        obj->segment.unk38.byte.unk3A = 0;
+    if (obj->segment.object.numModelIDs >= obj->segment.header->numberOfModelIds) {
+        obj->segment.object.numModelIDs = 0;
     }
     obj->properties.scenery.interactObj = NULL;
     obj->properties.common.unk4 = 0;
@@ -864,8 +864,8 @@ void obj_init_lighthouse_rocketsignpost(Object *obj, LevelObjectEntry_Lighthouse
     radius /= 64;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
     obj->segment.trans.y_rotation = entry->angleY << 6 << 4;
-    if (obj->segment.unk38.byte.unk3A >= obj->segment.header->numberOfModelIds) {
-        obj->segment.unk38.byte.unk3A = 0;
+    if (obj->segment.object.numModelIDs >= obj->segment.header->numberOfModelIds) {
+        obj->segment.object.numModelIDs = 0;
     }
     obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 2;
@@ -913,8 +913,8 @@ void obj_init_airzippers_waterzippers(Object *obj, LevelObjectEntry_AirZippers_W
     radius /= 64;
     obj->segment.trans.scale = objHeader->scale * radius;
     obj->segment.trans.y_rotation = entry->angleY << 6 << 4;
-    if (obj->segment.unk38.byte.unk3A >= objHeader->numberOfModelIds) {
-        obj->segment.unk38.byte.unk3A = 0;
+    if (obj->segment.object.numModelIDs >= objHeader->numberOfModelIds) {
+        obj->segment.object.numModelIDs = 0;
     }
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
@@ -981,8 +981,8 @@ void obj_init_groundzipper(Object *obj, LevelObjectEntry_GroundZipper *entry) {
     obj->segment.trans.scale = header->scale * objScale;
     obj->shadow->scale = header->shadowScale * objScale;
     obj->segment.trans.y_rotation = entry->rotation << 6 << 4;
-    if (obj->segment.unk38.byte.unk3A >= obj->segment.header->numberOfModelIds) {
-        obj->segment.unk38.byte.unk3A = 0;
+    if (obj->segment.object.numModelIDs >= obj->segment.header->numberOfModelIds) {
+        obj->segment.object.numModelIDs = 0;
     }
     obj->properties.zipper.scale = (s32) (28.0f * objScale) + 15;
     if (obj->properties.zipper.scale < 0) {
@@ -1060,7 +1060,7 @@ void obj_loop_unknown58(Object *obj, s32 updateRate) {
     Object_60 *obj60;
     s8 vehicleID;
 
-    obj->segment.unk38.byte.unk3B = 0;
+    obj->segment.object.animationID = 0;
     obj->segment.animFrame = 40;
     if (func_8001139C() == 0) {
         obj->properties.common.unk0 += updateRate;
@@ -1075,8 +1075,8 @@ void obj_loop_unknown58(Object *obj, s32 updateRate) {
         if (vehicleID == VEHICLE_HOVERCRAFT || vehicleID == VEHICLE_PLANE) {
             someObj = (Object *) obj60->unk4;
             someObj->segment.trans.y_rotation = 0x4000;
-            someObj->segment.unk38.byte.unk3A++;
-            someObj->segment.unk38.byte.unk3A &= 1;
+            someObj->segment.object.numModelIDs++;
+            someObj->segment.object.numModelIDs &= 1;
         }
     }
 }
@@ -1230,7 +1230,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     }
     switch (obj->properties.npc.action) {
     case TT_MODE_APPROACH_PLAYER:
-        obj->segment.unk38.byte.unk3B = 0;
+        obj->segment.object.animationID = 0;
         tt->unkD = 255;
         if (distance < 100.0) {
             racer_set_dialogue_camera();
@@ -1265,7 +1265,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         break;
     case TT_MODE_TURN_TOWARDS_PLAYER:
         racer_set_dialogue_camera();
-        obj->segment.unk38.byte.unk3B = 0;
+        obj->segment.object.animationID = 0;
         tt->animFrameF += 3.0 * updateRateF;
         angleDiff = (racerObj->segment.trans.y_rotation - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         if (angleDiff > 0x8000) {
@@ -1293,7 +1293,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     case TT_MODE_DIALOGUE:
         obj->segment.x_velocity = diffX * 0.05;
         obj->segment.z_velocity = diffZ * 0.05;
-        obj->segment.unk38.byte.unk3B = 1;
+        obj->segment.object.animationID = 1;
         tt->animFrameF += 1.0 * updateRateF;
         racer_set_dialogue_camera();
         if (index == 3) {
@@ -1317,11 +1317,11 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         if (obj->properties.npc.timer < 140) {
             obj->properties.npc.timer += 60;
             obj->properties.npc.action = TT_MODE_ROAM;
-            obj->segment.unk38.byte.unk3B = 0;
+            obj->segment.object.animationID = 0;
         }
         break;
     default:
-        obj->segment.unk38.byte.unk3B = 0;
+        obj->segment.object.animationID = 0;
         tt->forwardVel = 0.0f;
         if (tt->unkD == 0xFF) {
             tt->unkD = func_8001C524(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0);
@@ -1338,7 +1338,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         break;
     }
     obj->segment.trans.y_position = tempPosY;
-    index = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, &water);
+    index = func_8002B0F4(obj->segment.object.segmentID, obj->segment.trans.x_position, obj->segment.trans.z_position, &water);
      if(index != 0) {
         index--;
         while(index >= 0) {
@@ -1719,9 +1719,9 @@ void obj_loop_vehicleanim(Object *obj, s32 updateRate) {
         if (obj60->unk0 > 0) {
             someObj = obj60->unk0 == 3 ? obj60->unkC : obj60->unk4;
             someObj->segment.trans.y_rotation = 0x4000;
-            someObj->segment.unk38.byte.unk3A++;
-            if (someObj->segment.unk38.byte.unk3A == someObj->segment.header->numberOfModelIds) {
-                someObj->segment.unk38.byte.unk3A = 0;
+            someObj->segment.object.numModelIDs++;
+            if (someObj->segment.object.numModelIDs == someObj->segment.header->numberOfModelIds) {
+                someObj->segment.object.numModelIDs = 0;
             }
         }
     }
@@ -1929,7 +1929,7 @@ void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry) 
     LevelObjectEntry_BombExplosion *entry2;
     obj->segment.animFrame = 0;
     obj->segment.trans.scale = 0.5f;
-    obj->segment.unk38.byte.unk3A = get_random_number_from_range(0, obj->segment.header->numberOfModelIds - 1);
+    obj->segment.object.numModelIDs = get_random_number_from_range(0, obj->segment.header->numberOfModelIds - 1);
     entry2 = entry; // Needed for a match.
     obj->properties.bombExplosion.timer = 0;
     obj->properties.bombExplosion.unk4 = 0xFF;
@@ -2309,7 +2309,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     }
     switch (obj->properties.npc.action) {
     case TAJ_MODE_APPROACH_PLAYER:
-        obj->segment.unk38.byte.unk3B = 0;
+        obj->segment.object.animationID = 0;
         taj->unkD = 0xFF;
         if (distance < 100.0) {
             racer_set_dialogue_camera();
@@ -2341,7 +2341,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         break;
     case TAJ_MODE_TURN_TOWARDS_PLAYER:
         racer_set_dialogue_camera();
-        obj->segment.unk38.byte.unk3B = 0;
+        obj->segment.object.animationID = 0;
         taj->animFrameF += updateRateF * 2.0;
         arctan = (racerObj->segment.trans.y_rotation - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         if (arctan > 0x8000) {
@@ -2366,7 +2366,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         move_object(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
         break;
     case TAJ_MODE_GREET_PLAYER:
-        obj->segment.unk38.byte.unk3B = 1;
+        obj->segment.object.animationID = 1;
         taj->forwardVel = 0.0f;
         taj->animFrameF += updateRateF * 1.0;
         if (taj->animFrameF > 77.0) {
@@ -2388,13 +2388,13 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         racer_set_dialogue_camera();
         break;
     case TAJ_MODE_DIALOGUE:
-        obj->segment.unk38.byte.unk3B = 4;
+        obj->segment.object.animationID = 4;
         taj->animFrameF += updateRateF * 1.0;
         racer_set_dialogue_camera();
         if (var_a2_2 == 3 || var_a2_2 == 4) {
             obj->properties.npc.action = (var_a2_2 == 4) ? TAJ_MODE_END_DIALOGUE_UNUSED : TAJ_MODE_END_DIALOGUE;
             taj->animFrameF = 0.1f;
-            obj->segment.unk38.byte.unk3B = 2;
+            obj->segment.object.animationID = 2;
             taj->unk1C = 0;
             play_taj_voice_clip(SOUND_VOICE_TAJ_BYE, TRUE);
             func_80030DE0(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
@@ -2432,7 +2432,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
         break;
     case TAJ_MODE_TRANSFORM_BEGIN:
-        obj->segment.unk38.byte.unk3B = 5;
+        obj->segment.object.animationID = 5;
         racer_set_dialogue_camera();
         taj->animFrameF += updateRateF * 2.0;
         if (taj->animFrameF > 25.0) {
@@ -2493,7 +2493,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             sp6B = 1;
             if (obj->properties.npc.action == TAJ_MODE_END_DIALOGUE_UNUSED) {
                 func_80022CFC(
-                    obj->segment.unk2C.half.lower,
+                    obj->segment.object.segmentID,
                     obj->segment.trans.x_position - (racer64->racer.ox1 * 50.0f),
                     obj->segment.trans.y_position,
                     obj->segment.trans.z_position - (racer64->racer.oz1 * 50.0f)
@@ -2505,7 +2505,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
         break;
     case TAJ_MODE_TELEPORT_TO_PLAYER_BEGIN:
-        obj->segment.unk38.byte.unk3B = 3;
+        obj->segment.object.animationID = 3;
         taj->unkD = 0xFF;
         taj->forwardVel = 0.0f;
         taj->animFrameF +=  updateRateF * 2.0;
@@ -2517,35 +2517,35 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         if (taj->animFrameF < 20.0f) {
             var_a2 = 0;
         }
-        if (obj->segment.unk38.byte.unk39 > var_a2) {
-            obj->segment.unk38.byte.unk39 -= var_a2;
+        if (obj->segment.object.opacity > var_a2) {
+            obj->segment.object.opacity -= var_a2;
         } else {
             play_sound_global(SOUND_WHOOSH4, NULL);
             sp6B = 1;
-            obj->segment.unk38.byte.unk39 = 0;
+            obj->segment.object.opacity = 0;
             obj->properties.npc.action = TAJ_MODE_TELEPORT_TO_PLAYER_END;
             obj->segment.trans.x_position = racerObj->segment.trans.x_position - (racer64->racer.ox1 * 150.0f);
             obj->segment.trans.z_position = racerObj->segment.trans.z_position - (racer64->racer.oz1 * 150.0f);
-            obj->segment.unk2C.half.lower = get_level_segment_index_from_position(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+            obj->segment.object.segmentID = get_level_segment_index_from_position(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
             obj->segment.trans.y_rotation = racerObj->segment.trans.y_rotation + 0x8000;
         }
         break;
     case TAJ_MODE_TELEPORT_TO_PLAYER_END:
-        obj->segment.unk38.byte.unk3B = 3;
+        obj->segment.object.animationID = 3;
         taj->animFrameF -= updateRateF * 2.0;
         if (taj->animFrameF < 0.0f) {
             taj->animFrameF = 0.0f;
         }
         var_a2 = updateRate * 4;
-        if (obj->segment.unk38.byte.unk39 < (255 - var_a2)) {
-            obj->segment.unk38.byte.unk39 += var_a2;
+        if (obj->segment.object.opacity < (255 - var_a2)) {
+            obj->segment.object.opacity += var_a2;
         } else {
-            obj->segment.unk38.byte.unk39 = 0xFF;
+            obj->segment.object.opacity = 0xFF;
             obj->properties.npc.action = TAJ_MODE_APPROACH_PLAYER;
         }
         break;
     case TAJ_MODE_SET_CHALLENGE:
-        obj->segment.unk38.byte.unk3B = 3;
+        obj->segment.object.animationID = 3;
         taj->unkD = 0xFF;
         taj->forwardVel = 0.0f;
         taj->animFrameF += updateRateF * 2.0;
@@ -2556,8 +2556,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         if (taj->animFrameF < 20.0f) {
             var_a2 = 0;
         }
-        if (obj->segment.unk38.byte.unk39 > var_a2) {
-            obj->segment.unk38.byte.unk39 -= var_a2;
+        if (obj->segment.object.opacity > var_a2) {
+            obj->segment.object.opacity -= var_a2;
         } else {
             racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.vehicleID);
             func_80030DE0(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
@@ -2569,14 +2569,14 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             if (temp_v0_12 != NULL) {
                 obj->segment.trans.x_position = temp_v0_12->segment.trans.x_position;
                 obj->segment.trans.z_position = temp_v0_12->segment.trans.z_position;
-                obj->segment.unk2C.half.lower = temp_v0_12->segment.unk2C.half.lower;
+                obj->segment.object.segmentID = temp_v0_12->segment.object.segmentID;
                 obj->segment.trans.y_rotation = racerObj->segment.trans.y_rotation + 0x8000;
             }
             obj->properties.npc.action = TAJ_MODE_RACE;
         }
         break;
     case TAJ_MODE_TELEPORT_AWAY_BEGIN:
-        obj->segment.unk38.byte.unk3B = 3;
+        obj->segment.object.animationID = 3;
         taj->unkD = 0xFF;
         taj->forwardVel = 0.0f;
         taj->animFrameF += updateRateF * 2.0;
@@ -2587,42 +2587,42 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         if (taj->animFrameF < 20.0f) {
             var_a2 = 0;
         }
-        if (obj->segment.unk38.byte.unk39 > var_a2) {
-            obj->segment.unk38.byte.unk39 -= var_a2;
+        if (obj->segment.object.opacity > var_a2) {
+            obj->segment.object.opacity -= var_a2;
         } else {
-            obj->segment.unk38.byte.unk39 = 0;
+            obj->segment.object.opacity = 0;
             obj->properties.npc.action = TAJ_MODE_TELEPORT_AWAY_END;
             temp_v0_12 = func_8002342C(obj->segment.trans.x_position, obj->segment.trans.z_position);
             if (temp_v0_12 != NULL) {
                 obj->segment.trans.x_position = temp_v0_12->segment.trans.x_position;
                 obj->segment.trans.z_position = temp_v0_12->segment.trans.z_position;
-                obj->segment.unk2C.half.lower = temp_v0_12->segment.unk2C.half.lower;
+                obj->segment.object.segmentID = temp_v0_12->segment.object.segmentID;
                 obj->segment.trans.y_rotation = racerObj->segment.trans.y_rotation + 0x8000;
             }
         }
         break;
     case TAJ_MODE_TELEPORT_AWAY_END:
-        obj->segment.unk38.byte.unk3B = 3;
+        obj->segment.object.animationID = 3;
         taj->animFrameF -= updateRateF * 2.0;
         if (taj->animFrameF < 0.0f) {
             taj->animFrameF = 0.0f;
         }
         var_a2 = updateRate * 4;
-        if (obj->segment.unk38.byte.unk39 < (0xFF - var_a2)) {
-            obj->segment.unk38.byte.unk39 += var_a2;
+        if (obj->segment.object.opacity < (0xFF - var_a2)) {
+            obj->segment.object.opacity += var_a2;
         } else {
-            obj->segment.unk38.byte.unk39 = 0xFF;
+            obj->segment.object.opacity = 0xFF;
             obj->properties.npc.action = TAJ_MODE_ROAM;
         }
         break;
     case TAJ_MODE_RACE:
         obj->interactObj->flags = INTERACT_FLAGS_NONE;
-        obj->segment.unk38.byte.unk3B = 6;
-        obj->segment.unk38.byte.unk39 = 0xFF;
+        obj->segment.object.animationID = 6;
+        obj->segment.object.opacity = 0xFF;
         taj->animFrameF += updateRateF * 1.0;
         break;
     default:
-        obj->segment.unk38.byte.unk3B = 0;
+        obj->segment.object.animationID = 0;
         taj->forwardVel = 0.0f;
         if (taj->unkD == 0xFF) {
             taj->unkD = func_8001C524(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0);
@@ -2738,7 +2738,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         break;
     }
     obj->segment.trans.y_position = tempPosY;
-    var_a2 = func_8002B0F4(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, &water);
+    var_a2 = func_8002B0F4(obj->segment.object.segmentID, obj->segment.trans.x_position, obj->segment.trans.z_position, &water);
     if(var_a2 != 0) {
         var_a2--;
         while(var_a2 >= 0) {
@@ -3034,10 +3034,10 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
         if (obj->properties.npc.action == 0) {
             obj->segment.trans.flags &= (0xFFFF - OBJ_FLAGS_INVISIBLE);
             doubleSpeed = updateRate * 2;
-            if (obj->segment.unk38.byte.unk39 < (255 - doubleSpeed)) {
-                obj->segment.unk38.byte.unk39 += doubleSpeed;
+            if (obj->segment.object.opacity < (255 - doubleSpeed)) {
+                obj->segment.object.opacity += doubleSpeed;
             } else {
-                obj->segment.unk38.byte.unk39 = 255;
+                obj->segment.object.opacity = 255;
             }
             interactObj = obj->interactObj;
             if ((interactObj->distance < 45) && (isPirated == FALSE)) {
@@ -3061,9 +3061,9 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
                 }
             }
             obj64 = &obj->unk64->npc;
-            obj->segment.unk38.byte.unk3B = 0;
+            obj->segment.object.animationID = 0;
             obj64->forwardVel = 0.0f;
-            speedf = (obj->segment.unk38.byte.unk39 < 255) ? 0 : 1;
+            speedf = (obj->segment.object.opacity < 255) ? 0 : 1;
             if (obj64->unkD == 255) {
                 obj64->unkD = func_8001C524(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0);
                 if (obj64->unkD != 255) {
@@ -3097,7 +3097,7 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     if (obj64->unkE == -1) {
         rmonPrintf("Illegal door no!!!\n");
     }
-    obj->segment.unk38.byte.unk3A = entry->modelIndex;
+    obj->segment.object.numModelIDs = entry->modelIndex;
     obj->segment.trans.y_rotation = entry->closedRotation << 6 << 4;
     obj64->homeY = obj->segment.trans.y_position;
     obj64->unk8 = 0;
@@ -3115,8 +3115,8 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 20;
     obj->interactObj->pushForce = 0;
-    if (obj->segment.unk38.byte.unk3A >= obj->segment.header->numberOfModelIds) {
-        obj->segment.unk38.byte.unk3A = 0;
+    if (obj->segment.object.numModelIDs >= obj->segment.header->numberOfModelIds) {
+        obj->segment.object.numModelIDs = 0;
     }
 }
 
@@ -3126,7 +3126,7 @@ void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
     Object_TTDoor *obj64;
     f32 radius;
 
-    obj->segment.unk38.byte.unk3A = 0;
+    obj->segment.object.numModelIDs = 0;
     obj64 = &obj->unk64->tt_door;
     obj->segment.trans.y_rotation = entry->angleY << 6 << 4;
     obj64->doorID = entry->doorID;
@@ -3146,8 +3146,8 @@ void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 20;
     obj->interactObj->pushForce = 0;
-    if (obj->segment.unk38.byte.unk3A >= obj->segment.header->numberOfModelIds) {
-        obj->segment.unk38.byte.unk3A = 0;
+    if (obj->segment.object.numModelIDs >= obj->segment.header->numberOfModelIds) {
+        obj->segment.object.numModelIDs = 0;
     }
 }
 
@@ -3167,9 +3167,9 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
     ttDoor = (Object_TTDoor *) obj->unk64;
     settings = get_settings();
     if (ttDoor->doorID == 0) {
-        obj->segment.unk38.byte.unk3A = D_800DCA94[settings->ttAmulet];
+        obj->segment.object.numModelIDs = D_800DCA94[settings->ttAmulet];
     } else {
-        obj->segment.unk38.byte.unk3A = D_800DCA9C[settings->ttAmulet];
+        obj->segment.object.numModelIDs = D_800DCA9C[settings->ttAmulet];
     }
     if (obj->interactObj->distance < ttDoor->unk12 && (settings->ttAmulet < 4 || *settings->balloonsPtr < 47)) {
         racerObj = obj->interactObj->obj;
@@ -3329,7 +3329,7 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
 
 void obj_init_bridge_whaleramp(Object *obj, LevelObjectEntry_Bridge_WhaleRamp *entry) {
     Object_Bridge_WhaleRamp *temp = &obj->unk64->bridge_whale_ramp;
-    obj->segment.unk38.byte.unk3A = entry->unk8;
+    obj->segment.object.numModelIDs = entry->unk8;
     obj->segment.trans.y_rotation = entry->unk9 << 6 << 4;
     temp->unk0 = obj->segment.trans.y_position;
     obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0020;
@@ -3337,8 +3337,8 @@ void obj_init_bridge_whaleramp(Object *obj, LevelObjectEntry_Bridge_WhaleRamp *e
     obj->interactObj->hitboxRadius = 20;
     obj->interactObj->pushForce = 0;
     temp->unk4 = 0;
-    if (obj->segment.unk38.byte.unk3A >= obj->segment.header->numberOfModelIds) {
-        obj->segment.unk38.byte.unk3A = 0;
+    if (obj->segment.object.numModelIDs >= obj->segment.header->numberOfModelIds) {
+        obj->segment.object.numModelIDs = 0;
     }
 }
 
@@ -3965,12 +3965,12 @@ void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) 
         entry->unk8 = 0;
     }
 
-    if (obj->segment.unk38.byte.unk3A >= obj->segment.header->numberOfModelIds) {
-        obj->segment.unk38.byte.unk3A = 0;
+    if (obj->segment.object.numModelIDs >= obj->segment.header->numberOfModelIds) {
+        obj->segment.object.numModelIDs = 0;
     }
 
-    obj->segment.unk38.byte.unk3A = entry->balloonType;
-    obj->properties.weaponBalloon.balloonID = obj->segment.unk38.byte.unk3A;
+    obj->segment.object.numModelIDs = entry->balloonType;
+    obj->properties.weaponBalloon.balloonID = obj->segment.object.numModelIDs;
 
     scalef = entry->scale & 0xFF;
     if (scalef < 10) {
@@ -4584,7 +4584,7 @@ void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, UNUSED s
  * Sets hitbox data from spawn info.
 */
 void obj_init_buoy_pirateship(Object *obj, UNUSED LevelObjectEntry_Buoy_PirateShip *entry, UNUSED s32 arg2) {
-    obj->unk64 = func_800BE654(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position);
+    obj->unk64 = func_800BE654(obj->segment.object.segmentID, obj->segment.trans.x_position, obj->segment.trans.z_position);
     obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 30;
@@ -4609,7 +4609,7 @@ void obj_loop_buoy_pirateship(Object *obj, s32 updateRate) {
 */
 void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
     f32 radius;
-    obj->unk64 = func_800BE654(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position);
+    obj->unk64 = func_800BE654(obj->segment.object.segmentID, obj->segment.trans.x_position, obj->segment.trans.z_position);
     obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 30;
@@ -4619,7 +4619,7 @@ void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
     }
     radius /= 64;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
-    obj->segment.unk38.byte.unk3A = entry->unk8;
+    obj->segment.object.numModelIDs = entry->unk8;
     obj->segment.trans.y_rotation = entry->angleY << 6 << 4;
 }
 
@@ -4934,7 +4934,7 @@ void obj_init_frog(Object *obj, LevelObjectEntry_Frog *entry) {
     obj64->scaleY = 1.0f;
 
     if (obj64->drumstick) {
-        obj->segment.unk38.byte.unk3A = TRUE;
+        obj->segment.object.numModelIDs = TRUE;
         /**
           * Don't spawn the chicken frog if drumstick is already unlocked, or
           * if the player hasn't completed the trophy races yet.
@@ -4943,7 +4943,7 @@ void obj_init_frog(Object *obj, LevelObjectEntry_Frog *entry) {
             gParticlePtrList_addObject(obj);
         }
     } else {
-        obj->segment.unk38.byte.unk3A = FALSE;
+        obj->segment.object.numModelIDs = FALSE;
     }
 }
 
@@ -5060,7 +5060,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
         obj->segment.z_velocity = frog->hopTargetZ * cosine;
         ignore_bounds_check();
         move_object(obj, obj->segment.x_velocity, 0.0f, obj->segment.z_velocity);
-        if (func_8002BAB0(obj->segment.unk2C.half.lower, obj->segment.trans.x_position, obj->segment.trans.z_position, &sp6C) != 0) {
+        if (func_8002BAB0(obj->segment.object.segmentID, obj->segment.trans.x_position, obj->segment.trans.z_position, &sp6C) != 0) {
             obj->segment.trans.y_position = 0.0f;
             ignore_bounds_check();
             move_object(obj, 0.0f, sp6C, 0.0f);

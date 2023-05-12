@@ -788,7 +788,7 @@ UNUSED s32 func_8000E9C0(void) {
 
 void func_8000E9D0(Object *arg0) {
     arg0->segment.trans.flags |= OBJ_FLAGS_DEACTIVATED;
-    func_800245B4(arg0->segment.unk2C.half.upper | 0xC000);
+    func_800245B4(arg0->segment.object.unk2C | 0xC000);
     gObjPtrList[objCount++] = arg0;
     if (1) {}  // Fakematch
     D_8011AE64++;
@@ -1125,7 +1125,7 @@ void func_80011134(Object *arg0, s32 arg1) {
     s32 var_s1;
     u8 temp_v0;
 
-    temp_s3 = arg0->unk68[arg0->segment.unk38.byte.unk3A]->objModel;
+    temp_s3 = arg0->unk68[arg0->segment.object.numModelIDs]->objModel;
     temp_s5 = temp_s3->unk50;
     temp_s4 = temp_s3->batches;
     for (var_s1 = 0; temp_s5 > 0 && var_s1 < temp_s3->numberOfBatches; var_s1++) {
@@ -1303,20 +1303,20 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     
     gNoBoundsCheck = FALSE;
     if (outOfBounds) {
-        obj->segment.unk2C.half.lower = -1;
+        obj->segment.object.segmentID = -1;
         return 1;
     }
 
     obj->segment.trans.x_position = newXPos;
     obj->segment.trans.y_position = newYPos;
     obj->segment.trans.z_position = newZPos;
-    box = get_segment_bounding_box(obj->segment.unk2C.half.lower);
+    box = get_segment_bounding_box(obj->segment.object.segmentID);
 
     //For some reason the XYZ positions are converted into integers for the next section
     intXPos = newXPos, intYPos = newYPos, intZPos = newZPos;
     
     if (box == NULL) {
-        obj->segment.unk2C.half.lower = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
+        obj->segment.object.segmentID = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
         return 0;
     } else {
         outsideBBox = FALSE;
@@ -1332,7 +1332,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
         if (outsideBBox) {
             segmentID = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
             if (segmentID != -1) {
-                obj->segment.unk2C.half.lower = segmentID;
+                obj->segment.object.segmentID = segmentID;
             }
         }
     }
@@ -1412,14 +1412,14 @@ void render_3d_billboard(Object *obj) {
 
     if (obj->behaviorId == BHV_BOMB_EXPLOSION) {
         //!@bug Never true, because the type is u8.
-        if (obj->segment.unk38.byte.unk39 > 255) {
-            obj->segment.unk38.byte.unk39 = obj->properties.bombExplosion.unk4 & 0xFF;
+        if (obj->segment.object.opacity > 255) {
+            obj->segment.object.opacity = obj->properties.bombExplosion.unk4 & 0xFF;
         } else {
-            obj->segment.unk38.byte.unk39 = (obj->segment.unk38.byte.unk39 * (obj->properties.bombExplosion.unk4 & 0xFF)) >> 8;
+            obj->segment.object.opacity = (obj->segment.object.opacity * (obj->properties.bombExplosion.unk4 & 0xFF)) >> 8;
         }
     }
     
-    alpha = obj->segment.unk38.byte.unk39;
+    alpha = obj->segment.object.opacity;
     if (alpha > 255) {
         alpha = 255;
     }
@@ -1452,7 +1452,7 @@ void render_3d_billboard(Object *obj) {
     } else {
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     }
-    sp58 = (unk80068514_arg4 *) obj->unk68[obj->segment.unk38.byte.unk3A];
+    sp58 = (unk80068514_arg4 *) obj->unk68[obj->segment.object.numModelIDs];
     var_a0 = NULL;
     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON_2) {
         var_a0 = obj->properties.fireball.obj;
@@ -1518,7 +1518,7 @@ void render_3d_model(Object *obj) {
     ObjectModel *objModel;
     Object_68 *something;
 
-    obj68 = obj->unk68[obj->segment.unk38.byte.unk3A];
+    obj68 = obj->unk68[obj->segment.object.numModelIDs];
     if (obj68 != NULL) {
         objModel = obj68->objModel;
         hasOpacity = FALSE;
@@ -1575,14 +1575,14 @@ void render_3d_model(Object *obj) {
         spB0 = FALSE;
         if (racerObj != NULL) {
             object_undo_player_tumble(obj);
-            if (obj->segment.unk38.byte.unk3B == 0 || racerObj->vehicleID >= VEHICLE_TRICKY) {
+            if (obj->segment.object.animationID == 0 || racerObj->vehicleID >= VEHICLE_TRICKY) {
                 func_80069790(&gObjectCurrDisplayList, &gObjectCurrMatrix, obj68, racerObj->headAngle);
                 spB0 = TRUE;
             } else {
                 racerObj->headAngle = 0;
             }
         }
-        alpha = obj->segment.unk38.byte.unk39;
+        alpha = obj->segment.object.opacity;
         if (alpha > 255) {
             alpha = 255;
         }
@@ -1629,7 +1629,7 @@ void render_3d_model(Object *obj) {
                 if (!(loopObj->segment.trans.flags & OBJ_FLAGS_INVISIBLE)) {
                     index = obj->unk60->unk2C[i];
                     if (index >= 0 && index < objModel->unk18) {
-                        something = loopObj->unk68[loopObj->segment.unk38.byte.unk3A];
+                        something = loopObj->unk68[loopObj->segment.object.numModelIDs];
                         vtxX = obj->unk44[objModel->unk14[index]].x;
                         vtxY = obj->unk44[objModel->unk14[index]].y;
                         vtxZ = obj->unk44[objModel->unk14[index]].z;
@@ -1679,7 +1679,7 @@ void render_3d_model(Object *obj) {
                 index = obj->segment.header->unk58;
                 if (index >= 0 && index < objModel->unk18) {
                     flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
-                    something = loopObj->unk68[loopObj->segment.unk38.byte.unk3A];
+                    something = loopObj->unk68[loopObj->segment.object.numModelIDs];
                     vtxX = obj->unk44[objModel->unk14[index]].x;
                     vtxY = obj->unk44[objModel->unk14[index]].y;
                     vtxZ = obj->unk44[objModel->unk14[index]].z;
@@ -1860,9 +1860,9 @@ void func_80012F94(Object *obj) {
                     if (get_current_viewport() != objRacer->playerIndex) {
                         var_a1 += 5;
                     }
-                    var_f0_2 = obj->segment.unk30;
+                    var_f0_2 = obj->segment.object.distanceToCamera;
                     temp_v1 = (s32) var_f0_2 >> 3;
-                    if (obj->segment.unk30 < 0.0f) {
+                    if (obj->segment.object.distanceToCamera < 0.0f) {
                         var_f0_2 = 0.0f;
                     } else if (var_f0_2 > 3500.0f) {
                         var_f0_2 = 3500.0f;
@@ -1914,14 +1914,14 @@ void func_80012F94(Object *obj) {
             if (numberOfModels < var_t0) {
                 var_t0 = numberOfModels;
             }
-            obj->segment.unk38.byte.unk3A = var_t0;
+            obj->segment.object.numModelIDs = var_t0;
             if ((obj->unk54 != NULL) && (obj->unk54->unk0 < 0.6f)) {
                 objRacer->lightFlags |= RACER_LIGHT_NIGHT;
             } else {
                 objRacer->lightFlags &= ~RACER_LIGHT_NIGHT;
             }
             racerLightTimer = objRacer->lightFlags & RACER_LIGHT_TIMER;
-            new_var = obj->unk68[obj->segment.unk38.byte.unk3A];
+            new_var = obj->unk68[obj->segment.object.numModelIDs];
             temp_a1_3 = new_var->objModel;
             if (racerLightTimer != 0) {
                 racerLightTimer--;

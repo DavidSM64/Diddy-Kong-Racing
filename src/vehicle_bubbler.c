@@ -63,7 +63,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     set_boss_voice_clip_offset(D_800DCE40);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
-    sp56 = obj->segment.unk38.byte.unk3B;
+    sp56 = obj->segment.object.animationID;
     animFrame = obj->segment.animFrame;
     sp52 = racer->headAngle;
     if (racer->raceFinished == TRUE) {
@@ -92,11 +92,11 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     *startTimer = timer;
     racer->lateral_velocity = 0.0f;
     racer->headAngle = sp52;
-    obj->segment.unk38.byte.unk3B = sp56;
+    obj->segment.object.animationID = sp56;
     obj->segment.animFrame = animFrame;
-    if (racer->attackType != ATTACK_NONE && obj->segment.unk38.byte.unk3B != 2) {
-        racer->unk1CD = obj->segment.unk38.byte.unk3B;
-        obj->segment.unk38.byte.unk3B = 2;
+    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != 2) {
+        racer->unk1CD = obj->segment.object.animationID;
+        obj->segment.object.animationID = 2;
         obj->segment.y_velocity += 7.5;
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, 0);
@@ -112,8 +112,8 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     }
     gfxData = *obj->unk68;
     model = gfxData->objModel;
-    diffX = (model->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
-    obj->segment.unk38.byte.unk3B = 1;
+    diffX = (model->animations[obj->segment.object.animationID].unk4 * 16) - 17;
+    obj->segment.object.animationID = 1;
     racer->unkC += 2.0 * updateRateF;
     while (racer->unkC < 0.0f) {
         racer->unkC += diffX;
@@ -123,8 +123,8 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
         racer->unkC -= diffX;
         gfxData->unk10 = -1;
     }
-    if (gfxData->unk10 == -1 && obj->segment.unk38.byte.unk3B == 2) {
-        obj->segment.unk38.byte.unk3B = 1;
+    if (gfxData->unk10 == -1 && obj->segment.object.animationID == 2) {
+        obj->segment.object.animationID = 1;
         racer->unkC = 0.0f;
     }
     obj->segment.animFrame = racer->unkC;
@@ -141,7 +141,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     obj->unk74 = 0;
     func_800AFC3C(obj, updateRate);
     fade_when_near_camera(obj, racer, 0x28);
-    switch (obj->segment.unk38.byte.unk3B) {
+    switch (obj->segment.object.animationID) {
     case 1:
         sp38 = 0x2500;
     break;
@@ -161,13 +161,13 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
         CLAMP(timer, -sp38, sp38);
         racer->headAngleTarget = timer;
     }
-    if (obj->segment.unk38.byte.unk3B == 1) {
+    if (obj->segment.object.animationID == 1) {
         if ((racer->miscAnimCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }
     racer = (Object_Racer *) firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.unk38.byte.unk3B == 1) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == 1) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {
