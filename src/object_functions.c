@@ -315,7 +315,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
                 gParticlePtrList_addObject(obj);
                 func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, SOUND_EXPLOSION, 1.0f, 1);
             }
-            obj->segment.trans.scale *= 0.9f;
+            obj->segment.trans.scale -= (obj->segment.trans.scale * 0.05f) * updateRateF;
             if (obj->segment.trans.scale < 0.5f){
                 gParticlePtrList_addObject(obj);
             }
