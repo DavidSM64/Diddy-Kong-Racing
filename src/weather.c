@@ -135,7 +135,6 @@ s32 D_800E2C78 = 0;
 s32 gLightningTimer = 0;
 s32 gThunderTimer = 0;
 s32 D_800E2C84 = 0;
-s32 gRainOverlayUnusedValue = 0; // Set, but never read.
 Sprite *gRainSplashGfx = 0;
 s32 D_800E2C90 = 0;
 s32 gWeatherSoundMask = 0;
@@ -438,12 +437,10 @@ void func_800AD144(s32 arg0, s32 arg1) {
 void free_rain_memory(void) {
     if (gRainGfx[0].tex != NULL) {
         free_texture(gRainGfx[0].tex);
-        gRainOverlayUnusedValue = 0;
     }
 
     if (gRainGfx[1].tex != NULL) {
         free_texture(gRainGfx[1].tex);
-        gRainOverlayUnusedValue = 0;
     }
 
     if (gRainSplashGfx != NULL) {

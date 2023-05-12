@@ -186,14 +186,6 @@ void func_800B4A08(s32 arg0) {
     D_800E2EF0 = arg0;
 }
 
-/* Official name: sprintf */
-UNUSED void sprintf(char *s, char *format, ...) {
-    va_list args;
-    va_start(args, format);
-    vsprintf(s, format, args);
-    va_end(args);
-}
-
 //Official Name: vsprintf
 GLOBAL_ASM("asm/non_matchings/printf/vsprintf.s")
 
@@ -281,52 +273,6 @@ void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha) {
 */
 void set_render_printf_position(u16 x, u16 y) {
     RENDER_PRINTF_CMD_SET_POSITION(x, y)
-}
-
-/**
- * Definitely has some fakematch shenanigans.
- * This will return the length in pixels of a given string using the debug small font.
-*/
-UNUSED s32 func_800B63F4(const char *format, ...) {
-    s32 pad;
-    s32 fontCharU;
-    s32 stringLength;
-    char s[255];
-    u8 *ch;
-    va_list args;
-    va_start(args, format);
-
-    stringLength = 0;
-    func_800B4A08(1);
-    vsprintf(s, format, args);
-    func_800B4A08(0);
-    for (ch = (u8 *) &s[0]; *ch != '\0'; ch++) {
-        pad = *ch;
-        if (*ch != (0, '\n')) {
-            if (pad == ' ') {
-                stringLength += 6;
-                if (1){ }
-            } else {
-                if (*ch < 0x40) {
-                    //Character is a symbol or number and not a letter
-                    gDebugFontTexture = 0;
-                    *ch-= 0x21;
-                } else if (*ch < 0x60) {
-                    //Character is a upper case letter
-                    gDebugFontTexture = 1;
-                    *ch -= 0x40;
-                } else if (*ch < 0x80) {
-                    //Character is a lower case letter
-                    gDebugFontTexture = 2;
-                    *ch -= 0x60;
-                }
-                fontCharU = gDebugFontCoords[gDebugFontTexture][*ch].u;
-                stringLength = ((stringLength + gDebugFontCoords[gDebugFontTexture][*ch].v) - fontCharU) + (pad = 1);
-            }
-        }
-    }
-    va_end(args);
-    return stringLength;
 }
 
 GLOBAL_ASM("asm/non_matchings/printf/func_800B653C.s")

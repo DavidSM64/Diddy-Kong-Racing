@@ -1921,7 +1921,6 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
 
 void func_800AA3EC(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspectRatio) {
     LevelModel* lvlMdl;
-    UNUSED s32 pad24[2];
     f32 scaledX;
     f32 scaledY;
     s32 a;

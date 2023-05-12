@@ -189,8 +189,6 @@ void init_level_globals(void) {
         gGlobalLevelTable[i].raceType = gCurrentLevelHeader->race_type;
         gGlobalLevelTable[i].vehicles = ((u16) gCurrentLevelHeader->available_vehicles) << 4;
         gGlobalLevelTable[i].vehicles |= gCurrentLevelHeader->vehicle & 0xF;
-        gGlobalLevelTable[i].unk3 = 1;
-        gGlobalLevelTable[i].unk4 = gCurrentLevelHeader->unkB0;
     }
     gNumberOfWorlds++;
     D_80121178 = allocate_from_main_pool_safe(gNumberOfWorlds, COLOUR_TAG_YELLOW);

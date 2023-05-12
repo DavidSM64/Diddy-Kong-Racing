@@ -154,10 +154,10 @@ void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
     f32 radius;
     obj->segment.trans.flags |= OBJ_FLAGS_UNK_0002;
     radius = entry->radius & 0xFF;
-    if (radius < 10) {
-        radius = 10;
+    if (radius < 10.0f) {
+        radius = 10.0f;
     }
-    radius /= 64;
+    radius /= 64.0f;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
     obj->shadow->scale = obj->segment.header->shadowScale * radius;
     obj->segment.unk38.byte.unk3A = entry->unk8;
@@ -527,7 +527,7 @@ void obj_init_torch_mist(Object *obj, LevelObjectEntry_Torch_Mist *entry) {
     if (radius < 10.0f) {
         radius = 10.0f;
     }
-    radius /= 64;
+    radius /= 64.0f;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
     obj->unk78 = entry->animSpeed;
 }
@@ -849,10 +849,10 @@ void obj_loop_eggcreator(Object *obj, UNUSED s32 updateRate) {
 */
 void obj_init_lighthouse_rocketsignpost(Object *obj, LevelObjectEntry_Lighthouse_RocketSignpost *entry) {
     f32 radius = entry->radius & 0xFF;
-    if (radius < 10) {
-        radius = 10;
+    if (radius < 10.0f) {
+        radius = 10.0f;
     }
-    radius /= 64;
+    radius /= 64.0f;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
     obj->segment.trans.y_rotation = entry->angleY << 6 << 4;
     if (obj->segment.unk38.byte.unk3A >= obj->segment.header->numberOfModelIds) {
@@ -901,7 +901,7 @@ void obj_init_airzippers_waterzippers(Object *obj, LevelObjectEntry_AirZippers_W
         radius = 10.0f;
     }
     objHeader = obj->segment.header;
-    radius /= 64;
+    radius /= 64.0f;
     obj->segment.trans.scale = objHeader->scale * radius;
     obj->segment.trans.y_rotation = entry->angleY << 6 << 4;
     if (obj->segment.unk38.byte.unk3A >= objHeader->numberOfModelIds) {
@@ -1082,7 +1082,7 @@ void obj_init_characterflag(Object *obj, LevelObjectEntry_CharacterFlag *entry) 
     if (radius < 10.0f) {
         radius = 10.0f;
     }
-    radius /= 64;
+    radius /= 64.0f;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
 }
 
@@ -1950,11 +1950,11 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     f32 radius;
     Object_Exit *exit;
     radius = entry->radius & 0xFF;
-    if (radius < 5) {
-        radius = 5;
+    if (radius < 5.0f) {
+        radius = 5.0f;
     }
     exit = &obj->unk64->exit;
-    radius /= 128;
+    radius /= 128.0f;
     obj->segment.trans.scale = radius;
     obj->segment.trans.y_rotation = entry->unk11 << 6 << 4;
     exit->directionX = sins_f(obj->segment.trans.y_rotation);
@@ -2735,11 +2735,11 @@ void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     f32 radius;
     Object_ModeChange *obj64;
     radius = entry->radius & 0xFF;
-    if (radius < 5) {
-        radius = 5;
+    if (radius < 5.0f) {
+        radius = 5.0f;
     }
     obj64 = &obj->unk64->mode_change;
-    radius /= 128;
+    radius /= 128.0f;
     obj->segment.trans.scale = radius;
     obj->segment.trans.y_rotation = entry->angleY << 6 << 4;
     obj64->directionX = sins_f(obj->segment.trans.y_rotation);
@@ -2820,11 +2820,11 @@ void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry) {
     f32 radius;
     Object_Bonus *obj64;
     radius = entry->radius & 0xFF;
-    if (radius < 5) {
-        radius = 5;
+    if (radius < 5.0f) {
+        radius = 5.0f;
     }
     obj64 = &obj->unk64->bonus;
-    radius /= 128;
+    radius /= 128.0f;
     obj->segment.trans.scale = radius;
     obj->segment.trans.y_rotation = entry->angleY << 6 << 4;
     obj64->directionX = sins_f(obj->segment.trans.y_rotation);
@@ -2887,9 +2887,6 @@ void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) 
         entry->balloonID = func_8000CC20(obj);
     } else {
         func_8000CBF0(obj, entry->balloonID);
-    }
-    if (entry->balloonID == -1) {
-        rmonPrintf("Illegal door no!!!\n"); // Did the devs just copy-paste the door init function?
     }
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 4;
@@ -3010,9 +3007,6 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     obj64->unk11 = entry->numBalloonsToOpen;
     obj64->unk10 = entry->numBalloonsToOpen;
     obj64->unk12 = entry->distanceToOpen;
-    if (obj64->unkE == -1) {
-        rmonPrintf("Illegal door no!!!\n");
-    }
     obj->segment.unk38.byte.unk3A = entry->modelIndex;
     obj->segment.trans.y_rotation = entry->closedRotation << 6 << 4;
     obj64->homeY = obj->segment.trans.y_position;
@@ -3023,7 +3017,7 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     if (radius < 10.0f) {
         radius = 10.0f;
     }
-    radius /= 64;
+    radius /= 64.0f;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
     obj64->unk13 = (u8) entry->unkF;
     obj64->unk14 = (s8) entry->unk11;
@@ -3053,10 +3047,10 @@ void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
     obj->action = obj->segment.trans.y_rotation;
     obj->unk7C.word = (entry->unk9 & 0x3F) << 0xA;
     radius = entry->radius & 0xFF;
-    if (radius < 10) {
-        radius = 10;
+    if (radius < 10.0f) {
+        radius = 10.0f;
     }
-    radius /= 64;
+    radius /= 64.0f;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
     obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0020;
     obj->interactObj->unk11 = 2;
@@ -3169,15 +3163,12 @@ void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
     } else {
         func_8000CBF0(obj, entry->unk9);
     }
-    if (entry->unk9 == -1) {
-        rmonPrintf("Illegal door no!!!\n");
-    }
     radius = (s32)entry->scale & 0xFF;
     if (radius < 5.0f) {
         radius = 5.0f;
     }
     obj64 = &obj->unk64->trigger;
-    radius /= 128;
+    radius /= 128.0f;
     obj->segment.trans.scale = radius;
     obj->segment.trans.y_rotation = entry->rotation << 6 << 4;
     obj64->unk0 = sins_f(obj->segment.trans.y_rotation);
@@ -4499,7 +4490,7 @@ void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
     if (radius < 10.0f) {
         radius = 10.0f;
     }
-    radius /= 64;
+    radius /= 64.0f;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
     obj->segment.unk38.byte.unk3A = entry->unk8;
     obj->segment.trans.y_rotation = entry->angleY << 6 << 4;

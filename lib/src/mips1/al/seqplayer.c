@@ -8,15 +8,11 @@
 void __setInstChanState(ALSeqPlayer *seqp, ALInstrument *inst, s32 chan);
 void __resetPerfChanState(ALSeqPlayer *seqp, s32 chan) ;
 
-UNUSED void dummy_8000A710(UNUSED s32 arg0, UNUSED s32 arg1) {
-}
-
 ALVoiceState *__mapVoice(ALSeqPlayer *seqp, u8 key, u8 vel, u8 channel)
 {
     ALVoiceState  *vs = seqp->vFreeList;
     
     if(seqp->voiceLimit < seqp->mappedVoices) {
-        stubbed_printf("Exceeded voice limit of %d (%d)\n", seqp->voiceLimit, seqp->mappedVoices);
         return NULL;
     }
 

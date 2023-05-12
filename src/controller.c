@@ -30,9 +30,7 @@ OSMesgQueue *get_si_mesg_queue(void) {
  * Official name: joyInit
  */
 s32 init_controllers(void) {
-    UNUSED s32 *temp1;
     u8 bitpattern;
-    UNUSED s32 *temp2;
 
     osCreateMesgQueue(&sSIMesgQueue, &sSIMesgBuf, 1);
     osSetEventMesg(OS_EVENT_SI, &sSIMesgQueue, gSIMesg);

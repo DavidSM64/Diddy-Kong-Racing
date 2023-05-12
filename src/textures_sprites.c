@@ -1302,32 +1302,6 @@ s32 get_texture_size_from_id(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/get_texture_size_from_id.s")
 #endif
 
-UNUSED u8 func_8007C660(s32 arg0) {
-    Sprite *temp_s1;
-    s32 j;
-    s32 i;
-    s32 temp_v1;
-
-    if (arg0 & 0x8000) {
-        return 0;
-    }
-    if (D_80126370 == 0) {
-        D_80126370 = (u8 *) allocate_from_main_pool_safe(gTextureAssetID[TEX_TABLE_2D], COLOUR_TAG_MAGENTA);
-        for (i = 0; i < gTextureAssetID[TEX_TABLE_2D]; i++) {
-            D_80126370[i] = 0;
-        }
-        for (i = 0; i < D_80126354; i++) {
-            temp_s1 = gCurrentSprite;
-            load_asset_to_address(ASSET_SPRITES, (u32) temp_s1, gSpriteOffsetTable[i], gSpriteOffsetTable[i + 1] - gSpriteOffsetTable[i]);
-            temp_v1 = temp_s1->unkC.val[temp_s1->numberOfFrames];
-            for (j = 0; j < temp_v1; j++) {
-                D_80126370[temp_s1->baseTextureId + j] = 1;
-            }
-        }
-    }
-    return D_80126370[arg0];
-}
-
 #ifdef NON_EQUIVALENT
 s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *numFramesOut, s32 *formatOut, s32 *sizeOut) {
     TextureHeader *tex;

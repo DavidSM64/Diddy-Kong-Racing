@@ -18,7 +18,6 @@ MemoryPool gMemoryPools[4];
 #endif
 
 s32 gNumberOfMemoryPools;
-UNUSED s32 D_801235C4;
 FreeQueueSlot gFreeQueue[256];
 s32 gFreeQueueCount;
 s32 gFreeQueueState; //Official Name: mmDelay
@@ -485,32 +484,6 @@ u8 *align16(u8 *address) {
     s32 remainder = (s32)address & 0xF;
     if (remainder > 0) {
         address = (u8 *)(((s32)address - remainder) + 16);
-    }
-    return address;
-}
-
-/**
- * Returns the passed in address aligned to the next 8-byte boundary.
- * Unused.
- * Official name: mmAlign8
- */
-u8 *align8(u8 *address) {
-    s32 remainder = (s32)address & 0x7;
-    if (remainder > 0) {
-        address = (u8 *)(((s32)address - remainder) + 8);
-    }
-    return address;
-}
-
-/**
- * Returns the passed in address aligned to the next 4-byte boundary.
- * Unused.
- * Official name: mmAlign4
- */
-u8 *align4(u8 *address) {
-    s32 remainder = (s32)address & 0x3;
-    if (remainder > 0) {
-        address = (u8 *)(((s32)address - remainder) + 4);
     }
     return address;
 }

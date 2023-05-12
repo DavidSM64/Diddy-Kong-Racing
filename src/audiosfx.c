@@ -215,12 +215,6 @@ void func_80004604(u8 *arg0, u8 arg1) {
         arg0[0x36] = arg1;
 }
 
-UNUSED u8 func_8000461C(u8 *arg0) {
-    if (arg0)
-        return arg0[0x3F];
-    return 0;
-}
-
 s32 func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2) {
     return func_80004668(bnk, sndIndx, 0, arg2);
 }
@@ -245,14 +239,6 @@ void func_8000488C(u8 *arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/audiosfx/func_800048D8.s")
-
-UNUSED void func_80004998(void) {
-    func_800048D8(1);
-}
-
-UNUSED void func_800049B8(void) {
-    func_800048D8(17);
-}
 
 void func_800049D8(void) {
     func_800048D8(3);
@@ -284,7 +270,6 @@ u16 get_sound_channel_volume(u8 channel) {
 void set_sound_channel_volume(u8 channel, u16 volume) {
     OSIntMask mask;
     ALEventQueue *queue;
-    UNUSED s32 pad;
     ALEvent evt;
 
     mask = osSetIntMask(OS_IM_NONE);

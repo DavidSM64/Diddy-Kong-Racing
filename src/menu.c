@@ -2453,7 +2453,6 @@ void menu_title_screen_init(void) {
 }
 
 void func_8008377C(UNUSED s32 updateRate, f32 arg1) {
-    UNUSED u32 foo[2];
     s32 alpha;
     f32 scale;
     s32 i;
@@ -2505,7 +2504,6 @@ void func_8008377C(UNUSED s32 updateRate, f32 arg1) {
 u8 gTitleScreenTimer = 210;
 
 s32 menu_title_screen_loop(s32 updateRate) {
-    UNUSED s32 temp_v0_5;
     s32 sp28;
     s8 *demo;
     s32 contrIndex;
@@ -3808,7 +3806,6 @@ s32 menu_controller_pak_loop(s32 updateRate) {
     s32 playMoveSound = FALSE;
     s32 playCancelSound = FALSE;
     s32 playSelectedSound = FALSE;
-    UNUSED s32 pad;
     s32 temp_v1_2;
 
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
@@ -5506,10 +5503,6 @@ void func_8008E4B0(void) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8008E4EC.s")
 
-UNUSED s32 func_8008E790(void) {
-    return D_800E097C;
-}
-
 #ifdef NON_EQUIVALENT
 void menu_track_select_init(void) {
     s32 levelCount;
@@ -5968,9 +5961,7 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8008FF1C.s")
 GLOBAL_ASM("asm/non_matchings/menu/func_800904E8.s")
 
 void func_80090918(s32 updateRate) {
-    UNUSED s32 pad1[2];
     s32 var_t1;
-    UNUSED s32 pad2[2];
     s32 var_a1;
     s32 var_t0;
     s32 var_t2;
@@ -7906,7 +7897,6 @@ s32 menu_ghost_data_loop(s32 updateRate) {
     s32 xStick;
     s32 yStick;
     s32 temp;
-    UNUSED s32 unused;
 
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
 
@@ -8308,13 +8298,6 @@ s8 get_character_id_from_slot(s32 slot) {
 }
 
 /**
- * Unused duplicate of get_character_id_from_slot()
- */
-s8 get_character_id_from_slot_unused(s32 slot) {
-    return gCharacterIdSlots[slot];
-}
-
-/**
  * Gets the selected vehicle index for a player.
  * 0 = Car, 1 = Hovercraft, 2 = Plane
  */
@@ -8523,9 +8506,6 @@ void allocate_and_set_menu_image_properties(s32 imageID) {
     gMenuImageStack[imageID].unk1D = sMenuImageProperties[imageID].unk1D;
 }
 
-void func_8009CA58(void) {
-}
-
 GLOBAL_ASM("asm/non_matchings/menu/func_8009CA60.s")
 
 /**
@@ -8533,9 +8513,7 @@ GLOBAL_ASM("asm/non_matchings/menu/func_8009CA60.s")
  * Comes in wood, iron and gold colours.
  */
 void render_track_selection_viewport_border(ObjectModel *objMdl) {
-    UNUSED s32 pad1[4];
     s32 flags;
-    UNUSED s32 pad2[4];
     TextureHeader *tex;
     Triangle *tris;
     s32 triOffset;

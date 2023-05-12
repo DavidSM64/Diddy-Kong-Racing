@@ -1126,7 +1126,6 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
 }
 
 void func_80068FA8(Gfx **dlist, MatrixS **mtx, Object *arg2, Object *arg3, f32 shear) {
-    UNUSED s32 pad;
     f32 cossf_x_arg2;
     f32 cossf_y_arg2;
     f32 sinsf_x_arg2;

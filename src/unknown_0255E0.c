@@ -1649,9 +1649,6 @@ void func_8002C0C4(s32 modelId) {
         j = (s32) align16(((u8 *) (gCurrentLevelModel->segments[k].unk32 * 2)) + j);
     }
     temp_s4 = j - (s32)gCurrentLevelModel;
-    if (temp_s4 > levelSize) {
-        rmonPrintf("ERROR!! TrackMem overflow .. %d\n", temp_s4);
-    }
     set_free_queue_state(0);
     free_from_memory_pool(gTrackModelHeap);
     allocate_at_address_in_main_pool(temp_s4, (u8* ) gTrackModelHeap, COLOUR_TAG_YELLOW);

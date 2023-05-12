@@ -1749,7 +1749,6 @@ void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object) {
  * Official Name: objDoPlayerTumble
 */
 void object_do_player_tumble(Object *this) {
-    UNUSED s32 unused1;
     Object_Racer *sp_20;
     f32 tmp_f2;
     f32 sp_1c;
@@ -2081,7 +2080,6 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
     s32 var_t0;
     s32 opacity;
     f32 shear;
-    UNUSED s32 pad;
 
     racer = (Object_Racer *) obj->unk64;
     var_t0 = racer->unk2 * 4;
@@ -2368,13 +2366,6 @@ void set_taj_challenge_type(s32 vehicleID) {
     D_8011ADAC = 0;
 }
 
-/**
- * Returns which Taj challenge is currently active.
-*/
-UNUSED s16 get_taj_challenge_type(void) {
-    return gTajChallengeType;
-}
-
 GLOBAL_ASM("asm/non_matchings/objects/func_80017E98.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_800185E4.s")
 
@@ -2534,7 +2525,6 @@ void func_8001B790(void) {
 }
 
 Object *func_8001B7A8(Object *racer, s32 position, f32 *distance) {
-    UNUSED s32 temp;
     Object *tempRacer;
     position = (racer->obj.obj8001B7A8.unk112 - position) - 1;
     if (position < 0 || position >= gNumRacers) {
@@ -2552,7 +2542,6 @@ f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2) {
     Object_Racer *temp_racer;
     f32 var_f2;
     s32 r1_ccp;
-    UNUSED s32 temp_lo;
     s32 var_v1;
     s32 checkpointID;
 
@@ -2786,7 +2775,6 @@ s32 func_8001C48C(Object *obj) {
 }
 
 s32 func_8001C524(f32 diffX, f32 diffY, f32 diffZ, s32 someFlag) {
-    UNUSED f32 pad[6];
     s32 sp64;
     f32 len;
     f32 x;
@@ -2919,30 +2907,6 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
 GLOBAL_ASM("asm/non_matchings/objects/calc_dynamic_lighting_for_object_1.s")
 GLOBAL_ASM("asm/non_matchings/objects/calc_env_mapping_for_object.s")
 
-UNUSED void func_8001E13C(s16 arg0, s16 *arg1, s16 *arg2, s16 *arg3, s16 *arg4, s16 *arg5, s16 *arg6) {
-    Object *obj;
-    Object_Racer *racer;
-    s32 i;
-
-    for (i = 0; i < objCount; i++) {
-        obj = gObjPtrList[i];
-        if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
-            if (obj->behaviorId == BHV_RACER) {
-                racer = &obj->unk64->racer;
-                if (arg0 == racer->playerIndex) {
-                    *arg1 = obj->segment.trans.x_position;
-                    *arg2 = obj->segment.trans.y_position;
-                    *arg3 = obj->segment.trans.z_position;
-                    *arg4 = obj->segment.trans.z_rotation;
-                    *arg5 = obj->segment.trans.x_rotation;
-                    *arg6 = obj->segment.trans.y_rotation;
-                    i = objCount; //Feels like it should be a break instead.
-                }
-            }
-        }
-    }
-}
-
 /**
  * Returns a pointer to the asset in the misc. section. If index is out of range, then this
  * function just returns the pointer to gAssetsMiscSection.
@@ -3008,11 +2972,6 @@ void func_8001E45C(s32 arg0) {
             set_frame_blackout_timer();
         }
     }
-}
-
-// Unused?
-s32 func_8001E4B4(void) {
-    return D_8011AE60;
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001E4C4.s")
