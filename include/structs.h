@@ -1626,21 +1626,6 @@ typedef struct ObjectTransform {
   /* 0x0014 */ f32 z_position;
 } ObjectTransform;
 
-typedef struct ParticleProperties {
-  /* 0x0000 */ ParticleBehavior *behaviour;
-  /* 0x0004 */ s16 unk4;
-  /* 0x0006 */ u8 unk6;
-  /* 0x0007 */ u8 unk7;
-  /* 0x0004 */ s16 unk8;
-  /* 0x0004 */ s16 unkA;
-    union {
-        Vec3f pos;
-        unk800AF29C_C unkC;
-        unk800B2260_C **unkC_60;
-        unk800AF29C_C_400 unkC_400;
-    };
-} ParticleProperties;
-
 typedef struct SegmentPropertiesObject {
     /* 0x002C */ s16 unk2C;
     /* 0x002E */ s16 segmentID;
