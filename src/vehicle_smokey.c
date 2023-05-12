@@ -265,7 +265,7 @@ void func_8005E204(Object *obj, Object_Racer *racer, f32 arg2, s32 objectID, s32
     for (i = 0; i < sp7C; i++) {
         temp_s1 = var_s6[i];
         if (temp_s1->behaviorId == BHV_UNK_6B) {
-            temp_s2 = temp_s1->segment.unk3C_a.level_entry; 
+            temp_s2 = temp_s1->segment.level_entry; 
             if ((s8) temp_s2->animation.z_rotation == racer->lap + 1 || (s8) temp_s2->animation.z_rotation == 0) {
                 diffX = temp_s1->segment.trans.x_position - obj->segment.trans.x_position;
                 diffY = temp_s1->segment.trans.y_position - obj->segment.trans.y_position;
@@ -275,7 +275,7 @@ void func_8005E204(Object *obj, Object_Racer *racer, f32 arg2, s32 objectID, s32
                         temp_s1->properties.racer.unk0 = (Object *) 1; // ???
                         newObj = spawn_object(&spawnObj, 1);
                         if (newObj != NULL) {
-                            newObj->segment.unk3C_a.level_entry = NULL;
+                            newObj->segment.level_entry = NULL;
                             newObj->segment.x_velocity = obj->segment.x_velocity;
                             newObj->segment.y_velocity = obj->segment.y_velocity;
                             newObj->segment.z_velocity = obj->segment.z_velocity;

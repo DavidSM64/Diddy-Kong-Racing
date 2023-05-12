@@ -692,7 +692,7 @@ void func_8000E2B4(void) {
     if (get_filtered_cheats() & CHEAT_SMALL_CHARACTERS) {
         player->segment.trans.scale *= 0.714f;
     }
-    player->segment.unk3C_a.level_entry = NULL;
+    player->segment.level_entry = NULL;
     player->segment.trans.y_rotation = D_8011AD4C;
     player->segment.trans.y_position = D_8011AD48;
 }
@@ -741,10 +741,10 @@ void func_8000E4E8(s32 index) {
 s32 func_8000E558(Object *arg0){
     s32 temp_v0;
     s32 new_var, new_var2;
-    if (arg0->segment.unk3C_a.level_entry == NULL) {
+    if (arg0->segment.level_entry == NULL) {
         return TRUE;
     }
-    temp_v0 = (s32) arg0->segment.unk3C_a.level_entry;
+    temp_v0 = (s32) arg0->segment.level_entry;
     new_var2 = (s32) D_8011AE98[0];
     if ((temp_v0 >= new_var2) && (((D_8011AEA0[0] * 8) + new_var2) >= temp_v0)) {
         return FALSE;
@@ -1372,7 +1372,7 @@ void func_80011AD0(Object *this) {
 
         case BHV_FISH:
             obj64 = this->unk64;
-            tmp_f0 = this->segment.unk3C_a.level_entry->fish.unkC[1];
+            tmp_f0 = this->segment.level_entry->fish.unkC[1];
             tmp_f0 *= 0.01f;
             func_80011960(this, &obj64->fish.vertices[obj64->fish.unkFC * 6], 6, obj64->fish.triangles, 8, obj64->fish.texture, 26, 0, tmp_f0);
             break;
@@ -2868,7 +2868,7 @@ s32 func_8001C524(f32 diffX, f32 diffY, f32 diffZ, s32 someFlag) {
     for (numSteps = 0; numSteps != 128; numSteps++) {
         segment = (ObjectSegment*) (*D_8011AF04)[numSteps];
         if (segment) {
-            levelObj = &((segment->unk3C_a.level_entry)->ttDoor);
+            levelObj = &((segment->level_entry)->ttDoor);
             var_a0 = 1;
             if (someFlag && (sp64 != levelObj->doorID)) {
                 var_a0 = 0;

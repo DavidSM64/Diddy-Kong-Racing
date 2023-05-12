@@ -671,7 +671,7 @@ void spawn_skydome(s32 objectID) {
     spawnObject.objectID = objectID;
     gSkydomeSegment = spawn_object(&spawnObject, 2);
     if (gSkydomeSegment != NULL) {
-        gSkydomeSegment->segment.unk3C_a.level_entry = NULL;
+        gSkydomeSegment->segment.level_entry = NULL;
         gSkydomeSegment->unk4A = -1;
     }
 }
@@ -2384,7 +2384,7 @@ void obj_loop_fogchanger(Object *obj) {
     ObjectSegment *camera;
     
     racers = NULL;
-    fogChanger = (LevelObjectEntry_FogChanger *) obj->segment.unk3C_a.level_entry;
+    fogChanger = (LevelObjectEntry_FogChanger *) obj->segment.level_entry;
     camera = NULL;
     
     if (check_if_showing_cutscene_camera()) {

@@ -2536,7 +2536,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                         newObject.size = 8;
                         tempRacer->unk15C = spawn_object(&newObject, 1);
                         if (tempRacer->unk15C) {
-                            tempRacer->unk15C->segment.unk3C_a.level_entry = NULL;
+                            tempRacer->unk15C->segment.level_entry = NULL;
                             tempRacer->unk15C->segment.unk38.byte.unk39 = 128;
                         }
                     }
@@ -4551,7 +4551,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                     newObject.objectID = objID;
                     spawnedObj = spawn_object(&newObject, 1);
                     if (spawnedObj != NULL) {
-                        spawnedObj->segment.unk3C_a.level_entry = NULL;
+                        spawnedObj->segment.level_entry = NULL;
                         spawnedObj->segment.x_velocity = obj->segment.x_velocity - (racer->ox1 * velocity);
                         spawnedObj->segment.y_velocity = obj->segment.y_velocity - (racer->oy1 * velocity);
                         spawnedObj->segment.z_velocity = obj->segment.z_velocity - (racer->oz1 * velocity);
@@ -4904,7 +4904,7 @@ void drop_bananas(Object *obj, Object_Racer *racer, s32 number) {
                 if (get_current_level_race_type() != RACETYPE_CHALLENGE) {
                     bananaObj = spawn_object(&newObject, 1);
                     if (bananaObj != NULL) {
-                        bananaObj->segment.unk3C_a.level_entry = NULL;
+                        bananaObj->segment.level_entry = NULL;
                         banana = (Object_Banana *) bananaObj->unk64;
                         banana->unk9 = racer->vehicleID;
                         bananaObj->segment.x_velocity = racer->ox1 * 2;
@@ -5749,7 +5749,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
     if (racer->transitionTimer > 0) {
         racer->transitionTimer -= updateRate;
         if (racer->transitionTimer <= 0) {
-            func_8006D968((s8* ) racer->exitObj->segment.unk3C_a.level_entry);
+            func_8006D968((s8* ) racer->exitObj->segment.level_entry);
             racer->transitionTimer = 0;
         }
     }

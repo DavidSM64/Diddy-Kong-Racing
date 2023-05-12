@@ -401,7 +401,7 @@ void obj_loop_lasergun(Object *obj, s32 updateRate) {
             play_sound_at_position(SOUND_LASER_GUN, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
             laserBoltObj = spawn_object(&spawnObj, 1);
             if (laserBoltObj != NULL) {
-                laserBoltObj->segment.unk3C_a.level_entry = NULL;
+                laserBoltObj->segment.level_entry = NULL;
                 laserBoltObj->segment.trans.y_rotation = obj->segment.trans.y_rotation;
                 laserBoltObj->segment.trans.x_rotation = obj->segment.trans.x_rotation;
                 laserBoltObj->properties.lasergun.timer = lasergun->laserDuration;
@@ -554,7 +554,7 @@ void obj_loop_effectbox(Object *obj, UNUSED s32 updateRate) {
     f32 temp4;
     f32 temp5;
 
-    level_entry = &obj->segment.unk3C_a.level_entry->effectBox;
+    level_entry = &obj->segment.level_entry->effectBox;
     objList = get_racer_objects(&numberOfObjects);
     temp0 = coss_f((level_entry->unkB << 8) * -1);
     temp1 = sins_f((level_entry->unkB << 8) * -1);
@@ -625,13 +625,13 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
             obj->properties.trophyCabinet.trophy = TRUE;
             if ((settings->trophies >> (((settings->worldId - 1) ^ 0) * 2)) & 3) { // Fakematch
                 newObject.objectID = 0x80;
-                newObject.x = obj->segment.unk3C_a.level_entry->animation.common.x;
-                newObject.y = obj->segment.unk3C_a.level_entry->animation.common.y;
-                newObject.z = obj->segment.unk3C_a.level_entry->animation.common.z;
+                newObject.x = obj->segment.level_entry->animation.common.x;
+                newObject.y = obj->segment.level_entry->animation.common.y;
+                newObject.z = obj->segment.level_entry->animation.common.z;
                 newObject.size = 8;
                 tempObj = spawn_object(&newObject, 1);
                 if (tempObj != NULL) {
-                    tempObj->segment.unk3C_a.level_entry = NULL;
+                    tempObj->segment.level_entry = NULL;
                     tempObj->segment.trans.y_rotation = obj->segment.trans.y_rotation;
                 }
             }
@@ -847,7 +847,7 @@ void obj_loop_eggcreator(Object *obj, UNUSED s32 updateRate) {
             Object_EggCreator *eggSpawner = &eggObj->unk64->egg_creator;
             eggSpawner->currentEgg = obj;
             obj->properties.eggSpawner.egg = eggObj;
-            eggObj->segment.unk3C_a.level_entry = NULL;
+            eggObj->segment.level_entry = NULL;
         }
     }
 }
@@ -1694,7 +1694,7 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
                             newObject.objectID = 0xC6;
                             newObj = spawn_object(&newObject, 1);
                             if (newObj != NULL) {
-                                newObj->segment.unk3C_a.level_entry = NULL;
+                                newObj->segment.level_entry = NULL;
                                 newObj->segment.trans.y_rotation = wizShipObj->segment.trans.y_rotation + 0x8000;
                                 newObj->segment.trans.x_rotation = -wizShipObj->segment.trans.x_rotation;
                                 newObj->properties.lasergun.timer = 0x3C; 
@@ -1987,7 +1987,7 @@ void obj_init_teleport(Object *obj, UNUSED LevelObjectEntry_Teleport *entry) {
 */
 void obj_loop_teleport(Object *obj, UNUSED s32 updateRate) {
     if (obj->properties.lighthouse.active) {
-        LevelObjectEntry_Teleport *level_entry = &obj->segment.unk3C_a.level_entry->teleport;
+        LevelObjectEntry_Teleport *level_entry = &obj->segment.level_entry->teleport;
         if (obj->interactObj->distance < 120) {
             begin_level_teleport(level_entry->levelID);
             obj->properties.lighthouse.active = FALSE;
@@ -3019,7 +3019,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
     }
     speedf = updateRateF;
     settings = get_settings();
-    levelEntry = obj->segment.unk3C_a.level_entry;
+    levelEntry = obj->segment.level_entry;
     flag = 0x10000 << levelEntry->goldenBalloon.balloonID;
     if (settings->courseFlagsPtr[settings->courseId] & flag) {
         if (obj->properties.npc.timer > 0) {
@@ -3289,7 +3289,7 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
     f32 distance;
     s32 courseFlags;
 
-    triggerEntry = (LevelObjectEntry_Trigger *) obj->segment.unk3C_a.level_entry;
+    triggerEntry = (LevelObjectEntry_Trigger *) obj->segment.level_entry;
     trigger = (Object_Trigger *) obj->unk64;
     settings = get_settings();
     courseFlags = settings->courseFlagsPtr[settings->courseId];
@@ -3365,7 +3365,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
     Object_Racer *racer;
     
     whaleRamp = (Object_Bridge_WhaleRamp *) obj->unk64;
-    entry = (LevelObjectEntry_Bridge_WhaleRamp *) obj->segment.unk3C_a.level_entry;
+    entry = (LevelObjectEntry_Bridge_WhaleRamp *) obj->segment.level_entry;
     updateRateF = updateRate;
     
     if (osTvType == TV_TYPE_PAL) {
@@ -3573,7 +3573,7 @@ void obj_loop_treasuresucker(Object *obj, s32 updateRate) {
             spawnObj.objectID = BHV_SNOWBALL_2;
             newObj = spawn_object(&spawnObj, 1);
             if (newObj != NULL) {
-                newObj->segment.unk3C_a.level_entry = NULL;
+                newObj->segment.level_entry = NULL;
                 newObj->segment.y_velocity = 10.0f;
                 scale = (newObj->segment.y_velocity * 2) / 0.5;
                 newObj->segment.x_velocity = (obj->segment.trans.x_position - racerObj->segment.trans.x_position) / scale;
@@ -3637,7 +3637,7 @@ void obj_loop_bananacreator(Object *obj, s32 updateRate) {
         newBananaObj = spawn_object(&newEntry, 1);
         obj->properties.bananaSpawner.spawn = TRUE;
         if (newBananaObj) {
-            newBananaObj->segment.unk3C_a.level_entry = NULL;
+            newBananaObj->segment.level_entry = NULL;
             newBananaObj64 = &newBananaObj->unk64->banana;
             newBananaObj64->spawner = obj;
             func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position - 14.0f, obj->segment.trans.z_position, 44, SOUND_SELECT, 0.25f, 0);
@@ -4480,7 +4480,7 @@ void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 soundID, f32 scale, s3
     spawnObj.unk9 = arg6;
     newObj = spawn_object(&spawnObj, 1);
     if (newObj != NULL) {
-        newObj->segment.unk3C_a.level_entry = NULL;
+        newObj->segment.level_entry = NULL;
         newObj->segment.x_velocity = 0.0f;
         newObj->segment.y_velocity = 0.0f;
         newObj->segment.z_velocity = 0.0f;
@@ -4640,7 +4640,7 @@ void obj_loop_log(Object *obj, s32 updateRate) {
     if (log != NULL) {
         obj->segment.trans.y_position = func_800BEEB4((Object_64 *) log);
     } else {
-        obj->segment.trans.y_position = ((LevelObjectEntryCommon *) obj->segment.unk3C_a.level_entry)->y;
+        obj->segment.trans.y_position = ((LevelObjectEntryCommon *) obj->segment.level_entry)->y;
     }
     if (obj->unk5C->unk100 != NULL) {
         obj->properties.log.velocityY++;
@@ -4728,9 +4728,9 @@ void obj_loop_weather(Object *obj, UNUSED s32 updateRate) {
     diffX = obj->segment.trans.x_position - curObj->segment.trans.x_position;
     diffZ = obj->segment.trans.z_position - curObj->segment.trans.z_position;
     dist = obj->properties.distance.radius;
-    entry = (LevelObjectEntry_Weather *)obj->segment.unk3C_a.level_entry;
+    entry = (LevelObjectEntry_Weather *)obj->segment.level_entry;
     if ((diffX * diffX) + (diffZ * diffZ) <= dist){
-        if (((!obj->segment.unk3C_a.level_entry) && (!obj->segment.unk3C_a.level_entry)) && (!obj->segment.unk3C_a.level_entry)){}  // Fakematch
+        if (((!obj->segment.level_entry) && (!obj->segment.level_entry)) && (!obj->segment.level_entry)){}  // Fakematch
         changeWeather(entry->unkA * 256, entry->unkC * 256, entry->unkE * 256, entry->unk10 * 257, entry->unk11 * 257, entry->unk12);
     }
   }
@@ -4890,7 +4890,7 @@ void obj_loop_bubbler(Object *obj, s32 updateRate) {
 
 void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry) {
     obj->unk64 = (Object_64 *) ((s32) get_misc_asset(MISC_ASSET_UNK14) + (entry->unk8[0] << 7));
-    obj->segment.unk3C_a.level_entry = NULL;
+    obj->segment.level_entry = NULL;
 }
 
 void obj_init_unknown94(UNUSED Object *obj, UNUSED LevelObjectEntry_Unknown94 *entry, UNUSED s32 arg2) {
@@ -4908,7 +4908,7 @@ void obj_loop_rangetrigger(Object *obj, s32 updateRate) {
     LevelObjectEntry_RangeTrigger *level_entry;
     unk80042178 sp20;
 
-    level_entry = &obj->segment.unk3C_a.level_entry->rangeTrigger;
+    level_entry = &obj->segment.level_entry->rangeTrigger;
     if (func_80016DE8(obj->segment.trans.x_position, 0, obj->segment.trans.z_position, (f32)level_entry->unk8, 1, &sp20) > 0) {
         obj->unk74 = level_entry->unkA;
     } else {
