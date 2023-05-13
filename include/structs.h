@@ -1382,19 +1382,6 @@ typedef struct Object_Bridge_WhaleRamp {
   /* 0x4 */ s32 unk4;
 } Object_Bridge_WhaleRamp;
 
-typedef struct Object_80011AD0 {
-  /* 0x00 */ u8 pad0[0x20];
-  /* 0x20 */ u32 unk20;
-  /* 0x24 */ u32 unk24; //TextureHeader *?
-  /* 0x28 */ u8 pad28[0x48];
-  /* 0x70 */ u8 unk70;
-  /* 0x71 */ u8 pad71[0x3];
-  /* 0x74 */ f32 unk74;
-  /* 0x78 */ u8 pad78[0x80];
-  /* 0xF8 */ u32 unkF8; //TextureHeader *?
-  /* 0xFC */ u8 unkFC;
-} Object_80011AD0;
-
 typedef struct Object_8001B7A8 {
               u8 pad0[0x112];
   /* 0x112 */ s16 unk112;
@@ -1478,7 +1465,6 @@ typedef struct Object_64 {
         Object_NPC npc;
         Object_TT tt;
         Object_Bridge_WhaleRamp bridge_whale_ramp;
-        Object_80011AD0 obj80011AD0;
         Object_8001B7A8 obj8001B7A8;
         Object_80021400_64 obj80021400_64;
         Object_Log log;
