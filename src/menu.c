@@ -1731,6 +1731,7 @@ void func_80080580(Gfx** dlist, s32 x, s32 y, s32 x0, s32 y0, s32 x1, s32 y1, s3
     //((unk80080BC8*)((u8*)D_80126C2C[D_800E1DB8] + (D_800E1DB4 * 4)))->texture = tex;
     ((unk80080BC8*)((u8*)D_80126C2C + (D_800E1DB8 << 5) + (D_800E1DB4 * 4)))->texture = tex;
     //(&(*D_80126C2C)[D_800E1DB8] + (D_800E1DB4 * 4))->texture = tex;
+    //D_80126C2C[D_800E1DB8][D_800E1DB4].texture = tex;
     if (tex != NULL) {
         uVals[0] = 0;
         vVals[0] = 0;
@@ -1809,7 +1810,47 @@ GLOBAL_ASM("asm/non_matchings/menu/func_80080580.s")
 #endif
 
 //https://decomp.me/scratch/lS3f5
+#ifdef NON_EQUIVALENT
+void func_80080BC8(Gfx** dlist) {
+    s16 temp_a1;
+    s32 i;
+    s32 var_t0;
+    TextureHeader *tex;
+    TextureHeader *lastTex;
+    
+    gSPDisplayList((*dlist)++, &dMenuHudSettings); 
+    var_t0 = -1;
+    lastTex = NULL;
+    
+    for (i = 0; i < D_800E1DB8; i++) {
+        //((unk80080BC8*)((u8*)D_80126C2C + (i << 5) + (D_800E1DB4 * 4)))->texture
+        if (!D_80126C2C[i][D_800E1DB4].unk18) {
+            tex = D_80126C2C[i][D_800E1DB4].texture;
+            if (tex != NULL) { 
+                if (var_t0 != 1) {
+                    var_t0 = 1;
+                    gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudSettings[8]), 2);
+                }
+                if (lastTex != tex) {
+                    gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(tex->cmd), tex->numberOfCommands);
+                    lastTex = tex;
+                }
+            } else if (var_t0 != 0) {
+                var_t0 = 0;
+                gDkrDmaDisplayList((*dlist)++, OS_K0_TO_PHYSICAL(&dMenuHudSettings[6]), 2);
+            }
+            gDPPipeSync((*dlist)++);
+            gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL((&D_80126C2C[i][D_800E1DB4])->vertices), 20, 0);
+            gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL((&D_80126C2C[i][D_800E1DB4])->triangles), 10, 0);
+        }
+    }
+    D_800E1DB8 = 0;
+    D_800E1DB4 = 1 - D_800E1DB4;
+    reset_render_settings(dlist);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/func_80080BC8.s")
+#endif
 
 void func_80080E6C(void) {
     D_800E1DB8 = 0;
