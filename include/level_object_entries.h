@@ -18,9 +18,9 @@ typedef struct LevelObjectEntry_Racer {
 
 typedef struct LevelObjectEntry_Scenery {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 unk8;
+    /* 0x08 */ u8 numModelIDs;
     /* 0x09 */ u8 radius;
-    /* 0x0A */ u8 unkA;
+    /* 0x0A */ u8 angleY;
     /* 0x0B */ u8 solid;
 } LevelObjectEntry_Scenery;
 
@@ -62,7 +62,7 @@ typedef struct LevelObjectEntry_Exit {
 
     /* 0x0B */ u8 padB[5];
     /* 0x10 */ u8 radius; // Activation radius.
-    /* 0x11 */ u8 unk11;
+    /* 0x11 */ u8 angleY;
     /* 0x12 */ u8 pad12[5];
     
     // Defines the location in a hub world the player will spawn at when exiting `destinationMapId`.
@@ -95,7 +95,7 @@ typedef struct LevelObjectEntry_AudioLine {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8;
     /* 0x09 */ u8 unk9;
-    /* 0x0A */ u16 unkA;
+    /* 0x0A */ u16 soundID;
     /* 0x0C */ u8 unkC;
     /* 0x0D */ u8 unkD;
     /* 0x0E */ u16 unkE;
@@ -185,7 +185,7 @@ typedef struct LevelObjectEntry_WeaponBalloon {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8; // Unused?
     /* 0x09 */ u8 balloonType; 
-    /* 0x0A */ u8 scale; // This is divided by 64 to get actual scale.
+    /* 0x0A */ u8 radius; // This is divided by 64 to get actual scale.
 } LevelObjectEntry_WeaponBalloon;
 
 typedef struct LevelObjectEntry_AudioSeqLine {
@@ -207,7 +207,7 @@ typedef struct LevelObjectEntry_Unknown25 {
 
 typedef struct LevelObjectEntry_SkyControl {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 unk8;
+    /* 0x08 */ u8 setting;
     /* 0x09 */ u8 radius;
 } LevelObjectEntry_SkyControl;
 
@@ -267,14 +267,14 @@ typedef struct LevelObjectEntry_Weather {
 
 typedef struct LevelObjectEntry_Bridge_WhaleRamp {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 unk8;
-    /* 0x09 */ u8 unk9;
+    /* 0x08 */ u8 numModelIDs;
+    /* 0x09 */ u8 angleY;
     /* 0x0A */ u8 unkA;
     /* 0x0B */ u8 unkB;
-    /* 0x0C */ u8 unkC;
+    /* 0x0C */ u8 radius;
     /* 0x0D */ u8 unkD;
     /* 0x0E */ s8 unkE;
-    /* 0x0F */ u8 unkF;
+    /* 0x0F */ u8 allowedVehicles;
 } LevelObjectEntry_Bridge_WhaleRamp;
 
 typedef struct LevelObjectEntry_RampSwitch {
@@ -368,8 +368,8 @@ typedef struct LevelObjectEntry_InfoPoint {
 typedef struct LevelObjectEntry_Trigger {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 scale;
-    /* 0x09 */ s8 unk9;
-    /* 0x0A */ u8 rotation;
+    /* 0x09 */ s8 index;
+    /* 0x0A */ u8 angleY;
     /* 0x0B */ u8 unkB;
     /* 0x0C */ u8 unkC;
     /* 0x0D */ u8 unkD;
@@ -413,12 +413,12 @@ typedef struct LevelObjectEntry_BananaCreator {
 
 typedef struct LevelObjectEntry_TreasureSucker {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ s8 unk8;
+    /* 0x08 */ s8 playerID;
 } LevelObjectEntry_TreasureSucker;
 
 typedef struct LevelObjectEntry_Log {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 unk8;
+    /* 0x08 */ u8 numModelIDs;
     /* 0x09 */ u8 radius;
     /* 0x0A */ u8 angleY;
 } LevelObjectEntry_Log;
@@ -440,7 +440,7 @@ typedef struct LevelObjectEntry_HitTester {
 typedef struct LevelObjectEntry_MidiFade {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 scale;
-    /* 0x09 */ u8 rotation;
+    /* 0x09 */ u8 angleY;
     /* 0x0A */ u8 unkA[16]; // Is this 16 bytes or 15 bytes with a padded 0?
     /* 0x1A */ u8 unk1A;
     /* 0x1B */ u8 unk1B;
@@ -462,7 +462,7 @@ typedef struct LevelObjectEntry_EffectBox {
 
 typedef struct LevelObjectEntry_TrophyCab {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 rotation;
+    /* 0x08 */ u8 angleY;
 } LevelObjectEntry_TrophyCab;
 
 typedef struct LevelObjectEntry_Bubbler {
@@ -489,8 +489,8 @@ typedef struct LevelObjectEntry_Laserbolt {
 
 typedef struct LevelObjectEntry_Lasergun {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 angleX;
-    /* 0x09 */ u8 angleY;
+    /* 0x08 */ u8 angleY;
+    /* 0x09 */ u8 angleX;
     /* 0x0A */ s8 targeting;
     /* 0x0B */ s8 fireRate;
     /* 0x0C */ u8 laserDuration;
@@ -501,7 +501,7 @@ typedef struct LevelObjectEntry_GroundZipper {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8;
     /* 0x09 */ u8 scale;
-    /* 0x0A */ u8 rotation;
+    /* 0x0A */ u8 angleY;
 } LevelObjectEntry_GroundZipper;
 
 typedef struct LevelObjectEntry_OverridePos {
@@ -598,8 +598,8 @@ typedef struct LevelObjectEntry_OctoBubble {
 
 typedef struct LevelObjectEntry_LevelName {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ s8 unk8;
-    /* 0x09 */ s8 unk9;
+    /* 0x08 */ s8 levelID;
+    /* 0x09 */ s8 radius;
 } LevelObjectEntry_LevelName;
 
 typedef struct LevelObjectEntry_Midichset {

@@ -474,8 +474,12 @@ void func_80001440(u8 *arg0) {
     return;
 }
 
-void func_800014BC(f32 arg0) {
-    musicSetTempo((s32)((f32)(u32)(musicGetTempo() & 0xFF) * arg0));
+/**
+ * Multiplies the current tempo of the background music.
+ * Since it calls musicGetTempo and multiplies it by the result, calling this repeatedly can recursively change the music's speed.
+*/
+void multiply_music_tempo(f32 tempo) {
+    musicSetTempo((s32)((f32)(u32)(musicGetTempo() & 0xFF) * tempo));
 }
 
 /**

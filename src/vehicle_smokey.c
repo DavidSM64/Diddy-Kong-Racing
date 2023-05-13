@@ -38,7 +38,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     Object *firstRacerObj;
     
     set_boss_voice_clip_offset(D_800DCE20);
-    sp5E = obj->segment.unk38.byte.unk3B;
+    sp5E = obj->segment.object.animationID;
     sp5C = obj->segment.animFrame;
     sp5A = racer->headAngle;
     if (racer->velocity < 0.3 && -0.3 < racer->velocity) {
@@ -72,13 +72,13 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     *startTimer = sp44;
     obj->unk74 = 0;
     racer->headAngle = sp5A;
-    obj->segment.unk38.byte.unk3B = sp5E;
+    obj->segment.object.animationID = sp5E;
     obj->segment.animFrame = sp5C;
-    if (racer->attackType != ATTACK_NONE && obj->segment.unk38.byte.unk3B != 5) {
+    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != 5) {
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, 0);
         set_camera_shake(12.0f);
-        obj->segment.unk38.byte.unk3B = 5;
+        obj->segment.object.animationID = 5;
         obj->segment.x_velocity *= 0.27;
         obj->segment.z_velocity *= 0.27;
         racer->unkC = 0.0f;
@@ -98,7 +98,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     obj68 = *obj->unk68;
     objModel = obj68->objModel;
-    diffX = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
+    diffX = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
     var_f2 = (racer->velocity * updateRateF) * 0.45;
     if (var_f2 <= 0.0) {
         if (var_f2 > -2.0) {
@@ -107,7 +107,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     } else if (var_f2 < 2.0) {
         var_f2 = 2.0f;
     }
-    switch (obj->segment.unk38.byte.unk3B) {
+    switch (obj->segment.object.animationID) {
     case 0:
         racer->unk1CD = 0;
         racer->unkC += 1.0 * updateRateF;
@@ -149,41 +149,41 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->unkC += diffX;
         obj68->unk10 = -1;
     }
-    if (obj->segment.unk38.byte.unk3B == 2 && racer->groundedWheels == 0 && racer->velocity < -6.5) {
-        obj->segment.unk38.byte.unk3B = 3;
+    if (obj->segment.object.animationID == 2 && racer->groundedWheels == 0 && racer->velocity < -6.5) {
+        obj->segment.object.animationID = 3;
         racer->unkC = 0.0f;
     }
-    if (obj68->unk10 == -1 || obj->segment.unk38.byte.unk3B == 0) {
-        if (obj->segment.unk38.byte.unk3B == 5) {
-            obj->segment.unk38.byte.unk3B = racer->unk1CD;
+    if (obj68->unk10 == -1 || obj->segment.object.animationID == 0) {
+        if (obj->segment.object.animationID == 5) {
+            obj->segment.object.animationID = racer->unk1CD;
             racer->unkC = 0.0f;
-        } else if (obj->segment.unk38.byte.unk3B == 1) {
+        } else if (obj->segment.object.animationID == 1) {
             if (racer->unk1CD == 0) {
-                obj->segment.unk38.byte.unk3B = 2;
+                obj->segment.object.animationID = 2;
             } else {
-                obj->segment.unk38.byte.unk3B = 0;
+                obj->segment.object.animationID = 0;
             }
-        } else if (obj->segment.unk38.byte.unk3B == 3) {
+        } else if (obj->segment.object.animationID == 3) {
             if (racer->unk1CD == 4) {
-                obj->segment.unk38.byte.unk3B = 2;
+                obj->segment.object.animationID = 2;
             } else {
-                obj->segment.unk38.byte.unk3B = 4;
+                obj->segment.object.animationID = 4;
             }
         } else if (-0.1 < racer->velocity && racer->velocity < 0.1) {
-            if (obj->segment.unk38.byte.unk3B == 2) {
-                obj->segment.unk38.byte.unk3B = 1;
-                racer->unkC = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
+            if (obj->segment.object.animationID == 2) {
+                obj->segment.object.animationID = 1;
+                racer->unkC = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
             } else {
-                obj->segment.unk38.byte.unk3B = 0;
+                obj->segment.object.animationID = 0;
             }
         } else {
-            if (obj->segment.unk38.byte.unk3B == 0) {
-                obj->segment.unk38.byte.unk3B = 1;
+            if (obj->segment.object.animationID == 0) {
+                obj->segment.object.animationID = 1;
                 racer->unkC = 0.0f;
             }
-            if (obj->segment.unk38.byte.unk3B == 4 && racer->groundedWheels && racer->velocity > -6.0) {
-                obj->segment.unk38.byte.unk3B = 3;
-                racer->unkC = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
+            if (obj->segment.object.animationID == 4 && racer->groundedWheels && racer->velocity > -6.0) {
+                obj->segment.object.animationID = 3;
+                racer->unkC = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
             }
         }
     }
@@ -191,10 +191,10 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     obj->segment.animFrame = racer->unkC;
     newvar = obj->segment.animFrame >> 4;
     obj->unk74 = 0;
-    if (obj->segment.unk38.byte.unk3B != 1 && obj->segment.unk38.byte.unk3B != 2) {
+    if (obj->segment.object.animationID != 1 && obj->segment.object.animationID != 2) {
         sp5C >>= 4;
         newvar = 1;
-        if (obj->segment.unk38.byte.unk3B == 0) {
+        if (obj->segment.object.animationID == 0) {
             newvar = 3;
         }
         if (sp5C == newvar && newvar + 1 == obj->segment.animFrame >> 4) {
@@ -225,13 +225,13 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         racer->headAngleTarget = sp44;
     }
-    if (obj->segment.unk38.byte.unk3B >= 2) {
+    if (obj->segment.object.animationID >= 2) {
         if ((racer->miscAnimCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }
     racer = (Object_Racer *) firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.unk38.byte.unk3B == 1) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == 1) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != FALSE) {
@@ -265,28 +265,28 @@ void func_8005E204(Object *obj, Object_Racer *racer, f32 arg2, s32 objectID, s32
     for (i = 0; i < sp7C; i++) {
         temp_s1 = var_s6[i];
         if (temp_s1->behaviorId == BHV_UNK_6B) {
-            temp_s2 = temp_s1->segment.unk3C_a.level_entry; 
+            temp_s2 = temp_s1->segment.level_entry; 
             if ((s8) temp_s2->animation.z_rotation == racer->lap + 1 || (s8) temp_s2->animation.z_rotation == 0) {
                 diffX = temp_s1->segment.trans.x_position - obj->segment.trans.x_position;
                 diffY = temp_s1->segment.trans.y_position - obj->segment.trans.y_position;
                 diffZ = temp_s1->segment.trans.z_position - obj->segment.trans.z_position;
                 if (sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < (f32) ((s8) temp_s2->animation.x_rotation & 0xFF) * 4.0) {
-                    if (temp_s1->unk78 == 0) {
-                        temp_s1->unk78 = 1;
+                    if (temp_s1->properties.racer.unk0 == 0) {
+                        temp_s1->properties.racer.unk0 = (Object *) 1; // ???
                         newObj = spawn_object(&spawnObj, 1);
                         if (newObj != NULL) {
-                            newObj->segment.unk3C_a.level_entry = NULL;
+                            newObj->segment.level_entry = NULL;
                             newObj->segment.x_velocity = obj->segment.x_velocity;
                             newObj->segment.y_velocity = obj->segment.y_velocity;
                             newObj->segment.z_velocity = obj->segment.z_velocity;
-                            newObj->unk78_obj = temp_s1;
-                            newObj->unk7C.word = (s8) temp_s2->animation.y_rotation * 60;
+                            newObj->properties.racer.unk0 = temp_s1;
+                            newObj->properties.racer.unk4 = (s8) temp_s2->animation.y_rotation * 60;
                             newObj->segment.animFrame = get_random_number_from_range(0, 255);
                             play_sound_at_position(arg4, newObj->segment.trans.x_position, newObj->segment.trans.y_position, newObj->segment.trans.z_position, 4, NULL);
                         }
                     }
                 } else {
-                    temp_s1->unk78 = 0;
+                    temp_s1->properties.racer.unk0 = 0;
                 }
             }
         }

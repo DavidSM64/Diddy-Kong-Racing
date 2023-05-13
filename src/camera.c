@@ -175,7 +175,7 @@ GLOBAL_ASM("asm/non_matchings/camera/func_80065EA0.s")
 void func_80066060(s32 arg0, s32 arg1) {
     if (arg0 >= 0 && arg0 < 4) {
         D_800DD2F8[arg0] = arg1;
-        gActiveCameraStack[arg0].unk38.byte.unk3B = arg1;
+        gActiveCameraStack[arg0].object.animationID = arg1;
     }
 }
 
@@ -263,17 +263,17 @@ void func_80066230(Gfx **dlist, MatrixS **mats) {
     posX = cam->trans.x_position;
     posY = cam->trans.y_position;
     posZ = cam->trans.z_position;
-    sp24 = cam->unk38.half.unk38;
+    sp24 = cam->camera.unk38;
     cam->trans.z_rotation = 0;
     cam->trans.x_rotation = 0;
     cam->trans.y_rotation = -0x8000;
-    cam->unk38.half.unk38 = 0;
+    cam->camera.unk38 = 0;
     cam->trans.x_position = 0.0f;
     cam->trans.y_position = 0.0f;
     cam->trans.z_position = 0.0f;
     update_envmap_position(0.0f, 0.0f, -1.0f);
     func_80066CDC(dlist, mats);
-    cam->unk38.half.unk38 = sp24;
+    cam->camera.unk38 = sp24;
     cam->trans.y_rotation = angleY;
     cam->trans.x_rotation = angleX;
     cam->trans.z_rotation = angleZ;
@@ -307,14 +307,14 @@ void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5) {
     gActiveCameraStack[gActiveCameraID].trans.y_position = (f32) yPos;
     gActiveCameraStack[gActiveCameraID].trans.z_position = (f32) zPos;
     gActiveCameraStack[gActiveCameraID].trans.x_rotation = (s16) (arg4 * 0xB6);
-    gActiveCameraStack[gActiveCameraID].unk38.half.unk38 = (s16) 0;
+    gActiveCameraStack[gActiveCameraID].camera.unk38 = (s16) 0;
     gActiveCameraStack[gActiveCameraID].z_velocity = 0.0f;
     gActiveCameraStack[gActiveCameraID].unk28 = 0.0f;
-    gActiveCameraStack[gActiveCameraID].unk2C.word = 0.0f;
-    gActiveCameraStack[gActiveCameraID].unk30 = 0.0f;
+    gActiveCameraStack[gActiveCameraID].camera.unk2C = 0.0f;
+    gActiveCameraStack[gActiveCameraID].camera.distanceToCamera = 0.0f;
     gActiveCameraStack[gActiveCameraID].x_velocity = 160.0f;
     gActiveCameraStack[gActiveCameraID].trans.y_rotation = (s16) (arg5 * 0xB6);
-    gActiveCameraStack[gActiveCameraID].unk38.byte.unk3B = D_800DD2F8[gActiveCameraID];
+    gActiveCameraStack[gActiveCameraID].object.animationID = D_800DD2F8[gActiveCameraID];
 }
 
 /**
@@ -324,14 +324,14 @@ void func_800663DC(s32 xPos, s32 yPos, s32 zPos, s32 arg3, s32 arg4, s32 arg5) {
 */
 void write_to_object_render_stack(s32 stackPos, f32 xPos, f32 yPos, f32 zPos, s16 arg4, s16 arg5, s16 arg6) {
     stackPos += 4;
-    gActiveCameraStack[stackPos].unk38.half.unk38 = 0;
+    gActiveCameraStack[stackPos].camera.unk38 = 0;
     gActiveCameraStack[stackPos].trans.x_position = xPos;
     gActiveCameraStack[stackPos].trans.y_position = yPos;
     gActiveCameraStack[stackPos].trans.z_position = zPos;
     gActiveCameraStack[stackPos].trans.y_rotation = arg4;
     gActiveCameraStack[stackPos].trans.x_rotation = arg5;
     gActiveCameraStack[stackPos].trans.z_rotation = arg6;
-    gActiveCameraStack[stackPos].unk34_a.levelSegmentIndex = get_level_segment_index_from_position(xPos, yPos, zPos);
+    gActiveCameraStack[stackPos].object.cameraSegmentID = get_level_segment_index_from_position(xPos, yPos, zPos);
     gCutsceneCameraActive = TRUE;
 }
 
@@ -871,13 +871,13 @@ void func_80067D3C(Gfx **dlist, UNUSED MatrixS **mats) {
     }
 
     gCameraTransform.y_rotation = 0x8000 + gActiveCameraStack[gActiveCameraID].trans.y_rotation;
-    gCameraTransform.x_rotation = gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.half.unk38;
+    gCameraTransform.x_rotation = gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].camera.unk38;
     gCameraTransform.z_rotation = gActiveCameraStack[gActiveCameraID].trans.z_rotation;
 
     gCameraTransform.x_position = -gActiveCameraStack[gActiveCameraID].trans.x_position;
     gCameraTransform.y_position = -gActiveCameraStack[gActiveCameraID].trans.y_position;
     if (D_80120D18 != 0) {
-        gCameraTransform.y_position -= gActiveCameraStack[gActiveCameraID].unk30;
+        gCameraTransform.y_position -= gActiveCameraStack[gActiveCameraID].camera.distanceToCamera;
     }
     gCameraTransform.z_position = -gActiveCameraStack[gActiveCameraID].trans.z_position;
 
@@ -885,13 +885,13 @@ void func_80067D3C(Gfx **dlist, UNUSED MatrixS **mats) {
     f32_matrix_mult(&D_80120F60, &gPerspectiveMatrixF, &D_80120F20);
 
     gCameraTransform.y_rotation = -0x8000 - gActiveCameraStack[gActiveCameraID].trans.y_rotation;
-    gCameraTransform.x_rotation = -(gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].unk38.half.unk38);
+    gCameraTransform.x_rotation = -(gActiveCameraStack[gActiveCameraID].trans.x_rotation + gActiveCameraStack[gActiveCameraID].camera.unk38);
     gCameraTransform.z_rotation = -gActiveCameraStack[gActiveCameraID].trans.z_rotation;
     gCameraTransform.scale = 1.0f;
     gCameraTransform.x_position = gActiveCameraStack[gActiveCameraID].trans.x_position;
     gCameraTransform.y_position = gActiveCameraStack[gActiveCameraID].trans.y_position;
     if (D_80120D18 != 0) {
-        gCameraTransform.y_position += gActiveCameraStack[gActiveCameraID].unk30;
+        gCameraTransform.y_position += gActiveCameraStack[gActiveCameraID].camera.distanceToCamera;
     }
     gCameraTransform.z_position = gActiveCameraStack[gActiveCameraID].trans.z_position;
 
@@ -1356,7 +1356,7 @@ UNUSED void func_80069ACC(f32 x, f32 y, f32 z) {
     gActiveCameraStack[gActiveCameraID].trans.x_position += x;
     gActiveCameraStack[gActiveCameraID].trans.y_position += y;
     gActiveCameraStack[gActiveCameraID].trans.z_position += z;
-    gActiveCameraStack[gActiveCameraID].unk34_a.levelSegmentIndex =
+    gActiveCameraStack[gActiveCameraID].object.cameraSegmentID =
         get_level_segment_index_from_position(
             gActiveCameraStack[gActiveCameraID].trans.x_position,
             gActiveCameraStack[gActiveCameraID].trans.y_position,
@@ -1368,7 +1368,7 @@ UNUSED void func_80069B70(f32 x, UNUSED f32 y, f32 z) {
     gActiveCameraStack[gActiveCameraID].trans.z_position -= x * sins_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
     gActiveCameraStack[gActiveCameraID].trans.x_position -= z * sins_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
     gActiveCameraStack[gActiveCameraID].trans.z_position += z * coss_f(gActiveCameraStack[gActiveCameraID].trans.y_rotation);
-    gActiveCameraStack[gActiveCameraID].unk34_a.levelSegmentIndex =
+    gActiveCameraStack[gActiveCameraID].object.cameraSegmentID =
         get_level_segment_index_from_position(
             gActiveCameraStack[gActiveCameraID].trans.x_position,
             gActiveCameraStack[gActiveCameraID].trans.y_position,
@@ -1445,7 +1445,7 @@ void set_camera_shake_by_distance(f32 x, f32 y, f32 z, f32 dist, f32 magnitude) 
         diffZ = z - gActiveCameraStack[i].trans.z_position;
         distance = sqrtf(((diffX * diffX) + (diffY * diffY)) + (diffZ * diffZ));
         if (distance < dist) {
-            gActiveCameraStack[i].unk30 = ((dist - distance) * magnitude) / dist;
+            gActiveCameraStack[i].camera.distanceToCamera = ((dist - distance) * magnitude) / dist;
         }
     }
 }
@@ -1456,7 +1456,7 @@ void set_camera_shake_by_distance(f32 x, f32 y, f32 z, f32 dist, f32 magnitude) 
 void set_camera_shake(f32 magnitude) {
     s32 i;
     for (i = 0; i <= gNumberOfViewports; i++) {
-        gActiveCameraStack[i].unk30 = magnitude;
+        gActiveCameraStack[i].camera.distanceToCamera = magnitude;
     }
 }
 

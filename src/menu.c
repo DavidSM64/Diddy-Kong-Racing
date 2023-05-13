@@ -2713,7 +2713,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
             gTitleRevealTimer += updateRate;
             if (gTitleRevealTimer >= 32) {
                 gTitleRevealTimer = 32;
-                sp18->unk30 = 8.0f;
+                sp18->object.distanceToCamera = 8.0f;
                 play_sound_global(SOUND_EXPLOSION, 0);
             }
         } else {

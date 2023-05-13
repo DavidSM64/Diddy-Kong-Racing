@@ -350,7 +350,7 @@ void func_800BF524(Object *obj) {
     LevelObjectEntry800BF524 *temp_v0;
     s32 var_v1;
 
-    temp_v0 = (LevelObjectEntry800BF524 *) obj->segment.unk3C_a.level_entry;
+    temp_v0 = (LevelObjectEntry800BF524 *) obj->segment.level_entry;
     var_v1 = 0;
     if (temp_v0->unk10 != 0) {
         var_v1 = 1;
@@ -422,7 +422,7 @@ void obj_loop_wavepower(Object *obj) {
                 }
             }
             if (racerObj != NULL) {
-                entry = (LevelObjectEntry_WavePower *) obj->segment.unk3C_a.level_entry;
+                entry = (LevelObjectEntry_WavePower *) obj->segment.level_entry;
                 distance = entry->radius;
                 distance *= distance;
                 diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
