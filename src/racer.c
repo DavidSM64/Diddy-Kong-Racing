@@ -2795,9 +2795,7 @@ void apply_vehicle_rotation_offset(Object_Racer *obj, s32 max, s16 yRotation, s1
                 tempAngle = diff;
             }
             obj->z_rotation_offset += tempAngle;
-            return;
-        }
-        if (tempAngle < 0) {
+        } else if (tempAngle < 0) {
             diff = -(max * 0x600);
             if (tempAngle < diff) {
                 tempAngle = diff;
