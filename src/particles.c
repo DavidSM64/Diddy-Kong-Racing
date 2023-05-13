@@ -1479,7 +1479,7 @@ void func_800B3740(Particle *particle, Gfx **dlist, MatrixS **mtx, Vertex **vtx,
             gDPSetEnvColor((*dlist)++, 255, 255, 255, 0);
         }
     } else {
-        renderFlags = (RENDER_UNK_8000000 | RENDER_Z_UPDATE | RENDER_FOG_ACTIVE | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING);
+        renderFlags = (RENDER_VTX_ALPHA | RENDER_Z_UPDATE | RENDER_FOG_ACTIVE | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING);
         gDPSetEnvColor((*dlist)++, 255, 255, 255, 0);
         if (particle->segment.object.unk2C == 4) {
             if (particle->segment.camera.unk3A > 0) {
