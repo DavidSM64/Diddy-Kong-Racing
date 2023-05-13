@@ -3,7 +3,6 @@
 
 #include "types.h"
 #include "macros.h"
-#include "f3ddkr.h"
 #include "libultra_internal.h"
 
 #define OS_SC_RETRACE_MSG       1
