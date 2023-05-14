@@ -17,7 +17,7 @@
 #define ADVENTURE_TWO_BOOST_SPEED   2.0f    // Global boost multiplier for adventure 2. Default is 2.0f, but set it lower to make boosting controllable.
 
 /* -------------------------Debug------------------------- */
-//#define PUPPYPRINT_DEBUG                    // Enable debug features
+#define PUPPYPRINT_DEBUG                    // Enable debug features
 #define SKIP_INTRO SKIP_TITLE               // Skip the boot screen, making getting ingame faster.
 #define DEFAULT_CHARACTER 7                 // If you skip character select, pick a default character.
 #define UNLOCK_ALL                          // Unlock all characters, tracks and adventure 2.
