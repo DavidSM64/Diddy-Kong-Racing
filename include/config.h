@@ -10,14 +10,14 @@
 #define NO_ANTIPIRACY // Disable all the anti tamperment measures in the ROM
 #define SKIP_WARNING_SCREEN // Remove the pak warning screen.
 #define NUM_RACERS_1P 8                     // Default is 8
-#define NUM_RACERS_2P 8                     // Default is 6
+#define NUM_RACERS_2P 6                     // Default is 6
 #define NUM_RACERS_3P 4                     // Default is 4
 #define NUM_RACERS_4P 4                     // Default is 4
-#define ADVENTURE_TWO_SPEED         2.0f    // Global speed multiplier for adventure 2. Default is 1.0f, but set it higher for high speed action
-#define ADVENTURE_TWO_BOOST_SPEED   1.5f    // Global boost multiplier for adventure 2. Default is 2.0f, but set it lower to make boosting controllable.
+#define ADVENTURE_TWO_SPEED         1.0f    // Global speed multiplier for adventure 2. Default is 1.0f, but set it higher for high speed action
+#define ADVENTURE_TWO_BOOST_SPEED   2.0f    // Global boost multiplier for adventure 2. Default is 2.0f, but set it lower to make boosting controllable.
 
 /* -------------------------Debug------------------------- */
-#define PUPPYPRINT_DEBUG                    // Enable debug features
+//#define PUPPYPRINT_DEBUG                    // Enable debug features
 #define SKIP_INTRO SKIP_TITLE               // Skip the boot screen, making getting ingame faster.
 #define DEFAULT_CHARACTER 7                 // If you skip character select, pick a default character.
 #define UNLOCK_ALL                          // Unlock all characters, tracks and adventure 2.
@@ -28,9 +28,9 @@
 //#define EXPANSION_PAK_REQUIRED              // Enable expansion pak requirement
 //#define EXPANSION_PAK_SUPPORT               // Allow the game to use the expansion pak if it's inserted. Disabling this will move Framebuffers to expansion RAM for extra performance.
 
-#define NUM_GFX_COMMANDS        {3200, 4500, 6000, 6000} /* How many graphics commands can be ran per frame. Default is 4500, 7000, 11000, 11000 */
-#define NUM_VERTICES            {200, 400, 650, 700} /* How many vertices are allowed per frame. Default is 300, 600, 850, 900 */
-#define NUM_MATRICES            {200, 300, 450, 500} /* How many matrices are allowed per frame. Default is 300, 400, 550, 600 */
+#define NUM_GFX_COMMANDS        {3200, 4000, 5000, 5000} /* How many graphics commands can be ran per frame. Default is 4500, 7000, 11000, 11000 */
+#define NUM_VERTICES            {200, 300, 400, 500} /* How many vertices are allowed per frame. Default is 300, 600, 850, 900 */
+#define NUM_MATRICES            {200, 300, 400, 500} /* How many matrices are allowed per frame. Default is 300, 400, 550, 600 */
 #define NUM_HUD_VERTS           {20, 30, 40, 50} /* How many triangles the HUD can use per frame. Default is 20, 30, 40, 50 */
 
 #define THREAD2_STACK           0x400
@@ -43,7 +43,7 @@
 // These tweaks can be used to improve performance
 #define FIFO_UCODE                          // Allow usage of the faster FIFO microcode. Emulators will still use xbus. Requires 96KB memory to work.
 //#define FIFO_4MB                            // Allows non expansion pak users to use FIFO microcode.
-// #define DISABLE_MULTIPLAYER_CUTBACKS        // Disable the measures Rare took to improve performance in multiplayer. Performance will suffer.
+//#define DISABLE_MULTIPLAYER_CUTBACKS        // Disable the measures Rare took to improve performance in multiplayer. Performance will suffer.
 #define TRIPLE_BUFFERING                    // Uses more memory, but provides a much smoother gameplay experience. You may struggle to fit this in 4MB.
 #define SCREEN_WIDTH            320         // Default width is 320. Recommended to be 304 for 4MB users.
 #define SCREEN_WIDTH_16_10      384         // Default width is 384. Recommended to be 360 for 4MB users.
