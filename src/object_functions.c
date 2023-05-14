@@ -970,26 +970,26 @@ void obj_loop_airzippers_waterzippers(Object *obj, UNUSED s32 updateRate) {
 */
 void obj_init_groundzipper(Object *obj, LevelObjectEntry_GroundZipper *entry) {
     ObjectHeader *header;
-    f32 objScale;
+    f32 radius;
 
-    objScale = entry->scale & 0xFF;
-    if (objScale < 10.0f) {
-        objScale = 10.0f;
+    radius = entry->scale & 0xFF;
+    if (radius < 10.0f) {
+        radius = 10.0f;
     }
-    objScale /= 64;
+    radius /= 64;
     header = obj->segment.header;
-    obj->segment.trans.scale = header->scale * objScale;
-    obj->shadow->scale = header->shadowScale * objScale;
+    obj->segment.trans.scale = header->scale * radius;
+    obj->shadow->scale = header->shadowScale * radius;
     obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
     if (obj->segment.object.numModelIDs >= obj->segment.header->numberOfModelIds) {
         obj->segment.object.numModelIDs = 0;
     }
-    obj->properties.zipper.scale = (s32) (28.0f * objScale) + 15;
-    if (obj->properties.zipper.scale < 0) {
-        obj->properties.zipper.scale = 0;
+    obj->properties.zipper.radius = (s32) (28.0f * radius) + 15;
+    if (obj->properties.zipper.radius < 0) {
+        obj->properties.zipper.radius = 0;
     }
-    if (obj->properties.zipper.scale > 255) {
-        obj->properties.zipper.scale = 255;
+    if (obj->properties.zipper.radius > 255) {
+        obj->properties.zipper.radius = 255;
     }
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
@@ -1020,7 +1020,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
     obj->segment.trans.flags &= (0xFFFF - OBJ_FLAGS_INVISIBLE);
     obj->segment.trans.flags |= OBJ_FLAGS_SHADOW_ONLY;
     get_racer_object(PLAYER_ONE); // Unused. I guess the developers forgot to remove this?
-    if (obj->interactObj->distance < obj->properties.zipper.scale) {
+    if (obj->interactObj->distance < obj->properties.zipper.radius) {
         racerObjs = get_racer_objects(&numObjects);
         for (i = 0; i < numObjects; i++) {
             racerObj = racerObjs[i];
@@ -1029,7 +1029,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
                 diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
                 diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                if ((s32) sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < obj->properties.zipper.scale) {
+                if ((s32) sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < obj->properties.zipper.radius) {
                     if (racer->playerIndex != PLAYER_COMPUTER) {
                         play_sound_spatial(SOUND_ZIP_PAD_BOOST, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
                     }

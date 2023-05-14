@@ -73,7 +73,7 @@ typedef struct ObjPropertyEggSpawner {
 } ObjPropertyEggSpawner;
 
 typedef struct ObjPropertyZipper {
-	s32 scale;
+	s32 radius;
 } ObjPropertyZipper;
 
 typedef struct ObjPropertyCharacterFlag {
