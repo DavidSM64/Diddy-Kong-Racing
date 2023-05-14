@@ -6704,6 +6704,8 @@ char gPauseConfigOpt[][32] = {
     {"Screen X"},
     {"Screen Y"},
     {"Anti Aliasing"},
+    {"Frame Cap"},
+    {"Dedither"},
 };
 char gPauseOptionStack[sizeof(gPauseConfigOpt) / 32][40];
 char gPauseOptStrings[][8] = {
@@ -6712,6 +6714,10 @@ char gPauseOptStrings[][8] = {
     {"4:3"},
     {"16:10"},
     {"16:9"},
+    {"60"},
+    {"30"},
+    {"50"},
+    {"25"},
 };
 u8 gPauseSubmenu = 0;
 
@@ -6784,6 +6790,7 @@ void func_80093D40(UNUSED s32 updateRate) {
     s32 baseYPos;
     s32 xPos;
     s32 alpha;
+    s32 y;
 
     for (i = 0, xPos = SCREEN_WIDTH_HALF; i < gMenuOptionCap; i++) {
         x = get_text_width(gMenuOptionText[i], 0, 0) + 8;
@@ -6836,8 +6843,13 @@ void func_80093D40(UNUSED s32 updateRate) {
             render_dialogue_text(7, POS_CENTRED, yOffset + 44, gMenuText[ASSET_MENU_TEXT_CANCEL], 1, 12);
         } else {
             yOffset = 8;
+            y = 0;
             for (i = 0; i < (s32) (sizeof(gPauseConfigOpt) / 32); i++) {
                 if ((i == 0 && gExpansionPak == FALSE) || (i > 0 && (IO_READ(DPC_PIPEBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) == 0)) {
+                    continue;
+                }
+                // Just disabling widescreen related stuff for now.
+                if (i >= 0 && i <= 2) {
                     continue;
                 }
                 if (gMenuSubOption == i + 1) {
@@ -6856,10 +6868,17 @@ void func_80093D40(UNUSED s32 updateRate) {
                     puppyprintf(gPauseOptionStack[i], "%s: %d", gPauseConfigOpt[i], gScreenPos[1]);
                     break;
                 case 3:
-                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gDisableAA]);
+                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gDisableAA ^ 1]);
+                    break;
+                case 4:
+                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[5 + gFrameCap]);
+                    break;
+                case 5:
+                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gDedither]);
                     break;
                 }
-                render_dialogue_text(7, POS_CENTRED, yOffset + 8 + (i * 16), gPauseOptionStack[i], 1, 12);
+                render_dialogue_text(7, POS_CENTRED, yOffset + 8 + y, gPauseOptionStack[i], 1, 12);
+                y += 16;
             }
         }
     } else {
@@ -6950,6 +6969,12 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                         break;
                     case 4:
                         gDisableAA ^= 1;
+                        break;
+                    case 5:
+                        gFrameCap ^= 1;
+                        break;
+                    case 6:
+                        gDedither ^= 1;
                         set_dither_filter();
                         break;
                     }
@@ -6978,20 +7003,25 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                         if (gControllersYAxisDirection[playerId] < 0) {
                             gMenuSubOption++;
                             if (gMenuSubOption > (s32) (sizeof(gPauseConfigOpt) / 32)) {
-                                gMenuSubOption = 1;
+                                gMenuSubOption = (s32) (sizeof(gPauseConfigOpt) / 32);
                             }
                         } else {
                             gMenuSubOption--;
                             if (gMenuSubOption == 0) {
-                                gMenuSubOption = (sizeof(gPauseConfigOpt) / 32);
+                                gMenuSubOption = 1;
                             }
-                        }
-                        if (gMenuSubOption == 1 && gExpansionPak == FALSE) {
-                            gMenuSubOption++;
                         }
                         if ((IO_READ(DPC_PIPEBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) == 0) {
                             gMenuSubOption = 1;
                         }
+                    }
+                }
+                if (gPauseSubmenu != 0) {
+                    if (gMenuSubOption == 1 && gExpansionPak == FALSE) {
+                        gMenuSubOption++;
+                    }
+                    if (gMenuSubOption < 4) {
+                        gMenuSubOption = 4;
                     }
                 }
                 if (temp != gMenuSubOption) {

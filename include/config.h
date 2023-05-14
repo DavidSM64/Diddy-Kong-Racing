@@ -44,12 +44,11 @@
 #define FIFO_UCODE                          // Allow usage of the faster FIFO microcode. Emulators will still use xbus. Requires 96KB memory to work.
 //#define FIFO_4MB                            // Allows non expansion pak users to use FIFO microcode.
 // #define DISABLE_MULTIPLAYER_CUTBACKS        // Disable the measures Rare took to improve performance in multiplayer. Performance will suffer.
-#define REFRESH_RATE            1           // Affects the frame cap of the game. 1 is 60FPS, 2 is 30FPS, 3 is 20FPS.
 #define TRIPLE_BUFFERING                    // Uses more memory, but provides a much smoother gameplay experience. You may struggle to fit this in 4MB.
-#define SCREEN_WIDTH            304         // Default width is 320. Recommended to be 304 for 4MB users.
+#define SCREEN_WIDTH            320         // Default width is 320. Recommended to be 304 for 4MB users.
 #define SCREEN_WIDTH_16_10      384         // Default width is 384. Recommended to be 360 for 4MB users.
 #define SCREEN_WIDTH_WIDE       424         // Default width is 424. Recommended to be 408 for 4MB users.
-#define SCREEN_HEIGHT           224         // Default height is 240. Recommended to be 224 for 4MB users.
+#define SCREEN_HEIGHT           240         // Default height is 240. Recommended to be 224 for 4MB users.
 
 
 

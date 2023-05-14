@@ -14,6 +14,8 @@ extern u8 gDisableAA;
 extern u8 gOverrideAA;
 extern u8 gHideHUD;
 extern s8 gScreenMode;
+extern s8 gFrameCap;
+extern s8 gDedither;
 extern s8 gScreenPos[2];
 extern s32 gMapId;
 

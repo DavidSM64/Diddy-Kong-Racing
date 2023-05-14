@@ -10,9 +10,11 @@
 #include "viint.h"
 #include "main.h"
 
+extern s8 gFrameCap;
+
 static void __scTaskComplete(OSSched *sc, OSScTask *t) {
     if (t->list.t.type == M_GFXTASK) {
-        if (sc->retraceCount >= REFRESH_RATE && sc->scheduledFB == NULL) {
+        if (sc->retraceCount > gFrameCap && sc->scheduledFB == NULL) {
             sc->scheduledFB = t->framebuffer;
             osViSwapBuffer(t->framebuffer);
             sc->retraceCount = 0;
@@ -79,7 +81,7 @@ u32 gRetraceTimer = 0;
 
 static void __scHandleRetrace(OSSched *sc) {
 	sc->retraceCount++;
-    if (sc->retraceCount >= REFRESH_RATE && sc->scheduledFB && osViGetCurrentFramebuffer() == sc->scheduledFB) {
+    if (sc->retraceCount > gFrameCap && sc->scheduledFB && osViGetCurrentFramebuffer() == sc->scheduledFB) {
             if (sc->queuedFB) {
                 sc->scheduledFB = sc->queuedFB;
                 sc->queuedFB = NULL;

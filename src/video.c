@@ -153,7 +153,7 @@ void change_vi(OSViMode *mode, int width, int height) {
 }
 
 void set_dither_filter(void) {
-    if (!gDisableAA && !gOverrideAA) {
+    if (gDedither) {
         osViSetSpecialFeatures(OS_VI_DIVOT_ON);
         osViSetSpecialFeatures(OS_VI_DITHER_FILTER_ON);
     } else {

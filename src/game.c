@@ -792,14 +792,12 @@ void thread3_main(UNUSED void *unused) {
     }
 }
 
-#ifndef FIFO_UCODE
-u8 gDisableAA = TRUE;
-#else
-u8 gDisableAA = TRUE;
-#endif
+u8 gDisableAA = FALSE;
 u8 gHideHUD = FALSE;
 s8 gScreenMode = 0;
+s8 gFrameCap = 0;
 s8 gScreenPos[2] = {0, 0};
+s8 gDedither = FALSE;
 
 /**
  * Setup all of the necessary pieces required for the game to function.
@@ -955,14 +953,14 @@ void main_game_loop(void) {
             gOverrideTimer = -125000;
             if (gOverrideAA == TRUE) {
                 gOverrideAA = FALSE;
-                set_dither_filter();
+                //set_dither_filter();
             }
         }
         if (gOverrideTimer >= 125000) {
             gOverrideTimer = 125000;
             if (gOverrideAA == FALSE) {
                 gOverrideAA = TRUE;
-                set_dither_filter();
+                //set_dither_filter();
             }
         }
     }
@@ -1061,7 +1059,7 @@ void main_game_loop(void) {
     #ifdef PUPPYPRINT_DEBUG
         if (get_buttons_pressed_from_player(PLAYER_ONE) & D_JPAD) {
             gDisableAA ^= 1;
-            set_dither_filter();
+            //set_dither_filter();
         }
     #endif
 #ifdef FIFO_4MB
