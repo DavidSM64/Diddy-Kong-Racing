@@ -58,7 +58,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
 
     set_boss_voice_clip_offset((u16* ) D_800DCE80);
     racer->unk1EC = 0;
-    sp3E = obj->segment.unk38.byte.unk3B;
+    sp3E = obj->segment.object.animationID;
     sp3C = obj->segment.animFrame;
     sp3A = racer->headAngle;
     if ((racer->velocity < 0.3) && (-0.3 < racer->velocity)) {
@@ -94,14 +94,14 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     *startTimer = sp2C;
     obj->unk74 = 0;
     racer->headAngle = sp3A;
-    obj->segment.unk38.byte.unk3B = sp3E;
+    obj->segment.object.animationID = sp3E;
     obj->segment.animFrame = sp3C;
-    if (racer->attackType != ATTACK_NONE && obj->segment.unk38.byte.unk3B != 1) {
+    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != 1) {
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
         obj->segment.x_velocity *= 0.4;
-        obj->segment.unk38.byte.unk3B = 1;
+        obj->segment.object.animationID = 1;
         obj->segment.z_velocity *= 0.4;
         racer->unkC = 0.0f;
         obj->segment.y_velocity += 4.0;
@@ -121,7 +121,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->unkC += 2.0 * updateRateF;
     gfxData = *obj->unk68;
     objModel = gfxData->objModel;
-    diffX = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 16) - 17;
+    diffX = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
     while (diffX <= racer->unkC) {
         racer->unkC -= diffX;
         gfxData->unk10 = -1;
@@ -130,8 +130,8 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->unkC += diffX;
         gfxData->unk10 = -1;
     }
-    if (obj->segment.unk38.byte.unk3B == 1 && gfxData->unk10 == -1) {
-        obj->segment.unk38.byte.unk3B = 0;
+    if (obj->segment.object.animationID == 1 && gfxData->unk10 == -1) {
+        obj->segment.object.animationID = 0;
         racer->unkC = 0.0f;
     }
     obj->segment.animFrame = racer->unkC;
@@ -142,7 +142,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         someObj = func_8000BF44(-1);
         if (someObj != NULL) {
             rocket = (Object_WizpigRocket *) someObj->unk64;
-            someObj->unk78 = 0;
+            someObj->properties.racer.unk0 = 0;
             if (rocket != NULL) {
                 rocket->unk72 += updateRate;
                 rocket->unk70 = 2;
@@ -153,7 +153,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     firstRacerObj = get_racer_object(0);
     racer = (Object_Racer*)firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.unk38.byte.unk3B == 1) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == 1) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != 0) {
