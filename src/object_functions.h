@@ -11,6 +11,7 @@
 
 #define TIME_JIFFIES_PER_SECOND 60
 #define TIME_SECONDS(sec) sec * TIME_JIFFIES_PER_SECOND
+#define U8_ANGLE_TO_U16(x) (x << 6 << 4)
 
 enum BossRaceWarps {
     WARP_STANDARD = -1,

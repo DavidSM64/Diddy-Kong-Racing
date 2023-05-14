@@ -936,7 +936,7 @@ typedef struct Object_InfoPoint {
 } Object_InfoPoint;
 
 typedef struct Object_TTDoor {
-  /* 0x00 */ f32 unk0;
+  /* 0x00 */ f32 homeY;
   /* 0x04 */ s32 *soundMask;
   /* 0x08 */ s32 unk8;
   /* 0x0C */ s16 unkC;
@@ -1246,24 +1246,6 @@ typedef struct Object_Racer {
   /* 0x220 */ s32 unk220;
 } Object_Racer;
 
-typedef struct Object_Bonus {
-  /* 0x00 */ f32 directionX;
-  /* 0x04 */ f32 directionY;
-  /* 0x08 */ f32 directionZ;
-  /* 0x0C */ f32 rotationDiff; // Rotational offset, to test intersection when the exit is rotated.
-  /* 0x10 */ s32 radius; // Activation radius.
-  /* 0x14 */ s8 unk14;
-} Object_Bonus;
-
-typedef struct Object_ModeChange {
-  /* 0x00 */ f32 directionX;
-  /* 0x04 */ f32 directionY;
-  /* 0x08 */ f32 directionZ;
-  /* 0x0C */ f32 rotationDiff; // Rotational offset, to test intersection when the exit is rotated.
-  /* 0x10 */ s32 radius; // Activation radius.
-  /* 0x14 */ u8 vehicleID;
-} Object_ModeChange;
-
 typedef struct Object_Door {
   /* 0x00 */ f32 homeY;
   /* 0x04 */ u8 pad4[0x4];
@@ -1279,12 +1261,15 @@ typedef struct Object_Door {
 } Object_Door;
 
 typedef struct Object_Trigger {
-  /* 0x00 */ f32 unk0;
-  /* 0x04 */ f32 unk4;
-  /* 0x08 */ f32 unk8;
-  /* 0x0C */ f32 unkC;
-  /* 0x10 */ s32 unk10;
+  /* 0x00 */ f32 directionX;
+  /* 0x04 */ f32 directionY;
+  /* 0x08 */ f32 directionZ;
+  /* 0x0C */ f32 rotationDiff; // Rotational offset, to test intersection when the exit is rotated.
+  /* 0x10 */ s32 radius;
+  union {
+  /* 0x14 */ u8 vehicleID;
   /* 0x14 */ u8 unk14;
+  };
 } Object_Trigger;
 
 typedef struct Object_Audio {
@@ -1452,8 +1437,6 @@ typedef struct Object_64 {
         Object_Wizpig2 wizpig2;
         Object_Exit exit;
         Object_Racer racer;
-        Object_Bonus bonus;
-        Object_ModeChange mode_change;
         Object_Door door;
         Object_Trigger trigger;
         Object_Audio audio;

@@ -145,8 +145,8 @@ void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry) {
     radius /= 64;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
     obj->shadow->scale = obj->segment.header->shadowScale * radius;
-    obj->segment.object.numModelIDs = entry->unk8;
-    obj->segment.trans.y_rotation = entry->unkA << 6 << 4;
+    obj->segment.object.numModelIDs = entry->numModelIDs;
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
     if (entry->solid) {
         obj->interactObj->flags = INTERACT_FLAGS_SOLID;
         obj->interactObj->unk11 = 1;
@@ -305,7 +305,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
                 gParticlePtrList_addObject(obj);
                 func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, SOUND_EXPLOSION, 1.0f, 1);
             }
-            obj->segment.trans.scale *= 0.9;
+            obj->segment.trans.scale *= 0.9; //!@Delta
             if (obj->segment.trans.scale < 0.5) {
                 gParticlePtrList_addObject(obj);
             }
@@ -595,7 +595,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_effectbox.s")
 void obj_init_trophycab(Object *obj, LevelObjectEntry_TrophyCab *entry) {
     obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     obj->interactObj->unk11 = 2;
-    obj->segment.trans.y_rotation = entry->rotation << 6 << 4; // Not sure about the values here.
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
 }
 
 /**
@@ -863,7 +863,7 @@ void obj_init_lighthouse_rocketsignpost(Object *obj, LevelObjectEntry_Lighthouse
     }
     radius /= 64;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
-    obj->segment.trans.y_rotation = entry->angleY << 6 << 4;
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
     if (obj->segment.object.numModelIDs >= obj->segment.header->numberOfModelIds) {
         obj->segment.object.numModelIDs = 0;
     }
@@ -912,7 +912,7 @@ void obj_init_airzippers_waterzippers(Object *obj, LevelObjectEntry_AirZippers_W
     objHeader = obj->segment.header;
     radius /= 64;
     obj->segment.trans.scale = objHeader->scale * radius;
-    obj->segment.trans.y_rotation = entry->angleY << 6 << 4;
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
     if (obj->segment.object.numModelIDs >= objHeader->numberOfModelIds) {
         obj->segment.object.numModelIDs = 0;
     }
@@ -980,7 +980,7 @@ void obj_init_groundzipper(Object *obj, LevelObjectEntry_GroundZipper *entry) {
     header = obj->segment.header;
     obj->segment.trans.scale = header->scale * objScale;
     obj->shadow->scale = header->shadowScale * objScale;
-    obj->segment.trans.y_rotation = entry->rotation << 6 << 4;
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
     if (obj->segment.object.numModelIDs >= obj->segment.header->numberOfModelIds) {
         obj->segment.object.numModelIDs = 0;
     }
@@ -1085,7 +1085,7 @@ void obj_init_characterflag(Object *obj, LevelObjectEntry_CharacterFlag *entry) 
     f32 radius;
     obj->properties.characterFlag.playerID = entry->playerIndex;
     obj->properties.characterFlag.characterID = -1;
-    obj->segment.trans.y_rotation = entry->angleY << 6 << 4; // Not sure about the values here.
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
     radius = entry->radius & 0xFF;
     if (radius < 10.0f) {
         radius = 10.0f;
@@ -2012,7 +2012,7 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     exit = &obj->unk64->exit;
     radius /= 128;
     obj->segment.trans.scale = radius;
-    obj->segment.trans.y_rotation = entry->unk11 << 6 << 4;
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
     exit->directionX = sins_f(obj->segment.trans.y_rotation);
     exit->directionY = 0.0f;
     exit->directionZ = coss_f(obj->segment.trans.y_rotation);
@@ -2048,31 +2048,29 @@ void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
     enableWarp = TRUE;
     settings = get_settings();
     // Disable the warp if it's for the first boss encounter, having collected every balloon.
-    if ((exit->bossFlag == WARP_BOSS_FIRST) && (settings->balloonsPtr[settings->worldId] == 8)) {
+    if (exit->bossFlag == WARP_BOSS_FIRST && settings->balloonsPtr[settings->worldId] == 8) {
         enableWarp = FALSE;
     }
     // Disable the warp if it's for the second boss encounter, having not collected every balloon.
-    if ((exit->bossFlag == WARP_BOSS_REMATCH) && (settings->balloonsPtr[settings->worldId] < 8)) {
+    if (exit->bossFlag == WARP_BOSS_REMATCH && settings->balloonsPtr[settings->worldId] < 8) {
         enableWarp = FALSE;
     }
     // The above ensures only one of the boss warps is active so they don't overlap. This could also probably have been done in the initialiser.
-    if (enableWarp) {
-        if (obj->interactObj->distance < exit->radius) {
-            dist = exit->radius;
-            racerObjects = get_racer_objects(&numberOfRacers);
-            for (i = 0; i < numberOfRacers; i++) {
-                racerObj = racerObjects[i];
-                racer = &racerObj->unk64->racer;
-                if ((racer->playerIndex != PLAYER_COMPUTER) && (racer->exitObj == NULL)) {
-                    diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
-                    diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
-                    diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                    if ((sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < dist)) {
-                        rotDiff = (exit->directionX * racerObj->segment.trans.x_position) + (exit->directionZ * racerObj->segment.trans.z_position) + exit->rotationDiff;
-                        if (rotDiff < 0.0f) {
-                            racer->exitObj = obj;
-                            racer->transitionTimer = -120;
-                        }
+    if (enableWarp && obj->interactObj->distance < exit->radius) {
+        dist = exit->radius;
+        racerObjects = get_racer_objects(&numberOfRacers);
+        for (i = 0; i < numberOfRacers; i++) {
+            racerObj = racerObjects[i];
+            racer = &racerObj->unk64->racer;
+            if (racer->playerIndex != PLAYER_COMPUTER && racer->exitObj == NULL) {
+                diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
+                diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
+                diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
+                if ((sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < dist)) {
+                    rotDiff = (exit->directionX * racerObj->segment.trans.x_position) + (exit->directionZ * racerObj->segment.trans.z_position) + exit->rotationDiff;
+                    if (rotDiff < 0.0f) {
+                        racer->exitObj = obj;
+                        racer->transitionTimer = -120;
                     }
                 }
             }
@@ -2092,7 +2090,7 @@ void obj_loop_cameracontrol(UNUSED Object *obj, UNUSED s32 updateRate) {
 void obj_init_setuppoint(Object *obj, LevelObjectEntry_SetupPoint *entry) {
     obj->properties.common.unk0 = entry->unk8;
     obj->properties.common.unk4 = entry->unk9;
-    obj->segment.trans.y_rotation = entry->angleY << 6 << 4; // Not sure about the values here.
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
 }
 
 void obj_loop_setuppoint(UNUSED Object *obj, UNUSED s32 updateRate) {
@@ -2797,7 +2795,7 @@ void obj_init_checkpoint(Object *obj, LevelObjectEntry_Checkpoint *entry, UNUSED
     }
     scale /= 64;
     obj->segment.trans.scale = scale;
-    obj->segment.trans.y_rotation = entry->angleY << 6 << 4; // Not sure about the values here.
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
     func_80011390();
 }
 
@@ -2814,15 +2812,15 @@ void obj_loop_checkpoint(UNUSED Object *obj, UNUSED s32 updateRate) {
 */
 void obj_init_modechange(Object *obj, LevelObjectEntry_ModeChange *entry) {
     f32 radius;
-    Object_ModeChange *obj64;
+    Object_Trigger *obj64;
     radius = entry->radius & 0xFF;
     if (radius < 5) {
         radius = 5;
     }
-    obj64 = &obj->unk64->mode_change;
+    obj64 = &obj->unk64->trigger;
     radius /= 128;
     obj->segment.trans.scale = radius;
-    obj->segment.trans.y_rotation = entry->angleY << 6 << 4;
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
     obj64->directionX = sins_f(obj->segment.trans.y_rotation);
     obj64->directionY = 0.0f;
     obj64->directionZ = coss_f(obj->segment.trans.y_rotation);
@@ -2844,7 +2842,7 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
     Object **racerObjects;
     s32 numRacers;
     Object_Racer *racer;
-    Object_ModeChange *modeChange;
+    Object_Trigger *modeChange;
     f32 diffX;
     f32 diffY;
     f32 diffZ;
@@ -2853,7 +2851,7 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
     f32 radiusF;
     f32 dist;
     
-    modeChange = (Object_ModeChange *) obj->unk64;
+    modeChange = (Object_Trigger *) obj->unk64;
     if (obj->interactObj->distance < modeChange->radius) {
         radiusF = modeChange->radius;
         racerObjects = get_racer_objects(&numRacers);
@@ -2899,21 +2897,21 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
 
 void obj_init_bonus(Object *obj, LevelObjectEntry_Bonus *entry) {
     f32 radius;
-    Object_Bonus *obj64;
+    Object_Trigger *bonus;
     radius = entry->radius & 0xFF;
     if (radius < 5) {
         radius = 5;
     }
-    obj64 = &obj->unk64->bonus;
+    bonus = &obj->unk64->trigger;
     radius /= 128;
     obj->segment.trans.scale = radius;
-    obj->segment.trans.y_rotation = entry->angleY << 6 << 4;
-    obj64->directionX = sins_f(obj->segment.trans.y_rotation);
-    obj64->directionY = 0.0f;
-    obj64->directionZ = coss_f(obj->segment.trans.y_rotation);
-    obj64->rotationDiff = -((obj64->directionX * obj->segment.trans.x_position) + (obj64->directionZ * obj->segment.trans.z_position));
-    obj64->radius = entry->radius;
-    obj64->unk14 = entry->unkA;
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
+    bonus->directionX = sins_f(obj->segment.trans.y_rotation);
+    bonus->directionY = 0.0f;
+    bonus->directionZ = coss_f(obj->segment.trans.y_rotation);
+    bonus->rotationDiff = -((bonus->directionX * obj->segment.trans.x_position) + (bonus->directionZ * obj->segment.trans.z_position));
+    bonus->radius = entry->radius;
+    bonus->unk14 = entry->unkA; // Unused?
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = entry->radius;
@@ -2929,11 +2927,11 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
     f32 halfDist;
     f32 dist;
     f32 diffZ;
-    Object_Bonus *obj64;
+    Object_Trigger *obj64;
     Object **racerObjects;
     s32 i;
 
-    obj64 = &obj->unk64->bonus;
+    obj64 = &obj->unk64->trigger;
     if (obj->interactObj->distance < obj64->radius) {
         dist = obj64->radius;
         halfDist = dist * 0.5;
@@ -3098,7 +3096,7 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
         rmonPrintf("Illegal door no!!!\n");
     }
     obj->segment.object.numModelIDs = entry->modelIndex;
-    obj->segment.trans.y_rotation = entry->closedRotation << 6 << 4;
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->closedRotation);
     obj64->homeY = obj->segment.trans.y_position;
     obj64->unk8 = 0;
     obj->properties.door.closeAngle = obj->segment.trans.y_rotation;
@@ -3128,10 +3126,10 @@ void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
 
     obj->segment.object.numModelIDs = 0;
     obj64 = &obj->unk64->tt_door;
-    obj->segment.trans.y_rotation = entry->angleY << 6 << 4;
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
     obj64->doorID = entry->doorID;
     obj64->unk13 = entry->unkB;
-    obj64->unk0 = obj->segment.trans.y_position;
+    obj64->homeY = obj->segment.trans.y_position;
     obj64->unk8 = 0;
     obj64->unk12 = entry->unkA;
     obj->properties.door.closeAngle = obj->segment.trans.y_rotation;
@@ -3242,12 +3240,12 @@ void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
     f32 radius;
     Object_Trigger *obj64;
 
-    if (entry->unk9 == -1) {
-        entry->unk9 = func_8000CC20(obj);
+    if (entry->index == -1) {
+        entry->index = func_8000CC20(obj);
     } else {
-        func_8000CBF0(obj, entry->unk9);
+        func_8000CBF0(obj, entry->index);
     }
-    if (entry->unk9 == -1) {
+    if (entry->index == -1) {
         rmonPrintf("Illegal door no!!!\n");
     }
     radius = (s32)entry->scale & 0xFF;
@@ -3257,12 +3255,12 @@ void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry) {
     obj64 = &obj->unk64->trigger;
     radius /= 128;
     obj->segment.trans.scale = radius;
-    obj->segment.trans.y_rotation = entry->rotation << 6 << 4;
-    obj64->unk0 = sins_f(obj->segment.trans.y_rotation);
-    obj64->unk4 = 0.0f;
-    obj64->unk8 = coss_f(obj->segment.trans.y_rotation);
-    obj64->unkC = -((obj64->unk0 * obj->segment.trans.x_position) + (obj64->unk8 * obj->segment.trans.z_position));
-    obj64->unk10 = entry->scale;
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
+    obj64->directionX = sins_f(obj->segment.trans.y_rotation);
+    obj64->directionY = 0.0f;
+    obj64->directionZ = coss_f(obj->segment.trans.y_rotation);
+    obj64->rotationDiff = -((obj64->directionX * obj->segment.trans.x_position) + (obj64->directionZ * obj->segment.trans.z_position));
+    obj64->radius = entry->scale;
     obj64->unk14 = entry->unkD;
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
@@ -3294,22 +3292,22 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
     settings = get_settings();
     courseFlags = settings->courseFlagsPtr[settings->courseId];
     curRaceType = get_current_level_race_type();
-    if (triggerEntry->unk9 >= 0) {
-        flags = 0x10000 << triggerEntry->unk9;
-        if (obj->interactObj->distance < trigger->unk10) {
+    if (triggerEntry->index >= 0) {
+        flags = 0x10000 << triggerEntry->index;
+        if (obj->interactObj->distance < trigger->radius) {
             if (((u8) curRaceType != RACETYPE_HUBWORLD) || !(courseFlags & flags)) {
-                radiusF = trigger->unk10;
+                radiusF = trigger->radius;
                 racers = get_racer_objects(&numRacers);
                 for (i = 0; i < numRacers; i++) {
                     racerObj = racers[i];
-                    racer = (Object_Racer*)racerObj->unk64;
+                    racer = (Object_Racer *) racerObj->unk64;
                     if ((!(trigger->unk14 & 1) && racer->playerIndex == PLAYER_COMPUTER) || (!(trigger->unk14 & 2) && racer->playerIndex != PLAYER_COMPUTER)) {
                         diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                         diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
                         diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
                         distance = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
                         if (distance < radiusF) {
-                            distance = (trigger->unk0 * racerObj->segment.trans.x_position) + (trigger->unk8 * racerObj->segment.trans.z_position) + trigger->unkC;
+                            distance = (trigger->directionX * racerObj->segment.trans.x_position) + (trigger->directionZ * racerObj->segment.trans.z_position) + trigger->rotationDiff;
                             if (distance < 0.0f) {
                                 settings->courseFlagsPtr[settings->courseId] |= flags;
                                 if (triggerEntry->unkB != 0xFF) {
@@ -3329,8 +3327,8 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
 
 void obj_init_bridge_whaleramp(Object *obj, LevelObjectEntry_Bridge_WhaleRamp *entry) {
     Object_Bridge_WhaleRamp *temp = &obj->unk64->bridge_whale_ramp;
-    obj->segment.object.numModelIDs = entry->unk8;
-    obj->segment.trans.y_rotation = entry->unk9 << 6 << 4;
+    obj->segment.object.numModelIDs = entry->numModelIDs;
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
     temp->unk0 = obj->segment.trans.y_position;
     obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0020;
     obj->interactObj->unk11 = 2;
@@ -3355,7 +3353,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
     Object_Bridge_WhaleRamp *whaleRamp;
     LevelObjectEntry_Bridge_WhaleRamp *entry;
     f32 updateRateF;
-    s32 var_v0;
+    s32 vehicleID;
     f32 sp50;
     f32 sp4C;
     f32 sp48;
@@ -3384,7 +3382,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
                     obj->segment.trans.y_position -= (updateRateF * 2);
                 }
             }
-        } else if (entry->unkC > 0) {
+        } else if (entry->radius > 0) {
             if (whaleRamp->unk0 < obj->segment.trans.y_position) {
                 obj->segment.trans.y_position -= (updateRateF * 2);
             }
@@ -3421,7 +3419,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
     switch (entry->unkB) {
     case 0:
         obj->properties.common.unk0 = 0;
-        if (obj->interactObj->distance < entry->unkC) {
+        if (obj->interactObj->distance < entry->radius) {
             obj->properties.common.unk0 = 1;
         }
         break;
@@ -3432,16 +3430,16 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
             racer = (Object_Racer *) racerObj->unk64;
             switch(racer->vehicleID) {
                 default:
-                    var_v0 = VEHICLE_HOVERCRAFT;
+                    vehicleID = VEHICLE_HOVERCRAFT;
                     break;
                 case 1:
-                    var_v0 = VEHICLE_PLANE;
+                    vehicleID = VEHICLE_PLANE;
                     break;
                 case 2:
-                    var_v0 = VEHICLE_LOOPDELOOP;
+                    vehicleID = VEHICLE_LOOPDELOOP;
                     break;
             }
-            if (entry->unkF & var_v0) {
+            if (entry->allowedVehicles & vehicleID) {
                 obj->properties.common.unk0 = NULL;
             }
         }
@@ -3492,6 +3490,10 @@ void obj_init_fogchanger(Object *obj, LevelObjectEntry_FogChanger *entry) {
     obj->properties.distance.radius = dist;
 }
 
+/**
+ * Skydome control init behaviour.
+ * Sets hitbox data and on or off setting based off spawn info.
+*/
 void obj_init_skycontrol(Object *obj, LevelObjectEntry_SkyControl *entry) {
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
@@ -3500,6 +3502,11 @@ void obj_init_skycontrol(Object *obj, LevelObjectEntry_SkyControl *entry) {
     obj->properties.skyControl.radius = entry->radius;
 }
 
+/**
+ * Skydome control loop behaviour.
+ * When a player goes through this object, enable or disable rendering the skydome depending on setting.
+ * Used for transitions between indoors and outdoors.
+*/
 void obj_loop_skycontrol(Object *obj, UNUSED s32 updateRate) {
     if (obj->interactObj->distance < obj->properties.skyControl.radius) {
         set_skydome_visbility(obj->properties.skyControl.setting);
@@ -3517,6 +3524,10 @@ void obj_init_ainode(Object *obj, LevelObjectEntry_AiNode *entry) {
 void obj_loop_ainode(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
+/**
+ * Smokey's castle treasure box init function.
+ * Sets up player ID, making sure the value doesn't go over 4 players.
+*/
 void obj_init_treasuresucker(Object *obj, LevelObjectEntry_TreasureSucker *entry) {
     obj->segment.animFrame = 120;
     obj->properties.treasureSucker.playerID = (entry->playerID - 1) & 3;
@@ -4619,8 +4630,8 @@ void obj_init_log(Object *obj, LevelObjectEntry_Log *entry, UNUSED s32 arg2) {
     }
     radius /= 64;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
-    obj->segment.object.numModelIDs = entry->unk8;
-    obj->segment.trans.y_rotation = entry->angleY << 6 << 4;
+    obj->segment.object.numModelIDs = entry->numModelIDs;
+    obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
 }
 
 /**
