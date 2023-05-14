@@ -128,9 +128,9 @@ void change_vi(OSViMode *mode, int width, int height) {
         mode->fldRegs[0].origin = width*2;
         mode->fldRegs[1].origin = width*4;
 
-        mode->comRegs.hStart = (428-304 + (gScreenPos[0] * 2)) << 16 | (428+304 + (gScreenPos[0] * 2));
-        mode->fldRegs[0].vStart = (277-height + (gScreenPos[1] * 2)) << 16 | (271+height + (gScreenPos[1] * 2));
-        mode->fldRegs[1].vStart = (277-height + (gScreenPos[1] * 2)) << 16 | (271+height + (gScreenPos[1] * 2));
+        mode->comRegs.hStart = (428-304 + (gConfig.screenPos[0] * 2)) << 16 | (428+304 + (gConfig.screenPos[0] * 2));
+        mode->fldRegs[0].vStart = (277-height + (gConfig.screenPos[1] * 2)) << 16 | (271+height + (gConfig.screenPos[1] * 2));
+        mode->fldRegs[1].vStart = (277-height + (gConfig.screenPos[1] * 2)) << 16 | (271+height + (gConfig.screenPos[1] * 2));
     } else if (height == 240) {
         mode->comRegs.width = width;
         mode->comRegs.xScale = (width*512)/320;
@@ -153,7 +153,7 @@ void change_vi(OSViMode *mode, int width, int height) {
 }
 
 void set_dither_filter(void) {
-    if (gDedither) {
+    if (gConfig.dedither) {
         osViSetSpecialFeatures(OS_VI_DIVOT_ON);
         osViSetSpecialFeatures(OS_VI_DITHER_FILTER_ON);
     } else {

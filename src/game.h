@@ -10,14 +10,20 @@
 
 extern Gfx *gDisplayLists[2];
 extern s32 sLogicUpdateRate;
-extern u8 gDisableAA;
 extern u8 gOverrideAA;
 extern u8 gHideHUD;
-extern s8 gScreenMode;
-extern s8 gFrameCap;
-extern s8 gDedither;
-extern s8 gScreenPos[2];
 extern s32 gMapId;
+
+struct ConfigOptions {
+    u8 antiAliasing;
+    u8 screenMode;
+    u8 regionMode;
+    u8 frameCap;
+    u8 dedither;
+    u8 screenPos[2];
+};
+
+extern struct ConfigOptions gConfig;
 
 typedef enum RenderContext {
     DRAW_INTRO = -1,

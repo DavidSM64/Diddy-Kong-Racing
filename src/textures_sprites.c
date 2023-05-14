@@ -1057,7 +1057,7 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
     flags &= ~D_80126378;
     flags = (flags & RENDER_UNK_8000000) ? flags & ~RENDER_FOG_ACTIVE : flags & ~RENDER_Z_UPDATE;
     // This is just here until object rendering can be blanket handled too, rather than by each material.
-    if (gDisableAA || gOverrideAA) {
+    if (gConfig.antiAliasing || gOverrideAA) {
         flags &= ~RENDER_ANTI_ALIASING;
     } else {
         flags |= RENDER_ANTI_ALIASING;

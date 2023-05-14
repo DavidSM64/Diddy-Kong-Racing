@@ -6859,22 +6859,22 @@ void func_80093D40(UNUSED s32 updateRate) {
                 }
                 switch (i) {
                 case 0:
-                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[2 + gScreenMode]);
+                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[2 + gConfig.screenMode]);
                     break;
                 case 1:
-                    puppyprintf(gPauseOptionStack[i], "%s: %d", gPauseConfigOpt[i], gScreenPos[0]);
+                    puppyprintf(gPauseOptionStack[i], "%s: %d", gPauseConfigOpt[i], gConfig.screenPos[0]);
                     break;
                 case 2:
-                    puppyprintf(gPauseOptionStack[i], "%s: %d", gPauseConfigOpt[i], gScreenPos[1]);
+                    puppyprintf(gPauseOptionStack[i], "%s: %d", gPauseConfigOpt[i], gConfig.screenPos[1]);
                     break;
                 case 3:
-                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gDisableAA ^ 1]);
+                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gConfig.antiAliasing ^ 1]);
                     break;
                 case 4:
-                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[5 + gFrameCap]);
+                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[5 + gConfig.frameCap]);
                     break;
                 case 5:
-                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gDedither]);
+                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gConfig.dedither]);
                     break;
                 }
                 render_dialogue_text(7, POS_CENTRED, yOffset + 8 + y, gPauseOptionStack[i], 1, 12);
@@ -6935,14 +6935,14 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                     }
                     switch (gMenuSubOption) {
                     case 1:
-                        gScreenMode += moveDir;
-                        if (gScreenMode == -1) {
-                            gScreenMode = 0;
+                        gConfig.screenMode += moveDir;
+                        if (gConfig.screenMode == -1) {
+                            gConfig.screenMode = 0;
                         }
-                        if (gScreenMode > 2) {
-                            gScreenMode = 2;
+                        if (gConfig.screenMode > 2) {
+                            gConfig.screenMode = 2;
                         }
-                        switch (gScreenMode) {
+                        switch (gConfig.screenMode) {
                         case 0:
                             gScreenWidth = SCREEN_WIDTH;
                             change_vi(&gGlobalVI, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -6958,23 +6958,23 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                         }
                         break;
                     case 2:
-                        gScreenPos[0] += moveDir;
-                        CLAMP(gScreenPos[0], -8, 8);
+                        gConfig.screenPos[0] += moveDir;
+                        CLAMP(gConfig.screenPos[0], -8, 8);
                         change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
                         break;
                     case 3:
-                        gScreenPos[1] += moveDir;
-                        CLAMP(gScreenPos[1], -8, 8);
+                        gConfig.screenPos[1] += moveDir;
+                        CLAMP(gConfig.screenPos[1], -8, 8);
                         change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
                         break;
                     case 4:
-                        gDisableAA ^= 1;
+                        gConfig.antiAliasing ^= 1;
                         break;
                     case 5:
-                        gFrameCap ^= 1;
+                        gConfig.frameCap ^= 1;
                         break;
                     case 6:
-                        gDedither ^= 1;
+                        gConfig.dedither ^= 1;
                         set_dither_filter();
                         break;
                     }
@@ -9830,7 +9830,7 @@ void record_fps(void) {
         benchCPURecord[benchFramesRecorded] = benchCPU / benchFrames;
         benchRSPRecord[benchFramesRecorded] = benchRSP / benchFrames;
         benchRDPRecord[benchFramesRecorded] = benchRDP / benchFrames;
-        aaOvrRecord[benchFramesRecorded] = gOverrideAA || gDisableAA;
+        aaOvrRecord[benchFramesRecorded] = gOverrideAA || gConfig.antiAliasing;
         benchFramesRecorded++;
         benchFrames = 0;
         benchCPU = 0;

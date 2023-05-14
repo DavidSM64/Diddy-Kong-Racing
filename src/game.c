@@ -792,12 +792,13 @@ void thread3_main(UNUSED void *unused) {
     }
 }
 
-u8 gDisableAA = FALSE;
+
+struct ConfigOptions gConfig;
 u8 gHideHUD = FALSE;
-s8 gScreenMode = 0;
-s8 gFrameCap = 0;
-s8 gScreenPos[2] = {0, 0};
-s8 gDedither = FALSE;
+
+void init_config(void) {
+    bzero(&gConfig, sizeof(gConfig));
+}
 
 /**
  * Setup all of the necessary pieces required for the game to function.
@@ -849,6 +850,7 @@ void init_game(void) {
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
     get_platform();
+    init_config();
 
     osSetTime(0);
 }
@@ -946,7 +948,7 @@ void main_game_loop(void) {
 
     sLogicUpdateRate = calculate_updaterate();
 
-    if (!gDisableAA) {
+    if (gConfig.antiAliasing == 1) {
         gOverrideTimer -= 40000;
         gOverrideTimer += MIN(OS_CYCLES_TO_USEC(sDeltaTime), 66666);
         if (gOverrideTimer <= -125000) {
@@ -1058,7 +1060,7 @@ void main_game_loop(void) {
 #else
     #ifdef PUPPYPRINT_DEBUG
         if (get_buttons_pressed_from_player(PLAYER_ONE) & D_JPAD) {
-            gDisableAA ^= 1;
+            gConfig.antiAliasing ^= 1;
             //set_dither_filter();
         }
     #endif
