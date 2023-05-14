@@ -6878,7 +6878,7 @@ void func_80093D40(UNUSED s32 updateRate) {
                     puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gConfig.dedither]);
                     break;
                 case 6:
-                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gConfig.noCutbacks]);
+                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gConfig.noCutbacks ^ 1]);
                     break;
                 }
                 render_dialogue_text(7, POS_CENTRED, yOffset + 8 + y, gPauseOptionStack[i], 1, 12);

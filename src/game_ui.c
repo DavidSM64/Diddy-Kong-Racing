@@ -842,7 +842,7 @@ void render_race_start(s32 arg0, s32 updateRate) {
             if (D_80126CDC->unk19A[D_80126D08] >= 60) {
                 if (gRaceStartShowHudStep == 4) {
                     // Mute background music in 3/4 player.
-                    if (get_viewport_count() > TWO_PLAYERS || gSkipCutbacks) {
+                    if (get_viewport_count() > TWO_PLAYERS && gSkipCutbacks == FALSE) {
                         play_music(SEQUENCE_NONE);
                     } else {
                         func_8006BD10(1.0f);
