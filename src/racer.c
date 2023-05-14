@@ -218,7 +218,7 @@ s16 D_8011D5B8;
 
 /******************************/
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     s32 numRacers;
     u8 *miscAsset4;
