@@ -348,8 +348,8 @@ void obj_init_lasergun(Object *obj, LevelObjectEntry_Lasergun *entry) {
     laserGun->laserDuration = entry->laserDuration;
     laserGun->radius = entry->radius;
     laserGun->fireTimer = laserGun->fireRate;
-    obj->segment.trans.y_rotation = entry->angleX << 4 << 4; // Not sure about the shift amounts here, but it
-    obj->segment.trans.x_rotation = entry->angleY << 4 << 4; // just needs to be 2 left shifts that add up to 8.
+    obj->segment.trans.y_rotation = entry->angleY << 4 << 4; // Not sure about the shift amounts here, but it
+    obj->segment.trans.x_rotation = entry->angleX << 4 << 4; // just needs to be 2 left shifts that add up to 8.
 }
 
 /**

@@ -489,8 +489,8 @@ typedef struct LevelObjectEntry_Laserbolt {
 
 typedef struct LevelObjectEntry_Lasergun {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 angleX;
-    /* 0x09 */ u8 angleY;
+    /* 0x08 */ u8 angleY;
+    /* 0x09 */ u8 angleX;
     /* 0x0A */ s8 targeting;
     /* 0x0B */ s8 fireRate;
     /* 0x0C */ u8 laserDuration;
