@@ -95,7 +95,7 @@ typedef struct LevelObjectEntry_AudioLine {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8;
     /* 0x09 */ u8 unk9;
-    /* 0x0A */ u16 unkA;
+    /* 0x0A */ u16 soundID;
     /* 0x0C */ u8 unkC;
     /* 0x0D */ u8 unkD;
     /* 0x0E */ u16 unkE;
@@ -185,7 +185,7 @@ typedef struct LevelObjectEntry_WeaponBalloon {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8; // Unused?
     /* 0x09 */ u8 balloonType; 
-    /* 0x0A */ u8 scale; // This is divided by 64 to get actual scale.
+    /* 0x0A */ u8 radius; // This is divided by 64 to get actual scale.
 } LevelObjectEntry_WeaponBalloon;
 
 typedef struct LevelObjectEntry_AudioSeqLine {

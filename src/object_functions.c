@@ -3814,7 +3814,7 @@ void obj_init_silvercoin_adv2(Object *obj, UNUSED LevelObjectEntry_SilverCoinAdv
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 0;
     obj->interactObj->hitboxRadius = 30;
-    obj->properties.npc.action = 3;
+    obj->properties.npc.action = SILVER_COIN_INACTIVE;
     obj->properties.npc.timer = 16;
     if (!is_in_tracks_mode()) {
         if (check_if_silver_coin_race() && is_in_adventure_two()) {
@@ -3950,8 +3950,8 @@ void obj_loop_worldkey(Object *worldKeyObj, s32 updateRate) {
 */
 void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) {
     s32 cheats;
-    Object_WeaponBalloon *obj64;
-    f32 scalef;
+    Object_WeaponBalloon *balloon;
+    f32 radius;
 
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 4;
@@ -3983,17 +3983,17 @@ void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) 
     obj->segment.object.numModelIDs = entry->balloonType;
     obj->properties.weaponBalloon.balloonID = obj->segment.object.numModelIDs;
 
-    scalef = entry->scale & 0xFF;
-    if (scalef < 10) {
-        scalef = 10;
+    radius = entry->radius & 0xFF;
+    if (radius < 10) {
+        radius = 10;
     }
-    scalef /= 64;
+    radius /= 64;
 
-    obj64 = &obj->unk64->weapon_balloon;
+    balloon = &obj->unk64->weapon_balloon;
 
-    obj->segment.trans.scale = obj->segment.header->scale * scalef;
-    obj64->unk0 = obj->segment.trans.scale;
-    obj64->unk4 = 0;
+    obj->segment.trans.scale = obj->segment.header->scale * radius;
+    balloon->radius = obj->segment.trans.scale;
+    balloon->unk4 = 0;
     obj->properties.weaponBalloon.unk4 = 0;
 
     if (get_filtered_cheats() & CHEAT_DISABLE_WEAPONS) {
@@ -4013,7 +4013,7 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
     s32 newvar;
 
     balloon = (Object_WeaponBalloon *) obj->unk64;
-    obj->segment.trans.scale = balloon->unk0 * (1.0 - (balloon->unk4 / 90.0f));
+    obj->segment.trans.scale = balloon->radius * (1.0 - (balloon->unk4 / 90.0f));
     if (obj->segment.trans.scale < 0.001) {
         obj->segment.trans.scale = 0.001f;
     }
@@ -4336,12 +4336,7 @@ void rocket_prevent_overshoot(Object *obj, UNUSED s32 updateRate, Object_Weapon 
             rocket->forwardVel = -25.0f;
             angle = (arctan2_f(diffX, diffZ) - 0x8000) & 0xFFFF;
             angleDiff = angle - (obj->segment.trans.y_rotation & 0xFFFF);
-            if (angleDiff > 0x8000) {
-                angleDiff -= 0xFFFF;
-            }
-            if (angleDiff < -0x8000) {
-                angleDiff += 0xFFFF;
-            }
+            WRAP(angleDiff, -0x8000, 0x8000);
             if (angleDiff > 0x6000 || angleDiff < -0x6000) {
                 obj->interactObj->obj = (Object *) interactedObj;
                 obj->interactObj->distance = 1;
@@ -4460,18 +4455,18 @@ void play_rocket_trailing_sound(Object *obj, struct Object_Weapon *weapon, u16 s
         }
     }
     if (shouldPlaySound) {
-        if (weapon->unk1C == 0) {
+        if (weapon->soundMask == 0) {
             if (D_8011D4DC < 8) {
-                play_sound_at_position(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &weapon->unk1C);
+                play_sound_at_position(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &weapon->soundMask);
                 D_8011D4DC += 1;
             }
         } else {
-            update_spatial_audio_position(weapon->unk1C, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+            update_spatial_audio_position(weapon->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
         }
     } else {
-        if (weapon->unk1C != 0) {
-            func_800096F8(weapon->unk1C);
-            weapon->unk1C = 0;
+        if (weapon->soundMask) {
+            func_800096F8(weapon->soundMask);
+            weapon->soundMask = NULL;
             D_8011D4DC -= 1;
         }
     }
@@ -4513,15 +4508,15 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     obj64->unk4 = entry->unkC;
     obj64->unk5 = entry->unkD;
     obj64->unkD = entry->unk10;
-    obj64->unk8 = 0;
+    obj64->soundMask = NULL;
     if (ALBankFile_80115D14_GetSoundDecayTime(obj64->soundId)) {
         func_8000974C(obj64->soundId, entry->common.x, entry->common.y, entry->common.z,
             9, obj64->unk5, obj64->unk4, obj64->unk2, obj64->unkC,
-            obj64->unk6, obj64->unkD, (s32 *) &obj64->unk8);
+            obj64->unk6, obj64->unkD, (s32 *) &obj64->soundMask);
     } else {
         func_8000974C(obj64->soundId, entry->common.x, entry->common.y, entry->common.z,
             10, obj64->unk5, obj64->unk4, obj64->unk2, obj64->unkC,
-            obj64->unk6, obj64->unkD, (s32 *) &obj64->unk8);
+            obj64->unk6, obj64->unkD, (s32 *) &obj64->soundMask);
     }
     gParticlePtrList_addObject(obj);
 }
@@ -4532,7 +4527,7 @@ void obj_init_audioline(Object *obj, LevelObjectEntry_AudioLine *entry) {
 
     obj64 = &obj->unk64->audio_line;
     obj64->unk0 = entry->unk8;
-    obj64->unk2 = entry->unkA;
+    obj64->soundID = entry->soundID;
     obj64->unkC = entry->unkC;
     obj64->unkD = entry->unkD;
     obj64->unk_union.unk8_word = 0;
@@ -4542,7 +4537,7 @@ void obj_init_audioline(Object *obj, LevelObjectEntry_AudioLine *entry) {
     obj64->unkE = entry->unk9;
     obj64->unkF = entry->unk10;
     obj64->unk12 = entry->unk13;
-    func_800098A4(obj64->unk0, obj64->unk2, entry->common.x, entry->common.y, entry->common.z,
+    func_800098A4(obj64->unk0, obj64->soundID, entry->common.x, entry->common.y, entry->common.z,
                   obj64->unkF, obj64->unkE, obj64->unk10, obj64->unk12, obj64->unk4, obj64->unk11,
                   obj64->unkC, obj64->unkD);
     gParticlePtrList_addObject(obj);
@@ -4730,21 +4725,21 @@ void obj_loop_weather(Object *obj, UNUSED s32 updateRate) {
     objects = get_racer_objects(&numberOfObjects);
     cur = -1;
     if (numberOfObjects != 0) {
-    last = numberOfObjects - 1;
-    do {
-      curObj = objects[cur + 1];
-      curObj64 = (Object_Racer *) curObj->unk64;
-    } while (++cur < last && currViewport != curObj64->playerIndex);
-    
-    diffX = obj->segment.trans.x_position - curObj->segment.trans.x_position;
-    diffZ = obj->segment.trans.z_position - curObj->segment.trans.z_position;
-    dist = obj->properties.distance.radius;
-    entry = (LevelObjectEntry_Weather *)obj->segment.level_entry;
-    if ((diffX * diffX) + (diffZ * diffZ) <= dist){
-        if (((!obj->segment.level_entry) && (!obj->segment.level_entry)) && (!obj->segment.level_entry)){}  // Fakematch
-        changeWeather(entry->unkA * 256, entry->unkC * 256, entry->unkE * 256, entry->unk10 * 257, entry->unk11 * 257, entry->unk12);
+        last = numberOfObjects - 1;
+        do {
+            curObj = objects[cur + 1];
+            curObj64 = (Object_Racer *) curObj->unk64;
+        } while (++cur < last && currViewport != curObj64->playerIndex);
+        
+        diffX = obj->segment.trans.x_position - curObj->segment.trans.x_position;
+        diffZ = obj->segment.trans.z_position - curObj->segment.trans.z_position;
+        dist = obj->properties.distance.radius;
+        entry = (LevelObjectEntry_Weather *)obj->segment.level_entry;
+        if ((diffX * diffX) + (diffZ * diffZ) <= dist){
+            if (((!obj->segment.level_entry) && (!obj->segment.level_entry)) && (!obj->segment.level_entry)){}  // Fakematch
+            changeWeather(entry->unkA * 256, entry->unkC * 256, entry->unkE * 256, entry->unk10 * 257, entry->unk11 * 257, entry->unk12);
+        }
     }
-  }
 }
 
 void obj_init_lensflare(Object *obj, UNUSED LevelObjectEntry_LensFlare *entry) {

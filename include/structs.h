@@ -833,7 +833,7 @@ typedef struct Object_Animation {
 } Object_Animation;
 
 typedef struct Object_WeaponBalloon {
-  /* 0x0 */ f32 unk0;
+  /* 0x0 */ f32 radius;
   /* 0x4 */ s16 unk4;
   /* 0x6 */ s8 unk6[0x2];
 } Object_WeaponBalloon;
@@ -849,7 +849,7 @@ typedef struct Object_Weapon {
   /* 0x18 */ u8 weaponID;
   /* 0x19 */ s8 checkpoint;
   /* 0x19 */ s16 unk1A;
-  /* 0x19 */ s32 unk1C;
+  /* 0x19 */ s32 soundMask;
 } Object_Weapon;
 
 typedef struct Object_Butterfly {
@@ -954,7 +954,7 @@ typedef struct Object_WorldKey {
 typedef struct Object_AudioLine {
   /* 0x00 */ u8 unk0;
   /* 0x01 */ u8 pad1;
-  /* 0x02 */ u16 unk2;
+  /* 0x02 */ u16 soundID;
   /* 0x04 */ u16 unk4;
   /* 0x06 */ u16 unk6;
   /* 0x08 */ union {
@@ -1279,7 +1279,7 @@ typedef struct Object_Audio {
   /* 0x05 */ u8 unk5;
   /* 0x06 */ u8 unk6;
   /* 0x07 */ u8 unk7;
-  /* 0x08 */ s32 unk8;
+  /* 0x08 */ s32 soundMask;
   /* 0x0C */ u8 unkC;
   /* 0x0D */ u8 unkD;
 } Object_Audio;
