@@ -6706,6 +6706,7 @@ char gPauseConfigOpt[][32] = {
     {"Anti Aliasing"},
     {"Frame Cap"},
     {"Dedither"},
+    {"MP Cutbacks"},
 };
 char gPauseOptionStack[sizeof(gPauseConfigOpt) / 32][40];
 char gPauseOptStrings[][8] = {
@@ -6862,10 +6863,10 @@ void func_80093D40(UNUSED s32 updateRate) {
                     puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[2 + gConfig.screenMode]);
                     break;
                 case 1:
-                    puppyprintf(gPauseOptionStack[i], "%s: %d", gPauseConfigOpt[i], gConfig.screenPos[0]);
+                    puppyprintf(gPauseOptionStack[i], "%s: %d", gPauseConfigOpt[i], gConfig.screenPosX);
                     break;
                 case 2:
-                    puppyprintf(gPauseOptionStack[i], "%s: %d", gPauseConfigOpt[i], gConfig.screenPos[1]);
+                    puppyprintf(gPauseOptionStack[i], "%s: %d", gPauseConfigOpt[i], gConfig.screenPosY);
                     break;
                 case 3:
                     puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gConfig.antiAliasing ^ 1]);
@@ -6875,6 +6876,9 @@ void func_80093D40(UNUSED s32 updateRate) {
                     break;
                 case 5:
                     puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gConfig.dedither]);
+                    break;
+                case 6:
+                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gConfig.noCutbacks]);
                     break;
                 }
                 render_dialogue_text(7, POS_CENTRED, yOffset + 8 + y, gPauseOptionStack[i], 1, 12);
@@ -6958,13 +6962,13 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                         }
                         break;
                     case 2:
-                        gConfig.screenPos[0] += moveDir;
-                        CLAMP(gConfig.screenPos[0], -8, 8);
+                        gConfig.screenPosX += moveDir;
+                        CLAMP(gConfig.screenPosX, -8, 8);
                         change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
                         break;
                     case 3:
-                        gConfig.screenPos[1] += moveDir;
-                        CLAMP(gConfig.screenPos[1], -8, 8);
+                        gConfig.screenPosY += moveDir;
+                        CLAMP(gConfig.screenPosY, -8, 8);
                         change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
                         break;
                     case 4:
@@ -6976,6 +6980,9 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                     case 6:
                         gConfig.dedither ^= 1;
                         set_dither_filter();
+                        break;
+                    case 7:
+                        gConfig.noCutbacks ^= 1;
                         break;
                     }
                 }

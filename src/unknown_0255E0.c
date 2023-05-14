@@ -356,27 +356,23 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         set_active_camera(gSceneCurrentPlayerID);
         func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
         func_8002A31C();
-#ifndef DISABLE_MULTIPLAYER_CUTBACKS
-        if (numViewports < VIEWPORTS_COUNT_3_PLAYERS) {
-#endif
+        if (numViewports < VIEWPORTS_COUNT_3_PLAYERS || gSkipCutbacks) {
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             if (gCurrentLevelHeader2->skyDome == -1) {
                 func_80028050();
             } else {
                 render_skydome();
             }
-#ifndef DISABLE_MULTIPLAYER_CUTBACKS
         } else {
             func_8006807C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             draw_gradient_background();
             func_80067D3C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
         }
-#endif
         gDPPipeSync(gSceneCurrDisplayList++);
         initialise_player_viewport_vars(updateRate);
         set_weather_limits(-1, -512);
-        if (gCurrentLevelHeader2->weatherEnable > 0 && numViewports < VIEWPORTS_COUNT_3_PLAYERS) {
+        if ((gCurrentLevelHeader2->weatherEnable > 0 && numViewports < VIEWPORTS_COUNT_3_PLAYERS) || gSkipCutbacks) {
             process_weather(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList, tempUpdateRate);
         }
         func_800AD030(get_active_camera_segment());
@@ -1429,7 +1425,7 @@ s32 check_if_in_draw_range(Object *obj) {
         alpha = 255;
         viewDistance = obj->segment.header->drawDistance * obj->segment.header->drawDistance;
         if (obj->segment.header->drawDistance) {
-            if (gScenePlayerViewports == VIEWPORTS_COUNT_4_PLAYERS) {
+            if (gScenePlayerViewports == VIEWPORTS_COUNT_4_PLAYERS && gSkipCutbacks == FALSE) {
                 viewDistance *= 0.5f;
             }
 

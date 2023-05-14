@@ -13,14 +13,17 @@ extern s32 sLogicUpdateRate;
 extern u8 gOverrideAA;
 extern u8 gHideHUD;
 extern s32 gMapId;
+extern u8 gSkipCutbacks;
 
 struct ConfigOptions {
-    u8 antiAliasing;
-    u8 screenMode;
-    u8 regionMode;
-    u8 frameCap;
-    u8 dedither;
-    u8 screenPos[2];
+    u8 screenPosX : 4;
+    u8 screenPosY : 4;
+    u8 antiAliasing : 2;
+    u8 screenMode : 2;
+    u8 regionMode : 2;
+    u8 frameCap : 1;
+    u8 dedither : 1;
+    u8 noCutbacks : 1;
 };
 
 extern struct ConfigOptions gConfig;

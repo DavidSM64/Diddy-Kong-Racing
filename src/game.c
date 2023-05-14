@@ -313,6 +313,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     Settings *settings;
     s32 offset;
 
+    gSkipCutbacks = gConfig.noCutbacks;
     func_80072708();
     if (cutsceneId == -1) {
         cutsceneId = CUTSCENE_NONE;
@@ -795,9 +796,11 @@ void thread3_main(UNUSED void *unused) {
 
 struct ConfigOptions gConfig;
 u8 gHideHUD = FALSE;
+u8 gSkipCutbacks = FALSE;
 
 void init_config(void) {
     bzero(&gConfig, sizeof(gConfig));
+    gSkipCutbacks = gConfig.noCutbacks;
 }
 
 /**
