@@ -349,13 +349,12 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
                     gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
                 }
             }
-			/*if (copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2)) {
-                gDPSetCycleType((*dList)++, G_CYC_1CYCLE);
-                gDPSetPrimColor((*dList)++, 0, 0, sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 255);
-                gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
-                gDPSetRenderMode((*dList)++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+			if (copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2)) {
+                gDPSetCycleType((*dList)++, G_CYC_FILL);
+                gDPSetFillColor((*dList)++, (GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1) << 16) | 
+                                             GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1));
                 gDPFillRectangle((*dList)++, x1, y1, x2, y2);
-            }*/
+            }
         } else {
             if (D_800DE4C4) {
                 func_80078190(dList);
@@ -363,7 +362,8 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
                 gBackgroundDrawFunc.function((Gfx *) dList, mtx);
             } else {
                 if (skip == FALSE) {
-                    gDPSetFillColor((*dList)++, (GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1) << 16) | GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1));
+                    gDPSetFillColor((*dList)++, (GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1) << 16) | 
+                                                 GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1));
                     gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
                 }
             }
