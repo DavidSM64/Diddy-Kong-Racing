@@ -59,7 +59,7 @@ s32 D_800E2CC8 = 0;
 unk800B1CB8 *D_800E2CCC = NULL;
 s32 D_800E2CD0 = 0;
 s32 D_800E2CD4 = 0;
-Particle2 *D_800E2CD8 = NULL;
+Particle *D_800E2CD8 = NULL;
 s32 D_800E2CDC = 0;
 s32 *D_800E2CE0 = NULL;
 s32 *D_800E2CE4 = NULL;
@@ -393,7 +393,7 @@ void func_800AF024(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2) {
     *arg1 = temp;
 }
 
-void func_800AF0A4(Particle2 *particle) {
+void func_800AF0A4(Particle *particle) {
     Object_44 *temp_v0;
     Object_44_C *temp_v1;
     s16 temp_t1, temp_t8_0;
@@ -412,7 +412,7 @@ void func_800AF0A4(Particle2 *particle) {
     temp_v1->unkE = temp_t1;
 }
 
-void func_800AF0F0(Particle2 *particle) {
+void func_800AF0F0(Particle *particle) {
     Object_44 *temp_v0;
     Object_44_C *temp_v1;
     s16 temp_t8, temp_t1;
@@ -438,7 +438,7 @@ void func_800AF134(Particle *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 a
         arg1 = 0;
     }
     temp = gParticleBehavioursAssetTable[arg1];
-    if (arg0->unk8 != arg2 || temp != arg0->behaviour) {
+    if (arg0->data.unk8 != arg2 || temp != arg0->data.behaviour) {
         func_800B2260(arg0);
         func_800AF29C(arg0, arg1, arg2, arg3, arg4, arg5);
     }
@@ -459,43 +459,43 @@ void func_800AF29C(Particle *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 a
     s32 flags;
 
     temp_v1 = gParticleBehavioursAssetTable[arg1];
-    arg0->unk8 = arg2;
-    arg0->unk18 = arg3;
-    arg0->behaviour = temp_v1;
-    arg0->unk1A = arg4;
-    arg0->unk1C = arg5;
-    arg0->unk1E = 0;
+    arg0->data.unk8 = arg2;
+    arg0->data.unk18 = arg3;
+    arg0->data.behaviour = temp_v1;
+    arg0->data.unk1A = arg4;
+    arg0->data.unk1C = arg5;
+    arg0->data.unk1E = 0;
 
     flags = temp_v1->flags;
 
     if (flags & 0x4000) {
-        arg0->flags = 0x4000;
-        arg0->unk6 = 0;
-        arg0->pos.x = 0.0f;
-        arg0->pos.y = 0.0f;
-        arg0->pos.z = 0.0f;
+        arg0->data.flags = 0x4000;
+        arg0->data.unk6 = 0;
+        arg0->data.pos.x = 0.0f;
+        arg0->data.pos.y = 0.0f;
+        arg0->data.pos.z = 0.0f;
     } else if (flags & 0x400) {
-        arg0->unk6 = 0;
-        arg0->flags = 0x400;
+        arg0->data.unk6 = 0;
+        arg0->data.flags = 0x400;
         temp_v0_2 = gParticlesAssetTable[arg2]->unk8;
         if (temp_v0_2 < 0x100) {
-            arg0->unk7 = temp_v0_2;
+            arg0->data.unk7 = temp_v0_2;
         } else {
-            arg0->unk7 = 0xFF;
+            arg0->data.unk7 = 0xFF;
         }
-        arg0->unkC_400.unkC = (s32 *) allocate_from_main_pool_safe(arg0->unk7 * 4, COLOUR_TAG_SEMITRANS_GREY);
-        arg0->unkC_400.unk10 = temp_v1->unk14;
-        arg0->unkC_400.unk12 = temp_v1->unk16;
-        arg0->unkC_400.unk14 = temp_v1->unk22;
-        arg0->unkC_400.unk16 = temp_v1->unk24;
+        arg0->data.unkC_400.unkC = (s32 *) allocate_from_main_pool_safe(arg0->data.unk7 * 4, COLOUR_TAG_SEMITRANS_GREY);
+        arg0->data.unkC_400.unk10 = temp_v1->unk14;
+        arg0->data.unkC_400.unk12 = temp_v1->unk16;
+        arg0->data.unkC_400.unk14 = temp_v1->unk22;
+        arg0->data.unkC_400.unk16 = temp_v1->unk24;
     } else {
-        arg0->flags = 0;
-        arg0->unkC.unkC = temp_v1->unk14;
-        arg0->unkC.unkE = temp_v1->unk16;
-        arg0->unkC.unk10 = temp_v1->unk18;
-        arg0->unkC.unk12 = temp_v1->unk22;
-        arg0->unkC.unk14 = temp_v1->unk24;
-        arg0->unkC.unk16 = temp_v1->unk26;
+        arg0->data.flags = 0;
+        arg0->data.unkC.unkC = temp_v1->unk14;
+        arg0->data.unkC.unkE = temp_v1->unk16;
+        arg0->data.unkC.unk10 = temp_v1->unk18;
+        arg0->data.unkC.unk12 = temp_v1->unk22;
+        arg0->data.unkC.unk14 = temp_v1->unk24;
+        arg0->data.unkC.unk16 = temp_v1->unk26;
     }
 }
 
@@ -526,48 +526,48 @@ void func_800AF52C(Object *obj, s32 arg1) {
     s32 i;
     Particle *temp_v0;
     ParticleBehavior *temp_v1;
-    Particle2 *temp;
+    Particle *temp;
 
     temp_v0 = (Particle *) &obj->unk6C[arg1];
-    temp_v1 = temp_v0->behaviour;
-    temp_v0->unkA = 0;
-    if (temp_v0->flags & 0x4000) {
+    temp_v1 = temp_v0->data.behaviour;
+    temp_v0->data.unkA = 0;
+    if (temp_v0->data.flags & 0x4000) {
         ((ObjectSegment *) temp_v0)->trans.x_position = obj->segment.trans.x_position;
         ((ObjectSegment *) temp_v0)->trans.y_position = obj->segment.trans.y_position;
         ((ObjectSegment *) temp_v0)->trans.z_position = obj->segment.trans.z_position;
-    } else if (temp_v0->flags & 0x400) {
-        temp_v0->unkA = gParticlesAssetTable[temp_v0->unk8]->unk17 << 8;
+    } else if (temp_v0->data.flags & 0x400) {
+        temp_v0->data.unkA = gParticlesAssetTable[temp_v0->data.unk8]->unk17 << 8;
 
-        if (temp_v0->unk6 > 0) { // Useless if statement, since the loop already does this.
-            for (i = 0; i < temp_v0->unk6; i++){
-                temp = temp_v0->unkC_60[i];
+        if (temp_v0->data.unk6 > 0) { // Useless if statement, since the loop already does this.
+            for (i = 0; i < temp_v0->data.unk6; i++){
+                temp = temp_v0->data.unkC_60[i];
                 temp->segment.particle.unk3A = 0;
             }
         }
         if (temp_v1->flags & 1) {
-            temp_v0->unkC.unk10 = temp_v1->unk14;
-            temp_v0->unkC.unk12 = temp_v1->unk16;
+            temp_v0->data.unkC.unk10 = temp_v1->unk14;
+            temp_v0->data.unkC.unk12 = temp_v1->unk16;
         }
         if (temp_v1->flags & 4) {
-            temp_v0->unkC.unk14 = temp_v1->unk22;
-            temp_v0->unkC.unk16 = temp_v1->unk24;
+            temp_v0->data.unkC.unk14 = temp_v1->unk22;
+            temp_v0->data.unkC.unk16 = temp_v1->unk24;
         }
     } else {
         if (temp_v1->flags & 1) {
-            temp_v0->unk6 = 0;
-            temp_v0->unkC.unkC = temp_v1->unk14;
-            temp_v0->unkC.unkE = temp_v1->unk16;
-            temp_v0->unkC.unk10 = temp_v1->unk18;
+            temp_v0->data.unk6 = 0;
+            temp_v0->data.unkC.unkC = temp_v1->unk14;
+            temp_v0->data.unkC.unkE = temp_v1->unk16;
+            temp_v0->data.unkC.unk10 = temp_v1->unk18;
         }
         if (temp_v1->flags & 4) {
-            temp_v0->unk7 = 0;
-            temp_v0->unkC.unk12 = temp_v1->unk22;
-            temp_v0->unkC.unk14 = temp_v1->unk24;
-            temp_v0->unkC.unk16 = temp_v1->unk26;
+            temp_v0->data.unk7 = 0;
+            temp_v0->data.unkC.unk12 = temp_v1->unk22;
+            temp_v0->data.unkC.unk14 = temp_v1->unk24;
+            temp_v0->data.unkC.unk16 = temp_v1->unk26;
         }
     }
-    temp_v0->flags &= 0xFDFF;
-    temp_v0->flags |= 0xA000;
+    temp_v0->data.flags &= 0xFDFF;
+    temp_v0->data.flags |= 0xA000;
     obj->segment.unk1A++;
 }
 
@@ -583,53 +583,53 @@ void func_800AF6E4(Object *obj, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/particles/func_800AF714.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800AFC3C.s")
 
-void func_800AFE5C(Particle2 *arg0, Particle *arg1) {
-    Particle2 *temp_s0;
+void func_800AFE5C(Particle *arg0, Particle *arg1) {
+    Particle *temp_s0;
     Object *tempObj;
-    Particle2 *tempObj2;
+    Particle *tempObj2;
     s32 i;
     ParticleBehavior *temp_s4;
 
-    temp_s4 = arg1->behaviour;
-    if (arg1->flags & 0x4000) {
+    temp_s4 = arg1->data.behaviour;
+    if (arg1->data.flags & 0x4000) {
         tempObj = func_800B0BAC();
         if (tempObj != NULL) {
             func_8000E9D0(tempObj);
         }
-        arg1->flags &= 0xDFFF;
-        if (arg1->unk6 + 64 > 255) {
-            arg1->unk6 = 255;
+        arg1->data.flags &= 0xDFFF;
+        if (arg1->data.unk6 + 64 > 255) {
+            arg1->data.unk6 = 255;
         } else {
-            arg1->unk6 += 64;
+            arg1->data.unk6 += 64;
         }
-    } else if (arg1->flags & 0x400) {
-        if (arg1->unk6 < arg1->unk7) {
+    } else if (arg1->data.flags & 0x400) {
+        if (arg1->data.unk6 < arg1->data.unk7) {
             temp_s0 = func_800B0698(arg0, arg1);
-            arg1->flags &= 0xDFFF;
+            arg1->data.flags &= 0xDFFF;
             if (temp_s0 != NULL) {
                 func_8000E9D0((Object *) temp_s0);
-                temp_s0->unk74 = arg1->unk6;
+                temp_s0->unk74 = arg1->data.unk6;
                 temp_s0->segment.unk40 |= 0x2000;
-                arg1->unkC_60[arg1->unk6] = temp_s0;
-                arg1->unk6++;
+                arg1->data.unkC_60[arg1->data.unk6] = temp_s0;
+                arg1->data.unk6++;
             }
         }
     } else {
-        while (arg1->unkA >= temp_s4->unk40) {
-            arg1->unkA -= temp_s4->unk40;
+        while (arg1->data.unkA >= temp_s4->unk40) {
+            arg1->data.unkA -= temp_s4->unk40;
             for (i = 0; i < temp_s4->unk42; i++) {
                 tempObj2 = func_800B1130(arg0, arg1);
                 if (tempObj2 != NULL) {
                     func_8000E9D0((Object *) tempObj2);
-                    func_800B22FC(tempObj2, arg1->unkA);
+                    func_800B22FC(tempObj2, arg1->data.unkA);
                 }
-                arg1->flags &= ~0x2000;
+                arg1->data.flags &= ~0x2000;
             }
         }
     }
 }
 
-void func_800B0010(Particle2 *arg0, Particle2 *arg1, Particle *arg2, ParticleBehavior *arg3) {
+void func_800B0010(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehavior *arg3) {
     s32 sp3C;
     Vec3f sp30;
     Vec3s sp28;
@@ -676,17 +676,17 @@ void func_800B0010(Particle2 *arg0, Particle2 *arg1, Particle *arg2, ParticleBeh
             sp30.z += (f32) get_random_number_from_range(-arg3->unk70, arg3->unk70) * 0.00001525878906;
         }
         if (sp3C & 0x60) {
-            sp28.y_rotation = arg2->angle.unk12;
+            sp28.y_rotation = arg2->data.angle.unk12;
             if (sp3C & 0x20) {
                 sp28.y_rotation += get_random_number_from_range(-arg3->unk6A, arg3->unk6A);
             }
-            sp28.x_rotation = arg2->angle.unk14;
+            sp28.x_rotation = arg2->data.angle.unk14;
             if (sp3C & 0x40) {
                 sp28.x_rotation += get_random_number_from_range((s32) -arg3->unk6C, (s32) arg3->unk6C);
             }
             f32_vec3_apply_object_rotation3((ObjectTransform* ) &sp28, (f32*) &sp30);
         } else {
-            f32_vec3_apply_object_rotation3((ObjectTransform* ) &arg2->angle.unk12, (f32*) &sp30);
+            f32_vec3_apply_object_rotation3((ObjectTransform* ) &arg2->data.angle.unk12, (f32*) &sp30);
         }
         f32_vec3_apply_object_rotation((ObjectTransform* ) arg0->segment.unk3C, (f32*) &sp30);
         arg0->segment.x_velocity += sp30.x;
@@ -695,14 +695,14 @@ void func_800B0010(Particle2 *arg0, Particle2 *arg1, Particle *arg2, ParticleBeh
     }
 }
 
-void func_800B03C0(Particle2 *arg0, Particle2 *arg1, Particle *arg2, ParticleBehavior *behaviour) {
+void func_800B03C0(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehavior *behaviour) {
     s32 flags;
     Vec3f sp30;
     Vec3s sp28;
 
-    arg0->unk4C = arg2->unk18;
-    arg0->unk50 = arg2->unk1A;
-    arg0->unk54 = arg2->unk1C;
+    arg0->unk4C = arg2->data.unk18;
+    arg0->unk50 = arg2->data.unk1A;
+    arg0->unk54 = arg2->data.unk1C;
     arg0->unk58 = behaviour->unk58;
     if (behaviour->unk5C & 0x80000) {
         arg0->unk58 += (f32) get_random_number_from_range(-behaviour->unk94, behaviour->unk94) * 0.00001525878906; // 0.00001525878906 ~= 1.0/65536.0
@@ -716,17 +716,17 @@ void func_800B03C0(Particle2 *arg0, Particle2 *arg1, Particle *arg2, ParticleBeh
             sp30.z += (f32) get_random_number_from_range(-behaviour->unk60, behaviour->unk60) * 0.00001525878906;
         }
         if (flags & (4 | 2)) {
-            sp28.y_rotation = arg2->angle.y_rotation;
+            sp28.y_rotation = arg2->data.angle.y_rotation;
             if (flags & 2) {
                 sp28.y_rotation += get_random_number_from_range(-behaviour->unk64, behaviour->unk64);
             }
-            sp28.x_rotation = arg2->angle.x_rotation;
+            sp28.x_rotation = arg2->data.angle.x_rotation;
             if (flags & 4) {
                 sp28.x_rotation += get_random_number_from_range(-behaviour->unk66, behaviour->unk66);
             }
             f32_vec3_apply_object_rotation3((ObjectTransform* ) &sp28, (f32 *) &sp30);
         } else {
-            f32_vec3_apply_object_rotation((ObjectTransform* ) &arg2->angle.y_rotation, (f32 *) &sp30);
+            f32_vec3_apply_object_rotation((ObjectTransform* ) &arg2->data.angle.y_rotation, (f32 *) &sp30);
         }
         arg0->unk4C += sp30.x;
         arg0->unk50 += sp30.y;
@@ -746,20 +746,20 @@ void func_800B03C0(Particle2 *arg0, Particle2 *arg1, Particle *arg2, ParticleBeh
     arg0->segment.trans.z_position += arg1->segment.trans.z_position;
 }
 
-Particle2 *func_800B0698(Particle2 *arg0, Particle *arg1) {
+Particle *func_800B0698(Particle *arg0, Particle *arg1) {
     unk800E2CF0 *sp2C;
-    Particle2 *var_v0;
+    Particle *var_v0;
     TextureHeader **sp24;
     ParticleBehavior *sp20;
     f32 temp_f0;
     f32 temp_f14;
     f32 temp_f2;
 
-    sp2C = gParticlesAssetTable[arg1->unk8];
+    sp2C = gParticlesAssetTable[arg1->data.unk8];
     if (sp2C->unk0 != 4) {
         return NULL;
     }
-    sp20 = arg1->behaviour;
+    sp20 = arg1->data.behaviour;
     var_v0 = func_800B1CB8(4);
     if (var_v0 == NULL) {
         return var_v0;
@@ -785,8 +785,8 @@ Particle2 *func_800B0698(Particle2 *arg0, Particle *arg1) {
         var_v0->unk4A = 0xFF;
     }
     var_v0->unk60 = sp2C->unkE;
-    if (arg1->flags & 0x100) {
-        var_v0->unk5C = arg1->unkA;
+    if (arg1->data.flags & 0x100) {
+        var_v0->unk5C = arg1->data.unkA;
     } else {
         var_v0->unk5C = sp2C->unkC << 8;
     }
@@ -824,12 +824,12 @@ Particle2 *func_800B0698(Particle2 *arg0, Particle *arg1) {
         var_v0->unk58 = sqrtf((temp_f0 * temp_f0) + (temp_f2 * temp_f2) + (temp_f14 * temp_f14));
     }
     if (sp20->flags & 2) {
-        arg1->unkC.unk10 += sp20->unk1C;
-        arg1->unkC.unk12 += sp20->unk1E;
+        arg1->data.unkC.unk10 += sp20->unk1C;
+        arg1->data.unkC.unk12 += sp20->unk1E;
     }
     if (sp20->flags & 8) {
-        arg1->unkC.unk14 += sp20->unk2A;
-        arg1->unkC.unk16 += sp20->unk2C;
+        arg1->data.unkC.unk14 += sp20->unk2A;
+        arg1->data.unkC.unk16 += sp20->unk2C;
     }
     var_v0->segment.unk1A = sp2C->unk6;
     var_v0->segment.unk18 = 0;
@@ -863,21 +863,21 @@ Particle2 *func_800B0698(Particle2 *arg0, Particle *arg1) {
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800B0BAC.s")
 
-Particle2 *func_800B1130(Particle2 *arg0, Particle *arg1) {
+Particle *func_800B1130(Particle *arg0, Particle *arg1) {
     s32 sp3C;
     unk800E2CF0 *sp38;
-    Particle2* var_v0;
+    Particle* var_v0;
     TextureHeader **sp30;
     ParticleBehavior *partBeh;
     unk800B1130_SP28 *sp28;
     f32 sp24;
     s8 sp23;
     
-    sp38 = gParticlesAssetTable[arg1->unk8];
+    sp38 = gParticlesAssetTable[arg1->data.unk8];
     if (sp38->unk0 == 3 || sp38->unk0 == 4) {
         return NULL;
     }
-    partBeh = arg1->behaviour;
+    partBeh = arg1->data.behaviour;
     sp28 = (unk800B1130_SP28 *) partBeh->unk9C;
     
     var_v0 = func_800B1CB8(sp38->unk0);
@@ -914,14 +914,14 @@ Particle2 *func_800B1130(Particle2 *arg0, Particle *arg1) {
     if (D_800E2D00[0].word != 0) {
         var_v0->unk6C.word = D_800E2D00[0].word;
     } else if ((s32) sp28 != -1) {
-        arg1->unk1E++;
-        if (arg1->unk1E >= sp28->unk0) {
-            arg1->unk1E = 0;
+        arg1->data.unk1E++;
+        if (arg1->data.unk1E >= sp28->unk0) {
+            arg1->data.unk1E = 0;
         }
-        var_v0->unk6C.r = sp28[arg1->unk1E + 2].r;
-        var_v0->unk6C.g = sp28[arg1->unk1E + 2].g;
-        var_v0->unk6C.b = sp28[arg1->unk1E + 2].b;
-        var_v0->unk6C.a = sp28[arg1->unk1E + 2].a;
+        var_v0->unk6C.r = sp28[arg1->data.unk1E + 2].r;
+        var_v0->unk6C.g = sp28[arg1->data.unk1E + 2].g;
+        var_v0->unk6C.b = sp28[arg1->data.unk1E + 2].b;
+        var_v0->unk6C.a = sp28[arg1->data.unk1E + 2].a;
     } else {
         var_v0->unk6C.r = sp38->unk14;
         var_v0->unk6C.g = sp38->unk15;
@@ -1054,27 +1054,27 @@ Particle2 *func_800B1130(Particle2 *arg0, Particle *arg1) {
             var_v0->unk66 += get_random_number_from_range(-partBeh->unk8A, partBeh->unk8A);
         }
     }
-    func_800B0010(var_v0, (Particle2 *) arg0, arg1, partBeh);
+    func_800B0010(var_v0, arg0, arg1, partBeh);
     var_v0->unk68 = D_800E2E2C[(var_v0->segment.unk40 >> 4) & 7];
     if (var_v0->segment.particle.unk39 == 5) {
         var_v0->unk58 = sqrtf((var_v0->segment.x_velocity * var_v0->segment.x_velocity) + (var_v0->segment.y_velocity * var_v0->segment.y_velocity) + (var_v0->segment.z_velocity * var_v0->segment.z_velocity));
     }
     if (partBeh->flags & 2) {
-        arg1->unk6++;
-        if (arg1->unk6 >= partBeh->unk1A) {
-            arg1->unkC.unkC += partBeh->unk1C;
-            arg1->unkC.unkE += partBeh->unk1E;
-            arg1->unkC.unk10 += partBeh->unk18;
-            arg1->unk6 -= partBeh->unk1A;
+        arg1->data.unk6++;
+        if (arg1->data.unk6 >= partBeh->unk1A) {
+            arg1->data.unkC.unkC += partBeh->unk1C;
+            arg1->data.unkC.unkE += partBeh->unk1E;
+            arg1->data.unkC.unk10 += partBeh->unk18;
+            arg1->data.unk6 -= partBeh->unk1A;
         }
     }
     if (partBeh->flags & 8) {
-        arg1->unk7++;
-        if (arg1->unk7 >= partBeh->unk28) {
-            arg1->unkC.unk12 += partBeh->unk2A;
-            arg1->unkC.unk14 += partBeh->unk2C;
-            arg1->unkC.unk16 += partBeh->unk2E;
-            arg1->unk7 -= partBeh->unk28;
+        arg1->data.unk7++;
+        if (arg1->data.unk7 >= partBeh->unk28) {
+            arg1->data.unkC.unk12 += partBeh->unk2A;
+            arg1->data.unkC.unk14 += partBeh->unk2C;
+            arg1->data.unkC.unk16 += partBeh->unk2E;
+            arg1->data.unk7 -= partBeh->unk28;
         }
     }
     if (var_v0->unk44 == 0) {
@@ -1086,9 +1086,9 @@ Particle2 *func_800B1130(Particle2 *arg0, Particle *arg1) {
 }
 
 
-Particle2 *func_800B1CB8(s32 arg0) {
+Particle *func_800B1CB8(s32 arg0) {
     s32 i;
-    Particle2 *var_v1;
+    Particle *var_v1;
 
     var_v1 = NULL;
     i = 0;
@@ -1106,7 +1106,7 @@ Particle2 *func_800B1CB8(s32 arg0) {
                     }
                     D_800E2CC0[i].unk2C = 0x80;
                     D_800E2CB8++;
-                    var_v1 = (Particle2 *) &D_800E2CC0[i];
+                    var_v1 = (Particle *) &D_800E2CC0[i];
                 }
             }
             break;
@@ -1122,7 +1122,7 @@ Particle2 *func_800B1CB8(s32 arg0) {
                     }
                     D_800E2CA8[i].unk2C = 1;
                     D_800E2CA0++;
-                    var_v1 = (Particle2 *) &D_800E2CA8[i];
+                    var_v1 = (Particle *) &D_800E2CA8[i];
                 }
             }
             break;
@@ -1138,7 +1138,7 @@ Particle2 *func_800B1CB8(s32 arg0) {
                     }
                     D_800E2CB4[i].unk2C = 2;
                     D_800E2CAC++;
-                    var_v1 = (Particle2 *) &D_800E2CB4[i];
+                    var_v1 = (Particle *) &D_800E2CB4[i];
                 }
             }
             break;
@@ -1154,7 +1154,7 @@ Particle2 *func_800B1CB8(s32 arg0) {
                     }
                     D_800E2CCC[i].unk2C = 3;
                     D_800E2CC4++;
-                    var_v1 = (Particle2 *) &D_800E2CCC[i];
+                    var_v1 = (Particle *) &D_800E2CCC[i];
                 }
             }
             break;
@@ -1170,7 +1170,7 @@ Particle2 *func_800B1CB8(s32 arg0) {
                     }
                     D_800E2CD8[i].segment.particle.unk2C = 4;
                     D_800E2CD0++;
-                    var_v1 = (Particle2 *) &D_800E2CD8[i];
+                    var_v1 = (Particle *) &D_800E2CD8[i];
                 }
             }
             break;
@@ -1181,7 +1181,7 @@ Particle2 *func_800B1CB8(s32 arg0) {
     return var_v1;
 }
 
-void func_800B2040(Particle2 *arg0) {
+void func_800B2040(Particle *arg0) {
     TextureHeader *tex;
 
     switch (arg0->segment.particle.unk2C) {
@@ -1241,25 +1241,25 @@ void func_800B2040(Particle2 *arg0) {
 
 
 void func_800B2260(Particle *arg0) {
-    Particle2 *temp_v0;
+    Particle *temp_v0;
     s32 i;
 
-    if (arg0->flags & 0x400) {
-        if (arg0->unkC_60 != NULL) {
-            for (i = 0; i < arg0->unk6; i++) {
-                temp_v0 = arg0->unkC_60[i];
+    if (arg0->data.flags & 0x400) {
+        if (arg0->data.unkC_60 != NULL) {
+            for (i = 0; i < arg0->data.unk6; i++) {
+                temp_v0 = arg0->data.unkC_60[i];
                 temp_v0->segment.particle.unk3A = 0;
                 temp_v0->unk70 = 0;
             }
-            free_from_memory_pool(arg0->unkC_60);
-            arg0->unkC_60 = NULL;
+            free_from_memory_pool(arg0->data.unkC_60);
+            arg0->data.unkC_60 = NULL;
         }
     }
 }
 
-void func_800B22FC(Particle2 *arg0, s32 arg1) {
+void func_800B22FC(Particle *arg0, s32 arg1) {
     LevelModelSegmentBoundingBox *temp_v0_2;
-    Particle2 *sp20;
+    Particle *sp20;
 
     D_80127C80 = arg1;
     sp20 = NULL;
@@ -1326,21 +1326,21 @@ void func_800B22FC(Particle2 *arg0, s32 arg1) {
 }
 
 
-void func_800B263C(Particle2 *arg0) {
+void func_800B263C(Particle *arg0) {
     Particle *new_var;
-    Particle2 *new_var2;
+    Particle *new_var2;
     Particle *temp_v0;
     s32 i;
 
-    temp_v0 = (Particle *) arg0->unk70;
+    temp_v0 = arg0->unk70;
     if (temp_v0 != NULL) {
         new_var = temp_v0;
-        if (temp_v0->unk6 != 0) {
-            if (arg0 == temp_v0->unkC_60[arg0->unk74]) {
-                temp_v0->unk6--;
-                for (i = arg0->unk74; i < temp_v0->unk6; i++) {
-                    new_var->unkC_60[i] = new_var->unkC_60[i + 1];
-                    new_var2 = new_var->unkC_60[i];
+        if (temp_v0->data.unk6 != 0) {
+            if (arg0 == temp_v0->data.unkC_60[arg0->unk74]) {
+                temp_v0->data.unk6--;
+                for (i = arg0->unk74; i < temp_v0->data.unk6; i++) {
+                    new_var->data.unkC_60[i] = new_var->data.unkC_60[i + 1];
+                    new_var2 = new_var->data.unkC_60[i];
                     new_var2->unk74 = i;
                 }
             }
@@ -1350,7 +1350,7 @@ void func_800B263C(Particle2 *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800B26E0.s")
 
-void func_800B2FBC(Particle2 *arg0) {
+void func_800B2FBC(Particle *arg0) {
     s32 someFlag;
     s32 keepGoing;
     s32 i;

@@ -1051,8 +1051,8 @@ void func_80010994(s32 updateRate) {
         for (i = D_8011AE60; i < tempVal; i++) {
             obj = gObjPtrList[i];
             if (obj->segment.trans.flags & 0x8000) {
-                //Why is this object being treated as a Particle2?
-                func_800B22FC((Particle2 *) obj, updateRate);
+                //Why is this object being treated as a Particle?
+                func_800B22FC((Particle *) obj, updateRate);
             }
         }
     }

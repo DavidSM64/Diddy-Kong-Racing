@@ -121,74 +121,6 @@ typedef struct ParticleAngleSomething {
     s16 unk16;
 } ParticleAngleSomething;
 
-typedef struct Particle {
-    union {
-  /* 0x0000 */ ParticleBehavior *behaviour;
-  /* 0x0000 */ s32 unk0;
-    };
-  /* 0x0004 */ s16 flags;
-  /* 0x0006 */ u8 unk6;
-  /* 0x0007 */ u8 unk7;
-  /* 0x0008 */ s16 unk8;
-  /* 0x000A */ s16 unkA;
-    union {
-  /* 0x000C */ Vec3f pos;
-  /* 0x000C */ ParticleAngleSomething angle;
-  /* 0x000C */ unk800AF29C_C unkC;
-  /* 0x000C */ struct Particle2 **unkC_60;
-  /* 0x000C */ unk800AF29C_C_400 unkC_400;
-    };
-  /* 0x0018 */ s16 unk18;
-  /* 0x0018 */ s16 unk1A;
-  /* 0x001C */ s16 unk1C;
-  /* 0x001E */ s16 unk1E;
-  /* 0x0020 */ s16 unk20;
-  /* 0x0022 */ s16 unk22;
-  /* 0x0024 */ s16 unk24;
-  /* 0x0026 */ s16 unk26;
-  /* 0x0028 */ s16 unk28;
-  /* 0x002A */ s16 unk2A;
-  /* 0x002C */ s16 unk2C;
-  /* 0x002E */ s16 unk2E;
-  /* 0x0030 */ f32 unk30;
-  /* 0x0034 */ f32 unk34;
-  union {
-      struct {
-          /* 0x0038 */ u8 unk38;
-          /* 0x0039 */ u8 unk39;
-          /* 0x003A */ s8 unk3A;
-          /* 0x003B */ s8 unk3B;
-      } byte;
-      struct {
-          /* 0x0038 */ s16 unk38;
-          /* 0x003A */ s16 unk3A;
-      } half;
-      f32 unk38_f32;
-  } unk38;
-  /* 0x003C */ f32 unk3C;
-  /* 0x0040 */ s32 unk40;
-
-  union {
-  /* 0x0044 */ unk800B0698_44 *unk44;
-  /* 0x0044 */ TextureHeader *unk44_0;
-  };
-  /* 0x0048 */ s16 behaviorId;
-  /* 0x004A */ s16 unk4A;
-  /* 0x004C */ f32 unk4C_f32;
-  /* 0x0050 */ f32 unk50_f32;
-  /* 0x0054 */ f32 unk54_f32;
-  /* 0x0058 */ f32 unk58_f32;
-  /* 0x005C */ s16 unk5C;
-  /* 0x005E */ s16 unk5E;
-  /* 0x0060 */ s16 unk60;
-  /* 0x0062 */ s16 unk62;
-  /* 0x0064 */ s16 unk64;
-  /* 0x0066 */ s16 unk66;
-  /* 0x0068 */ Object_68 **gfxData;
-  /* 0x006C */ s16 unk6C;
-  /* 0x006E */ s16 unk6E;
-} Particle;
-
 typedef struct ParticleThing {
     union {
   /* 0x0000 */ ParticleBehavior *behaviour;
@@ -203,16 +135,17 @@ typedef struct ParticleThing {
   /* 0x000C */ Vec3f pos;
   /* 0x000C */ ParticleAngleSomething angle;
   /* 0x000C */ unk800AF29C_C unkC;
-  /* 0x000C */ struct Particle2 **unkC_60;
+  /* 0x000C */ struct Particle **unkC_60;
   /* 0x000C */ unk800AF29C_C_400 unkC_400;
     };
+  /* 0x0018 */ s16 unk18;
+  /* 0x0018 */ s16 unk1A;
+  /* 0x001C */ s16 unk1C;
+  /* 0x001E */ s16 unk1E;
 } ParticleThing;
 
 typedef struct ParticleSegment {
-  union {
   /* 0x0000 */ ObjectTransform trans;
-  /* 0x0000 */ ParticleThing data;
-  };
   /* 0x0018 */ s16 unk18;
   /* 0x001A */ s16 unk1A;
   /* 0x001C */ f32 x_velocity;
@@ -228,8 +161,11 @@ typedef struct ParticleSegment {
   /* 0x0040 */ s32 unk40;
 } ParticleSegment;
 
-typedef struct Particle2 {
+typedef struct Particle {
+  union {
   /* 0x0000 */ ParticleSegment segment;
+  /* 0x0000 */ ParticleThing data;
+  };
   union {
   /* 0x0044 */ unk800B0698_44 *unk44;
   /* 0x0044 */ TextureHeader *unk44_0;
@@ -258,7 +194,7 @@ typedef struct Particle2 {
   /* 0x0075 */ u8 unk75;
   /* 0x0076 */ u8 unk76;
   /* 0x0077 */ u8 unk77;
-} Particle2;
+} Particle;
 
 void func_800AE270(void);
 void func_800AE2A0(void);
@@ -270,23 +206,23 @@ void func_800AEE14(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2);
 void func_800AEEB8(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2);
 void func_800AEF88(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2);
 void func_800AF024(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2);
-void func_800AF0A4(Particle2 *particle);
-void func_800AF0F0(Particle2 *particle);
+void func_800AF0A4(Particle *particle);
+void func_800AF0F0(Particle *particle);
 void partInitTrigger(Particle *arg0, s32 arg1, s32 arg2);
 void func_800AF29C(Particle *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5);
 void func_800AF6E4(Object *obj, s32 arg1);
 void func_800B2260(Particle *arg0);
-void func_800B263C(Particle2 *arg0);
+void func_800B263C(Particle *arg0);
 void init_particle_assets(void);
-void func_800B2FBC(Particle2 *arg0);
-void func_800B03C0(Particle2 *arg0, Particle2 *arg1, Particle *arg2, ParticleBehavior *arg3);
-void func_800B2040(Particle2 *arg0);
-void func_800B22FC(Particle2 *arg0, s32 arg1);
-void func_800B0010(Particle2 *arg0, Particle2 *arg1, Particle *arg2, ParticleBehavior *arg3);
-Particle2 *func_800B0698(Particle2 *arg0, Particle *arg1);
-Particle2 *func_800B1CB8(s32 arg0);
-void func_800AFE5C(Particle2 *arg0, Particle *arg1);
-Particle2 *func_800B1130(Particle2 *arg0, Particle *arg1);
+void func_800B2FBC(Particle *arg0);
+void func_800B03C0(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehavior *arg3);
+void func_800B2040(Particle *arg0);
+void func_800B22FC(Particle *arg0, s32 arg1);
+void func_800B0010(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehavior *arg3);
+Particle *func_800B0698(Particle *arg0, Particle *arg1);
+Particle *func_800B1CB8(s32 arg0);
+void func_800AFE5C(Particle *arg0, Particle *arg1);
+Particle *func_800B1130(Particle *arg0, Particle *arg1);
 void func_800AF52C(Object *obj, s32 arg1);
 void func_800AF134(Particle *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5);
 
@@ -296,11 +232,11 @@ void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); 
 void func_800AF714(Object*, s32); // Non matching
 Object *func_800B0BAC();
 void func_800B26E0();
-void func_800B3140(Particle2 *);
-void func_800B3240(Particle2 *);
-void func_800B3358(Particle2 *);
-void func_800B34B0(Particle2 *);
-void func_800B3564(Particle2 *);
+void func_800B3140(Particle *);
+void func_800B3240(Particle *);
+void func_800B3358(Particle *);
+void func_800B34B0(Particle *);
+void func_800B3564(Particle *);
 void func_800B3740(Object *, Gfx **, MatrixS **, Vertex **, s32); // Non Matching
 void func_800B4668(Object*, s32, s32, s32);
 void func_800B46BC(Object*, s32, s32, s32);
