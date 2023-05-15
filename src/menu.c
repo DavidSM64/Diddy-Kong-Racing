@@ -6843,9 +6843,9 @@ void func_80093D40(UNUSED s32 updateRate) {
                     continue;
                 }
                 // Just disabling widescreen related stuff for now.
-                /*if (i >= 0 && i <= 2) {
+                if (i >= 0 && i <= 2) {
                     continue;
-                }*/
+                }
                 if (gMenuSubOption == i + 1) {
                     set_current_text_colour(7, 255, 255, 255, alpha, 255);
                 } else {
@@ -7020,9 +7020,9 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                     if (gMenuSubOption == 1 && gExpansionPak == FALSE) {
                         gMenuSubOption++;
                     }
-                    /*if (gMenuSubOption < 4) {
+                    if (gMenuSubOption < 4) {
                         gMenuSubOption = 4;
-                    }*/
+                    }
                 }
                 if (temp != gMenuSubOption) {
                     play_sound_global(SOUND_MENU_PICK2, NULL);
