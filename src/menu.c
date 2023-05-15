@@ -6842,10 +6842,12 @@ void func_80093D40(UNUSED s32 updateRate) {
                 if ((i == 0 && gExpansionPak == FALSE) || (i > 0 && (IO_READ(DPC_PIPEBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) == 0)) {
                     continue;
                 }
+#if SCREEN_HEIGHT <= 240
                 // Just disabling widescreen related stuff for now.
                 if (i >= 0 && i <= 2) {
                     continue;
                 }
+#endif
                 if (gMenuSubOption == i + 1) {
                     set_current_text_colour(7, 255, 255, 255, alpha, 255);
                 } else {
@@ -7016,6 +7018,7 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                         }
                     }
                 }
+#if SCREEN_HEIGHT <= 240
                 if (gPauseSubmenu != 0) {
                     if (gMenuSubOption == 1 && gExpansionPak == FALSE) {
                         gMenuSubOption++;
@@ -7024,6 +7027,7 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                         gMenuSubOption = 4;
                     }
                 }
+#endif
                 if (temp != gMenuSubOption) {
                     play_sound_global(SOUND_MENU_PICK2, NULL);
                 }
