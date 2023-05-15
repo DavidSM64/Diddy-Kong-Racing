@@ -32,14 +32,14 @@ Gfx dDrawRenderSettingsVtxAlpha[][2] = {
     DRAW_TABLE_ENTRY(G_CC_MODULATEIA, DKR_CC_UNK1, DKR_OMH_2CYC_BILERP, DKR_RM_UNKNOWN1, G_RM_AA_ZB_XLU_SURF2)
 };
 
-Gfx dDrawRenderSettingsSprite[][2] = {
+Gfx dDrawRenderSettingsSpriteCld[][2] = {
     // Semitransparent Sprite (Preserve coverage)
     DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, G_RM_CLD_SURF, G_RM_CLD_SURF2),
     DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, G_RM_ZB_CLD_SURF, G_RM_ZB_CLD_SURF2)
 };
 
-// Should probably be merged with dDrawRenderSettingsSprite
-Gfx dDrawRenderSettingsSprite2[][2] = {
+// Should probably be merged with dDrawRenderSettingsSpriteCld
+Gfx dDrawRenderSettingsSpriteXlu[][2] = {
     // Semitransparent Sprite (Overwrite coverage)
     DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, G_RM_XLU_SURF, G_RM_XLU_SURF2),
     DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, DKR_RM_UNKNOWN2_1, DKR_RM_UNKNOWN2_2),
@@ -867,9 +867,9 @@ void func_8007BF34(Gfx **dlist, s32 arg1) {
         temp_t8 = temp_a1 & ~0x800;
         if (D_800DE7C4 == 0) {
             if ((gCurrentRenderFlags & 0x200) != 0) {
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsSprite[((temp_t8 >> 1) & 1) * 16]), numberOfGfxCommands(dDrawRenderSettingsSprite[0]));
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsSpriteCld[((temp_t8 >> 1) & 1) * 16]), numberOfGfxCommands(dDrawRenderSettingsSpriteCld[0]));
             } else {
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsSprite2[(temp_t8 - 16) * 16]), numberOfGfxCommands(dDrawRenderSettingsSprite2[0]));
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsSpriteXlu[(temp_t8 - 16) * 16]), numberOfGfxCommands(dDrawRenderSettingsSpriteXlu[0]));
             }
         } else {
             gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsCommon[temp_t8 * 16]), numberOfGfxCommands(dDrawRenderSettingsCommon[0]));
