@@ -11,6 +11,7 @@
 
 #define TIME_JIFFIES_PER_SECOND 60
 #define TIME_SECONDS(sec) sec * TIME_JIFFIES_PER_SECOND
+#define U8_ANGLE_TO_U16(x) (x << 6 << 4)
 
 enum BossRaceWarps {
     WARP_STANDARD = -1,
@@ -33,7 +34,8 @@ enum TajBehaviours {
     TAJ_MODE_SET_CHALLENGE = 15,
     TAJ_MODE_TELEPORT_AWAY_BEGIN = 20,
     TAJ_MODE_TELEPORT_AWAY_END,
-    TAJ_MODE_RACE = 30
+    TAJ_MODE_RACE = 30,
+    TAJ_MODE_UNK1F
 };
 
 enum TTBehaviours {
@@ -66,12 +68,6 @@ enum FrogActions {
     FROG_FLAT,
     FROG_UNSQUISH
 };
-
-typedef struct Object78_80033DD0 {
-	s32 *unk0;
-	s16 unk4;
-	s16 unk6;
-} Object78_80033DD0;
 
 typedef struct unk80034B4C {
     u8 pad0[0x18];
@@ -242,18 +238,6 @@ typedef struct unk80041A90_MidiFade {
     f32 unk10;
     f32 unk14;
 } unk80041A90_MidiFade;
-
-typedef struct Object_78_Banana {
-    s32 unk0;
-    s16 unk4;
-    s16 unk6;
-} Object_78_Banana;
-
-typedef struct Object_LevelName_78 {
-    f32 radius;
-    s16 levelID;
-    s16 opacity;
-} Object_LevelName_78;
 
 // Unsure about the signed/unsigned with these arrays.
 extern u16 D_800DC9A8[20];

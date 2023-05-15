@@ -1831,7 +1831,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     D_80126CDC->unk1E6 = 14;
                     D_80126CDC->unk1E4 = 0;
                     D_80126CDC->unk1E8 = 1.0f;
-                    tempVar1 = (opacity * (f32) temp_v0_8->segment.unk38.byte.unk39) * 0.0078125;
+                    tempVar1 = (opacity * (f32) temp_v0_8->segment.object.opacity) * 0.0078125;
                     gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 60, 60, 60, tempVar1);
                     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk1E0);
                 }
@@ -1840,7 +1840,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
             if (temp_v0_8 != NULL) {
                 func_800AA3EC(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114, sp118, sp11C);
                 D_80126CDC->unk1E4 = 0;
-                tempVar1 = (opacity * (f32) temp_v0_8->segment.unk38.byte.unk39) * 0.0078125;
+                tempVar1 = (opacity * (f32) temp_v0_8->segment.object.opacity) * 0.0078125;
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gHudMinimapColours[8].red, gHudMinimapColours[8].green, gHudMinimapColours[8].blue, tempVar1);
                 D_80126CDC->unk1E8 = 1.0f;
                 D_80126CDC->unk1E6 = 14;

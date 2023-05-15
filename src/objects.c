@@ -678,7 +678,7 @@ void func_8000E2B4(void) {
     if (get_filtered_cheats() & CHEAT_SMALL_CHARACTERS) {
         player->segment.trans.scale *= 0.714f;
     }
-    player->segment.unk3C_a.level_entry = NULL;
+    player->segment.level_entry = NULL;
     player->segment.trans.y_rotation = D_8011AD4C;
     player->segment.trans.y_position = D_8011AD48;
 }
@@ -727,10 +727,10 @@ void func_8000E4E8(s32 index) {
 s32 func_8000E558(Object *arg0){
     s32 temp_v0;
     s32 new_var, new_var2;
-    if (arg0->segment.unk3C_a.level_entry == NULL) {
+    if (arg0->segment.level_entry == NULL) {
         return TRUE;
     }
-    temp_v0 = (s32) arg0->segment.unk3C_a.level_entry;
+    temp_v0 = (s32) arg0->segment.level_entry;
     new_var2 = (s32) D_8011AE98[0];
     if ((temp_v0 >= new_var2) && (((D_8011AEA0[0] * 8) + new_var2) >= temp_v0)) {
         return FALSE;
@@ -766,7 +766,7 @@ Object **objGetObjList(s32 *arg0, s32 *cnt) {
 
 void func_8000E9D0(Object *arg0) {
     arg0->segment.trans.flags |= OBJ_FLAGS_DEACTIVATED;
-    func_800245B4(arg0->segment.unk2C.half.upper | 0xC000);
+    func_800245B4(arg0->segment.object.unk2C | 0xC000);
     gObjPtrList[objCount++] = arg0;
     D_8011AE64++;
 }
@@ -1107,7 +1107,7 @@ void func_80011134(Object *arg0, s32 arg1) {
     s32 var_s1;
     u8 temp_v0;
 
-    temp_s3 = arg0->unk68[arg0->segment.unk38.byte.unk3A]->objModel;
+    temp_s3 = arg0->unk68[arg0->segment.object.numModelIDs]->objModel;
     temp_s5 = temp_s3->unk50;
     temp_s4 = temp_s3->batches;
     for (var_s1 = 0; temp_s5 > 0 && var_s1 < temp_s3->numberOfBatches; var_s1++) {
@@ -1285,20 +1285,20 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     
     gNoBoundsCheck = FALSE;
     if (outOfBounds) {
-        obj->segment.unk2C.half.lower = -1;
+        obj->segment.object.segmentID = -1;
         return 1;
     }
 
     obj->segment.trans.x_position = newXPos;
     obj->segment.trans.y_position = newYPos;
     obj->segment.trans.z_position = newZPos;
-    box = get_segment_bounding_box(obj->segment.unk2C.half.lower);
+    box = get_segment_bounding_box(obj->segment.object.segmentID);
 
     //For some reason the XYZ positions are converted into integers for the next section
     intXPos = newXPos, intYPos = newYPos, intZPos = newZPos;
     
     if (box == NULL) {
-        obj->segment.unk2C.half.lower = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
+        obj->segment.object.segmentID = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
         return 0;
     } else {
         outsideBBox = FALSE;
@@ -1314,7 +1314,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
         if (outsideBBox) {
             segmentID = get_level_segment_index_from_position(intXPos, intYPos, intZPos);
             if (segmentID != -1) {
-                obj->segment.unk2C.half.lower = segmentID;
+                obj->segment.object.segmentID = segmentID;
             }
         }
     }
@@ -1341,7 +1341,7 @@ void func_80011AD0(Object *this) {
 
     switch (this->behaviorId) {
         case BHV_CHARACTER_FLAG:
-            if (this->unk7C.word >= 0) {
+            if (this->properties.characterFlag.characterID >= 0) {
                 obj64 = this->unk64;
                 func_80011960(this, obj64->character_flag.vertices, 4, obj64->character_flag.triangles,
                                 2, obj64->character_flag.texture, 11, 0, 1.0f);
@@ -1354,13 +1354,13 @@ void func_80011AD0(Object *this) {
 
         case BHV_FISH:
             obj64 = this->unk64;
-            tmp_f0 = this->segment.unk3C_a.level_entry->fish.unkC[1];
+            tmp_f0 = this->segment.level_entry->fish.unkC[1];
             tmp_f0 *= 0.01f;
             func_80011960(this, &obj64->fish.vertices[obj64->fish.unkFC * 6], 6, obj64->fish.triangles, 8, obj64->fish.texture, 26, 0, tmp_f0);
             break;
 
         case BHV_BOOST:
-            if ((this->unk78 != 0) && ((this->unk64->boost.unk70 > 0) || (this->unk64->boost.unk74 > 0.0f))) {
+            if ((this->properties.common.unk0 != 0) && ((this->unk64->boost.unk70 > 0) || (this->unk64->boost.unk74 > 0.0f))) {
                 func_800135B8(this);
             }
             break;
@@ -1394,14 +1394,14 @@ void render_3d_billboard(Object *obj) {
 
     if (obj->behaviorId == BHV_BOMB_EXPLOSION) {
         //!@bug Never true, because the type is u8.
-        if (obj->segment.unk38.byte.unk39 > 255) {
-            obj->segment.unk38.byte.unk39 = obj->unk7C.word & 0xFF;
+        if (obj->segment.object.opacity > 255) {
+            obj->segment.object.opacity = obj->properties.bombExplosion.unk4 & 0xFF;
         } else {
-            obj->segment.unk38.byte.unk39 = (obj->segment.unk38.byte.unk39 * (obj->unk7C.word & 0xFF)) >> 8;
+            obj->segment.object.opacity = (obj->segment.object.opacity * (obj->properties.bombExplosion.unk4 & 0xFF)) >> 8;
         }
     }
     
-    alpha = obj->segment.unk38.byte.unk39;
+    alpha = obj->segment.object.opacity;
     if (alpha > 255) {
         alpha = 255;
     }
@@ -1434,11 +1434,11 @@ void render_3d_billboard(Object *obj) {
     } else {
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     }
-    sp58 = (unk80068514_arg4 *) obj->unk68[obj->segment.unk38.byte.unk3A];
+    sp58 = (unk80068514_arg4 *) obj->unk68[obj->segment.object.numModelIDs];
     var_a0 = NULL;
     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON_2) {
-        var_a0 = (Object *) obj->trans78;
-        if (obj->unk7C.word > 0) {
+        var_a0 = obj->properties.fireball.obj;
+        if (obj->properties.fireball.timer > 0) {
             var_a0 = obj;
         }
     }
@@ -1500,7 +1500,7 @@ void render_3d_model(Object *obj) {
     ObjectModel *objModel;
     Object_68 *something;
 
-    obj68 = obj->unk68[obj->segment.unk38.byte.unk3A];
+    obj68 = obj->unk68[obj->segment.object.numModelIDs];
     if (obj68 != NULL) {
         objModel = obj68->objModel;
         hasOpacity = FALSE;
@@ -1557,14 +1557,14 @@ void render_3d_model(Object *obj) {
         spB0 = FALSE;
         if (racerObj != NULL) {
             object_undo_player_tumble(obj);
-            if (obj->segment.unk38.byte.unk3B == 0 || racerObj->vehicleID >= VEHICLE_TRICKY) {
+            if (obj->segment.object.animationID == 0 || racerObj->vehicleID >= VEHICLE_TRICKY) {
                 func_80069790(&gObjectCurrDisplayList, &gObjectCurrMatrix, obj68, racerObj->headAngle);
                 spB0 = TRUE;
             } else {
                 racerObj->headAngle = 0;
             }
         }
-        alpha = obj->segment.unk38.byte.unk39;
+        alpha = obj->segment.object.opacity;
         if (alpha > 255) {
             alpha = 255;
         }
@@ -1611,7 +1611,7 @@ void render_3d_model(Object *obj) {
                 if (!(loopObj->segment.trans.flags & OBJ_FLAGS_INVISIBLE)) {
                     index = obj->unk60->unk2C[i];
                     if (index >= 0 && index < objModel->unk18) {
-                        something = loopObj->unk68[loopObj->segment.unk38.byte.unk3A];
+                        something = loopObj->unk68[loopObj->segment.object.numModelIDs];
                         vtxX = obj->unk44[objModel->unk14[index]].x;
                         vtxY = obj->unk44[objModel->unk14[index]].y;
                         vtxZ = obj->unk44[objModel->unk14[index]].z;
@@ -1645,7 +1645,7 @@ void render_3d_model(Object *obj) {
                                 gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
                                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
                             }
-                            loopObj->unk78 = render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, loopObj, (unk80068514_arg4 *) something, flags);
+                            loopObj->properties.common.unk0 = render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, loopObj, (unk80068514_arg4 *) something, flags);
                             if (var_v0_2) {
                                 gDkrInsertMatrix(gObjectCurrDisplayList++, 0, 0);
                                 func_80012CE8(&gObjectCurrDisplayList);
@@ -1665,7 +1665,7 @@ void render_3d_model(Object *obj) {
                 index = obj->segment.header->unk58;
                 if (index >= 0 && index < objModel->unk18) {
                     flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
-                    something = loopObj->unk68[loopObj->segment.unk38.byte.unk3A];
+                    something = loopObj->unk68[loopObj->segment.object.numModelIDs];
                     vtxX = obj->unk44[objModel->unk14[index]].x;
                     vtxY = obj->unk44[objModel->unk14[index]].y;
                     vtxZ = obj->unk44[objModel->unk14[index]].z;
@@ -1844,9 +1844,9 @@ void func_80012F94(Object *obj) {
                     if (get_current_viewport() != objRacer->playerIndex) {
                         var_a1 += 5;
                     }
-                    var_f0_2 = obj->segment.unk30;
+                    var_f0_2 = obj->segment.object.distanceToCamera;
                     temp_v1 = (s32) var_f0_2 >> 3;
-                    if (obj->segment.unk30 < 0.0f) {
+                    if (obj->segment.object.distanceToCamera < 0.0f) {
                         var_f0_2 = 0.0f;
                     } else if (var_f0_2 > 3500.0f) {
                         var_f0_2 = 3500.0f;
@@ -1898,14 +1898,14 @@ void func_80012F94(Object *obj) {
             if (numberOfModels < var_t0) {
                 var_t0 = numberOfModels;
             }
-            obj->segment.unk38.byte.unk3A = var_t0;
+            obj->segment.object.numModelIDs = var_t0;
             if ((obj->unk54 != NULL) && (obj->unk54->unk0 < 0.6f)) {
                 objRacer->lightFlags |= RACER_LIGHT_NIGHT;
             } else {
                 objRacer->lightFlags &= ~RACER_LIGHT_NIGHT;
             }
             racerLightTimer = objRacer->lightFlags & RACER_LIGHT_TIMER;
-            new_var = obj->unk68[obj->segment.unk38.byte.unk3A];
+            new_var = obj->unk68[obj->segment.object.numModelIDs];
             temp_a1_3 = new_var->objModel;
             if (racerLightTimer != 0) {
                 racerLightTimer--;
@@ -2679,7 +2679,7 @@ void func_8001BC54(void) {
         for (i = 0; i < gCameraObjCount - 1; i++) {
             objPtr = (*gCameraObjList)[i+1];
             temp = (*gCameraObjList)[i];
-            if (temp->unk78 > objPtr->unk78) {
+            if (temp->properties.common.unk0 > objPtr->properties.common.unk0) {
                 (*gCameraObjList)[i] = (*gCameraObjList)[i+1];
                 (*gCameraObjList)[i+1] = temp;
                 continueLoop = FALSE;
@@ -2795,7 +2795,7 @@ s32 func_8001C524(f32 diffX, f32 diffY, f32 diffZ, s32 someFlag) {
     for (numSteps = 0; numSteps != 128; numSteps++) {
         segment = (ObjectSegment*) (*D_8011AF04)[numSteps];
         if (segment) {
-            levelObj = &((segment->unk3C_a.level_entry)->ttDoor);
+            levelObj = &((segment->level_entry)->ttDoor);
             var_a0 = 1;
             if (someFlag && (sp64 != levelObj->doorID)) {
                 var_a0 = 0;
@@ -2947,7 +2947,7 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
         if (current_obj != NULL
         && !(current_obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)
         && current_obj->behaviorId == BHV_RAMP_SWITCH
-        && current_obj->action == arg0) {
+        && current_obj->properties.common.unk0 == arg0) {
             *arg1 = current_obj->segment.trans.x_position;
             *arg2 = current_obj->segment.trans.y_position;
             *arg3 = current_obj->segment.trans.z_position;
@@ -3002,7 +3002,7 @@ s32 func_8001F3EC(s32 arg0){
 
     count = 0;
     for (i = 0; i < D_8011AE78; i++) {
-        if (D_8011AE74[i]->unk7C.word == arg0){
+        if (D_8011AE74[i]->properties.common.unk4 == arg0){
             count++;
         }
     }
@@ -3032,7 +3032,7 @@ void func_80021400(s32 arg0) {
     arg0 &= 0xFF; //?
 
 
-    for (i = 0; i < D_8011AE78 && (arg0 != (D_8011AE74[i]->unk7C.word & 0xFF)); i++) {}
+    for (i = 0; i < D_8011AE78 && (arg0 != (D_8011AE74[i]->properties.common.unk4 & 0xFF)); i++) {}
 
     if (i < D_8011AE78) {
         if (D_8011AE74[i]->unk64 != NULL) {
@@ -3070,11 +3070,11 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
         i = 0;
         if (D_8011AE78 > 0) {
             temp_v1 = animObj->unk28;
-            if (temp_v1 != (s32) (*D_8011AE74)->unk7C.word) {
+            if (temp_v1 != (s32) (*D_8011AE74)->properties.common.unk4) {
 loop_11:
                 i++;
                 if (i < D_8011AE78) {
-                    if (temp_v1 != (s32) D_8011AE74[i]->unk7C.word) {
+                    if (temp_v1 != (s32) D_8011AE74[i]->properties.common.unk4) {
                         goto loop_11;
                     }
                 }

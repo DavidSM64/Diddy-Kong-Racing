@@ -56,7 +56,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
 
     set_boss_voice_clip_offset((u16* ) D_800DCE60);
     racer->unk1EC = 0;
-    sp3E = obj->segment.unk38.byte.unk3B;
+    sp3E = obj->segment.object.animationID;
     sp3C = obj->segment.animFrame;
     sp3A = racer->headAngle;
     if (racer->velocity < 0.3f && -0.3f < racer->velocity) {
@@ -93,13 +93,13 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     *startTimer = sp28;
     obj->unk74 = 0;
     racer->headAngle = sp3A;
-    obj->segment.unk38.byte.unk3B = sp3E;
+    obj->segment.object.animationID = sp3E;
     obj->segment.animFrame = sp3C;
-    if (racer->attackType != 0 && obj->segment.unk38.byte.unk3B != 5) {
+    if (racer->attackType != 0 && obj->segment.object.animationID != 5) {
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
-        obj->segment.unk38.byte.unk3B = 5;
+        obj->segment.object.animationID = 5;
         obj->segment.x_velocity *= 0.4f;
         obj->segment.z_velocity *= 0.4f;
         racer->unkC = 0.0f;
@@ -125,7 +125,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->x_rotation_offset = -obj->segment.trans.x_rotation;
     gfxData = *obj->unk68;
     objModel = gfxData->objModel;
-    diffX = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 0x10) - 0x11;
+    diffX = (objModel->animations[obj->segment.object.animationID].unk4 * 0x10) - 0x11;
     var_f12 = (racer->velocity * updateRateF) * 0.45f;
     if (var_f12 <= 0.0f) {
         if (var_f12 > -2.0f) {
@@ -134,7 +134,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     } else if (var_f12 < 2.0f) {
         var_f12 = 2.0f;
     }
-    switch (obj->segment.unk38.byte.unk3B) {
+    switch (obj->segment.object.animationID) {
     case 0:
         racer->unk1CD = 0;
         racer->unkC += 1.0f * updateRateF;
@@ -176,42 +176,42 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->unkC += diffX;
         gfxData->unk10 = -1;
     }
-    if (obj->segment.unk38.byte.unk3B == 2 && sp38 != 0) {
-        obj->segment.unk38.byte.unk3B = 3;
+    if (obj->segment.object.animationID == 2 && sp38 != 0) {
+        obj->segment.object.animationID = 3;
         racer->unkC = 0.0f;
     }
-    if (gfxData->unk10 == -1 || obj->segment.unk38.byte.unk3B == 0) {
-        if (obj->segment.unk38.byte.unk3B == 5) {
-            obj->segment.unk38.byte.unk3B = (s8) racer->unk1CD;
+    if (gfxData->unk10 == -1 || obj->segment.object.animationID == 0) {
+        if (obj->segment.object.animationID == 5) {
+            obj->segment.object.animationID = (s8) racer->unk1CD;
             racer->unkC = 0.0f;
-        } else if (obj->segment.unk38.byte.unk3B == 1) {
+        } else if (obj->segment.object.animationID == 1) {
             if (racer->unk1CD == 0) {
-                obj->segment.unk38.byte.unk3B = 2;
+                obj->segment.object.animationID = 2;
             } else {
-                obj->segment.unk38.byte.unk3B = 0;
+                obj->segment.object.animationID = 0;
             }
-        } else if (obj->segment.unk38.byte.unk3B == 3) {
+        } else if (obj->segment.object.animationID == 3) {
             if (racer->unk1CD == 4) {
-                obj->segment.unk38.byte.unk3B = 2;
+                obj->segment.object.animationID = 2;
             } else {
-                obj->segment.unk38.byte.unk3B = 4;
+                obj->segment.object.animationID = 4;
             }
         } else {
             if (-0.1f < racer->velocity && racer->velocity < 0.1f) {
-                if (obj->segment.unk38.byte.unk3B == 2) {
-                    obj->segment.unk38.byte.unk3B = 1;
-                    racer->unkC = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 0x10) - 0x11;
+                if (obj->segment.object.animationID == 2) {
+                    obj->segment.object.animationID = 1;
+                    racer->unkC = (objModel->animations[obj->segment.object.animationID].unk4 * 0x10) - 0x11;
                 } else {
-                    obj->segment.unk38.byte.unk3B = 0;
+                    obj->segment.object.animationID = 0;
                 }
             } else {
-                if (obj->segment.unk38.byte.unk3B == 0) {
-                    obj->segment.unk38.byte.unk3B = 1;
+                if (obj->segment.object.animationID == 0) {
+                    obj->segment.object.animationID = 1;
                     racer->unkC = 0.0f;
                 }
-                if ((obj->segment.unk38.byte.unk3B == 4) && (sp38 == 0)) {
-                    obj->segment.unk38.byte.unk3B = 3;
-                    racer->unkC = (objModel->animations[obj->segment.unk38.byte.unk3B].unk4 * 0x10) - 0x11;
+                if ((obj->segment.object.animationID == 4) && (sp38 == 0)) {
+                    obj->segment.object.animationID = 3;
+                    racer->unkC = (objModel->animations[obj->segment.object.animationID].unk4 * 0x10) - 0x11;
                 }
             }
         }
@@ -219,7 +219,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     sp3C = obj->segment.animFrame;
     obj->segment.animFrame = racer->unkC;
     obj->unk74 = 0;
-    if (obj->segment.unk38.byte.unk3B == 2) {
+    if (obj->segment.object.animationID == 2) {
         func_800113CC(obj, 2, sp3C, SOUND_STOMP2, SOUND_STOMP3);
     }
     if (racer->playerIndex == PLAYER_COMPUTER) {
@@ -231,7 +231,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     fade_when_near_camera(obj, racer, 0x28);
     firstRacerObj = get_racer_object(0);
     racer = (Object_Racer *) firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.unk38.byte.unk3B == 1) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == 1) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {

@@ -548,7 +548,7 @@ void func_8006BD10(f32 arg0) {
     if (gCurrentLevelHeader->music != 0) {
         func_800012E8();
         play_music(gCurrentLevelHeader->music);
-        func_800014BC(arg0);
+        multiply_music_tempo(arg0);
         func_80001074(gCurrentLevelHeader->instruments);
     }
 }
