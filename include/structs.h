@@ -1607,6 +1607,17 @@ typedef struct SegmentPropertiesObject {
   /* 0x003B */ s8 animationID;
 } SegmentPropertiesObject;
 
+typedef struct SegmentPropertiesParticle {
+  /* 0x002C */ s16 unk2C;
+  /* 0x002E */ s16 unk2E;
+  /* 0x0030 */ f32 unk30;
+  /* 0x0034 */ s16 unk34;
+  /* 0x0036 */ s16 unk36;
+  /* 0x0038 */ u8 unk38;
+  /* 0x0039 */ u8 unk39;
+  /* 0x003A */ s16 unk3A;
+} SegmentPropertiesParticle;
+
 typedef struct SegmentPropertiesCamera {
   /* 0x002C */ f32 unk2C;
   /* 0x0030 */ f32 distanceToCamera;
@@ -1626,6 +1637,7 @@ typedef struct ObjectSegment {
   /* 0x0028 */ f32 unk28;
   union {
       SegmentPropertiesObject object;
+      SegmentPropertiesParticle particle;
       SegmentPropertiesCamera camera;
   };
   /* 0x003C */ LevelObjectEntry* level_entry;
