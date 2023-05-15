@@ -112,16 +112,16 @@ typedef struct unk800B1130_SP28 {
     u8 a;
 } unk800B1130_SP28;
 
-typedef struct ParticleAngleSomething {
+typedef struct ParticleAngle {
     s16 y_rotation;
     s16 x_rotation;
     s16 z_rotation;
     s16 unk12;
     s16 unk14;
     s16 unk16;
-} ParticleAngleSomething;
+} ParticleAngle;
 
-typedef struct ParticleThing {
+typedef struct ParticleData {
     union {
   /* 0x0000 */ ParticleBehavior *behaviour;
   /* 0x0000 */ s32 unk0;
@@ -133,7 +133,7 @@ typedef struct ParticleThing {
   /* 0x000A */ s16 unkA;
     union {
   /* 0x000C */ Vec3f pos;
-  /* 0x000C */ ParticleAngleSomething angle;
+  /* 0x000C */ ParticleAngle angle;
   /* 0x000C */ unk800AF29C_C unkC;
   /* 0x000C */ struct Particle **unkC_60;
   /* 0x000C */ unk800AF29C_C_400 unkC_400;
@@ -142,7 +142,7 @@ typedef struct ParticleThing {
   /* 0x0018 */ s16 unk1A;
   /* 0x001C */ s16 unk1C;
   /* 0x001E */ s16 unk1E;
-} ParticleThing;
+} ParticleData;
 
 typedef struct ParticleSegment {
   /* 0x0000 */ ObjectTransform trans;
@@ -164,7 +164,7 @@ typedef struct ParticleSegment {
 typedef struct Particle {
   union {
   /* 0x0000 */ ParticleSegment segment;
-  /* 0x0000 */ ParticleThing data;
+  /* 0x0000 */ ParticleData data;
   };
   union {
   /* 0x0044 */ unk800B0698_44 *unk44;
