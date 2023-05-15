@@ -19,6 +19,21 @@
     gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1 | renderMode2), \
 }
 
+/**
+ * Diddy Kong Racing sets up many of the rendermode tables with a certain pattern.
+ * First two entries are combine mode.
+ * Third entry is othermode high word. (Most importantly, the cycle mode and texture filter settings)
+ * Fourth and fifth entries are render modes for no AA or ZB
+ * Sixth and seventh entries are render modes for for AA, but no ZB
+ * Eighth and ninth entries are render modes for for ZB, but no AA
+ * Tenth and eleventh entries are render modes for for AA and ZB
+*/
+#define DRAW_TABLE_GROUP(combine1, combine2, cycleMode, renderMode1, renderMode2, renderMode1AA, rendermode2AA, renderMode1ZB, rendermode2ZB, renderMode1ZBAA, renderMode2ZBAA) \
+{gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1 | renderMode2), }, \
+{gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1AA | rendermode2AA), }, \
+{gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1ZB | rendermode2ZB), }, \
+{gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1ZBAA | renderMode2ZBAA), }
+
 enum RenderFlags {
     RENDER_NONE,
     RENDER_VEHICLE_PART = (1 << 0), // Shares a spot with RENDER_ANTI_ALIASING, since TEX_EDGE enforces anti aliasing unconditionally.
