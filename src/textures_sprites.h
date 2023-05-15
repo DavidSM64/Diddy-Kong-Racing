@@ -9,6 +9,16 @@
 #include "memory.h"
 #include "libultra_internal.h"
 
+/**
+ * First two entries are combine mode.
+ * Third entry is othermode high word. (Most importantly, the cycle mode and texture filter settings)
+ * Fourth and fifth entries are render modes.
+*/
+#define DRAW_TABLE_ENTRY(combine1, combine2, cycleMode, renderMode1, renderMode2) { \
+    gsDPSetCombineLERP(combine1, combine2), \
+    gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1 | renderMode2), \
+}
+
 enum RenderFlags {
     RENDER_NONE,
     RENDER_VEHICLE_PART = (1 << 0), // Shares a spot with RENDER_ANTI_ALIASING, since TEX_EDGE enforces anti aliasing unconditionally.
