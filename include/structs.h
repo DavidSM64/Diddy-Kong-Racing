@@ -1653,6 +1653,7 @@ typedef struct unk800B0698_44 {
     union {
         unk800B0698_44_0 *unk0Ptr;
         s16 unk0;
+        struct unk800B0698_44_0 unk0struct;
     };
 } unk800B0698_44;
 

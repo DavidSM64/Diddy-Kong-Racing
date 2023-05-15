@@ -816,7 +816,7 @@ Particle *func_800B0698(Particle *arg0, Particle *arg1) {
     var_v0->unk64 = sp20->unk4C;
     var_v0->unk66 = sp20->unk4E;
     func_800B0010(var_v0, arg0, arg1, sp20);
-    var_v0->unk68 = D_800E2E2C[(var_v0->segment.unk40 >> 4) & 7];
+    var_v0->unk68f = D_800E2E2C[(var_v0->segment.unk40 >> 4) & 7];
     if (var_v0->segment.particle.unk39 == 5) {
         temp_f0 = var_v0->segment.x_velocity;
         temp_f2 = var_v0->segment.y_velocity;
@@ -1055,7 +1055,7 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
         }
     }
     func_800B0010(var_v0, arg0, arg1, partBeh);
-    var_v0->unk68 = D_800E2E2C[(var_v0->segment.unk40 >> 4) & 7];
+    var_v0->unk68f = D_800E2E2C[(var_v0->segment.unk40 >> 4) & 7];
     if (var_v0->segment.particle.unk39 == 5) {
         var_v0->forwardVel = sqrtf((var_v0->segment.x_velocity * var_v0->segment.x_velocity) + (var_v0->segment.y_velocity * var_v0->segment.y_velocity) + (var_v0->segment.z_velocity * var_v0->segment.z_velocity));
     }
@@ -1426,7 +1426,7 @@ UNUSED void func_800B3678(Gfx **arg0, MatrixS **arg1, Vertex **arg2) {
     for (; iObj < nObjs; iObj++) {
         if (objects[iObj]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
             if ((s32) objects[iObj]->segment.header & 0x8000) {
-                func_800B3740(objects[iObj], arg0, arg1, arg2, 0);
+                func_800B3740((Particle *) objects[iObj], arg0, arg1, arg2, 0);
             }
         }
     }

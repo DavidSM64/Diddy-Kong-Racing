@@ -151,13 +151,16 @@ typedef struct Particle {
   /* 0x0062 */ s16 unk62;
   /* 0x0064 */ s16 unk64;
   /* 0x0066 */ s16 unk66;
-  /* 0x0068 */ f32 unk68;
+  union {
+  /* 0x0068 */ u8 unk68b;
+  /* 0x0068 */ f32 unk68f;
+  };
   /* 0x006C */ ColourRGBA colour;
   /* 0x0070 */ struct Particle *unk70;
   /* 0x0074 */ u8 unk74;
   /* 0x0075 */ u8 unk75;
   /* 0x0076 */ u8 unk76;
-  /* 0x0077 */ u8 unk77;
+  /* 0x0077 */ s8 unk77;
 } Particle;
 
 // Almost an identical copy of Particle, but a few bytes shorter. Exists to make sure func_800B1CB8 matches.
@@ -208,7 +211,7 @@ void func_800B3240(Particle *);
 void func_800B3358(Particle *);
 void func_800B34B0(Particle *);
 void func_800B3564(Particle *);
-void func_800B3740(Object *, Gfx **, MatrixS **, Vertex **, s32); // Non Matching
+void func_800B3740(Particle *, Gfx **, MatrixS **, Vertex **, s32); // Non Matching
 void func_800B4668(Object*, s32, s32, s32);
 void func_800B46BC(Object*, s32, s32, s32);
 

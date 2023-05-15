@@ -1961,7 +1961,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
 void render_object(Object *this) {
     func_80012F94(this);
     if (this->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
-        func_800B3740(this, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, 0x8000);
+        func_800B3740((Particle *) this, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, 0x8000);
     } else {
         if (this->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL)
             render_3d_model(this);
