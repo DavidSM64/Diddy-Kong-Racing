@@ -165,56 +165,9 @@ typedef struct Particle {
 
 // Almost an identical copy of Particle, but a few bytes shorter. Exists to make sure func_800B1CB8 matches.
 typedef struct ParticleType {
-    union {
-  /* 0x0000 */ ParticleBehavior *behaviour;
-  /* 0x0000 */ s32 unk0;
-    };
-  /* 0x0004 */ s16 flags;
-  /* 0x0006 */ u8 unk6;
-  /* 0x0007 */ u8 unk7;
-  /* 0x0008 */ s16 unk8;
-  /* 0x000A */ s16 unkA;
-    union {
-  /* 0x000C */ Vec3f pos;
-  /* 0x000C */ ParticleAngle angle;
-  /* 0x000C */ unk800AF29C_C unkC;
-  /* 0x000C */ struct Particle **unkC_60;
-  /* 0x000C */ unk800AF29C_C_400 unkC_400;
-    };
-  /* 0x0018 */ s16 unk18;
-  /* 0x0018 */ s16 unk1A;
-  /* 0x001C */ s16 unk1C;
-  /* 0x001E */ s16 unk1E;
-  /* 0x0020 */ s32 unk20;
-  /* 0x0024 */ s32 unk24;
-  /* 0x0028 */ s32 unk28;
-  /* 0x002C */ s16 unk2C;
-  /* 0x002E */ s16 unk2E;
-  /* 0x0030 */ s32 unk30;
-  /* 0x0030 */ s32 unk34;
-  /* 0x0030 */ s32 unk38;
-  /* 0x0030 */ s32 unk3C;
-  /* 0x0030 */ s32 unk40;
-  union {
-  /* 0x0044 */ unk800B0698_44 *unk44;
-  /* 0x0044 */ TextureHeader *unk44_0;
-  /* 0x0044 */ unk800B2260_C_44 *unk44_1;
-  /* 0x0044 */ struct unk800B1CB8_44 *unk44_2;
-  };
-  /* 0x0048 */ s16 behaviorId;
-  /* 0x004A */ s16 unk4A;
-  /* 0x004C */ f32 unk4C;
-  /* 0x0050 */ f32 unk50;
-  /* 0x0054 */ f32 *unk54_ptr;
-  /* 0x0058 */ f32 unk58;
-  /* 0x005C */ s16 unk5C;
-  /* 0x005E */ s16 unk5E;
-  /* 0x0060 */ s16 unk60;
-  /* 0x0062 */ s16 unk62;
-  /* 0x0064 */ s16 unk64;
-  /* 0x0066 */ s16 unk66;
-  /* 0x0068 */ f32 unk68;
-  /* 0x006C */ ColourRGBA unk6C;
+    u8 pad[0x2C];
+    s16 unk2C;
+    u8 pad2[0x42];
 } ParticleType;
 
 void func_800AE270(void);
