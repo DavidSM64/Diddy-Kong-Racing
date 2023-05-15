@@ -454,11 +454,10 @@ void func_800C0834(s32 updateRate) {
  * Draws a simple fillrect covering the whole screen that fades in or out.
 */
 void render_fade_fullscreen(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
-    s32 screenSize = get_video_width_and_height_as_s32();
     gSPDisplayList((*dList)++, dTransitionFadeSettings);
     gDPSetPrimColor((*dList)++, 0, 0, gCurFadeRed, gCurFadeGreen, gCurFadeBlue, gCurFadeAlpha);
     gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
-    gDPFillRectangle((*dList)++, 0, 0, screenSize & 0x3FF, (screenSize >> 16) & 0x3FF);
+    gDPFillRectangle((*dList)++, 0, 0, gScreenWidth, gScreenHeight);
     reset_render_settings(dList);
 }
 
@@ -596,10 +595,9 @@ void func_800C27A0(s32 updateRate) {
 }
 
 void render_fade_disabled(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
-    s32 screenSize = get_video_width_and_height_as_s32();
     gSPDisplayList((*dList)++, dTransitionFadeSettings);
     gDPSetPrimColor((*dList)++, 0, 0, (gLastFadeRed >> 16), (gLastFadeGreen >> 16), (gLastFadeBlue >> 16), 255);
     gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
-    gDPFillRectangle((*dList)++, 0, 0, screenSize & 0x3FF, (screenSize >> 16) & 0x3FF);
+    gDPFillRectangle((*dList)++, 0, 0, gScreenWidth, gScreenHeight);
     reset_render_settings(dList);
 }

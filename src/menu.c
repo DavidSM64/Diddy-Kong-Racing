@@ -2470,7 +2470,7 @@ void func_8008377C(UNUSED s32 updateRate, f32 arg1) {
         }
         if (!is_controller_missing()) {
             i = 0; 
-            posY = SCREEN_HEIGHT - 48;
+            posY = gScreenHeight - 48;
             set_text_font(ASSET_FONTS_FUNFONT);
             set_text_background_colour(0, 0, 0, 0);
             while(gTitleMenuStrings[i] != NULL) {
@@ -4946,7 +4946,7 @@ void render_menu_image(s32 imageID, s32 xOffset, s32 yOffset, s32 red, s32 green
     func_8009CA60(imageID);
 }
 
-//#ifdef NON_EQUIVALENT
+#ifdef NON_EQUIVALENT
 // Shouldn't have any major issues.
 void render_file_select_menu(UNUSED s32 updateRate) {
     s32 s2;
@@ -4968,13 +4968,6 @@ void render_file_select_menu(UNUSED s32 updateRate) {
             color = 0x6A9073FF;
         }
         buttonX = gFileSelectButtons[i].x - (gScreenWidth / 2);
-#if SCREEN_HEIGHT < 240
-        if (i == 0) { // Hacky, but until I can mess with ortho scaling individually, is a necessary evil.
-            buttonX -= 5;
-        } else if (i == 2) {
-            buttonX += 5;
-        }
-#endif
         func_80080580(0, buttonX, (gScreenHeight / 2) - gFileSelectButtons[i].y, gFileSelectButtons[i].width,
             gFileSelectButtons[i].height, gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, color, D_80126550[TEXTURE_SURFACE_BUTTON_WOOD]);
     }
@@ -5086,9 +5079,9 @@ void render_file_select_menu(UNUSED s32 updateRate) {
         return;
     }
 }
-/*#else
+#else
 GLOBAL_ASM("asm/non_matchings/menu/render_file_select_menu.s")
-#endif*/
+#endif
 
 s32 func_8008D5F8(UNUSED s32 updateRate) {
     u32 buttonsPressed;
@@ -6850,9 +6843,9 @@ void func_80093D40(UNUSED s32 updateRate) {
                     continue;
                 }
                 // Just disabling widescreen related stuff for now.
-                if (i >= 0 && i <= 2) {
+                /*if (i >= 0 && i <= 2) {
                     continue;
-                }
+                }*/
                 if (gMenuSubOption == i + 1) {
                     set_current_text_colour(7, 255, 255, 255, alpha, 255);
                 } else {
@@ -7027,9 +7020,9 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                     if (gMenuSubOption == 1 && gExpansionPak == FALSE) {
                         gMenuSubOption++;
                     }
-                    if (gMenuSubOption < 4) {
+                    /*if (gMenuSubOption < 4) {
                         gMenuSubOption = 4;
-                    }
+                    }*/
                 }
                 if (temp != gMenuSubOption) {
                     play_sound_global(SOUND_MENU_PICK2, NULL);

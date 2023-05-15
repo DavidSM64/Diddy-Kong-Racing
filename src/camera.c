@@ -862,13 +862,11 @@ void set_ortho_matrix_height(f32 value) {
  * Official Name: camStandardOrtho
 */
 void set_ortho_matrix_view(Gfx **dlist, MatrixS **mtx) {
-    u32 widthAndHeight;
     s32 width, height;
     s32 i, j;
 
-    widthAndHeight = get_video_width_and_height_as_s32();
-    height = GET_VIDEO_HEIGHT(widthAndHeight);
-    width = GET_VIDEO_WIDTH(widthAndHeight);
+    height = 240;
+    width = 320;
     f32_matrix_to_s16_matrix(&gOrthoMatrix, *mtx);
     D_80120D88[0] = *mtx;
     gViewportStack[gActiveCameraID + 5].vp.vscale[0] = width * 2;
@@ -1076,7 +1074,7 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
     if (sprite != NULL) {
         temp_v1 = *vtx;
         temp_v1->x = segment->trans.x_position;
-        temp_v1->y = segment->trans.y_position * (SCREEN_WIDTH_FLOAT / (f32) gScreenWidth);
+        temp_v1->y = segment->trans.y_position;
         temp_v1->z = segment->trans.z_position;
         temp_v1->r = 255;
         temp_v1->g = 255;
@@ -1093,12 +1091,12 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         gCameraTransform.y_position = 0.0f;
         gCameraTransform.z_position = 0.0f;
         if (gAdjustViewportHeight) {
-            scale = segment->trans.scale * (SCREEN_WIDTH_FLOAT / (f32) gScreenWidth);
+            scale = segment->trans.scale;
             f32_matrix_from_scale(sp50, scale, scale, 1.0f);
             f32_matrix_from_rotation_and_scale(sp90, 0, 1.0f, 320.0f/240.0f);
             f32_matrix_mult(&sp90, &sp50, &D_80121060);
         } else {
-            scale = segment->trans.scale * (SCREEN_WIDTH_FLOAT / (f32) gScreenWidth);
+            scale = segment->trans.scale;
             f32_matrix_from_scale(D_80121060, scale, scale, 1.0f);
         }
         object_transform_to_matrix_2(sp90, &gCameraTransform);

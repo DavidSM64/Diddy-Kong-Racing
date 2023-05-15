@@ -596,9 +596,9 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
                 if (gHUDNumPlayers == ONE_PLAYER && racer->raceFinished == FALSE && racer->indicator_type && D_800E27B8 == 0) {
                     gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
                     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) indicator);
-                    indicator->unkC = -indicator->unkC;
+                    indicator->unkC = -indicator->unkC + (gScreenWidth - 320);
                     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) indicator);
-                    indicator->unkC = -indicator->unkC;
+                    indicator->unkC = -indicator->unkC + (gScreenWidth - 320);
                     indicator->unk2 = 0;
                     gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                 }
@@ -617,9 +617,9 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
                     indicator->unk0 = (s16) (0x8000 - indicator->unk0);
                 }
                 func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) indicator);
-                indicator->unkC = (f32) -indicator->unkC;
+                indicator->unkC = (f32) -indicator->unkC + (gScreenWidth - 320);
                 func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) indicator);
-                indicator->unkC = (f32) -indicator->unkC;
+                indicator->unkC = (f32) -indicator->unkC + (gScreenWidth - 320);
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
             if (updateRate < D_800E27B8) {
@@ -1774,27 +1774,27 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
             minimap = (Sprite *) lvlMdl->minimapSpriteIndex;
             switch (gHUDNumPlayers) {
                 case TWO_PLAYERS:
-                    gMinimapScreenX = 135;
-                    gMinimapScreenY = -gMinimapDotOffsetY / 2;
+                    gMinimapScreenX = 135 + (gScreenWidth - 320);
+                    gMinimapScreenY = (-gMinimapDotOffsetY / 2) - (gScreenHeight - 240);
                     break;
                 case THREE_PLAYERS:
                     if (get_current_level_race_type() == RACETYPE_CHALLENGE_EGGS || 
                         get_current_level_race_type() == RACETYPE_CHALLENGE_BATTLE || 
                         get_current_level_race_type() == RACETYPE_CHALLENGE_BANANAS) {
-                        gMinimapScreenX = (gMinimapDotOffsetX / 2) - 8;
-                        gMinimapScreenY =  -gMinimapDotOffsetY / 2;
+                        gMinimapScreenX = (gMinimapDotOffsetX / 2) - 8 + (gScreenWidth - 320);
+                        gMinimapScreenY =  (-gMinimapDotOffsetY / 2) - (gScreenHeight - 240);
                     } else {
-                        gMinimapScreenX = ( gMinimapDotOffsetX / 2) + 72;
-                        gMinimapScreenY = -60 - (gMinimapDotOffsetY / 2);
+                        gMinimapScreenX = ( gMinimapDotOffsetX / 2) + 72 + (gScreenWidth - 320);
+                        gMinimapScreenY = -60 - (gMinimapDotOffsetY / 2) - (gScreenHeight - 240);
                     }
                     break;
                 case FOUR_PLAYERS:
-                    gMinimapScreenX = (gMinimapDotOffsetX / 2) - 8;
-                    gMinimapScreenY = -gMinimapDotOffsetY / 2;
+                    gMinimapScreenX = (gMinimapDotOffsetX / 2) - 8 + (gScreenWidth - 320);
+                    gMinimapScreenY = (-gMinimapDotOffsetY / 2) - (gScreenHeight - 240);
                     break;
                 default:
-                    gMinimapScreenX = 135;
-                    gMinimapScreenY = -98;
+                    gMinimapScreenX = 135 + (gScreenWidth - 320);
+                    gMinimapScreenY = -98 - (gScreenHeight - 240);
                     break;
             }
             func_8007BF1C(FALSE);
