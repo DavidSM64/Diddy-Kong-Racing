@@ -11,6 +11,7 @@
 
 enum RenderFlags {
     RENDER_NONE,
+    RENDER_VEHICLE_PART = (1 << 0), // Shares a spot with RENDER_ANTI_ALIASING, since TEX_EDGE enforces anti aliasing unconditionally.
     RENDER_ANTI_ALIASING = (1 << 0),
     RENDER_Z_COMPARE =     (1 << 1),
     RENDER_SEMI_TRANSPARENT = (1 << 2),
@@ -63,36 +64,6 @@ typedef enum TransFlags {
 
 #define TEX_TABLE_2D 0
 #define TEX_TABLE_3D 1
-
-extern u32 gTexColourTag;
-extern s32 D_800DE7C4;
-
-extern Gfx D_800DF1A8[32][2];
-extern Gfx *gSceneCurrDisplayList;
-extern s32 gAntiAliasing;
-extern u32 D_8011D384;
-extern LevelHeader *gCurrentLevelHeader2;
-extern s32 gCurrentRenderFlags;
-extern TextureHeader *D_8012637C;
-extern s16 gForceFlags;
-extern Gfx dTextureRectangleModes[];
-extern Gfx D_800DE848[2][2];
-extern Gfx D_800DE868[8][2];
-extern Gfx D_800DE8E8[64][2];
-extern s32 D_80126378;
-extern s16 D_80126380;
-extern Gfx D_800DE7C8[8][2];
-extern Gfx D_800DECE8[16][2];
-extern Gfx D_800DEDE8[16][2];
-extern Gfx D_800DEEE8[4][2];
-extern Gfx D_800DEF28[16][2];
-extern Gfx D_800DF028[8][2];
-extern Gfx D_800DF0A8[16][2];
-extern s16 D_80126384;
-extern Gfx D_800DF3A8[6];
-extern Gfx D_800DF3D8[7];
-extern Gfx D_800DF410[3][2];
-
 
 /* Size: 8 bytes */
 typedef struct unk8007F1E8_18 {

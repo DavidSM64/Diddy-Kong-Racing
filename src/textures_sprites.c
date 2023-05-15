@@ -19,7 +19,7 @@ s32 D_800DE7C4 = 1;
 
 // See "include/f3ddkr.h" for the defines
 
-Gfx D_800DE7C8[][2] = {
+Gfx dDrawRenderSettingsVtxAlpha[][2] = {
     {
         gsDPSetCombineMode(G_CC_MODULATEIA, DKR_CC_UNK0),
         gsDPSetOtherMode(DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | DKR_RM_UNKNOWN0 | G_RM_XLU_SURF2),
@@ -54,7 +54,7 @@ Gfx D_800DE7C8[][2] = {
     },
 };
 
-Gfx D_800DE848[][2] = {
+Gfx dDrawRenderSettingsSprite[][2] = {
     {
         gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
         gsDPSetOtherMode(DKR_OMH_1CYC_POINT, DKR_OML_COMMON | G_RM_CLD_SURF | G_RM_CLD_SURF2),
@@ -65,8 +65,8 @@ Gfx D_800DE848[][2] = {
     },
 };
 
-// Should probably be merged with D_800DE848
-Gfx D_800DE868[][2] = {
+// Should probably be merged with dDrawRenderSettingsSprite
+Gfx dDrawRenderSettingsSprite2[][2] = {
     {
         gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
         gsDPSetOtherMode(DKR_OMH_1CYC_POINT, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
@@ -101,7 +101,7 @@ Gfx D_800DE868[][2] = {
     },
 };
 
-Gfx D_800DE8E8[][2] = {
+Gfx dDrawRenderSettingsCommon[][2] = {
     {
         gsDPSetCombineMode(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA),
         gsDPSetOtherMode(DKR_OMH_1CYC_BILERP, DKR_OML_COMMON | G_RM_OPA_SURF | G_RM_OPA_SURF2),
@@ -360,7 +360,7 @@ Gfx D_800DE8E8[][2] = {
     },
 };
 
-Gfx D_800DECE8[][2] = {
+Gfx dDrawRenderSettingsCutoutGeometry[][2] = {
     {
         gsDPSetCombineMode(G_CC_MODULATEIDECALA, G_CC_MODULATEIA_PRIM),
         gsDPSetOtherMode(DKR_OMH_1CYC_BILERP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
@@ -427,7 +427,8 @@ Gfx D_800DECE8[][2] = {
     },
 };
 
-Gfx D_800DEDE8[][2] = {
+// Object Decals
+Gfx dDrawRenderSettingsObjDecals[][2] = {
     {
         gsDPSetCombineMode(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA),
         gsDPSetOtherMode(DKR_OMH_1CYC_BILERP, DKR_OML_COMMON | G_RM_ZB_OPA_DECAL | G_RM_ZB_OPA_DECAL2),
@@ -494,7 +495,8 @@ Gfx D_800DEDE8[][2] = {
     },
 };
 
-Gfx D_800DEEE8[][2] = {
+// Tyre marks
+Gfx dDrawRenderSettingsTyreMarks[][2] = {
     {
         gsDPSetCombineMode(DKR_CC_UNK3, G_CC_MODULATEIA_PRIM2),
         gsDPSetOtherMode(DKR_OMH_2CYC_POINT, DKR_OML_COMMON | G_RM_NOOP | G_RM_XLU_SURF2),
@@ -513,6 +515,8 @@ Gfx D_800DEEE8[][2] = {
     },
 };
 
+// Dunno what this is but it appears on characters?
+// It's point sampled rendering.
 Gfx D_800DEF28[][2] = {
     {
         gsDPSetCombineMode(DKR_CC_UNK4, DKR_CC_UNK4),
@@ -580,6 +584,7 @@ Gfx D_800DEF28[][2] = {
     },
 };
 
+// Some kind of texture on top of a solid colour
 Gfx D_800DF028[][2] = {
     {
         gsDPSetCombineMode(DKR_CC_DECALFADEPRIM, DKR_CC_DECALFADEPRIM),
@@ -615,6 +620,7 @@ Gfx D_800DF028[][2] = {
     },
 };
 
+// Not sure what it is specifically, but some onscreen actors like TT and Taj use it.
 Gfx D_800DF0A8[][2] = {
     {
         gsDPSetCombineMode(DKR_CC_UNK5, DKR_CC_UNK6),
@@ -682,7 +688,7 @@ Gfx D_800DF0A8[][2] = {
     },
 };
 
-Gfx D_800DF1A8[][2] = {
+Gfx dDrawRenderSettingsBlinkingLights[][2] = {
     {
         gsDPSetCombineMode(DKR_CC_UNK7, DKR_CC_UNK8),
         gsDPSetOtherMode(DKR_OMH_2CYC_BILERP, DKR_OML_COMMON | G_RM_NOOP | G_RM_OPA_SURF2),
@@ -890,8 +896,8 @@ s32 D_80126368;
 TempTexHeader *gTempTextureHeader;
 u8 *D_80126370;
 s32 gCurrentRenderFlags;
-s32 D_80126378; // Set in Game UI
-TextureHeader *D_8012637C;
+s32 gBlockedRenderFlags;
+TextureHeader *gCurrentTextureHeader;
 s16 D_80126380;
 s16 gForceFlags;
 s16 D_80126384;
@@ -930,16 +936,18 @@ void tex_init_textures(void) {
 
 /**
  * Official Name: texDisableModes
+ * Add flags to the block list so they are removed when drawn.
 */
 void tex_disable_modes(s32 flags) {
-    D_80126378 |= flags;
+    gBlockedRenderFlags |= flags;
 }
 
 /**
  * Official Name: texEnableModes
+ * Remove flags to the block list so they are no longer removed when drawn.
 */
 void tex_enable_modes(s32 flags) {
-    D_80126378 &= ~flags;
+    gBlockedRenderFlags &= ~flags;
 }
 
 /**
@@ -1133,11 +1141,11 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B380.s")
  * Official Name: texDPInit
 */
 void reset_render_settings(Gfx **dlist) {
-    D_8012637C = NULL;
+    gCurrentTextureHeader = NULL;
     gCurrentRenderFlags = RENDER_NONE;
     D_80126380 = 0;
     gForceFlags = TRUE;
-    D_80126378 = RENDER_NONE;
+    gBlockedRenderFlags = RENDER_NONE;
     D_80126384 = FALSE;
     gDPPipeSync((*dlist)++);
     gSPSetGeometryMode((*dlist)++, G_SHADING_SMOOTH | G_SHADE | G_ZBUFFER);
@@ -1203,9 +1211,9 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
         }
 
         flags |= texhead->flags;
-        if (texhead != D_8012637C) {
+        if (texhead != gCurrentTextureHeader) {
             gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(texhead->cmd), texhead->numberOfCommands);
-            D_8012637C = texhead;
+            gCurrentTextureHeader = texhead;
             doPipeSync = FALSE;
         }
         if (D_80126380 == 0) {
@@ -1217,8 +1225,9 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
         D_80126380 = 0;
     }
 
-    flags = (D_80126384) ? (flags & (RENDER_DECAL | RENDER_COLOUR_INDEX | RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT)) : (flags & (RENDER_UNK_8000000 | RENDER_DECAL | RENDER_Z_UPDATE | RENDER_COLOUR_INDEX | RENDER_UNK_0000010 | RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING));
-    flags &= ~D_80126378;
+    flags = (D_80126384) ? (flags & (RENDER_DECAL | RENDER_COLOUR_INDEX | RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT)) : 
+                           (flags & (RENDER_UNK_8000000 | RENDER_DECAL | RENDER_Z_UPDATE | RENDER_COLOUR_INDEX | RENDER_UNK_0000010 | RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING));
+    flags &= ~gBlockedRenderFlags;
     flags = (flags & RENDER_UNK_8000000) ? flags & ~RENDER_FOG_ACTIVE : flags & ~RENDER_Z_UPDATE;
 
     if ((flags != gCurrentRenderFlags) || (forceFlags)) {
@@ -1246,7 +1255,7 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
         gCurrentRenderFlags = flags;
         if (!D_80126380) {
             if (flags & RENDER_UNK_8000000) {
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEEE8[flags & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE)]), numberOfGfxCommands(D_800DEEE8[0]));
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsTyreMarks[flags & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE)]), numberOfGfxCommands(dDrawRenderSettingsTyreMarks[0]));
                 return;
             }
             gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEF28[flags & (RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING)]), numberOfGfxCommands(D_800DEF28[0]));
@@ -1289,7 +1298,7 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
             if (flags & RENDER_COLOUR_INDEX) {
                 dlIndex |= 8; // Colour Index
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEDE8[dlIndex]), numberOfGfxCommands(D_800DEDE8[0]));
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsObjDecals[dlIndex]), numberOfGfxCommands(dDrawRenderSettingsObjDecals[0]));
             return;
         }
 
@@ -1298,7 +1307,7 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
             if (flags & RENDER_FOG_ACTIVE) {
                 dlIndex |= 8; // Fog
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DECE8[dlIndex]), numberOfGfxCommands(D_800DECE8[0]));
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsCutoutGeometry[dlIndex]), numberOfGfxCommands(dDrawRenderSettingsCutoutGeometry[0]));
             return;
         }
 
@@ -1311,11 +1320,11 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
                 gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
                 gCurrentRenderFlags |= RENDER_Z_COMPARE;
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE7C8[dlIndex]), numberOfGfxCommands(D_800DE7C8[0]));
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsVtxAlpha[dlIndex]), numberOfGfxCommands(dDrawRenderSettingsVtxAlpha[0]));
             return;
         }
 
-        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE8E8[flags]), numberOfGfxCommands(D_800DE8E8[0]));
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsCommon[flags]), numberOfGfxCommands(dDrawRenderSettingsCommon[0]));
         return;
     }
 }
@@ -1344,7 +1353,7 @@ void load_blinking_lights_texture(Gfx **dlist, TextureHeader *texture_list, u32 
     }
 
     gDPPipeSync((*dlist)++);
-    D_8012637C = 0;
+    gCurrentTextureHeader = 0;
     flags &= 0x1F;
     gSPSetGeometryMode((*dlist)++, G_FOG);
 
@@ -1355,7 +1364,7 @@ void load_blinking_lights_texture(Gfx **dlist, TextureHeader *texture_list, u32 
     }
     gForceFlags = TRUE;
     gCurrentRenderFlags = RENDER_NONE;
-    gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DF1A8[flags]), numberOfGfxCommands(D_800DF1A8[0]));
+    gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsBlinkingLights[flags]), numberOfGfxCommands(dDrawRenderSettingsBlinkingLights[0]));
 }
 
 
@@ -1376,7 +1385,7 @@ void func_8007BF34(Gfx **dlist, s32 arg1) {
         if (((gCurrentRenderFlags * 16) < 0) || (gForceFlags != 0)) {
             gSPSetGeometryMode((*dlist)++, G_FOG);
         }
-        temp_a1 = arg1 & 0xF7FFFFFF & ~D_80126378;
+        temp_a1 = arg1 & 0xF7FFFFFF & ~gBlockedRenderFlags;
         temp_v0_3 = temp_a1 & 2;
         if (((gCurrentRenderFlags & 2) != temp_v0_3) || (gForceFlags != 0)) {
             if (temp_v0_3 != 0) {
@@ -1390,14 +1399,14 @@ void func_8007BF34(Gfx **dlist, s32 arg1) {
         temp_t8 = temp_a1 & ~0x800;
         if (D_800DE7C4 == 0) {
             if ((gCurrentRenderFlags & 0x200) != 0) {
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE848[((temp_t8 >> 1) & 1) * 16]), numberOfGfxCommands(D_800DE848[0]));
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsSprite[((temp_t8 >> 1) & 1) * 16]), numberOfGfxCommands(dDrawRenderSettingsSprite[0]));
             } else {
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE868[(temp_t8 - 16) * 16]), numberOfGfxCommands(D_800DE868[0]));
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsSprite2[(temp_t8 - 16) * 16]), numberOfGfxCommands(dDrawRenderSettingsSprite2[0]));
             }
         } else {
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE8E8[temp_t8 * 16]), numberOfGfxCommands(D_800DE8E8[0]));
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsCommon[temp_t8 * 16]), numberOfGfxCommands(dDrawRenderSettingsCommon[0]));
         }
-        D_8012637C = NULL;
+        gCurrentTextureHeader = NULL;
         D_80126380 = 1;
     }
 }

@@ -48,7 +48,7 @@ ScreenViewport gScreenViewports[4] = {
 
 u32 gViewportWithBG = FALSE;
 
-Vertex D_800DD138 = {
+Vertex gVehiclePartVertex = {
     0, 0, 0, 255, 255, 255, 255
 };
 
@@ -1008,7 +1008,7 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
     s32 var_s2;
 
     result = TRUE;
-    if (flags & RENDER_ANTI_ALIASING) {
+    if (flags & RENDER_VEHICLE_PART) {
         sp5C = D_80120D28[D_80120D20] - obj->segment.trans.x_position;
         sp58 = D_80120D40[D_80120D20] - obj->segment.trans.y_position;
         var_f20 = D_80120D58[D_80120D20] - obj->segment.trans.z_position;
@@ -1052,8 +1052,8 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
         f32_matrix_mult(D_80120D70[D_80120D1C], &D_80120F20, &D_80121060);
         f32_matrix_to_s16_matrix(&D_80121060, *mtx);
         D_80120D88[D_80120D1C] = *mtx;
-        gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), 0x80);
-        gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(&D_800DD138), 1, 0);
+        gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
+        gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(&gVehiclePartVertex), 1, 0);
     } else {
         v = *vertexList;
         v->x = obj->segment.trans.x_position;
@@ -1075,13 +1075,13 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
         f32_matrix_from_rotation_and_scale((f32 (*)[4]) D_80120D70[D_80120D1C], sp34, obj->segment.trans.scale, gVideoAspectRatio);
         f32_matrix_to_s16_matrix(D_80120D70[D_80120D1C], *mtx);
         D_80120D88[D_80120D1C] = *mtx;
-        gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), 0x80);
+        gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*dlist)++);
     }
     if (D_80120D0C == 0) {
         var_s2 = ((var_s2 & 0xFF) * arg4->unk0) >> 8;
     }
-    flags &= ~RENDER_ANTI_ALIASING;
+    flags &= ~RENDER_VEHICLE_PART;
     if (flags & RENDER_SEMI_TRANSPARENT) {
         flags |= RENDER_ANTI_ALIASING;
     }
