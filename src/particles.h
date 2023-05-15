@@ -163,6 +163,7 @@ typedef struct Particle {
   /* 0x0077 */ u8 unk77;
 } Particle;
 
+// Almost an identical copy of Particle, but a few bytes shorter. Exists to make sure func_800B1CB8 matches.
 typedef struct ParticleType {
     union {
   /* 0x0000 */ ParticleBehavior *behaviour;
