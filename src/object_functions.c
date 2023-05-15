@@ -2538,7 +2538,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         if (obj->segment.object.opacity < (255 - var_a2)) {
             obj->segment.object.opacity += var_a2;
         } else {
-            obj->segment.object.opacity = 0xFF;
+            obj->segment.object.opacity = 255;
             obj->properties.npc.action = TAJ_MODE_APPROACH_PLAYER;
         }
         break;
@@ -2606,17 +2606,17 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             taj->animFrameF = 0.0f;
         }
         var_a2 = updateRate * 4;
-        if (obj->segment.object.opacity < (0xFF - var_a2)) {
+        if (obj->segment.object.opacity < (255 - var_a2)) {
             obj->segment.object.opacity += var_a2;
         } else {
-            obj->segment.object.opacity = 0xFF;
+            obj->segment.object.opacity = 255;
             obj->properties.npc.action = TAJ_MODE_ROAM;
         }
         break;
     case TAJ_MODE_RACE:
         obj->interactObj->flags = INTERACT_FLAGS_NONE;
         obj->segment.object.animationID = 6;
-        obj->segment.object.opacity = 0xFF;
+        obj->segment.object.opacity = 255;
         taj->animFrameF += updateRateF * 1.0;
         break;
     default:
@@ -5195,7 +5195,7 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
             }
             assign_dialogue_box_id(4);
             set_current_dialogue_box_coords(4, x1, y1, x2, y2);
-            set_current_dialogue_background_colour(4, 128, 64, 128, (properties->opacity * SCREEN_WIDTH_HALF) >> 8);
+            set_current_dialogue_background_colour(4, 128, 64, 128, (properties->opacity * 160) >> 8);
             set_current_text_background_colour(4, 0, 0, 0, 0);
             set_dialogue_font(4, FONT_COLOURFUL);
             set_current_text_colour(4, 255, 255, 255, 0, (properties->opacity * 255) >> 8);
