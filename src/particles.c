@@ -536,7 +536,7 @@ void func_800AF52C(Object *obj, s32 arg1) {
         ((ObjectSegment *) temp_v0)->trans.y_position = obj->segment.trans.y_position;
         ((ObjectSegment *) temp_v0)->trans.z_position = obj->segment.trans.z_position;
     } else if (temp_v0->data.flags & 0x400) {
-        temp_v0->data.unkA = gParticlesAssetTable[temp_v0->data.unk8]->unk17 << 8;
+        temp_v0->data.unkA = gParticlesAssetTable[temp_v0->data.unk8]->colour.a << 8;
 
         if (temp_v0->data.unk6 > 0) { // Useless if statement, since the loop already does this.
             for (i = 0; i < temp_v0->data.unk6; i++){
@@ -585,7 +585,7 @@ GLOBAL_ASM("asm/non_matchings/particles/func_800AFC3C.s")
 
 void func_800AFE5C(Particle *arg0, Particle *arg1) {
     Particle *temp_s0;
-    Object *tempObj;
+    Particle *tempObj;
     Particle *tempObj2;
     s32 i;
     ParticleBehavior *temp_s4;
@@ -594,7 +594,7 @@ void func_800AFE5C(Particle *arg0, Particle *arg1) {
     if (arg1->data.flags & 0x4000) {
         tempObj = func_800B0BAC();
         if (tempObj != NULL) {
-            func_8000E9D0(tempObj);
+            func_8000E9D0((Object *) tempObj);
         }
         arg1->data.flags &= 0xDFFF;
         if (arg1->data.unk6 + 64 > 255) {
@@ -630,9 +630,9 @@ void func_800AFE5C(Particle *arg0, Particle *arg1) {
 }
 
 void func_800B0010(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehavior *arg3) {
-    s32 sp3C;
-    Vec3f sp30;
-    Vec3s sp28;
+    s32 flags;
+    Vec3f velocityPos;
+    Vec3s angle;
 
     if (arg3->flags & 0x70) {
         arg0->segment.x_velocity = arg3->unk30;
@@ -643,19 +643,19 @@ void func_800B0010(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehav
         arg0->segment.y_velocity = 0.0f;
         arg0->segment.z_velocity = 0.0f;
     }
-    sp3C = arg3->unk5C & 0x700;
-    if (sp3C) {
-        if (sp3C & 0x100) {
-            arg0->segment.x_velocity += (f32) get_random_number_from_range(-arg3->unk74, arg3->unk74) * 0.00001525878906;
+    flags = arg3->unk5C & (0x400 | 0x200 | 0x100);
+    if (flags) {
+        if (flags & 0x100) {
+            arg0->segment.x_velocity += (f32) get_random_number_from_range(-arg3->velocityRangeX1, arg3->velocityRangeX1) * 0.00001525878906;
         }
-        if (sp3C & 0x200) {
-            arg0->segment.y_velocity += (f32) get_random_number_from_range(-arg3->unk78,  arg3->unk78) * 0.00001525878906;
+        if (flags & 0x200) {
+            arg0->segment.y_velocity += (f32) get_random_number_from_range(-arg3->velocityRangeY1, arg3->velocityRangeY1) * 0.00001525878906;
         }
-        if (sp3C & 0x400) {
-            arg0->segment.z_velocity += (f32) get_random_number_from_range(-arg3->unk7C, arg3->unk7C) * 0.00001525878906;
+        if (flags & 0x400) {
+            arg0->segment.z_velocity += (f32) get_random_number_from_range(-arg3->velocityRangeZ1, arg3->velocityRangeZ1) * 0.00001525878906;
         }
     }
-    switch (arg3->flags & 0x70) {
+    switch (arg3->flags & (0x40 | 0x20 | 0x10)) {
         case 0x10:
             arg0->segment.x_velocity += arg1->segment.x_velocity;
             arg0->segment.y_velocity += arg1->segment.y_velocity;
@@ -668,76 +668,76 @@ void func_800B0010(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehav
             break;
     }
     if (arg3->flags & 4) {
-        sp30.x = 0.0f;
-        sp30.y = 0.0f;
-        sp30.z = -arg3->unk3C;
-        sp3C = arg3->unk5C;
-        if (sp3C & 0x10) {
-            sp30.z += (f32) get_random_number_from_range(-arg3->unk70, arg3->unk70) * 0.00001525878906;
+        velocityPos.x = 0.0f;
+        velocityPos.y = 0.0f;
+        velocityPos.z = -arg3->unk3C;
+        flags = arg3->unk5C;
+        if (flags & 0x10) {
+            velocityPos.z += (f32) get_random_number_from_range(-arg3->gravityRange2, arg3->gravityRange2) * 0.00001525878906;
         }
-        if (sp3C & 0x60) {
-            sp28.y_rotation = arg2->data.angle.unk12;
-            if (sp3C & 0x20) {
-                sp28.y_rotation += get_random_number_from_range(-arg3->unk6A, arg3->unk6A);
+        if (flags & (0x40 | 0x20)) {
+            angle.y_rotation = arg2->data.angle.unk12;
+            if (flags & 0x20) {
+                angle.y_rotation += get_random_number_from_range(-arg3->angleRangeY2, arg3->angleRangeY2);
             }
-            sp28.x_rotation = arg2->data.angle.unk14;
-            if (sp3C & 0x40) {
-                sp28.x_rotation += get_random_number_from_range((s32) -arg3->unk6C, (s32) arg3->unk6C);
+            angle.x_rotation = arg2->data.angle.unk14;
+            if (flags & 0x40) {
+                angle.x_rotation += get_random_number_from_range(-arg3->angleRangeX2, arg3->angleRangeX2);
             }
-            f32_vec3_apply_object_rotation3((ObjectTransform* ) &sp28, (f32*) &sp30);
+            f32_vec3_apply_object_rotation3((ObjectTransform* ) &angle, (f32*) &velocityPos);
         } else {
-            f32_vec3_apply_object_rotation3((ObjectTransform* ) &arg2->data.angle.unk12, (f32*) &sp30);
+            f32_vec3_apply_object_rotation3((ObjectTransform* ) &arg2->data.angle.unk12, (f32*) &velocityPos);
         }
-        f32_vec3_apply_object_rotation((ObjectTransform* ) arg0->segment.unk3C, (f32*) &sp30);
-        arg0->segment.x_velocity += sp30.x;
-        arg0->segment.y_velocity += sp30.y;
-        arg0->segment.z_velocity += sp30.z;
+        f32_vec3_apply_object_rotation((ObjectTransform* ) arg0->segment.unk3C, (f32*) &velocityPos);
+        arg0->segment.x_velocity += velocityPos.x;
+        arg0->segment.y_velocity += velocityPos.y;
+        arg0->segment.z_velocity += velocityPos.z;
     }
 }
 
 void func_800B03C0(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehavior *behaviour) {
     s32 flags;
-    Vec3f sp30;
-    Vec3s sp28;
+    Vec3f posVel;
+    Vec3s angle;
 
-    arg0->unk4C = arg2->data.unk18;
-    arg0->unk50 = arg2->data.unk1A;
-    arg0->unk54 = arg2->data.unk1C;
-    arg0->unk58 = behaviour->unk58;
+    arg0->somePosX = arg2->data.unk18;
+    arg0->somePosY = arg2->data.unk1A;
+    arg0->somePosZ = arg2->data.unk1C;
+    arg0->forwardVel = behaviour->forwardVel;
     if (behaviour->unk5C & 0x80000) {
-        arg0->unk58 += (f32) get_random_number_from_range(-behaviour->unk94, behaviour->unk94) * 0.00001525878906; // 0.00001525878906 ~= 1.0/65536.0
+        arg0->forwardVel += (f32) get_random_number_from_range(-behaviour->velocityRange, behaviour->velocityRange) * 0.00001525878906; // 0.00001525878906 ~= 1.0/65536.0
     }
     if (behaviour->flags & 1) {
-        sp30.x = 0.0f;
-        sp30.y = 0.0f;
-        sp30.z = -behaviour->unk10;
+        posVel.x = 0.0f;
+        posVel.y = 0.0f;
+        posVel.z = -behaviour->unk10;
         flags = behaviour->unk5C;
         if (flags & 1) {
-            sp30.z += (f32) get_random_number_from_range(-behaviour->unk60, behaviour->unk60) * 0.00001525878906;
+            posVel.z += (f32) get_random_number_from_range(-behaviour->gravityRange1, behaviour->gravityRange1) * 0.00001525878906;
         }
         if (flags & (4 | 2)) {
-            sp28.y_rotation = arg2->data.angle.y_rotation;
+            angle.y_rotation = arg2->data.angle.y_rotation;
             if (flags & 2) {
-                sp28.y_rotation += get_random_number_from_range(-behaviour->unk64, behaviour->unk64);
+                angle.y_rotation += get_random_number_from_range(-behaviour->angleRangeY1, behaviour->angleRangeY1);
             }
-            sp28.x_rotation = arg2->data.angle.x_rotation;
+            angle.x_rotation = arg2->data.angle.x_rotation;
             if (flags & 4) {
-                sp28.x_rotation += get_random_number_from_range(-behaviour->unk66, behaviour->unk66);
+                angle.x_rotation += get_random_number_from_range(-behaviour->angleRangeX1, behaviour->angleRangeX1);
             }
-            f32_vec3_apply_object_rotation3((ObjectTransform* ) &sp28, (f32 *) &sp30);
+            f32_vec3_apply_object_rotation3((ObjectTransform* ) &angle, (f32 *) &posVel);
         } else {
-            f32_vec3_apply_object_rotation((ObjectTransform* ) &arg2->data.angle.y_rotation, (f32 *) &sp30);
+            f32_vec3_apply_object_rotation((ObjectTransform* ) &arg2->data.angle.y_rotation, (f32 *) &posVel);
         }
-        arg0->unk4C += sp30.x;
-        arg0->unk50 += sp30.y;
-        arg0->unk54 += sp30.z;
+        arg0->somePosX += posVel.x;
+        arg0->somePosY += posVel.y;
+        arg0->somePosZ += posVel.z;
     }
     if (arg0->segment.particle.unk39 != 4) {
-        f32_vec3_apply_object_rotation((ObjectTransform *) arg1, &arg0->unk4C);
+        f32_vec3_apply_object_rotation((ObjectTransform *) arg1, &arg0->somePosX);
     }
-    arg0->segment.trans.x_position = arg0->unk4C;
-    arg0->segment.trans.y_position = arg0->unk50;
-    arg0->segment.trans.z_position = arg0->unk54;
+    arg0->segment.trans.x_position = arg0->somePosX;
+    arg0->segment.trans.y_position = arg0->somePosY;
+    arg0->segment.trans.z_position = arg0->somePosZ;
     if (arg0->segment.particle.unk39 == 4) {
         f32_vec3_apply_object_rotation((ObjectTransform *) arg1, &arg0->segment.trans.x_position);
     }
@@ -770,15 +770,15 @@ Particle *func_800B0698(Particle *arg0, Particle *arg1) {
     var_v0->segment.unk40 = sp2C->unk2;
     var_v0->segment.unk3C = arg0;
     var_v0->unk70 = arg1;
-    var_v0->segment.trans.scale = sp2C->unk10 * sp20->unk50;
-    var_v0->segment.unk28 = sp2C->unk10 * sp20->unk54;
+    var_v0->segment.trans.scale = sp2C->scale * sp20->unk50;
+    var_v0->segment.unk28 = sp2C->scale * sp20->unk54;
     var_v0->segment.particle.unk3A = sp2C->unk8;
     var_v0->segment.particle.unk34 = 0.0f;
-    var_v0->segment.particle.unk38 = 0;
-    var_v0->unk6C.r = sp2C->unk14;
-    var_v0->unk6C.g = sp2C->unk15;
-    var_v0->unk6C.b = sp2C->unk16;
-    var_v0->unk6C.a = sp2C->unk17;
+    var_v0->segment.particle.unk38 = 0.0f;
+    var_v0->colour.r = sp2C->colour.r;
+    var_v0->colour.g = sp2C->colour.g;
+    var_v0->colour.b = sp2C->colour.b;
+    var_v0->colour.a = sp2C->colour.a;
     if (var_v0->segment.unk40 & 0x800 && arg0->unk54_ptr != NULL) {
         var_v0->unk4A = *arg0->unk54_ptr * 255.0f;
     } else {
@@ -804,13 +804,13 @@ Particle *func_800B0698(Particle *arg0, Particle *arg1) {
     }
     func_800B03C0(var_v0, arg0, arg1, sp20);
     if (sp20->flags & 0x80) {
-        var_v0->segment.trans.y_rotation = sp20->unk44;
-        var_v0->segment.trans.x_rotation = sp20->unk46;
-        var_v0->segment.trans.z_rotation = sp20->unk48;
+        var_v0->segment.trans.y_rotation = sp20->angleVelY;
+        var_v0->segment.trans.x_rotation = sp20->angleVelX;
+        var_v0->segment.trans.z_rotation = sp20->angleVelZ;
     } else {
-        var_v0->segment.trans.y_rotation = arg0->segment.trans.y_rotation + sp20->unk44;
-        var_v0->segment.trans.x_rotation = arg0->segment.trans.x_rotation + sp20->unk46;
-        var_v0->segment.trans.z_rotation = arg0->segment.trans.z_rotation + sp20->unk48;
+        var_v0->segment.trans.y_rotation = arg0->segment.trans.y_rotation + sp20->angleVelY;
+        var_v0->segment.trans.x_rotation = arg0->segment.trans.x_rotation + sp20->angleVelX;
+        var_v0->segment.trans.z_rotation = arg0->segment.trans.z_rotation + sp20->angleVelZ;
     }
     var_v0->unk62 = sp20->unk4A;
     var_v0->unk64 = sp20->unk4C;
@@ -821,7 +821,7 @@ Particle *func_800B0698(Particle *arg0, Particle *arg1) {
         temp_f0 = var_v0->segment.x_velocity;
         temp_f2 = var_v0->segment.y_velocity;
         temp_f14 = var_v0->segment.z_velocity;
-        var_v0->unk58 = sqrtf((temp_f0 * temp_f0) + (temp_f2 * temp_f2) + (temp_f14 * temp_f14));
+        var_v0->forwardVel = sqrtf((temp_f0 * temp_f0) + (temp_f2 * temp_f2) + (temp_f14 * temp_f14));
     }
     if (sp20->flags & 2) {
         arg1->data.unkC.unk10 += sp20->unk1C;
@@ -898,7 +898,7 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
     if (partBeh->unk5C & 0x20000) {
         sp24 += (f32) get_random_number_from_range(-partBeh->unk8C, partBeh->unk8C) * 0.00001525878906;
     }
-    var_v0->segment.trans.scale = sp38->unk10 * sp24;
+    var_v0->segment.trans.scale = sp38->scale * sp24;
     sp24 = partBeh->unk54;
     if (partBeh->unk5C & 0x40000) {
         sp24 += (f32) get_random_number_from_range(-partBeh->unk90, partBeh->unk90) * 0.00001525878906;
@@ -906,41 +906,41 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
     if (partBeh->flags & 0x1000) {
         var_v0->segment.unk28 = sqrtf((arg0->segment.x_velocity * arg0->segment.x_velocity) + (arg0->segment.y_velocity * arg0->segment.y_velocity) + (arg0->segment.z_velocity * arg0->segment.z_velocity)) * sp24 * 0.1f;
     } else {
-        var_v0->segment.unk28 = sp38->unk10 * sp24;
+        var_v0->segment.unk28 = sp38->scale * sp24;
     }
     var_v0->segment.particle.unk3A = get_random_number_from_range(-sp38->unkA, sp38->unkA) + sp38->unk8;
-    var_v0->segment.particle.unk38 = 0;
+    var_v0->segment.particle.unk38 = 0.0f;
     var_v0->segment.particle.unk34 = 0.0f;
     if (D_800E2D00[0].word != 0) {
-        var_v0->unk6C.word = D_800E2D00[0].word;
+        var_v0->colour.word = D_800E2D00[0].word;
     } else if ((s32) sp28 != -1) {
         arg1->data.unk1E++;
         if (arg1->data.unk1E >= sp28->unk0) {
             arg1->data.unk1E = 0;
         }
-        var_v0->unk6C.r = sp28[arg1->data.unk1E + 2].r;
-        var_v0->unk6C.g = sp28[arg1->data.unk1E + 2].g;
-        var_v0->unk6C.b = sp28[arg1->data.unk1E + 2].b;
-        var_v0->unk6C.a = sp28[arg1->data.unk1E + 2].a;
+        var_v0->colour.r = sp28[arg1->data.unk1E + 2].r;
+        var_v0->colour.g = sp28[arg1->data.unk1E + 2].g;
+        var_v0->colour.b = sp28[arg1->data.unk1E + 2].b;
+        var_v0->colour.a = sp28[arg1->data.unk1E + 2].a;
     } else {
-        var_v0->unk6C.r = sp38->unk14;
-        var_v0->unk6C.g = sp38->unk15;
-        var_v0->unk6C.b = sp38->unk16;
-        var_v0->unk6C.a = sp38->unk17;
+        var_v0->colour.r = sp38->colour.r;
+        var_v0->colour.g = sp38->colour.g;
+        var_v0->colour.b = sp38->colour.b;
+        var_v0->colour.a = sp38->colour.a;
     }
     sp3C = partBeh->unk5C & 0xF00000;
     if (sp3C != 0) {
         if (sp3C & 0x100000) {
-            var_v0->unk6C.r += get_random_number_from_range(-partBeh->unk98, partBeh->unk98);
+            var_v0->colour.r += get_random_number_from_range(-partBeh->colourRangeR, partBeh->colourRangeR);
         }
         if ((sp3C << 10) < 0) {
-            var_v0->unk6C.g += get_random_number_from_range(-partBeh->unk99, partBeh->unk99);
+            var_v0->colour.g += get_random_number_from_range(-partBeh->colourRangeG, partBeh->colourRangeG);
         }
         if ((sp3C << 9) < 0) {
-            var_v0->unk6C.b += get_random_number_from_range(-partBeh->unk9A, partBeh->unk9A);
+            var_v0->colour.b += get_random_number_from_range(-partBeh->colourRangeB, partBeh->colourRangeB);
         }
         if ((sp3C << 8) < 0) {
-            var_v0->unk6C.a += get_random_number_from_range(-partBeh->unk9B, partBeh->unk9B);
+            var_v0->colour.a += get_random_number_from_range(-partBeh->colourRangeA, partBeh->colourRangeA);
         }
     }
     var_v0->unk60 = sp38->unkE;
@@ -964,9 +964,9 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
         if (var_v0->unk44 != 0) {
             if ((*var_v0->unk44_2->unk8)->unk6 & 4) {
                 if (var_v0->segment.unk40 & 0x1000) {
-                    var_v0->segment.trans.flags |= 0x100;
+                    var_v0->segment.trans.flags |= OBJ_FLAGS_UNK_0100;
                 } else {
-                    var_v0->segment.trans.flags |= 0x80;
+                    var_v0->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
                 }
             }
             if (partBeh->flags & 0x800) {
@@ -989,9 +989,9 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
             if ((*sp30) != NULL) {
                 if ((*sp30)->flags & 4) {
                     if (var_v0->segment.unk40 & 0x1000) {
-                        var_v0->segment.trans.flags |= 0x100;
+                        var_v0->segment.trans.flags |= OBJ_FLAGS_UNK_0100;
                     } else {
-                        var_v0->segment.trans.flags |= 0x80;
+                        var_v0->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
                     }
                 }
                 if (partBeh->flags & 0x800) {
@@ -1019,30 +1019,30 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
     }
     func_800B03C0(var_v0, arg0, arg1, partBeh);
     if (partBeh->flags & 0x80) {
-        var_v0->segment.trans.y_rotation = partBeh->unk44;
-        var_v0->segment.trans.x_rotation = partBeh->unk46;
-        var_v0->segment.trans.z_rotation = partBeh->unk48;
+        var_v0->segment.trans.y_rotation = partBeh->angleVelY;
+        var_v0->segment.trans.x_rotation = partBeh->angleVelX;
+        var_v0->segment.trans.z_rotation = partBeh->angleVelZ;
     } else {
-        var_v0->segment.trans.y_rotation = arg0->segment.trans.y_rotation + partBeh->unk44;
-        var_v0->segment.trans.x_rotation = arg0->segment.trans.x_rotation + partBeh->unk46;
-        var_v0->segment.trans.z_rotation = arg0->segment.trans.z_rotation + partBeh->unk48;
+        var_v0->segment.trans.y_rotation = arg0->segment.trans.y_rotation + partBeh->angleVelY;
+        var_v0->segment.trans.x_rotation = arg0->segment.trans.x_rotation + partBeh->angleVelX;
+        var_v0->segment.trans.z_rotation = arg0->segment.trans.z_rotation + partBeh->angleVelZ;
     }
     sp3C = partBeh->unk5C & 0x3800;
     if (sp3C != 0) {
         if (sp3C & 0x800) {
-            var_v0->segment.trans.y_rotation += get_random_number_from_range(-partBeh->unk80, partBeh->unk80);
+            var_v0->segment.trans.y_rotation += get_random_number_from_range(-partBeh->angleRangeY3, partBeh->angleRangeY3);
         }
         if (sp3C & 0x1000) {
-            var_v0->segment.trans.x_rotation += get_random_number_from_range(-partBeh->unk82, partBeh->unk82);
+            var_v0->segment.trans.x_rotation += get_random_number_from_range(-partBeh->angleRangeX3, partBeh->angleRangeX3);
         }
         if (sp3C & 0x2000) {
-            var_v0->segment.trans.z_rotation += get_random_number_from_range(-partBeh->unk84, partBeh->unk84);
+            var_v0->segment.trans.z_rotation += get_random_number_from_range(-partBeh->angleRangeZ3, partBeh->angleRangeZ3);
         }
     }
     var_v0->unk62 = partBeh->unk4A;
     var_v0->unk64 = partBeh->unk4C;
     var_v0->unk66 = partBeh->unk4E;
-    sp3C = partBeh->unk5C & 0x1C000;
+    sp3C = partBeh->unk5C & (0x10000 | 0x8000 | 0x4000);
     if (sp3C != 0) {
         if (sp3C & 0x4000) {
             var_v0->unk62 += get_random_number_from_range(-partBeh->unk86, partBeh->unk86);
@@ -1057,7 +1057,7 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
     func_800B0010(var_v0, arg0, arg1, partBeh);
     var_v0->unk68 = D_800E2E2C[(var_v0->segment.unk40 >> 4) & 7];
     if (var_v0->segment.particle.unk39 == 5) {
-        var_v0->unk58 = sqrtf((var_v0->segment.x_velocity * var_v0->segment.x_velocity) + (var_v0->segment.y_velocity * var_v0->segment.y_velocity) + (var_v0->segment.z_velocity * var_v0->segment.z_velocity));
+        var_v0->forwardVel = sqrtf((var_v0->segment.x_velocity * var_v0->segment.x_velocity) + (var_v0->segment.y_velocity * var_v0->segment.y_velocity) + (var_v0->segment.z_velocity * var_v0->segment.z_velocity));
     }
     if (partBeh->flags & 2) {
         arg1->data.unk6++;

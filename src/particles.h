@@ -16,11 +16,8 @@ typedef struct unk800E2CF0 {
     u8 unkC;
     u8 unkD;
     s16 unkE;
-    f32 unk10;
-    u8 unk14;
-    u8 unk15;
-    u8 unk16;
-    u8 unk17;
+    f32 scale;
+    ColourRGBA colour;
 } unk800E2CF0;
 
 /* Size: 0x10 bytes */
@@ -141,13 +138,13 @@ typedef struct Particle {
   };
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A;
-  /* 0x004C */ f32 unk4C;
-  /* 0x0050 */ f32 unk50;
+  /* 0x004C */ f32 somePosX;
+  /* 0x0050 */ f32 somePosY;
   union {
-  /* 0x0054 */ f32 unk54;
+  /* 0x0054 */ f32 somePosZ;
   /* 0x0054 */ f32 *unk54_ptr;
   };
-  /* 0x0058 */ f32 unk58;
+  /* 0x0058 */ f32 forwardVel;
   /* 0x005C */ s16 unk5C;
   /* 0x005E */ s16 unk5E;
   /* 0x0060 */ s16 unk60;
@@ -155,7 +152,7 @@ typedef struct Particle {
   /* 0x0064 */ s16 unk64;
   /* 0x0066 */ s16 unk66;
   /* 0x0068 */ f32 unk68;
-  /* 0x006C */ ColourRGBA unk6C;
+  /* 0x006C */ ColourRGBA colour;
   /* 0x0070 */ struct Particle *unk70;
   /* 0x0074 */ u8 unk74;
   /* 0x0075 */ u8 unk75;
@@ -204,7 +201,7 @@ void func_800AF404(s32 arg0); // Non Matching
 void func_800AFC3C(Object *, s32); // Non Matching
 void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
 void func_800AF714(Object*, s32); // Non matching
-Object *func_800B0BAC();
+Particle *func_800B0BAC();
 void func_800B26E0();
 void func_800B3140(Particle *);
 void func_800B3240(Particle *);
