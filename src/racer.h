@@ -110,9 +110,9 @@ typedef struct ObjectCamera {
   /* 0x0018 */ f32 unk18;
   /* 0x001C */ f32 unk1C;
   /* 0x0020 */ f32 unk20;
-  /* 0x0024 */ f32 x_velocity;
-  /* 0x0028 */ f32 y_velocity;
-  /* 0x002C */ f32 z_velocity;
+  /* 0x0024 */ f32 offsetX;
+  /* 0x0028 */ f32 offsetY;
+  /* 0x002C */ f32 offsetZ;
   /* 0x0030 */ f32 unk30;
   /* 0x0034 */ s16 segmentIndex;
   /* 0x0036 */ s16 mode;

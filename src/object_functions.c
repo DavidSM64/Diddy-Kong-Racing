@@ -2469,7 +2469,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         if (obj->segment.object.opacity < (255 - var_a2)) {
             obj->segment.object.opacity += var_a2;
         } else {
-            obj->segment.object.opacity = 0xFF;
+            obj->segment.object.opacity = 255;
             obj->properties.npc.action = TAJ_MODE_APPROACH_PLAYER;
         }
         break;
@@ -2537,17 +2537,17 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             taj->animFrameF = 0.0f;
         }
         var_a2 = updateRate * 4;
-        if (obj->segment.object.opacity < (0xFF - var_a2)) {
+        if (obj->segment.object.opacity < (255 - var_a2)) {
             obj->segment.object.opacity += var_a2;
         } else {
-            obj->segment.object.opacity = 0xFF;
+            obj->segment.object.opacity = 255;
             obj->properties.npc.action = TAJ_MODE_ROAM;
         }
         break;
     case TAJ_MODE_RACE:
         obj->interactObj->flags = INTERACT_FLAGS_NONE;
         obj->segment.object.animationID = 6;
-        obj->segment.object.opacity = 0xFF;
+        obj->segment.object.opacity = 255;
         taj->animFrameF += updateRateF * 1.0f;
         break;
     default:

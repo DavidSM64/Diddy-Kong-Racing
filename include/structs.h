@@ -1516,40 +1516,41 @@ typedef struct ParticleBehavior {
     f32 unk3C;
     s16 unk40;
     s16 unk42;
-    s16 unk44;
-    s16 unk46;
-    s16 unk48;
+    // These names are pretty bad, but they're better than nothing.
+    s16 angleVelY;
+    s16 angleVelX;
+    s16 angleVelZ;
     s16 unk4A;
     s16 unk4C;
     s16 unk4E;
     f32 unk50;
     f32 unk54;
-    f32 unk58;
+    f32 forwardVel;
     s32 unk5C;
-    s32 unk60;
-    s16 unk64;
-    s16 unk66;
-    s16 unk68;
-    s16 unk6A;
-    s16 unk6C;
-    s16 unk6E;
-    s32 unk70;
-    s32 unk74;
-    s32 unk78;
-    s32 unk7C;
-    s16 unk80;
-    s16 unk82;
-    s16 unk84;
+    s32 gravityRange1;
+    s16 angleRangeY1;
+    s16 angleRangeX1;
+    s16 angleRangeZ1;
+    s16 angleRangeY2;
+    s16 angleRangeX2;
+    s16 angleRangeZ2;
+    s32 gravityRange2;
+    s32 velocityRangeX1;
+    s32 velocityRangeY1;
+    s32 velocityRangeZ1;
+    s16 angleRangeY3;
+    s16 angleRangeX3;
+    s16 angleRangeZ3;
     s16 unk86;
     s16 unk88;
     s16 unk8A;
-    s32 unk8C;
-    s32 unk90;
-    s32 unk94;
-    u8 unk98;
-    u8 unk99;
-    u8 unk9A;
-    u8 unk9B;
+    s32 unk8C; // Something to do with scale
+    s32 unk90; // Something to do with scale
+    s32 velocityRange;
+    u8 colourRangeR;
+    u8 colourRangeG;
+    u8 colourRangeB;
+    u8 colourRangeA;
     s32 *unk9C;
 } ParticleBehavior;
 
@@ -1608,6 +1609,16 @@ typedef struct SegmentPropertiesObject {
   /* 0x003B */ s8 animationID;
 } SegmentPropertiesObject;
 
+typedef struct SegmentPropertiesParticle {
+  /* 0x002C */ s16 unk2C;
+  /* 0x002E */ s16 unk2E;
+  /* 0x0030 */ f32 unk30;
+  /* 0x0034 */ f32 unk34;
+  /* 0x0038 */ u8 unk38;
+  /* 0x0039 */ u8 unk39;
+  /* 0x003A */ s16 unk3A;
+} SegmentPropertiesParticle;
+
 typedef struct SegmentPropertiesCamera {
   /* 0x002C */ f32 unk2C;
   /* 0x0030 */ f32 distanceToCamera;
@@ -1627,6 +1638,7 @@ typedef struct ObjectSegment {
   /* 0x0028 */ f32 unk28;
   union {
       SegmentPropertiesObject object;
+      SegmentPropertiesParticle particle;
       SegmentPropertiesCamera camera;
   };
   /* 0x003C */ LevelObjectEntry* level_entry;
@@ -1642,6 +1654,7 @@ typedef struct unk800B0698_44 {
     union {
         unk800B0698_44_0 *unk0Ptr;
         s16 unk0;
+        struct unk800B0698_44_0 unk0struct;
     };
 } unk800B0698_44;
 
