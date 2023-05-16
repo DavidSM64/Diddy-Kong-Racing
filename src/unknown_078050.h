@@ -13,6 +13,11 @@
 #define SEGMENT_DEPTH_BUFFER 0x02000000
 #define SEGMENT_COLOUR_BUFFER 0x01000000
 
+enum TextureRectangleFlags {
+    TEXRECT_BILERP,
+    TEXRECT_POINT
+};
+
 typedef union {
     void (*function)(Gfx*, Matrix *);
     void *ptr;

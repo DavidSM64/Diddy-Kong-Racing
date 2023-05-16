@@ -2470,7 +2470,7 @@ void func_8008377C(UNUSED s32 updateRate, f32 arg1) {
         sMenuGuiOpacity = (gTitleRevealTimer * 8) - 1;
         func_80068508(0);
         if (scale != 1.0f) {
-            render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_FLOAT_HALF, 52.0f, scale, scale, 0xFFFFFFFE, 1);
+            render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_FLOAT_HALF, 52.0f, scale, scale, 0xFFFFFFFE, TEXRECT_POINT);
         } else {
             render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_HALF, 52, 255, 255, 255, 255);
         }
