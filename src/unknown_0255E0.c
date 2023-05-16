@@ -1070,13 +1070,13 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
         if (!(batchFlags & BATCH_FLAGS_DEPTH_WRITE) && !(batchFlags & BATCH_FLAGS_UNK00000800)) {
             batchFlags |= gAntiAliasing;
         }
-        if ((!(textureFlags & RENDER_SEMI_TRANSPARENT) && !(batchFlags & BATCH_FLAGS_UNK00002000)) || batchFlags & BATCH_FLAGS_UNK00000800) {
+        if ((!(textureFlags & RENDER_SEMI_TRANSPARENT) && !(batchFlags & BATCH_FLAGS_WATER)) || batchFlags & BATCH_FLAGS_UNK00000800) {
             renderBatch = TRUE;
         }
         if (nonOpaque) {
             renderBatch = (renderBatch + 1) & 1;
         }
-        if (sp78 && batchFlags & BATCH_FLAGS_UNK00002000) {
+        if (sp78 && batchFlags & BATCH_FLAGS_WATER) {
             renderBatch = FALSE;
         }
         if (!renderBatch) {
