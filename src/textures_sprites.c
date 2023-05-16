@@ -142,7 +142,6 @@ Gfx dRenderSettingsDecal[][2] = {
 };
 
 Gfx dRenderSettingsSolidColourVtxAlpha[][2] = {
-    // Screeching noises.
     DRAW_TABLE_GROUP(DKR_CC_UNK3, G_CC_MODULATEIA_PRIM2, DKR_OMH_2CYC_POINT, 
     G_RM_NOOP, G_RM_XLU_SURF2, G_RM_NOOP, G_RM_AA_XLU_SURF2, G_RM_NOOP, G_RM_ZB_XLU_SURF2, G_RM_NOOP, G_RM_AA_ZB_XLU_SURF2),
 };
