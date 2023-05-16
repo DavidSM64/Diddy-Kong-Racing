@@ -48,7 +48,7 @@ extern s32 sBackgroundFillColour;
 
 extern TextureHeader *D_800DE4C4;
 extern TextureHeader *D_800DE4C8;
-extern s32 gChecquerBGEnabled;
+extern s32 gChequerBGEnabled;
 
 extern s32 gfxBufCounter;
 extern s32 gfxBufCounter2;

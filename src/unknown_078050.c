@@ -24,7 +24,7 @@ s32 sBackgroundFillColour = GPACK_RGBA5551(0, 0, 0, 1) | (GPACK_RGBA5551(0, 0, 0
 u32 D_800DE4C0 = 0x40;
 TextureHeader *D_800DE4C4 = 0;
 TextureHeader *D_800DE4C8 = 0;
-s32 gChecquerBGEnabled = 0;
+s32 gChequerBGEnabled = FALSE;
 
 BackgroundFunction gBackgroundDrawFunc = { NULL };
 s32 gfxBufCounter = 0;
@@ -59,7 +59,7 @@ Gfx dRdpInit[] = {
     gsSPEndDisplayList(),
 };
 
-Gfx D_800DE598[] = {
+Gfx dRaceFinishBackgroundSettings[] = {
     gsDPPipeSync(),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
@@ -95,7 +95,7 @@ Gfx dTextureRectangleModes[] = {
     gsSPEndDisplayList(),
 };
 
-Gfx D_800DE670[] = {
+Gfx dScaledRectangleBaseModes[] = {
     gsDPPipeSync(),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
@@ -176,14 +176,14 @@ s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
     dkrtask->task.data_ptr = (u64 *) dlBegin;
     dkrtask->task.data_size = ((s32) dlEnd - (s32) dlBegin) >> 3; // Shifted by 3, repsenting the size of the Gfx type.
     dkrtask->task.type = M_GFXTASK;
-    dkrtask->task.flags = 2;
+    dkrtask->task.flags = OS_TASK_DP_WAIT;
     dkrtask->task.ucode_boot = (u64 *) rspF3DDKRBootStart;
     dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
     dkrtask->task.ucode = (u64 *) rspF3DDKRXbusStart;
     dkrtask->task.ucode_data = (u64 *) rspF3DDKRDataXbusStart;
-    dkrtask->task.ucode_data_size = 0x800;
+    dkrtask->task.ucode_data_size = SP_UCODE_DATA_SIZE;
     dkrtask->task.dram_stack = (u64 *) gDramStack;
-    dkrtask->task.dram_stack_size = 0x400;
+    dkrtask->task.dram_stack_size = SP_DRAM_STACK_SIZE8;
     dkrtask->task.output_buff = (u64 *) gGfxSPTaskYieldBuffer;
     dkrtask->task.output_buff_size = (u64 *) &D_80125EA0;
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
@@ -216,14 +216,14 @@ UNUSED void setup_ostask_xbus_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->task.data_ptr = (u64 *) dlBegin;
     dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
     dkrtask->task.type = M_GFXTASK;
-    dkrtask->task.flags = 2;
+    dkrtask->task.flags = OS_TASK_DP_WAIT;
     dkrtask->task.ucode_boot = (u64 *) rspF3DDKRBootStart;
     dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
     dkrtask->task.ucode = (u64 *) rspF3DDKRXbusStart;
     dkrtask->task.ucode_data = (u64 *) rspF3DDKRDataXbusStart;
-    dkrtask->task.ucode_data_size = 0x800;
+    dkrtask->task.ucode_data_size = SP_UCODE_DATA_SIZE;
     dkrtask->task.dram_stack = (u64 *) gDramStack;
-    dkrtask->task.dram_stack_size = 0x400;
+    dkrtask->task.dram_stack_size = SP_DRAM_STACK_SIZE8;
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
     dkrtask->task.yield_data_size = sizeof(gGfxTaskYieldData);
     dkrtask->task.output_buff = NULL;
@@ -270,13 +270,13 @@ UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->task.ucode_boot = (u64 *) rspF3DDKRBootStart;
     dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
     dkrtask->task.type = M_GFXTASK;
-    dkrtask->task.flags = 2;
+    dkrtask->task.flags = OS_TASK_DP_WAIT;
     dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
     dkrtask->task.ucode = (u64 *) rspF3DDKRFifoStart;
     dkrtask->task.ucode_data = (u64 *) rspF3DDKRDataFifoStart;
-    dkrtask->task.ucode_data_size = 0x800;
+    dkrtask->task.ucode_data_size = SP_UCODE_DATA_SIZE;
     dkrtask->task.dram_stack = (u64 *) gDramStack;
-    dkrtask->task.dram_stack_size = 0x400;
+    dkrtask->task.dram_stack_size = SP_DRAM_STACK_SIZE8;
     dkrtask->task.output_buff = (u64 *) gGfxSPTaskYieldBuffer;
     dkrtask->task.output_buff_size = (u64 *) (gGfxSPTaskYieldBuffer + YIELD_BUFFER_SIZE);
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
@@ -322,14 +322,14 @@ UNUSED void setup_ostask_fifo_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
     dkrtask->task.data_ptr = (u64 *) dlBegin;
     dkrtask->task.type = M_GFXTASK;
-    dkrtask->task.flags = 2;
+    dkrtask->task.flags = OS_TASK_DP_WAIT;
     dkrtask->task.ucode_boot = (u64 *) rspF3DDKRBootStart;
     dkrtask->task.ucode_boot_size = (s32) (rspF3DDKRDramStart - rspF3DDKRBootStart);
     dkrtask->task.ucode = (u64 *) rspF3DDKRFifoStart;
     dkrtask->task.ucode_data = (u64 *) rspF3DDKRDataFifoStart;
-    dkrtask->task.ucode_data_size = 0x800;
+    dkrtask->task.ucode_data_size = SP_UCODE_DATA_SIZE;
     dkrtask->task.dram_stack = (u64 *) gDramStack;
-    dkrtask->task.dram_stack_size = 0x400;
+    dkrtask->task.dram_stack_size = SP_DRAM_STACK_SIZE8;
     dkrtask->task.output_buff = (u64 *) gGfxSPTaskYieldBuffer;
     dkrtask->task.output_buff_size = (u64 *) &D_80125EA0;
     dkrtask->task.yield_data_ptr = (u64 *) gGfxTaskYieldData;
@@ -425,8 +425,8 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
     gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_COLOUR_BUFFER);
     if (drawBG) {
         if (check_viewport_background_flag(0)) {
-            if (gChecquerBGEnabled) {
-                render_chequer_background(dList);
+            if (gChequerBGEnabled) {
+                render_chequer_background(dList); // Unused
             } else if (D_800DE4C4) {
                 func_80078190(dList);
             } else if (gBackgroundDrawFunc.ptr != NULL) {
@@ -435,6 +435,7 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
                 gDPSetFillColor((*dList)++, sBackgroundFillColour);
                 gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
             }
+            // Used for secondary viewport backgrounds. This does not need to be 1 cycle, this could easily work with fillmode.
             if (copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2)) {
                 gDPSetCycleType((*dList)++, G_CYC_1CYCLE);
                 gDPSetPrimColor((*dList)++, 0, 0, sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 255);
@@ -443,8 +444,8 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
                 gDPFillRectangle((*dList)++, x1, y1, x2, y2);
             }
         } else {
-            if (gChecquerBGEnabled) {
-                render_chequer_background(dList);
+            if (gChequerBGEnabled) {
+                render_chequer_background(dList); // Unused
             } else if (D_800DE4C4) {
                 func_80078190(dList);
             } else if (gBackgroundDrawFunc.ptr != NULL) {
@@ -523,7 +524,7 @@ void func_80078190(Gfx **dlist) {
     widthAndHeight = get_video_width_and_height_as_s32();
     videoWidth = GET_VIDEO_WIDTH(widthAndHeight);
     videoHeight = GET_VIDEO_HEIGHT(widthAndHeight);
-    gSPDisplayList((*dlist)++, D_800DE598);
+    gSPDisplayList((*dlist)++, dRaceFinishBackgroundSettings);
 
     if (D_800DE4C8 == NULL) {
         gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE4C4->cmd), D_800DE4C4->numberOfCommands);
@@ -620,14 +621,14 @@ UNUSED void set_chequer_background(s32 colourA, s32 colourB, s32 width, s32 heig
     gChequerBGColourA2 = colourB & 0xFF;
     gChequerBGWidth = width;
     gChequerBGHeight = height;
-    gChecquerBGEnabled = TRUE;
+    gChequerBGEnabled = TRUE;
 }
 
 /**
  * Disables the chequer background.
 */
 UNUSED void disable_chequer_background(void) {
-    gChecquerBGEnabled = FALSE;
+    gChequerBGEnabled = FALSE;
 }
 
 /**
@@ -747,7 +748,7 @@ void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos
         dmaDlist = dTextureRectangleScaledXlu[(u8)flags & 0xFF];
     }
 
-    gSPDisplayList((*dlist)++, D_800DE670);
+    gSPDisplayList((*dlist)++, dScaledRectangleBaseModes);
     gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dmaDlist), numberOfGfxCommands(dTextureRectangleScaledOpa[0]));
     gDPSetPrimColorRGBA((*dlist)++, colour);
 
