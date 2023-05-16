@@ -87,8 +87,8 @@ glabel func_8007BF34
 /* 07CC70 8007C070 31AE0001 */  andi  $t6, $t5, 1
 /* 07CC74 8007C074 000E7900 */  sll   $t7, $t6, 4
 /* 07CC78 8007C078 3C018000 */  lui   $at, 0x8000
-/* 07CC7C 8007C07C 3C19800E */  lui   $t9, %hi(dDrawRenderSettingsSpriteCld) # $t9, 0x800e
-/* 07CC80 8007C080 2739E848 */  addiu $t9, %lo(dDrawRenderSettingsSpriteCld) # addiu $t9, $t9, -0x17b8
+/* 07CC7C 8007C07C 3C19800E */  lui   $t9, %hi(dRenderSettingsSpriteCld) # $t9, 0x800e
+/* 07CC80 8007C080 2739E848 */  addiu $t9, %lo(dRenderSettingsSpriteCld) # addiu $t9, $t9, -0x17b8
 /* 07CC84 8007C084 01E1C021 */  addu  $t8, $t7, $at
 /* 07CC88 8007C088 3C0C0702 */  lui   $t4, (0x07020010 >> 16) # lui $t4, 0x702
 /* 07CC8C 8007C08C 244B0008 */  addiu $t3, $v0, 8
@@ -103,8 +103,8 @@ glabel func_8007BF34
 /* 07CCAC 8007C0AC 24ACFFF0 */  addiu $t4, $a1, -0x10
 /* 07CCB0 8007C0B0 000C6900 */  sll   $t5, $t4, 4
 /* 07CCB4 8007C0B4 3C018000 */  lui   $at, 0x8000
-/* 07CCB8 8007C0B8 3C0F800E */  lui   $t7, %hi(dDrawRenderSettingsSpriteXlu) # $t7, 0x800e
-/* 07CCBC 8007C0BC 25EFE868 */  addiu $t7, %lo(dDrawRenderSettingsSpriteXlu) # addiu $t7, $t7, -0x1798
+/* 07CCB8 8007C0B8 3C0F800E */  lui   $t7, %hi(dRenderSettingsSpriteXlu) # $t7, 0x800e
+/* 07CCBC 8007C0BC 25EFE868 */  addiu $t7, %lo(dRenderSettingsSpriteXlu) # addiu $t7, $t7, -0x1798
 /* 07CCC0 8007C0C0 01A17021 */  addu  $t6, $t5, $at
 /* 07CCC4 8007C0C4 244A0008 */  addiu $t2, $v0, 8
 /* 07CCC8 8007C0C8 AC8A0000 */  sw    $t2, ($a0)
@@ -116,10 +116,10 @@ glabel func_8007BF34
 /* 07CCDC 8007C0DC 8C820000 */  lw    $v0, ($a0)
 /* 07CCE0 8007C0E0 00055100 */  sll   $t2, $a1, 4
 /* 07CCE4 8007C0E4 3C018000 */  lui   $at, 0x8000
-/* 07CCE8 8007C0E8 3C0C800E */  lui   $t4, %hi(dDrawRenderSettingsCommon) # $t4, 0x800e
+/* 07CCE8 8007C0E8 3C0C800E */  lui   $t4, %hi(dRenderSettingsCommon) # $t4, 0x800e
 /* 07CCEC 8007C0EC 24590008 */  addiu $t9, $v0, 8
 /* 07CCF0 8007C0F0 AC990000 */  sw    $t9, ($a0)
-/* 07CCF4 8007C0F4 258CE8E8 */  addiu $t4, %lo(dDrawRenderSettingsCommon) # addiu $t4, $t4, -0x1718
+/* 07CCF4 8007C0F4 258CE8E8 */  addiu $t4, %lo(dRenderSettingsCommon) # addiu $t4, $t4, -0x1718
 /* 07CCF8 8007C0F8 01415821 */  addu  $t3, $t2, $at
 /* 07CCFC 8007C0FC 3C090702 */  lui   $t1, (0x07020010 >> 16) # lui $t1, 0x702
 /* 07CD00 8007C100 35290010 */  ori   $t1, (0x07020010 & 0xFFFF) # ori $t1, $t1, 0x10
@@ -129,9 +129,9 @@ glabel func_8007BF34
 .L8007C110:
 /* 07CD10 8007C110 3C018012 */  lui   $at, %hi(gCurrentTextureHeader) # $at, 0x8012
 /* 07CD14 8007C114 AC20637C */  sw    $zero, %lo(gCurrentTextureHeader)($at)
-/* 07CD18 8007C118 3C018012 */  lui   $at, %hi(D_80126380) # $at, 0x8012
+/* 07CD18 8007C118 3C018012 */  lui   $at, %hi(gUsingTexture) # $at, 0x8012
 /* 07CD1C 8007C11C 240E0001 */  li    $t6, 1
-/* 07CD20 8007C120 A42E6380 */  sh    $t6, %lo(D_80126380)($at)
+/* 07CD20 8007C120 A42E6380 */  sh    $t6, %lo(gUsingTexture)($at)
 .L8007C124:
 /* 07CD24 8007C124 03E00008 */  jr    $ra
 /* 07CD28 8007C128 00000000 */   nop   

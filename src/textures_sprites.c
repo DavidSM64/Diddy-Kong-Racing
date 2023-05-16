@@ -19,7 +19,7 @@ s32 D_800DE7C4 = 1;
 
 // See "include/f3ddkr.h" for the defines
 
-Gfx dDrawRenderSettingsVtxAlpha[][2] = {
+Gfx dRenderSettingsVtxAlpha[][2] = {
     // Semitransparent Vertex Alpha'd surface (Zsorted)
     DRAW_TABLE_GROUP(G_CC_MODULATEIA, DKR_CC_UNK0, DKR_OMH_2CYC_BILERP, 
     DKR_RM_UNKNOWN0, G_RM_XLU_SURF2, DKR_RM_UNKNOWN0, G_RM_AA_XLU_SURF2, DKR_RM_UNKNOWN0, G_RM_ZB_XLU_SURF2, DKR_RM_UNKNOWN0, G_RM_AA_ZB_XLU_SURF2),
@@ -28,23 +28,27 @@ Gfx dDrawRenderSettingsVtxAlpha[][2] = {
     DKR_RM_UNKNOWN1, G_RM_XLU_SURF2, DKR_RM_UNKNOWN1, G_RM_AA_XLU_SURF2, DKR_RM_UNKNOWN1, G_RM_ZB_XLU_SURF2, DKR_RM_UNKNOWN1, G_RM_AA_ZB_XLU_SURF2),
 };
 
-Gfx dDrawRenderSettingsSpriteCld[][2] = {
+Gfx dRenderSettingsSpriteCld[][2] = {
     // Semitransparent Sprite (Preserve coverage)
     DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, G_RM_CLD_SURF, G_RM_CLD_SURF2),
     DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, G_RM_ZB_CLD_SURF, G_RM_ZB_CLD_SURF2)
 };
 
-// Should probably be merged with dDrawRenderSettingsSpriteCld
-Gfx dDrawRenderSettingsSpriteXlu[][2] = {
+// Should probably be merged with dRenderSettingsSpriteCld
+Gfx dRenderSettingsSpriteXlu[][2] = {
     // Semitransparent Sprite (Overwrite coverage)
-    DRAW_TABLE_GROUP(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, 
-    G_RM_XLU_SURF, G_RM_XLU_SURF2, DKR_RM_UNKNOWN2_1, DKR_RM_UNKNOWN2_2, DKR_RM_UNKNOWN3_1, DKR_RM_UNKNOWN3_2, G_RM_AA_ZB_XLU_INTER, G_RM_AA_ZB_XLU_INTER2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, G_RM_XLU_SURF, G_RM_XLU_SURF2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, DKR_RM_UNKNOWN2_1, DKR_RM_UNKNOWN2_2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, DKR_RM_UNKNOWN3_1, DKR_RM_UNKNOWN3_2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, G_RM_AA_ZB_XLU_INTER, G_RM_AA_ZB_XLU_INTER2),
     // Semitransparent Sprite (Overwrite coverage) (Copy)
-    DRAW_TABLE_GROUP(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, 
-    G_RM_XLU_SURF, G_RM_XLU_SURF2, DKR_RM_UNKNOWN2_1, DKR_RM_UNKNOWN2_2, DKR_RM_UNKNOWN3_1, DKR_RM_UNKNOWN3_2, G_RM_AA_ZB_XLU_INTER, G_RM_AA_ZB_XLU_INTER2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, G_RM_XLU_SURF, G_RM_XLU_SURF2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, DKR_RM_UNKNOWN2_1, DKR_RM_UNKNOWN2_2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, DKR_RM_UNKNOWN3_1, DKR_RM_UNKNOWN3_2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT, G_RM_AA_ZB_XLU_INTER, G_RM_AA_ZB_XLU_INTER2)
 };
 
-Gfx dDrawRenderSettingsCommon[][2] = {
+Gfx dRenderSettingsCommon[][2] = {
     // Opaque Surface
     DRAW_TABLE_GROUP(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA, DKR_OMH_1CYC_BILERP, 
     G_RM_OPA_SURF, G_RM_OPA_SURF2, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2, G_RM_ZB_OPA_SURF, G_RM_ZB_OPA_SURF2, G_RM_AA_ZB_OPA_SURF, G_RM_AA_ZB_OPA_SURF2),
@@ -57,45 +61,45 @@ Gfx dDrawRenderSettingsCommon[][2] = {
     // Semitransparent Surface with fog
     DRAW_TABLE_GROUP(G_CC_MODULATEIDECALA, DKR_CC_UNK1, DKR_OMH_2CYC_BILERP, 
     G_RM_FOG_SHADE_A, G_RM_XLU_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_XLU_SURF2, G_RM_FOG_SHADE_A, G_RM_ZB_XLU_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_ZB_XLU_SURF2),
-    // Semitransparent Surface with primitive colour
+    // Cutout Surface with primitive colour
     DRAW_TABLE_GROUP(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_BILERP, 
     G_RM_XLU_SURF, G_RM_XLU_SURF2, G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2, G_RM_AA_ZB_TEX_EDGE, G_RM_AA_ZB_TEX_EDGE2, G_RM_AA_ZB_XLU_INTER, G_RM_AA_ZB_XLU_INTER2),
-    // Semitransparent Surface with primitive colour (Copy)
+    // Cutout Surface with primitive colour (Copy)
     DRAW_TABLE_GROUP(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_BILERP, 
     G_RM_XLU_SURF, G_RM_XLU_SURF2, G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2, G_RM_AA_ZB_TEX_EDGE, G_RM_AA_ZB_TEX_EDGE2, G_RM_AA_ZB_XLU_INTER, G_RM_AA_ZB_XLU_INTER2),
-    // Semitransparent Surface with primitive colour and fog
+    // Cutout Surface with primitive colour and fog
     DRAW_TABLE_GROUP(G_CC_MODULATEIA_PRIM, DKR_CC_UNK2, DKR_OMH_2CYC_BILERP, 
     G_RM_FOG_SHADE_A, G_RM_XLU_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_XLU_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_ZB_TEX_EDGE2, G_RM_FOG_SHADE_A, G_RM_AA_ZB_XLU_INTER2),
-    // Semitransparent Surface with primitive colour and fog (Zsorted interpenetrating)
+    // Cutout Surface with primitive colour and fog (Zsorted interpenetrating)
     DRAW_TABLE_GROUP(G_CC_MODULATEIA_PRIM, DKR_CC_UNK2, DKR_OMH_2CYC_BILERP, 
     G_RM_FOG_SHADE_A, G_RM_XLU_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_XLU_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_ZB_XLU_INTER2 | Z_UPD, G_RM_FOG_SHADE_A, G_RM_AA_ZB_XLU_INTER2),
-    // Opaque Surface with indexed texture.
+    // Opaque Surface with indexed texture
     DRAW_TABLE_GROUP(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA, DKR_OMH_1CYC_CI_BILERP, 
     G_RM_OPA_SURF, G_RM_OPA_SURF2, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2, G_RM_ZB_OPA_SURF, G_RM_ZB_OPA_SURF2, G_RM_AA_ZB_OPA_SURF, G_RM_AA_ZB_OPA_SURF2),
-    // Semitransparent Surface with indexed texture.
+    // Semitransparent Surface with indexed texture
     DRAW_TABLE_GROUP(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA, DKR_OMH_1CYC_CI_BILERP, 
     G_RM_XLU_SURF, G_RM_XLU_SURF2, G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2, G_RM_ZB_XLU_SURF, G_RM_ZB_XLU_SURF2, G_RM_AA_ZB_XLU_SURF, G_RM_AA_ZB_XLU_SURF2),
-    // Opqaue Surface with indexed texture and fog.
+    // Opqaue Surface with indexed texture and fog
     DRAW_TABLE_GROUP(G_CC_MODULATEIDECALA, G_CC_PASS2, DKR_OMH_2CYC_CI_BILERP, 
     G_RM_FOG_SHADE_A, G_RM_OPA_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_OPA_SURF2, G_RM_FOG_SHADE_A, G_RM_ZB_OPA_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
-    // Semitransparent Surface with indexed texture and fog.
+    // Semitransparent Surface with indexed texture and fog
     DRAW_TABLE_GROUP(G_CC_MODULATEIDECALA, G_CC_PASS2, DKR_OMH_2CYC_CI_BILERP, 
     G_RM_FOG_SHADE_A, G_RM_XLU_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_XLU_SURF2, G_RM_FOG_SHADE_A, G_RM_ZB_XLU_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_ZB_XLU_SURF2),
     // Opaque Surface with indexed texture. (Cutout)
     DRAW_TABLE_GROUP(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA, DKR_OMH_1CYC_CI_BILERP, 
     G_RM_OPA_SURF, G_RM_OPA_SURF2, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2, G_RM_ZB_OPA_SURF, G_RM_ZB_OPA_SURF2, G_RM_AA_ZB_OPA_SURF, G_RM_AA_ZB_OPA_SURF2),
-    // Semitransparent Surface with indexed texture. (Cutout)
+    // Semitransparent Surface with indexed texture (Cutout)
     DRAW_TABLE_GROUP(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA, DKR_OMH_1CYC_CI_BILERP, 
     G_RM_XLU_SURF, G_RM_XLU_SURF2, G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2, G_RM_AA_ZB_TEX_EDGE, G_RM_AA_ZB_TEX_EDGE2, G_RM_AA_ZB_XLU_INTER, G_RM_AA_ZB_XLU_INTER2),
-    // Opqaue Surface with indexed texture and fog. (Cutout)
+    // Opqaue Surface with indexed texture and fog (Cutout)
     DRAW_TABLE_GROUP(G_CC_MODULATEIDECALA, G_CC_PASS2, DKR_OMH_2CYC_CI_BILERP, 
     G_RM_FOG_SHADE_A, G_RM_OPA_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_OPA_SURF2, G_RM_FOG_SHADE_A, G_RM_ZB_OPA_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
-    // Semitransparent Surface with indexed texture and fog. (Cutout)
+    // Semitransparent Surface with indexed texture and fog (Cutout)
     DRAW_TABLE_GROUP(G_CC_MODULATEIDECALA, G_CC_PASS2, DKR_OMH_2CYC_CI_BILERP, 
     G_RM_FOG_SHADE_A, G_RM_XLU_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_XLU_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_ZB_TEX_EDGE2, G_RM_FOG_SHADE_A, G_RM_AA_ZB_XLU_INTER2),
 };
 
-Gfx dDrawRenderSettingsCutoutGeometry[][2] = {
+Gfx dRenderSettingsCutout[][2] = {
     // Semitransparent Surface
     DRAW_TABLE_GROUP(G_CC_MODULATEIDECALA, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_BILERP, 
     G_RM_XLU_SURF, G_RM_XLU_SURF2, G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2, G_RM_AA_ZB_TEX_EDGE, G_RM_AA_ZB_TEX_EDGE2, DKR_RM_UNKNOWN4_1, DKR_RM_UNKNOWN4_2),
@@ -110,31 +114,40 @@ Gfx dDrawRenderSettingsCutoutGeometry[][2] = {
     G_RM_FOG_SHADE_A, G_RM_XLU_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_XLU_SURF2, G_RM_FOG_SHADE_A, G_RM_AA_ZB_TEX_EDGE2, G_RM_FOG_SHADE_A, DKR_RM_UNKNOWN4_2),
 };
 
-// Object Decals
-Gfx dDrawRenderSettingsObjDecals[][2] = {
-    // Decal.
-    DRAW_TABLE_GROUP(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA, DKR_OMH_1CYC_BILERP, 
-    G_RM_ZB_OPA_DECAL, G_RM_ZB_OPA_DECAL2, G_RM_AA_ZB_OPA_DECAL, G_RM_AA_ZB_OPA_DECAL2, G_RM_ZB_XLU_DECAL, G_RM_ZB_XLU_DECAL2, G_RM_AA_ZB_XLU_DECAL, G_RM_AA_ZB_XLU_DECAL2),
-    // Decal with fog.
-    DRAW_TABLE_GROUP(G_CC_MODULATEIDECALA, DKR_CC_UNK1, DKR_OMH_2CYC_BILERP, 
-    G_RM_FOG_SHADE_A, G_RM_ZB_OPA_DECAL2, G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_DECAL2, G_RM_FOG_SHADE_A, G_RM_ZB_XLU_DECAL2, G_RM_FOG_SHADE_A, G_RM_AA_ZB_XLU_DECAL2),
-    // Decal with indexed texture.
-    DRAW_TABLE_GROUP(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA, DKR_OMH_1CYC_CI_BILERP, 
-    G_RM_ZB_OPA_DECAL, G_RM_ZB_OPA_DECAL2, G_RM_AA_ZB_OPA_DECAL, G_RM_AA_ZB_OPA_DECAL2, G_RM_ZB_XLU_DECAL, G_RM_ZB_XLU_DECAL2, G_RM_AA_ZB_XLU_DECAL, G_RM_AA_ZB_XLU_DECAL2),
-    // Decal with indexed texture and fog.
-    DRAW_TABLE_GROUP(G_CC_MODULATEIDECALA, G_CC_PASS2, DKR_OMH_2CYC_CI_BILERP, 
-    G_RM_FOG_SHADE_A, G_RM_ZB_OPA_DECAL2, G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_DECAL2, G_RM_FOG_SHADE_A, G_RM_ZB_XLU_DECAL2, G_RM_FOG_SHADE_A, G_RM_AA_ZB_XLU_DECAL2),
+Gfx dRenderSettingsDecal[][2] = {
+    // Opaque Decal.
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA, DKR_OMH_1CYC_BILERP, G_RM_ZB_OPA_DECAL, G_RM_ZB_OPA_DECAL2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA, DKR_OMH_1CYC_BILERP, G_RM_AA_ZB_OPA_DECAL, G_RM_AA_ZB_OPA_DECAL2),
+    // Semitransparent Decal.
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA, DKR_OMH_1CYC_BILERP, G_RM_ZB_XLU_DECAL, G_RM_ZB_XLU_DECAL2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA, DKR_OMH_1CYC_BILERP, G_RM_AA_ZB_XLU_DECAL, G_RM_AA_ZB_XLU_DECAL2),
+    // Opaque Decal with fog.
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, DKR_CC_UNK1, DKR_OMH_2CYC_BILERP, G_RM_FOG_SHADE_A, G_RM_ZB_OPA_DECAL2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, DKR_CC_UNK1, DKR_OMH_2CYC_BILERP, G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_DECAL2),
+    // Semitransparent Decal with fog.
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, DKR_CC_UNK1, DKR_OMH_2CYC_BILERP, G_RM_FOG_SHADE_A, G_RM_ZB_XLU_DECAL2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, DKR_CC_UNK1, DKR_OMH_2CYC_BILERP, G_RM_FOG_SHADE_A, G_RM_AA_ZB_XLU_DECAL2),
+    // Opaque Decal with indexed texture.
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA, DKR_OMH_1CYC_CI_BILERP, G_RM_ZB_OPA_DECAL, G_RM_ZB_OPA_DECAL2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA, DKR_OMH_1CYC_CI_BILERP, G_RM_AA_ZB_OPA_DECAL, G_RM_AA_ZB_OPA_DECAL2),
+    // Semitransparent Decal with indexed texture.
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA, DKR_OMH_1CYC_CI_BILERP, G_RM_ZB_XLU_DECAL, G_RM_ZB_XLU_DECAL2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA, DKR_OMH_1CYC_CI_BILERP, G_RM_AA_ZB_XLU_DECAL, G_RM_AA_ZB_XLU_DECAL2),
+    // Opaque Decal with indexed texture and fog.
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, G_CC_PASS2, DKR_OMH_2CYC_CI_BILERP, G_RM_FOG_SHADE_A, G_RM_ZB_OPA_DECAL2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, G_CC_PASS2, DKR_OMH_2CYC_CI_BILERP, G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_DECAL2),
+    // Semitransparent Decal with indexed texture and fog.
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, G_CC_PASS2, DKR_OMH_2CYC_CI_BILERP, G_RM_FOG_SHADE_A, G_RM_ZB_XLU_DECAL2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIDECALA, G_CC_PASS2, DKR_OMH_2CYC_CI_BILERP, G_RM_FOG_SHADE_A, G_RM_AA_ZB_XLU_DECAL2)
 };
 
-Gfx dDrawRenderSettingsTyreMarks[][2] = {
+Gfx dRenderSettingsSolidColourVtxAlpha[][2] = {
     // Screeching noises.
     DRAW_TABLE_GROUP(DKR_CC_UNK3, G_CC_MODULATEIA_PRIM2, DKR_OMH_2CYC_POINT, 
     G_RM_NOOP, G_RM_XLU_SURF2, G_RM_NOOP, G_RM_AA_XLU_SURF2, G_RM_NOOP, G_RM_ZB_XLU_SURF2, G_RM_NOOP, G_RM_AA_ZB_XLU_SURF2),
 };
 
-// Dunno what this is but it appears on characters?
-// It's point sampled rendering.
-Gfx D_800DEF28[][2] = {
+Gfx dRenderSettingsSolidColour[][2] = {
     // Opaque Surface
     DRAW_TABLE_GROUP(DKR_CC_UNK4, DKR_CC_UNK4, DKR_OMH_1CYC_POINT, 
     G_RM_OPA_SURF, G_RM_OPA_SURF2, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2, G_RM_ZB_OPA_SURF, G_RM_ZB_OPA_SURF2, G_RM_AA_ZB_OPA_INTER, G_RM_AA_ZB_OPA_INTER2),
@@ -181,7 +194,7 @@ Gfx D_800DF0A8[][2] = {
     G_RM_NOOP, G_RM_XLU_SURF2, G_RM_NOOP, G_RM_AA_XLU_SURF2, G_RM_NOOP, G_RM_AA_ZB_TEX_EDGE2, G_RM_NOOP, G_RM_AA_ZB_XLU_INTER2),
 };
 
-Gfx dDrawRenderSettingsBlinkingLights[][2] = {
+Gfx dRenderSettingsBlinkingLights[][2] = {
     // Opaque Surface
     DRAW_TABLE_GROUP(DKR_CC_UNK7, DKR_CC_UNK8, DKR_OMH_2CYC_BILERP, 
     G_RM_NOOP, G_RM_OPA_SURF2, G_RM_NOOP, G_RM_AA_OPA_SURF2, G_RM_NOOP, G_RM_ZB_OPA_SURF2, G_RM_NOOP, G_RM_AA_ZB_OPA_SURF2),
@@ -278,7 +291,7 @@ u8 *D_80126370;
 s32 gCurrentRenderFlags;
 s32 gBlockedRenderFlags;
 TextureHeader *gCurrentTextureHeader;
-s16 D_80126380;
+s16 gUsingTexture;
 s16 gForceFlags;
 s16 D_80126384;
 
@@ -523,7 +536,7 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B380.s")
 void reset_render_settings(Gfx **dlist) {
     gCurrentTextureHeader = NULL;
     gCurrentRenderFlags = RENDER_NONE;
-    D_80126380 = 0;
+    gUsingTexture = FALSE;
     gForceFlags = TRUE;
     gBlockedRenderFlags = RENDER_NONE;
     D_80126384 = FALSE;
@@ -596,34 +609,34 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
             gCurrentTextureHeader = texhead;
             doPipeSync = FALSE;
         }
-        if (D_80126380 == 0) {
+        if (gUsingTexture == FALSE) {
             forceFlags = TRUE;
-            D_80126380 = 1;
+            gUsingTexture = TRUE;
         }
-    } else if (D_80126380 != 0) {
+    } else if (gUsingTexture) {
         forceFlags = TRUE;
-        D_80126380 = 0;
+        gUsingTexture = FALSE;
     }
 
     flags = (D_80126384) ? (flags & (RENDER_DECAL | RENDER_COLOUR_INDEX | RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT)) : 
-                           (flags & (RENDER_UNK_8000000 | RENDER_DECAL | RENDER_Z_UPDATE | RENDER_COLOUR_INDEX | RENDER_UNK_0000010 | RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING));
+                           (flags & (RENDER_VTX_ALPHA | RENDER_DECAL | RENDER_Z_UPDATE | RENDER_COLOUR_INDEX | RENDER_CUTOUT | RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING));
     flags &= ~gBlockedRenderFlags;
-    flags = (flags & RENDER_UNK_8000000) ? flags & ~RENDER_FOG_ACTIVE : flags & ~RENDER_Z_UPDATE;
+    flags = (flags & RENDER_VTX_ALPHA) ? flags & ~RENDER_FOG_ACTIVE : flags & ~RENDER_Z_UPDATE;
 
-    if ((flags != gCurrentRenderFlags) || (forceFlags)) {
+    if (flags != gCurrentRenderFlags || forceFlags) {
         if (doPipeSync) {
             gDPPipeSync((*dlist)++);
         }
 
-        if (((flags & RENDER_UNK_8000000) != (gCurrentRenderFlags & RENDER_UNK_8000000)) || ((gForceFlags))) {
-            if ((flags & RENDER_UNK_8000000) || (D_80126384)) {
+        if (((flags & RENDER_VTX_ALPHA) != (gCurrentRenderFlags & RENDER_VTX_ALPHA)) || gForceFlags) {
+            if (flags & RENDER_VTX_ALPHA || D_80126384) {
                 gSPClearGeometryMode((*dlist)++, G_FOG);
             } else {
                 gSPSetGeometryMode((*dlist)++, G_FOG);
             }
         }
 
-        if (((flags & RENDER_Z_COMPARE) != (gCurrentRenderFlags & RENDER_Z_COMPARE)) || (gForceFlags)) {
+        if (((flags & RENDER_Z_COMPARE) != (gCurrentRenderFlags & RENDER_Z_COMPARE)) || gForceFlags) {
             if (flags & RENDER_Z_COMPARE) {
                 gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
             } else {
@@ -633,17 +646,17 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
 
         gForceFlags = FALSE;
         gCurrentRenderFlags = flags;
-        if (!D_80126380) {
-            if (flags & RENDER_UNK_8000000) {
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsTyreMarks[flags & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE)]), numberOfGfxCommands(dDrawRenderSettingsTyreMarks[0]));
+        if (!gUsingTexture) {
+            if (flags & RENDER_VTX_ALPHA) {
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsSolidColourVtxAlpha[flags & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE)]), numberOfGfxCommands(dRenderSettingsSolidColourVtxAlpha[0]));
                 return;
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DEF28[flags & (RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING)]), numberOfGfxCommands(D_800DEF28[0]));
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsSolidColour[flags & (RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING)]), numberOfGfxCommands(dRenderSettingsSolidColour[0]));
             return;
         }
 
         if (D_80126384) {
-            if ((flags & RENDER_DECAL) && (flags & RENDER_Z_COMPARE)) {
+            if (flags & RENDER_DECAL && flags & RENDER_Z_COMPARE) {
                 dlIndex = 0;
                 if (flags & RENDER_ANTI_ALIASING) {
                     dlIndex |= 1; // Anti Aliasing
@@ -664,7 +677,7 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
             return;
         }
 
-        if ((flags & RENDER_DECAL) && (flags & RENDER_Z_COMPARE)) {
+        if (flags & RENDER_DECAL && flags & RENDER_Z_COMPARE) {
             dlIndex = 0;
             if (flags & RENDER_ANTI_ALIASING) {
                 dlIndex |= 1; // Anti Aliasing
@@ -678,21 +691,21 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
             if (flags & RENDER_COLOUR_INDEX) {
                 dlIndex |= 8; // Colour Index
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsObjDecals[dlIndex]), numberOfGfxCommands(dDrawRenderSettingsObjDecals[0]));
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsDecal[dlIndex]), numberOfGfxCommands(dRenderSettingsDecal[0]));
             return;
         }
 
-        if (flags & RENDER_UNK_0000010) {
+        if (flags & RENDER_CUTOUT) {
             dlIndex = flags & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT);
             if (flags & RENDER_FOG_ACTIVE) {
                 dlIndex |= 8; // Fog
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsCutoutGeometry[dlIndex]), numberOfGfxCommands(dDrawRenderSettingsCutoutGeometry[0]));
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsCutout[dlIndex]), numberOfGfxCommands(dRenderSettingsCutout[0]));
             return;
         }
 
         flags &= ~RENDER_DECAL;
-        if (flags & RENDER_UNK_8000000) {
+        if (flags & RENDER_VTX_ALPHA) {
             dlIndex = flags & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE);
             if (flags & RENDER_Z_UPDATE) {
                 dlIndex |= 4; // Z write
@@ -700,11 +713,11 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
                 gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
                 gCurrentRenderFlags |= RENDER_Z_COMPARE;
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsVtxAlpha[dlIndex]), numberOfGfxCommands(dDrawRenderSettingsVtxAlpha[0]));
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsVtxAlpha[dlIndex]), numberOfGfxCommands(dRenderSettingsVtxAlpha[0]));
             return;
         }
 
-        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsCommon[flags]), numberOfGfxCommands(dDrawRenderSettingsCommon[0]));
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsCommon[flags]), numberOfGfxCommands(dRenderSettingsCommon[0]));
         return;
     }
 }
@@ -734,17 +747,17 @@ void load_blinking_lights_texture(Gfx **dlist, TextureHeader *texture_list, u32 
 
     gDPPipeSync((*dlist)++);
     gCurrentTextureHeader = 0;
-    flags &= 0x1F;
+    flags &= (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_FOG_ACTIVE | RENDER_CUTOUT);
     gSPSetGeometryMode((*dlist)++, G_FOG);
 
-    if (flags & G_TEXTURE_ENABLE) {
+    if (flags & RENDER_Z_COMPARE) {
         gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
     } else {
         gSPClearGeometryMode((*dlist)++, G_ZBUFFER);
     }
     gForceFlags = TRUE;
     gCurrentRenderFlags = RENDER_NONE;
-    gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsBlinkingLights[flags]), numberOfGfxCommands(dDrawRenderSettingsBlinkingLights[0]));
+    gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsBlinkingLights[flags]), numberOfGfxCommands(dRenderSettingsBlinkingLights[0]));
 }
 
 
@@ -779,15 +792,15 @@ void func_8007BF34(Gfx **dlist, s32 arg1) {
         temp_t8 = temp_a1 & ~0x800;
         if (D_800DE7C4 == 0) {
             if ((gCurrentRenderFlags & 0x200) != 0) {
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsSpriteCld[((temp_t8 >> 1) & 1) * 16]), numberOfGfxCommands(dDrawRenderSettingsSpriteCld[0]));
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsSpriteCld[((temp_t8 >> 1) & 1) * 16]), numberOfGfxCommands(dRenderSettingsSpriteCld[0]));
             } else {
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsSpriteXlu[(temp_t8 - 16) * 16]), numberOfGfxCommands(dDrawRenderSettingsSpriteXlu[0]));
+                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsSpriteXlu[(temp_t8 - 16) * 16]), numberOfGfxCommands(dRenderSettingsSpriteXlu[0]));
             }
         } else {
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dDrawRenderSettingsCommon[temp_t8 * 16]), numberOfGfxCommands(dDrawRenderSettingsCommon[0]));
+            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsCommon[temp_t8 * 16]), numberOfGfxCommands(dRenderSettingsCommon[0]));
         }
         gCurrentTextureHeader = NULL;
-        D_80126380 = 1;
+        gUsingTexture = 1;
     }
 }
 #else

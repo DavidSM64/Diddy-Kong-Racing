@@ -36,55 +36,55 @@
 
 enum RenderFlags {
     RENDER_NONE,
-    RENDER_VEHICLE_PART = (1 << 0), // Shares a spot with RENDER_ANTI_ALIASING, since TEX_EDGE enforces anti aliasing unconditionally.
-    RENDER_ANTI_ALIASING = (1 << 0),
-    RENDER_Z_COMPARE =     (1 << 1),
-    RENDER_SEMI_TRANSPARENT = (1 << 2),
-    RENDER_FOG_ACTIVE = (1 << 3),
-    RENDER_UNK_0000010 = (1 << 4),
-    RENDER_COLOUR_INDEX = (1 << 5),
-    RENDER_UNK_0000040 = (1 << 6),
-    RENDER_UNK_0000080 = (1 << 7),
-    RENDER_Z_UPDATE = (1 << 8),
-    RENDER_UNK_0000200 = (1 << 9),
-    RENDER_UNK_0000400 = (1 << 10),
-    RENDER_DECAL = (1 << 11),
-    RENDER_UNK_0001000 = (1 << 12),
-    RENDER_UNK_0002000 = (1 << 13),
-    RENDER_UNK_0004000 = (1 << 14),
-    RENDER_UNK_0008000 = (1 << 15),
-    RENDER_UNK_0010000 = (1 << 16),
-    RENDER_UNK_0020000 = (1 << 17),
-    RENDER_UNK_0040000 = (1 << 18),
-    RENDER_UNK_0080000 = (1 << 19),
-    RENDER_UNK_0100000 = (1 << 20),
-    RENDER_UNK_0200000 = (1 << 21),
-    RENDER_UNK_0400000 = (1 << 22),
-    RENDER_UNK_0800000 = (1 << 23),
-    RENDER_UNK_1000000 = (1 << 24),
-    RENDER_UNK_2000000 = (1 << 25),
-    RENDER_UNK_4000000 = (1 << 26),
-    RENDER_UNK_8000000 = (1 << 27),
+    RENDER_VEHICLE_PART =       (1 << 0), // Shares a spot with RENDER_ANTI_ALIASING, since TEX_EDGE enforces anti aliasing unconditionally.
+    RENDER_ANTI_ALIASING =      (1 << 0),
+    RENDER_Z_COMPARE =          (1 << 1),
+    RENDER_SEMI_TRANSPARENT =   (1 << 2),
+    RENDER_FOG_ACTIVE =         (1 << 3),
+    RENDER_CUTOUT =             (1 << 4),
+    RENDER_COLOUR_INDEX =       (1 << 5),
+    RENDER_UNK_0000040 =        (1 << 6),
+    RENDER_UNK_0000080 =        (1 << 7),
+    RENDER_Z_UPDATE =           (1 << 8),
+    RENDER_UNK_0000200 =        (1 << 9),
+    RENDER_UNK_0000400 =        (1 << 10),
+    RENDER_DECAL =              (1 << 11),
+    RENDER_UNK_0001000 =        (1 << 12),
+    RENDER_UNK_0002000 =        (1 << 13),
+    RENDER_UNK_0004000 =        (1 << 14),
+    RENDER_UNK_0008000 =        (1 << 15),
+    RENDER_UNK_0010000 =        (1 << 16),
+    RENDER_UNK_0020000 =        (1 << 17),
+    RENDER_UNK_0040000 =        (1 << 18),
+    RENDER_UNK_0080000 =        (1 << 19),
+    RENDER_UNK_0100000 =        (1 << 20),
+    RENDER_UNK_0200000 =        (1 << 21),
+    RENDER_UNK_0400000 =        (1 << 22),
+    RENDER_UNK_0800000 =        (1 << 23),
+    RENDER_UNK_1000000 =        (1 << 24),
+    RENDER_UNK_2000000 =        (1 << 25),
+    RENDER_UNK_4000000 =        (1 << 26),
+    RENDER_VTX_ALPHA =          (1 << 27),
 };
 
 typedef enum TransFlags {
-    OBJ_FLAGS_UNK_0000,
-    OBJ_FLAGS_UNK_0001 = (1 << 0),
-    OBJ_FLAGS_UNK_0002 = (1 << 1),
-    OBJ_FLAGS_UNK_0004 = (1 << 2),
-    OBJ_FLAGS_UNK_0008 = (1 << 3),
-    OBJ_FLAGS_UNK_0010 = (1 << 4),
-    OBJ_FLAGS_UNK_0020 = (1 << 5),
-    OBJ_FLAGS_UNK_0040 = (1 << 6),
-    OBJ_FLAGS_UNK_0080 = (1 << 7),
-    OBJ_FLAGS_UNK_0100 = (1 << 8),
-    OBJ_FLAGS_INVIS_PLAYER1 = (1 << 9), // Player 1 cannot see this.
-    OBJ_FLAGS_INVIS_PLAYER2 = (1 << 10), // Player 2 cannot see this.
-    OBJ_FLAGS_UNK_0800 = (1 << 11),
-    OBJ_FLAGS_SHADOW_ONLY = (1 << 12), // Still has a shadow, but the model is invisible.
-    OBJ_FLAGS_UNK_2000 = (1 << 13),
-    OBJ_FLAGS_INVISIBLE = (1 << 14), // Invisible, and hidden shadow too.
-    OBJ_FLAGS_DEACTIVATED = (1 << 15), // Object is invisible and inactive.
+    OBJ_FLAGS_NONE,
+    OBJ_FLAGS_UNK_0001 =        (1 << 0),
+    OBJ_FLAGS_UNK_0002 =        (1 << 1),
+    OBJ_FLAGS_UNK_0004 =        (1 << 2),
+    OBJ_FLAGS_UNK_0008 =        (1 << 3),
+    OBJ_FLAGS_UNK_0010 =        (1 << 4),
+    OBJ_FLAGS_UNK_0020 =        (1 << 5),
+    OBJ_FLAGS_UNK_0040 =        (1 << 6),
+    OBJ_FLAGS_UNK_0080 =        (1 << 7),
+    OBJ_FLAGS_UNK_0100 =        (1 << 8),
+    OBJ_FLAGS_INVIS_PLAYER1 =   (1 << 9),  // Player 1 cannot see this.
+    OBJ_FLAGS_INVIS_PLAYER2 =   (1 << 10), // Player 2 cannot see this.
+    OBJ_FLAGS_UNK_0800 =        (1 << 11),
+    OBJ_FLAGS_SHADOW_ONLY =     (1 << 12), // Still has a shadow, but the model is invisible.
+    OBJ_FLAGS_UNK_2000 =        (1 << 13),
+    OBJ_FLAGS_INVISIBLE =       (1 << 14), // Invisible, and hidden shadow too.
+    OBJ_FLAGS_DEACTIVATED =     (1 << 15), // Object is invisible and inactive.
 } TransFlags;
 
 #define TEX_TABLE_2D 0
