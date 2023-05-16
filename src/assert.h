@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_B7B30_H_
-#define _UNKNOWN_B7B30_H_
+#ifndef _ASSERT_H_
+#define _ASSERT_H_
 
 #include "types.h"
 #include "libultra_internal.h"
