@@ -46,7 +46,7 @@ enum RenderFlags {
     RENDER_UNK_0000040 =        (1 << 6),
     RENDER_UNK_0000080 =        (1 << 7),
     RENDER_Z_UPDATE =           (1 << 8),
-    RENDER_UNK_0000200 =        (1 << 9),
+    RENDER_PRESERVE_COVERAGE =  (1 << 9),
     RENDER_UNK_0000400 =        (1 << 10),
     RENDER_DECAL =              (1 << 11),
     RENDER_UNK_0001000 =        (1 << 12),

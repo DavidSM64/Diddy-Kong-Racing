@@ -8432,7 +8432,7 @@ void render_track_selection_viewport_border(ObjectModel *objMdl) {
         flags = RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_ANTI_ALIASING;
     }
     for (i = 0; i < objMdl->numberOfBatches; i++) {
-        if (!(objMdl->batches[i].flags & 0x100)) {
+        if (!(objMdl->batches[i].flags & RENDER_Z_UPDATE)) {
             vertOffset = objMdl->batches[i].verticesOffset;
             triOffset = objMdl->batches[i].facesOffset;
             numVerts = objMdl->batches[i + 1].verticesOffset - vertOffset;
