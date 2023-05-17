@@ -1344,19 +1344,19 @@ void func_80011AD0(Object *this) {
             if (this->properties.characterFlag.characterID >= 0) {
                 obj64 = this->unk64;
                 func_80011960(this, obj64->character_flag.vertices, 4, obj64->character_flag.triangles,
-                                2, obj64->character_flag.texture, 11, 0, 1.0f);
+                                2, obj64->character_flag.texture, RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_FOG_ACTIVE, 0, 1.0f);
             }
             break;
         case BHV_BUTTERFLY:
             obj64 = this->unk64;
-            func_80011960(this, &obj64->butterfly.vertices[obj64->butterfly.unkFC * 6], 6, obj64->butterfly.triangles, 8, obj64->butterfly.texture, 10, 0, 1.0f);
+            func_80011960(this, &obj64->butterfly.vertices[obj64->butterfly.unkFC * 6], 6, obj64->butterfly.triangles, 8, obj64->butterfly.texture, RENDER_Z_COMPARE | RENDER_FOG_ACTIVE, 0, 1.0f);
             break;
 
         case BHV_FISH:
             obj64 = this->unk64;
             tmp_f0 = this->segment.level_entry->fish.unkC[1];
             tmp_f0 *= 0.01f;
-            func_80011960(this, &obj64->fish.vertices[obj64->fish.unkFC * 6], 6, obj64->fish.triangles, 8, obj64->fish.texture, 26, 0, tmp_f0);
+            func_80011960(this, &obj64->fish.vertices[obj64->fish.unkFC * 6], 6, obj64->fish.triangles, 8, obj64->fish.texture, RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_CUTOUT, 0, tmp_f0);
             break;
 
         case BHV_BOOST:

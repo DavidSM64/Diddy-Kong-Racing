@@ -54,7 +54,7 @@ Gfx dRdpInit[] = {
     gsSPEndDisplayList(),
 };
 
-Gfx D_800DE598[] = {
+Gfx dRaceFinishBackgroundSettings[] = {
     gsDPPipeSync(),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
@@ -78,7 +78,7 @@ Gfx dTextureRectangleModes[] = {
     gsSPEndDisplayList(),
 };
 
-Gfx D_800DE670[] = {
+Gfx dScaledRectangleBaseModes[] = {
     gsDPPipeSync(),
     gsDPSetTextureLOD(G_TL_TILE),
     gsDPSetTextureLUT(G_TT_NONE),
@@ -89,41 +89,21 @@ Gfx D_800DE670[] = {
 };
 
 Gfx dTextureRectangleScaledOpa[][2] = {
-    {
-        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
-        gsDPSetOtherMode(DKR_OMH_1CYC_BILERP_NOPERSP, DKR_OML_COMMON | G_RM_AA_OPA_SURF | G_RM_AA_OPA_SURF2),
-    },
-    {
-        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
-        gsDPSetOtherMode(DKR_OMH_1CYC_BILERP_NOPERSP, DKR_OML_COMMON | G_RM_OPA_SURF | G_RM_OPA_SURF2),
-    },
-    {
-        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
-        gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_AA_OPA_SURF | G_RM_AA_OPA_SURF2),
-    },
-    {
-        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
-        gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_OPA_SURF | G_RM_OPA_SURF2),
-    },
+    // Bilinear Filtered texture
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_BILERP_NOPERSP, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_BILERP_NOPERSP, G_RM_OPA_SURF, G_RM_OPA_SURF2),
+    // Point Sampled texture
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT_NOPERSP, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT_NOPERSP, G_RM_OPA_SURF, G_RM_OPA_SURF2)
 };
 
 Gfx dTextureRectangleScaledXlu[][2] = {
-    {
-        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
-        gsDPSetOtherMode(DKR_OMH_1CYC_BILERP_NOPERSP, DKR_OML_COMMON | G_RM_AA_XLU_SURF | G_RM_AA_XLU_SURF2),
-    },
-    {
-        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
-        gsDPSetOtherMode(DKR_OMH_1CYC_BILERP_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
-    },
-    {
-        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
-        gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_AA_XLU_SURF | G_RM_AA_XLU_SURF2),
-    },
-    {
-        gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
-        gsDPSetOtherMode(DKR_OMH_1CYC_POINT_NOPERSP, DKR_OML_COMMON | G_RM_XLU_SURF | G_RM_XLU_SURF2),
-    },
+    // Bilinear Filtered texture
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_BILERP_NOPERSP, G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_BILERP_NOPERSP, G_RM_XLU_SURF, G_RM_XLU_SURF2),
+    // Point Sampled texture
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT_NOPERSP, G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT_NOPERSP, G_RM_XLU_SURF, G_RM_XLU_SURF2)
 };
 
 /*******************************/
@@ -148,7 +128,7 @@ DKR_OSTask gRdpTaskA = {
     {
         // task
         M_GFXTASK, // type
-        2, // flags
+        OS_TASK_DP_WAIT, // flags
         (u64 *) rspF3DDKRBootStart, // ucode_boot
         0, // ucode_boot_size
         (u64 *) rspF3DDKRXbusStart, // ucode
@@ -175,7 +155,7 @@ DKR_OSTask gRdpTaskB = {
     {
         // task
         M_GFXTASK, // type
-        2, // flags
+        OS_TASK_DP_WAIT, // flags
         (u64 *) rspF3DDKRBootStart, // ucode_boot
         0, // ucode_boot_size
         (u64 *) rspF3DDKRXbusStart, // ucode
@@ -428,7 +408,7 @@ void func_80078190(Gfx **dlist) {
     widthAndHeight = get_video_width_and_height_as_s32();
     videoWidth = GET_VIDEO_WIDTH(widthAndHeight);
     videoHeight = GET_VIDEO_HEIGHT(widthAndHeight);
-    gSPDisplayList((*dlist)++, D_800DE598);
+    gSPDisplayList((*dlist)++, dRaceFinishBackgroundSettings);
 
     if (D_800DE4C8 == NULL) {
         gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DE4C4->cmd), D_800DE4C4->numberOfCommands);
@@ -592,7 +572,7 @@ void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos
         dmaDlist = dTextureRectangleScaledXlu[(u8)flags & 0xFF];
     }
 
-    gSPDisplayList((*dlist)++, D_800DE670);
+    gSPDisplayList((*dlist)++, dScaledRectangleBaseModes);
     gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dmaDlist), numberOfGfxCommands(dTextureRectangleScaledOpa[0]));
     gDPSetPrimColorRGBA((*dlist)++, colour);
 

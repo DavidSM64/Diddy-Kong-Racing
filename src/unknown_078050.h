@@ -14,6 +14,11 @@
 #define SEGMENT_COLOUR_BUFFER 0x01000000
 #define FIFO_BUFFER_SIZE 0x18000
 
+enum TextureRectangleFlags {
+    TEXRECT_BILERP,
+    TEXRECT_POINT
+};
+
 typedef union {
     void (*function)(Gfx*, Matrix *);
     void *ptr;
@@ -38,7 +43,7 @@ extern s32 sBackgroundFillColour;
 
 extern TextureHeader *D_800DE4C4;
 extern TextureHeader *D_800DE4C8;
-extern s32 gChecquerBGEnabled;
+extern s32 gChequerBGEnabled;
 
 extern s32 gfxBufCounter;
 extern s32 gfxBufCounter2;

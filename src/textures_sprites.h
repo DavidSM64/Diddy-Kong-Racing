@@ -9,89 +9,86 @@
 #include "memory.h"
 #include "libultra_internal.h"
 
+/**
+ * First two entries are combine mode.
+ * Third entry is othermode high word. (Most importantly, the cycle mode and texture filter settings)
+ * Fourth and fifth entries are render modes.
+*/
+#define DRAW_TABLE_ENTRY(combine1, combine2, cycleMode, renderMode1, renderMode2) { \
+    gsDPSetCombineLERP(combine1, combine2), \
+    gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1 | renderMode2), \
+}
+
+/**
+ * Diddy Kong Racing sets up many of the rendermode tables with a certain pattern.
+ * First two entries are combine mode.
+ * Third entry is othermode high word. (Most importantly, the cycle mode and texture filter settings)
+ * Fourth and fifth entries are render modes for no AA or ZB
+ * Sixth and seventh entries are render modes for for AA, but no ZB
+ * Eighth and ninth entries are render modes for for ZB, but no AA
+ * Tenth and eleventh entries are render modes for for AA and ZB
+*/
+#define DRAW_TABLE_GROUP(combine1, combine2, cycleMode, renderMode1, renderMode2, renderMode1AA, rendermode2AA, renderMode1ZB, rendermode2ZB, renderMode1ZBAA, renderMode2ZBAA) \
+{gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1 | renderMode2), }, \
+{gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1AA | rendermode2AA), }, \
+{gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1ZB | rendermode2ZB), }, \
+{gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1ZBAA | renderMode2ZBAA), }
+
 enum RenderFlags {
     RENDER_NONE,
-    RENDER_ANTI_ALIASING = (1 << 0),
-    RENDER_Z_COMPARE =     (1 << 1),
-    RENDER_SEMI_TRANSPARENT = (1 << 2),
-    RENDER_FOG_ACTIVE = (1 << 3),
-    RENDER_UNK_0000010 = (1 << 4),
-    RENDER_COLOUR_INDEX = (1 << 5),
-    RENDER_UNK_0000040 = (1 << 6),
-    RENDER_UNK_0000080 = (1 << 7),
-    RENDER_Z_UPDATE = (1 << 8),
-    RENDER_UNK_0000200 = (1 << 9),
-    RENDER_UNK_0000400 = (1 << 10),
-    RENDER_DECAL = (1 << 11),
-    RENDER_UNK_0001000 = (1 << 12),
-    RENDER_UNK_0002000 = (1 << 13),
-    RENDER_UNK_0004000 = (1 << 14),
-    RENDER_UNK_0008000 = (1 << 15),
-    RENDER_UNK_0010000 = (1 << 16),
-    RENDER_UNK_0020000 = (1 << 17),
-    RENDER_UNK_0040000 = (1 << 18),
-    RENDER_UNK_0080000 = (1 << 19),
-    RENDER_UNK_0100000 = (1 << 20),
-    RENDER_UNK_0200000 = (1 << 21),
-    RENDER_UNK_0400000 = (1 << 22),
-    RENDER_UNK_0800000 = (1 << 23),
-    RENDER_UNK_1000000 = (1 << 24),
-    RENDER_UNK_2000000 = (1 << 25),
-    RENDER_UNK_4000000 = (1 << 26),
-    RENDER_UNK_8000000 = (1 << 27),
+    RENDER_VEHICLE_PART =       (1 << 0), // Shares a spot with RENDER_ANTI_ALIASING, since TEX_EDGE enforces anti aliasing unconditionally.
+    RENDER_ANTI_ALIASING =      (1 << 0), // Smooths the edges to improve visual quality.
+    RENDER_Z_COMPARE =          (1 << 1), // Compares depth values with existing geometry to prevent rendering errors.
+    RENDER_SEMI_TRANSPARENT =   (1 << 2), // Renders with translucency enabled, blending with existing geometry.
+    RENDER_FOG_ACTIVE =         (1 << 3), // Applies fog to the geometry.
+    RENDER_CUTOUT =             (1 << 4), // A surface with 1 bit alpha cut out for quick transparency.
+    RENDER_COLOUR_INDEX =       (1 << 5), // Enables palleted textures.
+    RENDER_UNK_0000040 =        (1 << 6),
+    RENDER_UNK_0000080 =        (1 << 7),
+    RENDER_Z_UPDATE =           (1 << 8), // Updates the depth buffer when rendering.
+    RENDER_PRESERVE_COVERAGE =  (1 << 9), // Coverage is used to help smooth the image. This won't write over existing coverage values.
+    RENDER_UNK_0000400 =        (1 << 10),
+    RENDER_DECAL =              (1 << 11), // Projects a surface on existing geometry, taking precedent to not zfight.
+    RENDER_UNK_0001000 =        (1 << 12),
+    RENDER_UNK_0002000 =        (1 << 13),
+    RENDER_UNK_0004000 =        (1 << 14),
+    RENDER_UNK_0008000 =        (1 << 15),
+    RENDER_UNK_0010000 =        (1 << 16),
+    RENDER_UNK_0020000 =        (1 << 17),
+    RENDER_UNK_0040000 =        (1 << 18),
+    RENDER_UNK_0080000 =        (1 << 19),
+    RENDER_UNK_0100000 =        (1 << 20),
+    RENDER_UNK_0200000 =        (1 << 21),
+    RENDER_UNK_0400000 =        (1 << 22),
+    RENDER_UNK_0800000 =        (1 << 23),
+    RENDER_UNK_1000000 =        (1 << 24),
+    RENDER_UNK_2000000 =        (1 << 25),
+    RENDER_UNK_4000000 =        (1 << 26),
+    RENDER_VTX_ALPHA =          (1 << 27), // Allows use of vertex alpha, disabling fog if necessary.
 };
 
 typedef enum TransFlags {
-    OBJ_FLAGS_UNK_0000,
-    OBJ_FLAGS_UNK_0001 = (1 << 0),
-    OBJ_FLAGS_UNK_0002 = (1 << 1),
-    OBJ_FLAGS_UNK_0004 = (1 << 2),
-    OBJ_FLAGS_UNK_0008 = (1 << 3),
-    OBJ_FLAGS_UNK_0010 = (1 << 4),
-    OBJ_FLAGS_UNK_0020 = (1 << 5),
-    OBJ_FLAGS_UNK_0040 = (1 << 6),
-    OBJ_FLAGS_UNK_0080 = (1 << 7),
-    OBJ_FLAGS_UNK_0100 = (1 << 8),
-    OBJ_FLAGS_INVIS_PLAYER1 = (1 << 9), // Player 1 cannot see this.
-    OBJ_FLAGS_INVIS_PLAYER2 = (1 << 10), // Player 2 cannot see this.
-    OBJ_FLAGS_UNK_0800 = (1 << 11),
-    OBJ_FLAGS_SHADOW_ONLY = (1 << 12), // Still has a shadow, but the model is invisible.
-    OBJ_FLAGS_UNK_2000 = (1 << 13),
-    OBJ_FLAGS_INVISIBLE = (1 << 14), // Invisible, and hidden shadow too.
-    OBJ_FLAGS_DEACTIVATED = (1 << 15), // Object is invisible and inactive.
+    OBJ_FLAGS_NONE,
+    OBJ_FLAGS_UNK_0001 =        (1 << 0),
+    OBJ_FLAGS_UNK_0002 =        (1 << 1),
+    OBJ_FLAGS_UNK_0004 =        (1 << 2),
+    OBJ_FLAGS_UNK_0008 =        (1 << 3),
+    OBJ_FLAGS_UNK_0010 =        (1 << 4),
+    OBJ_FLAGS_UNK_0020 =        (1 << 5),
+    OBJ_FLAGS_UNK_0040 =        (1 << 6),
+    OBJ_FLAGS_UNK_0080 =        (1 << 7),
+    OBJ_FLAGS_UNK_0100 =        (1 << 8),
+    OBJ_FLAGS_INVIS_PLAYER1 =   (1 << 9),  // Player 1 cannot see this.
+    OBJ_FLAGS_INVIS_PLAYER2 =   (1 << 10), // Player 2 cannot see this.
+    OBJ_FLAGS_UNK_0800 =        (1 << 11),
+    OBJ_FLAGS_SHADOW_ONLY =     (1 << 12), // Still has a shadow, but the model is invisible.
+    OBJ_FLAGS_UNK_2000 =        (1 << 13),
+    OBJ_FLAGS_INVISIBLE =       (1 << 14), // Invisible, and hidden shadow too.
+    OBJ_FLAGS_DEACTIVATED =     (1 << 15), // Object is invisible and inactive.
 } TransFlags;
 
 #define TEX_TABLE_2D 0
 #define TEX_TABLE_3D 1
-
-extern u32 gTexColourTag;
-extern s32 D_800DE7C4;
-
-extern Gfx *gSceneCurrDisplayList;
-extern s32 gAntiAliasing;
-extern u32 D_8011D384;
-extern LevelHeader *gCurrentLevelHeader2;
-extern s32 gCurrentRenderFlags;
-extern TextureHeader *D_8012637C;
-extern s16 gForceFlags;
-extern Gfx dTextureRectangleModes[];
-extern Gfx D_800DE848[2][2];
-extern Gfx D_800DE868[8][2];
-extern Gfx D_800DE8E8[64][2];
-extern s32 D_80126378;
-extern s16 D_80126380;
-extern Gfx D_800DE7C8[8][2];
-extern Gfx D_800DECE8[16][2];
-extern Gfx D_800DEDE8[16][2];
-extern Gfx D_800DEEE8[4][2];
-extern Gfx D_800DEF28[16][2];
-extern Gfx D_800DF028[8][2];
-extern Gfx D_800DF0A8[16][2];
-extern s16 D_80126384;
-extern Gfx D_800DF3A8[6];
-extern Gfx D_800DF3D8[7];
-extern Gfx D_800DF410[3][2];
-
 
 /* Size: 8 bytes */
 typedef struct unk8007F1E8_18 {
