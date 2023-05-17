@@ -897,6 +897,7 @@ void render_level_geometry_and_objects(void) {
 #ifdef PUPPYPRINT_DEBUG
     gPuppyPrint.mainTimerPoints[0][PP_OBJGFX] = osGetCount();
 #endif
+    gIsObjectRender = TRUE;
     func_80015348(sp160, objCount - 1);
     visibleFlags = OBJ_FLAGS_INVIS_PLAYER1 << (get_current_viewport() & 1);
 
@@ -950,6 +951,7 @@ void render_level_geometry_and_objects(void) {
 #ifdef PUPPYPRINT_DEBUG
     gPuppyPrint.mainTimerPoints[1][PP_OBJGFX] = osGetCount();
 #endif
+    gIsObjectRender = FALSE;
     if (gDrawLevelSegments) {
         for (i = numberOfSegments - 1; i >= 0; i--) {
             render_level_segment(segmentIds[i], TRUE); // Render transparent segments
@@ -962,7 +964,6 @@ void render_level_geometry_and_objects(void) {
     reset_render_settings(&gSceneCurrDisplayList);
     load_and_set_texture_no_offset(&gSceneCurrDisplayList, 0, RENDER_FOG_ACTIVE | RENDER_Z_COMPARE);
     func_80012C3C(&gSceneCurrDisplayList);
-
 #ifdef PUPPYPRINT_DEBUG
     gPuppyPrint.mainTimerPoints[0][PP_PARTICLEGFX] = osGetCount();
 #endif

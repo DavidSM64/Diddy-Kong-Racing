@@ -19,6 +19,8 @@
     gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1 | renderMode2), \
 }
 
+extern s32 gIsObjectRender;
+
 /**
  * Diddy Kong Racing sets up many of the rendermode tables with a certain pattern.
  * First two entries are combine mode.
@@ -32,6 +34,15 @@
 {gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1 | renderMode2), }, \
 {gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1AA | rendermode2AA), }, \
 {gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1ZB | rendermode2ZB), }, \
+{gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1ZBAA | renderMode2ZBAA), }
+
+#define DRAW_TABLE_GROUP_EXT(combine1, combine2, cycleMode, renderMode1, renderMode2, renderMode1AA, rendermode2AA, \
+renderMode1RA, rendermode2RA, renderMode1ZB, rendermode2ZB, renderMode1ZBRA, rendermode2ZBRA, renderMode1ZBAA, renderMode2ZBAA) \
+{gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1 | renderMode2), }, \
+{gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1RA | rendermode2RA), }, \
+{gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1AA | rendermode2AA), }, \
+{gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1ZB | rendermode2ZB), }, \
+{gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1ZBRA | rendermode2ZBRA), }, \
 {gsDPSetCombineLERP(combine1, combine2), gsDPSetOtherMode(cycleMode, DKR_OML_COMMON | renderMode1ZBAA | renderMode2ZBAA), }
 
 enum RenderFlags {

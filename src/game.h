@@ -16,9 +16,9 @@ extern s32 gMapId;
 extern u8 gSkipCutbacks;
 
 struct ConfigOptions {
+    s8 antiAliasing;
     u8 screenPosX : 4;
     u8 screenPosY : 4;
-    u8 antiAliasing : 2;
     u8 screenMode : 2;
     u8 regionMode : 2;
     u8 frameCap : 1;

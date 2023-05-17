@@ -6712,6 +6712,9 @@ char gPauseOptStrings[][8] = {
     {"30"},
     {"50"},
     {"25"},
+    {"Off"},
+    {"Fast"},
+    {"Fancy"},
 };
 u8 gPauseSubmenu = 0;
 
@@ -6864,7 +6867,7 @@ void func_80093D40(UNUSED s32 updateRate) {
                     puppyprintf(gPauseOptionStack[i], "%s: %d", gPauseConfigOpt[i], gConfig.screenPosY);
                     break;
                 case 3:
-                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gConfig.antiAliasing ^ 1]);
+                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[10 + gConfig.antiAliasing]);
                     break;
                 case 4:
                     puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[5 + gConfig.frameCap]);
@@ -6967,7 +6970,8 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                         change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
                         break;
                     case 4:
-                        gConfig.antiAliasing ^= 1;
+                        gConfig.antiAliasing += moveDir;
+                        CLAMP(gConfig.antiAliasing, -1, 1);
                         break;
                     case 5:
                         gConfig.frameCap ^= 1;
@@ -9834,7 +9838,7 @@ void record_fps(void) {
         benchCPURecord[benchFramesRecorded] = benchCPU / benchFrames;
         benchRSPRecord[benchFramesRecorded] = benchRSP / benchFrames;
         benchRDPRecord[benchFramesRecorded] = benchRDP / benchFrames;
-        aaOvrRecord[benchFramesRecorded] = gOverrideAA || gConfig.antiAliasing;
+        aaOvrRecord[benchFramesRecorded] = gOverrideAA || !gConfig.antiAliasing;
         benchFramesRecorded++;
         benchFrames = 0;
         benchCPU = 0;
