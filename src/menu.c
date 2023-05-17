@@ -2470,7 +2470,7 @@ void func_8008377C(UNUSED s32 updateRate, f32 arg1) {
         sMenuGuiOpacity = (gTitleRevealTimer * 8) - 1;
         func_80068508(0);
         if (scale != 1.0f) {
-            render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_FLOAT_HALF, 52.0f, scale, scale, 0xFFFFFFFE, 1);
+            render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_FLOAT_HALF, 52.0f, scale, scale, 0xFFFFFFFE, TEXRECT_POINT);
         } else {
             render_textured_rectangle(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_HALF, 52, 255, 255, 255, 255);
         }
@@ -8432,7 +8432,7 @@ void render_track_selection_viewport_border(ObjectModel *objMdl) {
         flags = RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_ANTI_ALIASING;
     }
     for (i = 0; i < objMdl->numberOfBatches; i++) {
-        if (!(objMdl->batches[i].flags & 0x100)) {
+        if (!(objMdl->batches[i].flags & RENDER_Z_UPDATE)) {
             vertOffset = objMdl->batches[i].verticesOffset;
             triOffset = objMdl->batches[i].facesOffset;
             numVerts = objMdl->batches[i + 1].verticesOffset - vertOffset;

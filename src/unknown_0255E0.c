@@ -349,7 +349,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     for (j = gSceneCurrentPlayerID = 0; j < numViewports; gSceneCurrentPlayerID++, j = gSceneCurrentPlayerID) {
         if (gCurrentLevelHeader2 && !gCurrentLevelHeader2 && !gCurrentLevelHeader2) {} // Fakematch
         if (j == 0) {
-            if (func_8000E184() && numViewports == VIEWPORTS_COUNT_2_PLAYERS) {
+            if (func_8000E184() && numViewports == 1) {
                 gSceneCurrentPlayerID = PLAYER_TWO;
             }
         }
@@ -361,7 +361,8 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         set_active_camera(gSceneCurrentPlayerID);
         func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
         func_8002A31C();
-        if (numViewports < VIEWPORTS_COUNT_3_PLAYERS) {
+        // Show detailed skydome in single player.
+        if (numViewports < 2) {
             func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             if (gCurrentLevelHeader2->skyDome == -1) {
                 func_80028050();
@@ -377,22 +378,24 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         gDPPipeSync(gSceneCurrDisplayList++);
         initialise_player_viewport_vars(updateRate);
         set_weather_limits(-1, -512);
-        if (gCurrentLevelHeader2->weatherEnable > 0 && numViewports < VIEWPORTS_COUNT_3_PLAYERS) {
+        // Show weather effects in single player.
+        if (gCurrentLevelHeader2->weatherEnable > 0 && numViewports < 2) {
             process_weather(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList, tempUpdateRate);
         }
         func_800AD030(get_active_camera_segment());
         func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
         render_hud(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_racer_object_by_port(gSceneCurrentPlayerID), updateRate);
     }
-
-    if (numViewports == VIEWPORTS_COUNT_4_PLAYERS && get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS && get_current_level_race_type() != RACETYPE_CHALLENGE_BATTLE && get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) {
+    // Show TT Cam toggle for the fourth viewport when playing 3 player.
+    if (numViewports == 3 && get_current_level_race_type() != RACETYPE_CHALLENGE_EGGS && 
+        get_current_level_race_type() != RACETYPE_CHALLENGE_BATTLE && get_current_level_race_type() != RACETYPE_CHALLENGE_BANANAS) {
         if (get_hud_setting() == 0) {
             if (flip) {
                 gSPSetGeometryMode(gSceneCurrDisplayList++, G_CULL_FRONT);
             }
             apply_fog(PLAYER_FOUR);
             gDPPipeSync(gSceneCurrDisplayList++);
-            set_active_camera(3);
+            set_active_camera(PLAYER_FOUR);
             disable_cutscene_camera();
             func_800278E8(updateRate);
             func_80066CDC(&gSceneCurrDisplayList, &gSceneCurrMatrix);
@@ -406,17 +409,17 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             set_weather_limits(-1, -512);
             func_800AD030(get_active_camera_segment());
             func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
-            set_text_font(0);
+            set_text_font(FONT_COLOURFUL);
             if (osTvType == TV_TYPE_PAL) {
-                posX = 166;
-                posY = 138;
+                posX = SCREEN_WIDTH_HALF + 6;
+                posY = SCREEN_HEIGHT_HALF_PAL + 6;
             } else {
-                posX = 170;
-                posY = 125;
+                posX = SCREEN_WIDTH_HALF + 10;
+                posY = SCREEN_HEIGHT_HALF + 5;
             }
-            draw_text(&gSceneCurrDisplayList, posX, posY, (char *)(&gViewport4Text), ALIGN_TOP_LEFT);
+            draw_text(&gSceneCurrDisplayList, posX, posY, (char *)(&gViewport4Text), ALIGN_TOP_LEFT); // TT CAM
         } else {
-            set_active_camera(3);
+            set_active_camera(PLAYER_FOUR);
             func_800278E8(updateRate);
         }
     }
@@ -1070,13 +1073,13 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
         if (!(batchFlags & BATCH_FLAGS_DEPTH_WRITE) && !(batchFlags & BATCH_FLAGS_UNK00000800)) {
             batchFlags |= gAntiAliasing;
         }
-        if ((!(textureFlags & RENDER_SEMI_TRANSPARENT) && !(batchFlags & BATCH_FLAGS_UNK00002000)) || batchFlags & BATCH_FLAGS_UNK00000800) {
+        if ((!(textureFlags & RENDER_SEMI_TRANSPARENT) && !(batchFlags & BATCH_FLAGS_WATER)) || batchFlags & BATCH_FLAGS_UNK00000800) {
             renderBatch = TRUE;
         }
         if (nonOpaque) {
             renderBatch = (renderBatch + 1) & 1;
         }
-        if (sp78 && batchFlags & BATCH_FLAGS_UNK00002000) {
+        if (sp78 && batchFlags & BATCH_FLAGS_WATER) {
             renderBatch = FALSE;
         }
         if (!renderBatch) {
@@ -1462,7 +1465,7 @@ s32 check_if_in_draw_range(Object *obj) {
         alpha = 255;
         viewDistance = obj->segment.header->drawDistance;
         if (obj->segment.header->drawDistance) {
-            if (gScenePlayerViewports == VIEWPORTS_COUNT_4_PLAYERS) {
+            if (gScenePlayerViewports == 3) {
                 viewDistance *= 0.5;
             }
 

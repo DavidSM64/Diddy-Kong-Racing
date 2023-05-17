@@ -15,12 +15,12 @@ glabel func_80078190
 /* 078DC4 800781C4 8FA40040 */  lw    $a0, 0x40($sp)
 /* 078DC8 800781C8 00024403 */  sra   $t0, $v0, 0x10
 /* 078DCC 800781CC 8C830000 */  lw    $v1, ($a0)
-/* 078DD0 800781D0 3C19800E */  lui   $t9, %hi(D_800DE598) # $t9, 0x800e
+/* 078DD0 800781D0 3C19800E */  lui   $t9, %hi(dRaceFinishBackgroundSettings) # $t9, 0x800e
 /* 078DD4 800781D4 246F0008 */  addiu $t7, $v1, 8
 /* 078DD8 800781D8 AC8F0000 */  sw    $t7, ($a0)
 /* 078DDC 800781DC 3C0A800E */  lui   $t2, %hi(D_800DE4C8) # $t2, 0x800e
 /* 078DE0 800781E0 310EFFFF */  andi  $t6, $t0, 0xffff
-/* 078DE4 800781E4 2739E598 */  addiu $t9, %lo(D_800DE598) # addiu $t9, $t9, -0x1a68
+/* 078DE4 800781E4 2739E598 */  addiu $t9, %lo(dRaceFinishBackgroundSettings) # addiu $t9, $t9, -0x1a68
 /* 078DE8 800781E8 3C180600 */  lui   $t8, 0x600
 /* 078DEC 800781EC 254AE4C8 */  addiu $t2, %lo(D_800DE4C8) # addiu $t2, $t2, -0x1b38
 /* 078DF0 800781F0 01C04025 */  move  $t0, $t6
