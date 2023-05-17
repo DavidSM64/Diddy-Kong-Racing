@@ -24,7 +24,7 @@
 #include "types.h"
 #include "macros.h"
 #include "audio_internal.h"
-#include "assert.h"
+#include "audio_assert.h"
 
 // TODO: these come from headers
 #ident "$Revision: 1.17 $"
