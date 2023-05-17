@@ -17,13 +17,13 @@ extern u8 gSkipCutbacks;
 
 struct ConfigOptions {
     s8 antiAliasing;
-    u8 screenPosX : 4;
-    u8 screenPosY : 4;
-    u8 screenMode : 2;
-    u8 regionMode : 2;
-    u8 frameCap : 1;
-    u8 dedither : 1;
-    u8 noCutbacks : 1;
+    u8 screenPosX;
+    u8 screenPosY;
+    u8 screenMode;
+    u8 regionMode;
+    u8 frameCap;
+    u8 dedither;
+    u8 noCutbacks;
 };
 
 extern struct ConfigOptions gConfig;

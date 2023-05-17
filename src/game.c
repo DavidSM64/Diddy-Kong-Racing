@@ -1061,17 +1061,11 @@ void main_game_loop(void) {
 #ifndef FIFO_UCODE
         setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
 #else
-    #ifdef PUPPYPRINT_DEBUG
-        if (get_buttons_pressed_from_player(PLAYER_ONE) & D_JPAD) {
-            gConfig.antiAliasing ^= 1;
-            //set_dither_filter();
-        }
-    #endif
-#ifdef FIFO_4MB
+    #ifdef FIFO_4MB
         if (suCodeSwitch == FALSE && IO_READ(DPC_BUFBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) {
-#else
+    #else
         if (suCodeSwitch == FALSE && IO_READ(DPC_BUFBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG) && gExpansionPak) {
-#endif
+    #endif
             setup_ostask_fifo(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
         } else {
             setup_ostask_xbus(gDisplayLists[gSPTaskNum], gCurrDisplayList, 0);
