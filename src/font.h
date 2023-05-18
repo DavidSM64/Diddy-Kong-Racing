@@ -182,5 +182,6 @@ void unload_font(s32 fontID);
 void render_text_string(Gfx **dlist, DialogueBoxBackground *box, char *text, AlignmentFlags alignmentFlags, f32 scisScale);
 s32 get_text_width(char *text, s32 x, s32 font);
 void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s32 number, s32 flags);
+s32 get_current_dialogue_box_height(s32 dialogueBoxID);
 
 #endif

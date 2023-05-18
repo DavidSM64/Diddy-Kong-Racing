@@ -6708,12 +6708,17 @@ enum ConfigOptionFlags {
     OPT_NUMBER = (1 << 2), // Displays the value of the option instead of a string.
     OPT_PAL =    (1 << 3), // Display a different set of values for PAL users.
     OPT_HIDDEN = (1 << 4), // Just hide it unconditionally, for debug purposes.
+#if SCREEN_HEIGHT >= 240
+    OPT_240 = (1 << 4), // Just hide it unconditionally, for debug purposes.
+#else
+    OPT_240 = (1 << 5), // Just hide it unconditionally, for debug purposes.
+#endif
 };
 
 ConfigOptionEntry gOptionMenu[] = {
-    {"Screen", &gConfig.screenMode, OPT_EX_PAK | OPT_HIDDEN, 5, 0, 2, refresh_screen_res},
-    {"Screen X", &gConfig.screenPosX, OPT_NO_EMU | OPT_NUMBER | OPT_HIDDEN, 0, -8, 8, refresh_screen_res},
-    {"Screen Y", &gConfig.screenPosY, OPT_NO_EMU | OPT_NUMBER | OPT_HIDDEN, 0, -8, 8, refresh_screen_res},
+    {"Screen", &gConfig.screenMode, OPT_EX_PAK | OPT_240, 5, 0, 2, refresh_screen_res},
+    {"Screen X", &gConfig.screenPosX, OPT_NO_EMU | OPT_NUMBER | OPT_240, 0, -8, 8, refresh_screen_res},
+    {"Screen Y", &gConfig.screenPosY, OPT_NO_EMU | OPT_NUMBER | OPT_240, 0, -8, 8, refresh_screen_res},
     {"Anti Aliasing", &gConfig.antiAliasing, OPT_NO_EMU, 2, -1, 1, NULL},
     {"Dedither", &gConfig.dedither, OPT_NO_EMU, 0, 0, 1, set_dither_filter},
     {"Frame Cap", &gConfig.frameCap, OPT_PAL, 8, 0, 3, NULL},
@@ -6743,6 +6748,7 @@ char gPauseOptStrings[][8] = {
     {"14"},
 };
 u8 gPauseSubmenu = 0;
+u8 gPauseOptionScroll;
 
 void refresh_screen_res(void) {
     change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
@@ -6869,6 +6875,7 @@ void func_80093D40(UNUSED s32 updateRate) {
             }
             render_dialogue_text(7, POS_CENTRED, yOffset + 44, gMenuText[ASSET_MENU_TEXT_CANCEL], 1, 12);
         } else {
+            s32 intendedScroll = gPauseOptionScroll;
             yOffset = 8;
             y = 0;
             for (i = 0; i < (s32) OPTIONSIZE; i++) {
@@ -6887,6 +6894,12 @@ void func_80093D40(UNUSED s32 updateRate) {
                 }
                 if (gMenuSubOption == i + 1) {
                     set_current_text_colour(7, 255, 255, 255, alpha, 255);
+                    while (y - (intendedScroll * 16) > get_current_dialogue_box_height(7) - 24) {
+                        intendedScroll++;
+                    }
+                    while (y - (intendedScroll * 16) < 0) {
+                        intendedScroll--;
+                    }
                 } else {
                     set_current_text_colour(7, 255, 255, 255, 0, 255);
                 }
@@ -6895,9 +6908,10 @@ void func_80093D40(UNUSED s32 updateRate) {
                 } else {
                     puppyprintf(gPauseOptionStack[i], "%s: %s", gOptionMenu[i].name, gPauseOptStrings[*gOptionMenu[i].option + stringOffset]);
                 }
-                render_dialogue_text(7, POS_CENTRED, yOffset + 8 + y, gPauseOptionStack[i], 1, 12);
+                render_dialogue_text(7, POS_CENTRED, yOffset + 8 + y - (gPauseOptionScroll * 16), gPauseOptionStack[i], 1, 12);
                 y += 16;
             }
+            gPauseOptionScroll = intendedScroll;
         }
     } else {
         render_dialogue_text(7, POS_CENTRED, 12, gMenuText[ASSET_MENU_TEXT_PAUSEOPTIONS], D_800E098C + 1, 12);

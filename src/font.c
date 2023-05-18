@@ -461,6 +461,14 @@ void set_current_dialogue_box_coords(s32 dialogueBoxID, s32 x1, s32 y1, s32 x2, 
     }
 }
 
+s32 get_current_dialogue_box_height(s32 dialogueBoxID) {
+    if (dialogueBoxID > 0 && dialogueBoxID < DIALOGUEBOXBACKGROUND_COUNT) {
+        DialogueBoxBackground *temp = &gDialogueBoxBackground[dialogueBoxID];
+        return temp->height;
+    }
+    return -1;
+}
+
 /**
  * Sets the active front of the current dialogue box.
  * Official Name: fontWindowUseFont
