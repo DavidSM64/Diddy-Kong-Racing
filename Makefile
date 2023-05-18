@@ -157,7 +157,7 @@ else
   OBJCOPY = $(CROSS)objcopy --pad-to=0x101000 --gap-fill=0xFF
 endif
 
-MIPSISET := -mips1
+MIPSISET := -mips2
 OPT_FLAGS := -O2 -Xfullwarn #include -Xfullwarn here since it's not supported with -O3
 
 INCLUDE_DIRS := include $(BUILD_DIR) $(BUILD_DIR)/include src include/libc .
@@ -313,6 +313,9 @@ $(BUILD_DIR)/src/vehicle_wizpig.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/vehicle_rocket.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/controller.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/audiomgr.o: OPT_FLAGS := -O3
+
+
+$(BUILD_DIR)/src/waves.o: MIPSISET := -mips1
 
 
 $(BUILD_DIR)/lib/src/mips1/sc/sched.o: OPT_FLAGS := -O3

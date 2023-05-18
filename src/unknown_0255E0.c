@@ -188,7 +188,7 @@ s32 set_scene_viewport_num(s32 numPorts) {
     return 0;
 }
 
-//#ifdef NON_EQUIVALENT
+#ifdef NON_EQUIVALENT
 void func_8002C0C4(s32 modelId);
 void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 arg5, u32 arg6) {
     s32 i;
@@ -262,9 +262,9 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
         func_80025510(arg2 + 1);
     }
 }
-/*#else
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
-#endif*/
+#endif
 
 /**
  * The root function for rendering the entire scene.

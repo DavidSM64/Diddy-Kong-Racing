@@ -536,8 +536,8 @@ MenuElement gControllerPakMenuElement[7] = {
 
 s32 gShowControllerPakMenu = FALSE;
 
-s32 gActiveMagicCodes = 0;
-s32 gUnlockedMagicCodes = 0;
+s32 gActiveMagicCodes = CHEAT_TWO_PLAYER_ADVENTURE;
+s32 gUnlockedMagicCodes = CHEAT_TWO_PLAYER_ADVENTURE;
 
 char *gMagicCodeMenuStrings[5] = { 0, 0, 0, 0, 0 };
 
