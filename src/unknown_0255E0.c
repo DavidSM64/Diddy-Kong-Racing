@@ -685,7 +685,6 @@ GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028050.s")
  * it gives the background a gradient effect.
 */
 void draw_gradient_background(void) {
-    s32 set_zero;
     s16 y0;
     s16 y1;
     u8 headerRed0;
@@ -696,13 +695,22 @@ void draw_gradient_background(void) {
     u8 headerBlue1;
     Vertex *verts;
     Triangle *tris;
-    s32 also_one;
-    s32 set_twenty;
-        
+    f32 widescreen = 1.0f;
+
+#ifndef NATIVE_RES_WIDESCREEN
+    switch (gConfig.screenMode) {
+    case 1:
+        widescreen = 1.2f;
+        break;
+    case 2:
+        widescreen = 1.33f;
+        break;
+    } 
+#endif
+
     verts = (Vertex *) gSceneCurrVertexList;
     tris = (Triangle *) gSceneCurrTriList;
     headerRed0 = gCurrentLevelHeader2->unkC1;
-    also_one = 1;
     headerGreen0 = gCurrentLevelHeader2->unkC2;
     headerBlue0 = gCurrentLevelHeader2->unkC3;
     headerRed1 = gCurrentLevelHeader2->unkBE;
@@ -712,38 +720,36 @@ void draw_gradient_background(void) {
     load_and_set_texture_no_offset(&gSceneCurrDisplayList, 0, RENDER_FOG_ACTIVE);
     gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), 4, 0);
     gSPPolygon(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(tris), 2, 0);
-    set_twenty = 20;
     y0 = -150;
     y1 = 150;
     if (get_viewport_count() == TWO_PLAYERS) {
         y0 >>= 1;
         y1 >>= 1;
     }
-    verts[0].x = -200;
+    verts[0].x = -200 * widescreen;
     verts[0].y = y0;
-    verts[0].z = set_twenty;
+    verts[0].z = 20;
     verts[0].r = headerRed0;
     verts[0].g = headerGreen0;
     verts[0].b = headerBlue0;
     verts[0].a = 255;
-    verts[also_one].x = 200;
+    verts[1].x = 200 * widescreen;
     verts[1].y = y0;
-    verts[1].z = set_twenty;
+    verts[1].z = 20;
     verts[1].r = headerRed0;
     verts[1].g = headerGreen0;
     verts[1].b = headerBlue0;
     verts[1].a = 255;
-    verts[2].x = -200;
+    verts[2].x = -200 * widescreen;
     verts[2].y = y1;
-    verts[2].z = set_twenty;
+    verts[2].z = 20;
     verts[2].r = headerRed1;
     verts[2].g = headerGreen1;
     verts[2].b = headerBlue1;
     verts[2].a = 255;
-    verts[3].x = 200;
-    set_zero = 0;
+    verts[3].x = 200 * widescreen;
     verts[3].y = y1;
-    verts[3].z = set_twenty;
+    verts[3].z = 20;
     verts[3].r = headerRed1;
     verts[3].g = headerGreen1;
     verts[3].b = headerBlue1;
@@ -753,10 +759,10 @@ void draw_gradient_background(void) {
     tris[0].vi1 = 1;
     tris[0].vi2 = 0;
     tris[0].uv0.u = 0;
-    tris[0].uv0.v = set_zero;
-    tris[set_zero].uv1.u = set_zero;
-    tris[set_zero].uv1.v = set_zero;
-    tris[set_zero].uv2.u = set_zero;
+    tris[0].uv0.v = 0;
+    tris[0].uv1.u = 0;
+    tris[0].uv1.v = 0;
+    tris[0].uv2.u = 0;
     tris[0].uv2.v = 0;
     tris[1].flags = 0x40;
     tris[1].vi0 = 3;

@@ -44,6 +44,7 @@
 #define FIFO_UCODE                          // Allow usage of the faster FIFO microcode. Emulators will still use xbus. Requires 96KB memory to work.
 //#define FIFO_4MB                            // Allows non expansion pak users to use FIFO microcode.
 #define TRIPLE_BUFFERING                    // Uses more memory, but provides a much smoother gameplay experience. You may struggle to fit this in 4MB.
+//#define NATIVE_RES_WIDESCREEN               // Uses native resolution widescreen. Looks better than anamorphic, but uses more memory and performance.
 #define SCREEN_WIDTH            320         // Default width is 320. Recommended to be 304 for 4MB users.
 #define SCREEN_WIDTH_16_10      384         // Default width is 384. Recommended to be 360 for 4MB users.
 #define SCREEN_WIDTH_WIDE       424         // Default width is 424. Recommended to be 408 for 4MB users.
