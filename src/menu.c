@@ -6716,7 +6716,7 @@ enum ConfigOptionFlags {
 };
 
 ConfigOptionEntry gOptionMenu[] = {
-    {"Screen", &gConfig.screenMode, OPT_EX_PAK | OPT_240, 5, 0, 2, refresh_screen_res},
+    {"Screen", &gConfig.screenMode, OPT_EX_PAK, 5, 0, 2, refresh_screen_res},
     {"Screen X", &gConfig.screenPosX, OPT_NO_EMU | OPT_NUMBER | OPT_240, 0, -8, 8, refresh_screen_res},
     {"Screen Y", &gConfig.screenPosY, OPT_NO_EMU | OPT_NUMBER | OPT_240, 0, -8, 8, refresh_screen_res},
     {"Anti Aliasing", &gConfig.antiAliasing, OPT_NO_EMU, 2, -1, 1, NULL},
@@ -6751,7 +6751,34 @@ u8 gPauseSubmenu = 0;
 u8 gPauseOptionScroll;
 
 void refresh_screen_res(void) {
+#ifdef NATIVE_RES_WIDESCREEN
+    switch (gConfig.screenMode) {
+    case 0:
+        gScreenWidth = SCREEN_WIDTH;
+        gScreenHeight = SCREEN_HEIGHT;
+        break;
+    case 1:
+        gScreenWidth = SCREEN_WIDTH_16_10;
+        gScreenHeight = SCREEN_HEIGHT;
+        break;
+    case 2:
+        gScreenWidth = SCREEN_WIDTH_WIDE;
+        gScreenHeight = SCREEN_HEIGHT;
+        break;
+    }
+#endif
     change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
+#ifndef NATIVE_RES_WIDESCREEN
+    switch (gConfig.screenMode) {
+    case 1:
+        gVideoAspectRatio *= 1.2f;
+        break;
+    case 2:
+        gVideoAspectRatio *= 1.33f;
+        break;
+    }
+    reset_perspective_matrix();
+#endif
 }
 
 //Pause Menu
@@ -7007,7 +7034,7 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                         if (gControllersYAxisDirection[playerId] < 0) {
                             gMenuSubOption++;
                             while ((gOptionMenu[gMenuSubOption - 1].flags & OPT_HIDDEN || (gOptionMenu[gMenuSubOption - 1].flags & OPT_EX_PAK && !gExpansionPak) || 
-                            ((gOptionMenu[gMenuSubOption- 1].flags & OPT_NO_EMU) && (gPlatform & EMULATOR))) && gMenuSubOption < OPTIONSIZE) {
+                            ((gOptionMenu[gMenuSubOption- 1].flags & OPT_NO_EMU) && (gPlatform & EMULATOR))) && gMenuSubOption < (s32) OPTIONSIZE + 1) {
                                 gMenuSubOption++;
                             }
                             // If it's out of bounds, then just return to where it was before.
@@ -7040,6 +7067,7 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
             } else if (gMenuOptionText[gMenuOption] == gPauseOptionText) {
                 gMenuSubOption = 1;
                 gPauseSubmenu = 1;
+                gPauseOptionScroll = 0;
                 while (gOptionMenu[gMenuSubOption - 1].flags & OPT_HIDDEN || (gOptionMenu[gMenuSubOption - 1].flags & OPT_EX_PAK && !gExpansionPak) || 
                 ((gOptionMenu[gMenuSubOption- 1].flags & OPT_NO_EMU) && (gPlatform & EMULATOR))) {
                     gMenuSubOption++;

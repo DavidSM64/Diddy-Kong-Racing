@@ -153,7 +153,7 @@ void change_vi(OSViMode *mode, int width, int height) {
         mode->fldRegs[1].yScale = 0x2000000|((height*1024)/240);
         mode->fldRegs[0].vStart = mode->fldRegs[1].vStart-0x20002;
     }
-    gVideoAspectRatio = (f32) width / (f32) height;
+    gVideoAspectRatio = ((f32) width / (f32) height);
     reset_perspective_matrix();
 }
 
