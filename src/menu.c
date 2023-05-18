@@ -6713,6 +6713,7 @@ enum ConfigOptionFlags {
 #else
     OPT_240 = (1 << 5), // Just hide it unconditionally, for debug purposes.
 #endif
+    OPT_ARES = (1 << 6), // Visible on accurate emulators.
 };
 
 ConfigOptionEntry gOptionMenu[] = {
@@ -6749,6 +6750,26 @@ char gPauseOptStrings[][8] = {
 };
 u8 gPauseSubmenu = 0;
 u8 gPauseOptionScroll;
+
+s32 menu_option_hidden(s32 index) {
+    // Hide hidden. Duh.
+    if (gOptionMenu[index].flags & OPT_HIDDEN) {
+        return 1;
+    }
+    // Hide expansion pak required options if there's no expansion pak.
+    if (gOptionMenu[index].flags & OPT_EX_PAK && !gExpansionPak) {
+        return 1;
+    }
+    if (gPlatform & EMULATOR) {
+        // Hide certain options on emulator.
+        if (gOptionMenu[index].flags & OPT_ARES && gPlatform & ARES) {
+            return 0;
+        } else if (gOptionMenu[index].flags & OPT_NO_EMU) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
 void refresh_screen_res(void) {
 #ifdef NATIVE_RES_WIDESCREEN
@@ -6907,8 +6928,7 @@ void func_80093D40(UNUSED s32 updateRate) {
             y = 0;
             for (i = 0; i < (s32) OPTIONSIZE; i++) {
                 s32 stringOffset = gOptionMenu[i].stringOffset;
-                if (gOptionMenu[i].flags & OPT_HIDDEN || (gOptionMenu[i].flags & OPT_EX_PAK && !gExpansionPak) || 
-                ((gOptionMenu[i].flags & OPT_NO_EMU) && (gPlatform & EMULATOR))) {
+                if (menu_option_hidden(i)) {
                     continue;
                 }
                 // If the value can be negative, offset the string by the amount it takes to not be negative.
@@ -7033,8 +7053,7 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                     } else {
                         if (gControllersYAxisDirection[playerId] < 0) {
                             gMenuSubOption++;
-                            while ((gOptionMenu[gMenuSubOption - 1].flags & OPT_HIDDEN || (gOptionMenu[gMenuSubOption - 1].flags & OPT_EX_PAK && !gExpansionPak) || 
-                            ((gOptionMenu[gMenuSubOption- 1].flags & OPT_NO_EMU) && (gPlatform & EMULATOR))) && gMenuSubOption < (s32) OPTIONSIZE + 1) {
+                            while (menu_option_hidden(gMenuSubOption - 1) && gMenuSubOption < (s32) OPTIONSIZE + 1) {
                                 gMenuSubOption++;
                             }
                             // If it's out of bounds, then just return to where it was before.
@@ -7043,8 +7062,7 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                             }
                         } else {
                             gMenuSubOption--;
-                            while ((gOptionMenu[gMenuSubOption - 1].flags & OPT_HIDDEN || (gOptionMenu[gMenuSubOption - 1].flags & OPT_EX_PAK && !gExpansionPak) || 
-                            ((gOptionMenu[gMenuSubOption - 1].flags & OPT_NO_EMU) && (gPlatform & EMULATOR))) && gMenuSubOption > 0) {
+                            while (menu_option_hidden(gMenuSubOption - 1) && gMenuSubOption > 0) {
                                 gMenuSubOption--;
                             }
                             // If it's out of bounds, then just return to where it was before.
@@ -7068,8 +7086,7 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                 gMenuSubOption = 1;
                 gPauseSubmenu = 1;
                 gPauseOptionScroll = 0;
-                while (gOptionMenu[gMenuSubOption - 1].flags & OPT_HIDDEN || (gOptionMenu[gMenuSubOption - 1].flags & OPT_EX_PAK && !gExpansionPak) || 
-                ((gOptionMenu[gMenuSubOption- 1].flags & OPT_NO_EMU) && (gPlatform & EMULATOR))) {
+                while (menu_option_hidden(gMenuSubOption - 1)) {
                     gMenuSubOption++;
                 }
             } else {

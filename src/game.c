@@ -802,6 +802,8 @@ void init_config(void) {
     bzero(&gConfig, sizeof(gConfig));
     if (gPlatform & EMULATOR) {
         gConfig.noCutbacks = TRUE;
+        gConfig.antiAliasing = 1;
+        gConfig.dedither = TRUE;
     }
     gSkipCutbacks = gConfig.noCutbacks;
 }
