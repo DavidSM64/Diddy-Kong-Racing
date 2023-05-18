@@ -800,6 +800,9 @@ u8 gSkipCutbacks = FALSE;
 
 void init_config(void) {
     bzero(&gConfig, sizeof(gConfig));
+    if (gPlatform & EMULATOR) {
+        gConfig.noCutbacks = TRUE;
+    }
     gSkipCutbacks = gConfig.noCutbacks;
 }
 

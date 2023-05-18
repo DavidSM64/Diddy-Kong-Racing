@@ -887,6 +887,7 @@ void func_80083098(f32);
 void func_8008F00C(s32);
 void render_track_selection_viewport_border(ObjectModel *objMdl);
 void render_adventure_track_setup(UNUSED s32 updateRate, s32 arg1, s32 arg2);
+void refresh_screen_res(void);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching

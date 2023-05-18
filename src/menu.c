@@ -6691,32 +6691,62 @@ void func_80093A0C(void) {
     func_80000B28();
 }
 
-char gPauseOptionText[] = "Options";
-char gPauseConfigOpt[][32] = {
-    {"Screen"},
-    {"Screen X"},
-    {"Screen Y"},
-    {"Anti Aliasing"},
-    {"Frame Cap"},
-    {"Dedither"},
-    {"MP Cutbacks"},
+typedef struct ConfigOptionEntry {
+    char *name;
+    s8 *option;
+    u8 flags;
+    u8 stringOffset;
+    s8 minValue;
+    s8 maxValue;
+    void (*func)();
+} ConfigOptionEntry;
+
+enum ConfigOptionFlags {
+    OPT_NONE,
+    OPT_EX_PAK = (1 << 0), // Requires the expansion pak.
+    OPT_NO_EMU = (1 << 1), // Hidden on emulator.
+    OPT_NUMBER = (1 << 2), // Displays the value of the option instead of a string.
+    OPT_PAL =    (1 << 3), // Display a different set of values for PAL users.
+    OPT_HIDDEN = (1 << 4), // Just hide it unconditionally, for debug purposes.
 };
-char gPauseOptionStack[sizeof(gPauseConfigOpt) / 32][40];
+
+ConfigOptionEntry gOptionMenu[] = {
+    {"Screen", &gConfig.screenMode, OPT_EX_PAK | OPT_HIDDEN, 5, 0, 2, refresh_screen_res},
+    {"Screen X", &gConfig.screenPosX, OPT_NO_EMU | OPT_NUMBER | OPT_HIDDEN, 0, -8, 8, refresh_screen_res},
+    {"Screen Y", &gConfig.screenPosY, OPT_NO_EMU | OPT_NUMBER | OPT_HIDDEN, 0, -8, 8, refresh_screen_res},
+    {"Anti Aliasing", &gConfig.antiAliasing, OPT_NO_EMU, 2, -1, 1, NULL},
+    {"Dedither", &gConfig.dedither, OPT_NO_EMU, 0, 0, 1, set_dither_filter},
+    {"Frame Cap", &gConfig.frameCap, OPT_PAL, 8, 0, 3, NULL},
+    {"MP Cutbacks", &gConfig.noCutbacks, OPT_NO_EMU, 1, 0, 1, NULL},
+};
+
+#define OPTIONSIZE (sizeof(gOptionMenu) / sizeof(ConfigOptionEntry))
+
+char gPauseOptionText[] = "Options";
+char gPauseOptionStack[OPTIONSIZE][40];
 char gPauseOptStrings[][8] = {
     {"Off"},
     {"On"},
+    {"Off"},
+    {"Fast"},
+    {"Fancy"},
     {"4:3"},
     {"16:10"},
     {"16:9"},
     {"60"},
     {"30"},
+    {"20"},
+    {"15"},
     {"50"},
     {"25"},
-    {"Off"},
-    {"Fast"},
-    {"Fancy"},
+    {"18"},
+    {"14"},
 };
 u8 gPauseSubmenu = 0;
+
+void refresh_screen_res(void) {
+    change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
+}
 
 //Pause Menu
 void func_80093A40(void) {
@@ -6841,43 +6871,29 @@ void func_80093D40(UNUSED s32 updateRate) {
         } else {
             yOffset = 8;
             y = 0;
-            for (i = 0; i < (s32) (sizeof(gPauseConfigOpt) / 32); i++) {
-                if ((i == 0 && gExpansionPak == FALSE) || (i > 0 && (IO_READ(DPC_PIPEBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) == 0)) {
+            for (i = 0; i < (s32) OPTIONSIZE; i++) {
+                s32 stringOffset = gOptionMenu[i].stringOffset;
+                if (gOptionMenu[i].flags & OPT_HIDDEN || (gOptionMenu[i].flags & OPT_EX_PAK && !gExpansionPak) || 
+                ((gOptionMenu[i].flags & OPT_NO_EMU) && (gPlatform & EMULATOR))) {
                     continue;
                 }
-#if SCREEN_HEIGHT <= 240
-                // Just disabling widescreen related stuff for now.
-                if (i >= 0 && i <= 2) {
-                    continue;
+                // If the value can be negative, offset the string by the amount it takes to not be negative.
+                if (gOptionMenu[i].minValue < 0) {
+                    stringOffset -= gOptionMenu[i].minValue;
                 }
-#endif
+                // Offset PAL by the max value.
+                if ((gOptionMenu[i].flags & OPT_PAL) && osTvType == TV_TYPE_PAL) {
+                    stringOffset += gOptionMenu[i].maxValue + 1;
+                }
                 if (gMenuSubOption == i + 1) {
                     set_current_text_colour(7, 255, 255, 255, alpha, 255);
                 } else {
                     set_current_text_colour(7, 255, 255, 255, 0, 255);
                 }
-                switch (i) {
-                case 0:
-                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[2 + gConfig.screenMode]);
-                    break;
-                case 1:
-                    puppyprintf(gPauseOptionStack[i], "%s: %d", gPauseConfigOpt[i], gConfig.screenPosX);
-                    break;
-                case 2:
-                    puppyprintf(gPauseOptionStack[i], "%s: %d", gPauseConfigOpt[i], gConfig.screenPosY);
-                    break;
-                case 3:
-                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[10 + gConfig.antiAliasing]);
-                    break;
-                case 4:
-                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[5 + gConfig.frameCap]);
-                    break;
-                case 5:
-                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gConfig.dedither]);
-                    break;
-                case 6:
-                    puppyprintf(gPauseOptionStack[i], "%s: %s", gPauseConfigOpt[i], gPauseOptStrings[gConfig.noCutbacks ^ 1]);
-                    break;
+                if (gOptionMenu[i].flags & OPT_NUMBER) {
+                    puppyprintf(gPauseOptionStack[i], "%s: %d", gOptionMenu[i].name, *gOptionMenu[i].option);
+                } else {
+                    puppyprintf(gPauseOptionStack[i], "%s: %s", gOptionMenu[i].name, gPauseOptStrings[*gOptionMenu[i].option + stringOffset]);
                 }
                 render_dialogue_text(7, POS_CENTRED, yOffset + 8 + y, gPauseOptionStack[i], 1, 12);
                 y += 16;
@@ -6928,61 +6944,29 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
         if (gMenuSubOption != 0) {
             if (gPauseSubmenu == 1) {
                 s32 moveDir = 0;
+                s32 moveOpt = FALSE;
                 if (gControllersXAxisDirection[D_800E098C] != 0) {
-                        play_sound_global(SOUND_SELECT2, NULL);
                     if (gControllersXAxisDirection[D_800E098C] > 0) {
                         moveDir = 1;
+                        if (*gOptionMenu[gMenuSubOption - 1].option < gOptionMenu[gMenuSubOption - 1].maxValue) {
+                            moveOpt = TRUE;
+                        }
                     } else {
                         moveDir = -1;
+                        if (*gOptionMenu[gMenuSubOption - 1].option > gOptionMenu[gMenuSubOption - 1].minValue) {
+                            moveOpt = TRUE;
+                        }
                     }
-                    switch (gMenuSubOption) {
-                    case 1:
-                        gConfig.screenMode += moveDir;
-                        if (gConfig.screenMode == -1) {
-                            gConfig.screenMode = 0;
+                    if (moveOpt) {
+                        if (gOptionMenu[gMenuSubOption - 1].minValue == 0 && gOptionMenu[gMenuSubOption - 1].maxValue == 1) {
+                            *gOptionMenu[gMenuSubOption - 1].option ^= 1;
+                        } else {
+                            *gOptionMenu[gMenuSubOption - 1].option += moveDir;
                         }
-                        if (gConfig.screenMode > 2) {
-                            gConfig.screenMode = 2;
+                        play_sound_global(SOUND_SELECT2, NULL);
+                        if (gOptionMenu[gMenuSubOption - 1].func) {
+                            (gOptionMenu[gMenuSubOption - 1].func)();
                         }
-                        switch (gConfig.screenMode) {
-                        case 0:
-                            gScreenWidth = SCREEN_WIDTH;
-                            change_vi(&gGlobalVI, SCREEN_WIDTH, SCREEN_HEIGHT);
-                            break;
-                        case 1:
-                            gScreenWidth = SCREEN_WIDTH_16_10;
-                            change_vi(&gGlobalVI, SCREEN_WIDTH_16_10, SCREEN_HEIGHT);
-                            break;
-                        case 2:
-                            gScreenWidth = SCREEN_WIDTH_WIDE;
-                            change_vi(&gGlobalVI, SCREEN_WIDTH_WIDE, SCREEN_HEIGHT);
-                            break;
-                        }
-                        break;
-                    case 2:
-                        gConfig.screenPosX += moveDir;
-                        CLAMP(gConfig.screenPosX, -8, 8);
-                        change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
-                        break;
-                    case 3:
-                        gConfig.screenPosY += moveDir;
-                        CLAMP(gConfig.screenPosY, -8, 8);
-                        change_vi(&gGlobalVI, gScreenWidth, gScreenHeight);
-                        break;
-                    case 4:
-                        gConfig.antiAliasing += moveDir;
-                        CLAMP(gConfig.antiAliasing, -1, 1);
-                        break;
-                    case 5:
-                        gConfig.frameCap ^= 1;
-                        break;
-                    case 6:
-                        gConfig.dedither ^= 1;
-                        set_dither_filter();
-                        break;
-                    case 7:
-                        gConfig.noCutbacks ^= 1;
-                        break;
                     }
                 }
             }
@@ -7008,30 +6992,27 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                     } else {
                         if (gControllersYAxisDirection[playerId] < 0) {
                             gMenuSubOption++;
-                            if (gMenuSubOption > (s32) (sizeof(gPauseConfigOpt) / 32)) {
-                                gMenuSubOption = (s32) (sizeof(gPauseConfigOpt) / 32);
+                            while ((gOptionMenu[gMenuSubOption - 1].flags & OPT_HIDDEN || (gOptionMenu[gMenuSubOption - 1].flags & OPT_EX_PAK && !gExpansionPak) || 
+                            ((gOptionMenu[gMenuSubOption- 1].flags & OPT_NO_EMU) && (gPlatform & EMULATOR))) && gMenuSubOption < OPTIONSIZE) {
+                                gMenuSubOption++;
+                            }
+                            // If it's out of bounds, then just return to where it was before.
+                            if (gMenuSubOption > (s32) OPTIONSIZE) {
+                                gMenuSubOption = temp;
                             }
                         } else {
                             gMenuSubOption--;
+                            while ((gOptionMenu[gMenuSubOption - 1].flags & OPT_HIDDEN || (gOptionMenu[gMenuSubOption - 1].flags & OPT_EX_PAK && !gExpansionPak) || 
+                            ((gOptionMenu[gMenuSubOption - 1].flags & OPT_NO_EMU) && (gPlatform & EMULATOR))) && gMenuSubOption > 0) {
+                                gMenuSubOption--;
+                            }
+                            // If it's out of bounds, then just return to where it was before.
                             if (gMenuSubOption == 0) {
-                                gMenuSubOption = 1;
+                                gMenuSubOption = temp;
                             }
                         }
-                        if ((IO_READ(DPC_PIPEBUSY_REG) + IO_READ(DPC_CLOCK_REG) + IO_READ(DPC_TMEM_REG)) == 0) {
-                            gMenuSubOption = 1;
-                        }
                     }
                 }
-#if SCREEN_HEIGHT <= 240
-                if (gPauseSubmenu != 0) {
-                    if (gMenuSubOption == 1 && gExpansionPak == FALSE) {
-                        gMenuSubOption++;
-                    }
-                    if (gMenuSubOption < 4) {
-                        gMenuSubOption = 4;
-                    }
-                }
-#endif
                 if (temp != gMenuSubOption) {
                     play_sound_global(SOUND_MENU_PICK2, NULL);
                 }
@@ -7045,6 +7026,10 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
             } else if (gMenuOptionText[gMenuOption] == gPauseOptionText) {
                 gMenuSubOption = 1;
                 gPauseSubmenu = 1;
+                while (gOptionMenu[gMenuSubOption - 1].flags & OPT_HIDDEN || (gOptionMenu[gMenuSubOption - 1].flags & OPT_EX_PAK && !gExpansionPak) || 
+                ((gOptionMenu[gMenuSubOption- 1].flags & OPT_NO_EMU) && (gPlatform & EMULATOR))) {
+                    gMenuSubOption++;
+                }
             } else {
                 gMenuDelay = 1;
             }

@@ -29,7 +29,7 @@ void skGetId(u32 *arg);
 
 void get_platform(void) {
     u32 notiQue;
-    /*if ((u32) IO_READ(DPC_PIPEBUSY_REG) + (u32) IO_READ(DPC_TMEM_REG) + (u32) IO_READ(DPC_BUFBUSY_REG)) {
+    if ((u32) IO_READ(DPC_PIPEBUSY_REG) + (u32) IO_READ(DPC_TMEM_REG) + (u32) IO_READ(DPC_BUFBUSY_REG)) {
         gPlatform &= ~EMULATOR;
         gPlatform |= CONSOLE;
         puppyprint_log("N64 Console Detected");
@@ -37,7 +37,7 @@ void get_platform(void) {
         gPlatform &= ~CONSOLE;
         gPlatform |= EMULATOR;
         puppyprint_log("N64 Emulator Detected");
-    }*/
+    }
 
     /*if (IS_VC()) {
         gPlatform &= ~CONSOLE;

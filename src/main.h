@@ -16,6 +16,7 @@ void thread1_main(void *);
 #define EMULATOR 2
 #define VC 4
 #define IQUE 8
+extern u8 gPlatform;
 
 enum DebugPages {
     PAGE_MINIMAL,
