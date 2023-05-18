@@ -13,6 +13,12 @@
 #include "textures_sprites.h"
 #include "math_util.h"
 
+/************ .rodata ************/
+
+const char D_800E87F0[] = "\nMaximum limit of %d lens flare switches, per level, has been exceeded.";
+
+/*********************************/
+
 /************ .data ************/
 
 unk800E2850 D_800E2850[3] = {

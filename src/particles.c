@@ -15,12 +15,6 @@
 
 /************ .rodata ************/
 
-// Need to move this to the correct file when we figure out where the lens flare code is.
-const char D_800E87F0[] = "\nMaximum limit of %d lens flare switches, per level, has been exceeded.";
-
-// This is most likely a file boundary. Not sure where the split occurs though.
-const int D_800E8838[2] = { 0, 0 };
-
 const char D_800E8840[] = "\n\nUnknown trigger type in initParticleTrigger %d, Max %d.\n\n";
 const char D_800E887C[] = "\n\nUnknown particle type in initParticleTrigger %d, Max %d.\n\n";
 const char D_800E88BC[] = "\n\nUnknown trigger type in initParticleTrigger %d, Max %d.\n\n";
