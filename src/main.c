@@ -20,40 +20,85 @@ u64 *gThread3StackPointer; // stack pointer for thread 3
 OSThread gThread1; // OSThread for thread 1
 OSThread gThread3; // OSThread for thread 3
 u8 gPlatformSet = FALSE;
-u8 gPlatform;
+u8 gPlatform = 0;
 
 /******************************/
 
 u32 get_clockspeed(void);
 void skGetId(u32 *arg);
 
+void check_cache_emulation() {
+    // Disable interrupts to ensure that nothing evicts the variable from cache while we're using it.
+    u32 saved = __osDisableInt();
+    // Create a variable with an initial value of 1. This value will remain cached.
+    volatile u8 sCachedValue = 1;
+    // Overwrite the variable directly in RDRAM without going through cache.
+    // This should preserve its value of 1 in dcache if dcache is emulated correctly.
+    *(u8*)(K0_TO_K1(&sCachedValue)) = 0;
+    // Read the variable back from dcache, if it's still 1 then cache is emulated correctly.
+    // If it's zero, then dcache is not emulated correctly.
+    if (sCachedValue) {
+        gPlatform |= ARES;
+    }
+    // Restore interrupts
+    __osRestoreInt(saved);
+}
+
+f32 round_double_to_float(f64 v) {
+    return v;
+}
+
 void get_platform(void) {
     u32 notiQue;
-    if ((u32) IO_READ(DPC_PIPEBUSY_REG) + (u32) IO_READ(DPC_TMEM_REG) + (u32) IO_READ(DPC_BUFBUSY_REG)) {
-        gPlatform &= ~EMULATOR;
+    gPlatform = 0;
+    // Read the RDP timing registers. Emulators read them as zero.
+    if ((u32) IO_READ(DPC_PIPEBUSY_REG) | (u32) IO_READ(DPC_TMEM_REG) | (u32) IO_READ(DPC_BUFBUSY_REG)) {
         gPlatform |= CONSOLE;
-        puppyprint_log("N64 Console Detected");
     } else {
-        gPlatform &= ~CONSOLE;
         gPlatform |= EMULATOR;
-        puppyprint_log("N64 Emulator Detected");
+        // Simple64 and Ares correctly emulate cache on the N64, perform this check to single them out.
+        check_cache_emulation();
     }
 
-    /*if (IS_VC()) {
-        gPlatform &= ~CONSOLE;
+    // Find the counter factor of an emulator. Console will return 0. This is mainly for Project64, which can default to 2, which can affect performance.
+    if (get_clockspeed() > 1) {
+        gPlatform |= CF_2;
+    }
+
+    // Virtual console has a unique way of rounding floats. This function will single it out.
+    if (round_double_to_float(0.9999999999999999) != 1.0f) {
         gPlatform |= EMULATOR;
         gPlatform |= VC;
-        puppyprint_log("Virtual Console Detected");
-    } else {*/
-        //gPlatform &= ~VC;
-    //}
+    }
 
-    /*skGetId(&notiQue);
-    if (!notiQue) {
-        gPlatform |= IQUE;
-        gPlatform &= EMULATOR;
-        puppyprint_log("iQue Player Detected");
-    }*/
+#ifdef PUPPYPRINT_DEBUG
+    // Piece together a string to print out.
+    if (gPlatform & EMULATOR) {
+        if (gPlatform & VC) {
+            puppyprint_log("Virtual Console detected.");
+        } else if (gPlatform & ARES) {
+            puppyprint_log("AresN64/Simple64 Emulator detected.");
+        } else {
+            puppyprint_log("N64 Emulator detected.");
+        }
+    } else {
+        if (gPlatform & IQUE) {
+            puppyprint_log("iQue Player detected.");
+        } else {
+            puppyprint_log("N64 Console detected.");
+        }
+    }
+    // Skip all this on console. This is emulator related info.
+    if ((gPlatform & CONSOLE) == FALSE) {
+        u32 cf;
+        if (gPlatform & CF_2) {
+            cf = 2;
+        } else {
+            cf = 1;
+        }
+        puppyprint_log("Counter Factor Setting: %d.", cf);
+    }
+#endif
 }
 
 #define STEP 0x100000
@@ -574,10 +619,6 @@ void puppyprint_render_log(void) {
         draw_text(&gCurrDisplayList, 8, y, gPuppyPrint.logText[i], ALIGN_TOP_LEFT);
         y += 10;
         firstDraw = FALSE;
-    }
-
-    if (get_buttons_pressed_from_player(0) & R_JPAD) {
-        puppyprint_log("Plop :)");
     }
 }
 

@@ -82,6 +82,7 @@ extern u16 gScreenWidth;
 extern u16 gScreenHeight;
 extern OSViMode gGlobalVI;
 extern u8 gUseExpansionMemory;
+extern s32 gBootTimer;
 
 extern OSViMode osViModeNtscLpn1, osViModePalLpn1, osViModeMpalLpn1, osViModePalLan1, osViModeNtscLan1, osViModeMpalLan1;
 

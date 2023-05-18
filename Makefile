@@ -368,6 +368,7 @@ endif
 clean_src: clean_lib
 ifneq ($(wildcard $(BUILD_DIR)/src/.*),)
 	rm -r $(BUILD_DIR)/src/*.o
+	rm -r ./dkr.ld
 else 
 	@echo "/build/lib directory has already been deleted." 
 endif 

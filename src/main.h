@@ -12,10 +12,17 @@ extern char gAssertString[64];
 void main(void);
 void thread1_main(void *);
 
-#define CONSOLE 1
-#define EMULATOR 2
-#define VC 4
-#define IQUE 8
+enum PlatformFlags {
+    CONSOLE =   (1 << 0), // Original Nintendo 64 hardware
+    EMULATOR =  (1 << 1), // Generic N64 emulator
+    VC =        (1 << 2), // Wii/WiiU virtual console emulator
+    IQUE =      (1 << 3), // iQue Player.
+    ARES =      (1 << 4), // More accurate N64 Emulator.
+    CF_2 =      (1 << 5), // Counter factor 2 is enabled.
+    FBE =       (1 << 6), // Framebuffer emulation is enabled.
+    DBE =       (1 << 7), // Depthbuffer emulation is enabled.
+};
+
 extern u8 gPlatform;
 
 enum DebugPages {

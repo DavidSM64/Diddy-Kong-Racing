@@ -44,6 +44,7 @@ u8 gUseExpansionMemory = FALSE;
 u16 gScreenWidth = SCREEN_WIDTH;
 u16 gScreenHeight;
 s32 gVideoSkipNextRate = FALSE;
+s32 gBootTimer = 8;
 
 /******************************/
 
@@ -73,12 +74,16 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
 // If Enforced 4MB is on, move framebuffers to expansion memory
 #if !defined(EXPANSION_PAK_SUPPORT) && !defined(FORCE_4MB_MEMORY)
     if (gExpansionPak) {
-        gVideoFramebuffers[0] = (u16 *) 0x80500000;
-        gVideoFramebuffers[1] = (u16 *) 0x80600000;
-    #ifdef TRIPLE_BUFFERING
-        gVideoFramebuffers[2] = (u16 *) 0x80700000;
-    #endif
+        u16 *fbAddr;
+        for (i = 0; i < NUM_FRAMEBUFFERS; i++) {
+            gVideoFramebuffers[i] = 0x80500000 + (i * 0x100000);
+            fbAddr = gVideoFramebuffers[i];
+            // Write this as part of framebuffer emulation detection.
+            fbAddr[100] = 0xBEEF;
+        }
         gVideoDepthBuffer = (u16 *) 0x80400000;
+        fbAddr = gVideoDepthBuffer;
+        fbAddr[100] = 0xBEEF;
     }
 #endif
     gVideoWriteFbIndex = 0;
@@ -183,6 +188,7 @@ void init_vi_settings(void) {
  */
 void init_framebuffer(s32 index) {
     s32 width = SCREEN_WIDTH;
+    u16 *fbAddr;
     if (gVideoFramebuffers[index] != 0) {
         func_80071538((u8 *) gVideoFramebuffers[index]);
         free_from_memory_pool(gVideoFramebuffers[index]);
@@ -194,9 +200,13 @@ void init_framebuffer(s32 index) {
 #endif
     gVideoFramebuffers[index] = allocate_from_main_pool_safe((width * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
     gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
+    fbAddr = gVideoFramebuffers[index];
+    fbAddr[100] = 0xBEEF;
     if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = allocate_from_main_pool_safe((width * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
-            gVideoDepthBuffer = (u16 *)(((s32)gVideoDepthBuffer + 0x3F) & ~0x3F);
+        gVideoDepthBuffer = allocate_from_main_pool_safe((width * SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+        gVideoDepthBuffer = (u16 *)(((s32)gVideoDepthBuffer + 0x3F) & ~0x3F);
+        fbAddr = gVideoDepthBuffer;
+        fbAddr[100] = 0xBEEF;
     }
 }
 
@@ -213,6 +223,27 @@ void reset_video_delta_time(void) {
 void swap_framebuffers(void);
 
 /**
+ * Read the framebuffer and check to see if the magic number written is still there.
+ * Ideally, it should've been written over, so it being there still means framebuffer emulation is off.
+*/
+void detect_framebuffer(void) {
+    u16 *fbAddr;
+    fbAddr = gVideoCurrFramebuffer;
+    if (fbAddr[100] != 0xBEEF) {
+        gPlatform |= FBE;
+    }
+    fbAddr = gVideoCurrFramebuffer;
+    if (fbAddr[100] != 0xBEEF) {
+        gPlatform |= DBE;
+    }
+    if (gPlatform & FBE) {
+        puppyprint_log("Framebuffer Emulation detected.");
+    } else {
+        puppyprint_log("Framebuffer Emulation missing.");
+    }
+}
+
+/**
  * Wait for the finished message from the scheduler while counting up a timer,
  * then update the current framebuffer index.
  * This function also has a section where it counts a timer that goes no higher
@@ -227,6 +258,12 @@ s32 swap_framebuffer_when_ready(void) {
         }
     }
     swap_framebuffers();
+    if (gBootTimer) {
+        gBootTimer--;
+        if (gBootTimer == 0) {
+            detect_framebuffer();
+        }
+    }
 }
 
 void func_8007AB24(u8 arg0) {
