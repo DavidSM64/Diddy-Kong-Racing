@@ -54,7 +54,7 @@ typedef struct epcInfo {
 /* 0x124 */ s32 badvaddr;
 /* 0x128 */ s32 unk128;
 /* 0x12C */ s32 unk12C;
-/* 0x130 */ f32 unk130[3];
+/* 0x130 */ f32 objectStackTrace[3];
 /* 0x13C */ u8 pad13C[0x74];
 } epcInfo;
 
@@ -77,9 +77,16 @@ enum EPCScreenPage {
     EPC_PAGE_EXIT
 };
 
+enum ObjectStackTraceID {
+    OBJECT_CLEAR = -1,
+    OBJECT_SPAWN,
+    OBJECT_UPDATE,
+    OBJECT_DRAW
+};
+
 void func_800B70D0(void);
 void func_800B7144(void);
-void func_800B76B8(s32 arg0, s32 arg1);
+void update_object_stack_trace(s32 arg0, s32 arg1);
 s32 get_lockup_status(void);
 void lockup_screen_loop(s32 arg0);
 void thread0_create(void);

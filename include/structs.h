@@ -1665,7 +1665,7 @@ typedef struct Object {
   /* 0x0044 */ unk800B0698_44 *unk44_0;
   };
   /* 0x0048 */ s16 behaviorId;
-  /* 0x004A */ s16 unk4A;
+  /* 0x004A */ s16 objectID; // Upper byte is object ID, lower byte is object size.
   /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318
   /* 0x0050 */ ShadowData *shadow; //player + 0x2F4
   /* 0x0054 */ Object_54 *unk54; //player + 0x2C0

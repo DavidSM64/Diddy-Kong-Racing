@@ -33,8 +33,8 @@ glabel func_800B71B0
 /* 0B7E20 800B7220 00000000 */  nop   
 /* 0B7E24 800B7224 10990081 */  beq   $a0, $t9, .L800B742C
 /* 0B7E28 800B7228 00000000 */   nop   
-/* 0B7E2C 800B722C 3C028013 */  lui   $v0, %hi(D_80129FB0) # $v0, 0x8013
-/* 0B7E30 800B7230 24429FB0 */  addiu $v0, %lo(D_80129FB0) # addiu $v0, $v0, -0x6050
+/* 0B7E2C 800B722C 3C028013 */  lui   $v0, %hi(gObjectStackTrace) # $v0, 0x8013
+/* 0B7E30 800B7230 24429FB0 */  addiu $v0, %lo(gObjectStackTrace) # addiu $v0, $v0, -0x6050
 /* 0B7E34 800B7234 8C480000 */  lw    $t0, ($v0)
 /* 0B7E38 800B7238 00E02025 */  move  $a0, $a3
 /* 0B7E3C 800B723C 44882000 */  mtc1  $t0, $f4

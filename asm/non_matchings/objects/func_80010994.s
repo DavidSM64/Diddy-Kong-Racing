@@ -459,8 +459,8 @@ glabel func_80010994
 /* 011C1C 8001101C 24080001 */  li    $t0, 1
 /* 011C20 80011020 46805420 */  cvt.s.w $f16, $f10
 /* 011C24 80011024 AE080000 */  sw    $t0, ($s0)
-/* 011C28 80011028 3C018012 */  lui   $at, %hi(D_8011ADA8) # $at, 0x8012
-/* 011C2C 8001102C E430ADA8 */  swc1  $f16, %lo(D_8011ADA8)($at)
+/* 011C28 80011028 3C018012 */  lui   $at, %hi(gObjectUpdateRateF) # $at, 0x8012
+/* 011C2C 8001102C E430ADA8 */  swc1  $f16, %lo(gObjectUpdateRateF)($at)
 /* 011C30 80011030 3C018012 */  lui   $at, %hi(D_8011AD24) # $at, 0x8012
 /* 011C34 80011034 A020AD24 */  sb    $zero, %lo(D_8011AD24)($at)
 /* 011C38 80011038 3C018012 */  lui   $at, %hi(D_8011AD53) # $at, 0x8012

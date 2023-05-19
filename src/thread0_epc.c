@@ -51,7 +51,7 @@ void thread0_create(void) {
     osCreateThread(&gEPCThread, 0, thread0_Main, 0, &gEPCStack[0x200], OS_PRIORITY_MAX);
     osStartThread(&gEPCThread);
     for (i = 0; i < 3; i++) {
-        D_80129FB0[i] = -1;
+        gObjectStackTrace[i] = -1;
     }
 }
 
@@ -123,9 +123,9 @@ void func_800B7460(s32 *epc, s32 size, s32 mask) {
         sp840.a1 = mask;
         sp840.epc = epc;
         sp840.cause = -1;
-        sp840.unk130[0] = D_80129FB0[0];
-        sp840.unk130[1] = D_80129FB0[1];
-        sp840.unk130[2] = D_80129FB0[2];
+        sp840.objectStackTrace[0] = gObjectStackTrace[0];
+        sp840.objectStackTrace[1] = gObjectStackTrace[1];
+        sp840.objectStackTrace[2] = gObjectStackTrace[2];
         bcopy(&sp840, &sp40, sizeof(epcInfo));
         bzero(&sp240, 0x200);
         v0 = func_80024594(&sp38, &size);
@@ -144,9 +144,13 @@ void func_800B7460(s32 *epc, s32 size, s32 mask) {
 GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B7460.s")
 #endif
 
-void func_800B76B8(s32 arg0, s32 arg1) {
-    if ((arg0 >= 0) && (arg0 < 3)) {
-        D_80129FB0[arg0] = arg1;
+/**
+ * Mark the object type given, so if the game crashes while processing it, the debug screen will tell you which object ID is to blame.
+ * Split into three sections, for spawning an object, updating an object and for rendering an object.
+*/
+void update_object_stack_trace(s32 index, s32 value) {
+    if (index >= OBJECT_SPAWN && index <= OBJECT_DRAW) {
+        gObjectStackTrace[index] = value;
     }
 }
 
@@ -182,7 +186,10 @@ s32 get_lockup_status(void) {
     return sLockupStatus;
 }
 
-/* Official name: diCpuTraceTick */
+/**
+ * Counts up. Automatically switches page every second.
+ * Official name: diCpuTraceTick
+*/
 void lockup_screen_loop(s32 updateRate) {
     sLockupDelay += updateRate;
     if (sLockupDelay > 60) {
@@ -201,7 +208,7 @@ void lockup_screen_loop(s32 updateRate) {
 */
 void render_epc_lock_up_display(void) {
     u16 *temp;
-    char *sp50[3] = {"setup", "control", "print"};
+    char *objStatusString[3] = {"setup", "control", "print"};
     s32 offset;
     s32 s3;
     s32 j;
@@ -215,19 +222,19 @@ void render_epc_lock_up_display(void) {
 
     switch (sLockupPage) {
         case EPC_PAGE_REGISTER:
-            D_80129FB0[0] = gEpcInfo.unk130[0];
-            D_80129FB0[1] = gEpcInfo.unk130[1];
-            D_80129FB0[2] = gEpcInfo.unk130[2];
-            if (((u32 *) gEpcInfo.unk130)[-4] == -1U) { // TODO: find better solution
+            gObjectStackTrace[OBJECT_SPAWN] = gEpcInfo.objectStackTrace[OBJECT_SPAWN];
+            gObjectStackTrace[OBJECT_UPDATE] = gEpcInfo.objectStackTrace[OBJECT_UPDATE];
+            gObjectStackTrace[OBJECT_DRAW] = gEpcInfo.objectStackTrace[OBJECT_DRAW];
+            if (((u32 *) gEpcInfo.objectStackTrace)[-4] == -1U) { // TODO: find better solution
                 render_printf(" epc\t\t0x%08x\n", gEpcInfo.epc);
                 render_printf(" cause\t\tmmAlloc(%d,0x%8x)\n", GET_REG(a0), GET_REG(a1));
                 for (i = 0; i < 3; i++) {
-                    if (D_80129FB0[i] != -1) {
+                    if (gObjectStackTrace[i] != OBJECT_CLEAR) {
                         if (!s3) {
                             s3 = TRUE;
                             render_printf(" object\t\t");
                         }
-                        render_printf("%s %d ", sp50[i], D_80129FB0[i]);
+                        render_printf("%s %d ", objStatusString[i], gObjectStackTrace[i]);
                     }
                 }
                 render_printf("\n");
@@ -240,12 +247,12 @@ void render_epc_lock_up_display(void) {
             render_printf(" sr\t\t0x%08x\n", gEpcInfo.sr);
             render_printf(" badvaddr\t0x%08x\n", gEpcInfo.badvaddr);
             for (i = 0; i < 3; i++) {
-                if (D_80129FB0[i] != -1) {
+                if (gObjectStackTrace[i] != OBJECT_CLEAR) {
                     if (!s3) {
                         s3 = TRUE;
                         render_printf(" object\t\t");
                     }
-                    render_printf("%s %d ", sp50[i], D_80129FB0[i]);
+                    render_printf("%s %d ", objStatusString[i], gObjectStackTrace[i]);
                 }
             }
             render_printf("\n");            

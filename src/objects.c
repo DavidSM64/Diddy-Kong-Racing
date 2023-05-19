@@ -183,7 +183,7 @@ s32 D_8011AD74;
 Gfx *D_8011AD78[10];
 s32 gAssetsMiscTableLength;
 s16 D_8011ADA4;
-f32 D_8011ADA8;
+f32 gObjectUpdateRateF;
 s32 D_8011ADAC;
 s32 D_8011ADB0;
 s32 D_8011ADB4;
@@ -389,12 +389,13 @@ void allocate_object_pools(void) {
         gAssetsMiscTableLength++;
     }
 
-    decrypt_magic_codes(&gAssetsMiscSection[gAssetsMiscTable[65]], (gAssetsMiscTable[66] - gAssetsMiscTable[65]) * 4);
+    decrypt_magic_codes(&gAssetsMiscSection[gAssetsMiscTable[ASSET_MISC_MAGIC_CODES]], 
+                        (gAssetsMiscTable[ASSET_MISC_TITLE_SCREEN_DEMO_IDS] - gAssetsMiscTable[ASSET_MISC_MAGIC_CODES]) * sizeof(s32 *));
     gObjPtrList = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * OBJECT_SLOT_COUNT, COLOUR_TAG_BLUE);
     D_8011ADC4 = 0;
     gTimeTrialEnabled = 0;
     gIsTimeTrial = FALSE;
-    D_8011ADA8 = 2.0f;
+    gObjectUpdateRateF = 2.0f;
     func_8000C460();
 }
 
@@ -906,7 +907,7 @@ s32 func_8000FD34(Object *arg0, Object_5C *arg1) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8000FD54.s")
 
 void gParticlePtrList_addObject(Object *object) {
-    func_800245B4(object->unk4A | 0x8000);
+    func_800245B4(object->objectID | 0x8000);
     gParticlePtrList[gParticleCount] = object;
     gParticleCount++;
 }
@@ -1085,7 +1086,7 @@ void func_80010994(s32 updateRate) {
     }
     func_80008438(gRacersByPort, gNumRacers, updateRate);
     D_8011ADAC = 1;
-    D_8011ADA8 = (f32) updateRate;
+    gObjectUpdateRateF = (f32) updateRate;
     D_8011AD24[0] = 0;
     D_8011AD53 = 0;
     func_8000E2B4();
@@ -1745,7 +1746,7 @@ void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object) {
     f32 scale;
     if (object->segment.trans.flags & (OBJ_FLAGS_INVISIBLE | OBJ_FLAGS_SHADOW_ONLY))
         return;
-    func_800B76B8(2, object->unk4A);
+    update_object_stack_trace(OBJECT_DRAW, object->objectID);
     gObjectCurrDisplayList = *dlist;
     gObjectCurrMatrix = *mtx;
     gObjectCurrVertexList = *verts;
@@ -1755,7 +1756,7 @@ void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object) {
     *dlist = gObjectCurrDisplayList;
     *mtx = gObjectCurrMatrix;
     *verts = gObjectCurrVertexList;
-    func_800B76B8(2, -1);
+    update_object_stack_trace(OBJECT_DRAW, OBJECT_CLEAR);
 }
 
 
@@ -3750,7 +3751,7 @@ s32 func_80023E30(s32 objectID) {
  * One big switch statement for whichever object.
 */
 void run_object_loop_func(Object *obj, s32 updateRate) {
-    func_800B76B8(1, obj->unk4A);
+    update_object_stack_trace(OBJECT_UPDATE, obj->objectID);
     switch (obj->behaviorId) {
         case BHV_SCENERY:
             obj_loop_scenery(obj, updateRate);
@@ -3991,7 +3992,7 @@ void run_object_loop_func(Object *obj, s32 updateRate) {
             obj_loop_levelname(obj, updateRate);
             break;
     }
-    func_800B76B8(1, -1);
+    update_object_stack_trace(OBJECT_UPDATE, OBJECT_CLEAR);
 }
 
 UNUSED void func_8002458C(UNUSED s32 arg0) {
