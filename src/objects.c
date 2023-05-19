@@ -907,16 +907,16 @@ s32 func_8000FD34(Object *arg0, Object_5C *arg1) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8000FD54.s")
 
 void gParticlePtrList_addObject(Object *object) {
-    func_800245B4(object->objectID | 0x8000);
+    func_800245B4(object->unk4A | 0x8000);
     gParticlePtrList[gParticleCount] = object;
     gParticleCount++;
 }
 
-s32 func_80010018(void) {
+UNUSED s32 func_80010018(void) {
     return gAssetsLvlObjTranslationTableLength;
 }
 
-s32 func_80010028(s32 arg0) {
+UNUSED s32 func_80010028(s32 arg0) {
     return (gAssetsLvlObjTranslationTable[arg0] < gAssetsObjectHeadersTableLength);
 }
 
@@ -1746,7 +1746,7 @@ void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object) {
     f32 scale;
     if (object->segment.trans.flags & (OBJ_FLAGS_INVISIBLE | OBJ_FLAGS_SHADOW_ONLY))
         return;
-    update_object_stack_trace(OBJECT_DRAW, object->objectID);
+    update_object_stack_trace(OBJECT_DRAW, object->unk4A);
     gObjectCurrDisplayList = *dlist;
     gObjectCurrMatrix = *mtx;
     gObjectCurrVertexList = *verts;
@@ -3751,7 +3751,7 @@ s32 func_80023E30(s32 objectID) {
  * One big switch statement for whichever object.
 */
 void run_object_loop_func(Object *obj, s32 updateRate) {
-    update_object_stack_trace(OBJECT_UPDATE, obj->objectID);
+    update_object_stack_trace(OBJECT_UPDATE, obj->unk4A);
     switch (obj->behaviorId) {
         case BHV_SCENERY:
             obj_loop_scenery(obj, updateRate);
