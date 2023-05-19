@@ -53,12 +53,12 @@ enum WizpigAnimations {
 void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
     s16 animID;
     s16 animFrame;
-    s16 sp3A;
+    s16 tempHeadAngle;
     s16 nextCheckpoint;
     f32 diffZ;
     f32 diffX;
     f32 animVelocity;
-    s32 sp28;
+    s32 tempStartTimer;
     Object *firstRacerObj;
     ObjectModel *objModel;
     Object_68 *gfxData;
@@ -67,7 +67,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->unk1EC = 0;
     animID = obj->segment.object.animationID;
     animFrame = obj->segment.animFrame;
-    sp3A = racer->headAngle;
+    tempHeadAngle = racer->headAngle;
     if (racer->velocity < 0.3 && -0.3 < racer->velocity) {
         *buttonsPressed = 0;
     }
@@ -75,8 +75,8 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         func_80021400(130);
         racer->raceFinished++;
     }
-    sp28 = *startTimer;
-    if (sp28 == 0x64) {
+    tempStartTimer = *startTimer;
+    if (tempStartTimer == 0x64) {
         gWizpigCutsceneTimer = 0;
     }
     racer->zipperDirCorrection = FALSE;
@@ -99,9 +99,9 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->vehicleID = VEHICLE_WIZPIG;
     func_80049794(updateRate, updateRateF, obj, racer);
     racer->vehicleID = racer->vehicleIDPrev;
-    *startTimer = sp28;
+    *startTimer = tempStartTimer;
     obj->unk74 = 0;
-    racer->headAngle = sp3A;
+    racer->headAngle = tempHeadAngle;
     obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
     // Unused, since there are no weapon balloons in Wizpig 1.
@@ -233,7 +233,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     if (racer->playerIndex == PLAYER_COMPUTER) {
         if (func_80023568() != 0) {
-            func_8005E204(obj, racer, 100.0f, 0x89, SOUND_VOICE_TRICKY_HM);
+            spawn_boss_hazard(obj, racer, 100.0f, 0x89, SOUND_VOICE_TRICKY_HM);
         }
     }
     func_800AFC3C(obj, updateRate);

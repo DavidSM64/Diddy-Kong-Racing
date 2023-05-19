@@ -54,7 +54,7 @@ enum BubblerAnimations {
 void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
     s16 animID;
     s16 animFrame;
-    s16 sp52;
+    s16 tempHeadAngle;
     s32 objectID;
     f32 diffZ;
     Object_68 *gfxData;
@@ -71,7 +71,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     *input &= ~R_TRIG;
     animID = obj->segment.object.animationID;
     animFrame = obj->segment.animFrame;
-    sp52 = racer->headAngle;
+    tempHeadAngle = racer->headAngle;
     if (racer->raceFinished == TRUE) {
         func_80021400(130);
         racer->raceFinished++;
@@ -97,7 +97,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     func_8004F7F4(updateRate, updateRateF, obj, racer);
     *startTimer = timer;
     racer->lateral_velocity = 0.0f;
-    racer->headAngle = sp52;
+    racer->headAngle = tempHeadAngle;
     obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
     if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_BUBBLER_DAMAGE) {
@@ -141,7 +141,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
             if (temp2 == 6) {
                 objectID = 0x12A;
             }
-            func_8005E204(obj, racer, 0.0f, objectID, SOUND_VOICE_BUBBLER_HOHO2);
+            spawn_boss_hazard(obj, racer, 0.0f, objectID, SOUND_VOICE_BUBBLER_HOHO2);
         }
     }
     obj->unk74 = 0;

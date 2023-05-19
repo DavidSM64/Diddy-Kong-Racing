@@ -51,10 +51,10 @@ enum RocketAnimations {
 void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
     s16 animID;
     s16 animFrame;
-    s16 sp3A;
+    s16 tempHeadAngle;
     f32 diffZ;
     f32 diffX;
-    s32 sp2C;
+    s32 tempStartTimer;
     Object *someObj;
     Object *firstRacerObj;
     Object_WizpigRocket *rocket;
@@ -65,7 +65,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->unk1EC = 0;
     animID = obj->segment.object.animationID;
     animFrame = obj->segment.animFrame;
-    sp3A = racer->headAngle;
+    tempHeadAngle = racer->headAngle;
     if (racer->velocity < 0.3 && -0.3 < racer->velocity) {
         *buttonsPressed = 0;
     }
@@ -73,14 +73,14 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         func_80021400(130);
         racer->raceFinished++;
     }
-    sp2C = *startTimer;
-    if (sp2C == 0x64) {
+    tempStartTimer = *startTimer;
+    if (tempStartTimer == 100) {
         gRocketCutsceneTimer = 0;
     }
     racer->zipperDirCorrection = FALSE;
     if (racer->playerIndex == PLAYER_COMPUTER) {
         if (*startTimer != 100) {
-        *startTimer -= 30;
+            *startTimer -= 30;
             if (*startTimer < 0) {
                 if (gRocketStartBoost == FALSE) {
                     play_random_boss_sound(BOSS_SOUND_POSITIVE);
@@ -96,9 +96,9 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->vehicleID = VEHICLE_CARPET;
     func_80049794(updateRate, updateRateF, obj, racer);
     racer->vehicleID = racer->vehicleIDPrev;
-    *startTimer = sp2C;
+    *startTimer = tempStartTimer;
     obj->unk74 = 0;
-    racer->headAngle = sp3A;
+    racer->headAngle = tempHeadAngle;
     obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
     if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_ROCKET_DAMAGE) {

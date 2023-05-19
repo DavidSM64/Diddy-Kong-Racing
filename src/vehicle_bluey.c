@@ -46,7 +46,7 @@ enum BlueAnimations {
     ANIM_BLUEY_RUN,
     ANIM_BLUEY_WALK,
     ANIM_BLUEY_IDLE,
-    ANIM_BLUEY_STOP,
+    ANIM_BLUEY_TURN,
     ANIM_BLUEY_DAMAGE
 };
 
@@ -56,13 +56,13 @@ enum BlueAnimations {
 void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
     s16 animID;
     s16 animFrame;
-    s16 sp5A;
+    s16 tempHeadAngle;
     f32 diffX;
     f32 diffZ;
-    s32 var_v0;
-    s32 sp48;
+    s32 steerVel;
+    s32 tempStartTimer;
     ObjectModel *objModel;
-    Object_68 *obj68;
+    Object_68 *gfxData;
     s32 sp3C;
     UNUSED s32 pad;
     Object *firstRacerObj;
@@ -72,13 +72,13 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     *input &= ~R_TRIG;
     animID = obj->segment.object.animationID;
     animFrame = obj->segment.animFrame;
-    sp5A = racer->headAngle;
+    tempHeadAngle = racer->headAngle;
     if (racer->raceFinished == TRUE && func_80023568()) {
         func_80021400(130);
         racer->raceFinished++;
     }
-    sp48 = *startTimer;
-    if (sp48 == 100) {
+    tempStartTimer = *startTimer;
+    if (tempStartTimer == 100) {
         gBlueyCutsceneTimer = 0;
     }
     if (racer->playerIndex == PLAYER_COMPUTER) {
@@ -99,9 +99,9 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     }
     
     func_8004F7F4(updateRate, updateRateF, obj, racer);
-    *startTimer = sp48;
+    *startTimer = tempStartTimer;
     racer->lateral_velocity = 0.0f;
-    racer->headAngle = sp5A;
+    racer->headAngle = tempHeadAngle;
     obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
     if (racer->attackType != ATTACK_NONE) {
@@ -132,18 +132,18 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
                 if (racer->unk1CD != 3) {
                     racer->animationSpeed = 40.0f;
                 }
-                obj->segment.object.animationID = ANIM_BLUEY_STOP;
-                var_v0 = racer->steerAngle;
-                var_v0 *= 2;
-                var_v0 = 40 - var_v0;
-                if (var_v0 < 0) {
-                    var_v0 = 0;
+                obj->segment.object.animationID = ANIM_BLUEY_TURN;
+                steerVel = racer->steerAngle;
+                steerVel *= 2;
+                steerVel = 40 - steerVel;
+                if (steerVel < 0) {
+                    steerVel = 0;
                 }
-                if (var_v0 > 73) {
-                    var_v0 = 73;
+                if (steerVel > 73) {
+                    steerVel = 73;
                 }
                 racer->unk1CD = 3;
-                racer->animationSpeed += (var_v0 - racer->animationSpeed) * 0.25;
+                racer->animationSpeed += (steerVel - racer->animationSpeed) * 0.25;
             } else {
                 racer->unk1CD = 0;
                 obj->segment.object.animationID = ANIM_BLUEY_RUN;
@@ -161,18 +161,18 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     } else {
         racer->animationSpeed += updateRateF * 1.0;
     }
-    obj68 = *obj->unk68;
-    objModel = obj68->objModel;
+    gfxData = *obj->unk68;
+    objModel = gfxData->objModel;
     diffX = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
     while (racer->animationSpeed < 0.0f) {
         racer->animationSpeed += diffX;
-        obj68->unk10 = -1;
+        gfxData->unk10 = -1;
     }
     while (diffX < racer->animationSpeed) {
         racer->animationSpeed -= diffX;
-        obj68->unk10 = -1;
+        gfxData->unk10 = -1;
     }
-    if (obj68->unk10 == -1 && obj->segment.object.animationID == ANIM_BLUEY_DAMAGE) {
+    if (gfxData->unk10 == -1 && obj->segment.object.animationID == ANIM_BLUEY_DAMAGE) {
         obj->segment.object.animationID = racer->unk1CD;
     }
     animFrame = obj->segment.animFrame;
@@ -188,17 +188,17 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
     diffZ = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
     if (sqrtf((diffX * diffX) + (diffZ * diffZ)) < 700.0) {
-        sp48 = (arctan2_f(diffX, diffZ) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
-        WRAP(sp48, -0x8000, 0x8000);
-        CLAMP(sp48, -0xC00, 0xC00);
-        racer->headAngleTarget = sp48;
+        tempStartTimer = (arctan2_f(diffX, diffZ) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+        WRAP(tempStartTimer, -0x8000, 0x8000);
+        CLAMP(tempStartTimer, -0xC00, 0xC00);
+        racer->headAngleTarget = tempStartTimer;
     }
     if (obj->segment.object.animationID == ANIM_BLUEY_WALK) {
         if ((racer->miscAnimCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }
-    if (obj->segment.object.animationID == ANIM_BLUEY_STOP) {
+    if (obj->segment.object.animationID == ANIM_BLUEY_TURN) {
         racer->headAngleTarget = 0;
     }
     racer = (Object_Racer *) firstRacerObj->unk64;
