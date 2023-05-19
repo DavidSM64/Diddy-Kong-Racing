@@ -534,7 +534,7 @@ void render_fade_waves(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts
     i == 5 -> Right third mask?
     */
     for(i = 0; i < 6; i++) {
-        if(i == 1 || i == 4) { // Is middle third?
+        if (i == 1 || i == 4) { // Is middle third?
             gSPVertexDKR(gfx++, OS_PHYSICAL_TO_K0(v), 14, 0);
             gSPPolygon(gfx++, OS_PHYSICAL_TO_K0(t), 12, TRIN_DISABLE_TEXTURE);
             v += 14;
