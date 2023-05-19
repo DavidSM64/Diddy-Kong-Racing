@@ -806,7 +806,7 @@ void render_skydome(void) {
 
     func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
     if (gSceneRenderSkyDome) {
-        func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, gSkydomeSegment);
+        render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, gSkydomeSegment);
     }
 }
 
@@ -929,12 +929,12 @@ void render_level_geometry_and_objects(void) {
         }
         if (obj != NULL && visible == 255 && check_if_in_draw_range(obj) && (objectsVisible[obj->segment.object.segmentID + 1] || obj->segment.camera.unk34 > 1000.0)) {
             if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
-                func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
+                render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
             } else if (obj->shadow != NULL) {
                 render_object_shadow(obj, obj->shadow);
             }
-            func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
+            render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
             if (obj->unk58 != NULL && obj->segment.header->unk30 & 0x10) {
                 func_8002D670(obj, obj->unk58);
             }
@@ -951,12 +951,12 @@ void render_level_geometry_and_objects(void) {
         }
         if (obj != NULL && visible && objFlags & OBJ_FLAGS_UNK_0100 && objectsVisible[obj->segment.object.segmentID + 1] && check_if_in_draw_range(obj)) {
             if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
-                func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
+                render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
             } else if (obj->shadow != NULL) {
                 render_object_shadow(obj, obj->shadow);
             }
-            func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
+            render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
             if ((obj->unk58 != NULL) && (obj->segment.header->unk30 & 0x10)) {
                 func_8002D670(obj, obj->unk58);
             }
@@ -996,12 +996,12 @@ void render_level_geometry_and_objects(void) {
         if (obj != NULL && visible < 255 && objectsVisible[obj->segment.object.segmentID + 1] && check_if_in_draw_range(obj)) {
             if (visible > 0) {
                 if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
-                    func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
+                    render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                     goto skip;
                 } else if (obj->shadow != NULL) {
                     render_object_shadow(obj, obj->shadow);
                 }
-                func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
+                render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 if ((obj->unk58 != 0) && (obj->segment.header->unk30 & 0x10)) {
                     func_8002D670(obj, obj->unk58);
                 }

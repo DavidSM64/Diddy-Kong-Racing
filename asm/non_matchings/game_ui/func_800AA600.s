@@ -583,7 +583,7 @@ glabel func_800AA600
 /* 0ABA8C 800AAE8C 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0ABA90 800AAE90 A0E0003A */  sb    $zero, 0x3a($a3)
 /* 0ABA94 800AAE94 A0EE0039 */  sb    $t6, 0x39($a3)
-/* 0ABA98 800AAE98 0C004B57 */  jal   func_80012D5C
+/* 0ABA98 800AAE98 0C004B57 */  jal   render_object
 /* 0ABA9C 800AAE9C E4E60008 */   swc1  $f6, 8($a3)
 /* 0ABAA0 800AAEA0 10000018 */  b     .L800AAF04
 /* 0ABAA4 800AAEA4 86080006 */   lh    $t0, 6($s0)

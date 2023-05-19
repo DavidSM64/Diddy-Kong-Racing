@@ -1506,7 +1506,7 @@ void render_3d_model(Object *obj) {
     s32 hasOpacity;
     s32 hasEnvCol;
     s32 flags;
-    s32 var_v0;
+    s32 meshBatch;
     s32 cicFailed;
     f32 vtxX;
     f32 vtxY;
@@ -1608,9 +1608,9 @@ void render_3d_model(Object *obj) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
         if (alpha < 255) {
-            var_v0 = func_800143A8(objModel, obj, 0, RENDER_SEMI_TRANSPARENT, spB0);
+            meshBatch = func_800143A8(objModel, obj, 0, RENDER_SEMI_TRANSPARENT, spB0);
         } else {
-            var_v0 = func_800143A8(objModel, obj, 0, RENDER_NONE, spB0);
+            meshBatch = func_800143A8(objModel, obj, 0, RENDER_NONE, spB0);
         }
         if (obj->segment.header->unk71) {
             if (hasOpacity) {
@@ -1693,17 +1693,17 @@ void render_3d_model(Object *obj) {
                 }
             }
         }
-        if (var_v0 != -1) {
+        if (meshBatch != -1) {
             if (obj->segment.header->unk71) {
                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->unk54->unk18, obj->unk54->unk19, obj->unk54->unk1A, alpha);
                 func_8007B43C();
             }
-            func_800143A8(objModel, obj, var_v0, 4, spB0);
+            func_800143A8(objModel, obj, meshBatch, 4, spB0);
             if (obj->segment.header->unk71) {
                 func_8007B454();
             }
         }
-        if ((hasOpacity) || (obj->segment.header->unk71)) {
+        if (hasOpacity || obj->segment.header->unk71) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
         if (hasEnvCol) {
@@ -1740,20 +1740,21 @@ void func_80012CE8(Gfx **dlist) {
 }
 
 /**
+ * Update the object stack trace, set the draw pointers, then begin rendering the object.
  * Official Name: objPrintObject
 */
-void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object) {
+void render_object(Gfx **dList, MatrixS **mtx, Vertex **verts, Object *obj) {
     f32 scale;
-    if (object->segment.trans.flags & (OBJ_FLAGS_INVISIBLE | OBJ_FLAGS_SHADOW_ONLY))
+    if (obj->segment.trans.flags & (OBJ_FLAGS_INVISIBLE | OBJ_FLAGS_SHADOW_ONLY))
         return;
-    update_object_stack_trace(OBJECT_DRAW, object->unk4A);
-    gObjectCurrDisplayList = *dlist;
+    update_object_stack_trace(OBJECT_DRAW, obj->unk4A);
+    gObjectCurrDisplayList = *dList;
     gObjectCurrMatrix = *mtx;
     gObjectCurrVertexList = *verts;
-    scale = object->segment.trans.scale;
-    render_object(object);
-    object->segment.trans.scale = scale;
-    *dlist = gObjectCurrDisplayList;
+    scale = obj->segment.trans.scale;
+    render_object_parts(obj);
+    obj->segment.trans.scale = scale;
+    *dList = gObjectCurrDisplayList;
     *mtx = gObjectCurrMatrix;
     *verts = gObjectCurrVertexList;
     update_object_stack_trace(OBJECT_DRAW, OBJECT_CLEAR);
@@ -1959,19 +1960,20 @@ void func_80012F94(Object *obj) {
 GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
 #endif
 
-void render_object(Object *this) {
-    func_80012F94(this);
-    if (this->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
-        func_800B3740((Particle *) this, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, 0x8000);
+void render_object_parts(Object *obj) {
+    func_80012F94(obj);
+    if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
+        func_800B3740((Particle *) obj, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, 0x8000);
     } else {
-        if (this->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL)
-            render_3d_model(this);
-        else if (this->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD)
-            render_3d_billboard(this);
-        else if (this->segment.header->modelType == OBJECT_MODEL_TYPE_UNKNOWN4)
-            func_80011AD0(this);
+        if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+            render_3d_model(obj);
+        } else if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
+            render_3d_billboard(obj);
+        } else if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_UNKNOWN4) {
+            func_80011AD0(obj);
+        }
     }
-    func_80013548(this);
+    func_80013548(obj);
 }
 
 void func_80013548(Object *obj) {
