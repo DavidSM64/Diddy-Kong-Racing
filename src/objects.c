@@ -2190,7 +2190,7 @@ s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags,
     while (i < objModel->numberOfBatches && !endLoop) {
         if ((objModel->batches[i].flags & 4) == 0 || (flags & 4)) {
             //Hidden/Invisible geometry
-            textureIndex = objModel->batches[i].flags & 0x100;
+            textureIndex = objModel->batches[i].flags & BATCH_FLAGS_HIDDEN;
             //Probably a fakematch to use textureIndex here, but it works.
             if (!textureIndex) {
                 vertOffset = objModel->batches[i].verticesOffset;
