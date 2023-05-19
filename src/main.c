@@ -625,6 +625,17 @@ void puppyprint_render_log(void) {
     }
 }
 
+void puppyprint_render_coverage(void) {
+    Gfx *gfx = gCurrDisplayList;
+    gDPSetCycleType(gfx++, G_CYC_1CYCLE);
+    gDPSetBlendColor(gfx++, 0xFF, 0xFF, 0xFF, 0xFF);
+    gDPSetPrimDepth(gfx++, 0xFFFF, 0xFFFF);
+    gDPSetDepthSource(gfx++, G_ZS_PRIM);
+    gDPSetRenderMode(gfx++, G_RM_VISCVG, G_RM_VISCVG2);
+    gDPFillRectangle(gfx++, 0,0, gScreenWidth-1, gScreenHeight-1);
+    gCurrDisplayList = gfx;
+}
+
 void render_page_menu(void) {
     char textBytes[16];
     s32 i;
@@ -677,6 +688,9 @@ void render_profiler(void) {
         break;
     case PAGE_LOG:
         puppyprint_render_log();
+        break;
+    case PAGE_COVERAGE:
+        puppyprint_render_coverage();
         break;
     }
 
