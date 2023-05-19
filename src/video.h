@@ -91,8 +91,6 @@ extern VideoModeResolution gVideoModeResolutions[8];
 
 void init_video(s32 videoModeIndex, OSSched *sc);
 void set_video_mode_index(s32 videoModeIndex);
-UNUSED s32 get_video_mode_index(void);
-UNUSED void set_video_width_and_height_from_index(s32 fbIndex);
 s32 get_video_width_and_height_as_s32(void);
 void init_vi_settings(void);
 void init_framebuffer(s32 index);

@@ -303,7 +303,7 @@ extern s32 osCicId; // Used for an Anti-Piracy check in render_3d_model
 
 Object *func_8000BF44(s32 arg0);
 void allocate_object_pools(void);
-void func_8000C460(void);
+void clear_object_pointers(void);
 void func_8000C604(void);
 s32 normalise_time(s32 timer);
 void func_8000CBC0(void);
@@ -373,10 +373,9 @@ void func_8001D1AC(void);
 void func_8001D1BC(s32 arg0);
 Object *func_8001D1E4(s32 *arg0);
 Object *func_8001D214(s32 arg0);
-void func_8001D23C(s32 arg0, s32 arg1, s32 arg2);
 void func_8001D258(f32 arg0, f32 arg1, s16 arg2, s16 arg3, s16 arg4);
 void func_8001D4B4(s32*, f32, f32, s16, s16, s16);
-void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 arg3);
+void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 intensity);
 s32 *get_misc_asset(s32 index);
 s32 func_8001E2EC(s32 arg0);
 void func_8001E344(s32 arg0);
@@ -384,7 +383,7 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3);
 s16 func_8001E440();
 void func_8001E450(s32 arg0);
 void func_8001E45C(s32 arg0);
-s32 func_8001E4B4(void);
+s32 get_object_list_index(void);
 s8 func_8001F3B8(void);
 void func_8001F3C8(s32 arg0);
 void func_8001F450(void);
@@ -428,7 +427,7 @@ void objFreeAssets(Object *obj, s32 count, s32 objType);
 void func_8001709C(Object *obj);
 s32 play_footstep_sounds(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoundId);
 void render_3d_misc(Object *this);
-Object *func_8001BDD4(Object *obj, s32 *cameraID);
+Object *find_nearest_spectate_camera(Object *obj, s32 *cameraID);
 s32 init_object_shadow(Object *obj, ShadowData *shadow);
 s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool);
 

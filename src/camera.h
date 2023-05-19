@@ -84,7 +84,6 @@ void func_800660C0(void);
 void func_800660D0(void);
 UNUSED f32 get_current_camera_fov(void);
 void update_camera_fov(f32 camFieldOfView);
-UNUSED void calculate_camera_perspective(void);
 Matrix *func_80066204(void);
 s32 get_viewport_count(void);
 s32 get_current_viewport(void);

@@ -153,7 +153,7 @@ s8 D_8011AD24[2];
 s8 D_8011AD26[2];
 f32 D_8011AD28;
 s32 D_8011AD2C;
-f32 D_8011AD30;
+f32 gCurrentLightIntensity;
 Object *D_8011AD34;
 s32 D_8011AD38; //D_8011AD38 is ultimately set by func_80074B34, and is almost definitely SIDeviceStatus
 s8 D_8011AD3C;
@@ -347,6 +347,10 @@ Object *func_8000BF44(s32 arg0) {
     return D_8011B020[arg0];
 }
 
+/**
+ * Allocate memory for objects and object related systems.
+ * This includes the objects themselves, particles, and all of the pointer lists for tracking objects.
+*/
 void allocate_object_pools(void) {
     s32 i;
 
@@ -396,7 +400,7 @@ void allocate_object_pools(void) {
     gTimeTrialEnabled = 0;
     gIsTimeTrial = FALSE;
     gObjectUpdateRateF = 2.0f;
-    func_8000C460();
+    clear_object_pointers();
 }
 
 #ifdef NON_EQUIVALENT
@@ -426,7 +430,10 @@ void decrypt_magic_codes(s32 *data, s32 length) {
 GLOBAL_ASM("asm/non_matchings/objects/decrypt_magic_codes.s")
 #endif
 
-void func_8000C460(void) {
+/**
+ * Set all object counters and headers to zero, effectively telling the game there are no objects currently in the scene.
+*/
+void clear_object_pointers(void) {
     s32 i;
 
     D_8011AD26[0] = 1;
@@ -442,13 +449,13 @@ void func_8000C460(void) {
     D_8011AD22[0] = 0;
     D_8011AD22[1] = 0;
 
-    for (i = 0; i < 0x80; i++) {
+    for (i = 0; i < 128; i++) {
         (*D_8011AF04)[i] = 0;
     }
     for (i = 0; i < 8; i++) {
         (*D_8011ADCC)[i] = 0;
     }
-    for (i = 0; i < 0x10; i++) {
+    for (i = 0; i < 16; i++) {
         D_8011AFF4[i].unk0 = 0;
     }
 
@@ -492,7 +499,7 @@ void func_8000C604(void) {
     gParticleCount = 0;
     objCount = 0;
     D_8011AE60 = 0;
-    func_8000C460();
+    clear_object_pointers();
     free_from_memory_pool((void *) D_8011AEB0[0]);
     free_from_memory_pool((void *) D_8011AEB0[1]);
 }
@@ -773,12 +780,18 @@ Object *get_object(s32 index) {
     return gObjPtrList[index];
 }
 
+/**
+ * Return the standard object list index and how many objects are in that list.
+*/
 Object **objGetObjList(s32 *arg0, s32 *cnt) {
     *arg0 = D_8011AE60;
     *cnt = objCount;
     return gObjPtrList;
 }
 
+/**
+ * Return the number of objects currently existing.
+*/
 UNUSED s32 getObjectCount(void) {
     return objCount;
 }
@@ -1536,7 +1549,7 @@ void render_3d_model(Object *obj) {
         hasEnvCol = FALSE;
         intensity = 255;
         if (obj->unk54 != NULL) {
-            intensity = (s32) (obj->unk54->unk0 * 255.0f * D_8011AD30);
+            intensity = (s32) (obj->unk54->unk0 * 255.0f * gCurrentLightIntensity);
             hasOpacity = TRUE;
             hasEnvCol = TRUE;
         }
@@ -1561,11 +1574,11 @@ void render_3d_model(Object *obj) {
                 }
                 obj->unk44 = (Vertex *) obj68->unk4[obj68->unk1F];
                 if (obj->behaviorId == BHV_UNK_3F) { // 63 = stopwatchicon, stopwatchhand
-                    calc_dyn_light_and_env_map_for_object(objModel, obj, 0, D_8011AD30);
+                    calc_dyn_light_and_env_map_for_object(objModel, obj, 0, gCurrentLightIntensity);
                 } else if (flags) {
-                    calc_dyn_light_and_env_map_for_object(objModel, obj, -1, D_8011AD30);
+                    calc_dyn_light_and_env_map_for_object(objModel, obj, -1, gCurrentLightIntensity);
                 } else {
-                    func_800245F0(objModel, obj, D_8011AD30);
+                    func_800245F0(objModel, obj, gCurrentLightIntensity);
                 }
             }
             if ((racerObj != NULL) && (racerObj->playerIndex == PLAYER_COMPUTER) && (racerObj->vehicleID < VEHICLE_TRICKY)) {
@@ -1965,7 +1978,7 @@ void func_80012F94(Object *obj) {
         }
     }
     D_8011AD28 = ret1;
-    D_8011AD30 = ret2;
+    gCurrentLightIntensity = ret2;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
@@ -2872,7 +2885,11 @@ Object *get_camera_object(s32 cameraIndex) {
     return (*gCameraObjList)[cameraIndex];
 }
 
-Object *func_8001BDD4(Object *obj, s32 *cameraId) {
+/**
+ * Take the current camera passed through the function and compare distances between the next and previous camera.
+ * Set the camera to be whichever's closest to the object.
+*/
+Object *find_nearest_spectate_camera(Object *obj, s32 *cameraId) {
     Object *nextCamera;
     Object *prevCamera;
     Object *currCamera;
@@ -3051,7 +3068,11 @@ void update_envmap_position(f32 x, f32 y, f32 z) {
     gEnvmapPos.z = z;
 }
 
-void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 arg3) {
+/**
+ * If the triangle batch allows for it, compute envmap normals for the mesh.
+ * Some objects will prefer some extra additions on top before calculating, like light intensity.
+*/
+void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 intensity) {
     s16 environmentMappingEnabled;
     s32 dynamicLightingEnabled;
     s16 i;
@@ -3063,19 +3084,19 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
         if (model->batches[i].unk6 != 0xFF) {
             dynamicLightingEnabled = -1; // This is a bit weird, but I guess it works.
         }
-        if (model->batches[i].flags & 0x8000) {
+        if (model->batches[i].flags & BATCH_FLAGS_ENVMAP) {
             environmentMappingEnabled = -1;
         }
     }
 
     if (dynamicLightingEnabled) {
         // Calculates dynamic lighting for the object
-        if (object->segment.header->unk71 != 0) {
+        if (object->segment.header->unk71) {
             // Dynamic lighting for some objects? (Intro diddy, Taj, T.T., Bosses)
-            calc_dynamic_lighting_for_object_1(object, model, arg2, object, arg3, 1.0f);
+            calc_dynamic_lighting_for_object_1(object, model, arg2, object, intensity, 1.0f);
         } else {
             // Dynamic lighting for other objects? (Racers, Rare logo, Wizpig face, etc.)
-            calc_dynamic_lighting_for_object_2(object, model, arg2, arg3);
+            calc_dynamic_lighting_for_object_2(object, model, arg2, intensity);
         }
     }
 
@@ -3172,15 +3193,18 @@ void func_8001E45C(s32 arg0) {
     if (arg0 != D_8011AE7A) {
         D_8011AE7A = arg0;
         D_8011ADAC = 0;
-        D_8011AE7E = (u8)1;
+        D_8011AE7E = 1;
         if (get_render_context() == DRAW_MENU) {
             set_frame_blackout_timer();
         }
     }
 }
 
-// Unused?
-s32 func_8001E4B4(void) {
+/**
+ * Returns the index of the standard object list.
+ * Goes unused, since objGetObjList exists
+*/
+UNUSED s32 get_object_list_index(void) {
     return D_8011AE60;
 }
 

@@ -1289,7 +1289,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     i = racer->unk1D2;
     if (gCurrentPlayerIndex == PLAYER_COMPUTER && !func_80023568()) {
-            func_80055A84(obj, racer, updateRate);
+            onscreen_ai_racer_physics(obj, racer, updateRate);
         } else {
         func_80054FD0(obj, racer, updateRate);
     }
@@ -4004,7 +4004,7 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
         racer_approach_object(obj, racer, updateRateF);
     }
     if (gCurrentPlayerIndex == PLAYER_COMPUTER && !func_80023568()) {
-            func_80055A84(obj, racer, updateRate);
+            onscreen_ai_racer_physics(obj, racer, updateRate);
     } else {
         func_80054FD0(obj, racer, updateRate);
     }
@@ -4207,7 +4207,11 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80054FD0.s")
 
-void func_80055A84(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
+/**
+ * Update the collision of the racer.
+ * Also update wheel contacts and hitbox size.
+*/
+void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
     f32 angleZ;
     f32 distance;
     s32 hasCollision;
@@ -4288,7 +4292,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
         if (temp_v1_2 < 0x2000 && temp_v1_2 > -0x2000) {
             racer->x_rotation_vel = temp_v1_2;
         }
-        xRot = -(s16)(u16)arctan2_f(zTemp, yTemp);
+        xRot = -(s16) (u16) arctan2_f(zTemp, yTemp);
         if ((xRot < 0x2000) && (xRot > -0x2000)) {
             obj->segment.trans.x_rotation = xRot;
         }
@@ -5335,8 +5339,8 @@ void update_camera_finish_race(UNUSED f32 updateRate, Object *obj, Object_Racer 
     f32 distance;
 
     cameraID = racer->spectateCamID;
-    cam = func_8001BDD4(obj, &cameraID);
-    if (!cam) {
+    cam = find_nearest_spectate_camera(obj, &cameraID);
+    if (cam == NULL) {
         gCameraObject->mode = CAMERA_FINISH_CHALLENGE;
         return;
     }
