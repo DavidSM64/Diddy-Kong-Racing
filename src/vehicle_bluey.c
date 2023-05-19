@@ -133,8 +133,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
                     racer->animationSpeed = 40.0f;
                 }
                 obj->segment.object.animationID = ANIM_BLUEY_TURN;
-                steerVel = racer->steerAngle;
-                steerVel *= 2;
+                steerVel = racer->steerAngle * 2;
                 steerVel = 40 - steerVel;
                 if (steerVel < 0) {
                     steerVel = 0;
