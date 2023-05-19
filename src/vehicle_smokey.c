@@ -12,10 +12,33 @@
 #include "racer.h"
 #include "particles.h"
 
+/************ .data ************/
+
+u16 gSmokeyVoiceTable[16] = {
+    SOUND_VOICE_BOSS_LAUGH2,
+    SOUND_VOICE_TRICKY_HM,
+    SOUND_VOICE_TRICKY_HMMM,
+    SOUND_VOICE_WIZPIG_HA,
+    SOUND_VOICE_WIZPIG_H2,
+    SOUND_VOICE_SMOKEY_EH,
+    SOUND_VOICE_SMOKEY_HEH,
+    SOUND_VOICE_SMOKEY_HAH,
+    SOUND_VOICE_SMOKEY_LAUGH,
+    SOUND_VOICE_SMOKEY_HM,
+    SOUND_VOICE_SMOKEY_HM2,
+    SOUND_VOICE_CONKER_YEHAHA,
+    SOUND_VOICE_TIMBER_WOW,
+    SOUND_WHOOSH2,
+    SOUND_NONE,
+    SOUND_NONE,
+};
+
+/*******************************/
+
 /************ .bss ************/
 
-s8 D_8011D5E0;
-s8 D_8011D5E1;
+s8 gSmokeyCutsceneTimer;
+s8 gSmokeyStartBoost;
 
 /******************************/
 
@@ -46,7 +69,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     s16 stepFrame;
     Object *firstRacerObj;
     
-    set_boss_voice_clip_offset(D_800DCE20);
+    set_boss_voice_clip_offset(gSmokeyVoiceTable);
     animID = obj->segment.object.animationID;
     animFrame = obj->segment.animFrame;
     sp5A = racer->headAngle;
@@ -59,20 +82,20 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     headAngleRange = *startTimer;
     if (headAngleRange == 100) {
-        D_8011D5E0 = 0;
+        gSmokeyCutsceneTimer = 0;
     }
     if (racer->playerIndex == PLAYER_COMPUTER && *startTimer != 100) {
         *startTimer -= 60;
         if (*startTimer < 0) {
-            if (D_8011D5E1 == 0) {
-                func_8005CB04(0);
+            if (gSmokeyStartBoost == FALSE) {
+                play_random_boss_sound(BOSS_SOUND_POSITIVE);
                 racer->boostTimer = 10;
             }
-            D_8011D5E1 = 1;
+            gSmokeyStartBoost = TRUE;
             *startTimer = 0;
             *input |= A_BUTTON;
         } else {
-            D_8011D5E1 = 0;
+            gSmokeyStartBoost = FALSE;
         }
     }
     racer->vehicleID = VEHICLE_SMOKEY;
@@ -84,7 +107,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
     if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_SMOKEY_DAMAGE) {
-        func_8005CB04(1);
+        play_random_boss_sound(BOSS_SOUND_NEGATIVE);
         play_sound_global(SOUND_EXPLOSION, 0);
         set_camera_shake(12.0f);
         obj->segment.object.animationID = ANIM_SMOKEY_DAMAGE;
@@ -244,9 +267,9 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != FALSE) {
-        if (D_8011D5E0 == 0) {
-            D_8011D5E0 = 1;
-            func_8005CB68(racer, &D_8011D5E0);
+        if (gSmokeyCutsceneTimer == 0) {
+            gSmokeyCutsceneTimer = 1;
+            func_8005CB68(racer, &gSmokeyCutsceneTimer);
         }
     }
 }

@@ -194,6 +194,7 @@ s32 set_scene_viewport_num(s32 numPorts) {
     return 0;
 }
 
+// track_init
 #ifdef NON_EQUIVALENT
 void func_8002C0C4(s32 modelId);
 void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 arg5, u32 arg6) {
@@ -984,15 +985,15 @@ void render_level_geometry_and_objects(void) {
         visible = 255;
         objFlags = obj->segment.trans.flags;
         if (objFlags & OBJ_FLAGS_UNK_0080) {
-            visible = TRUE;
+            visible = 1;
         } else if (!(objFlags & OBJ_FLAGS_DEACTIVATED)) {
             visible = obj->segment.object.opacity;
         }
         if (objFlags & visibleFlags) {
-            visible = FALSE;
+            visible = 0;
         }
         if (obj->behaviorId == BHV_RACER && visible >= 255) {
-            visible = FALSE;
+            visible = 0;
         }
         if (obj != NULL && visible < 255 && objectsVisible[obj->segment.object.segmentID + 1] && check_if_in_draw_range(obj)) {
             if (visible > 0) {

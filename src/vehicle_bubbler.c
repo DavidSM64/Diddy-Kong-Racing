@@ -13,7 +13,7 @@
 
 /************ .data ************/
 
-u16 D_800DCE40[16] = {
+u16 gBubblerVoiceTable[16] = {
     SOUND_VOICE_BUBBLER_HOHO,
     SOUND_VOICE_BUBBLER_OW,
     SOUND_VOICE_BUBBLER_AUGH,
@@ -36,8 +36,8 @@ u16 D_800DCE40[16] = {
 
 /************ .bss ************/
 
-s8 D_8011D5F0;
-s8 D_8011D5F1;
+s8 gBubblerCutsceneTimer;
+s8 gBubblerStartBoost;
 
 /******************************/
 
@@ -66,7 +66,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     f32 diffX;
     s32 temp2;
     
-    set_boss_voice_clip_offset(D_800DCE40);
+    set_boss_voice_clip_offset(gBubblerVoiceTable);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
     animID = obj->segment.object.animationID;
@@ -78,20 +78,20 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     }
     timer = *startTimer;
     if (timer == 100) {
-        D_8011D5F0 = 0;
+        gBubblerCutsceneTimer = 0;
     }
     if (racer->playerIndex == PLAYER_COMPUTER && *startTimer != 100) {
         *startTimer -= 30;
         if (*startTimer < 0) {
-            if (D_8011D5F1 == 0) {
-                func_8005CB04(0);
+            if (gBubblerStartBoost == FALSE) {
+                play_random_boss_sound(BOSS_SOUND_POSITIVE);
                 racer->boostTimer = 5;
             }
-            D_8011D5F1 = 1;
+            gBubblerStartBoost = TRUE;
             *startTimer = 0;
             *input |= 0x8000;
         } else {
-            D_8011D5F1 = 0;
+            gBubblerStartBoost = FALSE;
         }
     }
     func_8004F7F4(updateRate, updateRateF, obj, racer);
@@ -104,7 +104,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
         racer->unk1CD = obj->segment.object.animationID;
         obj->segment.object.animationID = ANIM_BUBBLER_DAMAGE;
         obj->segment.y_velocity += 7.5;
-        func_8005CB04(1);
+        play_random_boss_sound(BOSS_SOUND_NEGATIVE);
         play_sound_global(SOUND_EXPLOSION, 0);
         set_camera_shake(12.0f);
         racer->velocity *= 0.3;
@@ -177,9 +177,9 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {
-        if (D_8011D5F0 == 0) {
-        D_8011D5F0 = 1;
-        func_8005CB68(racer, &D_8011D5F0);
+        if (gBubblerCutsceneTimer == 0) {
+        gBubblerCutsceneTimer = 1;
+        func_8005CB68(racer, &gBubblerCutsceneTimer);
         }
     }
 }

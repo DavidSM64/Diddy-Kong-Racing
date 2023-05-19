@@ -14,7 +14,7 @@
 /************ .data ************/
 
 //sSoundEffectsPool index values?
-s16 D_800DCE80[14] = {
+s16 gRocketVoiceTable[14] = {
     SOUND_VOICE_BOSS_LAUGH2,
     SOUND_VOICE_TRICKY_HM,
     SOUND_VOICE_TRICKY_HMMM,
@@ -35,8 +35,8 @@ s16 D_800DCE80[14] = {
 
 /************ .bss ************/
 
-s8 D_8011D610;
-s8 D_8011D611;
+s8 gRocketCutsceneTimer;
+s8 gRocketStartBoost;
 
 /******************************/
 
@@ -61,7 +61,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     Object_68 *gfxData;
     ObjectModel *objModel;
 
-    set_boss_voice_clip_offset((u16* ) D_800DCE80);
+    set_boss_voice_clip_offset((u16* ) gRocketVoiceTable);
     racer->unk1EC = 0;
     animID = obj->segment.object.animationID;
     animFrame = obj->segment.animFrame;
@@ -75,21 +75,21 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     sp2C = *startTimer;
     if (sp2C == 0x64) {
-        D_8011D610 = 0;
+        gRocketCutsceneTimer = 0;
     }
     racer->zipperDirCorrection = FALSE;
     if (racer->playerIndex == PLAYER_COMPUTER) {
         if (*startTimer != 100) {
         *startTimer -= 30;
             if (*startTimer < 0) {
-                if (D_8011D611 == 0) {
-                    func_8005CB04(0);
+                if (gRocketStartBoost == FALSE) {
+                    play_random_boss_sound(BOSS_SOUND_POSITIVE);
                 }
-                D_8011D611 = 1;
+                gRocketStartBoost = TRUE;
                 *startTimer = 0;
                 *input |= A_BUTTON;
             } else {
-                D_8011D611 = 0;
+                gRocketStartBoost = FALSE;
             }
         }
     }
@@ -102,7 +102,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
     if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_ROCKET_DAMAGE) {
-        func_8005CB04(1);
+        play_random_boss_sound(BOSS_SOUND_NEGATIVE);
         play_sound_global(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
         obj->segment.x_velocity *= 0.4;
@@ -162,9 +162,9 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != 0) {
-        if (D_8011D610 == 0) {
-            D_8011D610 = 1;
-            func_8005CB68(racer, &D_8011D610);
+        if (gRocketCutsceneTimer == 0) {
+            gRocketCutsceneTimer = 1;
+            func_8005CB68(racer, &gRocketCutsceneTimer);
         }
     }
 }

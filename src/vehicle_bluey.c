@@ -14,7 +14,7 @@
 
 /************ .data ************/
 
-u16 D_800DCE00[16] = {
+u16 gBlueyVoiceTable[16] = {
     SOUND_VOICE_BLUEY_EH3,
     SOUND_VOICE_BLUEY_EH,
     SOUND_VOICE_BLUEY_OHNO,
@@ -33,31 +33,12 @@ u16 D_800DCE00[16] = {
     SOUND_NONE,
 };
 
-u16 D_800DCE20[16] = {
-    SOUND_VOICE_BOSS_LAUGH2,
-    SOUND_VOICE_TRICKY_HM,
-    SOUND_VOICE_TRICKY_HMMM,
-    SOUND_VOICE_WIZPIG_HA,
-    SOUND_VOICE_WIZPIG_H2,
-    SOUND_VOICE_SMOKEY_EH,
-    SOUND_VOICE_SMOKEY_HEH,
-    SOUND_VOICE_SMOKEY_HAH,
-    SOUND_VOICE_SMOKEY_LAUGH,
-    SOUND_VOICE_SMOKEY_HM,
-    SOUND_VOICE_SMOKEY_HM2,
-    SOUND_VOICE_CONKER_YEHAHA,
-    SOUND_VOICE_TIMBER_WOW,
-    SOUND_WHOOSH2,
-    SOUND_NONE,
-    SOUND_NONE,
-};
-
 /*******************************/
 
 /************ .bss ************/
 
-s8 D_8011D5D0;
-s8 D_8011D5D1;
+s8 gBlueyCutsceneTimer;
+s8 gBlueyStartBoost;
 
 /******************************/
 
@@ -86,7 +67,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     UNUSED s32 pad;
     Object *firstRacerObj;
 
-    set_boss_voice_clip_offset(D_800DCE00);
+    set_boss_voice_clip_offset(gBlueyVoiceTable);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
     animID = obj->segment.object.animationID;
@@ -98,21 +79,21 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     }
     sp48 = *startTimer;
     if (sp48 == 100) {
-        D_8011D5D0 = 0;
+        gBlueyCutsceneTimer = 0;
     }
     if (racer->playerIndex == PLAYER_COMPUTER) {
         if (*startTimer != 100) {
             *startTimer -= 15;
             if (*startTimer  < 0) {
-                if (D_8011D5D1 == 0) {
-                    func_8005CB04(0);
+                if (gBlueyStartBoost == FALSE) {
+                    play_random_boss_sound(BOSS_SOUND_POSITIVE);
                     racer->boostTimer = 3;
                 }
-                D_8011D5D1 = 1;
+                gBlueyStartBoost = TRUE;
                 *startTimer = 0;
                 *input |= A_BUTTON;
             } else {
-                D_8011D5D1 = 0;
+                gBlueyStartBoost = FALSE;
             }
         }
     }
@@ -128,7 +109,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
             racer->unk1CD = obj->segment.object.animationID;
             obj->segment.object.animationID = ANIM_BLUEY_DAMAGE;
             racer->animationSpeed = 0.0f;
-            func_8005CB04(1);
+            play_random_boss_sound(BOSS_SOUND_NEGATIVE);
             play_sound_global(SOUND_EXPLOSION, NULL);
             set_camera_shake(12.0f);
             racer->attackType = ATTACK_NONE;
@@ -225,9 +206,9 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {
-        if (D_8011D5D0 == 0) {
-            D_8011D5D0 = 1;
-            func_8005CB68(racer, &D_8011D5D0);
+        if (gBlueyCutsceneTimer == 0) {
+            gBlueyCutsceneTimer = 1;
+            func_8005CB68(racer, &gBlueyCutsceneTimer);
         }
     }
 }

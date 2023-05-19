@@ -12,7 +12,7 @@
 
 /************ .data ************/
 
-s16 D_800DCE60[14] = {
+s16 gWizpigVoiceTable[14] = {
     SOUND_VOICE_BOSS_LAUGH2, 
     SOUND_VOICE_TRICKY_HM, 
     SOUND_VOICE_TRICKY_HMMM, 
@@ -33,8 +33,8 @@ s16 D_800DCE60[14] = {
 
 /************ .bss ************/
 
-s8 D_8011D600;
-s8 D_8011D601;
+s8 gWizpigCutsceneTimer;
+s8 gWizpigStartBoost;
 
 /******************************/
 
@@ -63,7 +63,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     ObjectModel *objModel;
     Object_68 *gfxData;
 
-    set_boss_voice_clip_offset((u16* ) D_800DCE60);
+    set_boss_voice_clip_offset((u16* ) gWizpigVoiceTable);
     racer->unk1EC = 0;
     animID = obj->segment.object.animationID;
     animFrame = obj->segment.animFrame;
@@ -77,22 +77,22 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     sp28 = *startTimer;
     if (sp28 == 0x64) {
-        D_8011D600 = 0;
+        gWizpigCutsceneTimer = 0;
     }
     racer->zipperDirCorrection = FALSE;
     if (racer->playerIndex == PLAYER_COMPUTER) {
         if (*startTimer != 100) {
             *startTimer -= 30;
             if (*startTimer < 0) {
-                if (D_8011D601 == 0) {
-                    func_8005CB04(0);
+                if (gWizpigStartBoost == FALSE) {
+                    play_random_boss_sound(BOSS_SOUND_POSITIVE);
                     racer->boostTimer = 10;
                 }
-                D_8011D601 = 1;
+                gWizpigStartBoost = TRUE;
                 *startTimer = 0;
                 *input |= A_BUTTON;
             } else {
-                D_8011D601 = 0;
+                gWizpigStartBoost = FALSE;
             }
         }
     }
@@ -106,7 +106,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     obj->segment.animFrame = animFrame;
     // Unused, since there are no weapon balloons in Wizpig 1.
     if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_WIZPIG_DAMAGE) {
-        func_8005CB04(1);
+        play_random_boss_sound(BOSS_SOUND_NEGATIVE);
         play_sound_global(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
         obj->segment.object.animationID = ANIM_WIZPIG_DAMAGE;
@@ -244,9 +244,9 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {
-        if (D_8011D600 == 0) {
-            D_8011D600 = 1;
-            func_8005CB68(racer, &D_8011D600);
+        if (gWizpigCutsceneTimer == 0) {
+            gWizpigCutsceneTimer = 1;
+            func_8005CB68(racer, &gWizpigCutsceneTimer);
         }
     }
 }

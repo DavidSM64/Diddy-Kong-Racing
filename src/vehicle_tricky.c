@@ -17,7 +17,7 @@
 
 /************ .data ************/
 
-u16 D_800DCDE0[16] = {
+u16 gTrickyVoiceTable[16] = {
     SOUND_VOICE_BOSS_LAUGH,
     SOUND_VOICE_TRICKY_WOAH,
     SOUND_VOICE_TRICKY_WOAH2,
@@ -41,9 +41,9 @@ u16 D_800DCDE0[16] = {
 /************ .bss ************/
 
 f32 gTrickyRacerPeakHeight;
-s8 D_8011D5C4;
+s8 gTrickyCutsceneTimer;
 u16 *gBossSoundIDOffset;
-s8 D_8011D5CC;
+s8 gTrickyStartBoost;
 
 /******************************/
 
@@ -54,17 +54,17 @@ enum TrickyAnimations {
     ANIM_TRICKY_DAMAGE
 };
 
-void func_8005C2F0(Object *object, unk8005C2F0 *arg1) {
+void func_8005C2F0(Object *object, Object_Racer *racer) {
     object->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0004;
     object->interactObj->unk11 = 0;
     object->interactObj->hitboxRadius = 30;
     object->interactObj->pushForce = 0;
-    arg1->unkC = 0.0f;
+    racer->animationSpeed = 0.0f;
     gTrickyRacerPeakHeight = object->segment.trans.y_position;
-    if (arg1->unk118 != 0) {
+    if (racer->unk118 != 0) {
         func_80006AC8(object);
     }
-    D_8011D5C4 = 0;
+    gTrickyCutsceneTimer = 0;
 }
 
 /**
@@ -83,7 +83,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     UNUSED s32 pad;
     Object *firstRacerObj;
 
-    set_boss_voice_clip_offset(D_800DCDE0);
+    set_boss_voice_clip_offset(gTrickyVoiceTable);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
     animID = obj->segment.object.animationID;
@@ -98,15 +98,15 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         if (*startTimer != 100) {
             *startTimer -= 15;
             if (*startTimer < 0) {
-                if (D_8011D5CC == FALSE) {
-                    func_8005CB04(0);
+                if (gTrickyStartBoost == FALSE) {
+                    play_random_boss_sound(BOSS_SOUND_POSITIVE);
                     racer->boostTimer = 5;
                 }
-                D_8011D5CC = TRUE;
+                gTrickyStartBoost = TRUE;
                 *startTimer = 0;
                 *input |= A_BUTTON;
             } else {
-                D_8011D5CC = FALSE;
+                gTrickyStartBoost = FALSE;
             }
         }
     }
@@ -121,7 +121,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->unk1CD = obj->segment.object.animationID;
         obj->segment.object.animationID = ANIM_TRICKY_DAMAGE;
         obj->segment.y_velocity += 7.5;
-        func_8005CB04(1);
+        play_random_boss_sound(BOSS_SOUND_NEGATIVE);
         play_sound_global(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
         racer->velocity *= 0.3;
@@ -210,9 +210,9 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != FALSE) {
-        if (D_8011D5C4 == 0) {
-            D_8011D5C4 = 1;
-            func_8005CB68(racer, &D_8011D5C4);
+        if (gTrickyCutsceneTimer == 0) {
+            gTrickyCutsceneTimer = 1;
+            func_8005CB68(racer, &gTrickyCutsceneTimer);
         }
     }
 }
@@ -225,23 +225,27 @@ void set_boss_voice_clip_offset(u16 *soundID) {
 }
 
 void func_8005CA84(f32 x, f32 y, f32 z, s32 offset) {
-    s8 phi_v1 = get_random_number_from_range(0, 1);
+    s8 randomOffset = get_random_number_from_range(0, 1);
     if (offset == 0) {
-        phi_v1 = 0;
+        randomOffset = 0;
     }
-    offset += phi_v1;
-    play_sound_at_position(gBossSoundIDOffset[offset], x, y, z, 4, 0);
+    offset += randomOffset;
+    play_sound_at_position(gBossSoundIDOffset[offset], x, y, z, 4, NULL);
 }
 
-void func_8005CB04(s32 offset) {
-    s8 phi_v1 = get_random_number_from_range(0, 1);
+/**
+ * Add a random amount to offset, then play a random voice clip within that range.
+*/
+void play_random_boss_sound(s32 offset) {
+    s8 randomOffset = get_random_number_from_range(0, 1);
     if (offset == 0) {
-        phi_v1 = 0;
+        randomOffset = 0;
     }
-    offset += phi_v1;
-    play_sound_global(gBossSoundIDOffset[offset], 0);
+    offset += randomOffset;
+    play_sound_global(gBossSoundIDOffset[offset], NULL);
 }
 
+// boss_race_finish
 #ifdef NON_EQUIVALENT
 // This looks like it's just some stack and regalloc differences, but I can't be certain it's NON_MATCHING yet.
 // This function looks like it sets up the animation sequences
