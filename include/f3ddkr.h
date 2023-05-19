@@ -124,4 +124,36 @@
     _g->words.w1 = rgba;                          \
 }
 
+
+// Just for the sake of easy finding, custom gbi stuff is here too.
+#define	RM_AA_ZB_EDGE_DECAL(clk) \
+	AA_EN | Z_CMP | Z_UPD | IM_RD | CVG_DST_CLAMP | ALPHA_CVG_SEL |	\
+	CVG_X_ALPHA | ZMODE_DEC | TEX_EDGE | ZMODE_OPA | \
+	GBL_c##clk(G_BL_CLR_IN, G_BL_A_IN, G_BL_CLR_MEM, G_BL_A_MEM)
+
+#define	RM_RA_ZB_EDGE_DECAL(clk) \
+	AA_EN | Z_CMP | Z_UPD | CVG_DST_CLAMP | ALPHA_CVG_SEL |	\
+	CVG_X_ALPHA | ZMODE_DEC | TEX_EDGE | ZMODE_OPA | \
+	GBL_c##clk(G_BL_CLR_IN, G_BL_A_IN, G_BL_CLR_MEM, G_BL_A_MEM)
+
+#define	RM_RA_ZB_TEX_EDGE(clk) \
+	AA_EN | Z_CMP | Z_UPD | CVG_DST_CLAMP | \
+	CVG_X_ALPHA | ALPHA_CVG_SEL | ZMODE_OPA | TEX_EDGE | \
+	GBL_c##clk(G_BL_CLR_IN, G_BL_A_IN, G_BL_CLR_MEM, G_BL_A_MEM)
+
+#define	RM_RA_TEX_EDGE(clk) \
+	AA_EN | CVG_DST_CLAMP | \
+	CVG_X_ALPHA | ALPHA_CVG_SEL | ZMODE_OPA | TEX_EDGE | \
+	GBL_c##clk(G_BL_CLR_IN, G_BL_A_IN, G_BL_CLR_MEM, G_BL_A_MEM)
+
+#define G_RM_AA_ZB_EDGE_DECAL   RM_AA_ZB_EDGE_DECAL(1)
+#define G_RM_AA_ZB_EDGE_DECAL2  RM_AA_ZB_EDGE_DECAL(2)
+#define G_RM_RA_ZB_EDGE_DECAL   RM_RA_ZB_EDGE_DECAL(1)
+#define G_RM_RA_ZB_EDGE_DECAL2  RM_RA_ZB_EDGE_DECAL(2)
+
+#define	G_RM_RA_ZB_TEX_EDGE	    RM_RA_ZB_TEX_EDGE(1)
+#define	G_RM_RA_ZB_TEX_EDGE2	RM_RA_ZB_TEX_EDGE(2)
+#define	G_RM_RA_TEX_EDGE	    RM_RA_TEX_EDGE(1)
+#define	G_RM_RA_TEX_EDGE2	    RM_RA_TEX_EDGE(2)
+
 #endif
