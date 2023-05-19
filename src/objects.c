@@ -1103,7 +1103,7 @@ void func_80010994(s32 updateRate) {
     D_8011AD24[0] = 0;
     D_8011AD53 = 0;
     func_8000E2B4();
-    func_8009CFB0();
+    try_close_dialogue_box();
     func_800179D0();
     } while(0); //FAKEMATCH
     if (D_8011AF00 == 1) {

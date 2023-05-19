@@ -21,12 +21,12 @@
 #define TT_MENU_EXIT              10
 
 enum DialogueMenuCases {
-    DIALOG_TAJ,
-    DIALOG_UNK_01,
-    DIALOG_TT,
-    DIALOG_CHALLENGE,
-    DIALOG_TROPHY,
-    DIALOG_RACERESULT
+    DIALOGUE_TAJ,
+    DIALOGUE_UNK_01,
+    DIALOGUE_TT,
+    DIALOGUE_CHALLENGE,
+    DIALOGUE_TROPHY,
+    DIALOGUE_RACERESULT
 };
 
 #define CHEAT(index) 1 << index
@@ -831,8 +831,8 @@ void allocate_menu_images(s16 *imageSet);
 void allocate_and_set_menu_image_properties(s32 imageID);
 void func_8009CA58(void);
 void func_8009CF68(s32 arg0);
-void func_8009CFB0(void);
-s32 func_8009CFEC(u32 arg0);
+void try_close_dialogue_box(void);
+s32 npc_dialogue_loop(u32 arg0);
 void set_option_text_colour(s32 condition);
 void render_dialogue_option(char *text, s32 yOffset, s32 optionID);
 void handle_menu_joystick_input(void);

@@ -8213,6 +8213,9 @@ void func_8009BD5C(void) {
 void func_8009BE54() {
 }
 
+/**
+ * Reset all menu related joystick inputs for each player.
+*/
 void reset_controller_sticks(void) {
     s32 i;
     for (i = 0; i < 4; i++) {
@@ -8228,6 +8231,10 @@ void reset_controller_sticks(void) {
 #define STICK_DEADZONE 35
 #define STICK_DELAY_AMOUNT 15
 
+/**
+ * Reads the stick inputs, then with the aid of a maximum range and a deadzone, writes it to the menu inputs.
+ * Stick input delay is not time corrected, meaning holding the stick is slower at lower framerates.
+*/
 void update_controller_sticks(void) {
     s32 XClamp, YClamp;
     s32 i;
@@ -8608,7 +8615,11 @@ void func_8009CF68(s32 arg0) {
     }
 }
 
-void func_8009CFB0(void) {
+/**
+ * If the call to close dialogue has been made, this will begin hiding it.
+ * It then also resets the menus stick inputs.
+*/
+void try_close_dialogue_box(void) {
     if (gNeedToCloseDialogueBox) {
         gNeedToCloseDialogueBox = FALSE;
         close_dialogue_box(1);
@@ -8616,17 +8627,21 @@ void func_8009CFB0(void) {
     }
 }
 
-s32 func_8009CFEC(u32 dialogueOption) {
+/**
+ * Top level function for controlling dialogue with NPC's.
+ * Returning nonzero will trigger those NPC's to stop dialogue.
+*/
+s32 npc_dialogue_loop(u32 dialogueOption) {
     s32 result;
 
     D_800DF4E4[dialogueOption] = 0;
-    if ((func_800C3400() != 0) && (dialogueOption != DIALOG_CHALLENGE)) {
+    if ((func_800C3400() != 0) && (dialogueOption != DIALOGUE_CHALLENGE)) {
         return 0;
     }
     if (gNeedToCloseDialogueBox) {
         return 0;
     }
-    if (dialogueOption != DIALOG_CHALLENGE) {
+    if (dialogueOption != DIALOGUE_CHALLENGE) {
         func_8006F388(1);
     }
     result = 0;
@@ -8636,19 +8651,19 @@ s32 func_8009CFEC(u32 dialogueOption) {
     set_current_dialogue_background_colour(1, 0, 0, 0, 128);
     func_8001F450();
     switch (dialogueOption) {
-        case DIALOG_TAJ:
+        case DIALOGUE_TAJ:
             result = taj_menu_loop(); // Taj menu
             break;
-        case DIALOG_TT:
+        case DIALOGUE_TT:
             result = tt_menu_loop(); // T.T. menu
             break;
-        case DIALOG_CHALLENGE:
+        case DIALOGUE_CHALLENGE:
             result = func_800C3564(); // Taj challenge completed/failed menu
             break;
-        case DIALOG_TROPHY:
+        case DIALOGUE_TROPHY:
             result = trophy_race_cabinet_menu_loop(); // Trophy race cabinet menu
             break;
-        case DIALOG_RACERESULT:
+        case DIALOGUE_RACERESULT:
             result = dialogue_race_defeat();
             break;
     }

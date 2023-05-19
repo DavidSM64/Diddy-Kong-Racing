@@ -688,7 +688,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
         if (obj->properties.trophyCabinet.action == 1) {
             func_800AB1AC(3);
             set_hud_visibility(0U);
-            dialogueID = func_8009CFEC(4);
+            dialogueID = npc_dialogue_loop(DIALOGUE_TROPHY);
             if (dialogueID) {
                 obj->properties.trophyCabinet.action = 0;
                 func_8009CF68(4);
@@ -1223,7 +1223,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         func_800AB194(3);
     }
     if (obj->properties.npc.action >= TT_MODE_TURN_TOWARDS_PLAYER) {
-        index = func_8009CFEC(2U);
+        index = npc_dialogue_loop(DIALOGUE_TT);
     } else {
         func_8009CF68(2);
         index = 0;
@@ -2179,7 +2179,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     Object *temp_v0_12;
     s32 var_a2;
     Object **racerObjs;
-    s32 var_a2_2;
+    s32 dialogueID;
     s32 numRacers;
     Object_NPC *taj;
     Object_64 *racer64;
@@ -2281,11 +2281,11 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         case TAJ_MODE_DIALOGUE:
         case TAJ_MODE_TRANSFORM_BEGIN:
         case TAJ_MODE_TRANSFORM_END:
-            var_a2_2 = func_8009CFEC(0);
+            dialogueID = npc_dialogue_loop(DIALOGUE_TAJ);
             break;
         default:
             func_8009CF68(0);
-            var_a2_2 = 0;
+            dialogueID = 0;
             break;
     }
 
@@ -2303,7 +2303,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             func_8006F388(1);
             break;
     }
-    if (obj->properties.npc.action != TAJ_MODE_ROAM && var_a2_2 != 0 && obj->properties.npc.action < 4) {
+    if (obj->properties.npc.action != TAJ_MODE_ROAM && dialogueID != 0 && obj->properties.npc.action < 4) {
         obj->properties.npc.action = TAJ_MODE_DIALOGUE;
     }
     switch (obj->properties.npc.action) {
@@ -2390,8 +2390,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         obj->segment.object.animationID = 4;
         taj->animFrameF += updateRateF * 1.0;
         racer_set_dialogue_camera();
-        if (var_a2_2 == 3 || var_a2_2 == 4) {
-            obj->properties.npc.action = (var_a2_2 == 4) ? TAJ_MODE_END_DIALOGUE_UNUSED : TAJ_MODE_END_DIALOGUE;
+        if (dialogueID == 3 || dialogueID == 4) {
+            obj->properties.npc.action = (dialogueID == 4) ? TAJ_MODE_END_DIALOGUE_UNUSED : TAJ_MODE_END_DIALOGUE;
             taj->animFrameF = 0.1f;
             obj->segment.object.animationID = 2;
             taj->unk1C = 0;
@@ -2402,8 +2402,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             func_80001074(levelHeader->instruments);
             func_80008168();
         }
-        if (var_a2_2 & 0x80) {
-            D_8011D4E0 = var_a2_2 & 0x7F;
+        if (dialogueID & 0x80) {
+            D_8011D4E0 = dialogueID & 0x7F;
             if (D_8011D4E0 != racer64->racer.vehicleID) {
                 obj->properties.npc.action = TAJ_MODE_TRANSFORM_BEGIN;
                 taj->animFrameF = 0;
@@ -2413,8 +2413,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 set_menu_id_if_option_equal(0x62, 2);
             }
         }
-        if (var_a2_2 & 0x40) {
-            D_8011D4E0 = var_a2_2 & 0xF;
+        if (dialogueID & 0x40) {
+            D_8011D4E0 = dialogueID & 0xF;
             if (D_8011D4E0 != racer64->racer.vehicleID) {
                 D_8011D4E0 |= 0x80;
                 obj->properties.npc.action = TAJ_MODE_TRANSFORM_BEGIN;
