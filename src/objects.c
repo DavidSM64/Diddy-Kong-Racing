@@ -1608,9 +1608,9 @@ void render_3d_model(Object *obj) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
         if (alpha < 255) {
-            var_v0 = func_800143A8(objModel, obj, 0, 4, spB0);
+            var_v0 = func_800143A8(objModel, obj, 0, RENDER_SEMI_TRANSPARENT, spB0);
         } else {
-            var_v0 = func_800143A8(objModel, obj, 0, 0, spB0);
+            var_v0 = func_800143A8(objModel, obj, 0, RENDER_NONE, spB0);
         }
         if (obj->segment.header->unk71) {
             if (hasOpacity) {
@@ -3352,8 +3352,9 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800235DC.s")
 /**
  * Run when an object is created.
  * Used to do one-time things like initialising variables
+ * Arg2 is always zero. Effectively unused.
 */
-void run_object_init_func(Object *obj, void *entry, s32 arg2) {
+void run_object_init_func(Object *obj, void *entry, s32 param) {
     obj->behaviorId = obj->segment.header->behaviorId;
     switch (obj->behaviorId) {
         case BHV_RACER:
@@ -3366,7 +3367,7 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
             obj_init_fish(obj, (LevelObjectEntry_Fish *) entry);
             break;
         case BHV_ANIMATOR:
-            obj_init_animator(obj, (LevelObjectEntry_Animator *) entry, arg2);
+            obj_init_animator(obj, (LevelObjectEntry_Animator *) entry, param);
             break;
         case BHV_SMOKE:
             obj_init_smoke(obj, (LevelObjectEntry_Smoke *) entry);
@@ -3400,7 +3401,7 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
             obj_init_dino_whale(obj, (LevelObjectEntry_Dino_Whale *) entry);
             break;
         case BHV_CHECKPOINT:
-            obj_init_checkpoint(obj, (LevelObjectEntry_Checkpoint *) entry, arg2);
+            obj_init_checkpoint(obj, (LevelObjectEntry_Checkpoint *) entry, param);
             break;
         case BHV_MODECHANGE:
             obj_init_modechange(obj, (LevelObjectEntry_ModeChange *) entry);
@@ -3437,7 +3438,7 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
             obj_init_torch_mist(obj, (LevelObjectEntry_Torch_Mist *) entry);
             break;
         case BHV_TEXTURE_SCROLL:
-            obj_init_texscroll(obj, (LevelObjectEntry_TexScroll *) entry, arg2);
+            obj_init_texscroll(obj, (LevelObjectEntry_TexScroll *) entry, param);
             break;
         case BHV_STOPWATCH_MAN:
             obj_init_stopwatchman(obj, (LevelObjectEntry_StopWatchMan *) entry);
@@ -3446,13 +3447,13 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
             obj_init_banana(obj, (LevelObjectEntry_Banana *) entry);
             break;
         case BHV_LIGHT_RGBA:
-            obj_init_rgbalight(obj, (LevelObjectEntry_RgbaLight *) entry, arg2);
+            obj_init_rgbalight(obj, (LevelObjectEntry_RgbaLight *) entry, param);
             break;
         case BHV_BUOY_PIRATE_SHIP:
-            obj_init_buoy_pirateship(obj, (LevelObjectEntry_Buoy_PirateShip *) entry, arg2);
+            obj_init_buoy_pirateship(obj, (LevelObjectEntry_Buoy_PirateShip *) entry, param);
             break;
         case BHV_LOG:
-            obj_init_log(obj, (LevelObjectEntry_Log *) entry, arg2);
+            obj_init_log(obj, (LevelObjectEntry_Log *) entry, param);
             break;
         case BHV_WEATHER:
             obj_init_weather(obj, (LevelObjectEntry_Weather *) entry);
@@ -3498,7 +3499,7 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
             obj_init_unknown58(obj, (LevelObjectEntry_Unknown58 *) entry);
             break;
         case BHV_WAVE_GENERATOR:
-            obj_init_wavegenerator(obj, (LevelObjectEntry_WaveGenerator *) entry, arg2);
+            obj_init_wavegenerator(obj, (LevelObjectEntry_WaveGenerator *) entry, param);
             break;
         case BHV_BUTTERFLY:
             obj_init_butterfly(obj, (LevelObjectEntry_Butterfly *) entry);
@@ -3587,7 +3588,7 @@ void run_object_init_func(Object *obj, void *entry, s32 arg2) {
             obj_init_wardensmoke(obj, (LevelObjectEntry_WardenSmoke *) entry);
             break;
         case BHV_UNK_5E:
-            obj_init_unknown94(obj, (LevelObjectEntry_Unknown94 *) entry, arg2);
+            obj_init_unknown94(obj, (LevelObjectEntry_Unknown94 *) entry, param);
             break;
         case BHV_TELEPORT:
             obj_init_teleport(obj, (LevelObjectEntry_Teleport *) entry);

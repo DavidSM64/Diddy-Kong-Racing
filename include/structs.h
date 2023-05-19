@@ -1224,7 +1224,7 @@ typedef struct Object_Racer {
   /* 0x201 */ s8 unk201;
   /* 0x202 */ s8 silverCoinCount;
   /* 0x203 */ s8 boostType;
-  /* 0x204 */ s16 unk204;
+  /* 0x204 */ s16 bubbleTrapTimer;
   /* 0x206 */ s16 unk206;
   /* 0x208 */ s8 unk208;
   /* 0x209 */ u8 unk209;

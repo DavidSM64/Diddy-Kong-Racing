@@ -287,7 +287,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
                         func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, SOUND_EXPLOSION, 1.0f, 1);
                         gParticlePtrList_addObject(obj);
                     } else if (obj->properties.fireball.timer > 0) {
-                        racer->unk204 = 60;
+                        racer->bubbleTrapTimer = 60;
                         obj->properties.fireball.timer = -60;
                         obj->properties.fireball.obj = someObj;
                         play_sound_global(SOUND_BUBBLE_RISE, &weapon->soundMask);
@@ -1432,7 +1432,7 @@ void obj_loop_posarrow(Object *obj, UNUSED s32 updateRate) {
 }
 
 /* Offical name: animInit */
-void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 arg2) {
+void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 param) {
     Object_Animator *obj64;
     LevelModel *levelModel;
     s16 segmentBatchCount;
@@ -1443,7 +1443,8 @@ void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 arg2) 
     obj64->speedFactorX = entry->speedFactorX;
     obj64->speedFactorY = entry->speedfactorY;
     obj64->segmentId = get_level_segment_index_from_position(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
-    if (arg2 == 0) {
+    // Always true.
+    if (param == 0) {
         obj64->xSpeed = 0;
         obj64->ySpeed = 0;
     }
