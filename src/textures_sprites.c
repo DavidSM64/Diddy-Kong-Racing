@@ -522,6 +522,7 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
     s32 forceFlags;
     s32 doPipeSync;
     s32 dlIndex;
+    Gfx *dlID;
 
     forceFlags = gForceFlags;
     doPipeSync = TRUE;
@@ -575,11 +576,11 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
         gCurrentRenderFlags = flags;
         if (!gUsingTexture) {
             if (flags & RENDER_VTX_ALPHA) {
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsSolidColourVtxAlpha[flags & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE)]), numberOfGfxCommands(dRenderSettingsSolidColourVtxAlpha[0]));
-                return;
+                dlID = dRenderSettingsSolidColourVtxAlpha[flags & (RENDER_ANTI_ALIASING | RENDER_Z_COMPARE)];
+                goto draw;
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsSolidColour[flags & (RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING)]), numberOfGfxCommands(dRenderSettingsSolidColour[0]));
-            return;
+            dlID = dRenderSettingsSolidColour[flags & (RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING)];
+                goto draw;
         }
 
         if (D_80126384) {
@@ -591,11 +592,11 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
                 if (flags & RENDER_SEMI_TRANSPARENT) {
                     dlIndex |= 2; // Z Compare
                 }
-                gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DF028[dlIndex]), numberOfGfxCommands(D_800DF028[0]));
-                return;
+                dlID = D_800DF028[dlIndex];
+                goto draw;
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(D_800DF0A8[flags]), numberOfGfxCommands(D_800DF0A8[0]));
-            return;
+            dlID = D_800DF0A8[flags];
+            goto draw;
         }
 
         if (flags & RENDER_DECAL && flags & RENDER_Z_COMPARE) {
@@ -609,8 +610,8 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
             if (flags & RENDER_FOG_ACTIVE) {
                 dlIndex |= 4; // Fog
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsDecal[dlIndex]), numberOfGfxCommands(dRenderSettingsDecal[0]));
-            return;
+            dlID = dRenderSettingsDecal[dlIndex];
+            goto draw;
         }
 
         if (flags & RENDER_CUTOUT) {
@@ -618,8 +619,8 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
             if (flags & RENDER_FOG_ACTIVE) {
                 dlIndex |= 4; // Fog
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsCutout[dlIndex]), numberOfGfxCommands(dRenderSettingsCutout[0]));
-            return;
+            dlID = dRenderSettingsCutout[dlIndex];
+            goto draw;
         }
 
         flags &= ~RENDER_DECAL;
@@ -631,8 +632,8 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
                 gSPSetGeometryMode((*dlist)++, G_ZBUFFER);
                 gCurrentRenderFlags |= RENDER_Z_COMPARE;
             }
-            gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsVtxAlpha[dlIndex]), numberOfGfxCommands(dRenderSettingsVtxAlpha[0]));
-            return;
+            dlID = dRenderSettingsVtxAlpha[dlIndex];
+            goto draw;
         }
         dlIndex = gConfig.antiAliasing + 1;
         if (gIsObjectRender && gConfig.antiAliasing == 0) {
@@ -647,7 +648,9 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
         if (flags & RENDER_FOG_ACTIVE) {
             dlIndex += 12;
         }
-        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsCommon_ext[dlIndex]), numberOfGfxCommands(dRenderSettingsCommon_ext[0]));
+        dlID = dRenderSettingsCommon_ext[dlIndex];
+        draw:
+        gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dlID), numberOfGfxCommands(dRenderSettingsCommon_ext[0]));
         return;
     }
 }
