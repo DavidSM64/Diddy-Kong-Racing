@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "objects.h"
 #include "game.h"
+#include "thread3_main.h"
 #include "unknown_0CEC50.h"
 #include "controller.h"
 
