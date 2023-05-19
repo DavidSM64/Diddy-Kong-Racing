@@ -585,13 +585,7 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
 
         if (D_80126384) {
             if (flags & RENDER_DECAL && flags & RENDER_Z_COMPARE) {
-                dlIndex = 0;
-                if (flags & RENDER_ANTI_ALIASING) {
-                    dlIndex |= 1; // Anti Aliasing
-                }
-                if (flags & RENDER_SEMI_TRANSPARENT) {
-                    dlIndex |= 2; // Z Compare
-                }
+                dlIndex = (flags & RENDER_ANTI_ALIASING) | ((flags & RENDER_SEMI_TRANSPARENT) >> 1);
                 dlID = D_800DF028[dlIndex];
                 goto draw;
             }
@@ -600,25 +594,13 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
         }
 
         if (flags & RENDER_DECAL && flags & RENDER_Z_COMPARE) {
-            dlIndex = 0;
-            if (flags & RENDER_ANTI_ALIASING) {
-                dlIndex |= 1; // Anti Aliasing
-            }
-            if (flags & RENDER_SEMI_TRANSPARENT) {
-                dlIndex |= 2; // Z Compare
-            }
-            if (flags & RENDER_FOG_ACTIVE) {
-                dlIndex |= 4; // Fog
-            }
+            dlIndex = (flags & RENDER_ANTI_ALIASING) | ((flags & (RENDER_SEMI_TRANSPARENT | RENDER_FOG_ACTIVE)) >> 1);
             dlID = dRenderSettingsDecal[dlIndex];
             goto draw;
         }
 
         if (flags & RENDER_CUTOUT) {
-            dlIndex = flags & (RENDER_Z_COMPARE);
-            if (flags & RENDER_FOG_ACTIVE) {
-                dlIndex |= 4; // Fog
-            }
+            dlIndex = (flags & RENDER_Z_COMPARE) | ((flags & RENDER_FOG_ACTIVE) >> 1);
             dlID = dRenderSettingsCutout[dlIndex];
             goto draw;
         }
