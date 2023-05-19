@@ -1198,7 +1198,10 @@ UNUSED s32 func_800113BC() {
     return D_8011ADBC;
 }
 
-s32 func_800113CC(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoundId) {
+/**
+ * When the object reaches a certain anim frame, play a sound and shake the camera to emphasise the effect of their movement.
+*/
+s32 play_footstep_sounds(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoundId) {
     s8 *asset;
     f32 shakeDist;
     f32 shakeMagnitude;
@@ -1220,7 +1223,7 @@ s32 func_800113CC(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoun
         animFrame = obj->segment.animFrame >> 4;
         for (i = 0; i < asset0; i++) {
             nextAsset = asset[i+3];
-            if (((animFrame >= nextAsset) && (frame < nextAsset)) || ((nextAsset >= animFrame) && (nextAsset < frame))) {
+            if ((animFrame >= nextAsset && frame < nextAsset) || (nextAsset >= animFrame && nextAsset < frame)) {
                 set_camera_shake_by_distance(obj->segment.trans.x_position, obj->segment.trans.y_position,
                     obj->segment.trans.z_position, shakeDist, shakeMagnitude);
                 if (i & 1) {
@@ -1340,9 +1343,13 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos) {
     return 0;
 }
 
-void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 flags, u32 texOffset, f32 arg8) {
+/**
+ * Set up the basic model view matrix, load a texture, then render the mesh.
+ * A much simpler, faster way to render an object model as opposed to render_3d_model
+*/
+void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 flags, u32 texOffset, f32 scale) {
     s32 hasTexture = FALSE;
-    camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, arg8, 0.0f);
+    camera_push_model_mtx(&gObjectCurrDisplayList, &gObjectCurrMatrix, &obj->segment.trans, scale, 0.0f);
     gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     if (tex != NULL) {
@@ -1354,33 +1361,36 @@ void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triang
     func_80069A40(&gObjectCurrDisplayList);
 }
 
-void func_80011AD0(Object *this) {
-    f32 tmp_f0;
-    Object_64 *obj64;
+/**
+ * A few objects use unconventional means to render. They are handled here.
+*/
+void render_3d_misc(Object *obj) {
+    f32 scale;
+    Object_64 *objData;
 
-    switch (this->behaviorId) {
+    switch (obj->behaviorId) {
         case BHV_CHARACTER_FLAG:
-            if (this->properties.characterFlag.characterID >= 0) {
-                obj64 = this->unk64;
-                func_80011960(this, obj64->character_flag.vertices, 4, obj64->character_flag.triangles,
-                                2, obj64->character_flag.texture, RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_FOG_ACTIVE, 0, 1.0f);
+            if (obj->properties.characterFlag.characterID >= 0) {
+                objData = obj->unk64;
+                render_misc_model(obj, objData->character_flag.vertices, 4, objData->character_flag.triangles, 2, objData->character_flag.texture, 
+                              RENDER_ANTI_ALIASING | RENDER_Z_COMPARE | RENDER_FOG_ACTIVE, 0, 1.0f);
             }
             break;
         case BHV_BUTTERFLY:
-            obj64 = this->unk64;
-            func_80011960(this, &obj64->butterfly.vertices[obj64->butterfly.unkFC * 6], 6, obj64->butterfly.triangles, 8, obj64->butterfly.texture, RENDER_Z_COMPARE | RENDER_FOG_ACTIVE, 0, 1.0f);
+            objData = obj->unk64;
+            render_misc_model(obj, &objData->butterfly.vertices[objData->butterfly.unkFC * 6], 6, objData->butterfly.triangles, 8, objData->butterfly.texture, 
+                          RENDER_Z_COMPARE | RENDER_FOG_ACTIVE, 0, 1.0f);
             break;
-
         case BHV_FISH:
-            obj64 = this->unk64;
-            tmp_f0 = this->segment.level_entry->fish.unkC[1];
-            tmp_f0 *= 0.01f;
-            func_80011960(this, &obj64->fish.vertices[obj64->fish.unkFC * 6], 6, obj64->fish.triangles, 8, obj64->fish.texture, RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_CUTOUT, 0, tmp_f0);
+            objData = obj->unk64;
+            scale = obj->segment.level_entry->fish.unkC[1];
+            scale *= 0.01f;
+            render_misc_model(obj, &objData->fish.vertices[objData->fish.unkFC * 6], 6, objData->fish.triangles, 8, objData->fish.texture, 
+                          RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_CUTOUT, 0, scale);
             break;
-
         case BHV_BOOST:
-            if ((this->properties.common.unk0 != 0) && ((this->unk64->boost.unk70 > 0) || (this->unk64->boost.unk74 > 0.0f))) {
-                func_800135B8(this);
+            if (obj->properties.common.unk0 && (obj->unk64->boost.unk70 > 0 || obj->unk64->boost.unk74 > 0.0f)) {
+                func_800135B8(obj);
             }
             break;
     }
@@ -1398,8 +1408,8 @@ void render_3d_billboard(Object *obj) {
     s32 hasPrimCol;
     s32 hasEnvCol;
     ObjectTransformExt objTrans;
-    Object *var_a0;
-    unk80068514_arg4* sp58;
+    Object *bubbleTrap;
+    Object_68* gfxData;
 
     intensity = 255;
     hasPrimCol = FALSE;
@@ -1453,17 +1463,17 @@ void render_3d_billboard(Object *obj) {
     } else {
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     }
-    sp58 = (unk80068514_arg4 *) obj->unk68[obj->segment.object.numModelIDs];
-    var_a0 = NULL;
+    gfxData = obj->unk68[obj->segment.object.numModelIDs];
+    bubbleTrap = NULL;
     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON_2) {
-        var_a0 = obj->properties.fireball.obj;
+        bubbleTrap = obj->properties.fireball.obj;
         if (obj->properties.fireball.timer > 0) {
-            var_a0 = obj;
+            bubbleTrap = obj;
         }
     }
     
     // 5 = OilSlick, SmokeCloud, Bomb, BubbleWeapon
-    if(var_a0 != NULL || !(obj->behaviorId != BHV_WEAPON || obj->unk64->weapon.weaponID != WEAPON_BUBBLE_TRAP)) {
+    if(bubbleTrap != NULL || !(obj->behaviorId != BHV_WEAPON || obj->unk64->weapon.weaponID != WEAPON_BUBBLE_TRAP)) {
         objTrans.trans.z_rotation = 0;
         objTrans.trans.x_rotation = 0;
         objTrans.trans.y_rotation = 0;
@@ -1471,17 +1481,17 @@ void render_3d_billboard(Object *obj) {
         objTrans.trans.x_position = 0.0f;
         objTrans.trans.z_position = 0.0f;
         objTrans.trans.y_position = 12.0f;
-        objTrans.unk18 = obj->segment.animFrame;
+        objTrans.animFrame = obj->segment.animFrame;
         objTrans.unk1A = 32;
-        if (var_a0 == NULL) {
-            var_a0 = (Object *) obj->unk64->weapon.target;
-            if (var_a0 == NULL) {
-                var_a0 = obj;
+        if (bubbleTrap == NULL) {
+            bubbleTrap = (Object *) obj->unk64->weapon.target;
+            if (bubbleTrap == NULL) {
+                bubbleTrap = obj;
             }
         }
-        func_800138A8(&var_a0->segment.trans, sp58, (Object *) &objTrans, RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE);
+        render_bubble_trap(&bubbleTrap->segment.trans, gfxData, (Object *) &objTrans, RENDER_Z_COMPARE | RENDER_SEMI_TRANSPARENT | RENDER_Z_UPDATE);
     } else {
-        render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj, sp58, flags);
+        render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj, (unk80068514_arg4 *) gfxData, flags);
     }
     if (hasPrimCol) {
         gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -1809,6 +1819,7 @@ void object_undo_player_tumble(Object *obj) {
     }
 }
 
+// set_temp_model_transforms
 #ifdef NON_EQUIVALENT
 void func_80012F94(Object *obj) {
     u8 *bossAsset;
@@ -1960,6 +1971,11 @@ void func_80012F94(Object *obj) {
 GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
 #endif
 
+/**
+ * Determine which model type the object is using, then call the related function to render it.
+ * Beforehand, call a function to apply a temporary transformation, mostly for racers.
+ * Afterwards, undo that.
+*/
 void render_object_parts(Object *obj) {
     func_80012F94(obj);
     if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
@@ -1969,14 +1985,17 @@ void render_object_parts(Object *obj) {
             render_3d_model(obj);
         } else if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
             render_3d_billboard(obj);
-        } else if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_UNKNOWN4) {
-            func_80011AD0(obj);
+        } else if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_MISC) {
+            render_3d_misc(obj);
         }
     }
-    func_80013548(obj);
+    unset_temp_model_transforms(obj);
 }
 
-void func_80013548(Object *obj) {
+/**
+ * After rendering, sets the object position back to normal.
+*/
+void unset_temp_model_transforms(Object *obj) {
     if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && obj->segment.header->behaviorId == BHV_RACER) {
         obj->segment.trans.x_position -= obj->unk64->racer.carBobX;
         obj->segment.trans.y_position -= obj->unk64->racer.carBobY;
@@ -1986,12 +2005,15 @@ void func_80013548(Object *obj) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800135B8.s")
 
-void func_800138A8(ObjectTransform *trans, unk80068514_arg4 *arg1, Object *obj, s32 flags) {
+/**
+ * Render the bubble trap weapon.
+*/
+void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj, s32 flags) {
     f32 x;
     f32 y;
     f32 z;
     ObjectSegment *cameraSegment;
-    f32 posSq;
+    f32 dist;
 
     f32_vec3_apply_object_rotation(trans, &obj->segment.trans.x_position);
     obj->segment.trans.x_position += trans->x_position;
@@ -2001,17 +2023,17 @@ void func_800138A8(ObjectTransform *trans, unk80068514_arg4 *arg1, Object *obj, 
     x = cameraSegment->trans.x_position - obj->segment.trans.x_position;
     y = cameraSegment->trans.y_position - obj->segment.trans.y_position;
     z = cameraSegment->trans.z_position - obj->segment.trans.z_position;
-    posSq = sqrtf((x * x) + (y  * y ) + (z * z));
-    if (posSq > 0.0) {
-        posSq = obj->segment.unk1A / posSq;
-        x *= posSq;
-        y *= posSq;
-        z *= posSq;
+    dist = sqrtf((x * x) + (y * y) + (z * z));
+    if (dist > 0.0) {
+        dist = obj->segment.unk1A / dist;
+        x *= dist;
+        y *= dist;
+        z *= dist;
     }
     obj->segment.trans.x_position += x;
     obj->segment.trans.y_position += y;
     obj->segment.trans.z_position += z;
-    render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj, arg1, flags);
+    render_sprite_billboard(&gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, obj, (unk80068514_arg4 *) gfxData, flags);
 }
 
 /**
@@ -3335,7 +3357,7 @@ void init_racer_for_challenge(s32 vehicleID) {
     Object_Racer *racer;
 
     D_8011AEF7 = 3;
-    racer = &get_racer_object(0)->unk64->racer;
+    racer = &get_racer_object(PLAYER_ONE)->unk64->racer;
     racer->courseCheckpoint = 0;
     racer->checkpoint = 0;
     racer->lap = 0;

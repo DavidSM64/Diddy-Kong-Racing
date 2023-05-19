@@ -265,7 +265,7 @@ typedef struct TTGhostTable {
 
 typedef struct ObjectTransformExt {
     ObjectTransform trans;
-    s16 unk18;
+    s16 animFrame;
     s16 unk1A;
 } ObjectTransformExt;
 
@@ -342,7 +342,7 @@ void func_80012CE8(Gfx **dList);
 void render_object(Gfx **dList, MatrixS **mtx, Vertex **verts, Object *obj);
 void object_undo_player_tumble(Object *obj);
 void render_object_parts(Object *this);
-void func_80013548(Object *arg0);
+void unset_temp_model_transforms(Object *arg0);
 void func_800142B8(void);
 u32 func_800179D0(void);
 void set_taj_challenge_type(s32 arg0);
@@ -416,7 +416,7 @@ void update_envmap_position(f32 arg0, f32 arg1, f32 arg2);
 s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1);
 s32 func_8001B2F0(s32 mapId);
 void render_3d_billboard(Object *obj);
-void func_80011960(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 flags, u32 offset, f32 arg8);
+void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 flags, u32 offset, f32 yScale);
 void func_8000B290(void);
 void func_80016BC4(Object *obj);
 s32 func_8001C48C(Object *obj);
@@ -426,8 +426,8 @@ s32 func_8000FD34(Object *arg0, Object_5C *arg1);
 void func_8000E4E8(s32 index);
 void objFreeAssets(Object *obj, s32 count, s32 objType);
 void func_8001709C(Object *obj);
-s32 func_800113CC(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoundId);
-void func_80011AD0(Object *this);
+s32 play_footstep_sounds(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoundId);
+void render_3d_misc(Object *this);
 Object *func_8001BDD4(Object *obj, s32 *cameraID);
 s32 init_object_shadow(Object *obj, ShadowData *shadow);
 s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool);
@@ -448,7 +448,7 @@ void func_80022E18(s32);                                 /* extern */
 void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);       /* extern */
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); /* extern */
 void func_80011134(Object *, s32);
-void func_800138A8(ObjectTransform*, unk80068514_arg4*, Object *, s32);
+void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj, s32 flags);
 Object *func_8002342C(f32 x, f32 z);
 void func_8006017C(s32);
 void func_80012F94(Object *);

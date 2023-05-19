@@ -40,12 +40,17 @@ s8 D_8011D611;
 
 /******************************/
 
+enum RocketAnimations {
+    ANIM_ROCKET_0,
+    ANIM_ROCKET_1
+};
+
 /**
  * Top level update function for the Wizpig Rocket vehicle, used in the Wizpig rematch.
 */
 void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
-    s16 sp3E;
-    s16 sp3C;
+    s16 animID;
+    s16 animFrame;
     s16 sp3A;
     f32 diffZ;
     f32 diffX;
@@ -58,10 +63,10 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
 
     set_boss_voice_clip_offset((u16* ) D_800DCE80);
     racer->unk1EC = 0;
-    sp3E = obj->segment.object.animationID;
-    sp3C = obj->segment.animFrame;
+    animID = obj->segment.object.animationID;
+    animFrame = obj->segment.animFrame;
     sp3A = racer->headAngle;
-    if ((racer->velocity < 0.3) && (-0.3 < racer->velocity)) {
+    if (racer->velocity < 0.3 && -0.3 < racer->velocity) {
         *buttonsPressed = 0;
     }
     if (racer->raceFinished == TRUE && func_80023568()) {
@@ -94,16 +99,16 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     *startTimer = sp2C;
     obj->unk74 = 0;
     racer->headAngle = sp3A;
-    obj->segment.object.animationID = sp3E;
-    obj->segment.animFrame = sp3C;
-    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != 1) {
+    obj->segment.object.animationID = animID;
+    obj->segment.animFrame = animFrame;
+    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_ROCKET_1) {
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
         obj->segment.x_velocity *= 0.4;
-        obj->segment.object.animationID = 1;
+        obj->segment.object.animationID = ANIM_ROCKET_1;
         obj->segment.z_velocity *= 0.4;
-        racer->unkC = 0.0f;
+        racer->animationSpeed = 0.0f;
         obj->segment.y_velocity += 4.0;
     }
     racer->attackType = ATTACK_NONE;
@@ -118,23 +123,23 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             obj->segment.z_velocity = 0.0f;
         }
     }
-    racer->unkC += 2.0 * updateRateF;
+    racer->animationSpeed += 2.0 * updateRateF;
     gfxData = *obj->unk68;
     objModel = gfxData->objModel;
     diffX = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
-    while (diffX <= racer->unkC) {
-        racer->unkC -= diffX;
+    while (diffX <= racer->animationSpeed) {
+        racer->animationSpeed -= diffX;
         gfxData->unk10 = -1;
     }
-    while (racer->unkC <= 0.0f) {
-        racer->unkC += diffX;
+    while (racer->animationSpeed <= 0.0f) {
+        racer->animationSpeed += diffX;
         gfxData->unk10 = -1;
     }
-    if (obj->segment.object.animationID == 1 && gfxData->unk10 == -1) {
-        obj->segment.object.animationID = 0;
-        racer->unkC = 0.0f;
+    if (obj->segment.object.animationID == ANIM_ROCKET_1 && gfxData->unk10 == -1) {
+        obj->segment.object.animationID = ANIM_ROCKET_0;
+        racer->animationSpeed = 0.0f;
     }
-    obj->segment.animFrame = racer->unkC;
+    obj->segment.animFrame = racer->animationSpeed;
     obj->unk74 = 0;
     func_800AF714(obj, updateRate);
     fade_when_near_camera(obj, racer, 40);
@@ -151,9 +156,9 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             }
         }
     }
-    firstRacerObj = get_racer_object(0);
-    racer = (Object_Racer*)firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == 1) {
+    firstRacerObj = get_racer_object(PLAYER_ONE);
+    racer = (Object_Racer *) firstRacerObj->unk64;
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_ROCKET_1) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != 0) {

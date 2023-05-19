@@ -882,7 +882,7 @@ void obj_loop_rocketsignpost(Object *obj, UNUSED s32 updateRate) {
     Object *playerObj;
     ObjectInteraction *interactObj;
 
-    playerObj = get_racer_object(0);
+    playerObj = get_racer_object(PLAYER_ONE);
     if (playerObj != NULL) {
         interactObj = obj->interactObj;
         if (interactObj->distance < 200) {
@@ -2123,7 +2123,7 @@ void obj_loop_dino_whale(Object *obj, s32 updateRate) {
     }
     animFrame = obj->segment.animFrame;
     func_8001F460(obj, updateRate, obj);
-    func_800113CC(obj, 0, animFrame, SOUND_STOMP2, SOUND_STOMP3);
+    play_footstep_sounds(obj, 0, animFrame, SOUND_STOMP2, SOUND_STOMP3);
     if (obj->interactObj->distance < 255) {
         if (obj->properties.common.unk0 == 0) {
             obj->properties.common.unk0 = 60;
@@ -3426,7 +3426,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
         break;
     case 2:
         obj->properties.common.unk0 = 1;
-        racerObj = get_racer_object(0);
+        racerObj = get_racer_object(PLAYER_ONE);
         if (racerObj != NULL) {
             racer = (Object_Racer *) racerObj->unk64;
             switch(racer->vehicleID) {
