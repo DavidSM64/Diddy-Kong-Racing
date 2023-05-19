@@ -1063,7 +1063,10 @@ void func_80010994(s32 updateRate) {
             func_8001A8F4(updateRate);
         }
     }
-    func_80008438(gRacersByPort, gNumRacers, updateRate);
+    // This is just a temporary hack to prevent counter factor 1 crashing the emulator.
+    if (gPlatform & CONSOLE || gPlatform & CF_2 || gMapId != ASSET_LEVEL_CENTRALAREAHUB) {
+        func_80008438(gRacersByPort, gNumRacers, updateRate);
+    }
     D_8011ADAC = 1;
     D_8011ADA8 = (f32) updateRate;
     D_8011AD24[0] = 0;
