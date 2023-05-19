@@ -20,12 +20,12 @@ s8 D_8011D5E1;
 /******************************/
 
 enum SmokeyAnimations {
-    ANIM_SMOKEY_0,
-    ANIM_SMOKEY_1,
-    ANIM_SMOKEY_2,
-    ANIM_SMOKEY_3,
-    ANIM_SMOKEY_4,
-    ANIM_SMOKEY_5
+    ANIM_SMOKEY_IDLE,
+    ANIM_SMOKEY_RUN,
+    ANIM_SMOKEY_WALK,
+    ANIM_SMOKEY_LAND,
+    ANIM_SMOKEY_FLY,
+    ANIM_SMOKEY_DAMAGE
 };
 
 /**
@@ -83,11 +83,11 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->headAngle = sp5A;
     obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
-    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_SMOKEY_5) {
+    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_SMOKEY_DAMAGE) {
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, 0);
         set_camera_shake(12.0f);
-        obj->segment.object.animationID = ANIM_SMOKEY_5;
+        obj->segment.object.animationID = ANIM_SMOKEY_DAMAGE;
         obj->segment.x_velocity *= 0.27;
         obj->segment.z_velocity *= 0.27;
         racer->animationSpeed = 0.0f;
@@ -158,40 +158,40 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->animationSpeed += diffX;
         obj68->unk10 = -1;
     }
-    if (obj->segment.object.animationID == ANIM_SMOKEY_2 && racer->groundedWheels == 0 && racer->velocity < -6.5) {
-        obj->segment.object.animationID = ANIM_SMOKEY_3;
+    if (obj->segment.object.animationID == ANIM_SMOKEY_WALK && racer->groundedWheels == 0 && racer->velocity < -6.5) {
+        obj->segment.object.animationID = ANIM_SMOKEY_LAND;
         racer->animationSpeed = 0.0f;
     }
-    if (obj68->unk10 == -1 || obj->segment.object.animationID == ANIM_SMOKEY_0) {
-        if (obj->segment.object.animationID == ANIM_SMOKEY_5) {
+    if (obj68->unk10 == -1 || obj->segment.object.animationID == ANIM_SMOKEY_IDLE) {
+        if (obj->segment.object.animationID == ANIM_SMOKEY_DAMAGE) {
             obj->segment.object.animationID = racer->unk1CD;
             racer->animationSpeed = 0.0f;
-        } else if (obj->segment.object.animationID == ANIM_SMOKEY_1) {
+        } else if (obj->segment.object.animationID == ANIM_SMOKEY_RUN) {
             if (racer->unk1CD == 0) {
-                obj->segment.object.animationID = ANIM_SMOKEY_2;
+                obj->segment.object.animationID = ANIM_SMOKEY_WALK;
             } else {
-                obj->segment.object.animationID = ANIM_SMOKEY_0;
+                obj->segment.object.animationID = ANIM_SMOKEY_IDLE;
             }
-        } else if (obj->segment.object.animationID == ANIM_SMOKEY_3) {
+        } else if (obj->segment.object.animationID == ANIM_SMOKEY_LAND) {
             if (racer->unk1CD == 4) {
-                obj->segment.object.animationID = ANIM_SMOKEY_2;
+                obj->segment.object.animationID = ANIM_SMOKEY_WALK;
             } else {
-                obj->segment.object.animationID = ANIM_SMOKEY_4;
+                obj->segment.object.animationID = ANIM_SMOKEY_FLY;
             }
         } else if (-0.1 < racer->velocity && racer->velocity < 0.1) {
-            if (obj->segment.object.animationID == ANIM_SMOKEY_2) {
-                obj->segment.object.animationID = ANIM_SMOKEY_1;
+            if (obj->segment.object.animationID == ANIM_SMOKEY_WALK) {
+                obj->segment.object.animationID = ANIM_SMOKEY_RUN;
                 racer->animationSpeed = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
             } else {
-                obj->segment.object.animationID = ANIM_SMOKEY_0;
+                obj->segment.object.animationID = ANIM_SMOKEY_IDLE;
             }
         } else {
-            if (obj->segment.object.animationID == ANIM_SMOKEY_0) {
-                obj->segment.object.animationID = ANIM_SMOKEY_1;
+            if (obj->segment.object.animationID == ANIM_SMOKEY_IDLE) {
+                obj->segment.object.animationID = ANIM_SMOKEY_RUN;
                 racer->animationSpeed = 0.0f;
             }
-            if (obj->segment.object.animationID == ANIM_SMOKEY_4 && racer->groundedWheels && racer->velocity > -6.0) {
-                obj->segment.object.animationID = ANIM_SMOKEY_3;
+            if (obj->segment.object.animationID == ANIM_SMOKEY_FLY && racer->groundedWheels && racer->velocity > -6.0) {
+                obj->segment.object.animationID = ANIM_SMOKEY_LAND;
                 racer->animationSpeed = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
             }
         }
@@ -200,10 +200,10 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     obj->segment.animFrame = racer->animationSpeed;
     stepFrame = obj->segment.animFrame >> 4;
     obj->unk74 = 0;
-    if (obj->segment.object.animationID != ANIM_SMOKEY_1 && obj->segment.object.animationID != 2) {
+    if (obj->segment.object.animationID != ANIM_SMOKEY_RUN && obj->segment.object.animationID != 2) {
         animFrame >>= 4;
         stepFrame = 1;
-        if (obj->segment.object.animationID == ANIM_SMOKEY_0) {
+        if (obj->segment.object.animationID == ANIM_SMOKEY_IDLE) {
             stepFrame = 3;
         }
         if (animFrame == stepFrame && stepFrame + 1 == obj->segment.animFrame >> 4) {
@@ -234,13 +234,13 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         racer->headAngleTarget = headAngleRange;
     }
-    if (obj->segment.object.animationID >= ANIM_SMOKEY_2) {
+    if (obj->segment.object.animationID >= ANIM_SMOKEY_WALK) {
         if ((racer->miscAnimCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }
     racer = (Object_Racer *) firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_SMOKEY_1) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_SMOKEY_RUN) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != FALSE) {

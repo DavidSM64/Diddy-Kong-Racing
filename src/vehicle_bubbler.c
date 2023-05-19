@@ -42,9 +42,9 @@ s8 D_8011D5F1;
 /******************************/
 
 enum BubblerAnimations {
-    ANIM_BUBBLER_0,
-    ANIM_BUBBLER_1,
-    ANIM_BUBBLER_2
+    ANIM_BUBBLER_IDLE,
+    ANIM_BUBBLER_MOVE,
+    ANIM_BUBBLER_DAMAGE
 };
 
 /**
@@ -100,9 +100,9 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     racer->headAngle = sp52;
     obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
-    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_BUBBLER_2) {
+    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_BUBBLER_DAMAGE) {
         racer->unk1CD = obj->segment.object.animationID;
-        obj->segment.object.animationID = ANIM_BUBBLER_2;
+        obj->segment.object.animationID = ANIM_BUBBLER_DAMAGE;
         obj->segment.y_velocity += 7.5;
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, 0);
@@ -119,7 +119,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     gfxData = *obj->unk68;
     model = gfxData->objModel;
     diffX = (model->animations[obj->segment.object.animationID].unk4 * 16) - 17;
-    obj->segment.object.animationID = ANIM_BUBBLER_1;
+    obj->segment.object.animationID = ANIM_BUBBLER_MOVE;
     racer->animationSpeed += 2.0 * updateRateF;
     while (racer->animationSpeed < 0.0f) {
         racer->animationSpeed += diffX;
@@ -129,8 +129,8 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
         racer->animationSpeed -= diffX;
         gfxData->unk10 = -1;
     }
-    if (gfxData->unk10 == -1 && obj->segment.object.animationID == ANIM_BUBBLER_2) {
-        obj->segment.object.animationID = ANIM_BUBBLER_1;
+    if (gfxData->unk10 == -1 && obj->segment.object.animationID == ANIM_BUBBLER_DAMAGE) {
+        obj->segment.object.animationID = ANIM_BUBBLER_MOVE;
         racer->animationSpeed = 0.0f;
     }
     obj->segment.animFrame = racer->animationSpeed;
@@ -148,10 +148,10 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     func_800AFC3C(obj, updateRate);
     fade_when_near_camera(obj, racer, 40);
     switch (obj->segment.object.animationID) {
-    case ANIM_BUBBLER_1:
+    case ANIM_BUBBLER_MOVE:
         headAngleRange = 0x2500;
     break;
-    case ANIM_BUBBLER_2:
+    case ANIM_BUBBLER_DAMAGE:
         headAngleRange = 0x100;
     break;
     default:
@@ -167,13 +167,13 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
         CLAMP(timer, -headAngleRange, headAngleRange);
         racer->headAngleTarget = timer;
     }
-    if (obj->segment.object.animationID == ANIM_BUBBLER_1) {
+    if (obj->segment.object.animationID == ANIM_BUBBLER_MOVE) {
         if ((racer->miscAnimCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }
     racer = (Object_Racer *) firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_BUBBLER_1) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_BUBBLER_MOVE) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {

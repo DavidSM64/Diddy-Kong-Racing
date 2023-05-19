@@ -62,11 +62,11 @@ s8 D_8011D5D1;
 /******************************/
 
 enum BlueAnimations {
-    ANIM_BLUEY_0,
-    ANIM_BLUEY_1,
-    ANIM_BLUEY_2,
-    ANIM_BLUEY_3,
-    ANIM_BLUEY_4
+    ANIM_BLUEY_RUN,
+    ANIM_BLUEY_WALK,
+    ANIM_BLUEY_IDLE,
+    ANIM_BLUEY_STOP,
+    ANIM_BLUEY_DAMAGE
 };
 
 /**
@@ -124,9 +124,9 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
     if (racer->attackType != ATTACK_NONE) {
-        if (obj->segment.object.animationID != ANIM_BLUEY_4) {
+        if (obj->segment.object.animationID != ANIM_BLUEY_DAMAGE) {
             racer->unk1CD = obj->segment.object.animationID;
-            obj->segment.object.animationID = ANIM_BLUEY_4;
+            obj->segment.object.animationID = ANIM_BLUEY_DAMAGE;
             racer->animationSpeed = 0.0f;
             func_8005CB04(1);
             play_sound_global(SOUND_EXPLOSION, NULL);
@@ -145,13 +145,13 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     if ((find_next_checkpoint_node(racer->checkpoint, racer->unk1C8))->unk36[racer->unk1CA] == 1) {
         sp3C = TRUE;
     }
-    if (obj->segment.object.animationID != ANIM_BLUEY_4) {
+    if (obj->segment.object.animationID != ANIM_BLUEY_DAMAGE) {
         if (racer->velocity < -2.0) {
             if (sp3C) {
                 if (racer->unk1CD != 3) {
                     racer->animationSpeed = 40.0f;
                 }
-                obj->segment.object.animationID = ANIM_BLUEY_3;
+                obj->segment.object.animationID = ANIM_BLUEY_STOP;
                 var_v0 = racer->steerAngle;
                 var_v0 *= 2;
                 var_v0 = 40 - var_v0;
@@ -165,16 +165,16 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
                 racer->animationSpeed += (var_v0 - racer->animationSpeed) * 0.25;
             } else {
                 racer->unk1CD = 0;
-                obj->segment.object.animationID = ANIM_BLUEY_0;
+                obj->segment.object.animationID = ANIM_BLUEY_RUN;
                 racer->animationSpeed -= (racer->velocity * updateRateF) * 0.5;
             }
         } else if (racer->velocity < -0.1 || 0.1 < racer->velocity) {
             racer->unk1CD = 1;
-            obj->segment.object.animationID = ANIM_BLUEY_1;
+            obj->segment.object.animationID = ANIM_BLUEY_WALK;
             racer->animationSpeed -= racer->velocity * updateRateF * 2;
         } else {
             racer->unk1CD = 2;
-            obj->segment.object.animationID = ANIM_BLUEY_2;
+            obj->segment.object.animationID = ANIM_BLUEY_IDLE;
             racer->animationSpeed += updateRateF * 1.0;
         }
     } else {
@@ -191,13 +191,13 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
         racer->animationSpeed -= diffX;
         obj68->unk10 = -1;
     }
-    if (obj68->unk10 == -1 && obj->segment.object.animationID == ANIM_BLUEY_4) {
+    if (obj68->unk10 == -1 && obj->segment.object.animationID == ANIM_BLUEY_DAMAGE) {
         obj->segment.object.animationID = racer->unk1CD;
     }
     animFrame = obj->segment.animFrame;
     obj->segment.animFrame = racer->animationSpeed;
     obj->unk74 = 0;
-    if (obj->segment.object.animationID == ANIM_BLUEY_0) {
+    if (obj->segment.object.animationID == ANIM_BLUEY_RUN) {
         play_footstep_sounds(obj, 2, animFrame, SOUND_STOMP2, SOUND_STOMP3);
         obj->unk74 |= 3;
     }
@@ -212,16 +212,16 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
         CLAMP(sp48, -0xC00, 0xC00);
         racer->headAngleTarget = sp48;
     }
-    if (obj->segment.object.animationID == ANIM_BLUEY_1) {
+    if (obj->segment.object.animationID == ANIM_BLUEY_WALK) {
         if ((racer->miscAnimCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
     }
-    if (obj->segment.object.animationID == ANIM_BLUEY_3) {
+    if (obj->segment.object.animationID == ANIM_BLUEY_STOP) {
         racer->headAngleTarget = 0;
     }
     racer = (Object_Racer *) firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_BLUEY_1) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_BLUEY_WALK) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {

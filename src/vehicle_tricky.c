@@ -48,10 +48,10 @@ s8 D_8011D5CC;
 /******************************/
 
 enum TrickyAnimations {
-    ANIM_TRICKY_0,
-    ANIM_TRICKY_1,
-    ANIM_TRICKY_2,
-    ANIM_TRICKY_3
+    ANIM_TRICKY_IDLE,
+    ANIM_TRICKY_RUN,
+    ANIM_TRICKY_WALK,
+    ANIM_TRICKY_DAMAGE
 };
 
 void func_8005C2F0(Object *object, unk8005C2F0 *arg1) {
@@ -117,9 +117,9 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->headAngle = tempHeadAngle;
     obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
-    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_TRICKY_3) {
+    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_TRICKY_DAMAGE) {
         racer->unk1CD = obj->segment.object.animationID;
-        obj->segment.object.animationID = ANIM_TRICKY_3;
+        obj->segment.object.animationID = ANIM_TRICKY_DAMAGE;
         obj->segment.y_velocity += 7.5;
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, NULL);
@@ -136,15 +136,15 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     gfxData = *obj->unk68;
     objModel = gfxData->objModel;
     diffX = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
-    if (obj->segment.object.animationID != ANIM_TRICKY_3) {
+    if (obj->segment.object.animationID != ANIM_TRICKY_DAMAGE) {
         if (racer->velocity < -2.0) {
-            obj->segment.object.animationID = ANIM_TRICKY_1;
+            obj->segment.object.animationID = ANIM_TRICKY_RUN;
             racer->animationSpeed -= (racer->velocity * updateRateF) * 0.5;
         } else if (racer->velocity < -0.1 || racer->velocity > 0.1) {
-            obj->segment.object.animationID = ANIM_TRICKY_2;
+            obj->segment.object.animationID = ANIM_TRICKY_WALK;
             racer->animationSpeed -= (racer->velocity * updateRateF) * 2;
         } else {
-            obj->segment.object.animationID = ANIM_TRICKY_0;
+            obj->segment.object.animationID = ANIM_TRICKY_IDLE;
             racer->animationSpeed += 1.0 * updateRateF;
         }
     } else {
@@ -158,23 +158,23 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->animationSpeed -= diffX;
         gfxData->unk10 = -1;
     }
-    if (gfxData->unk10 == -1 && obj->segment.object.animationID == ANIM_TRICKY_3) {
+    if (gfxData->unk10 == -1 && obj->segment.object.animationID == ANIM_TRICKY_DAMAGE) {
         obj->segment.object.animationID = racer->unk1CD;
     }
     animFrame = obj->segment.animFrame;
     obj->segment.animFrame = racer->animationSpeed;
     obj->unk74 = 0;
-    if (obj->segment.object.animationID == ANIM_TRICKY_1) {
+    if (obj->segment.object.animationID == ANIM_TRICKY_RUN) {
         play_footstep_sounds(obj, 2, animFrame, SOUND_STOMP2, SOUND_STOMP3);
         obj->unk74 |= 3;
     }
     func_800AFC3C(obj, updateRate);
     fade_when_near_camera(obj, racer, 120);
     switch( obj->segment.object.animationID) {
-        case ANIM_TRICKY_1:
+        case ANIM_TRICKY_RUN:
             headAngleRange = 0x2500;
             break;
-        case ANIM_TRICKY_2:
+        case ANIM_TRICKY_WALK:
             headAngleRange = 0x100;
             break;
         default:
@@ -190,7 +190,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         CLAMP(tempStartTimer, -headAngleRange, headAngleRange);
         racer->headAngleTarget = tempStartTimer;
     }
-    if (obj->segment.object.animationID == ANIM_TRICKY_1) {
+    if (obj->segment.object.animationID == ANIM_TRICKY_RUN) {
         if ((racer->miscAnimCounter & 0x1F) < 10) {
             racer->headAngleTarget >>= 1;
         }
@@ -206,7 +206,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         func_8006F140(1);
     }
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_TRICKY_1) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_TRICKY_RUN) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != FALSE) {

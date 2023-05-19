@@ -41,8 +41,8 @@ s8 D_8011D611;
 /******************************/
 
 enum RocketAnimations {
-    ANIM_ROCKET_0,
-    ANIM_ROCKET_1
+    ANIM_ROCKET_IDLE,
+    ANIM_ROCKET_DAMAGE
 };
 
 /**
@@ -101,12 +101,12 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     racer->headAngle = sp3A;
     obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
-    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_ROCKET_1) {
+    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_ROCKET_DAMAGE) {
         func_8005CB04(1);
         play_sound_global(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
         obj->segment.x_velocity *= 0.4;
-        obj->segment.object.animationID = ANIM_ROCKET_1;
+        obj->segment.object.animationID = ANIM_ROCKET_DAMAGE;
         obj->segment.z_velocity *= 0.4;
         racer->animationSpeed = 0.0f;
         obj->segment.y_velocity += 4.0;
@@ -135,8 +135,8 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->animationSpeed += diffX;
         gfxData->unk10 = -1;
     }
-    if (obj->segment.object.animationID == ANIM_ROCKET_1 && gfxData->unk10 == -1) {
-        obj->segment.object.animationID = ANIM_ROCKET_0;
+    if (obj->segment.object.animationID == ANIM_ROCKET_DAMAGE && gfxData->unk10 == -1) {
+        obj->segment.object.animationID = ANIM_ROCKET_IDLE;
         racer->animationSpeed = 0.0f;
     }
     obj->segment.animFrame = racer->animationSpeed;
@@ -158,7 +158,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     firstRacerObj = get_racer_object(PLAYER_ONE);
     racer = (Object_Racer *) firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_ROCKET_1) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_ROCKET_DAMAGE) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != 0) {
