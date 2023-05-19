@@ -1731,7 +1731,6 @@ void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object) {
     f32 scale;
     if (object->segment.trans.flags & (OBJ_FLAGS_INVISIBLE | OBJ_FLAGS_SHADOW_ONLY))
         return;
-    func_800B76B8(2, object->unk4A);
     gObjectCurrDisplayList = *dlist;
     gObjectCurrMatrix = *mtx;
     gObjectCurrVertexList = *verts;
@@ -1741,7 +1740,6 @@ void func_80012D5C(Gfx **dlist, MatrixS **mtx, Vertex **verts, Object *object) {
     *dlist = gObjectCurrDisplayList;
     *mtx = gObjectCurrMatrix;
     *verts = gObjectCurrVertexList;
-    func_800B76B8(2, -1);
 }
 
 
@@ -3605,7 +3603,6 @@ s32 func_80023E30(s32 objectID) {
  * One big switch statement for whichever object.
 */
 void run_object_loop_func(Object *obj, s32 updateRate) {
-    func_800B76B8(1, obj->unk4A);
     switch (obj->behaviorId) {
         case BHV_SCENERY:
             obj_loop_scenery(obj, updateRate);
@@ -3822,7 +3819,6 @@ void run_object_loop_func(Object *obj, s32 updateRate) {
             obj_loop_levelname(obj, updateRate);
             break;
     }
-    func_800B76B8(1, -1);
 }
 
 s16 *func_80024594(s32 *arg0, s32 *arg1) {

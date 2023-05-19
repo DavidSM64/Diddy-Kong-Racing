@@ -648,7 +648,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
         if (worldBalloons) {
             worldBalloons = ((1 << (settings->worldId + 6)) & bossFlags) != 0;
         }
-#ifdef UNLOCK_ALL
+#ifdef OPEN_ALL_DOORS
         worldBalloons = TRUE;
 #endif
         if (obj->properties.trophyCabinet.action == NULL && func_800C3400() == FALSE) {
@@ -1968,7 +1968,7 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     obj->interactObj->hitboxRadius = entry->radius;
     obj->interactObj->pushForce = 0;
 
-#ifndef UNLOCK_ALL
+#ifndef OPEN_ALL_DOORS
     settings = get_settings();
     // Disable the warp if it's for the first boss encounter, having collected every balloon.
     if ((exit->bossFlag == WARP_BOSS_FIRST) && (settings->balloonsPtr[settings->worldId] == 8)) {
@@ -1976,6 +1976,10 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     }
     // Disable the warp if it's for the second boss encounter, having not collected every balloon.
     if ((exit->bossFlag == WARP_BOSS_REMATCH) && (settings->balloonsPtr[settings->worldId] < 8)) {
+        gParticlePtrList_addObject(obj);
+    }
+#else
+    if (exit->bossFlag == WARP_BOSS_FIRST) {
         gParticlePtrList_addObject(obj);
     }
 #endif
@@ -3082,7 +3086,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
     } else {
         obj->segment.object.numModelIDs = D_800DCA9C[settings->ttAmulet];
     }
-#ifndef UNLOCK_ALL
+#ifndef OPEN_ALL_DOORS
     if (obj->interactObj->distance < ttDoor->unk12 && (settings->ttAmulet < 4 || *settings->balloonsPtr < 47)) {
         racerObj = obj->interactObj->obj;
         if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
@@ -3118,7 +3122,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
         ttDoor->unkC = 0;
     }
     openDoor = TRUE;
-#ifndef UNLOCK_ALL
+#ifndef OPEN_ALL_DOORS
     if (settings->ttAmulet >= 4 && obj->interactObj->distance < ttDoor->unk12 && *settings->balloonsPtr >= 47) {
 #else
     if (obj->interactObj->distance < ttDoor->unk12) {

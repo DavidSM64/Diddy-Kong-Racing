@@ -998,9 +998,6 @@ void main_game_loop(void) {
         case DRAW_GAME: // In game (Controlling a character)
             ingame_logic_loop(sLogicUpdateRate);
             break;
-        case DRAW_CRASH_SCREEN: // EPC (lockup display)
-            lockup_screen_loop(sLogicUpdateRate);
-            break;
     }
 
     // This is a good spot to place custom text if you want it to overlay it over ALL the

@@ -592,7 +592,7 @@ void puppyprint_render_objects(void) {
 void puppyprint_render_log(void) {
     s32 i;
     s32 y;
-    s32 sineTime = 192 + (sinf(sTimerTemp * 75.0f) * 64.0f);
+    s32 sineTime = 224 + (sinf(sTimerTemp * 25.0f) * 32.0f);
     s32 firstDraw = TRUE;
     draw_blank_box(0, 0, gScreenWidth, gScreenHeight, 0x00000064);
     set_text_font(ASSET_FONTS_SMALLFONT);
@@ -604,7 +604,7 @@ void puppyprint_render_log(void) {
         gPuppyPrint.pageScroll = (NUM_LOG_LINES) * 10;
     }
 
-    y = -4 - gPuppyPrint.pageScroll;
+    y = 4 - gPuppyPrint.pageScroll;
     for (i = NUM_LOG_LINES; i > 0; i--) {
         if (gPuppyPrint.logText[i][0] == NULL) {
             continue;

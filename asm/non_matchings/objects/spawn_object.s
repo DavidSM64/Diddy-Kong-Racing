@@ -21,7 +21,6 @@ glabel spawn_object
 /* 00F68C 8000EA8C 0018C840 */  sll   $t9, $t8, 1
 /* 00F690 8000EA90 01D92825 */  or    $a1, $t6, $t9
 /* 00F694 8000EA94 AFA50064 */  sw    $a1, 0x64($sp)
-/* 00F698 8000EA98 0C02DDAE */  jal   func_800B76B8
 /* 00F69C 8000EA9C 00002025 */   move  $a0, $zero
 /* 00F6A0 8000EAA0 8FA3006C */  lw    $v1, 0x6c($sp)
 /* 00F6A4 8000EAA4 3C0F8012 */  lui   $t7, %hi(gAssetsObjectHeadersTableLength) # $t7, 0x8012
@@ -89,7 +88,6 @@ glabel spawn_object
 /* 00F784 8000EB84 31AF0001 */  andi  $t7, $t5, 1
 /* 00F788 8000EB88 11E00006 */  beqz  $t7, .L8000EBA4
 /* 00F78C 8000EB8C 8FA20068 */   lw    $v0, 0x68($sp)
-/* 00F790 8000EB90 0C02DDAE */  jal   func_800B76B8
 /* 00F794 8000EB94 2405FFFF */   li    $a1, -1
 /* 00F798 8000EB98 100002A4 */  b     .L8000F62C
 /* 00F79C 8000EB9C 00001025 */   move  $v0, $zero
@@ -828,7 +826,6 @@ glabel L8000EDE0
 /* 010214 8000F614 0C01867D */  jal   func_800619F4
 /* 010218 8000F618 00002025 */   move  $a0, $zero
 /* 01021C 8000F61C 00002025 */  move  $a0, $zero
-/* 010220 8000F620 0C02DDAE */  jal   func_800B76B8
 /* 010224 8000F624 2405FFFF */   li    $a1, -1
 /* 010228 8000F628 02401025 */  move  $v0, $s2
 .L8000F62C:

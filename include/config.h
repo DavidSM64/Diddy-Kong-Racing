@@ -15,12 +15,13 @@
 #define NUM_RACERS_4P 4                     // Default is 4
 #define ADVENTURE_TWO_SPEED         1.0f    // Global speed multiplier for adventure 2. Default is 1.0f, but set it higher for high speed action
 #define ADVENTURE_TWO_BOOST_SPEED   2.0f    // Global boost multiplier for adventure 2. Default is 2.0f, but set it lower to make boosting controllable.
+#define UNLOCK_ALL                          // Unlock all characters, tracks and adventure 2.
 
 /* -------------------------Debug------------------------- */
 #define PUPPYPRINT_DEBUG                    // Enable debug features
 #define SKIP_INTRO SKIP_TITLE               // Skip the boot screen, making getting ingame faster.
 #define DEFAULT_CHARACTER 7                 // If you skip character select, pick a default character.
-#define UNLOCK_ALL                          // Unlock all characters, tracks and adventure 2.
+#define OPEN_ALL_DOORS                      // Removes any and all requirements to progress the game.
 //#define DISABLE_AUDIO                       // Disable all ingame audio, and prevent the RSP from working on audio tasks.
 //#define FORCE_4MB_MEMORY                    // Pretend the expansion pak is not installed.
 
@@ -73,6 +74,10 @@
 
 #ifdef EXPANSION_PAK_REQUIRED
 #define EXPANSION_PAK_SUPPORT
+#endif
+
+#ifdef OPEN_ALL_DOORS
+#define UNLOCK_ALL
 #endif
 
 #endif // CONFIG_H
