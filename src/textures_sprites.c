@@ -281,9 +281,9 @@ Sprite *gCurrentSprite;
 s32 D_80126354;
 s32 D_80126358;
 s32 D_8012635C;
-s32 D_80126360;
-s32 D_80126364;
-s32 D_80126368;
+Vertex *D_80126360;
+Gfx *D_80126364;
+Triangle *D_80126368;
 
 TempTexHeader *gTempTextureHeader;
 u8 *D_80126370;
@@ -553,26 +553,18 @@ void func_8007B454(void) {
     gForceFlags = TRUE;
 }
 
-typedef struct Struct_Unk_8007B46C {
-    u8 pad0[0x12];
-    u16 unk12;
-    u8 pad14[2];
-    s16 unk16;
-    u8 pad17[3];
-} Struct_Unk_8007B46C;
-
 /**
  * Official Name: texFrame
 */
-Struct_Unk_8007B46C *func_8007B46C(Struct_Unk_8007B46C *arg0, s32 arg1) {
+TextureHeader *func_8007B46C(TextureHeader *texHead, s32 arg1) {
     if (arg1 > 0) {
-        if (arg1 < arg0->unk12 << 8) {
-            arg0 = (Struct_Unk_8007B46C *) (((u8*)arg0) + ((arg1 >> 16) * arg0->unk16));
+        if (arg1 < texHead->numOfTextures << 8) {
+            texHead = (TextureHeader *) (((u8 *)texHead) + ((arg1 >> 16) * texHead->textureSize));
         } else {
-            arg0 = (Struct_Unk_8007B46C *) (((u8*)arg0) + ((arg0->unk12 >> 8) - 1) * arg0->unk16);
+            texHead = (TextureHeader *) (((u8 *)texHead) + ((texHead->numOfTextures >> 8) - 1) * texHead->textureSize);
         }
     }
-    return arg0;
+    return texHead;
 }
 
 /**
@@ -975,10 +967,136 @@ void free_sprite(Sprite *sprite) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/free_sprite.s")
 #endif
 
+#ifdef NON_MATCHING
+void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2) {
+    UNUSED s32 pad[2];
+    s32 sprUnk4;
+    s32 sprUnk6;
+    s32 y0;
+    s32 x0;
+    s32 x1;
+    s32 y1;
+    s32 xTemp;
+    s32 yTemp;
+    s32 left;
+    s32 var_t5;
+    s32 curVertIndex;
+    s32 j;
+    s32 texWidth;
+    s32 texHeight;
+    s32 i;
+    Vertex *vertices;
+    Vertex *curVerts;
+    Triangle *triangles;
+    u8 *temp_a3;
+    Gfx *dlptr;
+    TextureHeader *tex;
+
+    temp_a3 = &sprite1->unkC.val[arg2];
+    sprUnk4 = sprite1->numberOfInstances;
+    sprUnk6 = sprite1->unk6;
+    i = temp_a3[0];
+    j = temp_a3[1];
+    dlptr = D_80126364;
+    vertices = D_80126360;
+    triangles = D_80126368;
+    if (i < j) {
+        tex = sprite2->frames[i];
+        sprite2->unk6 = ((tex->flags & 0xFFFF) & 0x3B);
+    }
+    curVertIndex = 0;
+    var_t5 = 0;
+    while (i < j) {
+        tex = sprite2->frames[i];
+        texWidth = tex->width;
+        texHeight = tex->height;
+        xTemp = (tex->unk3 - sprUnk4);
+        x0 = xTemp;
+        x1 = (xTemp + texWidth) - 1;
+        yTemp = (sprUnk6 - tex->unk4);
+        y0 = yTemp - 1;
+        y1 = (yTemp - texHeight);
+        curVerts = vertices;   
+        vertices[0].x = x0;
+        vertices[0].y = y0;
+        vertices[0].z = 0;
+        vertices[0].r = 255;
+        vertices[0].g = 255;
+        vertices[0].b = 255;
+        vertices[0].a = 255;
+        vertices[1].x = x1;
+        vertices[1].y = y0;
+        vertices[1].z = 0;
+        vertices[1].r = 255;
+        vertices[1].g = 255;
+        vertices[1].b = 255;
+        vertices[1].a = 255;
+        vertices[2].x = x1;
+        vertices[2].y = y1;
+        vertices[2].z = 0;
+        vertices[2].r = 255;
+        vertices[2].g = 255;
+        vertices[2].b = 255;
+        vertices[2].a = 255;
+        vertices[3].x = x0;
+        vertices[3].y = y1;
+        vertices[3].z = 0;
+        vertices[3].r = 255;
+        vertices[3].g = 255;
+        vertices[3].b = 255;
+        vertices[3].a = 255;
+        vertices += 4;
+        gDkrDmaDisplayList(dlptr++, OS_K0_TO_PHYSICAL(tex->cmd), tex->numberOfCommands);
+        if (var_t5 == 0) {
+            left = j - i;
+            if (left >= 6) {
+                left = 5;
+            }
+            gSPVertexDKR(dlptr++, OS_K0_TO_PHYSICAL(curVerts), (left * 4), 1);
+        }
+        gSPPolygon(dlptr++, OS_K0_TO_PHYSICAL(triangles), 2, 1);
+        triangles[0].flags = 0x40;
+        triangles[0].vi0   = curVertIndex + 3;
+        triangles[0].vi1   = curVertIndex + 2;
+        triangles[0].vi2   = curVertIndex + 1;
+        triangles[0].uv0.u = (texWidth - 1) << 5;
+        triangles[0].uv0.v = (texHeight - 1) << 5;
+        triangles[0].uv1.u = (texWidth - 1) << 5;
+        triangles[0].uv1.v = 0;
+        triangles[0].uv2.u = 1;
+        triangles[0].uv2.v = 0;
+        triangles[1].flags = 0x40;
+        triangles[1].vi0   = curVertIndex + 4;
+        triangles[1].vi1   = curVertIndex + 3;
+        triangles[1].vi2   = curVertIndex + 1;
+        triangles[1].uv0.u = 1;
+        triangles[1].uv0.v = (texHeight - 1) << 5;
+        triangles[1].uv1.u = (texWidth - 1) << 5;
+        triangles[1].uv1.v = (texHeight - 1) << 5;
+        triangles[1].uv2.u = 1;
+        triangles[1].uv2.v = 0;
+        triangles += 2;
+        curVertIndex += 4;
+        var_t5 += 1;
+        i += 1;
+        if (var_t5 >= 5) {
+            var_t5 = 0;
+            curVertIndex = 0;
+        }
+    }
+    gDPPipeSync(dlptr++);
+    gSPEndDisplayList(dlptr++);
+    D_80126364 = dlptr;
+    D_80126360 = vertices;
+    D_80126368 = triangles;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CDC0.s")
+#endif
 
 #ifdef NON_EQUIVALENT
 //HEAVILY WIP
+//Alternative attempt: https://decomp.me/scratch/TbR8j
 void build_tex_display_list(TextureHeader *tex, Gfx *dlist) {
     s32 texFlags;
     s32 cms;

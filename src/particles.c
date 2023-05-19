@@ -15,12 +15,6 @@
 
 /************ .rodata ************/
 
-// Need to move this to the correct file when we figure out where the lens flare code is.
-const char D_800E87F0[] = "\nMaximum limit of %d lens flare switches, per level, has been exceeded.";
-
-// This is most likely a file boundary. Not sure where the split occurs though.
-const int D_800E8838[2] = { 0, 0 };
-
 const char D_800E8840[] = "\n\nUnknown trigger type in initParticleTrigger %d, Max %d.\n\n";
 const char D_800E887C[] = "\n\nUnknown particle type in initParticleTrigger %d, Max %d.\n\n";
 const char D_800E88BC[] = "\n\nUnknown trigger type in initParticleTrigger %d, Max %d.\n\n";
@@ -1432,7 +1426,93 @@ UNUSED void func_800B3678(Gfx **arg0, MatrixS **arg1, Vertex **arg2) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800B3740.s")
+void func_800B3740(Particle *particle, Gfx **dlist, MatrixS **mtx, Vertex **vtx, s32 flags) {
+    s32 renderFlags;
+    s32 alpha;
+    s32 temp;
+    unk800B0698_44 *sp30;
+    Vertex *tempvtx;
+
+    renderFlags = (RENDER_FOG_ACTIVE | RENDER_Z_COMPARE);
+    
+    if ((particle->segment.unk40 & flags) && (D_800E2CDC < 0x200)) {
+        return;
+    }
+    alpha = (particle->unk5C >> 8) & 0xFF;
+    if(alpha <= 0) {
+        return;
+    }
+    if ((particle->segment.object.unk2C != 4) && (particle->segment.object.unk2C != 3)) {
+        gDPSetEnvColor((*dlist)++, particle->colour.r, particle->colour.g, particle->colour.b, particle->colour.a);
+        if (alpha != 255) {
+            renderFlags = (RENDER_Z_UPDATE | RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE);
+            gDPSetPrimColor((*dlist)++, 0, 0, particle->unk4A, particle->unk4A, particle->unk4A, alpha);
+        } else {
+            gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+        }
+        if (particle->segment.object.unk2C == 0x80) {
+            temp = particle->segment.unk18;
+            particle->segment.unk18 >>= 8;
+            particle->segment.unk18 = (particle->segment.unk18 * 255) / (particle->unk44->unk0);
+            render_sprite_billboard(dlist, mtx, vtx, (Object *) particle, (unk80068514_arg4 *) particle->unk44, renderFlags);
+            particle->segment.unk18 = temp;
+        } else {
+            sp30 = particle->unk44;
+            if (sp30->unk0Ptr != 0) {
+                camera_push_model_mtx(dlist, mtx, &particle->segment.trans, 1.0f, 0.0f);
+                load_and_set_texture(dlist, (TextureHeader *) sp30->unk0Ptr, renderFlags, particle->segment.unk18 << 8);
+                gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(sp30->unk0struct.unk8), sp30->unk0struct.unk4, 0);
+                gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL(sp30->unk0struct.unkC), sp30->unk0struct.unk6, 1);
+                func_80069A40(dlist);
+            }
+        }
+        if ((alpha != 255) || (particle->unk4A != 255)) {
+            gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+        }
+        if (particle->colour.a != 0) {
+            gDPSetEnvColor((*dlist)++, 255, 255, 255, 0);
+        }
+    } else {
+        renderFlags = (RENDER_VTX_ALPHA | RENDER_Z_UPDATE | RENDER_FOG_ACTIVE | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING);
+        gDPSetEnvColor((*dlist)++, 255, 255, 255, 0);
+        if (particle->segment.object.unk2C == 4) {
+            if (particle->segment.camera.unk3A > 0) {
+                gDPSetPrimColor((*dlist)++, 0, 0, particle->unk4A, particle->unk4A, particle->unk4A, 255);
+                if (particle->unk77 == 0) {
+                    func_800B3E64(particle);
+                }
+                sp30 = (unk800B0698_44 *) particle->unk44_0;
+                temp = particle->unk75;
+                temp <<= 3;
+                tempvtx = &sp30->unk0struct.unk8[temp];
+                load_and_set_texture(dlist, (TextureHeader *) sp30->unk0Ptr, renderFlags, particle->segment.unk18 << 8);
+                gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(tempvtx), sp30->unk0struct.unk4, 0);
+                gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL(sp30->unk0struct.unkC), sp30->unk0struct.unk6, 1);
+                if (particle->unk4A != 255) {
+                    gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+                }
+            }
+        } else if (particle->segment.object.unk2C == 3) {
+            gDPSetPrimColor((*dlist)++, 0, 0, particle->unk4A, particle->unk4A, particle->unk4A, alpha);
+            if (particle->unk68b >= 2) {
+                sp30 = (unk800B0698_44 *) particle->unk44_0;
+                load_and_set_texture(dlist, (TextureHeader *) sp30->unk0Ptr, renderFlags, particle->segment.unk18 << 8);
+                gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(sp30->unk0struct.unk8), sp30->unk0struct.unk4, 0);
+                gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL(sp30->unk0struct.unkC),  sp30->unk0struct.unk6, 1);
+            } else if (particle->unk68b > 0) {
+                sp30 = (unk800B0698_44 *) particle->unk44_0;
+                load_and_set_texture(dlist, (TextureHeader *) sp30->unk0Ptr, renderFlags, particle->segment.unk18 << 8);
+                gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(sp30->unk0struct.unk8), 4, 0);
+                gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL(&sp30->unk0struct.unkC[sp30->unk0struct.unk6]), 1, 1);
+            }
+            if ((alpha != 255) || (particle->unk4A != 255)) {
+                gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+            }
+        }
+    }
+}
+
+
 GLOBAL_ASM("asm/non_matchings/particles/func_800B3E64.s")
 
 UNUSED unk800E2CF0 *func_800B4488(s32 idx) {

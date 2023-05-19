@@ -26,6 +26,7 @@ glabel __ull_divremi
 /* 0CF850 800CEC50 03E00008 */  jr    $ra
 /* 0CF854 800CEC54 00000000 */   nop   
 
+glabel func_800CEC58
 /* 0CF858 800CEC58 27BDFFF8 */  addiu $sp, $sp, -8
 /* 0CF85C 800CEC5C AFA40008 */  sw    $a0, 8($sp)
 /* 0CF860 800CEC60 AFA5000C */  sw    $a1, 0xc($sp)
@@ -71,6 +72,7 @@ glabel __ull_divremi
 /* 0CF8EC 800CECEC 03E00008 */  jr    $ra
 /* 0CF8F0 800CECF0 27BD0008 */   addiu $sp, $sp, 8
 
+glabel func_800CECF4
 /* 0CF8F4 800CECF4 AFA40000 */  sw    $a0, ($sp)
 /* 0CF8F8 800CECF8 AFA50004 */  sw    $a1, 4($sp)
 /* 0CF8FC 800CECFC AFA60008 */  sw    $a2, 8($sp)

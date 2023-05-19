@@ -2167,7 +2167,87 @@ void func_800142B8(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_800143A8.s")
+s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool) {
+    s32 i;
+    s32 textureIndex;
+    s32 triOffset;
+    TextureHeader *texToSet;
+    s32 endLoop;
+    s32 numTris;
+    s32 texEnabled;
+    s32 texOffset;
+    s32 numVertices;
+    Vertex *vtx;
+    s32 offsetStartVertex;
+    s32 texToSetFlags;
+    Triangle *tris;
+    s32 vertOffset;
+    Gfx *dlist;
+
+    dlist = gObjectCurrDisplayList;
+    i = startIndex;
+    endLoop = FALSE;
+    while (i < objModel->numberOfBatches && !endLoop) {
+        if ((objModel->batches[i].flags & 4) == 0 || (flags & 4)) {
+            //Hidden/Invisible geometry
+            textureIndex = objModel->batches[i].flags & BATCH_FLAGS_HIDDEN;
+            //Probably a fakematch to use textureIndex here, but it works.
+            if (!textureIndex) {
+                vertOffset = objModel->batches[i].verticesOffset;
+                triOffset = objModel->batches[i].facesOffset;
+                numVertices = objModel->batches[i + 1].verticesOffset - vertOffset;
+                offsetStartVertex = (someBool) ? objModel->batches[i].unk1 : numVertices;
+                numTris = objModel->batches[i + 1].facesOffset - triOffset;
+                tris = &objModel->triangles[triOffset];
+                vtx = &obj->unk44[vertOffset];
+                textureIndex = objModel->batches[i].textureIndex;
+                //textureIndex of 0xFF is no texture
+                if (textureIndex == 0xFF) {
+                    texOffset = 0;
+                    texToSet = NULL;
+                    texEnabled = FALSE;
+                } else {
+                    texOffset = objModel->batches[i].unk7 << 14;
+                    texEnabled = TRUE;
+                    texToSet = objModel->textures[textureIndex].texture;
+                }
+                texToSetFlags = objModel->batches[i].flags | BATCH_FLAGS_UNK00000008;
+                if (flags & RENDER_SEMI_TRANSPARENT && !(objModel->batches[i].flags & (flags & ~RENDER_SEMI_TRANSPARENT))) {
+                    texToSetFlags |= RENDER_SEMI_TRANSPARENT;
+                }
+                if (D_800DC720 == 0) {
+                    load_and_set_texture(&dlist, texToSet, texToSetFlags, texOffset);
+                } else {
+                    texToSet = func_8007B46C(texToSet, texOffset);
+                    gDkrDmaDisplayList(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(texToSet->cmd), texToSet->numberOfCommands);
+                }
+                if (offsetStartVertex == numVertices) {
+                    gSPVertexDKR(dlist++, OS_K0_TO_PHYSICAL(vtx), numVertices, 0);
+                } else {
+                    if (offsetStartVertex > 0) {
+                        gSPVertexDKR(dlist++, OS_K0_TO_PHYSICAL(vtx), offsetStartVertex, 0);
+                        gDkrInsertMatrix(dlist++, 0, G_MTX_DKR_INDEX_2);
+                        gSPVertexDKR(dlist++, OS_K0_TO_PHYSICAL(&vtx[offsetStartVertex]), (numVertices - offsetStartVertex), 1);
+                    } else {
+                        gDkrInsertMatrix(dlist++, 0, G_MTX_DKR_INDEX_2);
+                        gSPVertexDKR(dlist++, OS_K0_TO_PHYSICAL(vtx), numVertices, 0);
+                    }
+                    gDkrInsertMatrix(dlist++, 0, G_MTX_DKR_INDEX_1);
+                }
+                gSPPolygon(dlist++, OS_K0_TO_PHYSICAL(tris), numTris, texEnabled);
+            }
+            i++;
+        } else {
+            endLoop = TRUE;
+        }
+    }
+    if (i >= objModel->numberOfBatches) {
+        i = -1;
+    }
+    gObjectCurrDisplayList = dlist;
+    return i;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80014814.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80014B50.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80015348.s")
