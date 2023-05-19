@@ -153,6 +153,7 @@ void tex_animate_texture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s3
 void func_8007F1E8(unk8007F1E8 *arg0);
 void init_pulsating_light_data(PulsatingLightData *data);
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
+TextureHeader *func_8007B46C(TextureHeader *arg0, s32 arg1);
 
 TextureHeader *load_texture(s32 arg0); // Non Matching
 void free_texture(TextureHeader *tex); // Non Matching
@@ -168,6 +169,7 @@ MemoryPoolSlot *func_8007C12C(s32 spriteID, s32 arg1); // Non Matching
 void tex_init_textures(void); // Non Matching
 void func_8007BF34(Gfx **dlist, s32 arg1); // Non Matching
 void load_blinking_lights_texture(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3); // Non Matching
-void build_tex_display_list(TextureHeader *tex, Gfx *dlist); //Non Matching
+void build_tex_display_list(TextureHeader *tex, Gfx *dlist); // Non Matching
+void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2); // Non Matching
 
 #endif

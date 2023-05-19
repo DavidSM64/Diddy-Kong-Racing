@@ -430,6 +430,7 @@ s32 func_800113CC(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 evenSoun
 void func_80011AD0(Object *this);
 Object *func_8001BDD4(Object *obj, s32 *cameraID);
 s32 init_object_shadow(Object *obj, ShadowData *shadow);
+s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -447,7 +448,6 @@ void func_80022E18(s32);                                 /* extern */
 void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);       /* extern */
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); /* extern */
 void func_80011134(Object *, s32);
-s32 func_800143A8(ObjectModel*, Object*, s32, s32, s32);  /* extern */
 void func_800138A8(ObjectTransform*, unk80068514_arg4*, Object *, s32);
 Object *func_8002342C(f32 x, f32 z);
 void func_8006017C(s32);

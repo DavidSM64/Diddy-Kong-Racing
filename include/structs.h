@@ -77,8 +77,8 @@ typedef struct TextureHeader {
       // 6 = IA4
       // 7 = CI4 (16 colors)
       // 8 = CI8 (64 colors)
-  /* 0x03 */ u8 unk3;
-  /* 0x04 */ u8 unk4;
+  /* 0x03 */ s8 unk3;
+  /* 0x04 */ s8 unk4;
   /* 0x05 */ u8 numberOfInstances; // Always 1 in the ROM.
   /* 0x06 */ s16 flags;
       // 0x04 = Interlaced texture
@@ -86,7 +86,7 @@ typedef struct TextureHeader {
       // 0x80 = V clamp flag. 0 = Wrap, 1 = Clamp
   /* 0x08 */ s16 ciPaletteOffset;
   /* 0x0A */ s16 numberOfCommands; // initialized in RAM; Number of commands in the texture display list. (Usually 0x07)
-  /* 0x0C */ s32* cmd; // initialized in RAM; Pointer to texture display list.
+  /* 0x0C */ s32 *cmd; // initialized in RAM; Pointer to texture display list.
   /* 0x10 */ u8 unk10;
   /* 0x11 */ u8 unk11;
   /* 0x12 */ u16 numOfTextures; // For animated textures, static textures are just 0x01. Each texture has it's own header.
@@ -496,6 +496,7 @@ typedef struct Triangle {
 /* Size: 12 bytes */
 typedef struct TriangleBatchInfo {
 /* 0x00 */ u8  textureIndex; // 0xFF = No texture
+/* 0x01 */ s8  unk1;
 /* 0x02 */ s16 verticesOffset;
 /* 0x04 */ s16 facesOffset;
 /* 0x06 */ u8  unk6; // 0xFF = vertex colors, otherwise use dynamic lighting normals (Objects only)
@@ -1645,8 +1646,13 @@ typedef struct ObjectSegment {
 } ObjectSegment;
 
 typedef struct unk800B0698_44_0 {
-    u8 pad0[0x12];
-    u16 unk12;
+    u8 pad0[0x3];
+    /* 0x04 */ s16 unk4;
+    /* 0x06 */ s16 unk6;
+    /* 0x08 */ Vertex *unk8;
+    /* 0x0C */ Triangle *unkC;
+    /* 0x10 */ u16 unk10;
+    /* 0x12 */ u16 unk12;
 } unk800B0698_44_0;
 
 typedef struct unk800B0698_44 {

@@ -199,6 +199,7 @@ void func_800AFE5C(Particle *arg0, Particle *arg1);
 Particle *func_800B1130(Particle *arg0, Particle *arg1);
 void func_800AF52C(Object *obj, s32 arg1);
 void func_800AF134(Particle *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5);
+void func_800B3740(Particle *particle, Gfx **dlist, MatrixS **mtx, Vertex **vtx, s32 flags);
 
 void func_800AF404(s32 arg0); // Non Matching
 void func_800AFC3C(Object *, s32); // Non Matching
@@ -211,8 +212,8 @@ void func_800B3240(Particle *);
 void func_800B3358(Particle *);
 void func_800B34B0(Particle *);
 void func_800B3564(Particle *);
-void func_800B3740(Particle *, Gfx **, MatrixS **, Vertex **, s32); // Non Matching
 void func_800B4668(Object*, s32, s32, s32);
 void func_800B46BC(Object*, s32, s32, s32);
+void func_800B3E64(Object *); // Non Matching
 
 #endif

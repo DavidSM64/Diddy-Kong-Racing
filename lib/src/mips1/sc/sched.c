@@ -5,7 +5,6 @@
 #include "sched.h"
 #include "types.h"
 #include "macros.h"
-#include "f3ddkr.h"
 #include "libultra_internal.h"
 #include "viint.h"
 

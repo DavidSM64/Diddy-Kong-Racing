@@ -13,7 +13,7 @@ extern u32 __osViIntrCount;
 
 OSDevMgr __osViDevMgr = {0};
 u64 gThread30Stack[0x400];
-u64 *gThread30StackPointer;
+u32 __osFinalrom;
 
 extern OSThread viThread;
 extern OSMesgQueue viEventQueue;
