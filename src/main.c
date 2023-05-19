@@ -49,7 +49,7 @@ f32 round_double_to_float(f64 v) {
 }
 
 void get_platform(void) {
-    u32 notiQue;
+    //u32 notiQue;
     gPlatform = 0;
     // Read the RDP timing registers. Emulators read them as zero.
     if ((u32) IO_READ(DPC_PIPEBUSY_REG) | (u32) IO_READ(DPC_TMEM_REG) | (u32) IO_READ(DPC_BUFBUSY_REG)) {
@@ -401,6 +401,7 @@ void profiler_reset_values(void) {
         gPuppyPrint.objTimers[i][PERF_AGGREGATE] -= gPuppyPrint.objTimers[i][perfIteration];
         gPuppyPrint.objTimers[i][perfIteration] = 0;
     }
+    gPuppyPrint.textureLoads = 0;
     puppyprint_input();
 }
 
@@ -474,7 +475,9 @@ void puppyprint_render_overview(void) {
     s32 y;
     puppyprint_render_minimal();
     // Draw triangle, vertex and overall RAM on bottom left.
-    draw_blank_box(((gScreenWidth/2) / 3) - 42, gScreenHeight - 40, ((gScreenWidth/2) / 3) + 62, gScreenHeight - 6, 0x0000007F);
+    draw_blank_box(((gScreenWidth/2) / 3) - 42, gScreenHeight - 50, ((gScreenWidth/2) / 3) + 62, gScreenHeight - 6, 0x0000007F);
+    puppyprintf(textBytes, "Textures: %d", gPuppyPrint.textureLoads);
+    draw_text(&gCurrDisplayList, ((gScreenWidth/2) / 3) + 10, gScreenHeight - 48, textBytes, ALIGN_TOP_CENTER);
     puppyprintf(textBytes,  "RAM: 0x%06X", gFreeMem[11]);
     draw_text(&gCurrDisplayList, ((gScreenWidth/2) / 3) + 10, gScreenHeight - 38, textBytes, ALIGN_TOP_CENTER);
     puppyprintf(textBytes,  "Tri: %d Vtx: %d", sTriCount, sVtxCount);
@@ -531,7 +534,7 @@ void puppyprint_render_breakdown(void) {
 void puppyprint_render_memory(void) {
     char textBytes[24];
     s32 y;
-    s32 i;
+    u32 i;
     u32 memSize;
 
 #ifndef FORCE_4MB_MEMORY
@@ -603,7 +606,7 @@ void puppyprint_render_log(void) {
 
     y = -4 - gPuppyPrint.pageScroll;
     for (i = NUM_LOG_LINES; i > 0; i--) {
-        if (gPuppyPrint.logText[i] == NULL) {
+        if (gPuppyPrint.logText[i][0] == NULL) {
             continue;
         }
         if (y <= -20 || y >= gScreenHeight) {
@@ -624,7 +627,7 @@ void puppyprint_render_log(void) {
 
 void render_page_menu(void) {
     char textBytes[16];
-    u32 i;
+    s32 i;
     s32 y;
     s32 sineTime = 192 + (sinf(sTimerTemp * 50.0f) * 64.0f);
     draw_blank_box(TEXT_OFFSET - 2, 56, 112, 108 + 2, 0x0000007F);
@@ -773,9 +776,9 @@ void update_rdp_profiling(void) {
     IO_WRITE(DPC_STATUS_REG, DPC_CLR_CLOCK_CTR | DPC_CLR_CMD_CTR | DPC_CLR_PIPE_CTR | DPC_CLR_TMEM_CTR);
 }
 
-s32 find_thread_interrupt_offset(s32 lowTime, s32 highTime) {
+s32 find_thread_interrupt_offset(u32 lowTime, u32 highTime) {
     s32 i;
-    s32 offsetTime = 0;
+    u32 offsetTime = 0;
     // Find if there's been an audio thread update during this thread.
     for (i = 0; i < gPuppyPrint.threadIteration[THREAD3_END / 2]; i++) {
         if (gPuppyPrint.threadTimes[i][THREAD3_END] < highTime &&
@@ -789,11 +792,9 @@ s32 find_thread_interrupt_offset(s32 lowTime, s32 highTime) {
 void calculate_individual_thread_timers(void) {
     s32 i;
     s32 j;
-    s32 k;
     u32 highTime;
     u32 lowTime;
     u32 normalTime;
-    u32 normalLowTime;
     u32 offsetTime;
 
     // Audio thread is basically top prio, so no need to do any further shenanigans
@@ -812,7 +813,7 @@ void calculate_individual_thread_timers(void) {
         }
     }
     gPuppyPrint.audTime[PERF_AGGREGATE] -= gPuppyPrint.audTime[perfIteration];
-    gPuppyPrint.audTime[perfIteration] = MIN(highTime - lowTime, OS_USEC_TO_CYCLES(99999));
+    gPuppyPrint.audTime[perfIteration] = MIN(highTime - lowTime, (s32) OS_USEC_TO_CYCLES(99999));
     gPuppyPrint.audTime[PERF_AGGREGATE] += gPuppyPrint.audTime[perfIteration];
     gPuppyPrint.audTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyPrint.audTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
     // Game thread, unfortunately, does not. We have to take the times of the audio too, so we can offset the values for accuracy.
@@ -833,14 +834,13 @@ void calculate_individual_thread_timers(void) {
         }
     }
     gPuppyPrint.gameTime[PERF_AGGREGATE] -= gPuppyPrint.gameTime[perfIteration];
-    gPuppyPrint.gameTime[perfIteration] = MIN(highTime - lowTime - offsetTime, OS_USEC_TO_CYCLES(99999));
+    gPuppyPrint.gameTime[perfIteration] = MIN(highTime - lowTime - offsetTime, (s32) OS_USEC_TO_CYCLES(99999));
     gPuppyPrint.gameTime[PERF_AGGREGATE] += gPuppyPrint.gameTime[perfIteration];
     gPuppyPrint.gameTime[PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyPrint.gameTime[PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
 }
 
 void calculate_core_timers(void) {
     s32 i;
-    s32 j;
     s32 lowTime;
     s32 highTime;
     s32 offsetTime = 0;
@@ -852,7 +852,7 @@ void calculate_core_timers(void) {
         highTime = gPuppyPrint.mainTimerPoints[1][i];
         offsetTime = find_thread_interrupt_offset(lowTime, highTime);
         gPuppyPrint.coreTimers[i][PERF_AGGREGATE] -= gPuppyPrint.coreTimers[i][perfIteration];
-        gPuppyPrint.coreTimers[i][perfIteration] = MIN(highTime - lowTime - offsetTime, OS_USEC_TO_CYCLES(99999));
+        gPuppyPrint.coreTimers[i][perfIteration] = MIN(highTime - lowTime - offsetTime, (s32) OS_USEC_TO_CYCLES(99999));
         gPuppyPrint.coreTimers[i][PERF_AGGREGATE] += gPuppyPrint.coreTimers[i][perfIteration];
         gPuppyPrint.coreTimers[i][PERF_TOTAL] = OS_CYCLES_TO_USEC(gPuppyPrint.coreTimers[i][PERF_AGGREGATE]) / NUM_PERF_ITERATIONS;
     }

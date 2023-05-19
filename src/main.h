@@ -178,6 +178,7 @@ struct PuppyPrint {
     u32 mainTimerPoints[2][PP_MAIN_TIMES_TOTAL]; // Timers for individual threads.
     u16 menuScroll; // Page menu scroll value to offset the text.
     s16 pageScroll; // Generic scroller var for a page. Reset when swapped.
+    u16 textureLoads; // Tracked number of texture loads.
     u8 threadIteration[NUM_THREAD_TIMERS / 2]; // Number of times the respective thread has looped.
     u8 enabled; // Show the profiler
     u8 menuOpen; // Whether the page menu's open

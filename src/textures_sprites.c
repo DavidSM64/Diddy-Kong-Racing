@@ -537,6 +537,9 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 te
             gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(texhead->cmd), texhead->numberOfCommands);
             gCurrentTextureHeader = texhead;
             doPipeSync = FALSE;
+#ifdef PUPPYPRINT_DEBUG
+            gPuppyPrint.textureLoads++;
+#endif
         }
         if (gUsingTexture == FALSE) {
             forceFlags = TRUE;
