@@ -76,7 +76,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->raceFinished++;
     }
     tempStartTimer = *startTimer;
-    if (tempStartTimer == 0x64) {
+    if (tempStartTimer == 100) {
         gWizpigCutsceneTimer = 0;
     }
     racer->zipperDirCorrection = FALSE;

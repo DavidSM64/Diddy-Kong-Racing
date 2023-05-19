@@ -341,7 +341,7 @@ void func_80012C98(Gfx **dList);
 void func_80012CE8(Gfx **dList);
 void render_object(Gfx **dList, MatrixS **mtx, Vertex **verts, Object *obj);
 void object_undo_player_tumble(Object *obj);
-void render_object_parts(Object *this);
+void render_object_parts(Object *obj);
 void unset_temp_model_transforms(Object *arg0);
 void func_800142B8(void);
 u32 func_800179D0(void);
@@ -430,11 +430,12 @@ void render_3d_misc(Object *this);
 Object *find_nearest_spectate_camera(Object *obj, s32 *cameraID);
 s32 init_object_shadow(Object *obj, ShadowData *shadow);
 s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool);
+void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj, s32 flags);
+void gParticlePtrList_flush(void);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
 void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
-void gParticlePtrList_flush(void);
 void decrypt_magic_codes(s32 *arg0, s32 length);
 s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
@@ -447,7 +448,6 @@ void func_80022E18(s32);                                 /* extern */
 void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);       /* extern */
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); /* extern */
 void func_80011134(Object *, s32);
-void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj, s32 flags);
 Object *func_8002342C(f32 x, f32 z);
 void func_8006017C(s32);
 void func_80012F94(Object *);
