@@ -2212,7 +2212,7 @@ s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags,
                     texToSet = objModel->textures[textureIndex].texture;
                 }
                 texToSetFlags = objModel->batches[i].flags | BATCH_FLAGS_UNK00000008;
-                if ((flags & 4) && !(objModel->batches[i].flags & (flags & ~4))) {
+                if (flags & RENDER_SEMI_TRANSPARENT && !(objModel->batches[i].flags & (flags & ~RENDER_SEMI_TRANSPARENT))) {
                     texToSetFlags |= RENDER_SEMI_TRANSPARENT;
                 }
                 if (D_800DC720 == 0) {
