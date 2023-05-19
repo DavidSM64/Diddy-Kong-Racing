@@ -2211,7 +2211,7 @@ s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags,
                     texEnabled = TRUE;
                     texToSet = objModel->textures[textureIndex].texture;
                 }
-                texToSetFlags = objModel->batches[i].flags | 8;
+                texToSetFlags = objModel->batches[i].flags | BATCH_FLAGS_UNK00000008;
                 if ((flags & 4) && !(objModel->batches[i].flags & (flags & ~4))) {
                     texToSetFlags |= 4;
                 }
