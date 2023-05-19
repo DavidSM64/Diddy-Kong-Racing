@@ -43,7 +43,7 @@ static void __scExec(OSSched *sc, OSScTask *t) {
 
     sc->curRSPTask = t;
 
-    if (t->list.t.type == M_GFXTASK) {
+    if (t->state & OS_SC_NEEDS_RDP) {
         sc->curRDPTask = t;
     }
 }
@@ -55,7 +55,7 @@ static void __scTryDispatch(OSSched *sc) {
             sc->nextAudTask = NULL;
             sc->doAudio = 0;
             __scExec(sc, t);
-        } else if (sc->curRDPTask == NULL && sc->queuedFB == NULL) {
+        } else if ((sc->curRDPTask == NULL || sc->curRDPTask == sc->nextGfxTask) && sc->queuedFB == NULL) {
             OSScTask *t = sc->nextGfxTask;
 
             if (t) {
@@ -67,7 +67,7 @@ static void __scTryDispatch(OSSched *sc) {
     }
 }
 
-//-----------------------------------------------------------------------------\
+//------------------------------------------------------------------------------/
 //-- Event handlers -----------------------------------------------------------/
 //----------------------------------------------------------------------------/
 
@@ -125,7 +125,7 @@ static void __scHandleRSP(OSSched *sc) {
             sc->nextGfxTask = t;
             puppyprint_update_rsp(RSP_GFX_RESUME);
         }
-        sc->curRDPTask = NULL;
+        //sc->curRDPTask = NULL;
     } else {
         t->state &= ~OS_SC_NEEDS_RSP;
         if ((t->state & OS_SC_RCP_MASK) == 0) {
@@ -160,7 +160,7 @@ static void __scMain(void *arg) {
     }
 }
 
-//-----------------------------------------------------------------------------\
+//------------------------------------------------------------------------------/
 //-- Public functions ---------------------------------------------------------/
 //----------------------------------------------------------------------------/
 
@@ -194,7 +194,7 @@ void osScSubmitGfxTask(OSSched *sc, OSScTask *t) {
     osSetThreadPri(0, prevpri);
 }
 
-void osScAddClient(OSSched *sc, OSScClient *c, OSMesgQueue *msgQ, u8 id) {
+void osScAddClient(OSSched *sc, UNUSED OSScClient *c, OSMesgQueue *msgQ, u8 id) {
     OSIntMask mask = osSetIntMask(OS_IM_NONE);
 
     if (id == OS_SC_ID_VIDEO) {
@@ -208,7 +208,7 @@ void osScAddClient(OSSched *sc, OSScClient *c, OSMesgQueue *msgQ, u8 id) {
 
 extern OSViMode osViModeNtscLpn1, osViModePalLpn1, osViModeMpalLpn1, osViModePalLan1, osViModeNtscLan1, osViModeMpalLan1;
 
-void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, u8 mode, u8 numFields) {
+void osCreateScheduler(OSSched *sc, void *stack, OSPri priority, UNUSED u8 mode, u8 numFields) {
     sc->audmq           = NULL;
     sc->gfxmq           = NULL;
     sc->curRSPTask      = NULL;
