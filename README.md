@@ -5,11 +5,11 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of April 24, 2023, this is our current score:
+As of May 19, 2023, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 51.18%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 51.99%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 24.34%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 26.52%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -132,11 +132,11 @@ As of April 28, 2023, this is our current score:
 ```
  =================================================
       ADVENTURE ONE (ASM -> C Decompilation)
- ---------------- 51.57% Complete ----------------
-           # Decompiled functions: 1503
-            # GLOBAL_ASM remaining: 329
+ ---------------- 51.99% Complete ----------------
+           # Decompiled functions: 1507
+            # GLOBAL_ASM remaining: 325
            # NON_MATCHING functions: 12
-        # NON_EQUIVALENT WIP functions: 64
+        # NON_EQUIVALENT WIP functions: 65
  ------------------ Game Status ------------------
      Balloons: 26/47, Keys: 3/4, Trophies: 2/5
       T.T. Amulets: 2/4, Wizpig Amulets: 2/4
@@ -144,14 +144,14 @@ As of April 28, 2023, this is our current score:
  We are racing the octopus boss Bubbler. (Lap 1/3)
  =================================================
        ADVENTURE TWO (Cleanup & Documentation)
- ---------------- 25.60% Complete ----------------
-            # Documented functions: 541
-          # Undocumented remaining: 1023
+ ---------------- 26.52% Complete ----------------
+            # Documented functions: 568
+           # Undocumented remaining: 996
  ------------------ Game Status ------------------
-     Balloons: 12/47, Keys: 1/4, Trophies: 1/5
+     Balloons: 13/47, Keys: 1/4, Trophies: 1/5
       T.T. Amulets: 1/4, Wizpig Amulets: 1/4
  -------------------------------------------------
- We are racing Taj in the Car Challenge. (Lap 3/3)
+    We are racing in Everfrost Peak. (Lap 2/3)
  =================================================
 ```
 <!-- README_SCORE_END -->
