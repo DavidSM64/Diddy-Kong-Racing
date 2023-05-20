@@ -1289,7 +1289,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     i = racer->unk1D2;
     if (gCurrentPlayerIndex == PLAYER_COMPUTER && !func_80023568()) {
-            func_80055A84(obj, racer, updateRate);
+            onscreen_ai_racer_physics(obj, racer, updateRate);
         } else {
         func_80054FD0(obj, racer, updateRate);
     }
@@ -1469,7 +1469,7 @@ void racer_attack_handler_hovercraft(Object *obj, Object_Racer *racer) {
         break;
     // Running into a bubble trap.
     case ATTACK_BUBBLE:
-        racer->unk204 = 0x78;
+        racer->bubbleTrapTimer = 120;
         obj->segment.x_velocity *= 0.7;
         if (obj->segment.y_velocity > 2.0f) {
             obj->segment.y_velocity = 2.0f;
@@ -1759,7 +1759,7 @@ void racer_attack_handler_plane(Object *obj, Object_Racer *racer) {
                 }
                 break;
             case ATTACK_BUBBLE:
-                racer->unk204 = 120;
+                racer->bubbleTrapTimer = 120;
                 obj->segment.x_velocity *= 0.7;
                 obj->segment.z_velocity *= 0.7;
                 break;
@@ -2301,7 +2301,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(MISC_RACER_WEIGHT);
         gCurrentRacerWeightStat = gCurrentRacerMiscAssetPtr[tempRacer->characterId] * 0.45;
-        if (tempRacer->unk204 > 0) {
+        if (tempRacer->bubbleTrapTimer > 0) {
             gCurrentRacerWeightStat = -0.02f;
         }
         gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(MISC_RACER_HANDLING);
@@ -2313,7 +2313,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         if (tempRacer->unk1FE == 1) {
             gCurrentRacerWeightStat -= (gCurrentRacerWeightStat * tempRacer->unk1FF) / 128;
-            if (tempRacer->unk204 > 0) {
+            if (tempRacer->bubbleTrapTimer > 0) {
                 gCurrentRacerWeightStat = -gCurrentRacerWeightStat;
             }
         }
@@ -2377,7 +2377,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         if (!(gCurrentRacerInput & A_BUTTON)) {
             tempRacer->throttleReleased = TRUE;
         }
-        if (check_if_showing_cutscene_camera() || gRaceStartTimer == 100 || tempRacer->unk1F1 || gRacerInputBlocked || tempRacer->approachTarget || tempRacer->unk204 > 0) {
+        if (check_if_showing_cutscene_camera() || gRaceStartTimer == 100 || tempRacer->unk1F1 || gRacerInputBlocked || tempRacer->approachTarget || tempRacer->bubbleTrapTimer > 0) {
             gCurrentStickX = 0;
             gCurrentStickY = 0;
             gCurrentRacerInput = 0;
@@ -2385,8 +2385,8 @@ void update_player_racer(Object *obj, s32 updateRate) {
             gCurrentButtonsReleased = 0;
             tempRacer->steerAngle = 0;
         }
-        if (tempRacer->unk204 > 0) {
-            tempRacer->unk204 -= updateRate;
+        if (tempRacer->bubbleTrapTimer > 0) {
+            tempRacer->bubbleTrapTimer -= updateRate;
             tempRacer->velocity *= 0.9f; //!@Delta
             obj->segment.x_velocity *= 0.87f; //!@Delta
             if (obj->segment.y_velocity > 2.0f) {
@@ -3877,7 +3877,7 @@ void racer_attack_handler_car(Object *obj, Object_Racer *racer, s32 updateRate) 
                     break;
                 // Running into a bubble trap.
                 case ATTACK_BUBBLE:
-                    racer->unk204 = 0x78;
+                    racer->bubbleTrapTimer = 120;
                     racer->velocity *= 0.5;
                     break;
                 // This goes unused.
@@ -4004,7 +4004,7 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
         racer_approach_object(obj, racer, updateRateF);
     }
     if (gCurrentPlayerIndex == PLAYER_COMPUTER && !func_80023568()) {
-            func_80055A84(obj, racer, updateRate);
+            onscreen_ai_racer_physics(obj, racer, updateRate);
     } else {
         func_80054FD0(obj, racer, updateRate);
     }
@@ -4207,7 +4207,11 @@ void update_car_velocity_ground(Object *obj, Object_Racer *racer, s32 updateRate
 
 GLOBAL_ASM("asm/non_matchings/racer/func_80054FD0.s")
 
-void func_80055A84(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
+/**
+ * Update the collision of the racer.
+ * Also update wheel contacts and hitbox size.
+*/
+void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
     f32 angleZ;
     f32 distance;
     s32 hasCollision;
@@ -4288,7 +4292,7 @@ void func_80055A84(Object *obj, Object_Racer *racer, UNUSED s32 updateRate) {
         if (temp_v1_2 < 0x2000 && temp_v1_2 > -0x2000) {
             racer->x_rotation_vel = temp_v1_2;
         }
-        xRot = -(s16)(u16)arctan2_f(zTemp, yTemp);
+        xRot = -(s16) (u16) arctan2_f(zTemp, yTemp);
         if ((xRot < 0x2000) && (xRot > -0x2000)) {
             obj->segment.trans.x_rotation = xRot;
         }
@@ -5335,8 +5339,8 @@ void update_camera_finish_race(UNUSED f32 updateRate, Object *obj, Object_Racer 
     f32 distance;
 
     cameraID = racer->spectateCamID;
-    cam = func_8001BDD4(obj, &cameraID);
-    if (!cam) {
+    cam = find_nearest_spectate_camera(obj, &cameraID);
+    if (cam == NULL) {
         gCameraObject->mode = CAMERA_FINISH_CHALLENGE;
         return;
     }
@@ -5794,7 +5798,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     }
     gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(MISC_RACER_WEIGHT);
     gCurrentRacerWeightStat = gCurrentRacerMiscAssetPtr[racer->characterId] * 0.45;
-    if (racer->unk204 > 0) {
+    if (racer->bubbleTrapTimer > 0) {
         gCurrentRacerWeightStat = -0.02f;
     }
     gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(MISC_RACER_HANDLING);
@@ -5842,8 +5846,8 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
             var_fv1 = (var_fv1 * var_fv1) + (temp_f0 * temp_f0);
         }
     }
-    if (racer->unk204 > 0) {
-        racer->unk204 -= updateRate;
+    if (racer->bubbleTrapTimer > 0) {
+        racer->bubbleTrapTimer -= updateRate;
         racer->velocity *= 0.8f; //!@Delta
     }
     if (racer->unk206 > 0) {
@@ -5863,7 +5867,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         }
         if (racer->unk1FE == 1) {
             gCurrentRacerWeightStat -= ((gCurrentRacerWeightStat * racer->unk1FF) / 128);
-            if (racer->unk204 > 0) {
+            if (racer->bubbleTrapTimer > 0) {
                 gCurrentRacerWeightStat = -gCurrentRacerWeightStat;
             }
             gCurrentStickY = 60;
@@ -5892,7 +5896,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
             gRacerWaveCount = func_8002B0F4(obj->segment.object.segmentID, obj->segment.trans.x_position, obj->segment.trans.z_position, &gRacerCurrentWave);
         }
         func_8002ACC8(0);
-        if ((racer->approachTarget != NULL) || (gRaceStartTimer != 0) || (racer->unk204 > 0)) {
+        if (racer->approachTarget != NULL || gRaceStartTimer != 0 || racer->bubbleTrapTimer > 0) {
             gCurrentStickX = 0;
             gCurrentStickY = 0;
             gCurrentRacerInput = 0;

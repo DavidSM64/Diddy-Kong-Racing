@@ -634,7 +634,7 @@ typedef enum {
     OBJECT_MODEL_TYPE_SPRITE_BILLBOARD,
     OBJECT_MODEL_TYPE_VEHICLE_PART,
     OBJECT_MODEL_TYPE_UNKNOWN3,
-    OBJECT_MODEL_TYPE_UNKNOWN4
+    OBJECT_MODEL_TYPE_MISC
 } ObjectModelType;
 
 typedef struct ObjHeaderParticleEntry {
@@ -1037,7 +1037,7 @@ typedef struct Object_Racer {
   /* 0x003 */ s8 characterId; // Affects minimap color, horn, voice, etc.
   /* 0x004 */ s32 unk4;
   /* 0x008 */ f32 forwardVel;
-  /* 0x00C */ f32 unkC;
+  /* 0x00C */ f32 animationSpeed;
   /* 0x010 */ s32 unk10;
   /* 0x014 */ s32 unk14;
   /* 0x018 */ s32 unk18;
@@ -1225,7 +1225,7 @@ typedef struct Object_Racer {
   /* 0x201 */ s8 unk201;
   /* 0x202 */ s8 silverCoinCount;
   /* 0x203 */ s8 boostType;
-  /* 0x204 */ s16 unk204;
+  /* 0x204 */ s16 bubbleTrapTimer;
   /* 0x206 */ s16 unk206;
   /* 0x208 */ s8 unk208;
   /* 0x209 */ u8 unk209;
@@ -1671,7 +1671,7 @@ typedef struct Object {
   /* 0x0044 */ unk800B0698_44 *unk44_0;
   };
   /* 0x0048 */ s16 behaviorId;
-  /* 0x004A */ s16 unk4A;
+  /* 0x004A */ s16 unk4A; // Upper byte is object ID, lower byte is object size.
   /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318
   /* 0x0050 */ ShadowData *shadow; //player + 0x2F4
   /* 0x0054 */ Object_54 *unk54; //player + 0x2C0

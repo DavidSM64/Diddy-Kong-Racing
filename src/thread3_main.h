@@ -70,7 +70,6 @@ void func_8006D8E0(s32 arg0);
 void func_8006D8F0(s32 arg0);
 void func_8006D968(s8 *arg0);
 RenderContext get_render_context(void);
-UNUSED void func_8006DA1C(s32 arg0);
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId);
 void set_level_default_vehicle(Vehicle arg0);
 void func_8006DB20(Vehicle vehicleId);

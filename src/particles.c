@@ -1479,7 +1479,7 @@ void func_800B3740(Particle *particle, Gfx **dlist, MatrixS **mtx, Vertex **vtx,
             if (particle->segment.camera.unk3A > 0) {
                 gDPSetPrimColor((*dlist)++, 0, 0, particle->unk4A, particle->unk4A, particle->unk4A, 255);
                 if (particle->unk77 == 0) {
-                    func_800B3E64(particle);
+                    func_800B3E64((Object *) particle);
                 }
                 sp30 = (unk800B0698_44 *) particle->unk44_0;
                 temp = particle->unk75;

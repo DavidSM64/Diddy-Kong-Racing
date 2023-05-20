@@ -10,8 +10,8 @@ glabel func_800B7460
 /* 0B8080 800B7480 27A40840 */   addiu $a0, $sp, 0x840
 /* 0B8084 800B7484 0C034138 */  jal   bzero
 /* 0B8088 800B7488 240501B0 */   li    $a1, 432
-/* 0B808C 800B748C 3C028013 */  lui   $v0, %hi(D_80129FB0) # $v0, 0x8013
-/* 0B8090 800B7490 24429FB0 */  addiu $v0, %lo(D_80129FB0) # addiu $v0, $v0, -0x6050
+/* 0B808C 800B748C 3C028013 */  lui   $v0, %hi(gObjectStackTrace) # $v0, 0x8013
+/* 0B8090 800B7490 24429FB0 */  addiu $v0, %lo(gObjectStackTrace) # addiu $v0, $v0, -0x6050
 /* 0B8094 800B7494 8C580000 */  lw    $t8, ($v0)
 /* 0B8098 800B7498 8C590004 */  lw    $t9, 4($v0)
 /* 0B809C 800B749C 8C480008 */  lw    $t0, 8($v0)
