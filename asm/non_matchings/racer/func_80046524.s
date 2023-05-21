@@ -2152,7 +2152,7 @@ glabel func_80046524
 /* 048FDC 800483DC 02202025 */   move  $a0, $s1
 /* 048FE0 800483E0 8FA60128 */  lw    $a2, 0x128($sp)
 /* 048FE4 800483E4 02002825 */  move  $a1, $s0
-/* 048FE8 800483E8 0C0156A1 */  jal   func_80055A84
+/* 048FE8 800483E8 0C0156A1 */  jal   onscreen_ai_racer_physics
 /* 048FEC 800483EC AFA800C4 */   sw    $t0, 0xc4($sp)
 /* 048FF0 800483F0 8FA800C4 */  lw    $t0, 0xc4($sp)
 /* 048FF4 800483F4 10000008 */  b     .L80048418

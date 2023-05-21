@@ -13,7 +13,7 @@
 
 /************ .data ************/
 
-u16 D_800DCE40[16] = {
+u16 gBubblerVoiceTable[16] = {
     SOUND_VOICE_BUBBLER_HOHO,
     SOUND_VOICE_BUBBLER_OW,
     SOUND_VOICE_BUBBLER_AUGH,
@@ -36,72 +36,78 @@ u16 D_800DCE40[16] = {
 
 /************ .bss ************/
 
-s8 D_8011D5F0;
-s8 D_8011D5F1;
+s8 gBubblerCutsceneTimer;
+s8 gBubblerStartBoost;
 
 /******************************/
+
+enum BubblerAnimations {
+    ANIM_BUBBLER_IDLE,
+    ANIM_BUBBLER_MOVE,
+    ANIM_BUBBLER_DAMAGE
+};
 
 /**
  * Top level function for updating the "Bubbler" vehicle.
  * Basically this controls the Bubbler boss on Sherbert Island, who follows a path, then throws special tripmines and bubble traps on the course.
 */
 void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
-    s16 sp56;
+    s16 animID;
     s16 animFrame;
-    s16 sp52;
+    s16 tempHeadAngle;
     s32 objectID;
     f32 diffZ;
     Object_68 *gfxData;
     s32 timer;
-    s32 sp38;
+    s32 headAngleRange;
     ObjectModel *model;
     Object *firstRacerObj;
     f32 diffX;
     s32 temp2;
     
-    set_boss_voice_clip_offset(D_800DCE40);
+    set_boss_voice_clip_offset(gBubblerVoiceTable);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
-    sp56 = obj->segment.object.animationID;
+    animID = obj->segment.object.animationID;
     animFrame = obj->segment.animFrame;
-    sp52 = racer->headAngle;
+    tempHeadAngle = racer->headAngle;
     if (racer->raceFinished == TRUE) {
         func_80021400(130);
         racer->raceFinished++;
     }
     timer = *startTimer;
     if (timer == 100) {
-        D_8011D5F0 = 0;
+        gBubblerCutsceneTimer = 0;
     }
     if (racer->playerIndex == PLAYER_COMPUTER && *startTimer != 100) {
         *startTimer -= 30;
         if (*startTimer < 0) {
-            if (D_8011D5F1 == 0) {
-                func_8005CB04(0);
+            if (gBubblerStartBoost == FALSE) {
+                play_random_boss_sound(BOSS_SOUND_POSITIVE);
                 racer->boostTimer = 5;
             }
-            D_8011D5F1 = 1;
+            gBubblerStartBoost = TRUE;
             *startTimer = 0;
             *input |= 0x8000;
         } else {
-            D_8011D5F1 = 0;
+            gBubblerStartBoost = FALSE;
         }
     }
     func_8004F7F4(updateRate, updateRateF, obj, racer);
     *startTimer = timer;
     racer->lateral_velocity = 0.0f;
-    racer->headAngle = sp52;
-    obj->segment.object.animationID = sp56;
+    racer->headAngle = tempHeadAngle;
+    obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
-    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != 2) {
+    if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_BUBBLER_DAMAGE) {
         racer->unk1CD = obj->segment.object.animationID;
-        obj->segment.object.animationID = 2;
+        obj->segment.object.animationID = ANIM_BUBBLER_DAMAGE;
         obj->segment.y_velocity += 7.5f;
-        func_8005CB04(1);
+        play_random_boss_sound(BOSS_SOUND_NEGATIVE);
         play_sound_global(SOUND_EXPLOSION, 0);
         set_camera_shake(12.0f);
         racer->velocity *= 0.3f;
-        racer->unkC = 0.0f;
+        racer->animationSpeed = 0.0f;
     }
     racer->attackType = ATTACK_NONE;
     if (racer->approachTarget != 0) {
@@ -112,21 +118,21 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     gfxData = *obj->unk68;
     model = gfxData->objModel;
     diffX = (model->animations[obj->segment.object.animationID].unk4 * 16) - 17;
-    obj->segment.object.animationID = 1;
-    racer->unkC += 2.0f * updateRateF;
-    while (racer->unkC < 0.0f) {
-        racer->unkC += diffX;
+    obj->segment.object.animationID = ANIM_BUBBLER_MOVE;
+    racer->animationSpeed += 2.0f * updateRateF;
+    while (racer->animationSpeed < 0.0f) {
+        racer->animationSpeed += diffX;
         gfxData->unk10 = -1;
     }
-    while (diffX < racer->unkC) {
-        racer->unkC -= diffX;
+    while (diffX < racer->animationSpeed) {
+        racer->animationSpeed -= diffX;
         gfxData->unk10 = -1;
     }
-    if (gfxData->unk10 == -1 && obj->segment.object.animationID == 2) {
-        obj->segment.object.animationID = 1;
-        racer->unkC = 0.0f;
+    if (gfxData->unk10 == -1 && obj->segment.object.animationID == ANIM_BUBBLER_DAMAGE) {
+        obj->segment.object.animationID = ANIM_BUBBLER_MOVE;
+        racer->animationSpeed = 0.0f;
     }
-    obj->segment.animFrame = racer->unkC;
+    obj->segment.animFrame = racer->animationSpeed;
     if (racer->playerIndex == PLAYER_COMPUTER) {
         temp2 = func_80023568();
         if (temp2 != 0) {
@@ -134,45 +140,45 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
             if (temp2 == 6) {
                 objectID = 0x12A;
             }
-            func_8005E204(obj, racer, 0.0f, objectID, 0x245);
+            spawn_boss_hazard(obj, racer, 0.0f, objectID, SOUND_VOICE_BUBBLER_HOHO2);
         }
     }
     obj->unk74 = 0;
     func_800AFC3C(obj, updateRate);
-    fade_when_near_camera(obj, racer, 0x28);
+    fade_when_near_camera(obj, racer, 40);
     switch (obj->segment.object.animationID) {
-    case 1:
-        sp38 = 0x2500;
+    case ANIM_BUBBLER_MOVE:
+        headAngleRange = 0x2500;
     break;
-    case 2:
-        sp38 = 0x100;
+    case ANIM_BUBBLER_DAMAGE:
+        headAngleRange = 0x100;
     break;
     default:
-        sp38 = 0x1500;
+        headAngleRange = 0x1500;
     break;
     }
-    firstRacerObj = get_racer_object(0);
+    firstRacerObj = get_racer_object(PLAYER_ONE);
     diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
     diffZ = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
     if (((diffX * diffX) + (diffZ * diffZ)) < 700.0f * 700.0f) {
         timer = (arctan2_f(diffX, diffZ) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
         WRAP(timer, -0x8000, 0x8000);
-        CLAMP(timer, -sp38, sp38);
+        CLAMP(timer, -headAngleRange, headAngleRange);
         racer->headAngleTarget = timer;
     }
-    if (obj->segment.object.animationID == 1) {
+    if (obj->segment.object.animationID == ANIM_BUBBLER_MOVE) {
         if ((racer->miscAnimCounter & 0x3F) < 20) {
             racer->headAngleTarget >>= 1;
         }
     }
     racer = (Object_Racer *) firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == 1) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_BUBBLER_MOVE) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {
-        if (D_8011D5F0 == 0) {
-        D_8011D5F0 = 1;
-        func_8005CB68(racer, &D_8011D5F0);
+        if (gBubblerCutsceneTimer == 0) {
+        gBubblerCutsceneTimer = 1;
+        func_8005CB68(racer, &gBubblerCutsceneTimer);
         }
     }
 }

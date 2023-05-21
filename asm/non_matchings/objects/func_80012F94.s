@@ -356,9 +356,9 @@ glabel func_80012F94
 /* 01406C 8001346C 3C018012 */  lui   $at, %hi(D_8011AD28) # $at, 0x8012
 /* 014070 80013470 8FBF001C */  lw    $ra, 0x1c($sp)
 /* 014074 80013474 E420AD28 */  swc1  $f0, %lo(D_8011AD28)($at)
-/* 014078 80013478 3C018012 */  lui   $at, %hi(D_8011AD30) # $at, 0x8012
+/* 014078 80013478 3C018012 */  lui   $at, %hi(gCurrentLightIntensity) # $at, 0x8012
 /* 01407C 8001347C 8FB00018 */  lw    $s0, 0x18($sp)
-/* 014080 80013480 E42EAD30 */  swc1  $f14, %lo(D_8011AD30)($at)
+/* 014080 80013480 E42EAD30 */  swc1  $f14, %lo(gCurrentLightIntensity)($at)
 /* 014084 80013484 03E00008 */  jr    $ra
 /* 014088 80013488 27BD0050 */   addiu $sp, $sp, 0x50
 

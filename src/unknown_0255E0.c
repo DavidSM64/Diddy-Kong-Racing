@@ -188,6 +188,7 @@ s32 set_scene_viewport_num(s32 numPorts) {
     return 0;
 }
 
+// track_init
 #ifdef NON_EQUIVALENT
 void func_8002C0C4(s32 modelId);
 void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 arg5, u32 arg6) {
@@ -439,7 +440,7 @@ void func_80026070(LevelModelSegmentBoundingBox *, f32, f32, f32);
 void func_80026430(LevelModelSegment *, f32, f32, f32);
 void func_80026C14(s16 arg0, s16 arg1, s32 arg2);
 void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3);
-
+//Alternative Attempt: https://decomp.me/scratch/2C6dJ
 void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     Vertex *spAC;
     s8 *spA8;
@@ -677,6 +678,7 @@ void set_skydome_visbility(s32 renderSky) {
     gSceneRenderSkyDome = renderSky;
 }
 
+//https://decomp.me/scratch/jmbc1
 GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028050.s")
 
 /**
@@ -797,7 +799,7 @@ void render_skydome(void) {
 
     func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
     if (gSceneRenderSkyDome) {
-        func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, gSkydomeSegment);
+        render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, gSkydomeSegment);
     }
 }
 
@@ -921,12 +923,12 @@ void render_level_geometry_and_objects(void) {
         }
         if (obj != NULL && visible == 255 && (objectsVisible[obj->segment.object.segmentID + 1] || obj->segment.camera.unk34 > 1000.0f) && check_if_in_draw_range(obj)) {
             if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
-                func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
+                render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
             } else if (obj->shadow != NULL) {
                 render_object_shadow(obj, obj->shadow);
             }
-            func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
+            render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
             if (obj->unk58 != NULL && obj->segment.header->unk30 & 0x10) {
                 func_8002D670(obj, obj->unk58);
             }
@@ -943,12 +945,12 @@ void render_level_geometry_and_objects(void) {
         }
         if (obj != NULL && visible && objFlags & OBJ_FLAGS_UNK_0100 && objectsVisible[obj->segment.object.segmentID + 1] && check_if_in_draw_range(obj)) {
             if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
-                func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
+                render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 continue;
             } else if (obj->shadow != NULL) {
                 render_object_shadow(obj, obj->shadow);
             }
-            func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
+            render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
             if ((obj->unk58 != NULL) && (obj->segment.header->unk30 & 0x10)) {
                 func_8002D670(obj, obj->unk58);
             }
@@ -979,25 +981,25 @@ void render_level_geometry_and_objects(void) {
         visible = 255;
         objFlags = obj->segment.trans.flags;
         if (objFlags & OBJ_FLAGS_UNK_0080) {
-            visible = TRUE;
+            visible = 1;
         } else if (!(objFlags & OBJ_FLAGS_DEACTIVATED)) {
             visible = obj->segment.object.opacity;
         }
         if (objFlags & visibleFlags) {
-            visible = FALSE;
+            visible = 0;
         }
         if (obj->behaviorId == BHV_RACER && visible >= 255) {
-            visible = FALSE;
+            visible = 0;
         }
         if (obj != NULL && visible < 255 && objectsVisible[obj->segment.object.segmentID + 1] && check_if_in_draw_range(obj)) {
             if (visible > 0) {
                 if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
-                    func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
+                    render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                     goto skip;
                 } else if (obj->shadow != NULL) {
                     render_object_shadow(obj, obj->shadow);
                 }
-                func_80012D5C(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
+                render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
                 if ((obj->unk58 != 0) && (obj->segment.header->unk30 & 0x10)) {
                     func_8002D670(obj, obj->unk58);
                 }

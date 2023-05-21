@@ -477,7 +477,7 @@ void render_fade_barndoor_horizontal(Gfx **dList, UNUSED MatrixS **mats, UNUSED 
 
 /**
  * Renders a transition effect on screen that will close in from both sides vertically.
- * Codewase, exactly the same as above, but uses a different vertex layout to make the difference.
+ * Codewise, exactly the same as above, but uses a different vertex layout to make the difference.
 */
 void render_fade_barndoor_vertical(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     reset_render_settings(dList);
@@ -490,57 +490,66 @@ void render_fade_barndoor_vertical(Gfx **dList, UNUSED MatrixS **mats, UNUSED Ve
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C15D4.s")
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1EE8.s")
 
-#ifdef NON_EQUIVALENT
 #define NUM_OF_VERTS 18
 #define NUM_OF_TRIS 16
 void render_fade_circle(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     Vertex *vertsToRender;
     Triangle *trisToRender;
+    Gfx *gfx;
+    s32 i;
+
     reset_render_settings(dList);
+    gfx = *dList;
+
     vertsToRender = (Vertex *) sTransitionVtx[sTransitionTaskNum[0]];
     trisToRender = (Triangle *) sTransitionTris[sTransitionTaskNum[0]];
-    gSPDisplayList((*dList)++, dTransitionShapeSettings);
-    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(vertsToRender), NUM_OF_VERTS, 0);
-    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
-    vertsToRender += NUM_OF_VERTS;
-    trisToRender += NUM_OF_TRIS;
-    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(vertsToRender), NUM_OF_VERTS, 0);
-    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
-    vertsToRender += NUM_OF_VERTS;
-    trisToRender += NUM_OF_TRIS;
-    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(vertsToRender), NUM_OF_VERTS, 0);
-    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
-    vertsToRender += NUM_OF_VERTS;
-    trisToRender += NUM_OF_TRIS;
-    gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(vertsToRender), NUM_OF_VERTS, 0);
-    gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
+    gSPDisplayList(gfx++, dTransitionShapeSettings);
+
+    for (i = 0; i < 4; i++) {
+        gSPVertexDKR(gfx++, OS_PHYSICAL_TO_K0(vertsToRender), NUM_OF_VERTS, 0);
+        gSPPolygon(gfx++, OS_PHYSICAL_TO_K0(trisToRender), NUM_OF_TRIS, TRIN_DISABLE_TEXTURE);
+        vertsToRender += NUM_OF_VERTS;
+        trisToRender += NUM_OF_TRIS;
+    }
+
+    *dList = gfx;
     reset_render_settings(dList);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_circle.s")
-#endif
 
-#ifdef NON_EQUIVALENT
-// This doesn't work properly.
-void render_fade_waves(Gfx **dList, MatrixS **mats, Vertex **verts) {
+void render_fade_waves(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
+    Gfx *gfx;
     s32 i;
-    reset_render_settings(dList);
-    gSPDisplayList((*dList)++, dTransitionShapeSettings);
-    for(i = 0; i < 6; i++) {
-        s32 index = sTransitionTaskNum[0] + i;
-        if(i != 1 && i != 4) {
-            gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), 16, 0);
-            gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 14, TRIN_DISABLE_TEXTURE);
+    Vertex *v;
+    Triangle *t;
+    reset_render_settings(dlist);
+    gfx = *dlist;
+    v = (Vertex *)sTransitionVtx[sTransitionTaskNum[0]];
+    t = (Triangle *)sTransitionTris[sTransitionTaskNum[0]];
+    gSPDisplayList(gfx++, dTransitionShapeSettings);
+    /*
+    i == 0 -> Left third wave?
+    i == 1 -> Middle third wave?
+    i == 2 -> Right third wave?
+    i == 3 -> Left third mask? ("mask" being pure black square in this context)
+    i == 4 -> Middle third mask?
+    i == 5 -> Right third mask?
+    */
+    for (i = 0; i < 6; i++) {
+        if (i == 1 || i == 4) { // Is middle third?
+            gSPVertexDKR(gfx++, OS_PHYSICAL_TO_K0(v), 14, 0);
+            gSPPolygon(gfx++, OS_PHYSICAL_TO_K0(t), 12, TRIN_DISABLE_TEXTURE);
+            v += 14;
+            t += 12;
         } else {
-            gSPVertexDKR((*dList)++, OS_PHYSICAL_TO_K0(sTransitionVtx[index]), 14, 0);
-            gSPPolygon((*dList)++, OS_PHYSICAL_TO_K0(sTransitionTris[index]), 12, TRIN_DISABLE_TEXTURE);
+            gSPVertexDKR(gfx++, OS_PHYSICAL_TO_K0(v), 16, 0);
+            gSPPolygon(gfx++, OS_PHYSICAL_TO_K0(t), 14, TRIN_DISABLE_TEXTURE);
+            v += 16;
+            t += 14;
         }
     }
-    reset_render_settings(dList);
+    *dlist = gfx;
+    reset_render_settings(dlist);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/fade_transition/render_fade_waves.s")
-#endif
 
 /**
  * Renders a transition effect on screen that will close in from the opposite corners of the screen.

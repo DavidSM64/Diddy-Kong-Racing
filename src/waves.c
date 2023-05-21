@@ -247,6 +247,7 @@ GLOBAL_ASM("asm/non_matchings/waves/func_800B92F4.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800B97A8.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800B9C18.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BA288.s")
+//https://decomp.me/scratch/h4uac
 GLOBAL_ASM("asm/non_matchings/waves/func_800BA4B8.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BA8E4.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BB2F4.s")

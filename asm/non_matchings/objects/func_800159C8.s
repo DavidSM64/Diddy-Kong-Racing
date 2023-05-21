@@ -30,8 +30,8 @@ glabel func_800159C8
 /* 0165EC 800159EC 460A4001 */  sub.s $f0, $f8, $f10
 /* 0165F0 800159F0 44814000 */  mtc1  $at, $f8
 /* 0165F4 800159F4 C4A60014 */  lwc1  $f6, 0x14($a1)
-/* 0165F8 800159F8 3C018012 */  lui   $at, %hi(D_8011ADA8) # $at, 0x8012
-/* 0165FC 800159FC C42AADA8 */  lwc1  $f10, %lo(D_8011ADA8)($at)
+/* 0165F8 800159F8 3C018012 */  lui   $at, %hi(gObjectUpdateRateF) # $at, 0x8012
+/* 0165FC 800159FC C42AADA8 */  lwc1  $f10, %lo(gObjectUpdateRateF)($at)
 /* 016600 80015A00 46043381 */  sub.s $f14, $f6, $f4
 /* 016604 80015A04 8CA6004C */  lw    $a2, 0x4c($a1)
 /* 016608 80015A08 460A4183 */  div.s $f6, $f8, $f10

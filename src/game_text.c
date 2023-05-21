@@ -204,7 +204,7 @@ void func_800C30CC(void) {
         D_800E3670 = 0;
         D_8012A789 = 0;
         for (i = 0; i < 10; i++) {
-            func_8009CFB0();
+            try_close_dialogue_box();
         };
         func_800C2AB4();
     }
@@ -313,7 +313,7 @@ void func_800C3440(s32 arg0) {
                     D_8012A784 = 1;
                 }
             }
-            func_8009CFEC(3);
+            npc_dialogue_loop(DIALOGUE_CHALLENGE);
         }
     }
 }

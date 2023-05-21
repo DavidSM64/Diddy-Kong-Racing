@@ -14,6 +14,12 @@
 #include "math_util.h"
 #include "main.h"
 
+/************ .rodata ************/
+
+const char D_800E87F0[] = "\nMaximum limit of %d lens flare switches, per level, has been exceeded.";
+
+/*********************************/
+
 /************ .data ************/
 
 unk800E2850 D_800E2850[3] = {
@@ -381,6 +387,8 @@ void func_800AC880(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC8A8.s")
+
+//https://decomp.me/scratch/mYuMJ
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800ACA20.s")
 
 void cameraAddOverrideObject(Object *arg0) {
@@ -560,4 +568,5 @@ void handle_rain_sound(UNUSED s32 updateRate) {
     }
 }
 
+//https://decomp.me/scratch/PDAZs
 GLOBAL_ASM("asm/non_matchings/game_ui/render_rain_overlay.s")

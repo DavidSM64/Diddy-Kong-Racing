@@ -24,12 +24,12 @@
 #define SCREEN_FIT_Y(x) ((x) *(SCREEN_HEIGHT_FLOAT / 240.0f))
 
 enum DialogueMenuCases {
-    DIALOG_TAJ,
-    DIALOG_UNK_01,
-    DIALOG_TT,
-    DIALOG_CHALLENGE,
-    DIALOG_TROPHY,
-    DIALOG_RACERESULT
+    DIALOGUE_TAJ,
+    DIALOGUE_UNK_01,
+    DIALOGUE_TT,
+    DIALOGUE_CHALLENGE,
+    DIALOGUE_TROPHY,
+    DIALOGUE_RACERESULT
 };
 
 #define CHEAT(index) 1 << index
@@ -130,6 +130,17 @@ typedef struct unk800DF510 {
     s8  unk1D;
     u8  pad1E[2];
 } unk800DF510;
+
+typedef struct unk80080BC8 {
+    Vertex *vertices;
+    s32 *unk4;
+    Triangle *triangles;
+    s32 *unkC;
+    TextureHeader *texture;
+    s32 *unk14;
+    s32 unk18;
+    s32 unk1C;
+} unk80080BC8;
 
 typedef struct unk80126460 {
     MenuElement elem[2];
@@ -642,12 +653,6 @@ extern Gfx dMenuHudSettings[6];
 
 extern s8 D_800E1CD0[32];
 
-extern s8 D_800E1CF0[60];
-
-extern u16 D_800E1D2C[40];
-
-extern s16 D_800E1D7C[20];
-
 extern s32 *D_800E1DA4[2];
 
 extern s32 *D_800E1DAC[2];
@@ -688,7 +693,6 @@ extern u64 sEepromSettings;
 extern char *sInsertControllerPakMenuText[3];
 extern char *sNoControllerPakMenuText[5];
 extern char *sInsertRumblePakMenuText[4];
-extern s32 *D_80126C2C;
 extern Settings *gSavefileData[4];
 
 extern DrawTexture D_800DFC10[2];
@@ -837,8 +841,8 @@ void allocate_menu_images(s16 *imageSet);
 void allocate_and_set_menu_image_properties(s32 imageID);
 void func_8009CA58(void);
 void func_8009CF68(s32 arg0);
-void func_8009CFB0(void);
-s32 func_8009CFEC(u32 arg0);
+void try_close_dialogue_box(void);
+s32 npc_dialogue_loop(u32 arg0);
 void set_option_text_colour(s32 condition);
 void render_dialogue_option(char *text, s32 yOffset, s32 optionID);
 void handle_menu_joystick_input(void);
@@ -934,7 +938,7 @@ void set_D_800DD430(s8 arg0);
 void func_80099E8C(s32 updateRate);
 s32 func_800998E0(s32 arg0);
 void func_80081218(void);
-void func_80080580(Gfx **arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6, s32 arg7, void *arg8);
+void func_80080580(Gfx** dlist, s32 x, s32 y, s32 x0, s32 y0, s32 x1, s32 y1, s32 colour, TextureHeader* tex);
 void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
 void render_enter_filename_ui(UNUSED s32 unused);
 void func_8008D8BC(s32 updateRate);

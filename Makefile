@@ -313,6 +313,7 @@ $(BUILD_DIR)/src/vehicle_wizpig.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/vehicle_rocket.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/controller.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/audiomgr.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/src/game.o: OPT_FLAGS := -O3
 
 
 $(BUILD_DIR)/src/waves.o: MIPSISET := -mips1
@@ -368,7 +369,7 @@ endif
 clean_src: clean_lib
 ifneq ($(wildcard $(BUILD_DIR)/src/.*),)
 	rm -r $(BUILD_DIR)/src/*.o
-	rm -r ./dkr.ld
+	rm -rf dkr.ld
 else 
 	@echo "/build/lib directory has already been deleted." 
 endif 

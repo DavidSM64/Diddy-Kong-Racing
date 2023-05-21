@@ -719,6 +719,7 @@ void render_hud_hubworld(Object *obj, s32 updateRate) {
 }
 
 // render_hud_time_trial
+//https://decomp.me/scratch/nZxsE
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A277C.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A36CC.s")
 

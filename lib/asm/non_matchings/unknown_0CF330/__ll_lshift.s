@@ -11,6 +11,7 @@ glabel __ll_lshift
 /* 0CF728 800CEB28 03E00008 */  jr    $ra
 /* 0CF72C 800CEB2C 0002103F */   dsra32 $v0, $v0, 0
 
+glabel func_800CEB30
 /* 0CF730 800CEB30 AFA40000 */  sw    $a0, ($sp)
 /* 0CF734 800CEB34 AFA50004 */  sw    $a1, 4($sp)
 /* 0CF738 800CEB38 AFA60008 */  sw    $a2, 8($sp)

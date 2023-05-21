@@ -75,7 +75,7 @@ enum RenderFlags {
     RENDER_UNK_1000000 =        (1 << 24),
     RENDER_UNK_2000000 =        (1 << 25),
     RENDER_UNK_4000000 =        (1 << 26),
-    RENDER_VTX_ALPHA =          (1 << 27), // Allows use of vertex alpha, disabling fog if necessary.
+    RENDER_VTX_ALPHA =          (1 << 27)  // Allows use of vertex alpha, disabling fog if necessary.
 };
 
 typedef enum TransFlags {
@@ -95,7 +95,7 @@ typedef enum TransFlags {
     OBJ_FLAGS_SHADOW_ONLY =     (1 << 12), // Still has a shadow, but the model is invisible.
     OBJ_FLAGS_UNK_2000 =        (1 << 13),
     OBJ_FLAGS_INVISIBLE =       (1 << 14), // Invisible, and hidden shadow too.
-    OBJ_FLAGS_DEACTIVATED =     (1 << 15), // Object is invisible and inactive.
+    OBJ_FLAGS_DEACTIVATED =     (1 << 15)  // Object is invisible and inactive.
 } TransFlags;
 
 #define TEX_TABLE_2D 0
@@ -164,6 +164,7 @@ void tex_animate_texture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s3
 void func_8007F1E8(unk8007F1E8 *arg0);
 void init_pulsating_light_data(PulsatingLightData *data);
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
+TextureHeader *func_8007B46C(TextureHeader *arg0, s32 arg1);
 
 TextureHeader *load_texture(s32 arg0); // Non Matching
 void free_texture(TextureHeader *tex); // Non Matching
@@ -179,7 +180,8 @@ MemoryPoolSlot *func_8007C12C(s32 spriteID, s32 arg1); // Non Matching
 void tex_init_textures(void); // Non Matching
 void func_8007BF34(Gfx **dlist, s32 arg1); // Non Matching
 void load_blinking_lights_texture(Gfx **dlist, TextureHeader *arg1, u32 flags, s32 arg3); // Non Matching
-void build_tex_display_list(TextureHeader *tex, Gfx *dlist); //Non Matching
+void build_tex_display_list(TextureHeader *tex, Gfx *dlist); // Non Matching
+void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2); // Non Matching
 
 TextureHeader *load_texture2(s32 arg0);
 

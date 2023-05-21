@@ -297,7 +297,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
                         func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, SOUND_EXPLOSION, 1.0f, 1);
                         gParticlePtrList_addObject(obj);
                     } else if (obj->properties.fireball.timer > 0) {
-                        racer->unk204 = 60;
+                        racer->bubbleTrapTimer = 60;
                         obj->properties.fireball.timer = -60;
                         obj->properties.fireball.obj = someObj;
                         play_sound_global(SOUND_BUBBLE_RISE, &weapon->soundMask);
@@ -689,7 +689,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
         if (obj->properties.trophyCabinet.action == 1) {
             func_800AB1AC(3);
             set_hud_visibility(0U);
-            dialogueID = func_8009CFEC(4);
+            dialogueID = npc_dialogue_loop(DIALOGUE_TROPHY);
             if (dialogueID) {
                 obj->properties.trophyCabinet.action = 0;
                 func_8009CF68(4);
@@ -873,7 +873,7 @@ void obj_loop_rocketsignpost(Object *obj, UNUSED s32 updateRate) {
     Object *playerObj;
     ObjectInteraction *interactObj;
 
-    playerObj = get_racer_object(0);
+    playerObj = get_racer_object(PLAYER_ONE);
     if (playerObj != NULL) {
         interactObj = obj->interactObj;
         if (interactObj->distance < 200) {
@@ -1210,7 +1210,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         func_800AB194(3);
     }
     if (obj->properties.npc.action >= TT_MODE_TURN_TOWARDS_PLAYER) {
-        index = func_8009CFEC(2U);
+        index = npc_dialogue_loop(DIALOGUE_TT);
     } else {
         func_8009CF68(2);
         index = 0;
@@ -1418,7 +1418,7 @@ void obj_loop_posarrow(Object *obj, UNUSED s32 updateRate) {
 }
 
 /* Offical name: animInit */
-void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 arg2) {
+void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 param) {
     Object_Animator *obj64;
     LevelModel *levelModel;
     s16 segmentBatchCount;
@@ -1429,7 +1429,8 @@ void obj_init_animator(Object *obj, LevelObjectEntry_Animator *entry, s32 arg2) 
     obj64->speedFactorX = entry->speedFactorX;
     obj64->speedFactorY = entry->speedfactorY;
     obj64->segmentId = get_level_segment_index_from_position(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
-    if (arg2 == 0) {
+    // Always true.
+    if (param == 0) {
         obj64->xSpeed = 0;
         obj64->ySpeed = 0;
     }
@@ -2064,7 +2065,7 @@ void obj_loop_dino_whale(Object *obj, s32 updateRate) {
     }
     animFrame = obj->segment.animFrame;
     func_8001F460(obj, updateRate, obj);
-    func_800113CC(obj, 0, animFrame, SOUND_STOMP2, SOUND_STOMP3);
+    play_footstep_sounds(obj, 0, animFrame, SOUND_STOMP2, SOUND_STOMP3);
     if (obj->interactObj->distance < 255) {
         if (obj->properties.common.unk0 == 0) {
             obj->properties.common.unk0 = 60;
@@ -2120,7 +2121,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     Object *temp_v0_12;
     s32 var_a2;
     Object **racerObjs;
-    s32 var_a2_2;
+    s32 dialogueID;
     s32 numRacers;
     Object_NPC *taj;
     Object_64 *racer64;
@@ -2215,11 +2216,11 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         case TAJ_MODE_DIALOGUE:
         case TAJ_MODE_TRANSFORM_BEGIN:
         case TAJ_MODE_TRANSFORM_END:
-            var_a2_2 = func_8009CFEC(0);
+            dialogueID = npc_dialogue_loop(DIALOGUE_TAJ);
             break;
         default:
             func_8009CF68(0);
-            var_a2_2 = 0;
+            dialogueID = 0;
             break;
     }
 
@@ -2237,7 +2238,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             func_8006F388(1);
             break;
     }
-    if (obj->properties.npc.action != TAJ_MODE_ROAM && var_a2_2 != 0 && obj->properties.npc.action < 4) {
+    if (obj->properties.npc.action != TAJ_MODE_ROAM && dialogueID != 0 && obj->properties.npc.action < 4) {
         obj->properties.npc.action = TAJ_MODE_DIALOGUE;
     }
     switch (obj->properties.npc.action) {
@@ -2324,8 +2325,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         obj->segment.object.animationID = 4;
         taj->animFrameF += updateRateF * 1.0f;
         racer_set_dialogue_camera();
-        if (var_a2_2 == 3 || var_a2_2 == 4) {
-            obj->properties.npc.action = (var_a2_2 == 4) ? TAJ_MODE_END_DIALOGUE_UNUSED : TAJ_MODE_END_DIALOGUE;
+        if (dialogueID == 3 || dialogueID == 4) {
+            obj->properties.npc.action = (dialogueID == 4) ? TAJ_MODE_END_DIALOGUE_UNUSED : TAJ_MODE_END_DIALOGUE;
             taj->animFrameF = 0.1f;
             obj->segment.object.animationID = 2;
             taj->unk1C = 0;
@@ -2336,8 +2337,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             func_80001074(levelHeader->instruments);
             func_80008168();
         }
-        if (var_a2_2 & 0x80) {
-            D_8011D4E0 = var_a2_2 & 0x7F;
+        if (dialogueID & 0x80) {
+            D_8011D4E0 = dialogueID & 0x7F;
             if (D_8011D4E0 != racer64->racer.vehicleID) {
                 obj->properties.npc.action = TAJ_MODE_TRANSFORM_BEGIN;
                 taj->animFrameF = 0;
@@ -2347,8 +2348,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 set_menu_id_if_option_equal(0x62, 2);
             }
         }
-        if (var_a2_2 & 0x40) {
-            D_8011D4E0 = var_a2_2 & 0xF;
+        if (dialogueID & 0x40) {
+            D_8011D4E0 = dialogueID & 0xF;
             if (D_8011D4E0 != racer64->racer.vehicleID) {
                 D_8011D4E0 |= 0x80;
                 obj->properties.npc.action = TAJ_MODE_TRANSFORM_BEGIN;
@@ -3340,7 +3341,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
         break;
     case 2:
         obj->properties.common.unk0 = 1;
-        racerObj = get_racer_object(0);
+        racerObj = get_racer_object(PLAYER_ONE);
         if (racerObj != NULL) {
             racer = (Object_Racer *) racerObj->unk64;
             switch(racer->vehicleID) {

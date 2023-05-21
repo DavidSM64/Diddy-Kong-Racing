@@ -14,7 +14,7 @@
 
 /************ .data ************/
 
-u16 D_800DCE00[16] = {
+u16 gBlueyVoiceTable[16] = {
     SOUND_VOICE_BLUEY_EH3,
     SOUND_VOICE_BLUEY_EH,
     SOUND_VOICE_BLUEY_OHNO,
@@ -33,93 +33,82 @@ u16 D_800DCE00[16] = {
     SOUND_NONE,
 };
 
-u16 D_800DCE20[16] = {
-    SOUND_VOICE_BOSS_LAUGH2,
-    SOUND_VOICE_TRICKY_HM,
-    SOUND_VOICE_TRICKY_HMMM,
-    SOUND_VOICE_WIZPIG_HA,
-    SOUND_VOICE_WIZPIG_H2,
-    SOUND_VOICE_SMOKEY_EH,
-    SOUND_VOICE_SMOKEY_HEH,
-    SOUND_VOICE_SMOKEY_HAH,
-    SOUND_VOICE_SMOKEY_LAUGH,
-    SOUND_VOICE_SMOKEY_HM,
-    SOUND_VOICE_SMOKEY_HM2,
-    SOUND_VOICE_CONKER_YEHAHA,
-    SOUND_VOICE_TIMBER_WOW,
-    SOUND_WHOOSH2,
-    SOUND_NONE,
-    SOUND_NONE,
-};
-
 /*******************************/
 
 /************ .bss ************/
 
-s8 D_8011D5D0;
-s8 D_8011D5D1;
+s8 gBlueyCutsceneTimer;
+s8 gBlueyStartBoost;
 
 /******************************/
+
+enum BlueAnimations {
+    ANIM_BLUEY_RUN,
+    ANIM_BLUEY_WALK,
+    ANIM_BLUEY_IDLE,
+    ANIM_BLUEY_TURN,
+    ANIM_BLUEY_DAMAGE
+};
 
 /**
  * Top level function for the Bluey vehicle, as seen in the Snowflake Mountain boss stage.
 */
 void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
-    s16 sp5E;
-    s16 sp5C;
-    s16 sp5A;
+    s16 animID;
+    s16 animFrame;
+    s16 tempHeadAngle;
     f32 diffX;
     f32 diffZ;
-    s32 var_v0;
-    s32 sp48;
+    s32 steerVel;
+    s32 tempStartTimer;
     ObjectModel *objModel;
-    Object_68 *obj68;
+    Object_68 *gfxData;
     s32 sp3C;
     Object *firstRacerObj;
 
-    set_boss_voice_clip_offset(D_800DCE00);
+    set_boss_voice_clip_offset(gBlueyVoiceTable);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
-    sp5E = obj->segment.object.animationID;
-    sp5C = obj->segment.animFrame;
-    sp5A = racer->headAngle;
+    animID = obj->segment.object.animationID;
+    animFrame = obj->segment.animFrame;
+    tempHeadAngle = racer->headAngle;
     if (racer->raceFinished == TRUE && func_80023568()) {
         func_80021400(130);
         racer->raceFinished++;
     }
-    sp48 = *startTimer;
-    if (sp48 == 100) {
-        D_8011D5D0 = 0;
+    tempStartTimer = *startTimer;
+    if (tempStartTimer == 100) {
+        gBlueyCutsceneTimer = 0;
     }
     if (racer->playerIndex == PLAYER_COMPUTER) {
         if (*startTimer != 100) {
             *startTimer -= 15;
             if (*startTimer  < 0) {
-                if (D_8011D5D1 == 0) {
-                    func_8005CB04(0);
+                if (gBlueyStartBoost == FALSE) {
+                    play_random_boss_sound(BOSS_SOUND_POSITIVE);
                     racer->boostTimer = 3;
                 }
-                D_8011D5D1 = 1;
+                gBlueyStartBoost = TRUE;
                 *startTimer = 0;
                 *input |= A_BUTTON;
             } else {
-                D_8011D5D1 = 0;
+                gBlueyStartBoost = FALSE;
             }
         }
     }
     
     func_8004F7F4(updateRate, updateRateF, obj, racer);
-    *startTimer = sp48;
+    *startTimer = tempStartTimer;
     racer->lateral_velocity = 0.0f;
-    racer->headAngle = sp5A;
-    obj->segment.object.animationID = (s8) sp5E;
-    obj->segment.animFrame = sp5C;
+    racer->headAngle = tempHeadAngle;
+    obj->segment.object.animationID = animID;
+    obj->segment.animFrame = animFrame;
     if (racer->attackType != ATTACK_NONE) {
-        if (obj->segment.object.animationID != 4) {
+        if (obj->segment.object.animationID != ANIM_BLUEY_DAMAGE) {
             racer->unk1CD = obj->segment.object.animationID;
-            obj->segment.object.animationID = 4;
-            racer->unkC = 0.0f;
-            func_8005CB04(1);
+            obj->segment.object.animationID = ANIM_BLUEY_DAMAGE;
+            racer->animationSpeed = 0.0f;
+            play_random_boss_sound(BOSS_SOUND_NEGATIVE);
             play_sound_global(SOUND_EXPLOSION, NULL);
             set_camera_shake(12.0f);
             racer->attackType = ATTACK_NONE;
@@ -136,89 +125,88 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     if ((find_next_checkpoint_node(racer->checkpoint, racer->unk1C8))->unk36[racer->unk1CA] == 1) {
         sp3C = TRUE;
     }
-    if (obj->segment.object.animationID != 4) {
+    if (obj->segment.object.animationID != ANIM_BLUEY_DAMAGE) {
         if (racer->velocity < -2.0f) {
             if (sp3C) {
                 if (racer->unk1CD != 3) {
-                    racer->unkC = 40.0f;
+                    racer->animationSpeed = 40.0f;
                 }
-                obj->segment.object.animationID = 3;
-                var_v0 = racer->steerAngle;
-                var_v0 *= 2;
-                var_v0 = 40 - var_v0;
-                if (var_v0 < 0) {
-                    var_v0 = 0;
+                obj->segment.object.animationID = ANIM_BLUEY_TURN;
+                steerVel = racer->steerAngle * 2;
+                steerVel = 40 - steerVel;
+                if (steerVel < 0) {
+                    steerVel = 0;
                 }
-                if (var_v0 > 73) {
-                    var_v0 = 73;
+                if (steerVel > 73) {
+                    steerVel = 73;
                 }
                 racer->unk1CD = 3;
-                racer->unkC += (var_v0 - racer->unkC) * 0.25f;
+                racer->animationSpeed += (steerVel - racer->animationSpeed) * 0.25f;
             } else {
                 racer->unk1CD = 0;
-                obj->segment.object.animationID = 0;
-                racer->unkC -= (racer->velocity * updateRateF) * 0.5f;
+                obj->segment.object.animationID = ANIM_BLUEY_RUN;
+                racer->animationSpeed -= (racer->velocity * updateRateF) * 0.5f;
             }
         } else if (racer->velocity < -0.1f || 0.1f < racer->velocity) {
             racer->unk1CD = 1;
-            obj->segment.object.animationID = 1;
-            racer->unkC -= racer->velocity * updateRateF * 2;
+            obj->segment.object.animationID = ANIM_BLUEY_WALK;
+            racer->animationSpeed -= racer->velocity * updateRateF * 2;
         } else {
             racer->unk1CD = 2;
-            obj->segment.object.animationID = 2;
-            racer->unkC += updateRateF * 1.0f;
+            obj->segment.object.animationID = ANIM_BLUEY_IDLE;
+            racer->animationSpeed += updateRateF * 1.0f;
         }
     } else {
-        racer->unkC += updateRateF * 1.0f;
+        racer->animationSpeed += updateRateF * 1.0f;
     }
-    obj68 = *obj->unk68;
-    objModel = obj68->objModel;
+    gfxData = *obj->unk68;
+    objModel = gfxData->objModel;
     diffX = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
-    while (racer->unkC < 0.0f) {
-        racer->unkC += diffX;
-        obj68->unk10 = -1;
+    while (racer->animationSpeed < 0.0f) {
+        racer->animationSpeed += diffX;
+        gfxData->unk10 = -1;
     }
-    while (diffX < racer->unkC) {
-        racer->unkC -= diffX;
-        obj68->unk10 = -1;
+    while (diffX < racer->animationSpeed) {
+        racer->animationSpeed -= diffX;
+        gfxData->unk10 = -1;
     }
-    if ((obj68->unk10 == -1) && (obj->segment.object.animationID == 4)) {
+    if (gfxData->unk10 == -1 && obj->segment.object.animationID == ANIM_BLUEY_DAMAGE) {
         obj->segment.object.animationID = racer->unk1CD;
     }
-    sp5C = obj->segment.animFrame;
-    obj->segment.animFrame = racer->unkC;
+    animFrame = obj->segment.animFrame;
+    obj->segment.animFrame = racer->animationSpeed;
     obj->unk74 = 0;
-    if (obj->segment.object.animationID == 0) {
-        func_800113CC(obj, 2, sp5C, SOUND_STOMP2, SOUND_STOMP3);
+    if (obj->segment.object.animationID == ANIM_BLUEY_RUN) {
+        play_footstep_sounds(obj, 2, animFrame, SOUND_STOMP2, SOUND_STOMP3);
         obj->unk74 |= 3;
     }
     func_800AFC3C(obj, updateRate);
-    fade_when_near_camera(obj, racer, 0x28);
-    firstRacerObj = get_racer_object(0);
+    fade_when_near_camera(obj, racer, 40);
+    firstRacerObj = get_racer_object(PLAYER_ONE);
     diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
     diffZ = firstRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
-    if (((diffX * diffX) + (diffZ * diffZ)) < 700.0f * 700.0f) {
-        sp48 = (arctan2_f(diffX, diffZ) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
-        WRAP(sp48, -0x8000, 0x8000);
-        CLAMP(sp48, -0xC00, 0xC00);
-        racer->headAngleTarget = sp48;
+    if ((diffX * diffX) + (diffZ * diffZ) < 700.0f * 700.0f) {
+        tempStartTimer = (arctan2_f(diffX, diffZ) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
+        WRAP(tempStartTimer, -0x8000, 0x8000);
+        CLAMP(tempStartTimer, -0xC00, 0xC00);
+        racer->headAngleTarget = tempStartTimer;
     }
-    if (obj->segment.object.animationID == 1) {
+    if (obj->segment.object.animationID == ANIM_BLUEY_WALK) {
         if ((racer->miscAnimCounter & 0x3F) < 20) {
             racer->headAngleTarget >>= 1;
         }
     }
-    if (obj->segment.object.animationID == 3) {
+    if (obj->segment.object.animationID == ANIM_BLUEY_TURN) {
         racer->headAngleTarget = 0;
     }
     racer = (Object_Racer *) firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == 1) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_BLUEY_WALK) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {
-        if (D_8011D5D0 == 0) {
-            D_8011D5D0 = 1;
-            func_8005CB68(racer, &D_8011D5D0);
+        if (gBlueyCutsceneTimer == 0) {
+            gBlueyCutsceneTimer = 1;
+            func_8005CB68(racer, &gBlueyCutsceneTimer);
         }
     }
 }

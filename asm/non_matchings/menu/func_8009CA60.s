@@ -61,7 +61,7 @@ glabel func_8009CA60
 /* 09D74C 8009CB4C A159003A */  sb    $t9, 0x3a($t2)
 .L8009CB50:
 /* 09D750 8009CB50 8D8CF764 */  lw    $t4, %lo(sMenuGuiOpacity)($t4)
-/* 09D754 8009CB54 0C004B57 */  jal   func_80012D5C
+/* 09D754 8009CB54 0C004B57 */  jal   render_object
 /* 09D758 8009CB58 A0EC0039 */   sb    $t4, 0x39($a3)
 /* 09D75C 8009CB5C 10000084 */  b     .L8009CD70
 /* 09D760 8009CB60 8FBF0024 */   lw    $ra, 0x24($sp)
