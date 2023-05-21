@@ -286,19 +286,20 @@ $(BUILD_DIR)/lib/%.o: OPT_FLAGS := -O2 -Xfullwarn
 $(BUILD_DIR)/lib/src/al/%.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/lib/src/os/%.o: OPT_FLAGS := -O2 -Xfullwarn
 $(BUILD_DIR)/lib/src/os/osViMgr.o: OPT_FLAGS := -O2 -Xfullwarn
-$(BUILD_DIR)/lib/src/os/osCreatePiManager.o: OPT_FLAGS := -O2 -Xfullwarn
-$(BUILD_DIR)/lib/src/os/osMotor.o: OPT_FLAGS := -O2 -Xfullwarn
+$(BUILD_DIR)/lib/src/os/osCreatePiManager.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/lib/src/os/osMotor.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/lib/src/libc/xprintf.o : OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/al/env.o: OPT_FLAGS := -O2 -Xfullwarn
+$(BUILD_DIR)/lib/src/al/env.o: OPT_FLAGS := -O3
 #$(BUILD_DIR)/lib/src/libc/llcvt.o: OPT_FLAGS :=
 #$(BUILD_DIR)/lib/src/libc/llcvt.o: MIPSISET := -mips3 32
 
 ####################### MATH UTIL #########################
+
 $(BUILD_DIR)/src/video.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/borders.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/set_rsp_segment.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/screen_asset.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/src/thread30.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/src/thread30.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/asset_loading.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/main.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/font.o: OPT_FLAGS := -O3
@@ -314,13 +315,10 @@ $(BUILD_DIR)/src/vehicle_rocket.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/controller.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/audiomgr.o: OPT_FLAGS := -O3
 $(BUILD_DIR)/src/game.o: OPT_FLAGS := -O3
-
+$(BUILD_DIR)/src/thread0_epc.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/lib/src/mips1/sc/sched.o: OPT_FLAGS := -O3
 
 $(BUILD_DIR)/src/waves.o: MIPSISET := -mips1
-
-
-$(BUILD_DIR)/lib/src/mips1/sc/sched.o: OPT_FLAGS := -O3
-#$(BUILD_DIR)/lib/src/mips1/os/osCreatePiManager.o: OPT_FLAGS := -O3
 
 ######################## Targets #############################
 
