@@ -1950,6 +1950,8 @@ void obj_loop_teleport(Object *obj, UNUSED s32 updateRate) {
 void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
     f32 radius;
     Object_Exit *exit;
+    Settings* settings;
+
     radius = entry->radius & 0xFF;
     if (radius < 5.0f) {
         radius = 5.0f;
@@ -1972,11 +1974,11 @@ void obj_init_exit(Object *obj, LevelObjectEntry_Exit *entry) {
 #ifndef OPEN_ALL_DOORS
     settings = get_settings();
     // Disable the warp if it's for the first boss encounter, having collected every balloon.
-    if ((exit->bossFlag == WARP_BOSS_FIRST) && (settings->balloonsPtr[settings->worldId] == 8)) {
+    if (exit->bossFlag == WARP_BOSS_FIRST && settings->balloonsPtr[settings->worldId] == 8) {
         gParticlePtrList_addObject(obj);
     }
     // Disable the warp if it's for the second boss encounter, having not collected every balloon.
-    if ((exit->bossFlag == WARP_BOSS_REMATCH) && (settings->balloonsPtr[settings->worldId] < 8)) {
+    if (exit->bossFlag == WARP_BOSS_REMATCH && settings->balloonsPtr[settings->worldId] < 8) {
         gParticlePtrList_addObject(obj);
     }
 #else
