@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_0255E0_H_
-#define _UNKNOWN_0255E0_H_
+#ifndef _TRACKS_H_
+#define _TRACKS_H_
 
 #include "types.h"
 #include "structs.h"

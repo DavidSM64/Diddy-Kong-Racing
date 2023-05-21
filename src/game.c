@@ -35,7 +35,7 @@
 #include "fade_transition.h"
 #include "borders.h"
 #include "unknown_008C40.h"
-#include "unknown_0255E0.h"
+#include "tracks.h"
 #include "game_text.h"
 #include "game_ui.h"
 #include "main.h"

@@ -18,7 +18,7 @@
 #include "game.h"
 #include "printf.h"
 #include "math_util.h"
-#include "unknown_0255E0.h"
+#include "tracks.h"
 #include "weather.h"
 #include "vehicle_misc.h"
 #include "unknown_005740.h"
