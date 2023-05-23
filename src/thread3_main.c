@@ -216,7 +216,7 @@ void init_game(void) {
     func_80081218(); // init_save_data
     create_and_start_thread30();
 #ifdef ENABLE_USB
-	init_usb_thread();
+    init_usb_thread();
 #endif
     osCreateMesgQueue(&gGameMesgQueue, gGameMesgBuf, 3);
     osScAddClient(&gMainSched, (OSScClient*) gNMISched, &gGameMesgQueue, OS_SC_ID_VIDEO);
@@ -302,7 +302,7 @@ void main_game_loop(void) {
 #endif
 
 #ifdef ENABLE_USB
-	tick_usb_thread();
+    tick_usb_thread();
 #endif
 
     /*if (gVideoSkipNextRate) {
@@ -377,10 +377,10 @@ void main_game_loop(void) {
 
     // This is a good spot to place custom text if you want it to overlay it over ALL the
     // menus & gameplay.
-	
+    
 #ifdef ENABLE_USB
 #ifdef SHOW_USB_INFO
-	render_usb_info();
+    render_usb_info();
 #endif
 #endif
 

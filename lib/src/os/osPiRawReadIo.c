@@ -24,7 +24,6 @@ s32 osPiRawWriteIo(u32 devAddr, u32 data) {
     return 0;
 }
 
-
 s32 osPiReadIo(u32 devAddr, u32* data) {
     register s32 ret;
 
