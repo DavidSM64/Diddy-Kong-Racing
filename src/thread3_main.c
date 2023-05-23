@@ -46,6 +46,11 @@
 #include "controller.h"
 #include "game.h"
 
+#include "config.h"
+#ifdef ENABLE_USB
+#include "usb/dkr_usb.h"
+#endif
+
 /************ .data ************/
 
 s8 sAntiPiracyTriggered = 0;
@@ -210,6 +215,9 @@ void init_game(void) {
     init_controller_paks();
     func_80081218(); // init_save_data
     create_and_start_thread30();
+#ifdef ENABLE_USB
+	init_usb_thread();
+#endif
     osCreateMesgQueue(&gGameMesgQueue, gGameMesgBuf, 3);
     osScAddClient(&gMainSched, (OSScClient*) gNMISched, &gGameMesgQueue, OS_SC_ID_VIDEO);
     gNMIMesgBuf = 0;
@@ -293,6 +301,10 @@ void main_game_loop(void) {
     profiler_snapshot(THREAD4_START);
 #endif
 
+#ifdef ENABLE_USB
+	tick_usb_thread();
+#endif
+
     /*if (gVideoSkipNextRate) {
         sLogicUpdateRate = LOGIC_60FPS;
         sTotalTime = 0;
@@ -365,6 +377,12 @@ void main_game_loop(void) {
 
     // This is a good spot to place custom text if you want it to overlay it over ALL the
     // menus & gameplay.
+	
+#ifdef ENABLE_USB
+#ifdef SHOW_USB_INFO
+	render_usb_info();
+#endif
+#endif
 
     handle_music_fade(sLogicUpdateRate);
     print_debug_strings(&gCurrDisplayList);
