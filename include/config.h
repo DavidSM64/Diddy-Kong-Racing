@@ -52,7 +52,10 @@
 #define SCREEN_HEIGHT           240         // Default height is 240. Recommended to be 224 for 4MB users.
 
 
-
+/* --------------------------Usb-------------------------- */
+// Optional USB stuff
+//#define ENABLE_USB                          // Allows for USB detection for flashcarts. Automatically set if PUPPYPRINT_DEBUG is defined.
+#define SHOW_USB_INFO                       // Renders USB information on HUD.
 
 
 // Don't touch any of this below.
@@ -78,6 +81,10 @@
 
 #ifdef OPEN_ALL_DOORS
 #define UNLOCK_ALL
+#endif
+
+#ifdef PUPPYPRINT_DEBUG
+#define ENABLE_USB                         // Always have USB enabled if puppyprint is enabled.
 #endif
 
 #endif // CONFIG_H
