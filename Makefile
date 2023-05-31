@@ -147,7 +147,7 @@ endif
 
 AS = $(CROSS)as
 CC := $(RECOMP_DIR)cc
-CPP := cpp -P -Wno-trigraphs
+CPP := cpp -P -Wno-trigraphs -I include
 LD = $(CROSS)ld
 OBJDUMP = $(CROSS)objdump
 # Pad to 12MB if matching, otherwise build to a necessary minimum of 1.04KB
@@ -171,7 +171,7 @@ IDO_IGNORE_WARNINGS = -woff 838,649,624
 ASFLAGS = -mtune=vr4300 -march=vr4300 -mabi=32 $(foreach d,$(DEFINES),--defsym $(d))
 INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I src -I . -I include/libc
 CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -DNDEBUG $(OPT_FLAGS) $(MIPSISET) $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) $(IDO_IGNORE_WARNINGS)
-LDFLAGS = undefined_syms.txt -T $(LD_SCRIPT) -Map $(BUILD_DIR)/dkr.map
+LDFLAGS = undefined_syms.txt -T $(BUILD_DIR)/$(LD_SCRIPT) -Map $(BUILD_DIR)/dkr.map
 
 ####################### Other Tools #########################
 
@@ -440,6 +440,7 @@ ifeq ($(NON_MATCHING),0)
 else
 	@$(PRINT) "$(GREEN)Build Complete!$(NO_COL)\n"
 endif
+	@if [ -f on_build.sh ]; then ./on_build.sh $(BUILD_DIR); fi
 
 $(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR)/$(TARGET).z64
 	xxd $< > $@

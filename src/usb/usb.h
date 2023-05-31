@@ -43,6 +43,9 @@
               USB Functions
     *********************************/
     
+    extern void usb_set_debug_address(u32 newAddress);
+    extern void usb_restore_debug_address();
+    
     /*==============================
         usb_initialize
         Initializes the USB buffers and pointers
