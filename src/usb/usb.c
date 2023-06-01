@@ -33,7 +33,7 @@ extern s32 osPiRawWriteIo(u32 devAddr, u32 data);
 #define BUFFER_SIZE 512
 
 // USB Memory location
-#define DEBUG_ADDRESS (0x04000000 - DEBUG_ADDRESS_SIZE) // Put the debug area at the 64MB - DEBUG_ADDRESS_SIZE area in ROM space
+#define DEFAULT_DEBUG_ADDRESS (0x04000000 - DEBUG_ADDRESS_SIZE) // Put the debug area at the 64MB - DEBUG_ADDRESS_SIZE area in ROM space
 
 // Data header related
 #define USBHEADER_CREATE(type, left) (((type<<24) | (left & 0x00FFFFFF)))
@@ -123,7 +123,7 @@ extern s32 osPiRawWriteIo(u32 devAddr, u32 data);
          EverDrive macros
 *********************************/
 
-#define ED_TIMEOUT        1000
+#define ED_TIMEOUT        10000
 
 #define ED_BASE           0x10000000
 #define ED_BASE_ADDRESS   0x1F800000
@@ -255,6 +255,16 @@ static int usb_datatype = 0;
 static int usb_datasize = 0;
 static int usb_dataleft = 0;
 static int usb_readblock = -1;
+
+static u32 DEBUG_ADDRESS = DEFAULT_DEBUG_ADDRESS;
+
+void usb_set_debug_address(u32 newAddress) {
+    DEBUG_ADDRESS = newAddress;
+}
+
+void usb_restore_debug_address() {
+    DEBUG_ADDRESS = DEFAULT_DEBUG_ADDRESS;
+}
 
 #ifndef LIBDRAGON
     // Message globals

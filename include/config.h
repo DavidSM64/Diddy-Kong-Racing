@@ -56,6 +56,7 @@
 // Optional USB stuff
 //#define ENABLE_USB                          // Allows for USB detection for flashcarts. Automatically set if PUPPYPRINT_DEBUG is defined.
 #define SHOW_USB_INFO                       // Renders USB information on HUD.
+#define USB_HOT_RELOAD                      // Allows for quick reloading of game code.
 
 
 // Don't touch any of this below.
