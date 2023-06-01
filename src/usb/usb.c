@@ -9,6 +9,8 @@ using UNFLoader.
 https://github.com/buu342/N64-UNFLoader
 ***************************************************************/
 
+#ifdef ENABLE_USB
+
 #include "usb.h"
 #ifndef LIBDRAGON
     #include <ultra64.h>
@@ -1473,3 +1475,5 @@ static void usb_sc64_read(void)
     // Set up DMA transfer between RDRAM and the PI
     usb_dma_read(usb_buffer, SC64_BASE + DEBUG_ADDRESS + usb_readblock, BUFFER_SIZE);
 }
+
+#endif
