@@ -9,6 +9,8 @@ using UNFLoader.
 https://github.com/buu342/N64-UNFLoader
 ***************************************************************/
 
+#include "config.h"
+
 #ifdef ENABLE_USB
 
 #include "usb.h"
