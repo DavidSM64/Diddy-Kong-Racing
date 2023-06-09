@@ -45,6 +45,8 @@
 #include "math_util.h"
 #include "controller.h"
 
+#include "usb/dkr_usb.h"
+
 /************ .rodata ************/
 
 UNUSED const char sLevelErrorString[] = "LOADLEVEL Error: Level out of range\n";
@@ -228,6 +230,7 @@ void init_game(void) {
     init_controller_paks();
     func_80081218(); // init_save_data
     create_and_start_thread30();
+    init_usb_thread();
     osCreateMesgQueue(&gNMIMesgQueue, &gNMIOSMesg, 1);
     osScAddClient(&gMainSched, (OSScClient*) gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);
     gNMIMesgBuf = 0;
@@ -252,6 +255,8 @@ void main_game_loop(void) {
     s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
 
     osSetTime(0);
+    
+    tick_usb_thread();
 
     if (gScreenStatus == MESG_SKIP_BUFFER_SWAP) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
@@ -313,6 +318,8 @@ void main_game_loop(void) {
 
     // This is a good spot to place custom text if you want it to overlay it over ALL the
     // menus & gameplay.
+    
+    render_usb_info();
 
     handle_music_fade(sLogicUpdateRate);
     print_debug_strings(&gCurrDisplayList);

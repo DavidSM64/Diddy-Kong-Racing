@@ -29,6 +29,8 @@
 #include "controller.h"
 #include "particles.h"
 
+#include "usb/autotracker.h"
+
 
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
@@ -5752,6 +5754,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
         racer->transitionTimer -= updateRate;
         if (racer->transitionTimer <= 0) {
             func_8006D968((s8* ) racer->exitObj->segment.level_entry);
+            send_map_warp_data_from_warp();
             racer->transitionTimer = 0;
         }
     }

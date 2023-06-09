@@ -45,6 +45,8 @@
 #include "math_util.h"
 #include "controller.h"
 
+#include "usb/autotracker.h"
+
 /************ .data ************/
 
 char *gTempLevelNames = NULL;
@@ -369,6 +371,11 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     s32 prevLevelID;
     Settings *settings;
     s32 offset;
+    
+    // Update save data when loading a new map
+    if(numberOfPlayers > ZERO_PLAYERS) {
+        send_save_data_to_computer_using_settings(get_settings());
+    }
 
     func_80072708();
     if (cutsceneId == -1) {

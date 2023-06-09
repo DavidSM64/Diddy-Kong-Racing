@@ -32,6 +32,8 @@
 #include "collision.h"
 #include "controller.h"
 
+#include "usb/autotracker.h"
+
 /************ .data ************/
 
 // Unsure about the signed/unsigned with these arrays.
@@ -3050,6 +3052,12 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
                             settings->balloonsPtr[0]++;
                         }
                         settings->courseFlagsPtr[settings->courseId] |= flag;
+                        
+                        // Update save data
+                        send_save_data_to_computer_using_settings(settings);
+                        // Send balloon got signal
+                        send_gold_balloon_data_to_computer((flag >> 16) & 0xFFFF, settings->worldId, settings->courseId);
+                        
                         if (1) {} // Fakematch
                         play_sound_spatial(SOUND_COLLECT_BALLOON, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
                         obj->properties.npc.timer = 16;
@@ -3934,6 +3942,10 @@ void obj_loop_worldkey(Object *worldKeyObj, s32 updateRate) {
                     play_sequence(SEQUENCE_KEY_COLLECT);
                     settings = get_settings();
                     settings->keys |= 1 << worldKeyObj->properties.worldKey.keyID; // Set key flag
+                    
+                    // Update save data
+                    send_save_data_to_computer_using_settings(settings);
+                    
                     gParticlePtrList_addObject(worldKeyObj);   // Makes the key unload.
                 }
             }
@@ -5202,6 +5214,9 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
             set_current_text_colour(4, 255, 255, 255, 0, (properties->opacity * 255) >> 8);
             render_dialogue_text(4, (x2 - x1) >> 1, ((y2 - y1) >> 1) + 2, levelName, 1, 12);
             open_dialogue_box(4);
+        }
+        if (properties->opacity > 80) {
+            send_map_warp_data_from_loop(properties->levelID, updateRate);
         }
     }
 }
