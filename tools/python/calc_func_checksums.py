@@ -65,7 +65,7 @@ def calculate_checksum_for_function(funcLabel, varLabel, funcSizeLabel):
 
 def calculate_matches():
     global mapFile, RAM_TO_ROM
-    REGEX_MAP_GET_LABEL = r"[ ]*?0x[0-9A-Fa-f]{8}([0-9A-Fa-f]{8})[ ]*?([_A-Za-z0-9]+)"
+    REGEX_MAP_GET_LABEL = r"[ ]*?(?:0x[0-9A-Fa-f]{8})?([0-9A-Fa-f]{8})[ ]*?([_A-Za-z0-9]+)"
     mapText = FileUtil.get_text_from_file(MAP_FILEPATH)
     mapMatches = getMatches(mapText, REGEX_MAP_GET_LABEL)
     for i in range(0, len(mapMatches) - 1):
