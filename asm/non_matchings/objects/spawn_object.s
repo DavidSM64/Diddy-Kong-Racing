@@ -822,7 +822,7 @@ glabel L8000EDE0
 /* 010200 8000F600 00000000 */  nop   
 /* 010204 8000F604 19C00003 */  blez  $t6, .L8000F614
 /* 010208 8000F608 00000000 */   nop   
-/* 01020C 8000F60C 0C003DD6 */  jal   lightSetupLightSources
+/* 01020C 8000F60C 0C003DD6 */  jal   light_setup_light_sources
 /* 010210 8000F610 02402025 */   move  $a0, $s2
 .L8000F614:
 /* 010214 8000F614 0C01867D */  jal   func_800619F4

@@ -61,7 +61,10 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031BB8.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031CAC.s")
 
-unk800DC950 *func_80031F88(Object *arg0, ObjectHeader24 *arg1) {
+/**
+ * Official Name: addObjectLight
+ */
+unk800DC950 *add_object_light(Object *arg0, ObjectHeader24 *arg1) {
     s32 i;
     unk800DC950 *temp_a2;
     MiscAssetObjectHeader24 *miscAsset;
