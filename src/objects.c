@@ -22,7 +22,7 @@
 #include "waves.h"
 #include "object_functions.h"
 #include "object_models.h"
-#include "unknown_032760.h"
+#include "lights.h"
 #include "game_ui.h"
 #include "unknown_008C40.h"
 #include "controller.h"

@@ -28,7 +28,7 @@
 #include "unknown_078050.h"
 #include "audiosfx.h"
 #include "audiomgr.h"
-#include "unknown_032760.h"
+#include "lights.h"
 #include "textures_sprites.h"
 #include "PR/os_internal.h"
 #include "printf.h"

@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_032760_H_
-#define _UNKNOWN_032760_H_
+#ifndef _LIGHTS_H_
+#define _LIGHTS_H_
 
 #include "types.h"
 #include "structs.h"

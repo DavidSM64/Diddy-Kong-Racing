@@ -7,7 +7,7 @@
 #include "object_functions.h"
 #include "libc/math.h"
 #include "camera.h"
-#include "unknown_032760.h"
+#include "lights.h"
 
 enum ObjectBehaviours {
     BHV_NONE,

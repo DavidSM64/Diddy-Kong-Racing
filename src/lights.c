@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80031B60 */
 
-#include "unknown_032760.h"
+#include "lights.h"
 
 #include "memory.h"
 #include "types.h"
@@ -29,6 +29,9 @@ f32 D_8011D4CC;
 
 /*******************************/
 
+/**
+ * Official Name: freeLights?
+ */
 void func_80031B60(void) {
     if (D_800DC950 != NULL) {
         free_from_memory_pool(D_800DC950);
@@ -41,8 +44,11 @@ void func_80031B60(void) {
     D_800DC958 = 0;
 }
 
-#ifdef NON_MATCHING
 // Regalloc issues
+#ifdef NON_MATCHING
+/**
+ * Official Name: setupLights?
+ */
 void func_80031BB8(s32 count) {
     s32 i;
     func_80031B60();
@@ -56,10 +62,10 @@ void func_80031BB8(s32 count) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031BB8.s")
+GLOBAL_ASM("asm/non_matchings/lights/func_80031BB8.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031CAC.s")
+GLOBAL_ASM("asm/non_matchings/lights/func_80031CAC.s")
 
 /**
  * Official Name: addObjectLight
@@ -172,8 +178,11 @@ void lightUpdateLights(s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80032424.s")
+GLOBAL_ASM("asm/non_matchings/lights/func_80032424.s")
 
+/**
+ * Official Name: killLight?
+*/
 void func_80032BAC(unk800DC950 *arg0) {
     unk800DC950 *entry = NULL;
     s32 i;
@@ -191,6 +200,9 @@ void func_80032BAC(unk800DC950 *arg0) {
     }
 }
 
+/**
+ * Official Name: lightGetLights?
+*/
 s32 func_80032C6C(void) {
     return D_800DC95C;
 }
@@ -352,7 +364,7 @@ void func_80032C7C(Object *object) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80032C7C.s")
+GLOBAL_ASM("asm/non_matchings/lights/func_80032C7C.s")
 #endif
 
 #ifdef NON_EQUIVALENT
@@ -391,9 +403,12 @@ void func_800337E4(void) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800337E4.s")
+GLOBAL_ASM("asm/non_matchings/lights/func_800337E4.s")
 #endif
 
+/**
+ * Official Name: lightDistanceCalc?
+*/
 f32 func_80033A14(unk800DC950 *arg0) {
     f32 out;
     f32 temp;
