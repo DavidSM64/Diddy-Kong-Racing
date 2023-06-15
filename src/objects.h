@@ -7,6 +7,7 @@
 #include "object_functions.h"
 #include "libc/math.h"
 #include "camera.h"
+#include "unknown_032760.h"
 
 enum ObjectBehaviours {
     BHV_NONE,
@@ -403,7 +404,7 @@ void func_800245B4(s16 arg0);
 void object_do_player_tumble(Object *this);
 f32 catmull_rom_interpolation(f32*, s32, f32);
 f32 cubic_spline_interpolation(f32 *data, s32 index, f32 x, f32 *derivative);
-s32 func_80031F88(Object*, ObjectHeader24 *);
+unk800DC950 *func_80031F88(Object*, ObjectHeader24 *);
 s16 func_8001C418(f32 yPos);
 void func_80021400(s32 arg0);
 s32 func_8001B668(s32 arg0);

@@ -16,7 +16,7 @@ typedef struct unk800DC950 {
     s16 unk6;
     s16 unk8;
     s16 unkA;
-    s32 unkC;
+    Object *unkC;
     f32 unk10;
     f32 unk14;
     f32 unk18;
@@ -36,7 +36,7 @@ typedef struct unk800DC950 {
     s16 unk48;
     s16 unk4A;
     s16 unk4C;
-    s16 unk4E;
+    u16 unk4E;
     s16 unk50;
     s16 unk52;
     s16 unk54;
