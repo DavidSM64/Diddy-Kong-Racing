@@ -61,21 +61,10 @@ GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031BB8.s")
 
 GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031CAC.s")
 
-#ifdef NON_EQUIVALENT
-typedef struct MiscAsset24 {
-    s32 unk0[4];
-    s32 *unk10[2];
-} MiscAsset24;
-
-//Pretty close, but need a better idea of what the misc asset is I think.
 unk800DC950 *func_80031F88(Object *arg0, ObjectHeader24 *arg1) {
-    s32 temp_t2;
-    s32 **temp_t3;
-    s32 *miscAsset;
     s32 i;
-    u16 miscAssetId;
     unk800DC950 *temp_a2;
-    s32 temp_a0_2;
+    MiscAssetObjectHeader24 *miscAsset;
 
     temp_a2 = NULL;
     if (D_800DC95C < D_800DC958) {
@@ -104,20 +93,16 @@ unk800DC950 *func_80031F88(Object *arg0, ObjectHeader24 *arg1) {
         temp_a2->unk28 = arg1->unk5 << 16;
         temp_a2->unk38 = 0;
         temp_a2->unk42 = 0;
-        miscAssetId = arg1->unk6;
-        if (miscAssetId != 0xFFFF) {
-            miscAsset = get_misc_asset(miscAssetId);
+        if (arg1->unk6 != 0xFFFF) {
+            miscAsset = (MiscAssetObjectHeader24 *) get_misc_asset(arg1->unk6);
             temp_a2->unk44 = miscAsset;
-            temp_t2 = miscAsset[0];
-            temp_t3 = &miscAsset[5];
-            temp_a0_2 = temp_t2 & 0xFFFF;
+            temp_a2->unk48 = miscAsset->unk0;
             temp_a2->unk4A = 0;
             temp_a2->unk4C = 0;
             temp_a2->unk4E = 0;
-            temp_a2->unk44 = temp_t3;
-            temp_a2->unk48 = (s16) temp_t2;
-            for (i = 0; i < temp_a0_2; i++) { \
-                temp_a2->unk4E += temp_t3[i][1]; //Must be on one line!
+            temp_a2->unk44 = &miscAsset->unk14;
+            for (i = 0; i < temp_a2->unk48 ; i++) { \
+                temp_a2->unk4E += temp_a2->unk44[i].unk4; //Must be on one line!
             }
         } else {
             temp_a2->unk44 = 0;
@@ -138,9 +123,6 @@ unk800DC950 *func_80031F88(Object *arg0, ObjectHeader24 *arg1) {
     }
     return temp_a2;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031F88.s")
-#endif
 
 UNUSED void func_80032210(unk800DC950 *arg0) {
     arg0->unk4 = 0;

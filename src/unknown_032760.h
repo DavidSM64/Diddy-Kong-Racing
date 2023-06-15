@@ -5,6 +5,17 @@
 #include "structs.h"
 #include "libc/math.h"
 
+typedef struct SubMiscAssetObjectHeader24 {
+    s32 unk0;
+    s32 unk4;
+} SubMiscAssetObjectHeader24;
+
+typedef struct MiscAssetObjectHeader24 {
+    s32 unk0;
+    u8 pad2[16];
+    SubMiscAssetObjectHeader24 *unk14;
+} MiscAssetObjectHeader24;
+
 /* Size: 0x88 bytes */
 typedef struct unk800DC950 {
     u8 unk0;
@@ -32,8 +43,8 @@ typedef struct unk800DC950 {
     s16 unk3E;
     s16 unk40;
     s16 unk42;
-    s32 unk44;
-    s16 unk48;
+    SubMiscAssetObjectHeader24 *unk44;
+    u16 unk48;
     s16 unk4A;
     s16 unk4C;
     u16 unk4E;
