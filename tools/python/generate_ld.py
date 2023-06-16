@@ -214,7 +214,7 @@ class GenerateLD:
 
     def append_files(self, files, extensions, directory, outputDir):
         filenames = FileUtil.get_filenames_from_directory_recursive(directory, extensions)
-        regex = r'[\/][*]+\s*RAM_POS:\s*0x([0-9a-fA-F]+)\s*[*]+[\/]'
+        regex = r'[\/][*]+\s*RAM_POS:\s*((?:0x)[0-9a-fA-F]+|(?:[Aa][Uu][Tt][Oo]))\s*[*]+[\/]'
         for filename in filenames:
             with open(directory + '/' + filename, 'r') as inFile:
                 notDone = True
@@ -225,7 +225,10 @@ class GenerateLD:
                         line = inFile.readline()
                         continue
                     matchedGroups = matches.groups()
-                    files.append((outputDir + filename[:-2] + '.o', '', matchedGroups[0], 0))
+                    ramPos = matchedGroups[0]
+                    if ramPos.lower() == 'auto':
+                        ramPos = '800FFFF0'
+                    files.append((outputDir + filename[:-2] + '.o', '', ramPos, 0))
                     break
 
     def get_code_files(self):
