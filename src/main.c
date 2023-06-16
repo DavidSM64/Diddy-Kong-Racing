@@ -11,6 +11,9 @@
 #include "controller.h"
 #include "printf.h"
 #include "particles.h"
+#include "set_rsp_segment.h"
+#include "unknown_008C40.h"
+#include "unknown_078050.h"
 
 /************ .bss ************/
 
@@ -172,14 +175,15 @@ void main(void) {
 extern OSSched gMainSched;
 
 #ifdef EXPANSION_PAK_REQUIRED
+
 void draw_memory_error_screen(void) {
     Gfx *dlist;
     init_main_memory_pool();
-    func_800C6170();
-    func_80076BA0();
+    rzipInit();
+    init_PI_mesg_queue();
     func_80008040(); // Should be very similar to func_8005F850
-    func_8007AC70(); // Should be very similar to func_8005F850
-    func_800B5E88();
+    tex_init_textures(); // Should be very similar to func_8005F850
+    diPrintfInit();
     osCreateScheduler(&gMainSched, 0, /*priority*/ 13, (u8) 0, 1);
     init_video(VIDEO_MODE_LOWRES_LPN, &gMainSched);
 

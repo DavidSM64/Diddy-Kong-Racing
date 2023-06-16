@@ -86,6 +86,17 @@ extern s32 gBootTimer;
 
 extern OSViMode osViModeNtscLpn1, osViModePalLpn1, osViModeMpalLpn1, osViModePalLan1, osViModeNtscLan1, osViModeMpalLan1;
 
+#ifdef ALLOW_FAKE_240I
+extern u8 gFake240iEnabled;
+extern u8 gFake240iField;
+extern u8 gFake240iMode; // 0 = Copy Previous Framebuffer (Blurry), 1 = Use solid gray (Darker)
+extern OSViMode osViModeNtscLpf1;
+
+void set_prev_fb(u8 *fb);
+void swap_fake240i_field(void);
+void fill_in_prev_framebuffer(Gfx **gCurrDisplayList, s32 updateRate);
+#endif
+
 /* Size: 0x08 bytes */
 typedef struct VideoModeResolution {
     /* 0x00 */ s32 width;

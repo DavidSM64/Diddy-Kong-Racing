@@ -49,6 +49,8 @@
 #include "config.h"
 #ifdef ENABLE_USB
 #include "usb/dkr_usb.h"
+#include "sd/cart.h"
+#include "sd/ff/ff.h"
 #endif
 
 /************ .data ************/
@@ -118,6 +120,8 @@ OSScClient *gNMISched[3];
 OSMesg gGameMesgBuf[3];
 OSMesgQueue gGameMesgQueue;
 s32 gNMIMesgBuf; //Official Name: resetPressed
+
+FATFS FatFs;
 
 /******************************/
 
@@ -217,6 +221,8 @@ void init_game(void) {
     create_and_start_thread30();
 #ifdef ENABLE_USB
     init_usb_thread();
+    cart_init();
+    f_mount(&FatFs, "", 0);
 #endif
     osCreateMesgQueue(&gGameMesgQueue, gGameMesgBuf, 3);
     osScAddClient(&gMainSched, (OSScClient*) gNMISched, &gGameMesgQueue, OS_SC_ID_VIDEO);
@@ -361,6 +367,13 @@ void main_game_loop(void) {
     set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoLastFramebuffer - 0x500);
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
+    
+#ifdef ALLOW_FAKE_240I
+    if(gFake240iEnabled) {
+        swap_fake240i_field();
+        fill_in_prev_framebuffer(&gCurrDisplayList, sLogicUpdateRate);
+    }
+#endif
     render_background(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE); 
     gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, sLogicUpdateRate);
     switch (sRenderContext) {
@@ -386,6 +399,13 @@ void main_game_loop(void) {
 
     handle_music_fade(sLogicUpdateRate);
     print_debug_strings(&gCurrDisplayList);
+    
+#ifdef ALLOW_FAKE_240I
+    if(gFake240iEnabled) {
+        gDPSetScissor(gCurrDisplayList++, 2 + gFake240iField, 0, 0, 320 - 1, 240 - 1);
+    }
+#endif
+
     render_dialogue_boxes(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     close_dialogue_box(4);
     assign_dialogue_box_id(4);

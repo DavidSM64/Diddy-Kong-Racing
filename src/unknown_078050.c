@@ -290,6 +290,11 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
     s32 x2;
     s32 y2;
     u32 skip = TRUE;
+#ifdef ALLOW_FAKE_240I
+    s32 interlace = gFake240iEnabled ? (2 + gFake240iField) : 0;
+#else
+    s32 interlace = 0;
+#endif
 
     widthAndHeight = get_video_width_and_height_as_s32();
     w = GET_VIDEO_WIDTH(widthAndHeight);
@@ -297,7 +302,9 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
 
     gDPPipeSync((*dList)++);
     //!@bug: the scissor does not need the off by one here, despite being intended for fill mode.
-    gDPSetScissor((*dList)++, 0, 0, 0, w, h);
+    
+    gDPSetScissor((*dList)++, interlace, 0, 0, w, h);
+    
     gDPSetCycleType((*dList)++, G_CYC_FILL);
     gDPSetColorImage((*dList)++, G_IM_FMT_RGBA, G_IM_SIZ_16b, w, SEGMENT_DEPTH_BUFFER);
     gDPSetFillColor((*dList)++, GPACK_RGBA5551(255, 255, 240, 0) << 16 | GPACK_RGBA5551(255, 255, 240, 0));

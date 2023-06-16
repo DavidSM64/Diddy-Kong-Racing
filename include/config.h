@@ -26,8 +26,8 @@
 //#define FORCE_4MB_MEMORY                    // Pretend the expansion pak is not installed.
 
 /* -------------------------Memory------------------------ */
-//#define EXPANSION_PAK_REQUIRED              // Enable expansion pak requirement
-//#define EXPANSION_PAK_SUPPORT               // Allow the game to use the expansion pak if it's inserted. Disabling this will move Framebuffers to expansion RAM for extra performance.
+#define EXPANSION_PAK_REQUIRED              // Enable expansion pak requirement
+#define EXPANSION_PAK_SUPPORT               // Allow the game to use the expansion pak if it's inserted. Disabling this will move Framebuffers to expansion RAM for extra performance.
 
 #define NUM_GFX_COMMANDS        {3200, 4000, 5000, 5000} /* How many graphics commands can be ran per frame. Default is 4500, 7000, 11000, 11000 */
 #define NUM_VERTICES            {200, 300, 400, 500} /* How many vertices are allowed per frame. Default is 300, 600, 850, 900 */
@@ -50,6 +50,7 @@
 #define SCREEN_WIDTH_16_10      384         // Default width is 384. Recommended to be 360 for 4MB users.
 #define SCREEN_WIDTH_WIDE       424         // Default width is 424. Recommended to be 408 for 4MB users.
 #define SCREEN_HEIGHT           240         // Default height is 240. Recommended to be 224 for 4MB users.
+#define ALLOW_FAKE_240I                     // Improves performance at the cost of quality
 
 
 /* --------------------------Usb-------------------------- */

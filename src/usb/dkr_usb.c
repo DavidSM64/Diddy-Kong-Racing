@@ -156,20 +156,11 @@ void render_usb_info(void) {
     s32 i;
     s32 readData;
     
-    set_render_printf_background_colour(0, 0, 0, 128);
-    render_printf("Does USB work? %d\n", usbState);
-    RETURN_IF_USB_NOT_VALID();
-    render_printf("Cart type: %d\n", cartType);
-    RETURN_IF_CART_NOT_VALID();
-    
 #ifdef USB_HOT_RELOAD
     if(isHotReloading) {
         render_printf("HOT RELOADING!\n");
     }
 #endif
-    
-    // Show message sent from the computer.
-    render_printf("%s\n", textBuffer);
 }
 
 #endif

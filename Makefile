@@ -169,7 +169,7 @@ DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
 #IDO Warnings to Ignore. These are coding style warnings we don't follow
 IDO_IGNORE_WARNINGS = -woff 838,649,624
 ASFLAGS = -mtune=vr4300 -march=vr4300 -mabi=32 $(foreach d,$(DEFINES),--defsym $(d))
-INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I src -I . -I include/libc
+INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I src -I src/sd -I . -I include/libc
 CFLAGS = -c -Wab,-r4300_mul -non_shared -G 0 -Xcpluscomm -DNDEBUG $(OPT_FLAGS) $(MIPSISET) $(INCLUDE_CFLAGS) $(DEF_INC_CFLAGS) $(IDO_IGNORE_WARNINGS)
 LDFLAGS = undefined_syms.txt -T $(BUILD_DIR)/$(LD_SCRIPT) -Map $(BUILD_DIR)/dkr.map
 
@@ -191,7 +191,7 @@ BUILDER = $(TOOLS_DIR)/dkr_assets_tool -b $(VERSION) ./assets
 
 LIB_DIRS := lib/
 ASM_DIRS := asm/ asm/boot/ asm/assets/ lib/asm/ lib/asm/non_decompilable
-SRC_DIRS := $(sort $(dir $(wildcard src/* src/**/*))) $(sort $(dir $(wildcard lib/src/* lib/src/**/* lib/src/**/**/*)))
+SRC_DIRS := $(sort $(dir $(wildcard src/* src/**/* src/**/**/*))) $(sort $(dir $(wildcard lib/src/* lib/src/**/* lib/src/**/**/*)))
 
 GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(SRC_DIRS)
 GLOBAL_ASM_O_FILES = $(foreach file,$(GLOBAL_ASM_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
