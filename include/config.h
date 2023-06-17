@@ -52,8 +52,8 @@
 #define SCREEN_HEIGHT           240         // Default height is 240. Recommended to be 224 for 4MB users.
 
 
-/* --------------------------Usb-------------------------- */
-// Optional USB stuff
+/* --------------------------IO--------------------------- */
+// USB stuff
 //#define ENABLE_USB                          // Allows for USB detection for flashcarts. Automatically set if PUPPYPRINT_DEBUG is defined.
 #define SHOW_USB_INFO                       // Renders USB information on HUD.
 #define USB_HOT_RELOAD                      // Allows for quick reloading of game code.
