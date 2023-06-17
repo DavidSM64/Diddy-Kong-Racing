@@ -94,7 +94,12 @@ class GenerateLD:
         self.gen_line('.main __FUNC_RAM_START : AT(romPos) SUBALIGN(16)')
         self.gen_open_block()
         for file in self.files:
+            condition = file[4]
+            if condition != None:
+                self.gen_line('#if ' + condition)
             self.gen_line(file[0] + '(.text);')
+            if condition != None:
+                self.gen_line('#endif')
         self.gen_close_block()
         self.gen_line('romPos += SIZEOF(.main);')
         self.gen_newline()
@@ -111,8 +116,13 @@ class GenerateLD:
         self.gen_line('.data . : AT(romPos) SUBALIGN(16)')
         self.gen_open_block()
         for file in self.files:
+            condition = file[4]
             if file[0] not in LATE_DATA_FILES:
+                if condition != None:
+                    self.gen_line('#if ' + condition)
                 self.gen_line(file[0] + '(.data);')
+                if condition != None:
+                    self.gen_line('#endif')
         for file in LATE_DATA_FILES:
             self.gen_line(file + '(.data);')
         self.gen_close_block()
@@ -124,12 +134,17 @@ class GenerateLD:
         self.gen_open_block()
         for file in self.files:
             f = file[0]
+            condition = file[4]
             if f not in LATE_DATA_FILES:
+                if condition != None:
+                    self.gen_line('#if ' + condition)
                 self.gen_line(f + '(.rodata);')
                 fname = f[f.rindex('/')+1:f.rindex('.')]
                 testName = DATA_DIR + '/' + fname + '.rodata.s'
                 if FileUtil.does_file_exist(testName):
                     self.gen_line(BUILD_DIR + '/data/' + fname + '.rodata.o(.rodata);')
+                if condition != None:
+                    self.gen_line('#endif')
         for f in LATE_DATA_FILES:
             self.gen_line(f + '(.rodata);')
             fname = f[f.rindex('/')+1:f.rindex('.')]
@@ -154,8 +169,13 @@ class GenerateLD:
         self.gen_line('.bss.noload . (NOLOAD): SUBALIGN(4)')
         self.gen_open_block()
         for file in self.files:
+            condition = file[4]
             if file[0] not in BSS_LIB_ORDER_FILES:
+                if condition != None:
+                    self.gen_line('#if ' + condition)
                 self.gen_line(file[0] + '(.bss);')
+                if condition != None:
+                    self.gen_line('#endif')
         for file in BSS_LIB_ORDER_FILES:
             self.gen_line(file + '(.bss);')
         self.gen_close_block()
@@ -214,7 +234,7 @@ class GenerateLD:
 
     def append_files(self, files, extensions, directory, outputDir):
         filenames = FileUtil.get_filenames_from_directory_recursive(directory, extensions)
-        regex = r'[\/][*]+\s*RAM_POS:\s*((?:0x)[0-9a-fA-F]+|(?:[Aa][Uu][Tt][Oo]))\s*[*]+[\/]'
+        regex = r'[\/][*]+\s*RAM_POS:\s*((?:0x)[0-9a-fA-F]+|(?:[Aa][Uu][Tt][Oo]))\s*(?:if\s*(.*))?\s*[*]+[\/]'
         for filename in filenames:
             with open(directory + '/' + filename, 'r') as inFile:
                 notDone = True
@@ -226,9 +246,10 @@ class GenerateLD:
                         continue
                     matchedGroups = matches.groups()
                     ramPos = matchedGroups[0]
+                    condition = matchedGroups[1]
                     if ramPos.lower() == 'auto':
                         ramPos = '800FFFF0'
-                    files.append((outputDir + filename[:-2] + '.o', '', ramPos, 0))
+                    files.append((outputDir + filename[:-2] + '.o', '', ramPos, 0, condition))
                     break
 
     def get_code_files(self):
