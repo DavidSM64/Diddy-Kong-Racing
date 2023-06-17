@@ -50,14 +50,9 @@ extern MemoryPoolSlot gMainMemoryPool;
  * Official Name: mmInit
  */
 void init_main_memory_pool(void) {
-    s32 ramEnd;
     gNumberOfMemoryPools = -1;
-    if (FALSE) {
-        ramEnd = EXTENDED_RAM_END; //Value from JFG, not required to match
-    } else {
-        ramEnd = RAM_END;
-    }
-    new_memory_pool(&gMainMemoryPool, ramEnd - (s32)(&gMainMemoryPool), MAIN_POOL_SLOT_COUNT);
+    if (1) {} // Fakematch
+    new_memory_pool(&gMainMemoryPool, RAM_END - (s32)(&gMainMemoryPool), MAIN_POOL_SLOT_COUNT);
     set_free_queue_state(2);
     gFreeQueueCount = 0;
 }
