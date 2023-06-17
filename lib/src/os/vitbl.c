@@ -182,41 +182,5 @@ OSViMode osViModeMpalLan1 = {
          VINTR(2),            // vIntr
      }}};
 
-#ifdef ALLOW_FAKE_240I
-OSViMode osViModeNtscLpf1 = {
-    OS_VI_NTSC_LPF1,  // type
-    {
-        // comRegs
-        VI_CTRL_TYPE_16 |
-             VI_CTRL_ANTIALIAS_MODE_2 |
-             0x3000,           //ctrl
-         WIDTH(320),           //width
-         BURST(57, 34, 5, 62), //burst
-         VSYNC(524),           //vSync
-         HSYNC(3093, 0),       //hSync
-         LEAP(3093, 3093),     //leap
-         HSTART(108, 748),     //hStart
-         SCALE(2, 0),          //xScale
-         VCURRENT(0),          //vCurrent
-    },
-    {// fldRegs
-     {
-        //[0]
-          ORIGIN(640),        //origin
-          SCALE(1, 0.25),     //yScale
-          HSTART(35, 509),    //vStart
-          BURST(4, 2, 14, 0), //vBurst
-          VINTR(2),           //vIntr
-     },
-     {
-         //[1]
-          ORIGIN(640),        //origin
-          SCALE(1, 0.75),     //yScale
-          HSTART(37, 511),    //vStart
-          BURST(4, 2, 14, 0), //vBurst
-          VINTR(2),           //vIntr
-     }}};
-#endif
-
 // This needs to be moved.
 u32 __osPiAccessQueueEnabled = 0;

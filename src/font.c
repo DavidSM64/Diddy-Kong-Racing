@@ -263,12 +263,6 @@ void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, Ali
     s32 newTempY;
     u8 curChar;
     
-#ifdef ALLOW_FAKE_240I
-    s32 interlace = gFake240iEnabled ? (2 + gFake240iField) : 0;
-#else
-    s32 interlace = 0;
-#endif
-
     xAlignmentDiff = -1;
     lastTextureIndex = -1;
     if (text != NULL) {
@@ -280,7 +274,7 @@ void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, Ali
         if (box != gDialogueBoxBackground) {
             scisOffset = (((box->y2 - box->y1) + 1) / (f32) 2) * scisScale;
             scisPos = (box->y1 + box->y2) >> 1;
-            gDPSetScissor((*dList)++, interlace, box->x1, scisPos - scisOffset, box->x2, scisPos + scisOffset);
+            gDPSetScissor((*dList)++, 0, box->x1, scisPos - scisOffset, box->x2, scisPos + scisOffset);
         }
         if (alignmentFlags & (HORZ_ALIGN_RIGHT | HORZ_ALIGN_CENTER)) {
             xAlignmentDiff = get_text_width(text, xpos, box->font);

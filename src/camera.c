@@ -572,8 +572,7 @@ void copy_viewport_frame_size_to_coords(s32 viewPortIndex, s32 *x1, s32 *y1, s32
     *y2 = gScreenViewports[viewPortIndex].y2;
 }
 
-//#ifdef NON_EQUIVALENT
-#ifdef ALLOW_FAKE_240I // Needed for fake 240i
+#ifdef NON_EQUIVALENT
 //Alternative attempt: https://decomp.me/scratch/rcJYo
 // Still a work-in-progress but it doesn't seem to cause any problems,
 // which is why it is labeled under NON_EQUIVALENT
@@ -596,12 +595,6 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
     s32 originalCameraID;
     s32 tempCameraID;
     s32 viewports;
-    
-#ifdef ALLOW_FAKE_240I
-    s32 interlace = gFake240iEnabled ? (2 + gFake240iField) : 0;
-#else
-    s32 interlace = 0;
-#endif
 
     originalCameraID = gActiveCameraID;
     savedCameraID = gActiveCameraID;
@@ -616,7 +609,7 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
     if (gScreenViewports[savedCameraID].flags & VIEWPORT_EXTRA_BG) {
         tempCameraID = gActiveCameraID;
         gActiveCameraID = savedCameraID;
-        gDPSetScissor((*dlist)++, interlace,
+        gDPSetScissor((*dlist)++, SCISSOR_INTERLACE,
             gScreenViewports[gActiveCameraID].scissorX1,
             gScreenViewports[gActiveCameraID].scissorY1,
             gScreenViewports[gActiveCameraID].scissorX2,
@@ -648,7 +641,7 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
             if (osTvType == TV_TYPE_PAL) {
                 posY -= 18;
             }
-            gDPSetScissor((*dlist)++, interlace, 0, 0, videoWidth, videoHeight);
+            gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, videoWidth, videoHeight);
             posX = x;
             break;
         case VIEWPORTS_COUNT_2_PLAYERS:
@@ -657,11 +650,11 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
                 if (osTvType == TV_TYPE_PAL) {
                     posY -= 12;
                 }
-                gDPSetScissor((*dlist)++, interlace, 0, 0, videoWidth, (y - (videoHeight >> 7)));
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, videoWidth, (y - (videoHeight >> 7)));
             } else {
                 posY = y;
                 posY += videoHeight >> 2;
-                gDPSetScissor((*dlist)++, interlace, 0, (y + (videoHeight >> 7)), videoWidth, (videoHeight - (videoHeight >> 7)));
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, (y + (videoHeight >> 7)), videoWidth, (videoHeight - (videoHeight >> 7)));
             }
             posX = x;
             break;
@@ -669,12 +662,12 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
             if (gActiveCameraID == 0) {
                 posY = sp58_y;
                 posX = videoWidth >> 2;
-                gDPSetScissor((*dlist)++, interlace, 0, 0, x - (videoWidth >> 8), videoHeight);
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, 0, x - (videoWidth >> 8), videoHeight);
             } else {
                 posY = sp58_y;
                 //posX = x;
                 posX = x + (videoWidth >> 2);
-                gDPSetScissor((*dlist)++, interlace, x + (videoWidth >> 8), 0, videoWidth - (videoWidth >> 8), videoHeight);
+                gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, x + (videoWidth >> 8), 0, videoWidth - (videoWidth >> 8), videoHeight);
             }
             break;
         case VIEWPORTS_COUNT_4_PLAYERS:
@@ -686,20 +679,20 @@ void func_80066CDC(Gfx **dlist, MatrixS **mats) {
                 case 0:
                     //Using posX and posY here is not smart since IDO can't optimize out the zero now.
                     //Why here of all places did they do this instead of just setting zero like everywhere else?
-                    gDPSetScissor((*dlist)++, interlace, posX, posY, (x - (videoWidth >> 8)), (y - (videoHeight >> 7)));
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, posX, posY, (x - (videoWidth >> 8)), (y - (videoHeight >> 7)));
                     break;
                 case 1:
                     posX = x;
-                    gDPSetScissor((*dlist)++, interlace, (sp54_x + (videoWidth >> 8)), 0, ((sp54_x + sp54_x) - (videoWidth >> 8)), (y - (videoHeight >> 7)));
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, (sp54_x + (videoWidth >> 8)), 0, ((sp54_x + sp54_x) - (videoWidth >> 8)), (y - (videoHeight >> 7)));
                     break;
                 case 2:
                     posY = y;
-                    gDPSetScissor((*dlist)++, interlace, 0, y + (videoHeight >> 7), x - (videoWidth >> 8), (y + y) - (videoHeight >> 7));
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, 0, y + (videoHeight >> 7), x - (videoWidth >> 8), (y + y) - (videoHeight >> 7));
                     break;
                 case 3:
                     posY = y;
                     posX = x;
-                    gDPSetScissor((*dlist)++, interlace, (sp54_x + (videoWidth >> 8)), y + (videoHeight >> 7), (x + x) - (videoWidth >> 8), (y + y) - (videoHeight >> 7));
+                    gDPSetScissor((*dlist)++, SCISSOR_INTERLACE, (sp54_x + (videoWidth >> 8)), y + (videoHeight >> 7), (x + x) - (videoWidth >> 8), (y + y) - (videoHeight >> 7));
                     break;
             }
             posY += sp58_y;
@@ -750,12 +743,6 @@ void set_viewport_scissor(Gfx **dlist) {
     s32 width;
     s32 height;
     
-#ifdef ALLOW_FAKE_240I
-    s32 interlace = gFake240iEnabled ? (2 + gFake240iField) : 0;
-#else
-    s32 interlace = 0;
-#endif
-
     size = get_video_width_and_height_as_s32();
     height = (u16) GET_VIDEO_HEIGHT(size);
     width = (u16) size;
@@ -827,10 +814,10 @@ void set_viewport_scissor(Gfx **dlist) {
                 }
                 break;
         }
-        gDPSetScissor((*dlist)++, interlace, ulx, uly, lrx, lry);
+        gDPSetScissor((*dlist)++, 0, ulx, uly, lrx, lry);
         return;
     }
-    gDPSetScissor((*dlist)++, interlace, 0, 0, width, height);
+    gDPSetScissor((*dlist)++, 0, 0, 0, width, height);
 }
 
 //Official Name: camGetPlayerProjMtx / camSetProjMtx - ??
@@ -950,18 +937,12 @@ void func_80068158(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY) {
 //Official Name: camResetView?
 void func_800682AC(Gfx **dlist) {
     u32 widthAndHeight, width, height;
-#ifdef ALLOW_FAKE_240I
-    s32 interlace = gFake240iEnabled ? (2 + gFake240iField) : 0;
-#else
-    s32 interlace = 0;
-#endif
-
     gActiveCameraID = 4;
     widthAndHeight = get_video_width_and_height_as_s32();
     height = GET_VIDEO_HEIGHT(widthAndHeight);
     width = GET_VIDEO_WIDTH(widthAndHeight);
     if (!(gScreenViewports[gActiveCameraID].flags & VIEWPORT_EXTRA_BG)) {
-        gDPSetScissor((*dlist)++, interlace, 0, 0, width - 1, height - 1);
+        gDPSetScissor((*dlist)++, 0, 0, 0, width - 1, height - 1);
         func_80068158(dlist, width >> 1, height >> 1, width >> 1, height >> 1);
     } else {
         set_viewport_scissor(dlist);

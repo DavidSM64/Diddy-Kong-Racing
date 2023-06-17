@@ -302,6 +302,7 @@ s32 calculate_updaterate(void) {
 void main_game_loop(void) {
     s32 framebufferSize;
     s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
+    FILINFO finfo;
 #ifdef PUPPYPRINT_DEBUG
     profiler_reset_values();
     profiler_snapshot(THREAD4_START);
@@ -367,13 +368,6 @@ void main_game_loop(void) {
     set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoLastFramebuffer - 0x500);
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
-    
-#ifdef ALLOW_FAKE_240I
-    if(gFake240iEnabled) {
-        swap_fake240i_field();
-        fill_in_prev_framebuffer(&gCurrDisplayList, sLogicUpdateRate);
-    }
-#endif
     render_background(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE); 
     gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, sLogicUpdateRate);
     switch (sRenderContext) {
@@ -391,6 +385,9 @@ void main_game_loop(void) {
     // This is a good spot to place custom text if you want it to overlay it over ALL the
     // menus & gameplay.
     
+    render_printf("dkr.z64 exists? %d\n", f_stat("dkr.z64", &finfo) != FR_NO_FILE);
+    render_printf("jkr.z64 exists? %d\n", f_stat("jkr.z64", &finfo) != FR_NO_FILE);
+    
 #ifdef ENABLE_USB
 #ifdef SHOW_USB_INFO
     render_usb_info();
@@ -399,12 +396,6 @@ void main_game_loop(void) {
 
     handle_music_fade(sLogicUpdateRate);
     print_debug_strings(&gCurrDisplayList);
-    
-#ifdef ALLOW_FAKE_240I
-    if(gFake240iEnabled) {
-        gDPSetScissor(gCurrDisplayList++, 2 + gFake240iField, 0, 0, 320 - 1, 240 - 1);
-    }
-#endif
 
     render_dialogue_boxes(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     close_dialogue_box(4);
