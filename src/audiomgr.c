@@ -116,9 +116,6 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     u8 *crc_region;
 #endif
     u32 ramEnd = RAM_END;
-    if (gUseExpansionMemory) {
-        ramEnd = EXTENDED_RAM_END;
-    }
 
     gAudioSched = audSched;
     gAudioHeap = c->heap;

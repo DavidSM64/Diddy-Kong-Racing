@@ -47,10 +47,9 @@
 #include "game.h"
 
 #include "config.h"
-#ifdef ENABLE_USB
-#include "usb/dkr_usb.h"
-#include "sd/cart.h"
-#include "sd/ff/ff.h"
+
+#ifdef ENABLE_IO
+#include "io/dkrio.h"
 #endif
 
 /************ .data ************/
@@ -121,10 +120,7 @@ OSMesg gGameMesgBuf[3];
 OSMesgQueue gGameMesgQueue;
 s32 gNMIMesgBuf; //Official Name: resetPressed
 
-FATFS FatFs;
-
 /******************************/
-
 
 /**
  * Main looping function for the main thread.
@@ -219,10 +215,8 @@ void init_game(void) {
     init_controller_paks();
     func_80081218(); // init_save_data
     create_and_start_thread30();
-#ifdef ENABLE_USB
-    init_usb_thread();
-    cart_init();
-    f_mount(&FatFs, "", 0);
+#ifdef ENABLE_IO
+    init_io();
 #endif
     osCreateMesgQueue(&gGameMesgQueue, gGameMesgBuf, 3);
     osScAddClient(&gMainSched, (OSScClient*) gNMISched, &gGameMesgQueue, OS_SC_ID_VIDEO);
@@ -302,14 +296,10 @@ s32 calculate_updaterate(void) {
 void main_game_loop(void) {
     s32 framebufferSize;
     s32 tempLogicUpdateRate, tempLogicUpdateRateMax;
-    FILINFO finfo;
+    
 #ifdef PUPPYPRINT_DEBUG
     profiler_reset_values();
     profiler_snapshot(THREAD4_START);
-#endif
-
-#ifdef ENABLE_USB
-    tick_usb_thread();
 #endif
 
     /*if (gVideoSkipNextRate) {
@@ -337,6 +327,10 @@ void main_game_loop(void) {
     }*/
 
     sLogicUpdateRate = calculate_updaterate();
+
+#ifdef ENABLE_IO
+    update_io(sLogicUpdateRate);
+#endif
 
     if (gConfig.antiAliasing == 1) {
         gOverrideTimer -= 40000;
@@ -385,13 +379,8 @@ void main_game_loop(void) {
     // This is a good spot to place custom text if you want it to overlay it over ALL the
     // menus & gameplay.
     
-    render_printf("dkr.z64 exists? %d\n", f_stat("dkr.z64", &finfo) != FR_NO_FILE);
-    render_printf("jkr.z64 exists? %d\n", f_stat("jkr.z64", &finfo) != FR_NO_FILE);
-    
-#ifdef ENABLE_USB
-#ifdef SHOW_USB_INFO
-    render_usb_info();
-#endif
+#ifdef ENABLE_IO
+    debug_render_io(sLogicUpdateRate);
 #endif
 
     handle_music_fade(sLogicUpdateRate);

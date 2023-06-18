@@ -34,7 +34,7 @@ extern MemoryPoolSlot gMainMemoryPool;
 void init_main_memory_pool(void) {
     gNumberOfMemoryPools = -1;
 #ifdef PUPPYPRINT_DEBUG
-    gFreeMem[11] = ramEnd - (s32)(&gMainMemoryPool);
+    gFreeMem[11] = RAM_END - (s32)(&gMainMemoryPool);
 #endif
     new_memory_pool(&gMainMemoryPool, RAM_END - (s32)(&gMainMemoryPool), MAIN_POOL_SLOT_COUNT);
     set_free_queue_state(2);

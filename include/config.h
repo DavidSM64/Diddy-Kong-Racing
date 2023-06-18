@@ -53,11 +53,16 @@
 
 
 /* --------------------------IO--------------------------- */
+//#define ENABLE_IO                           // Allows for USB & SD card functionality. Automatically set if PUPPYPRINT_DEBUG is defined.
+
 // USB stuff
 //#define ENABLE_USB                          // Allows for USB detection for flashcarts. Automatically set if PUPPYPRINT_DEBUG is defined.
-#define SHOW_USB_INFO                       // Renders USB information on HUD.
+//#define SHOW_USB_INFO                       // Renders USB information on HUD.
 #define USB_HOT_RELOAD                      // Allows for quick reloading of game code.
 
+// SD card stuff
+//#define ENABLE_LIBCART                      // Allows for accessing the SD card. Automatically set if PUPPYPRINT_DEBUG is defined.
+//#define SHOW_SD_INFO                        // Renders SD card debug information on HUD.
 
 // Don't touch any of this below.
 
@@ -85,7 +90,9 @@
 #endif
 
 #ifdef PUPPYPRINT_DEBUG
-#define ENABLE_USB                         // Always have USB enabled if puppyprint is enabled.
+#define ENABLE_IO
+#define ENABLE_USB
+#define ENABLE_LIBCART
 #endif
 
 #endif // CONFIG_H
