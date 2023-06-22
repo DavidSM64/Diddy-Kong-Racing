@@ -11,7 +11,6 @@
 #include "objects.h"
 #include "game.h"
 #include "thread3_main.h"
-#include "unknown_0CEC50.h"
 #include "controller.h"
 
 /************ .data ************/
@@ -671,10 +670,10 @@ SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileE
                 continue;
             }
             if (fileType == 3) {
-                if((_bcmp((u8 *) fileNames[fileNum], (char *) sDKRacingAdv1, strlen((char *) sDKRacingAdv2)) != 0)) {
+                if((bcmp((u8 *) fileNames[fileNum], (char *) sDKRacingAdv1, strlen((char *) sDKRacingAdv2)) != 0)) {
                     continue;
                 }
-            } else if((_bcmp((u8 *) fileNames[fileNum], (char *) sDKRacingTimes1, strlen((char *) sDKRacingTimes2)) != 0))  {
+            } else if((bcmp((u8 *) fileNames[fileNum], (char *) sDKRacingTimes1, strlen((char *) sDKRacingTimes2)) != 0))  {
                 continue;
             }
 
