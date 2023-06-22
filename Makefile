@@ -147,7 +147,7 @@ endif
 
 AS = $(CROSS)as
 CC := $(RECOMP_DIR)cc
-CPP := cpp -P -Wno-trigraphs
+CPP := cpp -P -Wno-trigraphs -I include
 LD = $(CROSS)ld
 OBJDUMP = $(CROSS)objdump
 # Pad to 12MB if matching, otherwise build to a necessary minimum of 1.04KB
