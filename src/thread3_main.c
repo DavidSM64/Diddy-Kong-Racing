@@ -25,7 +25,7 @@
 #include "objects.h"
 #include "camera.h"
 #include "save_data.h"
-#include "unknown_078050.h"
+#include "rcp.h"
 #include "audiosfx.h"
 #include "audiomgr.h"
 #include "lights.h"
