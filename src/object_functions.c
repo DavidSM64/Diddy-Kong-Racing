@@ -17,9 +17,9 @@
 #include "unknown_008C40.h"
 #include "objects.h"
 #include "particles.h"
-#include "unknown_0255E0.h"
+#include "tracks.h"
 #include "font.h"
-#include "unknown_032760.h"
+#include "lights.h"
 #include "game_ui.h"
 #include "waves.h"
 #include "audiosfx.h"
@@ -585,7 +585,7 @@ void obj_loop_effectbox(Object *obj, UNUSED s32 updateRate) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_effectbox.s")
+GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_effectbox.s")
 #endif
 
 /**
@@ -1127,7 +1127,7 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80036040.s")
+GLOBAL_ASM("asm/non_matchings/object_functions/func_80036040.s")
 
 /**
  * Hub world T.T init behaviour.
@@ -1378,8 +1378,8 @@ void play_tt_voice_clip(u16 soundID, s32 interrupt) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_fish.s")
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_fish.s")
+GLOBAL_ASM("asm/non_matchings/object_functions/obj_init_fish.s")
+GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_fish.s")
 
 /**
  * Lava Spurt init behaviour.
@@ -1545,7 +1545,7 @@ void obj_loop_animator(Object *obj, s32 updateRate) {
 }
 
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_animator.s")
+GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_animator.s")
 #endif
 
 void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2) {
@@ -1792,7 +1792,7 @@ void obj_loop_snowball(Object *obj, s32 updateRate) {
 UNUSED void obj_init_char_select(UNUSED s32 arg0, UNUSED s32 arg1) {
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_char_select.s")
+GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_char_select.s")
 
 void obj_loop_animcamera(Object *obj, s32 updateRate) {
     s32 temp_v0;
@@ -3119,7 +3119,7 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_door.s")
+GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_door.s")
 
 void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
     Object_TTDoor *obj64;
@@ -4106,7 +4106,7 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_weaponballoon.s")
+GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_weaponballoon.s")
 #endif
 
 /**
@@ -4473,7 +4473,7 @@ void play_rocket_trailing_sound(Object *obj, struct Object_Weapon *weapon, u16 s
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_8003F2E8.s")
+GLOBAL_ASM("asm/non_matchings/object_functions/func_8003F2E8.s")
 
 void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 soundID, f32 scale, s32 arg6) {
     LevelObjectEntry8003FC44 spawnObj;
@@ -4579,7 +4579,7 @@ void obj_init_texscroll(Object *obj, LevelObjectEntry_TexScroll *entry, s32 arg2
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_texscroll.s")
+GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_texscroll.s")
 
 /* Official name: rgbalightInit */
 void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, UNUSED s32 arg2) {
@@ -4826,12 +4826,12 @@ void obj_init_butterfly(Object *obj, LevelObjectEntry_Butterfly *entry, s32 arg2
 
 
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_butterfly.s")
+GLOBAL_ASM("asm/non_matchings/object_functions/obj_init_butterfly.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_loop_butterfly.s")
+GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_butterfly.s")
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/obj_init_midifade.s")
+GLOBAL_ASM("asm/non_matchings/object_functions/obj_init_midifade.s")
 
 void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry) {
     Object_MidiFadePoint *obj64;

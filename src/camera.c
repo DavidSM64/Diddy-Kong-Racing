@@ -5,7 +5,7 @@
 #include "audio.h"
 #include "objects.h"
 #include "game.h"
-#include "unknown_0255E0.h"
+#include "tracks.h"
 #include "video.h"
 #include "lib/src/libc/rmonPrintf.h"
 #include "math_util.h"

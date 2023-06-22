@@ -25,17 +25,17 @@
 #include "objects.h"
 #include "camera.h"
 #include "save_data.h"
-#include "unknown_078050.h"
+#include "rcp.h"
 #include "audiosfx.h"
 #include "audiomgr.h"
-#include "unknown_032760.h"
+#include "lights.h"
 #include "textures_sprites.h"
 #include "PR/os_internal.h"
 #include "printf.h"
 #include "fade_transition.h"
 #include "borders.h"
 #include "unknown_008C40.h"
-#include "unknown_0255E0.h"
+#include "tracks.h"
 #include "game_text.h"
 #include "game_ui.h"
 #include "main.h"
@@ -499,7 +499,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     }
     set_music_player_voice_limit(gCurrentLevelHeader->voiceLimit);
     func_80000CBC();
-    func_80031BB8(0x20);
+    setup_lights(0x20);
     var_s0 = VEHICLE_CAR;
     if (vehicleId >= VEHICLE_CAR && vehicleId < NUMBER_OF_PLAYER_VEHICLES) {
         var_s0 = gCurrentLevelHeader->unk4F[vehicleId];
@@ -681,7 +681,7 @@ void clear_audio_and_track(void) {
     func_80001844();
     func_800018E0();
     func_800012E8();
-    func_80031B60();
+    free_lights();
     free_track();
     func_80008174();
     adjust_audio_volume(VOLUME_NORMAL);

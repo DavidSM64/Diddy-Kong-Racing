@@ -1,9 +1,20 @@
-#ifndef _UNKNOWN_032760_H_
-#define _UNKNOWN_032760_H_
+#ifndef _LIGHTS_H_
+#define _LIGHTS_H_
 
 #include "types.h"
 #include "structs.h"
 #include "libc/math.h"
+
+typedef struct SubMiscAssetObjectHeader24 {
+    s32 unk0;
+    s32 unk4;
+} SubMiscAssetObjectHeader24;
+
+typedef struct MiscAssetObjectHeader24 {
+    s32 unk0;
+    u8 pad2[16];
+    SubMiscAssetObjectHeader24 *unk14;
+} MiscAssetObjectHeader24;
 
 /* Size: 0x88 bytes */
 typedef struct unk800DC950 {
@@ -16,7 +27,7 @@ typedef struct unk800DC950 {
     s16 unk6;
     s16 unk8;
     s16 unkA;
-    s32 unkC;
+    Object *unkC;
     f32 unk10;
     f32 unk14;
     f32 unk18;
@@ -32,11 +43,11 @@ typedef struct unk800DC950 {
     s16 unk3E;
     s16 unk40;
     s16 unk42;
-    s32 unk44;
-    s16 unk48;
+    SubMiscAssetObjectHeader24 *unk44;
+    u16 unk48;
     s16 unk4A;
     s16 unk4C;
-    s16 unk4E;
+    u16 unk4E;
     s16 unk50;
     s16 unk52;
     s16 unk54;
@@ -79,7 +90,7 @@ extern unk800DC950 **D_800DC950;
 
 f32 coss_f(s16); //?
 
-void func_80031B60(void);
+void free_lights(void);
 void func_80032210(unk800DC950 *arg0);
 void func_80032218(unk800DC950 *arg0);
 void func_80032224(unk800DC950 *arg0);
@@ -88,12 +99,12 @@ void func_80032344(unk800DC950 *arg0, s32 arg1, s32 arg2);
 void lightUpdateLights(s32 arg0);
 void func_80032BAC(unk800DC950 *arg0);
 s32 func_80032C6C(void);
-f32 func_80033A14(unk800DC950 *arg0);
-f32 func_80033C08(unk800DC950 *arg0);
+f32 light_distance_calc(unk800DC950 *arg0);
+f32 light_direction_calc(unk800DC950 *arg0);
 Object_64 *func_80031CAC(Object *, LevelObjectEntry_RgbaLight *entry);
 
 //Non Matching
-void func_80031BB8(s32 count);
+void setup_lights(s32 count);
 void func_80032C7C(Object *object);
 void func_800337E4(void);
 void func_80032424(unk800DC950 *arg0, s32 arg1);

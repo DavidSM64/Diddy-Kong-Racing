@@ -1,4 +1,13 @@
-glabel _bcmp
+/* The comment below is needed for this file to be picked up by generate_ld */
+/* RAM_POS: 0x800CE050 */
+
+.include "macros.inc"
+
+.set noat      # allow manual use of $at
+.set noreorder # dont insert nops after branches
+.set gp=64     # 64-bit instructions are used
+
+glabel bcmp /* Official name: _bcmp */
 /* 0CEC50 800CE050 28C10010 */  slti  $at, $a2, 0x10
 /* 0CEC54 800CE054 14200037 */  bnez  $at, .L800CE134
 /* 0CEC58 800CE058 00851026 */   xor   $v0, $a0, $a1

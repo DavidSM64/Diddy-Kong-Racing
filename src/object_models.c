@@ -5,7 +5,7 @@
 #include "macros.h"
 #include "memory.h"
 #include "asset_enums.h"
-#include "unknown_0255E0.h"
+#include "tracks.h"
 #include "asset_loading.h"
 #include "textures_sprites.h"
 #include "racer.h"
@@ -40,7 +40,6 @@ s16 *gAnimationTable;
 s32 *gObjectAnimationTable;
 s32 D_8011D640;
 s32 D_8011D644;
-UNUSED s32 D_8011D648[66]; // Appears to have no effect when removed entirely?
 
 /******************************/
 

@@ -1,11 +1,12 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80031B60 */
 
-#include "unknown_032760.h"
+#include "lights.h"
 
 #include "memory.h"
 #include "types.h"
 #include "macros.h"
+#include "objects.h"
 
 /************ .data ************/
 
@@ -28,7 +29,10 @@ f32 D_8011D4CC;
 
 /*******************************/
 
-void func_80031B60(void) {
+/**
+ * Official Name: freeLights
+ */
+void free_lights(void) {
     if (D_800DC950 != NULL) {
         free_from_memory_pool(D_800DC950);
         D_800DC950 = NULL;
@@ -40,32 +44,110 @@ void func_80031B60(void) {
     D_800DC958 = 0;
 }
 
-#ifdef NON_MATCHING
 // Regalloc issues
-void func_80031BB8(s32 count) {
+#ifdef NON_MATCHING
+/**
+ * Official Name: setupLights
+ */
+void setup_lights(s32 count) {
     s32 i;
-    func_80031B60();
+    s32 newCount;
+    unk800DC950 **temp_v0;
+
+    free_lights();
     D_800DC958 = count;
-    D_800DC950 = (unk800DC950 **) allocate_from_main_pool_safe(D_800DC958 * (sizeof(s32 *) + sizeof(unk800DC950) + sizeof(unk800DC960) + sizeof(unk800DC964)), COLOUR_TAG_MAGENTA);
-    D_800DC954 = (unk800DC950 *) &D_800DC950[D_800DC958];
-    D_800DC960 = (unk800DC960 *) &D_800DC954[D_800DC958];
-    D_800DC964 = (unk800DC964 *) &D_800DC960[D_800DC958];
+    temp_v0 = (unk800DC950 **) allocate_from_main_pool_safe(D_800DC958 * (sizeof(s32 *) + sizeof(unk800DC950) + sizeof(unk800DC960) + sizeof(unk800DC964)), COLOUR_TAG_MAGENTA);
+    newCount = D_800DC958;
+    D_800DC950 = temp_v0;
+    D_800DC954 = (unk800DC950 *) &temp_v0[newCount];
+    D_800DC960 = (unk800DC960 *) &D_800DC954[newCount];
+    D_800DC964 = (unk800DC964 *) &D_800DC960[newCount];
     for (i = 0; i < D_800DC958; i++) {
         D_800DC950[i] = &D_800DC954[i];
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031BB8.s")
+GLOBAL_ASM("asm/non_matchings/lights/setup_lights.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031CAC.s")
+GLOBAL_ASM("asm/non_matchings/lights/func_80031CAC.s")
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80031F88.s")
+/**
+ * Official Name: addObjectLight
+ */
+unk800DC950 *add_object_light(Object *arg0, ObjectHeader24 *arg1) {
+    s32 i;
+    unk800DC950 *temp_a2;
+    MiscAssetObjectHeader24 *miscAsset;
 
+    temp_a2 = NULL;
+    if (D_800DC95C < D_800DC958) {
+        temp_a2 = D_800DC950[D_800DC95C++];
+        temp_a2->unk0 = arg1->unk8 >> 0x1C;
+        temp_a2->unk1 = arg1->unk9;
+        temp_a2->unk2 = arg1->unkB;
+        temp_a2->unk3 = arg1->unkA;
+        temp_a2->unk4 = arg1->unk8A & 0xF;
+        temp_a2->unkC = arg0;
+        temp_a2->unk6 = arg1->unkC;
+        temp_a2->unk8 = arg1->unkE;
+        temp_a2->unkA = arg1->unk10;
+        temp_a2->unk10 = temp_a2->unk6;
+        temp_a2->unk14 = temp_a2->unk8;
+        temp_a2->unk18 = temp_a2->unkA;
+        temp_a2->unk1C = arg1->unk2 << 16;
+        temp_a2->unk2C = 0;
+        temp_a2->unk3C = 0;
+        temp_a2->unk20 = arg1->unk3 << 16;
+        temp_a2->unk30 = 0;
+        temp_a2->unk3E = 0;
+        temp_a2->unk24 = arg1->unk4 << 16;
+        temp_a2->unk34 = 0;
+        temp_a2->unk40 = 0;
+        temp_a2->unk28 = arg1->unk5 << 16;
+        temp_a2->unk38 = 0;
+        temp_a2->unk42 = 0;
+        if (arg1->unk6 != 0xFFFF) {
+            miscAsset = (MiscAssetObjectHeader24 *) get_misc_asset(arg1->unk6);
+            temp_a2->unk44 = miscAsset;
+            temp_a2->unk48 = miscAsset->unk0;
+            temp_a2->unk4A = 0;
+            temp_a2->unk4C = 0;
+            temp_a2->unk4E = 0;
+            temp_a2->unk44 = &miscAsset->unk14;
+            for (i = 0; i < temp_a2->unk48 ; i++) { \
+                temp_a2->unk4E += temp_a2->unk44[i].unk4; //Must be on one line!
+            }
+        } else {
+            temp_a2->unk44 = 0;
+        }
+        temp_a2->unk5C = arg1->unk12;
+        temp_a2->unk60 = arg1->unk14;
+        temp_a2->unk64 = arg1->unk16;
+        temp_a2->unk68 = temp_a2->unk5C * temp_a2->unk5C;
+        temp_a2->unk6C = 1.0f / temp_a2->unk5C;
+        temp_a2->unk70 = arg1->unk0 << 8;
+        temp_a2->unk74 = 0;
+        temp_a2->unk78 = 0;
+        temp_a2->unk72 = arg1->unk1 << 8;
+        temp_a2->unk76 = 0;
+        temp_a2->unk7A = 0;
+        temp_a2->unk5 = 1;
+        func_80032424(temp_a2, 0);
+    }
+    return temp_a2;
+}
+
+/**
+ * Official Name: turnLightOff?
+*/
 UNUSED void func_80032210(unk800DC950 *arg0) {
     arg0->unk4 = 0;
 }
 
+/**
+ * Official Name: turnLightOn?
+*/
 UNUSED void func_80032218(unk800DC950 *arg0) {
     arg0->unk4 = 1;
 }
@@ -107,8 +189,11 @@ void lightUpdateLights(s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80032424.s")
+GLOBAL_ASM("asm/non_matchings/lights/func_80032424.s")
 
+/**
+ * Official Name: killLight?
+*/
 void func_80032BAC(unk800DC950 *arg0) {
     unk800DC950 *entry = NULL;
     s32 i;
@@ -126,12 +211,14 @@ void func_80032BAC(unk800DC950 *arg0) {
     }
 }
 
+/**
+ * Official Name: lightGetLights?
+*/
 s32 func_80032C6C(void) {
     return D_800DC95C;
 }
 
 #ifdef NON_EQUIVALENT
-
 // Close to matching. Should be functionally equivalent.
 void func_80032C7C(Object *object) {
     s16 sp82;
@@ -187,12 +274,12 @@ void func_80032C7C(Object *object) {
                     D_8011D4C0 = (D_8011D4C4 * D_8011D4C4) + (D_8011D4C8 * D_8011D4C8) + (D_8011D4CC * D_8011D4CC);
                     if (D_8011D4C0 < entry->unk68) {
                         if (entry->unk1 == 2) {
-                            f20 = func_80033C08(entry);
+                            f20 = light_direction_calc(entry);
                         } else {
                             f20 = 1.0f;
                         }
                         if (f20 > 0.0f) {
-                            f20 *= func_80033A14(entry);
+                            f20 *= light_distance_calc(entry);
                             if (f20 > 0.0f) {
                                 if (object->segment.header->unk71 != 0) {
                                     if (D_8011D4C0 > 0.0f) {
@@ -287,11 +374,10 @@ void func_80032C7C(Object *object) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_80032C7C.s")
+GLOBAL_ASM("asm/non_matchings/lights/func_80032C7C.s")
 #endif
 
 #ifdef NON_EQUIVALENT
-
 // Has regalloc issues
 void func_800337E4(void) {
     s32 i;
@@ -326,10 +412,13 @@ void func_800337E4(void) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_032760/func_800337E4.s")
+GLOBAL_ASM("asm/non_matchings/lights/func_800337E4.s")
 #endif
 
-f32 func_80033A14(unk800DC950 *arg0) {
+/**
+ * Official Name: lightDistanceCalc
+*/
+f32 light_distance_calc(unk800DC950 *arg0) {
     f32 out;
     f32 temp;
 
@@ -361,7 +450,10 @@ f32 func_80033A14(unk800DC950 *arg0) {
     return out;
 }
 
-f32 func_80033C08(unk800DC950 *arg0) {
+/**
+ * Official Name: lightDirectionCalc
+*/
+f32 light_direction_calc(unk800DC950 *arg0) {
     f32 temp_f2;
     f32 phi_f12;
 
