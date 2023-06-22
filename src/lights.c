@@ -53,9 +53,7 @@ void setup_lights(s32 count) {
     s32 i;
     s32 newCount;
     unk800DC950 **temp_v0;
-    unk800DC950 *temp_t9;
-    unk800DC960 *temp_t4;
-    
+
     free_lights();
     D_800DC958 = count;
     temp_v0 = (unk800DC950 **) allocate_from_main_pool_safe(D_800DC958 * (sizeof(s32 *) + sizeof(unk800DC950) + sizeof(unk800DC960) + sizeof(unk800DC964)), COLOUR_TAG_MAGENTA);
@@ -140,10 +138,16 @@ unk800DC950 *add_object_light(Object *arg0, ObjectHeader24 *arg1) {
     return temp_a2;
 }
 
+/**
+ * Official Name: turnLightOff?
+*/
 UNUSED void func_80032210(unk800DC950 *arg0) {
     arg0->unk4 = 0;
 }
 
+/**
+ * Official Name: turnLightOn?
+*/
 UNUSED void func_80032218(unk800DC950 *arg0) {
     arg0->unk4 = 1;
 }
