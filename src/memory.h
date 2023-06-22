@@ -6,12 +6,8 @@
 #include "macros.h"
 #include "config.h"
 
-#ifdef EXPANSION_PAK_SUPPORT
-#define RAM_END 0x80800000
-#else
 #define RAM_END 0x80400000
-#endif
-
+#define EXPANSION_RAM_END 0x80800000
 #define MAIN_POOL_SLOT_COUNT 1600
 
 // Animation related?

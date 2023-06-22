@@ -50,9 +50,15 @@ extern MemoryPoolSlot gMainMemoryPool;
  * Official Name: mmInit
  */
 void init_main_memory_pool(void) {
+    s32 ramEnd;
+
     gNumberOfMemoryPools = -1;
-    if (1) {} // Fakematch
-    new_memory_pool(&gMainMemoryPool, RAM_END - (s32)(&gMainMemoryPool), MAIN_POOL_SLOT_COUNT);
+    if (EXPANSION_PAK_SUPPORT) {
+        ramEnd = EXPANSION_RAM_END;
+    } else {
+        ramEnd = RAM_END;
+    }
+    new_memory_pool(&gMainMemoryPool, ramEnd - (s32)(&gMainMemoryPool), MAIN_POOL_SLOT_COUNT);
     set_free_queue_state(2);
     gFreeQueueCount = 0;
 }
