@@ -17,7 +17,7 @@
 #include "unknown_008C40.h"
 #include "objects.h"
 #include "particles.h"
-#include "unknown_0255E0.h"
+#include "tracks.h"
 #include "font.h"
 #include "lights.h"
 #include "game_ui.h"

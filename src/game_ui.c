@@ -15,7 +15,7 @@
 #include "objects.h"
 #include "game_text.h"
 #include "object_models.h"
-#include "unknown_0255E0.h"
+#include "tracks.h"
 #include "unknown_078050.h"
 #include "audiosfx.h"
 #include "printf.h"

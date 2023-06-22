@@ -8,7 +8,7 @@
 #include "f3ddkr.h"
 #include "PR/libultra.h"
 #include "camera.h"
-#include "unknown_0255E0.h"
+#include "tracks.h"
 #include "unknown_008C40.h"
 #include "textures_sprites.h"
 #include "math_util.h"

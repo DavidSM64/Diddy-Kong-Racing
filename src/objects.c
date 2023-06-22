@@ -16,7 +16,7 @@
 #include "game.h"
 #include "racer.h"
 #include "particles.h"
-#include "unknown_0255E0.h"
+#include "tracks.h"
 #include "math_util.h"
 #include "camera.h"
 #include "waves.h"

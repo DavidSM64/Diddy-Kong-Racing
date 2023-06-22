@@ -11,7 +11,7 @@
 #include "textures_sprites.h"
 #include "objects.h"
 #include "audiosfx.h"
-#include "unknown_0255E0.h"
+#include "tracks.h"
 #include "math_util.h"
 
 /************ .data ************/

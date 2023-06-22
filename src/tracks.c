@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x800249E0 */
 
-#include "unknown_0255E0.h"
+#include "tracks.h"
 
 #include "types.h"
 #include "macros.h"
@@ -269,7 +269,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800249F0.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_800249F0.s")
 #endif
 
 /**
@@ -434,7 +434,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     *tris = gSceneCurrTriList;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80025510.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_80025510.s")
 
 void func_800257D0(void) {
     if (D_800DC924 != 0) {
@@ -612,16 +612,16 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002581C.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_8002581C.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80026070.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80026430.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80026C14.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80026E54.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027184.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80027568.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800278E8.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_80026070.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_80026430.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_80026C14.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_80026E54.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_80027184.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_80027568.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_800278E8.s")
 
 void func_80027E24(s32 updateRate) {
     s32 segmentNumber, batchNumber;
@@ -689,7 +689,7 @@ void set_skydome_visbility(s32 renderSky) {
 }
 
 //https://decomp.me/scratch/jmbc1
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80028050.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_80028050.s")
 
 /**
  * Instead of drawing the skydome with textures, draw a solid coloured background.
@@ -1619,7 +1619,7 @@ s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation) {
     return gTrackWaves[index]->type;
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002B0F4.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_8002B0F4.s")
 
 s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
     LevelModelSegment *seg;
@@ -1642,7 +1642,7 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002BAB0.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_8002BAB0.s")
 
 #ifdef NON_MATCHING
 // Loads a level track from the index in the models table.
@@ -1740,7 +1740,7 @@ void func_8002C0C4(s32 modelId) {
     set_texture_colour_tag(COLOUR_TAG_MAGENTA);
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002C0C4.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_8002C0C4.s")
 #endif
 
 void func_8002C71C(LevelModelSegment *segment) {
@@ -1882,7 +1882,7 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
     } 
 }
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002CC30.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_8002CC30.s")
 
 typedef struct unk8002D30C_a0 {
     u8 pad00[0x04];
@@ -2240,18 +2240,18 @@ loop_6:
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002DE30.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_8002DE30.s")
 #endif
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002E234.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002E904.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002EEEC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002F2AC.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002F440.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002FA64.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002FD74.s")
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_8002FF6C.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_8002E234.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_8002E904.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_8002EEEC.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_8002F2AC.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_8002F440.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_8002FA64.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_8002FD74.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_8002FF6C.s")
 
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_800304C8.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_800304C8.s")
 
 #ifdef NON_EQUIVALENT
 
@@ -2291,7 +2291,7 @@ void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5) {
 }
 
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030664.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_80030664.s")
 #endif
 
 /**
@@ -2487,7 +2487,7 @@ void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s
     entry->fogChanger = 0;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_0255E0/func_80030DE0.s")
+GLOBAL_ASM("asm/non_matchings/tracks/func_80030DE0.s")
 #endif
 
 /**

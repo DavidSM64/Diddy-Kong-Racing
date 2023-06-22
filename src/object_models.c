@@ -5,7 +5,7 @@
 #include "macros.h"
 #include "memory.h"
 #include "asset_enums.h"
-#include "unknown_0255E0.h"
+#include "tracks.h"
 #include "asset_loading.h"
 #include "textures_sprites.h"
 #include "racer.h"
