@@ -5,11 +5,11 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of June 15, 2023, this is our current score:
+As of June 22, 2023, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 52.06%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 52.10%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 26.52%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 26.72%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -128,13 +128,13 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of June 15, 2023, this is our current score:
+As of June 22, 2023, this is our current score:
 ```
  =================================================
       ADVENTURE ONE (ASM -> C Decompilation)
- ---------------- 52.06% Complete ----------------
+ ---------------- 52.10% Complete ----------------
            # Decompiled functions: 1508
-            # GLOBAL_ASM remaining: 324
+            # GLOBAL_ASM remaining: 323
            # NON_MATCHING functions: 12
         # NON_EQUIVALENT WIP functions: 65
  ------------------ Game Status ------------------
@@ -144,9 +144,9 @@ As of June 15, 2023, this is our current score:
  We are racing the octopus boss Bubbler. (Lap 2/3)
  =================================================
        ADVENTURE TWO (Cleanup & Documentation)
- ---------------- 26.52% Complete ----------------
-            # Documented functions: 568
-           # Undocumented remaining: 996
+ ---------------- 26.72% Complete ----------------
+            # Documented functions: 573
+           # Undocumented remaining: 990
  ------------------ Game Status ------------------
      Balloons: 13/47, Keys: 1/4, Trophies: 1/5
       T.T. Amulets: 1/4, Wizpig Amulets: 1/4
