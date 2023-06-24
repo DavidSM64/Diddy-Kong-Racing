@@ -27,7 +27,7 @@ glabel func_80032C7C
 /* 0338E0 80032CE0 80620053 */  lb    $v0, 0x53($v1)
 /* 0338E4 80032CE4 24010001 */  li    $at, 1
 /* 0338E8 80032CE8 10400009 */  beqz  $v0, .L80032D10
-/* 0338EC 80032CEC 3C178012 */   lui   $s7, %hi(D_8011D4CC) # $s7, 0x8012
+/* 0338EC 80032CEC 3C178012 */   lui   $s7, %hi(gLightDiffZ) # $s7, 0x8012
 /* 0338F0 80032CF0 10410009 */  beq   $v0, $at, .L80032D18
 /* 0338F4 80032CF4 24010002 */   li    $at, 2
 /* 0338F8 80032CF8 10410009 */  beq   $v0, $at, .L80032D20
@@ -56,7 +56,7 @@ glabel func_80032C7C
 /* 033944 80032D44 2631C968 */  addiu $s1, %lo(D_800DC968) # addiu $s1, $s1, -0x3698
 /* 033948 80032D48 44CFF800 */  ctc1  $t7, $31
 /* 03394C 80032D4C 44183000 */  mfc1  $t8, $f6
-/* 033950 80032D50 3C0D800E */  lui   $t5, %hi(D_800DC95C) # $t5, 0x800e
+/* 033950 80032D50 3C0D800E */  lui   $t5, %hi(gNumActiveLights) # $t5, 0x800e
 /* 033954 80032D54 4459F800 */  cfc1  $t9, $31
 /* 033958 80032D58 A7B80082 */  sh    $t8, 0x82($sp)
 /* 03395C 80032D5C 37210003 */  ori   $at, $t9, 3
@@ -68,7 +68,7 @@ glabel func_80032C7C
 /* 033974 80032D74 00001025 */  move  $v0, $zero
 /* 033978 80032D78 44D9F800 */  ctc1  $t9, $31
 /* 03397C 80032D7C 440A5000 */  mfc1  $t2, $f10
-/* 033980 80032D80 26F7D4CC */  addiu $s7, %lo(D_8011D4CC) # addiu $s7, $s7, -0x2b34
+/* 033980 80032D80 26F7D4CC */  addiu $s7, %lo(gLightDiffZ) # addiu $s7, $s7, -0x2b34
 /* 033984 80032D84 444BF800 */  cfc1  $t3, $31
 /* 033988 80032D88 A7AA0080 */  sh    $t2, 0x80($sp)
 /* 03398C 80032D8C 35610003 */  ori   $at, $t3, 3
@@ -77,26 +77,26 @@ glabel func_80032C7C
 /* 033998 80032D98 C7D00014 */  lwc1  $f16, 0x14($fp)
 /* 03399C 80032D9C AE200000 */  sw    $zero, ($s1)
 /* 0339A0 80032DA0 460084A4 */  cvt.w.s $f18, $f16
-/* 0339A4 80032DA4 8DADC95C */  lw    $t5, %lo(D_800DC95C)($t5)
+/* 0339A4 80032DA4 8DADC95C */  lw    $t5, %lo(gNumActiveLights)($t5)
 /* 0339A8 80032DA8 440C9000 */  mfc1  $t4, $f18
 /* 0339AC 80032DAC 44CBF800 */  ctc1  $t3, $31
 /* 0339B0 80032DB0 19A00137 */  blez  $t5, .L80033290
 /* 0339B4 80032DB4 A7AC007E */   sh    $t4, 0x7e($sp)
 /* 0339B8 80032DB8 3C013F80 */  li    $at, 0x3F800000 # 1.000000
-/* 0339BC 80032DBC 3C168012 */  lui   $s6, %hi(D_8011D4C4) # $s6, 0x8012
-/* 0339C0 80032DC0 3C148012 */  lui   $s4, %hi(D_8011D4C8) # $s4, 0x8012
+/* 0339BC 80032DBC 3C168012 */  lui   $s6, %hi(gLightDiffX) # $s6, 0x8012
+/* 0339C0 80032DC0 3C148012 */  lui   $s4, %hi(gLightDiffY) # $s4, 0x8012
 /* 0339C4 80032DC4 3C13800E */  lui   $s3, %hi(D_800DC960) # $s3, 0x800e
 /* 0339C8 80032DC8 4481C000 */  mtc1  $at, $f24
 /* 0339CC 80032DCC 4480D000 */  mtc1  $zero, $f26
 /* 0339D0 80032DD0 4480B000 */  mtc1  $zero, $f22
 /* 0339D4 80032DD4 2673C960 */  addiu $s3, %lo(D_800DC960) # addiu $s3, $s3, -0x36a0
-/* 0339D8 80032DD8 2694D4C8 */  addiu $s4, %lo(D_8011D4C8) # addiu $s4, $s4, -0x2b38
-/* 0339DC 80032DDC 26D6D4C4 */  addiu $s6, %lo(D_8011D4C4) # addiu $s6, $s6, -0x2b3c
+/* 0339D8 80032DD8 2694D4C8 */  addiu $s4, %lo(gLightDiffY) # addiu $s4, $s4, -0x2b38
+/* 0339DC 80032DDC 26D6D4C4 */  addiu $s6, %lo(gLightDiffX) # addiu $s6, $s6, -0x2b3c
 /* 0339E0 80032DE0 AFA30064 */  sw    $v1, 0x64($sp)
 /* 0339E4 80032DE4 24120014 */  li    $s2, 20
 .L80032DE8:
-/* 0339E8 80032DE8 3C0E800E */  lui   $t6, %hi(D_800DC950) # $t6, 0x800e
-/* 0339EC 80032DEC 8DCEC950 */  lw    $t6, %lo(D_800DC950)($t6)
+/* 0339E8 80032DE8 3C0E800E */  lui   $t6, %hi(gActiveLights) # $t6, 0x800e
+/* 0339EC 80032DEC 8DCEC950 */  lw    $t6, %lo(gActiveLights)($t6)
 /* 0339F0 80032DF0 8FB90064 */  lw    $t9, 0x64($sp)
 /* 0339F4 80032DF4 01C27821 */  addu  $t7, $t6, $v0
 /* 0339F8 80032DF8 8DF00000 */  lw    $s0, ($t7)
@@ -223,13 +223,13 @@ glabel func_80032C7C
 /* 033BD4 80032FD4 C6820000 */  lwc1  $f2, ($s4)
 /* 033BD8 80032FD8 46000282 */  mul.s $f10, $f0, $f0
 /* 033BDC 80032FDC C6EC0000 */  lwc1  $f12, ($s7)
-/* 033BE0 80032FE0 3C018012 */  lui   $at, %hi(D_8011D4C0) # $at, 0x8012
+/* 033BE0 80032FE0 3C018012 */  lui   $at, %hi(gLightDistance) # $at, 0x8012
 /* 033BE4 80032FE4 46021402 */  mul.s $f16, $f2, $f2
 /* 033BE8 80032FE8 00000000 */  nop   
 /* 033BEC 80032FEC 460C6102 */  mul.s $f4, $f12, $f12
 /* 033BF0 80032FF0 46105480 */  add.s $f18, $f10, $f16
 /* 033BF4 80032FF4 46049180 */  add.s $f6, $f18, $f4
-/* 033BF8 80032FF8 E426D4C0 */  swc1  $f6, %lo(D_8011D4C0)($at)
+/* 033BF8 80032FF8 E426D4C0 */  swc1  $f6, %lo(gLightDistance)($at)
 /* 033BFC 80032FFC C6080068 */  lwc1  $f8, 0x68($s0)
 /* 033C00 80033000 00000000 */  nop   
 /* 033C04 80033004 4608303C */  c.lt.s $f6, $f8
@@ -263,12 +263,12 @@ glabel func_80032C7C
 /* 033C6C 8003306C 45000082 */  bc1f  .L80033278
 /* 033C70 80033070 00000000 */   nop   
 /* 033C74 80033074 8FCA0040 */  lw    $t2, 0x40($fp)
-/* 033C78 80033078 3C018012 */  lui   $at, %hi(D_8011D4C0) # $at, 0x8012
+/* 033C78 80033078 3C018012 */  lui   $at, %hi(gLightDistance) # $at, 0x8012
 /* 033C7C 8003307C 914F0071 */  lbu   $t7, 0x71($t2)
 /* 033C80 80033080 00000000 */  nop   
 /* 033C84 80033084 11E00033 */  beqz  $t7, .L80033154
 /* 033C88 80033088 00000000 */   nop   
-/* 033C8C 8003308C C42CD4C0 */  lwc1  $f12, %lo(D_8011D4C0)($at)
+/* 033C8C 8003308C C42CD4C0 */  lwc1  $f12, %lo(gLightDistance)($at)
 /* 033C90 80033090 3C01BF80 */  li    $at, 0xBF800000 # -1.000000
 /* 033C94 80033094 460CB03C */  c.lt.s $f22, $f12
 /* 033C98 80033098 00000000 */  nop   
@@ -398,8 +398,8 @@ glabel func_80032C7C
 /* 033E70 80033270 270F0001 */  addiu $t7, $t8, 1
 /* 033E74 80033274 AE2F0000 */  sw    $t7, ($s1)
 .L80033278:
-/* 033E78 80033278 3C0B800E */  lui   $t3, %hi(D_800DC95C) # $t3, 0x800e
-/* 033E7C 8003327C 8D6BC95C */  lw    $t3, %lo(D_800DC95C)($t3)
+/* 033E78 80033278 3C0B800E */  lui   $t3, %hi(gNumActiveLights) # $t3, 0x800e
+/* 033E7C 8003327C 8D6BC95C */  lw    $t3, %lo(gNumActiveLights)($t3)
 /* 033E80 80033280 26B50001 */  addiu $s5, $s5, 1
 /* 033E84 80033284 02AB082A */  slt   $at, $s5, $t3
 /* 033E88 80033288 1420FED7 */  bnez  $at, .L80032DE8

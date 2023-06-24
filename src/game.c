@@ -499,7 +499,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     }
     set_music_player_voice_limit(gCurrentLevelHeader->voiceLimit);
     func_80000CBC();
-    setup_lights(0x20);
+    setup_lights(32);
     var_s0 = VEHICLE_CAR;
     if (vehicleId >= VEHICLE_CAR && vehicleId < NUMBER_OF_PLAYER_VEHICLES) {
         var_s0 = gCurrentLevelHeader->unk4F[vehicleId];

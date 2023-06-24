@@ -1,16 +1,16 @@
 glabel func_80031CAC
-/* 0328AC 80031CAC 3C03800E */  lui   $v1, %hi(D_800DC95C) # $v1, 0x800e
-/* 0328B0 80031CB0 2463C95C */  addiu $v1, %lo(D_800DC95C) # addiu $v1, $v1, -0x36a4
-/* 0328B4 80031CB4 3C0E800E */  lui   $t6, %hi(D_800DC958) # $t6, 0x800e
-/* 0328B8 80031CB8 8DCEC958 */  lw    $t6, %lo(D_800DC958)($t6)
+/* 0328AC 80031CAC 3C03800E */  lui   $v1, %hi(gNumActiveLights) # $v1, 0x800e
+/* 0328B0 80031CB0 2463C95C */  addiu $v1, %lo(gNumActiveLights) # addiu $v1, $v1, -0x36a4
+/* 0328B4 80031CB4 3C0E800E */  lui   $t6, %hi(gMaxLights) # $t6, 0x800e
+/* 0328B8 80031CB8 8DCEC958 */  lw    $t6, %lo(gMaxLights)($t6)
 /* 0328BC 80031CBC 8C620000 */  lw    $v0, ($v1)
 /* 0328C0 80031CC0 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 0328C4 80031CC4 004E082A */  slt   $at, $v0, $t6
 /* 0328C8 80031CC8 AFBF0014 */  sw    $ra, 0x14($sp)
 /* 0328CC 80031CCC 102000AA */  beqz  $at, .L80031F78
 /* 0328D0 80031CD0 00003025 */   move  $a2, $zero
-/* 0328D4 80031CD4 3C0F800E */  lui   $t7, %hi(D_800DC950) # $t7, 0x800e
-/* 0328D8 80031CD8 8DEFC950 */  lw    $t7, %lo(D_800DC950)($t7)
+/* 0328D4 80031CD4 3C0F800E */  lui   $t7, %hi(gActiveLights) # $t7, 0x800e
+/* 0328D8 80031CD8 8DEFC950 */  lw    $t7, %lo(gActiveLights)($t7)
 /* 0328DC 80031CDC 0002C080 */  sll   $t8, $v0, 2
 /* 0328E0 80031CE0 01F8C821 */  addu  $t9, $t7, $t8
 /* 0328E4 80031CE4 8F260000 */  lw    $a2, ($t9)

@@ -28,3 +28,5 @@ ctx.c.m2c
 # Ignore batch and executable files.
 *.exe
 *.bat
+dkr_hot_reload.py
+lastRomPath.txt

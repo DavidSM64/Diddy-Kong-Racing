@@ -5,6 +5,15 @@
 #include "structs.h"
 #include "libc/math.h"
 
+enum LightType {
+    LIGHT_UNK0,
+    LIGHT_UNK1,
+    LIGHT_UNK2,
+    LIGHT_UNK3,
+    LIGHT_UNK4,
+    LIGHT_UNK5,
+};
+
 typedef struct SubMiscAssetObjectHeader24 {
     s32 unk0;
     s32 unk4;
@@ -17,20 +26,20 @@ typedef struct MiscAssetObjectHeader24 {
 } MiscAssetObjectHeader24;
 
 /* Size: 0x88 bytes */
-typedef struct unk800DC950 {
+typedef struct ObjectLight {
     u8 unk0;
     u8 unk1;
     u8 unk2;
-    u8 unk3;
-    u8 unk4;
+    u8 type;
+    u8 enabled;
     u8 unk5;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    Object *unkC;
-    f32 unk10;
-    f32 unk14;
-    f32 unk18;
+    s16 homeX;
+    s16 homeY;
+    s16 homeZ;
+    Object *owner;
+    f32 x;
+    f32 y;
+    f32 z;
     s32 unk1C;
     s32 unk20;
     s32 unk24;
@@ -54,21 +63,21 @@ typedef struct unk800DC950 {
     s16 unk56;
     s16 unk58;
     s16 unk5A;
-    f32 unk5C;
+    f32 radius;
     f32 unk60;
     f32 unk64;
-    f32 unk68;
-    f32 unk6C;
+    f32 radiusSquare;
+    f32 radiusMag;
     s16 unk70;
     s16 unk72;
     s16 unk74;
     s16 unk76;
     s16 unk78;
     s16 unk7A;
-    f32 unk7C;
-    f32 unk80;
-    f32 unk84;
-} unk800DC950;
+    f32 unk7C; // Think this might be scale.
+    f32 unk80; // Ditto.
+    f32 unk84; // The evolved form of ditto.
+} ObjectLight;
 
 /* Size: 0x14 bytes */
 typedef struct unk800DC960 {
@@ -86,27 +95,19 @@ typedef struct unk800DC964 {
     f32 unk8;
 } unk800DC964;
 
-extern unk800DC950 **D_800DC950;
-
-f32 coss_f(s16); //?
-
 void free_lights(void);
-void func_80032210(unk800DC950 *arg0);
-void func_80032218(unk800DC950 *arg0);
-void func_80032224(unk800DC950 *arg0);
-void func_80032248(unk800DC950 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
-void func_80032344(unk800DC950 *arg0, s32 arg1, s32 arg2);
 void lightUpdateLights(s32 arg0);
-void func_80032BAC(unk800DC950 *arg0);
-s32 func_80032C6C(void);
-f32 light_distance_calc(unk800DC950 *arg0);
-f32 light_direction_calc(unk800DC950 *arg0);
+void func_80032BAC(ObjectLight *light);
+s32 get_light_count(void);
+f32 light_distance_calc(ObjectLight *light);
+f32 light_direction_calc(ObjectLight *light);
 Object_64 *func_80031CAC(Object *, LevelObjectEntry_RgbaLight *entry);
+ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1);
 
 //Non Matching
 void setup_lights(s32 count);
 void func_80032C7C(Object *object);
 void func_800337E4(void);
-void func_80032424(unk800DC950 *arg0, s32 arg1);
+void func_80032424(ObjectLight *light, s32 arg1);
 
 #endif

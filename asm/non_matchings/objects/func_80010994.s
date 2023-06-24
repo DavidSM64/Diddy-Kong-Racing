@@ -366,7 +366,7 @@ glabel func_80010994
 .L80010EC8:
 /* 011AC8 80010EC8 0C00C8E6 */  jal   lightUpdateLights
 /* 011ACC 80010ECC 02802025 */   move  $a0, $s4
-/* 011AD0 80010ED0 0C00CB1B */  jal   func_80032C6C
+/* 011AD0 80010ED0 0C00CB1B */  jal   get_light_count
 /* 011AD4 80010ED4 00000000 */   nop   
 /* 011AD8 80010ED8 1840001F */  blez  $v0, .L80010F58
 /* 011ADC 80010EDC 3C118012 */   lui   $s1, %hi(D_8011AE60) # $s1, 0x8012

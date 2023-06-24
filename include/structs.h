@@ -660,10 +660,10 @@ typedef struct ObjectHeader24 {
             u8 unkB;
         };
     };
-    s16 unkC;
-    s16 unkE;
-    s16 unk10;
-    u16 unk12;
+    s16 homeX;
+    s16 homeY;
+    s16 homeZ;
+    u16 radius;
     u16 unk14;
     u16 unk16;
 } ObjectHeader24;
@@ -701,7 +701,7 @@ typedef struct ObjectHeader {
   /* 0x57 */ s8 unk57;
   /* 0x58 */ s8 unk58;
   /* 0x59 */ u8 pad59;
-  /* 0x5A */ s8 unk5A;
+  /* 0x5A */ s8 numLightSources;
   /* 0x5B */ u8 unk5B;
   /* 0x5C */ u8 unk5C;
   /* 0x5D */ u8 unk5D; //Misc Asset index?
@@ -1702,7 +1702,7 @@ typedef struct Object {
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
   /* 0x0068 */ Object_68 **unk68; //player + 0x80
   /* 0x006C */ Object_6C *unk6C; //player + 0x370
-  /* 0x0070 */ u32 *unk70;
+  /* 0x0070 */ u32 *lightData;
   /* 0x0074 */ u32 unk74;
   /* 0x0078 */ ObjProperties properties;
   /* 0x0080 */ void *unk80;

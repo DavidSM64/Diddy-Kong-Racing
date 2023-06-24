@@ -837,8 +837,8 @@ void objFreeAssets(Object *obj, s32 count, s32 objType) {
  */
 void light_setup_light_sources(Object *obj) {
     s32 i;
-    for(i = 0; i < obj->segment.header->unk5A; i++) {
-        obj->unk70[i] = add_object_light(obj, &obj->segment.header->unk24[i]);
+    for (i = 0; i < obj->segment.header->numLightSources; i++) {
+        obj->lightData[i] = (u32) add_object_light(obj, &obj->segment.header->unk24[i]);
     }
 }
 
@@ -1074,7 +1074,7 @@ void func_80010994(s32 updateRate) {
     }
     do { //FAKEMATCH
     lightUpdateLights(updateRate);
-    if (func_80032C6C() > 0) {
+    if (get_light_count() > 0) {
         for (i = D_8011AE60; i < objCount; i++) {
             obj = gObjPtrList[i];
             if (!(obj->segment.trans.flags & 0x8000) && (obj->unk54 != NULL)) {
