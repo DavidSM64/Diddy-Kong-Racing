@@ -88,13 +88,6 @@ typedef struct unk800DC960 {
     s32 unk10;
 } unk800DC960;
 
-/* Size: 12 bytes */
-typedef struct unk800DC964 {
-    f32 unk0;
-    f32 unk4;
-    f32 unk8;
-} unk800DC964;
-
 void free_lights(void);
 void lightUpdateLights(s32 arg0);
 void func_80032BAC(ObjectLight *light);

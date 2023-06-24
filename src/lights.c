@@ -15,7 +15,7 @@ ObjectLight *D_800DC954 = NULL;
 s32 gMaxLights = 0;
 s32 gNumActiveLights = 0;
 unk800DC960 *D_800DC960 = NULL;
-unk800DC964 *D_800DC964 = NULL;
+Vec3f *D_800DC964 = NULL;
 s32 D_800DC968 = 0; // Currently unknown, might be a different type.
 
 /*******************************/
@@ -302,9 +302,9 @@ void func_80032C7C(Object *object) {
                                         gLightDiffY = 0.0f;
                                         gLightDiffZ = -1.0f;
                                     }
-                                    D_800DC964[D_800DC968].unk0 = gLightDiffX;
-                                    D_800DC964[D_800DC968].unk4 = gLightDiffY;
-                                    D_800DC964[D_800DC968].unk8 = gLightDiffZ;
+                                    D_800DC964[D_800DC968].x = gLightDiffX;
+                                    D_800DC964[D_800DC968].y = gLightDiffY;
+                                    D_800DC964[D_800DC968].z = gLightDiffZ;
                                 }
                                 D_800DC960[D_800DC968].unk0 = entry;
                                 D_800DC960[D_800DC968].unk4 = entry->unk1C >> 0x10;
@@ -329,9 +329,9 @@ void func_80032C7C(Object *object) {
                 object->unk54->unk6 = D_800DC960[0].unkC;
                 object->unk54->unk7 = D_800DC960[0].unk10;
                 object->unk54->unk11 = 0;
-                object->unk54->unk8 = D_800DC964[0].unk0 * 8192.0f;
-                object->unk54->unkA = D_800DC964[0].unk4 * 8192.0f;
-                object->unk54->unkC = D_800DC964[0].unk8 * 8192.0f;
+                object->unk54->unk8 = D_800DC964[0].x * 8192.0f;
+                object->unk54->unkA = D_800DC964[0].y * 8192.0f;
+                object->unk54->unkC = D_800DC964[0].z * 8192.0f;
             } else {
                 if (D_800DC960[1].unk10 < D_800DC960[0].unk10) {
                     phi_a0 = 0;
@@ -354,16 +354,16 @@ void func_80032C7C(Object *object) {
                 object->unk54->unk5 = D_800DC960[phi_a0].unk8;
                 object->unk54->unk6 = D_800DC960[phi_a0].unkC;
                 object->unk54->unk7 = D_800DC960[phi_a0].unk10;
-                object->unk54->unk8 = D_800DC964[phi_a0].unk0 * 8192.0f;
-                object->unk54->unkA = D_800DC964[phi_a0].unk4 * 8192.0f;
-                object->unk54->unkC = D_800DC964[phi_a0].unk8 * 8192.0f;
+                object->unk54->unk8 = D_800DC964[phi_a0].x * 8192.0f;
+                object->unk54->unkA = D_800DC964[phi_a0].y * 8192.0f;
+                object->unk54->unkC = D_800DC964[phi_a0].z * 8192.0f;
                 object->unk54->unkE = D_800DC960[phi_a1].unk4;
                 object->unk54->unkF = D_800DC960[phi_a1].unk8;
                 object->unk54->unk10 = D_800DC960[phi_a1].unkC;
                 object->unk54->unk11 = D_800DC960[phi_a1].unk10;
-                object->unk54->unk12 = D_800DC964[phi_a1].unk0 * 8192.0f;
-                object->unk54->unk14 = D_800DC964[phi_a1].unk4 * 8192.0f;
-                object->unk54->unk16 = D_800DC964[phi_a1].unk8 * 8192.0f;
+                object->unk54->unk12 = D_800DC964[phi_a1].x * 8192.0f;
+                object->unk54->unk14 = D_800DC964[phi_a1].y * 8192.0f;
+                object->unk54->unk16 = D_800DC964[phi_a1].z * 8192.0f;
             }
         } else {
             if (D_800DC968 > 0) {
