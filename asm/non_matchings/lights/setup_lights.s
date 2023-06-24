@@ -1,7 +1,7 @@
-glabel func_80031BB8
+glabel setup_lights
 /* 0327B8 80031BB8 27BDFFE8 */  addiu $sp, $sp, -0x18
 /* 0327BC 80031BBC AFBF0014 */  sw    $ra, 0x14($sp)
-/* 0327C0 80031BC0 0C00C6D8 */  jal   func_80031B60
+/* 0327C0 80031BC0 0C00C6D8 */  jal   free_lights
 /* 0327C4 80031BC4 AFA40018 */   sw    $a0, 0x18($sp)
 /* 0327C8 80031BC8 8FAE0018 */  lw    $t6, 0x18($sp)
 /* 0327CC 80031BCC 3C06800E */  lui   $a2, %hi(D_800DC958) # $a2, 0x800e

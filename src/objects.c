@@ -22,7 +22,7 @@
 #include "waves.h"
 #include "object_functions.h"
 #include "object_models.h"
-#include "unknown_032760.h"
+#include "lights.h"
 #include "game_ui.h"
 #include "unknown_008C40.h"
 #include "controller.h"
@@ -832,11 +832,13 @@ void objFreeAssets(Object *obj, s32 count, s32 objType) {
         }
     }
 }
-
-void lightSetupLightSources(Object *obj) {
+/**
+ * Official Name: lightSetupLightSources
+ */
+void light_setup_light_sources(Object *obj) {
     s32 i;
     for(i = 0; i < obj->segment.header->unk5A; i++) {
-        obj->unk70[i] = func_80031F88(obj, &obj->segment.header->unk24[i]);
+        obj->unk70[i] = add_object_light(obj, &obj->segment.header->unk24[i]);
     }
 }
 

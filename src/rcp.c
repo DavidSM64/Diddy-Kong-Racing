@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80077450 */
 
-#include "unknown_078050.h"
+#include "rcp.h"
 #include "types.h"
 #include "structs.h"
 #include "macros.h"
@@ -604,7 +604,7 @@ void func_80078190(Gfx **dlist) {
     gDPPipeSync((*dlist)++);
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_078050/func_80078190.s")
+GLOBAL_ASM("asm/non_matchings/rcp/func_80078190.s")
 #endif
 
 /**

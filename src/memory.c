@@ -51,9 +51,10 @@ extern MemoryPoolSlot gMainMemoryPool;
  */
 void init_main_memory_pool(void) {
     s32 ramEnd;
+
     gNumberOfMemoryPools = -1;
-    if (FALSE) {
-        ramEnd = EXTENDED_RAM_END; //Value from JFG, not required to match
+    if (EXPANSION_PAK_SUPPORT) {
+        ramEnd = EXPANSION_RAM_END;
     } else {
         ramEnd = RAM_END;
     }

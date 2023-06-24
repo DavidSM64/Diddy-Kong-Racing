@@ -40,7 +40,6 @@ s16 *gAnimationTable;
 s32 *gObjectAnimationTable;
 s32 D_8011D640;
 s32 D_8011D644;
-UNUSED s32 D_8011D648[66]; // Appears to have no effect when removed entirely?
 
 /******************************/
 

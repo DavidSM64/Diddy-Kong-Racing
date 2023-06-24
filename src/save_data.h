@@ -40,6 +40,7 @@ extern s8 *D_800DE440;
 extern u8 gN64FontCodes[68];
 extern s32 D_800DE48C;
 extern OSPfs pfs[MAXCONTROLLERS];
+extern int	bcmp(const void *, const void *, int);
 size_t strlen(const char *str);
 
 u8 func_80072250(s32 arg0);

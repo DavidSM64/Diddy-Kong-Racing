@@ -644,7 +644,28 @@ typedef struct ObjHeaderParticleEntry {
 
 // Size: 0x18 bytes
 typedef struct ObjectHeader24 {
-    u8 pad0[0x18];
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    u8 unk3;
+    u8 unk4;
+    u8 unk5;
+    u16 unk6; //Misc Asset Id?
+    union {
+        u32 unk8;
+        struct {
+            u8 unk8A;
+            u8 unk9;
+            u8 unkA;
+            u8 unkB;
+        };
+    };
+    s16 unkC;
+    s16 unkE;
+    s16 unk10;
+    u16 unk12;
+    u16 unk14;
+    u16 unk16;
 } ObjectHeader24;
 
 typedef struct ObjectHeader {

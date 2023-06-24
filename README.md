@@ -5,11 +5,11 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of May 19, 2023, this is our current score:
+As of June 22, 2023, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 51.99%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 52.10%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 26.52%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 26.72%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -128,25 +128,25 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of April 28, 2023, this is our current score:
+As of June 22, 2023, this is our current score:
 ```
  =================================================
       ADVENTURE ONE (ASM -> C Decompilation)
- ---------------- 51.99% Complete ----------------
-           # Decompiled functions: 1507
-            # GLOBAL_ASM remaining: 325
+ ---------------- 52.10% Complete ----------------
+           # Decompiled functions: 1508
+            # GLOBAL_ASM remaining: 323
            # NON_MATCHING functions: 12
         # NON_EQUIVALENT WIP functions: 65
  ------------------ Game Status ------------------
      Balloons: 26/47, Keys: 3/4, Trophies: 2/5
       T.T. Amulets: 2/4, Wizpig Amulets: 2/4
  -------------------------------------------------
- We are racing the octopus boss Bubbler. (Lap 1/3)
+ We are racing the octopus boss Bubbler. (Lap 2/3)
  =================================================
        ADVENTURE TWO (Cleanup & Documentation)
- ---------------- 26.52% Complete ----------------
-            # Documented functions: 568
-           # Undocumented remaining: 996
+ ---------------- 26.72% Complete ----------------
+            # Documented functions: 573
+           # Undocumented remaining: 990
  ------------------ Game Status ------------------
      Balloons: 13/47, Keys: 1/4, Trophies: 1/5
       T.T. Amulets: 1/4, Wizpig Amulets: 1/4

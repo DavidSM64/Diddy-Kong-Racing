@@ -25,10 +25,10 @@
 #include "objects.h"
 #include "camera.h"
 #include "save_data.h"
-#include "unknown_078050.h"
+#include "rcp.h"
 #include "audiosfx.h"
 #include "audiomgr.h"
-#include "unknown_032760.h"
+#include "lights.h"
 #include "textures_sprites.h"
 #include "PR/os_internal.h"
 #include "printf.h"
@@ -50,9 +50,12 @@
 UNUSED const char sLevelErrorString[] = "LOADLEVEL Error: Level out of range\n";
 UNUSED const char sBossErrorString[] = "BossLev problem\n";
 UNUSED const char sAITableErrorString[] = "AITABLE Error: Table out of range\n";
-UNUSED const char sDebugVersionInfoString[] = "1.1605";
-UNUSED const char sDebugBuildDateString[] = "02/10/97 16:03";
-UNUSED const char sDebugUsernameString[] = "pmountain";
+
+UNUSED char *sDebugRomBuildInfo[] = {
+    "1.1605",
+    "02/10/97 16:03",
+    "pmountain"
+};
 
 const char D_800E7134[] = "BBB\n"; // Functionally unused.
 UNUSED const char sDebugCarString[] = "CAR";
@@ -63,12 +66,6 @@ UNUSED const char sDebugVehicleSwapString[] = "Swapping\n";
 /*********************************/
 
 /************ .data ************/
-
-UNUSED char *sDebugRomBuildInfo[3] = {
-    (char *)sDebugVersionInfoString,
-    (char *)sDebugBuildDateString,
-    (char *)sDebugUsernameString
-};
 
 UNUSED char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
 
