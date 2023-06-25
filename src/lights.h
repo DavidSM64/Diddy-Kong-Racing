@@ -89,7 +89,7 @@ typedef struct unk800DC960 {
 } unk800DC960;
 
 void free_lights(void);
-void lightUpdateLights(s32 arg0);
+void lightUpdateLights(s32 updateRate);
 void func_80032BAC(ObjectLight *light);
 s32 get_light_count(void);
 f32 light_distance_calc(ObjectLight *light);

@@ -57,12 +57,12 @@ void setup_lights(s32 count) {
 
     free_lights();
     gMaxLights = count;
-    temp_v0 = (ObjectLight **) allocate_from_main_pool_safe(gMaxLights * (sizeof(s32 *) + sizeof(ObjectLight) + sizeof(unk800DC960) + sizeof(unk800DC964)), COLOUR_TAG_MAGENTA);
+    temp_v0 = (ObjectLight **) allocate_from_main_pool_safe(gMaxLights * (sizeof(s32 *) + sizeof(ObjectLight) + sizeof(unk800DC960) + sizeof(Vec3f)), COLOUR_TAG_MAGENTA);
     newCount = gMaxLights;
     gActiveLights = temp_v0;
     D_800DC954 = (ObjectLight *) &temp_v0[newCount];
     D_800DC960 = (unk800DC960 *) &D_800DC954[newCount];
-    D_800DC964 = (unk800DC964 *) &D_800DC960[newCount];
+    D_800DC964 = (Vec3f *) &D_800DC960[newCount];
     for (i = 0; i < gMaxLights; i++) {
         gActiveLights[i] = &D_800DC954[i];
     }
@@ -191,10 +191,10 @@ UNUSED void func_80032344(ObjectLight *light, s32 arg1, s32 arg2) {
 /**
  * Loops through all active lights and updates their properties.
 */
-void lightUpdateLights(s32 arg0) {
+void lightUpdateLights(s32 updateRate) {
     s32 i;
     for (i = 0; i < gNumActiveLights; i++) {
-        func_80032424(gActiveLights[i], arg0);
+        func_80032424(gActiveLights[i], updateRate);
     }
 }
 
