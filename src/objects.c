@@ -592,11 +592,11 @@ void instShowBearBar(void) {
     D_800DC708 = 0x8000;
 }
 
-s8 func_8000E138() {
+s8 func_8000E138(void) {
     return D_8011AD20;
 }
 
-s8 func_8000E148() {
+s8 func_8000E148(void) {
     return D_800DC71C;
 }
 
@@ -608,7 +608,7 @@ s8 func_8000E158(void) {
     }
 }
 
-s8 func_8000E184() {
+s8 func_8000E184(void) {
     return D_800DC748;
 }
 
@@ -634,7 +634,7 @@ s8 find_non_car_racers(void) {
  * Return true if the silver coin race mode is active.
  * Used to determine whether to spawn silver coins.
  */
-s8 check_if_silver_coin_race() {
+s8 check_if_silver_coin_race(void) {
     return gIsSilverCoinRace;
 }
 
@@ -715,7 +715,7 @@ void set_time_trial_enabled(s32 arg0) {
 /**
  * Returns the value in gTimeTrialEnabled.
  */
-u8 is_time_trial_enabled() {
+u8 is_time_trial_enabled(void) {
     return gTimeTrialEnabled;
 }
 
@@ -1195,7 +1195,7 @@ void func_80011390(void) {
     D_8011ADAC = 0;
 }
 
-s32 func_8001139C() {
+s32 func_8001139C(void) {
     return D_8011ADB0;
 }
 
@@ -1204,12 +1204,12 @@ s32 func_8001139C() {
  * There exists another variable in racer.c with exactly the same purpose.
  * This does not get used anywhere else.
  */
-s32 get_race_start_timer() {
+s32 get_race_start_timer(void) {
     return gRaceStartCountdown;
 }
 
 // Unused function, purpose currently unknown.
-UNUSED s32 func_800113BC() {
+UNUSED s32 func_800113BC(void) {
     return D_8011ADBC;
 }
 
@@ -2561,11 +2561,11 @@ void func_8001A8D4(s32 arg0) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001A8F4.s")
 
-s16 func_8001AE44() {
+s16 func_8001AE44(void) {
     return D_8011AD4E;
 }
 
-s32 func_8001AE54() {
+s32 func_8001AE54(void) {
     return D_8011ADC8;
 }
 
@@ -2659,7 +2659,7 @@ s32 func_8001B738(s32 controllerIndex) {
     return func_80059B7C(controllerIndex, func_800599A8(), D_800DC728, D_800DC72C, D_800DC724);
 }
 
-u8 has_ghost_to_save() {
+u8 has_ghost_to_save(void) {
     return gHasGhostToSave;
 }
 
@@ -3183,7 +3183,7 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
     }
 }
 
-s16 func_8001E440() {
+s16 func_8001E440(void) {
     return D_8011AE7A;
 }
 

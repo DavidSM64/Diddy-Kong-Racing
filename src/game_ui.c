@@ -423,11 +423,11 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 func_800A7A60(arg3, &gHUDCurrDisplayList);
                 set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
                 gDPSetEnvColor(gHUDCurrDisplayList++, 255, 255, 255, 0);
-                sp2C = func_8001139C(&gHUDCurrDisplayList) >> 1;
+                sp2C = func_8001139C() >> 1;
                 if (is_in_time_trial()) {
                     func_800A277C(sp2C, arg3, updateRate);
                 } else {
-                    if (func_8001E440(sp2C) == 10) {
+                    if (func_8001E440() == 10) {
                         func_80068508(1);
                         func_800A718C(racer);
                         func_80068508(0);
