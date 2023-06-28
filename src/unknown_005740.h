@@ -45,7 +45,6 @@ typedef struct unk80119C58 {
 
 
 extern u8 D_800DC6D0;
-extern s32 D_800DC6D4;
 extern s32 D_800DC6D8;
 extern s32 D_800DC6DC;
 extern u16 D_800DC6E0;

@@ -31,8 +31,8 @@ typedef struct unk80119C38 {
     u8 unk38;
     u8 unk39;
     u8 pad3A[0x2];
-    u8 unk3C;
-    u8 pad3D[0x7];
+    f32 unk3C;
+    u8 pad40[0x4];
     u8 unk44;
     u8 *unk48; //soundMask / soundState?
     u8 pad4C[0x4];
@@ -43,18 +43,18 @@ typedef struct unk80119C38 {
     u8 pad60[0x8];
     f32 unk68;
     u8 pad6C[0x8];
-    u32 unk74;
-    f32 unk78; // X?
-    f32 unk7C; // Y?
-    f32 unk80; // Z?
+    u8 unk74;
+    f32 unk78; // X
+    f32 unk7C; // Y
+    f32 unk80; // Z
     f32 unk84;
     u8 unk88; // Volume?
     f32 unk8C; // Volume?
     u8 pad90;
     u8 unk91;
     u8 pad92[0x2];
-    u8 unk94;
-    u8 pad95[0xB];
+    f32 unk94;
+    u8 pad98[0x8];
     u8 unkA0;
 } unk80119C38;
 
@@ -85,20 +85,11 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80005D08.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800063EC.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006AC8.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006BFC.s")
-/*
-static f64 D_800E4CC8 = 0.05;
-static f64 D_800E4CD8 = 0.05;
-static f64 D_800E4CE8 = 0.8;
-
-//void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *arg2, u8 arg3, s32 updateRate) {
-*/
 
 #if 1
-void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 arg4) {
+void func_8000488C(u8 *arg0);
+void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3, s32 updateRate) {
     f32 sp8C;
-    Object **var_s2_6;
-    Object **var_s6;
-    Object *temp_s0;
     Object_Racer *racer;
     Object_64 *temp_s1_7;
     f32 tempyPos;
@@ -110,15 +101,12 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
     f32 var_f26;
     s32 *temp_a0_2;
     u8 temp_s3;
-    unk80119C38 *temp_t2;
     u8 temp_t3;
     u8 temp_t6_2;
-    s32 temp_t8_2;
     s32 temp_v0_7;
     s32 var_a0_2;
     s32 var_a2;
     s32 var_s5_2;
-    s32 var_s5_3;
     s32 var_v1;
     u16 temp_a2_2;
     u8 *temp_a0_7;
@@ -126,8 +114,7 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
     s32 i, j;
 
     for (i = 0; i < arg3; i++) {
-        var_s6 = arg0[i];
-        racer = &arg0[i]->unk64->racer;
+        racer = &objs[i]->unk64->racer;
         if (racer != NULL) {
             D_80119C38 = (unk80119C38 *) racer->unk118;
         } else {
@@ -139,16 +126,16 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
                 D_80119C38->unk91 = 64;
                 D_80119C38->unk68 = 0.0f;
             } else {
-                tempyPos = var_s6[0]->segment.trans.y_position - arg2[i].trans.y_position;
-                tempxPos = var_s6[0]->segment.trans.x_position - arg2[i].trans.x_position;
-                tempzPos = var_s6[0]->segment.trans.z_position - arg2[i].trans.z_position;
-                func_80006BFC(var_s6[0], arg2, var_s6[0], arg4);
+                tempxPos = objs[i]->segment.trans.x_position - segment[i].trans.x_position;
+                tempyPos = objs[i]->segment.trans.y_position - segment[i].trans.y_position;
+                tempzPos = objs[i]->segment.trans.z_position - segment[i].trans.z_position;
+                func_80006BFC(objs[i], segment, objs[i], updateRate);
                 D_80119C38->unk84 = sqrtf((tempxPos * tempxPos) + (tempyPos * tempyPos) + (tempzPos * tempzPos));
                 if (D_80119C38->unk84 < 1500.0f) {
                     //2250000.0f = (1500.0f * 1500.0f)
                     var_f26 = (2250000.0f - (D_80119C38->unk84 * D_80119C38->unk84)) / 2250000.0f;
                     var_f26 *= var_f26;
-                    D_80119C38->unk91 = func_800090C0(tempxPos, tempzPos, arg2[i].trans.y_rotation);
+                    D_80119C38->unk91 = func_800090C0(tempxPos, tempzPos, segment[i].trans.y_rotation);
                 } else {
                     var_f26 = 0.0f;
                 }
@@ -167,10 +154,9 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
                     sp8C = temp_f0_3 + ((((f32) D_80119C38->unk39 / 100.0f) - temp_f0_3) * temp_f20_2);
                     temp_a0_2 = D_80119C38->unk50;
                     if (temp_a0_2 != NULL) {
-                        temp_s0 = *var_s6;
-                        func_80009B7C(temp_a0_2, temp_s0->segment.trans.x_position, temp_s0->segment.trans.y_position, temp_s0->segment.trans.z_position);
+                        func_80009B7C(temp_a0_2, objs[i]->segment.trans.x_position, objs[i]->segment.trans.y_position, objs[i]->segment.trans.z_position);
                         func_800049F8(D_80119C38->unk50, 8, temp_s3 << 8);
-                        func_800049F8(D_80119C38->unk50, 16, sp8C);
+                        func_800049F8(D_80119C38->unk50, 16, *((u32*) &sp8C));
                         func_80004604((u8 *) D_80119C38->unk50, 80);
                         func_800049F8(D_80119C38->unk50, 4, D_80119C38->unk91);
                     }
@@ -200,7 +186,7 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
                         }
                     } else {
                         var_a0 = D_80119C38[j].unk48;
-                        if ((var_a0 != NULL) && (temp_t6_2 == 0)) {
+                        if ((D_80119C38[j].unk48 != NULL) && (temp_t6_2 == 0)) {
                             func_8000488C(var_a0);
                             D_80119C38[j].unk48 = 0;
                         } else {
@@ -209,10 +195,9 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
                                 var_a0 = D_80119C38[j].unk48;
                             }
                             if (var_a0 != NULL) {
-                                temp_s0 = *var_s6;
-                                func_80009B7C((s32 *) var_a0, temp_s0->segment.trans.x_position, temp_s0->segment.trans.y_position, temp_s0->segment.trans.z_position);
+                                func_80009B7C((s32 *) var_a0, objs[i]->segment.trans.x_position, objs[i]->segment.trans.y_position, objs[i]->segment.trans.z_position);
                                 func_800049F8(D_80119C38[j].unk48, 8, temp_t6_2 << 8);
-                                func_800049F8(D_80119C38[j].unk48, 16, temp_f8);
+                                func_800049F8(D_80119C38[j].unk48, 16, *((u32*) &temp_f8));
                                 func_80004604(D_80119C38[j].unk48, 80);
                                 if (arg3 != 1) {
                                     D_80119C38->unk91 = 64;
@@ -226,9 +211,9 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
         }
     }
     if (arg3 < 3) {
-        for (var_s5_2 = arg3; var_s5_2 < arg1; var_s5_2++) {
-            racer = &arg0[var_s5_2]->unk64->racer;
-            if (arg0[var_s5_2]->unk64 != NULL) {
+        for (var_s5_2 = arg3; var_s5_2 < numRacers; var_s5_2++) {
+            racer = &objs[var_s5_2]->unk64->racer;
+            if (objs[var_s5_2]->unk64 != NULL) {
                 D_80119C38 = (unk80119C38 *) racer->unk118;
                 if (D_80119C38 != 0) {
                     D_80119C38->unk88 = 0;
@@ -236,21 +221,20 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
             }
         }
         for (i = 0; i < arg3; i++) {
-            temp_s1_7 = arg0[i]->unk64;
-            for (var_s5_3 = arg3; var_s5_3 < arg1; var_s5_3++) {
-                racer = &arg0[var_s5_3]->unk64->racer;
+            temp_s1_7 = objs[i]->unk64;
+            for (j = arg3; j < numRacers; j++) {
+                racer = &objs[j]->unk64->racer;
                 if (racer != NULL) {
-                    temp_t8_2 = racer->unk118;
-                    D_80119C38 = (unk80119C38 *) temp_t8_2;
-                    if (temp_t8_2 != 0) {
+                    D_80119C38 = (unk80119C38 *) racer->unk118;
+                    if (D_80119C38 != 0) {
                         if (temp_s1_7->racer.raceFinished != 0) {              
-                            tempyPos = arg0[var_s5_3]->segment.trans.y_position - arg2[i].trans.y_position;     
-                            tempxPos = arg0[var_s5_3]->segment.trans.x_position - arg2[i].trans.x_position;       
-                            tempzPos = arg0[var_s5_3]->segment.trans.z_position - arg2[i].trans.z_position;
+                            tempxPos = objs[j]->segment.trans.x_position - segment[i].trans.x_position;       
+                            tempyPos = objs[j]->segment.trans.y_position - segment[i].trans.y_position;     
+                            tempzPos = objs[j]->segment.trans.z_position - segment[i].trans.z_position;
                         } else {
-                            tempyPos = arg0[var_s5_3]->segment.trans.y_position - arg0[i]->segment.trans.y_position;
-                            tempxPos = arg0[var_s5_3]->segment.trans.x_position - arg0[i]->segment.trans.x_position;
-                            tempzPos = arg0[var_s5_3]->segment.trans.z_position - arg0[i]->segment.trans.z_position;
+                            tempxPos = objs[j]->segment.trans.x_position - objs[i]->segment.trans.x_position;
+                            tempyPos = objs[j]->segment.trans.y_position - objs[i]->segment.trans.y_position;
+                            tempzPos = objs[j]->segment.trans.z_position - objs[i]->segment.trans.z_position;
                         }
                         D_80119C38->unk84 = sqrtf((tempxPos * tempxPos) + (tempyPos * tempyPos) + (tempzPos * tempzPos));
                         if (D_80119C38->unk84 < 1500.0f) {
@@ -262,11 +246,11 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
                             temp_t3 *= 0.8;
                             if (D_80119C38->unk88 < temp_t3) {
                                 D_80119C38->unk88 = temp_t3;
-                                D_80119C38->unk91 = func_800090C0(tempxPos, tempzPos, arg2->trans.y_rotation);
+                                D_80119C38->unk91 = func_800090C0(tempxPos, tempzPos, segment->trans.y_rotation);
                                 if (temp_s1_7->racer.raceFinished != 0) {
-                                    func_80006BFC(arg0[i], arg2, arg0[var_s5_3], arg4);
+                                    func_80006BFC(objs[i], segment, objs[j], updateRate);
                                 } else {
-                                    func_80006BFC(arg0[i], NULL, arg0[var_s5_3], arg4);
+                                    func_80006BFC(objs[i], NULL, objs[j], updateRate);
                                 }
                                 D_80119C38->unk8C = D_80119C38->unk68 + D_80119C38->unk5C;
                                 if (D_80119C38->unk8C < 0.05) {
@@ -288,33 +272,32 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
                 }
             }
         }
-        if (arg4 < D_800DC6D4) {
-            D_800DC6D4 -= arg4;
+        if (updateRate < D_800DC6D4) {
+            D_800DC6D4 -= updateRate;
         } else {
             D_800DC6D4 = 0;
         }
-        for (i = 1; i < arg1; i++) {
-            if (var_s2_6[i]->unk64 != NULL) {
-                temp_t2 = (unk80119C38 *) var_s2_6[i]->unk64->racer.unk118;
-                D_80119C38 = (unk80119C38 **) &temp_t2;
-                if (temp_t2 != 0) {
-                    if (temp_t2->unk74 == 0) {
+        for (i = 1; i < numRacers; i++) {
+            if (objs[i]->unk64 != NULL) {
+                D_80119C38 = objs[i]->unk64->racer.unk118;
+                if (D_80119C38 != 0) {
+                    if (D_80119C38->unk74 == 0) {
                         var_a2 = 20;
                         var_a0_2 = -1;
-                        if (temp_t2->unk0 != 0) {
+                        if (D_80119C38->unk0 != 0) {
                             for (var_v1 = 0; var_v1 < 2; var_v1++) {
                                 if (D_80119C30[var_v1] != NULL) {
-                                    temp_v0_7 = temp_t2->unk88 - D_80119C30[var_v1]->unk88;
+                                    temp_v0_7 = D_80119C38->unk88 - D_80119C30[var_v1]->unk88;
                                     if ((var_a2 < temp_v0_7) && (D_800DC6D4 == 0)) {
                                         var_a0_2 = var_v1;
                                         var_a2 = temp_v0_7;
                                     }
-                                } else if (temp_t2->unk88 >= 9) {
+                                } else if (D_80119C38->unk88 >= 9) {
                                     var_a0_2 = var_v1;
                                 }
                             }
                             if (var_a0_2 != -1) {
-                                temp_t2->unk74 = 2;
+                                D_80119C38->unk74 = 2;
                                 if (D_80119C30[var_a0_2] != NULL) {
                                     temp_a0_7 = D_80119C30[var_a0_2]->unk48;
                                     if (temp_a0_7 != NULL) {
@@ -325,7 +308,7 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
                                     D_800DC6D4 = 60;
                                     D_80119C30[var_a0_2]->unk74 = 0;
                                 }
-                                D_80119C30[var_a0_2] = (unk80119C38 *) D_80119C38;
+                                D_80119C30[var_a0_2] = D_80119C38;
                             }
                         }
                     }
@@ -334,24 +317,24 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
         }
         if (func_8001139C() <= 0) {
             for (i = 0; i < ARRAY_COUNT(D_80119C30); i++) {
-                if (D_80119C30[i] != NULL) {
-                    temp_a2_2 = D_80119C30[i]->unk0;
-                    if (temp_a2_2 != 0) {
-                        if (D_80119C30[i]->unk74 == 1) {
-                            D_80119C30[i]->unk74 = 2;
+                unk80119C38 *temp = &D_80119C30[i];
+                if (temp != NULL) {
+                    if (temp->unk0 != 0) {
+                        if (temp->unk74 == 1) {
+                            temp->unk74 = 2;
                         } else {
-                            if (D_80119C30[i]->unk48 == NULL) {
-                                func_80001F14(temp_a2_2,  D_80119C30[i]->unk48);
+                            if (temp->unk48 == NULL) {
+                                func_80001F14(temp->unk0, &temp->unk48);
                             }
-                            if (D_80119C30[i]->unk48 != NULL) {
-                                func_80009B7C(D_80119C30[i]->unk48, D_80119C30[i]->unk80, D_80119C30[i]->unk84, D_80119C30[i]->unk80);
-                                func_800049F8(D_80119C30[i]->unk48, 8, D_80119C30[i]->unk88 << 8);
-                                func_800049F8(D_80119C30[i]->unk48, 16, D_80119C30[i]->unk8C);
+                            if (temp->unk48 != NULL) {
+                                func_80009B7C(temp->unk48, temp->unk78, temp->unk7C, temp->unk80);
+                                func_800049F8(temp->unk48, 8, temp->unk88 << 8);
+                                func_800049F8(temp->unk48, 16, *((u32*) &temp->unk8C));
                                 if (arg3 != 1) {
-                                    D_80119C30[i]->unk91 = 64;
+                                    temp->unk91 = 64;
                                 }
-                                func_800049F8(D_80119C30[i]->unk48, 4, (u32) D_80119C30[i]->unk91);
-                                func_80004604(D_80119C30[i]->unk48, 70);
+                                func_800049F8(temp->unk48, 4, temp->unk91);
+                                func_80004604(temp->unk48, 70);
                             }
                         }
                     }
