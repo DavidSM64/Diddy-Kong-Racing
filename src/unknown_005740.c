@@ -99,18 +99,13 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
     Object **var_s2_6;
     Object **var_s6;
     Object *temp_s0;
-    Object *temp_s0_2;
     Object_Racer *racer;
     Object_64 *temp_s1_7;
-    Object_64 *temp_v0_2;
-    Object_64 *temp_v0_6;
     f32 tempyPos;
-    f32 temp_f0_2;
     f32 temp_f0_3;
     f32 tempxPos;
     f32 temp_f20_2;
     f32 tempzPos;
-    f32 temp_f2_2;
     f32 temp_f8;
     f32 var_f26;
     s32 *temp_a0_2;
@@ -124,14 +119,10 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
     s32 var_a2;
     s32 var_s5_2;
     s32 var_s5_3;
-    s32 var_s5_4;
     s32 var_v1;
     u16 temp_a2_2;
     u8 *temp_a0_7;
     u8 *var_a0;
-    u8 temp_a1;
-    unk80119C38 **var_s3_2;
-    unk80119C38 *temp_s1_8;
     s32 i, j;
 
     for (i = 0; i < arg3; i++) {
@@ -167,8 +158,7 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
             }
             if ((D_80119C38->unkA0 < 70) && (D_80119C38->unk36) && (arg3 < 3) && (var_f26 != 0.0) && !(D_80119C38->unk44 & 1)) {
                 temp_f20_2 = D_80119C38->unkA0 / 70.0f;
-                temp_f0_2 = D_80119C38->unk37;
-                temp_s3 = (temp_f0_2 - (temp_f0_2 * temp_f20_2)) * var_f26;
+                temp_s3 = (D_80119C38->unk37 - (D_80119C38->unk37 * temp_f20_2)) * var_f26;
                 if (temp_s3 >= 16) {
                     if (D_80119C38->unk50 == NULL) {
                         func_80001F14((u16) D_80119C38->unk36, D_80119C38 + 0x50);
@@ -219,8 +209,8 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
                                 var_a0 = D_80119C38[j].unk48;
                             }
                             if (var_a0 != NULL) {
-                                temp_s0_2 = *var_s6;
-                                func_80009B7C((s32 *) var_a0, temp_s0_2->segment.trans.x_position, temp_s0_2->segment.trans.y_position, temp_s0_2->segment.trans.z_position);
+                                temp_s0 = *var_s6;
+                                func_80009B7C((s32 *) var_a0, temp_s0->segment.trans.x_position, temp_s0->segment.trans.y_position, temp_s0->segment.trans.z_position);
                                 func_800049F8(D_80119C38[j].unk48, 8, temp_t6_2 << 8);
                                 func_800049F8(D_80119C38[j].unk48, 16, temp_f8);
                                 func_80004604(D_80119C38[j].unk48, 80);
@@ -248,9 +238,9 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
         for (i = 0; i < arg3; i++) {
             temp_s1_7 = arg0[i]->unk64;
             for (var_s5_3 = arg3; var_s5_3 < arg1; var_s5_3++) {
-                temp_v0_2 = arg0[var_s5_3]->unk64;
-                if (temp_v0_2 != NULL) {
-                    temp_t8_2 = temp_v0_2->racer.unk118;
+                racer = &arg0[var_s5_3]->unk64->racer;
+                if (racer != NULL) {
+                    temp_t8_2 = racer->unk118;
                     D_80119C38 = (unk80119C38 *) temp_t8_2;
                     if (temp_t8_2 != 0) {
                         if (temp_s1_7->racer.raceFinished != 0) {              
@@ -263,10 +253,9 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
                             tempzPos = arg0[var_s5_3]->segment.trans.z_position - arg0[i]->segment.trans.z_position;
                         }
                         D_80119C38->unk84 = sqrtf((tempxPos * tempxPos) + (tempyPos * tempyPos) + (tempzPos * tempzPos));
-                        temp_f2_2 = D_80119C38->unk84;
-                        if (temp_f2_2 < 1500.0f) {
+                        if (D_80119C38->unk84 < 1500.0f) {
                             //2250000.0f = (1500.0f * 1500.0f)
-                            temp_t3 = D_80119C38->unk54 * ((2250000.0f - (temp_f2_2 * temp_f2_2)) / 2250000.0f);
+                            temp_t3 = D_80119C38->unk54 * ((2250000.0f - (D_80119C38->unk84 * D_80119C38->unk84)) / 2250000.0f);
                             if (temp_t3 > 127) {
                                 temp_t3 = 127;
                             }
@@ -304,57 +293,44 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
         } else {
             D_800DC6D4 = 0;
         }
-        var_s5_4 = 1;
-        if (arg1 >= 2) {
-            var_s2_6 = arg0 + 4;
-            do {
-                temp_v0_6 = (*var_s2_6)->unk64;
-                if (temp_v0_6 != NULL) {
-                    temp_t2 = (unk80119C38 *) temp_v0_6->racer.unk118;
-                    D_80119C38 = (unk80119C38 **) &temp_t2;
-                    if (temp_t2 != 0) {
-                        if (temp_t2->unk74 == 0) {
-                            var_a2 = 0x14;
-                            var_a0_2 = -1;
-                            if (temp_t2->unk0 != 0) {
-                                temp_a1 = temp_t2->unk88;
-                                var_s3_2 = D_80119C30;
-                                var_v1 = 0;
-                                do {
-                                    temp_s1_8 = *var_s3_2;
-                                    if (temp_s1_8 != NULL) {
-                                        temp_v0_7 = temp_a1 - temp_s1_8->unk88;
-                                        if ((var_a2 < temp_v0_7) && (D_800DC6D4 == 0)) {
-                                            var_a0_2 = var_v1;
-                                            var_a2 = temp_v0_7;
-                                        }
-                                    } else if ((s32) temp_a1 >= 9) {
+        for (i = 1; i < arg1; i++) {
+            if (var_s2_6[i]->unk64 != NULL) {
+                temp_t2 = (unk80119C38 *) var_s2_6[i]->unk64->racer.unk118;
+                D_80119C38 = (unk80119C38 **) &temp_t2;
+                if (temp_t2 != 0) {
+                    if (temp_t2->unk74 == 0) {
+                        var_a2 = 20;
+                        var_a0_2 = -1;
+                        if (temp_t2->unk0 != 0) {
+                            for (var_v1 = 0; var_v1 < 2; var_v1++) {
+                                if (D_80119C30[var_v1] != NULL) {
+                                    temp_v0_7 = temp_t2->unk88 - D_80119C30[var_v1]->unk88;
+                                    if ((var_a2 < temp_v0_7) && (D_800DC6D4 == 0)) {
                                         var_a0_2 = var_v1;
+                                        var_a2 = temp_v0_7;
                                     }
-                                    var_v1 += 1;
-                                    var_s3_2 += 4;
-                                } while (var_v1 < 2);
-                                if (var_a0_2 != -1) {
-                                    temp_t2->unk74 = 2;
-                                    if (D_80119C30[var_a0_2] != NULL) {
-                                        temp_a0_7 = D_80119C30[var_a0_2]->unk48;
-                                        if (temp_a0_7 != NULL) {
-                                            func_8000488C(temp_a0_7);
-                                            D_80119C30[var_a0_2]->unk48 = NULL;
-                                            D_80119C38->unk74 = 1;
-                                        }
-                                        D_800DC6D4 = 60;
-                                        D_80119C30[var_a0_2]->unk74 = 0;
-                                    }
-                                    D_80119C30[var_a0_2] = (unk80119C38 *) D_80119C38;
+                                } else if (temp_t2->unk88 >= 9) {
+                                    var_a0_2 = var_v1;
                                 }
+                            }
+                            if (var_a0_2 != -1) {
+                                temp_t2->unk74 = 2;
+                                if (D_80119C30[var_a0_2] != NULL) {
+                                    temp_a0_7 = D_80119C30[var_a0_2]->unk48;
+                                    if (temp_a0_7 != NULL) {
+                                        func_8000488C(temp_a0_7);
+                                        D_80119C30[var_a0_2]->unk48 = NULL;
+                                        D_80119C38->unk74 = 1;
+                                    }
+                                    D_800DC6D4 = 60;
+                                    D_80119C30[var_a0_2]->unk74 = 0;
+                                }
+                                D_80119C30[var_a0_2] = (unk80119C38 *) D_80119C38;
                             }
                         }
                     }
                 }
-                var_s5_4 += 1;
-                var_s2_6 += 4;
-            } while (var_s5_4 != arg1);
+            }
         }
         if (func_8001139C() <= 0) {
             for (i = 0; i < ARRAY_COUNT(D_80119C30); i++) {
