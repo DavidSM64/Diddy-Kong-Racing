@@ -95,23 +95,12 @@ static f64 D_800E4CE8 = 0.8;
 
 #if 1
 void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 arg4) {
-    s32 spAC;
     f32 sp8C;
-    s32 sp7C;
-    Object **var_s2_3;
-    Object **var_s2_4;
-    Object **var_s2_5;
     Object **var_s2_6;
     Object **var_s6;
-    Object **var_s6_2;
     Object *temp_s0;
     Object *temp_s0_2;
-    Object *temp_s0_3;
-    Object *temp_v0_3;
-    Object *temp_v0_4;
-    ObjectSegment *temp_v1_2;
     Object_Racer *racer;
-    Object_64 *temp_s1_3;
     Object_64 *temp_s1_7;
     Object_64 *temp_v0_2;
     Object_64 *temp_v0_6;
@@ -121,23 +110,14 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
     f32 tempxPos;
     f32 temp_f20_2;
     f32 tempzPos;
-    f32 temp_f22_2;
     f32 temp_f2_2;
     f32 temp_f8;
-    f32 var_f0;
-    f32 var_f16;
-    f32 var_f20;
     f32 var_f26;
-    f32 var_f6;
     s32 *temp_a0_2;
     u8 temp_s3;
     unk80119C38 *temp_t2;
     u8 temp_t3;
-    s32 temp_t4;
-    s32 temp_t5;
-    unk80119C38 *temp_t5_2;
     u8 temp_t6_2;
-    u8 temp_t7_2;
     s32 temp_t8_2;
     s32 temp_v0_7;
     s32 var_a0_2;
@@ -150,15 +130,8 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
     u8 *temp_a0_7;
     u8 *var_a0;
     u8 temp_a1;
-    unk80119C38 *temp_t1;
-    unk80119C38 *temp_t6_3;
-    unk80119C38 *temp_t8;
     unk80119C38 **var_s3_2;
     unk80119C38 *temp_s1_8;
-    Object_64 *temp_s1_4;
-    Object_64 *temp_s1_5;
-    Object_64 *temp_s1_6;
-    Object *temp_t9_2;
     s32 i, j;
 
     for (i = 0; i < arg3; i++) {
@@ -262,8 +235,7 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
             }
         }
     }
-    sp7C = arg3;
-    if (sp7C < 3) {
+    if (arg3 < 3) {
         for (var_s5_2 = arg3; var_s5_2 < arg1; var_s5_2++) {
             racer = &arg0[var_s5_2]->unk64->racer;
             if (arg0[var_s5_2]->unk64 != NULL) {
@@ -273,69 +245,49 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
                 }
             }
         }
-        spAC = 0;
-        var_s6_2 = arg0;
-        if (sp7C > 0) {
-            do {
-                temp_s1_7 = (*var_s6_2)->unk64;
-                var_s5_3 = sp7C;
-                if (sp7C < arg1) {
-                    var_s2_5 = &arg0[sp7C];
-                    do {
-                        temp_v0_2 = (*var_s2_5)->unk64;
-                        if (temp_v0_2 != NULL) {
-                            temp_t8_2 = temp_v0_2->racer.unk118;
-                            D_80119C38 = (unk80119C38 *) temp_t8_2;
-                            if (temp_t8_2 != 0) {
+        for (i = 0; i < arg3; i++) {
+            temp_s1_7 = arg0[i]->unk64;
+            for (var_s5_3 = arg3; var_s5_3 < arg1; var_s5_3++) {
+                temp_v0_2 = arg0[var_s5_3]->unk64;
+                if (temp_v0_2 != NULL) {
+                    temp_t8_2 = temp_v0_2->racer.unk118;
+                    D_80119C38 = (unk80119C38 *) temp_t8_2;
+                    if (temp_t8_2 != 0) {
+                        if (temp_s1_7->racer.raceFinished != 0) {              
+                            tempyPos = arg0[var_s5_3]->segment.trans.y_position - arg2[i].trans.y_position;     
+                            tempxPos = arg0[var_s5_3]->segment.trans.x_position - arg2[i].trans.x_position;       
+                            tempzPos = arg0[var_s5_3]->segment.trans.z_position - arg2[i].trans.z_position;
+                        } else {
+                            tempyPos = arg0[var_s5_3]->segment.trans.y_position - arg0[i]->segment.trans.y_position;
+                            tempxPos = arg0[var_s5_3]->segment.trans.x_position - arg0[i]->segment.trans.x_position;
+                            tempzPos = arg0[var_s5_3]->segment.trans.z_position - arg0[i]->segment.trans.z_position;
+                        }
+                        D_80119C38->unk84 = sqrtf((tempxPos * tempxPos) + (tempyPos * tempyPos) + (tempzPos * tempzPos));
+                        temp_f2_2 = D_80119C38->unk84;
+                        if (temp_f2_2 < 1500.0f) {
+                            //2250000.0f = (1500.0f * 1500.0f)
+                            temp_t3 = D_80119C38->unk54 * ((2250000.0f - (temp_f2_2 * temp_f2_2)) / 2250000.0f);
+                            if (temp_t3 > 127) {
+                                temp_t3 = 127;
+                            }
+                            temp_t3 *= 0.8;
+                            if (D_80119C38->unk88 < temp_t3) {
+                                D_80119C38->unk88 = temp_t3;
+                                D_80119C38->unk91 = func_800090C0(tempxPos, tempzPos, arg2->trans.y_rotation);
                                 if (temp_s1_7->racer.raceFinished != 0) {
-                                    temp_v0_3 = *var_s2_5;
-                                    temp_v1_2 = &arg2[spAC];
-                                    var_f16 = temp_v1_2->trans.z_position;
-                                    var_f6 = temp_v0_3->segment.trans.z_position;
-                                    var_f20 = temp_v0_3->segment.trans.x_position - temp_v1_2->trans.x_position;
-                                    var_f0 = temp_v0_3->segment.trans.y_position - temp_v1_2->trans.y_position;
+                                    func_80006BFC(arg0[i], arg2, arg0[var_s5_3], arg4);
                                 } else {
-                                    temp_v0_4 = *var_s2_5;
-                                    temp_s0_3 = *var_s6_2;
-                                    var_f6 = temp_v0_4->segment.trans.z_position;
-                                    var_f16 = temp_s0_3->segment.trans.z_position;
-                                    var_f20 = temp_v0_4->segment.trans.x_position - temp_s0_3->segment.trans.x_position;
-                                    var_f0 = temp_v0_4->segment.trans.y_position - temp_s0_3->segment.trans.y_position;
+                                    func_80006BFC(arg0[i], NULL, arg0[var_s5_3], arg4);
                                 }
-                                temp_f22_2 = var_f6 - var_f16;
-                                D_80119C38->unk84 = sqrtf((var_f20 * var_f20) + (var_f0 * var_f0) + (temp_f22_2 * temp_f22_2));
-                                temp_f2_2 = D_80119C38->unk84;
-                                if (temp_f2_2 < 1500.0f) {
-                                    //2250000.0f = (1500.0f * 1500.0f)
-                                    temp_t3 = D_80119C38->unk54 * ((2250000.0f - (temp_f2_2 * temp_f2_2)) / 2250000.0f);
-                                    if (temp_t3 >= 128) {
-                                        temp_t3 = 127;
-                                    }
-                                    temp_t7_2 = temp_t3 * 0.8;
-                                    if (D_80119C38->unk88 < temp_t7_2) {
-                                        D_80119C38->unk88 = temp_t7_2;
-                                        D_80119C38->unk91 = func_800090C0(var_f20, temp_f22_2, (s32) arg2->trans.y_rotation);
-                                        if (temp_s1_7->racer.raceFinished != 0) {
-                                            func_80006BFC(*var_s6_2, arg2, *var_s2_5, arg4);
-                                        } else {
-                                            func_80006BFC(*var_s6_2, NULL, *var_s2_5, arg4);
-                                        }
-                                        D_80119C38->unk8C = D_80119C38->unk68 + D_80119C38->unk5C;
-                                        if (D_80119C38->unk8C < 0.05) {
-                                            D_80119C38->unk8C = 0.05f;
-                                        }
-                                    }
+                                D_80119C38->unk8C = D_80119C38->unk68 + D_80119C38->unk5C;
+                                if (D_80119C38->unk8C < 0.05) {
+                                    D_80119C38->unk8C = 0.05f;
                                 }
                             }
                         }
-                        var_s5_3 += 1;
-                        var_s2_5 += 4;
-                    } while (var_s5_3 != arg1);
+                    }
                 }
-                temp_t4 = spAC + 1;
-                spAC = temp_t4;
-                var_s6_2 += 4;
-            } while (temp_t4 != sp7C);
+            }
         }
         for (i = 0; i < ARRAY_COUNT(D_80119C30); i++) {
             if (D_80119C30[i] != NULL) {
@@ -419,7 +371,7 @@ void func_80006FC8(Object **arg0, s32 arg1, ObjectSegment *arg2, u8 arg3, s32 ar
                                 func_80009B7C(D_80119C30[i]->unk48, D_80119C30[i]->unk80, D_80119C30[i]->unk84, D_80119C30[i]->unk80);
                                 func_800049F8(D_80119C30[i]->unk48, 8, D_80119C30[i]->unk88 << 8);
                                 func_800049F8(D_80119C30[i]->unk48, 16, D_80119C30[i]->unk8C);
-                                if (sp7C != 1) {
+                                if (arg3 != 1) {
                                     D_80119C30[i]->unk91 = 64;
                                 }
                                 func_800049F8(D_80119C30[i]->unk48, 4, (u32) D_80119C30[i]->unk91);
