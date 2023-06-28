@@ -22,6 +22,7 @@ s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
 //ALSeqPlayer?
 //ALCSPlayer?
 //ALCSPlayer_Custom?
+// Size is 0x50 somehow?
 typedef struct unk80119C38 {
     u16 unk0;
     u16 pad2;
@@ -143,15 +144,15 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                 temp_s3 = (D_80119C38->unk37 - (D_80119C38->unk37 * temp_f20_2)) * var_f26;
                 if (temp_s3 >= 16) {
                     if (D_80119C38->unk50 == NULL) {
-                        func_80001F14((u16) D_80119C38->unk36, D_80119C38 + 0x50);
+                        func_80001F14((u16) D_80119C38->unk36, D_80119C38 + 0x1);
                     }
                     temp_f0_3 = D_80119C38->unk38 / 100.0f;
                     sp8C = temp_f0_3 + ((((f32) D_80119C38->unk39 / 100.0f) - temp_f0_3) * temp_f20_2);
                     if (D_80119C38->unk50 != NULL) {
-                        func_80009B7C(D_80119C38->unk50, objs[i]->segment.trans.x_position, objs[i]->segment.trans.y_position, objs[i]->segment.trans.z_position);
+                        func_80009B7C((s32 *) D_80119C38->unk50, objs[i]->segment.trans.x_position, objs[i]->segment.trans.y_position, objs[i]->segment.trans.z_position);
                         func_800049F8(D_80119C38->unk50, 8, temp_s3 << 8);
                         func_800049F8(D_80119C38->unk50, 16, *((u32*) &sp8C));
-                        func_80004604((u8 *) D_80119C38->unk50, 80);
+                        func_80004604(D_80119C38->unk50, 80);
                         func_800049F8(D_80119C38->unk50, 4, D_80119C38->unk91);
                     }
                 } else {
@@ -185,7 +186,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                             D_80119C38[j].unk48 = 0;
                         } else {
                             if (var_a0 == NULL) {
-                                func_80001F14(D_80119C38[j].unk0, D_80119C38[j].unk48);
+                                func_80001F14(D_80119C38[j].unk0, (s32 *) D_80119C38[j].unk48);
                                 var_a0 = D_80119C38[j].unk48;
                             }
                             if (var_a0 != NULL) {
@@ -311,17 +312,17 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
         }
         if (func_8001139C() <= 0) {
             for (i = 0; i < ARRAY_COUNT(D_80119C30); i++) {
-                temp = &D_80119C30[i];
+                temp = D_80119C30[i];
                 if (temp != NULL) {
                     if (temp->unk0 != 0) {
                         if (temp->unk74 == 1) {
                             temp->unk74 = 2;
                         } else {
                             if (temp->unk48 == NULL) {
-                                func_80001F14(temp->unk0, &temp->unk48);
+                                func_80001F14(temp->unk0, (s32 *) &temp->unk48);
                             }
                             if (temp->unk48 != NULL) {
-                                func_80009B7C(temp->unk48, temp->unk78, temp->unk7C, temp->unk80);
+                                func_80009B7C((s32 *) temp->unk48, temp->unk78, temp->unk7C, temp->unk80);
                                 func_800049F8(temp->unk48, 8, temp->unk88 << 8);
                                 func_800049F8(temp->unk48, 16, *((u32*) &temp->unk8C));
                                 if (arg3 != 1) {
