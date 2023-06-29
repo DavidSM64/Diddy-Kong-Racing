@@ -103,11 +103,11 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
     s32 indexToUse;
     s32 maxVal;
     s32 curIndex;
-    u16 temp_a2_2;
     u8 *temp_a0_7;
     u8 *var_a0;
     s32 i, j;
     unk80119C38 *temp;
+    s32 new_var;
 
     for (i = 0; i < arg3; i++) {
         racer = &objs[i]->unk64->racer;
@@ -117,11 +117,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
             D_80119C38 = NULL;
         }
         if ((D_80119C38 != NULL) && (D_80119C38->unk0 != 0)) {
-            if (racer->raceFinished == 0 || check_if_showing_cutscene_camera()) {
-                var_f26 = 1.0f;
-                D_80119C38->unk91 = 64;
-                D_80119C38->unk68 = 0.0f;
-            } else {
+            if (!racer->raceFinished && check_if_showing_cutscene_camera()) {
                 tempxPos = objs[i]->segment.trans.x_position - segment[i].trans.x_position;
                 tempyPos = objs[i]->segment.trans.y_position - segment[i].trans.y_position;
                 tempzPos = objs[i]->segment.trans.z_position - segment[i].trans.z_position;
@@ -138,6 +134,10 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                 if (racer->raceFinished == 0) {
                     var_f26 *= 0.5;
                 }
+            } else {
+                var_f26 = 1.0f;
+                D_80119C38->unk91 = 64;
+                D_80119C38->unk68 = 0.0f;
             }
             if ((D_80119C38->unkA0 < 70) && (D_80119C38->unk36) && (arg3 < 3) && (var_f26 != 0.0) && !(D_80119C38->unk44 & 1)) {
                 temp_f20_2 = D_80119C38->unkA0 / 70.0f;
@@ -155,50 +155,44 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                         func_80004604(D_80119C38->unk50, 80);
                         func_800049F8(D_80119C38->unk50, 4, D_80119C38->unk91);
                     }
-                } else {
-                    if (D_80119C38->unk50 != NULL) {
-                        func_8000488C(D_80119C38->unk50);
-                        D_80119C38->unk50 = 0;
-                    }
-                }
-            } else {
-                if (D_80119C38->unk50 != NULL) {
+                } else if (D_80119C38->unk50 != NULL) {
                     func_8000488C(D_80119C38->unk50);
                     D_80119C38->unk50 = 0;
                 }
+            } else if (D_80119C38->unk50 != NULL) {
+                func_8000488C(D_80119C38->unk50);
+                D_80119C38->unk50 = 0;
             }
-            for (j = 0; j < 2; j++) {
-                if (var_f26 != 0.0) {
-                    temp_s3 =  D_80119C38[j].unk54 * var_f26;
-                    temp_f8 = D_80119C38[j].unk5C + D_80119C38->unk3C + D_80119C38->unk94 + D_80119C38->unk68;
-                    if (temp_f8 < 0.05) {
-                        temp_f8 = 0.05f;
+            for (j = 0; j < 2 && D_80119C38[j].unk0 != 0 && var_f26 != 0.0; j++) {
+                temp_s3 =  D_80119C38[j].unk54 * var_f26;
+                temp_f8 = D_80119C38[j].unk5C + D_80119C38->unk3C + D_80119C38->unk94 + D_80119C38->unk68;
+                if (temp_f8 < 0.05) {
+                    temp_f8 = 0.05f;
+                }
+                if ((j == 0) && (D_80119C38[j].unk44 & 1)) {
+                    if (D_80119C38[j].unk48 != NULL) {
+                        func_8000488C(D_80119C38[j].unk48);
+                        D_80119C38[j].unk48 = 0;
                     }
-                    if ((j == 0) && (D_80119C38[j].unk44 & 1)) {
-                        if (D_80119C38[j].unk48 != NULL) {
-                            func_8000488C(D_80119C38[j].unk48);
-                            D_80119C38[j].unk48 = 0;
-                        }
+                } else {
+                    var_a0 = D_80119C38[j].unk48;
+                    if ((var_a0 != NULL) && (temp_s3 == 0)) {
+                        func_8000488C(var_a0);
+                        D_80119C38[j].unk48 = 0;
                     } else {
-                        var_a0 = D_80119C38[j].unk48;
-                        if ((D_80119C38[j].unk48 != NULL) && (temp_s3 == 0)) {
-                            func_8000488C(var_a0);
-                            D_80119C38[j].unk48 = 0;
-                        } else {
-                            if (var_a0 == NULL) {
-                                func_80001F14(D_80119C38[j].unk0, (s32 *) D_80119C38[j].unk48);
-                                var_a0 = D_80119C38[j].unk48;
+                        if (var_a0 == NULL) {
+                            func_80001F14(D_80119C38[j].unk0, (s32 *) D_80119C38[j].unk48);
+                            var_a0 = D_80119C38[j].unk48;
+                        }
+                        if (var_a0 != NULL) {
+                            func_80009B7C((s32 *) var_a0, objs[i]->segment.trans.x_position, objs[i]->segment.trans.y_position, objs[i]->segment.trans.z_position);
+                            func_800049F8(D_80119C38[j].unk48, 8, temp_s3 << 8);
+                            func_800049F8(D_80119C38[j].unk48, 16, *((u32*) &temp_f8));
+                            func_80004604(D_80119C38[j].unk48, 80);
+                            if (arg3 != 1) {
+                                D_80119C38->unk91 = 64;
                             }
-                            if (var_a0 != NULL) {
-                                func_80009B7C((s32 *) var_a0, objs[i]->segment.trans.x_position, objs[i]->segment.trans.y_position, objs[i]->segment.trans.z_position);
-                                func_800049F8(D_80119C38[j].unk48, 8, temp_s3 << 8);
-                                func_800049F8(D_80119C38[j].unk48, 16, *((u32*) &temp_f8));
-                                func_80004604(D_80119C38[j].unk48, 80);
-                                if (arg3 != 1) {
-                                    D_80119C38->unk91 = 64;
-                                }
-                                func_800049F8(D_80119C38[j].unk48, 4, D_80119C38[j].unk91);
-                            }
+                            func_800049F8(D_80119C38[j].unk48, 4, D_80119C38[j].unk91);
                         }
                     }
                 }
