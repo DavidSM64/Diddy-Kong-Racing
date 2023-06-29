@@ -107,7 +107,6 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
     u8 *var_a0;
     s32 i, j;
     unk80119C38 *temp;
-    s32 new_var;
 
     for (i = 0; i < arg3; i++) {
         racer = &objs[i]->unk64->racer;
@@ -144,7 +143,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                 temp_s3 = (D_80119C38->unk37 - (D_80119C38->unk37 * temp_f20_2)) * var_f26;
                 if (temp_s3 >= 16) {
                     if (D_80119C38->unk50 == NULL) {
-                        func_80001F14((u16) D_80119C38->unk36, D_80119C38 + 0x1);
+                        func_80001F14((u16) D_80119C38->unk36, (s32 *) &D_80119C38->unk50);
                     }
                     temp_f0_3 = D_80119C38->unk38 / 100.0f;
                     sp8C = temp_f0_3 + ((((f32) D_80119C38->unk39 / 100.0f) - temp_f0_3) * temp_f20_2);
@@ -250,7 +249,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                 }
             }
         }
-        for (i = 0; i < ARRAY_COUNT(D_80119C30); i++) {
+        for (i = 0; i != ARRAY_COUNT(D_80119C30); i++) {
             if (D_80119C30[i] != NULL) {
                 if (D_80119C30[i]->unk48 != NULL && D_80119C30[i]->unk88 < 8) {
                     func_8000488C(D_80119C30[i]->unk48);
