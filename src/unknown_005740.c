@@ -32,8 +32,7 @@ typedef struct unk80119C38 {
     f32 unk3C;
     u8 pad40[0x4];
     u8 unk44;
-    u8 *unk48; //soundMask / soundState?
-    u8 pad4C[0x4];
+    u8 *unk48[2]; //soundMask / soundState?
     u8 *unk50;
     f32 unk54;
     f32 unk58;
@@ -119,18 +118,15 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80005254.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80005D08.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800063EC.s")
 
-#ifdef NON_EQUIVALENT
-//Completely matching except for the definition of D_80119C38 has the wrong size somehow.
-//https://decomp.me/scratch/nbhkz matches by treating D_80119C38 and D_80119C30 as s32 *.
-void func_80006AC8(Object *arg0) {
+void func_80006AC8(Object *obj) {
     s32 i;
 
-    D_80119C38 = (unk80119C38 *) arg0->unk64->racer.unk118;
+    D_80119C38 = (unk80119C38 *) obj->unk64->racer.unk118;
     if (D_80119C38 != NULL) {
-        for (i = 0; i != 8; i++) {
-            if (D_80119C38[i].unk48 != NULL) {
-                func_8000488C(D_80119C38[i].unk48);
-                D_80119C38[i].unk48 = 0;
+        for (i = 0; i != 2; i++) {
+            if (D_80119C38->unk48[i] != NULL) {
+                func_8000488C(D_80119C38->unk48[i]);
+                D_80119C38->unk48[i] = 0;
             }
         }
         if (D_80119C38->unk50 != NULL) {
@@ -147,12 +143,9 @@ void func_80006AC8(Object *arg0) {
             }
         }
         free_from_memory_pool(D_80119C38);
-        arg0->unk64->racer.unk118 = NULL;
+        obj->unk64->racer.unk118 = NULL;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006AC8.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006BFC.s")
 
