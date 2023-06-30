@@ -61,7 +61,7 @@ unk80119C38 *D_80119C38;
 s32 D_80119C3C;
 unk80115D18 *D_80119C40; // This should be in unknown_008C40?
 unk80119C50 **D_80119C44;
-unk80119C50 **D_80119C48; //0x24 struct size - 0x5A0 total size - should be 40 elements
+unk80119C48 **D_80119C48; //0x24 struct size - 0x5A0 total size - should be 40 elements
 u8 D_80119C4C;
 unk80119C50 **D_80119C50;
 s32 D_80119C54; //Padding?
@@ -84,6 +84,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800063EC.s")
 
 #ifdef NON_EQUIVALENT
 //Completely matching except for the definition of D_80119C38 has the wrong size somehow.
+//https://decomp.me/scratch/nbhkz matches by treating D_80119C38 and D_80119C30 as s32 *.
 void func_80006AC8(Object *arg0) {
     s32 i;
 

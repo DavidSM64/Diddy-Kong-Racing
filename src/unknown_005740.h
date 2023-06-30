@@ -22,6 +22,13 @@ typedef struct unk80119C50 {
     /* 0x22 */ u8 unk22;
 } unk80119C50;
 
+/* Size: 0x90 / 144 bytes */
+typedef struct unk80119C48 {
+    s32 unk18;
+    s32 unk3C;
+    s32 unk60;
+    s32 unk84;
+} unk80119C48;
 
 /* Size: 0x180 / 384 bytes */
 typedef struct unk80119C58 {
@@ -48,7 +55,7 @@ extern u8 D_800DC6D0;
 extern s32 D_800DC6D8;
 extern s32 D_800DC6DC;
 extern u16 D_800DC6E0;
-extern unk80119C50 **D_80119C48;
+extern unk80119C48 **D_80119C48;
 extern unk80119C50 **D_80119C44;
 extern unk80119C50 **D_80119C50;
 extern u8 D_80119C4C;
