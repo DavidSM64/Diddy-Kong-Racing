@@ -164,7 +164,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
     s32 maxVal;
     s32 curIndex;
     f32 sp8C;
-    u8 *tempUnk48;
+    s32 pad;
     unk80119C38 *temp;
 
     for (i = 0; i < arg3; i++) {
@@ -228,30 +228,28 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                 if (sp8C < 0.05) {
                     sp8C = 0.05f;
                 }
-                if ((j == 0) && (D_80119C38->unk44[j] & 1)) {
-                    if (D_80119C38->unk48[j] != NULL) {
-                        func_8000488C(D_80119C38->unk48[j]);
-                        D_80119C38->unk48[j] = NULL;
+                if ((j == 0) && (D_80119C38->unk44[0] & 1)) {
+                    if (D_80119C38->unk48[0] != NULL) {
+                        func_8000488C(D_80119C38->unk48[0]);
+                        D_80119C38->unk48[0] = NULL;
                     }
                 } else {
-                    tempUnk48 = D_80119C38->unk48[j];
-                    if ((tempUnk48 != NULL) && (temp_s3 == 0)) {
-                        func_8000488C(tempUnk48);
+                    if ((D_80119C38->unk48[j] != NULL) && (temp_s3 == 0)) {
+                        func_8000488C(D_80119C38->unk48[j]);
                         D_80119C38->unk48[j] = NULL;
                     } else {
-                        if (tempUnk48 == NULL) {
+                        if (D_80119C38->unk48[j] == NULL) {
                             func_80001F14(D_80119C38->unk0[j], (s32 *) &D_80119C38->unk48[j]);
-                            tempUnk48 = D_80119C38->unk48[j];
                         }
-                        if (tempUnk48 != NULL) {
-                            func_80009B7C((s32 *) tempUnk48, objs[i]->segment.trans.x_position, objs[i]->segment.trans.y_position, objs[i]->segment.trans.z_position);
+                        if (D_80119C38->unk48[j] != NULL) {
+                            func_80009B7C((s32 *) D_80119C38->unk48[j], objs[i]->segment.trans.x_position, objs[i]->segment.trans.y_position, objs[i]->segment.trans.z_position);
                             func_800049F8(D_80119C38->unk48[j], 8, temp_s3 << 8);
                             func_800049F8(D_80119C38->unk48[j], 16, *((u32*) &sp8C));
                             func_80004604(D_80119C38->unk48[j], 80);
                             if (arg3 != 1) {
                                 D_80119C38->unk91[0] = 64;
                             }
-                            func_800049F8(D_80119C38->unk48[j], 4, D_80119C38->unk91[j]);
+                            func_800049F8(D_80119C38->unk48[j], 4, D_80119C38->unk91[0]);
                         }
                     }
                 }
@@ -338,7 +336,8 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                         if (D_80119C38->unk0[0] != 0) {
                             for (curIndex = 0; curIndex < ARRAY_COUNT(D_80119C30); curIndex++) {
                                 if (D_80119C30[curIndex] != NULL) {
-                                    curVal = D_80119C38->unk88 - D_80119C30[curIndex]->unk88;
+                                    curVal = D_80119C38->unk88;
+                                    curVal -= D_80119C30[curIndex]->unk88;
                                     if ((maxVal < curVal) && (D_800DC6D4 == 0)) {
                                         indexToUse = curIndex;
                                         maxVal = curVal;
