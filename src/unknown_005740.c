@@ -20,8 +20,7 @@ s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
 /************ .bss ************/
 
 typedef struct unk80119C38 {
-    u16 unk0;
-    u16 pad2;
+    u16 unk0[2];
     u8 pad4[0x32];
     u8 unk36;
     u8 unk37;
@@ -53,6 +52,8 @@ typedef struct unk80119C38 {
     f32 unk94;
     u8 pad98[0x8];
     u8 unkA0;
+    u8 padA1[0x7];
+    s32 unkA8;
 } unk80119C38;
 
 unk80119C38 *D_80119C30[2];
@@ -80,13 +81,47 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800050D0.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80005254.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80005D08.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800063EC.s")
+
+#ifdef NON_EQUIVALENT
+//Completely matching except for the definition of D_80119C38 has the wrong size somehow.
+void func_80006AC8(Object *arg0) {
+    s32 i;
+
+    D_80119C38 = (unk80119C38 *) arg0->unk64->racer.unk118;
+    if (D_80119C38 != NULL) {
+        for (i = 0; i != 8; i++) {
+            if (D_80119C38[i].unk48 != NULL) {
+                func_8000488C(D_80119C38[i].unk48);
+                D_80119C38[i].unk48 = 0;
+            }
+        }
+        if (D_80119C38->unk50 != NULL) {
+            func_8000488C(D_80119C38->unk50);
+            D_80119C38->unk50 = NULL;
+        }
+        if (D_80119C38->unkA8 != NULL) {
+            func_8000488C(D_80119C38->unkA8);
+            D_80119C38->unkA8 = 0;
+        }
+        for (i = 0; i < ARRAY_COUNT(D_80119C30); i++) {
+            if (D_80119C30[i] == D_80119C38) {
+                D_80119C30[i] = NULL;
+            }
+        }
+        free_from_memory_pool(D_80119C38);
+        arg0->unk64->racer.unk118 = NULL;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006AC8.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006BFC.s")
 
-#if 1
+#ifdef NON_EQUIVALENT
+//https://decomp.me/scratch/bZapQ
 void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3, s32 updateRate) {
     Object_Racer *racer;
-    s32 i, j;
     f32 tempxPos;
     f32 tempyPos;
     f32 tempzPos;
@@ -94,6 +129,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
     f32 temp_f0_3;
     f32 temp_f20_2;
     f32 temp_f8;
+    s32 i, j;
     f32 var_f26;
     u8 temp_s3;
     s32 curVal;
@@ -110,7 +146,8 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
         } else {
             D_80119C38 = NULL;
         }
-        if ((D_80119C38 != NULL) && (D_80119C38->unk0 != 0)) {
+        //TODO: remove (0, ) fake match
+        if ((D_80119C38 != NULL) && (((0, D_80119C38))->unk0[0] != 0)) {
             if (!racer->raceFinished && check_if_showing_cutscene_camera()) {
                 tempxPos = objs[i]->segment.trans.x_position - segment[i].trans.x_position;
                 tempyPos = objs[i]->segment.trans.y_position - segment[i].trans.y_position;
@@ -157,7 +194,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                 func_8000488C(D_80119C38->unk50);
                 D_80119C38->unk50 = 0;
             }
-            for (j = 0; j < 2 && D_80119C38[j].unk0 != 0 && var_f26 != 0.0; j++) {
+            for (j = 0; j < 2 && D_80119C38->unk0[j] != 0 && var_f26 != 0.0; j++) {
                 temp_s3 =  D_80119C38[j].unk54 * var_f26;
                 temp_f8 = D_80119C38[j].unk5C + D_80119C38->unk3C + D_80119C38->unk94 + D_80119C38->unk68;
                 if (temp_f8 < 0.05) {
@@ -175,7 +212,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                         D_80119C38[j].unk48 = NULL;
                     } else {
                         if (tempUnk48 == NULL) {
-                            func_80001F14(D_80119C38[j].unk0, (s32 *) D_80119C38[j].unk48);
+                            func_80001F14(D_80119C38->unk0[j], (s32 *) D_80119C38[j].unk48);
                             tempUnk48 = D_80119C38[j].unk48;
                         }
                         if (tempUnk48 != NULL) {
@@ -253,6 +290,8 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                     D_80119C30[i]->unk74 = 0;
                     D_80119C30[i] = NULL;
                 }
+                //TODO: Remove fake match
+                if (D_80119C30[curIndex]->unk88){}
             }
         }
         if (updateRate < D_800DC6D4) {
@@ -264,11 +303,11 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
             racer = &objs[i]->unk64->racer;
             if (racer != NULL) {
                 D_80119C38 = (unk80119C38 *) racer->unk118;
-                if (D_80119C38 != 0) {
+                if (D_80119C38 != NULL) {
                     if (D_80119C38->unk74 == 0) {
                         maxVal = 20;
                         indexToUse = -1;
-                        if (D_80119C38->unk0 != 0) {
+                        if (D_80119C38->unk0[0] != 0) {
                             for (curIndex = 0; curIndex < ARRAY_COUNT(D_80119C30); curIndex++) {
                                 if (D_80119C30[curIndex] != NULL) {
                                     curVal = D_80119C38->unk88 - D_80119C30[curIndex]->unk88;
@@ -302,12 +341,12 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
             for (i = 0; i < ARRAY_COUNT(D_80119C30); i++) {
                 temp = D_80119C30[i];
                 if (temp != NULL) {
-                    if (temp->unk0 != 0) {
+                    if (temp->unk0[0] != 0) {
                         if (temp->unk74 == 1) {
                             temp->unk74 = 2;
                         } else {
                             if (temp->unk48 == NULL) {
-                                func_80001F14(temp->unk0, (s32 *) &temp->unk48);
+                                func_80001F14(temp->unk0[0], (s32 *) &temp->unk48);
                             }
                             if (temp->unk48 != NULL) {
                                 func_80009B7C((s32 *) temp->unk48, temp->unk78, temp->unk7C, temp->unk80);
