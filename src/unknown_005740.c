@@ -8,6 +8,8 @@
 #include "unknown_008C40.h"
 #include "audiosfx.h"
 #include "objects.h"
+#include "controller.h"
+#include "racer.h"
 
 /************ .data ************/
 
@@ -58,7 +60,7 @@ typedef struct unk80119C38 {
 
 unk80119C38 *D_80119C30[2];
 unk80119C38 *D_80119C38;
-s32 D_80119C3C;
+Object_Racer *D_80119C3C;
 unk80115D18 *D_80119C40; // This should be in unknown_008C40?
 unk80119C50 **D_80119C44;
 unk80119C48 **D_80119C48; //0x24 struct size - 0x5A0 total size - should be 40 elements
@@ -77,7 +79,42 @@ s32 D_8011AC1C;
 /******************************/
 
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80004B40.s")
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800050D0.s")
+
+void func_800050D0(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
+    if ((D_800DC6D0 != 0)) {
+        D_80119C3C = &obj->unk64->racer;
+        D_80119C38 = (unk80119C38 *) D_80119C3C->unk118;
+        if (D_80119C38 != NULL) {
+            if (func_8001139C()) {
+                if (D_80119C3C->playerIndex != PLAYER_COMPUTER) {
+                    buttonsHeld = get_buttons_held_from_player(D_80119C3C->playerIndex);
+                    buttonsPressed = get_buttons_pressed_from_player(D_80119C3C->playerIndex);
+                }
+            }
+            if (D_80119C38->unk0[0] == 0) {
+                D_80119C38->unk78 = -32000.0f;
+                D_80119C38->unk7C = -32000.0f;
+                D_80119C38->unk80 = -32000.0f;
+            } else {
+                D_80119C38->unk78 = obj->segment.trans.x_position;
+                D_80119C38->unk7C = obj->segment.trans.y_position;
+                D_80119C38->unk80 = obj->segment.trans.z_position;
+                switch (D_80119C3C->vehicleIDPrev) {
+                    case 1:
+                        func_80005D08(obj, buttonsPressed, buttonsHeld, updateRate);
+                        break;
+                    case 2:
+                        func_800063EC(obj, buttonsPressed, buttonsHeld, updateRate);
+                        break;
+                    default:
+                        func_80005254(obj, buttonsPressed, buttonsHeld, updateRate);
+                        break;
+                }
+            }
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80005254.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80005D08.s")
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800063EC.s")
