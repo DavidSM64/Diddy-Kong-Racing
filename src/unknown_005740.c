@@ -176,7 +176,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
         }
         
         if (D_80119C38 != NULL && D_80119C38->unk0[0] != 0) {
-            if (!racer->raceFinished && check_if_showing_cutscene_camera()) {
+            if (racer->raceFinished || check_if_showing_cutscene_camera()) {
                 tempxPos = objs[i]->segment.trans.x_position - segment[i].trans.x_position;
                 tempyPos = objs[i]->segment.trans.y_position - segment[i].trans.y_position;
                 tempzPos = objs[i]->segment.trans.z_position - segment[i].trans.z_position;
