@@ -28,13 +28,13 @@ typedef struct unk80119C38 {
     u8 pad6[0x8];
     u8 unkE;
     u8 unkF;
-    u8 padA[0x4];
+    u8 pad10[0x8];
     u16 unk18;
     u16 unk1A;
     u8 pad1C[0x10];
     u8 unk2C;
     u8 unk2D;
-    u8 pad2E[0xB];
+    u8 pad2E[0x8];
     u8 unk36;
     u8 unk37;
     u8 unk38;
@@ -56,7 +56,7 @@ typedef struct unk80119C38 {
     f32 unk84;
     u8 unk88; // Volume?
     f32 unk8C; // Volume?
-    u8 pad90;
+    s8 unk90;
     u8 unk91[3];
     f32 unk94;
     u8 unk98;
@@ -65,7 +65,7 @@ typedef struct unk80119C38 {
     u8 padA1[0x7];
     s32 unkA8;
     u16 unkAC;
-    u8 padAE[0x2];
+    u8 padAE[0x22];
     u8 unkD0;
 } unk80119C38;
 
@@ -126,14 +126,9 @@ void func_800050D0(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
     }
 }
 
-#ifdef NON_EQUIVALENT
+#if 1
 void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
-    s32 sp7C;
-    f32 sp78;
-    f32 sp74;
     f32 sp6C;
-    s32 sp5C;
-    s32 sp3C;
     f32 temp_f0_3;
     f32 temp_f0_5;
     f32 temp_f0_6;
@@ -152,23 +147,21 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
     f32 var_f4;
     f32 var_f6;
     f32 var_f8;
-    f64 temp_f0;
+    f32 temp_f0;
     f64 temp_f0_2;
-    f64 temp_f0_4;
-    f64 temp_f20;
-    f64 temp_f2;
+    f32 temp_f0_4;
     s32 temp_a0_3;
     s32 temp_a0_4;
     s32 temp_t2;
-    s32 temp_t8;
+    s32 button_A_Pressed;
     u8 temp_t9;
     s32 var_a0;
     s32 var_s0;
-    s32 var_t1;
+    s32 t1_loop;
     s32 var_t3;
-    s32 var_t4;
+    s32 t4_loop;
     s32 var_t9;
-    s32 var_v1;
+    s32 innerLoop;
     s32 var_v1_2;
     s8 temp_v0_3;
     s8 temp_v1;
@@ -191,7 +184,6 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
     unk80119C38 *var_v0_2;
     unk80119C38 *var_v0_3;
 
-    var_t1 = 0;
     if (D_80119C3C->unk1FB != 0) {
         var_f0 = 12.0f;
     } else {
@@ -200,76 +192,62 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
     if (var_f0 < 0.0f) {
         var_f0 = -var_f0;
     }
-    var_t4 = 0;
-    temp_t8 = buttonsHeld & 0x8000;
+    button_A_Pressed = buttonsHeld & A_BUTTON;
     var_s0 = (s32) ((var_f0 / 16.0f) * 100.0f) + 5;
-    if (var_s0 >= 0x65) {
-        var_s0 = 0x64;
+    if (var_s0 > 100) {
+        var_s0 = 100;
     }
-    temp_f20 = 0.4;
     temp_a3 = D_80119C38;
+    t1_loop = 0;
+    t4_loop = 0;
     do {
-        if ((temp_a3 + var_t4) != 0) {
-            temp_t0 = temp_a3 + (var_t1 * 5);
-            var_v1 = 0;
-            temp_t2 = var_t1 * 4;
-            if ((var_s0 < (s32) temp_t0->unkE) || (var_a2 = temp_a3 + (var_t1 * 5), (((s32) var_a2->unkF < var_s0) != 0))) {
-                var_a2 = temp_a3 + (var_t1 * 5);
+        if ((temp_a3 + t4_loop) != 0) {
+            temp_t0 = temp_a3 + (t1_loop * 5);
+            innerLoop = 0;
+            temp_t2 = t1_loop * 4;
+            var_a2 = temp_a3 + (t1_loop * 5);
+            if ((var_s0 < temp_t0->unkE) || ((var_a2->unkF < var_s0) != 0)) {
+                var_a2 = temp_a3 + (t1_loop * 5);
                 var_v0 = var_a2;
 loop_12:
-                var_v1 += 1;
+                innerLoop += 1;
                 var_v0 += 1;
-                if ((var_s0 < (s32) var_v0->unkF) || ((s32) var_v0->unkF < var_s0)) {
-                    if (var_v1 < 4) {
-                        goto loop_12;
-                    }
+                if (((var_s0 < var_v0->unkF) || (var_v0->unkF < var_s0)) && (innerLoop < 4)) {
+                    goto loop_12;
                 }
             }
-            temp_v0 = temp_t0 + var_v1;
+            temp_v0 = temp_t0 + innerLoop;
             temp_a0 = temp_v0->unkE;
-            temp_a1 = temp_v0->unk2C;
-            var_v1_2 = 0;
+            innerLoop = 0;
             var_v0_2 = var_a2;
-            var_f6 = (f32) temp_a1;
-            if ((s32) temp_a1 < 0) {
-                var_f6 += 4294967296.0f;
-            }
-            temp_f4 = ((f32) (temp_v0->unk2D - temp_a1) * ((f32) (var_s0 - temp_a0) / (f32) (temp_v0->unkF - temp_a0))) + var_f6;
+            temp_f4 = ((f32) (temp_v0->unk2D - temp_v0->unk2C) * ((f32) (var_s0 - temp_a0) / (f32) (temp_v0->unkF - temp_a0))) + temp_v0->unk2C;
             temp_t9 = temp_f4;
-            if ((var_s0 < (s32) temp_t0->unk4) || ((s32) var_a2->unk5 < var_s0)) {
+            if ((var_s0 < temp_t0->unk4) || (var_a2->unk5 < var_s0)) {
 loop_24:
-                var_v1_2 += 1;
+                innerLoop += 1;
                 var_v0_2 += 1;
-                if ((var_s0 < (s32) var_v0_2->unk5) || ((s32) var_v0_2->unk5 < var_s0)) {
-                    if (var_v1_2 < 4) {
-                        goto loop_24;
-                    }
+                if (((var_s0 < var_v0_2->unk5) || (var_v0_2->unk5 < var_s0)) && (innerLoop < 4)) {
+                    goto loop_24;
                 }
             }
-            temp_v0_2 = var_a2 + var_v1_2;
+            temp_v0_2 = var_a2 + innerLoop;
             temp_a0_2 = temp_v0_2->unk4;
-            temp_a1_2 = temp_a3 + (var_t1 * 0xA) + (var_v1_2 * 2);
-            temp_t5 = temp_a1_2->unk18;
+            temp_a1_2 = temp_a3 + (t1_loop * 10) + (innerLoop * 2);
             temp_f14 = (f32) (var_s0 - temp_a0_2) / (f32) (temp_v0_2->unk5 - temp_a0_2);
-            var_f4 = (f32) temp_t5;
-            if ((s32) temp_t5 < 0) {
-                var_f4 += 4294967296.0f;
-            }
-            temp_f16 = var_f4 / 10000.0f;
+            temp_f16 = temp_a1_2->unk18 / 10000.0f;
             temp_f18 = (f32) temp_a1_2->unk1A / 10000.0f;
-            if ((var_s0 >= 0x33) && (temp_v0_3 = D_80119C3C->bananas, (temp_v0_3 != 0))) {
-                var_v1_3 = 0xA;
-                if (temp_v0_3 < 0xB) {
-                    var_v1_3 = temp_v0_3;
+            if (var_s0 > 50 && D_80119C3C->bananas != 0) {
+                var_v1_3 = 10;
+                if (D_80119C3C->bananas < 11) {
+                    var_v1_3 = D_80119C3C->bananas;
                 }
                 var_f12 = temp_a3->unk3C;
-                temp_f0 = 0.05 * (f64) var_v1_3;
-                temp_f2 = (f64) var_f12;
-                if (temp_f2 < temp_f0) {
-                    temp_a3->unk3C = (f32) (temp_f2 + (temp_f0 / (f64) (var_v1_3 << 6)));
+                temp_f0 = var_v1_3 * 0.05;
+                if (var_f12 < temp_f0) {
+                    temp_a3->unk3C = (var_f12 + (temp_f0 / (var_v1_3 << 6)));
                     var_f12 = D_80119C38->unk3C;
-                } else if (temp_f0 < temp_f2) {
-                    temp_a3->unk3C = (f32) temp_f0;
+                } else if (temp_f0 < var_f12) {
+                    temp_a3->unk3C = temp_f0;
                     var_f12 = D_80119C38->unk3C;
                 }
                 var_f2 = ((temp_f18 - temp_f16) * temp_f14) + temp_f16 + var_f12;
@@ -290,75 +268,58 @@ loop_24:
                 var_f2_2 = (f32) ((f64) var_f2_2 + 0.3);
             }
             var_f12_2 = (var_f2_2 - temp_v0_4->unk5C[0]) / 2.0f;
-            var_f8 = (f32) temp_t9;
-            if (temp_t9 < 0) {
-                var_f8 += 4294967296.0f;
-            }
-            var_f14 = (var_f8 - temp_v0_4->unk54[0]) / 2.0f;
+            var_f14 = (temp_t9 - temp_v0_4->unk54[0]) / 2.0f;
             if (D_80119C3C->playerIndex != -1) {
-                sp7C = var_t1;
-                sp3C = temp_t2;
-                sp5C = var_t4;
-                sp74 = var_f12_2;
-                sp78 = var_f14;
                 if (get_random_number_from_range(0, 10) < 7) {
-                    sp7C = var_t1;
-                    sp3C = temp_t2;
-                    sp5C = var_t4;
-                    sp74 = var_f12_2;
-                    sp78 = var_f14;
-                    D_80119C38->pad90 = ((s8) D_80119C38->pad90 + get_random_number_from_range(0, 10)) - 5;
-                    temp_v1 = (s8) D_80119C38->pad90;
+                    D_80119C38->unk90 = (D_80119C38->unk90 + get_random_number_from_range(0, 10)) - 5;
+                    temp_v1 = D_80119C38->unk90;
                     if (temp_v1 >= 6) {
-                        D_80119C38->pad90 = 5;
+                        D_80119C38->unk90 = 5;
                     } else if (temp_v1 < -5) {
-                        D_80119C38->pad90 = -5U;
+                        D_80119C38->unk90 = -5U;
                     }
                 }
-                temp_f0_3 = (f32) (s8) D_80119C38->pad90 / 5.0f;
-                var_f12_2 = (f32) ((f64) var_f12_2 + (0.02 * (f64) temp_f0_3));
+                temp_f0_3 = D_80119C38->unk90 / 5.0f;
+                var_f12_2 += 0.02 * temp_f0_3;
                 var_f14 += 5.0f * temp_f0_3;
             }
-            if (temp_t8 != 0) {
-                temp_f0_4 = (f64) temp_a3_2->unk94;
-                if (temp_f0_4 < temp_f20) {
-                    temp_a3_2->unk94 = (f32) (temp_f0_4 + ((f64) (f32) updateRate * 0.01));
-                    if (temp_f20 < (f64) D_80119C38->unk94) {
+            if (button_A_Pressed != 0) {
+                //Might match better with 0.4f for some reason
+                if (temp_a3_2->unk94 < 0.4) {
+                    temp_a3_2->unk94 = (temp_a3_2->unk94 + ((f32) updateRate * 0.01));
+                    if (D_80119C38->unk94 > 0.4) {
                         D_80119C38->unk94 = 0.4f;
                     }
                 }
             }
-            var_v0_3 = temp_a3_2 + temp_t2;
-            if (temp_t8 == 0) {
-                temp_f0_5 = temp_a3_2->unk94;
-                var_v0_3 = temp_a3_2 + temp_t2;
-                if (temp_f0_5 > 0.0f) {
-                    temp_a3_2->unk94 = (f32) ((f64) temp_f0_5 - ((f64) (f32) updateRate * 0.005));
-                    var_v0_3 = D_80119C38 + temp_t2;
+            //Might match better with an else
+            if (button_A_Pressed == 0) {
+                if (temp_a3_2->unk94 > 0.0f) {
+                    temp_a3_2->unk94 = (temp_a3_2->unk94 - ((f32) updateRate * 0.005));
                     if (D_80119C38->unk94 < 0.0f) {
                         D_80119C38->unk94 = 0.0f;
-                        var_v0_3 = D_80119C38 + temp_t2;
                     }
                 }
             }
+            var_v0_3 = &temp_a3_2[temp_t2];
             var_v0_3->unk5C[0] = (f32) (var_v0_3->unk5C[0] + var_f12_2);
-            if (temp_t8 != 0) {
-                temp_v0_5 = D_80119C38 + temp_t2;
-                temp_v0_5->unk54[0] = (f32) (temp_v0_5->unk54[0] + var_f14);
+            if (button_A_Pressed != 0) {
+                D_80119C38[temp_t2].unk54[0] += var_f14;
             } else {
                 D_80119C38[temp_t2].unk54[0] = 35.0f;
             }
         }
-        var_t1 += 1;
-        var_t4 += 2;
-    } while (var_t1 != 1);
-    if (((D_80119C3C->unk10 != 0) || (D_80119C3C->unk14 != 0) || !(buttonsHeld & 0x4000) || (-0.1 < (f64) D_80119C3C->velocity) || (D_80119C3C->vehicleID == 4)) && (temp_a0_3 = temp_a3->unkA8, (temp_a0_3 != 0))) {
-        func_8000488C((u8 *) temp_a0_3);
-        D_80119C38->unkA8 = 0;
-        var_a0 = D_80119C38->unkA8;
+        t1_loop += 1;
+        t4_loop += 2;
+    } while (t1_loop != 1);
+    if (((D_80119C3C->unk10 != 0) || (D_80119C3C->unk14 != 0) || 
+        !(buttonsHeld & B_BUTTON) || (D_80119C3C->velocity > -0.1) || 
+        (D_80119C3C->vehicleID == 4)) && (temp_a3->unkA8 != 0)
+    ) {
+            func_8000488C(temp_a3->unkA8);
+            D_80119C38->unkA8 = 0;
     } else {
-        var_a0 = temp_a3->unkA8;
-        if ((buttonsPressed & B_BUTTON) && (var_a0 == 0) && (D_80119C3C->playerIndex >= 0)) {
+        if ((buttonsPressed & B_BUTTON) && (D_80119C38->unkA8 == 0) && (D_80119C3C->playerIndex >= 0)) {
             temp_f0_6 = D_80119C3C->velocity;
             if (temp_f0_6 < 0.0f) {
                 var_f20 = -temp_f0_6;
@@ -368,35 +329,33 @@ loop_24:
             if (var_f20 > 12.0f) {
                 var_f20 = 12.0f;
             }
-            func_80001F14(0x19U, &temp_a3->unkA8);
+            func_80001F14(25, &D_80119C38->unkA8);
             temp_a3_3 = D_80119C38;
-            sp6C = (f32) ((((f64) var_f20 * 0.5) / 12.0) + 0.5);
+            sp6C = (((var_f20 * 0.5) / 12.0) + 0.5);
             temp_a0_4 = temp_a3_3->unkA8;
             if (temp_a0_4 != 0) {
                 func_800049F8(temp_a0_4, 0x10, *((u32*) &sp6C));
             }
-            temp_a3_3->unkAC = 0x6E;
-            D_80119C38->unkD0 = 0U;
-            var_a0 = D_80119C38->unkA8;
+            temp_a3_3->unkAC = 110;
+            D_80119C38->unkD0 = 0;
         }
     }
-    if (var_a0 != 0) {
+    if (D_80119C38->unkA8 != 0) {
         if (D_80119C3C->groundedWheels == 0) {
             temp_a3->unkD0 = (u8) (temp_a3->unkD0 + updateRate);
         } else {
-            temp_a3->unkD0 = 0U;
+            temp_a3->unkD0 = 0;
         }
-        if ((s32) D_80119C38->unkD0 >= 0xA) {
+        if (D_80119C38->unkD0 >= 10) {
             func_800049F8(D_80119C38->unkA8, 8, 0);
         } else {
             func_800049F8(D_80119C38->unkA8, 8, D_80119C38->unkAC << 8);
             func_80009B7C((s32 *) D_80119C38->unkA8, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
         }
     }
-    temp_a3->unkA0 = (u8) var_s0;
-    if (temp_t8 != 0) {
-        temp_f4_2 = D_80119C38->unk54[0];
-        D_80119C38->unk98 = temp_f4_2; //temp_f4_2 could be s8 maybe?
+    temp_a3->unkA0 = var_s0;
+    if (button_A_Pressed != 0) {
+        D_80119C38->unk98 = D_80119C38->unk54[0]; //temp_f4_2 could be s8 maybe?
     }
 }
 #else
