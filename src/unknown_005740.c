@@ -21,6 +21,15 @@ s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
 
 /************ .bss ************/
 
+typedef struct unk80119C38_unk20 {
+        u16 unk0[2];
+    u8 unk4;
+    u8 unk5;
+    u8 pad6[0x8];
+    u8 unkE;
+    u8 unkF;
+} unk80119C38_unk20;
+
 typedef struct unk80119C38 {
     u16 unk0[2];
     u8 unk4;
@@ -31,7 +40,9 @@ typedef struct unk80119C38 {
     u8 pad10[0x8];
     u16 unk18;
     u16 unk1A;
-    u8 pad1C[0x10];
+    u8 pad1C[0x4];
+    unk80119C38_unk20 *unk20;
+    u8 pad24[0x8];
     u8 unk2C;
     u8 unk2D;
     u8 pad2E[0x8];
@@ -126,7 +137,7 @@ void func_800050D0(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
     }
 }
 
-#if 1
+#ifdef NON_EQUIVALENT
 void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
     f32 sp6C;
     f32 temp_f0_3;
@@ -149,13 +160,11 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
     s32 outerLoop;
     s32 innerLoop;
     s8 var_v1_3;
-    unk80119C38 *temp_a3_3;
-    unk80119C38 *temp_t0;
     unk80119C38 *temp_v0;
     unk80119C38 *temp_v0_2;
-    unk80119C38 *temp_v0_4;
     unk80119C38 *var_v0;
-    unk80119C38 *var_v0_2;
+    unk80119C38_unk20 *unk20;
+    unk80119C38_unk20 *unk20_2;
 
     if (D_80119C3C->unk1FB != 0) {
         var_f0 = 12.0f;
@@ -166,39 +175,38 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
         var_f0 = -var_f0;
     }
     button_A_Pressed = buttonsHeld & A_BUTTON;
-    var_s0 = (s32) ((var_f0 / 16.0f) * 100.0f) + 5;
+    var_s0 = (s32) ((var_f0 / 16) * 100) + 5;
     if (var_s0 > 100) {
         var_s0 = 100;
     }
-    outerLoop = 0;
-    do {
+    for (outerLoop = 0; outerLoop < 12; outerLoop++) {
         if ((D_80119C38->unk0[outerLoop]) != 0) {
-            temp_t0 = &D_80119C38[outerLoop];
+            unk20 = &D_80119C38[outerLoop].unk20;
             temp_t2 = outerLoop * 4;
             innerLoop = 0;
-            if ((var_s0 < temp_t0->unkE) || ((temp_t0->unkF < var_s0) != 0)) {
-                var_v0 = temp_t0;
+            if ((var_s0 < unk20->unkE) || ((unk20->unkF < var_s0) != 0)) {
+                unk20_2 = unk20;
 loop_12:
                 innerLoop += 1;
-                var_v0 += 1;
-                if (((var_s0 < var_v0->unkF) || (var_v0->unkF < var_s0)) && (innerLoop < 4)) {
+                unk20_2 += 1;
+                if (((var_s0 < unk20_2->unkF) || (unk20_2->unkF < var_s0)) && (innerLoop < 4)) {
                     goto loop_12;
                 }
             }
             temp_v0 = &D_80119C38[innerLoop];
             temp_f4 = ((f32) (temp_v0->unk2D - temp_v0->unk2C) * ((f32) (var_s0 - temp_v0->unkE) / (f32) (temp_v0->unkF - temp_v0->unkE))) + temp_v0->unk2C;
             innerLoop = 0;
-            if ((var_s0 < temp_t0->unk4) || (temp_t0->unk5 < var_s0)) {
-                var_v0_2 = temp_t0;
+            if ((var_s0 < unk20->unk4) || (unk20->unk5 < var_s0)) {
+                var_v0 = unk20;
 loop_24:
                 innerLoop += 1;
-                var_v0_2 += 1;
-                if (((var_s0 < var_v0_2->unk5) || (var_v0_2->unk5 < var_s0)) && (innerLoop < 4)) {
+                var_v0 += 1;
+                if (((var_s0 < var_v0->unk5) || (var_v0->unk5 < var_s0)) && (innerLoop < 4)) {
                     goto loop_24;
                 }
             }
             //TODO: This doesn't make sense as it is treating D_80119C38 as a multi dimension array is it not?
-            temp_v0_2 = &temp_t0[innerLoop];
+            temp_v0_2 = &unk20[innerLoop];
             temp_f14 = (f32) (var_s0 - temp_v0_2->unk4) / (f32) (temp_v0_2->unk5 - temp_v0_2->unk4);
             temp_f16 = temp_v0_2->unk18 / 10000.0f;
             temp_f18 = temp_v0_2->unk1A / 10000.0f;
@@ -226,17 +234,16 @@ loop_24:
             } else {
                 D_80119C38->unk40 /= 4;
             }
-            temp_v0_4 = &D_80119C38[outerLoop];
             var_f2 += D_80119C38->unk40;
             if ((D_80119C3C->groundedWheels == 0) && (D_80119C3C->playerIndex != -1)) {
                 var_f2 += 0.3;
             }
-            var_f12_2 = (var_f2 - temp_v0_4->unk5C[0]) / 2.0f;
-            var_f14 = (temp_f4 - temp_v0_4->unk54[0]) / 2.0f;
+            var_f12_2 = (var_f2 - D_80119C38->unk5C[outerLoop]) / 2.0f;
+            var_f14 = (temp_f4 - D_80119C38->unk54[outerLoop]) / 2.0f;
             if (D_80119C3C->playerIndex != -1) {
                 if (get_random_number_from_range(0, 10) < 7) {
                     D_80119C38->unk90 = (D_80119C38->unk90 + get_random_number_from_range(0, 10)) - 5;
-                    if (D_80119C38->unk90 >= 6) {
+                    if (D_80119C38->unk90 > 5) {
                         D_80119C38->unk90 = 5;
                     } else if (D_80119C38->unk90 < -5) {
                         D_80119C38->unk90 = -5;
@@ -270,8 +277,7 @@ loop_24:
                 D_80119C38->unk54[outerLoop] = 35.0f;
             }
         }
-        outerLoop += 1;
-    } while (outerLoop != 1);
+    }
     if (((D_80119C3C->unk10 != 0) || (D_80119C3C->unk14 != 0) || 
         !(buttonsHeld & B_BUTTON) || (D_80119C3C->velocity > -0.1) || 
         (D_80119C3C->vehicleID == 4)) && (D_80119C38->unkA8 != 0)
@@ -290,13 +296,12 @@ loop_24:
                 var_f20 = 12.0f;
             }
             func_80001F14(25, &D_80119C38->unkA8);
-            temp_a3_3 = D_80119C38;
             sp6C = (((var_f20 * 0.5) / 12.0) + 0.5);
-            temp_a0_4 = temp_a3_3->unkA8;
+            temp_a0_4 = D_80119C38->unkA8;
             if (temp_a0_4 != 0) {
                 func_800049F8(temp_a0_4, 0x10, *((u32*) &sp6C));
             }
-            temp_a3_3->unkAC = 110;
+            D_80119C38->unkAC = 110;
             D_80119C38->unkD0 = 0;
         }
     }
