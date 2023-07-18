@@ -349,7 +349,9 @@ void func_80005D08(Object *arg0, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32
     u8 var_t0;
 
     if (func_8001139C() == 0) {
-        var_f16 = sqrtf((arg0->segment.x_velocity * arg0->segment.x_velocity) + (arg0->segment.z_velocity * arg0->segment.z_velocity));
+        temp_f14 = arg0->segment.x_velocity;
+        var_f16 = arg0->segment.z_velocity;
+        var_f16 = sqrtf((temp_f14 * temp_f14) + (var_f16 * var_f16));
     } else {
         var_f16 = 0.0f;
     }
