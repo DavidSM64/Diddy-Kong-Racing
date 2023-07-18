@@ -40,13 +40,11 @@ typedef struct unk80119C38 {
     u8 unkE;
     u8 unkF;
     u8 pad10[0x8];
-    u16 unk18;
-    u16 unk1A;
+    u16 unk18[2];
     u8 pad1C[0x4];
     unk80119C38_unk20 *unk20;
     u8 pad24[0x8];
-    u8 unk2C;
-    u8 unk2D;
+    u8 unk2C[2];
     u8 pad2E[0x8];
     u8 unk36;
     u8 unk37;
@@ -337,7 +335,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80005254.s")
 #endif
 
 #if 1
-void func_80005D08(Object *arg0, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
+void func_80005D08(Object *arg0, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
     u16 temp_f10;
     f32 temp_f14;
     f32 var_f14;
@@ -346,12 +344,8 @@ void func_80005D08(Object *arg0, u32 buttonsPressed, u32 buttonsHeld, s32 update
     f32 var_f2;
     f64 temp_f0_4;
     s32 var_v0;
-    s32 temp_t8;
-    u8 var_v0_2;
+    u8 i;
     s32 var_a1;
-    u16 temp_a2;
-    u16 temp_t4;
-    u8 temp_a3;
     u8 var_t0;
 
     if (func_8001139C() == 0) {
@@ -425,18 +419,14 @@ void func_80005D08(Object *arg0, u32 buttonsPressed, u32 buttonsHeld, s32 update
         D_80119C38->unk5C[0] = 6.5534; //32767/5000. Hmmm.... //0x8000 / 5000
     }
     temp_f10 = D_80119C38->unk5C[0] * 10000.0f;
-    for (var_v0_2 = 0; temp_f10 >= D_80119C38[var_v0_2].unk18 && var_v0_2 < 4; var_v0_2++) {
-
-    }
-    if (var_v0_2 == 4) {
-        var_t0 = D_80119C38[var_v0_2].unk2C;
+    for (i = 0; temp_f10 >= D_80119C38->unk18[i] && i < 4; i++) { }
+    if (i == 4) {
+        var_t0 = D_80119C38->unk2C[i];
     } else {
-        if (var_v0_2 != 0) {
-            var_v0_2 = (var_v0_2 - 1) & 0xFF;
+        if (i != 0) {
+            i--;
         }
-        temp_a2 = D_80119C38[var_v0_2].unk18;
-        temp_a3 = D_80119C38[var_v0_2].unk2C;
-        var_t0 = ((D_80119C38[var_v0_2].unk2D - temp_a3) * ((f32) (temp_f10 - temp_a2) / (f32) (D_80119C38[var_v0_2].unk1A - temp_a2))) + temp_a3;
+        var_t0 = ((D_80119C38->unk2C[i + 1] - D_80119C38->unk2C[i]) * ((f32) (temp_f10 - D_80119C38->unk18[i]) / (f32) (D_80119C38->unk18[i + 1] - D_80119C38->unk18[i]))) + D_80119C38->unk2C[i];
     }
     D_80119C38->unk54[0] += ((var_t0 - D_80119C38->unk54[0]) / 8);
     D_80119C38->unk5C[1] = 1.0f;
