@@ -10,6 +10,7 @@
 #include "objects.h"
 #include "controller.h"
 #include "racer.h"
+#include "PR/libaudio.h"
 
 /************ .data ************/
 
@@ -59,7 +60,7 @@ typedef struct unk80119C38 {
     f32 unk54[2];
     f32 unk5C[3];
     f32 unk68;
-    u8 pad6C[0x8];
+    f32 unk6C[2];
     u8 unk74;
     f32 unk78; // X
     f32 unk7C; // Y
@@ -359,7 +360,75 @@ void func_80006AC8(Object *obj) {
     }
 }
 
+#if 1
+void func_80006BFC(Object *obj, ObjectSegment *segment, Object *arg2, s32 updateRate) {
+    Object_Racer *racer;
+    f32 velocity;
+    f32 xPos;
+    f32 yPos;
+    f32 zPos;
+    f32 new_xPos;
+    f32 new_zPos;
+    f32 new_yPos;
+    f32 var_f2_2;
+    f32 posSquared;
+    f32 sp1C;
+
+    racer = &obj->unk64->racer;
+    D_80119C38 = (unk80119C38 *) arg2->unk64->racer.unk118;
+    if (D_80119C38 != NULL) {
+        if (segment != NULL) {
+            xPos = segment[racer->playerIndex].trans.x_position;
+            yPos = segment[racer->playerIndex].trans.y_position;
+            zPos = segment[racer->playerIndex].trans.z_position;
+            sp1C = 1.0f;
+        } else {
+            xPos = obj->segment.trans.x_position;
+            yPos = obj->segment.trans.y_position;
+            zPos = obj->segment.trans.z_position;
+            switch (racer->vehicleID) {
+                case VEHICLE_CAR:
+                    if (racer->velocity >= 0.0f) {
+                        velocity = racer->velocity;
+                    } else {
+                        velocity = -racer->velocity;
+                    }
+                    break;
+                case VEHICLE_HOVERCRAFT:
+                    velocity = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity));
+                    break;
+                default:
+                    velocity = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity) + (obj->segment.y_velocity * obj->segment.y_velocity));
+                    break;
+            }
+            if (velocity > 15.0f) {
+                velocity = 15.0f;
+            }
+            sp1C = 1.0f - (velocity / 15.0f);
+        }
+        new_xPos = arg2->segment.trans.x_position - xPos;
+        new_yPos = arg2->segment.trans.y_position - yPos;
+        new_zPos = arg2->segment.trans.z_position - zPos;
+        posSquared = sqrtf((new_xPos * new_xPos) + (new_yPos * new_yPos) + (new_zPos * new_zPos));
+        var_f2_2 = (D_80119C38->unk6C[racer->playerIndex] - posSquared) / updateRate;
+        if (var_f2_2 > 15.0f) {
+            var_f2_2 = 15.0f;
+        } else if (var_f2_2 < -15.0f) {
+            var_f2_2 = -15.0f;
+        }
+        D_80119C38->unk68 += (((alCents2Ratio((((70.0f + var_f2_2) / (70.0f - var_f2_2)) * (s32) (func_80007FA4(D_80119C38->unk5C[0]) * 1731.23f))) - D_80119C38->unk5C[0]) - D_80119C38->unk68) / 2);
+        D_80119C38->unk68 *= sp1C;
+        if (D_80119C38->unk68 > 0.8) {
+            D_80119C38->unk68 = -0.8;
+        } else if (D_80119C38->unk68 < -0.8) {
+            D_80119C38->unk68 = -0.8f;
+        }
+        D_80119C38->unk6C[racer->playerIndex] = posSquared;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006BFC.s")
+#endif
 
 #ifdef NON_EQUIVALENT
 //https://decomp.me/scratch/utYpK
@@ -621,6 +690,7 @@ UNUSED u8 func_80007F94(void) {
     return D_800DC6D0;
 }
 
+// This is likely an arctanh function.
 f32 func_80007FA4(f32 arg0) {
     f32 temp_f0;
     f32 temp_f12;
