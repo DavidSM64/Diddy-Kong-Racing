@@ -360,8 +360,7 @@ void func_80006AC8(Object *obj) {
     }
 }
 
-#if 1
-void func_80006BFC(Object *obj, ObjectSegment *segment, Object *arg2, s32 updateRate) {
+void func_80006BFC(Object *obj, ObjectSegment *segment, Object *obj2, s32 updateRate) {
     Object_Racer *racer;
     f32 velocity;
     f32 xPos;
@@ -373,9 +372,12 @@ void func_80006BFC(Object *obj, ObjectSegment *segment, Object *arg2, s32 update
     f32 var_f2_2;
     f32 posSquared;
     f32 sp1C;
+    Object_Racer *racer2;
+    s32 new_var;
 
     racer = &obj->unk64->racer;
-    D_80119C38 = (unk80119C38 *) arg2->unk64->racer.unk118;
+    racer2 = &obj2->unk64->racer;
+    D_80119C38 = (unk80119C38 *) racer2->unk118;
     if (D_80119C38 != NULL) {
         if (segment != NULL) {
             xPos = segment[racer->playerIndex].trans.x_position;
@@ -406,29 +408,27 @@ void func_80006BFC(Object *obj, ObjectSegment *segment, Object *arg2, s32 update
             }
             sp1C = 1.0f - (velocity / 15.0f);
         }
-        new_xPos = arg2->segment.trans.x_position - xPos;
-        new_yPos = arg2->segment.trans.y_position - yPos;
-        new_zPos = arg2->segment.trans.z_position - zPos;
-        posSquared = sqrtf((new_xPos * new_xPos) + (new_yPos * new_yPos) + (new_zPos * new_zPos));
+        new_xPos = obj2->segment.trans.x_position - xPos;
+        new_yPos = obj2->segment.trans.y_position - yPos;
+        new_zPos = obj2->segment.trans.z_position - zPos;
+        posSquared = sqrtf(((new_xPos * new_xPos) + (new_yPos * new_yPos)) + (new_zPos * new_zPos));
         var_f2_2 = (D_80119C38->unk6C[racer->playerIndex] - posSquared) / updateRate;
         if (var_f2_2 > 15.0f) {
             var_f2_2 = 15.0f;
         } else if (var_f2_2 < -15.0f) {
             var_f2_2 = -15.0f;
         }
-        D_80119C38->unk68 += (((alCents2Ratio((((70.0f + var_f2_2) / (70.0f - var_f2_2)) * (s32) (func_80007FA4(D_80119C38->unk5C[0]) * 1731.23f))) - D_80119C38->unk5C[0]) - D_80119C38->unk68) / 2);
+        new_var = func_80007FA4(D_80119C38->unk5C[0]) * 1731.23404;
+        D_80119C38->unk68 += (((alCents2Ratio((((70.0f + var_f2_2) / (70.0f - var_f2_2)) * new_var)) - D_80119C38->unk5C[0]) - D_80119C38->unk68) / 2);
         D_80119C38->unk68 *= sp1C;
         if (D_80119C38->unk68 > 0.8) {
-            D_80119C38->unk68 = -0.8;
+            D_80119C38->unk68 = 0.8;
         } else if (D_80119C38->unk68 < -0.8) {
-            D_80119C38->unk68 = -0.8f;
+            D_80119C38->unk68 = -0.8;
         }
         D_80119C38->unk6C[racer->playerIndex] = posSquared;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006BFC.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 //https://decomp.me/scratch/utYpK
