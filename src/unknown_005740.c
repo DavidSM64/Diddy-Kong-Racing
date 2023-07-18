@@ -11,6 +11,7 @@
 #include "controller.h"
 #include "racer.h"
 #include "PR/libaudio.h"
+#include "game_ui.h"
 
 /************ .data ************/
 
@@ -23,7 +24,7 @@ s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
 /************ .bss ************/
 
 typedef struct unk80119C38_unk20 {
-        u16 unk0[2];
+    u16 unk0[2];
     u8 unk4;
     u8 unk5;
     u8 pad6[0x8];
@@ -74,11 +75,18 @@ typedef struct unk80119C38 {
     u8 unk98;
     u8 pad99[0x7];
     u8 unkA0;
-    u8 padA1[0x7];
+    f32 unkA4;
     s32 unkA8;
     u16 unkAC;
-    u8 padAE[0x22];
+    f32 unkB0;
+    f32 unkB4;
+    u8 padB8[0x4];
+    f32 unkBC;
+    u8 padC0[0x8];
+    f32 unkC8;
+    f32 unkCC;
     u8 unkD0;
+    f32 unkD4;
 } unk80119C38;
 
 unk80119C38 *D_80119C30[2];
@@ -328,7 +336,116 @@ loop_24:
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80005254.s")
 #endif
 
+#if 1
+void func_80005D08(Object *arg0, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
+    u16 temp_f10;
+    f32 temp_f14;
+    f32 var_f14;
+    f32 var_f16;
+    f32 var_f18;
+    f32 var_f2;
+    f64 temp_f0_4;
+    s32 var_v0;
+    s32 temp_t8;
+    u8 var_v0_2;
+    s32 var_a1;
+    u16 temp_a2;
+    u16 temp_t4;
+    u8 temp_a3;
+    u8 var_t0;
+
+    if (func_8001139C() == 0) {
+        var_f16 = sqrtf((arg0->segment.x_velocity * arg0->segment.x_velocity) + (arg0->segment.z_velocity * arg0->segment.z_velocity));
+    } else {
+        var_f16 = 0.0f;
+    }
+    temp_f14 = D_80119C38->unkD4;
+    if (buttonsHeld & A_BUTTON) {
+        D_80119C38->unkA4 += D_80119C38->unkB0 * (f32) updateRate;
+        if (D_80119C38->unkC8 < D_80119C38->unkA4) {
+            D_80119C38->unkA4 = D_80119C38->unkC8;
+        }
+    } else {
+        D_80119C38->unkA4 -= D_80119C38->unkB4 * (f32) updateRate;
+    }
+    if (D_80119C38->unkA4 < 0.0f) {
+        D_80119C38->unkA4 = 0.0f;
+    }
+    var_v0 = (-D_80119C3C->unk196 - (D_80119C3C->steerVisualRotation & 0xFFFF)) + 0x8000;
+    if (var_v0 > 0x8000) {
+        var_v0 += -0xFFFF;
+    }
+    if (var_v0 < -0x8000) {
+        var_v0 += 0xFFFF;
+    }
+    var_f2 = sins_f(var_v0);
+    if (var_f2 < 0.0f) {
+        var_f2 = -var_f2;
+    }
+    if ((check_if_showing_cutscene_camera() == 0) && ((func_8001139C() == 0))) {
+        var_f18 = ((D_80119C38->unkBC * var_f2 * var_f16) / 15.0);
+    } else {
+        var_f18 = 0.0f;
+    }
+    if (func_800A0190() == FALSE) {
+        D_80119C38->unkA4 = 0.0f;
+    }
+    if (var_f16 > 10.0) {
+        var_f16 -= 10.0;
+    } else {
+        var_f16 = 0.0f;
+    }
+    if ((var_f16 != 0.0) && D_80119C3C->bananas != 0) {
+        var_a1 = 10;
+        if (D_80119C3C->bananas <= 10) {
+            var_a1 = D_80119C3C->bananas;
+        }
+        temp_f0_4 = (0.95 * var_a1);
+        if (D_80119C38->unk3C < temp_f0_4) {
+            D_80119C38->unk3C += (temp_f0_4 / (var_a1 * 64));
+            var_f14 = temp_f14 + D_80119C38->unk3C;
+        } else {
+            if (temp_f0_4 < D_80119C38->unk3C) {
+                D_80119C38->unk3C = temp_f0_4;
+            }
+            var_f14 = temp_f14 + D_80119C38->unk3C;
+        }
+    } else {
+        D_80119C38->unk3C *= 0.95;
+        var_f14 += D_80119C38->unk3C;
+    }
+    var_f14 += ((var_f16 * D_80119C38->unkCC) + var_f18 + D_80119C38->unkA4);
+    if ((D_80119C3C->playerIndex != -1) && (D_80119C3C->groundedWheels == 0) && (D_80119C3C->waterTimer < 4)) {
+        if (func_8001139C() == 0) {
+            var_f14 += 0.3;
+        }
+    }
+    D_80119C38->unk5C[0] += ((var_f14 - D_80119C38->unk5C[0]) / 8);
+    if (D_80119C38->unk5C[0] > 6.5534) {
+        D_80119C38->unk5C[0] = 6.5534; //32767/5000. Hmmm.... //0x8000 / 5000
+    }
+    temp_f10 = D_80119C38->unk5C[0] * 10000.0f;
+    for (var_v0_2 = 0; temp_f10 >= D_80119C38[var_v0_2].unk18 && var_v0_2 < 4; var_v0_2++) {
+
+    }
+    if (var_v0_2 == 4) {
+        var_t0 = D_80119C38[var_v0_2].unk2C;
+    } else {
+        if (var_v0_2 != 0) {
+            var_v0_2 = (var_v0_2 - 1) & 0xFF;
+        }
+        temp_a2 = D_80119C38[var_v0_2].unk18;
+        temp_a3 = D_80119C38[var_v0_2].unk2C;
+        var_t0 = ((D_80119C38[var_v0_2].unk2D - temp_a3) * ((f32) (temp_f10 - temp_a2) / (f32) (D_80119C38[var_v0_2].unk1A - temp_a2))) + temp_a3;
+    }
+    D_80119C38->unk54[0] += ((var_t0 - D_80119C38->unk54[0]) / 8);
+    D_80119C38->unk5C[1] = 1.0f;
+    D_80119C38->unk54[1] = 0.0f;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80005D08.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800063EC.s")
 
 void func_80006AC8(Object *obj) {
