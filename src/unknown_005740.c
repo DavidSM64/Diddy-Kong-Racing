@@ -334,7 +334,7 @@ loop_24:
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80005254.s")
 #endif
 
-#if 1
+#ifdef NON_MATCHING
 void func_80005D08(Object *arg0, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
     f32 new_var2;
     f32 var_f16;
