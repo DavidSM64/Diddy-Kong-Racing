@@ -349,7 +349,6 @@ void func_80005D08(Object *arg0, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32
     u8 var_t0;
     u8 i;
     f32 new_var3;
-    f64 temp_f0_4;
 
     if (func_8001139C() == 0) {
         temp_f14 = arg0->segment.x_velocity;
@@ -400,21 +399,17 @@ void func_80005D08(Object *arg0, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32
         } else {
             var_a1 = 10;
         }
-        temp_f0_4 = var_a1;
-        temp_f0_4 = 0.95 * temp_f0_4;
-        if (D_80119C38->unk3C < temp_f0_4) {
-            D_80119C38->unk3C += (temp_f0_4 / (var_a1 * 64));
-            var_f14 += D_80119C38->unk3C;
+        if (D_80119C38->unk3C < (0.95 * var_a1)) {
+            D_80119C38->unk3C += ((0.95 * var_a1) / (var_a1 * 64));
         } else {
-            if (temp_f0_4 < D_80119C38->unk3C) {
-                D_80119C38->unk3C = temp_f0_4;
+            if ((0.95 * var_a1) < D_80119C38->unk3C) {
+                D_80119C38->unk3C = (0.95 * var_a1);
             }
-            var_f14 += D_80119C38->unk3C;
         }
+        var_f14 += D_80119C38->unk3C;
     } else {
         D_80119C38->unk3C *= 0.95;
-        //var_f14 += D_80119C38->unk3C;
-        var_f14 += (new_var2 = D_80119C38->unk3C);
+        var_f14 += D_80119C38->unk3C;
     }
     var_f14 += ((var_f16 * D_80119C38->unkCC) + var_f18 + D_80119C38->unkA4);
     if ((D_80119C3C->playerIndex != -1) && (D_80119C3C->groundedWheels == 0) && (D_80119C3C->waterTimer < 4)) {
@@ -435,8 +430,8 @@ void func_80005D08(Object *arg0, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32
             i--;
         }
         new_var = (temp_f10 - D_80119C38->unk18[i]) / ((f32) (D_80119C38->unk18[i + 1] - D_80119C38->unk18[i]));
-        new_var3 = (D_80119C38->unk2C[i + 1] - D_80119C38->unk2C[i]) * new_var;
-        new_var = new_var3 + D_80119C38->unk2C[i];
+        new_var = (D_80119C38->unk2C[i + 1] - D_80119C38->unk2C[i]) * new_var;
+        new_var += D_80119C38->unk2C[i];
         var_t0 = new_var;
     }
     D_80119C38->unk54[0] += ((var_t0 - D_80119C38->unk54[0]) / 8);
