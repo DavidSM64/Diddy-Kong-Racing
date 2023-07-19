@@ -28,8 +28,7 @@ typedef struct unk80119C38_unk20 {
     u8 unk4;
     u8 unk5;
     u8 pad6[0x8];
-    u8 unkE;
-    u8 unkF;
+    u8 unkE[2];
 } unk80119C38_unk20;
 
 typedef struct unk80119C38 {
@@ -37,8 +36,7 @@ typedef struct unk80119C38 {
     u8 unk4;
     u8 unk5;
     u8 pad6[0x8];
-    u8 unkE;
-    u8 unkF;
+    u8 unkE[2];
     u8 pad10[0x8];
     u16 unk18[2];
     u8 pad1C[0x4];
@@ -190,18 +188,10 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
         if ((D_80119C38->unk0[outerLoop]) != 0) {
             unk20 = &D_80119C38[outerLoop].unk20;
             temp_t2 = outerLoop * 4;
-            innerLoop = 0;
-            if ((var_s0 < unk20->unkE) || ((unk20->unkF < var_s0) != 0)) {
-                unk20_2 = unk20;
-loop_12:
-                innerLoop += 1;
-                unk20_2 += 1;
-                if (((var_s0 < unk20_2->unkF) || (unk20_2->unkF < var_s0)) && (innerLoop < 4)) {
-                    goto loop_12;
-                }
-            }
+            for (innerLoop = 0; 
+            ((var_s0 < D_80119C38->unkE[innerLoop]) || (D_80119C38->unkE[innerLoop + 1] < var_s0)) || innerLoop < 4; innerLoop++) {}
             temp_v0 = &D_80119C38[innerLoop];
-            temp_f4 = ((f32) (temp_v0->unk2D - temp_v0->unk2C) * ((f32) (var_s0 - temp_v0->unkE) / (f32) (temp_v0->unkF - temp_v0->unkE))) + temp_v0->unk2C;
+            temp_f4 = ((f32) (temp_v0->unk2C[innerLoop + 1] - temp_v0->unk2C[innerLoop]) * ((f32) (var_s0 - temp_v0->unkE[0]) / (f32) (temp_v0->unkE[0] - temp_v0->unkE[0]))) + temp_v0->unk2C[innerLoop];
             innerLoop = 0;
             if ((var_s0 < unk20->unk4) || (unk20->unk5 < var_s0)) {
                 var_v0 = unk20;
@@ -215,12 +205,13 @@ loop_24:
             //TODO: This doesn't make sense as it is treating D_80119C38 as a multi dimension array is it not?
             temp_v0_2 = &unk20[innerLoop];
             temp_f14 = (f32) (var_s0 - temp_v0_2->unk4) / (f32) (temp_v0_2->unk5 - temp_v0_2->unk4);
-            temp_f16 = temp_v0_2->unk18 / 10000.0f;
-            temp_f18 = temp_v0_2->unk1A / 10000.0f;
+            temp_f16 = temp_v0_2->unk18[0] / 10000.0f;
+            temp_f18 = temp_v0_2->unk18[1] / 10000.0f;
             if (var_s0 > 50 && D_80119C3C->bananas != 0) {
-                var_v1_3 = 10;
-                if (D_80119C3C->bananas < 11) {
+                if (D_80119C3C->bananas <= 10) {
                     var_v1_3 = D_80119C3C->bananas;
+                } else {                    
+                    var_v1_3 = 10;
                 }
                 var_f12 = D_80119C38->unk3C;
                 temp_f0 = var_v1_3 * 0.05;
@@ -334,9 +325,8 @@ loop_24:
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80005254.s")
 #endif
 
-#ifdef NON_MATCHING
 void func_80005D08(Object *arg0, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
-    f32 new_var2;
+    UNUSED s32 pad;
     f32 var_f16;
     f32 new_var;
     u16 temp_f10;
@@ -348,7 +338,6 @@ void func_80005D08(Object *arg0, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32
     s32 var_a1;
     u8 var_t0;
     u8 i;
-    f32 new_var3;
 
     if (func_8001139C() == 0) {
         temp_f14 = arg0->segment.x_velocity;
@@ -399,11 +388,11 @@ void func_80005D08(Object *arg0, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32
         } else {
             var_a1 = 10;
         }
-        if (D_80119C38->unk3C < (0.95 * var_a1)) {
-            D_80119C38->unk3C += ((0.95 * var_a1) / (var_a1 * 64));
+        if (D_80119C38->unk3C < (0.05 * var_a1)) {
+            D_80119C38->unk3C += ((0.05 * var_a1) / (var_a1 * 64));
         } else {
-            if ((0.95 * var_a1) < D_80119C38->unk3C) {
-                D_80119C38->unk3C = (0.95 * var_a1);
+            if ((0.05 * var_a1) < D_80119C38->unk3C) {
+                D_80119C38->unk3C = (0.05 * var_a1);
             }
         }
         var_f14 += D_80119C38->unk3C;
@@ -430,17 +419,12 @@ void func_80005D08(Object *arg0, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32
             i--;
         }
         new_var = (temp_f10 - D_80119C38->unk18[i]) / ((f32) (D_80119C38->unk18[i + 1] - D_80119C38->unk18[i]));
-        new_var = (D_80119C38->unk2C[i + 1] - D_80119C38->unk2C[i]) * new_var;
-        new_var += D_80119C38->unk2C[i];
-        var_t0 = new_var;
+        var_t0 = D_80119C38->unk2C[i] + (D_80119C38->unk2C[i + 1] - D_80119C38->unk2C[i]) * new_var;
     }
     D_80119C38->unk54[0] += ((var_t0 - D_80119C38->unk54[0]) / 8);
     D_80119C38->unk5C[1] = 1.0f;
     D_80119C38->unk54[1] = 0.0f;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80005D08.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800063EC.s")
 
