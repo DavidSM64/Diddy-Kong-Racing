@@ -24,13 +24,12 @@ s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
 /************ .bss ************/
 typedef struct unk80119C38 {
     u16 unk0[2];
-    u8 unk4[2];
-    u8 pad6[0x8];
-    u8 unkE[2];
-    u8 pad10[0x8];
-    u16 unk18[2];
-    u8 pad1C[0x4];
-    u8 unk20[0x4];
+    u8 unk4[4];
+    u8 pad8[0x6];
+    u8 unkE[4];
+    u8 pad12[0x6];
+    u16 unk18[4];
+    u8 unk20[4];
     u8 pad24[0x8];
     u8 unk2C[2];
     u8 pad2E[0x8];
@@ -132,7 +131,7 @@ void func_800050D0(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
     }
 }
 
-#if 1
+#ifdef NON_EQUIVALENT
 void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
     f32 sp6C;
     f32 temp_f14;
@@ -163,7 +162,7 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
     if (var_s0 > 100) {
         var_s0 = 100;
     }
-    for (outerLoop = 0; outerLoop < 12; outerLoop++) {
+    for (outerLoop = 0; outerLoop < 1; outerLoop++) {
         if ((D_80119C38->unk0[outerLoop]) != 0) {
             innerLoop = 0;
             while ((var_s0 < D_80119C38->unkE[innerLoop] || var_s0 > D_80119C38->unkE[innerLoop + 1]) && innerLoop < 4) {
@@ -220,20 +219,16 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
                 var_f12 += 0.02 * (D_80119C38->unk90 / 5.0f);
                 var_f14 += 5.0f * (D_80119C38->unk90 / 5.0f);
             }
-            if (buttonsHeld & A_BUTTON) {
-                if (D_80119C38->unk94 < 0.4) {
-                    D_80119C38->unk94 += ((f32) updateRate * 0.01);
-                    if (D_80119C38->unk94 > 0.4) {
-                        D_80119C38->unk94 = 0.4f;
-                    }
+            if ((buttonsHeld & A_BUTTON) && (D_80119C38->unk94 < 0.4)) {
+                D_80119C38->unk94 += ((f32) updateRate * 0.01);
+                if (D_80119C38->unk94 > 0.4) {
+                    D_80119C38->unk94 = 0.4f;
                 }
             }
-            if (!(buttonsHeld & A_BUTTON)) {
-                if (D_80119C38->unk94 > 0.0f) {
-                    D_80119C38->unk94 -= ((f32) updateRate * 0.005);
-                    if (D_80119C38->unk94 < 0.0f) {
-                        D_80119C38->unk94 = 0.0f;
-                    }
+            if (!(buttonsHeld & A_BUTTON) && (D_80119C38->unk94 > 0.0f)) {
+                D_80119C38->unk94 -= ((f32) updateRate * 0.005);
+                if (D_80119C38->unk94 < 0.0f) {
+                    D_80119C38->unk94 = 0.0f;
                 }
             }
             D_80119C38->unk5C[outerLoop] += var_f12;
