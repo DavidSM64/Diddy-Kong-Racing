@@ -45,68 +45,38 @@ s32 D_8011AC1C;
 
 #ifdef NON_EQUIVALENT
 unk80119C38 *func_80004B40(s8 characterId, s8 vehicleId) {
-    u32 *sp3C;
-    f32 temp_f0;
-    f32 temp_f18;
-    f32 var_f10;
-    f32 var_f16;
-    f32 var_f16_2;
-    f32 var_f18;
     u16 temp_a1;
     s32 temp_s1;
-    s32 temp_s6;
-    s32 temp_t7_2;
-    u16 temp_v1;
     u16 var_a0_2;
     s32 var_a3;
     s32 var_a3_2;
     s32 var_s0_2;
-    s32 var_v1_3;
-    s8 var_s0;
     unk80119C38 *var_a2;
-    u16 temp_a2;
-    u16 temp_t8_2;
     s32 *addrPtr;
     unkAudioAsset *temp_v0_2;
-    unkAudioAsset *var_s1;
-    unkAudioAsset *var_s3;
-    unkAudioAsset *var_t2;
-    unkAudioAsset *var_t3;
-    unkAudioAsset *var_t4;
-    u8 temp_a3;
-    u8 temp_t7;
-    u8 temp_t8;
-    u8 temp_t9;
-    unk80119C38 **var_v0;
     unk80119C38 *temp_v0_3;
-    unk80119C38 *var_ra;
-    unk80119C38 *var_s2;
-    unk80119C38 *var_s4;
-    unk80119C38 *var_t1;
-    unk80119C38 *var_t5;
-    unk80119C38 *var_v1;
     u8 *memset;
     unk80119C38 *var_a0;
     unkAudioAsset *var_a1;
     unkAudioAsset *var_v1_2;
     s32 i;
+    f32 new_var;
 
     if (characterId >= 11) {
         characterId = 11;
     }
    
-    if (D_800DC6D8 != NULL) {
+    if (D_800DC6D8 != 0) {
         for (i = 0; i < 2; i++) {
             D_80119C30[i] = NULL;
         }
-        D_800DC6D8 = NULL;
+        D_800DC6D8 = 0;
     }
     addrPtr = (s32 *) load_asset_section_from_rom(ASSET_AUDIO_TABLE);
     vehicleId *= 10;
-    sp3C = addrPtr;
-    temp_s1 = &addrPtr[ASSET_AUDIO_7] + ((vehicleId + characterId) * 0x4C); //ALSynth?
-    temp_v0_2 = (unkAudioAsset *) allocate_from_main_pool_safe(0x4C, COLOUR_TAG_CYAN);
-    load_asset_to_address(ASSET_AUDIO, (u32) temp_v0_2, temp_s1, 0x4C);
+    temp_s1 = addrPtr[ASSET_AUDIO_7] + ((vehicleId + characterId) * sizeof(unkAudioAsset));
+    temp_v0_2 = (unkAudioAsset *) allocate_from_main_pool_safe(sizeof(unkAudioAsset), COLOUR_TAG_CYAN);
+    load_asset_to_address(ASSET_AUDIO, (u32) temp_v0_2, temp_s1, sizeof(unkAudioAsset));
     temp_v0_3 = (unk80119C38 *) allocate_from_main_pool_safe(sizeof(unk80119C38), COLOUR_TAG_CYAN);
     
     //Not really sure this is right...
@@ -115,42 +85,32 @@ unk80119C38 *func_80004B40(s8 characterId, s8 vehicleId) {
         memset[var_a3] = 0;
     }
 
-    temp_v0_3->unk36 = temp_v0_2->unk36;
     var_s0_2 = 0;
+    temp_v0_3->unk36 = temp_v0_2->unk36;
     temp_v0_3->unk37 = temp_v0_2->unk37;
-    var_s1 = temp_v0_2;
     temp_v0_3->unk38 = temp_v0_2->unk38;
-    var_t3 = temp_v0_2;
     temp_v0_3->unk39 = temp_v0_2->unk39;
-    var_t4 = temp_v0_2;
-    temp_v0_3->unk64 = (u8) temp_v0_2->unk3A;
-    var_t5 = temp_v0_3;
-    var_ra = temp_v0_3;
-    var_t1 = temp_v0_3;
-    var_t2 = temp_v0_2;
-    var_s2 = temp_v0_3;
-    var_s3 = temp_v0_2;
-    var_s4 = temp_v0_3;
-    temp_v0_3->unkC8 = (f32) temp_v0_2->unk46 / 10000.0f;
-    temp_v0_3->unkB0 = (f32) temp_v0_2->unk3E / 10000.0f;
-    temp_v0_3->unkB4 = (f32) temp_v0_2->unk40 / 10000.0f;
-    temp_v0_3->unkC0 = (f32) temp_v0_2->unk42 / 10000.0f;
-    temp_v0_3->unkC4 = (f32) temp_v0_2->unk44 / 10000.0f;
-    temp_v0_3->unkBC = (f32) temp_v0_2->unk3C / 10000.0f;
+    temp_v0_3->unk64 = temp_v0_2->unk3A;
+    temp_v0_3->unkC8 = temp_v0_2->unk46 / 10000.0f;
+    temp_v0_3->unkB0 = temp_v0_2->unk3E / 10000.0f;
+    temp_v0_3->unkB4 = temp_v0_2->unk40 / 10000.0f;
+    temp_v0_3->unkC0 = temp_v0_2->unk42 / 10000.0f;
+    temp_v0_3->unkC4 = temp_v0_2->unk44 / 10000.0f;
+    temp_v0_3->unkBC = temp_v0_2->unk3C / 10000.0f;
     temp_v0_3->unkB8 = temp_v0_2->unk3B;
     temp_v0_3->unkD8 = 0;
-    temp_v0_3->unkCC = (f32) temp_v0_2->unk48 / 10000.0f;
+    temp_v0_3->unkCC = temp_v0_2->unk48 / 10000.0f;
     do {
         var_a3_2 = 1;
-        var_s4->unk0[0] = var_s1->unk0[0];
-        var_v1_2 = var_t3 + 1;
-        var_t1->unk4[0] = var_t2->unk4;
-        var_a1 = var_t4 + 2;
-        var_s2->unk18[0] = var_s3->unk18;
-        var_a0 = var_t5 + 1;
-        var_t1->unkE[0] = var_t2->unkE;
-        var_a2 = &var_ra->unk0[1];
-        var_t1->unk2C[0] = var_t2->unk2C;
+        temp_v0_3->unk0[0] = temp_v0_2->unk0;
+        var_v1_2 = &temp_v0_2[1];
+        temp_v0_3->unk4[0] = temp_v0_2->unk4;
+        var_a1 = temp_v0_2 + 2;
+        temp_v0_3->unk18[0] = temp_v0_2->unk18;
+        var_a0 = temp_v0_3 + 1;
+        temp_v0_3->unkE[0] = temp_v0_2->unkE;
+        var_a2 = &temp_v0_3->unk0[1];
+        temp_v0_3->unk2C[0] = temp_v0_2->unk2C;
 loop_10:
         var_a3_2 += 2;
         var_a0->unk4[0] = (u8) var_v1_2->unk4[0];
@@ -159,7 +119,7 @@ loop_10:
         var_a1 += 4;
         var_a0->unkE[0] = (u8) var_v1_2->unkC;
         var_a0 += 2;
-        var_a0->unk2A[0] = (u8) var_v1_2->unk2A;
+        var_a0->unk2A[0] = (u8) var_v1_2->unk2A[0];
         var_a2 += 4;
         var_a0->unk0[1] = (u8) var_v1_2->unk3;
         var_a2->unk16 = (u16) var_a1->unk16;
@@ -169,46 +129,34 @@ loop_10:
             goto loop_10;
         }
         var_s0_2 += 2;
-        var_s1 += 2;
-        var_t3 += 5;
-        var_t4 += 0xA;
-        var_t5 += 5;
-        var_ra += 0xA;
-        var_t1 += 5;
-        var_t2 += 5;
-        var_s2 += 0xA;
-        var_s3 += 0xA;
-        var_s4 += 2;
+        temp_v0_2 += 2;
+        temp_v0_2 += 5;
+        temp_v0_2 += 0xA;
+        temp_v0_3 += 5;
+        temp_v0_3 += 0xA;
+        temp_v0_3 += 5;
+        temp_v0_2 += 5;
+        temp_v0_3 += 0xA;
+        temp_v0_2 += 0xA;
+        temp_v0_3 += 2;
     } while (var_s0_2 < 4);
     temp_v0_3->unk74 = 0;
     temp_v0_3->unk6C[0] = 0.0f;
     temp_v0_3->unkD4 = temp_v0_2->unk4A / 100.0f;
     if (vehicleId == 0) {
         temp_v0_3->unk54[0] = temp_v0_3->unk2C[0];
-        temp_v0_3->unk5C[0] = (f32) temp_v0_3->unk18[0] / 10000.0f;
+        temp_v0_3->unk5C[0] = temp_v0_3->unk18[0] / 10000.0f;
         temp_v0_3->unk54[1] = temp_v0_3->unk31;
-        temp_v0_3->unk5C[1] = (f32) temp_v0_3->unk22 / 10000.0f;
+        temp_v0_3->unk5C[1] = temp_v0_3->unk22 / 10000.0f;
     } else {
-        temp_f0 = temp_v0_3->unkD4;
-        temp_f18 = temp_f0 * 10000.0f;
-        temp_v0_3->unk5C[0] = temp_f0;
-        temp_a1 = temp_f18;
-        var_a0_2 = 0;
-        if (temp_a1 >= (s32) temp_v0_3->unk18[0]) {
-loop_26:
-            temp_t7_2 = (var_a0_2 + 1) & 0xFFFF;
-            temp_t8_2 = temp_v0_3->unk18[temp_t7_2];
-            var_a0_2 = temp_t7_2;
-            if (temp_a1 >= (s32) temp_t8_2) {
-                if (temp_t7_2 < 4) {
-                    goto loop_26;
-                }
-            }
-        }
+        temp_v0_3->unk5C[0] = temp_v0_3->unkD4;
+        temp_a1 = temp_v0_3->unk5C[0] * 10000.0f;
+        for (var_a0_2 = 0; temp_a1 >= temp_v0_3->unk18[var_a0_2] && var_a0_2 < 4; var_a0_2++) { }
         var_a0_2--;
-        temp_v0_3->unk54[0] = ((f32) (temp_v0_3->unk2C[var_a0_2 + 1] - temp_v0_3->unk2C[var_a0_2]) * ((f32) (temp_a1 - temp_v0_3->unk18[var_a0_2]) / (f32) (temp_v0_3->unk18[var_a0_2 + 1] - temp_v0_3->unk18[var_a0_2]))) + temp_v0_3->unk2C[var_a0_2];
+        new_var = (temp_a1 - temp_v0_3->unk18[var_a0_2]) / ((f32) (temp_v0_3->unk18[var_a0_2 + 1] - temp_v0_3->unk18[var_a0_2]));
+        temp_v0_3->unk54[0] = temp_v0_3->unk2C[var_a0_2] + (temp_v0_3->unk2C[var_a0_2 + 1] - temp_v0_3->unk2C[var_a0_2]) * new_var;
     }
-    free_from_memory_pool(sp3C);
+    free_from_memory_pool(addrPtr);
     free_from_memory_pool((void *) temp_v0_2);
     return temp_v0_3;
 }
