@@ -50,6 +50,64 @@ typedef struct unk80119C58 {
     /* 0x17E */ u8 unk17E;
 } unk80119C58;
 
+/* Size: 0xE0 / 224 bytes */
+typedef struct unk80119C38 {
+    /* 0x00 */ u16 unk0[2];
+    /* 0x04 */ u8 unk4[4];
+    /* 0x08 */ u8 pad8[0x6];
+    /* 0x0E */ u8 unkE[4];
+    /* 0x12 */ u8 pad12[0x6];
+    /* 0x18 */ u16 unk18[4];
+    /* 0x20 */ u8 unk20[2];
+    /* 0x22 */ u16 unk22;
+    /* 0x24 */ u8 pad24[0x8];
+    /* 0x2C */ u8 unk2C[2];
+    /* 0x2E */ u8 pad2E[0x3];
+    /* 0x31 */ u8 unk31;
+    /* 0x32 */ u8 pad32[0x4];
+    /* 0x36 */ u8 unk36;
+    /* 0x37 */ u8 unk37;
+    /* 0x38 */ u8 unk38;
+    /* 0x39 */ u8 unk39;
+    /* 0x3A */ u8 pad3A[0x2];
+    /* 0x3C */ f32 unk3C;
+    /* 0x40 */ f32 unk40;
+    /* 0x44 */ u8 unk44[4];
+    /* 0x48 */ u8 *unk48[2]; //soundMask / soundState?
+    /* 0x50 */ u8 *unk50;
+    /* 0x54 */ f32 unk54[2];
+    /* 0x5C */ f32 unk5C[3];
+    /* 0x68 */ f32 unk68;
+    /* 0x6C */ f32 unk6C[2];
+    /* 0x74 */ u8 unk74;
+    /* 0x78 */ f32 unk78; // X
+    /* 0x7C */ f32 unk7C; // Y
+    /* 0x80 */ f32 unk80; // Z
+    /* 0x84 */ f32 unk84;
+    /* 0x88 */ u8 unk88; // Volume?
+    /* 0x8C */ f32 unk8C; // Volume?
+    /* 0x90 */ s8 unk90;
+    /* 0x91 */ u8 unk91[3];
+    /* 0x94 */ f32 unk94;
+    /* 0x98 */ u8 unk98;
+    /* 0x99 */ u8 pad99[0x7];
+    /* 0xA0 */ u8 unkA0;
+    /* 0xA4 */ f32 unkA4;
+    /* 0xA8 */ s32 unkA8;
+    /* 0xAC */ u16 unkAC;
+    /* 0xB0 */ f32 unkB0;
+    /* 0xB4 */ f32 unkB4;
+    /* 0xB8 */ u8 unkB8;
+    /* 0xBC */ f32 unkBC;
+    /* 0xC0 */ f32 unkC0;
+    /* 0xC4 */ f32 unkC4;
+    /* 0xC8 */ f32 unkC8;
+    /* 0xCC */ f32 unkCC;
+    /* 0xD0 */ u8 unkD0;
+    /* 0xD4 */ f32 unkD4;
+    /* 0xD8 */ u8 unkD8; //Sound is playing bool?
+    /* 0xDC */ u8 *unkDC; //soundMask / soundState?
+} unk80119C38;
 
 extern u8 D_800DC6D0;
 extern s32 D_800DC6D8;
@@ -65,7 +123,7 @@ void func_800050D0(Object* obj, u32 buttonsPressed, u32 carInput, s32 updateRate
 void func_80006AC8(Object *);
 
 f32 func_80007FA4(f32 arg0);
-s32 func_80004B40(s8, s8);
+unk80119C38 *func_80004B40(s8 characterId, s8 vehicleId);
 void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
 void func_80005D08(Object *, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
 void func_800063EC(Object *, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
