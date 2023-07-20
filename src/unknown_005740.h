@@ -54,13 +54,16 @@ typedef struct unk80119C58 {
 typedef struct unk80119C38 {
     /* 0x00 */ u16 unk0[2];
     /* 0x04 */ u8 unk4[4];
-    /* 0x08 */ u8 pad8[0x6];
+    /* 0x08 */ u8 pad8[0x5];
+    /* 0x0D */ u8 unkD;
     /* 0x0E */ u8 unkE[4];
-    /* 0x12 */ u8 pad12[0x6];
+    /* 0x12 */ u8 pad12[0x4];
+    /* 0x16 */ u16 unk16;
     /* 0x18 */ u16 unk18[4];
     /* 0x20 */ u8 unk20[2];
     /* 0x22 */ u16 unk22;
-    /* 0x24 */ u8 pad24[0x8];
+    /* 0x24 */ u8 pad24[0x6];
+    /* 0x2A */ u8 unk2A[2];
     /* 0x2C */ u8 unk2C[2];
     /* 0x2E */ u8 pad2E[0x3];
     /* 0x31 */ u8 unk31;
@@ -76,7 +79,8 @@ typedef struct unk80119C38 {
     /* 0x48 */ u8 *unk48[2]; //soundMask / soundState?
     /* 0x50 */ u8 *unk50;
     /* 0x54 */ f32 unk54[2];
-    /* 0x5C */ f32 unk5C[3];
+    /* 0x5C */ f32 unk5C[2];
+    /* 0x64 */ f32 unk64;
     /* 0x68 */ f32 unk68;
     /* 0x6C */ f32 unk6C[2];
     /* 0x74 */ u8 unk74;
@@ -108,6 +112,33 @@ typedef struct unk80119C38 {
     /* 0xD8 */ u8 unkD8; //Sound is playing bool?
     /* 0xDC */ u8 *unkDC; //soundMask / soundState?
 } unk80119C38;
+
+typedef struct unkAudioAsset {
+    u16 unk0[2];
+    u8 unk3;
+    u8 unk4[4];
+    u8 unkC;
+    /* 0x0D */ u8 unkD;
+    /* 0x0E */ u8 unkE[4];
+    /* 0x16 */ u16 unk16;
+    /* 0x18 */ u16 unk18[4];
+    /* 0x2A */ u8 unk2A[2];
+    /* 0x2C */ u8 unk2C[2];
+    /* 0x36 */ u8 unk36;
+    /* 0x37 */ u8 unk37;
+    /* 0x38 */ u8 unk38;
+    /* 0x39 */ u8 unk39;
+    /* 0x3A */ u8 unk3A;
+    u8 unk3B;
+    u16 unk3C;
+    u16 unk3E;
+    u16 unk40;
+    u16 unk42;
+    u16 unk44;
+    u16 unk46;
+    u16 unk48;
+    u16 unk4A;
+} unkAudioAsset;
 
 extern u8 D_800DC6D0;
 extern s32 D_800DC6D8;
