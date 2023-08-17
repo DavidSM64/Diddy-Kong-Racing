@@ -126,7 +126,7 @@ typedef struct unkAudioAsset {
     /* 0x12 */ u8 pad12[4];
     /* 0x16 */ u16 unk16;
     /* 0x18 */ u16 unk18[4];
-    /* 0x20 */ u8 unk20[0xA];
+    /* 0x20 */ u8 pad20[0xA];
     /* 0x2A */ u8 unk2A[2];
     /* 0x2C */ u8 unk2C[2];
     /* 0x2E */ u8 pad2E[0x8];
