@@ -689,7 +689,8 @@ typedef struct ObjectHeader {
              u8 pad3E[4];
   /* 0x42 */ s16 unk42;
   /* 0x44 */ s16 unk44;
-             u8 pad46[4];
+  /* 0x48 */ s16 unk46;
+  /* 0x48 */ s16 unk48;
   /* 0x4A */ s16 unk4A;
   /* 0x4C */ s16 unk4C;
   /* 0x4E */ s16 drawDistance;
@@ -758,6 +759,7 @@ typedef struct ShadowData {
     TextureHeader *texture;
     s16 unk8;
     s16 unkA;
+    s16 unkC;
 } ShadowData;
 
 typedef struct Object_54 {
@@ -1696,7 +1698,7 @@ typedef struct Object {
   /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318
   /* 0x0050 */ ShadowData *shadow; //player + 0x2F4
   /* 0x0054 */ Object_54 *unk54; //player + 0x2C0
-  /* 0x0058 */ void *unk58; //player + 0x304
+  /* 0x0058 */ ShadowData *unk58; //player + 0x304
   /* 0x005C */ Object_5C *unk5C;
   /* 0x0060 */ Object_60 *unk60; //player + 0x340
   /* 0x0064 */ Object_64 *unk64; //player + 0x98

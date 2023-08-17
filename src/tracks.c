@@ -116,20 +116,20 @@ s32 D_8011C8B8[512];
 s32 D_8011D0B8;
 s32 D_8011D0BC;
 s32 D_8011D0C0;
-s32 D_8011D0C4;
-s32 D_8011D0C8;
+Object *D_8011D0C4;
+f32 D_8011D0C8;
 s16 D_8011D0CC;
 s16 D_8011D0CE;
-s32 D_8011D0D0;
+s16 D_8011D0D0;
 f32 D_8011D0D4;
-s32 D_8011D0D8;
-s32 D_8011D0DC;
-s32 D_8011D0E0;
+f32 D_8011D0D8;
+f32 D_8011D0DC;
+f32 D_8011D0E0;
 f32 D_8011D0E4;
 s32 D_8011D0E8;
 s32 D_8011D0EC;
-s32 D_8011D0F0;
-s32 D_8011D0F4;
+f32 D_8011D0F0;
+f32 D_8011D0F4;
 Vec4f D_8011D0F8[3];
 Vec4f D_8011D128[3];
 s32 D_8011D158[3]; // Unused? Or part of something bigger above?
@@ -2242,7 +2242,136 @@ loop_6:
 #else
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002DE30.s")
 #endif
+
+#ifdef NON_EQUIVALENT
+void func_8002E234(Object *arg0, s32 arg1) {
+    s32 sp78;
+    s32 sp70;
+    f32 temp_f0;
+    f32 temp_f0_2;
+    f32 zPos;
+    f32 temp_f0_4;
+    f32 temp_f2;
+    f32 xPos;
+    f32 temp_f2_3;
+    f32 character_scale;
+    f32 var_f2;
+    f64 var_f0;
+    f64 var_f0_2;
+    s32 *var_s1;
+    s32 *var_v1;
+    s32 yPos;
+    s32 temp_s0_2;
+    s32 cheats;
+    s32 temp_v0_3;
+    s32 var_s2;
+
+    yPos = arg0->segment.trans.y_position;
+    character_scale = 1.0f;
+    if (arg0->behaviorId == BHV_RACER) {
+        cheats = get_filtered_cheats();
+        character_scale = 1.0f;
+        if (cheats & CHEAT_BIG_CHARACTERS) {
+            character_scale = 1.4f;
+        } else if (cheats & CHEAT_SMALL_CHARACTERS) {
+            character_scale = 0.714f;
+        }
+    }
+    D_8011D0C4 = arg0;
+    D_8011D0C8 = 0x40000000;
+    if (arg1 != 0) {
+        D_8011D0B8 = 0;
+        arg0->unk58->unk8 = (s16) D_8011D364;
+        D_8011D0C0 = func_8007B46C(arg0->unk58->texture, arg0->unk58->unkC << 8);
+        D_8011D0CE = arg0->segment.header->unk48 + yPos;
+        D_8011D0CC = arg0->segment.header->unk46 + yPos;
+        if ((D_8011D384 == 0) || ((get_viewport_count() <= 0))) {
+            D_8011D0C8 = 0;
+        }
+        D_8011D0D8 = (arg0->unk58->scale * character_scale);
+        temp_f0 = D_8011D0D8 * 10.0f;
+        D_8011D0DC = temp_f0;
+        D_8011D0E0 = temp_f0;
+        D_8011D0F0 = 0xBF800000;
+    } else {
+        arg0->shadow->unk8 = (s16) D_8011D364;
+        D_8011D0C0 = (s32) arg0->shadow->texture;
+        D_8011D0CE = arg0->segment.header->unk44 + yPos;
+        D_8011D0CC = arg0->segment.header->unk42 + yPos;
+        if (arg0->behaviorId != BHV_RACER) {
+            temp_f2 = arg0->segment.object.distanceToCamera;
+            var_f0 = (f64) temp_f2;
+            if (var_f0 < 0.0) {
+                var_f0 = (f64) -temp_f2;
+            }
+            var_f2 = var_f0 - 512.0;
+            if (var_f2 < 0.0) {
+                var_f2 = 0.0;
+            }
+            if (var_f2 > 1024.0) {
+                var_f2 = 1024.0;
+            }
+            D_8011D0C8 += (var_f2 * 0.005f);
+        }
+        D_8011D0D8 = (arg0->shadow->scale * character_scale);
+        temp_f0_2 = D_8011D0D8 * 10.0f;
+        D_8011D0DC = temp_f0_2;
+        D_8011D0E0 = temp_f0_2;
+        D_8011D0E4 = 4.0f * D_8011D0DC * D_8011D0E0;
+        D_8011D0F0 = ((f32) arg0->segment.header->unk42 * 0.125f);
+        if (D_8011D0F0 < 0.0f) {
+            D_8011D0F0 = -D_8011D0F0;
+        }
+        D_8011D0F4 = (7.0f * D_8011D0F0);
+        D_8011D0D0 = -0x8000;
+    }
+    D_8011D0D8 = 144.0f / D_8011D0D8;
+    zPos = arg0->segment.trans.z_position;
+    xPos = arg0->segment.trans.x_position;
+    temp_v0_3 = get_inside_segment_count_xyz(&sp78, (s16) (s32) (zPos - D_8011D0DC), D_8011D0CC, (s16) (s32) (xPos - D_8011D0E0), (s16) (s32) (zPos + D_8011D0DC), (s16) (s32) D_8011D0CE, (s16) (s32) (xPos + D_8011D0E0));
+    *D_8011C230 = 0;
+    sp70 = temp_v0_3;
+    D_8011B118 = 0;
+    for (var_s2 = 0; var_s2 < ARRAY_COUNT(D_8011B320); var_s2++) {
+        D_8011B320[var_s2] = 0;
+    }
+    D_8011D0E8 = -1;
+    D_8011D0EC = -1;
+    var_s2 = 0;
+    if (temp_v0_3 > 0) {
+        var_s1 = &sp78;
+        do {
+            temp_s0_2 = *var_s1;
+            if (temp_s0_2 >= 0) {
+                if ((arg1 != 0) && (gCurrentLevelModel->segments[temp_s0_2].unk2B != 0) && (D_8011D384 != 0)) {
+                    func_8002EEEC();
+                } else {
+                    temp_f0_4 = arg0->segment.trans.x_position;
+                    temp_f2_3 = arg0->segment.trans.z_position;
+                    func_8002E904(&gCurrentLevelModel->segments[*var_s1], func_800314DC(&gCurrentLevelModel->segmentsBoundingBoxes[temp_s0_2], (s32) (temp_f0_4 - D_8011D0DC), (s32) (temp_f2_3 - D_8011D0E0), (s32) (temp_f0_4 + D_8011D0DC), (s32) (temp_f2_3 + D_8011D0E0)), arg1);
+                }
+            }
+            var_s2 += 1;
+            var_s1 += 4;
+        } while (var_s2 != sp70);
+    }
+    if (*D_8011C230 > 0) {
+        if ((arg0->unk54 != NULL) && (arg1 == 0)) {
+            arg0->unk54->unk0 = func_8002FA64();
+        }
+        func_8002F2AC();
+        func_8002F440();
+    }
+    if (arg1 == 0) {
+        arg0->shadow->unkA = (s16) D_8011D364;
+        return;
+    }
+    arg0->unk58->unkA = (s16) D_8011D364;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002E234.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002E904.s")
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002EEEC.s")
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002F2AC.s")
