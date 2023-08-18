@@ -198,7 +198,7 @@ void func_800B9C18(s32);
 void func_800BA8E4(Gfx**, MatrixS**, s32);
 void func_8002DE30(Object*);
 void func_8002E234(Object*, s32);
-void func_8002E904(LevelModelSegment *, s32, s32);
+void func_8002E904(LevelModelSegment *, s32, s32 bool);
 void func_8002EEEC(void);
 void func_8002F2AC(void);
 void func_8002F440(void);

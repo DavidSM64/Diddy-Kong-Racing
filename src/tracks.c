@@ -109,13 +109,14 @@ s32 D_8011B11C;
 s32 D_8011B120[128];
 s32 D_8011B320[4];
 s32 D_8011B330[960];
-s32 D_8011C230[2];
+s32 D_8011C230;
+s32 D_8011C234;
 s32 D_8011C238[96];
 s32 D_8011C3B8[320];
 s32 D_8011C8B8[512];
 s32 D_8011D0B8;
 s32 D_8011D0BC;
-s32 D_8011D0C0;
+TextureHeader *D_8011D0C0;
 Object *D_8011D0C4;
 f32 D_8011D0C8;
 s16 D_8011D0CC;
@@ -2244,67 +2245,55 @@ GLOBAL_ASM("asm/non_matchings/tracks/func_8002DE30.s")
 #endif
 
 #ifdef NON_EQUIVALENT
-void func_8002E234(Object *arg0, s32 arg1) {
-    s32 sp78;
-    s32 sp70;
-    f32 temp_f0;
-    f32 temp_f0_2;
-    f32 zPos;
-    f32 temp_f0_4;
-    f32 temp_f2;
+void func_8002E234(Object *obj, s32 bool) {
+    s32 *inSegs;
     f32 xPos;
-    f32 temp_f2_3;
+    f32 zPos;
     f32 character_scale;
     f32 var_f2;
-    f64 var_f0;
-    f64 var_f0_2;
-    s32 *var_s1;
-    s32 *var_v1;
     s32 yPos;
-    s32 temp_s0_2;
     s32 cheats;
-    s32 temp_v0_3;
-    s32 var_s2;
+    s32 segs;
+    s32 i;
+    s32 test;
+    f32 temp;
 
-    yPos = arg0->segment.trans.y_position;
+    yPos = obj->segment.trans.y_position;
     character_scale = 1.0f;
-    if (arg0->behaviorId == BHV_RACER) {
+    if (obj->behaviorId == BHV_RACER) {
         cheats = get_filtered_cheats();
-        character_scale = 1.0f;
         if (cheats & CHEAT_BIG_CHARACTERS) {
             character_scale = 1.4f;
         } else if (cheats & CHEAT_SMALL_CHARACTERS) {
             character_scale = 0.714f;
         }
     }
-    D_8011D0C4 = arg0;
-    D_8011D0C8 = 0x40000000;
-    if (arg1 != 0) {
+    D_8011D0C8 = 2.0f;
+    D_8011D0C4 = obj;
+    if (bool) {
         D_8011D0B8 = 0;
-        arg0->unk58->unk8 = (s16) D_8011D364;
-        D_8011D0C0 = func_8007B46C(arg0->unk58->texture, arg0->unk58->unkC << 8);
-        D_8011D0CE = arg0->segment.header->unk48 + yPos;
-        D_8011D0CC = arg0->segment.header->unk46 + yPos;
+        obj->unk58->unk8 = D_8011D364;
+        D_8011D0C0 = func_8007B46C(obj->unk58->texture, obj->unk58->unkC << 8);
+        D_8011D0CE = obj->segment.header->unk48 + yPos;
+        D_8011D0CC = obj->segment.header->unk46 + yPos;
         if ((D_8011D384 == 0) || ((get_viewport_count() <= 0))) {
             D_8011D0C8 = 0;
         }
-        D_8011D0D8 = (arg0->unk58->scale * character_scale);
-        temp_f0 = D_8011D0D8 * 10.0f;
-        D_8011D0DC = temp_f0;
-        D_8011D0E0 = temp_f0;
-        D_8011D0F0 = 0xBF800000;
+        D_8011D0D8 = (obj->unk58->scale * character_scale);
+        D_8011D0DC = D_8011D0D8 * 10.0f;
+        D_8011D0E0 = D_8011D0D8 * 10.0f;
+        D_8011D0F0 = -1.0f;
     } else {
-        arg0->shadow->unk8 = (s16) D_8011D364;
-        D_8011D0C0 = (s32) arg0->shadow->texture;
-        D_8011D0CE = arg0->segment.header->unk44 + yPos;
-        D_8011D0CC = arg0->segment.header->unk42 + yPos;
-        if (arg0->behaviorId != BHV_RACER) {
-            temp_f2 = arg0->segment.object.distanceToCamera;
-            var_f0 = (f64) temp_f2;
-            if (var_f0 < 0.0) {
-                var_f0 = (f64) -temp_f2;
+        obj->shadow->unk8 = D_8011D364;
+        D_8011D0C0 = obj->shadow->texture;
+        D_8011D0CE = obj->segment.header->unk44 + yPos;
+        D_8011D0CC = obj->segment.header->unk42 + yPos;
+        if (obj->behaviorId != BHV_RACER) {
+            var_f2 = obj->segment.object.distanceToCamera;
+            if (var_f2 < 0.0) {
+                var_f2 = -var_f2;
             }
-            var_f2 = var_f0 - 512.0;
+            var_f2 -= 512.0;
             if (var_f2 < 0.0) {
                 var_f2 = 0.0;
             }
@@ -2313,12 +2302,11 @@ void func_8002E234(Object *arg0, s32 arg1) {
             }
             D_8011D0C8 += (var_f2 * 0.005f);
         }
-        D_8011D0D8 = (arg0->shadow->scale * character_scale);
-        temp_f0_2 = D_8011D0D8 * 10.0f;
-        D_8011D0DC = temp_f0_2;
-        D_8011D0E0 = temp_f0_2;
+        D_8011D0D8 = (obj->shadow->scale * character_scale);
+        D_8011D0DC = D_8011D0D8 * 10.0f;
+        D_8011D0E0 = D_8011D0D8 * 10.0f;
         D_8011D0E4 = 4.0f * D_8011D0DC * D_8011D0E0;
-        D_8011D0F0 = ((f32) arg0->segment.header->unk42 * 0.125f);
+        D_8011D0F0 = (obj->segment.header->unk42 * 0.125f);
         if (D_8011D0F0 < 0.0f) {
             D_8011D0F0 = -D_8011D0F0;
         }
@@ -2326,47 +2314,45 @@ void func_8002E234(Object *arg0, s32 arg1) {
         D_8011D0D0 = -0x8000;
     }
     D_8011D0D8 = 144.0f / D_8011D0D8;
-    zPos = arg0->segment.trans.z_position;
-    xPos = arg0->segment.trans.x_position;
-    temp_v0_3 = get_inside_segment_count_xyz(&sp78, (s16) (s32) (zPos - D_8011D0DC), D_8011D0CC, (s16) (s32) (xPos - D_8011D0E0), (s16) (s32) (zPos + D_8011D0DC), (s16) (s32) D_8011D0CE, (s16) (s32) (xPos + D_8011D0E0));
-    *D_8011C230 = 0;
-    sp70 = temp_v0_3;
+    xPos = obj->segment.trans.x_position;
+    zPos = obj->segment.trans.z_position;
+    segs = get_inside_segment_count_xyz(inSegs, (xPos - D_8011D0DC), D_8011D0CC, (zPos - D_8011D0E0), (xPos + D_8011D0DC), D_8011D0CE, (zPos + D_8011D0E0));
+    D_8011C230 = 0;
     D_8011B118 = 0;
-    for (var_s2 = 0; var_s2 < ARRAY_COUNT(D_8011B320); var_s2++) {
-        D_8011B320[var_s2] = 0;
+    for (i = 0; i < ARRAY_COUNT(D_8011B320); i++) {
+        D_8011B320[i] = 0;
     }
     D_8011D0E8 = -1;
     D_8011D0EC = -1;
-    var_s2 = 0;
-    if (temp_v0_3 > 0) {
-        var_s1 = &sp78;
-        do {
-            temp_s0_2 = *var_s1;
-            if (temp_s0_2 >= 0) {
-                if ((arg1 != 0) && (gCurrentLevelModel->segments[temp_s0_2].unk2B != 0) && (D_8011D384 != 0)) {
-                    func_8002EEEC();
-                } else {
-                    temp_f0_4 = arg0->segment.trans.x_position;
-                    temp_f2_3 = arg0->segment.trans.z_position;
-                    func_8002E904(&gCurrentLevelModel->segments[*var_s1], func_800314DC(&gCurrentLevelModel->segmentsBoundingBoxes[temp_s0_2], (s32) (temp_f0_4 - D_8011D0DC), (s32) (temp_f2_3 - D_8011D0E0), (s32) (temp_f0_4 + D_8011D0DC), (s32) (temp_f2_3 + D_8011D0E0)), arg1);
-                }
+    for (i = 0; i < segs; i++) {
+        if (inSegs[i] >= 0) {
+            if (bool && (gCurrentLevelModel->segments[inSegs[i]].unk2B != 0) && (D_8011D384 != 0)) {
+                func_8002EEEC();
+            } else {
+                test = func_800314DC(
+                    &gCurrentLevelModel->segmentsBoundingBoxes[inSegs[i]], 
+                    (obj->segment.trans.x_position - D_8011D0DC), //x1
+                    (obj->segment.trans.z_position - D_8011D0E0), //z1
+                    (obj->segment.trans.x_position + D_8011D0DC), //x2
+                    (obj->segment.trans.z_position + D_8011D0E0)  //z2
+                );
+                func_8002E904(&gCurrentLevelModel->segments[inSegs[i]], test, bool);
             }
-            var_s2 += 1;
-            var_s1 += 4;
-        } while (var_s2 != sp70);
+        }
     }
-    if (*D_8011C230 > 0) {
-        if ((arg0->unk54 != NULL) && (arg1 == 0)) {
-            arg0->unk54->unk0 = func_8002FA64();
+    if (D_8011C230 > 0) {
+        if ((obj->unk54 != NULL) && !bool) {
+            obj->unk54->unk0 = func_8002FA64();
         }
         func_8002F2AC();
         func_8002F440();
     }
-    if (arg1 == 0) {
-        arg0->shadow->unkA = (s16) D_8011D364;
-        return;
+    if (!bool) {
+        obj->shadow->unkA = D_8011D364;
     }
-    arg0->unk58->unkA = (s16) D_8011D364;
+    else {
+        obj->unk58->unkA = D_8011D364;
+    }
 }
 #else
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002E234.s")
