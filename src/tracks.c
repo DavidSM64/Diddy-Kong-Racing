@@ -2249,14 +2249,15 @@ void func_8002E234(Object *obj, s32 bool) {
     s32 *inSegs;
     f32 xPos;
     f32 zPos;
+    s32 *new_var;
     f32 character_scale;
     f32 var_f2;
     s32 yPos;
     s32 cheats;
-    s32 segs;
     s32 i;
     s32 test;
     f32 temp;
+    s32 segs;
 
     yPos = obj->segment.trans.y_position;
     character_scale = 1.0f;
@@ -2268,8 +2269,11 @@ void func_8002E234(Object *obj, s32 bool) {
             character_scale = 0.714f;
         }
     }
-    D_8011D0C8 = 2.0f;
+    
     D_8011D0C4 = obj;
+    D_8011D0C8 = 2.0f;
+    if (D_8011D0C4) { } //fakematch
+
     if (bool) {
         D_8011D0B8 = 0;
         obj->unk58->unk8 = D_8011D364;
@@ -2311,6 +2315,7 @@ void func_8002E234(Object *obj, s32 bool) {
             D_8011D0F0 = -D_8011D0F0;
         }
         D_8011D0F4 = (7.0f * D_8011D0F0);
+        if (1) { } if (1) { } if (1) { } if (1) { } if (1) { } if (1) { }
         D_8011D0D0 = -0x8000;
     }
     D_8011D0D8 = 144.0f / D_8011D0D8;
@@ -2322,21 +2327,22 @@ void func_8002E234(Object *obj, s32 bool) {
     for (i = 0; i < ARRAY_COUNT(D_8011B320); i++) {
         D_8011B320[i] = 0;
     }
+    new_var = inSegs; //fake?
     D_8011D0E8 = -1;
     D_8011D0EC = -1;
     for (i = 0; i < segs; i++) {
-        if (inSegs[i] >= 0) {
+        if (new_var[i] >= 0) {
             if (bool && (gCurrentLevelModel->segments[inSegs[i]].unk2B != 0) && (D_8011D384 != 0)) {
                 func_8002EEEC();
             } else {
                 test = func_800314DC(
-                    &gCurrentLevelModel->segmentsBoundingBoxes[inSegs[i]], 
+                    &gCurrentLevelModel->segmentsBoundingBoxes[new_var[i]], 
                     (obj->segment.trans.x_position - D_8011D0DC), //x1
                     (obj->segment.trans.z_position - D_8011D0E0), //z1
                     (obj->segment.trans.x_position + D_8011D0DC), //x2
                     (obj->segment.trans.z_position + D_8011D0E0)  //z2
                 );
-                func_8002E904(&gCurrentLevelModel->segments[inSegs[i]], test, bool);
+                func_8002E904(&gCurrentLevelModel->segments[new_var[i]], test, bool);
             }
         }
     }
