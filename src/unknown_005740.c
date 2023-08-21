@@ -104,26 +104,26 @@ unk80119C38 *func_80004B40(s8 characterId, s8 vehicleId) {
         var_a3_2 = 1;
         temp_v0_3->unk0[0] = temp_v0_2->unk0;
         var_v1_2 = &temp_v0_2[1];
-        temp_v0_3->unk4[0] = temp_v0_2->unk4;
+        temp_v0_3->unk4[0][0] = temp_v0_2->unk4[2];
         var_a1 = temp_v0_2 + 2;
         temp_v0_3->unk18[0] = temp_v0_2->unk18;
         var_a0 = temp_v0_3 + 1;
-        temp_v0_3->unkE[0] = temp_v0_2->unkE;
+        temp_v0_3->unkC[0][0] = temp_v0_2->unkC;
         var_a2 = &temp_v0_3->unk0[1];
         temp_v0_3->unk2C[0] = temp_v0_2->unk2C;
 loop_10:
         var_a3_2 += 2;
-        var_a0->unk4[0] = (u8) var_v1_2->unk4[0];
+        var_a0->unk4[0][0] = (u8) var_v1_2->unk4[0];
         var_v1_2 += 2;
         var_a2->unk18[0] = (u16) var_a1->unk18[0];
         var_a1 += 4;
-        var_a0->unkE[0] = (u8) var_v1_2->unkC;
+        var_a0->unkC[0][0] = (u8) var_v1_2->unkC;
         var_a0 += 2;
         var_a0->unk2A[0] = (u8) var_v1_2->unk2A[0];
         var_a2 += 4;
         var_a0->unk0[1] = (u8) var_v1_2->unk3;
         var_a2->unk16 = (u16) var_a1->unk16;
-        var_a0->unkD = (u8) var_v1_2->unkD;
+        var_a0->unkC[0][1] = (u8) var_v1_2->unkD;
         var_a0->unk2A[1] = (u8) var_v1_2->unk2A[1];
         if (var_a3_2 != 5) {
             goto loop_10;
@@ -200,6 +200,7 @@ void func_800050D0(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
 }
 
 #ifdef NON_EQUIVALENT
+//Scratch: https://decomp.me/scratch/w3w2c
 void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
     f32 sp6C;
     f32 temp_f14;
@@ -233,19 +234,19 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
     for (outerLoop = 0; outerLoop < 1; outerLoop++) {
         if ((D_80119C38->unk0[outerLoop]) != 0) {
             innerLoop = 0;
-            while ((var_s0 < D_80119C38->unkE[innerLoop] || var_s0 > D_80119C38->unkE[innerLoop + 1]) && innerLoop < 4) {
+            while ((var_s0 < D_80119C38->unkC[outerLoop][innerLoop] || var_s0 > D_80119C38->unkC[outerLoop][innerLoop + 1] ) && innerLoop < 4) {
                 innerLoop++;
             }
             
-            temp_f14 = (var_s0 - D_80119C38->unkE[innerLoop]) / ((f32) (D_80119C38->unkE[innerLoop + 1] - D_80119C38->unkE[innerLoop]));
-            temp_f4 = D_80119C38->unk2C[innerLoop] + (D_80119C38->unk2C[innerLoop + 1] - D_80119C38->unk2C[innerLoop]) * temp_f14;
+            temp_f14 = (var_s0 - D_80119C38->unkC[0][innerLoop] ) / ((f32) (D_80119C38->unkC[0][innerLoop + 1]  - D_80119C38->unkC[0][innerLoop] ));
+            temp_f4 = D_80119C38->unk2C[outerLoop] + (D_80119C38->unk2C[outerLoop + 1] - D_80119C38->unk2C[outerLoop]) * temp_f14;
             
             innerLoop = 0;
-            while ((var_s0 < D_80119C38->unk4[innerLoop] || var_s0 > D_80119C38->unk4[innerLoop + 1]) && innerLoop < 4) {
+            while ((var_s0 < D_80119C38->unk4[0][innerLoop] || var_s0 > D_80119C38->unk4[0][innerLoop + 1]) && innerLoop < 4) {
                 innerLoop++;
             }
             
-            temp_f14 = (var_s0 - D_80119C38->unk4[innerLoop]) / ((f32) (D_80119C38->unk4[innerLoop + 1] - D_80119C38->unk4[innerLoop]));
+            temp_f14 = (var_s0 - D_80119C38->unk4[0][innerLoop]) / ((f32) (D_80119C38->unk4[0][innerLoop + 1] - D_80119C38->unk4[0][innerLoop]));
             temp_f16 = D_80119C38->unk18[innerLoop] / 10000.0f;
             temp_f18 = D_80119C38->unk18[innerLoop + 1] / 10000.0f;
             if (var_s0 > 50 && D_80119C3C->bananas != 0) {

@@ -53,11 +53,13 @@ typedef struct unk80119C58 {
 /* Size: 0xE0 / 224 bytes */
 typedef struct unk80119C38 {
     /* 0x00 */ u16 unk0[2];
-    /* 0x04 */ u8 unk4[4];
-    /* 0x08 */ u8 pad8[0x5];
-    /* 0x0D */ u8 unkD;
-    /* 0x0E */ u8 unkE[4];
-    /* 0x12 */ u8 pad12[0x4];
+    u8 unk4[2][4];
+    /* 0x08 */ u8 pad8[0x2];
+    u8 unkC[2][4];
+    // /* 0x04 */ u8 unk4[4];
+    // /* 0x08 */ u8 pad8[0x5];
+    // /* 0x0D */ u8 unkD;
+    // /* 0x0E */ u8 unkE[4];
     /* 0x16 */ u16 unk16;
     /* 0x18 */ u16 unk18[4];
     /* 0x20 */ u8 unk20[2];
