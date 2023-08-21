@@ -106,12 +106,12 @@ s32 D_8011B110;
 u32 D_8011B114;
 s32 D_8011B118;
 s32 D_8011B11C;
-s32 D_8011B120[128];
+unk8011B120 D_8011B120[32]; //Struct sizeof(0x10) / sizeof(16)
 s32 D_8011B320[4];
-s32 D_8011B330[960];
+unk8011B330 D_8011B330[120]; //Struct sizeof(0x20) / sizeof(32)
 s32 D_8011C230;
 s32 D_8011C234;
-s32 D_8011C238[96];
+unk8011C238 D_8011C238[32]; //Struct sizeof(0xC) / sizeof(12)
 s32 D_8011C3B8[320];
 s32 D_8011C8B8[512];
 s32 D_8011D0B8;
@@ -163,7 +163,7 @@ u32 D_8011D384;
 FogData gFogData[4];
 Vec3i gScenePerspectivePos;
 unk8011D474 *D_8011D474; // 0x10 bytes struct?
-unk8011D478 *D_8011D478; // 0x8 bytes struct?
+unk8011D478 *D_8011D478; // 0xC bytes struct?
 s16 **D_8011D47C;
 Vertex *D_8011D480[2];
 Vertex *D_8011D488;
@@ -2368,7 +2368,68 @@ GLOBAL_ASM("asm/non_matchings/tracks/func_8002E904.s")
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002EEEC.s")
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002F2AC.s")
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002F440.s")
+
+#ifdef NON_EQUIVALENT
+f32 func_8002FA64(void) {
+    f32 var_f2;
+    f32 x0, z0, x1, z1, x2, z2;
+    s32 temp_t5;
+    s32 var_s2;
+    s32 i;
+
+    var_f2 = 0.0f;
+    if (D_8011C230 > 0) {
+        if (D_8011D0EC != 0) {
+            if (D_8011D0E8 > 0) {
+                var_f2 = D_800DC884[D_8011D0E8] * D_8011D0E4;
+            }
+        } else {
+            for (i = 0; i < D_8011C230; i++) {
+                if (D_8011C238[i].unkA > 0) {
+                    temp_t5 = D_8011C238[i].unk1;
+                    if (temp_t5 & 1) {
+                        x0 = D_8011B330[D_8011C238[i].unk2].x;
+                        z0 = D_8011B330[D_8011C238[i].unk2].z;
+                    } else {
+                        x0 = D_8011B120[D_8011C238[i].unk2].x;
+                        z0 = D_8011B120[D_8011C238[i].unk2].z;
+                    }
+                    temp_t5 >>= 1;
+                    if (temp_t5 & 1) {
+                        x1 = D_8011B330[D_8011C238[i].unk3].x;
+                        z1 = D_8011B330[D_8011C238[i].unk3].z;
+                    } else {
+                        x1 = D_8011B120[D_8011C238[i].unk3].x;
+                        z1 = D_8011B120[D_8011C238[i].unk3].z;
+                    }
+                    temp_t5 >>= 1;
+                    for (var_s2 = 2; var_s2 < D_8011C238[i].unk0; var_s2++) {
+                        if (temp_t5 & 1) {
+                            x2 = D_8011B330[D_8011C238[i + var_s2].unk2].x;
+                            z2 = D_8011B330[D_8011C238[i + var_s2].unk2].z;
+                        } else {
+                            x2 = D_8011B120[D_8011C238[i + var_s2].unk2].x;
+                            z2 = D_8011B120[D_8011C238[i + var_s2].unk2].z;
+                        }
+                        temp_t5 >>= 1;
+                        var_f2 += area_triangle_2d(x0, z0, x1, z1, x2, z2) * D_800DC884[D_8011C238[i].unkA];
+                        x1 = x2;
+                        z1 = z2;
+                    }
+                }
+            }
+        }
+        
+        if (D_8011D0E4 < var_f2) {
+            var_f2 = D_8011D0E4 * 0.99f;
+        }
+    }
+    return (D_8011D0E4 - var_f2) / D_8011D0E4;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002FA64.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002FD74.s")
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002FF6C.s")
 

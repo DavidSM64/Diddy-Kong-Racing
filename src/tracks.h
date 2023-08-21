@@ -56,6 +56,26 @@ typedef struct unknown800DC874 {
 } unknown800DC874;
 
 /* Size: 0x10 bytes */
+typedef struct unk8011B120 {
+    f32 x;
+    f32 y;
+    f32 z;
+    s32 unkC;
+} unk8011B120;
+
+/* Size: 0x20 bytes */
+typedef struct unk8011B330 {
+    f32 x;
+    f32 y;
+    f32 z;
+    s32 unkC;
+    s32 unk10;
+    s32 unk14;
+    s32 unk18;
+    s32 unk1C;
+} unk8011B330;
+
+/* Size: 0x10 bytes */
 typedef struct unk8011D330 {
     u8 pad0[0x10];
 } unk8011D330;
@@ -81,7 +101,17 @@ typedef struct unk8011D474 {
     Vertex *unkC;
 } unk8011D474;
 
-/* Size: 0x8 bytes */
+/* Size: 0xC bytes */
+typedef struct unk8011C238 {
+    u8 unk0;
+    u8 unk1;
+    u8 unk2;
+    u8 unk3;
+    u8 pad4[0x6];
+    s16 unkA;
+} unk8011C238;
+
+/* Size: 0xC bytes */
 typedef struct unk8011D478 {
     s32 unk0;
     s32 unk4;
