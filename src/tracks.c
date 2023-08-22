@@ -32,8 +32,8 @@
 
 s32 D_800DC870 = 0; // Currently unknown, might be a different type.
 //!@bug These two transition effects are marked to not clear when done, meaning they stay active the whole time.
-unknown800DC874 D_800DC874 = { { -128 }, 40, -1 };
-unknown800DC874 D_800DC87C = { { -125 }, 70, -1 };
+FadeTransition gFullFadeToBlack = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK2, FADE_COLOR_BLACK, 40, -1);
+FadeTransition gCircleFadeToBlack = FADE_TRANSITION(FADE_CIRCLE, FADE_FLAG_UNK2, FADE_COLOR_BLACK, 70, -1);
 
 f32 D_800DC884[10] = {
     0.0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f
@@ -96,7 +96,7 @@ f32 D_8011B0E8;
 f32 D_8011B0EC;
 s32 D_8011B0F0;
 s32 D_8011B0F4;
-s32 D_8011B0F8;
+s32 D_8011B0F8; //gIsInCutscene?
 s32 gAntiAliasing;
 s32 D_8011B100;
 s32 D_8011B104;
@@ -196,25 +196,25 @@ s32 set_scene_viewport_num(s32 numPorts) {
 }
 
 // track_init
-#ifdef NON_EQUIVALENT
-void func_8002C0C4(s32 modelId);
 void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 arg5, u32 arg6) {
     s32 i;
-    s32 tmp_a2;
 
     gCurrentLevelHeader2 = get_current_level_header();
-    D_8011B0F8 = 0;
+    D_8011B0F8 = FALSE;
     D_8011B100 = 0;
     D_8011B104 = 0;
     D_8011B108 = 0;
     D_8011B10C = 0;
+    
     if (gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_1 || gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_2) {
-        D_8011B0F8 = 1;
+        D_8011B0F8 = TRUE;
     }
+
     func_8002C0C4(arg0);
 
+    D_8011D384 = 0;
+    
     if (arg2 < 2) {
-        D_8011D384 = 0;
         for (i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
             if (gCurrentLevelModel->segments[i].unk2B != 0) {
                 D_8011D384++;
@@ -222,15 +222,17 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
             }
         }
     }
+
     if (is_in_two_player_adventure() && (gCurrentLevelHeader2->race_type == RACETYPE_DEFAULT || gCurrentLevelHeader2->race_type & RACETYPE_CHALLENGE)) {
-        tmp_a2 = 2;
+        i = 2;
     } else {
-        tmp_a2 = arg2;
-        tmp_a2++;
+        i = arg2 + 1;
     }
+    
     if (D_8011D384) {
-        func_800B82B4(gCurrentLevelModel, gCurrentLevelHeader2, tmp_a2);
+        func_800B82B4(gCurrentLevelModel, gCurrentLevelHeader2, i);
     }
+    
     set_active_viewports_and_max(arg2);
     spawn_skydome(arg1);
     D_8011B110 = 0;
@@ -241,19 +243,21 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
     gScenePlayerViewports = arg2;
     func_8000CC7C(vehicle, arg4, arg2);
     func_8000B020(72, 64);
+    
     if (arg0 == 0 && arg4 == 0) {
-        transition_begin(&D_800DC87C);
+        transition_begin(&gCircleFadeToBlack);
     } else {
-        transition_begin(&D_800DC874);
+        transition_begin(&gFullFadeToBlack);
     }
     set_active_viewports_and_max(gScenePlayerViewports);
+
+    arg2 = gScenePlayerViewports;
     gAntiAliasing = 0;
-    i = 0;
-    do {
-        D_8011D350[i] = allocate_from_main_pool_safe(3200, COLOUR_TAG_YELLOW);
-        D_8011D320[i] = allocate_from_main_pool_safe(12800, COLOUR_TAG_YELLOW);
-        D_8011D338[i] = allocate_from_main_pool_safe(20000, COLOUR_TAG_YELLOW);
-    } while ((Vertex *)&D_8011D338[++i] != (s32)&D_8011D348);
+    for (i = 0; i < ARRAY_COUNT(D_8011D350); i++) {
+        D_8011D350[i] = (DrawTexture *) allocate_from_main_pool_safe(3200, COLOUR_TAG_YELLOW);
+        D_8011D320[i] = (Triangle *) allocate_from_main_pool_safe(12800, COLOUR_TAG_YELLOW);
+        D_8011D338[i] = (Vertex *) allocate_from_main_pool_safe(20000, COLOUR_TAG_YELLOW);
+    }
 
     D_8011B0C8 = 0;
     func_8002D8DC(1, 1, 0);
@@ -269,9 +273,6 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
         func_80025510(arg2 + 1);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/tracks/func_800249F0.s")
-#endif
 
 /**
  * The root function for rendering the entire scene.

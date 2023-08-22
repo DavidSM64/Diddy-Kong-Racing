@@ -54,7 +54,7 @@ void func_80008040(void) {
     D_80119C44 = allocate_from_main_pool_safe(0xA0, COLOUR_TAG_CYAN);
     D_800DC6E0 = 0;
     for (var_v0 = 0; var_v0 < 7; var_v0++) {
-        D_80119C58 = NULL;
+        D_80119C58[var_v0].unk4 = NULL;
     }
     for (var_v0 = 0; var_v0 < 10; var_v0++) {
         D_80119C48[var_v0]->unk18 = 0;

@@ -5,6 +5,7 @@
 #include "structs.h"
 #include "f3ddkr.h"
 #include "racer.h"
+#include "fade_transition.h"
 
 #define LOCAL_OFFSET_TO_RAM_ADDRESS(type, ptr) \
     ptr = (type)((s32)((u8*)ptr) + (s32)((u8*)mdl))
@@ -145,8 +146,8 @@ enum WaveTypes {
 };
 
 extern s32 D_800DC870;
-extern unknown800DC874 D_800DC874;
-extern unknown800DC874 D_800DC87C;
+extern FadeTransition gFullFadeToBlack;
+extern FadeTransition gCircleFadeToBlack;
 
 extern f32 D_800DC884[10];
 
@@ -225,5 +226,6 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
 void func_800B82B4(LevelModel *, LevelHeader *, s32);
 void func_8000C8F8(u32, u32);
 void func_80025510(s32);
+void func_8002C0C4(s32 modelId);
 
 #endif
