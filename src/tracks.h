@@ -101,14 +101,11 @@ typedef struct unk8011D474 {
     Vertex *unkC;
 } unk8011D474;
 
-/* Size: 0xC bytes */
 typedef struct unk8011C238 {
-    u8 unk0;
-    u8 unk1;
-    u8 unk2;
-    u8 unk3;
-    u8 pad4[0x6];
-    s16 unkA;
+  u8 unk0;
+  u8 unk1;
+  u8 unk2[8];
+  s16 unkA;
 } unk8011C238;
 
 /* Size: 0xC bytes */
