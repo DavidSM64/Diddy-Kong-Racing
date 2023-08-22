@@ -149,11 +149,11 @@ s32 D_8011D334;
 Vertex *D_8011D338[4];
 Vertex *D_8011D348;
 s32 D_8011D34C;
-s32 *D_8011D350[4];
-unk8011D360 *D_8011D360;
+DrawTexture *D_8011D350[4];
+DrawTexture *D_8011D360;
 s32 D_8011D364;
-s32 D_8011D368;
-s32 D_8011D36C;
+s32 D_8011D368; //xOffset?
+s32 D_8011D36C; //yOffset?
 s32 *D_8011D370;
 s32 *D_8011D374;
 s32 D_8011D378;
@@ -1932,10 +1932,10 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
                 D_8011B0CC += 2;
             }
             i = shadow->unk8;
-            D_8011D360 = (unk8011D360 *) D_8011D350[D_8011B0CC];
+            D_8011D360 = (DrawTexture *) D_8011D350[D_8011B0CC];
             D_8011D330 = (Triangle *) D_8011D320[D_8011B0CC];
             D_8011D348 = (Vertex *) D_8011D338[D_8011B0CC];
-            someAlpha = D_8011D348[D_8011D360[i].unk6].a;
+            someAlpha = D_8011D348[D_8011D360[i].yOffset].a;
             flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
             if (someAlpha == 0 || obj->segment.object.opacity == 0) {
                 i = shadow->unkA;
@@ -1945,12 +1945,12 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, someAlpha);
             }
             while (i < shadow->unkA) {
-                load_and_set_texture_no_offset(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, flags);
+                load_and_set_texture_no_offset(&gSceneCurrDisplayList, D_8011D360[i].texture, flags);
                 // I hope we can clean this part up.
-                temp2 = new_var2 = D_8011D360[i].unk4; // Fakematch
-                temp3 = new_var = D_8011D360[i].unk6;
-                temp_a3 = D_8011D360[i+1].unk4 - new_var2;
-                temp_a0 = D_8011D360[i+1].unk6 - new_var;
+                temp2 = new_var2 = D_8011D360[i].xOffset; // Fakematch
+                temp3 = new_var = D_8011D360[i].yOffset;
+                temp_a3 = D_8011D360[i+1].xOffset - new_var2;
+                temp_a0 = D_8011D360[i+1].yOffset - new_var;
                 tri = (Triangle *) &D_8011D330[new_var2];
                 vtx = (Vertex *) &D_8011D348[temp3];
                 gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), temp_a0, 0);
@@ -1987,17 +1987,17 @@ void func_8002D670(Object *obj, ShadowData *shadow) {
                 }
             }
             flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
-            D_8011D360 = (unk8011D360* ) D_8011D350[D_8011B0D0];
-            D_8011D330 = (Triangle* ) D_8011D320[D_8011B0D0];
-            D_8011D348 = (Vertex* ) D_8011D338[D_8011B0D0];
+            D_8011D360 = (DrawTexture *) D_8011D350[D_8011B0D0];
+            D_8011D330 = (Triangle *) D_8011D320[D_8011B0D0];
+            D_8011D348 = (Vertex *) D_8011D338[D_8011B0D0];
             while (i < shadow->unkA) {
-                load_and_set_texture_no_offset(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, flags);
-                temp2 = D_8011D360[i].unk4; // Fakematch
-                temp3 = D_8011D360[i].unk6; // Fakematch
-                temp_a3 = D_8011D360[i+1].unk4 - D_8011D360[i].unk4;
-                temp_a0 = D_8011D360[i+1].unk6 - D_8011D360[i].unk6;
-                tri = &((Triangle *) D_8011D330)[D_8011D360[i].unk4];
-                vtx = &((Vertex *) D_8011D348)[D_8011D360[i].unk6];
+                load_and_set_texture_no_offset(&gSceneCurrDisplayList, D_8011D360[i].texture, flags);
+                temp2 = D_8011D360[i].xOffset; // Fakematch
+                temp3 = D_8011D360[i].yOffset; // Fakematch
+                temp_a3 = D_8011D360[i+1].xOffset - D_8011D360[i].xOffset;
+                temp_a0 = D_8011D360[i+1].yOffset - D_8011D360[i].yOffset;
+                tri = &((Triangle *) D_8011D330)[D_8011D360[i].xOffset];
+                vtx = &((Vertex *) D_8011D348)[D_8011D360[i].yOffset];
                 gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), temp_a0, 0);
                 gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(tri), temp_a3, 1);
                 i++;
@@ -2027,7 +2027,7 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
     }
     D_8011D330 = (Triangle *) D_8011D320[D_8011B0CC];
     D_8011D348 = (Vertex *) D_8011D338[D_8011B0CC];
-    D_8011D360 = (unk8011D360 *) D_8011D350[D_8011B0CC];
+    D_8011D360 = (DrawTexture *) D_8011D350[D_8011B0CC];
     D_8011D364 = 0;
     D_8011D368 = 0;
     D_8011D36C = 0;
@@ -2111,8 +2111,8 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
             }
         }
     }
-    D_8011D360[D_8011D364].unk4 = D_8011D368;
-    D_8011D360[D_8011D364].unk6 = D_8011D36C;
+    D_8011D360[D_8011D364].xOffset = D_8011D368;
+    D_8011D360[D_8011D364].yOffset = D_8011D36C;
 }
 
 #ifdef NON_EQUIVALENT

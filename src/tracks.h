@@ -83,33 +83,6 @@ typedef struct unk8011B330 {
 } unk8011B330;
 
 /* Size: 0x10 bytes */
-typedef struct unk8011D330 {
-    u8 unk0;
-    u8 unk1;
-    u8 unk2;
-    u8 unk3;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-} unk8011D330;
-
-/* Size: 0xA bytes */
-typedef struct unk8011D348 {
-    u8 pad0[0x9];
-    u8 unk9;
-} unk8011D348;
-
-/* Size: 0x8 bytes */
-typedef struct unk8011D360 {
-    struct unk8011D360 *unk0;
-    s16 unk4;
-    s16 unk6;
-} unk8011D360;
-
-/* Size: 0x10 bytes */
 typedef struct unk8011D474 {
     TriangleList *unk0;
     TriangleList *unk4;
