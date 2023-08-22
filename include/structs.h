@@ -476,7 +476,7 @@ typedef struct TexCoords {
     };
 } TexCoords;
 
-/* Size: 16 bytes */
+/* Size: 0x10 bytes */
 typedef struct Triangle {
     union {
         struct {

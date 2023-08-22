@@ -649,6 +649,9 @@ GLOBAL_ASM("asm/math_util/calc_dyn_lighting_for_level_segment.s")
 #endif
 
 #ifdef NON_MATCHING
+/**
+ * Signed distance field calculation. It's used to calculate the level of intersection between a point and a triangle.
+*/
 f32 area_triangle_2d(f32 x0, f32 z0, f32 x1, f32 z1, f32 x2, f32 z2) {
     f32 dx0 = x1 - x0; 
     f32 dz0 = z1 - z0;

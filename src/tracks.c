@@ -143,11 +143,11 @@ s32 *gLevelModelTable;
 UNUSED f32 gPrevCameraX; // Set but never read
 UNUSED f32 gPrevCameraY; // Set but never read
 UNUSED f32 gPrevCameraZ; // Set but never read
-s32 *D_8011D320[4];
-unk8011D330 *D_8011D330;
+Triangle *D_8011D320[4];
+Triangle *D_8011D330;
 s32 D_8011D334;
-s32 *D_8011D338[4];
-unk8011D348 *D_8011D348;
+Vertex *D_8011D338[4];
+Vertex *D_8011D348;
 s32 D_8011D34C;
 s32 *D_8011D350[4];
 unk8011D360 *D_8011D360;
@@ -253,7 +253,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
         D_8011D350[i] = allocate_from_main_pool_safe(3200, COLOUR_TAG_YELLOW);
         D_8011D320[i] = allocate_from_main_pool_safe(12800, COLOUR_TAG_YELLOW);
         D_8011D338[i] = allocate_from_main_pool_safe(20000, COLOUR_TAG_YELLOW);
-    } while ((s32)&D_8011D338[++i] != (s32)&D_8011D348);
+    } while ((Vertex *)&D_8011D338[++i] != (s32)&D_8011D348);
 
     D_8011B0C8 = 0;
     func_8002D8DC(1, 1, 0);
@@ -1933,9 +1933,9 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
             }
             i = shadow->unk8;
             D_8011D360 = (unk8011D360 *) D_8011D350[D_8011B0CC];
-            D_8011D330 = (unk8011D330 *) D_8011D320[D_8011B0CC];
-            D_8011D348 = (unk8011D348 *) D_8011D338[D_8011B0CC];
-            someAlpha = D_8011D348[D_8011D360[i].unk6].unk9;
+            D_8011D330 = (Triangle *) D_8011D320[D_8011B0CC];
+            D_8011D348 = (Vertex *) D_8011D338[D_8011B0CC];
+            someAlpha = D_8011D348[D_8011D360[i].unk6].a;
             flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
             if (someAlpha == 0 || obj->segment.object.opacity == 0) {
                 i = shadow->unkA;
@@ -1988,8 +1988,8 @@ void func_8002D670(Object *obj, ShadowData *shadow) {
             }
             flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
             D_8011D360 = (unk8011D360* ) D_8011D350[D_8011B0D0];
-            D_8011D330 = (unk8011D330* ) D_8011D320[D_8011B0D0];
-            D_8011D348 = (unk8011D348* ) D_8011D338[D_8011B0D0];
+            D_8011D330 = (Triangle* ) D_8011D320[D_8011B0D0];
+            D_8011D348 = (Vertex* ) D_8011D338[D_8011B0D0];
             while (i < shadow->unkA) {
                 load_and_set_texture_no_offset(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, flags);
                 temp2 = D_8011D360[i].unk4; // Fakematch
@@ -2025,9 +2025,9 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
     if (arg0 == 1) {
         D_8011B0CC += 2;
     }
-    D_8011D330 = (unk8011D330* ) D_8011D320[D_8011B0CC];
-    D_8011D348 = (unk8011D348* ) D_8011D338[D_8011B0CC];
-    D_8011D360 = (unk8011D360* ) D_8011D350[D_8011B0CC];
+    D_8011D330 = (Triangle *) D_8011D320[D_8011B0CC];
+    D_8011D348 = (Vertex *) D_8011D338[D_8011B0CC];
+    D_8011D360 = (unk8011D360 *) D_8011D350[D_8011B0CC];
     D_8011D364 = 0;
     D_8011D368 = 0;
     D_8011D36C = 0;
@@ -2366,9 +2366,43 @@ GLOBAL_ASM("asm/non_matchings/tracks/func_8002E234.s")
 
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002E904.s")
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002EEEC.s")
+
+#ifdef NON_EQUIVALENT
+void func_8002F2AC(void) {
+    f32 temp_f10;
+    f32 temp_f12;
+    f32 temp_f16;
+    f32 temp_f8;
+    unk8011B120_unkC *var_v0;
+    s32 i, j;
+
+    for (i = 0; i < D_8011B118; i++) {
+        var_v0 = D_8011B120[i].unkC;
+        temp_f16 = D_8011B120[i].x * var_v0->unk0;
+        temp_f10 = var_v0->unkC;
+        temp_f8 = var_v0->unk4;
+        temp_f12 = D_8011B120[i].z * var_v0->unk8;
+        D_8011B120[i].y = (f32) (-(temp_f16 + temp_f12 + temp_f10) / temp_f8);
+    }
+
+    for (i = 0; D_8011B320[i] > 0 ; i++) {
+        for (j = 0; j < D_8011B320[i]; j++) {
+            var_v0 = D_8011B330[i].unkC;
+            temp_f16 = D_8011B330[i].x * var_v0->unk0;
+            temp_f10 = var_v0->unkC;
+            temp_f8 = var_v0->unk4;
+            temp_f12 = D_8011B330[i].z * var_v0->unk8;
+            D_8011B330[i].z = (f32) (-(temp_f16 + temp_f12 + temp_f10) / temp_f8);            
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002F2AC.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002F440.s")
 
+//Transition points between different lighting levels, used by certain objects
 f32 func_8002FA64(void) {
     f32 var_f2;
     f32 x0, z0, x1, z1, x2, z2;
