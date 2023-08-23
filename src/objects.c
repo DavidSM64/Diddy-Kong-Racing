@@ -528,7 +528,78 @@ s32 normalise_time(s32 timer) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+//Really close to matching. Looks like it's just regalloc left, but there's a couple of fakematch stuff in there.
+void func_8000C8F8(s32 arg0, s32 arg1) {
+    s32 assetSize;
+    Settings *settings;
+    s32 i;
+    u8 *asset;
+    s32 var_s0;
+    u32 assetOffset;
+    s32 *assetTable;
+    u32 *temp_v1;
+    s32 *compressedAsset;
+    s32 temp_t3;
+
+    settings = get_settings();
+    assetOffset = settings->bosses | 0x820; // 0x820 = Wizpig 2 and some unknown 0x800 boss bit
+    gIsSilverCoinRace = ((settings->courseFlagsPtr[settings->courseId] & 4) == 0) && (((1 << settings->worldId) & assetOffset) != 0);
+    
+    if (!(settings->courseFlagsPtr[settings->courseId] & 2)) {
+        gIsSilverCoinRace = 0;
+    }
+    if (is_in_tracks_mode()) {
+        gIsSilverCoinRace = 0;
+    }
+    if (get_current_level_race_type()) {
+        gIsSilverCoinRace = 0;
+    }
+    
+    D_8011AD3E = 0;
+    asset = allocate_from_main_pool_safe(0x3000, COLOUR_TAG_BLUE);
+    D_8011AEB0[arg1] = asset;
+    D_8011AE98[arg1] = D_8011AEB0[arg1] + 0x10;
+    D_8011AEA0[arg1] = 0;
+    D_8011AEA8[arg1] = arg0;
+    assetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_OBJECT_MAPS_TABLE);
+    for (i = 0; assetTable[i] != -1; i++) { }
+    if (arg0 >= (i - 1)) {
+        arg0 = 0;
+    }
+    temp_v1 = &assetTable[arg0];
+    assetOffset = temp_v1[0];
+    assetSize = temp_v1[1] - assetOffset;
+    if (assetSize != 0) {
+        compressedAsset = ((asset + get_asset_uncompressed_size(ASSET_LEVEL_OBJECT_MAPS, assetOffset)) - assetSize) + 0x20;
+        if (1) {
+        load_asset_to_address(ASSET_LEVEL_OBJECT_MAPS, (u32) compressedAsset, assetOffset, assetSize);
+        gzip_inflate((u8 *) compressedAsset, (u8 *) asset);
+        free_from_memory_pool(assetTable);
+        D_8011AE98[arg1] = D_8011AEB0[arg1] + 0x10;
+        D_8011AEA0[arg1] = (var_s0 = ((s32 *) asset)[0]); 
+        D_8011AEC0 = arg1;
+        }
+        for (var_s0 = 0; var_s0 < D_8011AEA0[arg1]; var_s0 += temp_t3) {
+            spawn_object(D_8011AE98[arg1], 1);
+            temp_t3 = D_8011AE98[arg1][1] & 0x3F;
+            D_8011AE98[arg1] = &D_8011AE98[arg1][temp_t3];
+        }
+        D_8011AE98[arg1] = D_8011AEB0[arg1] + 0x10;
+        D_8011AE70 = 0;
+        D_8011ADC0 = 1;
+        if (D_8011ADAC == 0) {
+            gParticlePtrList_flush();
+            func_80017E98();
+            func_8001BC54();
+            func_8001E93C();
+        }
+        D_8011ADAC = 1;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_8000C8F8.s")
+#endif
 
 // Reset all values of D_8011AE08 to NULL
 void func_8000CBC0(void) {

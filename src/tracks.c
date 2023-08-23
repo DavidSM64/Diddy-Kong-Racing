@@ -196,7 +196,7 @@ s32 set_scene_viewport_num(s32 numPorts) {
 }
 
 // track_init
-void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 arg5, u32 arg6) {
+void func_800249F0(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, u32 entranceId, u32 collectables, u32 arg6) {
     s32 i;
 
     gCurrentLevelHeader2 = get_current_level_header();
@@ -210,11 +210,11 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
         D_8011B0F8 = TRUE;
     }
 
-    func_8002C0C4(arg0);
+    func_8002C0C4(geometry);
 
     D_8011D384 = 0;
     
-    if (arg2 < 2) {
+    if (numberOfPlayers < 2) {
         for (i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
             if (gCurrentLevelModel->segments[i].unk2B != 0) {
                 D_8011D384++;
@@ -226,32 +226,32 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
     if (is_in_two_player_adventure() && (gCurrentLevelHeader2->race_type == RACETYPE_DEFAULT || gCurrentLevelHeader2->race_type & RACETYPE_CHALLENGE)) {
         i = 2;
     } else {
-        i = arg2 + 1;
+        i = numberOfPlayers + 1;
     }
     
     if (D_8011D384) {
         func_800B82B4(gCurrentLevelModel, gCurrentLevelHeader2, i);
     }
     
-    set_active_viewports_and_max(arg2);
-    spawn_skydome(arg1);
+    set_active_viewports_and_max(numberOfPlayers);
+    spawn_skydome(skybox);
     D_8011B110 = 0;
     D_8011B114 = 0x10000;
     func_80011390();
     func_8000C8F8(arg6, 0);
-    func_8000C8F8(arg5, 1);
-    gScenePlayerViewports = arg2;
-    func_8000CC7C(vehicle, arg4, arg2);
+    func_8000C8F8(collectables, 1);
+    gScenePlayerViewports = numberOfPlayers;
+    func_8000CC7C(vehicle, entranceId, numberOfPlayers);
     func_8000B020(72, 64);
     
-    if (arg0 == 0 && arg4 == 0) {
+    if (geometry == 0 && entranceId == 0) {
         transition_begin(&gCircleFadeToBlack);
     } else {
         transition_begin(&gFullFadeToBlack);
     }
     set_active_viewports_and_max(gScenePlayerViewports);
 
-    arg2 = gScenePlayerViewports;
+    numberOfPlayers = gScenePlayerViewports;
     gAntiAliasing = 0;
     for (i = 0; i < ARRAY_COUNT(D_8011D350); i++) {
         D_8011D350[i] = (DrawTexture *) allocate_from_main_pool_safe(3200, COLOUR_TAG_YELLOW);
@@ -270,7 +270,7 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
         D_8011B0E1 = gCurrentLevelHeader2->unkB4;
         D_8011B0E2 = gCurrentLevelHeader2->unkB5;
         D_8011B0E3 = gCurrentLevelHeader2->unkB6;
-        func_80025510(arg2 + 1);
+        func_80025510(numberOfPlayers + 1);
     }
 }
 
