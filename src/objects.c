@@ -804,7 +804,7 @@ void func_8000E4E8(s32 index) {
     s32 i;
     u8 *temp_a1;
 
-    temp_v0 = (s32 *) D_8011AEB0[index];
+    temp_v0 = D_8011AEB0[index];
     temp_v0[0] = D_8011AEA0[index];
     temp_v0[3] = 0;
     temp_v0[2] = 0;
@@ -840,7 +840,25 @@ s32 func_8000E558(Object *arg0){
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8000E5EC.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8000E79C.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8000E898.s")
+
+UNUSED u8 *func_8000E898(u8 *arg0, s32 arg1) {
+    s32 temp_t6;
+    s32 i;
+    u8 *temp_v1;
+    u8 *new_var;
+    u8 *new_var2;
+
+    temp_t6 = arg0[1] & 0x3F;
+    new_var = arg0;
+    new_var = &D_8011AE98[arg1][D_8011AEA0[arg1]];
+    new_var2 = arg0;
+    temp_v1 = new_var;
+    D_8011AEA0[arg1] += temp_t6;
+    for (i = 0; i < temp_t6; i++) {
+        temp_v1[i] = new_var2[i];
+    }
+    return temp_v1;
+}
 
 /**
  * Returns the object at the current offset by ID.
