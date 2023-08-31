@@ -799,7 +799,7 @@ u8 is_in_time_trial(void) {
     return gIsTimeTrial;
 }
 
-void func_8000E4E8(s32 index) {
+UNUSED void func_8000E4E8(s32 index) {
     s32 *temp_v0;
     s32 i;
     u8 *temp_a1;
@@ -819,7 +819,7 @@ void func_8000E4E8(s32 index) {
     }
 }
 
-s32 func_8000E558(Object *arg0){
+UNUSED s32 func_8000E558(Object *arg0) {
     s32 temp_v0;
     s32 new_var, new_var2;
     if (arg0->segment.level_entry == NULL) {
