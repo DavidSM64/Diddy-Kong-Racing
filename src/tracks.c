@@ -32,8 +32,8 @@
 
 s32 D_800DC870 = 0; // Currently unknown, might be a different type.
 //!@bug These two transition effects are marked to not clear when done, meaning they stay active the whole time.
-unknown800DC874 D_800DC874 = { { -128 }, 40, -1 };
-unknown800DC874 D_800DC87C = { { -125 }, 70, -1 };
+FadeTransition gFullFadeToBlack = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK2, FADE_COLOR_BLACK, 40, -1);
+FadeTransition gCircleFadeToBlack = FADE_TRANSITION(FADE_CIRCLE, FADE_FLAG_UNK2, FADE_COLOR_BLACK, 70, -1);
 
 f32 D_800DC884[10] = {
     0.0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f
@@ -96,7 +96,7 @@ f32 D_8011B0E8;
 f32 D_8011B0EC;
 s32 D_8011B0F0;
 s32 D_8011B0F4;
-s32 D_8011B0F8;
+s32 D_8011B0F8; //gIsInCutscene?
 s32 gAntiAliasing;
 s32 D_8011B100;
 s32 D_8011B104;
@@ -106,30 +106,31 @@ s32 D_8011B110;
 u32 D_8011B114;
 s32 D_8011B118;
 s32 D_8011B11C;
-s32 D_8011B120[128];
+unk8011B120 D_8011B120[32]; //Struct sizeof(0x10) / sizeof(16)
 s32 D_8011B320[4];
-s32 D_8011B330[960];
-s32 D_8011C230[2];
-s32 D_8011C238[96];
+unk8011B330 D_8011B330[120]; //Struct sizeof(0x20) / sizeof(32)
+s32 D_8011C230;
+s32 D_8011C234;
+unk8011C238 D_8011C238[32]; //Struct sizeof(0xC) / sizeof(12)
 s32 D_8011C3B8[320];
 s32 D_8011C8B8[512];
 s32 D_8011D0B8;
 s32 D_8011D0BC;
-s32 D_8011D0C0;
-s32 D_8011D0C4;
-s32 D_8011D0C8;
+TextureHeader *D_8011D0C0;
+Object *D_8011D0C4;
+f32 D_8011D0C8;
 s16 D_8011D0CC;
 s16 D_8011D0CE;
-s32 D_8011D0D0;
+s16 D_8011D0D0;
 f32 D_8011D0D4;
-s32 D_8011D0D8;
-s32 D_8011D0DC;
-s32 D_8011D0E0;
+f32 D_8011D0D8;
+f32 D_8011D0DC;
+f32 D_8011D0E0;
 f32 D_8011D0E4;
 s32 D_8011D0E8;
 s32 D_8011D0EC;
-s32 D_8011D0F0;
-s32 D_8011D0F4;
+f32 D_8011D0F0;
+f32 D_8011D0F4;
 Vec4f D_8011D0F8[3];
 Vec4f D_8011D128[3];
 s32 D_8011D158[3]; // Unused? Or part of something bigger above?
@@ -142,17 +143,17 @@ s32 *gLevelModelTable;
 UNUSED f32 gPrevCameraX; // Set but never read
 UNUSED f32 gPrevCameraY; // Set but never read
 UNUSED f32 gPrevCameraZ; // Set but never read
-s32 *D_8011D320[4];
-unk8011D330 *D_8011D330;
+Triangle *D_8011D320[4];
+Triangle *D_8011D330;
 s32 D_8011D334;
-s32 *D_8011D338[4];
-unk8011D348 *D_8011D348;
+Vertex *D_8011D338[4];
+Vertex *D_8011D348;
 s32 D_8011D34C;
-s32 *D_8011D350[4];
-unk8011D360 *D_8011D360;
+DrawTexture *D_8011D350[4];
+DrawTexture *D_8011D360;
 s32 D_8011D364;
-s32 D_8011D368;
-s32 D_8011D36C;
+s32 D_8011D368; //xOffset?
+s32 D_8011D36C; //yOffset?
 s32 *D_8011D370;
 s32 *D_8011D374;
 s32 D_8011D378;
@@ -162,7 +163,7 @@ u32 D_8011D384;
 FogData gFogData[4];
 Vec3i gScenePerspectivePos;
 unk8011D474 *D_8011D474; // 0x10 bytes struct?
-unk8011D478 *D_8011D478; // 0x8 bytes struct?
+unk8011D478 *D_8011D478; // 0xC bytes struct?
 s16 **D_8011D47C;
 Vertex *D_8011D480[2];
 Vertex *D_8011D488;
@@ -195,25 +196,25 @@ s32 set_scene_viewport_num(s32 numPorts) {
 }
 
 // track_init
-#ifdef NON_EQUIVALENT
-void func_8002C0C4(s32 modelId);
-void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 arg5, u32 arg6) {
+void func_800249F0(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, u32 entranceId, u32 collectables, u32 arg6) {
     s32 i;
-    s32 tmp_a2;
 
     gCurrentLevelHeader2 = get_current_level_header();
-    D_8011B0F8 = 0;
+    D_8011B0F8 = FALSE;
     D_8011B100 = 0;
     D_8011B104 = 0;
     D_8011B108 = 0;
     D_8011B10C = 0;
+    
     if (gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_1 || gCurrentLevelHeader2->race_type == RACETYPE_CUTSCENE_2) {
-        D_8011B0F8 = 1;
+        D_8011B0F8 = TRUE;
     }
-    func_8002C0C4(arg0);
 
-    if (arg2 < 2) {
-        D_8011D384 = 0;
+    func_8002C0C4(geometry);
+
+    D_8011D384 = 0;
+    
+    if (numberOfPlayers < 2) {
         for (i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
             if (gCurrentLevelModel->segments[i].unk2B != 0) {
                 D_8011D384++;
@@ -221,38 +222,42 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
             }
         }
     }
+
     if (is_in_two_player_adventure() && (gCurrentLevelHeader2->race_type == RACETYPE_DEFAULT || gCurrentLevelHeader2->race_type & RACETYPE_CHALLENGE)) {
-        tmp_a2 = 2;
+        i = 2;
     } else {
-        tmp_a2 = arg2;
-        tmp_a2++;
+        i = numberOfPlayers + 1;
     }
+    
     if (D_8011D384) {
-        func_800B82B4(gCurrentLevelModel, gCurrentLevelHeader2, tmp_a2);
+        func_800B82B4(gCurrentLevelModel, gCurrentLevelHeader2, i);
     }
-    set_active_viewports_and_max(arg2);
-    spawn_skydome(arg1);
+    
+    set_active_viewports_and_max(numberOfPlayers);
+    spawn_skydome(skybox);
     D_8011B110 = 0;
     D_8011B114 = 0x10000;
     func_80011390();
     func_8000C8F8(arg6, 0);
-    func_8000C8F8(arg5, 1);
-    gScenePlayerViewports = arg2;
-    func_8000CC7C(vehicle, arg4, arg2);
+    func_8000C8F8(collectables, 1);
+    gScenePlayerViewports = numberOfPlayers;
+    func_8000CC7C(vehicle, entranceId, numberOfPlayers);
     func_8000B020(72, 64);
-    if (arg0 == 0 && arg4 == 0) {
-        transition_begin(&D_800DC87C);
+    
+    if (geometry == 0 && entranceId == 0) {
+        transition_begin(&gCircleFadeToBlack);
     } else {
-        transition_begin(&D_800DC874);
+        transition_begin(&gFullFadeToBlack);
     }
     set_active_viewports_and_max(gScenePlayerViewports);
+
+    numberOfPlayers = gScenePlayerViewports;
     gAntiAliasing = 0;
-    i = 0;
-    do {
-        D_8011D350[i] = allocate_from_main_pool_safe(3200, COLOUR_TAG_YELLOW);
-        D_8011D320[i] = allocate_from_main_pool_safe(12800, COLOUR_TAG_YELLOW);
-        D_8011D338[i] = allocate_from_main_pool_safe(20000, COLOUR_TAG_YELLOW);
-    } while ((s32)&D_8011D338[++i] != (s32)&D_8011D348);
+    for (i = 0; i < ARRAY_COUNT(D_8011D350); i++) {
+        D_8011D350[i] = (DrawTexture *) allocate_from_main_pool_safe(3200, COLOUR_TAG_YELLOW);
+        D_8011D320[i] = (Triangle *) allocate_from_main_pool_safe(12800, COLOUR_TAG_YELLOW);
+        D_8011D338[i] = (Vertex *) allocate_from_main_pool_safe(20000, COLOUR_TAG_YELLOW);
+    }
 
     D_8011B0C8 = 0;
     func_8002D8DC(1, 1, 0);
@@ -265,12 +270,9 @@ void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 
         D_8011B0E1 = gCurrentLevelHeader2->unkB4;
         D_8011B0E2 = gCurrentLevelHeader2->unkB5;
         D_8011B0E3 = gCurrentLevelHeader2->unkB6;
-        func_80025510(arg2 + 1);
+        func_80025510(numberOfPlayers + 1);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/tracks/func_800249F0.s")
-#endif
 
 /**
  * The root function for rendering the entire scene.
@@ -1931,10 +1933,10 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
                 D_8011B0CC += 2;
             }
             i = shadow->unk8;
-            D_8011D360 = (unk8011D360 *) D_8011D350[D_8011B0CC];
-            D_8011D330 = (unk8011D330 *) D_8011D320[D_8011B0CC];
-            D_8011D348 = (unk8011D348 *) D_8011D338[D_8011B0CC];
-            someAlpha = D_8011D348[D_8011D360[i].unk6].unk9;
+            D_8011D360 = (DrawTexture *) D_8011D350[D_8011B0CC];
+            D_8011D330 = (Triangle *) D_8011D320[D_8011B0CC];
+            D_8011D348 = (Vertex *) D_8011D338[D_8011B0CC];
+            someAlpha = D_8011D348[D_8011D360[i].yOffset].a;
             flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
             if (someAlpha == 0 || obj->segment.object.opacity == 0) {
                 i = shadow->unkA;
@@ -1944,12 +1946,12 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
                 gDPSetPrimColor(gSceneCurrDisplayList++, 0, 0, 255, 255, 255, someAlpha);
             }
             while (i < shadow->unkA) {
-                load_and_set_texture_no_offset(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, flags);
+                load_and_set_texture_no_offset(&gSceneCurrDisplayList, D_8011D360[i].texture, flags);
                 // I hope we can clean this part up.
-                temp2 = new_var2 = D_8011D360[i].unk4; // Fakematch
-                temp3 = new_var = D_8011D360[i].unk6;
-                temp_a3 = D_8011D360[i+1].unk4 - new_var2;
-                temp_a0 = D_8011D360[i+1].unk6 - new_var;
+                temp2 = new_var2 = D_8011D360[i].xOffset; // Fakematch
+                temp3 = new_var = D_8011D360[i].yOffset;
+                temp_a3 = D_8011D360[i+1].xOffset - new_var2;
+                temp_a0 = D_8011D360[i+1].yOffset - new_var;
                 tri = (Triangle *) &D_8011D330[new_var2];
                 vtx = (Vertex *) &D_8011D348[temp3];
                 gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), temp_a0, 0);
@@ -1986,17 +1988,17 @@ void func_8002D670(Object *obj, ShadowData *shadow) {
                 }
             }
             flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
-            D_8011D360 = (unk8011D360* ) D_8011D350[D_8011B0D0];
-            D_8011D330 = (unk8011D330* ) D_8011D320[D_8011B0D0];
-            D_8011D348 = (unk8011D348* ) D_8011D338[D_8011B0D0];
+            D_8011D360 = (DrawTexture *) D_8011D350[D_8011B0D0];
+            D_8011D330 = (Triangle *) D_8011D320[D_8011B0D0];
+            D_8011D348 = (Vertex *) D_8011D338[D_8011B0D0];
             while (i < shadow->unkA) {
-                load_and_set_texture_no_offset(&gSceneCurrDisplayList, (TextureHeader *) D_8011D360[i].unk0, flags);
-                temp2 = D_8011D360[i].unk4; // Fakematch
-                temp3 = D_8011D360[i].unk6; // Fakematch
-                temp_a3 = D_8011D360[i+1].unk4 - D_8011D360[i].unk4;
-                temp_a0 = D_8011D360[i+1].unk6 - D_8011D360[i].unk6;
-                tri = &((Triangle *) D_8011D330)[D_8011D360[i].unk4];
-                vtx = &((Vertex *) D_8011D348)[D_8011D360[i].unk6];
+                load_and_set_texture_no_offset(&gSceneCurrDisplayList, D_8011D360[i].texture, flags);
+                temp2 = D_8011D360[i].xOffset; // Fakematch
+                temp3 = D_8011D360[i].yOffset; // Fakematch
+                temp_a3 = D_8011D360[i+1].xOffset - D_8011D360[i].xOffset;
+                temp_a0 = D_8011D360[i+1].yOffset - D_8011D360[i].yOffset;
+                tri = &((Triangle *) D_8011D330)[D_8011D360[i].xOffset];
+                vtx = &((Vertex *) D_8011D348)[D_8011D360[i].yOffset];
                 gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), temp_a0, 0);
                 gSPPolygon(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(tri), temp_a3, 1);
                 i++;
@@ -2024,9 +2026,9 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
     if (arg0 == 1) {
         D_8011B0CC += 2;
     }
-    D_8011D330 = (unk8011D330* ) D_8011D320[D_8011B0CC];
-    D_8011D348 = (unk8011D348* ) D_8011D338[D_8011B0CC];
-    D_8011D360 = (unk8011D360* ) D_8011D350[D_8011B0CC];
+    D_8011D330 = (Triangle *) D_8011D320[D_8011B0CC];
+    D_8011D348 = (Vertex *) D_8011D338[D_8011B0CC];
+    D_8011D360 = (DrawTexture *) D_8011D350[D_8011B0CC];
     D_8011D364 = 0;
     D_8011D368 = 0;
     D_8011D36C = 0;
@@ -2110,8 +2112,8 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
             }
         }
     }
-    D_8011D360[D_8011D364].unk4 = D_8011D368;
-    D_8011D360[D_8011D364].unk6 = D_8011D36C;
+    D_8011D360[D_8011D364].xOffset = D_8011D368;
+    D_8011D360[D_8011D364].yOffset = D_8011D36C;
 }
 
 #ifdef NON_EQUIVALENT
@@ -2242,12 +2244,223 @@ loop_6:
 #else
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002DE30.s")
 #endif
+
+#ifdef NON_EQUIVALENT
+void func_8002E234(Object *obj, s32 bool) {
+    s32 *inSegs;
+    f32 xPos;
+    f32 zPos;
+    s32 *new_var;
+    f32 character_scale;
+    f32 var_f2;
+    s32 yPos;
+    s32 cheats;
+    s32 i;
+    s32 test;
+    f32 temp;
+    s32 segs;
+
+    yPos = obj->segment.trans.y_position;
+    character_scale = 1.0f;
+    if (obj->behaviorId == BHV_RACER) {
+        cheats = get_filtered_cheats();
+        if (cheats & CHEAT_BIG_CHARACTERS) {
+            character_scale = 1.4f;
+        } else if (cheats & CHEAT_SMALL_CHARACTERS) {
+            character_scale = 0.714f;
+        }
+    }
+    
+    D_8011D0C4 = obj;
+    D_8011D0C8 = 2.0f;
+    if (D_8011D0C4) { } //fakematch
+
+    if (bool) {
+        D_8011D0B8 = 0;
+        obj->unk58->unk8 = D_8011D364;
+        D_8011D0C0 = func_8007B46C(obj->unk58->texture, obj->unk58->unkC << 8);
+        D_8011D0CE = obj->segment.header->unk48 + yPos;
+        D_8011D0CC = obj->segment.header->unk46 + yPos;
+        if ((D_8011D384 == 0) || ((get_viewport_count() <= 0))) {
+            D_8011D0C8 = 0;
+        }
+        D_8011D0D8 = (obj->unk58->scale * character_scale);
+        D_8011D0DC = D_8011D0D8 * 10.0f;
+        D_8011D0E0 = D_8011D0D8 * 10.0f;
+        D_8011D0F0 = -1.0f;
+    } else {
+        obj->shadow->unk8 = D_8011D364;
+        D_8011D0C0 = obj->shadow->texture;
+        D_8011D0CE = obj->segment.header->unk44 + yPos;
+        D_8011D0CC = obj->segment.header->unk42 + yPos;
+        if (obj->behaviorId != BHV_RACER) {
+            var_f2 = obj->segment.object.distanceToCamera;
+            if (var_f2 < 0.0) {
+                var_f2 = -var_f2;
+            }
+            var_f2 -= 512.0;
+            if (var_f2 < 0.0) {
+                var_f2 = 0.0;
+            }
+            if (var_f2 > 1024.0) {
+                var_f2 = 1024.0;
+            }
+            D_8011D0C8 += (var_f2 * 0.005f);
+        }
+        D_8011D0D8 = (obj->shadow->scale * character_scale);
+        D_8011D0DC = D_8011D0D8 * 10.0f;
+        D_8011D0E0 = D_8011D0D8 * 10.0f;
+        D_8011D0E4 = 4.0f * D_8011D0DC * D_8011D0E0;
+        D_8011D0F0 = (obj->segment.header->unk42 * 0.125f);
+        if (D_8011D0F0 < 0.0f) {
+            D_8011D0F0 = -D_8011D0F0;
+        }
+        D_8011D0F4 = (7.0f * D_8011D0F0);
+        if (1) { } if (1) { } if (1) { } if (1) { } if (1) { } if (1) { }
+        D_8011D0D0 = -0x8000;
+    }
+    D_8011D0D8 = 144.0f / D_8011D0D8;
+    xPos = obj->segment.trans.x_position;
+    zPos = obj->segment.trans.z_position;
+    segs = get_inside_segment_count_xyz(inSegs, (xPos - D_8011D0DC), D_8011D0CC, (zPos - D_8011D0E0), (xPos + D_8011D0DC), D_8011D0CE, (zPos + D_8011D0E0));
+    D_8011C230 = 0;
+    D_8011B118 = 0;
+    for (i = 0; i < ARRAY_COUNT(D_8011B320); i++) {
+        D_8011B320[i] = 0;
+    }
+    new_var = inSegs; //fake?
+    D_8011D0E8 = -1;
+    D_8011D0EC = -1;
+    for (i = 0; i < segs; i++) {
+        if (new_var[i] >= 0) {
+            if (bool && (gCurrentLevelModel->segments[inSegs[i]].unk2B != 0) && (D_8011D384 != 0)) {
+                func_8002EEEC();
+            } else {
+                test = func_800314DC(
+                    &gCurrentLevelModel->segmentsBoundingBoxes[new_var[i]], 
+                    (obj->segment.trans.x_position - D_8011D0DC), //x1
+                    (obj->segment.trans.z_position - D_8011D0E0), //z1
+                    (obj->segment.trans.x_position + D_8011D0DC), //x2
+                    (obj->segment.trans.z_position + D_8011D0E0)  //z2
+                );
+                func_8002E904(&gCurrentLevelModel->segments[new_var[i]], test, bool);
+            }
+        }
+    }
+    if (D_8011C230 > 0) {
+        if ((obj->unk54 != NULL) && !bool) {
+            obj->unk54->unk0 = func_8002FA64();
+        }
+        func_8002F2AC();
+        func_8002F440();
+    }
+    if (!bool) {
+        obj->shadow->unkA = D_8011D364;
+    }
+    else {
+        obj->unk58->unkA = D_8011D364;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002E234.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002E904.s")
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002EEEC.s")
+
+#ifdef NON_EQUIVALENT
+void func_8002F2AC(void) {
+    f32 temp_f10;
+    f32 temp_f12;
+    f32 temp_f16;
+    f32 temp_f8;
+    unk8011B120_unkC *var_v0;
+    s32 i, j;
+
+    for (i = 0; i < D_8011B118; i++) {
+        var_v0 = D_8011B120[i].unkC;
+        temp_f16 = D_8011B120[i].x * var_v0->unk0;
+        temp_f10 = var_v0->unkC;
+        temp_f8 = var_v0->unk4;
+        temp_f12 = D_8011B120[i].z * var_v0->unk8;
+        D_8011B120[i].y = (f32) (-(temp_f16 + temp_f12 + temp_f10) / temp_f8);
+    }
+
+    for (i = 0; D_8011B320[i] > 0 ; i++) {
+        for (j = 0; j < D_8011B320[i]; j++) {
+            var_v0 = D_8011B330[i].unkC;
+            temp_f16 = D_8011B330[i].x * var_v0->unk0;
+            temp_f10 = var_v0->unkC;
+            temp_f8 = var_v0->unk4;
+            temp_f12 = D_8011B330[i].z * var_v0->unk8;
+            D_8011B330[i].z = (f32) (-(temp_f16 + temp_f12 + temp_f10) / temp_f8);            
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002F2AC.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002F440.s")
-GLOBAL_ASM("asm/non_matchings/tracks/func_8002FA64.s")
+
+//Transition points between different lighting levels, used by certain objects
+f32 func_8002FA64(void) {
+    f32 var_f2;
+    f32 x0, z0, x1, z1, x2, z2;
+    s32 temp_t5;
+    s32 var_s2;
+    s32 i;
+
+    var_f2 = 0.0f;
+    if (D_8011C230 > 0) {
+        if (D_8011D0EC != 0) {
+            if (D_8011D0E8 > 0) {
+                var_f2 = D_800DC884[D_8011D0E8] * D_8011D0E4;
+            }
+        } else {
+            for (i = 0; i < D_8011C230; i++) {
+                if (D_8011C238[i].unkA > 0) {
+                    temp_t5 = D_8011C238[i].unk1;
+                    if (temp_t5 & 1) {
+                        x0 = D_8011B330[D_8011C238[i].unk2[0]].x;
+                        z0 = D_8011B330[D_8011C238[i].unk2[0]].z;
+                    } else {
+                        x0 = D_8011B120[D_8011C238[i].unk2[0]].x;
+                        z0 = D_8011B120[D_8011C238[i].unk2[0]].z;
+                    }
+                    temp_t5 >>= 1;
+                    if (temp_t5 & 1) {
+                        x1 = D_8011B330[D_8011C238[i].unk2[1]].x;
+                        z1 = D_8011B330[D_8011C238[i].unk2[1]].z;
+                    } else {
+                        x1 = D_8011B120[D_8011C238[i].unk2[1]].x;
+                        z1 = D_8011B120[D_8011C238[i].unk2[1]].z;
+                    }
+                    temp_t5 >>= 1;
+                    for (var_s2 = 2; var_s2 < D_8011C238[i].unk0; var_s2++) {
+                        if (temp_t5 & 1) {
+                            x2 = D_8011B330[D_8011C238[i].unk2[var_s2]].x;
+                            z2 = D_8011B330[D_8011C238[i].unk2[var_s2]].z;
+                        } else {
+                            x2 = D_8011B120[D_8011C238[i].unk2[var_s2]].x;
+                            z2 = D_8011B120[D_8011C238[i].unk2[var_s2]].z;
+                        }
+                        temp_t5 >>= 1;
+                        var_f2 += area_triangle_2d(x0, z0, x1, z1, x2, z2) * D_800DC884[D_8011C238[i].unkA];
+                        x1 = x2;
+                        z1 = z2;
+                    }
+                }
+            }
+        }
+        
+        if (D_8011D0E4 < var_f2) {
+            var_f2 = D_8011D0E4 * 0.99f;
+        }
+    }
+    return (D_8011D0E4 - var_f2) / D_8011D0E4;
+}
+
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002FD74.s")
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002FF6C.s")
 

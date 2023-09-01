@@ -19,6 +19,9 @@ ctx.c
 ctx_includes.c
 ctx.c.m2c
 
+#Folder for automatically decompiled functions output from mips2c
+m2cfiles/
+
 # Misc stuff that should be ignored.
 .*/
 

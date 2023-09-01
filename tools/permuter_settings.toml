@@ -10,4 +10,4 @@ compiler_type = "ido"
 "G_IM_.*" = "unsigned int"
 
 [decompme.compilers]
-"tools/ido-static-recomp/build/5.3/out/cc" = "ido5.3"
+"./tools/ido-static-recomp/build/5.3/out/cc" = "ido5.3_irix"

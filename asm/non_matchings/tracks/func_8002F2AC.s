@@ -47,8 +47,8 @@ glabel func_8002F2AC
 /* 02FF58 8002F358 E488FFF4 */  swc1  $f8, -0xc($a0)
 .L8002F35C:
 /* 02FF5C 8002F35C 3C058012 */  lui   $a1, %hi(D_8011B320) # $a1, 0x8012
-/* 02FF60 8002F360 3C088012 */  lui   $t0, %hi(D_8011B330) # $t0, 0x8012
-/* 02FF64 8002F364 2508B330 */  addiu $t0, %lo(D_8011B330) # addiu $t0, $t0, -0x4cd0
+/* 02FF60 8002F360 3C088012 */  lui   $t0, %hi(D_8011B320) # $t0, 0x8012
+/* 02FF64 8002F364 2508B330 */  addiu $t0, %lo(D_8011B320 + 0x10) # addiu $t0, $t0, -0x4cd0
 /* 02FF68 8002F368 24A5B320 */  addiu $a1, %lo(D_8011B320) # addiu $a1, $a1, -0x4ce0
 /* 02FF6C 8002F36C 00002025 */  move  $a0, $zero
 .L8002F370:
