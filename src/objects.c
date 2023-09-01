@@ -3171,7 +3171,30 @@ void func_8001D2A0(Object *obj, f32 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001D4B4.s")
+void func_8001D4B4(Object_54 *arg0, f32 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5) {
+    Vec3s angle;
+    Vec3f velocityPos;
+
+    arg0->unk22 = arg3;
+    arg0->unk28 = arg1;
+    arg0->unk2C = arg2;
+    arg0->unk0 = 1.0f;
+    arg0->unk24 = arg4;
+    arg0->unk26 = arg5;
+    angle.z = arg3;
+    angle.x = arg5;
+    angle.y = arg4;
+    velocityPos.z = -16384.0f;
+    velocityPos.x = 0.0f;
+    velocityPos.y = 0.0f;
+    f32_vec3_apply_object_rotation((ObjectTransform *) &angle, (f32 *) &velocityPos);
+    arg0->unk1C = -velocityPos.x;
+    arg0->unk1E = -velocityPos.y;
+    arg0->unk20 = -velocityPos.z;
+    arg0->unk18 = 0;
+    arg0->unk19 = 0;
+    arg0->unk1A = 0;
+}
 
 /**
  * Take the normalised length of the position set by the perspective and set the world angle for the envmap.
