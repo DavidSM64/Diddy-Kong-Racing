@@ -782,7 +782,12 @@ typedef struct Object_54 {
     u8 unk19;
     u8 unk1A;
     u8 unk1B;
-    u8 pad1C[12];
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    s16 unk26;
     f32 unk28;
     f32 unk2C;
 } Object_54;

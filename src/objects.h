@@ -375,7 +375,7 @@ void func_8001D1BC(s32 arg0);
 Object *func_8001D1E4(s32 *arg0);
 Object *func_8001D214(s32 arg0);
 void func_8001D258(f32 arg0, f32 arg1, s16 arg2, s16 arg3, s16 arg4);
-void func_8001D4B4(s32*, f32, f32, s16, s16, s16);
+void func_8001D4B4(Object_54*, f32, f32, s16, s16, s16);
 void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 intensity);
 s32 *get_misc_asset(s32 index);
 s32 func_8001E2EC(s32 arg0);

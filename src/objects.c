@@ -260,7 +260,7 @@ s32 D_8011AF10[2];
 f32 D_8011AF18[4];
 s32 D_8011AF28;
 s32 D_8011AF2C;
-s32 D_8011AF30;
+Object_54 *D_8011AF30;
 s32 D_8011AF34;
 s32 D_8011AF38[10];
 s32 D_8011AF60[2];
@@ -3140,7 +3140,37 @@ void func_8001D258(f32 arg0, f32 arg1, s16 arg2, s16 arg3, s16 arg4) {
     func_8001D4B4(&D_8011AF30, arg0, arg1, arg2, arg3, arg4);
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001D2A0.s")
+void func_8001D2A0(Object *obj, f32 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5) {
+    if (obj->unk54 != NULL) {
+        obj->unk54->unk28 += arg1;
+        if (obj->unk54->unk28 < 0.0f) {
+            obj->unk54->unk28 = 0.0f;
+        } else if (obj->unk54->unk28 > 1.0f) {
+            obj->unk54->unk28 = 1.0f;
+        }
+        obj->unk54->unk2C += arg2;
+        if (obj->unk54->unk2C < 0.0f) {
+            obj->unk54->unk2C = 0.0f;
+        }
+        if (obj->unk54->unk2C >= 2.0f) {
+            obj->unk54->unk2C = 1.99f;
+        }
+        func_8001D4B4(obj->unk54, obj->unk54->unk28, obj->unk54->unk2C,
+            (obj->unk54->unk22 + arg3),
+            (obj->unk54->unk24 + arg4),
+            (obj->unk54->unk26 + arg5));
+        if (obj->segment.header->unk3D != 0) {
+            obj->unk54->unk4 = obj->segment.header->pad38[2];
+            obj->unk54->unk5 = obj->segment.header->pad38[3];
+            obj->unk54->unk6 = obj->segment.header->pad38[4];
+            obj->unk54->unk7 = obj->segment.header->unk3D;
+            obj->unk54->unk8 = -(obj->unk54->unk1C >> 1);
+            obj->unk54->unkA = -(obj->unk54->unk1E >> 1);
+            obj->unk54->unkC = -(obj->unk54->unk20 >> 1);
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8001D4B4.s")
 
 /**
