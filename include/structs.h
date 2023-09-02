@@ -679,14 +679,16 @@ typedef struct ObjectHeader {
   /* 0x1C */ ObjHeaderParticleEntry *objectParticles;
              s32 pad20;
   /* 0x24 */ ObjectHeader24 *unk24;
-             u8 pad28[8];
+  /* 0x28 */ f32 unk28;
+  /* 0x2C */ f32 unk2C;
   /* 0x30 */ u16 unk30;
   /* 0x32 */ s16 unk32;
   /* 0x32 */ s16 unk34;
   /* 0x32 */ s16 unk36;
              u8 pad38[5];
   /* 0x3D */ u8 unk3D;
-             u8 pad3E[4];
+  /* 0x3E */ s16 unk3E;
+  /* 0x40 */ s16 unk40;
   /* 0x42 */ s16 unk42;
   /* 0x44 */ s16 unk44;
   /* 0x48 */ s16 unk46;

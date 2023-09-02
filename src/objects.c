@@ -933,7 +933,41 @@ void light_setup_light_sources(Object *obj) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8000F7EC.s")
+s32 func_8000F7EC(Object *arg0, Object_54 *arg1) {
+    s32 var_a2;
+    s32 var_v1;
+
+    arg0->unk54 = arg1;
+    var_a2 = 0;
+    if (arg0->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        for (var_v1 = 0; arg0->unk68[var_v1] == NULL; var_v1++) { }
+        if ((arg0->unk68[var_v1] != NULL) && (arg0->unk68[var_v1]->objModel->unk40 != NULL)) {
+            func_8001D4B4(arg0->unk54, arg0->segment.header->unk28, arg0->segment.header->unk2C, 0, arg0->segment.header->unk3E, arg0->segment.header->unk40);
+            if (arg0->segment.header->unk3D != 0) {
+                arg0->unk54->unk4 = arg0->segment.header->pad38[2];
+                arg0->unk54->unk5 = arg0->segment.header->pad38[3];
+                arg0->unk54->unk6 = arg0->segment.header->pad38[4];
+                arg0->unk54->unk7 = arg0->segment.header->unk3D;
+                arg0->unk54->unk8 = -(arg0->unk54->unk1C >> 1);
+                arg0->unk54->unkA = -(arg0->unk54->unk1E >> 1);
+                arg0->unk54->unkC = -(arg0->unk54->unk20 >> 1);
+            }
+            var_a2 = 0x30;
+        }
+    } else if (arg0->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
+        arg0->unk54->unk0 = 1.0f;
+        arg1->unk4 = 0xFF;
+        arg1->unk5 = 0xFF;
+        arg1->unk6 = 0xFF;
+        arg1->unk7 = 0;
+        var_a2 = 8;
+    }
+    if (var_a2 == 0) {
+        arg0->unk54 = NULL;
+    }
+    return (var_a2 & ~3) + 4;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8000F99C.s")
 
 s32 func_8000FAC4(Object *obj, Object_6C *arg1) {
