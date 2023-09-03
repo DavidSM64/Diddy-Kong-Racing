@@ -174,6 +174,19 @@ typedef struct BossRaceVehicles {
     u8 bossVehicle;
 } BossRaceVehicles;
 
+typedef struct AssetObjectHeaders {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    s32 unkC;
+    s32 unk10;
+    s32 unk14;
+    s32 unk18;
+    s32 unk1C;
+    s32 unk20;
+    s32 unk24;
+} AssetObjectHeaders;
+
 /* Size: 0x8 bytes */
 typedef struct unknown800DC6F0 {
     union {
@@ -434,6 +447,7 @@ s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags,
 void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj, s32 flags);
 void gParticlePtrList_flush(void);
 s32 func_8000F7EC(Object *arg0, Object_54 *arg1);
+AssetObjectHeaders *func_8000C718(s32 index);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

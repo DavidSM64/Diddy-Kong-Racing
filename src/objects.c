@@ -203,7 +203,7 @@ s8 D_8011AE01;
 s8 gIsNonCarRacers;
 s8 gIsSilverCoinRace;
 Object *D_8011AE08[16];
-s32 (*D_8011AE48)[8]; // Unknown number of entries.
+AssetObjectHeaders *(*D_8011AE48)[8]; // Unknown number of entries.
 u8 (*D_8011AE4C)[8];  // Unknown number of entries.
 s32 D_8011AE50;
 TextureHeader *D_8011AE54;
@@ -379,7 +379,7 @@ void allocate_object_pools(void) {
         gAssetsObjectHeadersTableLength++;
     }
     gAssetsObjectHeadersTableLength--;
-    D_8011AE48 = allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOUR_TAG_WHITE);
+    D_8011AE48 = (AssetObjectHeaders * (*)[8]) allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOUR_TAG_WHITE);
     D_8011AE4C = allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength, COLOUR_TAG_WHITE);
 
     for (i = 0; i < gAssetsObjectHeadersTableLength; i++) {
@@ -504,7 +504,32 @@ void func_8000C604(void) {
     free_from_memory_pool((void *) D_8011AEB0[1]);
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8000C718.s")
+AssetObjectHeaders *func_8000C718(s32 index) {
+    s32 assetOffset;
+    s32 size;
+    AssetObjectHeaders *address;
+
+    if ((*D_8011AE4C)[index] != 0) {
+        (*D_8011AE4C)[index]++;
+        return (*D_8011AE48)[index];
+    }
+    assetOffset = gAssetsObjectHeadersTable[index];
+    size = gAssetsObjectHeadersTable[index + 1] - assetOffset;
+    address = allocate_from_pool_containing_slots((MemoryPoolSlot *) gObjectMemoryPool, size);
+    if (address != NULL) {
+        load_asset_to_address(ASSET_OBJECT_HEADERS, (u32) address, assetOffset, size);
+        address->unk24 = (u32) address + address->unk24;
+        address->unk1C = (u32) address + address->unk1C;
+        address->unk14 = (u32) address + address->unk14;
+        address->unk18 = (u32) address + address->unk18;
+        address->unk10 = (u32) address + address->unk10;
+        (*D_8011AE48)[index] = address;
+        (*D_8011AE4C)[index] = 1;
+    } else {
+        return NULL;
+    }
+    return address;
+}
 
 void func_8000C844(s32 arg0) {
     if ((*D_8011AE4C)[arg0] != 0) {
@@ -3174,7 +3199,7 @@ void func_8001D258(f32 arg0, f32 arg1, s16 arg2, s16 arg3, s16 arg4) {
     func_8001D4B4(&D_8011AF30, arg0, arg1, arg2, arg3, arg4);
 }
 
-void func_8001D2A0(Object *obj, f32 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5) {
+UNUSED void func_8001D2A0(Object *obj, f32 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5) {
     if (obj->unk54 != NULL) {
         obj->unk54->unk28 += arg1;
         if (obj->unk54->unk28 < 0.0f) {
