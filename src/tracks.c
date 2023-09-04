@@ -2017,9 +2017,9 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
     s32 numViewports;
     Object **objects;
     s32 var_a0;
-    Object_58_4* obj58_4;
+    TextureHeader* shadowTex;
     ShadowData *shadow;
-    Object_58* obj58;
+    ShadowData* obj58;
     s32 playerIndex;
 
     D_8011B0CC = D_8011B0C8;
@@ -2081,14 +2081,14 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
                     func_8002DE30(obj);
                 }
             }
-            if (obj58 != NULL && obj58->unk0 > 0.0f && arg1 == objHeader->unk36) {
+            if (obj58 != NULL && obj58->scale > 0.0f && arg1 == objHeader->unk36) {
                 obj58->unk8 = -1;
                 D_8011D0D4 = 1.0f;
-                obj58_4 = obj58->unk4;
-                if (obj58_4 != NULL && updateRate != 0 && obj58_4->unk12 != 0x100) {
+                shadowTex = obj58->texture;
+                if (shadowTex != NULL && updateRate != 0 && shadowTex->numOfTextures != 0x100) {
                     obj58->unkC += obj58->unkE;
-                    while (obj58_4->unk12 < obj58->unkC) {
-                        obj58->unkC -= obj58_4->unk12;
+                    while (shadowTex->numOfTextures < obj58->unkC) {
+                        obj58->unkC -= shadowTex->numOfTextures;
                     } 
                 }
                 
