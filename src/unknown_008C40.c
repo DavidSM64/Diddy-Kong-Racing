@@ -46,31 +46,26 @@ extern unk8011A6D8 D_8011A6D8[];
 
 #ifdef NON_EQUIVALENT
 void func_80008040(void) {
-    u32 temp_v1;
-    //? *phi_v1;
-    s32 i;
+    s32 var_v0;
 
     func_80002128(&D_80119C40, NULL, NULL);
-    D_80119C48 = allocate_from_main_pool_safe(1440, COLOUR_TAG_CYAN);
-    //D_80119C50 = allocate_from_main_pool_safe(160, COLOUR_TAG_CYAN);
-    D_80119C44 = allocate_from_main_pool_safe(160, COLOUR_TAG_CYAN);
+    D_80119C48 = allocate_from_main_pool_safe(0x5A0, COLOUR_TAG_CYAN);
+    D_80119C50 = allocate_from_main_pool_safe(0xA0, COLOUR_TAG_CYAN);
+    D_80119C44 = allocate_from_main_pool_safe(0xA0, COLOUR_TAG_CYAN);
     D_800DC6E0 = 0;
-    // phi_v1 = &D_80119C58;
-    // do {
-    //     temp_v1 = phi_v1 + 0x180;
-    //     temp_v1->unk-8 = 0;
-    //     phi_v1 = (? *) temp_v1;
-    // } while (temp_v1 < (u32) &D_8011A6D8);
-    // for (i = 0; i < 384; i++) {
-    //     D_80119C48[i]->unk18 = 0;
-    //     D_80119C48[i]->unk3C = 0;
-    //     D_80119C48[i]->unk60 = 0;
-    //     D_80119C48[i]->unk84 = 0;
-    // }
+    for (var_v0 = 0; var_v0 < 7; var_v0++) {
+        D_80119C58[var_v0].unk4 = NULL;
+    }
+    for (var_v0 = 0; var_v0 < 10; var_v0++) {
+        D_80119C48[var_v0]->unk18 = 0;
+        D_80119C48[var_v0]->unk3C = 0;
+        D_80119C48[var_v0]->unk60 = 0;
+        D_80119C48[var_v0]->unk84 = 0;
+    }
     func_80008174();
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008040.s")
+GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80008040.s")
 #endif
 
 void func_80008140(void) {
@@ -132,10 +127,10 @@ void func_80008174(void) {
     D_8011AC18 = 0;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008174.s")
+GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80008174.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80008438.s")
+GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80008438.s")
 
 s32 func_800090C0(f32 arg0, f32 arg1, s32 arg2) {
     s32 temp_v1;
@@ -241,7 +236,7 @@ void update_spatial_audio_position(s32 arg0, f32 arg1, f32 arg2, f32 arg3) {
     arg0->z = arg3;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/update_spatial_audio_position.s")
+GLOBAL_ASM("asm/non_matchings/unknown_008C40/update_spatial_audio_position.s")
 #endif
 
 void func_800096F8(s32 arg0) {
@@ -337,7 +332,7 @@ void func_80009968(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009968.s")
+GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80009968.s")
 #endif
 
 s32 func_800099EC(u8 arg0) {
@@ -437,10 +432,10 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009B7C.s")
+GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80009B7C.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80009D6C.s")
+GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80009D6C.s")
 
 #ifdef NON_EQUIVALENT
 extern unk80119C58 **D_80119C5C;
@@ -465,7 +460,7 @@ void func_8000A184(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_8000A184.s")
+GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_8000A184.s")
 #endif
 
 void func_8000A2E8(s32 arg0) {

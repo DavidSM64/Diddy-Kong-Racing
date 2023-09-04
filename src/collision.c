@@ -12,6 +12,7 @@
 
 // Collision for a different segment
 GLOBAL_ASM("asm/collision/func_80031130.s")
+
 // Might be segment related.
 #ifdef NON_EQUIVALENT
 s32 func_800314DC(LevelModelSegmentBoundingBox *a0, s32 a1, s32 a2, s32 a3, s32 t5) {
@@ -82,5 +83,6 @@ s32 func_800314DC(LevelModelSegmentBoundingBox *a0, s32 a1, s32 a2, s32 a3, s32 
 #else
 GLOBAL_ASM("asm/collision/func_800314DC.s")
 #endif
+
 // Player collision for the current segment
 GLOBAL_ASM("asm/collision/func_80031600.s")

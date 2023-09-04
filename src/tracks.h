@@ -5,6 +5,7 @@
 #include "structs.h"
 #include "f3ddkr.h"
 #include "racer.h"
+#include "fade_transition.h"
 
 #define LOCAL_OFFSET_TO_RAM_ADDRESS(type, ptr) \
     ptr = (type)((s32)((u8*)ptr) + (s32)((u8*)mdl))
@@ -55,23 +56,32 @@ typedef struct unknown800DC874 {
     s16 unk06;
 } unknown800DC874;
 
+typedef struct unk8011B120_unkC {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+} unk8011B120_unkC;
+
 /* Size: 0x10 bytes */
-typedef struct unk8011D330 {
-    u8 pad0[0x10];
-} unk8011D330;
+typedef struct unk8011B120 {
+    f32 x;
+    f32 y;
+    f32 z;
+    unk8011B120_unkC *unkC;
+} unk8011B120;
 
-/* Size: 0xA bytes */
-typedef struct unk8011D348 {
-    u8 pad0[0x9];
-    u8 unk9;
-} unk8011D348;
-
-/* Size: 0x8 bytes */
-typedef struct unk8011D360 {
-    struct unk8011D360 *unk0;
-    s16 unk4;
-    s16 unk6;
-} unk8011D360;
+/* Size: 0x20 bytes */
+typedef struct unk8011B330 {
+    f32 x;
+    f32 y;
+    f32 z;
+    unk8011B120_unkC *unkC;
+    s32 unk10;
+    s32 unk14;
+    s32 unk18;
+    s32 unk1C;
+} unk8011B330;
 
 /* Size: 0x10 bytes */
 typedef struct unk8011D474 {
@@ -81,7 +91,14 @@ typedef struct unk8011D474 {
     Vertex *unkC;
 } unk8011D474;
 
-/* Size: 0x8 bytes */
+typedef struct unk8011C238 {
+  u8 unk0;
+  u8 unk1;
+  u8 unk2[8];
+  s16 unkA;
+} unk8011C238;
+
+/* Size: 0xC bytes */
 typedef struct unk8011D478 {
     s32 unk0;
     s32 unk4;
@@ -129,8 +146,8 @@ enum WaveTypes {
 };
 
 extern s32 D_800DC870;
-extern unknown800DC874 D_800DC874;
-extern unknown800DC874 D_800DC87C;
+extern FadeTransition gFullFadeToBlack;
+extern FadeTransition gCircleFadeToBlack;
 
 extern f32 D_800DC884[10];
 
@@ -198,11 +215,16 @@ void func_800B9C18(s32);
 void func_800BA8E4(Gfx**, MatrixS**, s32);
 void func_8002DE30(Object*);
 void func_8002E234(Object*, s32);
+void func_8002E904(LevelModelSegment *, s32, s32 bool);
+void func_8002EEEC(void);
+void func_8002F2AC(void);
+void func_8002F440(void);
+f32 func_8002FA64(void);
 void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
 s32 func_8002BAB0(s16, f32, f32, f32*);
-void func_800249F0(u32 arg0, u32 arg1, s32 arg2, Vehicle vehicle, u32 arg4, u32 arg5, u32 arg6);
+void func_800249F0(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, u32 entranceId, u32 collectables, u32 arg6);
 void func_800B82B4(LevelModel *, LevelHeader *, s32);
-void func_8000C8F8(u32, u32);
 void func_80025510(s32);
+void func_8002C0C4(s32 modelId);
 
 #endif

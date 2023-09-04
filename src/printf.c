@@ -187,7 +187,7 @@ void func_800B4A08(s32 arg0) {
 }
 
 /* Official name: sprintf */
-UNUSED void sprintf(char *s, char *format, ...) {
+UNUSED int sprintf(char *s, const char *format, ...) {
     va_list args;
     va_start(args, format);
     vsprintf(s, format, args);
