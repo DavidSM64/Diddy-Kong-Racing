@@ -448,6 +448,7 @@ void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj,
 void gParticlePtrList_flush(void);
 s32 func_8000F7EC(Object *arg0, Object_54 *arg1);
 AssetObjectHeaders *func_8000C718(s32 index);
+s32 func_8000F99C(Object *);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -493,5 +494,6 @@ void func_80011264(ObjectModel *, Object *);
 void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
 s32 func_80061D30(Object *); //asm func in unknown_062930
 void func_8000C8F8(s32, s32);
+Object *func_8000FD54(s32);
 
 #endif

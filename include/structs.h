@@ -700,7 +700,7 @@ typedef struct ObjectHeader {
   /* 0x53 */ s8 modelType;
   /* 0x54 */ s8 behaviorId;
   /* 0x55 */ s8 numberOfModelIds; // size of array pointed by Object->unk68
-  /* 0x56 */ u8 pad56;
+  /* 0x56 */ s8 unk56;
   /* 0x57 */ s8 unk57;
   /* 0x58 */ s8 unk58;
   /* 0x59 */ u8 pad59;
@@ -820,8 +820,7 @@ typedef struct Object_5C {
 
 typedef struct Object_60 {
     s32 unk0;
-    struct Object *unk4;
-    u8 unk8[0x24];
+    struct Object *unk4[10];
     s8 *unk2C;
 } Object_60;
 

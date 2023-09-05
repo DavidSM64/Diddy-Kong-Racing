@@ -993,7 +993,37 @@ s32 func_8000F7EC(Object *arg0, Object_54 *arg1) {
     return (var_a2 & ~3) + 4;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8000F99C.s")
+s32 func_8000F99C(Object *obj) {
+    Object *temp_v0;
+    Object_60 *obj60;
+    s32 i;
+    s32 var_s4;
+    s32 var_v0;
+
+    obj60 = obj->unk60;
+    obj60->unk0 = obj->segment.header->unk56;
+    obj60->unk0 = obj60->unk0; //Fakematch?
+    var_s4 = FALSE;
+    for (i = 0; i < obj60->unk0; i++) {
+        obj60->unk4[i] = func_8000FD54(obj->segment.header->vehiclePartIds[i ^ 0]); //i ^ 0 fakematch
+        if (obj60->unk4[i] == NULL) {
+            var_s4 = TRUE;
+        }
+    }
+    if (var_s4) {
+        for (i = 0; i < obj60->unk0; i++) {
+            temp_v0 = obj60->unk4[i];
+            if (temp_v0 != NULL) {
+                objFreeAssets(temp_v0, temp_v0->segment.header->numberOfModelIds, temp_v0->segment.header->modelType);
+                func_8000C844(temp_v0->segment.object.unk2C);
+                free_from_memory_pool(temp_v0);
+            }
+        }
+        return 1;
+    }
+    obj60->unk2C = obj->segment.header->vehiclePartIndices;
+    return 0;
+}
 
 s32 func_8000FAC4(Object *obj, Object_6C *arg1) {
     ObjHeaderParticleEntry *particleDataEntry;

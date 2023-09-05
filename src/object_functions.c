@@ -1073,7 +1073,7 @@ void obj_loop_unknown58(Object *obj, s32 updateRate) {
     if (obj60->unk0 == 1) {
         vehicleID = someOtherObj64->vehicleID;
         if (vehicleID == VEHICLE_HOVERCRAFT || vehicleID == VEHICLE_PLANE) {
-            someObj = (Object *) obj60->unk4;
+            someObj = (Object *) obj60->unk4[0];
             someObj->segment.trans.y_rotation = 0x4000;
             someObj->segment.object.numModelIDs++;
             someObj->segment.object.numModelIDs &= 1;
@@ -4290,7 +4290,7 @@ block_25:
 block_37:
     obj->properties.projectile.unk4 += updateRate;
     if (obj->unk60 != NULL) {
-        temp_s1_2 = (Object *) obj->unk60->unk4;
+        temp_s1_2 = (Object *) obj->unk60->unk4[0];
         if (obj->properties.projectile.unk4 < 8) {
             temp_s1_2->segment.trans.scale = obj->properties.projectile.unk4 * 0.5f;
         } else if (obj->properties.projectile.unk4 < 16) {
