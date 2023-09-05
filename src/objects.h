@@ -174,6 +174,19 @@ typedef struct BossRaceVehicles {
     u8 bossVehicle;
 } BossRaceVehicles;
 
+typedef struct AssetObjectHeaders {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    s32 unkC;
+    s32 unk10;
+    s32 unk14;
+    s32 unk18;
+    s32 unk1C;
+    s32 unk20;
+    s32 unk24;
+} AssetObjectHeaders;
+
 /* Size: 0x8 bytes */
 typedef struct unknown800DC6F0 {
     union {
@@ -375,7 +388,7 @@ void func_8001D1BC(s32 arg0);
 Object *func_8001D1E4(s32 *arg0);
 Object *func_8001D214(s32 arg0);
 void func_8001D258(f32 arg0, f32 arg1, s16 arg2, s16 arg3, s16 arg4);
-void func_8001D4B4(s32*, f32, f32, s16, s16, s16);
+void func_8001D4B4(Object_54*, f32, f32, s16, s16, s16);
 void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 intensity);
 s32 *get_misc_asset(s32 index);
 s32 func_8001E2EC(s32 arg0);
@@ -433,6 +446,9 @@ s32 init_object_shadow(Object *obj, ShadowData *shadow);
 s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool);
 void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj, s32 flags);
 void gParticlePtrList_flush(void);
+s32 func_8000F7EC(Object *arg0, Object_54 *arg1);
+AssetObjectHeaders *func_8000C718(s32 index);
+s32 func_8000F99C(Object *);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -478,5 +494,6 @@ void func_80011264(ObjectModel *, Object *);
 void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
 s32 func_80061D30(Object *); //asm func in unknown_062930
 void func_8000C8F8(s32, s32);
+Object *func_8000FD54(s32);
 
 #endif
