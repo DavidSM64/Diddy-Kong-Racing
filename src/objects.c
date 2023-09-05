@@ -190,7 +190,7 @@ s32 D_8011ADB4;
 s32 gRaceStartCountdown;
 s32 D_8011ADBC;
 s32 D_8011ADC0;
-u8 D_8011ADC4;
+s8 D_8011ADC4;
 s8 D_8011ADC5;
 s32 D_8011ADC8;
 s8 (*D_8011ADCC)[8];
@@ -249,7 +249,7 @@ Object **gRacersByPort;
 s32 gNumRacers;
 u8 gTimeTrialEnabled;
 u8 gIsTimeTrial;
-u8 gIsTajChallenge;
+s8 gIsTajChallenge;
 s8 D_8011AEF7;
 s32 D_8011AEF8;
 s32 D_8011AEFC;
@@ -998,7 +998,6 @@ s32 func_8000F99C(Object *obj) {
     Object_60 *obj60;
     s32 i;
     s32 var_s4;
-    s32 var_v0;
 
     obj60 = obj->unk60;
     obj60->unk0 = obj->segment.header->unk56;
@@ -3226,7 +3225,7 @@ UNUSED void func_8001D23C(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }
 
 void func_8001D258(f32 arg0, f32 arg1, s16 arg2, s16 arg3, s16 arg4) {
-    func_8001D4B4(&D_8011AF30, arg0, arg1, arg2, arg3, arg4);
+    func_8001D4B4((Object_54 *) &D_8011AF30, arg0, arg1, arg2, arg3, arg4);
 }
 
 UNUSED void func_8001D2A0(Object *obj, f32 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5) {
