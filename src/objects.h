@@ -450,6 +450,7 @@ s32 func_8000F7EC(Object *arg0, Object_54 *arg1);
 AssetObjectHeaders *func_8000C718(s32 index);
 s32 func_8000F99C(Object *);
 void func_8000C844(s32 arg0);
+s32 func_800235DC(Object *obj, Object_64 *obj64);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

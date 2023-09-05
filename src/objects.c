@@ -3710,7 +3710,144 @@ void func_800235D0(s32 arg0) {
     D_8011ADD5 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_800235DC.s")
+s32 func_800235DC(Object *obj, Object_64 *obj64) {
+    s32 temp_v0;
+    s32 ret = 0;
+
+    obj->unk64 = obj64;
+
+    switch (obj->segment.header->behaviorId) {
+    case BHV_RACER:
+        ret = 0x224;
+        break;
+    case BHV_DOOR:
+    case BHV_TT_DOOR:
+        ret = 0x18;
+        break;
+    case BHV_EXIT:
+        ret = 0x18;
+        break;
+    case BHV_ANIMATOR:
+        ret = 0xC;
+        break;
+    case BHV_AUDIO:
+        ret = 0x10;
+        break;
+    case BHV_AUDIO_LINE:
+    case BHV_AUDIO_LINE_2:
+        ret = 0x14;
+        break;
+    case BHV_AINODE:
+        ret = 0x1C;
+        break;
+    case BHV_MODECHANGE:
+    case BHV_BONUS:
+    case BHV_TRIGGER:
+        ret = 0x18;
+        break;
+    case BHV_AUDIO_REVERB:
+        ret = 0x6;
+        break;
+    case BHV_TEXTURE_SCROLL:
+        ret = 0xC;
+        break;
+    case BHV_WEAPON:
+    case BHV_WEAPON_2:
+        ret = 0x20;
+        break;
+    case BHV_WEAPON_BALLOON:
+        ret = 0x8;
+        break;
+    case BHV_BANANA:
+        ret = 0xC;
+        break;
+    case BHV_BRIDGE_WHALE_RAMP:
+        ret = 0x8;
+        break;
+    case BHV_SEA_MONSTER:
+        ret = 0x18;
+        break;
+    case BHV_COLLECT_EGG:
+        ret = 0xC;
+        break;
+    case BHV_STOPWATCH_MAN:
+    case BHV_PARK_WARDEN:
+    case BHV_GOLDEN_BALLOON:
+        ret = 0x38;
+        break;
+    case BHV_LASER_GUN:
+        ret = 0x14;
+        break;
+    case BHV_OVERRIDE_POS:
+        ret = 0x10;
+        break;
+    case BHV_DINO_WHALE:
+    case BHV_ANIMATED_OBJECT:
+    case BHV_CAMERA_ANIMATION:
+    case BHV_CAR_ANIMATION:
+    case BHV_CHARACTER_SELECT:
+    case BHV_VEHICLE_ANIMATION:
+    case BHV_HIT_TESTER:
+    case BHV_HIT_TESTER_2:
+    case BHV_PARK_WARDEN_2:
+    case BHV_ANIMATED_OBJECT_2:
+    case BHV_WIZPIG_SHIP:
+    case BHV_ANIMATED_OBJECT_3:
+    case BHV_ANIMATED_OBJECT_4:
+    case BHV_SNOWBALL:
+    case BHV_SNOWBALL_2:
+    case BHV_SNOWBALL_3:
+    case BHV_SNOWBALL_4:
+    case BHV_HIT_TESTER_3:
+    case BHV_HIT_TESTER_4:
+    case BHV_DOOR_OPENER:
+    case BHV_PIG_ROCKETEER:
+    case BHV_WIZPIG_GHOSTS:
+        ret = 0x48;
+        break;
+    case BHV_MIDI_FADE:
+        ret = 0x44;
+        break;
+    case BHV_MIDI_FADE_POINT:
+        ret = 0x20;
+        break;
+    case BHV_MIDI_CHANNEL_SET:
+        ret = 0x4;
+        break;
+    case BHV_BUTTERFLY:
+        temp_v0 = 0x10 - ((s32) obj64 & 0xF);
+        obj->unk64 = (Object_64 *) &obj64->butterfly.triangles[0].verticesArray[temp_v0];
+        ret = (temp_v0 + 0x110);
+        break;
+    case BHV_FISH:
+        temp_v0 = 0x10 - ((s32) obj64 & 0xF);
+        obj->unk64 = (Object_64 *) &obj64->fish.triangles[0].verticesArray[temp_v0];
+        ret = (temp_v0 + 0x120);
+        break;
+    case BHV_CHARACTER_FLAG:
+        temp_v0 = 0x10 - ((s32) obj64 & 0xF);
+        obj->unk64 = (Object_64 *) &obj64->character_flag.triangles[0].verticesArray[temp_v0];
+        ret = (temp_v0 + 0x28);
+        break;
+    case BHV_UNK_5E:
+        ret = 0x60;
+        break;
+    case BHV_TROPHY_CABINET:
+        ret = 0x8;
+        break;
+    case BHV_FROG:
+        ret = 0x34;
+        break;
+    case BHV_FIREBALL_OCTOWEAPON_2:
+        ret = 0x20;
+        break;
+    default:
+        obj->unk64 = NULL;
+        break;
+    }
+
+    return (ret & ~3) + 4;
+}
 
 /**
  * Run when an object is created.
