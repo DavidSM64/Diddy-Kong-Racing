@@ -203,7 +203,7 @@ s8 D_8011AE01;
 s8 gIsNonCarRacers;
 s8 gIsSilverCoinRace;
 Object *D_8011AE08[16];
-s32 (*D_8011AE48)[8]; // Unknown number of entries.
+AssetObjectHeaders *(*D_8011AE48)[8]; // Unknown number of entries.
 u8 (*D_8011AE4C)[8];  // Unknown number of entries.
 s32 D_8011AE50;
 TextureHeader *D_8011AE54;
@@ -260,7 +260,7 @@ s32 D_8011AF10[2];
 f32 D_8011AF18[4];
 s32 D_8011AF28;
 s32 D_8011AF2C;
-s32 D_8011AF30;
+Object_54 *D_8011AF30;
 s32 D_8011AF34;
 s32 D_8011AF38[10];
 s32 D_8011AF60[2];
@@ -379,7 +379,7 @@ void allocate_object_pools(void) {
         gAssetsObjectHeadersTableLength++;
     }
     gAssetsObjectHeadersTableLength--;
-    D_8011AE48 = allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOUR_TAG_WHITE);
+    D_8011AE48 = (AssetObjectHeaders * (*)[8]) allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOUR_TAG_WHITE);
     D_8011AE4C = allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength, COLOUR_TAG_WHITE);
 
     for (i = 0; i < gAssetsObjectHeadersTableLength; i++) {
@@ -504,7 +504,32 @@ void func_8000C604(void) {
     free_from_memory_pool((void *) D_8011AEB0[1]);
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8000C718.s")
+AssetObjectHeaders *func_8000C718(s32 index) {
+    s32 assetOffset;
+    s32 size;
+    AssetObjectHeaders *address;
+
+    if ((*D_8011AE4C)[index] != 0) {
+        (*D_8011AE4C)[index]++;
+        return (*D_8011AE48)[index];
+    }
+    assetOffset = gAssetsObjectHeadersTable[index];
+    size = gAssetsObjectHeadersTable[index + 1] - assetOffset;
+    address = allocate_from_pool_containing_slots((MemoryPoolSlot *) gObjectMemoryPool, size);
+    if (address != NULL) {
+        load_asset_to_address(ASSET_OBJECT_HEADERS, (u32) address, assetOffset, size);
+        address->unk24 = (u32) address + address->unk24;
+        address->unk1C = (u32) address + address->unk1C;
+        address->unk14 = (u32) address + address->unk14;
+        address->unk18 = (u32) address + address->unk18;
+        address->unk10 = (u32) address + address->unk10;
+        (*D_8011AE48)[index] = address;
+        (*D_8011AE4C)[index] = 1;
+    } else {
+        return NULL;
+    }
+    return address;
+}
 
 void func_8000C844(s32 arg0) {
     if ((*D_8011AE4C)[arg0] != 0) {
@@ -933,8 +958,72 @@ void light_setup_light_sources(Object *obj) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8000F7EC.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8000F99C.s")
+s32 func_8000F7EC(Object *arg0, Object_54 *arg1) {
+    s32 var_a2;
+    s32 var_v1;
+
+    arg0->unk54 = arg1;
+    var_a2 = 0;
+    if (arg0->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        for (var_v1 = 0; arg0->unk68[var_v1] == NULL; var_v1++) { }
+        if ((arg0->unk68[var_v1] != NULL) && (arg0->unk68[var_v1]->objModel->unk40 != NULL)) {
+            func_8001D4B4(arg0->unk54, arg0->segment.header->unk28, arg0->segment.header->unk2C, 0, arg0->segment.header->unk3E, arg0->segment.header->unk40);
+            if (arg0->segment.header->unk3D != 0) {
+                arg0->unk54->unk4 = arg0->segment.header->pad38[2];
+                arg0->unk54->unk5 = arg0->segment.header->pad38[3];
+                arg0->unk54->unk6 = arg0->segment.header->pad38[4];
+                arg0->unk54->unk7 = arg0->segment.header->unk3D;
+                arg0->unk54->unk8 = -(arg0->unk54->unk1C >> 1);
+                arg0->unk54->unkA = -(arg0->unk54->unk1E >> 1);
+                arg0->unk54->unkC = -(arg0->unk54->unk20 >> 1);
+            }
+            var_a2 = 0x30;
+        }
+    } else if (arg0->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
+        arg0->unk54->unk0 = 1.0f;
+        arg1->unk4 = 0xFF;
+        arg1->unk5 = 0xFF;
+        arg1->unk6 = 0xFF;
+        arg1->unk7 = 0;
+        var_a2 = 8;
+    }
+    if (var_a2 == 0) {
+        arg0->unk54 = NULL;
+    }
+    return (var_a2 & ~3) + 4;
+}
+
+s32 func_8000F99C(Object *obj) {
+    Object *temp_v0;
+    Object_60 *obj60;
+    s32 i;
+    s32 var_s4;
+    s32 var_v0;
+
+    obj60 = obj->unk60;
+    obj60->unk0 = obj->segment.header->unk56;
+    obj60->unk0 = obj60->unk0; //Fakematch?
+    var_s4 = FALSE;
+    for (i = 0; i < obj60->unk0; i++) {
+        obj60->unk4[i] = func_8000FD54(obj->segment.header->vehiclePartIds[i ^ 0]); //i ^ 0 fakematch
+        if (obj60->unk4[i] == NULL) {
+            var_s4 = TRUE;
+        }
+    }
+    if (var_s4) {
+        for (i = 0; i < obj60->unk0; i++) {
+            temp_v0 = obj60->unk4[i];
+            if (temp_v0 != NULL) {
+                objFreeAssets(temp_v0, temp_v0->segment.header->numberOfModelIds, temp_v0->segment.header->modelType);
+                func_8000C844(temp_v0->segment.object.unk2C);
+                free_from_memory_pool(temp_v0);
+            }
+        }
+        return 1;
+    }
+    obj60->unk2C = obj->segment.header->vehiclePartIndices;
+    return 0;
+}
 
 s32 func_8000FAC4(Object *obj, Object_6C *arg1) {
     ObjHeaderParticleEntry *particleDataEntry;
@@ -3140,8 +3229,61 @@ void func_8001D258(f32 arg0, f32 arg1, s16 arg2, s16 arg3, s16 arg4) {
     func_8001D4B4(&D_8011AF30, arg0, arg1, arg2, arg3, arg4);
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001D2A0.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001D4B4.s")
+UNUSED void func_8001D2A0(Object *obj, f32 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5) {
+    if (obj->unk54 != NULL) {
+        obj->unk54->unk28 += arg1;
+        if (obj->unk54->unk28 < 0.0f) {
+            obj->unk54->unk28 = 0.0f;
+        } else if (obj->unk54->unk28 > 1.0f) {
+            obj->unk54->unk28 = 1.0f;
+        }
+        obj->unk54->unk2C += arg2;
+        if (obj->unk54->unk2C < 0.0f) {
+            obj->unk54->unk2C = 0.0f;
+        }
+        if (obj->unk54->unk2C >= 2.0f) {
+            obj->unk54->unk2C = 1.99f;
+        }
+        func_8001D4B4(obj->unk54, obj->unk54->unk28, obj->unk54->unk2C,
+            (obj->unk54->unk22 + arg3),
+            (obj->unk54->unk24 + arg4),
+            (obj->unk54->unk26 + arg5));
+        if (obj->segment.header->unk3D != 0) {
+            obj->unk54->unk4 = obj->segment.header->pad38[2];
+            obj->unk54->unk5 = obj->segment.header->pad38[3];
+            obj->unk54->unk6 = obj->segment.header->pad38[4];
+            obj->unk54->unk7 = obj->segment.header->unk3D;
+            obj->unk54->unk8 = -(obj->unk54->unk1C >> 1);
+            obj->unk54->unkA = -(obj->unk54->unk1E >> 1);
+            obj->unk54->unkC = -(obj->unk54->unk20 >> 1);
+        }
+    }
+}
+
+void func_8001D4B4(Object_54 *arg0, f32 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5) {
+    Vec3s angle;
+    Vec3f velocityPos;
+
+    arg0->unk22 = arg3;
+    arg0->unk28 = arg1;
+    arg0->unk2C = arg2;
+    arg0->unk0 = 1.0f;
+    arg0->unk24 = arg4;
+    arg0->unk26 = arg5;
+    angle.z = arg3;
+    angle.x = arg5;
+    angle.y = arg4;
+    velocityPos.z = -16384.0f;
+    velocityPos.x = 0.0f;
+    velocityPos.y = 0.0f;
+    f32_vec3_apply_object_rotation((ObjectTransform *) &angle, (f32 *) &velocityPos);
+    arg0->unk1C = -velocityPos.x;
+    arg0->unk1E = -velocityPos.y;
+    arg0->unk20 = -velocityPos.z;
+    arg0->unk18 = 0;
+    arg0->unk19 = 0;
+    arg0->unk1A = 0;
+}
 
 /**
  * Take the normalised length of the position set by the perspective and set the world angle for the envmap.
