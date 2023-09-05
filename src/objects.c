@@ -30,6 +30,7 @@
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
 #define OBJECT_SLOT_COUNT 512
+#define ASSET_OBJECT_HEADER_TABLE_LENGTH 304 //This isn't important, but it's the number of object headers
 
 /************ .data ************/
 
@@ -203,8 +204,8 @@ s8 D_8011AE01;
 s8 gIsNonCarRacers;
 s8 gIsSilverCoinRace;
 Object *D_8011AE08[16];
-AssetObjectHeaders *(*D_8011AE48)[8]; // Unknown number of entries.
-u8 (*D_8011AE4C)[8];  // Unknown number of entries.
+AssetObjectHeaders *(*D_8011AE48)[ASSET_OBJECT_HEADER_TABLE_LENGTH];
+u8 (*D_8011AE4C)[ASSET_OBJECT_HEADER_TABLE_LENGTH];
 s32 D_8011AE50;
 TextureHeader *D_8011AE54;
 Object **gObjPtrList; // Not sure about the number of elements
@@ -379,7 +380,7 @@ void allocate_object_pools(void) {
         gAssetsObjectHeadersTableLength++;
     }
     gAssetsObjectHeadersTableLength--;
-    D_8011AE48 = (AssetObjectHeaders * (*)[8]) allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOUR_TAG_WHITE);
+    D_8011AE48 = (AssetObjectHeaders * (*)[ASSET_OBJECT_HEADER_TABLE_LENGTH]) allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOUR_TAG_WHITE);
     D_8011AE4C = allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength, COLOUR_TAG_WHITE);
 
     for (i = 0; i < gAssetsObjectHeadersTableLength; i++) {
@@ -531,11 +532,11 @@ AssetObjectHeaders *func_8000C718(s32 index) {
     return address;
 }
 
-void func_8000C844(s32 arg0) {
-    if ((*D_8011AE4C)[arg0] != 0) {
-        (*D_8011AE4C)[arg0]--;
-        if ((*D_8011AE4C)[arg0] == 0) {
-            free_from_memory_pool((void *) (*D_8011AE48)[arg0]);
+void func_8000C844(s32 index) {
+    if ((*D_8011AE4C)[index] != 0) {
+        (*D_8011AE4C)[index]--;
+        if ((*D_8011AE4C)[index] == 0) {
+            free_from_memory_pool((void *) (*D_8011AE48)[index]);
         }
     }
 }
@@ -998,7 +999,6 @@ s32 func_8000F99C(Object *obj) {
     Object_60 *obj60;
     s32 i;
     s32 var_s4;
-    s32 var_v0;
 
     obj60 = obj->unk60;
     obj60->unk0 = obj->segment.header->unk56;
