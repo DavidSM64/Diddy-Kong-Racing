@@ -88,7 +88,7 @@ void *allocate_from_pool_containing_slots(MemoryPoolSlot *slots, s32 size);
 void set_free_queue_state(s32 state);
 void free_from_memory_pool(void *data);
 void clear_free_queue(void);
-void func_80071440(void *dataAddress);
+void add_to_free_queue(void *dataAddress);
 s32 func_80071478(u8 *address);
 s32 func_80071538(u8 *address);
 s32 get_memory_pool_index_containing_address(u8 *address);
