@@ -669,7 +669,7 @@ typedef struct ObjectHeader24 {
 } ObjectHeader24;
 
 typedef struct ObjectHeader {
-             u8 pad0[0x4];
+  /* 0x00 */ s32 unk0;
   /* 0x04 */ f32 shadowScale;
   /* 0x08 */ f32 unk8;
   /* 0x0C */ f32 scale;
@@ -683,9 +683,12 @@ typedef struct ObjectHeader {
   /* 0x2C */ f32 unk2C;
   /* 0x30 */ u16 unk30;
   /* 0x32 */ s16 unk32;
-  /* 0x32 */ s16 unk34;
-  /* 0x32 */ s16 unk36;
-             u8 pad38[5];
+  /* 0x34 */ s16 unk34;
+  /* 0x36 */ s16 unk36;
+  union {
+  /* 0x38 */ s16 unk38;
+  /* 0x38 */ u8 pad38[4];
+  };
   /* 0x3D */ u8 unk3D;
   /* 0x3E */ s16 unk3E;
   /* 0x40 */ s16 unk40;
@@ -744,17 +747,17 @@ typedef struct Object_44 {
 } Object_44;
 
 typedef struct ObjectInteraction {
-    struct Object *obj;
-    f32 x_position;
-    f32 y_position;
-    f32 z_position;
-    u8 hitboxRadius;
-    u8 unk11;
-    u8 pushForce;
-    u8 distance;
-    s16 flags;
-    s8 unk16;
-    s8 unk17;
+ /* 0x00 */ struct Object *obj;
+ /* 0x04 */ f32 x_position;
+ /* 0x08 */ f32 y_position;
+ /* 0x0C */ f32 z_position;
+ /* 0x10 */ u8 hitboxRadius;
+ /* 0x11 */ u8 unk11;
+ /* 0x12 */ u8 pushForce;
+ /* 0x13 */ u8 distance;
+ /* 0x14 */ s16 flags;
+ /* 0x16 */ s8 unk16;
+ /* 0x17 */ s8 unk17;
 } ObjectInteraction;
 
 typedef struct ShadowData {

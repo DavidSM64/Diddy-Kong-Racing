@@ -925,7 +925,312 @@ void func_8000E9D0(Object *arg0) {
     D_8011AE64++;
 }
 
+#ifdef NON_EQUIVALENT
+
+s32 func_8005F99C(s32, s32);
+
+Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
+    s16 sp66;
+    s32 objType;
+    s32 sp50;
+    Object *curObj;
+    Object *newObj;
+    u32 *address;
+    Object_68 **obj68;
+    Settings *settings;
+    s16 var_a0;
+    s32 sizeOfobj;
+    s32 var_a2;
+    s32 var_s0_5;
+    s32 var_s1;
+    s32 assetCount;
+    s8 var_v1;
+    Object *var_v1_2;
+    s32 i;
+
+    settings = get_settings();
+    objType = entry->objectID | ((entry->size & 0x80) << 1);
+    update_object_stack_trace(OBJECT_SPAWN, objType);
+    if (arg1 & 2) {
+        var_a0 = sp66; // @!Bug? Uninitialized?
+    } else {
+        var_a0 = gAssetsLvlObjTranslationTable[objType];
+    }
+    if (var_a0 >= gAssetsObjectHeadersTableLength) {
+        var_a0 = 0;
+    }
+    for (i = 0; i < 0x200; i++) {
+        (*D_8011AD58)[i] = NULL;
+    }
+    curObj = (*D_8011AD58)[0];
+    curObj->segment.trans.flags = 2;
+    curObj->segment.header = func_8000C718(var_a0);
+    if (curObj->segment.header == NULL) {
+        return NULL;
+    }
+    if (curObj->segment.header->unk30 & 0x80) {
+        curObj->segment.trans.flags |= 0x80;
+    }
+    if (curObj->segment.header->behaviorId == BHV_ROCKET_SIGNPOST && settings->cutsceneFlags & 1) {
+        update_object_stack_trace(OBJECT_SPAWN, -1);
+        return NULL;
+    }
+    curObj->segment.trans.x_position = entry->x;
+    curObj->segment.trans.y_position = entry->y;
+    curObj->segment.trans.z_position = entry->z;
+    curObj->segment.object.segmentID = get_level_segment_index_from_position(curObj->segment.trans.x_position, curObj->segment.trans.y_position, curObj->segment.trans.z_position);
+    curObj->segment.object.unk2C = var_a0;
+    curObj->segment.level_entry = (LevelObjectEntry *) entry;
+    curObj->unk4A = objType;
+    func_800245B4(sp66);
+    curObj->segment.trans.scale = curObj->segment.header->scale;
+    curObj->segment.camera.unk34 = curObj->segment.header->unk50 * curObj->segment.trans.scale;
+    curObj->segment.object.opacity = 0xFF;
+    sp50 = func_80023E30(curObj->segment.header->behaviorId);
+    curObj->segment.header->unk52++;
+    assetCount = curObj->segment.header->numberOfModelIds;
+    objType = curObj->segment.header->modelType;
+    curObj->unk68 = (Object_68 **) &curObj->unk80;
+    if (arg1 & 0x10) {
+        assetCount = 1;
+    }
+    var_a2 = 0;
+    switch (curObj->segment.header->behaviorId) {
+    case BHV_PARK_WARDEN:
+        func_800619F4(7);
+        break;
+    case BHV_ANIMATED_OBJECT_4:
+        var_a2 = get_character_id_from_slot(PLAYER_ONE);
+        curObj->segment.object.numModelIDs = var_a2;
+        assetCount = var_a2 + 1;
+        break;
+    case BHV_UNK_5B:
+        var_a2 = (settings->trophies >> (((settings->worldId - 1) ^ 0) * 2)) & 3; //fakematch
+        if (var_a2) {
+            var_a2--;
+            assetCount = var_a2 + 1;
+            curObj->segment.object.numModelIDs = var_a2;
+        }
+        break;
+    case BHV_DYNAMIC_LIGHT_OBJECT_2:
+        var_a2 = settings->wizpigAmulet;
+        assetCount = var_a2 + 1;
+        curObj->segment.object.numModelIDs = var_a2;
+        break;
+    case BHV_ROCKET_SIGNPOST_2:
+        objType = settings->trophies;
+        for (i = 0; i < 3; i++) {
+            if ((objType & 3) == 3) {
+                var_a2++;
+            }
+            objType >>= 2;
+        }
+        curObj->segment.object.numModelIDs = var_a2;
+        assetCount = var_a2 + 1;
+        break;
+    case BHV_GOLDEN_BALLOON:
+        assetCount = 1;
+        var_a2 = 0;
+        if (is_in_adventure_two()) {
+            curObj->segment.header->modelIds[0] = curObj->segment.header->modelIds[1];
+        }
+        curObj->segment.header->numberOfModelIds = 1;
+        break;
+    }
+    if (!(arg1 & 2)) {
+        if (curObj->unk4A != 0x19) {
+            if (curObj->unk4A == 0xCB) {
+                assetCount = 1;
+                if (is_in_adventure_two()) {
+                    curObj->segment.header->modelIds[0] = curObj->segment.header->modelIds[1];
+                }
+                curObj->segment.header->numberOfModelIds = 1;
+            }
+        } else {
+            assetCount = 5;
+            if (is_in_adventure_two()) {
+                curObj->segment.header->modelIds[0] = curObj->segment.header->modelIds[5];
+                curObj->segment.header->modelIds[1] = curObj->segment.header->modelIds[6];
+                curObj->segment.header->modelIds[2] = curObj->segment.header->modelIds[7];
+                curObj->segment.header->modelIds[3] = curObj->segment.header->modelIds[8];
+                curObj->segment.header->modelIds[4] = curObj->segment.header->modelIds[9];
+            }
+            curObj->segment.header->numberOfModelIds = 5;
+            var_a2 = 0;
+        }
+    }
+    var_v1 = FALSE;
+    if (objType == 0) {
+        for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {            
+            if (var_a2 == 0 && arg1 & 4) {
+                curObj->unk68[var_a2] = NULL;
+            } else if (var_a2 == 1 && arg1 & 8) {
+                curObj->unk68[var_a2] = NULL;
+            } else {
+                curObj->unk68[var_a2] = func_8005F99C(curObj->segment.header->modelIds[var_a2], sp50);
+                if (curObj->unk68[var_a2] == NULL) {
+                    var_v1 = TRUE;
+                }
+            }
+        }
+    } else if (objType == 4) {
+        for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {
+            curObj->unk68[var_a2] = load_texture(curObj->segment.header->modelIds[var_a2]);
+            if (curObj->unk68[var_a2] == NULL) {
+                var_v1 = TRUE;
+            }
+        }
+    } else {
+        for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {
+            curObj->unk68[var_a2] = func_8007C12C(curObj->segment.header->modelIds[var_a2], 10);
+            if (curObj->unk68[var_a2] == NULL) {
+                var_v1 = TRUE;
+            }
+        }
+    }
+    if (var_v1) {
+        objFreeAssets(curObj, assetCount, objType);
+        func_8000C844(var_a0);
+        return NULL;
+    }
+    address = &curObj->unk68[curObj->segment.header->numberOfModelIds];
+    sizeOfobj = func_800235DC(curObj, (Object_64 *) address);
+    address = (u32) address + sizeOfobj;
+    D_8011AE50 = NULL;
+    D_8011AE54 = NULL;
+    if (sp50 & 1) {
+        address = (u32) address + func_8000F7EC(curObj, address);
+    }
+    if (sp50 & 2) {
+        sizeOfobj = init_object_shadow(curObj, (ShadowData *) address);
+        address = (u32) address + sizeOfobj;
+        if (sizeOfobj == 0) {
+            objFreeAssets(curObj, assetCount, objType);
+            func_8000C844(var_a0);
+            return NULL;
+        }
+    }
+    if (sp50 & 4) {
+        sizeOfobj = func_8000FC6C(curObj, (Object_58 *) address);
+        address = (u32) address + sizeOfobj;
+        if (sizeOfobj == 0) {
+            if (D_8011AE50 != NULL) {
+                free_texture(D_8011AE50);
+            }
+            objFreeAssets(curObj, assetCount, objType);
+            func_8000C844(var_a0);
+            return NULL;
+        }
+    }
+    if (sp50 & 0x10) {
+        address = (u32) address + func_8000FD20(curObj, (ObjectInteraction *) address);
+    }
+    if (sp50 & 0x20) {
+        address = (u32) address + func_8000FD34(curObj, (Object_5C *) address);
+    }
+    if ((curObj->segment.header->unk56 > 0) && (curObj->segment.header->unk56 < 10)) {
+        curObj->unk60 = (Object_60 *) address;
+        address += 0xC;
+    }
+    if (curObj->segment.header->unk57 > 0) {
+        address = (u32) address + func_8000FAC4(curObj, (Object_6C *) address);
+    }
+    var_s1 = (u32)address - (u32)curObj;
+    if (curObj->segment.header->unk5A > 0) {
+        curObj->unk70 = (u32 *) address;
+        var_s1 = (u32)(address + (curObj->segment.header->unk5A * 4)) - (u32)curObj;
+    }
+    newObj = allocate_from_pool_containing_slots((MemoryPoolSlot *) gObjectMemoryPool, var_s1);
+    if (newObj == NULL) {
+        if (D_8011AE50 != NULL) {
+            free_texture(D_8011AE50);
+        }
+        if (D_8011AE54 != NULL) {
+            free_texture(D_8011AE54);
+        }
+        objFreeAssets(curObj, assetCount, objType);
+        func_8000C844(var_a0);
+        return NULL;
+    }
+    if (var_s1 & 0xF) {
+        var_s1 = (var_s1 & ~0xF) + 0x10;
+    }
+    var_s1 >>= 2;
+    // for (var_s0_5 = 0; var_s0_5 < var_s1; var_s0_5++) {
+    //     newObj[var_s0_5].segment.trans.x_position = (*D_8011AD58)[var_s0_5]->segment.trans.x_position;
+    // }
+    var_s0_5 = 0;
+    if (var_s1 > 0) {
+        var_v1_2 = &newObj[var_s0_5];
+        do {
+            var_v1_2->segment.trans.x_position = (*D_8011AD58)[var_s0_5]->segment.trans.x_position;
+            var_s0_5 += 4;
+            var_v1_2 += 1;
+        } while (var_s0_5 < var_s1);
+    }
+    if (newObj->unk58 != NULL) {
+        newObj->unk58 = ((u32)newObj + (u32) newObj->unk58) - (u32)D_8011AD58;
+    }
+    if (newObj->shadow != NULL) {
+        newObj->shadow = ((u32)newObj + (u32)newObj->shadow) - (u32)D_8011AD58;
+    }
+    if (newObj->unk54 != NULL) {
+        newObj->unk54 = ((u32)newObj + (u32)newObj->unk54) - (u32)D_8011AD58;
+    }
+    if (newObj->unk64 != NULL) {
+        newObj->unk64 = ((u32)newObj + (u32)newObj->unk64) - (u32)D_8011AD58;
+    }
+    if (newObj->interactObj != NULL) {
+        newObj->interactObj = ((u32)newObj + (u32)newObj->interactObj) - (u32)D_8011AD58;
+    }
+    if (newObj->unk5C != NULL) {
+        newObj->unk5C = ((u32)newObj + (u32)newObj->unk5C) - (u32)D_8011AD58;
+    }
+    if (newObj->unk60 != NULL) {
+        newObj->unk60 = ((u32)newObj + (u32)newObj->unk60) - (u32)D_8011AD58;
+    }
+    if (newObj->segment.header->unk57 > 0) {
+        newObj->unk6C = ((u32)newObj + (u32)newObj->unk6C) - (u32)D_8011AD58;
+    }
+    if (newObj->segment.header->unk5A > 0) {
+        newObj->unk70 = ((u32)newObj + (u32)newObj->unk70) - (u32)D_8011AD58;
+    }
+    newObj->unk68 = (Object_68 **) newObj->unk80;
+    if (arg1 & 1) {
+        gObjPtrList[objCount] = newObj;
+        objCount++;
+    }
+    run_object_init_func(newObj, entry, 0);
+    if (newObj->interactObj != NULL) {
+        newObj->interactObj->x_position = newObj->segment.trans.x_position;
+        newObj->interactObj->y_position = newObj->segment.trans.y_position;
+        newObj->interactObj->z_position = newObj->segment.trans.z_position;
+    }
+    if (newObj->segment.header->unk56 > 0 && newObj->segment.header->unk56 < 10 && func_8000F99C(newObj)) {
+        if (D_8011AE50 != NULL) {
+            free_texture(D_8011AE50);
+        }
+        if (D_8011AE54 != NULL) {
+            free_texture(D_8011AE54);
+        }
+        objFreeAssets(newObj, (s32) assetCount, objType);
+        func_8000C844((s32) var_a0);
+        free_from_memory_pool(newObj);
+        if (arg1 & 1) {
+            objCount--;
+        }
+        return NULL;
+    }
+    if (newObj->segment.header->unk5A > 0) {
+        light_setup_light_sources(newObj);
+    }
+    func_800619F4(0);
+    update_object_stack_trace(OBJECT_SPAWN, -1);
+    return newObj;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/spawn_object.s")
+#endif
 
 void objFreeAssets(Object *obj, s32 count, s32 objType) {
     s32 i;
@@ -969,11 +1274,11 @@ s32 func_8000F7EC(Object *arg0, Object_54 *arg1) {
         for (var_v1 = 0; arg0->unk68[var_v1] == NULL; var_v1++) { }
         if ((arg0->unk68[var_v1] != NULL) && (arg0->unk68[var_v1]->objModel->unk40 != NULL)) {
             func_8001D4B4(arg0->unk54, arg0->segment.header->unk28, arg0->segment.header->unk2C, 0, arg0->segment.header->unk3E, arg0->segment.header->unk40);
-            if (arg0->segment.header->unk3D != 0) {
-                arg0->unk54->unk4 = arg0->segment.header->pad38[2];
+            if (arg0->segment.header->pad38[5] != 0) {
+                arg0->unk54->unk4 = arg0->segment.header->pad38[2]; 
                 arg0->unk54->unk5 = arg0->segment.header->pad38[3];
                 arg0->unk54->unk6 = arg0->segment.header->pad38[4];
-                arg0->unk54->unk7 = arg0->segment.header->unk3D;
+                arg0->unk54->unk7 = arg0->segment.header->pad38[5];
                 arg0->unk54->unk8 = -(arg0->unk54->unk1C >> 1);
                 arg0->unk54->unkA = -(arg0->unk54->unk1E >> 1);
                 arg0->unk54->unkC = -(arg0->unk54->unk20 >> 1);
@@ -1070,26 +1375,26 @@ s32 init_object_shadow(Object *obj, ShadowData *shadow) {
     return 16;
 }
 
-s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1) {
-    arg0->unk58 = arg1;
-    arg1->unk0 = arg0->unk40->unk8;
-    arg1->unkC = 0;
-    arg1->unkE = arg0->unk40->unk0 >> 8;
-    arg1->unk4 = NULL;
-    if (arg0->unk40->unk36) {
-        arg1->unk4 = load_texture(arg0->unk40->unk38);
+s32 func_8000FC6C(Object *obj, Object_58 *obj58) {
+    obj->unk58 = obj58;
+    obj58->unk0 = obj->segment.header->unk8;
+    obj58->unkC = 0;
+    obj58->unkE = obj->segment.header->unk0 >> 8;
+    obj58->unk4 = NULL;
+    if (obj->segment.header->unk36) {
+        obj58->unk4 = load_texture(obj->segment.header->unk38);
     }
-    arg1->unk8 = -1;
-    D_8011AE54 = arg1->unk4;
-    if (arg0->unk40->unk36 && arg1->unk4 == NULL) {
+    obj58->unk8 = -1;
+    D_8011AE54 = obj58->unk4;
+    if (obj->segment.header->unk36 && obj58->unk4 == NULL) {
         return 0;
     }
     return 20;
 }
 
-s32 func_8000FD20(unk8000FD20 *arg0, unk8000FD20_2 *arg1) {
-    arg0->unk4C = arg1;
-    arg1->unk13 = 0xFF;
+s32 func_8000FD20(Object *obj, ObjectInteraction *interaction) {
+    obj->interactObj = interaction;
+    interaction->distance = 0xFF;
     return 40;
 }
 
@@ -3248,11 +3553,11 @@ UNUSED void func_8001D2A0(Object *obj, f32 arg1, f32 arg2, s16 arg3, s16 arg4, s
             (obj->unk54->unk22 + arg3),
             (obj->unk54->unk24 + arg4),
             (obj->unk54->unk26 + arg5));
-        if (obj->segment.header->unk3D != 0) {
+        if (obj->segment.header->pad38[5] != 0) {
             obj->unk54->unk4 = obj->segment.header->pad38[2];
             obj->unk54->unk5 = obj->segment.header->pad38[3];
             obj->unk54->unk6 = obj->segment.header->pad38[4];
-            obj->unk54->unk7 = obj->segment.header->unk3D;
+            obj->unk54->unk7 = obj->segment.header->pad38[5];
             obj->unk54->unk8 = -(obj->unk54->unk1C >> 1);
             obj->unk54->unkA = -(obj->unk54->unk1E >> 1);
             obj->unk54->unkC = -(obj->unk54->unk20 >> 1);
@@ -4116,9 +4421,9 @@ void run_object_init_func(Object *obj, void *entry, s32 param) {
     }
 }
 
-s32 func_80023E30(s32 objectID) {
+s32 func_80023E30(s32 behaviorId) {
   s32 value = 0;
-  switch (objectID){
+  switch (behaviorId){
     case BHV_RACER:
       value = 0x1F;
       break;

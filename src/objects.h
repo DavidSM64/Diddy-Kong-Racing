@@ -227,24 +227,6 @@ typedef struct unk800179D0 {
     u32 unk3C;
 } unk800179D0;
 
-/* Unknown Size */
-typedef struct unk8000FD20_2 {
-    u8 unk00[0x13];
-    u8 unk13;
-} unk8000FD20_2;
-
-/* Unknown Size */
-typedef struct unk8000FD20 {
-    u8 unk00[0x4C];
-    unk8000FD20_2 *unk4C;
-} unk8000FD20;
-
-/* Unknown Size */
-typedef struct unk_80016BC4_3 {
-    u8 pad0[0x55];
-    s8 unk55;
-} unk_80016BC4_3;
-
 typedef struct struct_8000FC6C {
     f32 unk0;
     TextureHeader *unk4;
@@ -426,7 +408,7 @@ Object *get_racer_object_by_port(s32 index);
 void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
 void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
 void update_envmap_position(f32 arg0, f32 arg1, f32 arg2);
-s32 func_8000FC6C(struct_8000FC6C_3 *arg0, struct_8000FC6C *arg1);
+s32 func_8000FC6C(Object *arg0, Object_58 *arg1);
 s32 func_8001B2F0(s32 mapId);
 void render_3d_billboard(Object *obj);
 void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 flags, u32 offset, f32 yScale);
@@ -452,9 +434,9 @@ s32 func_8000F99C(Object *);
 void func_8000C844(s32 arg0);
 s32 func_800235DC(Object *obj, Object_64 *obj64);
 void light_setup_light_sources(Object *obj);
-s32 func_8000FD20(unk8000FD20 *arg0, unk8000FD20_2 *arg1);
+s32 func_8000FD20(Object *arg0, ObjectInteraction *arg1);
 s32 func_8000FAC4(Object *obj, Object_6C *arg1);
-s32 func_80023E30(s32 objectID);
+s32 func_80023E30(s32 behaviorId);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
