@@ -408,7 +408,7 @@ Object *get_racer_object_by_port(s32 index);
 void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
 void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
 void update_envmap_position(f32 arg0, f32 arg1, f32 arg2);
-s32 func_8000FC6C(Object *arg0, Object_58 *arg1);
+s32 func_8000FC6C(Object *arg0, ShadowData *arg1);
 s32 func_8001B2F0(s32 mapId);
 void render_3d_billboard(Object *obj);
 void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 flags, u32 offset, f32 yScale);
@@ -429,7 +429,7 @@ s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags,
 void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj, s32 flags);
 void gParticlePtrList_flush(void);
 s32 func_8000F7EC(Object *arg0, Object_54 *arg1);
-AssetObjectHeaders *func_8000C718(s32 index);
+ObjectHeader *func_8000C718(s32 index);
 s32 func_8000F99C(Object *);
 void func_8000C844(s32 arg0);
 s32 func_800235DC(Object *obj, Object_64 *obj64);

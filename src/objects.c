@@ -505,10 +505,10 @@ void func_8000C604(void) {
     free_from_memory_pool((void *) D_8011AEB0[1]);
 }
 
-AssetObjectHeaders *func_8000C718(s32 index) {
+ObjectHeader *func_8000C718(s32 index) {
     s32 assetOffset;
     s32 size;
-    AssetObjectHeaders *address;
+    ObjectHeader *address;
 
     if ((*D_8011AE4C)[index] != 0) {
         (*D_8011AE4C)[index]++;
@@ -519,11 +519,11 @@ AssetObjectHeaders *func_8000C718(s32 index) {
     address = allocate_from_pool_containing_slots((MemoryPoolSlot *) gObjectMemoryPool, size);
     if (address != NULL) {
         load_asset_to_address(ASSET_OBJECT_HEADERS, (u32) address, assetOffset, size);
-        address->unk24 = (u32) address + address->unk24;
-        address->unk1C = (u32) address + address->unk1C;
-        address->unk14 = (u32) address + address->unk14;
-        address->unk18 = (u32) address + address->unk18;
-        address->unk10 = (u32) address + address->unk10;
+        address->unk24 = (ObjectHeader24 *) ((uintptr_t) address + (uintptr_t) address->unk24);
+        address->objectParticles = (ObjHeaderParticleEntry *) ((uintptr_t) address + (uintptr_t) address->objectParticles);
+        address->vehiclePartIds = (s32 *) ((uintptr_t) address + (uintptr_t) address->vehiclePartIds);
+        address->vehiclePartIndices = (s8 *) ((uintptr_t) address + (uintptr_t) address->vehiclePartIndices);
+        address->modelIds = (s32 *) ((uintptr_t) address + (uintptr_t) address->modelIds);
         (*D_8011AE48)[index] = address;
         (*D_8011AE4C)[index] = 1;
     } else {
@@ -927,7 +927,7 @@ void func_8000E9D0(Object *arg0) {
 
 #ifdef NON_EQUIVALENT
 
-s32 func_8005F99C(s32, s32);
+void *func_8005F99C(s32, s32);
 
 Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     s16 sp66;
@@ -936,7 +936,6 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     Object *curObj;
     Object *newObj;
     u32 *address;
-    Object_68 **obj68;
     Settings *settings;
     s16 var_a0;
     s32 sizeOfobj;
@@ -1067,7 +1066,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
             } else if (var_a2 == 1 && arg1 & 8) {
                 curObj->unk68[var_a2] = NULL;
             } else {
-                curObj->unk68[var_a2] = func_8005F99C(curObj->segment.header->modelIds[var_a2], sp50);
+                curObj->unk68[var_a2] = (Object_68 *) func_8005F99C(curObj->segment.header->modelIds[var_a2], sp50);
                 if (curObj->unk68[var_a2] == NULL) {
                     var_v1 = TRUE;
                 }
@@ -1075,14 +1074,14 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         }
     } else if (objType == 4) {
         for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {
-            curObj->unk68[var_a2] = load_texture(curObj->segment.header->modelIds[var_a2]);
+            curObj->unk68[var_a2] = (Object_68 *) load_texture(curObj->segment.header->modelIds[var_a2]);
             if (curObj->unk68[var_a2] == NULL) {
                 var_v1 = TRUE;
             }
         }
     } else {
         for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {
-            curObj->unk68[var_a2] = func_8007C12C(curObj->segment.header->modelIds[var_a2], 10);
+            curObj->unk68[var_a2] = (Object_68 *) func_8007C12C(curObj->segment.header->modelIds[var_a2], 10);
             if (curObj->unk68[var_a2] == NULL) {
                 var_v1 = TRUE;
             }
@@ -1093,17 +1092,17 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         func_8000C844(var_a0);
         return NULL;
     }
-    address = &curObj->unk68[curObj->segment.header->numberOfModelIds];
+    address = (u32 *) &curObj->unk68[curObj->segment.header->numberOfModelIds];
     sizeOfobj = func_800235DC(curObj, (Object_64 *) address);
-    address = (u32) address + sizeOfobj;
+    address = (u32 *) ((uintptr_t) address + sizeOfobj);
     D_8011AE50 = NULL;
     D_8011AE54 = NULL;
     if (sp50 & 1) {
-        address = (u32) address + func_8000F7EC(curObj, address);
+        address = (u32 *) ((uintptr_t) address + func_8000F7EC(curObj, (Object_54 *) address));
     }
     if (sp50 & 2) {
         sizeOfobj = init_object_shadow(curObj, (ShadowData *) address);
-        address = (u32) address + sizeOfobj;
+        address = (u32 *) ((uintptr_t) address + sizeOfobj);
         if (sizeOfobj == 0) {
             objFreeAssets(curObj, assetCount, objType);
             func_8000C844(var_a0);
@@ -1111,8 +1110,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         }
     }
     if (sp50 & 4) {
-        sizeOfobj = func_8000FC6C(curObj, (Object_58 *) address);
-        address = (u32) address + sizeOfobj;
+        sizeOfobj = func_8000FC6C(curObj, (ShadowData *) address);
+        address = (u32 *) ((uintptr_t) address + sizeOfobj);
         if (sizeOfobj == 0) {
             if (D_8011AE50 != NULL) {
                 free_texture(D_8011AE50);
@@ -1123,22 +1122,22 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         }
     }
     if (sp50 & 0x10) {
-        address = (u32) address + func_8000FD20(curObj, (ObjectInteraction *) address);
+        address = (u32 *) ((uintptr_t) address + func_8000FD20(curObj, (ObjectInteraction *) address));
     }
     if (sp50 & 0x20) {
-        address = (u32) address + func_8000FD34(curObj, (Object_5C *) address);
+        address = (u32 *) ((uintptr_t) address + func_8000FD34(curObj, (Object_5C *) address));
     }
     if ((curObj->segment.header->unk56 > 0) && (curObj->segment.header->unk56 < 10)) {
         curObj->unk60 = (Object_60 *) address;
         address += 0xC;
     }
     if (curObj->segment.header->unk57 > 0) {
-        address = (u32) address + func_8000FAC4(curObj, (Object_6C *) address);
+        address = (u32 *) ((uintptr_t) address + func_8000FAC4(curObj, (Object_6C *) address));
     }
-    var_s1 = (u32)address - (u32)curObj;
+    var_s1 = (uintptr_t) address - (uintptr_t) curObj;
     if (curObj->segment.header->unk5A > 0) {
-        curObj->unk70 = (u32 *) address;
-        var_s1 = (u32)(address + (curObj->segment.header->unk5A * 4)) - (u32)curObj;
+        curObj->unk70 = address;
+        var_s1 = (s32) (address + (curObj->segment.header->unk5A * 4)) - (uintptr_t) curObj;
     }
     newObj = allocate_from_pool_containing_slots((MemoryPoolSlot *) gObjectMemoryPool, var_s1);
     if (newObj == NULL) {
@@ -1169,31 +1168,31 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         } while (var_s0_5 < var_s1);
     }
     if (newObj->unk58 != NULL) {
-        newObj->unk58 = ((u32)newObj + (u32) newObj->unk58) - (u32)D_8011AD58;
+        newObj->unk58 = (ShadowData *)(((uintptr_t) newObj + (uintptr_t) newObj->unk58) - (uintptr_t) D_8011AD58);
     }
     if (newObj->shadow != NULL) {
-        newObj->shadow = ((u32)newObj + (u32)newObj->shadow) - (u32)D_8011AD58;
+        newObj->shadow = (ShadowData *)(((uintptr_t) newObj + (uintptr_t)newObj->shadow) - (uintptr_t) D_8011AD58);
     }
     if (newObj->unk54 != NULL) {
-        newObj->unk54 = ((u32)newObj + (u32)newObj->unk54) - (u32)D_8011AD58;
+        newObj->unk54 = (Object_54 *)(((uintptr_t) newObj + (uintptr_t) newObj->unk54) - (uintptr_t) D_8011AD58);
     }
     if (newObj->unk64 != NULL) {
-        newObj->unk64 = ((u32)newObj + (u32)newObj->unk64) - (u32)D_8011AD58;
+        newObj->unk64 = (Object_64 *)(((uintptr_t) newObj + (uintptr_t) newObj->unk64) - (uintptr_t) D_8011AD58);
     }
     if (newObj->interactObj != NULL) {
-        newObj->interactObj = ((u32)newObj + (u32)newObj->interactObj) - (u32)D_8011AD58;
+        newObj->interactObj = (ObjectInteraction *)(((uintptr_t) newObj + (uintptr_t) newObj->interactObj) - (uintptr_t) D_8011AD58);
     }
     if (newObj->unk5C != NULL) {
-        newObj->unk5C = ((u32)newObj + (u32)newObj->unk5C) - (u32)D_8011AD58;
+        newObj->unk5C = (Object_5C *)(((uintptr_t) newObj + (uintptr_t) newObj->unk5C) - (uintptr_t) D_8011AD58);
     }
     if (newObj->unk60 != NULL) {
-        newObj->unk60 = ((u32)newObj + (u32)newObj->unk60) - (u32)D_8011AD58;
+        newObj->unk60 = (Object_60 *)(((uintptr_t) newObj + (uintptr_t )newObj->unk60) - (uintptr_t) D_8011AD58);
     }
     if (newObj->segment.header->unk57 > 0) {
-        newObj->unk6C = ((u32)newObj + (u32)newObj->unk6C) - (u32)D_8011AD58;
+        newObj->unk6C = (Object_6C *)(((uintptr_t) newObj + (uintptr_t )newObj->unk6C) - (uintptr_t) D_8011AD58);
     }
     if (newObj->segment.header->unk5A > 0) {
-        newObj->unk70 = ((u32)newObj + (u32)newObj->unk70) - (u32)D_8011AD58;
+        newObj->unk70 = (u32 *)(((uintptr_t) newObj + (uintptr_t) newObj->unk70) - (uintptr_t) D_8011AD58);
     }
     newObj->unk68 = (Object_68 **) newObj->unk80;
     if (arg1 & 1) {
@@ -1375,18 +1374,18 @@ s32 init_object_shadow(Object *obj, ShadowData *shadow) {
     return 16;
 }
 
-s32 func_8000FC6C(Object *obj, Object_58 *obj58) {
+s32 func_8000FC6C(Object *obj, ShadowData *obj58) {
     obj->unk58 = obj58;
-    obj58->unk0 = obj->segment.header->unk8;
+    obj58->scale = obj->segment.header->unk8;
     obj58->unkC = 0;
     obj58->unkE = obj->segment.header->unk0 >> 8;
-    obj58->unk4 = NULL;
+    obj58->texture = NULL;
     if (obj->segment.header->unk36) {
-        obj58->unk4 = load_texture(obj->segment.header->unk38);
+        obj58->texture = load_texture(obj->segment.header->unk38);
     }
     obj58->unk8 = -1;
-    D_8011AE54 = obj58->unk4;
-    if (obj->segment.header->unk36 && obj58->unk4 == NULL) {
+    D_8011AE54 = obj58->texture;
+    if (obj->segment.header->unk36 && obj58->texture == NULL) {
         return 0;
     }
     return 20;

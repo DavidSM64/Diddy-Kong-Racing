@@ -2017,9 +2017,9 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
     s32 numViewports;
     Object **objects;
     s32 var_a0;
-    Object_58_4* obj58_4;
+    TextureHeader *texture;
     ShadowData *shadow;
-    Object_58* obj58;
+    ShadowData* shadow2;
     s32 playerIndex;
 
     D_8011B0CC = D_8011B0C8;
@@ -2037,7 +2037,7 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
     while (sp94 < sp90) {
         obj = objects[sp94];
         objHeader = obj->segment.header;
-        obj58 = obj->unk58;
+        shadow2 = obj->unk58;
         shadow = obj->shadow;
         sp94 += 1;
         if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
@@ -2047,7 +2047,7 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
             if (obj->segment.trans.flags & OBJ_FLAGS_INVISIBLE) {
                 shadow = NULL;
             }
-            if ((shadow != NULL && objHeader->unk32 == 2) || (obj58 != NULL && objHeader->unk36 == 2)) {
+            if ((shadow != NULL && objHeader->unk32 == 2) || (shadow2 != NULL && objHeader->unk36 == 2)) {
                 dist = get_distance_to_active_camera(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
             } else {
                 dist = 0;
@@ -2081,14 +2081,14 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
                     func_8002DE30(obj);
                 }
             }
-            if (obj58 != NULL && obj58->unk0 > 0.0f && arg1 == objHeader->unk36) {
-                obj58->unk8 = -1;
+            if (shadow2 != NULL && shadow2->scale > 0.0f && arg1 == objHeader->unk36) {
+                shadow2->unk8 = -1;
                 D_8011D0D4 = 1.0f;
-                obj58_4 = obj58->unk4;
-                if (obj58_4 != NULL && updateRate != 0 && obj58_4->unk12 != 0x100) {
-                    obj58->unkC += obj58->unkE;
-                    while (obj58_4->unk12 < obj58->unkC) {
-                        obj58->unkC -= obj58_4->unk12;
+                texture = shadow2->texture;
+                if (texture != NULL && updateRate != 0 && texture->numOfTextures != 0x100) {
+                    shadow2->unkC += shadow2->unkE;
+                    while (texture->numOfTextures < shadow2->unkC) {
+                        shadow2->unkC -= texture->numOfTextures;
                     } 
                 }
                 

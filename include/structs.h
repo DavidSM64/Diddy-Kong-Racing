@@ -766,6 +766,7 @@ typedef struct ShadowData {
     s16 unk8;
     s16 unkA;
     s16 unkC;
+    s16 unkE;
 } ShadowData;
 
 typedef struct Object_54 {
@@ -797,20 +798,6 @@ typedef struct Object_54 {
     f32 unk28;
     f32 unk2C;
 } Object_54;
-
-typedef struct Object_58_4 {
-    u8 pad0[0x12];
-    u16 unk12;
-} Object_58_4;
-
-typedef struct Object_58 {
-    f32 unk0;
-    Object_58_4 *unk4;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-} Object_58;
 
 typedef f32 FakeHalfMatrix[2][4];
 typedef struct Object_5C {
