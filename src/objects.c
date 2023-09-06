@@ -3156,7 +3156,7 @@ void func_8001B790(void) {
 Object *func_8001B7A8(Object *racer, s32 position, f32 *distance) {
     UNUSED s32 temp;
     Object *tempRacer;
-    position = (racer->obj.obj8001B7A8.unk112 - position) - 1;
+    position = (racer->obj.unk112 - position) - 1;
     if (position < 0 || position >= gNumRacers) {
         return NULL;
     }

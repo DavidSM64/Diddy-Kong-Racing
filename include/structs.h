@@ -1482,7 +1482,6 @@ typedef struct Object_64 {
         Object_NPC npc;
         Object_TT tt;
         Object_Bridge_WhaleRamp bridge_whale_ramp;
-        Object_8001B7A8 obj8001B7A8;
         Object_80021400_64 obj80021400_64;
         Object_Log log;
         Object_Fireball_Octoweapon fireball_octoweapon;
@@ -1723,78 +1722,7 @@ typedef struct Object {
   /* 0x008C */ u32 unk8C;
   /* 0x0090 */ u32 unk90;
   /* 0x0094 */ u32 unk94;
-  /* 0x0098 */ Object_64 obj;
-
-  // May be a part of obj (likely Object_Player).
-  /* 0x02B8 */ u8 pad2A8[0x8];
-
-  /* 0x02C0 */ f32 unk2C0;
-
-  /* 0x02C4 */ u8 red;
-  /* 0x02C5 */ u8 blue;
-  /* 0x02C6 */ u8 green;
-  /* 0x02C7 */ u8 alpha;
-
-  /* 0x02C8 */ u32 unk2C8;
-  /* 0x02CC */ u32 unk2CC;
-  /* 0x02D0 */ u32 unk2D0;
-  /* 0x02D4 */ u32 unk2D4;
-  /* 0x02D8 */ u32 unk2D8;
-
-  /* 0x02DC */ u16 unk2DC;
-  /* 0x02DE */ u16 unk2DE;
-  /* 0x02E0 */ u16 unk2E0;
-
-  /* 0x02E2 */ u16 unk2E2;
-  /* 0x02E4 */ u32 unk2E4;
-
-  /* 0x02E8 */ f32 unk2E8;
-  /* 0x02EC */ f32 unk2EC;
-  /* 0x02F0 */ u32 unk2F0;
-
-  /* 0x02F4 */ f32 shadow_scale;
-  /* 0x02F8 */ void *unk2F8;
-  /* 0x02FC */ u16 unk2FC;
-  /* 0x02FE */ u16 unk2FE;
-  /* 0x0300 */ u32 unk300;
-
-  /* 0x0304 */ f32 unk0304;
-
-  /* 0x0308 */ u32 unk308;
-  /* 0x030C */ u32 unk30C;
-  /* 0x0310 */ u32 unk310;
-  /* 0x0314 */ u32 unk314;
-
-  /* 0x0318 */ void *nearest_obj_ptr;
-  /* 0x031C */ f32 unk31C;
-  /* 0x0320 */ f32 unk320;
-  /* 0x0324 */ f32 unk324;
-
-  /* 0x0328 */ u32 unk328;
-  /* 0x032C */ u32 unk32C;
-  /* 0x0330 */ u32 unk330;
-  /* 0x0334 */ u32 unk334;
-  /* 0x0338 */ u32 unk338;
-  /* 0x033C */ u32 unk33C;
-
-  /* 0x0340 */ u32 unk340;
-  /* 0x0344 */ void *unk344;
-  /* 0x0348 */ void *unk348;
-  /* 0x034C */ void *unk34C;
-  /* 0x0350 */ void *unk350;
-
-  /* 0x0354 */ u32 unk354;
-  /* 0x0358 */ u32 unk358;
-  /* 0x035C */ u32 unk35C;
-  /* 0x0360 */ u32 unk360;
-  /* 0x0364 */ u32 unk364;
-  /* 0x0368 */ u32 unk368;
-  /* 0x036C */ u32 unk36C;
-
-  /* 0x0370 */ void *unk370;
-  /* 0x0374 */ s32 unk374;
-
-  u32 unk378[174]; // Not an array. Unknown values.
+  /* 0x0098 */ Object_8001B7A8 obj;
 } Object;
 
 // Unused
