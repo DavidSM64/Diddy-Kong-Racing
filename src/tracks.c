@@ -1966,7 +1966,7 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
     }
 }
 
-void func_8002D670(Object *obj, ShadowData *shadow) {
+void func_8002D670(Object *obj, ShadowData_2 *shadow) {
     s32 i;
     s32 temp_a0;
     s32 temp_a3;
@@ -2019,7 +2019,7 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
     s32 var_a0;
     TextureHeader* shadowTex;
     ShadowData *shadow;
-    ShadowData* obj58;
+    ShadowData_2 *obj58;
     s32 playerIndex;
 
     D_8011B0CC = D_8011B0C8;

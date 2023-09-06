@@ -185,7 +185,7 @@ s32 check_if_inside_segment(Object *obj, s32 segmentIndex);
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos);
 void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, s32 *segmentsOrderIndex);
 void render_level_geometry_and_objects(void);
-void func_8002D670(Object *obj, ShadowData *shadow);
+void func_8002D670(Object *obj, ShadowData_2 *shadow);
 void render_object_shadow(Object *obj, ShadowData *shadow);
 s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb);
 s32 check_if_in_draw_range(Object *obj);
