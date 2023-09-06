@@ -669,7 +669,7 @@ typedef struct ObjectHeader24 {
 } ObjectHeader24;
 
 typedef struct ObjectHeader {
-             u8 pad0[0x4];
+  /* 0x00 */ s32 unk0;
   /* 0x04 */ f32 shadowScale;
   /* 0x08 */ f32 unk8;
   /* 0x0C */ f32 scale;
@@ -679,16 +679,19 @@ typedef struct ObjectHeader {
   /* 0x1C */ ObjHeaderParticleEntry *objectParticles;
              s32 pad20;
   /* 0x24 */ ObjectHeader24 *unk24;
-  /* 0x28 */ f32 unk28;
-  /* 0x2C */ f32 unk2C;
+  /* 0x28 */ f32 shadeBrightness;
+  /* 0x2C */ f32 shadeAmbient;
   /* 0x30 */ u16 unk30;
   /* 0x32 */ s16 unk32;
-  /* 0x32 */ s16 unk34;
-  /* 0x32 */ s16 unk36;
-             u8 pad38[5];
+  /* 0x34 */ s16 unk34;
+  /* 0x36 */ s16 unk36;
+  /* 0x38 */ s16 unk38;
+  /* 0x3A */ u8 unk3A;
+  /* 0x3B */ u8 unk3B;
+  /* 0x3C */ u8 unk3C;
   /* 0x3D */ u8 unk3D;
-  /* 0x3E */ s16 unk3E;
-  /* 0x40 */ s16 unk40;
+  /* 0x3E */ s16 shadeAngleY;
+  /* 0x40 */ s16 shadeAngleZ;
   /* 0x42 */ s16 unk42;
   /* 0x44 */ s16 unk44;
   /* 0x48 */ s16 unk46;
@@ -743,17 +746,18 @@ typedef struct Object_44 {
 } Object_44;
 
 typedef struct ObjectInteraction {
-    struct Object *obj;
-    f32 x_position;
-    f32 y_position;
-    f32 z_position;
-    u8 hitboxRadius;
-    u8 unk11;
-    u8 pushForce;
-    u8 distance;
-    s16 flags;
-    s8 unk16;
-    s8 unk17;
+/*0x00*/  struct Object *obj;
+/*0x04*/  f32 x_position;
+/*0x08*/  f32 y_position;
+/*0x0C*/  f32 z_position;
+/*0x10*/  u8 hitboxRadius;
+/*0x11*/  u8 unk11;
+/*0x12*/  u8 pushForce;
+/*0x13*/  u8 distance;
+/*0x14*/  s16 flags;
+/*0x16*/  s8 unk16;
+/*0x17*/  s8 unk17;
+s32 pad[4];
 } ObjectInteraction;
 
 typedef struct ShadowData {
@@ -764,6 +768,17 @@ typedef struct ShadowData {
     s16 unkC;
     s16 unkE;
 } ShadowData;
+
+typedef struct ShadowData_2 {
+    f32 scale;
+    TextureHeader *texture;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+    s16 unk10;
+    s16 unk12;
+} ShadowData_2;
 
 typedef struct Object_54 {
     f32 unk0;
@@ -791,8 +806,8 @@ typedef struct Object_54 {
     s16 unk22;
     s16 unk24;
     s16 unk26;
-    f32 unk28;
-    f32 unk2C;
+    f32 brightness;
+    f32 ambient;
 } Object_54;
 
 typedef f32 FakeHalfMatrix[2][4];
@@ -803,6 +818,10 @@ typedef struct Object_5C {
  };
   /* 0x0100 */ void *unk100;
   /* 0x0104 */ u8 unk104;
+  /* 0x0105 */ u8 unk105;
+  /* 0x0106 */ u8 unk106;
+  /* 0x0107 */ u8 unk107;
+  /* 0x0108 */ s32 unk108;
 } Object_5C;
 
 typedef struct Object_60 {
@@ -1691,7 +1710,7 @@ typedef struct Object {
   /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318
   /* 0x0050 */ ShadowData *shadow; //player + 0x2F4
   /* 0x0054 */ Object_54 *unk54; //player + 0x2C0
-  /* 0x0058 */ ShadowData *unk58; //player + 0x304
+  /* 0x0058 */ ShadowData_2 *unk58; //player + 0x304
   /* 0x005C */ Object_5C *unk5C;
   /* 0x0060 */ Object_60 *unk60; //player + 0x340
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
@@ -1707,77 +1726,6 @@ typedef struct Object {
   /* 0x0090 */ u32 unk90;
   /* 0x0094 */ u32 unk94;
   /* 0x0098 */ Object_64 obj;
-
-  // May be a part of obj (likely Object_Player).
-  /* 0x02B8 */ u8 pad2A8[0x8];
-
-  /* 0x02C0 */ f32 unk2C0;
-
-  /* 0x02C4 */ u8 red;
-  /* 0x02C5 */ u8 blue;
-  /* 0x02C6 */ u8 green;
-  /* 0x02C7 */ u8 alpha;
-
-  /* 0x02C8 */ u32 unk2C8;
-  /* 0x02CC */ u32 unk2CC;
-  /* 0x02D0 */ u32 unk2D0;
-  /* 0x02D4 */ u32 unk2D4;
-  /* 0x02D8 */ u32 unk2D8;
-
-  /* 0x02DC */ u16 unk2DC;
-  /* 0x02DE */ u16 unk2DE;
-  /* 0x02E0 */ u16 unk2E0;
-
-  /* 0x02E2 */ u16 unk2E2;
-  /* 0x02E4 */ u32 unk2E4;
-
-  /* 0x02E8 */ f32 unk2E8;
-  /* 0x02EC */ f32 unk2EC;
-  /* 0x02F0 */ u32 unk2F0;
-
-  /* 0x02F4 */ f32 shadow_scale;
-  /* 0x02F8 */ void *unk2F8;
-  /* 0x02FC */ u16 unk2FC;
-  /* 0x02FE */ u16 unk2FE;
-  /* 0x0300 */ u32 unk300;
-
-  /* 0x0304 */ f32 unk0304;
-
-  /* 0x0308 */ u32 unk308;
-  /* 0x030C */ u32 unk30C;
-  /* 0x0310 */ u32 unk310;
-  /* 0x0314 */ u32 unk314;
-
-  /* 0x0318 */ void *nearest_obj_ptr;
-  /* 0x031C */ f32 unk31C;
-  /* 0x0320 */ f32 unk320;
-  /* 0x0324 */ f32 unk324;
-
-  /* 0x0328 */ u32 unk328;
-  /* 0x032C */ u32 unk32C;
-  /* 0x0330 */ u32 unk330;
-  /* 0x0334 */ u32 unk334;
-  /* 0x0338 */ u32 unk338;
-  /* 0x033C */ u32 unk33C;
-
-  /* 0x0340 */ u32 unk340;
-  /* 0x0344 */ void *unk344;
-  /* 0x0348 */ void *unk348;
-  /* 0x034C */ void *unk34C;
-  /* 0x0350 */ void *unk350;
-
-  /* 0x0354 */ u32 unk354;
-  /* 0x0358 */ u32 unk358;
-  /* 0x035C */ u32 unk35C;
-  /* 0x0360 */ u32 unk360;
-  /* 0x0364 */ u32 unk364;
-  /* 0x0368 */ u32 unk368;
-  /* 0x036C */ u32 unk36C;
-
-  /* 0x0370 */ void *unk370;
-  /* 0x0374 */ s32 unk374;
-
-  u32 unk378[174]; // Not an array. Unknown values.
 } Object;
 
 // Unused
