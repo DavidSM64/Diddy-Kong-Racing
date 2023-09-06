@@ -696,7 +696,8 @@ typedef struct ObjectHeader {
   /* 0x4A */ s16 unk4A;
   /* 0x4C */ s16 unk4C;
   /* 0x4E */ s16 drawDistance;
-             u8 pad50[3];
+  /* 0x50 */ s16 unk50;
+  /* 0x52 */ s8 unk52;
   /* 0x53 */ s8 modelType;
   /* 0x54 */ s8 behaviorId;
   /* 0x55 */ s8 numberOfModelIds; // size of array pointed by Object->unk68

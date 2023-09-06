@@ -173,7 +173,7 @@ s8 D_8011AD51;
 s8 D_8011AD52;
 s8 D_8011AD53;
 s32 D_8011AD54;
-s32 *D_8011AD58;
+Object *(*D_8011AD58)[0x200];
 s32 D_8011AD5C;
 s32 D_8011AD60;
 s32 *gAssetsObjectHeadersTable;
@@ -206,7 +206,7 @@ s8 gIsSilverCoinRace;
 Object *D_8011AE08[16];
 AssetObjectHeaders *(*D_8011AE48)[ASSET_OBJECT_HEADER_TABLE_LENGTH];
 u8 (*D_8011AE4C)[ASSET_OBJECT_HEADER_TABLE_LENGTH];
-s32 D_8011AE50;
+TextureHeader *D_8011AE50;
 TextureHeader *D_8011AE54;
 Object **gObjPtrList; // Not sure about the number of elements
 s32 objCount;
@@ -357,30 +357,30 @@ void allocate_object_pools(void) {
 
     func_8001D258(0.67f, 0.33f, 0, -0x2000, 0);
     gObjectMemoryPool = (Object *) new_sub_memory_pool(OBJECT_POOL_SIZE, OBJECT_SLOT_COUNT);
-    gParticlePtrList = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 200, COLOUR_TAG_BLUE);
-    D_8011AE6C = (Object **) allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
-    D_8011AE74 = (Object **) allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
-    gTrackCheckpoints = (CheckpointNode *) allocate_from_main_pool_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
+    gParticlePtrList = allocate_from_main_pool_safe(sizeof(uintptr_t) * 200, COLOUR_TAG_BLUE);
+    D_8011AE6C = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
+    D_8011AE74 = allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
+    gTrackCheckpoints = allocate_from_main_pool_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
     gCameraObjList = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
     gRacers = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
-    gRacersByPort = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
-    gRacersByPosition = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
+    gRacersByPort = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
+    gRacersByPosition = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
     D_8011AF04 = allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     D_8011ADCC = allocate_from_main_pool_safe(8, COLOUR_TAG_BLUE);
-    D_8011AFF4 = (unk800179D0 *) allocate_from_main_pool_safe(0x400, COLOUR_TAG_BLUE);
+    D_8011AFF4 = allocate_from_main_pool_safe(0x400, COLOUR_TAG_BLUE);
     gAssetsLvlObjTranslationTable = (s16 *) load_asset_section_from_rom(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
     gAssetsLvlObjTranslationTableLength = (get_size_of_asset_section(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE) >> 1) - 1;
     while (gAssetsLvlObjTranslationTable[gAssetsLvlObjTranslationTableLength] == 0) {
         gAssetsLvlObjTranslationTableLength--;
     }
-    D_8011AD58 = (s32 *) allocate_from_main_pool_safe(0x800, COLOUR_TAG_BLUE);
+    D_8011AD58 = allocate_from_main_pool_safe(sizeof(uintptr_t) * 512, COLOUR_TAG_BLUE);
     gAssetsObjectHeadersTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_HEADERS_TABLE);
     gAssetsObjectHeadersTableLength = 0;
     while (-1 != gAssetsObjectHeadersTable[gAssetsObjectHeadersTableLength]) {
         gAssetsObjectHeadersTableLength++;
     }
     gAssetsObjectHeadersTableLength--;
-    D_8011AE48 = (AssetObjectHeaders * (*)[ASSET_OBJECT_HEADER_TABLE_LENGTH]) allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOUR_TAG_WHITE);
+    D_8011AE48 = allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOUR_TAG_WHITE);
     D_8011AE4C = allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength, COLOUR_TAG_WHITE);
 
     for (i = 0; i < gAssetsObjectHeadersTableLength; i++) {
@@ -396,7 +396,7 @@ void allocate_object_pools(void) {
 
     decrypt_magic_codes(&gAssetsMiscSection[gAssetsMiscTable[ASSET_MISC_MAGIC_CODES]], 
                         (gAssetsMiscTable[ASSET_MISC_TITLE_SCREEN_DEMO_IDS] - gAssetsMiscTable[ASSET_MISC_MAGIC_CODES]) * sizeof(s32 *));
-    gObjPtrList = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * OBJECT_SLOT_COUNT, COLOUR_TAG_BLUE);
+    gObjPtrList = allocate_from_main_pool_safe(sizeof(uintptr_t) * OBJECT_SLOT_COUNT, COLOUR_TAG_BLUE);
     D_8011ADC4 = 0;
     gTimeTrialEnabled = 0;
     gIsTimeTrial = FALSE;
@@ -1019,10 +1019,10 @@ s32 func_8000F99C(Object *obj) {
                 free_from_memory_pool(temp_v0);
             }
         }
-        return 1;
+        return TRUE;
     }
     obj60->unk2C = obj->segment.header->vehiclePartIndices;
-    return 0;
+    return FALSE;
 }
 
 s32 func_8000FAC4(Object *obj, Object_6C *arg1) {
@@ -1058,12 +1058,12 @@ s32 init_object_shadow(Object *obj, ShadowData *shadow) {
     shadow->texture = NULL;
     objHeader = ((ObjectSegment *) obj)->header;
     if (objHeader->unk32) {
-        shadow->texture = (TextureHeader *) load_texture((s32) ((ObjectHeader *) objHeader)->unk34);
+        shadow->texture = load_texture((s32) ((ObjectHeader *) objHeader)->unk34);
         objHeader = ((ObjectSegment *) obj)->header;
     }
     shadow->scale = objHeader->shadowScale;
     shadow->unk8 = -1;
-    D_8011AE50 = (s32) shadow->texture;
+    D_8011AE50 = shadow->texture;
     if (((ObjectSegment *) obj)->header->unk32 && shadow->texture == NULL) {
         return 0;
     }

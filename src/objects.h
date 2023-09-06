@@ -451,6 +451,10 @@ AssetObjectHeaders *func_8000C718(s32 index);
 s32 func_8000F99C(Object *);
 void func_8000C844(s32 arg0);
 s32 func_800235DC(Object *obj, Object_64 *obj64);
+void light_setup_light_sources(Object *obj);
+s32 func_8000FD20(unk8000FD20 *arg0, unk8000FD20_2 *arg1);
+s32 func_8000FAC4(Object *obj, Object_6C *arg1);
+s32 func_80023E30(s32 objectID);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -458,7 +462,7 @@ void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
 void decrypt_magic_codes(s32 *arg0, s32 length);
 s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
-Object *spawn_object(void *entry, s32);
+Object *spawn_object(LevelObjectEntryCommon *entry, s32);
 s32 func_8001F460(Object*, s32, Object*);
 s32 func_80016DE8(f32, f32, f32, f32, s32, unk80042178 *);
 void func_8001BF20(void);
