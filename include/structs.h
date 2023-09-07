@@ -769,7 +769,7 @@ typedef struct ShadowData {
     s16 unkE;
 } ShadowData;
 
-typedef struct ShadowData_2 {
+typedef struct WaterEffect {
     f32 scale;
     TextureHeader *texture;
     s16 unk8;
@@ -778,9 +778,9 @@ typedef struct ShadowData_2 {
     s16 unkE;
     s16 unk10;
     s16 unk12;
-} ShadowData_2;
+} WaterEffect;
 
-typedef struct Object_54 {
+typedef struct ShadeProperties {
     f32 unk0;
     u8 unk4;
     u8 unk5;
@@ -808,7 +808,7 @@ typedef struct Object_54 {
     s16 unk26;
     f32 brightness;
     f32 ambient;
-} Object_54;
+} ShadeProperties;
 
 typedef f32 FakeHalfMatrix[2][4];
 typedef struct Object_5C {
@@ -1709,8 +1709,8 @@ typedef struct Object {
   /* 0x004A */ s16 unk4A; // Upper byte is object ID, lower byte is object size.
   /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318
   /* 0x0050 */ ShadowData *shadow; //player + 0x2F4
-  /* 0x0054 */ Object_54 *unk54; //player + 0x2C0
-  /* 0x0058 */ ShadowData_2 *unk58; //player + 0x304
+  /* 0x0054 */ ShadeProperties *shading; //player + 0x2C0
+  /* 0x0058 */ WaterEffect *waterEffect; //player + 0x304
   /* 0x005C */ Object_5C *unk5C;
   /* 0x0060 */ Object_60 *unk60; //player + 0x340
   /* 0x0064 */ Object_64 *unk64; //player + 0x98

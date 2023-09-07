@@ -939,8 +939,8 @@ void render_level_geometry_and_objects(void) {
                 render_object_shadow(obj, obj->shadow);
             }
             render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
-            if (obj->unk58 != NULL && obj->segment.header->unk30 & 0x10) {
-                func_8002D670(obj, obj->unk58);
+            if (obj->waterEffect != NULL && obj->segment.header->unk30 & 0x10) {
+                render_object_water_effects(obj, obj->waterEffect);
             }
         }
     }
@@ -961,8 +961,8 @@ void render_level_geometry_and_objects(void) {
                 render_object_shadow(obj, obj->shadow);
             }
             render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
-            if ((obj->unk58 != NULL) && (obj->segment.header->unk30 & 0x10)) {
-                func_8002D670(obj, obj->unk58);
+            if ((obj->waterEffect != NULL) && (obj->segment.header->unk30 & 0x10)) {
+                render_object_water_effects(obj, obj->waterEffect);
             }
         }
     }
@@ -1006,8 +1006,8 @@ void render_level_geometry_and_objects(void) {
                     render_object_shadow(obj, obj->shadow);
                 }
                 render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
-                if ((obj->unk58 != 0) && (obj->segment.header->unk30 & 0x10)) {
-                    func_8002D670(obj, obj->unk58);
+                if ((obj->waterEffect != 0) && (obj->segment.header->unk30 & 0x10)) {
+                    render_object_water_effects(obj, obj->waterEffect);
                 }
             }
 skip:
@@ -1966,7 +1966,11 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
     }
 }
 
-void func_8002D670(Object *obj, ShadowData_2 *shadow) {
+/**
+ * Used only by cars, render a texture on the surface of the water where the car is
+ * to give the wave effect. Works almost identically to shadows, since water can be wavy.
+ */
+void render_object_water_effects(Object *obj, WaterEffect *effect) {
     s32 i;
     s32 temp_a0;
     s32 temp_a3;
@@ -1977,21 +1981,21 @@ void func_8002D670(Object *obj, ShadowData_2 *shadow) {
     UNUSED s32 temp3;
 
     if (obj->segment.header->unk36 != 0) {
-        if ((shadow->unk8 != -1) && (D_8011B0C4 == 0)) {
+        if ((effect->unk8 != -1) && (D_8011B0C4 == 0)) {
             D_8011B0D0 = D_8011B0C8;
-            i = shadow->unk8;
+            i = effect->unk8;
             if (obj->segment.header->unk36 == 1) {
                 D_8011B0D0 = D_8011B0C8;
                 D_8011B0D0 += 2;
                 if (get_distance_to_active_camera(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position) > 768.0f) {
-                    i = shadow->unkA;
+                    i = effect->unkA;
                 }
             }
             flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
             D_8011D360 = (DrawTexture *) D_8011D350[D_8011B0D0];
             D_8011D330 = (Triangle *) D_8011D320[D_8011B0D0];
             D_8011D348 = (Vertex *) D_8011D338[D_8011B0D0];
-            while (i < shadow->unkA) {
+            while (i < effect->unkA) {
                 load_and_set_texture_no_offset(&gSceneCurrDisplayList, D_8011D360[i].texture, flags);
                 temp2 = D_8011D360[i].xOffset; // Fakematch
                 temp3 = D_8011D360[i].yOffset; // Fakematch
@@ -2019,7 +2023,7 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
     s32 var_a0;
     TextureHeader* shadowTex;
     ShadowData *shadow;
-    ShadowData_2 *obj58;
+    WaterEffect *obj58;
     s32 playerIndex;
 
     D_8011B0CC = D_8011B0C8;
@@ -2037,7 +2041,7 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
     while (sp94 < sp90) {
         obj = objects[sp94];
         objHeader = obj->segment.header;
-        obj58 = obj->unk58;
+        obj58 = obj->waterEffect;
         shadow = obj->shadow;
         sp94 += 1;
         if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
@@ -2077,7 +2081,7 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
                         var_a0 = TRUE;
                     }
                 }
-                if ((!var_a0) && (obj->unk54 != NULL)) {
+                if ((!var_a0) && (obj->shading != NULL)) {
                     func_8002DE30(obj);
                 }
             }
@@ -2211,7 +2215,7 @@ loop_6:
                                         &vert[temp_t0->verticesArray[3]].x
                                 ) != 0) {
                                     var_s7 = 1;
-                                    obj->unk54->unk0 += (((1.0f - D_800DC884[temp_v1_2]) - obj->unk54->unk0) * 0.2);
+                                    obj->shading->unk0 += (((1.0f - D_800DC884[temp_v1_2]) - obj->shading->unk0) * 0.2);
                                 }
                             }
                         }
@@ -2277,14 +2281,14 @@ void func_8002E234(Object *obj, s32 bool) {
 
     if (bool) {
         D_8011D0B8 = 0;
-        obj->unk58->unk8 = D_8011D364;
-        D_8011D0C0 = func_8007B46C(obj->unk58->texture, obj->unk58->unkC << 8);
+        obj->waterEffect->unk8 = D_8011D364;
+        D_8011D0C0 = func_8007B46C(obj->waterEffect->texture, obj->waterEffect->unkC << 8);
         D_8011D0CE = obj->segment.header->unk48 + yPos;
         D_8011D0CC = obj->segment.header->unk46 + yPos;
         if ((D_8011D384 == 0) || ((get_viewport_count() <= 0))) {
             D_8011D0C8 = 0;
         }
-        D_8011D0D8 = (obj->unk58->scale * character_scale);
+        D_8011D0D8 = (obj->waterEffect->scale * character_scale);
         D_8011D0DC = D_8011D0D8 * 10.0f;
         D_8011D0E0 = D_8011D0D8 * 10.0f;
         D_8011D0F0 = -1.0f;
@@ -2348,8 +2352,8 @@ void func_8002E234(Object *obj, s32 bool) {
         }
     }
     if (D_8011C230 > 0) {
-        if ((obj->unk54 != NULL) && !bool) {
-            obj->unk54->unk0 = func_8002FA64();
+        if ((obj->shading != NULL) && !bool) {
+            obj->shading->unk0 = func_8002FA64();
         }
         func_8002F2AC();
         func_8002F440();
@@ -2358,7 +2362,7 @@ void func_8002E234(Object *obj, s32 bool) {
         obj->shadow->unkA = D_8011D364;
     }
     else {
-        obj->unk58->unkA = D_8011D364;
+        obj->waterEffect->unkA = D_8011D364;
     }
 }
 #else
