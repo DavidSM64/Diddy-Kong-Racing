@@ -184,7 +184,7 @@ void init_game(void) {
     s32 viMode;
 
     init_main_memory_pool();
-    rzipInit(); // Initialise gzip decompression related things
+    init_rzip(); // Initialise gzip decompression related things
     sAntiPiracyTriggered = TRUE;
     if (check_imem_validity()) {
         sAntiPiracyTriggered = FALSE;

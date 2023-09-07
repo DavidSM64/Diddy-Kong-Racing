@@ -12,33 +12,26 @@
 
 // Animation related?
 #define COLOUR_TAG_RED 0xFF0000FF
-// Object related?
+// Models
 #define COLOUR_TAG_GREEN 0x00FF00FF
-// ???
+// Objects
 #define COLOUR_TAG_BLUE 0x0000FFFF
-// ???
+// Tracks
 #define COLOUR_TAG_YELLOW 0xFFFF00FF
-// ???
+// Textures
 #define COLOUR_TAG_MAGENTA 0xFF00FFFF
-// Audio related?
+// Audio
 #define COLOUR_TAG_CYAN 0x00FFFFFF
-// ???
+// Buffers and heaps
 #define COLOUR_TAG_WHITE 0xFFFFFFFF
-// ???
+// Assets
 #define COLOUR_TAG_GREY 0x7F7F7FFF
-// ???
+// Particles
 #define COLOUR_TAG_SEMITRANS_GREY 0x80808080
 // ???
 #define COLOUR_TAG_ORANGE 0xFF7F7FFF
-// ???
+// Controller Pak
 #define COLOUR_TAG_BLACK 0x000000FF
-
-/* Size: 0x8 bytes */
-typedef struct unk80070BE4_8_0 {
-    s16 unk0;
-    s16 unk2;
-    s32 unk4;
-} unk80070BE4_8_0;
     
 /* Size: 0x14 bytes */
 typedef struct MemoryPoolSlot {

@@ -1,8 +1,8 @@
 glabel gzip_inflate_block /* Official name: inflate_block */
 /* 0C74C0 800C68C0 3C0B8013 */  lui   $t3, %hi(gzip_num_bits) # $t3, 0x8013
 /* 0C74C4 800C68C4 8D6BAAD4 */  lw    $t3, %lo(gzip_num_bits)($t3)
-/* 0C74C8 800C68C8 3C018013 */  lui   $at, %hi(D_8012AAD8) # $at, 0x8013
-/* 0C74CC 800C68CC AC20AAD8 */  sw    $zero, %lo(D_8012AAD8)($at)
+/* 0C74C8 800C68C8 3C018013 */  lui   $at, %hi(gHuftTablePos) # $at, 0x8013
+/* 0C74CC 800C68CC AC20AAD8 */  sw    $zero, %lo(gHuftTablePos)($at)
 /* 0C74D0 800C68D0 24080001 */  li    $t0, 1
 /* 0C74D4 800C68D4 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 0C74D8 800C68D8 3C0C800E */  lui   $t4, %hi(gzip_inflate_input) # $t4, 0x800e
