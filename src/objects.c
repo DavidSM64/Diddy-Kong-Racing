@@ -941,10 +941,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     s32 sizeOfobj;
     s32 var_a2;
     s32 var_s0_5;
-    s32 var_s1;
     s32 assetCount;
     s8 var_v1;
-    Object *var_v1_2;
     s32 i;
 
     settings = get_settings();
@@ -967,7 +965,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     if (curObj->segment.header == NULL) {
         return NULL;
     }
-    if (curObj->segment.header->unk30 & 0x80) {
+    sp50 = curObj->segment.header->unk30 & 0x80;
+    if (sp50) {
         curObj->segment.trans.flags |= 0x80;
     }
     if (curObj->segment.header->behaviorId == BHV_ROCKET_SIGNPOST && settings->cutsceneFlags & 1) {
@@ -1048,6 +1047,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         } else {
             assetCount = 5;
             if (is_in_adventure_two()) {
+                var_a2 = 5; //fakematch?
                 curObj->segment.header->modelIds[0] = curObj->segment.header->modelIds[5];
                 curObj->segment.header->modelIds[1] = curObj->segment.header->modelIds[6];
                 curObj->segment.header->modelIds[2] = curObj->segment.header->modelIds[7];
@@ -1134,12 +1134,12 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     if (curObj->segment.header->unk57 > 0) {
         address = (u32 *) ((uintptr_t) address + func_8000FAC4(curObj, (Object_6C *) address));
     }
-    var_s1 = (uintptr_t) address - (uintptr_t) curObj;
+    sizeOfobj = (uintptr_t) address - (uintptr_t) curObj;
     if (curObj->segment.header->unk5A > 0) {
         curObj->unk70 = address;
-        var_s1 = (s32) (address + (curObj->segment.header->unk5A * 4)) - (uintptr_t) curObj;
+        sizeOfobj = (s32) (address + (curObj->segment.header->unk5A * 4)) - (uintptr_t) curObj;
     }
-    newObj = allocate_from_pool_containing_slots((MemoryPoolSlot *) gObjectMemoryPool, var_s1);
+    newObj = allocate_from_pool_containing_slots((MemoryPoolSlot *) gObjectMemoryPool, sizeOfobj);
     if (newObj == NULL) {
         if (D_8011AE50 != NULL) {
             free_texture(D_8011AE50);
@@ -1151,21 +1151,19 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         func_8000C844(var_a0);
         return NULL;
     }
-    if (var_s1 & 0xF) {
-        var_s1 = (var_s1 & ~0xF) + 0x10;
+    if (sizeOfobj & 0xF) {
+        sizeOfobj = (sizeOfobj & ~0xF) + 0x10;
     }
-    var_s1 >>= 2;
-    // for (var_s0_5 = 0; var_s0_5 < var_s1; var_s0_5++) {
-    //     newObj[var_s0_5].segment.trans.x_position = (*D_8011AD58)[var_s0_5]->segment.trans.x_position;
+    sizeOfobj >>= 2;
+    
+    // for (var_s0_5 = 0; var_s0_5 < objSize; var_s0_5++) {
+    //     u32 *temp = &newObj[var_s0_5];
+    //     temp = (u32)&(*D_8011AD58)[var_s0_5];
     // }
-    var_s0_5 = 0;
-    if (var_s1 > 0) {
-        var_v1_2 = &newObj[var_s0_5];
-        do {
-            var_v1_2->segment.trans.x_position = (*D_8011AD58)[var_s0_5]->segment.trans.x_position;
-            var_s0_5 += 4;
-            var_v1_2 += 1;
-        } while (var_s0_5 < var_s1);
+
+    //WRONG WRONG WRONG - Is this really just trying to set up the first several values in a weird way?
+    for (var_s0_5 = 0; var_s0_5 < sizeOfobj; var_s0_5+=4) {
+        newObj[var_s0_5].segment.trans.y_rotation = (*D_8011AD58)[var_s0_5]->segment.trans.y_rotation;
     }
     if (newObj->unk58 != NULL) {
         newObj->unk58 = (ShadowData *)(((uintptr_t) newObj + (uintptr_t) newObj->unk58) - (uintptr_t) D_8011AD58);
@@ -1194,7 +1192,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     if (newObj->segment.header->unk5A > 0) {
         newObj->unk70 = (u32 *)(((uintptr_t) newObj + (uintptr_t) newObj->unk70) - (uintptr_t) D_8011AD58);
     }
-    newObj->unk68 = (Object_68 **) newObj->unk80;
+    newObj->unk68 = (Object_68 **)((uintptr_t) newObj + (uintptr_t) 0x80);
     if (arg1 & 1) {
         gObjPtrList[objCount] = newObj;
         objCount++;
@@ -1212,8 +1210,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         if (D_8011AE54 != NULL) {
             free_texture(D_8011AE54);
         }
-        objFreeAssets(newObj, (s32) assetCount, objType);
-        func_8000C844((s32) var_a0);
+        objFreeAssets(newObj, assetCount, objType);
+        func_8000C844(var_a0);
         free_from_memory_pool(newObj);
         if (arg1 & 1) {
             objCount--;
