@@ -930,8 +930,8 @@ void func_8000E9D0(Object *arg0) {
 void *func_8005F99C(s32, s32);
 
 Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
-    s16 sp66;
     s32 objType;
+    Object *new_var;
     s32 sp50;
     Object *curObj;
     Object *newObj;
@@ -949,7 +949,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     objType = entry->objectID | ((entry->size & 0x80) << 1);
     update_object_stack_trace(OBJECT_SPAWN, objType);
     if (arg1 & 2) {
-        var_a0 = sp66; // @!Bug? Uninitialized?
+        var_a0 = objType;
     } else {
         var_a0 = gAssetsLvlObjTranslationTable[objType];
     }
@@ -980,7 +980,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     curObj->segment.object.unk2C = var_a0;
     curObj->segment.level_entry = (LevelObjectEntry *) entry;
     curObj->unk4A = objType;
-    func_800245B4(sp66);
+    func_800245B4(objType);
     curObj->segment.trans.scale = curObj->segment.header->scale;
     curObj->segment.camera.unk34 = curObj->segment.header->unk50 * curObj->segment.trans.scale;
     curObj->segment.object.opacity = 0xFF;
@@ -1045,15 +1045,12 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
                 curObj->segment.header->numberOfModelIds = 1;
             }
         } else {
-            assetCount = 5;
             if (is_in_adventure_two()) {
-                var_a2 = 5; //fakematch?
-                curObj->segment.header->modelIds[0] = curObj->segment.header->modelIds[5];
-                curObj->segment.header->modelIds[1] = curObj->segment.header->modelIds[6];
-                curObj->segment.header->modelIds[2] = curObj->segment.header->modelIds[7];
-                curObj->segment.header->modelIds[3] = curObj->segment.header->modelIds[8];
-                curObj->segment.header->modelIds[4] = curObj->segment.header->modelIds[9];
+                for (var_a2 = 0; var_a2 < 5; var_a2++) {
+                    curObj->segment.header->modelIds[var_a2] = curObj->segment.header->modelIds[var_a2 + 5];
+                }
             }
+            assetCount = 5;
             curObj->segment.header->numberOfModelIds = 5;
             var_a2 = 0;
         }
@@ -1067,6 +1064,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
                 curObj->unk68[var_a2] = NULL;
             } else {
                 curObj->unk68[var_a2] = (Object_68 *) func_8005F99C(curObj->segment.header->modelIds[var_a2], sp50);
+                if (assetCount) {} //FAKEMATCH?
                 if (curObj->unk68[var_a2] == NULL) {
                     var_v1 = TRUE;
                 }
@@ -1137,7 +1135,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     sizeOfobj = (uintptr_t) address - (uintptr_t) curObj;
     if (curObj->segment.header->unk5A > 0) {
         curObj->unk70 = address;
-        sizeOfobj = (s32) (address + (curObj->segment.header->unk5A * 4)) - (uintptr_t) curObj;
+        sizeOfobj = (s32) ((uintptr_t) address + (curObj->segment.header->unk5A * 4)) - (uintptr_t) curObj;
     }
     newObj = allocate_from_pool_containing_slots((MemoryPoolSlot *) gObjectMemoryPool, sizeOfobj);
     if (newObj == NULL) {
