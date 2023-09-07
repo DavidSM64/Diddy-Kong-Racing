@@ -6,17 +6,12 @@
 #include "thread0_epc.h"
 #include "controller.h"
 
-/************ .rodata ************/
-
-/*********************************/
-
 /************ .bss ************/
 
 MemoryPool gMemoryPools[4]; // Only two are used.
 
 #ifndef _ALIGN16
 #define _ALIGN16(a) (((u32) (a) & ~0xF) + 0x10)
-//#define _ALIGN16(val) ((val)&0xFFFFFFF0) + 0x10
 #endif
 
 s32 gNumberOfMemoryPools;
@@ -147,7 +142,7 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag
     if ((pool->curNumSlots + 1) == (*pool).maxNumSlots) {
         set_status_register_flags(flags);
         stubbed_printf("*** mm Error *** ---> No more slots available.\n");
-        return 0;
+        return NULL;
     }
     currIndex = -1;
     if (size & 0xF) {
@@ -160,7 +155,7 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag
     do {
         curSlot = &slots[nextIndex];
         if (curSlot->flags == 0) {
-            if ((curSlot->size >= size) && (curSlot->size < slotSize)) {
+            if (curSlot->size >= size && curSlot->size < slotSize) {
                 slotSize = curSlot->size;
                 currIndex = nextIndex;
             }
@@ -174,7 +169,7 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag
     }
     set_status_register_flags(flags);
     stubbed_printf("\n*** mm Error *** ---> No suitble block found for allocation.\n");
-    return 0;
+    return NULL;
 }
 
 /* Official name: mmAllocR */
@@ -227,7 +222,7 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
         set_status_register_flags(flags);
     }
     stubbed_printf("\n*** mm Error *** ---> Can't allocate memory at desired address.\n");
-    return 0;
+    return NULL;
 }
 
 /**
