@@ -394,13 +394,13 @@ s32 func_80071538(u8 *address) {
             if (slot->flags & 2) {
                 slot->flags ^= 2;
                 set_status_register_flags(flags);
-                return 1;
+                return TRUE;
             }
         }
         slotIndex = slot->nextIndex;
     }
     set_status_register_flags(flags);
-    return 0;
+    return FALSE;
 }
 
 /**
@@ -412,16 +412,20 @@ s32 get_memory_pool_index_containing_address(u8 *address) {
 
     for (i = gNumberOfMemoryPools; i > 0; i--) {
         pool = &gMemoryPools[i];
-        if ((u8 *)pool->slots >= address) {
+        if ((u8 *) pool->slots >= address) {
             continue;
         }
-        if (address < pool->size + (u8 *)pool->slots) {
+        if (address < pool->size + (u8 *) pool->slots) {
             break;
         }
     }
     return i;
 }
 
+/**
+ * Clears the current slot of all information, effectively freeing the allocated memory.
+ * Unused slots before and after will be merged with this slot
+*/
 void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
     s32 nextIndex;
     s32 prevIndex;
@@ -475,6 +479,11 @@ UNUSED MemoryPoolSlot *get_memory_pool_address(s32 poolIndex) {
     return gMemoryPools[poolIndex].slots;
 }
 
+/**
+ * Initialise and attempts to fit the new memory block in the slot given.
+ * Updates the linked list with any entries before and after then returns the new slot index.
+ * If the region cannot fit, return the old slot instead.
+*/
 s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken, u32 colourTag) {
     MemoryPool *pool;
     MemoryPoolSlot *poolSlots;
@@ -524,10 +533,9 @@ u8 *align16(u8 *address) {
 
 /**
  * Returns the passed in address aligned to the next 8-byte boundary.
- * Unused.
  * Official name: mmAlign8
  */
-u8 *align8(u8 *address) {
+UNUSED u8 *align8(u8 *address) {
     s32 remainder = (s32)address & 0x7;
     if (remainder > 0) {
         address = (u8 *)(((s32)address - remainder) + 8);
@@ -537,10 +545,9 @@ u8 *align8(u8 *address) {
 
 /**
  * Returns the passed in address aligned to the next 4-byte boundary.
- * Unused.
  * Official name: mmAlign4
  */
-u8 *align4(u8 *address) {
+UNUSED u8 *align4(u8 *address) {
     s32 remainder = (s32)address & 0x3;
     if (remainder > 0) {
         address = (u8 *)(((s32)address - remainder) + 4);
@@ -610,7 +617,7 @@ UNUSED s32 find_active_pool_slot_colours(void) {
 
 /**
  * Search through each memory pool, counting up the slots that match the colour tag looking to be found.
- * Marked as unused, since the function calling it is also unused.
+ * Marked as unused, since the functions calling it is also unused.
 */
 UNUSED s32 get_memory_colour_tag_count(u32 colourTag) {
     s32 i, count;
@@ -630,7 +637,6 @@ UNUSED s32 get_memory_colour_tag_count(u32 colourTag) {
 
 /**
  * Prints out the counts for each color tag in the main pool.
- * Unused. 
  */
 UNUSED void print_memory_colour_tags(void) {
     stubbed_printf("RED %d\n", get_memory_colour_tag_count(COLOUR_TAG_RED));
@@ -646,7 +652,6 @@ UNUSED void print_memory_colour_tags(void) {
 
 /**
  * Draws the counts for each color tag in the main pool.
- * Unused. 
  * See: https://tcrf.net/Diddy_Kong_Racing#Current_Colors
  */
 UNUSED void render_memory_colour_tags(void) {

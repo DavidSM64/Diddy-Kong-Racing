@@ -46,16 +46,6 @@ enum TriangleBatchFlags {
     BATCH_FLAGS_UNK80000000 = (1 << 31),
 };
 
-/* Size: 0x8 bytes */
-typedef struct unknown800DC874 {
-    union {
-        s8 unk00;
-        s32 dummy_force_alignment; // Not sure of a better way to do this.
-    } unk00_a;
-    u16 unk04;
-    s16 unk06;
-} unknown800DC874;
-
 typedef struct unk8011B120_unkC {
     f32 unk0;
     f32 unk4;
@@ -144,20 +134,6 @@ enum WaveTypes {
     WATER_WAVY = 14,
     WATER_UNK_F = 15
 };
-
-extern s32 D_800DC870;
-extern FadeTransition gFullFadeToBlack;
-extern FadeTransition gCircleFadeToBlack;
-
-extern f32 D_800DC884[10];
-
-extern LevelModel *gCurrentLevelModel;
-extern LevelHeader *gCurrentLevelHeader;
-
-extern s32 D_800DC920;
-extern s32 D_800DC928;
-
-extern s8 D_800DC92C[24];
 
 s32 set_scene_viewport_num(s32 arg0);
 void func_800257D0(void);
