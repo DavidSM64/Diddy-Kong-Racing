@@ -931,19 +931,19 @@ void *func_8005F99C(s32, s32);
 
 Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     s32 objType;
-    Object *new_var;
-    s32 sp50;
-    Object *curObj;
     Object *newObj;
-    u32 *address;
-    Settings *settings;
-    s16 var_a0;
-    s32 sizeOfobj;
     s32 var_a2;
+    s32 i;
     s32 var_s0_5;
+    s32 sp50;
+    s16 var_a0;
+    u32 *address;
+    s32 sizeOfobj;
+    Object *curObj;
+    Object *new_var;
     s32 assetCount;
     s8 var_v1;
-    s32 i;
+    Settings *settings;
 
     settings = get_settings();
     objType = entry->objectID | ((entry->size & 0x80) << 1);
@@ -959,7 +959,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     for (i = 0; i < 0x200; i++) {
         (*D_8011AD58)[i] = NULL;
     }
-    curObj = (*D_8011AD58)[0];
+    curObj = &(*D_8011AD58)[0];
     curObj->segment.trans.flags = 2;
     curObj->segment.header = func_8000C718(var_a0);
     if (curObj->segment.header == NULL) {
@@ -995,6 +995,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     var_a2 = 0;
     switch (curObj->segment.header->behaviorId) {
     case BHV_PARK_WARDEN:
+        if ((entry->z && entry->z) && entry->z){} //fakematch
         func_800619F4(7);
         break;
     case BHV_ANIMATED_OBJECT_4:
@@ -1013,11 +1014,12 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     case BHV_DYNAMIC_LIGHT_OBJECT_2:
         var_a2 = settings->wizpigAmulet;
         assetCount = var_a2 + 1;
-        curObj->segment.object.numModelIDs = var_a2;
+        curObj->segment.object.numModelIDs = settings->wizpigAmulet;
         break;
     case BHV_ROCKET_SIGNPOST_2:
         objType = settings->trophies;
-        for (i = 0; i < 3; i++) {
+        //Thanks, I hate it.
+        for (i = 0; i < 4; i = (i + 1) & 0xFFFFFFFF) {
             if ((objType & 3) == 3) {
                 var_a2++;
             }
@@ -1057,14 +1059,14 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     var_v1 = FALSE;
     if (objType == 0) {
-        for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {            
+        for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {
+            if(assetCount){} //FAKEMATCH?
             if (var_a2 == 0 && arg1 & 4) {
                 curObj->unk68[var_a2] = NULL;
             } else if (var_a2 == 1 && arg1 & 8) {
                 curObj->unk68[var_a2] = NULL;
             } else {
                 curObj->unk68[var_a2] = (Object_68 *) func_8005F99C(curObj->segment.header->modelIds[var_a2], sp50);
-                if (assetCount) {} //FAKEMATCH?
                 if (curObj->unk68[var_a2] == NULL) {
                     var_v1 = TRUE;
                 }
@@ -1112,7 +1114,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         address = (u32 *) ((uintptr_t) address + sizeOfobj);
         if (sizeOfobj == 0) {
             if (D_8011AE50 != NULL) {
-                free_texture(D_8011AE50);
+                free_texture((u32)D_8011AE50);
             }
             objFreeAssets(curObj, assetCount, objType);
             func_8000C844(var_a0);
@@ -1133,17 +1135,18 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         address = (u32 *) ((uintptr_t) address + func_8000FAC4(curObj, (Object_6C *) address));
     }
     sizeOfobj = (uintptr_t) address - (uintptr_t) curObj;
-    if (curObj->segment.header->unk5A > 0) {
+    if (curObj->segment.header->unk5A > 0) 
+    {
         curObj->unk70 = address;
         sizeOfobj = (s32) ((uintptr_t) address + (curObj->segment.header->unk5A * 4)) - (uintptr_t) curObj;
     }
     newObj = allocate_from_pool_containing_slots((MemoryPoolSlot *) gObjectMemoryPool, sizeOfobj);
     if (newObj == NULL) {
         if (D_8011AE50 != NULL) {
-            free_texture(D_8011AE50);
+            free_texture((u32)D_8011AE50);
         }
         if (D_8011AE54 != NULL) {
-            free_texture(D_8011AE54);
+            free_texture((u32)D_8011AE54);
         }
         objFreeAssets(curObj, assetCount, objType);
         func_8000C844(var_a0);
