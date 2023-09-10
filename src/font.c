@@ -71,8 +71,6 @@ DialogueBoxBackground *gDialogueBoxBackground; //Official Name: Window
 DialogueTextElement *gDialogueText; //Official Name: String
 s32 gCompactKerning; // Official Name: squash - Boolean value, seems to be related to X placement of menus on the X Axis?
 s8 sDialogueBoxCloseTimer;
-UNUSED s32 D_8012A7F8;
-UNUSED s32 D_8012A7FC;
 
 /******************************/
 

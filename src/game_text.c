@@ -443,7 +443,7 @@ s32 func_800C38B4(s32 arg0, TextBox *textbox) {
     char *var_s0;
 
     var_s0 = &D_8012A7A0[arg0];
-    while ((var_s0[0] >= 3) && (var_s0[0] < 13)) {
+    while (var_s0[0] >= 3 && var_s0[0] < 13) {
         switch (var_s0[0] - 3) {
         case 0:
             textbox->font = var_s0[1];
@@ -454,14 +454,14 @@ s32 func_800C38B4(s32 arg0, TextBox *textbox) {
         case 1:
             textbox->left = var_s0[1] & 0xFF;
             textbox->top = D_8012A7A0[arg0 + 2] & 0xFF;
-            if (osTvType == 0) {
+            if (osTvType == TV_TYPE_PAL) {
                 temp = textbox->top;
-                textbox->top = ((textbox->top * 0x108) / 240);
+                textbox->top = (textbox->top * 264) / 240;
                 temp = textbox->top - temp;
             } else {
                 temp = 0;
             }
-            textbox->right = (D_8012A7A0[arg0 + 3] & 0xFF) + 0x41;
+            textbox->right = (D_8012A7A0[arg0 + 3] & 0xFF) + 65;
             textbox->bottom = (D_8012A7A0[arg0 + 4] & 0xFF) + temp;
             arg0 += 5;
             set_current_dialogue_box_coords(1, textbox->left, textbox->top, textbox->right, textbox->bottom);
@@ -511,12 +511,12 @@ s32 func_800C38B4(s32 arg0, TextBox *textbox) {
             break;
         case 8:
             arg0 += 2;
-            D_8012A787 = (s8) var_s0[1];
+            D_8012A787 = var_s0[1];
             var_s0 += 2;
             break;
         case 9:
             arg0 += 2;
-            D_8012A788 = (s8) var_s0[1];
+            D_8012A788 = var_s0[1];
             var_s0 += 2;
             break;
         }
