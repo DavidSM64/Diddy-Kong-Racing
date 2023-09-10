@@ -2537,7 +2537,7 @@ void init_title_screen_variables(void) {
         gIsInAdventureTwo = 0;
     }
     if ((sEepromSettings & 0x2000000) == 0) {
-        func_800C2AF4(0);
+        set_subtitles(0);
     }
     load_menu_text(get_language());
 }
@@ -2903,12 +2903,12 @@ s32 menu_options_loop(s32 updateRate) {
         if (sEepromSettings & 0x2000000) {
             play_sound_global(SOUND_MENU_PICK2, NULL);
             unset_eeprom_settings_value(0);
-            func_800C2AF4(0);
+            set_subtitles(0);
             gOptionMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_SUBTITLESOFF];
         } else {
             play_sound_global(SOUND_MENU_PICK2, NULL);
             set_eeprom_settings_value(0);
-            func_800C2AF4(1);
+            set_subtitles(1);
             gOptionMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_SUBTITLESON];
         }
     } else {
@@ -8657,7 +8657,7 @@ s32 npc_dialogue_loop(u32 dialogueOption) {
             result = tt_menu_loop(); // T.T. menu
             break;
         case DIALOGUE_CHALLENGE:
-            result = func_800C3564(); // Taj challenge completed/failed menu
+            result = dialogue_challenge_loop(); // Taj challenge completed/failed menu
             break;
         case DIALOGUE_TROPHY:
             result = trophy_race_cabinet_menu_loop(); // Trophy race cabinet menu
