@@ -27,9 +27,7 @@ enum TextProperties {
     TEXT_COL_B,
     TEXT_ALPHA,
     TEXT_FONT,
-    TEXT_FLAGS,
-    TEXT_UNK7,
-    TEXT_UNK8
+    TEXT_FLAGS
 };
 
 typedef struct GameTextTableStruct  {
@@ -59,7 +57,7 @@ void set_subtitles(s32 arg0);
 void process_subtitles(s32 arg0);
 void load_game_text_table(void);
 void free_game_text_table(void);
-void func_800C3140(s32 arg0);
+void set_textbox_display_value(s32 arg0);
 void func_800C314C(void);
 void func_800C3158(s32 arg0, f32 arg1);
 s32 func_800C3400(void);

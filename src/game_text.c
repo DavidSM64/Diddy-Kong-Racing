@@ -11,7 +11,7 @@
 /************ .data ************/
 
 s8 gTextTableExists = FALSE;
-s16 D_800E3674 = 0;
+s16 gTextDisplayNumber = 0;
 s32 D_800E3678 = 0;
 s32 D_800E367C = 0;
 s32 gSubtitleSetting = TRUE;
@@ -28,30 +28,28 @@ s8 D_8012A787;
 s8 D_8012A788;
 u8 gShowOnscreenMessage;
 u8 D_8012A78A;
-s16 D_8012A78C;
+UNUSED s16 D_8012A78C; // Set to -1, never read.
 s16 D_8012A78E;
 s16 gTextTableEntries;
-s16 D_8012A792;
+UNUSED s16 D_8012A792;
 char *gGameTextTableEntries[2]; //960 x2 bytes
 char *D_8012A7A0;
 s32 D_8012A7A4;
 s16 gDialogueAlpha;
 s16 gTextAlphaVelocity;
 s16 gSubtitleTimer;
-s16 sDialogueXPos1; // The Upper Left X Coord of the Dialogue Box.
+s16 gDialogueXPos1; // The Upper Left X Coord of the Dialogue Box.
 s16 gDialogueYPos1; // The Upper Left Y Coord of the Dialogue Box. Changes for PAL / NTSC
-s16 sDialogueXPos2; // The Lower Right X Coord of the Dialogue Box.
+s16 gDialogueXPos2; // The Lower Right X Coord of the Dialogue Box.
 s16 gDialogueYPos2; // The Lower Right Y Coord of the Dialogue Box. Changes for PAL / NTSC
-s16 gShowSubtitles;     // A Boolean value
+s16 gShowSubtitles;
 s16 gSubtitleLineCount;
 s16 gCurrentTextID;
-s16 D_8012A7BE;
+UNUSED s16 D_8012A7BE;
 char *gSubtitleProperties[1];
 char *gCurrentMessageText[2];
 char *gCurrentTextProperties;
 s32 D_8012A7D4;
-s32 D_8012A7D8;
-s32 D_8012A7DC;
 
 /*****************************/
 
@@ -66,8 +64,8 @@ void init_dialogue_text(void) {
     gDialogueAlpha = 0;
     gTextAlphaVelocity = 32;
     gCurrentTextID = 0;
-    sDialogueXPos1 = 32;
-    sDialogueXPos2 = 288;
+    gDialogueXPos1 = 32;
+    gDialogueXPos2 = 288;
     if (osTvType == TV_TYPE_PAL) {
         gDialogueYPos1 = 224;
         gDialogueYPos2 = 248;
@@ -106,7 +104,7 @@ void render_subtitles(void) {
     char **textData;
 
     assign_dialogue_box_id(6);
-    set_current_dialogue_box_coords(6, sDialogueXPos1, gDialogueYPos1, sDialogueXPos2, gDialogueYPos2);
+    set_current_dialogue_box_coords(6, gDialogueXPos1, gDialogueYPos1, gDialogueXPos2, gDialogueYPos2);
     set_current_dialogue_background_colour(6, 64, 96, 96, (gDialogueAlpha * 160) >> 8);
     set_current_text_background_colour(6, 0, 0, 0, 0);
     textY = ((((gDialogueYPos2 - gDialogueYPos1) - (gSubtitleLineCount * 12)) - (gSubtitleLineCount * 2)) + 2) >> 1;
@@ -117,10 +115,10 @@ void render_subtitles(void) {
         set_dialogue_font(6, (s32) textData[i][TEXT_FONT]);
         textFlags = textData[i][TEXT_FLAGS];
         if (textFlags == ALIGN_TOP_CENTER) {
-            textX = (sDialogueXPos2 - sDialogueXPos1) >> 1;
+            textX = (gDialogueXPos2 - gDialogueXPos1) >> 1;
         } else {
             if (textFlags == ALIGN_TOP_RIGHT) {
-                textX = (sDialogueXPos2 - sDialogueXPos1) - 8;
+                textX = (gDialogueXPos2 - gDialogueXPos1) - 8;
             } else {
                 textX = 8;
             }
@@ -235,7 +233,7 @@ void free_game_text_table(void) {
     if (gTextTableExists) {
         free_from_memory_pool(gGameTextTable[0]);
         gTextTableExists = FALSE;
-        gShowOnscreenMessage = 0;
+        gShowOnscreenMessage = FALSE;
         for (i = 0; i < 10; i++) {
             try_close_dialogue_box();
         };
@@ -243,8 +241,11 @@ void free_game_text_table(void) {
     }
 }
 
-void func_800C3140(s32 arg0) {
-    D_800E3674 = arg0;
+/**
+ * Set the variable used by the message boxes when trying to display an arbitrary number.
+*/
+void set_textbox_display_value(s32 num) {
+    gTextDisplayNumber = num;
 }
 
 void func_800C314C(void) {
@@ -268,56 +269,56 @@ void func_800C31EC(s32 arg0) {
     s32 temp;
     
   if (gTextTableExists && arg0 >= 0) {
-    if (arg0 < gTextTableEntries) {
-      language = get_language();
-      switch (language) {
+        if (arg0 < gTextTableEntries) {
+        language = get_language();
+        switch (language) {
         case LANGUAGE_GERMAN:
-          arg0 += 0x55;
-          break;
+            arg0 += 0x55;
+            break;
         case LANGUAGE_FRENCH:
-          arg0 += 0xAA;
-          break;
+            arg0 += 0xAA;
+            break;
         case LANGUAGE_JAPANESE:
-          arg0 += 0xFF;
-          break;
-      }
+            arg0 += 0xFF;
+            break;
+        }
 
-      load_asset_to_address(ASSET_GAME_TEXT_TABLE, (u32) (*gGameTextTable)->entries, (arg0 & (~1)) << 2, 16);
-      
-      entries = (*gGameTextTable)->entries;
-      temp = ((s32) entries[(arg0 & 1)]) & 0xFF000000;
-      size = (((s32) entries[(arg0 & 1) + 1]) & 0xFFFFFF) - (((s32) entries[(arg0 & 1)]) & 0xFFFFFF);
-      
-      if (temp) {
-        load_asset_to_address(ASSET_GAME_TEXT, (u32) gCurrentMessageText[D_8012A7D4], ((s32) entries[(arg0 & 1)]) ^ temp, size);
-        gCurrentTextProperties = gCurrentMessageText[D_8012A7D4];
-        find_next_subtitle();
-        D_8012A7D4 = (D_8012A7D4 + 1) & 1;
+        load_asset_to_address(ASSET_GAME_TEXT_TABLE, (u32) (*gGameTextTable)->entries, (arg0 & (~1)) << 2, 16);
+        
+        entries = (*gGameTextTable)->entries;
+        temp = ((s32) entries[arg0 & 1]) & 0xFF000000;
+        size = (((s32) entries[(arg0 & 1) + 1]) & 0xFFFFFF) - (((s32) entries[arg0 & 1]) & 0xFFFFFF);
+        
+        if (temp) {
+            load_asset_to_address(ASSET_GAME_TEXT, (u32) gCurrentMessageText[D_8012A7D4], ((s32) entries[arg0 & 1]) ^ temp, size);
+            gCurrentTextProperties = gCurrentMessageText[D_8012A7D4];
+            find_next_subtitle();
+            D_8012A7D4 = (D_8012A7D4 + 1) & 1;
+            return;
+        }
+        load_asset_to_address(ASSET_GAME_TEXT, (u32) gGameTextTableEntries[D_8012A7A4], ((s32) entries[arg0 & 1]) ^ temp, size);
+        D_8012A7A0 = gGameTextTableEntries[D_8012A7A4];
+        D_8012A7A4 = (D_8012A7A4 + 1) & 1;
+        D_8012A788 = 0;
+        gTextCloseTimerSeconds = 0;
+        gCloseTextMessage = FALSE;
+        D_8012A787 = 1;
+        D_8012A7A0[size] = 2;
+        if (gShowOnscreenMessage == FALSE) {
+            D_8012A78E = 0;
+            D_8012A78A = 1;
+            gShowOnscreenMessage = TRUE;
+        }
         return;
-      }
-      load_asset_to_address(ASSET_GAME_TEXT, (u32) gGameTextTableEntries[D_8012A7A4], ((s32) entries[(arg0 & 1)]) ^ temp, size);
-      D_8012A7A0 = gGameTextTableEntries[D_8012A7A4];
-      D_8012A7A4 = (D_8012A7A4 + 1) & 1;
-      D_8012A788 = 0;
-      gTextCloseTimerSeconds = 0;
-      gCloseTextMessage = FALSE;
-      D_8012A787 = 1;
-      D_8012A7A0[size] = 2;
-      if (!gShowOnscreenMessage) {
-        D_8012A78E = 0;
-        D_8012A78A = 1;
-        gShowOnscreenMessage = 1;
-      }
-      return;
+        }
     }
-  }
-  gCloseTextMessage = TRUE;
+    gCloseTextMessage = TRUE;
 }
 
 s32 func_800C3400(void) {
     s32 result = 0;
     if (gTextTableExists) {
-        if (gShowOnscreenMessage != 0) {
+        if (gShowOnscreenMessage) {
             result = 1;
             if (D_8012A788 != 0) {
                 result = 2;
@@ -402,7 +403,7 @@ s32 dialogue_challenge_loop(void) {
         } else {
             xPos = (s32) (textBox.right - textBox.left) >> 1; // Center x position to box.
         }
-        render_dialogue_text(1, xPos, textBox.textY, &D_8012A7A0[index], D_800E3674, textBox.textFlags);
+        render_dialogue_text(1, xPos, textBox.textY, &D_8012A7A0[index], gTextDisplayNumber, textBox.textFlags);
         textBox.textY += textBox.lineHeight;
         while (D_8012A7A0[index] > 0) {
             index += 1;
@@ -426,7 +427,7 @@ s32 dialogue_challenge_loop(void) {
             if (D_8012A7A0[index] == 1) {
                 D_8012A78E += 1;
             } else {
-                gShowOnscreenMessage = 0;
+                gShowOnscreenMessage = FALSE;
                 func_8009CF68(3);
             }
             gCloseTextMessage = FALSE;
@@ -502,7 +503,7 @@ s32 func_800C38B4(s32 arg0, TextBox *textbox) {
         case 7:
             if (gTextCloseTimerSeconds == 0) {
                 gTextCloseTimerSeconds = var_s0[1] & 0xFF;
-                gTextCloseTimerFrames = normalise_time(0x3C);
+                gTextCloseTimerFrames = normalise_time(60);
                 var_s0 = &D_8012A7A0[arg0];
             }
             arg0 += 2;
