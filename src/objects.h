@@ -304,7 +304,7 @@ void func_8000C604(void);
 s32 normalise_time(s32 timer);
 void func_8000CBC0(void);
 s32 func_8000CC20(Object *arg0);
-u32 func_8000E0B0(void);
+s32 func_8000E0B0(void);
 void instShowBearBar(void);
 s8 func_8000E138(void);
 s8 func_8000E148(void);

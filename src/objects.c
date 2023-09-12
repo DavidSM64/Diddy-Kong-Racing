@@ -665,7 +665,7 @@ s32 func_8000CC20(Object *obj) {
 // Has a jump table
 GLOBAL_ASM("asm/non_matchings/objects/func_8000CC7C.s")
 
-u32 func_8000E0B0(void) {
+s32 func_8000E0B0(void) {
     // D_8011AD38 is likely an SIDeviceStatus value, but not 100% sure yet.
     switch (D_8011AD38) {
         case 1: //NO_CONTROLLER_PAK

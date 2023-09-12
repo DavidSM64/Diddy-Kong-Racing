@@ -283,6 +283,10 @@ typedef struct ObjectTransform_800A8474 {
     s16 unk18;
 } ObjectTransform_800A8474;
 
+typedef struct unk80126CF4 {
+    void *unk0[40];
+} unk80126CF4;
+
 extern u8 gGfxTaskYieldData[OS_YIELD_DATA_SIZE];
 
 u8 func_800A0190(void);
@@ -330,9 +334,10 @@ void func_800A6254(Object_64* obj, s32 updateRate);
 void func_800A6E30(Object_64* obj, s32 updateRate);
 void func_800A7A60(Object*, Gfx**);
 void func_800A0BD4(s32);
-void func_800A19A4(Object_Racer*, s32 updateRate);
+void func_800A19A4(Object_Racer* racer, s32 updateRate);
 void func_800A1E48(s32, s32);
 void render_treasure_hud(Object_Racer*);
 void func_800AA3EC(f32, f32, f32, f32, f32);
+void func_800A36CC(s32, s32, s32, s32, s32);
 
 #endif
