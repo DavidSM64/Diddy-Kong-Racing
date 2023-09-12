@@ -716,7 +716,7 @@ void render_hud_hubworld(Object *obj, s32 updateRate) {
 
 #ifdef NON_EQUIVALENT
 // render_hud_time_trial
-//https://decomp.me/scratch/7iImW
+// https://decomp.me/scratch/uE5JD
 // Draws Time Trial HUD. Also handles music/audio?
 void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
     s32 i;
@@ -729,6 +729,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
     LevelObjectEntryCommon sp90;
     LevelObjectEntryCommon sp88;
     char *SWMessage[3];
+    f32 posXTemp;
     f32 posX;
     f32 posZ;
     f32 posY;
@@ -828,12 +829,12 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
         }
         D_80126CDC->unk444 = ((stopwatchTimer * 0x444) + 0x7FF8);
         if (func_8000E0B0() <= 0) {
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC** ) &D_80126CDC->unk21C[0x224]);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &D_80126CDC->unk21C[0x224]);
         }
         D_80126CDC->unk444 = ((((stopwatchTimer / 60) + 30) % 60) * 0x444);
         D_80126CDC->unk450 = D_80126CDC->unk350 + 28.0f;
         if (func_8000E0B0() <= 0) {
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC** ) &D_80126CDC->unk21C[0x224]);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &D_80126CDC->unk21C[0x224]);
         }
         obj68->unk20 = 0;
         func_80068508(1);
@@ -847,15 +848,13 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
                 D_800E2834 = COLOUR_RGBA32(255, 255, 255, 254);
                 spB8 += 12;
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
-                D_80126CDC->unk338 = i;
-                if (((!(&playerRacerObj->segment)) && (!(&playerRacerObj->segment))) && (!(&playerRacerObj->segment))){} // FAKEMATCH
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC** ) &D_80126CDC->unk21C[0x104]);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC** ) &D_80126CDC->unk21C[0xE4]);
+                D_80126CDC->unk338 = i + 1;
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &D_80126CDC->unk21C[0x104]);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &D_80126CDC->unk21C[0xE4]);
                 D_80126CDC->unk330 += 12.0f;
                 D_80126CDC->unk310 += 12.0f;
             }
             posX = ((i * 4) - i) * 4;
-            if (temp_t2_2 && temp_t2_2){} // FAKEMATCH
             D_80126CDC->unk330 -= posX;
             D_80126CDC->unk310 -= posX;
             if ((curRacer->boost_sound & 4) && (D_80126D4C <= 0)) {
@@ -904,7 +903,8 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
                     posX = temp_s0->segment.trans.x_position - playerRacerObj->segment.trans.x_position;
                     posY = temp_s0->segment.trans.y_position - playerRacerObj->segment.trans.y_position;
                     posZ = temp_s0->segment.trans.z_position - playerRacerObj->segment.trans.z_position;
-                    if ((sqrtf((posX * posX) + (posY * posY) + (posZ * posZ)) < 600.0f) && (gHUDVoiceSoundMask == 0) && (D_80126D50 == 0)) {
+                    posXTemp = (posX * posX);
+                    if ((sqrtf(posXTemp + (posY * posY) + (posZ * posZ)) < 600.0f) && (gHUDVoiceSoundMask == 0) && (D_80126D50 == 0)) {
                         newLapSoundID = (get_random_number_from_range(0, 2) + SOUND_VOICE_TT_GO_FOR_IT);
                         while (D_80126D48 == newLapSoundID) {
                             newLapSoundID = (get_random_number_from_range(0, 2) + SOUND_VOICE_TT_GO_FOR_IT);
