@@ -25,7 +25,9 @@ typedef enum CameraZoom {
 typedef enum BoostSound {
     BOOST_NONE,
     BOOST_RACE_START,
-    BOOST_UNK2
+    BOOST_SOUND_UNK2,
+    BOOST_SOUND_UNK3,
+    BOOST_SOUND_UNK4
 } BoostSound;
 
 // boost types suffixed with _FAST are the ones you get from releasing the throttle.

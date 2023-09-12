@@ -3130,7 +3130,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->magnetTimer = 0;
         racer->lateral_velocity = 0.0f;
     } else if (surfaceType == SURFACE_FROZEN_WATER) {
-        racer->boost_sound |= 4;
+        racer->boost_sound |= BOOST_SOUND_UNK4;
         racer_play_sound(obj, SOUND_BOUNCE2);
     }
     // If driving over a zip pad, apply a boost.
@@ -4823,8 +4823,8 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
         }
     }
 
-    if (racer->boost_sound & BOOST_UNK2) {
-        racer->boost_sound &= ~BOOST_UNK2;
+    if (racer->boost_sound & BOOST_SOUND_UNK2) {
+        racer->boost_sound &= ~BOOST_SOUND_UNK2;
     }
     bananas = racer->bananas;
     // Cheats only apply to human players.

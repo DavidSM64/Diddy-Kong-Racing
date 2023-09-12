@@ -725,95 +725,89 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
     s32 spB0;
     s32 spAC;
     s32 stopwatchTimer;
-    Object_Racer *curRacer;
-    LevelObjectEntryCommon sp90;
-    LevelObjectEntryCommon sp88;
-    char *SWMessage[3];
-    f32 posXTemp;
-    f32 posX;
-    f32 posZ;
-    f32 posY;
-    s16 temp_a0_2;
     s32 temp_lo;
-    s32 temp_t2_2;
+    Object_Racer *curRacer;
+    Object *spawnObj20Temp;
+    Object_68 *obj68;
+    LevelObjectEntryCommon spawnObj20;
+    LevelObjectEntryCommon spawnObj34;
+    s32 temp_a0_2;
     s32 temp_t6;
     u16 stopwatchEndSoundID;
     s32 recordTime;
     u16 newLapSoundID;
-    Object *temp_s0;
-    Object_68 *obj68;
-    s32 temp;
-
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    char *SWMessage[3];
+    
     curRacer = &playerRacerObj->unk64->racer;
     stopwatchTimer = 0;
     if (D_80126CF4->unk0[20] == NULL) {
-        sp90.objectID = D_80126CF0[20];
-        sp90.size = 8;
-        sp90.x = 0;
-        sp90.y = 0;
-        sp90.z = 0;
-        D_80126CF4->unk0[20] = spawn_object(&sp90, 0);
+        spawnObj20.objectID = D_80126CF0[20];
+        spawnObj20.size = 8;
+        spawnObj20.x = 0;
+        spawnObj20.y = 0;
+        spawnObj20.z = 0;
+        D_80126CF4->unk0[20] = spawn_object(&spawnObj20, 0);
         D_80126CDC->unk340 = -0x8000;
         if (D_80126CF4->unk0[20] != NULL) {
              ((Object *) D_80126CF4->unk0[20])->segment.animFrame = 0;
         }
     }
     if (D_80126CF4->unk0[34] == 0) {
-        sp88.objectID = D_80126CF0[34];
-        sp88.size = 8;
-        sp88.x = 0;
-        sp88.y = 0;
-        sp88.z = 0;
-        D_80126CF4->unk0[34]= spawn_object(&sp88, 0);
+        spawnObj34.objectID = D_80126CF0[34];
+        spawnObj34.size = 8;
+        spawnObj34.x = 0;
+        spawnObj34.y = 0;
+        spawnObj34.z = 0;
+        D_80126CF4->unk0[34]= spawn_object(&spawnObj34, 0);
         D_80126CDC->unk440 = -0x8000;
     }
-    temp_s0 = D_80126CF4->unk0[20];
-    if (temp_s0 != NULL) {
-        temp_s0->segment.object.animationID = gStopwatchFaceID;
-        obj68 = (Object_68 *) temp_s0->unk68[0];
+    spawnObj20Temp = D_80126CF4->unk0[20];
+    if (spawnObj20Temp != NULL) {
+        spawnObj20Temp->segment.object.animationID = gStopwatchFaceID;
+        obj68 = (Object_68 *) spawnObj20Temp->unk68[0];
         obj68->objModel->unk52 = updateRate;
         if (gStopwatchFaceID != 0xFF) {
             if ((gStopwatchFaceID == 4) && ((func_8001139C()) || (!music_is_playing()))) {
-                temp_s0->segment.animFrame = 16;
+                spawnObj20Temp->segment.animFrame = 16;
             } else if (gStopwatchFaceID == 4) {
                 posX = audio_get_chr_select_anim_frac();
                 temp_t6 = (obj68->objModel->animations[gStopwatchFaceID].unk4 - 1) << 4;
                 if (posX == -1.0) {
-                    temp_s0->segment.animFrame = 0;
+                    spawnObj20Temp->segment.animFrame = 0;
                 } else if (posX > 0.5) {
-                    temp_s0->segment.animFrame = (s16)(temp_t6 - ((f32) (2.0 * (f32) (posX - 0.5)) * temp_t6));
+                    spawnObj20Temp->segment.animFrame = (temp_t6 - ((f32) (2.0 * (f32) (posX - 0.5)) * temp_t6));
                 } else {
-                    temp_s0->segment.animFrame = temp_t6 * (posX * 2);
+                    spawnObj20Temp->segment.animFrame = temp_t6 * (posX * 2);
                 }
-            } else {
-                if (!is_game_paused()) {
-                    if (D_80126D69 < 0) {
-                        temp_a0_2 = temp_s0->segment.animFrame;
-                        temp_lo = updateRate * D_80126D69;
-                        if (-temp_lo < temp_a0_2) {
-                            temp_s0->segment.animFrame = temp_a0_2 + temp_lo;
-                        } else {
-                            temp_s0->segment.animFrame = 1;
-                            D_80126D69 = -D_80126D69;
-                        }
+            } else if (!is_game_paused()) {
+                if (D_80126D69 < 0) {
+                    temp_lo = updateRate * D_80126D69;
+                    if (-temp_lo < spawnObj20Temp->segment.animFrame) {
+                        spawnObj20Temp->segment.animFrame = spawnObj20Temp->segment.animFrame + temp_lo;
                     } else {
-                        temp_s0->segment.animFrame += (updateRate * D_80126D69);
-                        temp_lo = (obj68->objModel->animations[gStopwatchFaceID].unk4 - 1) << 4;
-                        if (temp_s0->segment.animFrame >= temp_lo) {
-                            if (D_80126D68 != 0) {
-                                D_80126D69 = -D_80126D69;
-                                temp_s0->segment.animFrame = temp_lo - 1;
-                            } else {
-                                temp_s0->segment.animFrame = 0;
-                                if (curRacer->unk1FC == 0 && curRacer->raceFinished == 0) {
-                                    func_800A36CC(4, 0, 4, 1, 1);
-                                }
+                        spawnObj20Temp->segment.animFrame = 1;
+                        D_80126D69 = -D_80126D69;
+                    }
+                } else {
+                    spawnObj20Temp->segment.animFrame += (updateRate * D_80126D69);
+                    temp_lo = (obj68->objModel->animations[gStopwatchFaceID].unk4 - 1) << 4;
+                    if (spawnObj20Temp->segment.animFrame >= temp_lo) {
+                        if (D_80126D68 != 0) {
+                            D_80126D69 = -D_80126D69;
+                            spawnObj20Temp->segment.animFrame = temp_lo - 1;
+                        } else {
+                            spawnObj20Temp->segment.animFrame = 0;
+                            if (curRacer->unk1FC == 0 && curRacer->raceFinished == 0) {
+                                func_800A36CC(4, 0, 4, 1, 1);
                             }
                         }
                     }
                 }
             }
-            func_80061D30(temp_s0);
+            func_80061D30(spawnObj20Temp);
         }
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC** ) &D_80126CDC->unk21C[0x124]);
         
@@ -821,7 +815,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
             stopwatchTimer += curRacer->lap_times[i];
         }
         
-        if (osTvType == 0) {
+        if (osTvType == TV_TYPE_PAL) {
             stopwatchTimer = (f32) stopwatchTimer * 1.2;
         }
         if (normalise_time(36000) < stopwatchTimer) {
@@ -857,10 +851,10 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
             posX = ((i * 4) - i) * 4;
             D_80126CDC->unk330 -= posX;
             D_80126CDC->unk310 -= posX;
-            if ((curRacer->boost_sound & 4) && (D_80126D4C <= 0)) {
+            if ((curRacer->boost_sound & BOOST_SOUND_UNK4) && (D_80126D4C <= 0)) {
                 func_800A36CC(7, 3, 0, 4, 0);
-                D_80126D4C = 0x3C;
-                curRacer->boost_sound &= 0xFFFB;
+                D_80126D4C = 60;
+                curRacer->boost_sound &= ~BOOST_SOUND_UNK4;
             }
             if (D_80126D4C > 0) {
                 D_80126D4C -= updateRate;
@@ -881,10 +875,10 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
                 }
             }
         }
-        if ((curRacer->lap > 0) && (curRacer->lap < gHudLevelHeader->laps) && (curRacer->lap_times[curRacer->lap] < 20) && (gHUDVoiceSoundMask == 0) && (curRacer->vehicleID < 3)) {
+        if ((curRacer->lap > 0) && (curRacer->lap < gHudLevelHeader->laps) && (curRacer->lap_times[curRacer->lap] < 20) && (gHUDVoiceSoundMask == 0) && (curRacer->vehicleID <= VEHICLE_PLANE)) {
             D_80127184 = get_settings();
-            temp = func_8006BD88();
-            if (curRacer->lap_times[curRacer->lap] < (s32) D_80127184->flapTimesPtr[curRacer->vehicleID][temp]) {
+            temp_lo = func_8006BD88();
+            if (curRacer->lap_times[curRacer->lap] < D_80127184->flapTimesPtr[curRacer->vehicleID][temp_lo]) {
                 recordTime = curRacer->lap_times[curRacer->lap];
                 for (i = 0; i < curRacer->lap - 1; i++) {
                     if (recordTime >= curRacer->lap_times[i]) {
@@ -897,14 +891,13 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
             }
         }
         if (func_8001B288()) {
-            temp_s0 = func_8001B2E0();
-            if (temp_s0 != NULL) {
+            spawnObj20Temp = func_8001B2E0();
+            if (spawnObj20Temp != NULL) {
                 if ((func_8001139C() == 0) && (curRacer->raceFinished == 0)) {
-                    posX = temp_s0->segment.trans.x_position - playerRacerObj->segment.trans.x_position;
-                    posY = temp_s0->segment.trans.y_position - playerRacerObj->segment.trans.y_position;
-                    posZ = temp_s0->segment.trans.z_position - playerRacerObj->segment.trans.z_position;
-                    posXTemp = (posX * posX);
-                    if ((sqrtf(posXTemp + (posY * posY) + (posZ * posZ)) < 600.0f) && (gHUDVoiceSoundMask == 0) && (D_80126D50 == 0)) {
+                    posY = spawnObj20Temp->segment.trans.y_position - playerRacerObj->segment.trans.y_position;
+                    posX = spawnObj20Temp->segment.trans.x_position - playerRacerObj->segment.trans.x_position;
+                    posZ = spawnObj20Temp->segment.trans.z_position - playerRacerObj->segment.trans.z_position;
+                    if ((sqrtf(posX * posX + (posY * posY) + (posZ * posZ)) < 600.0f) && (gHUDVoiceSoundMask == 0) && (D_80126D50 == 0)) {
                         newLapSoundID = (get_random_number_from_range(0, 2) + SOUND_VOICE_TT_GO_FOR_IT);
                         while (D_80126D48 == newLapSoundID) {
                             newLapSoundID = (get_random_number_from_range(0, 2) + SOUND_VOICE_TT_GO_FOR_IT);
@@ -924,7 +917,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
             func_800A36CC(5, 1, 2, 2, 0);
         } else if (curRacer->boostTimer > 0) {
             func_800A36CC(6, 2, 3, 2, 0);
-        } else if (curRacer->unk1FC >= 0x79) {
+        } else if (curRacer->unk1FC > 120) {
             func_800A36CC(6, 3, 1, 4, 0);
         }
         render_lap_count(curRacer, updateRate);
