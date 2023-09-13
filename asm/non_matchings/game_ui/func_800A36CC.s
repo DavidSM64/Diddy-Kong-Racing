@@ -11,8 +11,8 @@ glabel func_800A36CC
 /* 0A42F0 800A36F0 0C003936 */  jal   is_in_time_trial
 /* 0A42F4 800A36F4 AFA7002C */   sw    $a3, 0x2c($sp)
 /* 0A42F8 800A36F8 10400058 */  beqz  $v0, .L800A385C
-/* 0A42FC 800A36FC 3C0E8012 */   lui   $t6, %hi(D_80126CF4) # $t6, 0x8012
-/* 0A4300 800A3700 8DCE6CF4 */  lw    $t6, %lo(D_80126CF4)($t6)
+/* 0A42FC 800A36FC 3C0E8012 */   lui   $t6, %hi(gHudElements) # $t6, 0x8012
+/* 0A4300 800A3700 8DCE6CF4 */  lw    $t6, %lo(gHudElements)($t6)
 /* 0A4304 800A3704 00000000 */  nop   
 /* 0A4308 800A3708 8DC20050 */  lw    $v0, 0x50($t6)
 /* 0A430C 800A370C 00000000 */  nop   

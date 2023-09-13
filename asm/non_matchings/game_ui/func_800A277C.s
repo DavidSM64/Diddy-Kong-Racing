@@ -30,7 +30,7 @@ glabel D_800E8738
 glabel func_800A277C
 /* 0A337C 800A277C 27BDFF40 */  addiu $sp, $sp, -0xc0
 /* 0A3380 800A2780 AFB00020 */  sw    $s0, 0x20($sp)
-/* 0A3384 800A2784 3C108012 */  lui   $s0, %hi(D_80126CF4) # $s0, 0x8012
+/* 0A3384 800A2784 3C108012 */  lui   $s0, %hi(gHudElements) # $s0, 0x8012
 /* 0A3388 800A2788 AFBF002C */  sw    $ra, 0x2c($sp)
 /* 0A338C 800A278C AFB20028 */  sw    $s2, 0x28($sp)
 /* 0A3390 800A2790 AFB10024 */  sw    $s1, 0x24($sp)
@@ -38,7 +38,7 @@ glabel func_800A277C
 /* 0A3398 800A2798 AFA500C4 */  sw    $a1, 0xc4($sp)
 /* 0A339C 800A279C AFA600C8 */  sw    $a2, 0xc8($sp)
 /* 0A33A0 800A27A0 8CAF0064 */  lw    $t7, 0x64($a1)
-/* 0A33A4 800A27A4 26106CF4 */  addiu $s0, %lo(D_80126CF4) # addiu $s0, $s0, 0x6cf4
+/* 0A33A4 800A27A4 26106CF4 */  addiu $s0, %lo(gHudElements) # addiu $s0, $s0, 0x6cf4
 /* 0A33A8 800A27A8 8E030000 */  lw    $v1, ($s0)
 /* 0A33AC 800A27AC AFAF00A0 */  sw    $t7, 0xa0($sp)
 /* 0A33B0 800A27B0 8C780050 */  lw    $t8, 0x50($v1)
