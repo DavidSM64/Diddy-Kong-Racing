@@ -716,7 +716,7 @@ void render_hud_hubworld(Object *obj, s32 updateRate) {
 
 #ifdef NON_EQUIVALENT
 // render_hud_time_trial
-// https://decomp.me/scratch/uE5JD
+// https://decomp.me/scratch/BWqz9
 // Draws Time Trial HUD. Also handles music/audio?
 void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
     s32 i;
@@ -727,10 +727,10 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
     s32 stopwatchTimer;
     s32 temp_lo;
     Object_Racer *curRacer;
-    Object *spawnObj20Temp;
+    Object *ttSWBodyObject;
     Object_68 *obj68;
-    LevelObjectEntryCommon spawnObj20;
-    LevelObjectEntryCommon spawnObj34;
+    LevelObjectEntryCommon ttSWBody;
+    LevelObjectEntryCommon ttSWArms;
     s32 temp_a0_2;
     s32 temp_t6;
     u16 stopwatchEndSoundID;
@@ -739,67 +739,68 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
     f32 posX;
     f32 posY;
     f32 posZ;
+    f32 new_var;
     char *SWMessage[3];
     
     curRacer = &playerRacerObj->unk64->racer;
     stopwatchTimer = 0;
     if (D_80126CF4->unk0[20] == NULL) {
-        spawnObj20.objectID = D_80126CF0[20];
-        spawnObj20.size = 8;
-        spawnObj20.x = 0;
-        spawnObj20.y = 0;
-        spawnObj20.z = 0;
-        D_80126CF4->unk0[20] = spawn_object(&spawnObj20, 0);
+        ttSWBody.objectID = D_80126CF0[20] & 0xFFFF;
+        ttSWBody.size = 8;
+        ttSWBody.x = 0;
+        ttSWBody.y = 0;
+        ttSWBody.z = 0;
+        D_80126CF4->unk0[20] = spawn_object(&ttSWBody, 0);
         D_80126CDC->unk340 = -0x8000;
         if (D_80126CF4->unk0[20] != NULL) {
              ((Object *) D_80126CF4->unk0[20])->segment.animFrame = 0;
         }
     }
     if (D_80126CF4->unk0[34] == 0) {
-        spawnObj34.objectID = D_80126CF0[34];
-        spawnObj34.size = 8;
-        spawnObj34.x = 0;
-        spawnObj34.y = 0;
-        spawnObj34.z = 0;
-        D_80126CF4->unk0[34]= spawn_object(&spawnObj34, 0);
+        ttSWArms.objectID = D_80126CF0[34] & 0xFFFF;
+        ttSWArms.size = 8;
+        ttSWArms.x = 0;
+        ttSWArms.y = 0;
+        ttSWArms.z = 0;
+        D_80126CF4->unk0[34] = spawn_object(&ttSWArms, 0);
         D_80126CDC->unk440 = -0x8000;
     }
-    spawnObj20Temp = D_80126CF4->unk0[20];
-    if (spawnObj20Temp != NULL) {
-        spawnObj20Temp->segment.object.animationID = gStopwatchFaceID;
-        obj68 = (Object_68 *) spawnObj20Temp->unk68[0];
+    ttSWBodyObject = D_80126CF4->unk0[20];
+    if (ttSWBodyObject != NULL) {
+        ttSWBodyObject->segment.object.animationID = gStopwatchFaceID;
+        obj68 = (Object_68 *) ttSWBodyObject->unk68[0];
         obj68->objModel->unk52 = updateRate;
         if (gStopwatchFaceID != 0xFF) {
             if ((gStopwatchFaceID == 4) && ((func_8001139C()) || (!music_is_playing()))) {
-                spawnObj20Temp->segment.animFrame = 16;
+                ttSWBodyObject->segment.animFrame = 16;
             } else if (gStopwatchFaceID == 4) {
                 posX = audio_get_chr_select_anim_frac();
                 temp_t6 = (obj68->objModel->animations[gStopwatchFaceID].unk4 - 1) << 4;
                 if (posX == -1.0) {
-                    spawnObj20Temp->segment.animFrame = 0;
+                    ttSWBodyObject->segment.animFrame = 0.0;
                 } else if (posX > 0.5) {
-                    spawnObj20Temp->segment.animFrame = (temp_t6 - ((f32) (2.0 * (f32) (posX - 0.5)) * temp_t6));
+                    ttSWBodyObject->segment.animFrame = (temp_t6 - ((f32) (2.0 * (f32) (posX - 0.5)) * temp_t6));
                 } else {
-                    spawnObj20Temp->segment.animFrame = temp_t6 * (posX * 2);
+                    new_var = posX;
+                    ttSWBodyObject->segment.animFrame = temp_t6 * (posX * 2);
                 }
             } else if (!is_game_paused()) {
                 if (D_80126D69 < 0) {
-                    temp_lo = updateRate * D_80126D69;
-                    if (-temp_lo < spawnObj20Temp->segment.animFrame) {
-                        spawnObj20Temp->segment.animFrame = spawnObj20Temp->segment.animFrame + temp_lo;
+                    if (-(updateRate * D_80126D69) < ttSWBodyObject->segment.animFrame) {
+                        ttSWBodyObject->segment.animFrame += (updateRate * D_80126D69);
                     } else {
-                        spawnObj20Temp->segment.animFrame = 1;
+                        ttSWBodyObject->segment.animFrame = 1;
                         D_80126D69 = -D_80126D69;
                     }
                 } else {
-                    spawnObj20Temp->segment.animFrame += (updateRate * D_80126D69);
+                    ttSWBodyObject->segment.animFrame += (updateRate * D_80126D69);
                     temp_lo = (obj68->objModel->animations[gStopwatchFaceID].unk4 - 1) << 4;
-                    if (spawnObj20Temp->segment.animFrame >= temp_lo) {
+                    if (ttSWBodyObject->segment.animFrame >= temp_lo) {
                         if (D_80126D68 != 0) {
                             D_80126D69 = -D_80126D69;
-                            spawnObj20Temp->segment.animFrame = temp_lo - 1;
+                            ttSWBodyObject->segment.animFrame = temp_lo - 1;
                         } else {
-                            spawnObj20Temp->segment.animFrame = 0;
+                            ttSWBodyObject->segment.animFrame = 0;
                             if (curRacer->unk1FC == 0 && curRacer->raceFinished == 0) {
                                 func_800A36CC(4, 0, 4, 1, 1);
                             }
@@ -807,7 +808,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
                     }
                 }
             }
-            func_80061D30(spawnObj20Temp);
+            func_80061D30(ttSWBodyObject);
         }
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC** ) &D_80126CDC->unk21C[0x124]);
         
@@ -836,7 +837,8 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
         if (!curRacer->raceFinished) {
             spB8 = D_80126CDC->unk2F0;
             for (i = 0; i < curRacer->countLap && i < gHudLevelHeader->laps; i++) {
-                get_timestamp_from_frames(curRacer->lap_times[i], &spB4, &spB0, &spAC);
+                 // FAKEMATCH
+                get_timestamp_from_frames(curRacer->lap_times[i] & 0xFFFFFFFFFFFFFFFF, &spB4, &spB0, &spAC);
                 D_800E2834 = D_800E27AC[i];
                 func_800A7FBC(D_80126CDC->unk2EC, spB8, spB4, spB0, spAC, 1);
                 D_800E2834 = COLOUR_RGBA32(255, 255, 255, 254);
@@ -848,6 +850,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
                 D_80126CDC->unk330 += 12.0f;
                 D_80126CDC->unk310 += 12.0f;
             }
+            if (1) {} // FAKEMATCH
             posX = ((i * 4) - i) * 4;
             D_80126CDC->unk330 -= posX;
             D_80126CDC->unk310 -= posX;
@@ -891,12 +894,12 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
             }
         }
         if (func_8001B288()) {
-            spawnObj20Temp = func_8001B2E0();
-            if (spawnObj20Temp != NULL) {
+            ttSWBodyObject = func_8001B2E0();
+            if (ttSWBodyObject != NULL) {
                 if ((func_8001139C() == 0) && (curRacer->raceFinished == 0)) {
-                    posY = spawnObj20Temp->segment.trans.y_position - playerRacerObj->segment.trans.y_position;
-                    posX = spawnObj20Temp->segment.trans.x_position - playerRacerObj->segment.trans.x_position;
-                    posZ = spawnObj20Temp->segment.trans.z_position - playerRacerObj->segment.trans.z_position;
+                    posY = ttSWBodyObject->segment.trans.y_position - playerRacerObj->segment.trans.y_position;
+                    posX = ttSWBodyObject->segment.trans.x_position - playerRacerObj->segment.trans.x_position;
+                    posZ = ttSWBodyObject->segment.trans.z_position - playerRacerObj->segment.trans.z_position;
                     if ((sqrtf(posX * posX + (posY * posY) + (posZ * posZ)) < 600.0f) && (gHUDVoiceSoundMask == 0) && (D_80126D50 == 0)) {
                         newLapSoundID = (get_random_number_from_range(0, 2) + SOUND_VOICE_TT_GO_FOR_IT);
                         while (D_80126D48 == newLapSoundID) {
