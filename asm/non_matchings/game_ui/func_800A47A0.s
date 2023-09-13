@@ -2,8 +2,8 @@ glabel func_800A47A0
 /* 0A53A0 800A47A0 27BDFFB8 */  addiu $sp, $sp, -0x48
 /* 0A53A4 800A47A4 AFBE0038 */  sw    $fp, 0x38($sp)
 /* 0A53A8 800A47A8 444EF800 */  cfc1  $t6, $31
-/* 0A53AC 800A47AC 3C1E8012 */  lui   $fp, %hi(D_80126CDC) # $fp, 0x8012
-/* 0A53B0 800A47B0 27DE6CDC */  addiu $fp, %lo(D_80126CDC) # addiu $fp, $fp, 0x6cdc
+/* 0A53AC 800A47AC 3C1E8012 */  lui   $fp, %hi(gCurrentHud) # $fp, 0x8012
+/* 0A53B0 800A47B0 27DE6CDC */  addiu $fp, %lo(gCurrentHud) # addiu $fp, $fp, 0x6cdc
 /* 0A53B4 800A47B4 AFB1001C */  sw    $s1, 0x1c($sp)
 /* 0A53B8 800A47B8 8FD10000 */  lw    $s1, ($fp)
 /* 0A53BC 800A47BC 35C10003 */  ori   $at, $t6, 3

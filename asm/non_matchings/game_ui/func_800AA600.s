@@ -14,8 +14,8 @@ glabel func_800AA600
 /* 0AB210 800AA610 AFA500BC */  sw    $a1, 0xbc($sp)
 /* 0AB214 800AA614 AFA600C0 */  sw    $a2, 0xc0($sp)
 /* 0AB218 800AA618 84E80006 */  lh    $t0, 6($a3)
-/* 0AB21C 800AA61C 3C038012 */  lui   $v1, %hi(D_80126CF0) # $v1, 0x8012
-/* 0AB220 800AA620 8C636CF0 */  lw    $v1, %lo(D_80126CF0)($v1)
+/* 0AB21C 800AA61C 3C038012 */  lui   $v1, %hi(gHudElementTable) # $v1, 0x8012
+/* 0AB220 800AA620 8C636CF0 */  lw    $v1, %lo(gHudElementTable)($v1)
 /* 0AB224 800AA624 00087040 */  sll   $t6, $t0, 1
 /* 0AB228 800AA628 006E7821 */  addu  $t7, $v1, $t6
 /* 0AB22C 800AA62C 85F80000 */  lh    $t8, ($t7)
@@ -178,8 +178,8 @@ glabel func_800AA600
 /* 0AB47C 800AA87C 46123100 */  add.s $f4, $f6, $f18
 /* 0AB480 800AA880 E604000C */  swc1  $f4, 0xc($s0)
 .L800AA884:
-/* 0AB484 800AA884 3C198012 */  lui   $t9, %hi(D_80126CF0) # $t9, 0x8012
-/* 0AB488 800AA888 8F396CF0 */  lw    $t9, %lo(D_80126CF0)($t9)
+/* 0AB484 800AA884 3C198012 */  lui   $t9, %hi(gHudElementTable) # $t9, 0x8012
+/* 0AB488 800AA888 8F396CF0 */  lw    $t9, %lo(gHudElementTable)($t9)
 /* 0AB48C 800AA88C 0008C040 */  sll   $t8, $t0, 1
 /* 0AB490 800AA890 03385821 */  addu  $t3, $t9, $t8
 /* 0AB494 800AA894 85620000 */  lh    $v0, ($t3)

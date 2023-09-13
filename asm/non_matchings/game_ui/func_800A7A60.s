@@ -10,13 +10,13 @@ glabel func_800A7A60
 /* 0A8680 800A7A80 0C019888 */  jal   get_current_viewport
 /* 0A8684 800A7A84 AFA30024 */   sw    $v1, 0x24($sp)
 /* 0A8688 800A7A88 8FA30024 */  lw    $v1, 0x24($sp)
-/* 0A868C 800A7A8C 3C078012 */  lui   $a3, %hi(D_80126CDC) # $a3, 0x8012
+/* 0A868C 800A7A8C 3C078012 */  lui   $a3, %hi(gCurrentHud) # $a3, 0x8012
 /* 0A8690 800A7A90 846F0000 */  lh    $t7, ($v1)
 /* 0A8694 800A7A94 00000000 */  nop   
 /* 0A8698 800A7A98 144F0030 */  bne   $v0, $t7, .L800A7B5C
 /* 0A869C 800A7A9C 8FBF001C */   lw    $ra, 0x1c($sp)
 /* 0A86A0 800A7AA0 8C780140 */  lw    $t8, 0x140($v1)
-/* 0A86A4 800A7AA4 8CE76CDC */  lw    $a3, %lo(D_80126CDC)($a3)
+/* 0A86A4 800A7AA4 8CE76CDC */  lw    $a3, %lo(gCurrentHud)($a3)
 /* 0A86A8 800A7AA8 C704000C */  lwc1  $f4, 0xc($t8)
 /* 0A86AC 800A7AAC 84E60226 */  lh    $a2, 0x226($a3)
 /* 0A86B0 800A7AB0 E4E4022C */  swc1  $f4, 0x22c($a3)

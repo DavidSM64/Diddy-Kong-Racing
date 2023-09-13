@@ -241,6 +241,10 @@ typedef struct unk80126CDC {
     s8 unk67B[0x85];
     struct unk80126CDC *unk700;
     s8 unk704[0x1C];
+    struct unk80126CDC *unk720;
+    s8 unk724[0x1C];
+    struct unk80126CDC *unk740;
+    s8 unk744[0x1C];
 } unk80126CDC;
 
 typedef struct unk800E1E64 {
@@ -283,6 +287,10 @@ typedef struct ObjectTransform_800A8474 {
     s16 unk18;
 } ObjectTransform_800A8474;
 
+typedef struct unk80126CF4 {
+ void *unk0[40];
+} unk80126CF4;
+
 extern u8 gGfxTaskYieldData[OS_YIELD_DATA_SIZE];
 
 u8 func_800A0190(void);
@@ -313,6 +321,7 @@ void render_race_finish_position(Object_64 *obj, s32 updateRate);
 void render_speedometer(Object *obj, s32 updateRate);
 void render_lap_count(Object_Racer *racer, s32 updateRate);
 void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtxList, s32 updateRate);
+void init_hud(s32 viewportCount);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
@@ -320,7 +329,6 @@ void func_800A4C44(Object_Racer *racer, s32 updateRate);
 void func_800A47A0(Object_Racer *obj, s32 updateRate);
 void func_800A718C(Object_64 *obj);
 void func_800AA600(Gfx **dList, MatrixS **mtx, Vertex **vtxList, unk80126CDC **arg3);
-void func_8009ECF0(s32 viewPortCount);
 void func_800A003C(void);
 void func_800A7FBC(s32, s32, s32 minutes, s32 seconds, s32 hundredths, s32); 
 void func_800A1248(s32, Object*, s32);
@@ -334,5 +342,6 @@ void func_800A19A4(Object_Racer*, s32 updateRate);
 void func_800A1E48(s32, s32);
 void render_treasure_hud(Object_Racer*);
 void func_800AA3EC(f32, f32, f32, f32, f32);
+void func_8009F034(void);
 
 #endif

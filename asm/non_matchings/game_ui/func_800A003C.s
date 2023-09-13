@@ -10,10 +10,10 @@ glabel func_800A003C
 /* 0A0C5C 800A005C AFB1001C */  sw    $s1, 0x1c($sp)
 /* 0A0C60 800A0060 18400032 */  blez  $v0, .L800A012C
 /* 0A0C64 800A0064 00008025 */   move  $s0, $zero
-/* 0A0C68 800A0068 3C148012 */  lui   $s4, %hi(D_80126CF0) # $s4, 0x8012
+/* 0A0C68 800A0068 3C148012 */  lui   $s4, %hi(gHudElementTable) # $s4, 0x8012
 /* 0A0C6C 800A006C 3C128012 */  lui   $s2, %hi(D_80126CF4) # $s2, 0x8012
 /* 0A0C70 800A0070 26526CF4 */  addiu $s2, %lo(D_80126CF4) # addiu $s2, $s2, 0x6cf4
-/* 0A0C74 800A0074 26946CF0 */  addiu $s4, %lo(D_80126CF0) # addiu $s4, $s4, 0x6cf0
+/* 0A0C74 800A0074 26946CF0 */  addiu $s4, %lo(gHudElementTable) # addiu $s4, $s4, 0x6cf0
 /* 0A0C78 800A0078 00008825 */  move  $s1, $zero
 /* 0A0C7C 800A007C 3413C000 */  li    $s3, 49152
 .L800A0080:
@@ -66,11 +66,11 @@ glabel func_800A003C
 /* 0A0D24 800A0124 1420FFD6 */  bnez  $at, .L800A0080
 /* 0A0D28 800A0128 26310004 */   addiu $s1, $s1, 4
 .L800A012C:
-/* 0A0D2C 800A012C 3C048012 */  lui   $a0, %hi(D_80126CE0) # $a0, 0x8012
+/* 0A0D2C 800A012C 3C048012 */  lui   $a0, %hi(gPlayerHud) # $a0, 0x8012
 /* 0A0D30 800A0130 3C128012 */  lui   $s2, %hi(D_80126CF4) # $s2, 0x8012
-/* 0A0D34 800A0134 3C148012 */  lui   $s4, %hi(D_80126CF0) # $s4, 0x8012
-/* 0A0D38 800A0138 8C846CE0 */  lw    $a0, %lo(D_80126CE0)($a0)
-/* 0A0D3C 800A013C 26946CF0 */  addiu $s4, %lo(D_80126CF0) # addiu $s4, $s4, 0x6cf0
+/* 0A0D34 800A0134 3C148012 */  lui   $s4, %hi(gHudElementTable) # $s4, 0x8012
+/* 0A0D38 800A0138 8C846CE0 */  lw    $a0, %lo(gPlayerHud)($a0)
+/* 0A0D3C 800A013C 26946CF0 */  addiu $s4, %lo(gHudElementTable) # addiu $s4, $s4, 0x6cf0
 /* 0A0D40 800A0140 0C01C450 */  jal   free_from_memory_pool
 /* 0A0D44 800A0144 26526CF4 */   addiu $s2, %lo(D_80126CF4) # addiu $s2, $s2, 0x6cf4
 /* 0A0D48 800A0148 8E840000 */  lw    $a0, ($s4)

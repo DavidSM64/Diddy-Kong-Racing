@@ -1,12 +1,12 @@
 glabel func_800A22F4
 /* 0A2EF4 800A22F4 27BDFFE0 */  addiu $sp, $sp, -0x20
 /* 0A2EF8 800A22F8 AFB00018 */  sw    $s0, 0x18($sp)
-/* 0A2EFC 800A22FC 3C108012 */  lui   $s0, %hi(D_80126CDC) # $s0, 0x8012
+/* 0A2EFC 800A22FC 3C108012 */  lui   $s0, %hi(gCurrentHud) # $s0, 0x8012
 /* 0A2F00 800A2300 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 0A2F04 800A2304 AFA40020 */  sw    $a0, 0x20($sp)
 /* 0A2F08 800A2308 AFA50024 */  sw    $a1, 0x24($sp)
 /* 0A2F0C 800A230C 808F0003 */  lb    $t7, 3($a0)
-/* 0A2F10 800A2310 26106CDC */  addiu $s0, %lo(D_80126CDC) # addiu $s0, $s0, 0x6cdc
+/* 0A2F10 800A2310 26106CDC */  addiu $s0, %lo(gCurrentHud) # addiu $s0, $s0, 0x6cdc
 /* 0A2F14 800A2314 8E190000 */  lw    $t9, ($s0)
 /* 0A2F18 800A2318 25F80038 */  addiu $t8, $t7, 0x38
 /* 0A2F1C 800A231C 3C038012 */  lui   $v1, %hi(gNumActivePlayers) # $v1, 0x8012
