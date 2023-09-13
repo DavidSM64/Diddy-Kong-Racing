@@ -236,7 +236,7 @@ s32 D_80126CF8;
 Gfx *gHUDCurrDisplayList;
 MatrixS *gHUDCurrMatrix;
 Vertex *gHUDCurrVertex;
-s32 D_80126D08;
+s32 gHudCurrentViewport;
 s32 gHUDNumPlayers;
 s32 D_80126D10;
 s32 D_80126D14;
@@ -309,9 +309,9 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
     s32 sp2C;
     Object_64* racer;
 
-    D_80126D08 = get_current_viewport();
+    gHudCurrentViewport = get_current_viewport();
     if (D_8012718A) {
-        arg3 = get_racer_object_by_port(1 - D_80126D08);
+        arg3 = get_racer_object_by_port(1 - gHudCurrentViewport);
     }
     gHudLevelHeader = get_current_level_header();
     if (arg3 == NULL) {
@@ -343,7 +343,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 } else {
                     D_80126D10 = racer->racer.playerIndex;
                 }
-                D_80126CDC = D_80126CE0[D_80126D08];
+                D_80126CDC = D_80126CE0[gHudCurrentViewport];
                 if (func_8001E440() != 10) {
                     if (gHUDNumPlayers == ONE_PLAYER) {
                         if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->racer.raceFinished == FALSE && ((gHudLevelHeader->race_type == RACETYPE_DEFAULT) || gHudLevelHeader->race_type == RACETYPE_HORSESHOE_GULCH) && D_80126D34) {
@@ -836,8 +836,8 @@ void render_race_start(s32 arg0, s32 updateRate) {
             gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &D_80126CDC->unk180);
             gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
-            D_80126CDC->unk19A[D_80126D08] += updateRate;
-            if (D_80126CDC->unk19A[D_80126D08] >= 60) {
+            D_80126CDC->unk19A[gHudCurrentViewport] += updateRate;
+            if (D_80126CDC->unk19A[gHudCurrentViewport] >= 60) {
                 if (gRaceStartShowHudStep == 4) {
                     // Mute background music in 3/4 player.
                     if (get_viewport_count() > TWO_PLAYERS) {
