@@ -22,7 +22,7 @@ s32 gThread30LoadDelay = 0;
 u8 leoDiskStack[16]; //technically should have a OS_LEO_STACKSIZE or something. This is something like 4096 in libreultra...
 OSThread gThread30;
 OSMesgQueue gThread30MesgQueue;
-OSMesg gThread30Message;
+OSMesg gThread30Message[2];
 
 // Currently defined in osViMgr.c
 // There are a few stacks defined next to each other. Maybe they are in their own separate file?
@@ -34,7 +34,7 @@ extern u64 gThread30Stack[0x400];
  * Initalizes and starts thread30()
  */
 void create_and_start_thread30(void) {
-    osCreateMesgQueue(&gThread30MesgQueue, &gThread30Message, 2);
+    osCreateMesgQueue(&gThread30MesgQueue, &gThread30Message[0], 2);
     osCreateThread(&gThread30, 30, &thread30_track_loading, NULL, &gThread30Stack[0x400], 8);
     osStartThread(&gThread30);
 }
