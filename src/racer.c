@@ -209,7 +209,7 @@ s16 D_8011D59E;
 s16 D_8011D5A0[2];
 s16 gTTGhostNodeCount; // Gets assigned, but never used?
 s16 D_8011D5A8[2];
-s16 D_8011D5AC;
+s16 D_8011D5AC; // Previous MapId?
 s8 gRacerWaveCount;
 s8 D_8011D5AF;
 WaterProperties **gRacerCurrentWave;
@@ -5601,7 +5601,7 @@ void func_80059984(s32 arg0) {
     D_8011D59D = (s8)((D_8011D59C + 1) & 1);
     D_8011D5AC = arg0;
 }
-
+ //get_previous_map_id?
 s32 func_800599A8(void) {
     return D_8011D5AC;
 }

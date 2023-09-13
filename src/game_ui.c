@@ -228,8 +228,7 @@ s8 gRaceStartShowHudStep;
 s8 D_80126CD5;
 u8 *D_80126CD8;
 unk80126CDC *D_80126CDC;
-unk80126CDC *D_80126CE0[3];
-unk80126CDC *D_80126CEC;
+unk80126CDC *D_80126CE0[4];
 s16 *D_80126CF0;
 unk80126CF4 *D_80126CF4;
 s32 D_80126CF8;
@@ -255,7 +254,7 @@ u8 gWrongWayNagPrefix;
 s32 D_80126D3C;
 s32 gHUDVoiceSoundMask;
 s32 D_80126D44;
-u16 D_80126D48;
+s16 D_80126D48;
 s32 D_80126D4C;
 s32 D_80126D50;
 u8 gMinimapRed;
@@ -293,7 +292,67 @@ u8 gGfxTaskYieldData[OS_YIELD_DATA_SIZE];
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_8009ECF0.s")
+void func_8009ECF0(UNUSED s32 viewPortCount) {
+    s32 i;
+    s32 tempMaxPlayers;
+
+    gHUDNumPlayers = get_viewport_count();
+    gNumActivePlayers = set_active_viewports_and_max(gHUDNumPlayers);
+    D_80127184 = get_settings();
+    D_80127188 = check_if_silver_coin_race();
+    D_80126CF0 = (s16 *)load_asset_section_from_rom(ASSET_HUD_ELEMENT_IDS); 
+    D_80126CF8 = 0; // Number of elements in ASSET_HUD_ELEMENT_IDS?
+    while(D_80126CF0[D_80126CF8] != -1) {
+        D_80126CF8++;
+    }
+    D_80126CF4 = allocate_from_main_pool_safe(D_80126CF8 * 5, COLOUR_TAG_BLUE);
+    D_80126CD8 = (u8*)((D_80126CF8 + (s32*)D_80126CF4));
+    for(i = 0; i < D_80126CF8; i++) {
+        D_80126CD8[i] = 0;
+        D_80126CF4->unk0[i] = NULL;
+    }
+    D_80126CF4->unk0[1] = func_8007C12C(D_80126CF0[1] & 0x3FFF, 1);
+    D_80126CF4->unk0[23] = func_8007C12C(D_80126CF0[23] & 0x3FFF, 1);
+    D_80126CF4->unk0[8] = func_8007C12C(D_80126CF0[8] & 0x3FFF, 1);
+    D_80126CF4->unk0[17] = func_8007C12C(D_80126CF0[17] & 0x3FFF, 1);
+    if (gNumActivePlayers != 3) {
+        tempMaxPlayers = gNumActivePlayers;
+    } else {
+        tempMaxPlayers = 4; // If gNumActivePlayers is 3, then set this to 4.
+    }
+    D_80126CE0[0] = allocate_from_main_pool_safe(tempMaxPlayers * sizeof(unk80126CDC), COLOUR_TAG_BLUE);
+    D_80126CE0[1] = ((u8*)D_80126CE0[0]) + sizeof(unk80126CDC);
+    D_80126CE0[2] = ((u8*)D_80126CE0[1]) + sizeof(unk80126CDC);
+    D_80126CE0[3] = ((u8*)D_80126CE0[2]) + sizeof(unk80126CDC);
+    func_8009F034();
+    D_80126D64 = 0;
+    gWrongWayNagTimer = 0;
+    D_80126D48 = 0;
+    D_80126D66 = 4;
+    D_80126D65 = 0;
+    gStopwatchFaceID = 4;
+    D_80126D69 = 1;
+    D_80126D68 = 1;
+    D_80126D70 = 0;
+    D_80126D7C = 0;
+    D_80126D74 = 0;
+    D_80126D3C = 0;
+    D_80126D44 = 0;
+    D_80126CD3 = 0;
+    D_80127194 = get_misc_asset(ASSET_MISC_58);
+    func_8007F1E8((unk8007F1E8* ) D_80127194);
+    set_sound_channel_volume(0, 0x7FFF);
+    set_sound_channel_volume(2, 0x7FFF);
+    for(i = 0; i < 2; i++){
+        D_800E2770[i].unk2 = 0;
+        D_800E2770[i].unk3 = 0;
+        D_800E2770[i].unkC = -1;
+        if (D_800E2770[i].unk4 != 0) {
+            func_8000488C(D_800E2770[i].unk4);
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/game_ui/func_8009F034.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A003C.s")
 
@@ -706,7 +765,7 @@ void render_hud_hubworld(Object *obj, s32 updateRate) {
         func_800A718C(obj64);
         render_speedometer(obj, updateRate);
         if (is_in_two_player_adventure()) {
-            temp_a3 = &D_80126CDC[1];
+            temp_a3 = &D_80126CDC->unk720;
             temp_a3->unk6 = (get_settings()->racers[1].character + 0x38);
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) temp_a3);
         }
@@ -1227,12 +1286,12 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A47A0.s")
  * Uses a 3 step process to play the sounds, display the position, then slide it offscreen.
 */
 void render_race_finish_position(Object_64 *obj, s32 updateRate) {
-    unk800A497C* temp_a3;
-    unk800A497C* temp_s0;
+    unk800A497C *temp_a3;
+    unk800A497C *temp_s0;
     s8 drawPosition;
 
     temp_a3 = (unk800A497C *) &D_80126CDC->unk700;
-    temp_s0 = (unk800A497C *) (&D_80126CDC->unk700 + 16); // Hacky workaround to the struct being assumed to be 0x720 bytes.
+    temp_s0 = (unk800A497C *) &D_80126CDC->unk740;
     //temp_s0 = &D_80126CDC->unk740;
     drawPosition = FALSE;
     switch (temp_a3->unk1A) {
@@ -1927,7 +1986,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     }
                 }
                 if (curRacerObj != NULL) {
-                    D_80126CDC = D_80126CEC;
+                    D_80126CDC = D_80126CE0[3];
                     spE4 = D_80126CDC->unk64C;
                     spE0 = D_80126CDC->unk650;
                     func_8007BF1C(FALSE);
