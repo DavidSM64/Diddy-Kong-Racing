@@ -294,6 +294,7 @@ u8 gGfxTaskYieldData[OS_YIELD_DATA_SIZE];
 
 /**
  * Load basic hud assets and allocate HUD data for each player.
+ * Set up the global hud elements and reset global vars.
 */
 void init_hud(UNUSED s32 viewportCount) {
     s32 i;
@@ -310,15 +311,16 @@ void init_hud(UNUSED s32 viewportCount) {
         gNumHudElements++;
     }
     gHudElements = allocate_from_main_pool_safe(gNumHudElements * (sizeof(void *) + 1), COLOUR_TAG_BLUE);
+    // Evil pointer shenanigans to store the timer in that last byte in the struct above.
     gHudElementStaleCounter = (u8 *) ((gNumHudElements + (s32 *) gHudElements));
     for(i = 0; i < gNumHudElements; i++) {
-        gHudElementStaleCounter[i] = NULL;
+        gHudElementStaleCounter[i] = 0;
         gHudElements->entry[i] = NULL;
     }
-    gHudElements->entry[HUD_ELEMENT_UNK_01] = func_8007C12C(gHudElementTable[1] & 0x3FFF, 1);
-    gHudElements->entry[HUD_ELEMENT_UNK_17] = func_8007C12C(gHudElementTable[23] & 0x3FFF, 1);
-    gHudElements->entry[HUD_ELEMENT_UNK_08] = func_8007C12C(gHudElementTable[8] & 0x3FFF, 1);
-    gHudElements->entry[HUD_ELEMENT_UNK_11] = func_8007C12C(gHudElementTable[17] & 0x3FFF, 1);
+    gHudElements->entry[HUD_ELEMENT_UNK_01] = func_8007C12C(gHudElementTable[HUD_ELEMENT_UNK_01] & 0x3FFF, 1);
+    gHudElements->entry[HUD_ELEMENT_UNK_17] = func_8007C12C(gHudElementTable[HUD_ELEMENT_UNK_17] & 0x3FFF, 1);
+    gHudElements->entry[HUD_ELEMENT_UNK_08] = func_8007C12C(gHudElementTable[HUD_ELEMENT_UNK_08] & 0x3FFF, 1);
+    gHudElements->entry[HUD_ELEMENT_UNK_11] = func_8007C12C(gHudElementTable[HUD_ELEMENT_UNK_11] & 0x3FFF, 1);
     if (gNumActivePlayers != 3) {
         playerCount = gNumActivePlayers;
     } else {
@@ -1665,7 +1667,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
         if (gHudElements->entry[i] && i != 40) {
             if (++gHudElementStaleCounter[i] > 60) {
                 if ((gHudElementTable[i] & (0x4000 | 0x8000)) == (0x4000 | 0x8000)) {
-                    free_texture((TextureHeader *)gHudElements->entry[i]);
+                    free_texture((TextureHeader *) gHudElements->entry[i]);
                 } else if (gHudElementTable[i] & 0x8000) {
                     free_sprite((Sprite *) gHudElements->entry[i]);
                 } else if (gHudElementTable[i] & 0x4000) {
