@@ -880,9 +880,8 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
         }
         if ((curRacer->lap > 0) && (curRacer->lap < gHudLevelHeader->laps) && (curRacer->lap_times[curRacer->lap] < 20) && (gHUDVoiceSoundMask == 0) && (curRacer->vehicleID <= VEHICLE_PLANE)) {
             D_80127184 = get_settings();
-            temp_lo = func_8006BD88();
-            if (curRacer->lap_times[curRacer->lap] < D_80127184->flapTimesPtr[curRacer->vehicleID][temp_lo]) {
-                recordTime = curRacer->lap_times[curRacer->lap];
+            if (curRacer->lap_times[curRacer->lap - 1] < D_80127184->flapTimesPtr[curRacer->vehicleID][get_current_map_id()]) {
+                recordTime = curRacer->lap_times[curRacer->lap - 1];
                 for (i = 0; i < curRacer->lap - 1; i++) {
                     if (recordTime >= curRacer->lap_times[i]) {
                         recordTime = 0;

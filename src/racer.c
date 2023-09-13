@@ -5451,7 +5451,7 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     if (temp_v0 == 0) {
         return;
     }
-    if ((func_8006BD88() == 0) && (racer->checkpoint >= temp_v0)) {
+    if ((get_current_map_id() == 0) && (racer->checkpoint >= temp_v0)) {
         racer->lap = 0;
         racer->checkpoint = 0;
         racer->courseCheckpoint = 0;

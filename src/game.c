@@ -605,7 +605,7 @@ void func_8006BD10(f32 arg0) {
     }
 }
 
-s32 func_8006BD88(void) {
+s32 get_current_map_id(void) {
     return gMapId;
 }
 

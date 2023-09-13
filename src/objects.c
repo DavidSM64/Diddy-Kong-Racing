@@ -3055,7 +3055,7 @@ s32 func_8001AE54(void) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8001AE64.s")
 
 s32 func_8001B288(void) {
-    if (func_800599A8() != func_8006BD88()) {
+    if (func_800599A8() != get_current_map_id()) {
         return 0;
     } else {
         if (D_800DC728 != D_8011AE82) {
@@ -3126,8 +3126,8 @@ s32 func_8001B668(s32 arg0) {
     s32 mapId;
 
     mapId = func_800599A8();
-    if ((func_8006BD88() != mapId) || (D_800DC728 != D_8011AE82)) {
-        temp_v0 = func_800599B8(arg0, func_8006BD88(), D_8011AE82, &sp2E, &sp2C);
+    if ((get_current_map_id() != mapId) || (D_800DC728 != D_8011AE82)) {
+        temp_v0 = func_800599B8(arg0, get_current_map_id(), D_8011AE82, &sp2E, &sp2C);
         if (temp_v0 == 0) {
             D_800DC728 = D_8011AE82;
             D_800DC72C = sp2E;
@@ -3135,7 +3135,7 @@ s32 func_8001B668(s32 arg0) {
         }
         return temp_v0;
     }
-    return func_800599B8(arg0, func_8006BD88(), D_8011AE82, NULL, NULL);
+    return func_800599B8(arg0, get_current_map_id(), D_8011AE82, NULL, NULL);
 }
 
 s32 func_8001B738(s32 controllerIndex) {

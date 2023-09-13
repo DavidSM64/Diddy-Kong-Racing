@@ -338,6 +338,6 @@ void func_800A19A4(Object_Racer* racer, s32 updateRate);
 void func_800A1E48(s32, s32);
 void render_treasure_hud(Object_Racer*);
 void func_800AA3EC(f32, f32, f32, f32, f32);
-void func_800A36CC(s32, s32, s32, s32, s32);
+void func_800A36CC(u8, u8, u8, u8, u8);
 
 #endif

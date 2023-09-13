@@ -688,7 +688,7 @@ glabel func_800A277C
 /* 0A3D44 800A3144 00000000 */   nop   
 /* 0A3D48 800A3148 3C108012 */  lui   $s0, %hi(D_80127184) # $s0, 0x8012
 /* 0A3D4C 800A314C 26107184 */  addiu $s0, %lo(D_80127184) # addiu $s0, $s0, 0x7184
-/* 0A3D50 800A3150 0C01AF62 */  jal   func_8006BD88
+/* 0A3D50 800A3150 0C01AF62 */  jal   get_current_map_id
 /* 0A3D54 800A3154 AE020000 */   sw    $v0, ($s0)
 /* 0A3D58 800A3158 8FAE00A0 */  lw    $t6, 0xa0($sp)
 /* 0A3D5C 800A315C 8E190000 */  lw    $t9, ($s0)

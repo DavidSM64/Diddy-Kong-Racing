@@ -41,7 +41,7 @@ s32 get_hub_area_id(s32 worldId);
 void get_number_of_levels_and_worlds(s32 *outLevelCount, s32 *outWorldCount);
 s32 check_if_in_race(void);
 void func_8006BD10(f32 arg0);
-s32 func_8006BD88(void);
+s32 get_current_map_id(void);
 u8 get_current_level_race_type(void);
 LevelHeader *get_current_level_header(void);
 u8 get_total_level_header_count(void);
