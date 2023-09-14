@@ -123,8 +123,8 @@ glabel func_800AA600
 /* 0AB3AC 800AA7AC 00000000 */  nop   
 /* 0AB3B0 800AA7B0 11E00203 */  beqz  $t7, .L800AAFC0
 .L800AA7B4:
-/* 0AB3B4 800AA7B4 3C198012 */   lui   $t9, %hi(gAssetHudElementstaleCounter) # $t9, 0x8012
-/* 0AB3B8 800AA7B8 8F396CD8 */  lw    $t9, %lo(gAssetHudElementstaleCounter)($t9)
+/* 0AB3B4 800AA7B4 3C198012 */   lui   $t9, %hi(gAssetHudElementStaleCounter) # $t9, 0x8012
+/* 0AB3B8 800AA7B8 8F396CD8 */  lw    $t9, %lo(gAssetHudElementStaleCounter)($t9)
 /* 0AB3BC 800AA7BC 3C018012 */  lui   $at, %hi(gHUDCurrDisplayList) # $at, 0x8012
 /* 0AB3C0 800AA7C0 0328C021 */  addu  $t8, $t9, $t0
 /* 0AB3C4 800AA7C4 A3000000 */  sb    $zero, ($t8)

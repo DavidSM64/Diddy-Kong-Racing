@@ -226,7 +226,7 @@ s8 D_80126CD3;
 s8 gRaceStartShowHudStep;
 
 s8 D_80126CD5;
-u8 *gAssetHudElementstaleCounter;
+u8 *gAssetHudElementStaleCounter;
 unk80126CDC *gCurrentHud;
 unk80126CDC *gPlayerHud[MAXCONTROLLERS]; //One per active player
 s16 *gAssetHudElementIds;
@@ -312,9 +312,9 @@ void init_hud(UNUSED s32 viewportCount) {
     }
     gAssetHudElements = allocate_from_main_pool_safe(gAssetHudElementIdsCount * (sizeof(void *) + 1), COLOUR_TAG_BLUE);
     // Evil pointer shenanigans to store the timer in that last byte in the struct above.
-    gAssetHudElementstaleCounter = (u8 *) ((gAssetHudElementIdsCount + (s32 *) gAssetHudElements));
+    gAssetHudElementStaleCounter = (u8 *) ((gAssetHudElementIdsCount + (s32 *) gAssetHudElements));
     for(i = 0; i < gAssetHudElementIdsCount; i++) {
-        gAssetHudElementstaleCounter[i] = 0;
+        gAssetHudElementStaleCounter[i] = 0;
         gAssetHudElements->entry[i] = NULL;
     }
     gAssetHudElements->entry[HUD_ELEMENT_UNK_01] = func_8007C12C(gAssetHudElementIds[HUD_ELEMENT_UNK_01] & 0x3FFF, 1); //ID: 86 - 0x56
@@ -1902,10 +1902,10 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     
     func_800A0BD4(updateRate);
     
-    gAssetHudElementstaleCounter[HUD_ELEMENT_UNK_01] = 0;
-    gAssetHudElementstaleCounter[HUD_ELEMENT_UNK_17] = 0;
-    gAssetHudElementstaleCounter[HUD_ELEMENT_UNK_08] = 0;
-    gAssetHudElementstaleCounter[HUD_ELEMENT_UNK_11] = 0;
+    gAssetHudElementStaleCounter[HUD_ELEMENT_UNK_01] = 0;
+    gAssetHudElementStaleCounter[HUD_ELEMENT_UNK_17] = 0;
+    gAssetHudElementStaleCounter[HUD_ELEMENT_UNK_08] = 0;
+    gAssetHudElementStaleCounter[HUD_ELEMENT_UNK_11] = 0;
     D_80127180 = 0;
     
     if (D_80126CD3 & 2) {
@@ -1916,7 +1916,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     
     for (i = 0; i < gAssetHudElementIdsCount; i++) {
         if (gAssetHudElements->entry[i] && i != 40) {
-            if (++gAssetHudElementstaleCounter[i] > 60) {
+            if (++gAssetHudElementStaleCounter[i] > 60) {
                 if ((gAssetHudElementIds[i] & (0x4000 | 0x8000)) == (0x4000 | 0x8000)) {
                     free_texture((TextureHeader *) gAssetHudElements->entry[i]);
                 } else if (gAssetHudElementIds[i] & 0x8000) {
