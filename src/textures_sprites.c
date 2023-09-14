@@ -816,38 +816,40 @@ Sprite* func_8007C52C(s32 arg0) {
     return sprite; 
 }
 
-#ifdef NON_EQUIVALENT
-// Mostly has regalloc issues.
-s32 get_texture_size_from_id(s32 arg0) {
-    s32 assetIndex;
-    s32 assetSection;
-    s32 assetTable;
-    s32 start;
+s32 get_texture_size_from_id(s32 id) {
+    s32 textureRomOffset;
+    TempTexHeader *new_var2;
+    UNUSED s32 pad;
+    u32 textureTable;
     s32 size;
-
-    assetSection = ASSET_TEXTURES_2D;
-    assetIndex = arg0;
-    assetTable = 0;
-    if (arg0 & 0x8000) {
-        assetIndex = arg0 & 0x7FFF;
-        assetSection = ASSET_TEXTURES_3D;
-        assetTable = 1;
+    s32 new_var3;
+    s32 textureTableType;
+    s32 numOfTextures;
+    TempTexHeader *new_var4;
+    
+    textureTable = ASSET_TEXTURES_2D;
+    textureTableType = 0;
+    if (id & 0x8000) {
+        textureTable = ASSET_TEXTURES_3D;
+        textureTableType = 1;
+        id &= 0x7FFF;
     }
-    if ((assetIndex >= gTextureAssetID[assetTable]) || (assetIndex < 0)) {
+    if ((id >= gTextureAssetID[textureTableType]) || (id < 0)) {
         return 0;
     }
-    start = gTextureAssetTable[assetTable][assetIndex];
-    size = gTextureAssetTable[assetTable][assetIndex + 1] - start;
-    if (gTempTextureHeader->header.isCompressed) {
-        load_asset_to_address(assetSection, gTempTextureHeader, start, 0x28);
-        size = byteswap32(&gTempTextureHeader->uncompressedSize);
+    textureRomOffset = gTextureAssetTable[textureTableType][id];
+    new_var3 = textureRomOffset;
+    size = gTextureAssetTable[textureTableType][id + 1] - new_var3;
+    new_var2 = gTempTextureHeader;
+    if (new_var2->header.isCompressed) {
+        load_asset_to_address(textureTable, (u32) new_var2, textureRomOffset, 0x28);
+        new_var4 = gTempTextureHeader;
+        size = byteswap32((u8 *) (&new_var4->uncompressedSize));
     }
-    return (((gTempTextureHeader->header.numOfTextures >> 8) & 0xFFFF) * 0x60) + size;
+    new_var2 = gTempTextureHeader;
+    numOfTextures = new_var2->header.numOfTextures;
+    return (((numOfTextures >> 8) & 0xFFFF) * 0x60) + size;
 }
-
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/get_texture_size_from_id.s")
-#endif
 
 UNUSED u8 func_8007C660(s32 arg0) {
     Sprite *temp_s1;
