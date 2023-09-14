@@ -985,7 +985,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     curObj->segment.trans.scale = curObj->segment.header->scale;
     curObj->segment.camera.unk34 = curObj->segment.header->unk50 * curObj->segment.trans.scale;
     curObj->segment.object.opacity = 0xFF;
-    sp50 = func_80023E30(curObj->segment.header->behaviorId);
+    sp50 = obj_init_property_flags(curObj->segment.header->behaviorId);
     curObj->segment.header->unk52++;
     assetCount = curObj->segment.header->numberOfModelIds;
     objType = curObj->segment.header->modelType;
@@ -1099,7 +1099,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     D_8011AE50 = NULL;
     D_8011AE54 = NULL;
     if (sp50 & 1) {
-        address = (u32 *) ((uintptr_t) address + func_8000F7EC(curObj, (Object_54 *) address));
+        address = (u32 *) ((uintptr_t) address + init_object_shading(curObj, (ShadeProperties *) address));
     }
     if (sp50 & 2) {
         sizeOfobj = init_object_shadow(curObj, (ShadowData *) address);
@@ -1123,7 +1123,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         }
     }
     if (sp50 & 0x10) {
-        address = (u32 *) ((uintptr_t) address + func_8000FD20(curObj, (ObjectInteraction *) address));
+        address = (u32 *) ((uintptr_t) address + init_object_interaction_data(curObj, (ObjectInteraction *) address));
     }
     if (sp50 & 0x20) {
         address = (u32 *) ((uintptr_t) address + func_8000FD34(curObj, (Object_5C *) address));
@@ -1136,10 +1136,10 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         address = (u32 *) ((uintptr_t) address + func_8000FAC4(curObj, (Object_6C *) address));
     }
     sizeOfobj = (uintptr_t) address - (uintptr_t) curObj;
-    if (curObj->segment.header->unk5A > 0) 
+    if (curObj->segment.header->numLightSources > 0) 
     {
-        curObj->unk70 = address;
-        sizeOfobj = (s32) ((uintptr_t) address + (curObj->segment.header->unk5A * 4)) - (uintptr_t) curObj;
+        curObj->lightData = address;
+        sizeOfobj = (s32) ((uintptr_t) address + (curObj->segment.header->numLightSources * 4)) - (uintptr_t) curObj;
     }
     newObj = allocate_from_pool_containing_slots((MemoryPoolSlot *) gObjectMemoryPool, sizeOfobj);
     if (newObj == NULL) {
@@ -1167,14 +1167,14 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     for (var_s0_5 = 0; var_s0_5 < sizeOfobj; var_s0_5+=4) {
         newObj[var_s0_5].segment.trans.y_rotation = (*gSpawnObjectHeap)[var_s0_5]->segment.trans.y_rotation;
     }
-    if (newObj->unk58 != NULL) {
-        newObj->unk58 = (ShadowData *)(((uintptr_t) newObj + (uintptr_t) newObj->unk58) - (uintptr_t) gSpawnObjectHeap);
+    if (newObj->waterEffect != NULL) {
+        newObj->waterEffect = (ShadowData *)(((uintptr_t) newObj + (uintptr_t) newObj->waterEffect) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->shadow != NULL) {
         newObj->shadow = (ShadowData *)(((uintptr_t) newObj + (uintptr_t)newObj->shadow) - (uintptr_t) gSpawnObjectHeap);
     }
-    if (newObj->unk54 != NULL) {
-        newObj->unk54 = (Object_54 *)(((uintptr_t) newObj + (uintptr_t) newObj->unk54) - (uintptr_t) gSpawnObjectHeap);
+    if (newObj->shading != NULL) {
+        newObj->shading = (ShadeProperties *)(((uintptr_t) newObj + (uintptr_t) newObj->shading) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->unk64 != NULL) {
         newObj->unk64 = (Object_64 *)(((uintptr_t) newObj + (uintptr_t) newObj->unk64) - (uintptr_t) gSpawnObjectHeap);
@@ -1191,8 +1191,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     if (newObj->segment.header->unk57 > 0) {
         newObj->unk6C = (Object_6C *)(((uintptr_t) newObj + (uintptr_t )newObj->unk6C) - (uintptr_t) gSpawnObjectHeap);
     }
-    if (newObj->segment.header->unk5A > 0) {
-        newObj->unk70 = (u32 *)(((uintptr_t) newObj + (uintptr_t) newObj->unk70) - (uintptr_t) gSpawnObjectHeap);
+    if (newObj->segment.header->numLightSources > 0) {
+        newObj->lightData = (u32 *)(((uintptr_t) newObj + (uintptr_t) newObj->lightData) - (uintptr_t) gSpawnObjectHeap);
     }
     newObj->unk68 = (Object_68 **)((uintptr_t) newObj + (uintptr_t) 0x80);
     if (arg1 & 1) {
@@ -1220,7 +1220,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         }
         return NULL;
     }
-    if (newObj->segment.header->unk5A > 0) {
+    if (newObj->segment.header->numLightSources > 0) {
         light_setup_light_sources(newObj);
     }
     func_800619F4(0);

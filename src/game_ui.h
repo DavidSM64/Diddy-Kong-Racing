@@ -332,7 +332,7 @@ typedef struct ObjectTransform_800A8474 {
 } ObjectTransform_800A8474;
 
 typedef struct HudElements {
- void *entry[40];
+    void *entry[40];
 } HudElements;
 
 extern u8 gGfxTaskYieldData[OS_YIELD_DATA_SIZE];
@@ -386,7 +386,7 @@ void func_800A19A4(Object_Racer* racer, s32 updateRate);
 void func_800A1E48(s32, s32);
 void render_treasure_hud(Object_Racer*);
 void func_800AA3EC(f32, f32, f32, f32, f32);
-void func_8009F034(void);
 void func_800A36CC(u8, u8, u8, u8, u8);
+void func_8009F034(void);
 
 #endif

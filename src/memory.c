@@ -191,7 +191,7 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
     s32 *flags;
     
     flags = clear_status_register_flags();
-    if (size == 0){
+    if (size == 0) {
         stubbed_printf("*** mmAllocAtAddr: size = 0 ***\n");
     }
     if ((gMemoryPools[0].curNumSlots + 1) == gMemoryPools[0].maxNumSlots) {

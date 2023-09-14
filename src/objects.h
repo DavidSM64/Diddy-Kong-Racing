@@ -373,7 +373,7 @@ void func_8001D1BC(s32 arg0);
 Object *func_8001D1E4(s32 *arg0);
 Object *func_8001D214(s32 arg0);
 void set_world_shading(f32 brightness, f32 ambient, s16 angleX, s16 angleY, s16 angleZ);
-void set_shading_properties(ShadeProperties*, f32, f32, s16, s16, s16);
+void set_shading_properties(ShadeProperties *shading, f32 brightness, f32 ambient, s16 angleX, s16 angleY, s16 angleZ);
 void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 intensity);
 s32 *get_misc_asset(s32 index);
 s32 func_8001E2EC(s32 arg0);
@@ -436,9 +436,9 @@ s32 func_8000F99C(Object *);
 void func_8000C844(s32 arg0);
 s32 func_800235DC(Object *obj, Object_64 *obj64);
 void light_setup_light_sources(Object *obj);
-s32 func_8000FD20(Object *arg0, ObjectInteraction *arg1);
+s32 init_object_interaction_data(Object *arg0, ObjectInteraction *arg1);
 s32 func_8000FAC4(Object *obj, Object_6C *arg1);
-s32 func_80023E30(s32 behaviorId);
+s32 obj_init_property_flags(s32 behaviorId);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

@@ -764,17 +764,17 @@ typedef struct Object_44 {
 } Object_44;
 
 typedef struct ObjectInteraction {
-/*0x00*/  struct Object *obj;
-/*0x04*/  f32 x_position;
-/*0x08*/  f32 y_position;
-/*0x0C*/  f32 z_position;
-/*0x10*/  u8 hitboxRadius;
-/*0x11*/  u8 unk11;
-/*0x12*/  u8 pushForce;
-/*0x13*/  u8 distance;
-/*0x14*/  s16 flags;
-/*0x16*/  s8 unk16;
-/*0x17*/  s8 unk17;
+ /* 0x00 */ struct Object *obj;
+ /* 0x04 */ f32 x_position;
+ /* 0x08 */ f32 y_position;
+ /* 0x0C */ f32 z_position;
+ /* 0x10 */ u8 hitboxRadius;
+ /* 0x11 */ u8 unk11;
+ /* 0x12 */ u8 pushForce;
+ /* 0x13 */ u8 distance;
+ /* 0x14 */ s16 flags;
+ /* 0x16 */ s8 unk16;
+ /* 0x17 */ s8 unk17;
 s32 pad[4];
 } ObjectInteraction;
 

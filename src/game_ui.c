@@ -809,28 +809,28 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
     
     curRacer = &playerRacerObj->unk64->racer;
     stopwatchTimer = 0;
-    if (gAssetHudElements->unk0[20] == NULL) {
+    if (gAssetHudElements->entry[20] == NULL) {
         ttSWBody.objectID = gAssetHudElementIds[20] & 0xFFFF;
         ttSWBody.size = 8;
         ttSWBody.x = 0;
         ttSWBody.y = 0;
         ttSWBody.z = 0;
-        gAssetHudElements->unk0[20] = spawn_object(&ttSWBody, 0);
+        gAssetHudElements->entry[20] = spawn_object(&ttSWBody, 0);
         gCurrentHud->unk340 = -0x8000;
-        if (gAssetHudElements->unk0[20] != NULL) {
-             ((Object *) gAssetHudElements->unk0[20])->segment.animFrame = 0;
+        if (gAssetHudElements->entry[20] != NULL) {
+             ((Object *) gAssetHudElements->entry[20])->segment.animFrame = 0;
         }
     }
-    if (gAssetHudElements->unk0[34] == 0) {
+    if (gAssetHudElements->entry[34] == 0) {
         ttSWArms.objectID = gAssetHudElementIds[34] & 0xFFFF;
         ttSWArms.size = 8;
         ttSWArms.x = 0;
         ttSWArms.y = 0;
         ttSWArms.z = 0;
-        gAssetHudElements->unk0[34] = spawn_object(&ttSWArms, 0);
+        gAssetHudElements->entry[34] = spawn_object(&ttSWArms, 0);
         gCurrentHud->unk440 = -0x8000;
     }
-    ttSWBodyObject = gAssetHudElements->unk0[20];
+    ttSWBodyObject = gAssetHudElements->entry[20];
     if (ttSWBodyObject != NULL) {
         ttSWBodyObject->segment.object.animationID = gStopwatchFaceID;
         obj68 = (Object_68 *) ttSWBodyObject->unk68[0];
