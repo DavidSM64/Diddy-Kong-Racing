@@ -396,7 +396,7 @@ typedef struct LevelHeader {
   /* 0x56 */ u8 pad56[0x1A];
 
   /* 0x70 */ LevelHeader_70 *unk70;
-  /* 0x74 */ s8 *unk74[7];
+  /* 0x74 */ LevelHeader_70 *unk74[7];
 
   // Weather related?
   /* 0x90 */ s16 weatherEnable;
@@ -677,10 +677,10 @@ typedef struct ObjectHeader24 {
             u8 unkB;
         };
     };
-    s16 unkC;
-    s16 unkE;
-    s16 unk10;
-    u16 unk12;
+    s16 homeX;
+    s16 homeY;
+    s16 homeZ;
+    u16 radius;
     u16 unk14;
     u16 unk16;
 } ObjectHeader24;
@@ -696,19 +696,19 @@ typedef struct ObjectHeader {
   /* 0x1C */ ObjHeaderParticleEntry *objectParticles;
              s32 pad20;
   /* 0x24 */ ObjectHeader24 *unk24;
-  /* 0x28 */ f32 unk28;
-  /* 0x2C */ f32 unk2C;
+  /* 0x28 */ f32 shadeBrightness;
+  /* 0x2C */ f32 shadeAmbient;
   /* 0x30 */ u16 unk30;
   /* 0x32 */ s16 unk32;
   /* 0x34 */ s16 unk34;
   /* 0x36 */ s16 unk36;
-  union {
   /* 0x38 */ s16 unk38;
-  /* 0x38 */ u8 pad38[4];
-  };
+  /* 0x3A */ u8 unk3A;
+  /* 0x3B */ u8 unk3B;
+  /* 0x3C */ u8 unk3C;
   /* 0x3D */ u8 unk3D;
-  /* 0x3E */ s16 unk3E;
-  /* 0x40 */ s16 unk40;
+  /* 0x3E */ s16 shadeAngleY;
+  /* 0x40 */ s16 shadeAngleZ;
   /* 0x42 */ s16 unk42;
   /* 0x44 */ s16 unk44;
   /* 0x48 */ s16 unk46;
@@ -725,7 +725,7 @@ typedef struct ObjectHeader {
   /* 0x57 */ s8 unk57;
   /* 0x58 */ s8 unk58;
   /* 0x59 */ u8 pad59;
-  /* 0x5A */ s8 unk5A;
+  /* 0x5A */ s8 numLightSources;
   /* 0x5B */ u8 unk5B;
   /* 0x5C */ u8 unk5C;
   /* 0x5D */ u8 unk5D; //Misc Asset index?
@@ -775,6 +775,7 @@ typedef struct ObjectInteraction {
  /* 0x14 */ s16 flags;
  /* 0x16 */ s8 unk16;
  /* 0x17 */ s8 unk17;
+/*0x18*/  s32 pad[4];
 } ObjectInteraction;
 
 typedef struct ShadowData {
@@ -786,7 +787,18 @@ typedef struct ShadowData {
     s16 unkE;
 } ShadowData;
 
-typedef struct Object_54 {
+typedef struct WaterEffect {
+    f32 scale;
+    TextureHeader *texture;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+    s16 unk10;
+    s16 unk12;
+} WaterEffect;
+
+typedef struct ShadeProperties {
     f32 unk0;
     u8 unk4;
     u8 unk5;
@@ -812,9 +824,9 @@ typedef struct Object_54 {
     s16 unk22;
     s16 unk24;
     s16 unk26;
-    f32 unk28;
-    f32 unk2C;
-} Object_54;
+    f32 brightness;
+    f32 ambient;
+} ShadeProperties;
 
 typedef f32 FakeHalfMatrix[2][4];
 typedef struct Object_5C {
@@ -824,6 +836,10 @@ typedef struct Object_5C {
  };
   /* 0x0100 */ void *unk100;
   /* 0x0104 */ u8 unk104;
+  /* 0x0105 */ u8 unk105;
+  /* 0x0106 */ u8 unk106;
+  /* 0x0107 */ u8 unk107;
+  /* 0x0108 */ s32 unk108;
 } Object_5C;
 
 typedef struct Object_60 {
@@ -1134,7 +1150,7 @@ typedef struct Object_Racer {
   /* 0x10C */ s32 unk10C;
   /* 0x110 */ s32 unk110;
   /* 0x114 */ s32 unk114;
-  /* 0x118 */ s32 unk118;
+  /* 0x118 */ struct unk80119C38 *unk118;
   /* 0x11C */ f32 unk11C;
   /* 0x120 */ f32 unk120;
   /* 0x124 */ f32 unk124;
@@ -1710,14 +1726,14 @@ typedef struct Object {
   /* 0x004A */ s16 unk4A; // Upper byte is object ID, lower byte is object size.
   /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318
   /* 0x0050 */ ShadowData *shadow; //player + 0x2F4
-  /* 0x0054 */ Object_54 *unk54; //player + 0x2C0
-  /* 0x0058 */ ShadowData *unk58; //player + 0x304
+  /* 0x0054 */ ShadeProperties *shading; //player + 0x2C0
+  /* 0x0058 */ WaterEffect *waterEffect; //player + 0x304
   /* 0x005C */ Object_5C *unk5C;
   /* 0x0060 */ Object_60 *unk60; //player + 0x340
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
   /* 0x0068 */ Object_68 **unk68; //player + 0x80
   /* 0x006C */ Object_6C *unk6C; //player + 0x370
-  /* 0x0070 */ u32 *unk70;
+  /* 0x0070 */ u32 *lightData;
   /* 0x0074 */ u32 unk74;
   /* 0x0078 */ ObjProperties properties;
   /* 0x0080 */ void *unk80;
@@ -1766,18 +1782,6 @@ typedef struct GhostNode {
 typedef struct GhostDataFrame {
     u8 pad0[12];
 } GhostDataFrame;
-
-/* Size: 0x18 bytes */
-typedef struct unk8011D510 {
-    /* 0x00 */ s16 unk0;
-    /* 0x02 */ s16 unk2;
-    /* 0x04 */ s16 unk4;
-    /* 0x06 */ u16 unk6;
-    /* 0x08 */ f32 unk8;
-    /* 0x0C */ f32 unkC;
-    /* 0x10 */ f32 unk10;
-    /* 0x14 */ f32 unk14;
-} unk8011D510;
 
 typedef struct unk80042178 {
     u8 pad0[0x20];

@@ -10,213 +10,242 @@
 
 /************ .data ************/
 
-s8 D_800E3670 = 0;
-s16 D_800E3674 = 0;
+s8 gTextTableExists = FALSE;
+s16 gTextDisplayNumber = 0;
 s32 D_800E3678 = 0;
 s32 D_800E367C = 0;
-s32 D_800E3680 = 1;
+s32 gSubtitleSetting = TRUE;
 
 /*******************************/
 
 /************ .bss ************/
 
 GameTextTableStruct *gGameTextTable[1];
-s8 D_8012A784;
-s8 D_8012A785;
-s8 D_8012A786;
+s8 gCloseTextMessage;
+s8 gTextCloseTimerFrames;
+s8 gTextCloseTimerSeconds;
 s8 D_8012A787;
 s8 D_8012A788;
-u8 D_8012A789;
+u8 gShowOnscreenMessage;
 u8 D_8012A78A;
-s16 D_8012A78C;
+UNUSED s16 D_8012A78C; // Set to -1, never read.
 s16 D_8012A78E;
-s16 D_8012A790;
-s16 D_8012A792;
-char *D_8012A798[2]; //960 x2 bytes
+s16 gTextTableEntries;
+UNUSED s16 D_8012A792;
+char *gGameTextTableEntries[2]; //960 x2 bytes
 char *D_8012A7A0;
 s32 D_8012A7A4;
-s16 sDialogueAlpha;
-s16 D_8012A7AA;
-s16 D_8012A7AC;
-s16 sDialogueXPos1; // The Upper Left X Coord of the Dialogue Box.
-s16 sDialogueYPos1; // The Upper Left Y Coord of the Dialogue Box. Changes for PAL / NTSC
-s16 sDialogueXPos2; // The Lower Right X Coord of the Dialogue Box.
-s16 sDialogueYPos2; // The Lower Right Y Coord of the Dialogue Box. Changes for PAL / NTSC
-s16 D_8012A7B6;     // A Boolean value
-s16 D_8012A7B8;
-s16 D_8012A7BA;
-s16 D_8012A7BE;
-char *D_8012A7C0[1];
-char *D_8012A7C8[2];
-char *D_8012A7D0;
+s16 gDialogueAlpha;
+s16 gTextAlphaVelocity;
+s16 gSubtitleTimer;
+s16 gDialogueXPos1; // The Upper Left X Coord of the Dialogue Box.
+s16 gDialogueYPos1; // The Upper Left Y Coord of the Dialogue Box. Changes for PAL / NTSC
+s16 gDialogueXPos2; // The Lower Right X Coord of the Dialogue Box.
+s16 gDialogueYPos2; // The Lower Right Y Coord of the Dialogue Box. Changes for PAL / NTSC
+s16 gShowSubtitles;
+s16 gSubtitleLineCount;
+s16 gCurrentTextID;
+UNUSED s16 D_8012A7BE;
+char *gSubtitleProperties[1];
+char *gCurrentMessageText[2];
+char *gCurrentTextProperties;
 s32 D_8012A7D4;
-s32 D_8012A7D8;
-s32 D_8012A7DC;
 
 /*****************************/
 
-void func_800C29F0(void) {
-    D_8012A7C8[0] = (char *) allocate_from_main_pool_safe(0x780, COLOUR_TAG_GREEN);
-    D_8012A7C8[1] = D_8012A7C8[0] + 0x3C0;
+/**
+ * Set the default values of dialogue and allocate memory for the active text entry.
+*/
+void init_dialogue_text(void) {
+    gCurrentMessageText[0] = (char *) allocate_from_main_pool_safe(0x780, COLOUR_TAG_GREEN);
+    gCurrentMessageText[1] = gCurrentMessageText[0] + 0x3C0;
     D_8012A7D4 = 0;
-    D_8012A7B6 = 0;
-    sDialogueAlpha = 0;
-    D_8012A7AA = 32;
-    D_8012A7BA = 0;
-    sDialogueXPos1 = 32;
-    sDialogueXPos2 = 288;
+    gShowSubtitles = FALSE;
+    gDialogueAlpha = 0;
+    gTextAlphaVelocity = 32;
+    gCurrentTextID = 0;
+    gDialogueXPos1 = 32;
+    gDialogueXPos2 = 288;
     if (osTvType == TV_TYPE_PAL) {
-        sDialogueYPos1 = 224;
-        sDialogueYPos2 = 248;
+        gDialogueYPos1 = 224;
+        gDialogueYPos2 = 248;
     } else {
-        sDialogueYPos1 = SCREEN_HEIGHT - 38;
-        sDialogueYPos2 = SCREEN_HEIGHT - 18;
+        gDialogueYPos1 = SCREEN_HEIGHT - 38;
+        gDialogueYPos2 = SCREEN_HEIGHT - 18;
     }
     func_800C56D0(6);
 }
 
-void func_800C2AB4(void) {
-    free_from_memory_pool(D_8012A7C8[0]);
-    D_8012A7B6 = 0;
+/**
+ * Close screen dialogue and free the text currently loaded into it.
+*/
+void free_message_box(void) {
+    free_from_memory_pool(gCurrentMessageText[0]);
+    gShowSubtitles = FALSE;
     close_dialogue_box(6);
     assign_dialogue_box_id(6);
 }
 
-void func_800C2AF4(s32 arg0) {
-    D_800E3680 = arg0;
+/**
+ * Toggle an override that prevents subtitles from showing.
+*/
+void set_subtitles(s32 setting) {
+    gSubtitleSetting = setting;
 }
 
-void func_800C2B00(void) {
-    s32 var_s1;
-    s32 var_s3;
+/**
+ * Render currently active subtitles on the screen.
+*/
+void render_subtitles(void) {
+    s32 textX;
+    s32 textY;
     s32 i;
     s32 textFlags;
-    char **var_s2;
+    char **textData;
 
     assign_dialogue_box_id(6);
-    set_current_dialogue_box_coords(6, sDialogueXPos1, sDialogueYPos1, sDialogueXPos2, sDialogueYPos2);
-    set_current_dialogue_background_colour(6, 0x40, 0x60, 0x60, (sDialogueAlpha * 0xA0) >> 8);
+    set_current_dialogue_box_coords(6, gDialogueXPos1, gDialogueYPos1, gDialogueXPos2, gDialogueYPos2);
+    set_current_dialogue_background_colour(6, 64, 96, 96, (gDialogueAlpha * 160) >> 8);
     set_current_text_background_colour(6, 0, 0, 0, 0);
-    var_s3 = ((((sDialogueYPos2 - sDialogueYPos1) - (D_8012A7B8 * 0xC)) - (D_8012A7B8 * 2)) + 2) >> 1;
+    textY = ((((gDialogueYPos2 - gDialogueYPos1) - (gSubtitleLineCount * 12)) - (gSubtitleLineCount * 2)) + 2) >> 1;
 
     
-    for (i = 0; i < D_8012A7B8; i++) {
-        var_s2 = &D_8012A7C0[0];
-        set_dialogue_font(6, (s32)var_s2[i][5]);
-        textFlags = var_s2[i][6];
-        if (textFlags == 4) {
-            var_s1 = (sDialogueXPos2 - sDialogueXPos1) >> 1;
+    for (i = 0; i < gSubtitleLineCount; i++) {
+        textData = &gSubtitleProperties[0];
+        set_dialogue_font(6, (s32) textData[i][TEXT_FONT]);
+        textFlags = textData[i][TEXT_FLAGS];
+        if (textFlags == ALIGN_TOP_CENTER) {
+            textX = (gDialogueXPos2 - gDialogueXPos1) >> 1;
         } else {
-            if (textFlags == 1) {
-                var_s1 = (sDialogueXPos2 - sDialogueXPos1) - 8;
+            if (textFlags == ALIGN_TOP_RIGHT) {
+                textX = (gDialogueXPos2 - gDialogueXPos1) - 8;
             } else {
-                var_s1 = 8;
+                textX = 8;
             }
         }
-        set_current_text_colour(6, var_s2[i][1], var_s2[i][2], var_s2[i][3], 255, (var_s2[i][4] * sDialogueAlpha) >> 8);
-        render_dialogue_text(6, var_s1, var_s3, var_s2[i] + 8, 1, textFlags);
-        set_current_text_colour(6, 0, 0, 0, 255, (sDialogueAlpha * 255) >> 8);
-        render_dialogue_text(6, var_s1 + 1, var_s3 + 1, var_s2[i] + 8, 1, textFlags);
-        var_s3 += 14;
+        set_current_text_colour(6, textData[i][TEXT_COL_R], textData[i][TEXT_COL_G], textData[i][TEXT_COL_B], 255, (textData[i][TEXT_ALPHA] * gDialogueAlpha) >> 8);
+        render_dialogue_text(6, textX, textY, textData[i] + 8, 1, textFlags);
+        set_current_text_colour(6, 0, 0, 0, 255, (gDialogueAlpha * 255) >> 8);
+        render_dialogue_text(6, textX + 1, textY + 1, textData[i] + 8, 1, textFlags);
+        textY += 14;
     }
     open_dialogue_box(6);
 }
 
-void func_800C2D6C(void) {
+/**
+ * Get the line count and text timer from the next message of the subtitle.
+ * Close the subtitles if none can be found.
+*/
+void find_next_subtitle(void) {
     u32 new_var3;
     u8 new_var;
     s32 new_var2;
     s32 done;
     
-    D_8012A7B8 = 0;
-    D_8012A7AC = 0;
+    gSubtitleLineCount = 0;
+    gSubtitleTimer = 0;
     done = FALSE;
-    while ((D_8012A7D0[0] != 0) && done == FALSE) {
-        D_8012A7BA = D_8012A7D0[0] - 1;
-        D_8012A7C0[(D_8012A7B8)] = D_8012A7D0;
-        D_8012A7AC = normalise_time(D_8012A7D0[7] * 6);
-        D_8012A7D0 += 8;
+    while (gCurrentTextProperties[0] != NULL && done == FALSE) {
+        gCurrentTextID = gCurrentTextProperties[0] - 1;
+        gSubtitleProperties[gSubtitleLineCount] = gCurrentTextProperties;
+        gSubtitleTimer = normalise_time(gCurrentTextProperties[7] * 6);
+        gCurrentTextProperties += 8;
         do {
-            new_var = D_8012A7D0[0];
+            new_var = gCurrentTextProperties[0];
             if (new_var & 0x80) {
-            D_8012A7D0 += 2;
+                gCurrentTextProperties += 2;
             } else {
-            D_8012A7D0++;
+                gCurrentTextProperties++;
             }
-        } while (D_8012A7D0[0] != 0);
-        D_8012A7B8++;
-        if (D_8012A7B8 >= 2) {
+        } while (gCurrentTextProperties[0] != NULL);
+        gSubtitleLineCount++;
+        if (gSubtitleLineCount >= 2) {
             done = TRUE;
         }
-        D_8012A7D0++;
-        new_var3 = (new_var2 = D_8012A7D0[0]);
-        if (D_8012A7D0[0] == 10) {
-            D_8012A7D0++;
+        gCurrentTextProperties++;
+        new_var3 = (new_var2 = gCurrentTextProperties[0]);
+        if (gCurrentTextProperties[0] == 10) {
+            gCurrentTextProperties++;
         } else if (new_var3 == 12) {
-            D_8012A7D0++;
+            gCurrentTextProperties++;
             done = TRUE;
         }
     }
-    if (D_8012A7B8 > 0) {
-    D_8012A7B6 = 1;
+    if (gSubtitleLineCount > 0) {
+    gShowSubtitles = TRUE;
     }
 }
 
-void func_800C2F1C(s32 arg0) {
-    if (D_800E3680 == 0) {
-        D_8012A7B6 = 0;
+/**
+ * Handle the subtitle system from here.
+ * Slowly show the text, tick down the timer, find the next message or close the box, then render.
+*/
+void process_subtitles(s32 updateRate) {
+    if (gSubtitleSetting == FALSE) {
+        gShowSubtitles = FALSE;
     }
-    if (D_8012A7B6 != 0) {
-        if (D_8012A7AC <= 0) {
-            sDialogueAlpha -= arg0 * D_8012A7AA;
-            if (sDialogueAlpha < 0) {
-                sDialogueAlpha = 0;
-                D_8012A7B6 = 0;
+    if (gShowSubtitles) {
+        if (gSubtitleTimer <= 0) {
+            gDialogueAlpha -= updateRate * gTextAlphaVelocity;
+            if (gDialogueAlpha < 0) {
+                gDialogueAlpha = 0;
+                gShowSubtitles = FALSE;
                 close_dialogue_box(6);
                 assign_dialogue_box_id(6);
             }
         } else {
-            sDialogueAlpha += arg0 * D_8012A7AA;
-            if (sDialogueAlpha > 256) {
-                sDialogueAlpha = 256;
+            gDialogueAlpha += updateRate * gTextAlphaVelocity;
+            if (gDialogueAlpha > 256) {
+                gDialogueAlpha = 256;
             }
-            D_8012A7AC -= arg0;
-            if (D_8012A7AC <= 0) {
-                func_800C2D6C();
+            gSubtitleTimer -= updateRate;
+            if (gSubtitleTimer <= 0) {
+                find_next_subtitle();
             }
         }
     }
-    if (D_8012A7B6 != 0) {
-        func_800C2B00();
+    if (gShowSubtitles) {
+        render_subtitles();
     }
 }
 
-void func_800C3048(void) {
+/**
+ * Load the text table into RAM.
+ * Assign the entries to a pointer table, then calculate the number of entries.
+*/
+void load_game_text_table(void) {
     D_8012A78C = -1;
     gGameTextTable[0] = (GameTextTableStruct *) allocate_from_main_pool_safe(0x800, COLOUR_TAG_GREEN);
-    D_8012A798[0] = (char *) &gGameTextTable[0]->entries[32];
-    D_8012A798[1] = &D_8012A798[0][960];
+    gGameTextTableEntries[0] = (char *) &gGameTextTable[0]->entries[32];
+    gGameTextTableEntries[1] = &gGameTextTableEntries[0][960];
     D_8012A7A4 = 0;
-    func_800C29F0();
-    D_8012A790 = (get_size_of_asset_section(ASSET_GAME_TEXT_TABLE) >> 2) - 2;
-    D_800E3670 = 1;
+    init_dialogue_text();
+    gTextTableEntries = (get_size_of_asset_section(ASSET_GAME_TEXT_TABLE) >> 2) - 2;
+    gTextTableExists = TRUE;
 }
 
-void func_800C30CC(void) {
+/**
+ * Free the text table from RAM.
+ * Close every dialogue box, then call a function that frees menu dialogue, too.
+ */
+void free_game_text_table(void) {
     s32 i;
-    if (D_800E3670) {
+    if (gTextTableExists) {
         free_from_memory_pool(gGameTextTable[0]);
-        D_800E3670 = 0;
-        D_8012A789 = 0;
+        gTextTableExists = FALSE;
+        gShowOnscreenMessage = FALSE;
         for (i = 0; i < 10; i++) {
             try_close_dialogue_box();
         };
-        func_800C2AB4();
+        free_message_box();
     }
 }
 
-void func_800C3140(s32 arg0) {
-    D_800E3674 = arg0;
+/**
+ * Set the variable used by the message boxes when trying to display an arbitrary number.
+*/
+void set_textbox_display_value(s32 num) {
+    gTextDisplayNumber = num;
 }
 
 void func_800C314C(void) {
@@ -239,57 +268,57 @@ void func_800C31EC(s32 arg0) {
     s32 language;
     s32 temp;
     
-  if ((D_800E3670 != 0) && (arg0 >= 0)) {
-    if (arg0 < D_8012A790) {
-      language = get_language();
-      switch (language) {
+  if (gTextTableExists && arg0 >= 0) {
+        if (arg0 < gTextTableEntries) {
+        language = get_language();
+        switch (language) {
         case LANGUAGE_GERMAN:
-          arg0 += 0x55;
-          break;
+            arg0 += 0x55;
+            break;
         case LANGUAGE_FRENCH:
-          arg0 += 0xAA;
-          break;
+            arg0 += 0xAA;
+            break;
         case LANGUAGE_JAPANESE:
-          arg0 += 0xFF;
-          break;
-      }
+            arg0 += 0xFF;
+            break;
+        }
 
-      load_asset_to_address(ASSET_GAME_TEXT_TABLE, (u32) (*gGameTextTable)->entries, (arg0 & (~1)) << 2, 16);
-      
-      entries = (*gGameTextTable)->entries;
-      temp = ((s32) entries[(arg0 & 1)]) & 0xFF000000;
-      size = (((s32) entries[(arg0 & 1) + 1]) & 0xFFFFFF) - (((s32) entries[(arg0 & 1)]) & 0xFFFFFF);
-      
-      if (temp) {
-        load_asset_to_address(ASSET_GAME_TEXT, (u32) D_8012A7C8[D_8012A7D4], ((s32) entries[(arg0 & 1)]) ^ temp, size);
-        D_8012A7D0 = D_8012A7C8[D_8012A7D4];
-        func_800C2D6C();
-        D_8012A7D4 = (D_8012A7D4 + 1) & 1;
+        load_asset_to_address(ASSET_GAME_TEXT_TABLE, (u32) (*gGameTextTable)->entries, (arg0 & (~1)) << 2, 16);
+        
+        entries = (*gGameTextTable)->entries;
+        temp = ((s32) entries[arg0 & 1]) & 0xFF000000;
+        size = (((s32) entries[(arg0 & 1) + 1]) & 0xFFFFFF) - (((s32) entries[arg0 & 1]) & 0xFFFFFF);
+        
+        if (temp) {
+            load_asset_to_address(ASSET_GAME_TEXT, (u32) gCurrentMessageText[D_8012A7D4], ((s32) entries[arg0 & 1]) ^ temp, size);
+            gCurrentTextProperties = gCurrentMessageText[D_8012A7D4];
+            find_next_subtitle();
+            D_8012A7D4 = (D_8012A7D4 + 1) & 1;
+            return;
+        }
+        load_asset_to_address(ASSET_GAME_TEXT, (u32) gGameTextTableEntries[D_8012A7A4], ((s32) entries[arg0 & 1]) ^ temp, size);
+        D_8012A7A0 = gGameTextTableEntries[D_8012A7A4];
+        D_8012A7A4 = (D_8012A7A4 + 1) & 1;
+        D_8012A788 = 0;
+        gTextCloseTimerSeconds = 0;
+        gCloseTextMessage = FALSE;
+        D_8012A787 = 1;
+        D_8012A7A0[size] = 2;
+        if (gShowOnscreenMessage == FALSE) {
+            D_8012A78E = 0;
+            D_8012A78A = 1;
+            gShowOnscreenMessage = TRUE;
+        }
         return;
-      }
-      load_asset_to_address(ASSET_GAME_TEXT, (u32) D_8012A798[D_8012A7A4], ((s32) entries[(arg0 & 1)]) ^ temp, size);
-      D_8012A7A0 = D_8012A798[D_8012A7A4];
-      D_8012A7A4 = (D_8012A7A4 + 1) & 1;
-      D_8012A788 = 0;
-      D_8012A786 = 0;
-      D_8012A784 = 0;
-      D_8012A787 = 1;
-      D_8012A7A0[size] = 2;
-      if (!D_8012A789) {
-        D_8012A78E = 0;
-        D_8012A78A = 1;
-        D_8012A789 = 1;
-      }
-      return;
+        }
     }
-  }
-  D_8012A784 = 1;
+    gCloseTextMessage = TRUE;
 }
 
 s32 func_800C3400(void) {
     s32 result = 0;
-    if (D_800E3670 != 0) {
-        if (D_8012A789 != 0) {
+    if (gTextTableExists) {
+        if (gShowOnscreenMessage) {
             result = 1;
             if (D_8012A788 != 0) {
                 result = 2;
@@ -299,28 +328,32 @@ s32 func_800C3400(void) {
     return result;
 }
 
-void func_800C3440(s32 arg0) {
-    if (D_800E3670 != 0) {
+/**
+ * Top level function for handling message boxes and dialogue.
+ * Calls a function too, to load in text entries when needed.
+*/
+void process_onscreen_textbox(s32 updateRate) {
+    if (gTextTableExists) {
         if (!is_game_paused()) {
             if (D_800E3678 > 0) {
-                D_800E3678 -= arg0;
+                D_800E3678 -= updateRate;
                 if (D_800E3678 <= 0) {
                     func_800C31EC(D_800E367C);
                     D_800E3678 = 0;
                 }
             }
         }
-        func_800C2F1C(arg0);
-        if (D_8012A789 != 0) {
+        process_subtitles(updateRate);
+        if (gShowOnscreenMessage) {
             disable_racer_input();
-            if (D_8012A786 != 0) {
-                D_8012A785 -= arg0;
-                while (D_8012A785 < 0) {
-                    D_8012A785 += normalise_time(60);
-                    D_8012A786--;
+            if (gTextCloseTimerSeconds) {
+                gTextCloseTimerFrames -= updateRate;
+                while (gTextCloseTimerFrames < 0) {
+                    gTextCloseTimerFrames += normalise_time(60);
+                    gTextCloseTimerSeconds--;
                 }
-                if (D_8012A786 <= 0) {
-                    D_8012A784 = 1;
+                if (gTextCloseTimerSeconds <= 0) {
+                    gCloseTextMessage = TRUE;
                 }
             }
             npc_dialogue_loop(DIALOGUE_CHALLENGE);
@@ -328,7 +361,7 @@ void func_800C3440(s32 arg0) {
     }
 }
 
-s32 func_800C3564(void) {
+s32 dialogue_challenge_loop(void) {
     s32 xPos;
     s32 index;
     s32 numberOfOnes;
@@ -370,7 +403,7 @@ s32 func_800C3564(void) {
         } else {
             xPos = (s32) (textBox.right - textBox.left) >> 1; // Center x position to box.
         }
-        render_dialogue_text(1, xPos, textBox.textY, &D_8012A7A0[index], D_800E3674, textBox.textFlags);
+        render_dialogue_text(1, xPos, textBox.textY, &D_8012A7A0[index], gTextDisplayNumber, textBox.textFlags);
         textBox.textY += textBox.lineHeight;
         while (D_8012A7A0[index] > 0) {
             index += 1;
@@ -390,15 +423,15 @@ s32 func_800C3564(void) {
         playerButtons = 0;
     }
     if (D_8012A78A == 0) {
-        if (playerButtons & A_BUTTON || D_8012A784 != 0) {
+        if (playerButtons & A_BUTTON || gCloseTextMessage) {
             if (D_8012A7A0[index] == 1) {
                 D_8012A78E += 1;
             } else {
-                D_8012A789 = 0;
+                gShowOnscreenMessage = FALSE;
                 func_8009CF68(3);
             }
-            D_8012A784 = 0;
-            D_8012A786 = 0;
+            gCloseTextMessage = FALSE;
+            gTextCloseTimerSeconds = 0;
         }
     }
     D_8012A78A = 0;
@@ -410,7 +443,7 @@ s32 func_800C38B4(s32 arg0, TextBox *textbox) {
     char *var_s0;
 
     var_s0 = &D_8012A7A0[arg0];
-    while ((var_s0[0] >= 3) && (var_s0[0] < 13)) {
+    while (var_s0[0] >= 3 && var_s0[0] < 13) {
         switch (var_s0[0] - 3) {
         case 0:
             textbox->font = var_s0[1];
@@ -421,14 +454,14 @@ s32 func_800C38B4(s32 arg0, TextBox *textbox) {
         case 1:
             textbox->left = var_s0[1] & 0xFF;
             textbox->top = D_8012A7A0[arg0 + 2] & 0xFF;
-            if (osTvType == 0) {
+            if (osTvType == TV_TYPE_PAL) {
                 temp = textbox->top;
-                textbox->top = ((textbox->top * 0x108) / 240);
+                textbox->top = (textbox->top * 264) / 240;
                 temp = textbox->top - temp;
             } else {
                 temp = 0;
             }
-            textbox->right = (D_8012A7A0[arg0 + 3] & 0xFF) + 0x41;
+            textbox->right = (D_8012A7A0[arg0 + 3] & 0xFF) + 65;
             textbox->bottom = (D_8012A7A0[arg0 + 4] & 0xFF) + temp;
             arg0 += 5;
             set_current_dialogue_box_coords(1, textbox->left, textbox->top, textbox->right, textbox->bottom);
@@ -468,9 +501,9 @@ s32 func_800C38B4(s32 arg0, TextBox *textbox) {
             var_s0 = &D_8012A7A0[arg0];
             break;
         case 7:
-            if (D_8012A786 == 0) {
-                D_8012A786 = var_s0[1] & 0xFF;
-                D_8012A785 = normalise_time(0x3C);
+            if (gTextCloseTimerSeconds == 0) {
+                gTextCloseTimerSeconds = var_s0[1] & 0xFF;
+                gTextCloseTimerFrames = normalise_time(60);
                 var_s0 = &D_8012A7A0[arg0];
             }
             arg0 += 2;
@@ -478,12 +511,12 @@ s32 func_800C38B4(s32 arg0, TextBox *textbox) {
             break;
         case 8:
             arg0 += 2;
-            D_8012A787 = (s8) var_s0[1];
+            D_8012A787 = var_s0[1];
             var_s0 += 2;
             break;
         case 9:
             arg0 += 2;
-            D_8012A788 = (s8) var_s0[1];
+            D_8012A788 = var_s0[1];
             var_s0 += 2;
             break;
         }

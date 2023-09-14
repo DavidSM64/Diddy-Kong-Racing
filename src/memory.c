@@ -6,32 +6,12 @@
 #include "thread0_epc.h"
 #include "controller.h"
 
-/************ .rodata ************/
-
-UNUSED const char D_800E7210[] = "*** mmAlloc: size = 0 ***\n";
-UNUSED const char D_800E722C[] = "*** mm Error *** ---> No more slots available.\n";
-UNUSED const char D_800E725C[] = "\n*** mm Error *** ---> No suitble block found for allocation.\n";
-UNUSED const char D_800E729C[] = "*** mmAllocAtAddr: size = 0 ***\n";
-UNUSED const char D_800E72C0[] = "\n*** mm Error *** ---> No more slots available.\n";
-UNUSED const char D_800E72F4[] = "\n*** mm Error *** ---> Can't allocate memory at desired address.\n";
-UNUSED const char D_800E7338[] = "\n*** mm Error *** ---> Can't free ram at this location: %x\n";
-UNUSED const char D_800E7374[] = "\n*** mm Error *** ---> No match found for mmFree.\n";
-UNUSED const char D_800E73A8[] = "*** Slots still in use in region ***\n";
-UNUSED const char D_800E73D0[] = "\n*** mm Error *** ---> stbf stack too deep!\n";
-UNUSED const char D_800E7400[] = "\n*** mm Error *** ---> Can't fix the specified block.\n";
-UNUSED const char D_800E7438[] = "\n*** mm Error *** ---> Can't unfix the specified block.\n";
-UNUSED const char D_800E7474[] = "Colour %x >> %d\n";
-UNUSED const char D_800E7488[] = "Unable to record %d slots, colours overflowed table.\n";
-
-/*********************************/
-
 /************ .bss ************/
 
-MemoryPool gMemoryPools[4];
+MemoryPool gMemoryPools[4]; // Only two are used.
 
 #ifndef _ALIGN16
 #define _ALIGN16(a) (((u32) (a) & ~0xF) + 0x10)
-//#define _ALIGN16(val) ((val)&0xFFFFFFF0) + 0x10
 #endif
 
 s32 gNumberOfMemoryPools;
@@ -140,6 +120,10 @@ MemoryPoolSlot *allocate_from_main_pool(s32 size, u32 colourTag) {
     return allocate_from_memory_pool(0, size, colourTag);
 }
 
+/**
+ * Search the existing empty slots and try to find one that can meet the size requirement.
+ * Afterwards, write the new allocation data to the slot in question and return the address.
+*/
 MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag) {
     s32 slotSize;
     MemoryPoolSlot *curSlot;
@@ -151,11 +135,14 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag
     s32 currIndex;
         
     flags = clear_status_register_flags();
-    if (size) {} // Fakematch
+    if (size == 0) {
+        stubbed_printf("*** mmAlloc: size = 0 ***\n");
+    }
     pool = &gMemoryPools[poolIndex];
     if ((pool->curNumSlots + 1) == (*pool).maxNumSlots) {
         set_status_register_flags(flags);
-        return 0;
+        stubbed_printf("*** mm Error *** ---> No more slots available.\n");
+        return NULL;
     }
     currIndex = -1;
     if (size & 0xF) {
@@ -168,7 +155,7 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag
     do {
         curSlot = &slots[nextIndex];
         if (curSlot->flags == 0) {
-            if ((curSlot->size >= size) && (curSlot->size < slotSize)) {
+            if (curSlot->size >= size && curSlot->size < slotSize) {
                 slotSize = curSlot->size;
                 currIndex = nextIndex;
             }
@@ -181,7 +168,8 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag
         return (MemoryPoolSlot *) (slots + currIndex)->data;
     }
     set_status_register_flags(flags);
-    return 0;
+    stubbed_printf("\n*** mm Error *** ---> No suitble block found for allocation.\n");
+    return NULL;
 }
 
 /* Official name: mmAllocR */
@@ -203,9 +191,12 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
     s32 *flags;
     
     flags = clear_status_register_flags();
-    if (!size){} // Fakematch
+    if (size == 0) {
+        stubbed_printf("*** mmAllocAtAddr: size = 0 ***\n");
+    }
     if ((gMemoryPools[0].curNumSlots + 1) == gMemoryPools[0].maxNumSlots) {
         set_status_register_flags(flags);
+        stubbed_printf("\n*** mm Error *** ---> No more slots available.\n");
     } else {
         if (size & 0xF) {
             size = _ALIGN16(size);
@@ -230,7 +221,8 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
         }
         set_status_register_flags(flags);
     }
-    return 0;
+    stubbed_printf("\n*** mm Error *** ---> Can't allocate memory at desired address.\n");
+    return NULL;
 }
 
 /**
@@ -259,7 +251,7 @@ void free_from_memory_pool(void *data) {
     if (gFreeQueueState == 0) {
         free_slot_containing_address(data);
     } else {
-        func_80071440(data);
+        add_to_free_queue(data);
     }
     set_status_register_flags(flags);
 }
@@ -282,6 +274,7 @@ void clear_free_queue(void) {
             gFreeQueue[i].unk4 = gFreeQueue[gFreeQueueCount - 1].unk4;
             gFreeQueueCount--;
         } else {
+            stubbed_printf("\n*** mm Error *** ---> Can't free ram at this location: %x\n", gFreeQueue[i].dataAddress);
             i++;
         }
     }
@@ -313,7 +306,7 @@ void free_slot_containing_address(u8 *address) {
     }
 }
 
-void func_80071314(void) {
+UNUSED void func_80071314(void) {
     MemoryPoolSlot *slotPos;
     MemoryPool *pool;
     UNUSED s32 pad;
@@ -323,7 +316,7 @@ void func_80071314(void) {
         
     flags = clear_status_register_flags();
     poolIndex = gNumberOfMemoryPools;
-    while (poolIndex != (-1)) {
+    while (poolIndex != -1) {
         pool = &gMemoryPools[poolIndex];
         slotPos = pool->slots;
         slotIndex = 0;
@@ -340,13 +333,23 @@ void func_80071314(void) {
                 }
             }
             slotIndex = (slotPos + slotIndex)->nextIndex;
-        } while (slotIndex != (-1));
+        } while (slotIndex != -1);
         poolIndex--;
     }
     set_status_register_flags(flags);
+    stubbed_printf("\n*** mm Error *** ---> No match found for mmFree.\n");
 }
 
-void func_80071440(void *dataAddress) {
+// TODO: Find homes for these, too.
+UNUSED const char D_800E73A8[] = "*** Slots still in use in region ***\n";
+UNUSED const char D_800E73D0[] = "\n*** mm Error *** ---> stbf stack too deep!\n";
+UNUSED const char D_800E7400[] = "\n*** mm Error *** ---> Can't fix the specified block.\n";
+UNUSED const char D_800E7438[] = "\n*** mm Error *** ---> Can't unfix the specified block.\n";
+
+/**
+ * Adds the current memory address to the back of the queue, so it can be freed.
+*/
+void add_to_free_queue(void *dataAddress) {
     gFreeQueue[gFreeQueueCount].dataAddress = dataAddress;
     gFreeQueue[gFreeQueueCount].unk4 = gFreeQueueState;
     gFreeQueueCount++;
@@ -363,17 +366,17 @@ s32 func_80071478(u8 *address) {
     slotIndex = 0;
     while (slotIndex != -1) {
         slot = slotIndex + pool->slots; // `slot = &pool->slots[slotIndex];` does not match.
-        if (address == (u8 *)slot->data) {
+        if (address == (u8 *) slot->data) {
             if (slot->flags == 1 || slot->flags == 4) {
                 slot->flags |= 2;
                 set_status_register_flags(flags);
-                return 1;
+                return TRUE;
             }
         }
         slotIndex = slot->nextIndex;
     }
     set_status_register_flags(flags);
-    return 0;
+    return FALSE;
 }
 
 s32 func_80071538(u8 *address) {
@@ -391,13 +394,13 @@ s32 func_80071538(u8 *address) {
             if (slot->flags & 2) {
                 slot->flags ^= 2;
                 set_status_register_flags(flags);
-                return 1;
+                return TRUE;
             }
         }
         slotIndex = slot->nextIndex;
     }
     set_status_register_flags(flags);
-    return 0;
+    return FALSE;
 }
 
 /**
@@ -409,16 +412,20 @@ s32 get_memory_pool_index_containing_address(u8 *address) {
 
     for (i = gNumberOfMemoryPools; i > 0; i--) {
         pool = &gMemoryPools[i];
-        if ((u8 *)pool->slots >= address) {
+        if ((u8 *) pool->slots >= address) {
             continue;
         }
-        if (address < pool->size + (u8 *)pool->slots) {
+        if (address < pool->size + (u8 *) pool->slots) {
             break;
         }
     }
     return i;
 }
 
+/**
+ * Clears the current slot of all information, effectively freeing the allocated memory.
+ * Unused slots before and after will be merged with this slot
+*/
 void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
     s32 nextIndex;
     s32 prevIndex;
@@ -465,11 +472,18 @@ void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
     }
 }
 
-// Unused?
-MemoryPoolSlot *mmGetSlotPtr(s32 poolIndex) {
+/**
+ * Return the address of the first slot of a given memory pool.
+*/
+UNUSED MemoryPoolSlot *get_memory_pool_address(s32 poolIndex) {
     return gMemoryPools[poolIndex].slots;
 }
 
+/**
+ * Initialise and attempts to fit the new memory block in the slot given.
+ * Updates the linked list with any entries before and after then returns the new slot index.
+ * If the region cannot fit, return the old slot instead.
+*/
 s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken, u32 colourTag) {
     MemoryPool *pool;
     MemoryPoolSlot *poolSlots;
@@ -519,10 +533,9 @@ u8 *align16(u8 *address) {
 
 /**
  * Returns the passed in address aligned to the next 8-byte boundary.
- * Unused.
  * Official name: mmAlign8
  */
-u8 *align8(u8 *address) {
+UNUSED u8 *align8(u8 *address) {
     s32 remainder = (s32)address & 0x7;
     if (remainder > 0) {
         address = (u8 *)(((s32)address - remainder) + 8);
@@ -532,10 +545,9 @@ u8 *align8(u8 *address) {
 
 /**
  * Returns the passed in address aligned to the next 4-byte boundary.
- * Unused.
  * Official name: mmAlign4
  */
-u8 *align4(u8 *address) {
+UNUSED u8 *align4(u8 *address) {
     s32 remainder = (s32)address & 0x3;
     if (remainder > 0) {
         address = (u8 *)(((s32)address - remainder) + 4);
@@ -543,18 +555,25 @@ u8 *align4(u8 *address) {
     return address;
 }
 
-s32 func_800718A4(void) {
+/**
+ * Iterate through all active memory pool slots and categorise them by colour.
+ * Tally how many colours there are, then how many colours are in use.
+ * Afterwards, print out the results.
+ * Since the function only has space for 64 different colours, make sure
+ * any missed tallies are at least reported.
+*/
+UNUSED s32 find_active_pool_slot_colours(void) {
     u32 colours[64];
     u32 colourCounts[64];
     MemoryPoolSlot *curSlot;
-    s32 temp;
+    s32 numOverflows;
     s32 i;
     s32 j;
     s32 colourIndex;
-    s32 var_a2;
+    s32 slotColour;
     u32 curColour;
     
-    temp = 0;
+    numOverflows = 0;
     for (j = 0; j < 64; j++) {
         colours[j] = 0;
         colourCounts[j] = 0; 
@@ -563,42 +582,49 @@ s32 func_800718A4(void) {
         curSlot = gMemoryPools[i].slots;
         do {
             if (curSlot->flags != 0) {
-                var_a2 = curSlot->colourTag;
-                if (var_a2 != 0) {
-                    curColour = var_a2;
+                slotColour = curSlot->colourTag;
+                if (slotColour != 0) {
+                    curColour = slotColour;
                     colourIndex = 0;
                     while (colourIndex < 64 && curColour != colours[colourIndex] && colours[colourIndex] != 0) {
-                        var_a2 = colours[colourIndex];
+                        slotColour = colours[colourIndex];
                         colourIndex++;
                     }
                     if (colourIndex < 64) {
                         colours[colourIndex] = curColour;
                         colourCounts[colourIndex]++;
                     } else {
-                        temp++;
+                        numOverflows++;
                     }
                 }
             }
-            var_a2 = curSlot->nextIndex;
-            if (var_a2 != -1) {
+            slotColour = curSlot->nextIndex;
+            if (slotColour != -1) {
                 curSlot = &gMemoryPools[i].slots[curSlot->nextIndex];
             }
-        } while (var_a2 != (-1));
+        } while (slotColour != -1);
     }
-    var_a2 = 0;
-    if(!temp) { } // Fakematch
-    for (j = 0; colours[j] != 0 && j < 64; j++) { } // Fakematch
-    var_a2 = 0;
-    if(!temp) { } // Fakematch
-    temp = var_a2;
+    slotColour = 0;
+    for (j = 0; colours[j] != 0 && j < 64; j++) {
+        stubbed_printf("Colour %x >> %d\n", colours[j], colourCounts[j]);
+    }
+    slotColour = 0;
+    if (numOverflows) {
+        stubbed_printf("Unable to record %d slots, colours overflowed table.\n", numOverflows);
+    }
+    numOverflows = slotColour;
 }
 
-s32 get_memory_colour_tag_count(u32 colourTag) {
+/**
+ * Search through each memory pool, counting up the slots that match the colour tag looking to be found.
+ * Marked as unused, since the functions calling it is also unused.
+*/
+UNUSED s32 get_memory_colour_tag_count(u32 colourTag) {
     s32 i, count;
     MemoryPoolSlot *slot;
     count = 0;
     slot = &gMemoryPools[0].slots[0];
-    for (i = 0; i < 1600; i++) {
+    for (i = 0; i < MAIN_POOL_SLOT_COUNT; i++) {
         if (slot->flags != 0) {
             if(colourTag == slot->colourTag) {
                 count++;
@@ -611,7 +637,6 @@ s32 get_memory_colour_tag_count(u32 colourTag) {
 
 /**
  * Prints out the counts for each color tag in the main pool.
- * Unused. 
  */
 UNUSED void print_memory_colour_tags(void) {
     stubbed_printf("RED %d\n", get_memory_colour_tag_count(COLOUR_TAG_RED));
@@ -627,7 +652,6 @@ UNUSED void print_memory_colour_tags(void) {
 
 /**
  * Draws the counts for each color tag in the main pool.
- * Unused. 
  * See: https://tcrf.net/Diddy_Kong_Racing#Current_Colors
  */
 UNUSED void render_memory_colour_tags(void) {

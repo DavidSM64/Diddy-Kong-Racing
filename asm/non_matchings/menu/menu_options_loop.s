@@ -159,7 +159,7 @@ glabel menu_options_loop
 /* 0851A4 800845A4 24040000 */  li    $a0, 0
 /* 0851A8 800845A8 0C027AAF */  jal   unset_eeprom_settings_value
 /* 0851AC 800845AC 3C050200 */   lui   $a1, 0x200
-/* 0851B0 800845B0 0C030ABD */  jal   func_800C2AF4
+/* 0851B0 800845B0 0C030ABD */  jal   set_subtitles
 /* 0851B4 800845B4 00002025 */   move  $a0, $zero
 /* 0851B8 800845B8 3C0B800E */  lui   $t3, %hi(gMenuText) # $t3, 0x800e
 /* 0851BC 800845BC 8D6BF4A0 */  lw    $t3, %lo(gMenuText)($t3)
@@ -173,7 +173,7 @@ glabel menu_options_loop
 /* 0851D8 800845D8 24040000 */  li    $a0, 0
 /* 0851DC 800845DC 0C027A9E */  jal   set_eeprom_settings_value
 /* 0851E0 800845E0 3C050200 */   lui   $a1, 0x200
-/* 0851E4 800845E4 0C030ABD */  jal   func_800C2AF4
+/* 0851E4 800845E4 0C030ABD */  jal   set_subtitles
 /* 0851E8 800845E8 24040001 */   li    $a0, 1
 /* 0851EC 800845EC 3C0C800E */  lui   $t4, %hi(gMenuText) # $t4, 0x800e
 /* 0851F0 800845F0 8D8CF4A0 */  lw    $t4, %lo(gMenuText)($t4)

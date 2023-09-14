@@ -7,7 +7,7 @@
 
 /************ .data ************/
 
-huft *D_800E3760 = NULL; //gzip_huft_alloc
+huft *gHuftTable = NULL; //gzip_huft_alloc
 s32 *gAssetAddress = NULL;
 u8 *gzip_inflate_input = NULL;
 u8 *gzip_inflate_output = NULL;
@@ -18,12 +18,12 @@ u8 *gzip_inflate_output = NULL;
 
 u32 gzip_bit_buffer;
 u32 gzip_num_bits;
-s32 D_8012AAD8; //gzip_hufts
+s32 gHuftTablePos; //gzip_hufts
 
 /******************************/
 
-void rzipInit(void) {
-    D_800E3760 = (huft *)allocate_from_main_pool_safe(0x2800, COLOUR_TAG_BLACK);
+void init_rzip(void) {
+    gHuftTable = (huft *)allocate_from_main_pool_safe(0x2800, COLOUR_TAG_BLACK);
     gAssetAddress = (s32 *)allocate_from_main_pool_safe(0x10, COLOUR_TAG_BLACK);
 }
 
@@ -155,7 +155,7 @@ void gzip_huft_build(u32 *b, u32 n, u32 s, u16 *d, u16 *e, huft **t, s32 *m) {
   q = NULL;      /* ditto */
   z = 0;                 /* ditto */
   
-  // D_800E3760 and D_8012AAD8 go in here somewhere.
+  // gHuftTable and gHuftTablePos go in here somewhere.
 
   /* go through the bit lengths (k already is bits in shortest code) */
   for (; k <= g; k++)
@@ -185,8 +185,8 @@ void gzip_huft_build(u32 *b, u32 n, u32 s, u16 *d, u16 *e, huft **t, s32 *m) {
         }
         z = 1 << j;             /* table entries for j-bit table */
 
-        q = &D_800E3760[D_8012AAD8];
-        D_8012AAD8 += z + 1;
+        q = &gHuftTable[gHuftTablePos];
+        gHuftTablePos += z + 1;
           
         *t = q + 1;             /* link to list for huft_free() */
         *(t = &(q->v.t)) = NULL;

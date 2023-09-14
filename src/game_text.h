@@ -20,6 +20,16 @@
     textBox.textY = y;                                    \
     textBox.lineHeight = height
 
+enum TextProperties {
+    TEXT_NONE,
+    TEXT_COL_R,
+    TEXT_COL_G,
+    TEXT_COL_B,
+    TEXT_ALPHA,
+    TEXT_FONT,
+    TEXT_FLAGS
+};
+
 typedef struct GameTextTableStruct  {
  char *entries[128];
  s32 *somethingElse;
@@ -41,22 +51,21 @@ typedef struct TextBox {
     s32 lineHeight;
 } TextBox;
 
-
-void func_800C29F0(void);
-void func_800C2AB4(void);
-void func_800C2AF4(s32 arg0);
-void func_800C2F1C(s32 arg0);
-void func_800C3048(void);
-void func_800C30CC(void);
-void func_800C3140(s32 arg0);
+void init_dialogue_text(void);
+void free_message_box(void);
+void set_subtitles(s32 arg0);
+void process_subtitles(s32 arg0);
+void load_game_text_table(void);
+void free_game_text_table(void);
+void set_textbox_display_value(s32 arg0);
 void func_800C314C(void);
 void func_800C3158(s32 arg0, f32 arg1);
 s32 func_800C3400(void);
-void func_800C3440(s32 arg0);
-void func_800C2D6C(void);
+void process_onscreen_textbox(s32 arg0);
+void find_next_subtitle(void);
 s32 func_800C38B4(s32 arg0, TextBox *textbox);
-void func_800C2B00(void);
+void render_subtitles(void);
 void func_800C31EC(s32 arg0);
-s32 func_800C3564(void);
+s32 dialogue_challenge_loop(void);
 
 #endif

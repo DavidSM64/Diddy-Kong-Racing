@@ -184,7 +184,7 @@ void init_game(void) {
     s32 viMode;
 
     init_main_memory_pool();
-    rzipInit(); // Initialise gzip decompression related things
+    init_rzip(); // Initialise gzip decompression related things
     sAntiPiracyTriggered = TRUE;
     if (check_imem_validity()) {
         sAntiPiracyTriggered = FALSE;
@@ -378,9 +378,9 @@ void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     alloc_displaylist_heap(numberOfPlayers);
     set_free_queue_state(0);
     func_80065EA0();
-    func_800C3048();
+    load_game_text_table();
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, gGameCurrentCutscene);
-    func_8009ECF0(get_viewport_count());
+    init_hud(get_viewport_count());
     func_800AE728(8, 0x10, 0x96, 0x64, 0x32, 0);
     func_8001BF20();
     osSetTime(0);
@@ -405,7 +405,7 @@ void unload_level_game(void) {
     transition_begin(&D_800DD3F4);
     func_800AE270();
     func_800A003C();
-    func_800C30CC();
+    free_game_text_table();
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
     gDPFullSync(gCurrDisplayList++);
     gSPEndDisplayList(gCurrDisplayList++);
@@ -505,7 +505,7 @@ void ingame_logic_loop(s32 updateRate) {
                 break;
         }
     }
-    func_800C3440(updateRate);
+    process_onscreen_textbox(updateRate);
     i = func_800C3400();
     if (i != 0) {
         if (i == 2) {
@@ -861,9 +861,9 @@ Vehicle get_level_default_vehicle(void) {
 void load_level_menu(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId) {
     set_free_queue_state(0);
     func_80065EA0();
-    func_800C3048();
+    load_game_text_table();
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, cutsceneId);
-    func_8009ECF0(get_viewport_count());
+    init_hud(get_viewport_count());
     func_800AE728(4, 4, 0x6E, 0x30, 0x20, 0);
     func_8001BF20();
     osSetTime(0);
@@ -882,7 +882,7 @@ void unload_level_menu(void) {
         transition_begin(&D_800DD3F4);
         func_800AE270();
         func_800A003C();
-        func_800C30CC();
+        free_game_text_table();
         set_free_queue_state(2);
     }
     gIsLoading = FALSE;
@@ -898,7 +898,7 @@ void update_menu_scene(s32 updateRate) {
         gParticlePtrList_flush();
         func_8001BF20();
         render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
-        func_800C3440(updateRate);
+        process_onscreen_textbox(updateRate);
         init_rdp_and_framebuffer(&gCurrDisplayList);
         render_borders_for_multiplayer(&gCurrDisplayList);
         render_second_multiplayer_borders(&gCurrDisplayList);

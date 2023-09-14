@@ -29,6 +29,7 @@
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
+#define OBJECT_SPAWN_HEAP_SIZE 0x800
 #define OBJECT_SLOT_COUNT 512
 #define ASSET_OBJECT_HEADER_TABLE_LENGTH 304 //This isn't important, but it's the number of object headers
 
@@ -173,7 +174,7 @@ s8 D_8011AD51;
 s8 D_8011AD52;
 s8 D_8011AD53;
 s32 D_8011AD54;
-Object *(*D_8011AD58)[0x200];
+Object *(*gSpawnObjectHeap)[0x200];
 s32 D_8011AD5C;
 s32 D_8011AD60;
 s32 *gAssetsObjectHeadersTable;
@@ -191,7 +192,7 @@ s32 D_8011ADB4;
 s32 gRaceStartCountdown;
 s32 D_8011ADBC;
 s32 D_8011ADC0;
-u8 D_8011ADC4;
+s8 D_8011ADC4;
 s8 D_8011ADC5;
 s32 D_8011ADC8;
 s8 (*D_8011ADCC)[8];
@@ -204,7 +205,7 @@ s8 D_8011AE01;
 s8 gIsNonCarRacers;
 s8 gIsSilverCoinRace;
 Object *D_8011AE08[16];
-AssetObjectHeaders *(*D_8011AE48)[ASSET_OBJECT_HEADER_TABLE_LENGTH];
+ObjectHeader *(*D_8011AE48)[ASSET_OBJECT_HEADER_TABLE_LENGTH];
 u8 (*D_8011AE4C)[ASSET_OBJECT_HEADER_TABLE_LENGTH];
 TextureHeader *D_8011AE50;
 TextureHeader *D_8011AE54;
@@ -242,7 +243,7 @@ s32 D_8011AED4;
 s16 gTajChallengeType;
 Object *(*gCameraObjList)[20]; // Camera objects with a maximum of 20
 s32 gCameraObjCount; //The number of camera objects in the above list
-Object *(*gRacers)[8];
+Object *(*gRacers)[10];
 // Similar to gRacers, but sorts the pointer by the players' current position in the race.
 Object **gRacersByPosition;
 // Similar to gRacers, but sorts the pointer by controller ports 1-4, then CPUs.
@@ -250,7 +251,7 @@ Object **gRacersByPort;
 s32 gNumRacers;
 u8 gTimeTrialEnabled;
 u8 gIsTimeTrial;
-u8 gIsTajChallenge;
+s8 gIsTajChallenge;
 s8 D_8011AEF7;
 s32 D_8011AEF8;
 s32 D_8011AEFC;
@@ -261,7 +262,7 @@ s32 D_8011AF10[2];
 f32 D_8011AF18[4];
 s32 D_8011AF28;
 s32 D_8011AF2C;
-Object_54 *D_8011AF30;
+ShadeProperties *gWorldShading; // Effectively unused.
 s32 D_8011AF34;
 s32 D_8011AF38[10];
 s32 D_8011AF60[2];
@@ -355,13 +356,13 @@ Object *func_8000BF44(s32 arg0) {
 void allocate_object_pools(void) {
     s32 i;
 
-    func_8001D258(0.67f, 0.33f, 0, -0x2000, 0);
+    set_world_shading(0.67f, 0.33f, 0, -0x2000, 0);
     gObjectMemoryPool = (Object *) new_sub_memory_pool(OBJECT_POOL_SIZE, OBJECT_SLOT_COUNT);
     gParticlePtrList = allocate_from_main_pool_safe(sizeof(uintptr_t) * 200, COLOUR_TAG_BLUE);
     D_8011AE6C = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
     D_8011AE74 = allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     gTrackCheckpoints = allocate_from_main_pool_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
-    gCameraObjList = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
+    gCameraObjList = allocate_from_main_pool_safe(sizeof(uintptr_t *) * 20, COLOUR_TAG_BLUE);
     gRacers = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
     gRacersByPort = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
     gRacersByPosition = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
@@ -373,7 +374,7 @@ void allocate_object_pools(void) {
     while (gAssetsLvlObjTranslationTable[gAssetsLvlObjTranslationTableLength] == 0) {
         gAssetsLvlObjTranslationTableLength--;
     }
-    D_8011AD58 = allocate_from_main_pool_safe(sizeof(uintptr_t) * 512, COLOUR_TAG_BLUE);
+    gSpawnObjectHeap = allocate_from_main_pool_safe(sizeof(uintptr_t) * 512, COLOUR_TAG_BLUE);
     gAssetsObjectHeadersTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_HEADERS_TABLE);
     gAssetsObjectHeadersTableLength = 0;
     while (-1 != gAssetsObjectHeadersTable[gAssetsObjectHeadersTableLength]) {
@@ -610,7 +611,7 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
         D_8011AEA0[arg1] = *asset;
         D_8011AEC0 = arg1;
         for (var_s0 = 0; var_s0 < D_8011AEA0[arg1]; var_s0 += temp_t3) {
-            spawn_object(D_8011AE98[arg1], 1);            
+            spawn_object((LevelObjectEntryCommon *) D_8011AE98[arg1], 1);            
             D_8011AE98[arg1] = &D_8011AE98[arg1][temp_t3 = D_8011AE98[arg1][1] & 0x3F];
         }
         D_8011AE98[arg1] = (u8 *)(D_8011AEB0[arg1] + 4);
@@ -781,7 +782,7 @@ void func_8000E2B4(void) {
     spawnObj.common.z = D_8011AD4A;
     spawnObj.unkC = D_8011AD4C;
     func_800521B8(1);
-    player = spawn_object(&spawnObj, 0x11);
+    player = spawn_object((LevelObjectEntryCommon *) &spawnObj, 0x11);
     gNumRacers = 1;
     (*gRacers)[0] = player;
     gRacersByPort[0] = player;
@@ -957,9 +958,9 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         var_a0 = 0;
     }
     for (i = 0; i < 0x200; i++) {
-        (*D_8011AD58)[i] = NULL;
+        (*gSpawnObjectHeap)[i] = NULL;
     }
-    curObj = &(*D_8011AD58)[0];
+    curObj = &(*gSpawnObjectHeap)[0];
     curObj->segment.trans.flags = 2;
     curObj->segment.header = func_8000C718(var_a0);
     if (curObj->segment.header == NULL) {
@@ -984,7 +985,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     curObj->segment.trans.scale = curObj->segment.header->scale;
     curObj->segment.camera.unk34 = curObj->segment.header->unk50 * curObj->segment.trans.scale;
     curObj->segment.object.opacity = 0xFF;
-    sp50 = func_80023E30(curObj->segment.header->behaviorId);
+    sp50 = obj_init_property_flags(curObj->segment.header->behaviorId);
     curObj->segment.header->unk52++;
     assetCount = curObj->segment.header->numberOfModelIds;
     objType = curObj->segment.header->modelType;
@@ -1098,7 +1099,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     D_8011AE50 = NULL;
     D_8011AE54 = NULL;
     if (sp50 & 1) {
-        address = (u32 *) ((uintptr_t) address + func_8000F7EC(curObj, (Object_54 *) address));
+        address = (u32 *) ((uintptr_t) address + init_object_shading(curObj, (ShadeProperties *) address));
     }
     if (sp50 & 2) {
         sizeOfobj = init_object_shadow(curObj, (ShadowData *) address);
@@ -1122,7 +1123,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         }
     }
     if (sp50 & 0x10) {
-        address = (u32 *) ((uintptr_t) address + func_8000FD20(curObj, (ObjectInteraction *) address));
+        address = (u32 *) ((uintptr_t) address + init_object_interaction_data(curObj, (ObjectInteraction *) address));
     }
     if (sp50 & 0x20) {
         address = (u32 *) ((uintptr_t) address + func_8000FD34(curObj, (Object_5C *) address));
@@ -1135,10 +1136,10 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         address = (u32 *) ((uintptr_t) address + func_8000FAC4(curObj, (Object_6C *) address));
     }
     sizeOfobj = (uintptr_t) address - (uintptr_t) curObj;
-    if (curObj->segment.header->unk5A > 0) 
+    if (curObj->segment.header->numLightSources > 0) 
     {
-        curObj->unk70 = address;
-        sizeOfobj = (s32) ((uintptr_t) address + (curObj->segment.header->unk5A * 4)) - (uintptr_t) curObj;
+        curObj->lightData = address;
+        sizeOfobj = (s32) ((uintptr_t) address + (curObj->segment.header->numLightSources * 4)) - (uintptr_t) curObj;
     }
     newObj = allocate_from_pool_containing_slots((MemoryPoolSlot *) gObjectMemoryPool, sizeOfobj);
     if (newObj == NULL) {
@@ -1159,39 +1160,39 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     
     // for (var_s0_5 = 0; var_s0_5 < objSize; var_s0_5++) {
     //     u32 *temp = &newObj[var_s0_5];
-    //     temp = (u32)&(*D_8011AD58)[var_s0_5];
+    //     temp = (u32)&(*gSpawnObjectHeap)[var_s0_5];
     // }
 
     //WRONG WRONG WRONG - Is this really just trying to set up the first several values in a weird way?
     for (var_s0_5 = 0; var_s0_5 < sizeOfobj; var_s0_5+=4) {
-        newObj[var_s0_5].segment.trans.y_rotation = (*D_8011AD58)[var_s0_5]->segment.trans.y_rotation;
+        newObj[var_s0_5].segment.trans.y_rotation = (*gSpawnObjectHeap)[var_s0_5]->segment.trans.y_rotation;
     }
-    if (newObj->unk58 != NULL) {
-        newObj->unk58 = (ShadowData *)(((uintptr_t) newObj + (uintptr_t) newObj->unk58) - (uintptr_t) D_8011AD58);
+    if (newObj->waterEffect != NULL) {
+        newObj->waterEffect = (ShadowData *)(((uintptr_t) newObj + (uintptr_t) newObj->waterEffect) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->shadow != NULL) {
-        newObj->shadow = (ShadowData *)(((uintptr_t) newObj + (uintptr_t)newObj->shadow) - (uintptr_t) D_8011AD58);
+        newObj->shadow = (ShadowData *)(((uintptr_t) newObj + (uintptr_t)newObj->shadow) - (uintptr_t) gSpawnObjectHeap);
     }
-    if (newObj->unk54 != NULL) {
-        newObj->unk54 = (Object_54 *)(((uintptr_t) newObj + (uintptr_t) newObj->unk54) - (uintptr_t) D_8011AD58);
+    if (newObj->shading != NULL) {
+        newObj->shading = (ShadeProperties *)(((uintptr_t) newObj + (uintptr_t) newObj->shading) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->unk64 != NULL) {
-        newObj->unk64 = (Object_64 *)(((uintptr_t) newObj + (uintptr_t) newObj->unk64) - (uintptr_t) D_8011AD58);
+        newObj->unk64 = (Object_64 *)(((uintptr_t) newObj + (uintptr_t) newObj->unk64) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->interactObj != NULL) {
-        newObj->interactObj = (ObjectInteraction *)(((uintptr_t) newObj + (uintptr_t) newObj->interactObj) - (uintptr_t) D_8011AD58);
+        newObj->interactObj = (ObjectInteraction *)(((uintptr_t) newObj + (uintptr_t) newObj->interactObj) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->unk5C != NULL) {
-        newObj->unk5C = (Object_5C *)(((uintptr_t) newObj + (uintptr_t) newObj->unk5C) - (uintptr_t) D_8011AD58);
+        newObj->unk5C = (Object_5C *)(((uintptr_t) newObj + (uintptr_t) newObj->unk5C) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->unk60 != NULL) {
-        newObj->unk60 = (Object_60 *)(((uintptr_t) newObj + (uintptr_t )newObj->unk60) - (uintptr_t) D_8011AD58);
+        newObj->unk60 = (Object_60 *)(((uintptr_t) newObj + (uintptr_t )newObj->unk60) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->segment.header->unk57 > 0) {
-        newObj->unk6C = (Object_6C *)(((uintptr_t) newObj + (uintptr_t )newObj->unk6C) - (uintptr_t) D_8011AD58);
+        newObj->unk6C = (Object_6C *)(((uintptr_t) newObj + (uintptr_t )newObj->unk6C) - (uintptr_t) gSpawnObjectHeap);
     }
-    if (newObj->segment.header->unk5A > 0) {
-        newObj->unk70 = (u32 *)(((uintptr_t) newObj + (uintptr_t) newObj->unk70) - (uintptr_t) D_8011AD58);
+    if (newObj->segment.header->numLightSources > 0) {
+        newObj->lightData = (u32 *)(((uintptr_t) newObj + (uintptr_t) newObj->lightData) - (uintptr_t) gSpawnObjectHeap);
     }
     newObj->unk68 = (Object_68 **)((uintptr_t) newObj + (uintptr_t) 0x80);
     if (arg1 & 1) {
@@ -1219,7 +1220,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         }
         return NULL;
     }
-    if (newObj->segment.header->unk5A > 0) {
+    if (newObj->segment.header->numLightSources > 0) {
         light_setup_light_sources(newObj);
     }
     func_800619F4(0);
@@ -1257,44 +1258,48 @@ void objFreeAssets(Object *obj, s32 count, s32 objType) {
  */
 void light_setup_light_sources(Object *obj) {
     s32 i;
-    for(i = 0; i < obj->segment.header->unk5A; i++) {
-        obj->unk70[i] = add_object_light(obj, &obj->segment.header->unk24[i]);
+    for (i = 0; i < obj->segment.header->numLightSources; i++) {
+        obj->lightData[i] = (u32) add_object_light(obj, &obj->segment.header->unk24[i]);
     }
 }
 
-s32 func_8000F7EC(Object *arg0, Object_54 *arg1) {
-    s32 var_a2;
-    s32 var_v1;
+/**
+ * Sets the shading properties of the object.
+*/
+s32 init_object_shading(Object *obj, ShadeProperties *shadeData) {
+    s32 returnSize;
+    s32 i;
 
-    arg0->unk54 = arg1;
-    var_a2 = 0;
-    if (arg0->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
-        for (var_v1 = 0; arg0->unk68[var_v1] == NULL; var_v1++) { }
-        if ((arg0->unk68[var_v1] != NULL) && (arg0->unk68[var_v1]->objModel->unk40 != NULL)) {
-            func_8001D4B4(arg0->unk54, arg0->segment.header->unk28, arg0->segment.header->unk2C, 0, arg0->segment.header->unk3E, arg0->segment.header->unk40);
-            if (arg0->segment.header->pad38[5] != 0) {
-                arg0->unk54->unk4 = arg0->segment.header->pad38[2]; 
-                arg0->unk54->unk5 = arg0->segment.header->pad38[3];
-                arg0->unk54->unk6 = arg0->segment.header->pad38[4];
-                arg0->unk54->unk7 = arg0->segment.header->pad38[5];
-                arg0->unk54->unk8 = -(arg0->unk54->unk1C >> 1);
-                arg0->unk54->unkA = -(arg0->unk54->unk1E >> 1);
-                arg0->unk54->unkC = -(arg0->unk54->unk20 >> 1);
+    obj->shading = shadeData;
+    returnSize = 0;
+    if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        for (i = 0; obj->unk68[i] == NULL; i++) { }
+        if (obj->unk68[i] != NULL && obj->unk68[i]->objModel->unk40 != NULL) {
+            set_shading_properties(obj->shading, obj->segment.header->shadeBrightness, obj->segment.header->shadeAmbient, 
+                                   0, obj->segment.header->shadeAngleY, obj->segment.header->shadeAngleZ);
+            if (obj->segment.header->unk3D != 0) {
+                obj->shading->unk4 = obj->segment.header->unk3A;
+                obj->shading->unk5 = obj->segment.header->unk3B;
+                obj->shading->unk6 = obj->segment.header->unk3C;
+                obj->shading->unk7 = obj->segment.header->unk3D;
+                obj->shading->unk8 = -(obj->shading->unk1C >> 1);
+                obj->shading->unkA = -(obj->shading->unk1E >> 1);
+                obj->shading->unkC = -(obj->shading->unk20 >> 1);
             }
-            var_a2 = 0x30;
+            returnSize = sizeof(ShadeProperties);
         }
-    } else if (arg0->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
-        arg0->unk54->unk0 = 1.0f;
-        arg1->unk4 = 0xFF;
-        arg1->unk5 = 0xFF;
-        arg1->unk6 = 0xFF;
-        arg1->unk7 = 0;
-        var_a2 = 8;
+    } else if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_SPRITE_BILLBOARD) {
+        obj->shading->unk0 = 1.0f;
+        shadeData->unk4 = 0xFF;
+        shadeData->unk5 = 0xFF;
+        shadeData->unk6 = 0xFF;
+        shadeData->unk7 = 0;
+        returnSize = 8;
     }
-    if (var_a2 == 0) {
-        arg0->unk54 = NULL;
+    if (returnSize == 0) {
+        obj->shading = NULL;
     }
-    return (var_a2 & ~3) + 4;
+    return (returnSize & ~3) + 4;
 }
 
 s32 func_8000F99C(Object *obj) {
@@ -1370,36 +1375,40 @@ s32 init_object_shadow(Object *obj, ShadowData *shadow) {
     if (((ObjectSegment *) obj)->header->unk32 && shadow->texture == NULL) {
         return 0;
     }
-    return 16;
+    return sizeof(ShadowData);
 }
 
-s32 func_8000FC6C(Object *obj, ShadowData *obj58) {
-    obj->unk58 = obj58;
-    obj58->scale = obj->segment.header->unk8;
-    obj58->unkC = 0;
-    obj58->unkE = obj->segment.header->unk0 >> 8;
-    obj58->texture = NULL;
+s32 func_8000FC6C(Object *obj, WaterEffect *shadow) {
+    obj->waterEffect = shadow;
+    shadow->scale = obj->segment.header->unk8;
+    shadow->unkC = 0;
+    shadow->unkE = obj->segment.header->unk0 >> 8;
+    shadow->texture = NULL;
     if (obj->segment.header->unk36) {
-        obj58->texture = load_texture(obj->segment.header->unk38);
+        shadow->texture = load_texture(obj->segment.header->unk38);
     }
-    obj58->unk8 = -1;
-    D_8011AE54 = obj58->texture;
-    if (obj->segment.header->unk36 && obj58->texture == NULL) {
+    shadow->unk8 = -1;
+    D_8011AE54 = shadow->texture;
+    if (obj->segment.header->unk36 && shadow->texture == NULL) {
         return 0;
     }
-    return 20;
+    return sizeof(WaterEffect);
 }
 
-s32 func_8000FD20(Object *obj, ObjectInteraction *interaction) {
-    obj->interactObj = interaction;
-    interaction->distance = 0xFF;
-    return 40;
+/**
+ * Writes object interatction properties to the object.
+ * Returns 40, to offset the pointer position used
+*/
+s32 init_object_interaction_data(Object *obj, ObjectInteraction *interactObj) {
+    obj->interactObj = interactObj;
+    interactObj->distance = 0xFF;
+    return sizeof(ObjectInteraction);
 }
 
 s32 func_8000FD34(Object *arg0, Object_5C *arg1) {
     arg0->unk5C = arg1;
     func_80016BC4(arg0);
-    return 268;
+    return sizeof(Object_5C);
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8000FD54.s")
@@ -1557,10 +1566,10 @@ void func_80010994(s32 updateRate) {
     }
     do { //FAKEMATCH
     lightUpdateLights(updateRate);
-    if (func_80032C6C() > 0) {
+    if (get_light_count() > 0) {
         for (i = D_8011AE60; i < objCount; i++) {
             obj = gObjPtrList[i];
-            if (!(obj->segment.trans.flags & 0x8000) && (obj->unk54 != NULL)) {
+            if (!(obj->segment.trans.flags & 0x8000) && (obj->shading != NULL)) {
                 func_80032C7C(obj);
             }
         }
@@ -1913,10 +1922,10 @@ void render_3d_billboard(Object *obj) {
     hasPrimCol = FALSE;
     hasEnvCol = FALSE;
     flags = obj->segment.trans.flags | RENDER_Z_UPDATE | RENDER_FOG_ACTIVE;
-    if (obj->unk54 != NULL) {
+    if (obj->shading != NULL) {
         hasPrimCol = TRUE;
         hasEnvCol = TRUE;
-        intensity = obj->unk54->unk0 * 255.0f;
+        intensity = obj->shading->unk0 * 255.0f;
     }
 
     if (obj->behaviorId == BHV_BOMB_EXPLOSION) {
@@ -1954,7 +1963,7 @@ void render_3d_billboard(Object *obj) {
         gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     }
     if (hasEnvCol) {
-        gDPSetEnvColor(gObjectCurrDisplayList++, obj->unk54->unk4, obj->unk54->unk5, obj->unk54->unk6, obj->unk54->unk7);
+        gDPSetEnvColor(gObjectCurrDisplayList++, obj->shading->unk4, obj->shading->unk5, obj->shading->unk6, obj->shading->unk7);
     } else if (obj->behaviorId == BHV_LAVA_SPURT) {
         hasEnvCol = TRUE;
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 0, 255);
@@ -2033,8 +2042,8 @@ void render_3d_model(Object *obj) {
         hasOpacity = FALSE;
         hasEnvCol = FALSE;
         intensity = 255;
-        if (obj->unk54 != NULL) {
-            intensity = (s32) (obj->unk54->unk0 * 255.0f * gCurrentLightIntensity);
+        if (obj->shading != NULL) {
+            intensity = (s32) (obj->shading->unk0 * 255.0f * gCurrentLightIntensity);
             hasOpacity = TRUE;
             hasEnvCol = TRUE;
         }
@@ -2103,12 +2112,12 @@ void render_3d_model(Object *obj) {
             hasOpacity = TRUE;
         }
         if (hasEnvCol) {
-            gDPSetEnvColor(gObjectCurrDisplayList++, obj->unk54->unk4, obj->unk54->unk5, obj->unk54->unk6, obj->unk54->unk7);
+            gDPSetEnvColor(gObjectCurrDisplayList++, obj->shading->unk4, obj->shading->unk5, obj->shading->unk6, obj->shading->unk7);
         } else {
             gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
         }
         if (obj->segment.header->unk71) {
-            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->unk54->unk18, obj->unk54->unk19, obj->unk54->unk1A, alpha);
+            gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->shading->unk18, obj->shading->unk19, obj->shading->unk1A, alpha);
             func_8007B43C();
         } else if (hasOpacity) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
@@ -2203,7 +2212,7 @@ void render_3d_model(Object *obj) {
         }
         if (meshBatch != -1) {
             if (obj->segment.header->unk71) {
-                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->unk54->unk18, obj->unk54->unk19, obj->unk54->unk1A, alpha);
+                gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->shading->unk18, obj->shading->unk19, obj->shading->unk1A, alpha);
                 func_8007B43C();
             }
             func_800143A8(objModel, obj, meshBatch, 4, spB0);
@@ -2426,7 +2435,7 @@ void func_80012F94(Object *obj) {
                 var_t0 = numberOfModels;
             }
             obj->segment.object.numModelIDs = var_t0;
-            if ((obj->unk54 != NULL) && (obj->unk54->unk0 < 0.6f)) {
+            if ((obj->shading != NULL) && (obj->shading->unk0 < 0.6f)) {
                 objRacer->lightFlags |= RACER_LIGHT_NIGHT;
             } else {
                 objRacer->lightFlags &= ~RACER_LIGHT_NIGHT;
@@ -3528,54 +3537,62 @@ Object *func_8001D214(s32 arg0) {
 UNUSED void func_8001D23C(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }
 
-void func_8001D258(f32 arg0, f32 arg1, s16 arg2, s16 arg3, s16 arg4) {
-    func_8001D4B4(&D_8011AF30, arg0, arg1, arg2, arg3, arg4);
+/**
+ * Applies shading properties to a global variable.
+ * Presumably intended for level geometry, which supports shading, but never uses it.
+*/
+void set_world_shading(f32 brightness, f32 ambient, s16 angleX, s16 angleY, s16 angleZ) {
+    set_shading_properties((ShadeProperties *) &gWorldShading, brightness, ambient, angleX, angleY, angleZ);
 }
 
-UNUSED void func_8001D2A0(Object *obj, f32 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5) {
-    if (obj->unk54 != NULL) {
-        obj->unk54->unk28 += arg1;
-        if (obj->unk54->unk28 < 0.0f) {
-            obj->unk54->unk28 = 0.0f;
-        } else if (obj->unk54->unk28 > 1.0f) {
-            obj->unk54->unk28 = 1.0f;
+/**
+ * Add values onto the existing properties of an objects shading.
+ * Resets the shading based off the new values.
+*/
+UNUSED void add_shading_properties(Object *obj, f32 brightnessChange, f32 ambientChange, s16 angleX, s16 angleY, s16 angleZ) {
+    if (obj->shading != NULL) {
+        obj->shading->brightness += brightnessChange;
+        if (obj->shading->brightness < 0.0f) {
+            obj->shading->brightness = 0.0f;
+        } else if (obj->shading->brightness > 1.0f) {
+            obj->shading->brightness = 1.0f;
         }
-        obj->unk54->unk2C += arg2;
-        if (obj->unk54->unk2C < 0.0f) {
-            obj->unk54->unk2C = 0.0f;
+        obj->shading->ambient += ambientChange;
+        if (obj->shading->ambient < 0.0f) {
+            obj->shading->ambient = 0.0f;
         }
-        if (obj->unk54->unk2C >= 2.0f) {
-            obj->unk54->unk2C = 1.99f;
+        if (obj->shading->ambient >= 2.0f) {
+            obj->shading->ambient = 1.99f;
         }
-        func_8001D4B4(obj->unk54, obj->unk54->unk28, obj->unk54->unk2C,
-            (obj->unk54->unk22 + arg3),
-            (obj->unk54->unk24 + arg4),
-            (obj->unk54->unk26 + arg5));
-        if (obj->segment.header->pad38[5] != 0) {
-            obj->unk54->unk4 = obj->segment.header->pad38[2];
-            obj->unk54->unk5 = obj->segment.header->pad38[3];
-            obj->unk54->unk6 = obj->segment.header->pad38[4];
-            obj->unk54->unk7 = obj->segment.header->pad38[5];
-            obj->unk54->unk8 = -(obj->unk54->unk1C >> 1);
-            obj->unk54->unkA = -(obj->unk54->unk1E >> 1);
-            obj->unk54->unkC = -(obj->unk54->unk20 >> 1);
+        set_shading_properties(obj->shading, obj->shading->brightness, obj->shading->ambient,
+            (obj->shading->unk22 + angleX),
+            (obj->shading->unk24 + angleY),
+            (obj->shading->unk26 + angleZ));
+        if (obj->segment.header->unk3D != 0) {
+            obj->shading->unk4 = obj->segment.header->unk3A;
+            obj->shading->unk5 = obj->segment.header->unk3B;
+            obj->shading->unk6 = obj->segment.header->unk3C;
+            obj->shading->unk7 = obj->segment.header->unk3D;
+            obj->shading->unk8 = -(obj->shading->unk1C >> 1);
+            obj->shading->unkA = -(obj->shading->unk1E >> 1);
+            obj->shading->unkC = -(obj->shading->unk20 >> 1);
         }
     }
 }
 
-void func_8001D4B4(Object_54 *arg0, f32 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5) {
+void set_shading_properties(ShadeProperties *arg0, f32 brightness, f32 ambient, s16 angleX, s16 angleY, s16 angleZ) {
     Vec3s angle;
     Vec3f velocityPos;
 
-    arg0->unk22 = arg3;
-    arg0->unk28 = arg1;
-    arg0->unk2C = arg2;
+    arg0->unk22 = angleX;
+    arg0->brightness = brightness;
+    arg0->ambient = ambient;
     arg0->unk0 = 1.0f;
-    arg0->unk24 = arg4;
-    arg0->unk26 = arg5;
-    angle.z = arg3;
-    angle.x = arg5;
-    angle.y = arg4;
+    arg0->unk24 = angleY;
+    arg0->unk26 = angleZ;
+    angle.z = angleX;
+    angle.x = angleZ;
+    angle.y = angleY;
     velocityPos.z = -16384.0f;
     velocityPos.x = 0.0f;
     velocityPos.y = 0.0f;
@@ -3647,7 +3664,10 @@ void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s
 GLOBAL_ASM("asm/non_matchings/objects/calc_dynamic_lighting_for_object_1.s")
 GLOBAL_ASM("asm/non_matchings/objects/calc_env_mapping_for_object.s")
 
-UNUSED void func_8001E13C(s16 arg0, s16 *arg1, s16 *arg2, s16 *arg3, s16 *arg4, s16 *arg5, s16 *arg6) {
+/**
+ * Find the racer object representing the player and directly set position and angle to new values.
+*/
+UNUSED void set_racer_position_and_angle(s16 player, s16 *x, s16 *y, s16 *z, s16 *angleZ, s16 *angleX, s16 *angleY) {
     Object *obj;
     Object_Racer *racer;
     s32 i;
@@ -3657,13 +3677,13 @@ UNUSED void func_8001E13C(s16 arg0, s16 *arg1, s16 *arg2, s16 *arg3, s16 *arg4, 
         if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             if (obj->behaviorId == BHV_RACER) {
                 racer = &obj->unk64->racer;
-                if (arg0 == racer->playerIndex) {
-                    *arg1 = obj->segment.trans.x_position;
-                    *arg2 = obj->segment.trans.y_position;
-                    *arg3 = obj->segment.trans.z_position;
-                    *arg4 = obj->segment.trans.z_rotation;
-                    *arg5 = obj->segment.trans.x_rotation;
-                    *arg6 = obj->segment.trans.y_rotation;
+                if (player == racer->playerIndex) {
+                    *x = obj->segment.trans.x_position;
+                    *y = obj->segment.trans.y_position;
+                    *z = obj->segment.trans.z_position;
+                    *angleZ = obj->segment.trans.z_rotation;
+                    *angleX = obj->segment.trans.x_rotation;
+                    *angleY = obj->segment.trans.y_rotation;
                     i = objCount; //Feels like it should be a break instead.
                 }
             }
@@ -4419,97 +4439,101 @@ void run_object_init_func(Object *obj, void *entry, s32 param) {
     }
 }
 
-s32 func_80023E30(s32 behaviorId) {
-  s32 value = 0;
-  switch (behaviorId){
+/**
+ * Set initialisation property flags based off object ID.
+ * This includes things like shadow data, interaction and visuals.
+*/
+s32 obj_init_property_flags(s32 behaviorId) {
+    s32 flags = OBJECT_SPAWN_NONE;
+    switch (behaviorId){
     case BHV_RACER:
-      value = 0x1F;
-      break;
+        flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK04 | OBJECT_SPAWN_UNK08 | OBJECT_SPAWN_INTERACTIVE;
+        break;
     case BHV_SCENERY:
-      value = 0x13;
-      break;
+        flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
+        break;
     case BHV_WEAPON:
-      value = 0x16;
-      break;
+        flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK04 | OBJECT_SPAWN_INTERACTIVE;
+        break;
     case BHV_DINO_WHALE:
-      value = 0x1B;
-      break;
+        flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08 | OBJECT_SPAWN_INTERACTIVE;
+        break;
     case BHV_DOOR:
     case BHV_TT_DOOR:
-      value = 0x30;
-      break;
+        flags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+        break;
     case BHV_WEAPON_BALLOON:
     case BHV_GOLDEN_BALLOON:
-      value = 0x12;
-      break;
+        flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
+        break;
     case BHV_HIT_TESTER:
     case BHV_HIT_TESTER_2:
     case BHV_SNOWBALL:
     case BHV_SNOWBALL_2:
-      value = 0x3B;
-      break;
+        flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08 | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+        break;
     case BHV_SNOWBALL_3:
     case BHV_SNOWBALL_4:
     case BHV_HIT_TESTER_3:
     case BHV_HIT_TESTER_4:
-      value = 0x3A;
-      break;
+        flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08 | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+        break;
     case BHV_UNK_18:
-      value = 0x04;
-      break;
+        flags = OBJECT_SPAWN_UNK04;
+        break;
     case BHV_STOPWATCH_MAN:
-      value = 0x1B;
-      break;
+        flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08 | OBJECT_SPAWN_INTERACTIVE;
+        break;
     case BHV_BANANA:
     case BHV_WORLD_KEY:
     case BHV_SILVER_COIN:
     case BHV_SILVER_COIN_2:
-      value = 0x12;
-      break;
+        flags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_SHADOW;
+        break;
     case BHV_LOG:
-      value = 0x30;
-      break;
+        flags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+        break;
     case BHV_BRIDGE_WHALE_RAMP:
-      value = 0x39;
-      break;
+        flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_UNK08 | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+        break;
     case BHV_RAMP_SWITCH:
-      value = 0x12;
-      break;
+        flags = OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_SHADOW;
+        break;
     case BHV_SEA_MONSTER:
-      value = 0x09;
-      break;
+        flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_UNK08;
+        break;
     case BHV_COLLECT_EGG:
-      value = 0x12;
-      break;
+        flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
+        break;
     case BHV_UNK_30:
-      value = 0x09;
-      break;
+        flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_UNK08;
+        break;
     case BHV_UNK_3F:
-      value = 0x09;
-      break;
+        flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_UNK08;
+        break;
     case BHV_ANIMATED_OBJECT:
     case BHV_VEHICLE_ANIMATION:
     case BHV_PARK_WARDEN_2:
     case BHV_WIZPIG_SHIP:
     case BHV_ANIMATED_OBJECT_4:
     case BHV_PIG_ROCKETEER:
-      value = 0x0B;
-      break;
+        flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08;
+        break;
     case BHV_CHARACTER_SELECT:
-      value = 0x0B;
-      break;
+        flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08;
+        break;
     case BHV_TROPHY_CABINET:
     case BHV_DYNAMIC_LIGHT_OBJECT_2:
     case BHV_ROCKET_SIGNPOST:
     case BHV_ROCKET_SIGNPOST_2:
-      value = 0x31;
-      break;
+        flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_INTERACTIVE | OBJECT_SPAWN_UNK20;
+        break;
     case BHV_UNK_5B:
-      value = 0x01;
-      break;
+        flags = OBJECT_SPAWN_UNK01;
+        break;
     case BHV_ANIMATED_OBJECT_2:
-      value = 0x0A;
-      break;
+        flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08;
+        break;
     case BHV_EXIT:
     case BHV_CHECKPOINT:
     case BHV_WEAPON_2:
@@ -4527,27 +4551,27 @@ s32 func_80023E30(s32 behaviorId) {
     case BHV_TELEPORT:
     case BHV_FIREBALL_OCTOWEAPON:
     case BHV_FIREBALL_OCTOWEAPON_2:
-      value = 0x10;
-      break;
+        flags = OBJECT_SPAWN_INTERACTIVE;
+        break;
     case BHV_ZIPPER_GROUND:
-      value = 0x12;
-      break;
+        flags = OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_INTERACTIVE;
+        break;
     case BHV_ANIMATION:
     case BHV_CAMERA_ANIMATION:
     case BHV_BUTTERFLY:
-      value = 0x02;
-      break;
+        flags = OBJECT_SPAWN_SHADOW;
+        break;
     case BHV_PARK_WARDEN:
-      value = 0x1B;
-      break;
+        flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08 | OBJECT_SPAWN_INTERACTIVE;
+        break;
     case BHV_FROG:
-      value = 0x0B;
-      break;
+        flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK08;
+        break;
     case BHV_UNK_72:
-      value = 0x01;
-      break;
+        flags = OBJECT_SPAWN_UNK01;
+        break;
   }
-  return value;
+  return flags;
 }
 
 /**

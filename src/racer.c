@@ -5579,7 +5579,7 @@ void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *
 */
 void allocate_ghost_data(void) {
     gGhostData[0] = allocate_from_main_pool_safe((sizeof(GhostNode) + sizeof(GhostDataFrame)) * MAX_NUMBER_OF_GHOST_NODES, COLOUR_TAG_RED);
-    gGhostData[1] = (GhostHeader *) ((GhostNode *) gGhostData[0] + MAX_NUMBER_OF_GHOST_NODES);
+    gGhostData[1] = ((GhostNode *) gGhostData[0] + MAX_NUMBER_OF_GHOST_NODES);
     gGhostData[2] = NULL; // T.T. Ghost
     D_8011D5A0[0] = 0;
     D_8011D5A0[1] = 0;
@@ -5612,7 +5612,7 @@ s32 func_800599B8(s32 arg0, s32 mapId, s16 arg2, s16 *arg3, s16 *arg4) {
     s16 sp2E;
 
     temp_t8 = (D_8011D59C + 1) & 1;
-    temp_v0 = func_80074B34(arg0, (s16)mapId, arg2, arg3, arg4, &sp2E, gGhostData[temp_t8]);
+    temp_v0 = func_80074B34(arg0, (s16)mapId, arg2, arg3, arg4, &sp2E, (GhostHeader *) gGhostData[temp_t8]);
     if (arg3 != 0) {
         if (temp_v0 == 0) {
             D_8011D5A0[temp_t8] = sp2E;
@@ -5657,7 +5657,7 @@ void free_tt_ghost_data(void) {
 }
 
 s32 func_80059B7C(s32 controllerIndex, s32 mapId, s16 arg2, s16 arg3, s16 arg4) {
-    return func_80075000(controllerIndex, (s16)mapId, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], gGhostData[D_8011D59C]);
+    return func_80075000(controllerIndex, (s16)mapId, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], (GhostHeader *) gGhostData[D_8011D59C]);
 }
 
 #ifdef NON_EQUIVALENT

@@ -637,8 +637,8 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
             }
         }
     }
-    obj->unk54->unk2C = 0.612f;
-    obj->unk54->unk28 = 0.0f;
+    obj->shading->ambient = 0.612f;
+    obj->shading->brightness = 0.0f;
     tempObj = get_racer_object(PLAYER_ONE);
     if (tempObj != NULL) {
         diffX = obj->segment.trans.x_position - tempObj->segment.trans.x_position;
@@ -703,7 +703,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
         }
         obj->unk5C->unk100 = NULL;
         if (worldBalloons) {
-            obj->unk54->unk28 = 0.552f;
+            obj->shading->brightness = 0.552f;
         }
     }
 }
@@ -4485,7 +4485,7 @@ void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 soundID, f32 scale, s3
     spawnObj.common.size = 10;
     spawnObj.common.objectID = objectID;
     spawnObj.unk9 = arg6;
-    newObj = spawn_object(&spawnObj, 1);
+    newObj = spawn_object((LevelObjectEntryCommon *) &spawnObj, 1);
     if (newObj != NULL) {
         newObj->segment.level_entry = NULL;
         newObj->segment.x_velocity = 0.0f;

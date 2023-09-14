@@ -160,6 +160,16 @@ enum ObjectInteractionFlags {
     INTERACT_FLAGS_UNK_8000 = (1 << 15),
 };
 
+enum ObjectSpawnFlags {
+    OBJECT_SPAWN_NONE,
+    OBJECT_SPAWN_UNK01          = (1 << 0),
+    OBJECT_SPAWN_SHADOW         = (1 << 1),
+    OBJECT_SPAWN_UNK04          = (1 << 2),
+    OBJECT_SPAWN_UNK08          = (1 << 3),
+    OBJECT_SPAWN_INTERACTIVE    = (1 << 4),
+    OBJECT_SPAWN_UNK20          = (1 << 5)
+};
+
 typedef struct RacerShieldGfx {
     s16 x_position;
     s16 y_position;
@@ -245,13 +255,6 @@ typedef struct struct_8000FC6C_2 {
     s16 unk36;
     s16 unk38;
 } struct_8000FC6C_2;
-
-typedef struct struct_8000FC6C_3 {
-    u8 unk0[0x40];
-    struct_8000FC6C_2 *unk40;
-    u8 unk44[0x14];
-    void *unk58;
-} struct_8000FC6C_3;
 
 typedef struct TTGhostTable {
     u8 mapId;
@@ -369,8 +372,8 @@ void func_8001D1AC(void);
 void func_8001D1BC(s32 arg0);
 Object *func_8001D1E4(s32 *arg0);
 Object *func_8001D214(s32 arg0);
-void func_8001D258(f32 arg0, f32 arg1, s16 arg2, s16 arg3, s16 arg4);
-void func_8001D4B4(Object_54*, f32, f32, s16, s16, s16);
+void set_world_shading(f32 brightness, f32 ambient, s16 angleX, s16 angleY, s16 angleZ);
+void set_shading_properties(ShadeProperties *shading, f32 brightness, f32 ambient, s16 angleX, s16 angleY, s16 angleZ);
 void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 intensity);
 s32 *get_misc_asset(s32 index);
 s32 func_8001E2EC(s32 arg0);
@@ -399,7 +402,6 @@ void func_800245B4(s16 arg0);
 void object_do_player_tumble(Object *this);
 f32 catmull_rom_interpolation(f32*, s32, f32);
 f32 cubic_spline_interpolation(f32 *data, s32 index, f32 x, f32 *derivative);
-unk800DC950 *add_object_light(Object*, ObjectHeader24 *);
 s16 func_8001C418(f32 yPos);
 void func_80021400(s32 arg0);
 s32 func_8001B668(s32 arg0);
@@ -408,7 +410,7 @@ Object *get_racer_object_by_port(s32 index);
 void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
 void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
 void update_envmap_position(f32 arg0, f32 arg1, f32 arg2);
-s32 func_8000FC6C(Object *arg0, ShadowData *arg1);
+s32 func_8000FC6C(Object *obj, WaterEffect *shadow);
 s32 func_8001B2F0(s32 mapId);
 void render_3d_billboard(Object *obj);
 void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 flags, u32 offset, f32 yScale);
@@ -428,15 +430,15 @@ s32 init_object_shadow(Object *obj, ShadowData *shadow);
 s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool);
 void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj, s32 flags);
 void gParticlePtrList_flush(void);
-s32 func_8000F7EC(Object *arg0, Object_54 *arg1);
+s32 init_object_shading(Object *obj, ShadeProperties *shading);
 ObjectHeader *func_8000C718(s32 index);
 s32 func_8000F99C(Object *);
 void func_8000C844(s32 arg0);
 s32 func_800235DC(Object *obj, Object_64 *obj64);
 void light_setup_light_sources(Object *obj);
-s32 func_8000FD20(Object *arg0, ObjectInteraction *arg1);
+s32 init_object_interaction_data(Object *arg0, ObjectInteraction *arg1);
 s32 func_8000FAC4(Object *obj, Object_6C *arg1);
-s32 func_80023E30(s32 behaviorId);
+s32 obj_init_property_flags(s32 behaviorId);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

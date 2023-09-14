@@ -31,3 +31,5 @@ m2cfiles/
 # Ignore batch and executable files.
 *.exe
 *.bat
+dkr_hot_reload.py
+lastRomPath.txt

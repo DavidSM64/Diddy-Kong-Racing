@@ -4,21 +4,21 @@ glabel setup_lights
 /* 0327C0 80031BC0 0C00C6D8 */  jal   free_lights
 /* 0327C4 80031BC4 AFA40018 */   sw    $a0, 0x18($sp)
 /* 0327C8 80031BC8 8FAE0018 */  lw    $t6, 0x18($sp)
-/* 0327CC 80031BCC 3C06800E */  lui   $a2, %hi(D_800DC958) # $a2, 0x800e
+/* 0327CC 80031BCC 3C06800E */  lui   $a2, %hi(gMaxLights) # $a2, 0x800e
 /* 0327D0 80031BD0 000E7880 */  sll   $t7, $t6, 2
 /* 0327D4 80031BD4 01EE7823 */  subu  $t7, $t7, $t6
 /* 0327D8 80031BD8 000F7880 */  sll   $t7, $t7, 2
 /* 0327DC 80031BDC 01EE7823 */  subu  $t7, $t7, $t6
 /* 0327E0 80031BE0 000F7880 */  sll   $t7, $t7, 2
-/* 0327E4 80031BE4 24C6C958 */  addiu $a2, %lo(D_800DC958) # addiu $a2, $a2, -0x36a8
+/* 0327E4 80031BE4 24C6C958 */  addiu $a2, %lo(gMaxLights) # addiu $a2, $a2, -0x36a8
 /* 0327E8 80031BE8 3C05FF00 */  lui   $a1, (0xFF00FFFF >> 16) # lui $a1, 0xff00
 /* 0327EC 80031BEC 01EE7823 */  subu  $t7, $t7, $t6
 /* 0327F0 80031BF0 000F2080 */  sll   $a0, $t7, 2
 /* 0327F4 80031BF4 34A5FFFF */  ori   $a1, (0xFF00FFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 0327F8 80031BF8 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0327FC 80031BFC ACCE0000 */   sw    $t6, ($a2)
-/* 032800 80031C00 3C06800E */  lui   $a2, %hi(D_800DC958) # $a2, 0x800e
-/* 032804 80031C04 24C6C958 */  addiu $a2, %lo(D_800DC958) # addiu $a2, $a2, -0x36a8
+/* 032800 80031C00 3C06800E */  lui   $a2, %hi(gMaxLights) # $a2, 0x800e
+/* 032804 80031C04 24C6C958 */  addiu $a2, %lo(gMaxLights) # addiu $a2, $a2, -0x36a8
 /* 032808 80031C08 8CC80000 */  lw    $t0, ($a2)
 /* 03280C 80031C0C 3C05800E */  lui   $a1, %hi(D_800DC954) # $a1, 0x800e
 /* 032810 80031C10 00085900 */  sll   $t3, $t0, 4
@@ -27,12 +27,12 @@ glabel setup_lights
 /* 03281C 80031C1C 0058C821 */  addu  $t9, $v0, $t8
 /* 032820 80031C20 000B58C0 */  sll   $t3, $t3, 3
 /* 032824 80031C24 00087080 */  sll   $t6, $t0, 2
-/* 032828 80031C28 3C07800E */  lui   $a3, %hi(D_800DC950) # $a3, 0x800e
+/* 032828 80031C28 3C07800E */  lui   $a3, %hi(gActiveLights) # $a3, 0x800e
 /* 03282C 80031C2C 3C09800E */  lui   $t1, %hi(D_800DC960) # $t1, 0x800e
 /* 032830 80031C30 032B6021 */  addu  $t4, $t9, $t3
 /* 032834 80031C34 01C87021 */  addu  $t6, $t6, $t0
 /* 032838 80031C38 2529C960 */  addiu $t1, %lo(D_800DC960) # addiu $t1, $t1, -0x36a0
-/* 03283C 80031C3C 24E7C950 */  addiu $a3, %lo(D_800DC950) # addiu $a3, $a3, -0x36b0
+/* 03283C 80031C3C 24E7C950 */  addiu $a3, %lo(gActiveLights) # addiu $a3, $a3, -0x36b0
 /* 032840 80031C40 24A5C954 */  addiu $a1, %lo(D_800DC954) # addiu $a1, $a1, -0x36ac
 /* 032844 80031C44 000E7080 */  sll   $t6, $t6, 2
 /* 032848 80031C48 ACE20000 */  sw    $v0, ($a3)

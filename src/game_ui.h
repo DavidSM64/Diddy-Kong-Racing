@@ -18,6 +18,49 @@ enum CourseIndicatorArrows {
     INDICATOR_EXCLAMATION
 };
 
+enum HudElementNames {
+    HUD_ELEMENT_UNK_00,
+    HUD_ELEMENT_UNK_01,
+    HUD_ELEMENT_UNK_02,
+    HUD_ELEMENT_UNK_03,
+    HUD_ELEMENT_UNK_04,
+    HUD_ELEMENT_UNK_05,
+    HUD_ELEMENT_UNK_06,
+    HUD_ELEMENT_UNK_07,
+    HUD_ELEMENT_UNK_08,
+    HUD_ELEMENT_UNK_09,
+    HUD_ELEMENT_UNK_0A,
+    HUD_ELEMENT_UNK_0B,
+    HUD_ELEMENT_UNK_0C,
+    HUD_ELEMENT_UNK_0D,
+    HUD_ELEMENT_UNK_0E,
+    HUD_ELEMENT_UNK_0F,
+    HUD_ELEMENT_UNK_10,
+    HUD_ELEMENT_UNK_11,
+    HUD_ELEMENT_UNK_12,
+    HUD_ELEMENT_UNK_13,
+    HUD_ELEMENT_UNK_14,
+    HUD_ELEMENT_UNK_15,
+    HUD_ELEMENT_UNK_16,
+    HUD_ELEMENT_UNK_17,
+    HUD_ELEMENT_UNK_18,
+    HUD_ELEMENT_UNK_19,
+    HUD_ELEMENT_UNK_1A,
+    HUD_ELEMENT_UNK_1B,
+    HUD_ELEMENT_UNK_1C,
+    HUD_ELEMENT_UNK_1D,
+    HUD_ELEMENT_UNK_1E,
+    HUD_ELEMENT_UNK_1F,
+    HUD_ELEMENT_UNK_20,
+    HUD_ELEMENT_UNK_21,
+    HUD_ELEMENT_UNK_22,
+    HUD_ELEMENT_UNK_23,
+    HUD_ELEMENT_UNK_24,
+    HUD_ELEMENT_UNK_25,
+    HUD_ELEMENT_UNK_26,
+    HUD_ELEMENT_UNK_27
+};
+
 typedef struct {
     s16 unk0;
     s16 unk2;
@@ -288,9 +331,9 @@ typedef struct ObjectTransform_800A8474 {
     s16 unk18;
 } ObjectTransform_800A8474;
 
-typedef struct unk80126CF4 {
-    void *unk0[40];
-} unk80126CF4;
+typedef struct HudElements {
+    void *entry[40];
+} HudElements;
 
 extern u8 gGfxTaskYieldData[OS_YIELD_DATA_SIZE];
 
@@ -322,7 +365,7 @@ void render_race_finish_position(Object_64 *obj, s32 updateRate);
 void render_speedometer(Object *obj, s32 updateRate);
 void render_lap_count(Object_Racer *racer, s32 updateRate);
 void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtxList, s32 updateRate);
-void func_8009ECF0(s32 viewPortCount);
+void init_hud(s32 viewportCount);
 
 // Non Matching
 void func_800A14F0(Object *, s32);

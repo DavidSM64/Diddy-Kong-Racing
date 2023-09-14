@@ -34,7 +34,7 @@ extern u64 gThread30Stack[0x400];
  * Initalizes and starts thread30()
  */
 void create_and_start_thread30(void) {
-    osCreateMesgQueue(&gThread30MesgQueue, gThread30Message, ARRAY_COUNT(gThread30Message));
+    osCreateMesgQueue(&gThread30MesgQueue, &gThread30Message[0], ARRAY_COUNT(gThread30Message));
     osCreateThread(&gThread30, 30, &thread30_track_loading, NULL, &gThread30Stack[0x400], 8);
     osStartThread(&gThread30);
 }

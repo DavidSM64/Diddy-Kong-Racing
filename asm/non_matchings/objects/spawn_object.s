@@ -45,10 +45,10 @@ glabel spawn_object
 /* 00F6E4 8000EAE4 00008025 */  move  $s0, $zero
 /* 00F6E8 8000EAE8 008F082A */  slt   $at, $a0, $t7
 /* 00F6EC 8000EAEC 14200002 */  bnez  $at, .L8000EAF8
-/* 00F6F0 8000EAF0 3C028012 */   lui   $v0, %hi(D_8011AD58) # $v0, 0x8012
+/* 00F6F0 8000EAF0 3C028012 */   lui   $v0, %hi(gSpawnObjectHeap) # $v0, 0x8012
 /* 00F6F4 8000EAF4 00002025 */  move  $a0, $zero
 .L8000EAF8:
-/* 00F6F8 8000EAF8 2442AD58 */  addiu $v0, %lo(D_8011AD58) # addiu $v0, $v0, -0x52a8
+/* 00F6F8 8000EAF8 2442AD58 */  addiu $v0, %lo(gSpawnObjectHeap) # addiu $v0, $v0, -0x52a8
 .L8000EAFC:
 /* 00F6FC 8000EAFC 8C580000 */  lw    $t8, ($v0)
 /* 00F700 8000EB00 00000000 */  nop   
@@ -143,7 +143,7 @@ glabel spawn_object
 /* 00F858 8000EC58 460A4402 */  mul.s $f16, $f8, $f10
 /* 00F85C 8000EC5C E6500034 */  swc1  $f16, 0x34($s2)
 /* 00F860 8000EC60 82040054 */  lb    $a0, 0x54($s0)
-/* 00F864 8000EC64 0C008F8C */  jal   func_80023E30
+/* 00F864 8000EC64 0C008F8C */  jal   obj_init_property_flags
 /* 00F868 8000EC68 00000000 */   nop   
 /* 00F86C 8000EC6C AFA20050 */  sw    $v0, 0x50($sp)
 /* 00F870 8000EC70 8E500040 */  lw    $s0, 0x40($s2)
@@ -483,7 +483,7 @@ glabel L8000EDE0
 /* 00FD2C 8000F12C 00C23021 */   addu  $a2, $a2, $v0
 /* 00FD30 8000F130 02402025 */  move  $a0, $s2
 /* 00FD34 8000F134 00C02825 */  move  $a1, $a2
-/* 00FD38 8000F138 0C003DFB */  jal   func_8000F7EC
+/* 00FD38 8000F138 0C003DFB */  jal   init_object_shading
 /* 00FD3C 8000F13C AFA60048 */   sw    $a2, 0x48($sp)
 /* 00FD40 8000F140 8FA60048 */  lw    $a2, 0x48($sp)
 /* 00FD44 8000F144 00000000 */  nop   
@@ -542,7 +542,7 @@ glabel L8000EDE0
 /* 00FE08 8000F208 310A0010 */  andi  $t2, $t0, 0x10
 /* 00FE0C 8000F20C 11400006 */  beqz  $t2, .L8000F228
 /* 00FE10 8000F210 00C02825 */   move  $a1, $a2
-/* 00FE14 8000F214 0C003F48 */  jal   func_8000FD20
+/* 00FE14 8000F214 0C003F48 */  jal   init_object_interaction_data
 /* 00FE18 8000F218 AFA60048 */   sw    $a2, 0x48($sp)
 /* 00FE1C 8000F21C 8FA60048 */  lw    $a2, 0x48($sp)
 /* 00FE20 8000F220 00000000 */  nop   
@@ -634,8 +634,8 @@ glabel L8000EDE0
 /* 00FF54 8000F354 00114083 */  sra   $t0, $s1, 2
 /* 00FF58 8000F358 1900000D */  blez  $t0, .L8000F390
 /* 00FF5C 8000F35C 00068080 */   sll   $s0, $a2, 2
-/* 00FF60 8000F360 3C058012 */  lui   $a1, %hi(D_8011AD58) # $a1, 0x8012
-/* 00FF64 8000F364 24A5AD58 */  addiu $a1, %lo(D_8011AD58) # addiu $a1, $a1, -0x52a8
+/* 00FF60 8000F360 3C058012 */  lui   $a1, %hi(gSpawnObjectHeap) # $a1, 0x8012
+/* 00FF64 8000F364 24A5AD58 */  addiu $a1, %lo(gSpawnObjectHeap) # addiu $a1, $a1, -0x52a8
 /* 00FF68 8000F368 00501821 */  addu  $v1, $v0, $s0
 /* 00FF6C 8000F36C 00082080 */  sll   $a0, $t0, 2
 .L8000F370:
@@ -649,9 +649,9 @@ glabel L8000EDE0
 /* 00FF8C 8000F38C AC6BFFFC */   sw    $t3, -4($v1)
 .L8000F390:
 /* 00FF90 8000F390 8C430058 */  lw    $v1, 0x58($v0)
-/* 00FF94 8000F394 3C058012 */  lui   $a1, %hi(D_8011AD58) # $a1, 0x8012
+/* 00FF94 8000F394 3C058012 */  lui   $a1, %hi(gSpawnObjectHeap) # $a1, 0x8012
 /* 00FF98 8000F398 10600005 */  beqz  $v1, .L8000F3B0
-/* 00FF9C 8000F39C 24A5AD58 */   addiu $a1, %lo(D_8011AD58) # addiu $a1, $a1, -0x52a8
+/* 00FF9C 8000F39C 24A5AD58 */   addiu $a1, %lo(gSpawnObjectHeap) # addiu $a1, $a1, -0x52a8
 /* 00FFA0 8000F3A0 8CA90000 */  lw    $t1, ($a1)
 /* 00FFA4 8000F3A4 00436021 */  addu  $t4, $v0, $v1
 /* 00FFA8 8000F3A8 01896823 */  subu  $t5, $t4, $t1
