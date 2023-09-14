@@ -1325,24 +1325,25 @@ void func_8007F1E8(LevelHeader_70 *arg0) {
 /**
  * Official name: updateColourCycle
 */
-#ifdef NON_EQUIVALENT
 void update_colour_cycle(LevelHeader_70 *arg0, s32 updateRate) {
-    s32 temp_lo;
-    s32 var_a3;
-    LevelHeader_70 *next;
-    LevelHeader_70 *cur;
-    u32 cur_red;
-    u32 cur_green;
-    u32 cur_blue;
-    u32 cur_alpha;
+    s32 temp;
+    s32 curIndex;
+    s32 nextIndex;
     u32 next_red;
+    u32 cur_red;
     u32 next_green;
     u32 next_blue;
     u32 next_alpha;
+    u32 cur_green;
+    u32 cur_blue;
+    u32 cur_alpha;
+    LevelHeader_70 *cur;
+    LevelHeader_70 *next;
 
     if (arg0->unk0 >= 2) {
         arg0->unk8 += updateRate;
         while (arg0->unk8 >= arg0->unkC) {
+            if (!temp){}
             arg0->unk8 -= arg0->unkC;
         }
         while (arg0->unk8 >= arg0->unk18[arg0->unk4].unk0) {
@@ -1352,30 +1353,33 @@ void update_colour_cycle(LevelHeader_70 *arg0, s32 updateRate) {
                 arg0->unk4 = 0;
             }
         }
-        var_a3 = arg0->unk4 + 1;
-        if (var_a3 >= arg0->unk0) {
-            var_a3 = 0;
+
+        curIndex = arg0->unk4;
+        nextIndex = curIndex + 1;
+        if (nextIndex >= arg0->unk0) {
+            nextIndex = 0;
         }
-        cur = &arg0->unk18[arg0->unk4];
-        next = &arg0->unk18[var_a3];
-        temp_lo = (arg0->unk8 << 16) / cur->unk18->unk0;
+        
+        cur = (LevelHeader_70 *) (&((LevelHeader_70_18 *)arg0)[curIndex]);
+        temp = (arg0->unk8 << 16) / (cur->unk18->unk0);
         cur_red = cur->red2;
         cur_green = cur->green2;
         cur_blue = cur->blue2;
         cur_alpha = cur->alpha2;
+
+        next = (LevelHeader_70 *) (&((LevelHeader_70_18 *)arg0)[nextIndex]);
         next_red = next->red2;
         next_green = next->green2;
         next_blue = next->blue2;
         next_alpha = next->alpha2;
-        arg0->red = (((next_red - cur_red) * temp_lo) >> 16) + cur_red;
-        arg0->green = (((next_green - cur_green) * temp_lo) >> 16) + cur_green;
-        arg0->blue = (((next_blue - cur_blue) * temp_lo) >> 16) + cur_blue;
-        arg0->alpha = (((next_alpha - cur_alpha) * temp_lo) >> 16) + cur_alpha;
+        
+        next = arg0;
+        arg0->red = (((next_red - cur_red) * temp) >> 16) + cur_red;
+        arg0->green = (((next_green - cur_green) * temp) >> 16) + cur_green;
+        arg0->blue = (((next_blue - cur_blue) * temp) >> 16) + cur_blue;
+        arg0->alpha = (((next_alpha - cur_alpha) * temp) >> 16) + cur_alpha;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/update_colour_cycle.s")
-#endif
 
 /**
  * Official name: resetMixCycle
