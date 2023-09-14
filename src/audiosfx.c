@@ -237,7 +237,8 @@ GLOBAL_ASM("asm/non_matchings/audiosfx/func_80004668.s")
 void func_8000488C(u8 *arg0) {
     ALEvent sp_18;
     sp_18.type = 1024;
-    ((u32 *)(&sp_18))[1] = (u32)arg0;
+    //((u32 *)(&sp_18))[1] = (u32)arg0;
+    sp_18.msg.osc.vs = (ALVoiceState *) arg0; //Not really a voice state, but not sure what else it is.
     if (arg0) {
         arg0[0x3e] &= ~(1 << 4);
         alEvtqPostEvent(&(gAlSndPlayerPtr->evtq), &sp_18, 0);

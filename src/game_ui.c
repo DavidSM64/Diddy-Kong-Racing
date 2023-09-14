@@ -321,9 +321,9 @@ void func_8009ECF0(UNUSED s32 viewPortCount) {
         tempMaxPlayers = 4; // If gNumActivePlayers is 3, then set this to 4.
     }
     D_80126CE0[0] = allocate_from_main_pool_safe(tempMaxPlayers * sizeof(unk80126CDC), COLOUR_TAG_BLUE);
-    D_80126CE0[1] = ((u8*)D_80126CE0[0]) + sizeof(unk80126CDC);
-    D_80126CE0[2] = ((u8*)D_80126CE0[1]) + sizeof(unk80126CDC);
-    D_80126CE0[3] = ((u8*)D_80126CE0[2]) + sizeof(unk80126CDC);
+    D_80126CE0[1] = (unk80126CDC *) (((u8*)D_80126CE0[0]) + sizeof(unk80126CDC));
+    D_80126CE0[2] = (unk80126CDC *) (((u8*)D_80126CE0[1]) + sizeof(unk80126CDC));
+    D_80126CE0[3] = (unk80126CDC *) (((u8*)D_80126CE0[2]) + sizeof(unk80126CDC));
     func_8009F034();
     D_80126D64 = 0;
     gWrongWayNagTimer = 0;
@@ -339,7 +339,7 @@ void func_8009ECF0(UNUSED s32 viewPortCount) {
     D_80126D3C = 0;
     D_80126D44 = 0;
     D_80126CD3 = 0;
-    D_80127194 = get_misc_asset(ASSET_MISC_58);
+    D_80127194 = (LevelHeader_70 *) get_misc_asset(ASSET_MISC_58);
     func_8007F1E8((unk8007F1E8* ) D_80127194);
     set_sound_channel_volume(0, 0x7FFF);
     set_sound_channel_volume(2, 0x7FFF);
