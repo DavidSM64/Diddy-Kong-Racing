@@ -1,7 +1,7 @@
 glabel func_800A003C
 /* 0A0C3C 800A003C 27BDFFD0 */  addiu $sp, $sp, -0x30
-/* 0A0C40 800A0040 3C028012 */  lui   $v0, %hi(D_80126CF8) # $v0, 0x8012
-/* 0A0C44 800A0044 8C426CF8 */  lw    $v0, %lo(D_80126CF8)($v0)
+/* 0A0C40 800A0040 3C028012 */  lui   $v0, %hi(gAssetHudElementIdsCount) # $v0, 0x8012
+/* 0A0C44 800A0044 8C426CF8 */  lw    $v0, %lo(gAssetHudElementIdsCount)($v0)
 /* 0A0C48 800A0048 AFB00018 */  sw    $s0, 0x18($sp)
 /* 0A0C4C 800A004C AFBF002C */  sw    $ra, 0x2c($sp)
 /* 0A0C50 800A0050 AFB40028 */  sw    $s4, 0x28($sp)
@@ -10,10 +10,10 @@ glabel func_800A003C
 /* 0A0C5C 800A005C AFB1001C */  sw    $s1, 0x1c($sp)
 /* 0A0C60 800A0060 18400032 */  blez  $v0, .L800A012C
 /* 0A0C64 800A0064 00008025 */   move  $s0, $zero
-/* 0A0C68 800A0068 3C148012 */  lui   $s4, %hi(D_80126CF0) # $s4, 0x8012
-/* 0A0C6C 800A006C 3C128012 */  lui   $s2, %hi(D_80126CF4) # $s2, 0x8012
-/* 0A0C70 800A0070 26526CF4 */  addiu $s2, %lo(D_80126CF4) # addiu $s2, $s2, 0x6cf4
-/* 0A0C74 800A0074 26946CF0 */  addiu $s4, %lo(D_80126CF0) # addiu $s4, $s4, 0x6cf0
+/* 0A0C68 800A0068 3C148012 */  lui   $s4, %hi(gAssetHudElementIds) # $s4, 0x8012
+/* 0A0C6C 800A006C 3C128012 */  lui   $s2, %hi(gAssetHudElements) # $s2, 0x8012
+/* 0A0C70 800A0070 26526CF4 */  addiu $s2, %lo(gAssetHudElements) # addiu $s2, $s2, 0x6cf4
+/* 0A0C74 800A0074 26946CF0 */  addiu $s4, %lo(gAssetHudElementIds) # addiu $s4, $s4, 0x6cf0
 /* 0A0C78 800A0078 00008825 */  move  $s1, $zero
 /* 0A0C7C 800A007C 3413C000 */  li    $s3, 49152
 .L800A0080:
@@ -55,10 +55,10 @@ glabel func_800A003C
 /* 0A0D00 800A0100 00000000 */   nop   
 /* 0A0D04 800A0104 8E4C0000 */  lw    $t4, ($s2)
 .L800A0108:
-/* 0A0D08 800A0108 3C028012 */  lui   $v0, %hi(D_80126CF8) # $v0, 0x8012
+/* 0A0D08 800A0108 3C028012 */  lui   $v0, %hi(gAssetHudElementIdsCount) # $v0, 0x8012
 /* 0A0D0C 800A010C 01916821 */  addu  $t5, $t4, $s1
 /* 0A0D10 800A0110 ADA00000 */  sw    $zero, ($t5)
-/* 0A0D14 800A0114 8C426CF8 */  lw    $v0, %lo(D_80126CF8)($v0)
+/* 0A0D14 800A0114 8C426CF8 */  lw    $v0, %lo(gAssetHudElementIdsCount)($v0)
 /* 0A0D18 800A0118 00000000 */  nop   
 .L800A011C:
 /* 0A0D1C 800A011C 26100001 */  addiu $s0, $s0, 1
@@ -67,17 +67,17 @@ glabel func_800A003C
 /* 0A0D28 800A0128 26310004 */   addiu $s1, $s1, 4
 .L800A012C:
 /* 0A0D2C 800A012C 3C048012 */  lui   $a0, %hi(D_80126CE0) # $a0, 0x8012
-/* 0A0D30 800A0130 3C128012 */  lui   $s2, %hi(D_80126CF4) # $s2, 0x8012
-/* 0A0D34 800A0134 3C148012 */  lui   $s4, %hi(D_80126CF0) # $s4, 0x8012
+/* 0A0D30 800A0130 3C128012 */  lui   $s2, %hi(gAssetHudElements) # $s2, 0x8012
+/* 0A0D34 800A0134 3C148012 */  lui   $s4, %hi(gAssetHudElementIds) # $s4, 0x8012
 /* 0A0D38 800A0138 8C846CE0 */  lw    $a0, %lo(D_80126CE0)($a0)
-/* 0A0D3C 800A013C 26946CF0 */  addiu $s4, %lo(D_80126CF0) # addiu $s4, $s4, 0x6cf0
+/* 0A0D3C 800A013C 26946CF0 */  addiu $s4, %lo(gAssetHudElementIds) # addiu $s4, $s4, 0x6cf0
 /* 0A0D40 800A0140 0C01C450 */  jal   free_from_memory_pool
-/* 0A0D44 800A0144 26526CF4 */   addiu $s2, %lo(D_80126CF4) # addiu $s2, $s2, 0x6cf4
+/* 0A0D44 800A0144 26526CF4 */   addiu $s2, %lo(gAssetHudElements) # addiu $s2, $s2, 0x6cf4
 /* 0A0D48 800A0148 8E840000 */  lw    $a0, ($s4)
 /* 0A0D4C 800A014C 0C01C450 */  jal   free_from_memory_pool
 /* 0A0D50 800A0150 00000000 */   nop   
-/* 0A0D54 800A0154 3C018012 */  lui   $at, %hi(D_80126CF8) # $at, 0x8012
-/* 0A0D58 800A0158 AC206CF8 */  sw    $zero, %lo(D_80126CF8)($at)
+/* 0A0D54 800A0154 3C018012 */  lui   $at, %hi(gAssetHudElementIdsCount) # $at, 0x8012
+/* 0A0D58 800A0158 AC206CF8 */  sw    $zero, %lo(gAssetHudElementIdsCount)($at)
 /* 0A0D5C 800A015C 8E440000 */  lw    $a0, ($s2)
 /* 0A0D60 800A0160 0C01C450 */  jal   free_from_memory_pool
 /* 0A0D64 800A0164 00000000 */   nop   

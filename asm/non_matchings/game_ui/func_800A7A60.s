@@ -21,7 +21,7 @@ glabel func_800A7A60
 /* 0A86AC 800A7AAC 84E60226 */  lh    $a2, 0x226($a3)
 /* 0A86B0 800A7AB0 E4E4022C */  swc1  $f4, 0x22c($a3)
 /* 0A86B4 800A7AB4 8C790140 */  lw    $t9, 0x140($v1)
-/* 0A86B8 800A7AB8 3C098012 */  lui   $t1, %hi(D_80126CF4) # $t1, 0x8012
+/* 0A86B8 800A7AB8 3C098012 */  lui   $t1, %hi(gAssetHudElements) # $t1, 0x8012
 /* 0A86BC 800A7ABC C7260010 */  lwc1  $f6, 0x10($t9)
 /* 0A86C0 800A7AC0 00065080 */  sll   $t2, $a2, 2
 /* 0A86C4 800A7AC4 E4E60230 */  swc1  $f6, 0x230($a3)
@@ -30,7 +30,7 @@ glabel func_800A7A60
 /* 0A86D0 800A7AD0 C5080014 */  lwc1  $f8, 0x14($t0)
 /* 0A86D4 800A7AD4 3C0C8012 */  lui   $t4, %hi(D_80126CD8) # $t4, 0x8012
 /* 0A86D8 800A7AD8 E4E80234 */  swc1  $f8, 0x234($a3)
-/* 0A86DC 800A7ADC 8D296CF4 */  lw    $t1, %lo(D_80126CF4)($t1)
+/* 0A86DC 800A7ADC 8D296CF4 */  lw    $t1, %lo(gAssetHudElements)($t1)
 /* 0A86E0 800A7AE0 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 /* 0A86E4 800A7AE4 012A5821 */  addu  $t3, $t1, $t2
 /* 0A86E8 800A7AE8 8D620000 */  lw    $v0, ($t3)

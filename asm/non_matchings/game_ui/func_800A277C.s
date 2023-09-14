@@ -30,7 +30,7 @@ glabel D_800E8738
 glabel func_800A277C
 /* 0A337C 800A277C 27BDFF40 */  addiu $sp, $sp, -0xc0
 /* 0A3380 800A2780 AFB00020 */  sw    $s0, 0x20($sp)
-/* 0A3384 800A2784 3C108012 */  lui   $s0, %hi(D_80126CF4) # $s0, 0x8012
+/* 0A3384 800A2784 3C108012 */  lui   $s0, %hi(gAssetHudElements) # $s0, 0x8012
 /* 0A3388 800A2788 AFBF002C */  sw    $ra, 0x2c($sp)
 /* 0A338C 800A278C AFB20028 */  sw    $s2, 0x28($sp)
 /* 0A3390 800A2790 AFB10024 */  sw    $s1, 0x24($sp)
@@ -38,14 +38,14 @@ glabel func_800A277C
 /* 0A3398 800A2798 AFA500C4 */  sw    $a1, 0xc4($sp)
 /* 0A339C 800A279C AFA600C8 */  sw    $a2, 0xc8($sp)
 /* 0A33A0 800A27A0 8CAF0064 */  lw    $t7, 0x64($a1)
-/* 0A33A4 800A27A4 26106CF4 */  addiu $s0, %lo(D_80126CF4) # addiu $s0, $s0, 0x6cf4
+/* 0A33A4 800A27A4 26106CF4 */  addiu $s0, %lo(gAssetHudElements) # addiu $s0, $s0, 0x6cf4
 /* 0A33A8 800A27A8 8E030000 */  lw    $v1, ($s0)
 /* 0A33AC 800A27AC AFAF00A0 */  sw    $t7, 0xa0($sp)
 /* 0A33B0 800A27B0 8C780050 */  lw    $t8, 0x50($v1)
 /* 0A33B4 800A27B4 00004825 */  move  $t1, $zero
 /* 0A33B8 800A27B8 1700001E */  bnez  $t8, .L800A2834
-/* 0A33BC 800A27BC 3C198012 */   lui   $t9, %hi(D_80126CF0) # $t9, 0x8012
-/* 0A33C0 800A27C0 8F396CF0 */  lw    $t9, %lo(D_80126CF0)($t9)
+/* 0A33BC 800A27BC 3C198012 */   lui   $t9, %hi(gAssetHudElementIds) # $t9, 0x8012
+/* 0A33C0 800A27C0 8F396CF0 */  lw    $t9, %lo(gAssetHudElementIds)($t9)
 /* 0A33C4 800A27C4 240C0008 */  li    $t4, 8
 /* 0A33C8 800A27C8 872B0028 */  lh    $t3, 0x28($t9)
 /* 0A33CC 800A27CC A3AC0091 */  sb    $t4, 0x91($sp)
@@ -79,8 +79,8 @@ glabel func_800A277C
 /* 0A3438 800A2838 3C118012 */  lui   $s1, %hi(D_80126CDC) # $s1, 0x8012
 /* 0A343C 800A283C 17000016 */  bnez  $t8, .L800A2898
 /* 0A3440 800A2840 26316CDC */   addiu $s1, %lo(D_80126CDC) # addiu $s1, $s1, 0x6cdc
-/* 0A3444 800A2844 3C198012 */  lui   $t9, %hi(D_80126CF0) # $t9, 0x8012
-/* 0A3448 800A2848 8F396CF0 */  lw    $t9, %lo(D_80126CF0)($t9)
+/* 0A3444 800A2844 3C198012 */  lui   $t9, %hi(gAssetHudElementIds) # $t9, 0x8012
+/* 0A3448 800A2848 8F396CF0 */  lw    $t9, %lo(gAssetHudElementIds)($t9)
 /* 0A344C 800A284C 240C0008 */  li    $t4, 8
 /* 0A3450 800A2850 872B0044 */  lh    $t3, 0x44($t9)
 /* 0A3454 800A2854 A3AC0089 */  sb    $t4, 0x89($sp)
@@ -688,7 +688,7 @@ glabel func_800A277C
 /* 0A3D44 800A3144 00000000 */   nop   
 /* 0A3D48 800A3148 3C108012 */  lui   $s0, %hi(D_80127184) # $s0, 0x8012
 /* 0A3D4C 800A314C 26107184 */  addiu $s0, %lo(D_80127184) # addiu $s0, $s0, 0x7184
-/* 0A3D50 800A3150 0C01AF62 */  jal   func_8006BD88
+/* 0A3D50 800A3150 0C01AF62 */  jal   get_current_map_id
 /* 0A3D54 800A3154 AE020000 */   sw    $v0, ($s0)
 /* 0A3D58 800A3158 8FAE00A0 */  lw    $t6, 0xa0($sp)
 /* 0A3D5C 800A315C 8E190000 */  lw    $t9, ($s0)

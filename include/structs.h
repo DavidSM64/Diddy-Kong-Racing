@@ -310,13 +310,30 @@ typedef struct Settings {
   /* 0x0117 */ u8 display_times;
 } Settings;
 
+/* Size: 8 bytes */
+typedef struct LevelHeader_70_18 {
+    s32 unk0; //0x0000001E
+    u8 red; //0xFF
+    u8 green; //0x70
+    u8 blue; //0x00
+    u8 alpha; //0xFF
+} LevelHeader_70_18;
+
 /* Unknown size */
 typedef struct LevelHeader_70 {
-             u8 pad0[0x10];
-  /* 0x10 */ u8 red;
-  /* 0x11 */ u8 green;
-  /* 0x12 */ u8 blue;
-  /* 0x13 */ u8 alpha;
+  /* 0x00 */ s32 unk0;  //0x00000004
+  /* 0x04 */ s32 unk4;  //0x00000000
+  /* 0x08 */ s32 unk8;  //0x00000000
+  /* 0x0C */ s32 unkC;  //0x00000000
+  /* 0x10 */ u8 red;    //0x72
+  /* 0x11 */ u8 green;  //0x75
+  /* 0x12 */ u8 blue;   //0x73
+  /* 0x13 */ u8 alpha;  //0x20
+  /* 0x14 */ u8 red2;   //0xFF
+  /* 0x15 */ u8 green2; //0x00
+  /* 0x16 */ u8 blue2;  //0x00
+  /* 0x17 */ u8 alpha2; //0xFF
+  /* 0x18 */ LevelHeader_70_18 unk18[1]; // Actual length depends on unk0
 } LevelHeader_70;
 
 // Used to update the pulsating lights in Spaceport Alpha
@@ -669,7 +686,7 @@ typedef struct ObjectHeader24 {
 } ObjectHeader24;
 
 typedef struct ObjectHeader {
-             u8 pad0[0x4];
+  /* 0x00 */ s32 unk0;
   /* 0x04 */ f32 shadowScale;
   /* 0x08 */ f32 unk8;
   /* 0x0C */ f32 scale;
@@ -683,9 +700,12 @@ typedef struct ObjectHeader {
   /* 0x2C */ f32 unk2C;
   /* 0x30 */ u16 unk30;
   /* 0x32 */ s16 unk32;
-  /* 0x32 */ s16 unk34;
-  /* 0x32 */ s16 unk36;
-             u8 pad38[5];
+  /* 0x34 */ s16 unk34;
+  /* 0x36 */ s16 unk36;
+  union {
+  /* 0x38 */ s16 unk38;
+  /* 0x38 */ u8 pad38[4];
+  };
   /* 0x3D */ u8 unk3D;
   /* 0x3E */ s16 unk3E;
   /* 0x40 */ s16 unk40;
@@ -696,7 +716,8 @@ typedef struct ObjectHeader {
   /* 0x4A */ s16 unk4A;
   /* 0x4C */ s16 unk4C;
   /* 0x4E */ s16 drawDistance;
-             u8 pad50[3];
+  /* 0x50 */ s16 unk50;
+  /* 0x52 */ s8 unk52;
   /* 0x53 */ s8 modelType;
   /* 0x54 */ s8 behaviorId;
   /* 0x55 */ s8 numberOfModelIds; // size of array pointed by Object->unk68
@@ -743,17 +764,17 @@ typedef struct Object_44 {
 } Object_44;
 
 typedef struct ObjectInteraction {
-    struct Object *obj;
-    f32 x_position;
-    f32 y_position;
-    f32 z_position;
-    u8 hitboxRadius;
-    u8 unk11;
-    u8 pushForce;
-    u8 distance;
-    s16 flags;
-    s8 unk16;
-    s8 unk17;
+ /* 0x00 */ struct Object *obj;
+ /* 0x04 */ f32 x_position;
+ /* 0x08 */ f32 y_position;
+ /* 0x0C */ f32 z_position;
+ /* 0x10 */ u8 hitboxRadius;
+ /* 0x11 */ u8 unk11;
+ /* 0x12 */ u8 pushForce;
+ /* 0x13 */ u8 distance;
+ /* 0x14 */ s16 flags;
+ /* 0x16 */ s8 unk16;
+ /* 0x17 */ s8 unk17;
 } ObjectInteraction;
 
 typedef struct ShadowData {
@@ -762,6 +783,7 @@ typedef struct ShadowData {
     s16 unk8;
     s16 unkA;
     s16 unkC;
+    s16 unkE;
 } ShadowData;
 
 typedef struct Object_54 {
@@ -793,20 +815,6 @@ typedef struct Object_54 {
     f32 unk28;
     f32 unk2C;
 } Object_54;
-
-typedef struct Object_58_4 {
-    u8 pad0[0x12];
-    u16 unk12;
-} Object_58_4;
-
-typedef struct Object_58 {
-    f32 unk0;
-    Object_58_4 *unk4;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-} Object_58;
 
 typedef f32 FakeHalfMatrix[2][4];
 typedef struct Object_5C {
@@ -1478,7 +1486,6 @@ typedef struct Object_64 {
         Object_NPC npc;
         Object_TT tt;
         Object_Bridge_WhaleRamp bridge_whale_ramp;
-        Object_8001B7A8 obj8001B7A8;
         Object_80021400_64 obj80021400_64;
         Object_Log log;
         Object_Fireball_Octoweapon fireball_octoweapon;
@@ -1719,78 +1726,7 @@ typedef struct Object {
   /* 0x008C */ u32 unk8C;
   /* 0x0090 */ u32 unk90;
   /* 0x0094 */ u32 unk94;
-  /* 0x0098 */ Object_64 obj;
-
-  // May be a part of obj (likely Object_Player).
-  /* 0x02B8 */ u8 pad2A8[0x8];
-
-  /* 0x02C0 */ f32 unk2C0;
-
-  /* 0x02C4 */ u8 red;
-  /* 0x02C5 */ u8 blue;
-  /* 0x02C6 */ u8 green;
-  /* 0x02C7 */ u8 alpha;
-
-  /* 0x02C8 */ u32 unk2C8;
-  /* 0x02CC */ u32 unk2CC;
-  /* 0x02D0 */ u32 unk2D0;
-  /* 0x02D4 */ u32 unk2D4;
-  /* 0x02D8 */ u32 unk2D8;
-
-  /* 0x02DC */ u16 unk2DC;
-  /* 0x02DE */ u16 unk2DE;
-  /* 0x02E0 */ u16 unk2E0;
-
-  /* 0x02E2 */ u16 unk2E2;
-  /* 0x02E4 */ u32 unk2E4;
-
-  /* 0x02E8 */ f32 unk2E8;
-  /* 0x02EC */ f32 unk2EC;
-  /* 0x02F0 */ u32 unk2F0;
-
-  /* 0x02F4 */ f32 shadow_scale;
-  /* 0x02F8 */ void *unk2F8;
-  /* 0x02FC */ u16 unk2FC;
-  /* 0x02FE */ u16 unk2FE;
-  /* 0x0300 */ u32 unk300;
-
-  /* 0x0304 */ f32 unk0304;
-
-  /* 0x0308 */ u32 unk308;
-  /* 0x030C */ u32 unk30C;
-  /* 0x0310 */ u32 unk310;
-  /* 0x0314 */ u32 unk314;
-
-  /* 0x0318 */ void *nearest_obj_ptr;
-  /* 0x031C */ f32 unk31C;
-  /* 0x0320 */ f32 unk320;
-  /* 0x0324 */ f32 unk324;
-
-  /* 0x0328 */ u32 unk328;
-  /* 0x032C */ u32 unk32C;
-  /* 0x0330 */ u32 unk330;
-  /* 0x0334 */ u32 unk334;
-  /* 0x0338 */ u32 unk338;
-  /* 0x033C */ u32 unk33C;
-
-  /* 0x0340 */ u32 unk340;
-  /* 0x0344 */ void *unk344;
-  /* 0x0348 */ void *unk348;
-  /* 0x034C */ void *unk34C;
-  /* 0x0350 */ void *unk350;
-
-  /* 0x0354 */ u32 unk354;
-  /* 0x0358 */ u32 unk358;
-  /* 0x035C */ u32 unk35C;
-  /* 0x0360 */ u32 unk360;
-  /* 0x0364 */ u32 unk364;
-  /* 0x0368 */ u32 unk368;
-  /* 0x036C */ u32 unk36C;
-
-  /* 0x0370 */ void *unk370;
-  /* 0x0374 */ s32 unk374;
-
-  u32 unk378[174]; // Not an array. Unknown values.
+  /* 0x0098 */ Object_8001B7A8 obj;
 } Object;
 
 // Unused
