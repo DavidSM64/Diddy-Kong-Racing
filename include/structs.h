@@ -396,7 +396,7 @@ typedef struct LevelHeader {
   /* 0x56 */ u8 pad56[0x1A];
 
   /* 0x70 */ LevelHeader_70 *unk70;
-  /* 0x74 */ s8 *unk74[7];
+  /* 0x74 */ LevelHeader_70 *unk74[7];
 
   // Weather related?
   /* 0x90 */ s16 weatherEnable;

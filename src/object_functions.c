@@ -4485,7 +4485,7 @@ void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 soundID, f32 scale, s3
     spawnObj.common.size = 10;
     spawnObj.common.objectID = objectID;
     spawnObj.unk9 = arg6;
-    newObj = spawn_object(&spawnObj, 1);
+    newObj = spawn_object((LevelObjectEntryCommon *) &spawnObj, 1);
     if (newObj != NULL) {
         newObj->segment.level_entry = NULL;
         newObj->segment.x_velocity = 0.0f;

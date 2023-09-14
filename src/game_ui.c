@@ -771,7 +771,7 @@ void render_hud_hubworld(Object *obj, s32 updateRate) {
         func_800A718C(obj64);
         render_speedometer(obj, updateRate);
         if (is_in_two_player_adventure()) {
-            temp_a3 = &gCurrentHud->unk720;
+            temp_a3 = (unk80126CDC *) &gCurrentHud->unk720;
             temp_a3->unk6 = (get_settings()->racers[1].character + 0x38);
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) temp_a3);
         }

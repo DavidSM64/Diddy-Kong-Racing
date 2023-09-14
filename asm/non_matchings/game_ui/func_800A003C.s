@@ -66,10 +66,10 @@ glabel func_800A003C
 /* 0A0D24 800A0124 1420FFD6 */  bnez  $at, .L800A0080
 /* 0A0D28 800A0128 26310004 */   addiu $s1, $s1, 4
 .L800A012C:
-/* 0A0D2C 800A012C 3C048012 */  lui   $a0, %hi(D_80126CE0) # $a0, 0x8012
+/* 0A0D2C 800A012C 3C048012 */  lui   $a0, %hi(gPlayerHud) # $a0, 0x8012
 /* 0A0D30 800A0130 3C128012 */  lui   $s2, %hi(gAssetHudElements) # $s2, 0x8012
 /* 0A0D34 800A0134 3C148012 */  lui   $s4, %hi(gAssetHudElementIds) # $s4, 0x8012
-/* 0A0D38 800A0138 8C846CE0 */  lw    $a0, %lo(D_80126CE0)($a0)
+/* 0A0D38 800A0138 8C846CE0 */  lw    $a0, %lo(gPlayerHud)($a0)
 /* 0A0D3C 800A013C 26946CF0 */  addiu $s4, %lo(gAssetHudElementIds) # addiu $s4, $s4, 0x6cf0
 /* 0A0D40 800A0140 0C01C450 */  jal   free_from_memory_pool
 /* 0A0D44 800A0144 26526CF4 */   addiu $s2, %lo(gAssetHudElements) # addiu $s2, $s2, 0x6cf4

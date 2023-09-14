@@ -205,7 +205,7 @@ s8 D_8011AE01;
 s8 gIsNonCarRacers;
 s8 gIsSilverCoinRace;
 Object *D_8011AE08[16];
-AssetObjectHeaders *(*D_8011AE48)[ASSET_OBJECT_HEADER_TABLE_LENGTH];
+ObjectHeader *(*D_8011AE48)[ASSET_OBJECT_HEADER_TABLE_LENGTH];
 u8 (*D_8011AE4C)[ASSET_OBJECT_HEADER_TABLE_LENGTH];
 TextureHeader *D_8011AE50;
 TextureHeader *D_8011AE54;
@@ -611,7 +611,7 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
         D_8011AEA0[arg1] = *asset;
         D_8011AEC0 = arg1;
         for (var_s0 = 0; var_s0 < D_8011AEA0[arg1]; var_s0 += temp_t3) {
-            spawn_object(D_8011AE98[arg1], 1);            
+            spawn_object((LevelObjectEntryCommon *) D_8011AE98[arg1], 1);            
             D_8011AE98[arg1] = &D_8011AE98[arg1][temp_t3 = D_8011AE98[arg1][1] & 0x3F];
         }
         D_8011AE98[arg1] = (u8 *)(D_8011AEB0[arg1] + 4);
@@ -782,7 +782,7 @@ void func_8000E2B4(void) {
     spawnObj.common.z = D_8011AD4A;
     spawnObj.unkC = D_8011AD4C;
     func_800521B8(1);
-    player = spawn_object(&spawnObj, 0x11);
+    player = spawn_object((LevelObjectEntryCommon *) &spawnObj, 0x11);
     gNumRacers = 1;
     (*gRacers)[0] = player;
     gRacersByPort[0] = player;
