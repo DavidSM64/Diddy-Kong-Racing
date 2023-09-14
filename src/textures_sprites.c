@@ -803,7 +803,7 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007BF34.s")
 */
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C12C.s")
 
-Sprite* func_8007C52C(s32 arg0) {
+Sprite *func_8007C52C(s32 arg0) {
     Sprite *sprite;
     if ((arg0 < 0) || (arg0 >= D_80126358)) {
         return NULL;
@@ -891,44 +891,44 @@ UNUSED s32 func_8007C8A0(s32 spriteIndex) {
     return ((SpriteCacheEntry*) ((s32*) gSpriteCache + spriteIndex * 2))->id;
 }
 
-#ifdef NON_EQUIVALENT
 s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *numFramesOut, s32 *formatOut, s32 *sizeOut) {
     TextureHeader *tex;
-    s32 i, j;
-    s32 start, size;
+    s32 i;
+    Sprite *new_var2;
+    s32 j;
+    s32 start;
+    s32 size;
+    s32 new_var;
 
     if ((spriteIndex < 0) || (spriteIndex >= D_80126354)) {
-        *numFramesOut = 0;
+        textureCouldNotBeLoaded:
         *numOfInstancesOut = 0;
         *unkOut = 0;
-        return;
+        *numFramesOut = 0;
+        return 0;
     }
     start = gSpriteOffsetTable[spriteIndex];
     size = gSpriteOffsetTable[spriteIndex + 1] - start;
-    load_asset_to_address(ASSET_SPRITES, gCurrentSprite, start, size);
-    tex = load_texture(gCurrentSprite->unkC.val[0] + gCurrentSprite->baseTextureId);
+    new_var2 = gCurrentSprite;
+    new_var = size;
+    load_asset_to_address(ASSET_SPRITES, (u32) new_var2, start, new_var);
+    tex = load_texture(new_var2->unkC.val[0] + new_var2->baseTextureId);
     if (tex != NULL) {
         *formatOut = tex->format & 0xF;
         free_texture(tex);
         *sizeOut = 0;
-        for (i = 0; i < gCurrentSprite->numberOfFrames; i++) {
-            for (j = gCurrentSprite->unkC.val[i]; j < (s32) gCurrentSprite->unkC.val[i + 1]; j++) {
-                *sizeOut += get_texture_size_from_id(gCurrentSprite->baseTextureId + j);
+        for (i = 0; i < new_var2->numberOfFrames; i++) {
+            for (j = new_var2->unkC.val[i]; j < (s32) new_var2->unkC.val[i + 1]; j++) {
+                *sizeOut += get_texture_size_from_id(new_var2->baseTextureId + j);
             }
         }
-        *numFramesOut = gCurrentSprite->numberOfFrames;
-        *numOfInstancesOut = gCurrentSprite->numberOfInstances;
-        *unkOut = gCurrentSprite->unk6;
+        *numFramesOut = new_var2->numberOfFrames;
+        *numOfInstancesOut = new_var2->numberOfInstances;
+        *unkOut = new_var2->unk6;
         return 1;
     }
-    *numFramesOut = 0;
-    *numOfInstancesOut = 0;
-    *unkOut = 0;
-    return 0;
+    goto textureCouldNotBeLoaded;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/load_sprite_info.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CA68.s")
 
