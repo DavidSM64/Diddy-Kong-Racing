@@ -473,7 +473,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     gMapId = levelId;
     for (var_s0 = 0; var_s0 < 7; var_s0++) {
         if ((s32) gCurrentLevelHeader->unk74[var_s0] != -1) {
-            gCurrentLevelHeader->unk74[var_s0] = (s8 *) get_misc_asset((s32) gCurrentLevelHeader->unk74[var_s0]);
+            gCurrentLevelHeader->unk74[var_s0] = (LevelHeader_70 *) get_misc_asset((s32) gCurrentLevelHeader->unk74[var_s0]);
             func_8007F1E8((LevelHeader_70 *) gCurrentLevelHeader->unk74[var_s0]);
         }
     }
