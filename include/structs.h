@@ -310,13 +310,30 @@ typedef struct Settings {
   /* 0x0117 */ u8 display_times;
 } Settings;
 
+/* Size: 8 bytes */
+typedef struct LevelHeader_70_18 {
+    s32 unk0; //0x0000001E
+    u8 red; //0xFF
+    u8 green; //0x70
+    u8 blue; //0x00
+    u8 alpha; //0xFF
+} LevelHeader_70_18;
+
 /* Unknown size */
 typedef struct LevelHeader_70 {
-             u8 pad0[0x10];
-  /* 0x10 */ u8 red;
-  /* 0x11 */ u8 green;
-  /* 0x12 */ u8 blue;
-  /* 0x13 */ u8 alpha;
+  /* 0x00 */ s32 unk0;  //0x00000004
+  /* 0x04 */ s32 unk4;  //0x00000000
+  /* 0x08 */ s32 unk8;  //0x00000000
+  /* 0x0C */ s32 unkC;  //0x00000000
+  /* 0x10 */ u8 red;    //0x72
+  /* 0x11 */ u8 green;  //0x75
+  /* 0x12 */ u8 blue;   //0x73
+  /* 0x13 */ u8 alpha;  //0x20
+  /* 0x14 */ u8 red2;   //0xFF
+  /* 0x15 */ u8 green2; //0x00
+  /* 0x16 */ u8 blue2;  //0x00
+  /* 0x17 */ u8 alpha2; //0xFF
+  /* 0x18 */ LevelHeader_70_18 unk18[1]; // Actual length depends on unk0
 } LevelHeader_70;
 
 // Used to update the pulsating lights in Spaceport Alpha

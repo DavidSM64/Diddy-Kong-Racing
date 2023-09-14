@@ -228,10 +228,10 @@ s8 gRaceStartShowHudStep;
 s8 D_80126CD5;
 u8 *D_80126CD8;
 unk80126CDC *D_80126CDC;
-unk80126CDC *D_80126CE0[4];
-s16 *D_80126CF0;
-unk80126CF4 *D_80126CF4;
-s32 D_80126CF8;
+unk80126CDC *D_80126CE0[MAXCONTROLLERS]; //One per active player
+s16 *gAssetHudElementIds;
+unk80126CF4 *gAssetHudElements;
+s32 gAssetHudElementIdsCount;
 Gfx *gHUDCurrDisplayList;
 MatrixS *gHUDCurrMatrix;
 Vertex *gHUDCurrVertex;
@@ -300,30 +300,30 @@ void func_8009ECF0(UNUSED s32 viewPortCount) {
     gNumActivePlayers = set_active_viewports_and_max(gHUDNumPlayers);
     D_80127184 = get_settings();
     D_80127188 = check_if_silver_coin_race();
-    D_80126CF0 = (s16 *)load_asset_section_from_rom(ASSET_HUD_ELEMENT_IDS); 
-    D_80126CF8 = 0; // Number of elements in ASSET_HUD_ELEMENT_IDS?
-    while(D_80126CF0[D_80126CF8] != -1) {
-        D_80126CF8++;
+    gAssetHudElementIds = (s16 *) load_asset_section_from_rom(ASSET_HUD_ELEMENT_IDS); 
+    gAssetHudElementIdsCount = 0; // Number of elements in ASSET_HUD_ELEMENT_IDS?
+    while(gAssetHudElementIds[gAssetHudElementIdsCount] != -1) {
+        gAssetHudElementIdsCount++;
     }
-    D_80126CF4 = allocate_from_main_pool_safe(D_80126CF8 * 5, COLOUR_TAG_BLUE);
-    D_80126CD8 = (u8*)((D_80126CF8 + (s32*)D_80126CF4));
-    for(i = 0; i < D_80126CF8; i++) {
+    gAssetHudElements = allocate_from_main_pool_safe(gAssetHudElementIdsCount * 5, COLOUR_TAG_BLUE);
+    D_80126CD8 = (u8 *) ((gAssetHudElementIdsCount + (u32 *) gAssetHudElements));
+    for(i = 0; i < gAssetHudElementIdsCount; i++) {
         D_80126CD8[i] = 0;
-        D_80126CF4->unk0[i] = NULL;
+        gAssetHudElements->unk0[i] = NULL;
     }
-    D_80126CF4->unk0[1] = func_8007C12C(D_80126CF0[1] & 0x3FFF, 1);
-    D_80126CF4->unk0[23] = func_8007C12C(D_80126CF0[23] & 0x3FFF, 1);
-    D_80126CF4->unk0[8] = func_8007C12C(D_80126CF0[8] & 0x3FFF, 1);
-    D_80126CF4->unk0[17] = func_8007C12C(D_80126CF0[17] & 0x3FFF, 1);
+    gAssetHudElements->unk0[1] = func_8007C12C(gAssetHudElementIds[1] & 0x3FFF, 1); //ID: 86 - 0x56
+    gAssetHudElements->unk0[23] = func_8007C12C(gAssetHudElementIds[23] & 0x3FFF, 1); //ID: 291 - 0x123
+    gAssetHudElements->unk0[8] = func_8007C12C(gAssetHudElementIds[8] & 0x3FFF, 1); //ID: 156 - 0x9C
+    gAssetHudElements->unk0[17] = func_8007C12C(gAssetHudElementIds[17] & 0x3FFF, 1); //ID: 60 - 0x3C
     if (gNumActivePlayers != 3) {
         tempMaxPlayers = gNumActivePlayers;
     } else {
         tempMaxPlayers = 4; // If gNumActivePlayers is 3, then set this to 4.
     }
     D_80126CE0[0] = allocate_from_main_pool_safe(tempMaxPlayers * sizeof(unk80126CDC), COLOUR_TAG_BLUE);
-    D_80126CE0[1] = (unk80126CDC *) (((u8*)D_80126CE0[0]) + sizeof(unk80126CDC));
-    D_80126CE0[2] = (unk80126CDC *) (((u8*)D_80126CE0[1]) + sizeof(unk80126CDC));
-    D_80126CE0[3] = (unk80126CDC *) (((u8*)D_80126CE0[2]) + sizeof(unk80126CDC));
+    D_80126CE0[1] = (unk80126CDC *) (((u8 *) D_80126CE0[0]) + sizeof(unk80126CDC));
+    D_80126CE0[2] = (unk80126CDC *) (((u8 *) D_80126CE0[1]) + sizeof(unk80126CDC));
+    D_80126CE0[3] = (unk80126CDC *) (((u8 *) D_80126CE0[2]) + sizeof(unk80126CDC));
     func_8009F034();
     D_80126D64 = 0;
     gWrongWayNagTimer = 0;
@@ -340,7 +340,7 @@ void func_8009ECF0(UNUSED s32 viewPortCount) {
     D_80126D44 = 0;
     D_80126CD3 = 0;
     D_80127194 = (LevelHeader_70 *) get_misc_asset(ASSET_MISC_58);
-    func_8007F1E8((unk8007F1E8* ) D_80127194);
+    func_8007F1E8(D_80127194);
     set_sound_channel_volume(0, 0x7FFF);
     set_sound_channel_volume(2, 0x7FFF);
     for(i = 0; i < 2; i++){
@@ -803,28 +803,28 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
     
     curRacer = &playerRacerObj->unk64->racer;
     stopwatchTimer = 0;
-    if (D_80126CF4->unk0[20] == NULL) {
-        ttSWBody.objectID = D_80126CF0[20] & 0xFFFF;
+    if (gAssetHudElements->unk0[20] == NULL) {
+        ttSWBody.objectID = gAssetHudElementIds[20] & 0xFFFF;
         ttSWBody.size = 8;
         ttSWBody.x = 0;
         ttSWBody.y = 0;
         ttSWBody.z = 0;
-        D_80126CF4->unk0[20] = spawn_object(&ttSWBody, 0);
+        gAssetHudElements->unk0[20] = spawn_object(&ttSWBody, 0);
         D_80126CDC->unk340 = -0x8000;
-        if (D_80126CF4->unk0[20] != NULL) {
-             ((Object *) D_80126CF4->unk0[20])->segment.animFrame = 0;
+        if (gAssetHudElements->unk0[20] != NULL) {
+             ((Object *) gAssetHudElements->unk0[20])->segment.animFrame = 0;
         }
     }
-    if (D_80126CF4->unk0[34] == 0) {
-        ttSWArms.objectID = D_80126CF0[34] & 0xFFFF;
+    if (gAssetHudElements->unk0[34] == 0) {
+        ttSWArms.objectID = gAssetHudElementIds[34] & 0xFFFF;
         ttSWArms.size = 8;
         ttSWArms.x = 0;
         ttSWArms.y = 0;
         ttSWArms.z = 0;
-        D_80126CF4->unk0[34] = spawn_object(&ttSWArms, 0);
+        gAssetHudElements->unk0[34] = spawn_object(&ttSWArms, 0);
         D_80126CDC->unk440 = -0x8000;
     }
-    ttSWBodyObject = D_80126CF4->unk0[20];
+    ttSWBodyObject = gAssetHudElements->unk0[20];
     if (ttSWBodyObject != NULL) {
         ttSWBodyObject->segment.object.animationID = gStopwatchFaceID;
         obj68 = (Object_68 *) ttSWBodyObject->unk68[0];
@@ -1017,7 +1017,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
             draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28, D_80127190, SWMessage[0], ALIGN_MIDDLE_CENTER);
             draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28, D_80127190 + 14, SWMessage[1], ALIGN_MIDDLE_CENTER);
             draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28, D_80127190 + 28, SWMessage[2], ALIGN_MIDDLE_CENTER);
-            update_colour_cycle((s8*)D_80127194, updateRate);
+            update_colour_cycle((s8 *)D_80127194, updateRate);
             set_kerning(0);
         }
         func_80068508(0);
@@ -1908,19 +1908,19 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
         mapOpacity = 255;
     }
     
-    for (i = 0; i < D_80126CF8; i++) {
-        if (D_80126CF4->unk0[i] && i != 40) {
+    for (i = 0; i < gAssetHudElementIdsCount; i++) {
+        if (gAssetHudElements->unk0[i] && i != 40) {
             if (++D_80126CD8[i] > 60) {
-                if ((D_80126CF0[i] & (0x4000 | 0x8000)) == (0x4000 | 0x8000)) {
-                    free_texture((TextureHeader *)D_80126CF4->unk0[i]);
-                } else if (D_80126CF0[i] & 0x8000) {
-                    free_sprite((Sprite *) D_80126CF4->unk0[i]);
-                } else if (D_80126CF0[i] & 0x4000) {
-                    gParticlePtrList_addObject((Object *) D_80126CF4->unk0[i]);
+                if ((gAssetHudElementIds[i] & (0x4000 | 0x8000)) == (0x4000 | 0x8000)) {
+                    free_texture((TextureHeader *)gAssetHudElements->unk0[i]);
+                } else if (gAssetHudElementIds[i] & 0x8000) {
+                    free_sprite((Sprite *) gAssetHudElements->unk0[i]);
+                } else if (gAssetHudElementIds[i] & 0x4000) {
+                    gParticlePtrList_addObject((Object *) gAssetHudElements->unk0[i]);
                 } else {
-                    func_8005FF40((ObjectModel **) D_80126CF4->unk0[i]);
+                    func_8005FF40((ObjectModel **) gAssetHudElements->unk0[i]);
                 }
-                D_80126CF4->unk0[i] = 0;
+                gAssetHudElements->unk0[i] = 0;
             }
         }
     }

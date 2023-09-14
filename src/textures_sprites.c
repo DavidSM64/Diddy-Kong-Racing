@@ -803,22 +803,18 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007BF34.s")
 */
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C12C.s")
 
-#ifdef NON_MATCHING
-Sprite *func_8007C52C(s32 arg0) {
-    Sprite *temp_v1;
-
+Sprite* func_8007C52C(s32 arg0) {
+    Sprite *sprite;
     if ((arg0 < 0) || (arg0 >= D_80126358)) {
         return NULL;
     }
-    temp_v1 = gSpriteCache[arg0].sprite;
-    if (temp_v1 == (Sprite *)-1) {
+    // Fakematch! The shifts here is a hack to skip a register.
+    sprite = gSpriteCache[arg0 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1].sprite;
+    if ((s32)sprite == -1) {
         return NULL;
     }
-    return temp_v1;
+    return sprite; 
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C52C.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 // Mostly has regalloc issues.
@@ -1311,16 +1307,16 @@ void tex_animate_texture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s3
     }    
 }
 
-void func_8007F1E8(unk8007F1E8 *arg0) {
+void func_8007F1E8(LevelHeader_70 *arg0) {
     s32 i;
 
     arg0->unk4 = 0;
     arg0->unk8 = 0;
     arg0->unkC = 0;
-    arg0->unk10 = arg0->unk14;
-    arg0->unk11 = arg0->unk15;
-    arg0->unk12 = arg0->unk16;
-    arg0->unk13 = arg0->unk17;
+    arg0->red = arg0->red2;
+    arg0->green = arg0->green2;
+    arg0->blue = arg0->blue2;
+    arg0->alpha = arg0->alpha2;
     for (i = 0; i < arg0->unk0; i++) {
         arg0->unkC += arg0->unk18[i].unk0;
     }
@@ -1329,7 +1325,57 @@ void func_8007F1E8(unk8007F1E8 *arg0) {
 /**
  * Official name: updateColourCycle
 */
+#ifdef NON_EQUIVALENT
+void update_colour_cycle(LevelHeader_70 *arg0, s32 updateRate) {
+    s32 temp_lo;
+    s32 var_a3;
+    LevelHeader_70 *next;
+    LevelHeader_70 *cur;
+    u32 cur_red;
+    u32 cur_green;
+    u32 cur_blue;
+    u32 cur_alpha;
+    u32 next_red;
+    u32 next_green;
+    u32 next_blue;
+    u32 next_alpha;
+
+    if (arg0->unk0 >= 2) {
+        arg0->unk8 += updateRate;
+        while (arg0->unk8 >= arg0->unkC) {
+            arg0->unk8 -= arg0->unkC;
+        }
+        while (arg0->unk8 >= arg0->unk18[arg0->unk4].unk0) {
+            arg0->unk8 -= arg0->unk18[arg0->unk4].unk0;
+            arg0->unk4++;
+            if (arg0->unk4 >= arg0->unk0) {
+                arg0->unk4 = 0;
+            }
+        }
+        var_a3 = arg0->unk4 + 1;
+        if (var_a3 >= arg0->unk0) {
+            var_a3 = 0;
+        }
+        cur = &arg0->unk18[arg0->unk4];
+        next = &arg0->unk18[var_a3];
+        temp_lo = (arg0->unk8 << 16) / cur->unk18->unk0;
+        cur_red = cur->red2;
+        cur_green = cur->green2;
+        cur_blue = cur->blue2;
+        cur_alpha = cur->alpha2;
+        next_red = next->red2;
+        next_green = next->green2;
+        next_blue = next->blue2;
+        next_alpha = next->alpha2;
+        arg0->red = (((next_red - cur_red) * temp_lo) >> 16) + cur_red;
+        arg0->green = (((next_green - cur_green) * temp_lo) >> 16) + cur_green;
+        arg0->blue = (((next_blue - cur_blue) * temp_lo) >> 16) + cur_blue;
+        arg0->alpha = (((next_alpha - cur_alpha) * temp_lo) >> 16) + cur_alpha;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/textures_sprites/update_colour_cycle.s")
+#endif
 
 /**
  * Official name: resetMixCycle

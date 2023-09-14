@@ -265,7 +265,7 @@ typedef struct unk800E2770 {
     s8 unk1;
     s8 unk2;
     s8 unk3;
-    s32 unk4;
+    s32 unk4; //soundMask?
     s32 unk8;
     s8 unkC;
     s8 unkD;
