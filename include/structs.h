@@ -775,7 +775,7 @@ typedef struct ObjectInteraction {
  /* 0x14 */ s16 flags;
  /* 0x16 */ s8 unk16;
  /* 0x17 */ s8 unk17;
-s32 pad[4];
+/*0x18*/  s32 pad[4];
 } ObjectInteraction;
 
 typedef struct ShadowData {
