@@ -67,7 +67,7 @@ glabel set_ghost_position_and_rotation
 /* 05AB1C 80059F1C AFA3003C */  sw    $v1, 0x3c($sp)
 /* 05AB20 80059F20 AFA5005C */  sw    $a1, 0x5c($sp)
 /* 05AB24 80059F24 AFAD004C */  sw    $t5, 0x4c($sp)
-/* 05AB28 80059F28 0C01AF62 */  jal   func_8006BD88
+/* 05AB28 80059F28 0C01AF62 */  jal   get_current_map_id
 /* 05AB2C 80059F2C E7A20094 */   swc1  $f2, 0x94($sp)
 /* 05AB30 80059F30 3C188012 */  lui   $t8, %hi(D_8011D5AC) # $t8, 0x8012
 /* 05AB34 80059F34 8718D5AC */  lh    $t8, %lo(D_8011D5AC)($t8)

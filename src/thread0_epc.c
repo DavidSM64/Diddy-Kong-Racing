@@ -60,7 +60,7 @@ void thread0_Main(UNUSED void *unused) {
     s32 sp34;
     s32 s0 = 0;
 
-    osCreateMesgQueue(&D_80129790, D_801297A8, 8);
+    osCreateMesgQueue(&D_80129790, D_801297A8, ARRAY_COUNT(D_801297A8));
     osSetEventMesg(OS_EVENT_FAULT, &D_80129790, (OSMesg) 8);
     osSetEventMesg(OS_EVENT_CPU_BREAK, &D_80129790, (OSMesg) 2);
     osCreatePiManager(150, &D_801297E8, D_801297C8, 8);

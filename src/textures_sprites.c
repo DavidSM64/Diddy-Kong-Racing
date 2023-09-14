@@ -803,55 +803,53 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007BF34.s")
 */
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C12C.s")
 
-#ifdef NON_MATCHING
 Sprite *func_8007C52C(s32 arg0) {
-    Sprite *temp_v1;
-
+    Sprite *sprite;
     if ((arg0 < 0) || (arg0 >= D_80126358)) {
         return NULL;
     }
-    temp_v1 = gSpriteCache[arg0].sprite;
-    if (temp_v1 == (Sprite *)-1) {
+    // Fakematch! The shifts here is a hack to skip a register.
+    sprite = gSpriteCache[arg0 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1].sprite;
+    if ((s32)sprite == -1) {
         return NULL;
     }
-    return temp_v1;
+    return sprite; 
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C52C.s")
-#endif
 
-#ifdef NON_EQUIVALENT
-// Mostly has regalloc issues.
-s32 get_texture_size_from_id(s32 arg0) {
-    s32 assetIndex;
-    s32 assetSection;
-    s32 assetTable;
-    s32 start;
+s32 get_texture_size_from_id(s32 id) {
+    s32 textureRomOffset;
+    TempTexHeader *new_var2;
+    UNUSED s32 pad;
+    u32 textureTable;
     s32 size;
-
-    assetSection = ASSET_TEXTURES_2D;
-    assetIndex = arg0;
-    assetTable = 0;
-    if (arg0 & 0x8000) {
-        assetIndex = arg0 & 0x7FFF;
-        assetSection = ASSET_TEXTURES_3D;
-        assetTable = 1;
+    s32 new_var3;
+    s32 textureTableType;
+    s32 numOfTextures;
+    TempTexHeader *new_var4;
+    
+    textureTable = ASSET_TEXTURES_2D;
+    textureTableType = 0;
+    if (id & 0x8000) {
+        textureTable = ASSET_TEXTURES_3D;
+        textureTableType = 1;
+        id &= 0x7FFF;
     }
-    if ((assetIndex >= gTextureAssetID[assetTable]) || (assetIndex < 0)) {
+    if ((id >= gTextureAssetID[textureTableType]) || (id < 0)) {
         return 0;
     }
-    start = gTextureAssetTable[assetTable][assetIndex];
-    size = gTextureAssetTable[assetTable][assetIndex + 1] - start;
-    if (gTempTextureHeader->header.isCompressed) {
-        load_asset_to_address(assetSection, gTempTextureHeader, start, 0x28);
-        size = byteswap32(&gTempTextureHeader->uncompressedSize);
+    textureRomOffset = gTextureAssetTable[textureTableType][id];
+    new_var3 = textureRomOffset;
+    size = gTextureAssetTable[textureTableType][id + 1] - new_var3;
+    new_var2 = gTempTextureHeader;
+    if (new_var2->header.isCompressed) {
+        load_asset_to_address(textureTable, (u32) new_var2, textureRomOffset, 0x28);
+        new_var4 = gTempTextureHeader;
+        size = byteswap32((u8 *) (&new_var4->uncompressedSize));
     }
-    return (((gTempTextureHeader->header.numOfTextures >> 8) & 0xFFFF) * 0x60) + size;
+    new_var2 = gTempTextureHeader;
+    numOfTextures = new_var2->header.numOfTextures;
+    return (((numOfTextures >> 8) & 0xFFFF) * 0x60) + size;
 }
-
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/get_texture_size_from_id.s")
-#endif
 
 UNUSED u8 func_8007C660(s32 arg0) {
     Sprite *temp_s1;
@@ -893,44 +891,44 @@ UNUSED s32 func_8007C8A0(s32 spriteIndex) {
     return ((SpriteCacheEntry*) ((s32*) gSpriteCache + spriteIndex * 2))->id;
 }
 
-#ifdef NON_EQUIVALENT
 s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *numFramesOut, s32 *formatOut, s32 *sizeOut) {
     TextureHeader *tex;
-    s32 i, j;
-    s32 start, size;
+    s32 i;
+    Sprite *new_var2;
+    s32 j;
+    s32 start;
+    s32 size;
+    s32 new_var;
 
     if ((spriteIndex < 0) || (spriteIndex >= D_80126354)) {
-        *numFramesOut = 0;
+        textureCouldNotBeLoaded:
         *numOfInstancesOut = 0;
         *unkOut = 0;
-        return;
+        *numFramesOut = 0;
+        return 0;
     }
     start = gSpriteOffsetTable[spriteIndex];
     size = gSpriteOffsetTable[spriteIndex + 1] - start;
-    load_asset_to_address(ASSET_SPRITES, gCurrentSprite, start, size);
-    tex = load_texture(gCurrentSprite->unkC.val[0] + gCurrentSprite->baseTextureId);
+    new_var2 = gCurrentSprite;
+    new_var = size;
+    load_asset_to_address(ASSET_SPRITES, (u32) new_var2, start, new_var);
+    tex = load_texture(new_var2->unkC.val[0] + new_var2->baseTextureId);
     if (tex != NULL) {
         *formatOut = tex->format & 0xF;
         free_texture(tex);
         *sizeOut = 0;
-        for (i = 0; i < gCurrentSprite->numberOfFrames; i++) {
-            for (j = gCurrentSprite->unkC.val[i]; j < (s32) gCurrentSprite->unkC.val[i + 1]; j++) {
-                *sizeOut += get_texture_size_from_id(gCurrentSprite->baseTextureId + j);
+        for (i = 0; i < new_var2->numberOfFrames; i++) {
+            for (j = new_var2->unkC.val[i]; j < (s32) new_var2->unkC.val[i + 1]; j++) {
+                *sizeOut += get_texture_size_from_id(new_var2->baseTextureId + j);
             }
         }
-        *numFramesOut = gCurrentSprite->numberOfFrames;
-        *numOfInstancesOut = gCurrentSprite->numberOfInstances;
-        *unkOut = gCurrentSprite->unk6;
+        *numFramesOut = new_var2->numberOfFrames;
+        *numOfInstancesOut = new_var2->numberOfInstances;
+        *unkOut = new_var2->unk6;
         return 1;
     }
-    *numFramesOut = 0;
-    *numOfInstancesOut = 0;
-    *unkOut = 0;
-    return 0;
+    goto textureCouldNotBeLoaded;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/load_sprite_info.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CA68.s")
 
@@ -1311,16 +1309,16 @@ void tex_animate_texture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s3
     }    
 }
 
-void func_8007F1E8(unk8007F1E8 *arg0) {
+void func_8007F1E8(LevelHeader_70 *arg0) {
     s32 i;
 
     arg0->unk4 = 0;
     arg0->unk8 = 0;
     arg0->unkC = 0;
-    arg0->unk10 = arg0->unk14;
-    arg0->unk11 = arg0->unk15;
-    arg0->unk12 = arg0->unk16;
-    arg0->unk13 = arg0->unk17;
+    arg0->red = arg0->red2;
+    arg0->green = arg0->green2;
+    arg0->blue = arg0->blue2;
+    arg0->alpha = arg0->alpha2;
     for (i = 0; i < arg0->unk0; i++) {
         arg0->unkC += arg0->unk18[i].unk0;
     }
@@ -1329,7 +1327,61 @@ void func_8007F1E8(unk8007F1E8 *arg0) {
 /**
  * Official name: updateColourCycle
 */
-GLOBAL_ASM("asm/non_matchings/textures_sprites/update_colour_cycle.s")
+void update_colour_cycle(LevelHeader_70 *arg0, s32 updateRate) {
+    s32 temp;
+    s32 curIndex;
+    s32 nextIndex;
+    u32 next_red;
+    u32 cur_red;
+    u32 next_green;
+    u32 next_blue;
+    u32 next_alpha;
+    u32 cur_green;
+    u32 cur_blue;
+    u32 cur_alpha;
+    LevelHeader_70 *cur;
+    LevelHeader_70 *next;
+
+    if (arg0->unk0 >= 2) {
+        arg0->unk8 += updateRate;
+        while (arg0->unk8 >= arg0->unkC) {
+            if (!temp){}
+            arg0->unk8 -= arg0->unkC;
+        }
+        while (arg0->unk8 >= arg0->unk18[arg0->unk4].unk0) {
+            arg0->unk8 -= arg0->unk18[arg0->unk4].unk0;
+            arg0->unk4++;
+            if (arg0->unk4 >= arg0->unk0) {
+                arg0->unk4 = 0;
+            }
+        }
+
+        curIndex = arg0->unk4;
+        nextIndex = curIndex + 1;
+        if (nextIndex >= arg0->unk0) {
+            nextIndex = 0;
+        }
+        
+        cur = (LevelHeader_70 *) (&((LevelHeader_70_18 *)arg0)[curIndex]);
+        temp = (arg0->unk8 << 16) / (cur->unk18->unk0);
+        cur_red = cur->red2;
+        cur_green = cur->green2;
+        cur_blue = cur->blue2;
+        cur_alpha = cur->alpha2;
+
+        next = (LevelHeader_70 *) (&((LevelHeader_70_18 *)arg0)[nextIndex]);
+        next_red = next->red2;
+        next_green = next->green2;
+        next_blue = next->blue2;
+        next_alpha = next->alpha2;
+        
+        next = arg0;
+        arg0->red = (((next_red - cur_red) * temp) >> 16) + cur_red;
+        arg0->green = (((next_green - cur_green) * temp) >> 16) + cur_green;
+        arg0->blue = (((next_blue - cur_blue) * temp) >> 16) + cur_blue;
+        arg0->alpha = (((next_alpha - cur_alpha) * temp) >> 16) + cur_alpha;
+    }
+}
 
 /**
  * Official name: resetMixCycle

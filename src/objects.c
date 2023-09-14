@@ -31,6 +31,7 @@
 #define OBJECT_POOL_SIZE 0x15800
 #define OBJECT_SPAWN_HEAP_SIZE 0x800
 #define OBJECT_SLOT_COUNT 512
+#define ASSET_OBJECT_HEADER_TABLE_LENGTH 304 //This isn't important, but it's the number of object headers
 
 /************ .data ************/
 
@@ -173,7 +174,7 @@ s8 D_8011AD51;
 s8 D_8011AD52;
 s8 D_8011AD53;
 s32 D_8011AD54;
-s32 *gSpawnObjectHeap;
+Object *(*gSpawnObjectHeap)[0x200];
 s32 D_8011AD5C;
 s32 D_8011AD60;
 s32 *gAssetsObjectHeadersTable;
@@ -204,8 +205,8 @@ s8 D_8011AE01;
 s8 gIsNonCarRacers;
 s8 gIsSilverCoinRace;
 Object *D_8011AE08[16];
-AssetObjectHeaders *(*D_8011AE48)[8]; // Unknown number of entries.
-u8 (*D_8011AE4C)[8];  // Unknown number of entries.
+AssetObjectHeaders *(*D_8011AE48)[ASSET_OBJECT_HEADER_TABLE_LENGTH];
+u8 (*D_8011AE4C)[ASSET_OBJECT_HEADER_TABLE_LENGTH];
 TextureHeader *D_8011AE50;
 TextureHeader *D_8011AE54;
 Object **gObjPtrList; // Not sure about the number of elements
@@ -357,30 +358,30 @@ void allocate_object_pools(void) {
 
     set_world_shading(0.67f, 0.33f, 0, -0x2000, 0);
     gObjectMemoryPool = (Object *) new_sub_memory_pool(OBJECT_POOL_SIZE, OBJECT_SLOT_COUNT);
-    gParticlePtrList = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 200, COLOUR_TAG_BLUE);
-    D_8011AE6C = (Object **) allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
-    D_8011AE74 = (Object **) allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
-    gTrackCheckpoints = (CheckpointNode *) allocate_from_main_pool_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
+    gParticlePtrList = allocate_from_main_pool_safe(sizeof(uintptr_t) * 200, COLOUR_TAG_BLUE);
+    D_8011AE6C = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
+    D_8011AE74 = allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
+    gTrackCheckpoints = allocate_from_main_pool_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
     gCameraObjList = allocate_from_main_pool_safe(sizeof(uintptr_t *) * 20, COLOUR_TAG_BLUE);
     gRacers = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
-    gRacersByPort = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
-    gRacersByPosition = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
+    gRacersByPort = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
+    gRacersByPosition = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
     D_8011AF04 = allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     D_8011ADCC = allocate_from_main_pool_safe(8, COLOUR_TAG_BLUE);
-    D_8011AFF4 = (unk800179D0 *) allocate_from_main_pool_safe(0x400, COLOUR_TAG_BLUE);
+    D_8011AFF4 = allocate_from_main_pool_safe(0x400, COLOUR_TAG_BLUE);
     gAssetsLvlObjTranslationTable = (s16 *) load_asset_section_from_rom(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
     gAssetsLvlObjTranslationTableLength = (get_size_of_asset_section(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE) >> 1) - 1;
     while (gAssetsLvlObjTranslationTable[gAssetsLvlObjTranslationTableLength] == 0) {
         gAssetsLvlObjTranslationTableLength--;
     }
-    gSpawnObjectHeap = (s32 *) allocate_from_main_pool_safe(OBJECT_SPAWN_HEAP_SIZE, COLOUR_TAG_BLUE);
+    gSpawnObjectHeap = allocate_from_main_pool_safe(sizeof(uintptr_t) * 512, COLOUR_TAG_BLUE);
     gAssetsObjectHeadersTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_HEADERS_TABLE);
     gAssetsObjectHeadersTableLength = 0;
     while (-1 != gAssetsObjectHeadersTable[gAssetsObjectHeadersTableLength]) {
         gAssetsObjectHeadersTableLength++;
     }
     gAssetsObjectHeadersTableLength--;
-    D_8011AE48 = (AssetObjectHeaders * (*)[8]) allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOUR_TAG_WHITE);
+    D_8011AE48 = allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength * 4, COLOUR_TAG_WHITE);
     D_8011AE4C = allocate_from_main_pool_safe(gAssetsObjectHeadersTableLength, COLOUR_TAG_WHITE);
 
     for (i = 0; i < gAssetsObjectHeadersTableLength; i++) {
@@ -396,7 +397,7 @@ void allocate_object_pools(void) {
 
     decrypt_magic_codes(&gAssetsMiscSection[gAssetsMiscTable[ASSET_MISC_MAGIC_CODES]], 
                         (gAssetsMiscTable[ASSET_MISC_TITLE_SCREEN_DEMO_IDS] - gAssetsMiscTable[ASSET_MISC_MAGIC_CODES]) * sizeof(s32 *));
-    gObjPtrList = (Object **) allocate_from_main_pool_safe(sizeof(uintptr_t) * OBJECT_SLOT_COUNT, COLOUR_TAG_BLUE);
+    gObjPtrList = allocate_from_main_pool_safe(sizeof(uintptr_t) * OBJECT_SLOT_COUNT, COLOUR_TAG_BLUE);
     D_8011ADC4 = 0;
     gTimeTrialEnabled = 0;
     gIsTimeTrial = FALSE;
@@ -505,10 +506,10 @@ void func_8000C604(void) {
     free_from_memory_pool((void *) D_8011AEB0[1]);
 }
 
-AssetObjectHeaders *func_8000C718(s32 index) {
+ObjectHeader *func_8000C718(s32 index) {
     s32 assetOffset;
     s32 size;
-    AssetObjectHeaders *address;
+    ObjectHeader *address;
 
     if ((*D_8011AE4C)[index] != 0) {
         (*D_8011AE4C)[index]++;
@@ -519,11 +520,11 @@ AssetObjectHeaders *func_8000C718(s32 index) {
     address = allocate_from_pool_containing_slots((MemoryPoolSlot *) gObjectMemoryPool, size);
     if (address != NULL) {
         load_asset_to_address(ASSET_OBJECT_HEADERS, (u32) address, assetOffset, size);
-        address->unk24 = (u32) address + address->unk24;
-        address->unk1C = (u32) address + address->unk1C;
-        address->unk14 = (u32) address + address->unk14;
-        address->unk18 = (u32) address + address->unk18;
-        address->unk10 = (u32) address + address->unk10;
+        address->unk24 = (ObjectHeader24 *) ((uintptr_t) address + (uintptr_t) address->unk24);
+        address->objectParticles = (ObjHeaderParticleEntry *) ((uintptr_t) address + (uintptr_t) address->objectParticles);
+        address->vehiclePartIds = (s32 *) ((uintptr_t) address + (uintptr_t) address->vehiclePartIds);
+        address->vehiclePartIndices = (s8 *) ((uintptr_t) address + (uintptr_t) address->vehiclePartIndices);
+        address->modelIds = (s32 *) ((uintptr_t) address + (uintptr_t) address->modelIds);
         (*D_8011AE48)[index] = address;
         (*D_8011AE4C)[index] = 1;
     } else {
@@ -532,11 +533,11 @@ AssetObjectHeaders *func_8000C718(s32 index) {
     return address;
 }
 
-void func_8000C844(s32 arg0) {
-    if ((*D_8011AE4C)[arg0] != 0) {
-        (*D_8011AE4C)[arg0]--;
-        if ((*D_8011AE4C)[arg0] == 0) {
-            free_from_memory_pool((void *) (*D_8011AE48)[arg0]);
+void func_8000C844(s32 index) {
+    if ((*D_8011AE4C)[index] != 0) {
+        (*D_8011AE4C)[index]--;
+        if ((*D_8011AE4C)[index] == 0) {
+            free_from_memory_pool((void *) (*D_8011AE48)[index]);
         }
     }
 }
@@ -665,7 +666,7 @@ s32 func_8000CC20(Object *obj) {
 // Has a jump table
 GLOBAL_ASM("asm/non_matchings/objects/func_8000CC7C.s")
 
-u32 func_8000E0B0(void) {
+s32 func_8000E0B0(void) {
     // D_8011AD38 is likely an SIDeviceStatus value, but not 100% sure yet.
     switch (D_8011AD38) {
         case 1: //NO_CONTROLLER_PAK
@@ -925,7 +926,310 @@ void func_8000E9D0(Object *arg0) {
     D_8011AE64++;
 }
 
+#ifdef NON_EQUIVALENT
+
+void *func_8005F99C(s32, s32);
+
+Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
+    s32 objType;
+    Object *newObj;
+    s32 var_a2;
+    s32 i;
+    s32 var_s0_5;
+    s32 sp50;
+    s16 var_a0;
+    u32 *address;
+    s32 sizeOfobj;
+    Object *curObj;
+    Object *new_var;
+    s32 assetCount;
+    s8 var_v1;
+    Settings *settings;
+
+    settings = get_settings();
+    objType = entry->objectID | ((entry->size & 0x80) << 1);
+    update_object_stack_trace(OBJECT_SPAWN, objType);
+    if (arg1 & 2) {
+        var_a0 = objType;
+    } else {
+        var_a0 = gAssetsLvlObjTranslationTable[objType];
+    }
+    if (var_a0 >= gAssetsObjectHeadersTableLength) {
+        var_a0 = 0;
+    }
+    for (i = 0; i < 0x200; i++) {
+        (*gSpawnObjectHeap)[i] = NULL;
+    }
+    curObj = &(*gSpawnObjectHeap)[0];
+    curObj->segment.trans.flags = 2;
+    curObj->segment.header = func_8000C718(var_a0);
+    if (curObj->segment.header == NULL) {
+        return NULL;
+    }
+    sp50 = curObj->segment.header->unk30 & 0x80;
+    if (sp50) {
+        curObj->segment.trans.flags |= 0x80;
+    }
+    if (curObj->segment.header->behaviorId == BHV_ROCKET_SIGNPOST && settings->cutsceneFlags & 1) {
+        update_object_stack_trace(OBJECT_SPAWN, -1);
+        return NULL;
+    }
+    curObj->segment.trans.x_position = entry->x;
+    curObj->segment.trans.y_position = entry->y;
+    curObj->segment.trans.z_position = entry->z;
+    curObj->segment.object.segmentID = get_level_segment_index_from_position(curObj->segment.trans.x_position, curObj->segment.trans.y_position, curObj->segment.trans.z_position);
+    curObj->segment.object.unk2C = var_a0;
+    curObj->segment.level_entry = (LevelObjectEntry *) entry;
+    curObj->unk4A = objType;
+    func_800245B4(objType);
+    curObj->segment.trans.scale = curObj->segment.header->scale;
+    curObj->segment.camera.unk34 = curObj->segment.header->unk50 * curObj->segment.trans.scale;
+    curObj->segment.object.opacity = 0xFF;
+    sp50 = func_80023E30(curObj->segment.header->behaviorId);
+    curObj->segment.header->unk52++;
+    assetCount = curObj->segment.header->numberOfModelIds;
+    objType = curObj->segment.header->modelType;
+    curObj->unk68 = (Object_68 **) &curObj->unk80;
+    if (arg1 & 0x10) {
+        assetCount = 1;
+    }
+    var_a2 = 0;
+    switch (curObj->segment.header->behaviorId) {
+    case BHV_PARK_WARDEN:
+        if ((entry->z && entry->z) && entry->z){} //fakematch
+        func_800619F4(7);
+        break;
+    case BHV_ANIMATED_OBJECT_4:
+        var_a2 = get_character_id_from_slot(PLAYER_ONE);
+        curObj->segment.object.numModelIDs = var_a2;
+        assetCount = var_a2 + 1;
+        break;
+    case BHV_UNK_5B:
+        var_a2 = (settings->trophies >> (((settings->worldId - 1) ^ 0) * 2)) & 3; //fakematch
+        if (var_a2) {
+            var_a2--;
+            assetCount = var_a2 + 1;
+            curObj->segment.object.numModelIDs = var_a2;
+        }
+        break;
+    case BHV_DYNAMIC_LIGHT_OBJECT_2:
+        var_a2 = settings->wizpigAmulet;
+        assetCount = var_a2 + 1;
+        curObj->segment.object.numModelIDs = settings->wizpigAmulet;
+        break;
+    case BHV_ROCKET_SIGNPOST_2:
+        objType = settings->trophies;
+        //Thanks, I hate it.
+        for (i = 0; i < 4; i = (i + 1) & 0xFFFFFFFF) {
+            if ((objType & 3) == 3) {
+                var_a2++;
+            }
+            objType >>= 2;
+        }
+        curObj->segment.object.numModelIDs = var_a2;
+        assetCount = var_a2 + 1;
+        break;
+    case BHV_GOLDEN_BALLOON:
+        assetCount = 1;
+        var_a2 = 0;
+        if (is_in_adventure_two()) {
+            curObj->segment.header->modelIds[0] = curObj->segment.header->modelIds[1];
+        }
+        curObj->segment.header->numberOfModelIds = 1;
+        break;
+    }
+    if (!(arg1 & 2)) {
+        if (curObj->unk4A != 0x19) {
+            if (curObj->unk4A == 0xCB) {
+                assetCount = 1;
+                if (is_in_adventure_two()) {
+                    curObj->segment.header->modelIds[0] = curObj->segment.header->modelIds[1];
+                }
+                curObj->segment.header->numberOfModelIds = 1;
+            }
+        } else {
+            if (is_in_adventure_two()) {
+                for (var_a2 = 0; var_a2 < 5; var_a2++) {
+                    curObj->segment.header->modelIds[var_a2] = curObj->segment.header->modelIds[var_a2 + 5];
+                }
+            }
+            assetCount = 5;
+            curObj->segment.header->numberOfModelIds = 5;
+            var_a2 = 0;
+        }
+    }
+    var_v1 = FALSE;
+    if (objType == 0) {
+        for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {
+            if(assetCount){} //FAKEMATCH?
+            if (var_a2 == 0 && arg1 & 4) {
+                curObj->unk68[var_a2] = NULL;
+            } else if (var_a2 == 1 && arg1 & 8) {
+                curObj->unk68[var_a2] = NULL;
+            } else {
+                curObj->unk68[var_a2] = (Object_68 *) func_8005F99C(curObj->segment.header->modelIds[var_a2], sp50);
+                if (curObj->unk68[var_a2] == NULL) {
+                    var_v1 = TRUE;
+                }
+            }
+        }
+    } else if (objType == 4) {
+        for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {
+            curObj->unk68[var_a2] = (Object_68 *) load_texture(curObj->segment.header->modelIds[var_a2]);
+            if (curObj->unk68[var_a2] == NULL) {
+                var_v1 = TRUE;
+            }
+        }
+    } else {
+        for (var_a2 = var_a2; var_a2 < assetCount; var_a2++) {
+            curObj->unk68[var_a2] = (Object_68 *) func_8007C12C(curObj->segment.header->modelIds[var_a2], 10);
+            if (curObj->unk68[var_a2] == NULL) {
+                var_v1 = TRUE;
+            }
+        }
+    }
+    if (var_v1) {
+        objFreeAssets(curObj, assetCount, objType);
+        func_8000C844(var_a0);
+        return NULL;
+    }
+    address = (u32 *) &curObj->unk68[curObj->segment.header->numberOfModelIds];
+    sizeOfobj = func_800235DC(curObj, (Object_64 *) address);
+    address = (u32 *) ((uintptr_t) address + sizeOfobj);
+    D_8011AE50 = NULL;
+    D_8011AE54 = NULL;
+    if (sp50 & 1) {
+        address = (u32 *) ((uintptr_t) address + func_8000F7EC(curObj, (Object_54 *) address));
+    }
+    if (sp50 & 2) {
+        sizeOfobj = init_object_shadow(curObj, (ShadowData *) address);
+        address = (u32 *) ((uintptr_t) address + sizeOfobj);
+        if (sizeOfobj == 0) {
+            objFreeAssets(curObj, assetCount, objType);
+            func_8000C844(var_a0);
+            return NULL;
+        }
+    }
+    if (sp50 & 4) {
+        sizeOfobj = func_8000FC6C(curObj, (ShadowData *) address);
+        address = (u32 *) ((uintptr_t) address + sizeOfobj);
+        if (sizeOfobj == 0) {
+            if (D_8011AE50 != NULL) {
+                free_texture((u32)D_8011AE50);
+            }
+            objFreeAssets(curObj, assetCount, objType);
+            func_8000C844(var_a0);
+            return NULL;
+        }
+    }
+    if (sp50 & 0x10) {
+        address = (u32 *) ((uintptr_t) address + func_8000FD20(curObj, (ObjectInteraction *) address));
+    }
+    if (sp50 & 0x20) {
+        address = (u32 *) ((uintptr_t) address + func_8000FD34(curObj, (Object_5C *) address));
+    }
+    if ((curObj->segment.header->unk56 > 0) && (curObj->segment.header->unk56 < 10)) {
+        curObj->unk60 = (Object_60 *) address;
+        address += 0xC;
+    }
+    if (curObj->segment.header->unk57 > 0) {
+        address = (u32 *) ((uintptr_t) address + func_8000FAC4(curObj, (Object_6C *) address));
+    }
+    sizeOfobj = (uintptr_t) address - (uintptr_t) curObj;
+    if (curObj->segment.header->unk5A > 0) 
+    {
+        curObj->unk70 = address;
+        sizeOfobj = (s32) ((uintptr_t) address + (curObj->segment.header->unk5A * 4)) - (uintptr_t) curObj;
+    }
+    newObj = allocate_from_pool_containing_slots((MemoryPoolSlot *) gObjectMemoryPool, sizeOfobj);
+    if (newObj == NULL) {
+        if (D_8011AE50 != NULL) {
+            free_texture((u32)D_8011AE50);
+        }
+        if (D_8011AE54 != NULL) {
+            free_texture((u32)D_8011AE54);
+        }
+        objFreeAssets(curObj, assetCount, objType);
+        func_8000C844(var_a0);
+        return NULL;
+    }
+    if (sizeOfobj & 0xF) {
+        sizeOfobj = (sizeOfobj & ~0xF) + 0x10;
+    }
+    sizeOfobj >>= 2;
+    
+    // for (var_s0_5 = 0; var_s0_5 < objSize; var_s0_5++) {
+    //     u32 *temp = &newObj[var_s0_5];
+    //     temp = (u32)&(*gSpawnObjectHeap)[var_s0_5];
+    // }
+
+    //WRONG WRONG WRONG - Is this really just trying to set up the first several values in a weird way?
+    for (var_s0_5 = 0; var_s0_5 < sizeOfobj; var_s0_5+=4) {
+        newObj[var_s0_5].segment.trans.y_rotation = (*gSpawnObjectHeap)[var_s0_5]->segment.trans.y_rotation;
+    }
+    if (newObj->unk58 != NULL) {
+        newObj->unk58 = (ShadowData *)(((uintptr_t) newObj + (uintptr_t) newObj->unk58) - (uintptr_t) gSpawnObjectHeap);
+    }
+    if (newObj->shadow != NULL) {
+        newObj->shadow = (ShadowData *)(((uintptr_t) newObj + (uintptr_t)newObj->shadow) - (uintptr_t) gSpawnObjectHeap);
+    }
+    if (newObj->unk54 != NULL) {
+        newObj->unk54 = (Object_54 *)(((uintptr_t) newObj + (uintptr_t) newObj->unk54) - (uintptr_t) gSpawnObjectHeap);
+    }
+    if (newObj->unk64 != NULL) {
+        newObj->unk64 = (Object_64 *)(((uintptr_t) newObj + (uintptr_t) newObj->unk64) - (uintptr_t) gSpawnObjectHeap);
+    }
+    if (newObj->interactObj != NULL) {
+        newObj->interactObj = (ObjectInteraction *)(((uintptr_t) newObj + (uintptr_t) newObj->interactObj) - (uintptr_t) gSpawnObjectHeap);
+    }
+    if (newObj->unk5C != NULL) {
+        newObj->unk5C = (Object_5C *)(((uintptr_t) newObj + (uintptr_t) newObj->unk5C) - (uintptr_t) gSpawnObjectHeap);
+    }
+    if (newObj->unk60 != NULL) {
+        newObj->unk60 = (Object_60 *)(((uintptr_t) newObj + (uintptr_t )newObj->unk60) - (uintptr_t) gSpawnObjectHeap);
+    }
+    if (newObj->segment.header->unk57 > 0) {
+        newObj->unk6C = (Object_6C *)(((uintptr_t) newObj + (uintptr_t )newObj->unk6C) - (uintptr_t) gSpawnObjectHeap);
+    }
+    if (newObj->segment.header->unk5A > 0) {
+        newObj->unk70 = (u32 *)(((uintptr_t) newObj + (uintptr_t) newObj->unk70) - (uintptr_t) gSpawnObjectHeap);
+    }
+    newObj->unk68 = (Object_68 **)((uintptr_t) newObj + (uintptr_t) 0x80);
+    if (arg1 & 1) {
+        gObjPtrList[objCount] = newObj;
+        objCount++;
+    }
+    run_object_init_func(newObj, entry, 0);
+    if (newObj->interactObj != NULL) {
+        newObj->interactObj->x_position = newObj->segment.trans.x_position;
+        newObj->interactObj->y_position = newObj->segment.trans.y_position;
+        newObj->interactObj->z_position = newObj->segment.trans.z_position;
+    }
+    if (newObj->segment.header->unk56 > 0 && newObj->segment.header->unk56 < 10 && func_8000F99C(newObj)) {
+        if (D_8011AE50 != NULL) {
+            free_texture(D_8011AE50);
+        }
+        if (D_8011AE54 != NULL) {
+            free_texture(D_8011AE54);
+        }
+        objFreeAssets(newObj, assetCount, objType);
+        func_8000C844(var_a0);
+        free_from_memory_pool(newObj);
+        if (arg1 & 1) {
+            objCount--;
+        }
+        return NULL;
+    }
+    if (newObj->segment.header->unk5A > 0) {
+        light_setup_light_sources(newObj);
+    }
+    func_800619F4(0);
+    update_object_stack_trace(OBJECT_SPAWN, -1);
+    return newObj;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/spawn_object.s")
+#endif
 
 void objFreeAssets(Object *obj, s32 count, s32 objType) {
     s32 i;
@@ -1023,10 +1327,10 @@ s32 func_8000F99C(Object *obj) {
                 free_from_memory_pool(temp_v0);
             }
         }
-        return 1;
+        return TRUE;
     }
     obj60->unk2C = obj->segment.header->vehiclePartIndices;
-    return 0;
+    return FALSE;
 }
 
 s32 func_8000FAC4(Object *obj, Object_6C *arg1) {
@@ -1062,7 +1366,7 @@ s32 init_object_shadow(Object *obj, ShadowData *shadow) {
     shadow->texture = NULL;
     objHeader = ((ObjectSegment *) obj)->header;
     if (objHeader->unk32) {
-        shadow->texture = (TextureHeader *) load_texture((s32) ((ObjectHeader *) objHeader)->unk34);
+        shadow->texture = load_texture((s32) ((ObjectHeader *) objHeader)->unk34);
         objHeader = ((ObjectSegment *) obj)->header;
     }
     shadow->scale = objHeader->shadowScale;
@@ -2760,7 +3064,7 @@ s32 func_8001AE54(void) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8001AE64.s")
 
 s32 func_8001B288(void) {
-    if (func_800599A8() != func_8006BD88()) {
+    if (func_800599A8() != get_current_map_id()) {
         return 0;
     } else {
         if (D_800DC728 != D_8011AE82) {
@@ -2831,8 +3135,8 @@ s32 func_8001B668(s32 arg0) {
     s32 mapId;
 
     mapId = func_800599A8();
-    if ((func_8006BD88() != mapId) || (D_800DC728 != D_8011AE82)) {
-        temp_v0 = func_800599B8(arg0, func_8006BD88(), D_8011AE82, &sp2E, &sp2C);
+    if ((get_current_map_id() != mapId) || (D_800DC728 != D_8011AE82)) {
+        temp_v0 = func_800599B8(arg0, get_current_map_id(), D_8011AE82, &sp2E, &sp2C);
         if (temp_v0 == 0) {
             D_800DC728 = D_8011AE82;
             D_800DC72C = sp2E;
@@ -2840,7 +3144,7 @@ s32 func_8001B668(s32 arg0) {
         }
         return temp_v0;
     }
-    return func_800599B8(arg0, func_8006BD88(), D_8011AE82, NULL, NULL);
+    return func_800599B8(arg0, get_current_map_id(), D_8011AE82, NULL, NULL);
 }
 
 s32 func_8001B738(s32 controllerIndex) {
@@ -2859,7 +3163,7 @@ void func_8001B790(void) {
 Object *func_8001B7A8(Object *racer, s32 position, f32 *distance) {
     UNUSED s32 temp;
     Object *tempRacer;
-    position = (racer->obj.obj8001B7A8.unk112 - position) - 1;
+    position = (racer->obj.unk112 - position) - 1;
     if (position < 0 || position >= gNumRacers) {
         return NULL;
     }
@@ -3729,7 +4033,144 @@ void func_800235D0(s32 arg0) {
     D_8011ADD5 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_800235DC.s")
+s32 func_800235DC(Object *obj, Object_64 *obj64) {
+    s32 temp_v0;
+    s32 ret = 0;
+
+    obj->unk64 = obj64;
+
+    switch (obj->segment.header->behaviorId) {
+    case BHV_RACER:
+        ret = 0x224;
+        break;
+    case BHV_DOOR:
+    case BHV_TT_DOOR:
+        ret = 0x18;
+        break;
+    case BHV_EXIT:
+        ret = 0x18;
+        break;
+    case BHV_ANIMATOR:
+        ret = 0xC;
+        break;
+    case BHV_AUDIO:
+        ret = 0x10;
+        break;
+    case BHV_AUDIO_LINE:
+    case BHV_AUDIO_LINE_2:
+        ret = 0x14;
+        break;
+    case BHV_AINODE:
+        ret = 0x1C;
+        break;
+    case BHV_MODECHANGE:
+    case BHV_BONUS:
+    case BHV_TRIGGER:
+        ret = 0x18;
+        break;
+    case BHV_AUDIO_REVERB:
+        ret = 0x6;
+        break;
+    case BHV_TEXTURE_SCROLL:
+        ret = 0xC;
+        break;
+    case BHV_WEAPON:
+    case BHV_WEAPON_2:
+        ret = 0x20;
+        break;
+    case BHV_WEAPON_BALLOON:
+        ret = 0x8;
+        break;
+    case BHV_BANANA:
+        ret = 0xC;
+        break;
+    case BHV_BRIDGE_WHALE_RAMP:
+        ret = 0x8;
+        break;
+    case BHV_SEA_MONSTER:
+        ret = 0x18;
+        break;
+    case BHV_COLLECT_EGG:
+        ret = 0xC;
+        break;
+    case BHV_STOPWATCH_MAN:
+    case BHV_PARK_WARDEN:
+    case BHV_GOLDEN_BALLOON:
+        ret = 0x38;
+        break;
+    case BHV_LASER_GUN:
+        ret = 0x14;
+        break;
+    case BHV_OVERRIDE_POS:
+        ret = 0x10;
+        break;
+    case BHV_DINO_WHALE:
+    case BHV_ANIMATED_OBJECT:
+    case BHV_CAMERA_ANIMATION:
+    case BHV_CAR_ANIMATION:
+    case BHV_CHARACTER_SELECT:
+    case BHV_VEHICLE_ANIMATION:
+    case BHV_HIT_TESTER:
+    case BHV_HIT_TESTER_2:
+    case BHV_PARK_WARDEN_2:
+    case BHV_ANIMATED_OBJECT_2:
+    case BHV_WIZPIG_SHIP:
+    case BHV_ANIMATED_OBJECT_3:
+    case BHV_ANIMATED_OBJECT_4:
+    case BHV_SNOWBALL:
+    case BHV_SNOWBALL_2:
+    case BHV_SNOWBALL_3:
+    case BHV_SNOWBALL_4:
+    case BHV_HIT_TESTER_3:
+    case BHV_HIT_TESTER_4:
+    case BHV_DOOR_OPENER:
+    case BHV_PIG_ROCKETEER:
+    case BHV_WIZPIG_GHOSTS:
+        ret = 0x48;
+        break;
+    case BHV_MIDI_FADE:
+        ret = 0x44;
+        break;
+    case BHV_MIDI_FADE_POINT:
+        ret = 0x20;
+        break;
+    case BHV_MIDI_CHANNEL_SET:
+        ret = 0x4;
+        break;
+    case BHV_BUTTERFLY:
+        temp_v0 = 0x10 - ((s32) obj64 & 0xF);
+        obj->unk64 = (Object_64 *) &obj64->butterfly.triangles[0].verticesArray[temp_v0];
+        ret = (temp_v0 + 0x110);
+        break;
+    case BHV_FISH:
+        temp_v0 = 0x10 - ((s32) obj64 & 0xF);
+        obj->unk64 = (Object_64 *) &obj64->fish.triangles[0].verticesArray[temp_v0];
+        ret = (temp_v0 + 0x120);
+        break;
+    case BHV_CHARACTER_FLAG:
+        temp_v0 = 0x10 - ((s32) obj64 & 0xF);
+        obj->unk64 = (Object_64 *) &obj64->character_flag.triangles[0].verticesArray[temp_v0];
+        ret = (temp_v0 + 0x28);
+        break;
+    case BHV_UNK_5E:
+        ret = 0x60;
+        break;
+    case BHV_TROPHY_CABINET:
+        ret = 0x8;
+        break;
+    case BHV_FROG:
+        ret = 0x34;
+        break;
+    case BHV_FIREBALL_OCTOWEAPON_2:
+        ret = 0x20;
+        break;
+    default:
+        obj->unk64 = NULL;
+        break;
+    }
+
+    return (ret & ~3) + 4;
+}
 
 /**
  * Run when an object is created.
@@ -4002,9 +4443,9 @@ void run_object_init_func(Object *obj, void *entry, s32 param) {
  * Set initialisation property flags based off object ID.
  * This includes things like shadow data, interaction and visuals.
 */
-s32 obj_init_property_flags(s32 objectID) {
+s32 obj_init_property_flags(s32 behaviorId) {
     s32 flags = OBJECT_SPAWN_NONE;
-    switch (objectID){
+    switch (behaviorId){
     case BHV_RACER:
         flags = OBJECT_SPAWN_UNK01 | OBJECT_SPAWN_SHADOW | OBJECT_SPAWN_UNK04 | OBJECT_SPAWN_UNK08 | OBJECT_SPAWN_INTERACTIVE;
         break;

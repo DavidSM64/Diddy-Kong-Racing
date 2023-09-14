@@ -143,10 +143,10 @@ s8 gHudToggleSettings[4] = {
 
 s8 D_800E27A8 = 1;
 
-s8 D_800E27AC[12] = {
-    -1, 40, 40, -2,
-    40, -1, 40, -2,
-    40, 40, -1, -2,
+u32 D_800E27AC[3] = {
+    COLOUR_RGBA32(255, 40, 40, 254),
+    COLOUR_RGBA32(40, 255, 40, 254),
+    COLOUR_RGBA32(40, 40, 255, 254),
 };
 
 u8 D_800E27B8 = 0;
@@ -194,7 +194,7 @@ ByteColour gHudMinimapColours[40] = {
  { 0, 0, 0 },
 };
 
-s32 D_800E2834 = -2;
+u32 D_800E2834 = COLOUR_RGBA32(255, 255, 255, 254);
 
 f32 D_800E2838 = 0.0f;
 
@@ -226,12 +226,12 @@ s8 D_80126CD3;
 s8 gRaceStartShowHudStep;
 
 s8 D_80126CD5;
-u8 *gHudElementStaleCounter;
+u8 *gAssetHudElementstaleCounter;
 unk80126CDC *gCurrentHud;
-unk80126CDC *gPlayerHud[4];
-s16 *gHudElementTable;
-HudElements *gHudElements;
-s32 gNumHudElements;
+unk80126CDC *gPlayerHud[MAXCONTROLLERS]; //One per active player
+s16 *gAssetHudElementIds;
+HudElements *gAssetHudElements;
+s32 gAssetHudElementIdsCount;
 Gfx *gHUDCurrDisplayList;
 MatrixS *gHUDCurrMatrix;
 Vertex *gHUDCurrVertex;
@@ -267,8 +267,8 @@ u8 D_80126D64;
 u8 D_80126D65;
 u8 D_80126D66;
 u8 gStopwatchFaceID;
-s8 D_80126D68;
-u8 D_80126D69;
+u8 D_80126D68;
+s8 D_80126D69;
 s32 gWrongWayNagTimer;
 u8 D_80126D70;
 u8 D_80126D71;
@@ -284,7 +284,7 @@ u8 D_8012718A;
 u8 D_8012718B;
 s32 D_8012718C;
 s32 D_80127190;
-unk8007F1E8 *D_80127194;
+LevelHeader_70 *D_80127194;
 s32 D_80127198[6];
 
 // Not sure why this ended up here, and not in rcp.c along with the rest of the task data.
@@ -304,23 +304,23 @@ void init_hud(UNUSED s32 viewportCount) {
     gNumActivePlayers = set_active_viewports_and_max(gHUDNumPlayers);
     gHudSettings = get_settings();
     gHudSilverCoinRace = check_if_silver_coin_race();
-    gHudElementTable = (s16 *) load_asset_section_from_rom(ASSET_HUD_ELEMENT_IDS); 
-    gNumHudElements = 0;
+    gAssetHudElementIds = (s16 *) load_asset_section_from_rom(ASSET_HUD_ELEMENT_IDS); 
+    gAssetHudElementIdsCount = 0;
     
-    while(gHudElementTable[gNumHudElements] != -1) {
-        gNumHudElements++;
+    while(gAssetHudElementIds[gAssetHudElementIdsCount] != -1) {
+        gAssetHudElementIdsCount++;
     }
-    gHudElements = allocate_from_main_pool_safe(gNumHudElements * (sizeof(void *) + 1), COLOUR_TAG_BLUE);
+    gAssetHudElements = allocate_from_main_pool_safe(gAssetHudElementIdsCount * (sizeof(void *) + 1), COLOUR_TAG_BLUE);
     // Evil pointer shenanigans to store the timer in that last byte in the struct above.
-    gHudElementStaleCounter = (u8 *) ((gNumHudElements + (s32 *) gHudElements));
-    for(i = 0; i < gNumHudElements; i++) {
-        gHudElementStaleCounter[i] = 0;
-        gHudElements->entry[i] = NULL;
+    gAssetHudElementstaleCounter = (u8 *) ((gAssetHudElementIdsCount + (s32 *) gAssetHudElements));
+    for(i = 0; i < gAssetHudElementIdsCount; i++) {
+        gAssetHudElementstaleCounter[i] = 0;
+        gAssetHudElements->entry[i] = NULL;
     }
-    gHudElements->entry[HUD_ELEMENT_UNK_01] = func_8007C12C(gHudElementTable[HUD_ELEMENT_UNK_01] & 0x3FFF, 1);
-    gHudElements->entry[HUD_ELEMENT_UNK_17] = func_8007C12C(gHudElementTable[HUD_ELEMENT_UNK_17] & 0x3FFF, 1);
-    gHudElements->entry[HUD_ELEMENT_UNK_08] = func_8007C12C(gHudElementTable[HUD_ELEMENT_UNK_08] & 0x3FFF, 1);
-    gHudElements->entry[HUD_ELEMENT_UNK_11] = func_8007C12C(gHudElementTable[HUD_ELEMENT_UNK_11] & 0x3FFF, 1);
+    gAssetHudElements->entry[HUD_ELEMENT_UNK_01] = func_8007C12C(gAssetHudElementIds[HUD_ELEMENT_UNK_01] & 0x3FFF, 1); //ID: 86 - 0x56
+    gAssetHudElements->entry[HUD_ELEMENT_UNK_17] = func_8007C12C(gAssetHudElementIds[HUD_ELEMENT_UNK_17] & 0x3FFF, 1); //ID: 291 - 0x123
+    gAssetHudElements->entry[HUD_ELEMENT_UNK_08] = func_8007C12C(gAssetHudElementIds[HUD_ELEMENT_UNK_08] & 0x3FFF, 1); //ID: 156 - 0x9C
+    gAssetHudElements->entry[HUD_ELEMENT_UNK_11] = func_8007C12C(gAssetHudElementIds[HUD_ELEMENT_UNK_11] & 0x3FFF, 1); //ID: 60 - 0x3C
     if (gNumActivePlayers != 3) {
         playerCount = gNumActivePlayers;
     } else {
@@ -345,7 +345,7 @@ void init_hud(UNUSED s32 viewportCount) {
     D_80126D3C = 0;
     D_80126D44 = 0;
     D_80126CD3 = 0;
-    D_80127194 = (unk8007F1E8 *) get_misc_asset(ASSET_MISC_58);
+    D_80127194 = (LevelHeader_70 *) get_misc_asset(ASSET_MISC_58);
     func_8007F1E8(D_80127194);
     set_sound_channel_volume(0, 32767);
     set_sound_channel_volume(2, 32767);
@@ -779,9 +779,260 @@ void render_hud_hubworld(Object *obj, s32 updateRate) {
     }
 }
 
+#ifdef NON_EQUIVALENT
 // render_hud_time_trial
-//https://decomp.me/scratch/nZxsE
+// https://decomp.me/scratch/BWqz9
+// Draws Time Trial HUD. Also handles music/audio?
+void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
+    s32 i;
+    s32 spB8;
+    s32 spB4;
+    s32 spB0;
+    s32 spAC;
+    s32 stopwatchTimer;
+    s32 temp_lo;
+    Object_Racer *curRacer;
+    Object *ttSWBodyObject;
+    Object_68 *obj68;
+    LevelObjectEntryCommon ttSWBody;
+    LevelObjectEntryCommon ttSWArms;
+    s32 temp_a0_2;
+    s32 temp_t6;
+    u16 stopwatchEndSoundID;
+    s32 recordTime;
+    u16 newLapSoundID;
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    f32 new_var;
+    char *SWMessage[3];
+    
+    curRacer = &playerRacerObj->unk64->racer;
+    stopwatchTimer = 0;
+    if (gAssetHudElements->unk0[20] == NULL) {
+        ttSWBody.objectID = gAssetHudElementIds[20] & 0xFFFF;
+        ttSWBody.size = 8;
+        ttSWBody.x = 0;
+        ttSWBody.y = 0;
+        ttSWBody.z = 0;
+        gAssetHudElements->unk0[20] = spawn_object(&ttSWBody, 0);
+        gCurrentHud->unk340 = -0x8000;
+        if (gAssetHudElements->unk0[20] != NULL) {
+             ((Object *) gAssetHudElements->unk0[20])->segment.animFrame = 0;
+        }
+    }
+    if (gAssetHudElements->unk0[34] == 0) {
+        ttSWArms.objectID = gAssetHudElementIds[34] & 0xFFFF;
+        ttSWArms.size = 8;
+        ttSWArms.x = 0;
+        ttSWArms.y = 0;
+        ttSWArms.z = 0;
+        gAssetHudElements->unk0[34] = spawn_object(&ttSWArms, 0);
+        gCurrentHud->unk440 = -0x8000;
+    }
+    ttSWBodyObject = gAssetHudElements->unk0[20];
+    if (ttSWBodyObject != NULL) {
+        ttSWBodyObject->segment.object.animationID = gStopwatchFaceID;
+        obj68 = (Object_68 *) ttSWBodyObject->unk68[0];
+        obj68->objModel->unk52 = updateRate;
+        if (gStopwatchFaceID != 0xFF) {
+            if ((gStopwatchFaceID == 4) && ((func_8001139C()) || (!music_is_playing()))) {
+                ttSWBodyObject->segment.animFrame = 16;
+            } else if (gStopwatchFaceID == 4) {
+                posX = audio_get_chr_select_anim_frac();
+                temp_t6 = (obj68->objModel->animations[gStopwatchFaceID].unk4 - 1) << 4;
+                if (posX == -1.0) {
+                    ttSWBodyObject->segment.animFrame = 0.0;
+                } else if (posX > 0.5) {
+                    ttSWBodyObject->segment.animFrame = (temp_t6 - ((f32) (2.0 * (f32) (posX - 0.5)) * temp_t6));
+                } else {
+                    new_var = posX;
+                    ttSWBodyObject->segment.animFrame = temp_t6 * (posX * 2);
+                }
+            } else if (!is_game_paused()) {
+                if (D_80126D69 < 0) {
+                    if (-(updateRate * D_80126D69) < ttSWBodyObject->segment.animFrame) {
+                        ttSWBodyObject->segment.animFrame += (updateRate * D_80126D69);
+                    } else {
+                        ttSWBodyObject->segment.animFrame = 1;
+                        D_80126D69 = -D_80126D69;
+                    }
+                } else {
+                    ttSWBodyObject->segment.animFrame += (updateRate * D_80126D69);
+                    temp_lo = (obj68->objModel->animations[gStopwatchFaceID].unk4 - 1) << 4;
+                    if (ttSWBodyObject->segment.animFrame >= temp_lo) {
+                        if (D_80126D68 != 0) {
+                            D_80126D69 = -D_80126D69;
+                            ttSWBodyObject->segment.animFrame = temp_lo - 1;
+                        } else {
+                            ttSWBodyObject->segment.animFrame = 0;
+                            if (curRacer->unk1FC == 0 && curRacer->raceFinished == 0) {
+                                func_800A36CC(4, 0, 4, 1, 1);
+                            }
+                        }
+                    }
+                }
+            }
+            func_80061D30(ttSWBodyObject);
+        }
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC** ) &gCurrentHud->unk21C[0x124]);
+        
+        for(i = 0; curRacer->lap >= i && i < 5; i++) { 
+            stopwatchTimer += curRacer->lap_times[i];
+        }
+        
+        if (osTvType == TV_TYPE_PAL) {
+            stopwatchTimer = (f32) stopwatchTimer * 1.2;
+        }
+        if (normalise_time(36000) < stopwatchTimer) {
+            stopwatchTimer = normalise_time(36000);
+        }
+        gCurrentHud->unk444 = ((stopwatchTimer * 0x444) + 0x7FF8);
+        if (func_8000E0B0() <= 0) {
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk21C[0x224]);
+        }
+        gCurrentHud->unk444 = ((((stopwatchTimer / 60) + 30) % 60) * 0x444);
+        gCurrentHud->unk450 = gCurrentHud->unk350 + 28.0f;
+        if (func_8000E0B0() <= 0) {
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk21C[0x224]);
+        }
+        obj68->unk20 = 0;
+        func_80068508(1);
+        render_course_indicator_arrows(curRacer, updateRate);
+        if (!curRacer->raceFinished) {
+            spB8 = gCurrentHud->unk2F0;
+            for (i = 0; i < curRacer->countLap && i < gHudLevelHeader->laps; i++) {
+                 // FAKEMATCH
+                get_timestamp_from_frames(curRacer->lap_times[i] & 0xFFFFFFFFFFFFFFFF, &spB4, &spB0, &spAC);
+                D_800E2834 = D_800E27AC[i];
+                func_800A7FBC(gCurrentHud->unk2EC, spB8, spB4, spB0, spAC, 1);
+                D_800E2834 = COLOUR_RGBA32(255, 255, 255, 254);
+                spB8 += 12;
+                gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+                gCurrentHud->unk338 = i + 1;
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk21C[0x104]);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk21C[0xE4]);
+                gCurrentHud->unk330 += 12.0f;
+                gCurrentHud->unk310 += 12.0f;
+            }
+            if (1) {} // FAKEMATCH
+            posX = ((i * 4) - i) * 4;
+            gCurrentHud->unk330 -= posX;
+            gCurrentHud->unk310 -= posX;
+            if ((curRacer->boost_sound & BOOST_SOUND_UNK4) && (D_80126D4C <= 0)) {
+                func_800A36CC(7, 3, 0, 4, 0);
+                D_80126D4C = 60;
+                curRacer->boost_sound &= ~BOOST_SOUND_UNK4;
+            }
+            if (D_80126D4C > 0) {
+                D_80126D4C -= updateRate;
+                if (D_80126D4C < 0) {
+                    D_80126D4C = 0;
+                }
+            }
+            if ((D_80126D4C == 0) && (!curRacer->raceFinished)) {
+                D_80126D4C = -100;
+                if (gHUDVoiceSoundMask == 0) {
+                    stopwatchEndSoundID = get_random_number_from_range(0, D_80126D64 + 2) + SOUND_VOICE_TT_OH_NO;
+                    while (D_80126D48 == stopwatchEndSoundID) {
+                        stopwatchEndSoundID = get_random_number_from_range(0, D_80126D64 + 2) + SOUND_VOICE_TT_OH_NO;
+                    }
+                    D_80126D48 = (u16) stopwatchEndSoundID;
+                    play_sound_global(stopwatchEndSoundID, &gHUDVoiceSoundMask);
+                    D_80126D64 = 1;
+                }
+            }
+        }
+        if ((curRacer->lap > 0) && (curRacer->lap < gHudLevelHeader->laps) && (curRacer->lap_times[curRacer->lap] < 20) && (gHUDVoiceSoundMask == 0) && (curRacer->vehicleID <= VEHICLE_PLANE)) {
+            gHudSettings = get_settings();
+            if (curRacer->lap_times[curRacer->lap - 1] < gHudSettings->flapTimesPtr[curRacer->vehicleID][get_current_map_id()]) {
+                recordTime = curRacer->lap_times[curRacer->lap - 1];
+                for (i = 0; i < curRacer->lap - 1; i++) {
+                    if (recordTime >= curRacer->lap_times[i]) {
+                        recordTime = 0;
+                    }
+                }
+                if (recordTime) {
+                    play_sound_global(SOUND_VOICE_TT_LAP_RECORD, &gHUDVoiceSoundMask);
+                }
+            }
+        }
+        if (func_8001B288()) {
+            ttSWBodyObject = func_8001B2E0();
+            if (ttSWBodyObject != NULL) {
+                if ((func_8001139C() == 0) && (curRacer->raceFinished == 0)) {
+                    posY = ttSWBodyObject->segment.trans.y_position - playerRacerObj->segment.trans.y_position;
+                    posX = ttSWBodyObject->segment.trans.x_position - playerRacerObj->segment.trans.x_position;
+                    posZ = ttSWBodyObject->segment.trans.z_position - playerRacerObj->segment.trans.z_position;
+                    if ((sqrtf(posX * posX + (posY * posY) + (posZ * posZ)) < 600.0f) && (gHUDVoiceSoundMask == 0) && (D_80126D50 == 0)) {
+                        newLapSoundID = (get_random_number_from_range(0, 2) + SOUND_VOICE_TT_GO_FOR_IT);
+                        while (D_80126D48 == newLapSoundID) {
+                            newLapSoundID = (get_random_number_from_range(0, 2) + SOUND_VOICE_TT_GO_FOR_IT);
+                        }
+                        D_80126D48 = newLapSoundID;
+                        play_sound_global(newLapSoundID, &gHUDVoiceSoundMask);
+                        D_80126D50 = get_random_number_from_range(120, 1200);
+                    }
+                    D_80126D50 -= updateRate;
+                    if (D_80126D50 < 0) {
+                        D_80126D50 = 0;
+                    }
+                }
+            }
+        }
+        if ((curRacer->lap_times[curRacer->lap] < 30) && (curRacer->lap != 0)) {
+            func_800A36CC(5, 1, 2, 2, 0);
+        } else if (curRacer->boostTimer > 0) {
+            func_800A36CC(6, 2, 3, 2, 0);
+        } else if (curRacer->unk1FC > 120) {
+            func_800A36CC(6, 3, 1, 4, 0);
+        }
+        render_lap_count(curRacer, updateRate);
+        render_race_time(curRacer, updateRate);
+        render_racer_bananas(curRacer, updateRate);
+        render_wrong_way_text(curRacer, updateRate);
+        render_race_start(arg0, updateRate);
+        render_speedometer(playerRacerObj, updateRate);
+        if (func_8000E0B0() > 0) {
+            switch (func_8000E0B0()) {
+                case 1:
+                    SWMessage[0] = "CAN'T";
+                    SWMessage[1] = "SAVE";
+                    SWMessage[2] = "GHOST";
+                    break;
+                case 2:
+                    SWMessage[0] = " CONTROLLER";
+                    SWMessage[1] = "PAK";
+                    SWMessage[2] = "FULL";
+                    break;
+                case 3:
+                    SWMessage[0] = " CONTROLLER";
+                    SWMessage[1] = "PAK";
+                    SWMessage[2] = "DAMAGED";
+                    break;
+            }
+            set_kerning(1);
+            set_text_font(ASSET_FONTS_FUNFONT);
+            // Draw text shadow.
+            set_text_colour(0, 0, 0, 255, 255);
+            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28 + 1, D_80127190 + 1, SWMessage[0], ALIGN_MIDDLE_CENTER);
+            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28 + 1, D_80127190 + 15, SWMessage[1], ALIGN_MIDDLE_CENTER);
+            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28 + 1, D_80127190 + 29, SWMessage[2], ALIGN_MIDDLE_CENTER);
+            // Draw actual text.
+            set_text_colour(D_80127194->red, D_80127194->green, D_80127194->blue, 128, D_80127194->alpha);
+            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28, D_80127190, SWMessage[0], ALIGN_MIDDLE_CENTER);
+            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28, D_80127190 + 14, SWMessage[1], ALIGN_MIDDLE_CENTER);
+            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28, D_80127190 + 28, SWMessage[2], ALIGN_MIDDLE_CENTER);
+            update_colour_cycle((s8 *)D_80127194, updateRate);
+            set_kerning(0);
+        }
+        func_80068508(0);
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A277C.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A36CC.s")
 
 void func_800A3870(void) {
@@ -1021,7 +1272,7 @@ void render_treasure_hud(Object_Racer *racer) {
     }
     for (i = 0; i < 10; i++) {
         if (i >= racer->lap) {
-            D_800E2834 = 0x80808080;
+            D_800E2834 = COLOUR_RGBA32(128, 128, 128, 128);
         }
         D_80126CD5 = TRUE;
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk400);
@@ -1029,7 +1280,7 @@ void render_treasure_hud(Object_Racer *racer) {
         gCurrentHud->unk410 -= 3.0f;
     }
     gCurrentHud->unk410 = sp48;
-    D_800E2834 = -2;
+    D_800E2834 = COLOUR_RGBA32(255, 255, 255, 254);
     D_80126CD5 = 0;
 }
 
@@ -1041,8 +1292,8 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A47A0.s")
  * Uses a 3 step process to play the sounds, display the position, then slide it offscreen.
 */
 void render_race_finish_position(Object_64 *obj, s32 updateRate) {
-    unk800A497C* temp_a3;
-    unk800A497C* temp_s0;
+    unk800A497C *temp_a3;
+    unk800A497C *temp_s0;
     s8 drawPosition;
 
     temp_a3 = (unk800A497C *) &gCurrentHud->unk700;
@@ -1651,10 +1902,10 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     
     func_800A0BD4(updateRate);
     
-    gHudElementStaleCounter[HUD_ELEMENT_UNK_01] = 0;
-    gHudElementStaleCounter[HUD_ELEMENT_UNK_17] = 0;
-    gHudElementStaleCounter[HUD_ELEMENT_UNK_08] = 0;
-    gHudElementStaleCounter[HUD_ELEMENT_UNK_11] = 0;
+    gAssetHudElementstaleCounter[HUD_ELEMENT_UNK_01] = 0;
+    gAssetHudElementstaleCounter[HUD_ELEMENT_UNK_17] = 0;
+    gAssetHudElementstaleCounter[HUD_ELEMENT_UNK_08] = 0;
+    gAssetHudElementstaleCounter[HUD_ELEMENT_UNK_11] = 0;
     D_80127180 = 0;
     
     if (D_80126CD3 & 2) {
@@ -1663,19 +1914,19 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
         mapOpacity = 255;
     }
     
-    for (i = 0; i < gNumHudElements; i++) {
-        if (gHudElements->entry[i] && i != 40) {
-            if (++gHudElementStaleCounter[i] > 60) {
-                if ((gHudElementTable[i] & (0x4000 | 0x8000)) == (0x4000 | 0x8000)) {
-                    free_texture((TextureHeader *) gHudElements->entry[i]);
-                } else if (gHudElementTable[i] & 0x8000) {
-                    free_sprite((Sprite *) gHudElements->entry[i]);
-                } else if (gHudElementTable[i] & 0x4000) {
-                    gParticlePtrList_addObject((Object *) gHudElements->entry[i]);
+    for (i = 0; i < gAssetHudElementIdsCount; i++) {
+        if (gAssetHudElements->entry[i] && i != 40) {
+            if (++gAssetHudElementstaleCounter[i] > 60) {
+                if ((gAssetHudElementIds[i] & (0x4000 | 0x8000)) == (0x4000 | 0x8000)) {
+                    free_texture((TextureHeader *) gAssetHudElements->entry[i]);
+                } else if (gAssetHudElementIds[i] & 0x8000) {
+                    free_sprite((Sprite *) gAssetHudElements->entry[i]);
+                } else if (gAssetHudElementIds[i] & 0x4000) {
+                    gParticlePtrList_addObject((Object *) gAssetHudElements->entry[i]);
                 } else {
-                    func_8005FF40((ObjectModel **) gHudElements->entry[i]);
+                    func_8005FF40((ObjectModel **) gAssetHudElements->entry[i]);
                 }
-                gHudElements->entry[i] = 0;
+                gAssetHudElements->entry[i] = 0;
             }
         }
     }
@@ -1713,7 +1964,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                         gCurrentHud->unk670 *= 1.1;
                     }
                     func_800A19A4(tempVar4, updateRate);
-                    D_800E2834 = -2;
+                    D_800E2834 = COLOUR_RGBA32(255, 255, 255, 254);
                     gCurrentHud->unk64C = temp_s0;
                     gCurrentHud->unk650 = temp_s1;
                     gCurrentHud->unk66C = spF4;

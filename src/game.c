@@ -474,7 +474,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     for (var_s0 = 0; var_s0 < 7; var_s0++) {
         if ((s32) gCurrentLevelHeader->unk74[var_s0] != -1) {
             gCurrentLevelHeader->unk74[var_s0] = (s8 *) get_misc_asset((s32) gCurrentLevelHeader->unk74[var_s0]);
-            func_8007F1E8((unk8007F1E8 *) gCurrentLevelHeader->unk74[var_s0]);
+            func_8007F1E8((LevelHeader_70 *) gCurrentLevelHeader->unk74[var_s0]);
         }
     }
 
@@ -605,7 +605,7 @@ void func_8006BD10(f32 arg0) {
     }
 }
 
-s32 func_8006BD88(void) {
+s32 get_current_map_id(void) {
     return gMapId;
 }
 

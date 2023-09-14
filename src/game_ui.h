@@ -71,6 +71,7 @@ typedef struct {
     f32 unkC;
 } IndicatorArrow;
 
+// Size: 0x760
 typedef struct unk80126CDC {
     struct unk80126CDC *unk0;
     u8 unk4[0x2];
@@ -286,8 +287,8 @@ typedef struct unk80126CDC {
     s8 unk704[0x1C];
     struct unk80126CDC *unk720;
     s8 unk724[0x1C];
-    struct unk80126CDC *unk740;
-    s8 unk744[0x1C];
+    struct unk800A497C *unk740;
+    u8 pad744[0x1C];
 } unk80126CDC;
 
 typedef struct unk800E1E64 {
@@ -307,7 +308,7 @@ typedef struct unk800E2770 {
     s8 unk1;
     s8 unk2;
     s8 unk3;
-    s32 unk4;
+    s32 unk4; //soundMask?
     s32 unk8;
     s8 unkC;
     s8 unkD;
@@ -381,10 +382,11 @@ void func_800A6254(Object_64* obj, s32 updateRate);
 void func_800A6E30(Object_64* obj, s32 updateRate);
 void func_800A7A60(Object*, Gfx**);
 void func_800A0BD4(s32);
-void func_800A19A4(Object_Racer*, s32 updateRate);
+void func_800A19A4(Object_Racer* racer, s32 updateRate);
 void func_800A1E48(s32, s32);
 void render_treasure_hud(Object_Racer*);
 void func_800AA3EC(f32, f32, f32, f32, f32);
 void func_8009F034(void);
+void func_800A36CC(u8, u8, u8, u8, u8);
 
 #endif

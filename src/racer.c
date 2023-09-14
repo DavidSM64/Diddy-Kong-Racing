@@ -202,14 +202,14 @@ s8 gStartBoostTime;
 s16 gDialogueCameraAngle;
 s8 gEggChallengeFlags[4];
 s8 D_8011D58C[4];
-GhostHeader *gGhostData[3];
+GhostNode *gGhostData[3];
 s8 D_8011D59C;
 s8 D_8011D59D;
 s16 D_8011D59E;
 s16 D_8011D5A0[2];
 s16 gTTGhostNodeCount; // Gets assigned, but never used?
 s16 D_8011D5A8[2];
-s16 D_8011D5AC;
+s16 D_8011D5AC; // Previous MapId?
 s8 gRacerWaveCount;
 s8 D_8011D5AF;
 WaterProperties **gRacerCurrentWave;
@@ -3130,7 +3130,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer->magnetTimer = 0;
         racer->lateral_velocity = 0.0f;
     } else if (surfaceType == SURFACE_FROZEN_WATER) {
-        racer->boost_sound |= 4;
+        racer->boost_sound |= BOOST_SOUND_UNK4;
         racer_play_sound(obj, SOUND_BOUNCE2);
     }
     // If driving over a zip pad, apply a boost.
@@ -4823,8 +4823,8 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
         }
     }
 
-    if (racer->boost_sound & BOOST_UNK2) {
-        racer->boost_sound &= ~BOOST_UNK2;
+    if (racer->boost_sound & BOOST_SOUND_UNK2) {
+        racer->boost_sound &= ~BOOST_SOUND_UNK2;
     }
     bananas = racer->bananas;
     // Cheats only apply to human players.
@@ -5451,7 +5451,7 @@ void func_80059208(Object *obj, Object_Racer *racer, s32 updateRate) {
     if (temp_v0 == 0) {
         return;
     }
-    if ((func_8006BD88() == 0) && (racer->checkpoint >= temp_v0)) {
+    if ((get_current_map_id() == 0) && (racer->checkpoint >= temp_v0)) {
         racer->lap = 0;
         racer->checkpoint = 0;
         racer->courseCheckpoint = 0;
@@ -5601,7 +5601,7 @@ void func_80059984(s32 arg0) {
     D_8011D59D = (s8)((D_8011D59C + 1) & 1);
     D_8011D5AC = arg0;
 }
-
+ //get_previous_map_id?
 s32 func_800599A8(void) {
     return D_8011D5AC;
 }
@@ -5660,7 +5660,46 @@ s32 func_80059B7C(s32 controllerIndex, s32 mapId, s16 arg2, s16 arg3, s16 arg4) 
     return func_80075000(controllerIndex, (s16)mapId, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], gGhostData[D_8011D59C]);
 }
 
+#ifdef NON_EQUIVALENT
+void func_80059BF0(Object *obj, s32 updateRate) {
+    GhostNode *ghostNode;
+    Object_Racer *racer;
+    f32 yCosF;
+    f32 zCosf;
+    s32 temp;
+    s32 i;
+
+    racer = &obj->unk64->racer;
+    zCosf = coss_f(racer->z_rotation_offset);
+    yCosF = coss_f(racer->x_rotation_offset - racer->unk166) * zCosf;
+    if (yCosF < 0.0f) {
+        yCosF *= 0.5;
+    }
+    yCosF = (17.0f - (yCosF * 17.0f));
+    D_8011D59E -= updateRate;
+    if (D_8011D59E <= 0) {
+        for (i = 0; D_8011D59E <= 0; i++) {            
+            temp = D_8011D5A0[D_8011D59C] + i;
+            if ((temp) >= 360) {
+                if (is_postrace_viewport_active() == 0) {
+                    D_8011D5A8[D_8011D59C] = 1;
+                }
+                return;
+            }
+            D_8011D59E += 30;
+            ghostNode = &gGhostData[D_8011D59C][temp];
+            ghostNode->x = obj->segment.trans.x_position;
+            ghostNode->y = (obj->segment.trans.y_position + yCosF);
+            ghostNode->z = obj->segment.trans.z_position;
+            ghostNode->yRotation = (obj->segment.trans.y_rotation + racer->y_rotation_offset);
+            ghostNode->xRotation = (obj->segment.trans.x_rotation + racer->x_rotation_offset);
+            ghostNode->zRotation = (obj->segment.trans.z_rotation + racer->z_rotation_offset);
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/racer/func_80059BF0.s")
+#endif
 
 s16 func_80059E20(void) {
     return D_8011D5A8[D_8011D59C];

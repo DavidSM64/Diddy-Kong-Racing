@@ -4276,7 +4276,7 @@ block_25:
                 racer->attackType = ATTACK_EXPLOSION;
                 weaponOwner = (Object_Racer *) weapon->owner->unk64;
                 if (racer->playerIndex != PLAYER_COMPUTER || weaponOwner->playerIndex != PLAYER_COMPUTER) {
-                    weaponOwner->boost_sound |= 2;
+                    weaponOwner->boost_sound |= BOOST_SOUND_UNK2;
                 }
                 if (racer->raceFinished == FALSE) {
                     func_80072348(racer->playerIndex, 9);

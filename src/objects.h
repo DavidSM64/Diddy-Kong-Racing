@@ -237,23 +237,14 @@ typedef struct unk800179D0 {
     u32 unk3C;
 } unk800179D0;
 
-/* Unknown Size */
-typedef struct unk8000FD20_2 {
-    u8 unk00[0x13];
-    u8 unk13;
-} unk8000FD20_2;
-
-/* Unknown Size */
-typedef struct unk8000FD20 {
-    u8 unk00[0x4C];
-    ObjectInteraction *unk4C;
-} unk8000FD20;
-
-/* Unknown Size */
-typedef struct unk_80016BC4_3 {
-    u8 pad0[0x55];
-    s8 unk55;
-} unk_80016BC4_3;
+typedef struct struct_8000FC6C {
+    f32 unk0;
+    TextureHeader *unk4;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+} struct_8000FC6C;
 
 typedef struct struct_8000FC6C_2 {
     s32 unk0;
@@ -316,7 +307,7 @@ void func_8000C604(void);
 s32 normalise_time(s32 timer);
 void func_8000CBC0(void);
 s32 func_8000CC20(Object *arg0);
-u32 func_8000E0B0(void);
+s32 func_8000E0B0(void);
 void instShowBearBar(void);
 s8 func_8000E138(void);
 s8 func_8000E148(void);
@@ -439,9 +430,15 @@ s32 init_object_shadow(Object *obj, ShadowData *shadow);
 s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool);
 void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj, s32 flags);
 void gParticlePtrList_flush(void);
-s32 init_object_shading(Object *arg0, ShadeProperties *arg1);
-AssetObjectHeaders *func_8000C718(s32 index);
+s32 init_object_shading(Object *obj, ShadeProperties *shading);
+ObjectHeader *func_8000C718(s32 index);
 s32 func_8000F99C(Object *);
+void func_8000C844(s32 arg0);
+s32 func_800235DC(Object *obj, Object_64 *obj64);
+void light_setup_light_sources(Object *obj);
+s32 func_8000FD20(Object *arg0, ObjectInteraction *arg1);
+s32 func_8000FAC4(Object *obj, Object_6C *arg1);
+s32 func_80023E30(s32 behaviorId);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -449,7 +446,7 @@ void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
 void decrypt_magic_codes(s32 *arg0, s32 length);
 s32 func_80014814(s32 *);
 void func_80015348(s32, s32);
-Object *spawn_object(void *entry, s32);
+Object *spawn_object(LevelObjectEntryCommon *entry, s32);
 s32 func_8001F460(Object*, s32, Object*);
 s32 func_80016DE8(f32, f32, f32, f32, s32, unk80042178 *);
 void func_8001BF20(void);

@@ -90,32 +90,6 @@ typedef enum TransFlags {
 #define TEX_TABLE_2D 0
 #define TEX_TABLE_3D 1
 
-/* Size: 8 bytes */
-typedef struct unk8007F1E8_18 {
-    s32 unk0;
-    u8 unk4;
-    u8 unk5;
-    u8 unk6;
-    u8 unk7;
-} unk8007F1E8_18;
-
-/* Size: Variable. */
-typedef struct unk8007F1E8 {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    u8 unk10;
-    u8 unk11;
-    u8 unk12;
-    u8 unk13;
-    u8 unk14;
-    u8 unk15;
-    u8 unk16;
-    u8 unk17;
-    unk8007F1E8_18 unk18[1]; // Actual length depends on unk0
-} unk8007F1E8;
-
 typedef struct TextureCacheEntry {
     s32 id;
     TextureHeader *texture;
@@ -150,7 +124,7 @@ void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 of
 
 // There might be a file boundary here.
 void tex_animate_texture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 updateRate);
-void func_8007F1E8(unk8007F1E8 *arg0);
+void func_8007F1E8(LevelHeader_70 *arg0);
 void init_pulsating_light_data(PulsatingLightData *data);
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
 TextureHeader *func_8007B46C(TextureHeader *arg0, s32 arg1);

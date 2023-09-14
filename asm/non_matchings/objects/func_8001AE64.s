@@ -202,7 +202,7 @@ glabel func_8001AE64
 /* 01BD54 8001B154 00000000 */   nop   
 /* 01BD58 8001B158 0C01666A */  jal   func_800599A8
 /* 01BD5C 8001B15C AFA80030 */   sw    $t0, 0x30($sp)
-/* 01BD60 8001B160 0C01AF62 */  jal   func_8006BD88
+/* 01BD60 8001B160 0C01AF62 */  jal   get_current_map_id
 /* 01BD64 8001B164 AFA20028 */   sw    $v0, 0x28($sp)
 /* 01BD68 8001B168 8FAF0028 */  lw    $t7, 0x28($sp)
 /* 01BD6C 8001B16C 8FA80030 */  lw    $t0, 0x30($sp)
@@ -223,7 +223,7 @@ glabel func_8001AE64
 /* 01BDA4 8001B1A4 A42EC728 */  sh    $t6, %lo(D_800DC728)($at)
 /* 01BDA8 8001B1A8 81180059 */  lb    $t8, 0x59($t0)
 /* 01BDAC 8001B1AC 3C01800E */  lui   $at, %hi(D_800DC72C) # $at, 0x800e
-/* 01BDB0 8001B1B0 0C01AF62 */  jal   func_8006BD88
+/* 01BDB0 8001B1B0 0C01AF62 */  jal   get_current_map_id
 /* 01BDB4 8001B1B4 A438C72C */   sh    $t8, %lo(D_800DC72C)($at)
 /* 01BDB8 8001B1B8 0C016661 */  jal   func_80059984
 /* 01BDBC 8001B1BC 00402025 */   move  $a0, $v0
@@ -264,7 +264,7 @@ glabel func_8001AE64
 /* 01BE38 8001B238 8FA40034 */  lw    $a0, 0x34($sp)
 /* 01BE3C 8001B23C 11E00008 */  beqz  $t7, .L8001B260
 /* 01BE40 8001B240 00000000 */   nop   
-/* 01BE44 8001B244 0C01AF62 */  jal   func_8006BD88
+/* 01BE44 8001B244 0C01AF62 */  jal   get_current_map_id
 /* 01BE48 8001B248 00000000 */   nop   
 /* 01BE4C 8001B24C 8FA50034 */  lw    $a1, 0x34($sp)
 /* 01BE50 8001B250 0C006CF1 */  jal   func_8001B3C4
