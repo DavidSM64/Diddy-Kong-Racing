@@ -976,14 +976,6 @@ typedef struct Object_CharacterFlag {
   /* 0x24 */ TextureHeader *texture;
 } Object_CharacterFlag;
 
-typedef struct Object_Snowball {
-  /* 0x00 */ u8 pad0[0x20];
-  /* 0x20 */ u32 soundMask;
-  /* 0x24 */ s16 unk24;
-  /* 0x28 */ u8 pad28[0x12];
-  /* 0x38 */ s8 unk38;
-} Object_Snowball;
-
 typedef struct Object_AnimCamera {
   /* 0x00 */ u8 pad0[0x30];
   /* 0x30 */ s8 unk30;
@@ -1453,11 +1445,15 @@ typedef struct Object_Fireball_Octoweapon {
 } Object_Fireball_Octoweapon;
 
 typedef struct Object_AnimatedObject {
-    u8 pad0[0x28];
+    u8 pad0[0x20];
+  /* 0x20 */ u32 soundMask;
+  /* 0x24 */ s16 unk24;
+  /* 0x26 */ s16 unk26;
     s16 unk28;
     u8 pad2A[0xC];
     s16 unk36;
-    u8 pad38[0x2];
+    s8 unk38;
+    s8 unk39;
     s8 unk3A;
     s8 unk3B;
     s8 pad3C[0xC];
@@ -1488,7 +1484,6 @@ typedef struct Object_64 {
         Object_CollectEgg egg;
         Object_UnkId58 unkid58;
         Object_CharacterFlag character_flag;
-        Object_Snowball snowball;
         Object_AnimCamera anim_camera;
         Object_InfoPoint info_point;
         Object_TTDoor tt_door;
