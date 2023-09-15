@@ -2826,7 +2826,25 @@ s32 func_80014814(s32 *retObjCount) {
 GLOBAL_ASM("asm/non_matchings/objects/func_80014814.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/objects/func_800149C0.s")
+UNUSED void func_800149C0(unk800149C0 *arg0, UNUSED s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5, s32 arg6) {
+    UNUSED s32 pad;
+    s32 endVal;
+    s32 startVal;
+    f32 temp_f0;
+    s32 i;
+
+    temp_f0 = arg0->unk6;
+    endVal = func_80014B50(arg2, arg3, temp_f0, arg0->unk4);
+    startVal = func_80014B50(arg2, endVal - 1, temp_f0, arg0->unk4 + 8);
+
+    for (i = startVal; i < endVal; i++) {
+        gObjPtrList[i]->segment.object.unk38 += arg6;
+    }
+
+    *arg4 = startVal;
+    *arg5 = endVal - 1;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80014B50.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80015348.s")
 

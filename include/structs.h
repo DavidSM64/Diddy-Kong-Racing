@@ -1655,7 +1655,7 @@ typedef struct SegmentPropertiesObject {
   /* 0x0030 */ f32 distanceToCamera;
   /* 0x0034 */ s16 cameraSegmentID;
   /* 0x0036 */ s16 unk36;
-  /* 0x0038 */ u8 unk38;
+  /* 0x0038 */ s8 unk38;
   /* 0x0039 */ u8 opacity;
   /* 0x003A */ s8 numModelIDs;
   /* 0x003B */ s8 animationID;
