@@ -131,7 +131,6 @@ TextureHeader *func_8007B46C(TextureHeader *arg0, s32 arg1);
 
 TextureHeader *load_texture(s32 arg0); // Non Matching
 void free_texture(TextureHeader *tex); // Non Matching
-TextureHeader *func_8007B380(s32 arg0); // Non Matching
 s32 get_texture_size_from_id(s32 arg0); // Non Matching
 s32 func_8007C860(s32 spriteIndex); // Non Matching
 s32 load_sprite_info(s32 spriteID, s32 *numOfInstancesOut, s32 *unkOut,

@@ -2780,7 +2780,53 @@ s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags,
     return i;
 }
 
+#ifdef NON_EQUIVALENT
+s32 func_80014814(s32 *retObjCount) {
+    s32 i;
+    s32 maxObjCount;
+    s32 curObjCount;
+
+    *retObjCount = objCount;
+    if (D_8011AE7C) {
+        return D_8011AE7C;
+    }
+    curObjCount = D_8011AE60;
+    maxObjCount = objCount - 1;
+    while (maxObjCount >= curObjCount) {
+        for (i = 0; maxObjCount >= curObjCount && i == 0; i++) {
+            if (!(gObjPtrList[curObjCount]->segment.trans.flags & 0x8000)) {
+                if (gObjPtrList[curObjCount]->segment.header->unk30 & 1) {
+                    curObjCount++;
+                }
+                i = -1;
+            } else {
+                curObjCount++;
+            }
+        }
+        for (i = 0; maxObjCount >= curObjCount && i == 0; i++) {
+            if (gObjPtrList[maxObjCount]->segment.trans.flags & 0x8000) {
+                i = -1;
+            } else if (!(gObjPtrList[maxObjCount]->segment.header->unk30 & 1)) {
+                maxObjCount--;
+            } else {
+                i = -1;
+            }
+        }
+        if (curObjCount > maxObjCount) {
+            gObjPtrList[curObjCount] = gObjPtrList[maxObjCount];
+            gObjPtrList[maxObjCount] = gObjPtrList[curObjCount];
+            curObjCount++;
+            maxObjCount--;
+        }
+    }
+    D_8011AE7C = curObjCount;
+    return curObjCount;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_80014814.s")
+#endif
+
+GLOBAL_ASM("asm/non_matchings/objects/func_800149C0.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80014B50.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80015348.s")
 

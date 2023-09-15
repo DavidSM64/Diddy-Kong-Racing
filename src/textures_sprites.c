@@ -516,21 +516,16 @@ void set_texture_colour_tag(s32 tagID) {
     gTexColourTag = tagID;
 }
 
-#ifdef NON_EQUIVALENT
-// Unused.
-TextureHeader *func_8007B380(s32 arg0) {
+UNUSED TextureHeader *func_8007B380(s32 arg0) {
     if ((arg0 < 0) || (arg0 >= gNumberOfLoadedTextures)) {
         return 0;
     }
     // Regalloc issue here
-    if (gTextureCache[arg0].texture == (TextureHeader *)-1) {
+    if (gTextureCache[arg0 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1].texture == (TextureHeader *)-1) {
         return 0;
     }
-    return gTextureCache[arg0].texture;
+    return gTextureCache[arg0 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1].texture;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B380.s")
-#endif
 
 /**
  * Resets all render settings to the default state.
