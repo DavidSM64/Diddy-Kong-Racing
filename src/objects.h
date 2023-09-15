@@ -434,7 +434,7 @@ s32 init_object_shading(Object *obj, ShadeProperties *shading);
 ObjectHeader *func_8000C718(s32 index);
 s32 func_8000F99C(Object *);
 void func_8000C844(s32 arg0);
-s32 func_800235DC(Object *obj, Object_64 *obj64);
+s32 get_object_property_size(Object *obj, Object_64 *obj64);
 void light_setup_light_sources(Object *obj);
 s32 init_object_interaction_data(Object *arg0, ObjectInteraction *arg1);
 s32 func_8000FAC4(Object *obj, Object_6C *arg1);

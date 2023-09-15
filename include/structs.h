@@ -918,6 +918,7 @@ typedef struct Object_Butterfly {
   /* 0x104 */ s16 unk104;
   /* 0x106 */ s16 unk106;
   /* 0x108 */ f32 unk108;
+  /* 0x10C */ f32 unk10C;
 } Object_Butterfly;
 
 typedef struct Object_Fish {
@@ -932,6 +933,11 @@ typedef struct Object_Fish {
   /* 0x104 */ s16 unk104;
   /* 0x106 */ s16 unk106;
   /* 0x108 */ f32 unk108;
+  /* 0x10C */ f32 unk10C;
+  /* 0x110 */ f32 unk110;
+  /* 0x114 */ f32 unk114;
+  /* 0x118 */ f32 unk118;
+  /* 0x11c */ f32 unk11C;
 } Object_Fish;
 
 typedef struct Object_Boost {
@@ -999,6 +1005,7 @@ typedef struct Object_TTDoor {
   /* 0x10 */ u8 pad10[2];
   /* 0x12 */ u8 unk12;
   /* 0x13 */ s8 unk13;
+  /* 0x14 */ s32 unk14;
 } Object_TTDoor;
 
 typedef struct Object_WorldKey {
@@ -1452,6 +1459,8 @@ typedef struct Object_AnimatedObject {
     s16 unk36;
     u8 pad38[0x2];
     s8 unk3A;
+    s8 unk3B;
+    s8 pad3C[0xC];
 } Object_AnimatedObject;
 
 typedef struct Object_WizpigRocket {
