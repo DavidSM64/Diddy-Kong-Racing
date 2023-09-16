@@ -254,7 +254,7 @@ void free_weather_memory(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800AB4A8.s")
+GLOBAL_ASM("asm/non_matchings/weather/func_800AB4A8.s")
 
 void func_800ABB34(void) {
     s32 temp_v0;
@@ -348,8 +348,8 @@ void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currH
     *currHudTris = gCurrWeatherTriList;
 }
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC0C8.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC21C.s")
+GLOBAL_ASM("asm/non_matchings/weather/func_800AC0C8.s")
+GLOBAL_ASM("asm/non_matchings/weather/func_800AC21C.s")
 
 /**
  * Load and execute the draw commands for the falling snowflakes, seen with snowy weather enabled.
@@ -399,10 +399,10 @@ void func_800AC880(s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800AC8A8.s")
+GLOBAL_ASM("asm/non_matchings/weather/func_800AC8A8.s")
 
 //https://decomp.me/scratch/mYuMJ
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800ACA20.s")
+GLOBAL_ASM("asm/non_matchings/weather/func_800ACA20.s")
 
 void cameraAddOverrideObject(Object *arg0) {
     if (D_800E2A88 < 0x10) {
@@ -431,7 +431,7 @@ void func_800ACF98(Object* arg0) {
 
 }
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800AD030.s")
+GLOBAL_ASM("asm/non_matchings/weather/func_800AD030.s")
 
 void func_800AD144(s32 arg0, s32 arg1) {
     gLightningFrequency = arg0;
@@ -536,7 +536,7 @@ void handle_weather_rain(s32 updateRate) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/game_ui/render_rain_splashes.s")
+GLOBAL_ASM("asm/non_matchings/weather/render_rain_splashes.s")
 
 /**
  * On a randomly set timer, based on the weather intensity, count down and make the sound of thunder.
@@ -589,4 +589,4 @@ void handle_rain_sound(UNUSED s32 updateRate) {
 }
 
 //https://decomp.me/scratch/PDAZs
-GLOBAL_ASM("asm/non_matchings/game_ui/render_rain_overlay.s")
+GLOBAL_ASM("asm/non_matchings/weather/render_rain_overlay.s")
