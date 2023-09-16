@@ -382,7 +382,7 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
     *arg1 = arg1_ret;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_05CEF0/func_8005CB68.s")
+GLOBAL_ASM("asm/non_matchings/vehicle_tricky/func_8005CB68.s")
 #endif
 
 /**
