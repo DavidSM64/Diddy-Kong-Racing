@@ -334,7 +334,7 @@ void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currH
         D_80127BB4 = (D_80127BB0 * D_80127BB8[0]) >> (unused = 16);
         D_80127BF8.unk4 = (D_80127BF8.unk0 + ((D_80127BF8.unk2 - D_80127BF8.unk0) * D_80127BB8[12])) >> (unused = 16);
 
-        func_800AC0C8(updateRate, &D_80127BF8); // This is the snow physics that makes it move
+        func_800AC0C8(updateRate); // This is the snow physics that makes it move
         if ((D_80127BB4 > 0) && (D_80127BF8.unk4 < D_80127BF8.unk0)) {
             D_800E2904 = D_800E2914[D_80127C08];
             func_800AC21C(); // Both of these funcs are needed to render.

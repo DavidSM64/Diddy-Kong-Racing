@@ -1463,6 +1463,20 @@ typedef struct Object_WizpigRocket {
     f32 unk74;
 } Object_WizpigRocket;
 
+typedef struct Object_8001E89C_64_C {
+    /* 0x00 */ u8 pad0[0xC];
+    /* 0x0C */ f32 unkC;
+    /* 0x10 */ f32 unk10;
+    /* 0x14 */ f32 unk14;
+} Object_8001E89C_64_C;
+
+typedef struct Object_8001E89C_64 {
+    /* 0x00 */ f32 unk0;
+    /* 0x04 */ f32 unk4;
+    /* 0x08 */ f32 unk8;
+    /* 0x0C */ Object_8001E89C_64_C *unkC;
+} Object_8001E89C_64;
+
 typedef struct Object_64 {
     union {
         Object_Laser laser;
@@ -1508,6 +1522,7 @@ typedef struct Object_64 {
         Object_LaserGun lasergun;
         Object_AnimatedObject animatedObject;
         Object_WizpigRocket wizpigRocket;
+        Object_8001E89C_64 obj8001E89C_64;
     };
 } Object_64;
 

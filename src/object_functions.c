@@ -4831,6 +4831,7 @@ GLOBAL_ASM("asm/non_matchings/object_functions/obj_init_butterfly.s")
 
 GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_butterfly.s")
 
+//Scratch: https://decomp.me/scratch/h4CcJ
 GLOBAL_ASM("asm/non_matchings/object_functions/obj_init_midifade.s")
 
 void obj_init_midifadepoint(Object *obj, LevelObjectEntry_MidiFadePoint *entry) {

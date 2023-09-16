@@ -199,7 +199,7 @@ s8 (*D_8011ADCC)[8];
 f32 D_8011ADD0;
 s8 D_8011ADD4;
 s8 D_8011ADD5;
-s32 D_8011ADD8[10];
+Object *D_8011ADD8[10];
 s8 D_8011AE00;
 s8 D_8011AE01;
 s8 gIsNonCarRacers;
@@ -3832,7 +3832,31 @@ UNUSED s32 get_object_list_index(void) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001E4C4.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001E6EC.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001E89C.s")
+
+void func_8001E89C(void) {
+    s32 i;
+    Object *obj;
+    Object_64 *obj64;
+
+    // some flag, flips to 1 when loading a new zone
+    if (D_8011AE01 != 0) { 
+        D_8011AE01 = 0;
+        return;
+    }
+
+    // loading (boss) cutscene
+    for (i = 0; i < D_8011AE00; i++) {
+        obj = D_8011ADD8[i];
+        obj64 = obj->unk64;
+
+        if (obj64->obj8001E89C_64.unkC != NULL) {
+            obj64->obj8001E89C_64.unkC->unkC = obj64->obj8001E89C_64.unk0;
+            obj64->obj8001E89C_64.unkC->unk10 = obj64->obj8001E89C_64.unk4;
+            obj64->obj8001E89C_64.unkC->unk14 = obj64->obj8001E89C_64.unk8;
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8001E93C.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001EE74.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001EFA4.s")
