@@ -1772,7 +1772,7 @@ void obj_loop_snowball(Object *obj, s32 updateRate) {
     Object_AnimatedObject *obj64 = &obj->unk64->animatedObject;
     if (obj64->unk24 == 0) {
         if (obj64->unk38 != 0) {
-            obj64->unk24 = (s16)(obj64->unk38 & 0xFF);
+            obj64->unk24 = (s16) (obj64->unk38 & 0xFF);
         }
     }
     if (obj64->unk24 != 0) {

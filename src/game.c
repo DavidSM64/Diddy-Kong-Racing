@@ -394,6 +394,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     for (i = 0; gTempAssetTable[i] != -1; i++) { }
     i--;
     if (levelId >= i) {
+        stubbed_printf("LOADLEVEL Error: Level out of range\n");
         levelId = ASSET_LEVEL_CENTRALAREAHUB;
     }
 
@@ -431,7 +432,9 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
                     for (var_s0 = 0; levelId != someAsset[var_s0]; var_s0 += 2) { }
                     levelId = someAsset[var_s0 + 1];
                     entranceId = cutsceneId;
-                    if (cutsceneId) {} // Fakematch
+                    if (cutsceneId == CUTSCENE_NONE) {
+                        stubbed_printf("BossLev problem\n");
+                    }
                 }
             }
             if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD) {
@@ -640,6 +643,7 @@ char *get_level_name(s32 levelId) {
     u8 numberOfNullPointers = 0;
 
     if (levelId < 0 || levelId >= gNumberOfLevelHeaders) {
+        stubbed_printf("AITABLE Error: Table out of range\n");
         return NULL;
     }
 
