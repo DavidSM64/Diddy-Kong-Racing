@@ -2120,134 +2120,70 @@ void func_8002D8DC(s32 arg0, s32 arg1, s32 updateRate) {
     D_8011D360[D_8011D364].yOffset = D_8011D36C;
 }
 
-#ifdef NON_EQUIVALENT
 void func_8002DE30(Object *obj) {
     s32 sp94;
     s32 sp90;
-    s32 sp8C;
-    s32 sp88;
+    s32 blockId;
+    s32 var_t3;
+    s32 k;
+    u32 batchFlags;
+    s32 foundResult;
     s32 i;
-    s32 sp5C;
-    LevelModelSegment *segment;
-    ObjectHeader *objHeader;
-    Triangle *temp_t0;
-    TriangleBatchInfo *batches;
-    Vertex *vert;
-    f32 temp_f0_2;
-    s16 temp_v0_3;
-    s16 segmentIndex;
-    s16 var_a1;
-    s16 var_a2;
-    s16 facesOffset;
-    s32 obj_yPos;
-    s32 temp_v0;
-    s32 temp_v0_2;
-    s32 var_s4;
-    s32 var_s7;
-    s32 var_t2;
-    s32 var_v1;
-    u32 temp_v1_2;
-    u8 *var_a0;
-    u8 temp_t7;
-    s32 vertsOffset;
+    LevelModelSegment *block;
+    Triangle *triangle;
+    Vertex *vertices;
+    s32 minYPos;
+    s32 maxYPos;
+    s32 j;
 
-    objHeader = obj->segment.header;
-    obj_yPos = obj->segment.trans.y_position;
-    sp94 = obj_yPos + objHeader->unk44;
-    sp90 = obj_yPos + objHeader->unk42;
-    segmentIndex = obj->segment.object.segmentID;
-    var_s7 = 0;
-    if (segmentIndex != -1) {
-        //func_800314DC = collision
-        temp_v0 = func_800314DC(&gCurrentLevelModel->segmentsBoundingBoxes[segmentIndex], 
-            (obj->segment.trans.x_position - 16.0f),
-            (obj->segment.trans.z_position - 16.0f),
-            (obj->segment.trans.x_position + 16.0f),
-            (obj->segment.trans.z_position + 16.0f));
-
-        segment = &gCurrentLevelModel->segments[segmentIndex];
-        for (i = 0; i < segment->numberOfBatches; i++) {
-            vertsOffset = segment->batches[i].verticesOffset;
-            
-        }
-
-        i = 0;
-        segment = &gCurrentLevelModel->segments[segmentIndex];
-        var_t2 = 0;
-        if  (segment->numberOfBatches > 0) {
-            batches = segment->batches;
-            vertsOffset = batches->verticesOffset;
-loop_3:
-            temp_v1_2 = batches->flags;
-            if (!(temp_v1_2 & 0x6900)) {
-                facesOffset = batches->facesOffset;
-                vert = &segment->vertices[vertsOffset];
-                if ((facesOffset < batches[1].textureIndex) != 0) {
-                    var_s4 = facesOffset * 2;
-                    if (var_s7 == 0) {
-loop_6:
-                        temp_v0_2 = *(segment->unk10 + var_s4) & temp_v0;
-                        if ((temp_v0_2 & 0xFF) && (temp_v0_2 & 0xFF00)) {
-                            temp_t0 = &segment->triangles[facesOffset];
-                            temp_t7 = temp_t0->verticesArray[1];
-                            var_a0 = &temp_t0->verticesArray[1];
-                            var_v1 = 1;
-                            var_a1 = vert[temp_t7].y;
-                            var_a2 = var_a1;
-                            do {
-                                var_v1 += 1;
-                                temp_v0_3 = vert[var_a0[1]].y;
-                                if (temp_v0_3 < var_a1) {
-                                    var_a1 = temp_v0_3;
-                                } else if (var_a2 < temp_v0_3) {
-                                    var_a2 = temp_v0_3;
-                                }
-                                var_a0 += 1;
-                            } while (var_v1 != 3);
-                            if ((var_a2 >= sp90) && (sp94 >= var_a1)) {
-                                sp88 = temp_v0;
-                                sp5C = var_t2;
-                                if (point_triangle_2d_xz_intersection(
-                                        obj->segment.trans.x_position, 
-                                        obj->segment.trans.z_position, 
-                                        &vert[temp_t7].x,
-                                        &vert[temp_t0->verticesArray[2]].x,
-                                        &vert[temp_t0->verticesArray[3]].x
-                                ) != 0) {
-                                    var_s7 = 1;
-                                    obj->shading->unk0 += (((1.0f - D_800DC884[temp_v1_2]) - obj->shading->unk0) * 0.2);
-                                }
+    sp94 = (s32)obj->segment.trans.y_position + obj->segment.header->unk44;
+    sp90 = (s32)obj->segment.trans.y_position + obj->segment.header->unk42;
+    blockId = obj->segment.object.segmentID;
+    foundResult = FALSE;
+    if (blockId != -1) {
+        var_t3 = func_800314DC(
+            &gCurrentLevelModel->segmentsBoundingBoxes[blockId], 
+            obj->segment.trans.x_position - 16.0f, obj->segment.trans.z_position - 16.0f, 
+            obj->segment.trans.x_position + 16.0f, obj->segment.trans.z_position + 16.0f
+        );
+        block = &gCurrentLevelModel->segments[blockId]; 
+        for(i = 0; i < block->numberOfBatches && !foundResult; i++) {
+            if (!(block->batches[i].flags & (BATCH_FLAGS_HIDDEN | BATCH_FLAGS_UNK00000800 | BATCH_FLAGS_WATER | BATCH_FLAGS_FORCE_NO_SHADOWS))) {
+                batchFlags = (block->batches[i].flags >> 0x13) & 7;
+                vertices = &block->vertices[block->batches[i].verticesOffset];
+                for(j = block->batches[i].facesOffset; j < block->batches[i+1].facesOffset && !foundResult; j++) {
+                    blockId = block->unk10[j] & var_t3;
+                    if(blockId){}
+                    if (((block->unk10[j] & var_t3) & 0xFF) && ((block->unk10[j] & var_t3) & 0xFF00)) {
+                        triangle = &block->triangles[j];
+                        minYPos = vertices[triangle->verticesArray[1]].y;
+                        maxYPos = minYPos;
+                        for(k = 1; k < 3; k++) {
+                            if (vertices[triangle->verticesArray[k + 1]].y < minYPos) {
+                                minYPos = vertices[triangle->verticesArray[k + 1]].y;
+                            } else if (maxYPos < vertices[triangle->verticesArray[k + 1]].y) {
+                                maxYPos = vertices[triangle->verticesArray[k + 1]].y;
                             }
                         }
-                        facesOffset += 1;
-                        batches = &segment->batches[var_t2];
-                        var_s4 += 2;
-                        if (facesOffset < batches[1].textureIndex) {
-                            if (var_s7 != 0) {
-
-                            } else {
-                                goto loop_6;
+                        if (maxYPos >= sp90 && sp94 >= minYPos) {
+                            if (point_triangle_2d_xz_intersection(
+                                    obj->segment.trans.x_position,
+                                    obj->segment.trans.z_position,
+                                    &vertices[triangle->verticesArray[1]].x, 
+                                    &vertices[triangle->verticesArray[2]].x,
+                                    &vertices[triangle->verticesArray[3]].x)
+                            ) {
+                                foundResult = TRUE;
+                                obj->shading->unk0 += (((1.0f - D_800DC884[batchFlags]) - obj->shading->unk0) * 0.2);
                             }
                         }
                     }
                 }
             }
-            var_t2 += 0xC;
-            i++;
-            batches += 0xC;
-            if (i < segment->numberOfBatches) {
-                if (var_s7 != 0) {
-
-                } else {
-                    goto loop_3;
-                }
-            }
+            
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/tracks/func_8002DE30.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 void func_8002E234(Object *obj, s32 bool) {
