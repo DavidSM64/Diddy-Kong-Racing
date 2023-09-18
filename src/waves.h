@@ -111,7 +111,7 @@ void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1);
 void obj_loop_wavepower(Object *obj);
 void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
 void func_800BF3E4(s32 arg0);
-f32 func_800BEEB4(Object_800BEEB4_64 *, s32);
+f32 func_800BEEB4(Object_64 *, s32);
 
 Object_64 *func_800BE654(s16, f32, f32); // Non Matching
 void func_800BBF78(LevelModel *arg0); // Non Matching
