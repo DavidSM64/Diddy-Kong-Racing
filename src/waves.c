@@ -322,13 +322,11 @@ f32 func_800BEFC4(s32 arg0, s32 arg1, s32 arg2) {
     f32 var_f0;
     f32 var_f28;
     f32 var_f2;
-    s32 var_s0;
     s32 temp_a1;
     s32 var_s3;
     s32 var_v1;
-    u16 temp_s0;
+    s32 temp_s0;
     u8 temp_t5;
-    s32 var_v0;
     unk800E3184 *temp_a3;
     unk800E3190 *temp_s1;
 
@@ -349,45 +347,38 @@ f32 func_800BEFC4(s32 arg0, s32 arg1, s32 arg2) {
     temp_t5 = temp_a3->unk0[0];
     if (temp_t5 != 0xFF) {
         temp_f30 = D_8012A0D0 + (temp_a1 * var_f0);
-        var_s3 = 0;
-        var_v0 = temp_t5;
         temp_f24 = D_8012A0D4 + (((D_800E30D8[arg0].unkB * var_v1) + arg2) * var_f2);
-loop_6:
-        temp_s1 = &D_800E3190[var_v0];
-        if ((temp_s1->unk0 <= temp_f24) && (temp_f24 <= temp_s1->unk4)) {
-            temp_f20 = temp_f30 - temp_s1->unk8;
-            temp_f22 = temp_f24 - temp_s1->unkC;
-            temp_f12 = (temp_f20 * temp_f20) + (temp_f22 * temp_f22);
-            if (temp_f12 < temp_s1->unk14) {
-                temp_f0 = sqrtf(temp_f12);
-                temp_s0 = temp_s1->unk1A;
-                if (temp_s1->unk31 != 0) {
-                    if (temp_f20 < 0.0f) {
-                        var_s0 = temp_s0 - (s32) (temp_f20 * temp_s1->unk20);
+        var_s3 = 0;
+        do {
+            temp_s1 = &D_800E3190[temp_a3->unk0[var_s3]];
+            if ((temp_s1->unk0 <= temp_f24) && (temp_f24 <= temp_s1->unk4)) {
+                temp_f20 = temp_f30 - temp_s1->unk8;
+                temp_f22 = temp_f24 - temp_s1->unkC;
+                temp_f12 = (temp_f20 * temp_f20) + (temp_f22 * temp_f22);
+                if (temp_f12 < temp_s1->unk14) {
+                    temp_f0 = sqrtf(temp_f12);
+                    temp_s0 = temp_s1->unk1A;
+                    if (temp_s1->unk31 != 0) {
+                        if (temp_f20 < 0.0f) {
+                            temp_s0 -= (s32) (temp_f20 * temp_s1->unk20);
+                        } else {
+                            temp_s0 += (s32) (temp_f20 * temp_s1->unk20);
+                        }
+                    } else if (temp_s1->unk32 != 0) {
+                        if (temp_f20 < 0.0f) {
+                            temp_s0 -= (s32) (temp_f22 * temp_s1->unk20);
+                        } else {
+                            temp_s0 += (s32) (temp_f22 * temp_s1->unk20);
+                        }
                     } else {
-                        var_s0 = temp_s0 + (s32) (temp_f20 * temp_s1->unk20);
+                        temp_s0 += (s32) (temp_f0 * temp_s1->unk20);
                     }
-                } else if (temp_s1->unk32 != 0) {
-                    if (temp_f20 < 0.0f) {
-                        var_s0 = temp_s0 - (s32) (temp_f22 * temp_s1->unk20);
-                    } else {
-                        var_s0 = temp_s0 + (s32) (temp_f22 * temp_s1->unk20);
-                    }
-                } else {
-                    var_s0 = temp_s0 + (s32) (temp_f0 * temp_s1->unk20);
+                    temp_f0 = coss_f((temp_f0 * 65536.0f) / temp_s1->unk10);
+                    var_f28 += temp_s1->unk24 * sins_f(temp_s0) * temp_f0;
                 }
-                temp_f0 = coss_f((temp_f0 * 65536.0f) / temp_s1->unk10);
-                var_f28 += temp_s1->unk24 * sins_f(var_s0) * temp_f0;
             }
-        }
-        var_s3 += 1;
-        temp_a3 += 1;
-        if (var_s3 < 8) {
-            var_v0 = temp_a3->unk0[0];
-            if (var_v0 != 0xFF) {
-                goto loop_6;
-            }
-        }
+            var_s3++;
+        } while (var_s3 < 8 && temp_a3->unk0[var_s3] != 0xFF);
     }
     return var_f28;
 }

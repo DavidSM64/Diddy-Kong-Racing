@@ -32,8 +32,7 @@ typedef struct unk800E3190 {
 } unk800E3190;
 
 typedef struct unk800E3184 {
-    u8 unk0[4];
-    s32 unk4;
+    u8 unk0[8];
 } unk800E3184;
 
 typedef struct unk800B8134 {
