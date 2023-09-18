@@ -1407,7 +1407,24 @@ GLOBAL_ASM("asm/non_matchings/particles/func_800B3140.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B3240.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B3358.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B34B0.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800B3564.s")
+
+void func_800B3564(Particle *arg0) {
+    s32 var_s1;
+
+    for (var_s1 = 0; D_80127C80 > var_s1++;) {
+        arg0->segment.x_velocity = 0.0f;
+        arg0->segment.y_velocity = 0.0f;
+        arg0->segment.z_velocity = -arg0->forwardVel;
+        f32_vec3_apply_object_rotation3(&arg0->segment.trans, &arg0->segment.x_velocity);
+        arg0->segment.trans.x_position += arg0->segment.x_velocity;
+        arg0->segment.trans.y_position += arg0->segment.y_velocity - arg0->unk68f;
+        arg0->segment.trans.z_position += arg0->segment.z_velocity;
+        arg0->segment.trans.scale += arg0->segment.unk28;
+        arg0->segment.trans.y_rotation += arg0->unk62;
+        arg0->segment.trans.x_rotation += arg0->unk64;
+        arg0->segment.trans.z_rotation += arg0->unk66;
+    }
+}
 
 UNUSED void func_800B3678(Gfx **arg0, MatrixS **arg1, Vertex **arg2) {
     UNUSED s32 pad;

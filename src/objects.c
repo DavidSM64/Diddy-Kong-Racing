@@ -199,7 +199,7 @@ s8 (*D_8011ADCC)[8];
 f32 D_8011ADD0;
 s8 D_8011ADD4;
 s8 D_8011ADD5;
-s32 D_8011ADD8[10];
+Object *D_8011ADD8[10];
 s8 D_8011AE00;
 s8 D_8011AE01;
 s8 gIsNonCarRacers;
@@ -2780,7 +2780,71 @@ s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags,
     return i;
 }
 
+#ifdef NON_EQUIVALENT
+s32 func_80014814(s32 *retObjCount) {
+    s32 i;
+    s32 maxObjCount;
+    s32 curObjCount;
+
+    *retObjCount = objCount;
+    if (D_8011AE7C) {
+        return D_8011AE7C;
+    }
+    curObjCount = D_8011AE60;
+    maxObjCount = objCount - 1;
+    while (maxObjCount >= curObjCount) {
+        for (i = 0; maxObjCount >= curObjCount && i == 0; i++) {
+            if (!(gObjPtrList[curObjCount]->segment.trans.flags & 0x8000)) {
+                if (gObjPtrList[curObjCount]->segment.header->unk30 & 1) {
+                    curObjCount++;
+                }
+                i = -1;
+            } else {
+                curObjCount++;
+            }
+        }
+        for (i = 0; maxObjCount >= curObjCount && i == 0; i++) {
+            if (gObjPtrList[maxObjCount]->segment.trans.flags & 0x8000) {
+                i = -1;
+            } else if (!(gObjPtrList[maxObjCount]->segment.header->unk30 & 1)) {
+                maxObjCount--;
+            } else {
+                i = -1;
+            }
+        }
+        if (curObjCount > maxObjCount) {
+            gObjPtrList[curObjCount] = gObjPtrList[maxObjCount];
+            gObjPtrList[maxObjCount] = gObjPtrList[curObjCount];
+            curObjCount++;
+            maxObjCount--;
+        }
+    }
+    D_8011AE7C = curObjCount;
+    return curObjCount;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_80014814.s")
+#endif
+
+UNUSED void func_800149C0(unk800149C0 *arg0, UNUSED s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5, s32 arg6) {
+    UNUSED s32 pad;
+    s32 endVal;
+    s32 startVal;
+    f32 temp_f0;
+    s32 i;
+
+    temp_f0 = arg0->unk6;
+    endVal = func_80014B50(arg2, arg3, temp_f0, arg0->unk4);
+    startVal = func_80014B50(arg2, endVal - 1, temp_f0, arg0->unk4 + 8);
+
+    for (i = startVal; i < endVal; i++) {
+        gObjPtrList[i]->segment.object.unk38 += arg6;
+    }
+
+    *arg4 = startVal;
+    *arg5 = endVal - 1;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80014B50.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80015348.s")
 
@@ -3768,7 +3832,31 @@ UNUSED s32 get_object_list_index(void) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001E4C4.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001E6EC.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001E89C.s")
+
+void func_8001E89C(void) {
+    s32 i;
+    Object *obj;
+    Object_64 *obj64;
+
+    // some flag, flips to 1 when loading a new zone
+    if (D_8011AE01 != 0) { 
+        D_8011AE01 = 0;
+        return;
+    }
+
+    // loading (boss) cutscene
+    for (i = 0; i < D_8011AE00; i++) {
+        obj = D_8011ADD8[i];
+        obj64 = obj->unk64;
+
+        if (obj64->obj8001E89C_64.unkC != NULL) {
+            obj64->obj8001E89C_64.unkC->unkC = obj64->obj8001E89C_64.unk0;
+            obj64->obj8001E89C_64.unkC->unk10 = obj64->obj8001E89C_64.unk4;
+            obj64->obj8001E89C_64.unkC->unk14 = obj64->obj8001E89C_64.unk8;
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8001E93C.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001EE74.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001EFA4.s")

@@ -6,21 +6,33 @@
 
 typedef struct{
     LevelModelSegment *unk00;
-    u8 pad04[0x8];
+    u8 pad04[0x6];
+    u8 unkA;
+    u8 unkB;
     u32 unk0C;
     u8 pad10[0xC];
 } LevelModel_Alternate;
 
 typedef struct unk800E3190 {
-    u8 pad0[0x1A];
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    u8 pad18[0x2];
     u16 unk1A;
     u32 unk1C;
-    u8 pad20[0x20];
+    f32 unk20;
+    f32 unk24;
+    u8 pad28[0x8];
+    u8 unk31;
+    u8 unk32;
+    u8 pad33[0xE];
 } unk800E3190;
 
 typedef struct unk800E3184 {
-    u8 unk0[4];
-    s32 unk4;
+    u8 unk0[8];
 } unk800E3184;
 
 typedef struct unk800B8134 {
@@ -99,13 +111,14 @@ void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1);
 void obj_loop_wavepower(Object *obj);
 void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
 void func_800BF3E4(s32 arg0);
+f32 func_800BEEB4(Object_64 *, s32);
 
 Object_64 *func_800BE654(s16, f32, f32); // Non Matching
-f32 func_800BEEB4(Object_64 *); // Non Matching
 void func_800BBF78(LevelModel *arg0); // Non Matching
 f32 func_800BB2F4(s32, f32, f32, f32*);
 void func_800B8C04(s32, s32, s32, s32, s32);
 void func_800BF524(Object *);
 void *func_800BF634(Object *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, f32 arg5, f32 arg6, f32 arg7, s32 arg8);
+f32 func_800BEFC4(s32, s32, s32);
 
 #endif

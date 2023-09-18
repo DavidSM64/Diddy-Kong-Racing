@@ -5,11 +5,11 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of September 14, 2023, this is our current score:
+As of September 18, 2023, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 53.21%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 53.37%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 26.77%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 27.64%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -128,15 +128,15 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of September 14th, 2023, this is our current score:
+As of September 18th, 2023, this is our current score:
 ```
  ========================================================
           ADVENTURE ONE (ASM -> C Decompilation)
- ------------------- 53.21% Complete --------------------
-               # Decompiled functions: 1526
-               # GLOBAL_ASM remaining: 305
-               # NON_MATCHING functions: 12
-            # NON_EQUIVALENT WIP functions: 71
+ ------------------- 53.37% Complete --------------------
+               # Decompiled functions: 1532
+               # GLOBAL_ASM remaining: 300
+               # NON_MATCHING functions: 14
+            # NON_EQUIVALENT WIP functions: 70
  --------------------- Game Status ----------------------
         Balloons: 26/47, Keys: 3/4, Trophies: 2/5
           T.T. Amulets: 2/4, Wizpig Amulets: 2/4
@@ -144,14 +144,14 @@ As of September 14th, 2023, this is our current score:
  We are battling in Darkwater Beach. (3 opponents remain)
  ========================================================
           ADVENTURE TWO (Cleanup & Documentation)
- ------------------- 26.77% Complete --------------------
-               # Documented functions: 574
-              # Undocumented remaining: 989
+ ------------------- 27.64% Complete --------------------
+               # Documented functions: 604
+              # Undocumented remaining: 960
  --------------------- Game Status ----------------------
-        Balloons: 13/47, Keys: 1/4, Trophies: 1/5
+        Balloons: 14/47, Keys: 1/4, Trophies: 1/5
           T.T. Amulets: 1/4, Wizpig Amulets: 1/4
  --------------------------------------------------------
-        We are racing in Everfrost Peak. (Lap 3/3)
+         We are racing in Walrus Cove. (Lap 1/3)
  ========================================================
 ```
 <!-- README_SCORE_END -->
