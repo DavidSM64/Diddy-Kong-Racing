@@ -308,8 +308,37 @@ GLOBAL_ASM("asm/non_matchings/waves/func_800BC6C8.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BCC70.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BDC80.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BE654.s")
+
 // Get water height probably.
-GLOBAL_ASM("asm/non_matchings/waves/func_800BEEB4.s")
+f32 func_800BEEB4(Object_800BEEB4_64 *arg0, s32 updateRate) {
+    s32 var_t0;
+    f32 temp;
+    Object_800BEEB4_64 *temp_a0;
+
+    arg0->unk4 += updateRate;
+    while (arg0->unk4 >= arg0->unk6) {
+        arg0->unk4 -= arg0->unk6;
+    }
+    var_t0 = arg0->unkE[arg0->unk4 >> 1];
+    if (arg0->unk4 & 1) {
+        if ((arg0->unk4 + 1) >= arg0->unk6) {
+            var_t0 += arg0->unkE[0];
+        } else {
+            var_t0 += arg0->unkE[(arg0->unk4 >> 1) + 1];
+        }
+        if (arg0->unk2 > 0) {
+            var_t0 <<= (arg0->unk2 + 0x1F);
+        } else {
+            var_t0 >>= 1;
+        }
+    } else {
+        var_t0 <<= arg0->unk2;
+    }
+    temp = (((f32) var_t0 * 0.0625) + (f32) arg0->unk0);
+    temp *= D_80129FC8->unk40;
+    temp += func_800BEFC4(arg0->unkC, arg0->unk8, arg0->unkA);
+    return temp;
+}
 
 #ifdef NON_EQUIVALENT
 f32 func_800BEFC4(s32 arg0, s32 arg1, s32 arg2) {
