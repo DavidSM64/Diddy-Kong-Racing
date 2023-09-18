@@ -479,20 +479,25 @@ TextureHeader *load_texture(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/load_texture.s")
 #endif
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 /**
+ * The same difference preventing this from matching is the same as free_sprite
  * Official Name: texFreeTexture
 */
 void free_texture(TextureHeader *tex) {
     s32 i;
+    s32 texId;
+
     if (tex != NULL) {
         tex->numberOfInstances--;
-        if ((tex->numberOfInstances & 0xFF) <= 0) {
+        if (tex->numberOfInstances <= 0) {
             for (i = 0; i < gNumberOfLoadedTextures; i++) {
                 if (tex == gTextureCache[i].texture) {
+                    texId = -1;
                     free_from_memory_pool(tex);
-                    gTextureCache[i].id = -1;
-                    gTextureCache[i].texture = (TextureHeader *)-1;
+                    gTextureCache[i].id = texId;
+                    gTextureCache[i].texture = (TextureHeader *) texId;
+                    break;
                 }
             }
         }
@@ -511,21 +516,16 @@ void set_texture_colour_tag(s32 tagID) {
     gTexColourTag = tagID;
 }
 
-#ifdef NON_EQUIVALENT
-// Unused.
-TextureHeader *func_8007B380(s32 arg0) {
+UNUSED TextureHeader *func_8007B380(s32 arg0) {
     if ((arg0 < 0) || (arg0 >= gNumberOfLoadedTextures)) {
         return 0;
     }
     // Regalloc issue here
-    if (gTextureCache[arg0].texture == (TextureHeader *)-1) {
+    if (gTextureCache[arg0 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1].texture == (TextureHeader *)-1) {
         return 0;
     }
-    return gTextureCache[arg0].texture;
+    return gTextureCache[arg0 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1].texture;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007B380.s")
-#endif
 
 /**
  * Resets all render settings to the default state.
@@ -932,29 +932,25 @@ s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CA68.s")
 
-#ifdef NON_EQUIVALENT
-// andi 0xff instead of a simple mov for j = i. s32 doesn't work.
+#ifdef NON_MATCHING
 /* Official name: texFreeSprite */
 void free_sprite(Sprite *sprite) {
     s32 i;
-    u8 j;
     s32 frame;
     s32 spriteId;
-    SpriteCacheEntry *cache;
 
     if (sprite != NULL) {
         sprite->numberOfInstances--;
         if (sprite->numberOfInstances <= 0) {
             for (i = 0; i < D_80126358; i++) {
-                j = i; // What?
-                if (sprite == gSpriteCache[j].sprite) {
+                if (sprite == gSpriteCache[i].sprite) {
                     for (frame = 0; frame < sprite->numberOfFrames; frame++) {
                         free_texture(sprite->frames[frame]);
                     }
                     spriteId = -1;
                     free_from_memory_pool(sprite);
-                    gSpriteCache[j].id = spriteId;
-                    gSpriteCache[j].sprite = (Sprite *)spriteId; // ?
+                    gSpriteCache[i].id = spriteId;
+                    gSpriteCache[i].sprite = (Sprite *)spriteId;
                     break;
                 }
             }

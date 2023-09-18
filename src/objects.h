@@ -297,6 +297,13 @@ typedef struct unk8001A7D8_arg0 {
     u8 unk49;
 } unk8001A7D8_arg0;
 
+typedef struct unk800149C0 {
+    u8 pad0[4];
+    u8 unk4;
+    u8 pad5;
+    s16 unk6;
+} unk800149C0;
+
 #define CIC_ID 6103
 extern s32 osCicId; // Used for an Anti-Piracy check in render_3d_model
 
@@ -485,5 +492,6 @@ void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
 s32 func_80061D30(Object *); //asm func in unknown_062930
 void func_8000C8F8(s32, s32);
 Object *func_8000FD54(s32);
+s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3);
 
 #endif

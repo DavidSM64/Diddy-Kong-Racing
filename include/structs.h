@@ -1466,6 +1466,32 @@ typedef struct Object_WizpigRocket {
     f32 unk74;
 } Object_WizpigRocket;
 
+typedef struct Object_8001E89C_64_C {
+    /* 0x00 */ u8 pad0[0xC];
+    /* 0x0C */ f32 unkC;
+    /* 0x10 */ f32 unk10;
+    /* 0x14 */ f32 unk14;
+} Object_8001E89C_64_C;
+
+typedef struct Object_8001E89C_64 {
+    /* 0x00 */ f32 unk0;
+    /* 0x04 */ f32 unk4;
+    /* 0x08 */ f32 unk8;
+    /* 0x0C */ Object_8001E89C_64_C *unkC;
+} Object_8001E89C_64;
+
+typedef struct Object_800BEEB4_64 {
+    /* 0x00 */ s16 unk0;
+    /* 0x02 */ u8 unk2;
+    /* 0x04 */ u8 unk3;
+    /* 0x04 */ u16 unk4;
+    /* 0x06 */ u16 unk6;
+    /* 0x08 */ u16 unk8;
+    /* 0x0A */ u16 unkA;
+    /* 0x0C */ u16 unkC;
+    /* 0x0E */ s8 unkE[2];
+} Object_800BEEB4_64;
+
 typedef struct Object_64 {
     union {
         Object_Laser laser;
@@ -1510,6 +1536,8 @@ typedef struct Object_64 {
         Object_LaserGun lasergun;
         Object_AnimatedObject animatedObject;
         Object_WizpigRocket wizpigRocket;
+        Object_8001E89C_64 obj8001E89C_64;
+        Object_800BEEB4_64 obj800BEEB4_64;
     };
 } Object_64;
 
@@ -1657,7 +1685,7 @@ typedef struct SegmentPropertiesObject {
   /* 0x0030 */ f32 distanceToCamera;
   /* 0x0034 */ s16 cameraSegmentID;
   /* 0x0036 */ s16 unk36;
-  /* 0x0038 */ u8 unk38;
+  /* 0x0038 */ s8 unk38;
   /* 0x0039 */ u8 opacity;
   /* 0x003A */ s8 numModelIDs;
   /* 0x003B */ s8 animationID;

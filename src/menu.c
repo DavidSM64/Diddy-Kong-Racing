@@ -2147,7 +2147,69 @@ void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blu
     sMenuGuiColourB = (u8)255;
 }
 
+#ifdef NON_EQUIVALENT
+//void func_80081C04(s32 num, s32 x, s32 y, u8 r, u8 g, u8 b, u8 a, u8 font, u8 alignment)
+void func_80081C04(s32 num, s32 x, s32 y, u8 red, u8 green, u8 blue, u8 alpha, u8 font, u8 alignment) {
+    u8 *sp38;
+    s32 var_s0;
+    s32 var_s0_2;
+    s32 var_s3;
+    s32 var_s4_2;
+    s32 found;
+
+    var_s3 = 0;
+    var_s0 = 1000000000;
+    found = FALSE;
+
+    while (var_s0 >= 10) {
+        if (num < var_s0) {
+            found = TRUE;
+            sp38[var_s3] = (num / var_s0);
+            num %= var_s0;
+        } else if (found) {
+            sp38[var_s3] = 0;
+        }
+        var_s3++;
+        var_s0 /= 10;
+    }
+    sp38[var_s3] = num;
+    var_s3++;
+    if (alignment & 4) {
+        x -= var_s3 * 12;
+        var_s4_2 = x + 6;
+    }
+    else if (alignment & 1) {
+        var_s4_2 = x - ((var_s3 * 11) >> 1);
+    } else {
+        var_s4_2 = x + 6;
+    }
+    if (alignment & 8) {
+        y += 7;
+    } else if (alignment & 0x10) {
+        y -= 7;
+    }
+    sMenuGuiColourR = red;
+    sMenuGuiColourG = green;
+    sMenuGuiColourB = blue;
+    sMenuGuiOpacity = alpha;
+    func_8007BF1C(0);
+    func_80068508(1);
+    gMenuImageStack->unk10 = y;
+    for (var_s0_2 = 0; var_s0_2 < var_s3; var_s0_2++, var_s4_2 += 12) {
+        gMenuImageStack->unkC = var_s4_2;
+        gMenuImageStack->unk18 = sp38[var_s0_2];
+        func_8009CA60(0);
+    }
+    func_8007BF1C(1);
+    func_80068508(0);
+    sMenuGuiColourR = 255;
+    sMenuGuiColourG = 255;
+    sMenuGuiColourB = 255;
+    sMenuGuiOpacity = 255;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/func_80081C04.s")
+#endif
 
 void func_80081E54(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5) {
     D_800DF798 = arg0;
@@ -7393,37 +7455,47 @@ s32 compress_filename_string(char *filename, s32 length) {
     return output;
 }
 
-#ifdef NON_EQUIVALENT
+void trim_filename_string(char* input, char* output) {
+    s32 some_ptr;   
+    u32 zxChar;
+    char* ptr_to_input;
+    char new_var;
+    s32 another_ptr;
+    char* one_more_ptr;
 
-// Not matching, but functionally equivalent.
-// Trims the trailing end of the string, so that spaces won't show up at the end.
-void trim_filename_string(char *input, char *output) {
-    s32 numSpaces, numSpacesProcessed;
-    while (*input != '\0') {
-        numSpaces = 0;
-        numSpacesProcessed = 0;
-        if (*input == ' ') {
-            input++;
-            numSpaces++;
-            while (*input == ' ') {
-                input++;
-                numSpaces++;
-            }
-            if (*input != '\0') {
-                while (numSpacesProcessed < numSpaces) {
-                    *(output++) = *(input++);
-                    numSpacesProcessed++;
+    some_ptr = 0;
+    if (*input != 0) {
+        new_var = input[some_ptr];
+        ptr_to_input = input;    
+        zxChar = new_var;
+        do {
+            another_ptr = some_ptr;
+            if ((zxChar & 0xFFFFFFFF) == ' ') {
+                zxChar = ptr_to_input[1];
+                some_ptr++;
+                ptr_to_input++;
+                while ((zxChar & 0xFFFFFFFF) == ' ') {
+                    some_ptr++;
+                    zxChar = *(++ptr_to_input);
                 }
+                if ((zxChar != 0) && (another_ptr < some_ptr)) {
+                    one_more_ptr = another_ptr + input;
+                    do {
+                        *(output++) = *(one_more_ptr++);
+                    } while (++another_ptr < some_ptr);
+                    zxChar = *ptr_to_input;
+                }
+            } else {
+                *output = zxChar;
+                zxChar = ptr_to_input[1];
+                output++;
+                some_ptr++;
+                ptr_to_input++;
             }
-        } else {
-            *(output++) = *(input++);
-        }
+        } while (zxChar != 0);
     }
     *output = '\0';
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/trim_filename_string.s")
-#endif
 
 void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *arg5, s32 arg6) {
     D_800E0F90 = arg0;
