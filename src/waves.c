@@ -110,8 +110,8 @@ s32 D_8012A0A8;
 s32 D_8012A0AC;
 s32 D_8012A0B0;
 s32 D_8012A0B4;
-s32 D_8012A0B8;
-s32 D_8012A0BC;
+f32 D_8012A0B8;
+f32 D_8012A0BC;
 s32 D_8012A0C0;
 s32 D_8012A0C4;
 s32 D_8012A0C8;
@@ -310,7 +310,90 @@ GLOBAL_ASM("asm/non_matchings/waves/func_800BDC80.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BE654.s")
 // Get water height probably.
 GLOBAL_ASM("asm/non_matchings/waves/func_800BEEB4.s")
+
+#ifdef NON_EQUIVALENT
+f32 func_800BEFC4(s32 arg0, s32 arg1, s32 arg2) {
+    f32 temp_f0;
+    f32 temp_f12;
+    f32 temp_f20;
+    f32 temp_f22;
+    f32 temp_f24;
+    f32 temp_f30;
+    f32 var_f0;
+    f32 var_f28;
+    f32 var_f2;
+    s32 var_s0;
+    s32 temp_a1;
+    s32 var_s3;
+    s32 var_v1;
+    u16 temp_s0;
+    u8 temp_t5;
+    s32 var_v0;
+    unk800E3184 *temp_a3;
+    unk800E3190 *temp_s1;
+
+    var_f28 = 0.0f;
+    if (D_800E3188 <= 0) {
+        return 0.0f;
+    }
+    var_f0 = D_8012A0B8;
+    var_v1 = D_80129FC8->unk0;
+    var_f2 = D_8012A0BC;
+    if (D_80129FC8->unk28 != 0) {
+        var_f0 *= 0.5f;
+        var_v1 *= 2;
+        var_f2 *= 0.5f;
+    }
+    temp_a1 = (D_800E30D8[arg0].unkA * var_v1) + arg1;
+    temp_a3 = &D_800E3184[temp_a1];
+    temp_t5 = temp_a3->unk0[0];
+    if (temp_t5 != 0xFF) {
+        temp_f30 = D_8012A0D0 + (temp_a1 * var_f0);
+        var_s3 = 0;
+        var_v0 = temp_t5;
+        temp_f24 = D_8012A0D4 + (((D_800E30D8[arg0].unkB * var_v1) + arg2) * var_f2);
+loop_6:
+        temp_s1 = &D_800E3190[var_v0];
+        if ((temp_s1->unk0 <= temp_f24) && (temp_f24 <= temp_s1->unk4)) {
+            temp_f20 = temp_f30 - temp_s1->unk8;
+            temp_f22 = temp_f24 - temp_s1->unkC;
+            temp_f12 = (temp_f20 * temp_f20) + (temp_f22 * temp_f22);
+            if (temp_f12 < temp_s1->unk14) {
+                temp_f0 = sqrtf(temp_f12);
+                temp_s0 = temp_s1->unk1A;
+                if (temp_s1->unk31 != 0) {
+                    if (temp_f20 < 0.0f) {
+                        var_s0 = temp_s0 - (s32) (temp_f20 * temp_s1->unk20);
+                    } else {
+                        var_s0 = temp_s0 + (s32) (temp_f20 * temp_s1->unk20);
+                    }
+                } else if (temp_s1->unk32 != 0) {
+                    if (temp_f20 < 0.0f) {
+                        var_s0 = temp_s0 - (s32) (temp_f22 * temp_s1->unk20);
+                    } else {
+                        var_s0 = temp_s0 + (s32) (temp_f22 * temp_s1->unk20);
+                    }
+                } else {
+                    var_s0 = temp_s0 + (s32) (temp_f0 * temp_s1->unk20);
+                }
+                temp_f0 = coss_f((temp_f0 * 65536.0f) / temp_s1->unk10);
+                var_f28 += temp_s1->unk24 * sins_f(var_s0) * temp_f0;
+            }
+        }
+        var_s3 += 1;
+        temp_a3 += 1;
+        if (var_s3 < 8) {
+            var_v0 = temp_a3->unk0[0];
+            if (var_v0 != 0xFF) {
+                goto loop_6;
+            }
+        }
+    }
+    return var_f28;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/waves/func_800BEFC4.s")
+#endif
 
 void func_800BF3E4(s32 arg0) {
     s32 i;
