@@ -1575,8 +1575,31 @@ UNUSED ParticleBehavior *func_800B461C(s32 *idx) {
     return gParticleBehavioursAssetTable[*idx];
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800B4668.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800B46BC.s")
+void func_800B4668(Object* obj, s32 idx, s32 arg2, s32 arg3) {
+    s32 temp_v0;
+
+    arg3 <<= 8; 
+    temp_v0 = (obj->unk6C[idx].unkA & 0xFFFF) + arg2;
+    if (arg3 < temp_v0) {
+        obj->unk6C[idx].unkA = arg3;
+    } else {
+        obj->unk6C[idx].unkA = temp_v0;
+    }
+    obj->unk6C[idx].unk4 |= 0x100;
+}
+
+void func_800B46BC(Object* obj, s32 idx, s32 arg2, s32 arg3) {
+    s32 temp_v0;
+
+    arg3 <<= 8; 
+    temp_v0 = (obj->unk6C[idx].unkA & 0xFFFF) - arg2;
+    if (temp_v0 < arg3) {
+        obj->unk6C[idx].unkA = arg3;
+    } else {
+        obj->unk6C[idx].unkA = temp_v0;
+    }
+    obj->unk6C[idx].unk4 |= 0x100;
+}
 
 /**
  * memset(void *s, int c, size_t n)
