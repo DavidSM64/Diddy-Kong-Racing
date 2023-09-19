@@ -1,4 +1,4 @@
-glabel func_800B4794
+glabel strcasecmp
 /* 0B5394 800B4794 90820000 */  lbu   $v0, ($a0)
 /* 0B5398 800B4798 00000000 */  nop   
 /* 0B539C 800B479C 14400005 */  bnez  $v0, .L800B47B4

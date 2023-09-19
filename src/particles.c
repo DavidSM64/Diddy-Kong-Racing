@@ -1624,29 +1624,3 @@ void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3) {
     }
     obj->unk6C[idx].unk4 |= 0x100;
 }
-
-UNUSED char *strcpy(char *src, const char *dst) {
-    char *ret = src;
-
-    while (*src++ = *dst++);
-    return ret;
-}
-
-GLOBAL_ASM("asm/non_matchings/particles/func_800B4744.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800B4794.s")
-
-/**
- * memset(void *s, int c, size_t n)
- *
- * s: start of area to clear
- * c: char to fill with
- * n: size of area to clear
- */
-void *memset(void *s, int c, size_t n) {
-    u8 *var_v0 = s;
-
-    while (n-- > 0) {
-        *var_v0++ = c;
-    }
-    return s;
-}
