@@ -759,7 +759,7 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1E48.s")
 
 void func_800A22F4(Object_Racer *racer, UNUSED void *unused) {
     gCurrentHud->unk646 = racer->characterId + 56;
-    if (gNumActivePlayers < 3 || (gNumActivePlayers == 3 && racer->playerIndex == -1)) {
+    if (gNumActivePlayers < 3 || (gNumActivePlayers == 3 && racer->playerIndex == PLAYER_COMPUTER)) {
         D_80126CD5 = TRUE;
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk640);
         D_80126CD5 = FALSE;
@@ -774,17 +774,17 @@ void func_800A22F4(Object_Racer *racer, UNUSED void *unused) {
     } else {
         gCurrentHud->unk6D8 = racer->bananas / 10;
         gCurrentHud->unk6F8 = racer->bananas % 10;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk67B[0x65]);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk6E0);
     }
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk67B[0x45]);
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk6C0);
     if (gNumActivePlayers == 2 && racer->bananas < 10) {
         gCurrentHud->unk6CC -= 6.0f;
     }
     if (gNumActivePlayers != 2) {
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk67B[0x25]);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk6A0);
         func_8007BF1C(1);
         D_80126CD5 = TRUE;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk67B[5]);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk680);
         D_80126CD5 = FALSE;
         func_8007BF1C(0);
     }
