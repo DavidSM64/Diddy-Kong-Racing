@@ -1564,11 +1564,11 @@ typedef struct Object_68 {
  
 /* Size: 0x20 bytes */
 typedef struct Object_6C {
-    u8  pad0[0x4];
-    s16 unk4;
-    u8  pad6[0x4];
-    s16 unkA;
-    u8  padC[0x14];
+    /* 0x00 */ u8  pad0[0x4];
+    /* 0x04 */ s16 unk4;
+    /* 0x05 */ u8  pad6[0x4];
+    /* 0x0A */ s16 unkA;
+    /* 0x0C */ u8  padC[0x14];
 } Object_6C;
 
 /* Size: 0xA0 bytes */
