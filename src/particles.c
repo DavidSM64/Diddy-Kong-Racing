@@ -1559,7 +1559,14 @@ UNUSED ParticleBehavior *func_800B4578(s32 idx) {
     return gParticleBehavioursAssetTable[gParticleBehavioursAssetTableCount - 1];
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800B45C4.s")
+UNUSED ParticleBehavior *func_800B45C4(s32 *idx) {
+    *idx += 1;
+    while (*idx >= gParticleBehavioursAssetTableCount) {
+        *idx -= gParticleBehavioursAssetTableCount;
+    }
+    return gParticleBehavioursAssetTable[*idx];
+}
+
 GLOBAL_ASM("asm/non_matchings/particles/func_800B461C.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B4668.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B46BC.s")

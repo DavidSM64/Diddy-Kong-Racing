@@ -854,7 +854,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     // Fake, fixes f12 & f14 swap.
     if (1) { } if (1) { } if (1) { } if (1) { } if (1) { }        
 
-    if (racer->zipperDirCorrection != 0) {
+    if (!racer->zipperDirCorrection) {
         gCurrentStickX = 0;
         racer->magnetTimer = 0;
         racer->steerAngle = 0;
@@ -868,7 +868,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             var_v1 += 0xFFFF;
         }
         racer->steerVisualRotation += (var_v1 * updateRate) >> 3;
-        if (((var_v1 < 0x400) && (var_v1 > (-0x400))) || (racer->playerIndex == PLAYER_COMPUTER)) {
+        if ((var_v1 < 0x400 && var_v1 > -0x400) || (racer->playerIndex == PLAYER_COMPUTER)) {
             if (racer->playerIndex != PLAYER_COMPUTER) {
                 play_sound_spatial(SOUND_ZIP_PAD_BOOST, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
                 play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, (0x80 | 0x2));
@@ -894,7 +894,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         var_f2 = 14.0f;
     }
     var_f2 /= 14.0f;
-    if ((racer->unk1D4 != 0) || (racer->unk1D5 != 0)) {
+    if (racer->unk1D4 != 0 || racer->unk1D5 != 0) {
         apply_vehicle_rotation_offset(racer, updateRate, racer->y_rotation_offset, 0, 0);
     } else {
         apply_vehicle_rotation_offset(racer, updateRate, 0, (spF0 * 4096.0f) * var_f2, 0);
@@ -1133,8 +1133,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     temp = 1.0f;
     racer->unk196 += (((s32) ((((f32) var_v1) * 1.75) * temp)) * updateRate) >> 6;
-    if (racer->zipperDirCorrection == 0) {
-        if ((gCurrentPlayerIndex == PLAYER_COMPUTER) && (racer->raceFinished == 0)) {
+    if (!racer->zipperDirCorrection) {
+        if ((gCurrentPlayerIndex == PLAYER_COMPUTER) && (!racer->raceFinished)) {
             var_f16 = racer->lateral_velocity * 0.25;
             temp_f0 = var_f16 * 0.35;
             if (temp_f0 < 0.0) {
