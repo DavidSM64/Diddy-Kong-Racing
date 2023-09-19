@@ -756,7 +756,39 @@ void func_800A1C04(s32 arg0, Object *obj, s32 updateRate) {
 }
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1E48.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A22F4.s")
+
+void func_800A22F4(Object_Racer *racer, UNUSED void *unused) {
+    gCurrentHud->unk646 = racer->characterId + 56;
+    if (gNumActivePlayers < 3 || (gNumActivePlayers == 3 && racer->playerIndex == -1)) {
+        D_80126CD5 = TRUE;
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk640);
+        D_80126CD5 = FALSE;
+        init_rdp_and_framebuffer(&gHUDCurrDisplayList);
+        reset_render_settings(&gHUDCurrDisplayList);
+    }
+    if (racer->bananas < 10) {
+        gCurrentHud->unk6D8 = racer->bananas;
+        if (gNumActivePlayers == 2) {
+            gCurrentHud->unk6CC += 6.0f;
+        }
+    } else {
+        gCurrentHud->unk6D8 = racer->bananas / 10;
+        gCurrentHud->unk6F8 = racer->bananas % 10;
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk67B[0x65]);
+    }
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk67B[0x45]);
+    if (gNumActivePlayers == 2 && racer->bananas < 10) {
+        gCurrentHud->unk6CC -= 6.0f;
+    }
+    if (gNumActivePlayers != 2) {
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk67B[0x25]);
+        func_8007BF1C(1);
+        D_80126CD5 = TRUE;
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk67B[5]);
+        D_80126CD5 = FALSE;
+        func_8007BF1C(0);
+    }
+}
 
 /**
  * When racing the boss, render the essentials, but skip the bananas.

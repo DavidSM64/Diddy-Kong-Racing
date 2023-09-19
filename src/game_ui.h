@@ -282,7 +282,13 @@ typedef struct unk80126CDC {
     f32 unk670;
     u8 unk674[0x6];
     s8 unk67A;
-    s8 unk67B[0x85];
+    s8 unk67B[0x51];
+    f32 unk6CC;
+    u8 unk6D0[0x8];
+    s16 unk6D8;
+    s8 unk6DA[0x1E];
+    s16 unk6F8;
+    s8 unk6FA[0x6];
     struct unk80126CDC *unk700;
     s8 unk704[0x1C];
     struct unk80126CDC *unk720;
@@ -367,6 +373,7 @@ void render_lap_count(Object_Racer *racer, s32 updateRate);
 void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtxList, s32 updateRate);
 void init_hud(s32 viewportCount);
 void func_800A1C04(s32 arg0, Object *obj, s32 updateRate);
+void func_800A22F4(Object_Racer *racer, void *unused);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
