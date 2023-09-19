@@ -366,6 +366,7 @@ void render_speedometer(Object *obj, s32 updateRate);
 void render_lap_count(Object_Racer *racer, s32 updateRate);
 void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtxList, s32 updateRate);
 void init_hud(s32 viewportCount);
+void func_800A1C04(s32 arg0, Object *obj, s32 updateRate);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
@@ -376,14 +377,13 @@ void func_800AA600(Gfx **dList, MatrixS **mtx, Vertex **vtxList, unk80126CDC **a
 void func_800A003C(void);
 void func_800A7FBC(s32, s32, s32 minutes, s32 seconds, s32 hundredths, s32); 
 void func_800A1248(s32, Object*, s32);
-void func_800A1C04(s32, Object*, s32);
 void func_800A277C(s32, Object*, s32);
 void func_800A6254(Object_64* obj, s32 updateRate);
 void func_800A6E30(Object_64* obj, s32 updateRate);
 void func_800A7A60(Object*, Gfx**);
 void func_800A0BD4(s32);
 void func_800A19A4(Object_Racer* racer, s32 updateRate);
-void func_800A1E48(s32, s32);
+void func_800A1E48(Object*, s32);
 void render_treasure_hud(Object_Racer*);
 void func_800AA3EC(f32, f32, f32, f32, f32);
 void func_800A36CC(u8, u8, u8, u8, u8);

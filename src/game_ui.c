@@ -717,7 +717,44 @@ void render_hud_challenge_eggs(s32 arg0, Object *arg1, s32 updateRate) {
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A14F0.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A19A4.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1C04.s")
+
+void func_800A1C04(s32 arg0, Object *obj, s32 updateRate) {
+    Object **racerObjs;
+    Object_Racer *racer;
+    s32 numRacers;
+    s32 racersFinished;
+    s32 i;
+
+    racer = (Object_Racer *) obj->unk64;
+    if (gNumActivePlayers != 1 || racer->raceFinished == FALSE) {
+        func_80068508(1);
+        render_race_start(arg0, updateRate);
+        render_weapon_hud(obj, updateRate);
+        racerObjs = get_racer_objects(&numRacers);
+        switch (gNumActivePlayers) {
+            case 1:
+                func_800A1E48(obj, updateRate);
+                break;
+            case 2:
+                racersFinished = 0;
+                for (i = 0; i < numRacers; i++) {
+                    racer = &racerObjs[i]->unk64->racer;
+                    if (racer->playerIndex != PLAYER_COMPUTER && racer->raceFinished) {
+                        racersFinished++;
+                    }
+                }
+                if (racersFinished == 2) {
+                    return;
+                }
+                break;
+            default:
+                render_racer_bananas(racer, updateRate);
+                break;
+        }
+        func_80068508(0);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1E48.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A22F4.s")
 
