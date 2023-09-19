@@ -1429,7 +1429,32 @@ void func_800B3140(Particle* arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800B3240.s")
+void func_800B3240(Particle* arg0) {
+    s32 i;
+    Object *temp_v0;
+
+    i = D_80127C80;
+    while ( i-- > 0) {
+        arg0->segment.trans.y_rotation += arg0->unk62;
+        arg0->segment.trans.x_rotation += arg0->unk64;
+        arg0->segment.trans.z_rotation += arg0->unk66;
+        arg0->segment.trans.scale += arg0->segment.unk28;
+    }
+    arg0->segment.trans.x_position = 0.0f;
+    arg0->segment.trans.y_position = -arg0->forwardVel;
+    arg0->segment.trans.z_position = 0.0f;
+    f32_vec3_apply_object_rotation(&arg0->segment.trans, &arg0->segment.trans.x_position);
+    arg0->segment.trans.x_position += arg0->somePosX;
+    arg0->segment.trans.y_position += arg0->somePosY;
+    arg0->segment.trans.z_position += arg0->somePosZ;
+    temp_v0 = arg0->segment.unk3C;
+    if (temp_v0 != NULL) {
+        arg0->segment.trans.x_position += temp_v0->segment.trans.x_position;
+        arg0->segment.trans.y_position += temp_v0->segment.trans.y_position;
+        arg0->segment.trans.z_position += temp_v0->segment.trans.z_position;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/particles/func_800B3358.s")
 GLOBAL_ASM("asm/non_matchings/particles/func_800B34B0.s")
 

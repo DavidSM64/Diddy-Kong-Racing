@@ -7,15 +7,15 @@
 UNUSED char *strcpy(char *src, const char *dest) {
     char *ret = src;
 
-    while ((*src++ = *dest++));
+    while ((*src++ = *dest++) != '\0');
     return ret;
 }
 
 UNUSED char *strcat(char *dest, const char *src) {
     char *ret = dest;
     
-    while (*dest) dest++;
-    while ((*dest++ = *src++));
+    while (*dest != '\0') dest++;
+    while ((*dest++ = *src++) != '\0');
     
     return ret;
 }
@@ -30,10 +30,10 @@ GLOBAL_ASM("asm/non_matchings/unused_string/strcasecmp.s")
  * n: size of area to clear
  */
 UNUSED void *memset(void *s, int c, size_t n) {
-    u8 *var_v0 = s;
+    unsigned char *ret = s;
 
     while (n-- > 0) {
-        *var_v0++ = c;
+        *ret++ = c;
     }
     return s;
 }
