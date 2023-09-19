@@ -1554,7 +1554,6 @@ void func_800B3740(Particle *particle, Gfx **dlist, MatrixS **mtx, Vertex **vtx,
     }
 }
 
-
 GLOBAL_ASM("asm/non_matchings/particles/func_800B3E64.s")
 
 UNUSED unk800E2CF0 *func_800B4488(s32 idx) {
@@ -1600,7 +1599,7 @@ UNUSED ParticleBehavior *func_800B461C(s32 *idx) {
     return gParticleBehavioursAssetTable[*idx];
 }
 
-void func_800B4668(Object* obj, s32 idx, s32 arg2, s32 arg3) {
+void func_800B4668(Object *obj, s32 idx, s32 arg2, s32 arg3) {
     s32 temp_v0;
 
     arg3 <<= 8; 
@@ -1613,7 +1612,7 @@ void func_800B4668(Object* obj, s32 idx, s32 arg2, s32 arg3) {
     obj->unk6C[idx].unk4 |= 0x100;
 }
 
-void func_800B46BC(Object* obj, s32 idx, s32 arg2, s32 arg3) {
+void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3) {
     s32 temp_v0;
 
     arg3 <<= 8; 
@@ -1625,6 +1624,16 @@ void func_800B46BC(Object* obj, s32 idx, s32 arg2, s32 arg3) {
     }
     obj->unk6C[idx].unk4 |= 0x100;
 }
+
+UNUSED char *strcpy(char *src, const char *dst) {
+    char *ret = src;
+
+    while (*src++ = *dst++);
+    return ret;
+}
+
+GLOBAL_ASM("asm/non_matchings/particles/func_800B4744.s")
+GLOBAL_ASM("asm/non_matchings/particles/func_800B4794.s")
 
 /**
  * memset(void *s, int c, size_t n)
