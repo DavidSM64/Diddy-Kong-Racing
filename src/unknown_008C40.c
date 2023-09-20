@@ -227,17 +227,12 @@ void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 arg6,
     func_8000974C(soundId, x, y, z, arg4, 100, arg5, 15000, 0, arg6, 0x3F, soundMask);
 }
 
-#if 0
 // I think this function is used to update the world position of any sound associated with the given soundmask.
-//This matches, but it breaks update_player_racer
-void update_spatial_audio_position(s32 arg0, f32 arg1, f32 arg2, f32 arg3) {
-    arg0->x = arg1;
-    arg0->y = arg2;
-    arg0->z = arg3;
+void update_spatial_audio_position(Vec3f *arg0, f32 x, f32 y, f32 z) {
+    arg0->x = x;
+    arg0->y = y;
+    arg0->z = z;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/update_spatial_audio_position.s")
-#endif
 
 void func_800096F8(s32 arg0) {
     s32 i;
