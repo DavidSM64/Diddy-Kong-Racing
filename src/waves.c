@@ -309,34 +309,33 @@ GLOBAL_ASM("asm/non_matchings/waves/func_800BCC70.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BDC80.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BE654.s")
 
-// Get water height probably.
-f32 func_800BEEB4(Object_64 *arg0, s32 updateRate) {
+f32 get_wave_height(Object_Log *log, s32 updateRate) {
     s32 var_t0;
-    f32 temp;
+    f32 y;
 
-    arg0->obj800BEEB4_64.unk4 += updateRate;
-    while (arg0->obj800BEEB4_64.unk4 >= arg0->obj800BEEB4_64.unk6) {
-        arg0->obj800BEEB4_64.unk4 -= arg0->obj800BEEB4_64.unk6;
+    log->unk4 += updateRate;
+    while (log->unk4 >= log->unk6) {
+        log->unk4 -= log->unk6;
     }
-    var_t0 = arg0->obj800BEEB4_64.unkE[arg0->obj800BEEB4_64.unk4 >> 1];
-    if (arg0->obj800BEEB4_64.unk4 & 1) {
-        if ((arg0->obj800BEEB4_64.unk4 + 1) >= arg0->obj800BEEB4_64.unk6) {
-            var_t0 += arg0->obj800BEEB4_64.unkE[0];
+    var_t0 = log->unkE[log->unk4 >> 1];
+    if (log->unk4 & 1) {
+        if (log->unk4 + 1 >= log->unk6) {
+            var_t0 += log->unkE[0];
         } else {
-            var_t0 += arg0->obj800BEEB4_64.unkE[(arg0->obj800BEEB4_64.unk4 >> 1) + 1];
+            var_t0 += log->unkE[(log->unk4 >> 1) + 1];
         }
-        if (arg0->obj800BEEB4_64.unk2 > 0) {
-            var_t0 <<= (arg0->obj800BEEB4_64.unk2 + 0x1F);
+        if (log->unk2 > 0) {
+            var_t0 <<= (log->unk2 + 0x1F);
         } else {
             var_t0 >>= 1;
         }
     } else {
-        var_t0 <<= arg0->obj800BEEB4_64.unk2;
+        var_t0 <<= log->unk2;
     }
-    temp = (((f32) var_t0 * 0.0625) + (f32) arg0->obj800BEEB4_64.unk0);
-    temp *= D_80129FC8->unk40;
-    temp += func_800BEFC4(arg0->obj800BEEB4_64.unkC, arg0->obj800BEEB4_64.unk8, arg0->obj800BEEB4_64.unkA);
-    return temp;
+    y = (((f32) var_t0 * 0.0625) + (f32) log->unk0);
+    y *= D_80129FC8->unk40;
+    y += func_800BEFC4(log->unkC, log->unk8, log->unkA);
+    return y;
 }
 
 #ifdef NON_EQUIVALENT
