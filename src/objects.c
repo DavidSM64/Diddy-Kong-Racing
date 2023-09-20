@@ -1654,26 +1654,32 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80011134.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+//Probably NON_MATCHING, but not sure.
 //This is a function for doors
 void func_80011264(ObjectModel *model, Object *obj) {
-    s32 temp_a2;
+    s32 current;
+    s32 remaining;
     s32 i;
-    u8 textureIndex;
     Object_Door *door;
+    TriangleBatchInfo *batch;
 
     if (model->unk50 > 0) {
+        batch = &model->batches[0];
         door = &obj->unk64->door;
-        temp_a2 = (door->unk10 / 10) - 1;
-        for (i = 0; i < model->numberOfBatches; i++) {
-            if (model->batches[i].flags & 0x10000) {
-                textureIndex = model->batches[i].textureIndex;
-                if (textureIndex != 0xFF) { // 0xFF = No Texture
-                    if (model->textures[textureIndex].texture->numOfTextures > 0x900) {
-                        model->batches[i].unk7 = (door->unk10 % 10) * 4;
+        current = ((door->unk10 / 10) - 1) << 2;
+        if (model->textures[batch->textureIndex].texture){} //fakematch
+        if (1) { //fakematch
+        remaining = ((door->unk10 % 10) << 2);
+        }
+        for (i = 0; i < model->numberOfBatches; i++, batch++) {
+            if (batch->flags & 0x10000) {
+                if (batch->textureIndex != 0xFF) { // 0xFF = No Texture
+                    if (model->textures[batch->textureIndex].texture->numOfTextures > 0x900) {
+                        batch->unk7 = remaining;
+                    } else if (current >= 0) {
+                        batch->unk7 = current;
                     }
-                    if (!(temp_a2 & 0x20000000)) {
-                        model->batches[i].unk7 = temp_a2 * 4;
-                    }
+                    if (door){} //fakematch
                 }
             }
         }
