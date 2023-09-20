@@ -20,7 +20,70 @@ UNUSED char *strcat(char *dest, const char *src) {
     return ret;
 }
 
-GLOBAL_ASM("asm/non_matchings/unused_string/strcasecmp.s")
+UNUSED int strcasecmp(const char *s1, const char *s2) {
+	unsigned char c1;
+	unsigned char c2;
+
+	while (*s1 || *s2) {
+		c1 = *s1;
+        
+		if (c1 >= 'a' && c1 <= 'z') {
+			c1 -= 0x20;
+		}
+
+		c2 = *s2;
+        
+		if (c2 >= 'a' && c2 <= 'z') {
+			c2 -= 0x20;
+		}
+
+		if (c1 < c2) {
+			return -1;
+		}
+
+		if (c2 < c1) {
+			return 1;
+		}
+
+		s1++;
+		s2++;
+	}
+    
+	return 0;
+}
+
+UNUSED int strncasecmp(const char *s1, const char *s2, size_t n) {
+	unsigned char c1;
+	unsigned char c2;
+
+	while ((*s1 || *s2) && n) {
+		c1 = *s1;
+        
+		if (c1 >= 'a' && c1 <= 'z') {
+			c1 -= 0x20;
+		}
+
+		c2 = *s2;
+        
+		if (c2 >= 'a' && c2 <= 'z') {
+			c2 -= 0x20;
+		}
+
+		if (c1 < c2) {
+			return -1;
+		}
+
+		if (c2 < c1) {
+			return 1;
+		}
+
+		s1++;
+		s2++;
+        n--;
+	}
+
+	return 0;
+}
 
 /**
  * memset(void *s, int c, size_t n)
