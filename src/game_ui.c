@@ -251,7 +251,7 @@ u8 D_80126D35;
 u8 gHideRaceTimer;
 u8 gNumActivePlayers;
 u8 gWrongWayNagPrefix;
-unk80119C50 *D_80126D3C;
+SoundMask *D_80126D3C;
 s32 gHUDVoiceSoundMask;
 s32 D_80126D44;
 s16 D_80126D48;

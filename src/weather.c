@@ -143,7 +143,7 @@ s32 D_800E2C84 = 0;
 TextureHeader *gRainOverlayUnusedValue = NULL; // Set, but never read.
 Sprite *gRainSplashGfx = 0;
 s32 D_800E2C90 = 0;
-unk80119C50 *gWeatherSoundMask = NULL;
+SoundMask *gWeatherSoundMask = NULL;
 
 
 FadeTransition D_800E2C98 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK1, FADE_COLOR_WHITE, 5, 2);

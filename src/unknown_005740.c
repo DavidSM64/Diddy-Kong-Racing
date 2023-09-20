@@ -27,10 +27,10 @@ unk80119C38 *D_80119C30[2];
 unk80119C38 *D_80119C38;
 Object_Racer *D_80119C3C;
 unk80115D18 *D_80119C40; // This should be in unknown_008C40?
-unk80119C50 **D_80119C44;
+SoundMask **D_80119C44;
 unk80119C48 **D_80119C48; //0x24 struct size - 0x5A0 total size - should be 40 elements
 u8 D_80119C4C;
-unk80119C50 **D_80119C50;
+SoundMask **D_80119C50;
 s32 D_80119C54; //Padding?
 unk80119C58 **D_80119C58; //Struct of size in func_8000A184 = 0x180 = 384 bytes
 unk80119C58 **D_80119C5C; //Struct of size in func_8000A184 = 0x180 = 384 bytes Likely the same as above

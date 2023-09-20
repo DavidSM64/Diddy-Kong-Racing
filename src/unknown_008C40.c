@@ -217,24 +217,24 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
 /**
  * Play Sound at position 
  */
-void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, unk80119C50 **soundMask) {
+void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, SoundMask **soundMask) {
     func_8000974C(D_80119C40[soundId].unk0, x, y, z, arg4, D_80119C40[soundId].unk3,
         D_80119C40[soundId].unk2, D_80119C40[soundId].unk6, 0, D_80119C40[soundId].unk4,
         D_80119C40[soundId].unk8, soundMask);
 }
 
-void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 arg6, unk80119C50 **soundMask) {
+void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 arg6, SoundMask **soundMask) {
     func_8000974C(soundId, x, y, z, arg4, 100, arg5, 15000, 0, arg6, 0x3F, soundMask);
 }
 
 // I think this function is used to update the world position of any sound associated with the given soundmask.
-void update_spatial_audio_position(unk80119C50 *arg0, f32 x, f32 y, f32 z) {
-    arg0->x = x;
-    arg0->y = y;
-    arg0->z = z;
+void update_spatial_audio_position(SoundMask *arg0, f32 x, f32 y, f32 z) {
+    arg0->pos.x = x;
+    arg0->pos.y = y;
+    arg0->pos.z = z;
 }
 
-void func_800096F8(unk80119C50 *arg0) {
+void func_800096F8(SoundMask *arg0) {
     s32 i;
     for (i = 0; i < 40; i++) {
         if (arg0 == D_80119C44[i]) {
@@ -244,8 +244,8 @@ void func_800096F8(unk80119C50 *arg0) {
     }
 }
 
-void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, u16 arg7, u8 arg8, u8 arg9, u8 argA, unk80119C50 **soundMask) {
-    unk80119C50 *temp_v0;
+void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, u16 arg7, u8 arg8, u8 arg9, u8 argA, SoundMask **soundMask) {
+    SoundMask *temp_v0;
 
     if (soundMask != NULL) {
         func_800245B4(soundId | 0xE000);
@@ -258,9 +258,9 @@ void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, 
         return;
     }
     temp_v0 = D_80119C50[D_80119C4C--];
-    temp_v0->x = x;
-    temp_v0->y = y;
-    temp_v0->z = z;
+    temp_v0->pos.x = x;
+    temp_v0->pos.y = y;
+    temp_v0->pos.z = z;
     temp_v0->soundId = soundId;
     temp_v0->unk11 = arg4;
     temp_v0->unk10 = arg5;

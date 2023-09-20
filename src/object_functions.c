@@ -1777,9 +1777,9 @@ void obj_loop_snowball(Object *obj, s32 updateRate) {
     }
     if (obj64->unk24 != 0) {
         if (obj64->soundMask == NULL) {
-            play_sound_at_position(obj64->unk24, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, (unk80119C50 **) &obj64->soundMask);
+            play_sound_at_position(obj64->unk24, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, (SoundMask **) &obj64->soundMask);
         } else {
-            update_spatial_audio_position((unk80119C50 *) obj64->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+            update_spatial_audio_position((SoundMask *) obj64->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
         }
     }
     func_8001F460(obj, updateRate, obj);
@@ -3225,7 +3225,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
             play_sound_at_position(SOUND_DOOR_OPEN, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &ttDoor->soundMask);
         }
     } else if (ttDoor->soundMask != NULL) {
-        func_800096F8((unk80119C50 *)((s32)ttDoor->soundMask));
+        func_800096F8((SoundMask *)((s32)ttDoor->soundMask));
         ttDoor->soundMask = NULL;
     }
     obj->interactObj->distance = 0xFF;
@@ -3457,7 +3457,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
     
     obj->interactObj->distance = 255;
     obj->interactObj->obj = NULL;
-    obj->interactObj->flags &= 0xFFF7;
+    obj->interactObj->flags &= ~INTERACT_FLAGS_PUSHING;
 }
 
 void obj_init_rampswitch(Object *obj, LevelObjectEntry_RampSwitch *entry) {
@@ -3687,7 +3687,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
     s8 sp43;
     Object_Banana *banana;
     ObjPropertyBanana *properties;
-    unk80119C50 *prevSoundMask;
+    SoundMask *prevSoundMask;
 
     updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {

@@ -136,8 +136,8 @@ extern s32 D_800DC6D8;
 extern s32 D_800DC6DC;
 extern u16 D_800DC6E0;
 extern unk80119C48 **D_80119C48;
-extern unk80119C50 **D_80119C44;
-extern unk80119C50 **D_80119C50;
+extern SoundMask **D_80119C44;
+extern SoundMask **D_80119C50;
 extern u8 D_80119C4C;
 
 
