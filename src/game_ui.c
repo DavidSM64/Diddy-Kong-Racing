@@ -251,7 +251,7 @@ u8 D_80126D35;
 u8 gHideRaceTimer;
 u8 gNumActivePlayers;
 u8 gWrongWayNagPrefix;
-s32 D_80126D3C;
+unk80119C50 *D_80126D3C;
 s32 gHUDVoiceSoundMask;
 s32 D_80126D44;
 s16 D_80126D48;
@@ -342,7 +342,7 @@ void init_hud(UNUSED s32 viewportCount) {
     D_80126D70 = 0;
     D_80126D7C = 0;
     D_80126D74 = 0;
-    D_80126D3C = 0;
+    D_80126D3C = NULL;
     D_80126D44 = 0;
     D_80126CD3 = 0;
     D_80127194 = (LevelHeader_70 *) get_misc_asset(ASSET_MISC_58);
@@ -1200,7 +1200,7 @@ void render_race_start(s32 arg0, s32 updateRate) {
                     gRaceStartShowHudStep++;
                 }
             }
-            if (D_80126D3C == 0 && func_80023568() == 0) {
+            if (D_80126D3C == NULL && func_80023568() == 0) {
                 f32 sp4C;
                 UNUSED s32 pad;
                 Object** racerGroup;

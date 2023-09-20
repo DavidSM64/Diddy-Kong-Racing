@@ -2632,7 +2632,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                 }
             } else if (tempRacer->shieldSoundMask) {
                 func_800096F8(tempRacer->shieldSoundMask);
-                tempRacer->shieldSoundMask = 0;
+                tempRacer->shieldSoundMask = NULL;
             }
             tempRacer->shieldTimer -= updateRate;
             if (tempRacer->shieldTimer <= 0) {
@@ -6061,7 +6061,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         } else {
             if (racer->shieldSoundMask) {
                 func_800096F8(racer->shieldSoundMask);
-                racer->shieldSoundMask = 0;
+                racer->shieldSoundMask = NULL;
             }
         }
         racer->shieldTimer -= updateRate;
@@ -6069,7 +6069,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
             racer->shieldType = 0;
         }
     }
-    if (racer->soundMask != 0) {
+    if (racer->soundMask != NULL) {
         update_spatial_audio_position(racer->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
     }
     gRacerInputBlocked = FALSE;

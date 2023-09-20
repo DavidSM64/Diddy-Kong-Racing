@@ -5,23 +5,6 @@
 #include "structs.h"
 #include "audio.h"
 
-/* Size: 0x24 / 36 bytes */
-typedef struct unk80119C50 {
-    /* 0x00 */ f32 x, y, z;
-    /* 0x0C */ u16 soundId;
-    /* 0x0E */ u8 unkE;
-    /* 0x0F */ u8 unkF;
-    /* 0x10 */ u8 unk10;
-    /* 0x11 */ u8 unk11;
-    /* 0x12 */ u8 unk12;
-    /* 0x14 */ s32 unk14;
-    /* 0x18 */ s32 unk18;
-    /* 0x1C */ s32 *soundMask;
-    /* 0x20 */ u8 unk20;
-    /* 0x21 */ u8 unk21;
-    /* 0x22 */ u8 unk22;
-} unk80119C50;
-
 /* Size: 0x90 / 144 bytes */
 typedef struct unk80119C48 {
     s32 unk18;

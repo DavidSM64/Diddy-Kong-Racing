@@ -63,6 +63,23 @@ typedef struct Vec4f {
   };
 } Vec4f;
 
+/* Size: 0x24 / 36 bytes */
+typedef struct unk80119C50 {
+    /* 0x00 */ f32 x, y, z;
+    /* 0x0C */ u16 soundId;
+    /* 0x0E */ u8 unkE;
+    /* 0x0F */ u8 unkF;
+    /* 0x10 */ u8 unk10;
+    /* 0x11 */ u8 unk11;
+    /* 0x12 */ u8 unk12;
+    /* 0x14 */ s32 unk14;
+    /* 0x18 */ s32 unk18;
+    /* 0x1C */ struct unk80119C50 **soundMask;
+    /* 0x20 */ u8 unk20;
+    /* 0x21 */ u8 unk21;
+    /* 0x22 */ u8 unk22;
+} unk80119C50;
+
 /* Size: 0x20 bytes */
 typedef struct TextureHeader {
   /* 0x00 */ u8 width;
@@ -903,7 +920,7 @@ typedef struct Object_Weapon {
   /* 0x18 */ u8 weaponID;
   /* 0x19 */ s8 checkpoint;
   /* 0x19 */ s16 unk1A;
-  /* 0x19 */ s32 soundMask;
+  /* 0x19 */ unk80119C50 *soundMask;
 } Object_Weapon;
 
 typedef struct Object_Butterfly {
@@ -991,7 +1008,7 @@ typedef struct Object_InfoPoint {
 
 typedef struct Object_TTDoor {
   /* 0x00 */ f32 homeY;
-  /* 0x04 */ s32 *soundMask;
+  /* 0x04 */ unk80119C50 *soundMask;
   /* 0x08 */ s32 unk8;
   /* 0x0C */ s16 unkC;
   /* 0x0C */ s8 unkE;
@@ -1082,7 +1099,6 @@ typedef struct Object_Exit {
   /* 0x10 */ s32 radius; // Activation radius.
   /* 0x14 */ s8 bossFlag; // Dictates boss level version. 0 is first encounter, 1 is rematch. -1 means no boss.
 } Object_Exit;
-
 /* Size: 0x224 - 548 bytes */
 typedef struct Object_Racer {
   /* 0x000 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
@@ -1096,7 +1112,7 @@ typedef struct Object_Racer {
   /* 0x018 */ s32 unk18;
   /* 0x01C */ s32 unk1C;
   /* 0x020 */ s32 unk20;
-  /* 0x024 */ s32 soundMask;
+  /* 0x024 */ unk80119C50 *soundMask;
   /* 0x028 */ u16 lastSoundID;
   /* 0x02A */ u16 unk2A;
   /* 0x02C */ f32 velocity;
@@ -1181,8 +1197,8 @@ typedef struct Object_Racer {
   /* 0x175 */ s8 magnetTimer;
   /* 0x176 */ s16 unk176;
   /* 0x178 */ void *magnetSoundMask;
-  /* 0x17C */ s32 shieldSoundMask;
-  /* 0x180 */ s32 bananaSoundMask;
+  /* 0x17C */ unk80119C50 *shieldSoundMask;
+  /* 0x180 */ unk80119C50 *bananaSoundMask;
   /* 0x184 */ s8 magnetModelID;
   /* 0x185 */ s8 bananas;
   /* 0x186 */ u8 unk186;
@@ -1333,7 +1349,7 @@ typedef struct Object_Audio {
   /* 0x05 */ u8 unk5;
   /* 0x06 */ u8 unk6;
   /* 0x07 */ u8 unk7;
-  /* 0x08 */ s32 soundMask;
+  /* 0x08 */ unk80119C50 *soundMask;
   /* 0x0C */ u8 unkC;
   /* 0x0D */ u8 unkD;
 } Object_Audio;
@@ -1418,7 +1434,7 @@ typedef struct Object_TT {
 
 typedef struct Object_Bridge_WhaleRamp {
   /* 0x0 */ f32 unk0;
-  /* 0x4 */ s32 unk4;
+  /* 0x4 */ unk80119C50 *unk4;
 } Object_Bridge_WhaleRamp;
 
 typedef struct Object_8001B7A8 {
