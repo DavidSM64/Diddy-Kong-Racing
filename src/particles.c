@@ -1455,8 +1455,46 @@ void func_800B3240(Particle* arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800B3358.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800B34B0.s")
+void func_800B3358(Particle* arg0) {
+    s32 i;
+    Vec3f sp38;
+    i = 0;
+    while (i++ < D_80127C80) {
+        arg0->segment.trans.x_position += arg0->segment.x_velocity;
+        arg0->segment.trans.y_position += arg0->segment.y_velocity;
+        arg0->segment.trans.z_position += arg0->segment.z_velocity;
+        arg0->segment.trans.scale += arg0->segment.unk28;
+        arg0->segment.trans.y_rotation += arg0->unk62;
+        arg0->segment.trans.x_rotation += arg0->unk64;
+        arg0->segment.trans.z_rotation += arg0->unk66;
+        sp38.x = 0.0f;
+        sp38.y = -arg0->forwardVel;
+        sp38.z = 0.0f;
+        f32_vec3_apply_object_rotation(&arg0->segment.trans, sp38.f);
+        arg0->segment.x_velocity += sp38.x;
+        arg0->segment.y_velocity += sp38.y;
+        arg0->segment.y_velocity -= arg0->unk68f;
+        arg0->segment.z_velocity += sp38.z;
+    }
+}
+
+void func_800B34B0(Particle* arg0) {
+    f32 temp_f0;
+    s32 i;
+
+    i = 0;
+    while (i++ < D_80127C80) {
+        temp_f0 = arg0->segment.y_velocity;
+        arg0->segment.trans.x_position += arg0->segment.x_velocity;
+        arg0->segment.trans.y_position += temp_f0;
+        arg0->segment.y_velocity = temp_f0 - arg0->unk68f;
+        arg0->segment.trans.z_position += arg0->segment.z_velocity;
+        arg0->segment.trans.scale += arg0->segment.unk28;
+        arg0->segment.trans.y_rotation += arg0->unk62;
+        arg0->segment.trans.x_rotation += arg0->unk64;
+        arg0->segment.trans.z_rotation += arg0->unk66;
+    }
+}
 
 void func_800B3564(Particle *arg0) {
     s32 var_s1;
