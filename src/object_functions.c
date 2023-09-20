@@ -32,9 +32,6 @@
 #include "collision.h"
 #include "controller.h"
 
-//Not accurate as arg- should be Vec3f*, but we have to define it here so it won't break things.
-void update_spatial_audio_position(s32, f32, f32, f32);
-
 /************ .data ************/
 
 // Unsure about the signed/unsigned with these arrays.

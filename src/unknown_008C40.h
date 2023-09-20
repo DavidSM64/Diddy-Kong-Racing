@@ -62,6 +62,7 @@ void func_800098A4(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6,
 s32 func_800099EC(u8 arg0);
 void func_8000A414(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *arg3, u8 red, u8 green, u8 blue);
 void func_80006BFC(Object *obj, ObjectSegment *segment, Object *obj2, s32 updateRate);
+void update_spatial_audio_position(s32 arg0, f32 x, f32 y, f32 z);
 
 s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, f32 *outY, f32 *outZ);
 void func_80009968(f32, f32, f32, u8, u8, u8); // Non Matching

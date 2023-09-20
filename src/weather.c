@@ -564,8 +564,6 @@ void handle_rain_lightning(s32 updateRate) {
     }
 }
 
-//Not accurate as arg- should be Vec3f*, but we have to define it here so it won't break things.
-void update_spatial_audio_position(s32, f32, f32, f32);
 /**
  * Emit looping rain sound, using the camera position and direction as reference.
  */

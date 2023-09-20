@@ -228,10 +228,11 @@ void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 arg6,
 }
 
 // I think this function is used to update the world position of any sound associated with the given soundmask.
-void update_spatial_audio_position(Vec3f *arg0, f32 x, f32 y, f32 z) {
-    arg0->x = x;
-    arg0->y = y;
-    arg0->z = z;
+void update_spatial_audio_position(s32 arg0, f32 x, f32 y, f32 z) {
+    Vec3f *tmp = (Vec3f *)arg0; //Making arg0 a Vec3f breaks other things, so this is the workaround.
+    tmp->x = x;
+    tmp->y = y;
+    tmp->z = z;
 }
 
 void func_800096F8(s32 arg0) {

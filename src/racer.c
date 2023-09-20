@@ -29,7 +29,6 @@
 #include "controller.h"
 #include "particles.h"
 
-
 #define MAX_NUMBER_OF_GHOST_NODES 360
 
 /**
@@ -2189,8 +2188,6 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
     tempRacer->lightFlags = 0;
 }
 
-//Not accurate as arg- should be Vec3f*, but we have to define it here so it won't break things.
-void update_spatial_audio_position(s32, f32, f32, f32);
 /**
  * Main function for handling everything related to the player controlled racer object.
  * Branches off into a different function if the player becomes computer controlled. (Finishing a race)
