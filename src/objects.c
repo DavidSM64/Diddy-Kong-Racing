@@ -1683,14 +1683,19 @@ void func_80011264(ObjectModel *model, Object *obj) {
 GLOBAL_ASM("asm/non_matchings/objects/func_80011264.s")
 #endif
 
-UNUSED void func_80011364(s32 arg0) {
+/**
+ * Do nothing. Unused.
+*/
+UNUSED void do_nothing_func_80011364(UNUSED s32 unused) {
 }
 
-UNUSED s32 func_8001136C(void) {
-    if (D_8011ADAC) {
-        return 0;
-    }
-    return 1;
+/**
+ * Return the opposite of D_8011ADAC's value
+ */
+UNUSED s32 is_not_D_8011ADAC(void) {
+    //Ever hear of return !D_8011ADAC?
+    if (D_8011ADAC) return FALSE;
+    else            return TRUE;
 }
 
 void func_80011390(void) {
