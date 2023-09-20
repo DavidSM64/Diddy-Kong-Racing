@@ -15,6 +15,8 @@ ignoreFiles = ["include/sys/regdef.h"]
 
 search_folders = ["include/", "src/"]
 
+hack_directives_into_singleline = ['DRAW_TABLE_ENTRY', 'DRAW_TABLE_GROUP']
+
 # From: https://stackoverflow.com/a/18381470
 # Removes all single line & multi-line comments from a C file.
 def remove_comments(string):
@@ -98,7 +100,7 @@ def collect_func_from_regex(filename, filetext, regex, data):
                 print("[Current] type:", data[funcName]["type"], "| args:", data[funcName]["args"], "| filename:", data[funcName]["filename"])
                 print("[This]    type:", funcType, "| args:", args, "| filename:", filename)
 
-regex_func_def   = r"^([ \t]*(?:[A-Za-z0-9_*])+[ \t]+(?:[A-Za-z0-9_* ])+)[(]((?:[^)]|\n)*?)[)]\s*[{]"
+regex_func_def   = r"^(?!\s*if\s+)([ \t]*(?:[A-Za-z0-9_*])+[ \t]+(?:[A-Za-z0-9_* ])+)[(]((?:[^)]|\n)*?)[)]\s*[{]"
 regex_func_proto = r"^([ \t]*(?:[A-Za-z0-9_*])+[ \t]+(?:[A-Za-z0-9_* ])+)[(]((?:[^)]|\n)*?)[)]\s*[;]"
 
 # Collects both prototypes & definitions in a file.
@@ -229,13 +231,23 @@ def collect_enums(filename, filetext, data):
             "kind": "enum",
             "value": enum.group(0)
         }
+        
+def should_directive_be_in_singleline_category(direct):
+    directText = direct.group(0)
+    
+    for hackDir in hack_directives_into_singleline:
+        if directText.startswith('#define ' + hackDir):
+            return True
+    
+    return direct.group(1) is None
+    
 
 definesRegex = r"(^#\s*define.*\\(?:\n.*\\)*\n.*$)|(^#(?!include)(?!undef).*$)"
 # Get all the preprocessor directives in a file, except for #include and #undef
 def collect_directives(filename, filetext, data):
     defs = regex_get_matches(filetext, definesRegex)
     for direct in defs:
-        if direct.group(1) is None: 
+        if should_directive_be_in_singleline_category(direct): 
             data['singleline'].append(direct.group(0))
         data['all'].append(direct.group(0))
 
@@ -359,7 +371,7 @@ def write_single_type(types, name, addedTypes, nameStack):
             structTypes = types[name]['types']
             for memType in structTypes:
                 if memType in types and memType not in nameStack:
-                    if memType != "Object": # This is a hack, due to circular referencing making things difficult. :/
+                    if memType != "Object" and memType != "Particle": # This is a hack, due to circular referencing making things difficult. :/
                         out += write_single_type(types, memType, addedTypes, nameStack)
             out += types[name]['value'] + "\n"
         elif kind == "enum":
