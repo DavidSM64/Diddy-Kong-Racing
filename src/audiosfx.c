@@ -125,19 +125,21 @@ void func_8000410C(ALSoundState *state) {
 }
 
 #if 0
-void func_8000418C(void *arg0) {
-    f32 sp28;
-    void *sp24;
-    s16 sp20;
-    f32 sp1C;
-    f32 temp_f6;
-
-    temp_f6 = alCents2Ratio((s32) arg0->unk8->unk4->unk5) * arg0->unk2C;
-    sp20 = 16;
-    sp1C = temp_f6;
-    sp24 = arg0;
-    sp28 = sp1C;
-    alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent *) &sp20, 33333);
+typedef struct unknown8000418C {
+    u8 pad0[0x8];
+    ALSound *sound;
+    u8 padC[0x20];
+    f32 unk2C;
+} unknown8000418C;
+void func_8000418C(unknown8000418C *arg0) {
+    ALSndpEvent evt;
+    do {
+    if (arg0->sound->keyMap->detune){}
+    evt.pitch.pitch = alCents2Ratio(arg0->sound->keyMap->detune) * arg0->unk2C;
+    evt.msg.type = AL_SEQP_STOP_EVT;
+    } while(0);
+    alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &evt.msg, 33333);
+    if ((!arg0->sound->keyMap) && (!arg0->sound->keyMap)){}
 }
 #else
 GLOBAL_ASM("asm/non_matchings/audiosfx/func_8000418C.s")
