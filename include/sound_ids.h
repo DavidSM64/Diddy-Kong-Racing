@@ -6,6 +6,7 @@
 #define SOUND_VOICE_CHARACTER_POSITIVE SOUND_VOICE_KRUNCH_POSITIVE1
 #define SOUND_VOICE_CHARACTER_NEGATIVE SOUND_VOICE_KRUNCH_NEGATIVE1
 #define SOUND_HORN_CHARACTER SOUND_HORN_KRUNCH
+#define SOUND_NUMBER_OF_RACERS 8
 
 /// Cannot stress enough that these names are very temporary, preliminary, expendable and other words that imply that they are not final.
 // Also might be worth thinking of a better way of laying this out, because scrolling through hundreds of sound ID's isn't particularly pleasant.
@@ -652,7 +653,7 @@ enum SoundID {
 /* 0x027D */ SOUND_UNK_27D,
 /* 0x027E */ SOUND_UNK_27E,
              // Trying to play 27F onwards will incur a crash.
-/* 0x027F */  NUM_SOUND_IDS
+/* 0x027F */ NUM_SOUND_IDS
 };
 
 #endif

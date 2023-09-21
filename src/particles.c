@@ -1403,10 +1403,98 @@ void func_800B2FBC(Particle *arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800B3140.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800B3240.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800B3358.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800B34B0.s")
+void func_800B3140(Particle *arg0) {
+    s32 i;
+    Object *temp_v0;
+
+    i = D_80127C80;
+    while ( i-- > 0) {
+        arg0->somePosX += arg0->segment.x_velocity;
+        arg0->somePosY += arg0->segment.y_velocity;
+        arg0->segment.y_velocity -= arg0->unk68f;
+        arg0->somePosZ += arg0->segment.z_velocity;
+        arg0->segment.trans.y_rotation += arg0->unk62;
+        arg0->segment.trans.x_rotation += arg0->unk64;
+        arg0->segment.trans.z_rotation += arg0->unk66;
+        arg0->segment.trans.scale += arg0->segment.unk28;
+    }
+    arg0->segment.trans.x_position = arg0->somePosX;
+    arg0->segment.trans.y_position = arg0->somePosY;
+    arg0->segment.trans.z_position = arg0->somePosZ;
+    temp_v0 = arg0->segment.unk3C;
+    if (temp_v0 != NULL) {
+        arg0->segment.trans.x_position += temp_v0->segment.trans.x_position;
+        arg0->segment.trans.y_position += temp_v0->segment.trans.y_position;
+        arg0->segment.trans.z_position += temp_v0->segment.trans.z_position;
+    }
+}
+
+void func_800B3240(Particle *arg0) {
+    s32 i;
+    Object *temp_v0;
+
+    i = D_80127C80;
+    while ( i-- > 0) {
+        arg0->segment.trans.y_rotation += arg0->unk62;
+        arg0->segment.trans.x_rotation += arg0->unk64;
+        arg0->segment.trans.z_rotation += arg0->unk66;
+        arg0->segment.trans.scale += arg0->segment.unk28;
+    }
+    arg0->segment.trans.x_position = 0.0f;
+    arg0->segment.trans.y_position = -arg0->forwardVel;
+    arg0->segment.trans.z_position = 0.0f;
+    f32_vec3_apply_object_rotation(&arg0->segment.trans, &arg0->segment.trans.x_position);
+    arg0->segment.trans.x_position += arg0->somePosX;
+    arg0->segment.trans.y_position += arg0->somePosY;
+    arg0->segment.trans.z_position += arg0->somePosZ;
+    temp_v0 = arg0->segment.unk3C;
+    if (temp_v0 != NULL) {
+        arg0->segment.trans.x_position += temp_v0->segment.trans.x_position;
+        arg0->segment.trans.y_position += temp_v0->segment.trans.y_position;
+        arg0->segment.trans.z_position += temp_v0->segment.trans.z_position;
+    }
+}
+
+void func_800B3358(Particle *arg0) {
+    s32 i;
+    Vec3f sp38;
+    i = 0;
+    while (i++ < D_80127C80) {
+        arg0->segment.trans.x_position += arg0->segment.x_velocity;
+        arg0->segment.trans.y_position += arg0->segment.y_velocity;
+        arg0->segment.trans.z_position += arg0->segment.z_velocity;
+        arg0->segment.trans.scale += arg0->segment.unk28;
+        arg0->segment.trans.y_rotation += arg0->unk62;
+        arg0->segment.trans.x_rotation += arg0->unk64;
+        arg0->segment.trans.z_rotation += arg0->unk66;
+        sp38.x = 0.0f;
+        sp38.y = -arg0->forwardVel;
+        sp38.z = 0.0f;
+        f32_vec3_apply_object_rotation(&arg0->segment.trans, sp38.f);
+        arg0->segment.x_velocity += sp38.x;
+        arg0->segment.y_velocity += sp38.y;
+        arg0->segment.y_velocity -= arg0->unk68f;
+        arg0->segment.z_velocity += sp38.z;
+    }
+}
+
+void func_800B34B0(Particle *arg0) {
+    f32 temp_f0;
+    s32 i;
+
+    i = 0;
+    while (i++ < D_80127C80) {
+        temp_f0 = arg0->segment.y_velocity;
+        arg0->segment.trans.x_position += arg0->segment.x_velocity;
+        arg0->segment.trans.y_position += temp_f0;
+        arg0->segment.y_velocity = temp_f0 - arg0->unk68f;
+        arg0->segment.trans.z_position += arg0->segment.z_velocity;
+        arg0->segment.trans.scale += arg0->segment.unk28;
+        arg0->segment.trans.y_rotation += arg0->unk62;
+        arg0->segment.trans.x_rotation += arg0->unk64;
+        arg0->segment.trans.z_rotation += arg0->unk66;
+    }
+}
 
 void func_800B3564(Particle *arg0) {
     s32 var_s1;
@@ -1529,7 +1617,6 @@ void func_800B3740(Particle *particle, Gfx **dlist, MatrixS **mtx, Vertex **vtx,
     }
 }
 
-
 GLOBAL_ASM("asm/non_matchings/particles/func_800B3E64.s")
 
 UNUSED unk800E2CF0 *func_800B4488(s32 idx) {
@@ -1559,23 +1646,44 @@ UNUSED ParticleBehavior *func_800B4578(s32 idx) {
     return gParticleBehavioursAssetTable[gParticleBehavioursAssetTableCount - 1];
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800B45C4.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800B461C.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800B4668.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800B46BC.s")
-
-/**
- * memset(void *s, int c, size_t n)
- *
- * s: start of area to clear
- * c: char to fill with
- * n: size of area to clear
- */
-void *memset(void *s, int c, size_t n) {
-    u8 *var_v0 = s;
-
-    while (n-- > 0) {
-        *var_v0++ = c;
+UNUSED ParticleBehavior *func_800B45C4(s32 *idx) {
+    *idx += 1;
+    while (*idx >= gParticleBehavioursAssetTableCount) {
+        *idx -= gParticleBehavioursAssetTableCount;
     }
-    return s;
+    return gParticleBehavioursAssetTable[*idx];
+}
+
+UNUSED ParticleBehavior *func_800B461C(s32 *idx) {
+    *idx -= 1;
+    while (*idx < 0) {
+        *idx += gParticleBehavioursAssetTableCount;
+    }
+    return gParticleBehavioursAssetTable[*idx];
+}
+
+void func_800B4668(Object *obj, s32 idx, s32 arg2, s32 arg3) {
+    s32 temp_v0;
+
+    arg3 <<= 8; 
+    temp_v0 = (obj->unk6C[idx].unkA & 0xFFFF) + arg2;
+    if (arg3 < temp_v0) {
+        obj->unk6C[idx].unkA = arg3;
+    } else {
+        obj->unk6C[idx].unkA = temp_v0;
+    }
+    obj->unk6C[idx].unk4 |= 0x100;
+}
+
+void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3) {
+    s32 temp_v0;
+
+    arg3 <<= 8; 
+    temp_v0 = (obj->unk6C[idx].unkA & 0xFFFF) - arg2;
+    if (temp_v0 < arg3) {
+        obj->unk6C[idx].unkA = arg3;
+    } else {
+        obj->unk6C[idx].unkA = temp_v0;
+    }
+    obj->unk6C[idx].unk4 |= 0x100;
 }

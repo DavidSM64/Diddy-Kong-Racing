@@ -230,7 +230,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             stepFrame = 3;
         }
         if (animFrame == stepFrame && stepFrame + 1 == obj->segment.animFrame >> 4) {
-            play_sound_at_position(SOUND_UNK_223, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, 0);
+            play_sound_at_position(SOUND_UNK_223, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
         }
     }
     if (racer->vehicleIDPrev == VEHICLE_SMOKEY && racer->playerIndex == PLAYER_COMPUTER && func_80023568()) {

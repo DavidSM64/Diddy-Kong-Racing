@@ -251,7 +251,7 @@ u8 D_80126D35;
 u8 gHideRaceTimer;
 u8 gNumActivePlayers;
 u8 gWrongWayNagPrefix;
-s32 D_80126D3C;
+SoundMask *D_80126D3C;
 s32 gHUDVoiceSoundMask;
 s32 D_80126D44;
 s16 D_80126D48;
@@ -342,7 +342,7 @@ void init_hud(UNUSED s32 viewportCount) {
     D_80126D70 = 0;
     D_80126D7C = 0;
     D_80126D74 = 0;
-    D_80126D3C = 0;
+    D_80126D3C = NULL;
     D_80126D44 = 0;
     D_80126CD3 = 0;
     D_80127194 = (LevelHeader_70 *) get_misc_asset(ASSET_MISC_58);
@@ -717,9 +717,78 @@ void render_hud_challenge_eggs(s32 arg0, Object *arg1, s32 updateRate) {
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A14F0.s")
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A19A4.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1C04.s")
+
+void func_800A1C04(s32 arg0, Object *obj, s32 updateRate) {
+    Object **racerObjs;
+    Object_Racer *racer;
+    s32 numRacers;
+    s32 racersFinished;
+    s32 i;
+
+    racer = (Object_Racer *) obj->unk64;
+    if (gNumActivePlayers != 1 || racer->raceFinished == FALSE) {
+        func_80068508(1);
+        render_race_start(arg0, updateRate);
+        render_weapon_hud(obj, updateRate);
+        racerObjs = get_racer_objects(&numRacers);
+        switch (gNumActivePlayers) {
+            case 1:
+                func_800A1E48(obj, updateRate);
+                break;
+            case 2:
+                racersFinished = 0;
+                for (i = 0; i < numRacers; i++) {
+                    racer = &racerObjs[i]->unk64->racer;
+                    if (racer->playerIndex != PLAYER_COMPUTER && racer->raceFinished) {
+                        racersFinished++;
+                    }
+                }
+                if (racersFinished == 2) {
+                    return;
+                }
+                break;
+            default:
+                render_racer_bananas(racer, updateRate);
+                break;
+        }
+        func_80068508(0);
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1E48.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A22F4.s")
+
+void func_800A22F4(Object_Racer *racer, UNUSED void *unused) {
+    gCurrentHud->unk646 = racer->characterId + 56;
+    if (gNumActivePlayers < 3 || (gNumActivePlayers == 3 && racer->playerIndex == PLAYER_COMPUTER)) {
+        D_80126CD5 = TRUE;
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk640);
+        D_80126CD5 = FALSE;
+        init_rdp_and_framebuffer(&gHUDCurrDisplayList);
+        reset_render_settings(&gHUDCurrDisplayList);
+    }
+    if (racer->bananas < 10) {
+        gCurrentHud->unk6D8 = racer->bananas;
+        if (gNumActivePlayers == 2) {
+            gCurrentHud->unk6CC += 6.0f;
+        }
+    } else {
+        gCurrentHud->unk6D8 = racer->bananas / 10;
+        gCurrentHud->unk6F8 = racer->bananas % 10;
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk6E0);
+    }
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk6C0);
+    if (gNumActivePlayers == 2 && racer->bananas < 10) {
+        gCurrentHud->unk6CC -= 6.0f;
+    }
+    if (gNumActivePlayers != 2) {
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk6A0);
+        func_8007BF1C(1);
+        D_80126CD5 = TRUE;
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk680);
+        D_80126CD5 = FALSE;
+        func_8007BF1C(0);
+    }
+}
 
 /**
  * When racing the boss, render the essentials, but skip the bananas.
@@ -1131,7 +1200,7 @@ void render_race_start(s32 arg0, s32 updateRate) {
                     gRaceStartShowHudStep++;
                 }
             }
-            if (D_80126D3C == 0 && func_80023568() == 0) {
+            if (D_80126D3C == NULL && func_80023568() == 0) {
                 f32 sp4C;
                 UNUSED s32 pad;
                 Object** racerGroup;
