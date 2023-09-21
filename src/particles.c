@@ -1532,14 +1532,21 @@ void func_800B3740(Particle *particle, Gfx **dlist, MatrixS **mtx, Vertex **vtx,
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800B3E64.s")
 
-UNUSED unk800E2CF0 *func_800B4488(s32 idx) {
+/**
+ * Return a specific particle asset table from the main table.
+*/
+UNUSED unk800E2CF0 *get_particle_asset_table(s32 idx) {
     if (idx < gParticlesAssetTableCount) {
         return gParticlesAssetTable[idx];
     }
     return gParticlesAssetTable[gParticlesAssetTableCount - 1];
 }
 
-UNUSED unk800E2CF0 *func_800B44D4(s32 *idx) {
+/**
+ * Return the next particle table after the index.
+ * Make sure the index is in range by wrapping it.
+*/
+UNUSED unk800E2CF0 *get_next_particle_table(s32 *idx) {
     *idx = *idx + 1;
     while (*idx >= gParticlesAssetTableCount) {
         *idx = *idx - gParticlesAssetTableCount;
@@ -1547,12 +1554,22 @@ UNUSED unk800E2CF0 *func_800B44D4(s32 *idx) {
     return gParticlesAssetTable[*idx];
 }
 
-UNUSED unk800E2CF0 *func_800B452C(s32 *arg0) {
-    for (*arg0 = *arg0 - 1; *arg0 < 0; *arg0 += gParticlesAssetTableCount);
-    return gParticlesAssetTable[*arg0];
+/**
+ * Return the previous particle table before the index.
+ * Make sure the index is in range by wrapping it.
+*/
+UNUSED unk800E2CF0 *get_previous_particle_table(s32 *idx) {
+    *idx = *idx - 1;
+    while (*idx < 0) {
+        *idx += gParticlesAssetTableCount;
+    }
+    return gParticlesAssetTable[*idx];
 }
 
-UNUSED ParticleBehavior *func_800B4578(s32 idx) {
+/**
+ * Return the particle behaviour ID from the behaviour table.
+*/
+UNUSED ParticleBehavior *get_particle_behaviour(s32 idx) {
     if (idx < gParticleBehavioursAssetTableCount) {
         return gParticleBehavioursAssetTable[idx];
     }
@@ -1571,7 +1588,7 @@ GLOBAL_ASM("asm/non_matchings/particles/func_800B46BC.s")
  * c: char to fill with
  * n: size of area to clear
  */
-void *memset(void *s, int c, size_t n) {
+UNUSED void *memset(void *s, int c, size_t n) {
     u8 *var_v0 = s;
 
     while (n-- > 0) {
