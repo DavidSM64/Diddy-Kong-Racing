@@ -2136,8 +2136,8 @@ void func_8002DE30(Object *obj) {
     s32 maxYPos;
     s32 j;
 
-    sp94 = (s32)obj->segment.trans.y_position + obj->segment.header->unk44;
-    sp90 = (s32)obj->segment.trans.y_position + obj->segment.header->unk42;
+    sp94 = (s32) obj->segment.trans.y_position + obj->segment.header->unk44;
+    sp90 = (s32) obj->segment.trans.y_position + obj->segment.header->unk42;
     blockId = obj->segment.object.segmentID;
     foundResult = FALSE;
     if (blockId != -1) {

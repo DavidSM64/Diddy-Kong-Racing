@@ -1403,7 +1403,7 @@ void func_800B2FBC(Particle *arg0) {
     }
 }
 
-void func_800B3140(Particle* arg0) {
+void func_800B3140(Particle *arg0) {
     s32 i;
     Object *temp_v0;
 
@@ -1429,7 +1429,7 @@ void func_800B3140(Particle* arg0) {
     }
 }
 
-void func_800B3240(Particle* arg0) {
+void func_800B3240(Particle *arg0) {
     s32 i;
     Object *temp_v0;
 
@@ -1455,7 +1455,7 @@ void func_800B3240(Particle* arg0) {
     }
 }
 
-void func_800B3358(Particle* arg0) {
+void func_800B3358(Particle *arg0) {
     s32 i;
     Vec3f sp38;
     i = 0;
@@ -1478,7 +1478,7 @@ void func_800B3358(Particle* arg0) {
     }
 }
 
-void func_800B34B0(Particle* arg0) {
+void func_800B34B0(Particle *arg0) {
     f32 temp_f0;
     s32 i;
 
