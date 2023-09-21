@@ -4935,15 +4935,15 @@ void run_object_loop_func(Object *obj, s32 updateRate) {
 UNUSED void func_8002458C(UNUSED s32 arg0) {
 }
 
-s16 *func_80024594(s32 *arg0, s32 *arg1) {
-    *arg0 = D_800DC700;
-    *arg1 = 0x80;
+s16 *func_80024594(s32 *currentCount, s32 *maxCount) {
+    *currentCount = D_800DC700;
+    *maxCount = ARRAY_COUNT(D_8011AC20);
     return D_8011AC20;
 }
 
 void func_800245B4(s16 arg0) {
     D_8011AC20[D_800DC700++] = arg0;
-    if (D_800DC700 >= 0x80) {
+    if (D_800DC700 >= ARRAY_COUNT(D_8011AC20)) {
         D_800DC700 = 0;
     }
 }

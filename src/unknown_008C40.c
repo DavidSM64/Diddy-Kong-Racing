@@ -254,7 +254,7 @@ void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, 
         if (soundMask != NULL) {
             *soundMask = 0;
         }
-        func_800245B4(-0x55AB);
+        func_800245B4(0xAA55);
         return;
     }
     temp_v0 = D_80119C50[D_80119C4C--];

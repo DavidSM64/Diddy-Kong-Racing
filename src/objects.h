@@ -403,7 +403,7 @@ s8 func_800235C0(void);
 void func_800235D0(s32 arg0);
 void run_object_init_func(Object *arg0, void *arg1, s32 arg2);
 void run_object_loop_func(Object *obj, s32 arg1);
-s16 *func_80024594(s32 *arg0, s32 *arg1);
+s16 *func_80024594(s32 *currentCount, s32 *maxCount);
 void func_800245B4(s16 arg0);
 void object_do_player_tumble(Object *this);
 f32 catmull_rom_interpolation(f32*, s32, f32);
