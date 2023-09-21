@@ -5,7 +5,7 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of September 31, 2023, this is our current score:
+As of September 21, 2023, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 53.85%
 
