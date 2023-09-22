@@ -1269,7 +1269,7 @@ void handle_particle_movement(Particle *particle, s32 updateRate) {
     if (particle->segment.particle.unk2C == 3) {
         func_800B26E0();
     } else {
-        if (particle->segment.unk40 & (2 | 1)) {
+        if (particle->segment.unk40 & 3) {
             if (gParticleUpdateRate > 0) {
                 func_800B2FBC(particle);
             }
@@ -1279,7 +1279,7 @@ void handle_particle_movement(Particle *particle, s32 updateRate) {
             particle->modelFrame = 1 - particle->modelFrame;
             particle->unk77 = 0;
         }
-        if (tempParticle || (tempParticle && tempParticle->unk70)) {
+        if (tempParticle == NULL || (tempParticle && tempParticle->unk70)) {
             if (particle->segment.particle.movementType == PARTICLE_MOVEMENT_VELOCITIES) {
                 move_particle_with_velocities(particle);
             } else if (particle->segment.particle.movementType == PARTICLE_MOVEMENT_VELOCITY_PARENT) {
