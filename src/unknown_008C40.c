@@ -217,57 +217,50 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
 /**
  * Play Sound at position 
  */
-void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, s32 *soundMask) {
+void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, SoundMask **soundMask) {
     func_8000974C(D_80119C40[soundId].unk0, x, y, z, arg4, D_80119C40[soundId].unk3,
         D_80119C40[soundId].unk2, D_80119C40[soundId].unk6, 0, D_80119C40[soundId].unk4,
         D_80119C40[soundId].unk8, soundMask);
 }
 
-void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 arg6, s32 *soundMask) {
+void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 arg6, SoundMask **soundMask) {
     func_8000974C(soundId, x, y, z, arg4, 100, arg5, 15000, 0, arg6, 0x3F, soundMask);
 }
 
-#if 0
 // I think this function is used to update the world position of any sound associated with the given soundmask.
-//This matches, but it breaks update_player_racer
-void update_spatial_audio_position(s32 arg0, f32 arg1, f32 arg2, f32 arg3) {
-    arg0->x = arg1;
-    arg0->y = arg2;
-    arg0->z = arg3;
+void update_spatial_audio_position(SoundMask *arg0, f32 x, f32 y, f32 z) {
+    arg0->pos.x = x;
+    arg0->pos.y = y;
+    arg0->pos.z = z;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/update_spatial_audio_position.s")
-#endif
 
-void func_800096F8(s32 arg0) {
+void func_800096F8(SoundMask *arg0) {
     s32 i;
-    s32 *v0 = (s32 *) D_80119C44;
     for (i = 0; i < 40; i++) {
-        if (arg0 == *v0) {
+        if (arg0 == D_80119C44[i]) {
             func_8000A2E8(i);
             break;
         }
-        v0++;
     }
 }
 
-void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, u16 arg7, u8 arg8, u8 arg9, u8 argA, s32 *soundMask) {
-    unk80119C50 *temp_v0;
+void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, u16 arg7, u8 arg8, u8 arg9, u8 argA, SoundMask **soundMask) {
+    SoundMask *temp_v0;
 
-    if (soundMask != 0) {
+    if (soundMask != NULL) {
         func_800245B4(soundId | 0xE000);
     }
     if (D_800DC6E0 == 40) {
-        if (soundMask != 0) {
+        if (soundMask != NULL) {
             *soundMask = 0;
         }
-        func_800245B4(-0x55AB);
+        func_800245B4(0xAA55);
         return;
     }
     temp_v0 = D_80119C50[D_80119C4C--];
-    temp_v0->x = x;
-    temp_v0->y = y;
-    temp_v0->z = z;
+    temp_v0->pos.x = x;
+    temp_v0->pos.y = y;
+    temp_v0->pos.z = z;
     temp_v0->soundId = soundId;
     temp_v0->unk11 = arg4;
     temp_v0->unk10 = arg5;
@@ -279,8 +272,8 @@ void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, 
     temp_v0->unk22 = 0;
     temp_v0->soundMask = soundMask;
     D_80119C44[D_800DC6E0++] = temp_v0;
-    if (soundMask != 0) {
-        *soundMask = (u32) temp_v0;
+    if (soundMask != NULL) {
+        *soundMask = temp_v0;
     }
 }
 
@@ -468,8 +461,8 @@ void func_8000A2E8(s32 arg0) {
         if (D_80119C44[arg0]->unk18 != 0) {
             func_8000488C(D_80119C44[arg0]->unk18);
         }
-        if (D_80119C44[arg0]->soundMask != 0) {
-            *D_80119C44[arg0]->soundMask = 0;
+        if (D_80119C44[arg0]->soundMask != NULL) {
+            *D_80119C44[arg0]->soundMask = NULL;
             func_800245B4(D_80119C44[arg0]->soundId | 0x5000);
         }
         D_80119C4C++;

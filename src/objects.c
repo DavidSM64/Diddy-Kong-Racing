@@ -1654,26 +1654,32 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80011134.s")
 #endif
 
 #ifdef NON_EQUIVALENT
+//Probably NON_MATCHING, but not sure.
 //This is a function for doors
 void func_80011264(ObjectModel *model, Object *obj) {
-    s32 temp_a2;
+    s32 current;
+    s32 remaining;
     s32 i;
-    u8 textureIndex;
     Object_Door *door;
+    TriangleBatchInfo *batch;
 
     if (model->unk50 > 0) {
+        batch = &model->batches[0];
         door = &obj->unk64->door;
-        temp_a2 = (door->unk10 / 10) - 1;
-        for (i = 0; i < model->numberOfBatches; i++) {
-            if (model->batches[i].flags & 0x10000) {
-                textureIndex = model->batches[i].textureIndex;
-                if (textureIndex != 0xFF) { // 0xFF = No Texture
-                    if (model->textures[textureIndex].texture->numOfTextures > 0x900) {
-                        model->batches[i].unk7 = (door->unk10 % 10) * 4;
+        current = ((door->unk10 / 10) - 1) << 2;
+        if (model->textures[batch->textureIndex].texture){} //fakematch
+        if (1) { //fakematch
+        remaining = ((door->unk10 % 10) << 2);
+        }
+        for (i = 0; i < model->numberOfBatches; i++, batch++) {
+            if (batch->flags & 0x10000) {
+                if (batch->textureIndex != 0xFF) { // 0xFF = No Texture
+                    if (model->textures[batch->textureIndex].texture->numOfTextures > 0x900) {
+                        batch->unk7 = remaining;
+                    } else if (current >= 0) {
+                        batch->unk7 = current;
                     }
-                    if (!(temp_a2 & 0x20000000)) {
-                        model->batches[i].unk7 = temp_a2 * 4;
-                    }
+                    if (door){} //fakematch
                 }
             }
         }
@@ -1682,6 +1688,21 @@ void func_80011264(ObjectModel *model, Object *obj) {
 #else
 GLOBAL_ASM("asm/non_matchings/objects/func_80011264.s")
 #endif
+
+/**
+ * Do nothing. Unused.
+*/
+UNUSED void do_nothing_func_80011364(UNUSED s32 unused) {
+}
+
+/**
+ * Return the opposite of D_8011ADAC's value
+ */
+UNUSED s32 is_not_D_8011ADAC(void) {
+    //Ever hear of return !D_8011ADAC?
+    if (D_8011ADAC) return FALSE;
+    else            return TRUE;
+}
 
 void func_80011390(void) {
     D_8011ADAC = 0;
@@ -4917,15 +4938,15 @@ void run_object_loop_func(Object *obj, s32 updateRate) {
 UNUSED void func_8002458C(UNUSED s32 arg0) {
 }
 
-s16 *func_80024594(s32 *arg0, s32 *arg1) {
-    *arg0 = D_800DC700;
-    *arg1 = 0x80;
+s16 *func_80024594(s32 *currentCount, s32 *maxCount) {
+    *currentCount = D_800DC700;
+    *maxCount = ARRAY_COUNT(D_8011AC20);
     return D_8011AC20;
 }
 
 void func_800245B4(s16 arg0) {
     D_8011AC20[D_800DC700++] = arg0;
-    if (D_800DC700 >= 0x80) {
+    if (D_800DC700 >= ARRAY_COUNT(D_8011AC20)) {
         D_800DC700 = 0;
     }
 }

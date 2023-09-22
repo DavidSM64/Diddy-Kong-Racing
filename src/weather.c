@@ -140,10 +140,10 @@ s32 D_800E2C78 = 0;
 s32 gLightningTimer = 0;
 s32 gThunderTimer = 0;
 s32 D_800E2C84 = 0;
-s32 gRainOverlayUnusedValue = 0; // Set, but never read.
+TextureHeader *gRainOverlayUnusedValue = NULL; // Set, but never read.
 Sprite *gRainSplashGfx = 0;
 s32 D_800E2C90 = 0;
-s32 gWeatherSoundMask = 0;
+SoundMask *gWeatherSoundMask = NULL;
 
 
 FadeTransition D_800E2C98 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK1, FADE_COLOR_WHITE, 5, 2);
@@ -458,22 +458,22 @@ void func_800AD144(s32 arg0, s32 arg1) {
 void free_rain_memory(void) {
     if (gRainGfx[0].tex != NULL) {
         free_texture(gRainGfx[0].tex);
-        gRainOverlayUnusedValue = 0;
+        gRainOverlayUnusedValue = NULL;
     }
 
     if (gRainGfx[1].tex != NULL) {
         free_texture(gRainGfx[1].tex);
-        gRainOverlayUnusedValue = 0;
+        gRainOverlayUnusedValue = NULL;
     }
 
     if (gRainSplashGfx != NULL) {
         free_sprite(gRainSplashGfx);
-        gRainSplashGfx = 0;
+        gRainSplashGfx = NULL;
     }
 
-    if (gWeatherSoundMask) {
+    if (gWeatherSoundMask != NULL) {
         func_800096F8(gWeatherSoundMask);
-        gWeatherSoundMask = 0;
+        gWeatherSoundMask = NULL;
     }
 
     gWeatherType = WEATHER_SNOW;

@@ -1776,10 +1776,10 @@ void obj_loop_snowball(Object *obj, s32 updateRate) {
         }
     }
     if (obj64->unk24 != 0) {
-        if (obj64->soundMask == 0) {
-            play_sound_at_position(obj64->unk24, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, (s32 *) &obj64->soundMask);
+        if (obj64->soundMask == NULL) {
+            play_sound_at_position(obj64->unk24, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, (SoundMask **) &obj64->soundMask);
         } else {
-            update_spatial_audio_position(obj64->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+            update_spatial_audio_position((SoundMask *) obj64->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
         }
     }
     func_8001F460(obj, updateRate, obj);
@@ -3222,13 +3222,11 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
     }
     if (openDoor) {
         if (ttDoor->soundMask == NULL) {
-            play_sound_at_position(SOUND_DOOR_OPEN, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, (s32 *) &ttDoor->soundMask);
+            play_sound_at_position(SOUND_DOOR_OPEN, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &ttDoor->soundMask);
         }
-    } else {
-        if (ttDoor->soundMask) {
-            func_800096F8((s32) ttDoor->soundMask);
-            ttDoor->soundMask = NULL;
-        }
+    } else if (ttDoor->soundMask != NULL) {
+        func_800096F8((SoundMask *)((s32)ttDoor->soundMask));
+        ttDoor->soundMask = NULL;
     }
     obj->interactObj->distance = 0xFF;
     obj->interactObj->obj = NULL;
@@ -3411,7 +3409,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
             }
         } else {
             obj->segment.trans.x_rotation = 0;
-            if (whaleRamp->unk4 != 0) {
+            if (whaleRamp->unk4 != NULL) {
                 func_800096F8(whaleRamp->unk4);
             }
         }
@@ -3459,7 +3457,7 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
     
     obj->interactObj->distance = 255;
     obj->interactObj->obj = NULL;
-    obj->interactObj->flags &= 0xFFF7;
+    obj->interactObj->flags &= ~INTERACT_FLAGS_PUSHING;
 }
 
 void obj_init_rampswitch(Object *obj, LevelObjectEntry_RampSwitch *entry) {
@@ -3689,7 +3687,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
     s8 sp43;
     Object_Banana *banana;
     ObjPropertyBanana *properties;
-    s32 prevSoundMask;
+    SoundMask *prevSoundMask;
 
     updateRateF = updateRate;
     if (osTvType == TV_TYPE_PAL) {
@@ -4513,11 +4511,11 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     if (ALBankFile_80115D14_GetSoundDecayTime(obj64->soundId)) {
         func_8000974C(obj64->soundId, entry->common.x, entry->common.y, entry->common.z,
             9, obj64->unk5, obj64->unk4, obj64->unk2, obj64->unkC,
-            obj64->unk6, obj64->unkD, (s32 *) &obj64->soundMask);
+            obj64->unk6, obj64->unkD, &obj64->soundMask);
     } else {
         func_8000974C(obj64->soundId, entry->common.x, entry->common.y, entry->common.z,
             10, obj64->unk5, obj64->unk4, obj64->unk2, obj64->unkC,
-            obj64->unk6, obj64->unkD, (s32 *) &obj64->soundMask);
+            obj64->unk6, obj64->unkD, &obj64->soundMask);
     }
     gParticlePtrList_addObject(obj);
 }
