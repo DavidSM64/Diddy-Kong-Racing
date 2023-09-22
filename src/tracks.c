@@ -2406,46 +2406,43 @@ GLOBAL_ASM("asm/non_matchings/tracks/func_8002FF6C.s")
 
 GLOBAL_ASM("asm/non_matchings/tracks/func_800304C8.s")
 
-#ifdef NON_EQUIVALENT
-
-// Should be functionally equivalent.
 void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5) {
-    s32 max, min;
-
-    max = arg2;
-    min = arg1;
+    s32 temp;
+    FogData *fogData;
+    
+    fogData = &gFogData[arg0];
+    
     if (arg2 < arg1) {
-        max = arg1;
-        min = arg2;
+        temp = arg1;
+        arg1 = arg2;
+        arg2 = temp;
     }
-    if (max >= 0x400) {
-        max = 0x3FF;
+    
+    if (arg2 >= 0x400) {
+        arg2 = 0x3FF;
     }
-    if (min >= max - 5) {
-        min = max - 5;
+    if (arg1 >= arg2 - 5) {
+        arg1 = arg2 - 5;
     }
-    gFogData[arg0].addFog.near = 0;
-    gFogData[arg0].addFog.far = 0;
-    gFogData[arg0].addFog.r = 0;
-    gFogData[arg0].addFog.g = 0;
-    gFogData[arg0].addFog.b = 0;
-    gFogData[arg0].fog.r = arg3 << 0x10;
-    gFogData[arg0].fog.g = arg4 << 0x10;
-    gFogData[arg0].fog.b = arg5 << 0x10;
-    gFogData[arg0].fog.near = min << 0x10;
-    gFogData[arg0].fog.far = max << 0x10;
-    gFogData[arg0].intendedFog.r = arg3;
-    gFogData[arg0].intendedFog.near = min;
-    gFogData[arg0].intendedFog.far = max;
-    gFogData[arg0].switchTimer = 0;
-    gFogData[arg0].fogChanger = 0;
-    gFogData[arg0].intendedFog.g = arg4;
-    gFogData[arg0].intendedFog.b = arg5;
-}
 
-#else
-GLOBAL_ASM("asm/non_matchings/tracks/func_80030664.s")
-#endif
+    fogData->addFog.near = 0;
+    fogData->addFog.far = 0;
+    fogData->addFog.r = 0;
+    fogData->addFog.g = 0;
+    fogData->addFog.b = 0;
+    fogData->fog.r = arg3 << 16;
+    fogData->fog.g = arg4 << 16;
+    fogData->fog.b = arg5 << 16;
+    fogData->fog.near = arg1 << 16;
+    fogData->fog.far = arg2 << 16;
+    fogData->intendedFog.r = arg3;
+    fogData->intendedFog.g = arg4;
+    fogData->intendedFog.b = arg5;
+    fogData->intendedFog.near = arg1;
+    fogData->intendedFog.far = arg2;
+    fogData->switchTimer = 0;
+    fogData->fogChanger = NULL;
+}
 
 /**
  * Writes the current fog settings to the arguments.
