@@ -445,6 +445,7 @@ void light_setup_light_sources(Object *obj);
 s32 init_object_interaction_data(Object *arg0, ObjectInteraction *arg1);
 s32 func_8000FAC4(Object *obj, Object_6C *arg1);
 s32 obj_init_property_flags(s32 behaviorId);
+void func_8001B3C4(s32 arg0, s16 *playerId);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

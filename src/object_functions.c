@@ -658,7 +658,8 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                         play_sound_global(SOUND_VOICE_TT_TROPHY_RACE, NULL);
                         func_800A3870();
                     } else {
-                        func_800C31EC(4);
+                        // Text for "TROPHY RACE" "TO ENTER THE TROPHY RACE, YOU MUST COMPLETE ALL THE TASKS FROM THIS WORLD. KEEP RACING!"
+                        func_800C31EC(ASSET_GAME_TEXT_4);
                         gfxData->unk4 = 180;
                         gfxData->unk0 = 140;
                         set_sndfx_player_voice_limit(16);

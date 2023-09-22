@@ -26,6 +26,7 @@
 #include "game_ui.h"
 #include "unknown_008C40.h"
 #include "controller.h"
+#include "game_text.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
@@ -51,7 +52,7 @@ s16 D_800DC724 = 0x2A30;
 s16 D_800DC728 = -1;
 s16 D_800DC72C = 0;
 u8 gHasGhostToSave = 0;
-s32 D_800DC734 = 0; // Currently unknown, might be a different type.
+u8 D_800DC734 = 0;
 u8 D_800DC738 = 0;
 s8 D_800DC73C = 0;
 s8 D_800DC740 = 0;
@@ -3202,7 +3203,36 @@ s32 func_8001B3AC(s32 arg0) {
     return arg0 == D_800DC718;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001B3C4.s")
+void func_8001B3C4(s32 arg0, s16 *playerId) {
+    s32 trackIdCount;
+    s8* mainTrackIds;
+
+    D_800DC718 = 0;
+    free_tt_ghost_data();
+    D_800DC734 = 0;
+    mainTrackIds = get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
+    trackIdCount = 0;
+    while (mainTrackIds[trackIdCount] != -1 && mainTrackIds[trackIdCount] != arg0) {
+        trackIdCount++;
+    }
+    if (D_800DC738 != 0) {
+        set_eeprom_settings_value(16 << trackIdCount);
+        if ((get_eeprom_settings() & 0xFFFFF0) == 0xFFFFF0) {
+            set_magic_code_flags(CHEAT_CONTROL_TT);
+            play_sound_global(SOUND_VOICE_TT_BEAT_ALL_TIMES, NULL);
+            func_80000FDC(SOUND_VOICE_TT_UNLOCKED, 0, 1.5f);
+            func_800C31EC(ASSET_GAME_TEXT_84); //Text for "You have beaten all my times!" and then "Now you can PICK me!"
+        } else {
+            play_sound_global(SOUND_VOICE_TT_WELL_THEN, NULL);
+            func_80000FDC(SOUND_VOICE_TT_TRY_ANOTHER_TRACK, 0, 1.0f);
+            func_800C31EC(ASSET_GAME_TEXT_83); //Text for "Well Done! Now try another track."
+        }
+        D_800DC738 = 0;
+        return;
+    }
+    play_time_trial_end_message(playerId);
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8001B4FC.s")
 
 Object *func_8001B640(void) {
