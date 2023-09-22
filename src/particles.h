@@ -7,7 +7,7 @@
 
 enum ParticleFlags {
     PARTICLE_FLAGS_NONE,
-    PARTICLE_UNK00000001 = (1 << 0),
+    PARTICLE_GRAVITY = (1 << 0),
     PARTICLE_UNK00000002 = (1 << 1),
     PARTICLE_UNK00000004 = (1 << 2),
     PARTICLE_UNK00000008 = (1 << 3),
@@ -74,26 +74,10 @@ typedef struct XYStruct {
     s16 x, y;
 } XYStruct;
 
-typedef struct unk800B2260_C_44 {
-    TextureHeader *texture;
-} unk800B2260_C_44;
-
 typedef struct unk800B1CB8_44_8 {
     u8 pad0[6];
     s16 unk6;
 } unk800B1CB8_44_8;
-
-typedef struct unk800B1130_8 {
-    u8 pad0[6];
-    s16 unk6;
-} unk800B1130_8;
-
-typedef struct unk800B1130 {
-    u8 pad0[8];
-    unk800B1130_8 **unk8;
-    u8 padC[0x6];
-    u16 unk12;
-} unk800B1130;
 
 typedef struct unk800B1130_SP28 {
     s32 unk0;
@@ -107,9 +91,9 @@ typedef struct ParticleAngle {
     s16 y_rotation;
     s16 x_rotation;
     s16 z_rotation;
-    s16 unk12;
-    s16 unk14;
-    s16 unk16;
+    s16 y_direction;
+    s16 x_direction;
+    s16 z_direction;
 } ParticleAngle;
 
 typedef struct ParticleData {
@@ -119,13 +103,12 @@ typedef struct ParticleData {
     };
   /* 0x0004 */ s16 flags;
   /* 0x0006 */ u8 unk6;
-  /* 0x0007 */ u8 unk7;
+  /* 0x0007 */ u8 lifeTime;
   /* 0x0008 */ s16 unk8;
-  /* 0x000A */ s16 unkA;
+  /* 0x000A */ s16 opacity;
     union {
   /* 0x000C */ Vec3f pos;
   /* 0x000C */ ParticleAngle angle;
-  /* 0x000C */ unk800AF29C_C unkC;
   /* 0x000C */ struct Particle **unkC_60;
   /* 0x000C */ unk800AF29C_C_400 unkC_400;
     };
@@ -234,10 +217,10 @@ void func_800AF6E4(Object *obj, s32 arg1);
 void func_800B2260(Particle *arg0);
 void func_800B263C(Particle *arg0);
 void init_particle_assets(void);
-void func_800B2FBC(Particle *arg0);
+void set_particle_texture_frame(Particle *arg0);
 void func_800B03C0(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehavior *arg3);
 void func_800B2040(Particle *arg0);
-void handle_particle_movement(Particle *arg0, s32 arg1);
+void handle_particle_movement(Particle *particle, s32 updateRate);
 void func_800B0010(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehavior *arg3);
 Particle *func_800B0698(Particle *arg0, Particle *arg1);
 Particle *func_800B1CB8(s32 arg0);
@@ -245,7 +228,7 @@ void func_800AFE5C(Particle *arg0, Particle *arg1);
 Particle *func_800B1130(Particle *arg0, Particle *arg1);
 void func_800AF52C(Object *obj, s32 arg1);
 void func_800AF134(Particle *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5);
-void render_particle(Particle *particle, Gfx **dlist, MatrixS **mtx, Vertex **vtx, s32 flags);
+void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 flags);
 void func_800B4668(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3);
 

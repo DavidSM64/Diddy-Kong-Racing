@@ -588,7 +588,7 @@ glabel func_800B26E0
 /* 0B3B98 800B2F98 00000000 */  nop   
 /* 0B3B9C 800B2F9C 1B000004 */  blez  $t8, .L800B2FB0
 /* 0B3BA0 800B2FA0 8FBF0014 */   lw    $ra, 0x14($sp)
-/* 0B3BA4 800B2FA4 0C02CBEF */  jal   func_800B2FBC
+/* 0B3BA4 800B2FA4 0C02CBEF */  jal   set_particle_texture_frame
 /* 0B3BA8 800B2FA8 00C02025 */   move  $a0, $a2
 /* 0B3BAC 800B2FAC 8FBF0014 */  lw    $ra, 0x14($sp)
 .L800B2FB0:

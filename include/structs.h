@@ -1656,15 +1656,6 @@ typedef struct unk800AF29C_C_400 {
     s16 unk16;
 } unk800AF29C_C_400;
 
-typedef struct unk800AF29C_C {
-    s16 unkC;
-    s16 unkE;
-    s16 unk10;
-    s16 unk12;
-    s16 unk14;
-    s16 unk16;
-} unk800AF29C_C;
-
 typedef struct unk800B2260_C {
     s32 unk0;
     s32 unk4;

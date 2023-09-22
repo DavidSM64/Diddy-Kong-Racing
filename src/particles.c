@@ -452,19 +452,18 @@ void partInitTrigger(Particle *particle, s32 behaviourID, s32 arg2) {
 }
 
 void func_800AF29C(Particle *arg0, s32 behaviourID, s32 arg2, s16 velX, s16 velY, s16 velZ) {
-    ParticleBehavior *temp_v1;
-    s32 temp_v0_2;
+    ParticleBehavior *behaviour;
     s32 flags;
 
-    temp_v1 = gParticleBehavioursAssetTable[behaviourID];
+    behaviour = gParticleBehavioursAssetTable[behaviourID];
     arg0->data.unk8 = arg2;
+    arg0->data.behaviour = behaviour;
     arg0->data.baseVelX = velX;
-    arg0->data.behaviour = temp_v1;
     arg0->data.baseVelY = velY;
     arg0->data.baseVelZ = velZ;
     arg0->data.unk1E = 0;
 
-    flags = temp_v1->flags;
+    flags = behaviour->flags;
 
     if (flags & 0x4000) {
         arg0->data.flags = 0x4000;
@@ -475,25 +474,24 @@ void func_800AF29C(Particle *arg0, s32 behaviourID, s32 arg2, s16 velX, s16 velY
     } else if (flags & 0x400) {
         arg0->data.unk6 = 0;
         arg0->data.flags = 0x400;
-        temp_v0_2 = gParticlesAssetTable[arg2]->lifeTime;
-        if (temp_v0_2 < 0x100) {
-            arg0->data.unk7 = temp_v0_2;
+        if (gParticlesAssetTable[arg2]->lifeTime <= 255) {
+            arg0->data.lifeTime = gParticlesAssetTable[arg2]->lifeTime;
         } else {
-            arg0->data.unk7 = 0xFF;
+            arg0->data.lifeTime = 255;
         }
-        arg0->data.unkC_400.unkC = (s32 *) allocate_from_main_pool_safe(arg0->data.unk7 * 4, COLOUR_TAG_SEMITRANS_GREY);
-        arg0->data.unkC_400.unk10 = temp_v1->unk14;
-        arg0->data.unkC_400.unk12 = temp_v1->unk16;
-        arg0->data.unkC_400.unk14 = temp_v1->unk22;
-        arg0->data.unkC_400.unk16 = temp_v1->unk24;
+        arg0->data.unkC_400.unkC = (s32 *) allocate_from_main_pool_safe(arg0->data.lifeTime * sizeof(uintptr_t), COLOUR_TAG_SEMITRANS_GREY);
+        arg0->data.unkC_400.unk10 = behaviour->unk14;
+        arg0->data.unkC_400.unk12 = behaviour->unk16;
+        arg0->data.unkC_400.unk14 = behaviour->unk22;
+        arg0->data.unkC_400.unk16 = behaviour->unk24;
     } else {
         arg0->data.flags = 0;
-        arg0->data.unkC.unkC = temp_v1->unk14;
-        arg0->data.unkC.unkE = temp_v1->unk16;
-        arg0->data.unkC.unk10 = temp_v1->unk18;
-        arg0->data.unkC.unk12 = temp_v1->unk22;
-        arg0->data.unkC.unk14 = temp_v1->unk24;
-        arg0->data.unkC.unk16 = temp_v1->unk26;
+        arg0->data.angle.y_rotation = behaviour->unk14;
+        arg0->data.angle.x_rotation = behaviour->unk16;
+        arg0->data.angle.z_rotation = behaviour->unk18;
+        arg0->data.angle.y_direction = behaviour->unk22;
+        arg0->data.angle.x_direction = behaviour->unk24;
+        arg0->data.angle.z_direction = behaviour->unk26;
     }
 }
 
@@ -523,18 +521,18 @@ GLOBAL_ASM("asm/non_matchings/particles/func_800AF404.s")
 void func_800AF52C(Object *obj, s32 arg1) {
     s32 i;
     Particle *temp_v0;
-    ParticleBehavior *temp_v1;
+    ParticleBehavior *behaviour;
     Particle *temp;
 
     temp_v0 = (Particle *) &obj->unk6C[arg1];
-    temp_v1 = temp_v0->data.behaviour;
-    temp_v0->data.unkA = 0;
+    behaviour = temp_v0->data.behaviour;
+    temp_v0->data.opacity = 0;
     if (temp_v0->data.flags & 0x4000) {
-        ((ObjectSegment *) temp_v0)->trans.x_position = obj->segment.trans.x_position;
-        ((ObjectSegment *) temp_v0)->trans.y_position = obj->segment.trans.y_position;
-        ((ObjectSegment *) temp_v0)->trans.z_position = obj->segment.trans.z_position;
+        temp_v0->segment.trans.x_position = obj->segment.trans.x_position;
+        temp_v0->segment.trans.y_position = obj->segment.trans.y_position;
+        temp_v0->segment.trans.z_position = obj->segment.trans.z_position;
     } else if (temp_v0->data.flags & 0x400) {
-        temp_v0->data.unkA = gParticlesAssetTable[temp_v0->data.unk8]->colour.a << 8;
+        temp_v0->data.opacity = gParticlesAssetTable[temp_v0->data.unk8]->colour.a << 8;
 
         if (temp_v0->data.unk6 > 0) { // Useless if statement, since the loop already does this.
             for (i = 0; i < temp_v0->data.unk6; i++){
@@ -542,26 +540,26 @@ void func_800AF52C(Object *obj, s32 arg1) {
                 temp->segment.particle.destroyTimer = 0;
             }
         }
-        if (temp_v1->flags & 1) {
-            temp_v0->data.unkC.unk10 = temp_v1->unk14;
-            temp_v0->data.unkC.unk12 = temp_v1->unk16;
+        if (behaviour->flags & 1) {
+            temp_v0->data.angle.z_rotation = behaviour->unk14;
+            temp_v0->data.angle.y_direction = behaviour->unk16;
         }
-        if (temp_v1->flags & 4) {
-            temp_v0->data.unkC.unk14 = temp_v1->unk22;
-            temp_v0->data.unkC.unk16 = temp_v1->unk24;
+        if (behaviour->flags & 4) {
+            temp_v0->data.angle.x_direction = behaviour->unk22;
+            temp_v0->data.angle.z_direction = behaviour->unk24;
         }
     } else {
-        if (temp_v1->flags & 1) {
+        if (behaviour->flags & 1) {
             temp_v0->data.unk6 = 0;
-            temp_v0->data.unkC.unkC = temp_v1->unk14;
-            temp_v0->data.unkC.unkE = temp_v1->unk16;
-            temp_v0->data.unkC.unk10 = temp_v1->unk18;
+            temp_v0->data.angle.y_rotation = behaviour->unk14;
+            temp_v0->data.angle.x_rotation = behaviour->unk16;
+            temp_v0->data.angle.z_rotation = behaviour->unk18;
         }
-        if (temp_v1->flags & 4) {
-            temp_v0->data.unk7 = 0;
-            temp_v0->data.unkC.unk12 = temp_v1->unk22;
-            temp_v0->data.unkC.unk14 = temp_v1->unk24;
-            temp_v0->data.unkC.unk16 = temp_v1->unk26;
+        if (behaviour->flags & 4) {
+            temp_v0->data.lifeTime = 0;
+            temp_v0->data.angle.y_direction = behaviour->unk22;
+            temp_v0->data.angle.x_direction = behaviour->unk24;
+            temp_v0->data.angle.z_direction = behaviour->unk26;
         }
     }
     temp_v0->data.flags &= 0xFDFF;
@@ -601,7 +599,7 @@ void func_800AFE5C(Particle *arg0, Particle *arg1) {
             arg1->data.unk6 += 64;
         }
     } else if (arg1->data.flags & 0x400) {
-        if (arg1->data.unk6 < arg1->data.unk7) {
+        if (arg1->data.unk6 < arg1->data.lifeTime) {
             temp_s0 = func_800B0698(arg0, arg1);
             arg1->data.flags &= 0xDFFF;
             if (temp_s0 != NULL) {
@@ -613,13 +611,13 @@ void func_800AFE5C(Particle *arg0, Particle *arg1) {
             }
         }
     } else {
-        while (arg1->data.unkA >= temp_s4->unk40) {
-            arg1->data.unkA -= temp_s4->unk40;
+        while (arg1->data.opacity >= temp_s4->unk40) {
+            arg1->data.opacity -= temp_s4->unk40;
             for (i = 0; i < temp_s4->unk42; i++) {
                 tempObj2 = func_800B1130(arg0, arg1);
                 if (tempObj2 != NULL) {
                     func_8000E9D0((Object *) tempObj2);
-                    handle_particle_movement(tempObj2, arg1->data.unkA);
+                    handle_particle_movement(tempObj2, arg1->data.opacity);
                 }
                 arg1->data.flags &= ~0x2000;
             }
@@ -674,17 +672,17 @@ void func_800B0010(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehav
             velocityPos.z += (f32) get_random_number_from_range(-arg3->gravityRange2, arg3->gravityRange2) * 0.00001525878906;
         }
         if (flags & (PARTICLE_UNK00000040 | PARTICLE_UNK00000020)) {
-            angle.y_rotation = arg2->data.angle.unk12;
+            angle.y_rotation = arg2->data.angle.y_direction;
             if (flags & PARTICLE_UNK00000020) {
                 angle.y_rotation += get_random_number_from_range(-arg3->angleRangeY2, arg3->angleRangeY2);
             }
-            angle.x_rotation = arg2->data.angle.unk14;
+            angle.x_rotation = arg2->data.angle.x_direction;
             if (flags & PARTICLE_UNK00000040) {
                 angle.x_rotation += get_random_number_from_range(-arg3->angleRangeX2, arg3->angleRangeX2);
             }
             f32_vec3_apply_object_rotation3((ObjectTransform* ) &angle, (f32*) &velocityPos);
         } else {
-            f32_vec3_apply_object_rotation3((ObjectTransform* ) &arg2->data.angle.unk12, (f32*) &velocityPos);
+            f32_vec3_apply_object_rotation3((ObjectTransform* ) &arg2->data.angle.y_direction, (f32*) &velocityPos);
         }
         f32_vec3_apply_object_rotation((ObjectTransform* ) arg0->segment.unk3C, (f32*) &velocityPos);
         arg0->segment.x_velocity += velocityPos.x;
@@ -693,24 +691,24 @@ void func_800B0010(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehav
     }
 }
 
-void func_800B03C0(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehavior *behaviour) {
+void func_800B03C0(Particle *particle, Particle *arg1, Particle *arg2, ParticleBehavior *behaviour) {
     s32 flags;
     Vec3f posVel;
     Vec3s angle;
 
-    arg0->baseVelX = arg2->data.baseVelX;
-    arg0->baseVelY = arg2->data.baseVelY;
-    arg0->baseVelZ = arg2->data.baseVelZ;
-    arg0->forwardVel = behaviour->forwardVel;
+    particle->baseVelX = arg2->data.baseVelX;
+    particle->baseVelY = arg2->data.baseVelY;
+    particle->baseVelZ = arg2->data.baseVelZ;
+    particle->forwardVel = behaviour->forwardVel;
     if (behaviour->behaviourFlags & PARTICLE_FORWARDVEL) {
-        arg0->forwardVel += (f32) get_random_number_from_range(-behaviour->velocityRange, behaviour->velocityRange) * 0.00001525878906; // 0.00001525878906 ~= 1.0/65536.0
+        particle->forwardVel += (f32) get_random_number_from_range(-behaviour->velocityRange, behaviour->velocityRange) * 0.00001525878906; // 0.00001525878906 ~= 1.0/65536.0
     }
     if (behaviour->flags & 1) {
         posVel.x = 0.0f;
         posVel.y = 0.0f;
         posVel.z = -behaviour->unk10;
         flags = behaviour->behaviourFlags;
-        if (flags & PARTICLE_UNK00000001) {
+        if (flags & PARTICLE_GRAVITY) {
             posVel.z += (f32) get_random_number_from_range(-behaviour->gravityRange1, behaviour->gravityRange1) * 0.00001525878906;
         }
         if (flags & (PARTICLE_UNK00000004 | PARTICLE_UNK00000002)) {
@@ -726,22 +724,22 @@ void func_800B03C0(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehav
         } else {
             f32_vec3_apply_object_rotation((ObjectTransform* ) &arg2->data.angle.y_rotation, (f32 *) &posVel);
         }
-        arg0->baseVelX += posVel.x;
-        arg0->baseVelY += posVel.y;
-        arg0->baseVelZ += posVel.z;
+        particle->baseVelX += posVel.x;
+        particle->baseVelY += posVel.y;
+        particle->baseVelZ += posVel.z;
     }
-    if (arg0->segment.particle.movementType != PARTICLE_MOVEMENT_BASIC_PARENT) {
-        f32_vec3_apply_object_rotation((ObjectTransform *) arg1, &arg0->baseVelX);
+    if (particle->segment.particle.movementType != PARTICLE_MOVEMENT_BASIC_PARENT) {
+        f32_vec3_apply_object_rotation((ObjectTransform *) arg1, &particle->baseVelX);
     }
-    arg0->segment.trans.x_position = arg0->baseVelX;
-    arg0->segment.trans.y_position = arg0->baseVelY;
-    arg0->segment.trans.z_position = arg0->baseVelZ;
-    if (arg0->segment.particle.movementType == PARTICLE_MOVEMENT_BASIC_PARENT) {
-        f32_vec3_apply_object_rotation((ObjectTransform *) arg1, &arg0->segment.trans.x_position);
+    particle->segment.trans.x_position = particle->baseVelX;
+    particle->segment.trans.y_position = particle->baseVelY;
+    particle->segment.trans.z_position = particle->baseVelZ;
+    if (particle->segment.particle.movementType == PARTICLE_MOVEMENT_BASIC_PARENT) {
+        f32_vec3_apply_object_rotation((ObjectTransform *) arg1, &particle->segment.trans.x_position);
     }
-    arg0->segment.trans.x_position += arg1->segment.trans.x_position;
-    arg0->segment.trans.y_position += arg1->segment.trans.y_position;
-    arg0->segment.trans.z_position += arg1->segment.trans.z_position;
+    particle->segment.trans.x_position += arg1->segment.trans.x_position;
+    particle->segment.trans.y_position += arg1->segment.trans.y_position;
+    particle->segment.trans.z_position += arg1->segment.trans.z_position;
 }
 
 Particle *func_800B0698(Particle *arg0, Particle *arg1) {
@@ -784,7 +782,7 @@ Particle *func_800B0698(Particle *arg0, Particle *arg1) {
     }
     var_v0->opacityTimer = properties->opacityTimer;
     if (arg1->data.flags & 0x100) {
-        var_v0->opacity = arg1->data.unkA;
+        var_v0->opacity = arg1->data.opacity;
     } else {
         var_v0->opacity = properties->opacity << 8;
     }
@@ -822,12 +820,12 @@ Particle *func_800B0698(Particle *arg0, Particle *arg1) {
         var_v0->forwardVel = sqrtf((temp_f0 * temp_f0) + (temp_f2 * temp_f2) + (temp_f14 * temp_f14));
     }
     if (sp20->flags & 2) {
-        arg1->data.unkC.unk10 += sp20->unk1C;
-        arg1->data.unkC.unk12 += sp20->unk1E;
+        arg1->data.angle.z_rotation += sp20->unk1C;
+        arg1->data.angle.y_direction += sp20->unk1E;
     }
     if (sp20->flags & 8) {
-        arg1->data.unkC.unk14 += sp20->unk2A;
-        arg1->data.unkC.unk16 += sp20->unk2C;
+        arg1->data.angle.x_direction += sp20->unk2A;
+        arg1->data.angle.z_direction += sp20->unk2C;
     }
     var_v0->segment.unk1A = properties->unk6;
     var_v0->segment.textureFrame = 0;
@@ -865,8 +863,8 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
     s32 flags;
     ParticleProperties *properties;
     Particle* var_v0;
-    TextureHeader **sp30;
-    ParticleBehavior *partBeh;
+    TextureHeader **texture;
+    ParticleBehavior *behaviour;
     unk800B1130_SP28 *sp28;
     f32 sp24;
     s8 sp23;
@@ -875,8 +873,8 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
     if (properties->unk0 == 3 || properties->unk0 == 4) {
         return NULL;
     }
-    partBeh = arg1->data.behaviour;
-    sp28 = (unk800B1130_SP28 *) partBeh->unk9C;
+    behaviour = arg1->data.behaviour;
+    sp28 = (unk800B1130_SP28 *) behaviour->unk9C;
     
     var_v0 = func_800B1CB8(properties->unk0);
     if (var_v0 == NULL) {
@@ -892,16 +890,16 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
     } else {
         var_v0->brightness = 255;
     }
-    sp24 = partBeh->unk50;
-    if (partBeh->behaviourFlags & PARTICLE_UNK00020000) {
-        sp24 += (f32) get_random_number_from_range(-partBeh->unk8C, partBeh->unk8C) * 0.00001525878906;
+    sp24 = behaviour->unk50;
+    if (behaviour->behaviourFlags & PARTICLE_UNK00020000) {
+        sp24 += (f32) get_random_number_from_range(-behaviour->unk8C, behaviour->unk8C) * 0.00001525878906;
     }
     var_v0->segment.trans.scale = properties->scale * sp24;
-    sp24 = partBeh->unk54;
-    if (partBeh->behaviourFlags & PARTICLE_UNK00040000) {
-        sp24 += (f32) get_random_number_from_range(-partBeh->unk90, partBeh->unk90) * 0.00001525878906;
+    sp24 = behaviour->unk54;
+    if (behaviour->behaviourFlags & PARTICLE_UNK00040000) {
+        sp24 += (f32) get_random_number_from_range(-behaviour->unk90, behaviour->unk90) * 0.00001525878906;
     }
-    if (partBeh->flags & 0x1000) {
+    if (behaviour->flags & 0x1000) {
         var_v0->segment.scaleVel = sqrtf((arg0->segment.x_velocity * arg0->segment.x_velocity) + (arg0->segment.y_velocity * arg0->segment.y_velocity) + (arg0->segment.z_velocity * arg0->segment.z_velocity)) * sp24 * 0.1f;
     } else {
         var_v0->segment.scaleVel = properties->scale * sp24;
@@ -926,19 +924,19 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
         var_v0->colour.b = properties->colour.b;
         var_v0->colour.a = properties->colour.a;
     }
-    flags = partBeh->behaviourFlags & (PARTICLE_COLOURVEL_ALPHA | PARTICLE_COLOURVEL_BLUE | PARTICLE_COLOURVEL_GREEN | PARTICLE_COLOURVEL_RED);
+    flags = behaviour->behaviourFlags & (PARTICLE_COLOURVEL_ALPHA | PARTICLE_COLOURVEL_BLUE | PARTICLE_COLOURVEL_GREEN | PARTICLE_COLOURVEL_RED);
     if (flags) {
         if (flags & PARTICLE_COLOURVEL_RED) {
-            var_v0->colour.r += get_random_number_from_range(-partBeh->colourRangeR, partBeh->colourRangeR);
+            var_v0->colour.r += get_random_number_from_range(-behaviour->colourRangeR, behaviour->colourRangeR);
         }
         if (flags & PARTICLE_COLOURVEL_GREEN) {
-            var_v0->colour.g += get_random_number_from_range(-partBeh->colourRangeG, partBeh->colourRangeG);
+            var_v0->colour.g += get_random_number_from_range(-behaviour->colourRangeG, behaviour->colourRangeG);
         }
         if (flags & PARTICLE_COLOURVEL_BLUE) {
-            var_v0->colour.b += get_random_number_from_range(-partBeh->colourRangeB, partBeh->colourRangeB);
+            var_v0->colour.b += get_random_number_from_range(-behaviour->colourRangeB, behaviour->colourRangeB);
         }
         if (flags & PARTICLE_COLOURVEL_ALPHA) {
-            var_v0->colour.a += get_random_number_from_range(-partBeh->colourRangeA, partBeh->colourRangeA);
+            var_v0->colour.a += get_random_number_from_range(-behaviour->colourRangeA, behaviour->colourRangeA);
         }
     }
     var_v0->opacityTimer = properties->opacityTimer;
@@ -967,7 +965,7 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
                     var_v0->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
                 }
             }
-            if (partBeh->flags & PARTICLE_ANGLE_Y) {
+            if (behaviour->flags & PARTICLE_ANGLE_Y) {
                 var_v0->segment.textureFrame = get_random_number_from_range(0, var_v0->unk44_1->textureCount - 1) << 8;
                 if ((var_v0->segment.unk40 & 3) == 2) {
                     var_v0->segment.textureFrame |= 0xFF;
@@ -981,24 +979,24 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
             sp23 = 1;
         }
     } else if ((var_v0->segment.particle.unk2C == 2) || (var_v0->segment.particle.unk2C == 1)) {
-        sp30 = &var_v0->modelData->texture;
-        if (sp30 != 0) {
-            (*sp30) = load_texture(properties->textureID);
-            if ((*sp30) != NULL) {
-                if ((*sp30)->flags & 4) {
+        texture = &var_v0->modelData->texture;
+        if (texture) {
+            *texture = load_texture(properties->textureID);
+            if (*texture != NULL) {
+                if ((*texture)->flags & 4) {
                     if (var_v0->segment.unk40 & 0x1000) {
                         var_v0->segment.trans.flags |= OBJ_FLAGS_UNK_0100;
                     } else {
                         var_v0->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
                     }
                 }
-                if (partBeh->flags & 0x800) {
-                    var_v0->segment.textureFrame = get_random_number_from_range(0, ((*sp30)->numOfTextures >> 8) - 1) << 8;
+                if (behaviour->flags & 0x800) {
+                    var_v0->segment.textureFrame = get_random_number_from_range(0, ((*texture)->numOfTextures >> 8) - 1) << 8;
                     if ((var_v0->segment.unk40 & 3) == 2) {
                         var_v0->segment.textureFrame |= 0xFF;
                     }
                 } else if ((var_v0->segment.unk40 & 3) == 2) {
-                    var_v0->segment.textureFrame = (*sp30)->numOfTextures - 1;
+                    var_v0->segment.textureFrame = (*texture)->numOfTextures - 1;
                 } else {
                     var_v0->segment.textureFrame = 0;
                 }
@@ -1015,64 +1013,64 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
             func_800AF0F0(var_v0);
         }
     }
-    func_800B03C0(var_v0, arg0, arg1, partBeh);
-    if (partBeh->flags & 0x80) {
-        var_v0->segment.trans.y_rotation = partBeh->angleOffsetY;
-        var_v0->segment.trans.x_rotation = partBeh->angleOffsetX;
-        var_v0->segment.trans.z_rotation = partBeh->angleOffsetZ;
+    func_800B03C0(var_v0, arg0, arg1, behaviour);
+    if (behaviour->flags & 0x80) {
+        var_v0->segment.trans.y_rotation = behaviour->angleOffsetY;
+        var_v0->segment.trans.x_rotation = behaviour->angleOffsetX;
+        var_v0->segment.trans.z_rotation = behaviour->angleOffsetZ;
     } else {
-        var_v0->segment.trans.y_rotation = arg0->segment.trans.y_rotation + partBeh->angleOffsetY;
-        var_v0->segment.trans.x_rotation = arg0->segment.trans.x_rotation + partBeh->angleOffsetX;
-        var_v0->segment.trans.z_rotation = arg0->segment.trans.z_rotation + partBeh->angleOffsetZ;
+        var_v0->segment.trans.y_rotation = arg0->segment.trans.y_rotation + behaviour->angleOffsetY;
+        var_v0->segment.trans.x_rotation = arg0->segment.trans.x_rotation + behaviour->angleOffsetX;
+        var_v0->segment.trans.z_rotation = arg0->segment.trans.z_rotation + behaviour->angleOffsetZ;
     }
-    flags = partBeh->behaviourFlags & (PARTICLE_ANGLE_Z | PARTICLE_ANGLE_X | PARTICLE_ANGLE_Y);
+    flags = behaviour->behaviourFlags & (PARTICLE_ANGLE_Z | PARTICLE_ANGLE_X | PARTICLE_ANGLE_Y);
     if (flags != 0) {
         if (flags & PARTICLE_ANGLE_Y) {
-            var_v0->segment.trans.y_rotation += get_random_number_from_range(-partBeh->angleRangeY3, partBeh->angleRangeY3);
+            var_v0->segment.trans.y_rotation += get_random_number_from_range(-behaviour->angleRangeY3, behaviour->angleRangeY3);
         }
         if (flags & PARTICLE_ANGLE_X) {
-            var_v0->segment.trans.x_rotation += get_random_number_from_range(-partBeh->angleRangeX3, partBeh->angleRangeX3);
+            var_v0->segment.trans.x_rotation += get_random_number_from_range(-behaviour->angleRangeX3, behaviour->angleRangeX3);
         }
         if (flags & PARTICLE_ANGLE_Z) {
-            var_v0->segment.trans.z_rotation += get_random_number_from_range(-partBeh->angleRangeZ3, partBeh->angleRangeZ3);
+            var_v0->segment.trans.z_rotation += get_random_number_from_range(-behaviour->angleRangeZ3, behaviour->angleRangeZ3);
         }
     }
-    var_v0->angleVelY = partBeh->angleVelY;
-    var_v0->angleVelX = partBeh->angleVelX;
-    var_v0->angleVelZ = partBeh->angleVelZ;
-    flags = partBeh->behaviourFlags & (PARTICLE_ANGLEVEL_Z | PARTICLE_ANGLEVEL_X | PARTICLE_ANGLEVEL_Y);
+    var_v0->angleVelY = behaviour->angleVelY;
+    var_v0->angleVelX = behaviour->angleVelX;
+    var_v0->angleVelZ = behaviour->angleVelZ;
+    flags = behaviour->behaviourFlags & (PARTICLE_ANGLEVEL_Z | PARTICLE_ANGLEVEL_X | PARTICLE_ANGLEVEL_Y);
     if (flags) {
         if (flags & PARTICLE_ANGLEVEL_Y) {
-            var_v0->angleVelY += get_random_number_from_range(-partBeh->unk86, partBeh->unk86);
+            var_v0->angleVelY += get_random_number_from_range(-behaviour->unk86, behaviour->unk86);
         }
         if (flags & PARTICLE_ANGLEVEL_X) {
-            var_v0->angleVelX += get_random_number_from_range(-partBeh->unk88, partBeh->unk88);
+            var_v0->angleVelX += get_random_number_from_range(-behaviour->unk88, behaviour->unk88);
         }
         if (flags & PARTICLE_ANGLEVEL_Z) {
-            var_v0->angleVelZ += get_random_number_from_range(-partBeh->unk8A, partBeh->unk8A);
+            var_v0->angleVelZ += get_random_number_from_range(-behaviour->unk8A, behaviour->unk8A);
         }
     }
-    func_800B0010(var_v0, arg0, arg1, partBeh);
+    func_800B0010(var_v0, arg0, arg1, behaviour);
     var_v0->gravity = gParticleGravityTable[(var_v0->segment.unk40 >> 4) & 7];
     if (var_v0->segment.particle.movementType == PARTICLE_MOVEMENT_VELOCITY) {
         var_v0->forwardVel = sqrtf((var_v0->segment.x_velocity * var_v0->segment.x_velocity) + (var_v0->segment.y_velocity * var_v0->segment.y_velocity) + (var_v0->segment.z_velocity * var_v0->segment.z_velocity));
     }
-    if (partBeh->flags & 2) {
+    if (behaviour->flags & 2) {
         arg1->data.unk6++;
-        if (arg1->data.unk6 >= partBeh->unk1A) {
-            arg1->data.unkC.unkC += partBeh->unk1C;
-            arg1->data.unkC.unkE += partBeh->unk1E;
-            arg1->data.unkC.unk10 += partBeh->unk18;
-            arg1->data.unk6 -= partBeh->unk1A;
+        if (arg1->data.unk6 >= behaviour->unk1A) {
+            arg1->data.angle.y_rotation += behaviour->unk1C;
+            arg1->data.angle.x_rotation += behaviour->unk1E;
+            arg1->data.angle.z_rotation += behaviour->unk18;
+            arg1->data.unk6 -= behaviour->unk1A;
         }
     }
-    if (partBeh->flags & 8) {
-        arg1->data.unk7++;
-        if (arg1->data.unk7 >= partBeh->unk28) {
-            arg1->data.unkC.unk12 += partBeh->unk2A;
-            arg1->data.unkC.unk14 += partBeh->unk2C;
-            arg1->data.unkC.unk16 += partBeh->unk2E;
-            arg1->data.unk7 -= partBeh->unk28;
+    if (behaviour->flags & 8) {
+        arg1->data.lifeTime++;
+        if (arg1->data.lifeTime >= behaviour->unk28) {
+            arg1->data.angle.y_direction += behaviour->unk2A;
+            arg1->data.angle.x_direction += behaviour->unk2C;
+            arg1->data.angle.z_direction += behaviour->unk2E;
+            arg1->data.lifeTime -= behaviour->unk28;
         }
     }
     if (var_v0->modelData == NULL) {
@@ -1271,7 +1269,7 @@ void handle_particle_movement(Particle *particle, s32 updateRate) {
     } else {
         if (particle->segment.unk40 & 3) {
             if (gParticleUpdateRate > 0) {
-                func_800B2FBC(particle);
+                set_particle_texture_frame(particle);
             }
         }
         if (particle->segment.particle.unk2C == 4) {
@@ -1351,7 +1349,7 @@ void func_800B263C(Particle *arg0) {
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800B26E0.s")
 
-void func_800B2FBC(Particle *particle) {
+void set_particle_texture_frame(Particle *particle) {
     s32 someFlag;
     s32 keepGoing;
     s32 i;
@@ -1562,7 +1560,7 @@ UNUSED void render_active_particles(Gfx **dList, MatrixS **arg1, Vertex **arg2) 
 /**
  * Load a texture then render a sprite or a billboard.
 */
-void render_particle(Particle *particle, Gfx **dlist, MatrixS **mtx, Vertex **vtx, s32 flags) {
+void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 flags) {
     s32 renderFlags;
     s32 alpha;
     s32 temp;
@@ -1580,41 +1578,41 @@ void render_particle(Particle *particle, Gfx **dlist, MatrixS **mtx, Vertex **vt
         return;
     }
     if (particle->segment.object.unk2C != 4 && particle->segment.object.unk2C != 3) {
-        gDPSetEnvColor((*dlist)++, particle->colour.r, particle->colour.g, particle->colour.b, particle->colour.a);
+        gDPSetEnvColor((*dList)++, particle->colour.r, particle->colour.g, particle->colour.b, particle->colour.a);
         if (alpha != 255) {
             renderFlags = (RENDER_Z_UPDATE | RENDER_FOG_ACTIVE | RENDER_SEMI_TRANSPARENT | RENDER_Z_COMPARE);
-            gDPSetPrimColor((*dlist)++, 0, 0, particle->brightness, particle->brightness, particle->brightness, alpha);
+            gDPSetPrimColor((*dList)++, 0, 0, particle->brightness, particle->brightness, particle->brightness, alpha);
         } else {
-            gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+            gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
         }
         if (particle->segment.object.unk2C == 0x80) {
             temp = particle->segment.textureFrame;
             particle->segment.textureFrame >>= 8;
             particle->segment.textureFrame = (particle->segment.textureFrame * 255) / (particle->unk44_1->textureCount);
-            render_sprite_billboard(dlist, mtx, vtx, (Object *) particle, (unk80068514_arg4 *) particle->modelData, renderFlags);
+            render_sprite_billboard(dList, mtx, vtx, (Object *) particle, (unk80068514_arg4 *) particle->modelData, renderFlags);
             particle->segment.textureFrame = temp;
         } else {
             modelData = particle->modelData;
             if (modelData->texture) {
-                camera_push_model_mtx(dlist, mtx, &particle->segment.trans, 1.0f, 0.0f);
-                load_and_set_texture(dlist, (TextureHeader *) modelData->texture, renderFlags, particle->segment.textureFrame << 8);
-                gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(modelData->vertices), modelData->vertexCount, 0);
-                gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL(modelData->triangles), modelData->triangleCount, TRIN_ENABLE_TEXTURE);
-                func_80069A40(dlist);
+                camera_push_model_mtx(dList, mtx, &particle->segment.trans, 1.0f, 0.0f);
+                load_and_set_texture(dList, (TextureHeader *) modelData->texture, renderFlags, particle->segment.textureFrame << 8);
+                gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(modelData->vertices), modelData->vertexCount, 0);
+                gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(modelData->triangles), modelData->triangleCount, TRIN_ENABLE_TEXTURE);
+                func_80069A40(dList);
             }
         }
         if (alpha != 255 || particle->brightness != 255) {
-            gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+            gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
         }
         if (particle->colour.a) {
-            gDPSetEnvColor((*dlist)++, 255, 255, 255, 0);
+            gDPSetEnvColor((*dList)++, 255, 255, 255, 0);
         }
     } else {
         renderFlags = (RENDER_VTX_ALPHA | RENDER_Z_UPDATE | RENDER_FOG_ACTIVE | RENDER_Z_COMPARE | RENDER_ANTI_ALIASING);
-        gDPSetEnvColor((*dlist)++, 255, 255, 255, 0);
+        gDPSetEnvColor((*dList)++, 255, 255, 255, 0);
         if (particle->segment.object.unk2C == 4) {
             if (particle->segment.camera.unk3A > 0) {
-                gDPSetPrimColor((*dlist)++, 0, 0, particle->brightness, particle->brightness, particle->brightness, 255);
+                gDPSetPrimColor((*dList)++, 0, 0, particle->brightness, particle->brightness, particle->brightness, 255);
                 if (particle->unk77 == 0) {
                     func_800B3E64((Object *) particle);
                 }
@@ -1622,28 +1620,28 @@ void render_particle(Particle *particle, Gfx **dlist, MatrixS **mtx, Vertex **vt
                 temp = particle->modelFrame;
                 temp <<= 3;
                 tempvtx = &modelData->vertices[temp];
-                load_and_set_texture(dlist, modelData->texture, renderFlags, particle->segment.textureFrame << 8);
-                gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(tempvtx), modelData->vertexCount, 0);
-                gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL(modelData->triangles), modelData->triangleCount, TRIN_ENABLE_TEXTURE);
+                load_and_set_texture(dList, modelData->texture, renderFlags, particle->segment.textureFrame << 8);
+                gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(tempvtx), modelData->vertexCount, 0);
+                gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(modelData->triangles), modelData->triangleCount, TRIN_ENABLE_TEXTURE);
                 if (particle->brightness != 255) {
-                    gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+                    gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
                 }
             }
         } else if (particle->segment.object.unk2C == 3) {
-            gDPSetPrimColor((*dlist)++, 0, 0, particle->brightness, particle->brightness, particle->brightness, alpha);
+            gDPSetPrimColor((*dList)++, 0, 0, particle->brightness, particle->brightness, particle->brightness, alpha);
             if (particle->unk68b >= 2) {
                 modelData = particle->modelData;
-                load_and_set_texture(dlist, modelData->texture, renderFlags, particle->segment.textureFrame << 8);
-                gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(modelData->vertices), modelData->vertexCount, 0);
-                gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL(modelData->triangles),  modelData->triangleCount, 1);
+                load_and_set_texture(dList, modelData->texture, renderFlags, particle->segment.textureFrame << 8);
+                gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(modelData->vertices), modelData->vertexCount, 0);
+                gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(modelData->triangles),  modelData->triangleCount, 1);
             } else if (particle->unk68b > 0) {
                 modelData = particle->modelData;
-                load_and_set_texture(dlist, modelData->texture, renderFlags, particle->segment.textureFrame << 8);
-                gSPVertexDKR((*dlist)++, OS_K0_TO_PHYSICAL(modelData->vertices), 4, 0);
-                gSPPolygon((*dlist)++, OS_K0_TO_PHYSICAL(&modelData->triangles[modelData->triangleCount]), 1, TRIN_ENABLE_TEXTURE);
+                load_and_set_texture(dList, modelData->texture, renderFlags, particle->segment.textureFrame << 8);
+                gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(modelData->vertices), 4, 0);
+                gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(&modelData->triangles[modelData->triangleCount]), 1, TRIN_ENABLE_TEXTURE);
             }
             if (alpha != 255 || particle->brightness != 255) {
-                gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+                gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
             }
         }
     }
