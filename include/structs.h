@@ -1587,9 +1587,9 @@ typedef struct Object_6C {
 /* Size: 0xA0 bytes */
 typedef struct ParticleBehavior {
     s32 flags;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
+    f32 velX;
+    f32 velY;
+    f32 velZ;
     f32 unk10;
     s16 unk14;
     s16 unk16;
@@ -1705,12 +1705,12 @@ typedef struct SegmentPropertiesObject {
 
 typedef struct SegmentPropertiesParticle {
   /* 0x002C */ s16 unk2C;
-  /* 0x002E */ s16 unk2E;
+  /* 0x002E */ s16 blockID;
   /* 0x0030 */ f32 unk30;
   /* 0x0034 */ f32 unk34;
   /* 0x0038 */ u8 unk38;
-  /* 0x0039 */ u8 unk39;
-  /* 0x003A */ s16 unk3A;
+  /* 0x0039 */ u8 movementType;
+  /* 0x003A */ s16 destroyTimer;
 } SegmentPropertiesParticle;
 
 typedef struct SegmentPropertiesCamera {
@@ -1739,44 +1739,10 @@ typedef struct ObjectSegment {
   /* 0x0040 */ ObjectHeader *header;
 } ObjectSegment;
 
-typedef struct ParticleModel {
-    union {
-    /* 0x00 */ s16 unk0;
-    /* 0x00 */ TextureHeader *texture;
-    };
-    /* 0x04 */ s16 unk4;
-    /* 0x06 */ s16 unk6;
-    /* 0x08 */ Vertex *unk8;
-    /* 0x0C */ Triangle *unkC;
-    /* 0x10 */ u16 unk10;
-    /* 0x12 */ u16 unk12;
-} ParticleModel;
-
-typedef struct unk800B0698_44_0 {
-    u8 pad0[0x3];
-    /* 0x04 */ s16 unk4;
-    /* 0x06 */ s16 unk6;
-    /* 0x08 */ Vertex *unk8;
-    /* 0x0C */ Triangle *unkC;
-    /* 0x10 */ u16 unk10;
-    /* 0x12 */ u16 unk12;
-} unk800B0698_44_0;
-
-typedef struct unk800B0698_44 {
-    union {
-        TextureHeader *texture;
-        s16 unk0;
-        struct unk800B0698_44_0 unk0struct;
-    };
-} unk800B0698_44;
-
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ ObjectSegment segment;
-  union {
   /* 0x0044 */ Vertex *unk44;
-  /* 0x0044 */ unk800B0698_44 *unk44_0;
-  };
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A; // Upper byte is object ID, lower byte is object size.
   /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318

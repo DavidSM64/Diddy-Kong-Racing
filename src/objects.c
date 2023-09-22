@@ -2507,7 +2507,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
 void render_object_parts(Object *obj) {
     func_80012F94(obj);
     if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
-        func_800B3740((Particle *) obj, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, 0x8000);
+        render_particle((Particle *) obj, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, 0x8000);
     } else {
         if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
             render_3d_model(obj);
