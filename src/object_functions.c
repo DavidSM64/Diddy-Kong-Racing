@@ -4879,7 +4879,7 @@ void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry) {
 
 /* Official name: bubblerInit */
 void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry) {
-    func_800AF134((Particle *) obj->unk6C, entry->unk9, entry->unk8, 0, 0, 0);
+    func_800AF134((Particle *) obj->unk6C, entry->particleBehaviourID, entry->particlePropertyID, 0, 0, 0);
     obj->properties.common.unk0 = entry->unkA;
 }
 

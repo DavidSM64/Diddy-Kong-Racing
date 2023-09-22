@@ -51,18 +51,18 @@ enum ParticleMovement {
 };
 
 typedef struct ParticleProperties {
-    u8 unk0;
-    u8 movementType;
-    u16 unk2;
-    s16 textureID;
-    s16 unk6;
-    s16 lifeTime;
-    s16 lifeTimeRange;
-    u8 opacity;
-    u8 opacityVel;
-    s16 opacityTimer;
-    f32 scale;
-    ColourRGBA colour;
+  /* 0x00 */ u8 unk0;
+  /* 0x01 */ u8 movementType;
+  /* 0x02 */ u16 unk2;
+  /* 0x04 */ s16 textureID;
+  /* 0x06 */ s16 unk6;
+  /* 0x08 */ s16 lifeTime;
+  /* 0x0A */ s16 lifeTimeRange;
+  /* 0x0C */ u8 opacity;
+  /* 0x0D */ u8 opacityVel;
+  /* 0x0E */ s16 opacityTimer;
+  /* 0x10 */ f32 scale;
+  /* 0x14 */ ColourRGBA colour;
 } ParticleProperties;
 
 /* Size: 0x10 bytes */
@@ -104,7 +104,7 @@ typedef struct ParticleData {
   /* 0x0004 */ s16 flags;
   /* 0x0006 */ u8 unk6;
   /* 0x0007 */ u8 lifeTime;
-  /* 0x0008 */ s16 unk8;
+  /* 0x0008 */ s16 propertyID;
   /* 0x000A */ s16 opacity;
     union {
   /* 0x000C */ Vec3f pos;

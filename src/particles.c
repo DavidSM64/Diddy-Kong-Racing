@@ -427,36 +427,36 @@ void func_800AF0F0(Particle *particle) {
     temp_v1->unk1C = temp_t8;
 }
 
-void func_800AF134(Particle *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 arg5) {
-    ParticleBehavior *temp;
-    if (arg2 >= gParticlesAssetTableCount) {
-        arg2 = 0;
+void func_800AF134(Particle *particle, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ) {
+    ParticleBehavior *behaviour;
+    if (propertyID >= gParticlesAssetTableCount) {
+        propertyID = 0;
     }
-    if (arg1 >= gParticleBehavioursAssetTableCount) {
-        arg1 = 0;
+    if (behaviourID >= gParticleBehavioursAssetTableCount) {
+        behaviourID = 0;
     }
-    temp = gParticleBehavioursAssetTable[arg1];
-    if (arg0->data.unk8 != arg2 || temp != arg0->data.behaviour) {
-        func_800B2260(arg0);
-        func_800AF29C(arg0, arg1, arg2, arg3, arg4, arg5);
+    behaviour = gParticleBehavioursAssetTable[behaviourID];
+    if (particle->data.propertyID != propertyID || behaviour != particle->data.behaviour) {
+        func_800B2260(particle);
+        func_800AF29C(particle, behaviourID, propertyID, velX, velY, velZ);
     }
 }
 
-void partInitTrigger(Particle *particle, s32 behaviourID, s32 arg2) {
+void partInitTrigger(Particle *particle, s32 behaviourID, s32 propertyID) {
     ParticleBehavior *behaviour;
 
     if (behaviourID < gParticleBehavioursAssetTableCount) {
         behaviour = gParticleBehavioursAssetTable[behaviourID];
-        func_800AF29C(particle, behaviourID, arg2, behaviour->velX, behaviour->velY, behaviour->velZ);
+        func_800AF29C(particle, behaviourID, propertyID, behaviour->velX, behaviour->velY, behaviour->velZ);
     }
 }
 
-void func_800AF29C(Particle *arg0, s32 behaviourID, s32 arg2, s16 velX, s16 velY, s16 velZ) {
+void func_800AF29C(Particle *arg0, s32 behaviourID, s32 propertyID, s16 velX, s16 velY, s16 velZ) {
     ParticleBehavior *behaviour;
     s32 flags;
 
     behaviour = gParticleBehavioursAssetTable[behaviourID];
-    arg0->data.unk8 = arg2;
+    arg0->data.propertyID = propertyID;
     arg0->data.behaviour = behaviour;
     arg0->data.baseVelX = velX;
     arg0->data.baseVelY = velY;
@@ -474,8 +474,8 @@ void func_800AF29C(Particle *arg0, s32 behaviourID, s32 arg2, s16 velX, s16 velY
     } else if (flags & 0x400) {
         arg0->data.unk6 = 0;
         arg0->data.flags = 0x400;
-        if (gParticlesAssetTable[arg2]->lifeTime <= 255) {
-            arg0->data.lifeTime = gParticlesAssetTable[arg2]->lifeTime;
+        if (gParticlesAssetTable[propertyID]->lifeTime <= 255) {
+            arg0->data.lifeTime = gParticlesAssetTable[propertyID]->lifeTime;
         } else {
             arg0->data.lifeTime = 255;
         }
@@ -532,7 +532,7 @@ void func_800AF52C(Object *obj, s32 arg1) {
         temp_v0->segment.trans.y_position = obj->segment.trans.y_position;
         temp_v0->segment.trans.z_position = obj->segment.trans.z_position;
     } else if (temp_v0->data.flags & 0x400) {
-        temp_v0->data.opacity = gParticlesAssetTable[temp_v0->data.unk8]->colour.a << 8;
+        temp_v0->data.opacity = gParticlesAssetTable[temp_v0->data.propertyID]->colour.a << 8;
 
         if (temp_v0->data.unk6 > 0) { // Useless if statement, since the loop already does this.
             for (i = 0; i < temp_v0->data.unk6; i++){
@@ -751,7 +751,7 @@ Particle *func_800B0698(Particle *arg0, Particle *arg1) {
     f32 temp_f14;
     f32 temp_f2;
 
-    properties = gParticlesAssetTable[arg1->data.unk8];
+    properties = gParticlesAssetTable[arg1->data.propertyID];
     if (properties->unk0 != 4) {
         return NULL;
     }
@@ -869,7 +869,7 @@ Particle *func_800B1130(Particle *arg0, Particle *arg1) {
     f32 sp24;
     s8 sp23;
     
-    properties = gParticlesAssetTable[arg1->data.unk8];
+    properties = gParticlesAssetTable[arg1->data.propertyID];
     if (properties->unk0 == 3 || properties->unk0 == 4) {
         return NULL;
     }
