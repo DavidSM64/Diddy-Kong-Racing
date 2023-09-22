@@ -6,14 +6,14 @@ glabel D_800E709C
 glabel func_80065EA0
 /* 066AA0 80065EA0 3C048012 */  lui   $a0, %hi(D_80120DA0) # $a0, 0x8012
 /* 066AA4 80065EA4 24030001 */  li    $v1, 1
-/* 066AA8 80065EA8 3C0F8012 */  lui   $t7, %hi(D_80120D70) # $t7, 0x8012
-/* 066AAC 80065EAC 25EF0D70 */  addiu $t7, %lo(D_80120D70) # addiu $t7, $t7, 0xd70
+/* 066AA8 80065EA8 3C0F8012 */  lui   $t7, %hi(gModelMatrixF) # $t7, 0x8012
+/* 066AAC 80065EAC 25EF0D70 */  addiu $t7, %lo(gModelMatrixF) # addiu $t7, $t7, 0xd70
 /* 066AB0 80065EB0 00037080 */  sll   $t6, $v1, 2
 /* 066AB4 80065EB4 24840DA0 */  addiu $a0, %lo(D_80120DA0) # addiu $a0, $a0, 0xda0
 /* 066AB8 80065EB8 01CF1021 */  addu  $v0, $t6, $t7
 /* 066ABC 80065EBC 0003C980 */  sll   $t9, $v1, 6
-/* 066AC0 80065EC0 3C018012 */  lui   $at, %hi(D_80120D70) # $at, 0x8012
-/* 066AC4 80065EC4 AC240D70 */  sw    $a0, %lo(D_80120D70)($at)
+/* 066AC0 80065EC0 3C018012 */  lui   $at, %hi(gModelMatrixF) # $at, 0x8012
+/* 066AC4 80065EC4 AC240D70 */  sw    $a0, %lo(gModelMatrixF)($at)
 /* 066AC8 80065EC8 00994021 */  addu  $t0, $a0, $t9
 /* 066ACC 80065ECC 27BDFFC8 */  addiu $sp, $sp, -0x38
 /* 066AD0 80065ED0 AC480000 */  sw    $t0, ($v0)
@@ -53,10 +53,10 @@ glabel func_80065EA0
 /* 066B54 80065F54 3C018012 */  lui   $at, %hi(gCutsceneCameraActive) # $at, 0x8012
 /* 066B58 80065F58 A0200D14 */  sb    $zero, %lo(gCutsceneCameraActive)($at)
 /* 066B5C 80065F5C AE200000 */  sw    $zero, ($s1)
-/* 066B60 80065F60 3C018012 */  lui   $at, %hi(D_80120D1C) # $at, 0x8012
-/* 066B64 80065F64 AC200D1C */  sw    $zero, %lo(D_80120D1C)($at)
-/* 066B68 80065F68 3C018012 */  lui   $at, %hi(D_80120D20) # $at, 0x8012
-/* 066B6C 80065F6C AC200D20 */  sw    $zero, %lo(D_80120D20)($at)
+/* 066B60 80065F60 3C018012 */  lui   $at, %hi(gModelMatrixStackPos) # $at, 0x8012
+/* 066B64 80065F64 AC200D1C */  sw    $zero, %lo(gModelMatrixStackPos)($at)
+/* 066B68 80065F68 3C018012 */  lui   $at, %hi(gCameraMatrixPos) # $at, 0x8012
+/* 066B6C 80065F6C AC200D20 */  sw    $zero, %lo(gCameraMatrixPos)($at)
 /* 066B70 80065F70 3C018012 */  lui   $at, %hi(gNumberOfViewports) # $at, 0x8012
 /* 066B74 80065F74 AC200CE0 */  sw    $zero, %lo(gNumberOfViewports)($at)
 /* 066B78 80065F78 3C018012 */  lui   $at, %hi(D_80120D0C) # $at, 0x8012
@@ -106,8 +106,8 @@ glabel func_80065EA0
 /* 066C1C 8006601C E7A60014 */  swc1  $f6, 0x14($sp)
 /* 066C20 80066020 0C033248 */  jal   guPerspectiveF
 /* 066C24 80066024 E7A80018 */   swc1  $f8, 0x18($sp)
-/* 066C28 80066028 3C058012 */  lui   $a1, %hi(gPerspectiveMatrixS) # $a1, 0x8012
-/* 066C2C 8006602C 24A50FE0 */  addiu $a1, %lo(gPerspectiveMatrixS) # addiu $a1, $a1, 0xfe0
+/* 066C28 80066028 3C058012 */  lui   $a1, %hi(gProjectionMatrixS) # $a1, 0x8012
+/* 066C2C 8006602C 24A50FE0 */  addiu $a1, %lo(gProjectionMatrixS) # addiu $a1, $a1, 0xfe0
 /* 066C30 80066030 0C01BE1C */  jal   f32_matrix_to_s16_matrix
 /* 066C34 80066034 02002025 */   move  $a0, $s0
 /* 066C38 80066038 3C014270 */  li    $at, 0x42700000 # 60.000000

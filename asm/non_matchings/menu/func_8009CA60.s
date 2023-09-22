@@ -184,7 +184,7 @@ glabel func_8009CA60
 /* 09D924 8009CD24 8C440000 */  lw    $a0, ($v0)
 /* 09D928 8009CD28 0C02735F */  jal   render_track_selection_viewport_border
 /* 09D92C 8009CD2C 00000000 */   nop   
-/* 09D930 8009CD30 0C01A690 */  jal   func_80069A40
+/* 09D930 8009CD30 0C01A690 */  jal   apply_matrix_from_stack
 /* 09D934 8009CD34 02002025 */   move  $a0, $s0
 /* 09D938 8009CD38 3C0D800E */  lui   $t5, %hi(sMenuGuiOpacity) # $t5, 0x800e
 /* 09D93C 8009CD3C 8DADF764 */  lw    $t5, %lo(sMenuGuiOpacity)($t5)

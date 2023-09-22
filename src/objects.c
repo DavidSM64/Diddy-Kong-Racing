@@ -1886,7 +1886,7 @@ void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *tr
     load_and_set_texture(&gObjectCurrDisplayList, (TextureHeader* ) tex, flags, texOffset);
     gSPVertexDKR(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(verts), numVertices, 0);
     gSPPolygon(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(triangles), numTriangles, hasTexture);
-    func_80069A40(&gObjectCurrDisplayList);
+    apply_matrix_from_stack(&gObjectCurrDisplayList);
 }
 
 /**
@@ -2115,7 +2115,7 @@ void render_3d_model(Object *obj) {
         if (racerObj != NULL) {
             object_undo_player_tumble(obj);
             if (obj->segment.object.animationID == 0 || racerObj->vehicleID >= VEHICLE_TRICKY) {
-                func_80069790(&gObjectCurrDisplayList, &gObjectCurrMatrix, obj68, racerObj->headAngle);
+                apply_head_turning_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, obj68, racerObj->headAngle);
                 spB0 = TRUE;
             } else {
                 racerObj->headAngle = 0;
@@ -2247,7 +2247,7 @@ void render_3d_model(Object *obj) {
         if (hasEnvCol) {
             gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
         }
-        func_80069A40(&gObjectCurrDisplayList);
+        apply_matrix_from_stack(&gObjectCurrDisplayList);
     }
 }
 
@@ -2624,7 +2624,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         } else {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
-        func_80068FA8(&gObjectCurrDisplayList, &gObjectCurrMatrix, gShieldEffectObject, obj, shear);
+        apply_object_shear_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, gShieldEffectObject, obj, shear);
         func_800143A8(mdl, gShieldEffectObject, 0, 4, 0);
         gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
         if (racer->shieldTimer < 64) {
@@ -2684,7 +2684,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gMagnetEffectObject->unk44 = (Vertex *) gfxData->unk4[gfxData->unk1F];
             opacity = (((D_8011B078[(var_t0 * 4) + 1] * 8) & 0x7F) + 0x80);
             func_8007F594(&gObjectCurrDisplayList, 2, 0xFFFFFF00 | opacity, gMagnetColours[racer->magnetModelID]);
-            func_80068FA8(&gObjectCurrDisplayList, &gObjectCurrMatrix, gMagnetEffectObject, obj, shear);
+            apply_object_shear_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, gMagnetEffectObject, obj, shear);
             D_800DC720 = TRUE;
             func_800143A8(mdl, gMagnetEffectObject, 0, 4, 0);
             D_800DC720 = FALSE;
