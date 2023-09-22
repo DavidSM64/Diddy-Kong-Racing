@@ -354,7 +354,7 @@ glabel func_80010994
 /* 011A9C 80010E9C 310A8000 */  andi  $t2, $t0, 0x8000
 /* 011AA0 80010EA0 11400005 */  beqz  $t2, .L80010EB8
 /* 011AA4 80010EA4 00000000 */   nop   
-/* 011AA8 80010EA8 0C02C8BF */  jal   func_800B22FC
+/* 011AA8 80010EA8 0C02C8BF */  jal   handle_particle_movement
 /* 011AAC 80010EAC AFA20044 */   sw    $v0, 0x44($sp)
 /* 011AB0 80010EB0 8FA20044 */  lw    $v0, 0x44($sp)
 /* 011AB4 80010EB4 00000000 */  nop   

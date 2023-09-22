@@ -467,8 +467,8 @@ typedef struct LevelObjectEntry_TrophyCab {
 
 typedef struct LevelObjectEntry_Bubbler {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 unk8;
-    /* 0x09 */ u8 unk9;
+    /* 0x08 */ u8 particlePropertyID;
+    /* 0x09 */ u8 particleBehaviourID;
     /* 0x0A */ u16 unkA;
 } LevelObjectEntry_Bubbler;
 
