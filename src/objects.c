@@ -1560,7 +1560,7 @@ void func_80010994(s32 updateRate) {
             obj = gObjPtrList[i];
             if (obj->segment.trans.flags & 0x8000) {
                 //Why is this object being treated as a Particle?
-                func_800B22FC((Particle *) obj, updateRate);
+                handle_particle_movement((Particle *) obj, updateRate);
             }
         }
     }

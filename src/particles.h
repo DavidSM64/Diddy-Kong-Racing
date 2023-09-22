@@ -50,33 +50,25 @@ enum ParticleMovement {
     PARTICLE_MOVEMENT_VELOCITY,
 };
 
-typedef struct unk800E2CF0 {
+typedef struct ParticleProperties {
     u8 unk0;
     u8 movementType;
     u16 unk2;
-    s16 unk4;
+    s16 textureID;
     s16 unk6;
     s16 lifeTime;
     s16 lifeTimeRange;
-    u8 unkC;
-    u8 unkD;
+    u8 opacity;
+    u8 opacityVel;
     s16 opacityTimer;
     f32 scale;
     ColourRGBA colour;
-} unk800E2CF0;
+} ParticleProperties;
 
 /* Size: 0x10 bytes */
 typedef struct unk800E2D08 {
     s16 unk0, unk2, unk4, unk6, unk8, unkA, unkC, unkE;
 } unk800E2D08;
-
-typedef struct unk800AF024 {
-    u8 pad0[4];
-    s16 unk4;
-    s16 unk6;
-    Vertex *unk8;
-    Triangle *unkC;
-} unk800AF024;
 
 typedef struct XYStruct {
     s16 x, y;
@@ -174,7 +166,7 @@ typedef struct ParticleModel {
 } ParticleModel;
 
 typedef struct ParticleOtherSomething {
-    /* 0x00 */ s16 unk0;
+    /* 0x00 */ s16 textureCount;
     /* 0x02 */ s16 unk2;
     /* 0x04 */ s16 unk4;
     /* 0x06 */ s16 unk6;
@@ -212,7 +204,7 @@ typedef struct Particle {
   /* 0x006C */ ColourRGBA colour;
   /* 0x0070 */ struct Particle *unk70;
   /* 0x0074 */ u8 unk74;
-  /* 0x0075 */ u8 unk75;
+  /* 0x0075 */ u8 modelFrame;
   /* 0x0076 */ u8 unk76;
   /* 0x0077 */ s8 unk77;
 } Particle;
@@ -230,10 +222,10 @@ void func_800AE2D8(void);
 void func_800AE374(void);
 void func_800AE438(void);
 void func_800AE490(void);
-void func_800AEE14(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2);
-void func_800AEEB8(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2);
-void func_800AEF88(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2);
-void func_800AF024(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2);
+void generate_particle_shape_triangle(ParticleModel *arg0, Vertex **arg1, Triangle **arg2);
+void generate_particle_shape_quad(ParticleModel *arg0, Vertex **arg1, Triangle **arg2);
+void func_800AEF88(ParticleModel *arg0, Vertex **arg1, Triangle **arg2);
+void func_800AF024(ParticleModel *arg0, Vertex **arg1, Triangle **arg2);
 void func_800AF0A4(Particle *particle);
 void func_800AF0F0(Particle *particle);
 void partInitTrigger(Particle *arg0, s32 arg1, s32 arg2);
@@ -245,7 +237,7 @@ void init_particle_assets(void);
 void func_800B2FBC(Particle *arg0);
 void func_800B03C0(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehavior *arg3);
 void func_800B2040(Particle *arg0);
-void func_800B22FC(Particle *arg0, s32 arg1);
+void handle_particle_movement(Particle *arg0, s32 arg1);
 void func_800B0010(Particle *arg0, Particle *arg1, Particle *arg2, ParticleBehavior *arg3);
 Particle *func_800B0698(Particle *arg0, Particle *arg1);
 Particle *func_800B1CB8(s32 arg0);
