@@ -3593,7 +3593,62 @@ s32 func_8001C524(f32 diffX, f32 diffY, f32 diffZ, s32 someFlag) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001C6C4.s")
+
+#ifdef NON_MATCHING
+typedef struct LevelObjectEntry_Unknown8001CC48 {
+    LevelObjectEntryCommon common;
+    u8 pad8[2];
+    u8 unkA[4];
+} LevelObjectEntry_Unknown8001CC48;
+
+typedef struct Object_Unknown8001CC48 {
+    s8 pad0[0x18];
+    s8 unk18[4];
+} Object_Unknown8001CC48;
+
+s32 func_8001CC48(s32 arg0, s32 arg1, s32 arg2) {
+    LevelObjectEntry_Unknown8001CC48 *entry;
+    Object *someObj;
+    Object_Unknown8001CC48 *someObj64;
+    s32 someCount;
+    s32 i;
+    s32 someIndex;
+    s32 test;
+
+    if ((arg0 < -1) || (arg0 >= 128)) {
+        return 255;
+    }
+    someObj = (*D_8011AF04)[arg0];
+    if (someObj == NULL) {
+        return 255;
+    }
+    entry = (LevelObjectEntry_Unknown8001CC48 *)someObj->segment.level_entry;
+    someObj64 = (Object_Unknown8001CC48*)someObj->unk64;
+    test = arg2 & 3;
+    
+    // Swapping these messes up the registers.
+    someCount = 0;
+    someIndex = (someObj64->unk18[test] + 1) & 3;
+    
+    for (i = 0; i < 4; i++) {
+        if (entry->unkA[someIndex] != 255) {
+            if (entry->unkA[someIndex] != arg1) {
+                someObj64->unk18[test] = someIndex;
+                i = 4;
+                someCount++;
+            } 
+        } 
+        someIndex = (someIndex + 1) & 3;
+    }
+    if (someCount == 0) {
+        return 255;
+    }
+    return entry->unkA[someObj64->unk18[test]];
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_8001CC48.s")
+#endif
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8001CD28.s")
 
 void func_8001D1AC(void) {

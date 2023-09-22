@@ -125,13 +125,14 @@ void func_8000410C(ALSoundState *state) {
 }
 
 #ifdef NON_EQUIVALENT
+//There's some weird shenanigans with these structs that needs to be figured out.
 void func_8000418C(ALVoiceState *voiceState) {
     ALSndpEvent evt;
-    UNUSED ALSound *sound;
-
+    s32 pad;
     evt.pitch.pitch = alCents2Ratio(((ALSound *)voiceState->voice.node.prev)->keyMap->detune) * voiceState->vibrato;
-    evt.pitch.type = AL_SEQP_STOP_EVT;
+    evt.pitch.type = AL_SEQP_STOP_EVT; 
     evt.pitch.state = voiceState;
+    evt.msg.msg.loop.count = evt.msg.msg.tempo.ticks;
     alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &evt.msg, 33333);
 }
 #else
