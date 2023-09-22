@@ -1611,17 +1611,16 @@ typedef struct ParticleBehavior {
     f32 unk3C;
     s16 unk40;
     s16 unk42;
-    // These names are pretty bad, but they're better than nothing.
+    s16 angleOffsetY;
+    s16 angleOffsetX;
+    s16 angleOffsetZ;
     s16 angleVelY;
     s16 angleVelX;
     s16 angleVelZ;
-    s16 unk4A;
-    s16 unk4C;
-    s16 unk4E;
     f32 unk50;
     f32 unk54;
     f32 forwardVel;
-    s32 unk5C;
+    s32 behaviourFlags;
     s32 gravityRange1;
     s16 angleRangeY1;
     s16 angleRangeX1;
@@ -1740,6 +1739,19 @@ typedef struct ObjectSegment {
   /* 0x0040 */ ObjectHeader *header;
 } ObjectSegment;
 
+typedef struct ParticleModel {
+    union {
+    /* 0x00 */ s16 unk0;
+    /* 0x00 */ TextureHeader *texture;
+    };
+    /* 0x04 */ s16 unk4;
+    /* 0x06 */ s16 unk6;
+    /* 0x08 */ Vertex *unk8;
+    /* 0x0C */ Triangle *unkC;
+    /* 0x10 */ u16 unk10;
+    /* 0x12 */ u16 unk12;
+} ParticleModel;
+
 typedef struct unk800B0698_44_0 {
     u8 pad0[0x3];
     /* 0x04 */ s16 unk4;
@@ -1752,7 +1764,7 @@ typedef struct unk800B0698_44_0 {
 
 typedef struct unk800B0698_44 {
     union {
-        unk800B0698_44_0 *unk0Ptr;
+        TextureHeader *texture;
         s16 unk0;
         struct unk800B0698_44_0 unk0struct;
     };

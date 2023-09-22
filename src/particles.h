@@ -5,6 +5,42 @@
 #include "structs.h"
 #include "libultra_internal.h"
 
+enum ParticleFlags {
+    PARTICLE_FLAGS_NONE,
+    PARTICLE_UNK00000001 = (1 << 0),
+    PARTICLE_UNK00000002 = (1 << 1),
+    PARTICLE_UNK00000004 = (1 << 2),
+    PARTICLE_UNK00000008 = (1 << 3),
+    PARTICLE_UNK00000010 = (1 << 4),
+    PARTICLE_UNK00000020 = (1 << 5),
+    PARTICLE_UNK00000040 = (1 << 6),
+    PARTICLE_UNK00000080 = (1 << 7),
+    PARTICLE_VEL_X = (1 << 8),
+    PARTICLE_VEL_Y = (1 << 9),
+    PARTICLE_VEL_Z = (1 << 10),
+    PARTICLE_ANGLE_Y = (1 << 11),
+    PARTICLE_ANGLE_X = (1 << 12),
+    PARTICLE_ANGLE_Z = (1 << 13),
+    PARTICLE_ANGLEVEL_Y = (1 << 14),
+    PARTICLE_ANGLEVEL_X = (1 << 15),
+    PARTICLE_ANGLEVEL_Z = (1 << 16),
+    PARTICLE_UNK00020000 = (1 << 17),
+    PARTICLE_UNK00040000 = (1 << 18),
+    PARTICLE_FORWARDVEL = (1 << 19),
+    PARTICLE_COLOURVEL_RED = (1 << 20),
+    PARTICLE_COLOURVEL_GREEN = (1 << 21),
+    PARTICLE_COLOURVEL_BLUE = (1 << 22),
+    PARTICLE_COLOURVEL_ALPHA = (1 << 23),
+    PARTICLE_UNK01000000 = (1 << 24),
+    PARTICLE_UNK02000000 = (1 << 25),
+    PARTICLE_UNK04000000 = (1 << 26),
+    PARTICLE_UNK08000000 = (1 << 27),
+    PARTICLE_UNK10000000 = (1 << 28),
+    PARTICLE_UNK20000000 = (1 << 29),
+    PARTICLE_UNK40000000 = (1 << 30),
+    PARTICLE_UNK80000000 = (1 << 31),
+};
+
 typedef struct unk800E2CF0 {
     u8 unk0;
     u8 unk1;
@@ -110,12 +146,12 @@ typedef struct ParticleData {
 
 typedef struct ParticleSegment {
   /* 0x0000 */ ObjectTransform trans;
-  /* 0x0018 */ s16 unk18;
+  /* 0x0018 */ s16 textureFrame;
   /* 0x001A */ s16 unk1A;
   /* 0x001C */ f32 x_velocity;
   /* 0x0020 */ f32 y_velocity;
   /* 0x0024 */ f32 z_velocity;
-  /* 0x0028 */ f32 unk28;
+  /* 0x0028 */ f32 scaleVel;
   union {
       SegmentPropertiesObject object;
       SegmentPropertiesParticle particle;
@@ -131,9 +167,7 @@ typedef struct Particle {
   /* 0x0000 */ ParticleData data;
   };
   union {
-  /* 0x0044 */ unk800B0698_44 *unk44;
-  /* 0x0044 */ TextureHeader *unk44_0;
-  /* 0x0044 */ unk800B2260_C_44 *unk44_1;
+  /* 0x0044 */ ParticleModel *modelData;
   /* 0x0044 */ struct unk800B1CB8_44 *unk44_2;
   };
   /* 0x0048 */ s16 behaviorId;
@@ -148,12 +182,12 @@ typedef struct Particle {
   /* 0x005C */ s16 unk5C;
   /* 0x005E */ s16 unk5E;
   /* 0x0060 */ s16 unk60;
-  /* 0x0062 */ s16 unk62;
-  /* 0x0064 */ s16 unk64;
-  /* 0x0066 */ s16 unk66;
+  /* 0x0062 */ s16 angleVelY;
+  /* 0x0064 */ s16 angleVelX;
+  /* 0x0066 */ s16 angleVelZ;
   union {
   /* 0x0068 */ u8 unk68b;
-  /* 0x0068 */ f32 unk68f;
+  /* 0x0068 */ f32 gravity;
   };
   /* 0x006C */ ColourRGBA colour;
   /* 0x0070 */ struct Particle *unk70;
