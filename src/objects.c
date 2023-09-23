@@ -3232,7 +3232,7 @@ s32 func_8001B3AC(s32 arg0) {
 
 void func_8001B3C4(s32 arg0, s16 *playerId) {
     s32 trackIdCount;
-    s8* mainTrackIds;
+    s8 *mainTrackIds;
 
     D_800DC718 = 0;
     free_tt_ghost_data();
