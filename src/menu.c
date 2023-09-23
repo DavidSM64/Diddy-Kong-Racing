@@ -8934,17 +8934,17 @@ s32 taj_menu_loop(void) {
         case -3:
         case -2:
         case -1:
-            func_800C31EC(8 - sCurrentMenuID);
+            func_800C31EC(ASSET_GAME_TEXT_8 - sCurrentMenuID); //Wouldn't this be ASSET_GAME_TEXT_9?
             sCurrentMenuID = 4;
             break;
         case -4:
-            func_800C31EC(0x11);
+            func_800C31EC(ASSET_GAME_TEXT_17);
             gNextTajChallengeMenu = 0;
             sCurrentMenuID = 1;
             gDialogueSubmenu = 3;
             break;
         case -5:
-            func_800C31EC(0x15);
+            func_800C31EC(ASSET_GAME_TEXT_21);
             gNextTajChallengeMenu = 0;
             sCurrentMenuID = 7;
             gDialogueSubmenu = 0;
@@ -8952,7 +8952,7 @@ s32 taj_menu_loop(void) {
         case -8:
         case -7:
         case -6:
-            func_800C31EC(12 - sCurrentMenuID);
+            func_800C31EC(ASSET_GAME_TEXT_12 - sCurrentMenuID);
             sCurrentMenuID = 6;
             gDialogueSubmenu = 0;
             break;

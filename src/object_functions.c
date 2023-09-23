@@ -658,7 +658,8 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                         play_sound_global(SOUND_VOICE_TT_TROPHY_RACE, NULL);
                         func_800A3870();
                     } else {
-                        func_800C31EC(4);
+                        // Text for "TROPHY RACE" "TO ENTER THE TROPHY RACE, YOU MUST COMPLETE ALL THE TASKS FROM THIS WORLD. KEEP RACING!"
+                        func_800C31EC(ASSET_GAME_TEXT_4);
                         gfxData->unk4 = 180;
                         gfxData->unk0 = 140;
                         set_sndfx_player_voice_limit(16);
@@ -740,7 +741,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
     }
     switch (egg->status) {
     case EGG_SPAWNED:
-        func_80036040(obj, (Object_64 *) egg);
+        try_to_collect_egg(obj, egg);
         break;
     case EGG_MOVING:
         obj->segment.trans.flags &= (0xFFFF - OBJ_FLAGS_INVISIBLE);
@@ -801,7 +802,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
             egg->spawnerObj->properties.eggSpawner.egg = NULL;
         }
         if (egg->hatchTimer < 540) {
-            func_80036040(obj, (Object_64 *) egg);
+            try_to_collect_egg(obj, egg);
         }
         if (racerObj != NULL && egg->status != EGG_IN_BASE) {
             racer->eggHudCounter -= 1;
@@ -1127,7 +1128,38 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/object_functions/func_80036040.s")
+void try_to_collect_egg(Object *obj, Object_CollectEgg *egg) {
+    Object_64 *racer;
+    Object *interactedObj;
+    Matrix mat;
+    ObjectTransform transF;
+
+    if (obj->interactObj->distance < 40) {
+        interactedObj = obj->interactObj->obj;
+        if (interactedObj->segment.header->behaviorId == BHV_RACER) {
+            racer = interactedObj->unk64;
+            if (racer->racer.held_obj == NULL) {
+                egg->status = EGG_UNK_01;
+                obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
+                racer->racer.held_obj = obj;
+                transF.y_rotation = -interactedObj->segment.trans.y_rotation;
+                transF.x_rotation = -interactedObj->segment.trans.x_rotation;
+                transF.z_rotation = -interactedObj->segment.trans.z_rotation;
+                transF.scale = 1.0f;
+                transF.x_position = -interactedObj->segment.trans.x_position;
+                transF.y_position = -interactedObj->segment.trans.y_position;
+                transF.z_position = -interactedObj->segment.trans.z_position;
+                object_transform_to_matrix_2(mat, &transF);
+                guMtxXFMF(mat, 
+                     obj->segment.trans.x_position,  obj->segment.trans.y_position,  obj->segment.trans.z_position, 
+                    &obj->segment.trans.x_position, &obj->segment.trans.y_position, &obj->segment.trans.z_position);
+                obj->segment.trans.x_position /= interactedObj->segment.trans.scale;
+                obj->segment.trans.y_position /= interactedObj->segment.trans.scale;
+                obj->segment.trans.z_position /= interactedObj->segment.trans.scale;
+            }
+        }
+    }
+}
 
 /**
  * Hub world T.T init behaviour.
@@ -1601,7 +1633,7 @@ void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2
     }
     obj64 = &obj->unk64->animation;
     if (obj->unk64 != 0) {
-        func_8001EFA4(obj, obj64);
+        func_8001EFA4(obj, (Object *) obj64);
         if (entry->order != 0 || obj64->unk4A != entry->objectIdToSpawn) {
             gParticlePtrList_addObject((Object *) obj64);
             obj->unk64 = NULL;
@@ -4017,9 +4049,9 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
         obj->segment.trans.scale = 0.001f;
     }
     if (obj->segment.trans.scale < 0.1) {
-        obj->segment.trans.flags |= 0x4000;
+        obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
     } else {
-        obj->segment.trans.flags &= 0xBFFF;
+        obj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
     }
     if (obj->properties.weaponBalloon.unk4 > 0) {
         obj->unk74 = 1;

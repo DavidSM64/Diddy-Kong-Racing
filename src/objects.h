@@ -415,7 +415,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos);
 Object *get_racer_object_by_port(s32 index);
 void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
 void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
-void update_envmap_position(f32 arg0, f32 arg1, f32 arg2);
+void update_envmap_position(f32 x, f32 y, f32 z);
 s32 func_8000FC6C(Object *obj, WaterEffect *shadow);
 s32 func_8001B2F0(s32 mapId);
 void render_3d_billboard(Object *obj);
@@ -445,6 +445,9 @@ void light_setup_light_sources(Object *obj);
 s32 init_object_interaction_data(Object *arg0, ObjectInteraction *arg1);
 s32 func_8000FAC4(Object *obj, Object_6C *arg1);
 s32 obj_init_property_flags(s32 behaviorId);
+void func_8001B3C4(s32 arg0, s16 *playerId);
+void func_8001EFA4(Object *, Object *);
+Object *func_80016C68(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
