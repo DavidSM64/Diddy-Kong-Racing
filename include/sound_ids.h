@@ -601,7 +601,7 @@ enum SoundID {
 /* 0x0249 */ SOUND_DRAWBRIDGE_BELL,
 /* 0x024A */ SOUND_BUBBLE_RISE,
 /* 0x024B */ SOUND_VOICE_TT_BEAT_MY_TIME, // "Now try beat my time"
-/* 0x024C */ SOUND_VOICE_TT_WELL_THEN,
+/* 0x024C */ SOUND_VOICE_TT_WELL_DONE,
 /* 0x024D */ SOUND_VOICE_TT_TRY_ANOTHER_TRACK, // "Now try another track"
 /* 0x024E */ SOUND_VOICE_TT_BEAT_ALL_TIMES, // "You've beaten all my times"
 /* 0x024F */ SOUND_VOICE_TT_UNLOCKED, // "Now you can pick me"

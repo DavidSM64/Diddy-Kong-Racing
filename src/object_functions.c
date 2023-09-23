@@ -1633,7 +1633,7 @@ void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2
     }
     obj64 = &obj->unk64->animation;
     if (obj->unk64 != 0) {
-        func_8001EFA4(obj, obj64);
+        func_8001EFA4(obj, (Object *) obj64);
         if (entry->order != 0 || obj64->unk4A != entry->objectIdToSpawn) {
             gParticlePtrList_addObject((Object *) obj64);
             obj->unk64 = NULL;

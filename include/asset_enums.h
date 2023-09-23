@@ -2396,13 +2396,13 @@ typedef enum {
     ASSET_GAME_TEXT_0,
     ASSET_GAME_TEXT_1,
     ASSET_GAME_TEXT_2,
-    ASSET_GAME_TEXT_3, //"This will eventually give you information and guidance when you first enter this world PRESS A It will only be triggered once to help you now what's going on! PRESS A TO END"
-    ASSET_GAME_TEXT_4, //"TROPHY RACE" "TO ENTER THE TROPHY RACE, YOU MUST COMPLETE ALL THE TASKS FROM THIS WORLD. KEEP RACING!"
-    ASSET_GAME_TEXT_5, //"WELL DONE! TAKE THIS AS FIRST PRIZE! A GOLDEN BALLOON!"
-    ASSET_GAME_TEXT_6, //"The Sorcerer WizPig has cast a wicked spell over Timber's Island. Your task is to collect the Magical Folden Balloons, collect the amulets and save the Island!! GOOD LUCK"
-    ASSET_GAME_TEXT_7, //"Hello Friend! If you wish to change your vehicle, then summon me with your horn, Either stop on the pad or beep when I am close to you! Press A To Continue"
-    ASSET_GAME_TEXT_8, //"HELLO OLD FRIEND! MY NAME IS PARK WARDEN YOU CAN CHANGE YOUR VEHICLE HERE BY HONKING YOUR HORN! GOOD LUCK!"
-    ASSET_GAME_TEXT_9, //"Car Challenge To test your driving skills, you must race me around the Island!!"
+    ASSET_GAME_TEXT_3,
+    ASSET_GAME_TEXT_4,
+    ASSET_GAME_TEXT_5,
+    ASSET_GAME_TEXT_6,
+    ASSET_GAME_TEXT_7,
+    ASSET_GAME_TEXT_8,
+    ASSET_GAME_TEXT_9,
     ASSET_GAME_TEXT_10,
     ASSET_GAME_TEXT_11,
     ASSET_GAME_TEXT_12,
@@ -2410,11 +2410,11 @@ typedef enum {
     ASSET_GAME_TEXT_14,
     ASSET_GAME_TEXT_15,
     ASSET_GAME_TEXT_16,
-    ASSET_GAME_TEXT_17, //"MY SKILLS ARE GREATER! Better luck next time. TRY AGAIN."
+    ASSET_GAME_TEXT_17,
     ASSET_GAME_TEXT_18,
     ASSET_GAME_TEXT_19,
     ASSET_GAME_TEXT_20,
-    ASSET_GAME_TEXT_21, //"Well Done! You are a skilled racer."
+    ASSET_GAME_TEXT_21,
     ASSET_GAME_TEXT_22,
     ASSET_GAME_TEXT_23,
     ASSET_GAME_TEXT_24,

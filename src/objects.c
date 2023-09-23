@@ -27,6 +27,7 @@
 #include "unknown_008C40.h"
 #include "controller.h"
 #include "game_text.h"
+#include "audiosfx.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
@@ -3216,14 +3217,16 @@ void func_8001B3C4(s32 arg0, s16 *playerId) {
         trackIdCount++;
     }
     if (D_800DC738 != 0) {
+        //Save that TT has been beaten for this track.
         set_eeprom_settings_value(16 << trackIdCount);
+        //Check if TT has been beaten for all tracks.
         if ((get_eeprom_settings() & 0xFFFFF0) == 0xFFFFF0) {
             set_magic_code_flags(CHEAT_CONTROL_TT);
             play_sound_global(SOUND_VOICE_TT_BEAT_ALL_TIMES, NULL);
             func_80000FDC(SOUND_VOICE_TT_UNLOCKED, 0, 1.5f);
             func_800C31EC(ASSET_GAME_TEXT_84); //Text for "You have beaten all my times!" and then "Now you can PICK me!"
         } else {
-            play_sound_global(SOUND_VOICE_TT_WELL_THEN, NULL);
+            play_sound_global(SOUND_VOICE_TT_WELL_DONE, NULL);
             func_80000FDC(SOUND_VOICE_TT_TRY_ANOTHER_TRACK, 0, 1.0f);
             func_800C31EC(ASSET_GAME_TEXT_83); //Text for "Well Done! Now try another track."
         }
@@ -3965,7 +3968,76 @@ void func_8001E89C(void) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001E93C.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001EE74.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001EFA4.s")
+
+void func_8001EFA4(Object *arg0, Object *animObj) {
+    LevelObjectEntry_Animation *animEntry;
+    Object_Animation *anim;
+    f32 scale;
+
+    animEntry = &arg0->segment.level_entry->animation;
+    anim = &animObj->unk64->animation;
+    scale = animEntry->scale & 0xFF;
+    if (scale < 1.0f) {
+        scale = 1.0f;
+    }
+    scale /= 64;
+    animObj->segment.trans.scale = animObj->segment.header->scale * scale;
+    animObj->properties.common.unk0 = 0;
+    animObj->properties.common.unk4 = 0;
+    if ((animEntry->unk22 >= 2) && (animEntry->unk22 < 10)) {
+        animObj->properties.common.unk0 = animEntry->unk22 - 1;
+    }
+    if ((animEntry->unk22 >= 10) && (animEntry->unk22 < 18)) {
+        animObj->properties.common.unk0 = animEntry->unk22 - 9;
+    }
+    animObj->segment.trans.x_position = arg0->segment.trans.x_position;
+    animObj->segment.trans.y_position = arg0->segment.trans.y_position;
+    animObj->segment.trans.z_position = arg0->segment.trans.z_position;
+    animObj->segment.trans.y_rotation = arg0->segment.trans.y_rotation;
+    animObj->segment.trans.z_rotation = arg0->segment.trans.z_rotation;
+    animObj->segment.trans.x_rotation = arg0->segment.trans.x_rotation;
+    anim->unk26 = 0;
+    anim->unk3D = animEntry->channel;
+    anim->unk28 = animEntry->actorIndex;
+    anim->unk8 = (f32)animEntry->nodeSpeed * 0.1;
+    anim->unk2A = normalise_time(animEntry->animationStartDelay);
+    animObj->segment.object.animationID = animEntry->objAnimIndex;
+    animObj->segment.animFrame = animEntry->unk16;
+    anim->unk14 = animEntry->objAnimSpeed;
+    anim->unk10 = 0;
+    anim->unk2C = animEntry->objAnimLoopType;
+    anim->unk2E = animEntry->rotateType;
+    anim->unk3E = animEntry->nextAnim;
+    anim->unk3F = animEntry->unk2D;
+    anim->unk31 = animEntry->yawSpinSpeed;
+    anim->unk32 = animEntry->rollSpinSpeed;
+    anim->unk33 = animEntry->pitchSpinSpeed;
+    anim->unk34 = animEntry->unk20;
+    anim->unk2D = 0; 
+    anim->unk4 = 0;
+    anim->unk0 = 0;
+    arg0->unk6C = NULL;
+    anim->unk36 = normalise_time(animEntry->pauseFrameCount);
+    anim->unk3A = animEntry->specialHide;
+    if (animEntry->unk13 >= 0) {
+        anim->unk2F = animEntry->unk13;
+    }
+    anim->unk39 = animEntry->unk1F;
+    anim->unk38 = animEntry->unk1E;
+    anim->unk3B = animEntry->unk29;
+    anim->unk40 = animEntry->soundEffect;
+    anim->unk41 = animEntry->fadeOptions;
+    anim->unk3C = animEntry->fadeAlpha;
+    anim->unk42 = 0xFF;
+    if (anim->unk18 != NULL) {
+        func_8000488C(anim->unk18);
+    }
+    anim->unk18 = 0;
+    anim->unk43 = animEntry->unk30;
+    anim->unk1C = arg0;
+    anim->unk45 = 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_8001F23C.s")
 
 s8 func_8001F3B8(void) {
@@ -4066,7 +4138,7 @@ loop_11:
                 }
             }
         }
-        func_8001EFA4(D_8011AE74[i], (Object_Animation *) obj);
+        func_8001EFA4(D_8011AE74[i], obj);
         return 1;
     }
     return 0;
