@@ -741,7 +741,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
     }
     switch (egg->status) {
     case EGG_SPAWNED:
-        func_80036040(obj, (Object_64 *) egg);
+        func_80036040(obj, egg);
         break;
     case EGG_MOVING:
         obj->segment.trans.flags &= (0xFFFF - OBJ_FLAGS_INVISIBLE);
@@ -802,7 +802,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
             egg->spawnerObj->properties.eggSpawner.egg = NULL;
         }
         if (egg->hatchTimer < 540) {
-            func_80036040(obj, (Object_64 *) egg);
+            func_80036040(obj, egg);
         }
         if (racerObj != NULL && egg->status != EGG_IN_BASE) {
             racer->eggHudCounter -= 1;
@@ -1128,7 +1128,38 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/object_functions/func_80036040.s")
+void func_80036040(Object *obj, Object_CollectEgg *egg) {
+    Object_64 *racer;
+    Object *interactedObj;
+    Matrix mat;
+    ObjectTransform transF;
+
+    if (obj->interactObj->distance < 40) {
+        interactedObj = obj->interactObj->obj;
+        if (interactedObj->segment.header->behaviorId == BHV_RACER) {
+            racer = interactedObj->unk64;
+            if (racer->racer.held_obj == NULL) {
+                egg->status = EGG_UNK_01;
+                obj->segment.trans.flags |= 0x4000;
+                racer->racer.held_obj = obj;
+                transF.y_rotation = -interactedObj->segment.trans.y_rotation;
+                transF.x_rotation = -interactedObj->segment.trans.x_rotation;
+                transF.z_rotation = -interactedObj->segment.trans.z_rotation;
+                transF.scale = 1.0f;
+                transF.x_position = -interactedObj->segment.trans.x_position;
+                transF.y_position = -interactedObj->segment.trans.y_position;
+                transF.z_position = -interactedObj->segment.trans.z_position;
+                object_transform_to_matrix_2(&mat, &transF);
+                guMtxXFMF(&mat, 
+                     obj->segment.trans.x_position,  obj->segment.trans.y_position,  obj->segment.trans.z_position, 
+                    &obj->segment.trans.x_position, &obj->segment.trans.y_position, &obj->segment.trans.z_position);
+                obj->segment.trans.x_position /= interactedObj->segment.trans.scale;
+                obj->segment.trans.y_position /= interactedObj->segment.trans.scale;
+                obj->segment.trans.z_position /= interactedObj->segment.trans.scale;
+            }
+        }
+    }
+}
 
 /**
  * Hub world T.T init behaviour.

@@ -415,7 +415,7 @@ s32 move_object(Object *obj, f32 xPos, f32 yPos, f32 zPos);
 Object *get_racer_object_by_port(s32 index);
 void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
 void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
-void update_envmap_position(f32 arg0, f32 arg1, f32 arg2);
+void update_envmap_position(f32 x, f32 y, f32 z);
 s32 func_8000FC6C(Object *obj, WaterEffect *shadow);
 s32 func_8001B2F0(s32 mapId);
 void render_3d_billboard(Object *obj);

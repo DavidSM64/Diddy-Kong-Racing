@@ -59,14 +59,6 @@ s8 D_800DC92C[24] = {
 
 /*******************************/
 
-/************ .rodata ************/
-
-const char gViewport4Text[] = "TT CAM";
-UNUSED const char gTrackClippingErrorString[] = "Solid Clipping x0=x1 Error!!!\n";
-UNUSED const char gTrackHeightOverflowString[] = "TrackGetHeight() - Overflow!!!\n";
-
-/*********************************/
-
 /************ .bss ************/
 
 Gfx *gSceneCurrDisplayList;
@@ -420,7 +412,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
                 posX = SCREEN_WIDTH_HALF + 10;
                 posY = SCREEN_HEIGHT_HALF + 5;
             }
-            draw_text(&gSceneCurrDisplayList, posX, posY, (char *)(&gViewport4Text), ALIGN_TOP_LEFT); // TT CAM
+            draw_text(&gSceneCurrDisplayList, posX, posY, "TT CAM", ALIGN_TOP_LEFT);
         } else {
             set_active_camera(PLAYER_FOUR);
             func_800278E8(updateRate);
@@ -435,6 +427,10 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     *vtx = gSceneCurrVertexList;
     *tris = gSceneCurrTriList;
 }
+
+/************ .rodata ************/
+UNUSED const char gTrackClippingErrorString[] = "Solid Clipping x0=x1 Error!!!\n";
+UNUSED const char gTrackHeightOverflowString[] = "TrackGetHeight() - Overflow!!!\n";
 
 GLOBAL_ASM("asm/non_matchings/tracks/func_80025510.s")
 
