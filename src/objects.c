@@ -970,7 +970,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     }
     sp50 = curObj->segment.header->unk30 & 0x80;
     if (sp50) {
-        curObj->segment.trans.flags |= 0x80;
+        curObj->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
     }
     if (curObj->segment.header->behaviorId == BHV_ROCKET_SIGNPOST && settings->cutsceneFlags & 1) {
         update_object_stack_trace(OBJECT_SPAWN, -1);
@@ -2985,7 +2985,33 @@ void func_80016BC4(Object *arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80016C68.s")
+Object *func_80016C68(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis) {
+    f32 yDiff;
+    f32 zDiff;
+    f32 xDiff;
+    f32 distance;
+    s32 i;
+    Object *curObj;
+    
+    for (i = 0; i < objCount; i++) {
+        curObj = gObjPtrList[i];
+        if (!(curObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (curObj->behaviorId == BHV_ANIMATED_OBJECT_3)) {
+            xDiff = curObj->segment.trans.x_position - x;
+            zDiff = curObj->segment.trans.z_position - z;
+            if (!dontCheckYAxis) {
+                yDiff = curObj->segment.trans.y_position - y;
+                distance = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff));
+            } else {
+                distance = sqrtf((xDiff * xDiff) + (zDiff * zDiff));
+            }
+            if (distance < maxDistCheck) {
+                return curObj;
+            }
+        }
+    }
+    return NULL;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80016DE8.s")
 
 void func_8001709C(Object *obj) {

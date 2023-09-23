@@ -442,7 +442,7 @@ s32 func_8001C524(f32 x, f32 y, f32 z, s32 arg3);
 s32 func_8001CC48(s32, s32, s32);
 f32 func_8001C6C4(Object_64 *, Object *, f32, f32, s32);
 void func_8000CBF0(Object*, s32);
-void func_80036040(Object *, Object_CollectEgg*);
+void try_to_collect_egg(Object *, Object_CollectEgg*);
 
 
 void func_8001EE74();

@@ -741,7 +741,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
     }
     switch (egg->status) {
     case EGG_SPAWNED:
-        func_80036040(obj, egg);
+        try_to_collect_egg(obj, egg);
         break;
     case EGG_MOVING:
         obj->segment.trans.flags &= (0xFFFF - OBJ_FLAGS_INVISIBLE);
@@ -802,7 +802,7 @@ void obj_loop_collectegg(Object *obj, s32 updateRate) {
             egg->spawnerObj->properties.eggSpawner.egg = NULL;
         }
         if (egg->hatchTimer < 540) {
-            func_80036040(obj, egg);
+            try_to_collect_egg(obj, egg);
         }
         if (racerObj != NULL && egg->status != EGG_IN_BASE) {
             racer->eggHudCounter -= 1;
@@ -1128,7 +1128,7 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
-void func_80036040(Object *obj, Object_CollectEgg *egg) {
+void try_to_collect_egg(Object *obj, Object_CollectEgg *egg) {
     Object_64 *racer;
     Object *interactedObj;
     Matrix mat;
@@ -1140,7 +1140,7 @@ void func_80036040(Object *obj, Object_CollectEgg *egg) {
             racer = interactedObj->unk64;
             if (racer->racer.held_obj == NULL) {
                 egg->status = EGG_UNK_01;
-                obj->segment.trans.flags |= 0x4000;
+                obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
                 racer->racer.held_obj = obj;
                 transF.y_rotation = -interactedObj->segment.trans.y_rotation;
                 transF.x_rotation = -interactedObj->segment.trans.x_rotation;
@@ -1149,8 +1149,8 @@ void func_80036040(Object *obj, Object_CollectEgg *egg) {
                 transF.x_position = -interactedObj->segment.trans.x_position;
                 transF.y_position = -interactedObj->segment.trans.y_position;
                 transF.z_position = -interactedObj->segment.trans.z_position;
-                object_transform_to_matrix_2(&mat, &transF);
-                guMtxXFMF(&mat, 
+                object_transform_to_matrix_2(mat, &transF);
+                guMtxXFMF(mat, 
                      obj->segment.trans.x_position,  obj->segment.trans.y_position,  obj->segment.trans.z_position, 
                     &obj->segment.trans.x_position, &obj->segment.trans.y_position, &obj->segment.trans.z_position);
                 obj->segment.trans.x_position /= interactedObj->segment.trans.scale;
@@ -4049,9 +4049,9 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
         obj->segment.trans.scale = 0.001f;
     }
     if (obj->segment.trans.scale < 0.1) {
-        obj->segment.trans.flags |= 0x4000;
+        obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
     } else {
-        obj->segment.trans.flags &= 0xBFFF;
+        obj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
     }
     if (obj->properties.weaponBalloon.unk4 > 0) {
         obj->unk74 = 1;
