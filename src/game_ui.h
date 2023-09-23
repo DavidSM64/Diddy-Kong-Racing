@@ -382,6 +382,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtxList, s
 void init_hud(s32 viewportCount);
 void func_800A1C04(s32 arg0, Object *obj, s32 updateRate);
 void func_800A22F4(Object_Racer *racer, void *unused);
+void free_hud(void);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
@@ -389,7 +390,6 @@ void func_800A4C44(Object_Racer *racer, s32 updateRate);
 void func_800A47A0(Object_Racer *obj, s32 updateRate);
 void func_800A718C(Object_64 *obj);
 void func_800AA600(Gfx **dList, MatrixS **mtx, Vertex **vtxList, unk80126CDC **arg3);
-void func_800A003C(void);
 void func_800A7FBC(s32, s32, s32 minutes, s32 seconds, s32 hundredths, s32); 
 void func_800A1248(s32, Object*, s32);
 void func_800A277C(s32, Object*, s32);

@@ -360,7 +360,32 @@ void init_hud(UNUSED s32 viewportCount) {
 }
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_8009F034.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A003C.s")
+
+/**
+ * Free's all elements in the hud, and the player hud, and flushes particles
+ */
+void free_hud(void) {
+    s32 i;
+    for (i = 0; i < gAssetHudElementIdsCount; i++) {
+        if (gAssetHudElements->entry[i] != NULL) {
+            if ((gAssetHudElementIds[i] & 0xC000) == 0xC000) {
+                free_texture(gAssetHudElements->entry[i]);
+            } else if (gAssetHudElementIds[i] & 0x8000) {
+                free_sprite((Sprite *) gAssetHudElements->entry[i]);
+            } else if (gAssetHudElementIds[i] & 0x4000) {
+                gParticlePtrList_addObject((Object *) gAssetHudElements->entry[i]);
+            } else {
+                func_8005FF40((ObjectModel **) gAssetHudElements->entry[i]);
+            }
+            gAssetHudElements->entry[i] = 0;
+        }
+    }
+    free_from_memory_pool(*gPlayerHud);
+    free_from_memory_pool(gAssetHudElementIds);
+    gAssetHudElementIdsCount = 0;
+    free_from_memory_pool(gAssetHudElements);
+    gParticlePtrList_flush();
+}
 
 u8 func_800A0190(void) {
     return D_80126D34;
