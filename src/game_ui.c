@@ -1127,7 +1127,57 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A277C.s")
 #endif
 
+#if 0
+void func_800A36CC(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4) {
+    s16 var_a3;
+    s32 var_t0;
+    u8 *temp_v0_2;
+    u8 temp_a2;
+    Object_68 **unk68;
+    Object *hud20;
+    Object_68_38 *temp_v0_3;
+
+    if (is_in_time_trial()) {
+        hud20 = gAssetHudElements->entry[20];
+        if (hud20 != NULL) {
+            unk68 = hud20->unk68;
+            var_t0 = 0;
+            var_a3 = unk68[0]->unk28;
+            if (var_a3 > 0) {
+                do {
+                    temp_v0_2 = unk68[0]->unk38[var_t0];
+                    temp_a2 = *temp_v0_2;
+                    if (D_80126D66 == temp_a2) {
+                        *temp_v0_2 = arg0;
+                        if (arg0 == 4) {
+                            temp_v0_3 = unk68[0]->unk38[var_t0];
+                            temp_v0_3->unk8 = (temp_v0_3->unk8 | 0x810000);
+                            unk68[0]->unk50 = 1;
+                        } else {
+                            temp_v0_3 = unk68[0]->unk38[var_t0];
+                            temp_v0_3->unk8 = (temp_v0_3->unk8 & ~0x800000);
+                            unk68[0]->unk50 = 0;
+                        }
+                        var_a3 = unk68[0]->unk28;
+                    }
+                    if (D_80126D65 == temp_a2) {
+                        *temp_v0_2 = arg1;
+                        var_a3 = unk68[0]->unk28;
+                    }
+                    var_t0 += 1;
+                } while (var_t0 < var_a3);
+            }
+            D_80126D66 = arg0;
+            D_80126D65 = arg1;
+            gStopwatchFaceID = arg2;
+            D_80126D69 = arg3;
+            D_80126D68 = arg4;
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A36CC.s")
+#endif
 
 void func_800A3870(void) {
     gCurrentHud->unk4C4 = 0x6490;
