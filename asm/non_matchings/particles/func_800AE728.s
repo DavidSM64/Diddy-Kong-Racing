@@ -193,7 +193,7 @@ glabel func_800AE728
 /* 0AF5F8 800AE9F8 02602825 */  move  $a1, $s3
 /* 0AF5FC 800AE9FC 01F0C021 */  addu  $t8, $t7, $s0
 /* 0AF600 800AEA00 8F040044 */  lw    $a0, 0x44($t8)
-/* 0AF604 800AEA04 0C02BB85 */  jal   func_800AEE14
+/* 0AF604 800AEA04 0C02BB85 */  jal   generate_particle_shape_triangle
 /* 0AF608 800AEA08 02803025 */   move  $a2, $s4
 /* 0AF60C 800AEA0C 3C19800E */  lui   $t9, %hi(D_800E2E4C) # $t9, 0x800e
 /* 0AF610 800AEA10 8F392E4C */  lw    $t9, %lo(D_800E2E4C)($t9)
@@ -225,7 +225,7 @@ glabel func_800AE728
 /* 0AF670 800AEA70 02602825 */  move  $a1, $s3
 /* 0AF674 800AEA74 01F0C021 */  addu  $t8, $t7, $s0
 /* 0AF678 800AEA78 8F040044 */  lw    $a0, 0x44($t8)
-/* 0AF67C 800AEA7C 0C02BBAE */  jal   func_800AEEB8
+/* 0AF67C 800AEA7C 0C02BBAE */  jal   generate_particle_shape_quad
 /* 0AF680 800AEA80 02803025 */   move  $a2, $s4
 /* 0AF684 800AEA84 3C19800E */  lui   $t9, %hi(D_800E2E50) # $t9, 0x800e
 /* 0AF688 800AEA88 8F392E50 */  lw    $t9, %lo(D_800E2E50)($t9)

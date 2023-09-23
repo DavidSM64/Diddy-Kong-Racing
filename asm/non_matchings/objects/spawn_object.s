@@ -470,7 +470,7 @@ glabel L8000EDE0
 /* 00FCF8 8000F0F8 02402025 */  move  $a0, $s2
 /* 00FCFC 8000F0FC 000A5880 */  sll   $t3, $t2, 2
 /* 00FD00 8000F100 032B2821 */  addu  $a1, $t9, $t3
-/* 00FD04 8000F104 0C008D77 */  jal   func_800235DC
+/* 00FD04 8000F104 0C008D77 */  jal   get_object_property_size
 /* 00FD08 8000F108 AFA50048 */   sw    $a1, 0x48($sp)
 /* 00FD0C 8000F10C 8FAC0050 */  lw    $t4, 0x50($sp)
 /* 00FD10 8000F110 3C018012 */  lui   $at, %hi(D_8011AE50) # $at, 0x8012

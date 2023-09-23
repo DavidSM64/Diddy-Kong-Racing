@@ -47,10 +47,6 @@
 
 /************ .rodata ************/
 
-UNUSED const char sLevelErrorString[] = "LOADLEVEL Error: Level out of range\n";
-UNUSED const char sBossErrorString[] = "BossLev problem\n";
-UNUSED const char sAITableErrorString[] = "AITABLE Error: Table out of range\n";
-
 UNUSED char *sDebugRomBuildInfo[] = {
     "1.1605",
     "02/10/97 16:03",
@@ -58,10 +54,6 @@ UNUSED char *sDebugRomBuildInfo[] = {
 };
 
 const char D_800E7134[] = "BBB\n"; // Functionally unused.
-UNUSED const char sDebugCarString[] = "CAR";
-UNUSED const char sDebugHovercraftString[] = "HOV";
-UNUSED const char sDebugPlaneString[] = "PLN";
-UNUSED const char sDebugVehicleSwapString[] = "Swapping\n";
 
 /*********************************/
 
@@ -94,7 +86,7 @@ UNUSED FadeTransition D_800DD3FC = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NO
 s32 sLogicUpdateRate = LOGIC_5FPS;
 FadeTransition D_800DD408 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 30, -1);
 UNUSED char *D_800DD410[3] = {
-    (char *)sDebugCarString, (char *)sDebugHovercraftString, (char *)sDebugPlaneString
+    "CAR", "HOV", "PLN"
 };
 FadeTransition gLevelFadeOutTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
 FadeTransition D_800DD424 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 260, -1);
@@ -183,6 +175,7 @@ void thread3_main(UNUSED void *unused) {
 void init_game(void) {
     s32 viMode;
 
+    stubbed_printf(sDebugRomBuildInfo);
     init_main_memory_pool();
     init_rzip(); // Initialise gzip decompression related things
     sAntiPiracyTriggered = TRUE;
@@ -844,6 +837,7 @@ void set_level_default_vehicle(Vehicle vehicleID) {
 }
 
 void func_8006DB20(Vehicle vehicleId) {
+    stubbed_printf("Swapping\n");
     D_8012351C = vehicleId;
 }
 

@@ -792,7 +792,7 @@ typedef struct ObjectInteraction {
  /* 0x14 */ s16 flags;
  /* 0x16 */ s8 unk16;
  /* 0x17 */ s8 unk17;
-/*0x18*/  s32 pad[4];
+ /* 0x18 */ s32 pad[4];
 } ObjectInteraction;
 
 typedef struct ShadowData {
@@ -865,8 +865,6 @@ typedef struct Object_60 {
     s8 *unk2C;
 } Object_60;
 
-struct Object;
-
 typedef struct Object_LaserGun {
   /* 0x00 */ s32 unk0;
   /* 0x00 */ s32 unk4;
@@ -935,6 +933,7 @@ typedef struct Object_Butterfly {
   /* 0x104 */ s16 unk104;
   /* 0x106 */ s16 unk106;
   /* 0x108 */ f32 unk108;
+  /* 0x10C */ f32 unk10C;
 } Object_Butterfly;
 
 typedef struct Object_Fish {
@@ -949,6 +948,11 @@ typedef struct Object_Fish {
   /* 0x104 */ s16 unk104;
   /* 0x106 */ s16 unk106;
   /* 0x108 */ f32 unk108;
+  /* 0x10C */ f32 unk10C;
+  /* 0x110 */ f32 unk110;
+  /* 0x114 */ f32 unk114;
+  /* 0x118 */ f32 unk118;
+  /* 0x11c */ f32 unk11C;
 } Object_Fish;
 
 typedef struct Object_Boost {
@@ -987,14 +991,6 @@ typedef struct Object_CharacterFlag {
   /* 0x24 */ TextureHeader *texture;
 } Object_CharacterFlag;
 
-typedef struct Object_Snowball {
-  /* 0x00 */ u8 pad0[0x20];
-  /* 0x20 */ u32 soundMask;
-  /* 0x24 */ s16 unk24;
-  /* 0x28 */ u8 pad28[0x12];
-  /* 0x38 */ s8 unk38;
-} Object_Snowball;
-
 typedef struct Object_AnimCamera {
   /* 0x00 */ u8 pad0[0x30];
   /* 0x30 */ s8 unk30;
@@ -1016,6 +1012,7 @@ typedef struct Object_TTDoor {
   /* 0x10 */ u8 pad10[2];
   /* 0x12 */ u8 unk12;
   /* 0x13 */ s8 unk13;
+  /* 0x14 */ s32 unk14;
 } Object_TTDoor;
 
 typedef struct Object_WorldKey {
@@ -1453,7 +1450,15 @@ typedef struct Object_80021400_64 {
 } Object_80021400_64;
 
 typedef struct Object_Log {
-    s32 unk0;
+    /* 0x00 */ s16 unk0;
+    /* 0x02 */ u8 unk2;
+    /* 0x04 */ u8 unk3;
+    /* 0x04 */ u16 unk4;
+    /* 0x06 */ u16 unk6;
+    /* 0x08 */ u16 unk8;
+    /* 0x0A */ u16 unkA;
+    /* 0x0C */ u16 unkC;
+    /* 0x0E */ s8 unkE[2];
 } Object_Log;
 
 typedef struct Object_Fireball_Octoweapon {
@@ -1462,12 +1467,18 @@ typedef struct Object_Fireball_Octoweapon {
 } Object_Fireball_Octoweapon;
 
 typedef struct Object_AnimatedObject {
-    u8 pad0[0x28];
+    u8 pad0[0x20];
+  /* 0x20 */ u32 soundMask;
+  /* 0x24 */ s16 unk24;
+  /* 0x26 */ s16 unk26;
     s16 unk28;
     u8 pad2A[0xC];
     s16 unk36;
-    u8 pad38[0x2];
+    s8 unk38;
+    s8 unk39;
     s8 unk3A;
+    s8 unk3B;
+    s8 pad3C[0xC];
 } Object_AnimatedObject;
 
 typedef struct Object_WizpigRocket {
@@ -1493,18 +1504,6 @@ typedef struct Object_8001E89C_64 {
     /* 0x0C */ Object_8001E89C_64_C *unkC;
 } Object_8001E89C_64;
 
-typedef struct Object_800BEEB4_64 {
-    /* 0x00 */ s16 unk0;
-    /* 0x02 */ u8 unk2;
-    /* 0x04 */ u8 unk3;
-    /* 0x04 */ u16 unk4;
-    /* 0x06 */ u16 unk6;
-    /* 0x08 */ u16 unk8;
-    /* 0x0A */ u16 unkA;
-    /* 0x0C */ u16 unkC;
-    /* 0x0E */ s8 unkE[2];
-} Object_800BEEB4_64;
-
 typedef struct Object_64 {
     union {
         Object_Laser laser;
@@ -1521,7 +1520,6 @@ typedef struct Object_64 {
         Object_CollectEgg egg;
         Object_UnkId58 unkid58;
         Object_CharacterFlag character_flag;
-        Object_Snowball snowball;
         Object_AnimCamera anim_camera;
         Object_InfoPoint info_point;
         Object_TTDoor tt_door;
@@ -1551,7 +1549,6 @@ typedef struct Object_64 {
         Object_AnimatedObject animatedObject;
         Object_WizpigRocket wizpigRocket;
         Object_8001E89C_64 obj8001E89C_64;
-        Object_800BEEB4_64 obj800BEEB4_64;
     };
 } Object_64;
 
@@ -1590,9 +1587,9 @@ typedef struct Object_6C {
 /* Size: 0xA0 bytes */
 typedef struct ParticleBehavior {
     s32 flags;
-    f32 unk4;
-    f32 unk8;
-    f32 unkC;
+    f32 velX;
+    f32 velY;
+    f32 velZ;
     f32 unk10;
     s16 unk14;
     s16 unk16;
@@ -1614,17 +1611,16 @@ typedef struct ParticleBehavior {
     f32 unk3C;
     s16 unk40;
     s16 unk42;
-    // These names are pretty bad, but they're better than nothing.
+    s16 angleOffsetY;
+    s16 angleOffsetX;
+    s16 angleOffsetZ;
     s16 angleVelY;
     s16 angleVelX;
     s16 angleVelZ;
-    s16 unk4A;
-    s16 unk4C;
-    s16 unk4E;
     f32 unk50;
     f32 unk54;
     f32 forwardVel;
-    s32 unk5C;
+    s32 behaviourFlags;
     s32 gravityRange1;
     s16 angleRangeY1;
     s16 angleRangeX1;
@@ -1659,15 +1655,6 @@ typedef struct unk800AF29C_C_400 {
     s16 unk14;
     s16 unk16;
 } unk800AF29C_C_400;
-
-typedef struct unk800AF29C_C {
-    s16 unkC;
-    s16 unkE;
-    s16 unk10;
-    s16 unk12;
-    s16 unk14;
-    s16 unk16;
-} unk800AF29C_C;
 
 typedef struct unk800B2260_C {
     s32 unk0;
@@ -1709,12 +1696,12 @@ typedef struct SegmentPropertiesObject {
 
 typedef struct SegmentPropertiesParticle {
   /* 0x002C */ s16 unk2C;
-  /* 0x002E */ s16 unk2E;
+  /* 0x002E */ s16 blockID;
   /* 0x0030 */ f32 unk30;
   /* 0x0034 */ f32 unk34;
   /* 0x0038 */ u8 unk38;
-  /* 0x0039 */ u8 unk39;
-  /* 0x003A */ s16 unk3A;
+  /* 0x0039 */ u8 movementType;
+  /* 0x003A */ s16 destroyTimer;
 } SegmentPropertiesParticle;
 
 typedef struct SegmentPropertiesCamera {
@@ -1743,31 +1730,10 @@ typedef struct ObjectSegment {
   /* 0x0040 */ ObjectHeader *header;
 } ObjectSegment;
 
-typedef struct unk800B0698_44_0 {
-    u8 pad0[0x3];
-    /* 0x04 */ s16 unk4;
-    /* 0x06 */ s16 unk6;
-    /* 0x08 */ Vertex *unk8;
-    /* 0x0C */ Triangle *unkC;
-    /* 0x10 */ u16 unk10;
-    /* 0x12 */ u16 unk12;
-} unk800B0698_44_0;
-
-typedef struct unk800B0698_44 {
-    union {
-        unk800B0698_44_0 *unk0Ptr;
-        s16 unk0;
-        struct unk800B0698_44_0 unk0struct;
-    };
-} unk800B0698_44;
-
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ ObjectSegment segment;
-  union {
   /* 0x0044 */ Vertex *unk44;
-  /* 0x0044 */ unk800B0698_44 *unk44_0;
-  };
   /* 0x0048 */ s16 behaviorId;
   /* 0x004A */ s16 unk4A; // Upper byte is object ID, lower byte is object size.
   /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318

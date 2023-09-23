@@ -1770,10 +1770,10 @@ void obj_init_snowball(Object *obj, UNUSED LevelObjectEntry_Snowball *entry) {
 }
 
 void obj_loop_snowball(Object *obj, s32 updateRate) {
-    Object_Snowball *obj64 = &obj->unk64->snowball;
+    Object_AnimatedObject *obj64 = &obj->unk64->animatedObject;
     if (obj64->unk24 == 0) {
         if (obj64->unk38 != 0) {
-            obj64->unk24 = (s16)(obj64->unk38 & 0xFF);
+            obj64->unk24 = (s16) (obj64->unk38 & 0xFF);
         }
     }
     if (obj64->unk24 != 0) {
@@ -4604,7 +4604,7 @@ void obj_init_buoy_pirateship(Object *obj, UNUSED LevelObjectEntry_Buoy_PirateSh
 */
 void obj_loop_buoy_pirateship(Object *obj, s32 updateRate) {
     if (obj->unk64 != NULL) {
-        obj->segment.trans.y_position = func_800BEEB4(obj->unk64, updateRate);
+        obj->segment.trans.y_position = get_wave_height((Object_Log *) obj->unk64, updateRate);
     }
     obj->segment.animFrame += updateRate * 8;
 }
@@ -4644,7 +4644,7 @@ void obj_loop_log(Object *obj, s32 updateRate) {
 
     log = (Object_Log *) obj->unk64;
     if (log != NULL) {
-        obj->segment.trans.y_position = func_800BEEB4((Object_64 *) log, updateRate);
+        obj->segment.trans.y_position = get_wave_height(log, updateRate);
     } else {
         obj->segment.trans.y_position = ((LevelObjectEntryCommon *) obj->segment.level_entry)->y;
     }
@@ -4880,7 +4880,7 @@ void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry) {
 
 /* Official name: bubblerInit */
 void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry) {
-    func_800AF134((Particle *) obj->unk6C, entry->unk9, entry->unk8, 0, 0, 0);
+    func_800AF134((Particle *) obj->unk6C, entry->particleBehaviourID, entry->particlePropertyID, 0, 0, 0);
     obj->properties.common.unk0 = entry->unkA;
 }
 

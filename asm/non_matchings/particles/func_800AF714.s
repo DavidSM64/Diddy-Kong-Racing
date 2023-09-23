@@ -225,8 +225,8 @@ glabel func_800AF714
 /* 0B0644 800AFA44 24020100 */  li    $v0, 256
 .L800AFA48:
 /* 0B0648 800AFA48 A4620000 */  sh    $v0, ($v1)
-/* 0B064C 800AFA4C 3C01800E */  lui   $at, %hi(D_800E2EEC) # $at, 0x800e
-/* 0B0650 800AFA50 AC222EEC */  sw    $v0, %lo(D_800E2EEC)($at)
+/* 0B064C 800AFA4C 3C01800E */  lui   $at, %hi(gParticleOpacity) # $at, 0x800e
+/* 0B0650 800AFA50 AC222EEC */  sw    $v0, %lo(gParticleOpacity)($at)
 .L800AFA54:
 /* 0B0654 800AFA54 11600060 */  beqz  $t3, .L800AFBD8
 /* 0B0658 800AFA58 00000000 */   nop   
@@ -337,8 +337,8 @@ glabel func_800AF714
 /* 0B07D8 800AFBD8 AE200000 */  sw    $zero, ($s1)
 .L800AFBDC:
 /* 0B07DC 800AFBDC 240E0100 */  li    $t6, 256
-/* 0B07E0 800AFBE0 3C01800E */  lui   $at, %hi(D_800E2EEC) # $at, 0x800e
-/* 0B07E4 800AFBE4 AC2E2EEC */  sw    $t6, %lo(D_800E2EEC)($at)
+/* 0B07E0 800AFBE0 3C01800E */  lui   $at, %hi(gParticleOpacity) # $at, 0x800e
+/* 0B07E4 800AFBE4 AC2E2EEC */  sw    $t6, %lo(gParticleOpacity)($at)
 /* 0B07E8 800AFBE8 8E4F0040 */  lw    $t7, 0x40($s2)
 /* 0B07EC 800AFBEC 26100001 */  addiu $s0, $s0, 1
 /* 0B07F0 800AFBF0 81F90057 */  lb    $t9, 0x57($t7)

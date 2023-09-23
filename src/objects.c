@@ -1095,7 +1095,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         return NULL;
     }
     address = (u32 *) &curObj->unk68[curObj->segment.header->numberOfModelIds];
-    sizeOfobj = func_800235DC(curObj, (Object_64 *) address);
+    sizeOfobj = get_object_property_size(curObj, (Object_64 *) address);
     address = (u32 *) ((uintptr_t) address + sizeOfobj);
     D_8011AE50 = NULL;
     D_8011AE54 = NULL;
@@ -1561,7 +1561,7 @@ void func_80010994(s32 updateRate) {
             obj = gObjPtrList[i];
             if (obj->segment.trans.flags & 0x8000) {
                 //Why is this object being treated as a Particle?
-                func_800B22FC((Particle *) obj, updateRate);
+                handle_particle_movement((Particle *) obj, updateRate);
             }
         }
     }
@@ -2508,7 +2508,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80012F94.s")
 void render_object_parts(Object *obj) {
     func_80012F94(obj);
     if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
-        func_800B3740((Particle *) obj, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, 0x8000);
+        render_particle((Particle *) obj, &gObjectCurrDisplayList, &gObjectCurrMatrix, &gObjectCurrVertexList, 0x8000);
     } else {
         if (obj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
             render_3d_model(obj);
@@ -4227,7 +4227,10 @@ void func_800235D0(s32 arg0) {
     D_8011ADD5 = arg0;
 }
 
-s32 func_800235DC(Object *obj, Object_64 *obj64) {
+/**
+ * Return the size of the object property struct intended to be used with the object.
+*/
+s32 get_object_property_size(Object *obj, Object_64 *obj64) {
     s32 temp_v0;
     s32 ret = 0;
 
@@ -4235,24 +4238,24 @@ s32 func_800235DC(Object *obj, Object_64 *obj64) {
 
     switch (obj->segment.header->behaviorId) {
     case BHV_RACER:
-        ret = 0x224;
+        ret = sizeof(Object_Racer);
         break;
     case BHV_DOOR:
     case BHV_TT_DOOR:
-        ret = 0x18;
+        ret = sizeof(Object_TTDoor);
         break;
     case BHV_EXIT:
-        ret = 0x18;
+        ret = sizeof(Object_Exit);
         break;
     case BHV_ANIMATOR:
-        ret = 0xC;
+        ret = sizeof(Object_Animator);
         break;
     case BHV_AUDIO:
-        ret = 0x10;
+        ret = sizeof(Object_Audio);
         break;
     case BHV_AUDIO_LINE:
     case BHV_AUDIO_LINE_2:
-        ret = 0x14;
+        ret = sizeof(Object_AudioLine);
         break;
     case BHV_AINODE:
         ret = 0x1C;
@@ -4260,40 +4263,40 @@ s32 func_800235DC(Object *obj, Object_64 *obj64) {
     case BHV_MODECHANGE:
     case BHV_BONUS:
     case BHV_TRIGGER:
-        ret = 0x18;
+        ret = sizeof(Object_Trigger);
         break;
     case BHV_AUDIO_REVERB:
-        ret = 0x6;
+        ret = sizeof(Object_AudioReverb);
         break;
     case BHV_TEXTURE_SCROLL:
-        ret = 0xC;
+        ret = sizeof(Object_TexScroll);
         break;
     case BHV_WEAPON:
     case BHV_WEAPON_2:
-        ret = 0x20;
+        ret = sizeof(Object_Weapon);
         break;
     case BHV_WEAPON_BALLOON:
-        ret = 0x8;
+        ret = sizeof(Object_WeaponBalloon);
         break;
     case BHV_BANANA:
-        ret = 0xC;
+        ret = sizeof(Object_Banana);
         break;
     case BHV_BRIDGE_WHALE_RAMP:
-        ret = 0x8;
+        ret = sizeof(Object_Bridge_WhaleRamp);
         break;
     case BHV_SEA_MONSTER:
         ret = 0x18;
         break;
     case BHV_COLLECT_EGG:
-        ret = 0xC;
+        ret = sizeof(Object_CollectEgg);
         break;
     case BHV_STOPWATCH_MAN:
     case BHV_PARK_WARDEN:
     case BHV_GOLDEN_BALLOON:
-        ret = 0x38;
+        ret = sizeof(Object_NPC);
         break;
     case BHV_LASER_GUN:
-        ret = 0x14;
+        ret = sizeof(Object_LaserGun);
         break;
     case BHV_OVERRIDE_POS:
         ret = 0x10;
@@ -4320,13 +4323,13 @@ s32 func_800235DC(Object *obj, Object_64 *obj64) {
     case BHV_DOOR_OPENER:
     case BHV_PIG_ROCKETEER:
     case BHV_WIZPIG_GHOSTS:
-        ret = 0x48;
+        ret = sizeof(Object_AnimatedObject);
         break;
     case BHV_MIDI_FADE:
-        ret = 0x44;
+        ret = sizeof(Object_MidiFade);
         break;
     case BHV_MIDI_FADE_POINT:
-        ret = 0x20;
+        ret = sizeof(Object_MidiFadePoint);
         break;
     case BHV_MIDI_CHANNEL_SET:
         ret = 0x4;
@@ -4334,29 +4337,29 @@ s32 func_800235DC(Object *obj, Object_64 *obj64) {
     case BHV_BUTTERFLY:
         temp_v0 = 0x10 - ((s32) obj64 & 0xF);
         obj->unk64 = (Object_64 *) &obj64->butterfly.triangles[0].verticesArray[temp_v0];
-        ret = (temp_v0 + 0x110);
+        ret = (temp_v0 + sizeof(Object_Butterfly));
         break;
     case BHV_FISH:
         temp_v0 = 0x10 - ((s32) obj64 & 0xF);
         obj->unk64 = (Object_64 *) &obj64->fish.triangles[0].verticesArray[temp_v0];
-        ret = (temp_v0 + 0x120);
+        ret = (temp_v0 + sizeof(Object_Fish));
         break;
     case BHV_CHARACTER_FLAG:
         temp_v0 = 0x10 - ((s32) obj64 & 0xF);
         obj->unk64 = (Object_64 *) &obj64->character_flag.triangles[0].verticesArray[temp_v0];
-        ret = (temp_v0 + 0x28);
+        ret = (temp_v0 + sizeof(Object_CharacterFlag));
         break;
     case BHV_UNK_5E:
         ret = 0x60;
         break;
     case BHV_TROPHY_CABINET:
-        ret = 0x8;
+        ret = sizeof(Object_TrophyCabinet);
         break;
     case BHV_FROG:
-        ret = 0x34;
+        ret = sizeof(Object_Frog);
         break;
     case BHV_FIREBALL_OCTOWEAPON_2:
-        ret = 0x20;
+        ret = sizeof(Object_Fireball_Octoweapon);
         break;
     default:
         obj->unk64 = NULL;
