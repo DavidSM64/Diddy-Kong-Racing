@@ -45,8 +45,6 @@ void free_lights(void) {
     gMaxLights = 0;
 }
 
-// Regalloc issues
-#ifdef NON_MATCHING
 /**
  * Official Name: setupLights
  */
@@ -60,16 +58,13 @@ void setup_lights(s32 count) {
     temp_v0 = (ObjectLight **) allocate_from_main_pool_safe(gMaxLights * (sizeof(s32 *) + sizeof(ObjectLight) + sizeof(unk800DC960) + sizeof(Vec3f)), COLOUR_TAG_MAGENTA);
     newCount = gMaxLights;
     gActiveLights = temp_v0;
-    D_800DC954 = (ObjectLight *) &temp_v0[newCount];
-    D_800DC960 = (unk800DC960 *) &D_800DC954[newCount];
-    D_800DC964 = (Vec3f *) &D_800DC960[newCount];
+    D_800DC954 = newCount + (0, temp_v0);
+    D_800DC960 = newCount + (0, D_800DC954);
+    D_800DC964 = newCount + (0, D_800DC960);
     for (i = 0; i < gMaxLights; i++) {
         gActiveLights[i] = &D_800DC954[i];
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/lights/setup_lights.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/lights/func_80031CAC.s")
 
@@ -387,43 +382,45 @@ void func_80032C7C(Object *object) {
 GLOBAL_ASM("asm/non_matchings/lights/func_80032C7C.s")
 #endif
 
-#ifdef NON_EQUIVALENT
-// Has regalloc issues
 void func_800337E4(void) {
+    s32 temp_a2;
+    s32 index;
+    s32 temp_a3;
+    s32 temp_lo;
     s32 i;
-    s32 temp;
+    unk800DC960 *temp_a1;
 
     for (i = 1; i < D_800DC968; i++) {
-        if (D_800DC960[i].unk10 >= 2) {
-            if (D_800DC960[0].unk10 >= D_800DC960[i].unk10) {
-                temp = (D_800DC960[i].unk10 << 0x10);
-                temp /= D_800DC960[0].unk10;
-                D_800DC960[0].unk4 = D_800DC960[0].unk4 + ((D_800DC960[i].unk4 * temp) >> 0x10);
-                D_800DC960[0].unk8 = D_800DC960[0].unk8 + ((D_800DC960[i].unk8 * temp) >> 0x10);
-                D_800DC960[0].unkC = D_800DC960[0].unkC + ((D_800DC960[i].unkC * temp) >> 0x10);
+        index = i; // Needed?
+        if ((&D_800DC960[index])->unk10){} // Fakematch
+        temp_a1 = (0, D_800DC960) + index;
+        temp_a2 = temp_a1->unk10;
+        if (temp_a2 >= 2) {
+            temp_a3 = D_800DC960->unk10;
+            if (temp_a3 >= temp_a2) {
+                temp_lo = ((s32) (temp_a2 << 16)) / temp_a3;
+                D_800DC960->unk4 = D_800DC960->unk4 + (((s32) (temp_a1->unk4 * temp_lo)) >> 16);
+                D_800DC960->unk8 += ((s32) ((&D_800DC960[index])->unk8 * temp_lo)) >> 16;
+                D_800DC960->unkC += ((s32) ((&D_800DC960[index])->unkC * temp_lo)) >> 16;
             } else {
-                temp = (D_800DC960[0].unk10 << 0x10);
-                temp /= D_800DC960[i].unk10;
-                D_800DC960[0].unk4 = D_800DC960[i].unk4 + ((D_800DC960[0].unk4 * temp) >> 0x10);
-                D_800DC960[0].unk8 = D_800DC960[i].unk8 + ((D_800DC960[0].unk8 * temp) >> 0x10);
-                D_800DC960[0].unkC = D_800DC960[i].unkC + ((D_800DC960[0].unkC * temp) >> 0x10);
-                D_800DC960[0].unk10 = D_800DC960[i].unk10;
+                temp_lo = ((s32) (temp_a3 << 16)) / temp_a2;
+                D_800DC960->unk4 = temp_a1->unk4 + (((s32) (D_800DC960->unk4 * temp_lo)) >> 16);
+                D_800DC960->unk8 = (&D_800DC960[index])->unk8 + (((s32) ((D_800DC960->unk8 * temp_lo) ^ 0)) >> 16);
+                D_800DC960->unkC = (&D_800DC960[index])->unkC + (((s32) (D_800DC960->unkC * temp_lo)) >> 16);
+                D_800DC960->unk10 = (&D_800DC960[index])->unk10;
             }
-            if (D_800DC960[0].unk4 >= 0x100) {
-                D_800DC960[0].unk4 = 0xFF;
+            if (D_800DC960->unk4 >= 256) {
+                D_800DC960->unk4 = 255;
             }
-            if (D_800DC960[0].unk8 >= 0x100) {
-                D_800DC960[0].unk8 = 0xFF;
+            if (D_800DC960->unk8 >= 256) {
+             D_800DC960->unk8 = 255;
             }
-            if (D_800DC960[0].unkC >= 0x100) {
-                D_800DC960[0].unkC = 0xFF;
+            if (D_800DC960->unkC >= 256) {
+                D_800DC960->unkC = 255;
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/lights/func_800337E4.s")
-#endif
 
 /**
  * Official Name: lightDistanceCalc
