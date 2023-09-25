@@ -27,8 +27,7 @@ unk800E2850 D_800E2850[3] = {
     { 0,  0x08, (TextureHeader *)2, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
 };
 
-s32 *D_800E28D4 = 0;
-
+unk800E28D4 *D_800E28D4 = NULL;
 unk800E2850 D_800E28D8 = { NULL, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 // Not sure about typing for the following.
@@ -83,7 +82,7 @@ unk800E2980 D_800E2A30[5] = {
 };
 
 s32 D_800E2A80 = 0;
-s32 D_800E2A84 = 1;
+s32 D_800E2A84 = TRUE;
 s32 D_800E2A88 = 0;
 f32 D_800E2A8C = -200.0f;
 f32 D_800E2A90 = 200.0f;
@@ -179,7 +178,7 @@ Object *D_80127C40[16];
 void init_weather(void) {
     D_800E28D8.unk0 = 0;
     D_800E28D8.unk4 = 0;
-    D_800E28D4 = 0;
+    D_800E28D4 = NULL;
     D_80127BB0 = 0;
     D_80127C00 = 6;
     D_80127C00 <<= 2;
@@ -190,7 +189,7 @@ void init_weather(void) {
     D_80127BF8.unk0 = -1;
     D_80127BF8.unk2 = -0x200;
     D_800E2A80 = 0;
-    D_800E2A84 = 1;
+    D_800E2A84 = TRUE;
     D_800E2A88 = 0;
     if (D_800E291C == NULL) {
         D_800E291C = (s32 *)load_asset_section_from_rom(ASSET_WEATHER_PARTICLES);
@@ -248,7 +247,7 @@ void free_weather_memory(void) {
 
     D_800E2A88 = 0;
     D_800E2A80 = 0;
-    D_800E2A84 = 1;
+    D_800E2A84 = TRUE;
     if (gWeatherType != WEATHER_SNOW) {
         free_rain_memory();
     }
@@ -334,7 +333,7 @@ void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currH
         D_80127BB4 = (D_80127BB0 * D_80127BB8[0]) >> (unused = 16);
         D_80127BF8.unk4 = (D_80127BF8.unk0 + ((D_80127BF8.unk2 - D_80127BF8.unk0) * D_80127BB8[12])) >> (unused = 16);
 
-        func_800AC0C8(updateRate); // This is the snow physics that makes it move
+        func_800AC0C8(updateRate);
         if ((D_80127BB4 > 0) && (D_80127BF8.unk4 < D_80127BF8.unk0)) {
             D_800E2904 = D_800E2914[D_80127C08];
             func_800AC21C(); // Both of these funcs are needed to render.
@@ -348,7 +347,23 @@ void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currH
     *currHudTris = gCurrWeatherTriList;
 }
 
-GLOBAL_ASM("asm/non_matchings/weather/func_800AC0C8.s")
+// This is the snow physics that makes it move
+void func_800AC0C8(s32 updateRate) {
+    unk800E2850_unk0* temp_v1;
+    s32 i;
+
+    for (i = 0; i < D_80127BB0; i++) {
+        temp_v1 = &D_800E28D8.unk0[D_800E28D4[i].unkF];
+        D_800E28D4[i].unk0 = ((((temp_v1->unk0 + (D_80127BB8[3] * 2)) * updateRate) >> 1) + D_800E28D4[i].unk0) & D_800E28D8.unk18;
+        D_800E28D4[i].unk4 = ((((temp_v1->unk4 + (D_80127BB8[6] * 2)) * updateRate) >> 1) + D_800E28D4[i].unk4) & D_800E28D8.unk1C;
+        D_800E28D4[i].unk8 = ((((temp_v1->unk8 + (D_80127BB8[9] * 2)) * updateRate) >> 1) + D_800E28D4[i].unk8) & D_800E28D8.unk20;
+        D_800E28D4[i].unkF++;
+        if (D_800E28D4[i].unkF >= D_800E28D8.unk4) {
+            D_800E28D4[i].unkF -= D_800E28D8.unk4;
+        } 
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/weather/func_800AC21C.s")
 
 /**
@@ -380,22 +395,20 @@ void render_falling_snow(void) {
     }
 }
 
-// Unused
-void func_800AC850(void) {
-    D_800E2A84 = 1;
+UNUSED void func_800AC850(void) {
+    D_800E2A84 = TRUE;
 }
 
-// Unused
-void func_800AC860(void) {
+UNUSED void func_800AC860(void) {
     if (D_800E2A80 != 0) {
-        D_800E2A84 = 0;
+        D_800E2A84 = FALSE;
     }
 }
 
 void func_800AC880(s32 arg0) {
     if (arg0 == D_800E2A80) {
         D_800E2A80 = 0;
-        D_800E2A84 = 1;
+        D_800E2A84 = TRUE;
     }
 }
 

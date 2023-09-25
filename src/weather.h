@@ -81,6 +81,14 @@ typedef struct {
     s32 unk4;
 } unk80127BF8;
 
+typedef struct unk800E28D4 {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    u8  padC[3];
+    u8  unkF;
+} unk800E28D4;
+
 extern u32 osTvType;
 
 void set_weather_limits(s16 arg0, s16 arg1);
@@ -98,11 +106,12 @@ void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currH
 void render_falling_snow(void);
 void free_weather_memory(void);
 void changeWeather(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
+void func_800AD030(ObjectSegment *cameraSegment);
+void func_800AC0C8(s32 updateRate);
 
 s32 coss(s16);
 s32 sins(s16);
 void init_weather(void);
-s32 func_800AC0C8(s32);
 void f32_matrix_dot(Matrix *arg0, Matrix *arg1, Matrix *arg2);
 void func_800AC21C(void);
 void func_800AC8A8(Object *);
