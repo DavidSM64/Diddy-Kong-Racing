@@ -22,7 +22,7 @@ u16 sTransitionFadeTimer = 0;
 u16 sTransitionFlags = 0;
 u16 D_800E31B8 = 0;
 s8 D_800E31BC = 0;
-VertexList *sTransitionVtx[2] = { NULL, NULL };
+Vertex *sTransitionVtx[2] = { NULL, NULL };
 TriangleList *sTransitionTris[2] = { NULL, NULL };
 s32 sTransitionTaskNum = 0;
 
@@ -204,9 +204,9 @@ s32 D_8012A760;
 s32 D_8012A764;
 s32 D_8012A768;
 s32 D_8012A76C;
-s32 D_8012A770;
-s32 D_8012A774;
-s32 D_8012A778;
+f32 *D_8012A770;
+f32 *D_8012A774;
+f32 *D_8012A778;
 s32 D_8012A77C;
 
 /*****************************/
@@ -461,7 +461,42 @@ void render_fade_fullscreen(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **
 }
 
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C0B00.s")
-GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1130.s")
+
+void func_800C1130(s32 updateRate) {
+    s32 i;
+    f32 updateRateF;
+
+    updateRateF = (f32) updateRate;
+    if (sTransitionFadeTimer > 0) {
+        if (updateRate < sTransitionFadeTimer) {
+           for (i = 0; i < D_8012A77C; i++) {
+                D_8012A770[i*3] += updateRateF * D_8012A774[i*3];
+                D_8012A770[i*3 + 1] += updateRateF * D_8012A774[i*3 + 1];
+                D_8012A770[i*3 + 2] += updateRateF * D_8012A774[i*3 + 2];
+            }
+            sTransitionFadeTimer -= updateRate;
+        } else {
+            for (i = 0; i < D_8012A77C; i++) {
+                D_8012A770[i*3]     = D_8012A778[i*3];
+                D_8012A770[i*3 + 1] = D_8012A778[i*3 + 1];
+                D_8012A770[i*3 + 2] = D_8012A778[i*3 + 2];
+            }
+            sTransitionFadeTimer = 0;
+        }
+        for (i = 0; i < D_8012A77C; i++) {
+            sTransitionVtx[sTransitionTaskNum][i].x = (s32)D_8012A770[i*3];
+            sTransitionVtx[sTransitionTaskNum][i].y = (s32)D_8012A770[i*3+1];
+            sTransitionVtx[sTransitionTaskNum][i].a = (s32)D_8012A770[i*3+2];
+        }
+    } else if (sTransitionFlags != 0xFFFF) {
+        if (updateRate < sTransitionFlags) {
+            sTransitionFlags -= updateRate;
+        }
+        else {
+            sTransitionFlags = 0;
+        }
+    }
+}
 
 /**
  * Renders a transition effect on screen that will close in from both sides horizonally.

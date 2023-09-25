@@ -1590,6 +1590,13 @@ typedef struct Object_64 {
     };
 } Object_64;
 
+// Size: 0xC
+typedef struct Object_68_38 {
+ /* 0x00 */ u8 *unk0;
+ /* 0x00 */ u8 pad4[4];
+ /* 0x08 */ s32 unk8;
+} Object_68_38;
+
 typedef struct Object_68 {
   /* 0x00 */ union {
       ObjectModel *objModel;
@@ -1608,9 +1615,14 @@ typedef struct Object_68 {
   /* 0x21 */ s8 unk21;
   /* 0x22 */ s16 unk22;
   /* 0x24 */ s32 unk24;
-  /* 0x28 */ s32 unk28;
+  /* 0x28 */ s16 unk28;
+  /* 0x2A */ s16 unk2A;
   /* 0x2C */ s32 unk2C;
   /* 0x30 */ s32 unk30;
+  /* 0x34 */ u8 pad34[0x4];
+  /* 0x38 */ Object_68_38 *unk38[2]; //Array Size unknown
+  /* 0x40 */ u8 pad40[0x10];
+  /* 0x50 */ s16 unk50;
  } Object_68;
  
 /* Size: 0x20 bytes */
