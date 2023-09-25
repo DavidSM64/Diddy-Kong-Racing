@@ -309,6 +309,12 @@ typedef struct LevelObjectEntry_Bonus {
 
 typedef struct LevelObjectEntry_LensFlare {
     /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ s16 unk8;
+    /* 0x0A */ s16 unkA;
+    /* 0x0C */ u8 unkC;
+    /* 0x0D */ u8 unkD;
+    /* 0x0E */ u8 unkE;
+    /* 0x0F */ u8 unkF;
 } LevelObjectEntry_LensFlare;
 
 typedef struct LevelObjectEntry_LensFlareSwitch {

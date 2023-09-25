@@ -92,7 +92,7 @@ typedef struct unk800E28D4 {
 extern u32 osTvType;
 
 void set_weather_limits(s16 arg0, s16 arg1);
-void func_800AC880(s32 arg0);
+void func_800AC880(Object *obj);
 void cameraAddOverrideObject(Object *arg0);
 void free_rain_memory(void);
 void func_800AD2C4(s32 arg0, s32 arg1, f32 arg2);

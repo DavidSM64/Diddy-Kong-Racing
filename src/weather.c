@@ -81,7 +81,7 @@ unk800E2980 D_800E2A30[5] = {
     { 0,      0,      0,  0.0f,    0.0f },
 };
 
-s32 D_800E2A80 = 0;
+Object *D_800E2A80 = NULL;
 s32 D_800E2A84 = TRUE;
 s32 D_800E2A88 = 0;
 f32 D_800E2A8C = -200.0f;
@@ -167,7 +167,7 @@ Matrix *D_80127C20;
 s32 D_80127C24;
 s32 D_80127C28;
 Matrix *D_80127C2C;
-s32 D_80127C30[4];
+Vec3f D_80127C30;
 Object *D_80127C40[16];
 
 /******************************/
@@ -188,7 +188,7 @@ void init_weather(void) {
     D_800E290C = 0;
     D_80127BF8.unk0 = -1;
     D_80127BF8.unk2 = -0x200;
-    D_800E2A80 = 0;
+    D_800E2A80 = NULL;
     D_800E2A84 = TRUE;
     D_800E2A88 = 0;
     if (D_800E291C == NULL) {
@@ -246,7 +246,7 @@ void free_weather_memory(void) {
     FREE_MEM(D_800E2910);
 
     D_800E2A88 = 0;
-    D_800E2A80 = 0;
+    D_800E2A80 = NULL;
     D_800E2A84 = TRUE;
     if (gWeatherType != WEATHER_SNOW) {
         free_rain_memory();
@@ -400,19 +400,73 @@ UNUSED void func_800AC850(void) {
 }
 
 UNUSED void func_800AC860(void) {
-    if (D_800E2A80 != 0) {
+    if (D_800E2A80 != NULL) {
         D_800E2A84 = FALSE;
     }
 }
 
-void func_800AC880(s32 arg0) {
-    if (arg0 == D_800E2A80) {
-        D_800E2A80 = 0;
+void func_800AC880(Object *obj) {
+    if (obj == D_800E2A80) {
+        D_800E2A80 = NULL;
         D_800E2A84 = TRUE;
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/weather/func_800AC8A8.s")
+void func_800AC8A8(Object *lensflareObj) {
+    LevelObjectEntry_LensFlare *entry;
+    Vec3s sp1C;
+
+    D_800E2A80 = lensflareObj;
+    D_800E2A84 = 0;
+    entry = &D_800E2A80->segment.level_entry->lensFlare;
+    
+    switch (entry->unkC) {
+    default:
+        D_80127C24 = 0; 
+        break;
+    case 1:
+        D_80127C24 = (s32) D_800E29A0;
+        break;
+    case 2:
+        D_80127C24 = (s32) D_800E29E0;
+        break;
+    case 3:
+        D_80127C24 = (s32) D_800E2A30;
+        break;
+    }
+
+    switch (entry->unkD) {
+    default:
+        D_80127C28 = 0;
+        break;
+    case 1: 
+        D_80127C28 = (s32) D_800E29A0;
+        break;
+    case 2: 
+        D_80127C28 = (s32) D_800E29E0;
+        break;
+    case 3: 
+        D_80127C28 = (s32) D_800E2A30;
+        break;
+    }
+    
+    if (entry->unkE == 1) {
+        D_80127C2C = (Matrix *) D_800E2980;
+    } else {
+        D_80127C2C = NULL;
+    }
+
+    sp1C.y_rotation = entry->unkA;
+    sp1C.x_rotation = entry->unk8; 
+    sp1C.z_rotation = 0;
+    D_80127C30.x = 0;
+    D_80127C30.y = 0;
+    D_80127C30.z = -1.0f;
+    f32_vec3_apply_object_rotation3((ObjectTransform *) &sp1C, D_80127C30.f);
+    D_80127C30.x = -D_80127C30.x;
+    D_80127C30.y = -D_80127C30.y;
+    D_80127C30.z = -D_80127C30.z;
+}
 
 //https://decomp.me/scratch/mYuMJ
 GLOBAL_ASM("asm/non_matchings/weather/func_800ACA20.s")
