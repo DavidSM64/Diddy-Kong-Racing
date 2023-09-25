@@ -68,7 +68,7 @@ void setup_lights(s32 count) {
 }
 
 #ifdef NON_EQUIVALENT
-ObjectLight *func_80031CAC(Object* light, LevelObjectEntry_RgbaLight* lightEntry) {
+ObjectLight *func_80031CAC(Object *light, LevelObjectEntry_RgbaLight *lightEntry) {
     s32 i;
     ObjectLight *newLight;
     LevelHeader_70 *test;

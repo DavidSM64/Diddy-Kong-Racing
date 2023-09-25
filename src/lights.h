@@ -94,7 +94,7 @@ void func_80032BAC(ObjectLight *light);
 s32 get_light_count(void);
 f32 light_distance_calc(ObjectLight *light);
 f32 light_direction_calc(ObjectLight *light);
-ObjectLight *func_80031CAC(Object* light, LevelObjectEntry_RgbaLight* lightEntry);
+ObjectLight *func_80031CAC(Object *light, LevelObjectEntry_RgbaLight *lightEntry);
 ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1);
 
 //Non Matching
