@@ -7,6 +7,7 @@
 #include "types.h"
 #include "macros.h"
 #include "objects.h"
+#include "game.h"
 
 /************ .data ************/
 
@@ -66,7 +67,83 @@ void setup_lights(s32 count) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+ObjectLight *func_80031CAC(Object* light, LevelObjectEntry_RgbaLight* lightEntry) {
+    s32 i;
+    ObjectLight *newLight;
+    LevelHeader_70 *test;
+    s32 temp_a0;
+
+    newLight = NULL;
+    if (gNumActiveLights < gMaxLights) {
+        newLight = gActiveLights[gNumActiveLights++];
+        newLight->unk0 = ((s32) (lightEntry->unk8 & 0xF0) >> 4);
+        newLight->type = lightEntry->unk8 & 0xF;
+        newLight->unk1 = ((s32) (lightEntry->unk9 & 0xE0) >> 5);
+        newLight->unk2 = lightEntry->unk9 & 0x1F;
+        newLight->enabled = TRUE;
+        newLight->owner = NULL;
+        newLight->homeX = 0;
+        newLight->homeY = 0;
+        newLight->homeZ = 0;
+        if (light != NULL) {
+            newLight->x = light->segment.trans.x_position;
+            newLight->y = light->segment.trans.y_position;
+            newLight->z = light->segment.trans.z_position;
+        } else {
+            newLight->x = (f32) lightEntry->common.x;
+            newLight->y = (f32) lightEntry->common.y;
+            newLight->z = (f32) lightEntry->common.z;
+        }
+        newLight->unk1C = lightEntry->unkA << 16;
+        newLight->unk2C = 0;
+        newLight->unk3C = 0;
+        newLight->unk20 = lightEntry->unkB << 16;
+        newLight->unk30 = 0;
+        newLight->unk3E = 0;
+        newLight->unk24 = lightEntry->unkC << 16;
+        newLight->unk34 = 0;
+        newLight->unk40 = 0;
+        newLight->unk28 = lightEntry->unkD << 16;
+        newLight->unk38 = 0;
+        newLight->unk42 = 0;
+        newLight->unk44 = NULL;
+        if (lightEntry->unk1C < 7) {
+            test = (LevelHeader_70 *) get_current_level_header()->unk74[lightEntry->unk1C];
+            if (((s32) test) != -1) {
+                newLight->unk44 = &test->unk4;
+                newLight->unk44 = &test->unk0;
+                newLight->unk4A = 0;
+                if (lightEntry && lightEntry && lightEntry) {}
+                newLight->unk4C = 0;
+                newLight->unk4E = 0;
+                newLight->unk48 = (u16) &test->red2;
+                temp_a0 = (u16) &test->red2;
+                for (i = 0; i < temp_a0; ) {
+                    newLight->unk4E += test->unk18[i++].unk0;
+                }
+            }
+        }
+        newLight->radius = lightEntry->unkE;
+        newLight->unk60  = lightEntry->unk10;
+        newLight->unk64  = lightEntry->unk12;
+        newLight->radiusSquare = newLight->radius * newLight->radius;
+        newLight->radiusMag = 1 / newLight->radius;
+        newLight->unk70 = lightEntry->unk14;
+        newLight->unk74 = lightEntry->unk18;
+        newLight->unk78 = (lightEntry->unk18) ? 0xFFFF : 0;
+        newLight->unk72 = lightEntry->unk16;
+        newLight->unk76 = lightEntry->unk1A;
+        newLight->unk7A = (lightEntry->unk1A) ? 0xFFFF : 0;
+        newLight->unk7A = 0;
+        newLight->unk5 = 1;
+        func_80032424(newLight, 0);
+    }
+    return newLight;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/lights/func_80031CAC.s")
+#endif
 
 /**
  * Official Name: addObjectLight

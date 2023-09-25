@@ -431,7 +431,26 @@ void func_800ACF98(Object* arg0) {
 
 }
 
-GLOBAL_ASM("asm/non_matchings/weather/func_800AD030.s")
+void func_800AD030(ObjectSegment *cameraSegment) {
+    LevelObjectEntry_Weather *weather;
+    f32 xDiff;
+    f32 zDiff;
+    f32 yDiff;
+    s32 i; 
+    D_800E2A84 = FALSE;
+    if (D_800E2A88 > 0 && D_800E2A80 != 0) {
+        if(D_80127C40[0]){} // Fakematch
+        for (i = 0; i < D_800E2A88; i++) {
+            xDiff = cameraSegment->trans.x_position - D_80127C40[i]->segment.trans.x_position;
+            yDiff = cameraSegment->trans.y_position - D_80127C40[i]->segment.trans.y_position;
+            zDiff = cameraSegment->trans.z_position - D_80127C40[i]->segment.trans.z_position;
+            weather = &D_80127C40[i]->segment.level_entry->weather;
+            if (sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)) < weather->radius) {
+                D_800E2A84 = TRUE;
+            }
+        }
+    }
+}
 
 void func_800AD144(s32 arg0, s32 arg1) {
     gLightningFrequency = arg0;
