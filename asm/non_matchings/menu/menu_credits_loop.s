@@ -198,10 +198,10 @@ glabel menu_credits_loop
 /* 09C204 8009B604 8FB8006C */   lw    $t8, 0x6c($sp)
 .L8009B608:
 /* 09C208 8009B608 AEC00000 */  sw    $zero, ($s6)
-/* 09C20C 8009B60C 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
+/* 09C20C 8009B60C 3C018012 */  lui   $at, %hi(gIgnorePlayerInputTime) # $at, 0x8012
 /* 09C210 8009B610 AFA90068 */  sw    $t1, 0x68($sp)
 /* 09C214 8009B614 100000FD */  b     .L8009BA0C
-/* 09C218 8009B618 AC2063C4 */   sw    $zero, %lo(gIgnorePlayerInput)($at)
+/* 09C218 8009B618 AC2063C4 */   sw    $zero, %lo(gIgnorePlayerInputTime)($at)
 .L8009B61C:
 /* 09C21C 8009B61C 3C01FFFF */  lui   $at, (0xFFFF0FFF >> 16) # lui $at, 0xffff
 .L8009B620:
@@ -489,8 +489,8 @@ glabel menu_credits_loop
 /* 09C61C 8009BA1C 3C068012 */  lui   $a2, %hi(gOpacityDecayTimer) # $a2, 0x8012
 /* 09C620 8009BA20 24C663D8 */  addiu $a2, %lo(gOpacityDecayTimer) # addiu $a2, $a2, 0x63d8
 .L8009BA24:
-/* 09C624 8009BA24 3C198012 */  lui   $t9, %hi(gIgnorePlayerInput) # $t9, 0x8012
-/* 09C628 8009BA28 8F3963C4 */  lw    $t9, %lo(gIgnorePlayerInput)($t9)
+/* 09C624 8009BA24 3C198012 */  lui   $t9, %hi(gIgnorePlayerInputTime) # $t9, 0x8012
+/* 09C628 8009BA28 8F3963C4 */  lw    $t9, %lo(gIgnorePlayerInputTime)($t9)
 /* 09C62C 8009BA2C 00009025 */  move  $s2, $zero
 /* 09C630 8009BA30 1720000C */  bnez  $t9, .L8009BA64
 /* 09C634 8009BA34 3C09800E */   lui   $t1, %hi(gMenuDelay) # $t1, 0x800e
@@ -613,11 +613,11 @@ glabel L8009BB9C
 /* 09C7E4 8009BBE4 AC6E0000 */  sw    $t6, ($v1)
 /* 09C7E8 8009BBE8 03194821 */  addu  $t1, $t8, $t9
 /* 09C7EC 8009BBEC 812A0000 */  lb    $t2, ($t1)
-/* 09C7F0 8009BBF0 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
+/* 09C7F0 8009BBF0 3C018012 */  lui   $at, %hi(gIgnorePlayerInputTime) # $at, 0x8012
 /* 09C7F4 8009BBF4 05410004 */  bgez  $t2, .L8009BC08
 /* 09C7F8 8009BBF8 324C9000 */   andi  $t4, $s2, 0x9000
 /* 09C7FC 8009BBFC AC600000 */  sw    $zero, ($v1)
-/* 09C800 8009BC00 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInput)($at)
+/* 09C800 8009BC00 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInputTime)($at)
 .L8009BC04:
 /* 09C804 8009BC04 324C9000 */  andi  $t4, $s2, 0x9000
 .L8009BC08:

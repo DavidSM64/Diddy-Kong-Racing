@@ -60,7 +60,8 @@ typedef enum Cheats {
     CHEAT_ULTIMATE_AI              = CHEAT(25),
     CHEAT_FREE_BALLOON             = CHEAT(26),
     CHEAT_EPC_LOCK_UP_DISPLAY      = CHEAT(27),
-    CHEAT_ROM_CHECKSUM             = CHEAT(28)
+    CHEAT_ROM_CHECKSUM             = CHEAT(28),
+    MAX_CHEATS                     = 32
 } Cheats;
 
 typedef enum MENU_ID {
@@ -795,7 +796,7 @@ void unload_big_font_5(void);
 void func_80099600(void);
 s32 get_trophy_race_world_id(void);
 void func_8009ABAC(void);
-void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5);
+void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s8 *arg5);
 void menu_23_init(void);
 void func_8009AF18(void);
 void menu_credits_init(void);
@@ -881,6 +882,9 @@ void render_track_selection_viewport_border(ObjectModel *objMdl);
 void render_adventure_track_setup(UNUSED s32 updateRate, s32 arg1, s32 arg2);
 void menu_trophy_race_round_init(void);
 void func_8008B358(void);
+s32 menu_save_options_loop(s32 updateRate);
+s32 menu_23_loop(s32 updateRate);
+s32 menu_magic_codes_list_loop(s32 updateRate);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -889,7 +893,6 @@ s32 menu_audio_options_loop(s32 arg0);
 s32 menu_options_loop(s32 updateRate);
 s32 menu_controller_pak_loop(s32 updateRate);
 void render_magic_codes_list_menu_text(s32 arg0);
-s32 menu_magic_codes_list_loop(s32 arg0);
 void calculate_and_display_rom_checksum(void);
 void randomise_ai_racer_slots(s32 arg0);
 void menu_game_select_init(void);
@@ -908,11 +911,9 @@ void menu_track_select_init(void);
 void menu_trophy_race_rankings_init(void);
 void func_8009E3D0(void);
 s32 menu_title_screen_loop(s32 updateRate);
-s32 menu_save_options_loop(s32 updateRate);
 s32 menu_magic_codes_loop(s32 updateRate);
 s32 menu_results_loop(s32 updateRate);
 s32 menu_trophy_race_rankings_loop(s32 updateRate);
-s32 menu_23_loop(s32 updateRate);
 s32 menu_credits_loop(s32 updateRate);
 void func_8009CA60(s32 imageID);
 void func_8007FFEC(s32 arg0);
@@ -940,6 +941,10 @@ void func_8009963C(void);
 void func_80081C04(s32 num, s32 x, s32 y, u8 r, u8 g, u8 b, u8 a, u8 font, u8 alignment);
 void func_80080E90(Gfx **dList, s32 x, s32 y, u8 BGr, u8 BGg, u8 BGb, u8 BGa, u8 r, u8 g, u8 b, u8 a);
 void func_80084854(void);
+s32 func_800862C4(void);
+s32 func_80086AFC(void);
+s32 func_80087734(s32, s32);
+void func_80085B9C(UNUSED s32 updateRate);
 
 typedef enum MenuTextures {
 /* 0x00 */ TEXTURE_UNK_00,

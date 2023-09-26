@@ -54,8 +54,8 @@ glabel menu_magic_codes_loop
 /* 08A998 80089D98 8FA70044 */  lw    $a3, 0x44($sp)
 /* 08A99C 80089D9C 256B63D8 */  addiu $t3, %lo(gOpacityDecayTimer) # addiu $t3, $t3, 0x63d8
 .L80089DA0:
-/* 08A9A0 80089DA0 3C198012 */  lui   $t9, %hi(gIgnorePlayerInput) # $t9, 0x8012
-/* 08A9A4 80089DA4 8F3963C4 */  lw    $t9, %lo(gIgnorePlayerInput)($t9)
+/* 08A9A0 80089DA0 3C198012 */  lui   $t9, %hi(gIgnorePlayerInputTime) # $t9, 0x8012
+/* 08A9A4 80089DA4 8F3963C4 */  lw    $t9, %lo(gIgnorePlayerInputTime)($t9)
 /* 08A9A8 80089DA8 00005025 */  move  $t2, $zero
 /* 08A9AC 80089DAC 00004025 */  move  $t0, $zero
 /* 08A9B0 80089DB0 17200025 */  bnez  $t9, .L80089E48
@@ -519,8 +519,8 @@ glabel menu_magic_codes_loop
 .L8008A414:
 /* 08B014 8008A414 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
 /* 08B018 8008A418 8C42F47C */  lw    $v0, %lo(gMenuDelay)($v0)
-/* 08B01C 8008A41C 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
-/* 08B020 8008A420 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInput)($at)
+/* 08B01C 8008A41C 3C018012 */  lui   $at, %hi(gIgnorePlayerInputTime) # $at, 0x8012
+/* 08B020 8008A420 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInputTime)($at)
 /* 08B024 8008A424 2841FFE2 */  slti  $at, $v0, -0x1e
 /* 08B028 8008A428 14200003 */  bnez  $at, .L8008A438
 /* 08B02C 8008A42C 2841001F */   slti  $at, $v0, 0x1f

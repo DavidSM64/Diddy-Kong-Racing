@@ -33,8 +33,8 @@ glabel menu_audio_options_loop
 /* 0858E8 80084CE8 3C09800E */  lui   $t1, %hi(gMenuDelay) # $t1, 0x800e
 /* 0858EC 80084CEC 2529F47C */  addiu $t1, %lo(gMenuDelay) # addiu $t1, $t1, -0xb84
 .L80084CF0:
-/* 0858F0 80084CF0 3C0B8012 */  lui   $t3, %hi(gIgnorePlayerInput) # $t3, 0x8012
-/* 0858F4 80084CF4 8D6B63C4 */  lw    $t3, %lo(gIgnorePlayerInput)($t3)
+/* 0858F0 80084CF0 3C0B8012 */  lui   $t3, %hi(gIgnorePlayerInputTime) # $t3, 0x8012
+/* 0858F4 80084CF4 8D6B63C4 */  lw    $t3, %lo(gIgnorePlayerInputTime)($t3)
 /* 0858F8 80084CF8 00000000 */  nop   
 /* 0858FC 80084CFC 1560012C */  bnez  $t3, .L800851B0
 /* 085900 80084D00 00000000 */   nop   
@@ -382,8 +382,8 @@ glabel menu_audio_options_loop
 /* 085DDC 800851DC 10000003 */  b     .L800851EC
 /* 085DE0 800851E0 00001025 */   move  $v0, $zero
 .L800851E4:
-/* 085DE4 800851E4 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
-/* 085DE8 800851E8 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInput)($at)
+/* 085DE4 800851E4 3C018012 */  lui   $at, %hi(gIgnorePlayerInputTime) # $at, 0x8012
+/* 085DE8 800851E8 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInputTime)($at)
 .L800851EC:
 /* 085DEC 800851EC 8FBF001C */  lw    $ra, 0x1c($sp)
 /* 085DF0 800851F0 8FB00018 */  lw    $s0, 0x18($sp)

@@ -419,9 +419,9 @@ glabel menu_trophy_race_rankings_loop
 .L800995E8:
 /* 09A1E8 800995E8 8FBF001C */  lw    $ra, 0x1c($sp)
 .L800995EC:
-/* 09A1EC 800995EC 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
+/* 09A1EC 800995EC 3C018012 */  lui   $at, %hi(gIgnorePlayerInputTime) # $at, 0x8012
 /* 09A1F0 800995F0 8FA2003C */  lw    $v0, 0x3c($sp)
-/* 09A1F4 800995F4 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInput)($at)
+/* 09A1F4 800995F4 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInputTime)($at)
 /* 09A1F8 800995F8 03E00008 */  jr    $ra
 /* 09A1FC 800995FC 27BD0050 */   addiu $sp, $sp, 0x50
 
