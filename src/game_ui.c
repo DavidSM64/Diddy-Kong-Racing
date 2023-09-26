@@ -510,7 +510,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                     }
                 }
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
-                func_800A7A60(arg3, &gHUDCurrDisplayList);
+                func_800A7A60(arg3);
                 set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
                 gDPSetEnvColor(gHUDCurrDisplayList++, 255, 255, 255, 0);
                 sp2C = func_8001139C() >> 1;
@@ -1879,7 +1879,37 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+void func_800A7A60(Object *obj) {
+    unk80126CDC *hud;
+    unk80068514_arg4 *arg4;
+    Object_Racer *racer;
+    s32 hudElementIndex;
+    f32 *new_var;
+
+    racer = &obj->unk64->racer;
+    if (racer->magnetTargetObj != NULL) {
+        if (get_current_viewport() == racer->playerIndex) {
+            hud = gCurrentHud;
+            hudElementIndex = hud->unk226;
+            if (1) { } if (1) { } if (1) { } if (1) { } if (1) { }
+            new_var = &racer->magnetTargetObj->segment.trans.x_position;
+            hud->unk22C = *new_var;
+            hud->unk230 = racer->magnetTargetObj->segment.trans.y_position;
+            hud->unk234 = racer->magnetTargetObj->segment.trans.z_position;
+            arg4 = (unk80068514_arg4 *) gAssetHudElements->entry[hudElementIndex];
+            if (arg4 != NULL) {
+                gAssetHudElementStaleCounter[hudElementIndex] = 0;
+                func_80066CDC(&gHUDCurrDisplayList, &gHUDCurrMatrix);
+                func_80068408(&gHUDCurrDisplayList, &gHUDCurrMatrix);
+                render_sprite_billboard(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, hud->unk220, arg4, RENDER_Z_UPDATE);
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7A60.s")
+#endif
 
 /**
  * Render the lap time on the top right.

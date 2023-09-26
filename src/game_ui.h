@@ -156,7 +156,15 @@ typedef struct unk80126CDC {
     s16 unk218; 
     s8 unk21A;
     s8 unk21B;
-    u8 unk21C[0x24];
+    u8 pad21C[0x4];
+    Object *unk220;
+    u8 pad224[0x2];
+    s16 unk226;
+    u8 pad228[0x2];
+    f32 unk22C;
+    f32 unk230;
+    f32 unk234;
+    u8 pad238[0x8];
     struct unk80126CDC *unk240;
     u8 unk244[0x8];
     f32 unk24C;
@@ -383,6 +391,7 @@ void init_hud(s32 viewportCount);
 void func_800A1C04(s32 arg0, Object *obj, s32 updateRate);
 void func_800A22F4(Object_Racer *racer, void *unused);
 void free_hud(void);
+void func_800A36CC(u8, u8, u8, u8, u8);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
@@ -395,13 +404,12 @@ void func_800A1248(s32, Object*, s32);
 void func_800A277C(s32, Object*, s32);
 void func_800A6254(Object_64* obj, s32 updateRate);
 void func_800A6E30(Object_64* obj, s32 updateRate);
-void func_800A7A60(Object*, Gfx**);
+void func_800A7A60(Object*);
 void func_800A0BD4(s32);
 void func_800A19A4(Object_Racer* racer, s32 updateRate);
 void func_800A1E48(Object*, s32);
 void render_treasure_hud(Object_Racer*);
 void func_800AA3EC(f32, f32, f32, f32, f32);
-void func_800A36CC(u8, u8, u8, u8, u8);
 void func_8009F034(void);
 
 #endif
