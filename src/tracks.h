@@ -173,9 +173,9 @@ void initialise_player_viewport_vars(s32 updateRate);
 s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation);
 void render_level_segment(s32 segmentId, s32 nonOpaque);
 void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, TriangleList** tris, s32 updateRate);
+void func_80030664(s32 fogIdx, s16 near, s16 far, u8 red, u8 green, u8 blue);
+void func_80030DE0(s32 fogIdx, s32 red, s32 green, s32 blue, s32 near, s32 far, s32 switchTimer);
 
-
-void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5);
 void free_track(void);
 void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportIndex);
 s32 func_80027568(void);
@@ -186,7 +186,6 @@ void func_80028050(void);
 void initialise_player_viewport_vars(s32);
 void func_8002A31C(void);
 void update_colour_cycle(LevelHeader_70 *arg0, s32 arg1);
-void func_800AD030(ObjectSegment*);
 void func_800B9C18(s32);
 void func_800BA8E4(Gfx**, MatrixS**, s32);
 void func_8002DE30(Object*);
@@ -196,7 +195,6 @@ void func_8002EEEC(void);
 void func_8002F2AC(void);
 void func_8002F440(void);
 f32 func_8002FA64(void);
-void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
 s32 func_8002BAB0(s16, f32, f32, f32*);
 void func_800249F0(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, u32 entranceId, u32 collectables, u32 arg6);
 void func_800B82B4(LevelModel *, LevelHeader *, s32);

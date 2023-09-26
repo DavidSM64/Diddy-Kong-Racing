@@ -897,7 +897,45 @@ typedef struct Object_Animator {
 } Object_Animator;
 
 typedef struct Object_Animation {
-  /* 0x00 */ u8 pad0[0x4A];
+  /* 0x00 */ f32 unk0;
+  /* 0x04 */ f32 unk4;
+  /* 0x08 */ f32 unk8;
+  /* 0x0C */ s32 unkC;
+  /* 0x10 */ f32 unk10;
+  /* 0x14 */ f32 unk14; 
+  /* 0x18 */ u8 *unk18; 
+  /* 0x1C */ struct Object *unk1C;
+  /* 0x20 */ s32 unk20;
+  /* 0x24 */ s16 unk24;
+  /* 0x26 */ s16 unk26;
+  /* 0x28 */ u16 unk28;
+  /* 0x2A */ u16 unk2A;
+  /* 0x2C */ u8 unk2C;
+  /* 0x2D */ u8 unk2D;
+  /* 0x2E */ u8 unk2E;
+  /* 0x2F */ u8 unk2F;
+  /* 0x30 */ u8 unk30;
+  /* 0x31 */ u8 unk31;
+  /* 0x32 */ u8 unk32;
+  /* 0x33 */ u8 unk33;
+  /* 0x34 */ u8 unk34;
+  /* 0x35 */ u8 unk35;
+  /* 0x36 */ s16 unk36;
+  /* 0x38 */ u8 unk38;
+  /* 0x39 */ u8 unk39;
+  /* 0x3A */ u8 unk3A;
+  /* 0x3V */ u8 unk3B;
+  /* 0x3C */ u8 unk3C;
+  /* 0x3D */ u8 unk3D;
+  /* 0x3E */ u8 unk3E;
+  /* 0x3F */ u8 unk3F;
+  /* 0x40 */ u8 unk40;
+  /* 0x41 */ u8 unk41;
+  /* 0x42 */ u8 unk42;
+  /* 0x43 */ u8 unk43;
+  /* 0x44 */ u8 unk44;
+  /* 0x45 */ u8 unk45;
+  /* 0x46 */ u8 pad46[4];
   /* 0x4A */ s16 unk4A;
 } Object_Animation;
 
@@ -1552,6 +1590,13 @@ typedef struct Object_64 {
     };
 } Object_64;
 
+// Size: 0xC
+typedef struct Object_68_38 {
+ /* 0x00 */ u8 *unk0;
+ /* 0x00 */ u8 pad4[4];
+ /* 0x08 */ s32 unk8;
+} Object_68_38;
+
 typedef struct Object_68 {
   /* 0x00 */ union {
       ObjectModel *objModel;
@@ -1570,9 +1615,14 @@ typedef struct Object_68 {
   /* 0x21 */ s8 unk21;
   /* 0x22 */ s16 unk22;
   /* 0x24 */ s32 unk24;
-  /* 0x28 */ s32 unk28;
+  /* 0x28 */ s16 unk28;
+  /* 0x2A */ s16 unk2A;
   /* 0x2C */ s32 unk2C;
   /* 0x30 */ s32 unk30;
+  /* 0x34 */ u8 pad34[0x4];
+  /* 0x38 */ Object_68_38 *unk38[2]; //Array Size unknown
+  /* 0x40 */ u8 pad40[0x10];
+  /* 0x50 */ s16 unk50;
  } Object_68;
  
 /* Size: 0x20 bytes */

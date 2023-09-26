@@ -248,6 +248,20 @@ typedef struct LevelObjectEntry_Banana {
 
 typedef struct LevelObjectEntry_RgbaLight {
     /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ u8 unk8;
+    /* 0x09 */ u8 unk9;
+    /* 0x0A */ u8 unkA;
+    /* 0x0B */ u8 unkB;
+    /* 0x0C */ u8 unkC;
+    /* 0x0D */ u8 unkD;
+    /* 0x0E */ s16 unkE;
+    /* 0x10 */ s16 unk10;
+    /* 0x12 */ s16 unk12;
+    /* 0x14 */ s16 unk14;
+    /* 0x16 */ s16 unk16;
+    /* 0x18 */ s16 unk18;
+    /* 0x1A */ s16 unk1A;
+    /* 0x1C */ u8 unk1C;
 } LevelObjectEntry_RgbaLight;
 
 typedef struct LevelObjectEntry_Buoy_PirateShip {
@@ -295,6 +309,12 @@ typedef struct LevelObjectEntry_Bonus {
 
 typedef struct LevelObjectEntry_LensFlare {
     /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ s16 unk8;
+    /* 0x0A */ s16 unkA;
+    /* 0x0C */ u8 unkC;
+    /* 0x0D */ u8 unkD;
+    /* 0x0E */ u8 unkE;
+    /* 0x0F */ u8 unkF;
 } LevelObjectEntry_LensFlare;
 
 typedef struct LevelObjectEntry_LensFlareSwitch {
@@ -333,9 +353,10 @@ typedef struct LevelObjectEntry_Animation {
     /* 0x10 */ s8 actorIndex;
     /* 0x11 */ s8 order;
     /* 0x12 */ s8 objAnimIndex;
-    /* 0x13 */ u8 pad13;
+    /* 0x13 */ s8 unk13;
     /* 0x14 */ s8 nodeSpeed;
-    /* 0x15 */ u8 pad15[2];
+    /* 0x15 */ s8 unk15;
+    /* 0x16 */ u8 unk16;
     /* 0x17 */ s8 objAnimSpeed;
     /* 0x18 */ u8 objAnimLoopType; // 0 = Loop, 1 = Reverse loop, 2 = Play once, 3 = reverse once then stop.
     /* 0x19 */ u8 rotateType;
@@ -343,20 +364,25 @@ typedef struct LevelObjectEntry_Animation {
     /* 0x1B */ s8 rollSpinSpeed;
     /* 0x1C */ s8 pitchSpinSpeed;
     /* 0x1D */ u8 goToNode;
-    /* 0x1E */ u8 pad1E[3];
+    /* 0x1E */ u8 unk1E;
+    /* 0x1F */ s8 unk1F;
+    /* 0x20 */ s8 unk20;
     /* 0x21 */ s8 channel;
-    /* 0x22 */ u8 pad22[2];
-    /* 0x24 */ s8 pauseFrameCount;
-    /* 0x25 */ u8 pad25;
-    /* 0x26 */ u8 specialHide;
+    /* 0x22 */ s8 unk22;
+    /* 0x23 */ s8 unk23;
+    /* 0x24 */ s16 pauseFrameCount;
+    /* 0x26 */ s8 specialHide;
     /* 0x27 */ u8 messageId;
-    /* 0x28 */ u8 pad28[3];
-    /* 0x2B */ u8 fadeAlpha;
-    /* 0x2C */ u8 nextAnim;
-    /* 0x2D */ u8 pad2D;
-    /* 0x2E */ u8 soundEffect;
-    /* 0x2F */ u8 fadeOptions; // 1 = Start fading from fadeAlpha, 2 = make visible, 3 = make invisible.
-    /* 0x30 */ u8 pad30[2];
+    /* 0x28 */ s8 unk28;
+    /* 0x29 */ s8 unk29;
+    /* 0x2A */ s8 unk2A;
+    /* 0x2B */ s8 fadeAlpha;
+    /* 0x2C */ s8 nextAnim;
+    /* 0x2D */ s8 unk2D;
+    /* 0x2E */ s8 soundEffect;
+    /* 0x2F */ s8 fadeOptions; // 1 = Start fading from fadeAlpha, 2 = make visible, 3 = make invisible.
+    /* 0x30 */ s8 unk30;
+    /* 0x31 */ u8 unk31;
 } LevelObjectEntry_Animation;
 
 typedef struct LevelObjectEntry_InfoPoint {

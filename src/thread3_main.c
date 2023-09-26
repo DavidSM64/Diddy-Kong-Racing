@@ -397,7 +397,7 @@ void unload_level_game(void) {
     clear_audio_and_track();
     transition_begin(&D_800DD3F4);
     func_800AE270();
-    func_800A003C();
+    free_hud();
     free_game_text_table();
     gCurrDisplayList = gDisplayLists[gSPTaskNum];
     gDPFullSync(gCurrDisplayList++);
@@ -875,7 +875,7 @@ void unload_level_menu(void) {
         clear_audio_and_track();
         transition_begin(&D_800DD3F4);
         func_800AE270();
-        func_800A003C();
+        free_hud();
         free_game_text_table();
         set_free_queue_state(2);
     }

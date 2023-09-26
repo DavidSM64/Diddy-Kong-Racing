@@ -59,14 +59,6 @@ s8 D_800DC92C[24] = {
 
 /*******************************/
 
-/************ .rodata ************/
-
-const char gViewport4Text[] = "TT CAM";
-UNUSED const char gTrackClippingErrorString[] = "Solid Clipping x0=x1 Error!!!\n";
-UNUSED const char gTrackHeightOverflowString[] = "TrackGetHeight() - Overflow!!!\n";
-
-/*********************************/
-
 /************ .bss ************/
 
 Gfx *gSceneCurrDisplayList;
@@ -420,7 +412,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
                 posX = SCREEN_WIDTH_HALF + 10;
                 posY = SCREEN_HEIGHT_HALF + 5;
             }
-            draw_text(&gSceneCurrDisplayList, posX, posY, (char *)(&gViewport4Text), ALIGN_TOP_LEFT); // TT CAM
+            draw_text(&gSceneCurrDisplayList, posX, posY, "TT CAM", ALIGN_TOP_LEFT);
         } else {
             set_active_camera(PLAYER_FOUR);
             func_800278E8(updateRate);
@@ -435,6 +427,10 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     *vtx = gSceneCurrVertexList;
     *tris = gSceneCurrTriList;
 }
+
+/************ .rodata ************/
+UNUSED const char gTrackClippingErrorString[] = "Solid Clipping x0=x1 Error!!!\n";
+UNUSED const char gTrackHeightOverflowString[] = "TrackGetHeight() - Overflow!!!\n";
 
 GLOBAL_ASM("asm/non_matchings/tracks/func_80025510.s")
 
@@ -2406,46 +2402,43 @@ GLOBAL_ASM("asm/non_matchings/tracks/func_8002FF6C.s")
 
 GLOBAL_ASM("asm/non_matchings/tracks/func_800304C8.s")
 
-#ifdef NON_EQUIVALENT
+void func_80030664(s32 fogIdx, s16 near, s16 far, u8 red, u8 green, u8 blue) {
+    s32 temp;
+    FogData *fogData;
+    
+    fogData = &gFogData[fogIdx];
+    
+    if (far < near) {
+        temp = near;
+        near = far;
+        far = temp;
+    }
+    
+    if (far >= 0x400) {
+        far = 0x3FF;
+    }
+    if (near >= far - 5) {
+        near = far - 5;
+    }
 
-// Should be functionally equivalent.
-void func_80030664(s32 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5) {
-    s32 max, min;
-
-    max = arg2;
-    min = arg1;
-    if (arg2 < arg1) {
-        max = arg1;
-        min = arg2;
-    }
-    if (max >= 0x400) {
-        max = 0x3FF;
-    }
-    if (min >= max - 5) {
-        min = max - 5;
-    }
-    gFogData[arg0].addFog.near = 0;
-    gFogData[arg0].addFog.far = 0;
-    gFogData[arg0].addFog.r = 0;
-    gFogData[arg0].addFog.g = 0;
-    gFogData[arg0].addFog.b = 0;
-    gFogData[arg0].fog.r = arg3 << 0x10;
-    gFogData[arg0].fog.g = arg4 << 0x10;
-    gFogData[arg0].fog.b = arg5 << 0x10;
-    gFogData[arg0].fog.near = min << 0x10;
-    gFogData[arg0].fog.far = max << 0x10;
-    gFogData[arg0].intendedFog.r = arg3;
-    gFogData[arg0].intendedFog.near = min;
-    gFogData[arg0].intendedFog.far = max;
-    gFogData[arg0].switchTimer = 0;
-    gFogData[arg0].fogChanger = 0;
-    gFogData[arg0].intendedFog.g = arg4;
-    gFogData[arg0].intendedFog.b = arg5;
+    fogData->addFog.near = 0;
+    fogData->addFog.far = 0;
+    fogData->addFog.r = 0;
+    fogData->addFog.g = 0;
+    fogData->addFog.b = 0;
+    fogData->fog.r = red << 16;
+    fogData->fog.g = green << 16;
+    fogData->fog.b = blue << 16;
+    fogData->fog.near = near << 16;
+    fogData->fog.far = far << 16;
+    fogData->intendedFog.r = red;
+    fogData->intendedFog.g = green;
+    fogData->intendedFog.b = blue;
+    fogData->intendedFog.near = near;
+    fogData->intendedFog.far = far;
+    fogData->switchTimer = 0;
+    fogData->fogChanger = NULL;
 }
-
-#else
-GLOBAL_ASM("asm/non_matchings/tracks/func_80030664.s")
-#endif
 
 /**
  * Writes the current fog settings to the arguments.
@@ -2608,40 +2601,38 @@ void obj_loop_fogchanger(Object *obj) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-void func_80030DE0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6) {
-    s32 max, min;
-    FogData *entry;
+void func_80030DE0(s32 fogIdx, s32 red, s32 green, s32 blue, s32 near, s32 far, s32 switchTimer) {
+    s32 temp;
+    FogData *fogData;
 
-    entry = &gFogData[arg0];
-    max = arg5;
-    min = arg4;
-    if (arg5 < arg4) {
-        max = arg4;
-        min = arg5;
+    fogData = &gFogData[fogIdx];
+    
+    if (far < near) {
+        temp = near;
+        near = far;
+        far = temp;
     }
-    if (max > 0x3FF) {
-        max = 0x3FF;
+    
+    if (far >= 0x400) {
+        far= 0x3FF;
     }
-    if (min >= max - 5) {
-        min = max - 5;
+    if (near >= far - 5) {
+        near = far - 5;
     }
-    entry->intendedFog.r = arg1;
-    entry->intendedFog.g = arg2;
-    entry->intendedFog.b = arg3;
-    entry->intendedFog.near = min;
-    entry->intendedFog.far = max;
-    entry->addFog.r = ((arg1 << 16) - entry->fog.r) / arg6;
-    entry->addFog.g = ((arg2 << 16) - entry->fog.g) / arg6;
-    entry->addFog.b = ((arg3 << 16) - entry->fog.b) / arg6;
-    entry->addFog.near = ((min << 16) - entry->fog.near) / arg6;
-    entry->addFog.far = ((max << 16) - entry->fog.far) / arg6;
-    entry->switchTimer = arg6;
-    entry->fogChanger = 0;
+    
+    fogData->intendedFog.r = red;
+    fogData->intendedFog.g = green;
+    fogData->intendedFog.b = blue;
+    fogData->intendedFog.near = near;
+    fogData->intendedFog.far = far;
+    fogData->addFog.r = ((red << 16) - fogData->fog.r) / switchTimer;
+    fogData->addFog.g = ((green << 16) - fogData->fog.g) / switchTimer;
+    fogData->addFog.b = ((blue << 16) - fogData->fog.b) / switchTimer;
+    fogData->addFog.near = ((near << 16) - fogData->fog.near) / switchTimer;
+    fogData->addFog.far = ((far << 16) - fogData->fog.far) / switchTimer;
+    fogData->switchTimer = switchTimer;
+    fogData->fogChanger = NULL;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/tracks/func_80030DE0.s")
-#endif
 
 /**
  * Updates the stored perspective of the camera, as well as the envmap values derived from it.

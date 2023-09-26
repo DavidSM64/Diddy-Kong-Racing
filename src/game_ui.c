@@ -360,7 +360,32 @@ void init_hud(UNUSED s32 viewportCount) {
 }
 
 GLOBAL_ASM("asm/non_matchings/game_ui/func_8009F034.s")
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A003C.s")
+
+/**
+ * Free's all elements in the hud, and the player hud, and flushes particles
+ */
+void free_hud(void) {
+    s32 i;
+    for (i = 0; i < gAssetHudElementIdsCount; i++) {
+        if (gAssetHudElements->entry[i] != NULL) {
+            if ((gAssetHudElementIds[i] & 0xC000) == 0xC000) {
+                free_texture(gAssetHudElements->entry[i]);
+            } else if (gAssetHudElementIds[i] & 0x8000) {
+                free_sprite((Sprite *) gAssetHudElements->entry[i]);
+            } else if (gAssetHudElementIds[i] & 0x4000) {
+                gParticlePtrList_addObject((Object *) gAssetHudElements->entry[i]);
+            } else {
+                func_8005FF40((ObjectModel **) gAssetHudElements->entry[i]);
+            }
+            gAssetHudElements->entry[i] = 0;
+        }
+    }
+    free_from_memory_pool(*gPlayerHud);
+    free_from_memory_pool(gAssetHudElementIds);
+    gAssetHudElementIdsCount = 0;
+    free_from_memory_pool(gAssetHudElements);
+    gParticlePtrList_flush();
+}
 
 u8 func_800A0190(void) {
     return D_80126D34;
@@ -1102,7 +1127,50 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A277C.s")
 #endif
 
+#ifdef NON_EQUIVALENT
+void func_800A36CC(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4) {
+    s32 var_a3;
+    s32 i;
+    u8 *temp_v0_2;
+    Object_68 **unk68;
+    Object *hud20;
+
+    if (is_in_time_trial()) {
+        hud20 = gAssetHudElements->entry[20];
+        if (hud20 != NULL) {
+            unk68 = hud20->unk68;
+            var_a3 = unk68[0]->unk28;
+            
+            for (i = 0; i < var_a3; i++) {
+                temp_v0_2 = unk68[0]->unk38[i];
+                if (D_80126D66 == *temp_v0_2) {
+                    *temp_v0_2 = arg0;
+                    if (arg0 == 4) {
+                        unk68[0]->unk38[i]->unk8 |= (0x800000 | 0x10000);
+                        unk68[0]->unk50 = 1;
+                    } else {
+                        unk68[0]->unk38[i]->unk8 &= ~(0x800000 | 0x10000);
+                        unk68[0]->unk50 = 0;
+                    }
+                    var_a3 = unk68[0]->unk28;
+                }
+                if (D_80126D65 == *temp_v0_2) {
+                    *temp_v0_2 = arg1;
+                    var_a3 = unk68[0]->unk28;
+                }
+                
+            }
+            D_80126D66 = arg0;
+            D_80126D65 = arg1;
+            gStopwatchFaceID = arg2;
+            D_80126D69 = arg3;
+            D_80126D68 = arg4;
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A36CC.s")
+#endif
 
 void func_800A3870(void) {
     gCurrentHud->unk4C4 = 0x6490;

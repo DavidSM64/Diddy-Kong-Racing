@@ -7,6 +7,7 @@
 #include "types.h"
 #include "macros.h"
 #include "objects.h"
+#include "game.h"
 
 /************ .data ************/
 
@@ -45,8 +46,6 @@ void free_lights(void) {
     gMaxLights = 0;
 }
 
-// Regalloc issues
-#ifdef NON_MATCHING
 /**
  * Official Name: setupLights
  */
@@ -60,18 +59,91 @@ void setup_lights(s32 count) {
     temp_v0 = (ObjectLight **) allocate_from_main_pool_safe(gMaxLights * (sizeof(s32 *) + sizeof(ObjectLight) + sizeof(unk800DC960) + sizeof(Vec3f)), COLOUR_TAG_MAGENTA);
     newCount = gMaxLights;
     gActiveLights = temp_v0;
-    D_800DC954 = (ObjectLight *) &temp_v0[newCount];
-    D_800DC960 = (unk800DC960 *) &D_800DC954[newCount];
-    D_800DC964 = (Vec3f *) &D_800DC960[newCount];
+    D_800DC954 = newCount + (0, temp_v0); //fakematch
+    D_800DC960 = newCount + (0, D_800DC954); //fakematch
+    D_800DC964 = newCount + (0, D_800DC960); //fakematch
     for (i = 0; i < gMaxLights; i++) {
         gActiveLights[i] = &D_800DC954[i];
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/lights/setup_lights.s")
-#endif
 
+#ifdef NON_EQUIVALENT
+ObjectLight *func_80031CAC(Object *light, LevelObjectEntry_RgbaLight *lightEntry) {
+    s32 i;
+    ObjectLight *newLight;
+    LevelHeader_70 *test;
+    s32 temp_a0;
+
+    newLight = NULL;
+    if (gNumActiveLights < gMaxLights) {
+        newLight = gActiveLights[gNumActiveLights++];
+        newLight->unk0 = ((s32) (lightEntry->unk8 & 0xF0) >> 4);
+        newLight->type = lightEntry->unk8 & 0xF;
+        newLight->unk1 = ((s32) (lightEntry->unk9 & 0xE0) >> 5);
+        newLight->unk2 = lightEntry->unk9 & 0x1F;
+        newLight->enabled = TRUE;
+        newLight->owner = NULL;
+        newLight->homeX = 0;
+        newLight->homeY = 0;
+        newLight->homeZ = 0;
+        if (light != NULL) {
+            newLight->x = light->segment.trans.x_position;
+            newLight->y = light->segment.trans.y_position;
+            newLight->z = light->segment.trans.z_position;
+        } else {
+            newLight->x = (f32) lightEntry->common.x;
+            newLight->y = (f32) lightEntry->common.y;
+            newLight->z = (f32) lightEntry->common.z;
+        }
+        newLight->unk1C = lightEntry->unkA << 16;
+        newLight->unk2C = 0;
+        newLight->unk3C = 0;
+        newLight->unk20 = lightEntry->unkB << 16;
+        newLight->unk30 = 0;
+        newLight->unk3E = 0;
+        newLight->unk24 = lightEntry->unkC << 16;
+        newLight->unk34 = 0;
+        newLight->unk40 = 0;
+        newLight->unk28 = lightEntry->unkD << 16;
+        newLight->unk38 = 0;
+        newLight->unk42 = 0;
+        newLight->unk44 = NULL;
+        if (lightEntry->unk1C < 7) {
+            test = (LevelHeader_70 *) get_current_level_header()->unk74[lightEntry->unk1C];
+            if (((s32) test) != -1) {
+                newLight->unk44 = &test->unk4;
+                newLight->unk44 = &test->unk0;
+                newLight->unk4A = 0;
+                if (lightEntry && lightEntry && lightEntry) {}
+                newLight->unk4C = 0;
+                newLight->unk4E = 0;
+                newLight->unk48 = (u16) &test->red2;
+                temp_a0 = (u16) &test->red2;
+                for (i = 0; i < temp_a0; ) {
+                    newLight->unk4E += test->unk18[i++].unk0;
+                }
+            }
+        }
+        newLight->radius = lightEntry->unkE;
+        newLight->unk60  = lightEntry->unk10;
+        newLight->unk64  = lightEntry->unk12;
+        newLight->radiusSquare = newLight->radius * newLight->radius;
+        newLight->radiusMag = 1 / newLight->radius;
+        newLight->unk70 = lightEntry->unk14;
+        newLight->unk74 = lightEntry->unk18;
+        newLight->unk78 = (lightEntry->unk18) ? 0xFFFF : 0;
+        newLight->unk72 = lightEntry->unk16;
+        newLight->unk76 = lightEntry->unk1A;
+        newLight->unk7A = (lightEntry->unk1A) ? 0xFFFF : 0;
+        newLight->unk7A = 0;
+        newLight->unk5 = 1;
+        func_80032424(newLight, 0);
+    }
+    return newLight;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/lights/func_80031CAC.s")
+#endif
 
 /**
  * Official Name: addObjectLight
@@ -387,43 +459,45 @@ void func_80032C7C(Object *object) {
 GLOBAL_ASM("asm/non_matchings/lights/func_80032C7C.s")
 #endif
 
-#ifdef NON_EQUIVALENT
-// Has regalloc issues
 void func_800337E4(void) {
+    s32 temp_a2;
+    s32 index;
+    s32 temp_a3;
+    s32 temp_lo;
     s32 i;
-    s32 temp;
+    unk800DC960 *temp_a1;
 
     for (i = 1; i < D_800DC968; i++) {
-        if (D_800DC960[i].unk10 >= 2) {
-            if (D_800DC960[0].unk10 >= D_800DC960[i].unk10) {
-                temp = (D_800DC960[i].unk10 << 0x10);
-                temp /= D_800DC960[0].unk10;
-                D_800DC960[0].unk4 = D_800DC960[0].unk4 + ((D_800DC960[i].unk4 * temp) >> 0x10);
-                D_800DC960[0].unk8 = D_800DC960[0].unk8 + ((D_800DC960[i].unk8 * temp) >> 0x10);
-                D_800DC960[0].unkC = D_800DC960[0].unkC + ((D_800DC960[i].unkC * temp) >> 0x10);
+        index = i; // Needed?
+        if ((&D_800DC960[index])->unk10){} // Fakematch
+        temp_a1 = (0, D_800DC960) + index;
+        temp_a2 = temp_a1->unk10;
+        if (temp_a2 >= 2) {
+            temp_a3 = D_800DC960->unk10;
+            if (temp_a3 >= temp_a2) {
+                temp_lo = ((s32) (temp_a2 << 16)) / temp_a3;
+                D_800DC960->unk4 = D_800DC960->unk4 + (((s32) (temp_a1->unk4 * temp_lo)) >> 16);
+                D_800DC960->unk8 += ((s32) ((&D_800DC960[index])->unk8 * temp_lo)) >> 16;
+                D_800DC960->unkC += ((s32) ((&D_800DC960[index])->unkC * temp_lo)) >> 16;
             } else {
-                temp = (D_800DC960[0].unk10 << 0x10);
-                temp /= D_800DC960[i].unk10;
-                D_800DC960[0].unk4 = D_800DC960[i].unk4 + ((D_800DC960[0].unk4 * temp) >> 0x10);
-                D_800DC960[0].unk8 = D_800DC960[i].unk8 + ((D_800DC960[0].unk8 * temp) >> 0x10);
-                D_800DC960[0].unkC = D_800DC960[i].unkC + ((D_800DC960[0].unkC * temp) >> 0x10);
-                D_800DC960[0].unk10 = D_800DC960[i].unk10;
+                temp_lo = ((s32) (temp_a3 << 16)) / temp_a2;
+                D_800DC960->unk4 = temp_a1->unk4 + (((s32) (D_800DC960->unk4 * temp_lo)) >> 16);
+                D_800DC960->unk8 = (&D_800DC960[index])->unk8 + (((s32) ((D_800DC960->unk8 * temp_lo) ^ 0)) >> 16);
+                D_800DC960->unkC = (&D_800DC960[index])->unkC + (((s32) (D_800DC960->unkC * temp_lo)) >> 16);
+                D_800DC960->unk10 = (&D_800DC960[index])->unk10;
             }
-            if (D_800DC960[0].unk4 >= 0x100) {
-                D_800DC960[0].unk4 = 0xFF;
+            if (D_800DC960->unk4 >= 256) {
+                D_800DC960->unk4 = 255;
             }
-            if (D_800DC960[0].unk8 >= 0x100) {
-                D_800DC960[0].unk8 = 0xFF;
+            if (D_800DC960->unk8 >= 256) {
+             D_800DC960->unk8 = 255;
             }
-            if (D_800DC960[0].unkC >= 0x100) {
-                D_800DC960[0].unkC = 0xFF;
+            if (D_800DC960->unkC >= 256) {
+                D_800DC960->unkC = 255;
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/lights/func_800337E4.s")
-#endif
 
 /**
  * Official Name: lightDistanceCalc

@@ -124,20 +124,16 @@ void func_8000410C(ALSoundState *state) {
     _removeEvents(&gAlSndPlayerPtr->evtq, state, 0xFFFF);
 }
 
-#if 0
-void func_8000418C(void *arg0) {
-    f32 sp28;
-    void *sp24;
-    s16 sp20;
-    f32 sp1C;
-    f32 temp_f6;
-
-    temp_f6 = alCents2Ratio((s32) arg0->unk8->unk4->unk5) * arg0->unk2C;
-    sp20 = 16;
-    sp1C = temp_f6;
-    sp24 = arg0;
-    sp28 = sp1C;
-    alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent *) &sp20, 33333);
+#ifdef NON_EQUIVALENT
+//There's some weird shenanigans with these structs that needs to be figured out.
+void func_8000418C(ALVoiceState *voiceState) {
+    ALSndpEvent evt;
+    s32 pad;
+    evt.pitch.pitch = alCents2Ratio(((ALSound *)voiceState->voice.node.prev)->keyMap->detune) * voiceState->vibrato;
+    evt.pitch.type = AL_SEQP_STOP_EVT; 
+    evt.pitch.state = voiceState;
+    evt.msg.msg.loop.count = evt.msg.msg.tempo.ticks;
+    alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &evt.msg, 33333);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/audiosfx/func_8000418C.s")
