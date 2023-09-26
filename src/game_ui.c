@@ -1127,7 +1127,6 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A277C.s")
 #endif
 
-#ifdef NON_EQUIVALENT
 void func_800A36CC(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4) {
     s32 var_a3;
     s32 i;
@@ -1152,12 +1151,10 @@ void func_800A36CC(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4) {
                         unk68[0]->unk50 = 0;
                     }
                     var_a3 = unk68[0]->unk28;
-                }
-                if (D_80126D65 == unk68[0]->unk38[i].unk0[0]) {
+                } else if (D_80126D65 == unk68[0]->unk38[i].unk0[0]) {
                     unk68[0]->unk38[i].unk0[0] = arg1;
                     var_a3 = unk68[0]->unk28;
-                }
-                
+                }                
             }
             D_80126D66 = arg0;
             D_80126D65 = arg1;
@@ -1167,9 +1164,6 @@ void func_800A36CC(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4) {
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A36CC.s")
-#endif
 
 void func_800A3870(void) {
     gCurrentHud->unk4C4 = 0x6490;
