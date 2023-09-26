@@ -597,8 +597,6 @@ extern s16 D_800E1024[14];
 extern s32 D_800E1040;
 extern s16 D_800E1044;
 
-extern MenuElement D_800E1048[9][3];
-
 extern s16 D_800E13A8[138];
 
 extern s16* D_800E14BC[32];
@@ -881,6 +879,8 @@ void func_80083098(f32);
 void func_8008F00C(s32);
 void render_track_selection_viewport_border(ObjectModel *objMdl);
 void render_adventure_track_setup(UNUSED s32 updateRate, s32 arg1, s32 arg2);
+void menu_trophy_race_round_init(void);
+void func_8008B358(void);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -901,7 +901,6 @@ void render_track_select_setup_ui(s32 updateRate);
 void func_80092188(s32 updateRate);
 void func_8008E4EC(void);
 void trim_filename_string(char *input, char *output);
-void menu_trophy_race_round_init(void);
 void menu_ghost_data_init(void);
 void update_controller_sticks(void);
 s32 tt_menu_loop(void);
@@ -920,7 +919,6 @@ void func_8007FFEC(s32 arg0);
 void func_800871D8(s32 arg0);
 SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1);
 void func_8009C6D4(s32 arg0);
-void func_8008B358(void);
 void func_8008B4C8(void);
 void func_8008B758(s8 *activePlayers);
 void set_D_800DD430(s8 arg0);

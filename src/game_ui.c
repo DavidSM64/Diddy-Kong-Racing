@@ -1138,24 +1138,23 @@ void func_800A36CC(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4) {
     if (is_in_time_trial()) {
         hud20 = gAssetHudElements->entry[20];
         if (hud20 != NULL) {
-            unk68 = hud20->unk68;
+            unk68 = hud20->unk68[0];
             var_a3 = unk68[0]->unk28;
             
             for (i = 0; i < var_a3; i++) {
-                temp_v0_2 = unk68[0]->unk38[i];
-                if (D_80126D66 == *temp_v0_2) {
-                    *temp_v0_2 = arg0;
+                if (D_80126D66 == unk68[0]->unk38[i].unk0[0]) {
+                    unk68[0]->unk38[i].unk0[0] = arg0;
                     if (arg0 == 4) {
-                        unk68[0]->unk38[i]->unk8 |= (0x800000 | 0x10000);
+                        unk68[0]->unk38[i].unk8 |= (0x800000 | 0x10000);
                         unk68[0]->unk50 = 1;
                     } else {
-                        unk68[0]->unk38[i]->unk8 &= ~(0x800000 | 0x10000);
+                        unk68[0]->unk38[i].unk8 &= ~(0x800000 | 0x10000);
                         unk68[0]->unk50 = 0;
                     }
                     var_a3 = unk68[0]->unk28;
                 }
-                if (D_80126D65 == *temp_v0_2) {
-                    *temp_v0_2 = arg1;
+                if (D_80126D65 == unk68[0]->unk38[i].unk0[0]) {
+                    unk68[0]->unk38[i].unk0[0] = arg1;
                     var_a3 = unk68[0]->unk28;
                 }
                 
