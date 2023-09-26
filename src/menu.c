@@ -70,10 +70,8 @@ s32 D_801263F8[8];
 u8 D_80126418[8];
 u8 D_80126420[8];
 u8 D_80126428[8];
-s8 D_80126430;
-s8 D_80126431;
-s32 D_80126434;
-s32 D_80126438[4];
+u8 D_80126430[8]; //Contains the order of racer indices that tell you what place they are in.
+s8 *D_80126438[4];
 
 //Eeeprom save data bits stored at address 0xF
 //bit 0      = Adventure Two is Unlocked
