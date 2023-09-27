@@ -322,7 +322,7 @@ typedef struct Settings {
   /* 0x004C */ Settings4C *unk4C;
   /* 0x0050 */ u32 filename;
   /* 0x0054 */ Racer racers[8];
-  /* 0x0114 */ u8 timeTrialRacer;
+  /* 0x0114 */ s8 timeTrialRacer;
   /* 0x0115 */ char unk115[2];
   /* 0x0117 */ u8 display_times;
 } Settings;
