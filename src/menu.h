@@ -595,9 +595,6 @@ extern s32 gTrophyRacePointsArray[8];
 
 extern s16 D_800E1024[14];
 
-extern s32 D_800E1040;
-extern s16 D_800E1044;
-
 extern s16 D_800E13A8[138];
 
 extern s16* D_800E14BC[32];
@@ -885,6 +882,7 @@ void func_8008B358(void);
 s32 menu_save_options_loop(s32 updateRate);
 s32 menu_23_loop(s32 updateRate);
 s32 menu_magic_codes_list_loop(s32 updateRate);
+void menu_trophy_race_rankings_init(void);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -908,7 +906,6 @@ void menu_ghost_data_init(void);
 void update_controller_sticks(void);
 s32 tt_menu_loop(void);
 void menu_track_select_init(void);
-void menu_trophy_race_rankings_init(void);
 void func_8009E3D0(void);
 s32 menu_title_screen_loop(s32 updateRate);
 s32 menu_magic_codes_loop(s32 updateRate);
@@ -945,6 +942,7 @@ s32 func_800862C4(void);
 s32 func_80086AFC(void);
 s32 func_80087734(s32, s32);
 void func_80085B9C(UNUSED s32 updateRate);
+void func_80098774(s32);
 
 typedef enum MenuTextures {
 /* 0x00 */ TEXTURE_UNK_00,
