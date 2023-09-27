@@ -7410,36 +7410,35 @@ void func_80094A5C(void) {
     if (D_80126C54.unk0_s32 >= 0) {
         if (D_80126C54.unk0_s32 < 10) {
             D_80126C54.unk0_s32++;
-            return;
-        }
-        temp_a0 = D_800E0A10[D_80126C54.unk0_s32];
-        if (temp_a0 == -1) {
-            allocate_menu_images(D_800E0A40);
-            assign_racer_portrait_textures();
-            settings = get_settings();
-            D_800E0BEC->unk14_a.element = D_800E0AF0[settings->racers[settings->timeTrialRacer].character];
-            if (!is_time_trial_enabled()) {
-                for(i = 0; i < 8; i++) {
-                    for(j = 0; j < 8; j++) {
-                        if (i == settings->racers[j].starting_position) {
-                            D_800E0CEC[7 - i].unk14_a.element = (DrawTexture* ) D_800E0AF0[settings->racers[j].character];
+        } else {
+            temp_a0 = D_800E0A10[D_80126C54.unk0_s32];
+            if (temp_a0 == -1) {
+                allocate_menu_images(D_800E0A40);
+                assign_racer_portrait_textures();
+                settings = get_settings();
+                D_800E0BEC->unk14_a.element = D_800E0AF0[settings->racers[settings->timeTrialRacer].character];
+                if (!is_time_trial_enabled()) {
+                    for (i = 0; i < 8; i++) {
+                        for (j = 0; j < 8; j++) {
+                            if (i == settings->racers[j].starting_position) {
+                                D_800E0CEC[7 - i].unk14_a.element = D_800E0AF0[settings->racers[j].character];
+                            }
                         }
                     }
-                }
-                if (is_in_two_player_adventure()) {
-                    for (i = 0; i < 6; i++)
-                    {
-                        D_800E0CEC[i+1].unk14_a.element = D_800E0CEC[i + 2].unk14_a.element;
+                    if (is_in_two_player_adventure()) {
+                        for (i = 0; i < 6; i++) {
+                            D_800E0CEC[i + 1].unk14_a.element = D_800E0CEC[i + 2].unk14_a.element;
+                        }
+                        D_800E0CEC[7].unk14_a.element = &D_80126850;
+                        D_800E0CEC[0].unk14_a.element = &D_80126850;
                     }
-                    D_800E0CEC[7].unk14_a.element = &D_80126850;
-                    D_800E0CEC[0].unk14_a.element = &D_80126850;
                 }
+                D_80126C54.unk0_s32 = -1;
+            } else {
+                func_8009C6D4(temp_a0);
+                D_80126C54.unk0_s32++;
             }
-            D_80126C54.unk0_s32 = -1;
-            return;
         }
-        func_8009C6D4(temp_a0);
-        D_80126C54.unk0_s32 += 1;
     }
 }
 
