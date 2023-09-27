@@ -969,7 +969,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
             }
             func_80061D30(ttSWBodyObject);
         }
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC** ) &gCurrentHud->unk21C[0x124]);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC** ) &gCurrentHud->unk340);
         
         for(i = 0; curRacer->lap >= i && i < 5; i++) { 
             stopwatchTimer += curRacer->lap_times[i];
@@ -983,12 +983,12 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
         }
         gCurrentHud->unk444 = ((stopwatchTimer * 0x444) + 0x7FF8);
         if (func_8000E0B0() <= 0) {
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk21C[0x224]);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk440);
         }
         gCurrentHud->unk444 = ((((stopwatchTimer / 60) + 30) % 60) * 0x444);
         gCurrentHud->unk450 = gCurrentHud->unk350 + 28.0f;
         if (func_8000E0B0() <= 0) {
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk21C[0x224]);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk440);
         }
         obj68->unk20 = 0;
         func_80068508(1);
@@ -1004,8 +1004,8 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
                 spB8 += 12;
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                 gCurrentHud->unk338 = i + 1;
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk21C[0x104]);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk21C[0xE4]);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk320);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk300);
                 gCurrentHud->unk330 += 12.0f;
                 gCurrentHud->unk310 += 12.0f;
             }

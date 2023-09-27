@@ -172,9 +172,13 @@ typedef struct unk80126CDC {
     u8 unk254[0x98];
     f32 unk2EC;
     f32 unk2F0;
-    u8 unk2F4[0x1C];
+    u8 unk2F4[0xC];
+    s16 unk300;
+    u8 unk302[0xC];
     f32 unk310;
-    u8 unk314[0x1C];
+    u8 unk314[0xC];
+    s16 unk320;
+    u8 pad322[0xE];
     f32 unk330;
     s32 unk334;
     s16 unk338;
