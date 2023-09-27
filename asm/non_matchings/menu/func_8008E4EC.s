@@ -1,7 +1,7 @@
 glabel func_8008E4EC
 /* 08F0EC 8008E4EC 27BDFF88 */  addiu $sp, $sp, -0x78
-/* 08F0F0 8008E4F0 3C0E8012 */  lui   $t6, %hi(gIgnorePlayerInput) # $t6, 0x8012
-/* 08F0F4 8008E4F4 8DCE63C4 */  lw    $t6, %lo(gIgnorePlayerInput)($t6)
+/* 08F0F0 8008E4F0 3C0E8012 */  lui   $t6, %hi(gIgnorePlayerInputTime) # $t6, 0x8012
+/* 08F0F4 8008E4F4 8DCE63C4 */  lw    $t6, %lo(gIgnorePlayerInputTime)($t6)
 /* 08F0F8 8008E4F8 AFBF003C */  sw    $ra, 0x3c($sp)
 /* 08F0FC 8008E4FC AFBE0038 */  sw    $fp, 0x38($sp)
 /* 08F100 8008E500 AFB70034 */  sw    $s7, 0x34($sp)
