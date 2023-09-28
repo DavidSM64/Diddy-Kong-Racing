@@ -656,8 +656,6 @@ extern char gRareCopyrightString[24];
 
 extern char *D_800E1E10;
 
-extern s32 D_800E1E14;
-extern s32 D_800E1E18;
 extern s32 D_800E1E1C;
 
 extern s8 D_800E1E20[8];
@@ -720,6 +718,8 @@ extern TrackRenderDetails gTrackSelectRenderDetails[9];
 extern s32 D_801269F0;
 extern s32 gSelectedTrackX;
 extern s32 gSelectedTrackY;
+
+extern u8 *__ROM_END;
 
 s32 get_random_number_from_range(s32, s32); // No file to pull from yet.
 
@@ -883,6 +883,8 @@ s32 menu_save_options_loop(s32 updateRate);
 s32 menu_23_loop(s32 updateRate);
 s32 menu_magic_codes_list_loop(s32 updateRate);
 void menu_trophy_race_rankings_init(void);
+void calculate_and_display_rom_checksum(void);
+s32 menu_trophy_race_rankings_loop(s32 updateRate);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -891,7 +893,6 @@ s32 menu_audio_options_loop(s32 arg0);
 s32 menu_options_loop(s32 updateRate);
 s32 menu_controller_pak_loop(s32 updateRate);
 void render_magic_codes_list_menu_text(s32 arg0);
-void calculate_and_display_rom_checksum(void);
 void randomise_ai_racer_slots(s32 arg0);
 void menu_game_select_init(void);
 void render_file_select_menu(s32 arg0);
@@ -910,7 +911,6 @@ void func_8009E3D0(void);
 s32 menu_title_screen_loop(s32 updateRate);
 s32 menu_magic_codes_loop(s32 updateRate);
 s32 menu_results_loop(s32 updateRate);
-s32 menu_trophy_race_rankings_loop(s32 updateRate);
 s32 menu_credits_loop(s32 updateRate);
 void func_8009CA60(s32 imageID);
 void func_8007FFEC(s32 arg0);

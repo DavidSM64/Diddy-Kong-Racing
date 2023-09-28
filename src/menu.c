@@ -71,7 +71,7 @@ u8 D_80126418[8];
 u8 D_80126420[8];
 u8 D_80126428[8];
 u8 D_80126430[8]; //Contains the order of racer indices that tell you what place they are in.
-s8 *D_80126438[4];
+s8 D_80126438[16];
 
 //Eeeprom save data bits stored at address 0xF
 //bit 0      = Adventure Two is Unlocked
@@ -1500,25 +1500,6 @@ FadeTransition D_800E1E08 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FAD
 
 char *D_800E1E10 = " (ADV.";
 
-s32 D_800E1E14 = 0;
-s32 D_800E1E18 = 0;
-s32 D_800E1E1C = 0;
-
-s8 D_800E1E20[8] = {
-    0, -1, 1, 0, 0, 1, -1, 0
-};
-
-s8 D_800E1E28 = 0;
-
-// TT Game Status textures, think these are potentially multi-part images.
-s16 D_800E1E2C[10] = {
-    0x4C, 0x4D, 0x4E, 0x4F, 0x5B, 0x5C, 0x00, 0x42, -1, 0
-};
-
-// TT game status textures. And these maybe just standalone ones.
-s16 D_800E1E40[10] = {
-    0x0D, 0x0E, 0x0F, 0x10, 0x08, 0x09, 0x00, 0x0A, -1, 0
-};
 
 /*******************************/
 
@@ -1528,7 +1509,7 @@ const char D_800E8208[] = "OK?";
 const char D_800E820C[] = "~";
 const char D_800E8210[] = "DEL";
 const char D_800E8214[] = "OK";
-const char D_800E8218[] = "ROM checksum %08X,%d\n"; // Used with the "DODGYROMMER" cheat.
+const char gROMChecksum[] = "ROM checksum %08X,%d\n"; // Used with the "DODGYROMMER" cheat.
 const char D_800E8230[] = "OK?";
 const char D_800E8234[] = "OK?";
 const char D_800E8238[] = "OK?";
@@ -2912,14 +2893,16 @@ void render_options_menu_ui(UNUSED s32 updateRate) {
     }
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 s32 menu_options_loop(s32 updateRate) {
     s32 buttonsPressed;
+    s32 i;
+    UNUSED s32 pad0;
     s32 analogX;
     s32 analogY;
+    UNUSED s32 pad1[4];
 
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
-
     if (gMenuDelay != 0) {
         if (gMenuDelay > 0) {
             gMenuDelay += updateRate;
@@ -2931,20 +2914,18 @@ s32 menu_options_loop(s32 updateRate) {
     if (gMenuDelay >= -19 && gMenuDelay < 35) {
         render_options_menu_ui(updateRate);
     }
-
     buttonsPressed = 0;
     analogX = 0;
     analogY = 0;
     if (gIgnorePlayerInputTime == 0 && gMenuDelay == 0) {
-        // Get input from all 4 controllers.
-        s32 i;
-        for (i = 0; i < 4; i++) {
-            analogY += gControllersYAxisDirection[i];             // Y axis (-1 = down, 1 = up) for controller
-            analogX += gControllersXAxisDirection[i];             // X axis (-1 = left, 1 = right) for controller
-            buttonsPressed |= get_buttons_pressed_from_player(i); // Button presses for controller
+        s8* xAxisPtr;
+        s8* yAxisPtr; 
+        for (i = 0, xAxisPtr = gControllersXAxisDirection, yAxisPtr = gControllersYAxisDirection; i < 4; i++) {
+            buttonsPressed |= get_buttons_pressed_from_player(i);
+            analogX += *(xAxisPtr++);
+            analogY += *(yAxisPtr++);
         }
     }
-
     if ((buttonsPressed & B_BUTTON) || ((buttonsPressed & (A_BUTTON | START_BUTTON)) && D_800DF460 == 5)) {
         // Leave the option menu
         set_music_fade_timer(-128);
@@ -2955,48 +2936,45 @@ s32 menu_options_loop(s32 updateRate) {
         // Go to a sub-menu
         gMenuDelay = 31;
         play_sound_global(SOUND_SELECT2, NULL);
-    } else if (D_800DF460 == 0 && analogX != 0) {
-        // Change language
-        s32 currentLang = get_language();
-        if ((currentLang >> 31) == 0 && currentLang == LANGUAGE_ENGLISH) {
+        
+    } else if ((D_800DF460 == 0) && (analogX != 0)) {
+        s32 curLanguage = get_language();
+        if (!(curLanguage >> 31) && (curLanguage == LANGUAGE_ENGLISH)) {
             set_language(LANGUAGE_FRENCH);
         } else {
             set_language(LANGUAGE_ENGLISH);
         }
         play_sound_global(SOUND_MENU_PICK2, NULL);
-    } else if (D_800DF460 == 1 && analogX != 0) {
-        // Enable/Disable subtitles.
+    } else if ((D_800DF460 == 1) && (analogX != 0)) {
         if (sEepromSettings & 0x2000000) {
             play_sound_global(SOUND_MENU_PICK2, NULL);
-            unset_eeprom_settings_value(0);
+            unset_eeprom_settings_value(0x02000000);
             set_subtitles(0);
-            gOptionMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_SUBTITLESOFF];
+           gOptionMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_SUBTITLESOFF];
         } else {
             play_sound_global(SOUND_MENU_PICK2, NULL);
-            set_eeprom_settings_value(0);
+            set_eeprom_settings_value(0x02000000);
             set_subtitles(1);
             gOptionMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_SUBTITLESON];
         }
     } else {
-        // Move up & down the list
+        s32 prev_D_800DF460 = D_800DF460;
         if (analogY < 0) {
-            // Scroll down the list.
             D_800DF460++;
             if (D_800DF460 >= 6) {
                 D_800DF460 = 5;
             }
-            play_sound_global(SOUND_MENU_PICK2, NULL);
         }
         if (analogY > 0) {
-            // Scroll up the list.
             D_800DF460--;
             if (D_800DF460 < 0) {
                 D_800DF460 = 0;
             }
+        }
+        if (prev_D_800DF460 != D_800DF460) {
             play_sound_global(SOUND_MENU_PICK2, NULL);
         }
     }
-
     if (gMenuDelay >= 31) {
         // Change screen to a sub-menu
         if (D_800DF460 == 2) {
@@ -4602,46 +4580,66 @@ void func_8008AD1C(void) {
     unload_font(ASSET_FONTS_BIGFONT);
 }
 
-#ifdef NON_EQUIVALENT
-
-extern u8 *__ROM_END;
-
 void calculate_and_display_rom_checksum(void) {
-    s32 romOffset, numBytes, numBytesLeft;
+    static u32 cksum=0;
+    static u32 calculated=0;
+    s32 blockOffs;
+    s32 size;
+    s32 numBytes, numLeft;
     s32 i;
     u8 *tempBuffer;
-    if (!D_800E1E18) {
-        numBytesLeft = &__ROM_END;
-        numBytesLeft -= 0x1000;
-        romOffset = 0x1000;
-        tempBuffer = allocate_from_main_pool_safe(0x5000, COLOUR_TAG_BLACK);
 
-        while (numBytesLeft > 0) {
-            numBytes = numBytesLeft;
-            if (numBytesLeft >= 0x5001) {
-                numBytes = 0x5000;
+    if (!calculated) {
+        numBytes = 0x1000;
+        size = 0x5000;
+        blockOffs = 0x1000;
+        numLeft = (s32) &__ROM_END;
+        numLeft -= 0x1000;
+        tempBuffer = allocate_from_main_pool_safe(size, COLOUR_TAG_BLACK);
+
+        while (numLeft != 0) {
+            numBytes = numLeft;
+            if (numBytes > size) {
+                numBytes = size;
             }
-            dmacopy(romOffset, tempBuffer, numBytes);
-            numBytesLeft -= numBytes;
+            dmacopy(blockOffs, (u32) tempBuffer, numBytes);
+            numLeft -= numBytes;
 
             for (i = 0; i < numBytes; i++) {
-                D_800E1E14 += tempBuffer[i];
+                cksum += tempBuffer[i];
             }
-
-            romOffset += numBytes;
+            blockOffs += numBytes;
         }
 
         free_from_memory_pool(tempBuffer);
-        D_800E1E18 = TRUE;
+        calculated = TRUE;
     }
 
     set_render_printf_background_colour(0, 0, 0, 128);
     set_render_printf_position(32, 136);
-    render_printf(D_800E8218, D_800E1E14, &__ROM_END); // D_800E8218 = "ROM checksum %08X,%d\n"
+    numLeft = (s32) &__ROM_END;
+    render_printf(gROMChecksum, cksum, numLeft); // gROMChecksum = "ROM checksum %08X,%d\n"
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/calculate_and_display_rom_checksum.s")
-#endif
+
+//These vars have to be defined after calculate_and_display_rom_checksum since that function has a static var in it.
+
+s32 D_800E1E1C = 0;
+
+s8 D_800E1E20[8] = {
+    0, -1, 1, 0, 0, 1, -1, 0
+};
+
+s8 D_800E1E28 = 0;
+
+// TT Game Status textures, think these are potentially multi-part images.
+s16 D_800E1E2C[10] = {
+    0x4C, 0x4D, 0x4E, 0x4F, 0x5B, 0x5C, 0x00, 0x42, -1, 0
+};
+
+// TT game status textures. And these maybe just standalone ones.
+s16 D_800E1E40[10] = {
+    0x0D, 0x0E, 0x0F, 0x10, 0x08, 0x09, 0x00, 0x0A, -1, 0
+};
 
 void func_8008AEB4(s32 arg0, s32 *arg1) {
     switch (arg0) {
@@ -8163,7 +8161,152 @@ void func_80098EBC(s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/menu_trophy_race_rankings_loop.s")
+s32 menu_trophy_race_rankings_loop(s32 updateRate) {
+    s32 i;
+    s32 temp6;
+    s32 buttonsPressed;
+    s32 temp1;
+    s32 ret;
+    s8 *miscAsset31;
+    s32 sp34;
+    s16 temp5;
+    s16 temp7;
+    Settings *settings;
+    s32 temp0;
+
+    ret = 0;
+    settings = get_settings();
+    if ((gMenuDelay > -20) && (gMenuDelay < 20)) {
+        func_80098EBC(updateRate);
+    }
+    update_controller_sticks();
+    switch (D_801263E0) { // D_801263E0 = current Trophy Race Rankings state?
+    case 0:
+        if (func_80081F4C(updateRate) != 0) {
+            D_801263E0 = 1;
+            func_80098774(1);
+            func_80081E54(*D_800E1048, 0.5f, 0.0f, 0.0f, 0, 0);
+        }
+        break;
+    case 1:
+        if (func_80081F4C(updateRate) != 0) {
+            D_801263E0 = 2;
+            draw_menu_elements(1, *D_800E1048, 1.0f);
+        }
+        break;
+    case 2:
+        gOpacityDecayTimer += updateRate;
+        if (gOpacityDecayTimer > 10) {
+            gOpacityDecayTimer -= 10;
+            temp5 = 0;
+            for(i = 0; i < D_800E0FE4; i++) {
+                if (D_801263F8[i] > 0) {
+                    D_801263F8[i]--;
+                    temp5 = 1;
+                    settings->racers[i].trophy_points++;
+                }
+            }
+            if (temp5) {
+                play_sound_global(0x5EU, NULL);
+            }
+        }
+
+        buttonsPressed = 0;
+        temp1 = gMenuOption;
+        for (i = 0; i < gNumberOfActivePlayers; i++) {
+            buttonsPressed |= get_buttons_pressed_from_player(i);
+            if (gControllersYAxisDirection[i] < 0) {
+                gMenuOption++;
+            }
+            if (gControllersYAxisDirection[i] > 0) {
+                gMenuOption--;
+            }
+        }
+        if (gMenuOption < 0) {
+            gMenuOption = 0;
+        }
+        if (gMenuOption >= D_80126C14) {
+            gMenuOption = D_80126C14 - 1;
+        }
+        if (temp1 != gMenuOption) {
+            play_sound_global(0xEBU, NULL);
+        }
+        if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+            set_music_fade_timer(-128);
+            transition_begin(&sMenuTransitionFadeIn);
+            D_801263E0 = 3;
+            for(i = 0; i < D_800E0FE4; i++){
+                settings->racers[i].trophy_points += D_801263F8[i];
+            }
+        }
+        break;
+    case 3:
+        gMenuDelay += updateRate;
+        if (gMenuDelay >= 31) {
+            func_80099600();
+            close_dialogue_box(7);
+            assign_dialogue_box_id(7);
+            if (gTrophyRaceRound < 4) {
+                menu_init(MENU_TROPHY_RACE_ROUND);
+            } else {
+                for(temp6 = 0, i = 0; i < D_800E0FE4; i++) {
+                    if (D_80126420[i] != 0) {
+                        temp7 = settings->racers[D_80126430[i]].character;
+                        if (temp6 == 0) {
+                            sp34 = i;
+                            D_80126438[temp6++] = temp7;
+                            continue;
+                        }
+                        if (settings->racers[D_80126430[i]].trophy_points == settings->racers[D_80126430[sp34]].trophy_points) {
+                            D_80126438[temp6++] = temp7;
+                        }
+                    }
+                }
+
+                if (gNumberOfActivePlayers == 1 && !is_in_two_player_adventure()) {
+                    temp6 = 0;
+                }
+                D_80126438[temp6] = -1;
+                if (gIsInTracksMode == 1) {
+                    if (sp34 >= 3) {
+                        menu_init(MENU_TRACK_SELECT);
+                    } else {
+                        ret = 0x105;
+                    }
+                } else {
+                    ret = 1;
+                    settings->courseId = get_hub_area_id((s32) settings->worldId);
+                    if (D_800DF450 != 0) {
+                        D_800DF450 = 0;
+                        ret = settings->courseId | 0x200;
+                        if (sp34 < 3) {
+                            temp0 = settings->worldId - 1;
+                            temp0 <<= 1;
+                            temp1 = ((3 - sp34) & 3);
+                            temp6 = (settings->trophies >> temp0) & 3;
+                            if (temp6 < temp1) {
+                                settings->trophies &= ~(3 << temp0);
+                                settings->trophies |= (temp1 << temp0);
+                                safe_mark_write_save_file(get_save_file_index());
+                            }
+                        }
+                    }
+                }
+                if (sp34 < 3) {
+                    miscAsset31 = (s8 *) get_misc_asset(ASSET_MISC_31);
+                    temp0 = ((gTrophyRaceWorldId * 3) + sp34) - 3;
+                    func_8009ABD8(miscAsset31, temp0, ret, 0, 0, D_80126438);
+                    ret = 0;
+                    menu_init(MENU_UNKNOWN_23);
+                }
+                gTrophyRaceWorldId = 0;
+            }
+        }
+        break;
+    }
+    gIgnorePlayerInputTime = 0;
+    return ret;
+}
 
 void func_80099600(void) {
     func_8009C4A8(D_800E1024);
