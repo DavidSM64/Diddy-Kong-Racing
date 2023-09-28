@@ -7314,7 +7314,7 @@ void func_80094688(s32 arg0, s32 arg1) {
     s16 *var_v1;
     LevelHeader *header;
 
-    func_80072298(0U);
+    func_80072298(0);
     header = get_current_level_header();
     D_80126C28 = arg0;
     if (is_in_two_player_adventure()) {
