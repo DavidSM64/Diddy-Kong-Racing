@@ -8207,7 +8207,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                 }
             }
             if (temp5) {
-                play_sound_global(0x5EU, NULL);
+                play_sound_global(SOUND_TING_HIGH, NULL);
             }
         }
 
@@ -8229,7 +8229,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
             gMenuOption = D_80126C14 - 1;
         }
         if (temp1 != gMenuOption) {
-            play_sound_global(0xEBU, NULL);
+            play_sound_global(SOUND_MENU_PICK2, NULL);
         }
         if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
             set_music_fade_timer(-128);
@@ -8275,7 +8275,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                     }
                 } else {
                     ret = 1;
-                    settings->courseId = get_hub_area_id((s32) settings->worldId);
+                    settings->courseId = get_hub_area_id(settings->worldId);
                     if (D_800DF450 != 0) {
                         D_800DF450 = 0;
                         ret = settings->courseId | 0x200;
