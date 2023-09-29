@@ -4384,7 +4384,7 @@ s32 menu_magic_codes_loop(s32 updateRate) {
     s32 someBool;
     s32 someBool2;
     s32 foundCheat;
-    s32 sp40;
+    s32 menuDelay;
     s32 playBackSound;
     s32 playSelectSound;
     s32 playPickSound;
@@ -4394,7 +4394,7 @@ s32 menu_magic_codes_loop(s32 updateRate) {
 
     someBool = FALSE;
     someBool2 = FALSE;
-    sp40 = 0;
+    menuDelay = 0;
     foundCheat = FALSE;
     playBackSound = FALSE;
     playSelectSound = FALSE;
@@ -4413,7 +4413,7 @@ s32 menu_magic_codes_loop(s32 updateRate) {
         }
     }
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
-    if ((gMenuDelay > -20) && (gMenuDelay < 20)) {
+    if (gMenuDelay > -20 && gMenuDelay < 20) {
         foundCheat = 0;
         render_magic_codes_ui(updateRate);
     }
@@ -4421,26 +4421,26 @@ s32 menu_magic_codes_loop(s32 updateRate) {
     xDir = 0;
     yDir = 0;
     if (gIgnorePlayerInputTime == 0 && gMenuDelay == 0) {
-        for(i = 0; i < 4; i++) {
+        for(i = 0; i < MAXCONTROLLERS; i++) {
             buttonsPressed |= get_buttons_pressed_from_player(i);
             xDir += gControllersXAxisDirection[i];
             yDir += gControllersYAxisDirection[i];
         }
     }
     if (gOptionsMenuItemIndex == 4) {
-        if ((gOpacityDecayTimer == 0) || (buttonsPressed & (A_BUTTON | START_BUTTON))) {
+        if (gOpacityDecayTimer == 0 || buttonsPressed & (A_BUTTON | START_BUTTON)) {
             gOptionsMenuItemIndex = 0;
         }
     } else if (gOptionsMenuItemIndex == 5) {
-        prevValue = ((gCheatInputCurrentColumn & 0xF) * 0x10) | gCheatInputCurrentRow;
+        prevValue = ((gCheatInputCurrentColumn & 0xF) * 16) | gCheatInputCurrentRow;
         if (xDir < 0) {
-            gCheatInputCurrentColumn = gCheatInputCurrentColumn - 1;
+            gCheatInputCurrentColumn--;
             if (gCheatInputCurrentColumn < 0) {
                 gCheatInputCurrentColumn = 6;
             }
         }
         if (xDir > 0) {
-            gCheatInputCurrentColumn = gCheatInputCurrentColumn + 1;
+            gCheatInputCurrentColumn++;
             if (gCheatInputCurrentColumn >= 7) {
                 gCheatInputCurrentColumn = 0;
             }
@@ -4457,35 +4457,35 @@ s32 menu_magic_codes_loop(s32 updateRate) {
                 gCheatInputCurrentRow = 3;
             }
         }
-        if ((((gCheatInputCurrentColumn & 0xF) * 0x10) | gCheatInputCurrentRow) != prevValue) {
+        if ((((gCheatInputCurrentColumn & 0xF) * 16) | gCheatInputCurrentRow) != prevValue) {
             playPickSound = TRUE;
         }
-        if (buttonsPressed & (A_BUTTON)) {
-            if ((gCheatInputCurrentRow == 3) && (gCheatInputCurrentColumn == 5)) {
+        if (buttonsPressed & A_BUTTON) {
+            if (gCheatInputCurrentRow == 3 && gCheatInputCurrentColumn == 5) {
                 someBool = TRUE;
-            } else if ((gCheatInputCurrentRow == 3) && (gCheatInputCurrentColumn == 6)) {
+            } else if (gCheatInputCurrentRow == 3 && gCheatInputCurrentColumn == 6) {
                 someBool2 = TRUE;
-            } else if (gCheatInputStringLength < 0x13) {
+            } else if (gCheatInputStringLength <= 18) {
                 playSelectSound = TRUE;
-                D_80126C58[gCheatInputStringLength] = (gCheatInputCurrentRow * 7) + gCheatInputCurrentColumn + 0x41;
+                D_80126C58[gCheatInputStringLength] = (gCheatInputCurrentRow * 7) + gCheatInputCurrentColumn + 65;
                 gCheatInputStringLength++;
                 D_80126C58[gCheatInputStringLength] = 0;
             }
         }
-        if (buttonsPressed & (B_BUTTON)) {
+        if (buttonsPressed & B_BUTTON) {
             if (gCheatInputStringLength > 0) {
                 someBool = TRUE;
             } else {
                 gOptionsMenuItemIndex = 0;
             }
         }
-        if (buttonsPressed & (START_BUTTON)) {
+        if (buttonsPressed & START_BUTTON) {
             someBool2 = TRUE;
         }
         if (someBool) {
             play_sound_global(SOUND_BOUNCE, NULL);
             if (gCheatInputStringLength > 0) {
-                gCheatInputStringLength = gCheatInputStringLength - 1;
+                gCheatInputStringLength--;
                 D_80126C58[gCheatInputStringLength] = 0;
             }
         }
@@ -4521,11 +4521,11 @@ s32 menu_magic_codes_loop(s32 updateRate) {
                     gActiveMagicCodes |= 1 << (D_80126C4C >> 1);
                 }
                 gOptionsMenuItemIndex = 4;
-                gOpacityDecayTimer = 0xF0;
+                gOpacityDecayTimer = 240;
             }
         }
     } else if (gOptionsMenuItemIndex == 6) {
-        if ((gOpacityDecayTimer == 0) || (buttonsPressed & (A_BUTTON | START_BUTTON))) {
+        if (gOpacityDecayTimer == 0 || buttonsPressed & (A_BUTTON | START_BUTTON)) {
             gOptionsMenuItemIndex = 1;
         }
     } else if (D_801263E0 != 0) {
@@ -4540,13 +4540,13 @@ s32 menu_magic_codes_loop(s32 updateRate) {
                 playBackSound = TRUE;
             }
             D_801263E0 = 0;
-        } else if (buttonsPressed & (B_BUTTON)) {
+        } else if (buttonsPressed & B_BUTTON) {
             playBackSound = TRUE;
             D_801263E0 = 0;
-        } else if ((yDir < 0) && (D_801263E0 == 1)) {
+        } else if (yDir < 0 && D_801263E0 == 1) {
             playPickSound = TRUE;
             D_801263E0 = 2;
-        } else if ((yDir > 0) && (D_801263E0 == 2)) {
+        } else if (yDir > 0 && D_801263E0 == 2) {
             playPickSound = TRUE;
             D_801263E0 = 1;
         }
@@ -4570,7 +4570,7 @@ s32 menu_magic_codes_loop(s32 updateRate) {
         if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
             playSelectSound = TRUE;
             if (gOptionsMenuItemIndex == 3) {
-                sp40 = -1;
+                menuDelay = -1;
             } else if (gOptionsMenuItemIndex == 0) {
                 gCheatInputCurrentRow = 0;
                 gCheatInputCurrentColumn = 0;
@@ -4580,17 +4580,17 @@ s32 menu_magic_codes_loop(s32 updateRate) {
             } else if (gOptionsMenuItemIndex == 1) {
                 D_801263E0 = 2;
             } else if (gOptionsMenuItemIndex == 2) {
-                sp40 = 1;
+                menuDelay = 1;
             }
         }
         if (buttonsPressed & (B_BUTTON)) {
-            sp40 = -1;
+            menuDelay = -1;
         }
-        if (sp40 != 0) {
-            if (sp40 < 0) {
+        if (menuDelay != 0) {
+            if (menuDelay < 0) {
                 playBackSound = TRUE;
             }
-            gMenuDelay = sp40;
+            gMenuDelay = menuDelay;
             transition_begin(&sMenuTransitionFadeIn);
         }
     }
@@ -4603,7 +4603,7 @@ s32 menu_magic_codes_loop(s32 updateRate) {
     }
     
     gIgnorePlayerInputTime = 0;
-    if ((gMenuDelay < -30) || (gMenuDelay > 30)) {
+    if (gMenuDelay < -30 || gMenuDelay > 30) {
         unload_big_font_2();
         if (gMenuDelay < 0) {
             if (gActiveMagicCodes & CHEAT_DISPLAY_CREDITS) {
