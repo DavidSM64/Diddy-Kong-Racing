@@ -265,7 +265,7 @@ const char D_800E7C50[] = "TEXSPR Error: Tryed to deallocate non-existent sprite
 
 s32 *gTextureAssetTable[2];
 
-TextureCacheEntry *gTextureCache;
+s32 *gTextureCache;
 
 u8 *gCiPalettes;
 s32 gNumberOfLoadedTextures;
@@ -275,7 +275,7 @@ s32 gCiPalettesSize;
 s32 D_80126344;
 s32 *gSpriteOffsetTable;
 
-SpriteCacheEntry *gSpriteCache;
+s32 *gSpriteCache;
 
 Sprite *gCurrentSprite;
 s32 D_80126354;
@@ -480,7 +480,6 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/load_texture.s")
 #endif
 
 /**
- * I hate this match so much.
  * This function frees textures
  * Official Name: texFreeTexture
 */
@@ -490,21 +489,13 @@ void free_texture(TextureHeader *tex) {
     if (tex != 0) { 
         if ((--tex->numberOfInstances) <= 0) {
             for (i = 0; i < gNumberOfLoadedTextures; i++) {
-                if ((s32) tex == ((s32 *) gTextureCache)[(i << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1)+1]) {
+                if ((s32)tex == gTextureCache[(i << 1) + 1]) {
                     free_from_memory_pool(tex);
-                    ((s32 *) gTextureCache)[(i << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1)] = -1;
-                    ((s32 *) gTextureCache)[(i << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1)+1] = -1;
+
+                    gTextureCache[(i << 1)] = -1;
+                    gTextureCache[(i << 1) + 1] = -1;
                     return;
                 }
-                /*
-                //The above code should be this, but for some reason IDO hates us.
-                if (tex == gTextureCache[i].texture) {
-                    free_from_memory_pool(tex);
-                    gTextureCache[i].id = -1;
-                    gTextureCache[i].texture = (TextureHeader *) -1;
-                    return;
-                }
-                */
             }
         }
     }
@@ -519,15 +510,14 @@ void set_texture_colour_tag(s32 tagID) {
     gTexColourTag = tagID;
 }
 
-UNUSED TextureHeader *func_8007B380(s32 arg0) {
+UNUSED s32 func_8007B380(s32 arg0) {
     if ((arg0 < 0) || (arg0 >= gNumberOfLoadedTextures)) {
         return 0;
     }
-    // Regalloc issue here
-    if (gTextureCache[arg0 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1].texture == (TextureHeader *)-1) {
+    if (gTextureCache[(arg0 << 1) + 1] == -1) {
         return 0;
     }
-    return gTextureCache[arg0 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1].texture;
+    return gTextureCache[(arg0 << 1) + 1];
 }
 
 /**
@@ -807,16 +797,14 @@ GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007BF34.s")
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007C12C.s")
 
 Sprite *func_8007C52C(s32 arg0) {
-    Sprite *sprite;
     if ((arg0 < 0) || (arg0 >= D_80126358)) {
         return NULL;
     }
-    // Fakematch! The shifts here is a hack to skip a register.
-    sprite = gSpriteCache[arg0 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1].sprite;
-    if ((s32)sprite == -1) {
+
+    if (gSpriteCache[(arg0 << 1) + 1] == -1) {
         return NULL;
     }
-    return sprite; 
+    return gSpriteCache[(arg0 << 1) + 1]; 
 }
 
 s32 get_texture_size_from_id(s32 id) {
@@ -884,14 +872,14 @@ UNUSED s32 func_8007C860(s32 spriteIndex) {
     if ((spriteIndex < 0) || (spriteIndex >= gNumberOfLoadedTextures)) {
         return -1;
     }
-    return ((TextureCacheEntry *) ((s32*) gTextureCache + spriteIndex * 2))->id;
+    return gTextureCache[spriteIndex << 1];
 }
 
 UNUSED s32 func_8007C8A0(s32 spriteIndex) {
     if ((spriteIndex < 0) || (spriteIndex >= D_80126358)) {
         return -1;
     }
-    return ((SpriteCacheEntry*) ((s32*) gSpriteCache + spriteIndex * 2))->id;
+    return gSpriteCache[spriteIndex << 1];
 }
 
 s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *numFramesOut, s32 *formatOut, s32 *sizeOut) {
@@ -935,25 +923,23 @@ s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CA68.s")
 
-#ifdef NON_MATCHING
+#if 1
 /* Official name: texFreeSprite */
 void free_sprite(Sprite *sprite) {
     s32 i;
     s32 frame;
-    s32 spriteId;
 
     if (sprite != NULL) {
         sprite->numberOfInstances--;
         if (sprite->numberOfInstances <= 0) {
             for (i = 0; i < D_80126358; i++) {
-                if (sprite == gSpriteCache[i].sprite) {
+                if ((s32)sprite == gSpriteCache[(i << 1) + 1]) {
                     for (frame = 0; frame < sprite->numberOfFrames; frame++) {
                         free_texture(sprite->frames[frame]);
                     }
-                    spriteId = -1;
                     free_from_memory_pool(sprite);
-                    gSpriteCache[i].id = spriteId;
-                    gSpriteCache[i].sprite = (Sprite *)spriteId;
+                    gSpriteCache[(i << 1) + 0] = -1;
+                    gSpriteCache[(i << 1) + 1] = -1; // ?
                     break;
                 }
             }
