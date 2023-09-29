@@ -943,6 +943,7 @@ s32 func_80086AFC(void);
 s32 func_80087734(s32, s32);
 void func_80085B9C(UNUSED s32 updateRate);
 void func_80098774(s32);
+void render_magic_codes_ui(s32 updateRate);
 
 typedef enum MenuTextures {
 /* 0x00 */ TEXTURE_UNK_00,

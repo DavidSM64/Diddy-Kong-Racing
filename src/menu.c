@@ -265,9 +265,9 @@ u16 (*gCheatsAssetData)[30]; // Cheat table.
 s32 D_80126C34;
 s32 gNumberOfCheats;
 s32 D_80126C3C;
-u16 gCheatInputCurrentRow;
-u16 gCheatInputCurrentColumn;
-u16 gCheatInputStringLength;
+s16 gCheatInputCurrentRow;
+s16 gCheatInputCurrentColumn;
+s16 gCheatInputStringLength;
 s16 gOptionsMenuItemIndex;
 s32 D_80126C48;
 s16 D_80126C4C;
@@ -4376,8 +4376,250 @@ void render_magic_codes_ui(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/menu/render_magic_codes_ui.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/menu/menu_magic_codes_loop.s")
+s32 menu_magic_codes_loop(s32 updateRate) {
+    s32 i;
+    s32 buttonsPressed;
+    s32 xDir;
+    s32 yDir;
+    s32 someBool;
+    s32 someBool2;
+    s32 foundCheat;
+    s32 sp40;
+    s32 playBackSound;
+    s32 playSelectSound;
+    s32 playPickSound;
+    s32 prevValue;
+    char *cheatCodeText;
+    u16 *cheatDataEntries;
 
+    someBool = FALSE;
+    someBool2 = FALSE;
+    sp40 = 0;
+    foundCheat = FALSE;
+    playBackSound = FALSE;
+    playSelectSound = FALSE;
+    playPickSound = FALSE;
+    if (gOpacityDecayTimer != 0) {
+        gOpacityDecayTimer -= updateRate;
+        if (gOpacityDecayTimer < 0) {
+            gOpacityDecayTimer = 0;
+        }
+    }
+    if (gMenuDelay != 0) {
+        if (gMenuDelay > 0) {
+            gMenuDelay += updateRate;
+        } else {
+            gMenuDelay -= updateRate;
+        }
+    }
+    gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
+    if ((gMenuDelay > -20) && (gMenuDelay < 20)) {
+        foundCheat = 0;
+        render_magic_codes_ui(updateRate);
+    }
+    buttonsPressed = 0;
+    xDir = 0;
+    yDir = 0;
+    if (gIgnorePlayerInputTime == 0 && gMenuDelay == 0) {
+        for(i = 0; i < 4; i++) {
+            buttonsPressed |= get_buttons_pressed_from_player(i);
+            xDir += gControllersXAxisDirection[i];
+            yDir += gControllersYAxisDirection[i];
+        }
+    }
+    if (gOptionsMenuItemIndex == 4) {
+        if ((gOpacityDecayTimer == 0) || (buttonsPressed & (A_BUTTON | START_BUTTON))) {
+            gOptionsMenuItemIndex = 0;
+        }
+    } else if (gOptionsMenuItemIndex == 5) {
+        prevValue = ((gCheatInputCurrentColumn & 0xF) * 0x10) | gCheatInputCurrentRow;
+        if (xDir < 0) {
+            gCheatInputCurrentColumn = gCheatInputCurrentColumn - 1;
+            if (gCheatInputCurrentColumn < 0) {
+                gCheatInputCurrentColumn = 6;
+            }
+        }
+        if (xDir > 0) {
+            gCheatInputCurrentColumn = gCheatInputCurrentColumn + 1;
+            if (gCheatInputCurrentColumn >= 7) {
+                gCheatInputCurrentColumn = 0;
+            }
+        }
+        if (yDir < 0) {
+            gCheatInputCurrentRow++;
+            if (gCheatInputCurrentRow >= 4) {
+                gCheatInputCurrentRow = 0;
+            }
+        }
+        if (yDir > 0) {
+            gCheatInputCurrentRow--;
+            if (gCheatInputCurrentRow < 0) {
+                gCheatInputCurrentRow = 3;
+            }
+        }
+        if ((((gCheatInputCurrentColumn & 0xF) * 0x10) | gCheatInputCurrentRow) != prevValue) {
+            playPickSound = TRUE;
+        }
+        if (buttonsPressed & (A_BUTTON)) {
+            if ((gCheatInputCurrentRow == 3) && (gCheatInputCurrentColumn == 5)) {
+                someBool = TRUE;
+            } else if ((gCheatInputCurrentRow == 3) && (gCheatInputCurrentColumn == 6)) {
+                someBool2 = TRUE;
+            } else if (gCheatInputStringLength < 0x13) {
+                playSelectSound = TRUE;
+                D_80126C58[gCheatInputStringLength] = (gCheatInputCurrentRow * 7) + gCheatInputCurrentColumn + 0x41;
+                gCheatInputStringLength++;
+                D_80126C58[gCheatInputStringLength] = 0;
+            }
+        }
+        if (buttonsPressed & (B_BUTTON)) {
+            if (gCheatInputStringLength > 0) {
+                someBool = TRUE;
+            } else {
+                gOptionsMenuItemIndex = 0;
+            }
+        }
+        if (buttonsPressed & (START_BUTTON)) {
+            someBool2 = TRUE;
+        }
+        if (someBool) {
+            play_sound_global(SOUND_BOUNCE, NULL);
+            if (gCheatInputStringLength > 0) {
+                gCheatInputStringLength = gCheatInputStringLength - 1;
+                D_80126C58[gCheatInputStringLength] = 0;
+            }
+        }
+        if (someBool2) {
+            playSelectSound = TRUE;
+            if (gCheatInputStringLength == 0) {
+                gOptionsMenuItemIndex = 0;
+            } else {
+                cheatDataEntries = &(*gCheatsAssetData)[1];
+                D_80126C4C = 0; // Index into the gCheatsAssetData cheatsTable
+                while((D_80126C4C < (gNumberOfCheats * 2)) && !foundCheat)  {
+                    foundCheat = TRUE;
+                    cheatCodeText = ((char *) (*gCheatsAssetData)) + cheatDataEntries[D_80126C4C];
+                    // D_80126C58 = char *gPlayerEnteredCode; (Or something like that)
+                    i = -1;
+                    do {
+                        i++;
+                        if (cheatCodeText[i] != D_80126C58[i]) {
+                            foundCheat = FALSE;
+                        }
+                        if(!foundCheat) { 
+                            do { } while (0); // Fakematch
+                            break;
+                        }
+                    } while(cheatCodeText[i] != '\0' && D_80126C58[i] != '\0');
+                    if(foundCheat) continue;
+                    D_80126C4C += 2;
+                }
+                if (!foundCheat) {
+                    D_80126C4C = -1;
+                } else {
+                    gUnlockedMagicCodes |= 1 << (D_80126C4C >> 1);
+                    gActiveMagicCodes |= 1 << (D_80126C4C >> 1);
+                }
+                gOptionsMenuItemIndex = 4;
+                gOpacityDecayTimer = 0xF0;
+            }
+        }
+    } else if (gOptionsMenuItemIndex == 6) {
+        if ((gOpacityDecayTimer == 0) || (buttonsPressed & (A_BUTTON | START_BUTTON))) {
+            gOptionsMenuItemIndex = 1;
+        }
+    } else if (D_801263E0 != 0) {
+        if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+            if (D_801263E0 == 1) {
+                gActiveMagicCodes = 0;
+                gOptionsMenuItemIndex = 6;
+                playSelectSound = TRUE; 
+                gUnlockedMagicCodes &= 3;
+                gOpacityDecayTimer = 0xF0;
+            } else {
+                playBackSound = TRUE;
+            }
+            D_801263E0 = 0;
+        } else if (buttonsPressed & (B_BUTTON)) {
+            playBackSound = TRUE;
+            D_801263E0 = 0;
+        } else if ((yDir < 0) && (D_801263E0 == 1)) {
+            playPickSound = TRUE;
+            D_801263E0 = 2;
+        } else if ((yDir > 0) && (D_801263E0 == 2)) {
+            playPickSound = TRUE;
+            D_801263E0 = 1;
+        }
+    } else {
+        prevValue = gOptionsMenuItemIndex;
+        if (yDir < 0) {
+            gOptionsMenuItemIndex += 1;
+            if (gOptionsMenuItemIndex >= 4) {
+                gOptionsMenuItemIndex = 3;
+            }
+        }
+        if (yDir > 0) {
+            gOptionsMenuItemIndex -= 1;
+            if (gOptionsMenuItemIndex < 0) {
+                gOptionsMenuItemIndex = 0;
+            }
+        }
+        if (prevValue != gOptionsMenuItemIndex) {
+            playPickSound = TRUE;
+        }
+        if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+            playSelectSound = TRUE;
+            if (gOptionsMenuItemIndex == 3) {
+                sp40 = -1;
+            } else if (gOptionsMenuItemIndex == 0) {
+                gCheatInputCurrentRow = 0;
+                gCheatInputCurrentColumn = 0;
+                gCheatInputStringLength = 0;
+                *D_80126C58 = 0;
+                gOptionsMenuItemIndex = 5;
+            } else if (gOptionsMenuItemIndex == 1) {
+                D_801263E0 = 2;
+            } else if (gOptionsMenuItemIndex == 2) {
+                sp40 = 1;
+            }
+        }
+        if (buttonsPressed & (B_BUTTON)) {
+            sp40 = -1;
+        }
+        if (sp40 != 0) {
+            if (sp40 < 0) {
+                playBackSound = TRUE;
+            }
+            gMenuDelay = sp40;
+            transition_begin(&sMenuTransitionFadeIn);
+        }
+    }
+    if (playBackSound) {
+        play_sound_global(SOUND_MENU_BACK3, NULL);
+    } else if (playSelectSound) {
+        play_sound_global(SOUND_SELECT2, NULL);
+    } else if (playPickSound) {
+        play_sound_global(SOUND_MENU_PICK2, NULL);
+    }
+    
+    gIgnorePlayerInputTime = 0;
+    if ((gMenuDelay < -30) || (gMenuDelay > 30)) {
+        unload_big_font_2();
+        if (gMenuDelay < 0) {
+            if (gActiveMagicCodes & CHEAT_DISPLAY_CREDITS) {
+                func_80000B28();
+                gViewingCreditsFromCheat = TRUE;
+                menu_init(MENU_CREDITS);
+                gActiveMagicCodes &= ~CHEAT_DISPLAY_CREDITS;
+            } else {
+                menu_init(MENU_OPTIONS);
+            }
+        } else {
+            menu_init(MENU_MAGIC_CODES_LIST);
+        }
+    }
+    return 0;
+}
 
 /**
  * Explicitly says to unload the ASSET_FONTS_BIGFONT type.
