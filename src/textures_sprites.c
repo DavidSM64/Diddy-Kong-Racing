@@ -479,33 +479,36 @@ TextureHeader *load_texture(s32 arg0) {
 GLOBAL_ASM("asm/non_matchings/textures_sprites/load_texture.s")
 #endif
 
-#ifdef NON_MATCHING
 /**
- * The same difference preventing this from matching is the same as free_sprite
+ * I hate this match so much.
+ * This function frees textures
  * Official Name: texFreeTexture
 */
 void free_texture(TextureHeader *tex) {
     s32 i;
-    s32 texId;
-
-    if (tex != NULL) {
-        tex->numberOfInstances--;
-        if (tex->numberOfInstances <= 0) {
+    
+    if (tex != 0) { 
+        if ((--tex->numberOfInstances) <= 0) {
             for (i = 0; i < gNumberOfLoadedTextures; i++) {
-                if (tex == gTextureCache[i].texture) {
-                    texId = -1;
+                if ((s32) tex == ((s32 *) gTextureCache)[(i << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1)+1]) {
                     free_from_memory_pool(tex);
-                    gTextureCache[i].id = texId;
-                    gTextureCache[i].texture = (TextureHeader *) texId;
-                    break;
+                    ((s32 *) gTextureCache)[(i << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1)] = -1;
+                    ((s32 *) gTextureCache)[(i << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1 >> 1 << 1)+1] = -1;
+                    return;
                 }
+                /*
+                //The above code should be this, but for some reason IDO hates us.
+                if (tex == gTextureCache[i].texture) {
+                    free_from_memory_pool(tex);
+                    gTextureCache[i].id = -1;
+                    gTextureCache[i].texture = (TextureHeader *) -1;
+                    return;
+                }
+                */
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/free_texture.s")
-#endif
 
 /**
  * Set the colour tag that determines which memory pool textures will be loaded into.
