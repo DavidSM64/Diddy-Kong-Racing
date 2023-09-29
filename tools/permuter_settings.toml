@@ -8,6 +8,8 @@ compiler_type = "ido"
 "OS_PHYSICAL_TO_K0" = "void *"
 "_SHIFTL" = "unsigned int"
 "G_IM_.*" = "unsigned int"
+"KEEPLINEBREAK" = "void"
+"IO_READ" = "volatile unsigned int *"
 
 [decompme.compilers]
 "./tools/ido-static-recomp/build/5.3/out/cc" = "ido5.3_irix"

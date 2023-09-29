@@ -2960,28 +2960,16 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800159C8.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016500.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80016748.s")
 
-void func_80016BC4(Object *arg0) {
-    s32 var_s0;
-    s32 var_s1;
-    s32 *temp_v0;
-    s8 var_v1;
+void func_80016BC4(Object *obj) {
+    s32 i;
 
-    arg0->unk5C->unk104 = 0;
-    func_8001709C(arg0);
-    func_8001709C(arg0);
-    var_s1 = 0;
-    var_v1 = arg0->segment.header->numberOfModelIds;
-    var_s0 = 0;
-    if (var_v1 > 0) {
-        do {
-            temp_v0 = (s32 *) *(arg0->unk68 + var_s0);
-            if (temp_v0 != NULL) {
-                func_8006017C(*temp_v0);
-                var_v1 = arg0->segment.header->numberOfModelIds;
-            }
-            var_s1 += 1;
-            var_s0 += 1;
-        } while (var_s1 < var_v1);
+    obj->unk5C->unk104 = 0;
+    func_8001709C(obj);
+    func_8001709C(obj);
+    for (i = 0; i < obj->segment.header->numberOfModelIds; i++) {
+        if (obj->unk68[i] != NULL) {
+            func_8006017C(obj->unk68[i]->objModel);
+        }
     }
 }
 
@@ -3237,7 +3225,7 @@ void func_8001B3C4(s32 arg0, s16 *playerId) {
     D_800DC718 = 0;
     free_tt_ghost_data();
     D_800DC734 = 0;
-    mainTrackIds = get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
+    mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
     trackIdCount = 0;
     while (mainTrackIds[trackIdCount] != -1 && mainTrackIds[trackIdCount] != arg0) {
         trackIdCount++;
@@ -4132,7 +4120,6 @@ s8 func_800214C4(void) {
 }
 
 s8 func_800214E4(Object *obj, s32 updateRate) {
-    s16 temp_v1;
     s32 i;
     Object_AnimatedObject *animObj;
 
@@ -4151,18 +4138,8 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
     }
     if (animObj->unk36 <= 0) {
         obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
-        i = 0;
-        if (D_8011AE78 > 0) {
-            temp_v1 = animObj->unk28;
-            if (temp_v1 != (s32) (*D_8011AE74)->properties.common.unk4) {
-loop_11:
-                i++;
-                if (i < D_8011AE78) {
-                    if (temp_v1 != (s32) D_8011AE74[i]->properties.common.unk4) {
-                        goto loop_11;
-                    }
-                }
-            }
+        for (i = 0; (i < D_8011AE78 && animObj->unk28 != D_8011AE74[i]->properties.common.unk4); i++) {
+            if (FALSE) {} //FAKEMATCH
         }
         func_8001EFA4(D_8011AE74[i], obj);
         return 1;
@@ -4206,12 +4183,12 @@ f32 cubic_spline_interpolation(f32 *data, s32 index, f32 x, f32 *derivative) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8002277C.s")
 
-f32 lerp(f32 *arg0, u32 arg1, f32 arg2) {
+UNUSED f32 lerp(f32 *arg0, u32 arg1, f32 arg2) {
     f32 result = arg0[arg1 + 1] + ((arg0[arg1 + 2] - arg0[arg1 + 1]) * arg2);
     return result;
 }
 
-f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
+UNUSED f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
     f32 new_var2;
     f32 temp_f12;
     f32 new_var;
