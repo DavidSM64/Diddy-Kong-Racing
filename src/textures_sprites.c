@@ -396,8 +396,8 @@ TextureHeader *load_texture(s32 arg0) {
         arg0 = 0;
     }
     for (i = 0; i < gNumberOfLoadedTextures; i++) {
-        if (arg0 == gTextureCache[i].id) {
-            tex = gTextureCache[i].texture;
+        if (arg0 == gTextureCache[(i << 1)]) {
+            tex = gTextureCache[(i << 1) + 1];
             tex->numberOfInstances++;
             return tex;
         }
@@ -429,15 +429,15 @@ TextureHeader *load_texture(s32 arg0) {
     }
     texIndex = -1;
     for (i = 0; i < gNumberOfLoadedTextures; i++) {
-        if (gTextureCache[i].id == -1) {
+        if (gTextureCache[(i << 1)] == -1) {
             texIndex = i;
         }
     }
     if (texIndex == -1) {
         texIndex = gNumberOfLoadedTextures++;
     }
-    gTextureCache[texIndex].id = arg0;
-    gTextureCache[texIndex].texture = tex;
+    gTextureCache[(texIndex << 1)] = arg0;
+    gTextureCache[(texIndex << 1) + 1] = tex;
     paletteOffset = -1;
     if ((tex->format & 0xF) == TEX_FORMAT_CI4) {
         if (D_80126344 == 0) {
@@ -923,7 +923,6 @@ s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *
 
 GLOBAL_ASM("asm/non_matchings/textures_sprites/func_8007CA68.s")
 
-#if 1
 /* Official name: texFreeSprite */
 void free_sprite(Sprite *sprite) {
     s32 i;
@@ -946,9 +945,6 @@ void free_sprite(Sprite *sprite) {
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/textures_sprites/free_sprite.s")
-#endif
 
 #ifdef NON_MATCHING
 void func_8007CDC0(Sprite *sprite1, Sprite *sprite2, s32 arg2) {

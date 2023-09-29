@@ -121,6 +121,8 @@ void load_and_set_texture_no_offset(Gfx **dlist, TextureHeader *texhead, u32 fla
 void func_8007BF1C(s32 arg0);
 s32 func_8007EF64(s16 arg0);
 void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 offset);
+void free_sprite(Sprite *sprite);
+void free_texture(TextureHeader *tex);
 
 // There might be a file boundary here.
 void tex_animate_texture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s32 *arg2, s32 updateRate);
@@ -128,14 +130,11 @@ void func_8007F1E8(LevelHeader_70 *arg0);
 void init_pulsating_light_data(PulsatingLightData *data);
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
 TextureHeader *func_8007B46C(TextureHeader *arg0, s32 arg1);
-
 TextureHeader *load_texture(s32 arg0); // Non Matching
-void free_texture(TextureHeader *tex); // Non Matching
 s32 get_texture_size_from_id(s32 arg0); // Non Matching
 s32 func_8007C860(s32 spriteIndex); // Non Matching
 s32 load_sprite_info(s32 spriteID, s32 *numOfInstancesOut, s32 *unkOut,
 	s32 *numFramesOut, s32 *formatOut, s32 *sizeOut); // Non Matching
-void free_sprite(Sprite *sprite); // Non Matching
 void func_8007F594(Gfx **dlist, u32 index, u32 primitiveColor, u32 environmentColor); // Non Matching
 void func_8007CA68(s32 spriteID, s32 arg1, s32 *arg2, s32 *arg3, s32 *arg4); // Non Matching
 MemoryPoolSlot *func_8007C12C(s32 spriteID, s32 arg1); // Non Matching
