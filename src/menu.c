@@ -2893,7 +2893,6 @@ void render_options_menu_ui(UNUSED s32 updateRate) {
     }
 }
 
-#ifdef NON_MATCHING
 s32 menu_options_loop(s32 updateRate) {
     s32 buttonsPressed;
     s32 i;
@@ -2911,16 +2910,16 @@ s32 menu_options_loop(s32 updateRate) {
         }
     }
 
-    if (gMenuDelay >= -19 && gMenuDelay < 35) {
+    if (gMenuDelay > -20 && gMenuDelay < 35) {
         render_options_menu_ui(updateRate);
     }
     buttonsPressed = 0;
     analogX = 0;
     analogY = 0;
     if (gIgnorePlayerInputTime == 0 && gMenuDelay == 0) {
-        s8* xAxisPtr;
-        s8* yAxisPtr; 
-        for (i = 0, xAxisPtr = gControllersXAxisDirection, yAxisPtr = gControllersYAxisDirection; i < 4; i++) {
+        s8 *xAxisPtr;
+        s8 *yAxisPtr; 
+        for (i = 0, xAxisPtr = gControllersXAxisDirection, yAxisPtr = gControllersYAxisDirection; i < MAXCONTROLLERS; i++) {
             buttonsPressed |= get_buttons_pressed_from_player(i);
             analogX += *(xAxisPtr++);
             analogY += *(yAxisPtr++);
@@ -2937,23 +2936,26 @@ s32 menu_options_loop(s32 updateRate) {
         gMenuDelay = 31;
         play_sound_global(SOUND_SELECT2, NULL);
         
-    } else if ((D_800DF460 == 0) && (analogX != 0)) {
-        s32 curLanguage = get_language();
-        if (!(curLanguage >> 31) && (curLanguage == LANGUAGE_ENGLISH)) {
-            set_language(LANGUAGE_FRENCH);
-        } else {
-            set_language(LANGUAGE_ENGLISH);
+    } else if (D_800DF460 == 0 && analogX != 0) {
+        switch ((u64) get_language()) {
+            case LANGUAGE_ENGLISH:
+                 set_language(LANGUAGE_FRENCH);
+                 break;
+            default:
+                set_language(LANGUAGE_ENGLISH);
+                break;
         }
         play_sound_global(SOUND_MENU_PICK2, NULL);
-    } else if ((D_800DF460 == 1) && (analogX != 0)) {
+    } else if (D_800DF460 == 1 && analogX != 0) {
         if (sEepromSettings & 0x2000000) {
+            //0x2000000 SUBTITLES ENABLED?
             play_sound_global(SOUND_MENU_PICK2, NULL);
-            unset_eeprom_settings_value(0x02000000);
+            unset_eeprom_settings_value(0x2000000);
             set_subtitles(0);
            gOptionMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_SUBTITLESOFF];
         } else {
             play_sound_global(SOUND_MENU_PICK2, NULL);
-            set_eeprom_settings_value(0x02000000);
+            set_eeprom_settings_value(0x2000000);
             set_subtitles(1);
             gOptionMenuStrings[1] = gMenuText[ASSET_MENU_TEXT_SUBTITLESON];
         }
@@ -2975,7 +2977,7 @@ s32 menu_options_loop(s32 updateRate) {
             play_sound_global(SOUND_MENU_PICK2, NULL);
         }
     }
-    if (gMenuDelay >= 31) {
+    if (gMenuDelay > 30) {
         // Change screen to a sub-menu
         if (D_800DF460 == 2) {
             unload_big_font_1();
@@ -3001,10 +3003,6 @@ s32 menu_options_loop(s32 updateRate) {
     gIgnorePlayerInputTime = 0;
     return 0;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/menu_options_loop.s")
-#endif
-
 
 /**
  * Explicitly says to unload the ASSET_FONTS_BIGFONT type.

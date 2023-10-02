@@ -886,12 +886,12 @@ void menu_trophy_race_rankings_init(void);
 void calculate_and_display_rom_checksum(void);
 s32 menu_trophy_race_rankings_loop(s32 updateRate);
 s32 menu_results_loop(s32 updateRate);
+s32 menu_options_loop(s32 updateRate);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
 void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2);
 s32 menu_audio_options_loop(s32 arg0);
-s32 menu_options_loop(s32 updateRate);
 s32 menu_controller_pak_loop(s32 updateRate);
 void render_magic_codes_list_menu_text(s32 arg0);
 void randomise_ai_racer_slots(s32 arg0);
