@@ -7804,7 +7804,116 @@ void menu_11_init(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80096978.s")
-GLOBAL_ASM("asm/non_matchings/menu/menu_results_loop.s")
+
+s32 menu_results_loop(s32 updateRate) {
+    s32 playBackSound;
+    s32 playSelectSound;
+    s32 playPickSound;
+    s32 prevOption;
+
+    playBackSound = FALSE;
+    playSelectSound = FALSE;
+    playPickSound = FALSE;
+    gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
+    func_8008E4EC();
+    if (D_801263E0 <= 0) {
+        gOpacityDecayTimer += updateRate;
+        if (gOpacityDecayTimer >= 60) {
+            D_801263E0 = 1;
+        } else if (D_801263E0 < 0 && gOpacityDecayTimer > 20) {
+            D_801263E0 = 0;
+            play_sound_global(SOUND_WHOOSH1, NULL);
+        }
+    }
+    if (gMenuDelay < 20) {
+        if (D_801263E0 <= 0) {
+            if (gOpacityDecayTimer >= 20) {
+                func_80096978(updateRate, 1.0f - ((f32) (gOpacityDecayTimer - 20) / 40.0f));
+            }
+        } else {
+            func_80096978(updateRate, 0.0f);
+        }
+    }
+    if (gMenuDelay == 0) {
+        if (D_801263E0 == 0) {
+            if (D_801267E8 & (A_BUTTON | START_BUTTON)) {
+                D_801263E0 = 1;
+            }
+        } else if (gMenuSubOption != 0) {
+            if (D_801267E8 & (A_BUTTON | START_BUTTON)) {
+                if (gMenuSubOption == 1) {
+                    playSelectSound = TRUE;
+                    set_music_fade_timer(-128);
+                    transition_begin(&sMenuTransitionFadeIn);
+                    gMenuDelay = 1;
+                } else {
+                    playBackSound = TRUE;
+                    gMenuSubOption = 0;
+                }
+            } else if (D_801267E8 & B_BUTTON) {
+                playBackSound = TRUE;
+                gMenuSubOption = 0;
+            } else {
+                prevOption = gMenuSubOption;
+                if (D_80126838 > 0 && gMenuSubOption == 2) {
+                    gMenuSubOption = 1;
+                }
+                if (D_80126838 < 0 && gMenuSubOption == 1) {
+                    gMenuSubOption = 2;
+                }
+                if (prevOption != gMenuSubOption) {
+                    playPickSound = TRUE;
+                }
+            }
+        } else if (D_801267E8 & (A_BUTTON | START_BUTTON)) {
+            playSelectSound = TRUE;
+            if (D_80126BF0[gMenuOption] == gMenuText[28]) {
+                gMenuSubOption = 2;
+            } else {
+                gMenuDelay = 1;
+                transition_begin(&sMenuTransitionFadeIn);
+                set_music_fade_timer(-128);
+            }
+        } else {
+            prevOption = gMenuOption;
+            if (D_80126838 < 0 && gMenuOption < (D_80126C14 - 1)) {
+                gMenuOption++;
+            }
+            if (D_80126838 > 0 && gMenuOption > 0) {
+                gMenuOption--;
+            }
+            if (prevOption != gMenuOption) {
+                playPickSound = TRUE;
+            }
+        }
+        if (playBackSound) {
+            play_sound_global(SOUND_MENU_BACK3, NULL);
+        } else if (playSelectSound) {
+            play_sound_global(SOUND_SELECT2, NULL);
+        } else if (playPickSound) {
+            play_sound_global(SOUND_MENU_PICK2, NULL);
+        }
+        
+    } else {
+        gMenuDelay += updateRate;
+        if (gMenuDelay > 30) {
+            func_800976CC();
+            close_dialogue_box(7);
+            assign_dialogue_box_id(7);
+            if (D_80126BF0[gMenuOption] == gMenuText[ASSET_MENU_TEXT_TRYAGAIN]) {
+                return (0x100 | 0x2); //This gets parsed in func_8006DCF8 as a flag and an ID from the bottom 7 bits.
+            }
+            if (D_80126BF0[gMenuOption] == gMenuText[ASSET_MENU_TEXT_SELECTTRACK]) {
+                load_level_for_menu(-1, -1, 0);
+                menu_init(MENU_TRACK_SELECT);
+                return 0;
+            }
+            return (0x100 | 0x4);
+        }
+    }
+    gIgnorePlayerInputTime = 0;
+    return 0;
+}
 
 void func_800976CC(void) {
     func_8009C4A8(D_800E0A24);

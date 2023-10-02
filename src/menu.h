@@ -885,6 +885,7 @@ s32 menu_magic_codes_list_loop(s32 updateRate);
 void menu_trophy_race_rankings_init(void);
 void calculate_and_display_rom_checksum(void);
 s32 menu_trophy_race_rankings_loop(s32 updateRate);
+s32 menu_results_loop(s32 updateRate);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -910,7 +911,6 @@ void menu_track_select_init(void);
 void func_8009E3D0(void);
 s32 menu_title_screen_loop(s32 updateRate);
 s32 menu_magic_codes_loop(s32 updateRate);
-s32 menu_results_loop(s32 updateRate);
 s32 menu_credits_loop(s32 updateRate);
 void func_8009CA60(s32 imageID);
 void func_8007FFEC(s32 arg0);
@@ -944,6 +944,7 @@ s32 func_80087734(s32, s32);
 void func_80085B9C(UNUSED s32 updateRate);
 void func_80098774(s32);
 void render_magic_codes_ui(s32 updateRate);
+void func_80096978(s32, f32);
 
 typedef enum MenuTextures {
 /* 0x00 */ TEXTURE_UNK_00,
