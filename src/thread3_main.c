@@ -105,7 +105,7 @@ Vertex *gGameCurrVertexList;
 TriangleList *gTriangleHeap[2];
 TriangleList *gGameCurrTriList;
 UNUSED s32 D_80121230[8];
-s8 D_80121250[16]; //Settings4C
+s8 D_80121250[16];
 OSSched gMainSched; // 0x288 / 648 bytes
 u64 gSchedStack[0x400];
 s32 gSPTaskNum;
@@ -900,11 +900,12 @@ void update_menu_scene(s32 updateRate) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-// Minor & regalloc issues.
 void func_8006DCF8(s32 updateRate) {
-    s32 menuLoopResult, temp, temp2, tempResult;
-
+    s32 menuLoopResult;
+    s32 temp;
+    s32 playerVehicle;
+    s32 temp5;
+    
     gIsPaused = FALSE;
     gPostRaceViewPort = NULL;
     if (!gIsLoading && gRenderMenu) {
@@ -950,17 +951,16 @@ void func_8006DCF8(s32 updateRate) {
                 break;
             case 1:
                 gGameCurrentEntrance = 0;
-                gGameCurrentCutscene = CUTSCENE_ID_UNK_64;
                 gPlayableMapId = D_80121250[0];
+                gGameCurrentCutscene = CUTSCENE_ID_UNK_64;
                 sRenderContext = DRAW_GAME;
-                // Minor issue with these 2 if statements
-                temp2 = D_80121250[D_80121250[1] + 8];
-                temp = D_80121250[15];
-                if (temp >= 0) {
-                    gGameCurrentEntrance = temp;
+                temp5 = D_80121250[1];
+                if (D_80121250[15] >= 0) {
+                    gGameCurrentEntrance = D_80121250[15];
                 }
-                if (temp2 >= 0) {
-                    gGameCurrentCutscene = temp2;
+                temp = D_80121250[temp5 + 8];
+                if (temp >= 0) {
+                    gGameCurrentCutscene = temp;
                 }
                 load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
                 safe_mark_write_save_file(get_save_file_index());
@@ -985,20 +985,21 @@ void func_8006DCF8(s32 updateRate) {
     }
     if ((menuLoopResult & 0x80) && (menuLoopResult != -1)) {
         unload_level_menu();
-        // Minor issue here.
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
         gDPFullSync(gCurrDisplayList++);
         gSPEndDisplayList(gCurrDisplayList++);
-        temp = menuLoopResult & 0x7F;
-        D_80121250[1] = temp;
+
+        menuLoopResult &= 0x7f;
+        D_80121250[1] = menuLoopResult;
         D_80121250[0] = gPlayableMapId;
-        gPlayableMapId = D_80121250[temp + 2];
-        gGameCurrentEntrance = D_80121250[temp + 4];
+
+        gPlayableMapId = D_80121250[menuLoopResult+2];
+        gGameCurrentEntrance = D_80121250[menuLoopResult+4];
         sRenderContext = DRAW_GAME;
-        gGameCurrentCutscene = D_80121250[temp + 12];
-        temp = get_player_selected_vehicle(0);
+        gGameCurrentCutscene = D_80121250[menuLoopResult+12];
+        playerVehicle = get_player_selected_vehicle(0);
         gGameNumPlayers = gSettingsPtr->gNumRacers - 1;
-        load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, temp);
+        load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, playerVehicle);
         D_801234FC = 0;
         gLevelDefaultVehicleID = D_8012351C;
         return;
@@ -1016,10 +1017,6 @@ void func_8006DCF8(s32 updateRate) {
         }
     }
 }
-
-#else
-GLOBAL_ASM("asm/non_matchings/game/func_8006DCF8.s")
-#endif
 
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
     if (!gIsLoading) {
