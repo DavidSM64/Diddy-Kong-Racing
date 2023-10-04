@@ -372,7 +372,7 @@ void free_hud(void) {
             } else if (gAssetHudElementIds[i] & 0x8000) {
                 free_sprite((Sprite *) gAssetHudElements->entry[i]);
             } else if (gAssetHudElementIds[i] & 0x4000) {
-                despawn_object((Object *) gAssetHudElements->entry[i]);
+                free_object((Object *) gAssetHudElements->entry[i]);
             } else {
                 func_8005FF40((ObjectModel **) gAssetHudElements->entry[i]);
             }
@@ -2156,7 +2156,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 } else if (gAssetHudElementIds[i] & 0x8000) {
                     free_sprite((Sprite *) gAssetHudElements->entry[i]);
                 } else if (gAssetHudElementIds[i] & 0x4000) {
-                    despawn_object((Object *) gAssetHudElements->entry[i]);
+                    free_object((Object *) gAssetHudElements->entry[i]);
                 } else {
                     func_8005FF40((ObjectModel **) gAssetHudElements->entry[i]);
                 }

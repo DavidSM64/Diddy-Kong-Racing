@@ -328,11 +328,11 @@ void func_8000B290(void) {
         }
     }
     if (gShieldEffectObject)
-        despawn_object(gShieldEffectObject);
+        free_object(gShieldEffectObject);
     gShieldEffectObject = NULL;
 
     if (gMagnetEffectObject)
-        despawn_object(gMagnetEffectObject);
+        free_object(gMagnetEffectObject);
     gMagnetEffectObject = NULL;
     gParticlePtrList_flush();
 }
@@ -748,7 +748,7 @@ void func_8000E1EC(Object *obj, s32 vehicleID) {
     D_8011AD48 = obj->segment.trans.y_position;
     D_8011AD4A = obj->segment.trans.z_position;
     D_8011AD4C = obj->segment.trans.y_rotation;
-    despawn_object(obj);
+    free_object(obj);
     gNumRacers = 0;
 }
 
@@ -1415,7 +1415,8 @@ s32 func_8000FD34(Object *arg0, Object_5C *arg1) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8000FD54.s")
 
-void despawn_object(Object *object) {
+//Official Name: objFreeObject
+void free_object(Object *object) {
     func_800245B4(object->unk4A | 0x8000);
     gParticlePtrList[gParticleCount] = object;
     gParticleCount++;
@@ -4065,7 +4066,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
     newObj = (Object *) obj->unk64;
     // (newObj->behaviorId == BHV_DINO_WHALE) is Dinosaur1, Dinosaur2, Dinosaur3, Whale, and Dinoisle
     if ((obj->unk64 != NULL) && (newObj->behaviorId == BHV_DINO_WHALE) && (gTimeTrialEnabled)) {
-        despawn_object(newObj);
+        free_object(newObj);
         obj->unk64 = NULL;
         newObj = NULL;
     }

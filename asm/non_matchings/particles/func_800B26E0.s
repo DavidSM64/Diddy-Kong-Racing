@@ -516,7 +516,7 @@ glabel func_800B26E0
 /* 0B3A88 800B2E88 1DE00009 */  bgtz  $t7, .L800B2EB0
 /* 0B3A8C 800B2E8C 00000000 */   nop   
 /* 0B3A90 800B2E90 AFA30038 */  sw    $v1, 0x38($sp)
-/* 0B3A94 800B2E94 0C003FEE */  jal   despawn_object
+/* 0B3A94 800B2E94 0C003FEE */  jal   free_object
 /* 0B3A98 800B2E98 AFA60050 */   sw    $a2, 0x50($sp)
 /* 0B3A9C 800B2E9C 8FA30038 */  lw    $v1, 0x38($sp)
 /* 0B3AA0 800B2EA0 3C058012 */  lui   $a1, %hi(gParticleUpdateRate) # $a1, 0x8012

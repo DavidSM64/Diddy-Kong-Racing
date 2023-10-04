@@ -9346,7 +9346,7 @@ void func_8009C508(s32 arg0) {
                     free_sprite((Sprite *) (u32) D_80126550[arg0]);
                 } else {
                     if ((*gAssetsMenuElementIds)[arg0] & 0x4000) {
-                        despawn_object((Object *) (u32) D_80126550[arg0]);
+                        free_object((Object *) (u32) D_80126550[arg0]);
                     } else {
                         func_8005FF40((ObjectModel**)(u32)D_80126550[arg0]);
                     }
