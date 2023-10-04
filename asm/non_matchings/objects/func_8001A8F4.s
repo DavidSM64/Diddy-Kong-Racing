@@ -224,7 +224,7 @@ glabel func_8001A8F4
 /* 01B838 8001AC38 0006C880 */  sll   $t9, $a2, 2
 /* 01B83C 8001AC3C 03194821 */  addu  $t1, $t8, $t9
 /* 01B840 8001AC40 8D240000 */  lw    $a0, ($t1)
-/* 01B844 8001AC44 0C003FEE */  jal   gParticlePtrList_addObject
+/* 01B844 8001AC44 0C003FEE */  jal   despawn_object
 /* 01B848 8001AC48 00000000 */   nop   
 /* 01B84C 8001AC4C 3C078012 */  lui   $a3, %hi(D_8011AD51) # $a3, 0x8012
 /* 01B850 8001AC50 24E7AD51 */  addiu $a3, %lo(D_8011AD51) # addiu $a3, $a3, -0x52af

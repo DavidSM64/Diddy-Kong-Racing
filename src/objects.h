@@ -342,7 +342,7 @@ Object **objGetObjList(s32 *arg0, s32 *cnt);
 s32 getObjectCount(void);
 s32 func_8000E9C0(void);
 void func_8000E9D0(Object *arg0);
-void gParticlePtrList_addObject(Object *);
+void despawn_object(Object *);
 s32 func_80010018(void);
 s32 func_80010028(s32 arg0);
 void func_80011390(void);
