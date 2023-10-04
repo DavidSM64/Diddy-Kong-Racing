@@ -1466,7 +1466,7 @@ void render_treasure_hud(Object_Racer *racer) {
     D_80126CD5 = 0;
 }
 
-void func_800A47A0(Object_Racer* racer, s32 updateRate) {
+void func_800A47A0(Object_Racer *racer, s32 updateRate) {
     s32 i;
     s32 prevUnk5D0;
 

@@ -211,7 +211,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, s32 updateRate);
 void drop_bananas(Object *obj, Object_Racer *racer, s32 number);
 void update_player_racer(Object *obj, s32 updateRate);
 void func_80045128(Object **racerObjs);
-void func_80059BF0(Object* obj, s32 updateRate);
+void func_80059BF0(Object *obj, s32 updateRate);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
