@@ -280,8 +280,8 @@ glabel menu_results_loop
 /* 0982A8 800976A8 10000004 */  b     .L800976BC
 /* 0982AC 800976AC 24020104 */   li    $v0, 260
 .L800976B0:
-/* 0982B0 800976B0 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
-/* 0982B4 800976B4 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInput)($at)
+/* 0982B0 800976B0 3C018012 */  lui   $at, %hi(gIgnorePlayerInputTime) # $at, 0x8012
+/* 0982B4 800976B4 AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInputTime)($at)
 /* 0982B8 800976B8 00001025 */  move  $v0, $zero
 .L800976BC:
 /* 0982BC 800976BC 8FBF0014 */  lw    $ra, 0x14($sp)

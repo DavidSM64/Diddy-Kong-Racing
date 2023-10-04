@@ -109,8 +109,8 @@ glabel func_80095728
 .L800958A4:
 /* 0964A4 800958A4 0C026FC8 */  jal   update_controller_sticks
 /* 0964A8 800958A8 AFAA0030 */   sw    $t2, 0x30($sp)
-/* 0964AC 800958AC 3C0E8012 */  lui   $t6, %hi(gIgnorePlayerInput) # $t6, 0x8012
-/* 0964B0 800958B0 8DCE63C4 */  lw    $t6, %lo(gIgnorePlayerInput)($t6)
+/* 0964AC 800958AC 3C0E8012 */  lui   $t6, %hi(gIgnorePlayerInputTime) # $t6, 0x8012
+/* 0964B0 800958B0 8DCE63C4 */  lw    $t6, %lo(gIgnorePlayerInputTime)($t6)
 /* 0964B4 800958B4 3C098012 */  lui   $t1, %hi(D_80126C14) # $t1, 0x8012
 /* 0964B8 800958B8 8FAA0030 */  lw    $t2, 0x30($sp)
 /* 0964BC 800958BC 25296C14 */  addiu $t1, %lo(D_80126C14) # addiu $t1, $t1, 0x6c14
@@ -1115,21 +1115,21 @@ glabel L800964DC
 .L80096710:
 /* 097310 80096710 AFAC0044 */  sw    $t4, 0x44($sp)
 .L80096714:
-/* 097314 80096714 3C028012 */  lui   $v0, %hi(gIgnorePlayerInput) # $v0, 0x8012
-/* 097318 80096718 8C4263C4 */  lw    $v0, %lo(gIgnorePlayerInput)($v0)
+/* 097314 80096714 3C028012 */  lui   $v0, %hi(gIgnorePlayerInputTime) # $v0, 0x8012
+/* 097318 80096718 8C4263C4 */  lw    $v0, %lo(gIgnorePlayerInputTime)($v0)
 /* 09731C 8009671C 3C0D8012 */  lui   $t5, %hi(sMenuCurrDisplayList) # $t5, 0x8012
 /* 097320 80096720 1840000B */  blez  $v0, .L80096750
 /* 097324 80096724 00000000 */   nop   
 /* 097328 80096728 8FAE0064 */  lw    $t6, 0x64($sp)
-/* 09732C 8009672C 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
+/* 09732C 8009672C 3C018012 */  lui   $at, %hi(gIgnorePlayerInputTime) # $at, 0x8012
 /* 097330 80096730 004E7823 */  subu  $t7, $v0, $t6
-/* 097334 80096734 AC2F63C4 */  sw    $t7, %lo(gIgnorePlayerInput)($at)
-/* 097338 80096738 3C188012 */  lui   $t8, %hi(gIgnorePlayerInput) # $t8, 0x8012
-/* 09733C 8009673C 8F1863C4 */  lw    $t8, %lo(gIgnorePlayerInput)($t8)
-/* 097340 80096740 3C018012 */  lui   $at, %hi(gIgnorePlayerInput) # $at, 0x8012
+/* 097334 80096734 AC2F63C4 */  sw    $t7, %lo(gIgnorePlayerInputTime)($at)
+/* 097338 80096738 3C188012 */  lui   $t8, %hi(gIgnorePlayerInputTime) # $t8, 0x8012
+/* 09733C 8009673C 8F1863C4 */  lw    $t8, %lo(gIgnorePlayerInputTime)($t8)
+/* 097340 80096740 3C018012 */  lui   $at, %hi(gIgnorePlayerInputTime) # $at, 0x8012
 /* 097344 80096744 07010002 */  bgez  $t8, .L80096750
 /* 097348 80096748 00000000 */   nop   
-/* 09734C 8009674C AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInput)($at)
+/* 09734C 8009674C AC2063C4 */  sw    $zero, %lo(gIgnorePlayerInputTime)($at)
 .L80096750:
 /* 097350 80096750 8DAD63A0 */  lw    $t5, %lo(sMenuCurrDisplayList)($t5)
 /* 097354 80096754 8FB90058 */  lw    $t9, 0x58($sp)

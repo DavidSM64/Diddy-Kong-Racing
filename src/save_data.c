@@ -127,7 +127,7 @@ u8 func_80072250(s32 arg0) {
 
 void func_80072298(u8 arg0) {
     D_801241E4 = arg0;
-    if (arg0 != 0) {
+    if (arg0) {
         gRumbleDetectionTimer = 0x79;
         D_801241E6 = 0xF;
         return;
@@ -192,10 +192,10 @@ void func_80072578(s16 controllerIndex, s16 arg1, s16 arg2) {
     s16 index;
     u8 new_var;
 
-    if (D_801241E4 != 0 && controllerIndex >= 0 && controllerIndex < 4) {
+    if (D_801241E4 && controllerIndex >= 0 && controllerIndex < 4) {
         new_var = func_80072250(controllerIndex);
         index = 0xFFFF;
-        index = index & new_var;
+        index &= new_var;
         new_var = 1 << index;
         D_801241E6 |= new_var;
         D_801241E7 &= ~new_var;
@@ -1624,7 +1624,7 @@ void init_controller_paks(void) {
     sControllerMesgQueue = get_si_mesg_queue();
     sUnkMiscAsset19 = (s16 *)get_misc_asset(ASSET_MISC_19);
     D_801241E6 = D_801241E7 = 0xF;
-    D_801241E4 = 1;
+    D_801241E4 = TRUE;
     gRumbleDetectionTimer = 0;
     D_800DE48C = 1;
     sControllerPaksPresent = sRumblePaksPresent = 0;

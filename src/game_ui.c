@@ -510,7 +510,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                     }
                 }
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
-                func_800A7A60(arg3, &gHUDCurrDisplayList);
+                func_800A7A60(arg3);
                 set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
                 gDPSetEnvColor(gHUDCurrDisplayList++, 255, 255, 255, 0);
                 sp2C = func_8001139C() >> 1;
@@ -969,7 +969,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
             }
             func_80061D30(ttSWBodyObject);
         }
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC** ) &gCurrentHud->unk21C[0x124]);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC** ) &gCurrentHud->unk340);
         
         for(i = 0; curRacer->lap >= i && i < 5; i++) { 
             stopwatchTimer += curRacer->lap_times[i];
@@ -983,12 +983,12 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
         }
         gCurrentHud->unk444 = ((stopwatchTimer * 0x444) + 0x7FF8);
         if (func_8000E0B0() <= 0) {
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk21C[0x224]);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk440);
         }
         gCurrentHud->unk444 = ((((stopwatchTimer / 60) + 30) % 60) * 0x444);
         gCurrentHud->unk450 = gCurrentHud->unk350 + 28.0f;
         if (func_8000E0B0() <= 0) {
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk21C[0x224]);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk440);
         }
         obj68->unk20 = 0;
         func_80068508(1);
@@ -1004,8 +1004,8 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
                 spB8 += 12;
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                 gCurrentHud->unk338 = i + 1;
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk21C[0x104]);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk21C[0xE4]);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk320);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk300);
                 gCurrentHud->unk330 += 12.0f;
                 gCurrentHud->unk310 += 12.0f;
             }
@@ -1127,7 +1127,6 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A277C.s")
 #endif
 
-#ifdef NON_EQUIVALENT
 void func_800A36CC(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4) {
     s32 var_a3;
     s32 i;
@@ -1138,27 +1137,24 @@ void func_800A36CC(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4) {
     if (is_in_time_trial()) {
         hud20 = gAssetHudElements->entry[20];
         if (hud20 != NULL) {
-            unk68 = hud20->unk68;
+            unk68 = hud20->unk68[0];
             var_a3 = unk68[0]->unk28;
             
             for (i = 0; i < var_a3; i++) {
-                temp_v0_2 = unk68[0]->unk38[i];
-                if (D_80126D66 == *temp_v0_2) {
-                    *temp_v0_2 = arg0;
+                if (D_80126D66 == unk68[0]->unk38[i].unk0[0]) {
+                    unk68[0]->unk38[i].unk0[0] = arg0;
                     if (arg0 == 4) {
-                        unk68[0]->unk38[i]->unk8 |= (0x800000 | 0x10000);
+                        unk68[0]->unk38[i].unk8 |= (0x800000 | 0x10000);
                         unk68[0]->unk50 = 1;
                     } else {
-                        unk68[0]->unk38[i]->unk8 &= ~(0x800000 | 0x10000);
+                        unk68[0]->unk38[i].unk8 &= ~(0x800000 | 0x10000);
                         unk68[0]->unk50 = 0;
                     }
                     var_a3 = unk68[0]->unk28;
-                }
-                if (D_80126D65 == *temp_v0_2) {
-                    *temp_v0_2 = arg1;
+                } else if (D_80126D65 == unk68[0]->unk38[i].unk0[0]) {
+                    unk68[0]->unk38[i].unk0[0] = arg1;
                     var_a3 = unk68[0]->unk28;
-                }
-                
+                }                
             }
             D_80126D66 = arg0;
             D_80126D65 = arg1;
@@ -1168,9 +1164,6 @@ void func_800A36CC(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4) {
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A36CC.s")
-#endif
 
 void func_800A3870(void) {
     gCurrentHud->unk4C4 = 0x6490;
@@ -1886,7 +1879,37 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+void func_800A7A60(Object *obj) {
+    unk80126CDC *hud;
+    unk80068514_arg4 *arg4;
+    Object_Racer *racer;
+    s32 hudElementIndex;
+    f32 *new_var;
+
+    racer = &obj->unk64->racer;
+    if (racer->magnetTargetObj != NULL) {
+        if (get_current_viewport() == racer->playerIndex) {
+            hud = gCurrentHud;
+            hudElementIndex = hud->unk226;
+            if (1) { } if (1) { } if (1) { } if (1) { } if (1) { }
+            new_var = &racer->magnetTargetObj->segment.trans.x_position;
+            hud->unk22C = *new_var;
+            hud->unk230 = racer->magnetTargetObj->segment.trans.y_position;
+            hud->unk234 = racer->magnetTargetObj->segment.trans.z_position;
+            arg4 = (unk80068514_arg4 *) gAssetHudElements->entry[hudElementIndex];
+            if (arg4 != NULL) {
+                gAssetHudElementStaleCounter[hudElementIndex] = 0;
+                func_80066CDC(&gHUDCurrDisplayList, &gHUDCurrMatrix);
+                func_80068408(&gHUDCurrDisplayList, &gHUDCurrMatrix);
+                render_sprite_billboard(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, hud->unk220, arg4, RENDER_Z_UPDATE);
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7A60.s")
+#endif
 
 /**
  * Render the lap time on the top right.

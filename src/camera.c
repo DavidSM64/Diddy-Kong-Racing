@@ -10,6 +10,7 @@
 #include "lib/src/libc/rmonPrintf.h"
 #include "math_util.h"
 #include "weather.h"
+#include "lib/src/os/piint.h"
 
 /************ .rodata ************/
 
@@ -135,21 +136,25 @@ Matrix D_801210A0;
 
 /******************************/
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 extern s32 D_B0000578;
 /**
  * Official Name: camInit
 */
 void func_80065EA0(void) {
-    s32 i, j;
-    for (i = 0; i < 5; i++) {
-        gModelMatrixF[i] = &D_80120DA0[i];
-    };
+    s32 i;
+    s32 j;
+    u32 stat;
+ 
+    // This loop is not cooperating. 
+    for (i = 0; i < 5; i++) { gModelMatrixF[i] = D_80120DA0 + i + i*0; } 
+
     for (j = 0; j < 8; j++) {
         gActiveCameraID = j;
         func_800663DC(200, 200, 200, 0, 0, 180);
-    };
-    gCutsceneCameraActive = FALSE;
+    }
+    
+    gCutsceneCameraActive = FALSE; 
     gActiveCameraID = 0;
     gModelMatrixStackPos = 0;
     gCameraMatrixPos = 0;
@@ -158,12 +163,14 @@ void func_80065EA0(void) {
     D_80120D18 = 0;
     gAdjustViewportHeight = 0;
     gAntiPiracyViewport = 0;
-    while (IO_READ(PI_STATUS_REG) & PI_STATUS_ERROR) {
-    }
+    
+    WAIT_ON_IOBUSY(stat);
+    
     //0xB0000578 is a direct read from the ROM as opposed to RAM
-    if ((D_B0000578 & 0xFFFF) != 0x8965) {
+    if (((D_B0000578 & 0xFFFF) & 0xFFFF) != 0x8965) {
         gAntiPiracyViewport = TRUE;
     }
+
     guPerspectiveF(gPerspectiveMatrixF, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
     f32_matrix_to_s16_matrix(gPerspectiveMatrixF, gProjectionMatrixS);
     gCurCamFOV = CAMERA_DEFAULT_FOV;
