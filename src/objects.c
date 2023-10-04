@@ -4096,7 +4096,37 @@ s32 func_800210CC(s8 arg0) {
     return 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80021104.s")
+void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Animation *entry) {
+    ObjectSegment *seg;
+    ObjectTransform *animObjTrans;
+
+    animObjTrans = animObj->unk1C;
+    if (obj->behaviorId == BHV_CAMERA_ANIMATION) {
+        animObj->unk44 = D_8011AD3E;
+        D_8011AD3E++;
+    }
+    if (entry->unk22 == 18) {
+        set_active_camera(animObj->unk30);
+        seg = get_active_camera_segment_no_cutscenes();
+        animObjTrans->x_position = seg->trans.x_position;
+        animObjTrans->y_position = seg->trans.y_position;
+        animObjTrans->z_position = seg->trans.z_position;
+        animObjTrans->y_rotation = (0x8000 - seg->trans.y_rotation);
+        animObjTrans->x_rotation = -seg->trans.x_rotation;
+        animObjTrans->z_rotation = seg->trans.z_rotation;
+    }
+    if ((entry->unk22 >= 10) && (entry->unk22 < 18)) {
+        seg = &(*gRacers)[entry->unk22 - 10]->segment;
+        if (seg != NULL) {
+            animObjTrans->x_position = seg->trans.x_position;
+            animObjTrans->y_position = seg->trans.y_position;
+            animObjTrans->z_position = seg->trans.z_position;
+            animObjTrans->y_rotation = seg->trans.y_rotation;
+            animObjTrans->x_rotation = seg->trans.x_rotation;
+            animObjTrans->z_rotation = seg->trans.z_rotation;
+        }
+    }
+}
 
 void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entry, Object_CharacterSelect *charSelect, UNUSED s32 index) {
     s32 initialAnimFrame;
