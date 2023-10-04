@@ -330,11 +330,10 @@ typedef struct unk800E1E64 {
 
 /* Size: 0x10 bytes */
 typedef struct unk800E2770 {
-    s8 unk0;
-    s8 unk1;
-    s8 unk2;
+    u16 unk0;
+    u8 unk2;
     s8 unk3;
-    s32 unk4; //soundMask?
+    s32 *unk4; //soundmask?
     s32 unk8;
     s8 unkC;
     s8 unkD;
@@ -396,6 +395,7 @@ void func_800A1C04(s32 arg0, Object *obj, s32 updateRate);
 void func_800A22F4(Object_Racer *racer, void *unused);
 void free_hud(void);
 void func_800A36CC(u8, u8, u8, u8, u8);
+void func_800A0BD4(s32 updateRate);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
@@ -409,7 +409,6 @@ void func_800A277C(s32, Object*, s32);
 void func_800A6254(Object_64* obj, s32 updateRate);
 void func_800A6E30(Object_64* obj, s32 updateRate);
 void func_800A7A60(Object*);
-void func_800A0BD4(s32);
 void func_800A19A4(Object_Racer* racer, s32 updateRate);
 void func_800A1E48(Object*, s32);
 void render_treasure_hud(Object_Racer*);

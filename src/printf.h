@@ -44,6 +44,7 @@ typedef struct TexFontCoords {
     RENDER_PRINTF_CMD_END
 
 
+char *_itoa(u64 n, char *outBuffer, u32 radix, s32 useUpperCase);
 void func_800B4A08(s32 arg0);
 void diPrintfInit(void);
 void set_render_printf_colour(u8 red, u8 green, u8 blue, u8 alpha);
