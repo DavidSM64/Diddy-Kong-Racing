@@ -7902,7 +7902,7 @@ s32 menu_results_loop(s32 updateRate) {
                 return (0x100 | 0x2); //This gets parsed in func_8006DCF8 as a flag and an ID from the bottom 7 bits.
             }
             if (D_80126BF0[gMenuOption] == gMenuText[ASSET_MENU_TEXT_SELECTTRACK]) {
-                load_level_for_menu(-1, -1, 0);
+                load_level_for_menu(SPECIAL_MAP_ID_NO_LEVEL, -1, 0);
                 menu_init(MENU_TRACK_SELECT);
                 return 0;
             }

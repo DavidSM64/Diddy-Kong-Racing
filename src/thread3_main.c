@@ -671,20 +671,20 @@ void ingame_logic_loop(s32 updateRate) {
             switch (sp40) {
                 case 1:
                     // Go to track select menu from "Select Track" option in tracks menu.
-                    load_menu_with_level_background(MENU_TRACK_SELECT, -1, 1);
+                    load_menu_with_level_background(MENU_TRACK_SELECT, SPECIAL_MAP_ID_NO_LEVEL, 1);
                     break;
                 case 2:
-                    load_menu_with_level_background(MENU_RESULTS, 0x22, 0);
+                    load_menu_with_level_background(MENU_RESULTS, ASSET_LEVEL_TROPHYRACE, 0);
                     break;
                 case 3:
-                    load_menu_with_level_background(MENU_TROPHY_RACE_ROUND, 0x22, 0);
+                    load_menu_with_level_background(MENU_TROPHY_RACE_ROUND, ASSET_LEVEL_TROPHYRACE, 0);
                     break;
                 case 4:
-                    load_menu_with_level_background(MENU_TROPHY_RACE_RANKINGS, 0x22, 0);
+                    load_menu_with_level_background(MENU_TROPHY_RACE_RANKINGS, ASSET_LEVEL_TROPHYRACE, 0);
                     break;
                 case 5:
                     // Trophy race related?
-                    load_menu_with_level_background(MENU_UNUSED_22, 0x22, 0);
+                    load_menu_with_level_background(MENU_UNUSED_22, ASSET_LEVEL_TROPHYRACE, 0);
                     break;
                 case 6:
                     // Go to character select menu from "Select Character" option in tracks menu.
@@ -696,23 +696,23 @@ void ingame_logic_loop(s32 updateRate) {
                         i ^= 3;
                     }
                     func_8008AEB4(1, 0);
-                    load_menu_with_level_background(MENU_CHARACTER_SELECT, 0x16, i);
+                    load_menu_with_level_background(MENU_CHARACTER_SELECT, ASSET_LEVEL_CHARACTERSELECT, i);
                     break;
                 case 7:
                     gIsLoading = TRUE;
-                    load_menu_with_level_background(MENU_UNKNOWN_23, -1, 0);
+                    load_menu_with_level_background(MENU_UNKNOWN_23, SPECIAL_MAP_ID_NO_LEVEL, 0);
                     gIsLoading = FALSE;
                     break;
                 case 8:
-                    load_menu_with_level_background(MENU_CREDITS, -1, 0);
+                    load_menu_with_level_background(MENU_CREDITS, SPECIAL_MAP_ID_NO_LEVEL, 0);
                     break;
             }
         } else if (D_801234FC == 1) {
             if (D_80121250[2] == -1) {
-                load_menu_with_level_background(MENU_UNUSED_8, -1, 0);
+                load_menu_with_level_background(MENU_UNUSED_8, SPECIAL_MAP_ID_NO_LEVEL, 0);
             } else {
                 gIsLoading = TRUE;
-                load_menu_with_level_background(MENU_TRACK_SELECT_ADVENTURE, -1, -1);
+                load_menu_with_level_background(MENU_TRACK_SELECT_ADVENTURE, SPECIAL_MAP_ID_NO_LEVEL, -1);
             }
         } else if (!(buttonHeldInputs & R_TRIG)) {
             if (!(buttonHeldInputs & Z_TRIG)) {
@@ -727,7 +727,7 @@ void ingame_logic_loop(s32 updateRate) {
             load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
         } else {
             safe_mark_write_save_file(get_save_file_index());
-            load_menu_with_level_background(MENU_TITLE, -1, 0);
+            load_menu_with_level_background(MENU_TITLE, SPECIAL_MAP_ID_NO_LEVEL, 0);
         }
         D_801234FC = 0;
     }
@@ -939,7 +939,7 @@ void func_8006DCF8(s32 updateRate) {
         gPostRaceViewPort = NULL;
         switch (menuLoopResult & 0x7F) {
             case 5:
-                load_menu_with_level_background(MENU_TRACK_SELECT, -1, 1);
+                load_menu_with_level_background(MENU_TRACK_SELECT, SPECIAL_MAP_ID_NO_LEVEL, 1);
                 break;
             case 14:
                 gPlayableMapId = ASSET_LEVEL_CENTRALAREAHUB;
@@ -978,7 +978,7 @@ void func_8006DCF8(s32 updateRate) {
                 load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
                 break;
             default:
-                load_menu_with_level_background(MENU_TITLE, -1, 0);
+                load_menu_with_level_background(MENU_TITLE, SPECIAL_MAP_ID_NO_LEVEL, 0);
                 break;
         }
         return;
@@ -1521,7 +1521,7 @@ void pre_intro_loop(void) {
     }
     sBootDelayTimer++;
     if (sBootDelayTimer >= 8) {
-        load_menu_with_level_background(MENU_BOOT, 0x27, 2);
+        load_menu_with_level_background(MENU_BOOT, ASSET_LEVEL_OPTIONSBACKGROUND, 2);
     }
 }
 
