@@ -276,7 +276,15 @@ typedef struct unk80126CDC {
     struct unk80126CDC *unk580;
     u8 unk584[0x1C];
     struct unk80126CDC *unk5A0;
-    u8 unk484[0x7C];
+    u8 unk5A4[0x1C];
+    struct unk80126CDC *unk5C0;
+    u8 unk5C1[0xC];
+    f32 unk5D0;
+    u8 unk5D4[0x6];
+    s8 unk5DA;
+    s8 unk5DB;
+    s8 unk5DC;
+    u8 unk5DD[0x43];
     struct unk80126CDC *unk620;
     u8 unk624[0x14];
     s16 unk638;
@@ -396,11 +404,11 @@ void func_800A22F4(Object_Racer *racer, void *unused);
 void free_hud(void);
 void func_800A36CC(u8, u8, u8, u8, u8);
 void func_800A0BD4(s32 updateRate);
+void func_800A47A0(Object_Racer *racer, s32 updateRate);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
 void func_800A4C44(Object_Racer *racer, s32 updateRate);
-void func_800A47A0(Object_Racer *obj, s32 updateRate);
 void func_800A718C(Object_64 *obj);
 void func_800AA600(Gfx **dList, MatrixS **mtx, Vertex **vtxList, unk80126CDC **arg3);
 void func_800A7FBC(s32, s32, s32 minutes, s32 seconds, s32 hundredths, s32); 

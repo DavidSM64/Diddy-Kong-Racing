@@ -1466,7 +1466,35 @@ void render_treasure_hud(Object_Racer *racer) {
     D_80126CD5 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A47A0.s")
+void func_800A47A0(Object_Racer* racer, s32 updateRate) {
+    s32 i;
+    s32 prevUnk5D0;
+
+    gCurrentHud->unk5D0 = (s32) gCurrentHud->unk5D0; //Convert itself to a int and back to a float? Strips decimals?
+    prevUnk5D0 = gCurrentHud->unk5D0;
+    for(i = 0; i < 8; i++) {
+        if (i >= racer->silverCoinCount) {
+            D_800E2834 = COLOUR_RGBA32(128, 128, 128, 128);
+        }
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk5C0);
+        gCurrentHud->unk5D0 -= gCurrentHud->unk5DC;
+    }
+    if (racer->silverCoinCount == 8) {
+        if (gCurrentHud->unk5DB < 30) {
+            gCurrentHud->unk5DB += updateRate;
+        }
+        if (gCurrentHud->unk5DA == 0) {
+            if (gCurrentHud->unk5DB >= 30) {
+                gCurrentHud->unk5DA = 1;
+                if (gHUDVoiceSoundMask == 0) {
+                    play_sound_global(SOUND_VOICE_TT_GO_FOR_IT, &gHUDVoiceSoundMask);
+                }
+            }
+        }
+    }
+    gCurrentHud->unk5D0 = prevUnk5D0;
+    D_800E2834 = COLOUR_RGBA32(255, 255, 255, 254);
+}
 
 /**
  * Plays the race finish fanfare and displays what position you finished
