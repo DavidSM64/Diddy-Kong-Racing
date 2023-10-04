@@ -197,11 +197,11 @@ typedef struct Racer {
 
 /* Unknown Size */
 typedef struct Settings4C {
-    u8 unk0;
-    u8 unk1;
-    s8 unk2;
+    u8 unk0; //courseId?
+    u8 unk1; // This value + 8 is cutsceneId index? gGameCurrentCutscene = D_80121250[D_80121250[1] + 8];
+    s8 unk2; //mapId?
     u8 pad3[0xC];
-    u8 unkF;
+    u8 unkF; //entranceId?
 } Settings4C;
 
 #define TAJ_FLAGS_CAR_CHAL_UNLOCKED    0x01
