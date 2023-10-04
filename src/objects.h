@@ -9,6 +9,15 @@
 #include "camera.h"
 #include "lights.h"
 
+
+#define NEW_OBJECT_ENTRY(entryVar, entryId, entrySize, xPos, yPos, zPos) { \
+    entryVar.x = (xPos);                                                   \
+    entryVar.y = (yPos);                                                   \
+    entryVar.z = (zPos);                                                   \
+    entryVar.size = ((((entryId) >> 1) & 0x80) | (entrySize));             \
+    entryVar.objectID = (s8)(entryId);                                     \
+}
+
 enum ObjectBehaviours {
     BHV_NONE,
     BHV_RACER,

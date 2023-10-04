@@ -4052,7 +4052,49 @@ void func_8001EFA4(Object *arg0, Object *animObj) {
     anim->unk45 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001F23C.s")
+void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
+    s32 i;
+    LevelObjectEntryCommon newObjEntry;
+    Object *newObj;
+    Object_AnimCamera *camera;
+    s32 viewportCount;
+
+    NEW_OBJECT_ENTRY(newObjEntry, animEntry->objectIdToSpawn, 8, animEntry->common.x, animEntry->common.y, animEntry->common.z);
+
+    obj->unk64 = (Object_64*)spawn_object((LevelObjectEntryCommon* ) &newObjEntry, 1);
+    newObj = (Object *) obj->unk64;
+    // (newObj->behaviorId == BHV_DINO_WHALE) is Dinosaur1, Dinosaur2, Dinosaur3, Whale, and Dinoisle
+    if ((obj->unk64 != NULL) && (newObj->behaviorId == BHV_DINO_WHALE) && (gTimeTrialEnabled)) {
+        gParticlePtrList_addObject(newObj);
+        obj->unk64 = NULL;
+        newObj = NULL;
+    }
+    camera = (Object_AnimCamera *) newObj;
+    if (camera != NULL) {
+        camera->unk3C = 0;
+        func_8001EFA4(obj, newObj);
+        if (newObj->segment.header->behaviorId == BHV_CAMERA_ANIMATION) {
+            camera = &newObj->unk64->anim_camera;
+            camera->unk44 = D_8011AD3E;
+            viewportCount = get_viewport_count();
+            if (func_8006C19C()) {
+                viewportCount = VIEWPORTS_COUNT_2_PLAYERS;
+            }
+            for (i = 0; i < viewportCount;) {
+                newObj = spawn_object(&newObjEntry, 1);
+                if (newObj != NULL) {
+                    newObj->segment.level_entry = NULL;
+                    func_8001EFA4(obj, newObj);
+                    camera = &newObj->unk64->anim_camera;
+                    i++;
+                    camera->unk30 = i;
+                    camera->unk44 = D_8011AD3E;
+                }
+            }
+            D_8011AD3E++;
+        }
+    }
+}
 
 s8 func_8001F3B8(void) {
     return D_8011ADD4;

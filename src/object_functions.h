@@ -402,6 +402,7 @@ void obj_loop_lasergun(Object *obj, s32 updateRate);
 void play_rocket_trailing_sound(Object *obj, struct Object_Weapon *weapon, u16 soundID);
 void rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon *rocket);
 void homing_rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon *rocket);
+void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 updateRate);
@@ -446,7 +447,6 @@ void try_to_collect_egg(Object *, Object_CollectEgg*);
 
 
 void func_8001EE74();
-void func_8001F23C(Object *obj, LevelObjectEntry_Animation *entry);
 s32 func_8001F3EC(s32);
 s32 func_80021600(s32);
 void func_8003F2E8(Object *, s32 updateRate);

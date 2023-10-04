@@ -26,7 +26,7 @@ typedef struct unk8011A6D8_04 {
 typedef struct unk8011A6D8 {
   union {
     /* 0x00 */ f32 unk0_01;
-    /* 0x00 */ s8 unk0_02;
+    /* 0x00 */ u8 unk0_02;
   } unk0;
   union {
     /* 0x04 */ unk8011A6D8_04 *unk4_01;
@@ -64,6 +64,7 @@ s32 func_800099EC(u8 arg0);
 void func_8000A414(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *arg3, u8 red, u8 green, u8 blue);
 void func_80006BFC(Object *obj, ObjectSegment *segment, Object *obj2, s32 updateRate);
 void update_spatial_audio_position(SoundMask *arg0, f32 x, f32 y, f32 z);
+s32 func_80009AB4(u8 arg0);
 
 s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, f32 *outY, f32 *outZ);
 void func_80009968(f32, f32, f32, u8, u8, u8); // Non Matching

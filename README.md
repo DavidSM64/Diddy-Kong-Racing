@@ -7,7 +7,7 @@ Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of October 4, 2023, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 56.14%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 56.18%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 28.44%
 <!-- README_SCORE_SUMMARY_END -->
@@ -132,9 +132,9 @@ As of October 4th, 2023, this is our current score:
 ```
  =====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- -------------------------- 56.14% Complete --------------------------
-                     # Decompiled functions: 1587
-                      # GLOBAL_ASM remaining: 251
+ -------------------------- 56.18% Complete --------------------------
+                     # Decompiled functions: 1588
+                      # GLOBAL_ASM remaining: 250
                      # NON_MATCHING functions: 12
                   # NON_EQUIVALENT WIP functions: 61
  ---------------------------- Game Status ----------------------------

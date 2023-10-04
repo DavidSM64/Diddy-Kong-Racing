@@ -1032,8 +1032,14 @@ typedef struct Object_CharacterFlag {
 typedef struct Object_AnimCamera {
   /* 0x00 */ u8 pad0[0x30];
   /* 0x30 */ s8 unk30;
-  /* 0x31 */ u8 pad31[0x13];
-  /* 0x44 */ s8 unk44;
+  /* 0x31 */ u8 pad31[0xB];
+  /* 0x3C */ s32 unk3C;
+  /* 0x40 */ u8 pad40[4];
+  /* 0x44 */ u8 unk44;
+  /* 0x45 */ u8 pad45[5];
+  /* 0x4A */ s16 unk4A;
+  /* 0x4C */ u8 pad4C[8];
+  /* 0x54 */ s8 unk54;
 } Object_AnimCamera;
 
 typedef struct Object_InfoPoint {
