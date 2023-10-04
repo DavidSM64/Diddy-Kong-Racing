@@ -4613,7 +4613,7 @@ GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_texscroll.s")
 
 /* Official name: rgbalightInit */
 void obj_init_rgbalight(Object *obj, LevelObjectEntry_RgbaLight *entry, UNUSED s32 arg2) {
-    obj->unk64 = func_80031CAC(obj, entry);
+    obj->unk64 = (Object_64 *) func_80031CAC(obj, entry);
 }
 
 /**
