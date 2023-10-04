@@ -4097,7 +4097,46 @@ s32 func_800210CC(s8 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80021104.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8002125C.s")
+
+void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entry, Object_CharacterSelect *charSelect, UNUSED s32 index) {
+    s32 initialAnimFrame;
+
+    initialAnimFrame = entry->unk12;
+    if (initialAnimFrame >= 0) {
+        if (initialAnimFrame != charSelectObj->segment.object.animationID) {
+            charSelectObj->segment.animFrame = entry->unk16;
+        }
+        charSelectObj->segment.object.animationID = entry->unk12;
+        charSelect->unk14 = entry->unk17;
+        charSelect->unk2C = entry->unk18;
+    }
+    if (entry->unk13 >= 0) {
+        charSelect->unk2F = entry->unk13;
+    }
+    charSelect->unk36 = normalise_time(entry->unk24);
+    charSelect->unk3F = entry->unk2D;
+    charSelect->unk3A = entry->unk26;
+    charSelect->unk39 = entry->unk1F;
+    charSelect->unk43 = entry->unk30;
+    charSelect->unk38 = entry->unk1E;
+    charSelect->unk3B = entry->unk29;
+    charSelect->unk40 = entry->unk2E;
+    charSelect->unk41 = entry->unk2F;
+    charSelect->unk3C = entry->unk2B;
+    if (entry->unk27 != 255) {
+        func_800C31EC(entry->unk27);
+    }
+    if (entry->unk2A >= 0) {
+        func_8001E45C(entry->unk2A);
+        return;
+    }
+    if (entry->unk15 >= 0) {
+        func_80021400(entry->unk15);
+    }
+    if (entry->unk28 >= 0) {
+        D_8011AD22[D_8011AD21]++;
+    }
+}
 
 void func_80021400(s32 arg0) {
     s32 i;

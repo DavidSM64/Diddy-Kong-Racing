@@ -448,6 +448,7 @@ s32 obj_init_property_flags(s32 behaviorId);
 void func_8001B3C4(s32 arg0, s16 *playerId);
 void func_8001EFA4(Object *, Object *);
 Object *func_80016C68(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis);
+void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entry, Object_CharacterSelect *charSelect, UNUSED s32 index);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

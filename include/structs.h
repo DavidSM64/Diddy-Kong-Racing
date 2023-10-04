@@ -1542,6 +1542,28 @@ typedef struct Object_8001E89C_64 {
     /* 0x0C */ Object_8001E89C_64_C *unkC;
 } Object_8001E89C_64;
 
+typedef struct Object_CharacterSelect {
+    u8 pad0[0x14];
+    f32 unk14;
+    u8 pad18[0x14];
+    u8 unk2C;
+    u8 pad2D[2];
+    u8 unk2F;
+    u8 pad30[6];
+    s16 unk36;
+    u8 unk38;
+    u8 unk39;
+    s8 unk3A;
+    s8 unk3B;
+    s8 unk3C;
+    s8 pad3D[2];
+    s8 unk3F;
+    s8 unk40;
+    s8 unk41;
+    s8 pad42;
+    s8 unk43;
+} Object_CharacterSelect;
+
 typedef struct Object_64 {
     union {
         Object_Laser laser;
@@ -1587,6 +1609,7 @@ typedef struct Object_64 {
         Object_AnimatedObject animatedObject;
         Object_WizpigRocket wizpigRocket;
         Object_8001E89C_64 obj8001E89C_64;
+        Object_CharacterSelect characterSelect;
     };
 } Object_64;
 
