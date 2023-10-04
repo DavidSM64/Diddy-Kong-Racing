@@ -40,6 +40,18 @@ typedef struct unk800DC6BC_40 {
     u8 pad0C[0x38];
 } unk800DC6BC_40; //ALSoundState
 
+typedef struct ALLink_unk8000418C {
+    u8 pad0[5];
+    s8 unk5;
+} ALLink_unk8000418C;
+
+typedef struct ALEvent_unk8000418C {
+ s16 type;
+ ALVoiceState *unk4;
+ s32 unk8;
+ u8 pad[4]; // Not sure how big this is supposed to be.
+} ALEvent_unk8000418C;
+
 /* Unknown Size */
 typedef struct unk800DC6BC {
     ALPlayer        node;
@@ -128,6 +140,7 @@ void func_800049D8(void);
 void func_800049F8(s32 soundMask, s16 type, u32 volume);
 u16 get_sound_channel_volume(u8 channel);
 void set_sound_channel_volume(u8 channel, u16 volume);
+void func_8000418C(ALVoiceState *voiceState);
 
 // Non Matching
 void func_80004520(ALSoundState *);

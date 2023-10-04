@@ -1792,7 +1792,7 @@ void free_track(void) {
     }
     func_800257D0();
     if (gSkydomeSegment != NULL) {
-        gParticlePtrList_addObject(gSkydomeSegment);
+        free_object(gSkydomeSegment);
         gParticlePtrList_flush();
     }
     func_8000C604();

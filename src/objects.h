@@ -9,6 +9,15 @@
 #include "camera.h"
 #include "lights.h"
 
+
+#define NEW_OBJECT_ENTRY(entryVar, entryId, entrySize, xPos, yPos, zPos) { \
+    entryVar.x = (xPos);                                                   \
+    entryVar.y = (yPos);                                                   \
+    entryVar.z = (zPos);                                                   \
+    entryVar.size = ((((entryId) >> 1) & 0x80) | (entrySize));             \
+    entryVar.objectID = (s8)(entryId);                                     \
+}
+
 enum ObjectBehaviours {
     BHV_NONE,
     BHV_RACER,
@@ -333,7 +342,7 @@ Object **objGetObjList(s32 *arg0, s32 *cnt);
 s32 getObjectCount(void);
 s32 func_8000E9C0(void);
 void func_8000E9D0(Object *arg0);
-void gParticlePtrList_addObject(Object *);
+void free_object(Object *);
 s32 func_80010018(void);
 s32 func_80010028(s32 arg0);
 void func_80011390(void);
@@ -448,6 +457,8 @@ s32 obj_init_property_flags(s32 behaviorId);
 void func_8001B3C4(s32 arg0, s16 *playerId);
 void func_8001EFA4(Object *, Object *);
 Object *func_80016C68(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis);
+void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entry, Object_CharacterSelect *charSelect, UNUSED s32 index);
+void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Animation *entry);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);

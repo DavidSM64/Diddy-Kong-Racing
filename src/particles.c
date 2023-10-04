@@ -1302,7 +1302,7 @@ void handle_particle_movement(Particle *particle, s32 updateRate) {
         }
         particle->segment.particle.destroyTimer -= gParticleUpdateRate;
         if (particle->segment.particle.destroyTimer <= 0) {
-            gParticlePtrList_addObject((Object*) particle);
+            free_object((Object*) particle);
         } else {
             if (particle->opacityTimer == 0) {
                 particle->opacity += gParticleUpdateRate * particle->opacityVel;

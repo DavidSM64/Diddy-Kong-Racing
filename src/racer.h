@@ -211,6 +211,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, s32 updateRate);
 void drop_bananas(Object *obj, Object_Racer *racer, s32 number);
 void update_player_racer(Object *obj, s32 updateRate);
 void func_80045128(Object **racerObjs);
+void func_80059BF0(Object *obj, s32 updateRate);
 
 //Non Matching
 void set_ghost_position_and_rotation(Object *obj);
@@ -218,7 +219,6 @@ void func_80054FD0(Object *obj, Object_Racer *racer, s32);
 void func_80053750(Object *obj, Object_Racer *racer, f32);
 void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32, f32);
 s32 func_80017248(void*, s32, s32*, Vec3f*, f32*, f32*, s8* surface);
-void func_80059BF0(Object* obj, s32 updateRate);
 void func_80059208(Object* obj, Object_Racer* racer, s32 updateRate);       /* extern */
 void func_8004F7F4(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */
 void func_80046524(s32 updateRate, f32 updateRateF, Object* obj, Object_Racer* racer);  /* extern */

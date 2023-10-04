@@ -276,7 +276,15 @@ typedef struct unk80126CDC {
     struct unk80126CDC *unk580;
     u8 unk584[0x1C];
     struct unk80126CDC *unk5A0;
-    u8 unk484[0x7C];
+    u8 unk5A4[0x1C];
+    struct unk80126CDC *unk5C0;
+    u8 unk5C1[0xC];
+    f32 unk5D0;
+    u8 unk5D4[0x6];
+    s8 unk5DA;
+    s8 unk5DB;
+    s8 unk5DC;
+    u8 unk5DD[0x43];
     struct unk80126CDC *unk620;
     u8 unk624[0x14];
     s16 unk638;
@@ -330,11 +338,10 @@ typedef struct unk800E1E64 {
 
 /* Size: 0x10 bytes */
 typedef struct unk800E2770 {
-    s8 unk0;
-    s8 unk1;
-    s8 unk2;
+    u16 unk0;
+    u8 unk2;
     s8 unk3;
-    s32 unk4; //soundMask?
+    s32 *unk4; //soundmask?
     s32 unk8;
     s8 unkC;
     s8 unkD;
@@ -396,11 +403,13 @@ void func_800A1C04(s32 arg0, Object *obj, s32 updateRate);
 void func_800A22F4(Object_Racer *racer, void *unused);
 void free_hud(void);
 void func_800A36CC(u8, u8, u8, u8, u8);
+void func_800A0BD4(s32 updateRate);
+void func_800A47A0(Object_Racer *racer, s32 updateRate);
+void func_800A7A60(Object *racerObj);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
 void func_800A4C44(Object_Racer *racer, s32 updateRate);
-void func_800A47A0(Object_Racer *obj, s32 updateRate);
 void func_800A718C(Object_64 *obj);
 void func_800AA600(Gfx **dList, MatrixS **mtx, Vertex **vtxList, unk80126CDC **arg3);
 void func_800A7FBC(s32, s32, s32 minutes, s32 seconds, s32 hundredths, s32); 
@@ -408,8 +417,6 @@ void func_800A1248(s32, Object*, s32);
 void func_800A277C(s32, Object*, s32);
 void func_800A6254(Object_64* obj, s32 updateRate);
 void func_800A6E30(Object_64* obj, s32 updateRate);
-void func_800A7A60(Object*);
-void func_800A0BD4(s32);
 void func_800A19A4(Object_Racer* racer, s32 updateRate);
 void func_800A1E48(Object*, s32);
 void render_treasure_hud(Object_Racer*);

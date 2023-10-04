@@ -673,6 +673,34 @@ typedef struct LevelObjectEntry_WavePower {
     u16 unkC;
 } LevelObjectEntry_WavePower;
 
+typedef struct LevelObjectEntry_CharacterSelect {
+    LevelObjectEntryCommon common;
+    u8 pad8[0xA];
+    s8 unk12; 
+    s8 unk13;
+    s8 unk14;
+    s8 unk15;
+    u8 unk16;
+    s8 unk17;
+    u8 unk18;
+    s8 pad19[5]; 
+    u8 unk1E;
+    s8 unk1F;
+    s8 pad20[4];
+    s16 unk24;
+    s8 unk26;
+    u8 unk27;
+    s8 unk28;
+    s8 unk29;
+    s8 unk2A;
+    s8 unk2B;
+    s8 unk2C;
+    s8 unk2D;
+    s8 unk2E;
+    s8 unk2F;
+    s8 unk30;
+} LevelObjectEntry_CharacterSelect;
+
 typedef struct LevelObjectEntry {
     union {
         LevelObjectEntry_Racer racer;
@@ -765,6 +793,7 @@ typedef struct LevelObjectEntry {
         LevelObjectEntry8003FC44 unk8003FC44;
         LevelObjectEntry800BF524 unk800BF524;
         LevelObjectEntry_WavePower wavePower;
+        LevelObjectEntry_CharacterSelect characterSelect;
     };
 } LevelObjectEntry;
 

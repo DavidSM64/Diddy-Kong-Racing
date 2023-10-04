@@ -5,9 +5,9 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of September 29, 2023, this is our current score:
+As of October 4, 2023, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 55.56%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 56.18%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 28.44%
 <!-- README_SCORE_SUMMARY_END -->
@@ -128,31 +128,31 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of September 29th, 2023, this is our current score:
+As of October 4th, 2023, this is our current score:
 ```
- ===============================================================
-             ADVENTURE ONE (ASM -> C Decompilation)
- ----------------------- 55.56% Complete -----------------------
-                  # Decompiled functions: 1577
-                   # GLOBAL_ASM remaining: 261
-                  # NON_MATCHING functions: 13
-               # NON_EQUIVALENT WIP functions: 64
- ------------------------- Game Status -------------------------
-            Balloons: 26/47, Keys: 3/4, Trophies: 2/5
-             T.T. Amulets: 3/4, Wizpig Amulets: 2/4
- ---------------------------------------------------------------
- We are collecting silver coins in Whale Bay. (6/8 silver coins)
- ===============================================================
-              ADVENTURE TWO (Cleanup & Documentation)
- ----------------------- 28.44% Complete -----------------------
-                   # Documented functions: 624
-                  # Undocumented remaining: 946
- ------------------------- Game Status -------------------------
-            Balloons: 14/47, Keys: 1/4, Trophies: 1/5
-             T.T. Amulets: 1/4, Wizpig Amulets: 1/4
- ---------------------------------------------------------------
-             We are racing in Walrus Cove. (Lap 3/3)
- ===============================================================
+ =====================================================================
+                ADVENTURE ONE (ASM -> C Decompilation)
+ -------------------------- 56.18% Complete --------------------------
+                     # Decompiled functions: 1588
+                      # GLOBAL_ASM remaining: 250
+                     # NON_MATCHING functions: 12
+                  # NON_EQUIVALENT WIP functions: 61
+ ---------------------------- Game Status ----------------------------
+               Balloons: 27/47, Keys: 3/4, Trophies: 2/5
+                T.T. Amulets: 3/4, Wizpig Amulets: 2/4
+ ---------------------------------------------------------------------
+ We are collecting silver coins in Crescent Island. (0/8 silver coins)
+ =====================================================================
+                 ADVENTURE TWO (Cleanup & Documentation)
+ -------------------------- 28.44% Complete --------------------------
+                      # Documented functions: 624
+                     # Undocumented remaining: 946
+ ---------------------------- Game Status ----------------------------
+               Balloons: 14/47, Keys: 1/4, Trophies: 1/5
+                T.T. Amulets: 1/4, Wizpig Amulets: 1/4
+ ---------------------------------------------------------------------
+                We are racing in Walrus Cove. (Lap 3/3)
+ =====================================================================
 ```
 <!-- README_SCORE_END -->
 
