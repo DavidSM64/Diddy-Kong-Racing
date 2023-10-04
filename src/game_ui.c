@@ -1470,7 +1470,7 @@ void func_800A47A0(Object_Racer* racer, s32 updateRate) {
     s32 i;
     s32 prevUnk5D0;
 
-    gCurrentHud->unk5D0 = (s32) gCurrentHud->unk5D0; //Convert itself to a int and back to a float? Strips decimals?
+    gCurrentHud->unk5D0 = (s32) gCurrentHud->unk5D0; //Rounds float down to it's int value.
     prevUnk5D0 = gCurrentHud->unk5D0;
     for(i = 0; i < 8; i++) {
         if (i >= racer->silverCoinCount) {
@@ -1959,37 +1959,31 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-void func_800A7A60(Object *obj) {
-    unk80126CDC *hud;
-    unk80068514_arg4 *arg4;
+void func_800A7A60(Object *racerObj) {
+    unk80068514_arg4 *entry;
+    unk80126CDC *temp;
     Object_Racer *racer;
     s32 hudElementIndex;
-    f32 *new_var;
 
-    racer = &obj->unk64->racer;
-    if (racer->magnetTargetObj != NULL) {
-        if (get_current_viewport() == racer->playerIndex) {
-            hud = gCurrentHud;
-            hudElementIndex = hud->unk226;
-            if (1) { } if (1) { } if (1) { } if (1) { } if (1) { }
-            new_var = &racer->magnetTargetObj->segment.trans.x_position;
-            hud->unk22C = *new_var;
-            hud->unk230 = racer->magnetTargetObj->segment.trans.y_position;
-            hud->unk234 = racer->magnetTargetObj->segment.trans.z_position;
-            arg4 = (unk80068514_arg4 *) gAssetHudElements->entry[hudElementIndex];
-            if (arg4 != NULL) {
-                gAssetHudElementStaleCounter[hudElementIndex] = 0;
-                func_80066CDC(&gHUDCurrDisplayList, &gHUDCurrMatrix);
-                func_80068408(&gHUDCurrDisplayList, &gHUDCurrMatrix);
-                render_sprite_billboard(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, hud->unk220, arg4, RENDER_Z_UPDATE);
-            }
+    if(entry){} // Fakematch
+    racer = &racerObj->unk64->racer;
+    if (racer->magnetTargetObj != NULL && get_current_viewport() == racer->playerIndex) {
+        temp = gCurrentHud;
+        temp->unk22C = racer->magnetTargetObj->segment.trans.x_position;
+        temp->unk230 = racer->magnetTargetObj->segment.trans.y_position;
+        temp->unk234 = racer->magnetTargetObj->segment.trans.z_position;
+        hudElementIndex = temp->unk226;
+        entry = gAssetHudElements->entry[hudElementIndex];
+        if (entry == NULL) {
+            return;
         }
+        gAssetHudElementStaleCounter[hudElementIndex] = 0;
+        temp = (unk80126CDC *) &temp->unk220;
+        func_80066CDC(&gHUDCurrDisplayList, &gHUDCurrMatrix);
+        func_80068408(&gHUDCurrDisplayList, &gHUDCurrMatrix);
+        render_sprite_billboard(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (Object *) temp, entry, RENDER_Z_UPDATE);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A7A60.s")
-#endif
 
 /**
  * Render the lap time on the top right.

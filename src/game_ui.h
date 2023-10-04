@@ -405,6 +405,7 @@ void free_hud(void);
 void func_800A36CC(u8, u8, u8, u8, u8);
 void func_800A0BD4(s32 updateRate);
 void func_800A47A0(Object_Racer *racer, s32 updateRate);
+void func_800A7A60(Object *racerObj);
 
 // Non Matching
 void func_800A14F0(Object *, s32);
@@ -416,7 +417,6 @@ void func_800A1248(s32, Object*, s32);
 void func_800A277C(s32, Object*, s32);
 void func_800A6254(Object_64* obj, s32 updateRate);
 void func_800A6E30(Object_64* obj, s32 updateRate);
-void func_800A7A60(Object*);
 void func_800A19A4(Object_Racer* racer, s32 updateRate);
 void func_800A1E48(Object*, s32);
 void render_treasure_hud(Object_Racer*);
