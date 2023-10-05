@@ -533,7 +533,7 @@ extern unk800E0970 *D_800E0970;
 extern s32 D_800E0974;
 extern char* gQMarkPtr;
 extern s32 D_800E097C;
-extern s32 D_800E0980;
+extern s32 gTrackNameVoiceDelay;
 extern s32 gMenuOptionCap;
 extern s32 gMenuSubOption;
 extern s32 D_800E098C;
@@ -542,16 +542,16 @@ extern s16 D_800E0A24[14];
 
 extern s16 D_800E0A40[8];
 
-extern DrawTexture D_800E0A50[2];
-extern DrawTexture D_800E0A60[2];
-extern DrawTexture D_800E0A70[2];
-extern DrawTexture D_800E0A90[2];
-extern DrawTexture D_800E0A80[2];
-extern DrawTexture D_800E0AA0[2];
-extern DrawTexture D_800E0AB0[2];
-extern DrawTexture D_800E0AC0[2];
-extern DrawTexture D_800E0AD0[2];
-extern DrawTexture D_800E0AE0[2];
+extern DrawTexture gMenuPortraitKrunch[2];
+extern DrawTexture gMenuPortraitDiddy[2];
+extern DrawTexture gMenuPortraitDrumstick[2];
+extern DrawTexture gMenuPortraitBanjo[2];
+extern DrawTexture gMenuPortraitBumper[2];
+extern DrawTexture gMenuPortraitConker[2];
+extern DrawTexture gMenuPortraitTiptup[2];
+extern DrawTexture gMenuPortraitTT[2];
+extern DrawTexture gMenuPortraitPipsy[2];
+extern DrawTexture gMenuPortraitTimber[2];
 
 extern DrawTexture* D_800E0AF0[10];
 
@@ -592,10 +592,10 @@ extern s16 D_800E0FB4[18];
 
 extern s16 D_800E0FD8[6];
 
-extern s32 D_800E0FE4;
+extern s32 gRankingPlayerCount;
 extern s32 gTrophyRaceWorldId;
 extern s32 gTrophyRaceRound;
-extern s32 D_800E0FF0;
+extern s32 gPrevTrophyRaceRound;
 
 // Unused? Not sure what this is.
 extern u32 D_800E0FF4[4];

@@ -252,9 +252,9 @@ s32 D_80126BE0;
 s32 D_80126BE4;
 s32 D_80126BE8;
 f32 D_80126BEC;
-char *D_80126BF0[8];
+char *gResultOptionText[8];
 s32 D_80126C10;
-s32 D_80126C14;
+s32 gResultOptionCount;
 s32 D_80126C18;
 char **D_80126C1C;
 s32 D_80126C20;
@@ -906,7 +906,7 @@ unk800E0970 *D_800E0970 = NULL;
 s32 D_800E0974 = 0;
 char *gQMarkPtr = "?";
 s32 D_800E097C = 0;
-s32 D_800E0980 = 0;
+s32 gTrackNameVoiceDelay = 0;
 s32 gMenuOptionCap = 0;
 s32 gMenuSubOption = 0;
 s32 D_800E098C = 0; //Player ID or controllerIndex maybe?
@@ -957,21 +957,21 @@ s16 D_800E0A40[8] = {
     0x0004, 0x0000, 0x0001, 0xFFFF, 0x0300, 0x0000, 0x0012, 0xFFFF
 };
 
-DrawTexture D_800E0A50[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0A60[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0A70[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0A80[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0A90[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0AA0[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0AB0[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0AC0[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0AD0[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800E0AE0[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gMenuPortraitKrunch[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gMenuPortraitDiddy[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gMenuPortraitDrumstick[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gMenuPortraitBumper[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gMenuPortraitBanjo[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gMenuPortraitConker[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gMenuPortraitTiptup[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gMenuPortraitTT[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gMenuPortraitPipsy[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gMenuPortraitTimber[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 
 DrawTexture *D_800E0AF0[10] = {
-    D_800E0A50, D_800E0A60, D_800E0A70, D_800E0A80,
-    D_800E0A90, D_800E0AA0, D_800E0AB0, D_800E0AC0,
-    D_800E0AD0, D_800E0AE0
+    gMenuPortraitKrunch, gMenuPortraitDiddy, gMenuPortraitDrumstick, gMenuPortraitBumper,
+    gMenuPortraitBanjo, gMenuPortraitConker, gMenuPortraitTiptup, gMenuPortraitTT,
+    gMenuPortraitPipsy, gMenuPortraitTimber
 };
 
 s16 D_800E0B18[74] = {
@@ -1011,7 +1011,7 @@ char *gRacePlacementsArray[8] = {
 };
 
 MenuElement D_800E0BEC[8] = {
-    { 352, 172,  32, 172, -288, 172, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
+    { 352, 172,  32, 172, -288, 172, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
     { 452, 166, 132, 166, -188, 166, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, 0, 0, 0, 0 },
     { 560, 184, 240, 184,  -80, 184, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, 0, 0, 0, 0 },
     { 452, 180, 132, 180, -188, 180, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, 0, 0, 0, 0 },
@@ -1022,14 +1022,14 @@ MenuElement D_800E0BEC[8] = {
 };
 
 MenuElement D_800E0CEC[11] = {
-    { 575, 172, 255, 172,  -65, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
-    { 542, 172, 222, 172,  -98, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
-    { 509, 172, 189, 172, -131, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
-    { 476, 172, 156, 172, -164, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
-    { 443, 172, 123, 172, -197, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
-    { 410, 172,  90, 172, -230, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
-    { 377, 172,  57, 172, -263, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
-    { 344, 172,  24, 172, -296, 166, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
+    { 575, 172, 255, 172,  -65, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
+    { 542, 172, 222, 172,  -98, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
+    { 509, 172, 189, 172, -131, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
+    { 476, 172, 156, 172, -164, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
+    { 443, 172, 123, 172, -197, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
+    { 410, 172,  90, 172, -230, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
+    { 377, 172,  57, 172, -263, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
+    { 344, 172,  24, 172, -296, 166, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
     { 481, 166, 161, 166, -159, 166,   0,   0,   0, 255, 128, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, 0, 0, 0, 0 },
     { 479, 164, 159, 164, -161, 164, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, 0, 0, 0, 0 },
     {   0,   0,   0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0, {      NULL   }, 0, 0, 0, 0 },
@@ -1075,10 +1075,10 @@ s16 D_800E0FD8[6] = {
     7, 0, 1, 2, 3, -1
 };
 
-s32 D_800E0FE4 = 8; // Number of racers in trophy race? (1 to 8)
+s32 gRankingPlayerCount = 8; // Number of racers in trophy race? (1 to 8)
 s32 gTrophyRaceWorldId = 0;
 s32 gTrophyRaceRound = 0; // Rounds 1 - 4 (as 0 - 3)
-s32 D_800E0FF0 = 0;
+s32 gPrevTrophyRaceRound = 0;
 
 // Unused? Not sure what this is.
 u32 D_800E0FF4[4] = {
@@ -1107,42 +1107,42 @@ MenuElement D_800E1048[1][2] = {
 
 MenuElement D_800E1088[8][3] = {
     {
-        { 64, -192, 64, 48, 64, 288, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
+        { 64, -192, 64, 48, 64, 288, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
         { 32, -192, 32, 48, 32, 288, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFirstPlace }, 0, 0, 0, 0 },
         { 130, -172, 130, 68, 130, 308, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[0] }, 0, 0, 0, 0 }
     },
     {
-        { 64, -150, 64, 90, 64, 330, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
+        { 64, -150, 64, 90, 64, 330, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
         { 32, -150, 32, 90, 32, 330, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gSecondPlace }, 0, 0, 0, 0 },
         { 130, -130, 130, 110, 130, 350, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[1] }, 0, 0, 0, 0 }
     },
     {
-        { 64, -108, 64, 132, 64, 372, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
+        { 64, -108, 64, 132, 64, 372, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
         { 32, -108, 32, 132, 32, 372, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gThirdPlace }, 0, 0, 0, 0 },
         { 130, -88, 130, 152, 130, 392, 255, 128, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[2] }, 0, 0, 0, 0 }
     },
     {
-        { 64, -66, 64, 174, 64, 414, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
+        { 64, -66, 64, 174, 64, 414, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
         { 32, -66, 32, 174, 32, 414, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFourthPlace }, 0, 0, 0, 0 },
         { 130, -46, 130, 194, 130, 434, 255, 64, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[3] }, 0, 0, 0, 0 }
     },
     {
-        { 220, 288, 220, 48, 220, -192, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
+        { 220, 288, 220, 48, 220, -192, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
         { 188, 288, 188, 48, 188, -192, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFifthPlace }, 0, 0, 0, 0 },
         { 286, 308, 286, 68, 286, -172, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[4] }, 0, 0, 0, 0 }
     },
     {
-        { 220, 330, 220, 90, 220, -160, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
+        { 220, 330, 220, 90, 220, -160, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
         { 188, 330, 188, 90, 188, -150, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gSixthPlace }, 0, 0, 0, 0 },
         { 286, 350, 286, 110, 286, -130, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[5] }, 0, 0, 0, 0 }
     },
     {
-        { 220, 372, 220, 132, 220, -108, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
+        { 220, 372, 220, 132, 220, -108, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
         { 188, 372, 188, 132, 188, -108, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gSeventhPlace }, 0, 0, 0, 0 },
         { 286, 392, 286, 152, 286, -88, 255, 128, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[6] }, 0, 0, 0, 0 }
     },
     {
-        { 220, 414, 220, 174, 220, -66, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &D_800E0A50 }, 0, 0, 0, 0 },
+        { 220, 414, 220, 174, 220, -66, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
         { 188, 414, 188, 174, 188, -66, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gEighthPlace }, 0, 0, 0, 0 },
         { 286, 434, 286, 194, 286, -46, 255, 64, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[7] }, 0, 0, 0, 0 }
     }
@@ -6301,7 +6301,7 @@ void func_8008F00C(s32 arg0) {
                     gPlayerSelectVehicle[i] = vehicle;
                 }
                 gNumberOfReadyPlayers = 0;
-                D_800E0980 = 1;
+                gTrackNameVoiceDelay = 1;
                 func_8009C674(D_800E07E8);
                 allocate_menu_images(D_800E0830);
                 assign_vehicle_icon_textures();
@@ -7066,7 +7066,7 @@ void menu_adventure_track_init(void) {
         transition_begin(&sMenuTransitionFadeOut);
         gOptionBlinkTimer = 0;
         gMenuDelay = 0;
-        D_800E0980 = 30;
+        gTrackNameVoiceDelay = 30;
         load_font(ASSET_FONTS_BIGFONT);
         load_level_for_menu(mapId, -1, 1);
     }
@@ -7572,17 +7572,20 @@ void n_alSeqpDelete(void) {
     n_alSynRemovePlayer();
 }
 
+/**
+ * Set the racer portrait element textures for their respective characters.
+*/
 void assign_racer_portrait_textures(void) {
-    D_800E0A50[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_KRUNCH];
-    D_800E0A60[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_DIDDY];
-    D_800E0A70[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_DRUMSTICK];
-    D_800E0A90[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_BANJO];
-    D_800E0A80[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_BUMPER];
-    D_800E0AA0[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_CONKER];
-    D_800E0AB0[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_TIPTUP];
-    D_800E0AC0[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_TT];
-    D_800E0AD0[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_PIPSY];
-    D_800E0AE0[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_TIMBER];
+    gMenuPortraitKrunch[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_KRUNCH];
+    gMenuPortraitDiddy[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_DIDDY];
+    gMenuPortraitDrumstick[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_DRUMSTICK];
+    gMenuPortraitBanjo[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_BANJO];
+    gMenuPortraitBumper[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_BUMPER];
+    gMenuPortraitConker[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_CONKER];
+    gMenuPortraitTiptup[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_TIPTUP];
+    gMenuPortraitTT[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_TT];
+    gMenuPortraitPipsy[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_PIPSY];
+    gMenuPortraitTimber[0].texture = gMenuTextures[TEXTURE_ICON_PORTRAIT_TIMBER];
 }
 
 void func_80094688(s32 arg0, s32 arg1) {
@@ -7597,24 +7600,24 @@ void func_80094688(s32 arg0, s32 arg1) {
     }
     D_80126A90 = 0;
     if (gNumberOfActivePlayers == 1 && gTrophyRaceWorldId == 0) {
-        if (is_in_tracks_mode() == 1) {
-            D_80126BF0[0] = gMenuText[ASSET_MENU_TEXT_TRYAGAIN];
-            D_80126BF0[1] = gMenuText[ASSET_MENU_TEXT_SELECTTRACK];
-            D_80126BF0[2] = gMenuText[ASSET_MENU_TEXT_SELECTCHARACTER];
-            D_80126C14 = 3;
+        if (is_in_tracks_mode() == TRUE) {
+            gResultOptionText[0] = gMenuText[ASSET_MENU_TEXT_TRYAGAIN];
+            gResultOptionText[1] = gMenuText[ASSET_MENU_TEXT_SELECTTRACK];
+            gResultOptionText[2] = gMenuText[ASSET_MENU_TEXT_SELECTCHARACTER];
+            gResultOptionCount = 3;
             D_80126A90 = 1;
         } else {
             if (arg0 == 0) {
-                D_80126BF0[0] = gMenuText[ASSET_MENU_TEXT_TRYAGAIN];
-                D_80126C14 = 1;
+                gResultOptionText[0] = gMenuText[ASSET_MENU_TEXT_TRYAGAIN];
+                gResultOptionCount = 1;
             } else {
-                D_80126C14 = 0;
+                gResultOptionCount = 0;
             }
-            D_80126BF0[D_80126C14] = gMenuText[ASSET_MENU_TEXT_RETURNTOLOBBY];
-            D_80126C14++;
+            gResultOptionText[gResultOptionCount] = gMenuText[ASSET_MENU_TEXT_RETURNTOLOBBY];
+            gResultOptionCount++;
         }
-        D_80126BF0[D_80126C14] = gMenuText[ASSET_MENU_TEXT_QUIT];
-        D_80126C14++;
+        gResultOptionText[gResultOptionCount] = gMenuText[ASSET_MENU_TEXT_QUIT];
+        gResultOptionCount++;
         gMenuOptionCount = 0;
     } else {
         gMenuOptionCount = 7;
@@ -7799,23 +7802,27 @@ void func_80096790(void) {
     adjust_audio_volume(VOLUME_NORMAL);
 }
 
+/**
+ * Initialise the race results menu.
+ * Set the text for the options and set the order of the racer portraits based on finishing position.
+*/
 void menu_results_init(void) {
     Settings *settings;
     u16 *placements;
     s32 i;
-    s8 temp_a2;
+    s8 startPos;
 
     settings = get_settings();
-    D_80126BF0[0] = gMenuText[ASSET_MENU_TEXT_SELECTTRACK];
-    D_80126BF0[1] = gMenuText[ASSET_MENU_TEXT_TRYAGAIN];
-    D_80126BF0[2] = gMenuText[ASSET_MENU_TEXT_QUIT];
-    D_80126C14 = 3;
+    gResultOptionText[0] = gMenuText[ASSET_MENU_TEXT_SELECTTRACK];
+    gResultOptionText[1] = gMenuText[ASSET_MENU_TEXT_TRYAGAIN];
+    gResultOptionText[2] = gMenuText[ASSET_MENU_TEXT_QUIT];
+    gResultOptionCount = 3;
 
     for (i = 0; i < gNumberOfActivePlayers; i++) {
-        temp_a2 = settings->racers[i].starting_position;
-        if (temp_a2 < 4) {
+        startPos = settings->racers[i].starting_position;
+        if (startPos < 4) {
             placements = settings->racers[i].placements;
-            placements[temp_a2]++;
+            placements[startPos]++;
         }
     }
 
@@ -7831,9 +7838,9 @@ void menu_results_init(void) {
     assign_racer_portrait_textures();
     load_font(ASSET_FONTS_BIGFONT);
     transition_begin(&sMenuTransitionFadeOut);
-    set_music_player_voice_limit(0x18);
+    set_music_player_voice_limit(24);
     play_music(SEQUENCE_MAIN_MENU);
-    set_music_fade_timer(0x80);
+    set_music_fade_timer(128);
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80096978.s")
@@ -7900,7 +7907,7 @@ s32 menu_results_loop(s32 updateRate) {
             }
         } else if (D_801267E8 & (A_BUTTON | START_BUTTON)) {
             playSelectSound = TRUE;
-            if (D_80126BF0[gMenuOption] == gMenuText[28]) {
+            if (gResultOptionText[gMenuOption] == gMenuText[28]) {
                 gMenuSubOption = 2;
             } else {
                 gMenuDelay = 1;
@@ -7909,7 +7916,7 @@ s32 menu_results_loop(s32 updateRate) {
             }
         } else {
             prevOption = gMenuOption;
-            if (D_80126838 < 0 && gMenuOption < (D_80126C14 - 1)) {
+            if (D_80126838 < 0 && gMenuOption < (gResultOptionCount - 1)) {
                 gMenuOption++;
             }
             if (D_80126838 > 0 && gMenuOption > 0) {
@@ -7933,10 +7940,10 @@ s32 menu_results_loop(s32 updateRate) {
             func_800976CC();
             close_dialogue_box(7);
             assign_dialogue_box_id(7);
-            if (D_80126BF0[gMenuOption] == gMenuText[ASSET_MENU_TEXT_TRYAGAIN]) {
+            if (gResultOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_TRYAGAIN]) {
                 return (0x100 | 0x2); //This gets parsed in func_8006DCF8 as a flag and an ID from the bottom 7 bits.
             }
-            if (D_80126BF0[gMenuOption] == gMenuText[ASSET_MENU_TEXT_SELECTTRACK]) {
+            if (gResultOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_SELECTTRACK]) {
                 load_level_for_menu(-1, -1, 0);
                 menu_init(MENU_TRACK_SELECT);
                 return 0;
@@ -8302,6 +8309,10 @@ void func_80098208(void) {
     set_time_trial_enabled(0);
 }
 
+/**
+ * Initialise the trophy race intro.
+ * Finds which level should be next, then loads it for the preview.
+*/
 void menu_trophy_race_round_init(void) {
     s32 i;
     s32 index;
@@ -8332,11 +8343,11 @@ void menu_trophy_race_round_init(void) {
     load_level_for_menu(index, -1, 1);
 
     gMenuDelay = 0;
-    D_800E0980 = 10;
+    gTrackNameVoiceDelay = 10;
     load_font(ASSET_FONTS_BIGFONT);
     set_music_player_voice_limit(24);
     play_music(SEQUENCE_MAIN_MENU);
-    set_music_fade_timer(0x100);
+    set_music_fade_timer(256);
 }
 
 /**
@@ -8377,16 +8388,16 @@ s32 menu_trophy_race_round_loop(s32 updateRate) {
     s32 temp;
 
     trackMenuIds = (s8 *)get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS); //tracks_menu_ids
-    if (D_800E0980 != 0) {
-        D_800E0980 -= updateRate;
-        if (D_800E0980 <= 0) {
+    if (gTrackNameVoiceDelay != 0) {
+        gTrackNameVoiceDelay -= updateRate;
+        if (gTrackNameVoiceDelay <= 0) {
             //This is mostly likely supposed to be a multi dimensional array
             temp = trackMenuIds[(((gTrophyRaceWorldId - 1) * 6) + gTrophyRaceRound)];
             temp_a2 = D_800E0758[temp];
             if (temp_a2 != -1) {
                 play_sound_global(temp_a2, NULL);
             }
-            D_800E0980 = 0;
+            gTrackNameVoiceDelay = 0;
         }
     }
     if (gMenuDelay != 0) {
@@ -8422,6 +8433,10 @@ void unload_big_font_5(void) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80098774.s")
 
+/**
+ * Initialise trophy race points screen.
+ * Sets the order of the racer portraits based on points position.
+*/
 void menu_trophy_race_rankings_init(void) {
     UNUSED s32 pad0;
     UNUSED s32 pad1;
@@ -8443,50 +8458,50 @@ void menu_trophy_race_rankings_init(void) {
     reset_controller_sticks();
     func_8009C674(D_800E1024);
     allocate_menu_images(D_800E1040);
-    D_800E0FF0 = gTrophyRaceRound;
+    gPrevTrophyRaceRound = gTrophyRaceRound;
     do {
         if(++gTrophyRaceRound >= 4) break;
     } while((trackMenuIds[((gTrophyRaceWorldId - 1) * 6) + (gTrophyRaceRound)] == -1));
     
     if (gTrophyRaceRound < 4) {
-        D_80126BF0[0] = gMenuText[ASSET_MENU_TEXT_CONTINUE];
-        D_80126BF0[1] = gMenuText[ASSET_MENU_TEXT_QUITTROPHYRACE];
-        D_80126C14 = 3;
+        gResultOptionText[0] = gMenuText[ASSET_MENU_TEXT_CONTINUE];
+        gResultOptionText[1] = gMenuText[ASSET_MENU_TEXT_QUITTROPHYRACE];
+        gResultOptionCount = 3;
     } else {
-        D_80126BF0[0] = gMenuText[ASSET_MENU_TEXT_TROPHYCEREMONY];
-        D_80126C14 = 1;
+        gResultOptionText[0] = gMenuText[ASSET_MENU_TEXT_TROPHYCEREMONY];
+        gResultOptionCount = 1;
     }
     gMenuOption = 0;
     assign_racer_portrait_textures();
     
-    if (gNumberOfActivePlayers >= 3) {
-        D_800E0FE4 = gNumberOfActivePlayers;
+    if (gNumberOfActivePlayers > 2) {
+        gRankingPlayerCount = gNumberOfActivePlayers;
     } else if ((gNumberOfActivePlayers == 2) || (is_in_two_player_adventure())) {
-        D_800E0FE4 = get_multiplayer_racer_count();
+        gRankingPlayerCount = get_multiplayer_racer_count();
     } else {
-        D_800E0FE4 = 8;
+        gRankingPlayerCount = 8;
     }
-    for(i = 0; i < D_800E0FE4; i++) {
-        for(j = 0; j < D_800E0FE4; j++) {
+    for(i = 0; i < gRankingPlayerCount; i++) {
+        for(j = 0; j < gRankingPlayerCount; j++) {
             if (i == settings->racers[j].starting_position) {
                 D_80126428[i] = j;
                 if (j < gNumberOfActivePlayers) {
-                    D_80126418[i] = 1;
+                    D_80126418[i] = TRUE;
                 } else {
-                    D_80126418[i] = 0;
+                    D_80126418[i] = FALSE;
                 }
             }
         }
     } 
-    for(i = 0; i < D_800E0FE4; i++){
+    for(i = 0; i < gRankingPlayerCount; i++){
         D_801263F8[i] = gTrophyRacePointsArray[settings->racers[i].starting_position];
     }
-    for(i = 0; i < D_800E0FE4; i++){
+    for(i = 0; i < gRankingPlayerCount; i++){
         D_80126430[i] = i;
         sp48[i] = settings->racers[i].trophy_points + D_801263F8[i];
     }
     
-    for (i = D_800E0FE4-1; i > 0; i--) {
+    for (i = gRankingPlayerCount-1; i > 0; i--) {
         for (j = 0; j < i; j++) {
             if(sp48[j] < sp48[j+1]) {
                 tempForSwap = sp48[j];
@@ -8504,7 +8519,7 @@ void menu_trophy_race_rankings_init(void) {
     } else {
         j = gNumberOfActivePlayers;
     }
-    for(i = 0; i < D_800E0FE4; i++) {
+    for(i = 0; i < gRankingPlayerCount; i++) {
         if (D_80126430[i] < j) {
             D_80126420[i] = 1;
         } else {
@@ -8514,7 +8529,7 @@ void menu_trophy_race_rankings_init(void) {
     load_font(ASSET_FONTS_BIGFONT);
     set_music_player_voice_limit(24);
     play_music(SEQUENCE_MAIN_MENU);
-    set_music_fade_timer(0x100);
+    set_music_fade_timer(256);
     func_80098774(0);
     func_80081E54(*D_800E1048, 0.5f, 20.0f, 0.5f, 0, 0);
 }
@@ -8530,7 +8545,7 @@ void func_80098EBC(s32 arg0) {
     if (test >= 0x100) {
         test = 0x1FF - test;
     }
-    for (i = 0; i < D_800E0FE4; i++) {
+    for (i = 0; i < gRankingPlayerCount; i++) {
         fade = 0xFF;
         if ((gNumberOfActivePlayers < 3) && (((gMenuOptionCount == 0) && D_80126418[i]) || ((gMenuOptionCount != 0) && D_80126420[i]))) {
             fade = (test >> 1) + 0x80;
@@ -8583,7 +8598,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
         if (gOpacityDecayTimer > 10) {
             gOpacityDecayTimer -= 10;
             temp5 = 0;
-            for(i = 0; i < D_800E0FE4; i++) {
+            for(i = 0; i < gRankingPlayerCount; i++) {
                 if (D_801263F8[i] > 0) {
                     D_801263F8[i]--;
                     temp5 = 1;
@@ -8609,8 +8624,8 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
         if (gMenuOption < 0) {
             gMenuOption = 0;
         }
-        if (gMenuOption >= D_80126C14) {
-            gMenuOption = D_80126C14 - 1;
+        if (gMenuOption >= gResultOptionCount) {
+            gMenuOption = gResultOptionCount - 1;
         }
         if (temp1 != gMenuOption) {
             play_sound_global(SOUND_MENU_PICK2, NULL);
@@ -8619,7 +8634,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
             set_music_fade_timer(-128);
             transition_begin(&sMenuTransitionFadeIn);
             gMenuOptionCount = 3;
-            for(i = 0; i < D_800E0FE4; i++){
+            for(i = 0; i < gRankingPlayerCount; i++){
                 settings->racers[i].trophy_points += D_801263F8[i];
             }
         }
@@ -8633,7 +8648,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
             if (gTrophyRaceRound < 4) {
                 menu_init(MENU_TROPHY_RACE_ROUND);
             } else {
-                for(temp6 = 0, i = 0; i < D_800E0FE4; i++) {
+                for(temp6 = 0, i = 0; i < gRankingPlayerCount; i++) {
                     if (D_80126420[i] != 0) {
                         temp7 = settings->racers[D_80126430[i]].character;
                         if (temp6 == 0) {

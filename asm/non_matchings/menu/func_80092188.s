@@ -11,8 +11,8 @@ glabel func_80092188
 /* 092D98 80092198 AFA40058 */  sw    $a0, 0x58($sp)
 /* 092D9C 8009219C 0C01BAA4 */  jal   get_settings
 /* 092DA0 800921A0 AFAE0030 */   sw    $t6, 0x30($sp)
-/* 092DA4 800921A4 3C06800E */  lui   $a2, %hi(D_800E0980) # $a2, 0x800e
-/* 092DA8 800921A8 24C60980 */  addiu $a2, %lo(D_800E0980) # addiu $a2, $a2, 0x980
+/* 092DA4 800921A4 3C06800E */  lui   $a2, %hi(gTrackNameVoiceDelay) # $a2, 0x800e
+/* 092DA8 800921A8 24C60980 */  addiu $a2, %lo(gTrackNameVoiceDelay) # addiu $a2, $a2, 0x980
 /* 092DAC 800921AC 8CC30000 */  lw    $v1, ($a2)
 /* 092DB0 800921B0 AFA2002C */  sw    $v0, 0x2c($sp)
 /* 092DB4 800921B4 10600005 */  beqz  $v1, .L800921CC
@@ -39,9 +39,9 @@ glabel func_80092188
 /* 092E04 80092204 0C030C7B */  jal   func_800C31EC
 /* 092E08 80092208 2484003C */   addiu $a0, $a0, 0x3c
 /* 092E0C 8009220C 3C028012 */  lui   $v0, %hi(D_801269C8) # $v0, 0x8012
-/* 092E10 80092210 3C06800E */  lui   $a2, %hi(D_800E0980) # $a2, 0x800e
+/* 092E10 80092210 3C06800E */  lui   $a2, %hi(gTrackNameVoiceDelay) # $a2, 0x800e
 /* 092E14 80092214 8C4269C8 */  lw    $v0, %lo(D_801269C8)($v0)
-/* 092E18 80092218 24C60980 */  addiu $a2, %lo(D_800E0980) # addiu $a2, $a2, 0x980
+/* 092E18 80092218 24C60980 */  addiu $a2, %lo(gTrackNameVoiceDelay) # addiu $a2, $a2, 0x980
 .L8009221C:
 /* 092E1C 8009221C 3C0C8012 */  lui   $t4, %hi(gMenuOptionCount) # $t4, 0x8012
 /* 092E20 80092220 24010004 */  li    $at, 4
@@ -71,8 +71,8 @@ glabel func_80092188
 /* 092E7C 8009227C 00000000 */   nop   
 /* 092E80 80092280 0C000741 */  jal   play_sound_global
 /* 092E84 80092284 00002825 */   move  $a1, $zero
-/* 092E88 80092288 3C06800E */  lui   $a2, %hi(D_800E0980) # $a2, 0x800e
-/* 092E8C 8009228C 24C60980 */  addiu $a2, %lo(D_800E0980) # addiu $a2, $a2, 0x980
+/* 092E88 80092288 3C06800E */  lui   $a2, %hi(gTrackNameVoiceDelay) # $a2, 0x800e
+/* 092E8C 8009228C 24C60980 */  addiu $a2, %lo(gTrackNameVoiceDelay) # addiu $a2, $a2, 0x980
 /* 092E90 80092290 ACC00000 */  sw    $zero, ($a2)
 .L80092294:
 /* 092E94 80092294 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e

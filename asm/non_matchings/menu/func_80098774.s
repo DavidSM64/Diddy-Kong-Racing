@@ -28,8 +28,8 @@ glabel func_80098774
 /* 0993D4 800987D4 24A51048 */  addiu $a1, %lo(D_800E1048) # addiu $a1, $a1, 0x1048
 /* 0993D8 800987D8 ACA30014 */  sw    $v1, 0x14($a1)
 /* 0993DC 800987DC ACA30034 */  sw    $v1, 0x34($a1)
-/* 0993E0 800987E0 3C09800E */  lui   $t1, %hi(D_800E0FE4) # $t1, 0x800e
-/* 0993E4 800987E4 8D290FE4 */  lw    $t1, %lo(D_800E0FE4)($t1)
+/* 0993E0 800987E0 3C09800E */  lui   $t1, %hi(gRankingPlayerCount) # $t1, 0x800e
+/* 0993E4 800987E4 8D290FE4 */  lw    $t1, %lo(gRankingPlayerCount)($t1)
 /* 0993E8 800987E8 3C198000 */  lui   $t9, %hi(osTvType) # $t9, 0x8000
 /* 0993EC 800987EC 8F390300 */  lw    $t9, %lo(osTvType)($t9)
 /* 0993F0 800987F0 2528FFFF */  addiu $t0, $t1, -1
