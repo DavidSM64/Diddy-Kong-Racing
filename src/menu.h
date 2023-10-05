@@ -20,6 +20,8 @@
 #define TT_MENU_SAVE_GHOST        8
 #define TT_MENU_EXIT              10
 
+#define NUM_CHARACTERS 10
+
 enum DialogueMenuCases {
     DIALOGUE_TAJ,
     DIALOGUE_UNK_01,
@@ -102,6 +104,14 @@ typedef enum PakError {
     PAK_ERROR_FULL,
     PAK_ERROR_CORRUPT
 } PakError;
+
+typedef enum TitleDemoIndex {
+    DEMO_LEVEL_ID,
+    DEMO_PLAYER_COUNT,
+    DEMO_CUTSCENE_ID,
+
+    DEMO_INDEX_SIZE
+} TitleDemoIndex;
 
 /* Size: 0x20 bytes */
 // So this is looking to be a struct for menu images.
@@ -699,7 +709,7 @@ extern SavefileInfo gSavefileInfo[4];
 
 extern s8 gControllersXAxisDirection[4];
 extern s8 gControllersYAxisDirection[4];
-extern TextureHeader *D_80126550[128];
+extern TextureHeader *gMenuTextures[128];
 extern s32 D_801267D0;
 extern u8 D_801269C4[4];
 extern f32 gTrackSelectX;
@@ -770,7 +780,7 @@ void menu_file_select_init(void);
 void render_menu_image(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6);
 void func_8008E428(void);
 void assign_vehicle_icon_textures(void);
-void func_8008E4B0(void);
+void assign_menu_arrow_textures(void);
 void func_8008F534(void);
 void func_80090ED8(s32 updateRate);
 s32 func_80092BE0(s32 mapId);
@@ -781,7 +791,7 @@ void n_alSeqpDelete(void);
 void assign_racer_portrait_textures(void);
 void func_80094C14(s32 arg0);
 void func_80096790(void);
-void menu_11_init(void);
+void menu_results_init(void);
 void func_800976CC(void);
 void decompress_filename_string(u32 compressedFilename, char *output, s32 length);
 s32 compress_filename_string(char *filename, s32 length);
@@ -819,7 +829,6 @@ s32 get_number_of_active_players(void);
 s32 get_active_player_count(void);
 s32 get_multiplayer_racer_count(void);
 Settings **get_all_save_files_ptr(void);
-void func_8009C49C(void);
 void func_8009C4A8(s16 *arg0);
 void func_8009C508(s32 arg0);
 void func_8009C674(s16 *arg0);

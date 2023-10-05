@@ -35,8 +35,8 @@ glabel menu_ghost_data_init
 /* 09A6DC 80099ADC 2484174C */   addiu $a0, %lo(D_800E174C) # addiu $a0, $a0, 0x174c
 /* 09A6E0 80099AE0 0C03105C */  jal   load_font
 /* 09A6E4 80099AE4 24040002 */   li    $a0, 2
-/* 09A6E8 80099AE8 3C028012 */  lui   $v0, %hi(D_80126550) # $v0, 0x8012
-/* 09A6EC 80099AEC 24426550 */  addiu $v0, %lo(D_80126550) # addiu $v0, $v0, 0x6550
+/* 09A6E8 80099AE8 3C028012 */  lui   $v0, %hi(gMenuTextures) # $v0, 0x8012
+/* 09A6EC 80099AEC 24426550 */  addiu $v0, %lo(gMenuTextures) # addiu $v0, $v0, 0x6550
 /* 09A6F0 80099AF0 8C570038 */  lw    $s7, 0x38($v0)
 /* 09A6F4 80099AF4 3C01800E */  lui   $at, %hi(D_800E153C) # $at, 0x800e
 /* 09A6F8 80099AF8 AC37153C */  sw    $s7, %lo(D_800E153C)($at)
@@ -234,7 +234,7 @@ glabel menu_ghost_data_init
 /* 09A9F8 80099DF8 AF0F0018 */   sw    $t7, 0x18($t8)
 /* 09A9FC 80099DFC 0C025181 */  jal   assign_racer_portrait_textures
 /* 09AA00 80099E00 00000000 */   nop   
-/* 09AA04 80099E04 0C02392C */  jal   func_8008E4B0
+/* 09AA04 80099E04 0C02392C */  jal   assign_menu_arrow_textures
 /* 09AA08 80099E08 00000000 */   nop   
 /* 09AA0C 80099E0C 3C018012 */  lui   $at, %hi(gOptionBlinkTimer) # $at, 0x8012
 /* 09AA10 80099E10 AC2063BC */  sw    $zero, %lo(gOptionBlinkTimer)($at)

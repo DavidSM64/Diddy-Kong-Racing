@@ -64,11 +64,11 @@ glabel func_8009C6D4
 /* 09D3BC 8009C7BC 0C01EB9D */  jal   load_texture
 /* 09D3C0 8009C7C0 AFA70038 */   sw    $a3, 0x38($sp)
 /* 09D3C4 8009C7C4 8FA70038 */  lw    $a3, 0x38($sp)
-/* 09D3C8 8009C7C8 3C018012 */  lui   $at, %hi(D_80126550) # $at, 0x8012
+/* 09D3C8 8009C7C8 3C018012 */  lui   $at, %hi(gMenuTextures) # $at, 0x8012
 /* 09D3CC 8009C7CC 00075880 */  sll   $t3, $a3, 2
 /* 09D3D0 8009C7D0 002B0821 */  addu  $at, $at, $t3
 /* 09D3D4 8009C7D4 10000027 */  b     .L8009C874
-/* 09D3D8 8009C7D8 AC226550 */   sw    $v0, %lo(D_80126550)($at)
+/* 09D3D8 8009C7D8 AC226550 */   sw    $v0, %lo(gMenuTextures)($at)
 .L8009C7DC:
 /* 09D3DC 8009C7DC 1180000B */  beqz  $t4, .L8009C80C
 /* 09D3E0 8009C7E0 304E4000 */   andi  $t6, $v0, 0x4000
@@ -77,11 +77,11 @@ glabel func_8009C6D4
 /* 09D3EC 8009C7EC 0C01F04B */  jal   func_8007C12C
 /* 09D3F0 8009C7F0 AFA70038 */   sw    $a3, 0x38($sp)
 /* 09D3F4 8009C7F4 8FA70038 */  lw    $a3, 0x38($sp)
-/* 09D3F8 8009C7F8 3C018012 */  lui   $at, %hi(D_80126550) # $at, 0x8012
+/* 09D3F8 8009C7F8 3C018012 */  lui   $at, %hi(gMenuTextures) # $at, 0x8012
 /* 09D3FC 8009C7FC 00076880 */  sll   $t5, $a3, 2
 /* 09D400 8009C800 002D0821 */  addu  $at, $at, $t5
 /* 09D404 8009C804 1000001B */  b     .L8009C874
-/* 09D408 8009C808 AC226550 */   sw    $v0, %lo(D_80126550)($at)
+/* 09D408 8009C808 AC226550 */   sw    $v0, %lo(gMenuTextures)($at)
 .L8009C80C:
 /* 09D40C 8009C80C 11C00011 */  beqz  $t6, .L8009C854
 /* 09D410 8009C810 30443FFF */   andi  $a0, $v0, 0x3fff
@@ -96,20 +96,20 @@ glabel func_8009C6D4
 /* 09D434 8009C834 0C003A95 */  jal   spawn_object
 /* 09D438 8009C838 AFA70038 */   sw    $a3, 0x38($sp)
 /* 09D43C 8009C83C 8FA70038 */  lw    $a3, 0x38($sp)
-/* 09D440 8009C840 3C018012 */  lui   $at, %hi(D_80126550) # $at, 0x8012
+/* 09D440 8009C840 3C018012 */  lui   $at, %hi(gMenuTextures) # $at, 0x8012
 /* 09D444 8009C844 0007C880 */  sll   $t9, $a3, 2
 /* 09D448 8009C848 00390821 */  addu  $at, $at, $t9
 /* 09D44C 8009C84C 10000009 */  b     .L8009C874
-/* 09D450 8009C850 AC226550 */   sw    $v0, %lo(D_80126550)($at)
+/* 09D450 8009C850 AC226550 */   sw    $v0, %lo(gMenuTextures)($at)
 .L8009C854:
 /* 09D454 8009C854 00002825 */  move  $a1, $zero
 /* 09D458 8009C858 0C017E67 */  jal   func_8005F99C
 /* 09D45C 8009C85C AFA70038 */   sw    $a3, 0x38($sp)
 /* 09D460 8009C860 8FA70038 */  lw    $a3, 0x38($sp)
-/* 09D464 8009C864 3C018012 */  lui   $at, %hi(D_80126550) # $at, 0x8012
+/* 09D464 8009C864 3C018012 */  lui   $at, %hi(gMenuTextures) # $at, 0x8012
 /* 09D468 8009C868 00074880 */  sll   $t1, $a3, 2
 /* 09D46C 8009C86C 00290821 */  addu  $at, $at, $t1
-/* 09D470 8009C870 AC226550 */  sw    $v0, %lo(D_80126550)($at)
+/* 09D470 8009C870 AC226550 */  sw    $v0, %lo(gMenuTextures)($at)
 .L8009C874:
 /* 09D474 8009C874 8FAB0024 */  lw    $t3, 0x24($sp)
 /* 09D478 8009C878 240A0001 */  li    $t2, 1

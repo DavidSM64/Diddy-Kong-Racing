@@ -9,10 +9,10 @@ glabel func_8009CA60
 /* 09D67C 8009CA7C AFA40060 */  sw    $a0, 0x60($sp)
 /* 09D680 8009CA80 00687821 */  addu  $t7, $v1, $t0
 /* 09D684 8009CA84 85E50006 */  lh    $a1, 6($t7)
-/* 09D688 8009CA88 3C0A8012 */  lui   $t2, %hi(D_80126550) # $t2, 0x8012
+/* 09D688 8009CA88 3C0A8012 */  lui   $t2, %hi(gMenuTextures) # $t2, 0x8012
 /* 09D68C 8009CA8C 0005C080 */  sll   $t8, $a1, 2
 /* 09D690 8009CA90 01585021 */  addu  $t2, $t2, $t8
-/* 09D694 8009CA94 8D4A6550 */  lw    $t2, %lo(D_80126550)($t2)
+/* 09D694 8009CA94 8D4A6550 */  lw    $t2, %lo(gMenuTextures)($t2)
 /* 09D698 8009CA98 3C19800E */  lui   $t9, %hi(gAssetsMenuElementIds) # $t9, 0x800e
 /* 09D69C 8009CA9C 114000B4 */  beqz  $t2, .L8009CD70
 /* 09D6A0 8009CAA0 8FBF0024 */   lw    $ra, 0x24($sp)
@@ -173,13 +173,13 @@ glabel func_8009CA60
 /* 09D8F8 8009CCF8 256BF75C */  addiu $t3, %lo(gMenuImageStack) # addiu $t3, $t3, -0x8a4
 /* 09D8FC 8009CCFC 8FA8002C */  lw    $t0, 0x2c($sp)
 /* 09D900 8009CD00 8D6E0000 */  lw    $t6, ($t3)
-/* 09D904 8009CD04 3C028012 */  lui   $v0, %hi(D_80126550) # $v0, 0x8012
+/* 09D904 8009CD04 3C028012 */  lui   $v0, %hi(gMenuTextures) # $v0, 0x8012
 /* 09D908 8009CD08 01C87821 */  addu  $t7, $t6, $t0
 /* 09D90C 8009CD0C 85EC0006 */  lh    $t4, 6($t7)
 /* 09D910 8009CD10 00000000 */  nop   
 /* 09D914 8009CD14 000CC880 */  sll   $t9, $t4, 2
 /* 09D918 8009CD18 00591021 */  addu  $v0, $v0, $t9
-/* 09D91C 8009CD1C 8C426550 */  lw    $v0, %lo(D_80126550)($v0)
+/* 09D91C 8009CD1C 8C426550 */  lw    $v0, %lo(gMenuTextures)($v0)
 /* 09D920 8009CD20 00000000 */  nop   
 /* 09D924 8009CD24 8C440000 */  lw    $a0, ($v0)
 /* 09D928 8009CD28 0C02735F */  jal   render_track_selection_viewport_border

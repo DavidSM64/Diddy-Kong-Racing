@@ -221,8 +221,8 @@ glabel render_track_select_setup_ui
 .L80091250:
 /* 091E50 80091250 8FCE0000 */  lw    $t6, ($fp)
 /* 091E54 80091254 3C01B0E0 */  lui   $at, (0xB0E0C000 >> 16) # lui $at, 0xb0e0
-/* 091E58 80091258 3C188012 */  lui   $t8, %hi(D_80126550) # $t8, 0x8012
-/* 091E5C 8009125C 8F18665C */  lw    $t8, %lo(D_80126550 + 0x10C)($t8)
+/* 091E58 80091258 3C188012 */  lui   $t8, %hi(gMenuTextures) # $t8, 0x8012
+/* 091E5C 8009125C 8F18665C */  lw    $t8, %lo(gMenuTextures + 0x10C)($t8)
 /* 091E60 80091260 86090002 */  lh    $t1, 2($s0)
 /* 091E64 80091264 860B0006 */  lh    $t3, 6($s0)
 /* 091E68 80091268 860C0008 */  lh    $t4, 8($s0)
@@ -936,8 +936,8 @@ glabel render_track_select_setup_ui
 .L80091CE8:
 /* 0928E8 80091CE8 0060A025 */  move  $s4, $v1
 .L80091CEC:
-/* 0928EC 80091CEC 3C0B8012 */  lui   $t3, %hi(D_80126550) # $t3, 0x8012
-/* 0928F0 80091CF0 8D6B665C */  lw    $t3, %lo(D_80126550 + 0x10C)($t3)
+/* 0928EC 80091CEC 3C0B8012 */  lui   $t3, %hi(gMenuTextures) # $t3, 0x8012
+/* 0928F0 80091CF0 8D6B665C */  lw    $t3, %lo(gMenuTextures + 0x10C)($t3)
 /* 0928F4 80091CF4 864E0002 */  lh    $t6, 2($s2)
 /* 0928F8 80091CF8 86590006 */  lh    $t9, 6($s2)
 /* 0928FC 80091CFC 86490008 */  lh    $t1, 8($s2)
