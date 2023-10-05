@@ -308,19 +308,18 @@ void func_800098A4(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6,
 // single regalloc diff
 void func_80009968(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
     Vec3f *temp_a1;
-    unk8011A6D8 *temp_v1;
+    s32 tempArg5 = arg5;
 
-    if ((arg4 < 7) && (arg5 < 15)) {
-        temp_v1 = &D_8011A6D8[arg4];
-        temp_a1 = (Vec3f *) &temp_v1->unk4 + arg5 * 1;
-        temp_a1->x = x;
-        temp_a1->y = y;
-        temp_a1->z = z;
-        if (arg5 == 0) {
-            temp_v1->unk0.unk0_02 = arg3 & 0xFF;
+    if ((arg4 < 7) && (tempArg5 < 15)) {
+        temp_a1 = (Vec3f *) &D_8011A6D8[arg4].unk4.unk4_05;
+        temp_a1[tempArg5].x = x;
+        temp_a1[tempArg5].y = y;
+        temp_a1[tempArg5].z = z;
+        if (tempArg5 == 0) {
+            D_8011A6D8[arg4].unk0.unk0_02 = arg3 & 0xFF;
         }
-        if (temp_v1->unkB8 < arg5) {
-             temp_v1->unkB8 = arg5;
+        if (D_8011A6D8[arg4].unkB8 < tempArg5) {
+             D_8011A6D8[arg4].unkB8 = tempArg5;
         }
     }
 }
@@ -379,7 +378,7 @@ s32 func_80009AB4(u8 arg0) {
 }
 
 #ifdef NON_EQUIVALENT
-u8 func_80009D6C(unk8011A6D8 *, f32, f32, f32);    /* extern */
+u8 func_80009D6C(unk8011A6D8 *, f32, f32, f32);
 
 void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
     s32 j;
@@ -390,18 +389,18 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
     f32 *yVals;
     s32 distBetween;
     s32 numOfYVals;
-    s32 temp_v0_4;
-    s32 volume;
+    u8 temp_v0_4;
+    u8 volume;
     s32 var_s6;
     s32 i;
     s32 k;
 
     levelSegmentIndex = get_level_segment_index_from_position(x, y, z);
     volume = 0;
-    var_s6 = 0x190;
+    var_s6 = 400;
     for (i = 0; i < 7; i++) {
         if (D_8011A6D8[i].unk0.unk0_02 != 0) {
-            if (func_80009AB4(i & 0xFF) != 0) {
+            if (func_80009AB4(i) != 0) {
                 for (j = 0; j < D_8011A6D8[i].unkB8; j++) {
                     distBetween = func_800092A8(x, y, z, &D_8011A6D8[i].unk4.unk4_02[j], &outX, &outY, &outZ);
                     if (distBetween < var_s6) {
@@ -411,7 +410,7 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
                                 var_s6 = distBetween;
                                 temp_v0_4 = func_80009D6C(&D_8011A6D8[i], outX, outY, outZ);
                                 if (volume < temp_v0_4) {
-                                    volume = temp_v0_4 & 0xFF;
+                                    volume = temp_v0_4;
                                 }
                             }
                         }

@@ -31,7 +31,7 @@ glabel func_8001E93C
 /* 01F5AC 8001E9AC 1219000A */  beq   $s0, $t9, .L8001E9D8
 /* 01F5B0 8001E9B0 00000000 */   nop   
 /* 01F5B4 8001E9B4 00602025 */  move  $a0, $v1
-/* 01F5B8 8001E9B8 0C003FEE */  jal   gParticlePtrList_addObject
+/* 01F5B8 8001E9B8 0C003FEE */  jal   free_object
 /* 01F5BC 8001E9BC AFA2003C */   sw    $v0, 0x3c($sp)
 /* 01F5C0 8001E9C0 8FA2003C */  lw    $v0, 0x3c($sp)
 /* 01F5C4 8001E9C4 3C048012 */  lui   $a0, %hi(D_8011AE78) # $a0, 0x8012

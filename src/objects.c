@@ -328,11 +328,11 @@ void func_8000B290(void) {
         }
     }
     if (gShieldEffectObject)
-        gParticlePtrList_addObject(gShieldEffectObject);
+        free_object(gShieldEffectObject);
     gShieldEffectObject = NULL;
 
     if (gMagnetEffectObject)
-        gParticlePtrList_addObject(gMagnetEffectObject);
+        free_object(gMagnetEffectObject);
     gMagnetEffectObject = NULL;
     gParticlePtrList_flush();
 }
@@ -748,7 +748,7 @@ void func_8000E1EC(Object *obj, s32 vehicleID) {
     D_8011AD48 = obj->segment.trans.y_position;
     D_8011AD4A = obj->segment.trans.z_position;
     D_8011AD4C = obj->segment.trans.y_rotation;
-    gParticlePtrList_addObject(obj);
+    free_object(obj);
     gNumRacers = 0;
 }
 
@@ -1415,7 +1415,8 @@ s32 func_8000FD34(Object *arg0, Object_5C *arg1) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8000FD54.s")
 
-void gParticlePtrList_addObject(Object *object) {
+//Official Name: objFreeObject
+void free_object(Object *object) {
     func_800245B4(object->unk4A | 0x8000);
     gParticlePtrList[gParticleCount] = object;
     gParticleCount++;
@@ -4058,7 +4059,49 @@ void func_8001EFA4(Object *arg0, Object *animObj) {
     anim->unk45 = 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001F23C.s")
+void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
+    s32 i;
+    LevelObjectEntryCommon newObjEntry;
+    Object *newObj;
+    Object_AnimCamera *camera;
+    s32 viewportCount;
+
+    NEW_OBJECT_ENTRY(newObjEntry, animEntry->objectIdToSpawn, 8, animEntry->common.x, animEntry->common.y, animEntry->common.z);
+
+    obj->unk64 = (Object_64*)spawn_object((LevelObjectEntryCommon* ) &newObjEntry, 1);
+    newObj = (Object *) obj->unk64;
+    // (newObj->behaviorId == BHV_DINO_WHALE) is Dinosaur1, Dinosaur2, Dinosaur3, Whale, and Dinoisle
+    if ((obj->unk64 != NULL) && (newObj->behaviorId == BHV_DINO_WHALE) && (gTimeTrialEnabled)) {
+        free_object(newObj);
+        obj->unk64 = NULL;
+        newObj = NULL;
+    }
+    camera = (Object_AnimCamera *) newObj;
+    if (camera != NULL) {
+        camera->unk3C = 0;
+        func_8001EFA4(obj, newObj);
+        if (newObj->segment.header->behaviorId == BHV_CAMERA_ANIMATION) {
+            camera = &newObj->unk64->anim_camera;
+            camera->unk44 = D_8011AD3E;
+            viewportCount = get_viewport_count();
+            if (func_8006C19C()) {
+                viewportCount = VIEWPORTS_COUNT_2_PLAYERS;
+            }
+            for (i = 0; i < viewportCount;) {
+                newObj = spawn_object(&newObjEntry, 1);
+                if (newObj != NULL) {
+                    newObj->segment.level_entry = NULL;
+                    func_8001EFA4(obj, newObj);
+                    camera = &newObj->unk64->anim_camera;
+                    i++;
+                    camera->unk30 = i;
+                    camera->unk44 = D_8011AD3E;
+                }
+            }
+            D_8011AD3E++;
+        }
+    }
+}
 
 s8 func_8001F3B8(void) {
     return D_8011ADD4;
@@ -4102,8 +4145,77 @@ s32 func_800210CC(s8 arg0) {
     return 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80021104.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8002125C.s")
+void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Animation *entry) {
+    ObjectSegment *seg;
+    ObjectTransform *animObjTrans;
+
+    animObjTrans = animObj->unk1C;
+    if (obj->behaviorId == BHV_CAMERA_ANIMATION) {
+        animObj->unk44 = D_8011AD3E;
+        D_8011AD3E++;
+    }
+    if (entry->unk22 == 18) {
+        set_active_camera(animObj->unk30);
+        seg = get_active_camera_segment_no_cutscenes();
+        animObjTrans->x_position = seg->trans.x_position;
+        animObjTrans->y_position = seg->trans.y_position;
+        animObjTrans->z_position = seg->trans.z_position;
+        animObjTrans->y_rotation = (0x8000 - seg->trans.y_rotation);
+        animObjTrans->x_rotation = -seg->trans.x_rotation;
+        animObjTrans->z_rotation = seg->trans.z_rotation;
+    }
+    if ((entry->unk22 >= 10) && (entry->unk22 < 18)) {
+        seg = &(*gRacers)[entry->unk22 - 10]->segment;
+        if (seg != NULL) {
+            animObjTrans->x_position = seg->trans.x_position;
+            animObjTrans->y_position = seg->trans.y_position;
+            animObjTrans->z_position = seg->trans.z_position;
+            animObjTrans->y_rotation = seg->trans.y_rotation;
+            animObjTrans->x_rotation = seg->trans.x_rotation;
+            animObjTrans->z_rotation = seg->trans.z_rotation;
+        }
+    }
+}
+
+void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entry, Object_CharacterSelect *charSelect, UNUSED s32 index) {
+    s32 initialAnimFrame;
+
+    initialAnimFrame = entry->unk12;
+    if (initialAnimFrame >= 0) {
+        if (initialAnimFrame != charSelectObj->segment.object.animationID) {
+            charSelectObj->segment.animFrame = entry->unk16;
+        }
+        charSelectObj->segment.object.animationID = entry->unk12;
+        charSelect->unk14 = entry->unk17;
+        charSelect->unk2C = entry->unk18;
+    }
+    if (entry->unk13 >= 0) {
+        charSelect->unk2F = entry->unk13;
+    }
+    charSelect->unk36 = normalise_time(entry->unk24);
+    charSelect->unk3F = entry->unk2D;
+    charSelect->unk3A = entry->unk26;
+    charSelect->unk39 = entry->unk1F;
+    charSelect->unk43 = entry->unk30;
+    charSelect->unk38 = entry->unk1E;
+    charSelect->unk3B = entry->unk29;
+    charSelect->unk40 = entry->unk2E;
+    charSelect->unk41 = entry->unk2F;
+    charSelect->unk3C = entry->unk2B;
+    if (entry->unk27 != 255) {
+        func_800C31EC(entry->unk27);
+    }
+    if (entry->unk2A >= 0) {
+        func_8001E45C(entry->unk2A);
+        return;
+    }
+    if (entry->unk15 >= 0) {
+        func_80021400(entry->unk15);
+    }
+    if (entry->unk28 >= 0) {
+        D_8011AD22[D_8011AD21]++;
+    }
+}
 
 void func_80021400(s32 arg0) {
     s32 i;

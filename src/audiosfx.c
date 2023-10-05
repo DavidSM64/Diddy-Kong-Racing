@@ -124,20 +124,16 @@ void func_8000410C(ALSoundState *state) {
     _removeEvents(&gAlSndPlayerPtr->evtq, state, 0xFFFF);
 }
 
-#ifdef NON_EQUIVALENT
-//There's some weird shenanigans with these structs that needs to be figured out.
 void func_8000418C(ALVoiceState *voiceState) {
-    ALSndpEvent evt;
-    s32 pad;
-    evt.pitch.pitch = alCents2Ratio(((ALSound *)voiceState->voice.node.prev)->keyMap->detune) * voiceState->vibrato;
-    evt.pitch.type = AL_SEQP_STOP_EVT; 
-    evt.pitch.state = voiceState;
-    evt.msg.msg.loop.count = evt.msg.msg.tempo.ticks;
-    alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &evt.msg, 33333);
+    ALEvent_unk8000418C evt;
+    f32 sp1C;
+
+    sp1C = alCents2Ratio(((ALLink_unk8000418C*)voiceState->voice.node.prev->prev)->unk5) * voiceState->vibrato;
+    evt.type = AL_SEQP_STOP_EVT;
+    evt.unk4 = voiceState;
+    evt.unk8 = *((s32*)&sp1C); // But why tho?
+    alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent *) &evt, 33333);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/audiosfx/func_8000418C.s")
-#endif
 
 static void _removeEvents(ALEventQueue *evtq, ALSoundState *state, u16 eventType) {
     ALLink              *thisNode;

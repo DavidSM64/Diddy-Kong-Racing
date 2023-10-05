@@ -197,11 +197,11 @@ typedef struct Racer {
 
 /* Unknown Size */
 typedef struct Settings4C {
-    u8 unk0;
-    u8 unk1;
-    s8 unk2;
+    u8 unk0; //courseId?
+    u8 unk1; // This value + 8 is cutsceneId index? gGameCurrentCutscene = D_80121250[D_80121250[1] + 8];
+    s8 unk2; //mapId?
     u8 pad3[0xC];
-    u8 unkF;
+    u8 unkF; //entranceId?
 } Settings4C;
 
 #define TAJ_FLAGS_CAR_CHAL_UNLOCKED    0x01
@@ -914,7 +914,7 @@ typedef struct Object_Animation {
   /* 0x2D */ u8 unk2D;
   /* 0x2E */ u8 unk2E;
   /* 0x2F */ u8 unk2F;
-  /* 0x30 */ u8 unk30;
+  /* 0x30 */ s8 unk30;
   /* 0x31 */ u8 unk31;
   /* 0x32 */ u8 unk32;
   /* 0x33 */ u8 unk33;
@@ -1032,8 +1032,14 @@ typedef struct Object_CharacterFlag {
 typedef struct Object_AnimCamera {
   /* 0x00 */ u8 pad0[0x30];
   /* 0x30 */ s8 unk30;
-  /* 0x31 */ u8 pad31[0x13];
-  /* 0x44 */ s8 unk44;
+  /* 0x31 */ u8 pad31[0xB];
+  /* 0x3C */ s32 unk3C;
+  /* 0x40 */ u8 pad40[4];
+  /* 0x44 */ u8 unk44;
+  /* 0x45 */ u8 pad45[5];
+  /* 0x4A */ s16 unk4A;
+  /* 0x4C */ u8 pad4C[8];
+  /* 0x54 */ s8 unk54;
 } Object_AnimCamera;
 
 typedef struct Object_InfoPoint {
@@ -1542,6 +1548,28 @@ typedef struct Object_8001E89C_64 {
     /* 0x0C */ Object_8001E89C_64_C *unkC;
 } Object_8001E89C_64;
 
+typedef struct Object_CharacterSelect {
+    u8 pad0[0x14];
+    f32 unk14;
+    u8 pad18[0x14];
+    u8 unk2C;
+    u8 pad2D[2];
+    u8 unk2F;
+    u8 pad30[6];
+    s16 unk36;
+    u8 unk38;
+    u8 unk39;
+    s8 unk3A;
+    s8 unk3B;
+    s8 unk3C;
+    s8 pad3D[2];
+    s8 unk3F;
+    s8 unk40;
+    s8 unk41;
+    s8 pad42;
+    s8 unk43;
+} Object_CharacterSelect;
+
 typedef struct Object_64 {
     union {
         Object_Laser laser;
@@ -1587,6 +1615,7 @@ typedef struct Object_64 {
         Object_AnimatedObject animatedObject;
         Object_WizpigRocket wizpigRocket;
         Object_8001E89C_64 obj8001E89C_64;
+        Object_CharacterSelect characterSelect;
     };
 } Object_64;
 

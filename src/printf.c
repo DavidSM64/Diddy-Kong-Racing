@@ -147,8 +147,8 @@ Gfx dDebugFontSettings[] = {
 
 /************ .rodata ************/
 
-const char D_800E8C00[] = "0123456789abcdefghijklmnopqrstuvwxyz";
-const char D_800E8C28[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const char gLowerCase[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+const char gUpperCase[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const char D_800E8C50[] = "";
 const char D_800E8C54[] = "(null)";
 const char D_800E8C5C[] = "(nil)";
@@ -177,7 +177,18 @@ char *gDebugPrintBufferEnd;
 
 /******************************/
 
-GLOBAL_ASM("asm/non_matchings/printf/_itoa.s")
+char *_itoa(u64 n, char *outBuffer, u32 radix, s32 useUpperCase) {
+    char *alphabet;
+    char *buffer;
+
+    alphabet = (useUpperCase) ? (char *) gUpperCase : (char *) gLowerCase;
+    
+    for (buffer = outBuffer; n > 0; n /= radix) {
+        *(--buffer) = alphabet[n % radix];
+    }
+    
+    return buffer;
+}
 
 //Official Name: sprintfSetSpacingCodes
 void func_800B4A08(s32 arg0) {
