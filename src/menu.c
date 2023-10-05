@@ -255,9 +255,9 @@ f32 D_80126BEC;
 char *gResultOptionText[8];
 s32 D_80126C10;
 s32 gResultOptionCount;
-s32 D_80126C18;
+s32 gBootMenuTimer;
 char **D_80126C1C;
-s32 D_80126C20;
+s32 gBootMenuPhase;
 s32 D_80126C24;
 s8 D_80126C28;
 unk80080BC8 (*D_80126C2C)[2];
@@ -968,7 +968,7 @@ DrawTexture gMenuPortraitTT[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture gMenuPortraitPipsy[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 DrawTexture gMenuPortraitTimber[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 
-DrawTexture *D_800E0AF0[10] = {
+DrawTexture *gRacerPortraits[10] = {
     gMenuPortraitKrunch, gMenuPortraitDiddy, gMenuPortraitDrumstick, gMenuPortraitBumper,
     gMenuPortraitBanjo, gMenuPortraitConker, gMenuPortraitTiptup, gMenuPortraitTT,
     gMenuPortraitPipsy, gMenuPortraitTimber
@@ -3825,6 +3825,10 @@ PakError check_for_controller_pak_errors(void) {
     return sControllerPakError;
 }
 
+/**
+ * Initialise boot screen menu.
+ * Load the title textures into RAM.
+*/
 void menu_boot_init(void) {
     s32 i;
 
@@ -3838,8 +3842,8 @@ void menu_boot_init(void) {
     }
 
     // Reset variables for menu_boot_loop()
-    D_80126C20 = 0; // D_80126C20 is the current state of the boot screen. Either 0, 1, or 2.
-    D_80126C18 = 0; // D_80126C18 is a timer for the boot screen, counts up to 0x8C frames.
+    gBootMenuPhase = 0;
+    gBootMenuTimer = 0;
 }
 
 s32 menu_boot_loop(s32 updateRate) {
@@ -3856,29 +3860,29 @@ s32 menu_boot_loop(s32 updateRate) {
 
     temp = y;
 
-    switch (D_80126C20) {
+    switch (gBootMenuPhase) {
         case 0:
-            if (D_80126C18 < 32) {
-                D_80126C18 += updateRate;
-                if (D_80126C18 >= 33) {
-                    D_80126C18 = 32;
+            if (gBootMenuTimer < 32) {
+                gBootMenuTimer += updateRate;
+                if (gBootMenuTimer >= 33) {
+                    gBootMenuTimer = 32;
                 }
             } else {
                 func_800887E8();
-                D_80126C20 = 1;
+                gBootMenuPhase = 1;
             }
             break;
         case 1:
-            if (D_80126C18 < 140) {
-                D_80126C18 += updateRate;
-                if (D_80126C18 >= 141) {
-                    D_80126C18 = 140;
+            if (gBootMenuTimer < 140) {
+                gBootMenuTimer += updateRate;
+                if (gBootMenuTimer >= 141) {
+                    gBootMenuTimer = 140;
                 }
             } else {
                 func_800887C4();
-                D_80126C20 = 2;
+                gBootMenuPhase = 2;
             }
-            if (D_80126C18 >= 129) {
+            if (gBootMenuTimer >= 129) {
                 temp = 300;
             }
             break;
@@ -7693,12 +7697,12 @@ void func_80094A5C(void) {
             allocate_menu_images(D_800E0A40);
             assign_racer_portrait_textures();
             settings = get_settings();
-            D_800E0BEC->unk14_a.element = D_800E0AF0[settings->racers[settings->timeTrialRacer].character];
+            D_800E0BEC->unk14_a.element = gRacerPortraits[settings->racers[settings->timeTrialRacer].character];
             if (!is_time_trial_enabled()) {
                 for (i = 0; i < 8; i++) {
                     for (j = 0; j < 8; j++) {
                         if (i == settings->racers[j].starting_position) {
-                            D_800E0CEC[7 - i].unk14_a.element = D_800E0AF0[settings->racers[j].character];
+                            D_800E0CEC[7 - i].unk14_a.element = gRacerPortraits[settings->racers[j].character];
                         }
                     }
                 }
@@ -8800,7 +8804,7 @@ s32 menu_ghost_data_loop(s32 updateRate) {
     }
 
     pressedButtons = 0;
-    if (gMenuDelay != 0) {
+    if (gMenuDelay) {
         if (gMenuDelay < 0) {
             gMenuDelay -= updateRate;
         } else {
@@ -8966,7 +8970,7 @@ s32 menu_23_loop(UNUSED s32 updateRate) {
     }
     if (D_80126804 != NULL) {
         for (i = 0; D_80126804[i] != -1; i++) {
-            render_textured_rectangle(&sMenuCurrDisplayList, D_800E0AF0[D_80126804[i]], 24, 16 + (44 * i), 255, 255, 255, 255);
+            render_textured_rectangle(&sMenuCurrDisplayList, gRacerPortraits[D_80126804[i]], 24, 16 + (44 * i), 255, 255, 255, 255);
         }
     }
     gIgnorePlayerInputTime = 0;
@@ -8981,6 +8985,10 @@ void func_8009AF18(void) {
     }
 }
 
+/**
+ * Initialise credits sequence.
+ * Sets the ending text depending on when the credits were called.
+*/ 
 void menu_credits_init(void) {
     s32 cheat;
     s32 cheatIndex;
@@ -9011,8 +9019,8 @@ void menu_credits_init(void) {
     allocate_menu_images(D_800E17F0);
     assign_racer_portrait_textures();
     load_font(ASSET_FONTS_BIGFONT);
-    set_music_player_voice_limit(0x18);
-    D_800E18F8 = (u16)0x1000;
+    set_music_player_voice_limit(24);
+    D_800E18F8 = 0x1000;
     if (gViewingCreditsFromCheat) {
         play_music(SEQUENCE_DARKMOON_CAVERNS);
         gCreditsArray[84] = gCreditsLastMessageArray[2]; // "THE END"
@@ -9023,7 +9031,7 @@ void menu_credits_init(void) {
         if (settings->bosses & 0x20) {
             play_music(SEQUENCE_CRESCENT_ISLAND);
             gCreditsArray[84] = gCreditsLastMessageArray[1]; // "TO BE CONTINUED ..."
-            D_800E18F8 = (u16)0x61F4;
+            D_800E18F8 = 0x61F4;
             D_80126BCC = 9;
         } else {
             play_music(SEQUENCE_DARKMOON_CAVERNS);

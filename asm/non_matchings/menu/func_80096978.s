@@ -100,9 +100,9 @@ glabel func_80096978
 /* 0976F4 80096AF4 44819000 */  mtc1  $at, $f18
 /* 0976F8 80096AF8 24190036 */  li    $t9, 54
 /* 0976FC 80096AFC 46149102 */  mul.s $f4, $f18, $f20
-/* 097700 80096B00 3C12800E */  lui   $s2, %hi(D_800E0AF0) # $s2, 0x800e
+/* 097700 80096B00 3C12800E */  lui   $s2, %hi(gRacerPortraits) # $s2, 0x800e
 /* 097704 80096B04 8FB00084 */  lw    $s0, 0x84($sp)
-/* 097708 80096B08 26520AF0 */  addiu $s2, %lo(D_800E0AF0) # addiu $s2, $s2, 0xaf0
+/* 097708 80096B08 26520AF0 */  addiu $s2, %lo(gRacerPortraits) # addiu $s2, $s2, 0xaf0
 /* 09770C 80096B0C 444FF800 */  cfc1  $t7, $31
 /* 097710 80096B10 2413017F */  li    $s3, 383
 /* 097714 80096B14 35E10003 */  ori   $at, $t7, 3

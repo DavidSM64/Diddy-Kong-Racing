@@ -60,8 +60,8 @@ glabel func_80098774
 /* 099450 80098850 3C15800E */  lui   $s5, %hi(gTrophyRacePointsArray) # $s5, 0x800e
 /* 099454 80098854 3C148012 */  lui   $s4, %hi(D_80126428) # $s4, 0x8012
 /* 099458 80098858 3C138012 */  lui   $s3, %hi(D_80126430) # $s3, 0x8012
-/* 09945C 8009885C 3C0D800E */  lui   $t5, %hi(D_800E0AF0) # $t5, 0x800e
-/* 099460 80098860 25AD0AF0 */  addiu $t5, %lo(D_800E0AF0) # addiu $t5, $t5, 0xaf0
+/* 09945C 8009885C 3C0D800E */  lui   $t5, %hi(gRacerPortraits) # $t5, 0x800e
+/* 099460 80098860 25AD0AF0 */  addiu $t5, %lo(gRacerPortraits) # addiu $t5, $t5, 0xaf0
 /* 099464 80098864 26736430 */  addiu $s3, %lo(D_80126430) # addiu $s3, $s3, 0x6430
 /* 099468 80098868 26946428 */  addiu $s4, %lo(D_80126428) # addiu $s4, $s4, 0x6428
 /* 09946C 8009886C 26B51004 */  addiu $s5, %lo(gTrophyRacePointsArray) # addiu $s5, $s5, 0x1004

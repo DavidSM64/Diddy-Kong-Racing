@@ -553,7 +553,7 @@ extern DrawTexture gMenuPortraitTT[2];
 extern DrawTexture gMenuPortraitPipsy[2];
 extern DrawTexture gMenuPortraitTimber[2];
 
-extern DrawTexture* D_800E0AF0[10];
+extern DrawTexture* gRacerPortraits[10];
 
 extern s16 D_800E0B18[74];
 
