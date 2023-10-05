@@ -59,7 +59,7 @@ UNUSED s32 sUnused_801263C8; // Set to 0 in menu_init, and never again.
 CharacterSelectData (*gCurrCharacterSelectData)[10]; //Some sort of character list? Cares if T.T. and Drumstick are unlocked
 
 s32 D_801263D0; //Compared for equality to gTrackIdForPreview
-s8 gActivePlayersArray[4];
+s8 gActivePlayersArray[MAXCONTROLLERS]; //Boolean value for each controller if it's active with a player.
 s32 gOpacityDecayTimer;
 s8 D_801263DC[4];
 s32 D_801263E0;
@@ -145,8 +145,7 @@ TextureHeader *D_80126550[128];              // lookup table? TEXTURES
 u8 D_80126750[128]; // Seems to be a boolean for "This texture exists" for the above array.
 s32 D_801267D0;
 s32 D_801267D4;
-s32 D_801267D8[3];
-s32 D_801267E4;
+s32 D_801267D8[MAXCONTROLLERS];
 s32 D_801267E8; //Holds a value of which button was pressed
 s8 *D_801267EC;
 s32 D_801267F0[5];
@@ -4906,12 +4905,12 @@ void set_active_player_index(s32 controllerIndex) {
 
     gNumberOfActivePlayers = 1;
 
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < ARRAY_COUNT(gPlayersCharacterArray); i++) {
         gPlayersCharacterArray[i] = (i == controllerIndex) ? 1 : -1;
     }
 
-    for (i = 0; i < 4; i++) {
-        gActivePlayersArray[i] = (i == controllerIndex) ? 1 : 0;
+    for (i = 0; i < ARRAY_COUNT(gActivePlayersArray); i++) {
+        gActivePlayersArray[i] = (i == controllerIndex) ? TRUE : FALSE;
     }
 }
 
@@ -4940,8 +4939,8 @@ void menu_character_select_init(void) {
     gMenuDelay = 0;
     gOptionBlinkTimer = 0;
     D_800DF484 = 0;
-    for (i = 0; (i < 4) && (!breakTheLoop); i++) {
-        if (gActivePlayersArray[i] != 0) {
+    for (i = 0; (i < ARRAY_COUNT(gActivePlayersArray)) && (!breakTheLoop); i++) {
+        if (gActivePlayersArray[i]) {
             breakTheLoop = TRUE;
             D_801263C0.unk0 = (*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID;
             D_801263C0.unk2 = 0x7F;
@@ -5002,21 +5001,21 @@ void func_8008B358(void) {
     s32 var_a0;
     s32 var_a2;
 
-    for(i = 0; i < 4; i++) {
-        if (gActivePlayersArray[i] == 0) {
+    for(i = 0; i < MAXCONTROLLERS; i++) {
+        if (!gActivePlayersArray[i]) {
             var_a2 = -1;
             if (D_801267D8[i] & (A_BUTTON | START_BUTTON)) {
                 do {
-                    var_a2 += 1;
+                    var_a2++;
                     var_a0 = TRUE;
-                    for (j = 0; (j < 4) && (var_a0); j++) {
-                        if ((gActivePlayersArray[j] != 0) && (var_a2 == gPlayersCharacterArray[j])) {
+                    for (j = 0; (j < ARRAY_COUNT(gActivePlayersArray)) && (var_a0); j++) {
+                        if (gActivePlayersArray[j] && var_a2 == gPlayersCharacterArray[j]) {
                             var_a0 = FALSE;
                         }
                     }
                 } while (!var_a0);
                 gPlayersCharacterArray[i] = var_a2;
-                gActivePlayersArray[i] = 1;
+                gActivePlayersArray[i] = TRUE;
                 gNumberOfActivePlayers++;
                 D_801263C0.unk0 = (*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID;
                 D_801263C0.unk2 = 0;
@@ -5027,7 +5026,52 @@ void func_8008B358(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8008B4C8.s")
+void func_8008B4C8(void) {
+    s32 i;
+    s32 var_s1_2;
+    s32 buttonsPressedAllPlayers;
+
+    buttonsPressedAllPlayers = 0;
+    for (i = 0; i < ARRAY_COUNT(gActivePlayersArray); i++) {
+        if (gActivePlayersArray[i]) {
+            buttonsPressedAllPlayers |= D_801267D8[i];
+        }
+    }
+
+    if (buttonsPressedAllPlayers & (A_BUTTON | START_BUTTON)) {
+        gMenuDelay = 1;
+        mark_read_all_save_files();
+        transition_begin(&sMenuTransitionFadeIn);
+        var_s1_2 = -1;
+        //!@bug: This loop condition is doing a bitwise & instead of a boolean && 
+        for (i = 0; (i < ARRAY_COUNT(D_801267D8)) & (var_s1_2 < 0); i++) {
+            if (D_801267D8[i] & (A_BUTTON | START_BUTTON)) {
+                var_s1_2 = i;
+            }
+        }
+        if (D_80126808[var_s1_2] != 0) {
+            func_8000488C(D_80126808[var_s1_2]);
+        }
+        play_sound_global(((*gCurrCharacterSelectData)[gPlayersCharacterArray[var_s1_2]].voiceID + 0x19E), &D_80126808[var_s1_2]);
+        if ((gNumberOfActivePlayers >= 3) || ((gNumberOfActivePlayers >= 2) && !(gActiveMagicCodes & CHEAT_TWO_PLAYER_ADVENTURE)) || (D_800DFFD0 == 1)) {
+            set_music_fade_timer(-128);
+        }
+    } else {
+        for (i = 0; i < ARRAY_COUNT(gActivePlayersArray); i++) {
+            if (gActivePlayersArray[i] && D_801263DC[i] != 0) {
+                if (D_801267D8[i] & B_BUTTON) {
+                    D_801263DC[i] = 0;
+                    gNumberOfReadyPlayers--;
+                    if (D_80126808[i] != 0) {
+                        func_8000488C(D_80126808[i]);
+                    }
+                    play_sound_global(((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID + 0x93), &D_80126808[i]);
+                }
+            }
+        }
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/menu/func_8008B758.s")
 
 #ifdef NON_EQUIVALENT
@@ -5096,7 +5140,7 @@ s32 menu_character_select_loop(s32 updateRate) {
     gIgnorePlayerInputTime = 0;
     if (gMenuDelay == 0) {
         // THIS MUST BE ON ONE LINE!
-        for (i = 0; i < 4; i++) { activePlayers[i] = gActivePlayersArray[i]; }
+        for (i = 0; i < ARRAY_COUNT(gActivePlayersArray); i++) { activePlayers[i] = gActivePlayersArray[i]; }
         func_8008B358();
         if (gNumberOfReadyPlayers == gNumberOfActivePlayers) {
             func_8008B4C8(); // Cancel/Confirm selected character?
@@ -5117,7 +5161,7 @@ s32 menu_character_select_loop(s32 updateRate) {
             func_8008C128();
 
             phi_a0 = 0;
-            for (j = 0; j < 4; j++) {
+            for (j = 0; j < ARRAY_COUNT(gActivePlayersArray); j++) {
                 if (gActivePlayersArray[j]) {
                     gCharacterIdSlots[phi_a0] = (*gCurrCharacterSelectData)[gPlayersCharacterArray[j]].voiceID;
                     phi_a0++;
@@ -9226,7 +9270,7 @@ s8 get_player_character(s32 controllerIndex) {
     if (controllerIndex < 0 || controllerIndex >= 4) {
         return -1;
     }
-    if (gActivePlayersArray[controllerIndex] == 0) {
+    if (!gActivePlayersArray[controllerIndex]) {
         return -1;
     }
     return gPlayersCharacterArray[controllerIndex];

@@ -887,6 +887,7 @@ void calculate_and_display_rom_checksum(void);
 s32 menu_trophy_race_rankings_loop(s32 updateRate);
 s32 menu_results_loop(s32 updateRate);
 s32 menu_options_loop(s32 updateRate);
+void func_8008B4C8(void);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -917,7 +918,6 @@ void func_8007FFEC(s32 arg0);
 void func_800871D8(s32 arg0);
 SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1);
 void func_8009C6D4(s32 arg0);
-void func_8008B4C8(void);
 void func_8008B758(s8 *activePlayers);
 void set_D_800DD430(s8 arg0);
 void func_80099E8C(s32 updateRate);
