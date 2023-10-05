@@ -61,7 +61,7 @@ CharacterSelectData (*gCurrCharacterSelectData)[10]; //Some sort of character li
 s32 D_801263D0; //Compared for equality to gTrackIdForPreview
 s8 gActivePlayersArray[MAXCONTROLLERS]; //Boolean value for each controller if it's active with a player.
 s32 gOpacityDecayTimer;
-s8 D_801263DC[4];
+s8 D_801263DC[MAXCONTROLLERS];
 s32 D_801263E0;
 s32 D_801263E4;
 s8 gPlayersCharacterArray[8]; // -1 = Non active player, or character id if >= 0
@@ -145,12 +145,12 @@ TextureHeader *D_80126550[128];              // lookup table? TEXTURES
 u8 D_80126750[128]; // Seems to be a boolean for "This texture exists" for the above array.
 s32 D_801267D0;
 s32 D_801267D4;
-s32 D_801267D8[MAXCONTROLLERS];
+s32 D_801267D8[MAXCONTROLLERS]; //Buttons pressed per player
 s32 D_801267E8; //Holds a value of which button was pressed
 s8 *D_801267EC;
 s32 D_801267F0[5];
 s8 *D_80126804;
-s32 D_80126808[4];
+s32 D_80126808[MAXCONTROLLERS]; //Soundmask values
 s32 D_80126818;
 s32 D_8012681C;
 s16 D_80126820;
@@ -1903,7 +1903,7 @@ void menu_init(u32 menuId) {
     sUnused_80126828 = 0;
 
     //Needs to be one line
-    for (i = 0; i < 4; i++) { D_80126808[i] = 0; }
+    for (i = 0; i < ARRAY_COUNT(D_80126808); i++) { D_80126808[i] = 0; }
     func_80001844();
     switch (gCurrentMenuId) {
         case MENU_LOGOS:
@@ -4932,7 +4932,7 @@ void menu_character_select_init(void) {
     } else {
         gCurrCharacterSelectData = (CharacterSelectData (*)[10]) &gCharacterSelectBytesDefault;
     }
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < ARRAY_COUNT(D_801263DC); i++) {
         D_801263DC[i] = 0;
     }
     gNumberOfReadyPlayers = 0;
@@ -5028,7 +5028,7 @@ void func_8008B358(void) {
 
 void func_8008B4C8(void) {
     s32 i;
-    s32 var_s1_2;
+    s32 characterSelected;
     s32 buttonsPressedAllPlayers;
 
     buttonsPressedAllPlayers = 0;
@@ -5039,24 +5039,26 @@ void func_8008B4C8(void) {
     }
 
     if (buttonsPressedAllPlayers & (A_BUTTON | START_BUTTON)) {
+        //Character Selected
         gMenuDelay = 1;
         mark_read_all_save_files();
         transition_begin(&sMenuTransitionFadeIn);
-        var_s1_2 = -1;
+        characterSelected = -1;
         //!@bug: This loop condition is doing a bitwise & instead of a boolean && 
-        for (i = 0; (i < ARRAY_COUNT(D_801267D8)) & (var_s1_2 < 0); i++) {
+        for (i = 0; (i < ARRAY_COUNT(D_801267D8)) & (characterSelected < 0); i++) {
             if (D_801267D8[i] & (A_BUTTON | START_BUTTON)) {
-                var_s1_2 = i;
+                characterSelected = i;
             }
         }
-        if (D_80126808[var_s1_2] != 0) {
-            func_8000488C(D_80126808[var_s1_2]);
+        if (D_80126808[characterSelected] != 0) {
+            func_8000488C(D_80126808[characterSelected]);
         }
-        play_sound_global(((*gCurrCharacterSelectData)[gPlayersCharacterArray[var_s1_2]].voiceID + 0x19E), &D_80126808[var_s1_2]);
-        if ((gNumberOfActivePlayers >= 3) || ((gNumberOfActivePlayers >= 2) && !(gActiveMagicCodes & CHEAT_TWO_PLAYER_ADVENTURE)) || (D_800DFFD0 == 1)) {
+        play_sound_global(((*gCurrCharacterSelectData)[gPlayersCharacterArray[characterSelected]].voiceID + SOUND_VOICE_CHARACTER_SELECTED), &D_80126808[characterSelected]);
+        if ((gNumberOfActivePlayers > 2) || ((gNumberOfActivePlayers > 1) && !(gActiveMagicCodes & CHEAT_TWO_PLAYER_ADVENTURE)) || (D_800DFFD0 == 1)) {
             set_music_fade_timer(-128);
         }
     } else {
+        //Character Deselected
         for (i = 0; i < ARRAY_COUNT(gActivePlayersArray); i++) {
             if (gActivePlayersArray[i] && D_801263DC[i] != 0) {
                 if (D_801267D8[i] & B_BUTTON) {
@@ -5065,14 +5067,132 @@ void func_8008B4C8(void) {
                     if (D_80126808[i] != 0) {
                         func_8000488C(D_80126808[i]);
                     }
-                    play_sound_global(((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID + 0x93), &D_80126808[i]);
+                    play_sound_global(((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID + SOUND_VOICE_CHARACTER_DESELECTED), &D_80126808[i]);
                 }
             }
         }
     }
 }
 
+#ifdef NON_EQUIVALENT
+void func_8008B758(s8 *arg0) {
+    s8 *sp4C;
+    CharacterSelectData (*temp_a1_2)[0xA];
+    CharacterSelectData *temp_s1_3;
+    s16 temp_a0_3;
+    s16 temp_a0_4;
+    s16 temp_v1_2;
+    s32 *temp_s1;
+    s32 *temp_s1_2;
+    s32 *temp_v0;
+    s32 temp_a0;
+    s32 temp_a0_2;
+    s32 temp_v1;
+    s32 var_a0;
+    s32 var_s4;
+    s32 var_v0_3;
+    s32 var_v1;
+    s8 *temp_a1;
+    s8 *temp_s2;
+    s8 *var_v0;
+    s8 *var_v0_2;
+    s8 temp_t8;
+
+    var_s4 = 0;
+    var_v0 = arg0;
+    do {
+        sp4C = var_v0;
+        if (*var_v0 != 0) {
+            temp_a1 = &D_801263DC[var_s4];
+            temp_v0 = &D_801267D8[var_s4];
+            if (*temp_a1 != 0) {
+                if (*temp_v0 & B_BUTTON) {
+                    *temp_a1 = 0;
+                    gNumberOfReadyPlayers -= 1;
+                    if (D_80126808[var_s4] != 0) {
+                        func_8000488C(D_80126808[var_s4]);
+                    }
+                    play_sound_global(((*gCurrCharacterSelectData)[gPlayersCharacterArray[var_s4]].voiceID + SOUND_VOICE_CHARACTER_DESELECTED), &D_80126808[var_s4]);
+                }
+            } else {
+                temp_v1 = *temp_v0;
+                temp_s2 = &gPlayersCharacterArray[var_s4];
+                if (temp_v1 & B_BUTTON) {
+                    gNumberOfActivePlayers -= 1;
+                    gActivePlayersArray[var_s4] = 0;
+                    if (gNumberOfActivePlayers > 0) {
+                        if (D_801263B4.unk0 == (*gCurrCharacterSelectData)[*temp_s2].voiceID) {
+                            var_a0 = 0;
+                            var_v1 = 0;
+                            if (D_801263C0.unk1 <= 0) {
+                                var_v0_2 = gActivePlayersArray;
+loop_12:
+                                if (*var_v0_2 != 0) {
+                                    var_a0 = 1;
+                                    D_801263C0.unk2 = 0;
+                                    D_801263C0.unk1 = 0x14;
+                                    D_801263C0.unk0 = (s8) (*gCurrCharacterSelectData)[gPlayersCharacterArray[var_v1]].voiceID;
+                                }
+                                var_v1 += 1;
+                                var_v0_2 += 1;
+                                if ((var_v1 < 4) && (var_a0 == 0)) {
+                                    goto loop_12;
+                                }
+                            }
+                        }
+                    }
+                    *temp_s2 = -1;
+                    if (gNumberOfActivePlayers <= 0) {
+                        gMenuDelay = -1;
+                        transition_begin(&sMenuTransitionFadeIn);
+                    }
+                } else if (temp_v1 & (A_BUTTON | START_BUTTON)) {
+                    temp_s1_2 = &D_80126808[var_s4];
+                    temp_a0_2 = *temp_s1_2;
+                    *temp_a1 = 1;
+                    gNumberOfReadyPlayers += 1;
+                    if (temp_a0_2 != 0) {
+                        func_8000488C((u8 *) temp_a0_2);
+                    }
+                    play_sound_global(((*gCurrCharacterSelectData)[*temp_s2].voiceID + SOUND_VOICE_CHARACTER_SELECT), temp_s1_2);
+                } else {
+                    temp_t8 = *temp_s2;
+                    temp_a1_2 = gCurrCharacterSelectData;
+                    temp_a0_3 = (&D_80126830)[var_s4];
+                    var_v0_3 = temp_t8 * 0xE;
+                    temp_s1_3 = &(*temp_a1_2)[temp_t8];
+                    if (temp_a0_3 > 0) {
+                        func_8008BFE8(var_s4, (s8 *) temp_s1_3->upInput, 2, SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
+                        var_v0_3 = *temp_s2 * 0xE;
+                    } else if (temp_a0_3 < 0) {
+                        func_8008BFE8(var_s4, (s8 *) temp_s1_3->downInput, 2, SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
+                        var_v0_3 = *temp_s2 * 0xE;
+                    } else {
+                        temp_a0_4 = *(&D_80126818 + (var_s4 * 2));
+                        if (temp_a0_4 < 0) {
+                            func_8008BFE8(var_s4, (s8 *) temp_s1_3->rightInput, 4, SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
+                            var_v0_3 = *temp_s2 * 0xE;
+                        } else if (temp_a0_4 > 0) {
+                            func_8008BFE8(var_s4, (s8 *) temp_s1_3->LeftInput, 4, SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
+                            var_v0_3 = *temp_s2 * 0xE;
+                        }
+                    }
+                    temp_v1_2 = (*gCurrCharacterSelectData)[*temp_s2 + var_v0_3].voiceID;
+                    if (temp_s1_3->voiceID != temp_v1_2) {
+                        D_801263C0.unk0 = (s8) temp_v1_2;
+                        D_801263C0.unk2 = 0;
+                        D_801263C0.unk1 = 0x14;
+                    }
+                }
+            }
+        }
+        var_s4 += 1;
+        var_v0 = sp4C + 1;
+    } while (var_s4 != 4);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/func_8008B758.s")
+#endif
 
 #ifdef NON_EQUIVALENT
 
@@ -5132,7 +5252,7 @@ s32 menu_character_select_loop(s32 updateRate) {
     func_8008C168(updateRate);
     func_8008E4EC();
 
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < ARRAY_COUNT(D_801263DC); i++) {
         if (D_801263DC[i] == 1) {
             D_801263DC[i] = 2;
         }
@@ -5199,34 +5319,34 @@ s32 menu_character_select_loop(s32 updateRate) {
     return 0;
 }
 
-void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4) {
-    s32 someBool;
+void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 menuPickSoundId, u16 menuPickFailedSoundId) {
+    s32 sameCharSelected;
     s32 j;
     s32 i;
 
     j = 0;
-    someBool = TRUE;
-    while (someBool && j < arg2 && arg1[j] != -1) {
-        someBool = FALSE;
+    sameCharSelected = TRUE;
+    while (sameCharSelected && j < arg2 && arg1[j] != -1) {
+        sameCharSelected = FALSE;
         // Run this block if the DOUBLEVISION cheat isn't active.
         if (!(get_filtered_cheats() & CHEAT_SELECT_SAME_PLAYER)) {
-            for (i = 0; i < MAXCONTROLLERS && !someBool; i++) {
+            for (i = 0; i < MAXCONTROLLERS && !sameCharSelected; i++) {
                 if (i != arg0 && gPlayersCharacterArray[i] == arg1[j]) {
-                    someBool = TRUE;
+                    sameCharSelected = TRUE;
                 }
             }
-            if (someBool) {
+            if (sameCharSelected) {
                 j++;
             }
         }
     }
-    if (!someBool) {
+    if (!sameCharSelected) {
         gPlayersCharacterArray[arg0] = arg1[j];
-        // arg3 seems to always be passed SOUND_MENU_PICK3?
-        play_sound_global(arg3, NULL);
+        // menuPickSoundId seems to always be passed SOUND_MENU_PICK3?
+        play_sound_global(menuPickSoundId, NULL);
     } else {
-        // arg4 seems to always be passed SOUND_HORN_DRUMSTICK?
-        play_sound_global(arg4, NULL);
+        // menuPickFailedSoundId seems to always be passed SOUND_HORN_DRUMSTICK?
+        play_sound_global(menuPickFailedSoundId, NULL);
     }
 }
 
