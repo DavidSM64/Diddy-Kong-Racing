@@ -138,7 +138,7 @@ typedef struct unk80126460 {
 } unk80126460;
 
 typedef struct unk801263C0 {
-    s8 unk0;
+    s8 channelIndex;
     s8 unk1;
     union {
         struct {
@@ -688,7 +688,7 @@ extern DrawTexture D_800DFC60[2];
 extern Gfx *sMenuCurrDisplayList;
 extern const char D_800E8208[];
 extern s32 gOptionBlinkTimer;
-extern s32 D_801263E0;
+extern s32 gMenuOptionCount;
 extern s32 D_80126A00;
 extern unk800861C8 *D_80126A04;
 extern s32 D_80126A08;

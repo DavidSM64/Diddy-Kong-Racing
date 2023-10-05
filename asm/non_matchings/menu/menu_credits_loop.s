@@ -507,8 +507,8 @@ glabel menu_credits_loop
 /* 09C65C 8009BA5C 3C068012 */  lui   $a2, %hi(gOpacityDecayTimer) # $a2, 0x8012
 /* 09C660 8009BA60 24C663D8 */  addiu $a2, %lo(gOpacityDecayTimer) # addiu $a2, $a2, 0x63d8
 .L8009BA64:
-/* 09C664 8009BA64 3C108012 */  lui   $s0, %hi(D_801263E0) # $s0, 0x8012
-/* 09C668 8009BA68 261063E0 */  addiu $s0, %lo(D_801263E0) # addiu $s0, $s0, 0x63e0
+/* 09C664 8009BA64 3C108012 */  lui   $s0, %hi(gMenuOptionCount) # $s0, 0x8012
+/* 09C668 8009BA68 261063E0 */  addiu $s0, %lo(gMenuOptionCount) # addiu $s0, $s0, 0x63e0
 /* 09C66C 8009BA6C 8E0A0000 */  lw    $t2, ($s0)
 /* 09C670 8009BA70 24110004 */  li    $s1, 4
 /* 09C674 8009BA74 2D410005 */  sltiu $at, $t2, 5

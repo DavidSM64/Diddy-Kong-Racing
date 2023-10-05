@@ -1739,7 +1739,7 @@ typedef struct SegmentPropertiesObject {
   /* 0x0036 */ s16 unk36;
   /* 0x0038 */ s8 unk38;
   /* 0x0039 */ u8 opacity;
-  /* 0x003A */ s8 numModelIDs;
+  /* 0x003A */ s8 modelIndex;
   /* 0x003B */ s8 animationID;
 } SegmentPropertiesObject;
 

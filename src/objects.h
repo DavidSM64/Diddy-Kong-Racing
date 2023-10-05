@@ -363,7 +363,7 @@ Object *func_8001B640(void);
 s32 func_8001B650(void);
 s32 func_8001B738(s32 controllerIndex);
 u8 has_ghost_to_save(void);
-void func_8001B790(void);
+void set_ghost_none(void);
 f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2);
 CheckpointNode *get_checkpoint_node(s32 arg0);
 CheckpointNode *find_next_checkpoint_node(s32 arg0, s32 arg1);

@@ -403,8 +403,8 @@ glabel func_80096978
 /* 097B70 80096F70 AFA90078 */  sw    $t1, 0x78($sp)
 /* 097B74 80096F74 1420FF41 */  bnez  $at, .L80096C7C
 /* 097B78 80096F78 AFB900A0 */   sw    $t9, 0xa0($sp)
-/* 097B7C 80096F7C 3C0D8012 */  lui   $t5, %hi(D_801263E0) # $t5, 0x8012
-/* 097B80 80096F80 8DAD63E0 */  lw    $t5, %lo(D_801263E0)($t5)
+/* 097B7C 80096F7C 3C0D8012 */  lui   $t5, %hi(gMenuOptionCount) # $t5, 0x8012
+/* 097B80 80096F80 8DAD63E0 */  lw    $t5, %lo(gMenuOptionCount)($t5)
 /* 097B84 80096F84 3C118012 */  lui   $s1, %hi(D_80126C14) # $s1, 0x8012
 /* 097B88 80096F88 19A000B7 */  blez  $t5, .L80097268
 /* 097B8C 80096F8C 26316C14 */   addiu $s1, %lo(D_80126C14) # addiu $s1, $s1, 0x6c14

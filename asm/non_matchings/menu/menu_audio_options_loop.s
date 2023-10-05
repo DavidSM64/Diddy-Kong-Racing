@@ -78,7 +78,7 @@ glabel menu_audio_options_loop
 /* 085994 80084D94 1601FFE6 */  bne   $s0, $at, .L80084D30
 /* 085998 80084D98 00F83821 */   addu  $a3, $a3, $t8
 /* 08599C 80084D9C 04C10006 */  bgez  $a2, .L80084DB8
-/* 0859A0 80084DA0 3C038012 */   lui   $v1, %hi(D_801263E0) # $v1, 0x8012
+/* 0859A0 80084DA0 3C038012 */   lui   $v1, %hi(gMenuOptionCount) # $v1, 0x8012
 /* 0859A4 80084DA4 24C60018 */  addiu $a2, $a2, 0x18
 /* 0859A8 80084DA8 18C00008 */  blez  $a2, .L80084DCC
 /* 0859AC 80084DAC 8FA40040 */   lw    $a0, 0x40($sp)
@@ -99,17 +99,17 @@ glabel menu_audio_options_loop
 /* 0859DC 80084DDC 01402025 */   move  $a0, $t2
 /* 0859E0 80084DE0 3C0C8012 */  lui   $t4, %hi(gOptionsMenuItemIndex) # $t4, 0x8012
 /* 0859E4 80084DE4 858C6C46 */  lh    $t4, %lo(gOptionsMenuItemIndex)($t4)
-/* 0859E8 80084DE8 246363E0 */  addiu $v1, %lo(D_801263E0) # addiu $v1, $v1, 0x63e0
+/* 0859E8 80084DE8 246363E0 */  addiu $v1, %lo(gMenuOptionCount) # addiu $v1, $v1, 0x63e0
 /* 0859EC 80084DEC 8C6B0000 */  lw    $t3, ($v1)
 /* 0859F0 80084DF0 258D0001 */  addiu $t5, $t4, 1
 /* 0859F4 80084DF4 116D0007 */  beq   $t3, $t5, .L80084E14
 /* 0859F8 80084DF8 2418FFFF */   li    $t8, -1
 .L80084DFC:
 /* 0859FC 80084DFC 8FAE0040 */  lw    $t6, 0x40($sp)
-/* 085A00 80084E00 3C038012 */  lui   $v1, %hi(D_801263E0) # $v1, 0x8012
+/* 085A00 80084E00 3C038012 */  lui   $v1, %hi(gMenuOptionCount) # $v1, 0x8012
 /* 085A04 80084E04 31CF4000 */  andi  $t7, $t6, 0x4000
 /* 085A08 80084E08 11E00011 */  beqz  $t7, .L80084E50
-/* 085A0C 80084E0C 246363E0 */   addiu $v1, %lo(D_801263E0) # addiu $v1, $v1, 0x63e0
+/* 085A0C 80084E0C 246363E0 */   addiu $v1, %lo(gMenuOptionCount) # addiu $v1, $v1, 0x63e0
 /* 085A10 80084E10 2418FFFF */  li    $t8, -1
 .L80084E14:
 /* 085A14 80084E14 3C01800E */  lui   $at, %hi(gMenuDelay) # $at, 0x800e

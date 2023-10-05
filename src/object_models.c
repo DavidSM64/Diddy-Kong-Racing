@@ -172,19 +172,19 @@ GLOBAL_ASM("asm/non_matchings/object_models/func_80061A00.s")
 
 void func_80061C0C(Object *obj) {
     ObjectModel *mdl;
-    Object_68 *temp_a1;
+    Object_68 *gfxData;
     s32 var_v1;
 
-    if (obj->segment.object.numModelIDs < 0) {
-        obj->segment.object.numModelIDs = 0;
+    if (obj->segment.object.modelIndex < 0) {
+        obj->segment.object.modelIndex = 0;
     }
     var_v1 = obj->segment.header->numberOfModelIds - 1;
-    if (var_v1 < obj->segment.object.numModelIDs) {
-        obj->segment.object.numModelIDs = var_v1;
+    if (var_v1 < obj->segment.object.modelIndex) {
+        obj->segment.object.modelIndex = var_v1;
     }
-    temp_a1 = obj->unk68[obj->segment.object.numModelIDs];
-    mdl = temp_a1->objModel;
-    if (temp_a1->objModel->animations != NULL) {
+    gfxData = obj->unk68[obj->segment.object.modelIndex];
+    mdl = gfxData->objModel;
+    if (gfxData->objModel->animations != NULL) {
         if (obj->segment.object.animationID < 0) {
             obj->segment.object.animationID = 0;
         }
@@ -201,7 +201,7 @@ void func_80061C0C(Object *obj) {
         }
         if (var_v1 < obj->segment.animFrame >> 4) {
             obj->segment.animFrame = 0;
-            temp_a1->unk10 = -1;
+            gfxData->unk10 = -1;
         }
     }
 }

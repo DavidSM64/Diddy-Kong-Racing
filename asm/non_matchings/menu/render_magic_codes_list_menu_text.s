@@ -91,10 +91,10 @@ glabel render_magic_codes_list_menu_text
 /* 08B2C4 8008A6C4 240600FF */  li    $a2, 255
 /* 08B2C8 8008A6C8 0C0310E1 */  jal   set_text_colour
 /* 08B2CC 8008A6CC 00003825 */   move  $a3, $zero
-/* 08B2D0 8008A6D0 3C038012 */  lui   $v1, %hi(D_801263E0) # $v1, 0x8012
+/* 08B2D0 8008A6D0 3C038012 */  lui   $v1, %hi(gMenuOptionCount) # $v1, 0x8012
 /* 08B2D4 8008A6D4 3C198012 */  lui   $t9, %hi(D_80126C70) # $t9, 0x8012
 /* 08B2D8 8008A6D8 8F396C70 */  lw    $t9, %lo(D_80126C70)($t9)
-/* 08B2DC 8008A6DC 8C6363E0 */  lw    $v1, %lo(D_801263E0)($v1)
+/* 08B2DC 8008A6DC 8C6363E0 */  lw    $v1, %lo(gMenuOptionCount)($v1)
 /* 08B2E0 8008A6E0 3C168012 */  lui   $s6, %hi(gCheatsAssetData) # $s6, 0x8012
 /* 08B2E4 8008A6E4 8ED66C30 */  lw    $s6, %lo(gCheatsAssetData)($s6)
 /* 08B2E8 8008A6E8 00791021 */  addu  $v0, $v1, $t9
@@ -168,10 +168,10 @@ glabel render_magic_codes_list_menu_text
 /* 08B3E8 8008A7E8 0C0310E1 */  jal   set_text_colour
 /* 08B3EC 8008A7EC 00003825 */   move  $a3, $zero
 .L8008A7F0:
-/* 08B3F0 8008A7F0 3C198012 */  lui   $t9, %hi(D_801263E0) # $t9, 0x8012
+/* 08B3F0 8008A7F0 3C198012 */  lui   $t9, %hi(gMenuOptionCount) # $t9, 0x8012
 /* 08B3F4 8008A7F4 3C098012 */  lui   $t1, %hi(D_80126C70) # $t1, 0x8012
 /* 08B3F8 8008A7F8 8D296C70 */  lw    $t1, %lo(D_80126C70)($t1)
-/* 08B3FC 8008A7FC 8F3963E0 */  lw    $t9, %lo(D_801263E0)($t9)
+/* 08B3FC 8008A7FC 8F3963E0 */  lw    $t9, %lo(gMenuOptionCount)($t9)
 /* 08B400 8008A800 26100001 */  addiu $s0, $s0, 1
 /* 08B404 8008A804 03291021 */  addu  $v0, $t9, $t1
 /* 08B408 8008A808 0202082A */  slt   $at, $s0, $v0

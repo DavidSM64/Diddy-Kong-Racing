@@ -360,21 +360,20 @@ u16 musicGetChanMask(void) {
     return gMusicPlayer->chanMask;
 }
 
-void func_80001074(u16 arg0) {
+void func_80001074(u16 channel) {
     u32 chan;
     if (D_800DC65C) {
-        D_80115F7C = arg0;
+        D_80115F7C = channel;
     } else {
-        gMusicPlayer->chanMask = arg0;
+        gMusicPlayer->chanMask = channel;
         for (chan = 0; chan != 16; chan++) {
-            if (arg0 & (1 << chan)) {
+            if (channel & (1 << chan)) {
                 func_80001170(chan);
             } else {
                 func_80001114(chan);
             }
         }
     }
-    return;
 }
 
 void func_80001114(u8 chan) {
@@ -471,7 +470,6 @@ void func_80001440(u8 *arg0) {
             s0++;
         } while (s0 < gMusicPlayer->maxChannels);
     }
-    return;
 }
 
 /**
@@ -621,7 +619,6 @@ void sfxSetPan(ALPan pan) {
     for (iChan = 0; iChan < 16; iChan++) {
         alCSPSetChlPan((ALCSPlayer *) gSndFxPlayer, iChan, pan);
     }
-    return;
 }
 
 /**
@@ -870,7 +867,6 @@ void func_80002570(ALSeqPlayer *seqp) {
         D_80115D41 = 0;
         D_800DC660 = 0;
     }
-    return;
 }
 
 void func_80002608(u8 arg0) {

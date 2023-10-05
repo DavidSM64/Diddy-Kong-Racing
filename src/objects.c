@@ -1003,7 +1003,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         break;
     case BHV_ANIMATED_OBJECT_4:
         var_a2 = get_character_id_from_slot(PLAYER_ONE);
-        curObj->segment.object.numModelIDs = var_a2;
+        curObj->segment.object.modelIndex = var_a2;
         assetCount = var_a2 + 1;
         break;
     case BHV_UNK_5B:
@@ -1011,13 +1011,13 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         if (var_a2) {
             var_a2--;
             assetCount = var_a2 + 1;
-            curObj->segment.object.numModelIDs = var_a2;
+            curObj->segment.object.modelIndex = var_a2;
         }
         break;
     case BHV_DYNAMIC_LIGHT_OBJECT_2:
         var_a2 = settings->wizpigAmulet;
         assetCount = var_a2 + 1;
-        curObj->segment.object.numModelIDs = settings->wizpigAmulet;
+        curObj->segment.object.modelIndex = settings->wizpigAmulet;
         break;
     case BHV_ROCKET_SIGNPOST_2:
         objType = settings->trophies;
@@ -1028,7 +1028,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
             }
             objType >>= 2;
         }
-        curObj->segment.object.numModelIDs = var_a2;
+        curObj->segment.object.modelIndex = var_a2;
         assetCount = var_a2 + 1;
         break;
     case BHV_GOLDEN_BALLOON:
@@ -1635,7 +1635,7 @@ void func_80011134(Object *arg0, s32 arg1) {
     s32 var_s1;
     u8 temp_v0;
 
-    temp_s3 = arg0->unk68[arg0->segment.object.numModelIDs]->objModel;
+    temp_s3 = arg0->unk68[arg0->segment.object.modelIndex]->objModel;
     temp_s5 = temp_s3->unk50;
     temp_s4 = temp_s3->batches;
     for (var_s1 = 0; temp_s5 > 0 && var_s1 < temp_s3->numberOfBatches; var_s1++) {
@@ -1993,7 +1993,7 @@ void render_3d_billboard(Object *obj) {
     } else {
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
     }
-    gfxData = obj->unk68[obj->segment.object.numModelIDs];
+    gfxData = obj->unk68[obj->segment.object.modelIndex];
     bubbleTrap = NULL;
     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON_2) {
         bubbleTrap = obj->properties.fireball.obj;
@@ -2059,7 +2059,7 @@ void render_3d_model(Object *obj) {
     ObjectModel *objModel;
     Object_68 *something;
 
-    obj68 = obj->unk68[obj->segment.object.numModelIDs];
+    obj68 = obj->unk68[obj->segment.object.modelIndex];
     if (obj68 != NULL) {
         objModel = obj68->objModel;
         hasOpacity = FALSE;
@@ -2170,7 +2170,7 @@ void render_3d_model(Object *obj) {
                 if (!(loopObj->segment.trans.flags & OBJ_FLAGS_INVISIBLE)) {
                     index = obj->unk60->unk2C[i];
                     if (index >= 0 && index < objModel->unk18) {
-                        something = loopObj->unk68[loopObj->segment.object.numModelIDs];
+                        something = loopObj->unk68[loopObj->segment.object.modelIndex];
                         vtxX = obj->unk44[objModel->unk14[index]].x;
                         vtxY = obj->unk44[objModel->unk14[index]].y;
                         vtxZ = obj->unk44[objModel->unk14[index]].z;
@@ -2220,7 +2220,7 @@ void render_3d_model(Object *obj) {
                 index = obj->segment.header->unk58;
                 if (index >= 0 && index < objModel->unk18) {
                     flags = (RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_Z_UPDATE);
-                    something = loopObj->unk68[loopObj->segment.object.numModelIDs];
+                    something = loopObj->unk68[loopObj->segment.object.modelIndex];
                     vtxX = obj->unk44[objModel->unk14[index]].x;
                     vtxY = obj->unk44[objModel->unk14[index]].y;
                     vtxZ = obj->unk44[objModel->unk14[index]].z;
@@ -2457,14 +2457,14 @@ void func_80012F94(Object *obj) {
             if (numberOfModels < var_t0) {
                 var_t0 = numberOfModels;
             }
-            obj->segment.object.numModelIDs = var_t0;
+            obj->segment.object.modelIndex = var_t0;
             if ((obj->shading != NULL) && (obj->shading->unk0 < 0.6f)) {
                 objRacer->lightFlags |= RACER_LIGHT_NIGHT;
             } else {
                 objRacer->lightFlags &= ~RACER_LIGHT_NIGHT;
             }
             racerLightTimer = objRacer->lightFlags & RACER_LIGHT_TIMER;
-            new_var = obj->unk68[obj->segment.object.numModelIDs];
+            new_var = obj->unk68[obj->segment.object.modelIndex];
             temp_a1_3 = new_var->objModel;
             if (racerLightTimer != 0) {
                 racerLightTimer--;
@@ -3283,13 +3283,19 @@ s32 func_8001B738(s32 controllerIndex) {
     return func_80059B7C(controllerIndex, func_800599A8(), D_800DC728, D_800DC72C, D_800DC724);
 }
 
+/**
+ * Returns whether there's valid ghost data to save.
+*/
 u8 has_ghost_to_save(void) {
     return gHasGhostToSave;
 }
 
-void func_8001B790(void) {
+/**
+ * Resets the variables used for ghost data saving.
+*/
+void set_ghost_none(void) {
     D_8011D5AC = -1;
-    gHasGhostToSave = 0;
+    gHasGhostToSave = FALSE;
 }
 
 Object *func_8001B7A8(Object *racer, s32 position, f32 *distance) {

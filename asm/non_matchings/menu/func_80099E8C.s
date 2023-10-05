@@ -430,9 +430,9 @@ glabel func_80099E8C
 /* 09B0EC 8009A4EC 1DC0FEF0 */  bgtz  $t6, .L8009A0B0
 /* 09B0F0 8009A4F0 00000000 */   nop   
 .L8009A4F4:
-/* 09B0F4 8009A4F4 3C108012 */  lui   $s0, %hi(D_801263E0) # $s0, 0x8012
+/* 09B0F4 8009A4F4 3C108012 */  lui   $s0, %hi(gMenuOptionCount) # $s0, 0x8012
 /* 09B0F8 8009A4F8 8FB900D8 */  lw    $t9, 0xd8($sp)
-/* 09B0FC 8009A4FC 261063E0 */  addiu $s0, %lo(D_801263E0) # addiu $s0, $s0, 0x63e0
+/* 09B0FC 8009A4FC 261063E0 */  addiu $s0, %lo(gMenuOptionCount) # addiu $s0, $s0, 0x63e0
 /* 09B100 8009A500 8E0A0000 */  lw    $t2, ($s0)
 /* 09B104 8009A504 332900FF */  andi  $t1, $t9, 0xff
 /* 09B108 8009A508 19400063 */  blez  $t2, .L8009A698

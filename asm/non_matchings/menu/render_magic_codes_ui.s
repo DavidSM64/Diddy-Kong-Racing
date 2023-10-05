@@ -204,8 +204,8 @@ glabel render_magic_codes_ui
 /* 08A5A0 800899A0 11800022 */  beqz  $t4, .L80089A2C
 /* 08A5A4 800899A4 3C0E800E */   lui   $t6, %hi(gMagicCodeMenuStrings) # $t6, 0x800e
 /* 08A5A8 800899A8 25CEFDA0 */  addiu $t6, %lo(gMagicCodeMenuStrings) # addiu $t6, $t6, -0x260
-/* 08A5AC 800899AC 3C158012 */  lui   $s5, %hi(D_801263E0) # $s5, 0x8012
-/* 08A5B0 800899B0 26B563E0 */  addiu $s5, %lo(D_801263E0) # addiu $s5, $s5, 0x63e0
+/* 08A5AC 800899AC 3C158012 */  lui   $s5, %hi(gMenuOptionCount) # $s5, 0x8012
+/* 08A5B0 800899B0 26B563E0 */  addiu $s5, %lo(gMenuOptionCount) # addiu $s5, $s5, 0x63e0
 /* 08A5B4 800899B4 01AE8821 */  addu  $s1, $t5, $t6
 .L800899B8:
 /* 08A5B8 800899B8 3C0F8012 */  lui   $t7, %hi(gOptionsMenuItemIndex) # $t7, 0x8012
@@ -240,8 +240,8 @@ glabel render_magic_codes_ui
 /* 08A624 80089A24 1540FFE4 */  bnez  $t2, .L800899B8
 /* 08A628 80089A28 02749821 */   addu  $s3, $s3, $s4
 .L80089A2C:
-/* 08A62C 80089A2C 3C158012 */  lui   $s5, %hi(D_801263E0) # $s5, 0x8012
-/* 08A630 80089A30 26B563E0 */  addiu $s5, %lo(D_801263E0) # addiu $s5, $s5, 0x63e0
+/* 08A62C 80089A2C 3C158012 */  lui   $s5, %hi(gMenuOptionCount) # $s5, 0x8012
+/* 08A630 80089A30 26B563E0 */  addiu $s5, %lo(gMenuOptionCount) # addiu $s5, $s5, 0x63e0
 /* 08A634 80089A34 0C0310BB */  jal   set_text_font
 /* 08A638 80089A38 00002025 */   move  $a0, $zero
 /* 08A63C 80089A3C 240B00FF */  li    $t3, 255
