@@ -144,14 +144,14 @@ As of October 4th, 2023, this is our current score:
  We are collecting silver coins in Crescent Island. (0/8 silver coins)
  =====================================================================
                  ADVENTURE TWO (Cleanup & Documentation)
- -------------------------- 28.44% Complete --------------------------
-                      # Documented functions: 624
-                     # Undocumented remaining: 946
+ -------------------------- 30.06% Complete --------------------------
+                      # Documented functions: 656
+                     # Undocumented remaining: 914
  ---------------------------- Game Status ----------------------------
-               Balloons: 14/47, Keys: 1/4, Trophies: 1/5
+               Balloons: 15/47, Keys: 1/4, Trophies: 1/5
                 T.T. Amulets: 1/4, Wizpig Amulets: 1/4
  ---------------------------------------------------------------------
-                We are racing in Walrus Cove. (Lap 3/3)
+              We are racing in Snowball Valley. (Lap 3/3)
  =====================================================================
 ```
 <!-- README_SCORE_END -->
