@@ -28,7 +28,7 @@ glabel calc_dynamic_lighting_for_object_2
 /* 0253AC 800247AC E7060004 */  swc1  $f6, 4($t8)
 /* 0253B0 800247B0 10C00007 */  beqz  $a2, .L800247D0
 /* 0253B4 800247B4 E7080008 */   swc1  $f8, 8($t8)
-/* 0253B8 800247B8 0C01A769 */  jal   func_80069DA4
+/* 0253B8 800247B8 0C01A769 */  jal   get_projection_matrix_f32
 /* 0253BC 800247BC 00000000 */   nop   
 /* 0253C0 800247C0 27A50010 */  addiu $a1, $sp, 0x10
 /* 0253C4 800247C4 00402025 */  move  $a0, $v0

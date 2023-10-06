@@ -40,7 +40,7 @@ glabel func_800ACA20
 /* 0AD6B8 800ACAB8 E7B400D8 */  swc1  $f20, 0xd8($sp)
 /* 0AD6BC 800ACABC E7B400DC */  swc1  $f20, 0xdc($sp)
 /* 0AD6C0 800ACAC0 AFAB0098 */  sw    $t3, 0x98($sp)
-/* 0AD6C4 800ACAC4 0C01A769 */  jal   func_80069DA4
+/* 0AD6C4 800ACAC4 0C01A769 */  jal   get_projection_matrix_f32
 /* 0AD6C8 800ACAC8 E7AA00E0 */   swc1  $f10, 0xe0($sp)
 /* 0AD6CC 800ACACC 27A500D8 */  addiu $a1, $sp, 0xd8
 /* 0AD6D0 800ACAD0 00A03025 */  move  $a2, $a1

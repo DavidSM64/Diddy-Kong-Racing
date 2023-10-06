@@ -28,8 +28,8 @@ glabel func_80098774
 /* 0993D4 800987D4 24A51048 */  addiu $a1, %lo(D_800E1048) # addiu $a1, $a1, 0x1048
 /* 0993D8 800987D8 ACA30014 */  sw    $v1, 0x14($a1)
 /* 0993DC 800987DC ACA30034 */  sw    $v1, 0x34($a1)
-/* 0993E0 800987E0 3C09800E */  lui   $t1, %hi(D_800E0FE4) # $t1, 0x800e
-/* 0993E4 800987E4 8D290FE4 */  lw    $t1, %lo(D_800E0FE4)($t1)
+/* 0993E0 800987E0 3C09800E */  lui   $t1, %hi(gRankingPlayerCount) # $t1, 0x800e
+/* 0993E4 800987E4 8D290FE4 */  lw    $t1, %lo(gRankingPlayerCount)($t1)
 /* 0993E8 800987E8 3C198000 */  lui   $t9, %hi(osTvType) # $t9, 0x8000
 /* 0993EC 800987EC 8F390300 */  lw    $t9, %lo(osTvType)($t9)
 /* 0993F0 800987F0 2528FFFF */  addiu $t0, $t1, -1
@@ -60,8 +60,8 @@ glabel func_80098774
 /* 099450 80098850 3C15800E */  lui   $s5, %hi(gTrophyRacePointsArray) # $s5, 0x800e
 /* 099454 80098854 3C148012 */  lui   $s4, %hi(D_80126428) # $s4, 0x8012
 /* 099458 80098858 3C138012 */  lui   $s3, %hi(D_80126430) # $s3, 0x8012
-/* 09945C 8009885C 3C0D800E */  lui   $t5, %hi(D_800E0AF0) # $t5, 0x800e
-/* 099460 80098860 25AD0AF0 */  addiu $t5, %lo(D_800E0AF0) # addiu $t5, $t5, 0xaf0
+/* 09945C 8009885C 3C0D800E */  lui   $t5, %hi(gRacerPortraits) # $t5, 0x800e
+/* 099460 80098860 25AD0AF0 */  addiu $t5, %lo(gRacerPortraits) # addiu $t5, $t5, 0xaf0
 /* 099464 80098864 26736430 */  addiu $s3, %lo(D_80126430) # addiu $s3, $s3, 0x6430
 /* 099468 80098868 26946428 */  addiu $s4, %lo(D_80126428) # addiu $s4, $s4, 0x6428
 /* 09946C 8009886C 26B51004 */  addiu $s5, %lo(gTrophyRacePointsArray) # addiu $s5, $s5, 0x1004

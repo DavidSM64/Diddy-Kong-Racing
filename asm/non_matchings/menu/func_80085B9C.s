@@ -13,8 +13,8 @@ glabel func_80085B9C
 /* 0867B4 80085BB4 AFB00028 */  sw    $s0, 0x28($sp)
 /* 0867B8 80085BB8 0C01E948 */  jal   get_video_width_and_height_as_s32
 /* 0867BC 80085BBC AFA40068 */   sw    $a0, 0x68($sp)
-/* 0867C0 80085BC0 3C038012 */  lui   $v1, %hi(D_801263E0) # $v1, 0x8012
-/* 0867C4 80085BC4 8C6363E0 */  lw    $v1, %lo(D_801263E0)($v1)
+/* 0867C0 80085BC0 3C038012 */  lui   $v1, %hi(gMenuOptionCount) # $v1, 0x8012
+/* 0867C4 80085BC4 8C6363E0 */  lw    $v1, %lo(gMenuOptionCount)($v1)
 /* 0867C8 80085BC8 3C01800F */  lui   $at, %hi(jpt_800E83E0) # $at, 0x800f
 /* 0867CC 80085BCC 306E0007 */  andi  $t6, $v1, 7
 /* 0867D0 80085BD0 000E7080 */  sll   $t6, $t6, 2

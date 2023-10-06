@@ -18,7 +18,7 @@ typedef struct LevelObjectEntry_Racer {
 
 typedef struct LevelObjectEntry_Scenery {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 numModelIDs;
+    /* 0x08 */ u8 modelIndex;
     /* 0x09 */ u8 radius;
     /* 0x0A */ u8 angleY;
     /* 0x0B */ u8 solid;
@@ -281,7 +281,7 @@ typedef struct LevelObjectEntry_Weather {
 
 typedef struct LevelObjectEntry_Bridge_WhaleRamp {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 numModelIDs;
+    /* 0x08 */ u8 modelIndex;
     /* 0x09 */ u8 angleY;
     /* 0x0A */ u8 unkA;
     /* 0x0B */ u8 unkB;
@@ -444,7 +444,7 @@ typedef struct LevelObjectEntry_TreasureSucker {
 
 typedef struct LevelObjectEntry_Log {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 numModelIDs;
+    /* 0x08 */ u8 modelIndex;
     /* 0x09 */ u8 radius;
     /* 0x0A */ u8 angleY;
 } LevelObjectEntry_Log;

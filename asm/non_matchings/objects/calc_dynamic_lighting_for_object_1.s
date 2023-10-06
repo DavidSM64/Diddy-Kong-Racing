@@ -72,7 +72,7 @@ glabel calc_dynamic_lighting_for_object_1
 /* 01E524 8001D924 00000000 */   nop   
 /* 01E528 8001D928 12400009 */  beqz  $s2, .L8001D950
 /* 01E52C 8001D92C 00000000 */   nop   
-/* 01E530 8001D930 0C01A769 */  jal   func_80069DA4
+/* 01E530 8001D930 0C01A769 */  jal   get_projection_matrix_f32
 /* 01E534 8001D934 A7A9009E */   sh    $t1, 0x9e($sp)
 /* 01E538 8001D938 00402025 */  move  $a0, $v0
 /* 01E53C 8001D93C 02002825 */  move  $a1, $s0
@@ -136,7 +136,7 @@ glabel calc_dynamic_lighting_for_object_1
 /* 01E620 8001DA20 46803220 */  cvt.s.w $f8, $f6
 /* 01E624 8001DA24 12400009 */  beqz  $s2, .L8001DA4C
 /* 01E628 8001DA28 E7A80064 */   swc1  $f8, 0x64($sp)
-/* 01E62C 8001DA2C 0C01A769 */  jal   func_80069DA4
+/* 01E62C 8001DA2C 0C01A769 */  jal   get_projection_matrix_f32
 /* 01E630 8001DA30 A7A9009E */   sh    $t1, 0x9e($sp)
 /* 01E634 8001DA34 00402025 */  move  $a0, $v0
 /* 01E638 8001DA38 02002825 */  move  $a1, $s0
