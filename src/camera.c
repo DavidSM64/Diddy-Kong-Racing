@@ -141,7 +141,7 @@ extern s32 D_B0000578;
 /**
  * Official Name: camInit
 */
-void func_80065EA0(void) {
+void camera_init(void) {
     s32 i;
     s32 j;
     u32 stat;
@@ -176,7 +176,7 @@ void func_80065EA0(void) {
     gCurCamFOV = CAMERA_DEFAULT_FOV;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/camera/func_80065EA0.s")
+GLOBAL_ASM("asm/non_matchings/camera/camera_init.s")
 #endif
 
 void func_80066060(s32 arg0, s32 arg1) {

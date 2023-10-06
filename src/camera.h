@@ -130,7 +130,7 @@ void apply_head_turning_matrix(Gfx **dlist, MatrixS **mtx, Object_68 *obj68, s16
 void apply_object_shear_matrix(Gfx **dlist, MatrixS **mtx, Object *arg2, Object *arg3, f32 shear);
 
 // Non Matching
-void func_80065EA0(void);
+void camera_init(void);
 void func_80066CDC(Gfx **dlist, MatrixS **mats);
 
 #endif
