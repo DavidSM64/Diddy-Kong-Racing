@@ -118,8 +118,6 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
 void init_level_globals(void);
 void alloc_displaylist_heap(s32 numberOfPlayers);
 void default_alloc_displaylist_heap(void);
-
-//Non Matching
 void func_8006DCF8(s32 updateRate);
 
 #endif

@@ -223,10 +223,10 @@ typedef struct ButtonTextElement {
 
 /* Size: 0xE bytes. */
 typedef struct CharacterSelectData {
-    u8 upInput[2];
-    u8 downInput[2];
-    u8 rightInput[4];
-    u8 LeftInput[4];
+    s8 upInput[2];
+    s8 downInput[2];
+    s8 rightInput[4];
+    s8 leftInput[4];
     s16 voiceID;
 } CharacterSelectData;
 
@@ -473,6 +473,8 @@ void calculate_and_display_rom_checksum(void);
 s32 menu_trophy_race_rankings_loop(s32 updateRate);
 s32 menu_results_loop(s32 updateRate);
 s32 menu_options_loop(s32 updateRate);
+void func_8008B4C8(void);
+void func_8008B758(s8 *activePlayers);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -503,13 +505,11 @@ void func_8007FFEC(s32 arg0);
 void func_800871D8(s32 arg0);
 SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1);
 void func_8009C6D4(s32 arg0);
-void func_8008B4C8(void);
-void func_8008B758(s8 *activePlayers);
 void set_D_800DD430(s8 arg0);
 void func_80099E8C(s32 updateRate);
 s32 func_800998E0(s32 arg0);
 void func_80081218(void);
-void func_80080580(Gfx** dlist, s32 x, s32 y, s32 x0, s32 y0, s32 x1, s32 y1, s32 colour, TextureHeader* tex);
+void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour, TextureHeader *tex);
 void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
 void render_enter_filename_ui(UNUSED s32 unused);
 void func_8008D8BC(s32 updateRate);
@@ -522,7 +522,7 @@ void func_80093D40(UNUSED s32 updateRate);
 void func_80080BC8(Gfx **);
 void func_8009963C(void);
 void func_80081C04(s32 num, s32 x, s32 y, u8 r, u8 g, u8 b, u8 a, u8 font, u8 alignment);
-void func_80080E90(Gfx **dList, s32 x, s32 y, u8 BGr, u8 BGg, u8 BGb, u8 BGa, u8 r, u8 g, u8 b, u8 a);
+void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour0, s32 colour1, s32 colour2, s32 colour3);
 void func_80084854(void);
 s32 func_800862C4(void);
 s32 func_80086AFC(void);

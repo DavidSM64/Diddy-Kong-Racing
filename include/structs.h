@@ -166,11 +166,22 @@ typedef struct MenuElement {
   /* 0x14 */ u16 *numberU16;  // Pointer to a number to be displayed on the screen.
   /* 0x14 */ s32 value;       // Some value for elementType == 5
   } unk14_a;
-  // Element Background Color/Transparency
-  /* 0x18 */ s16 backgroundRed;
-  /* 0x1A */ s16 backgroundGreen;
-  /* 0x1C */ s16 backgroundBlue;
-  /* 0x1E */ s16 backgroundAlpha; // 0x0000 = No background, 0x00FF = full background color.
+  union {
+    struct {
+        // Element Background Color/Transparency
+        /* 0x18 */ s16 backgroundRed;
+        /* 0x1A */ s16 backgroundGreen;
+        /* 0x1C */ s16 backgroundBlue;
+        /* 0x1E */ s16 backgroundAlpha; // 0x0000 = No background, 0x00FF = full background color.
+    } background;
+    struct {        
+        // Texture Size
+        /* 0x18 */ s16 width;
+        /* 0x1A */ s16 height;
+        /* 0x1C */ s16 borderWidth;
+        /* 0x1E */ s16 borderHeight;
+    } texture;
+  } details;
 } MenuElement;
 
 #define TEX_FORMAT_RGBA32 0

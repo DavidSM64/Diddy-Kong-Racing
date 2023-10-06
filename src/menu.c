@@ -59,9 +59,9 @@ UNUSED s32 sUnused_801263C8; // Set to 0 in menu_init, and never again.
 CharacterSelectData (*gCurrCharacterSelectData)[10]; //Some sort of character list? Cares if T.T. and Drumstick are unlocked
 
 s32 D_801263D0; //Compared for equality to gTrackIdForPreview
-s8 gActivePlayersArray[4];
+s8 gActivePlayersArray[MAXCONTROLLERS]; //Boolean value for each controller if it's active with a player.
 s32 gOpacityDecayTimer;
-s8 D_801263DC[4];
+s8 D_801263DC[MAXCONTROLLERS];
 s32 gMenuOptionCount;
 s32 D_801263E4;
 s8 gPlayersCharacterArray[8]; // -1 = Non active player, or character id if >= 0
@@ -145,21 +145,18 @@ TextureHeader *gMenuTextures[128];              // lookup table? TEXTURES
 u8 D_80126750[128]; // Seems to be a boolean for "This texture exists" for the above array.
 s32 D_801267D0;
 s32 D_801267D4;
-s32 D_801267D8[3];
-s32 D_801267E4;
-s32 D_801267E8; //Holds a value of which button was pressed
+s32 D_801267D8[5]; //Buttons pressed per player plus an extra?
 s8 *D_801267EC;
 s32 D_801267F0[5];
 s8 *D_80126804;
-s32 D_80126808[4];
-s32 D_80126818;
+s32 D_80126808[MAXCONTROLLERS]; //Soundmask values
+s16 D_80126818[2];
 s32 D_8012681C;
 s16 D_80126820;
 s32 D_80126824;
 UNUSED s8 sUnused_80126828; // Set to 0 in menu_init, and never used again.
 s32 D_8012682C;
-s16 D_80126830;
-s32 D_80126834;
+s16 D_80126830[4];
 s16 D_80126838;
 s16 D_8012683A;
 s32 D_8012683C;
@@ -167,7 +164,7 @@ s32 D_80126840;
 s32 D_80126844;
 s32 D_80126848;
 s32 D_8012684C;
-s32 *D_80126850;
+s32 *D_80126850; //Never set, but it's read? Is it part of a larger struct being set?
 s32 D_80126854;
 s32 D_80126858;
 s32 D_8012685C;
@@ -517,13 +514,13 @@ s16 D_800DFCAC[4] = {
 };
 
 MenuElement gControllerPakMenuElement[7] = {
-    { 161, 32,  161, 33,  161, 32,  0,   0,   0,   255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 30,  160, 30,  160, 30,  255, 255, 255, 0,   255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 112, 160, 112, 160, 112, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 128, 160, 128, 160, 128, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 192, 160, 192, 160, 192, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 208, 160, 208, 160, 208, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   ASSET_FONTS_FUNFONT, 0,  0, { NULL }, 0, 0, 0, 0 },
+    { 161, 32,  161, 33,  161, 32,  0,   0,   0,   255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 160, 30,  160, 30,  160, 30,  255, 255, 255, 0,   255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 160, 112, 160, 112, 160, 112, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 160, 128, 160, 128, 160, 128, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 160, 192, 160, 192, 160, 192, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 160, 208, 160, 208, 160, 208, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   ASSET_FONTS_FUNFONT, 0,  0, { NULL }, {{ 0, 0, 0, 0 }} },
 };
 
 s32 gShowControllerPakMenu = FALSE;
@@ -641,42 +638,42 @@ s32 D_800DFFD0 = 0;
 s32 D_800DFFD4 = -1;
 
 MenuElement gCautionMenuTextElements[14] = {
-    { SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF,  72, SCREEN_WIDTH_HALF,  68, SCREEN_WIDTH_HALF,  72, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF,  86, SCREEN_WIDTH_HALF,  82, SCREEN_WIDTH_HALF,  86, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 100, SCREEN_WIDTH_HALF,  96, SCREEN_WIDTH_HALF, 100, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 114, SCREEN_WIDTH_HALF, 110, SCREEN_WIDTH_HALF, 114, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 128, SCREEN_WIDTH_HALF, 124, SCREEN_WIDTH_HALF, 128, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 142, SCREEN_WIDTH_HALF, 138, SCREEN_WIDTH_HALF, 142, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 156, SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 156, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 156, SCREEN_WIDTH_HALF, 166, SCREEN_WIDTH_HALF, 156, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 186, SCREEN_WIDTH_HALF, 180, SCREEN_WIDTH_HALF, 186, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 200, SCREEN_WIDTH_HALF, 194, SCREEN_WIDTH_HALF, 200, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 200, SCREEN_WIDTH_HALF, 208, SCREEN_WIDTH_HALF, 200, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,                   0,  0, 0, { NULL }, 0, 0, 0, 0 },
+    { SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF,  72, SCREEN_WIDTH_HALF,  68, SCREEN_WIDTH_HALF,  72, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF,  86, SCREEN_WIDTH_HALF,  82, SCREEN_WIDTH_HALF,  86, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 100, SCREEN_WIDTH_HALF,  96, SCREEN_WIDTH_HALF, 100, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 114, SCREEN_WIDTH_HALF, 110, SCREEN_WIDTH_HALF, 114, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 128, SCREEN_WIDTH_HALF, 124, SCREEN_WIDTH_HALF, 128, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 142, SCREEN_WIDTH_HALF, 138, SCREEN_WIDTH_HALF, 142, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 156, SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 156, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 156, SCREEN_WIDTH_HALF, 166, SCREEN_WIDTH_HALF, 156, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 186, SCREEN_WIDTH_HALF, 180, SCREEN_WIDTH_HALF, 186, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 200, SCREEN_WIDTH_HALF, 194, SCREEN_WIDTH_HALF, 200, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 200, SCREEN_WIDTH_HALF, 208, SCREEN_WIDTH_HALF, 200, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,                   0,  0, 0, { NULL }, {{ 0, 0, 0, 0 }} },
 };
 
 MenuElement gGameSelectTextElemsNoAdv2[7] = {
-    { SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    { SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    { -96,  39, -96,  39, -96,  39, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, 192, 44, 4, 4 },
-    { SCREEN_WIDTH_HALF, 104, SCREEN_WIDTH_HALF, 104, SCREEN_WIDTH_HALF, 104, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    { -96,  -9, -96,  -9, -96,  -9, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, 192, 44, 4, 4 },
-    { SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 152, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0,  0, 0, { NULL },   0,  0, 0, 0 },
+    { SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL },  {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   {{ 0, 0, 0, 0 }} },
+    { -96,  39, -96,  39, -96,  39, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, {{ 192, 44, 4, 4 }} },
+    { SCREEN_WIDTH_HALF, 104, SCREEN_WIDTH_HALF, 104, SCREEN_WIDTH_HALF, 104, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   {{ 0, 0, 0, 0 }} },
+    { -96,  -9, -96,  -9, -96,  -9, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, {{ 192, 44, 4, 4 }} },
+    { SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 152, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   {{ 0, 0, 0, 0 }} },
+    {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0,  0, 0, { NULL },   {{ 0, 0, 0, 0 }} },
 };
 
 MenuElement gGameSelectTextElemsWithAdv2[9] = {
-    {  SCREEN_WIDTH_HALF + 1,  35,  SCREEN_WIDTH_HALF + 1,  35,  SCREEN_WIDTH_HALF + 1,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    {  SCREEN_WIDTH_HALF,  32,  SCREEN_WIDTH_HALF,  32,  SCREEN_WIDTH_HALF,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    { -112,  55, -112,  55, -112,  55, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, 224, 44, 4, 4 },
-    {  SCREEN_WIDTH_HALF,  88,  SCREEN_WIDTH_HALF,  88,  SCREEN_WIDTH_HALF,  88, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    { -112,   7, -112,   7, -112,   7, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, 224, 44, 4, 4 },
-    {  SCREEN_WIDTH_HALF, 136,  SCREEN_WIDTH_HALF, 136,  SCREEN_WIDTH_HALF, 136, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    { -112, -41, -112, -41, -112, -41, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, 224, 44, 4, 4 },
-    {  SCREEN_WIDTH_HALF, 184,  SCREEN_WIDTH_HALF, 184,  SCREEN_WIDTH_HALF, 184, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    {    0,   0,    0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0, { NULL },   0,  0, 0, 0 },
+    {  SCREEN_WIDTH_HALF + 1,  35,  SCREEN_WIDTH_HALF + 1,  35,  SCREEN_WIDTH_HALF + 1,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL },  {{ 0, 0, 0, 0 }} },
+    {  SCREEN_WIDTH_HALF,  32,  SCREEN_WIDTH_HALF,  32,  SCREEN_WIDTH_HALF,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   {{ 0, 0, 0, 0 }} },
+    { -112,  55, -112,  55, -112,  55, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, {{ 224, 44, 4, 4 }} },
+    {  SCREEN_WIDTH_HALF,  88,  SCREEN_WIDTH_HALF,  88,  SCREEN_WIDTH_HALF,  88, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   {{ 0, 0, 0, 0 }} },
+    { -112,   7, -112,   7, -112,   7, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, {{ 224, 44, 4, 4 }} },
+    {  SCREEN_WIDTH_HALF, 136,  SCREEN_WIDTH_HALF, 136,  SCREEN_WIDTH_HALF, 136, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   {{ 0, 0, 0, 0 }} },
+    { -112, -41, -112, -41, -112, -41, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, {{ 224, 44, 4, 4 }} },
+    {  SCREEN_WIDTH_HALF, 184,  SCREEN_WIDTH_HALF, 184,  SCREEN_WIDTH_HALF, 184, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   {{ 0, 0, 0, 0 }}},
+    {    0,   0,    0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0, { NULL },   {{ 0, 0, 0, 0 }} },
 };
 
 s16 D_800E0398[6] = {
@@ -1011,41 +1008,41 @@ char *gRacePlacementsArray[8] = {
 };
 
 MenuElement D_800E0BEC[8] = {
-    { 352, 172,  32, 172, -288, 172, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 452, 166, 132, 166, -188, 166, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, 0, 0, 0, 0 },
-    { 560, 184, 240, 184,  -80, 184, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, 0, 0, 0, 0 },
-    { 452, 180, 132, 180, -188, 180, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, 0, 0, 0, 0 },
-    { 452, 198, 132, 198, -188, 198, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, 0, 0, 0, 0 },
-    { 452, 216, 132, 216, -188, 216, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, 0, 0, 0, 0 },
-    { 560, 200, 240, 200,  -80, 200, 128, 255, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, 0, 0, 0, 0 },
-    {   0,   0,   0,   0,    0,   0,   0,   0,   0, 0,   0, 0,  0, 0, {      NULL   }, 0, 0, 0, 0 },
+    { 352, 172,  32, 172, -288, 172, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 452, 166, 132, 166, -188, 166, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    { 560, 184, 240, 184,  -80, 184, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    { 452, 180, 132, 180, -188, 180, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    { 452, 198, 132, 198, -188, 198, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    { 452, 216, 132, 216, -188, 216, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    { 560, 200, 240, 200,  -80, 200, 128, 255, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    {   0,   0,   0,   0,    0,   0,   0,   0,   0, 0,   0, 0,  0, 0, {      NULL   }, {{ 0, 0, 0, 0 }} },
 };
 
 MenuElement D_800E0CEC[11] = {
-    { 575, 172, 255, 172,  -65, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 542, 172, 222, 172,  -98, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 509, 172, 189, 172, -131, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 476, 172, 156, 172, -164, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 443, 172, 123, 172, -197, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 410, 172,  90, 172, -230, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 377, 172,  57, 172, -263, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 344, 172,  24, 172, -296, 166, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 481, 166, 161, 166, -159, 166,   0,   0,   0, 255, 128, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, 0, 0, 0, 0 },
-    { 479, 164, 159, 164, -161, 164, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, 0, 0, 0, 0 },
-    {   0,   0,   0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0, {      NULL   }, 0, 0, 0, 0 },
+    { 575, 172, 255, 172,  -65, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 542, 172, 222, 172,  -98, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 509, 172, 189, 172, -131, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 476, 172, 156, 172, -164, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 443, 172, 123, 172, -197, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 410, 172,  90, 172, -230, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 377, 172,  57, 172, -263, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 344, 172,  24, 172, -296, 166, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 481, 166, 161, 166, -159, 166,   0,   0,   0, 255, 128, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    { 479, 164, 159, 164, -161, 164, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    {   0,   0,   0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0, {      NULL   }, {{ 0, 0, 0, 0 }} },
 
 };
 
 MenuElement D_800E0E4C[9] = {
-    { 481, 174, 161, 174, -159, 174,   0,   0,   0, 255, 128, ASSET_FONTS_FUNFONT, 12, 0, {       NULL  }, 0, 0, 0, 0 },
-    { 479, 172, 159, 172, -161, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, {       NULL  }, 0, 0, 0, 0 },
-    { 368, 192,  48, 192, -272, 192, 255,  64,  64,  96, 255, ASSET_FONTS_FUNFONT,  8, 0, {       NULL  }, 0, 0, 0, 0 },
-    { 506, 187, 186, 187, -134, 187, 255, 192, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 1, {       NULL  }, 0, 0, 0, 0 },
-    { 578, 192, 258, 192,  -62, 192, 255, 128, 255,  96, 255, ASSET_FONTS_FUNFONT, 12, 0, { &D_80126390 }, 0, 0, 0, 0 },
-    { 368, 212,  48, 212, -272, 212, 255,  64,  64,  96, 255, ASSET_FONTS_FUNFONT,  8, 0, {       NULL  }, 0, 0, 0, 0 },
-    { 506, 207, 186, 207, -134, 207, 128, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 1, {       NULL  }, 0, 0, 0, 0 },
-    { 578, 212, 258, 212,  -62, 212, 255, 128, 255,  96, 255, ASSET_FONTS_FUNFONT, 12, 0, { &D_80126394 }, 0, 0, 0, 0 },
-    {   0,   0,   0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0, {       NULL  }, 0, 0, 0, 0 },
+    { 481, 174, 161, 174, -159, 174,   0,   0,   0, 255, 128, ASSET_FONTS_FUNFONT, 12, 0, {       NULL  }, {{ 0, 0, 0, 0 }} },
+    { 479, 172, 159, 172, -161, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, {       NULL  }, {{ 0, 0, 0, 0 }} },
+    { 368, 192,  48, 192, -272, 192, 255,  64,  64,  96, 255, ASSET_FONTS_FUNFONT,  8, 0, {       NULL  }, {{ 0, 0, 0, 0 }} },
+    { 506, 187, 186, 187, -134, 187, 255, 192, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 1, {       NULL  }, {{ 0, 0, 0, 0 }} },
+    { 578, 192, 258, 192,  -62, 192, 255, 128, 255,  96, 255, ASSET_FONTS_FUNFONT, 12, 0, { &D_80126390 }, {{ 0, 0, 0, 0 }} },
+    { 368, 212,  48, 212, -272, 212, 255,  64,  64,  96, 255, ASSET_FONTS_FUNFONT,  8, 0, {       NULL  }, {{ 0, 0, 0, 0 }} },
+    { 506, 207, 186, 207, -134, 207, 128, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 1, {       NULL  }, {{ 0, 0, 0, 0 }} },
+    { 578, 212, 258, 212,  -62, 212, 255, 128, 255,  96, 255, ASSET_FONTS_FUNFONT, 12, 0, { &D_80126394 }, {{ 0, 0, 0, 0 }} },
+    {   0,   0,   0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0, {       NULL  }, {{ 0, 0, 0, 0 }} },
 };
 
 // Valid characters for name input. Must be u8, not char.
@@ -1100,54 +1097,54 @@ s16 D_800E1040[3] = {
 
 MenuElement D_800E1048[1][2] = { 
     {
-        { SCREEN_WIDTH + 160 + 1, 35, SCREEN_WIDTH_HALF + 1, 35, -159, 35, 0, 0, 0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-        { SCREEN_WIDTH + 160, 32, SCREEN_WIDTH_HALF, 32, -160, 32, 255, 255, 255, 0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 }
+        { SCREEN_WIDTH + 160 + 1, 35, SCREEN_WIDTH_HALF + 1, 35, -159, 35, 0, 0, 0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+        { SCREEN_WIDTH + 160, 32, SCREEN_WIDTH_HALF, 32, -160, 32, 255, 255, 255, 0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} }
     }
 };
 
 MenuElement D_800E1088[8][3] = {
     {
-        { 64, -192, 64, 48, 64, 288, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 32, -192, 32, 48, 32, 288, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFirstPlace }, 0, 0, 0, 0 },
-        { 130, -172, 130, 68, 130, 308, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[0] }, 0, 0, 0, 0 }
+        { 64, -192, 64, 48, 64, 288, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 32, -192, 32, 48, 32, 288, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFirstPlace }, {{ 0, 0, 0, 0 }} },
+        { 130, -172, 130, 68, 130, 308, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[0] }, {{ 0, 0, 0, 0 }} }
     },
     {
-        { 64, -150, 64, 90, 64, 330, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 32, -150, 32, 90, 32, 330, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gSecondPlace }, 0, 0, 0, 0 },
-        { 130, -130, 130, 110, 130, 350, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[1] }, 0, 0, 0, 0 }
+        { 64, -150, 64, 90, 64, 330, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 32, -150, 32, 90, 32, 330, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gSecondPlace }, {{ 0, 0, 0, 0 }} },
+        { 130, -130, 130, 110, 130, 350, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[1] }, {{ 0, 0, 0, 0 }} }
     },
     {
-        { 64, -108, 64, 132, 64, 372, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 32, -108, 32, 132, 32, 372, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gThirdPlace }, 0, 0, 0, 0 },
-        { 130, -88, 130, 152, 130, 392, 255, 128, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[2] }, 0, 0, 0, 0 }
+        { 64, -108, 64, 132, 64, 372, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 32, -108, 32, 132, 32, 372, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gThirdPlace }, {{ 0, 0, 0, 0 }} },
+        { 130, -88, 130, 152, 130, 392, 255, 128, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[2] }, {{ 0, 0, 0, 0 }} }
     },
     {
-        { 64, -66, 64, 174, 64, 414, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 32, -66, 32, 174, 32, 414, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFourthPlace }, 0, 0, 0, 0 },
-        { 130, -46, 130, 194, 130, 434, 255, 64, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[3] }, 0, 0, 0, 0 }
+        { 64, -66, 64, 174, 64, 414, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 32, -66, 32, 174, 32, 414, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFourthPlace }, {{ 0, 0, 0, 0 }} },
+        { 130, -46, 130, 194, 130, 434, 255, 64, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[3] }, {{ 0, 0, 0, 0 }} }
     },
     {
-        { 220, 288, 220, 48, 220, -192, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 188, 288, 188, 48, 188, -192, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFifthPlace }, 0, 0, 0, 0 },
-        { 286, 308, 286, 68, 286, -172, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[4] }, 0, 0, 0, 0 }
+        { 220, 288, 220, 48, 220, -192, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 188, 288, 188, 48, 188, -192, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFifthPlace }, {{ 0, 0, 0, 0 }} },
+        { 286, 308, 286, 68, 286, -172, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[4] }, {{ 0, 0, 0, 0 }} }
     },
     {
-        { 220, 330, 220, 90, 220, -160, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 188, 330, 188, 90, 188, -150, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gSixthPlace }, 0, 0, 0, 0 },
-        { 286, 350, 286, 110, 286, -130, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[5] }, 0, 0, 0, 0 }
+        { 220, 330, 220, 90, 220, -160, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 188, 330, 188, 90, 188, -150, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gSixthPlace }, {{ 0, 0, 0, 0 }} },
+        { 286, 350, 286, 110, 286, -130, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[5] }, {{ 0, 0, 0, 0 }} }
     },
     {
-        { 220, 372, 220, 132, 220, -108, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 188, 372, 188, 132, 188, -108, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gSeventhPlace }, 0, 0, 0, 0 },
-        { 286, 392, 286, 152, 286, -88, 255, 128, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[6] }, 0, 0, 0, 0 }
+        { 220, 372, 220, 132, 220, -108, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 188, 372, 188, 132, 188, -108, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gSeventhPlace }, {{ 0, 0, 0, 0 }} },
+        { 286, 392, 286, 152, 286, -88, 255, 128, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[6] }, {{ 0, 0, 0, 0 }} }
     },
     {
-        { 220, 414, 220, 174, 220, -66, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 188, 414, 188, 174, 188, -66, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gEighthPlace }, 0, 0, 0, 0 },
-        { 286, 434, 286, 194, 286, -46, 255, 64, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[7] }, 0, 0, 0, 0 }
+        { 220, 414, 220, 174, 220, -66, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 188, 414, 188, 174, 188, -66, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gEighthPlace }, {{ 0, 0, 0, 0 }} },
+        { 286, 434, 286, 194, 286, -46, 255, 64, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[7] }, {{ 0, 0, 0, 0 }} }
     }
 };
-MenuElement D_800E1088_END = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ASSET_FONTS_FUNFONT, 0, 0, { NULL }, 0, 0, 0, 0 };
+MenuElement D_800E1088_END = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ASSET_FONTS_FUNFONT, 0, 0, { NULL }, {{ 0, 0, 0, 0 }} };
 
 s16 D_800E13A8[138] = {
     0x0040, 0x0020, 0x0082, 0x0040, 0x0020, 0x0082, 0x0040, 0x0020,
@@ -1399,15 +1396,15 @@ s32 gCheatsInCreditsArray[21] = {
 s32 gViewingCreditsFromCheat = FALSE; // Set to 1 if viewing credits from "WHODIDTHIS" cheat
 
 MenuElement D_800E1B50[9] = {
-    { 480, 104, 160, 104, -160, 104, 255,   0, 255, 48, 255, ASSET_FONTS_FUNFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    { 480, 104, 160, 104, -160, 104, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    { 480, 104, 160, 104, -160, 104, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    { 480, 104, 160, 104, -160, 104, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    {   0,   0,   0,   0,    0,   0,   0,   0,   0,  0,   0, 0, 0, 0, { NULL }, 0, 0, 0, 0 },
+    { 480, 104, 160, 104, -160, 104, 255,   0, 255, 48, 255, ASSET_FONTS_FUNFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 480, 104, 160, 104, -160, 104, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 480, 104, 160, 104, -160, 104, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 480, 104, 160, 104, -160, 104, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    {   0,   0,   0,   0,    0,   0,   0,   0,   0,  0,   0, 0, 0, 0, { NULL }, {{ 0, 0, 0, 0 }} },
 };
 
 Gfx dMenuHudSettings[] = {
@@ -1703,7 +1700,7 @@ void func_80080518(f32 arg0, f32 arg1) {
 
 //https://decomp.me/scratch/W0adv
 #ifdef NON_EQUIVALENT
-void func_80080580(Gfx** dlist, s32 x, s32 y, s32 x0, s32 y0, s32 x1, s32 y1, s32 colour, TextureHeader* tex) {
+void func_80080580(Gfx** dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour, TextureHeader *tex) {
     s32 uVals[4];
     s32 vVals[4];
     Vertex* verts;
@@ -1719,12 +1716,12 @@ void func_80080580(Gfx** dlist, s32 x, s32 y, s32 x0, s32 y0, s32 x1, s32 y1, s3
     if (tex != NULL) {
         uVals[0] = 0;
         vVals[0] = 0;
-        uVals[1] = D_800E1DC0 * x1;
-        uVals[2] = (x0 - x1) * D_800E1DC0;
-        uVals[3] = D_800E1DC0 * x0;
-        vVals[1] = D_800E1DC4 * y1;
-        vVals[2] = (y0 - y1) * D_800E1DC4;
-        vVals[3] = D_800E1DC4 * y0;
+        uVals[1] = D_800E1DC0 * borderWidth;
+        uVals[2] = (width - borderWidth) * D_800E1DC0;
+        uVals[3] = D_800E1DC0 * width;
+        vVals[1] = D_800E1DC4 * borderHeight;
+        vVals[2] = (height - borderHeight) * D_800E1DC4;
+        vVals[3] = D_800E1DC4 * height;
         tris = ((unk80080BC8*)((u8*)D_80126C2C + (D_800E1DB8 << 5) + (D_800E1DB4 * 4)))->triangles;
         for (i = 0; i < 5; i++) {
             tris[i*2].uv0.u = uVals[D_800E1CF0[i][0]];
@@ -1744,15 +1741,15 @@ void func_80080580(Gfx** dlist, s32 x, s32 y, s32 x0, s32 y0, s32 x1, s32 y1, s3
     verts = ((unk80080BC8*)((u8*)D_80126C2C + (D_800E1DB8 << 5) + (D_800E1DB4 * 4)))->vertices;
     for (i = 0; i < 5; i++) {
         for(j = 0; j < 4; j++) {
-            verts[j].x = x;
-            verts[j].y = y;
-            verts[j].x += (D_800E1D2C[j][0] * x0);
-            verts[j].x += (D_800E1D2C[j][1] * x1);
-            verts[j].y += (D_800E1D2C[j][2] * y0);
-            verts[j].y += (D_800E1D2C[j][3] * y1);
+            verts[j].x = startX;
+            verts[j].y = startY;
+            verts[j].x += (D_800E1D2C[j][0] * width);
+            verts[j].x += (D_800E1D2C[j][1] * borderWidth);
+            verts[j].y += (D_800E1D2C[j][2] * height);
+            verts[j].y += (D_800E1D2C[j][3] * borderHeight);
             verts[j].z = 0;
-            verts[j].r = (s32) (D_800E1D7C[i][0] * ((colour >> 0x18) & 0xFF)) >> 8;
-            verts[j].g = (s32) (D_800E1D7C[i][1] * ((colour >> 0x10) & 0xFF)) >> 8;
+            verts[j].r = (s32) (D_800E1D7C[i][0] * ((colour >> 24) & 0xFF)) >> 8;
+            verts[j].g = (s32) (D_800E1D7C[i][1] * ((colour >> 16) & 0xFF)) >> 8;
             verts[j].b = (s32) (D_800E1D7C[i][2] * ((colour >> 8) & 0xFF)) >> 8;
             verts[j].a = (s32) (D_800E1D7C[i][3] * (colour & 0xFF)) >> 8;
         }
@@ -1904,7 +1901,7 @@ void menu_init(u32 menuId) {
     sUnused_80126828 = 0;
 
     //Needs to be one line
-    for (i = 0; i < 4; i++) { D_80126808[i] = 0; }
+    for (i = 0; i < ARRAY_COUNT(D_80126808); i++) { D_80126808[i] = 0; }
     func_80001844();
     switch (gCurrentMenuId) {
         case MENU_LOGOS:
@@ -2314,8 +2311,12 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                     yPos = (tempY & 0xFFFFFFFFFFFFFFFFu) + elem->middle;
                 }
                 switch (elem->elementType) {
-                    case 0:
-                        set_text_background_colour(elem->backgroundRed, elem->backgroundGreen, elem->backgroundBlue, elem->backgroundAlpha);
+                    case 0: //ascii text
+                        set_text_background_colour(
+                            elem->details.background.backgroundRed, 
+                            elem->details.background.backgroundGreen,
+                            elem->details.background.backgroundBlue,
+                            elem->details.background.backgroundAlpha);
                         set_text_colour(elem->filterRed, elem->filterGreen, elem->filterBlue, elem->filterAlpha, elem->opacity);
                         set_text_font(elem->textFont);
                         draw_text(&sMenuCurrDisplayList, xPos, yPos + D_800DF79C, elem->unk14_a.asciiText, elem->textAlignFlags);
@@ -2328,22 +2329,22 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                         sMenuGuiOpacity = elem->opacity;
                         show_timestamp(
                             *elem->unk14_a.numberU16,
-                            xPos - 0xA0,
-                            (-yPos - D_800DF7A0) + 0x78,
+                            xPos - 160,
+                            (-yPos - D_800DF7A0) + 120,
                             elem->filterRed,
                             elem->filterGreen,
                             elem->filterBlue,
                             elem->textFont);
                         break;
-                    case 2:
+                    case 2: //Number
                         if (s5) {
                             s5 = FALSE;
                             reset_render_settings(&sMenuCurrDisplayList);
                         }
                         func_80081C04(
                             *elem->unk14_a.number,
-                            xPos - 0xA0,
-                            (-yPos - D_800DF7A0) + 0x78,
+                            xPos - 160,
+                            (-yPos - D_800DF7A0) + 120,
                             elem->filterRed,
                             elem->filterGreen,
                             elem->filterBlue,
@@ -2369,8 +2370,8 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                             elem->unk14_a.element,
                             xPos,
                             yPos + D_800DF79C,
-                            elem->backgroundRed / 256.0f,
-                            elem->backgroundGreen / 256.0f,
+                            elem->details.texture.width / 256.0f,
+                            elem->details.texture.height / 256.0f,
                             (elem->filterRed << 24) | (elem->filterGreen << 16) | (elem->filterBlue << 8) | elem->opacity,
                             elem->textAlignFlags);
                         s5 = TRUE;
@@ -2382,13 +2383,13 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                         }
                         func_80068508(1);
                         func_8007BF1C(FALSE);
-                        gMenuImageStack[elem->unk14_a.value].unkC = xPos - 0xA0;
-                        gMenuImageStack[elem->unk14_a.value].unk10 = (-yPos - D_800DF7A0) + 0x78;
+                        gMenuImageStack[elem->unk14_a.value].unkC = xPos - 160;
+                        gMenuImageStack[elem->unk14_a.value].unk10 = (-yPos - D_800DF7A0) + 120;
                         gMenuImageStack[elem->unk14_a.value].unk18 = elem->textFont;
-                        gMenuImageStack[elem->unk14_a.value].unk4 = elem->backgroundRed;
-                        gMenuImageStack[elem->unk14_a.value].unk2 = elem->backgroundGreen;
-                        gMenuImageStack[elem->unk14_a.value].unk0 = elem->backgroundBlue;
-                        gMenuImageStack[elem->unk14_a.value].unk8 = elem->backgroundAlpha / 256.0f;
+                        gMenuImageStack[elem->unk14_a.value].unk4 = elem->details.background.backgroundRed;
+                        gMenuImageStack[elem->unk14_a.value].unk2 = elem->details.background.backgroundGreen;
+                        gMenuImageStack[elem->unk14_a.value].unk0 = elem->details.background.backgroundBlue;
+                        gMenuImageStack[elem->unk14_a.value].unk8 = elem->details.background.backgroundAlpha / 256.0f;
                         sMenuGuiColourR = elem->filterRed;
                         sMenuGuiColourG = elem->filterGreen;
                         sMenuGuiColourB = elem->filterBlue;
@@ -2403,25 +2404,25 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                             &sMenuCurrDisplayList,
                             xPos,
                             yPos + D_800DF7A0,
-                            elem->backgroundRed,
-                            elem->backgroundGreen,
-                            elem->backgroundBlue,
-                            elem->backgroundAlpha,
+                            elem->details.texture.width,
+                            elem->details.texture.height,
+                            elem->details.texture.borderWidth,
+                            elem->details.texture.borderHeight,
                             elem->filterRed,
                             elem->filterGreen,
                             elem->filterBlue,
                             elem->opacity);
                         break;
-                    case 7:
+                    case 7: //Texture
                         func_80080580(
                             &sMenuCurrDisplayList,
                             xPos,
                             yPos + D_800DF7A0,
-                            elem->backgroundRed,
-                            elem->backgroundGreen,
-                            elem->backgroundBlue,
-                            elem->backgroundAlpha,
-                            (elem->filterRed << 0x18) | (elem->filterGreen << 0x10) | (elem->filterBlue << 8) | elem->opacity,
+                            elem->details.texture.width,
+                            elem->details.texture.height,
+                            elem->details.texture.borderWidth,
+                            elem->details.texture.borderHeight,
+                            (elem->filterRed << 24) | (elem->filterGreen << 16) | (elem->filterBlue << 8) | elem->opacity,
                             elem->unk14_a.element);
                         break;
                 }
@@ -4938,12 +4939,12 @@ void set_active_player_index(s32 controllerIndex) {
 
     gNumberOfActivePlayers = 1;
 
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < ARRAY_COUNT(gPlayersCharacterArray); i++) {
         gPlayersCharacterArray[i] = (i == controllerIndex) ? 1 : -1;
     }
 
-    for (i = 0; i < 4; i++) {
-        gActivePlayersArray[i] = (i == controllerIndex) ? 1 : 0;
+    for (i = 0; i < ARRAY_COUNT(gActivePlayersArray); i++) {
+        gActivePlayersArray[i] = (i == controllerIndex) ? TRUE : FALSE;
     }
 }
 
@@ -4969,14 +4970,14 @@ void menu_character_select_init(void) {
     } else {
         gCurrCharacterSelectData = (CharacterSelectData (*)[10]) &gCharacterSelectBytesDefault;
     }
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < ARRAY_COUNT(D_801263DC); i++) {
         D_801263DC[i] = 0;
     }
     gNumberOfReadyPlayers = 0;
     gMenuDelay = 0;
     gOptionBlinkTimer = 0;
     D_800DF484 = 0;
-    for (i = 0; i < 4 && !breakTheLoop; i++) {
+    for (i = 0; i < ARRAY_COUNT(gActivePlayersArray) && !breakTheLoop; i++) {
         if (gActivePlayersArray[i] != 0) {
             breakTheLoop = TRUE;
             gMenuCurrentCharacter.channelIndex = (*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID;
@@ -5038,21 +5039,21 @@ void func_8008B358(void) {
     s32 var_a0;
     s32 var_a2;
 
-    for(i = 0; i < 4; i++) {
-        if (gActivePlayersArray[i] == 0) {
+    for(i = 0; i < MAXCONTROLLERS; i++) {
+        if (!gActivePlayersArray[i]) {
             var_a2 = -1;
             if (D_801267D8[i] & (A_BUTTON | START_BUTTON)) {
                 do {
-                    var_a2 += 1;
+                    var_a2++;
                     var_a0 = TRUE;
-                    for (j = 0; (j < 4) && (var_a0); j++) {
-                        if ((gActivePlayersArray[j] != 0) && (var_a2 == gPlayersCharacterArray[j])) {
+                    for (j = 0; (j < ARRAY_COUNT(gActivePlayersArray)) && (var_a0); j++) {
+                        if (gActivePlayersArray[j] && var_a2 == gPlayersCharacterArray[j]) {
                             var_a0 = FALSE;
                         }
                     }
                 } while (!var_a0);
                 gPlayersCharacterArray[i] = var_a2;
-                gActivePlayersArray[i] = 1;
+                gActivePlayersArray[i] = TRUE;
                 gNumberOfActivePlayers++;
                 gMenuCurrentCharacter.channelIndex = (*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID;
                 gMenuCurrentCharacter.unk2 = 0;
@@ -5063,8 +5064,122 @@ void func_8008B358(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8008B4C8.s")
-GLOBAL_ASM("asm/non_matchings/menu/func_8008B758.s")
+void func_8008B4C8(void) {
+    s32 i;
+    s32 characterSelected;
+    s32 buttonsPressedAllPlayers;
+
+    buttonsPressedAllPlayers = 0;
+    for (i = 0; i < ARRAY_COUNT(gActivePlayersArray); i++) {
+        if (gActivePlayersArray[i]) {
+            buttonsPressedAllPlayers |= D_801267D8[i];
+        }
+    }
+
+    if (buttonsPressedAllPlayers & (A_BUTTON | START_BUTTON)) {
+        //Character Selected
+        gMenuDelay = 1;
+        mark_read_all_save_files();
+        transition_begin(&sMenuTransitionFadeIn);
+        characterSelected = -1;
+        //!@bug: This loop condition is doing a bitwise & instead of a boolean && 
+        for (i = 0; (i < MAXCONTROLLERS) & (characterSelected < 0); i++) {
+            if (D_801267D8[i] & (A_BUTTON | START_BUTTON)) {
+                characterSelected = i;
+            }
+        }
+        if (D_80126808[characterSelected] != 0) {
+            func_8000488C(D_80126808[characterSelected]);
+        }
+        play_sound_global(((*gCurrCharacterSelectData)[gPlayersCharacterArray[characterSelected]].voiceID + SOUND_VOICE_CHARACTER_SELECTED), &D_80126808[characterSelected]);
+        if ((gNumberOfActivePlayers > 2) || ((gNumberOfActivePlayers > 1) && !(gActiveMagicCodes & CHEAT_TWO_PLAYER_ADVENTURE)) || (D_800DFFD0 == 1)) {
+            set_music_fade_timer(-128);
+        }
+    } else {
+        //Character Deselected
+        for (i = 0; i < ARRAY_COUNT(gActivePlayersArray); i++) {
+            if (gActivePlayersArray[i] && D_801263DC[i] != 0) {
+                if (D_801267D8[i] & B_BUTTON) {
+                    D_801263DC[i] = 0;
+                    gNumberOfReadyPlayers--;
+                    if (D_80126808[i] != 0) {
+                        func_8000488C(D_80126808[i]);
+                    }
+                    play_sound_global(((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID + SOUND_VOICE_CHARACTER_DESELECTED), &D_80126808[i]);
+                }
+            }
+        }
+    }
+}
+
+void func_8008B758(s8 *activePlayers) {
+    CharacterSelectData *charSelectData;
+    s32 found;
+    s32 i;
+    s32 j;
+
+    for (i = 0; i < MAXCONTROLLERS; i++) {
+        if (activePlayers[i] != 0) {
+            if (D_801263DC[i] != 0) {
+                if (D_801267D8[i] & B_BUTTON) {
+                    D_801263DC[i] = 0;
+                    gNumberOfReadyPlayers -= 1;
+                    if (D_80126808[i] != 0) {
+                        func_8000488C(D_80126808[i]);
+                    }
+                    play_sound_global(((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID + SOUND_VOICE_CHARACTER_DESELECTED), &D_80126808[i]);
+                }
+            } else {
+                if (D_801267D8[i] & B_BUTTON) {
+                    gNumberOfActivePlayers--;
+                    gActivePlayersArray[i] = 0;
+                    if (gNumberOfActivePlayers > 0) {
+                        if (gMenuSelectedCharacter.channelIndex == (*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID) {
+                            if (gMenuCurrentCharacter.unk1 <= 0) {
+                                for (found = FALSE, j = 0; j < ARRAY_COUNT(gActivePlayersArray) && !found; j++) {
+                                    if (gActivePlayersArray[j]) {
+                                        found = TRUE;
+                                        gMenuCurrentCharacter.channelIndex = (*gCurrCharacterSelectData)[gPlayersCharacterArray[j]].voiceID;
+                                        gMenuCurrentCharacter.unk2 = 0;
+                                        gMenuCurrentCharacter.unk1 = 20;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    gPlayersCharacterArray[i] = -1;
+                    if (gNumberOfActivePlayers <= 0) {
+                        gMenuDelay = -1;
+                        transition_begin(&sMenuTransitionFadeIn);
+                    }
+                } else if (D_801267D8[i] & (A_BUTTON | START_BUTTON)) {
+                    D_801263DC[i] = 1;
+                    gNumberOfReadyPlayers++;
+                    if (D_80126808[i] != 0) {
+                        func_8000488C(D_80126808[i]);
+                    }
+                    play_sound_global(((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID + SOUND_VOICE_CHARACTER_SELECT), &D_80126808[i]);
+                } else {
+                    charSelectData = (*gCurrCharacterSelectData) + gPlayersCharacterArray[i];
+                    if (D_80126830[i] > 0) {
+                        func_8008BFE8(i, charSelectData->upInput, ARRAY_COUNT(charSelectData->upInput), SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
+                    } else if (D_80126830[i] < 0) {
+                        func_8008BFE8(i, charSelectData->downInput, ARRAY_COUNT(charSelectData->downInput), SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
+                    } else if (D_80126818[i] < 0) {
+                        func_8008BFE8(i, charSelectData->rightInput, ARRAY_COUNT(charSelectData->rightInput), SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
+                    } else if (D_80126818[i] > 0) {
+                        func_8008BFE8(i, charSelectData->leftInput, ARRAY_COUNT(charSelectData->leftInput), SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
+                    }
+                    if (charSelectData->voiceID != (*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID) {
+                        gMenuCurrentCharacter.channelIndex = (*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID;
+                        gMenuCurrentCharacter.unk2 = 0;
+                        gMenuCurrentCharacter.unk1 = 20;
+                    }
+                }
+            }
+        }
+    }
+}
 
 #ifdef NON_EQUIVALENT
 
@@ -5124,7 +5239,7 @@ s32 menu_character_select_loop(s32 updateRate) {
     func_8008C168(updateRate);
     func_8008E4EC();
 
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < ARRAY_COUNT(D_801263DC); i++) {
         if (D_801263DC[i] == 1) {
             D_801263DC[i] = 2;
         }
@@ -5132,7 +5247,7 @@ s32 menu_character_select_loop(s32 updateRate) {
     gIgnorePlayerInputTime = 0;
     if (gMenuDelay == 0) {
         // THIS MUST BE ON ONE LINE!
-        for (i = 0; i < 4; i++) { activePlayers[i] = gActivePlayersArray[i]; }
+        for (i = 0; i < ARRAY_COUNT(gActivePlayersArray); i++) { activePlayers[i] = gActivePlayersArray[i]; }
         func_8008B358();
         if (gNumberOfReadyPlayers == gNumberOfActivePlayers) {
             func_8008B4C8(); // Cancel/Confirm selected character?
@@ -5153,7 +5268,7 @@ s32 menu_character_select_loop(s32 updateRate) {
             func_8008C128();
 
             phi_a0 = 0;
-            for (j = 0; j < 4; j++) {
+            for (j = 0; j < ARRAY_COUNT(gActivePlayersArray); j++) {
                 if (gActivePlayersArray[j]) {
                     gCharacterIdSlots[phi_a0] = (*gCurrCharacterSelectData)[gPlayersCharacterArray[j]].voiceID;
                     phi_a0++;
@@ -5191,34 +5306,34 @@ s32 menu_character_select_loop(s32 updateRate) {
     return 0;
 }
 
-void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 arg3, u16 arg4) {
-    s32 someBool;
+void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 menuPickSoundId, u16 menuPickFailedSoundId) {
+    s32 sameCharSelected;
     s32 j;
     s32 i;
 
     j = 0;
-    someBool = TRUE;
-    while (someBool && j < arg2 && arg1[j] != -1) {
-        someBool = FALSE;
+    sameCharSelected = TRUE;
+    while (sameCharSelected && j < arg2 && arg1[j] != -1) {
+        sameCharSelected = FALSE;
         // Run this block if the DOUBLEVISION cheat isn't active.
         if (!(get_filtered_cheats() & CHEAT_SELECT_SAME_PLAYER)) {
-            for (i = 0; i < MAXCONTROLLERS && !someBool; i++) {
+            for (i = 0; i < MAXCONTROLLERS && !sameCharSelected; i++) {
                 if (i != arg0 && gPlayersCharacterArray[i] == arg1[j]) {
-                    someBool = TRUE;
+                    sameCharSelected = TRUE;
                 }
             }
-            if (someBool) {
+            if (sameCharSelected) {
                 j++;
             }
         }
     }
-    if (!someBool) {
+    if (!sameCharSelected) {
         gPlayersCharacterArray[arg0] = arg1[j];
-        // arg3 seems to always be passed SOUND_MENU_PICK3?
-        play_sound_global(arg3, NULL);
+        // menuPickSoundId seems to always be passed SOUND_MENU_PICK3?
+        play_sound_global(menuPickSoundId, NULL);
     } else {
-        // arg4 seems to always be passed SOUND_HORN_DRUMSTICK?
-        play_sound_global(arg4, NULL);
+        // menuPickFailedSoundId seems to always be passed SOUND_HORN_DRUMSTICK?
+        play_sound_global(menuPickFailedSoundId, NULL);
     }
 }
 
@@ -5578,11 +5693,11 @@ void render_file_select_menu(UNUSED s32 updateRate) {
     set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     for (i = 0; i < 3; i++) { // 3 files
         if (gSavefileInfo[i].isAdventure2 == gIsInAdventureTwo || gSavefileInfo[i].isStarted == 0) {
-            color = 0xB0E0C0FF;
+            color = COLOUR_RGBA32(176, 224, 192, 255);
         } else {
-            color = 0x6A9073FF;
+            color = COLOUR_RGBA32(106, 144, 115, 255);
         }
-        func_80080580(0, gFileSelectButtons[i].x - 0xA0, 0x78 - gFileSelectButtons[i].y, gFileSelectButtons[i].width,
+        func_80080580(NULL, gFileSelectButtons[i].x - 160, 120 - gFileSelectButtons[i].y, gFileSelectButtons[i].width,
             gFileSelectButtons[i].height, gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, color, gMenuTextures[TEXTURE_SURFACE_BUTTON_WOOD]);
     }
     func_80080BC8(&sMenuCurrDisplayList);
@@ -6652,7 +6767,7 @@ void func_80090918(s32 updateRate) {
     }
     if (sp24 == 0) {
         var_a1 = (gFFLUnlocked == -1) ? 3 : 4;
-        if (D_801267E8 & (A_BUTTON | START_BUTTON)) {
+        if (D_801267D8[4] & (A_BUTTON | START_BUTTON)) {
             if (gTrackIdForPreview != (s32) -1) {
                 gMenuDelay = 1;
                 gTrackIdToLoad = gTrackIdForPreview;
@@ -6660,7 +6775,7 @@ void func_80090918(s32 updateRate) {
             } else {
                 play_sound_global(SOUND_UNK_6A, NULL);
             }
-        } else if (D_801267E8 & B_BUTTON) {
+        } else if (D_801267D8[4] & B_BUTTON) {
             disable_new_screen_transitions();
             transition_begin(&sMenuTransitionFadeIn);
             enable_new_screen_transitions();
@@ -7281,12 +7396,12 @@ s32 menu_adventure_track_loop(s32 updateRate) {
                 gMenuOptionCount = 1;
                 play_sound_global(SOUND_CAR_REV2, NULL);
             } else if (sp1C >= 2) {
-                if (D_80126830 > 0) {
+                if (D_80126830[0] > 0) {
                     do {
                         vehicle--;
                     } while (!((1 << vehicle) & sp30) && (vehicle >= 0));
                 }
-                if (D_80126830 < 0) {
+                if (D_80126830[0] < 0) {
                     do {
                         vehicle++;
                     } while (!((1 << vehicle) & sp30) && (vehicle < 3));
@@ -7891,11 +8006,11 @@ s32 menu_results_loop(s32 updateRate) {
     }
     if (gMenuDelay == 0) {
         if (gMenuOptionCount == 0) {
-            if (D_801267E8 & (A_BUTTON | START_BUTTON)) {
+            if (D_801267D8[4] & (A_BUTTON | START_BUTTON)) {
                 gMenuOptionCount = 1;
             }
         } else if (gMenuSubOption != 0) {
-            if (D_801267E8 & (A_BUTTON | START_BUTTON)) {
+            if (D_801267D8[4] & (A_BUTTON | START_BUTTON)) {
                 if (gMenuSubOption == 1) {
                     playSelectSound = TRUE;
                     set_music_fade_timer(-128);
@@ -7905,7 +8020,7 @@ s32 menu_results_loop(s32 updateRate) {
                     playBackSound = TRUE;
                     gMenuSubOption = 0;
                 }
-            } else if (D_801267E8 & B_BUTTON) {
+            } else if (D_801267D8[4] & B_BUTTON) {
                 playBackSound = TRUE;
                 gMenuSubOption = 0;
             } else {
@@ -7920,7 +8035,7 @@ s32 menu_results_loop(s32 updateRate) {
                     playPickSound = TRUE;
                 }
             }
-        } else if (D_801267E8 & (A_BUTTON | START_BUTTON)) {
+        } else if (D_801267D8[4] & (A_BUTTON | START_BUTTON)) {
             playSelectSound = TRUE;
             if (gResultOptionText[gMenuOption] == gMenuText[28]) {
                 gMenuSubOption = 2;
@@ -7959,7 +8074,7 @@ s32 menu_results_loop(s32 updateRate) {
                 return (0x100 | 0x2); //This gets parsed in func_8006DCF8 as a flag and an ID from the bottom 7 bits.
             }
             if (gResultOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_SELECTTRACK]) {
-                load_level_for_menu(-1, -1, 0);
+                load_level_for_menu(SPECIAL_MAP_ID_NO_LEVEL, -1, 0);
                 menu_init(MENU_TRACK_SELECT);
                 return 0;
             }
@@ -8423,7 +8538,7 @@ s32 menu_trophy_race_round_loop(s32 updateRate) {
     }
     if ((gIgnorePlayerInputTime == 0) && (gMenuDelay == 0)) {
         func_8008E4EC();
-        if ((D_801267E8 & (A_BUTTON | START_BUTTON)) != 0) {
+        if ((D_801267D8[4] & (A_BUTTON | START_BUTTON)) != 0) {
             transition_begin(&sMenuTransitionFadeIn);
             gMenuDelay = 1;
             set_music_fade_timer(-128);
@@ -8927,9 +9042,9 @@ void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s8 *arg5) {
     }
 
     if ((phi_v1 == 0) && (get_misc_asset(MISC_ASSET_UNK19) == (s32 *)arg0)) {
-        D_8012684C = 1;
+        D_8012684C = TRUE;
     } else {
-        D_8012684C = 0;
+        D_8012684C = FALSE;
     }
 
     D_801267EC = arg0;
@@ -8964,7 +9079,7 @@ s32 menu_23_loop(UNUSED s32 updateRate) {
         if (D_801267EC[0] >= 0) {
             load_level_for_menu(D_801267EC[0], D_801267EC[1], D_801267EC[2]);
         } else {
-            if (D_8012684C != 0) {
+            if (D_8012684C) {
                 func_80000B18();
             }
             func_8009AF18();
@@ -9295,7 +9410,7 @@ s8 get_player_character(s32 controllerIndex) {
     if (controllerIndex < 0 || controllerIndex >= 4) {
         return -1;
     }
-    if (gActivePlayersArray[controllerIndex] == 0) {
+    if (!gActivePlayersArray[controllerIndex]) {
         return -1;
     }
     return gPlayersCharacterArray[controllerIndex];

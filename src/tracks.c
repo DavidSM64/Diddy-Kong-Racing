@@ -2397,7 +2397,35 @@ f32 func_8002FA64(void) {
     return (D_8011D0E4 - var_f2) / D_8011D0E4;
 }
 
-GLOBAL_ASM("asm/non_matchings/tracks/func_8002FD74.s")
+s32 func_8002FD74(f32 x0, f32 z0, f32 x1, f32 x2, s32 count, Vec4f *arg5) {
+    if(count > 0) {
+        f32 minX = arg5[0].x;
+        f32 maxX = arg5[0].x;
+        f32 minZ = arg5[0].z;
+        f32 maxZ = arg5[0].z;
+        s32 i;
+
+        for(i = 1; i < count; i++) {
+            if (arg5[i].x < minX) {
+                minX = arg5[i].x;
+            } else if (maxX < arg5[i].x) {
+                maxX = arg5[i].x;
+            }
+            if (arg5[i].z < minZ) {
+                minZ = arg5[i].z;
+            } else if (maxZ < arg5[i].z) {
+                maxZ = arg5[i].z;
+            }
+        }
+    
+        if ((x0 <= maxX) && (z0 <= maxZ) && (minX <= x1) && (minZ <= x2)) {
+            return -1;
+        }
+    }
+
+    return 0;   
+}
+
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002FF6C.s")
 
 GLOBAL_ASM("asm/non_matchings/tracks/func_800304C8.s")

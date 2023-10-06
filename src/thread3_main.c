@@ -105,7 +105,7 @@ Vertex *gGameCurrVertexList;
 TriangleList *gTriangleHeap[2];
 TriangleList *gGameCurrTriList;
 UNUSED s32 D_80121230[8];
-s8 D_80121250[16]; //Settings4C
+s8 D_80121250[16];
 OSSched gMainSched; // 0x288 / 648 bytes
 u64 gSchedStack[0x400];
 s32 gSPTaskNum;
@@ -671,20 +671,20 @@ void ingame_logic_loop(s32 updateRate) {
             switch (sp40) {
                 case 1:
                     // Go to track select menu from "Select Track" option in tracks menu.
-                    load_menu_with_level_background(MENU_TRACK_SELECT, -1, 1);
+                    load_menu_with_level_background(MENU_TRACK_SELECT, SPECIAL_MAP_ID_NO_LEVEL, 1);
                     break;
                 case 2:
-                    load_menu_with_level_background(MENU_RESULTS, 0x22, 0);
+                    load_menu_with_level_background(MENU_RESULTS, ASSET_LEVEL_TROPHYRACE, 0);
                     break;
                 case 3:
-                    load_menu_with_level_background(MENU_TROPHY_RACE_ROUND, 0x22, 0);
+                    load_menu_with_level_background(MENU_TROPHY_RACE_ROUND, ASSET_LEVEL_TROPHYRACE, 0);
                     break;
                 case 4:
-                    load_menu_with_level_background(MENU_TROPHY_RACE_RANKINGS, 0x22, 0);
+                    load_menu_with_level_background(MENU_TROPHY_RACE_RANKINGS, ASSET_LEVEL_TROPHYRACE, 0);
                     break;
                 case 5:
                     // Trophy race related?
-                    load_menu_with_level_background(MENU_UNUSED_22, 0x22, 0);
+                    load_menu_with_level_background(MENU_UNUSED_22, ASSET_LEVEL_TROPHYRACE, 0);
                     break;
                 case 6:
                     // Go to character select menu from "Select Character" option in tracks menu.
@@ -696,23 +696,23 @@ void ingame_logic_loop(s32 updateRate) {
                         i ^= 3;
                     }
                     func_8008AEB4(1, 0);
-                    load_menu_with_level_background(MENU_CHARACTER_SELECT, 0x16, i);
+                    load_menu_with_level_background(MENU_CHARACTER_SELECT, ASSET_LEVEL_CHARACTERSELECT, i);
                     break;
                 case 7:
                     gIsLoading = TRUE;
-                    load_menu_with_level_background(MENU_UNKNOWN_23, -1, 0);
+                    load_menu_with_level_background(MENU_UNKNOWN_23, SPECIAL_MAP_ID_NO_LEVEL, 0);
                     gIsLoading = FALSE;
                     break;
                 case 8:
-                    load_menu_with_level_background(MENU_CREDITS, -1, 0);
+                    load_menu_with_level_background(MENU_CREDITS, SPECIAL_MAP_ID_NO_LEVEL, 0);
                     break;
             }
         } else if (D_801234FC == 1) {
             if (D_80121250[2] == -1) {
-                load_menu_with_level_background(MENU_UNUSED_8, -1, 0);
+                load_menu_with_level_background(MENU_UNUSED_8, SPECIAL_MAP_ID_NO_LEVEL, 0);
             } else {
                 gIsLoading = TRUE;
-                load_menu_with_level_background(MENU_TRACK_SELECT_ADVENTURE, -1, -1);
+                load_menu_with_level_background(MENU_TRACK_SELECT_ADVENTURE, SPECIAL_MAP_ID_NO_LEVEL, -1);
             }
         } else if (!(buttonHeldInputs & R_TRIG)) {
             if (!(buttonHeldInputs & Z_TRIG)) {
@@ -727,7 +727,7 @@ void ingame_logic_loop(s32 updateRate) {
             load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
         } else {
             safe_mark_write_save_file(get_save_file_index());
-            load_menu_with_level_background(MENU_TITLE, -1, 0);
+            load_menu_with_level_background(MENU_TITLE, SPECIAL_MAP_ID_NO_LEVEL, 0);
         }
         D_801234FC = 0;
     }
@@ -900,11 +900,12 @@ void update_menu_scene(s32 updateRate) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-// Minor & regalloc issues.
 void func_8006DCF8(s32 updateRate) {
-    s32 menuLoopResult, temp, temp2, tempResult;
-
+    s32 menuLoopResult;
+    s32 temp;
+    s32 playerVehicle;
+    s32 temp5;
+    
     gIsPaused = FALSE;
     gPostRaceViewPort = NULL;
     if (!gIsLoading && gRenderMenu) {
@@ -938,7 +939,7 @@ void func_8006DCF8(s32 updateRate) {
         gPostRaceViewPort = NULL;
         switch (menuLoopResult & 0x7F) {
             case 5:
-                load_menu_with_level_background(MENU_TRACK_SELECT, -1, 1);
+                load_menu_with_level_background(MENU_TRACK_SELECT, SPECIAL_MAP_ID_NO_LEVEL, 1);
                 break;
             case 14:
                 gPlayableMapId = ASSET_LEVEL_CENTRALAREAHUB;
@@ -950,17 +951,16 @@ void func_8006DCF8(s32 updateRate) {
                 break;
             case 1:
                 gGameCurrentEntrance = 0;
-                gGameCurrentCutscene = CUTSCENE_ID_UNK_64;
                 gPlayableMapId = D_80121250[0];
+                gGameCurrentCutscene = CUTSCENE_ID_UNK_64;
                 sRenderContext = DRAW_GAME;
-                // Minor issue with these 2 if statements
-                temp2 = D_80121250[D_80121250[1] + 8];
-                temp = D_80121250[15];
-                if (temp >= 0) {
-                    gGameCurrentEntrance = temp;
+                temp5 = D_80121250[1];
+                if (D_80121250[15] >= 0) {
+                    gGameCurrentEntrance = D_80121250[15];
                 }
-                if (temp2 >= 0) {
-                    gGameCurrentCutscene = temp2;
+                temp = D_80121250[temp5 + 8];
+                if (temp >= 0) {
+                    gGameCurrentCutscene = temp;
                 }
                 load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
                 safe_mark_write_save_file(get_save_file_index());
@@ -978,27 +978,28 @@ void func_8006DCF8(s32 updateRate) {
                 load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
                 break;
             default:
-                load_menu_with_level_background(MENU_TITLE, -1, 0);
+                load_menu_with_level_background(MENU_TITLE, SPECIAL_MAP_ID_NO_LEVEL, 0);
                 break;
         }
         return;
     }
     if ((menuLoopResult & 0x80) && (menuLoopResult != -1)) {
         unload_level_menu();
-        // Minor issue here.
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
         gDPFullSync(gCurrDisplayList++);
         gSPEndDisplayList(gCurrDisplayList++);
-        temp = menuLoopResult & 0x7F;
-        D_80121250[1] = temp;
+
+        menuLoopResult &= 0x7f;
+        D_80121250[1] = menuLoopResult;
         D_80121250[0] = gPlayableMapId;
-        gPlayableMapId = D_80121250[temp + 2];
-        gGameCurrentEntrance = D_80121250[temp + 4];
+
+        gPlayableMapId = D_80121250[menuLoopResult+2];
+        gGameCurrentEntrance = D_80121250[menuLoopResult+4];
         sRenderContext = DRAW_GAME;
-        gGameCurrentCutscene = D_80121250[temp + 12];
-        temp = get_player_selected_vehicle(0);
+        gGameCurrentCutscene = D_80121250[menuLoopResult+12];
+        playerVehicle = get_player_selected_vehicle(0);
         gGameNumPlayers = gSettingsPtr->gNumRacers - 1;
-        load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, temp);
+        load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, playerVehicle);
         D_801234FC = 0;
         gLevelDefaultVehicleID = D_8012351C;
         return;
@@ -1016,10 +1017,6 @@ void func_8006DCF8(s32 updateRate) {
         }
     }
 }
-
-#else
-GLOBAL_ASM("asm/non_matchings/game/func_8006DCF8.s")
-#endif
 
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
     if (!gIsLoading) {
@@ -1524,7 +1521,7 @@ void pre_intro_loop(void) {
     }
     sBootDelayTimer++;
     if (sBootDelayTimer >= 8) {
-        load_menu_with_level_background(MENU_BOOT, 0x27, 2);
+        load_menu_with_level_background(MENU_BOOT, ASSET_LEVEL_OPTIONSBACKGROUND, 2);
     }
 }
 

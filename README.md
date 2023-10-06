@@ -5,11 +5,11 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of October 4, 2023, this is our current score:
+As of October 6, 2023, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 56.18%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 56.60%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 28.44%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 30.06%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -128,20 +128,20 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of October 4th, 2023, this is our current score:
+As of October 6th, 2023, this is our current score:
 ```
  =====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- -------------------------- 56.18% Complete --------------------------
-                     # Decompiled functions: 1588
-                      # GLOBAL_ASM remaining: 250
+ -------------------------- 56.60% Complete --------------------------
+                     # Decompiled functions: 1592
+                      # GLOBAL_ASM remaining: 246
                      # NON_MATCHING functions: 12
-                  # NON_EQUIVALENT WIP functions: 61
+                  # NON_EQUIVALENT WIP functions: 60
  ---------------------------- Game Status ----------------------------
                Balloons: 27/47, Keys: 3/4, Trophies: 2/5
                 T.T. Amulets: 3/4, Wizpig Amulets: 2/4
  ---------------------------------------------------------------------
- We are collecting silver coins in Crescent Island. (0/8 silver coins)
+ We are collecting silver coins in Crescent Island. (3/8 silver coins)
  =====================================================================
                  ADVENTURE TWO (Cleanup & Documentation)
  -------------------------- 30.06% Complete --------------------------
