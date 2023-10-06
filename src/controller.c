@@ -196,7 +196,7 @@ u16 get_buttons_released_from_player(s32 player) {
  * Clamps the X joystick axis of the selected player to 70 and returns it.
  * Official name: joyGetStickX
  */
-s8 clamp_joystick_x_axis(s32 player) {
+s32 clamp_joystick_x_axis(s32 player) {
     return clamp_joystick(gControllerCurrData[sPlayerID[player]].stick_x);
 }
 

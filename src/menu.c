@@ -3064,158 +3064,152 @@ void menu_audio_options_init(void) {
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80084854.s")
 
-#ifdef NON_EQUIVALENT
-
-// Almost matching, should be functionally equivalent
-s32 menu_audio_options_loop(s32 arg0) {
-    s32 buttonInputs;
-    s32 sp30;
-    s32 phi_a2;
-    s32 contY;
+s32 menu_audio_options_loop(s32 updateRate) {
+    s32 i; 
+    u32 buttonsPressed;
     s32 contX;
-    s32 i;
+    s32 contY;
+    s32 contXAxis;
+    s32 sp30;
 
     sp30 = 0;
-    gOptionBlinkTimer = (s32)((gOptionBlinkTimer + arg0) & 0x3F);
+    gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     if (gMenuDelay != 0) {
         if (gMenuDelay > 0) {
-            gMenuDelay += arg0;
+            gMenuDelay += updateRate;
         } else {
-            gMenuDelay -= arg0;
+            gMenuDelay -= updateRate;
         }
     }
-    if (gMenuDelay >= -0x13 && gMenuDelay < 0x14) {
+    if (gMenuDelay > -20 && gMenuDelay < 20) {
         func_80084854();
     }
-    if (gIgnorePlayerInputTime == 0 && gMenuDelay == 0) {
-        buttonInputs = 0;
+    if (gIgnorePlayerInputTime == 0) {
         contX = 0;
         contY = 0;
-        phi_a2 = 0;
-
-        // Check all 4 controllers for inputs
-        for (i = 0; i < 4; i++) {
-            buttonInputs |= get_buttons_pressed_from_player(i);
-            phi_a2 += clamp_joystick_x_axis(i);
-            contY += gControllersYAxisDirection[i];
-            contX += gControllersXAxisDirection[i];
-        }
-
-        if (phi_a2 < 0) {
-            phi_a2 += 0x18;
-            if (phi_a2 > 0) {
-                phi_a2 = 0;
+        if (gMenuDelay == 0) {
+            buttonsPressed = 0;
+            contXAxis = 0;
+            for(i = 0; i < 4; i++) {
+                buttonsPressed |= get_buttons_pressed_from_player(i);
+                contXAxis += clamp_joystick_x_axis(i);
+                contX += gControllersXAxisDirection[i];
+                contY += gControllersYAxisDirection[i];
             }
-        } else {
-            phi_a2 -= 0x18;
-            if (phi_a2 < 0) {
-                phi_a2 = 0;
-            }
-        }
-
-        if (((buttonInputs & (A_BUTTON | START_BUTTON)) && (gMenuOptionCount == gOptionsMenuItemIndex + 1)) || (buttonInputs & B_BUTTON)) {
-            gMenuDelay = -1;
-            transition_begin(&sMenuTransitionFadeIn);
-            if (gOpacityDecayTimer >= 0) {
-                set_music_fade_timer(-0x80);
-            }
-            sp30 = 3;
-        } else if (contY < 0 && gOptionsMenuItemIndex < gMenuOptionCount - 1) {
-            gOptionsMenuItemIndex++;
-            sp30 = 1;
-        } else if (contY > 0 && gOptionsMenuItemIndex > 0) {
-            gOptionsMenuItemIndex--;
-            sp30 = 1;
-        } else if (gOptionsMenuItemIndex == 0 && contX != 0) {
-            if (contX < 0) {
-                D_800DFAC8--;
+            if (contXAxis < 0) {
+                contXAxis += 24;
+                if (contXAxis > 0) {
+                    contXAxis = 0;
+                }
             } else {
-                D_800DFAC8++;
-            }
-            if (D_800DFAC8 < 0) {
-                D_800DFAC8 = 2;
-            }
-            if (D_800DFAC8 > 2) {
-                D_800DFAC8 = 0;
-            }
-            set_stereo_pan_mode(D_800DFAC8);
-            sp30 = 1;
-        } else if (((phi_a2 >> 2) != 0) && ((gOptionsMenuItemIndex == 1) || (gOptionsMenuItemIndex == 2))) {
-            if (gOptionsMenuItemIndex == 1) {
-                gSfxVolumeSliderValue += (phi_a2 >> 2);
-                if (gSfxVolumeSliderValue < 0) {
-                    gSfxVolumeSliderValue = 0;
-                } else if (gSfxVolumeSliderValue >= 0x101) {
-                    gSfxVolumeSliderValue = 0x100;
+                contXAxis -= 24;
+                if (contXAxis < 0) {
+                    contXAxis = 0;
                 }
-                set_sfx_volume_slider(gSfxVolumeSliderValue);
-            } else if (gOptionsMenuItemIndex == 2) {
-                gMusicVolumeSliderValue += (phi_a2 >> 2);
-                if (gMusicVolumeSliderValue < 0) {
-                    gMusicVolumeSliderValue = 0;
+            }
+            contXAxis >>= 2;
+            if (((buttonsPressed & (A_BUTTON | START_BUTTON)) && (gMenuOptionCount == gOptionsMenuItemIndex + 1)) || (buttonsPressed & B_BUTTON)) {
+                gMenuDelay = -1;
+                transition_begin(&sMenuTransitionFadeIn);
+                if (gOpacityDecayTimer >= 0) {
+                    set_music_fade_timer(-128);
+                    
+                }
+                sp30 = 3;
+            } else if (contY < 0 && gOptionsMenuItemIndex < (gMenuOptionCount - 1)) {
+                gOptionsMenuItemIndex += 1;
+                sp30 = 1;
+            } else if (contY > 0 && gOptionsMenuItemIndex > 0) {
+                gOptionsMenuItemIndex -= 1;
+                sp30 = 1;
+            } else if (gOptionsMenuItemIndex == 0 && contX != 0) {
+                if (contX < 0) {                        
+                    D_800DFAC8--;
                 } else {
-                    if (gMusicVolumeSliderValue >= 0x101) {
-                        gMusicVolumeSliderValue = 0x100;
+                    D_800DFAC8++;
+                }
+                if (D_800DFAC8 < 0) {
+                    D_800DFAC8 = 2;
+                }
+                if (D_800DFAC8 >= 3) {
+                    D_800DFAC8 = 0;
+                }
+                set_stereo_pan_mode(D_800DFAC8);
+                sp30 = 1;
+            } else if (contXAxis && (gOptionsMenuItemIndex == 1 || gOptionsMenuItemIndex == 2)) {
+                if (gOptionsMenuItemIndex == 1) {
+                    gSfxVolumeSliderValue += contXAxis;
+                    if (gSfxVolumeSliderValue < 0) {
+                        gSfxVolumeSliderValue = 0;
+                    } else if (gSfxVolumeSliderValue > 256) {
+                        gSfxVolumeSliderValue = 256;
+                    }
+                    set_sfx_volume_slider(gSfxVolumeSliderValue);
+                } else if (gOptionsMenuItemIndex == 2) {
+                    gMusicVolumeSliderValue += contXAxis;
+                    if (gMusicVolumeSliderValue < 0) {
+                        gMusicVolumeSliderValue = 0;
+                    } else if (gMusicVolumeSliderValue > 256) {
+                        gMusicVolumeSliderValue = 256;
+                    }
+                    set_music_volume_slider(gMusicVolumeSliderValue);
+                    if (!music_is_playing()) {
+                        if (gOpacityDecayTimer >= 0) {
+                            func_80000B28();
+                            play_music(D_800DFABC);
+                        } else {
+                            func_80000B28();
+                            set_music_player_voice_limit(24);
+                            play_music(SEQUENCE_MAIN_MENU);
+                            func_80000B18();
+                        }
                     }
                 }
-                set_music_volume_slider(gMusicVolumeSliderValue);
-                if (!music_is_playing()) {
-                    if (gOpacityDecayTimer >= 0) {
-                        func_80000B28();
-                        play_music((u8)D_800DFABC);
-                    } else {
-                        func_80000B28();
-                        set_music_player_voice_limit(0x18);
-                        play_music(SEQUENCE_MAIN_MENU);
-                        func_80000B18();
+            } else if (gMenuOptionCount >= 5 && gOptionsMenuItemIndex == 3) {
+                if (contX < 0 && D_800DFABC > 0) {
+                    D_800DFABC--;
+                    sp30 = 1;
+                } else if (contX > 0) {
+                    if (D_800DFABC < (ALSeqFile_80115CF8_GetSeqCount() - 1)) {
+                        D_800DFABC++;
+                        sp30 = 1;
                     }
                 }
+                if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+                    func_80000B28();
+                    set_music_player_voice_limit(24);
+                    play_music(D_800DFABC);
+                    gOpacityDecayTimer = D_800DFABC;
+                }
             }
-        } else if (gMenuOptionCount >= 5 && gOptionsMenuItemIndex == 3) {
-            if (contX < 0 && D_800DFABC > 0) {
-                D_800DFABC--;
-                sp30 = 1;
-            } else if (contX > 0 && D_800DFABC < (ALSeqFile_80115CF8_GetSeqCount() - 1)) {
-                D_800DFABC++;
-                sp30 = 1;
+            if (gOptionsMenuItemIndex == 1) {
+                if (D_801269FC == NULL) {
+                    play_sound_global(SOUND_VOICE_DIDDY_POSITIVE5, (s32 *) &D_801269FC);
+                }
+            } else if (D_801269FC != NULL) {
+                func_8000488C((u8* ) D_801269FC);
             }
-            if (buttonInputs & (A_BUTTON | START_BUTTON)) {
-                func_80000B28();
-                set_music_player_voice_limit(0x18);
-                play_music((u8)D_800DFABC);
-                gOpacityDecayTimer = D_800DFABC;
+            if (sp30 == 3) {
+                play_sound_global(SOUND_MENU_BACK3, NULL);
+            } else if (sp30 == 2) {
+                play_sound_global(SOUND_SELECT2, NULL);
+            } else if (sp30 == 1) {
+                play_sound_global(SOUND_MENU_PICK2, NULL);
             }
-        }
-
-        if (gOptionsMenuItemIndex == 1 && D_801269FC == NULL) {
-            play_sound_global(SOUND_VOICE_DIDDY_POSITIVE5, &D_801269FC);
-        } else if (D_801269FC != NULL) {
-            func_8000488C(&D_801269FC);
-        }
-
-        if (sp30 == 3) {
-            play_sound_global(SOUND_MENU_BACK3, NULL);
-        } else if (sp30 == 2) {
-            play_sound_global(SOUND_SELECT2, NULL);
-        } else if (sp30 == 1) {
-            play_sound_global(SOUND_MENU_PICK2, NULL);
         }
     }
     if (gMenuDelay < -30) {
         func_800851FC();
-        menu_init(0xC);
+        menu_init(MENU_OPTIONS);
         return 0;
     }
     gIgnorePlayerInputTime = 0;
     return 0;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/menu_audio_options_loop.s")
-#endif
 
 void func_800851FC(void) {
     if (D_801269FC != NULL) {
-        func_8000488C((s32 *) D_801269FC);
+        func_8000488C(D_801269FC);
     }
     if (gOpacityDecayTimer >= 0) {
         set_music_player_voice_limit(0x18);
