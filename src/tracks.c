@@ -1344,7 +1344,7 @@ void func_8002A31C(void) {
     s32 i;
     f32 w;
 
-    cameraMatrix = func_80069DA4();
+    cameraMatrix = get_projection_matrix_f32();
     for (i = 0; i < ARRAY_COUNT(D_8011D0F8);) {
         x = D_800DC8AC[i][0].x;
         y = D_800DC8AC[i][0].y;

@@ -100,10 +100,10 @@ glabel menu_track_select_init
 /* 08F524 8008E924 0C01DED7 */  jal   set_background_fill_colour
 /* 08F528 8008E928 240600DF */   li    $a2, 223
 /* 08F52C 8008E92C 3C11800E */  lui   $s1, %hi(D_800E0710) # $s1, 0x800e
-/* 08F530 8008E930 3C168012 */  lui   $s6, %hi(D_80126550) # $s6, 0x8012
+/* 08F530 8008E930 3C168012 */  lui   $s6, %hi(gMenuTextures) # $s6, 0x8012
 /* 08F534 8008E934 3C12800E */  lui   $s2, %hi(D_800E0730) # $s2, 0x800e
 /* 08F538 8008E938 26520730 */  addiu $s2, %lo(D_800E0730) # addiu $s2, $s2, 0x730
-/* 08F53C 8008E93C 26D66550 */  addiu $s6, %lo(D_80126550) # addiu $s6, $s6, 0x6550
+/* 08F53C 8008E93C 26D66550 */  addiu $s6, %lo(gMenuTextures) # addiu $s6, $s6, 0x6550
 /* 08F540 8008E940 26310710 */  addiu $s1, %lo(D_800E0710) # addiu $s1, $s1, 0x710
 /* 08F544 8008E944 00002825 */  move  $a1, $zero
 .L8008E948:
@@ -336,7 +336,7 @@ glabel menu_track_select_init
 /* 08F8B8 8008ECB8 3C04800E */  lui   $a0, %hi(D_800E07E0) # $a0, 0x800e
 /* 08F8BC 8008ECBC 0C027229 */  jal   allocate_menu_images
 /* 08F8C0 8008ECC0 248407E0 */   addiu $a0, %lo(D_800E07E0) # addiu $a0, $a0, 0x7e0
-/* 08F8C4 8008ECC4 0C02392C */  jal   func_8008E4B0
+/* 08F8C4 8008ECC4 0C02392C */  jal   assign_menu_arrow_textures
 /* 08F8C8 8008ECC8 00000000 */   nop   
 /* 08F8CC 8008ECCC 3C02800E */  lui   $v0, %hi(D_800E05D4) # $v0, 0x800e
 /* 08F8D0 8008ECD0 3C03800E */  lui   $v1, %hi(D_800E05F4) # $v1, 0x800e

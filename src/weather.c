@@ -309,7 +309,7 @@ void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currH
     gCurrWeatherVertexList = *currHudVerts;
     gCurrWeatherTriList = *currHudTris;
     D_80127C1C = get_active_camera_segment();
-    D_80127C20 = func_80069DBC();
+    D_80127C20 = get_camera_matrix();
     if (gWeatherType != WEATHER_SNOW) {
         handle_weather_rain(updateRate);
     } else {
@@ -378,7 +378,7 @@ void render_falling_snow(void) {
         D_80127C04 = 2;
         if (D_800E2908 >= 4) {
             i = 0;
-            mtx = (u32) func_80069DB0();
+            mtx = (u32) get_projection_matrix_s16();
             gSPMatrix(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(mtx ^ 0), G_MTX_DKR_INDEX_0);
             gDkrInsertMatrix(gCurrWeatherDisplayList++, G_MTX_DKR_INDEX_0, 0);
             load_and_set_texture_no_offset(&gCurrWeatherDisplayList, D_800E28D8.unk8, RENDER_Z_COMPARE);

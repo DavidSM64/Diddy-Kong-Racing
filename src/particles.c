@@ -1598,7 +1598,7 @@ void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vt
                 load_and_set_texture(dList, (TextureHeader *) modelData->texture, renderFlags, particle->segment.textureFrame << 8);
                 gSPVertexDKR((*dList)++, OS_K0_TO_PHYSICAL(modelData->vertices), modelData->vertexCount, 0);
                 gSPPolygon((*dList)++, OS_K0_TO_PHYSICAL(modelData->triangles), modelData->triangleCount, TRIN_ENABLE_TEXTURE);
-                func_80069A40(dList);
+                apply_matrix_from_stack(dList);
             }
         }
         if (alpha != 255 || particle->brightness != 255) {

@@ -608,7 +608,7 @@ glabel func_800AA600
 /* 0ABAEC 800AAEEC 0C02ABF4 */  jal   func_800AAFD0
 /* 0ABAF0 800AAEF0 00000000 */   nop   
 /* 0ABAF4 800AAEF4 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
-/* 0ABAF8 800AAEF8 0C01A690 */  jal   func_80069A40
+/* 0ABAF8 800AAEF8 0C01A690 */  jal   apply_matrix_from_stack
 /* 0ABAFC 800AAEFC 24846CFC */   addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
 .L800AAF00:
 /* 0ABB00 800AAF00 86080006 */  lh    $t0, 6($s0)

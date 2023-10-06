@@ -21,8 +21,8 @@ glabel func_80087734
 /* 08835C 8008775C 240F01FF */  li    $t7, 511
 /* 088360 80087760 01EE3023 */  subu  $a2, $t7, $t6
 .L80087764:
-/* 088364 80087764 3C098012 */  lui   $t1, %hi(D_801263E0) # $t1, 0x8012
-/* 088368 80087768 252963E0 */  addiu $t1, %lo(D_801263E0) # addiu $t1, $t1, 0x63e0
+/* 088364 80087764 3C098012 */  lui   $t1, %hi(gMenuOptionCount) # $t1, 0x8012
+/* 088368 80087768 252963E0 */  addiu $t1, %lo(gMenuOptionCount) # addiu $t1, $t1, 0x63e0
 /* 08836C 8008776C 3C058012 */  lui   $a1, %hi(D_80126A74) # $a1, 0x8012
 /* 088370 80087770 8D280000 */  lw    $t0, ($t1)
 /* 088374 80087774 24A56A74 */  addiu $a1, %lo(D_80126A74) # addiu $a1, $a1, 0x6a74
@@ -72,8 +72,8 @@ glabel func_80087734
 /* 088410 80087810 00002825 */  move  $a1, $zero
 /* 088414 80087814 0C000741 */  jal   play_sound_global
 /* 088418 80087818 AFA8001C */   sw    $t0, 0x1c($sp)
-/* 08841C 8008781C 3C098012 */  lui   $t1, %hi(D_801263E0) # $t1, 0x8012
-/* 088420 80087820 252963E0 */  addiu $t1, %lo(D_801263E0) # addiu $t1, $t1, 0x63e0
+/* 08841C 8008781C 3C098012 */  lui   $t1, %hi(gMenuOptionCount) # $t1, 0x8012
+/* 088420 80087820 252963E0 */  addiu $t1, %lo(gMenuOptionCount) # addiu $t1, $t1, 0x63e0
 /* 088424 80087824 8D380000 */  lw    $t8, ($t1)
 /* 088428 80087828 8FA8001C */  lw    $t0, 0x1c($sp)
 /* 08842C 8008782C 2401FFF7 */  li    $at, -9
@@ -200,8 +200,8 @@ glabel L800879BC
 /* 0885CC 800879CC 240400EF */  li    $a0, 239
 /* 0885D0 800879D0 0C000741 */  jal   play_sound_global
 /* 0885D4 800879D4 AFA8001C */   sw    $t0, 0x1c($sp)
-/* 0885D8 800879D8 3C098012 */  lui   $t1, %hi(D_801263E0) # $t1, 0x8012
-/* 0885DC 800879DC 252963E0 */  addiu $t1, %lo(D_801263E0) # addiu $t1, $t1, 0x63e0
+/* 0885D8 800879D8 3C098012 */  lui   $t1, %hi(gMenuOptionCount) # $t1, 0x8012
+/* 0885DC 800879DC 252963E0 */  addiu $t1, %lo(gMenuOptionCount) # addiu $t1, $t1, 0x63e0
 /* 0885E0 800879E0 8D2E0000 */  lw    $t6, ($t1)
 /* 0885E4 800879E4 2401FFF7 */  li    $at, -9
 /* 0885E8 800879E8 01C17824 */  and   $t7, $t6, $at

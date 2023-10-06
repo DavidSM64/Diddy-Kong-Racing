@@ -804,7 +804,7 @@ Sprite *func_8007C52C(s32 arg0) {
     if (gSpriteCache[(arg0 << 1) + 1] == -1) {
         return NULL;
     }
-    return gSpriteCache[(arg0 << 1) + 1]; 
+    return (Sprite *) gSpriteCache[(arg0 << 1) + 1]; 
 }
 
 s32 get_texture_size_from_id(s32 id) {

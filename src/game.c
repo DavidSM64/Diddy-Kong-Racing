@@ -608,6 +608,9 @@ void func_8006BD10(f32 arg0) {
     }
 }
 
+/**
+ * Return the current map ID.
+*/
 s32 get_current_map_id(void) {
     return gMapId;
 }
@@ -629,7 +632,6 @@ LevelHeader *get_current_level_header(void) {
 
 /**
  * Returns the amount of level headers there are in the game.
- * Goes unused.
  */
 UNUSED u8 get_total_level_header_count(void) {
     return gNumberOfLevelHeaders - 1;

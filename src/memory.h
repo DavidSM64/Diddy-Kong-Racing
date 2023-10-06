@@ -59,7 +59,7 @@ typedef struct MemoryPool {
 /* Size: 0x8 bytes */
 typedef struct FreeQueueSlot {
     void *dataAddress;
-    u8 unk4; //FreeQueueState?
+    u8 freeTimer;
 } FreeQueueSlot;
 
 /* Unknown size */

@@ -71,7 +71,7 @@ typedef struct ScreenViewport {
 } ScreenViewport;
 
 typedef struct unk80068514_arg4 {
-    s16 unk0;
+    s16 textureCount;
     s16 unk2;
     s16 unk4;
     s16 unk6;
@@ -113,9 +113,9 @@ void func_80068508(s32 arg0);
 ObjectSegment *get_active_camera_segment_no_cutscenes(void);
 ObjectSegment *get_active_camera_segment(void);
 ObjectSegment *get_cutscene_camera_segment(void);
-Matrix *func_80069DA4(void);
-MatrixS *func_80069DB0(void);
-Matrix *func_80069DBC(void);
+Matrix *get_projection_matrix_f32(void);
+MatrixS *get_projection_matrix_s16(void);
+Matrix *get_camera_matrix(void);
 f32 func_80069DC8(f32 x, f32 y, f32 z);
 void set_camera_shake_by_distance(f32 x, f32 y, f32 z, f32 dist, f32 magnitude);
 void set_camera_shake(f32 magnitude);
@@ -124,10 +124,10 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
 s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Object *obj, unk80068514_arg4 *arg4, s32 flags);
 void camera_push_model_mtx(Gfx **arg0, MatrixS **arg1, ObjectTransform *arg2, f32 scale, f32 scaleY);
 void set_viewport_scissor(Gfx **dlist);
-void func_80069A40(Gfx **dlist);
+void apply_matrix_from_stack(Gfx **dlist);
 void copy_viewports_to_stack(void);
-void func_80069790(Gfx **dlist, MatrixS **mtx, Object_68 *obj68, s16 headAngle);
-void func_80068FA8(Gfx **dlist, MatrixS **mtx, Object *arg2, Object *arg3, f32 shear);
+void apply_head_turning_matrix(Gfx **dlist, MatrixS **mtx, Object_68 *obj68, s16 headAngle);
+void apply_object_shear_matrix(Gfx **dlist, MatrixS **mtx, Object *arg2, Object *arg3, f32 shear);
 
 // Non Matching
 void func_80065EA0(void);

@@ -287,13 +287,13 @@ glabel func_80099E8C
 /* 09AEBC 8009A2BC 0C031110 */  jal   draw_text
 /* 09AEC0 8009A2C0 01323021 */   addu  $a2, $t1, $s2
 /* 09AEC4 8009A2C4 8FAB0074 */  lw    $t3, 0x74($sp)
-/* 09AEC8 8009A2C8 3C05800E */  lui   $a1, %hi(D_800E0AF0) # $a1, 0x800e
+/* 09AEC8 8009A2C8 3C05800E */  lui   $a1, %hi(gRacerPortraits) # $a1, 0x800e
 /* 09AECC 8009A2CC 916C0000 */  lbu   $t4, ($t3)
 /* 09AED0 8009A2D0 86260004 */  lh    $a2, 4($s1)
 /* 09AED4 8009A2D4 000C6880 */  sll   $t5, $t4, 2
 /* 09AED8 8009A2D8 862E0006 */  lh    $t6, 6($s1)
 /* 09AEDC 8009A2DC 00AD2821 */  addu  $a1, $a1, $t5
-/* 09AEE0 8009A2E0 8CA50AF0 */  lw    $a1, %lo(D_800E0AF0)($a1)
+/* 09AEE0 8009A2E0 8CA50AF0 */  lw    $a1, %lo(gRacerPortraits)($a1)
 /* 09AEE4 8009A2E4 240F00FF */  li    $t7, 255
 /* 09AEE8 8009A2E8 241800FF */  li    $t8, 255
 /* 09AEEC 8009A2EC 241900FF */  li    $t9, 255
@@ -430,9 +430,9 @@ glabel func_80099E8C
 /* 09B0EC 8009A4EC 1DC0FEF0 */  bgtz  $t6, .L8009A0B0
 /* 09B0F0 8009A4F0 00000000 */   nop   
 .L8009A4F4:
-/* 09B0F4 8009A4F4 3C108012 */  lui   $s0, %hi(D_801263E0) # $s0, 0x8012
+/* 09B0F4 8009A4F4 3C108012 */  lui   $s0, %hi(gMenuOptionCount) # $s0, 0x8012
 /* 09B0F8 8009A4F8 8FB900D8 */  lw    $t9, 0xd8($sp)
-/* 09B0FC 8009A4FC 261063E0 */  addiu $s0, %lo(D_801263E0) # addiu $s0, $s0, 0x63e0
+/* 09B0FC 8009A4FC 261063E0 */  addiu $s0, %lo(gMenuOptionCount) # addiu $s0, $s0, 0x63e0
 /* 09B100 8009A500 8E0A0000 */  lw    $t2, ($s0)
 /* 09B104 8009A504 332900FF */  andi  $t1, $t9, 0xff
 /* 09B108 8009A508 19400063 */  blez  $t2, .L8009A698

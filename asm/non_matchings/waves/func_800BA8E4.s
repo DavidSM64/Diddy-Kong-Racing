@@ -495,7 +495,7 @@ glabel func_800BA8E4
 /* 0BBC50 800BB050 01EEC821 */  addu  $t9, $t7, $t6
 /* 0BBC54 800BB054 ACF90004 */  sw    $t9, 4($a3)
 .L800BB058:
-/* 0BBC58 800BB058 0C01A690 */  jal   func_80069A40
+/* 0BBC58 800BB058 0C01A690 */  jal   apply_matrix_from_stack
 /* 0BBC5C 800BB05C 02202025 */   move  $a0, $s1
 /* 0BBC60 800BB060 3C018013 */  lui   $at, %hi(D_8012A0A0) # $at, 0x8013
 /* 0BBC64 800BB064 C42AA0A0 */  lwc1  $f10, %lo(D_8012A0A0)($at)
@@ -606,7 +606,7 @@ glabel func_800BA8E4
 /* 0BBE00 800BB200 1420FFD9 */  bnez  $at, .L800BB168
 /* 0BBE04 800BB204 25080001 */   addiu $t0, $t0, 1
 .L800BB208:
-/* 0BBE08 800BB208 0C01A690 */  jal   func_80069A40
+/* 0BBE08 800BB208 0C01A690 */  jal   apply_matrix_from_stack
 /* 0BBE0C 800BB20C 02202025 */   move  $a0, $s1
 /* 0BBE10 800BB210 3C1F8013 */  lui   $ra, %hi(D_80129FC8) # $ra, 0x8013
 /* 0BBE14 800BB214 27FF9FC8 */  addiu $ra, %lo(D_80129FC8) # addiu $ra, $ra, -0x6038
