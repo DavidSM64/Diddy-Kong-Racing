@@ -175,7 +175,7 @@ s32 D_80126860;
 s32 gTitleDemoIndex;
 s16 gTitleDemoTimer;
 s32 gTitleRevealTimer;
-f32 D_80126870;
+f32 gTitleAudioCounter;
 s8 *sTitleScreenDemoIds; //Misc Asset 66 - title_screen_demo_ids.bin - 12 or 13 values.
 s32 D_80126878[24];
 f32 D_801268D8;
@@ -2616,7 +2616,7 @@ void menu_title_screen_init(void) {
     } else {
         gTitleRevealTimer = 1;
     }
-    D_80126870 = 0;
+    gTitleAudioCounter = 0;
     gMenuOptionCount = 0;
     func_8009C674(sGameTitleTileTextures);
     for (i = 0; i < 11; i++) {
@@ -2645,7 +2645,11 @@ void menu_title_screen_init(void) {
     gIsInTracksMode = FALSE;
 }
 
-void func_8008377C(UNUSED s32 updateRate, f32 arg1) {
+/**
+ * Scale and render the game title on the screen based on the reveal timer.
+ * Also render the selection options.
+*/
+void render_title_screen(UNUSED s32 updateRate, f32 updateRateF) {
     UNUSED u32 foo[2];
     s32 alpha;
     f32 scale;
@@ -2684,32 +2688,36 @@ void func_8008377C(UNUSED s32 updateRate, f32 arg1) {
         }
     } else {
         if (sTitleScreenDemoIds[gTitleDemoIndex] == sTitleScreenDemoIds[0]) {
-            func_80083098(arg1);
+            func_80083098(updateRateF);
         }
     }
 }
 
+/**
+ * Handle the countdown when the title screen starts to show the logo coming in.
+ * Fade music to make voice clips more audible.
+*/
 s32 menu_title_screen_loop(s32 updateRate) {
     UNUSED s32 temp_v0_5;
     s32 sp28;
     s8 *demo;
     s32 contrIndex;
-    f32 sp1C;
+    f32 updateRateF;
     ObjectSegment* sp18;
-    s8 var_a1;
+    s8 playerCount;
 
     sp18 = get_active_camera_segment();
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     func_8008E4EC();
     if (osTvType == TV_TYPE_PAL) {
-        sp1C = (f32) updateRate / 50.0f;
+        updateRateF = (f32) updateRate / 50.0f;
     } else {
-        sp1C = (f32) updateRate / 60.0f;
+        updateRateF = (f32) updateRate / 60.0f;
     }
     if (gMenuDelay < 20) {
-        func_8008377C(updateRate, sp1C);
+        render_title_screen(updateRate, updateRateF);
     }
-    if (gMenuDelay != 0) {
+    if (gMenuDelay) {
         gMenuDelay += updateRate;
     }
     if (sTitleScreenDemoIds[gTitleDemoIndex] == sTitleScreenDemoIds[0]) {
@@ -2718,8 +2726,8 @@ s32 menu_title_screen_loop(s32 updateRate) {
     sp28 = 0;
     if (gTitleDemoTimer > 0) {
         gTitleDemoTimer -= updateRate;
-        if ((gTitleDemoTimer < 60) && ((gTitleDemoTimer + updateRate) >= 60)) {
-            set_music_fade_timer(-0x300);
+        if (gTitleDemoTimer < 60 && gTitleDemoTimer + updateRate >= 60) {
+            set_music_fade_timer(-768);
             sp28 = 0;
             transition_begin(&D_800E1E08);
         }
@@ -2729,7 +2737,7 @@ s32 menu_title_screen_loop(s32 updateRate) {
     } else {
         gTitleDemoTimer = 0;
     }
-    if ((gMenuDelay == 0) && (func_800214C4() || sp28)) {
+    if (gMenuDelay == 0 && (func_800214C4() || sp28)) {
         if (gTitleDemoTimer){} // Fakematch
         gTitleDemoIndex += DEMO_INDEX_SIZE;
         demo = &sTitleScreenDemoIds[gTitleDemoIndex];
@@ -2740,13 +2748,13 @@ s32 menu_title_screen_loop(s32 updateRate) {
         if (gTitleRevealTimer == 0) {
             gTitleRevealTimer = 1;
         }
-        var_a1 = demo[1];
+        playerCount = demo[DEMO_PLAYER_COUNT];
         gTitleDemoTimer = 0;
-        if (var_a1 == -2) {
-            var_a1 = 0;
+        if (playerCount == -2) {
+            playerCount = 0;
             gTitleDemoTimer = 1500;
         }
-        load_level_for_menu(demo[0], var_a1, demo[2]);
+        load_level_for_menu(demo[DEMO_LEVEL_ID], playerCount, demo[DEMO_CUTSCENE_ID]);
         if (sTitleScreenDemoIds[gTitleDemoIndex] == sTitleScreenDemoIds[DEMO_LEVEL_ID]) {
             D_801268D8 = 0.0f;
             D_801268E0 = 0;
@@ -2767,25 +2775,25 @@ s32 menu_title_screen_loop(s32 updateRate) {
                 play_sound_global(SOUND_EXPLOSION, 0);
             }
         } else {
-            if (D_80126870 < 6.0f) {
-                D_80126870 +=  sp1C;
-                if ((D_80126870 > 0.67f) && (gMenuOptionCount == 0)) {
+            if (gTitleAudioCounter < 6.0f) {
+                gTitleAudioCounter += updateRateF;
+                if (gTitleAudioCounter > 0.67f && gMenuOptionCount == 0) {
                     play_sound_global(SOUND_VOICE_TT_DIDDY_KONG_RACING, 0);
                     gMenuOptionCount = 1;
-                } else if ((D_80126870 > 2.83f) && (gMenuOptionCount == 1)) {
+                } else if ((gTitleAudioCounter > 2.83f) && (gMenuOptionCount == 1)) {
                     play_sound_global(SOUND_VOICE_TT_PRESS_START, 0);
                     gMenuOptionCount = 2;
                 }
             }
         }
     }
-    if (D_80126870 > 0.0f) {
-        if (D_80126870 < 0.5f) {
-            set_relative_volume_for_music((s32) ((f32) sMenuMusicVolume * (1.0f - D_80126870)));
-        } else if (D_80126870 < 4.5f) {
+    if (gTitleAudioCounter > 0.0f) {
+        if (gTitleAudioCounter < 0.5f) {
+            set_relative_volume_for_music((s32) ((f32) sMenuMusicVolume * (1.0f - gTitleAudioCounter)));
+        } else if (gTitleAudioCounter < 4.5f) {
             set_relative_volume_for_music(((s32) sMenuMusicVolume >> 1));
-        } else if (D_80126870 < 5.0f) {
-            set_relative_volume_for_music((s32) ((f32) sMenuMusicVolume * (D_80126870 - 4.0f)));
+        } else if (gTitleAudioCounter < 5.0f) {
+            set_relative_volume_for_music((s32) ((f32) sMenuMusicVolume * (gTitleAudioCounter - 4.0f)));
         } else {
             set_relative_volume_for_music(*((s8*)&sMenuMusicVolume + 3));
         }
@@ -2901,12 +2909,15 @@ void render_options_menu_ui(UNUSED s32 updateRate) {
     }
 }
 
+/**
+ * Draw the text list and accept input for going to specific option menus.
+*/
 s32 menu_options_loop(s32 updateRate) {
     s32 buttonsPressed;
     s32 i;
     UNUSED s32 pad0;
-    s32 analogX;
-    s32 analogY;
+    s32 analogueX;
+    s32 analogueY;
     UNUSED s32 pad1[4];
 
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
@@ -2922,15 +2933,15 @@ s32 menu_options_loop(s32 updateRate) {
         render_options_menu_ui(updateRate);
     }
     buttonsPressed = 0;
-    analogX = 0;
-    analogY = 0;
+    analogueX = 0;
+    analogueY = 0;
     if (gIgnorePlayerInputTime == 0 && gMenuDelay == 0) {
         s8 *xAxisPtr;
         s8 *yAxisPtr; 
         for (i = 0, xAxisPtr = gControllersXAxisDirection, yAxisPtr = gControllersYAxisDirection; i < MAXCONTROLLERS; i++) {
             buttonsPressed |= get_buttons_pressed_from_player(i);
-            analogX += *(xAxisPtr++);
-            analogY += *(yAxisPtr++);
+            analogueX += *(xAxisPtr++);
+            analogueY += *(yAxisPtr++);
         }
     }
     if ((buttonsPressed & B_BUTTON) || ((buttonsPressed & (A_BUTTON | START_BUTTON)) && D_800DF460 == 5)) {
@@ -2944,7 +2955,7 @@ s32 menu_options_loop(s32 updateRate) {
         gMenuDelay = 31;
         play_sound_global(SOUND_SELECT2, NULL);
         
-    } else if (D_800DF460 == 0 && analogX != 0) {
+    } else if (D_800DF460 == 0 && analogueX != 0) {
         switch ((u64) get_language()) {
             case LANGUAGE_ENGLISH:
                  set_language(LANGUAGE_FRENCH);
@@ -2954,7 +2965,7 @@ s32 menu_options_loop(s32 updateRate) {
                 break;
         }
         play_sound_global(SOUND_MENU_PICK2, NULL);
-    } else if (D_800DF460 == 1 && analogX != 0) {
+    } else if (D_800DF460 == 1 && analogueX != 0) {
         if (sEepromSettings & 0x2000000) {
             //0x2000000 SUBTITLES ENABLED?
             play_sound_global(SOUND_MENU_PICK2, NULL);
@@ -2969,13 +2980,13 @@ s32 menu_options_loop(s32 updateRate) {
         }
     } else {
         s32 prev_D_800DF460 = D_800DF460;
-        if (analogY < 0) {
+        if (analogueY < 0) {
             D_800DF460++;
             if (D_800DF460 >= 6) {
                 D_800DF460 = 5;
             }
         }
-        if (analogY > 0) {
+        if (analogueY > 0) {
             D_800DF460--;
             if (D_800DF460 < 0) {
                 D_800DF460 = 0;
@@ -3539,7 +3550,7 @@ s32 menu_save_options_loop(s32 updateRate) {
     if ((gMenuOptionCount & 7) >= 2) {
         func_80086A48(updateRate);
     }
-    if ((gMenuDelay >= -19) && (gMenuDelay < 20)) {
+    if (gMenuDelay > -20 && gMenuDelay < 20) {
         func_80085B9C(updateRate);
     }
     if (gMenuDelay != 0) {
@@ -9642,6 +9653,9 @@ void func_8009D324(void) {
     D_800DF4D8 = 0;
 }
 
+/**
+ * Sets the variable controlling which Taj Challenge dialogue is to be used.
+*/
 void set_next_taj_challenge_menu(s32 arg0) {
     gNextTajChallengeMenu = arg0;
 }
@@ -9664,7 +9678,7 @@ s32 taj_menu_loop(void) {
     Settings *settings; // sp24
 
     settings = get_settings();
-    if ((gNextTajChallengeMenu != 0) && (sCurrentMenuID == 0)) {
+    if (gNextTajChallengeMenu && sCurrentMenuID == 0) {
         sCurrentMenuID = -gNextTajChallengeMenu;
     }
     if (sCurrentMenuID == 0) {
@@ -9859,6 +9873,11 @@ s32 dialogue_race_defeat(void) {
     return state;
 }
 
+/**
+ * Main function for TT dialogue.
+ * Handles the controls for navigating the main options, selecting time trial and viewing the game status.
+ * Also has unused functions to handle pak swapping as well as displaying the messages about them.
+*/
 s32 tt_menu_loop(void) {
     s32 currentOption;
     s32 buttonsPressed;
@@ -9876,13 +9895,13 @@ s32 tt_menu_loop(void) {
         sCurrentMenuID = TT_MENU_INTRODUCTION;
     }
     if ((sCurrentMenuID != TT_MENU_GAME_STATUS) && (sCurrentMenuID != TT_MENU_INTRODUCTION)) {
-        currentOption = 0x78;
+        currentOption = 120;
         if (has_ghost_to_save()) {
-            currentOption = 0x88;
+            currentOption = 136;
         }
-        set_current_dialogue_box_coords(1, 0x18, 0x10, 0xC0, currentOption);
+        set_current_dialogue_box_coords(1, 24, 16, 192, currentOption);
     } else {
-        set_current_dialogue_box_coords(1, 0x18, 0x10, 0xB8, 0xDC);
+        set_current_dialogue_box_coords(1, 24, 16, 184, 220);
     }
     set_dialogue_font(1, ASSET_FONTS_FUNFONT);
     currentOption = 0;
