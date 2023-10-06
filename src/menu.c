@@ -5072,10 +5072,8 @@ void func_8008B4C8(void) {
     }
 }
 
-#ifdef NON_MATCHING
 void func_8008B758(s8 *activePlayers) {
     CharacterSelectData *charSelectData;
-    CharacterSelectData *temp;
     s32 found;
     s32 i;
     s32 j;
@@ -5122,7 +5120,7 @@ void func_8008B758(s8 *activePlayers) {
                     }
                     play_sound_global(((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID + SOUND_VOICE_CHARACTER_SELECT), &D_80126808[i]);
                 } else {
-                    charSelectData = &(*gCurrCharacterSelectData)[gPlayersCharacterArray[i]];
+                    charSelectData = (*gCurrCharacterSelectData) + gPlayersCharacterArray[i];
                     if (D_80126830[i] > 0) {
                         func_8008BFE8(i, charSelectData->upInput, ARRAY_COUNT(charSelectData->upInput), SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
                     } else if (D_80126830[i] < 0) {
@@ -5132,10 +5130,8 @@ void func_8008B758(s8 *activePlayers) {
                     } else if (D_80126818[i] > 0) {
                         func_8008BFE8(i, charSelectData->leftInput, ARRAY_COUNT(charSelectData->leftInput), SOUND_MENU_PICK3, SOUND_HORN_DRUMSTICK);
                     }
-                    if (1) { }
-                    temp = *gCurrCharacterSelectData;
-                    if (charSelectData->voiceID != temp[gPlayersCharacterArray[i]].voiceID) {
-                        D_801263C0.unk0 = temp[gPlayersCharacterArray[i]].voiceID;
+                    if (charSelectData->voiceID != (*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID) {
+                        D_801263C0.unk0 = (*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID;
                         D_801263C0.unk2 = 0;
                         D_801263C0.unk1 = 20;
                     }
@@ -5144,9 +5140,6 @@ void func_8008B758(s8 *activePlayers) {
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_8008B758.s")
-#endif
 
 #ifdef NON_EQUIVALENT
 
