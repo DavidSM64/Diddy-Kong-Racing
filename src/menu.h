@@ -213,10 +213,10 @@ typedef struct ButtonTextElement {
 
 /* Size: 0xE bytes. */
 typedef struct CharacterSelectData {
-    u8 upInput[2];
-    u8 downInput[2];
-    u8 rightInput[4];
-    u8 LeftInput[4];
+    s8 upInput[2];
+    s8 downInput[2];
+    s8 rightInput[4];
+    s8 leftInput[4];
     s16 voiceID;
 } CharacterSelectData;
 
