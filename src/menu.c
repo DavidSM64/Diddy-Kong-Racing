@@ -164,7 +164,7 @@ s32 D_80126840;
 s32 D_80126844;
 s32 D_80126848;
 s32 D_8012684C;
-s32 *D_80126850;
+s32 *D_80126850; //Never set, but it's read? Is it part of a larger struct being set?
 s32 D_80126854;
 s32 D_80126858;
 s32 D_8012685C;
@@ -1700,7 +1700,7 @@ void func_80080518(f32 arg0, f32 arg1) {
 
 //https://decomp.me/scratch/W0adv
 #ifdef NON_EQUIVALENT
-void func_80080580(Gfx** dlist, s32 x, s32 y, s32 x0, s32 y0, s32 x1, s32 y1, s32 colour, TextureHeader* tex) {
+void func_80080580(Gfx** dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour, TextureHeader *tex) {
     s32 uVals[4];
     s32 vVals[4];
     Vertex* verts;
@@ -1716,12 +1716,12 @@ void func_80080580(Gfx** dlist, s32 x, s32 y, s32 x0, s32 y0, s32 x1, s32 y1, s3
     if (tex != NULL) {
         uVals[0] = 0;
         vVals[0] = 0;
-        uVals[1] = D_800E1DC0 * x1;
-        uVals[2] = (x0 - x1) * D_800E1DC0;
-        uVals[3] = D_800E1DC0 * x0;
-        vVals[1] = D_800E1DC4 * y1;
-        vVals[2] = (y0 - y1) * D_800E1DC4;
-        vVals[3] = D_800E1DC4 * y0;
+        uVals[1] = D_800E1DC0 * borderWidth;
+        uVals[2] = (width - borderWidth) * D_800E1DC0;
+        uVals[3] = D_800E1DC0 * width;
+        vVals[1] = D_800E1DC4 * borderHeight;
+        vVals[2] = (height - borderHeight) * D_800E1DC4;
+        vVals[3] = D_800E1DC4 * height;
         tris = ((unk80080BC8*)((u8*)D_80126C2C + (D_800E1DB8 << 5) + (D_800E1DB4 * 4)))->triangles;
         for (i = 0; i < 5; i++) {
             tris[i*2].uv0.u = uVals[D_800E1CF0[i][0]];
@@ -1741,15 +1741,15 @@ void func_80080580(Gfx** dlist, s32 x, s32 y, s32 x0, s32 y0, s32 x1, s32 y1, s3
     verts = ((unk80080BC8*)((u8*)D_80126C2C + (D_800E1DB8 << 5) + (D_800E1DB4 * 4)))->vertices;
     for (i = 0; i < 5; i++) {
         for(j = 0; j < 4; j++) {
-            verts[j].x = x;
-            verts[j].y = y;
-            verts[j].x += (D_800E1D2C[j][0] * x0);
-            verts[j].x += (D_800E1D2C[j][1] * x1);
-            verts[j].y += (D_800E1D2C[j][2] * y0);
-            verts[j].y += (D_800E1D2C[j][3] * y1);
+            verts[j].x = startX;
+            verts[j].y = startY;
+            verts[j].x += (D_800E1D2C[j][0] * width);
+            verts[j].x += (D_800E1D2C[j][1] * borderWidth);
+            verts[j].y += (D_800E1D2C[j][2] * height);
+            verts[j].y += (D_800E1D2C[j][3] * borderHeight);
             verts[j].z = 0;
-            verts[j].r = (s32) (D_800E1D7C[i][0] * ((colour >> 0x18) & 0xFF)) >> 8;
-            verts[j].g = (s32) (D_800E1D7C[i][1] * ((colour >> 0x10) & 0xFF)) >> 8;
+            verts[j].r = (s32) (D_800E1D7C[i][0] * ((colour >> 24) & 0xFF)) >> 8;
+            verts[j].g = (s32) (D_800E1D7C[i][1] * ((colour >> 16) & 0xFF)) >> 8;
             verts[j].b = (s32) (D_800E1D7C[i][2] * ((colour >> 8) & 0xFF)) >> 8;
             verts[j].a = (s32) (D_800E1D7C[i][3] * (colour & 0xFF)) >> 8;
         }
@@ -2311,8 +2311,12 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                     yPos = (tempY & 0xFFFFFFFFFFFFFFFFu) + elem->middle;
                 }
                 switch (elem->elementType) {
-                    case 0:
-                        set_text_background_colour(elem->backgroundRed, elem->backgroundGreen, elem->backgroundBlue, elem->backgroundAlpha);
+                    case 0: //ascii text
+                        set_text_background_colour(
+                            elem->details.background.backgroundRed, 
+                            elem->details.background.backgroundGreen,
+                            elem->details.background.backgroundBlue,
+                            elem->details.background.backgroundAlpha);
                         set_text_colour(elem->filterRed, elem->filterGreen, elem->filterBlue, elem->filterAlpha, elem->opacity);
                         set_text_font(elem->textFont);
                         draw_text(&sMenuCurrDisplayList, xPos, yPos + D_800DF79C, elem->unk14_a.asciiText, elem->textAlignFlags);
@@ -2325,22 +2329,22 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                         sMenuGuiOpacity = elem->opacity;
                         show_timestamp(
                             *elem->unk14_a.numberU16,
-                            xPos - 0xA0,
-                            (-yPos - D_800DF7A0) + 0x78,
+                            xPos - 160,
+                            (-yPos - D_800DF7A0) + 120,
                             elem->filterRed,
                             elem->filterGreen,
                             elem->filterBlue,
                             elem->textFont);
                         break;
-                    case 2:
+                    case 2: //Number
                         if (s5) {
                             s5 = FALSE;
                             reset_render_settings(&sMenuCurrDisplayList);
                         }
                         func_80081C04(
                             *elem->unk14_a.number,
-                            xPos - 0xA0,
-                            (-yPos - D_800DF7A0) + 0x78,
+                            xPos - 160,
+                            (-yPos - D_800DF7A0) + 120,
                             elem->filterRed,
                             elem->filterGreen,
                             elem->filterBlue,
@@ -2366,8 +2370,8 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                             elem->unk14_a.element,
                             xPos,
                             yPos + D_800DF79C,
-                            elem->backgroundRed / 256.0f,
-                            elem->backgroundGreen / 256.0f,
+                            elem->details.texture.width / 256.0f,
+                            elem->details.texture.height / 256.0f,
                             (elem->filterRed << 24) | (elem->filterGreen << 16) | (elem->filterBlue << 8) | elem->opacity,
                             elem->textAlignFlags);
                         s5 = TRUE;
@@ -2379,13 +2383,13 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                         }
                         func_80068508(1);
                         func_8007BF1C(FALSE);
-                        gMenuImageStack[elem->unk14_a.value].unkC = xPos - 0xA0;
-                        gMenuImageStack[elem->unk14_a.value].unk10 = (-yPos - D_800DF7A0) + 0x78;
+                        gMenuImageStack[elem->unk14_a.value].unkC = xPos - 160;
+                        gMenuImageStack[elem->unk14_a.value].unk10 = (-yPos - D_800DF7A0) + 120;
                         gMenuImageStack[elem->unk14_a.value].unk18 = elem->textFont;
-                        gMenuImageStack[elem->unk14_a.value].unk4 = elem->backgroundRed;
-                        gMenuImageStack[elem->unk14_a.value].unk2 = elem->backgroundGreen;
-                        gMenuImageStack[elem->unk14_a.value].unk0 = elem->backgroundBlue;
-                        gMenuImageStack[elem->unk14_a.value].unk8 = elem->backgroundAlpha / 256.0f;
+                        gMenuImageStack[elem->unk14_a.value].unk4 = elem->details.background.backgroundRed;
+                        gMenuImageStack[elem->unk14_a.value].unk2 = elem->details.background.backgroundGreen;
+                        gMenuImageStack[elem->unk14_a.value].unk0 = elem->details.background.backgroundBlue;
+                        gMenuImageStack[elem->unk14_a.value].unk8 = elem->details.background.backgroundAlpha / 256.0f;
                         sMenuGuiColourR = elem->filterRed;
                         sMenuGuiColourG = elem->filterGreen;
                         sMenuGuiColourB = elem->filterBlue;
@@ -2400,25 +2404,25 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                             &sMenuCurrDisplayList,
                             xPos,
                             yPos + D_800DF7A0,
-                            elem->backgroundRed,
-                            elem->backgroundGreen,
-                            elem->backgroundBlue,
-                            elem->backgroundAlpha,
+                            elem->details.texture.width,
+                            elem->details.texture.height,
+                            elem->details.texture.borderWidth,
+                            elem->details.texture.borderHeight,
                             elem->filterRed,
                             elem->filterGreen,
                             elem->filterBlue,
                             elem->opacity);
                         break;
-                    case 7:
+                    case 7: //Texture
                         func_80080580(
                             &sMenuCurrDisplayList,
                             xPos,
                             yPos + D_800DF7A0,
-                            elem->backgroundRed,
-                            elem->backgroundGreen,
-                            elem->backgroundBlue,
-                            elem->backgroundAlpha,
-                            (elem->filterRed << 0x18) | (elem->filterGreen << 0x10) | (elem->filterBlue << 8) | elem->opacity,
+                            elem->details.texture.width,
+                            elem->details.texture.height,
+                            elem->details.texture.borderWidth,
+                            elem->details.texture.borderHeight,
+                            (elem->filterRed << 24) | (elem->filterGreen << 16) | (elem->filterBlue << 8) | elem->opacity,
                             elem->unk14_a.element);
                         break;
                 }
@@ -5645,11 +5649,11 @@ void render_file_select_menu(UNUSED s32 updateRate) {
     set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     for (i = 0; i < 3; i++) { // 3 files
         if (gSavefileInfo[i].isAdventure2 == gIsInAdventureTwo || gSavefileInfo[i].isStarted == 0) {
-            color = 0xB0E0C0FF;
+            color = COLOUR_RGBA32(176, 224, 192, 255);
         } else {
-            color = 0x6A9073FF;
+            color = COLOUR_RGBA32(106, 144, 115, 255);
         }
-        func_80080580(0, gFileSelectButtons[i].x - 0xA0, 0x78 - gFileSelectButtons[i].y, gFileSelectButtons[i].width,
+        func_80080580(NULL, gFileSelectButtons[i].x - 160, 120 - gFileSelectButtons[i].y, gFileSelectButtons[i].width,
             gFileSelectButtons[i].height, gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, color, D_80126550[TEXTURE_SURFACE_BUTTON_WOOD]);
     }
     func_80080BC8(&sMenuCurrDisplayList);
@@ -8973,9 +8977,9 @@ void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s8 *arg5) {
     }
 
     if ((phi_v1 == 0) && (get_misc_asset(MISC_ASSET_UNK19) == (s32 *)arg0)) {
-        D_8012684C = 1;
+        D_8012684C = TRUE;
     } else {
-        D_8012684C = 0;
+        D_8012684C = FALSE;
     }
 
     D_801267EC = arg0;
@@ -9010,7 +9014,7 @@ s32 menu_23_loop(UNUSED s32 updateRate) {
         if (D_801267EC[0] >= 0) {
             load_level_for_menu(D_801267EC[0], D_801267EC[1], D_801267EC[2]);
         } else {
-            if (D_8012684C != 0) {
+            if (D_8012684C) {
                 func_80000B18();
             }
             func_8009AF18();
