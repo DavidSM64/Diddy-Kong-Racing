@@ -514,13 +514,13 @@ s16 D_800DFCAC[4] = {
 };
 
 MenuElement gControllerPakMenuElement[7] = {
-    { 161, 32,  161, 33,  161, 32,  0,   0,   0,   255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 30,  160, 30,  160, 30,  255, 255, 255, 0,   255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 112, 160, 112, 160, 112, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 128, 160, 128, 160, 128, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 192, 160, 192, 160, 192, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 160, 208, 160, 208, 160, 208, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   ASSET_FONTS_FUNFONT, 0,  0, { NULL }, 0, 0, 0, 0 },
+    { 161, 32,  161, 33,  161, 32,  0,   0,   0,   255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 160, 30,  160, 30,  160, 30,  255, 255, 255, 0,   255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 160, 112, 160, 112, 160, 112, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 160, 128, 160, 128, 160, 128, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 160, 192, 160, 192, 160, 192, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 160, 208, 160, 208, 160, 208, 255, 255, 255, 0,   255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   ASSET_FONTS_FUNFONT, 0,  0, { NULL }, {{ 0, 0, 0, 0 }} },
 };
 
 s32 gShowControllerPakMenu = FALSE;
@@ -638,42 +638,42 @@ s32 D_800DFFD0 = 0;
 s32 D_800DFFD4 = -1;
 
 MenuElement gCautionMenuTextElements[14] = {
-    { SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF,  72, SCREEN_WIDTH_HALF,  68, SCREEN_WIDTH_HALF,  72, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF,  86, SCREEN_WIDTH_HALF,  82, SCREEN_WIDTH_HALF,  86, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 100, SCREEN_WIDTH_HALF,  96, SCREEN_WIDTH_HALF, 100, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 114, SCREEN_WIDTH_HALF, 110, SCREEN_WIDTH_HALF, 114, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 128, SCREEN_WIDTH_HALF, 124, SCREEN_WIDTH_HALF, 128, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 142, SCREEN_WIDTH_HALF, 138, SCREEN_WIDTH_HALF, 142, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 156, SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 156, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 156, SCREEN_WIDTH_HALF, 166, SCREEN_WIDTH_HALF, 156, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 186, SCREEN_WIDTH_HALF, 180, SCREEN_WIDTH_HALF, 186, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 200, SCREEN_WIDTH_HALF, 194, SCREEN_WIDTH_HALF, 200, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    { SCREEN_WIDTH_HALF, 200, SCREEN_WIDTH_HALF, 208, SCREEN_WIDTH_HALF, 200, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-    {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,                   0,  0, 0, { NULL }, 0, 0, 0, 0 },
+    { SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF,  72, SCREEN_WIDTH_HALF,  68, SCREEN_WIDTH_HALF,  72, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF,  86, SCREEN_WIDTH_HALF,  82, SCREEN_WIDTH_HALF,  86, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 100, SCREEN_WIDTH_HALF,  96, SCREEN_WIDTH_HALF, 100, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 114, SCREEN_WIDTH_HALF, 110, SCREEN_WIDTH_HALF, 114, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 128, SCREEN_WIDTH_HALF, 124, SCREEN_WIDTH_HALF, 128, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 142, SCREEN_WIDTH_HALF, 138, SCREEN_WIDTH_HALF, 142, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 156, SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 156, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 156, SCREEN_WIDTH_HALF, 166, SCREEN_WIDTH_HALF, 156, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 186, SCREEN_WIDTH_HALF, 180, SCREEN_WIDTH_HALF, 186, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 200, SCREEN_WIDTH_HALF, 194, SCREEN_WIDTH_HALF, 200, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF, 200, SCREEN_WIDTH_HALF, 208, SCREEN_WIDTH_HALF, 200, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,                   0,  0, 0, { NULL }, {{ 0, 0, 0, 0 }} },
 };
 
 MenuElement gGameSelectTextElemsNoAdv2[7] = {
-    { SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    { SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    { -96,  39, -96,  39, -96,  39, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, 192, 44, 4, 4 },
-    { SCREEN_WIDTH_HALF, 104, SCREEN_WIDTH_HALF, 104, SCREEN_WIDTH_HALF, 104, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    { -96,  -9, -96,  -9, -96,  -9, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, 192, 44, 4, 4 },
-    { SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 152, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0,  0, 0, { NULL },   0,  0, 0, 0 },
+    { SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35, SCREEN_WIDTH_HALF + 1,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL },  {{ 0, 0, 0, 0 }} },
+    { SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, SCREEN_WIDTH_HALF,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   {{ 0, 0, 0, 0 }} },
+    { -96,  39, -96,  39, -96,  39, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, {{ 192, 44, 4, 4 }} },
+    { SCREEN_WIDTH_HALF, 104, SCREEN_WIDTH_HALF, 104, SCREEN_WIDTH_HALF, 104, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   {{ 0, 0, 0, 0 }} },
+    { -96,  -9, -96,  -9, -96,  -9, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, {{ 192, 44, 4, 4 }} },
+    { SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 152, SCREEN_WIDTH_HALF, 152, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   {{ 0, 0, 0, 0 }} },
+    {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 0,  0, 0, { NULL },   {{ 0, 0, 0, 0 }} },
 };
 
 MenuElement gGameSelectTextElemsWithAdv2[9] = {
-    {  SCREEN_WIDTH_HALF + 1,  35,  SCREEN_WIDTH_HALF + 1,  35,  SCREEN_WIDTH_HALF + 1,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    {  SCREEN_WIDTH_HALF,  32,  SCREEN_WIDTH_HALF,  32,  SCREEN_WIDTH_HALF,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    { -112,  55, -112,  55, -112,  55, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, 224, 44, 4, 4 },
-    {  SCREEN_WIDTH_HALF,  88,  SCREEN_WIDTH_HALF,  88,  SCREEN_WIDTH_HALF,  88, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    { -112,   7, -112,   7, -112,   7, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, 224, 44, 4, 4 },
-    {  SCREEN_WIDTH_HALF, 136,  SCREEN_WIDTH_HALF, 136,  SCREEN_WIDTH_HALF, 136, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    { -112, -41, -112, -41, -112, -41, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, 224, 44, 4, 4 },
-    {  SCREEN_WIDTH_HALF, 184,  SCREEN_WIDTH_HALF, 184,  SCREEN_WIDTH_HALF, 184, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   0,  0, 0, 0 },
-    {    0,   0,    0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0, { NULL },   0,  0, 0, 0 },
+    {  SCREEN_WIDTH_HALF + 1,  35,  SCREEN_WIDTH_HALF + 1,  35,  SCREEN_WIDTH_HALF + 1,  35,   0,   0,   0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL },  {{ 0, 0, 0, 0 }} },
+    {  SCREEN_WIDTH_HALF,  32,  SCREEN_WIDTH_HALF,  32,  SCREEN_WIDTH_HALF,  32, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   {{ 0, 0, 0, 0 }} },
+    { -112,  55, -112,  55, -112,  55, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, {{ 224, 44, 4, 4 }} },
+    {  SCREEN_WIDTH_HALF,  88,  SCREEN_WIDTH_HALF,  88,  SCREEN_WIDTH_HALF,  88, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   {{ 0, 0, 0, 0 }} },
+    { -112,   7, -112,   7, -112,   7, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, {{ 224, 44, 4, 4 }} },
+    {  SCREEN_WIDTH_HALF, 136,  SCREEN_WIDTH_HALF, 136,  SCREEN_WIDTH_HALF, 136, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   {{ 0, 0, 0, 0 }} },
+    { -112, -41, -112, -41, -112, -41, 176, 224, 192, 255, 255, ASSET_FONTS_FUNFONT,  0, 7, { NULL }, {{ 224, 44, 4, 4 }} },
+    {  SCREEN_WIDTH_HALF, 184,  SCREEN_WIDTH_HALF, 184,  SCREEN_WIDTH_HALF, 184, 255, 255, 255,   0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL },   {{ 0, 0, 0, 0 }}},
+    {    0,   0,    0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0, { NULL },   {{ 0, 0, 0, 0 }} },
 };
 
 s16 D_800E0398[6] = {
@@ -1008,41 +1008,41 @@ char *gRacePlacementsArray[8] = {
 };
 
 MenuElement D_800E0BEC[8] = {
-    { 352, 172,  32, 172, -288, 172, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 452, 166, 132, 166, -188, 166, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, 0, 0, 0, 0 },
-    { 560, 184, 240, 184,  -80, 184, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, 0, 0, 0, 0 },
-    { 452, 180, 132, 180, -188, 180, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, 0, 0, 0, 0 },
-    { 452, 198, 132, 198, -188, 198, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, 0, 0, 0, 0 },
-    { 452, 216, 132, 216, -188, 216, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, 0, 0, 0, 0 },
-    { 560, 200, 240, 200,  -80, 200, 128, 255, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, 0, 0, 0, 0 },
-    {   0,   0,   0,   0,    0,   0,   0,   0,   0, 0,   0, 0,  0, 0, {      NULL   }, 0, 0, 0, 0 },
+    { 352, 172,  32, 172, -288, 172, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 452, 166, 132, 166, -188, 166, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    { 560, 184, 240, 184,  -80, 184, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    { 452, 180, 132, 180, -188, 180, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    { 452, 198, 132, 198, -188, 198, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    { 452, 216, 132, 216, -188, 216, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    { 560, 200, 240, 200,  -80, 200, 128, 255, 255, 0, 255, ASSET_FONTS_FUNFONT,  0, 1, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    {   0,   0,   0,   0,    0,   0,   0,   0,   0, 0,   0, 0,  0, 0, {      NULL   }, {{ 0, 0, 0, 0 }} },
 };
 
 MenuElement D_800E0CEC[11] = {
-    { 575, 172, 255, 172,  -65, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 542, 172, 222, 172,  -98, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 509, 172, 189, 172, -131, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 476, 172, 156, 172, -164, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 443, 172, 123, 172, -197, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 410, 172,  90, 172, -230, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 377, 172,  57, 172, -263, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 344, 172,  24, 172, -296, 166, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-    { 481, 166, 161, 166, -159, 166,   0,   0,   0, 255, 128, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, 0, 0, 0, 0 },
-    { 479, 164, 159, 164, -161, 164, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, 0, 0, 0, 0 },
-    {   0,   0,   0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0, {      NULL   }, 0, 0, 0, 0 },
+    { 575, 172, 255, 172,  -65, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 542, 172, 222, 172,  -98, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 509, 172, 189, 172, -131, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 476, 172, 156, 172, -164, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 443, 172, 123, 172, -197, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 410, 172,  90, 172, -230, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 377, 172,  57, 172, -263, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 344, 172,  24, 172, -296, 166, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+    { 481, 166, 161, 166, -159, 166,   0,   0,   0, 255, 128, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    { 479, 164, 159, 164, -161, 164, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, {      NULL   }, {{ 0, 0, 0, 0 }} },
+    {   0,   0,   0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0, {      NULL   }, {{ 0, 0, 0, 0 }} },
 
 };
 
 MenuElement D_800E0E4C[9] = {
-    { 481, 174, 161, 174, -159, 174,   0,   0,   0, 255, 128, ASSET_FONTS_FUNFONT, 12, 0, {       NULL  }, 0, 0, 0, 0 },
-    { 479, 172, 159, 172, -161, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, {       NULL  }, 0, 0, 0, 0 },
-    { 368, 192,  48, 192, -272, 192, 255,  64,  64,  96, 255, ASSET_FONTS_FUNFONT,  8, 0, {       NULL  }, 0, 0, 0, 0 },
-    { 506, 187, 186, 187, -134, 187, 255, 192, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 1, {       NULL  }, 0, 0, 0, 0 },
-    { 578, 192, 258, 192,  -62, 192, 255, 128, 255,  96, 255, ASSET_FONTS_FUNFONT, 12, 0, { &D_80126390 }, 0, 0, 0, 0 },
-    { 368, 212,  48, 212, -272, 212, 255,  64,  64,  96, 255, ASSET_FONTS_FUNFONT,  8, 0, {       NULL  }, 0, 0, 0, 0 },
-    { 506, 207, 186, 207, -134, 207, 128, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 1, {       NULL  }, 0, 0, 0, 0 },
-    { 578, 212, 258, 212,  -62, 212, 255, 128, 255,  96, 255, ASSET_FONTS_FUNFONT, 12, 0, { &D_80126394 }, 0, 0, 0, 0 },
-    {   0,   0,   0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0, {       NULL  }, 0, 0, 0, 0 },
+    { 481, 174, 161, 174, -159, 174,   0,   0,   0, 255, 128, ASSET_FONTS_FUNFONT, 12, 0, {       NULL  }, {{ 0, 0, 0, 0 }} },
+    { 479, 172, 159, 172, -161, 172, 255, 255, 255,   0, 255, ASSET_FONTS_FUNFONT, 12, 0, {       NULL  }, {{ 0, 0, 0, 0 }} },
+    { 368, 192,  48, 192, -272, 192, 255,  64,  64,  96, 255, ASSET_FONTS_FUNFONT,  8, 0, {       NULL  }, {{ 0, 0, 0, 0 }} },
+    { 506, 187, 186, 187, -134, 187, 255, 192, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 1, {       NULL  }, {{ 0, 0, 0, 0 }} },
+    { 578, 192, 258, 192,  -62, 192, 255, 128, 255,  96, 255, ASSET_FONTS_FUNFONT, 12, 0, { &D_80126390 }, {{ 0, 0, 0, 0 }} },
+    { 368, 212,  48, 212, -272, 212, 255,  64,  64,  96, 255, ASSET_FONTS_FUNFONT,  8, 0, {       NULL  }, {{ 0, 0, 0, 0 }} },
+    { 506, 207, 186, 207, -134, 207, 128, 255, 255,   0, 255, ASSET_FONTS_FUNFONT,  0, 1, {       NULL  }, {{ 0, 0, 0, 0 }} },
+    { 578, 212, 258, 212,  -62, 212, 255, 128, 255,  96, 255, ASSET_FONTS_FUNFONT, 12, 0, { &D_80126394 }, {{ 0, 0, 0, 0 }} },
+    {   0,   0,   0,   0,    0,   0,   0,   0,   0,   0,   0, 0,  0, 0, {       NULL  }, {{ 0, 0, 0, 0 }} },
 };
 
 // Valid characters for name input. Must be u8, not char.
@@ -1097,54 +1097,54 @@ s16 D_800E1040[3] = {
 
 MenuElement D_800E1048[1][2] = { 
     {
-        { SCREEN_WIDTH + 160 + 1, 35, SCREEN_WIDTH_HALF + 1, 35, -159, 35, 0, 0, 0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 },
-        { SCREEN_WIDTH + 160, 32, SCREEN_WIDTH_HALF, 32, -160, 32, 255, 255, 255, 0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, 0, 0, 0, 0 }
+        { SCREEN_WIDTH + 160 + 1, 35, SCREEN_WIDTH_HALF + 1, 35, -159, 35, 0, 0, 0, 255, 128, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+        { SCREEN_WIDTH + 160, 32, SCREEN_WIDTH_HALF, 32, -160, 32, 255, 255, 255, 0, 255, ASSET_FONTS_BIGFONT, 12, 0, { NULL }, {{ 0, 0, 0, 0 }} }
     }
 };
 
 MenuElement D_800E1088[8][3] = {
     {
-        { 64, -192, 64, 48, 64, 288, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 32, -192, 32, 48, 32, 288, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFirstPlace }, 0, 0, 0, 0 },
-        { 130, -172, 130, 68, 130, 308, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[0] }, 0, 0, 0, 0 }
+        { 64, -192, 64, 48, 64, 288, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 32, -192, 32, 48, 32, 288, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFirstPlace }, {{ 0, 0, 0, 0 }} },
+        { 130, -172, 130, 68, 130, 308, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[0] }, {{ 0, 0, 0, 0 }} }
     },
     {
-        { 64, -150, 64, 90, 64, 330, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 32, -150, 32, 90, 32, 330, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gSecondPlace }, 0, 0, 0, 0 },
-        { 130, -130, 130, 110, 130, 350, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[1] }, 0, 0, 0, 0 }
+        { 64, -150, 64, 90, 64, 330, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 32, -150, 32, 90, 32, 330, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gSecondPlace }, {{ 0, 0, 0, 0 }} },
+        { 130, -130, 130, 110, 130, 350, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[1] }, {{ 0, 0, 0, 0 }} }
     },
     {
-        { 64, -108, 64, 132, 64, 372, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 32, -108, 32, 132, 32, 372, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gThirdPlace }, 0, 0, 0, 0 },
-        { 130, -88, 130, 152, 130, 392, 255, 128, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[2] }, 0, 0, 0, 0 }
+        { 64, -108, 64, 132, 64, 372, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 32, -108, 32, 132, 32, 372, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gThirdPlace }, {{ 0, 0, 0, 0 }} },
+        { 130, -88, 130, 152, 130, 392, 255, 128, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[2] }, {{ 0, 0, 0, 0 }} }
     },
     {
-        { 64, -66, 64, 174, 64, 414, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 32, -66, 32, 174, 32, 414, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFourthPlace }, 0, 0, 0, 0 },
-        { 130, -46, 130, 194, 130, 434, 255, 64, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[3] }, 0, 0, 0, 0 }
+        { 64, -66, 64, 174, 64, 414, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 32, -66, 32, 174, 32, 414, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFourthPlace }, {{ 0, 0, 0, 0 }} },
+        { 130, -46, 130, 194, 130, 434, 255, 64, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[3] }, {{ 0, 0, 0, 0 }} }
     },
     {
-        { 220, 288, 220, 48, 220, -192, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 188, 288, 188, 48, 188, -192, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFifthPlace }, 0, 0, 0, 0 },
-        { 286, 308, 286, 68, 286, -172, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[4] }, 0, 0, 0, 0 }
+        { 220, 288, 220, 48, 220, -192, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 188, 288, 188, 48, 188, -192, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gFifthPlace }, {{ 0, 0, 0, 0 }} },
+        { 286, 308, 286, 68, 286, -172, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[4] }, {{ 0, 0, 0, 0 }} }
     },
     {
-        { 220, 330, 220, 90, 220, -160, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 188, 330, 188, 90, 188, -150, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gSixthPlace }, 0, 0, 0, 0 },
-        { 286, 350, 286, 110, 286, -130, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[5] }, 0, 0, 0, 0 }
+        { 220, 330, 220, 90, 220, -160, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 188, 330, 188, 90, 188, -150, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gSixthPlace }, {{ 0, 0, 0, 0 }} },
+        { 286, 350, 286, 110, 286, -130, 255, 192, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[5] }, {{ 0, 0, 0, 0 }} }
     },
     {
-        { 220, 372, 220, 132, 220, -108, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 188, 372, 188, 132, 188, -108, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gSeventhPlace }, 0, 0, 0, 0 },
-        { 286, 392, 286, 152, 286, -88, 255, 128, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[6] }, 0, 0, 0, 0 }
+        { 220, 372, 220, 132, 220, -108, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 188, 372, 188, 132, 188, -108, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gSeventhPlace }, {{ 0, 0, 0, 0 }} },
+        { 286, 392, 286, 152, 286, -88, 255, 128, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[6] }, {{ 0, 0, 0, 0 }} }
     },
     {
-        { 220, 414, 220, 174, 220, -66, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, 0, 0, 0, 0 },
-        { 188, 414, 188, 174, 188, -66, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gEighthPlace }, 0, 0, 0, 0 },
-        { 286, 434, 286, 194, 286, -46, 255, 64, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[7] }, 0, 0, 0, 0 }
+        { 220, 414, 220, 174, 220, -66, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 3, { &gMenuPortraitKrunch }, {{ 0, 0, 0, 0 }} },
+        { 188, 414, 188, 174, 188, -66, 255, 255, 255, 0, 255, ASSET_FONTS_FUNFONT, 0, 0, { gEighthPlace }, {{ 0, 0, 0, 0 }} },
+        { 286, 434, 286, 194, 286, -46, 255, 64, 255, 0, 255, ASSET_FONTS_FUNFONT, 4, 2, { &gTrophyRacePointsArray[7] }, {{ 0, 0, 0, 0 }} }
     }
 };
-MenuElement D_800E1088_END = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ASSET_FONTS_FUNFONT, 0, 0, { NULL }, 0, 0, 0, 0 };
+MenuElement D_800E1088_END = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ASSET_FONTS_FUNFONT, 0, 0, { NULL }, {{ 0, 0, 0, 0 }} };
 
 s16 D_800E13A8[138] = {
     0x0040, 0x0020, 0x0082, 0x0040, 0x0020, 0x0082, 0x0040, 0x0020,
@@ -1396,15 +1396,15 @@ s32 gCheatsInCreditsArray[21] = {
 s32 gViewingCreditsFromCheat = FALSE; // Set to 1 if viewing credits from "WHODIDTHIS" cheat
 
 MenuElement D_800E1B50[9] = {
-    { 480, 104, 160, 104, -160, 104, 255,   0, 255, 48, 255, ASSET_FONTS_FUNFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    { 480, 104, 160, 104, -160, 104, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    { 480, 104, 160, 104, -160, 104, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    { 480, 104, 160, 104, -160, 104, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, 0, 0, 0, 0 },
-    {   0,   0,   0,   0,    0,   0,   0,   0,   0,  0,   0, 0, 0, 0, { NULL }, 0, 0, 0, 0 },
+    { 480, 104, 160, 104, -160, 104, 255,   0, 255, 48, 255, ASSET_FONTS_FUNFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 480, 104, 160, 104, -160, 104, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 480, 104, 160, 104, -160, 104, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 480, 104, 160, 104, -160, 104, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    { 480, 132, 160, 132, -160, 132, 255, 255, 255,  0, 255, ASSET_FONTS_BIGFONT, 4, 0, { NULL }, {{ 0, 0, 0, 0 }} },
+    {   0,   0,   0,   0,    0,   0,   0,   0,   0,  0,   0, 0, 0, 0, { NULL }, {{ 0, 0, 0, 0 }} },
 };
 
 Gfx dMenuHudSettings[] = {
