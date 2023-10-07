@@ -7,13 +7,13 @@
 #include "game.h"
 
 typedef enum RenderContext {
-    DRAW_INTRO = -1,
-    DRAW_GAME,
-    DRAW_MENU,
-    DRAW_UNK_02,
-    DRAW_UNK_03,
-    DRAW_UNK_04,
-    DRAW_CRASH_SCREEN
+    GAMEMODE_INTRO = -1,
+    GAMEMODE_INGAME,
+    GAMEMODE_MENU,
+    GAMEMODE_UNUSED_2,
+    GAMEMODE_UNUSED_3,
+    GAMEMODE_UNUSED_4,
+    GAMEMODE_LOCKUP
 } RenderContext;
 
 enum LevelLoadType {
@@ -117,7 +117,7 @@ void set_drumstick_unlock_transition(void);
 void func_8006D8E0(s32 arg0);
 void func_8006D8F0(s32 arg0);
 void func_8006D968(s8 *arg0);
-RenderContext get_render_context(void);
+RenderContext get_game_mode(void);
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId);
 void set_level_default_vehicle(Vehicle arg0);
 void set_vehicle_id_for_menu(Vehicle vehicleId);

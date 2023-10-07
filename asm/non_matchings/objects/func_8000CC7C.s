@@ -79,7 +79,7 @@ glabel func_8000CC7C
 /* 00D974 8000CD74 AFB90130 */  sw    $t9, 0x130($sp)
 /* 00D978 8000CD78 A04D003B */  sb    $t5, 0x3b($v0)
 .L8000CD7C:
-/* 00D97C 8000CD7C 0C01B683 */  jal   get_render_context
+/* 00D97C 8000CD7C 0C01B683 */  jal   get_game_mode
 /* 00D980 8000CD80 00000000 */   nop   
 /* 00D984 8000CD84 0C01BAA4 */  jal   get_settings
 /* 00D988 8000CD88 AFA20138 */   sw    $v0, 0x138($sp)
@@ -967,7 +967,7 @@ glabel L8000D98C
 /* 00E5D4 8000D9D4 3C018012 */   lui   $at, %hi(D_8011AD20) # $at, 0x8012
 /* 00E5D8 8000D9D8 A020AD20 */  sb    $zero, %lo(D_8011AD20)($at)
 .L8000D9DC:
-/* 00E5DC 8000D9DC 0C01B683 */  jal   get_render_context
+/* 00E5DC 8000D9DC 0C01B683 */  jal   get_game_mode
 /* 00E5E0 8000D9E0 00000000 */   nop   
 /* 00E5E4 8000D9E4 1440002D */  bnez  $v0, .L8000DA9C
 /* 00E5E8 8000D9E8 3C028012 */   lui   $v0, %hi(objCount) # $v0, 0x8012

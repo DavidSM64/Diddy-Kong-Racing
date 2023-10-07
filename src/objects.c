@@ -3946,7 +3946,7 @@ void func_8001E45C(s32 arg0) {
         D_8011AE7A = arg0;
         D_8011ADAC = 0;
         D_8011AE7E = 1;
-        if (get_render_context() == DRAW_MENU) {
+        if (get_game_mode() == GAMEMODE_MENU) {
             set_frame_blackout_timer();
         }
     }

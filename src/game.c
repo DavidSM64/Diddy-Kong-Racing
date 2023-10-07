@@ -734,7 +734,7 @@ void func_8006BFC8(s8 *arg0) {
     if (get_filtered_cheats() & CHEAT_ULTIMATE_AI) {
         phi_s0 = 9;
     }
-    if (get_render_context() == DRAW_MENU) {
+    if (get_game_mode() == GAMEMODE_MENU) {
         phi_s0 = 5;
     }
     gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);

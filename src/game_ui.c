@@ -409,7 +409,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
         }
     }
     if (arg3 != NULL && !(gHudLevelHeader->unkBC & 2)) {
-        if (get_render_context() != DRAW_MENU) {
+        if (get_game_mode() != GAMEMODE_MENU) {
             gHUDCurrDisplayList = *dList;
             gHUDCurrMatrix = *mtx;
             gHUDCurrVertex = *vertexList;
