@@ -72,10 +72,10 @@ s32 gSceneCurrentPlayerID;
 Object *gSkydomeSegment;
 UNUSED s32 gIsNearCurrBBox; // Set to true if the current visible segment is close to the camera. Never actually used though.
 s32 D_8011B0C0;
-s32 D_8011B0C4;
+s32 gDisableShadows;
 s32 gShadowHeapFlip; // Flips between 0 and 1 to prevent incorrect access between frames.
 s32 D_8011B0CC;
-s32 D_8011B0D0;
+s32 gShadowIndex;
 s32 gSceneStartSegment;
 s32 D_8011B0D8;
 s32 gSceneRenderSkyDome;
@@ -114,7 +114,7 @@ f32 D_8011D0C8;
 s16 D_8011D0CC;
 s16 D_8011D0CE;
 s16 D_8011D0D0;
-f32 D_8011D0D4;
+f32 gShadowOpacity;
 f32 D_8011D0D8;
 f32 D_8011D0DC;
 f32 D_8011D0E0;
@@ -252,11 +252,11 @@ void func_800249F0(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicl
     }
 
     gShadowHeapFlip = 0;
-    generate_shadow(1, 1, 0);
-    generate_shadow(2, 2, 0);
+    update_shadows(SHADOW_SCENERY, SHADOW_SCENERY, 0);
+    update_shadows(SHADOW_ACTORS, SHADOW_ACTORS, 0);
     gShadowHeapFlip = 1;
-    generate_shadow(1, 1, 0);
-    generate_shadow(2, 2, 0);
+    update_shadows(SHADOW_SCENERY, SHADOW_SCENERY, 0);
+    update_shadows(SHADOW_ACTORS, SHADOW_ACTORS, 0);
     gShadowHeapFlip = 0;
     if (gCurrentLevelHeader2->unkB7) {
         D_8011B0E1 = gCurrentLevelHeader2->unkB4;
@@ -284,9 +284,9 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     gSceneCurrVertexList = *vtx;
     gSceneCurrTriList = *tris;
     gSceneRenderSkyDome = TRUE;
-    D_8011B0C4 = 0;
+    gDisableShadows = FALSE;
     D_8011B0C0 = 0;
-    gIsNearCurrBBox = 0;
+    gIsNearCurrBBox = FALSE;
     numViewports = set_active_viewports_and_max(gScenePlayerViewports);
     if (is_game_paused()) {
         tempUpdateRate = 0;
@@ -296,13 +296,12 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     if (D_8011D384) {
         func_800B9C18(tempUpdateRate);
     }
-    generate_shadow(2, 2, updateRate);
+    update_shadows(SHADOW_ACTORS, SHADOW_ACTORS, updateRate);
     for (i = 0; i < 7; i++) {
         if ((s32) gCurrentLevelHeader2->unk74[i] != -1) {
             update_colour_cycle(gCurrentLevelHeader2->unk74[i], tempUpdateRate);
         }
     }
-
     if (gCurrentLevelHeader2->pulseLightData != (PulsatingLightData *) -1) {
         update_pulsating_light_data(gCurrentLevelHeader2->pulseLightData, tempUpdateRate);
     }
@@ -339,7 +338,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     update_fog(numViewports, tempUpdateRate);
     func_800AF404(tempUpdateRate);
     if (gCurrentLevelModel->numberOfAnimatedTextures > 0) {
-        func_80027E24(tempUpdateRate);
+        animate_level_textures(tempUpdateRate);
     }
     for (j = gSceneCurrentPlayerID = 0; j < numViewports; gSceneCurrentPlayerID++, j = gSceneCurrentPlayerID) {
         if (gCurrentLevelHeader2 && !gCurrentLevelHeader2 && !gCurrentLevelHeader2) {} // Fakematch
@@ -621,7 +620,10 @@ GLOBAL_ASM("asm/non_matchings/tracks/func_80027184.s")
 GLOBAL_ASM("asm/non_matchings/tracks/func_80027568.s")
 GLOBAL_ASM("asm/non_matchings/tracks/func_800278E8.s")
 
-void func_80027E24(s32 updateRate) {
+/**
+ * Handle the flipbook effect for level geometry textures.
+*/
+void animate_level_textures(s32 updateRate) {
     s32 segmentNumber, batchNumber;
     LevelModelSegment *segment;
     TextureHeader *texture;
@@ -635,7 +637,7 @@ void func_80027E24(s32 updateRate) {
             if (batch[batchNumber].flags & BATCH_FLAGS_TEXTURE_ANIM) {
                 if (batch[batchNumber].textureIndex != 0xFF) {
                     texture = gCurrentLevelModel->textures[batch[batchNumber].textureIndex].texture;
-                    if ((texture->numOfTextures != 0x100) && (texture->frameAdvanceDelay != 0)) {
+                    if (texture->numOfTextures != 0x100 && texture->frameAdvanceDelay) {
                         temp = batch[batchNumber].unk7 << 6;
                         if (batch[batchNumber].flags & BATCH_FLAGS_UNK80000000) {
                             temp |= batch[batchNumber].unk6;
@@ -686,6 +688,7 @@ void set_skydome_visbility(s32 renderSky) {
     gSceneRenderSkyDome = renderSky;
 }
 
+// init_skydome
 //https://decomp.me/scratch/jmbc1
 GLOBAL_ASM("asm/non_matchings/tracks/func_80028050.s")
 
@@ -1833,7 +1836,7 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
                 minZ = 32000;
                 minX = 32000;
                 
-                for (l = 0; l != 3; l++) {
+                for (l = 0; l < 3; l++) {
                     vert = &segment->vertices[segment->triangles[j].verticesArray[l + 1] + vertsOffset];
                     k = vert->x; vertX = k; // This is probably fake, but it matches.
                     vertZ = vert->z;
@@ -1850,13 +1853,13 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
                         minZ = vertZ;
                     }
                 }
-                boxDelta = ( (bbox->x2 - bbox->x1) >> 3) + 1;
+                boxDelta = ((bbox->x2 - bbox->x1) >> 3) + 1;
                 bit = 1;
                 boxMax = boxDelta + bbox->x1;
                 boxMin = bbox->x1;
                 val = 0;
                 for (k = 0; k < 8; k++) {
-                    if ((boxMax >= minX) && (maxX >= boxMin)) {
+                    if (boxMax >= minX && maxX >= boxMin) {
                         val |= bit;
                     }
                     boxMax += boxDelta;
@@ -1867,7 +1870,7 @@ void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbo
                 boxMax = boxDelta + bbox->z1;
                 boxMin = bbox->z1;
                 for (k = 0; k < 8; k++) {
-                    if ((boxMax >= minZ) && (maxZ >= boxMin)) {
+                    if (boxMax >= minZ && maxZ >= boxMin) {
                         val |= bit;
                     }
                     boxMax += boxDelta;
@@ -1922,10 +1925,10 @@ void render_object_shadow(Object *obj, ShadowData *shadow) {
     s32 offsetX;
     s32 alpha;
     
-    if (obj->segment.header->unk32) {
-        if (shadow->meshStart != -1 && D_8011B0C4 == 0) {
+    if (obj->segment.header->shadowGroup) {
+        if (shadow->meshStart != -1 && gDisableShadows == FALSE) {
             D_8011B0CC = gShadowHeapFlip;
-            if (obj->segment.header->unk32 == 1) {
+            if (obj->segment.header->shadowGroup == SHADOW_SCENERY) {
                 D_8011B0CC += 2;
             }
             i = shadow->meshStart;
@@ -1976,27 +1979,27 @@ void render_object_water_effects(Object *obj, WaterEffect *effect) {
     UNUSED s32 offsetX;
     UNUSED s32 offsetY;
 
-    if (obj->segment.header->unk36) {
-        if ((effect->meshStart != -1) && (D_8011B0C4 == 0)) {
-            D_8011B0D0 = gShadowHeapFlip;
+    if (obj->segment.header->waterEffectGroup) {
+        if (effect->meshStart != -1 && gDisableShadows == FALSE) {
+            gShadowIndex = gShadowHeapFlip;
             i = effect->meshStart;
-            if (obj->segment.header->unk36 == 1) {
-                D_8011B0D0 = gShadowHeapFlip;
-                D_8011B0D0 += 2;
+            if (obj->segment.header->waterEffectGroup == SHADOW_SCENERY) {
+                gShadowIndex = gShadowHeapFlip;
+                gShadowIndex += 2;
                 if (get_distance_to_active_camera(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position) > 768.0f) {
                     i = effect->meshEnd; // Just return.
                 }
             }
             flags = RENDER_FOG_ACTIVE | RENDER_Z_COMPARE;
-            gCurrentShadowTexture = gShadowHeapTextures[D_8011B0D0];
-            gCurrentShadowTris = gShadowHeapTris[D_8011B0D0];
-            gCurrentShadowVerts = gShadowHeapVerts[D_8011B0D0];
+            gCurrentShadowTexture = gShadowHeapTextures[gShadowIndex];
+            gCurrentShadowTris = gShadowHeapTris[gShadowIndex];
+            gCurrentShadowVerts = gShadowHeapVerts[gShadowIndex];
             while (i < effect->meshEnd) {
                 load_and_set_texture_no_offset(&gSceneCurrDisplayList, gCurrentShadowTexture[i].texture, flags);
                 offsetX = gCurrentShadowTexture[i].xOffset; // Fakematch
                 offsetY = gCurrentShadowTexture[i].yOffset; // Fakematch
-                numTris = gCurrentShadowTexture[i+1].xOffset - gCurrentShadowTexture[i].xOffset;
-                numVerts = gCurrentShadowTexture[i+1].yOffset - gCurrentShadowTexture[i].yOffset;
+                numTris = gCurrentShadowTexture[i + 1].xOffset - gCurrentShadowTexture[i].xOffset;
+                numVerts = gCurrentShadowTexture[i + 1].yOffset - gCurrentShadowTexture[i].yOffset;
                 tri = &gCurrentShadowTris[gCurrentShadowTexture[i].xOffset];
                 vtx = &gCurrentShadowVerts[gCurrentShadowTexture[i].yOffset];
                 gSPVertexDKR(gSceneCurrDisplayList++, OS_K0_TO_PHYSICAL(vtx), numVerts, 0);
@@ -2007,7 +2010,12 @@ void render_object_water_effects(Object *obj, WaterEffect *effect) {
     }
 }
 
-void generate_shadow(s32 arg0, s32 arg1, s32 updateRate) {
+/**
+ * Updates shadow and water effect properties for each relevant object in the scene.
+ * The first argument decides whether to update shadows for static objects or moving objects.
+ * Checks how many players there are before deciding whether to cast a shadow for that object.
+*/
+void update_shadows(s32 group, s32 waterGroup, s32 updateRate) {
     s32 objIndex;
     s32 objectCount;
     Object *obj;
@@ -2016,14 +2024,14 @@ void generate_shadow(s32 arg0, s32 arg1, s32 updateRate) {
     s32 radius;
     s32 numViewports;
     Object **objects;
-    s32 var_a0;
-    TextureHeader* shadowTex;
+    s32 skipShading;
+    TextureHeader* waterTex;
     ShadowData *shadow;
     WaterEffect *waterEffect;
     s32 playerIndex;
 
     D_8011B0CC = gShadowHeapFlip;
-    if (arg0 == 1) {
+    if (group == SHADOW_SCENERY) {
         D_8011B0CC += 2;
     }
     gCurrentShadowTris = (Triangle *) gShadowHeapTris[D_8011B0CC];
@@ -2043,58 +2051,58 @@ void generate_shadow(s32 arg0, s32 arg1, s32 updateRate) {
         if ((obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             continue;
         }
-        if (shadow != NULL && shadow->scale > 0.0f && arg0 == objHeader->unk32) {
+        if (shadow != NULL && shadow->scale > 0.0f && group == objHeader->shadowGroup) {
             shadow->meshStart = -1;
         } 
         if (obj->segment.trans.flags & OBJ_FLAGS_INVISIBLE) {
             shadow = NULL;
         }
-        if ((shadow != NULL && objHeader->unk32 == 2) || (waterEffect != NULL && objHeader->unk36 == 2)) {
+        if ((shadow != NULL && objHeader->shadowGroup == SHADOW_ACTORS) || (waterEffect != NULL && objHeader->waterEffectGroup == SHADOW_ACTORS)) {
             dist = get_distance_to_active_camera(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
             } else {
             dist = 0;
         }
-        if (shadow != NULL && shadow->scale > 0.0f && arg0 == objHeader->unk32) {
-            D_8011D0D4 = 1.0f;
+        if (shadow != NULL && shadow->scale > 0.0f && group == objHeader->shadowGroup) {
+            gShadowOpacity = 1.0f;
             shadow->meshStart = -1;
-            var_a0 = FALSE;
-            if (objHeader->unk32 == 2 && numViewports > ONE_PLAYER && numViewports <= FOUR_PLAYERS) {
+            skipShading = FALSE;
+            if (objHeader->shadowGroup == SHADOW_ACTORS && numViewports > ONE_PLAYER && numViewports <= FOUR_PLAYERS) {
                 if (obj->behaviorId == BHV_RACER) {
                     playerIndex = obj->unk64->racer.playerIndex;
                     if (playerIndex != PLAYER_COMPUTER) {
                         func_8002E234(obj, FALSE);
-                        var_a0 = TRUE;
+                        skipShading = TRUE;
                     }
                 } else if (obj->behaviorId == BHV_WEAPON) {
                     func_8002E234(obj, FALSE);
-                    var_a0 = TRUE;
+                    skipShading = TRUE;
                 }
             } else {
                 radius = objHeader->unk4A;
                 if (dist < radius) {
                     if (objHeader->unk4C < dist) {
-                        D_8011D0D4 = (radius - dist) / ( radius - objHeader->unk4C);
+                        gShadowOpacity = (radius - dist) / ( radius - objHeader->unk4C);
                     }
                     func_8002E234(obj, FALSE);
-                    var_a0 = TRUE;
+                    skipShading = TRUE;
                 }
             }
-            if ((!var_a0) && (obj->shading != NULL)) {
+            if (skipShading == FALSE && obj->shading != NULL) {
                 func_8002DE30(obj);
             }
         }
-        if (waterEffect != NULL && waterEffect->scale > 0.0f && arg1 == objHeader->unk36) {
+        if (waterEffect != NULL && waterEffect->scale > 0.0f && waterGroup == objHeader->waterEffectGroup) {
             waterEffect->meshStart = -1;
-            D_8011D0D4 = 1.0f;
-            shadowTex = waterEffect->texture;
-            if (shadowTex != NULL && updateRate != 0 && shadowTex->numOfTextures != 0x100) {
-                waterEffect->unkC += waterEffect->unkE;
-                while (shadowTex->numOfTextures < waterEffect->unkC) {
-                    waterEffect->unkC -= shadowTex->numOfTextures;
+            gShadowOpacity = 1.0f;
+            waterTex = waterEffect->texture;
+            if (waterTex != NULL && updateRate && waterTex->numOfTextures != 0x100) {
+                waterEffect->textureFrame += waterEffect->animationSpeed;
+                while (waterTex->numOfTextures < waterEffect->textureFrame) {
+                    waterEffect->textureFrame -= waterTex->numOfTextures;
                 } 
             }
                 
-            if (objHeader->unk32 == 2 && numViewports > ONE_PLAYER && numViewports <= FOUR_PLAYERS) {
+            if (objHeader->shadowGroup == SHADOW_ACTORS && numViewports > ONE_PLAYER && numViewports <= FOUR_PLAYERS) {
                 if (obj->behaviorId == BHV_RACER) {
                     playerIndex = obj->unk64->racer.playerIndex;
                     if (playerIndex != PLAYER_COMPUTER) {
@@ -2106,7 +2114,7 @@ void generate_shadow(s32 arg0, s32 arg1, s32 updateRate) {
             } else {
                 if (dist < objHeader->unk4A) {
                     if (objHeader->unk4C < dist) {
-                        D_8011D0D4 = (objHeader->unk4A - dist) / (objHeader->unk4A - objHeader->unk4C);
+                        gShadowOpacity = (objHeader->unk4A - dist) / (objHeader->unk4A - objHeader->unk4C);
                     }
                     func_8002E234(obj, TRUE);
                 }
@@ -2182,6 +2190,7 @@ void func_8002DE30(Object *obj) {
     }
 }
 
+// Generate shadow
 #ifdef NON_EQUIVALENT
 void func_8002E234(Object *obj, s32 bool) {
     s32 *inSegs;

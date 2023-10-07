@@ -519,7 +519,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     if (settings->worldId == WORLD_CENTRAL_AREA && var_s0 > 0 && gCurrentDefaultVehicle != -1) {
         vehicleId = gCurrentDefaultVehicle;
     }
-    func_8006DB20(vehicleId);
+    set_vehicle_id_for_menu(vehicleId);
     if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD) {
         if (settings->worldId - 1 >= 0) {
             var_s0 = 8 << (settings->worldId + 31);

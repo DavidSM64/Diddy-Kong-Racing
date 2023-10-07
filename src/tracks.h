@@ -46,6 +46,12 @@ enum TriangleBatchFlags {
     BATCH_FLAGS_UNK80000000 = (1 << 31),
 };
 
+enum ShadowUpdate {
+	SHADOW_NONE,
+	SHADOW_SCENERY,
+	SHADOW_ACTORS
+};
+
 typedef struct unk8011B120_unkC {
     f32 unk0;
     f32 unk4;
@@ -156,7 +162,7 @@ void reset_fog(s32 playerID);
 void update_fog(s32 playerID, s32 updateRate);
 void apply_fog(s32 playerID);
 void compute_scene_camera_transform_matrix(void);
-void func_80027E24(s32 updateRate);
+void animate_level_textures(s32 updateRate);
 s32 check_if_inside_segment(Object *obj, s32 segmentIndex);
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos);
 void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, s32 *segmentsOrderIndex);
@@ -167,7 +173,7 @@ s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb);
 s32 check_if_in_draw_range(Object *obj);
 void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbox, s32 arg2);
 void draw_gradient_background(void);
-void generate_shadow(s32 arg0, s32 arg1, s32 arg2);
+void update_shadows(s32 group, s32 waterGroup, s32 arg2);
 void obj_loop_fogchanger(Object* obj);
 void initialise_player_viewport_vars(s32 updateRate);
 s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation);

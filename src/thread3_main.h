@@ -24,6 +24,54 @@ enum LevelLoadType {
     LEVEL_LOAD_FUTURE_FUN_LAND,
 };
 
+enum LevelLoadContext {
+    LEVEL_CONTEXT_NONE,
+    LEVEL_CONTEXT_TRACK_SELECT,
+    LEVEL_CONTEXT_RESULTS,
+    LEVEL_CONTEXT_TROPHY_ROUND,
+    LEVEL_CONTEXT_TROPHY_RESULTS,
+    LEVEL_CONTEXT_UNUSED,
+    LEVEL_CONTEXT_CHARACTER_SELECT,
+    LEVEL_CONTEXT_UNK7,
+    LEVEL_CONTEXT_CREDITS
+};
+
+enum MenuResult {
+    MENU_RESULT_CONTINUE,
+    MENU_RESULT_UNK1,
+    MENU_RESULT_UNK2,
+    MENU_RESULT_UNK3,
+    MENU_RESULT_UNK4,
+    MENU_RESULT_UNK5,
+    MENU_RESULT_UNK6,
+    MENU_RESULT_UNK7,
+    MENU_RESULT_UNK8,
+    MENU_RESULT_UNK9,
+    MENU_RESULT_UNK10,
+    MENU_RESULT_UNK11,
+    MENU_RESULT_UNK12,
+    MENU_RESULT_UNK13,
+    MENU_RESULT_UNK14,
+    MENU_RESULT_UNK15,
+    MENU_RESULT_UNK16,
+    MENU_RESULT_UNK17,
+    MENU_RESULT_UNK18,
+};
+
+enum MenuResultFlags {
+    MENU_RESULT_FLAGS_0,
+    MENU_RESULT_FLAGS_1 = (1 << 0),
+    MENU_RESULT_FLAGS_2 = (1 << 1),
+    MENU_RESULT_FLAGS_4 = (1 << 2),
+    MENU_RESULT_FLAGS_8 = (1 << 3),
+    MENU_RESULT_FLAGS_10 = (1 << 4),
+    MENU_RESULT_FLAGS_20 = (1 << 5),
+    MENU_RESULT_FLAGS_40 = (1 << 6),
+    MENU_RESULT_FLAGS_80 = (1 << 7),
+    MENU_RESULT_FLAGS_100 = (1 << 8),
+    MENU_RESULT_FLAGS_200 = (1 << 9),
+};
+
 /**
  * Bit 00: Read Eeprom Data flap times
  * Bit 01: Read Eeprom Data course times
@@ -62,24 +110,24 @@ extern s32 gSaveDataFlags;
 void thread3_main(UNUSED void *unused);
 void init_game(void);
 void main_game_loop(void);
-void func_8006CAE4(s32 numPlayers, s32 trackID, Vehicle vehicle);
+void load_next_ingame_level(s32 numPlayers, s32 trackID, Vehicle vehicle);
 void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId);
 void unload_level_game(void);
-void func_8006D8A4(void);
+void set_drumstick_unlock_transition(void);
 void func_8006D8E0(s32 arg0);
 void func_8006D8F0(s32 arg0);
 void func_8006D968(s8 *arg0);
 RenderContext get_render_context(void);
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId);
 void set_level_default_vehicle(Vehicle arg0);
-void func_8006DB20(Vehicle vehicleId);
+void set_vehicle_id_for_menu(Vehicle vehicleId);
 Vehicle get_level_default_vehicle(void);
 void load_level_menu(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicleId, s32 cutsceneId);
 void unload_level_menu(void);
 void update_menu_scene(s32 arg0);
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId);
 void calc_and_alloc_heap_for_settings(void);
-void func_8006E5BC(void);
+void init_racer_headers(void);
 void func_8006E770(Settings *settings, s32 arg1);
 void func_8006E994(Settings *settings);
 void func_8006EA58(void);
@@ -107,7 +155,7 @@ void func_8006F20C(void);
 void begin_trophy_race_teleport(void);
 void begin_lighthouse_rocket_cutscene(void);
 void begin_level_teleport(s32 arg0);
-void func_8006F388(u8 arg0);
+void set_pause_lockout_timer(u8 time);
 void func_8006F398(void);
 void set_frame_blackout_timer(void);
 void pre_intro_loop(void);
@@ -118,6 +166,6 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
 void init_level_globals(void);
 void alloc_displaylist_heap(s32 numberOfPlayers);
 void default_alloc_displaylist_heap(void);
-void func_8006DCF8(s32 updateRate);
+void menu_logic_loop(s32 updateRate);
 
 #endif

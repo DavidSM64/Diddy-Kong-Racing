@@ -5782,7 +5782,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
         }
         racer->transitionTimer = 60 - updateRate;
     }
-    func_8006F388(1);
+    set_pause_lockout_timer(1);
     if (racer->transitionTimer > 0) {
         racer->transitionTimer -= updateRate;
         if (racer->transitionTimer <= 0) {

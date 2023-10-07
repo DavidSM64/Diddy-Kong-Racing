@@ -1367,14 +1367,14 @@ s32 init_object_shadow(Object *obj, ShadowData *shadow) {
     obj->shadow = shadow;
     shadow->texture = NULL;
     objHeader = ((ObjectSegment *) obj)->header;
-    if (objHeader->unk32) {
+    if (objHeader->shadowGroup) {
         shadow->texture = load_texture((s32) ((ObjectHeader *) objHeader)->unk34);
         objHeader = ((ObjectSegment *) obj)->header;
     }
     shadow->scale = objHeader->shadowScale;
     shadow->meshStart = -1;
     D_8011AE50 = shadow->texture;
-    if (((ObjectSegment *) obj)->header->unk32 && shadow->texture == NULL) {
+    if (((ObjectSegment *) obj)->header->shadowGroup && shadow->texture == NULL) {
         return 0;
     }
     return sizeof(ShadowData);
@@ -1383,15 +1383,15 @@ s32 init_object_shadow(Object *obj, ShadowData *shadow) {
 s32 func_8000FC6C(Object *obj, WaterEffect *shadow) {
     obj->waterEffect = shadow;
     shadow->scale = obj->segment.header->unk8;
-    shadow->unkC = 0;
-    shadow->unkE = obj->segment.header->unk0 >> 8;
+    shadow->textureFrame = 0;
+    shadow->animationSpeed = obj->segment.header->unk0 >> 8;
     shadow->texture = NULL;
-    if (obj->segment.header->unk36) {
+    if (obj->segment.header->waterEffectGroup) {
         shadow->texture = load_texture(obj->segment.header->unk38);
     }
     shadow->meshStart = -1;
     D_8011AE54 = shadow->texture;
-    if (obj->segment.header->unk36 && shadow->texture == NULL) {
+    if (obj->segment.header->waterEffectGroup && shadow->texture == NULL) {
         return 0;
     }
     return sizeof(WaterEffect);
@@ -4149,7 +4149,7 @@ void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Anim
     ObjectSegment *seg;
     ObjectTransform *animObjTrans;
 
-    animObjTrans = animObj->unk1C;
+    animObjTrans = (ObjectTransform *) animObj->unk1C;
     if (obj->behaviorId == BHV_CAMERA_ANIMATION) {
         animObj->unk44 = D_8011AD3E;
         D_8011AD3E++;
@@ -4332,7 +4332,7 @@ void init_racer_for_challenge(s32 vehicleID) {
     racer->lap = 0;
     racer->unk1BA = 0;
     set_taj_challenge_type(vehicleID);
-    func_8006F388(10);
+    set_pause_lockout_timer(10);
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80022948.s")

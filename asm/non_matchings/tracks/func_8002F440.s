@@ -104,9 +104,9 @@ glabel func_8002F440
 /* 0301B8 8002F5B8 00000000 */  nop   
 .L8002F5BC:
 /* 0301BC 8002F5BC 44975000 */  mtc1  $s7, $f10
-/* 0301C0 8002F5C0 3C018012 */  lui   $at, %hi(D_8011D0D4) # $at, 0x8012
+/* 0301C0 8002F5C0 3C018012 */  lui   $at, %hi(gShadowOpacity) # $at, 0x8012
 /* 0301C4 8002F5C4 46805220 */  cvt.s.w $f8, $f10
-/* 0301C8 8002F5C8 C426D0D4 */  lwc1  $f6, %lo(D_8011D0D4)($at)
+/* 0301C8 8002F5C8 C426D0D4 */  lwc1  $f6, %lo(gShadowOpacity)($at)
 /* 0301CC 8002F5CC 3C198012 */  lui   $t9, %hi(D_8011C230) # $t9, 0x8012
 /* 0301D0 8002F5D0 46064102 */  mul.s $f4, $f8, $f6
 /* 0301D4 8002F5D4 8F39C230 */  lw    $t9, %lo(D_8011C230)($t9)

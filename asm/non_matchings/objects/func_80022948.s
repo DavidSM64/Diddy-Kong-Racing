@@ -233,7 +233,7 @@ glabel func_80022948
 /* 0238D0 80022CD0 1420FFEC */  bnez  $at, .L80022C84
 /* 0238D4 80022CD4 24630004 */   addiu $v1, $v1, 4
 .L80022CD8:
-/* 0238D8 80022CD8 0C01BCE2 */  jal   func_8006F388
+/* 0238D8 80022CD8 0C01BCE2 */  jal   set_pause_lockout_timer
 /* 0238DC 80022CDC 24040014 */   li    $a0, 20
 /* 0238E0 80022CE0 3C04800E */  lui   $a0, %hi(D_800DC6F0) # $a0, 0x800e
 /* 0238E4 80022CE4 0C030076 */  jal   transition_begin
