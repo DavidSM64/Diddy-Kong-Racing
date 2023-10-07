@@ -8800,10 +8800,10 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                     if (sp34 >= 3) {
                         menu_init(MENU_TRACK_SELECT);
                     } else {
-                        ret = MENU_RESULT_FLAGS_100 | MENU_RESULT_UNK5;
+                        ret = MENU_RESULT_FLAGS_100 | MENU_RESULT_TRACKS_MODE;
                     }
                 } else {
-                    ret = MENU_RESULT_UNK1;
+                    ret = MENU_RESULT_RETURN_TO_GAME;
                     settings->courseId = get_hub_area_id(settings->worldId);
                     if (D_800DF450 != 0) {
                         D_800DF450 = 0;

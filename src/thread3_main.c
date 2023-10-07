@@ -951,7 +951,7 @@ void menu_logic_loop(s32 updateRate) {
         gIsPaused = FALSE;
         gPostRaceViewPort = NULL;
         switch (menuLoopResult & 0x7F) {
-            case MENU_RESULT_UNK5:
+            case MENU_RESULT_TRACKS_MODE:
                 load_menu_with_level_background(MENU_TRACK_SELECT, SPECIAL_MAP_ID_NO_LEVEL, 1);
                 break;
             case MENU_RESULT_UNK14:
@@ -962,7 +962,7 @@ void menu_logic_loop(s32 updateRate) {
                 load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, gLevelDefaultVehicleID);
                 safe_mark_write_save_file(get_save_file_index());
                 break;
-            case MENU_RESULT_UNK1:
+            case MENU_RESULT_RETURN_TO_GAME:
                 gGameCurrentEntrance = 0;
                 gPlayableMapId = D_80121250[0];
                 gGameCurrentCutscene = CUTSCENE_ID_UNK_64;
