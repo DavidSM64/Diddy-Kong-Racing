@@ -2025,7 +2025,7 @@ void render_wrong_way_text(Object_Racer *obj, s32 updateRate) {
     func_8007BF1C(FALSE);
 }
 
-void func_800A5F18(Object_Racer* racer) {
+void func_800A5F18(Object_Racer *racer) {
     s32 sp24;
 
     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk5E0);
