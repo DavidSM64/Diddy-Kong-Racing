@@ -535,58 +535,55 @@ void obj_loop_torch_mist(Object *obj, s32 updateRate) {
 void obj_init_effectbox(UNUSED Object *obj, UNUSED LevelObjectEntry_EffectBox *entry) {
 }
 
-#ifdef NON_MATCHING
-// Has regalloc issues
-
-void obj_loop_effectbox(Object *obj, UNUSED s32 updateRate) {
-    Object **objList;
-    Object_EffectBox *curObj64;
-    s32 numberOfObjects;
-    LevelObjectEntry_EffectBox *level_entry;
+void obj_loop_effectbox(Object *effectBoxObj, s32 arg1) {
+    Object **racers;
+    LevelObjectEntry_EffectBox *effectBoxEntry;
+    s32 numRacers;
+    Object *curRacerObj;
+    Object_Racer *curRacer;
+    f32 sinAngle;
+    f32 zDiff;
+    f32 yExtentsHalf;
+    f32 xDiff;
+    f32 yExtents;
+    f32 cosAngle;
+    f32 xExtents;
+    f32 zExtents;
+    f32 yDiff;
     s32 i;
-    f32 diffX;
-    f32 diffY;
-    f32 diffZ;
-    f32 temp0;
-    f32 temp1;
-    f32 temp2;
-    f32 temp3;
-    f32 temp4;
-    f32 temp5;
 
-    level_entry = &obj->segment.level_entry->effectBox;
-    objList = get_racer_objects(&numberOfObjects);
-    temp0 = coss_f((level_entry->unkB << 8) * -1);
-    temp1 = sins_f((level_entry->unkB << 8) * -1);
-    temp2 = level_entry->unk8 * 3;
-    temp3 = level_entry->unk9 * 3;
-    temp4 = level_entry->unkA * 3;
-    for (i = 0; i < numberOfObjects; i++)
-    {
-        diffX = objList[i]->segment.trans.x_position - obj->segment.trans.x_position;
-        diffY = objList[i]->segment.trans.y_position - obj->segment.trans.y_position;
-        diffZ = objList[i]->segment.trans.z_position - obj->segment.trans.z_position;
-        if ((-temp3 < diffY) && (diffY < temp3)) {
-            temp5 = (diffX * temp0) + (diffZ * temp1);
-            if ((-temp2 < temp5) && (temp5 < temp2)) {
-                temp5 = (-diffX * temp1) + (diffZ * temp0);
-                if ((-temp4 < temp5) && (temp5 < temp4)) {
-                    curObj64 = &objList[i]->unk64->effect_box;
-                    curObj64->unk1FE = level_entry->unkC;
-                    curObj64->unk1FF = level_entry->unkD;
-                    temp5 = temp3 / 2;
-                    if ((temp5 < diffY) && (curObj64->unk1FE == 1)) {
-                        temp5 = (1.0 - ((diffY - temp5) / temp5));
-                        curObj64->unk1FF *= temp5;
+    effectBoxEntry = (LevelObjectEntry_EffectBox *)effectBoxObj->segment.level_entry;
+    racers = get_racer_objects(&numRacers);
+    cosAngle = coss_f(-(effectBoxEntry->unkB * 256));
+    sinAngle = sins_f(-(effectBoxEntry->unkB * 256));
+    xExtents = (f32) (effectBoxEntry->unk8 * 3);
+    yExtents = (f32) (effectBoxEntry->unk9 * 3);
+    zExtents = (f32) (effectBoxEntry->unkA * 3);
+    for(i = 0; i < numRacers; i++) {
+        curRacerObj = racers[i];
+        xDiff = curRacerObj->segment.trans.x_position - effectBoxObj->segment.trans.x_position;
+        yDiff = curRacerObj->segment.trans.y_position - effectBoxObj->segment.trans.y_position;
+        zDiff = curRacerObj->segment.trans.z_position - effectBoxObj->segment.trans.z_position;
+        if ((-yExtents < yDiff) && (yDiff < yExtents)) {
+            yExtentsHalf = (xDiff * cosAngle) + (zDiff * sinAngle);
+            if ((-xExtents < yExtentsHalf) && (yExtentsHalf < xExtents)) {
+                zDiff = (-xDiff * sinAngle) + (zDiff * cosAngle);
+                if ((-zExtents < zDiff) && (zDiff < zExtents)) {
+                    yExtentsHalf = yExtents / 2;
+                    curRacer = &curRacerObj->unk64->racer;
+                    curRacer->unk1FE = effectBoxEntry->unkC;
+                    curRacer->unk1FF = effectBoxEntry->unkD;
+                    if ((yExtentsHalf < yDiff) && (curRacer->unk1FE == 1)) {
+                        xDiff = (yDiff - yExtentsHalf) / yExtentsHalf;
+                        yDiff = (1.0 - xDiff);
+                        curRacer->unk1FF *= yDiff;
                     }
                 }
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_effectbox.s")
-#endif
+
 
 /**
  * Trophy Cabinet loop behaviour.
