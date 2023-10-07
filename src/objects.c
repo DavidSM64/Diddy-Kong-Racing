@@ -2142,7 +2142,7 @@ void render_3d_model(Object *obj) {
         }
         if (obj->segment.header->unk71) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->shading->unk18, obj->shading->unk19, obj->shading->unk1A, alpha);
-            func_8007B43C();
+            enable_primitive_colour();
         } else if (hasOpacity) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, intensity, intensity, intensity, alpha);
         } else {
@@ -2159,7 +2159,7 @@ void render_3d_model(Object *obj) {
             } else {
                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
-            func_8007B454();
+            disable_primitive_colour();
         }
         if (obj->unk60 != NULL) {
             obj60_unk0 = obj->unk60->unk0;
@@ -2237,11 +2237,11 @@ void render_3d_model(Object *obj) {
         if (meshBatch != -1) {
             if (obj->segment.header->unk71) {
                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->shading->unk18, obj->shading->unk19, obj->shading->unk1A, alpha);
-                func_8007B43C();
+                enable_primitive_colour();
             }
             func_800143A8(objModel, obj, meshBatch, 4, spB0);
             if (obj->segment.header->unk71) {
-                func_8007B454();
+                disable_primitive_colour();
             }
         }
         if (hasOpacity || obj->segment.header->unk71) {

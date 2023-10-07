@@ -71,8 +71,8 @@ ObjectSegment *gSceneActiveCamera;
 s32 gSceneCurrentPlayerID;
 Object *gSkydomeSegment;
 UNUSED s32 gIsNearCurrBBox; // Set to true if the current visible segment is close to the camera. Never actually used though.
-s32 D_8011B0C0;
-s32 gDisableShadows;
+UNUSED s32 D_8011B0C0; // Set to 0 then never read.
+UNUSED s32 gDisableShadows; // Never not 0.
 s32 gShadowHeapFlip; // Flips between 0 and 1 to prevent incorrect access between frames.
 s32 D_8011B0CC;
 s32 gShadowIndex;
@@ -137,10 +137,10 @@ UNUSED f32 gPrevCameraY; // Set but never read
 UNUSED f32 gPrevCameraZ; // Set but never read
 Triangle *gShadowHeapTris[4];
 Triangle *gCurrentShadowTris;
-s32 D_8011D334;
+UNUSED s32 D_8011D334;
 Vertex *gShadowHeapVerts[4];
 Vertex *gCurrentShadowVerts;
-s32 D_8011D34C;
+UNUSED s32 D_8011D34C;
 DrawTexture *gShadowHeapTextures[4];
 DrawTexture *gCurrentShadowTexture;
 s32 D_8011D364;
@@ -187,8 +187,11 @@ s32 set_scene_viewport_num(s32 numPorts) {
     return 0;
 }
 
-// track_init
-void func_800249F0(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, u32 entranceId, u32 collectables, u32 arg6) {
+/**
+ * Initialises the level.
+ * Allocates RAM to load generate the level geometry, spawn objects and generate shadows.
+*/
+void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, u32 entranceId, u32 collectables, u32 arg6) {
     s32 i;
 
     gCurrentLevelHeader2 = get_current_level_header();
@@ -252,11 +255,11 @@ void func_800249F0(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicl
     }
 
     gShadowHeapFlip = 0;
-    update_shadows(SHADOW_SCENERY, SHADOW_SCENERY, 0);
-    update_shadows(SHADOW_ACTORS, SHADOW_ACTORS, 0);
+    update_shadows(SHADOW_SCENERY, SHADOW_SCENERY, LOGIC_NULL);
+    update_shadows(SHADOW_ACTORS, SHADOW_ACTORS, LOGIC_NULL);
     gShadowHeapFlip = 1;
-    update_shadows(SHADOW_SCENERY, SHADOW_SCENERY, 0);
-    update_shadows(SHADOW_ACTORS, SHADOW_ACTORS, 0);
+    update_shadows(SHADOW_SCENERY, SHADOW_SCENERY, LOGIC_NULL);
+    update_shadows(SHADOW_ACTORS, SHADOW_ACTORS, LOGIC_NULL);
     gShadowHeapFlip = 0;
     if (gCurrentLevelHeader2->unkB7) {
         D_8011B0E1 = gCurrentLevelHeader2->unkB4;
@@ -1646,6 +1649,7 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002BAB0.s")
 
 #ifdef NON_MATCHING
+// generate_track
 // Loads a level track from the index in the models table.
 // Has regalloc issues.
 void func_8002C0C4(s32 modelId) {
