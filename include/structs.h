@@ -809,8 +809,8 @@ typedef struct ObjectInteraction {
 typedef struct ShadowData {
     f32 scale;
     TextureHeader *texture;
-    s16 unk8;
-    s16 unkA;
+    s16 meshStart;
+    s16 meshEnd;
     s16 unkC;
     s16 unkE;
 } ShadowData;
@@ -818,8 +818,8 @@ typedef struct ShadowData {
 typedef struct WaterEffect {
     f32 scale;
     TextureHeader *texture;
-    s16 unk8;
-    s16 unkA;
+    s16 meshStart;
+    s16 meshEnd;
     s16 unkC;
     s16 unkE;
     s16 unk10;

@@ -110,16 +110,16 @@ glabel func_8002F440
 /* 0301CC 8002F5CC 3C198012 */  lui   $t9, %hi(D_8011C230) # $t9, 0x8012
 /* 0301D0 8002F5D0 46064102 */  mul.s $f4, $f8, $f6
 /* 0301D4 8002F5D4 8F39C230 */  lw    $t9, %lo(D_8011C230)($t9)
-/* 0301D8 8002F5D8 3C158012 */  lui   $s5, %hi(D_8011D330) # $s5, 0x8012
-/* 0301DC 8002F5DC 3C148012 */  lui   $s4, %hi(D_8011D348) # $s4, 0x8012
+/* 0301D8 8002F5D8 3C158012 */  lui   $s5, %hi(gCurrentShadowTris) # $s5, 0x8012
+/* 0301DC 8002F5DC 3C148012 */  lui   $s4, %hi(gCurrentShadowVerts) # $s4, 0x8012
 /* 0301E0 8002F5E0 4458F800 */  cfc1  $t8, $31
 /* 0301E4 8002F5E4 24120019 */  li    $s2, 25
 /* 0301E8 8002F5E8 37010003 */  ori   $at, $t8, 3
 /* 0301EC 8002F5EC 38210002 */  xori  $at, $at, 2
 /* 0301F0 8002F5F0 44C1F800 */  ctc1  $at, $31
-/* 0301F4 8002F5F4 2694D348 */  addiu $s4, %lo(D_8011D348) # addiu $s4, $s4, -0x2cb8
+/* 0301F4 8002F5F4 2694D348 */  addiu $s4, %lo(gCurrentShadowVerts) # addiu $s4, $s4, -0x2cb8
 /* 0301F8 8002F5F8 460022A4 */  cvt.w.s $f10, $f4
-/* 0301FC 8002F5FC 26B5D330 */  addiu $s5, %lo(D_8011D330) # addiu $s5, $s5, -0x2cd0
+/* 0301FC 8002F5FC 26B5D330 */  addiu $s5, %lo(gCurrentShadowTris) # addiu $s5, $s5, -0x2cd0
 /* 030200 8002F600 44175000 */  mfc1  $s7, $f10
 /* 030204 8002F604 44D8F800 */  ctc1  $t8, $31
 /* 030208 8002F608 1B20010A */  blez  $t9, .L8002FA34
@@ -138,11 +138,11 @@ glabel func_8002F440
 /* 03023C 8002F63C 240B00FF */  li    $t3, 255
 .L8002F640:
 /* 030240 8002F640 91A20000 */  lbu   $v0, ($t5)
-/* 030244 8002F644 3C038012 */  lui   $v1, %hi(D_8011D360) # $v1, 0x8012
+/* 030244 8002F644 3C038012 */  lui   $v1, %hi(gCurrentShadowTexture) # $v1, 0x8012
 /* 030248 8002F648 00527821 */  addu  $t7, $v0, $s2
 /* 03024C 8002F64C 29E10018 */  slti  $at, $t7, 0x18
 /* 030250 8002F650 14200019 */  bnez  $at, .L8002F6B8
-/* 030254 8002F654 2463D360 */   addiu $v1, %lo(D_8011D360) # addiu $v1, $v1, -0x2ca0
+/* 030254 8002F654 2463D360 */   addiu $v1, %lo(gCurrentShadowTexture) # addiu $v1, $v1, -0x2ca0
 /* 030258 8002F658 8FD90000 */  lw    $t9, ($fp)
 /* 03025C 8002F65C 8C780000 */  lw    $t8, ($v1)
 /* 030260 8002F660 3C0E8012 */  lui   $t6, %hi(D_8011D0C0) # $t6, 0x8012

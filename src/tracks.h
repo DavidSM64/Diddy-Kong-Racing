@@ -23,7 +23,7 @@ enum TriangleBatchFlags {
     BATCH_FLAGS_HIDDEN = (1 << 8),
     BATCH_FLAGS_UNK00000200 = (1 << 9),
     BATCH_FLAGS_UNK00000400 = (1 << 10),
-    BATCH_FLAGS_UNK00000800 = (1 << 11),
+    BATCH_FLAGS_SOLID_GEOMETRY = (1 << 11),
     BATCH_FLAGS_UNK00001000 = (1 << 12),
     BATCH_FLAGS_WATER =             (1 << 13),
     BATCH_FLAGS_FORCE_NO_SHADOWS =  (1 << 14),
@@ -167,14 +167,14 @@ s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb);
 s32 check_if_in_draw_range(Object *obj);
 void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbox, s32 arg2);
 void draw_gradient_background(void);
-void func_8002D8DC(s32 arg0, s32 arg1, s32 arg2);
+void generate_shadow(s32 arg0, s32 arg1, s32 arg2);
 void obj_loop_fogchanger(Object* obj);
 void initialise_player_viewport_vars(s32 updateRate);
 s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation);
 void render_level_segment(s32 segmentId, s32 nonOpaque);
 void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, TriangleList** tris, s32 updateRate);
-void func_80030664(s32 fogIdx, s16 near, s16 far, u8 red, u8 green, u8 blue);
-void func_80030DE0(s32 fogIdx, s32 red, s32 green, s32 blue, s32 near, s32 far, s32 switchTimer);
+void set_fog(s32 fogIdx, s16 near, s16 far, u8 red, u8 green, u8 blue);
+void slowly_change_fog(s32 fogIdx, s32 red, s32 green, s32 blue, s32 near, s32 far, s32 switchTimer);
 s32 func_8002FD74(f32 x0, f32 z0, f32 x1, f32 x2, s32 count, Vec4f *arg5);
 
 void free_track(void);

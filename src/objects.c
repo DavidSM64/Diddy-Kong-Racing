@@ -1372,7 +1372,7 @@ s32 init_object_shadow(Object *obj, ShadowData *shadow) {
         objHeader = ((ObjectSegment *) obj)->header;
     }
     shadow->scale = objHeader->shadowScale;
-    shadow->unk8 = -1;
+    shadow->meshStart = -1;
     D_8011AE50 = shadow->texture;
     if (((ObjectSegment *) obj)->header->unk32 && shadow->texture == NULL) {
         return 0;
@@ -1389,7 +1389,7 @@ s32 func_8000FC6C(Object *obj, WaterEffect *shadow) {
     if (obj->segment.header->unk36) {
         shadow->texture = load_texture(obj->segment.header->unk38);
     }
-    shadow->unk8 = -1;
+    shadow->meshStart = -1;
     D_8011AE54 = shadow->texture;
     if (obj->segment.header->unk36 && shadow->texture == NULL) {
         return 0;
