@@ -5587,8 +5587,8 @@ void allocate_ghost_data(void) {
     D_8011D5A0[0] = 0;
     D_8011D5A0[1] = 0;
     D_8011D5A0[2] = 0;
-    D_8011D5A8[0] = 0;
-    D_8011D5A8[1] = 0;
+    D_8011D5A8[0] = CONTPAK_ERROR_NONE;
+    D_8011D5A8[1] = CONTPAK_ERROR_NONE;
     D_8011D59D = 0;
     D_8011D5AC = -1;
 }
@@ -5596,7 +5596,7 @@ void allocate_ghost_data(void) {
 void func_80059944(void) {
     D_8011D59C = D_8011D59D;
     D_8011D5A0[D_8011D59C] = 0;
-    D_8011D5A8[D_8011D59C] = 0;
+    D_8011D5A8[D_8011D59C] = CONTPAK_ERROR_NONE;
     D_8011D59E = 0;
 }
 
@@ -5682,7 +5682,7 @@ void func_80059BF0(Object *obj, s32 updateRate) {
         D_8011D59E += 30;
         if (D_8011D5A0[D_8011D59C] >= 360) {
             if (!is_postrace_viewport_active()) {
-                D_8011D5A8[D_8011D59C] = 1;
+                D_8011D5A8[D_8011D59C] = CONTPAK_ERROR_UNKNOWN;
             }
             return;
         }

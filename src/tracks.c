@@ -2556,6 +2556,7 @@ void apply_fog(s32 playerID) {
 /**
  * Sets the active viewport's fog target when passed through.
  * Used in courses to make less, or more dense.
+ * @bug: Timer doesn't account for PAL, meaning fog will scroll 20% slower on PAL systems.
 */
 void obj_loop_fogchanger(Object *obj) {
     s32 nearTemp;
@@ -2648,6 +2649,7 @@ void obj_loop_fogchanger(Object *obj) {
 
 /**
  * Set the fog properties from the current values to the target, over a time specified by switchTimer.
+ * @bug: Timer doesn't account for PAL, meaning fog will scroll 20% slower on PAL systems.
 */
 void slowly_change_fog(s32 fogIdx, s32 red, s32 green, s32 blue, s32 near, s32 far, s32 switchTimer) {
     s32 temp;

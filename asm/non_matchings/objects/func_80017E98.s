@@ -1,7 +1,7 @@
 glabel func_80017E98
 /* 018A98 80017E98 27BDFEE8 */  addiu $sp, $sp, -0x118
-/* 018A9C 80017E9C 3C038012 */  lui   $v1, %hi(objCount) # $v1, 0x8012
-/* 018AA0 80017EA0 8C63AE5C */  lw    $v1, %lo(objCount)($v1)
+/* 018A9C 80017E9C 3C038012 */  lui   $v1, %hi(gObjectCount) # $v1, 0x8012
+/* 018AA0 80017EA0 8C63AE5C */  lw    $v1, %lo(gObjectCount)($v1)
 /* 018AA4 80017EA4 AFB30044 */  sw    $s3, 0x44($sp)
 /* 018AA8 80017EA8 3C018012 */  lui   $at, %hi(gNumberOfCheckpoints) # $at, 0x8012
 /* 018AAC 80017EAC AFBF005C */  sw    $ra, 0x5c($sp)
@@ -74,7 +74,7 @@ glabel func_80017E98
 /* 018BB0 80017FB0 8E8B0000 */  lw    $t3, ($s4)
 /* 018BB4 80017FB4 01850019 */  multu $t4, $a1
 /* 018BB8 80017FB8 240FFFFF */  li    $t7, -1
-/* 018BBC 80017FBC 3C038012 */  lui   $v1, %hi(objCount) # $v1, 0x8012
+/* 018BBC 80017FBC 3C038012 */  lui   $v1, %hi(gObjectCount) # $v1, 0x8012
 /* 018BC0 80017FC0 00006812 */  mflo  $t5
 /* 018BC4 80017FC4 016D7021 */  addu  $t6, $t3, $t5
 /* 018BC8 80017FC8 A5C4002C */  sh    $a0, 0x2c($t6)
@@ -88,7 +88,7 @@ glabel func_80017E98
 /* 018BE8 80017FE8 00000000 */  nop   
 /* 018BEC 80017FEC 25AE0001 */  addiu $t6, $t5, 1
 /* 018BF0 80017FF0 ACEE0000 */  sw    $t6, ($a3)
-/* 018BF4 80017FF4 8C63AE5C */  lw    $v1, %lo(objCount)($v1)
+/* 018BF4 80017FF4 8C63AE5C */  lw    $v1, %lo(gObjectCount)($v1)
 /* 018BF8 80017FF8 00000000 */  nop   
 /* 018BFC 80017FFC 0263082A */  slt   $at, $s3, $v1
 .L80018000:

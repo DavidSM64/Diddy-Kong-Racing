@@ -200,8 +200,8 @@ glabel func_80022948
 /* 023854 80022C54 240D0002 */  li    $t5, 2
 /* 023858 80022C58 A18D0012 */  sb    $t5, 0x12($t4)
 /* 02385C 80022C5C 3C048012 */  lui   $a0, %hi(D_8011AE60) # $a0, 0x8012
-/* 023860 80022C60 3C058012 */  lui   $a1, %hi(objCount) # $a1, 0x8012
-/* 023864 80022C64 8CA5AE5C */  lw    $a1, %lo(objCount)($a1)
+/* 023860 80022C60 3C058012 */  lui   $a1, %hi(gObjectCount) # $a1, 0x8012
+/* 023864 80022C64 8CA5AE5C */  lw    $a1, %lo(gObjectCount)($a1)
 /* 023868 80022C68 8C84AE60 */  lw    $a0, %lo(D_8011AE60)($a0)
 /* 02386C 80022C6C 2407003E */  li    $a3, 62
 /* 023870 80022C70 0085082A */  slt   $at, $a0, $a1
@@ -225,8 +225,8 @@ glabel func_80022948
 /* 0238B4 80022CB4 14E90006 */  bne   $a3, $t1, .L80022CD0
 /* 0238B8 80022CB8 0085082A */   slt   $at, $a0, $a1
 /* 0238BC 80022CBC AE020154 */  sw    $v0, 0x154($s0)
-/* 0238C0 80022CC0 3C058012 */  lui   $a1, %hi(objCount) # $a1, 0x8012
-/* 0238C4 80022CC4 8CA5AE5C */  lw    $a1, %lo(objCount)($a1)
+/* 0238C0 80022CC0 3C058012 */  lui   $a1, %hi(gObjectCount) # $a1, 0x8012
+/* 0238C4 80022CC4 8CA5AE5C */  lw    $a1, %lo(gObjectCount)($a1)
 /* 0238C8 80022CC8 00000000 */  nop   
 /* 0238CC 80022CCC 0085082A */  slt   $at, $a0, $a1
 .L80022CD0:

@@ -122,8 +122,8 @@ glabel func_8000CC7C
 /* 00DA14 8000CE14 AC80FFFC */  sw    $zero, -4($a0)
 /* 00DA18 8000CE18 1420FFF9 */  bnez  $at, .L8000CE00
 /* 00DA1C 8000CE1C AC40FFFC */   sw    $zero, -4($v0)
-/* 00DA20 8000CE20 3C028012 */  lui   $v0, %hi(objCount) # $v0, 0x8012
-/* 00DA24 8000CE24 8C42AE5C */  lw    $v0, %lo(objCount)($v0)
+/* 00DA20 8000CE20 3C028012 */  lui   $v0, %hi(gObjectCount) # $v0, 0x8012
+/* 00DA24 8000CE24 8C42AE5C */  lw    $v0, %lo(gObjectCount)($v0)
 /* 00DA28 8000CE28 00009025 */  move  $s2, $zero
 /* 00DA2C 8000CE2C 18400050 */  blez  $v0, .L8000CF70
 /* 00DA30 8000CE30 0000A825 */   move  $s5, $zero
@@ -970,8 +970,8 @@ glabel L8000D98C
 /* 00E5DC 8000D9DC 0C01B683 */  jal   get_game_mode
 /* 00E5E0 8000D9E0 00000000 */   nop   
 /* 00E5E4 8000D9E4 1440002D */  bnez  $v0, .L8000DA9C
-/* 00E5E8 8000D9E8 3C028012 */   lui   $v0, %hi(objCount) # $v0, 0x8012
-/* 00E5EC 8000D9EC 8C42AE5C */  lw    $v0, %lo(objCount)($v0)
+/* 00E5E8 8000D9E8 3C028012 */   lui   $v0, %hi(gObjectCount) # $v0, 0x8012
+/* 00E5EC 8000D9EC 8C42AE5C */  lw    $v0, %lo(gObjectCount)($v0)
 /* 00E5F0 8000D9F0 0000A825 */  move  $s5, $zero
 /* 00E5F4 8000D9F4 18400029 */  blez  $v0, .L8000DA9C
 /* 00E5F8 8000D9F8 3C138012 */   lui   $s3, %hi(gObjPtrList) # $s3, 0x8012
@@ -995,8 +995,8 @@ glabel L8000D98C
 /* 00E63C 8000DA3C 00000000 */   nop   
 /* 00E640 8000DA40 0C003FEE */  jal   free_object
 /* 00E644 8000DA44 02202025 */   move  $a0, $s1
-/* 00E648 8000DA48 3C028012 */  lui   $v0, %hi(objCount) # $v0, 0x8012
-/* 00E64C 8000DA4C 8C42AE5C */  lw    $v0, %lo(objCount)($v0)
+/* 00E648 8000DA48 3C028012 */  lui   $v0, %hi(gObjectCount) # $v0, 0x8012
+/* 00E64C 8000DA4C 8C42AE5C */  lw    $v0, %lo(gObjectCount)($v0)
 /* 00E650 8000DA50 1000000E */  b     .L8000DA8C
 /* 00E654 8000DA54 26520001 */   addiu $s2, $s2, 1
 .L8000DA58:
@@ -1009,8 +1009,8 @@ glabel L8000D98C
 /* 00E670 8000DA70 00000000 */   nop   
 /* 00E674 8000DA74 0C003FEE */  jal   free_object
 /* 00E678 8000DA78 02202025 */   move  $a0, $s1
-/* 00E67C 8000DA7C 3C028012 */  lui   $v0, %hi(objCount) # $v0, 0x8012
-/* 00E680 8000DA80 8C42AE5C */  lw    $v0, %lo(objCount)($v0)
+/* 00E67C 8000DA7C 3C028012 */  lui   $v0, %hi(gObjectCount) # $v0, 0x8012
+/* 00E680 8000DA80 8C42AE5C */  lw    $v0, %lo(gObjectCount)($v0)
 /* 00E684 8000DA84 00000000 */  nop   
 .L8000DA88:
 /* 00E688 8000DA88 26520001 */  addiu $s2, $s2, 1

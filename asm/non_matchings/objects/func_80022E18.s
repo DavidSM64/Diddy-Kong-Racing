@@ -53,8 +53,8 @@ glabel func_80022E18
 /* 023AE0 80022EE0 ADCD0000 */  sw    $t5, ($t6)
 /* 023AE4 80022EE4 ACCF0000 */  sw    $t7, ($a2)
 /* 023AE8 80022EE8 3C058012 */  lui   $a1, %hi(D_8011AE60) # $a1, 0x8012
-/* 023AEC 80022EEC 3C038012 */  lui   $v1, %hi(objCount) # $v1, 0x8012
-/* 023AF0 80022EF0 8C63AE5C */  lw    $v1, %lo(objCount)($v1)
+/* 023AEC 80022EEC 3C038012 */  lui   $v1, %hi(gObjectCount) # $v1, 0x8012
+/* 023AF0 80022EF0 8C63AE5C */  lw    $v1, %lo(gObjectCount)($v1)
 /* 023AF4 80022EF4 8CA5AE60 */  lw    $a1, %lo(D_8011AE60)($a1)
 /* 023AF8 80022EF8 3C188012 */  lui   $t8, %hi(gObjPtrList) # $t8, 0x8012
 /* 023AFC 80022EFC 00A3082A */  slt   $at, $a1, $v1
