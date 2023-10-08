@@ -179,6 +179,14 @@ enum ObjectSpawnFlags {
     OBJECT_SPAWN_UNK20          = (1 << 5)
 };
 
+enum ContPakErrors {
+    CONTPAK_ERROR_MISSING = -1,
+    CONTPAK_ERROR_NONE,
+    CONTPAK_ERROR_UNKNOWN,
+    CONTPAK_ERROR_FULL,
+    CONTPAK_ERROR_DAMAGED
+};
+
 typedef struct RacerShieldGfx {
     s16 x_position;
     s16 y_position;
@@ -323,7 +331,7 @@ void func_8000C604(void);
 s32 normalise_time(s32 timer);
 void func_8000CBC0(void);
 s32 func_8000CC20(Object *arg0);
-s32 func_8000E0B0(void);
+s32 get_contpak_error(void);
 void instShowBearBar(void);
 s8 func_8000E138(void);
 s8 func_8000E148(void);
@@ -339,8 +347,8 @@ u8 is_time_trial_enabled(void);
 u8 is_in_time_trial(void);
 Object *get_object(s32 index);
 Object **objGetObjList(s32 *arg0, s32 *cnt);
-s32 getObjectCount(void);
-s32 func_8000E9C0(void);
+s32 get_object_count(void);
+s32 get_particle_count(void);
 void func_8000E9D0(Object *arg0);
 void free_object(Object *);
 s32 func_80010018(void);
@@ -425,7 +433,7 @@ Object *get_racer_object_by_port(s32 index);
 void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
 void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *obj);
 void update_envmap_position(f32 x, f32 y, f32 z);
-s32 func_8000FC6C(Object *obj, WaterEffect *shadow);
+s32 init_object_water_effect(Object *obj, WaterEffect *shadow);
 s32 func_8001B2F0(s32 mapId);
 void render_3d_billboard(Object *obj);
 void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *triangles, u32 numTriangles, TextureHeader *tex, u32 flags, u32 offset, f32 yScale);
@@ -446,9 +454,9 @@ s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags,
 void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj, s32 flags);
 void gParticlePtrList_flush(void);
 s32 init_object_shading(Object *obj, ShadeProperties *shading);
-ObjectHeader *func_8000C718(s32 index);
+ObjectHeader *load_object_header(s32 index);
 s32 func_8000F99C(Object *);
-void func_8000C844(s32 arg0);
+void try_free_object_header(s32 arg0);
 s32 get_object_property_size(Object *obj, Object_64 *obj64);
 void light_setup_light_sources(Object *obj);
 s32 init_object_interaction_data(Object *arg0, ObjectInteraction *arg1);

@@ -4,6 +4,10 @@
 #include "types.h"
 #include "macros.h"
 
+/**
+ * Copy a string to a given location.
+ * Return the address of the destrination.
+*/
 UNUSED char *strcpy(char *src, const char *dest) {
     char *ret = src;
 
@@ -11,6 +15,10 @@ UNUSED char *strcpy(char *src, const char *dest) {
     return ret;
 }
 
+/**
+ * Append a string to the end of a given string.
+ * Return the address of the destrination.
+*/
 UNUSED char *strcat(char *dest, const char *src) {
     char *ret = dest;
     
@@ -20,6 +28,10 @@ UNUSED char *strcat(char *dest, const char *src) {
     return ret;
 }
 
+/**
+ * Compare two strings, with no case sensitivity.
+ * Return zero if they match.
+*/
 UNUSED int strcasecmp(const char *s1, const char *s2) {
 	unsigned char c1;
 	unsigned char c2;
@@ -52,6 +64,10 @@ UNUSED int strcasecmp(const char *s1, const char *s2) {
 	return 0;
 }
 
+/**
+ * Compare an arbitrary amount of characters in two strings, with no case sensitivity.
+ * Return zero if they match.
+*/
 UNUSED int strncasecmp(const char *s1, const char *s2, size_t n) {
 	unsigned char c1;
 	unsigned char c2;

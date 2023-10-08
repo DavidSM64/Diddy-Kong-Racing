@@ -1240,7 +1240,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
                 }
                 obj->properties.npc.action = TT_MODE_APPROACH_PLAYER;
                 get_fog_settings(PLAYER_ONE, &tt->fogNear, &tt->fogFar, &tt->fogR, &tt->fogG, &tt->fogB);
-                func_80030DE0(PLAYER_ONE, 128, 128, 255, 900, 998, 240);
+                slowly_change_fog(PLAYER_ONE, 128, 128, 255, 900, 998, 240);
                 func_800012E8();
                 play_music(SEQUENCE_TTS_THEME);
                 if (racerObj != NULL) {
@@ -1293,7 +1293,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             obj->properties.npc.action = TT_MODE_TURN_TOWARDS_PLAYER;
         }
         move_object(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
-        func_8006F388(1);
+        set_pause_lockout_timer(1);
         break;
     case TT_MODE_TURN_TOWARDS_PLAYER:
         racer_set_dialogue_camera();
@@ -1335,7 +1335,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             } else {
                 play_tt_voice_clip(SOUND_VOICE_TT_OK, 1);
             }
-            func_80030DE0(PLAYER_ONE, tt->fogR, tt->fogG, tt->fogB, tt->fogNear, tt->fogFar, 180);
+            slowly_change_fog(PLAYER_ONE, tt->fogR, tt->fogG, tt->fogB, tt->fogNear, tt->fogFar, 180);
             play_music(header->music);
             func_80001074(header->instruments);
             racer->unk118 = func_80004B40(racer->characterId, racer->vehicleID);
@@ -2298,7 +2298,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             sp6B = 1;
         }
         get_fog_settings(PLAYER_ONE, &taj->fogNear, &taj->fogFar, &taj->fogR, &taj->fogG, &taj->fogB);
-        func_80030DE0(PLAYER_ONE, 255, 0, 120, 960, 1100, 240);
+        slowly_change_fog(PLAYER_ONE, 255, 0, 120, 960, 1100, 240);
         taj->animFrameF = 0.0f;
     }
 
@@ -2332,7 +2332,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         case TAJ_MODE_SET_CHALLENGE:
         case TAJ_MODE_TELEPORT_AWAY_BEGIN:
         case TAJ_MODE_TELEPORT_AWAY_END:
-            func_8006F388(1);
+            set_pause_lockout_timer(1);
             break;
     }
     if (obj->properties.npc.action != TAJ_MODE_ROAM && dialogueID != 0 && obj->properties.npc.action < 4) {
@@ -2428,7 +2428,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->segment.object.animationID = 2;
             taj->unk1C = 0;
             play_taj_voice_clip(SOUND_VOICE_TAJ_BYE, TRUE);
-            func_80030DE0(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
+            slowly_change_fog(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
             set_music_player_voice_limit(levelHeader->voiceLimit);
             play_music(levelHeader->music);
             func_80001074(levelHeader->instruments);
@@ -2591,7 +2591,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->segment.object.opacity -= var_a2;
         } else {
             racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.vehicleID);
-            func_80030DE0(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
+            slowly_change_fog(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
             set_music_player_voice_limit(levelHeader->voiceLimit);
             play_music(levelHeader->music);
             func_80001074(levelHeader->instruments);
@@ -5027,7 +5027,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
                     play_sound_at_position(SOUND_VOICE_DRUMSTICK_POSITIVE2, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                     set_eeprom_settings_value(2);
                     set_magic_code_flags(CHEAT_CONTROL_DRUMSTICK);
-                    func_8006D8A4();
+                    set_drumstick_unlock_transition();
                     free_object(obj);
                     break;
                 } else {
@@ -5109,7 +5109,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
                     play_sound_at_position(SOUND_VOICE_DRUMSTICK_POSITIVE2, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                     set_eeprom_settings_value(2);
                     set_magic_code_flags(CHEAT_CONTROL_DRUMSTICK);
-                    func_8006D8A4();
+                    set_drumstick_unlock_transition();
                     free_object(obj);
                 } else {
                     frog->action = FROG_SQUISH;

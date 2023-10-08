@@ -47,7 +47,7 @@ LevelHeader *get_current_level_header(void);
 u8 get_total_level_header_count(void);
 char *get_level_name(s32 levelId);
 void clear_audio_and_track(void);
-void func_8006BFC8(s8 *arg0);
+void set_ai_level(s8 *arg0);
 void frontCleanupMultiSelect(void);
 TempStruct5 *func_8006C18C(void);
 s8 func_8006C19C(void);

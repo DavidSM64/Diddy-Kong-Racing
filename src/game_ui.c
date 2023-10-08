@@ -409,7 +409,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
         }
     }
     if (arg3 != NULL && !(gHudLevelHeader->unkBC & 2)) {
-        if (get_render_context() != DRAW_MENU) {
+        if (get_game_mode() != GAMEMODE_MENU) {
             gHUDCurrDisplayList = *dList;
             gHUDCurrMatrix = *mtx;
             gHUDCurrVertex = *vertexList;
@@ -1034,12 +1034,12 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
             stopwatchTimer = normalise_time(36000);
         }
         gCurrentHud->unk444 = ((stopwatchTimer * 0x444) + 0x7FF8);
-        if (func_8000E0B0() <= 0) {
+        if (get_contpak_error() <= 0) {
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk440);
         }
         gCurrentHud->unk444 = ((((stopwatchTimer / 60) + 30) % 60) * 0x444);
         gCurrentHud->unk450 = gCurrentHud->unk350 + 28.0f;
-        if (func_8000E0B0() <= 0) {
+        if (get_contpak_error() <= 0) {
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk440);
         }
         obj68->unk20 = 0;
@@ -1139,8 +1139,8 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
         render_wrong_way_text(curRacer, updateRate);
         render_race_start(arg0, updateRate);
         render_speedometer(playerRacerObj, updateRate);
-        if (func_8000E0B0() > 0) {
-            switch (func_8000E0B0()) {
+        if (get_contpak_error() > 0) {
+            switch (get_contpak_error()) {
                 case 1:
                     SWMessage[0] = "CAN'T";
                     SWMessage[1] = "SAVE";

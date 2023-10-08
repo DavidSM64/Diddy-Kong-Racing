@@ -590,7 +590,7 @@ glabel L800951CC
 /* 096184 80095584 24040007 */   li    $a0, 7
 .L80095588:
 glabel L80095588
-/* 096188 80095588 0C01B683 */  jal   get_render_context
+/* 096188 80095588 0C01B683 */  jal   get_game_mode
 /* 09618C 8009558C 00000000 */   nop   
 /* 096190 80095590 1440001D */  bnez  $v0, .L80095608
 /* 096194 80095594 3C0F800E */   lui   $t7, %hi(gNumberOfActivePlayers) # $t7, 0x800e

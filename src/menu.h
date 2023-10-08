@@ -90,7 +90,7 @@ typedef enum MENU_ID {
     MENU_TROPHY_RACE_ROUND,
     MENU_TROPHY_RACE_RANKINGS,
     MENU_UNUSED_22,
-    MENU_UNKNOWN_23,
+    MENU_NEWGAME_CINEMATIC,
     MENU_GHOST_DATA,
     MENU_CREDITS,
     MENU_BOOT,
@@ -381,7 +381,7 @@ void func_80099600(void);
 s32 get_trophy_race_world_id(void);
 void func_8009ABAC(void);
 void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s8 *arg5);
-void menu_23_init(void);
+void menu_cinematic_init(void);
 void func_8009AF18(void);
 void menu_credits_init(void);
 void render_credits_fade(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
@@ -466,7 +466,7 @@ void render_adventure_track_setup(UNUSED s32 updateRate, s32 arg1, s32 arg2);
 void menu_trophy_race_round_init(void);
 void func_8008B358(void);
 s32 menu_save_options_loop(s32 updateRate);
-s32 menu_23_loop(s32 updateRate);
+s32 menu_cinematic_loop(s32 updateRate);
 s32 menu_magic_codes_list_loop(s32 updateRate);
 void menu_trophy_race_rankings_init(void);
 void calculate_and_display_rom_checksum(void);

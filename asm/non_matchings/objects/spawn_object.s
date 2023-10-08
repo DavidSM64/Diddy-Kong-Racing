@@ -61,7 +61,7 @@ glabel spawn_object
 /* 00F71C 8000EB1C 24190002 */  li    $t9, 2
 /* 00F720 8000EB20 A6590006 */  sh    $t9, 6($s2)
 /* 00F724 8000EB24 A7A4004E */  sh    $a0, 0x4e($sp)
-/* 00F728 8000EB28 0C0031C6 */  jal   func_8000C718
+/* 00F728 8000EB28 0C0031C6 */  jal   load_object_header
 /* 00F72C 8000EB2C AFA3002C */   sw    $v1, 0x2c($sp)
 /* 00F730 8000EB30 14400003 */  bnez  $v0, .L8000EB40
 /* 00F734 8000EB34 AE420040 */   sw    $v0, 0x40($s2)
@@ -459,7 +459,7 @@ glabel L8000EDE0
 /* 00FCD0 8000F0D0 0C003D92 */  jal   objFreeAssets
 /* 00FCD4 8000F0D4 02602825 */   move  $a1, $s3
 /* 00FCD8 8000F0D8 87A4004E */  lh    $a0, 0x4e($sp)
-/* 00FCDC 8000F0DC 0C003211 */  jal   func_8000C844
+/* 00FCDC 8000F0DC 0C003211 */  jal   try_free_object_header
 /* 00FCE0 8000F0E0 00000000 */   nop   
 /* 00FCE4 8000F0E4 10000151 */  b     .L8000F62C
 /* 00FCE8 8000F0E8 00001025 */   move  $v0, $zero
@@ -504,7 +504,7 @@ glabel L8000EDE0
 /* 00FD7C 8000F17C 0C003D92 */  jal   objFreeAssets
 /* 00FD80 8000F180 02602825 */   move  $a1, $s3
 /* 00FD84 8000F184 87A4004E */  lh    $a0, 0x4e($sp)
-/* 00FD88 8000F188 0C003211 */  jal   func_8000C844
+/* 00FD88 8000F188 0C003211 */  jal   try_free_object_header
 /* 00FD8C 8000F18C 00000000 */   nop   
 /* 00FD90 8000F190 10000126 */  b     .L8000F62C
 /* 00FD94 8000F194 00001025 */   move  $v0, $zero
@@ -514,7 +514,7 @@ glabel L8000EDE0
 /* 00FDA0 8000F1A0 330E0004 */  andi  $t6, $t8, 4
 /* 00FDA4 8000F1A4 11C00016 */  beqz  $t6, .L8000F200
 /* 00FDA8 8000F1A8 00C02825 */   move  $a1, $a2
-/* 00FDAC 8000F1AC 0C003F1B */  jal   func_8000FC6C
+/* 00FDAC 8000F1AC 0C003F1B */  jal   init_object_water_effect
 /* 00FDB0 8000F1B0 AFA60048 */   sw    $a2, 0x48($sp)
 /* 00FDB4 8000F1B4 8FA60048 */  lw    $a2, 0x48($sp)
 /* 00FDB8 8000F1B8 14400011 */  bnez  $v0, .L8000F200
@@ -532,7 +532,7 @@ glabel L8000EDE0
 /* 00FDE4 8000F1E4 0C003D92 */  jal   objFreeAssets
 /* 00FDE8 8000F1E8 02602825 */   move  $a1, $s3
 /* 00FDEC 8000F1EC 87A4004E */  lh    $a0, 0x4e($sp)
-/* 00FDF0 8000F1F0 0C003211 */  jal   func_8000C844
+/* 00FDF0 8000F1F0 0C003211 */  jal   try_free_object_header
 /* 00FDF4 8000F1F4 00000000 */   nop   
 /* 00FDF8 8000F1F8 1000010C */  b     .L8000F62C
 /* 00FDFC 8000F1FC 00001025 */   move  $v0, $zero
@@ -619,7 +619,7 @@ glabel L8000EDE0
 /* 00FF20 8000F320 0C003D92 */  jal   objFreeAssets
 /* 00FF24 8000F324 02602825 */   move  $a1, $s3
 /* 00FF28 8000F328 87A4004E */  lh    $a0, 0x4e($sp)
-/* 00FF2C 8000F32C 0C003211 */  jal   func_8000C844
+/* 00FF2C 8000F32C 0C003211 */  jal   try_free_object_header
 /* 00FF30 8000F330 00000000 */   nop   
 /* 00FF34 8000F334 100000BD */  b     .L8000F62C
 /* 00FF38 8000F338 00001025 */   move  $v0, $zero
@@ -703,9 +703,9 @@ glabel L8000EDE0
 /* 01004C 8000F44C AC4A005C */  sw    $t2, 0x5c($v0)
 .L8000F450:
 /* 010050 8000F450 8C430060 */  lw    $v1, 0x60($v0)
-/* 010054 8000F454 3C108012 */  lui   $s0, %hi(objCount) # $s0, 0x8012
+/* 010054 8000F454 3C108012 */  lui   $s0, %hi(gObjectCount) # $s0, 0x8012
 /* 010058 8000F458 10600005 */  beqz  $v1, .L8000F470
-/* 01005C 8000F45C 2610AE5C */   addiu $s0, %lo(objCount) # addiu $s0, $s0, -0x51a4
+/* 01005C 8000F45C 2610AE5C */   addiu $s0, %lo(gObjectCount) # addiu $s0, $s0, -0x51a4
 /* 010060 8000F460 8CAB0000 */  lw    $t3, ($a1)
 /* 010064 8000F464 0043C821 */  addu  $t9, $v0, $v1
 /* 010068 8000F468 032B6023 */  subu  $t4, $t9, $t3
@@ -750,10 +750,10 @@ glabel L8000EDE0
 /* 0100F8 8000F4F8 25590001 */  addiu $t9, $t2, 1
 /* 0100FC 8000F4FC AE190000 */  sw    $t9, ($s0)
 .L8000F500:
-/* 010100 8000F500 3C108012 */  lui   $s0, %hi(objCount) # $s0, 0x8012
+/* 010100 8000F500 3C108012 */  lui   $s0, %hi(gObjectCount) # $s0, 0x8012
 /* 010104 8000F504 8FA50068 */  lw    $a1, 0x68($sp)
 /* 010108 8000F508 0C008E2F */  jal   run_object_init_func
-/* 01010C 8000F50C 2610AE5C */   addiu $s0, %lo(objCount) # addiu $s0, $s0, -0x51a4
+/* 01010C 8000F50C 2610AE5C */   addiu $s0, %lo(gObjectCount) # addiu $s0, $s0, -0x51a4
 /* 010110 8000F510 8E42004C */  lw    $v0, 0x4c($s2)
 /* 010114 8000F514 00000000 */  nop   
 /* 010118 8000F518 1040000C */  beqz  $v0, .L8000F54C
@@ -802,7 +802,7 @@ glabel L8000EDE0
 /* 0101B8 8000F5B8 0C003D92 */  jal   objFreeAssets
 /* 0101BC 8000F5BC 02602825 */   move  $a1, $s3
 /* 0101C0 8000F5C0 87A4004E */  lh    $a0, 0x4e($sp)
-/* 0101C4 8000F5C4 0C003211 */  jal   func_8000C844
+/* 0101C4 8000F5C4 0C003211 */  jal   try_free_object_header
 /* 0101C8 8000F5C8 00000000 */   nop   
 /* 0101CC 8000F5CC 0C01C450 */  jal   free_from_memory_pool
 /* 0101D0 8000F5D0 02402025 */   move  $a0, $s2

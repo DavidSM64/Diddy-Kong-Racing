@@ -361,7 +361,7 @@ glabel func_800A277C
 /* 0A3860 800A2C60 0000C812 */  mflo  $t9
 /* 0A3864 800A2C64 272C7FF8 */  addiu $t4, $t9, 0x7ff8
 /* 0A3868 800A2C68 A54C0444 */  sh    $t4, 0x444($t2)
-/* 0A386C 800A2C6C 0C00382C */  jal   func_8000E0B0
+/* 0A386C 800A2C6C 0C00382C */  jal   get_contpak_error
 /* 0A3870 800A2C70 AFA900A8 */   sw    $t1, 0xa8($sp)
 /* 0A3874 800A2C74 8FA900A8 */  lw    $t1, 0xa8($sp)
 /* 0A3878 800A2C78 1C40000D */  bgtz  $v0, .L800A2CB0
@@ -420,7 +420,7 @@ glabel func_800A277C
 /* 0A3938 800A2D38 C4480350 */  lwc1  $f8, 0x350($v0)
 /* 0A393C 800A2D3C 00000000 */  nop   
 /* 0A3940 800A2D40 460A4100 */  add.s $f4, $f8, $f10
-/* 0A3944 800A2D44 0C00382C */  jal   func_8000E0B0
+/* 0A3944 800A2D44 0C00382C */  jal   get_contpak_error
 /* 0A3948 800A2D48 E4440450 */   swc1  $f4, 0x450($v0)
 /* 0A394C 800A2D4C 1C40000A */  bgtz  $v0, .L800A2D78
 /* 0A3950 800A2D50 8FAF0098 */   lw    $t7, 0x98($sp)
@@ -884,11 +884,11 @@ glabel func_800A277C
 /* 0A4020 800A3420 8FA500C8 */  lw    $a1, 0xc8($sp)
 /* 0A4024 800A3424 0C028E21 */  jal   render_speedometer
 /* 0A4028 800A3428 00000000 */   nop   
-/* 0A402C 800A342C 0C00382C */  jal   func_8000E0B0
+/* 0A402C 800A342C 0C00382C */  jal   get_contpak_error
 /* 0A4030 800A3430 00000000 */   nop   
 /* 0A4034 800A3434 1840009D */  blez  $v0, .L800A36AC
 /* 0A4038 800A3438 00000000 */   nop   
-/* 0A403C 800A343C 0C00382C */  jal   func_8000E0B0
+/* 0A403C 800A343C 0C00382C */  jal   get_contpak_error
 /* 0A4040 800A3440 00000000 */   nop   
 /* 0A4044 800A3444 24010001 */  li    $at, 1
 /* 0A4048 800A3448 10410008 */  beq   $v0, $at, .L800A346C

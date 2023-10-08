@@ -471,7 +471,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         load_asset_to_address(ASSET_LEVEL_HEADERS, (u32) gCurrentLevelHeader, offset, size);
     }
     free_from_memory_pool(gTempAssetTable);
-    func_8006BFC8((s8 *) &gCurrentLevelHeader->unk20);
+    set_ai_level((s8 *) &gCurrentLevelHeader->unk20);
     func_8000CBC0();
     gMapId = levelId;
     for (var_s0 = 0; var_s0 < 7; var_s0++) {
@@ -519,7 +519,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     if (settings->worldId == WORLD_CENTRAL_AREA && var_s0 > 0 && gCurrentDefaultVehicle != -1) {
         vehicleId = gCurrentDefaultVehicle;
     }
-    func_8006DB20(vehicleId);
+    set_vehicle_id_for_menu(vehicleId);
     if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD) {
         if (settings->worldId - 1 >= 0) {
             var_s0 = 8 << (settings->worldId + 31);
@@ -565,14 +565,14 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         cutsceneId = CUTSCENE_ID_UNK_64;
     }
     func_8001E450(cutsceneId);
-    func_800249F0(gCurrentLevelHeader->geometry, gCurrentLevelHeader->skybox, numberOfPlayers, vehicleId, entranceId, gCurrentLevelHeader->collectables, gCurrentLevelHeader->unkBA);
+    init_track(gCurrentLevelHeader->geometry, gCurrentLevelHeader->skybox, numberOfPlayers, vehicleId, entranceId, gCurrentLevelHeader->collectables, gCurrentLevelHeader->unkBA);
     if (gCurrentLevelHeader->fogNear == 0 && gCurrentLevelHeader->fogFar == 0 && gCurrentLevelHeader->fogR == 0 && gCurrentLevelHeader->fogG == 0 && gCurrentLevelHeader->fogB == 0) {
         for (var_s0 = 0; var_s0 < 4; var_s0++) {
             reset_fog(var_s0);
         }
     } else {
         for (var_s0 = 0; var_s0 < 4; var_s0++) {
-            func_80030664(var_s0, gCurrentLevelHeader->fogNear, gCurrentLevelHeader->fogFar, (u8) gCurrentLevelHeader->fogR, gCurrentLevelHeader->fogG, gCurrentLevelHeader->fogB);
+            set_fog(var_s0, gCurrentLevelHeader->fogNear, gCurrentLevelHeader->fogFar, (u8) gCurrentLevelHeader->fogR, gCurrentLevelHeader->fogG, gCurrentLevelHeader->fogB);
         }
     }
     settings = get_settings();
@@ -700,42 +700,42 @@ void clear_audio_and_track(void) {
     }
 }
 
-void func_8006BFC8(s8 *arg0) {
+/**
+ * Set the skill level of the AI.
+ * Apply offsets based on game mode.
+*/
+void set_ai_level(s8 *arg0) {
     s32 temp;
     UNUSED s32 temp2;
     s16 phi_v1;
-    s8 phi_s0;
+    s8 aiLevel;
     Settings *settings;
 
-    phi_s0 = 0;
-    if (!is_in_tracks_mode()) {
+    aiLevel = 0;
+    if (is_in_tracks_mode() == FALSE) {
         settings = get_settings();
         temp = settings->courseFlagsPtr[settings->courseId];
         if (temp & 2) {
-            phi_s0 = 1;
+            aiLevel = 1;
         }
         if (temp & 4) {
-            phi_s0 = 2;
+            aiLevel = 2;
         }
     } else {
-        phi_s0 = 3;
+        aiLevel = 3;
     }
-
-    if (get_trophy_race_world_id() != 0) {
-        phi_s0 = 4;
+    if (get_trophy_race_world_id()) {
+        aiLevel = 4;
     }
-
     if (is_in_adventure_two()) {
-        phi_s0 += 5;
+        aiLevel += 5;
     }
-
-    phi_s0 = arg0[phi_s0];
-
+    aiLevel = arg0[aiLevel];
     if (get_filtered_cheats() & CHEAT_ULTIMATE_AI) {
-        phi_s0 = 9;
+        aiLevel = 9;
     }
-    if (get_render_context() == DRAW_MENU) {
-        phi_s0 = 5;
+    if (get_game_mode() == GAMEMODE_MENU) {
+        aiLevel = 5;
     }
     gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
     phi_v1 = 0;
@@ -743,11 +743,11 @@ void func_8006BFC8(s8 *arg0) {
         phi_v1++;
     }
     phi_v1--;
-    if (phi_s0 >= phi_v1) {
-        phi_s0 = 0;
+    if (aiLevel >= phi_v1) {
+        aiLevel = 0;
     }
-    temp2 = gTempAssetTable[phi_s0];
-    temp = gTempAssetTable[phi_s0 + 1] - temp2;
+    temp2 = gTempAssetTable[aiLevel];
+    temp = gTempAssetTable[aiLevel + 1] - temp2;
     D_801211C0 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
     load_asset_to_address(ASSET_UNKNOWN_0, (u32) D_801211C0, temp2, temp);
     free_from_memory_pool(gTempAssetTable);
