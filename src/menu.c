@@ -1949,7 +1949,7 @@ void menu_init(u32 menuId) {
         case MENU_TROPHY_RACE_RANKINGS:
             menu_trophy_race_rankings_init();
             break;
-        case MENU_CINEMATIC:
+        case MENU_NEWGAME_CINEMATIC:
             menu_cinematic_init();
             break;
         case MENU_GHOST_DATA:
@@ -2026,7 +2026,7 @@ s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts
         case MENU_TROPHY_RACE_RANKINGS:
             ret = menu_trophy_race_rankings_loop(updateRate);
             break;
-        case MENU_CINEMATIC:
+        case MENU_NEWGAME_CINEMATIC:
             ret = menu_cinematic_loop(updateRate);
             break;
         case MENU_GHOST_DATA:
@@ -6184,7 +6184,7 @@ s32 menu_file_select_loop(s32 updateRate) {
                 settings->cutsceneFlags |= CUTSCENE_ADVENTURE_TWO;
             }
             func_8009ABD8((s8 *)get_misc_asset(MISC_ASSET_UNK19), 0, gNumberOfActivePlayers, 0, 0, NULL);
-            menu_init(MENU_CINEMATIC);
+            menu_init(MENU_NEWGAME_CINEMATIC);
             return MENU_RESULT_CONTINUE;
         }
         if (settings->cutsceneFlags & CUTSCENE_ADVENTURE_TWO) {
@@ -8826,7 +8826,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                     temp0 = ((gTrophyRaceWorldId * 3) + sp34) - 3;
                     func_8009ABD8(miscAsset31, temp0, ret, 0, 0, D_80126438);
                     ret = MENU_RESULT_CONTINUE;
-                    menu_init(MENU_CINEMATIC);
+                    menu_init(MENU_NEWGAME_CINEMATIC);
                 }
                 gTrophyRaceWorldId = 0;
             }

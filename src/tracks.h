@@ -23,7 +23,7 @@ enum TriangleBatchFlags {
     BATCH_FLAGS_HIDDEN = (1 << 8),
     BATCH_FLAGS_UNK00000200 = (1 << 9),
     BATCH_FLAGS_UNK00000400 = (1 << 10),
-    BATCH_FLAGS_SOLID_GEOMETRY = (1 << 11),
+    BATCH_FLAGS_RECEIVE_SHADOWS = (1 << 11),
     BATCH_FLAGS_UNK00001000 = (1 << 12),
     BATCH_FLAGS_WATER =             (1 << 13),
     BATCH_FLAGS_FORCE_NO_SHADOWS =  (1 << 14),

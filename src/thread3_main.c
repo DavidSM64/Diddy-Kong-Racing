@@ -703,7 +703,7 @@ void ingame_logic_loop(s32 updateRate) {
                     break;
                 case LEVEL_CONTEXT_UNK7:
                     gIsLoading = TRUE;
-                    load_menu_with_level_background(MENU_CINEMATIC, SPECIAL_MAP_ID_NO_LEVEL, 0);
+                    load_menu_with_level_background(MENU_NEWGAME_CINEMATIC, SPECIAL_MAP_ID_NO_LEVEL, 0);
                     gIsLoading = FALSE;
                     break;
                 case LEVEL_CONTEXT_CREDITS:

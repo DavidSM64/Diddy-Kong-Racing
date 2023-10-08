@@ -578,7 +578,7 @@ void func_800AD40C(void) {
     if (gWeatherType != WEATHER_SNOW && get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER) {
         a = ((gLightningFrequency * -38) >> 16) + 1018;
         b = ((gLightningFrequency * -20) >> 16) + 1023;
-        set_fog(0, a, b, 0x1CU, 0xFU, 0x24U);
+        set_fog(0, a, b, 28, 15, 36);
     }
 }
 

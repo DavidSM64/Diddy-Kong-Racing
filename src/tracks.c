@@ -1076,10 +1076,10 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
             textureFlags = texture->flags;
         }
         batchFlags |= BATCH_FLAGS_UNK00000008 | BATCH_FLAGS_UNK00000002;
-        if (!(batchFlags & BATCH_FLAGS_DEPTH_WRITE) && !(batchFlags & BATCH_FLAGS_SOLID_GEOMETRY)) {
+        if (!(batchFlags & BATCH_FLAGS_DEPTH_WRITE) && !(batchFlags & BATCH_FLAGS_RECEIVE_SHADOWS)) {
             batchFlags |= gAntiAliasing;
         }
-        if ((!(textureFlags & RENDER_SEMI_TRANSPARENT) && !(batchFlags & BATCH_FLAGS_WATER)) || batchFlags & BATCH_FLAGS_SOLID_GEOMETRY) {
+        if ((!(textureFlags & RENDER_SEMI_TRANSPARENT) && !(batchFlags & BATCH_FLAGS_WATER)) || batchFlags & BATCH_FLAGS_RECEIVE_SHADOWS) {
             renderBatch = TRUE;
         }
         if (nonOpaque) {
@@ -2157,7 +2157,7 @@ void func_8002DE30(Object *obj) {
         );
         block = &gCurrentLevelModel->segments[blockId]; 
         for(i = 0; i < block->numberOfBatches && !foundResult; i++) {
-            if (!(block->batches[i].flags & (BATCH_FLAGS_HIDDEN | BATCH_FLAGS_SOLID_GEOMETRY | BATCH_FLAGS_WATER | BATCH_FLAGS_FORCE_NO_SHADOWS))) {
+            if (!(block->batches[i].flags & (BATCH_FLAGS_HIDDEN | BATCH_FLAGS_RECEIVE_SHADOWS | BATCH_FLAGS_WATER | BATCH_FLAGS_FORCE_NO_SHADOWS))) {
                 batchFlags = (block->batches[i].flags >> 19) & (BATCH_FLAGS_UNK00000001 | BATCH_FLAGS_UNK00000002 | BATCH_FLAGS_UNK00000004);
                 vertices = &block->vertices[block->batches[i].verticesOffset];
                 for(j = block->batches[i].facesOffset; j < block->batches[i+1].facesOffset && !foundResult; j++) {
@@ -2227,8 +2227,8 @@ void func_8002E234(Object *obj, s32 bool) {
 
     if (bool) {
         D_8011D0B8 = 0;
-        obj->waterEffect->unk8 = D_8011D364;
-        D_8011D0C0 = func_8007B46C(obj->waterEffect->texture, obj->waterEffect->unkC << 8);
+        obj->waterEffect->meshStart = D_8011D364;
+        D_8011D0C0 = func_8007B46C(obj->waterEffect->texture, obj->waterEffect->textureFrame << 8);
         D_8011D0CE = obj->segment.header->unk48 + yPos;
         D_8011D0CC = obj->segment.header->unk46 + yPos;
         if ((D_8011D384 == 0) || ((get_viewport_count() <= 0))) {
@@ -2239,7 +2239,7 @@ void func_8002E234(Object *obj, s32 bool) {
         D_8011D0E0 = D_8011D0D8 * 10.0f;
         D_8011D0F0 = -1.0f;
     } else {
-        obj->shadow->unk8 = D_8011D364;
+        obj->shadow->meshStart = D_8011D364;
         D_8011D0C0 = obj->shadow->texture;
         D_8011D0CE = obj->segment.header->unk44 + yPos;
         D_8011D0CC = obj->segment.header->unk42 + yPos;
@@ -2305,10 +2305,10 @@ void func_8002E234(Object *obj, s32 bool) {
         func_8002F440();
     }
     if (!bool) {
-        obj->shadow->unkA = D_8011D364;
+        obj->shadow->meshEnd = D_8011D364;
     }
     else {
-        obj->waterEffect->unkA = D_8011D364;
+        obj->waterEffect->meshEnd = D_8011D364;
     }
 }
 #else
