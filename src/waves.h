@@ -101,7 +101,7 @@ typedef struct unk800BFC54_arg0 {
     f32 unk2C;
 } unk800BFC54_arg0;
 
-void func_800B7D20(void);
+void free_waves(void);
 void func_800B8B8C(void);
 s32 func_800B9228(LevelModelSegment *arg0);
 void func_800BBDDC(LevelModel *level, LevelHeader *header);

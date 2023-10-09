@@ -196,7 +196,7 @@ s32 D_8011ADBC;
 s32 D_8011ADC0;
 s8 D_8011ADC4;
 s8 D_8011ADC5;
-s32 D_8011ADC8;
+u32 D_8011ADC8;
 s8 (*D_8011ADCC)[8];
 f32 D_8011ADD0;
 s8 D_8011ADD4;
@@ -3184,7 +3184,7 @@ s16 func_8001AE44(void) {
     return D_8011AD4E;
 }
 
-s32 func_8001AE54(void) {
+u32 func_8001AE54(void) {
     return D_8011ADC8;
 }
 

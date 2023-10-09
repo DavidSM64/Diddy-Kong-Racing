@@ -614,7 +614,7 @@ typedef struct LevelModelSegment {
            u8 pad22[0x06];
 /* 0x28 */ s16 unk28;
 /* 0x2A */ s8 unk2A;
-/* 0x2B */ s8 unk2B;
+/* 0x2B */ s8 hasWaves;
 /* 0x2C */ Vertex *unk2C;
 /* 0x30 */ s16 unk30;
 /* 0x32 */ s16 unk32;

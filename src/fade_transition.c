@@ -54,24 +54,24 @@ VertexList D_800E3268[28] = {
     0x00A0, 0xFF10, 0x00A0, 0xFF10,
 };
 
-TriangleList D_800E32A0[12] = {
+u8 D_800E32A0[12] = {
     0x00, 0x02, 0x04, 0x0E, 0x10, 0x12, 0x08, 0x0A,
     0x0C, 0x16, 0x18, 0x1A,
 };
 
-TriangleList D_800E32AC[12] = {
+u8 D_800E32AC[12] = {
     0x04, 0x06, 0x08, 0x12, 0x14, 0x16, 0x04, 0x06,
     0x08, 0x12, 0x14, 0x16,
 };
 
-s8 D_800E32B8[24] = {
+u8 gTransitionBarnDoorTris[24] = {
     0, 3, 1, 1, 3, 4, 1, 4,
     2, 2, 4, 5, 6, 9, 7, 7,
     9, 10, 7, 10, 8, 8, 10, 11,
 };
 
-s8 D_800E32D0[12] = {
-    -1, -1, 0, -1, -1, 0, 0, -1, -1, 0, -1, -1,
+u8 D_800E32D0[12] = {
+    255, 255, 0, 255, 255, 0, 0, 255, 255, 0, 255, 255,
 };
 
 VertexList D_800E32DC[24] = {
@@ -80,20 +80,20 @@ VertexList D_800E32DC[24] = {
     0xFF60, 0xFF88, 0x00A0, 0xFF88, 0x01E0, 0xFF88, 0x0320, 0xFF88,
 };
 
-s8 D_800E330C[12] = {
+u8 D_800E330C[12] = {
     0, 2, 4, 12, 14, 8, 10, 18, 20, 22, 0, 0,
 };
 
-s8 D_800E3318[12] = {
+u8 D_800E3318[12] = {
     4, 6, 8, 16, 18, 4, 6, 14, 16, 18, 0, 0,
 };
 
-s8 D_800E3324[20] = {
+u8 gTransitionBarnDoorDiagTris[20] = {
     0, 1, 3, 1, 3, 4, 1, 4, 2, 5, 7, 8, 5, 8, 6, 6, 8, 9, 0, 0,
 };
 
-s8 D_800E3338[12] = {
-    -1, -1, 0, -1, 0, 0, -1, 0, -1, -1, 0, 0,
+u8 D_800E3338[12] = {
+    255, 255, 0, 255, 0, 0, 255, 0, 255, 255, 0, 0,
 };
 
 VertexList D_800E3344[126] = {
@@ -115,7 +115,7 @@ VertexList D_800E3344[126] = {
     0x0080, 0xFEE8, 0x0090, 0xFEE8, 0x00A0, 0xFEE8,
 };
 
-TriangleList D_800E3440[92] = {
+u8 D_800E3440[92] = {
     0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0E,
     0x00, 0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0E,
     0x0E, 0x10, 0x12, 0x14, 0x16, 0x18, 0x1A, 0x0E,
@@ -130,7 +130,7 @@ TriangleList D_800E3440[92] = {
     0x76, 0x78, 0x7A, 0x7C,
 };
 
-TriangleList D_800E349C[92] = {
+u8 D_800E349C[92] = {
     0x2A, 0x2C, 0x2E, 0x30, 0x32, 0x34, 0x36, 0x38,
     0x54, 0x56, 0x58, 0x5A, 0x5C, 0x5E, 0x60, 0x62,
     0x38, 0x3A, 0x3C, 0x3E, 0x40, 0x42, 0x44, 0x62,
@@ -145,16 +145,16 @@ TriangleList D_800E349C[92] = {
     0x76, 0x78, 0x7A, 0x7C,
 };
 
-s8 D_800E34F8[92] = {
-    0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1,
-    0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, 0, 0,
-    0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+u8 D_800E34F8[92] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255,
+    0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 0, 0,
+    0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
 };
 
-TriangleList D_800E3554[244] = {
+u8 gTransitionWaveTris[244] = {
     0, 8, 9, 0, 9, 1, 1, 9, 10, 1, 10, 2, 2, 10, 11, 2,
     11, 3, 3, 11, 12, 3, 12, 4, 4, 12, 13, 4, 13, 5, 5, 13,
     14, 5, 14, 6, 6, 14, 15, 6, 15, 7, 0, 7, 8, 0, 8, 1,
@@ -269,19 +269,19 @@ s32 transition_begin(FadeTransition *transition) {
             transition_fullscreen_start(transition);
             break;
         case FADE_BARNDOOR_HORIZONTAL:
-            func_800C0B00(transition, 12, 8, D_800E3230, D_800E32A0, D_800E32AC, D_800E32D0, D_800E32D0, D_800E32B8);
+            func_800C0B00(transition, 12, 8, D_800E3230, D_800E32A0, D_800E32AC, D_800E32D0, D_800E32D0, gTransitionBarnDoorTris);
             break;
         case FADE_BARNDOOR_VERTICAL:
-            func_800C0B00(transition, 12, 8, D_800E3268, D_800E32A0, D_800E32AC, D_800E32D0, D_800E32D0, D_800E32B8);
+            func_800C0B00(transition, 12, 8, D_800E3268, D_800E32A0, D_800E32AC, D_800E32D0, D_800E32D0, gTransitionBarnDoorTris);
             break;
         case FADE_CIRCLE:
             func_800C15D4(transition);
             break;
         case FADE_WAVES:
-            func_800C0B00(transition, 92, 80, D_800E3344, D_800E349C, D_800E3440, D_800E34F8, D_800E34F8, D_800E3554);
+            func_800C0B00(transition, 92, 80, D_800E3344, D_800E349C, D_800E3440, D_800E34F8, D_800E34F8, gTransitionWaveTris);
             break;
         case FADE_BARNDOOR_DIAGONAL:
-            func_800C0B00(transition, 10, 6, D_800E32DC, D_800E330C, D_800E3318, D_800E3338, D_800E3338, D_800E3324);
+            func_800C0B00(transition, 10, 6, D_800E32DC, D_800E330C, D_800E3318, D_800E3338, D_800E3338, gTransitionBarnDoorDiagTris);
             break;
         case FADE_DISABLED:
             func_800C2640(transition);
@@ -460,8 +460,8 @@ void render_fade_fullscreen(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **
     reset_render_settings(dList);
 }
 
-void func_800C0B00(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *arg3, u8 *arg4, u8 *arg5, u8 *arg6, u8 *arg7, u8 *arg8) {
-    s32 temp; 
+void func_800C0B00(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *arg3, u8 *arg4, u8 *arg5, u8 *arg6, u8 *arg7, u8 *vertIndices) {
+    UNUSED s32 pad; 
     u8 *swap;
     s32 sizeVerts;
     s32 sizeTris;
@@ -471,9 +471,9 @@ void func_800C0B00(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *a
     j = numVerts;
     sizeVerts = j * 10;
     sizeTris = numTris * 16;
-    i = (j * 12);
+    i = j * 12;
     
-    sTransitionVtx[0] = allocate_from_main_pool_safe(((sizeVerts + sizeTris) * 2) + (i * 3), 0xFFFF00FF);
+    sTransitionVtx[0] = allocate_from_main_pool_safe(((sizeVerts + sizeTris) * 2) + (i * 3), COLOUR_TAG_YELLOW);
     sTransitionVtx[1] = sTransitionVtx[0] + j;
     sTransitionTris[0] = (Triangle*)(sTransitionVtx[1] + j);
     sTransitionTris[1] = (Triangle*)(((u8 *) sTransitionTris[0]) + sizeTris);
@@ -513,13 +513,13 @@ void func_800C0B00(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *a
     for (i = 0; i < 2; i++) {
         for (j = 0; j < numTris; j++) {
             sTransitionTris[i][j].flags = 0x40;
-            sTransitionTris[i][j].vi0 = arg8[(j * 3) + 0];
+            sTransitionTris[i][j].vi0 = vertIndices[(j * 3) + 0];
             sTransitionTris[i][j].uv0.u = 0;
             sTransitionTris[i][j].uv0.v = 0;
-            sTransitionTris[i][j].vi1 = arg8[(j * 3) + 1];
+            sTransitionTris[i][j].vi1 = vertIndices[(j * 3) + 1];
             sTransitionTris[i][j].uv1.u = 0;
             sTransitionTris[i][j].uv1.v = 0;
-            sTransitionTris[i][j].vi2 = arg8[(j * 3) + 2];
+            sTransitionTris[i][j].vi2 = vertIndices[(j * 3) + 2];
             sTransitionTris[i][j].uv2.u = 0;
             sTransitionTris[i][j].uv2.v = 0;
         }

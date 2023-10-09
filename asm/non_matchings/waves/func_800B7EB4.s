@@ -3,7 +3,7 @@ glabel func_800B7EB4
 /* 0B8AB8 800B7EB8 AFBF0024 */  sw    $ra, 0x24($sp)
 /* 0B8ABC 800B7EBC AFB20020 */  sw    $s2, 0x20($sp)
 /* 0B8AC0 800B7EC0 AFB1001C */  sw    $s1, 0x1c($sp)
-/* 0B8AC4 800B7EC4 0C02DF48 */  jal   func_800B7D20
+/* 0B8AC4 800B7EC4 0C02DF48 */  jal   free_waves
 /* 0B8AC8 800B7EC8 AFB00018 */   sw    $s0, 0x18($sp)
 /* 0B8ACC 800B7ECC 3C128013 */  lui   $s2, %hi(D_80129FC8) # $s2, 0x8013
 /* 0B8AD0 800B7ED0 26529FC8 */  addiu $s2, %lo(D_80129FC8) # addiu $s2, $s2, -0x6038

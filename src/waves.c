@@ -135,7 +135,7 @@ s32 D_8012A72C;
 
 /*****************************/
 
-void func_800B7D20(void) {
+void free_waves(void) {
     if (D_800E3040 != NULL) {
         free_from_memory_pool(D_800E3040);
         D_800E3040 = NULL;
