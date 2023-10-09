@@ -40,14 +40,14 @@ Gfx dTransitionFadeSettings[] = {
     gsSPEndDisplayList(),
 };
 
-s16 D_800E3230[28] = {
+s16 gTransitionBarnHorizontalData[28] = {
     0xFE20, 0x0078, 0xFEC0, 0x0078, 0xFF60, 0x0078, 0x0000, 0x0078,
     0x00A0, 0x0078, 0x0140, 0x0078, 0x01E0, 0x0078, 0xFE20, 0xFF88,
     0xFEC0, 0xFF88, 0xFF60, 0xFF88, 0x0000, 0xFF88, 0x00A0, 0xFF88,
     0x0140, 0xFF88, 0x01E0, 0xFF88,
 };
 
-s16 D_800E3268[28] = {
+s16 gTransitionBarnVerticalData[28] = {
     0xFF60, 0x0168, 0xFF60, 0x00F0, 0xFF60, 0x0078, 0xFF60, 0x0000,
     0xFF60, 0xFF88, 0xFF60, 0xFF10, 0xFF60, 0xFF10, 0x00A0, 0x0168,
     0x00A0, 0x00F0, 0x00A0, 0x0078, 0x00A0, 0x0000, 0x00A0, 0xFF88,
@@ -74,7 +74,7 @@ u8 gTransitionBarnDoorAlpha[12] = {
     255, 255, 0, 255, 255, 0, 0, 255, 255, 0, 255, 255,
 };
 
-s16 D_800E32DC[24] = {
+s16 gTransitionBarnDiagData[24] = {
     0xFCE0, 0x0078, 0xFE20, 0x0078, 0xFF60, 0x0078, 0x00A0, 0x0078,
     0x01E0, 0x0078, 0x0320, 0x0078, 0xFCE0, 0xFF88, 0xFE20, 0xFF88,
     0xFF60, 0xFF88, 0x00A0, 0xFF88, 0x01E0, 0xFF88, 0x0320, 0xFF88,
@@ -96,7 +96,7 @@ u8 gTransitionBarnDoorDiagAlpha[12] = {
     255, 255, 0, 255, 0, 0, 255, 0, 255, 255, 0, 0,
 };
 
-s16 D_800E3344[126] = {
+s16 gTransitionWaveData[126] = {
     0xFF60, 0x00A0, 0xFF70, 0x00A0, 0xFF80, 0x00A0, 0xFF90, 0x00A0,
     0xFFA0, 0x00A0, 0xFFB0, 0x00A0, 0xFFC0, 0x00A0, 0xFFD0, 0x00A0,
     0xFFE0, 0x00A0, 0xFFF0, 0x00A0, 0x0000, 0x00A0, 0x0010, 0x00A0,
@@ -272,19 +272,19 @@ s32 transition_begin(FadeTransition *transition) {
             transition_fullscreen_start(transition);
             break;
         case FADE_BARNDOOR_HORIZONTAL:
-            init_transition_shape(transition, 12, 8, D_800E3230, D_800E32A0, D_800E32AC, gTransitionBarnDoorAlpha, gTransitionBarnDoorAlpha, gTransitionBarnDoorTris);
+            init_transition_shape(transition, 12, 8, gTransitionBarnHorizontalData, D_800E32A0, D_800E32AC, gTransitionBarnDoorAlpha, gTransitionBarnDoorAlpha, gTransitionBarnDoorTris);
             break;
         case FADE_BARNDOOR_VERTICAL:
-            init_transition_shape(transition, 12, 8, D_800E3268, D_800E32A0, D_800E32AC, gTransitionBarnDoorAlpha, gTransitionBarnDoorAlpha, gTransitionBarnDoorTris);
+            init_transition_shape(transition, 12, 8, gTransitionBarnVerticalData, D_800E32A0, D_800E32AC, gTransitionBarnDoorAlpha, gTransitionBarnDoorAlpha, gTransitionBarnDoorTris);
             break;
         case FADE_CIRCLE:
             func_800C15D4(transition);
             break;
         case FADE_WAVES:
-            init_transition_shape(transition, 92, 80, D_800E3344, D_800E349C, D_800E3440, gTransitionWaveAlpha, gTransitionWaveAlpha, gTransitionWaveTris);
+            init_transition_shape(transition, 92, 80, gTransitionWaveData, D_800E349C, D_800E3440, gTransitionWaveAlpha, gTransitionWaveAlpha, gTransitionWaveTris);
             break;
         case FADE_BARNDOOR_DIAGONAL:
-            init_transition_shape(transition, 10, 6, D_800E32DC, D_800E330C, D_800E3318, gTransitionBarnDoorDiagAlpha, gTransitionBarnDoorDiagAlpha, gTransitionBarnDoorDiagTris);
+            init_transition_shape(transition, 10, 6, gTransitionBarnDiagData, D_800E330C, D_800E3318, gTransitionBarnDoorDiagAlpha, gTransitionBarnDoorDiagAlpha, gTransitionBarnDoorDiagTris);
             break;
         case FADE_DISABLED:
             init_transition_blank(transition);
@@ -469,7 +469,7 @@ void render_fade_fullscreen(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **
 /**
  * Allocate space for the new transitions vertices and triangles, then build the geometry based on the vertex and triangle shapes given.
 */
-void init_transition_shape(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *arg3, u8 *arg4, u8 *arg5, u8 *nextAlpha, u8 *lastAlpha, u8 *vertIndices) {
+void init_transition_shape(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *coords, u8 *nextPos, u8 *targetPos, u8 *nextAlpha, u8 *targetAlpha, u8 *vertIndices) {
     UNUSED s32 pad; 
     u8 *swap;
     s32 sizeVerts;
@@ -490,21 +490,21 @@ void init_transition_shape(FadeTransition *transition, s32 numVerts, s32 numTris
     gTransitionVtxStep = (f32 *) (((u8 *) gTransitionNextVtx) + i);
     gTransitionVertexTarget = (f32 *) (((u8 *) gTransitionVtxStep) + i);
     if (transition->type & FADE_FLAG_OUT) {
-        swap = arg4;
-        arg4 = arg5;
-        arg5 = swap;
+        swap = nextPos;
+        nextPos = targetPos;
+        targetPos = swap;
         swap = nextAlpha;
-        nextAlpha = lastAlpha;
-        lastAlpha = swap;
+        nextAlpha = targetAlpha;
+        targetAlpha = swap;
     }
     
     for (i = 0; i < numVerts; i++) {
-        gTransitionNextVtx[(i * 3) + 0] = arg3[arg4[i]];
-        gTransitionNextVtx[(i * 3) + 1] = arg3[arg4[i] + 1];
+        gTransitionNextVtx[(i * 3) + 0] = coords[nextPos[i]];
+        gTransitionNextVtx[(i * 3) + 1] = coords[nextPos[i] + 1];
         gTransitionNextVtx[(i * 3) + 2] = nextAlpha[i];
-        gTransitionVertexTarget[(i * 3) + 0] = arg3[arg5[i]];
-        gTransitionVertexTarget[(i * 3) + 1] = arg3[arg5[i] + 1];
-        gTransitionVertexTarget[(i * 3) + 2] = lastAlpha[i];
+        gTransitionVertexTarget[(i * 3) + 0] = coords[targetPos[i]];
+        gTransitionVertexTarget[(i * 3) + 1] = coords[targetPos[i] + 1];
+        gTransitionVertexTarget[(i * 3) + 2] = targetAlpha[i];
         gTransitionVtxStep[(i * 3) + 0] = (gTransitionVertexTarget[(i * 3) + 0] - gTransitionNextVtx[(i * 3) + 0]) / sTransitionFadeTimer;
         gTransitionVtxStep[(i * 3) + 1] = (gTransitionVertexTarget[(i * 3) + 1] - gTransitionNextVtx[(i * 3) + 1]) / sTransitionFadeTimer;
         gTransitionVtxStep[(i * 3) + 2] = (gTransitionVertexTarget[(i * 3) + 2] - gTransitionNextVtx[(i * 3) + 2]) / sTransitionFadeTimer;
