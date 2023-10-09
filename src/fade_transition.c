@@ -23,7 +23,7 @@ u16 sTransitionFlags = 0;
 u16 D_800E31B8 = 0;
 s8 D_800E31BC = 0;
 Vertex *sTransitionVtx[2] = { NULL, NULL };
-TriangleList *sTransitionTris[2] = { NULL, NULL };
+Triangle *sTransitionTris[2] = { NULL, NULL };
 s32 sTransitionTaskNum = 0;
 
 Gfx dTransitionFadeSettings[] = {
@@ -460,7 +460,75 @@ void render_fade_fullscreen(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **
     reset_render_settings(dList);
 }
 
-GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C0B00.s")
+void func_800C0B00(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *arg3, u8 *arg4, u8 *arg5, u8 *arg6, u8 *arg7, u8 *arg8) {
+    s32 temp; 
+    u8 *swap;
+    s32 sizeVerts;
+    s32 sizeTris;
+    s32 i;
+    s32 j;
+    
+    j = numVerts;
+    sizeVerts = j * 10;
+    sizeTris = numTris * 16;
+    i = (j * 12);
+    
+    sTransitionVtx[0] = allocate_from_main_pool_safe(((sizeVerts + sizeTris) * 2) + (i * 3), 0xFFFF00FF);
+    sTransitionVtx[1] = sTransitionVtx[0] + j;
+    sTransitionTris[0] = (Triangle*)(sTransitionVtx[1] + j);
+    sTransitionTris[1] = (Triangle*)(((u8 *) sTransitionTris[0]) + sizeTris);
+    D_8012A770 = (f32 *) (((u8 *) sTransitionTris[1]) + sizeTris);
+    D_8012A774 = (f32 *) (((u8 *) D_8012A770) + i);
+    D_8012A778 = (f32 *) (((u8 *) D_8012A774) + i);
+    if (transition->type & 0x80) {
+        swap = arg4;
+        arg4 = arg5;
+        arg5 = swap;
+        swap = arg6;
+        arg6 = arg7;
+        arg7 = swap;
+    }
+    
+    for (i = 0; i < numVerts; i++) {
+        D_8012A770[(i * 3) + 0] = arg3[arg4[i]];
+        D_8012A770[(i * 3) + 1] = arg3[arg4[i] + 1];
+        D_8012A770[(i * 3) + 2] = arg6[i];
+        D_8012A778[(i * 3) + 0] = arg3[arg5[i]];
+        D_8012A778[(i * 3) + 1] = arg3[arg5[i] + 1];
+        D_8012A778[(i * 3) + 2] = arg7[i];
+        D_8012A774[(i * 3) + 0] = (D_8012A778[(i * 3) + 0] - D_8012A770[(i * 3) + 0]) / sTransitionFadeTimer;
+        D_8012A774[(i * 3) + 1] = (D_8012A778[(i * 3) + 1] - D_8012A770[(i * 3) + 1]) / sTransitionFadeTimer;
+        D_8012A774[(i * 3) + 2] = (D_8012A778[(i * 3) + 2] - D_8012A770[(i * 3) + 2]) / sTransitionFadeTimer;
+    }
+    
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < numVerts; j++) {
+            sTransitionVtx[i][j].z = -16;
+            sTransitionVtx[i][j].r = gCurFadeRed;
+            sTransitionVtx[i][j].g = gCurFadeGreen;
+            sTransitionVtx[i][j].b = gCurFadeBlue;
+        }
+    }
+    
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < numTris; j++) {
+            sTransitionTris[i][j].flags = 0x40;
+            sTransitionTris[i][j].vi0 = arg8[(j * 3) + 0];
+            sTransitionTris[i][j].uv0.u = 0;
+            sTransitionTris[i][j].uv0.v = 0;
+            sTransitionTris[i][j].vi1 = arg8[(j * 3) + 1];
+            sTransitionTris[i][j].uv1.u = 0;
+            sTransitionTris[i][j].uv1.v = 0;
+            sTransitionTris[i][j].vi2 = arg8[(j * 3) + 2];
+            sTransitionTris[i][j].uv2.u = 0;
+            sTransitionTris[i][j].uv2.v = 0;
+        }
+    }
+    
+    sTransitionStatus = 1;
+    D_8012A77C = numVerts;
+}
+
 
 void func_800C1130(s32 updateRate) {
     s32 i;
