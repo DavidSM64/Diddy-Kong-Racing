@@ -16,12 +16,12 @@
 
 s32 gTransitionsDisabled = FALSE;
 s32 sLevelTransitionDelayTimer = 0; // Set when a level is loaded after a transition, to hold it for a few extra frames.
-s32 D_800E31A8 = 0;
+s32 gTransitionInvert = 0;
 s32 sTransitionStatus = TRANSITION_NONE;
 u16 sTransitionFadeTimer = 0;
-u16 sTransitionFlags = 0;
-u16 D_800E31B8 = 0;
-s8 D_800E31BC = 0;
+u16 gTransitionEndTimer = 0;
+u16 sTransitionFadeDuration = 0;
+s8 gTransitionFadeIn = 0;
 Vertex *sTransitionVtx[2] = { NULL, NULL };
 Triangle *sTransitionTris[2] = { NULL, NULL };
 s32 sTransitionTaskNum = 0;
@@ -40,14 +40,14 @@ Gfx dTransitionFadeSettings[] = {
     gsSPEndDisplayList(),
 };
 
-VertexList D_800E3230[28] = {
+s16 D_800E3230[28] = {
     0xFE20, 0x0078, 0xFEC0, 0x0078, 0xFF60, 0x0078, 0x0000, 0x0078,
     0x00A0, 0x0078, 0x0140, 0x0078, 0x01E0, 0x0078, 0xFE20, 0xFF88,
     0xFEC0, 0xFF88, 0xFF60, 0xFF88, 0x0000, 0xFF88, 0x00A0, 0xFF88,
     0x0140, 0xFF88, 0x01E0, 0xFF88,
 };
 
-VertexList D_800E3268[28] = {
+s16 D_800E3268[28] = {
     0xFF60, 0x0168, 0xFF60, 0x00F0, 0xFF60, 0x0078, 0xFF60, 0x0000,
     0xFF60, 0xFF88, 0xFF60, 0xFF10, 0xFF60, 0xFF10, 0x00A0, 0x0168,
     0x00A0, 0x00F0, 0x00A0, 0x0078, 0x00A0, 0x0000, 0x00A0, 0xFF88,
@@ -70,11 +70,11 @@ u8 gTransitionBarnDoorTris[24] = {
     9, 10, 7, 10, 8, 8, 10, 11,
 };
 
-u8 D_800E32D0[12] = {
+u8 gTransitionBarnDoorAlpha[12] = {
     255, 255, 0, 255, 255, 0, 0, 255, 255, 0, 255, 255,
 };
 
-VertexList D_800E32DC[24] = {
+s16 D_800E32DC[24] = {
     0xFCE0, 0x0078, 0xFE20, 0x0078, 0xFF60, 0x0078, 0x00A0, 0x0078,
     0x01E0, 0x0078, 0x0320, 0x0078, 0xFCE0, 0xFF88, 0xFE20, 0xFF88,
     0xFF60, 0xFF88, 0x00A0, 0xFF88, 0x01E0, 0xFF88, 0x0320, 0xFF88,
@@ -92,11 +92,11 @@ u8 gTransitionBarnDoorDiagTris[20] = {
     0, 1, 3, 1, 3, 4, 1, 4, 2, 5, 7, 8, 5, 8, 6, 6, 8, 9, 0, 0,
 };
 
-u8 D_800E3338[12] = {
+u8 gTransitionBarnDoorDiagAlpha[12] = {
     255, 255, 0, 255, 0, 0, 255, 0, 255, 255, 0, 0,
 };
 
-VertexList D_800E3344[126] = {
+s16 D_800E3344[126] = {
     0xFF60, 0x00A0, 0xFF70, 0x00A0, 0xFF80, 0x00A0, 0xFF90, 0x00A0,
     0xFFA0, 0x00A0, 0xFFB0, 0x00A0, 0xFFC0, 0x00A0, 0xFFD0, 0x00A0,
     0xFFE0, 0x00A0, 0xFFF0, 0x00A0, 0x0000, 0x00A0, 0x0010, 0x00A0,
@@ -145,7 +145,7 @@ u8 D_800E349C[92] = {
     0x76, 0x78, 0x7A, 0x7C,
 };
 
-u8 D_800E34F8[92] = {
+u8 gTransitionWaveAlpha[92] = {
     0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255,
     0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 0, 0,
     0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
@@ -193,9 +193,9 @@ u8 gCurFadeAlpha;
 s32 gLastFadeRed;
 s32 gLastFadeGreen;
 s32 gLastFadeBlue;
-s32 D_8012A744;
-s32 D_8012A748;
-s32 D_8012A74C;
+s32 gLastFadeRedStep;
+s32 gLastFadeGreenStep;
+s32 gLastFadeBlueStep;
 f32 sTransitionOpacity;
 f32 gTransitionOpacityVel;
 s32 D_8012A758;
@@ -204,10 +204,10 @@ s32 D_8012A760;
 s32 D_8012A764;
 s32 D_8012A768;
 s32 D_8012A76C;
-f32 *D_8012A770;
-f32 *D_8012A774;
-f32 *D_8012A778;
-s32 D_8012A77C;
+f32 *gTransitionNextVtx;
+f32 *gTransitionVtxStep;
+f32 *gTransitionVertexTarget;
+s32 gTransitionVertexCount;
 
 /*****************************/
 
@@ -225,15 +225,18 @@ void disable_new_screen_transitions(void) {
     gTransitionsDisabled = FALSE;
 }
 
-//@bug: This doesn't seem to guarantee a return.
-u32 fxFadeOn(void) {
+/**
+ * Checks if there is currently a fadeout transition playing.
+*/
+u32 check_fadeout_transition(void) {
     u32 isActive = sTransitionFadeTimer != 0;
     if (isActive == FALSE) {
-        isActive = sTransitionFlags != 0;
+        isActive = gTransitionEndTimer != 0;
         if (isActive) {
-            return (D_800E31BC != 0);
+            return (gTransitionFadeIn != 0);
         }
     }
+//!@bug: This doesn't seem to guarantee a return.
 }
 
 /**
@@ -248,13 +251,13 @@ s32 transition_begin(FadeTransition *transition) {
         return 0;
     }
     sTransitionFadeTimer = transition->duration;
-    D_800E31B8 = transition->duration;
-    sTransitionFlags = transition->unk6;
-    D_800E31BC = !(transition->type & FADE_FLAG_UNK2);
+    sTransitionFadeDuration = transition->duration;
+    gTransitionEndTimer = transition->endTimer;
+    gTransitionFadeIn = !(transition->type & FADE_FLAG_OUT);
     gCurFadeTransition = transition->type & 0x3F;
-    D_800E31A8 = transition->type & FADE_FLAG_UNK1;
+    gTransitionInvert = transition->type & FADE_FLAG_INVERT;
     sLevelTransitionDelayTimer = 0;
-    if (!D_800E31BC && !sLevelTransitionDelayTimer) {
+    if (!gTransitionFadeIn && !sLevelTransitionDelayTimer) {
         sLevelTransitionDelayTimer = 2; 
     }
     if (sTransitionFadeTimer > 0) {
@@ -269,22 +272,22 @@ s32 transition_begin(FadeTransition *transition) {
             transition_fullscreen_start(transition);
             break;
         case FADE_BARNDOOR_HORIZONTAL:
-            func_800C0B00(transition, 12, 8, D_800E3230, D_800E32A0, D_800E32AC, D_800E32D0, D_800E32D0, gTransitionBarnDoorTris);
+            init_transition_shape(transition, 12, 8, D_800E3230, D_800E32A0, D_800E32AC, gTransitionBarnDoorAlpha, gTransitionBarnDoorAlpha, gTransitionBarnDoorTris);
             break;
         case FADE_BARNDOOR_VERTICAL:
-            func_800C0B00(transition, 12, 8, D_800E3268, D_800E32A0, D_800E32AC, D_800E32D0, D_800E32D0, gTransitionBarnDoorTris);
+            init_transition_shape(transition, 12, 8, D_800E3268, D_800E32A0, D_800E32AC, gTransitionBarnDoorAlpha, gTransitionBarnDoorAlpha, gTransitionBarnDoorTris);
             break;
         case FADE_CIRCLE:
             func_800C15D4(transition);
             break;
         case FADE_WAVES:
-            func_800C0B00(transition, 92, 80, D_800E3344, D_800E349C, D_800E3440, D_800E34F8, D_800E34F8, gTransitionWaveTris);
+            init_transition_shape(transition, 92, 80, D_800E3344, D_800E349C, D_800E3440, gTransitionWaveAlpha, gTransitionWaveAlpha, gTransitionWaveTris);
             break;
         case FADE_BARNDOOR_DIAGONAL:
-            func_800C0B00(transition, 10, 6, D_800E32DC, D_800E330C, D_800E3318, D_800E3338, D_800E3338, gTransitionBarnDoorDiagTris);
+            init_transition_shape(transition, 10, 6, D_800E32DC, D_800E330C, D_800E3318, gTransitionBarnDoorDiagAlpha, gTransitionBarnDoorDiagAlpha, gTransitionBarnDoorDiagTris);
             break;
         case FADE_DISABLED:
-            func_800C2640(transition);
+            init_transition_blank(transition);
             break;
         }
     }
@@ -308,7 +311,7 @@ s32 handle_transitions(s32 updateRate) {
         if (sTransitionFadeTimer == 0) {
             sTransitionStatus = TRANSITION_LEVELSWAP;
         }
-        if ((sTransitionFadeTimer == 0) && (sTransitionFlags == 0)) {
+        if (sTransitionFadeTimer == 0 && gTransitionEndTimer == 0) {
             transition_end();
         } else {
             if (sTransitionFadeTimer > 0) {
@@ -316,19 +319,19 @@ s32 handle_transitions(s32 updateRate) {
             }
             switch (gCurFadeTransition) {
                 case FADE_FULLSCREEN:
-                    func_800C0834(updateRate);
+                    process_transition_fullscreen(updateRate);
                     break;
                 case FADE_BARNDOOR_HORIZONTAL:
                 case FADE_BARNDOOR_VERTICAL:
                 case FADE_WAVES:
                 case FADE_BARNDOOR_DIAGONAL:
-                    func_800C1130(updateRate);
+                    process_transition_shape(updateRate);
                     break;
                 case FADE_CIRCLE:
                     func_800C1EE8(updateRate);
                     break;
                 case FADE_DISABLED:
-                    func_800C27A0(updateRate);
+                    process_transition_disabled(updateRate);
                     break;
             }
         }
@@ -397,7 +400,7 @@ void transition_end(void) {
  * Sets the transition timer and opacity to positive or negative depending on whether to fade in or out.
 */
 void transition_fullscreen_start(FadeTransition *transition) {
-    if (transition->type & 0x80) {
+    if (transition->type & FADE_FLAG_OUT) {
         sTransitionOpacity = 255.0f;
         gTransitionOpacityVel = -255.0f / (f32) sTransitionFadeTimer;
     } else {
@@ -407,7 +410,10 @@ void transition_fullscreen_start(FadeTransition *transition) {
     sTransitionStatus = TRANSITION_ACTIVE;
 }
 
-void func_800C0834(s32 updateRate) {
+/**
+ * Slowly dade in or out by increasing or decreasing opacity.
+*/
+void process_transition_fullscreen(s32 updateRate) {
     s32 var_v0;
     do {
         var_v0 = TRUE;
@@ -431,21 +437,21 @@ void func_800C0834(s32 updateRate) {
                 sTransitionOpacity = 255.0f;
             }
             gCurFadeAlpha = sTransitionOpacity;
-        } else if (sTransitionFlags != 0xFFFF) {
-            if (updateRate < sTransitionFlags) {
-                sTransitionFlags -= updateRate;
+        } else if (gTransitionEndTimer != 0xFFFF) {
+            if (updateRate < gTransitionEndTimer) {
+                gTransitionEndTimer -= updateRate;
             } else {
-                updateRate -= sTransitionFlags;
-                sTransitionFlags = 0;
-                if (D_800E31A8 != 0) {
-                    D_800E31A8 = 0;
-                    sTransitionFadeTimer = D_800E31B8;
+                updateRate -= gTransitionEndTimer;
+                gTransitionEndTimer = 0;
+                if (gTransitionInvert != 0) {
+                    gTransitionInvert = 0;
+                    sTransitionFadeTimer = sTransitionFadeDuration;
                     gTransitionOpacityVel = -gTransitionOpacityVel;
                     var_v0 = FALSE;
                 }
             }
         }
-    } while (var_v0 == FALSE && (updateRate > 0));
+    } while (var_v0 == FALSE && updateRate > 0);
 }
 
 /**
@@ -460,7 +466,10 @@ void render_fade_fullscreen(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **
     reset_render_settings(dList);
 }
 
-void func_800C0B00(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *arg3, u8 *arg4, u8 *arg5, u8 *arg6, u8 *arg7, u8 *vertIndices) {
+/**
+ * Allocate space for the new transitions vertices and triangles, then build the geometry based on the vertex and triangle shapes given.
+*/
+void init_transition_shape(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *arg3, u8 *arg4, u8 *arg5, u8 *nextAlpha, u8 *lastAlpha, u8 *vertIndices) {
     UNUSED s32 pad; 
     u8 *swap;
     s32 sizeVerts;
@@ -475,30 +484,30 @@ void func_800C0B00(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *a
     
     sTransitionVtx[0] = allocate_from_main_pool_safe(((sizeVerts + sizeTris) * 2) + (i * 3), COLOUR_TAG_YELLOW);
     sTransitionVtx[1] = sTransitionVtx[0] + j;
-    sTransitionTris[0] = (Triangle*)(sTransitionVtx[1] + j);
-    sTransitionTris[1] = (Triangle*)(((u8 *) sTransitionTris[0]) + sizeTris);
-    D_8012A770 = (f32 *) (((u8 *) sTransitionTris[1]) + sizeTris);
-    D_8012A774 = (f32 *) (((u8 *) D_8012A770) + i);
-    D_8012A778 = (f32 *) (((u8 *) D_8012A774) + i);
-    if (transition->type & 0x80) {
+    sTransitionTris[0] = (Triangle*) (sTransitionVtx[1] + j);
+    sTransitionTris[1] = (Triangle*) (((u8 *) sTransitionTris[0]) + sizeTris);
+    gTransitionNextVtx = (f32 *) (((u8 *) sTransitionTris[1]) + sizeTris);
+    gTransitionVtxStep = (f32 *) (((u8 *) gTransitionNextVtx) + i);
+    gTransitionVertexTarget = (f32 *) (((u8 *) gTransitionVtxStep) + i);
+    if (transition->type & FADE_FLAG_OUT) {
         swap = arg4;
         arg4 = arg5;
         arg5 = swap;
-        swap = arg6;
-        arg6 = arg7;
-        arg7 = swap;
+        swap = nextAlpha;
+        nextAlpha = lastAlpha;
+        lastAlpha = swap;
     }
     
     for (i = 0; i < numVerts; i++) {
-        D_8012A770[(i * 3) + 0] = arg3[arg4[i]];
-        D_8012A770[(i * 3) + 1] = arg3[arg4[i] + 1];
-        D_8012A770[(i * 3) + 2] = arg6[i];
-        D_8012A778[(i * 3) + 0] = arg3[arg5[i]];
-        D_8012A778[(i * 3) + 1] = arg3[arg5[i] + 1];
-        D_8012A778[(i * 3) + 2] = arg7[i];
-        D_8012A774[(i * 3) + 0] = (D_8012A778[(i * 3) + 0] - D_8012A770[(i * 3) + 0]) / sTransitionFadeTimer;
-        D_8012A774[(i * 3) + 1] = (D_8012A778[(i * 3) + 1] - D_8012A770[(i * 3) + 1]) / sTransitionFadeTimer;
-        D_8012A774[(i * 3) + 2] = (D_8012A778[(i * 3) + 2] - D_8012A770[(i * 3) + 2]) / sTransitionFadeTimer;
+        gTransitionNextVtx[(i * 3) + 0] = arg3[arg4[i]];
+        gTransitionNextVtx[(i * 3) + 1] = arg3[arg4[i] + 1];
+        gTransitionNextVtx[(i * 3) + 2] = nextAlpha[i];
+        gTransitionVertexTarget[(i * 3) + 0] = arg3[arg5[i]];
+        gTransitionVertexTarget[(i * 3) + 1] = arg3[arg5[i] + 1];
+        gTransitionVertexTarget[(i * 3) + 2] = lastAlpha[i];
+        gTransitionVtxStep[(i * 3) + 0] = (gTransitionVertexTarget[(i * 3) + 0] - gTransitionNextVtx[(i * 3) + 0]) / sTransitionFadeTimer;
+        gTransitionVtxStep[(i * 3) + 1] = (gTransitionVertexTarget[(i * 3) + 1] - gTransitionNextVtx[(i * 3) + 1]) / sTransitionFadeTimer;
+        gTransitionVtxStep[(i * 3) + 2] = (gTransitionVertexTarget[(i * 3) + 2] - gTransitionNextVtx[(i * 3) + 2]) / sTransitionFadeTimer;
     }
     
     for (i = 0; i < 2; i++) {
@@ -526,42 +535,44 @@ void func_800C0B00(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *a
     }
     
     sTransitionStatus = 1;
-    D_8012A77C = numVerts;
+    gTransitionVertexCount = numVerts;
 }
 
-
-void func_800C1130(s32 updateRate) {
+/**
+ * Slowly update the vertices of the transition based on what the next frames target is.
+ * That target is set based on a velocity.
+*/
+void process_transition_shape(s32 updateRate) {
     s32 i;
     f32 updateRateF;
 
-    updateRateF = (f32) updateRate;
+    updateRateF = updateRate;
     if (sTransitionFadeTimer > 0) {
         if (updateRate < sTransitionFadeTimer) {
-           for (i = 0; i < D_8012A77C; i++) {
-                D_8012A770[i*3] += updateRateF * D_8012A774[i*3];
-                D_8012A770[i*3 + 1] += updateRateF * D_8012A774[i*3 + 1];
-                D_8012A770[i*3 + 2] += updateRateF * D_8012A774[i*3 + 2];
+           for (i = 0; i < gTransitionVertexCount; i++) {
+                gTransitionNextVtx[i*3] += updateRateF * gTransitionVtxStep[i*3];
+                gTransitionNextVtx[i*3 + 1] += updateRateF * gTransitionVtxStep[i*3 + 1];
+                gTransitionNextVtx[i*3 + 2] += updateRateF * gTransitionVtxStep[i*3 + 2];
             }
             sTransitionFadeTimer -= updateRate;
         } else {
-            for (i = 0; i < D_8012A77C; i++) {
-                D_8012A770[i*3]     = D_8012A778[i*3];
-                D_8012A770[i*3 + 1] = D_8012A778[i*3 + 1];
-                D_8012A770[i*3 + 2] = D_8012A778[i*3 + 2];
+            for (i = 0; i < gTransitionVertexCount; i++) {
+                gTransitionNextVtx[i*3]     = gTransitionVertexTarget[i*3];
+                gTransitionNextVtx[i*3 + 1] = gTransitionVertexTarget[i*3 + 1];
+                gTransitionNextVtx[i*3 + 2] = gTransitionVertexTarget[i*3 + 2];
             }
             sTransitionFadeTimer = 0;
         }
-        for (i = 0; i < D_8012A77C; i++) {
-            sTransitionVtx[sTransitionTaskNum][i].x = (s32)D_8012A770[i*3];
-            sTransitionVtx[sTransitionTaskNum][i].y = (s32)D_8012A770[i*3+1];
-            sTransitionVtx[sTransitionTaskNum][i].a = (s32)D_8012A770[i*3+2];
+        for (i = 0; i < gTransitionVertexCount; i++) {
+            sTransitionVtx[sTransitionTaskNum][i].x = gTransitionNextVtx[i*3];
+            sTransitionVtx[sTransitionTaskNum][i].y = gTransitionNextVtx[i*3+1];
+            sTransitionVtx[sTransitionTaskNum][i].a = (s32) gTransitionNextVtx[i*3+2];
         }
-    } else if (sTransitionFlags != 0xFFFF) {
-        if (updateRate < sTransitionFlags) {
-            sTransitionFlags -= updateRate;
-        }
-        else {
-            sTransitionFlags = 0;
+    } else if (gTransitionEndTimer != 0xFFFF) {
+        if (updateRate < gTransitionEndTimer) {
+            gTransitionEndTimer -= updateRate;
+        } else {
+            gTransitionEndTimer = 0;
         }
     }
 }
@@ -594,6 +605,9 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1EE8.s")
 
 #define NUM_OF_VERTS 18
 #define NUM_OF_TRIS 16
+/**
+ * Render a circle shape transition onscreen using previously allocated geometry.
+*/
 void render_fade_circle(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     Vertex *vertsToRender;
     Triangle *trisToRender;
@@ -618,6 +632,9 @@ void render_fade_circle(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **vert
     reset_render_settings(dList);
 }
 
+/**
+ * Render the wavy transition onscreen using the vertex data allocated earlier.
+*/
 void render_fade_waves(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     Gfx *gfx;
     s32 i;
@@ -625,8 +642,8 @@ void render_fade_waves(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts
     Triangle *t;
     reset_render_settings(dlist);
     gfx = *dlist;
-    v = (Vertex *)sTransitionVtx[sTransitionTaskNum];
-    t = (Triangle *)sTransitionTris[sTransitionTaskNum];
+    v = (Vertex *) sTransitionVtx[sTransitionTaskNum];
+    t = (Triangle *) sTransitionTris[sTransitionTaskNum];
     gSPDisplayList(gfx++, dTransitionShapeSettings);
     /*
     i == 0 -> Left third wave?
@@ -664,27 +681,33 @@ void render_fade_barndoor_diagonal(Gfx **dList, UNUSED MatrixS **mats, UNUSED Ve
     reset_render_settings(dList);
 }
 
-void func_800C2640(UNUSED FadeTransition *transition) {
+/**
+ * Set the transition colour target, then set the velocity for the colour to fade to.
+*/
+void init_transition_blank(UNUSED FadeTransition *transition) {
     gLastFadeRed <<= 0x10;
     gLastFadeGreen <<= 0x10;
     gLastFadeBlue <<= 0x10;
-    gCurFadeAlpha = 0xFF;
+    gCurFadeAlpha = 255;
     sTransitionOpacity = 255.0f;
     gTransitionOpacityVel = 0.0f;
-    D_8012A744 = (s32) ((gCurFadeRed << 0x10) - gLastFadeRed) / (s32) sTransitionFadeTimer;
-    D_8012A748 = (s32) ((gCurFadeGreen << 0x10) - gLastFadeGreen) / (s32) sTransitionFadeTimer;
-    D_8012A74C = (s32) ((gCurFadeBlue << 0x10) - gLastFadeBlue) / (s32) sTransitionFadeTimer;
+    gLastFadeRedStep = ((gCurFadeRed << 0x10) - gLastFadeRed) / sTransitionFadeTimer;
+    gLastFadeGreenStep = ((gCurFadeGreen << 0x10) - gLastFadeGreen) / sTransitionFadeTimer;
+    gLastFadeBlueStep = ((gCurFadeBlue << 0x10) - gLastFadeBlue) / sTransitionFadeTimer;
     sTransitionStatus = 1;
 }
 
-void func_800C27A0(s32 updateRate) {
+/**
+ * Shifts the colours of the transition over time while the timer ticks down.
+*/
+void process_transition_disabled(s32 updateRate) {
     s32 var_v0;
     do {
         var_v0 = TRUE;
         if (sTransitionFadeTimer > 0) {
-            gLastFadeRed += D_8012A744 * updateRate;
-            gLastFadeGreen += D_8012A748 * updateRate;
-            gLastFadeBlue += D_8012A74C * updateRate;
+            gLastFadeRed += gLastFadeRedStep * updateRate;
+            gLastFadeGreen += gLastFadeGreenStep * updateRate;
+            gLastFadeBlue += gLastFadeBlueStep * updateRate;
             if (updateRate >= sTransitionFadeTimer) {
                 gLastFadeRed = gCurFadeRed << 0x10;
                 gLastFadeGreen = gCurFadeGreen << 0x10;
@@ -695,16 +718,19 @@ void func_800C27A0(s32 updateRate) {
                 sTransitionFadeTimer -= updateRate;
             }
         } else {
-            if (sTransitionFlags != 0xFFFF) {
-                sTransitionFlags -= updateRate;
-                if (sTransitionFlags <= 0) {
-                    sTransitionFlags = 0;
+            if (gTransitionEndTimer != 0xFFFF) {
+                gTransitionEndTimer -= updateRate;
+                if (gTransitionEndTimer <= 0) {
+                    gTransitionEndTimer = 0;
                 }
             }
         }
     } while (var_v0 == FALSE);
 }
 
+/**
+ * Fill the whole screen with a solid colour.
+*/
 void render_fade_disabled(Gfx **dList, UNUSED MatrixS **mats, UNUSED Vertex **verts) {
     s32 screenSize = get_video_width_and_height_as_s32();
     gSPDisplayList((*dList)++, dTransitionFadeSettings);

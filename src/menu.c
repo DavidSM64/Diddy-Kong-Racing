@@ -369,9 +369,9 @@ s32 D_800DF768 = 1;
 
 FadeTransition sMenuTransitionFadeInFast = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 10, -1);
 FadeTransition sMenuTransitionFadeIn = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 18, -1);
-FadeTransition sMenuTransitionFadeOut = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK2, FADE_COLOR_BLACK, 18, 0);
+FadeTransition sMenuTransitionFadeOut = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 18, 0);
 UNUSED FadeTransition sMenuTransitionFadeInWhite = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 18, -1);
-UNUSED FadeTransition sMenuTransitionFadeOutWhite = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK2, FADE_COLOR_WHITE, 18, 0);
+UNUSED FadeTransition sMenuTransitionFadeOutWhite = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_WHITE, 18, 0);
 
 s32 D_800DF794 = 4;
 MenuElement *D_800DF798 = NULL;
@@ -3894,7 +3894,7 @@ s32 menu_boot_loop(s32 updateRate) {
             }
             break;
         case 2:
-            if (gMenuDelay && fxFadeOn() == 0) {
+            if (gMenuDelay && check_fadeout_transition() == 0) {
                 transition_begin(&sMenuTransitionFadeInFast);
             }
             temp = 300;

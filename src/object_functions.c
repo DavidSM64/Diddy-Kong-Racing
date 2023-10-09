@@ -35,7 +35,7 @@
 /************ .data ************/
 
 // Unsure about the signed/unsigned with these arrays.
-FadeTransition D_800DC970 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK1, FADE_COLOR_WHITE, 7, 3);
+FadeTransition D_800DC970 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_INVERT, FADE_COLOR_WHITE, 7, 3);
 FadeTransition D_800DC978 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, 0xFFFF);
 
 Vertex gCharacterFlagVertices[4] = {
