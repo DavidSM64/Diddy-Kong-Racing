@@ -8,6 +8,7 @@
 #include "memory.h"
 #include "textures_sprites.h"
 #include "objects.h"
+#include "tracks.h"
 
 /************ .data ************/
 
@@ -64,13 +65,13 @@ s16 D_800E3144[26] = {
 
 s32 *D_800E3178 = NULL;
 s32 D_800E317C = 0;
-s32 D_800E3180 = 0;
+LevelHeader_70 *D_800E3180 = NULL;
 unk800E3184 *D_800E3184 = NULL;
 s32 D_800E3188 = NULL;
 s32 D_800E318C = 0;
 unk800E3190 *D_800E3190 = NULL;
 s32 *D_800E3194 = NULL;
-Object *D_800E3198 = 0;
+Object *gWaveGeneratorObj = NULL;
 s32 D_800E319C = 0;
 
 /*******************************/
@@ -95,8 +96,8 @@ s32 D_8012A01C;
 s32 D_8012A020[2];
 s32 D_8012A028[20];
 s32 D_8012A078;
-TriangleBatchInfo *D_8012A07C;
-TextureHeader *D_8012A080;
+TriangleBatchInfo *gWaveBatch;
+TextureHeader *gWaveTexture;
 s32 D_8012A084;
 s32 D_8012A088;
 s32 D_8012A08C;
@@ -106,10 +107,10 @@ s32 D_8012A098;
 s32 D_8012A09C;
 s32 D_8012A0A0;
 s32 D_8012A0A4;
-s32 D_8012A0A8;
-s32 D_8012A0AC;
-s32 D_8012A0B0;
-s32 D_8012A0B4;
+s32 gWaveBoundingBoxDiffX;
+s32 gWaveBoundingBoxDiffZ;
+s32 gWaveBoundingBoxX1;
+s32 gWaveBoundingBoxZ1;
 f32 D_8012A0B8;
 f32 D_8012A0BC;
 s32 D_8012A0C0;
@@ -274,10 +275,10 @@ void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1) {
     numSegments = level->numberOfSegments;
     curBatch = 0;
     
-    for (i = 0; (curBatch == 0) && (i < numSegments); i++) {
+    for (i = 0; curBatch == 0 && i < numSegments; i++) {
         segment = &level->segments[i];
-        for (j = 0; (curBatch == 0) && (j < segment->numberOfBatches); j++) {
-            if ((segment->batches[j].flags & 0x01002100) == 0x01002000) {
+        for (j = 0; curBatch == 0 && j < segment->numberOfBatches; j++) {
+            if ((segment->batches[j].flags & (BATCH_FLAGS_UNK01000000 | BATCH_FLAGS_WATER | BATCH_FLAGS_HIDDEN)) == (BATCH_FLAGS_UNK01000000 | BATCH_FLAGS_WATER)) {
                 curBatch = &segment->batches[j];
             }
         }
@@ -289,15 +290,15 @@ void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1) {
         i--;
     }
     bb = &level->segmentsBoundingBoxes[i];
-    D_8012A0A8 = bb->x2 - bb->x1;
-    D_8012A0AC = bb->z2 - bb->z1;
-    D_8012A0B0 = bb->x1;
-    D_8012A0B4 = bb->z1;
-    D_8012A07C = curBatch;
-    D_8012A080 = level->textures[curBatch->textureIndex].texture;
-    temp_t6 = (curBatch->flags & 0x70000000) >> 0x1C;
+    gWaveBoundingBoxDiffX = bb->x2 - bb->x1;
+    gWaveBoundingBoxDiffZ = bb->z2 - bb->z1;
+    gWaveBoundingBoxX1 = bb->x1;
+    gWaveBoundingBoxZ1 = bb->z1;
+    gWaveBatch = curBatch;
+    gWaveTexture = level->textures[curBatch->textureIndex].texture;
+    temp_t6 = (curBatch->flags & (BATCH_FLAGS_UNK40000000 | BATCH_FLAGS_UNK20000000 | BATCH_FLAGS_UNK10000000)) >> 0x1C;
     if (temp_t6 > 0) {
-        D_800E3180 = arg1->unk70[temp_t6];
+        D_800E3180 = (LevelHeader_70 *) arg1->unk70[temp_t6];
     } else {
         D_800E3180 = 0;
     }
@@ -512,13 +513,13 @@ void obj_loop_wavepower(Object *obj) {
     f32 diffX;
     f32 distance;
 
-    if (obj != D_800E3198) {
+    if (obj != gWaveGeneratorObj) {
         racers = get_racer_objects(&numRacers);
         if (numRacers > 0) {
             racerObj = NULL;
             for (i = 0; i < numRacers && racerObj == NULL; i++) {
                 racer = (Object_Racer *) racers[i]->unk64;
-                if (racer->playerIndex == 0) {
+                if (racer->playerIndex == PLAYER_ONE) {
                     racerObj = racers[i];
                 }
             }
@@ -529,11 +530,11 @@ void obj_loop_wavepower(Object *obj) {
                 diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
                 diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
-                if (((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < distance) {
-                    D_8012A720 = ((f32) entry->unkA * (1.0f / 256.0f));
-                    D_8012A724 = ((D_8012A720 -  D_80129FC8->unk40) / (f32) entry->unkC);
-                    D_8012A728 = (s32) entry->unkC;
-                    D_800E3198 = obj;
+                if ((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ) < distance) {
+                    D_8012A720 = entry->unkA * (1.0f / 256.0f);
+                    D_8012A724 = (D_8012A720 -  D_80129FC8->unk40) / (f32) entry->unkC;
+                    D_8012A728 = entry->unkC;
+                    gWaveGeneratorObj = obj;
                 }
             }
         }

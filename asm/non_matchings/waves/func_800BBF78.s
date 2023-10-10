@@ -83,8 +83,8 @@ glabel func_800BBF78
 /* 0BCCA4 800BC0A4 1420FFE1 */  bnez  $at, .L800BC02C
 /* 0BCCA8 800BC0A8 2610000C */   addiu $s0, $s0, 0xc
 .L800BC0AC:
-/* 0BCCAC 800BC0AC 3C198013 */  lui   $t9, %hi(D_8012A0B0) # $t9, 0x8013
-/* 0BCCB0 800BC0B0 8F24A0B0 */  lw    $a0, %lo(D_8012A0B0)($t9)
+/* 0BCCAC 800BC0AC 3C198013 */  lui   $t9, %hi(gWaveBoundingBoxX1) # $t9, 0x8013
+/* 0BCCB0 800BC0B0 8F24A0B0 */  lw    $a0, %lo(gWaveBoundingBoxX1)($t9)
 /* 0BCCB4 800BC0B4 26D6A0D0 */  addiu $s6, %lo(D_8012A0D0) # addiu $s6, $s6, -0x5f30
 /* 0BCCB8 800BC0B8 AEC40000 */  sw    $a0, ($s6)
 /* 0BCCBC 800BC0BC 8C620000 */  lw    $v0, ($v1)
@@ -97,8 +97,8 @@ glabel func_800BBF78
 /* 0BCCD8 800BC0D8 0044082A */  slt   $at, $v0, $a0
 /* 0BCCDC 800BC0DC 10200009 */  beqz  $at, .L800BC104
 /* 0BCCE0 800BC0E0 3C158013 */   lui   $s5, %hi(D_8012A0D4) # $s5, 0x8013
-/* 0BCCE4 800BC0E4 3C068013 */  lui   $a2, %hi(D_8012A0A8) # $a2, 0x8013
-/* 0BCCE8 800BC0E8 8CC6A0A8 */  lw    $a2, %lo(D_8012A0A8)($a2)
+/* 0BCCE4 800BC0E4 3C068013 */  lui   $a2, %hi(gWaveBoundingBoxDiffX) # $a2, 0x8013
+/* 0BCCE8 800BC0E8 8CC6A0A8 */  lw    $a2, %lo(gWaveBoundingBoxDiffX)($a2)
 /* 0BCCEC 800BC0EC 00000000 */  nop   
 .L800BC0F0:
 /* 0BCCF0 800BC0F0 00867023 */  subu  $t6, $a0, $a2
@@ -107,17 +107,17 @@ glabel func_800BBF78
 /* 0BCCFC 800BC0FC 1420FFFC */  bnez  $at, .L800BC0F0
 /* 0BCD00 800BC100 01C02025 */   move  $a0, $t6
 .L800BC104:
-/* 0BCD04 800BC104 3C188013 */  lui   $t8, %hi(D_8012A0B4) # $t8, 0x8013
-/* 0BCD08 800BC108 8F18A0B4 */  lw    $t8, %lo(D_8012A0B4)($t8)
+/* 0BCD04 800BC104 3C188013 */  lui   $t8, %hi(gWaveBoundingBoxZ1) # $t8, 0x8013
+/* 0BCD08 800BC108 8F18A0B4 */  lw    $t8, %lo(gWaveBoundingBoxZ1)($t8)
 /* 0BCD0C 800BC10C 26B5A0D4 */  addiu $s5, %lo(D_8012A0D4) # addiu $s5, $s5, -0x5f2c
-/* 0BCD10 800BC110 3C068013 */  lui   $a2, %hi(D_8012A0A8) # $a2, 0x8013
+/* 0BCD10 800BC110 3C068013 */  lui   $a2, %hi(gWaveBoundingBoxDiffX) # $a2, 0x8013
 /* 0BCD14 800BC114 AEB80000 */  sw    $t8, ($s5)
-/* 0BCD18 800BC118 8CC6A0A8 */  lw    $a2, %lo(D_8012A0A8)($a2)
+/* 0BCD18 800BC118 8CC6A0A8 */  lw    $a2, %lo(gWaveBoundingBoxDiffX)($a2)
 /* 0BCD1C 800BC11C 00B8082A */  slt   $at, $a1, $t8
 /* 0BCD20 800BC120 10200009 */  beqz  $at, .L800BC148
 /* 0BCD24 800BC124 03001025 */   move  $v0, $t8
-/* 0BCD28 800BC128 3C038013 */  lui   $v1, %hi(D_8012A0AC) # $v1, 0x8013
-/* 0BCD2C 800BC12C 8C63A0AC */  lw    $v1, %lo(D_8012A0AC)($v1)
+/* 0BCD28 800BC128 3C038013 */  lui   $v1, %hi(gWaveBoundingBoxDiffZ) # $v1, 0x8013
+/* 0BCD2C 800BC12C 8C63A0AC */  lw    $v1, %lo(gWaveBoundingBoxDiffZ)($v1)
 /* 0BCD30 800BC130 00000000 */  nop   
 .L800BC134:
 /* 0BCD34 800BC134 00437823 */  subu  $t7, $v0, $v1
@@ -128,8 +128,8 @@ glabel func_800BBF78
 .L800BC148:
 /* 0BCD48 800BC148 00E4C823 */  subu  $t9, $a3, $a0
 /* 0BCD4C 800BC14C 0326001A */  div   $zero, $t9, $a2
-/* 0BCD50 800BC150 3C1E8013 */  lui   $fp, %hi(D_8012A0AC) # $fp, 0x8013
-/* 0BCD54 800BC154 27DEA0AC */  addiu $fp, %lo(D_8012A0AC) # addiu $fp, $fp, -0x5f54
+/* 0BCD50 800BC150 3C1E8013 */  lui   $fp, %hi(gWaveBoundingBoxDiffZ) # $fp, 0x8013
+/* 0BCD54 800BC154 27DEA0AC */  addiu $fp, %lo(gWaveBoundingBoxDiffZ) # addiu $fp, $fp, -0x5f54
 /* 0BCD58 800BC158 01027823 */  subu  $t7, $t0, $v0
 /* 0BCD5C 800BC15C 3C178013 */  lui   $s7, %hi(D_8012A0D8) # $s7, 0x8013
 /* 0BCD60 800BC160 26F7A0D8 */  addiu $s7, %lo(D_8012A0D8) # addiu $s7, $s7, -0x5f28
@@ -263,11 +263,11 @@ glabel func_800BBF78
 /* 0BCF3C 800BC33C 02808025 */  move  $s0, $s4
 /* 0BCF40 800BC340 03190019 */  multu $t8, $t9
 /* 0BCF44 800BC344 3C038013 */  lui   $v1, %hi(D_8012A1E8) # $v1, 0x8013
-/* 0BCF48 800BC348 3C148013 */  lui   $s4, %hi(D_8012A0A8) # $s4, 0x8013
+/* 0BCF48 800BC348 3C148013 */  lui   $s4, %hi(gWaveBoundingBoxDiffX) # $s4, 0x8013
 /* 0BCF4C 800BC34C 0000F825 */  move  $ra, $zero
 /* 0BCF50 800BC350 00001025 */  move  $v0, $zero
 /* 0BCF54 800BC354 2463A1E8 */  addiu $v1, %lo(D_8012A1E8) # addiu $v1, $v1, -0x5e18
-/* 0BCF58 800BC358 2694A0A8 */  addiu $s4, %lo(D_8012A0A8) # addiu $s4, $s4, -0x5f58
+/* 0BCF58 800BC358 2694A0A8 */  addiu $s4, %lo(gWaveBoundingBoxDiffX) # addiu $s4, $s4, -0x5f58
 /* 0BCF5C 800BC35C 240C000A */  li    $t4, 10
 /* 0BCF60 800BC360 3C0B0040 */  lui   $t3, 0x40
 /* 0BCF64 800BC364 24050080 */  li    $a1, 128

@@ -31,16 +31,16 @@ glabel func_800B82B4
 /* 0B8F0C 800B830C 8FA40070 */  lw    $a0, 0x70($sp)
 /* 0B8F10 800B8310 0C02EF77 */  jal   func_800BBDDC
 /* 0B8F14 800B8314 02002825 */   move  $a1, $s0
-/* 0B8F18 800B8318 3C0E8013 */  lui   $t6, %hi(D_8012A0A8) # $t6, 0x8013
-/* 0B8F1C 800B831C 8DCEA0A8 */  lw    $t6, %lo(D_8012A0A8)($t6)
+/* 0B8F18 800B8318 3C0E8013 */  lui   $t6, %hi(gWaveBoundingBoxDiffX) # $t6, 0x8013
+/* 0B8F1C 800B831C 8DCEA0A8 */  lw    $t6, %lo(gWaveBoundingBoxDiffX)($t6)
 /* 0B8F20 800B8320 3C058013 */  lui   $a1, %hi(D_8012A0A0) # $a1, 0x8013
 /* 0B8F24 800B8324 448E2000 */  mtc1  $t6, $f4
 /* 0B8F28 800B8328 24A5A0A0 */  addiu $a1, %lo(D_8012A0A0) # addiu $a1, $a1, -0x5f60
 /* 0B8F2C 800B832C 468021A0 */  cvt.s.w $f6, $f4
-/* 0B8F30 800B8330 3C0F8013 */  lui   $t7, %hi(D_8012A0AC) # $t7, 0x8013
+/* 0B8F30 800B8330 3C0F8013 */  lui   $t7, %hi(gWaveBoundingBoxDiffZ) # $t7, 0x8013
 /* 0B8F34 800B8334 3C148013 */  lui   $s4, %hi(D_80129FC8) # $s4, 0x8013
 /* 0B8F38 800B8338 E4A60000 */  swc1  $f6, ($a1)
-/* 0B8F3C 800B833C 8DEFA0AC */  lw    $t7, %lo(D_8012A0AC)($t7)
+/* 0B8F3C 800B833C 8DEFA0AC */  lw    $t7, %lo(gWaveBoundingBoxDiffZ)($t7)
 /* 0B8F40 800B8340 26949FC8 */  addiu $s4, %lo(D_80129FC8) # addiu $s4, $s4, -0x6038
 /* 0B8F44 800B8344 8E820000 */  lw    $v0, ($s4)
 /* 0B8F48 800B8348 448F4000 */  mtc1  $t7, $f8
@@ -58,14 +58,14 @@ glabel func_800B82B4
 /* 0B8F78 800B8378 2652A0BC */  addiu $s2, %lo(D_8012A0BC) # addiu $s2, $s2, -0x5f44
 /* 0B8F7C 800B837C 2631A0B8 */  addiu $s1, %lo(D_8012A0B8) # addiu $s1, $s1, -0x5f48
 /* 0B8F80 800B8380 3C018013 */  lui   $at, %hi(D_8012A084) # $at, 0x8013
-/* 0B8F84 800B8384 3C038013 */  lui   $v1, %hi(D_8012A080) # $v1, 0x8013
+/* 0B8F84 800B8384 3C038013 */  lui   $v1, %hi(gWaveTexture) # $v1, 0x8013
 /* 0B8F88 800B8388 0000B825 */  move  $s7, $zero
 /* 0B8F8C 800B838C 46003203 */  div.s $f8, $f6, $f0
 /* 0B8F90 800B8390 E6240000 */  swc1  $f4, ($s1)
 /* 0B8F94 800B8394 E6480000 */  swc1  $f8, ($s2)
 /* 0B8F98 800B8398 AC20A084 */  sw    $zero, %lo(D_8012A084)($at)
 /* 0B8F9C 800B839C 3C018013 */  lui   $at, %hi(D_8012A088) # $at, 0x8013
-/* 0B8FA0 800B83A0 8C63A080 */  lw    $v1, %lo(D_8012A080)($v1)
+/* 0B8FA0 800B83A0 8C63A080 */  lw    $v1, %lo(gWaveTexture)($v1)
 /* 0B8FA4 800B83A4 AC20A088 */  sw    $zero, %lo(D_8012A088)($at)
 /* 0B8FA8 800B83A8 8E990030 */  lw    $t9, 0x30($s4)
 /* 0B8FAC 800B83AC 90780000 */  lbu   $t8, ($v1)
@@ -591,9 +591,9 @@ glabel func_800B82B4
 /* 0B9738 800B8B38 AC203188 */  sw    $zero, %lo(D_800E3188)($at)
 /* 0B973C 800B8B3C 3C018013 */  lui   $at, %hi(D_8012A728) # $at, 0x8013
 /* 0B9740 800B8B40 AC20A728 */  sw    $zero, %lo(D_8012A728)($at)
-/* 0B9744 800B8B44 3C01800E */  lui   $at, %hi(D_800E3198) # $at, 0x800e
+/* 0B9744 800B8B44 3C01800E */  lui   $at, %hi(gWaveGeneratorObj) # $at, 0x800e
 /* 0B9748 800B8B48 8FBF0044 */  lw    $ra, 0x44($sp)
-/* 0B974C 800B8B4C AC203198 */  sw    $zero, %lo(D_800E3198)($at)
+/* 0B974C 800B8B4C AC203198 */  sw    $zero, %lo(gWaveGeneratorObj)($at)
 /* 0B9750 800B8B50 3C018013 */  lui   $at, %hi(D_8012A018) # $at, 0x8013
 /* 0B9754 800B8B54 C7B50018 */  lwc1  $f21, 0x18($sp)
 /* 0B9758 800B8B58 C7B4001C */  lwc1  $f20, 0x1c($sp)

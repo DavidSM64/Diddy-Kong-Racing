@@ -535,7 +535,7 @@ void obj_loop_torch_mist(Object *obj, s32 updateRate) {
 void obj_init_effectbox(UNUSED Object *obj, UNUSED LevelObjectEntry_EffectBox *entry) {
 }
 
-void obj_loop_effectbox(Object *effectBoxObj, s32 arg1) {
+void obj_loop_effectbox(Object *obj, UNUSED s32 updateRate) {
     Object **racers;
     LevelObjectEntry_EffectBox *effectBoxEntry;
     s32 numRacers;
@@ -552,28 +552,28 @@ void obj_loop_effectbox(Object *effectBoxObj, s32 arg1) {
     f32 yDiff;
     s32 i;
 
-    effectBoxEntry = (LevelObjectEntry_EffectBox *)effectBoxObj->segment.level_entry;
+    effectBoxEntry = (LevelObjectEntry_EffectBox *) obj->segment.level_entry;
     racers = get_racer_objects(&numRacers);
     cosAngle = coss_f(-(effectBoxEntry->unkB * 256));
     sinAngle = sins_f(-(effectBoxEntry->unkB * 256));
-    xExtents = (f32) (effectBoxEntry->unk8 * 3);
-    yExtents = (f32) (effectBoxEntry->unk9 * 3);
-    zExtents = (f32) (effectBoxEntry->unkA * 3);
+    xExtents = effectBoxEntry->unk8 * 3;
+    yExtents = effectBoxEntry->unk9 * 3;
+    zExtents = effectBoxEntry->unkA * 3;
     for(i = 0; i < numRacers; i++) {
         curRacerObj = racers[i];
-        xDiff = curRacerObj->segment.trans.x_position - effectBoxObj->segment.trans.x_position;
-        yDiff = curRacerObj->segment.trans.y_position - effectBoxObj->segment.trans.y_position;
-        zDiff = curRacerObj->segment.trans.z_position - effectBoxObj->segment.trans.z_position;
-        if ((-yExtents < yDiff) && (yDiff < yExtents)) {
+        xDiff = curRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
+        yDiff = curRacerObj->segment.trans.y_position - obj->segment.trans.y_position;
+        zDiff = curRacerObj->segment.trans.z_position - obj->segment.trans.z_position;
+        if (-yExtents < yDiff && yDiff < yExtents) {
             yExtentsHalf = (xDiff * cosAngle) + (zDiff * sinAngle);
-            if ((-xExtents < yExtentsHalf) && (yExtentsHalf < xExtents)) {
+            if (-xExtents < yExtentsHalf && yExtentsHalf < xExtents) {
                 zDiff = (-xDiff * sinAngle) + (zDiff * cosAngle);
-                if ((-zExtents < zDiff) && (zDiff < zExtents)) {
+                if (-zExtents < zDiff && zDiff < zExtents) {
                     yExtentsHalf = yExtents / 2;
                     curRacer = &curRacerObj->unk64->racer;
                     curRacer->unk1FE = effectBoxEntry->unkC;
                     curRacer->unk1FF = effectBoxEntry->unkD;
-                    if ((yExtentsHalf < yDiff) && (curRacer->unk1FE == 1)) {
+                    if (yExtentsHalf < yDiff && curRacer->unk1FE == 1) {
                         xDiff = (yDiff - yExtentsHalf) / yExtentsHalf;
                         yDiff = (1.0 - xDiff);
                         curRacer->unk1FF *= yDiff;
