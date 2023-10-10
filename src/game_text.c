@@ -73,7 +73,7 @@ void init_dialogue_text(void) {
         gDialogueYPos1 = SCREEN_HEIGHT - 38;
         gDialogueYPos2 = SCREEN_HEIGHT - 18;
     }
-    func_800C56D0(6);
+    clear_dialogue_box_open_flag(6);
 }
 
 /**

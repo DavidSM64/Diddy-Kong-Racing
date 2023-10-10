@@ -7511,7 +7511,7 @@ void func_80093D40(UNUSED s32 updateRate) {
 
     yOffset = ((gMenuOptionCap * 16) + 28);
 
-    func_800C56D0(7);
+    clear_dialogue_box_open_flag(7);
     assign_dialogue_box_id(7);
 
     yOffset >>= 1;

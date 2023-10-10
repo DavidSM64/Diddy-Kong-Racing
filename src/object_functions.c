@@ -5174,7 +5174,7 @@ void obj_init_levelname(Object *obj, LevelObjectEntry_LevelName *entry) {
     if (is_in_tracks_mode()) {
         free_object(obj);
     }
-    func_800C56D0(4);
+    clear_dialogue_box_open_flag(4);
 }
 
 /**
