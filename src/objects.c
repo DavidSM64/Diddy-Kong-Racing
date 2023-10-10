@@ -1571,7 +1571,7 @@ void func_80010994(s32 updateRate) {
         for (i = 0; i < gNumRacers; i++) {
             racer = &gRacersByPosition[i]->unk64->racer;
             if (racer->playerIndex != -1) {
-                func_80043ECC(gRacersByPosition[i], racer, updateRate);
+                increment_ai_behaviour_chances(gRacersByPosition[i], racer, updateRate);
                 i = gNumRacers; //Why not just break?
             }
         }
@@ -4109,7 +4109,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
             camera = &newObj->unk64->anim_camera;
             camera->unk44 = D_8011AD3E;
             viewportCount = get_viewport_count();
-            if (func_8006C19C()) {
+            if (is_two_player_adventure_race()) {
                 viewportCount = VIEWPORTS_COUNT_2_PLAYERS;
             }
             for (i = 0; i < viewportCount;) {
@@ -5140,7 +5140,7 @@ void run_object_loop_func(Object *obj, s32 updateRate) {
             obj_loop_parkwarden(obj, updateRate);
             break;
         case BHV_WORLD_KEY:
-            obj_loop_worldkey(obj, updateRate); //arg1=speed
+            obj_loop_worldkey(obj, updateRate);
             break;
         case BHV_BANANA_SPAWNER:
             obj_loop_bananacreator(obj, updateRate);

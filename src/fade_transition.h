@@ -22,7 +22,14 @@
 #define FADE_COLOR_BLACK FADE_COLOR(0, 0, 0)
 #define FADE_COLOR_WHITE FADE_COLOR(255, 255, 255)
 
-#define FADE_TRANSITION(type, flags, color, duration, unk6) { (type & 0x3F) | (flags & 0xC0), color, duration, unk6 }
+/**
+ * type: Transition type
+ * flags: Transition flags
+ * color: Transition colour
+ * duration: Transition length
+ * endDelay: Length after transition finishing before it frees.
+*/
+#define FADE_TRANSITION(type, flags, color, duration, endDelay) { (type & 0x3F) | (flags & 0xC0), color, duration, endDelay }
 
 enum TransitionStatus {
     TRANSITION_LEVELSWAP = -1,

@@ -49,7 +49,7 @@
 
 char *gTempLevelNames = NULL;
 s8 gCurrentDefaultVehicle = -1;
-u8 D_800DD318 = FALSE;
+u8 gTwoPlayerAdvRace = FALSE;
 s32 gIsInRace = 0;
 
 // Updated automatically from calc_func_checksums.py
@@ -77,7 +77,7 @@ LevelGlobalData *gGlobalLevelTable;
 
 s32 D_80121180[16];
 
-TempStruct5 *D_801211C0;
+AIBehaviourTable *gAIBehaviourTable;
 s16 gLevelPropertyStack[5 * 4]; // Stores level info for cutscenes. 5 sets of four properties.
 
 /******************************/
@@ -555,10 +555,10 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         cutsceneId = CUTSCENE_ID_UNK_64;
     }
     if ((gCurrentLevelHeader->race_type == RACETYPE_DEFAULT || gCurrentLevelHeader->race_type & RACETYPE_CHALLENGE) && is_in_two_player_adventure()) {
-        D_800DD318 = TRUE;
+        gTwoPlayerAdvRace = TRUE;
         cutsceneId = CUTSCENE_ID_UNK_64;
     } else {
-        D_800DD318 = FALSE;
+        gTwoPlayerAdvRace = FALSE;
 
     }
     if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT && numPlayers == 0 && is_time_trial_enabled()) {
@@ -737,7 +737,7 @@ void set_ai_level(s8 *arg0) {
     if (get_game_mode() == GAMEMODE_MENU) {
         aiLevel = 5;
     }
-    gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
+    gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_AI_BEHAVIOUR_TABLE);
     phi_v1 = 0;
     while (-1 != (s32) gTempAssetTable[phi_v1]) {
         phi_v1++;
@@ -748,21 +748,27 @@ void set_ai_level(s8 *arg0) {
     }
     temp2 = gTempAssetTable[aiLevel];
     temp = gTempAssetTable[aiLevel + 1] - temp2;
-    D_801211C0 = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
-    load_asset_to_address(ASSET_UNKNOWN_0, (u32) D_801211C0, temp2, temp);
+    gAIBehaviourTable = allocate_from_main_pool_safe(temp, COLOUR_TAG_YELLOW);
+    load_asset_to_address(ASSET_AI_BEHAVIOUR, (u32) gAIBehaviourTable, temp2, temp);
     free_from_memory_pool(gTempAssetTable);
 }
 
 void frontCleanupMultiSelect(void) {
-    free_from_memory_pool(D_801211C0);
+    free_from_memory_pool(gAIBehaviourTable);
 }
 
-TempStruct5 *func_8006C18C(void) {
-    return D_801211C0;
+/**
+ * Return the behaviour value table for AI racers.
+*/
+AIBehaviourTable *get_ai_behaviour_table(void) {
+    return gAIBehaviourTable;
 }
 
-s8 func_8006C19C(void) {
-    return D_800DD318;
+/**
+ * Return whether it is a standard race with two players in adventure mode.
+*/
+s8 is_two_player_adventure_race(void) {
+    return gTwoPlayerAdvRace;
 }
 
 /**

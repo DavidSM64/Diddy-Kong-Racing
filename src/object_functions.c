@@ -35,8 +35,8 @@
 /************ .data ************/
 
 // Unsure about the signed/unsigned with these arrays.
-FadeTransition D_800DC970 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_INVERT, FADE_COLOR_WHITE, 7, 3);
-FadeTransition D_800DC978 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, 0xFFFF);
+FadeTransition gTajTransformTransitionEnd = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_INVERT, FADE_COLOR_WHITE, 7, 3);
+FadeTransition gTajTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, 0xFFFF);
 
 Vertex gCharacterFlagVertices[4] = {
     { -256,  256, 0, 255, 255, 255, 255 },
@@ -303,7 +303,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         if (obj->properties.fireball.timer < 0) {
             if (obj->unk4A == 298) {
                 free_object(obj);
-                func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, SOUND_EXPLOSION, 1.0f, 1);
+                func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);
             }
             obj->segment.trans.scale *= 0.9; //!@Delta
             if (obj->segment.trans.scale < 0.5) {
@@ -433,11 +433,6 @@ void obj_init_laserbolt(Object *obj, UNUSED LevelObjectEntry_Laserbolt *entry) {
     obj->interactObj->unk11 = 0;
 }
 
-typedef struct Object_7C_80034860 {
-	u8 pad0[0xC];
-	s16 unkC;
-} Object_7C_80034860;
-
 /**
  * Laser Bolt init behaviour.
  * Move in a set direction, until it either times out, hits a racer, or hits a wall.
@@ -447,7 +442,7 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
 
 	Object *racerObj;
 
-	Object_7C_80034860 *obj7C;
+	Object_LaserGun *laserGun;
 	Object_Laser *laser;
 
 	s8 delete; // Boolean
@@ -497,12 +492,12 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
             if (laser->unk0 != -1) {
                 laser->unk187 = 1;
             }
-            obj7C = (Object_7C_80034860 *) obj->properties.lasergun.obj;
-            if (obj7C) {
-                obj7C->unkC = 180;
+            laserGun = obj->properties.lasergun.obj;
+            if (laserGun) {
+                laserGun->fireTimer = 180;
             }
             delete = TRUE;
-            func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position - 36.0f, obj->segment.trans.z_position, 44, SOUND_EXPLOSION, 0.5, 0);
+            func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position - 36.0f, obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 0.5, 0);
         }
     }
     if (delete) {
@@ -532,9 +527,18 @@ void obj_loop_torch_mist(Object *obj, s32 updateRate) {
     obj->segment.animFrame += obj->properties.speed.speed * updateRate;
 }
 
+/**
+ * Effect box init behaviour.
+ * Does nothing.
+*/
 void obj_init_effectbox(UNUSED Object *obj, UNUSED LevelObjectEntry_EffectBox *entry) {
 }
 
+/**
+ * Effect box loop behaviour.
+ * Searches for any racers that are inside the region.
+ * Applies an effect to their weight and velocity.
+*/
 void obj_loop_effectbox(Object *obj, UNUSED s32 updateRate) {
     Object **racers;
     LevelObjectEntry_EffectBox *effectBoxEntry;
@@ -1976,7 +1980,7 @@ void obj_loop_bombexplosion(Object *obj, s32 updateRate) {
     temp_t8 = (obj->properties.bombExplosion.unk4 >> 8) & 0xFF;
     if (obj->properties.bombExplosion.timer > 10 && temp_t8 != 0) {
         obj->properties.bombExplosion.unk4 ^= (temp_t8 << 8);
-        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, SOUND_NONE, 1.0f, temp_t8 - 1);
+        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_NONE, 1.0f, temp_t8 - 1);
     }
     if (obj->properties.bombExplosion.timer < 20) {
         obj->segment.trans.scale = ((obj->properties.bombExplosion.timer / 20.0f) * 10.0f) + 0.5f;
@@ -2452,7 +2456,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 play_taj_voice_clip((racer64->racer.vehicleID + SOUND_VOICE_TAJ_ABRAKADABRA), TRUE);
             } else {
                 obj->properties.npc.action = TAJ_MODE_SET_CHALLENGE;
-                transition_begin(&D_800DC978);
+                transition_begin(&gTajTransition);
                 sp6B = 1;
                 play_taj_voice_clip(SOUND_WHOOSH4, TRUE);
                 taj->animFrameF = 0.0f;
@@ -2478,7 +2482,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 func_8000E1EC(racerObj, D_8011D4E0 & 0xF);
                 obj->properties.npc.action = TAJ_MODE_TRANSFORM_END;
                 play_sound_global(SOUND_CYMBAL, NULL);
-                transition_begin(&D_800DC970);
+                transition_begin(&gTajTransformTransitionEnd);
             }
         }
         break;
@@ -2499,7 +2503,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 racer64->racer.transparency = 255;
                 if (taj->animFrameF == 0.0) {
                     if (D_8011D4E0 & 0x80) {
-                        transition_begin(&D_800DC978);
+                        transition_begin(&gTajTransition);
                         sp6B = 1;
                         obj->properties.npc.action = TAJ_MODE_SET_CHALLENGE;
                         play_sound_global(SOUND_WHOOSH4, NULL);
@@ -2782,7 +2786,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         gNPCPosY = obj->segment.trans.y_position;
     }
     if (sp6B != 0) {
-        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 0xC, SOUND_NONE, 1.0f, 0);
+        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, BHV_DINO_WHALE, SOUND_NONE, 1.0f, 0);
     }
     obj->segment.animFrame = taj->animFrameF * 1.0;
     func_80061C0C(obj);
@@ -3679,7 +3683,7 @@ void obj_loop_bananacreator(Object *obj, s32 updateRate) {
             newBananaObj->segment.level_entry = NULL;
             newBananaObj64 = &newBananaObj->unk64->banana;
             newBananaObj64->spawner = obj;
-            func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position - 14.0f, obj->segment.trans.z_position, 44, SOUND_SELECT, 0.25f, 0);
+            func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position - 14.0f, obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_SELECT, 0.25f, 0);
             obj->properties.bananaSpawner.spawn = FALSE;
         }
         obj->properties.bananaSpawner.timer = TIME_SECONDS(20); // Set delay to respawn banana to 20 seconds.
@@ -3891,10 +3895,10 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate) {
     ObjectInteraction *interactObj;
     Object_Racer* racer;
     Object *racerObj;
-    s32 temp;
+    s32 twoPlayerAdv;
 
-    temp = func_8006C19C();
-    if ((temp && obj->properties.npc.action != SILVER_COIN_INACTIVE) || (!temp && obj->properties.npc.action == SILVER_COIN_ACTIVE)) {
+    twoPlayerAdv = is_two_player_adventure_race();
+    if ((twoPlayerAdv && obj->properties.npc.action != SILVER_COIN_INACTIVE) || (!twoPlayerAdv && obj->properties.npc.action == SILVER_COIN_ACTIVE)) {
         interactObj = obj->interactObj;
         if (interactObj->distance < 80) {
             racerObj = interactObj->obj;
@@ -4309,7 +4313,7 @@ block_25:
                     func_80072348(racer->playerIndex, 9);
                 }
             }
-            func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, SOUND_EXPLOSION, 1.0f, 1);
+            func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);
             free_object(obj);
             return;
         }
@@ -4328,7 +4332,7 @@ block_37:
     }
     obj->properties.projectile.timer -= updateRate;
     if (obj->properties.projectile.timer < 0) {
-        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 44, SOUND_EXPLOSION, 1.0f, 1);
+        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);
         free_object(obj);
         return;
     }
