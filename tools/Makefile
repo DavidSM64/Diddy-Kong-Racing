@@ -16,10 +16,11 @@ default: all
 
 n64crc_SOURCES := n64crc.c
 
-all: $(PROGRAMS)
+all: $(PROGRAMS) recomp
 
 clean:
 	rm -Rf $(PROGRAMS) $(BUILD_DIR)
+	@make -C ido-static-recomp clean VERSION=5.3
 
 distclean: clean
 
@@ -43,6 +44,11 @@ $(BUILD_DIR)/%.o: %.cpp
 
 dkr_assets_tool: $(dkr_assets_tool_OBJ_FILES)
 	$(CXX) $^ -o $@ $(CXXFLAGS) $(LDFLAGS) -lpthread
+
+recomp:
+	@make -C ido-static-recomp setup
+	@make -C ido-static-recomp VERSION=5.3
+	@printf "done\n"
 
 .PHONY: all clean distclean default
 

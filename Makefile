@@ -96,21 +96,6 @@ $(error Missing submodule ido-static-recomp. Please run 'git submodule update --
 endif
 endif
 
-# List of IDO tools required for the repo.
-# NOTE: If you are adding a tool here, make sure to update the Makefile in `/tools/ido-static-recomp/`!
-RECOMP_TOOLS := cc cfe uopt ugen as1 ujoin uld usplit umerge
-
-RECOMP_DIR := $(RECOMP_PROJECT)build/5.3/out/
-RECOMP_TOOLS_PATHS = $(addprefix $(RECOMP_DIR),$(RECOMP_TOOLS))
-
-# Checks if all the recomp tools exist.
-$(foreach p,$(RECOMP_TOOLS_PATHS),$(if $(wildcard $(p)),,$(info $(p) does not exist!) $(eval runRecomp:=yes)))
-
-# If any of the tools do not exist, then recomp needs to run to build them.
-ifeq ($(runRecomp),yes)
-  DUMMY != cd $(RECOMP_PROJECT) && make setup && make VERSION=5.3 && cp build/5.3/out/usr/bin/cc build/5.3/out/cc && cp build/5.3/out/usr/lib/* build/5.3/out/ && cd ../../ >&2 || echo FAIL
-endif
-
 ######## Extract Assets & Microcode ########
 
 DUMMY != python3 ./tools/python/check_if_need_to_extract.py $(VERSION) >&2 || echo FAIL
@@ -146,7 +131,7 @@ endif
 endif
 
 AS = $(CROSS)as
-CC := $(RECOMP_DIR)cc
+CC := tools/ido-static-recomp/build/5.3/out/cc
 CPP := cpp -P -Wno-trigraphs -I include
 LD = $(CROSS)ld
 OBJDUMP = $(CROSS)objdump
@@ -337,7 +322,6 @@ distclean:
 	rm -rf assets
 	rm -rf ucode
 	rm -rf dkr.ld
-	rm -rf tools/ido-static-recomp/{,.[!.],..?}* # Deletes all files, including hidden ones.
 	$(MAKE) -C tools distclean
     
 clean_lib:
