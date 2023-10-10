@@ -144,9 +144,9 @@ glabel func_80010994
 /* 0117AC 80010BAC 1420FFF6 */  bnez  $at, .L80010B88
 /* 0117B0 80010BB0 26520004 */   addiu $s2, $s2, 4
 .L80010BB4:
-/* 0117B4 80010BB4 3C138012 */  lui   $s3, %hi(objCount) # $s3, 0x8012
+/* 0117B4 80010BB4 3C138012 */  lui   $s3, %hi(gObjectCount) # $s3, 0x8012
 /* 0117B8 80010BB8 3C118012 */  lui   $s1, %hi(D_8011AE60) # $s1, 0x8012
-/* 0117BC 80010BBC 8E73AE5C */  lw    $s3, %lo(objCount)($s3)
+/* 0117BC 80010BBC 8E73AE5C */  lw    $s3, %lo(gObjectCount)($s3)
 /* 0117C0 80010BC0 8E31AE60 */  lw    $s1, %lo(D_8011AE60)($s1)
 /* 0117C4 80010BC4 00000000 */  nop   
 /* 0117C8 80010BC8 0233082A */  slt   $at, $s1, $s3
@@ -333,8 +333,8 @@ glabel func_80010994
 /* 011A50 80010E50 1420FFE6 */  bnez  $at, .L80010DEC
 /* 011A54 80010E54 00000000 */   nop   
 .L80010E58:
-/* 011A58 80010E58 3C188012 */  lui   $t8, %hi(D_8011AE64) # $t8, 0x8012
-/* 011A5C 80010E5C 8F18AE64 */  lw    $t8, %lo(D_8011AE64)($t8)
+/* 011A58 80010E58 3C188012 */  lui   $t8, %hi(gParticleCount) # $t8, 0x8012
+/* 011A5C 80010E5C 8F18AE64 */  lw    $t8, %lo(gParticleCount)($t8)
 /* 011A60 80010E60 00000000 */  nop   
 /* 011A64 80010E64 1B000018 */  blez  $t8, .L80010EC8
 /* 011A68 80010E68 3C118012 */   lui   $s1, %hi(D_8011AE60) # $s1, 0x8012
@@ -370,8 +370,8 @@ glabel func_80010994
 /* 011AD4 80010ED4 00000000 */   nop   
 /* 011AD8 80010ED8 1840001F */  blez  $v0, .L80010F58
 /* 011ADC 80010EDC 3C118012 */   lui   $s1, %hi(D_8011AE60) # $s1, 0x8012
-/* 011AE0 80010EE0 3C028012 */  lui   $v0, %hi(objCount) # $v0, 0x8012
-/* 011AE4 80010EE4 8C42AE5C */  lw    $v0, %lo(objCount)($v0)
+/* 011AE0 80010EE0 3C028012 */  lui   $v0, %hi(gObjectCount) # $v0, 0x8012
+/* 011AE4 80010EE4 8C42AE5C */  lw    $v0, %lo(gObjectCount)($v0)
 /* 011AE8 80010EE8 8E31AE60 */  lw    $s1, %lo(D_8011AE60)($s1)
 /* 011AEC 80010EEC 00000000 */  nop   
 /* 011AF0 80010EF0 0222082A */  slt   $at, $s1, $v0
@@ -394,8 +394,8 @@ glabel func_80010994
 /* 011B30 80010F30 00000000 */   nop   
 /* 011B34 80010F34 0C00CB1F */  jal   func_80032C7C
 /* 011B38 80010F38 02002025 */   move  $a0, $s0
-/* 011B3C 80010F3C 3C028012 */  lui   $v0, %hi(objCount) # $v0, 0x8012
-/* 011B40 80010F40 8C42AE5C */  lw    $v0, %lo(objCount)($v0)
+/* 011B3C 80010F3C 3C028012 */  lui   $v0, %hi(gObjectCount) # $v0, 0x8012
+/* 011B40 80010F40 8C42AE5C */  lw    $v0, %lo(gObjectCount)($v0)
 /* 011B44 80010F44 00000000 */  nop   
 .L80010F48:
 /* 011B48 80010F48 26310001 */  addiu $s1, $s1, 1

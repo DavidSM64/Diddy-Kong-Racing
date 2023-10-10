@@ -22,8 +22,8 @@ u16 sTransitionFadeTimer = 0;
 u16 sTransitionFlags = 0;
 u16 D_800E31B8 = 0;
 s8 D_800E31BC = 0;
-Vertex *sTransitionVtx[2] = { 0, 0 };
-Triangle *sTransitionTris[2] = { 0, 0 };
+Vertex *sTransitionVtx[2] = { NULL, NULL };
+Triangle *sTransitionTris[2] = { NULL, NULL };
 s32 sTransitionTaskNum = 0;
 
 Gfx dTransitionFadeSettings[] = {

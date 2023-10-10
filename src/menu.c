@@ -1949,8 +1949,8 @@ void menu_init(u32 menuId) {
         case MENU_TROPHY_RACE_RANKINGS:
             menu_trophy_race_rankings_init();
             break;
-        case MENU_UNKNOWN_23:
-            menu_23_init();
+        case MENU_NEWGAME_CINEMATIC:
+            menu_cinematic_init();
             break;
         case MENU_GHOST_DATA:
             menu_ghost_data_init();
@@ -2026,8 +2026,8 @@ s32 menu_loop(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts
         case MENU_TROPHY_RACE_RANKINGS:
             ret = menu_trophy_race_rankings_loop(updateRate);
             break;
-        case MENU_UNKNOWN_23:
-            ret = menu_23_loop(updateRate);
+        case MENU_NEWGAME_CINEMATIC:
+            ret = menu_cinematic_loop(updateRate);
             break;
         case MENU_GHOST_DATA:
             ret = menu_ghost_data_loop(updateRate);
@@ -2566,7 +2566,7 @@ s32 menu_logo_screen_loop(s32 updateRate) {
         set_text_colour(0xFF, 0xFF, 0xFF, 0xFF, opacity);
         draw_text(&sMenuCurrDisplayList, POS_CENTRED, yOffsetShadow, gRareCopyrightString, ALIGN_MIDDLE_CENTER);
     }
-    return 0;
+    return MENU_RESULT_CONTINUE;
 }
 
 /**
@@ -2838,15 +2838,15 @@ s32 menu_title_screen_loop(s32 updateRate) {
             load_level_for_menu(ASSET_LEVEL_CHARACTERSELECT, -1, sp28);
             func_8008AEB4(0, NULL);
             menu_init(MENU_CHARACTER_SELECT);
-            return 0;
+            return MENU_RESULT_CONTINUE;
         }
         D_800DF460 = 0;
         load_level_for_menu(ASSET_LEVEL_OPTIONSBACKGROUND, -1, 0);
         menu_init(MENU_OPTIONS);
-        return 0;
+        return MENU_RESULT_CONTINUE;
     }
     gIgnorePlayerInputTime = 0;
-    return 0;
+    return MENU_RESULT_CONTINUE;
 }
 
 /**
@@ -3002,26 +3002,26 @@ s32 menu_options_loop(s32 updateRate) {
         if (D_800DF460 == 2) {
             unload_big_font_1();
             menu_init(MENU_AUDIO_OPTIONS);
-            return 0;
+            return MENU_RESULT_CONTINUE;
         }
         if (D_800DF460 == 3) {
             unload_big_font_1();
             menu_init(MENU_SAVE_OPTIONS);
-            return 0;
+            return MENU_RESULT_CONTINUE;
         }
         unload_big_font_1();
         menu_init(MENU_MAGIC_CODES);
-        return 0;
+        return MENU_RESULT_CONTINUE;
     }
     if (gMenuDelay < -30) {
         // Change screen back to the title screen.
         func_80000B28();
         unload_big_font_1();
         menu_init(MENU_TITLE);
-        return 0;
+        return MENU_RESULT_CONTINUE;
     }
     gIgnorePlayerInputTime = 0;
-    return 0;
+    return MENU_RESULT_CONTINUE;
 }
 
 /**
@@ -3074,10 +3074,13 @@ s32 menu_audio_options_loop(s32 updateRate) {
 
     sp30 = 0;
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
+    gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     if (gMenuDelay != 0) {
         if (gMenuDelay > 0) {
             gMenuDelay += updateRate;
+            gMenuDelay += updateRate;
         } else {
+            gMenuDelay -= updateRate;
             gMenuDelay -= updateRate;
         }
     }
@@ -3629,7 +3632,7 @@ s32 menu_save_options_loop(s32 updateRate) {
     }
     gIgnorePlayerInputTime = 0;
     
-    return 0;
+    return MENU_RESULT_CONTINUE;
 }
 
 void func_80087EB8(void) {
@@ -4639,7 +4642,7 @@ s32 menu_magic_codes_loop(s32 updateRate) {
             menu_init(MENU_MAGIC_CODES_LIST);
         }
     }
-    return 0;
+    return MENU_RESULT_CONTINUE;
 }
 
 /**
@@ -4836,10 +4839,10 @@ s32 menu_magic_codes_list_loop(s32 updateRate) {
     if (gMenuDelay < -30) {
         func_8008AD1C();
         menu_init(MENU_MAGIC_CODES);
-        return 0;
+        return MENU_RESULT_CONTINUE;
     }
     gIgnorePlayerInputTime = 0;
-    return 0;
+    return MENU_RESULT_CONTINUE;
 }
 
 void func_8008AD1C(void) {
@@ -5284,7 +5287,7 @@ s32 menu_character_select_loop(s32 updateRate) {
             } else {
                 func_80000B28();
                 func_800828B8();
-                func_8006E5BC();
+                init_racer_headers();
                 menu_init(MENU_TRACK_SELECT);
             }
         }
@@ -5297,7 +5300,7 @@ s32 menu_character_select_loop(s32 updateRate) {
             menu_init(MENU_TITLE);
         }
     }
-    return 0;
+    return MENU_RESULT_CONTINUE;
 }
 
 void func_8008BFE8(s32 arg0, s8 *arg1, s32 arg2, u16 menuPickSoundId, u16 menuPickFailedSoundId) {
@@ -5418,7 +5421,7 @@ s32 menu_caution_loop(s32 updateRate) {
     if (gIgnorePlayerInputTime > 0) {
         gIgnorePlayerInputTime -= updateRate;
     }
-    return 0;
+    return MENU_RESULT_CONTINUE;
 }
 
 /**
@@ -5534,7 +5537,7 @@ s32 menu_game_select_loop(s32 updateRate) {
         if (D_800DF460 == gMenuOptionCount) {
             func_80000B28();
             gIsInTracksMode = TRUE;
-            func_8006E5BC();
+            init_racer_headers();
             load_level_for_menu((s32)SPECIAL_MAP_ID_NO_LEVEL, -1, 0);
             menu_init(MENU_TRACK_SELECT);
         } else {
@@ -5544,7 +5547,7 @@ s32 menu_game_select_loop(s32 updateRate) {
             set_level_default_vehicle(VEHICLE_CAR);
             menu_init(MENU_FILE_SELECT);
         }
-        return 0;
+        return MENU_RESULT_CONTINUE;
     } else if (gMenuDelay < -30) {
         func_8008CACC();
         charSelectScene = 0;
@@ -5557,7 +5560,7 @@ s32 menu_game_select_loop(s32 updateRate) {
         load_level_for_menu(ASSET_LEVEL_CHARACTERSELECT, -1, charSelectScene);
         func_8008AEB4(0, 0);
         menu_init(MENU_CHARACTER_SELECT);
-        return 0;
+        return MENU_RESULT_CONTINUE;
     } else {
         func_8008C698(updateRate);
         if ((gMenuDelay == 0) && (gOpacityDecayTimer == 0)) {
@@ -5594,7 +5597,7 @@ s32 menu_game_select_loop(s32 updateRate) {
             }
         }
         gIgnorePlayerInputTime = 0;
-        return 0;
+        return MENU_RESULT_CONTINUE;
     }
 }
 
@@ -6171,15 +6174,15 @@ s32 menu_file_select_loop(s32 updateRate) {
         D_800E0FAC = 1;
         func_8008E428();
         func_80000B28();
-        func_8006E5BC();
+        init_racer_headers();
         gTrophyRaceWorldId = 0;
         if (settings->newGame) {
             if (gIsInAdventureTwo) {
                 settings->cutsceneFlags |= CUTSCENE_ADVENTURE_TWO;
             }
             func_8009ABD8((s8 *)get_misc_asset(MISC_ASSET_UNK19), 0, gNumberOfActivePlayers, 0, 0, NULL);
-            menu_init(MENU_UNKNOWN_23);
-            return 0;
+            menu_init(MENU_NEWGAME_CINEMATIC);
+            return MENU_RESULT_CONTINUE;
         }
         if (settings->cutsceneFlags & CUTSCENE_ADVENTURE_TWO) {
             gIsInAdventureTwo = TRUE;
@@ -6191,10 +6194,10 @@ s32 menu_file_select_loop(s32 updateRate) {
     if (gMenuDelay < -35) {
         func_8008E428();
         menu_init(MENU_GAME_SELECT);
-        return 0;
+        return MENU_RESULT_CONTINUE;
     }
     else {
-        return 0;
+        return MENU_RESULT_CONTINUE;
     }
 }
 
@@ -6509,11 +6512,11 @@ s32 menu_track_select_loop(s32 updateRate) {
             load_level_for_menu(ASSET_LEVEL_CHARACTERSELECT, -1, cutsceneId);
             func_8008AEB4(0, NULL);
             menu_init(MENU_CHARACTER_SELECT);
-            return 0;
+            return MENU_RESULT_CONTINUE;
         }
         load_level_for_menu(ASSET_LEVEL_OPTIONSBACKGROUND, -1, 0);
         menu_init(MENU_GAME_SELECT);
-        return 0;
+        return MENU_RESULT_CONTINUE;
     }
     if (D_801267D0 >= 2) {
         func_8008F534();
@@ -6530,10 +6533,10 @@ s32 menu_track_select_loop(s32 updateRate) {
         D_800DF450 = 0;
         gTrophyRaceRound = 0;
         menu_init(MENU_TROPHY_RACE_ROUND);
-        return 0;
+        return MENU_RESULT_CONTINUE;
     }
     gIgnorePlayerInputTime = 0;
-    return 0;
+    return MENU_RESULT_CONTINUE;
 }
 
 void func_8008F534(void) {
@@ -7424,7 +7427,7 @@ s32 menu_adventure_track_loop(s32 updateRate) {
         }
     }
     gIgnorePlayerInputTime = 0;
-    return 0;
+    return MENU_RESULT_CONTINUE;
 }
 
 void func_80093A0C(void) {
@@ -7764,7 +7767,7 @@ void func_80094688(s32 arg0, s32 arg1) {
         gMenuOptionCount = 8;
         gMenuDelay = 100;
     }
-    if (get_render_context() != DRAW_GAME) {
+    if (get_game_mode() != GAMEMODE_INGAME) {
         gMenuOptionCount = 7;
     }
     reset_controller_sticks();
@@ -7791,7 +7794,7 @@ void func_80094688(s32 arg0, s32 arg1) {
             D_80126BBC = 0;
         }
         D_80126BC0 = var_v1[2];
-        if (get_render_context() == DRAW_GAME) {
+        if (get_game_mode() == GAMEMODE_INGAME) {
             func_80078170(D_80126BB8, D_80126BBC, D_80126BC0);
         }
         camEnableUserView(0, 1);
@@ -8065,7 +8068,7 @@ s32 menu_results_loop(s32 updateRate) {
             close_dialogue_box(7);
             assign_dialogue_box_id(7);
             if (gResultOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_TRYAGAIN]) {
-                return (0x100 | 0x2); //This gets parsed in func_8006DCF8 as a flag and an ID from the bottom 7 bits.
+                return (0x100 | 0x2); //This gets parsed in menu_logic_loop as a flag and an ID from the bottom 7 bits.
             }
             if (gResultOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_SELECTTRACK]) {
                 load_level_for_menu(SPECIAL_MAP_ID_NO_LEVEL, -1, 0);
@@ -8076,7 +8079,7 @@ s32 menu_results_loop(s32 updateRate) {
         }
     }
     gIgnorePlayerInputTime = 0;
-    return 0;
+    return MENU_RESULT_CONTINUE;
 }
 
 void func_800976CC(void) {
@@ -8545,7 +8548,7 @@ s32 menu_trophy_race_round_loop(s32 updateRate) {
         return gNumberOfActivePlayers;
     }
     gIgnorePlayerInputTime = 0;
-    return 0;
+    return MENU_RESULT_CONTINUE;
 }
 
 /**
@@ -8697,7 +8700,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
     Settings *settings;
     s32 temp0;
 
-    ret = 0;
+    ret = MENU_RESULT_CONTINUE;
     settings = get_settings();
     if ((gMenuDelay > -20) && (gMenuDelay < 20)) {
         func_80098EBC(updateRate);
@@ -8794,14 +8797,14 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                     if (sp34 >= 3) {
                         menu_init(MENU_TRACK_SELECT);
                     } else {
-                        ret = 0x105;
+                        ret = MENU_RESULT_FLAGS_100 | MENU_RESULT_TRACKS_MODE;
                     }
                 } else {
-                    ret = 1;
+                    ret = MENU_RESULT_RETURN_TO_GAME;
                     settings->courseId = get_hub_area_id(settings->worldId);
                     if (D_800DF450 != 0) {
                         D_800DF450 = 0;
-                        ret = settings->courseId | 0x200;
+                        ret = settings->courseId | MENU_RESULT_FLAGS_200;
                         if (sp34 < 3) {
                             temp0 = settings->worldId - 1;
                             temp0 <<= 1;
@@ -8819,8 +8822,8 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
                     miscAsset31 = (s8 *) get_misc_asset(ASSET_MISC_31);
                     temp0 = ((gTrophyRaceWorldId * 3) + sp34) - 3;
                     func_8009ABD8(miscAsset31, temp0, ret, 0, 0, D_80126438);
-                    ret = 0;
-                    menu_init(MENU_UNKNOWN_23);
+                    ret = MENU_RESULT_CONTINUE;
+                    menu_init(MENU_NEWGAME_CINEMATIC);
                 }
                 gTrophyRaceWorldId = 0;
             }
@@ -9015,7 +9018,7 @@ s32 menu_ghost_data_loop(s32 updateRate) {
         func_8009ABAC();
         menu_init(MENU_SAVE_OPTIONS);
     }
-    return 0;
+    return MENU_RESULT_CONTINUE;
 }
 
 void func_8009ABAC(void) {
@@ -9048,7 +9051,7 @@ void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s8 *arg5) {
     D_80126804 = arg5;
 }
 
-void menu_23_init(void) {
+void menu_cinematic_init(void) {
     if (D_80126804 != NULL) {
         func_8009C674(D_800E1768);
         assign_racer_portrait_textures();
@@ -9058,7 +9061,7 @@ void menu_23_init(void) {
     gMenuOptionCount = 0;
 }
 
-s32 menu_23_loop(UNUSED s32 updateRate) {
+s32 menu_cinematic_loop(UNUSED s32 updateRate) {
     s32 i;
     s32 buttonsPressed;
 
@@ -9094,7 +9097,7 @@ s32 menu_23_loop(UNUSED s32 updateRate) {
         }
     }
     gIgnorePlayerInputTime = 0;
-    return 0;
+    return MENU_RESULT_CONTINUE;
 }
 
 
@@ -9679,7 +9682,7 @@ s32 npc_dialogue_loop(u32 dialogueOption) {
         return 0;
     }
     if (dialogueOption != DIALOGUE_CHALLENGE) {
-        func_8006F388(1);
+        set_pause_lockout_timer(1);
     }
     result = 0;
     update_controller_sticks();

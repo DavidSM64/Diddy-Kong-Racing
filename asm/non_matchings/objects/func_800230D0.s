@@ -8,8 +8,8 @@ glabel func_800230D0
 /* 023CE8 800230E8 00A08825 */  move  $s1, $a1
 /* 023CEC 800230EC 14400032 */  bnez  $v0, .L800231B8
 /* 023CF0 800230F0 AFBF001C */   sw    $ra, 0x1c($sp)
-/* 023CF4 800230F4 3C078012 */  lui   $a3, %hi(objCount) # $a3, 0x8012
-/* 023CF8 800230F8 24E7AE5C */  addiu $a3, %lo(objCount) # addiu $a3, $a3, -0x51a4
+/* 023CF4 800230F4 3C078012 */  lui   $a3, %hi(gObjectCount) # $a3, 0x8012
+/* 023CF8 800230F8 24E7AE5C */  addiu $a3, %lo(gObjectCount) # addiu $a3, $a3, -0x51a4
 /* 023CFC 800230FC 8CE40000 */  lw    $a0, ($a3)
 /* 023D00 80023100 00004025 */  move  $t0, $zero
 /* 023D04 80023104 1880002A */  blez  $a0, .L800231B0

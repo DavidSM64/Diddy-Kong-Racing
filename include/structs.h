@@ -209,7 +209,7 @@ typedef struct Racer {
 /* Unknown Size */
 typedef struct Settings4C {
     u8 unk0; //courseId?
-    u8 unk1; // This value + 8 is cutsceneId index? gGameCurrentCutscene = D_80121250[D_80121250[1] + 8];
+    u8 unk1; // This value + 8 is cutsceneId index? gGameCurrentCutscene = gLevelSettings[gLevelSettings[1] + 8];
     s8 unk2; //mapId?
     u8 pad3[0xC];
     u8 unkF; //entranceId?
@@ -714,7 +714,7 @@ typedef struct ObjectHeader24 {
 } ObjectHeader24;
 
 typedef struct ObjectHeader {
-  /* 0x00 */ s32 unk0;
+  /* 0x00 */ s32 unk0; // The one use I've seen for this so far is water effect animation speed.
   /* 0x04 */ f32 shadowScale;
   /* 0x08 */ f32 unk8;
   /* 0x0C */ f32 scale;
@@ -727,9 +727,9 @@ typedef struct ObjectHeader {
   /* 0x28 */ f32 shadeBrightness;
   /* 0x2C */ f32 shadeAmbient;
   /* 0x30 */ u16 unk30;
-  /* 0x32 */ s16 unk32;
+  /* 0x32 */ s16 shadowGroup;
   /* 0x34 */ s16 unk34;
-  /* 0x36 */ s16 unk36;
+  /* 0x36 */ s16 waterEffectGroup;
   /* 0x38 */ s16 unk38;
   /* 0x3A */ u8 unk3A;
   /* 0x3B */ u8 unk3B;
@@ -809,8 +809,8 @@ typedef struct ObjectInteraction {
 typedef struct ShadowData {
     f32 scale;
     TextureHeader *texture;
-    s16 unk8;
-    s16 unkA;
+    s16 meshStart;
+    s16 meshEnd;
     s16 unkC;
     s16 unkE;
 } ShadowData;
@@ -818,10 +818,10 @@ typedef struct ShadowData {
 typedef struct WaterEffect {
     f32 scale;
     TextureHeader *texture;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
+    s16 meshStart;
+    s16 meshEnd;
+    s16 textureFrame;
+    s16 animationSpeed;
     s16 unk10;
     s16 unk12;
 } WaterEffect;

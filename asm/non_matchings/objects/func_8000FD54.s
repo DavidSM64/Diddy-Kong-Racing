@@ -12,7 +12,7 @@ glabel func_8000FD54
 /* 01097C 8000FD7C AFB00018 */   sw    $s0, 0x18($sp)
 /* 010980 8000FD80 00002025 */  move  $a0, $zero
 .L8000FD84:
-/* 010984 8000FD84 0C0031C6 */  jal   func_8000C718
+/* 010984 8000FD84 0C0031C6 */  jal   load_object_header
 /* 010988 8000FD88 AFA40038 */   sw    $a0, 0x38($sp)
 /* 01098C 8000FD8C 14400003 */  bnez  $v0, .L8000FD9C
 /* 010990 8000FD90 00409825 */   move  $s3, $v0
@@ -28,7 +28,7 @@ glabel func_8000FD54
 /* 0109B4 8000FDB4 14400006 */  bnez  $v0, .L8000FDD0
 /* 0109B8 8000FDB8 00409025 */   move  $s2, $v0
 /* 0109BC 8000FDBC 8FA40038 */  lw    $a0, 0x38($sp)
-/* 0109C0 8000FDC0 0C003211 */  jal   func_8000C844
+/* 0109C0 8000FDC0 0C003211 */  jal   try_free_object_header
 /* 0109C4 8000FDC4 00000000 */   nop   
 /* 0109C8 8000FDC8 10000073 */  b     .L8000FF98
 /* 0109CC 8000FDCC 00001025 */   move  $v0, $zero
@@ -153,7 +153,7 @@ glabel func_8000FD54
 /* 010B74 8000FF74 0C003D92 */  jal   objFreeAssets
 /* 010B78 8000FF78 02802825 */   move  $a1, $s4
 /* 010B7C 8000FF7C 8FA40038 */  lw    $a0, 0x38($sp)
-/* 010B80 8000FF80 0C003211 */  jal   func_8000C844
+/* 010B80 8000FF80 0C003211 */  jal   try_free_object_header
 /* 010B84 8000FF84 00000000 */   nop   
 /* 010B88 8000FF88 0C01C450 */  jal   free_from_memory_pool
 /* 010B8C 8000FF8C 02402025 */   move  $a0, $s2

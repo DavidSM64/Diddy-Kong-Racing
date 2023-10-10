@@ -1,6 +1,6 @@
 glabel func_8001E4C4
-/* 01F0C4 8001E4C4 3C088012 */  lui   $t0, %hi(objCount) # $t0, 0x8012
-/* 01F0C8 8001E4C8 2508AE5C */  addiu $t0, %lo(objCount) # addiu $t0, $t0, -0x51a4
+/* 01F0C4 8001E4C4 3C088012 */  lui   $t0, %hi(gObjectCount) # $t0, 0x8012
+/* 01F0C8 8001E4C8 2508AE5C */  addiu $t0, %lo(gObjectCount) # addiu $t0, $t0, -0x51a4
 /* 01F0CC 8001E4CC 8D030000 */  lw    $v1, ($t0)
 /* 01F0D0 8001E4D0 00001025 */  move  $v0, $zero
 /* 01F0D4 8001E4D4 18600013 */  blez  $v1, .L8001E524

@@ -604,7 +604,7 @@ glabel func_80019808
 /* 01ACA0 8001A0A0 00000000 */   nop   
 /* 01ACA4 8001A0A4 AFBF0064 */  sw    $ra, 0x64($sp)
 /* 01ACA8 8001A0A8 AFA80080 */  sw    $t0, 0x80($sp)
-/* 01ACAC 8001A0AC 0C01B683 */  jal   get_render_context
+/* 01ACAC 8001A0AC 0C01B683 */  jal   get_game_mode
 /* 01ACB0 8001A0B0 AFAA0044 */   sw    $t2, 0x44($sp)
 /* 01ACB4 8001A0B4 8FA80080 */  lw    $t0, 0x80($sp)
 /* 01ACB8 8001A0B8 8FAA0044 */  lw    $t2, 0x44($sp)

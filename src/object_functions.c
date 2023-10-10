@@ -535,58 +535,55 @@ void obj_loop_torch_mist(Object *obj, s32 updateRate) {
 void obj_init_effectbox(UNUSED Object *obj, UNUSED LevelObjectEntry_EffectBox *entry) {
 }
 
-#ifdef NON_MATCHING
-// Has regalloc issues
-
-void obj_loop_effectbox(Object *obj, UNUSED s32 updateRate) {
-    Object **objList;
-    Object_EffectBox *curObj64;
-    s32 numberOfObjects;
-    LevelObjectEntry_EffectBox *level_entry;
+void obj_loop_effectbox(Object *effectBoxObj, s32 arg1) {
+    Object **racers;
+    LevelObjectEntry_EffectBox *effectBoxEntry;
+    s32 numRacers;
+    Object *curRacerObj;
+    Object_Racer *curRacer;
+    f32 sinAngle;
+    f32 zDiff;
+    f32 yExtentsHalf;
+    f32 xDiff;
+    f32 yExtents;
+    f32 cosAngle;
+    f32 xExtents;
+    f32 zExtents;
+    f32 yDiff;
     s32 i;
-    f32 diffX;
-    f32 diffY;
-    f32 diffZ;
-    f32 temp0;
-    f32 temp1;
-    f32 temp2;
-    f32 temp3;
-    f32 temp4;
-    f32 temp5;
 
-    level_entry = &obj->segment.level_entry->effectBox;
-    objList = get_racer_objects(&numberOfObjects);
-    temp0 = coss_f((level_entry->unkB << 8) * -1);
-    temp1 = sins_f((level_entry->unkB << 8) * -1);
-    temp2 = level_entry->unk8 * 3;
-    temp3 = level_entry->unk9 * 3;
-    temp4 = level_entry->unkA * 3;
-    for (i = 0; i < numberOfObjects; i++)
-    {
-        diffX = objList[i]->segment.trans.x_position - obj->segment.trans.x_position;
-        diffY = objList[i]->segment.trans.y_position - obj->segment.trans.y_position;
-        diffZ = objList[i]->segment.trans.z_position - obj->segment.trans.z_position;
-        if ((-temp3 < diffY) && (diffY < temp3)) {
-            temp5 = (diffX * temp0) + (diffZ * temp1);
-            if ((-temp2 < temp5) && (temp5 < temp2)) {
-                temp5 = (-diffX * temp1) + (diffZ * temp0);
-                if ((-temp4 < temp5) && (temp5 < temp4)) {
-                    curObj64 = &objList[i]->unk64->effect_box;
-                    curObj64->unk1FE = level_entry->unkC;
-                    curObj64->unk1FF = level_entry->unkD;
-                    temp5 = temp3 / 2;
-                    if ((temp5 < diffY) && (curObj64->unk1FE == 1)) {
-                        temp5 = (1.0 - ((diffY - temp5) / temp5));
-                        curObj64->unk1FF *= temp5;
+    effectBoxEntry = (LevelObjectEntry_EffectBox *)effectBoxObj->segment.level_entry;
+    racers = get_racer_objects(&numRacers);
+    cosAngle = coss_f(-(effectBoxEntry->unkB * 256));
+    sinAngle = sins_f(-(effectBoxEntry->unkB * 256));
+    xExtents = (f32) (effectBoxEntry->unk8 * 3);
+    yExtents = (f32) (effectBoxEntry->unk9 * 3);
+    zExtents = (f32) (effectBoxEntry->unkA * 3);
+    for(i = 0; i < numRacers; i++) {
+        curRacerObj = racers[i];
+        xDiff = curRacerObj->segment.trans.x_position - effectBoxObj->segment.trans.x_position;
+        yDiff = curRacerObj->segment.trans.y_position - effectBoxObj->segment.trans.y_position;
+        zDiff = curRacerObj->segment.trans.z_position - effectBoxObj->segment.trans.z_position;
+        if ((-yExtents < yDiff) && (yDiff < yExtents)) {
+            yExtentsHalf = (xDiff * cosAngle) + (zDiff * sinAngle);
+            if ((-xExtents < yExtentsHalf) && (yExtentsHalf < xExtents)) {
+                zDiff = (-xDiff * sinAngle) + (zDiff * cosAngle);
+                if ((-zExtents < zDiff) && (zDiff < zExtents)) {
+                    yExtentsHalf = yExtents / 2;
+                    curRacer = &curRacerObj->unk64->racer;
+                    curRacer->unk1FE = effectBoxEntry->unkC;
+                    curRacer->unk1FF = effectBoxEntry->unkD;
+                    if ((yExtentsHalf < yDiff) && (curRacer->unk1FE == 1)) {
+                        xDiff = (yDiff - yExtentsHalf) / yExtentsHalf;
+                        yDiff = (1.0 - xDiff);
+                        curRacer->unk1FF *= yDiff;
                     }
                 }
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_effectbox.s")
-#endif
+
 
 /**
  * Trophy Cabinet loop behaviour.
@@ -1240,7 +1237,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
                 }
                 obj->properties.npc.action = TT_MODE_APPROACH_PLAYER;
                 get_fog_settings(PLAYER_ONE, &tt->fogNear, &tt->fogFar, &tt->fogR, &tt->fogG, &tt->fogB);
-                func_80030DE0(PLAYER_ONE, 128, 128, 255, 900, 998, 240);
+                slowly_change_fog(PLAYER_ONE, 128, 128, 255, 900, 998, 240);
                 func_800012E8();
                 play_music(SEQUENCE_TTS_THEME);
                 if (racerObj != NULL) {
@@ -1293,7 +1290,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             obj->properties.npc.action = TT_MODE_TURN_TOWARDS_PLAYER;
         }
         move_object(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
-        func_8006F388(1);
+        set_pause_lockout_timer(1);
         break;
     case TT_MODE_TURN_TOWARDS_PLAYER:
         racer_set_dialogue_camera();
@@ -1335,7 +1332,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             } else {
                 play_tt_voice_clip(SOUND_VOICE_TT_OK, 1);
             }
-            func_80030DE0(PLAYER_ONE, tt->fogR, tt->fogG, tt->fogB, tt->fogNear, tt->fogFar, 180);
+            slowly_change_fog(PLAYER_ONE, tt->fogR, tt->fogG, tt->fogB, tt->fogNear, tt->fogFar, 180);
             play_music(header->music);
             func_80001074(header->instruments);
             racer->unk118 = func_80004B40(racer->characterId, racer->vehicleID);
@@ -2298,7 +2295,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             sp6B = 1;
         }
         get_fog_settings(PLAYER_ONE, &taj->fogNear, &taj->fogFar, &taj->fogR, &taj->fogG, &taj->fogB);
-        func_80030DE0(PLAYER_ONE, 255, 0, 120, 960, 1100, 240);
+        slowly_change_fog(PLAYER_ONE, 255, 0, 120, 960, 1100, 240);
         taj->animFrameF = 0.0f;
     }
 
@@ -2332,7 +2329,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         case TAJ_MODE_SET_CHALLENGE:
         case TAJ_MODE_TELEPORT_AWAY_BEGIN:
         case TAJ_MODE_TELEPORT_AWAY_END:
-            func_8006F388(1);
+            set_pause_lockout_timer(1);
             break;
     }
     if (obj->properties.npc.action != TAJ_MODE_ROAM && dialogueID != 0 && obj->properties.npc.action < 4) {
@@ -2428,7 +2425,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->segment.object.animationID = 2;
             taj->unk1C = 0;
             play_taj_voice_clip(SOUND_VOICE_TAJ_BYE, TRUE);
-            func_80030DE0(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
+            slowly_change_fog(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
             set_music_player_voice_limit(levelHeader->voiceLimit);
             play_music(levelHeader->music);
             func_80001074(levelHeader->instruments);
@@ -2591,7 +2588,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->segment.object.opacity -= var_a2;
         } else {
             racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.vehicleID);
-            func_80030DE0(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
+            slowly_change_fog(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
             set_music_player_voice_limit(levelHeader->voiceLimit);
             play_music(levelHeader->music);
             func_80001074(levelHeader->instruments);
@@ -5027,7 +5024,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
                     play_sound_at_position(SOUND_VOICE_DRUMSTICK_POSITIVE2, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                     set_eeprom_settings_value(2);
                     set_magic_code_flags(CHEAT_CONTROL_DRUMSTICK);
-                    func_8006D8A4();
+                    set_drumstick_unlock_transition();
                     free_object(obj);
                     break;
                 } else {
@@ -5109,7 +5106,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
                     play_sound_at_position(SOUND_VOICE_DRUMSTICK_POSITIVE2, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                     set_eeprom_settings_value(2);
                     set_magic_code_flags(CHEAT_CONTROL_DRUMSTICK);
-                    func_8006D8A4();
+                    set_drumstick_unlock_transition();
                     free_object(obj);
                 } else {
                     frog->action = FROG_SQUISH;

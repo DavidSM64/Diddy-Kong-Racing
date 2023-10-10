@@ -23,7 +23,7 @@ enum TriangleBatchFlags {
     BATCH_FLAGS_HIDDEN = (1 << 8),
     BATCH_FLAGS_UNK00000200 = (1 << 9),
     BATCH_FLAGS_UNK00000400 = (1 << 10),
-    BATCH_FLAGS_UNK00000800 = (1 << 11),
+    BATCH_FLAGS_RECEIVE_SHADOWS = (1 << 11),
     BATCH_FLAGS_UNK00001000 = (1 << 12),
     BATCH_FLAGS_WATER =             (1 << 13),
     BATCH_FLAGS_FORCE_NO_SHADOWS =  (1 << 14),
@@ -44,6 +44,12 @@ enum TriangleBatchFlags {
     BATCH_FLAGS_UNK20000000 = (1 << 29),
     BATCH_FLAGS_UNK40000000 = (1 << 30),
     BATCH_FLAGS_UNK80000000 = (1 << 31),
+};
+
+enum ShadowUpdate {
+	SHADOW_NONE,
+	SHADOW_SCENERY,
+	SHADOW_ACTORS
 };
 
 typedef struct unk8011B120_unkC {
@@ -156,7 +162,7 @@ void reset_fog(s32 playerID);
 void update_fog(s32 playerID, s32 updateRate);
 void apply_fog(s32 playerID);
 void compute_scene_camera_transform_matrix(void);
-void func_80027E24(s32 updateRate);
+void animate_level_textures(s32 updateRate);
 s32 check_if_inside_segment(Object *obj, s32 segmentIndex);
 s32 get_level_segment_index_from_position(f32 xPos, f32 yPos, f32 zPos);
 void traverse_segments_bsp_tree(s32 nodeIndex, s32 segmentIndex, s32 segmentIndex2, u8 *segmentsOrder, s32 *segmentsOrderIndex);
@@ -167,14 +173,14 @@ s32 should_segment_be_visible(LevelModelSegmentBoundingBox *bb);
 s32 check_if_in_draw_range(Object *obj);
 void func_8002C954(LevelModelSegment *segment, LevelModelSegmentBoundingBox *bbox, s32 arg2);
 void draw_gradient_background(void);
-void func_8002D8DC(s32 arg0, s32 arg1, s32 arg2);
+void update_shadows(s32 group, s32 waterGroup, s32 arg2);
 void obj_loop_fogchanger(Object* obj);
 void initialise_player_viewport_vars(s32 updateRate);
 s32 get_wave_properties(f32 yPos, f32 *waterHeight, Vec3f *rotation);
 void render_level_segment(s32 segmentId, s32 nonOpaque);
 void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, TriangleList** tris, s32 updateRate);
-void func_80030664(s32 fogIdx, s16 near, s16 far, u8 red, u8 green, u8 blue);
-void func_80030DE0(s32 fogIdx, s32 red, s32 green, s32 blue, s32 near, s32 far, s32 switchTimer);
+void set_fog(s32 fogIdx, s16 near, s16 far, u8 red, u8 green, u8 blue);
+void slowly_change_fog(s32 fogIdx, s32 red, s32 green, s32 blue, s32 near, s32 far, s32 switchTimer);
 s32 func_8002FD74(f32 x0, f32 z0, f32 x1, f32 x2, s32 count, Vec4f *arg5);
 
 void free_track(void);
@@ -197,7 +203,7 @@ void func_8002F2AC(void);
 void func_8002F440(void);
 f32 func_8002FA64(void);
 s32 func_8002BAB0(s16, f32, f32, f32*);
-void func_800249F0(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, u32 entranceId, u32 collectables, u32 arg6);
+void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, u32 entranceId, u32 collectables, u32 arg6);
 void func_800B82B4(LevelModel *, LevelHeader *, s32);
 void func_80025510(s32);
 void func_8002C0C4(s32 modelId);

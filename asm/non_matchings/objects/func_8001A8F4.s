@@ -4,7 +4,7 @@ glabel func_8001A8F4
 /* 01B4FC 8001A8FC AFA40040 */  sw    $a0, 0x40($sp)
 /* 01B500 8001A900 AFB10018 */  sw    $s1, 0x18($sp)
 /* 01B504 8001A904 AFB00014 */  sw    $s0, 0x14($sp)
-/* 01B508 8001A908 0C01BCE2 */  jal   func_8006F388
+/* 01B508 8001A908 0C01BCE2 */  jal   set_pause_lockout_timer
 /* 01B50C 8001A90C 24040001 */   li    $a0, 1
 /* 01B510 8001A910 3C108012 */  lui   $s0, %hi(D_8011AD4E) # $s0, 0x8012
 /* 01B514 8001A914 2610AD4E */  addiu $s0, %lo(D_8011AD4E) # addiu $s0, $s0, -0x52b2

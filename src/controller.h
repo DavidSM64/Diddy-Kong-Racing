@@ -23,7 +23,7 @@ u16 get_buttons_held_from_player(s32 player);
 u32 get_buttons_pressed_from_player(s32 player);
 u16 get_buttons_released_from_player(s32 player);
 s32 clamp_joystick_x_axis(s32 player);
-s8 clamp_joystick_y_axis(s32 player);
+s32 clamp_joystick_y_axis(s32 player);
 s8 clamp_joystick(s8 stickMag);
 void disable_button_mask(void);
 

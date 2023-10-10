@@ -1,6 +1,6 @@
 glabel func_80014814
-/* 015414 80014814 3C068012 */  lui   $a2, %hi(objCount) # $a2, 0x8012
-/* 015418 80014818 24C6AE5C */  addiu $a2, %lo(objCount) # addiu $a2, $a2, -0x51a4
+/* 015414 80014814 3C068012 */  lui   $a2, %hi(gObjectCount) # $a2, 0x8012
+/* 015418 80014818 24C6AE5C */  addiu $a2, %lo(gObjectCount) # addiu $a2, $a2, -0x51a4
 /* 01541C 8001481C 8CCE0000 */  lw    $t6, ($a2)
 /* 015420 80014820 3C0A8012 */  lui   $t2, %hi(D_8011AE7C) # $t2, 0x8012
 /* 015424 80014824 254AAE7C */  addiu $t2, %lo(D_8011AE7C) # addiu $t2, $t2, -0x5184

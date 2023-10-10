@@ -204,7 +204,7 @@ s32 clamp_joystick_x_axis(s32 player) {
  * Clamps the Y joystick axis of the selected player to 70 and returns it.
  * Official name: joyGetStickY
  */
-s8 clamp_joystick_y_axis(s32 player) {
+s32 clamp_joystick_y_axis(s32 player) {
     return clamp_joystick(gControllerCurrData[sPlayerID[player]].stick_y);
 }
 
