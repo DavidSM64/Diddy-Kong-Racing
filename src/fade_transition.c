@@ -64,7 +64,7 @@ u8 D_800E32AC[12] = {
     0x08, 0x12, 0x14, 0x16,
 };
 
-u8 gTransitionBarnDoorTris[24] = {
+TriangleList gTransitionBarnDoorTris[24] = {
     0, 3, 1, 1, 3, 4, 1, 4,
     2, 2, 4, 5, 6, 9, 7, 7,
     9, 10, 7, 10, 8, 8, 10, 11,
@@ -88,7 +88,7 @@ u8 D_800E3318[12] = {
     4, 6, 8, 16, 18, 4, 6, 14, 16, 18, 0, 0,
 };
 
-u8 gTransitionBarnDoorDiagTris[20] = {
+TriangleList gTransitionBarnDoorDiagTris[20] = {
     0, 1, 3, 1, 3, 4, 1, 4, 2, 5, 7, 8, 5, 8, 6, 6, 8, 9, 0, 0,
 };
 
@@ -154,7 +154,7 @@ u8 gTransitionWaveAlpha[92] = {
     255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
 };
 
-u8 gTransitionWaveTris[244] = {
+TriangleList gTransitionWaveTris[244] = {
     0, 8, 9, 0, 9, 1, 1, 9, 10, 1, 10, 2, 2, 10, 11, 2,
     11, 3, 3, 11, 12, 3, 12, 4, 4, 12, 13, 4, 13, 5, 5, 13,
     14, 5, 14, 6, 6, 14, 15, 6, 15, 7, 0, 7, 8, 0, 8, 1,
