@@ -3074,13 +3074,10 @@ s32 menu_audio_options_loop(s32 updateRate) {
 
     sp30 = 0;
     gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
-    gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
     if (gMenuDelay != 0) {
         if (gMenuDelay > 0) {
             gMenuDelay += updateRate;
-            gMenuDelay += updateRate;
         } else {
-            gMenuDelay -= updateRate;
             gMenuDelay -= updateRate;
         }
     }
