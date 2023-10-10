@@ -41,6 +41,6 @@ typedef s32 ptrdiff_t;
 
 typedef float Matrix[4][4];
 typedef s16 VertexList;
-typedef s8 TriangleList;
+typedef u8 TriangleList;
 
 #endif

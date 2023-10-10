@@ -141,7 +141,7 @@ extern s32 D_B0000578;
 /**
  * Official Name: camInit
 */
-void func_80065EA0(void) {
+void camera_init(void) {
     s32 i;
     s32 j;
     u32 stat;
@@ -172,11 +172,11 @@ void func_80065EA0(void) {
     }
 
     guPerspectiveF(gPerspectiveMatrixF, &perspNorm, CAMERA_DEFAULT_FOV, CAMERA_ASPECT, CAMERA_NEAR, CAMERA_FAR, CAMERA_SCALE);
-    f32_matrix_to_s16_matrix((Matrix *) gPerspectiveMatrixF, (MatrixS *) gProjectionMatrixS);
+    f32_matrix_to_s16_matrix(&gPerspectiveMatrixF, &gProjectionMatrixS);
     gCurCamFOV = CAMERA_DEFAULT_FOV;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/camera/func_80065EA0.s")
+GLOBAL_ASM("asm/non_matchings/camera/camera_init.s")
 #endif
 
 void func_80066060(s32 arg0, s32 arg1) {
