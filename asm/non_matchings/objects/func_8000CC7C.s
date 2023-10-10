@@ -221,7 +221,7 @@ glabel func_8000CC7C
 /* 00DB90 8000CF90 AC2DAEF0 */  sw    $t5, %lo(gNumRacers)($at)
 /* 00DB94 8000CF94 AFA20144 */  sw    $v0, 0x144($sp)
 /* 00DB98 8000CF98 A2000000 */  sb    $zero, ($s0)
-/* 00DB9C 8000CF9C 0C01B067 */  jal   func_8006C19C
+/* 00DB9C 8000CF9C 0C01B067 */  jal   is_two_player_adventure_race
 /* 00DBA0 8000CFA0 AFA20058 */   sw    $v0, 0x58($sp)
 /* 00DBA4 8000CFA4 10400006 */  beqz  $v0, .L8000CFC0
 /* 00DBA8 8000CFA8 24190002 */   li    $t9, 2
@@ -658,7 +658,7 @@ glabel func_8000CC7C
 /* 00E184 8000D584 24010004 */  li    $at, 4
 /* 00E188 8000D588 11C10006 */  beq   $t6, $at, .L8000D5A4
 /* 00E18C 8000D58C 00002025 */   move  $a0, $zero
-/* 00E190 8000D590 0C01B067 */  jal   func_8006C19C
+/* 00E190 8000D590 0C01B067 */  jal   is_two_player_adventure_race
 /* 00E194 8000D594 AFA60054 */   sw    $a2, 0x54($sp)
 /* 00E198 8000D598 8FA60054 */  lw    $a2, 0x54($sp)
 /* 00E19C 8000D59C 10400006 */  beqz  $v0, .L8000D5B8
@@ -1299,7 +1299,7 @@ glabel L8000D98C
 /* 00EAA8 8000DEA8 00000000 */   nop   
 /* 00EAAC 8000DEAC 14400014 */  bnez  $v0, .L8000DF00
 /* 00EAB0 8000DEB0 00000000 */   nop   
-/* 00EAB4 8000DEB4 0C01B067 */  jal   func_8006C19C
+/* 00EAB4 8000DEB4 0C01B067 */  jal   is_two_player_adventure_race
 /* 00EAB8 8000DEB8 00000000 */   nop   
 /* 00EABC 8000DEBC 14400010 */  bnez  $v0, .L8000DF00
 /* 00EAC0 8000DEC0 00009025 */   move  $s2, $zero

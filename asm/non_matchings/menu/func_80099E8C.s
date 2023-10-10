@@ -437,7 +437,7 @@ glabel func_80099E8C
 /* 09B104 8009A504 332900FF */  andi  $t1, $t9, 0xff
 /* 09B108 8009A508 19400063 */  blez  $t2, .L8009A698
 /* 09B10C 8009A50C AFA900D8 */   sw    $t1, 0xd8($sp)
-/* 09B110 8009A510 0C0315B4 */  jal   func_800C56D0
+/* 09B110 8009A510 0C0315B4 */  jal   clear_dialogue_box_open_flag
 /* 09B114 8009A514 24040007 */   li    $a0, 7
 /* 09B118 8009A518 0C031525 */  jal   assign_dialogue_box_id
 /* 09B11C 8009A51C 24040007 */   li    $a0, 7

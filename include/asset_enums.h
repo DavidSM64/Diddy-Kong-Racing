@@ -6,8 +6,8 @@
 /********** Asset Sections **********/
 
 typedef enum {
-    ASSET_UNKNOWN_0,
-    ASSET_UNKNOWN_0_TABLE,
+    ASSET_AI_BEHAVIOUR,
+    ASSET_AI_BEHAVIOUR_TABLE,
     ASSET_TEXTURES_3D,
     ASSET_TEXTURES_3D_TABLE,
     ASSET_TEXTURES_2D,
@@ -58,20 +58,20 @@ typedef enum {
     ASSET_TTGHOSTS
 } AssetSectionsEnum;
 
-/********** ASSET_UNKNOWN_0 **********/
+/********** ASSET_AI_BEHAVIOUR **********/
 
 typedef enum {
-    ASSET_UNKNOWN_0_0,
-    ASSET_UNKNOWN_0_1,
-    ASSET_UNKNOWN_0_2,
-    ASSET_UNKNOWN_0_3,
-    ASSET_UNKNOWN_0_4,
-    ASSET_UNKNOWN_0_5,
-    ASSET_UNKNOWN_0_6,
-    ASSET_UNKNOWN_0_7,
-    ASSET_UNKNOWN_0_8,
-    ASSET_UNKNOWN_0_9
-} AssetUnknown0Enum;
+    ASSET_AI_BEHAVIOUR_0,
+    ASSET_AI_BEHAVIOUR_1,
+    ASSET_AI_BEHAVIOUR_2,
+    ASSET_AI_BEHAVIOUR_3,
+    ASSET_AI_BEHAVIOUR_4,
+    ASSET_AI_BEHAVIOUR_5,
+    ASSET_AI_BEHAVIOUR_6,
+    ASSET_AI_BEHAVIOUR_7,
+    ASSET_AI_BEHAVIOUR_8,
+    ASSET_AI_BEHAVIOUR_9
+} AssetAiBehaviourEnum;
 
 /********** ASSET_TEXTURES_3D **********/
 

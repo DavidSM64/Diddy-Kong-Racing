@@ -5,8 +5,8 @@
 /********** Asset Sections Table **********/
 
 .word 50 # Number of entries in the table
-.word ASSET_UNKNOWN_0 - ASSETS_START
-.word ASSET_UNKNOWN_0_TABLE - ASSETS_START
+.word ASSET_AI_BEHAVIOUR - ASSETS_START
+.word ASSET_AI_BEHAVIOUR_TABLE - ASSETS_START
 .word ASSET_TEXTURES_3D - ASSETS_START
 .word ASSET_TEXTURES_3D_TABLE - ASSETS_START
 .word ASSET_TEXTURES_2D - ASSETS_START
@@ -62,47 +62,47 @@
 .balign 16
 glabel ASSETS_START
 
-/********** ASSET_UNKNOWN_0 **********/
+/********** ASSET_AI_BEHAVIOUR **********/
 
 .balign 16
-glabel ASSET_UNKNOWN_0
-glabel ASSET_UNKNOWN_0_0
-.incbin "./build/us_1.0/assets/unknown_0/unknown_0_0.bin"
-glabel ASSET_UNKNOWN_0_1
-.incbin "./build/us_1.0/assets/unknown_0/unknown_0_1.bin"
-glabel ASSET_UNKNOWN_0_2
-.incbin "./build/us_1.0/assets/unknown_0/unknown_0_2.bin"
-glabel ASSET_UNKNOWN_0_3
-.incbin "./build/us_1.0/assets/unknown_0/unknown_0_3.bin"
-glabel ASSET_UNKNOWN_0_4
-.incbin "./build/us_1.0/assets/unknown_0/unknown_0_4.bin"
-glabel ASSET_UNKNOWN_0_5
-.incbin "./build/us_1.0/assets/unknown_0/unknown_0_5.bin"
-glabel ASSET_UNKNOWN_0_6
-.incbin "./build/us_1.0/assets/unknown_0/unknown_0_6.bin"
-glabel ASSET_UNKNOWN_0_7
-.incbin "./build/us_1.0/assets/unknown_0/unknown_0_7.bin"
-glabel ASSET_UNKNOWN_0_8
-.incbin "./build/us_1.0/assets/unknown_0/unknown_0_8.bin"
-glabel ASSET_UNKNOWN_0_9
-.incbin "./build/us_1.0/assets/unknown_0/unknown_0_9.bin"
-glabel ASSET_UNKNOWN_0_END
+glabel ASSET_AI_BEHAVIOUR
+glabel ASSET_AI_BEHAVIOUR_0
+.incbin "./build/us_1.0/assets/ai-racers/unknown_0_0.bin"
+glabel ASSET_AI_BEHAVIOUR_1
+.incbin "./build/us_1.0/assets/ai-racers/unknown_0_1.bin"
+glabel ASSET_AI_BEHAVIOUR_2
+.incbin "./build/us_1.0/assets/ai-racers/unknown_0_2.bin"
+glabel ASSET_AI_BEHAVIOUR_3
+.incbin "./build/us_1.0/assets/ai-racers/unknown_0_3.bin"
+glabel ASSET_AI_BEHAVIOUR_4
+.incbin "./build/us_1.0/assets/ai-racers/unknown_0_4.bin"
+glabel ASSET_AI_BEHAVIOUR_5
+.incbin "./build/us_1.0/assets/ai-racers/unknown_0_5.bin"
+glabel ASSET_AI_BEHAVIOUR_6
+.incbin "./build/us_1.0/assets/ai-racers/unknown_0_6.bin"
+glabel ASSET_AI_BEHAVIOUR_7
+.incbin "./build/us_1.0/assets/ai-racers/unknown_0_7.bin"
+glabel ASSET_AI_BEHAVIOUR_8
+.incbin "./build/us_1.0/assets/ai-racers/unknown_0_8.bin"
+glabel ASSET_AI_BEHAVIOUR_9
+.incbin "./build/us_1.0/assets/ai-racers/unknown_0_9.bin"
+glabel ASSET_AI_BEHAVIOUR_END
 
-/********** ASSET_UNKNOWN_0_TABLE **********/
+/********** ASSET_AI_BEHAVIOUR_TABLE **********/
 
 .balign 16
-glabel ASSET_UNKNOWN_0_TABLE
-.word ASSET_UNKNOWN_0_0 - ASSET_UNKNOWN_0
-.word ASSET_UNKNOWN_0_1 - ASSET_UNKNOWN_0
-.word ASSET_UNKNOWN_0_2 - ASSET_UNKNOWN_0
-.word ASSET_UNKNOWN_0_3 - ASSET_UNKNOWN_0
-.word ASSET_UNKNOWN_0_4 - ASSET_UNKNOWN_0
-.word ASSET_UNKNOWN_0_5 - ASSET_UNKNOWN_0
-.word ASSET_UNKNOWN_0_6 - ASSET_UNKNOWN_0
-.word ASSET_UNKNOWN_0_7 - ASSET_UNKNOWN_0
-.word ASSET_UNKNOWN_0_8 - ASSET_UNKNOWN_0
-.word ASSET_UNKNOWN_0_9 - ASSET_UNKNOWN_0
-.word ASSET_UNKNOWN_0_END - ASSET_UNKNOWN_0
+glabel ASSET_AI_BEHAVIOUR_TABLE
+.word ASSET_AI_BEHAVIOUR_0 - ASSET_AI_BEHAVIOUR
+.word ASSET_AI_BEHAVIOUR_1 - ASSET_AI_BEHAVIOUR
+.word ASSET_AI_BEHAVIOUR_2 - ASSET_AI_BEHAVIOUR
+.word ASSET_AI_BEHAVIOUR_3 - ASSET_AI_BEHAVIOUR
+.word ASSET_AI_BEHAVIOUR_4 - ASSET_AI_BEHAVIOUR
+.word ASSET_AI_BEHAVIOUR_5 - ASSET_AI_BEHAVIOUR
+.word ASSET_AI_BEHAVIOUR_6 - ASSET_AI_BEHAVIOUR
+.word ASSET_AI_BEHAVIOUR_7 - ASSET_AI_BEHAVIOUR
+.word ASSET_AI_BEHAVIOUR_8 - ASSET_AI_BEHAVIOUR
+.word ASSET_AI_BEHAVIOUR_9 - ASSET_AI_BEHAVIOUR
+.word ASSET_AI_BEHAVIOUR_END - ASSET_AI_BEHAVIOUR
 .word 0xFFFFFFFF
 
 /********** ASSET_TEXTURES_3D **********/

@@ -411,7 +411,7 @@ glabel func_80096978
 /* 097B90 80096F90 8E2B0000 */  lw    $t3, ($s1)
 /* 097B94 80096F94 24040007 */  li    $a0, 7
 /* 097B98 80096F98 000B60C0 */  sll   $t4, $t3, 3
-/* 097B9C 80096F9C 0C0315B4 */  jal   func_800C56D0
+/* 097B9C 80096F9C 0C0315B4 */  jal   clear_dialogue_box_open_flag
 /* 097BA0 80096FA0 AFAC00A8 */   sw    $t4, 0xa8($sp)
 /* 097BA4 80096FA4 0C031525 */  jal   assign_dialogue_box_id
 /* 097BA8 80096FA8 24040007 */   li    $a0, 7

@@ -32,8 +32,8 @@
 
 s32 D_800DC870 = 0; // Currently unknown, might be a different type.
 //!@bug These two transition effects are marked to not clear when done, meaning they stay active the whole time.
-FadeTransition gFullFadeToBlack = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK2, FADE_COLOR_BLACK, 40, -1);
-FadeTransition gCircleFadeToBlack = FADE_TRANSITION(FADE_CIRCLE, FADE_FLAG_UNK2, FADE_COLOR_BLACK, 70, -1);
+FadeTransition gFullFadeToBlack = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 40, -1);
+FadeTransition gCircleFadeToBlack = FADE_TRANSITION(FADE_CIRCLE, FADE_FLAG_OUT, FADE_COLOR_BLACK, 70, -1);
 
 f32 D_800DC884[10] = {
     0.0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f
@@ -151,7 +151,7 @@ s32 *D_8011D374;
 s32 D_8011D378;
 s32 gScenePlayerViewports;
 UNUSED f32 gCurrBBoxDistanceToCamera; // Used in a comparison check, but functionally unused.
-u32 D_8011D384;
+u32 gWaveBlockCount;
 FogData gFogData[4];
 Vec3i gScenePerspectivePos;
 unk8011D474 *D_8011D474; // 0x10 bytes struct?
@@ -207,13 +207,13 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
 
     func_8002C0C4(geometry);
 
-    D_8011D384 = 0;
+    gWaveBlockCount = 0;
     
     if (numberOfPlayers < 2) {
         for (i = 0; i < gCurrentLevelModel->numberOfSegments; i++) {
-            if (gCurrentLevelModel->segments[i].unk2B != 0) {
-                D_8011D384++;
-                gCurrentLevelModel->segments[i].unk2B = 1;
+            if (gCurrentLevelModel->segments[i].hasWaves != 0) {
+                gWaveBlockCount++;
+                gCurrentLevelModel->segments[i].hasWaves = 1;
             }
         }
     }
@@ -224,7 +224,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
         i = numberOfPlayers + 1;
     }
     
-    if (D_8011D384) {
+    if (gWaveBlockCount) {
         func_800B82B4(gCurrentLevelModel, gCurrentLevelHeader2, i);
     }
     
@@ -296,7 +296,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     } else {
         tempUpdateRate = updateRate;
     }
-    if (D_8011D384) {
+    if (gWaveBlockCount) {
         func_800B9C18(tempUpdateRate);
     }
     update_shadows(SHADOW_ACTORS, SHADOW_ACTORS, updateRate);
@@ -831,7 +831,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
     gSceneActiveCamera = get_active_camera_segment();
     viewportID = get_current_viewport();
     compute_scene_camera_transform_matrix();
-    update_envmap_position((f32) gScenePerspectivePos.x / 65536.0f, (f32) gScenePerspectivePos.y / 65536.0f, (f32) gScenePerspectivePos.z / 65536.0f);
+    update_envmap_position(gScenePerspectivePos.x / 65536.0f, gScenePerspectivePos.y / 65536.0f, gScenePerspectivePos.z / 65536.0f);
     segmentIndex = gSceneActiveCamera->object.cameraSegmentID;
     if (segmentIndex > -1 && (segmentIndex < gCurrentLevelModel->numberOfSegments)) {
         gSceneStartSegment = gCurrentLevelModel->segments[segmentIndex].unk28;
@@ -841,7 +841,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
     gPrevCameraX = gSceneActiveCamera->trans.x_position;
     gPrevCameraY = gSceneActiveCamera->trans.y_position;
     gPrevCameraZ = gSceneActiveCamera->trans.z_position;
-    if (D_8011D384 != 0) {
+    if (gWaveBlockCount != 0) {
         func_800B8B8C();
         racers = get_racer_objects(&numRacers);
         if (gSceneActiveCamera->object.unk36 != 7 && numRacers > 0 && !check_if_showing_cutscene_camera()) {
@@ -852,7 +852,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
             } while(i < numRacers - 1 && viewportID != racer->playerIndex);
             func_800B8C04(racers[i]->segment.trans.x_position, racers[i]->segment.trans.y_position, racers[i]->segment.trans.z_position, get_current_viewport(), updateRate);
         } else {
-            func_800B8C04((s32) gSceneActiveCamera->trans.x_position, (s32) gSceneActiveCamera->trans.y_position, (s32) gSceneActiveCamera->trans.z_position, get_current_viewport(), updateRate);
+            func_800B8C04(gSceneActiveCamera->trans.x_position, gSceneActiveCamera->trans.y_position, gSceneActiveCamera->trans.z_position, get_current_viewport(), updateRate);
         }
     }
     get_current_level_header()->unk3 = 1;
@@ -975,7 +975,7 @@ void render_level_geometry_and_objects(void) {
         }
     }
 
-    if (D_8011D384 != 0) {
+    if (gWaveBlockCount != 0) {
         func_800BA8E4(&gSceneCurrDisplayList, &gSceneCurrMatrix, get_current_viewport());
     }
 
@@ -1052,7 +1052,7 @@ void render_level_segment(s32 segmentId, s32 nonOpaque) {
     s32 textureFlags;
     numberVertices = (batchInfo + 1)->verticesOffset - batchInfo->verticesOffset;
     segment = &gCurrentLevelModel->segments[segmentId];
-    sp78 = (nonOpaque && D_8011D384) ? (func_800B9228(segment)) : (0);
+    sp78 = (nonOpaque && gWaveBlockCount) ? (func_800B9228(segment)) : (0);
     if (nonOpaque) {
         startPos = segment->numberofOpaqueBatches;
         endPos = segment->numberOfBatches;
@@ -1637,7 +1637,7 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
         return FALSE;
     }
     seg = &gCurrentLevelModel->segments[obj->segment.object.segmentID];
-    if ((seg->unk2B != 0) && (D_8011D384 != 0) && (arg3 == 1)) {
+    if ((seg->hasWaves != 0) && (gWaveBlockCount != 0) && (arg3 == 1)) {
         *arg1 = func_800BB2F4(obj->segment.object.segmentID, obj->segment.trans.x_position, obj->segment.trans.z_position, arg2);
         return TRUE;
     } else {
@@ -1782,8 +1782,8 @@ void free_track(void) {
     s32 i;
 
     func_8000B290();
-    if (D_8011D384 != 0) {
-        func_800B7D20();
+    if (gWaveBlockCount != 0) {
+        free_waves();
     }
     for (i = 0; i < gCurrentLevelModel->numberOfTextures; i++) {
         free_texture(gCurrentLevelModel->textures[i].texture);
@@ -2231,7 +2231,7 @@ void func_8002E234(Object *obj, s32 bool) {
         D_8011D0C0 = func_8007B46C(obj->waterEffect->texture, obj->waterEffect->textureFrame << 8);
         D_8011D0CE = obj->segment.header->unk48 + yPos;
         D_8011D0CC = obj->segment.header->unk46 + yPos;
-        if ((D_8011D384 == 0) || ((get_viewport_count() <= 0))) {
+        if ((gWaveBlockCount == 0) || ((get_viewport_count() <= 0))) {
             D_8011D0C8 = 0;
         }
         D_8011D0D8 = (obj->waterEffect->scale * character_scale);
@@ -2283,7 +2283,7 @@ void func_8002E234(Object *obj, s32 bool) {
     D_8011D0EC = -1;
     for (i = 0; i < segs; i++) {
         if (new_var[i] >= 0) {
-            if (bool && (gCurrentLevelModel->segments[inSegs[i]].unk2B != 0) && (D_8011D384 != 0)) {
+            if (bool && (gCurrentLevelModel->segments[inSegs[i]].hasWaves != 0) && (gWaveBlockCount != 0)) {
                 func_8002EEEC();
             } else {
                 test = func_800314DC(

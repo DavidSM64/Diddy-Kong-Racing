@@ -106,15 +106,15 @@
     "assets": {
         "sections": [
             {
-                "build-id": "ASSET_UNKNOWN_0",
+                "build-id": "ASSET_AI_BEHAVIOUR",
                 "type": "Binary",
-                "folder": "unknown_0",
+                "folder": "ai-racers",
                 "table": 1
             },
             {
-                "build-id": "ASSET_UNKNOWN_0_TABLE",
+                "build-id": "ASSET_AI_BEHAVIOUR_TABLE",
                 "type": "Table",
-                "for": "ASSET_UNKNOWN_0"
+                "for": "ASSET_AI_BEHAVIOUR"
             },
             {
                 "build-id": "ASSET_TEXTURES_3D",

@@ -201,7 +201,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         gTrickyRacerPeakHeight = firstRacerObj->segment.trans.y_position;
     }
     if (firstRacerObj->segment.trans.y_position + 400.0 < gTrickyRacerPeakHeight) {
-        if (fxFadeOn() == 0 && is_in_two_player_adventure()) {
+        if (check_fadeout_transition() == 0 && is_in_two_player_adventure()) {
             func_8006F398();
         }
         func_8006F140(1);

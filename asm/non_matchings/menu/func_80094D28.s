@@ -332,7 +332,7 @@ glabel L80095110
 /* 095DC4 800951C4 100000F0 */  b     .L80095588
 /* 095DC8 800951C8 A047006E */   sb    $a3, 0x6e($v0)
 glabel L800951CC
-/* 095DCC 800951CC 0C0315B4 */  jal   func_800C56D0
+/* 095DCC 800951CC 0C0315B4 */  jal   clear_dialogue_box_open_flag
 /* 095DD0 800951D0 24040007 */   li    $a0, 7
 /* 095DD4 800951D4 0C031525 */  jal   assign_dialogue_box_id
 /* 095DD8 800951D8 24040007 */   li    $a0, 7

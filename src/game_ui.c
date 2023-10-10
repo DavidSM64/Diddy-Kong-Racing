@@ -551,7 +551,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 if (racer->racer.raceFinished == 1) {
                     func_80068508(1);
                     if (is_in_time_trial()) {
-                        func_800A6E30(racer, updateRate);
+                        func_800A6E30((Object_Racer *) racer, updateRate);
                     } else if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER && racer->racer.unk1AC == 1) {
                         if (is_in_two_player_adventure()) {
                             if (get_current_level_race_type() == RACETYPE_BOSS) {
@@ -894,9 +894,9 @@ void func_800A14F0(Object *racerObj, s32 updateRate) {
 }
 
 
-void func_800A19A4(Object_Racer *racer, s32 updateRate) {
+void func_800A19A4(Object_Racer *racer, UNUSED s32 updateRate) {
     s32 i;
-    s32 var_s1;
+    UNUSED s32 pad;
     s32 sp44;
     s32 sp40;
     s32 i2;
@@ -2070,19 +2070,19 @@ void func_800A6E30(Object_Racer *racer, s32 updateRate) {
     
     switch (gCurrentHud->unk1DA) {
     case 0:
-        D_800E2770->unk2 = 0x7F;
+        D_800E2770->unk2 = 127;
         D_800E2770->unk3 = 0;
         D_800E2770->unkC = (s8) racer->playerIndex;
-        play_sound_global(0x16U, NULL);
+        play_sound_global(SOUND_WHOOSH1, NULL);
         if ((gHUDNumPlayers == 0) || (gHUDNumPlayers == 1)) {
             gCurrentHud->unk1CC = -200.0f;
             gCurrentHud->unk1DD = 0;
         } else {
             if ((racer->playerIndex == 0) || (racer->playerIndex == 2)) {
-                gCurrentHud->unk1DD = -0x50U;
+                gCurrentHud->unk1DD = -80;
                 gCurrentHud->unk1CC = -200.0f;
             } else {
-                gCurrentHud->unk1DD = 0x50;
+                gCurrentHud->unk1DD = 80;
                 gCurrentHud->unk1CC = -40.0f;
             }
         }
@@ -2090,32 +2090,32 @@ void func_800A6E30(Object_Racer *racer, s32 updateRate) {
         return;
     case 1:
         temp = (updateRate * 13);
-        if (gCurrentHud->unk1CC < (gCurrentHud->unk1DD - temp)) {
+        if (gCurrentHud->unk1CC < gCurrentHud->unk1DD - temp) {
             gCurrentHud->unk1CC += temp;
         } else {
             gCurrentHud->unk1CC = gCurrentHud->unk1DD;
             gCurrentHud->unk1DA = 2;
-            gCurrentHud->unk1DB = -0x78U;
-            if ((gHUDVoiceSoundMask == 0) && (D_80126D71 == 0)) {
+            gCurrentHud->unk1DB = -120;
+            if (gHUDVoiceSoundMask == NULL && D_80126D71 == 0) {
                 play_time_trial_end_message(&racer->playerIndex);
             }
         }
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk1C0);
         return;
     case 2:
-        gCurrentHud->unk1DB = (s8) gCurrentHud->unk1DB + updateRate;
-        if ((s8) gCurrentHud->unk1DB >= 0x78) {
+        gCurrentHud->unk1DB += updateRate;
+        if (gCurrentHud->unk1DB >= 120) {
             gCurrentHud->unk1DA = 3;
             if ((gHUDNumPlayers == 0) || (gHUDNumPlayers == 1)) {
-                gCurrentHud->unk1DD = 0x38;
+                gCurrentHud->unk1DD = 56;
             } else {
                 if ((racer->playerIndex == 0) || (racer->playerIndex == 2)) {
-                    gCurrentHud->unk1DD = 0x38;
+                    gCurrentHud->unk1DD = 56;
                 } else {
-                    gCurrentHud->unk1DD = -0x28U;
+                    gCurrentHud->unk1DD = -40;
                 }
             }
-            play_sound_global(0x16U, NULL);
+            play_sound_global(SOUND_WHOOSH1, NULL);
         }
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk1C0);
         return;
@@ -2130,40 +2130,36 @@ void func_800A6E30(Object_Racer *racer, s32 updateRate) {
         D_800E2770->unk3 = -1;
         gCurrentHud->unk1DA = 5;
         gCurrentHud->unk1DB = 0;
-        /* fallthrough */
+        return;
     default:
         return;
     }
 }
 
 
-void func_800A718C(Object_64 *arg0) {
+void func_800A718C(UNUSED Object_64 *arg0) {
     s32 sp2C;
     s32 div;
-    s32 pad;
+    UNUSED s32 pad;
     u32 sp20;
     Settings *settings;
 
     settings = get_settings();
-    if (osTvType == 0) {
-        sp20 = 0x286;
+    if (osTvType == TV_TYPE_PAL) {
+        sp20 = 646;
     } else {
-        sp20 = 0x348;
+        sp20 = 840;
     }
     if (settings->cutsceneFlags & 4) {
-        gCurrentHud->unk266 = 0x45;
+        gCurrentHud->unk266 = 69;
     }
-    if ((func_8001E440() == 10) && (func_8001AE54() < sp20)) {
+    if (func_8001E440() == 10 && func_8001AE54() < sp20) {
         sp2C = *settings->balloonsPtr - 1;
     } else {
         sp2C = *settings->balloonsPtr;
-        sp2C = (s32) sp2C;
-        sp2C = sp2C;
-        if (func_8001E440() == 0xA) {
-            sp2C = (s32) sp2C;
-            if ((func_8001AE54() < (u32) (sp20 + 8)) && (D_80126D44 == 0)) {
-                sp2C = (s32) sp2C;
-                play_sound_global(0xFEU, &D_80126D44);
+        if (func_8001E440() == 10) {
+            if (func_8001AE54() < sp20 + 8 && D_80126D44 == 0) {
+                play_sound_global(SOUND_HUD_LAP_TICK, &D_80126D44);
             }
         }
     }
@@ -2172,20 +2168,20 @@ void func_800A718C(Object_64 *arg0) {
     }
     div = sp2C / 10;
     if (div != 0) {
-        gCurrentHud->unk2B8 = (s16) div;
-        gCurrentHud->unk2D8 = (s16) (sp2C % 10);
+        gCurrentHud->unk2B8 = div;
+        gCurrentHud->unk2D8 = sp2C % 10;
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk2C0);
     } else {
-        gCurrentHud->unk2B8 = (s16) (sp2C % 10);
+        gCurrentHud->unk2B8 = sp2C % 10;
     }
     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk2A0);
-    set_viewport_tv_type(1);
-    if (osTvType == 0) {
+    set_viewport_tv_type(TV_TYPE_NTSC);
+    if (osTvType == TV_TYPE_PAL) {
         func_8007BF1C(1);
     }
     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk260);
     func_8007BF1C(0);
-    set_viewport_tv_type(0);
+    set_viewport_tv_type(TV_TYPE_PAL);
     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk280);
 }
 
@@ -2396,7 +2392,7 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
 }
 
 void func_800A7FBC(s32 arg0, s32 arg1, s32 minutes, s32 seconds, s32 hundredths, s32 someBool) {
-    s32 pad;
+    UNUSED s32 pad;
     unk80126CDC_entry entry2;
     s32 unk14;
     s32 unk10;

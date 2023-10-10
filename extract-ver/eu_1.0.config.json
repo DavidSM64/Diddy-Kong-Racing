@@ -17,7 +17,7 @@
         "sections": [
             {
                 "type": "Binary",
-                "folder": "unknown_0",
+                "folder": "ai-racers",
                 "table": 1
             },
             { "type": "Table" },
