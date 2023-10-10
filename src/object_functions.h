@@ -403,6 +403,7 @@ void play_rocket_trailing_sound(Object *obj, struct Object_Weapon *weapon, u16 s
 void rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon *rocket);
 void homing_rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon *rocket);
 void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry);
+void obj_loop_effectbox(Object *obj, s32 updateRate);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 updateRate);
@@ -413,7 +414,6 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate);
 void obj_loop_groundzipper(Object *obj, s32 updateRate);
 void obj_loop_laserbolt(Object *obj, s32 updateRate);
 void obj_loop_posarrow(Object *obj, s32 updateRate);
-void obj_loop_effectbox(Object *obj, s32 updateRate);
 void obj_loop_bananacreator(Object *obj, s32 updateRate);
 void obj_loop_butterfly(Object *obj, s32 updateRate);
 void obj_loop_airzippers_waterzippers(Object *obj, s32 updateRate);
