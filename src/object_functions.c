@@ -535,7 +535,7 @@ void obj_loop_torch_mist(Object *obj, s32 updateRate) {
 void obj_init_effectbox(UNUSED Object *obj, UNUSED LevelObjectEntry_EffectBox *entry) {
 }
 
-void obj_loop_effectbox(Object *effectBoxObj, s32 arg1) {
+void obj_loop_effectbox(Object *effectBoxObj, UNUSED s32 updateRate) {
     Object **racers;
     LevelObjectEntry_EffectBox *effectBoxEntry;
     s32 numRacers;
