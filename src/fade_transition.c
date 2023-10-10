@@ -473,7 +473,7 @@ void func_800C0B00(FadeTransition *transition, s32 numVerts, s32 numTris, Vertex
   sizeTris = numTris * 16;
   i = (j * 12);
 
-  sTransitionVtx[0] = allocate_from_main_pool_safe(((sizeVerts + sizeTris) * 2) + (i * 3), 0xFFFF00FF);
+  sTransitionVtx[0] = allocate_from_main_pool_safe(((sizeVerts + sizeTris) * 2) + (i * 3), COLOUR_TAG_YELLOW);
   sTransitionVtx[1] = sTransitionVtx[0] + j;
   sTransitionTris[0] = (Triangle *) (sTransitionVtx[1] + j);
   sTransitionTris[1] = (Triangle *) (((u8 *) sTransitionTris[0]) + sizeTris);
