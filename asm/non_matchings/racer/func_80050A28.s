@@ -846,8 +846,8 @@ glabel func_80050A28
 /* 0521A0 800515A0 240D0002 */  li    $t5, 2
 /* 0521A4 800515A4 332C2000 */  andi  $t4, $t9, 0x2000
 /* 0521A8 800515A8 11800002 */  beqz  $t4, .L800515B4
-/* 0521AC 800515AC 3C018012 */   lui   $at, %hi(D_8011D582) # $at, 0x8012
-/* 0521B0 800515B0 A02DD582 */  sb    $t5, %lo(D_8011D582)($at)
+/* 0521AC 800515AC 3C018012 */   lui   $at, %hi(gTajInteractStatus) # $at, 0x8012
+/* 0521B0 800515B0 A02DD582 */  sb    $t5, %lo(gTajInteractStatus)($at)
 .L800515B4:
 /* 0521B4 800515B4 C60800C0 */  lwc1  $f8, 0xc0($s0)
 /* 0521B8 800515B8 44802000 */  mtc1  $zero, $f4

@@ -341,7 +341,7 @@ void func_8000E194(void);
 void fontUseFont(void);
 s8 find_non_car_racers(void);
 s8 check_if_silver_coin_race(void);
-void func_8000E1EC(Object *obj, s32 vehicleID);
+void despawn_player_racer(Object *obj, s32 vehicleID);
 void set_time_trial_enabled(s32 arg0);
 u8 is_time_trial_enabled(void);
 u8 is_in_time_trial(void);

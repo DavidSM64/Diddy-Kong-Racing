@@ -124,8 +124,8 @@ VertexPosition D_800DCB28[6] = {
 f32 gNPCPosY;
 s32 gTajSoundMask;
 s32 gTTSoundMask;
-s32 D_8011D4DC;
-s8 D_8011D4E0;
+s32 gRocketSoundTimer;
+s8 gTajDialogueChoice;
 s16 gTajSoundID; // Taj Voice clips
 
 /******************************/
@@ -2274,7 +2274,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
     }
     obj->interactObj->flags = INTERACT_FLAGS_SOLID;
-    if ((func_80052188() || var_a2) && (obj->properties.npc.action == TAJ_MODE_ROAM || obj->properties.npc.action == TAJ_MODE_UNK1F)) {
+    if ((should_taj_teleport() || var_a2) && (obj->properties.npc.action == TAJ_MODE_ROAM || obj->properties.npc.action == TAJ_MODE_UNK1F)) {
         func_800012E8();
         set_music_player_voice_limit(24);
         play_music(SEQUENCE_ENTRANCED);
@@ -2436,8 +2436,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             func_80008168();
         }
         if (dialogueID & 0x80) {
-            D_8011D4E0 = dialogueID & 0x7F;
-            if (D_8011D4E0 != racer64->racer.vehicleID) {
+            gTajDialogueChoice = dialogueID & 0x7F;
+            if (gTajDialogueChoice != racer64->racer.vehicleID) {
                 obj->properties.npc.action = TAJ_MODE_TRANSFORM_BEGIN;
                 taj->animFrameF = 0;
                 // Voice clips: Abrakadabra, Alakazam, Alakazoom?
@@ -2447,9 +2447,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             }
         }
         if (dialogueID & 0x40) {
-            D_8011D4E0 = dialogueID & 0xF;
-            if (D_8011D4E0 != racer64->racer.vehicleID) {
-                D_8011D4E0 |= 0x80;
+            gTajDialogueChoice = dialogueID & 0xF;
+            if (gTajDialogueChoice != racer64->racer.vehicleID) {
+                gTajDialogueChoice |= 0x80;
                 obj->properties.npc.action = TAJ_MODE_TRANSFORM_BEGIN;
                 taj->animFrameF = 0.0f;
                 // Voice clips: Abrakadabra, Alakazam, Alakazoom?
@@ -2479,7 +2479,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 racer64->racer.transparency -= (updateRate * 16);
             } else {
                 racer64->racer.transparency = 0;
-                func_8000E1EC(racerObj, D_8011D4E0 & 0xF);
+                despawn_player_racer(racerObj, gTajDialogueChoice & 0xF);
                 obj->properties.npc.action = TAJ_MODE_TRANSFORM_END;
                 play_sound_global(SOUND_CYMBAL, NULL);
                 transition_begin(&gTajTransformTransitionEnd);
@@ -2502,7 +2502,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             } else {
                 racer64->racer.transparency = 255;
                 if (taj->animFrameF == 0.0) {
-                    if (D_8011D4E0 & 0x80) {
+                    if (gTajDialogueChoice & 0x80) {
                         transition_begin(&gTajTransition);
                         sp6B = 1;
                         obj->properties.npc.action = TAJ_MODE_SET_CHALLENGE;
@@ -4449,12 +4449,18 @@ void homing_rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon 
     }
 }
 
-void func_8003F0D0(void) {
-    D_8011D4DC = 0;
+/**
+ * Set the rocket sound timer back to zero.
+*/
+void reset_rocket_sound_timer(void) {
+    gRocketSoundTimer = 0;
 }
 
-void func_8003F0DC(void) {
-    D_8011D4DC--;
+/**
+ * Reduce the rocket sound timer by 1 increment.
+*/
+void decrease_rocket_sound_timer(void) {
+    gRocketSoundTimer--;
 }
 
 /**
@@ -4487,10 +4493,10 @@ void play_rocket_trailing_sound(Object *obj, struct Object_Weapon *weapon, u16 s
         }
     }
     if (shouldPlaySound) {
-        if (weapon->soundMask == 0) {
-            if (D_8011D4DC < 8) {
+        if (weapon->soundMask == NULL) {
+            if (gRocketSoundTimer < 8) {
                 play_sound_at_position(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &weapon->soundMask);
-                D_8011D4DC += 1;
+                gRocketSoundTimer++;
             }
         } else {
             update_spatial_audio_position(weapon->soundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
@@ -4499,7 +4505,7 @@ void play_rocket_trailing_sound(Object *obj, struct Object_Weapon *weapon, u16 s
         if (weapon->soundMask) {
             func_800096F8(weapon->soundMask);
             weapon->soundMask = NULL;
-            D_8011D4DC -= 1;
+            gRocketSoundTimer -= 1;
         }
     }
 }

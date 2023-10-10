@@ -37,7 +37,7 @@ glabel func_8000CC7C
 /* 00D8D4 8000CCD4 AFB40028 */  sw    $s4, 0x28($sp)
 /* 00D8D8 8000CCD8 AFB20020 */  sw    $s2, 0x20($sp)
 /* 00D8DC 8000CCDC A2200000 */  sb    $zero, ($s1)
-/* 00D8E0 8000CCE0 0C01486E */  jal   func_800521B8
+/* 00D8E0 8000CCE0 0C01486E */  jal   set_taj_status
 /* 00D8E4 8000CCE4 00002025 */   move  $a0, $zero
 /* 00D8E8 8000CCE8 0C01AF6C */  jal   get_current_level_header
 /* 00D8EC 8000CCEC 00000000 */   nop   
@@ -1384,7 +1384,7 @@ glabel L8000D98C
 /* 00EBE8 8000DFE8 01D97804 */  sllv  $t7, $t9, $t6
 /* 00EBEC 8000DFEC 030F6825 */  or    $t5, $t8, $t7
 /* 00EBF0 8000DFF0 A6ED0014 */  sh    $t5, 0x14($s7)
-/* 00EBF4 8000DFF4 0C01486E */  jal   func_800521B8
+/* 00EBF4 8000DFF4 0C01486E */  jal   set_taj_status
 /* 00EBF8 8000DFF8 24040002 */   li    $a0, 2
 /* 00EBFC 8000DFFC 0C0274CC */  jal   set_next_taj_challenge_menu
 /* 00EC00 8000E000 02402025 */   move  $a0, $s2

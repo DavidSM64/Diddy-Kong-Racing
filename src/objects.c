@@ -163,13 +163,13 @@ s32 D_8011AD38; //D_8011AD38 is ultimately set by func_80074B34, and is almost d
 s8 D_8011AD3C;
 s8 D_8011AD3D;
 s8 D_8011AD3E;
-Object *D_8011AD40;
-s8 D_8011AD44;
+Object *gTransformObject; // Set but never read.
+s8 gTransformTimer;
 s8 gOverworldVehicle;
-s16 D_8011AD46;
-s16 D_8011AD48;
-s16 D_8011AD4A;
-s16 D_8011AD4C;
+s16 gTransformPosX;
+s16 gTransformPosY;
+s16 gTransformPosZ;
+s16 gTransformAngleY;
 s16 D_8011AD4E;
 s8 D_8011AD50;
 s8 D_8011AD51;
@@ -473,7 +473,7 @@ void clear_object_pointers(void) {
     D_8011AE7A = 0;
     D_8011AE7E = 1;
     D_8011AE7C = 0;
-    D_8011AD44 = 0;
+    gTransformTimer = 0;
     gIsTajChallenge = FALSE;
     D_8011AEF7 = 0;
     D_8011AF60[0] = 0;
@@ -753,62 +753,69 @@ s8 check_if_silver_coin_race(void) {
     return gIsSilverCoinRace;
 }
 
-void func_8000E1EC(Object *obj, s32 vehicleID) {
-    D_8011AD40 = obj;
-    D_8011AD44 = 4;
+/**
+ * Store some things about the racer object then remove it.
+*/
+void despawn_player_racer(Object *obj, s32 vehicleID) {
+    gTransformObject = obj;
+    gTransformTimer = 4;
     gOverworldVehicle = vehicleID;
-    D_8011AD46 = obj->segment.trans.x_position;
-    D_8011AD48 = obj->segment.trans.y_position;
-    D_8011AD4A = obj->segment.trans.z_position;
-    D_8011AD4C = obj->segment.trans.y_rotation;
+    gTransformPosX = obj->segment.trans.x_position;
+    gTransformPosY = obj->segment.trans.y_position;
+    gTransformPosZ = obj->segment.trans.z_position;
+    gTransformAngleY = obj->segment.trans.y_rotation;
     free_object(obj);
     gNumRacers = 0;
 }
 
-void func_8000E2B4(void) {
+/**
+ * Spawn a new racer object and set the initial position and rotation to what was set
+ * before the old one was freed.
+*/
+void transform_player_vehicle(void) {
     Object *player;
     LevelObjectEntry8000E2B4 spawnObj;
     Settings *settings;
-    Object_Racer *player_64;
-    s16 object_id;
+    Object_Racer *racer;
+    s16 objectID;
 
-    if (!D_8011AD44) {
+    if (gTransformTimer == 0) {
         return;
     }
-    D_8011AD44--;
-    if (D_8011AD44) {
+    gTransformTimer--;
+    if (gTransformTimer) {
         return;
     }
     settings = get_settings();
     spawnObj.unkE = 0;
     spawnObj.common.size = 16;
-    if (gOverworldVehicle < 5) {
-        object_id = ((s16 *) D_800DC7A8)[settings->racers[0].character + gOverworldVehicle * 10];
+    if (gOverworldVehicle < VEHICLE_TRICKY) {
+        objectID = ((s16 *) D_800DC7A8)[settings->racers[PLAYER_ONE].character + gOverworldVehicle * 10];
     } else {
-        object_id = D_800DC7B8[gOverworldVehicle + 37];
+        objectID = D_800DC7B8[gOverworldVehicle + 37];
     }
     set_level_default_vehicle(gOverworldVehicle);
-    spawnObj.common.size = spawnObj.common.size | ((s32) (object_id & 0x100) >> 1);
+    spawnObj.common.size |= (objectID & 0x100) >> 1;
     spawnObj.unkA = 0;
     spawnObj.unk8 = 0;
-    spawnObj.common.objectID = object_id;
-    spawnObj.common.x = D_8011AD46;
-    spawnObj.common.y = D_8011AD48;
-    spawnObj.common.z = D_8011AD4A;
-    spawnObj.unkC = D_8011AD4C;
-    func_800521B8(1);
-    player = spawn_object((LevelObjectEntryCommon *) &spawnObj, 0x11);
+    spawnObj.common.objectID = objectID;
+    spawnObj.common.x = gTransformPosX;
+    spawnObj.common.y = gTransformPosY;
+    spawnObj.common.z = gTransformPosZ;
+    spawnObj.unkC = gTransformAngleY;
+    set_taj_status(TAJ_DIALOGUE);
+    player = spawn_object((LevelObjectEntryCommon *) &spawnObj, 0x10 | 0x1);
     gNumRacers = 1;
-    (*gRacers)[0] = player;
-    gRacersByPort[0] = player;
+    (*gRacers)[PLAYER_ONE] = player;
+    gRacersByPort[PLAYER_ONE] = player;
     *gRacersByPosition = player;
-    player_64 = &player->unk64->racer;
-    player_64->vehicleID = gOverworldVehicle;
-    player_64->vehicleIDPrev = gOverworldVehicle;
-    player_64->unk2 = 0;
-    player_64->characterId = (s8) settings->racers[0].character;
-    player_64->playerIndex = 0;
-    player_64->unk118 = 0;
+    racer = &player->unk64->racer;
+    racer->vehicleID = gOverworldVehicle;
+    racer->vehicleIDPrev = gOverworldVehicle;
+    racer->unk2 = 0;
+    racer->characterId = settings->racers[PLAYER_ONE].character;
+    racer->playerIndex = 0;
+    racer->unk118 = 0;
     if (get_filtered_cheats() & CHEAT_BIG_CHARACTERS) {
         player->segment.trans.scale *= 1.4f;
     }
@@ -816,15 +823,15 @@ void func_8000E2B4(void) {
         player->segment.trans.scale *= 0.714f;
     }
     player->segment.level_entry = NULL;
-    player->segment.trans.y_rotation = D_8011AD4C;
-    player->segment.trans.y_position = D_8011AD48;
+    player->segment.trans.y_rotation = gTransformAngleY;
+    player->segment.trans.y_position = gTransformPosY;
 }
 
 /**
  * Enables or Disables time trial mode.
  */
-void set_time_trial_enabled(s32 arg0) {
-    gTimeTrialEnabled = arg0;
+void set_time_trial_enabled(s32 status) {
+    gTimeTrialEnabled = status;
 }
 
 /**
@@ -1249,15 +1256,19 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/objects/spawn_object.s")
 #endif
 
+/**
+ * Run functions that will attempt to free the graphics data of the object
+ * if there are no other references.
+*/
 void objFreeAssets(Object *obj, s32 count, s32 objType) {
     s32 i;
-    if (objType == 0) { // 3D model
+    if (objType == OBJECT_MODEL_TYPE_3D_MODEL) { // 3D model
         for (i = 0; i < count; i++) {
             if (obj->unk68[i] != NULL) {
                 func_8005FF40((ObjectModel **) (s32) obj->unk68[i]);
             }
         } 
-    } else if (objType == 4) {
+    } else if (objType == OBJECT_MODEL_TYPE_MISC) {
         for (i = 0; i < count; i++) {
             if (obj->unk68[i] != NULL) {
                 free_texture((TextureHeader *) (s32) obj->unk68[i]);
@@ -1624,7 +1635,7 @@ void func_80010994(s32 updateRate) {
     gObjectUpdateRateF = (f32) updateRate;
     D_8011AD24[0] = 0;
     D_8011AD53 = 0;
-    func_8000E2B4();
+    transform_player_vehicle();
     try_close_dialogue_box();
     func_800179D0();
     } while(0); //FAKEMATCH

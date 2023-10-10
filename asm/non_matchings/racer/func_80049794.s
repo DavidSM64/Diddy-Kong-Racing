@@ -832,8 +832,8 @@ glabel func_80049794
 /* 04AEF0 8004A2F0 24190002 */  li    $t9, 2
 /* 04AEF4 8004A2F4 31F82000 */  andi  $t8, $t7, 0x2000
 /* 04AEF8 8004A2F8 13000002 */  beqz  $t8, .L8004A304
-/* 04AEFC 8004A2FC 3C018012 */   lui   $at, %hi(D_8011D582) # $at, 0x8012
-/* 04AF00 8004A300 A039D582 */  sb    $t9, %lo(D_8011D582)($at)
+/* 04AEFC 8004A2FC 3C018012 */   lui   $at, %hi(gTajInteractStatus) # $at, 0x8012
+/* 04AF00 8004A300 A039D582 */  sb    $t9, %lo(gTajInteractStatus)($at)
 .L8004A304:
 /* 04AF04 8004A304 8D6BD528 */  lw    $t3, %lo(gCurrentRacerInput)($t3)
 /* 04AF08 8004A308 00000000 */  nop   
