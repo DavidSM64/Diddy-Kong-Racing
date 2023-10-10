@@ -831,7 +831,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
     gSceneActiveCamera = get_active_camera_segment();
     viewportID = get_current_viewport();
     compute_scene_camera_transform_matrix();
-    update_envmap_position((f32) gScenePerspectivePos.x / 65536.0f, (f32) gScenePerspectivePos.y / 65536.0f, (f32) gScenePerspectivePos.z / 65536.0f);
+    update_envmap_position(gScenePerspectivePos.x / 65536.0f, gScenePerspectivePos.y / 65536.0f, gScenePerspectivePos.z / 65536.0f);
     segmentIndex = gSceneActiveCamera->object.cameraSegmentID;
     if (segmentIndex > -1 && (segmentIndex < gCurrentLevelModel->numberOfSegments)) {
         gSceneStartSegment = gCurrentLevelModel->segments[segmentIndex].unk28;
@@ -852,7 +852,7 @@ void initialise_player_viewport_vars(s32 updateRate) {
             } while(i < numRacers - 1 && viewportID != racer->playerIndex);
             func_800B8C04(racers[i]->segment.trans.x_position, racers[i]->segment.trans.y_position, racers[i]->segment.trans.z_position, get_current_viewport(), updateRate);
         } else {
-            func_800B8C04((s32) gSceneActiveCamera->trans.x_position, (s32) gSceneActiveCamera->trans.y_position, (s32) gSceneActiveCamera->trans.z_position, get_current_viewport(), updateRate);
+            func_800B8C04(gSceneActiveCamera->trans.x_position, gSceneActiveCamera->trans.y_position, gSceneActiveCamera->trans.z_position, get_current_viewport(), updateRate);
         }
     }
     get_current_level_header()->unk3 = 1;
