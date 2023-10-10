@@ -55,10 +55,8 @@ s32 gIsInRace = 0;
 // Updated automatically from calc_func_checksums.py
 s32 gFunc80068158Checksum = 0x585E;
 s32 gFunc80068158Length = 0x154;
-
 s16 gLevelPropertyStackPos = 0;
 s16 D_800DD32C = 0;
-
 s8 D_800DD330 = 0;
 
 /*******************************/
@@ -71,12 +69,9 @@ LevelHeader *gCurrentLevelHeader;
 char **gLevelNames;
 s32 gNumberOfLevelHeaders;
 s32 gNumberOfWorlds;
-
 s8 *D_80121178;
 LevelGlobalData *gGlobalLevelTable;
-
-s32 D_80121180[16];
-
+s32 gRaceTypeCountTable[16];
 AIBehaviourTable *gAIBehaviourTable;
 s16 gLevelPropertyStack[5 * 4]; // Stores level info for cutscenes. 5 sets of four properties.
 
@@ -98,7 +93,7 @@ void init_level_globals(void) {
     gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_HEADERS_TABLE);
     i = 0;
     while (i < 16) {
-        D_80121180[i++] = 0;
+        gRaceTypeCountTable[i++] = 0;
     }
     gNumberOfLevelHeaders = 0;
     while (gTempAssetTable[gNumberOfLevelHeaders] != -1) {
@@ -114,7 +109,7 @@ void init_level_globals(void) {
             gNumberOfWorlds = gCurrentLevelHeader->world;
         }
         if ((gCurrentLevelHeader->race_type >= 0) && (gCurrentLevelHeader->race_type < 16)) {
-            D_80121180[gCurrentLevelHeader->race_type]++;
+            gRaceTypeCountTable[gCurrentLevelHeader->race_type]++;
         }
         gGlobalLevelTable[i].world = gCurrentLevelHeader->world;
         gGlobalLevelTable[i].raceType = gCurrentLevelHeader->race_type;
@@ -261,9 +256,12 @@ UNUSED s32 search_level_properties_backwards(s32 levelID, s8 raceType, s8 worldI
     return -1;
 }
 
-UNUSED s32 func_8006B018(s8 arg0) {
-    if ((arg0 >= 0) && (arg0 < 16)) {
-        return D_80121180[arg0];
+/**
+ * Return the number of tracks that fall under a certain race type.
+*/
+UNUSED s32 get_race_type_count(s8 raceType) {
+    if (raceType >= 0 && raceType < 16) {
+        return gRaceTypeCountTable[raceType];
     }
     return 0;
 }
@@ -680,7 +678,7 @@ char *get_level_name(s32 levelId) {
  * Call multiple functions to stop and free audio, then free track, weather and wave data.
 */
 void clear_audio_and_track(void) {
-    frontCleanupMultiSelect();
+    free_ai_behaviour_table();
     set_background_prim_colour(0, 0, 0);
     free_from_memory_pool(gCurrentLevelHeader);
     func_800049D8();
@@ -753,7 +751,10 @@ void set_ai_level(s8 *arg0) {
     free_from_memory_pool(gTempAssetTable);
 }
 
-void frontCleanupMultiSelect(void) {
+/**
+ * Frees the AI behaviour table from memory.
+*/
+void free_ai_behaviour_table(void) {
     free_from_memory_pool(gAIBehaviourTable);
 }
 
