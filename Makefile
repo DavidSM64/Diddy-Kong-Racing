@@ -162,6 +162,7 @@ LDFLAGS = undefined_syms.txt -T $(BUILD_DIR)/$(LD_SCRIPT) -Map $(BUILD_DIR)/dkr.
 
 # N64 tools
 TOOLS_DIR = ./tools
+FLIPS = $(TOOLS_DIR)/Flips/flips
 EMULATOR = mupen64plus
 EMU_FLAGS = --noosd
 LOADER = loader64
@@ -421,6 +422,10 @@ test: $(BUILD_DIR)/$(TARGET).z64
 
 load: $(BUILD_DIR)/$(TARGET).z64
 	$(LOADER) $(LOADER_FLAGS) $<
+
+ROM := $(BUILD_DIR)/$(TARGET).z64
+patch: $(ROM)
+	$(FLIPS) --create --bps ./baseroms/dkr.z64 $(ROM) $(BUILD_DIR)/$(TARGET).bps
 
 .PHONY: all clean distclean default diff test
 
