@@ -941,7 +941,7 @@ void render_level_geometry_and_objects(void) {
                 render_object_shadow(obj, obj->shadow);
             }
             render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
-            if (obj->waterEffect != NULL && obj->segment.header->unk30 & 0x10) {
+            if (obj->waterEffect != NULL && obj->segment.header->flags & 0x10) {
                 render_object_water_effects(obj, obj->waterEffect);
             }
         }
@@ -963,7 +963,7 @@ void render_level_geometry_and_objects(void) {
                 render_object_shadow(obj, obj->shadow);
             }
             render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
-            if ((obj->waterEffect != NULL) && (obj->segment.header->unk30 & 0x10)) {
+            if ((obj->waterEffect != NULL) && (obj->segment.header->flags & 0x10)) {
                 render_object_water_effects(obj, obj->waterEffect);
             }
         }
@@ -1008,7 +1008,7 @@ void render_level_geometry_and_objects(void) {
                     render_object_shadow(obj, obj->shadow);
                 }
                 render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
-                if ((obj->waterEffect != 0) && (obj->segment.header->unk30 & 0x10)) {
+                if ((obj->waterEffect != 0) && (obj->segment.header->flags & 0x10)) {
                     render_object_water_effects(obj, obj->waterEffect);
                 }
             }

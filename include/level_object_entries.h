@@ -115,6 +115,7 @@ typedef struct LevelObjectEntry_SetupPoint {
     /* 0x08 */ u8 unk8;
     /* 0x09 */ u8 unk9;
     /* 0x0A */ u8 angleY;
+    /* 0x0B */ s8 vehicle;
 } LevelObjectEntry_SetupPoint;
 
 typedef struct LevelObjectEntry_Dino_Whale {
@@ -700,6 +701,15 @@ typedef struct LevelObjectEntry_CharacterSelect {
     s8 unk2F;
     s8 unk30;
 } LevelObjectEntry_CharacterSelect;
+
+// Size: 0x10 bytes
+typedef struct LevelObjectEntry_Unk8000CC7C {
+    LevelObjectEntryCommon common;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+} LevelObjectEntry_Unk8000CC7C;
 
 typedef struct LevelObjectEntry {
     union {

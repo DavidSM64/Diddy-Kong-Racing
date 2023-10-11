@@ -720,13 +720,13 @@ typedef struct ObjectHeader {
   /* 0x0C */ f32 scale;
   /* 0x10 */ s32 *modelIds;
   /* 0x14 */ s32 *vehiclePartIds;
-  /* 0x18 */ s8  *vehiclePartIndices;
+  /* 0x18 */ s8 *vehiclePartIndices;
   /* 0x1C */ ObjHeaderParticleEntry *objectParticles;
              s32 pad20;
   /* 0x24 */ ObjectHeader24 *unk24;
   /* 0x28 */ f32 shadeBrightness;
   /* 0x2C */ f32 shadeAmbient;
-  /* 0x30 */ u16 unk30;
+  /* 0x30 */ u16 flags;
   /* 0x32 */ s16 shadowGroup;
   /* 0x34 */ s16 unk34;
   /* 0x36 */ s16 waterEffectGroup;
@@ -761,7 +761,7 @@ typedef struct ObjectHeader {
   /* 0x60 */ char internalName[16];
   /* 0x70 */ u8 unk70;
   /* 0x71 */ u8 unk71;
-  /* 0x71 */ u8 unk72;
+  /* 0x72 */ u8 unk72;
              u8 pad73[0x5];
 } ObjectHeader;
 

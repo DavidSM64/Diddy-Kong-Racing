@@ -197,8 +197,8 @@ typedef struct RacerShieldGfx {
 } RacerShieldGfx;
 
 typedef struct BossRaceVehicles {
-    u8 playerVehicle;
-    u8 bossVehicle;
+    s8 playerVehicle;
+    s8 bossVehicle;
 } BossRaceVehicles;
 
 typedef struct AssetObjectHeaders {
@@ -492,7 +492,7 @@ void func_80012F94(Object *);
 void render_3d_model(Object *);
 void func_800101AC(Object *, s32);
 void func_800135B8(Object *);
-void func_8000CC7C(Vehicle, u32, s32);
+void func_8000CC7C(enum Vehicle, u32, s32);
 void func_8000B020(s32, s32);
 void func_8000BADC(s32);
 void func_80022948(void);
@@ -515,5 +515,6 @@ void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
 s32 func_80061D30(Object *); //asm func in unknown_062930
 Object *func_8000FD54(s32);
 s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3);
+u8 func_8001B4FC(s32);
 
 #endif
