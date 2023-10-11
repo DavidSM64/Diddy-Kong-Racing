@@ -15407,6 +15407,11 @@
                         "build-id": "ASSET_MISC_RACER_HANDLING"
                     },
                     {
+                        "index": 11,
+                        "filename": "racer_unused_11_data",
+                        "build-id": "ASSET_MISC_RACER_UNUSED_11"
+                    },
+                    {
                         "index": 21,
                         "filename": "shield_data",
                         "build-id": "ASSET_MISC_SHIELD_DATA"

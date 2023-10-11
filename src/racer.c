@@ -189,7 +189,7 @@ f32 *gCurrentRacerMiscAssetPtr;
 f32 *D_8011D568;
 f32 gCurrentRacerWeightStat;
 f32 gCurrentRacerHandlingStat;
-f32 D_8011D574;
+f32 gCurrentRacerUnusedMiscAsset11; // Set, but never read
 f32 gRacerMagnetVelX;
 f32 gRacerMagnetVelZ;
 u8 D_8011D580;
@@ -2313,8 +2313,8 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_RACER_HANDLING);
         gCurrentRacerHandlingStat = gCurrentRacerMiscAssetPtr[tempRacer->characterId];
-        gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_11);
-        D_8011D574 = gCurrentRacerMiscAssetPtr[tempRacer->characterId];
+        gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_RACER_UNUSED_11);
+        gCurrentRacerUnusedMiscAsset11 = gCurrentRacerMiscAssetPtr[tempRacer->characterId];
         if (tempRacer->unk1FE == 3) {
             gCurrentRacerWeightStat *= (f32) tempRacer->unk1FF / 256;
         }
@@ -5842,8 +5842,8 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     }
     gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_RACER_HANDLING);
     gCurrentRacerHandlingStat = gCurrentRacerMiscAssetPtr[racer->characterId];
-    gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_11);
-    D_8011D574 = gCurrentRacerMiscAssetPtr[racer->characterId];
+    gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_RACER_UNUSED_11);
+    gCurrentRacerUnusedMiscAsset11 = gCurrentRacerMiscAssetPtr[racer->characterId];
     xPos = obj->segment.trans.x_position;
     yPos = obj->segment.trans.y_position;
     zPos = obj->segment.trans.z_position;
