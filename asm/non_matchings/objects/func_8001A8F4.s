@@ -265,18 +265,18 @@ glabel func_8001A8F4
 /* 01B8D0 8001ACD0 A029AD50 */  sb    $t1, %lo(D_8011AD50)($at)
 /* 01B8D4 8001ACD4 0C007917 */  jal   func_8001E45C
 /* 01B8D8 8001ACD8 2404000A */   li    $a0, 10
-/* 01B8DC 8001ACDC 3C108012 */  lui   $s0, %hi(D_8011ADC8) # $s0, 0x8012
-/* 01B8E0 8001ACE0 2610ADC8 */  addiu $s0, %lo(D_8011ADC8) # addiu $s0, $s0, -0x5238
+/* 01B8DC 8001ACDC 3C108012 */  lui   $s0, %hi(gBalloonCutsceneTimer) # $s0, 0x8012
+/* 01B8E0 8001ACE0 2610ADC8 */  addiu $s0, %lo(gBalloonCutsceneTimer) # addiu $s0, $s0, -0x5238
 /* 01B8E4 8001ACE4 0C007A4F */  jal   func_8001E93C
 /* 01B8E8 8001ACE8 AE000000 */   sw    $zero, ($s0)
 /* 01B8EC 8001ACEC 3C028012 */  lui   $v0, %hi(D_8011AD50) # $v0, 0x8012
 /* 01B8F0 8001ACF0 8042AD50 */  lb    $v0, %lo(D_8011AD50)($v0)
 /* 01B8F4 8001ACF4 00000000 */  nop   
 .L8001ACF8:
-/* 01B8F8 8001ACF8 3C108012 */  lui   $s0, %hi(D_8011ADC8) # $s0, 0x8012
+/* 01B8F8 8001ACF8 3C108012 */  lui   $s0, %hi(gBalloonCutsceneTimer) # $s0, 0x8012
 /* 01B8FC 8001ACFC 24010003 */  li    $at, 3
 /* 01B900 8001AD00 1441000C */  bne   $v0, $at, .L8001AD34
-/* 01B904 8001AD04 2610ADC8 */   addiu $s0, %lo(D_8011ADC8) # addiu $s0, $s0, -0x5238
+/* 01B904 8001AD04 2610ADC8 */   addiu $s0, %lo(gBalloonCutsceneTimer) # addiu $s0, $s0, -0x5238
 /* 01B908 8001AD08 3C04800E */  lui   $a0, %hi(D_800DC860) # $a0, 0x800e
 /* 01B90C 8001AD0C 0C030076 */  jal   transition_begin
 /* 01B910 8001AD10 2484C860 */   addiu $a0, %lo(D_800DC860) # addiu $a0, $a0, -0x37a0

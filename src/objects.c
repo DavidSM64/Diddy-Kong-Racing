@@ -196,7 +196,7 @@ s32 D_8011ADBC;
 s32 D_8011ADC0;
 s8 D_8011ADC4;
 s8 D_8011ADC5;
-u32 D_8011ADC8;
+u32 gBalloonCutsceneTimer;
 s8 (*D_8011ADCC)[8];
 f32 D_8011ADD0;
 s8 D_8011ADD4;
@@ -220,7 +220,7 @@ Object **D_8011AE6C;
 s32 D_8011AE70;
 Object **D_8011AE74;
 s16 D_8011AE78;
-s16 D_8011AE7A;
+s16 gCutsceneID;
 s16 D_8011AE7C;
 s8 D_8011AE7E;
 s16 gTTGhostTimeToBeat;
@@ -470,7 +470,7 @@ void clear_object_pointers(void) {
     gParticleCount = 0;
     D_8011AE88 = 0;
     D_8011ADD4 = 0;
-    D_8011AE7A = 0;
+    gCutsceneID = 0;
     D_8011AE7E = 1;
     D_8011AE7C = 0;
     gTransformTimer = 0;
@@ -1640,7 +1640,7 @@ void func_80010994(s32 updateRate) {
     func_800179D0();
     } while(0); //FAKEMATCH
     if (D_8011AF00 == 1) {
-        if ((D_8011ADB0 == 0x50) && (D_8011AE7A == 0)) {
+        if ((D_8011ADB0 == 0x50) && (gCutsceneID == 0)) {
             sp54 = 0;
             for (i = 0; i < MAXCONTROLLERS; i++) {
                 tempVal = get_buttons_pressed_from_player(i);
@@ -3198,8 +3198,11 @@ s16 func_8001AE44(void) {
     return D_8011AD4E;
 }
 
-u32 func_8001AE54(void) {
-    return D_8011ADC8;
+/**
+ * Return the timer used for the collectable balloon cutscene.
+*/
+u32 get_balloon_cutscene_timer(void) {
+    return gBalloonCutsceneTimer;
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001AE64.s")
@@ -3981,17 +3984,23 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
     }
 }
 
-s16 func_8001E440(void) {
-    return D_8011AE7A;
+/**
+ * Return the index of the currently active cutscene.
+*/
+s16 get_cutscene_id(void) {
+    return gCutsceneID;
 }
 
-void func_8001E450(s32 arg0) {
-    D_8011AE7A = arg0;
+/**
+ * Set the current cutscene index.
+*/
+void set_cutscene_id(s32 cutsceneID) {
+    gCutsceneID = cutsceneID;
 }
 
-void func_8001E45C(s32 arg0) {
-    if (arg0 != D_8011AE7A) {
-        D_8011AE7A = arg0;
+void func_8001E45C(s32 cutsceneID) {
+    if (cutsceneID != gCutsceneID) {
+        gCutsceneID = cutsceneID;
         D_8011ADAC = 0;
         D_8011AE7E = 1;
         if (get_game_mode() == GAMEMODE_MENU) {

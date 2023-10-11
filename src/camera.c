@@ -1167,7 +1167,7 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         gModelMatrixS[gModelMatrixStackPos] = *mtx;
         gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*dList)++);
-        if (D_80120D0C == 0) {
+        if (D_80120D0C == FALSE) {
             index =  (((u8) index) * sprite->baseTextureId) >> 8;
         }
         func_8007BF34(dList, sprite->unk6 | flags);

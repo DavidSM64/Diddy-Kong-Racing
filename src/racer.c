@@ -342,7 +342,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
                 }
             }
             if (D_8011D544 != 0.0f) {
-                racer->unk1CA = D_800DCDA0[racer->unk1AE];
+                racer->unk1CA = D_800DCDA0[racer->racePosition];
             }
             if ((f32) (s16) ((racer->aiSkill - 2) << 2) <= 300.0f - D_8011D544) {
                 gCurrentRacerInput |= A_BUTTON;
@@ -2137,7 +2137,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
     obj->interactObj->z_position = obj->segment.trans.z_position;
     tempRacer->groundedWheels = 3;
     tempRacer->unk1AA = 1;
-    tempRacer->unk1AE = 1;
+    tempRacer->racePosition = 1;
     tempRacer->miscAnimCounter = tempRacer->playerIndex * 5;
     tempRacer->checkpoint_distance = 1.0f;
     tempRacer->unk1FD = 0;
@@ -4401,7 +4401,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
             }
             magnetTarget = NULL;
             if (gCurrentButtonsPressed & Z_TRIG) {
-                func_800A74EC(318, racer->playerIndex);
+                func_800A74EC(SOUND_VOICE_TT_POWERUP, racer->playerIndex);
             }
             if (racer->magnetLevel3) {
                 if (racer->magnetTimer == 0) {

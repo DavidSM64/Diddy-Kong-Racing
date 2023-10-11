@@ -1604,7 +1604,7 @@ void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2
         func_8001F3C8(entry->actorIndex);
     }
     if (entry->channel == -1) {
-        entry->channel = func_8001E440();
+        entry->channel = get_cutscene_id();
     }
     if (entry->channel == 20) {
         entry->actorIndex |= 0x80;
@@ -1629,7 +1629,7 @@ void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2
     if (arg2 != 0 && (get_buttons_pressed_from_player(PLAYER_ONE) & R_CBUTTONS)) {
         obj->properties.animatedObj.action = 2;
     }
-    if (((func_8001E440() == entry->channel) || (entry->channel == 20)) && (obj->unk64 == NULL) && (entry->order == 0) && (entry->objectIdToSpawn != -1)) {
+    if (((get_cutscene_id() == entry->channel) || (entry->channel == 20)) && (obj->unk64 == NULL) && (entry->order == 0) && (entry->objectIdToSpawn != -1)) {
         func_8001F23C(obj, entry);
     }
     obj64 = &obj->unk64->animation;

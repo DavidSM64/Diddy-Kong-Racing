@@ -14,8 +14,8 @@ glabel func_8001E6EC
 /* 01F31C 8001E71C 3C058012 */  lui   $a1, %hi(D_8011ADD8) # $a1, 0x8012
 /* 01F320 8001E720 3C128012 */  lui   $s2, %hi(D_8011AE74) # $s2, 0x8012
 /* 01F324 8001E724 3C118012 */  lui   $s1, %hi(D_8011AE78) # $s1, 0x8012
-/* 01F328 8001E728 3C0C8012 */  lui   $t4, %hi(D_8011AE7A) # $t4, 0x8012
-/* 01F32C 8001E72C 258CAE7A */  addiu $t4, %lo(D_8011AE7A) # addiu $t4, $t4, -0x5186
+/* 01F328 8001E728 3C0C8012 */  lui   $t4, %hi(gCutsceneID) # $t4, 0x8012
+/* 01F32C 8001E72C 258CAE7A */  addiu $t4, %lo(gCutsceneID) # addiu $t4, $t4, -0x5186
 /* 01F330 8001E730 2631AE78 */  addiu $s1, %lo(D_8011AE78) # addiu $s1, $s1, -0x5188
 /* 01F334 8001E734 2652AE74 */  addiu $s2, %lo(D_8011AE74) # addiu $s2, $s2, -0x518c
 /* 01F338 8001E738 24A5ADD8 */  addiu $a1, %lo(D_8011ADD8) # addiu $a1, $a1, -0x5228

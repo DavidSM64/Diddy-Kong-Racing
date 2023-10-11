@@ -28,8 +28,8 @@ glabel func_8001E4C4
 /* 01F124 8001E524 3C098012 */  lui   $t1, %hi(gObjPtrList) # $t1, 0x8012
 /* 01F128 8001E528 1860002C */  blez  $v1, .L8001E5DC
 /* 01F12C 8001E52C 2529AE58 */   addiu $t1, %lo(gObjPtrList) # addiu $t1, $t1, -0x51a8
-/* 01F130 8001E530 3C0B8012 */  lui   $t3, %hi(D_8011AE7A) # $t3, 0x8012
-/* 01F134 8001E534 256BAE7A */  addiu $t3, %lo(D_8011AE7A) # addiu $t3, $t3, -0x5186
+/* 01F130 8001E530 3C0B8012 */  lui   $t3, %hi(gCutsceneID) # $t3, 0x8012
+/* 01F134 8001E534 256BAE7A */  addiu $t3, %lo(gCutsceneID) # addiu $t3, $t3, -0x5186
 /* 01F138 8001E538 00002025 */  move  $a0, $zero
 /* 01F13C 8001E53C 240C0014 */  li    $t4, 20
 /* 01F140 8001E540 240A0031 */  li    $t2, 49

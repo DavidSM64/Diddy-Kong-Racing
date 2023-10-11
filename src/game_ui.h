@@ -71,7 +71,7 @@ typedef struct {
     f32 unkC;
 } IndicatorArrow;
 
-// Used in func_800A7FBC
+// Used in render_timer
 typedef struct unk80126CDC_entry {
     s16 unk0;
     s16 unk2;
@@ -441,10 +441,10 @@ extern u8 gGfxTaskYieldData[OS_YIELD_DATA_SIZE];
 
 u8 func_800A0190(void);
 void func_800A0B74(void);
-void func_800A0DC0(s32 arg0, Object *arg1, s32 updateRate);
+void render_hud_race(s32 arg0, Object *arg1, s32 updateRate);
 void render_hud_challenge_eggs(s32 arg0, Object *arg1, s32 updateRate);
 void render_hud_race_boss(s32 arg0, Object *arg1, s32 updateRate);
-void func_800A263C(s32 arg0, Object *arg1, s32 updateRate);
+void render_hud_taj_race(s32 arg0, Object *arg1, s32 updateRate);
 void func_800A3870(void);
 void play_time_trial_end_message(s16 *playerID);
 void set_time_trial_start_voice(u16 arg0, f32 arg1, s32 arg2);
@@ -468,28 +468,28 @@ void render_speedometer(Object *obj, s32 updateRate);
 void render_lap_count(Object_Racer *racer, s32 updateRate);
 void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtxList, s32 updateRate);
 void init_hud(s32 viewportCount);
-void func_800A1C04(s32 arg0, Object *obj, s32 updateRate);
+void render_hud_battle(s32 arg0, Object *obj, s32 updateRate);
 void func_800A22F4(Object_Racer *racer, void *unused);
 void free_hud(void);
-void func_800A36CC(u8, u8, u8, u8, u8);
+void set_stopwatch_face(u8, u8, u8, u8, u8);
 void func_800A0BD4(s32 updateRate);
-void func_800A47A0(Object_Racer *racer, s32 updateRate);
-void func_800A7A60(Object *racerObj);
+void render_silver_coin_counter(Object_Racer *racer, s32 updateRate);
+void render_magnet_reticle(Object *racerObj);
 void func_800A6E30(Object_Racer *racer, s32 updateRate);
 void func_800A19A4(Object_Racer *racer, s32 updateRate);
 void func_800A14F0(Object *racerObj, s32 updateRate);
-void func_800A4C44(Object_Racer *racer, s32 updateRate);
-void func_800A1248(s32 arg0, Object *obj, s32 updateRate);
+void render_race_position(Object_Racer *racer, s32 updateRate);
+void render_hud_banana_challenge(s32 arg0, Object *obj, s32 updateRate);
 
 // Non Matching
-void func_800A718C(Object_64 *obj);
+void render_balloon_count(Object_64 *obj);
 void func_800AA600(Gfx **dList, MatrixS **mtx, Vertex **vtxList, unk80126CDC **arg3);
-void func_800A7FBC(s32, s32, s32 minutes, s32 seconds, s32 hundredths, s32); 
+void render_timer(s32, s32, s32 minutes, s32 seconds, s32 hundredths, s32); 
 void func_800A277C(s32, Object*, s32);
 void func_800A6254(Object_64* obj, s32 updateRate);
 void func_800A1E48(Object*, s32);
 void render_treasure_hud(Object_Racer*);
-void func_800AA3EC(f32, f32, f32, f32, f32);
+void minimap_marker_pos(f32, f32, f32, f32, f32);
 void func_8009F034(void);
 
 #endif
