@@ -1020,8 +1020,8 @@ glabel L8000D98C
 /* 00E694 8000DA94 26B50004 */   addiu $s5, $s5, 4
 /* 00E698 8000DA98 00009025 */  move  $s2, $zero
 .L8000DA9C:
-/* 00E69C 8000DA9C 3C15800E */  lui   $s5, %hi(D_800DC718) # $s5, 0x800e
-/* 00E6A0 8000DAA0 26B5C718 */  addiu $s5, %lo(D_800DC718) # addiu $s5, $s5, -0x38e8
+/* 00E69C 8000DA9C 3C15800E */  lui   $s5, %hi(gGhostObj) # $s5, 0x800e
+/* 00E6A0 8000DAA0 26B5C718 */  addiu $s5, %lo(gGhostObj) # addiu $s5, $s5, -0x38e8
 /* 00E6A4 8000DAA4 0C0166D3 */  jal   free_tt_ghost_data
 /* 00E6A8 8000DAA8 AEA00000 */   sw    $zero, ($s5)
 /* 00E6AC 8000DAAC 3C118012 */  lui   $s1, %hi(D_8011AD38) # $s1, 0x8012
@@ -1414,7 +1414,7 @@ glabel L8000D98C
 /* 00EC54 8000E054 AC20ADB0 */  sw    $zero, %lo(D_8011ADB0)($at)
 /* 00EC58 8000E058 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 00EC5C 8000E05C 44816000 */  mtc1  $at, $f12
-/* 00EC60 8000E060 0C01AF44 */  jal   func_8006BD10
+/* 00EC60 8000E060 0C01AF44 */  jal   start_level_music
 /* 00EC64 8000E064 00000000 */   nop   
 .L8000E068:
 /* 00EC68 8000E068 0C01C42C */  jal   set_free_queue_state

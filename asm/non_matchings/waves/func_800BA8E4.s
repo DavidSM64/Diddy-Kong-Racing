@@ -71,7 +71,7 @@ glabel func_800BA8E4
 /* 0BB5EC 800BA9EC 3C04800E */  lui   $a0, %hi(D_800E30D0) # $a0, 0x800e
 /* 0BB5F0 800BA9F0 8C8430D0 */  lw    $a0, %lo(D_800E30D0)($a0)
 /* 0BB5F4 800BA9F4 0005C200 */  sll   $t8, $a1, 8
-/* 0BB5F8 800BA9F8 0C01ED1B */  jal   func_8007B46C
+/* 0BB5F8 800BA9F8 0C01ED1B */  jal   set_animated_texture_header
 /* 0BB5FC 800BA9FC 03002825 */   move  $a1, $t8
 /* 0BB600 800BAA00 3C198013 */  lui   $t9, %hi(gWaveBatch) # $t9, 0x8013
 /* 0BB604 800BAA04 8F39A07C */  lw    $t9, %lo(gWaveBatch)($t9)
@@ -80,7 +80,7 @@ glabel func_800BA8E4
 /* 0BB610 800BAA10 8C84A080 */  lw    $a0, %lo(gWaveTexture)($a0)
 /* 0BB614 800BAA14 00057380 */  sll   $t6, $a1, 0xe
 /* 0BB618 800BAA18 00408025 */  move  $s0, $v0
-/* 0BB61C 800BAA1C 0C01ED1B */  jal   func_8007B46C
+/* 0BB61C 800BAA1C 0C01ED1B */  jal   set_animated_texture_header
 /* 0BB620 800BAA20 01C02825 */   move  $a1, $t6
 /* 0BB624 800BAA24 00409025 */  move  $s2, $v0
 /* 0BB628 800BAA28 02002025 */  move  $a0, $s0
@@ -184,7 +184,7 @@ glabel func_800BA8E4
 /* 0BB7A0 800BABA0 91E50007 */  lbu   $a1, 7($t7)
 /* 0BB7A4 800BABA4 8C84A080 */  lw    $a0, %lo(gWaveTexture)($a0)
 /* 0BB7A8 800BABA8 00057380 */  sll   $t6, $a1, 0xe
-/* 0BB7AC 800BABAC 0C01ED1B */  jal   func_8007B46C
+/* 0BB7AC 800BABAC 0C01ED1B */  jal   set_animated_texture_header
 /* 0BB7B0 800BABB0 01C02825 */   move  $a1, $t6
 /* 0BB7B4 800BABB4 8E270000 */  lw    $a3, ($s1)
 /* 0BB7B8 800BABB8 3C010700 */  lui   $at, 0x700

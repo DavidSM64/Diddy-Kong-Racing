@@ -1,7 +1,7 @@
 glabel func_8001B4FC
 /* 01C0FC 8001B4FC 27BDFFD0 */  addiu $sp, $sp, -0x30
-/* 01C100 8001B500 3C01800E */  lui   $at, %hi(D_800DC738) # $at, 0x800e
-/* 01C104 8001B504 A020C738 */  sb    $zero, %lo(D_800DC738)($at)
+/* 01C100 8001B500 3C01800E */  lui   $at, %hi(gTimeTrialStaff) # $at, 0x800e
+/* 01C104 8001B504 A020C738 */  sb    $zero, %lo(gTimeTrialStaff)($at)
 /* 01C108 8001B508 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 01C10C 8001B50C AFB00018 */  sw    $s0, 0x18($sp)
 /* 01C110 8001B510 3C01800E */  lui   $at, %hi(D_800DC734) # $at, 0x800e
@@ -69,8 +69,8 @@ glabel func_8001B4FC
 /* 01C1FC 8001B5FC 006D5824 */   and   $t3, $v1, $t5
 /* 01C200 8001B600 15600003 */  bnez  $t3, .L8001B610
 /* 01C204 8001B604 240F0001 */   li    $t7, 1
-/* 01C208 8001B608 3C01800E */  lui   $at, %hi(D_800DC738) # $at, 0x800e
-/* 01C20C 8001B60C A02FC738 */  sb    $t7, %lo(D_800DC738)($at)
+/* 01C208 8001B608 3C01800E */  lui   $at, %hi(gTimeTrialStaff) # $at, 0x800e
+/* 01C20C 8001B60C A02FC738 */  sb    $t7, %lo(gTimeTrialStaff)($at)
 .L8001B610:
 /* 01C210 8001B610 0C006CBC */  jal   func_8001B2F0
 /* 01C214 8001B614 02002025 */   move  $a0, $s0

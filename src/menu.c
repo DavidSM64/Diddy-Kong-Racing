@@ -7196,7 +7196,7 @@ void menu_adventure_track_init(void) {
     }
     assign_dialogue_box_id(7);
     if (get_map_race_type(mapId) & 0x40) {
-        func_800C31EC(get_map_world_id(mapId) + 0x3B);
+        set_current_text(get_map_world_id(mapId) + 0x3B);
     }
 }
 
@@ -7364,7 +7364,7 @@ s32 menu_adventure_track_loop(s32 updateRate) {
         if ((gMenuOptionCount != 0) || sp20 || sp28) {
             if (D_801267D8[0] & (A_BUTTON | START_BUTTON)) {
                 if (sp28) {
-                    func_800C31EC(0x2710);
+                    set_current_text(0x2710);
                 }
                 gMenuDelay = 1;
                 transition_begin(&sMenuTransitionFadeIn);
@@ -7373,7 +7373,7 @@ s32 menu_adventure_track_loop(s32 updateRate) {
                 play_sound_global(SOUND_MENU_BACK3, NULL);
                 if (sp20 || sp28) {
                     if (sp28) {
-                        func_800C31EC(0x2710);
+                        set_current_text(0x2710);
                     }
                     transition_begin(&sMenuTransitionFadeIn);
                     gMenuDelay = -1;
@@ -9833,7 +9833,7 @@ s32 taj_menu_loop(void) {
 
     switch (sCurrentMenuID) {
         case 0:
-            func_800C31EC(7);
+            set_current_text(7);
             sCurrentMenuID = 1;
             D_800DF4D8 = 1;
             break;
@@ -9903,17 +9903,17 @@ s32 taj_menu_loop(void) {
         case -3:
         case -2:
         case -1:
-            func_800C31EC(ASSET_GAME_TEXT_8 - sCurrentMenuID); //Wouldn't this be ASSET_GAME_TEXT_9?
+            set_current_text(ASSET_GAME_TEXT_8 - sCurrentMenuID); //Wouldn't this be ASSET_GAME_TEXT_9?
             sCurrentMenuID = 4;
             break;
         case -4:
-            func_800C31EC(ASSET_GAME_TEXT_17);
+            set_current_text(ASSET_GAME_TEXT_17);
             gNextTajChallengeMenu = 0;
             sCurrentMenuID = 1;
             gDialogueSubmenu = 3;
             break;
         case -5:
-            func_800C31EC(ASSET_GAME_TEXT_21);
+            set_current_text(ASSET_GAME_TEXT_21);
             gNextTajChallengeMenu = 0;
             sCurrentMenuID = 7;
             gDialogueSubmenu = 0;
@@ -9921,7 +9921,7 @@ s32 taj_menu_loop(void) {
         case -8:
         case -7:
         case -6:
-            func_800C31EC(ASSET_GAME_TEXT_12 - sCurrentMenuID);
+            set_current_text(ASSET_GAME_TEXT_12 - sCurrentMenuID);
             sCurrentMenuID = 6;
             gDialogueSubmenu = 0;
             break;

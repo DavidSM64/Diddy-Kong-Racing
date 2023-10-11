@@ -660,7 +660,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                         func_800A3870();
                     } else {
                         // Text for "TROPHY RACE" "TO ENTER THE TROPHY RACE, YOU MUST COMPLETE ALL THE TASKS FROM THIS WORLD. KEEP RACING!"
-                        func_800C31EC(ASSET_GAME_TEXT_4);
+                        set_current_text(ASSET_GAME_TEXT_4);
                         gfxData->unk4 = 180;
                         gfxData->unk0 = 140;
                         set_sndfx_player_voice_limit(16);
@@ -1906,7 +1906,7 @@ void obj_loop_infopoint(Object *obj, UNUSED s32 updateRate) {
             Object_InfoPoint *playerObj64 = &playerObj->unk64->info_point;
             player = playerObj64->unk0;
             if ((player != PLAYER_COMPUTER) && (get_buttons_pressed_from_player(player) & Z_TRIG)) {
-                func_800C31EC(obj->properties.infoPoint.radius & 0xFF);
+                set_current_text(obj->properties.infoPoint.radius & 0xFF);
             }
         }
     }
@@ -3213,7 +3213,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
                     ttDoor->unk8 = 140;
                     set_sndfx_player_voice_limit(16);
                     play_sequence(SEQUENCE_NO_TROPHY_FOR_YOU);
-                    func_800C31EC(ttDoor->unk13 & 0xFF);
+                    set_current_text(ttDoor->unk13 & 0xFF);
                 }
                 ttDoor->unkC = 300;
             }
@@ -3343,7 +3343,7 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
                             if (distance < 0.0f) {
                                 settings->courseFlagsPtr[settings->courseId] |= flags;
                                 if (triggerEntry->unkB != 0xFF) {
-                                    func_800C31EC(triggerEntry->unkB);
+                                    set_current_text(triggerEntry->unkB);
                                 }
                                 if (triggerEntry->unkC != 0xFF) {
                                     func_80021400(triggerEntry->unkC + 0x80);
@@ -4110,7 +4110,7 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
                         if (levelMask == racer->balloon_level) {
                             if (racer->raceFinished == FALSE) {
                                 if (prevQuantity != racer->balloon_quantity) {
-                                    func_800A7484(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
+                                    set_time_trial_start_voice(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
                                     newvar = racer->balloon_level;
                                     if (racer->balloon_level > 2) {
                                         newvar = 2;
@@ -4123,7 +4123,7 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
                         } else if (racer->raceFinished == FALSE) {
                             newvar = racer->balloon_level;
                             if (newvar > 0) {
-                                func_800A7484(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
+                                set_time_trial_start_voice(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
                             }
                             play_sound_global(SOUND_COLLECT_ITEM + racer->balloon_level, NULL);
                         }

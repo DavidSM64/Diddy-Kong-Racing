@@ -447,7 +447,7 @@ void render_hud_race_boss(s32 arg0, Object *arg1, s32 updateRate);
 void func_800A263C(s32 arg0, Object *arg1, s32 updateRate);
 void func_800A3870(void);
 void play_time_trial_end_message(s16 *playerID);
-void func_800A7484(u16 arg0, f32 arg1, s32 arg2);
+void set_time_trial_start_voice(u16 arg0, f32 arg1, s32 arg2);
 void func_800A74EC(u16 arg0, s32 arg1);
 void minimap_init(LevelModel *model);
 s8 get_hud_setting(void);

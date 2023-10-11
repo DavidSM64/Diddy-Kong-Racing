@@ -12,8 +12,8 @@
 
 s8 gTextTableExists = FALSE;
 s16 gTextDisplayNumber = 0;
-s32 D_800E3678 = 0;
-s32 D_800E367C = 0;
+s32 gTextboxDelay = 0;
+s32 gDelayedTextID = 0;
 s32 gSubtitleSetting = TRUE;
 
 /*******************************/
@@ -248,55 +248,66 @@ void set_textbox_display_value(s32 num) {
     gTextDisplayNumber = num;
 }
 
-void func_800C314C(void) {
-    D_800E3678 = 0;
+/**
+ * Sets the delayed text timer back to 0.
+*/
+void reset_delayed_text(void) {
+    gTextboxDelay = 0;
 }
 
-void func_800C3158(s32 arg0, f32 arg1) {
+/**
+ * Set the delayed text ID and delay (in seconds)
+*/
+void set_delayed_text(s32 textID, f32 delay) {
     if (osTvType == TV_TYPE_PAL) {
-        D_800E3678 = arg1 * 50.0;
+        gTextboxDelay = delay * 50.0;
     } else {
-        D_800E3678 = arg1 * 60.0;
+        gTextboxDelay = delay * 60.0;
     }
-    D_800E367C = arg0;
+    gDelayedTextID = textID;
 }
 
-void func_800C31EC(s32 arg0) {
+/**
+ * Set the current text index based on the entry.
+ * Start certain behaviours based on the header, 
+ * like showing a subtitle, or opening an onscreen text box.
+*/
+void set_current_text(s32 textID) {
     char **entries;
     UNUSED s32 pad;
     s32 size;
     s32 language;
     s32 temp;
     
-  if (gTextTableExists && arg0 >= 0) {
-        if (arg0 < gTextTableEntries) {
+  if (gTextTableExists && textID >= 0) {
+        if (textID < gTextTableEntries) {
         language = get_language();
         switch (language) {
         case LANGUAGE_GERMAN:
-            arg0 += 0x55;
+            textID += 85;
             break;
         case LANGUAGE_FRENCH:
-            arg0 += 0xAA;
+            textID += 170;
             break;
         case LANGUAGE_JAPANESE:
-            arg0 += 0xFF;
+            textID += 255;
             break;
         }
 
-        load_asset_to_address(ASSET_GAME_TEXT_TABLE, (u32) (*gGameTextTable)->entries, (arg0 & (~1)) << 2, 16);
+        load_asset_to_address(ASSET_GAME_TEXT_TABLE, (u32) (*gGameTextTable)->entries, (textID & (~1)) << 2, 16);
         
         entries = (*gGameTextTable)->entries;
-        temp = ((s32) entries[arg0 & 1]) & 0xFF000000;
-        size = (((s32) entries[(arg0 & 1) + 1]) & 0xFFFFFF) - (((s32) entries[arg0 & 1]) & 0xFFFFFF);
+        temp = ((s32) entries[textID & 1]) & 0xFF000000;
+        size = (((s32) entries[(textID & 1) + 1]) & 0xFFFFFF) - (((s32) entries[textID & 1]) & 0xFFFFFF);
         
         if (temp) {
-            load_asset_to_address(ASSET_GAME_TEXT, (u32) gCurrentMessageText[D_8012A7D4], ((s32) entries[arg0 & 1]) ^ temp, size);
+            load_asset_to_address(ASSET_GAME_TEXT, (u32) gCurrentMessageText[D_8012A7D4], ((s32) entries[textID & 1]) ^ temp, size);
             gCurrentTextProperties = gCurrentMessageText[D_8012A7D4];
             find_next_subtitle();
             D_8012A7D4 = (D_8012A7D4 + 1) & 1;
             return;
         }
-        load_asset_to_address(ASSET_GAME_TEXT, (u32) gGameTextTableEntries[D_8012A7A4], ((s32) entries[arg0 & 1]) ^ temp, size);
+        load_asset_to_address(ASSET_GAME_TEXT, (u32) gGameTextTableEntries[D_8012A7A4], ((s32) entries[textID & 1]) ^ temp, size);
         D_8012A7A0 = gGameTextTableEntries[D_8012A7A4];
         D_8012A7A4 = (D_8012A7A4 + 1) & 1;
         D_8012A788 = 0;
@@ -335,11 +346,11 @@ s32 func_800C3400(void) {
 void process_onscreen_textbox(s32 updateRate) {
     if (gTextTableExists) {
         if (!is_game_paused()) {
-            if (D_800E3678 > 0) {
-                D_800E3678 -= updateRate;
-                if (D_800E3678 <= 0) {
-                    func_800C31EC(D_800E367C);
-                    D_800E3678 = 0;
+            if (gTextboxDelay > 0) {
+                gTextboxDelay -= updateRate;
+                if (gTextboxDelay <= 0) {
+                    set_current_text(gDelayedTextID);
+                    gTextboxDelay = 0;
                 }
             }
         }

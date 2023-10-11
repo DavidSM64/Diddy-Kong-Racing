@@ -520,7 +520,7 @@ void ingame_logic_loop(s32 updateRate) {
                 break;
             case 1:
                 func_80001050();
-                func_800C314C();
+                reset_delayed_text();
                 if (func_80023568() != 0 && is_in_two_player_adventure()) {
                     func_8006F398();
                 }
@@ -528,7 +528,7 @@ void ingame_logic_loop(s32 updateRate) {
                 break;
             case 2:
                 func_80001050();
-                func_800C314C();
+                reset_delayed_text();
                 if (func_80023568() != 0 && is_in_two_player_adventure()) {
                     func_8006F398();
                 }
@@ -536,12 +536,12 @@ void ingame_logic_loop(s32 updateRate) {
                 break;
             case 4:
                 loadContext = LEVEL_CONTEXT_TRACK_SELECT;
-                func_800C314C();
+                reset_delayed_text();
                 buttonHeldInputs |= L_TRIG;
                 break;
             case 11:
                 loadContext = LEVEL_CONTEXT_CHARACTER_SELECT;
-                func_800C314C();
+                reset_delayed_text();
                 buttonHeldInputs |= L_TRIG;
                 break;
             case 5:
@@ -554,7 +554,7 @@ void ingame_logic_loop(s32 updateRate) {
             case 3:
                 gDrumstickSceneLoadTimer = 0;
                 func_80001050();
-                func_800C314C();
+                reset_delayed_text();
                 clear_level_property_stack();
                 buttonHeldInputs |= (L_TRIG | R_TRIG);
                 break;

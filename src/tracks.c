@@ -2228,7 +2228,7 @@ void func_8002E234(Object *obj, s32 bool) {
     if (bool) {
         D_8011D0B8 = 0;
         obj->waterEffect->meshStart = D_8011D364;
-        D_8011D0C0 = func_8007B46C(obj->waterEffect->texture, obj->waterEffect->textureFrame << 8);
+        D_8011D0C0 = set_animated_texture_header(obj->waterEffect->texture, obj->waterEffect->textureFrame << 8);
         D_8011D0CE = obj->segment.header->unk48 + yPos;
         D_8011D0CC = obj->segment.header->unk46 + yPos;
         if ((gWaveBlockCount == 0) || ((get_viewport_count() <= 0))) {

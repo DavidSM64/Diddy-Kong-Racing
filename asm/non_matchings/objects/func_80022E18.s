@@ -160,7 +160,7 @@ glabel func_80022E18
 /* 023C6C 8002306C 24010002 */  li    $at, 2
 /* 023C70 80023070 15810003 */  bne   $t4, $at, .L80023080
 /* 023C74 80023074 00000000 */   nop   
-/* 023C78 80023078 0C030C7B */  jal   func_800C31EC
+/* 023C78 80023078 0C030C7B */  jal   set_current_text
 /* 023C7C 8002307C 00002025 */   move  $a0, $zero
 .L80023080:
 /* 023C80 80023080 3C018012 */  lui   $at, %hi(D_8011ADB0) # $at, 0x8012
@@ -177,7 +177,7 @@ glabel func_80022E18
 /* 023CA8 800230A8 00000000 */   nop   
 /* 023CAC 800230AC 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 023CB0 800230B0 44816000 */  mtc1  $at, $f12
-/* 023CB4 800230B4 0C01AF44 */  jal   func_8006BD10
+/* 023CB4 800230B4 0C01AF44 */  jal   start_level_music
 /* 023CB8 800230B8 00000000 */   nop   
 /* 023CBC 800230BC 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 023CC0 800230C0 3C018012 */  lui   $at, %hi(gIsTajChallenge) # $at, 0x8012

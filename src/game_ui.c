@@ -271,9 +271,9 @@ s8 D_80126D69;
 s32 gWrongWayNagTimer;
 u8 D_80126D70;
 u8 D_80126D71;
-s32 D_80126D74;
+s32 gTimeTrialVoiceDelay;
 s32 D_80126D78;
-u16 D_80126D7C;
+u16 gTimeTrialVoiceID;
 DrawTexture gHudSprites[128];
 s32 D_80127180;
 Settings *gHudSettings;
@@ -339,8 +339,8 @@ void init_hud(UNUSED s32 viewportCount) {
     D_80126D69 = 1;
     D_80126D68 = 1;
     D_80126D70 = 0;
-    D_80126D7C = 0;
-    D_80126D74 = 0;
+    gTimeTrialVoiceID = 0;
+    gTimeTrialVoiceDelay = 0;
     D_80126D3C = NULL;
     D_80126D44 = 0;
     D_80126CD3 = 0;
@@ -470,7 +470,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         play_music(SEQUENCE_RACE_START_FANFARE);
                         set_sound_channel_count(12);
                     } else {
-                        func_8006BD10(1.0f);
+                        start_level_music(1.0f);
                     }
                     gRaceStartShowHudStep += 1;
                 }
@@ -597,12 +597,12 @@ void func_800A0BD4(s32 updateRate) {
     s32 temp;
     s32 i;
 
-    if (D_80126D74 > 0) {
-        D_80126D74 -= updateRate;
-        if (D_80126D74 <= 0) {
-            D_80126D74 = 0;
+    if (gTimeTrialVoiceDelay > 0) {
+        gTimeTrialVoiceDelay -= updateRate;
+        if (gTimeTrialVoiceDelay <= 0) {
+            gTimeTrialVoiceDelay = 0;
             if (gHUDVoiceSoundMask == 0) {
-                play_sound_global(D_80126D7C, &gHUDVoiceSoundMask);
+                play_sound_global(gTimeTrialVoiceID, &gHUDVoiceSoundMask);
             }
         }
     }
@@ -1477,7 +1477,7 @@ void render_race_start(s32 arg0, s32 updateRate) {
                     if (get_viewport_count() > TWO_PLAYERS) {
                         play_music(SEQUENCE_NONE);
                     } else {
-                        func_8006BD10(1.0f);
+                        start_level_music(1.0f);
                     }
                     play_sound_global(SOUND_WHOOSH1, NULL);
                     gRaceStartShowHudStep++;
@@ -1486,9 +1486,9 @@ void render_race_start(s32 arg0, s32 updateRate) {
             }
             if (gRaceStartShowHudStep == 3) {
                 play_sound_global(SOUND_VOICE_TT_GO, &gHUDVoiceSoundMask);
-                if ((func_8001B640() != 0) && (func_8001B650() == 0)) {
-                    func_800A7484(0x24B, 1.7f, 0);
-                    func_800C3158(0x52, 1.7f);
+                if (get_time_trial_ghost() && not_staff_ghost() == FALSE) {
+                    set_time_trial_start_voice(SOUND_VOICE_TT_BEAT_MY_TIME, 1.7f, 0);
+                    set_delayed_text(ASSET_GAME_TEXT_82, 1.7f); // Now try and beat my time!
                 }
                 D_80126D70 = 1;
                 gRaceStartShowHudStep++;
@@ -2196,17 +2196,21 @@ UNUSED void play_hud_voice_line(u16 soundId) {
     }
 }
 
-void func_800A7484(u16 arg0, f32 arg1, s32 arg2) {
-    if (D_80126D74 == 0) {
-        D_80126D7C = arg0;
-        D_80126D74 = arg1 * 60.0f;
+/**
+ * Set the sound ID and delay (in seconds) of the voice clip that will be played
+ * after the time trial run starts.
+*/
+void set_time_trial_start_voice(u16 soundID, f32 delay, s32 arg2) {
+    if (gTimeTrialVoiceDelay == 0) {
+        gTimeTrialVoiceID = soundID;
+        gTimeTrialVoiceDelay = delay * 60.0f;
         D_80126D78 = arg2;
     }
 }
 
 void func_800A74EC(u16 arg0, s32 arg1) {
-    if (arg0 == D_80126D7C && D_80126D78 == arg1) {
-        D_80126D74 = 0;
+    if (arg0 == gTimeTrialVoiceID && D_80126D78 == arg1) {
+        gTimeTrialVoiceDelay = 0;
     }
 }
 
@@ -2842,7 +2846,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk1E0);
                 }
             }
-            temp_v0_8 = func_8001B640();
+            temp_v0_8 = get_time_trial_ghost();
             if (temp_v0_8 != NULL) {
                 func_800AA3EC(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114, sp118, sp11C);
                 gCurrentHud->unk1E4 = 0;

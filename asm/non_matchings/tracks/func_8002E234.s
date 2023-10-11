@@ -71,7 +71,7 @@ glabel func_8002E234
 /* 02EF18 8002E318 8C440004 */  lw    $a0, 4($v0)
 /* 02EF1C 8002E31C 00055200 */  sll   $t2, $a1, 8
 /* 02EF20 8002E320 01402825 */  move  $a1, $t2
-/* 02EF24 8002E324 0C01ED1B */  jal   func_8007B46C
+/* 02EF24 8002E324 0C01ED1B */  jal   set_animated_texture_header
 /* 02EF28 8002E328 E7B2006C */   swc1  $f18, 0x6c($sp)
 /* 02EF2C 8002E32C 3C018012 */  lui   $at, %hi(D_8011D0C0) # $at, 0x8012
 /* 02EF30 8002E330 AC22D0C0 */  sw    $v0, %lo(D_8011D0C0)($at)

@@ -143,7 +143,7 @@ glabel func_8009F034
 /* 09FDE4 8009F1E4 25F8FFFC */  addiu $t8, $t7, -4
 /* 09FDE8 8009F1E8 AC780000 */  sw    $t8, ($v1)
 .L8009F1EC:
-/* 09FDEC 8009F1EC 0C006D90 */  jal   func_8001B640
+/* 09FDEC 8009F1EC 0C006D90 */  jal   get_time_trial_ghost
 /* 09FDF0 8009F1F0 00000000 */   nop   
 /* 09FDF4 8009F1F4 14400004 */  bnez  $v0, .L8009F208
 /* 09FDF8 8009F1F8 240C0001 */   li    $t4, 1

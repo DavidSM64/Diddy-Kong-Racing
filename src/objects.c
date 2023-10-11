@@ -46,15 +46,15 @@ s16 D_800DC708 = 0;
 s32 D_800DC70C = 0; // Currently unknown, might be a different type.
 s16 D_800DC710 = 1;
 s32 D_800DC714 = 0; // Currently unknown, might be a different type.
-s32 D_800DC718 = 0;
+Object *gGhostObj = NULL;
 s8 D_800DC71C = 0;
-s32 D_800DC720 = 0; // Currently unknown, might be a different type.
+s32 gObjectTexAnim = FALSE;
 s16 D_800DC724 = 0x2A30;
 s16 D_800DC728 = -1;
 s16 D_800DC72C = 0;
 u8 gHasGhostToSave = 0;
 u8 D_800DC734 = 0;
-u8 D_800DC738 = 0;
+u8 gTimeTrialStaff = FALSE;
 s8 D_800DC73C = 0;
 s8 D_800DC740 = 0;
 s8 D_800DC744 = 0;
@@ -2185,9 +2185,9 @@ void render_3d_model(Object *obj) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
         if (alpha < 255) {
-            meshBatch = func_800143A8(objModel, obj, 0, RENDER_SEMI_TRANSPARENT, spB0);
+            meshBatch = render_mesh(objModel, obj, 0, RENDER_SEMI_TRANSPARENT, spB0);
         } else {
-            meshBatch = func_800143A8(objModel, obj, 0, RENDER_NONE, spB0);
+            meshBatch = render_mesh(objModel, obj, 0, RENDER_NONE, spB0);
         }
         if (obj->segment.header->unk71) {
             if (hasOpacity) {
@@ -2275,7 +2275,7 @@ void render_3d_model(Object *obj) {
                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->shading->unk18, obj->shading->unk19, obj->shading->unk1A, alpha);
                 enable_primitive_colour();
             }
-            func_800143A8(objModel, obj, meshBatch, 4, spB0);
+            render_mesh(objModel, obj, meshBatch, RENDER_SEMI_TRANSPARENT, spB0);
             if (obj->segment.header->unk71) {
                 disable_primitive_colour();
             }
@@ -2664,7 +2664,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
         apply_object_shear_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, gShieldEffectObject, obj, shear);
-        func_800143A8(mdl, gShieldEffectObject, 0, 4, 0);
+        render_mesh(mdl, gShieldEffectObject, 0, RENDER_SEMI_TRANSPARENT, 0);
         gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
         if (racer->shieldTimer < 64) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -2721,12 +2721,12 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gfxData = *gMagnetEffectObject->unk68;
             mdl = gfxData->objModel;
             gMagnetEffectObject->unk44 = (Vertex *) gfxData->unk4[gfxData->unk1F];
-            opacity = (((D_8011B078[(var_t0 * 4) + 1] * 8) & 0x7F) + 0x80);
-            func_8007F594(&gObjectCurrDisplayList, 2, 0xFFFFFF00 | opacity, gMagnetColours[racer->magnetModelID]);
+            opacity = ((D_8011B078[(var_t0 * 4) + 1] * 8) & 0x7F) + 0x80;
+            func_8007F594(&gObjectCurrDisplayList, 2, COLOUR_RGBA32(255, 255, 255, opacity), gMagnetColours[racer->magnetModelID]);
             apply_object_shear_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, gMagnetEffectObject, obj, shear);
-            D_800DC720 = TRUE;
-            func_800143A8(mdl, gMagnetEffectObject, 0, 4, 0);
-            D_800DC720 = FALSE;
+            gObjectTexAnim = TRUE;
+            render_mesh(mdl, gMagnetEffectObject, 0, RENDER_SEMI_TRANSPARENT, 0);
+            gObjectTexAnim = FALSE;
             gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             reset_render_settings(&gObjectCurrDisplayList);
@@ -2759,7 +2759,10 @@ void func_800142B8(void) {
     }
 }
 
-s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool) {
+/**
+ * Renders every triangle batch in an objects mesh.
+*/
+s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool) {
     s32 i;
     s32 textureIndex;
     s32 triOffset;
@@ -2780,7 +2783,7 @@ s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags,
     i = startIndex;
     endLoop = FALSE;
     while (i < objModel->numberOfBatches && !endLoop) {
-        if ((objModel->batches[i].flags & 4) == 0 || (flags & 4)) {
+        if (!(objModel->batches[i].flags & BATCH_FLAGS_UNK00000004) || flags & RENDER_SEMI_TRANSPARENT) {
             //Hidden/Invisible geometry
             textureIndex = objModel->batches[i].flags & BATCH_FLAGS_HIDDEN;
             //Probably a fakematch to use textureIndex here, but it works.
@@ -2807,10 +2810,10 @@ s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags,
                 if (flags & RENDER_SEMI_TRANSPARENT && !(objModel->batches[i].flags & (flags & ~RENDER_SEMI_TRANSPARENT))) {
                     texToSetFlags |= RENDER_SEMI_TRANSPARENT;
                 }
-                if (D_800DC720 == 0) {
+                if (gObjectTexAnim == FALSE) {
                     load_and_set_texture(&dlist, texToSet, texToSetFlags, texOffset);
                 } else {
-                    texToSet = func_8007B46C(texToSet, texOffset);
+                    texToSet = set_animated_texture_header(texToSet, texOffset);
                     gDkrDmaDisplayList(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(texToSet->cmd), texToSet->numberOfCommands);
                 }
                 if (offsetStartVertex == numVertices) {
@@ -3251,15 +3254,18 @@ s32 func_8001B2F0(s32 mapId) {
     return ret;
 }
 
-s32 func_8001B3AC(s32 arg0) {
-    return arg0 == D_800DC718;
+/** 
+ * Return true if this object is the time trial ghost.
+*/
+s32 is_time_trial_ghost(Object* obj) {
+    return obj == gGhostObj;
 }
 
 void func_8001B3C4(s32 arg0, s16 *playerId) {
     s32 trackIdCount;
     s8 *mainTrackIds;
 
-    D_800DC718 = 0;
+    gGhostObj = NULL;
     free_tt_ghost_data();
     D_800DC734 = 0;
     mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
@@ -3267,7 +3273,7 @@ void func_8001B3C4(s32 arg0, s16 *playerId) {
     while (mainTrackIds[trackIdCount] != -1 && mainTrackIds[trackIdCount] != arg0) {
         trackIdCount++;
     }
-    if (D_800DC738 != 0) {
+    if (gTimeTrialStaff) {
         //Save that TT has been beaten for this track.
         set_eeprom_settings_value(16 << trackIdCount);
         //Check if TT has been beaten for all tracks.
@@ -3275,13 +3281,13 @@ void func_8001B3C4(s32 arg0, s16 *playerId) {
             set_magic_code_flags(CHEAT_CONTROL_TT);
             play_sound_global(SOUND_VOICE_TT_BEAT_ALL_TIMES, NULL);
             func_80000FDC(SOUND_VOICE_TT_UNLOCKED, 0, 1.5f);
-            func_800C31EC(ASSET_GAME_TEXT_84); //Text for "You have beaten all my times!" and then "Now you can PICK me!"
+            set_current_text(ASSET_GAME_TEXT_84); //Text for "You have beaten all my times!" and then "Now you can PICK me!"
         } else {
             play_sound_global(SOUND_VOICE_TT_WELL_DONE, NULL);
             func_80000FDC(SOUND_VOICE_TT_TRY_ANOTHER_TRACK, 0, 1.0f);
-            func_800C31EC(ASSET_GAME_TEXT_83); //Text for "Well Done! Now try another track."
+            set_current_text(ASSET_GAME_TEXT_83); //Text for "Well Done! Now try another track."
         }
-        D_800DC738 = 0;
+        gTimeTrialStaff = FALSE;
         return;
     }
     play_time_trial_end_message(playerId);
@@ -3289,12 +3295,18 @@ void func_8001B3C4(s32 arg0, s16 *playerId) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001B4FC.s")
 
-Object *func_8001B640(void) {
-    return (Object *) D_800DC718;
+/**
+ * Return the time trial ghost object.
+*/
+Object *get_time_trial_ghost(void) {
+    return gGhostObj;
 }
 
-s32 func_8001B650(void) {
-    return D_800DC738 == 0;
+/**
+ * Return true if the time trial is not against a staff ghost.
+*/
+s32 not_staff_ghost(void) {
+    return gTimeTrialStaff == FALSE;
 }
 
 s32 func_8001B668(s32 arg0) {
@@ -4239,7 +4251,7 @@ void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entr
     charSelect->unk41 = entry->unk2F;
     charSelect->unk3C = entry->unk2B;
     if (entry->unk27 != 255) {
-        func_800C31EC(entry->unk27);
+        set_current_text(entry->unk27);
     }
     if (entry->unk2A >= 0) {
         func_8001E45C(entry->unk2A);

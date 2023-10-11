@@ -129,7 +129,7 @@ void tex_animate_texture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s3
 void func_8007F1E8(LevelHeader_70 *arg0);
 void init_pulsating_light_data(PulsatingLightData *data);
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
-TextureHeader *func_8007B46C(TextureHeader *arg0, s32 arg1);
+TextureHeader *set_animated_texture_header(TextureHeader *arg0, s32 arg1);
 TextureHeader *load_texture(s32 arg0); // Non Matching
 s32 get_texture_size_from_id(s32 arg0); // Non Matching
 s32 func_8007C860(s32 spriteIndex); // Non Matching

@@ -255,7 +255,7 @@ glabel obj_loop_weaponballoon
 /* 03F0C8 8003E4C8 2404013E */  li    $a0, 318
 /* 03F0CC 8003E4CC 3C053F80 */  lui   $a1, 0x3f80
 /* 03F0D0 8003E4D0 00E03025 */  move  $a2, $a3
-/* 03F0D4 8003E4D4 0C029D21 */  jal   func_800A7484
+/* 03F0D4 8003E4D4 0C029D21 */  jal   set_time_trial_start_voice
 /* 03F0D8 8003E4D8 AFA30038 */   sw    $v1, 0x38($sp)
 /* 03F0DC 8003E4DC 8FA30038 */  lw    $v1, 0x38($sp)
 /* 03F0E0 8003E4E0 00002825 */  move  $a1, $zero
@@ -290,7 +290,7 @@ glabel obj_loop_weaponballoon
 /* 03F148 8003E548 2404013E */   li    $a0, 318
 /* 03F14C 8003E54C 3C053F80 */  lui   $a1, 0x3f80
 /* 03F150 8003E550 00E03025 */  move  $a2, $a3
-/* 03F154 8003E554 0C029D21 */  jal   func_800A7484
+/* 03F154 8003E554 0C029D21 */  jal   set_time_trial_start_voice
 /* 03F158 8003E558 AFA30038 */   sw    $v1, 0x38($sp)
 /* 03F15C 8003E55C 8FA30038 */  lw    $v1, 0x38($sp)
 /* 03F160 8003E560 00000000 */  nop   

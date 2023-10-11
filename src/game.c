@@ -597,11 +597,14 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     func_8007AB24(gCurrentLevelHeader->unk4[numberOfPlayers]);
 }
 
-void func_8006BD10(f32 arg0) {
-    if (gCurrentLevelHeader->music != 0) {
+/**
+ * If the level's music ID is nonzero, set the current background music.
+*/
+void start_level_music(f32 tempo) {
+    if (gCurrentLevelHeader->music != SEQUENCE_NONE) {
         func_800012E8();
         play_music(gCurrentLevelHeader->music);
-        multiply_music_tempo(arg0);
+        multiply_music_tempo(tempo);
         func_80001074(gCurrentLevelHeader->instruments);
     }
 }
