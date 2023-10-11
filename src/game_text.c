@@ -279,7 +279,7 @@ void set_current_text(s32 textID) {
     s32 language;
     s32 temp;
     
-  if (gTextTableExists && textID >= 0) {
+    if (gTextTableExists && textID >= 0) {
         if (textID < gTextTableEntries) {
         language = get_language();
         switch (language) {
