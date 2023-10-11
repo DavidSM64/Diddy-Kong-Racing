@@ -475,7 +475,7 @@ void set_stopwatch_face(u8, u8, u8, u8, u8);
 void func_800A0BD4(s32 updateRate);
 void render_silver_coin_counter(Object_Racer *racer, s32 updateRate);
 void render_magnet_reticle(Object *racerObj);
-void func_800A6E30(Object_Racer *racer, s32 updateRate);
+void render_time_trial_finish(Object_Racer *racer, s32 updateRate);
 void func_800A19A4(Object_Racer *racer, s32 updateRate);
 void func_800A14F0(Object *racerObj, s32 updateRate);
 void render_race_position(Object_Racer *racer, s32 updateRate);

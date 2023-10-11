@@ -551,7 +551,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 if (racer->racer.raceFinished == TRUE) {
                     func_80068508(1);
                     if (is_in_time_trial()) {
-                        func_800A6E30((Object_Racer *) racer, updateRate);
+                        render_time_trial_finish((Object_Racer *) racer, updateRate);
                     } else if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER && racer->racer.unk1AC == 1) {
                         if (is_in_two_player_adventure()) {
                             if (get_current_level_race_type() == RACETYPE_BOSS) {
@@ -2086,7 +2086,10 @@ void play_time_trial_end_message(s16 *playerID) {
     }
 }
 
-void func_800A6E30(Object_Racer *racer, s32 updateRate) {
+/**
+ * Render the finishing overlay after a time trial.
+*/
+void render_time_trial_finish(Object_Racer *racer, s32 updateRate) {
     s32 temp;
     
     switch (gCurrentHud->unk1DA) {
@@ -2095,7 +2098,7 @@ void func_800A6E30(Object_Racer *racer, s32 updateRate) {
         D_800E2770->unk3 = 0;
         D_800E2770->unkC = (s8) racer->playerIndex;
         play_sound_global(SOUND_WHOOSH1, NULL);
-        if ((gHUDNumPlayers == 0) || (gHUDNumPlayers == 1)) {
+        if (gHUDNumPlayers == 0 || gHUDNumPlayers == 1) {
             gCurrentHud->unk1CC = -200.0f;
             gCurrentHud->unk1DD = 0;
         } else {
