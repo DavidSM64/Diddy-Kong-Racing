@@ -991,7 +991,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     if (curObj->segment.header == NULL) {
         return NULL;
     }
-    sp50 = curObj->segment.header->unk30 & 0x80;
+    sp50 = curObj->segment.header->flags & 0x80;
     if (sp50) {
         curObj->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
     }
@@ -2855,7 +2855,7 @@ s32 func_80014814(s32 *retObjCount) {
     while (maxObjCount >= curObjCount) {
         for (i = 0; maxObjCount >= curObjCount && i == 0; i++) {
             if (!(gObjPtrList[curObjCount]->segment.trans.flags & 0x8000)) {
-                if (gObjPtrList[curObjCount]->segment.header->unk30 & 1) {
+                if (gObjPtrList[curObjCount]->segment.header->flags & 1) {
                     curObjCount++;
                 }
                 i = -1;
@@ -2866,7 +2866,7 @@ s32 func_80014814(s32 *retObjCount) {
         for (i = 0; maxObjCount >= curObjCount && i == 0; i++) {
             if (gObjPtrList[maxObjCount]->segment.trans.flags & 0x8000) {
                 i = -1;
-            } else if (!(gObjPtrList[maxObjCount]->segment.header->unk30 & 1)) {
+            } else if (!(gObjPtrList[maxObjCount]->segment.header->flags & 1)) {
                 maxObjCount--;
             } else {
                 i = -1;
