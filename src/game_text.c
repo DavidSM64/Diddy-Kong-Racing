@@ -279,8 +279,7 @@ void set_current_text(s32 textID) {
     s32 language;
     s32 temp;
     
-    if (gTextTableExists && textID >= 0) {
-        if (textID < gTextTableEntries) {
+    if (gTextTableExists && textID >= 0 && textID < gTextTableEntries) {
         language = get_language();
         switch (language) {
         case LANGUAGE_GERMAN:
@@ -321,7 +320,6 @@ void set_current_text(s32 textID) {
             gShowOnscreenMessage = TRUE;
         }
         return;
-        }
     }
     gCloseTextMessage = TRUE;
 }
