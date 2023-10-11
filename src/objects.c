@@ -2983,7 +2983,62 @@ void func_800155B8(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800159C8.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_80016500.s")
+
+void func_80016500(Object *obj, Object_Racer *racer) {
+    s32 sp3C;
+    s32 angle;
+    UNUSED s32 pad;
+    f32 startVelocity;
+    f32 cosAngle;
+    f32 sinAngle;
+
+    startVelocity = racer->velocity;
+    angle = racer->steerVisualRotation;
+    if (racer->vehicleID == VEHICLE_CAR) {
+        if (racer->drift_direction != 0) {
+            angle += racer->unk10C;
+            angle = (s16)angle;
+        }
+    }
+    cosAngle = coss_f(-angle);
+    sinAngle = sins_f(-angle);
+    racer->lateral_velocity = ( obj->segment.x_velocity * cosAngle) + (obj->segment.z_velocity * sinAngle);
+    racer->velocity = (-obj->segment.x_velocity * sinAngle) + (obj->segment.z_velocity * cosAngle);
+    if (racer->playerIndex != -1) {
+        angle = (startVelocity - racer->velocity) * 14.0f;
+        if (angle < 0) {
+            angle = -angle;
+        }
+        angle += 35;
+        if (angle >= 128) {
+            angle = 127;
+        }
+        if (racer->unk1F6 == 0) {
+            play_sound_global(SOUND_CRASH_CHARACTER, &racer->unk220);
+            func_80001FB8(SOUND_CRASH_CHARACTER, (s32 *) racer->unk220, angle);
+        }
+        if (racer->unk1F6 == 0 && angle >= 56) {
+            if (!racer->raceFinished) {
+                func_80072348(racer->playerIndex, 18);
+            }
+            racer->unk1F3 |= 8;
+        }
+        if (angle >= 56) {
+            play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 1);
+        }
+        sp3C = (startVelocity - racer->velocity);
+        if (sp3C < 0) {
+            sp3C = -sp3C;
+        }
+        if (sp3C >= 4) {
+            sp3C = 3;
+        }
+        racer->unk1F6 = 30;
+        set_active_camera(racer->playerIndex);
+        get_active_camera_segment()->object.distanceToCamera = sp3C;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80016748.s")
 
 void func_80016BC4(Object *obj) {

@@ -29,7 +29,7 @@ enum SoundID {
 /* 0x000A */ SOUND_UNK_0A,
 /* 0x000B */ SOUND_UNK_0B,
 /* 0x000C */ SOUND_CRASH,
-/* 0x000D */ SOUND_CRASH2, // Not the same as the last, sounds like a cymbal or something.
+/* 0x000D */ SOUND_CRASH_CHARACTER,
 /* 0x000E */ SOUND_BALLOON_POP,
 /* 0x000F */ SOUND_PLOP, // Dropping a landmine
 /* 0x0010 */ SOUND_UNK_10,
