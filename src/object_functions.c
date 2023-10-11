@@ -4421,12 +4421,12 @@ void homing_rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon 
         } else {
             rocket->hitObj = targetObj;
             rocket->forwardVel = -25.0f;
-            sp58 = NULL;
+            sp58 = FALSE;
         }
         angle = (arctan2_f(diffX, diffZ) - 0x8000) & 0xFFFF;
         angleDiff = angle - (obj->segment.trans.y_rotation & 0xFFFF);
         WRAP(angleDiff, -0x8000, 0x8000);
-        if (sp58 != NULL) {
+        if (sp58) {
             obj->segment.trans.y_rotation += (angleDiff * updateRate) >> shift;
             angleDiff = sineY - (obj->segment.trans.x_rotation & 0xFFFF);
             WRAP(angleDiff, -0x8000, 0x8000);

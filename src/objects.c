@@ -3149,7 +3149,65 @@ Object *find_taj_object(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80018CE0.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001955C.s")
+
+//Rocket Path
+s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY, f32 *outZ) {
+    s32 numCheckpoints;
+    s32 checkpointIndex;
+    s32 i;
+    f32 xData[4];
+    f32 yData[4];
+    f32 zData[4];
+    f32 xSpline;
+    f32 temp2;
+    f32 zSpline;
+    f32 ySpline;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    CheckpointNode *checkpointNode;
+
+    numCheckpoints = gNumberOfCheckpoints;
+    if (numCheckpoints == 0) {
+        return FALSE;
+    }
+    checkpointIndex = checkpoint - 2;
+    if (checkpointIndex < 0) {
+        checkpointIndex += numCheckpoints;
+    }
+    for(i = 0; i < 4; i++) {
+        checkpointNode = find_next_checkpoint_node(checkpointIndex, arg2);
+        xData[i] = checkpointNode->x + (checkpointNode->scale * checkpointNode->rotationZFrac * arg3);
+        yData[i] = checkpointNode->y + (checkpointNode->scale * arg4);
+        zData[i] = checkpointNode->z + (checkpointNode->scale * -checkpointNode->rotationXFrac * arg3);
+        checkpointIndex += 1;
+        if (checkpointIndex == numCheckpoints) {
+            checkpointIndex = 0;
+        }
+    }
+    temp2 = (1.0 - checkpointDist);
+    if (temp2 < 0.0f) {
+        temp2 = 0.0f;
+    }
+    if (temp2 > 1.0) {
+        temp2 = 1.0f;
+    }
+    xSpline = cubic_spline_interpolation(xData, 0, temp2, &dx);
+    ySpline = cubic_spline_interpolation(yData, 0, temp2, &dy);
+    zSpline = cubic_spline_interpolation(zData, 0, temp2, &dz);
+    temp2 = sqrtf((dx * dx) + (dy * dy) + (dz * dz));
+    if (temp2 != 0.0f) {
+        temp2 = 500.0 / temp2;
+        dx *= temp2;
+        dy *= temp2;
+        dz *= temp2;
+    }
+    *outX = (xSpline + dx) - obj->segment.trans.x_position;
+    *outY = (ySpline + dy) - obj->segment.trans.y_position;
+    *outZ = (zSpline + dz) - obj->segment.trans.z_position;
+    return TRUE;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80019808.s")
 
 s8 func_8001A7D8(unk8001A7D8_arg0 *arg0) {
