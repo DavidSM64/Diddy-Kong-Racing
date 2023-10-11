@@ -9,7 +9,7 @@ As of October 10, 2023, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 58.00%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 31.11%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 33.35%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
