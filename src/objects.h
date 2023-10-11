@@ -469,6 +469,7 @@ void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entr
 void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Animation *entry);
 s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY, f32 *outZ);
 void func_80016500(Object *obj, Object_Racer *racer);
+void func_8000C8F8(s32, s32);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -512,7 +513,6 @@ void func_80016748(Object *, Object *);
 void func_80011264(ObjectModel *, Object *);
 void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
 s32 func_80061D30(Object *); //asm func in unknown_062930
-void func_8000C8F8(s32, s32);
 Object *func_8000FD54(s32);
 s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3);
 

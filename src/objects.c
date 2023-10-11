@@ -566,16 +566,14 @@ s32 normalise_time(s32 timer) {
     }
 }
 
-#ifdef NON_MATCHING
-//Really close to matching. Looks like it's just regalloc left, but there's a couple of fakematch stuff in there.
 void func_8000C8F8(s32 arg0, s32 arg1) {
     s32 assetSize;
     Settings *settings;
     s32 i;
-    s32 *asset;
+    s32 *mem;
     s32 var_s0;
     u32 assetOffset;
-    s32 *assetTable;
+    u32 *objMapTable;
     UNUSED s32 pad;
     u8 *compressedAsset;
     s32 temp_t3;
@@ -595,37 +593,34 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
     }
     
     D_8011AD3E = 0;
-    asset = allocate_from_main_pool_safe(0x3000, COLOUR_TAG_BLUE);
-    D_8011AEB0[arg1] = asset;
+    mem = allocate_from_main_pool_safe(0x3000, COLOUR_TAG_BLUE);
+    D_8011AEB0[arg1] = mem;
     D_8011AE98[arg1] = (u8 *)(D_8011AEB0[arg1] + 4); //Some structs unk4?
     D_8011AEA0[arg1] = 0;
     D_8011AEA8[arg1] = arg0;
-    assetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_OBJECT_MAPS_TABLE);
-    for (i = 0; assetTable[i] != -1; i++) { }
-    
-    //REGALLOC DIFF START
-    if (arg0 >= (i - 1)) {
+    objMapTable = (u32 *) load_asset_section_from_rom(ASSET_LEVEL_OBJECT_MAPS_TABLE);
+    for (i = 0; objMapTable[i] != 0xFFFFFFFF; i++) { }
+    i--;
+    if (arg0 >= i) {
         arg0 = 0;
     }
-    assetOffset = (&assetTable[arg0])[0];
-    assetSize = (&assetTable[arg0])[1];
-    assetSize -= assetOffset;
-    //REGALLOC DIFF END
+    assetOffset = objMapTable[arg0];
+    assetSize = objMapTable[arg0+1] - assetOffset;
 
     if (assetSize != 0) {
-        compressedAsset = (u8 *) asset;
+        compressedAsset = (u8 *) mem;
         compressedAsset = ((compressedAsset + get_asset_uncompressed_size(ASSET_LEVEL_OBJECT_MAPS, assetOffset)) - (0, assetSize)) + 0x20;
         load_asset_to_address(ASSET_LEVEL_OBJECT_MAPS, (u32) compressedAsset, assetOffset, assetSize);
-        gzip_inflate(compressedAsset, (u8 *) asset);
-        free_from_memory_pool(assetTable);
+        gzip_inflate(compressedAsset, (u8 *) mem);
+        free_from_memory_pool(objMapTable);
         D_8011AE98[arg1] = (u8 *)(D_8011AEB0[arg1] + 4);
-        D_8011AEA0[arg1] = *asset;
+        D_8011AEA0[arg1] = *mem;
         D_8011AEC0 = arg1;
         for (var_s0 = 0; var_s0 < D_8011AEA0[arg1]; var_s0 += temp_t3) {
             spawn_object((LevelObjectEntryCommon *) D_8011AE98[arg1], 1);            
             D_8011AE98[arg1] = &D_8011AE98[arg1][temp_t3 = D_8011AE98[arg1][1] & 0x3F];
         }
-        D_8011AE98[arg1] = (u8 *)(D_8011AEB0[arg1] + 4);
+        D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
         D_8011AE70 = 0;
         D_8011ADC0 = 1;
         if (D_8011ADAC == 0) {
@@ -637,9 +632,6 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
         D_8011ADAC = 1;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/func_8000C8F8.s")
-#endif
 
 // Reset all values of D_8011AE08 to NULL
 void func_8000CBC0(void) {
