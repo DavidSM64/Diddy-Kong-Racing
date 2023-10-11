@@ -413,7 +413,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
                     racer->unk209 |= 2;
                 }
                 if (racer->unk209 & 4) {
-                    gCurrentRacerInput &= 0xFFFF7FFF;
+                    gCurrentRacerInput &= ~A_BUTTON;
                 }
             } else {
                 racer->unk209 &= ~2;
@@ -422,7 +422,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
                 }
             }
             if (racer->unk209 & 4) {
-                gCurrentRacerInput &= 0xFFFF7FFF;
+                gCurrentRacerInput &= ~A_BUTTON;
             }
             if (racer->unk1C6 == 0) {
                 if (racer->unk1C9 == 4 || racer->unk1C9 == 5) {
@@ -516,7 +516,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
                 if (racer->raceFinished != FALSE) {
                     racer->boostTimer = 0;
                     racer->unk213 = 0;
-                    gCurrentRacerInput &= 0xFFFF7FFF;
+                    gCurrentRacerInput &= ~A_BUTTON;
                     gCurrentRacerInput |= B_BUTTON;
                     if (racer->velocity > -0.3) {
                         gCurrentRacerInput |= A_BUTTON;
@@ -2917,7 +2917,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     // Handle drifting
     if (racer->drifting) {
-        gCurrentRacerInput = (gCurrentRacerInput & 0xFFFF7FFF);
+        gCurrentRacerInput &= ~A_BUTTON;
         gCurrentRacerInput |= B_BUTTON;
         gCurrentStickY = -70;
         sp60 = TRUE;
@@ -3282,7 +3282,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
             if (racer->wheel_surfaces[0] != SURFACE_NONE) {
                 D_8011D550 = D_800DCCCC[racer->wheel_surfaces[0]];
-                *((s16*) &D_8011D552) = racer->unk1E0; // necessary because a different function expects a char.
+                *((s16 *) &D_8011D552) = racer->unk1E0; // necessary because a different function expects a char.
                 racer->unk1E0 = 0;
             }
         }

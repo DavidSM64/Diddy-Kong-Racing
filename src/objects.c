@@ -3854,7 +3854,33 @@ void func_8001B3C4(s32 arg0, s16 *playerId) {
     play_time_trial_end_message(playerId);
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001B4FC.s")
+u8 func_8001B4FC(s32 trackId) {
+    s32 i;
+    s8 *mainTrackIds;
+    u16 *temp_v0;
+    Settings *settings;
+
+    D_800DC738 = 0;
+    D_800DC734 = 0;
+    settings = get_settings();
+    if (get_map_default_vehicle(trackId) == D_8011AE82) {
+        mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
+        temp_v0 = (u16 *) get_misc_asset(ASSET_MISC_24);
+        for (i = 0; mainTrackIds[i] != -1 && trackId != mainTrackIds[i]; i++) { }
+        if (mainTrackIds[i] != -1) {
+            if (temp_v0[i] >= settings->courseTimesPtr[D_8011AE82][trackId]) {
+                //Check if TT has been beaten?
+                if (!(get_eeprom_settings() & ((1 << 4) << i) )) {
+                    D_800DC738 = 1;
+                }
+                if (func_8001B2F0(trackId) == 0) {
+                    D_800DC734 = 1;
+                }
+            }
+        }
+    }
+    return D_800DC734;
+}
 
 Object *func_8001B640(void) {
     return (Object *) D_800DC718;
