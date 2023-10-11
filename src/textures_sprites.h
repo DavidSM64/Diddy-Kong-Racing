@@ -118,7 +118,7 @@ void reset_render_settings(Gfx **dlist);
 void enable_primitive_colour(void);
 void disable_primitive_colour(void);
 void load_and_set_texture_no_offset(Gfx **dlist, TextureHeader *texhead, u32 flags);
-void func_8007BF1C(s32 arg0);
+void sprite_opaque(s32 setting);
 s32 func_8007EF64(s16 arg0);
 void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 offset);
 void free_sprite(Sprite *sprite);

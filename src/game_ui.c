@@ -479,7 +479,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 init_rdp_and_framebuffer(&gHUDCurrDisplayList);
                 tex_enable_modes(0xFFFFFFFF);
                 tex_disable_modes(RENDER_Z_COMPARE);
-                func_8007BF1C(FALSE);
+                sprite_opaque(FALSE);
                 if (check_if_showing_cutscene_camera() == FALSE && D_80126D34 == FALSE && racer->racer.playerIndex == PLAYER_ONE) {
                     if (D_80126D35 != 0) {
                         D_80126D28 = sins_f(D_80126D2C) * D_80126D30 * 8.0f;
@@ -568,7 +568,7 @@ block_95:
                     func_80068508(0);
                 }
                 D_80126CD1 = 0;
-                func_8007BF1C(TRUE);
+                sprite_opaque(TRUE);
                 if (D_80127180) {
                     gHudSprites[D_80127180].texture = NULL;
                     render_textured_rectangle(&gHUDCurrDisplayList, (DrawTexture *) &gHudSprites, 0, 0, 255, 255, 255, 255);
@@ -995,11 +995,11 @@ void func_800A22F4(Object_Racer *racer, UNUSED void *unused) {
     }
     if (gNumActivePlayers != 2) {
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk6A0);
-        func_8007BF1C(1);
+        sprite_opaque(TRUE);
         D_80126CD5 = TRUE;
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk680);
         D_80126CD5 = FALSE;
-        func_8007BF1C(0);
+        sprite_opaque(FALSE);
     }
 }
 
@@ -1408,10 +1408,10 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
                     }
                     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk5A0);
                     reset_render_settings(&gHUDCurrDisplayList);
-                    func_8007BF1C(TRUE);
+                    sprite_opaque(TRUE);
                     gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, opacity);
                     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk4C0);
-                    func_8007BF1C(FALSE);
+                    sprite_opaque(FALSE);
                     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk4E0);
                     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk500);
                     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk520);
@@ -1437,7 +1437,7 @@ void render_race_start(s32 arg0, s32 updateRate) {
             D_800E2770[1].unk3 = -1;
         }
         if (gHUDNumPlayers == TWO_PLAYERS) {
-            func_8007BF1C(TRUE);
+            sprite_opaque(TRUE);
         }
         if (arg0 > 0) {
             if (D_80126D34) {
@@ -1494,7 +1494,7 @@ void render_race_start(s32 arg0, s32 updateRate) {
                 gRaceStartShowHudStep++;
             }
         }
-        func_8007BF1C(FALSE);
+        sprite_opaque(FALSE);
     }
 }
 
@@ -1528,11 +1528,11 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
             }
         }
         if (var_v1 == 0) {
-            func_8007BF1C(TRUE);
+            sprite_opaque(TRUE);
             set_viewport_tv_type(TV_TYPE_NTSC);
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk360);
             set_viewport_tv_type(TV_TYPE_PAL);
-            func_8007BF1C(FALSE);
+            sprite_opaque(FALSE);
             gCurrentHud->unkF8 = var_v1;
             if (gCurrentHud->unk39B) {
                 gCurrentHud->unk39A -= updateRate;
@@ -1552,10 +1552,10 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
         } else {
             gCurrentHud->unkF8 = var_v1 + 128;
             func_80068508(0);
-            func_8007BF1C(TRUE);
+            sprite_opaque(TRUE);
             set_viewport_tv_type(TV_TYPE_NTSC);
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unkE0);
-            func_8007BF1C(FALSE);
+            sprite_opaque(FALSE);
             set_viewport_tv_type(TV_TYPE_PAL);
             func_80068508(1);
             gCurrentHud->unkF8 -= 128;
@@ -1795,7 +1795,7 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unkC0);
     }
     if (gHUDNumPlayers == TWO_PLAYERS) {
-        func_8007BF1C(TRUE);
+        sprite_opaque(TRUE);
     }
     if (is_game_paused() == FALSE) {
         if (racer->lap_times[racer->lap] < 30 && gCurrentHud->unk3DA == 0 && racer->raceFinished == FALSE) {
@@ -1936,7 +1936,7 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
             }
         }
     }
-    func_8007BF1C(FALSE);
+    sprite_opaque(FALSE);
 }
 
 /**
@@ -1948,7 +1948,7 @@ void render_wrong_way_text(Object_Racer *obj, s32 updateRate) {
     f32 textPosTarget;
 
     if (gHUDNumPlayers == TWO_PLAYERS) {
-        func_8007BF1C(TRUE);
+        sprite_opaque(TRUE);
     }
     if (obj->unk1FC > 120 && (gHUDNumPlayers || gCurrentHud->unk46C == gCurrentHud->unk47A[2]) && !is_game_paused()) {
         if ((gWrongWayNagPrefix || gWrongWayNagTimer == 0) && gHUDVoiceSoundMask == NULL) {
@@ -2022,7 +2022,7 @@ void render_wrong_way_text(Object_Racer *obj, s32 updateRate) {
         gCurrentHud->unk46C =  gCurrentHud->unk49C - 200;
         play_sound_global(SOUND_WHOOSH1, NULL);
     }
-    func_8007BF1C(FALSE);
+    sprite_opaque(FALSE);
 }
 
 void func_800A5F18(Object_Racer *racer) {
@@ -2177,10 +2177,10 @@ void func_800A718C(UNUSED Object_64 *arg0) {
     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk2A0);
     set_viewport_tv_type(TV_TYPE_NTSC);
     if (osTvType == TV_TYPE_PAL) {
-        func_8007BF1C(1);
+        sprite_opaque(TRUE);
     }
     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk260);
-    func_8007BF1C(0);
+    sprite_opaque(FALSE);
     set_viewport_tv_type(TV_TYPE_PAL);
     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk280);
 }
@@ -2259,10 +2259,10 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
                 gCurrentHud->unk48 *= 0.75;
             }
             if (gCurrentHud->unk48 != 1.0) {
-                func_8007BF1C(TRUE);
+                sprite_opaque(TRUE);
             }
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk40);
-            func_8007BF1C(FALSE);
+            sprite_opaque(FALSE);
             if (racerObj->racer.balloon_quantity > 3) {
                 gCurrentHud->unk63A = -128;
             }
@@ -2611,12 +2611,12 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
         // Show life counter and icons in 2 player.
         if (gNumActivePlayers == 2 && gHudToggleSettings[gHUDNumPlayers] == 0) {
             func_80068508(TRUE);
-            func_8007BF1C(FALSE);
+            sprite_opaque(FALSE);
             set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
             func_800A1E48(0, updateRate);
             func_80068508(FALSE);
             reset_render_settings(&gHUDCurrDisplayList);
-            func_8007BF1C(TRUE);
+            sprite_opaque(TRUE);
         } else {
             // In 3/4 player, just show the life counter.
             if (gNumActivePlayers == 3) {
@@ -2630,7 +2630,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     gCurrentHud = gPlayerHud[PLAYER_FOUR];
                     spE4 = gCurrentHud->unk64C;
                     spE0 = gCurrentHud->unk650;
-                    func_8007BF1C(FALSE);
+                    sprite_opaque(FALSE);
                     set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
                     func_80068508(TRUE);
                     gCurrentHud->unk64C = 225.0f;
@@ -2684,7 +2684,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     gCurrentHud->unk250 += temp;
                     gCurrentHud->unk64C = spE4;
                     gCurrentHud->unk650 = spE0;
-                    func_8007BF1C(TRUE);
+                    sprite_opaque(TRUE);
                     reset_render_settings(&gHUDCurrDisplayList);
                     func_80068508(FALSE);
                 }
@@ -2804,7 +2804,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
             if (osTvType == TV_TYPE_PAL) {
                 gMinimapScreenY *= 1.2;
             }
-            func_8007BF1C(FALSE);
+            sprite_opaque(FALSE);
             objTrans.trans.x_position = gMinimapScreenX + D_80126D24 + D_80126D28;
             objTrans.trans.y_position = gMinimapScreenY;
             if (osTvType == TV_TYPE_PAL) {
@@ -2883,7 +2883,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                         if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
                             gCurrentHud->unk1E4 = 0xFFFF - gCurrentHud->unk1E4;
                         }
-                        func_8007BF1C(TRUE);
+                        sprite_opaque(TRUE);
                     } else {
                         gCurrentHud->unk1E4 = 0;
                         gCurrentHud->unk1E6 = 14;
@@ -2915,12 +2915,12 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                         }
                         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk1E0);
                     }
-                    func_8007BF1C(FALSE);
+                    sprite_opaque(FALSE);
                 }
             }
             gDPPipeSync(gHUDCurrDisplayList++);
             func_80068508(FALSE);
-            func_8007BF1C(TRUE);
+            sprite_opaque(TRUE);
             *dList = gHUDCurrDisplayList;
             *mtx = gHUDCurrMatrix;
             *vtx = gHUDCurrVertex;

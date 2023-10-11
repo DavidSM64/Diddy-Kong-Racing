@@ -15,7 +15,7 @@
 /************ .data ************/
 
 u32 gTexColourTag = COLOUR_TAG_MAGENTA;
-s32 D_800DE7C4 = 1;
+s32 gSpriteOpaque = TRUE;
 
 // See "include/f3ddkr.h" for the defines
 
@@ -754,9 +754,11 @@ void load_blinking_lights_texture(Gfx **dlist, TextureHeader *texture_list, u32 
     gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsBlinkingLights[flags]), numberOfGfxCommands(dRenderSettingsBlinkingLights[0]));
 }
 
-
-void func_8007BF1C(s32 arg0) {
-    D_800DE7C4 = arg0;
+/**
+ * Set whether to use an opaque render mode for sprites.
+*/
+void sprite_opaque(s32 setting) {
+    gSpriteOpaque = setting;
     gForceFlags = TRUE;
 }
 
@@ -784,7 +786,7 @@ void func_8007BF34(Gfx **dlist, s32 arg1) {
         gForceFlags = 0;
         gCurrentRenderFlags = temp_a1;
         temp_t8 = temp_a1 & ~0x800;
-        if (D_800DE7C4 == 0) {
+        if (gSpriteOpaque == 0) {
             if ((gCurrentRenderFlags & 0x200) != 0) {
                 gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsSpriteCld[((temp_t8 >> 1) & 1) * 16]), numberOfGfxCommands(dRenderSettingsSpriteCld[0]));
             } else {
