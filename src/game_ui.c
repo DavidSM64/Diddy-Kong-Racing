@@ -2053,16 +2053,16 @@ void func_800A5F18(Object_Racer *racer) {
     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk600);
     if (!(get_current_level_race_type() & 0x40) && (is_in_two_player_adventure() == 0)) {
         get_racer_objects(&sp24);
-        if (((s32) gNumActivePlayers >= 2) && ((is_in_two_player_adventure() == 0) || (is_postrace_viewport_active() == 0))) {
-            set_text_font(0);
+        if (gNumActivePlayers >= 2 && (is_in_two_player_adventure() == FALSE || is_postrace_viewport_active() == FALSE)) {
+            set_text_font(FONT_COLOURFUL);
             if (sp24 != racer->unk1AC) {
                 set_text_colour(255, 255, 255, 0, 255);
-                draw_text(&gHUDCurrDisplayList, (s32) (gCurrentHud->unk16C - 40.0f), (s32) gCurrentHud->unk170, "RACE", ALIGN_TOP_LEFT);
-                render_timer((s32) gCurrentHud->unk16C, (s32) gCurrentHud->unk170, (s32) (s8) gCurrentHud->unk17A, (s32) (s8) gCurrentHud->unk17B, (s32) (s8) gCurrentHud->unk17C, 1);
-                draw_text(&gHUDCurrDisplayList, (s32) (gCurrentHud->unk2EC - 40.0f), (s32) gCurrentHud->unk2F0, "LAP", ALIGN_TOP_LEFT);
-                render_timer((s32) gCurrentHud->unk2EC, (s32) gCurrentHud->unk2F0, (s32) (s8) gCurrentHud->unk2FA, (s32) (s8) gCurrentHud->unk2FB, (s32) (s8) gCurrentHud->unk2FC, 1);
+                draw_text(&gHUDCurrDisplayList, gCurrentHud->unk16C - 40.0f, gCurrentHud->unk170, "RACE", ALIGN_TOP_LEFT);
+                render_timer(gCurrentHud->unk16C, gCurrentHud->unk170, gCurrentHud->unk17A, gCurrentHud->unk17B, gCurrentHud->unk17C, 1);
+                draw_text(&gHUDCurrDisplayList, gCurrentHud->unk2EC - 40.0f, gCurrentHud->unk2F0, "LAP", ALIGN_TOP_LEFT);
+                render_timer(gCurrentHud->unk2EC, gCurrentHud->unk2F0, gCurrentHud->unk2FA, gCurrentHud->unk2FB, gCurrentHud->unk2FC, 1);
             } else {
-                draw_text(&gHUDCurrDisplayList, (s32) (gCurrentHud->unk16C - 35.0f), (s32) gCurrentHud->unk170, "DID NOT FINISH", ALIGN_TOP_LEFT);
+                draw_text(&gHUDCurrDisplayList, gCurrentHud->unk16C - 35.0f, gCurrentHud->unk170, "DID NOT FINISH", ALIGN_TOP_LEFT);
             }
         }
     }

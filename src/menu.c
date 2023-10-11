@@ -9833,7 +9833,7 @@ s32 taj_menu_loop(void) {
 
     switch (sCurrentMenuID) {
         case 0:
-            set_current_text(7);
+            set_current_text(ASSET_GAME_TEXT_7);
             sCurrentMenuID = 1;
             D_800DF4D8 = 1;
             break;
