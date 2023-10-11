@@ -8486,13 +8486,13 @@ glabel ASSET_MISC_TRICKY_BOSS_DATA
 glabel ASSET_MISC_BLUEY_BOSS_DATA
 .incbin "./build/us_1.0/assets/misc/unlabeled/bluey_boss_data.bin"
 glabel ASSET_MISC_SMOKEY_BOSS_DATA
-.incbin "./build/us_1.0/assets/misc/unlabeled/SMOKEY_boss_data.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/smokey_boss_data.bin"
 glabel ASSET_MISC_8
 .incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_8.bin"
-glabel ASSET_MISC_9
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_9.bin"
-glabel ASSET_MISC_10
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_10.bin"
+glabel ASSET_MISC_RACER_WEIGHT
+.incbin "./build/us_1.0/assets/misc/unlabeled/racer_weight_data.bin"
+glabel ASSET_MISC_RACER_HANDLING
+.incbin "./build/us_1.0/assets/misc/unlabeled/racer_handling_data.bin"
 glabel ASSET_MISC_11
 .incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_11.bin"
 glabel ASSET_MISC_12
@@ -8626,8 +8626,8 @@ glabel ASSET_MISC_TABLE
 .word (ASSET_MISC_BLUEY_BOSS_DATA - ASSET_MISC) / 4
 .word (ASSET_MISC_SMOKEY_BOSS_DATA - ASSET_MISC) / 4
 .word (ASSET_MISC_8 - ASSET_MISC) / 4
-.word (ASSET_MISC_9 - ASSET_MISC) / 4
-.word (ASSET_MISC_10 - ASSET_MISC) / 4
+.word (ASSET_MISC_RACER_WEIGHT - ASSET_MISC) / 4
+.word (ASSET_MISC_RACER_HANDLING - ASSET_MISC) / 4
 .word (ASSET_MISC_11 - ASSET_MISC) / 4
 .word (ASSET_MISC_12 - ASSET_MISC) / 4
 .word (ASSET_MISC_13 - ASSET_MISC) / 4

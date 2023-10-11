@@ -15393,9 +15393,19 @@
                     },
                     {
                         "index": 7,
-                        "filename": "SMOKEY_boss_data",
+                        "filename": "smokey_boss_data",
                         "build-id": "ASSET_MISC_SMOKEY_BOSS_DATA"
-                    },                    
+                    },
+                    {
+                        "index": 9,
+                        "filename": "racer_weight_data",
+                        "build-id": "ASSET_MISC_RACER_WEIGHT"
+                    },
+                    {
+                        "index": 10,
+                        "filename": "racer_handling_data",
+                        "build-id": "ASSET_MISC_RACER_HANDLING"
+                    },
                     {
                         "index": 21,
                         "filename": "shield_data",

@@ -2306,12 +2306,12 @@ void update_player_racer(Object *obj, s32 updateRate) {
         } else {
             tempRacer->unk18C = 0;
         }
-        gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(MISC_RACER_WEIGHT);
+        gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_RACER_WEIGHT);
         gCurrentRacerWeightStat = gCurrentRacerMiscAssetPtr[tempRacer->characterId] * 0.45;
         if (tempRacer->bubbleTrapTimer > 0) {
             gCurrentRacerWeightStat = -0.02f;
         }
-        gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(MISC_RACER_HANDLING);
+        gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_RACER_HANDLING);
         gCurrentRacerHandlingStat = gCurrentRacerMiscAssetPtr[tempRacer->characterId];
         gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_11);
         D_8011D574 = gCurrentRacerMiscAssetPtr[tempRacer->characterId];
@@ -5835,12 +5835,12 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     } else {
         racer->unk18C = 0;
     }
-    gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(MISC_RACER_WEIGHT);
+    gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_RACER_WEIGHT);
     gCurrentRacerWeightStat = gCurrentRacerMiscAssetPtr[racer->characterId] * 0.45;
     if (racer->bubbleTrapTimer > 0) {
         gCurrentRacerWeightStat = -0.02f;
     }
-    gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(MISC_RACER_HANDLING);
+    gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_RACER_HANDLING);
     gCurrentRacerHandlingStat = gCurrentRacerMiscAssetPtr[racer->characterId];
     gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_11);
     D_8011D574 = gCurrentRacerMiscAssetPtr[racer->characterId];
