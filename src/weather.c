@@ -145,7 +145,7 @@ s32 D_800E2C90 = 0;
 SoundMask *gWeatherSoundMask = NULL;
 
 
-FadeTransition D_800E2C98 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_UNK1, FADE_COLOR_WHITE, 5, 2);
+FadeTransition gThunderTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_INVERT, FADE_COLOR_WHITE, 5, 2);
 
 /*******************************/
 
@@ -633,8 +633,8 @@ void handle_rain_lightning(s32 updateRate) {
     if (gThunderTimer > 0) {
         gThunderTimer -= updateRate;
         if (gThunderTimer <= 0) {
-            if (D_800E2C6C >= 32769 && fxFadeOn() == 0) {
-                transition_begin(&D_800E2C98);
+            if (D_800E2C6C >= 32769 && check_fadeout_transition() == 0) {
+                transition_begin(&gThunderTransition);
             }
             play_sound_global(SOUND_LIGHTNING, NULL);
             gThunderTimer = 0;

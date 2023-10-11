@@ -372,7 +372,7 @@ s16 get_taj_challenge_type(void);
 Object *find_taj_object(void);
 void func_8001A8D4(s32 arg0);
 s16 func_8001AE44(void);
-s32 func_8001AE54(void);
+u32 func_8001AE54(void);
 s32 func_8001B288(void);
 Object *func_8001B2E0(void);
 s32 func_8001B3AC(s32 arg0);

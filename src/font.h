@@ -29,9 +29,7 @@ enum DialogueFlags {
     DIALOGUE_BOX_UNUSED_01 = 0x0001,
     DIALOGUE_BOX_VERTS     = 0x4000,
     DIALOGUE_BOX_CLOSED    = 0x7FFF,
-    DIALOGUE_BOX_OPEN      = 0x8000,
-    DIALOGUE_BOX_UNK_02    = 0xBFFF,
-    DIALOGUE_BOX_UNUSED_02 = 0xFFFE
+    DIALOGUE_BOX_OPEN      = 0x8000
 };
 
 typedef struct unk800C54E8 {
@@ -171,7 +169,7 @@ void move_dialogue_box_to_front(s32 dialogueBoxID, DialogueBox *box);
 void assign_dialogue_box_id(s32 dialogueBoxID);
 void open_dialogue_box(s32 dialogueBoxID);
 void close_dialogue_box(s32 dialogueBoxID);
-void func_800C56D0(s32 dialogueBoxID);
+void clear_dialogue_box_open_flag(s32 dialogueBoxID);
 void render_dialogue_boxes(Gfx **dlist, MatrixS **mat, Vertex **verts);
 void render_fill_rectangle(Gfx **dlist, s32 ulx, s32 uly, s32 lrx, s32 lry);
 void render_dialogue_box(Gfx **dlist, MatrixS **mat, Vertex **verts, s32 dialogueBoxID);

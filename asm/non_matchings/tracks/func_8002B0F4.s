@@ -396,10 +396,10 @@ glabel func_8002B0F4
 /* 02C2CC 8002B6CC A06E0010 */  sb    $t6, 0x10($v1)
 /* 02C2D0 8002B6D0 030FF821 */  addu  $ra, $t8, $t7
 /* 02C2D4 8002B6D4 83F9002B */  lb    $t9, 0x2b($ra)
-/* 02C2D8 8002B6D8 3C188012 */  lui   $t8, %hi(D_8011D384) # $t8, 0x8012
+/* 02C2D8 8002B6D8 3C188012 */  lui   $t8, %hi(gWaveBlockCount) # $t8, 0x8012
 /* 02C2DC 8002B6DC 1320000D */  beqz  $t9, .L8002B714
 /* 02C2E0 8002B6E0 3C013F80 */   li    $at, 0x3F800000 # 1.000000
-/* 02C2E4 8002B6E4 8F18D384 */  lw    $t8, %lo(D_8011D384)($t8)
+/* 02C2E4 8002B6E4 8F18D384 */  lw    $t8, %lo(gWaveBlockCount)($t8)
 /* 02C2E8 8002B6E8 02002025 */  move  $a0, $s0
 /* 02C2EC 8002B6EC 13000009 */  beqz  $t8, .L8002B714
 /* 02C2F0 8002B6F0 00483821 */   addu  $a3, $v0, $t0

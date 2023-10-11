@@ -1,16 +1,16 @@
 glabel func_800B8C04
 /* 0B9804 800B8C04 3C0A8013 */  lui   $t2, %hi(D_8012A0D0) # $t2, 0x8013
 /* 0B9808 800B8C08 8D4AA0D0 */  lw    $t2, %lo(D_8012A0D0)($t2)
-/* 0B980C 800B8C0C 3C088013 */  lui   $t0, %hi(D_8012A0A8) # $t0, 0x8013
-/* 0B9810 800B8C10 8D08A0A8 */  lw    $t0, %lo(D_8012A0A8)($t0)
+/* 0B980C 800B8C0C 3C088013 */  lui   $t0, %hi(gWaveBoundingBoxDiffX) # $t0, 0x8013
+/* 0B9810 800B8C10 8D08A0A8 */  lw    $t0, %lo(gWaveBoundingBoxDiffX)($t0)
 /* 0B9814 800B8C14 008A7023 */  subu  $t6, $a0, $t2
 /* 0B9818 800B8C18 01C8001A */  div   $zero, $t6, $t0
 /* 0B981C 800B8C1C 27BDFFB0 */  addiu $sp, $sp, -0x50
 /* 0B9820 800B8C20 AFA50054 */  sw    $a1, 0x54($sp)
 /* 0B9824 800B8C24 3C0C8013 */  lui   $t4, %hi(D_8012A0D4) # $t4, 0x8013
 /* 0B9828 800B8C28 8D8CA0D4 */  lw    $t4, %lo(D_8012A0D4)($t4)
-/* 0B982C 800B8C2C 3C098013 */  lui   $t1, %hi(D_8012A0AC) # $t1, 0x8013
-/* 0B9830 800B8C30 8D29A0AC */  lw    $t1, %lo(D_8012A0AC)($t1)
+/* 0B982C 800B8C2C 3C098013 */  lui   $t1, %hi(gWaveBoundingBoxDiffZ) # $t1, 0x8013
+/* 0B9830 800B8C30 8D29A0AC */  lw    $t1, %lo(gWaveBoundingBoxDiffZ)($t1)
 /* 0B9834 800B8C34 00CC7823 */  subu  $t7, $a2, $t4
 /* 0B9838 800B8C38 AFB70034 */  sw    $s7, 0x34($sp)
 /* 0B983C 800B8C3C AFB00018 */  sw    $s0, 0x18($sp)

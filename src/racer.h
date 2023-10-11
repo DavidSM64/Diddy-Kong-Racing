@@ -104,6 +104,18 @@ typedef enum LightFlags {
     RACER_LIGHT_BRAKE = (1 << 7)
 } LightFlags;
 
+typedef enum RacerAIBehaviours {
+    AI_EMPOWERED_BOOST,
+    AI_GETS_BALLOON,
+    AI_UNK_2,
+    AI_BLUE_BALLOON
+} RacerAIBehaviours;
+
+#define AI_MIN 0
+#define AI_MAX 1
+#define AI_MIN_STEP 2
+#define AI_MAX_STEP 3
+
 typedef struct ObjectCamera {
   /* 0x0014 */ ObjectTransform trans;
   /* 0x0018 */ f32 unk18;
@@ -124,11 +136,11 @@ typedef struct ObjectCamera {
   /* 0x003F */ u8 unk3F;
 } ObjectCamera;
 
-typedef struct TempStruct5 {
+typedef struct AIBehaviourTable {
     f32 unk0;
     f32 unk4;
-    s8 unk8[4][4];
-} TempStruct5;
+    s8 percentages[4][4];
+} AIBehaviourTable;
 
 typedef struct Asset20 {
     f32 unk0;
@@ -195,7 +207,7 @@ void handle_racer_head_turning(Object *obj, Object_Racer *racer, s32 updateRate)
 void racer_approach_object(Object *obj, Object_Racer *racer, f32 divisor);
 void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer);
 void racer_AI_pathing_inputs(Object *obj, Object_Racer *racer, s32 updateRate);
-void func_80043ECC(Object *obj, Object_Racer *racer, s32 updateRate);
+void increment_ai_behaviour_chances(Object *obj, Object_Racer *racer, s32 updateRate);
 void onscreen_ai_racer_physics(Object *obj, Object_Racer *racer, s32 updateRate);
 void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRate);
 void racer_spinout_car(Object* obj, Object_Racer* racer, s32 updateRate, f32 updateRateF);

@@ -208,8 +208,8 @@ glabel func_800C1EE8
 /* 0C2E00 800C2200 1000000D */  b     .L800C2238
 /* 0C2E04 800C2204 8FBF004C */   lw    $ra, 0x4c($sp)
 .L800C2208:
-/* 0C2E08 800C2208 3C03800E */  lui   $v1, %hi(sTransitionFlags) # $v1, 0x800e
-/* 0C2E0C 800C220C 246331B4 */  addiu $v1, %lo(sTransitionFlags) # addiu $v1, $v1, 0x31b4
+/* 0C2E08 800C2208 3C03800E */  lui   $v1, %hi(gTransitionEndTimer) # $v1, 0x800e
+/* 0C2E0C 800C220C 246331B4 */  addiu $v1, %lo(gTransitionEndTimer) # addiu $v1, $v1, 0x31b4
 /* 0C2E10 800C2210 94620000 */  lhu   $v0, ($v1)
 /* 0C2E14 800C2214 3401FFFF */  li    $at, 65535
 /* 0C2E18 800C2218 10410006 */  beq   $v0, $at, .L800C2234

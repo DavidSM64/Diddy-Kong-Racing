@@ -239,7 +239,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     s16 sp3C;
     s16 sp38;
     Object_64 *sp58;
-    TempStruct5 *sp54;
+    AIBehaviourTable *sp54;
     s16 sp3A;
     f32 temp_f0;
     s16 sp6E;
@@ -256,7 +256,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     miscAsset2 = (s8 *) get_misc_asset(MISC_ASSET_UNK02);
     header = get_current_level_header();
     racerGroup = get_racer_objects_by_position(&numRacers);
-    sp54 = func_8006C18C();
+    sp54 = get_ai_behaviour_table();
     if (racer->unk1C6 > 0) {
         racer->unk1C6 -= updateRate;
     } else {
@@ -353,10 +353,10 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
             } else {
                 balloonType = racer->balloon_type;
             }
-            sp38 = (((sp54->unk8[1][1] - sp54->unk8[1][0]) * (7 - var_t5)) / 7) + sp54->unk8[1][0];
-            sp36 = (((sp54->unk8[2][1] - sp54->unk8[2][0]) * (7 - var_t5)) / 7) + sp54->unk8[2][0];
-            sp3A = (((sp54->unk8[0][1] - sp54->unk8[0][0]) * (7 - var_t5)) / 7) + sp54->unk8[0][0];
-            sp3C = (((sp54->unk8[3][1] - sp54->unk8[3][0]) * (7 - var_t5)) / 7) + sp54->unk8[3][0];
+            sp38 = (((sp54->percentages[1][1] - sp54->percentages[1][0]) * (7 - var_t5)) / 7) + sp54->percentages[1][0];
+            sp36 = (((sp54->percentages[2][1] - sp54->percentages[2][0]) * (7 - var_t5)) / 7) + sp54->percentages[2][0];
+            sp3A = (((sp54->percentages[0][1] - sp54->percentages[0][0]) * (7 - var_t5)) / 7) + sp54->percentages[0][0];
+            sp3C = (((sp54->percentages[3][1] - sp54->percentages[3][0]) * (7 - var_t5)) / 7) + sp54->percentages[3][0];
             if (racer->unk209 & 1) {
                 if (racer->unk201 == 0) {
                     if (racer->balloon_level == 0) {
@@ -546,43 +546,47 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/racer/func_80042D20.s")
 #endif
 
-void func_80043ECC(Object *obj, Object_Racer *racer, s32 updateRate) {
-    TempStruct5 *temp_v0;
+/**
+ * During specific or nonspecific actions, increase the steps in the AI behaviour table.
+ * Increment percent chances of them performing specific actions, with a maximum of 100%.
+*/
+void increment_ai_behaviour_chances(Object *obj, Object_Racer *racer, s32 updateRate) {
+    AIBehaviourTable *aiTable;
     s8 *test;
     s8 balloonType;
     s32 i;
-    static s8 D_8011D5BA;
-    static s8 D_8011D5BB;
+    static s8 sAIFramesSinceA;
+    static s8 sAIStartedBoosting;
     static s8 sBalloonLevelAI;
 
     if (!obj) {
-        D_8011D5BA = 0;
-        D_8011D5BB = 0;
+        sAIFramesSinceA = 0;
+        sAIStartedBoosting = 0;
         sBalloonLevelAI = 0;
         return;
     }
-    temp_v0 = func_8006C18C();
+    aiTable = get_ai_behaviour_table();
     if (racer->boostTimer) {
-        if (!D_8011D5BB) {
-            temp_v0->unk8[3][0] += temp_v0->unk8[3][2];
-            temp_v0->unk8[3][1] += temp_v0->unk8[3][3];
-            D_8011D5BB = 1;
+        if (sAIStartedBoosting == FALSE) {
+            aiTable->percentages[AI_BLUE_BALLOON][AI_MIN] += aiTable->percentages[AI_BLUE_BALLOON][AI_MIN_STEP];
+            aiTable->percentages[AI_BLUE_BALLOON][AI_MAX] += aiTable->percentages[AI_BLUE_BALLOON][AI_MAX_STEP];
+            sAIStartedBoosting = TRUE;
         }
         if (!(gCurrentRacerInput & A_BUTTON)) {
-            D_8011D5BA += updateRate;
+            sAIFramesSinceA += updateRate;
         }
     } else {
-        D_8011D5BB = 0;
-        if (D_8011D5BA > 20) {
-            temp_v0->unk8[0][0] += temp_v0->unk8[0][2];
-            temp_v0->unk8[0][1] += temp_v0->unk8[0][3];
+        sAIStartedBoosting = FALSE;
+        if (sAIFramesSinceA > 20) {
+            aiTable->percentages[AI_EMPOWERED_BOOST][AI_MIN] += aiTable->percentages[AI_EMPOWERED_BOOST][AI_MIN_STEP];
+            aiTable->percentages[AI_EMPOWERED_BOOST][AI_MAX] += aiTable->percentages[AI_EMPOWERED_BOOST][AI_MAX_STEP];
         }
-        D_8011D5BA = 0;
+        sAIFramesSinceA = 0;
     }
     if (racer->balloon_quantity) {
         if (sBalloonLevelAI < racer->balloon_level) {
-            temp_v0->unk8[1][0] += temp_v0->unk8[1][2];
-            temp_v0->unk8[1][1] += temp_v0->unk8[1][3];
+            aiTable->percentages[AI_GETS_BALLOON][AI_MIN] += aiTable->percentages[1][AI_MIN_STEP];
+            aiTable->percentages[AI_GETS_BALLOON][AI_MAX] += aiTable->percentages[1][AI_MAX_STEP];
         }
         sBalloonLevelAI = racer->balloon_level;
     } else {
@@ -596,22 +600,22 @@ void func_80043ECC(Object *obj, Object_Racer *racer, s32 updateRate) {
             balloonType = racer->balloon_type;
         }
         if (gRacerAIBalloonActionTable[balloonType] == 1) {
-            temp_v0->unk8[2][0] += temp_v0->unk8[2][2];
-            temp_v0->unk8[2][1] += temp_v0->unk8[2][3];
+            aiTable->percentages[AI_UNK_2][AI_MIN] += aiTable->percentages[AI_UNK_2][AI_MIN_STEP];
+            aiTable->percentages[AI_UNK_2][AI_MAX] += aiTable->percentages[AI_UNK_2][AI_MAX_STEP];
         }
     }
     for (i = 0; i < 2; i++) {
-        if (temp_v0->unk8[1][i] > 100 || temp_v0->unk8[1][i] < 0) {
-            temp_v0->unk8[1][i] = 100;
+        if (aiTable->percentages[AI_GETS_BALLOON][i] > 100 || aiTable->percentages[AI_GETS_BALLOON][i] < 0) {
+            aiTable->percentages[AI_GETS_BALLOON][i] = 100;
         }
-        if (temp_v0->unk8[0][i]  > 100 || temp_v0->unk8[0][i] < 0) {
-            temp_v0->unk8[0][i]  = 100;
+        if (aiTable->percentages[AI_EMPOWERED_BOOST][i]  > 100 || aiTable->percentages[AI_EMPOWERED_BOOST][i] < 0) {
+            aiTable->percentages[AI_EMPOWERED_BOOST][i]  = 100;
         }
-        if (temp_v0->unk8[3][i] > 100 || temp_v0->unk8[3][i] < 0) {
-            temp_v0->unk8[3][i] = 100;
+        if (aiTable->percentages[AI_BLUE_BALLOON][i] > 100 || aiTable->percentages[AI_BLUE_BALLOON][i] < 0) {
+            aiTable->percentages[AI_BLUE_BALLOON][i] = 100;
         }
-        if (temp_v0->unk8[2][i] > 100 || temp_v0->unk8[2][i] < 0) {
-            temp_v0->unk8[2][i] = 100;
+        if (aiTable->percentages[AI_UNK_2][i] > 100 || aiTable->percentages[AI_UNK_2][i] < 0) {
+            aiTable->percentages[AI_UNK_2][i] = 100;
         }
     }
 }
@@ -2181,7 +2185,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
         D_8011D58C[i] = 0; 
     }
     if (1) {} if (1) {} // Fakematch
-    func_80043ECC(NULL, NULL, 0);
+    increment_ai_behaviour_chances(NULL, NULL, 0);
     gRacerDialogueCamera = i;
     gStartBoostTime = 0;
     tempRacer->lightFlags = 0;

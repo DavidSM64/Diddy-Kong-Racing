@@ -48,7 +48,7 @@ glabel func_80042D20
 /* 04395C 80042D5C AFA20050 */  sw    $v0, 0x50($sp)
 /* 043960 80042D60 0C006EAB */  jal   get_racer_objects_by_position
 /* 043964 80042D64 27A40068 */   addiu $a0, $sp, 0x68
-/* 043968 80042D68 0C01B063 */  jal   func_8006C18C
+/* 043968 80042D68 0C01B063 */  jal   get_ai_behaviour_table
 /* 04396C 80042D6C AFA20060 */   sw    $v0, 0x60($sp)
 /* 043970 80042D70 AFA20054 */  sw    $v0, 0x54($sp)
 /* 043974 80042D74 860301C6 */  lh    $v1, 0x1c6($s0)

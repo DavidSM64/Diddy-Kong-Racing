@@ -339,7 +339,7 @@ glabel func_8001A8F4
 /* 01B9E0 8001ADE0 00000000 */   nop   
 /* 01B9E4 8001ADE4 12000013 */  beqz  $s0, .L8001AE34
 /* 01B9E8 8001ADE8 8FBF001C */   lw    $ra, 0x1c($sp)
-/* 01B9EC 8001ADEC 0C030063 */  jal   fxFadeOn
+/* 01B9EC 8001ADEC 0C030063 */  jal   check_fadeout_transition
 /* 01B9F0 8001ADF0 00000000 */   nop   
 /* 01B9F4 8001ADF4 1440000F */  bnez  $v0, .L8001AE34
 /* 01B9F8 8001ADF8 8FBF001C */   lw    $ra, 0x1c($sp)

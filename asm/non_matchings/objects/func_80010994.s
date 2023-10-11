@@ -280,7 +280,7 @@ glabel func_80010994
 /* 011994 80010D94 00000000 */  nop   
 /* 011998 80010D98 12480008 */  beq   $s2, $t0, .L80010DBC
 /* 01199C 80010D9C 26310001 */   addiu $s1, $s1, 1
-/* 0119A0 80010DA0 0C010FB3 */  jal   func_80043ECC
+/* 0119A0 80010DA0 0C010FB3 */  jal   increment_ai_behaviour_chances
 /* 0119A4 80010DA4 02803025 */   move  $a2, $s4
 /* 0119A8 80010DA8 3C078012 */  lui   $a3, %hi(gNumRacers) # $a3, 0x8012
 /* 0119AC 80010DAC 8CE7AEF0 */  lw    $a3, %lo(gNumRacers)($a3)

@@ -793,10 +793,10 @@ UNUSED void set_dialogue_box_unused_flag(s32 dialogueBoxID) {
 }
 
 /**
- * Clear every flag from the selected dialogue box.
+ * Clear DIALOGUE_BOX_UNUSED_01 from the dialogue box.
  */
-UNUSED void dialogue_box_clear_flags(s32 dialogueBoxID) {
-    gDialogueBoxBackground[dialogueBoxID].flags &= DIALOGUE_BOX_UNUSED_02;
+UNUSED void dialogue_box_clear_unused_flag(s32 dialogueBoxID) {
+    gDialogueBoxBackground[dialogueBoxID].flags &= (0xFFFF & ~DIALOGUE_BOX_UNUSED_01);
 }
 
 /**
@@ -806,8 +806,11 @@ UNUSED void enable_dialogue_box_vertices(s32 dialogueBoxID) {
     gDialogueBoxBackground[dialogueBoxID].flags |= DIALOGUE_BOX_VERTS;
 }
 
-void func_800C56D0(s32 dialogueBoxID) {
-    gDialogueBoxBackground[dialogueBoxID].flags &= DIALOGUE_BOX_UNK_02;
+/**
+ * Clears the open flag from the dialogue box.
+*/
+void clear_dialogue_box_open_flag(s32 dialogueBoxID) {
+    gDialogueBoxBackground[dialogueBoxID].flags &= (DIALOGUE_BOX_VERTS + DIALOGUE_BOX_CLOSED);
 }
 
 /**
