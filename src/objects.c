@@ -316,7 +316,7 @@ void func_8000B290(void) {
         D_800DC74C[0] = 0;
         D_800DC74C[1] = 0;
     }
-    var_s0 = (struct TempStruct9 *) get_misc_asset(MISC_ASSET_UNK14);
+    var_s0 = (struct TempStruct9 *) get_misc_asset(ASSET_MISC_20);
     for (i = 0; i < 10; i++) {
         temp_a0_2 = var_s0[i].unk78;
         if (temp_a0_2 != 0) {
@@ -3085,7 +3085,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         if (vehicleID >= NUMBER_OF_PLAYER_VEHICLES) {
             vehicleID = VEHICLE_CAR;
         }
-        shield = ((struct RacerShieldGfx *) get_misc_asset(MISC_ASSET_SHIELD_DATA));
+        shield = ((struct RacerShieldGfx *) get_misc_asset(ASSET_MISC_SHIELD_DATA));
         vehicleID =  (vehicleID * 10) + var_a2;
         shield = shield + vehicleID;
         gShieldEffectObject->segment.trans.x_position = shield->x_position;
@@ -3151,7 +3151,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gObjectCurrDisplayList = *dList;
             gObjectCurrMatrix = *mtx;
             gObjectCurrVertexList = *vtxList;
-            magnet = (f32 *) get_misc_asset(MISC_ASSET_MAGNET_DATA);
+            magnet = (f32 *) get_misc_asset(ASSET_MISC_MAGNET_DATA);
             vehicleID = racer->vehicleID;
             if (vehicleID < VEHICLE_CAR || vehicleID >= NUMBER_OF_PLAYER_VEHICLES) {
                 vehicleID = VEHICLE_CAR;

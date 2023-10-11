@@ -4097,7 +4097,7 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
                         racer->balloon_level = 2;
                         levelMask = 2;
                     }
-                    balloonAsset = (s8 *) get_misc_asset(MISC_ASSET_UNK0C);
+                    balloonAsset = (s8 *) get_misc_asset(ASSET_MISC_12);
                     prevQuantity = racer->balloon_quantity;
                     racer->balloon_quantity = balloonAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2) + 1];
                     racer->unk209 |= 1;
@@ -4928,7 +4928,7 @@ void obj_loop_bubbler(Object *obj, s32 updateRate) {
 }
 
 void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry) {
-    obj->unk64 = (Object_64 *) ((s32) get_misc_asset(MISC_ASSET_UNK14) + (entry->unk8[0] << 7));
+    obj->unk64 = (Object_64 *) ((s32) get_misc_asset(ASSET_MISC_20) + (entry->unk8[0] << 7));
     obj->segment.level_entry = NULL;
 }
 

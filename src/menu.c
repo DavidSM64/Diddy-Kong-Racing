@@ -1867,7 +1867,7 @@ void func_80081218(void) {
     gSavefileData[3] = (u8 *)gSavefileData[2] + sp20;
     gSavefileData[3]->courseFlagsPtr = (u8 *)gSavefileData[3] + sizeof(Settings);
     gSavefileData[3]->balloonsPtr = (u8 *)gSavefileData[3]->courseFlagsPtr + sp28;
-    gCheatsAssetData = get_misc_asset(MISC_ASSET_UNK41);
+    gCheatsAssetData = get_misc_asset(ASSET_MISC_MAGIC_CODES);
     gNumberOfCheats = (s32)(*gCheatsAssetData);
     gMenuText = allocate_from_main_pool_safe(1024 * sizeof(char *), COLOUR_TAG_WHITE);
     load_menu_text(LANGUAGE_ENGLISH);
@@ -2630,7 +2630,7 @@ void menu_title_screen_init(void) {
     reset_sound_volume(FALSE);
     set_time_trial_enabled(FALSE);
     gTitleDemoIndex = 0;
-    sTitleScreenDemoIds = (s8 *) get_misc_asset(MISC_ASSET_TITLE_DEMOS);
+    sTitleScreenDemoIds = (s8 *) get_misc_asset(ASSET_MISC_TITLE_SCREEN_DEMO_IDS);
     numberOfPlayers = sTitleScreenDemoIds[DEMO_PLAYER_COUNT];
     gTitleDemoTimer = 0;
     if (numberOfPlayers == -2) {
@@ -6177,7 +6177,7 @@ s32 menu_file_select_loop(s32 updateRate) {
             if (gIsInAdventureTwo) {
                 settings->cutsceneFlags |= CUTSCENE_ADVENTURE_TWO;
             }
-            func_8009ABD8((s8 *)get_misc_asset(MISC_ASSET_UNK19), 0, gNumberOfActivePlayers, 0, 0, NULL);
+            func_8009ABD8((s8 *) get_misc_asset(ASSET_MISC_25), 0, gNumberOfActivePlayers, 0, 0, NULL);
             menu_init(MENU_NEWGAME_CINEMATIC);
             return MENU_RESULT_CONTINUE;
         }
@@ -7118,7 +7118,7 @@ s32 func_80092BE0(s32 mapId) {
     s32 index;
     s32 temp;
 
-    trackIdArray = (s8 *)get_misc_asset(MISC_ASSET_UNK1C);
+    trackIdArray = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
 
     index = 0;
     temp = -1;
@@ -9035,7 +9035,7 @@ void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s8 *arg5) {
         arg0++;
     }
 
-    if ((phi_v1 == 0) && (get_misc_asset(MISC_ASSET_UNK19) == (s32 *)arg0)) {
+    if ((phi_v1 == 0) && (get_misc_asset(ASSET_MISC_25) == (s32 *)arg0)) {
         D_8012684C = TRUE;
     } else {
         D_8012684C = FALSE;
