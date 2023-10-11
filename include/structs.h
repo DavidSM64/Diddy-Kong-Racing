@@ -726,7 +726,7 @@ typedef struct ObjectHeader {
   /* 0x24 */ ObjectHeader24 *unk24;
   /* 0x28 */ f32 shadeBrightness;
   /* 0x2C */ f32 shadeAmbient;
-  /* 0x30 */ u16 unk30;
+  /* 0x30 */ u16 flags;
   /* 0x32 */ s16 shadowGroup;
   /* 0x34 */ s16 unk34;
   /* 0x36 */ s16 waterEffectGroup;

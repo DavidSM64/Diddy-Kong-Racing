@@ -115,6 +115,7 @@ typedef struct LevelObjectEntry_SetupPoint {
     /* 0x08 */ u8 unk8;
     /* 0x09 */ u8 unk9;
     /* 0x0A */ u8 angleY;
+    /* 0x0B */ s8 vehicle;
 } LevelObjectEntry_SetupPoint;
 
 typedef struct LevelObjectEntry_Dino_Whale {

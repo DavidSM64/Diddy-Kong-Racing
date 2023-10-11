@@ -149,6 +149,11 @@ typedef struct ObjPropertyRacer {
     s32 unk4;
 } ObjPropertyRacer;
 
+typedef struct ObjPropertySetupPoint {
+ s32 unk0; 
+ s32 unk4; 
+} ObjPropertySetupPoint;
+
 typedef struct ObjProperties {
     union {
         ObjPropertyCommon common;
@@ -179,6 +184,7 @@ typedef struct ObjProperties {
         ObjPropertyWorldKey worldKey;
         ObjPropertyWeaponBalloon weaponBalloon;
         ObjPropertyRacer racer;
+        ObjPropertySetupPoint setupPoint;
     };
 } ObjProperties;
 

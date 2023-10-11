@@ -197,8 +197,8 @@ typedef struct RacerShieldGfx {
 } RacerShieldGfx;
 
 typedef struct BossRaceVehicles {
-    u8 playerVehicle;
-    u8 bossVehicle;
+    s8 playerVehicle;
+    s8 bossVehicle;
 } BossRaceVehicles;
 
 typedef struct AssetObjectHeaders {
