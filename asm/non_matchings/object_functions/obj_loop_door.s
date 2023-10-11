@@ -121,7 +121,7 @@ glabel obj_loop_door
 /* 03C740 8003BB40 81040013 */  lb    $a0, 0x13($t0)
 /* 03C744 8003BB44 00000000 */  nop   
 /* 03C748 8003BB48 309800FF */  andi  $t8, $a0, 0xff
-/* 03C74C 8003BB4C 0C030C7B */  jal   func_800C31EC
+/* 03C74C 8003BB4C 0C030C7B */  jal   set_current_text
 /* 03C750 8003BB50 03002025 */   move  $a0, $t8
 /* 03C754 8003BB54 8FA80044 */  lw    $t0, 0x44($sp)
 /* 03C758 8003BB58 8FA90040 */  lw    $t1, 0x40($sp)

@@ -106,7 +106,7 @@ enum ObjectBehaviours {
     BHV_WIZPIG_SHIP,
     BHV_ANIMATED_OBJECT_3,
     BHV_ANIMATED_OBJECT_4,
-    BHV_UNK_57,
+    BHV_TAJ_TELEPOINT,
     BHV_SILVER_COIN,
     BHV_BOOST,
     BHV_WARDEN_SMOKE,
@@ -197,8 +197,8 @@ typedef struct RacerShieldGfx {
 } RacerShieldGfx;
 
 typedef struct BossRaceVehicles {
-    u8 playerVehicle;
-    u8 bossVehicle;
+    s8 playerVehicle;
+    s8 bossVehicle;
 } BossRaceVehicles;
 
 typedef struct AssetObjectHeaders {
@@ -327,7 +327,7 @@ extern s32 osCicId; // Used for an Anti-Piracy check in render_3d_model
 Object *func_8000BF44(s32 arg0);
 void allocate_object_pools(void);
 void clear_object_pointers(void);
-void func_8000C604(void);
+void free_all_objects(void);
 s32 normalise_time(s32 timer);
 void func_8000CBC0(void);
 s32 func_8000CC20(Object *arg0);
@@ -341,7 +341,7 @@ void func_8000E194(void);
 void fontUseFont(void);
 s8 find_non_car_racers(void);
 s8 check_if_silver_coin_race(void);
-void func_8000E1EC(Object *obj, s32 vehicleID);
+void despawn_player_racer(Object *obj, s32 vehicleID);
 void set_time_trial_enabled(s32 arg0);
 u8 is_time_trial_enabled(void);
 u8 is_in_time_trial(void);
@@ -372,12 +372,12 @@ s16 get_taj_challenge_type(void);
 Object *find_taj_object(void);
 void func_8001A8D4(s32 arg0);
 s16 func_8001AE44(void);
-u32 func_8001AE54(void);
+u32 get_balloon_cutscene_timer(void);
 s32 func_8001B288(void);
 Object *func_8001B2E0(void);
-s32 func_8001B3AC(s32 arg0);
-Object *func_8001B640(void);
-s32 func_8001B650(void);
+s32 is_time_trial_ghost(Object* obj);
+Object *get_time_trial_ghost(void);
+s32 unbeaten_staff_time(void);
 s32 func_8001B738(s32 controllerIndex);
 u8 has_ghost_to_save(void);
 void set_ghost_none(void);
@@ -402,8 +402,8 @@ s32 *get_misc_asset(s32 index);
 s32 func_8001E2EC(s32 arg0);
 void func_8001E344(s32 arg0);
 void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3);
-s16 func_8001E440(void);
-void func_8001E450(s32 arg0);
+s16 get_cutscene_id(void);
+void set_cutscene_id(s32 arg0);
 void func_8001E45C(s32 arg0);
 s32 get_object_list_index(void);
 s8 func_8001F3B8(void);
@@ -450,7 +450,7 @@ s32 play_footstep_sounds(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 e
 void render_3d_misc(Object *this);
 Object *find_nearest_spectate_camera(Object *obj, s32 *cameraID);
 s32 init_object_shadow(Object *obj, ShadowData *shadow);
-s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool);
+s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool);
 void render_bubble_trap(ObjectTransform *trans, Object_68 *gfxData, Object *obj, s32 flags);
 void gParticlePtrList_flush(void);
 s32 init_object_shading(Object *obj, ShadeProperties *shading);
@@ -462,11 +462,14 @@ void light_setup_light_sources(Object *obj);
 s32 init_object_interaction_data(Object *arg0, ObjectInteraction *arg1);
 s32 func_8000FAC4(Object *obj, Object_6C *arg1);
 s32 obj_init_property_flags(s32 behaviorId);
-void func_8001B3C4(s32 arg0, s16 *playerId);
+void tt_ghost_beaten(s32 arg0, s16 *playerId);
 void func_8001EFA4(Object *, Object *);
 Object *func_80016C68(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis);
 void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entry, Object_CharacterSelect *charSelect, UNUSED s32 index);
 void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Animation *entry);
+s8 set_course_finish_flags(Settings *settings);
+void process_object_interactions(void);
+void render_3d_model(Object *obj);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -483,10 +486,9 @@ void func_80022E18(s32);                                 /* extern */
 void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);       /* extern */
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); /* extern */
 void func_80011134(Object *, s32);
-Object *func_8002342C(f32 x, f32 z);
+Object *find_furthest_telepoint(f32 x, f32 z);
 void func_8006017C(ObjectModel *);
 void func_80012F94(Object *);
-void render_3d_model(Object *);
 void func_800101AC(Object *, s32);
 void func_800135B8(Object *);
 void func_8000CC7C(Vehicle, u32, s32);
@@ -502,7 +504,6 @@ void func_80014090(Object*, s32, ObjectHeader*);
 void func_80008438(Object**, s32, s32);
 void func_8001E6EC(s8);
 void func_8001E89C(void);
-void func_800155B8(void);
 void func_800230D0(Object*, Object_Racer*);
 s32 func_8001955C(Object*, s8, u8, s16, s32, f32, f32*, f32*, f32*);
 void func_80010994(s32 updateRate);

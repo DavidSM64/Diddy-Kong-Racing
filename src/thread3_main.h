@@ -6,7 +6,7 @@
 #include "structs.h"
 #include "game.h"
 
-typedef enum RenderContext {
+typedef enum GameMode {
     GAMEMODE_INTRO = -1,
     GAMEMODE_INGAME,
     GAMEMODE_MENU,
@@ -14,7 +14,7 @@ typedef enum RenderContext {
     GAMEMODE_UNUSED_3,
     GAMEMODE_UNUSED_4,
     GAMEMODE_LOCKUP
-} RenderContext;
+} GameMode;
 
 enum LevelLoadType {
     LEVEL_LOAD_NORMAL,
@@ -72,6 +72,13 @@ enum MenuResultFlags {
     MENU_RESULT_FLAGS_200 = (1 << 9),
 };
 
+enum TrackFinishBits {
+    RACE_UNATTEMPTED,
+    RACE_VISITED = (1 << 0),
+    RACE_CLEARED = (1 << 1),
+    RACE_CLEARED_SILVER_COINS = (1 << 2),
+};
+
 /**
  * Bit 00: Read Eeprom Data flap times
  * Bit 01: Read Eeprom Data course times
@@ -117,7 +124,7 @@ void set_drumstick_unlock_transition(void);
 void func_8006D8E0(s32 arg0);
 void func_8006D8F0(s32 arg0);
 void func_8006D968(s8 *arg0);
-RenderContext get_game_mode(void);
+GameMode get_game_mode(void);
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId);
 void set_level_default_vehicle(Vehicle arg0);
 void set_vehicle_id_for_menu(Vehicle vehicleId);
@@ -128,9 +135,9 @@ void update_menu_scene(s32 arg0);
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId);
 void calc_and_alloc_heap_for_settings(void);
 void init_racer_headers(void);
-void func_8006E770(Settings *settings, s32 arg1);
-void func_8006E994(Settings *settings);
-void func_8006EA58(void);
+void clear_lap_records(Settings *settings, s32 arg1);
+void clear_game_progress(Settings *settings);
+void reset_save_data(void);
 Settings *get_settings(void);
 s8 is_game_paused(void);
 s8 is_postrace_viewport_active(void);
@@ -156,7 +163,7 @@ void begin_trophy_race_teleport(void);
 void begin_lighthouse_rocket_cutscene(void);
 void begin_level_teleport(s32 arg0);
 void set_pause_lockout_timer(u8 time);
-void func_8006F398(void);
+void swap_lead_player(void);
 void set_frame_blackout_timer(void);
 void pre_intro_loop(void);
 s32 is_controller_missing(void);

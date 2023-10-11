@@ -58,14 +58,14 @@ void process_subtitles(s32 arg0);
 void load_game_text_table(void);
 void free_game_text_table(void);
 void set_textbox_display_value(s32 arg0);
-void func_800C314C(void);
-void func_800C3158(s32 arg0, f32 arg1);
+void reset_delayed_text(void);
+void set_delayed_text(s32 arg0, f32 arg1);
 s32 func_800C3400(void);
 void process_onscreen_textbox(s32 arg0);
 void find_next_subtitle(void);
 s32 func_800C38B4(s32 arg0, TextBox *textbox);
 void render_subtitles(void);
-void func_800C31EC(s32 arg0);
+void set_current_text(s32 arg0);
 s32 dialogue_challenge_loop(void);
 
 #endif

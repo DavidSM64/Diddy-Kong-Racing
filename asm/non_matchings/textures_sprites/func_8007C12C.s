@@ -11,8 +11,8 @@ glabel func_8007C12C
 /* 07CD50 8007C150 AFB00014 */  sw    $s0, 0x14($sp)
 /* 07CD54 8007C154 04800007 */  bltz  $a0, .L8007C174
 /* 07CD58 8007C158 AC25635C */   sw    $a1, %lo(D_8012635C)($at)
-/* 07CD5C 8007C15C 3C0E8012 */  lui   $t6, %hi(D_80126354) # $t6, 0x8012
-/* 07CD60 8007C160 8DCE6354 */  lw    $t6, %lo(D_80126354)($t6)
+/* 07CD5C 8007C15C 3C0E8012 */  lui   $t6, %hi(gSpriteTableNum) # $t6, 0x8012
+/* 07CD60 8007C160 8DCE6354 */  lw    $t6, %lo(gSpriteTableNum)($t6)
 /* 07CD64 8007C164 3C0A8012 */  lui   $t2, %hi(D_80126358) # $t2, 0x8012
 /* 07CD68 8007C168 008E082A */  slt   $at, $a0, $t6
 /* 07CD6C 8007C16C 14200003 */  bnez  $at, .L8007C17C

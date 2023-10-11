@@ -369,8 +369,8 @@ glabel func_800AA600
 /* 0AB748 800AAB48 3C01800F */  lui   $at, %hi(D_800E87E0) # $at, 0x800f
 /* 0AB74C 800AAB4C C43387E0 */  lwc1  $f19, %lo(D_800E87E0)($at)
 /* 0AB750 800AAB50 C43287E4 */  lwc1  $f18, %lo(D_800E87E0 + 4)($at)
-/* 0AB754 800AAB54 3C18800E */  lui   $t8, %hi(D_800E2834) # $t8, 0x800e
-/* 0AB758 800AAB58 8F182834 */  lw    $t8, %lo(D_800E2834)($t8)
+/* 0AB754 800AAB54 3C18800E */  lui   $t8, %hi(gHudColour) # $t8, 0x800e
+/* 0AB758 800AAB58 8F182834 */  lw    $t8, %lo(gHudColour)($t8)
 /* 0AB75C 800AAB5C 240B0001 */  li    $t3, 1
 /* 0AB760 800AAB60 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
 /* 0AB764 800AAB64 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc
@@ -406,9 +406,9 @@ glabel func_800AA600
 /* 0AB7D8 800AABD8 8DC30000 */  lw    $v1, ($t6)
 /* 0AB7DC 800AABDC 860F0018 */  lh    $t7, 0x18($s0)
 /* 0AB7E0 800AABE0 84790016 */  lh    $t9, 0x16($v1)
-/* 0AB7E4 800AABE4 3C02800E */  lui   $v0, %hi(D_800E2834) # $v0, 0x800e
+/* 0AB7E4 800AABE4 3C02800E */  lui   $v0, %hi(gHudColour) # $v0, 0x800e
 /* 0AB7E8 800AABE8 01F90019 */  multu $t7, $t9
-/* 0AB7EC 800AABEC 8C422834 */  lw    $v0, %lo(D_800E2834)($v0)
+/* 0AB7EC 800AABEC 8C422834 */  lw    $v0, %lo(gHudColour)($v0)
 /* 0AB7F0 800AABF0 2401FFFE */  li    $at, -2
 /* 0AB7F4 800AABF4 3C058012 */  lui   $a1, %hi(D_80127180) # $a1, 0x8012
 /* 0AB7F8 800AABF8 3C0D8012 */  lui   $t5, %hi(gHudSprites) # $t5, 0x8012
@@ -498,8 +498,8 @@ glabel func_800AA600
 /* 0AB940 800AAD40 016D0019 */  multu $t3, $t5
 /* 0AB944 800AAD44 A7A0004E */  sh    $zero, 0x4e($sp)
 /* 0AB948 800AAD48 AFA00050 */  sw    $zero, 0x50($sp)
-/* 0AB94C 800AAD4C 3C0E800E */  lui   $t6, %hi(D_800E2834) # $t6, 0x800e
-/* 0AB950 800AAD50 8DCE2834 */  lw    $t6, %lo(D_800E2834)($t6)
+/* 0AB94C 800AAD4C 3C0E800E */  lui   $t6, %hi(gHudColour) # $t6, 0x800e
+/* 0AB950 800AAD50 8DCE2834 */  lw    $t6, %lo(gHudColour)($t6)
 /* 0AB954 800AAD54 240F0001 */  li    $t7, 1
 /* 0AB958 800AAD58 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
 /* 0AB95C 800AAD5C 24846CFC */  addiu $a0, %lo(gHUDCurrDisplayList) # addiu $a0, $a0, 0x6cfc

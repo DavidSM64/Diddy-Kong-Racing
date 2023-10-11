@@ -55,7 +55,7 @@ enum SilvereCoinBehaviours {
 
 enum EggPickupStatus {
     EGG_SPAWNED,
-    EGG_UNK_01,
+    EGG_COLLECTED,
     EGG_MOVING,
     EGG_IN_BASE,
     EGG_HATCHED
@@ -351,8 +351,8 @@ void obj_init_wballoonpop(Object *obj, LevelObjectEntry_WBalloonPop *entry);
 void obj_loop_wballoonpop(Object *obj, s32 updateRate);
 void obj_init_weapon(Object *obj, LevelObjectEntry_Weapon *entry);
 void obj_loop_weapon(Object *obj, s32 updateRate);
-void func_8003F0D0(void);
-void func_8003F0DC(void);
+void reset_rocket_sound_timer(void);
+void decrease_rocket_sound_timer(void);
 void obj_init_audioline(Object *obj, LevelObjectEntry_AudioLine *entry);
 void obj_init_audioreverb(Object *obj, LevelObjectEntry_AudioReverb *entry);
 void obj_init_texscroll(Object *obj, LevelObjectEntry_TexScroll *entry, s32 arg2);

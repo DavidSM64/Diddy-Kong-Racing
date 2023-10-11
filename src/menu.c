@@ -2083,7 +2083,7 @@ void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blu
     }
     get_timestamp_from_frames(frameCount, &minutes, &seconds, &hundredths);
     func_80068508(1);
-    func_8007BF1C(FALSE);
+    sprite_opaque(FALSE);
 
     gMenuImageStack[imageIndex].unk18 = minutes / 10;
     gMenuImageStack[imageIndex].unkC = xPos;
@@ -2123,7 +2123,7 @@ void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blu
     func_8009CA60(imageIndex);
 
     func_80068508(0);
-    func_8007BF1C(TRUE);
+    sprite_opaque(TRUE);
     sMenuGuiColourR = (u8)255;
     sMenuGuiColourG = (u8)255;
     sMenuGuiColourB = (u8)255;
@@ -2174,7 +2174,7 @@ void func_80081C04(s32 num, s32 x, s32 y, u8 red, u8 green, u8 blue, u8 alpha, u
     sMenuGuiColourG = green;
     sMenuGuiColourB = blue;
     sMenuGuiOpacity = alpha;
-    func_8007BF1C(0);
+    sprite_opaque(FALSE);
     func_80068508(1);
     gMenuImageStack->unk10 = y;
     for (var_s0_2 = 0; var_s0_2 < var_s3; var_s0_2++, var_s4_2 += 12) {
@@ -2182,7 +2182,7 @@ void func_80081C04(s32 num, s32 x, s32 y, u8 red, u8 green, u8 blue, u8 alpha, u
         gMenuImageStack->unk18 = sp38[var_s0_2];
         func_8009CA60(0);
     }
-    func_8007BF1C(1);
+    sprite_opaque(TRUE);
     func_80068508(0);
     sMenuGuiColourR = 255;
     sMenuGuiColourG = 255;
@@ -2382,7 +2382,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                             reset_render_settings(&sMenuCurrDisplayList);
                         }
                         func_80068508(1);
-                        func_8007BF1C(FALSE);
+                        sprite_opaque(FALSE);
                         gMenuImageStack[elem->unk14_a.value].unkC = xPos - 160;
                         gMenuImageStack[elem->unk14_a.value].unk10 = (-yPos - D_800DF7A0) + 120;
                         gMenuImageStack[elem->unk14_a.value].unk18 = elem->textFont;
@@ -2397,7 +2397,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                         sMenuGuiOpacity = elem->opacity;
                         func_8009CA60(elem->unk14_a.value);
                         func_80068508(0);
-                        func_8007BF1C(TRUE);
+                        sprite_opaque(TRUE);
                         break;
                     case 6:
                         func_80080E90(
@@ -2453,7 +2453,7 @@ void func_800828B8(void) {
     get_number_of_levels_and_worlds(&numLevels, &numWorlds);
 
     for (i = 0; i < numLevels; i++) {
-        settings->courseFlagsPtr[i] = 0;
+        settings->courseFlagsPtr[i] = RACE_UNATTEMPTED;
         for (numWorlds = 0; numWorlds < 3; numWorlds++) {
             settings->courseFlagsPtr[i] |= gSavefileData[numWorlds]->courseFlagsPtr[i];
         }
@@ -5702,7 +5702,7 @@ void render_file_select_menu(UNUSED s32 updateRate) {
         for (i = 0; i < 3; i++) {
             if (gSavefileInfo[i].isStarted != 0) {
                 s2 = 0xB;
-                func_8007BF1C(FALSE);
+                sprite_opaque(FALSE);
                 if (gSavefileInfo[i].isAdventure2 != 0) {
                     s2 = 0xC;
                 }
@@ -5718,7 +5718,7 @@ void render_file_select_menu(UNUSED s32 updateRate) {
                 render_menu_image(s5, gFileSelectElementPos[8] + gFileSelectButtons[i].x, gFileSelectElementPos[9] + gFileSelectButtons[i].y, 0, 0, 0, 128);
                 sMenuGuiColourG = 255;
                 sMenuGuiColourB = 255;
-                func_8007BF1C(TRUE);
+                sprite_opaque(TRUE);
             } else {
                 set_text_colour(255, 255, 255, 64, 255);
                 draw_text(&sMenuCurrDisplayList, gFileSelectElementPos[4] + gFileSelectButtons[i].x, gFileSelectElementPos[5] + gFileSelectButtons[i].y + y, gMenuText[ASSET_MENU_TEXT_NEW], ALIGN_MIDDLE_CENTER);
@@ -7045,7 +7045,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                     set_text_colour(0xFF, 0xFF, 0xFF, 0, 0xFF);
                     draw_text(&sMenuCurrDisplayList, gTwoPlayerRacerCountMenu.textPos[2] + gTwoPlayerRacerCountMenu.x - 1, gTwoPlayerRacerCountMenu.textPos[3] + gTwoPlayerRacerCountMenu.y - 1, gMenuText[ASSET_MENU_TEXT_NUMBEROFRACERS], ALIGN_MIDDLE_CENTER);
                     func_80068508(1);
-                    func_8007BF1C(FALSE);
+                    sprite_opaque(FALSE);
                     for (i = 0; i < 3; i++) {
                         s32 index = i * 2;
                         if (i == gMultiplayerSelectedNumberOfRacers) {
@@ -7067,13 +7067,13 @@ void render_track_select_setup_ui(s32 updateRate) {
                         sMenuGuiColourG = 0xFF;
                         sMenuGuiColourB = 0xFF;
                     }
-                    func_8007BF1C(TRUE);
+                    sprite_opaque(TRUE);
                     func_80068508(0);
                 }
             }
         }
         if (D_801269C8 < 4) {
-            func_8007BF1C(FALSE);
+            sprite_opaque(FALSE);
             i = 11;
             if (gIsInAdventureTwo) {
                 i = 12;
@@ -7087,7 +7087,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                 gMenuImageStack[i].unkC = 120.0f;
                 func_8009CA60(i);
             }
-            func_8007BF1C(TRUE);
+            sprite_opaque(TRUE);
         }
         if ((gNumberOfActivePlayers == 1) && (gMenuOptionCount >= 0) && (func_80092BE0(gTrackIdForPreview) >= 0)) {
             // Render small T.T. icon.
@@ -7160,7 +7160,7 @@ void menu_adventure_track_init(void) {
     mapId = settings->unk4C->unk2;
     gPlayerSelectVehicle[PLAYER_ONE] = get_map_default_vehicle(mapId);
     result = get_map_race_type(mapId);
-    if ((result == 5) || (result == 8) || (!(result & 0x40) && (!(settings->courseFlagsPtr[mapId] & 2)))) {
+    if ((result == 5) || (result == 8) || (!(result & 0x40) && (!(settings->courseFlagsPtr[mapId] & RACE_CLEARED)))) {
         temp = D_800E0758[mapId];
         if (temp != -1) {
             func_80000FDC(temp, 0, 1.0f);
@@ -7196,7 +7196,7 @@ void menu_adventure_track_init(void) {
     }
     assign_dialogue_box_id(7);
     if (get_map_race_type(mapId) & 0x40) {
-        func_800C31EC(get_map_world_id(mapId) + 0x3B);
+        set_current_text(get_map_world_id(mapId) + 0x3B);
     }
 }
 
@@ -7334,13 +7334,13 @@ s32 menu_adventure_track_loop(s32 updateRate) {
     mapId = ((Settings4C *)((u8 *)settings->unk4C + gTrackIdForPreview))->unk2;
     sp28 = FALSE;
     sp1C = 0;
-    if (settings->courseFlagsPtr[mapId] & 2) {
+    if (settings->courseFlagsPtr[mapId] & RACE_CLEARED) {
         sp1C = 1;
     }
-    if (settings->courseFlagsPtr[mapId] & 4) {
+    if (settings->courseFlagsPtr[mapId] & RACE_CLEARED_SILVER_COINS) {
         sp1C = 2;
     }
-    if (get_map_race_type(mapId) & 0x40) {
+    if (get_map_race_type(mapId) & RACETYPE_CHALLENGE) {
         sp28 = TRUE;
     }
     sp20 = FALSE;
@@ -7364,7 +7364,7 @@ s32 menu_adventure_track_loop(s32 updateRate) {
         if ((gMenuOptionCount != 0) || sp20 || sp28) {
             if (D_801267D8[0] & (A_BUTTON | START_BUTTON)) {
                 if (sp28) {
-                    func_800C31EC(0x2710);
+                    set_current_text(0x2710);
                 }
                 gMenuDelay = 1;
                 transition_begin(&sMenuTransitionFadeIn);
@@ -7373,7 +7373,7 @@ s32 menu_adventure_track_loop(s32 updateRate) {
                 play_sound_global(SOUND_MENU_BACK3, NULL);
                 if (sp20 || sp28) {
                     if (sp28) {
-                        func_800C31EC(0x2710);
+                        set_current_text(0x2710);
                     }
                     transition_begin(&sMenuTransitionFadeIn);
                     gMenuDelay = -1;
@@ -9833,7 +9833,7 @@ s32 taj_menu_loop(void) {
 
     switch (sCurrentMenuID) {
         case 0:
-            func_800C31EC(7);
+            set_current_text(ASSET_GAME_TEXT_7);
             sCurrentMenuID = 1;
             D_800DF4D8 = 1;
             break;
@@ -9903,17 +9903,17 @@ s32 taj_menu_loop(void) {
         case -3:
         case -2:
         case -1:
-            func_800C31EC(ASSET_GAME_TEXT_8 - sCurrentMenuID); //Wouldn't this be ASSET_GAME_TEXT_9?
+            set_current_text(ASSET_GAME_TEXT_8 - sCurrentMenuID); //Wouldn't this be ASSET_GAME_TEXT_9?
             sCurrentMenuID = 4;
             break;
         case -4:
-            func_800C31EC(ASSET_GAME_TEXT_17);
+            set_current_text(ASSET_GAME_TEXT_17);
             gNextTajChallengeMenu = 0;
             sCurrentMenuID = 1;
             gDialogueSubmenu = 3;
             break;
         case -5:
-            func_800C31EC(ASSET_GAME_TEXT_21);
+            set_current_text(ASSET_GAME_TEXT_21);
             gNextTajChallengeMenu = 0;
             sCurrentMenuID = 7;
             gDialogueSubmenu = 0;
@@ -9921,7 +9921,7 @@ s32 taj_menu_loop(void) {
         case -8:
         case -7:
         case -6:
-            func_800C31EC(ASSET_GAME_TEXT_12 - sCurrentMenuID);
+            set_current_text(ASSET_GAME_TEXT_12 - sCurrentMenuID);
             sCurrentMenuID = 6;
             gDialogueSubmenu = 0;
             break;

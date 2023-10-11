@@ -1,7 +1,7 @@
 glabel func_80021600
 /* 022200 80021600 27BDFEA0 */  addiu $sp, $sp, -0x160
-/* 022204 80021604 3C0E8012 */  lui   $t6, %hi(D_8011AE7A) # $t6, 0x8012
-/* 022208 80021608 85CEAE7A */  lh    $t6, %lo(D_8011AE7A)($t6)
+/* 022204 80021604 3C0E8012 */  lui   $t6, %hi(gCutsceneID) # $t6, 0x8012
+/* 022208 80021608 85CEAE7A */  lh    $t6, %lo(gCutsceneID)($t6)
 /* 02220C 8002160C AFBF0044 */  sw    $ra, 0x44($sp)
 /* 022210 80021610 AFBE0040 */  sw    $fp, 0x40($sp)
 /* 022214 80021614 AFB7003C */  sw    $s7, 0x3c($sp)

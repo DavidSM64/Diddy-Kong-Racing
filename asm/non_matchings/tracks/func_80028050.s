@@ -357,7 +357,7 @@ glabel func_80028050
 /* 0291D0 800285D0 8CA5B110 */  lw    $a1, %lo(D_8011B110)($a1)
 /* 0291D4 800285D4 8FA40074 */  lw    $a0, 0x74($sp)
 /* 0291D8 800285D8 00057A00 */  sll   $t7, $a1, 8
-/* 0291DC 800285DC 0C01ED1B */  jal   func_8007B46C
+/* 0291DC 800285DC 0C01ED1B */  jal   set_animated_texture_header
 /* 0291E0 800285E0 01E02825 */   move  $a1, $t7
 /* 0291E4 800285E4 8E630000 */  lw    $v1, ($s3)
 /* 0291E8 800285E8 3C010700 */  lui   $at, 0x700

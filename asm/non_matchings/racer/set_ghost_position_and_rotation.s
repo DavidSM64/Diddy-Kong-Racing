@@ -14,7 +14,7 @@ glabel set_ghost_position_and_rotation
 /* 05AA54 80059E54 AFB00018 */  sw    $s0, 0x18($sp)
 /* 05AA58 80059E58 30AE0001 */  andi  $t6, $a1, 1
 /* 05AA5C 80059E5C 00808025 */  move  $s0, $a0
-/* 05AA60 80059E60 0C006CEB */  jal   func_8001B3AC
+/* 05AA60 80059E60 0C006CEB */  jal   is_time_trial_ghost
 /* 05AA64 80059E64 AFAE005C */   sw    $t6, 0x5c($sp)
 /* 05AA68 80059E68 8FA5005C */  lw    $a1, 0x5c($sp)
 /* 05AA6C 80059E6C 10400002 */  beqz  $v0, .L80059E78

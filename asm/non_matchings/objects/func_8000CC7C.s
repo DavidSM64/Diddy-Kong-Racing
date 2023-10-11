@@ -17,9 +17,9 @@ glabel func_8000CC7C
 /* 00D884 8000CC84 A020AD20 */  sb    $zero, %lo(D_8011AD20)($at)
 /* 00D888 8000CC88 3C018012 */  lui   $at, %hi(D_8011ADB0) # $at, 0x8012
 /* 00D88C 8000CC8C AC20ADB0 */  sw    $zero, %lo(D_8011ADB0)($at)
-/* 00D890 8000CC90 3C018012 */  lui   $at, %hi(D_8011ADC4) # $at, 0x8012
+/* 00D890 8000CC90 3C018012 */  lui   $at, %hi(gFirstTimeFinish) # $at, 0x8012
 /* 00D894 8000CC94 AFB1001C */  sw    $s1, 0x1c($sp)
-/* 00D898 8000CC98 A020ADC4 */  sb    $zero, %lo(D_8011ADC4)($at)
+/* 00D898 8000CC98 A020ADC4 */  sb    $zero, %lo(gFirstTimeFinish)($at)
 /* 00D89C 8000CC9C 3C118012 */  lui   $s1, %hi(D_8011AF00) # $s1, 0x8012
 /* 00D8A0 8000CCA0 AFBE0038 */  sw    $fp, 0x38($sp)
 /* 00D8A4 8000CCA4 3C018012 */  lui   $at, %hi(gNumRacers) # $at, 0x8012
@@ -37,7 +37,7 @@ glabel func_8000CC7C
 /* 00D8D4 8000CCD4 AFB40028 */  sw    $s4, 0x28($sp)
 /* 00D8D8 8000CCD8 AFB20020 */  sw    $s2, 0x20($sp)
 /* 00D8DC 8000CCDC A2200000 */  sb    $zero, ($s1)
-/* 00D8E0 8000CCE0 0C01486E */  jal   func_800521B8
+/* 00D8E0 8000CCE0 0C01486E */  jal   set_taj_status
 /* 00D8E4 8000CCE4 00002025 */   move  $a0, $zero
 /* 00D8E8 8000CCE8 0C01AF6C */  jal   get_current_level_header
 /* 00D8EC 8000CCEC 00000000 */   nop   
@@ -1020,8 +1020,8 @@ glabel L8000D98C
 /* 00E694 8000DA94 26B50004 */   addiu $s5, $s5, 4
 /* 00E698 8000DA98 00009025 */  move  $s2, $zero
 .L8000DA9C:
-/* 00E69C 8000DA9C 3C15800E */  lui   $s5, %hi(D_800DC718) # $s5, 0x800e
-/* 00E6A0 8000DAA0 26B5C718 */  addiu $s5, %lo(D_800DC718) # addiu $s5, $s5, -0x38e8
+/* 00E69C 8000DA9C 3C15800E */  lui   $s5, %hi(gGhostObj) # $s5, 0x800e
+/* 00E6A0 8000DAA0 26B5C718 */  addiu $s5, %lo(gGhostObj) # addiu $s5, $s5, -0x38e8
 /* 00E6A4 8000DAA4 0C0166D3 */  jal   free_tt_ghost_data
 /* 00E6A8 8000DAA8 AEA00000 */   sw    $zero, ($s5)
 /* 00E6AC 8000DAAC 3C118012 */  lui   $s1, %hi(D_8011AD38) # $s1, 0x8012
@@ -1384,7 +1384,7 @@ glabel L8000D98C
 /* 00EBE8 8000DFE8 01D97804 */  sllv  $t7, $t9, $t6
 /* 00EBEC 8000DFEC 030F6825 */  or    $t5, $t8, $t7
 /* 00EBF0 8000DFF0 A6ED0014 */  sh    $t5, 0x14($s7)
-/* 00EBF4 8000DFF4 0C01486E */  jal   func_800521B8
+/* 00EBF4 8000DFF4 0C01486E */  jal   set_taj_status
 /* 00EBF8 8000DFF8 24040002 */   li    $a0, 2
 /* 00EBFC 8000DFFC 0C0274CC */  jal   set_next_taj_challenge_menu
 /* 00EC00 8000E000 02402025 */   move  $a0, $s2
@@ -1414,7 +1414,7 @@ glabel L8000D98C
 /* 00EC54 8000E054 AC20ADB0 */  sw    $zero, %lo(D_8011ADB0)($at)
 /* 00EC58 8000E058 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 00EC5C 8000E05C 44816000 */  mtc1  $at, $f12
-/* 00EC60 8000E060 0C01AF44 */  jal   func_8006BD10
+/* 00EC60 8000E060 0C01AF44 */  jal   start_level_music
 /* 00EC64 8000E064 00000000 */   nop   
 .L8000E068:
 /* 00EC68 8000E068 0C01C42C */  jal   set_free_queue_state

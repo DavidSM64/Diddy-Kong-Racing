@@ -34,8 +34,8 @@ glabel func_80018CE0
 /* 019960 80018D60 0C019884 */  jal   get_viewport_count
 /* 019964 80018D64 00000000 */   nop   
 /* 019968 80018D68 144001E4 */  bnez  $v0, .L800194FC
-/* 01996C 80018D6C 3C0C8012 */   lui   $t4, %hi(D_8011AE60) # $t4, 0x8012
-/* 019970 80018D70 8D8CAE60 */  lw    $t4, %lo(D_8011AE60)($t4)
+/* 01996C 80018D6C 3C0C8012 */   lui   $t4, %hi(gObjectListStart) # $t4, 0x8012
+/* 019970 80018D70 8D8CAE60 */  lw    $t4, %lo(gObjectListStart)($t4)
 /* 019974 80018D74 3C0D8012 */  lui   $t5, %hi(gObjectCount) # $t5, 0x8012
 /* 019978 80018D78 8DADAE5C */  lw    $t5, %lo(gObjectCount)($t5)
 /* 01997C 80018D7C AFAC00F4 */  sw    $t4, 0xf4($sp)

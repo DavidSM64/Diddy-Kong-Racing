@@ -72,8 +72,8 @@ glabel func_8007BF34
 .L8007C038:
 /* 07CC38 8007C038 A5000000 */  sh    $zero, ($t0)
 /* 07CC3C 8007C03C ACE50000 */  sw    $a1, ($a3)
-/* 07CC40 8007C040 3C19800E */  lui   $t9, %hi(D_800DE7C4) # $t9, 0x800e
-/* 07CC44 8007C044 8F39E7C4 */  lw    $t9, %lo(D_800DE7C4)($t9)
+/* 07CC40 8007C040 3C19800E */  lui   $t9, %hi(gSpriteOpaque) # $t9, 0x800e
+/* 07CC44 8007C044 8F39E7C4 */  lw    $t9, %lo(gSpriteOpaque)($t9)
 /* 07CC48 8007C048 00A1C024 */  and   $t8, $a1, $at
 /* 07CC4C 8007C04C 17200023 */  bnez  $t9, .L8007C0DC
 /* 07CC50 8007C050 03002825 */   move  $a1, $t8

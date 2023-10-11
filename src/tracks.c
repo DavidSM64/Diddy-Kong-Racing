@@ -941,7 +941,7 @@ void render_level_geometry_and_objects(void) {
                 render_object_shadow(obj, obj->shadow);
             }
             render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
-            if (obj->waterEffect != NULL && obj->segment.header->unk30 & 0x10) {
+            if (obj->waterEffect != NULL && obj->segment.header->flags & 0x10) {
                 render_object_water_effects(obj, obj->waterEffect);
             }
         }
@@ -963,7 +963,7 @@ void render_level_geometry_and_objects(void) {
                 render_object_shadow(obj, obj->shadow);
             }
             render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
-            if ((obj->waterEffect != NULL) && (obj->segment.header->unk30 & 0x10)) {
+            if ((obj->waterEffect != NULL) && (obj->segment.header->flags & 0x10)) {
                 render_object_water_effects(obj, obj->waterEffect);
             }
         }
@@ -1008,7 +1008,7 @@ void render_level_geometry_and_objects(void) {
                     render_object_shadow(obj, obj->shadow);
                 }
                 render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, obj);
-                if ((obj->waterEffect != 0) && (obj->segment.header->unk30 & 0x10)) {
+                if ((obj->waterEffect != 0) && (obj->segment.header->flags & 0x10)) {
                     render_object_water_effects(obj, obj->waterEffect);
                 }
             }
@@ -1802,7 +1802,7 @@ void free_track(void) {
         free_object(gSkydomeSegment);
         gParticlePtrList_flush();
     }
-    func_8000C604();
+    free_all_objects();
     gCurrentLevelModel = NULL;
 }
 
@@ -2228,7 +2228,7 @@ void func_8002E234(Object *obj, s32 bool) {
     if (bool) {
         D_8011D0B8 = 0;
         obj->waterEffect->meshStart = D_8011D364;
-        D_8011D0C0 = func_8007B46C(obj->waterEffect->texture, obj->waterEffect->textureFrame << 8);
+        D_8011D0C0 = set_animated_texture_header(obj->waterEffect->texture, obj->waterEffect->textureFrame << 8);
         D_8011D0CE = obj->segment.header->unk48 + yPos;
         D_8011D0CC = obj->segment.header->unk46 + yPos;
         if ((gWaveBlockCount == 0) || ((get_viewport_count() <= 0))) {
