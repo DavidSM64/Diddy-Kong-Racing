@@ -396,7 +396,7 @@ u8 func_800A0190(void) {
 */
 void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s32 updateRate) {
     s32 sp2C;
-    Object_64* racer;
+    Object_Racer *racer;
 
     gHudCurrentViewport = get_current_viewport();
     if (D_8012718A) {
@@ -426,16 +426,16 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 }
             }
             if (gShowHUD == 0) {
-                racer = arg3->unk64;
+                racer = (Object_Racer *) arg3->unk64;
                 if (D_8012718A) {
-                    D_80126D10 = 1 - racer->racer.playerIndex;
+                    D_80126D10 = 1 - racer->playerIndex;
                 } else {
-                    D_80126D10 = racer->racer.playerIndex;
+                    D_80126D10 = racer->playerIndex;
                 }
                 gCurrentHud = gPlayerHud[gHudCurrentViewport];
                 if (get_cutscene_id() != 10) {
                     if (gHUDNumPlayers == ONE_PLAYER) {
-                        if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->racer.raceFinished == FALSE && ((gHudLevelHeader->race_type == RACETYPE_DEFAULT) || gHudLevelHeader->race_type == RACETYPE_HORSESHOE_GULCH) && D_80126D34) {
+                        if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->raceFinished == FALSE && ((gHudLevelHeader->race_type == RACETYPE_DEFAULT) || gHudLevelHeader->race_type == RACETYPE_HORSESHOE_GULCH) && D_80126D34) {
                             gShowCourseDirections = 1 - gShowCourseDirections;
                             play_sound_global((SOUND_TING_HIGHER + gShowCourseDirections), NULL);
                             if (gShowCourseDirections) {
@@ -444,15 +444,15 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                                 D_800E27B8 = 0;
                             }
                         }
-                    } else if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->racer.raceFinished == FALSE && !(gHudLevelHeader->race_type & RACETYPE_CHALLENGE) && D_80126D34) {
-                        if (D_800E2794[gHUDNumPlayers][racer->racer.playerIndex] < PLAYER_FOUR) {
-                             D_800E2794[gHUDNumPlayers][racer->racer.playerIndex]++;
+                    } else if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->raceFinished == FALSE && !(gHudLevelHeader->race_type & RACETYPE_CHALLENGE) && D_80126D34) {
+                        if (D_800E2794[gHUDNumPlayers][racer->playerIndex] < PLAYER_FOUR) {
+                             D_800E2794[gHUDNumPlayers][racer->playerIndex]++;
                         } else {
-                             D_800E2794[gHUDNumPlayers][racer->racer.playerIndex] = PLAYER_ONE;
+                             D_800E2794[gHUDNumPlayers][racer->playerIndex] = PLAYER_ONE;
                         }
-                        play_sound_global((SOUND_TING_HIGHEST - (D_800E2794[gHUDNumPlayers][racer->racer.playerIndex] == 0)), NULL);
+                        play_sound_global((SOUND_TING_HIGHEST - (D_800E2794[gHUDNumPlayers][racer->playerIndex] == 0)), NULL);
                     }
-                    if (get_buttons_pressed_from_player(D_80126D10) & R_CBUTTONS && racer->racer.raceFinished == FALSE && D_80126D34 && D_80126CD0 == 0) {
+                    if (get_buttons_pressed_from_player(D_80126D10) & R_CBUTTONS && racer->raceFinished == FALSE && D_80126D34 && D_80126CD0 == 0) {
                         gHudToggleSettings[gHUDNumPlayers] = 1 - gHudToggleSettings[gHUDNumPlayers];
                         if (gHudToggleSettings[gHUDNumPlayers] == 0) {
                             play_sound_global(SOUND_TING_LOW, NULL);
@@ -480,7 +480,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 tex_enable_modes(0xFFFFFFFF);
                 tex_disable_modes(RENDER_Z_COMPARE);
                 sprite_opaque(FALSE);
-                if (check_if_showing_cutscene_camera() == FALSE && D_80126D34 == FALSE && racer->racer.playerIndex == PLAYER_ONE) {
+                if (check_if_showing_cutscene_camera() == FALSE && D_80126D34 == FALSE && racer->playerIndex == PLAYER_ONE) {
                     if (D_80126D35 != 0) {
                         D_80126D28 = sins_f(D_80126D2C) * D_80126D30 * 8.0f;
                         D_80126D2C += updateRate << 0xB;
@@ -548,11 +548,11 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         }
                     }
                 }
-                if (racer->racer.raceFinished == TRUE) {
+                if (racer->raceFinished == TRUE) {
                     func_80068508(1);
                     if (is_in_time_trial()) {
                         render_time_trial_finish((Object_Racer *) racer, updateRate);
-                    } else if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER && racer->racer.unk1AC == 1) {
+                    } else if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER && racer->unk1AC == 1) {
                         if (is_in_two_player_adventure()) {
                             if (get_current_level_race_type() == RACETYPE_BOSS) {
                                 goto showFinish;
@@ -817,19 +817,19 @@ void render_hud_banana_challenge(s32 arg0, Object *obj, s32 updateRate) {
 /**
  * The Egg Collector challenge mode displays the icons of each player and their score.
 */
-void render_hud_challenge_eggs(s32 arg0, Object *arg1, s32 updateRate) {
-    Object_Racer *racer = &arg1->unk64->racer;
+void render_hud_challenge_eggs(s32 arg0, Object *obj, s32 updateRate) {
+    Object_Racer *racer = &obj->unk64->racer;
     if (racer->raceFinished == FALSE) {
         func_80068508(1);
         render_race_start(arg0, updateRate);
-        render_weapon_hud(arg1, updateRate);
+        render_weapon_hud(obj, updateRate);
         if ((127 - (updateRate * 2)) >= gCurrentHud->unk67A) {
             gCurrentHud->unk67A += updateRate * 2;
         } else {
             gCurrentHud->unk67A = (gCurrentHud->unk67A + (updateRate * 2)) - 255;
         }
         if (gNumActivePlayers != 2) {
-            func_800A14F0(arg1, updateRate);
+            func_800A14F0(obj, updateRate);
         }
         func_80068508(0);
     }
@@ -1056,13 +1056,13 @@ void render_hud_taj_race(s32 arg0, Object *obj, s32 updateRate) {
  * In two player adventure, the icon of the character of the player sitting out is displayed.
 */
 void render_hud_hubworld(Object *obj, s32 updateRate) {
-    Object_64 *obj64;
+    Object_Racer *racer;
     unk80126CDC *temp_a3;
 
     if (get_viewport_count() == 0) {
-        obj64 = obj->unk64;
+        racer = (Object_Racer *) obj->unk64;
         func_80068508(1);
-        render_balloon_count(obj64);
+        render_balloon_count(racer);
         render_speedometer(obj, updateRate);
         if (is_in_two_player_adventure()) {
             temp_a3 = (unk80126CDC *) &gCurrentHud->unk720;
@@ -1375,14 +1375,14 @@ void func_800A3870(void) {
 */
 void render_speedometer(Object *obj, UNUSED s32 updateRate) {
     f32 vel;
-    Object_64* racer64;
+    Object_Racer *racer;
     s32 opacity;
 
     if (gNumActivePlayers == 1) {
         if (!check_if_showing_cutscene_camera()) {
-            racer64 = obj->unk64;
-            if (racer64->racer.raceFinished == FALSE) {
-                if (racer64->racer.vehicleID == VEHICLE_PLANE) {
+            racer = (Object_Racer *) obj->unk64;
+            if (racer->raceFinished == FALSE) {
+                if (racer->vehicleID == VEHICLE_PLANE) {
                     vel = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.y_velocity * obj->segment.y_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity));
                 } else {
                     vel = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity));
@@ -1391,13 +1391,13 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
                     D_800E2838 = vel;
                 }
                 vel *= 4.0f;
-                if (racer64->racer.drift_direction != 0) {
+                if (racer->drift_direction != 0) {
                     vel += 7.0f;
                 }
                 if (vel > 100.0f) {
                     vel = 100.0f;
                 }
-                if (racer64->racer.velocity > 0.0f) {
+                if (racer->velocity > 0.0f) {
                     vel = 0.0f;
                 }
                 vel = 100.0f - vel;
@@ -1653,7 +1653,7 @@ void render_silver_coin_counter(Object_Racer *racer, s32 updateRate) {
  * in the middle of the screen.
  * Uses a 3 step process to play the sounds, display the position, then slide it offscreen.
 */
-void render_race_finish_position(Object_64 *obj, s32 updateRate) {
+void render_race_finish_position(Object_Racer *racer, s32 updateRate) {
     unk800A497C *temp_a3;
     unk800A497C *temp_s0;
     s8 drawPosition;
@@ -1670,7 +1670,7 @@ void render_race_finish_position(Object_64 *obj, s32 updateRate) {
             play_sound_global(SOUND_VOICE_TT_FINISH, &gHUDVoiceSoundMask);
             D_800E2770->unk2 = 127;
             D_800E2770->unk3 = 0;
-            D_800E2770->unkC = obj->racer.playerIndex;
+            D_800E2770->unkC = racer->playerIndex;
             temp_a3->unk1A = 1;
             break;
         case 1:
@@ -1692,7 +1692,7 @@ void render_race_finish_position(Object_64 *obj, s32 updateRate) {
                 if (temp_a3->unk1C == 2) {
                     temp_a3->unk1A = 2;
                     play_sound_global(SOUND_WHOOSH1, NULL);
-                    if (D_800E2770->unkC == obj->racer.playerIndex) {
+                    if (D_800E2770->unkC == racer->playerIndex) {
                         D_800E2770->unk3 = -1;
                     }
                 }
@@ -2163,7 +2163,7 @@ void render_time_trial_finish(Object_Racer *racer, s32 updateRate) {
 /**
  * Render the icon, and the number of collectable balloons onscreen.
 */
-void render_balloon_count(UNUSED Object_64 *arg0) {
+void render_balloon_count(UNUSED Object_Racer *racer) {
     s32 balloonCount;
     s32 div;
     UNUSED s32 pad;
@@ -2245,25 +2245,25 @@ void func_800A74EC(u16 soundID, s32 arg1) {
  * The icon will spin and grow as it appears, then spins and shrinks as it disappears.
 */
 void render_weapon_hud(Object *obj, s32 updateRate) {
-    Object_64 *racerObj;
+    Object_Racer *racer;
     s32 temp_a0;
 
-    racerObj = obj->unk64;
-    if (racerObj->racer.raceFinished == FALSE) {
+    racer = (Object_Racer *) obj->unk64;
+    if (racer->raceFinished == FALSE) {
         set_viewport_tv_type(TV_TYPE_NTSC);
-        temp_a0 = (racerObj->racer.balloon_type * 3) + (racerObj->racer.balloon_level);
-        if (gCurrentHud->unk5D != racerObj->racer.balloon_level) {
-            if (racerObj->racer.balloon_level == 0) {
+        temp_a0 = (racer->balloon_type * 3) + (racer->balloon_level);
+        if (gCurrentHud->unk5D != racer->balloon_level) {
+            if (racer->balloon_level == 0) {
                 gCurrentHud->unk5C = 120;
             } else if (gNumActivePlayers == 1) {
                 gCurrentHud->unk5C = 0;
             } else {
                 gCurrentHud->unk5C = 120;
             }
-            gCurrentHud->unk5D = racerObj->racer.balloon_level;
+            gCurrentHud->unk5D = racer->balloon_level;
         }
-        if (racerObj->racer.balloon_quantity > 0) {
-            if (gCurrentHud->unk5B < 16 && racerObj->racer.unk170 == 0) {
+        if (racer->balloon_quantity > 0) {
+            if (gCurrentHud->unk5B < 16 && racer->unk170 == 0) {
                 gCurrentHud->unk44 = gCurrentHud->unk5B << 12;
                 gCurrentHud->unk48 = (gCurrentHud->unk5B * 0.04687) + 0.25;
             } else {
@@ -2289,15 +2289,15 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
             }
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk40);
             sprite_opaque(FALSE);
-            if (racerObj->racer.balloon_quantity > 3) {
+            if (racer->balloon_quantity > 3) {
                 gCurrentHud->unk63A = -128;
             }
-            if (racerObj->racer.balloon_quantity < 3) {
+            if (racer->balloon_quantity < 3) {
                 gCurrentHud->unk63A -= updateRate;
             }
-            if (racerObj->racer.balloon_quantity >= 3 || ((((gCurrentHud->unk63A + 128) % 32) < 20) && racerObj->racer.balloon_quantity != 1)) {
+            if (racer->balloon_quantity >= 3 || ((((gCurrentHud->unk63A + 128) % 32) < 20) && racer->balloon_quantity != 1)) {
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                gCurrentHud->unk638 = racerObj->racer.balloon_quantity - 1;
+                gCurrentHud->unk638 = racer->balloon_quantity - 1;
                 func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk620);
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }

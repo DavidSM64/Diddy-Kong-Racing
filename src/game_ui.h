@@ -463,7 +463,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **tris, Object *obj, s32 upda
 void render_weapon_hud(Object *obj, s32 updateRate);
 void render_race_start(s32 arg0, s32 updateRate);
 void render_racer_bananas(Object_Racer *obj, s32 updateRate);
-void render_race_finish_position(Object_64 *racer, s32 updateRate);
+void render_race_finish_position(Object_Racer *racer, s32 updateRate);
 void render_speedometer(Object *obj, s32 updateRate);
 void render_lap_count(Object_Racer *racer, s32 updateRate);
 void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtxList, s32 updateRate);
@@ -480,7 +480,7 @@ void func_800A19A4(Object_Racer *racer, s32 updateRate);
 void func_800A14F0(Object *racerObj, s32 updateRate);
 void render_race_position(Object_Racer *racer, s32 updateRate);
 void render_hud_banana_challenge(s32 arg0, Object *obj, s32 updateRate);
-void render_balloon_count(Object_64 *racer);
+void render_balloon_count(Object_Racer *racer);
 void render_treasure_hud(Object_Racer *racer);
 void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspectRatio);
 void render_timer(s32 arg0, s32 arg1, s32 minutes, s32 seconds, s32 hundredths, s32 someBool);
@@ -488,7 +488,7 @@ void render_timer(s32 arg0, s32 arg1, s32 minutes, s32 seconds, s32 hundredths, 
 // Non Matching
 void func_800AA600(Gfx **dList, MatrixS **mtx, Vertex **vtxList, unk80126CDC **arg3);
 void func_800A277C(s32, Object*, s32);
-void func_800A6254(Object_64* obj, s32 updateRate);
+void func_800A6254(Object_Racer *racer, s32 updateRate);
 void func_800A1E48(Object*, s32);
 void func_8009F034(void);
 
