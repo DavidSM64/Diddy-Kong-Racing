@@ -144,14 +144,14 @@ As of October 10th, 2023, this is our current score:
  We are collecting silver coins in Pirate Lagoon. (2/8 silver coins)
  ===================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 31.11% Complete -------------------------
-                     # Documented functions: 683
-                    # Undocumented remaining: 887
+ ------------------------- 33.35% Complete -------------------------
+                     # Documented functions: 740
+                    # Undocumented remaining: 830
  --------------------------- Game Status ---------------------------
-              Balloons: 16/47, Keys: 2/4, Trophies: 1/5
+              Balloons: 17/47, Keys: 2/4, Trophies: 1/5
                T.T. Amulets: 1/4, Wizpig Amulets: 1/4
  -------------------------------------------------------------------
-             We are racing in Frosty Village. (Lap 2/3)
+       We are battling in Icicle Pyramid. (3 opponents remain)
  ===================================================================
 ```
 <!-- README_SCORE_END -->
