@@ -405,7 +405,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
     gHudLevelHeader = get_current_level_header();
     if (arg3 == NULL) {
         if (get_cutscene_id() == 10) {
-            arg3 = get_racer_object_by_port(0);
+            arg3 = get_racer_object_by_port(PLAYER_ONE);
         }
     }
     if (arg3 != NULL && !(gHudLevelHeader->unkBC & 2)) {
@@ -2323,27 +2323,27 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
 */
 void render_magnet_reticle(Object *racerObj) {
     unk80068514_arg4 *entry;
-    unk80126CDC *temp;
+    unk80126CDC *hud;
     Object_Racer *racer;
     s32 hudElementIndex;
 
     if(entry){} // Fakematch
     racer = &racerObj->unk64->racer;
     if (racer->magnetTargetObj != NULL && get_current_viewport() == racer->playerIndex) {
-        temp = gCurrentHud;
-        temp->unk22C = racer->magnetTargetObj->segment.trans.x_position;
-        temp->unk230 = racer->magnetTargetObj->segment.trans.y_position;
-        temp->unk234 = racer->magnetTargetObj->segment.trans.z_position;
-        hudElementIndex = temp->unk226;
+        hud = gCurrentHud;
+        hud->unk22C = racer->magnetTargetObj->segment.trans.x_position;
+        hud->unk230 = racer->magnetTargetObj->segment.trans.y_position;
+        hud->unk234 = racer->magnetTargetObj->segment.trans.z_position;
+        hudElementIndex = hud->unk226;
         entry = gAssetHudElements->entry[hudElementIndex];
         if (entry == NULL) {
             return;
         }
         gAssetHudElementStaleCounter[hudElementIndex] = 0;
-        temp = (unk80126CDC *) &temp->unk220;
+        hud = (unk80126CDC *) &hud->unk220;
         func_80066CDC(&gHUDCurrDisplayList, &gHUDCurrMatrix);
         func_80068408(&gHUDCurrDisplayList, &gHUDCurrMatrix);
-        render_sprite_billboard(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (Object *) temp, entry, RENDER_Z_UPDATE);
+        render_sprite_billboard(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (Object *) hud, entry, RENDER_Z_UPDATE);
     }
 }
 
