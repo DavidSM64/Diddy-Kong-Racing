@@ -106,7 +106,7 @@ enum ObjectBehaviours {
     BHV_WIZPIG_SHIP,
     BHV_ANIMATED_OBJECT_3,
     BHV_ANIMATED_OBJECT_4,
-    BHV_UNK_57,
+    BHV_TAJ_TELEPOINT,
     BHV_SILVER_COIN,
     BHV_BOOST,
     BHV_WARDEN_SMOKE,
@@ -486,7 +486,7 @@ void func_80022E18(s32);                                 /* extern */
 void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);       /* extern */
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); /* extern */
 void func_80011134(Object *, s32);
-Object *func_8002342C(f32 x, f32 z);
+Object *find_furthest_telepoint(f32 x, f32 z);
 void func_8006017C(ObjectModel *);
 void func_80012F94(Object *);
 void func_800101AC(Object *, s32);

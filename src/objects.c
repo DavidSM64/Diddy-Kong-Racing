@@ -80,7 +80,7 @@ u16 D_800DC7A8[8] = {
 
 s16 D_800DC7B8[52] = {
     0x00ED, 0x00FF, BHV_TRIGGER, BHV_VEHICLE_ANIMATION,
-    BHV_ZIPPER_WATER, BHV_UNK_3A, BHV_UNK_57, BHV_SILVER_COIN,
+    BHV_ZIPPER_WATER, BHV_UNK_3A, BHV_TAJ_TELEPOINT, BHV_SILVER_COIN,
     BHV_BOOST, BHV_WARDEN_SMOKE, 0x00F3, 0x00FD,
     BHV_TREASURE_SUCKER, BHV_LOG, BHV_LAVA_SPURT, BHV_POS_ARROW,
     BHV_UNK_5B, BHV_UNK_5C, BHV_ZIPPER_AIR, BHV_UNK_5E,
@@ -4398,6 +4398,10 @@ UNUSED f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
 UNUSED void func_800228DC(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }
 
+/**
+ * Prepares the player racer for a Taj Challenge race.
+ * Prevents them from pausing for 10 frames.
+*/
 void init_racer_for_challenge(s32 vehicleID) {
     Object_Racer *racer;
 
@@ -4447,7 +4451,10 @@ s8 is_taj_challenge(void) {
     return gIsTajChallenge;
 }
 
-Object *func_8002342C(f32 x, f32 z) {
+/**
+ * Searches for the furthest teleport anchor and returns it.
+*/
+Object *find_furthest_telepoint(f32 x, f32 z) {
     Object *tempObj;
     Object *bestObj;
     f32 diffX;
@@ -4462,7 +4469,7 @@ Object *func_8002342C(f32 x, f32 z) {
     if (gObjectCount > 0) {
         do {
             tempObj = gObjPtrList[i];
-            if (!(tempObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && tempObj->behaviorId == BHV_UNK_57) {
+            if (!(tempObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && tempObj->behaviorId == BHV_TAJ_TELEPOINT) {
                 diffX = tempObj->segment.trans.x_position - x;
                 diffZ = tempObj->segment.trans.z_position - z;
                 tempObj = gObjPtrList[i]; // fakematch

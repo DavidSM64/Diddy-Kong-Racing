@@ -1129,6 +1129,10 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
+/**
+ * If interacted by a racer, attach itself to the player and mark as invisible
+ * if the player is not already carrying an egg.
+*/
 void try_to_collect_egg(Object *obj, Object_CollectEgg *egg) {
     Object_64 *racer;
     Object *interactedObj;
@@ -1140,7 +1144,7 @@ void try_to_collect_egg(Object *obj, Object_CollectEgg *egg) {
         if (interactedObj->segment.header->behaviorId == BHV_RACER) {
             racer = interactedObj->unk64;
             if (racer->racer.held_obj == NULL) {
-                egg->status = EGG_UNK_01;
+                egg->status = EGG_COLLECTED;
                 obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
                 racer->racer.held_obj = obj;
                 transF.y_rotation = -interactedObj->segment.trans.y_rotation;
@@ -2209,7 +2213,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     struct WaterProperties **water;
     Object *racerObj;
     s32 sp3C;
-    Object *temp_v0_12;
+    Object *telepoint;
     s32 var_a2;
     Object **racerObjs;
     s32 dialogueID;
@@ -2597,11 +2601,11 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             play_music(levelHeader->music);
             func_80001074(levelHeader->instruments);
             init_racer_for_challenge(racer64->racer.vehicleID);
-            temp_v0_12 = func_8002342C(obj->segment.trans.x_position, obj->segment.trans.z_position);
-            if (temp_v0_12 != NULL) {
-                obj->segment.trans.x_position = temp_v0_12->segment.trans.x_position;
-                obj->segment.trans.z_position = temp_v0_12->segment.trans.z_position;
-                obj->segment.object.segmentID = temp_v0_12->segment.object.segmentID;
+            telepoint = find_furthest_telepoint(obj->segment.trans.x_position, obj->segment.trans.z_position);
+            if (telepoint != NULL) {
+                obj->segment.trans.x_position = telepoint->segment.trans.x_position;
+                obj->segment.trans.z_position = telepoint->segment.trans.z_position;
+                obj->segment.object.segmentID = telepoint->segment.object.segmentID;
                 obj->segment.trans.y_rotation = racerObj->segment.trans.y_rotation + 0x8000;
             }
             obj->properties.npc.action = TAJ_MODE_RACE;
@@ -2624,11 +2628,11 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         } else {
             obj->segment.object.opacity = 0;
             obj->properties.npc.action = TAJ_MODE_TELEPORT_AWAY_END;
-            temp_v0_12 = func_8002342C(obj->segment.trans.x_position, obj->segment.trans.z_position);
-            if (temp_v0_12 != NULL) {
-                obj->segment.trans.x_position = temp_v0_12->segment.trans.x_position;
-                obj->segment.trans.z_position = temp_v0_12->segment.trans.z_position;
-                obj->segment.object.segmentID = temp_v0_12->segment.object.segmentID;
+            telepoint = find_furthest_telepoint(obj->segment.trans.x_position, obj->segment.trans.z_position);
+            if (telepoint != NULL) {
+                obj->segment.trans.x_position = telepoint->segment.trans.x_position;
+                obj->segment.trans.z_position = telepoint->segment.trans.z_position;
+                obj->segment.object.segmentID = telepoint->segment.object.segmentID;
                 obj->segment.trans.y_rotation = racerObj->segment.trans.y_rotation + 0x8000;
             }
         }

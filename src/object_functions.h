@@ -55,7 +55,7 @@ enum SilvereCoinBehaviours {
 
 enum EggPickupStatus {
     EGG_SPAWNED,
-    EGG_UNK_01,
+    EGG_COLLECTED,
     EGG_MOVING,
     EGG_IN_BASE,
     EGG_HATCHED
