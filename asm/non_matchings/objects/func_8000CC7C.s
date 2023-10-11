@@ -17,9 +17,9 @@ glabel func_8000CC7C
 /* 00D884 8000CC84 A020AD20 */  sb    $zero, %lo(D_8011AD20)($at)
 /* 00D888 8000CC88 3C018012 */  lui   $at, %hi(D_8011ADB0) # $at, 0x8012
 /* 00D88C 8000CC8C AC20ADB0 */  sw    $zero, %lo(D_8011ADB0)($at)
-/* 00D890 8000CC90 3C018012 */  lui   $at, %hi(D_8011ADC4) # $at, 0x8012
+/* 00D890 8000CC90 3C018012 */  lui   $at, %hi(gFirstTimeFinish) # $at, 0x8012
 /* 00D894 8000CC94 AFB1001C */  sw    $s1, 0x1c($sp)
-/* 00D898 8000CC98 A020ADC4 */  sb    $zero, %lo(D_8011ADC4)($at)
+/* 00D898 8000CC98 A020ADC4 */  sb    $zero, %lo(gFirstTimeFinish)($at)
 /* 00D89C 8000CC9C 3C118012 */  lui   $s1, %hi(D_8011AF00) # $s1, 0x8012
 /* 00D8A0 8000CCA0 AFBE0038 */  sw    $fp, 0x38($sp)
 /* 00D8A4 8000CCA4 3C018012 */  lui   $at, %hi(gNumRacers) # $at, 0x8012

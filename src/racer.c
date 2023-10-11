@@ -5807,7 +5807,7 @@ void racer_enter_door(Object_Racer* racer, s32 updateRate) {
 void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateRateF) {
     s32 var_t2;
     Object **objects;
-    s32 renderContext;
+    s32 gameMode;
     s32 countOfObjects;
     f32 xPos;
     f32 yPos;
@@ -5824,7 +5824,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     f32 temp_fv1_2;
 
     gCurrentPlayerIndex = -1;
-    renderContext = get_game_mode();
+    gameMode = get_game_mode();
     levelHeader = get_current_level_header();
     if (racer->unk1F6 > 0) {
         racer->unk1F6 -= updateRate;
@@ -5962,7 +5962,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         case VEHICLE_WIZPIG: update_wizpig(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         case VEHICLE_ROCKET: update_rocket(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         }
-        if (renderContext != GAMEMODE_MENU) {
+        if (gameMode != GAMEMODE_MENU) {
             func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
         lastCheckpointDist = racer->checkpoint_distance;
@@ -6015,7 +6015,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         racer->unk70 = obj->segment.trans.z_position;
     } else {
         func_8005B818(obj, racer, updateRate, updateRateF);
-        if (renderContext != GAMEMODE_MENU) {
+        if (gameMode != GAMEMODE_MENU) {
             func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
     }

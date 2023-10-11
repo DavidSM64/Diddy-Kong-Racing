@@ -97,7 +97,7 @@ glabel func_80010994
 /* 0116FC 80010AFC 3C158012 */  lui   $s5, %hi(gRacers) # $s5, 0x8012
 /* 011700 80010B00 0C0050AE */  jal   func_800142B8
 /* 011704 80010B04 26B5AEE4 */   addiu $s5, %lo(gRacers) # addiu $s5, $s5, -0x511c
-/* 011708 80010B08 0C00556E */  jal   func_800155B8
+/* 011708 80010B08 0C00556E */  jal   process_object_interactions
 /* 01170C 80010B0C 00000000 */   nop   
 /* 011710 80010B10 0C007A27 */  jal   func_8001E89C
 /* 011714 80010B14 00000000 */   nop   
@@ -145,9 +145,9 @@ glabel func_80010994
 /* 0117B0 80010BB0 26520004 */   addiu $s2, $s2, 4
 .L80010BB4:
 /* 0117B4 80010BB4 3C138012 */  lui   $s3, %hi(gObjectCount) # $s3, 0x8012
-/* 0117B8 80010BB8 3C118012 */  lui   $s1, %hi(D_8011AE60) # $s1, 0x8012
+/* 0117B8 80010BB8 3C118012 */  lui   $s1, %hi(gObjectListStart) # $s1, 0x8012
 /* 0117BC 80010BBC 8E73AE5C */  lw    $s3, %lo(gObjectCount)($s3)
-/* 0117C0 80010BC0 8E31AE60 */  lw    $s1, %lo(D_8011AE60)($s1)
+/* 0117C0 80010BC0 8E31AE60 */  lw    $s1, %lo(gObjectListStart)($s1)
 /* 0117C4 80010BC4 00000000 */  nop   
 /* 0117C8 80010BC8 0233082A */  slt   $at, $s1, $s3
 /* 0117CC 80010BCC 1020004C */  beqz  $at, .L80010D00
@@ -294,8 +294,8 @@ glabel func_80010994
 .L80010DC8:
 /* 0119C8 80010DC8 0C002EB7 */  jal   func_8000BADC
 /* 0119CC 80010DCC 02802025 */   move  $a0, $s4
-/* 0119D0 80010DD0 3C118012 */  lui   $s1, %hi(D_8011AE60) # $s1, 0x8012
-/* 0119D4 80010DD4 8E31AE60 */  lw    $s1, %lo(D_8011AE60)($s1)
+/* 0119D0 80010DD0 3C118012 */  lui   $s1, %hi(gObjectListStart) # $s1, 0x8012
+/* 0119D4 80010DD4 8E31AE60 */  lw    $s1, %lo(gObjectListStart)($s1)
 /* 0119D8 80010DD8 00000000 */  nop   
 /* 0119DC 80010DDC 0233082A */  slt   $at, $s1, $s3
 /* 0119E0 80010DE0 1020001D */  beqz  $at, .L80010E58
@@ -337,8 +337,8 @@ glabel func_80010994
 /* 011A5C 80010E5C 8F18AE64 */  lw    $t8, %lo(gParticleCount)($t8)
 /* 011A60 80010E60 00000000 */  nop   
 /* 011A64 80010E64 1B000018 */  blez  $t8, .L80010EC8
-/* 011A68 80010E68 3C118012 */   lui   $s1, %hi(D_8011AE60) # $s1, 0x8012
-/* 011A6C 80010E6C 8E31AE60 */  lw    $s1, %lo(D_8011AE60)($s1)
+/* 011A68 80010E68 3C118012 */   lui   $s1, %hi(gObjectListStart) # $s1, 0x8012
+/* 011A6C 80010E6C 8E31AE60 */  lw    $s1, %lo(gObjectListStart)($s1)
 /* 011A70 80010E70 00131080 */  sll   $v0, $s3, 2
 /* 011A74 80010E74 0233082A */  slt   $at, $s1, $s3
 /* 011A78 80010E78 10200013 */  beqz  $at, .L80010EC8
@@ -369,10 +369,10 @@ glabel func_80010994
 /* 011AD0 80010ED0 0C00CB1B */  jal   get_light_count
 /* 011AD4 80010ED4 00000000 */   nop   
 /* 011AD8 80010ED8 1840001F */  blez  $v0, .L80010F58
-/* 011ADC 80010EDC 3C118012 */   lui   $s1, %hi(D_8011AE60) # $s1, 0x8012
+/* 011ADC 80010EDC 3C118012 */   lui   $s1, %hi(gObjectListStart) # $s1, 0x8012
 /* 011AE0 80010EE0 3C028012 */  lui   $v0, %hi(gObjectCount) # $v0, 0x8012
 /* 011AE4 80010EE4 8C42AE5C */  lw    $v0, %lo(gObjectCount)($v0)
-/* 011AE8 80010EE8 8E31AE60 */  lw    $s1, %lo(D_8011AE60)($s1)
+/* 011AE8 80010EE8 8E31AE60 */  lw    $s1, %lo(gObjectListStart)($s1)
 /* 011AEC 80010EEC 00000000 */  nop   
 /* 011AF0 80010EF0 0222082A */  slt   $at, $s1, $v0
 /* 011AF4 80010EF4 10200018 */  beqz  $at, .L80010F58

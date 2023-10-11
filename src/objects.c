@@ -53,11 +53,11 @@ s16 D_800DC724 = 0x2A30;
 s16 D_800DC728 = -1;
 s16 D_800DC72C = 0;
 u8 gHasGhostToSave = 0;
-u8 D_800DC734 = 0;
-u8 gTimeTrialStaff = FALSE;
+u8 gTimeTrialStaffGhost = 0;
+u8 gBeatStaffGhost = FALSE;
 s8 D_800DC73C = 0;
 s8 D_800DC740 = 0;
-s8 D_800DC744 = 0;
+s8 gSwapLeadPlayer = FALSE;
 s8 D_800DC748 = 0;
 s32 D_800DC74C[2] = {0, 0}; // Have a feeling these are both the same array.
 s32 D_800DC754[2] = {0, 0};
@@ -194,7 +194,7 @@ s32 D_8011ADB4;
 s32 gRaceStartCountdown;
 s32 D_8011ADBC;
 s32 D_8011ADC0;
-s8 D_8011ADC4;
+s8 gFirstTimeFinish;
 s8 D_8011ADC5;
 u32 gBalloonCutsceneTimer;
 s8 (*D_8011ADCC)[8];
@@ -213,7 +213,7 @@ TextureHeader *D_8011AE50;
 TextureHeader *D_8011AE54;
 Object **gObjPtrList; // Not sure about the number of elements
 s32 gObjectCount;
-s32 D_8011AE60;
+s32 gObjectListStart;
 s32 gParticleCount;
 Object *gObjectMemoryPool;
 Object **D_8011AE6C;
@@ -400,7 +400,7 @@ void allocate_object_pools(void) {
     decrypt_magic_codes(&gAssetsMiscSection[gAssetsMiscTable[ASSET_MISC_MAGIC_CODES]], 
                         (gAssetsMiscTable[ASSET_MISC_TITLE_SCREEN_DEMO_IDS] - gAssetsMiscTable[ASSET_MISC_MAGIC_CODES]) * sizeof(s32 *));
     gObjPtrList = allocate_from_main_pool_safe(sizeof(uintptr_t) * OBJECT_SLOT_COUNT, COLOUR_TAG_BLUE);
-    D_8011ADC4 = 0;
+    gFirstTimeFinish = 0;
     gTimeTrialEnabled = 0;
     gIsTimeTrial = FALSE;
     gObjectUpdateRateF = 2.0f;
@@ -466,7 +466,7 @@ void clear_object_pointers(void) {
     D_8011AF08[0] = 0xFF;
     D_8011AF08[1] = 0xFF;
     gObjectCount = 0;
-    D_8011AE60 = 0;
+    gObjectListStart = 0;
     gParticleCount = 0;
     D_8011AE88 = 0;
     D_8011ADD4 = 0;
@@ -483,17 +483,21 @@ void clear_object_pointers(void) {
     D_8011ADD5 = 0;
 }
 
-void func_8000C604(void) {
+/**
+ * Clear all objects from memory. Also clear rumble.
+ * Swap lead player in adventure two if the other player finished ahead of the lead player.
+*/
+void free_all_objects(void) {
     s32 i, len;
     free_tt_ghost_data();
     D_800DC748 = 0;
-    if (D_800DC71C != 0) {
+    if (D_800DC71C) {
         func_80072298(1);
     }
     D_800DC71C = 0;
-    if (D_800DC744 && is_in_two_player_adventure()) {
-        D_800DC744 = 0;
-        func_8006F398();
+    if (gSwapLeadPlayer && is_in_two_player_adventure()) {
+        gSwapLeadPlayer = FALSE;
+        swap_lead_player();
     }
     gParticlePtrList_flush();
     len = gObjectCount;
@@ -502,7 +506,7 @@ void func_8000C604(void) {
     }
     gFreeListCount = 0;
     gObjectCount = 0;
-    D_8011AE60 = 0;
+    gObjectListStart = 0;
     clear_object_pointers();
     free_from_memory_pool((void *) D_8011AEB0[0]);
     free_from_memory_pool((void *) D_8011AEB0[1]);
@@ -924,7 +928,7 @@ Object *get_object(s32 index) {
  * Return the standard object list index and how many objects are in that list.
 */
 Object **objGetObjList(s32 *arg0, s32 *cnt) {
-    *arg0 = D_8011AE60;
+    *arg0 = gObjectListStart;
     *cnt = gObjectCount;
     return gObjPtrList;
 }
@@ -1535,7 +1539,7 @@ void func_80010994(s32 updateRate) {
     }
     i = 1; //FAKEMATCH
     func_800142B8();
-    func_800155B8();
+    process_object_interactions();
     func_8001E89C();
     for (i = 0; i < D_8011AE70; i++) {
         run_object_loop_func(D_8011AE6C[i], updateRate);
@@ -1545,7 +1549,7 @@ void func_80010994(s32 updateRate) {
         func_8001709C(D_8011AE6C[i]);
     }
     tempVal = gObjectCount;
-    for (i = D_8011AE60; i < tempVal; i++) {
+    for (i = gObjectListStart; i < tempVal; i++) {
         obj = gObjPtrList[i];
         if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             if ((obj->behaviorId != BHV_LIGHT_RGBA) && (obj->behaviorId != BHV_WEAPON) && (obj->behaviorId != BHV_FOG_CHANGER)) {
@@ -1588,14 +1592,14 @@ void func_80010994(s32 updateRate) {
         }
     }
     func_8000BADC(updateRate);
-    for (i = D_8011AE60; i < tempVal; i++) {
+    for (i = gObjectListStart; i < tempVal; i++) {
         obj = gObjPtrList[i];
         if ((!(obj->segment.trans.flags & 0x8000) && (obj->behaviorId == BHV_WEAPON)) || (obj->behaviorId == BHV_FOG_CHANGER)) {
             run_object_loop_func(obj, updateRate);
         }
     }
     if (gParticleCount > 0) {
-        for (i = D_8011AE60; i < tempVal; i++) {
+        for (i = gObjectListStart; i < tempVal; i++) {
             obj = gObjPtrList[i];
             if (obj->segment.trans.flags & 0x8000) {
                 //Why is this object being treated as a Particle?
@@ -1606,7 +1610,7 @@ void func_80010994(s32 updateRate) {
     do { //FAKEMATCH
     lightUpdateLights(updateRate);
     if (get_light_count() > 0) {
-        for (i = D_8011AE60; i < gObjectCount; i++) {
+        for (i = gObjectListStart; i < gObjectCount; i++) {
             obj = gObjPtrList[i];
             if (!(obj->segment.trans.flags & 0x8000) && (obj->shading != NULL)) {
                 func_80032C7C(obj);
@@ -1807,6 +1811,7 @@ s32 play_footstep_sounds(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 e
     }
     return ret;
 }
+
 /**
  * Make the next call of move_object never mark the object as out of bounds.
  * Official Name: objMoveXYZnocheck
@@ -2740,14 +2745,14 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
 GLOBAL_ASM("asm/non_matchings/objects/func_80014090.s")
 
 void func_800142B8(void) {
-    s32 i = D_8011AE60;
+    s32 i = gObjectListStart;
     s32 j;
     Object *currObj;
     Object_68 *curr_68;
 
     for (; i < gObjectCount; i++) {
         currObj = gObjPtrList[i];
-        if ((currObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) == 0 && currObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        if (!(currObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && currObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
             for (j = 0; j < currObj->segment.header->numberOfModelIds; j++) {
                 curr_68 = currObj->unk68[j];
                 if (curr_68 != NULL && curr_68->unk20 > 0) {
@@ -2853,7 +2858,7 @@ s32 func_80014814(s32 *retObjCount) {
     if (D_8011AE7C) {
         return D_8011AE7C;
     }
-    curObjCount = D_8011AE60;
+    curObjCount = gObjectListStart;
     maxObjCount = gObjectCount - 1;
     while (maxObjCount >= curObjCount) {
         for (i = 0; maxObjCount >= curObjCount && i == 0; i++) {
@@ -2911,21 +2916,25 @@ UNUSED void func_800149C0(unk800149C0 *arg0, UNUSED s32 arg1, s32 arg2, s32 arg3
 GLOBAL_ASM("asm/non_matchings/objects/func_80014B50.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80015348.s")
 
-void func_800155B8(void) {
+/**
+ * Go through each object and detect potential interactions between each.
+ * Add candidates to a list and calcualte their distances.
+*/
+void process_object_interactions(void) {
     Object *obj2;
     Object *obj;
     ObjectInteraction *objInteract;
     ObjectInteraction *objInteract2;
     f32 xDiff;
     f32 zDiff;
-    f32 var_f12;
+    f32 radius;
     s32 j;
     s32 i;
     s32 objsWithInteractives;
     Object *objList[257]; //257 seems random, but it works for now.
 
     objsWithInteractives = 0;
-    for (i = D_8011AE60; i < gObjectCount; i++) {
+    for (i = gObjectListStart; i < gObjectCount; i++) {
         obj = gObjPtrList[i];
         if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             objInteract = obj->interactObj;
@@ -2935,7 +2944,7 @@ void func_800155B8(void) {
                 if (objInteract->unk11 != 2) {
                     objInteract->obj = NULL;
                     objInteract->flags &= ~(INTERACT_FLAGS_COLLIDED | INTERACT_FLAGS_PUSHING);
-                    objInteract->distance = 0xFF;
+                    objInteract->distance = 255;
                 }
             }
         }
@@ -2946,7 +2955,7 @@ void func_800155B8(void) {
     for (i = 0; i < objsWithInteractives; i++) {
         obj = objList[i];
         objInteract = obj->interactObj;
-        if ((objInteract->unk11 == 2) && (D_8011AE70 < 20)) {
+        if (objInteract->unk11 == 2 && D_8011AE70 < 20) {
             D_8011AE6C[D_8011AE70] = obj;
             D_8011AE70++;
         }
@@ -2955,18 +2964,18 @@ void func_800155B8(void) {
                 if (i != j) {
                     obj2 = objList[j];
                     objInteract2 = obj2->interactObj;
-                    if (objInteract2->flags & 3) {
+                    if (objInteract2->flags & (INTERACT_FLAGS_SOLID | INTERACT_FLAGS_TANGIBLE)) {
                         if (objInteract2->unk11 == 3) {
                             func_80016748(obj, obj2);
                         } else if (objInteract2->unk11 != 2) {
                             xDiff = obj->segment.trans.x_position - obj2->segment.trans.x_position;
                             zDiff = obj->segment.trans.z_position - obj2->segment.trans.z_position;
                             if (objInteract2->flags & INTERACT_FLAGS_UNK_0020) {
-                                var_f12 = 0x400000; //4194304.0f;
+                                radius = 0x400000; //4194304.0f;
                             } else {
-                                var_f12 = 0x40000; //262144.0f;
+                                radius = 0x40000; //262144.0f;
                             }
-                            if (((xDiff * xDiff) + (zDiff * zDiff)) < var_f12) {
+                            if (((xDiff * xDiff) + (zDiff * zDiff)) < radius) {
                                 func_800159C8(obj, obj2);
                             }
                         }
@@ -3153,7 +3162,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800185E4.s")
 Object *find_taj_object(void) {
     s32 i;
     Object *current_obj;
-    for (i = D_8011AE60; i < gObjectCount; i++) {
+    for (i = gObjectListStart; i < gObjectCount; i++) {
         current_obj = gObjPtrList[i];
         if (!(current_obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (current_obj->behaviorId == BHV_PARK_WARDEN)) {
             return current_obj;
@@ -3166,24 +3175,29 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80018CE0.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8001955C.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80019808.s")
 
-s8 func_8001A7D8(unk8001A7D8_arg0 *arg0) {
+/**
+ * Mark the course as finished for the appropriate mode.
+ * Check if it's the first race or the silver coin race before deciding which flag to write.
+ * Return whether something was written.
+*/
+s8 set_course_finish_flags(Settings *settings) {
     Object_Racer *racer;
 
-    racer = (Object_Racer *) gRacersByPosition[0]->unk64;
+    racer = (Object_Racer *) gRacersByPosition[PLAYER_ONE]->unk64;
     if (racer->playerIndex == PLAYER_COMPUTER) {
-        return 0;
+        return FALSE;
     }
-    D_8011ADC4 = 0;
-    if (!(arg0->unk4[arg0->unk49] & 2)) {
-        if (!gIsTimeTrial) {
-            D_8011ADC4 = 1;
-            arg0->unk4[arg0->unk49] |= 2;
+    gFirstTimeFinish = FALSE;
+    if (!(settings->courseFlagsPtr[settings->courseId] & RACE_CLEARED)) {
+        if (gIsTimeTrial == FALSE) {
+            gFirstTimeFinish = TRUE;
+            settings->courseFlagsPtr[settings->courseId] |= RACE_CLEARED;
         }
-    } else if (gIsSilverCoinRace && racer->silverCoinCount >= 8 && !gIsTimeTrial) {
-        D_8011ADC4 = 1;
-            arg0->unk4[arg0->unk49] |= 4;
+    } else if (gIsSilverCoinRace && racer->silverCoinCount >= 8 && gIsTimeTrial == FALSE) {
+        gFirstTimeFinish = TRUE;
+        settings->courseFlagsPtr[settings->courseId] |= RACE_CLEARED_SILVER_COINS;
     }
-    return D_8011ADC4;
+    return gFirstTimeFinish;
 }
 
 void func_8001A8D4(s32 arg0) {
@@ -3264,19 +3278,24 @@ s32 is_time_trial_ghost(Object* obj) {
     return obj == gGhostObj;
 }
 
-void func_8001B3C4(s32 arg0, s16 *playerId) {
+/**
+ * Free ghost data then save the players victory.
+ * Check if the player has beaten every time and unlock TT.
+ * Otherwise, tell them to try another track.
+*/
+void tt_ghost_beaten(s32 arg0, s16 *playerId) {
     s32 trackIdCount;
     s8 *mainTrackIds;
 
     gGhostObj = NULL;
     free_tt_ghost_data();
-    D_800DC734 = 0;
+    gTimeTrialStaffGhost = FALSE;
     mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
     trackIdCount = 0;
     while (mainTrackIds[trackIdCount] != -1 && mainTrackIds[trackIdCount] != arg0) {
         trackIdCount++;
     }
-    if (gTimeTrialStaff) {
+    if (gBeatStaffGhost) {
         //Save that TT has been beaten for this track.
         set_eeprom_settings_value(16 << trackIdCount);
         //Check if TT has been beaten for all tracks.
@@ -3290,7 +3309,7 @@ void func_8001B3C4(s32 arg0, s16 *playerId) {
             func_80000FDC(SOUND_VOICE_TT_TRY_ANOTHER_TRACK, 0, 1.0f);
             set_current_text(ASSET_GAME_TEXT_83); //Text for "Well Done! Now try another track."
         }
-        gTimeTrialStaff = FALSE;
+        gBeatStaffGhost = FALSE;
         return;
     }
     play_time_trial_end_message(playerId);
@@ -3306,10 +3325,10 @@ Object *get_time_trial_ghost(void) {
 }
 
 /**
- * Return true if the time trial is not against a staff ghost.
+ * Return true if the tt ghost is unbeaten for this track.
 */
-s32 not_staff_ghost(void) {
-    return gTimeTrialStaff == FALSE;
+s32 unbeaten_staff_time(void) {
+    return gBeatStaffGhost == FALSE;
 }
 
 s32 func_8001B668(s32 arg0) {
@@ -4014,7 +4033,7 @@ void func_8001E45C(s32 cutsceneID) {
  * Goes unused, since objGetObjList exists
 */
 UNUSED s32 get_object_list_index(void) {
-    return D_8011AE60;
+    return gObjectListStart;
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001E4C4.s")

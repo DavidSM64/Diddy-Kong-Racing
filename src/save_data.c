@@ -378,7 +378,7 @@ void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
     s16 var_a0;
     u8 temp_v1;
 
-    func_8006E994(settings);
+    clear_game_progress(settings);
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
     D_801241EC = saveData;
     D_801241F0 = D_801241F4 = 0;
@@ -391,15 +391,15 @@ void populate_settings_from_save_data(Settings *settings, u8 *saveData) {
                 temp_v1 = func_80072C54(2);
                 if (temp_v1 > 0) {
                     // Set Map Visited
-                    settings->courseFlagsPtr[i] |= 1;
+                    settings->courseFlagsPtr[i] |= RACE_VISITED;
                 }
                 if (temp_v1 >= 2) {
                     // Set Map Completed
-                    settings->courseFlagsPtr[i] |= 2;
+                    settings->courseFlagsPtr[i] |= RACE_CLEARED;
                 }
                 if (temp_v1 >= 3) {
                     // Set Map Silver Coin Challenge Completed
-                    settings->courseFlagsPtr[i] |= 4;
+                    settings->courseFlagsPtr[i] |= RACE_CLEARED_SILVER_COINS;
                 }
                 var_s1 += 2;
             }
@@ -443,15 +443,15 @@ void func_800732E8(Settings *settings, u8 *saveData) {
          if ((temp_v0 == 0) || (temp_v0 & 0x40) || (temp_v0 == 8)) {
             courseStatus = 0;
             // Map visited
-            if (settings->courseFlagsPtr[i] & 1) {
+            if (settings->courseFlagsPtr[i] & RACE_VISITED) {
                 courseStatus = 1;
             }
             // Map completed
-            if (settings->courseFlagsPtr[i] & 2) {
+            if (settings->courseFlagsPtr[i] & RACE_CLEARED) {
                 courseStatus++;
             }
             // Map Silver coin challenge completed
-            if (settings->courseFlagsPtr[i] & 4) {
+            if (settings->courseFlagsPtr[i] & RACE_CLEARED_SILVER_COINS) {
                 courseStatus++;
             }
             func_80072E28(2, courseStatus);
@@ -492,7 +492,7 @@ void func_80073588(Settings *settings, u8 *saveData, u8 arg2) {
     s32 i;
     s16 sum;
 
-    func_8006E770(settings, arg2);
+    clear_lap_records(settings, arg2);
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
 
     if (arg2 & 1) {

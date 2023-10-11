@@ -259,15 +259,15 @@ glabel func_8001AE64
 /* 01BE24 8001B224 8FA40034 */  lw    $a0, 0x34($sp)
 /* 01BE28 8001B228 0218082A */  slt   $at, $s0, $t8
 /* 01BE2C 8001B22C 10200010 */  beqz  $at, .L8001B270
-/* 01BE30 8001B230 3C0F800E */   lui   $t7, %hi(D_800DC734) # $t7, 0x800e
-/* 01BE34 8001B234 91EFC734 */  lbu   $t7, %lo(D_800DC734)($t7)
+/* 01BE30 8001B230 3C0F800E */   lui   $t7, %hi(gTimeTrialStaffGhost) # $t7, 0x800e
+/* 01BE34 8001B234 91EFC734 */  lbu   $t7, %lo(gTimeTrialStaffGhost)($t7)
 /* 01BE38 8001B238 8FA40034 */  lw    $a0, 0x34($sp)
 /* 01BE3C 8001B23C 11E00008 */  beqz  $t7, .L8001B260
 /* 01BE40 8001B240 00000000 */   nop   
 /* 01BE44 8001B244 0C01AF62 */  jal   get_current_map_id
 /* 01BE48 8001B248 00000000 */   nop   
 /* 01BE4C 8001B24C 8FA50034 */  lw    $a1, 0x34($sp)
-/* 01BE50 8001B250 0C006CF1 */  jal   func_8001B3C4
+/* 01BE50 8001B250 0C006CF1 */  jal   tt_ghost_beaten
 /* 01BE54 8001B254 00402025 */   move  $a0, $v0
 /* 01BE58 8001B258 10000008 */  b     .L8001B27C
 /* 01BE5C 8001B25C 8FBF001C */   lw    $ra, 0x1c($sp)

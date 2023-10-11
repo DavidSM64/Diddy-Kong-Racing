@@ -1498,7 +1498,7 @@ void render_race_start(s32 arg0, s32 updateRate) {
             }
             if (gRaceStartShowHudStep == 3) {
                 play_sound_global(SOUND_VOICE_TT_GO, &gHUDVoiceSoundMask);
-                if (get_time_trial_ghost() && not_staff_ghost() == FALSE) {
+                if (get_time_trial_ghost() && unbeaten_staff_time() == FALSE) {
                     set_time_trial_start_voice(SOUND_VOICE_TT_BEAT_MY_TIME, 1.7f, 0);
                     set_delayed_text(ASSET_GAME_TEXT_82, 1.7f); // Now try and beat my time!
                 }

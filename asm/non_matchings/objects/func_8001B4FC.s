@@ -1,13 +1,13 @@
 glabel func_8001B4FC
 /* 01C0FC 8001B4FC 27BDFFD0 */  addiu $sp, $sp, -0x30
-/* 01C100 8001B500 3C01800E */  lui   $at, %hi(gTimeTrialStaff) # $at, 0x800e
-/* 01C104 8001B504 A020C738 */  sb    $zero, %lo(gTimeTrialStaff)($at)
+/* 01C100 8001B500 3C01800E */  lui   $at, %hi(gBeatStaffGhost) # $at, 0x800e
+/* 01C104 8001B504 A020C738 */  sb    $zero, %lo(gBeatStaffGhost)($at)
 /* 01C108 8001B508 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 01C10C 8001B50C AFB00018 */  sw    $s0, 0x18($sp)
-/* 01C110 8001B510 3C01800E */  lui   $at, %hi(D_800DC734) # $at, 0x800e
+/* 01C110 8001B510 3C01800E */  lui   $at, %hi(gTimeTrialStaffGhost) # $at, 0x800e
 /* 01C114 8001B514 00808025 */  move  $s0, $a0
 /* 01C118 8001B518 0C01BAA4 */  jal   get_settings
-/* 01C11C 8001B51C A020C734 */   sb    $zero, %lo(D_800DC734)($at)
+/* 01C11C 8001B51C A020C734 */   sb    $zero, %lo(gTimeTrialStaffGhost)($at)
 /* 01C120 8001B520 AFA20020 */  sw    $v0, 0x20($sp)
 /* 01C124 8001B524 0C01AC2B */  jal   get_map_default_vehicle
 /* 01C128 8001B528 02002025 */   move  $a0, $s0
@@ -69,20 +69,20 @@ glabel func_8001B4FC
 /* 01C1FC 8001B5FC 006D5824 */   and   $t3, $v1, $t5
 /* 01C200 8001B600 15600003 */  bnez  $t3, .L8001B610
 /* 01C204 8001B604 240F0001 */   li    $t7, 1
-/* 01C208 8001B608 3C01800E */  lui   $at, %hi(gTimeTrialStaff) # $at, 0x800e
-/* 01C20C 8001B60C A02FC738 */  sb    $t7, %lo(gTimeTrialStaff)($at)
+/* 01C208 8001B608 3C01800E */  lui   $at, %hi(gBeatStaffGhost) # $at, 0x800e
+/* 01C20C 8001B60C A02FC738 */  sb    $t7, %lo(gBeatStaffGhost)($at)
 .L8001B610:
 /* 01C210 8001B610 0C006CBC */  jal   func_8001B2F0
 /* 01C214 8001B614 02002025 */   move  $a0, $s0
 /* 01C218 8001B618 14400003 */  bnez  $v0, .L8001B628
 /* 01C21C 8001B61C 24090001 */   li    $t1, 1
-/* 01C220 8001B620 3C01800E */  lui   $at, %hi(D_800DC734) # $at, 0x800e
-/* 01C224 8001B624 A029C734 */  sb    $t1, %lo(D_800DC734)($at)
+/* 01C220 8001B620 3C01800E */  lui   $at, %hi(gTimeTrialStaffGhost) # $at, 0x800e
+/* 01C224 8001B624 A029C734 */  sb    $t1, %lo(gTimeTrialStaffGhost)($at)
 .L8001B628:
 /* 01C228 8001B628 8FBF001C */  lw    $ra, 0x1c($sp)
 .L8001B62C:
-/* 01C22C 8001B62C 3C02800E */  lui   $v0, %hi(D_800DC734) # $v0, 0x800e
-/* 01C230 8001B630 9042C734 */  lbu   $v0, %lo(D_800DC734)($v0)
+/* 01C22C 8001B62C 3C02800E */  lui   $v0, %hi(gTimeTrialStaffGhost) # $v0, 0x800e
+/* 01C230 8001B630 9042C734 */  lbu   $v0, %lo(gTimeTrialStaffGhost)($v0)
 /* 01C234 8001B634 8FB00018 */  lw    $s0, 0x18($sp)
 /* 01C238 8001B638 03E00008 */  jr    $ra
 /* 01C23C 8001B63C 27BD0030 */   addiu $sp, $sp, 0x30

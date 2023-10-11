@@ -2453,7 +2453,7 @@ void func_800828B8(void) {
     get_number_of_levels_and_worlds(&numLevels, &numWorlds);
 
     for (i = 0; i < numLevels; i++) {
-        settings->courseFlagsPtr[i] = 0;
+        settings->courseFlagsPtr[i] = RACE_UNATTEMPTED;
         for (numWorlds = 0; numWorlds < 3; numWorlds++) {
             settings->courseFlagsPtr[i] |= gSavefileData[numWorlds]->courseFlagsPtr[i];
         }
@@ -7160,7 +7160,7 @@ void menu_adventure_track_init(void) {
     mapId = settings->unk4C->unk2;
     gPlayerSelectVehicle[PLAYER_ONE] = get_map_default_vehicle(mapId);
     result = get_map_race_type(mapId);
-    if ((result == 5) || (result == 8) || (!(result & 0x40) && (!(settings->courseFlagsPtr[mapId] & 2)))) {
+    if ((result == 5) || (result == 8) || (!(result & 0x40) && (!(settings->courseFlagsPtr[mapId] & RACE_CLEARED)))) {
         temp = D_800E0758[mapId];
         if (temp != -1) {
             func_80000FDC(temp, 0, 1.0f);
@@ -7334,13 +7334,13 @@ s32 menu_adventure_track_loop(s32 updateRate) {
     mapId = ((Settings4C *)((u8 *)settings->unk4C + gTrackIdForPreview))->unk2;
     sp28 = FALSE;
     sp1C = 0;
-    if (settings->courseFlagsPtr[mapId] & 2) {
+    if (settings->courseFlagsPtr[mapId] & RACE_CLEARED) {
         sp1C = 1;
     }
-    if (settings->courseFlagsPtr[mapId] & 4) {
+    if (settings->courseFlagsPtr[mapId] & RACE_CLEARED_SILVER_COINS) {
         sp1C = 2;
     }
-    if (get_map_race_type(mapId) & 0x40) {
+    if (get_map_race_type(mapId) & RACETYPE_CHALLENGE) {
         sp28 = TRUE;
     }
     sp20 = FALSE;

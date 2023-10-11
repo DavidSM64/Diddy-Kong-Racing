@@ -130,15 +130,15 @@ glabel func_8001A8F4
 /* 01B6D8 8001AAD8 8C650064 */  lw    $a1, 0x64($v1)
 /* 01B6DC 8001AADC AC830000 */  sw    $v1, ($a0)
 /* 01B6E0 8001AAE0 8CF80000 */  lw    $t8, ($a3)
-/* 01B6E4 8001AAE4 3C08800E */  lui   $t0, %hi(D_800DC744) # $t0, 0x800e
-/* 01B6E8 8001AAE8 2508C744 */  addiu $t0, %lo(D_800DC744) # addiu $t0, $t0, -0x38bc
+/* 01B6E4 8001AAE4 3C08800E */  lui   $t0, %hi(gSwapLeadPlayer) # $t0, 0x800e
+/* 01B6E8 8001AAE8 2508C744 */  addiu $t0, %lo(gSwapLeadPlayer) # addiu $t0, $t0, -0x38bc
 /* 01B6EC 8001AAEC AF060004 */  sw    $a2, 4($t8)
 /* 01B6F0 8001AAF0 81190000 */  lb    $t9, ($t0)
 /* 01B6F4 8001AAF4 00000000 */  nop   
 /* 01B6F8 8001AAF8 13200007 */  beqz  $t9, .L8001AB18
 /* 01B6FC 8001AAFC 00000000 */   nop   
 /* 01B700 8001AB00 A1000000 */  sb    $zero, ($t0)
-/* 01B704 8001AB04 0C01BCE6 */  jal   func_8006F398
+/* 01B704 8001AB04 0C01BCE6 */  jal   swap_lead_player
 /* 01B708 8001AB08 AFA50038 */   sw    $a1, 0x38($sp)
 /* 01B70C 8001AB0C 8FA50038 */  lw    $a1, 0x38($sp)
 /* 01B710 8001AB10 00000000 */  nop   

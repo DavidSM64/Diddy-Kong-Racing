@@ -202,7 +202,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     if (firstRacerObj->segment.trans.y_position + 400.0 < gTrickyRacerPeakHeight) {
         if (check_fadeout_transition() == 0 && is_in_two_player_adventure()) {
-            func_8006F398();
+            swap_lead_player();
         }
         func_8006F140(1);
     }
@@ -334,7 +334,7 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
             } else {
                 func_8006F140(3);
                 if (is_in_two_player_adventure()) {
-                    func_8006F398();
+                    swap_lead_player();
                 }
             }
             arg1_ret++;

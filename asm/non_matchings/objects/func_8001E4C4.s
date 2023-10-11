@@ -149,8 +149,8 @@ glabel func_8001E4C4
 /* 01F2D0 8001E6D0 1020FFC6 */  beqz  $at, .L8001E5EC
 /* 01F2D4 8001E6D4 00E2082A */   slt   $at, $a3, $v0
 .L8001E6D8:
-/* 01F2D8 8001E6D8 3C018012 */  lui   $at, %hi(D_8011AE60) # $at, 0x8012
-/* 01F2DC 8001E6DC AC22AE60 */  sw    $v0, %lo(D_8011AE60)($at)
+/* 01F2D8 8001E6D8 3C018012 */  lui   $at, %hi(gObjectListStart) # $at, 0x8012
+/* 01F2DC 8001E6DC AC22AE60 */  sw    $v0, %lo(gObjectListStart)($at)
 /* 01F2E0 8001E6E0 3C018012 */  lui   $at, %hi(D_8011AE7C) # $at, 0x8012
 /* 01F2E4 8001E6E4 03E00008 */  jr    $ra
 /* 01F2E8 8001E6E8 A420AE7C */   sh    $zero, %lo(D_8011AE7C)($at)

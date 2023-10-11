@@ -104,8 +104,8 @@ glabel func_8001E93C
 /* 01F6B4 8001EAB4 24120001 */  li    $s2, 1
 /* 01F6B8 8001EAB8 3C018012 */  lui   $at, %hi(D_8011AE01) # $at, 0x8012
 /* 01F6BC 8001EABC A032AE01 */  sb    $s2, %lo(D_8011AE01)($at)
-/* 01F6C0 8001EAC0 3C0C8012 */  lui   $t4, %hi(D_8011AE60) # $t4, 0x8012
-/* 01F6C4 8001EAC4 8D8CAE60 */  lw    $t4, %lo(D_8011AE60)($t4)
+/* 01F6C0 8001EAC0 3C0C8012 */  lui   $t4, %hi(gObjectListStart) # $t4, 0x8012
+/* 01F6C4 8001EAC4 8D8CAE60 */  lw    $t4, %lo(gObjectListStart)($t4)
 /* 01F6C8 8001EAC8 3C018012 */  lui   $at, %hi(D_8011AE78) # $at, 0x8012
 /* 01F6CC 8001EACC A420AE78 */  sh    $zero, %lo(D_8011AE78)($at)
 /* 01F6D0 8001EAD0 0186082A */  slt   $at, $t4, $a2

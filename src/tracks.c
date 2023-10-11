@@ -1802,7 +1802,7 @@ void free_track(void) {
         free_object(gSkydomeSegment);
         gParticlePtrList_flush();
     }
-    func_8000C604();
+    free_all_objects();
     gCurrentLevelModel = NULL;
 }
 

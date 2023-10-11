@@ -522,7 +522,7 @@ void ingame_logic_loop(s32 updateRate) {
                 func_80001050();
                 reset_delayed_text();
                 if (func_80023568() != 0 && is_in_two_player_adventure()) {
-                    func_8006F398();
+                    swap_lead_player();
                 }
                 buttonHeldInputs |= (L_TRIG | Z_TRIG);
                 break;
@@ -530,7 +530,7 @@ void ingame_logic_loop(s32 updateRate) {
                 func_80001050();
                 reset_delayed_text();
                 if (func_80023568() != 0 && is_in_two_player_adventure()) {
-                    func_8006F398();
+                    swap_lead_player();
                 }
                 buttonHeldInputs |= L_TRIG;
                 break;
@@ -618,7 +618,7 @@ void ingame_logic_loop(s32 updateRate) {
             if (gPlayableMapId < 0) {
                 if (gPlayableMapId == SPECIAL_MAP_ID_NO_LEVEL || gPlayableMapId == SPECIAL_MAP_ID_UNK_NEG10) {
                     if (gPlayableMapId == SPECIAL_MAP_ID_UNK_NEG10 && is_in_two_player_adventure()) {
-                        func_8006F398();
+                        swap_lead_player();
                     }
                     buttonHeldInputs |= L_TRIG;
                     D_801234FC = 2;
@@ -647,7 +647,7 @@ void ingame_logic_loop(s32 updateRate) {
                     if (gPlayableMapId < 0) {
                         if (gPlayableMapId == -1 || gPlayableMapId == -10) {
                             if (gPlayableMapId == -10 && is_in_two_player_adventure()) {
-                                func_8006F398();
+                                swap_lead_player();
                             }
                             buttonHeldInputs |= L_TRIG;
                             D_801234FC = 2;
@@ -796,7 +796,7 @@ void func_8006D968(s8 *arg0) {
 /**
  * Returns the current game mode.
  */
-RenderContext get_game_mode(void) {
+GameMode get_game_mode(void) {
     return gGameMode;
 }
 
@@ -1140,22 +1140,25 @@ void init_racer_headers(void) {
     gSettingsPtr->courseId = 0;
 }
 
-void func_8006E770(Settings *settings, s32 arg1) {
+/**
+ * Depending on flags, clear fastest lap times and/or overall course times.
+*/
+void clear_lap_records(Settings *settings, s32 flags) {
     s32 i, j;
     s32 numWorlds, numLevels;
     s32 index;
     u16 *temp_v0;
 
     get_number_of_levels_and_worlds(&numLevels, &numWorlds);
-    temp_v0 = (u16 *)get_misc_asset(MISC_ASSET_UNK17);
+    temp_v0 = (u16 *) get_misc_asset(MISC_ASSET_UNK17);
     for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         for (j = 0; j < numLevels; j++) {
             index = (j * 12) + (i * 4);
-            if (arg1 & 1) {
+            if (flags & 1) {
                 settings->flapInitialsPtr[i][j] = temp_v0[index + 3];
                 settings->flapTimesPtr[i][j] = temp_v0[index + 2];
             }
-            if (arg1 & 2) {
+            if (flags & 2) {
                 settings->courseInitialsPtr[i][j] = temp_v0[index + 1];
                 settings->courseTimesPtr[i][j] = temp_v0[index];
             }
@@ -1163,19 +1166,22 @@ void func_8006E770(Settings *settings, s32 arg1) {
     }
 }
 
-void func_8006E994(Settings *settings) {
+/**
+ * Set all game progression values to their default, as if it were a new game.
+*/
+void clear_game_progress(Settings *settings) {
     s32 i;
-    s32 sp20;
-    s32 sp1C;
+    s32 worldCount;
+    s32 levelCount;
 
-    get_number_of_levels_and_worlds(&sp1C, &sp20);
+    get_number_of_levels_and_worlds(&levelCount, &worldCount);
     settings->newGame = TRUE;
 
-    for (i = 0; i < sp20; i++) {
+    for (i = 0; i < worldCount; i++) {
         settings->balloonsPtr[i] = 0;
     }
-    for (i = 0; i < sp1C; i++) {
-        settings->courseFlagsPtr[i] = 0;
+    for (i = 0; i < levelCount; i++) {
+        settings->courseFlagsPtr[i] = RACE_UNATTEMPTED;
     }
 
     settings->keys = 0;
@@ -1188,9 +1194,12 @@ void func_8006E994(Settings *settings) {
     settings->wizpigAmulet = 0;
 }
 
-UNUSED void func_8006EA58(void) {
-    func_8006E770(gSettingsPtr, 3);
-    func_8006E994(gSettingsPtr);
+/**
+ * Call functions to set all game save data to the default.
+*/
+UNUSED void reset_save_data(void) {
+    clear_lap_records(gSettingsPtr, 3);
+    clear_game_progress(gSettingsPtr);
 }
 
 /**
@@ -1507,7 +1516,11 @@ void set_pause_lockout_timer(u8 time) {
     gPauseLockTimer = time;
 }
 
-void func_8006F398(void) {
+/**
+ * Switch the data around for player 1 and 2 for two player adventure,
+ * effectively passing the lead over to the other player.
+*/
+void swap_lead_player(void) {
     s32 i;
     u8 temp;
     u8 *first_racer_data;
@@ -1519,7 +1532,7 @@ void func_8006F398(void) {
     first_racer_data = (u8 *)(gSettingsPtr->racers);
     second_racer_data = (u8 *)(gSettingsPtr->racers + 1);
 
-    for (i = 0; i < (s32)sizeof(Racer); i++) {
+    for (i = 0; i < (s32) sizeof(Racer); i++) {
         temp = first_racer_data[i];
         first_racer_data[i] = second_racer_data[i];
         second_racer_data[i] = temp;
