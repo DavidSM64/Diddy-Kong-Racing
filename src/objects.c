@@ -675,7 +675,7 @@ s32 func_8000CC20(Object *obj) {
 #ifdef NON_EQUIVALENT
 void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     s32 numPlayers; // sp144
-    enum RenderContext gameMode;
+    enum GameMode gameMode;
     s32 cutsceneID; //sp130
     s8* miscAsset16;
     s8 sp11C[8];
@@ -708,10 +708,10 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
 
     D_8011AD20 = 0;
     D_8011ADB0 = 0;
-    D_8011ADC4 = 0;
+    gFirstTimeFinish = 0;
     gNumRacers = 0;
     D_8011AF00 = 0;
-    func_800521B8(0);
+    set_taj_status(0);
     levelHeader = get_current_level_header();
     raceType = levelHeader->race_type;
     if (raceType == RACETYPE_CUTSCENE_1 || raceType == RACETYPE_CUTSCENE_2) {
@@ -1004,7 +1004,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             }
         }
     }
-    D_800DC718 = 0;
+    gGhostObj = 0;
     free_tt_ghost_data();
     D_8011AD38 = -1;
     if ((gIsTimeTrial) && (numPlayers == 1)) {
@@ -1043,7 +1043,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             newRacerObj->behaviorId = BHV_UNK_3A;
             newRacerObj->shadow->scale = 0.01f;
             newRacerObj->interactObj->flags = 0;
-            D_800DC718 = newRacerObj;
+            gGhostObj = newRacerObj;
             newRacerObj->unk64->racer.transparency = 0x60;
         }
     }
@@ -1122,7 +1122,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             if (var_s4) {
                 set_taj_voice_line(SOUND_VOICE_TAJ_CHALLENGE_RACE);
                 settings->tajFlags |= 1 << (var_s4 + 31);
-                func_800521B8(2);
+                set_taj_status(2);
                 set_next_taj_challenge_menu(var_s4);
                 safe_mark_write_save_file(get_save_file_index());
             }
@@ -1135,7 +1135,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     if (func_8000E148() != 0) {
         func_80072298(0);
         D_8011ADB0 = 0;
-        func_8006BD10(1.0f);
+        start_level_music(1.0f);
     }
     set_free_queue_state(0);
     free_from_memory_pool(entry);
