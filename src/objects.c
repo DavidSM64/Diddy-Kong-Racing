@@ -28,6 +28,8 @@
 #include "controller.h"
 #include "game_text.h"
 #include "audiosfx.h"
+#include "unknown_005740.h"
+#include "vehicle_misc.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
@@ -53,7 +55,7 @@ s16 D_800DC724 = 0x2A30;
 s16 D_800DC728 = -1;
 s16 D_800DC72C = 0;
 u8 gHasGhostToSave = 0;
-u8 gTimeTrialStaffGhost = 0;
+u8 gTimeTrialStaffGhost = FALSE;
 u8 gBeatStaffGhost = FALSE;
 s8 D_800DC73C = 0;
 s8 D_800DC740 = 0;
@@ -224,7 +226,7 @@ s16 gCutsceneID;
 s16 D_8011AE7C;
 s8 D_8011AE7E;
 s16 gTTGhostTimeToBeat;
-s16 D_8011AE82;
+s16 D_8011AE82; //Current Vehicle being used in track?
 s16 gMapDefaultVehicle; // Vehicle enum
 s32 D_8011AE88;
 Gfx *gObjectCurrDisplayList;
@@ -314,7 +316,7 @@ void func_8000B290(void) {
         D_800DC74C[0] = 0;
         D_800DC74C[1] = 0;
     }
-    var_s0 = (struct TempStruct9 *) get_misc_asset(MISC_ASSET_UNK14);
+    var_s0 = (struct TempStruct9 *) get_misc_asset(ASSET_MISC_20);
     for (i = 0; i < 10; i++) {
         temp_a0_2 = var_s0[i].unk78;
         if (temp_a0_2 != 0) {
@@ -570,16 +572,14 @@ s32 normalise_time(s32 timer) {
     }
 }
 
-#ifdef NON_MATCHING
-//Really close to matching. Looks like it's just regalloc left, but there's a couple of fakematch stuff in there.
 void func_8000C8F8(s32 arg0, s32 arg1) {
     s32 assetSize;
     Settings *settings;
     s32 i;
-    s32 *asset;
+    s32 *mem;
     s32 var_s0;
     u32 assetOffset;
-    s32 *assetTable;
+    u32 *objMapTable;
     UNUSED s32 pad;
     u8 *compressedAsset;
     s32 temp_t3;
@@ -599,37 +599,34 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
     }
     
     D_8011AD3E = 0;
-    asset = allocate_from_main_pool_safe(0x3000, COLOUR_TAG_BLUE);
-    D_8011AEB0[arg1] = asset;
-    D_8011AE98[arg1] = (u8 *)(D_8011AEB0[arg1] + 4); //Some structs unk4?
+    mem = allocate_from_main_pool_safe(0x3000, COLOUR_TAG_BLUE);
+    D_8011AEB0[arg1] = mem;
+    D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
     D_8011AEA0[arg1] = 0;
     D_8011AEA8[arg1] = arg0;
-    assetTable = (s32 *) load_asset_section_from_rom(ASSET_LEVEL_OBJECT_MAPS_TABLE);
-    for (i = 0; assetTable[i] != -1; i++) { }
-    
-    //REGALLOC DIFF START
-    if (arg0 >= (i - 1)) {
+    objMapTable = (u32 *) load_asset_section_from_rom(ASSET_LEVEL_OBJECT_MAPS_TABLE);
+    for (i = 0; objMapTable[i] != 0xFFFFFFFF; i++) { }
+    i--;
+    if (arg0 >= i) {
         arg0 = 0;
     }
-    assetOffset = (&assetTable[arg0])[0];
-    assetSize = (&assetTable[arg0])[1];
-    assetSize -= assetOffset;
-    //REGALLOC DIFF END
+    assetOffset = objMapTable[arg0];
+    assetSize = objMapTable[arg0+1] - assetOffset;
 
     if (assetSize != 0) {
-        compressedAsset = (u8 *) asset;
+        compressedAsset = (u8 *) mem;
         compressedAsset = ((compressedAsset + get_asset_uncompressed_size(ASSET_LEVEL_OBJECT_MAPS, assetOffset)) - (0, assetSize)) + 0x20;
         load_asset_to_address(ASSET_LEVEL_OBJECT_MAPS, (u32) compressedAsset, assetOffset, assetSize);
-        gzip_inflate(compressedAsset, (u8 *) asset);
-        free_from_memory_pool(assetTable);
-        D_8011AE98[arg1] = (u8 *)(D_8011AEB0[arg1] + 4);
-        D_8011AEA0[arg1] = *asset;
+        gzip_inflate(compressedAsset, (u8 *) mem);
+        free_from_memory_pool(objMapTable);
+        D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
+        D_8011AEA0[arg1] = *mem;
         D_8011AEC0 = arg1;
         for (var_s0 = 0; var_s0 < D_8011AEA0[arg1]; var_s0 += temp_t3) {
             spawn_object((LevelObjectEntryCommon *) D_8011AE98[arg1], 1);            
             D_8011AE98[arg1] = &D_8011AE98[arg1][temp_t3 = D_8011AE98[arg1][1] & 0x3F];
         }
-        D_8011AE98[arg1] = (u8 *)(D_8011AEB0[arg1] + 4);
+        D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
         D_8011AE70 = 0;
         D_8011ADC0 = 1;
         if (D_8011ADAC == 0) {
@@ -641,9 +638,6 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
         D_8011ADAC = 1;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/objects/func_8000C8F8.s")
-#endif
 
 // Reset all values of D_8011AE08 to NULL
 void func_8000CBC0(void) {
@@ -678,8 +672,479 @@ s32 func_8000CC20(Object *obj) {
     return NextFreeIndex;
 }
 
-// Has a jump table
+#ifdef NON_EQUIVALENT
+void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
+    s32 numPlayers; // sp144
+    enum GameMode gameMode;
+    s32 cutsceneID; //sp130
+    s8* miscAsset16;
+    s8 sp11C[8];
+    s8 sp114[8];
+    s32 spF4[8];
+    s32 spD4[8];
+    s32 spB4[8];
+    s32 sp94[8]; 
+    LevelHeader* levelHeader;
+    ObjectSegment* cutsceneCameraSegment; // sp74
+    s16 objectId;
+    s8 sp127;
+    u8 raceType;
+    s8 tempVehicle;
+    u8 var_a1;
+    s32 isChallengeMode; // sp64
+    s32 i6; // sp54
+    LevelObjectEntry_Unk8000CC7C* entry;
+    Object* curObj;
+    Object* curRacerObj;
+    Object* newRacerObj;
+    Object_Racer *curRacer;
+    Settings* settings;
+    s32 spawnObjFlags;
+    s32 racerPos;
+    s32 i2;
+    s32 j;
+    s32 var_s4;
+    s32 tajFlags;
+
+    D_8011AD20 = 0;
+    D_8011ADB0 = 0;
+    gFirstTimeFinish = 0;
+    gNumRacers = 0;
+    D_8011AF00 = 0;
+    set_taj_status(0);
+    levelHeader = get_current_level_header();
+    raceType = levelHeader->race_type;
+    if (raceType == RACETYPE_CUTSCENE_1 || raceType == RACETYPE_CUTSCENE_2) {
+        return; 
+    }
+    if (raceType == RACETYPE_BOSS || raceType & RACETYPE_CHALLENGE) {
+        gIsTimeTrial = 0;
+        gTimeTrialEnabled = 0;
+    }
+    cutsceneID = -1;
+    if (is_time_trial_enabled() && raceType == RACETYPE_DEFAULT) {
+        cutsceneCameraSegment = get_cutscene_camera_segment();
+        cutsceneID = (u8) cutsceneCameraSegment->object.animationID;
+        cutsceneCameraSegment->object.animationID = 1;
+    }
+    gameMode = get_game_mode();
+    settings = get_settings();
+    miscAsset16 = (s8*) get_misc_asset(3);
+    D_8011AE82 = D_8011ADC5;
+    tajFlags = settings->courseFlagsPtr[settings->courseId];
+    if (!(tajFlags & 1)) { // Check if the player has not visited the course yet.
+        settings->courseFlagsPtr[settings->courseId] = tajFlags | 1;
+        D_8011AF00 = 2;
+    }
+    if (raceType != RACETYPE_DEFAULT) {
+        D_8011AF00 = 2;
+    }
+    for(i2 = 0; i2 < 8; i2++) {
+        spB4[i2] = 0;
+        spF4[i2] = 0;
+        spD4[i2] = 0;
+    }
+    for(i2 = 0; i2 < gObjectCount; i2++) {
+        curObj = gObjPtrList[i2];
+        if (!(curObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
+            if (curObj->behaviorId == BHV_SETUP_POINT) {
+                if (arg1 == curObj->properties.setupPoint.unk4) {
+                    if (curObj->properties.setupPoint.unk0 < 8) {
+                        spF4[curObj->properties.setupPoint.unk0] = curObj->segment.trans.x_position;
+                        spD4[curObj->properties.setupPoint.unk0] = curObj->segment.trans.y_position;
+                        spB4[curObj->properties.setupPoint.unk0] = curObj->segment.trans.z_position;
+                        sp94[curObj->properties.setupPoint.unk0] = curObj->segment.trans.y_rotation;
+                    }
+                    tempVehicle = curObj->segment.level_entry->setupPoint.vehicle;
+                    if (tempVehicle != -1) {
+                        vehicle = tempVehicle;
+                    }
+                }
+            }
+        }
+    }
+    D_8011ADC5 = vehicle;
+    D_8011AE82 = D_8011ADC5;
+    numPlayers = arg2 + 1;
+    gNumRacers = 8;
+    D_800DC740 = 0;
+    if (is_two_player_adventure_race()) {
+        numPlayers = 2;
+        D_800DC740 = 1;
+        set_scene_viewport_num(1);
+    }
+    if (raceType == RACETYPE_HUBWORLD) {
+        gTimeTrialEnabled = 0;
+    }
+    
+    gIsTimeTrial = gTimeTrialEnabled;
+    if (gIsTimeTrial) {
+        raceType = RACETYPE_HUBWORLD; // ???
+    }
+    isChallengeMode = raceType & RACETYPE_CHALLENGE;
+    if (raceType == RACETYPE_HUBWORLD || numPlayers >= 3) {
+        gNumRacers = numPlayers;
+        if (get_level_property_stack_pos() == 0 && D_800DC708 != 0) {
+            sp94[0] += D_800DC708;
+            D_800DC708 = 0;
+        }
+    } else if (numPlayers == 2) {
+        gNumRacers = get_multiplayer_racer_count();
+    }
+    
+    if (isChallengeMode != 0) {
+        gNumRacers = 4;
+    }
+    D_8011AD3C = 0;
+    if (raceType == RACETYPE_BOSS) {
+        gNumRacers = 2;
+        numPlayers = 1;
+        D_8011AD3C = 1;
+    }
+    D_800DC71C = 0;
+    if (gameMode == GAMEMODE_MENU && raceType == RACETYPE_DEFAULT) {
+        gNumRacers = 6;
+        D_800DC71C = 1;
+        D_8011AD3C = 2;
+    }
+    
+    for(i2 = 0; i2 < gNumRacers; i2++) {
+        sp11C[i2] = 0;
+    }
+    
+    var_a1 = 0;
+    for(i2 = 0; i2 < numPlayers; i2++) {
+        racerPos = settings->racers[i2].starting_position;
+        if (racerPos < gNumRacers) {
+            if (sp11C[racerPos] == 0) {
+                sp11C[racerPos] = 1;
+                continue;
+            }
+        }
+        sp114[var_a1++] = (u16) i2;
+    }
+    
+    for (i2 = numPlayers; i2 < gNumRacers; i2++) {
+        racerPos = settings->racers[i2].starting_position;
+        if (racerPos < gNumRacers) {
+            if (sp11C[racerPos] == 0) {
+                sp11C[racerPos] = 1;
+                continue;
+            }
+        }
+        sp114[var_a1++] = (u16) i2;
+    }
+    
+    for (i6 = 0; i6 < var_a1; i6++) {
+        for (j = 0; j < gNumRacers; j++) {
+            if (sp11C[j] == 0) {
+                sp11C[j] = 1;
+                settings->racers[sp114[i6]].starting_position = j;
+                j = gNumRacers;
+            }
+        }
+    }
+    if (((!(&curObj->segment.trans)) && (!(&curObj->segment.trans))) && (!(&curObj->segment.trans))) {}
+    entry = allocate_from_main_pool_safe(sizeof(LevelObjectEntry_Unk8000CC7C), COLOUR_TAG_YELLOW);
+    entry->unkC = 0;
+    entry->unkA = 0;
+    entry->unk8 = 0;
+    if (levelHeader->vehicle == VEHICLE_CAR) {
+        gIsNonCarRacers = FALSE;
+    } else {
+        gIsNonCarRacers = TRUE;
+    }
+    sp127 = -1;
+    i2 = gNumRacers;
+    D_8011AD24[1] = levelHeader->unkB8;
+     for (i6 = 0; i6 < gNumRacers; i6++) {
+        var_s4 = i6;
+        if (raceType != RACETYPE_HUBWORLD && isChallengeMode == 0 && D_8011AD3C == 0) {
+            var_s4 = 0;
+            // This might not be a for loop?
+            for(j = 0; j < gNumRacers; j++) { 
+                if (i6 == settings->racers[j].starting_position) {
+                    var_s4 = j;
+                    j = i2;
+                }
+            }
+        }
+        if (var_s4 < numPlayers) {
+            entry->unkE = var_s4;
+        } else {
+            entry->unkE = 4;
+        }
+        if (raceType != RACETYPE_HUBWORLD || entry->unkE != 4) {
+            spawnObjFlags = 1;
+            if (D_8011AD3C == 1) {
+                if (i6 == 0) {
+                    vehicle = gBossVehicles[D_8011AD24[1]].playerVehicle;
+                } else {
+                    vehicle = gBossVehicles[D_8011AD24[1]].playerVehicle;
+                }
+            } else if (D_8011AD3C == 2) {
+                vehicle = levelHeader->vehicle;
+            } else {
+                if (entry->unkE == 4 || is_two_player_adventure_race()) {
+                    vehicle = get_player_selected_vehicle(PLAYER_ONE);
+                } else if (numPlayers >= 2) {
+                    vehicle = get_player_selected_vehicle(entry->unkE);
+                }
+            }
+            
+            // Are these assignments correct? Seems weird.
+            if (D_8011AD3C == 2) {
+                objectId = D_800DC7A8[D_800DC840[i6] + (vehicle * 10)];
+            } else if (vehicle < 5) {
+                objectId = D_800DC7A8[(settings->racers[var_s4].character) + (vehicle * 10)];
+            } else {
+                objectId = D_800DC7B8[vehicle];
+            }
+            
+            entry->common.objectID = objectId;
+            entry->common.size = ((objectId & 0x100) >> 1) | 0x10;
+            entry->common.x = spF4[i6];
+            entry->common.y = spD4[i6];
+            entry->common.z = spB4[i6];
+            entry->unkC =     sp94[i6];
+            if (entry->unkE == 4) {
+                func_800619F4(1);
+            }
+            if (entry->unkE == 4) {
+                spawnObjFlags = 5;
+                if (numPlayers >= 2) {
+                    spawnObjFlags |= 8;
+                }
+            }
+            if (entry->unkE != 4) {
+                if (numPlayers == 1) {
+                    spawnObjFlags |= 0x10;
+                }
+            }
+            if (vehicle >= VEHICLE_TRICKY) {
+                spawnObjFlags = 1;
+                func_800619F4(0);
+            }
+            newRacerObj = spawn_object((LevelObjectEntryCommon*)entry, spawnObjFlags);
+            newRacerObj->segment.trans.y_rotation = sp94[i6];
+            (*gRacers)[i6] = newRacerObj;
+            gRacersByPosition[i6] = newRacerObj;
+            gRacersByPort[var_s4] = newRacerObj;
+            curRacer = &newRacerObj->unk64->racer;
+            newRacerObj->segment.level_entry = NULL;
+            curRacer->vehicleID = vehicle;
+            curRacer->vehicleIDPrev = vehicle;
+            if (sp127 != -1 && sp127 != vehicle) {
+                D_8011AD20 = 1;
+            }
+            sp127 = vehicle;
+            if (curRacer->vehicleID == VEHICLE_PLANE || curRacer->vehicleID == VEHICLE_SMOKEY || curRacer->vehicleID == VEHICLE_PTERODACTYL) {
+                gIsNonCarRacers = TRUE;
+            }
+            curRacer->unk1CB = vehicle;
+            tempVehicle = curRacer->unk1CB;
+            if (tempVehicle < VEHICLE_CAR || tempVehicle > VEHICLE_PLANE) {
+                curRacer->unk1CB = 0;
+            }
+            curRacer->unk2 = var_s4;
+            curRacer->characterId = settings->racers[var_s4].character;
+            if (D_8011AD3C == 2) {
+                curRacer->characterId = D_800DC840[i6];
+            } else {
+                curRacer->characterId = settings->racers[var_s4].character;
+            }
+            if (raceType == RACETYPE_CHALLENGE_BATTLE) {
+                curRacer->bananas = 8;
+            } else {
+                curRacer->bananas = 0;
+            }
+            if (get_filtered_cheats() & CHEAT_START_WITH_10_BANANAS && !isChallengeMode) {
+                if (curRacer->playerIndex != PLAYER_COMPUTER) {
+                    curRacer->bananas = 10;
+                }
+            }
+            if ((gameMode != GAMEMODE_MENU || D_8011AD3C == 2) && vehicle < VEHICLE_TRICKY) {
+                curRacer->unk118 = func_80004B40(curRacer->characterId, curRacer->vehicleID);
+            } else {
+                curRacer->unk118 = NULL;
+            }
+            
+            newRacerObj->interactObj->pushForce = miscAsset16[curRacer->characterId] + 1;
+            switch (curRacer->vehicleID) {
+                case VEHICLE_TRICKY:
+                case VEHICLE_BLUEY:
+                case VEHICLE_SMOKEY:
+                case VEHICLE_PTERODACTYL:
+                case VEHICLE_SNOWBALL:
+                case VEHICLE_BUBBLER:
+                case VEHICLE_WIZPIG:
+                case VEHICLE_ROCKET:
+                    func_8005C2F0(newRacerObj, curRacer);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    var_s4 = 0;
+    if (raceType != RACETYPE_BOSS) {
+        D_8011AD3C = 0;
+    }
+    if (D_8011AD3C != 0) {
+        D_8011AD20 = 0;
+    }
+    if (get_game_mode() == GAMEMODE_INGAME) {
+        for(j = 0; j < gObjectCount; j++) {
+            curObj = gObjPtrList[j];
+            tajFlags = curObj->segment.header->flags;
+            if ((tajFlags & 0x20) && (gIsTimeTrial)) {
+                free_object(curObj);
+            } else if ((tajFlags & 0x40) && (numPlayers >= 2)) {
+                free_object(curObj);
+            }
+        }
+    }
+    gGhostObj = 0;
+    free_tt_ghost_data();
+    D_8011AD38 = -1;
+    if ((gIsTimeTrial) && (numPlayers == 1)) {
+        func_80059944();
+        D_8011AD38 = func_8001B668(0);
+        gHasGhostToSave = 0;
+        if (D_800DC728 >= 5) {
+            D_800DC728 = 0;
+        }
+        if (func_8001B288() != 0) {
+            objectId = D_800DC7A8[(D_800DC728 * 10) + D_800DC72C];
+            entry->common.size = ((objectId & 0x100) >> 1) | 0x10;
+            entry->common.objectID = objectId;
+            entry->common.x = spF4[0];
+            entry->common.y = spD4[0];
+            entry->common.z = spB4[0];
+            entry->unkC = sp94[0];
+            newRacerObj = spawn_object((LevelObjectEntryCommon*) entry, 1);
+            newRacerObj->segment.level_entry = NULL;
+            newRacerObj->behaviorId = BHV_UNK_3A;
+            newRacerObj->shadow->scale = 0.01f;
+            newRacerObj->interactObj->flags = 0;
+            D_8011AD34 = newRacerObj;
+            newRacerObj->unk64->racer.transparency = 0x60;
+        }
+        if (func_8001B4FC(get_current_map_id()) != 0) {
+            objectId = D_800DC7B8[gMapDefaultVehicle * 10];
+            entry->common.size = ((objectId & 0x100) >> 1) | 0x10;
+            entry->common.objectID = objectId;
+            entry->common.x = spF4[0];
+            entry->common.y = spD4[0];
+            entry->common.z = spB4[0];
+            entry->unkC = sp94[0];
+            newRacerObj = spawn_object((LevelObjectEntryCommon*) entry, 1);
+            newRacerObj->segment.level_entry = NULL;
+            newRacerObj->behaviorId = BHV_UNK_3A;
+            newRacerObj->shadow->scale = 0.01f;
+            newRacerObj->interactObj->flags = 0;
+            gGhostObj = newRacerObj;
+            newRacerObj->unk64->racer.transparency = 0x60;
+        }
+    }
+    D_8011ADB0 = 100;
+    for (j = 0; j < gNumRacers; j++) {
+        curRacerObj = (*gRacers)[j];
+        curRacer = &curRacerObj->unk64->racer;
+        for(i2 = 0; i2 < 10; i2++) {
+            update_player_racer(curRacerObj, LOGIC_30FPS); // Simulate 10 updates?
+        }
+        if (curRacer->playerIndex == PLAYER_COMPUTER) {
+            var_s4 = (var_s4 + 1) & 1;
+            for (i2 = 0; i2 < curRacerObj->segment.header->numberOfModelIds; i2++) {
+                if (curRacerObj->unk68[i2] != NULL) {
+                    if (curRacerObj->unk68[i2]->unk20 != 0) {
+                        curRacerObj->unk68[i2]->unk20 = (var_s4 * 2);
+                    }
+                }
+            }
+        } else {
+            // curRacer is a human racer.
+            for (i2 = 0; i2 < curRacerObj->segment.header->numberOfModelIds; i2++) {
+                if (curRacerObj->unk68[i2] != NULL) {
+                    if (curRacerObj->unk68[i2]->unk20 != 0) {
+                        curRacerObj->unk68[i2]->unk20 = 0;
+                    }
+                }
+            }
+        }
+        if (get_filtered_cheats() & CHEAT_BIG_CHARACTERS) {
+            curRacerObj->segment.trans.scale *= 1.4f;
+        }
+        if (get_filtered_cheats() & CHEAT_SMALL_CHARACTERS) {
+            curRacerObj->segment.trans.scale *= 0.714f;
+        }
+        curRacer->stretch_height_cap = 1.0f;
+        curRacer->stretch_height = 1.0f;
+    }
+    if (raceType == RACETYPE_DEFAULT || isChallengeMode || gIsTimeTrial || D_8011AD3C) {
+        D_8011ADB0 = 80;
+    } else {
+        D_8011ADB0 = 0;
+    }
+    if (raceType == RACETYPE_DEFAULT && numPlayers == 1 && !is_in_adventure_two()) {
+        if (is_two_player_adventure_race() == 0) {
+            for(i2 = 0; i2 < 3; i2++) {
+                entry->common.objectID = BHV_ANIMATED_OBJECT;
+                entry->common.size = 8;
+                entry->common.x = 0;
+                entry->common.y = 0;
+                entry->common.z = 0;
+                newRacerObj = spawn_object((LevelObjectEntryCommon*)entry, 1);
+                newRacerObj->properties.common.unk0 = i2;
+                newRacerObj->segment.level_entry = NULL;
+            }
+        }
+    }
+    D_8011AD4E = 0;
+    D_8011ADB4 = 0;
+    set_next_taj_challenge_menu(0);
+    if (settings->worldId == WORLD_CENTRAL_AREA) {
+        if (!is_in_tracks_mode()) {
+            var_s4 = 0;
+            miscAsset16 = (s8*)get_misc_asset(ASSET_MISC_16);
+            tajFlags = settings->tajFlags;
+            
+            // settings->balloonsPtr[0] is the total balloon count.
+            if (!(tajFlags & TAJ_FLAGS_CAR_CHAL_UNLOCKED) && (settings->balloonsPtr[0] >= miscAsset16[0])) {
+                var_s4 = 1;
+            } else if (!(tajFlags & TAJ_FLAGS_HOVER_CHAL_UNLOCKED) && (settings->balloonsPtr[0] >= miscAsset16[1])) {
+                var_s4 = 2;
+            } else if (!(tajFlags & TAJ_FLAGS_PLANE_CHAL_UNLOCKED) && (settings->balloonsPtr[0] >= miscAsset16[2])) {
+                var_s4 = 3;
+            }
+            
+            if (var_s4) {
+                set_taj_voice_line(SOUND_VOICE_TAJ_CHALLENGE_RACE);
+                settings->tajFlags |= 1 << (var_s4 + 31);
+                set_taj_status(2);
+                set_next_taj_challenge_menu(var_s4);
+                safe_mark_write_save_file(get_save_file_index());
+            }
+        }
+    }
+    *D_8011AD24 = 1;
+    if (cutsceneID >= 0) {
+        cutsceneCameraSegment->object.animationID = cutsceneID;
+    }
+    if (func_8000E148() != 0) {
+        func_80072298(0);
+        D_8011ADB0 = 0;
+        start_level_music(1.0f);
+    }
+    set_free_queue_state(0);
+    free_from_memory_pool(entry);
+    set_free_queue_state(2);
+    
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_8000CC7C.s")
+#endif
 
 /**
  * Return an error status for the controller pak.
@@ -2636,7 +3101,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         if (vehicleID >= NUMBER_OF_PLAYER_VEHICLES) {
             vehicleID = VEHICLE_CAR;
         }
-        shield = ((struct RacerShieldGfx *) get_misc_asset(MISC_ASSET_SHIELD_DATA));
+        shield = ((struct RacerShieldGfx *) get_misc_asset(ASSET_MISC_SHIELD_DATA));
         vehicleID =  (vehicleID * 10) + var_a2;
         shield = shield + vehicleID;
         gShieldEffectObject->segment.trans.x_position = shield->x_position;
@@ -2702,7 +3167,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gObjectCurrDisplayList = *dList;
             gObjectCurrMatrix = *mtx;
             gObjectCurrVertexList = *vtxList;
-            magnet = (f32 *) get_misc_asset(MISC_ASSET_MAGNET_DATA);
+            magnet = (f32 *) get_misc_asset(ASSET_MISC_MAGNET_DATA);
             vehicleID = racer->vehicleID;
             if (vehicleID < VEHICLE_CAR || vehicleID >= NUMBER_OF_PLAYER_VEHICLES) {
                 vehicleID = VEHICLE_CAR;
@@ -3006,7 +3471,62 @@ void process_object_interactions(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800159C8.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_80016500.s")
+
+void func_80016500(Object *obj, Object_Racer *racer) {
+    s32 sp3C;
+    s32 angle;
+    UNUSED s32 pad;
+    f32 startVelocity;
+    f32 cosAngle;
+    f32 sinAngle;
+
+    startVelocity = racer->velocity;
+    angle = racer->steerVisualRotation;
+    if (racer->vehicleID == VEHICLE_CAR) {
+        if (racer->drift_direction != 0) {
+            angle += racer->unk10C;
+            angle = (s16)angle;
+        }
+    }
+    cosAngle = coss_f(-angle);
+    sinAngle = sins_f(-angle);
+    racer->lateral_velocity = ( obj->segment.x_velocity * cosAngle) + (obj->segment.z_velocity * sinAngle);
+    racer->velocity = (-obj->segment.x_velocity * sinAngle) + (obj->segment.z_velocity * cosAngle);
+    if (racer->playerIndex != -1) {
+        angle = (startVelocity - racer->velocity) * 14.0f;
+        if (angle < 0) {
+            angle = -angle;
+        }
+        angle += 35;
+        if (angle >= 128) {
+            angle = 127;
+        }
+        if (racer->unk1F6 == 0) {
+            play_sound_global(SOUND_CRASH_CHARACTER, &racer->unk220);
+            func_80001FB8(SOUND_CRASH_CHARACTER, (s32 *) racer->unk220, angle);
+        }
+        if (racer->unk1F6 == 0 && angle >= 56) {
+            if (!racer->raceFinished) {
+                func_80072348(racer->playerIndex, 18);
+            }
+            racer->unk1F3 |= 8;
+        }
+        if (angle >= 56) {
+            play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 1);
+        }
+        sp3C = (startVelocity - racer->velocity);
+        if (sp3C < 0) {
+            sp3C = -sp3C;
+        }
+        if (sp3C >= 4) {
+            sp3C = 3;
+        }
+        racer->unk1F6 = 30;
+        set_active_camera(racer->playerIndex);
+        get_active_camera_segment()->object.distanceToCamera = sp3C;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80016748.s")
 
 void func_80016BC4(Object *obj) {
@@ -3172,7 +3692,65 @@ Object *find_taj_object(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80018CE0.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001955C.s")
+
+//Rocket Path
+s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 checkpointDist, f32 *outX, f32 *outY, f32 *outZ) {
+    s32 numCheckpoints;
+    s32 checkpointIndex;
+    s32 i;
+    f32 xData[4];
+    f32 yData[4];
+    f32 zData[4];
+    f32 xSpline;
+    f32 temp2;
+    f32 zSpline;
+    f32 ySpline;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    CheckpointNode *checkpointNode;
+
+    numCheckpoints = gNumberOfCheckpoints;
+    if (numCheckpoints == 0) {
+        return FALSE;
+    }
+    checkpointIndex = checkpoint - 2;
+    if (checkpointIndex < 0) {
+        checkpointIndex += numCheckpoints;
+    }
+    for(i = 0; i < 4; i++) {
+        checkpointNode = find_next_checkpoint_node(checkpointIndex, arg2);
+        xData[i] = checkpointNode->x + (checkpointNode->scale * checkpointNode->rotationZFrac * arg3);
+        yData[i] = checkpointNode->y + (checkpointNode->scale * arg4);
+        zData[i] = checkpointNode->z + (checkpointNode->scale * -checkpointNode->rotationXFrac * arg3);
+        checkpointIndex += 1;
+        if (checkpointIndex == numCheckpoints) {
+            checkpointIndex = 0;
+        }
+    }
+    temp2 = (1.0 - checkpointDist);
+    if (temp2 < 0.0f) {
+        temp2 = 0.0f;
+    }
+    if (temp2 > 1.0) {
+        temp2 = 1.0f;
+    }
+    xSpline = cubic_spline_interpolation(xData, 0, temp2, &dx);
+    ySpline = cubic_spline_interpolation(yData, 0, temp2, &dy);
+    zSpline = cubic_spline_interpolation(zData, 0, temp2, &dz);
+    temp2 = sqrtf((dx * dx) + (dy * dy) + (dz * dz));
+    if (temp2 != 0.0f) {
+        temp2 = 500.0 / temp2;
+        dx *= temp2;
+        dy *= temp2;
+        dz *= temp2;
+    }
+    *outX = (xSpline + dx) - obj->segment.trans.x_position;
+    *outY = (ySpline + dy) - obj->segment.trans.y_position;
+    *outZ = (zSpline + dz) - obj->segment.trans.z_position;
+    return TRUE;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_80019808.s")
 
 /**
@@ -3315,7 +3893,33 @@ void tt_ghost_beaten(s32 arg0, s16 *playerId) {
     play_time_trial_end_message(playerId);
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001B4FC.s")
+u8 func_8001B4FC(s32 trackId) {
+    s32 i;
+    s8 *mainTrackIds;
+    u16 *temp_v0;
+    Settings *settings;
+
+    gBeatStaffGhost = FALSE;
+    gTimeTrialStaffGhost = FALSE;
+    settings = get_settings();
+    if (get_map_default_vehicle(trackId) == D_8011AE82) {
+        mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
+        temp_v0 = (u16 *) get_misc_asset(ASSET_MISC_24);
+        for (i = 0; mainTrackIds[i] != -1 && trackId != mainTrackIds[i]; i++) { }
+        if (mainTrackIds[i] != -1) {
+            if (temp_v0[i] >= settings->courseTimesPtr[D_8011AE82][trackId]) {
+                //Check if TT has been beaten?
+                if (!(get_eeprom_settings() & ((1 << 4) << i) )) {
+                    gBeatStaffGhost = TRUE;
+                }
+                if (func_8001B2F0(trackId) == 0) {
+                    gTimeTrialStaffGhost = TRUE;
+                }
+            }
+        }
+    }
+    return gTimeTrialStaffGhost;
+}
 
 /**
  * Return the time trial ghost object.

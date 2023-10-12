@@ -8481,20 +8481,20 @@ glabel ASSET_MISC_3
 .incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_3.bin"
 glabel ASSET_MISC_4
 .incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_4.bin"
-glabel ASSET_MISC_5
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_5.bin"
-glabel ASSET_MISC_6
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_6.bin"
-glabel ASSET_MISC_7
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_7.bin"
+glabel ASSET_MISC_TRICKY_BOSS_DATA
+.incbin "./build/us_1.0/assets/misc/unlabeled/tricky_boss_data.bin"
+glabel ASSET_MISC_BLUEY_BOSS_DATA
+.incbin "./build/us_1.0/assets/misc/unlabeled/bluey_boss_data.bin"
+glabel ASSET_MISC_SMOKEY_BOSS_DATA
+.incbin "./build/us_1.0/assets/misc/unlabeled/smokey_boss_data.bin"
 glabel ASSET_MISC_8
 .incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_8.bin"
-glabel ASSET_MISC_9
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_9.bin"
-glabel ASSET_MISC_10
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_10.bin"
-glabel ASSET_MISC_11
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_11.bin"
+glabel ASSET_MISC_RACER_WEIGHT
+.incbin "./build/us_1.0/assets/misc/unlabeled/racer_weight_data.bin"
+glabel ASSET_MISC_RACER_HANDLING
+.incbin "./build/us_1.0/assets/misc/unlabeled/racer_handling_data.bin"
+glabel ASSET_MISC_RACER_UNUSED_11
+.incbin "./build/us_1.0/assets/misc/unlabeled/racer_unused_11_data.bin"
 glabel ASSET_MISC_12
 .incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_12.bin"
 glabel ASSET_MISC_13
@@ -8513,10 +8513,10 @@ glabel ASSET_MISC_19
 .incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_19.bin"
 glabel ASSET_MISC_20
 .incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_20.bin"
-glabel ASSET_MISC_21
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_21.bin"
-glabel ASSET_MISC_22
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_22.bin"
+glabel ASSET_MISC_SHIELD_DATA
+.incbin "./build/us_1.0/assets/misc/unlabeled/shield_data.bin"
+glabel ASSET_MISC_MAGNET_DATA
+.incbin "./build/us_1.0/assets/misc/unlabeled/magnet_data.bin"
 glabel ASSET_MISC_23
 .incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_23.bin"
 glabel ASSET_MISC_24
@@ -8583,8 +8583,8 @@ glabel ASSET_MISC_54
 .incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_54.bin"
 glabel ASSET_MISC_55
 .incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_55.bin"
-glabel ASSET_MISC_56
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_56.bin"
+glabel ASSET_MISC_RACER_HITBOX_SIZE
+.incbin "./build/us_1.0/assets/misc/unlabeled/racer_hitbox_size.bin"
 glabel ASSET_MISC_57
 .incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_57.bin"
 glabel ASSET_MISC_58
@@ -8622,13 +8622,13 @@ glabel ASSET_MISC_TABLE
 .word (ASSET_MISC_2 - ASSET_MISC) / 4
 .word (ASSET_MISC_3 - ASSET_MISC) / 4
 .word (ASSET_MISC_4 - ASSET_MISC) / 4
-.word (ASSET_MISC_5 - ASSET_MISC) / 4
-.word (ASSET_MISC_6 - ASSET_MISC) / 4
-.word (ASSET_MISC_7 - ASSET_MISC) / 4
+.word (ASSET_MISC_TRICKY_BOSS_DATA - ASSET_MISC) / 4
+.word (ASSET_MISC_BLUEY_BOSS_DATA - ASSET_MISC) / 4
+.word (ASSET_MISC_SMOKEY_BOSS_DATA - ASSET_MISC) / 4
 .word (ASSET_MISC_8 - ASSET_MISC) / 4
-.word (ASSET_MISC_9 - ASSET_MISC) / 4
-.word (ASSET_MISC_10 - ASSET_MISC) / 4
-.word (ASSET_MISC_11 - ASSET_MISC) / 4
+.word (ASSET_MISC_RACER_WEIGHT - ASSET_MISC) / 4
+.word (ASSET_MISC_RACER_HANDLING - ASSET_MISC) / 4
+.word (ASSET_MISC_RACER_UNUSED_11 - ASSET_MISC) / 4
 .word (ASSET_MISC_12 - ASSET_MISC) / 4
 .word (ASSET_MISC_13 - ASSET_MISC) / 4
 .word (ASSET_MISC_14 - ASSET_MISC) / 4
@@ -8638,8 +8638,8 @@ glabel ASSET_MISC_TABLE
 .word (ASSET_MISC_18 - ASSET_MISC) / 4
 .word (ASSET_MISC_19 - ASSET_MISC) / 4
 .word (ASSET_MISC_20 - ASSET_MISC) / 4
-.word (ASSET_MISC_21 - ASSET_MISC) / 4
-.word (ASSET_MISC_22 - ASSET_MISC) / 4
+.word (ASSET_MISC_SHIELD_DATA - ASSET_MISC) / 4
+.word (ASSET_MISC_MAGNET_DATA - ASSET_MISC) / 4
 .word (ASSET_MISC_23 - ASSET_MISC) / 4
 .word (ASSET_MISC_24 - ASSET_MISC) / 4
 .word (ASSET_MISC_25 - ASSET_MISC) / 4
@@ -8673,7 +8673,7 @@ glabel ASSET_MISC_TABLE
 .word (ASSET_MISC_53 - ASSET_MISC) / 4
 .word (ASSET_MISC_54 - ASSET_MISC) / 4
 .word (ASSET_MISC_55 - ASSET_MISC) / 4
-.word (ASSET_MISC_56 - ASSET_MISC) / 4
+.word (ASSET_MISC_RACER_HITBOX_SIZE - ASSET_MISC) / 4
 .word (ASSET_MISC_57 - ASSET_MISC) / 4
 .word (ASSET_MISC_58 - ASSET_MISC) / 4
 .word (ASSET_MISC_59 - ASSET_MISC) / 4

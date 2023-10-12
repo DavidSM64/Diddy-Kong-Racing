@@ -372,7 +372,7 @@ void menu_results_init(void);
 void func_800976CC(void);
 void decompress_filename_string(u32 compressedFilename, char *output, s32 length);
 s32 compress_filename_string(char *filename, s32 length);
-void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *arg5, s32 arg6);
+void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *fileName, s32 arg6);
 void unload_big_font_4(void);
 void func_80098208(void);
 void draw_trophy_race_text(UNUSED s32 updateRate);
@@ -476,13 +476,15 @@ s32 menu_options_loop(s32 updateRate);
 void func_8008B4C8(void);
 void func_8008B758(s8 *activePlayers);
 s32 menu_audio_options_loop(s32 updateRate);
+void func_8009963C(void);
+void render_enter_filename_ui(UNUSED s32 updateRate);
+void randomise_ai_racer_slots(s32 arg0);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
 void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2);
 s32 menu_controller_pak_loop(s32 updateRate);
 void render_magic_codes_list_menu_text(s32 arg0);
-void randomise_ai_racer_slots(s32 arg0);
 void menu_game_select_init(void);
 void render_file_select_menu(s32 arg0);
 void func_8008FF1C(s32 updateRate);
@@ -511,7 +513,6 @@ s32 func_800998E0(s32 arg0);
 void func_80081218(void);
 void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour, TextureHeader *tex);
 void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
-void render_enter_filename_ui(UNUSED s32 unused);
 void func_8008D8BC(s32 updateRate);
 void renderTrackSelect(s32 arg0, s32 arg1, s8 *arg2, s8 *arg3, s32 arg4, s32 arg5, s32 arg6, DrawTexture *arg7, s32 arg8);
 //Possible names
@@ -520,7 +521,6 @@ s32 func_80095728(Gfx **gfx, MatrixS **mtx, Vertex **vtx, s32 updateRate);
 s32 func_8008F618(Gfx **dlist, MatrixS **mat);
 void func_80093D40(UNUSED s32 updateRate);
 void func_80080BC8(Gfx **);
-void func_8009963C(void);
 void func_80081C04(s32 num, s32 x, s32 y, u8 r, u8 g, u8 b, u8 a, u8 font, u8 alignment);
 void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour0, s32 colour1, s32 colour2, s32 colour3);
 void func_80084854(void);

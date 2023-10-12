@@ -150,8 +150,8 @@ typedef struct ObjPropertyRacer {
 } ObjPropertyRacer;
 
 typedef struct ObjPropertySetupPoint {
- s32 unk0; 
- s32 unk4; 
+    s32 unk0; 
+    s32 unk4; 
 } ObjPropertySetupPoint;
 
 typedef struct ObjProperties {

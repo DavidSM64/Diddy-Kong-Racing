@@ -332,7 +332,7 @@ s32 get_hub_area_id(s32 worldId) {
     if (worldId < 0 || worldId >= gNumberOfWorlds) {
         worldId = 0;
     }
-    hubAreaIds = (s8 *)get_misc_asset(MISC_ASSET_UNK1B); //hub_area_ids
+    hubAreaIds = (s8 *)get_misc_asset(ASSET_MISC_HUB_AREA_IDS);
 
     return hubAreaIds[worldId];
 }
@@ -426,7 +426,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
                             D_800DD330 = 2;
                         }
                     }
-                    someAsset = (s8 *) get_misc_asset(MISC_ASSET_UNK43);
+                    someAsset = (s8 *) get_misc_asset(ASSET_MISC_67);
                     for (var_s0 = 0; levelId != someAsset[var_s0]; var_s0 += 2) { }
                     levelId = someAsset[var_s0 + 1];
                     entranceId = cutsceneId;
@@ -442,7 +442,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
                         // Trigger World Key unlocking Challenge Door cutscene.
                         push_level_property_stack(levelId, entranceId, vehicleId, cutsceneId);
                         settings->cutsceneFlags |= CUTSCENE_DINO_DOMAIN_KEY << (var_s0 + 31);
-                        someAsset = (s8 *) get_misc_asset(MISC_ASSET_UNK44);
+                        someAsset = (s8 *) get_misc_asset(ASSET_MISC_68);
                         levelId = someAsset[var_s0 - 1];
                         entranceId = 0;
                         cutsceneId = CUTSCENE_ID_UNK_5;
@@ -456,7 +456,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
                 entranceId = 0;
                 cutsceneId = CUTSCENE_NONE;
                 settings->cutsceneFlags |= CUTSCENE_WIZPIG_FACE;
-                levelId = ((s8 *) get_misc_asset(MISC_ASSET_UNK44))[4];
+                levelId = ((s8 *) get_misc_asset(ASSET_MISC_68))[4];
             }
         }
     }

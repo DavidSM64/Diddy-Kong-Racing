@@ -4101,7 +4101,7 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
                         racer->balloon_level = 2;
                         levelMask = 2;
                     }
-                    balloonAsset = (s8 *) get_misc_asset(MISC_ASSET_UNK0C);
+                    balloonAsset = (s8 *) get_misc_asset(ASSET_MISC_12);
                     prevQuantity = racer->balloon_quantity;
                     racer->balloon_quantity = balloonAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2) + 1];
                     racer->unk209 |= 1;
@@ -4425,12 +4425,12 @@ void homing_rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon 
         } else {
             rocket->hitObj = targetObj;
             rocket->forwardVel = -25.0f;
-            sp58 = NULL;
+            sp58 = FALSE;
         }
         angle = (arctan2_f(diffX, diffZ) - 0x8000) & 0xFFFF;
         angleDiff = angle - (obj->segment.trans.y_rotation & 0xFFFF);
         WRAP(angleDiff, -0x8000, 0x8000);
-        if (sp58 != NULL) {
+        if (sp58) {
             obj->segment.trans.y_rotation += (angleDiff * updateRate) >> shift;
             angleDiff = sineY - (obj->segment.trans.x_rotation & 0xFFFF);
             WRAP(angleDiff, -0x8000, 0x8000);
@@ -4938,7 +4938,7 @@ void obj_loop_bubbler(Object *obj, s32 updateRate) {
 }
 
 void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry) {
-    obj->unk64 = (Object_64 *) ((s32) get_misc_asset(MISC_ASSET_UNK14) + (entry->unk8[0] << 7));
+    obj->unk64 = (Object_64 *) ((s32) get_misc_asset(ASSET_MISC_20) + (entry->unk8[0] << 7));
     obj->segment.level_entry = NULL;
 }
 

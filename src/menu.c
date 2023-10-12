@@ -113,33 +113,25 @@ SavefileInfo gSavefileInfo[4];
 s32 D_801264D0;
 s32 D_801264D4;
 s8 gDialogueSubmenu;
-u8 *D_801264DC; //gGhostLevelIDs?
+u8 D_801264DC[4]; //gGhostLevelIDs?
 s8 D_801264E0;
 s8 D_801264E1;
 
 s8 sCurrentMenuID;
-u8 *D_801264E4; //gGhostSomethings?
+u8 D_801264E4[4]; //gGhostSomethings?
 s32 D_801264E8;
-u8 *D_801264EC; //gGhostVehicleIds?
+u8 D_801264EC[4]; //gGhostVehicleIds?
 s32 D_801264F0[2];
-s16 *D_801264F8[3]; //gGhostChecksums?
+u16 D_801264F8[6]; //gGhostChecksums?
 s8 sDialogueOptionMax;
-s32 D_80126508;
-s16 D_8012650C;
+u8 D_80126508[6];
 s8 gDialogueOptionYOffset;
-s32 D_80126510;
-s16 D_80126514;
+u8 D_80126510[6];
 s8 gDialogueItemSelection;
-s32 D_80126518;
-s32 D_8012651C;
-s32 D_80126520;
-s32 D_80126524;
-s32 D_80126528;
-s32 D_8012652C;
+u8 D_80126518[6];
+u16 D_80126520[6];
 Settings *gSavefileData[4];
-s8 D_80126540;
-s8 D_80126541;
-s32 D_80126544;
+u8 D_80126540[8];
 s32 gMultiplayerSelectedNumberOfRacersCopy; // Saved version gMultiplayerSelectedNumberOfRacers?
 TextureHeader *gMenuTextures[128];              // lookup table? TEXTURES
 u8 D_80126750[128]; // Seems to be a boolean for "This texture exists" for the above array.
@@ -273,7 +265,7 @@ unk80126C54 D_80126C54;
 u8 D_80126C58[20];
 s32 *D_80126C6C;
 s32 gNumOnscreenMagicCodes;
-char *D_80126C74;
+char *D_80126C74; // gFileName?
 s32 D_80126C78;
 s32 D_80126C7C;
 s16 D_80126C80[32];
@@ -1867,7 +1859,7 @@ void func_80081218(void) {
     gSavefileData[3] = (u8 *)gSavefileData[2] + sp20;
     gSavefileData[3]->courseFlagsPtr = (u8 *)gSavefileData[3] + sizeof(Settings);
     gSavefileData[3]->balloonsPtr = (u8 *)gSavefileData[3]->courseFlagsPtr + sp28;
-    gCheatsAssetData = get_misc_asset(MISC_ASSET_UNK41);
+    gCheatsAssetData = get_misc_asset(ASSET_MISC_MAGIC_CODES);
     gNumberOfCheats = (s32)(*gCheatsAssetData);
     gMenuText = allocate_from_main_pool_safe(1024 * sizeof(char *), COLOUR_TAG_WHITE);
     load_menu_text(LANGUAGE_ENGLISH);
@@ -2630,7 +2622,7 @@ void menu_title_screen_init(void) {
     reset_sound_volume(FALSE);
     set_time_trial_enabled(FALSE);
     gTitleDemoIndex = 0;
-    sTitleScreenDemoIds = (s8 *) get_misc_asset(MISC_ASSET_TITLE_DEMOS);
+    sTitleScreenDemoIds = (s8 *) get_misc_asset(ASSET_MISC_TITLE_SCREEN_DEMO_IDS);
     numberOfPlayers = sTitleScreenDemoIds[DEMO_PLAYER_COUNT];
     gTitleDemoTimer = 0;
     if (numberOfPlayers == -2) {
@@ -5175,52 +5167,43 @@ void func_8008B758(s8 *activePlayers) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-
-// Should be functionally equivalent
 void randomise_ai_racer_slots(s32 arg0) {
+    s32 foundIt;
     s32 i, j;
     s32 numCharacters;
-    s32 s1;
 
     numCharacters = 7;
     if (is_drumstick_unlocked()) {
-        numCharacters = 8;
+        numCharacters++;
     }
     if (is_tt_unlocked()) {
         numCharacters++;
     }
 
     if (arg0 < 8) {
-        s1 = FALSE;
-        for (i = 0; (i < arg0) && (!s1); i++) {
-            if (gCharacterIdSlots[i] == 9) {
-                s1 = TRUE;
+        foundIt = FALSE;
+        for (i = 0; i < arg0 && !foundIt; i++) {
+            if (gCharacterIdSlots[i] == 9) { // I think 9 is the character id for Diddy Kong?
+                foundIt = TRUE;
             }
         }
-        if (!s1) {
+        if (!foundIt) {
             gCharacterIdSlots[arg0] = 9;
             arg0++;
         }
     }
-    i = arg0;
-    while (i < 8) {
-        s1 = FALSE; // Check for duplicate racer id.
-        gCharacterIdSlots[i] = (*gCurrCharacterSelectData)[get_random_number_from_range(0, numCharacters)].voiceID;
-        for (j = 0; j < i; j++) {
-            if (gCharacterIdSlots[i] == gCharacterIdSlots[j]) {
-                s1 = TRUE; // Duplicate found!
+
+    for (i = arg0; i < 8; i++) {
+        do {
+            gCharacterIdSlots[i] = (*gCurrCharacterSelectData)[get_random_number_from_range(0, numCharacters)].voiceID;
+            for (j = 0, foundIt = FALSE; j < i; j++) {
+                if (gCharacterIdSlots[j] == gCharacterIdSlots[i]) {
+                    foundIt = TRUE;
+                }
             }
-        }
-        if (s1) {
-            continue; // Redo if duplicate was found.
-        }
-        i++;
+        } while (foundIt);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/randomise_ai_racer_slots.s")
-#endif
 
 s32 menu_character_select_loop(s32 updateRate) {
     s32 i;
@@ -6177,7 +6160,7 @@ s32 menu_file_select_loop(s32 updateRate) {
             if (gIsInAdventureTwo) {
                 settings->cutsceneFlags |= CUTSCENE_ADVENTURE_TWO;
             }
-            func_8009ABD8((s8 *)get_misc_asset(MISC_ASSET_UNK19), 0, gNumberOfActivePlayers, 0, 0, NULL);
+            func_8009ABD8((s8 *) get_misc_asset(ASSET_MISC_25), 0, gNumberOfActivePlayers, 0, 0, NULL);
             menu_init(MENU_NEWGAME_CINEMATIC);
             return MENU_RESULT_CONTINUE;
         }
@@ -7118,7 +7101,7 @@ s32 func_80092BE0(s32 mapId) {
     s32 index;
     s32 temp;
 
-    trackIdArray = (s8 *)get_misc_asset(MISC_ASSET_UNK1C);
+    trackIdArray = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
 
     index = 0;
     temp = -1;
@@ -8181,61 +8164,69 @@ void trim_filename_string(char* input, char* output) {
     *output = '\0';
 }
 
-void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *arg5, s32 arg6) {
+void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *fileName, s32 arg6) {
     D_800E0F90 = arg0;
     D_800E0F94 = arg1;
     D_800E0F98 = arg2;
     D_800E0F9C = arg3;
     D_80126C6C = arg4;
-    D_80126C74 = arg5;
+    D_80126C74 = fileName;
     D_80126C78 = arg6;
     D_800E0FA0 = 0;
-    D_80126C50 = (f32)*D_80126C6C;
+    D_80126C50 = (f32) *D_80126C6C;
     D_80126C48 = FALSE;
     D_80126C3C = 0;
     D_80126C34 = 0;
     load_font(ASSET_FONTS_BIGFONT);
 }
 
-#ifdef NON_EQUIVALENT
-// Minor differences, and is very close.
-// Draw menu for "Enter your initials" when starting a new game.
-// The text entry is a horizontal list of characters you scroll through.
-// Visual Aid: https://imgur.com/llVwdTy
-void render_enter_filename_ui(UNUSED s32 unused) {
-    s32 sp6C;
-    s32 i;
-    s32 pad;
-    s32 temp_f4;
-    s32 yPos;
+/**
+ * Draw menu for "Enter your initials" when starting a new game.
+ * The text entry is a horizontal list of characters you scroll through.
+ * Visual Aid: https://imgur.com/llVwdTy
+*/
+void render_enter_filename_ui(UNUSED s32 updateRate) {
+    s32 xIncrement;
+    s32 charIndexIncrement;
+    s32 xStart;
     s32 charIndex;
-    char *fileName;
-    s32 xPos;
-    s32 xPosOffset;
-    s32 charIndexOffset;
+    s32 x;
+    s32 i;
+    s32 startCharacterIndex;
+    s32 y;
+    char *trimmedTextPtr;
+    char trimmedTextBuffer[4];
 
-    temp_f4 = D_80126C50;
-    sp6C = SCREEN_WIDTH_HALF - (s32) ((D_80126C50 - temp_f4) * 40);
+    startCharacterIndex = D_80126C50;
+    xStart = SCREEN_WIDTH_HALF - (s32) ((D_80126C50 - (f32) startCharacterIndex) * 40);
     set_text_background_colour(0, 0, 0, 0);
     set_text_font(ASSET_FONTS_FUNFONT);
+
+    // Draw "Enter Initials" shadow
     set_text_colour(0, 0, 0, 255, 128);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 2, D_800E0F90 - 22, gMenuText[ASSET_MENU_TEXT_ENTERINITIALS], ALIGN_MIDDLE_CENTER);
+
+    // Draw "Enter Initials" text
     set_text_colour(255, 128, 255, 96, 255);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, D_800E0F90 - 24, gMenuText[ASSET_MENU_TEXT_ENTERINITIALS], ALIGN_MIDDLE_CENTER);
-    yPos = D_800E0F90;
-    for (i = 0; i < 2; i++) {
-        xPos = sp6C;
-        charIndex = temp_f4;
-        if (i != 0) {
-            xPos -= 40;
-            charIndex--;
-            xPosOffset = -40;
-            charIndexOffset = -1;
+
+    y = D_800E0F90;
+    
+    // Doesn't match with a for loop.
+    i = 0;
+    while (i < 2) {
+        x = xStart;
+        charIndex = startCharacterIndex;
+         if (i != 0) {
+            x = xStart - 40;
+            charIndex = startCharacterIndex - 1;
+            xIncrement = -40;
+            charIndexIncrement = -1;
         } else {
-            xPosOffset = 40;
-            charIndexOffset = 1;
+            xIncrement = 40;
+            charIndexIncrement = 1;
         }
-        while ((xPos >= -15) && (xPos < 336)) {
+        while(((x >= -15) && (x < 336))) {
             if (charIndex < 0) {
                 charIndex = 30;
             }
@@ -8250,33 +8241,33 @@ void render_enter_filename_ui(UNUSED s32 unused) {
             if (charIndex < 28) {
                 set_text_font(ASSET_FONTS_BIGFONT);
                 D_800E0F8C = gFileNameValidChars[charIndex];
-                draw_text(&sMenuCurrDisplayList, xPos, yPos, &D_800E0F8C, ALIGN_MIDDLE_CENTER);
+                draw_text(&sMenuCurrDisplayList, x, y, &D_800E0F8C, ALIGN_MIDDLE_CENTER);
             } else {
                 set_text_font(ASSET_FONTS_FUNFONT);
                 if (charIndex == 28) {
-                    draw_text(&sMenuCurrDisplayList, xPos, yPos, &D_800E8244 /* "SP" */, ALIGN_MIDDLE_CENTER);
+                    draw_text(&sMenuCurrDisplayList, x, y, (char *) &D_800E8244 /* "SP" */, ALIGN_MIDDLE_CENTER);
                 } else if (charIndex == 29) {
-                    draw_text(&sMenuCurrDisplayList, xPos, yPos, &D_800E8248 /* "DEL" */, ALIGN_MIDDLE_CENTER);
+                    draw_text(&sMenuCurrDisplayList, x, y, (char *) &D_800E8248 /* "DEL" */, ALIGN_MIDDLE_CENTER);
                 } else {
-                    draw_text(&sMenuCurrDisplayList, xPos, yPos, &D_800E824C /* "OK" */, ALIGN_MIDDLE_CENTER);
+                    draw_text(&sMenuCurrDisplayList, x, y, (char *) &D_800E824C /* "OK" */, ALIGN_MIDDLE_CENTER);
                 }
             }
-            xPos += xPosOffset;
-            charIndex += charIndexOffset;
+            x += xIncrement;
+            charIndex += charIndexIncrement;
         }
+        i++;
     }
-    trim_filename_string(D_80126C74, fileName);
-    if (fileName != NULL) {
+    trimmedTextPtr = trimmedTextBuffer;
+    trim_filename_string(D_80126C74, trimmedTextPtr);
+
+    if (trimmedTextPtr != NULL) {
         set_text_font(D_800E0F9C);
         set_text_colour(0, 0, 0, 255, 128);
-        draw_text(&sMenuCurrDisplayList, D_800E0F94 + 1, D_800E0F98 + 3, fileName, ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, D_800E0F94 + 1, D_800E0F98 + 3, trimmedTextBuffer, ALIGN_MIDDLE_CENTER);
         set_text_colour(255, 255, 255, 0, 255);
-        draw_text(&sMenuCurrDisplayList, D_800E0F94, D_800E0F98, fileName, ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, D_800E0F94, D_800E0F98, trimmedTextBuffer, ALIGN_MIDDLE_CENTER);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/render_enter_filename_ui.s")
-#endif
 
 s32 menu_enter_filename_loop(s32 updateRate) {
     s32 var_v0_2;
@@ -8356,7 +8347,7 @@ s32 menu_enter_filename_loop(s32 updateRate) {
             if (*temp_a1 < 29) {
                 D_80126C74[D_800E0FA0] = gFileNameValidChars[*temp_a1];
                 D_800E0FA0++;
-                D_80126C74[D_800E0FA0] = 0;
+                D_80126C74[D_800E0FA0] = '\0';
                 play_sound_global(SOUND_SELECT2, NULL);
                 if (D_800E0FA0 >= D_80126C78) {
                     *D_80126C6C = 30;
@@ -8364,11 +8355,11 @@ s32 menu_enter_filename_loop(s32 updateRate) {
             } else if (*temp_a1 == 29) {
                 if (D_800E0FA0 > 0) {
                     D_800E0FA0--;
-                    D_80126C74[D_800E0FA0] = 0;
+                    D_80126C74[D_800E0FA0] = '\0';
                 }
                 play_sound_global(SOUND_MENU_BACK3, NULL);
             } else {
-                if ((D_800E0FA0 != 0) || (D_80126C74[0] == 0)) {
+                if ((D_800E0FA0 != 0) || (D_80126C74[0] == '\0')) {
                     for (var_v1 = D_800E0FA0; var_v1 < D_80126C78; var_v1++) {
                         D_80126C74[var_v1] = 32;
                     }
@@ -8381,7 +8372,7 @@ s32 menu_enter_filename_loop(s32 updateRate) {
             if (D_800E0FA0 > 0) {
                 D_800E0FA0--;
             }
-            D_80126C74[D_800E0FA0] = 0;
+            D_80126C74[D_800E0FA0] = '\0';
             play_sound_global(SOUND_MENU_BACK3, NULL);
         } else {
             var_v0_2 = *temp_a1;
@@ -8407,7 +8398,7 @@ s32 menu_enter_filename_loop(s32 updateRate) {
         D_80126C48 = TRUE;
     } else if (buttonsPressed & B_BUTTON) {
         D_800E0FA0--;
-        D_80126C74[D_800E0FA0] = 0;
+        D_80126C74[D_800E0FA0] = '\0';
         play_sound_global(SOUND_MENU_BACK3, NULL);
     }
     render_enter_filename_ui(updateRate);
@@ -8840,7 +8831,50 @@ s32 get_trophy_race_world_id(void) {
     return gTrophyRaceWorldId;
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8009963C.s")
+void func_8009963C(void) {
+    u8 *mainTrackIds;
+    s32 i;
+    s32 j;
+    u16 sp44[4]; 
+    u16 swap;
+    u16 swapByte;
+    UNUSED s32 pad;
+
+    D_801264D4 = 0;
+    mainTrackIds = (u8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
+    
+    for(i = 0; i < 6; i++) {
+        if (D_801264DC[i] != 0xFF) {
+            for(j = 0; mainTrackIds[j] != 0xFF && mainTrackIds[j] != D_801264DC[i]; j++) {}
+            if (mainTrackIds[j] != 0xFF) {
+                D_80126540[D_801264D4] = i;
+                sp44[D_801264D4] = (j * 8) + D_801264EC[i];
+                D_801264D4++;
+            }
+        }
+    }
+
+    for(i = D_801264D4-1; i > 0; i--) {
+        for (j = 0; j < i; j++) {
+            if(sp44[j+1] < sp44[j]) {
+                swap = sp44[j];
+                sp44[j] = sp44[j+1];
+                sp44[j+1] = swap;
+                swapByte = D_80126540[j];
+                D_80126540[j] = D_80126540[j+1];
+                D_80126540[j+1] = swapByte;
+            }
+        }
+    }
+    
+    for(i = 0; i < D_801264D4; i++) {
+        D_80126508[i] = D_801264DC[D_80126540[i]];
+        D_80126510[i] = D_801264E4[D_80126540[i]];
+        D_80126518[i] = D_801264EC[D_80126540[i]];
+        D_80126520[i] = D_801264F8[D_80126540[i]];
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/menu/func_800998E0.s")
 
 #ifdef NON_EQUIVALENT
@@ -9035,7 +9069,7 @@ void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s8 *arg5) {
         arg0++;
     }
 
-    if ((phi_v1 == 0) && (get_misc_asset(MISC_ASSET_UNK19) == (s32 *)arg0)) {
+    if ((phi_v1 == 0) && (get_misc_asset(ASSET_MISC_25) == (s32 *)arg0)) {
         D_8012684C = TRUE;
     } else {
         D_8012684C = FALSE;
@@ -9783,8 +9817,8 @@ void set_menu_id_if_option_equal(s32 IDToCheck, s32 IDToSet) {
  */
 s32 taj_menu_loop(void) {
     s32 sp2C;
-    s32 buttonsPressed; // sp28
-    Settings *settings; // sp24
+    s32 buttonsPressed;
+    Settings *settings;
 
     settings = get_settings();
     if (gNextTajChallengeMenu && sCurrentMenuID == 0) {
@@ -9833,6 +9867,10 @@ s32 taj_menu_loop(void) {
 
     switch (sCurrentMenuID) {
         case 0:
+            // Hello Friend!
+            // If you wish to change your vehicle, then summon me with your horn.
+            // Either stop on the pad or beep when I am close to you!
+            // Press A To Continue
             set_current_text(ASSET_GAME_TEXT_7);
             sCurrentMenuID = 1;
             D_800DF4D8 = 1;
@@ -9900,28 +9938,28 @@ s32 taj_menu_loop(void) {
                 sCurrentMenuID = 0x63;
             }
             break;
-        case -3:
-        case -2:
-        case -1:
-            set_current_text(ASSET_GAME_TEXT_8 - sCurrentMenuID); //Wouldn't this be ASSET_GAME_TEXT_9?
+        case -3: // Plane Challenge - To Test your flying skills you must race me around the Island!!
+        case -2: // Hover Challenge - To Test your driving skills you must race me around the Island!!
+        case -1: // Car Challenge - To Test your driving skills you must race me around the Island!!
+            set_current_text(ASSET_GAME_TEXT_8 - sCurrentMenuID); // 9, 10, 11
             sCurrentMenuID = 4;
             break;
         case -4:
-            set_current_text(ASSET_GAME_TEXT_17);
+            set_current_text(ASSET_GAME_TEXT_17); // MY SKILLS ARE GREATER! - Better luck next time. - TRY AGAIN.
             gNextTajChallengeMenu = 0;
             sCurrentMenuID = 1;
             gDialogueSubmenu = 3;
             break;
         case -5:
-            set_current_text(ASSET_GAME_TEXT_21);
+            set_current_text(ASSET_GAME_TEXT_21); // Well Done! - You are a skilled racer.
             gNextTajChallengeMenu = 0;
             sCurrentMenuID = 7;
             gDialogueSubmenu = 0;
             break;
-        case -8:
-        case -7:
-        case -6:
-            set_current_text(ASSET_GAME_TEXT_12 - sCurrentMenuID);
+        case -8: // Well done! - Take this as a reward. - That was my last challenge. You have done well.
+        case -7: // Well done! - Take this as a reward. - I'll See You Later.
+        case -6: // Well done! - Take this as a reward. - I'll See You Later.
+            set_current_text(ASSET_GAME_TEXT_12 - sCurrentMenuID); // 18, 19, 20
             sCurrentMenuID = 6;
             gDialogueSubmenu = 0;
             break;
