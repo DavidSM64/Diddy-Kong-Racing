@@ -562,7 +562,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT && numPlayers == 0 && is_time_trial_enabled()) {
         cutsceneId = CUTSCENE_ID_UNK_64;
     }
-    func_8001E450(cutsceneId);
+    set_cutscene_id(cutsceneId);
     init_track(gCurrentLevelHeader->geometry, gCurrentLevelHeader->skybox, numberOfPlayers, vehicleId, entranceId, gCurrentLevelHeader->collectables, gCurrentLevelHeader->unkBA);
     if (gCurrentLevelHeader->fogNear == 0 && gCurrentLevelHeader->fogFar == 0 && gCurrentLevelHeader->fogR == 0 && gCurrentLevelHeader->fogG == 0 && gCurrentLevelHeader->fogB == 0) {
         for (var_s0 = 0; var_s0 < 4; var_s0++) {
@@ -597,11 +597,14 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     func_8007AB24(gCurrentLevelHeader->unk4[numberOfPlayers]);
 }
 
-void func_8006BD10(f32 arg0) {
-    if (gCurrentLevelHeader->music != 0) {
+/**
+ * If the level's music ID is nonzero, set the current background music.
+*/
+void start_level_music(f32 tempo) {
+    if (gCurrentLevelHeader->music != SEQUENCE_NONE) {
         func_800012E8();
         play_music(gCurrentLevelHeader->music);
-        multiply_music_tempo(arg0);
+        multiply_music_tempo(tempo);
         func_80001074(gCurrentLevelHeader->instruments);
     }
 }

@@ -15,8 +15,8 @@ glabel func_8007CA68
 /* 07D69C 8007CA9C AFA60048 */  sw    $a2, 0x48($sp)
 /* 07D6A0 8007CAA0 04800007 */  bltz  $a0, .L8007CAC0
 /* 07D6A4 8007CAA4 AFA7004C */   sw    $a3, 0x4c($sp)
-/* 07D6A8 8007CAA8 3C0E8012 */  lui   $t6, %hi(D_80126354) # $t6, 0x8012
-/* 07D6AC 8007CAAC 8DCE6354 */  lw    $t6, %lo(D_80126354)($t6)
+/* 07D6A8 8007CAA8 3C0E8012 */  lui   $t6, %hi(gSpriteTableNum) # $t6, 0x8012
+/* 07D6AC 8007CAAC 8DCE6354 */  lw    $t6, %lo(gSpriteTableNum)($t6)
 /* 07D6B0 8007CAB0 3C198012 */  lui   $t9, %hi(gSpriteOffsetTable) # $t9, 0x8012
 /* 07D6B4 8007CAB4 008E082A */  slt   $at, $a0, $t6
 /* 07D6B8 8007CAB8 14200007 */  bnez  $at, .L8007CAD8

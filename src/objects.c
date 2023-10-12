@@ -48,18 +48,18 @@ s16 D_800DC708 = 0;
 s32 D_800DC70C = 0; // Currently unknown, might be a different type.
 s16 D_800DC710 = 1;
 s32 D_800DC714 = 0; // Currently unknown, might be a different type.
-s32 D_800DC718 = 0;
+Object *gGhostObj = NULL;
 s8 D_800DC71C = 0;
-s32 D_800DC720 = 0; // Currently unknown, might be a different type.
+s32 gObjectTexAnim = FALSE;
 s16 D_800DC724 = 0x2A30;
 s16 D_800DC728 = -1;
 s16 D_800DC72C = 0;
 u8 gHasGhostToSave = 0;
-u8 D_800DC734 = FALSE;
-u8 D_800DC738 = FALSE;
+u8 gTimeTrialStaffGhost = FALSE;
+u8 gBeatStaffGhost = FALSE;
 s8 D_800DC73C = 0;
 s8 D_800DC740 = 0;
-s8 D_800DC744 = 0;
+s8 gSwapLeadPlayer = FALSE;
 s8 D_800DC748 = 0;
 s32 D_800DC74C[2] = {0, 0}; // Have a feeling these are both the same array.
 s32 D_800DC754[2] = {0, 0};
@@ -82,7 +82,7 @@ u16 D_800DC7A8[8] = {
 
 s16 D_800DC7B8[52] = {
     0x00ED, 0x00FF, BHV_TRIGGER, BHV_VEHICLE_ANIMATION,
-    BHV_ZIPPER_WATER, BHV_UNK_3A, BHV_UNK_57, BHV_SILVER_COIN,
+    BHV_ZIPPER_WATER, BHV_UNK_3A, BHV_TAJ_TELEPOINT, BHV_SILVER_COIN,
     BHV_BOOST, BHV_WARDEN_SMOKE, 0x00F3, 0x00FD,
     BHV_TREASURE_SUCKER, BHV_LOG, BHV_LAVA_SPURT, BHV_POS_ARROW,
     BHV_UNK_5B, BHV_UNK_5C, BHV_ZIPPER_AIR, BHV_UNK_5E,
@@ -165,13 +165,13 @@ s32 D_8011AD38; //D_8011AD38 is ultimately set by func_80074B34, and is almost d
 s8 D_8011AD3C;
 s8 D_8011AD3D;
 s8 D_8011AD3E;
-Object *D_8011AD40;
-s8 D_8011AD44;
+Object *gTransformObject; // Set but never read.
+s8 gTransformTimer;
 s8 gOverworldVehicle;
-s16 D_8011AD46;
-s16 D_8011AD48;
-s16 D_8011AD4A;
-s16 D_8011AD4C;
+s16 gTransformPosX;
+s16 gTransformPosY;
+s16 gTransformPosZ;
+s16 gTransformAngleY;
 s16 D_8011AD4E;
 s8 D_8011AD50;
 s8 D_8011AD51;
@@ -196,9 +196,9 @@ s32 D_8011ADB4;
 s32 gRaceStartCountdown;
 s32 D_8011ADBC;
 s32 D_8011ADC0;
-s8 D_8011ADC4;
+s8 gFirstTimeFinish;
 s8 D_8011ADC5;
-u32 D_8011ADC8;
+u32 gBalloonCutsceneTimer;
 s8 (*D_8011ADCC)[8];
 f32 D_8011ADD0;
 s8 D_8011ADD4;
@@ -215,14 +215,14 @@ TextureHeader *D_8011AE50;
 TextureHeader *D_8011AE54;
 Object **gObjPtrList; // Not sure about the number of elements
 s32 gObjectCount;
-s32 D_8011AE60;
+s32 gObjectListStart;
 s32 gParticleCount;
 Object *gObjectMemoryPool;
 Object **D_8011AE6C;
 s32 D_8011AE70;
 Object **D_8011AE74;
 s16 D_8011AE78;
-s16 D_8011AE7A;
+s16 gCutsceneID;
 s16 D_8011AE7C;
 s8 D_8011AE7E;
 s16 gTTGhostTimeToBeat;
@@ -402,7 +402,7 @@ void allocate_object_pools(void) {
     decrypt_magic_codes(&gAssetsMiscSection[gAssetsMiscTable[ASSET_MISC_MAGIC_CODES]], 
                         (gAssetsMiscTable[ASSET_MISC_TITLE_SCREEN_DEMO_IDS] - gAssetsMiscTable[ASSET_MISC_MAGIC_CODES]) * sizeof(s32 *));
     gObjPtrList = allocate_from_main_pool_safe(sizeof(uintptr_t) * OBJECT_SLOT_COUNT, COLOUR_TAG_BLUE);
-    D_8011ADC4 = 0;
+    gFirstTimeFinish = 0;
     gTimeTrialEnabled = 0;
     gIsTimeTrial = FALSE;
     gObjectUpdateRateF = 2.0f;
@@ -468,14 +468,14 @@ void clear_object_pointers(void) {
     D_8011AF08[0] = 0xFF;
     D_8011AF08[1] = 0xFF;
     gObjectCount = 0;
-    D_8011AE60 = 0;
+    gObjectListStart = 0;
     gParticleCount = 0;
     D_8011AE88 = 0;
     D_8011ADD4 = 0;
-    D_8011AE7A = 0;
+    gCutsceneID = 0;
     D_8011AE7E = 1;
     D_8011AE7C = 0;
-    D_8011AD44 = 0;
+    gTransformTimer = 0;
     gIsTajChallenge = FALSE;
     D_8011AEF7 = 0;
     D_8011AF60[0] = 0;
@@ -485,17 +485,21 @@ void clear_object_pointers(void) {
     D_8011ADD5 = 0;
 }
 
-void func_8000C604(void) {
+/**
+ * Clear all objects from memory. Also clear rumble.
+ * Swap lead player in adventure two if the other player finished ahead of the lead player.
+*/
+void free_all_objects(void) {
     s32 i, len;
     free_tt_ghost_data();
     D_800DC748 = 0;
-    if (D_800DC71C != 0) {
+    if (D_800DC71C) {
         func_80072298(1);
     }
     D_800DC71C = 0;
-    if (D_800DC744 && is_in_two_player_adventure()) {
-        D_800DC744 = 0;
-        func_8006F398();
+    if (gSwapLeadPlayer && is_in_two_player_adventure()) {
+        gSwapLeadPlayer = FALSE;
+        swap_lead_player();
     }
     gParticlePtrList_flush();
     len = gObjectCount;
@@ -504,7 +508,7 @@ void func_8000C604(void) {
     }
     gFreeListCount = 0;
     gObjectCount = 0;
-    D_8011AE60 = 0;
+    gObjectListStart = 0;
     clear_object_pointers();
     free_from_memory_pool((void *) D_8011AEB0[0]);
     free_from_memory_pool((void *) D_8011AEB0[1]);
@@ -1218,62 +1222,69 @@ s8 check_if_silver_coin_race(void) {
     return gIsSilverCoinRace;
 }
 
-void func_8000E1EC(Object *obj, s32 vehicleID) {
-    D_8011AD40 = obj;
-    D_8011AD44 = 4;
+/**
+ * Store some things about the racer object then remove it.
+*/
+void despawn_player_racer(Object *obj, s32 vehicleID) {
+    gTransformObject = obj;
+    gTransformTimer = 4;
     gOverworldVehicle = vehicleID;
-    D_8011AD46 = obj->segment.trans.x_position;
-    D_8011AD48 = obj->segment.trans.y_position;
-    D_8011AD4A = obj->segment.trans.z_position;
-    D_8011AD4C = obj->segment.trans.y_rotation;
+    gTransformPosX = obj->segment.trans.x_position;
+    gTransformPosY = obj->segment.trans.y_position;
+    gTransformPosZ = obj->segment.trans.z_position;
+    gTransformAngleY = obj->segment.trans.y_rotation;
     free_object(obj);
     gNumRacers = 0;
 }
 
-void func_8000E2B4(void) {
+/**
+ * Spawn a new racer object and set the initial position and rotation to what was set
+ * before the old one was freed.
+*/
+void transform_player_vehicle(void) {
     Object *player;
     LevelObjectEntry8000E2B4 spawnObj;
     Settings *settings;
-    Object_Racer *player_64;
-    s16 object_id;
+    Object_Racer *racer;
+    s16 objectID;
 
-    if (!D_8011AD44) {
+    if (gTransformTimer == 0) {
         return;
     }
-    D_8011AD44--;
-    if (D_8011AD44) {
+    gTransformTimer--;
+    if (gTransformTimer) {
         return;
     }
     settings = get_settings();
     spawnObj.unkE = 0;
     spawnObj.common.size = 16;
-    if (gOverworldVehicle < 5) {
-        object_id = ((s16 *) D_800DC7A8)[settings->racers[0].character + gOverworldVehicle * 10];
+    if (gOverworldVehicle < VEHICLE_TRICKY) {
+        objectID = ((s16 *) D_800DC7A8)[settings->racers[PLAYER_ONE].character + gOverworldVehicle * 10];
     } else {
-        object_id = D_800DC7B8[gOverworldVehicle + 37];
+        objectID = D_800DC7B8[gOverworldVehicle + 37];
     }
     set_level_default_vehicle(gOverworldVehicle);
-    spawnObj.common.size = spawnObj.common.size | ((s32) (object_id & 0x100) >> 1);
+    spawnObj.common.size |= (objectID & 0x100) >> 1;
     spawnObj.unkA = 0;
     spawnObj.unk8 = 0;
-    spawnObj.common.objectID = object_id;
-    spawnObj.common.x = D_8011AD46;
-    spawnObj.common.y = D_8011AD48;
-    spawnObj.common.z = D_8011AD4A;
-    spawnObj.unkC = D_8011AD4C;
-    func_800521B8(1);
-    player = spawn_object((LevelObjectEntryCommon *) &spawnObj, 0x11);
+    spawnObj.common.objectID = objectID;
+    spawnObj.common.x = gTransformPosX;
+    spawnObj.common.y = gTransformPosY;
+    spawnObj.common.z = gTransformPosZ;
+    spawnObj.unkC = gTransformAngleY;
+    set_taj_status(TAJ_DIALOGUE);
+    player = spawn_object((LevelObjectEntryCommon *) &spawnObj, 0x10 | 0x1);
     gNumRacers = 1;
-    (*gRacers)[0] = player;
-    gRacersByPort[0] = player;
+    (*gRacers)[PLAYER_ONE] = player;
+    gRacersByPort[PLAYER_ONE] = player;
     *gRacersByPosition = player;
-    player_64 = &player->unk64->racer;
-    player_64->vehicleID = gOverworldVehicle;
-    player_64->vehicleIDPrev = gOverworldVehicle;
-    player_64->unk2 = 0;
-    player_64->characterId = (s8) settings->racers[0].character;
-    player_64->playerIndex = 0;
-    player_64->unk118 = 0;
+    racer = &player->unk64->racer;
+    racer->vehicleID = gOverworldVehicle;
+    racer->vehicleIDPrev = gOverworldVehicle;
+    racer->unk2 = 0;
+    racer->characterId = settings->racers[PLAYER_ONE].character;
+    racer->playerIndex = 0;
+    racer->unk118 = 0;
     if (get_filtered_cheats() & CHEAT_BIG_CHARACTERS) {
         player->segment.trans.scale *= 1.4f;
     }
@@ -1281,15 +1292,15 @@ void func_8000E2B4(void) {
         player->segment.trans.scale *= 0.714f;
     }
     player->segment.level_entry = NULL;
-    player->segment.trans.y_rotation = D_8011AD4C;
-    player->segment.trans.y_position = D_8011AD48;
+    player->segment.trans.y_rotation = gTransformAngleY;
+    player->segment.trans.y_position = gTransformPosY;
 }
 
 /**
  * Enables or Disables time trial mode.
  */
-void set_time_trial_enabled(s32 arg0) {
-    gTimeTrialEnabled = arg0;
+void set_time_trial_enabled(s32 status) {
+    gTimeTrialEnabled = status;
 }
 
 /**
@@ -1382,7 +1393,7 @@ Object *get_object(s32 index) {
  * Return the standard object list index and how many objects are in that list.
 */
 Object **objGetObjList(s32 *arg0, s32 *cnt) {
-    *arg0 = D_8011AE60;
+    *arg0 = gObjectListStart;
     *cnt = gObjectCount;
     return gObjPtrList;
 }
@@ -1449,7 +1460,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     if (curObj->segment.header == NULL) {
         return NULL;
     }
-    sp50 = curObj->segment.header->unk30 & 0x80;
+    sp50 = curObj->segment.header->flags & 0x80;
     if (sp50) {
         curObj->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
     }
@@ -1714,15 +1725,19 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
 GLOBAL_ASM("asm/non_matchings/objects/spawn_object.s")
 #endif
 
+/**
+ * Run functions that will attempt to free the graphics data of the object
+ * if there are no other references.
+*/
 void objFreeAssets(Object *obj, s32 count, s32 objType) {
     s32 i;
-    if (objType == 0) { // 3D model
+    if (objType == OBJECT_MODEL_TYPE_3D_MODEL) { // 3D model
         for (i = 0; i < count; i++) {
             if (obj->unk68[i] != NULL) {
                 func_8005FF40((ObjectModel **) (s32) obj->unk68[i]);
             }
         } 
-    } else if (objType == 4) {
+    } else if (objType == OBJECT_MODEL_TYPE_MISC) {
         for (i = 0; i < count; i++) {
             if (obj->unk68[i] != NULL) {
                 free_texture((TextureHeader *) (s32) obj->unk68[i]);
@@ -1989,7 +2004,7 @@ void func_80010994(s32 updateRate) {
     }
     i = 1; //FAKEMATCH
     func_800142B8();
-    func_800155B8();
+    process_object_interactions();
     func_8001E89C();
     for (i = 0; i < D_8011AE70; i++) {
         run_object_loop_func(D_8011AE6C[i], updateRate);
@@ -1999,7 +2014,7 @@ void func_80010994(s32 updateRate) {
         func_8001709C(D_8011AE6C[i]);
     }
     tempVal = gObjectCount;
-    for (i = D_8011AE60; i < tempVal; i++) {
+    for (i = gObjectListStart; i < tempVal; i++) {
         obj = gObjPtrList[i];
         if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             if ((obj->behaviorId != BHV_LIGHT_RGBA) && (obj->behaviorId != BHV_WEAPON) && (obj->behaviorId != BHV_FOG_CHANGER)) {
@@ -2042,14 +2057,14 @@ void func_80010994(s32 updateRate) {
         }
     }
     func_8000BADC(updateRate);
-    for (i = D_8011AE60; i < tempVal; i++) {
+    for (i = gObjectListStart; i < tempVal; i++) {
         obj = gObjPtrList[i];
         if ((!(obj->segment.trans.flags & 0x8000) && (obj->behaviorId == BHV_WEAPON)) || (obj->behaviorId == BHV_FOG_CHANGER)) {
             run_object_loop_func(obj, updateRate);
         }
     }
     if (gParticleCount > 0) {
-        for (i = D_8011AE60; i < tempVal; i++) {
+        for (i = gObjectListStart; i < tempVal; i++) {
             obj = gObjPtrList[i];
             if (obj->segment.trans.flags & 0x8000) {
                 //Why is this object being treated as a Particle?
@@ -2060,7 +2075,7 @@ void func_80010994(s32 updateRate) {
     do { //FAKEMATCH
     lightUpdateLights(updateRate);
     if (get_light_count() > 0) {
-        for (i = D_8011AE60; i < gObjectCount; i++) {
+        for (i = gObjectListStart; i < gObjectCount; i++) {
             obj = gObjPtrList[i];
             if (!(obj->segment.trans.flags & 0x8000) && (obj->shading != NULL)) {
                 func_80032C7C(obj);
@@ -2089,12 +2104,12 @@ void func_80010994(s32 updateRate) {
     gObjectUpdateRateF = (f32) updateRate;
     D_8011AD24[0] = 0;
     D_8011AD53 = 0;
-    func_8000E2B4();
+    transform_player_vehicle();
     try_close_dialogue_box();
     func_800179D0();
     } while(0); //FAKEMATCH
     if (D_8011AF00 == 1) {
-        if ((D_8011ADB0 == 0x50) && (D_8011AE7A == 0)) {
+        if ((D_8011ADB0 == 0x50) && (gCutsceneID == 0)) {
             sp54 = 0;
             for (i = 0; i < MAXCONTROLLERS; i++) {
                 tempVal = get_buttons_pressed_from_player(i);
@@ -2261,6 +2276,7 @@ s32 play_footstep_sounds(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 e
     }
     return ret;
 }
+
 /**
  * Make the next call of move_object never mark the object as out of bounds.
  * Official Name: objMoveXYZnocheck
@@ -2639,9 +2655,9 @@ void render_3d_model(Object *obj) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
         if (alpha < 255) {
-            meshBatch = func_800143A8(objModel, obj, 0, RENDER_SEMI_TRANSPARENT, spB0);
+            meshBatch = render_mesh(objModel, obj, 0, RENDER_SEMI_TRANSPARENT, spB0);
         } else {
-            meshBatch = func_800143A8(objModel, obj, 0, RENDER_NONE, spB0);
+            meshBatch = render_mesh(objModel, obj, 0, RENDER_NONE, spB0);
         }
         if (obj->segment.header->unk71) {
             if (hasOpacity) {
@@ -2729,7 +2745,7 @@ void render_3d_model(Object *obj) {
                 gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, obj->shading->unk18, obj->shading->unk19, obj->shading->unk1A, alpha);
                 enable_primitive_colour();
             }
-            func_800143A8(objModel, obj, meshBatch, 4, spB0);
+            render_mesh(objModel, obj, meshBatch, RENDER_SEMI_TRANSPARENT, spB0);
             if (obj->segment.header->unk71) {
                 disable_primitive_colour();
             }
@@ -3118,7 +3134,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
         apply_object_shear_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, gShieldEffectObject, obj, shear);
-        func_800143A8(mdl, gShieldEffectObject, 0, 4, 0);
+        render_mesh(mdl, gShieldEffectObject, 0, RENDER_SEMI_TRANSPARENT, 0);
         gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
         if (racer->shieldTimer < 64) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -3175,12 +3191,12 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gfxData = *gMagnetEffectObject->unk68;
             mdl = gfxData->objModel;
             gMagnetEffectObject->unk44 = (Vertex *) gfxData->unk4[gfxData->unk1F];
-            opacity = (((D_8011B078[(var_t0 * 4) + 1] * 8) & 0x7F) + 0x80);
-            func_8007F594(&gObjectCurrDisplayList, 2, 0xFFFFFF00 | opacity, gMagnetColours[racer->magnetModelID]);
+            opacity = ((D_8011B078[(var_t0 * 4) + 1] * 8) & 0x7F) + 0x80;
+            func_8007F594(&gObjectCurrDisplayList, 2, COLOUR_RGBA32(255, 255, 255, opacity), gMagnetColours[racer->magnetModelID]);
             apply_object_shear_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, gMagnetEffectObject, obj, shear);
-            D_800DC720 = TRUE;
-            func_800143A8(mdl, gMagnetEffectObject, 0, 4, 0);
-            D_800DC720 = FALSE;
+            gObjectTexAnim = TRUE;
+            render_mesh(mdl, gMagnetEffectObject, 0, RENDER_SEMI_TRANSPARENT, 0);
+            gObjectTexAnim = FALSE;
             gDkrInsertMatrix(gObjectCurrDisplayList++, 0, G_MTX_DKR_INDEX_0);
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             reset_render_settings(&gObjectCurrDisplayList);
@@ -3194,14 +3210,14 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
 GLOBAL_ASM("asm/non_matchings/objects/func_80014090.s")
 
 void func_800142B8(void) {
-    s32 i = D_8011AE60;
+    s32 i = gObjectListStart;
     s32 j;
     Object *currObj;
     Object_68 *curr_68;
 
     for (; i < gObjectCount; i++) {
         currObj = gObjPtrList[i];
-        if ((currObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) == 0 && currObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        if (!(currObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && currObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
             for (j = 0; j < currObj->segment.header->numberOfModelIds; j++) {
                 curr_68 = currObj->unk68[j];
                 if (curr_68 != NULL && curr_68->unk20 > 0) {
@@ -3213,7 +3229,10 @@ void func_800142B8(void) {
     }
 }
 
-s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool) {
+/**
+ * Renders every triangle batch in an objects mesh.
+*/
+s32 render_mesh(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags, s32 someBool) {
     s32 i;
     s32 textureIndex;
     s32 triOffset;
@@ -3234,7 +3253,7 @@ s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags,
     i = startIndex;
     endLoop = FALSE;
     while (i < objModel->numberOfBatches && !endLoop) {
-        if ((objModel->batches[i].flags & 4) == 0 || (flags & 4)) {
+        if (!(objModel->batches[i].flags & BATCH_FLAGS_UNK00000004) || flags & RENDER_SEMI_TRANSPARENT) {
             //Hidden/Invisible geometry
             textureIndex = objModel->batches[i].flags & BATCH_FLAGS_HIDDEN;
             //Probably a fakematch to use textureIndex here, but it works.
@@ -3261,10 +3280,10 @@ s32 func_800143A8(ObjectModel *objModel, Object *obj, s32 startIndex, s32 flags,
                 if (flags & RENDER_SEMI_TRANSPARENT && !(objModel->batches[i].flags & (flags & ~RENDER_SEMI_TRANSPARENT))) {
                     texToSetFlags |= RENDER_SEMI_TRANSPARENT;
                 }
-                if (D_800DC720 == 0) {
+                if (gObjectTexAnim == FALSE) {
                     load_and_set_texture(&dlist, texToSet, texToSetFlags, texOffset);
                 } else {
-                    texToSet = func_8007B46C(texToSet, texOffset);
+                    texToSet = set_animated_texture_header(texToSet, texOffset);
                     gDkrDmaDisplayList(gObjectCurrDisplayList++, OS_K0_TO_PHYSICAL(texToSet->cmd), texToSet->numberOfCommands);
                 }
                 if (offsetStartVertex == numVertices) {
@@ -3304,12 +3323,12 @@ s32 func_80014814(s32 *retObjCount) {
     if (D_8011AE7C) {
         return D_8011AE7C;
     }
-    curObjCount = D_8011AE60;
+    curObjCount = gObjectListStart;
     maxObjCount = gObjectCount - 1;
     while (maxObjCount >= curObjCount) {
         for (i = 0; maxObjCount >= curObjCount && i == 0; i++) {
             if (!(gObjPtrList[curObjCount]->segment.trans.flags & 0x8000)) {
-                if (gObjPtrList[curObjCount]->segment.header->unk30 & 1) {
+                if (gObjPtrList[curObjCount]->segment.header->flags & 1) {
                     curObjCount++;
                 }
                 i = -1;
@@ -3320,7 +3339,7 @@ s32 func_80014814(s32 *retObjCount) {
         for (i = 0; maxObjCount >= curObjCount && i == 0; i++) {
             if (gObjPtrList[maxObjCount]->segment.trans.flags & 0x8000) {
                 i = -1;
-            } else if (!(gObjPtrList[maxObjCount]->segment.header->unk30 & 1)) {
+            } else if (!(gObjPtrList[maxObjCount]->segment.header->flags & 1)) {
                 maxObjCount--;
             } else {
                 i = -1;
@@ -3362,21 +3381,25 @@ UNUSED void func_800149C0(unk800149C0 *arg0, UNUSED s32 arg1, s32 arg2, s32 arg3
 GLOBAL_ASM("asm/non_matchings/objects/func_80014B50.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_80015348.s")
 
-void func_800155B8(void) {
+/**
+ * Go through each object and detect potential interactions between each.
+ * Add candidates to a list and calcualte their distances.
+*/
+void process_object_interactions(void) {
     Object *obj2;
     Object *obj;
     ObjectInteraction *objInteract;
     ObjectInteraction *objInteract2;
     f32 xDiff;
     f32 zDiff;
-    f32 var_f12;
+    f32 radius;
     s32 j;
     s32 i;
     s32 objsWithInteractives;
     Object *objList[257]; //257 seems random, but it works for now.
 
     objsWithInteractives = 0;
-    for (i = D_8011AE60; i < gObjectCount; i++) {
+    for (i = gObjectListStart; i < gObjectCount; i++) {
         obj = gObjPtrList[i];
         if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             objInteract = obj->interactObj;
@@ -3386,7 +3409,7 @@ void func_800155B8(void) {
                 if (objInteract->unk11 != 2) {
                     objInteract->obj = NULL;
                     objInteract->flags &= ~(INTERACT_FLAGS_COLLIDED | INTERACT_FLAGS_PUSHING);
-                    objInteract->distance = 0xFF;
+                    objInteract->distance = 255;
                 }
             }
         }
@@ -3397,7 +3420,7 @@ void func_800155B8(void) {
     for (i = 0; i < objsWithInteractives; i++) {
         obj = objList[i];
         objInteract = obj->interactObj;
-        if ((objInteract->unk11 == 2) && (D_8011AE70 < 20)) {
+        if (objInteract->unk11 == 2 && D_8011AE70 < 20) {
             D_8011AE6C[D_8011AE70] = obj;
             D_8011AE70++;
         }
@@ -3406,18 +3429,18 @@ void func_800155B8(void) {
                 if (i != j) {
                     obj2 = objList[j];
                     objInteract2 = obj2->interactObj;
-                    if (objInteract2->flags & 3) {
+                    if (objInteract2->flags & (INTERACT_FLAGS_SOLID | INTERACT_FLAGS_TANGIBLE)) {
                         if (objInteract2->unk11 == 3) {
                             func_80016748(obj, obj2);
                         } else if (objInteract2->unk11 != 2) {
                             xDiff = obj->segment.trans.x_position - obj2->segment.trans.x_position;
                             zDiff = obj->segment.trans.z_position - obj2->segment.trans.z_position;
                             if (objInteract2->flags & INTERACT_FLAGS_UNK_0020) {
-                                var_f12 = 0x400000; //4194304.0f;
+                                radius = 0x400000; //4194304.0f;
                             } else {
-                                var_f12 = 0x40000; //262144.0f;
+                                radius = 0x40000; //262144.0f;
                             }
-                            if (((xDiff * xDiff) + (zDiff * zDiff)) < var_f12) {
+                            if (((xDiff * xDiff) + (zDiff * zDiff)) < radius) {
                                 func_800159C8(obj, obj2);
                             }
                         }
@@ -3659,7 +3682,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800185E4.s")
 Object *find_taj_object(void) {
     s32 i;
     Object *current_obj;
-    for (i = D_8011AE60; i < gObjectCount; i++) {
+    for (i = gObjectListStart; i < gObjectCount; i++) {
         current_obj = gObjPtrList[i];
         if (!(current_obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (current_obj->behaviorId == BHV_PARK_WARDEN)) {
             return current_obj;
@@ -3730,24 +3753,29 @@ s32 func_8001955C(Object *obj, s32 checkpoint, u8 arg2, s32 arg3, s32 arg4, f32 
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80019808.s")
 
-s8 func_8001A7D8(unk8001A7D8_arg0 *arg0) {
+/**
+ * Mark the course as finished for the appropriate mode.
+ * Check if it's the first race or the silver coin race before deciding which flag to write.
+ * Return whether something was written.
+*/
+s8 set_course_finish_flags(Settings *settings) {
     Object_Racer *racer;
 
-    racer = (Object_Racer *) gRacersByPosition[0]->unk64;
+    racer = (Object_Racer *) gRacersByPosition[PLAYER_ONE]->unk64;
     if (racer->playerIndex == PLAYER_COMPUTER) {
-        return 0;
+        return FALSE;
     }
-    D_8011ADC4 = 0;
-    if (!(arg0->unk4[arg0->unk49] & 2)) {
-        if (!gIsTimeTrial) {
-            D_8011ADC4 = 1;
-            arg0->unk4[arg0->unk49] |= 2;
+    gFirstTimeFinish = FALSE;
+    if (!(settings->courseFlagsPtr[settings->courseId] & RACE_CLEARED)) {
+        if (gIsTimeTrial == FALSE) {
+            gFirstTimeFinish = TRUE;
+            settings->courseFlagsPtr[settings->courseId] |= RACE_CLEARED;
         }
-    } else if (gIsSilverCoinRace && racer->silverCoinCount >= 8 && !gIsTimeTrial) {
-        D_8011ADC4 = 1;
-            arg0->unk4[arg0->unk49] |= 4;
+    } else if (gIsSilverCoinRace && racer->silverCoinCount >= 8 && gIsTimeTrial == FALSE) {
+        gFirstTimeFinish = TRUE;
+        settings->courseFlagsPtr[settings->courseId] |= RACE_CLEARED_SILVER_COINS;
     }
-    return D_8011ADC4;
+    return gFirstTimeFinish;
 }
 
 void func_8001A8D4(s32 arg0) {
@@ -3762,8 +3790,11 @@ s16 func_8001AE44(void) {
     return D_8011AD4E;
 }
 
-u32 func_8001AE54(void) {
-    return D_8011ADC8;
+/**
+ * Return the timer used for the collectable balloon cutscene.
+*/
+u32 get_balloon_cutscene_timer(void) {
+    return gBalloonCutsceneTimer;
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001AE64.s")
@@ -3818,23 +3849,31 @@ s32 func_8001B2F0(s32 mapId) {
     return ret;
 }
 
-s32 func_8001B3AC(s32 arg0) {
-    return arg0 == D_800DC718;
+/** 
+ * Return true if this object is the time trial ghost.
+*/
+s32 is_time_trial_ghost(Object* obj) {
+    return obj == gGhostObj;
 }
 
-void func_8001B3C4(s32 arg0, s16 *playerId) {
+/**
+ * Free ghost data then save the players victory.
+ * Check if the player has beaten every time and unlock TT.
+ * Otherwise, tell them to try another track.
+*/
+void tt_ghost_beaten(s32 arg0, s16 *playerId) {
     s32 trackIdCount;
     s8 *mainTrackIds;
 
-    D_800DC718 = 0;
+    gGhostObj = NULL;
     free_tt_ghost_data();
-    D_800DC734 = FALSE;
+    gTimeTrialStaffGhost = FALSE;
     mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
     trackIdCount = 0;
     while (mainTrackIds[trackIdCount] != -1 && mainTrackIds[trackIdCount] != arg0) {
         trackIdCount++;
     }
-    if (D_800DC738) {
+    if (gBeatStaffGhost) {
         //Save that TT has been beaten for this track.
         set_eeprom_settings_value(16 << trackIdCount);
         //Check if TT has been beaten for all tracks.
@@ -3842,13 +3881,13 @@ void func_8001B3C4(s32 arg0, s16 *playerId) {
             set_magic_code_flags(CHEAT_CONTROL_TT);
             play_sound_global(SOUND_VOICE_TT_BEAT_ALL_TIMES, NULL);
             func_80000FDC(SOUND_VOICE_TT_UNLOCKED, 0, 1.5f);
-            func_800C31EC(ASSET_GAME_TEXT_84); //Text for "You have beaten all my times!" and then "Now you can PICK me!"
+            set_current_text(ASSET_GAME_TEXT_84); //Text for "You have beaten all my times!" and then "Now you can PICK me!"
         } else {
             play_sound_global(SOUND_VOICE_TT_WELL_DONE, NULL);
             func_80000FDC(SOUND_VOICE_TT_TRY_ANOTHER_TRACK, 0, 1.0f);
-            func_800C31EC(ASSET_GAME_TEXT_83); //Text for "Well Done! Now try another track."
+            set_current_text(ASSET_GAME_TEXT_83); //Text for "Well Done! Now try another track."
         }
-        D_800DC738 = FALSE;
+        gBeatStaffGhost = FALSE;
         return;
     }
     play_time_trial_end_message(playerId);
@@ -3860,8 +3899,8 @@ u8 func_8001B4FC(s32 trackId) {
     u16 *temp_v0;
     Settings *settings;
 
-    D_800DC738 = FALSE;
-    D_800DC734 = FALSE;
+    gBeatStaffGhost = FALSE;
+    gTimeTrialStaffGhost = FALSE;
     settings = get_settings();
     if (get_map_default_vehicle(trackId) == D_8011AE82) {
         mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
@@ -3871,23 +3910,29 @@ u8 func_8001B4FC(s32 trackId) {
             if (temp_v0[i] >= settings->courseTimesPtr[D_8011AE82][trackId]) {
                 //Check if TT has been beaten?
                 if (!(get_eeprom_settings() & ((1 << 4) << i) )) {
-                    D_800DC738 = TRUE;
+                    gBeatStaffGhost = TRUE;
                 }
                 if (func_8001B2F0(trackId) == 0) {
-                    D_800DC734 = TRUE;
+                    gTimeTrialStaffGhost = TRUE;
                 }
             }
         }
     }
-    return D_800DC734;
+    return gTimeTrialStaffGhost;
 }
 
-Object *func_8001B640(void) {
-    return (Object *) D_800DC718;
+/**
+ * Return the time trial ghost object.
+*/
+Object *get_time_trial_ghost(void) {
+    return gGhostObj;
 }
 
-s32 func_8001B650(void) {
-    return D_800DC738 == FALSE;
+/**
+ * Return true if the tt ghost is unbeaten for this track.
+*/
+s32 unbeaten_staff_time(void) {
+    return gBeatStaffGhost == FALSE;
 }
 
 s32 func_8001B668(s32 arg0) {
@@ -4562,17 +4607,23 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
     }
 }
 
-s16 func_8001E440(void) {
-    return D_8011AE7A;
+/**
+ * Return the index of the currently active cutscene.
+*/
+s16 get_cutscene_id(void) {
+    return gCutsceneID;
 }
 
-void func_8001E450(s32 arg0) {
-    D_8011AE7A = arg0;
+/**
+ * Set the current cutscene index.
+*/
+void set_cutscene_id(s32 cutsceneID) {
+    gCutsceneID = cutsceneID;
 }
 
-void func_8001E45C(s32 arg0) {
-    if (arg0 != D_8011AE7A) {
-        D_8011AE7A = arg0;
+void func_8001E45C(s32 cutsceneID) {
+    if (cutsceneID != gCutsceneID) {
+        gCutsceneID = cutsceneID;
         D_8011ADAC = 0;
         D_8011AE7E = 1;
         if (get_game_mode() == GAMEMODE_MENU) {
@@ -4586,7 +4637,7 @@ void func_8001E45C(s32 arg0) {
  * Goes unused, since objGetObjList exists
 */
 UNUSED s32 get_object_list_index(void) {
-    return D_8011AE60;
+    return gObjectListStart;
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001E4C4.s")
@@ -4832,7 +4883,7 @@ void func_8002125C(Object *charSelectObj, LevelObjectEntry_CharacterSelect *entr
     charSelect->unk41 = entry->unk2F;
     charSelect->unk3C = entry->unk2B;
     if (entry->unk27 != 255) {
-        func_800C31EC(entry->unk27);
+        set_current_text(entry->unk27);
     }
     if (entry->unk2A >= 0) {
         func_8001E45C(entry->unk2A);
@@ -4951,6 +5002,10 @@ UNUSED f32 func_800228B0(f32 *arg0, u32 arg1, f32 arg2, f32 *arg3) {
 UNUSED void func_800228DC(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 }
 
+/**
+ * Prepares the player racer for a Taj Challenge race.
+ * Prevents them from pausing for 10 frames.
+*/
 void init_racer_for_challenge(s32 vehicleID) {
     Object_Racer *racer;
 
@@ -5000,7 +5055,10 @@ s8 is_taj_challenge(void) {
     return gIsTajChallenge;
 }
 
-Object *func_8002342C(f32 x, f32 z) {
+/**
+ * Searches for the furthest teleport anchor and returns it.
+*/
+Object *find_furthest_telepoint(f32 x, f32 z) {
     Object *tempObj;
     Object *bestObj;
     f32 diffX;
@@ -5015,7 +5073,7 @@ Object *func_8002342C(f32 x, f32 z) {
     if (gObjectCount > 0) {
         do {
             tempObj = gObjPtrList[i];
-            if (!(tempObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && tempObj->behaviorId == BHV_UNK_57) {
+            if (!(tempObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && tempObj->behaviorId == BHV_TAJ_TELEPOINT) {
                 diffX = tempObj->segment.trans.x_position - x;
                 diffZ = tempObj->segment.trans.z_position - z;
                 tempObj = gObjPtrList[i]; // fakematch

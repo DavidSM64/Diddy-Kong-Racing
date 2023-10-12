@@ -15,7 +15,7 @@
 /************ .data ************/
 
 u32 gTexColourTag = COLOUR_TAG_MAGENTA;
-s32 D_800DE7C4 = 1;
+s32 gSpriteOpaque = TRUE;
 
 // See "include/f3ddkr.h" for the defines
 
@@ -278,7 +278,7 @@ s32 *gSpriteOffsetTable;
 s32 *gSpriteCache;
 
 Sprite *gCurrentSprite;
-s32 D_80126354;
+s32 gSpriteTableNum;
 s32 D_80126358;
 s32 D_8012635C;
 Vertex *D_80126360;
@@ -319,11 +319,11 @@ void tex_init_textures(void) {
     gCurrentSprite = allocate_from_main_pool_safe(sizeof(Sprite) * 32, COLOUR_TAG_MAGENTA);
     D_80126358 = 0;
     gSpriteOffsetTable = (s32 *) load_asset_section_from_rom(ASSET_SPRITES_TABLE);
-    D_80126354 = 0;
-    while (gSpriteOffsetTable[D_80126354] != -1) {
-        D_80126354++;
+    gSpriteTableNum = 0;
+    while (gSpriteOffsetTable[gSpriteTableNum] != -1) {
+        gSpriteTableNum++;
     }
-    D_80126354--;
+    gSpriteTableNum--;
 
     gTempTextureHeader = allocate_from_main_pool_safe(0x28, COLOUR_TAG_MAGENTA);
     D_80126344 = 0;
@@ -362,7 +362,7 @@ UNUSED s32 get_loaded_3D_textures(void) {
 }
 
 UNUSED s32 func_8007AE64(void) {
-    return D_80126354;
+    return gSpriteTableNum;
 }
 
 #ifdef NON_EQUIVALENT
@@ -556,12 +556,13 @@ void disable_primitive_colour(void) {
 }
 
 /**
+ * Shift the texture header by the offset and return the result. 
  * Official Name: texFrame
 */
-TextureHeader *func_8007B46C(TextureHeader *texHead, s32 arg1) {
-    if (arg1 > 0) {
-        if (arg1 < texHead->numOfTextures << 8) {
-            texHead = (TextureHeader *) (((u8 *)texHead) + ((arg1 >> 16) * texHead->textureSize));
+TextureHeader *set_animated_texture_header(TextureHeader *texHead, s32 offset) {
+    if (offset > 0) {
+        if (offset < texHead->numOfTextures << 8) {
+            texHead = (TextureHeader *) (((u8 *)texHead) + ((offset >> 16) * texHead->textureSize));
         } else {
             texHead = (TextureHeader *) (((u8 *)texHead) + ((texHead->numOfTextures >> 8) - 1) * texHead->textureSize);
         }
@@ -753,9 +754,11 @@ void load_blinking_lights_texture(Gfx **dlist, TextureHeader *texture_list, u32 
     gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsBlinkingLights[flags]), numberOfGfxCommands(dRenderSettingsBlinkingLights[0]));
 }
 
-
-void func_8007BF1C(s32 arg0) {
-    D_800DE7C4 = arg0;
+/**
+ * Set whether to use an opaque render mode for sprites.
+*/
+void sprite_opaque(s32 setting) {
+    gSpriteOpaque = setting;
     gForceFlags = TRUE;
 }
 
@@ -783,7 +786,7 @@ void func_8007BF34(Gfx **dlist, s32 arg1) {
         gForceFlags = 0;
         gCurrentRenderFlags = temp_a1;
         temp_t8 = temp_a1 & ~0x800;
-        if (D_800DE7C4 == 0) {
+        if (gSpriteOpaque == 0) {
             if ((gCurrentRenderFlags & 0x200) != 0) {
                 gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(dRenderSettingsSpriteCld[((temp_t8 >> 1) & 1) * 16]), numberOfGfxCommands(dRenderSettingsSpriteCld[0]));
             } else {
@@ -865,7 +868,7 @@ UNUSED u8 func_8007C660(s32 arg0) {
         for (i = 0; i < gTextureAssetID[TEX_TABLE_2D]; i++) {
             D_80126370[i] = 0;
         }
-        for (i = 0; i < D_80126354; i++) {
+        for (i = 0; i < gSpriteTableNum; i++) {
             temp_s1 = gCurrentSprite;
             load_asset_to_address(ASSET_SPRITES, (u32) temp_s1, gSpriteOffsetTable[i], gSpriteOffsetTable[i + 1] - gSpriteOffsetTable[i]);
             temp_v1 = temp_s1->unkC.val[temp_s1->numberOfFrames];
@@ -900,7 +903,7 @@ s32 load_sprite_info(s32 spriteIndex, s32 *numOfInstancesOut, s32 *unkOut, s32 *
     s32 size;
     s32 new_var;
 
-    if ((spriteIndex < 0) || (spriteIndex >= D_80126354)) {
+    if ((spriteIndex < 0) || (spriteIndex >= gSpriteTableNum)) {
         textureCouldNotBeLoaded:
         *numOfInstancesOut = 0;
         *unkOut = 0;

@@ -1011,7 +1011,7 @@ glabel render_track_select_setup_ui
 /* 092A0C 80091E0C 248463A0 */   addiu $a0, %lo(sMenuCurrDisplayList) # addiu $a0, $a0, 0x63a0
 /* 092A10 80091E10 0C01A142 */  jal   func_80068508
 /* 092A14 80091E14 24040001 */   li    $a0, 1
-/* 092A18 80091E18 0C01EFC7 */  jal   func_8007BF1C
+/* 092A18 80091E18 0C01EFC7 */  jal   sprite_opaque
 /* 092A1C 80091E1C 00002025 */   move  $a0, $zero
 /* 092A20 80091E20 3C15800E */  lui   $s5, %hi(gMultiplayerSelectedNumberOfRacers) # $s5, 0x800e
 /* 092A24 80091E24 3C11800E */  lui   $s1, %hi(sMenuGuiColourB) # $s1, 0x800e
@@ -1071,7 +1071,7 @@ glabel render_track_select_setup_ui
 /* 092AEC 80091EEC A2130000 */  sb    $s3, ($s0)
 /* 092AF0 80091EF0 1696FFD3 */  bne   $s4, $s6, .L80091E40
 /* 092AF4 80091EF4 A2330000 */   sb    $s3, ($s1)
-/* 092AF8 80091EF8 0C01EFC7 */  jal   func_8007BF1C
+/* 092AF8 80091EF8 0C01EFC7 */  jal   sprite_opaque
 /* 092AFC 80091EFC 24040001 */   li    $a0, 1
 /* 092B00 80091F00 0C01A142 */  jal   func_80068508
 /* 092B04 80091F04 00002025 */   move  $a0, $zero
@@ -1082,7 +1082,7 @@ glabel render_track_select_setup_ui
 /* 092B14 80091F14 29210004 */  slti  $at, $t1, 4
 /* 092B18 80091F18 1020003D */  beqz  $at, .L80092010
 /* 092B1C 80091F1C 00000000 */   nop   
-/* 092B20 80091F20 0C01EFC7 */  jal   func_8007BF1C
+/* 092B20 80091F20 0C01EFC7 */  jal   sprite_opaque
 /* 092B24 80091F24 00002025 */   move  $a0, $zero
 /* 092B28 80091F28 3C0A800E */  lui   $t2, %hi(gIsInAdventureTwo) # $t2, 0x800e
 /* 092B2C 80091F2C 8D4AF494 */  lw    $t2, %lo(gIsInAdventureTwo)($t2)
@@ -1145,7 +1145,7 @@ glabel render_track_select_setup_ui
 /* 092C00 80092000 0C027298 */  jal   func_8009CA60
 /* 092C04 80092004 E544000C */   swc1  $f4, 0xc($t2)
 .L80092008:
-/* 092C08 80092008 0C01EFC7 */  jal   func_8007BF1C
+/* 092C08 80092008 0C01EFC7 */  jal   sprite_opaque
 /* 092C0C 8009200C 24040001 */   li    $a0, 1
 .L80092010:
 /* 092C10 80092010 3C08800E */  lui   $t0, %hi(gNumberOfActivePlayers) # $t0, 0x800e

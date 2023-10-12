@@ -150,7 +150,7 @@ glabel L80086CDC
 /* 087924 80086D24 10000128 */  b     .L800871C8
 /* 087928 80086D28 AFA20038 */   sw    $v0, 0x38($sp)
 .L80086D2C:
-/* 08792C 80086D2C 0C01B9DC */  jal   func_8006E770
+/* 08792C 80086D2C 0C01B9DC */  jal   clear_lap_records
 /* 087930 80086D30 24050003 */   li    $a1, 3
 /* 087934 80086D34 0C01BAFF */  jal   mark_to_write_flap_and_course_times
 /* 087938 80086D38 00000000 */   nop   

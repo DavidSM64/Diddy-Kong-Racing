@@ -118,7 +118,7 @@ void reset_render_settings(Gfx **dlist);
 void enable_primitive_colour(void);
 void disable_primitive_colour(void);
 void load_and_set_texture_no_offset(Gfx **dlist, TextureHeader *texhead, u32 flags);
-void func_8007BF1C(s32 arg0);
+void sprite_opaque(s32 setting);
 s32 func_8007EF64(s16 arg0);
 void load_and_set_texture(Gfx **dlist, TextureHeader *texhead, s32 flags, s32 offset);
 void free_sprite(Sprite *sprite);
@@ -129,7 +129,7 @@ void tex_animate_texture(TextureHeader *texture, u32 *triangleBatchInfoFlags, s3
 void func_8007F1E8(LevelHeader_70 *arg0);
 void init_pulsating_light_data(PulsatingLightData *data);
 void update_pulsating_light_data(PulsatingLightData *data, s32 timeDelta);
-TextureHeader *func_8007B46C(TextureHeader *arg0, s32 arg1);
+TextureHeader *set_animated_texture_header(TextureHeader *arg0, s32 arg1);
 TextureHeader *load_texture(s32 arg0); // Non Matching
 s32 get_texture_size_from_id(s32 arg0); // Non Matching
 s32 func_8007C860(s32 spriteIndex); // Non Matching

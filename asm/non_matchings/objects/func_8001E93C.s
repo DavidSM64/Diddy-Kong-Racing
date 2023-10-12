@@ -63,9 +63,9 @@ glabel func_8001E93C
 /* 01F620 8001EA20 25ADAE74 */   addiu $t5, %lo(D_8011AE74) # addiu $t5, $t5, -0x518c
 /* 01F624 8001EA24 3C058012 */  lui   $a1, %hi(gObjPtrList) # $a1, 0x8012
 /* 01F628 8001EA28 3C0B8012 */  lui   $t3, %hi(D_8011ADD8) # $t3, 0x8012
-/* 01F62C 8001EA2C 3C098012 */  lui   $t1, %hi(D_8011AE7A) # $t1, 0x8012
+/* 01F62C 8001EA2C 3C098012 */  lui   $t1, %hi(gCutsceneID) # $t1, 0x8012
 /* 01F630 8001EA30 8CA5AE58 */  lw    $a1, %lo(gObjPtrList)($a1)
-/* 01F634 8001EA34 2529AE7A */  addiu $t1, %lo(D_8011AE7A) # addiu $t1, $t1, -0x5186
+/* 01F634 8001EA34 2529AE7A */  addiu $t1, %lo(gCutsceneID) # addiu $t1, $t1, -0x5186
 /* 01F638 8001EA38 256BADD8 */  addiu $t3, %lo(D_8011ADD8) # addiu $t3, $t3, -0x5228
 /* 01F63C 8001EA3C 00005025 */  move  $t2, $zero
 /* 01F640 8001EA40 00063880 */  sll   $a3, $a2, 2
@@ -104,8 +104,8 @@ glabel func_8001E93C
 /* 01F6B4 8001EAB4 24120001 */  li    $s2, 1
 /* 01F6B8 8001EAB8 3C018012 */  lui   $at, %hi(D_8011AE01) # $at, 0x8012
 /* 01F6BC 8001EABC A032AE01 */  sb    $s2, %lo(D_8011AE01)($at)
-/* 01F6C0 8001EAC0 3C0C8012 */  lui   $t4, %hi(D_8011AE60) # $t4, 0x8012
-/* 01F6C4 8001EAC4 8D8CAE60 */  lw    $t4, %lo(D_8011AE60)($t4)
+/* 01F6C0 8001EAC0 3C0C8012 */  lui   $t4, %hi(gObjectListStart) # $t4, 0x8012
+/* 01F6C4 8001EAC4 8D8CAE60 */  lw    $t4, %lo(gObjectListStart)($t4)
 /* 01F6C8 8001EAC8 3C018012 */  lui   $at, %hi(D_8011AE78) # $at, 0x8012
 /* 01F6CC 8001EACC A420AE78 */  sh    $zero, %lo(D_8011AE78)($at)
 /* 01F6D0 8001EAD0 0186082A */  slt   $at, $t4, $a2

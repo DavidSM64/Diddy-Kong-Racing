@@ -111,6 +111,12 @@ typedef enum RacerAIBehaviours {
     AI_BLUE_BALLOON
 } RacerAIBehaviours;
 
+typedef enum TajInteraction {
+    TAJ_WANDER,
+    TAJ_DIALOGUE,
+    TAJ_TELEPORT,
+} TajInteraction;
+
 #define AI_MIN 0
 #define AI_MAX 1
 #define AI_MIN_STEP 2
@@ -161,8 +167,8 @@ void apply_plane_tilt_anim(s32 updateRate, Object *obj, Object_Racer *racer);
 void racer_attack_handler_plane(Object *obj, Object_Racer *racer);
 void update_carpet(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer);
 void set_racer_tail_lights(Object_Racer *arg0);
-s32 func_80052188(void);
-void func_800521B8(s32 arg0);
+s32 should_taj_teleport(void);
+void set_taj_status(s32 arg0);
 void slowly_reset_head_angle(Object_Racer *racer);
 void func_80052988(Object *obj, Object_Racer *arg1, s32 action, s32 arg3, s32 duration, s32 arg5, s32 arg6, s32 arg7);
 void handle_car_steering(Object_Racer *racer);

@@ -52,10 +52,10 @@ glabel func_80022E18
 /* 023ADC 80022EDC 240F0001 */  li    $t7, 1
 /* 023AE0 80022EE0 ADCD0000 */  sw    $t5, ($t6)
 /* 023AE4 80022EE4 ACCF0000 */  sw    $t7, ($a2)
-/* 023AE8 80022EE8 3C058012 */  lui   $a1, %hi(D_8011AE60) # $a1, 0x8012
+/* 023AE8 80022EE8 3C058012 */  lui   $a1, %hi(gObjectListStart) # $a1, 0x8012
 /* 023AEC 80022EEC 3C038012 */  lui   $v1, %hi(gObjectCount) # $v1, 0x8012
 /* 023AF0 80022EF0 8C63AE5C */  lw    $v1, %lo(gObjectCount)($v1)
-/* 023AF4 80022EF4 8CA5AE60 */  lw    $a1, %lo(D_8011AE60)($a1)
+/* 023AF4 80022EF4 8CA5AE60 */  lw    $a1, %lo(gObjectListStart)($a1)
 /* 023AF8 80022EF8 3C188012 */  lui   $t8, %hi(gObjPtrList) # $t8, 0x8012
 /* 023AFC 80022EFC 00A3082A */  slt   $at, $a1, $v1
 /* 023B00 80022F00 10200013 */  beqz  $at, .L80022F50
@@ -143,7 +143,7 @@ glabel func_80022E18
 .L80023030:
 /* 023C30 80023030 240A001F */  li    $t2, 31
 /* 023C34 80023034 24040002 */  li    $a0, 2
-/* 023C38 80023038 0C01486E */  jal   func_800521B8
+/* 023C38 80023038 0C01486E */  jal   set_taj_status
 /* 023C3C 8002303C AD6A0078 */   sw    $t2, 0x78($t3)
 /* 023C40 80023040 10000016 */  b     .L8002309C
 /* 023C44 80023044 00000000 */   nop   
@@ -160,7 +160,7 @@ glabel func_80022E18
 /* 023C6C 8002306C 24010002 */  li    $at, 2
 /* 023C70 80023070 15810003 */  bne   $t4, $at, .L80023080
 /* 023C74 80023074 00000000 */   nop   
-/* 023C78 80023078 0C030C7B */  jal   func_800C31EC
+/* 023C78 80023078 0C030C7B */  jal   set_current_text
 /* 023C7C 8002307C 00002025 */   move  $a0, $zero
 .L80023080:
 /* 023C80 80023080 3C018012 */  lui   $at, %hi(D_8011ADB0) # $at, 0x8012
@@ -177,7 +177,7 @@ glabel func_80022E18
 /* 023CA8 800230A8 00000000 */   nop   
 /* 023CAC 800230AC 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 023CB0 800230B0 44816000 */  mtc1  $at, $f12
-/* 023CB4 800230B4 0C01AF44 */  jal   func_8006BD10
+/* 023CB4 800230B4 0C01AF44 */  jal   start_level_music
 /* 023CB8 800230B8 00000000 */   nop   
 /* 023CBC 800230BC 8FBF0014 */  lw    $ra, 0x14($sp)
 /* 023CC0 800230C0 3C018012 */  lui   $at, %hi(gIsTajChallenge) # $at, 0x8012
