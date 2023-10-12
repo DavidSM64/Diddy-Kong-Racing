@@ -265,7 +265,7 @@ unk80126C54 D_80126C54;
 u8 D_80126C58[20];
 s32 *D_80126C6C;
 s32 gNumOnscreenMagicCodes;
-char *D_80126C74;
+char *D_80126C74; // gFileName?
 s32 D_80126C78;
 s32 D_80126C7C;
 s16 D_80126C80[32];
@@ -8173,61 +8173,69 @@ void trim_filename_string(char* input, char* output) {
     *output = '\0';
 }
 
-void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *arg5, s32 arg6) {
+void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *fileName, s32 arg6) {
     D_800E0F90 = arg0;
     D_800E0F94 = arg1;
     D_800E0F98 = arg2;
     D_800E0F9C = arg3;
     D_80126C6C = arg4;
-    D_80126C74 = arg5;
+    D_80126C74 = fileName;
     D_80126C78 = arg6;
     D_800E0FA0 = 0;
-    D_80126C50 = (f32)*D_80126C6C;
+    D_80126C50 = (f32) *D_80126C6C;
     D_80126C48 = FALSE;
     D_80126C3C = 0;
     D_80126C34 = 0;
     load_font(ASSET_FONTS_BIGFONT);
 }
 
-#ifdef NON_EQUIVALENT
-// Minor differences, and is very close.
-// Draw menu for "Enter your initials" when starting a new game.
-// The text entry is a horizontal list of characters you scroll through.
-// Visual Aid: https://imgur.com/llVwdTy
-void render_enter_filename_ui(UNUSED s32 unused) {
-    s32 sp6C;
-    s32 i;
-    s32 pad;
-    s32 temp_f4;
-    s32 yPos;
+/**
+ * Draw menu for "Enter your initials" when starting a new game.
+ * The text entry is a horizontal list of characters you scroll through.
+ * Visual Aid: https://imgur.com/llVwdTy
+*/
+void render_enter_filename_ui(UNUSED s32 updateRate) {
+    s32 xIncrement;
+    s32 charIndexIncrement;
+    s32 xStart;
     s32 charIndex;
-    char *fileName;
-    s32 xPos;
-    s32 xPosOffset;
-    s32 charIndexOffset;
+    s32 x;
+    s32 i;
+    s32 startCharacterIndex;
+    s32 y;
+    char *trimmedTextPtr;
+    char trimmedTextBuffer[4];
 
-    temp_f4 = D_80126C50;
-    sp6C = SCREEN_WIDTH_HALF - (s32) ((D_80126C50 - temp_f4) * 40);
+    startCharacterIndex = D_80126C50;
+    xStart = SCREEN_WIDTH_HALF - (s32) ((D_80126C50 - (f32) startCharacterIndex) * 40);
     set_text_background_colour(0, 0, 0, 0);
     set_text_font(ASSET_FONTS_FUNFONT);
+
+    // Draw "Enter Initials" shadow
     set_text_colour(0, 0, 0, 255, 128);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 2, D_800E0F90 - 22, gMenuText[ASSET_MENU_TEXT_ENTERINITIALS], ALIGN_MIDDLE_CENTER);
+
+    // Draw "Enter Initials" text
     set_text_colour(255, 128, 255, 96, 255);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, D_800E0F90 - 24, gMenuText[ASSET_MENU_TEXT_ENTERINITIALS], ALIGN_MIDDLE_CENTER);
-    yPos = D_800E0F90;
-    for (i = 0; i < 2; i++) {
-        xPos = sp6C;
-        charIndex = temp_f4;
-        if (i != 0) {
-            xPos -= 40;
-            charIndex--;
-            xPosOffset = -40;
-            charIndexOffset = -1;
+
+    y = D_800E0F90;
+    
+    // Doesn't match with a for loop.
+    i = 0;
+    while (i < 2) {
+        x = xStart;
+        charIndex = startCharacterIndex;
+         if (i != 0) {
+            x = xStart - 40;
+            charIndex = startCharacterIndex - 1;
+            xIncrement = -40;
+            charIndexIncrement = -1;
         } else {
-            xPosOffset = 40;
-            charIndexOffset = 1;
+            xIncrement = 40;
+            charIndexIncrement = 1;
         }
-        while ((xPos >= -15) && (xPos < 336)) {
+        while(((x >= -15) && (x < 336))) {
             if (charIndex < 0) {
                 charIndex = 30;
             }
@@ -8242,33 +8250,33 @@ void render_enter_filename_ui(UNUSED s32 unused) {
             if (charIndex < 28) {
                 set_text_font(ASSET_FONTS_BIGFONT);
                 D_800E0F8C = gFileNameValidChars[charIndex];
-                draw_text(&sMenuCurrDisplayList, xPos, yPos, &D_800E0F8C, ALIGN_MIDDLE_CENTER);
+                draw_text(&sMenuCurrDisplayList, x, y, &D_800E0F8C, ALIGN_MIDDLE_CENTER);
             } else {
                 set_text_font(ASSET_FONTS_FUNFONT);
                 if (charIndex == 28) {
-                    draw_text(&sMenuCurrDisplayList, xPos, yPos, &D_800E8244 /* "SP" */, ALIGN_MIDDLE_CENTER);
+                    draw_text(&sMenuCurrDisplayList, x, y, (char *) &D_800E8244 /* "SP" */, ALIGN_MIDDLE_CENTER);
                 } else if (charIndex == 29) {
-                    draw_text(&sMenuCurrDisplayList, xPos, yPos, &D_800E8248 /* "DEL" */, ALIGN_MIDDLE_CENTER);
+                    draw_text(&sMenuCurrDisplayList, x, y, (char *) &D_800E8248 /* "DEL" */, ALIGN_MIDDLE_CENTER);
                 } else {
-                    draw_text(&sMenuCurrDisplayList, xPos, yPos, &D_800E824C /* "OK" */, ALIGN_MIDDLE_CENTER);
+                    draw_text(&sMenuCurrDisplayList, x, y, (char *) &D_800E824C /* "OK" */, ALIGN_MIDDLE_CENTER);
                 }
             }
-            xPos += xPosOffset;
-            charIndex += charIndexOffset;
+            x += xIncrement;
+            charIndex += charIndexIncrement;
         }
+        i++;
     }
-    trim_filename_string(D_80126C74, fileName);
-    if (fileName != NULL) {
+    trimmedTextPtr = trimmedTextBuffer;
+    trim_filename_string(D_80126C74, trimmedTextPtr);
+
+    if (trimmedTextPtr != NULL) {
         set_text_font(D_800E0F9C);
         set_text_colour(0, 0, 0, 255, 128);
-        draw_text(&sMenuCurrDisplayList, D_800E0F94 + 1, D_800E0F98 + 3, fileName, ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, D_800E0F94 + 1, D_800E0F98 + 3, trimmedTextBuffer, ALIGN_MIDDLE_CENTER);
         set_text_colour(255, 255, 255, 0, 255);
-        draw_text(&sMenuCurrDisplayList, D_800E0F94, D_800E0F98, fileName, ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, D_800E0F94, D_800E0F98, trimmedTextBuffer, ALIGN_MIDDLE_CENTER);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/render_enter_filename_ui.s")
-#endif
 
 s32 menu_enter_filename_loop(s32 updateRate) {
     s32 var_v0_2;
@@ -8348,7 +8356,7 @@ s32 menu_enter_filename_loop(s32 updateRate) {
             if (*temp_a1 < 29) {
                 D_80126C74[D_800E0FA0] = gFileNameValidChars[*temp_a1];
                 D_800E0FA0++;
-                D_80126C74[D_800E0FA0] = 0;
+                D_80126C74[D_800E0FA0] = '\0';
                 play_sound_global(SOUND_SELECT2, NULL);
                 if (D_800E0FA0 >= D_80126C78) {
                     *D_80126C6C = 30;
@@ -8356,11 +8364,11 @@ s32 menu_enter_filename_loop(s32 updateRate) {
             } else if (*temp_a1 == 29) {
                 if (D_800E0FA0 > 0) {
                     D_800E0FA0--;
-                    D_80126C74[D_800E0FA0] = 0;
+                    D_80126C74[D_800E0FA0] = '\0';
                 }
                 play_sound_global(SOUND_MENU_BACK3, NULL);
             } else {
-                if ((D_800E0FA0 != 0) || (D_80126C74[0] == 0)) {
+                if ((D_800E0FA0 != 0) || (D_80126C74[0] == '\0')) {
                     for (var_v1 = D_800E0FA0; var_v1 < D_80126C78; var_v1++) {
                         D_80126C74[var_v1] = 32;
                     }
@@ -8373,7 +8381,7 @@ s32 menu_enter_filename_loop(s32 updateRate) {
             if (D_800E0FA0 > 0) {
                 D_800E0FA0--;
             }
-            D_80126C74[D_800E0FA0] = 0;
+            D_80126C74[D_800E0FA0] = '\0';
             play_sound_global(SOUND_MENU_BACK3, NULL);
         } else {
             var_v0_2 = *temp_a1;
@@ -8399,7 +8407,7 @@ s32 menu_enter_filename_loop(s32 updateRate) {
         D_80126C48 = TRUE;
     } else if (buttonsPressed & B_BUTTON) {
         D_800E0FA0--;
-        D_80126C74[D_800E0FA0] = 0;
+        D_80126C74[D_800E0FA0] = '\0';
         play_sound_global(SOUND_MENU_BACK3, NULL);
     }
     render_enter_filename_ui(updateRate);
