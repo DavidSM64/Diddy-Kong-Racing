@@ -476,6 +476,7 @@ s32 menu_options_loop(s32 updateRate);
 void func_8008B4C8(void);
 void func_8008B758(s8 *activePlayers);
 s32 menu_audio_options_loop(s32 updateRate);
+void func_8009963C(void);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -520,7 +521,6 @@ s32 func_80095728(Gfx **gfx, MatrixS **mtx, Vertex **vtx, s32 updateRate);
 s32 func_8008F618(Gfx **dlist, MatrixS **mat);
 void func_80093D40(UNUSED s32 updateRate);
 void func_80080BC8(Gfx **);
-void func_8009963C(void);
 void func_80081C04(s32 num, s32 x, s32 y, u8 r, u8 g, u8 b, u8 a, u8 font, u8 alignment);
 void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour0, s32 colour1, s32 colour2, s32 colour3);
 void func_80084854(void);

@@ -1486,8 +1486,8 @@ void render_race_start(s32 arg0, s32 updateRate) {
             }
             if (gRaceStartShowHudStep == 3) {
                 play_sound_global(SOUND_VOICE_TT_GO, &gHUDVoiceSoundMask);
-                if ((func_8001B640() != 0) && (func_8001B650() == 0)) {
-                    func_800A7484(0x24B, 1.7f, 0);
+                if ((func_8001B640() != 0) && (func_8001B650() == FALSE)) {
+                    func_800A7484(SOUND_VOICE_TT_BEAT_MY_TIME, 1.7f, 0);
                     func_800C3158(0x52, 1.7f);
                 }
                 D_80126D70 = 1;

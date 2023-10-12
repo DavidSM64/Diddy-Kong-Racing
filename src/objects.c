@@ -55,8 +55,8 @@ s16 D_800DC724 = 0x2A30;
 s16 D_800DC728 = -1;
 s16 D_800DC72C = 0;
 u8 gHasGhostToSave = 0;
-u8 D_800DC734 = 0;
-u8 D_800DC738 = 0;
+u8 D_800DC734 = FALSE;
+u8 D_800DC738 = FALSE;
 s8 D_800DC73C = 0;
 s8 D_800DC740 = 0;
 s8 D_800DC744 = 0;
@@ -226,7 +226,7 @@ s16 D_8011AE7A;
 s16 D_8011AE7C;
 s8 D_8011AE7E;
 s16 gTTGhostTimeToBeat;
-s16 D_8011AE82;
+s16 D_8011AE82; //Current Vehicle being used in track?
 s16 gMapDefaultVehicle; // Vehicle enum
 s32 D_8011AE88;
 Gfx *gObjectCurrDisplayList;
@@ -669,7 +669,7 @@ s32 func_8000CC20(Object *obj) {
 }
 
 #ifdef NON_EQUIVALENT
-void func_8000CC7C(enum Vehicle vehicle, u32 arg1, s32 arg2) {
+void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     s32 numPlayers; // sp144
     enum RenderContext gameMode;
     s32 cutsceneID; //sp130
@@ -3828,13 +3828,13 @@ void func_8001B3C4(s32 arg0, s16 *playerId) {
 
     D_800DC718 = 0;
     free_tt_ghost_data();
-    D_800DC734 = 0;
+    D_800DC734 = FALSE;
     mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
     trackIdCount = 0;
     while (mainTrackIds[trackIdCount] != -1 && mainTrackIds[trackIdCount] != arg0) {
         trackIdCount++;
     }
-    if (D_800DC738 != 0) {
+    if (D_800DC738) {
         //Save that TT has been beaten for this track.
         set_eeprom_settings_value(16 << trackIdCount);
         //Check if TT has been beaten for all tracks.
@@ -3848,7 +3848,7 @@ void func_8001B3C4(s32 arg0, s16 *playerId) {
             func_80000FDC(SOUND_VOICE_TT_TRY_ANOTHER_TRACK, 0, 1.0f);
             func_800C31EC(ASSET_GAME_TEXT_83); //Text for "Well Done! Now try another track."
         }
-        D_800DC738 = 0;
+        D_800DC738 = FALSE;
         return;
     }
     play_time_trial_end_message(playerId);
@@ -3860,8 +3860,8 @@ u8 func_8001B4FC(s32 trackId) {
     u16 *temp_v0;
     Settings *settings;
 
-    D_800DC738 = 0;
-    D_800DC734 = 0;
+    D_800DC738 = FALSE;
+    D_800DC734 = FALSE;
     settings = get_settings();
     if (get_map_default_vehicle(trackId) == D_8011AE82) {
         mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
@@ -3871,10 +3871,10 @@ u8 func_8001B4FC(s32 trackId) {
             if (temp_v0[i] >= settings->courseTimesPtr[D_8011AE82][trackId]) {
                 //Check if TT has been beaten?
                 if (!(get_eeprom_settings() & ((1 << 4) << i) )) {
-                    D_800DC738 = 1;
+                    D_800DC738 = TRUE;
                 }
                 if (func_8001B2F0(trackId) == 0) {
-                    D_800DC734 = 1;
+                    D_800DC734 = TRUE;
                 }
             }
         }
@@ -3887,7 +3887,7 @@ Object *func_8001B640(void) {
 }
 
 s32 func_8001B650(void) {
-    return D_800DC738 == 0;
+    return D_800DC738 == FALSE;
 }
 
 s32 func_8001B668(s32 arg0) {

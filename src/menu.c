@@ -113,33 +113,25 @@ SavefileInfo gSavefileInfo[4];
 s32 D_801264D0;
 s32 D_801264D4;
 s8 gDialogueSubmenu;
-u8 *D_801264DC; //gGhostLevelIDs?
+u8 D_801264DC[4]; //gGhostLevelIDs?
 s8 D_801264E0;
 s8 D_801264E1;
 
 s8 sCurrentMenuID;
-u8 *D_801264E4; //gGhostSomethings?
+u8 D_801264E4[4]; //gGhostSomethings?
 s32 D_801264E8;
-u8 *D_801264EC; //gGhostVehicleIds?
+u8 D_801264EC[4]; //gGhostVehicleIds?
 s32 D_801264F0[2];
-s16 *D_801264F8[3]; //gGhostChecksums?
+u16 D_801264F8[6]; //gGhostChecksums?
 s8 sDialogueOptionMax;
-s32 D_80126508;
-s16 D_8012650C;
+u8 D_80126508[6];
 s8 gDialogueOptionYOffset;
-s32 D_80126510;
-s16 D_80126514;
+u8 D_80126510[6];
 s8 gDialogueItemSelection;
-s32 D_80126518;
-s32 D_8012651C;
-s32 D_80126520;
-s32 D_80126524;
-s32 D_80126528;
-s32 D_8012652C;
+u8 D_80126518[6];
+u16 D_80126520[6];
 Settings *gSavefileData[4];
-s8 D_80126540;
-s8 D_80126541;
-s32 D_80126544;
+u8 D_80126540[8];
 s32 gMultiplayerSelectedNumberOfRacersCopy; // Saved version gMultiplayerSelectedNumberOfRacers?
 TextureHeader *gMenuTextures[128];              // lookup table? TEXTURES
 u8 D_80126750[128]; // Seems to be a boolean for "This texture exists" for the above array.
@@ -8840,7 +8832,50 @@ s32 get_trophy_race_world_id(void) {
     return gTrophyRaceWorldId;
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8009963C.s")
+void func_8009963C(void) {
+    u8 *mainTrackIds;
+    s32 i;
+    s32 j;
+    u16 sp44[4]; 
+    u16 swap;
+    u16 swapByte;
+    UNUSED s32 pad;
+
+    D_801264D4 = 0;
+    mainTrackIds = (u8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
+    
+    for(i = 0; i < 6; i++) {
+        if (D_801264DC[i] != 0xFF) {
+            for(j = 0; mainTrackIds[j] != 0xFF && mainTrackIds[j] != D_801264DC[i]; j++) {}
+            if (mainTrackIds[j] != 0xFF) {
+                D_80126540[D_801264D4] = i;
+                sp44[D_801264D4] = (j * 8) + D_801264EC[i];
+                D_801264D4++;
+            }
+        }
+    }
+
+    for(i = D_801264D4-1; i > 0; i--) {
+        for (j = 0; j < i; j++) {
+            if(sp44[j+1] < sp44[j]) {
+                swap = sp44[j];
+                sp44[j] = sp44[j+1];
+                sp44[j+1] = swap;
+                swapByte = D_80126540[j];
+                D_80126540[j] = D_80126540[j+1];
+                D_80126540[j+1] = swapByte;
+            }
+        }
+    }
+    
+    for(i = 0; i < D_801264D4; i++) {
+        D_80126508[i] = D_801264DC[D_80126540[i]];
+        D_80126510[i] = D_801264E4[D_80126540[i]];
+        D_80126518[i] = D_801264EC[D_80126540[i]];
+        D_80126520[i] = D_801264F8[D_80126540[i]];
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/menu/func_800998E0.s")
 
 #ifdef NON_EQUIVALENT
