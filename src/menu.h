@@ -478,13 +478,13 @@ void func_8008B758(s8 *activePlayers);
 s32 menu_audio_options_loop(s32 updateRate);
 void func_8009963C(void);
 void render_enter_filename_ui(UNUSED s32 updateRate);
+void randomise_ai_racer_slots(s32 arg0);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
 void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2);
 s32 menu_controller_pak_loop(s32 updateRate);
 void render_magic_codes_list_menu_text(s32 arg0);
-void randomise_ai_racer_slots(s32 arg0);
 void menu_game_select_init(void);
 void render_file_select_menu(s32 arg0);
 void func_8008FF1C(s32 updateRate);

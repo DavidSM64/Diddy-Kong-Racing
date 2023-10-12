@@ -5167,52 +5167,44 @@ void func_8008B758(s8 *activePlayers) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-
-// Should be functionally equivalent
 void randomise_ai_racer_slots(s32 arg0) {
+    s32 foundIt;
     s32 i, j;
     s32 numCharacters;
-    s32 s1;
 
     numCharacters = 7;
     if (is_drumstick_unlocked()) {
-        numCharacters = 8;
+        numCharacters++;
     }
     if (is_tt_unlocked()) {
         numCharacters++;
     }
 
     if (arg0 < 8) {
-        s1 = FALSE;
-        for (i = 0; (i < arg0) && (!s1); i++) {
-            if (gCharacterIdSlots[i] == 9) {
-                s1 = TRUE;
+        foundIt = FALSE;
+        for (i = 0; i < arg0 && !foundIt; i++) {
+            if (gCharacterIdSlots[i] == 9) { // I think 9 is the character id for Diddy Kong?
+                foundIt = TRUE;
             }
         }
-        if (!s1) {
+        if (!foundIt) {
             gCharacterIdSlots[arg0] = 9;
             arg0++;
         }
     }
-    i = arg0;
-    while (i < 8) {
-        s1 = FALSE; // Check for duplicate racer id.
-        gCharacterIdSlots[i] = (*gCurrCharacterSelectData)[get_random_number_from_range(0, numCharacters)].voiceID;
-        for (j = 0; j < i; j++) {
-            if (gCharacterIdSlots[i] == gCharacterIdSlots[j]) {
-                s1 = TRUE; // Duplicate found!
+
+    for (i = arg0; i < 8; i++) {
+        do {
+            
+            gCharacterIdSlots[i] = (*gCurrCharacterSelectData)[get_random_number_from_range(0, numCharacters)].voiceID;
+            for (j = 0, foundIt = FALSE; j < i; j++) {
+                if (gCharacterIdSlots[j] == gCharacterIdSlots[i]) {
+                    foundIt = TRUE;
+                }
             }
-        }
-        if (s1) {
-            continue; // Redo if duplicate was found.
-        }
-        i++;
+        } while (foundIt);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/randomise_ai_racer_slots.s")
-#endif
 
 s32 menu_character_select_loop(s32 updateRate) {
     s32 i;
