@@ -9818,8 +9818,8 @@ void set_menu_id_if_option_equal(s32 IDToCheck, s32 IDToSet) {
  */
 s32 taj_menu_loop(void) {
     s32 sp2C;
-    s32 buttonsPressed; // sp28
-    Settings *settings; // sp24
+    s32 buttonsPressed;
+    Settings *settings;
 
     settings = get_settings();
     if (gNextTajChallengeMenu && sCurrentMenuID == 0) {
@@ -9868,6 +9868,10 @@ s32 taj_menu_loop(void) {
 
     switch (sCurrentMenuID) {
         case 0:
+            // Hello Friend!
+            // If you wish to change your vehicle, then summon me with your horn.
+            // Either stop on the pad or beep when I am close to you!
+            // Press A To Continue
             set_current_text(ASSET_GAME_TEXT_7);
             sCurrentMenuID = 1;
             D_800DF4D8 = 1;
@@ -9935,28 +9939,28 @@ s32 taj_menu_loop(void) {
                 sCurrentMenuID = 0x63;
             }
             break;
-        case -3:
-        case -2:
-        case -1:
-            set_current_text(ASSET_GAME_TEXT_8 - sCurrentMenuID); //Wouldn't this be ASSET_GAME_TEXT_9?
+        case -3: // Plane Challenge - To Test your flying skills you must race me around the Island!!
+        case -2: // Hover Challenge - To Test your driving skills you must race me around the Island!!
+        case -1: // Car Challenge - To Test your driving skills you must race me around the Island!!
+            set_current_text(ASSET_GAME_TEXT_8 - sCurrentMenuID); // 9, 10, 11
             sCurrentMenuID = 4;
             break;
         case -4:
-            set_current_text(ASSET_GAME_TEXT_17);
+            set_current_text(ASSET_GAME_TEXT_17); // MY SKILLS ARE GREATER! - Better luck next time. - TRY AGAIN.
             gNextTajChallengeMenu = 0;
             sCurrentMenuID = 1;
             gDialogueSubmenu = 3;
             break;
         case -5:
-            set_current_text(ASSET_GAME_TEXT_21);
+            set_current_text(ASSET_GAME_TEXT_21); // Well Done! - You are a skilled racer.
             gNextTajChallengeMenu = 0;
             sCurrentMenuID = 7;
             gDialogueSubmenu = 0;
             break;
-        case -8:
-        case -7:
-        case -6:
-            set_current_text(ASSET_GAME_TEXT_12 - sCurrentMenuID);
+        case -8: // Well done! - Take this as a reward. - That was my last challenge. You have done well.
+        case -7: // Well done! - Take this as a reward. - I'll See You Later.
+        case -6: // Well done! - Take this as a reward. - I'll See You Later.
+            set_current_text(ASSET_GAME_TEXT_12 - sCurrentMenuID); // 18, 19, 20
             sCurrentMenuID = 6;
             gDialogueSubmenu = 0;
             break;
