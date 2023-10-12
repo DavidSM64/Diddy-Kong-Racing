@@ -5195,7 +5195,6 @@ void randomise_ai_racer_slots(s32 arg0) {
 
     for (i = arg0; i < 8; i++) {
         do {
-            
             gCharacterIdSlots[i] = (*gCurrCharacterSelectData)[get_random_number_from_range(0, numCharacters)].voiceID;
             for (j = 0, foundIt = FALSE; j < i; j++) {
                 if (gCharacterIdSlots[j] == gCharacterIdSlots[i]) {
