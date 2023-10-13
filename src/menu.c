@@ -142,13 +142,11 @@ s8 *D_801267EC;
 s32 D_801267F0[5];
 s8 *D_80126804;
 s32 D_80126808[MAXCONTROLLERS]; //Soundmask values
-s16 D_80126818[4]; //Should be count of 5?
-s16 D_80126820; //Is this the last one of the above?
+s16 D_80126818[5];
 s32 D_80126824;
 UNUSED s8 sUnused_80126828; // Set to 0 in menu_init, and never used again.
 s32 D_8012682C;
-s16 D_80126830[4]; //Should be count of 5?
-s16 D_80126838; //Is this the last one of the above?
+s16 D_80126830[5];
 s16 D_8012683A;
 s32 D_8012683C;
 s32 D_80126840;
@@ -2793,11 +2791,11 @@ s32 menu_title_screen_loop(s32 updateRate) {
         }
     } else if ((gMenuDelay == 0) && !is_controller_missing()) {
         s32 temp0 = gTitleScreenCurrentOption;
-        // D_80126838 = +1 when going up, and -1 when going down.
-        if ((D_80126838 < 0) && (gTitleScreenCurrentOption < 1)) {
+        // D_80126830[4] = +1 when going up, and -1 when going down.
+        if ((D_80126830[4] < 0) && (gTitleScreenCurrentOption < 1)) {
             gTitleScreenCurrentOption++;
         }
-        if ((D_80126838 > 0) && (gTitleScreenCurrentOption > 0)) {
+        if ((D_80126830[4] > 0) && (gTitleScreenCurrentOption > 0)) {
             gTitleScreenCurrentOption--;
         }
         if (temp0 != gTitleScreenCurrentOption) {
@@ -6207,10 +6205,10 @@ void assign_menu_arrow_textures(void) {
 
 void func_8008E4EC(void) {
     s32 i;
-    s32 buttonsPressed[5];
+    s32 buttonsPressed[ARRAY_COUNT(D_80126818)];
 
     if (gIgnorePlayerInputTime == 0) {
-        for(i = 0; i < 5; i++) {
+        for(i = 0; i < ARRAY_COUNT(D_80126818); i++) {
             buttonsPressed[i] = 0;
             D_80126818[i] = 0;
             D_80126830[i] = 0;
@@ -6220,18 +6218,18 @@ void func_8008E4EC(void) {
             D_80126818[i] = gControllersXAxisDirection[i];
             D_80126830[i] = gControllersYAxisDirection[i];
             if (i < gNumberOfActivePlayers) {
-                buttonsPressed[4] |= buttonsPressed[i];
-                D_80126818[4] += gControllersXAxisDirection[i];
-                D_80126830[4] += gControllersYAxisDirection[i];
+                buttonsPressed[ARRAY_COUNT(D_80126818) - 1] |= buttonsPressed[i];
+                D_80126818[ARRAY_COUNT(D_80126818) - 1] += gControllersXAxisDirection[i];
+                D_80126830[ARRAY_COUNT(D_80126818) - 1] += gControllersYAxisDirection[i];
             }
         }
-        for(i = 0; i < 5; i++) {
+        for(i = 0; i < ARRAY_COUNT(D_80126818); i++) {
             D_801267D8[i] = buttonsPressed[i] & ~D_801267F0[i];
             D_801267F0[i] = buttonsPressed[i];
         }
         return;
     }
-    for(i = 0; i < 5; i++) {
+    for(i = 0; i < ARRAY_COUNT(D_80126818); i++) {
         D_801267F0[i] = (START_BUTTON | B_BUTTON | A_BUTTON);
         D_801267D8[i] = 0;
         D_80126818[i] = 0;
@@ -6788,20 +6786,20 @@ void func_80090918(s32 updateRate) {
         } else {
             s32 prevValue = D_801269C8;
             s32 prevValue2 = D_801269CC;
-            if ((D_80126820 < 0) && (D_801269C8 > 0)) {
+            if ((D_80126818[4] < 0) && (D_801269C8 > 0)) {
                 D_801269C8--;
             }
-            if ((D_80126820 > 0) && (D_801269C8 < 5)) {
+            if ((D_80126818[4] > 0) && (D_801269C8 < 5)) {
                 D_801269C8++;
             }
             if ((D_801269CC == 4) && (D_801269C8 == 5)) {
                 D_801269C8 = 4;
             }
-            if (D_80126820 == 0) {
-                if ((D_80126838 < 0) && (D_801269CC < var_a1)) {
+            if (D_80126818[4] == 0) {
+                if ((D_80126830[4] < 0) && (D_801269CC < var_a1)) {
                     D_801269CC++;
                 }
-                if ((D_80126838 > 0) && (D_801269CC > 0)) {
+                if ((D_80126830[4] > 0) && (D_801269CC > 0)) {
                     D_801269CC--;
                 }
                 if ((D_801269C8 == 5) && (D_801269CC == 4)) {
@@ -8030,10 +8028,10 @@ s32 menu_results_loop(s32 updateRate) {
                 gMenuSubOption = 0;
             } else {
                 prevOption = gMenuSubOption;
-                if (D_80126838 > 0 && gMenuSubOption == 2) {
+                if (D_80126830[4] > 0 && gMenuSubOption == 2) {
                     gMenuSubOption = 1;
                 }
-                if (D_80126838 < 0 && gMenuSubOption == 1) {
+                if (D_80126830[4] < 0 && gMenuSubOption == 1) {
                     gMenuSubOption = 2;
                 }
                 if (prevOption != gMenuSubOption) {
@@ -8051,10 +8049,10 @@ s32 menu_results_loop(s32 updateRate) {
             }
         } else {
             prevOption = gMenuOption;
-            if (D_80126838 < 0 && gMenuOption < (gResultOptionCount - 1)) {
+            if (D_80126830[4] < 0 && gMenuOption < (gResultOptionCount - 1)) {
                 gMenuOption++;
             }
-            if (D_80126838 > 0 && gMenuOption > 0) {
+            if (D_80126830[4] > 0 && gMenuOption > 0) {
                 gMenuOption--;
             }
             if (prevOption != gMenuOption) {
