@@ -278,6 +278,10 @@ $(BUILD_DIR)/lib/src/libc/xprintf.o : OPT_FLAGS := -O3
 $(BUILD_DIR)/lib/src/al/env.o: OPT_FLAGS := -g
 $(BUILD_DIR)/lib/src/libc/llcvt.o: OPT_FLAGS := -O1
 $(BUILD_DIR)/lib/src/libc/llcvt.o: MIPSISET := -mips3 -32
+$(BUILD_DIR)/lib/src/libc/ll.o: OPT_FLAGS := -O1
+$(BUILD_DIR)/lib/src/libc/ll.o: MIPSISET := -mips3 -32
+$(BUILD_DIR)/lib/src/libc/ldiv.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/lib/src/libc/ldiv.o: MIPSISET := -mips2
 
 $(BUILD_DIR)/lib/%.o: MIPSISET := -mips2
 $(BUILD_DIR)/lib/src/mips1/%.o: MIPSISET := -mips1
@@ -380,9 +384,13 @@ $(BUILD_DIR)/%.o: %.c | $(ALL_ASSETS_BUILT)
 
 $(BUILD_DIR)/lib/src/libc/llcvt.o: lib/src/libc/llcvt.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling mips3:,$<,$@)
-	@$(CC_CHECK) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
 	$(V)$(CC) $(CFLAGS) -o $@ $<
-	python3 tools/python/patchmips3.py $@ || rm $@
+	$(V)python3 tools/python/patchmips3.py $@ || rm $@
+
+$(BUILD_DIR)/lib/src/libc/ll.o: lib/src/libc/ll.c | $(ALL_ASSETS_BUILT)
+	$(call print,Compiling mips3:,$<,$@)
+	$(V)$(CC) $(CFLAGS) -o $@ $<
+	$(V)python3 tools/python/patchmips3.py $@ || rm $@
 	
 $(BUILD_DIR)/%.o: $(BUILD_DIR)/%.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling:,$<,$@)
