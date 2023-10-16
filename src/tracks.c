@@ -445,7 +445,6 @@ void func_800257D0(void) {
 }
 
 #ifdef NON_EQUIVALENT
-
 void func_80026070(LevelModelSegmentBoundingBox *, f32, f32, f32);
 void func_80026430(LevelModelSegment *, f32, f32, f32);
 void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3);
@@ -537,9 +536,9 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
         continueLoop = TRUE;
         do {
             for (i = 0; i < D_8011D49E - 1; i++) {
-                if (D_8011D478[i].unk8 < D_8011D478[i].unk0) {
-                    temp_t3 = D_8011D478[i].unk8;
-                    D_8011D478[i].unk8 = D_8011D478[i].unk0;
+                if (D_8011D478[i].unk7 < D_8011D478[i].unk0) {
+                    temp_t3 = D_8011D478[i].unk7;
+                    D_8011D478[i].unk7 = D_8011D478[i].unk0;
                     temp_t4 = D_8011D478[i+1].unk0;
                     D_8011D478[i].unk0 = temp_t3;
                     D_8011D478[i+1].unk0 = D_8011D478[i].unk4;
@@ -550,12 +549,12 @@ void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
         } while (!continueLoop);
         var_s0 = 0;
         for (i = 0; i < D_8011D49E; i++) {
-            temp_t3_2 = D_8011D478[var_s0].unk8 * 2;
-            if (D_8011D47C[temp_t3_2][0] == -1) {
-                D_8011D478[i].unk4 = (s8) (D_8011D478[i].unk8 | 2);
-                D_8011D47C[temp_t3_2][0] = (s8) i;
+            temp_t3_2 = D_8011D478[var_s0].unk7 * 2;
+            if (D_8011D47C[temp_t3_2] == -1) {
+                D_8011D478[i].unk4 = (D_8011D478[i].unk7 | 2);
+                D_8011D47C[temp_t3_2] = i;
             } else {
-                D_8011D47C[temp_t3_2][0] = (s8) i;
+                D_8011D47C[temp_t3_2] = i;
             }
         }
         temp_t6 = gSceneCurrVertexList;
