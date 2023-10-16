@@ -562,7 +562,10 @@ typedef struct TriangleBatchInfo {
 
 /* Size: 8 bytes */
 typedef struct ObjectModel_44 {
+    union {
 /* 0x00 */ s32 *anim;
+/* 0x00 */ u8 *animData;
+    };
 /* 0x04 */ s32 unk4; // Number of frames in animation?
 } ObjectModel_44;
 

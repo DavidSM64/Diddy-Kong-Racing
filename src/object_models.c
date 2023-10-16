@@ -165,9 +165,66 @@ void func_800619F4(s32 arg0) {
     D_8011D640 = arg0;
 }
 
-// s32 func_80061A00(ObjectModel *model, s32 animTableIndex)
 // Returns 0 if successful, or 1 if an error occured.
-GLOBAL_ASM("asm/non_matchings/object_models/func_80061A00.s")
+s32 func_80061A00(ObjectModel *model, s32 animTableIndex) {
+    s32 j;
+    s32 end;
+    ObjectModel_44 *allocAnimData;
+    s32 start;
+    s32 size;
+    s32 assetOffset;
+    s32 assetSize;
+    s32 i;
+    s32 i2;
+    u32 animAddress;
+    s32 *temp;
+
+    start = gAnimationTable[animTableIndex];
+    end = gAnimationTable[animTableIndex+1];
+    if (start == end) {
+        model->numberOfAnimations = 0;
+        return 0;
+    }
+    if (D_8011D640 != 0) {
+        if (start + D_8011D640 < end) {
+            end = start + D_8011D640;
+        }
+    }
+    model->numberOfAnimations = end - start;
+    allocAnimData = (ObjectModel_44 *) allocate_from_main_pool(model->numberOfAnimations * 8, COLOUR_TAG_RED);
+    model->animations = allocAnimData;
+    if (allocAnimData == NULL) {
+        return 1;
+    }
+    i = 0;
+    i2 = 0;
+    do {
+        assetOffset = gObjectAnimationTable[start];
+        animAddress = gObjectAnimationTable[start+1] - assetOffset;
+        assetSize = animAddress;
+        size = get_asset_uncompressed_size(ASSET_OBJECT_ANIMATIONS, assetOffset) + 0x80;
+        model->animations[i].animData = (u8*)allocate_from_main_pool(size, COLOUR_TAG_RED);
+        if (model->animations[i].animData == NULL) {
+            for(j = 0; j < i2; j++) {
+                free_from_memory_pool(model->animations[j].animData);
+            }
+            free_from_memory_pool(model->animations);
+            model->animations = NULL;
+            return 1;
+        }
+        animAddress = (u32) (model->animations[i].animData + size) - assetSize;
+        load_asset_to_address(ASSET_OBJECT_ANIMATIONS, animAddress, assetOffset, assetSize);
+        gzip_inflate((u8* ) animAddress, (u8 *) model->animations[i].anim);
+        temp = model->animations[i].anim;
+        model->animations[i].unk4 = *temp;
+        model->animations[i].anim++;
+        i++;
+        start++;
+        i2++;
+    } while (start < end);
+
+    return 0;
+}
 
 void func_80061C0C(Object *obj) {
     ObjectModel *mdl;
