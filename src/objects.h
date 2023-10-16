@@ -474,6 +474,8 @@ u8 func_8001B4FC(s32 trackId);
 s8 set_course_finish_flags(Settings *settings);
 void process_object_interactions(void);
 void render_3d_model(Object *obj);
+void func_80022E18(s32 arg0);
+void func_8001BF20(void);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -484,11 +486,9 @@ void func_80015348(s32, s32);
 Object *spawn_object(LevelObjectEntryCommon *entry, s32);
 s32 func_8001F460(Object*, s32, Object*);
 s32 func_80016DE8(f32, f32, f32, f32, s32, unk80042178 *);
-void func_8001BF20(void);
 void func_8000B750(Object *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-void func_80022E18(s32);                                 /* extern */
-void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);       /* extern */
-s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); /* extern */
+void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);
+s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); 
 void func_80011134(Object *, s32);
 Object *find_furthest_telepoint(f32 x, f32 z);
 void func_8006017C(ObjectModel *);
@@ -517,5 +517,6 @@ void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
 s32 func_80061D30(Object *); //asm func in unknown_062930
 Object *func_8000FD54(s32);
 s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3);
+s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3); // NON MATCHING
 
 #endif

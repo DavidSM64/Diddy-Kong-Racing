@@ -562,7 +562,10 @@ typedef struct TriangleBatchInfo {
 
 /* Size: 8 bytes */
 typedef struct ObjectModel_44 {
+    union {
 /* 0x00 */ s32 *anim;
+/* 0x00 */ u8 *animData;
+    };
 /* 0x04 */ s32 unk4; // Number of frames in animation?
 } ObjectModel_44;
 
@@ -594,7 +597,8 @@ typedef struct ObjectModel {
     /* 0x40 */ s32* unk40;
     /* 0x44 */ ObjectModel_44* animations;
     /* 0x48 */ s16 numberOfAnimations;
-    /* 0x4A */ u8 pad4A[6];
+    /* 0x4A */ s16 unk4A;
+    /* 0x4C */ u8 pad4C[4];
     /* 0x50 */ s16 unk50;
     /* 0x52 */ s16 unk52;
 } ObjectModel;      
@@ -1151,6 +1155,13 @@ typedef struct Object_Exit {
   /* 0x10 */ s32 radius; // Activation radius.
   /* 0x14 */ s8 bossFlag; // Dictates boss level version. 0 is first encounter, 1 is rematch. -1 means no boss.
 } Object_Exit;
+
+typedef struct Object_AiNode {
+   /* 0x00 */ struct Object *nodeObj[4];
+   /* 0x10 */ s16 distToNode[4];
+   /* 0x18 */ u8 unk18[4];
+} Object_AiNode;
+
 /* Size: 0x224 - 548 bytes */
 typedef struct Object_Racer {
   /* 0x000 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
@@ -1627,6 +1638,7 @@ typedef struct Object_64 {
         Object_WizpigRocket wizpigRocket;
         Object_8001E89C_64 obj8001E89C_64;
         Object_CharacterSelect characterSelect;
+        Object_AiNode ai_node;
     };
 } Object_64;
 

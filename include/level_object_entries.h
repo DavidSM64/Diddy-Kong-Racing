@@ -174,6 +174,8 @@ typedef struct LevelObjectEntry_AiNode {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8;
     /* 0x09 */ u8 unk9;
+    /* 0x0A */ u8 unkA[4];
+    /* 0x0E */ s8 unkE;
 } LevelObjectEntry_AiNode;
 
 #define BALLOON_TYPE_BOOST   0

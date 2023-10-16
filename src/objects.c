@@ -257,7 +257,7 @@ u8 gTimeTrialEnabled;
 u8 gIsTimeTrial;
 s8 gIsTajChallenge;
 s8 D_8011AEF7;
-s32 D_8011AEF8;
+s8 D_8011AEF8;
 s32 D_8011AEFC;
 s8 D_8011AF00;
 Object *(*D_8011AF04)[128];
@@ -4251,7 +4251,105 @@ Object *find_nearest_spectate_camera(Object *obj, s32 *cameraId) {
     return currCamera;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001BF20.s")
+void func_8001BF20(void) {
+    LevelObjectEntry_AiNode *aiNodeEntry;
+    Object *obj;
+    s16 sp186;
+    Object* nextAiNodeObj;
+    f32 xDiff;
+    f32 zDiff;
+    f32 yDiff;
+    s32 i;
+    s32 j;
+    s8 index; // Must be an s8
+    u8 index2; // Must be an u8
+    s16 swap;
+    Object_AiNode *aiNodeObj64;
+    s8 spE4[128];
+    s8 sp64[128];
+
+    if (D_8011AF10[0] != 0) {
+        D_8011AF10[0] = 0;
+        for(i = 0; i < 128; i++) {
+            (*D_8011AF04)[i] = 0;
+        }
+        sp186 = 0;
+        for(i = 0; i < gObjectCount; i++) {
+            obj = gObjPtrList[i];
+            if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (obj->behaviorId == BHV_AINODE)) {
+                aiNodeEntry = &obj->segment.level_entry->aiNode;
+                index2 = aiNodeEntry->unk9;
+                if (!(index2 & 128)) {
+                    (*D_8011AF04)[index2] = obj;
+                    spE4[sp186] = aiNodeEntry->unk9;
+                    sp64[sp186] = aiNodeEntry->unkE & 3;
+                    sp186++;
+                }
+            }
+        }
+        if (sp186 != 0) {
+            for(i = 0; i < 128; i++) {
+                obj = (*D_8011AF04)[i];
+                if (obj != NULL) {
+                    aiNodeObj64 = (Object_AiNode *)obj->unk64;
+                    aiNodeEntry = &obj->segment.level_entry->aiNode;
+                    for(j = 0; j < 4; j++) {
+                        index2 = aiNodeEntry->unkA[j];
+                        if (!(index2 & 128)) {
+                            nextAiNodeObj = (*D_8011AF04)[index2];
+                            aiNodeObj64->nodeObj[j] = nextAiNodeObj;
+                            if (nextAiNodeObj == NULL) {
+                                aiNodeEntry->unkA[j] = -1;
+                            } else {
+                                xDiff = obj->segment.trans.x_position - nextAiNodeObj->segment.trans.x_position;
+                                yDiff = obj->segment.trans.y_position - nextAiNodeObj->segment.trans.y_position;
+                                zDiff = obj->segment.trans.z_position - nextAiNodeObj->segment.trans.z_position;
+                                aiNodeObj64->distToNode[j] = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff));
+                            }
+                        }
+                    }
+                }
+            }
+
+            do {
+                j = TRUE;
+                for(i = 0; i < (sp186 - 1); i++) {
+                    if((*D_8011AF04)[spE4[i + 1]]->segment.trans.y_position < (*D_8011AF04)[spE4[i]]->segment.trans.y_position) {
+                        swap = spE4[i];
+                        spE4[i] = spE4[i + 1];
+                        spE4[i + 1] = swap;
+                        swap = sp64[i];
+                        sp64[i] = sp64[i + 1];
+                        sp64[i + 1] = swap;
+                        j = FALSE;
+                    }
+                }
+            } while(!j); // Keep doing this until no more swaps are needed.
+
+            if(1){} // Fakematch
+            
+            for(i = 0; i < 5; i++) {
+                D_8011AF18[i] = -20000.0f;
+            }
+            
+            index = sp64[0];
+            for (i = 0; i < (sp186 - 1);) {
+                while ((i < (sp186 - 1)) && (index >= sp64[i])) {
+                    i++;
+                }
+                if (index < sp64[i]) {
+                    index = sp64[i];
+                    D_8011AF18[index] = (f32) ((f64) ((*D_8011AF04)[spE4[i]]->segment.trans.y_position + (*D_8011AF04)[spE4[i-1]]->segment.trans.y_position) * 0.5);
+                } else {
+                    i = sp186;
+                }
+            }
+            D_8011AF18[0] = -10000.0f;
+            
+            D_8011AF18[4] = -D_8011AF18[0];
+        }
+    }
+}
 
 s16 func_8001C418(f32 yPos) {
     s16 i = 0;
@@ -4377,7 +4475,133 @@ s32 func_8001CC48(s32 arg0, s32 arg1, s32 arg2) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8001CC48.s")
 #endif
 
+#ifdef NON_MATCHING
+s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+    s16 result; 
+    s32 sp370; 
+    s16 var_t1;
+    s16 sp36C; 
+    s16 temp2; 
+    s16 i;
+    LevelObjectEntry_AiNode *aiNodeEntry;
+    s8 someBool;
+    s8 var_s3;
+    s8 var_s5;
+    s8 temp; 
+    s32 var_ra; 
+    Object_AiNode *aiNode;
+    Object *aiNodeObj;
+    s32 sp154[128];
+    s8 spD4[128];
+    s8 sp54[128];
+
+    // Only matches with do {} while?
+    i = 0;
+    do {
+        sp154[i] = 0;
+        i++;
+    } while (i < 128);
+    
+    aiNodeObj = (*D_8011AF04)[arg0];
+    aiNode = (Object_AiNode *) aiNodeObj->unk64;
+    aiNodeEntry = &aiNodeObj->segment.level_entry->aiNode;
+    var_t1 = 0;
+    var_ra = 0;
+    result = 0xFF;
+    var_s3 = 0;
+    someBool = 1;
+    var_s5 = 0;
+    do {
+        for (i = 0; i < 4; i++) {
+            if (aiNode->nodeObj[i] != 0) {
+                temp2 = aiNodeEntry->unkA[i];
+                temp = 1;
+                if (((arg0 == aiNodeEntry->unk9) && (temp2 == arg2)) || ((arg2 == aiNodeEntry->unk9) && (temp2 == arg0))) {
+                    temp = 0;
+                    if (var_s5 != 0) {
+                        temp = 1;
+                    }
+                    var_s5++;
+                }
+                if (temp != 0) {
+                    sp36C = 0;
+                    temp = 0;
+                    while ((sp36C < var_t1) && (temp2 != spD4[sp36C])) {
+                        sp36C++;
+                    }
+                    
+                    sp370 = aiNode->distToNode[i] + var_ra;
+                    if (sp36C == var_t1) {
+                        temp = 2;
+                    } else if (sp370 < sp154[temp2]) {
+                        temp = 1;
+                    }
+                }
+                if (temp != 0) {
+                    while (sp36C < var_t1 - 1) {
+                        spD4[sp36C] = spD4[sp36C + 1];
+                        sp54[sp36C] = sp54[sp36C + 1];
+                        sp36C++;
+                    }
+                    if (temp == 2) {
+                        var_t1++;
+                    }
+                    sp154[temp2] = sp370;
+                    
+                    sp36C = var_t1 - 1;
+                    
+                    sp54[sp36C] = (someBool) ? aiNodeEntry->unkA[i] : var_s3;
+                    spD4[sp36C] = aiNodeEntry->unkA[i];
+                    
+                    while ((sp36C > 0) && (sp154[spD4[sp36C - 1]] < sp154[spD4[sp36C]])) {
+                        temp = spD4[sp36C];
+                        spD4[sp36C] = spD4[sp36C - 1];
+                        spD4[sp36C - 1] = temp;
+                        temp = sp54[sp36C];
+                        sp54[sp36C] = sp54[sp36C - 1];
+                        sp54[sp36C - 1] = temp;
+                        sp36C--;
+                    }
+                    
+                }
+            }
+        }
+        
+        if (var_t1 > 0) {
+            var_t1--;
+            aiNodeObj = (*D_8011AF04)[spD4[var_t1]];
+            aiNodeEntry = &aiNodeObj->segment.level_entry->aiNode;
+            var_s3 = sp54[var_t1];
+            var_ra = sp154[aiNodeEntry->unk9];
+            aiNode = &aiNodeObj->unk64->ai_node;
+            someBool = 0;
+            if (arg1 & 0x100) {
+                if ((arg1 & 0x7F) == spD4[var_t1]) {
+                    result = var_s3;
+                }
+            } else if (arg1 == aiNodeEntry->unk8) {
+                result = var_s3;
+            }
+            if ((var_t1 == 0) && (result == 0xFF)) {
+                result = var_s3;
+            }
+        }
+    } while ((result == 0xFF) && (var_t1 > 0));
+    
+    if (result != 0xFF) {
+        aiNodeObj = (*D_8011AF04)[arg0];
+        aiNodeEntry = &aiNodeObj->segment.level_entry->aiNode;
+        aiNode =  &aiNodeObj->unk64->ai_node;
+        for (i = 0; (i < 4) && (result != aiNodeEntry->unkA[i]); i++) {}
+        if (i < 4) {
+            aiNode->unk18[arg3] = i;
+        }
+    }
+    return result;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_8001CD28.s")
+#endif
 
 void func_8001D1AC(void) {
     D_8011AF10[0] = 1;
@@ -5045,7 +5269,79 @@ void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80022E18.s")
+void func_80022E18(s32 arg0) {
+    s32 flags;
+    s32 i;
+    Object_Racer *racer;
+    Settings *settings;
+    Object *obj;
+    LevelHeader *levelHeader;
+
+    levelHeader = get_current_level_header();
+    levelHeader->race_type = 5;
+    levelHeader->music = D_8011AEF8;
+    levelHeader->instruments = D_8011AEFC;
+    func_800AB1AC(1);
+
+    // Only works with do {} while?
+    i = 0;
+    do {
+        racer = &(*gRacers)[i]->unk64->racer;
+        if (!racer){}
+        racer->raceFinished = 0;
+        racer->lap = 0;
+        racer->checkpoint = 0;
+        racer->courseCheckpoint = 0;
+    } while(++i < gNumRacers);
+    
+    free_object((*gRacers)[1]);
+    gRacersByPosition[0] = (*gRacers)[0];
+    gNumRacers = 1;
+    for (i = gObjectListStart; i < gObjectCount; i++) {
+        if (!(gObjPtrList[i]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (gObjPtrList[i]->behaviorId == BHV_PARK_WARDEN)) {
+            obj = gObjPtrList[i];
+        }
+    }
+    racer = &(*gRacers)[0]->unk64->racer;
+    if (racer->unk15C != NULL) {
+        free_object(racer->unk15C);
+        racer->unk15C = NULL;
+    }
+    if (arg0 == 0) {
+        if (racer->unk1AC == 1) {
+            settings = get_settings();
+            flags = racer->vehicleID;
+            flags = 1 << (flags + 3);
+            if (settings->tajFlags & flags) {
+                set_next_taj_challenge_menu(5);
+            } else {
+                set_next_taj_challenge_menu(racer->vehicleID + 6);
+                settings->tajFlags |= flags;
+                safe_mark_write_save_file(get_save_file_index());
+            }
+        } else {
+            set_next_taj_challenge_menu(4);
+        }
+        obj->properties.common.unk0 = 0x1F;
+        set_taj_status(2);
+    } else {
+        func_80000B28();
+        func_80001844();
+        set_next_taj_challenge_menu(0);
+        func_80008168();
+        if (arg0 == 2) {
+            set_current_text(0);
+        }
+        D_8011ADB0 = 0;
+        gRaceStartCountdown = 0;
+        obj->properties.common.unk0 = 0x14;
+    }
+    func_80000B28();
+    func_800A0B74();
+    start_level_music(1.0f);
+    gIsTajChallenge = 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_800230D0.s")
 
 /**

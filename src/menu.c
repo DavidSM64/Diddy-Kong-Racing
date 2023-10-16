@@ -142,14 +142,11 @@ s8 *D_801267EC;
 s32 D_801267F0[5];
 s8 *D_80126804;
 s32 D_80126808[MAXCONTROLLERS]; //Soundmask values
-s16 D_80126818[2];
-s32 D_8012681C;
-s16 D_80126820;
+s16 D_80126818[5];
 s32 D_80126824;
 UNUSED s8 sUnused_80126828; // Set to 0 in menu_init, and never used again.
 s32 D_8012682C;
-s16 D_80126830[4];
-s16 D_80126838;
+s16 D_80126830[5];
 s16 D_8012683A;
 s32 D_8012683C;
 s32 D_80126840;
@@ -2121,69 +2118,66 @@ void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blu
     sMenuGuiColourB = (u8)255;
 }
 
-#ifdef NON_EQUIVALENT
-//void func_80081C04(s32 num, s32 x, s32 y, u8 r, u8 g, u8 b, u8 a, u8 font, u8 alignment)
-void func_80081C04(s32 num, s32 x, s32 y, u8 red, u8 green, u8 blue, u8 alpha, u8 font, u8 alignment) {
-    u8 *sp38;
-    s32 var_s0;
-    s32 var_s0_2;
-    s32 var_s3;
-    s32 var_s4_2;
-    s32 found;
+void func_80081C04(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UNUSED s32 font, s32 alignment) {
+    s32 strLen;
+    s32 powerOfTen;
+    s32 i;
+    s32 hasProcessedDigit;
+    s32 curDigit;
+    UNUSED s32 pad[2];
+    u8 digits[10];
 
-    var_s3 = 0;
-    var_s0 = 1000000000;
-    found = FALSE;
-
-    while (var_s0 >= 10) {
-        if (num < var_s0) {
-            found = TRUE;
-            sp38[var_s3] = (num / var_s0);
-            num %= var_s0;
-        } else if (found) {
-            sp38[var_s3] = 0;
+    strLen = 0;
+    powerOfTen = 1000000000;
+    hasProcessedDigit = FALSE;
+    
+    while (powerOfTen >= 10) {
+        if (number >= powerOfTen) {
+            curDigit = number / powerOfTen;
+            number -= curDigit * powerOfTen;
+            digits[strLen++] = curDigit;
+            hasProcessedDigit = TRUE;
+        } else if (hasProcessedDigit) {
+            digits[strLen++] = 0;
         }
-        var_s3++;
-        var_s0 /= 10;
+        powerOfTen /= 10;
     }
-    sp38[var_s3] = num;
-    var_s3++;
-    if (alignment & 4) {
-        x -= var_s3 * 12;
-        var_s4_2 = x + 6;
-    }
-    else if (alignment & 1) {
-        var_s4_2 = x - ((var_s3 * 11) >> 1);
+
+    digits[strLen++] = number;
+    if (alignment & HORZ_ALIGN_CENTER) {
+        x -= strLen * 12;
+        x += 6;
+    } else if (alignment & HORZ_ALIGN_RIGHT) {
+        x -= (strLen * 11) >> 1;
     } else {
-        var_s4_2 = x + 6;
+        x += 6;
     }
-    if (alignment & 8) {
+    if (alignment & VERT_ALIGN_MIDDLE) {
         y += 7;
     } else if (alignment & 0x10) {
         y -= 7;
     }
-    sMenuGuiColourR = red;
-    sMenuGuiColourG = green;
-    sMenuGuiColourB = blue;
-    sMenuGuiOpacity = alpha;
-    sprite_opaque(FALSE);
+    sMenuGuiColourR = r;
+    sMenuGuiColourG = g;
+    sMenuGuiColourB = b;
+    sMenuGuiOpacity = a;
+    sprite_opaque(0);
     func_80068508(1);
-    gMenuImageStack->unk10 = y;
-    for (var_s0_2 = 0; var_s0_2 < var_s3; var_s0_2++, var_s4_2 += 12) {
-        gMenuImageStack->unkC = var_s4_2;
-        gMenuImageStack->unk18 = sp38[var_s0_2];
+    if (powerOfTen && number) {} // Fakematch
+    gMenuImageStack[0].unk10 = y;
+    for (i = 0; i < strLen; i++) {
+        gMenuImageStack[0].unkC = x;
+        gMenuImageStack[0].unk18 = digits[i];
         func_8009CA60(0);
+        x += 12;
     }
-    sprite_opaque(TRUE);
+    sprite_opaque(1);
     func_80068508(0);
     sMenuGuiColourR = 255;
     sMenuGuiColourG = 255;
     sMenuGuiColourB = 255;
     sMenuGuiOpacity = 255;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_80081C04.s")
-#endif
 
 void func_80081E54(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s32 arg5) {
     D_800DF798 = arg0;
@@ -2797,11 +2791,11 @@ s32 menu_title_screen_loop(s32 updateRate) {
         }
     } else if ((gMenuDelay == 0) && !is_controller_missing()) {
         s32 temp0 = gTitleScreenCurrentOption;
-        // D_80126838 = +1 when going up, and -1 when going down.
-        if ((D_80126838 < 0) && (gTitleScreenCurrentOption < 1)) {
+        // D_80126830[4] = +1 when going up, and -1 when going down.
+        if ((D_80126830[4] < 0) && (gTitleScreenCurrentOption < 1)) {
             gTitleScreenCurrentOption++;
         }
-        if ((D_80126838 > 0) && (gTitleScreenCurrentOption > 0)) {
+        if ((D_80126830[4] > 0) && (gTitleScreenCurrentOption > 0)) {
             gTitleScreenCurrentOption--;
         }
         if (temp0 != gTitleScreenCurrentOption) {
@@ -6209,7 +6203,39 @@ void assign_menu_arrow_textures(void) {
     gMenuSelectionArrowRight[0].texture = gMenuTextures[TEXTURE_ICON_ARROW_RIGHT];
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8008E4EC.s")
+void func_8008E4EC(void) {
+    s32 i;
+    s32 buttonsPressed[ARRAY_COUNT(D_80126818)];
+
+    if (gIgnorePlayerInputTime == 0) {
+        for(i = 0; i < ARRAY_COUNT(D_80126818); i++) {
+            buttonsPressed[i] = 0;
+            D_80126818[i] = 0;
+            D_80126830[i] = 0;
+        }
+        for(i = 0; i < MAXCONTROLLERS; i++) {
+            buttonsPressed[i] = get_buttons_held_from_player(i);
+            D_80126818[i] = gControllersXAxisDirection[i];
+            D_80126830[i] = gControllersYAxisDirection[i];
+            if (i < gNumberOfActivePlayers) {
+                buttonsPressed[ARRAY_COUNT(D_80126818) - 1] |= buttonsPressed[i];
+                D_80126818[ARRAY_COUNT(D_80126818) - 1] += gControllersXAxisDirection[i];
+                D_80126830[ARRAY_COUNT(D_80126818) - 1] += gControllersYAxisDirection[i];
+            }
+        }
+        for(i = 0; i < ARRAY_COUNT(D_80126818); i++) {
+            D_801267D8[i] = buttonsPressed[i] & ~D_801267F0[i];
+            D_801267F0[i] = buttonsPressed[i];
+        }
+        return;
+    }
+    for(i = 0; i < ARRAY_COUNT(D_80126818); i++) {
+        D_801267F0[i] = (START_BUTTON | B_BUTTON | A_BUTTON);
+        D_801267D8[i] = 0;
+        D_80126818[i] = 0;
+        D_80126830[i] = 0;
+    }
+}
 
 UNUSED s32 func_8008E790(void) {
     return D_800E097C;
@@ -6760,20 +6786,20 @@ void func_80090918(s32 updateRate) {
         } else {
             s32 prevValue = D_801269C8;
             s32 prevValue2 = D_801269CC;
-            if ((D_80126820 < 0) && (D_801269C8 > 0)) {
+            if ((D_80126818[4] < 0) && (D_801269C8 > 0)) {
                 D_801269C8--;
             }
-            if ((D_80126820 > 0) && (D_801269C8 < 5)) {
+            if ((D_80126818[4] > 0) && (D_801269C8 < 5)) {
                 D_801269C8++;
             }
             if ((D_801269CC == 4) && (D_801269C8 == 5)) {
                 D_801269C8 = 4;
             }
-            if (D_80126820 == 0) {
-                if ((D_80126838 < 0) && (D_801269CC < var_a1)) {
+            if (D_80126818[4] == 0) {
+                if ((D_80126830[4] < 0) && (D_801269CC < var_a1)) {
                     D_801269CC++;
                 }
-                if ((D_80126838 > 0) && (D_801269CC > 0)) {
+                if ((D_80126830[4] > 0) && (D_801269CC > 0)) {
                     D_801269CC--;
                 }
                 if ((D_801269C8 == 5) && (D_801269CC == 4)) {
@@ -8002,10 +8028,10 @@ s32 menu_results_loop(s32 updateRate) {
                 gMenuSubOption = 0;
             } else {
                 prevOption = gMenuSubOption;
-                if (D_80126838 > 0 && gMenuSubOption == 2) {
+                if (D_80126830[4] > 0 && gMenuSubOption == 2) {
                     gMenuSubOption = 1;
                 }
-                if (D_80126838 < 0 && gMenuSubOption == 1) {
+                if (D_80126830[4] < 0 && gMenuSubOption == 1) {
                     gMenuSubOption = 2;
                 }
                 if (prevOption != gMenuSubOption) {
@@ -8023,10 +8049,10 @@ s32 menu_results_loop(s32 updateRate) {
             }
         } else {
             prevOption = gMenuOption;
-            if (D_80126838 < 0 && gMenuOption < (gResultOptionCount - 1)) {
+            if (D_80126830[4] < 0 && gMenuOption < (gResultOptionCount - 1)) {
                 gMenuOption++;
             }
-            if (D_80126838 > 0 && gMenuOption > 0) {
+            if (D_80126830[4] > 0 && gMenuOption > 0) {
                 gMenuOption--;
             }
             if (prevOption != gMenuOption) {
@@ -9623,8 +9649,57 @@ void allocate_and_set_menu_image_properties(s32 imageID) {
 void func_8009CA58(void) {
 }
 
-//https://decomp.me/scratch/rfLCI
-GLOBAL_ASM("asm/non_matchings/menu/func_8009CA60.s")
+void func_8009CA60(s32 stackIndex) {
+    Object *new_var;
+    unk8009CA602 *new_var2;
+    Sprite *sprite;
+    ObjectModel **temp;
+    
+    if (gMenuTextures[gMenuImageStack[stackIndex].unk6] != 0) {
+        if (((*gAssetsMenuElementIds)[gMenuImageStack[stackIndex].unk6] & 0xC000) != 0xC000) {
+            if ((*gAssetsMenuElementIds)[gMenuImageStack[stackIndex].unk6] & 0x4000) {
+                if (0) {} // Fakematch
+                new_var = (Object*)gMenuTextures[gMenuImageStack[stackIndex].unk6];
+                new_var2 = (unk8009CA602 *) &gMenuImageStack[stackIndex];
+                new_var->segment.trans.y_rotation = new_var2->trans.y_rotation;
+                new_var->segment.trans.x_rotation = new_var2->trans.x_rotation;
+                new_var->segment.trans.z_rotation = new_var2->trans.z_rotation;
+                new_var->segment.trans.x_position = new_var2->trans.x_position;
+                new_var->segment.trans.y_position = new_var2->trans.y_position;
+                new_var->segment.trans.z_position = new_var2->trans.z_position;
+                new_var->segment.trans.scale = new_var2->trans.scale;
+                if (D_800DF468 == 0) {
+                    new_var->segment.animFrame = new_var2->unk1D;
+                    new_var->segment.object.modelIndex = new_var2->unk18;
+                }
+                new_var->segment.object.opacity = sMenuGuiOpacity;
+                render_object(&sMenuCurrDisplayList, &sMenuCurrHudMat, &sMenuCurrHudVerts, new_var);
+            } else {
+                if ((*gAssetsMenuElementIds)[gMenuImageStack[stackIndex].unk6] & 0x8000) {
+                    sprite = (Sprite *) gMenuTextures[gMenuImageStack[stackIndex].unk6];
+                    gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, sMenuGuiColourR, sMenuGuiColourG, sMenuGuiColourB, sMenuGuiOpacity);
+                    gDPSetEnvColor(sMenuCurrDisplayList++, 255, 255, 255, 0);
+                    render_ortho_triangle_image(&sMenuCurrDisplayList, &sMenuCurrHudMat, &sMenuCurrHudVerts, (ObjectSegment *)(&gMenuImageStack[stackIndex]), sprite, D_800DF4B4);
+                    gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+                } else {
+                    if (sMenuGuiOpacity < 255) {
+                        gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, sMenuGuiOpacity);
+                    } else {
+                        gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+                    };
+                    gDPSetEnvColor(sMenuCurrDisplayList++, 255, 255, 255, 0);
+                    camera_push_model_mtx(&sMenuCurrDisplayList, &sMenuCurrHudMat, (ObjectTransform *) (&gMenuImageStack[stackIndex]), D_800DF454, 0);
+                    temp = ((ObjectModel **) gMenuTextures[gMenuImageStack[stackIndex].unk6]);
+                    render_track_selection_viewport_border(*temp);
+                    apply_matrix_from_stack(&sMenuCurrDisplayList);
+                    if (sMenuGuiOpacity < 255) {
+                        gDPSetPrimColor(sMenuCurrDisplayList++, 0, 0, 255, 255, 255, 255);
+                    }
+                }
+            }
+        }
+    }
+}
 
 /**
  * Render the border around the centre viewport in the track selection menu.

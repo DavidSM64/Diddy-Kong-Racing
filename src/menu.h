@@ -280,6 +280,14 @@ typedef struct unk8006BDB0 {
     s8 unk4C;
 } unk8006BDB0;
 
+typedef struct unk8009CA602 {
+    ObjectTransform trans;
+    s16 unk18;
+    s16 unk1A;
+    s8 unk1C;
+    s8 unk1D;
+} unk8009CA602;
+
 typedef struct TitleScreenDemos {
     s8 levelId;
     s8 numberOfPlayers;
@@ -479,6 +487,9 @@ s32 menu_audio_options_loop(s32 updateRate);
 void func_8009963C(void);
 void render_enter_filename_ui(UNUSED s32 updateRate);
 void randomise_ai_racer_slots(s32 arg0);
+void func_80081C04(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UNUSED s32 font, s32 alignment);
+void func_8009CA60(s32 stackIndex);
+void func_8008E4EC(void);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -492,7 +503,6 @@ void func_800904E8(s32 updateRate);
 void func_80090918(s32 updateRate);
 void render_track_select_setup_ui(s32 updateRate);
 void func_80092188(s32 updateRate);
-void func_8008E4EC(void);
 void trim_filename_string(char *input, char *output);
 void menu_ghost_data_init(void);
 void update_controller_sticks(void);
@@ -502,7 +512,6 @@ void func_8009E3D0(void);
 s32 menu_title_screen_loop(s32 updateRate);
 s32 menu_magic_codes_loop(s32 updateRate);
 s32 menu_credits_loop(s32 updateRate);
-void func_8009CA60(s32 imageID);
 void func_8007FFEC(s32 arg0);
 void func_800871D8(s32 arg0);
 SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1);
@@ -521,7 +530,6 @@ s32 func_80095728(Gfx **gfx, MatrixS **mtx, Vertex **vtx, s32 updateRate);
 s32 func_8008F618(Gfx **dlist, MatrixS **mat);
 void func_80093D40(UNUSED s32 updateRate);
 void func_80080BC8(Gfx **);
-void func_80081C04(s32 num, s32 x, s32 y, u8 r, u8 g, u8 b, u8 a, u8 font, u8 alignment);
 void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour0, s32 colour1, s32 colour2, s32 colour3);
 void func_80084854(void);
 s32 func_800862C4(void);
