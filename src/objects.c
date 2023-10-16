@@ -1422,8 +1422,6 @@ void func_8000E9D0(Object *arg0) {
 
 #ifdef NON_EQUIVALENT
 
-void *func_8005F99C(s32, s32);
-
 Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     s32 objType;
     Object *newObj;

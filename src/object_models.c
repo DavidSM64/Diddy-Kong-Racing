@@ -75,12 +75,100 @@ void allocate_object_model_pools(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/object_models/func_8005F99C.s")
+unk8005FCD0 *func_8005F99C(s32 arg0, s32 arg1) {
+    s32 i;
+    s32 sp50;
+    ObjectModel *objMdl;
+    s32 sp48;
+    s32 temp_s0;
+    unk8005FCD0 *ret;
+    s8 sp3F;
+    u32 compressedData;
+    s32 sp34;
+
+    if (arg0 >= D_8011D630) {
+        arg0 = 0;
+    }
+
+    // Check if the model already exists in the cache.
+    for(i = 0; i < D_8011D62C; i++) {
+        if(arg0 == D_8011D624[(i << 1)]) {
+            objMdl = (ObjectModel *) D_8011D624[(i << 1) + 1];
+            ret = func_8005FCD0(objMdl, arg1);
+            if (ret != NULL) {
+                objMdl->unk30++;
+            }
+            return ret;
+        }
+    }
+    
+    if (D_8011D634 > 0) {
+        D_8011D634--;
+        sp50 = D_8011D628[D_8011D634];
+    } else {
+        sp50 = D_8011D62C;
+        D_8011D62C++;
+    }
+
+    temp_s0 = gObjectModelTable[arg0];
+    sp48 = gObjectModelTable[arg0 + 1] - temp_s0;
+    sp34 = get_asset_uncompressed_size(ASSET_OBJECT_MODELS, temp_s0) + 0x80;
+    objMdl = (ObjectModel *) allocate_from_main_pool(sp34, COLOUR_TAG_RED);
+    if (objMdl == NULL) {
+        return NULL;
+    }
+    compressedData = (u32) ((u8 *) objMdl + sp34) - sp48;
+    load_asset_to_address(ASSET_OBJECT_MODELS, compressedData, temp_s0, sp48);
+    gzip_inflate((u8 *) compressedData, (u8 *) objMdl);
+    objMdl->textures = (TextureInfo *) ((s32) objMdl->textures + (u8 *) objMdl);
+    objMdl->vertices = (Vertex *) ((s32) objMdl->vertices + (u8 *) objMdl);
+    objMdl->triangles = (Triangle*) ((s32) objMdl->triangles + (u8 *) objMdl);
+    objMdl->batches = (TriangleBatchInfo *) ((s32) objMdl->batches + (u8 *) objMdl);
+    objMdl->unk14 = (s16 *) ((s32) objMdl->unk14 + (u8 *) objMdl);
+    objMdl->unk1C = (s8 *) ((s32) objMdl->unk1C + (u8 *) objMdl);
+    objMdl->unk4C = (s32 *) ((s32) objMdl->unk4C + (u8 *) objMdl);
+    objMdl->unk30 = 1;
+    objMdl->unkC = 0;
+    objMdl->unk10 = 0;
+    objMdl->unk32 = 0;
+    objMdl->unk52 = 0;
+    objMdl->unk40 = 0;
+    objMdl->numberOfAnimations = 0;
+    objMdl->animations = NULL;
+    sp3F = 0;
+    for (i = 0; i < objMdl->numberOfTextures; i++) {
+        objMdl->textures[i].texture = load_texture(((s32) objMdl->textures[i].texture) | 0x8000);
+        if (objMdl->textures[i].texture == NULL) {
+            sp3F = 1;
+        }
+    }
+    if (!sp3F) {
+        for(i = 0; i < objMdl->numberOfBatches; i++) {
+            if ((objMdl->batches[i].textureIndex != 0xFF) && (objMdl->batches[i].textureIndex >= objMdl->numberOfTextures)) {
+                goto block_30;
+            }
+        }
+        if ((func_80060EA8(objMdl) == 0) && (func_80061A00(objMdl, arg0) == 0)) {
+            ret = func_8005FCD0((ObjectModel *) objMdl, arg1);
+            if (ret != NULL) {
+                D_8011D624[(sp50 << 1)] = arg0;
+                D_8011D624[(sp50 << 1) + 1] = (s32) objMdl;
+                if (D_8011D62C < 70) {
+                    ret->unk20 = 0;
+                    return ret;
+                }
+            }
+        }
+    }
+block_30:
+    free_object_model((ObjectModel* ) objMdl);
+    return NULL;
+}
 
 unk8005FCD0 *func_8005FCD0(ObjectModel *model, s32 arg1) {
     s32 temp;
     unk8005FCD0 *result;
-    s32 var_v1;
+    Vertex *var_v1;
     Vertex *vertex;
     Vertex *mdlVertex;
 
@@ -92,7 +180,7 @@ unk8005FCD0 *func_8005FCD0(ObjectModel *model, s32 arg1) {
         }
         result->unk4 = (Vertex *) ((u8 *) result + 36);
         result->unk8 = (Vertex *) ((u8 *) result + (model->numberOfVertices * 10) + 36);
-        result->unkC = ((u8*)result + temp);
+        result->unkC = (s32) ((u8 *) result + temp);
         result->unk1E = 2;
     } else if ((model->unk40 != NULL) && (arg1 & 1)) {
         temp = (model->numberOfVertices * 10);
@@ -100,9 +188,9 @@ unk8005FCD0 *func_8005FCD0(ObjectModel *model, s32 arg1) {
         if (result == NULL) {
             return NULL;
         }
-        var_v1 = (u8 *) result + 36;
-        result->unk4 = (Vertex *) var_v1;
-        result->unk8 = (Vertex *) var_v1;
+        var_v1 = (Vertex *) ((u8 *) result + 36);
+        result->unk4 = var_v1;
+        result->unk8 = var_v1;
         result->unkC = 0;
         result->unk1E = 1;
     } else {
@@ -110,8 +198,8 @@ unk8005FCD0 *func_8005FCD0(ObjectModel *model, s32 arg1) {
         if (result == NULL) {
             return NULL;
         }
-        result->unk4 = (Vertex *) model->vertices;
-        result->unk8 = (Vertex *) model->vertices;
+        result->unk4 = model->vertices;
+        result->unk8 = model->vertices;
         result->unkC = 0;
         result->unk1E = 0;
     }

@@ -11,8 +11,9 @@ typedef struct unk8011D624 {
     ObjectModel *model;
 } unk8011D624;
 
+//Object_68?
 typedef struct unk8005FCD0 {
-    s32 unk0;
+    ObjectModel *unk0;
     Vertex *unk4;
     Vertex *unk8;
     s32 unkC;
@@ -25,6 +26,7 @@ typedef struct unk8005FCD0 {
     s16 unk1C;
     s8 unk1E;
     s8 unk1F;
+    s8 unk20;
 } unk8005FCD0;
 
 extern s32 gTractionTableChecksum;
@@ -37,9 +39,11 @@ void func_8005FF40(ObjectModel **modelPtr);
 s32 func_80061A00(ObjectModel *model, s32 animTableIndex);
 s32 func_80060C58(Vertex *vertices, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 unk8005FCD0 *func_8005FCD0(ObjectModel* model, s32 arg1);
+unk8005FCD0 *func_8005F99C(s32 arg0, s32 arg1);
 
 void free_object_model(ObjectModel *model); //Non Matching
 void func_80060910(ObjectModel *);
 s32 func_80060AC8(ObjectModel *mdl, s32 arg1, s32 arg2, s32 arg3, s32 *outBatchIndex, s32 *outVertexIndex);
+s32 func_80060EA8(ObjectModel *);
 
 #endif
