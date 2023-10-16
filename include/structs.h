@@ -597,7 +597,8 @@ typedef struct ObjectModel {
     /* 0x40 */ s32* unk40;
     /* 0x44 */ ObjectModel_44* animations;
     /* 0x48 */ s16 numberOfAnimations;
-    /* 0x4A */ u8 pad4A[6];
+    /* 0x4A */ s16 unk4A;
+    /* 0x4C */ u8 pad4C[4];
     /* 0x50 */ s16 unk50;
     /* 0x52 */ s16 unk52;
 } ObjectModel;      
