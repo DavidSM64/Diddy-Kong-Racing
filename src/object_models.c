@@ -77,7 +77,7 @@ void allocate_object_model_pools(void) {
 
 GLOBAL_ASM("asm/non_matchings/object_models/func_8005F99C.s")
 
-unk8005FCD0 *func_8005FCD0(ObjectModel* model, s32 arg1) {
+unk8005FCD0 *func_8005FCD0(ObjectModel *model, s32 arg1) {
     s32 temp;
     unk8005FCD0 *result;
     s32 var_v1;
