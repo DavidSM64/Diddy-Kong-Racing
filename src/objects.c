@@ -257,7 +257,7 @@ u8 gTimeTrialEnabled;
 u8 gIsTimeTrial;
 s8 gIsTajChallenge;
 s8 D_8011AEF7;
-s32 D_8011AEF8;
+s8 D_8011AEF8;
 s32 D_8011AEFC;
 s8 D_8011AF00;
 Object *(*D_8011AF04)[128];
@@ -5045,7 +5045,79 @@ void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80022E18.s")
+void func_80022E18(s32 arg0) {
+    s32 flags;
+    s32 i;
+    Object_Racer *racer;
+    Settings *settings;
+    Object *obj;
+    LevelHeader *levelHeader;
+
+    levelHeader = get_current_level_header();
+    levelHeader->race_type = 5;
+    levelHeader->music = D_8011AEF8;
+    levelHeader->instruments = D_8011AEFC;
+    func_800AB1AC(1);
+
+    // Only works with do {} while?
+    i = 0;
+    do {
+        racer = &(*gRacers)[i]->unk64->racer;
+        if (!racer){}
+        racer->raceFinished = 0;
+        racer->lap = 0;
+        racer->checkpoint = 0;
+        racer->courseCheckpoint = 0;
+    } while(++i < gNumRacers);
+    
+    free_object((*gRacers)[1]);
+    gRacersByPosition[0] = (*gRacers)[0];
+    gNumRacers = 1;
+    for (i = gObjectListStart; i < gObjectCount; i++) {
+        if (!(gObjPtrList[i]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (gObjPtrList[i]->behaviorId == BHV_PARK_WARDEN)) {
+            obj = gObjPtrList[i];
+        }
+    }
+    racer = &(*gRacers)[0]->unk64->racer;
+    if (racer->unk15C != NULL) {
+        free_object(racer->unk15C);
+        racer->unk15C = NULL;
+    }
+    if (arg0 == 0) {
+        if (racer->unk1AC == 1) {
+            settings = get_settings();
+            flags = racer->vehicleID;
+            flags = 1 << (flags + 3);
+            if (settings->tajFlags & flags) {
+                set_next_taj_challenge_menu(5);
+            } else {
+                set_next_taj_challenge_menu(racer->vehicleID + 6);
+                settings->tajFlags |= flags;
+                safe_mark_write_save_file(get_save_file_index());
+            }
+        } else {
+            set_next_taj_challenge_menu(4);
+        }
+        obj->properties.common.unk0 = 0x1F;
+        set_taj_status(2);
+    } else {
+        func_80000B28();
+        func_80001844();
+        set_next_taj_challenge_menu(0);
+        func_80008168();
+        if (arg0 == 2) {
+            set_current_text(0);
+        }
+        D_8011ADB0 = 0;
+        gRaceStartCountdown = 0;
+        obj->properties.common.unk0 = 0x14;
+    }
+    func_80000B28();
+    func_800A0B74();
+    start_level_music(1.0f);
+    gIsTajChallenge = 0;
+}
+
 GLOBAL_ASM("asm/non_matchings/objects/func_800230D0.s")
 
 /**
