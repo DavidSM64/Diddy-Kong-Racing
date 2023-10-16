@@ -1151,6 +1151,12 @@ typedef struct Object_Exit {
   /* 0x10 */ s32 radius; // Activation radius.
   /* 0x14 */ s8 bossFlag; // Dictates boss level version. 0 is first encounter, 1 is rematch. -1 means no boss.
 } Object_Exit;
+
+typedef struct Object_AiNode {
+   /* 0x00 */ struct Object *nodeObj[4];
+   /* 0x10 */ s16 distToNode[4];
+} Object_AiNode;
+
 /* Size: 0x224 - 548 bytes */
 typedef struct Object_Racer {
   /* 0x000 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
@@ -1627,6 +1633,7 @@ typedef struct Object_64 {
         Object_WizpigRocket wizpigRocket;
         Object_8001E89C_64 obj8001E89C_64;
         Object_CharacterSelect characterSelect;
+        Object_AiNode ai_node;
     };
 } Object_64;
 

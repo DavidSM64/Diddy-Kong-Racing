@@ -4251,7 +4251,105 @@ Object *find_nearest_spectate_camera(Object *obj, s32 *cameraId) {
     return currCamera;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001BF20.s")
+void func_8001BF20(void) {
+    LevelObjectEntry_AiNode *aiNodeEntry;
+    Object *obj;
+    s16 sp186;
+    Object* nextAiNodeObj;
+    f32 xDiff;
+    f32 zDiff;
+    f32 yDiff;
+    s32 i;
+    s32 j;
+    s8 index; // Must be an s8
+    u8 index2; // Must be an u8
+    s16 swap;
+    Object_AiNode *aiNodeObj64;
+    s8 spE4[128];
+    s8 sp64[128];
+
+    if (D_8011AF10[0] != 0) {
+        D_8011AF10[0] = 0;
+        for(i = 0; i < 128; i++) {
+            (*D_8011AF04)[i] = 0;
+        }
+        sp186 = 0;
+        for(i = 0; i < gObjectCount; i++) {
+            obj = gObjPtrList[i];
+            if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (obj->behaviorId == BHV_AINODE)) {
+                aiNodeEntry = &obj->segment.level_entry->aiNode;
+                index2 = aiNodeEntry->unk9;
+                if (!(index2 & 128)) {
+                    (*D_8011AF04)[index2] = obj;
+                    spE4[sp186] = aiNodeEntry->unk9;
+                    sp64[sp186] = aiNodeEntry->unkE & 3;
+                    sp186++;
+                }
+            }
+        }
+        if (sp186 != 0) {
+            for(i = 0; i < 128; i++) {
+                obj = (*D_8011AF04)[i];
+                if (obj != NULL) {
+                    aiNodeObj64 = (Object_AiNode *)obj->unk64;
+                    aiNodeEntry = &obj->segment.level_entry->aiNode;
+                    for(j = 0; j < 4; j++) {
+                        index2 = aiNodeEntry->unkA[j];
+                        if (!(index2 & 128)) {
+                            nextAiNodeObj = (*D_8011AF04)[index2];
+                            aiNodeObj64->nodeObj[j] = nextAiNodeObj;
+                            if (nextAiNodeObj == NULL) {
+                                aiNodeEntry->unkA[j] = -1;
+                            } else {
+                                xDiff = obj->segment.trans.x_position - nextAiNodeObj->segment.trans.x_position;
+                                yDiff = obj->segment.trans.y_position - nextAiNodeObj->segment.trans.y_position;
+                                zDiff = obj->segment.trans.z_position - nextAiNodeObj->segment.trans.z_position;
+                                aiNodeObj64->distToNode[j] = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff));
+                            }
+                        }
+                    }
+                }
+            }
+
+            do {
+                j = TRUE;
+                for(i = 0; i < (sp186 - 1); i++) {
+                    if((*D_8011AF04)[spE4[i + 1]]->segment.trans.y_position < (*D_8011AF04)[spE4[i]]->segment.trans.y_position) {
+                        swap = spE4[i];
+                        spE4[i] = spE4[i + 1];
+                        spE4[i + 1] = swap;
+                        swap = sp64[i];
+                        sp64[i] = sp64[i + 1];
+                        sp64[i + 1] = swap;
+                        j = FALSE;
+                    }
+                }
+            } while(!j); // Keep doing this until no more swaps are needed.
+
+            if(1){} // Fakematch
+            
+            for(i = 0; i < 5; i++) {
+                D_8011AF18[i] = -20000.0f;
+            }
+            
+            index = sp64[0];
+            for (i = 0; i < (sp186 - 1);) {
+                while ((i < (sp186 - 1)) && (index >= sp64[i])) {
+                    i++;
+                }
+                if (index < sp64[i]) {
+                    index = sp64[i];
+                    D_8011AF18[index] = (f32) ((f64) ((*D_8011AF04)[spE4[i]]->segment.trans.y_position + (*D_8011AF04)[spE4[i-1]]->segment.trans.y_position) * 0.5);
+                } else {
+                    i = sp186;
+                }
+            }
+            D_8011AF18[0] = -10000.0f;
+            
+            D_8011AF18[4] = -D_8011AF18[0];
+        }
+    }
+}
 
 s16 func_8001C418(f32 yPos) {
     s16 i = 0;
