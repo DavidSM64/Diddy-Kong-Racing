@@ -75,13 +75,13 @@ void allocate_object_model_pools(void) {
     }
 }
 
-unk8005FCD0 *func_8005F99C(s32 arg0, s32 arg1) {
+Object_68 *func_8005F99C(s32 arg0, s32 arg1) {
     s32 i;
     s32 sp50;
     ObjectModel *objMdl;
     s32 sp48;
     s32 temp_s0;
-    unk8005FCD0 *ret;
+    Object_68 *ret;
     s8 sp3F;
     u32 compressedData;
     s32 sp34;
@@ -149,7 +149,7 @@ unk8005FCD0 *func_8005F99C(s32 arg0, s32 arg1) {
             }
         }
         if ((func_80060EA8(objMdl) == 0) && (func_80061A00(objMdl, arg0) == 0)) {
-            ret = func_8005FCD0((ObjectModel *) objMdl, arg1);
+            ret = func_8005FCD0(objMdl, arg1);
             if (ret != NULL) {
                 D_8011D624[(sp50 << 1)] = arg0;
                 D_8011D624[(sp50 << 1) + 1] = (s32) objMdl;
@@ -165,54 +165,54 @@ block_30:
     return NULL;
 }
 
-unk8005FCD0 *func_8005FCD0(ObjectModel *model, s32 arg1) {
+Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
     s32 temp;
-    unk8005FCD0 *result;
+    Object_68 *result;
     Vertex *var_v1;
     Vertex *vertex;
     Vertex *mdlVertex;
 
     if ((model->numberOfAnimations != 0) && (arg1 & 8)) {
         temp = ((model->numberOfVertices << 1) * 10) + 36;
-        result = (unk8005FCD0 *) allocate_from_main_pool((model->unk4A * 6) + temp, COLOUR_TAG_BLUE);
+        result = (Object_68 *) allocate_from_main_pool((model->unk4A * 6) + temp, COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
-        result->unk4 = (Vertex *) ((u8 *) result + 36);
-        result->unk8 = (Vertex *) ((u8 *) result + (model->numberOfVertices * 10) + 36);
-        result->unkC = (s32) ((u8 *) result + temp);
+        result->unk4[0] = (Vertex *) ((u8 *) result + 36);
+        result->unk4[1] = (Vertex *) ((u8 *) result + (model->numberOfVertices * 10) + 36);
+        result->unk4[2] = (Vertex *) ((u8 *) result + temp);
         result->unk1E = 2;
     } else if ((model->unk40 != NULL) && (arg1 & 1)) {
         temp = (model->numberOfVertices * 10);
-        result = (unk8005FCD0 *) allocate_from_main_pool(temp + 36, COLOUR_TAG_BLUE);
+        result = (Object_68 *) allocate_from_main_pool(temp + 36, COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
         var_v1 = (Vertex *) ((u8 *) result + 36);
-        result->unk4 = var_v1;
-        result->unk8 = var_v1;
-        result->unkC = 0;
+        result->unk4[0] = var_v1;
+        result->unk4[1] = var_v1;
+        result->unk4[2] = NULL;
         result->unk1E = 1;
     } else {
-        result = (unk8005FCD0 *) allocate_from_main_pool(36, COLOUR_TAG_BLUE);
+        result = (Object_68 *) allocate_from_main_pool(36, COLOUR_TAG_BLUE);
         if (result == NULL) {
             return NULL;
         }
-        result->unk4 = model->vertices;
-        result->unk8 = model->vertices;
-        result->unkC = 0;
+        result->unk4[0] = model->vertices;
+        result->unk4[1] = model->vertices;
+        result->unk4[2] = NULL;
         result->unk1E = 0;
     }
     result->unk16 = 0;
     result->unk18 = 0;
     result->unk1A = 0;
-    result->unk0 = model;
+    result->objModel = model;
     result->unk10 = -1;
     result->unk12 = -1;
     result->unk1F = 0;
     if (result->unk1E != 0) {
         temp = 0;
-        vertex = &result->unk4[0];
+        vertex = result->unk4[0];
         mdlVertex = &model->vertices[0];
         do {
             vertex->x = mdlVertex->x;
@@ -228,7 +228,7 @@ unk8005FCD0 *func_8005FCD0(ObjectModel *model, s32 arg1) {
         } while(temp < model->numberOfVertices);
         
         temp = 0;
-        vertex = &result->unk8[0];
+        vertex = result->unk4[1];
         mdlVertex = &model->vertices[0];
         do {
             vertex->x = mdlVertex->x;

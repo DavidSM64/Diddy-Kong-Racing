@@ -1651,9 +1651,10 @@ typedef struct Object_68 {
       ObjectModel *objModel;
       TextureHeader *texHeader;
   };
-  /* 0x04 */ s32 *unk4[3];
+  /* 0x04 */ Vertex *unk4[3];
   /* 0x10 */ s16 unk10;
-  /* 0x12 */ u8 pad12[4];
+  /* 0x12 */ s16 unk12;
+  /* 0x14 */ s16 unk14;
   /* 0x16 */ s16 unk16;
   /* 0x18 */ s16 unk18;
   /* 0x1A */ s16 unk1A;
