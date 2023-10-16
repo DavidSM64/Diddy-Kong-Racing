@@ -4475,7 +4475,133 @@ s32 func_8001CC48(s32 arg0, s32 arg1, s32 arg2) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8001CC48.s")
 #endif
 
+#ifdef NON_MATCHING
+s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+    s16 result; 
+    s32 sp370; 
+    s16 var_t1;
+    s16 sp36C; 
+    s16 temp2; 
+    s16 i;
+    LevelObjectEntry_AiNode *aiNodeEntry;
+    s8 someBool;
+    s8 var_s3;
+    s8 var_s5;
+    s8 temp; 
+    s32 var_ra; 
+    Object_AiNode *aiNode;
+    Object *aiNodeObj;
+    s32 sp154[128];
+    s8 spD4[128];
+    s8 sp54[128];
+
+    // Only matches with do {} while?
+    i = 0;
+    do {
+        sp154[i] = 0;
+        i++;
+    } while (i < 128);
+    
+    aiNodeObj = (*D_8011AF04)[arg0];
+    aiNode = (Object_AiNode *) aiNodeObj->unk64;
+    aiNodeEntry = &aiNodeObj->segment.level_entry->aiNode;
+    var_t1 = 0;
+    var_ra = 0;
+    result = 0xFF;
+    var_s3 = 0;
+    someBool = 1;
+    var_s5 = 0;
+    do {
+        for (i = 0; i < 4; i++) {
+            if (aiNode->nodeObj[i] != 0) {
+                temp2 = aiNodeEntry->unkA[i];
+                temp = 1;
+                if (((arg0 == aiNodeEntry->unk9) && (temp2 == arg2)) || ((arg2 == aiNodeEntry->unk9) && (temp2 == arg0))) {
+                    temp = 0;
+                    if (var_s5 != 0) {
+                        temp = 1;
+                    }
+                    var_s5++;
+                }
+                if (temp != 0) {
+                    sp36C = 0;
+                    temp = 0;
+                    while ((sp36C < var_t1) && (temp2 != spD4[sp36C])) {
+                        sp36C++;
+                    }
+                    
+                    sp370 = aiNode->distToNode[i] + var_ra;
+                    if (sp36C == var_t1) {
+                        temp = 2;
+                    } else if (sp370 < sp154[temp2]) {
+                        temp = 1;
+                    }
+                }
+                if (temp != 0) {
+                    while (sp36C < var_t1 - 1) {
+                        spD4[sp36C] = spD4[sp36C + 1];
+                        sp54[sp36C] = sp54[sp36C + 1];
+                        sp36C++;
+                    }
+                    if (temp == 2) {
+                        var_t1++;
+                    }
+                    sp154[temp2] = sp370;
+                    
+                    sp36C = var_t1 - 1;
+                    
+                    sp54[sp36C] = (someBool) ? aiNodeEntry->unkA[i] : var_s3;
+                    spD4[sp36C] = aiNodeEntry->unkA[i];
+                    
+                    while ((sp36C > 0) && (sp154[spD4[sp36C - 1]] < sp154[spD4[sp36C]])) {
+                        temp = spD4[sp36C];
+                        spD4[sp36C] = spD4[sp36C - 1];
+                        spD4[sp36C - 1] = temp;
+                        temp = sp54[sp36C];
+                        sp54[sp36C] = sp54[sp36C - 1];
+                        sp54[sp36C - 1] = temp;
+                        sp36C--;
+                    }
+                    
+                }
+            }
+        }
+        
+        if (var_t1 > 0) {
+            var_t1--;
+            aiNodeObj = (*D_8011AF04)[spD4[var_t1]];
+            aiNodeEntry = &aiNodeObj->segment.level_entry->aiNode;
+            var_s3 = sp54[var_t1];
+            var_ra = sp154[aiNodeEntry->unk9];
+            aiNode = &aiNodeObj->unk64->ai_node;
+            someBool = 0;
+            if (arg1 & 0x100) {
+                if ((arg1 & 0x7F) == spD4[var_t1]) {
+                    result = var_s3;
+                }
+            } else if (arg1 == aiNodeEntry->unk8) {
+                result = var_s3;
+            }
+            if ((var_t1 == 0) && (result == 0xFF)) {
+                result = var_s3;
+            }
+        }
+    } while ((result == 0xFF) && (var_t1 > 0));
+    
+    if (result != 0xFF) {
+        aiNodeObj = (*D_8011AF04)[arg0];
+        aiNodeEntry = &aiNodeObj->segment.level_entry->aiNode;
+        aiNode =  &aiNodeObj->unk64->ai_node;
+        for (i = 0; (i < 4) && (result != aiNodeEntry->unkA[i]); i++) {}
+        if (i < 4) {
+            aiNode->unk18[arg3] = i;
+        }
+    }
+    return result;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_8001CD28.s")
+#endif
 
 void func_8001D1AC(void) {
     D_8011AF10[0] = 1;

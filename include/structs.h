@@ -1155,6 +1155,7 @@ typedef struct Object_Exit {
 typedef struct Object_AiNode {
    /* 0x00 */ struct Object *nodeObj[4];
    /* 0x10 */ s16 distToNode[4];
+   /* 0x18 */ u8 unk18[4];
 } Object_AiNode;
 
 /* Size: 0x224 - 548 bytes */
