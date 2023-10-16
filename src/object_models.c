@@ -31,7 +31,7 @@ UNUSED const char D_800E6BE0[] = "MOD Error: Tryed to deallocate non-existent mo
 /************ .bss ************/
 
 s32 *gObjectModelTable;
-unk8011D624 *D_8011D624; // Array of unk8011D624
+s32 *D_8011D624;
 s32 *D_8011D628;
 s32 D_8011D62C;
 s32 D_8011D630;
@@ -50,7 +50,7 @@ void allocate_object_model_pools(void) {
     s32 i;
     s32 checksum;
 
-    D_8011D624 = (unk8011D624 *) allocate_from_main_pool_safe(0x230, COLOUR_TAG_GREEN);
+    D_8011D624 = allocate_from_main_pool_safe(0x230, COLOUR_TAG_GREEN);
     D_8011D628 = allocate_from_main_pool_safe(0x190, COLOUR_TAG_GREEN);
     D_8011D62C = 0;
     D_8011D634 = 0;
@@ -78,38 +78,37 @@ void allocate_object_model_pools(void) {
 GLOBAL_ASM("asm/non_matchings/object_models/func_8005F99C.s")
 GLOBAL_ASM("asm/non_matchings/object_models/func_8005FCD0.s")
 
-#ifdef NON_MATCHING
 void func_8005FF40(ObjectModel **modelPtr) {
-    s32 i;
+    UNUSED s32 pad;
     s32 modelIndex;
     ObjectModel *model;
+    s32 i;
     
-    if (modelPtr != NULL) {
+    if (modelPtr != 0) {
         model = *modelPtr;
         model->unk30--;
         if (model->unk30 > 0) {
             free_from_memory_pool(modelPtr);
             return;
         }
+        
         modelIndex = -1;
         for (i = 0; i < D_8011D62C; i++) {
-            if (model == D_8011D624[i].model) {
+            if ((s32) model == D_8011D624[(i << 1) + 1]) {
                 modelIndex = i;
             }
         }
+        
         if (modelIndex != -1) {
             free_object_model(model);
             D_8011D628[D_8011D634] = modelIndex;
             D_8011D634++;
-            D_8011D624[modelIndex].unk0 = -1;
-            D_8011D624[modelIndex].model = (ObjectModel *) -1;
+            D_8011D624[modelIndex << 1] = -1;
+            D_8011D624[(modelIndex << 1) + 1] = -1;
             free_from_memory_pool(modelPtr);
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/object_models/func_8005FF40.s")
-#endif
 
 void free_object_model(ObjectModel *mdl) {
     // free the textures

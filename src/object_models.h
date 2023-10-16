@@ -17,9 +17,9 @@ extern s32 gFunc80024D54Length;
 void allocate_object_model_pools(void);
 void func_800619F4(s32 arg0);
 void func_80061C0C(Object* obj);
+void func_8005FF40(ObjectModel **modelPtr);
 
 void free_object_model(ObjectModel *model); //Non Matching
-void func_8005FF40(ObjectModel **modelPtr);
 void func_80060910(ObjectModel *);
 
 #endif
