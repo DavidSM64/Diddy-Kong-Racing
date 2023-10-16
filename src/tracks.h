@@ -94,11 +94,13 @@ typedef struct unk8011C238 {
   s16 unkA;
 } unk8011C238;
 
-/* Size: 0xC bytes */
+/* Size: 0x8 bytes */
 typedef struct unk8011D478 {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s8 unk6;
+    s8 unk7;
 } unk8011D478;
 
 // In this struct, data is rightshifted 16 bytes, so make the smooth transition more precise.
@@ -182,6 +184,7 @@ void render_scene(Gfx** dList, MatrixS** mtx, Vertex** vtx, TriangleList** tris,
 void set_fog(s32 fogIdx, s16 near, s16 far, u8 red, u8 green, u8 blue);
 void slowly_change_fog(s32 fogIdx, s32 red, s32 green, s32 blue, s32 near, s32 far, s32 switchTimer);
 s32 func_8002FD74(f32 x0, f32 z0, f32 x1, f32 x2, s32 count, Vec4f *arg5);
+void func_80026C14(s16 arg0, s16 arg1, s32 arg2);
 
 void free_track(void);
 void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 currentViewportIndex);

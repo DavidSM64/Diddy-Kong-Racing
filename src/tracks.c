@@ -156,7 +156,7 @@ FogData gFogData[4];
 Vec3i gScenePerspectivePos;
 unk8011D474 *D_8011D474; // 0x10 bytes struct?
 unk8011D478 *D_8011D478; // 0xC bytes struct?
-s16 **D_8011D47C;
+s8 *D_8011D47C;
 Vertex *D_8011D480[2];
 Vertex *D_8011D488;
 s32 D_8011D48C;
@@ -448,7 +448,6 @@ void func_800257D0(void) {
 
 void func_80026070(LevelModelSegmentBoundingBox *, f32, f32, f32);
 void func_80026430(LevelModelSegment *, f32, f32, f32);
-void func_80026C14(s16 arg0, s16 arg1, s32 arg2);
 void func_80026E54(s16 arg0, s8 *arg1, f32 arg2, f32 arg3);
 //Alternative Attempt: https://decomp.me/scratch/2C6dJ
 void func_8002581C(u8 *segmentIds, s32 numberOfSegments, s32 viewportIndex) {
@@ -617,7 +616,40 @@ GLOBAL_ASM("asm/non_matchings/tracks/func_8002581C.s")
 
 GLOBAL_ASM("asm/non_matchings/tracks/func_80026070.s")
 GLOBAL_ASM("asm/non_matchings/tracks/func_80026430.s")
-GLOBAL_ASM("asm/non_matchings/tracks/func_80026C14.s")
+
+void func_80026C14(s16 arg0, s16 arg1, s32 arg2) {
+    s16 i;
+    s16 j;
+
+    if (D_8011D49E < D_8011D4BA) {
+        i = 0;
+        while (i < D_8011D49E && D_8011D478[i].unk0 < arg0) {
+            i++;
+        }
+        while(i < D_8011D49E && arg0 == D_8011D478[i].unk0 && D_8011D478[i].unk2 < arg1) {
+            i++;
+        }
+        j = D_8011D49E;
+        while (i < j) {
+            D_8011D478[j].unk0 = D_8011D478[j-1].unk0;
+            D_8011D478[j].unk2 = D_8011D478[j-1].unk2;
+            D_8011D478[j].unk7 = D_8011D478[j-1].unk7;
+            D_8011D478[j].unk6 = D_8011D478[j-1].unk6;
+            j--;
+        }
+        D_8011D478[i].unk0 = arg0;
+        D_8011D478[i].unk2 = arg1;
+        D_8011D478[i].unk4 = 0;
+        D_8011D478[i].unk7 = D_8011D49C;
+        D_8011D478[i].unk6 = arg2;
+        D_8011D47C[D_8011D49E] = -1;
+        if (D_8011D49E & 1) {
+            D_8011D49C++;
+        }
+        D_8011D49E++;
+    }
+}
+
 GLOBAL_ASM("asm/non_matchings/tracks/func_80026E54.s")
 GLOBAL_ASM("asm/non_matchings/tracks/func_80027184.s")
 GLOBAL_ASM("asm/non_matchings/tracks/func_80027568.s")
