@@ -913,9 +913,9 @@ typedef struct Object_Animation {
   /* 0x00 */ f32 unk0;
   /* 0x04 */ f32 unk4;
   /* 0x08 */ f32 unk8;
-  /* 0x0C */ s32 unkC;
-  /* 0x10 */ f32 unk10;
-  /* 0x14 */ f32 unk14; 
+  /* 0x0C */ f32 x;
+  /* 0x10 */ f32 y;
+  /* 0x14 */ f32 z; 
   /* 0x18 */ u8 *unk18; 
   /* 0x1C */ struct Object *unk1C;
   /* 0x20 */ s32 unk20;
@@ -950,7 +950,16 @@ typedef struct Object_Animation {
   /* 0x45 */ u8 unk45;
   /* 0x46 */ u8 pad46[4];
   /* 0x4A */ s16 unk4A;
+  /* 0x4C */ u8 pad4C[0x10];
+  /* 0x5C */ s32 unk5C;
 } Object_Animation;
+
+typedef struct Object_OverridePos {
+  /* 0x00 */ f32 x;
+  /* 0x04 */ f32 y;
+  /* 0x08 */ f32 z;
+  /* 0x0C */ Object_Animation *anim;
+} Object_OverridePos;
 
 typedef struct Object_WeaponBalloon {
   /* 0x0 */ f32 radius;

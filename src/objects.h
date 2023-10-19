@@ -476,6 +476,7 @@ void process_object_interactions(void);
 void render_3d_model(Object *obj);
 void func_80022E18(s32 arg0);
 void func_8001BF20(void);
+void func_8001E6EC(s8);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -506,7 +507,6 @@ void func_80019808(s32 updateRate);
 void func_8001A8F4(s32 updateRate);
 void func_80014090(Object*, s32, ObjectHeader*);
 void func_80008438(Object**, s32, s32);
-void func_8001E6EC(s8);
 void func_8001E89C(void);
 void func_800230D0(Object*, Object_Racer*);
 void func_80010994(s32 updateRate);

@@ -203,9 +203,9 @@ s8 (*D_8011ADCC)[8];
 f32 D_8011ADD0;
 s8 D_8011ADD4;
 s8 D_8011ADD5;
-Object *D_8011ADD8[10];
-s8 D_8011AE00;
-s8 D_8011AE01;
+Object *D_8011ADD8[10]; //Array of OverRidePos objects
+s8 D_8011AE00; //Number of OverRidePos objects in D_8011ADD8
+s8 D_8011AE01; //A boolean? I've seen it either as 0 or 1
 s8 gIsNonCarRacers;
 s8 gIsSilverCoinRace;
 Object *D_8011AE08[16];
@@ -220,8 +220,8 @@ s32 gParticleCount;
 Object *gObjectMemoryPool;
 Object **D_8011AE6C;
 s32 D_8011AE70;
-Object **D_8011AE74;
-s16 D_8011AE78;
+Object **D_8011AE74; //Pointer to an array of Animation objects
+s16 D_8011AE78; //Number of Animation objects in D_8011AE74
 s16 gCutsceneID;
 s16 D_8011AE7C;
 s8 D_8011AE7E;
@@ -4863,7 +4863,41 @@ UNUSED s32 get_object_list_index(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001E4C4.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001E6EC.s")
+
+void func_8001E6EC(s8 arg0) {
+    LevelObjectEntry_OverridePos *overridePosEntry;
+    Object *overridePosObj;
+    Object_OverridePos *overridePos;
+    s32 i;
+    s32 j;
+    s32 someBool;
+    Object_64 *unk64;
+
+    for (i = 0; i < D_8011AE00; i++) {
+        overridePosObj = D_8011ADD8[i];
+        overridePosEntry = &overridePosObj->segment.level_entry->overridePos;
+        overridePos = (Object_OverridePos*)overridePosObj->unk64;
+        if ((overridePosEntry->cutsceneId == gCutsceneID) || ((overridePosEntry->cutsceneId == 20))) {
+            for (j = 0; (j < D_8011AE78) && (overridePosEntry->behaviorId != D_8011AE74[j]->properties.animatedObj.behaviourID); j++) {}
+            if (j != D_8011AE78 && D_8011AE74[j]->unk64 != NULL) {
+                someBool = (D_8011AE74[j]->unk64->animation.unk5C) ? FALSE : TRUE;
+                if (arg0 != someBool) {
+                    unk64 = D_8011AE74[j]->unk64;
+                    overridePos->x = unk64->animation.x;
+                    overridePos->y = unk64->animation.y;
+                    overridePos->z = unk64->animation.z;
+                    overridePos->anim = &unk64->animation;
+                    unk64->animation.x = overridePosObj->segment.trans.x_position;
+                    unk64->animation.y = overridePosObj->segment.trans.y_position;
+                    unk64->animation.z = overridePosObj->segment.trans.z_position;
+                }
+            } else {
+                overridePos->anim = NULL;
+            }
+        }
+    }
+    D_8011AE01 = FALSE;
+}
 
 void func_8001E89C(void) {
     s32 i;
@@ -4945,8 +4979,8 @@ void func_8001EFA4(Object *arg0, Object *animObj) {
     anim->unk2A = normalise_time(animEntry->animationStartDelay);
     animObj->segment.object.animationID = animEntry->objAnimIndex;
     animObj->segment.animFrame = animEntry->unk16;
-    anim->unk14 = animEntry->objAnimSpeed;
-    anim->unk10 = 0;
+    anim->z = animEntry->objAnimSpeed;
+    anim->y = 0;
     anim->unk2C = animEntry->objAnimLoopType;
     anim->unk2E = animEntry->rotateType;
     anim->unk3E = animEntry->nextAnim;
