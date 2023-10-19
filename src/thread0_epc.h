@@ -93,7 +93,7 @@ void thread0_create(void);
 void func_800B71B0(void);
 
 void thread0_Main(UNUSED void *unused); // Non Matching
-void func_800B7460(s32 *epc, s32 size, s32 mask); // Non Matching
+void func_800B7460(s32 *epc, s32 size, u32 mask); // Non Matching
 void render_epc_lock_up_display(void); // Non Matching
 
 #endif

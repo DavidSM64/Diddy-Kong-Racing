@@ -79,8 +79,12 @@ void func_800B70D0(void) {
     OSThread *node = __osGetActiveQueue();
     while (node->priority != -1) {
         if (node->priority == 0) {
-            node->context.sr &= 0xFFFF00FE;
-            node->context.sr |= 0x6C01;
+            node->context.sr &= ~(SR_IMASK | SR_IE);
+            //node->context.sr |= (0x6C01);
+            //Pretty sure these are the flags
+            node->context.sr |= ((SR_SX | SR_UX | SR_KSU_SUP | SR_ERL) << SR_IMASKSHIFT) | SR_IE;
+            //Could be this though.
+            //node->context.sr | = (SR_IBIT7 | SR_IBIT6 | SR_IBIT4 | SR_IBIT3 | SR_IE);
             break;
         }
         node = node->tlnext;
@@ -90,8 +94,8 @@ void func_800B70D0(void) {
 void func_800B7144(void) {
     OSThread *node = __osGetActiveQueue();
     while (node->priority != -1) {
-        if ((node->priority > 0) && (node->priority < 128)) {
-            osStopThread((OSThread *)&node->next);
+        if (node->priority > OS_PRIORITY_IDLE && node->priority <= OS_PRIORITY_APPMAX) {
+            osStopThread((OSThread *) &node->next);
         }
         node = node->tlnext;
     }
@@ -99,7 +103,7 @@ void func_800B7144(void) {
 
 void func_800B71B0(void) {
     OSThread *thread;
-    s16 sp444[0x200];
+    UNUSED s16 sp444[0x200];
     u8 sp244[0x200];
     u8 sp44[0x200];
     s16 *v0;
@@ -108,9 +112,9 @@ void func_800B71B0(void) {
     s32 maxCount;
     u8 zero;
     
-    for (thread = __osGetActiveQueue(); thread->priority != (-1); thread = thread->tlnext) {
-        if ((thread->priority > 0) && (thread->priority < 128)) {
-            if ((thread->flags & 2) || (thread->flags & 1)) {
+    for (thread = __osGetActiveQueue(); thread->priority != -1; thread = thread->tlnext) {
+        if (thread->priority > OS_PRIORITY_IDLE && thread->priority <= OS_PRIORITY_APPMAX) {
+            if (thread->flags & 2 || thread->flags & 1) {
                 break;
             }
         }
@@ -121,7 +125,7 @@ void func_800B71B0(void) {
         thread->context.fp0.f.f_even = gObjectStackTrace[1];
         thread->context.fp2.f.f_odd = gObjectStackTrace[2];
         bcopy(thread, sp44, sizeof(epcInfo));
-        bcopy((void *) thread->context.sp, sp244, 0x200);
+        bcopy((void *) thread->context.sp, sp244, sizeof(sp244));
         zero = 0; // Why is this needed to match?
         v0 = func_80024594(&currentCount, &maxCount);
         for (i = zero; i < maxCount; i++) {
@@ -131,13 +135,10 @@ void func_800B71B0(void) {
                 currentCount += maxCount;
             }
         }
-        write_controller_pak_file(0, -1, "CORE", "", sp44, 0x800);
+        write_controller_pak_file(0, -1, "CORE", "", sp44, sizeof(sp44) + sizeof(sp244) + sizeof(sp444));
     }
     while (1) {} // Infinite loop
 }
-
-const char sCoreFileName1[] = "CORE";
-const char sCoreFileExt1[] = { 0, 0, 0, 0 };
 
 #ifdef NON_EQUIVALENT
 //Rename mask to colourTag?
@@ -162,7 +163,7 @@ void func_800B7460(s32 *epc, s32 size, u32 mask) {
         epcinfo.objectStackTrace[1] = gObjectStackTrace[1];
         epcinfo.objectStackTrace[2] = gObjectStackTrace[2];
         bcopy(&epcinfo, &sp40, sizeof(epcInfo));
-        bzero(&sp240, 0x200);
+        bzero(&sp240, sizeof(sp240));
         zero = 0; // Why is this needed to match?
         v0 = func_80024594(&currentCount, &size);
         for (i = zero; i < size; i++) {
@@ -172,11 +173,13 @@ void func_800B7460(s32 *epc, s32 size, u32 mask) {
                 currentCount += size;
             }
         }
-        write_controller_pak_file(0, -1, sCoreFileName1, sCoreFileExt1, &sp40, 0x800);
+        write_controller_pak_file(0, -1, "CORE", "", &sp40, sizeof(sp40) + sizeof(sp240) + sizeof(sp440));
     }
     while (1) {} // Infinite loop; waiting for the player to reset the console?
 }
 #else
+const char sCoreFileName[] = "CORE";
+const char sCoreFileExt[] = "";
 GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B7460.s")
 #endif
 

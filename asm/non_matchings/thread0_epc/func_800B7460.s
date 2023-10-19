@@ -49,7 +49,7 @@ glabel func_800B7460
 /* 0B811C 800B751C 8FA909F4 */  lw    $t1, 0x9f4($sp)
 /* 0B8120 800B7520 00002825 */  move  $a1, $zero
 /* 0B8124 800B7524 19200054 */  blez  $t1, .L800B7678
-/* 0B8128 800B7528 3C07800F */   lui   $a3, %hi(sCoreFileExt1) # $a3, 0x800f
+/* 0B8128 800B7528 3C07800F */   lui   $a3, %hi(sCoreFileExt) # $a3, 0x800f
 /* 0B812C 800B752C 31260003 */  andi  $a2, $t1, 3
 /* 0B8130 800B7530 10C00018 */  beqz  $a2, .L800B7594
 /* 0B8134 800B7534 00C01825 */   move  $v1, $a2
@@ -142,16 +142,16 @@ glabel func_800B7460
 /* 0B8270 800B7670 14AEFFCB */  bne   $a1, $t6, .L800B75A0
 /* 0B8274 800B7674 24840008 */   addiu $a0, $a0, 8
 .L800B7678:
-/* 0B8278 800B7678 3C06800F */  lui   $a2, %hi(sCoreFileName1) # $a2, 0x800f
+/* 0B8278 800B7678 3C06800F */  lui   $a2, %hi(sCoreFileName) # $a2, 0x800f
 /* 0B827C 800B767C 27AF0040 */  addiu $t7, $sp, 0x40
 /* 0B8280 800B7680 240D0800 */  li    $t5, 2048
 /* 0B8284 800B7684 AFAD0014 */  sw    $t5, 0x14($sp)
 /* 0B8288 800B7688 AFAF0010 */  sw    $t7, 0x10($sp)
-/* 0B828C 800B768C 24C68EE8 */  addiu $a2, %lo(sCoreFileName1) # addiu $a2, $a2, -0x7118
+/* 0B828C 800B768C 24C68EE8 */  addiu $a2, %lo(sCoreFileName) # addiu $a2, $a2, -0x7118
 /* 0B8290 800B7690 00002025 */  move  $a0, $zero
 /* 0B8294 800B7694 2405FFFF */  li    $a1, -1
 /* 0B8298 800B7698 0C01D9B5 */  jal   write_controller_pak_file
-/* 0B829C 800B769C 24E78EF0 */   addiu $a3, %lo(sCoreFileExt1) # addiu $a3, $a3, -0x7110
+/* 0B829C 800B769C 24E78EF0 */   addiu $a3, %lo(sCoreFileExt) # addiu $a3, $a3, -0x7110
 .L800B76A0:
 /* 0B82A0 800B76A0 1000FFFF */  b     .L800B76A0
 /* 0B82A4 800B76A4 00000000 */   nop   
