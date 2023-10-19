@@ -1904,10 +1904,6 @@ typedef struct GhostDataFrame {
     u8 pad0[12];
 } GhostDataFrame;
 
-typedef struct unk80042178 {
-    u8 pad0[0x20];
-} unk80042178;
-
 typedef struct ByteColour {
     u8 red;
     u8 green;

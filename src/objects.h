@@ -481,6 +481,7 @@ Object *func_8000FD54(s32 objectHeaderIndex);
 void func_80015348(s32 startIndex, s32 lastIndex);
 void func_80016748(Object *obj0, Object *obj1);
 void func_8001AE64(void);
+s32 func_80016DE8(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **arg5);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -489,7 +490,6 @@ void decrypt_magic_codes(s32 *arg0, s32 length);
 s32 func_80014814(s32 *);
 Object *spawn_object(LevelObjectEntryCommon *entry, s32);
 s32 func_8001F460(Object*, s32, Object*);
-s32 func_80016DE8(f32, f32, f32, f32, s32, unk80042178 *);
 void func_8000B750(Object *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); 

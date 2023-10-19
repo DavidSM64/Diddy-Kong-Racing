@@ -3753,7 +3753,59 @@ Object *func_80016C68(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis)
     return NULL;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80016DE8.s")
+s32 func_80016DE8(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **arg5) {
+    f32 distances[8];
+    s32 i;
+    s32 j;
+    f32 xDiff;
+    f32 yDiff;
+    f32 zDiff;
+    s32 result;
+    Object *racerObj;
+    Object_Racer *racer;
+    Object *swapObj;
+    f32 swapf;
+
+    result = 0;
+    if (gNumRacers > 0) {
+        for(i = 0; i < gNumRacers; i++) {
+            racerObj = (*gRacers)[i];
+            racer = &racerObj->unk64->racer;
+            if ((racer->playerIndex >= 0) && (racer->playerIndex < 4)) {
+                if (is2dCheck) {
+                    xDiff = racerObj->segment.trans.x_position - x;
+                    zDiff = racerObj->segment.trans.z_position - z;
+                    yDiff = sqrtf((xDiff * xDiff) + (zDiff * zDiff));
+                } else {
+                    xDiff = racerObj->segment.trans.x_position - x;
+                    yDiff = racerObj->segment.trans.y_position - y;
+                    zDiff = racerObj->segment.trans.z_position - z;
+                    yDiff = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff));
+                }
+                if (yDiff < radius) {
+                    distances[result] = yDiff;
+                    arg5[result] = (*gRacers)[i];
+                    result++;
+                }
+            }
+        }
+        if (result >= 2) {
+            for(i = result - 1; i > 0; i--) {
+                for(j = 0; j < i; j++) {
+                   if(distances[j+1] < distances[j]) {
+                       swapf = distances[j];
+                       swapObj = arg5[j];
+                       distances[j] = distances[j+1];
+                       arg5[j] = arg5[j+1];
+                       distances[j+1] = swapf;
+                       arg5[j+1] = swapObj;
+                   }
+                }
+            }
+        }
+    }
+    return result;
+}
 
 void func_8001709C(Object *obj) {
     ObjectTransform sp78;
