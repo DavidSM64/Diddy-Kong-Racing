@@ -3441,7 +3441,47 @@ UNUSED void func_800149C0(unk800149C0 *arg0, UNUSED s32 arg1, s32 arg2, s32 arg3
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80014B50.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_80015348.s")
+
+// Sorts objects by distance to the camera.
+void func_80015348(s32 startIndex, s32 lastIndex) {
+    s32 i;
+    s32 didNotSwap;
+    Object *obj;
+
+    if (lastIndex < startIndex) {
+        return;
+    } 
+
+    for (i = startIndex; i <= lastIndex; i++) {
+        obj = gObjPtrList[i];
+        if (obj != NULL) {
+            if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
+                // func_80069DC8 calculates the distance to the camera from a XYZ location.
+                obj->segment.object.distanceToCamera = -func_80069DC8(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+            } else if (obj->segment.header->flags & OBJ_FLAGS_UNK_0080) {
+                obj->segment.object.distanceToCamera += -16000.0f;
+            } else {
+                obj->segment.object.distanceToCamera = -func_80069DC8(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+            }
+        } else {
+            //!@bug obj is NULL here, so it would probably cause a crash. Thankfully, gObjPtrList shouldn't have NULL objects in it.
+            obj->segment.object.distanceToCamera = 0.0f;
+        }
+    }
+        
+    // Keep swapping until all objects are sorted by the distance to the camera.
+    do {
+        didNotSwap = TRUE;
+        for (i = startIndex; i < lastIndex; i++) {
+            if (gObjPtrList[i]->segment.object.distanceToCamera < gObjPtrList[i + 1]->segment.object.distanceToCamera) {
+                obj = gObjPtrList[i];
+                gObjPtrList[i] = gObjPtrList[i + 1];
+                gObjPtrList[i + 1] = obj;
+                didNotSwap = FALSE;
+            }
+        }
+    } while (!didNotSwap);
+}
 
 /**
  * Go through each object and detect potential interactions between each.

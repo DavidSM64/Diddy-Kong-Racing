@@ -478,13 +478,13 @@ void func_80022E18(s32 arg0);
 void func_8001BF20(void);
 void func_8001E6EC(s8);
 Object *func_8000FD54(s32 objectHeaderIndex);
+void func_80015348(s32 startIndex, s32 lastIndex);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
 void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
 void decrypt_magic_codes(s32 *arg0, s32 length);
 s32 func_80014814(s32 *);
-void func_80015348(s32, s32);
 Object *spawn_object(LevelObjectEntryCommon *entry, s32);
 s32 func_8001F460(Object*, s32, Object*);
 s32 func_80016DE8(f32, f32, f32, f32, s32, unk80042178 *);
