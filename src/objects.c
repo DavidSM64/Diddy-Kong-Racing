@@ -3981,7 +3981,98 @@ u32 get_balloon_cutscene_timer(void) {
     return gBalloonCutsceneTimer;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001AE64.s")
+void func_8001AE64(void) {
+    s32 bestCourseTime;
+    s32 bestRacerTime;
+    s32 i;
+    s32 courseTime;
+    s32 temp;
+    s32 curRacerLapTime;
+    s32 j;
+    Object_Racer *curRacer;
+    Object_Racer *bestRacer;
+    Settings *settings;
+    LevelHeader* levelHeader;
+
+    levelHeader = get_current_level_header();
+    settings = get_settings();
+    settings->timeTrialRacer = 0;
+    settings->unk115[1] = 0;
+    settings->unk115[0] = 0;
+    bestCourseTime = 36001;
+    bestRacerTime = 36001;
+    bestRacer = &gRacersByPosition[0]->unk64->racer;
+    for (i = 0; i < gNumRacers; i++) {
+        curRacer = &gRacersByPosition[i]->unk64->racer;
+        if (curRacer->unk2 >= 0) {
+            if (curRacer->unk2 < get_number_of_active_players()) {
+                settings->racers[curRacer->unk2].best_times = 0;
+                temp = curRacer->vehicleIDPrev;
+                if ((temp >= 0) && (temp < 3)) {
+                    courseTime = 0;
+                    for(j = 0; j < levelHeader->laps && j < 5; j++) {
+                       settings->racers[curRacer->unk2].lap_times[j] = curRacer->lap_times[j];
+                        curRacerLapTime = curRacer->lap_times[j];
+                        courseTime += curRacerLapTime;
+                        if (curRacerLapTime < bestRacerTime) {
+                            settings->unk115[1] = j;
+                            settings->unk115[0] = curRacer->unk2;
+                            bestRacerTime = curRacerLapTime;
+                        }
+                    }
+                    settings->racers[curRacer->unk2].course_time = courseTime;
+                    if (courseTime < bestCourseTime) {
+                        bestCourseTime = courseTime;
+                        settings->timeTrialRacer = curRacer->unk2;
+                        bestRacer = curRacer;
+                    }
+                }
+            }
+        }
+    }
+    settings->display_times = 0;
+    if (gIsTimeTrial) {
+        temp = D_8011AE82;
+        if ((temp >= 3) || (temp < 0)) {
+            temp = 0;
+        }
+        settings->display_times = 1;
+        if ((settings->unk115[0] == 0)) {
+            if((settings->flapTimesPtr[temp][settings->courseId] == 0) || (bestRacerTime < settings->flapTimesPtr[temp][settings->courseId])) {
+                settings->flapTimesPtr[temp][settings->courseId] = bestRacerTime;
+                settings->racers[settings->unk115[0]].best_times |= 1 << settings->unk115[1];
+            }
+        }
+        if ((settings->timeTrialRacer == 0)) {
+            if((settings->courseTimesPtr[temp][settings->courseId] == 0) || (bestCourseTime < settings->courseTimesPtr[temp][settings->courseId])) {
+                settings->courseTimesPtr[temp][settings->courseId] = bestCourseTime;
+                settings->racers[settings->timeTrialRacer].best_times |= 0x80;
+            }
+        }
+        if (((!temp) && (!temp)) && (!temp)){} // Fakematch
+        if (settings->timeTrialRacer == 0) {
+            if ((bestCourseTime < 10800) && ((temp != D_800DC728) || ((func_800599A8() != get_current_map_id())) || (bestCourseTime < D_800DC724))) {
+                D_800DC724 = bestCourseTime;
+                D_800DC728 = D_8011AE82;
+                D_800DC72C = settings->racers[0].character;
+                func_80059984(get_current_map_id());
+                gHasGhostToSave = 1;
+            }
+            if (osTvType == TV_TYPE_PAL) {
+                bestCourseTime = (bestCourseTime * 6) / 5;
+            }
+            if (bestCourseTime < gTTGhostTimeToBeat) {
+                if (gTimeTrialStaffGhost) {
+                    tt_ghost_beaten(get_current_map_id(), &bestRacer->playerIndex);
+                } else {
+                    play_time_trial_end_message(&bestRacer->playerIndex);
+                }
+            } else {
+                play_time_trial_end_message(&bestRacer->playerIndex);
+            }
+        }
+    }
+}
 
 s32 func_8001B288(void) {
     if (func_800599A8() != get_current_map_id()) {

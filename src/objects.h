@@ -480,6 +480,7 @@ void func_8001E6EC(s8);
 Object *func_8000FD54(s32 objectHeaderIndex);
 void func_80015348(s32 startIndex, s32 lastIndex);
 void func_80016748(Object *obj0, Object *obj1);
+void func_8001AE64(void);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
