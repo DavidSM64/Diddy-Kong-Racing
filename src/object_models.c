@@ -125,7 +125,7 @@ Object_68 *func_8005F99C(s32 arg0, s32 arg1) {
     objMdl->triangles = (Triangle*) ((s32) objMdl->triangles + (u8 *) objMdl);
     objMdl->batches = (TriangleBatchInfo *) ((s32) objMdl->batches + (u8 *) objMdl);
     objMdl->unk14 = (s16 *) ((s32) objMdl->unk14 + (u8 *) objMdl);
-    objMdl->unk1C = (s8 *) ((s32) objMdl->unk1C + (u8 *) objMdl);
+    objMdl->unk1C = (s16 *) ((s32) objMdl->unk1C + (u8 *) objMdl);
     objMdl->unk4C = (s32 *) ((s32) objMdl->unk4C + (u8 *) objMdl);
     objMdl->unk30 = 1;
     objMdl->unkC = 0;

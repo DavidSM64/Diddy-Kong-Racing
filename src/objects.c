@@ -3629,7 +3629,89 @@ void func_80016500(Object *obj, Object_Racer *racer) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80016748.s")
+void func_80016748(Object *obj0, Object *obj1) {
+    ObjectModel *objModel;
+    s32 i;
+    f32 temp;
+
+#ifdef AVOID_UB
+    Matrix obj1TransformMtx;
+#else
+    // THIS IS A HACK! Supposed to be a Matrix, but the stack ended up being too big.
+    f32 pad[2];
+    f32 obj1TransformMtx[4][3]; 
+#endif
+
+    f32 xDiff;
+    f32 yDiff;
+    f32 zDiff;
+    ObjectInteraction *obj1Interact;
+    ObjectInteraction *obj0Interact;
+    Object_Racer *racer;
+    f32 distance;
+    f32 radius;
+    Object_68 *obj68;
+
+    if (obj1->unk44 != NULL) {
+        obj68 = (*obj1->unk68);
+        objModel = obj68->objModel;
+        xDiff = obj0->segment.trans.x_position - obj1->segment.trans.x_position;
+        yDiff = obj0->segment.trans.y_position - obj1->segment.trans.y_position;
+        zDiff = obj0->segment.trans.z_position - obj1->segment.trans.z_position;
+        if (!((objModel->unk3C + 50.0) < sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)))) {
+            obj0Interact = obj0->interactObj;
+            obj1Interact = obj1->interactObj; 
+            object_transform_to_matrix(obj1TransformMtx, &obj1->segment.trans);
+            for(i = 0; i < objModel->unk20; i += 2) {
+                xDiff = obj1->unk44[objModel->unk1C[i]].x;
+                yDiff = obj1->unk44[objModel->unk1C[i]].y;
+                zDiff = obj1->unk44[objModel->unk1C[i]].z;
+                guMtxXFMF(obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
+                temp = (((f32) objModel->unk1C[i + 1] / 64) * obj1->segment.trans.scale) * 50.0;
+                xDiff -= obj0->segment.trans.x_position;
+                yDiff -= obj0->segment.trans.y_position;
+                zDiff -= obj0->segment.trans.z_position;
+                distance = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff));
+                temp += obj1Interact->hitboxRadius;
+                if ((distance < temp) && (distance > 0.0f)) {
+                    obj0Interact->flags |= 8;
+                    obj1Interact->flags |= 8;
+                    obj0Interact->obj = obj1;
+                    obj1Interact->obj = obj0;
+                    obj0Interact->distance = 0;
+                    obj1Interact->distance = 0;
+                    radius = (temp - distance) / distance;
+                    distance = 2; // Needed
+                    radius /= distance;
+                    xDiff *= radius;
+                    yDiff *= radius;
+                    zDiff *= radius;
+                    obj0->segment.trans.x_position -= xDiff;
+                    obj0->segment.trans.y_position -= yDiff;
+                    obj0->segment.trans.z_position -= zDiff;
+                    
+                    if (obj0->behaviorId == BHV_RACER) {
+                        racer = &obj0->unk64->racer;
+                        if (!racer->raceFinished) {
+                            func_80072348(racer->playerIndex, 18);
+                        }
+                        if (racer->vehicleID == VEHICLE_HOVERCRAFT) {
+                            if (radius > 0.1) {
+                                obj0->segment.x_velocity -= xDiff;
+                                obj0->segment.z_velocity -= zDiff;
+                            }
+                        } else if (radius > 0.3) {
+                            obj0->segment.x_velocity -= xDiff;
+                            obj0->segment.z_velocity -= zDiff;
+                            racer->velocity = radius * 4.0f;
+                            racer->lateral_velocity = 0.0f;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 void func_80016BC4(Object *obj) {
     s32 i;

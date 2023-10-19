@@ -578,8 +578,8 @@ typedef struct ObjectModel {
     /* 0x14 */ s16 *unk14;
     /* 0x18 */ s16 unk18;
     /* 0x1A */ s16 unk1A;
-    /* 0x1C */ s8 *unk1C;
-    /* 0x20 */ u8 pad20[2];
+    /* 0x1C */ s16 *unk1C;
+    /* 0x20 */ s16 unk20;
     /* 0x22 */ s16 numberOfTextures;
     /* 0x24 */ s16 numberOfVertices;
     /* 0x26 */ s16 numberOfTriangles;
@@ -591,7 +591,7 @@ typedef struct ObjectModel {
     /* 0x32 */ s16 unk32;
     /* 0x34 */ u8 pad34[4];
     /* 0x38 */ TriangleBatchInfo* batches;
-    /* 0x3C */ u8 pad3C[4];
+    /* 0x3C */ f32 unk3C;
     /* 0x40 */ s32* unk40;
     /* 0x44 */ ObjectModel_44* animations;
     /* 0x48 */ s16 numberOfAnimations;
@@ -798,7 +798,7 @@ typedef struct ObjectInteraction {
  /* 0x04 */ f32 x_position;
  /* 0x08 */ f32 y_position;
  /* 0x0C */ f32 z_position;
- /* 0x10 */ u8 hitboxRadius;
+ /* 0x10 */ s8 hitboxRadius;
  /* 0x11 */ u8 unk11;
  /* 0x12 */ u8 pushForce;
  /* 0x13 */ u8 distance;
