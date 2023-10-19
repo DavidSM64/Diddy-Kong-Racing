@@ -1912,7 +1912,71 @@ s32 func_8000FD34(Object *obj, Object_5C *matrices) {
     return sizeof(Object_5C);
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8000FD54.s")
+// Loads an object from object header index
+Object *func_8000FD54(s32 objectHeaderIndex) {
+    s32 modelType;
+    Object *object;
+    ObjectHeader *objHeader;
+    s32 objSize;
+    s32 i;
+    s32 failedToLoadModel;
+    s8 numModelIds;
+    u8 *objectAsRawBytes;
+
+    if (objectHeaderIndex >= gAssetsObjectHeadersTableLength) {
+        objectHeaderIndex = 0;
+    }
+    objHeader = load_object_header(objectHeaderIndex);
+    if (objHeader == NULL) {
+        return NULL;
+    }
+    objSize = (objHeader->numberOfModelIds * 4) + 0x80;
+    object = (Object *) allocate_from_main_pool(objSize, COLOUR_TAG_BLUE);
+    if (object == NULL) {
+        try_free_object_header(objectHeaderIndex);
+        return NULL;
+    }
+    
+    objectAsRawBytes = (u8 *) object;
+    for (i = 0; i < objSize; i++) { objectAsRawBytes[i] = 0; } // Must be one line! (Why not use bzero?)
+    
+    object->segment.trans.flags = OBJ_FLAGS_UNK_0002;
+    object->segment.header = objHeader;
+    object->segment.object.unk2C = objectHeaderIndex;
+    object->unk4A = objectHeaderIndex;
+    object->segment.trans.scale = objHeader->scale;
+    if (objHeader->flags & OBJ_FLAGS_UNK_0080) {
+        object->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
+    }
+    numModelIds = object->segment.header->numberOfModelIds;
+    modelType = object->segment.header->modelType;
+    object->unk68 = (Object_68 **) &object->unk80; 
+    
+    failedToLoadModel = FALSE;
+    if (modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        for(i = 0; i < numModelIds; i++) {
+            object->unk68[i] = func_8005F99C(object->segment.header->modelIds[i], 0);
+            if (object->unk68[i] == NULL) {
+                failedToLoadModel = TRUE;
+            }
+        }
+    } else {
+        for(i = 0; i < numModelIds; i++) {
+            object->unk68[i] = (Object_68 *) func_8007C12C(object->segment.header->modelIds[i], 10);
+            if (object->unk68[i] == NULL) {
+                failedToLoadModel = TRUE;
+            }
+        }
+    }
+    if (failedToLoadModel) {
+        objFreeAssets(object, numModelIds, modelType);
+        try_free_object_header(objectHeaderIndex);
+        free_from_memory_pool(object);
+        return NULL;
+    }
+    
+    return object;
+}
 
 /**
  * Adds the object to the free list.
