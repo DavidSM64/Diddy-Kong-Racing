@@ -404,6 +404,7 @@ void rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon *rocket
 void homing_rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon *rocket);
 void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry);
 void obj_loop_effectbox(Object *obj, s32 updateRate);
+void func_8001EE74(void);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 updateRate);
@@ -446,7 +447,6 @@ void func_8000CBF0(Object*, s32);
 void try_to_collect_egg(Object *, Object_CollectEgg*);
 
 
-void func_8001EE74();
 s32 func_8001F3EC(s32);
 s32 func_80021600(s32);
 void func_8003F2E8(Object *, s32 updateRate);

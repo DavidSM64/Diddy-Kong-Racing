@@ -156,7 +156,7 @@ s8 D_8011AD20;
 s8 D_8011AD21;
 s8 D_8011AD22[2];
 s8 D_8011AD24[2];
-s8 D_8011AD26[2];
+s8 D_8011AD26;
 f32 D_8011AD28;
 s32 D_8011AD2C;
 f32 gCurrentLightIntensity;
@@ -442,7 +442,7 @@ GLOBAL_ASM("asm/non_matchings/objects/decrypt_magic_codes.s")
 void clear_object_pointers(void) {
     s32 i;
 
-    D_8011AD26[0] = 1;
+    D_8011AD26 = TRUE;
     D_8011AD5C = 0;
     D_8011AD60 = 0;
     gFreeListCount = 0;
@@ -4890,7 +4890,26 @@ void func_8001E89C(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001E93C.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001EE74.s")
+
+void func_8001EE74(void) {
+    LevelObjectEntry_Animation *animation;
+    Object *obj;
+    s32 i;
+
+    for (i = 0; i < D_8011AE78; i++) {
+        obj = D_8011AE74[i];
+        animation = &obj->segment.level_entry->animation;
+        if (obj->unk64 == NULL && animation->order == 0 && animation->objectIdToSpawn != -1) {
+            func_8001F23C(obj, animation);
+        }
+        if (D_8011AD26 || animation->channel != 20) {
+            if (obj->unk64 != NULL) {
+                func_8001EFA4(obj, (Object *) obj->unk64);
+            }
+        }
+    }
+    D_8011AD26 = FALSE;
+}
 
 void func_8001EFA4(Object *arg0, Object *animObj) {
     LevelObjectEntry_Animation *animEntry;
