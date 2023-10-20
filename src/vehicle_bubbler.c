@@ -123,13 +123,13 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     racer->animationSpeed += 2.0 * updateRateF;
     while (racer->animationSpeed < 0.0f) {
         racer->animationSpeed += diffX;
-        gfxData->unk10 = -1;
+        gfxData->animationID = -1;
     }
     while (diffX < racer->animationSpeed) {
         racer->animationSpeed -= diffX;
-        gfxData->unk10 = -1;
+        gfxData->animationID = -1;
     }
-    if (gfxData->unk10 == -1 && obj->segment.object.animationID == ANIM_BUBBLER_DAMAGE) {
+    if (gfxData->animationID == -1 && obj->segment.object.animationID == ANIM_BUBBLER_DAMAGE) {
         obj->segment.object.animationID = ANIM_BUBBLER_MOVE;
         racer->animationSpeed = 0.0f;
     }

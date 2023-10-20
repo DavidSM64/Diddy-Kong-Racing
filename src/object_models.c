@@ -207,9 +207,9 @@ Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
     result->unk18 = 0;
     result->unk1A = 0;
     result->objModel = model;
-    result->unk10 = -1;
-    result->unk12 = -1;
-    result->unk1F = 0;
+    result->animationID = -1;
+    result->animationFrame = -1;
+    result->animationTaskNum = 0;
     if (result->unk1E != 0) {
         temp = 0;
         vertex = result->unk4[0];
@@ -469,7 +469,7 @@ void func_80061C0C(Object *obj) {
         }
         if (var_v1 < obj->segment.animFrame >> 4) {
             obj->segment.animFrame = 0;
-            gfxData->unk10 = -1;
+            gfxData->animationID = -1;
         }
     }
 }

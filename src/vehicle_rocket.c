@@ -129,13 +129,13 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     diffX = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
     while (diffX <= racer->animationSpeed) {
         racer->animationSpeed -= diffX;
-        gfxData->unk10 = -1;
+        gfxData->animationID = -1;
     }
     while (racer->animationSpeed <= 0.0f) {
         racer->animationSpeed += diffX;
-        gfxData->unk10 = -1;
+        gfxData->animationID = -1;
     }
-    if (obj->segment.object.animationID == ANIM_ROCKET_DAMAGE && gfxData->unk10 == -1) {
+    if (obj->segment.object.animationID == ANIM_ROCKET_DAMAGE && gfxData->animationID == -1) {
         obj->segment.object.animationID = ANIM_ROCKET_IDLE;
         racer->animationSpeed = 0.0f;
     }

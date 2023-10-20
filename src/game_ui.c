@@ -1167,7 +1167,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
                     }
                 }
             }
-            func_80061D30(ttSWBodyObject);
+            object_animate(ttSWBodyObject);
         }
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC** ) &gCurrentHud->unk340);
         

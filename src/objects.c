@@ -2646,9 +2646,9 @@ void render_3d_model(Object *obj) {
             racerObj = NULL;
         }
         if (obj68->unk20 <= 0) {
-            obj->unk44 = (Vertex *) obj68->unk4[obj68->unk1F];
+            obj->unk44 = (Vertex *) obj68->unk4[obj68->animationTaskNum];
             if (obj68->unk1E == 2) {
-                func_80061D30(obj);
+                object_animate(obj);
             }
             if (obj68->unk1E && objModel->unk40 != NULL) {
                 flags = TRUE;
@@ -2658,7 +2658,7 @@ void render_3d_model(Object *obj) {
                 if (get_viewport_count() != VIEWPORTS_COUNT_1_PLAYER) {
                     flags = FALSE;
                 }
-                obj->unk44 = (Vertex *) obj68->unk4[obj68->unk1F];
+                obj->unk44 = (Vertex *) obj68->unk4[obj68->animationTaskNum];
                 if (obj->behaviorId == BHV_UNK_3F) { // 63 = stopwatchicon, stopwatchhand
                     calc_dyn_light_and_env_map_for_object(objModel, obj, 0, gCurrentLightIntensity);
                 } else if (flags) {
@@ -2673,7 +2673,7 @@ void render_3d_model(Object *obj) {
                 obj68->unk20 = 1;
             }
         }
-        obj->unk44 = (Vertex *) obj68->unk4[obj68->unk1F];
+        obj->unk44 = (Vertex *) obj68->unk4[obj68->animationTaskNum];
         if (obj->behaviorId == BHV_DOOR) {
             func_80011264(objModel, obj);
         }
@@ -3188,7 +3188,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         shear *= scale;
         gfxData = gShieldEffectObject->unk68[shieldType];
         mdl = gfxData->objModel;
-        gShieldEffectObject->unk44 = (Vertex *) gfxData->unk4[gfxData->unk1F];
+        gShieldEffectObject->unk44 = (Vertex *) gfxData->unk4[gfxData->animationTaskNum];
         gDPSetEnvColor(gObjectCurrDisplayList++, 255, 255, 255, 0);
         if (racer->shieldTimer < 64) {
             gDPSetPrimColor(gObjectCurrDisplayList++, 0, 0, 255, 255, 255, racer->shieldTimer * 4);
@@ -3252,7 +3252,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
             gMagnetEffectObject->segment.trans.z_rotation = 0;
             gfxData = *gMagnetEffectObject->unk68;
             mdl = gfxData->objModel;
-            gMagnetEffectObject->unk44 = (Vertex *) gfxData->unk4[gfxData->unk1F];
+            gMagnetEffectObject->unk44 = (Vertex *) gfxData->unk4[gfxData->animationTaskNum];
             opacity = ((D_8011B078[(var_t0 * 4) + 1] * 8) & 0x7F) + 0x80;
             func_8007F594(&gObjectCurrDisplayList, 2, COLOUR_RGBA32(255, 255, 255, opacity), gMagnetColours[racer->magnetModelID]);
             apply_object_shear_matrix(&gObjectCurrDisplayList, &gObjectCurrMatrix, gMagnetEffectObject, obj, shear);

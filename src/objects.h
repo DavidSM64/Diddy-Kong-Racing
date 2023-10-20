@@ -516,7 +516,7 @@ void func_80010994(s32 updateRate);
 void func_800159C8(Object *, Object *);
 void func_80011264(ObjectModel *, Object *);
 void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
-s32 func_80061D30(Object *); //asm func in unknown_062930
+s32 object_animate(Object *obj); //asm func in unknown_062930
 s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3);
 s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3); // NON MATCHING
 

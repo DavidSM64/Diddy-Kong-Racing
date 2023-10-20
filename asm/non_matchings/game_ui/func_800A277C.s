@@ -287,7 +287,7 @@ glabel func_800A277C
 .L800A2B54:
 /* 0A3754 800A2B54 02002025 */  move  $a0, $s0
 .L800A2B58:
-/* 0A3758 800A2B58 0C01874C */  jal   func_80061D30
+/* 0A3758 800A2B58 0C01874C */  jal   object_animate
 /* 0A375C 800A2B5C AFA900A8 */   sw    $t1, 0xa8($sp)
 /* 0A3760 800A2B60 8FA900A8 */  lw    $t1, 0xa8($sp)
 /* 0A3764 800A2B64 00000000 */  nop   

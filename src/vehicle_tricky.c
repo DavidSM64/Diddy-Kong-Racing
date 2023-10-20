@@ -152,13 +152,13 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     while (racer->animationSpeed < 0.0f) {
         racer->animationSpeed += diffX;
-        gfxData->unk10 = -1;
+        gfxData->animationID = -1;
     }
     while (diffX < racer->animationSpeed) {
         racer->animationSpeed -= diffX;
-        gfxData->unk10 = -1;
+        gfxData->animationID = -1;
     }
-    if (gfxData->unk10 == -1 && obj->segment.object.animationID == ANIM_TRICKY_DAMAGE) {
+    if (gfxData->animationID == -1 && obj->segment.object.animationID == ANIM_TRICKY_DAMAGE) {
         obj->segment.object.animationID = racer->unk1CD;
     }
     animFrame = obj->segment.animFrame;
