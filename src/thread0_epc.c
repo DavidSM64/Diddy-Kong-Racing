@@ -180,9 +180,8 @@ void func_800B7460(s32 epc, s32 size, u32 colourTag) {
     }
 }
 #else
-const char sCoreFileName[] = "CORE";
-const char sCoreFileExt[] = "";
-GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B7460.s")
+//Cursed as hell, it doesn't seem to matter what file this is pointing to really.
+GLOBAL_ASM("asm/unknown_062930/func_80061D30.s")
 #endif
 
 /**
