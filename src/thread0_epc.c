@@ -140,10 +140,6 @@ void func_800B71B0(void) {
     while (1) {} // Infinite loop
 }
 
-#if 1
-// Ok, so this is weird... If I remove the last GLOBAL_ASM in this file, 
-// even if it's not included anymore, it breaks get_lockup_status
-// as it can't seem to find the externed statics?
 void func_800B7460(s32 epc, s32 size, u32 colourTag) {
     epcInfo epcinfo;
     s16 sp440[0x200];
@@ -179,10 +175,6 @@ void func_800B7460(s32 epc, s32 size, u32 colourTag) {
         while (1) {} // Infinite loop; waiting for the player to reset the console?
     }
 }
-#else
-//Cursed as hell, it doesn't seem to matter what file this is pointing to really.
-GLOBAL_ASM("asm/unknown_062930/func_80061D30.s")
-#endif
 
 /**
  * Mark the object type given, so if the game crashes while processing it, the debug screen will tell you which object ID is to blame.
@@ -193,6 +185,15 @@ void update_object_stack_trace(s32 index, s32 value) {
         gObjectStackTrace[index] = value;
     }
 }
+
+#if 1
+// Ok, so this is weird... If I remove the last GLOBAL_ASM in this file, 
+// even if it's not included anymore, it breaks get_lockup_status
+// as it can't seem to find the externed statics?
+#else
+//Cursed as hell, it doesn't seem to matter what file this is pointing to really.
+GLOBAL_ASM("asm/unknown_062930/func_80061D30.s")
+#endif
 
 //Called as a check to see if render_epc_lock_up_display should be called.
 s32 get_lockup_status(void) {
