@@ -103,11 +103,11 @@ MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlot
 void *allocate_from_main_pool_safe(s32 size, u32 colourTag) {
     void *temp_v0;
     if (size == 0) {
-        func_800B7460(get_stack_pointer()->unk14, size, colourTag);
+        dump_memory_to_cpak(get_stack_pointer()->unk14, size, colourTag);
     }
     temp_v0 = allocate_from_memory_pool(0, size, colourTag);
     if (temp_v0 == (void *)NULL) {
-        func_800B7460(get_stack_pointer()->unk14, size, colourTag);
+        dump_memory_to_cpak(get_stack_pointer()->unk14, size, colourTag);
     }
     return temp_v0;
 }

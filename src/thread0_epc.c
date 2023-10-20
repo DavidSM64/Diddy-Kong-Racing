@@ -158,7 +158,7 @@ void write_epc_data_to_cpak(void) {
  * Writes epc data to the controller pak when a memory allocation has failed, 
  * but only if CHEAT_EPC_LOCK_UP_DISPLAY is active.
  */
-void func_800B7460(s32 epc, s32 size, u32 colourTag) {
+void dump_memory_to_cpak(s32 epc, s32 size, u32 colourTag) {
     epcInfo epcinfo;
     s16 sp440[0x200];
     u8 sp240[0x200];
