@@ -210,5 +210,6 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
 void func_800B82B4(LevelModel *, LevelHeader *, s32);
 void func_80025510(s32);
 void func_8002C0C4(s32 modelId);
+void func_800304C8(Vec4f *arg0);
 
 #endif

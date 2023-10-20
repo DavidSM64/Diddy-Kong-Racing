@@ -90,10 +90,10 @@ void update_object_stack_trace(s32 arg0, s32 arg1);
 s32 get_lockup_status(void);
 void lockup_screen_loop(s32 arg0);
 void thread0_create(void);
+void func_800B71B0(void);
 
 void thread0_Main(UNUSED void *unused); // Non Matching
-void func_800B7460(s32 *epc, s32 size, s32 mask); // Non Matching
+void func_800B7460(s32 *epc, s32 size, u32 mask); // Non Matching
 void render_epc_lock_up_display(void); // Non Matching
-void func_800B71B0(void); // Non Matching
 
 #endif

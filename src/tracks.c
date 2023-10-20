@@ -107,7 +107,7 @@ unk8011C238 D_8011C238[32]; //Struct sizeof(0xC) / sizeof(12)
 s32 D_8011C3B8[320];
 s32 D_8011C8B8[512];
 s32 D_8011D0B8;
-s32 D_8011D0BC;
+Vec4f *D_8011D0BC;
 TextureHeader *D_8011D0C0;
 Object *D_8011D0C4;
 f32 D_8011D0C8;
@@ -2473,7 +2473,47 @@ s32 func_8002FD74(f32 x0, f32 z0, f32 x1, f32 x2, s32 count, Vec4f *arg5) {
 
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002FF6C.s")
 
+#ifdef NON_EQUIUVALENT
+void func_800304C8(Vec4f *arg0) {
+    s16 found1;
+    s16 found2;
+    s16 found3;
+    f32 temp;
+    f32 arg02x;
+    f32 arg00z;
+    f32 compare;
+    
+    found1 = FALSE;
+    found2 = FALSE;
+    found3 = FALSE;
+    temp = arg0[0].z;
+    arg00z = temp;
+    compare = 0.0f;
+    temp = (D_8011D0C4->segment.trans.z_position - arg0[1].z);
+    
+    if ((((D_8011D0C4->segment.trans.x_position - arg0[0].x) * (arg0[1].z - arg00z)) - ((arg0[1].x - arg0[0].x) * (((0, D_8011D0C4->segment.trans.z_position)) - arg00z))) >= compare) {
+        found1 = TRUE;
+    }
+    if ((((D_8011D0C4->segment.trans.x_position - arg0[1].x) * (arg0[2].z - arg0[1].z)) - (temp * (arg0[2].x - arg0[1].x))) >= compare) {
+        found2 = TRUE;
+    }
+    arg02x = arg0[2].x;
+    if (found1 == found2) {
+        f32 zPosDiff = (arg00z - arg0[2].z);
+        if ((((D_8011D0C4->segment.trans.x_position - arg02x) * zPosDiff) - ((arg0[0].x - arg02x) * (arg02x - arg0[2].z))) >= compare) {
+            found3 = TRUE;
+        }
+        if (found2 == found3) {
+            f32 test = (-(((D_8011D0BC->x * D_8011D0C4->segment.trans.x_position) + (D_8011D0BC->z * D_8011D0C4->segment.trans.z_position)) + D_8011D0BC->w)) / D_8011D0BC->y;
+            if (D_8011D0D0 < test) {
+                D_8011D0D0 = test;
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/tracks/func_800304C8.s")
+#endif
 
 /**
  * Instantly update current fog properties.

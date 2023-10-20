@@ -156,7 +156,7 @@ s8 D_8011AD20;
 s8 D_8011AD21;
 s8 D_8011AD22[2];
 s8 D_8011AD24[2];
-s8 D_8011AD26[2];
+s8 D_8011AD26;
 f32 D_8011AD28;
 s32 D_8011AD2C;
 f32 gCurrentLightIntensity;
@@ -203,9 +203,9 @@ s8 (*D_8011ADCC)[8];
 f32 D_8011ADD0;
 s8 D_8011ADD4;
 s8 D_8011ADD5;
-Object *D_8011ADD8[10];
-s8 D_8011AE00;
-s8 D_8011AE01;
+Object *D_8011ADD8[10]; //Array of OverRidePos objects
+s8 D_8011AE00; //Number of OverRidePos objects in D_8011ADD8
+s8 D_8011AE01; //A boolean? I've seen it either as 0 or 1
 s8 gIsNonCarRacers;
 s8 gIsSilverCoinRace;
 Object *D_8011AE08[16];
@@ -220,8 +220,8 @@ s32 gParticleCount;
 Object *gObjectMemoryPool;
 Object **D_8011AE6C;
 s32 D_8011AE70;
-Object **D_8011AE74;
-s16 D_8011AE78;
+Object **D_8011AE74; //Pointer to an array of Animation objects
+s16 D_8011AE78; //Number of Animation objects in D_8011AE74
 s16 gCutsceneID;
 s16 D_8011AE7C;
 s8 D_8011AE7E;
@@ -442,7 +442,7 @@ GLOBAL_ASM("asm/non_matchings/objects/decrypt_magic_codes.s")
 void clear_object_pointers(void) {
     s32 i;
 
-    D_8011AD26[0] = 1;
+    D_8011AD26 = TRUE;
     D_8011AD5C = 0;
     D_8011AD60 = 0;
     gFreeListCount = 0;
@@ -1422,8 +1422,6 @@ void func_8000E9D0(Object *arg0) {
 
 #ifdef NON_EQUIVALENT
 
-void *func_8005F99C(s32, s32);
-
 Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     s32 objType;
     Object *newObj;
@@ -1914,7 +1912,71 @@ s32 func_8000FD34(Object *obj, Object_5C *matrices) {
     return sizeof(Object_5C);
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8000FD54.s")
+// Loads an object from object header index
+Object *func_8000FD54(s32 objectHeaderIndex) {
+    s32 modelType;
+    Object *object;
+    ObjectHeader *objHeader;
+    s32 objSize;
+    s32 i;
+    s32 failedToLoadModel;
+    s8 numModelIds;
+    u8 *objectAsRawBytes;
+
+    if (objectHeaderIndex >= gAssetsObjectHeadersTableLength) {
+        objectHeaderIndex = 0;
+    }
+    objHeader = load_object_header(objectHeaderIndex);
+    if (objHeader == NULL) {
+        return NULL;
+    }
+    objSize = (objHeader->numberOfModelIds * 4) + 0x80;
+    object = (Object *) allocate_from_main_pool(objSize, COLOUR_TAG_BLUE);
+    if (object == NULL) {
+        try_free_object_header(objectHeaderIndex);
+        return NULL;
+    }
+    
+    objectAsRawBytes = (u8 *) object;
+    for (i = 0; i < objSize; i++) { objectAsRawBytes[i] = 0; } // Must be one line! (Why not use bzero?)
+    
+    object->segment.trans.flags = OBJ_FLAGS_UNK_0002;
+    object->segment.header = objHeader;
+    object->segment.object.unk2C = objectHeaderIndex;
+    object->unk4A = objectHeaderIndex;
+    object->segment.trans.scale = objHeader->scale;
+    if (objHeader->flags & OBJ_FLAGS_UNK_0080) {
+        object->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
+    }
+    numModelIds = object->segment.header->numberOfModelIds;
+    modelType = object->segment.header->modelType;
+    object->unk68 = (Object_68 **) &object->unk80; 
+    
+    failedToLoadModel = FALSE;
+    if (modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        for(i = 0; i < numModelIds; i++) {
+            object->unk68[i] = func_8005F99C(object->segment.header->modelIds[i], 0);
+            if (object->unk68[i] == NULL) {
+                failedToLoadModel = TRUE;
+            }
+        }
+    } else {
+        for(i = 0; i < numModelIds; i++) {
+            object->unk68[i] = (Object_68 *) func_8007C12C(object->segment.header->modelIds[i], 10);
+            if (object->unk68[i] == NULL) {
+                failedToLoadModel = TRUE;
+            }
+        }
+    }
+    if (failedToLoadModel) {
+        objFreeAssets(object, numModelIds, modelType);
+        try_free_object_header(objectHeaderIndex);
+        free_from_memory_pool(object);
+        return NULL;
+    }
+    
+    return object;
+}
 
 /**
  * Adds the object to the free list.
@@ -3379,7 +3441,47 @@ UNUSED void func_800149C0(unk800149C0 *arg0, UNUSED s32 arg1, s32 arg2, s32 arg3
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80014B50.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_80015348.s")
+
+// Sorts objects by distance to the camera.
+void func_80015348(s32 startIndex, s32 lastIndex) {
+    s32 i;
+    s32 didNotSwap;
+    Object *obj;
+
+    if (lastIndex < startIndex) {
+        return;
+    } 
+
+    for (i = startIndex; i <= lastIndex; i++) {
+        obj = gObjPtrList[i];
+        if (obj != NULL) {
+            if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
+                // func_80069DC8 calculates the distance to the camera from a XYZ location.
+                obj->segment.object.distanceToCamera = -func_80069DC8(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+            } else if (obj->segment.header->flags & OBJ_FLAGS_UNK_0080) {
+                obj->segment.object.distanceToCamera += -16000.0f;
+            } else {
+                obj->segment.object.distanceToCamera = -func_80069DC8(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+            }
+        } else {
+            //!@bug obj is NULL here, so it would probably cause a crash. Thankfully, gObjPtrList shouldn't have NULL objects in it.
+            obj->segment.object.distanceToCamera = 0.0f;
+        }
+    }
+        
+    // Keep swapping until all objects are sorted by the distance to the camera.
+    do {
+        didNotSwap = TRUE;
+        for (i = startIndex; i < lastIndex; i++) {
+            if (gObjPtrList[i]->segment.object.distanceToCamera < gObjPtrList[i + 1]->segment.object.distanceToCamera) {
+                obj = gObjPtrList[i];
+                gObjPtrList[i] = gObjPtrList[i + 1];
+                gObjPtrList[i + 1] = obj;
+                didNotSwap = FALSE;
+            }
+        }
+    } while (!didNotSwap);
+}
 
 /**
  * Go through each object and detect potential interactions between each.
@@ -3527,7 +3629,89 @@ void func_80016500(Object *obj, Object_Racer *racer) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80016748.s")
+void func_80016748(Object *obj0, Object *obj1) {
+    ObjectModel *objModel;
+    s32 i;
+    f32 temp;
+
+#ifdef AVOID_UB
+    Matrix obj1TransformMtx;
+#else
+    // THIS IS A HACK! Supposed to be a Matrix, but the stack ended up being too big.
+    f32 pad[2];
+    f32 obj1TransformMtx[4][3]; 
+#endif
+
+    f32 xDiff;
+    f32 yDiff;
+    f32 zDiff;
+    ObjectInteraction *obj1Interact;
+    ObjectInteraction *obj0Interact;
+    Object_Racer *racer;
+    f32 distance;
+    f32 radius;
+    Object_68 *obj68;
+
+    if (obj1->unk44 != NULL) {
+        obj68 = (*obj1->unk68);
+        objModel = obj68->objModel;
+        xDiff = obj0->segment.trans.x_position - obj1->segment.trans.x_position;
+        yDiff = obj0->segment.trans.y_position - obj1->segment.trans.y_position;
+        zDiff = obj0->segment.trans.z_position - obj1->segment.trans.z_position;
+        if (!((objModel->unk3C + 50.0) < sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)))) {
+            obj0Interact = obj0->interactObj;
+            obj1Interact = obj1->interactObj; 
+            object_transform_to_matrix(obj1TransformMtx, &obj1->segment.trans);
+            for(i = 0; i < objModel->unk20; i += 2) {
+                xDiff = obj1->unk44[objModel->unk1C[i]].x;
+                yDiff = obj1->unk44[objModel->unk1C[i]].y;
+                zDiff = obj1->unk44[objModel->unk1C[i]].z;
+                guMtxXFMF(obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
+                temp = (((f32) objModel->unk1C[i + 1] / 64) * obj1->segment.trans.scale) * 50.0;
+                xDiff -= obj0->segment.trans.x_position;
+                yDiff -= obj0->segment.trans.y_position;
+                zDiff -= obj0->segment.trans.z_position;
+                distance = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff));
+                temp += obj1Interact->hitboxRadius;
+                if ((distance < temp) && (distance > 0.0f)) {
+                    obj0Interact->flags |= 8;
+                    obj1Interact->flags |= 8;
+                    obj0Interact->obj = obj1;
+                    obj1Interact->obj = obj0;
+                    obj0Interact->distance = 0;
+                    obj1Interact->distance = 0;
+                    radius = (temp - distance) / distance;
+                    distance = 2; // Needed
+                    radius /= distance;
+                    xDiff *= radius;
+                    yDiff *= radius;
+                    zDiff *= radius;
+                    obj0->segment.trans.x_position -= xDiff;
+                    obj0->segment.trans.y_position -= yDiff;
+                    obj0->segment.trans.z_position -= zDiff;
+                    
+                    if (obj0->behaviorId == BHV_RACER) {
+                        racer = &obj0->unk64->racer;
+                        if (!racer->raceFinished) {
+                            func_80072348(racer->playerIndex, 18);
+                        }
+                        if (racer->vehicleID == VEHICLE_HOVERCRAFT) {
+                            if (radius > 0.1) {
+                                obj0->segment.x_velocity -= xDiff;
+                                obj0->segment.z_velocity -= zDiff;
+                            }
+                        } else if (radius > 0.3) {
+                            obj0->segment.x_velocity -= xDiff;
+                            obj0->segment.z_velocity -= zDiff;
+                            racer->velocity = radius * 4.0f;
+                            racer->lateral_velocity = 0.0f;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 void func_80016BC4(Object *obj) {
     s32 i;
@@ -3569,7 +3753,59 @@ Object *func_80016C68(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis)
     return NULL;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80016DE8.s")
+s32 func_80016DE8(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **arg5) {
+    f32 distances[8];
+    s32 i;
+    s32 j;
+    f32 xDiff;
+    f32 yDiff;
+    f32 zDiff;
+    s32 result;
+    Object *racerObj;
+    Object_Racer *racer;
+    Object *swapObj;
+    f32 swapf;
+
+    result = 0;
+    if (gNumRacers > 0) {
+        for(i = 0; i < gNumRacers; i++) {
+            racerObj = (*gRacers)[i];
+            racer = &racerObj->unk64->racer;
+            if ((racer->playerIndex >= 0) && (racer->playerIndex < 4)) {
+                if (is2dCheck) {
+                    xDiff = racerObj->segment.trans.x_position - x;
+                    zDiff = racerObj->segment.trans.z_position - z;
+                    yDiff = sqrtf((xDiff * xDiff) + (zDiff * zDiff));
+                } else {
+                    xDiff = racerObj->segment.trans.x_position - x;
+                    yDiff = racerObj->segment.trans.y_position - y;
+                    zDiff = racerObj->segment.trans.z_position - z;
+                    yDiff = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff));
+                }
+                if (yDiff < radius) {
+                    distances[result] = yDiff;
+                    arg5[result] = (*gRacers)[i];
+                    result++;
+                }
+            }
+        }
+        if (result >= 2) {
+            for(i = result - 1; i > 0; i--) {
+                for(j = 0; j < i; j++) {
+                   if(distances[j+1] < distances[j]) {
+                       swapf = distances[j];
+                       swapObj = arg5[j];
+                       distances[j] = distances[j+1];
+                       arg5[j] = arg5[j+1];
+                       distances[j+1] = swapf;
+                       arg5[j+1] = swapObj;
+                   }
+                }
+            }
+        }
+    }
+    return result;
+}
 
 void func_8001709C(Object *obj) {
     ObjectTransform sp78;
@@ -3797,7 +4033,98 @@ u32 get_balloon_cutscene_timer(void) {
     return gBalloonCutsceneTimer;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001AE64.s")
+void func_8001AE64(void) {
+    s32 bestCourseTime;
+    s32 bestRacerTime;
+    s32 i;
+    s32 courseTime;
+    s32 temp;
+    s32 curRacerLapTime;
+    s32 j;
+    Object_Racer *curRacer;
+    Object_Racer *bestRacer;
+    Settings *settings;
+    LevelHeader* levelHeader;
+
+    levelHeader = get_current_level_header();
+    settings = get_settings();
+    settings->timeTrialRacer = 0;
+    settings->unk115[1] = 0;
+    settings->unk115[0] = 0;
+    bestCourseTime = 36001;
+    bestRacerTime = 36001;
+    bestRacer = &gRacersByPosition[0]->unk64->racer;
+    for (i = 0; i < gNumRacers; i++) {
+        curRacer = &gRacersByPosition[i]->unk64->racer;
+        if (curRacer->unk2 >= 0) {
+            if (curRacer->unk2 < get_number_of_active_players()) {
+                settings->racers[curRacer->unk2].best_times = 0;
+                temp = curRacer->vehicleIDPrev;
+                if ((temp >= 0) && (temp < 3)) {
+                    courseTime = 0;
+                    for(j = 0; j < levelHeader->laps && j < 5; j++) {
+                       settings->racers[curRacer->unk2].lap_times[j] = curRacer->lap_times[j];
+                        curRacerLapTime = curRacer->lap_times[j];
+                        courseTime += curRacerLapTime;
+                        if (curRacerLapTime < bestRacerTime) {
+                            settings->unk115[1] = j;
+                            settings->unk115[0] = curRacer->unk2;
+                            bestRacerTime = curRacerLapTime;
+                        }
+                    }
+                    settings->racers[curRacer->unk2].course_time = courseTime;
+                    if (courseTime < bestCourseTime) {
+                        bestCourseTime = courseTime;
+                        settings->timeTrialRacer = curRacer->unk2;
+                        bestRacer = curRacer;
+                    }
+                }
+            }
+        }
+    }
+    settings->display_times = 0;
+    if (gIsTimeTrial) {
+        temp = D_8011AE82;
+        if ((temp >= 3) || (temp < 0)) {
+            temp = 0;
+        }
+        settings->display_times = 1;
+        if ((settings->unk115[0] == 0)) {
+            if((settings->flapTimesPtr[temp][settings->courseId] == 0) || (bestRacerTime < settings->flapTimesPtr[temp][settings->courseId])) {
+                settings->flapTimesPtr[temp][settings->courseId] = bestRacerTime;
+                settings->racers[settings->unk115[0]].best_times |= 1 << settings->unk115[1];
+            }
+        }
+        if ((settings->timeTrialRacer == 0)) {
+            if((settings->courseTimesPtr[temp][settings->courseId] == 0) || (bestCourseTime < settings->courseTimesPtr[temp][settings->courseId])) {
+                settings->courseTimesPtr[temp][settings->courseId] = bestCourseTime;
+                settings->racers[settings->timeTrialRacer].best_times |= 0x80;
+            }
+        }
+        if (((!temp) && (!temp)) && (!temp)){} // Fakematch
+        if (settings->timeTrialRacer == 0) {
+            if ((bestCourseTime < 10800) && ((temp != D_800DC728) || ((func_800599A8() != get_current_map_id())) || (bestCourseTime < D_800DC724))) {
+                D_800DC724 = bestCourseTime;
+                D_800DC728 = D_8011AE82;
+                D_800DC72C = settings->racers[0].character;
+                func_80059984(get_current_map_id());
+                gHasGhostToSave = 1;
+            }
+            if (osTvType == TV_TYPE_PAL) {
+                bestCourseTime = (bestCourseTime * 6) / 5;
+            }
+            if (bestCourseTime < gTTGhostTimeToBeat) {
+                if (gTimeTrialStaffGhost) {
+                    tt_ghost_beaten(get_current_map_id(), &bestRacer->playerIndex);
+                } else {
+                    play_time_trial_end_message(&bestRacer->playerIndex);
+                }
+            } else {
+                play_time_trial_end_message(&bestRacer->playerIndex);
+            }
+        }
+    }
+}
 
 s32 func_8001B288(void) {
     if (func_800599A8() != get_current_map_id()) {
@@ -4865,7 +5192,41 @@ UNUSED s32 get_object_list_index(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001E4C4.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001E6EC.s")
+
+void func_8001E6EC(s8 arg0) {
+    LevelObjectEntry_OverridePos *overridePosEntry;
+    Object *overridePosObj;
+    Object_OverridePos *overridePos;
+    s32 i;
+    s32 j;
+    s32 someBool;
+    Object_64 *unk64;
+
+    for (i = 0; i < D_8011AE00; i++) {
+        overridePosObj = D_8011ADD8[i];
+        overridePosEntry = &overridePosObj->segment.level_entry->overridePos;
+        overridePos = (Object_OverridePos*)overridePosObj->unk64;
+        if ((overridePosEntry->cutsceneId == gCutsceneID) || ((overridePosEntry->cutsceneId == 20))) {
+            for (j = 0; (j < D_8011AE78) && (overridePosEntry->behaviorId != D_8011AE74[j]->properties.animatedObj.behaviourID); j++) {}
+            if (j != D_8011AE78 && D_8011AE74[j]->unk64 != NULL) {
+                someBool = (D_8011AE74[j]->unk64->animation.unk5C) ? FALSE : TRUE;
+                if (arg0 != someBool) {
+                    unk64 = D_8011AE74[j]->unk64;
+                    overridePos->x = unk64->animation.x;
+                    overridePos->y = unk64->animation.y;
+                    overridePos->z = unk64->animation.z;
+                    overridePos->anim = &unk64->animation;
+                    unk64->animation.x = overridePosObj->segment.trans.x_position;
+                    unk64->animation.y = overridePosObj->segment.trans.y_position;
+                    unk64->animation.z = overridePosObj->segment.trans.z_position;
+                }
+            } else {
+                overridePos->anim = NULL;
+            }
+        }
+    }
+    D_8011AE01 = FALSE;
+}
 
 void func_8001E89C(void) {
     s32 i;
@@ -4892,7 +5253,26 @@ void func_8001E89C(void) {
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8001E93C.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8001EE74.s")
+
+void func_8001EE74(void) {
+    LevelObjectEntry_Animation *animation;
+    Object *obj;
+    s32 i;
+
+    for (i = 0; i < D_8011AE78; i++) {
+        obj = D_8011AE74[i];
+        animation = &obj->segment.level_entry->animation;
+        if (obj->unk64 == NULL && animation->order == 0 && animation->objectIdToSpawn != -1) {
+            func_8001F23C(obj, animation);
+        }
+        if (D_8011AD26 || animation->channel != 20) {
+            if (obj->unk64 != NULL) {
+                func_8001EFA4(obj, (Object *) obj->unk64);
+            }
+        }
+    }
+    D_8011AD26 = FALSE;
+}
 
 void func_8001EFA4(Object *arg0, Object *animObj) {
     LevelObjectEntry_Animation *animEntry;
@@ -4928,8 +5308,8 @@ void func_8001EFA4(Object *arg0, Object *animObj) {
     anim->unk2A = normalise_time(animEntry->animationStartDelay);
     animObj->segment.object.animationID = animEntry->objAnimIndex;
     animObj->segment.animFrame = animEntry->unk16;
-    anim->unk14 = animEntry->objAnimSpeed;
-    anim->unk10 = 0;
+    anim->z = animEntry->objAnimSpeed;
+    anim->y = 0;
     anim->unk2C = animEntry->objAnimLoopType;
     anim->unk2E = animEntry->rotateType;
     anim->unk3E = animEntry->nextAnim;

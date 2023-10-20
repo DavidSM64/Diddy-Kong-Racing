@@ -535,6 +535,8 @@ typedef struct LevelObjectEntry_GroundZipper {
 
 typedef struct LevelObjectEntry_OverridePos {
     /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ s8 behaviorId;
+    /* 0x09 */ s8 cutsceneId;
 } LevelObjectEntry_OverridePos;
 
 typedef struct LevelObjectEntry_WizpigShip {

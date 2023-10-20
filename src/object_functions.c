@@ -4953,12 +4953,12 @@ void obj_init_rangetrigger(UNUSED Object *obj, UNUSED LevelObjectEntry_RangeTrig
 
 /* Official name: rangetriggerControl */
 void obj_loop_rangetrigger(Object *obj, s32 updateRate) {
-    UNUSED s32 temp;
+    UNUSED s32 pad;
     LevelObjectEntry_RangeTrigger *level_entry;
-    unk80042178 sp20;
+    Object *objs[8];
 
     level_entry = &obj->segment.level_entry->rangeTrigger;
-    if (func_80016DE8(obj->segment.trans.x_position, 0, obj->segment.trans.z_position, (f32)level_entry->unk8, 1, &sp20) > 0) {
+    if (func_80016DE8(obj->segment.trans.x_position, 0, obj->segment.trans.z_position, level_entry->unk8, 1, objs) > 0) {
         obj->unk74 = level_entry->unkA;
     } else {
         obj->unk74 = 0;
@@ -5029,7 +5029,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
         if (frog->squishCooldown > 0) {
             frog->squishCooldown -= updateRate;
         }
-        if (func_80016DE8(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 96.0f, 1, (unk80042178 *) &racerObj) > 0) {
+        if (func_80016DE8(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 96.0f, 1, &racerObj) > 0) {
             diffX = obj->segment.trans.x_position - racerObj->segment.trans.x_position;
             diffY = obj->segment.trans.y_position - racerObj->segment.trans.y_position;
             diffZ = obj->segment.trans.z_position - racerObj->segment.trans.z_position;
@@ -5115,7 +5115,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
             move_object(obj, 0.0f, sp6C, 0.0f);
         }
         if (frog->squishCooldown <= 0 && (frog->hopFrame < 6 || frog->hopFrame >= 27)) {
-            if (func_80016DE8(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 40.0f, 0, (unk80042178 *) &racerObj)) {
+            if (func_80016DE8(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 40.0f, 0, &racerObj)) {
                 if (frog->drumstick) {
                     play_sound_at_position(SOUND_VOICE_DRUMSTICK_POSITIVE2, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                     set_eeprom_settings_value(2);

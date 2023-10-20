@@ -17,12 +17,6 @@
 UNUSED const char D_800E8E70[] = "\nAssertion failed: '%s' in file %s, line %d\n";
 UNUSED const char D_800E8EA0[] = "\nAssertion failed: '%s' in file %s, line %d\n";
 UNUSED const char D_800E8ED0[] = ">fault< ";
-const char D_800E8EDC[] = "CORE";
-const char D_800E8EE4[4] = { 0, 0, 0, 0 };
-const char sCoreFileName1[] = "CORE";
-const char sCoreFileExt1[] = { 0, 0, 0, 0 };
-const char sCoreFileName2[] = "CORE";
-const char sCoreFileExt2[] = { 0, 0, 0, 0 };
 
 /*********************************/
 
@@ -85,8 +79,12 @@ void func_800B70D0(void) {
     OSThread *node = __osGetActiveQueue();
     while (node->priority != -1) {
         if (node->priority == 0) {
-            node->context.sr &= 0xFFFF00FE;
-            node->context.sr |= 0x6C01;
+            node->context.sr &= ~(SR_IMASK | SR_IE);
+            //node->context.sr |= (0x6C01);
+            //Pretty sure these are the flags
+            node->context.sr |= ((SR_SX | SR_UX | SR_KSU_SUP | SR_ERL) << SR_IMASKSHIFT) | SR_IE;
+            //Could be this though.
+            //node->context.sr | = (SR_IBIT7 | SR_IBIT6 | SR_IBIT4 | SR_IBIT3 | SR_IE);
             break;
         }
         node = node->tlnext;
@@ -96,51 +94,92 @@ void func_800B70D0(void) {
 void func_800B7144(void) {
     OSThread *node = __osGetActiveQueue();
     while (node->priority != -1) {
-        if ((node->priority > 0) && (node->priority < 128)) {
-            osStopThread((OSThread *)&node->next);
+        if (node->priority > OS_PRIORITY_IDLE && node->priority <= OS_PRIORITY_APPMAX) {
+            osStopThread((OSThread *) &node->next);
         }
         node = node->tlnext;
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B71B0.s")
+void func_800B71B0(void) {
+    OSThread *thread;
+    UNUSED s16 sp444[0x200];
+    u8 sp244[0x200];
+    u8 sp44[0x200];
+    s16 *v0;
+    s32 i;
+    s32 currentCount;
+    s32 maxCount;
+    u8 zero;
+    
+    for (thread = __osGetActiveQueue(); thread->priority != -1; thread = thread->tlnext) {
+        if (thread->priority > OS_PRIORITY_IDLE && thread->priority <= OS_PRIORITY_APPMAX) {
+            if (thread->flags & 2 || thread->flags & 1) {
+                break;
+            }
+        }
+    }
+    
+    if (thread->priority != -1) {
+        thread->context.fp0.f.f_odd = gObjectStackTrace[0];
+        thread->context.fp0.f.f_even = gObjectStackTrace[1];
+        thread->context.fp2.f.f_odd = gObjectStackTrace[2];
+        bcopy(thread, sp44, sizeof(epcInfo));
+        bcopy((void *) thread->context.sp, sp244, sizeof(sp244));
+        zero = 0; // Why is this needed to match?
+        v0 = func_80024594(&currentCount, &maxCount);
+        for (i = zero; i < maxCount; i++) {
+            sp444[i] = v0[currentCount];
+            currentCount--;
+            if (currentCount < zero) {
+                currentCount += maxCount;
+            }
+        }
+        write_controller_pak_file(0, -1, "CORE", "", sp44, sizeof(sp44) + sizeof(sp244) + sizeof(sp444));
+    }
+    while (1) {} // Infinite loop
+}
 
 #ifdef NON_EQUIVALENT
 //Rename mask to colourTag?
-void func_800B7460(s32 *epc, s32 size, s32 mask) {
-    epcInfo sp840;
+void func_800B7460(s32 *epc, s32 size, u32 mask) {
+    epcInfo epcinfo;
     s16 sp440[0x200];
     u8 sp240[0x200];
-    epcInfo sp40;
-    s32 sp38;
+    u8 sp40[0x200];
     s16 *v0;
+    s32 currentCount;
     s32 i;
+    u8 zero;
 
     // This is checking if the EPC cheat is active
     if (get_filtered_cheats() & CHEAT_EPC_LOCK_UP_DISPLAY) {
-        bzero(&sp840, sizeof(epcInfo));
-        sp840.a0 = size;
-        sp840.a1 = mask;
-        sp840.epc = epc;
-        sp840.cause = -1;
-        sp840.objectStackTrace[0] = gObjectStackTrace[0];
-        sp840.objectStackTrace[1] = gObjectStackTrace[1];
-        sp840.objectStackTrace[2] = gObjectStackTrace[2];
-        bcopy(&sp840, &sp40, sizeof(epcInfo));
-        bzero(&sp240, 0x200);
-        v0 = func_80024594(&sp38, &size);
-        for (i = 0; i < size; i++) {
-            sp440[i] = v0[sp38];
-            sp38--;
-            if (sp38 < 0) {
-                sp38 += size;
+        bzero(&epcinfo, sizeof(epcInfo));
+        epcinfo.epc = epc;
+        epcinfo.a0 = size;
+        epcinfo.a1 = mask;
+        epcinfo.cause = -1;
+        epcinfo.objectStackTrace[0] = gObjectStackTrace[0];
+        epcinfo.objectStackTrace[1] = gObjectStackTrace[1];
+        epcinfo.objectStackTrace[2] = gObjectStackTrace[2];
+        bcopy(&epcinfo, &sp40, sizeof(epcInfo));
+        bzero(&sp240, sizeof(sp240));
+        zero = 0; // Why is this needed to match?
+        v0 = func_80024594(&currentCount, &size);
+        for (i = zero; i < size; i++) {
+            sp440[i] = v0[currentCount];
+            currentCount--;
+            if (currentCount < zero) {
+                currentCount += size;
             }
         }
-        write_controller_pak_file(0, -1, sCoreFileName1, sCoreFileExt1, &sp40, 0x800);
-        while (1); // Infinite loop; waiting for the player to reset the console?
+        write_controller_pak_file(0, -1, "CORE", "", &sp40, sizeof(sp40) + sizeof(sp240) + sizeof(sp440));
     }
+    while (1) {} // Infinite loop; waiting for the player to reset the console?
 }
 #else
+const char sCoreFileName[] = "CORE";
+const char sCoreFileExt[] = "";
 GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B7460.s")
 #endif
 
@@ -170,7 +209,7 @@ s32 get_lockup_status(void) {
         sLockupStatus = 0;
         // Looks like it reads EpcInfo data from the controller pak, which is interesting
         if ((get_si_device_status(controllerIndex) == CONTROLLER_PAK_GOOD) &&
-            (get_file_number(controllerIndex, (char *)sCoreFileName2, (char *)sCoreFileExt2, &fileNum) == CONTROLLER_PAK_GOOD) &&
+            (get_file_number(controllerIndex, "CORE", "", &fileNum) == CONTROLLER_PAK_GOOD) &&
             (read_data_from_controller_pak(controllerIndex, fileNum, dataFromControllerPak, 0x800) == CONTROLLER_PAK_GOOD)) {
             bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(epcInfo));
             bcopy(&sp220, &D_801299B0, sizeof(sp220));

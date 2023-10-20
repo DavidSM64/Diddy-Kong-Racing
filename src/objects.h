@@ -476,16 +476,20 @@ void process_object_interactions(void);
 void render_3d_model(Object *obj);
 void func_80022E18(s32 arg0);
 void func_8001BF20(void);
+void func_8001E6EC(s8);
+Object *func_8000FD54(s32 objectHeaderIndex);
+void func_80015348(s32 startIndex, s32 lastIndex);
+void func_80016748(Object *obj0, Object *obj1);
+void func_8001AE64(void);
+s32 func_80016DE8(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **arg5);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
 void calc_dynamic_lighting_for_object_2(Object *, ObjectModel *, s16, f32);
 void decrypt_magic_codes(s32 *arg0, s32 length);
 s32 func_80014814(s32 *);
-void func_80015348(s32, s32);
 Object *spawn_object(LevelObjectEntryCommon *entry, s32);
 s32 func_8001F460(Object*, s32, Object*);
-s32 func_80016DE8(f32, f32, f32, f32, s32, unk80042178 *);
 void func_8000B750(Object *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_80018CE0(Object* obj, f32 xPos, f32 yPos, f32 zPos, s32 updateRate);
 s32 func_800185E4(s8, Object* obj, f32 xPos, f32 yPos, f32 zPos, f32* checkpointDistance, u8*); 
@@ -506,16 +510,13 @@ void func_80019808(s32 updateRate);
 void func_8001A8F4(s32 updateRate);
 void func_80014090(Object*, s32, ObjectHeader*);
 void func_80008438(Object**, s32, s32);
-void func_8001E6EC(s8);
 void func_8001E89C(void);
 void func_800230D0(Object*, Object_Racer*);
 void func_80010994(s32 updateRate);
 void func_800159C8(Object *, Object *);
-void func_80016748(Object *, Object *);
 void func_80011264(ObjectModel *, Object *);
 void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
 s32 func_80061D30(Object *); //asm func in unknown_062930
-Object *func_8000FD54(s32);
 s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3);
 s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3); // NON MATCHING
 

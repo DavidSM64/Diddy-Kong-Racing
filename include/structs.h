@@ -334,7 +334,7 @@ typedef struct Settings {
   /* 0x0050 */ u32 filename;
   /* 0x0054 */ Racer racers[8];
   /* 0x0114 */ s8 timeTrialRacer;
-  /* 0x0115 */ char unk115[2];
+  /* 0x0115 */ s8 unk115[2];
   /* 0x0117 */ u8 display_times;
 } Settings;
 
@@ -578,11 +578,8 @@ typedef struct ObjectModel {
     /* 0x14 */ s16 *unk14;
     /* 0x18 */ s16 unk18;
     /* 0x1A */ s16 unk1A;
-    /* 0x1C */ s8 unk1C;
-    /* 0x1D */ s8 unk1D;
-    /* 0x1E */ s8 unk1E;
-    /* 0x1F */ s8 unk1F;
-    /* 0x20 */ u8 pad20[2];
+    /* 0x1C */ s16 *unk1C;
+    /* 0x20 */ s16 unk20;
     /* 0x22 */ s16 numberOfTextures;
     /* 0x24 */ s16 numberOfVertices;
     /* 0x26 */ s16 numberOfTriangles;
@@ -591,14 +588,15 @@ typedef struct ObjectModel {
     /* 0x2E */ u8 unk2E;
     /* 0x2F */ char pad2F[1];
     /* 0x30 */ s16 unk30;
-    /* 0x32 */ u8 pad32[6];
+    /* 0x32 */ s16 unk32;
+    /* 0x34 */ u8 pad34[4];
     /* 0x38 */ TriangleBatchInfo* batches;
-    /* 0x3C */ u8 pad3C[4];
+    /* 0x3C */ f32 unk3C;
     /* 0x40 */ s32* unk40;
     /* 0x44 */ ObjectModel_44* animations;
     /* 0x48 */ s16 numberOfAnimations;
     /* 0x4A */ s16 unk4A;
-    /* 0x4C */ u8 pad4C[4];
+    /* 0x4C */ s32 *unk4C;
     /* 0x50 */ s16 unk50;
     /* 0x52 */ s16 unk52;
 } ObjectModel;      
@@ -800,7 +798,7 @@ typedef struct ObjectInteraction {
  /* 0x04 */ f32 x_position;
  /* 0x08 */ f32 y_position;
  /* 0x0C */ f32 z_position;
- /* 0x10 */ u8 hitboxRadius;
+ /* 0x10 */ s8 hitboxRadius;
  /* 0x11 */ u8 unk11;
  /* 0x12 */ u8 pushForce;
  /* 0x13 */ u8 distance;
@@ -915,9 +913,9 @@ typedef struct Object_Animation {
   /* 0x00 */ f32 unk0;
   /* 0x04 */ f32 unk4;
   /* 0x08 */ f32 unk8;
-  /* 0x0C */ s32 unkC;
-  /* 0x10 */ f32 unk10;
-  /* 0x14 */ f32 unk14; 
+  /* 0x0C */ f32 x;
+  /* 0x10 */ f32 y;
+  /* 0x14 */ f32 z; 
   /* 0x18 */ u8 *unk18; 
   /* 0x1C */ struct Object *unk1C;
   /* 0x20 */ s32 unk20;
@@ -952,7 +950,16 @@ typedef struct Object_Animation {
   /* 0x45 */ u8 unk45;
   /* 0x46 */ u8 pad46[4];
   /* 0x4A */ s16 unk4A;
+  /* 0x4C */ u8 pad4C[0x10];
+  /* 0x5C */ s32 unk5C;
 } Object_Animation;
+
+typedef struct Object_OverridePos {
+  /* 0x00 */ f32 x;
+  /* 0x04 */ f32 y;
+  /* 0x08 */ f32 z;
+  /* 0x0C */ Object_Animation *anim;
+} Object_OverridePos;
 
 typedef struct Object_WeaponBalloon {
   /* 0x0 */ f32 radius;
@@ -1653,9 +1660,10 @@ typedef struct Object_68 {
       ObjectModel *objModel;
       TextureHeader *texHeader;
   };
-  /* 0x04 */ s32 *unk4[3];
+  /* 0x04 */ Vertex *unk4[3];
   /* 0x10 */ s16 unk10;
-  /* 0x12 */ u8 pad12[4];
+  /* 0x12 */ s16 unk12;
+  /* 0x14 */ s16 unk14;
   /* 0x16 */ s16 unk16;
   /* 0x18 */ s16 unk18;
   /* 0x1A */ s16 unk1A;
@@ -1895,10 +1903,6 @@ typedef struct GhostNode {
 typedef struct GhostDataFrame {
     u8 pad0[12];
 } GhostDataFrame;
-
-typedef struct unk80042178 {
-    u8 pad0[0x20];
-} unk80042178;
 
 typedef struct ByteColour {
     u8 red;
