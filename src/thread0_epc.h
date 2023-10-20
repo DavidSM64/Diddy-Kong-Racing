@@ -84,13 +84,13 @@ enum ObjectStackTraceID {
     OBJECT_DRAW
 };
 
-void func_800B70D0(void);
-void func_800B7144(void);
+void enable_interupts_on_main(void);
+void stop_all_threads_except_main(void);
 void update_object_stack_trace(s32 arg0, s32 arg1);
 s32 get_lockup_status(void);
 void lockup_screen_loop(s32 arg0);
 void thread0_create(void);
-void func_800B71B0(void);
+void write_epc_data_to_cpak(void);
 void func_800B7460(s32 epc, s32 size, u32 colourTag);
 void thread0_Main(UNUSED void *unused);
 void render_epc_lock_up_display(void);
