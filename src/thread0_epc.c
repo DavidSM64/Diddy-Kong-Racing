@@ -140,9 +140,11 @@ void func_800B71B0(void) {
     while (1) {} // Infinite loop
 }
 
-#ifdef NON_EQUIVALENT
-//Rename mask to colourTag?
-void func_800B7460(s32 *epc, s32 size, u32 mask) {
+#if 1
+// Ok, so this is weird... If I remove the last GLOBAL_ASM in this file, 
+// even if it's not included anymore, it breaks get_lockup_status
+// as it can't seem to find the externed statics?
+void func_800B7460(s32 epc, s32 size, u32 colourTag) {
     epcInfo epcinfo;
     s16 sp440[0x200];
     u8 sp240[0x200];
@@ -150,32 +152,32 @@ void func_800B7460(s32 *epc, s32 size, u32 mask) {
     s16 *v0;
     s32 currentCount;
     s32 i;
-    u8 zero;
+    UNUSED s32 pad;
 
     // This is checking if the EPC cheat is active
     if (get_filtered_cheats() & CHEAT_EPC_LOCK_UP_DISPLAY) {
         bzero(&epcinfo, sizeof(epcInfo));
-        epcinfo.epc = epc;
+        epcinfo.epc = epc & 0xFFFFFFFFFFFFFFFF; //fakematch
         epcinfo.a0 = size;
-        epcinfo.a1 = mask;
+        epcinfo.a1 = colourTag;
         epcinfo.cause = -1;
         epcinfo.objectStackTrace[0] = gObjectStackTrace[0];
         epcinfo.objectStackTrace[1] = gObjectStackTrace[1];
         epcinfo.objectStackTrace[2] = gObjectStackTrace[2];
         bcopy(&epcinfo, &sp40, sizeof(epcInfo));
         bzero(&sp240, sizeof(sp240));
-        zero = 0; // Why is this needed to match?
         v0 = func_80024594(&currentCount, &size);
-        for (i = zero; i < size; i++) {
+        for (i = 0; i < size; i++) {
             sp440[i] = v0[currentCount];
             currentCount--;
-            if (currentCount < zero) {
+            if (currentCount < 0) {
                 currentCount += size;
             }
         }
-        write_controller_pak_file(0, -1, "CORE", "", &sp40, sizeof(sp40) + sizeof(sp240) + sizeof(sp440));
+        i = sizeof(sp40) + sizeof(sp240) + sizeof(sp440); //fakematch?
+        write_controller_pak_file(0, -1, "CORE", "", sp40, i);
+        while (1) {} // Infinite loop; waiting for the player to reset the console?
     }
-    while (1) {} // Infinite loop; waiting for the player to reset the console?
 }
 #else
 const char sCoreFileName[] = "CORE";
