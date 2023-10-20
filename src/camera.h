@@ -116,7 +116,7 @@ ObjectSegment *get_cutscene_camera_segment(void);
 Matrix *get_projection_matrix_f32(void);
 MatrixS *get_projection_matrix_s16(void);
 Matrix *get_camera_matrix(void);
-f32 func_80069DC8(f32 x, f32 y, f32 z);
+f32 get_distance_to_camera(f32 x, f32 y, f32 z);
 void set_camera_shake_by_distance(f32 x, f32 y, f32 z, f32 dist, f32 magnitude);
 void set_camera_shake(f32 magnitude);
 void func_80067D3C(Gfx **dlist, MatrixS **mats);

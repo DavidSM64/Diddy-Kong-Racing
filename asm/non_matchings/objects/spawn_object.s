@@ -369,7 +369,7 @@ glabel L8000EDE0
 /* 00FB8C 8000EF8C 00000000 */  nop   
 /* 00FB90 8000EF90 01B07821 */  addu  $t7, $t5, $s0
 /* 00FB94 8000EF94 8DE40000 */  lw    $a0, ($t7)
-/* 00FB98 8000EF98 0C017E67 */  jal   func_8005F99C
+/* 00FB98 8000EF98 0C017E67 */  jal   object_model_init
 /* 00FB9C 8000EF9C A3A30037 */   sb    $v1, 0x37($sp)
 /* 00FBA0 8000EFA0 8E580068 */  lw    $t8, 0x68($s2)
 /* 00FBA4 8000EFA4 83A30037 */  lb    $v1, 0x37($sp)

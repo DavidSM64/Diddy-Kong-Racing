@@ -587,7 +587,7 @@ typedef struct ObjectModel {
     /* 0x2A */ u8 pad2A[4];
     /* 0x2E */ u8 unk2E;
     /* 0x2F */ char pad2F[1];
-    /* 0x30 */ s16 unk30;
+    /* 0x30 */ s16 references;
     /* 0x32 */ s16 unk32;
     /* 0x34 */ u8 pad34[4];
     /* 0x38 */ TriangleBatchInfo* batches;

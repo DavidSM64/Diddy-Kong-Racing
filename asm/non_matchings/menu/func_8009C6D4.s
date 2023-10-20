@@ -103,7 +103,7 @@ glabel func_8009C6D4
 /* 09D450 8009C850 AC226550 */   sw    $v0, %lo(gMenuTextures)($at)
 .L8009C854:
 /* 09D454 8009C854 00002825 */  move  $a1, $zero
-/* 09D458 8009C858 0C017E67 */  jal   func_8005F99C
+/* 09D458 8009C858 0C017E67 */  jal   object_model_init
 /* 09D45C 8009C85C AFA70038 */   sw    $a3, 0x38($sp)
 /* 09D460 8009C860 8FA70038 */  lw    $a3, 0x38($sp)
 /* 09D464 8009C864 3C018012 */  lui   $at, %hi(gMenuTextures) # $at, 0x8012

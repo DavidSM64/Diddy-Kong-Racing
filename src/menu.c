@@ -9586,7 +9586,7 @@ void func_8009C508(s32 arg0) {
                     if ((*gAssetsMenuElementIds)[arg0] & 0x4000) {
                         free_object((Object *) (u32) gMenuTextures[arg0]);
                     } else {
-                        func_8005FF40((ObjectModel**)(u32)gMenuTextures[arg0]);
+                        free_3d_model((ObjectModel**)(u32)gMenuTextures[arg0]);
                     }
                 }
             }

@@ -1559,7 +1559,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
             } else if (var_a2 == 1 && arg1 & 8) {
                 curObj->unk68[var_a2] = NULL;
             } else {
-                curObj->unk68[var_a2] = (Object_68 *) func_8005F99C(curObj->segment.header->modelIds[var_a2], sp50);
+                curObj->unk68[var_a2] = (Object_68 *) object_model_init(curObj->segment.header->modelIds[var_a2], sp50);
                 if (curObj->unk68[var_a2] == NULL) {
                     var_v1 = TRUE;
                 }
@@ -1732,7 +1732,7 @@ void objFreeAssets(Object *obj, s32 count, s32 objType) {
     if (objType == OBJECT_MODEL_TYPE_3D_MODEL) { // 3D model
         for (i = 0; i < count; i++) {
             if (obj->unk68[i] != NULL) {
-                func_8005FF40((ObjectModel **) (s32) obj->unk68[i]);
+                free_3d_model((ObjectModel **) (s32) obj->unk68[i]);
             }
         } 
     } else if (objType == OBJECT_MODEL_TYPE_MISC) {
@@ -1955,7 +1955,7 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
     failedToLoadModel = FALSE;
     if (modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
         for(i = 0; i < numModelIds; i++) {
-            object->unk68[i] = func_8005F99C(object->segment.header->modelIds[i], 0);
+            object->unk68[i] = object_model_init(object->segment.header->modelIds[i], 0);
             if (object->unk68[i] == NULL) {
                 failedToLoadModel = TRUE;
             }
@@ -3442,8 +3442,10 @@ UNUSED void func_800149C0(unk800149C0 *arg0, UNUSED s32 arg1, s32 arg2, s32 arg3
 
 GLOBAL_ASM("asm/non_matchings/objects/func_80014B50.s")
 
-// Sorts objects by distance to the camera.
-void func_80015348(s32 startIndex, s32 lastIndex) {
+/**
+ * Takes every object and sorts the main object list by distance to the camera.
+*/
+void sort_objects_by_dist(s32 startIndex, s32 lastIndex) {
     s32 i;
     s32 didNotSwap;
     Object *obj;
@@ -3456,12 +3458,12 @@ void func_80015348(s32 startIndex, s32 lastIndex) {
         obj = gObjPtrList[i];
         if (obj != NULL) {
             if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
-                // func_80069DC8 calculates the distance to the camera from a XYZ location.
-                obj->segment.object.distanceToCamera = -func_80069DC8(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+                // get_distance_to_camera calculates the distance to the camera from a XYZ location.
+                obj->segment.object.distanceToCamera = -get_distance_to_camera(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
             } else if (obj->segment.header->flags & OBJ_FLAGS_UNK_0080) {
                 obj->segment.object.distanceToCamera += -16000.0f;
             } else {
-                obj->segment.object.distanceToCamera = -func_80069DC8(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+                obj->segment.object.distanceToCamera = -get_distance_to_camera(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
             }
         } else {
             //!@bug obj is NULL here, so it would probably cause a crash. Thankfully, gObjPtrList shouldn't have NULL objects in it.

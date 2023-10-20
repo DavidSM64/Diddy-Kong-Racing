@@ -478,7 +478,7 @@ void func_80022E18(s32 arg0);
 void func_8001BF20(void);
 void func_8001E6EC(s8);
 Object *func_8000FD54(s32 objectHeaderIndex);
-void func_80015348(s32 startIndex, s32 lastIndex);
+void sort_objects_by_dist(s32 startIndex, s32 lastIndex);
 void func_80016748(Object *obj0, Object *obj1);
 void func_8001AE64(void);
 s32 func_80016DE8(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **arg5);

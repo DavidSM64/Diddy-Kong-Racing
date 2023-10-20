@@ -949,7 +949,7 @@ void render_level_geometry_and_objects(void) {
     }
 
     reset_render_settings(&gSceneCurrDisplayList);
-    func_80015348(sp160, objCount - 1);
+    sort_objects_by_dist(sp160, objCount - 1);
     visibleFlags = OBJ_FLAGS_INVIS_PLAYER1 << (get_current_viewport() & 1);
 
     for (i = sp160; i < objCount; i++) {
