@@ -34,7 +34,7 @@ typedef struct unk80115D1C {
 
 /* Size: 0x08 bytes */
 typedef struct unk80115D48 {
-    /* 0x00 */ u16 unk0;
+    /* 0x00 */ u16 soundId;
     /* 0x02 */ s16 unk2;
     /* 0x04 */ s32 unk4;
 } unk80115D48;
@@ -71,7 +71,7 @@ void func_80000C68(u8 arg0);
 void set_music_fade_timer(s32 time);
 void func_80000CBC(void);
 void handle_music_fade(u8 updateRate);
-void func_80000FDC(u16 arg0, s32 arg1, f32 arg2);
+void func_80000FDC(u16 soundId, s32 arg1, f32 arg2);
 void func_80001050(void);
 u16 musicGetChanMask(void);
 void func_80001074(u16 arg0);

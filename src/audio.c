@@ -320,11 +320,11 @@ void handle_music_fade(u8 updateRate) {
             D_80115D48[reg_s2].unk2 -= updateRate;
             if (D_80115D48[reg_s2].unk2 <= 0) {
                 j = reg_s2;
-                play_sound_global(D_80115D48[reg_s2].unk0, (s32 *) D_80115D48[reg_s2].unk4);
+                play_sound_global(D_80115D48[reg_s2].soundId, (s32 *) D_80115D48[reg_s2].unk4);
 
                 D_800DC658 -= 1;
                 while (j < D_800DC658) {
-                    D_80115D48[reg_s2].unk0 = D_80115D48[reg_s2 + 1].unk0;
+                    D_80115D48[reg_s2].soundId = D_80115D48[reg_s2 + 1].soundId;
                     D_80115D48[reg_s2].unk2 = D_80115D48[reg_s2 + 1].unk2;
                     D_80115D48[reg_s2].unk4 = D_80115D48[reg_s2 + 1].unk4;
                     j++;
@@ -343,9 +343,9 @@ void handle_music_fade(u8 updateRate) {
     }
 }
 
-void func_80000FDC(u16 arg0, s32 arg1, f32 arg2) {
+void func_80000FDC(u16 soundId, s32 arg1, f32 arg2) {
     if (D_800DC658 < 8) {
-        D_80115D48[D_800DC658].unk0 = arg0;
+        D_80115D48[D_800DC658].soundId = soundId;
         D_80115D48[D_800DC658].unk4 = arg1;
         D_80115D48[D_800DC658].unk2 = arg2 * 60.0f;
         D_800DC658++;

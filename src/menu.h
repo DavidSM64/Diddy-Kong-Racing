@@ -244,16 +244,40 @@ typedef struct unk800E153C {
     u32 unk4; // Flags?
 } unk800E153C;
 
+typedef struct MenuColour {
+    u8 red;
+    u8 green;
+    u8 blue;
+    u8 alpha;
+    u8 opacity;
+} MenuColour;
+
+// Unknown Size
+typedef struct unk80126A80 {
+    u8 pad0[0x13];
+    s8 unk13;
+} unk80126A80;
+
 /* Size: 0x10 bytes */
 typedef struct unk800861C8 {
-    u8 unk0;
-    u8 unk1;
-    u8 unk2;
-    u8 pad3[0x3];
-    u8 controllerIndex;
-    u8 pad7[0x5];
-    u32 fileSize; // Game Data File Size
+  /* 0x00 */ u8 unk0;
+  /* 0x01 */ u8 unk1;
+  /* 0x02 */ u8 unk2;
+  /* 0x03 */ u8 unk3;
+  /* 0x04 */ s16 compressedFilename;
+  /* 0x06 */ u8 controllerIndex;
+  /* 0x07 */ u8 unk7;
+  /* 0x08 */ char *unk8;
+  /* 0x0C */ u32 fileSize; // Game Data File Size
 } unk800861C8;
+
+// Size: 12 bytes
+typedef struct unk80126878 {
+  /* 0x00 */ char *text;
+  /* 0x04 */ s16 x;
+  /* 0x06 */ s16 y;
+  /* 0x08 */ s32 colourIndex;
+} unk80126878;
 
 /* Size: 0x10 bytes */
 typedef struct unk800E0970 {
@@ -490,6 +514,11 @@ void randomise_ai_racer_slots(s32 arg0);
 void func_80081C04(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UNUSED s32 font, s32 alignment);
 void func_8009CA60(s32 stackIndex);
 void func_8008E4EC(void);
+SIDeviceStatus func_800862C4(void);
+void func_8009C6D4(s32 arg0);
+s32 func_80087734(s32 buttonsPressed, s32 yAxis);
+void func_800853D0(unk800861C8 *arg0, s32 x, s32 y);
+void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectOpacity, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -515,26 +544,20 @@ s32 menu_credits_loop(s32 updateRate);
 void func_8007FFEC(s32 arg0);
 void func_800871D8(s32 arg0);
 SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1);
-void func_8009C6D4(s32 arg0);
 void set_D_800DD430(s8 arg0);
 void func_80099E8C(s32 updateRate);
 s32 func_800998E0(s32 arg0);
 void func_80081218(void);
 void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour, TextureHeader *tex);
-void func_800853D0(unk800861C8 *arg0, s32 arg1, s32 arg2);
 void func_8008D8BC(s32 updateRate);
-void renderTrackSelect(s32 arg0, s32 arg1, s8 *arg2, s8 *arg3, s32 arg4, s32 arg5, s32 arg6, DrawTexture *arg7, s32 arg8);
-//Possible names
-//void renderTrackSelect(s32 xPos, s32 yPos, char *levelName, char *arg3, s32 colour, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
+
 s32 func_80095728(Gfx **gfx, MatrixS **mtx, Vertex **vtx, s32 updateRate);
 s32 func_8008F618(Gfx **dlist, MatrixS **mat);
 void func_80093D40(UNUSED s32 updateRate);
 void func_80080BC8(Gfx **);
 void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour0, s32 colour1, s32 colour2, s32 colour3);
 void func_80084854(void);
-s32 func_800862C4(void);
 s32 func_80086AFC(void);
-s32 func_80087734(s32, s32);
 void func_80085B9C(UNUSED s32 updateRate);
 void func_80098774(s32);
 void render_magic_codes_ui(s32 updateRate);
