@@ -212,7 +212,7 @@ s32 D_80126A70;
 s32 D_80126A74;
 s32 D_80126A78;
 s32 D_80126A7C;
-s32 D_80126A80[4];
+unk80126A80 *D_80126A80[4];
 s32 D_80126A90;
 s32 D_80126A94;
 s32 D_80126A98;
@@ -3713,7 +3713,129 @@ s32 func_800876CC(s32 buttonsPressed, UNUSED s32 arg1) {
     return 0;
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_80087734.s")
+s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
+    UNUSED s32 pad[2];
+    s32 sp1C;
+    s32 i;
+    s32 temp;
+
+    temp = gOptionBlinkTimer * 8;
+    if (temp > 255) {
+        temp = 511 - temp;
+    }
+    sp1C = (gMenuOptionCount & 7);
+    for(i = 0; i < D_80126A74; i++) {
+        if (i == D_80126A78) {
+            D_80126A80[i]->unk13 = temp;
+        } else {
+            D_80126A80[i]->unk13 = 0;
+        }
+    }
+    if (buttonsPressed & B_BUTTON || (buttonsPressed & (START_BUTTON | A_BUTTON) && D_80126A74 == (D_80126A78 + 1U))) {
+        play_sound_global(SOUND_MENU_BACK3, NULL);
+        gMenuOptionCount &= ~8;
+        switch (sp1C) {
+            case 0:
+                if (!(buttonsPressed & (START_BUTTON | A_BUTTON))) {
+                    gOpacityDecayTimer = 6;
+                    gMenuOptionCount = 1;
+                }
+                break;
+            case 2:
+                switch (D_800DFADC) {
+                    case 5:
+                        gOpacityDecayTimer = 5;
+                        gMenuOptionCount = 1;
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 9:
+                        D_80126A18 = 0;
+                        break;
+                    case 7:
+                        D_80126A18 = -1;
+                        break;
+                    default:
+                        D_80126A18 = 1;
+                        break;
+                }
+                break;
+            case 4:
+                switch (D_800DFADC) {
+                    case 1:
+                    case 5:
+                        gOpacityDecayTimer = 5;
+                        gMenuOptionCount = 1;
+                        break;
+                    case 2:
+                    case 3:
+                    case 9:
+                        D_80126A1C = 0;
+                        break;
+                    case 7:
+                        D_80126A1C = -1;
+                        break;
+                    default:
+                        D_80126A1C = 1;
+                        break;
+                }
+                break;
+            case 7:
+                switch (D_800DFADC) {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 5:
+                    case 7:
+                        gOpacityDecayTimer = 5;
+                        gMenuOptionCount = 1;
+                        break;
+                    case 9:
+                    case 10:
+                        gMenuOptionCount = 4;
+                        break;
+                }
+                break;
+        }
+    } else if (buttonsPressed & (START_BUTTON | A_BUTTON)) {
+        play_sound_global(SOUND_SELECT2, NULL);
+        gMenuOptionCount &= ~8;
+        switch (D_800DFADC) {
+            case CONTROLLER_PAK_WITH_BAD_ID:
+                reformat_controller_pak(D_800DFAE0);
+                if (sp1C == 4) {
+                    D_80126A1C = 0;
+                } else if (sp1C == 7) {
+                    D_80126A18 = 0;
+                }
+                break;
+            case CONTROLLER_PAK_INCONSISTENT:
+            case CONTROLLER_PAK_BAD_DATA:
+                repair_controller_pak(D_800DFAE0);
+                if (sp1C == 4) {
+                    D_80126A1C = 1;
+                } else if (sp1C == 2) {
+                    D_80126A18 = 1;
+                }
+                break;
+            case RUMBLE_PAK:
+                if (sp1C == 4) {
+                    D_80126A1C = -1;
+                } else {
+                    D_80126A18 = -1;
+                }
+                break;
+        }
+    } else if (yAxis < 0 && D_80126A78 < (D_80126A74 - 1)) {
+        play_sound_global(SOUND_MENU_PICK2, NULL);
+        D_80126A78++;
+    } else if (yAxis > 0 && D_80126A78 > 0) {
+        play_sound_global(SOUND_MENU_PICK2, NULL);
+        D_80126A78--;
+    }
+    return 0;
+}
 
 s32 menu_save_options_loop(s32 updateRate) {
     s32 result;

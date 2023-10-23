@@ -252,6 +252,12 @@ typedef struct MenuColour {
     u8 opacity;
 } MenuColour;
 
+// Unknown Size
+typedef struct unk80126A80 {
+    u8 pad0[0x13];
+    s8 unk13;
+} unk80126A80;
+
 /* Size: 0x10 bytes */
 typedef struct unk800861C8 {
   /* 0x00 */ u8 unk0;
@@ -510,6 +516,7 @@ void func_8009CA60(s32 stackIndex);
 void func_8008E4EC(void);
 SIDeviceStatus func_800862C4(void);
 void func_8009C6D4(s32 arg0);
+s32 func_80087734(s32 buttonsPressed, s32 yAxis);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -552,7 +559,6 @@ void func_80080BC8(Gfx **);
 void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour0, s32 colour1, s32 colour2, s32 colour3);
 void func_80084854(void);
 s32 func_80086AFC(void);
-s32 func_80087734(s32, s32);
 void func_80085B9C(UNUSED s32 updateRate);
 void func_80098774(s32);
 void render_magic_codes_ui(s32 updateRate);
