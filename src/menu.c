@@ -6200,7 +6200,7 @@ void render_file_select_menu(UNUSED s32 updateRate) {
         set_text_font(ASSET_FONTS_BIGFONT);
         set_text_background_colour(0, 0, 0, 0);
         s5 = 10;
-        for (i = 0; i < NUMBER_OF_SAVE_FILES i++) {
+        for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
             if (gSavefileInfo[i].isStarted != 0) {
                 s2 = 0xB;
                 sprite_opaque(FALSE);
