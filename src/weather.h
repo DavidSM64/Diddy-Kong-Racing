@@ -57,8 +57,8 @@ typedef struct unk800E2B4C {
 
 /* Size: 0x18 Bytes */
 typedef struct unk800E2C2C {
-    s16 unk0;
-    s16 unk2;
+    s16 unk0; //tri - u?
+    s16 unk2; //tri - v?
     s16 unk4;
     s16 unk6;
     s16 unk8;
