@@ -260,7 +260,7 @@ typedef struct unk80126A80 {
 
 /* Size: 0x10 bytes */
 typedef struct unk800861C8 {
-  /* 0x00 */ u8 unk0;
+  /* 0x00 */ u8 saveFileType; //SaveFileType enum
   /* 0x01 */ u8 unk1;
   /* 0x02 */ u8 unk2;
   /* 0x03 */ u8 unk3;

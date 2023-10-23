@@ -1140,11 +1140,7 @@ void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 node
 }
 
 //Seems to only be called when used as an argument for func_800860A8. Effectively just returns 0x6700
-//get_ghost_data_file_size()?
-s32 func_80074B1C(void) {
-    //func_80074EB8 Makes extensive use out of 0x1100, and even does a * 6 to it.
-    //func_80075000 Uses 0x1100 once as well.
-    //Another possibility for 0x1100, seems to be from load_blinking_lights_texture which seems to do (0xF5101100 & 0xFFFF);
+s32 get_ghost_data_file_size(void) {
     int x = 0x1100;
     return (&x)[0] * 6 + 0x100;
 }
@@ -1252,7 +1248,7 @@ loop_10:
     start_reading_controller_data(controllerIndex);
     if (ret == CONTROLLER_PAK_CHANGED) {
         if (get_free_space(controllerIndex, &bytesFree, &notesFree) == CONTROLLER_PAK_GOOD) {
-            if ((bytesFree < func_80074B1C()) || ((notesFree == 0))) {
+            if ((bytesFree < get_ghost_data_file_size()) || ((notesFree == 0))) {
                 return CONTROLLER_PAK_FULL;
             }
             /* Duplicate return node #48. Try simplifying control flow for better match */

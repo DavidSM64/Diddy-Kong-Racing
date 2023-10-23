@@ -3390,8 +3390,8 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
     s32 temp;
     
     sp70 = 11;
-    switch (arg0->unk0) {
-        case 1:
+    switch (arg0->saveFileType) {
+        case SAVE_FILE_TYPE_UNK1:
             drawTexture = D_800DFC10;
             texture = gMenuTextures[TEXTURE_SURFACE_BUTTON_WOOD];
             colour = COLOUR_RGBA32(176, 224, 192, 255);
@@ -3410,14 +3410,14 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
             }
             text = gMenuText[ASSET_MENU_TEXT_GAMEPAK];
             break;
-        case 2:
+        case SAVE_FILE_TYPE_UNK2:
             drawTexture = D_800DFC20;
             texture = gMenuTextures[TEXTURE_SURFACE_BUTTON_WOOD];
             colour = COLOUR_RGBA32(176, 224, 192, 255);
             text2 = gMenuText[ASSET_MENU_TEXT_TIMES];
             text = gMenuText[ASSET_MENU_TEXT_GAMEPAK];
             break;
-        case 3:
+        case SAVE_FILE_TYPE_GAME_DATA:
             drawTexture = D_800DFC10;
             texture = gMenuTextures[TEXTURE_UNK_44];
             colour = D_800DFACC[arg0->controllerIndex];
@@ -3437,42 +3437,42 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
                 sp70 = 12;
             }
             break;
-        case 4:
+        case SAVE_FILE_TYPE_TIME_DATA:
             drawTexture = D_800DFC20;
             texture = gMenuTextures[TEXTURE_UNK_44];
             colour = D_800DFACC[arg0->controllerIndex];
             text2 = arg0->unk8;
             text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + arg0->controllerIndex];
             break;
-        case 5:
+        case SAVE_FILE_TYPE_GHOST_DATA:
             drawTexture = D_800DFC30;
             texture = gMenuTextures[TEXTURE_UNK_44];
             colour = D_800DFACC[arg0->controllerIndex];
             text2 = gMenuText[ASSET_MENU_TEXT_GHOSTS];
             text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + arg0->controllerIndex];
             break;
-        case 6:
+        case SAVE_FILE_TYPE_UNKNOWN:
             drawTexture = D_800DFC40;
             texture = gMenuTextures[TEXTURE_UNK_44];
             colour = D_800DFACC[arg0->controllerIndex];
             text2 = arg0->unk8;
             text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + arg0->controllerIndex];
             break;
-        case 8:
+        case SAVE_FILE_TYPE_UNK8:
             drawTexture = D_800DFC50;
             texture = gMenuTextures[TEXTURE_UNK_44];
             colour = D_800DFACC[arg0->controllerIndex];
             text2 = gMenuText[ASSET_MENU_TEXT_EMPTYSLOT];
             text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + arg0->controllerIndex];
             break;
-        case 9:
+        case SAVE_FILE_TYPE_UNK9:
             drawTexture = D_800DFC30;
             texture = gMenuTextures[TEXTURE_UNK_45];
             colour = -1;
             text2 = gMenuText[ASSET_MENU_TEXT_VIEWGHOSTS];
             text = NULL;
             break;
-        case 10:
+        case SAVE_FILE_TYPE_UNKA:
             drawTexture = D_800DFC10;
             text2 = gMenuText[ASSET_MENU_TEXT_GAMEPAKBONUSES];
             texture = gMenuTextures[TEXTURE_SURFACE_BUTTON_WOOD];
@@ -3491,7 +3491,7 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
     if (osTvType == TV_TYPE_PAL) {
         y += 12;
     }
-    if ((arg0->unk0 == 3) || ((arg0->unk0 == 1) && (gSavefileData[arg0->controllerIndex]->newGame == 0))) {
+    if (arg0->saveFileType == SAVE_FILE_TYPE_GAME_DATA || (arg0->saveFileType == SAVE_FILE_TYPE_UNK1 && gSavefileData[arg0->controllerIndex]->newGame == FALSE)) {
         if (osTvType == TV_TYPE_PAL) {
             i = 134;
         } else {
@@ -3598,7 +3598,7 @@ void func_80085B9C(UNUSED s32 updateRate) {
             tempTex++;
             var_s2++;
             yPos += 16;
-        } while(var_s2 != 2);
+        } while(var_s2 < 2);
     }
     if (var_s3) {
         temp_f4 = D_80126BDC;
@@ -3651,8 +3651,8 @@ s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, 
     if (*arg1 != 0) {
         ret = get_free_space(controllerIndex, &arg2[*arg3].fileSize, &sControllerPakNotesFree[controllerIndex]);
         if (ret == CONTROLLER_PAK_GOOD) {
-            if (((s32)arg2[*arg3].fileSize >= fileSize) && (sControllerPakNotesFree[controllerIndex] > 0)) {
-                arg2[*arg3].unk0 = 8; //CONTROLLER_PAK_UNK8 maybe?
+            if (((s32) arg2[*arg3].fileSize >= fileSize) && (sControllerPakNotesFree[controllerIndex] > 0)) {
+                arg2[*arg3].saveFileType = SAVE_FILE_TYPE_UNK8;
                 arg2[*arg3].controllerIndex = controllerIndex;
                 (*arg3)++;
             }
@@ -3678,7 +3678,7 @@ void func_800861C8(unk800861C8 *arg0, s32 *arg1) {
     s32 i;
     for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         if (gSavefileData[i]->newGame) {
-            arg0[*arg1].unk0 = 1;
+            arg0[*arg1].saveFileType = SAVE_FILE_TYPE_UNK1;
             arg0[*arg1].unk1 = 0;
             arg0[*arg1].unk2 = 0;
             arg0[*arg1].controllerIndex = i;
@@ -3707,7 +3707,7 @@ SIDeviceStatus func_800862C4(void) {
     D_80126BDC = 0.0f;
     for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         if (!gSavefileData[i]->newGame) {
-            D_80126A0C[D_80126A08].unk0 = 1;
+            D_80126A0C[D_80126A08].saveFileType = SAVE_FILE_TYPE_UNK1;
             D_80126A0C[D_80126A08].unk1 = 1;
             D_80126A0C[D_80126A08].unk2 = gSavefileData[i]->balloonsPtr[0];
             D_80126A0C[D_80126A08].controllerIndex = i;
@@ -3716,10 +3716,10 @@ SIDeviceStatus func_800862C4(void) {
         }
     }
     
-    D_80126A0C[D_80126A08].unk0 = 2;
+    D_80126A0C[D_80126A08].saveFileType = SAVE_FILE_TYPE_UNK2;
     D_80126A0C[D_80126A08].unk1 = 1;
     D_80126A0C[D_80126A08++].fileSize = get_time_data_file_size();
-    D_80126A0C[D_80126A08++].unk0 = 10;
+    D_80126A0C[D_80126A08++].saveFileType = SAVE_FILE_TYPE_UNKA;
     temp_D_80126A64 = D_80126A64;
     do {
         numAttempts = 1;
@@ -3736,7 +3736,7 @@ SIDeviceStatus func_800862C4(void) {
                 for (fileIndex = 0; fileIndex < 16; fileIndex++) {
                     if ((fileTypes[fileIndex] >= SAVE_FILE_TYPE_GAME_DATA) && (fileTypes[fileIndex] <= SAVE_FILE_TYPE_UNKNOWN)) {
                         (*sControllerPakNotesFree)--;
-                        D_80126A0C[D_80126A08].unk0 = fileTypes[fileIndex];
+                        D_80126A0C[D_80126A08].saveFileType = fileTypes[fileIndex];
                         D_80126A0C[D_80126A08].controllerIndex = 0;
                         D_80126A0C[D_80126A08].unk7 = fileIndex;
                         D_80126A0C[D_80126A08].fileSize = fileSizes[fileIndex];
@@ -3808,30 +3808,30 @@ s32 func_800867D4(void) {
 
     D_80126A00 = 0;
 
-    switch (D_80126A0C[D_80126BD4].unk0) {
-        case 1: //Some other type of game data?
+    switch (D_80126A0C[D_80126BD4].saveFileType) {
+        case SAVE_FILE_TYPE_UNK1:
             mark_read_save_file(D_80126A0C[D_80126BD4].controllerIndex);
             func_800861C8(D_80126A04, &D_80126A00);
             ret = func_800860A8(0, &D_80126A18, D_80126A04, &D_80126A00, get_game_data_file_size(), -1);
             break;
-        case 2: //Some other type of time data?
+        case SAVE_FILE_TYPE_UNK2:
             ret = func_800860A8(0, &D_80126A18, D_80126A04, &D_80126A00, get_time_data_file_size(), -1);
             break;
-        case 3: //GAMD / Game Data
+        case SAVE_FILE_TYPE_GAME_DATA:
             func_800861C8(D_80126A04, &D_80126A00);
             ret = func_800860A8(1, &D_80126A1C, D_80126A04, &D_80126A00, get_game_data_file_size(), D_80126A0C[D_80126BD4].controllerIndex);
             break;
-        case 4: //TIMD / Time Data
-            D_80126A04[D_80126A00++].unk0 = 2;
+        case SAVE_FILE_TYPE_TIME_DATA:
+            D_80126A04[D_80126A00++].saveFileType = SAVE_FILE_TYPE_UNK2;
             ret = func_800860A8(1, &D_80126A1C, D_80126A04, &D_80126A00, get_time_data_file_size(), D_80126A0C[D_80126BD4].controllerIndex);
             break;
-        case 5: //GHSS / Ghost Data
-            D_80126A04[D_80126A00++].unk0 = 9;
-            ret = func_800860A8(1, &D_80126A1C, D_80126A04, &D_80126A00, func_80074B1C(), D_80126A0C[D_80126BD4].controllerIndex);
+        case SAVE_FILE_TYPE_GHOST_DATA:
+            D_80126A04[D_80126A00++].saveFileType = SAVE_FILE_TYPE_UNK9;
+            ret = func_800860A8(1, &D_80126A1C, D_80126A04, &D_80126A00, get_ghost_data_file_size(), D_80126A0C[D_80126BD4].controllerIndex);
             break;
     }
 
-    D_80126A04[D_80126A00++].unk0 = 7;
+    D_80126A04[D_80126A00++].saveFileType = SAVE_FILE_TYPE_UNK7;
 
     return ret;
 }
