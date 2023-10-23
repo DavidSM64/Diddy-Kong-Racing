@@ -279,15 +279,6 @@ typedef struct unk80126878 {
   /* 0x08 */ s32 colourIndex;
 } unk80126878;
 
-/* Size: 0x10 bytes */
-typedef struct unk800E0970 {
-    s8 unk0;
-    s8 unk1;
-    s8 unk2;
-    s8 unk3;
-    s8 pad4[12];
-} unk800E0970;
-
 /* Unknown size */
 typedef struct unk80069D20 {
     s16 unk0;
@@ -553,7 +544,7 @@ void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s
 void func_8008D8BC(s32 updateRate);
 
 s32 func_80095728(Gfx **gfx, MatrixS **mtx, Vertex **vtx, s32 updateRate);
-s32 func_8008F618(Gfx **dlist, MatrixS **mat);
+s32 func_8008F618(Gfx **dlist, MatrixS **mtx);
 void func_80080BC8(Gfx **);
 void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour0, s32 colour1, s32 colour2, s32 colour3);
 void func_80084854(void);

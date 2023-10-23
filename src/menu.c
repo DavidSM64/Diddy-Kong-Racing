@@ -805,12 +805,12 @@ s16 D_800E0710[16] = {
     0x16, 0x17, 0x20, 0x00
 };
 
-s16 D_800E0730[19] = {
-    0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0000,
-    0x0000, 0x0000, 0x0000
+TextureHeader *D_800E0730[10] = {
+    NULL, NULL, // Dino domain
+    NULL, NULL, // Sherbet Island
+    NULL, NULL, // Snowflake Mountain
+    NULL, NULL, // Dragon Forest
+    NULL, NULL  // Future Fun Land
 };
 
 // ID for T.Ts voice lines for each track id.
@@ -899,49 +899,71 @@ s16 D_800E0830[8] = {
     0x03, 0x0B, 0x0C, -1
 };
 
-s16 D_800E0840[148] = {
-    0x0000, 0xFFFF, 0x0001, 0x01FF,
-    0xFF00, 0x0200, 0xFFFF, 0x0003,
-    0x01FF, 0xFF00, 0x0400, 0xFFFF,
-    0x0005, 0x01FF, 0xFF00, 0x0600,
-    0xFFFF, 0x0006, 0x0200, 0x4000,
-    0x0701, 0xFFFF, 0x0007, 0x0340,
-    0x8000, 0x0800, 0xFFFF, 0x0008,
-    0x0280, 0xC020, 0x0901, 0xFFFF,
-    0x0009, 0x03C0, 0xFF20, 0x0A02,
-    0xFFFF, 0x000B, 0x03FF, 0xFF00,
-    0x0C02, 0xFFFF, 0x200D, 0x03FF,
-    0xFF20, 0x0E02, 0xFFFF, 0x000E,
-    0x0400, 0x4000, 0x0F03, 0xFFFF,
-    0x000F, 0x0540, 0x8000, 0x1002,
-    0xFFFF, 0x2010, 0x0480, 0xC000,
-    0x1103, 0xFFFF, 0x2011, 0x05C0,
-    0xFF00, 0x1204, 0xFFFF, 0x0013,
-    0x05FF, 0xFF00, 0x1404, 0xFFFF,
-    0x0015, 0x05FF, 0xFF00, 0x1604,
-    0xFFFF, 0x0016, 0x0600, 0x4000,
-    0x1705, 0xFFFF, 0x0017, 0x0740,
-    0x8000, 0x1804, 0xFFFF, 0x0018,
-    0x0680, 0xC020, 0x1905, 0xFFFF,
-    0x0019, 0x07C0, 0xFF20, 0x1A06,
-    0xFFFF, 0x001B, 0x07FF, 0xFF00,
-    0x1C06, 0xFFFF, 0x201D, 0x07FF,
-    0xFF20, 0x1E06, 0xFFFF, 0x001E,
-    0x0800, 0x4000, 0x1F07, 0xFFFF,
-    0x001F, 0x0940, 0x8000, 0x2006,
-    0xFFFF, 0x2020, 0x0880, 0xC020,
-    0x2107, 0xFFFF, 0x2021, 0x09C0,
-    0xFF20, 0x2208, 0xFFFF, 0x0023,
-    0x09FF, 0xFF00, 0x2408, 0xFFFF,
-    0x2025, 0x09FF, 0xFF20, 0x2608,
-    0xFFFF, 0x0027, 0x09FF, 0xFF00,
-    0x2808, 0xFFFF, 0x2029, 0x09FF,
-    0xFF20, 0xFF00, 0x0000, 0x0000
+// Not a struct, since the entries can *technically* be either 4 or 5 bytes. But it is always 5 in the final game.
+u8 D_800E0840[295] = {
+    0, 0, 255, 255, 0, 
+    1, 1, 255, 255, 0, 
+    2, 0, 255, 255, 0, 
+    3, 1, 255, 255, 0, 
+    4, 0, 255, 255, 0, 
+    5, 1, 255, 255, 0, 
+    6, 0, 255, 255, 0, 
+    6, 2, 0, 64, 0,
+    7, 1, 255, 255, 0, 
+    7, 3, 64, 128, 0, 
+    8, 0, 255, 255, 0, 
+    8, 2, 128, 192, 32, 
+    9, 1, 255, 255, 0, 
+    9, 3, 192, 255, 32, 
+    10, 2, 255, 255, 0, 
+    11, 3, 255, 255, 0,
+    12, 2, 255, 255, 32, 
+    13, 3, 255, 255, 32, 
+    14, 2, 255, 255, 0, 
+    14, 4, 0, 64, 0, 
+    15, 3, 255, 255, 0, 
+    15, 5, 64, 128, 0, 
+    16, 2, 255, 255, 32, 
+    16, 4, 128, 192, 0,
+    17, 3, 255, 255, 32, 
+    17, 5, 192, 255, 0, 
+    18, 4, 255, 255, 0, 
+    19, 5, 255, 255, 0, 
+    20, 4, 255, 255, 0, 
+    21, 5, 255, 255, 0, 
+    22, 4, 255, 255, 0, 
+    22, 6, 0, 64, 0,
+    23, 5, 255, 255, 0, 
+    23, 7, 64, 128, 0, 
+    24, 4, 255, 255, 0, 
+    24, 6, 128, 192, 32, 
+    25, 5, 255, 255, 0, 
+    25, 7, 192, 255, 32, 
+    26, 6, 255, 255, 0, 
+    27, 7, 255, 255, 0,
+    28, 6, 255, 255, 32, 
+    29, 7, 255, 255, 32, 
+    30, 6, 255, 255, 0, 
+    30, 8, 0, 64, 0, 
+    31, 7, 255, 255, 0, 
+    31, 9, 64, 128, 0, 
+    32, 6, 255, 255, 32, 
+    32, 8, 128, 192, 32,
+    33, 7, 255, 255, 32, 
+    33, 9, 192, 255, 32, 
+    34, 8, 255, 255, 0, 
+    35, 9, 255, 255, 0, 
+    36, 8, 255, 255, 32, 
+    37, 9, 255, 255, 32, 
+    38, 8, 255, 255, 0, 
+    39, 9, 255, 255, 0,
+    40, 8, 255, 255, 32, 
+    41, 9, 255, 255, 32, 
+    255, 0, 0, 0, 0
 };
-
 Vertex *D_800E0968 = NULL;
 s32 D_800E096C = 0;
-unk800E0970 *D_800E0970 = NULL;
+Triangle *D_800E0970 = NULL;
 s32 D_800E0974 = 0;
 char *gQMarkPtr = "?";
 s32 D_800E097C = 0;
@@ -2571,7 +2593,7 @@ s32 menu_logo_screen_loop(s32 updateRate) {
         sBootScreenTimer -= updateRate / 60.0f;
     }
     if (sBootScreenTimer <= 0.0f) {
-        camDisableUserView(0, 0);
+        camDisableUserView(0, FALSE);
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO);
         init_title_screen_variables();
         menu_init(MENU_TITLE);
@@ -6831,7 +6853,7 @@ void menu_track_select_init(void) {
             var_s0[1] = NULL;
         }
     }
-    D_800E0970 = (unk800E0970 *) allocate_from_main_pool_safe(2880, COLOUR_TAG_YELLOW);
+    D_800E0970 = (Triangle *) allocate_from_main_pool_safe(2880, COLOUR_TAG_YELLOW);
     D_800E0974 = (s32) (&D_800E0970[40]); //640 bytes forward
     D_800E096C = (s32) (&D_800E0970[80]); //1280 bytes forward
     //D_800E096C = (s32) (&D_800E0968[80]); //800 bytes past D_800E0968
@@ -7072,7 +7094,7 @@ s32 menu_track_select_loop(s32 updateRate) {
 void func_8008F534(void) {
     s32 i;
 
-    camDisableUserView(0, 0);
+    camDisableUserView(0, FALSE);
     func_8009C4A8(D_800E07C4);
     set_free_queue_state(0);
     free_from_memory_pool(D_800E0970);
@@ -7093,8 +7115,111 @@ void func_8008F534(void) {
     set_D_800DD430(0);
 }
 
-//https://decomp.me/scratch/ubeU1
+#ifdef NON_EQUIVALENT
+s32 func_8008F618(Gfx **dlist, MatrixS **mtx) {
+    s32 sp7C;
+    u8 *data;
+    s32 texU;
+    s32 texV;
+    UNUSED s32 pad1;
+    s32 yPos;
+    s32 flags;
+    s32 hasTexture;
+    UNUSED s32 pad2;
+    s32 numVertices;
+    s32 index;
+    s32 prevAlpha;
+    s32 prevIndex;
+    s32 temp;
+    s32 temp2;
+    Vertex *vertices;
+    Triangle *triangles;
+    TextureHeader *bgTexture;
+    s32 prevAlpha2;
+    s32 curIndex;
+    
+    numVertices = 0;
+    camDisableUserView(0, TRUE); 
+    func_80066230(dlist, mtx); 
+    set_ortho_matrix_view(dlist, mtx); 
+    reset_render_settings(dlist);
+    gDPPipeSync((*dlist)++); 
+    sp7C = gTrackSelectX; 
+    temp2 = -gTrackSelectY; 
+    temp = temp2 / (gTrackSelectViewportY >> 3); 
+    if (temp >= 42) { return 1; } 
+    temp2 -= (temp * (gTrackSelectViewportY >> 3)); 
+    yPos = gTrackSelectViewPortHalfY + temp2;
+    gDPSetPrimColor((*dlist)++, 0, 0, 255, 255, 255, 255);
+    gDPSetEnvColor((*dlist)++, 255, 255, 255, 0);
+    vertices = (&D_800E0968)[D_80126924];
+    triangles = (&D_800E0970)[D_80126924];
+    for (index = 0; D_800E0840[index] < temp; index += 5) {}
+    
+    data = &D_800E0840[index];
+    while ((yPos >= -gTrackSelectViewPortHalfY) && (data[0] < 42) && (numVertices < 64)) {
+        bgTexture = D_800E0730[data[1]];
+        vertices[0].y = yPos;
+        vertices[1].y = yPos;
+        vertices[0].a = data[2];
+        vertices[1].a = data[2];
+        prevIndex = data[0];
+        prevAlpha = data[2];
+        vertices[2].y = yPos - (gTrackSelectViewportY >> 3);
+        vertices[2].a = data[3];
+        vertices[3].y = (gTrackSelectViewPortHalfY + temp2) - (gTrackSelectViewportY >> 3);
+        vertices[3].a = data[3];
+        prevAlpha2 = data[3];
+        data += 4;
+        if (bgTexture != 0) {
+            texU = (((bgTexture->width - 1) & sp7C) << 5) + (data[0] << 5);
+            data++;
+            texV = bgTexture->height << 5;
+        }
+        triangles[0].uv0.u = texU;
+        triangles[0].uv0.v = 0;
+        triangles[0].uv1.u = texU;
+        triangles[0].uv1.v = texV;
+        triangles[0].uv2.u = texU + 0x2800;
+        triangles[0].uv2.v = 0;
+        triangles[1].uv0.u = texU + 0x2800;
+        triangles[1].uv0.v = 0;
+        triangles[1].uv1.u = texU;
+        triangles[1].uv1.v = texV;
+        triangles[1].uv2.u = texU + 0x2800;
+        triangles[1].uv2.v = texV;
+        
+        triangles += 2;
+        vertices += 4;
+        
+        if (bgTexture != 0) {
+            hasTexture = 1;
+        } else {
+            hasTexture = 0;
+        }
+
+        // If both alphas are 255, then don't set the transparency flags.
+        if ((prevAlpha + prevAlpha2) == 255+255) {
+            flags = 0;
+        } else {
+            flags = RENDER_VTX_ALPHA | RENDER_Z_UPDATE;
+        }
+        
+        load_and_set_texture(dlist, bgTexture, flags, 0);
+        gSPVertexDKR((*dlist)++, OS_PHYSICAL_TO_K0(vertices), 4, 0);
+        gSPPolygon((*dlist)++, OS_PHYSICAL_TO_K0(triangles), 2, hasTexture);
+        curIndex = data[0];
+        if (prevIndex != curIndex) {
+            yPos -= (gTrackSelectViewportY >> 3);
+        }
+        numVertices += 4;
+    }
+    camEnableUserView(0, 1);
+    return 0;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/func_8008F618.s")
+#endif
 
 void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectOpacity, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8) {
     s32 xTemp;
@@ -7279,7 +7404,7 @@ void func_8008FF1C(s32 updateRate) {
             }
             trackSelectY++;
         }
-        camDisableUserView(0, 1);
+        camDisableUserView(0, TRUE);
         func_8009BD5C();
         set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
         reset_render_settings(&sMenuCurrDisplayList);
@@ -7377,7 +7502,7 @@ void func_80090918(s32 updateRate) {
             func_8008F00C(1);
         } else if (gMenuDelay < -30) {
             disable_new_screen_transitions();
-            camDisableUserView(0, 0);
+            camDisableUserView(0, FALSE);
             func_8008F00C(-1);
         }
     }
@@ -7462,7 +7587,7 @@ void render_track_select_setup_ui(s32 updateRate) {
     if ((gNumberOfActivePlayers == 2) && (D_801269C8 < 4) && (gMenuOptionCount >= 2)) {
         sp74 = TRUE;
     }
-    camDisableUserView(0, 1);
+    camDisableUserView(0, TRUE);
     func_8009BD5C();
     set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     if (gMenuDelay < 0) {
@@ -9869,9 +9994,9 @@ void render_credits_fade(s32 x1, s32 y1, s32 x2, s32 y2, s32 a) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_credits_loop.s")
 
 void func_8009BCF0(void) {
-    set_music_player_voice_limit(0x12);
+    set_music_player_voice_limit(18);
     disable_new_screen_transitions();
-    camDisableUserView(0, 0);
+    camDisableUserView(0, FALSE);
     set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO);
     func_8009C4A8(D_800E17D8);
     unload_font(ASSET_FONTS_BIGFONT);

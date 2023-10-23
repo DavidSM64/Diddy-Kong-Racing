@@ -35,6 +35,14 @@ OSMesg D_801297A8[8];
 OSMesg D_801297C8[8];
 OSMesgQueue D_801297E8;
 
+#if CURSED
+// Ok, so this is weird... If I remove the last GLOBAL_ASM in this file, 
+// even if it's not included anymore, it breaks get_lockup_status
+// as it can't seem to find the externed statics?
+//Cursed as hell, it doesn't seem to matter what file this is pointing to really.
+GLOBAL_ASM("asm/unknown_062930/func_80061D30.s")
+#endif
+
 /**
  * Start the exception program counter thread.
  * Official Name: diCpuTraceInit
@@ -203,15 +211,6 @@ void update_object_stack_trace(s32 index, s32 value) {
         gObjectStackTrace[index] = value;
     }
 }
-
-#if 1
-// Ok, so this is weird... If I remove the last GLOBAL_ASM in this file, 
-// even if it's not included anymore, it breaks get_lockup_status
-// as it can't seem to find the externed statics?
-#else
-//Cursed as hell, it doesn't seem to matter what file this is pointing to really.
-GLOBAL_ASM("asm/unknown_062930/func_80061D30.s")
-#endif
 
 /**
  * Called as a check to see if render_epc_lock_up_display should be called.
