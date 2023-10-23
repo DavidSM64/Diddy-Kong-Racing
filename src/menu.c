@@ -456,9 +456,12 @@ s32 gMusicVolumeSliderValue = 256; // Value from 0 to 256
 
 s32 D_800DFAC8 = 0;
 
-// Unsure about typing here.
-u16 D_800DFACC[8] = {
-    0x4040, 0xFFFF, 0xFF40, 0x40FF, 0xFFD0, 0x40FF, 0x40FF, 0x40FF
+// This is used for RGBA colors for the save options Controller Pak BG.
+u32 D_800DFACC[MAXCONTROLLERS] = {
+    COLOUR_RGBA32(64, 64, 255, 255),  // Blue for controller 1
+    COLOUR_RGBA32(255, 64, 64, 255),  // Red for controller 2
+    COLOUR_RGBA32(255, 208, 64, 255), // Yellow for controller 3
+    COLOUR_RGBA32(64, 255, 64, 255)   // Green for controller 4
 };
 
 s32 D_800DFADC = 0; // Currently unknown, might be a different type.
@@ -3330,7 +3333,161 @@ void menu_save_options_init(void) {
     transition_begin(&sMenuTransitionFadeOut);
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_800853D0.s")
+void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
+    s32 i;
+    s32 sp78;
+    s32 sp74;
+    s32 sp70;
+    s32 colour;
+    DrawTexture *drawTexture;
+    char *text2;
+    char *text;
+    char buffer[16];
+    TextureHeader *texture;
+    s32 temp;
+    
+    sp70 = 11;
+    switch (arg0->unk0) {
+        case 1:
+            drawTexture = D_800DFC10;
+            texture = gMenuTextures[TEXTURE_SURFACE_BUTTON_WOOD];
+            colour = COLOUR_RGBA32(176, 224, 192, 255);
+            if (!gSavefileData[arg0->controllerIndex]->newGame) {
+                decompress_filename_string(gSavefileData[arg0->controllerIndex]->filename, buffer, 3);
+                trim_filename_string(buffer, buffer);
+                text2 = buffer;
+                sp78 = *gSavefileData[arg0->controllerIndex]->balloonsPtr / 10;
+                sp74 = *gSavefileData[arg0->controllerIndex]->balloonsPtr - (sp78 * 10);
+                //Is Adventure Two?
+                if (gSavefileData[arg0->controllerIndex]->cutsceneFlags & 4) {
+                    sp70 = 12;
+                }
+            } else {
+                text2 = gFilenames[arg0->controllerIndex];
+            }
+            text = gMenuText[ASSET_MENU_TEXT_GAMEPAK];
+            break;
+        case 2:
+            drawTexture = D_800DFC20;
+            texture = gMenuTextures[TEXTURE_SURFACE_BUTTON_WOOD];
+            colour = COLOUR_RGBA32(176, 224, 192, 255);
+            text2 = gMenuText[ASSET_MENU_TEXT_TIMES];
+            text = gMenuText[ASSET_MENU_TEXT_GAMEPAK];
+            break;
+        case 3:
+            drawTexture = D_800DFC10;
+            texture = gMenuTextures[TEXTURE_UNK_44];
+            colour = D_800DFACC[arg0->controllerIndex];
+            text2 = buffer;
+            decompress_filename_string(arg0->compressedFilename, buffer, 3);
+            // char *D_800E1E10 = " (ADV.";
+            for (i = 0; D_800E1E10[i] != '\0'; i++) {
+                buffer[i+3] = D_800E1E10[i];
+            }
+            buffer[i+3] = arg0->unk8[0];
+            buffer[i+4] = ')';
+            buffer[i+5] = '\0';
+            text = gMenuText[86 + arg0->controllerIndex];
+            sp78 = arg0->unk2 / 10;
+            sp74 = arg0->unk2 % 10;
+            if (arg0->unk3 != 0) {
+                sp70 = 12;
+            }
+            break;
+        case 4:
+            drawTexture = D_800DFC20;
+            texture = gMenuTextures[TEXTURE_UNK_44];
+            colour = D_800DFACC[arg0->controllerIndex];
+            text2 = arg0->unk8;
+            text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + arg0->controllerIndex];
+            break;
+        case 5:
+            drawTexture = D_800DFC30;
+            texture = gMenuTextures[TEXTURE_UNK_44];
+            colour = D_800DFACC[arg0->controllerIndex];
+            text2 = gMenuText[ASSET_MENU_TEXT_GHOSTS];
+            text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + arg0->controllerIndex];
+            break;
+        case 6:
+            drawTexture = D_800DFC40;
+            texture = gMenuTextures[TEXTURE_UNK_44];
+            colour = D_800DFACC[arg0->controllerIndex];
+            text2 = arg0->unk8;
+            text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + arg0->controllerIndex];
+            break;
+        case 8:
+            drawTexture = D_800DFC50;
+            texture = gMenuTextures[TEXTURE_UNK_44];
+            colour = D_800DFACC[arg0->controllerIndex];
+            text2 = gMenuText[ASSET_MENU_TEXT_EMPTYSLOT];
+            text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + arg0->controllerIndex];
+            break;
+        case 9:
+            drawTexture = D_800DFC30;
+            texture = gMenuTextures[TEXTURE_UNK_45];
+            colour = -1;
+            text2 = gMenuText[ASSET_MENU_TEXT_VIEWGHOSTS];
+            text = NULL;
+            break;
+        case 10:
+            drawTexture = D_800DFC10;
+            text2 = gMenuText[ASSET_MENU_TEXT_GAMEPAKBONUSES];
+            texture = gMenuTextures[TEXTURE_SURFACE_BUTTON_WOOD];
+            colour = COLOUR_RGBA32(176, 224, 192, 255);
+            text = gMenuText[ASSET_MENU_TEXT_GAMEPAK];
+            break;
+        default:
+            drawTexture = D_800DFC60;
+            texture = gMenuTextures[TEXTURE_UNK_45];
+            colour = COLOUR_RGBA32(128, 128, 128, 255);
+            text2 = gMenuText[ASSET_MENU_TEXT_ERASE];
+            text = NULL;
+            break;
+    }
+    func_80080580(&sMenuCurrDisplayList, x - 160, 120 - y, 160, 64, 4, 4, colour, texture);
+    if (osTvType == TV_TYPE_PAL) {
+        y += 12;
+    }
+    if ((arg0->unk0 == 3) || ((arg0->unk0 == 1) && (gSavefileData[arg0->controllerIndex]->newGame == 0))) {
+        if (osTvType == TV_TYPE_PAL) {
+            i = 134;
+        } else {
+            i = 120;
+        }
+        func_80068508(1);
+        temp = (i - y);
+        gMenuImageStack[2].unk10 = temp - 49;
+        gMenuImageStack[sp70].unk10 = temp - 24;
+        sprite_opaque(0);
+        gMenuImageStack[2].unkC = x - 133;
+        gMenuImageStack[2].unk18 = sp78;
+        func_8009CA60(2);
+        gMenuImageStack[2].unkC = x - 125;
+        gMenuImageStack[2].unk18 = sp74;
+        func_8009CA60(2);
+        sprite_opaque(1);
+        gMenuImageStack[sp70].unkC = x - 128;
+        func_8009CA60(sp70);
+        func_80068508(0);
+    }
+    if (drawTexture != NULL) {
+        render_textured_rectangle(&sMenuCurrDisplayList, drawTexture, x + 60, y + 6, 255, 255, 255, 255);
+    }
+    if (text != NULL) {
+        set_text_font(0);
+        set_text_colour(0, 0, 0, 255, 128);
+        draw_text(&sMenuCurrDisplayList, x + 81, y + 1, text, ALIGN_MIDDLE_CENTER);
+        set_text_colour(255, 64, 255, 64, 255);
+        draw_text(&sMenuCurrDisplayList, x + 79, y - 1, text, ALIGN_MIDDLE_CENTER);
+    }
+    if (text2 != NULL) {
+        set_text_font(1);
+        set_text_colour(0, 0, 0, 255, 160);
+        draw_text(&sMenuCurrDisplayList, x + 80, y + 48, text2, ALIGN_TOP_CENTER);
+        set_text_colour(255, 255, 255, 255, 255);
+        draw_text(&sMenuCurrDisplayList, x + 79, y + 47, text2, ALIGN_TOP_CENTER);
+    }
+}
 
 #ifdef NON_EQUIVALENT
 void func_80085B9C(UNUSED s32 updateRate) {
@@ -3548,7 +3705,7 @@ SIDeviceStatus func_800862C4(void) {
                                 temp_D_80126A64 += 2;
                                 D_80126A0C[D_80126A08].unk2 = *settings->balloonsPtr;
                                 D_80126A0C[D_80126A08].unk3 = (settings->cutsceneFlags & 4) != 0; // Is in Adventure Two?
-                                D_80126A0C[D_80126A08].unk4 = settings->filename;
+                                D_80126A0C[D_80126A08].compressedFilename = settings->filename;
                             } else {
                                 D_80126A08--;
                             }
