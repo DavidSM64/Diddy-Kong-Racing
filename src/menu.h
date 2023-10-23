@@ -519,6 +519,7 @@ void func_8009C6D4(s32 arg0);
 s32 func_80087734(s32 buttonsPressed, s32 yAxis);
 void func_800853D0(unk800861C8 *arg0, s32 x, s32 y);
 void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectOpacity, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
+void func_80093D40(UNUSED s32 updateRate);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -553,7 +554,6 @@ void func_8008D8BC(s32 updateRate);
 
 s32 func_80095728(Gfx **gfx, MatrixS **mtx, Vertex **vtx, s32 updateRate);
 s32 func_8008F618(Gfx **dlist, MatrixS **mat);
-void func_80093D40(UNUSED s32 updateRate);
 void func_80080BC8(Gfx **);
 void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour0, s32 colour1, s32 colour2, s32 colour3);
 void func_80084854(void);

@@ -5242,7 +5242,7 @@ void obj_loop_levelname(Object *obj, s32 updateRate) {
             set_current_text_background_colour(4, 0, 0, 0, 0);
             set_dialogue_font(4, FONT_COLOURFUL);
             set_current_text_colour(4, 255, 255, 255, 0, (properties->opacity * 255) >> 8);
-            render_dialogue_text(4, (x2 - x1) >> 1, ((y2 - y1) >> 1) + 2, levelName, 1, 12);
+            render_dialogue_text(4, (x2 - x1) >> 1, ((y2 - y1) >> 1) + 2, levelName, 1, ALIGN_MIDDLE_CENTER);
             open_dialogue_box(4);
         }
     }

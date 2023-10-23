@@ -4501,8 +4501,8 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
         set_dialogue_font(6, ASSET_FONTS_FUNFONT);
         set_current_text_colour(6, 255, 255, 255, 0, 255);
         set_current_text_background_colour(6, 0, 0, 0, 0);
-        render_dialogue_text(6, POS_CENTRED, 2, gMenuText[86 + gMenuOption], 1, 4); //ASSET_MENU_TEXT_CONTPAK1 - CONTROLLER PAK 1 / 2 / 3 / 4
-        render_dialogue_text(6, POS_CENTRED, 16, gMenuText[ASSET_MENU_TEXT_FREEPAGESX], sCurrentControllerPakFreeSpace, 4); //FREE PAGES: ~
+        render_dialogue_text(6, POS_CENTRED, 2, gMenuText[86 + gMenuOption], 1, HORZ_ALIGN_CENTER); //ASSET_MENU_TEXT_CONTPAK1 - CONTROLLER PAK 1 / 2 / 3 / 4
+        render_dialogue_text(6, POS_CENTRED, 16, gMenuText[ASSET_MENU_TEXT_FREEPAGESX], sCurrentControllerPakFreeSpace, HORZ_ALIGN_CENTER); //FREE PAGES: ~
         render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
 
         yPos += 34; //To 82
@@ -4534,9 +4534,9 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
                 fileNameText = D_80126AA0[gOpacityDecayTimer + i];
                 numberOfPages = sCurrentControllerPakAllFileSizes[gOpacityDecayTimer + i];
             }
-            render_dialogue_text(6, 26, 2, noteText, gOpacityDecayTimer + i + 1, 4);
-            render_dialogue_text(6, 56, 2, fileNameText, 1, 0);
-            render_dialogue_text(6, 240, 2, pagesText, numberOfPages, 4);
+            render_dialogue_text(6, 26, 2, noteText, gOpacityDecayTimer + i + 1, HORZ_ALIGN_CENTER);
+            render_dialogue_text(6, 56, 2, fileNameText, 1, HORZ_ALIGN_LEFT);
+            render_dialogue_text(6, 240, 2, pagesText, numberOfPages, HORZ_ALIGN_CENTER);
             render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
             yPos += 16;
         }
@@ -4579,7 +4579,7 @@ void render_controller_pak_ui(UNUSED s32 updateRate) {
                 //ASSET_MENU_TEXT_DELETENOTEX  - DELETE NOTE ~ ?
                 //ASSET_MENU_TEXT_DELETE       - DELETE
                 //ASSET_MENU_TEXT_CANCELDELETE - CANCEL
-                render_dialogue_text(6, POS_CENTRED, yPos, gMenuText[ASSET_MENU_TEXT_DELETENOTEX + i], D_800DF460 + 1, 4);
+                render_dialogue_text(6, POS_CENTRED, yPos, gMenuText[ASSET_MENU_TEXT_DELETENOTEX + i], D_800DF460 + 1, HORZ_ALIGN_CENTER);
 
                 if (i != 0) {
                     yPos += 16;
@@ -4889,7 +4889,7 @@ void render_magic_codes_ui(s32 arg0) {
             set_current_text_colour(6, 255, green, 255, alpha, 255);
 
             // gMenuText[148] = "CLEAR ALL CODES?", [149] = "OK", [150] = "CANCEL"
-            render_dialogue_text(6, POS_CENTRED, yPos, gMenuText[148 + i], 1, 4);
+            render_dialogue_text(6, POS_CENTRED, yPos, gMenuText[148 + i], 1, HORZ_ALIGN_CENTER);
 
             if (i != 0) {
                 yPos += 16;
@@ -8110,82 +8110,78 @@ void func_80093A40(void) {
     reset_controller_sticks();
 }
 
-#ifdef NON_EQUIVALENT
-// In the right ballpark, but not right.
-// Draw pause game screen?
 void func_80093D40(UNUSED s32 updateRate) {
-    s32 yOffset;
-    s32 i;
+    ColourRGBA *colour;
+    s32 halfTemp;
+    s32 halfX;
     s32 x;
-    ColourRGBA *colours;
-    s32 baseYPos;
-    s32 xPos;
+    s32 temp;
+    s32 textWidth;
+    s32 i;
+    s32 y;
     s32 alpha;
-
-    for (i = 0, xPos = SCREEN_WIDTH_HALF; i < gMenuOptionCap; i++) {
-        x = get_text_width(gMenuOptionText[i], 0, 0) + 8;
-        if (xPos < x) {
-            xPos = x;
+    
+    for (i = 0, x = SCREEN_WIDTH_HALF; i < gMenuOptionCap; i++) {
+        textWidth = get_text_width(gMenuOptionText[i], 0, 0) + 8;
+        if (x < textWidth) {
+            x = textWidth;
         }
     }
-
-    baseYPos = (osTvType == TV_TYPE_PAL) ? SCREEN_HEIGHT_HALF_PAL : SCREEN_HEIGHT_HALF;
-
-    yOffset = ((gMenuOptionCap * 16) + 28);
-
+    temp = (gMenuOptionCap * 16) + 28;
+    if (osTvType == TV_TYPE_PAL) {
+        y = SCREEN_HEIGHT_HALF_PAL;
+    } else {
+        y = SCREEN_HEIGHT_HALF;
+    }
     clear_dialogue_box_open_flag(7);
     assign_dialogue_box_id(7);
-
-    yOffset >>= 1;
-    xPos >>= 1;
-
-    set_current_dialogue_box_coords(7, SCREEN_WIDTH_HALF - xPos, baseYPos - yOffset, xPos + SCREEN_WIDTH_HALF, yOffset + baseYPos);
-    colours = &D_800E0990[get_player_id(D_800E098C)];
-    set_current_dialogue_background_colour(7, colours->r, colours->g, colours->b, colours->a);
-    set_dialogue_font(7, 0);
+    halfTemp = temp >> 1;
+    halfX = x >> 1;
+    set_current_dialogue_box_coords(7, SCREEN_WIDTH_HALF - halfX, y - halfTemp, halfX + 160, halfTemp + y);
+    colour = &D_800E0990[get_player_id(D_800E098C)];
+    set_current_dialogue_background_colour(7, colour->r, colour->g, colour->b, colour->a);
+    set_dialogue_font(7, ASSET_FONTS_FUNFONT);
     set_current_text_background_colour(7, 128, 128, 255, 0);
-    colours = &D_800E09A0[get_player_id(D_800E098C)];
-    set_current_text_colour(7, colours->r, colours->g, colours->b, colours->a, 255);
+    colour = &D_800E09A0[get_player_id(D_800E098C)];
+    set_current_text_colour(7, colour->r, colour->g, colour->b, colour->a, 255);
     alpha = gOptionBlinkTimer * 8;
-    if (alpha >= 256) {
+    if (alpha > 255) {
         alpha = 511 - alpha;
     }
     if (gMenuSubOption != 0) {
+        i = halfTemp - 26;
         if (gTrophyRaceWorldId != 0) {
-            yOffset -= 26;
-            render_dialogue_text(7, POS_CENTRED, yOffset + 8, gMenuText[ASSET_MENU_TEXT_QUITTROPHYRACETITLE], 1, 12);
+            render_dialogue_text(7, POS_CENTRED, i + 8, gMenuText[ASSET_MENU_TEXT_QUITTROPHYRACETITLE], 1, ALIGN_MIDDLE_CENTER);
         } else {
-            yOffset -= 26;
-            render_dialogue_text(7, POS_CENTRED, yOffset + 8, gMenuText[ASSET_MENU_TEXT_QUITGAMETITLE], 1, 12);
+            render_dialogue_text(7, POS_CENTRED, i + 8, gMenuText[ASSET_MENU_TEXT_QUITGAMETITLE], 1, ALIGN_MIDDLE_CENTER);
         }
         if (gMenuSubOption == 1) {
             set_current_text_colour(7, 255, 255, 255, alpha, 255);
         } else {
             set_current_text_colour(7, 255, 255, 255, 0, 255);
         }
-        render_dialogue_text(7, POS_CENTRED, yOffset + 28, gMenuText[ASSET_MENU_TEXT_OK], 1, 12); // OK
+        render_dialogue_text(7, POS_CENTRED, i + 28, gMenuText[ASSET_MENU_TEXT_OK], 1, ALIGN_MIDDLE_CENTER);
         if (gMenuSubOption == 2) {
             set_current_text_colour(7, 255, 255, 255, alpha, 255);
         } else {
             set_current_text_colour(7, 255, 255, 255, 0, 255);
         }
-        render_dialogue_text(7, POS_CENTRED, yOffset + 44, gMenuText[ASSET_MENU_TEXT_CANCEL], 1, 12);
+        render_dialogue_text(7, POS_CENTRED, i + 44, gMenuText[ASSET_MENU_TEXT_CANCEL], 1, ALIGN_MIDDLE_CENTER);
     } else {
-        render_dialogue_text(7, POS_CENTRED, 12, gMenuText[ASSET_MENU_TEXT_PAUSEOPTIONS], D_800E098C + 1, 12);
-        for (i = 0, yOffset = 32; i < gMenuOptionCap; i++, yOffset += 16) {
+        i = D_800E098C + 1; // Fakematch. Seems to fix stuff?
+        render_dialogue_text(7, POS_CENTRED, 12, gMenuText[ASSET_MENU_TEXT_PAUSEOPTIONS], D_800E098C + 1, ALIGN_MIDDLE_CENTER);
+        for (i = 0, y = 32; i < gMenuOptionCap; i++, y += 16) {
             if (i == gMenuOption) {
                 set_current_text_colour(7, 255, 255, 255, alpha, 255);
             } else {
                 set_current_text_colour(7, 255, 255, 255, 0, 255);
             }
-            render_dialogue_text(7, POS_CENTRED, yOffset, gMenuOptionText[i], 1, 12);
+            render_dialogue_text(7, POS_CENTRED, y, gMenuOptionText[i], 1, ALIGN_MIDDLE_CENTER);
         }
+        
     }
     open_dialogue_box(7);
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_80093D40.s")
-#endif
 
 /**
  * Show the available options when the player pauses the game.
@@ -10489,7 +10485,7 @@ void render_dialogue_option(char *text, s32 yOffset, s32 optionID) {
     if (gDialogueSubmenu == sDialogueOptionMax) {
         gDialogueItemSelection = optionID;
     }
-    render_dialogue_text(1, POS_CENTRED, gDialogueOptionYOffset, text, 1, 4);
+    render_dialogue_text(1, POS_CENTRED, gDialogueOptionYOffset, text, 1, HORZ_ALIGN_CENTER);
     gDialogueOptionYOffset = (s8)(gDialogueOptionYOffset + yOffset);
     sDialogueOptionMax = (s8)(sDialogueOptionMax + 1);
 }
@@ -10562,7 +10558,7 @@ s32 taj_menu_loop(void) {
     switch (sCurrentMenuID) {
         case 2:
         case 0x62:
-            render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_VEHICLESELECT], 1, 4); // VEHICLE SELECT
+            render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_VEHICLESELECT], 1, HORZ_ALIGN_CENTER); // VEHICLE SELECT
             gDialogueOptionYOffset = 30;
             render_dialogue_option(gMenuText[ASSET_MENU_TEXT_CAR], 20, 0); // CAR
             render_dialogue_option(gMenuText[ASSET_MENU_TEXT_HOVERCRAFT], 20, 1); // HOVERCRAFT
@@ -10571,7 +10567,7 @@ s32 taj_menu_loop(void) {
             break;
         case 3:
         case 0x63:
-            render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_CHALLENGESELECT], 1, 4); // CHALLENGE SELECT
+            render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_CHALLENGESELECT], 1, HORZ_ALIGN_CENTER); // CHALLENGE SELECT
             gDialogueOptionYOffset = 30;
             if (settings->tajFlags & TAJ_FLAGS_CAR_CHAL_UNLOCKED) {
                 gDialogueOptionTangible = settings->tajFlags & TAJ_FLAGS_CAR_CHAL_COMPLETED;
@@ -10601,7 +10597,7 @@ s32 taj_menu_loop(void) {
             break;
         case 1:
             gNextTajChallengeMenu = 0;
-            render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_OPTIONS], 1, 4); // OPTIONS
+            render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_OPTIONS], 1, HORZ_ALIGN_CENTER); // OPTIONS
             gDialogueOptionYOffset = 30;
             render_dialogue_option(gMenuText[ASSET_MENU_TEXT_CHANGEVEHICLE], 20, 0); // CHANGE VEHICLE
             if (settings->tajFlags & TAJ_FLAGS_UNLOCKED_A_CHALLENGE) {
@@ -10724,8 +10720,8 @@ s32 dialogue_race_defeat(void) {
     playerInput = get_buttons_pressed_from_player(PLAYER_ONE);
     sDialogueOptionMax = 0;
     gNextTajChallengeMenu = 0;
-    render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_LOSETOTAJ_0], 1, 4);    // BETTER LUCK
-    render_dialogue_text(1, POS_CENTRED, 20, gMenuText[ASSET_MENU_TEXT_LOSETOTAJ_1], 1, 4); // NEXT TIME!
+    render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_LOSETOTAJ_0], 1, HORZ_ALIGN_CENTER);  // BETTER LUCK
+    render_dialogue_text(1, POS_CENTRED, 20, gMenuText[ASSET_MENU_TEXT_LOSETOTAJ_1], 1, HORZ_ALIGN_CENTER); // NEXT TIME!
     gDialogueOptionYOffset = 50;
     render_dialogue_option(gMenuText[ASSET_MENU_TEXT_TRYAGAIN], 20, 0); // TRY AGAIN
     render_dialogue_option(gMenuText[ASSET_MENU_TEXT_EXIT], 20, 1); // EXIT
@@ -10782,19 +10778,19 @@ s32 tt_menu_loop(void) {
     switch (sCurrentMenuID) {
         case TT_MENU_ROOT:
         case TT_MENU_EXIT:
-            render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_OPTIONS], 1, 4); // OPTIONS
-            render_dialogue_option(gMenuText[ASSET_MENU_TEXT_STATUS], 0x14, 3);             // STATUS
+            render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_OPTIONS], 1, HORZ_ALIGN_CENTER); // OPTIONS
+            render_dialogue_option(gMenuText[ASSET_MENU_TEXT_STATUS], 20, 3);             // STATUS
             if (!is_in_two_player_adventure()) {
                 if (is_time_trial_enabled()) {
-                    render_dialogue_option(gMenuText[ASSET_MENU_TEXT_TIMETRIALON], 0x14, 0); // TIME TRIAL ON
+                    render_dialogue_option(gMenuText[ASSET_MENU_TEXT_TIMETRIALON], 20, 0); // TIME TRIAL ON
                 } else {
-                    render_dialogue_option(gMenuText[ASSET_MENU_TEXT_TIMETRIALOFF], 0x14, 0); // TIME TRIAL OFF
+                    render_dialogue_option(gMenuText[ASSET_MENU_TEXT_TIMETRIALOFF], 20, 0); // TIME TRIAL OFF
                 }
                 if (has_ghost_to_save()) {
-                    render_dialogue_option(gMenuText[ASSET_MENU_TEXT_SAVEGHOST], 0x14, 1); // SAVE GHOST
+                    render_dialogue_option(gMenuText[ASSET_MENU_TEXT_SAVEGHOST], 20, 1); // SAVE GHOST
                 }
             }
-            render_dialogue_option(gMenuText[ASSET_MENU_TEXT_RETURN], 0x14, 2); // RETURN
+            render_dialogue_option(gMenuText[ASSET_MENU_TEXT_RETURN], 20, 2); // RETURN
             handle_menu_joystick_input();
             if (gDialogueItemSelection == 0) {
                 if (gControllersXAxisDirection[0] > 0) {
@@ -10853,7 +10849,7 @@ s32 tt_menu_loop(void) {
                 yPos1 -= (i << 2 << 1); // Might be fake?
                 i = 0;
                 while (gTTSaveGhostPakErrorText[i] != NULL) {
-                    render_dialogue_text(1, POS_CENTRED, yPos1, gTTSaveGhostPakErrorText[i], 1, 4);
+                    render_dialogue_text(1, POS_CENTRED, yPos1, gTTSaveGhostPakErrorText[i], 1, HORZ_ALIGN_CENTER);
                     yPos1 += 16;
                     i++;
                 }
@@ -10889,7 +10885,7 @@ s32 tt_menu_loop(void) {
             //TT Has 12 different intro text lines. This will render them one by one until it hits the NULL line.
             i = ASSET_MENU_TEXT_TTINTRO_0;
             while (gMenuText[i] != NULL) {
-                render_dialogue_text(1, POS_CENTRED, 6 + ((i-52) * 16), gMenuText[i], 1, 4);
+                render_dialogue_text(1, POS_CENTRED, 6 + ((i-52) * 16), gMenuText[i], 1, HORZ_ALIGN_CENTER);
                 i++;
             }
             if (buttonsPressed & (A_BUTTON | B_BUTTON)) {
@@ -10899,9 +10895,9 @@ s32 tt_menu_loop(void) {
             }
             break;
         case TT_MENU_INSERT_CONT_PAK:
-            render_dialogue_text(1, POS_CENTRED, 34, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_3], 1, 4); // If you wish to use
-            render_dialogue_text(1, POS_CENTRED, 50, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_4], 1, 4); // the Controller Pak
-            render_dialogue_text(1, POS_CENTRED, 66, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_6], 1, 4); // insert it now!
+            render_dialogue_text(1, POS_CENTRED, 34, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_3], 1, HORZ_ALIGN_CENTER); // If you wish to use
+            render_dialogue_text(1, POS_CENTRED, 50, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_4], 1, HORZ_ALIGN_CENTER); // the Controller Pak
+            render_dialogue_text(1, POS_CENTRED, 66, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_6], 1, HORZ_ALIGN_CENTER); // insert it now!
             if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
                 play_sound_global(SOUND_SELECT2, NULL);
                 gSaveGhostDelayCounter = 0;
@@ -10913,15 +10909,15 @@ s32 tt_menu_loop(void) {
             }
             break;
         case TT_MENU_INSERT_RUMBLE_PAK:
-            render_dialogue_text(1, POS_CENTRED, 34, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_3], 1, 4); // If you wish to use
-            render_dialogue_text(1, POS_CENTRED, 50, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_5], 1, 4); // the Rumble Pak
-            render_dialogue_text(1, POS_CENTRED, 66, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_6], 1, 4); // insert it now!
+            render_dialogue_text(1, POS_CENTRED, 34, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_3], 1, HORZ_ALIGN_CENTER); // If you wish to use
+            render_dialogue_text(1, POS_CENTRED, 50, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_5], 1, HORZ_ALIGN_CENTER); // the Rumble Pak
+            render_dialogue_text(1, POS_CENTRED, 66, gMenuText[ASSET_MENU_TEXT_INSERTDEVICE_6], 1, HORZ_ALIGN_CENTER); // insert it now!
             if (buttonsPressed & (A_BUTTON | B_BUTTON | START_BUTTON)) {
                 sCurrentMenuID = TT_MENU_ROOT;
             }
             break;
         case TT_MENU_SAVE_GHOST:
-            render_dialogue_text(1, POS_CENTRED, 50, gMenuText[ASSET_MENU_TEXT_PLEASEWAIT], 1, 4); // PLEASE WAIT
+            render_dialogue_text(1, POS_CENTRED, 50, gMenuText[ASSET_MENU_TEXT_PLEASEWAIT], 1, HORZ_ALIGN_CENTER); // PLEASE WAIT
             gSaveGhostDelayCounter++;
             if (gSaveGhostDelayCounter >= 5) {
                 result = func_8001B738(0);
@@ -10972,7 +10968,7 @@ s32 tt_menu_loop(void) {
     if ((sCurrentMenuID == TT_MENU_CONT_PAK_ERROR_1) ||
         (sCurrentMenuID == TT_MENU_CONT_PAK_ERROR_2) ||
         (sCurrentMenuID == TT_MENU_CONT_PAK_ERROR_3)) {
-        render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_PAKERROR], 1, 4); // PAK ERROR
+        render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_PAKERROR], 1, HORZ_ALIGN_CENTER); // PAK ERROR
     }
 
     return currentOption;
@@ -10991,7 +10987,7 @@ s32 trophy_race_cabinet_menu_loop(void) {
     set_dialogue_font(1, ASSET_FONTS_FUNFONT);
     currentOption = 0;
     buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
-    render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_TROPHYRACE], 1, 4); // TROPHY RACE
+    render_dialogue_text(1, POS_CENTRED, 6, gMenuText[ASSET_MENU_TEXT_TROPHYRACE], 1, HORZ_ALIGN_CENTER); // TROPHY RACE
     if (gControllersYAxisDirection[0] < 0) {
         gDialogueSubmenu++;
     } else if (gControllersYAxisDirection[0] > 0) {
@@ -11004,9 +11000,9 @@ s32 trophy_race_cabinet_menu_loop(void) {
         gDialogueSubmenu = 1;
     }
     set_option_text_colour(gDialogueSubmenu == 0);
-    render_dialogue_text(1, POS_CENTRED, 30, gMenuText[ASSET_MENU_TEXT_ENTERTROPHYRACE], 1, 4); // ENTER TROPHY RACE
+    render_dialogue_text(1, POS_CENTRED, 30, gMenuText[ASSET_MENU_TEXT_ENTERTROPHYRACE], 1, HORZ_ALIGN_CENTER); // ENTER TROPHY RACE
     set_option_text_colour(gDialogueSubmenu == 1);
-    render_dialogue_text(1, POS_CENTRED, 50, gMenuText[ASSET_MENU_TEXT_EXIT], 1, 4); // EXIT
+    render_dialogue_text(1, POS_CENTRED, 50, gMenuText[ASSET_MENU_TEXT_EXIT], 1, HORZ_ALIGN_CENTER); // EXIT
     if (buttonsPressed & A_BUTTON) {
         currentOption = gDialogueSubmenu + 1;
     }
