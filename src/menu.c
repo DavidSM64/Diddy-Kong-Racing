@@ -163,7 +163,7 @@ s16 gTitleDemoTimer;
 s32 gTitleRevealTimer;
 f32 gTitleAudioCounter;
 s8 *sTitleScreenDemoIds; //Misc Asset 66 - title_screen_demo_ids.bin - 12 or 13 values.
-s32 D_80126878[24];
+unk80126878 D_80126878[8];
 f32 D_801268D8;
 s32 D_801268DC;
 s32 D_801268E0;
@@ -419,8 +419,15 @@ unk800DF83C D_800DF83C[10] = {
 
 s32 D_800DF9F4 = 0;
 
-u16 D_800DF9F8[12] = {
-    0xFFFF, 0x00FF, 0xCC00, 0xFF00, 0xFF99, 0x00FF, 0xFFFF, 0x6600, 0x00FF, 0xFF33, 0x0000, 0x0F78
+MenuColour D_800DF9F8[4] = {
+    { 255, 255, 0, 255, 204 },
+    { 0, 255, 0, 255, 153 },
+    { 0, 255, 255, 255, 102 },
+    { 0, 0, 255, 255, 51 }
+};
+
+UNUSED u8 D_800DFA10[4] = {
+    0, 0, 15, 120
 };
 
 char *gOptionMenuStrings[7] = {
@@ -2576,7 +2583,89 @@ void init_title_screen_variables(void) {
     load_menu_text(get_language());
 }
 
+#ifdef NON_MATCHING
+void func_80083098(f32 arg0) {
+    f32 temp;
+    f32 temp2;
+    s32 didUpdate;
+    s32 xPos;
+    s32 yPos;
+    s32 i;
+    unk800DF83C *introCharData;
+    char *text;
+    s32 j;
+
+    didUpdate = FALSE;
+    xPos = 0;
+    yPos = 0;
+    text = NULL;
+    if (D_801268E0 < 10) {
+        introCharData = &D_800DF83C[D_801268E0];
+        D_801268D8 += arg0;
+        set_text_font(ASSET_FONTS_BIGFONT);
+        set_text_background_colour(0, 0, 0, 0);
+        i = 0;
+        while (i < D_800DF9F4) {
+            // set_text_colour(D_800DF9F8[D_80126878[i].colourIndex].red, D_800DF9F8[D_80126878[i].colourIndex].green, D_800DF9F8[D_80126878[i].colourIndex].blue, D_800DF9F8[D_80126878[i].colourIndex].alpha, D_800DF9F8[D_80126878[i].colourIndex].opacity);
+            j = D_80126878[i].colourIndex; // This seems super fake, but I can't do any better.
+            set_text_colour(D_800DF9F8[j].red, D_800DF9F8[j].green, D_800DF9F8[j].blue, D_800DF9F8[j].alpha, D_800DF9F8[j].opacity);
+            draw_text(&sMenuCurrDisplayList, D_80126878[i].x, D_80126878[i].y, D_80126878[i].text, ALIGN_MIDDLE_CENTER);
+            D_80126878[i].colourIndex++;
+            if (D_80126878[i].colourIndex >= 4) {
+                j = i;
+                D_800DF9F4--;
+                while(j < D_800DF9F4) {
+                    D_80126878[j].text = D_80126878[j+1].text;
+                    D_80126878[j].x = D_80126878[j+1].x;
+                    D_80126878[j].y = D_80126878[j+1].y;
+                    D_80126878[j].colourIndex = D_80126878[j+1].colourIndex;
+                    j++;
+                }
+            } else {
+                i++;
+            }
+        }
+        if (introCharData->unk4 <= D_801268D8) {
+            if (D_801268D8 < introCharData->unk8) {
+                temp = (D_801268D8 - introCharData->unk4);
+                temp2 = (introCharData->unk8 - introCharData->unk4);
+                xPos = (introCharData->unk14 + (((introCharData->unk1C - introCharData->unk14) * temp) / temp2));
+                yPos = (introCharData->unk18 + (((introCharData->unk20 - introCharData->unk18) * temp) / temp2));
+                text = introCharData->unk0;
+                didUpdate = TRUE;
+            } else if (D_801268D8 <= introCharData->unkC) {
+                xPos = introCharData->unk1C;
+                yPos = introCharData->unk20;
+                text = introCharData->unk0;
+                didUpdate = TRUE;
+            } else if (D_801268D8 < introCharData->unk10) {
+                temp = (D_801268D8 - introCharData->unkC);
+                temp2 = (introCharData->unk10 - introCharData->unkC);
+                xPos = (introCharData->unk1C + (((introCharData->unk24 - introCharData->unk1C) * temp) / temp2));
+                yPos = (introCharData->unk20 + (((introCharData->unk28 - introCharData->unk20) * temp) / temp2));
+                text = introCharData->unk0;
+                didUpdate = TRUE;
+            } else {
+                if (!D_800DF9F8){} // Fake
+                D_801268E0++;
+            }
+        }
+        if (didUpdate) {
+            if (D_800DF9F4 < 4) {
+                D_80126878[D_800DF9F4].colourIndex = 0;
+                D_80126878[D_800DF9F4].text = text;
+                D_80126878[D_800DF9F4].x = xPos;
+                D_80126878[D_800DF9F4].y = yPos;
+                D_800DF9F4++;
+            }
+            set_text_colour(255, 255, 255, 0, 255);
+            draw_text(&sMenuCurrDisplayList, xPos, yPos, text, ALIGN_MIDDLE_CENTER);
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/func_80083098.s")
+#endif
 
 /**
  * Initialise the title screen menu.

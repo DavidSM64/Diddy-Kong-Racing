@@ -244,6 +244,14 @@ typedef struct unk800E153C {
     u32 unk4; // Flags?
 } unk800E153C;
 
+typedef struct MenuColour {
+    u8 red;
+    u8 green;
+    u8 blue;
+    u8 alpha;
+    u8 opacity;
+} MenuColour;
+
 /* Size: 0x10 bytes */
 typedef struct unk800861C8 {
   /* 0x00 */ u8 unk0;
@@ -256,6 +264,14 @@ typedef struct unk800861C8 {
   /* 0x08 */ char *unk8;
   /* 0x0C */ u32 fileSize; // Game Data File Size
 } unk800861C8;
+
+// Size: 12 bytes
+typedef struct unk80126878 {
+  /* 0x00 */ char *text;
+  /* 0x04 */ s16 x;
+  /* 0x06 */ s16 y;
+  /* 0x08 */ s32 colourIndex;
+} unk80126878;
 
 /* Size: 0x10 bytes */
 typedef struct unk800E0970 {
