@@ -64,12 +64,12 @@ typedef struct unk800E2C2C {
     s16 unk8;
     s16 unkA;
     TextureHeader *tex;
-    u8 unk10;
-    u8 unk11;
-    u8 unk12;
-    u8 unk13;
-    u8 unk14;
-    u8 unk15;
+    u8 primitiveRed;
+    u8 primitiveGreen;
+    u8 primitiveBlue;
+    u8 environmentRed;
+    u8 environmentGreen;
+    u8 environmentBlue;
     u8 unk16;
     u8 unk17;
 } unk800E2C2C;

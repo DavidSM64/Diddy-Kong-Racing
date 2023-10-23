@@ -1352,7 +1352,7 @@ s16 D_800E17F4[130] = {
     0x0056, 0x4000
 };
 
-u16 D_800E18F8 = 0x1000;
+UNUSED u16 D_800E18F8 = 0x1000; // Set but never read.
 
 // Unused?
 u16 D_800E18FC[30] = {
@@ -8653,7 +8653,7 @@ s32 menu_results_loop(s32 updateRate) {
             }
         } else if (D_801267D8[4] & (A_BUTTON | START_BUTTON)) {
             playSelectSound = TRUE;
-            if (gResultOptionText[gMenuOption] == gMenuText[28]) {
+            if (gResultOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_QUIT]) {
                 gMenuSubOption = 2;
             } else {
                 gMenuDelay = 1;
@@ -9132,7 +9132,7 @@ void draw_trophy_race_text(UNUSED s32 updateRate) {
     set_text_colour(255, 255, 255, 0, 255);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, (char *)worldName, ALIGN_MIDDLE_CENTER);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 64, gMenuText[ASSET_MENU_TEXT_TROPHYRACE], ALIGN_MIDDLE_CENTER); // TROPHY RACE
-    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos + 176, gMenuText[138 + gTrophyRaceRound], ALIGN_MIDDLE_CENTER); // ROUND ONE / ROUND TWO / ROUND THREE / ROUND FOUR
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos + 176, gMenuText[ASSET_MENU_TEXT_ROUNDONE + gTrophyRaceRound], ALIGN_MIDDLE_CENTER); // ROUND ONE / ROUND TWO / ROUND THREE / ROUND FOUR
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos + 208, (char *)levelName, ALIGN_MIDDLE_CENTER);
 }
 
@@ -10872,7 +10872,22 @@ s32 tt_menu_loop(void) {
             break;
         case TT_MENU_INTRODUCTION:
             {
-            i = 52;
+            /*
+                0: HI, I'M TT.
+                1: 
+                2: YOU CAN ASK ME
+                3: ABOUT YOUR GAME
+                4: STATUS OR SELECT
+                5: MY TIME TRIAL MODE
+                6: TO PRACTICE A
+                7: LEVEL.
+                8: 
+                9: I CAN ALSO SAVE
+                10: YOUR BEST GHOSTS
+                11: {NULL TO END THE CHAT}
+            */
+            //TT Has 12 different intro text lines. This will render them one by one until it hits the NULL line.
+            i = ASSET_MENU_TEXT_TTINTRO_0;
             while (gMenuText[i] != NULL) {
                 render_dialogue_text(1, POS_CENTRED, 6 + ((i-52) * 16), gMenuText[i], 1, 4);
                 i++;

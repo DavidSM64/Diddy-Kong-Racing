@@ -12,6 +12,7 @@
 #include "unknown_008C40.h"
 #include "textures_sprites.h"
 #include "math_util.h"
+#include "objects.h"
 
 /************ .rodata ************/
 
@@ -124,8 +125,8 @@ unk800E2B4C D_800E2B4C[8] = {
 };
 
 unk800E2C2C gRainGfx[2] = {
-    { 0, 0, 0x400, 0x400, 0x000A, 0xFFC4, NULL, 0x80, 0xFF, 0xFF, 0x80, 0x80, 0xFF, 0x80, 0x00 },
-    { 0, 0, 0x600, 0x600, 0x0020, 0xFF40, NULL, 0xFF, 0xFF, 0xFF, 0x00, 0x80, 0xFF, 0xFF, 0x00 }
+    { 0, 0, 0x400, 0x400, 0x000A, 0xFFC4, NULL, 128, 255, 255, 128, 128, 255, 128, 0 },
+    { 0, 0, 0x600, 0x600, 0x0020, 0xFF40, NULL, 255, 255, 255, 0, 128, 255, 255, 0 }
 };
 
 s32 gWeatherType = WEATHER_SNOW;
@@ -674,5 +675,97 @@ void handle_rain_sound(UNUSED s32 updateRate) {
     }
 }
 
-//https://decomp.me/scratch/PDAZs
+#ifdef NON_EQUIVALENT
+void render_rain_overlay(unk800E2C2C *arg0, s32 arg1) {
+    f32 sp7C;
+    Triangle *sp64;
+    f32 temp_f0;
+    f32 temp_f12;
+    f32 temp_f14;
+    f32 temp_f16;
+    f32 temp_f18;
+    f32 temp_f20;
+    f32 temp_f22;
+    f32 temp_f24;
+    f32 temp_f26;
+    s16 temp_s1;
+    s16 temp_s2;
+    s16 temp_t2;
+    s32 temp_t0;
+    s32 opacity;
+    s32 widthScaled;
+    s32 heightScaled;
+    s32 temp_t7_2;
+    s32 temp_t9;
+    s32 temp_v1;
+    TextureHeader *tex;
+    ObjectSegment *objSeg;
+    Vertex *verts;
+    Triangle *tris;
+
+    tex = arg0->tex;
+    if (tex != NULL) {
+        widthScaled = tex->width << 5; //*32
+        heightScaled = tex->height << 5;
+        temp_v1 = (widthScaled * 2) - 1;
+        temp_t9 = (heightScaled * 2) - 1;
+        arg0->unk0 = (normalise_time(arg0->unk8 * arg1) + arg0->unk0) & temp_v1;
+        arg0->unk2 = (normalise_time(arg0->unkA * arg1) + arg0->unk2) & temp_t9;
+        temp_t7_2 = (arg0->unk4 * widthScaled) >> 8;
+        opacity = (arg0->unk16 * (((D_800E2C6C >> 2) * gLightningFrequency) >> 14)) >> 16;
+        if (opacity > 0) {
+            objSeg = D_80127C1C;
+            temp_t2 = arg0->unk2;
+            temp_s2 = ((arg0->unk6 * heightScaled) >> 8) + temp_t2;
+            temp_t0 = (arg0->unk0 + ((temp_t7_2 * 6 * objSeg->trans.y_rotation) >> 16)) & temp_v1;
+            temp_s1 = temp_t7_2 + temp_t0;
+            sp7C = sins_f(objSeg->trans.z_rotation);
+            temp_f0 = coss_f(D_80127C1C->trans.z_rotation);
+            temp_f12 = D_800E2A8C;
+            temp_f14 = D_800E2A9C;
+            temp_f16 = D_800E2A9C;
+            temp_f18 = D_800E2A9C;
+            temp_f20 = D_800E2A9C;
+            temp_f22 = D_800E2AA8;
+            temp_f24 = D_800E2AA8;
+            temp_f26 = D_800E2AA8;
+            verts = &D_800E2AAC + (D_800E2C90 * sizeof(Vertex));
+            verts[0].x = ((temp_f12 * temp_f0) - (temp_f14 * sp7C));
+            verts[0].y = ((temp_f12 * sp7C) + (temp_f14 * temp_f0));
+            verts[1].x = ((temp_f16 * temp_f0) - (temp_f18 * sp7C));
+            verts[1].y = ((temp_f16 * sp7C) + (temp_f18 * temp_f0));
+            verts[2].x = ((temp_f20 * temp_f0) - (temp_f22 * sp7C));
+            verts[2].y = ((temp_f20 * sp7C) + (temp_f22 * temp_f0));
+            verts[3].x = ((temp_f24 * temp_f0) - (temp_f26 * sp7C));
+            verts[3].y = ((temp_f24 * sp7C) + (temp_f26 * temp_f0));
+            tris = gCurrWeatherTriList;
+            tris[0].vertices = (0x40 << 24) | (0 << 16) | (1 << 8) | 2;
+            tris[0].uv0.u = temp_t0;
+            tris[0].uv0.v = temp_t2;
+            tris[0].uv1.u = temp_s1;
+            tris[0].uv1.v = temp_t2;
+            tris[0].uv2.u = temp_s1;
+            tris[0].uv2.v = temp_s2;
+            tris[1].vertices = (0x40 << 24) | (2 << 16) | (3 << 8) | 0;
+            tris[1].uv0.u = temp_s1;
+            tris[1].uv0.v = temp_s2;
+            tris[1].uv1.u = temp_t0;
+            tris[1].uv1.v = temp_s2;
+            tris[1].uv2.u = temp_t0;
+            tris[1].uv2.v = temp_t2;
+            sp64 = tris + 0x20;
+            func_8007F594(&gCurrWeatherDisplayList, 0, COLOUR_RGBA32(arg0->primitiveRed, arg0->primitiveGreen, arg0->primitiveBlue, opacity), COLOUR_RGBA32(arg0->environmentRed, arg0->environmentGreen, arg0->environmentBlue, 0));
+            gDkrDmaDisplayList(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
+            //24 verts?
+            gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(&D_800E2AAC[D_800E2C90]), 24, 80);
+            //1 triangles?
+            gSPPolygon(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(gCurrWeatherTriList), 2, 0);
+            gDPPipeSync(gCurrWeatherDisplayList++);
+            D_800E2C90 = (D_800E2C90 + 4) & 0xF;
+            gCurrWeatherTriList = sp64;
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/weather/render_rain_overlay.s")
+#endif
