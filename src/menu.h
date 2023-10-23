@@ -246,13 +246,15 @@ typedef struct unk800E153C {
 
 /* Size: 0x10 bytes */
 typedef struct unk800861C8 {
-    u8 unk0;
-    u8 unk1;
-    u8 unk2;
-    u8 pad3[0x3];
-    u8 controllerIndex;
-    u8 pad7[0x5];
-    u32 fileSize; // Game Data File Size
+  /* 0x00 */ u8 unk0;
+  /* 0x01 */ u8 unk1;
+  /* 0x02 */ u8 unk2;
+  /* 0x03 */ u8 unk3;
+  /* 0x04 */ s16 unk4;
+  /* 0x06 */ u8 controllerIndex;
+  /* 0x07 */ u8 unk7;
+  /* 0x08 */ char *unk8;
+  /* 0x0C */ u32 fileSize; // Game Data File Size
 } unk800861C8;
 
 /* Size: 0x10 bytes */
@@ -490,6 +492,8 @@ void randomise_ai_racer_slots(s32 arg0);
 void func_80081C04(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UNUSED s32 font, s32 alignment);
 void func_8009CA60(s32 stackIndex);
 void func_8008E4EC(void);
+SIDeviceStatus func_800862C4(void);
+void func_8009C6D4(s32 arg0);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -515,7 +519,6 @@ s32 menu_credits_loop(s32 updateRate);
 void func_8007FFEC(s32 arg0);
 void func_800871D8(s32 arg0);
 SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1);
-void func_8009C6D4(s32 arg0);
 void set_D_800DD430(s8 arg0);
 void func_80099E8C(s32 updateRate);
 s32 func_800998E0(s32 arg0);
@@ -532,7 +535,6 @@ void func_80093D40(UNUSED s32 updateRate);
 void func_80080BC8(Gfx **);
 void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour0, s32 colour1, s32 colour2, s32 colour3);
 void func_80084854(void);
-s32 func_800862C4(void);
 s32 func_80086AFC(void);
 s32 func_80087734(s32, s32);
 void func_80085B9C(UNUSED s32 updateRate);

@@ -669,7 +669,7 @@ SIDeviceStatus get_file_extension(s32 controllerIndex, s32 fileType, char *fileE
             if (fileNames[fileNum] == NULL) {
                 continue;
             }
-            if (fileType == 3) {
+            if (fileType == SAVE_FILE_TYPE_GAME_DATA) {
                 if((bcmp((u8 *) fileNames[fileNum], (char *) sDKRacingAdv1, strlen((char *) sDKRacingAdv2)) != 0)) {
                     continue;
                 }
@@ -1767,7 +1767,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
         temp_D_800DE440 += 0x12;
         fileExtensions[i] = (char *) temp_D_800DE440;
         fileSizes[i] = 0;
-        fileTypes[i] = -1;
+        fileTypes[i] = SAVE_FILE_TYPE_UNSET;
         temp_D_800DE440 += 6;
     }
     
@@ -1775,7 +1775,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
         fileExtensions[i] = 0;
         fileNames[i] = 0;
         fileSizes[i] = 0;
-        fileTypes[i] = -1;
+        fileTypes[i] = SAVE_FILE_TYPE_UNSET;
         i++;
     }
     
@@ -1794,7 +1794,7 @@ s32 get_controller_pak_file_list(s32 controllerIndex, s32 maxNumOfFilesToGet, ch
         font_codes_to_string((char *)&state.game_name, (char *)fileNames[i], PFS_FILE_NAME_LEN);
         font_codes_to_string((char *)&state.ext_name, (char *)fileExtensions[i], PFS_FILE_EXT_LEN);
         fileSizes[i] = state.file_size;
-        fileTypes[i] = 6; // Unknown file type? Possibly from another game?
+        fileTypes[i] = SAVE_FILE_TYPE_UNKNOWN;
         
         if ((state.game_code == gameCode) && (state.company_code == COMPANY_CODE)) {
             fileTypes[i] = get_file_type(controllerIndex, i);
@@ -2141,31 +2141,27 @@ char *string_to_font_codes(char *inString, char *outString, s32 stringLength) {
 
 /**
  * For the given controller, and file, this will return a value for which type of file it is.
- * 3 = GAMD / Game Data
- * 4 = TIMD / Time Data
- * 5 = GHSS / Ghost Data
- * 6 = Unknown? Possibly from another game?
  */
-s32 get_file_type(s32 controllerIndex, s32 fileNum) {
+SaveFileType get_file_type(s32 controllerIndex, s32 fileNum) {
     s32 *data;
     UNUSED s32 pad;
     s32 ret;
 
-    ret = 6;
+    ret = SAVE_FILE_TYPE_UNKNOWN;
     data = allocate_from_main_pool_safe(0x100, COLOUR_TAG_BLACK);
-    if (read_data_from_controller_pak(controllerIndex, fileNum, (u8 *)data, 0x100) == CONTROLLER_PAK_GOOD) {
+    if (read_data_from_controller_pak(controllerIndex, fileNum, (u8 *) data, 0x100) == CONTROLLER_PAK_GOOD) {
         switch (*data) {
             case GAMD:
-                ret = 3;
+                ret = SAVE_FILE_TYPE_GAME_DATA;
                 break;
             case TIMD:
-                ret = 4;
+                ret = SAVE_FILE_TYPE_TIME_DATA;
                 break;
             case GHSS:
-                ret = 5;
+                ret = SAVE_FILE_TYPE_GHOST_DATA;
                 break;
             default:
-                ret = 6;
+                ret = SAVE_FILE_TYPE_UNKNOWN;
                 break;
         }
     }

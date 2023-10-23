@@ -133,7 +133,7 @@ u16 D_80126520[6];
 Settings *gSavefileData[4];
 u8 D_80126540[8];
 s32 gMultiplayerSelectedNumberOfRacersCopy; // Saved version gMultiplayerSelectedNumberOfRacers?
-TextureHeader *gMenuTextures[128];              // lookup table? TEXTURES
+TextureHeader *gMenuTextures[128]; // lookup table? Contains Objects as well. Need to change name and type.
 u8 D_80126750[128]; // Seems to be a boolean for "This texture exists" for the above array.
 s32 D_801267D0;
 s32 D_801267D4;
@@ -205,7 +205,7 @@ u8 sControllerPakNoFreeSpace[MAXCONTROLLERS]; //Flag to see if there's no free s
 u8 sControllerPakBadData[MAXCONTROLLERS]; //Flag to see if there's bad data for the given controller pak
 char *gMenuOptionText[8]; //Menu Text
 u8 sControllerPakDataPresent[MAXCONTROLLERS]; //Flag to see if there's data present for the given controller pak? Not sure
-u8 *D_80126A64;
+char *D_80126A64;
 s32 gMenuOption; //sCurrentControllerIndex?
 s32 D_80126A6C;
 s32 D_80126A70;
@@ -2440,7 +2440,7 @@ void func_800828B8(void) {
 
     for (i = 0; i < numLevels; i++) {
         settings->courseFlagsPtr[i] = RACE_UNATTEMPTED;
-        for (numWorlds = 0; numWorlds < 3; numWorlds++) {
+        for (numWorlds = 0; numWorlds < NUMBER_OF_SAVE_FILES; numWorlds++) {
             settings->courseFlagsPtr[i] |= gSavefileData[numWorlds]->courseFlagsPtr[i];
         }
     }
@@ -2449,7 +2449,7 @@ void func_800828B8(void) {
     settings->keys = 0;
     settings->bosses = 0;
     settings->cutsceneFlags = 0;
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         settings->trophies |= gSavefileData[i]->trophies;
         settings->keys |= gSavefileData[i]->keys;
         settings->bosses |= gSavefileData[i]->bosses;
@@ -3217,7 +3217,7 @@ void menu_save_options_init(void) {
     gMenuDelay = 0;
     gMenuOptionCount = 1;
     gOpacityDecayTimer = 0;
-    D_80126A64 = (u8 *) allocate_from_main_pool_safe(0x800, COLOUR_TAG_WHITE);
+    D_80126A64 = (char *) allocate_from_main_pool_safe(0x800, COLOUR_TAG_WHITE);
     D_80126A0C = (unk800861C8 *) allocate_from_main_pool_safe(0xA00, COLOUR_TAG_WHITE);
     D_80126A04 = &D_80126A0C[80];
     D_80126A08 = 0;
@@ -3387,7 +3387,7 @@ s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, 
 
 void func_800861C8(unk800861C8 *arg0, s32 *arg1) {
     s32 i;
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         if (gSavefileData[i]->newGame) {
             arg0[*arg1].unk0 = 1;
             arg0[*arg1].unk1 = 0;
@@ -3399,7 +3399,120 @@ void func_800861C8(unk800861C8 *arg0, s32 *arg1) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_800862C4.s")
+SIDeviceStatus func_800862C4(void) {
+    s32 numAttempts;
+    s32 i;
+    s32 fileIndex;
+    SIDeviceStatus result;
+    SIDeviceStatus temp;
+    char *fileNames[16];
+    char *fileExts[16];
+    u8 fileTypes[16];
+    Settings *settings;
+    u32 fileSizes[16];
+    char *temp_D_80126A64;
+    
+    settings = gSavefileData[3];
+    D_80126A08 = 0;
+    D_80126BD4 = 0;
+    D_80126BDC = 0.0f;
+    for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
+        if (!gSavefileData[i]->newGame) {
+            D_80126A0C[D_80126A08].unk0 = 1;
+            D_80126A0C[D_80126A08].unk1 = 1;
+            D_80126A0C[D_80126A08].unk2 = gSavefileData[i]->balloonsPtr[0];
+            D_80126A0C[D_80126A08].controllerIndex = i;
+            D_80126A0C[D_80126A08].fileSize = get_game_data_file_size();
+            D_80126A08++;
+        }
+    }
+    
+    D_80126A0C[D_80126A08].unk0 = 2;
+    D_80126A0C[D_80126A08].unk1 = 1;
+    D_80126A0C[D_80126A08++].fileSize = get_time_data_file_size();
+    D_80126A0C[D_80126A08++].unk0 = 10;
+    temp_D_80126A64 = D_80126A64;
+    do {
+        numAttempts = 1;
+        if (D_80126A18 != 0) {
+            D_80126A14 = 0;
+            
+            do {
+                result = get_controller_pak_file_list(0, 16, fileNames, fileExts, fileSizes, fileTypes);
+                temp = result & 0xFF; //strip the controller index from the result to just get the SI Device Status
+                numAttempts++;
+            } while ((temp == CONTROLLER_PAK_CHANGED) && (numAttempts < 3));
+
+            if (result == CONTROLLER_PAK_GOOD) {
+                for (fileIndex = 0; fileIndex < 16; fileIndex++) {
+                    if ((fileTypes[fileIndex] >= SAVE_FILE_TYPE_GAME_DATA) && (fileTypes[fileIndex] <= SAVE_FILE_TYPE_UNKNOWN)) {
+                        (*sControllerPakNotesFree)--;
+                        D_80126A0C[D_80126A08].unk0 = fileTypes[fileIndex];
+                        D_80126A0C[D_80126A08].controllerIndex = 0;
+                        D_80126A0C[D_80126A08].unk7 = fileIndex;
+                        D_80126A0C[D_80126A08].fileSize = fileSizes[fileIndex];
+                        if (fileTypes[fileIndex] == SAVE_FILE_TYPE_GAME_DATA) {
+                            if (read_game_data_from_controller_pak(0, fileExts[fileIndex], settings) == CONTROLLER_PAK_GOOD) {
+                                D_80126A0C[D_80126A08].unk8 = temp_D_80126A64;
+                                temp_D_80126A64[0] = *fileExts[fileIndex];
+                                temp_D_80126A64[1] = 0;
+                                temp_D_80126A64 += 2;
+                                D_80126A0C[D_80126A08].unk2 = *settings->balloonsPtr;
+                                D_80126A0C[D_80126A08].unk3 = (settings->cutsceneFlags & 4) != 0; // Is in Adventure Two?
+                                D_80126A0C[D_80126A08].unk4 = settings->filename;
+                            } else {
+                                D_80126A08--;
+                            }
+                        } else {
+                            temp = 0;
+                            if ((fileTypes[fileIndex] == SAVE_FILE_TYPE_UNKNOWN) || (fileTypes[fileIndex] == SAVE_FILE_TYPE_TIME_DATA)) {
+                                if (fileTypes[fileIndex] == SAVE_FILE_TYPE_TIME_DATA) {
+                                    temp = CONTROLLER_PAK_BAD_DATA;
+                                }
+                                D_80126A0C[D_80126A08].unk8 = temp_D_80126A64;
+                                while (fileNames[fileIndex][temp] != '\0') {
+                                    *temp_D_80126A64 = fileNames[fileIndex][temp];
+                                    temp++;
+                                    temp_D_80126A64++;
+                                }
+                                
+                                if ((fileExts[fileIndex] != NULL) && (fileExts[fileIndex][0] != '\0')) {
+                                    *temp_D_80126A64 = '.';
+                                    temp_D_80126A64++;
+                                    temp = 0;
+                                    while (fileExts[fileIndex][temp] != '\0') {
+                                        *temp_D_80126A64 = fileExts[fileIndex][temp];
+                                        temp_D_80126A64++;
+                                        temp++;
+                                    }
+                                }
+                                *temp_D_80126A64 = 0;
+                                temp_D_80126A64++;
+                            }
+                        }
+                        D_80126A08++;
+                    }
+                }
+                packDirectoryFree();
+            } else if (temp == RUMBLE_PAK) {
+                D_80126A14 = 1;
+                if (D_80126A18 < 0) {
+                    result = CONTROLLER_PAK_GOOD;
+                }
+                if (D_80126A6C != 0) {
+                    D_80126A10 = 1;
+                    D_80126A6C = 0;
+                }
+            } else if (temp == NO_CONTROLLER_PAK) {
+                result = CONTROLLER_PAK_GOOD;
+            } else if (D_80126A18 < 0 && temp == CONTROLLER_PAK_CHANGED) {
+                numAttempts = 0;
+            }
+        }
+    }
+    while (numAttempts == 0);
+    return result;
+}
 
 s32 func_800867D4(void) {
     s32 ret = 0;
@@ -4173,7 +4286,7 @@ s32 menu_controller_pak_loop(s32 updateRate) {
                 default:
                     if (pressedButtons & (A_BUTTON | START_BUTTON)) {
                         //Check if the selected menu item is a file or blank
-                        if ((sCurrentControllerPakAllFileTypes[D_800DF460] >= 3) && (sCurrentControllerPakAllFileTypes[D_800DF460] <= 6)) {
+                        if ((sCurrentControllerPakAllFileTypes[D_800DF460] >= SAVE_FILE_TYPE_GAME_DATA) && (sCurrentControllerPakAllFileTypes[D_800DF460] <= SAVE_FILE_TYPE_UNKNOWN)) {
                             D_80126C10 = 0;
                             gMenuOptionCount = 2;
                             playSelectedSound = TRUE;
@@ -5662,7 +5775,7 @@ void render_file_select_menu(UNUSED s32 updateRate) {
 
     func_8009BD5C();
     set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
-    for (i = 0; i < 3; i++) { // 3 files
+    for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         if (gSavefileInfo[i].isAdventure2 == gIsInAdventureTwo || gSavefileInfo[i].isStarted == 0) {
             color = COLOUR_RGBA32(176, 224, 192, 255);
         } else {
@@ -5676,7 +5789,7 @@ void render_file_select_menu(UNUSED s32 updateRate) {
         set_text_font(ASSET_FONTS_BIGFONT);
         set_text_background_colour(0, 0, 0, 0);
         s5 = 10;
-        for (i = 0; i < 3; i++) {
+        for (i = 0; i < NUMBER_OF_SAVE_FILES i++) {
             if (gSavefileInfo[i].isStarted != 0) {
                 s2 = 0xB;
                 sprite_opaque(FALSE);
@@ -5709,7 +5822,7 @@ void render_file_select_menu(UNUSED s32 updateRate) {
     set_text_font(ASSET_FONTS_FUNFONT);
     set_text_background_colour(0, 0, 0, 0);
     set_text_colour(255, 255, 255, 0, 255);
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         s2 = FALSE;
         if (D_80126484 != FALSE) {
             if (D_80126494 == 0 && i == gSaveFileIndex3) {
@@ -6046,7 +6159,7 @@ s32 menu_file_select_loop(s32 updateRate) {
         gOpacityDecayTimer++;
         
         if (gOpacityDecayTimer >= 3) {
-            for (i = 0; i < 3; i++) {
+            for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
                 gSavefileInfo[i].isAdventure2 = 0;
                 if (gSavefileData[i]->newGame) {
                     gSavefileInfo[i].isStarted = 0;
@@ -9616,8 +9729,44 @@ void func_8009C674(s16 *textureIndex) {
     }
 }
 
-// Educated guess says this is a function that renders texture tiles on screen.
-GLOBAL_ASM("asm/non_matchings/menu/func_8009C6D4.s")
+void func_8009C6D4(s32 arg0) {
+    s32 i;
+    LevelObjectEntryCommon entry;
+    
+    if (*gAssetsMenuElementIds == NULL) {
+        *gAssetsMenuElementIds = (s16 *) load_asset_section_from_rom(ASSET_MENU_ELEMENT_IDS);
+        for(D_800DF754 = 0; (*gAssetsMenuElementIds)[D_800DF754] != -1; D_800DF754++){}
+        D_800DF758 = 0;
+        for(i = 0; i < D_800DF754; i++) {
+            D_80126750[i] = FALSE;
+        }
+    }
+    if (!D_80126750[arg0]) {
+        i = (*gAssetsMenuElementIds)[arg0];
+        
+        if (((!arg0) && (!arg0)) && (!arg0)){} // Fakematch
+        
+        if ((i & 0xC000) == 0xC000) {
+            gMenuTextures[arg0] = load_texture(i & 0x3FFF);
+        } else if (i & 0x8000) {
+            gMenuTextures[arg0] = func_8007C12C(i & 0x3FFF, 0);
+        } else if (i & 0x4000) {
+            if (D_800DF754){} // Fakematch
+            entry.objectID = i & 0xFFFF;
+            entry.size = 8;
+            entry.x = 0;
+            entry.y = 0;
+            entry.z = 0;
+            gMenuTextures[arg0] = spawn_object(&entry, 0);
+        } else {
+            gMenuTextures[arg0] = func_8005F99C(i & 0x3FFF, 0);
+        }
+
+        D_80126750[arg0] = TRUE;
+        D_800DF758++;
+    }
+}
+
 
 void allocate_menu_images(s16 *imageSet) {
     s32 index = 0;
