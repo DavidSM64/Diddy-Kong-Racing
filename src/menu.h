@@ -518,6 +518,7 @@ SIDeviceStatus func_800862C4(void);
 void func_8009C6D4(s32 arg0);
 s32 func_80087734(s32 buttonsPressed, s32 yAxis);
 void func_800853D0(unk800861C8 *arg0, s32 x, s32 y);
+void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectOpacity, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -549,9 +550,7 @@ s32 func_800998E0(s32 arg0);
 void func_80081218(void);
 void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour, TextureHeader *tex);
 void func_8008D8BC(s32 updateRate);
-void renderTrackSelect(s32 arg0, s32 arg1, s8 *arg2, s8 *arg3, s32 arg4, s32 arg5, s32 arg6, DrawTexture *arg7, s32 arg8);
-//Possible names
-//void renderTrackSelect(s32 xPos, s32 yPos, char *levelName, char *arg3, s32 colour, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
+
 s32 func_80095728(Gfx **gfx, MatrixS **mtx, Vertex **vtx, s32 updateRate);
 s32 func_8008F618(Gfx **dlist, MatrixS **mat);
 void func_80093D40(UNUSED s32 updateRate);

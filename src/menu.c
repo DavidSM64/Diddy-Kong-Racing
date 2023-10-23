@@ -186,7 +186,7 @@ char *gMusicTestString;
 f32 gTrackSelectY;
 f32 D_801269E8;
 f32 D_801269EC;
-s32 D_801269F0;
+char *D_801269F0;
 s32 gSelectedTrackX;
 s32 gSelectedTrackY;
 s32 *D_801269FC;
@@ -777,11 +777,13 @@ u16 D_800E06B0[10] = {
     0x68, 0x21, 0xFB, 0x27, 0x8E, 0xF5, 0x27, 0x6C, 0xB0, 0xF5
 };
 
+//Paired X / Y Offsets. X Is First, Y is Second. For NTSC.
 s16 D_800E06C4[8] = {
     0x0000, 0xFFC2, 0x0055, 0x0000,
     0x0000, 0x003E, 0xFFAB, 0x0000,
 };
 
+//Paired X / Y Offsets. X Is First, Y is Second. For PAL.
 s16 D_800E06D4[8] = {
     0x0000, 0xFFB6, 0x0055, 0x0000,
     0x0000, 0x004A, 0xFFAB, 0x0000,
@@ -7052,7 +7054,96 @@ void func_8008F534(void) {
 
 //https://decomp.me/scratch/ubeU1
 GLOBAL_ASM("asm/non_matchings/menu/func_8008F618.s")
-GLOBAL_ASM("asm/non_matchings/menu/renderTrackSelect.s")
+
+void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectOpacity, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8) {
+    s32 xTemp;
+    s32 yTemp;
+    s32 opacity;
+    s32 i;
+    s32 sp6C;
+    s32 x1;
+    s32 y1;
+    s32 x2;
+    s32 y2;
+    f32 sp58;
+    f32 sp54;
+    s16 *offsets;
+    s32 temp;
+
+    sp6C = 0;
+    xTemp = x + 160;
+    yTemp = gTrackSelectViewPortHalfY - y;
+    if (osTvType == TV_TYPE_PAL) {
+        sp6C = 12;
+    }
+    set_text_font(ASSET_FONTS_BIGFONT);
+    set_text_background_colour(0, 0, 0, 0);
+    if (gMenuDelay > 0) {
+        opacity = 255 - (gMenuDelay * 16);
+        if (opacity < 0) {
+            opacity = 0;
+        }
+    } else {
+        opacity = 255;
+    }
+    if (hubName != D_801269F0) {
+        temp = get_level_name(get_hub_area_id(3));
+        if ((s32) hubName == temp) {
+            set_kerning(TRUE);
+        }
+        set_text_colour(0, 0, 0, 255, opacity / 2);
+        draw_text(&sMenuCurrDisplayList, 161, (yTemp - sp6C) - 85, hubName, ALIGN_MIDDLE_CENTER);
+        set_text_colour(255, 255, 255, 0, opacity);
+        draw_text(&sMenuCurrDisplayList, 160, (yTemp - sp6C) - 88, hubName, ALIGN_MIDDLE_CENTER);
+        D_801269F0 = hubName;
+        set_kerning(0);
+    }
+    set_text_colour(255, 255, 255, 0, opacity);
+    draw_text(&sMenuCurrDisplayList, xTemp, sp6C + yTemp + 88, trackName, ALIGN_MIDDLE_CENTER);
+    if (rectOpacity > 0) {
+        if (((yTemp - (gTrackSelectViewportY >> 2)) < gTrackSelectViewportY) && (((gTrackSelectViewportY >> 2) + yTemp) > 0)) {
+            sp58 = 1.25f;
+            sp54 = 1.25f;
+            if (osTvType == TV_TYPE_PAL) {
+                sp54 *= 1.1;
+            }
+            temp = xTemp - 80;
+            if (copyViewPort) {
+                copy_viewport_frame_size_to_coords(0, &x1, &y1, &x2, &y2);
+                temp = x1;
+                sp58 = (x2 - temp) * (1.0f / 128.0f);
+                sp54 = (y2 - y1) / 96.0f;
+            } else {
+                x2 = xTemp + 80;
+            }
+            x1 = temp;
+            if (temp < SCREEN_WIDTH && xTemp > 0) {
+                render_texture_rectangle_scaled(&sMenuCurrDisplayList, arg7, xTemp, yTemp, sp58, sp54, (rectOpacity & 0xFF) | ~0xFF, 0x1000);
+            }
+            if (xTemp < SCREEN_WIDTH && x2 > 0) {
+                render_texture_rectangle_scaled(&sMenuCurrDisplayList, arg7, xTemp, yTemp, sp58, sp54, (rectOpacity & 0xFF) | ~0xFF, 0);
+            }
+            reset_render_settings(&sMenuCurrDisplayList);
+        }
+    }
+    gMenuImageStack[imageId].unkC = x;
+    gMenuImageStack[imageId].unk10 = y;
+    if (osTvType == TV_TYPE_PAL) {
+        D_800DF454 = 1.2f;
+        offsets = D_800E06D4;
+    } else {
+        offsets = D_800E06C4;
+    }
+    func_8009CA60(imageId);
+    D_800DF454 = 1.0f;
+    for(i = 0; i < 4; i++) {
+        if ((1 << i) & arg8) {
+            render_textured_rectangle(&sMenuCurrDisplayList, gMenuSelectionArrows[i], offsets[(i << 1)] + xTemp + 1, offsets[(i << 1) + 1] + yTemp + 1, 0, 0, 0, 128);
+            render_textured_rectangle(&sMenuCurrDisplayList, gMenuSelectionArrows[i], offsets[(i << 1)] + xTemp - 1, offsets[(i << 1) + 1] + yTemp - 1, 255, 255, 255, 255);
+        }
+    }
+    reset_render_settings(&sMenuCurrDisplayList);
+}
 
 #ifdef NON_EQUIVALENT
 void func_8008FF1C(s32 updateRate) {
@@ -7158,7 +7249,7 @@ void func_8008FF1C(s32 updateRate) {
 
         for (yOffset = 0; yOffset < ARRAY_COUNT(gTrackSelectRenderDetails); yOffset++) {
             if (gTrackSelectRenderDetails[yOffset].visible != 0) {
-                renderTrackSelect(
+                render_track_select(
                     gTrackSelectRenderDetails[yOffset].xOff,
                     gTrackSelectRenderDetails[yOffset].yOff,
                     gTrackSelectRenderDetails[yOffset].hubName,

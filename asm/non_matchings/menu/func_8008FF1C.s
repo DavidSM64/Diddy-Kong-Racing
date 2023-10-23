@@ -369,7 +369,7 @@ glabel func_8008FF1C
 /* 091080 80090480 AFAA0018 */  sw    $t2, 0x18($sp)
 /* 091084 80090484 AFA2001C */  sw    $v0, 0x1c($sp)
 /* 091088 80090488 AFB90010 */  sw    $t9, 0x10($sp)
-/* 09108C 8009048C 0C023E95 */  jal   renderTrackSelect
+/* 09108C 8009048C 0C023E95 */  jal   render_track_select
 /* 091090 80090490 AFA80014 */   sw    $t0, 0x14($sp)
 .L80090494:
 /* 091094 80090494 26100010 */  addiu $s0, $s0, 0x10
