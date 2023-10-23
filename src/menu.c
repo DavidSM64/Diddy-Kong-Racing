@@ -813,21 +813,62 @@ s16 D_800E0730[19] = {
     0x0000, 0x0000, 0x0000
 };
 
-s16 D_800E0758[54] = {
-    0xFFFF, 0xFFFF,
-    0x0129, 0x011A, 0x0120, 0x0115,
-    0x0126, 0x011D, 0x0130, 0x0121,
-    0x0117, 0x0154, 0x0128, 0x0119,
-    0x012C, 0x0123, 0xFFFF, 0x0122,
-    0x011C, 0x0116, 0x0127, 0xFFFF,
-    0xFFFF, 0xFFFF, 0x012D, 0x012E,
-    0x0153, 0x012B, 0x011B, 0x011F,
-    0x0124, 0x011E, 0x0118, 0x0125,
-    0x012F, 0x012A, 0xFFFF, 0xFFFF,
-    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
-    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
-    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
-    0xFFFF, 0xFFFF, 0xFFFF, 0x0000
+// ID for T.Ts voice lines for each track id.
+// T.T. will say nothing for tracks with -1
+s16 gTTVoiceLines[53] = {
+    -1, 
+    -1,
+    SOUND_VOICE_TT_DRAGON_FOREST, 
+    SOUND_VOICE_TT_FOSSIL_CANYON, 
+    SOUND_VOICE_TT_PIRATE_LAGOON, 
+    SOUND_VOICE_TT_ANCIENT_LAKE,
+    SOUND_VOICE_TT_WALRUS_COVE, 
+    SOUND_VOICE_TT_HOT_TOP_VOLCANO, 
+    SOUND_VOICE_TT_WHALE_BAY, 
+    SOUND_VOICE_TT_SNOWBALL_VALLEY,
+    SOUND_VOICE_TT_CRESCENT_ISLAND, 
+    SOUND_VOICE_TT_FIRE_MOUNTAIN, 
+    SOUND_VOICE_TT_DINO_DOMAIN, 
+    SOUND_VOICE_TT_EVERFROST_PEAK,
+    SOUND_VOICE_TT_SHERBET_ISLAND, 
+    SOUND_VOICE_TT_SPACEPORT_ALPHA, 
+    -1, 
+    SOUND_VOICE_TT_SPACEDUST_VALLEY,
+    SOUND_VOICE_TT_GREENWOOD_VILLAGE, 
+    SOUND_VOICE_TT_BOULDER_CANYON, 
+    SOUND_VOICE_TT_WINDMILL_PLAINS, 
+    -1,
+    -1, 
+    -1, 
+    SOUND_VOICE_TT_SNOWFLAKE_MOUNTAIN, 
+    SOUND_VOICE_TT_SMOKEY_CASTLE,
+    SOUND_VOICE_TT_DARKWATER_BEACH, 
+    SOUND_VOICE_TT_ICICLE_PYRAMID, 
+    SOUND_VOICE_TT_FROSTY_VILLAGE, 
+    SOUND_VOICE_TT_JUNGLE_FALLS,
+    SOUND_VOICE_TT_TREASURE_CAVES, 
+    SOUND_VOICE_TT_HAUNTED_WOODS, 
+    SOUND_VOICE_TT_DARKMOON_CAVERNS, 
+    SOUND_VOICE_TT_STAR_CITY,
+    SOUND_VOICE_TT_TROPHY_RACE, 
+    SOUND_VOICE_TT_FUTURE_FUN_LAND, 
+    -1, 
+    -1,
+    -1, 
+    -1, 
+    -1, 
+    -1,
+    -1, 
+    -1, 
+    -1, 
+    -1,
+    -1, 
+    -1, 
+    -1, 
+    -1,
+    -1, 
+    -1, 
+    -1
 };
 
 s16 D_800E07C4[14] = {
@@ -7732,7 +7773,7 @@ void menu_adventure_track_init(void) {
     Settings *settings;
     s32 result;
     s32 mapId;
-    s16 temp;
+    s16 ttVoiceLine;
 
     settings = get_settings();
     gTrackIdForPreview = ASSET_LEVEL_CENTRALAREAHUB;
@@ -7742,17 +7783,17 @@ void menu_adventure_track_init(void) {
     gPlayerSelectVehicle[PLAYER_ONE] = get_map_default_vehicle(mapId);
     result = get_map_race_type(mapId);
     if ((result == 5) || (result == 8) || (!(result & 0x40) && (!(settings->courseFlagsPtr[mapId] & RACE_CLEARED)))) {
-        temp = D_800E0758[mapId];
-        if (temp != -1) {
-            func_80000FDC(temp, 0, 1.0f);
+        ttVoiceLine = gTTVoiceLines[mapId];
+        if (ttVoiceLine != -1) {
+            func_80000FDC(ttVoiceLine, 0, 1.0f);
         }
         gMenuOptionCount = -1;
     } else {
-        temp = D_800E0758[mapId];
-        if (temp != -1) {
-            func_80000FDC(temp, 0, 0.5f);
+        ttVoiceLine = gTTVoiceLines[mapId];
+        if (ttVoiceLine != -1) {
+            func_80000FDC(ttVoiceLine, 0, 0.5f);
         }
-        set_music_player_voice_limit(0x18);
+        set_music_player_voice_limit(24);
         play_music(SEQUENCE_MAIN_MENU);
         func_80000B18();
         gMenuOptionCount = 0;
@@ -7777,7 +7818,7 @@ void menu_adventure_track_init(void) {
     }
     assign_dialogue_box_id(7);
     if (get_map_race_type(mapId) & 0x40) {
-        set_current_text(get_map_world_id(mapId) + 0x3B);
+        set_current_text(get_map_world_id(mapId) + 59);
     }
 }
 
@@ -8239,8 +8280,8 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
                 return 1;
             }
             if ((gMenuOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_RESTARTRACE]) || (gMenuOptionText[gMenuOption] == gMenuText[ASSET_MENU_TEXT_RESTARTCHALLENGE])) {
-                if ((gIsInTracksMode == 0) && (D_800E0758[get_ingame_map_id()] != -1)) {
-                    func_80000FDC(D_800E0758[get_ingame_map_id()], 0, 1.0f);
+                if ((gIsInTracksMode == 0) && (gTTVoiceLines[get_ingame_map_id()] != -1)) {
+                    func_80000FDC(gTTVoiceLines[get_ingame_map_id()], 0, 1.0f);
                 }
                 return 2;
             }
@@ -9097,7 +9138,7 @@ void draw_trophy_race_text(UNUSED s32 updateRate) {
 
 s32 menu_trophy_race_round_loop(s32 updateRate) {
     s8 *trackMenuIds;
-    s16 temp_a2;
+    s16 ttVoiceLine;
     s32 temp;
 
     trackMenuIds = (s8 *)get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS); //tracks_menu_ids
@@ -9106,9 +9147,9 @@ s32 menu_trophy_race_round_loop(s32 updateRate) {
         if (gTrackNameVoiceDelay <= 0) {
             //This is mostly likely supposed to be a multi dimensional array
             temp = trackMenuIds[(((gTrophyRaceWorldId - 1) * 6) + gTrophyRaceRound)];
-            temp_a2 = D_800E0758[temp];
-            if (temp_a2 != -1) {
-                play_sound_global(temp_a2, NULL);
+            ttVoiceLine = gTTVoiceLines[temp];
+            if (ttVoiceLine != -1) {
+                play_sound_global(ttVoiceLine, NULL);
             }
             gTrackNameVoiceDelay = 0;
         }
