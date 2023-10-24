@@ -8618,12 +8618,11 @@ void func_80094D28(UNUSED s32 updateRate) {
     s32 viewportULX;
     s32 viewportLRY;
     s32 viewportULY;
-    s32 textYPos;
+    Settings *settings;
+    s32 j;
     s32 i;
-    s32 iTemp;
     s32 sp3C;
     s32 temp;
-    Settings *settings;
     
     settings = get_settings();
     if (gNumberOfActivePlayers == 1) {
@@ -8649,13 +8648,13 @@ void func_80094D28(UNUSED s32 updateRate) {
             gMenuImageStack[4].unk8 = sMenuImageProperties[4].unk8 * (2.0f - (temp / 60.0f));
             break;
         case 2:
-            for(iTemp = 0; iTemp < 3; iTemp++) {
-                if (settings->display_times && settings->racers[0].best_times & (1 << iTemp)) {
-                    D_800E0BEC[iTemp+3].filterGreen = 192 - ((textAlpha * 3) >> 2);
-                    D_800E0BEC[iTemp+3].filterBlue = 255 - textAlpha;
+            for(i = 0; i < 3; i++) {
+                if (settings->display_times && settings->racers[0].best_times & (1 << i)) {
+                    D_800E0BEC[i+3].filterGreen = 192 - ((textAlpha * 3) >> 2);
+                    D_800E0BEC[i+3].filterBlue = 255 - textAlpha;
                 } else {
-                    D_800E0BEC[iTemp+3].filterGreen = 192;
-                    D_800E0BEC[iTemp+3].filterBlue = 255;
+                    D_800E0BEC[i+3].filterGreen = 192;
+                    D_800E0BEC[i+3].filterBlue = 255;
                 }
             }
             if (settings->display_times && settings->racers[0].best_times & (1 << 7)) {
@@ -8669,22 +8668,22 @@ void func_80094D28(UNUSED s32 updateRate) {
             }
             break;
         case 3:
-            for(i = 0; i < 8; i++) {
-                iTemp = i;
+            for(j = 0; j < 8; j++) {
+                i = j;
                 sp3C = 255;
                 if (is_in_two_player_adventure()) {
-                    iTemp = i - 1;
-                    if (iTemp == settings->racers[1].starting_position) {
+                    i = j - 1;
+                    if (i == settings->racers[1].starting_position) {
                         sp3C = (textAlpha >> 1) + 128;
                     }
                 }
-                if (iTemp == settings->racers[0].starting_position) {
+                if (i == settings->racers[0].starting_position) {
                     sp3C = (textAlpha >> 1) + 128;
                 }
-                //if (y){} // Fake
-                D_800E0CEC[7 - i].filterRed = sp3C;
-                D_800E0CEC[7 - i].filterGreen = sp3C;
-                D_800E0CEC[7 - i].filterBlue = sp3C;
+                if (y){} // Fake
+                D_800E0CEC[7 - j].filterRed = sp3C;
+                D_800E0CEC[7 - j].filterGreen = sp3C;
+                D_800E0CEC[7 - j].filterBlue = sp3C;
             }
             break;
         case 5:
@@ -8727,12 +8726,12 @@ void func_80094D28(UNUSED s32 updateRate) {
                 viewportULX = 0;
                 viewportLRY = 16;
             }
-            textYPos = ((temp * viewportLRY) + 1) >> 1;
+            viewportULY = ((temp * viewportLRY) + 1) >> 1;
             temp = 192;
             if (osTvType == TV_TYPE_PAL) {
                 temp = 218;
             } 
-            set_current_dialogue_box_coords(7, 0, temp - textYPos - viewportULX - 4, SCREEN_WIDTH, temp + textYPos + viewportULX + 4);
+            set_current_dialogue_box_coords(7, 0, temp - viewportULY - viewportULX - 4, SCREEN_WIDTH, temp + viewportULY + viewportULX + 4);
             set_current_dialogue_background_colour(7, 64, 64, 255, 0);
             set_current_text_colour(7, 255, 0, 255, 64, 255);
             if (D_80126A98) {
@@ -8742,21 +8741,22 @@ void func_80094D28(UNUSED s32 updateRate) {
                     render_dialogue_text(7, POS_CENTRED, y, D_80126C1C[temp], 1, ALIGN_MIDDLE_CENTER);
                 }
             } else {
-                textYPos -= 24;
+                if (y && y){}
+                viewportULY -= 24;
                 if (gMenuSubOption != 0) {
-                    render_dialogue_text(7, POS_CENTRED, textYPos + 8, gMenuText[ASSET_MENU_TEXT_QUITGAMETITLE], 1, ALIGN_MIDDLE_CENTER);
+                    render_dialogue_text(7, POS_CENTRED, viewportULY + 8, gMenuText[ASSET_MENU_TEXT_QUITGAMETITLE], 1, ALIGN_MIDDLE_CENTER);
                     temp = 0;
                     if (gMenuSubOption == 1) {
                         temp = textAlpha;
                     }
                     set_current_text_colour(7, 255, 255, 255, temp, 255);
-                    render_dialogue_text(7, POS_CENTRED, textYPos + 26, gMenuText[ASSET_MENU_TEXT_OK], 1, ALIGN_MIDDLE_CENTER);
+                    render_dialogue_text(7, POS_CENTRED, viewportULY + 26, gMenuText[ASSET_MENU_TEXT_OK], 1, ALIGN_MIDDLE_CENTER);
                     temp = 0;
                     if (gMenuSubOption == 2) {
                         temp = textAlpha;
                     }
                     set_current_text_colour(7, 255, 255, 255, temp, 255);
-                    render_dialogue_text(7, POS_CENTRED, textYPos + 42, gMenuText[ASSET_MENU_TEXT_CANCEL], 1, ALIGN_MIDDLE_CENTER);
+                    render_dialogue_text(7, POS_CENTRED, viewportULY + 42, gMenuText[ASSET_MENU_TEXT_CANCEL], 1, ALIGN_MIDDLE_CENTER);
                 } else {
                     for (y = 12, temp = 0; temp < gResultOptionCount; temp++, y += viewportLRY) {
                         if (temp == gMenuOption) {
