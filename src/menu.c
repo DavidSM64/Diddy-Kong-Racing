@@ -364,7 +364,7 @@ UNUSED FadeTransition sMenuTransitionFadeOutWhite = FADE_TRANSITION(FADE_FULLSCR
 
 s32 D_800DF794 = 4;
 MenuElement *D_800DF798 = NULL;
-s32 D_800DF79C = 0;
+s32 D_800DF79C = 0; //PAL Y Offset?
 
 s32 D_800DF7A0 = 0;
 char *gTitleMenuStrings[3] = { 0, 0, 0 };
@@ -6017,7 +6017,7 @@ void func_8008C698(UNUSED s32 updateRate) {
         }
 
         if (osTvType == TV_TYPE_PAL) {
-            D_800DF79C = 0xC;
+            D_800DF79C = 12;
             D_800DF7A0 = 0;
         } else {
             D_800DF79C = 0;
@@ -8585,11 +8585,11 @@ void func_80094A5C(void) {
     }
 }
 
-void func_80094C14(s32 arg0) {
-    gOptionBlinkTimer = (gOptionBlinkTimer + arg0) & 0x3F;
-    D_80126A94 += arg0;
+void func_80094C14(s32 updateRate) {
+    gOptionBlinkTimer = (gOptionBlinkTimer + updateRate) & 0x3F;
+    D_80126A94 += updateRate;
     if (gOpacityDecayTimer >= 0) {
-        gOpacityDecayTimer += arg0;
+        gOpacityDecayTimer += updateRate;
         switch (D_800DF460) {
             case 0:
                 if (normalise_time(240) < gOpacityDecayTimer) {
@@ -8611,7 +8611,182 @@ void func_80094C14(s32 arg0) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+void func_80094D28(UNUSED s32 updateRate) {
+    s32 y;
+    s32 textAlpha;
+    s32 viewportULX;
+    s32 viewportLRY;
+    s32 viewportULY;
+    s32 textYPos;
+    s32 i;
+    s32 iTemp;
+    s32 sp3C;
+    s32 temp;
+    Settings *settings;
+    
+    settings = get_settings();
+    if (gNumberOfActivePlayers == 1) {
+        set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    }
+    camDisableUserView(0, TRUE);
+    textAlpha = gOptionBlinkTimer * 8;
+    if (textAlpha > 255) {
+        textAlpha = 511 - textAlpha;
+    }
+    switch (gMenuOptionCount) {
+        case 1:
+            temp = D_80126A94;
+            if (temp > 60) {
+                temp = 60;
+            }
+            viewportULY = ((gTrackSelectViewPortHalfY - ((gTrackSelectViewPortHalfY * 4) / 5)) * temp) / 60;
+            viewportLRY = gTrackSelectViewportY - (((gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY / 5)) * temp) / 60);
+            viewportULX = (temp * 80) / 60;
+            resize_viewport(0, viewportULX, viewportULY, SCREEN_WIDTH - viewportULX, viewportLRY);
+            gMenuImageStack[4].unkC = 0.0f;
+            gMenuImageStack[4].unk10 = gTrackSelectViewPortHalfY - ((viewportULY + viewportLRY) >> 1);
+            gMenuImageStack[4].unk8 = sMenuImageProperties[4].unk8 * (2.0f - (temp / 60.0f));
+            break;
+        case 2:
+            for(iTemp = 0; iTemp < 3; iTemp++) {
+                if (settings->display_times && settings->racers[0].best_times & (1 << iTemp)) {
+                    D_800E0BEC[iTemp+3].filterGreen = 192 - ((textAlpha * 3) >> 2);
+                    D_800E0BEC[iTemp+3].filterBlue = 255 - textAlpha;
+                } else {
+                    D_800E0BEC[iTemp+3].filterGreen = 192;
+                    D_800E0BEC[iTemp+3].filterBlue = 255;
+                }
+            }
+            if (settings->display_times && settings->racers[0].best_times & (1 << 7)) {
+                D_800E0BEC[6].filterRed = (textAlpha >> 1) + 128;
+                D_800E0BEC[6].filterGreen = 255 - textAlpha;
+                D_800E0BEC[6].filterBlue = 255 - textAlpha;
+            } else {
+                D_800E0BEC[6].filterRed = 128;
+                D_800E0BEC[6].filterGreen = 255;
+                D_800E0BEC[6].filterBlue = 255;
+            }
+            break;
+        case 3:
+            for(i = 0; i < 8; i++) {
+                iTemp = i;
+                sp3C = 255;
+                if (is_in_two_player_adventure()) {
+                    iTemp = i - 1;
+                    if (iTemp == settings->racers[1].starting_position) {
+                        sp3C = (textAlpha >> 1) + 128;
+                    }
+                }
+                if (iTemp == settings->racers[0].starting_position) {
+                    sp3C = (textAlpha >> 1) + 128;
+                }
+                //if (y){} // Fake
+                D_800E0CEC[7 - i].filterRed = sp3C;
+                D_800E0CEC[7 - i].filterGreen = sp3C;
+                D_800E0CEC[7 - i].filterBlue = sp3C;
+            }
+            break;
+        case 5:
+            if (settings->display_times && settings->racers[0].best_times & (s8) ~(1 << 7)) {
+                D_800E0E4C[6].filterRed = 255;
+                D_800E0E4C[6].filterBlue = 255 - textAlpha;
+                D_800E0E4C[6].filterGreen = 192 - ((textAlpha * 3) >> 2);
+            } else {
+                D_800E0E4C[6].filterRed = 255;
+                D_800E0E4C[6].filterGreen = 192;
+                D_800E0E4C[6].filterBlue = 255;
+            }
+            if (settings->display_times && settings->racers[0].best_times & (1 << 7)) {
+                D_800E0E4C[3].filterRed = (textAlpha >> 1) + 128;
+                D_800E0E4C[3].filterGreen = 255 - textAlpha;
+                D_800E0E4C[3].filterBlue = 255 - textAlpha;
+            } else {
+                D_800E0E4C[3].filterRed = 128;
+                D_800E0E4C[3].filterGreen = 255;
+                D_800E0E4C[3].filterBlue = 255;
+            }
+            break;
+        case 6:
+            clear_dialogue_box_open_flag(7);
+            assign_dialogue_box_id(7);
+            set_dialogue_font(7, FONT_COLOURFUL);
+            set_current_text_background_colour(7, 0, 0, 0, 0);
+            
+            if (D_80126A98) {
+                temp = 1;
+            } else if (D_80126C1C != NULL) {
+                temp = D_80126C24;
+            } else {
+                temp = gResultOptionCount;
+            }
+            if (temp >= 5) {
+                viewportULX = 2;
+                viewportLRY = 13;
+            } else {
+                viewportULX = 0;
+                viewportLRY = 16;
+            }
+            textYPos = ((temp * viewportLRY) + 1) >> 1;
+            temp = 192;
+            if (osTvType == TV_TYPE_PAL) {
+                temp = 218;
+            } 
+            set_current_dialogue_box_coords(7, 0, temp - textYPos - viewportULX - 4, SCREEN_WIDTH, temp + textYPos + viewportULX + 4);
+            set_current_dialogue_background_colour(7, 64, 64, 255, 0);
+            set_current_text_colour(7, 255, 0, 255, 64, 255);
+            if (D_80126A98) {
+                render_dialogue_text(7, POS_CENTRED, 12, gMenuText[ASSET_MENU_TEXT_PLEASEWAIT], 1, ALIGN_MIDDLE_CENTER);
+            } else if (D_80126C1C != NULL) {
+                for (y = 12, temp = 0; temp < D_80126C24; temp++, y += viewportLRY) {
+                    render_dialogue_text(7, POS_CENTRED, y, D_80126C1C[temp], 1, ALIGN_MIDDLE_CENTER);
+                }
+            } else {
+                textYPos -= 24;
+                if (gMenuSubOption != 0) {
+                    render_dialogue_text(7, POS_CENTRED, textYPos + 8, gMenuText[ASSET_MENU_TEXT_QUITGAMETITLE], 1, ALIGN_MIDDLE_CENTER);
+                    temp = 0;
+                    if (gMenuSubOption == 1) {
+                        temp = textAlpha;
+                    }
+                    set_current_text_colour(7, 255, 255, 255, temp, 255);
+                    render_dialogue_text(7, POS_CENTRED, textYPos + 26, gMenuText[ASSET_MENU_TEXT_OK], 1, ALIGN_MIDDLE_CENTER);
+                    temp = 0;
+                    if (gMenuSubOption == 2) {
+                        temp = textAlpha;
+                    }
+                    set_current_text_colour(7, 255, 255, 255, temp, 255);
+                    render_dialogue_text(7, POS_CENTRED, textYPos + 42, gMenuText[ASSET_MENU_TEXT_CANCEL], 1, ALIGN_MIDDLE_CENTER);
+                } else {
+                    for (y = 12, temp = 0; temp < gResultOptionCount; temp++, y += viewportLRY) {
+                        if (temp == gMenuOption) {
+                            set_current_text_colour(7, 255, 255, 255, textAlpha, 255);
+                        } else {
+                            set_current_text_colour(7, 255, 255, 255, 0, 255);
+                        }
+                        render_dialogue_text(7, SCREEN_WIDTH_HALF, y, gResultOptionText[temp], 1, ALIGN_MIDDLE_CENTER);
+                    }
+                }
+            }
+            open_dialogue_box(7);
+            break;
+    }
+    if (get_game_mode() == GAMEMODE_INGAME && gNumberOfActivePlayers == 1) {
+        if (gTrophyRaceWorldId == 0) {
+            camEnableUserView(0, TRUE);
+            if (osTvType == TV_TYPE_PAL) {
+                D_800DF454 = 1.2f;
+            }
+            if (gMenuOptionCount > 0) {
+                func_8009CA60(4);
+            }
+            D_800DF454 = 1.0f;
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/menu/func_80094D28.s")
+#endif
 
 void func_80095624(s32 status) {
     // status may contain controllerIndex in it's upper bits

@@ -389,7 +389,7 @@ void func_80093A0C(void);
 void n_alSynRemovePlayer(void);
 void n_alSeqpDelete(void);
 void assign_racer_portrait_textures(void);
-void func_80094C14(s32 arg0);
+void func_80094C14(s32 updateRate);
 void func_80096790(void);
 void menu_results_init(void);
 void func_800976CC(void);
@@ -553,6 +553,7 @@ void func_80085B9C(UNUSED s32 updateRate);
 void func_80098774(s32);
 void render_magic_codes_ui(s32 updateRate);
 void func_80096978(s32, f32);
+void func_80094D28(UNUSED s32 updateRate);
 
 typedef enum MenuTextures {
 /* 0x00 */ TEXTURE_UNK_00,
