@@ -8611,7 +8611,7 @@ void func_80094C14(s32 updateRate) {
     }
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 void func_80094D28(UNUSED s32 updateRate) {
     s32 y;
     s32 textAlpha;
@@ -8741,7 +8741,7 @@ void func_80094D28(UNUSED s32 updateRate) {
                     render_dialogue_text(7, POS_CENTRED, y, D_80126C1C[temp], 1, ALIGN_MIDDLE_CENTER);
                 }
             } else {
-                if (y && y){}
+                if (y && y){} //fake
                 viewportULY -= 24;
                 if (gMenuSubOption != 0) {
                     render_dialogue_text(7, POS_CENTRED, viewportULY + 8, gMenuText[ASSET_MENU_TEXT_QUITGAMETITLE], 1, ALIGN_MIDDLE_CENTER);
