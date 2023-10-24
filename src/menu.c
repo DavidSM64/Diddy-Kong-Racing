@@ -8689,8 +8689,8 @@ void func_80094D28(UNUSED s32 updateRate) {
         case 5:
             if (settings->display_times && settings->racers[0].best_times & (s8) ~(1 << 7)) {
                 D_800E0E4C[6].filterRed = 255;
-                D_800E0E4C[6].filterBlue = 255 - textAlpha;
                 D_800E0E4C[6].filterGreen = 192 - ((textAlpha * 3) >> 2);
+                D_800E0E4C[6].filterBlue = 255 - textAlpha;
             } else {
                 D_800E0E4C[6].filterRed = 255;
                 D_800E0E4C[6].filterGreen = 192;
