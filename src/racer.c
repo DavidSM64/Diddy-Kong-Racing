@@ -5709,7 +5709,119 @@ s16 func_80059E20(void) {
     return D_8011D5A8[D_8011D59C];
 }
 
+#ifdef NON_EQUIVALENT
+s32 set_ghost_position_and_rotation(Object *obj) {
+    Vec3f vector[3];
+    GhostNode *nextGhostNode;
+    GhostNode *temp_ra;
+    GhostNode *temp_v0;
+    GhostNode *curGhostNode;
+    Object_64 *temp_v0_2;
+    f32 temp_f2;
+    f32 var_f2;
+    s16 yRot;
+    s16 zRot;
+    s16 xRot;
+    s16 temp_t5;
+    s32 temp_f6;
+    s32 var_a1;
+    s32 nodeIndex;
+    s32 rotDiff;
+    s32 i;
+
+    var_a1 = (D_8011D59C + 1) & 1;
+    if (is_time_trial_ghost(obj)) {
+        var_a1 = 2;
+    }
+    var_f2 = (f32) obj->properties.common.unk0 / 30.0f;
+    if (osTvType == TV_TYPE_PAL && var_a1 == 2) {
+        var_f2 = ((f32) obj->properties.common.unk0 * 1.2) / 30.0f;
+    }
+    temp_f6 = var_f2;
+    temp_t5 = D_8011D5A0[var_a1];
+    if (temp_f6 >= (temp_t5 - 2)) {
+        return FALSE;
+    }
+    if (var_a1 != 2 && get_current_map_id() != D_8011D5AC) {
+        return FALSE;
+    }
+    temp_ra = gGhostData[var_a1];
+    nodeIndex = temp_f6 - 1;
+    curGhostNode = &temp_ra[nodeIndex];
+    i = 0;
+    do {
+        if (nodeIndex == -1) {
+            vector[i].x = ((curGhostNode + 1)->x * 2) - (curGhostNode + 2)->x;
+            vector[i].y = ((curGhostNode + 1)->y * 2) - (curGhostNode + 2)->y;
+            vector[i].z = ((curGhostNode + 1)->z * 2) - (curGhostNode + 2)->z;
+        } else if (nodeIndex >= temp_t5) {
+            vector[i].x = (curGhostNode->x * 2) - (curGhostNode - 1)->x;
+            vector[i].y = (curGhostNode->y * 2) - (curGhostNode - 1)->y;
+            vector[i].z = (curGhostNode->z * 2) - (curGhostNode - 1)->z;
+        } else {
+            vector[i].x = curGhostNode->x;
+            vector[i].y = curGhostNode->y;
+            vector[i].z = curGhostNode->z;
+        }
+        nodeIndex++;
+        curGhostNode++;
+        i++;
+    } while (i < 3);
+    temp_f2 = var_f2 - temp_f6;
+    curGhostNode = &temp_ra[temp_f6];
+    obj->segment.trans.x_position = catmull_rom_interpolation(&vector->x, 0, temp_f2);
+    obj->segment.trans.y_position = catmull_rom_interpolation(&vector->y, 0, temp_f2);
+    obj->segment.trans.z_position = catmull_rom_interpolation(&vector->z, 0, temp_f2);
+
+    
+    yRot = curGhostNode->yRotation;
+    nextGhostNode = curGhostNode + 1;
+    rotDiff = nextGhostNode->yRotation - (yRot & 0xFFFF);
+    if (rotDiff > 0x8000) {
+        rotDiff -= 0xFFFF;
+    }
+    if (rotDiff < -0x8000) {
+        rotDiff += 0xFFFF;
+    }
+    obj->segment.trans.y_rotation = yRot + (s32) (rotDiff * temp_f2);
+    
+    xRot = curGhostNode->xRotation;
+    nextGhostNode = curGhostNode + 1;
+    rotDiff = nextGhostNode->xRotation - (xRot & 0xFFFF);
+    if (rotDiff > 0x8000) {
+        rotDiff -= 0xFFFF;
+    }
+    if (rotDiff < -0x8000) {
+        rotDiff += 0xFFFF;
+    }
+    obj->segment.trans.x_rotation = xRot + (s32) (rotDiff * temp_f2);
+    
+    zRot = curGhostNode->zRotation;
+    nextGhostNode = curGhostNode + 1;
+    rotDiff = nextGhostNode->zRotation - (zRot & 0xFFFF);
+    if (rotDiff > 0x8000) {
+        rotDiff -= 0xFFFF;
+    }
+    if (rotDiff < -0x8000) {
+        rotDiff += 0xFFFF;
+    }
+    obj->segment.trans.z_rotation = zRot + (s32) (rotDiff * temp_f2);
+    
+    obj->unk74 = 0;
+    obj->segment.object.segmentID = get_level_segment_index_from_position(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+    if (temp_t5 == (temp_f6 + 3)) {
+        temp_v0_2 = obj->unk64;
+        if (temp_f2 >= 0.8) {
+            temp_v0_2->racer.transparency = 0;
+        } else {
+            temp_v0_2->racer.transparency = (0.8 - temp_f2) * 96.0;
+        }
+    }
+    return TRUE;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/racer/set_ghost_position_and_rotation.s")
+#endif
 
 /**
  * Blocks the player's movement until the end of their update cycle.
