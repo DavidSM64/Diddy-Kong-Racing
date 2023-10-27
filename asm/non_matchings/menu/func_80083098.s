@@ -23,9 +23,9 @@ glabel func_80083098
 /* 083CEC 800830EC C4640000 */  lwc1  $f4, ($v1)
 /* 083CF0 800830F0 000E7080 */  sll   $t6, $t6, 2
 /* 083CF4 800830F4 01C27023 */  subu  $t6, $t6, $v0
-/* 083CF8 800830F8 3C0F800E */  lui   $t7, %hi(D_800DF83C) # $t7, 0x800e
+/* 083CF8 800830F8 3C0F800E */  lui   $t7, %hi(gTitleCinematicText) # $t7, 0x800e
 /* 083CFC 800830FC 460C2180 */  add.s $f6, $f4, $f12
-/* 083D00 80083100 25EFF83C */  addiu $t7, %lo(D_800DF83C) # addiu $t7, $t7, -0x7c4
+/* 083D00 80083100 25EFF83C */  addiu $t7, %lo(gTitleCinematicText) # addiu $t7, $t7, -0x7c4
 /* 083D04 80083104 000E7080 */  sll   $t6, $t6, 2
 /* 083D08 80083108 01CF9821 */  addu  $s3, $t6, $t7
 /* 083D0C 8008310C E4660000 */  swc1  $f6, ($v1)
@@ -36,15 +36,15 @@ glabel func_80083098
 /* 083D20 80083120 00003025 */  move  $a2, $zero
 /* 083D24 80083124 0C0310F3 */  jal   set_text_background_colour
 /* 083D28 80083128 00003825 */   move  $a3, $zero
-/* 083D2C 8008312C 3C12800E */  lui   $s2, %hi(D_800DF9F4) # $s2, 0x800e
-/* 083D30 80083130 2652F9F4 */  addiu $s2, %lo(D_800DF9F4) # addiu $s2, $s2, -0x60c
+/* 083D2C 8008312C 3C12800E */  lui   $s2, %hi(gTitleCinematicTextColourCount) # $s2, 0x800e
+/* 083D30 80083130 2652F9F4 */  addiu $s2, %lo(gTitleCinematicTextColourCount) # addiu $s2, $s2, -0x60c
 /* 083D34 80083134 8E440000 */  lw    $a0, ($s2)
 /* 083D38 80083138 00008825 */  move  $s1, $zero
 /* 083D3C 8008313C 18800044 */  blez  $a0, .L80083250
 /* 083D40 80083140 3C108012 */   lui   $s0, %hi(D_80126878) # $s0, 0x8012
 /* 083D44 80083144 3C168012 */  lui   $s6, %hi(sMenuCurrDisplayList) # $s6, 0x8012
-/* 083D48 80083148 3C15800E */  lui   $s5, %hi(D_800DF9F8) # $s5, 0x800e
-/* 083D4C 8008314C 26B5F9F8 */  addiu $s5, %lo(D_800DF9F8) # addiu $s5, $s5, -0x608
+/* 083D48 80083148 3C15800E */  lui   $s5, %hi(gTitleCinematicTextColours) # $s5, 0x800e
+/* 083D4C 8008314C 26B5F9F8 */  addiu $s5, %lo(gTitleCinematicTextColours) # addiu $s5, $s5, -0x608
 /* 083D50 80083150 26D663A0 */  addiu $s6, %lo(sMenuCurrDisplayList) # addiu $s6, $s6, 0x63a0
 /* 083D54 80083154 26106878 */  addiu $s0, %lo(D_80126878) # addiu $s0, $s0, 0x6878
 /* 083D58 80083158 24140005 */  li    $s4, 5

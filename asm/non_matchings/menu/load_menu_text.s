@@ -96,22 +96,22 @@ glabel load_menu_text
 /* 080658 8007FA58 2463FDA0 */  addiu $v1, %lo(gMagicCodeMenuStrings) # addiu $v1, $v1, -0x260
 /* 08065C 8007FA5C AC59003C */  sw    $t9, 0x3c($v0)
 /* 080660 8007FA60 8C8A0018 */  lw    $t2, 0x18($a0)
-/* 080664 8007FA64 3C07800E */  lui   $a3, %hi(D_800E0BEC) # $a3, 0x800e
+/* 080664 8007FA64 3C07800E */  lui   $a3, %hi(gRaceResultsMenuElements) # $a3, 0x800e
 /* 080668 8007FA68 AC4A004C */  sw    $t2, 0x4c($v0)
 /* 08066C 8007FA6C 8C8B0018 */  lw    $t3, 0x18($a0)
-/* 080670 8007FA70 24E70BEC */  addiu $a3, %lo(D_800E0BEC) # addiu $a3, $a3, 0xbec
+/* 080670 8007FA70 24E70BEC */  addiu $a3, %lo(gRaceResultsMenuElements) # addiu $a3, $a3, 0xbec
 /* 080674 8007FA74 AC4B005C */  sw    $t3, 0x5c($v0)
 /* 080678 8007FA78 8C8C001C */  lw    $t4, 0x1c($a0)
-/* 08067C 8007FA7C 3C09800E */  lui   $t1, %hi(D_800E0CEC) # $t1, 0x800e
+/* 08067C 8007FA7C 3C09800E */  lui   $t1, %hi(gRaceOrderMenuElements) # $t1, 0x800e
 /* 080680 8007FA80 AC2C69E0 */  sw    $t4, %lo(gMusicTestString)($at)
 /* 080684 8007FA84 8C8D0038 */  lw    $t5, 0x38($a0)
-/* 080688 8007FA88 25290CEC */  addiu $t1, %lo(D_800E0CEC) # addiu $t1, $t1, 0xcec
+/* 080688 8007FA88 25290CEC */  addiu $t1, %lo(gRaceOrderMenuElements) # addiu $t1, $t1, 0xcec
 /* 08068C 8007FA8C AC6D0000 */  sw    $t5, ($v1)
 /* 080690 8007FA90 8C8E003C */  lw    $t6, 0x3c($a0)
-/* 080694 8007FA94 3C06800E */  lui   $a2, %hi(D_800E0E4C) # $a2, 0x800e
+/* 080694 8007FA94 3C06800E */  lui   $a2, %hi(gRecordTimesMenuElements) # $a2, 0x800e
 /* 080698 8007FA98 AC6E0004 */  sw    $t6, 4($v1)
 /* 08069C 8007FA9C 8C8F0040 */  lw    $t7, 0x40($a0)
-/* 0806A0 8007FAA0 24C60E4C */  addiu $a2, %lo(D_800E0E4C) # addiu $a2, $a2, 0xe4c
+/* 0806A0 8007FAA0 24C60E4C */  addiu $a2, %lo(gRecordTimesMenuElements) # addiu $a2, $a2, 0xe4c
 /* 0806A4 8007FAA4 AC6F0008 */  sw    $t7, 8($v1)
 /* 0806A8 8007FAA8 8C980014 */  lw    $t8, 0x14($a0)
 /* 0806AC 8007FAAC 3C02800E */  lui   $v0, %hi(gOptionMenuStrings) # $v0, 0x800e
@@ -163,58 +163,58 @@ glabel load_menu_text
 /* 08075C 8007FB5C 24C603B0 */  addiu $a2, %lo(gFilenames) # addiu $a2, $a2, 0x3b0
 /* 080760 8007FB60 AC59000C */  sw    $t9, 0xc($v0)
 /* 080764 8007FB64 8C8A0044 */  lw    $t2, 0x44($a0)
-/* 080768 8007FB68 3C07800E */  lui   $a3, %hi(D_800DFAE4) # $a3, 0x800e
+/* 080768 8007FB68 3C07800E */  lui   $a3, %hi(gContPakNotPresentStrings) # $a3, 0x800e
 /* 08076C 8007FB6C AC4A0010 */  sw    $t2, 0x10($v0)
 /* 080770 8007FB70 8C8B0014 */  lw    $t3, 0x14($a0)
-/* 080774 8007FB74 24E7FAE4 */  addiu $a3, %lo(D_800DFAE4) # addiu $a3, $a3, -0x51c
+/* 080774 8007FB74 24E7FAE4 */  addiu $a3, %lo(gContPakNotPresentStrings) # addiu $a3, $a3, -0x51c
 /* 080778 8007FB78 AC4B0014 */  sw    $t3, 0x14($v0)
 /* 08077C 8007FB7C 8C8C0120 */  lw    $t4, 0x120($a0)
-/* 080780 8007FB80 3C03800E */  lui   $v1, %hi(D_800DFAFC) # $v1, 0x800e
+/* 080780 8007FB80 3C03800E */  lui   $v1, %hi(gContPakCorruptDataRepairStrings) # $v1, 0x800e
 /* 080784 8007FB84 ACCC0000 */  sw    $t4, ($a2)
 /* 080788 8007FB88 8C8D0124 */  lw    $t5, 0x124($a0)
-/* 08078C 8007FB8C 2463FAFC */  addiu $v1, %lo(D_800DFAFC) # addiu $v1, $v1, -0x504
+/* 08078C 8007FB8C 2463FAFC */  addiu $v1, %lo(gContPakCorruptDataRepairStrings) # addiu $v1, $v1, -0x504
 /* 080790 8007FB90 ACCD0004 */  sw    $t5, 4($a2)
 /* 080794 8007FB94 8C8E0128 */  lw    $t6, 0x128($a0)
-/* 080798 8007FB98 3C05800E */  lui   $a1, %hi(D_800DFB14) # $a1, 0x800e
+/* 080798 8007FB98 3C05800E */  lui   $a1, %hi(gContPakDamagedStrings) # $a1, 0x800e
 /* 08079C 8007FB9C ACCE0008 */  sw    $t6, 8($a2)
 /* 0807A0 8007FBA0 8C8F0168 */  lw    $t7, 0x168($a0)
-/* 0807A4 8007FBA4 24A5FB14 */  addiu $a1, %lo(D_800DFB14) # addiu $a1, $a1, -0x4ec
+/* 0807A4 8007FBA4 24A5FB14 */  addiu $a1, %lo(gContPakDamagedStrings) # addiu $a1, $a1, -0x4ec
 /* 0807A8 8007FBA8 ACEF0000 */  sw    $t7, ($a3)
 /* 0807AC 8007FBAC 8C98016C */  lw    $t8, 0x16c($a0)
-/* 0807B0 8007FBB0 3C08800E */  lui   $t0, %hi(D_800DFB2C) # $t0, 0x800e
+/* 0807B0 8007FBB0 3C08800E */  lui   $t0, %hi(gContPakFullStrings) # $t0, 0x800e
 /* 0807B4 8007FBB4 ACF80004 */  sw    $t8, 4($a3)
 /* 0807B8 8007FBB8 8C990154 */  lw    $t9, 0x154($a0)
-/* 0807BC 8007FBBC 2508FB2C */  addiu $t0, %lo(D_800DFB2C) # addiu $t0, $t0, -0x4d4
+/* 0807BC 8007FBBC 2508FB2C */  addiu $t0, %lo(gContPakFullStrings) # addiu $t0, $t0, -0x4d4
 /* 0807C0 8007FBC0 ACF9000C */  sw    $t9, 0xc($a3)
 /* 0807C4 8007FBC4 8C8A0168 */  lw    $t2, 0x168($a0)
-/* 0807C8 8007FBC8 3C02800E */  lui   $v0, %hi(D_800DFB40) # $v0, 0x800e
+/* 0807C8 8007FBC8 3C02800E */  lui   $v0, %hi(gContPakDiffContStrings) # $v0, 0x800e
 /* 0807CC 8007FBCC AC6A0000 */  sw    $t2, ($v1)
 /* 0807D0 8007FBD0 8C8B0174 */  lw    $t3, 0x174($a0)
-/* 0807D4 8007FBD4 2442FB40 */  addiu $v0, %lo(D_800DFB40) # addiu $v0, $v0, -0x4c0
+/* 0807D4 8007FBD4 2442FB40 */  addiu $v0, %lo(gContPakDiffContStrings) # addiu $v0, $v0, -0x4c0
 /* 0807D8 8007FBD8 AC6B0004 */  sw    $t3, 4($v1)
 /* 0807DC 8007FBDC 8C8C0178 */  lw    $t4, 0x178($a0)
-/* 0807E0 8007FBE0 3C06800E */  lui   $a2, %hi(D_800DFB8C) # $a2, 0x800e
+/* 0807E0 8007FBE0 3C06800E */  lui   $a2, %hi(gContPakRumbleDetectedStrings) # $a2, 0x800e
 /* 0807E4 8007FBE4 AC6C000C */  sw    $t4, 0xc($v1)
 /* 0807E8 8007FBE8 8C8D0154 */  lw    $t5, 0x154($a0)
-/* 0807EC 8007FBEC 24C6FB8C */  addiu $a2, %lo(D_800DFB8C) # addiu $a2, $a2, -0x474
+/* 0807EC 8007FBEC 24C6FB8C */  addiu $a2, %lo(gContPakRumbleDetectedStrings) # addiu $a2, $a2, -0x474
 /* 0807F0 8007FBF0 AC6D0010 */  sw    $t5, 0x10($v1)
 /* 0807F4 8007FBF4 8C8E0168 */  lw    $t6, 0x168($a0)
-/* 0807F8 8007FBF8 3C03800E */  lui   $v1, %hi(D_800DFB5C) # $v1, 0x800e
+/* 0807F8 8007FBF8 3C03800E */  lui   $v1, %hi(gContPakNoRoomForGhostsStrings) # $v1, 0x800e
 /* 0807FC 8007FBFC ACAE0000 */  sw    $t6, ($a1)
 /* 080800 8007FC00 8C8F017C */  lw    $t7, 0x17c($a0)
-/* 080804 8007FC04 2463FB5C */  addiu $v1, %lo(D_800DFB5C) # addiu $v1, $v1, -0x4a4
+/* 080804 8007FC04 2463FB5C */  addiu $v1, %lo(gContPakNoRoomForGhostsStrings) # addiu $v1, $v1, -0x4a4
 /* 080808 8007FC08 ACAF0004 */  sw    $t7, 4($a1)
 /* 08080C 8007FC0C 8C980180 */  lw    $t8, 0x180($a0)
-/* 080810 8007FC10 3C07800E */  lui   $a3, %hi(D_800DFBA4) # $a3, 0x800e
+/* 080810 8007FC10 3C07800E */  lui   $a3, %hi(gContPakSwitchToRumbleStrings) # $a3, 0x800e
 /* 080814 8007FC14 ACB8000C */  sw    $t8, 0xc($a1)
 /* 080818 8007FC18 8C990154 */  lw    $t9, 0x154($a0)
-/* 08081C 8007FC1C 24E7FBA4 */  addiu $a3, %lo(D_800DFBA4) # addiu $a3, $a3, -0x45c
+/* 08081C 8007FC1C 24E7FBA4 */  addiu $a3, %lo(gContPakSwitchToRumbleStrings) # addiu $a3, $a3, -0x45c
 /* 080820 8007FC20 ACB90010 */  sw    $t9, 0x10($a1)
 /* 080824 8007FC24 8C8A0168 */  lw    $t2, 0x168($a0)
-/* 080828 8007FC28 3C05800E */  lui   $a1, %hi(D_800DFB74) # $a1, 0x800e
+/* 080828 8007FC28 3C05800E */  lui   $a1, %hi(gContPakCorruptDataStrings) # $a1, 0x800e
 /* 08082C 8007FC2C AD0A0000 */  sw    $t2, ($t0)
 /* 080830 8007FC30 8C8B0184 */  lw    $t3, 0x184($a0)
-/* 080834 8007FC34 24A5FB74 */  addiu $a1, %lo(D_800DFB74) # addiu $a1, $a1, -0x48c
+/* 080834 8007FC34 24A5FB74 */  addiu $a1, %lo(gContPakCorruptDataStrings) # addiu $a1, $a1, -0x48c
 /* 080838 8007FC38 AD0B0004 */  sw    $t3, 4($t0)
 /* 08083C 8007FC3C 8C8C0188 */  lw    $t4, 0x188($a0)
 /* 080840 8007FC40 3C01800E */  lui   $at, %hi(sBadControllerPakMenuText) # $at, 0x800e
@@ -232,10 +232,10 @@ glabel load_menu_text
 /* 080870 8007FC70 250809F8 */  addiu $t0, %lo(D_800E09F8) # addiu $t0, $t0, 0x9f8
 /* 080874 8007FC74 AC580010 */  sw    $t8, 0x10($v0)
 /* 080878 8007FC78 8C990168 */  lw    $t9, 0x168($a0)
-/* 08087C 8007FC7C 3C02800E */  lui   $v0, %hi(D_800DFBBC) # $v0, 0x800e
+/* 08087C 8007FC7C 3C02800E */  lui   $v0, %hi(gContPakNeed2ndAdvStrings) # $v0, 0x800e
 /* 080880 8007FC80 AC790000 */  sw    $t9, ($v1)
 /* 080884 8007FC84 8C8A0198 */  lw    $t2, 0x198($a0)
-/* 080888 8007FC88 2442FBBC */  addiu $v0, %lo(D_800DFBBC) # addiu $v0, $v0, -0x444
+/* 080888 8007FC88 2442FBBC */  addiu $v0, %lo(gContPakNeed2ndAdvStrings) # addiu $v0, $v0, -0x444
 /* 08088C 8007FC8C AC6A0004 */  sw    $t2, 4($v1)
 /* 080890 8007FC90 8C8B019C */  lw    $t3, 0x19c($a0)
 /* 080894 8007FC94 00000000 */  nop   

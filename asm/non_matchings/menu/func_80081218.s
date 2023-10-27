@@ -91,10 +91,10 @@ glabel func_80081218
 /* 081F7C 8008137C AC22F4A0 */  sw    $v0, %lo(gMenuText)($at)
 /* 081F80 80081380 0C01FE40 */  jal   load_menu_text
 /* 081F84 80081384 00002025 */   move  $a0, $zero
-/* 081F88 80081388 3C028012 */  lui   $v0, %hi(gMenuTextures) # $v0, 0x8012
+/* 081F88 80081388 3C028012 */  lui   $v0, %hi(gMenuObjects) # $v0, 0x8012
 /* 081F8C 8008138C 3C038012 */  lui   $v1, %hi(D_80126750) # $v1, 0x8012
 /* 081F90 80081390 24636750 */  addiu $v1, %lo(D_80126750) # addiu $v1, $v1, 0x6750
-/* 081F94 80081394 24426550 */  addiu $v0, %lo(gMenuTextures) # addiu $v0, $v0, 0x6550
+/* 081F94 80081394 24426550 */  addiu $v0, %lo(gMenuObjects) # addiu $v0, $v0, 0x6550
 .L80081398:
 /* 081F98 80081398 24420010 */  addiu $v0, $v0, 0x10
 /* 081F9C 8008139C AC40FFF0 */  sw    $zero, -0x10($v0)

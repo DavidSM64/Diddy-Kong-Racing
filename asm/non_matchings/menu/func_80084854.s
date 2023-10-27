@@ -10,8 +10,8 @@ glabel func_80084854
 /* 085474 80084874 AFB0002C */  sw    $s0, 0x2c($sp)
 /* 085478 80084878 AFA40058 */  sw    $a0, 0x58($sp)
 /* 08547C 8008487C 906E0000 */  lbu   $t6, ($v1)
-/* 085480 80084880 3C13800E */  lui   $s3, %hi(D_800DFABC) # $s3, 0x800e
-/* 085484 80084884 8E73FABC */  lw    $s3, %lo(D_800DFABC)($s3)
+/* 085480 80084880 3C13800E */  lui   $s3, %hi(gMusicTestSongIndex) # $s3, 0x800e
+/* 085484 80084884 8E73FABC */  lw    $s3, %lo(gMusicTestSongIndex)($s3)
 /* 085488 80084888 29C10030 */  slti  $at, $t6, 0x30
 /* 08548C 8008488C 14200006 */  bnez  $at, .L800848A8
 /* 085490 80084890 00008825 */   move  $s1, $zero
@@ -49,7 +49,7 @@ glabel func_80084854
 /* 085500 80084900 26310001 */  addiu $s1, $s1, 1
 /* 085504 80084904 3C128012 */  lui   $s2, %hi(sMenuCurrDisplayList) # $s2, 0x8012
 /* 085508 80084908 265263A0 */  addiu $s2, %lo(sMenuCurrDisplayList) # addiu $s2, $s2, 0x63a0
-/* 08550C 8008490C 3C0F800E */  lui   $t7, %hi(D_800DFAC8) # $t7, 0x800e
+/* 08550C 8008490C 3C0F800E */  lui   $t7, %hi(gAudioOutputType) # $t7, 0x800e
 /* 085510 80084910 00001012 */  mflo  $v0
 /* 085514 80084914 24590030 */  addiu $t9, $v0, 0x30
 /* 085518 80084918 A1190000 */  sb    $t9, ($t0)
@@ -74,7 +74,7 @@ glabel func_80084854
 /* 085564 80084964 240E01FF */  li    $t6, 511
 /* 085568 80084968 01CD9823 */  subu  $s3, $t6, $t5
 .L8008496C:
-/* 08556C 8008496C 8DEFFAC8 */  lw    $t7, %lo(D_800DFAC8)($t7)
+/* 08556C 8008496C 8DEFFAC8 */  lw    $t7, %lo(gAudioOutputType)($t7)
 /* 085570 80084970 3C01800E */  lui   $at, %hi(gAudioMenuStrings+12) # $at, 0x800e
 /* 085574 80084974 000FC080 */  sll   $t8, $t7, 2
 /* 085578 80084978 0338C821 */  addu  $t9, $t9, $t8
@@ -91,8 +91,8 @@ glabel func_80084854
 .L800849A4:
 /* 0855A4 800849A4 24100071 */  li    $s0, 113
 .L800849A8:
-/* 0855A8 800849A8 3C0D8012 */  lui   $t5, %hi(gMenuTextures) # $t5, 0x8012
-/* 0855AC 800849AC 8DAD6660 */  lw    $t5, %lo(gMenuTextures + 0x110)($t5)
+/* 0855A8 800849A8 3C0D8012 */  lui   $t5, %hi(gMenuObjects) # $t5, 0x8012
+/* 0855AC 800849AC 8DAD6660 */  lw    $t5, %lo(gMenuObjects + 0x110)($t5)
 /* 0855B0 800849B0 24090078 */  li    $t1, 120
 /* 0855B4 800849B4 240B000E */  li    $t3, 14
 /* 0855B8 800849B8 240A0006 */  li    $t2, 6
@@ -107,8 +107,8 @@ glabel func_80084854
 /* 0855DC 800849DC AFB1001C */  sw    $s1, 0x1c($sp)
 /* 0855E0 800849E0 0C020160 */  jal   func_80080580
 /* 0855E4 800849E4 AFAD0020 */   sw    $t5, 0x20($sp)
-/* 0855E8 800849E8 3C088012 */  lui   $t0, %hi(gMenuTextures) # $t0, 0x8012
-/* 0855EC 800849EC 8D086660 */  lw    $t0, %lo(gMenuTextures + 0x110)($t0)
+/* 0855E8 800849E8 3C088012 */  lui   $t0, %hi(gMenuObjects) # $t0, 0x8012
+/* 0855EC 800849EC 8D086660 */  lw    $t0, %lo(gMenuObjects + 0x110)($t0)
 /* 0855F0 800849F0 240E0050 */  li    $t6, 80
 /* 0855F4 800849F4 240F000E */  li    $t7, 14
 /* 0855F8 800849F8 24180006 */  li    $t8, 6
