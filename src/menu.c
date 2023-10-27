@@ -1242,74 +1242,87 @@ s16 *D_800E14BC[32] = {
     NULL, NULL, &D_800E13A8[0], &D_800E13A8[48]
 };
 
-unk800E153C D_800E153C[] = {
-    { NULL, 0x00000000 },
-    { NULL, 0x00400000 },
-    { NULL, 0x00800000 },
-    { NULL, 0x00C00000 },
-    { NULL, 0x01000000 },
-    { NULL, 0x00000020 },
-    { NULL, 0x00400020 },
-    { NULL, 0x00800020 },
-    { NULL, 0x00C00020 },
-    { NULL, 0x01000020 },
-    { NULL, 0x00000000 },
-};
-unk800E153C D_800E1594[] = {
-    { NULL, 0x00000000 },
-    { NULL, 0x00400000 },
-    { NULL, 0x00800000 },
-    { NULL, 0x00C00000 },
-    { NULL, 0x01000000 },
-    { NULL, 0x00000020 },
-    { NULL, 0x00400020 },
-    { NULL, 0x00800020 },
-    { NULL, 0x00C00020 },
-    { NULL, 0x01000020 },
-    { NULL, 0x00000000 },
-};
-unk800E153C D_800E15EC[] = {
-    { NULL, 0x00000000 },
-    { NULL, 0x00400000 },
-    { NULL, 0x00800000 },
-    { NULL, 0x00C00000 },
-    { NULL, 0x01000000 },
-    { NULL, 0x00000020 },
-    { NULL, 0x00400020 },
-    { NULL, 0x00800020 },
-    { NULL, 0x00C00020 },
-    { NULL, 0x01000020 },
-    { NULL, 0x00000000 },
-};
-unk800E153C D_800E1644[] = {
-    { NULL, 0x00000000 },
-    { NULL, 0x00400000 },
-    { NULL, 0x00800000 },
-    { NULL, 0x00C00000 },
-    { NULL, 0x01000000 },
-    { NULL, 0x00000020 },
-    { NULL, 0x00400020 },
-    { NULL, 0x00800020 },
-    { NULL, 0x00C00020 },
-    { NULL, 0x01000020 },
-    { NULL, 0x00000000 },
-};
-unk800E153C D_800E169C[] = {
-    { NULL, 0x00000000 },
-    { NULL, 0x00400000 },
-    { NULL, 0x00800000 },
-    { NULL, 0x00C00000 },
-    { NULL, 0x01000000 },
-    { NULL, 0x00000020 },
-    { NULL, 0x00400020 },
-    { NULL, 0x00800020 },
-    { NULL, 0x00C00020 },
-    { NULL, 0x01000020 },
-    { NULL, 0x00000000 },
+// DrawTextures for Dino Domain ghost background.
+DrawTexture D_800E153C[] = {
+    { NULL, 0, 0 },
+    { NULL, 64, 0 },
+    { NULL, 128, 0 },
+    { NULL, 192, 0 },
+    { NULL, 256, 0 },
+    { NULL, 0, 32 },
+    { NULL, 64, 32 },
+    { NULL, 128, 32 },
+    { NULL, 192, 32 },
+    { NULL, 256, 32 },
+    { NULL, 0, 0 }
 };
 
-unk800E153C *D_800E16F4[5] = {
-    D_800E153C, D_800E1594, D_800E15EC, D_800E1644, D_800E169C
+// DrawTextures for Sherbet Island ghost background.
+DrawTexture D_800E1594[] = {
+    { NULL, 0, 0 },
+    { NULL, 64, 0 },
+    { NULL, 128, 0 },
+    { NULL, 192, 0 },
+    { NULL, 256, 0 },
+    { NULL, 0, 32 },
+    { NULL, 64, 32 },
+    { NULL, 128, 32 },
+    { NULL, 192, 32 },
+    { NULL, 256, 32 },
+    { NULL, 0, 0 }
+};
+
+// DrawTextures for Snowflake Mountain ghost background.
+DrawTexture D_800E15EC[] = {
+    { NULL, 0, 0 },
+    { NULL, 64, 0 },
+    { NULL, 128, 0 },
+    { NULL, 192, 0 },
+    { NULL, 256, 0 },
+    { NULL, 0, 32 },
+    { NULL, 64, 32 },
+    { NULL, 128, 32 },
+    { NULL, 192, 32 },
+    { NULL, 256, 32 },
+    { NULL, 0, 0 }
+};
+
+// DrawTextures for Dragon Forest ghost background.
+DrawTexture D_800E1644[] = {
+    { NULL, 0, 0 },
+    { NULL, 64, 0 },
+    { NULL, 128, 0 },
+    { NULL, 192, 0 },
+    { NULL, 256, 0 },
+    { NULL, 0, 32 },
+    { NULL, 64, 32 },
+    { NULL, 128, 32 },
+    { NULL, 192, 32 },
+    { NULL, 256, 32 },
+    { NULL, 0, 0 }
+};
+
+// DrawTextures for Future Fun Land ghost background.
+DrawTexture D_800E169C[] = {
+    { NULL, 0, 0 },
+    { NULL, 64, 0 },
+    { NULL, 128, 0 },
+    { NULL, 192, 0 },
+    { NULL, 256, 0 },
+    { NULL, 0, 32 },
+    { NULL, 64, 32 },
+    { NULL, 128, 32 },
+    { NULL, 192, 32 },
+    { NULL, 256, 32 },
+    { NULL, 0, 0 }
+};
+
+DrawTexture *D_800E16F4[5] = {
+    D_800E153C, // Dino Domain
+    D_800E1594, // Sherbet Island
+    D_800E15EC, // Snowflake Mountain
+    D_800E1644, // Dragon Forest
+    D_800E169C  // Future Fun Land
 };
 
 s16 D_800E1708[34] = {
@@ -10185,7 +10198,132 @@ void menu_ghost_data_init(void) {
 GLOBAL_ASM("asm/non_matchings/menu/menu_ghost_data_init.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/menu/func_80099E8C.s")
+void func_80099E8C(UNUSED s32 updateRate) {
+    s32 currentWorldId;
+    s32 spE8;
+    s32 spE4;
+    s32 i;
+    s32 y;
+    s32 colourIntensity;
+    s32 x;
+    s32 heightAdjust;
+    DrawTexture *vehicleSelectTex;
+    char *levelName;
+    char textBuffer[64];
+
+    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    if (osTvType == TV_TYPE_PAL) {
+        heightAdjust = 12;
+    } else {
+        heightAdjust = 0;
+    }
+    spE4 = gOpacityDecayTimer;
+    set_text_font(FONT_LARGE);
+    set_text_background_colour(0, 0, 0, 0);
+    set_text_colour(0, 0, 0, 255, 128);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 35, gMenuText[ASSET_MENU_TEXT_GHOSTDATA], ALIGN_MIDDLE_CENTER);
+    set_text_colour(255, 255, 255, 0, 255);
+    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, gMenuText[ASSET_MENU_TEXT_GHOSTDATA], ALIGN_MIDDLE_CENTER);
+    y = 56;
+    if (D_801264D4 <= 0) {
+        set_text_colour(255, 255, 255, 0, 255);
+        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, heightAdjust + SCREEN_HEIGHT_HALF, gMenuText[ASSET_MENU_TEXT_NOGHOSTSSAVED], ALIGN_MIDDLE_CENTER);
+        return;
+    }
+    spE8 = 3;
+    colourIntensity = gOptionBlinkTimer * 8;
+    if (colourIntensity > 255) {
+        colourIntensity = 511 - colourIntensity;
+    }
+    colourIntensity |= ~0xFF;
+    set_text_font(FONT_SMALL);
+    x = 40;
+    while ((spE4 < D_801264D4) && (spE8 > 0)) {
+        if (((!D_800E1754) && (!D_800E1754)) && (!D_800E1754)){} // Fakematch
+        currentWorldId = get_map_world_id(D_80126508[spE4]) - 1;
+        if (currentWorldId < 0 || currentWorldId >= 5) {
+            currentWorldId = 0;
+        }
+        levelName = get_level_name(D_80126508[spE4]);
+        for(i = 0; (levelName[i] != '\0') && (i < 63); i++) {
+            textBuffer[i] = levelName[i];
+            if ((textBuffer[i] >= 'a') && (textBuffer[i] <= 'z')) {
+                textBuffer[i] ^= 0x20; // Force uppercase.
+            }
+        }
+        textBuffer[i] = '\0'; // Set NULL terminator
+        render_texture_rectangle_scaled(&sMenuCurrDisplayList, D_800E16F4[currentWorldId], x, y, 0.75f, 0.8125f, COLOUR_RGBA32(255, 255, 255, 255), 0);
+        func_80080E90(&sMenuCurrDisplayList, 40, y, 240, 52, 4, 4, 32, 80, 176, 128);
+        if (spE4 == D_80126498) {
+            func_80080E90(&sMenuCurrDisplayList, 40, y, 240, 52, 4, 4, colourIntensity, colourIntensity, colourIntensity, colourIntensity);
+        }
+        set_text_colour(0, 0, 0, 255, 255);
+        for(i = 0; i < 4; i++) {
+            draw_text(&sMenuCurrDisplayList, D_800E1754[0] + 40 + D_800E1E20[(i<<1)], y + D_800E1754[1] + D_800E1E20[(i<<1)+1], textBuffer, ALIGN_MIDDLE_CENTER);
+        }
+        set_text_colour(200, 228, 80, 255, 255);
+        draw_text(&sMenuCurrDisplayList, D_800E1754[0] + 40, D_800E1754[1] + y, textBuffer, ALIGN_MIDDLE_CENTER);
+        render_textured_rectangle(&sMenuCurrDisplayList, gRacerPortraits[D_80126510[spE4]], D_800E1754[2] + 0x28, D_800E1754[3] + y, 255, 255, 255, 255);
+        switch (D_80126518[spE4]) {
+            case 1:
+                vehicleSelectTex = gRaceSelectionHoverTex;
+                break;
+            case 2:
+                vehicleSelectTex = gRaceSelectionPlaneTex;
+                break;
+            default:
+                vehicleSelectTex = gRaceSelectionCarTex;
+                break;
+        }
+        render_texture_rectangle_scaled(&sMenuCurrDisplayList, vehicleSelectTex, (D_800E1754[4] + 40), (D_800E1754[5] + y), 0.625f, 0.625f, COLOUR_RGBA32(255, 255, 255, 255), 0);
+        reset_render_settings(&sMenuCurrDisplayList);
+        gMenuImageStack[7].unkC = (D_800E1754[6] - SCREEN_HEIGHT_HALF);
+        gMenuImageStack[7].unk10 = ((-D_800E1754[7] - y) + heightAdjust + SCREEN_HEIGHT_HALF);
+        gMenuImageStack[7].unk8 = 0.075f;
+        func_8009CA60(7);
+        sMenuGuiOpacity = 128;
+        //Timestamp Shadow gets drawn first
+        show_timestamp(D_80126520[spE4], D_800E1754[8] - (SCREEN_HEIGHT_HALF - 1), (-D_800E1754[9] - y) + heightAdjust + (SCREEN_HEIGHT_HALF - 1), 0, 0, 0, FONT_COLOURFUL);
+        sMenuGuiOpacity = 255;
+        show_timestamp(D_80126520[spE4], D_800E1754[8] - (SCREEN_HEIGHT_HALF + 1), (-D_800E1754[9] - y) + heightAdjust + (SCREEN_HEIGHT_HALF + 1), 255, 192, 255, FONT_COLOURFUL);
+        spE4++;
+        spE8--;
+        y += 54;
+    }
+    colourIntensity &= 0xFF;
+    if (gMenuOptionCount > 0) {
+        clear_dialogue_box_open_flag(7);
+        assign_dialogue_box_id(7);
+        set_current_dialogue_box_coords(7, 104, 102, 216, 138);
+        set_current_dialogue_background_colour(7, 0, 0, 0, 192);
+        set_dialogue_font(7, 0);
+        set_current_text_background_colour(7, 0, 0, 0, 0);
+        if (gMenuOptionCount == 1) {
+            set_current_text_colour(7, 255, 255, 255, colourIntensity, 255);
+        } else {
+            set_current_text_colour(7, 255, 255, 255, 0, 255);
+        }
+        render_dialogue_text(7, POS_CENTRED, 12, gMenuText[ASSET_MENU_TEXT_ERASEGHOST], 1, ALIGN_MIDDLE_CENTER);
+        if (gMenuOptionCount == 2) {
+            set_current_text_colour(7, 255, 255, 255, colourIntensity, 255);
+        } else {
+            set_current_text_colour(7, 255, 255, 255, 0, 255);
+        }
+        render_dialogue_text(7, POS_CENTRED, 28, gMenuText[ASSET_MENU_TEXT_CANCEL], 1, ALIGN_MIDDLE_CENTER);
+        render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
+    }
+    if (gOptionBlinkTimer & 0x10) {
+        if ((gOpacityDecayTimer + 3) < D_801264D4) {
+            render_textured_rectangle(&sMenuCurrDisplayList, gMenuSelectionArrowDown, SCREEN_WIDTH_HALF + 1, y + 3, 0, 0, 0, 128);
+            render_textured_rectangle(&sMenuCurrDisplayList, gMenuSelectionArrowDown, SCREEN_WIDTH_HALF - 1, y + 1, 255, 255, 255, 255);
+        }
+        if (gOpacityDecayTimer > 0) {
+            render_textured_rectangle(&sMenuCurrDisplayList, gMenuSelectionArrowUp, SCREEN_WIDTH_HALF + 1, 54, 0, 0, 0, 128);
+            render_textured_rectangle(&sMenuCurrDisplayList, gMenuSelectionArrowUp, SCREEN_WIDTH_HALF - 1, 52, 255, 255, 255, 255);
+        }
+        reset_render_settings(&sMenuCurrDisplayList);
+    }
+}
 
 s32 menu_ghost_data_loop(s32 updateRate) {
     s32 i;
