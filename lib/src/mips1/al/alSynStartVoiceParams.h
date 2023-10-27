@@ -5,11 +5,11 @@
 #include "audio_internal.h"
 
 // Can be changed in the "Audio Options" menu.
-enum StereoPanMode {
+typedef enum StereoPanMode {
     STEREO,
     MONO,
     HEADPHONES
-};
+} StereoPanMode;
 
 void set_stereo_pan_mode(s32 panMode);
 s32 modify_panning(s32 pan);

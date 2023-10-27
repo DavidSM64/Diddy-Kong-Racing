@@ -334,9 +334,9 @@ glabel func_8007FFEC
 /* 0810F4 800804F4 AC201DB4 */  sw    $zero, %lo(D_800E1DB4)($at)
 /* 0810F8 800804F8 3C01800E */  lui   $at, %hi(gWoodPanelCount) # $at, 0x800e
 /* 0810FC 800804FC AC201DB8 */  sw    $zero, %lo(gWoodPanelCount)($at)
-/* 081100 80080500 3C01800E */  lui   $at, %hi(D_800E1DBC) # $at, 0x800e
+/* 081100 80080500 3C01800E */  lui   $at, %hi(gWoodPanelAllocCount) # $at, 0x800e
 /* 081104 80080504 8FBF001C */  lw    $ra, 0x1c($sp)
-/* 081108 80080508 AC301DBC */  sw    $s0, %lo(D_800E1DBC)($at)
+/* 081108 80080508 AC301DBC */  sw    $s0, %lo(gWoodPanelAllocCount)($at)
 /* 08110C 8008050C 8FB00018 */  lw    $s0, 0x18($sp)
 /* 081110 80080510 03E00008 */  jr    $ra
 /* 081114 80080514 27BD0050 */   addiu $sp, $sp, 0x50

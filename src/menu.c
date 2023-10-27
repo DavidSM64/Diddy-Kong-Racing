@@ -272,23 +272,37 @@ s32 D_80126CC0;
 
 /************ .data ************/
 
+// A boolean, set to TRUE if player has entered trophy race through adventure mode.
 s8 gInAdvModeTrophyRace = 0;
+
+// Height scale of the wooden frames in the track select menu.
 f32 gTrackSelectWoodFrameHeightScale = 1.0f;
+
 s32 gResetTitleScale = 1;
+
 s32 gTitleScreenCurrentOption = 0; // 0 = "Start", 1 = "Options"
-s32 gMenuCurIndex = 0; // Currently selected menu index? Reused in different menus.
-s32 ununsed_800DF464 = 4; // Currently unknown, might be a different type.
+
+// Currently selected index for all menus.
+s32 gMenuCurIndex = 0;
+
+s32 ununsed_800DF464 = 4; 
 s32 ununsed_800DF468 = 0;
+
+// Used as a short delay before printing the missing controller text.
 s32 gMissingControllerDelay = 0;
-s32 gCurrentMenuId = 0; // Currently unknown, might be a different type.
-s32 ununsed_800DF474 = 0;     // Currently unknown, might be a different type.
-s32 unused_800DF478 = 0;     // Currently unknown, might be a different type.
+
+s32 gCurrentMenuId = 0; 
+s32 ununsed_800DF474 = 0;
+
+// A boolean, set to TRUE when a track is loaded using gTrackIdToLoad.
+s32 gTrackSpecifiedWithTrackIdToLoad = 0; 
+
 s32 gMenuDelay = 0;
 s32 gNumberOfReadyPlayers = 0;
-s32 D_800DF484 = 0; // Currently unknown, might be a different type.
+s32 D_800DF484 = 0;
 s32 gTitleScreenLoaded = 0;
-s32 unused_800DF48C = 0; // Currently unknown, might be a different type.
-s32 unused_800DF490 = 0; // Currently unknown, might be a different type.
+s32 unused_800DF48C = 0;
+s32 unused_800DF490 = 0;
 s32 gIsInAdventureTwo = 0;
 s32 gPlayerHasSeenCautionMenu = 0;
 s32 *gMenuTextLangTable = NULL;
@@ -298,34 +312,40 @@ char **gMenuText = NULL;
 u8 sMenuGuiColourR = 0xFF;
 u8 sMenuGuiColourG = 0xFF;
 u8 sMenuGuiColourB = 0xFF;
+u8 sMenuGuiColourA = 0;
 
-u8  sMenuGuiColourA              = 0;
-s32 gMenuSpriteFlags              = 0;
+// Flags for menu/HUD sprites. Used in func_8009CA60()
+// Seems like it doesn't matter what you set it as?
+s32 gMenuSpriteFlags        = 0;
+
 s32 gIsInTracksMode         = 1;
 s32 gNumberOfActivePlayers  = 1;
 s32 gIsInTwoPlayerAdventure = 0;
-s32 gTrackIdForPreview    = ASSET_LEVEL_CENTRALAREAHUB;
+s32 gTrackIdForPreview      = ASSET_LEVEL_CENTRALAREAHUB;
 s32 gTrackSelectRow         = 0; // 1 = Dino Domain, 2 = Sherbet Island, etc.
 s32 gSaveFileIndex          = 0;
-s32 unused_800DF4D0              = 0; // Unused?
+s32 unused_800DF4D0         = 0; // Unused?
 s32 gTrackIdToLoad          = 0;
-s8 unused_800DF4D8               = 1;
+s8 unused_800DF4D8          = 1;
 s8 gNextTajChallengeMenu    = FALSE;
 s8 gNeedToCloseDialogueBox  = FALSE;
 
-s8 gDoneTalkingToNPC[4] = {
-    0, 0, 0, 0
+// Array of booleans, set to TRUE when you are done talking to an NPC.
+// This has (atleast) 5 elements, not 4!
+s8 gDoneTalkingToNPC[5] = {
+    FALSE, // Taj
+    FALSE, // Unused?
+    FALSE, // T.T.
+    FALSE, // Taj Challenge
+    FALSE // Trophy Cabinet
 };
 
-s32 D_800DF4E8 = 0; // Currently unknown, might be a different type.
 s8 gDialogueOptionTangible = FALSE;
 
-// Unused?
 s32 unused_800DF4F0[] = {
     0x4000, 0x8000, 0x1000, 0x2000, 0x8000, 0x10, 0x400, 0x00
 };
 
-//MenuElement?
 unk800DF510 sMenuImageProperties[18] = {
     { 0, 0, 0, 0x00,   1.0f, 0.0f,   0.0f,  -32.0f, 0, 0, 0, 0, 0, { 0 } },
     { 0, 0, 0, 0x01,   1.0f, 0.0f,   0.0f,  -32.0f, 0, 0, 0, 0, 0, { 0 } },
@@ -347,7 +367,7 @@ unk800DF510 sMenuImageProperties[18] = {
     { 0, 0, 0, 0x5D,   1.0f, 0.0f,   0.0f,    0.0f, 0, 0, 0, 0, 0, { 0 } },
 };
 
-s16 *gAssetsMenuElementIds[1] = { NULL }; // This is probably not correct.
+s16 *gAssetsMenuElementIds[1] = { NULL };
 s16 gMenuElementIdCount = 0;
 s16 gMenuObjectsCount = 0;
 unk800DF510 *gMenuImageStack = NULL;
@@ -364,15 +384,15 @@ UNUSED FadeTransition sMenuTransitionFadeOutWhite = FADE_TRANSITION(FADE_FULLSCR
 
 s32 gTrophyRankingsState = 4;
 MenuElement *gTrophyRankingsMenuElements = NULL;
-s32 gDrawMenuElementsYOffset = 0; //PAL Y Offset?
-
+s32 gDrawMenuElementsYOffset = 0;
 s32 gDrawMenuElementsYOffset2 = 0;
+
 char *gTitleMenuStrings[3] = { 0, 0, 0 };
 
 // Version text shown on the title screen? See 1:15 in https://www.youtube.com/watch?v=OHSCLcA74ao.
 char gVersionDisplayText[20] = "VERSION XXXXXXXX";
 
-// "Diddy Kong Racing" logo texture indices?
+// "Diddy Kong Racing" logo texture indices
 s16 sGameTitleTileTextures[12] = {
     TEXTURE_TITLE_SEGMENT_01,
     TEXTURE_TITLE_SEGMENT_02,
@@ -417,13 +437,15 @@ unk800DF83C gTitleCinematicText[10] = {
     { "DIDDY", 63.5f, 64.0f, 66.0f, 66.5f, -80.0f, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT_HALF, SCREEN_HEIGHT_FLOAT - 32.0f, SCREEN_WIDTH_FLOAT + 80.0f, SCREEN_HEIGHT_FLOAT - 32.0f }
 };
 
+// Number of active colours used in the title screen cinematic.
 s32 gTitleCinematicTextColourCount = 0;
 
+// Colours used for the Character Names during the title screen cinematic
 MenuColour gTitleCinematicTextColours[4] = {
-    { 255, 255, 0, 255, 204 },
-    { 0, 255, 0, 255, 153 },
-    { 0, 255, 255, 255, 102 },
-    { 0, 0, 255, 255, 51 }
+    { 255, 255,   0, 255, 204 }, // Yellow
+    {   0, 255,   0, 255, 153 }, // Green
+    {   0, 255, 255, 255, 102 }, // Cyan
+    {   0,   0, 255, 255,  51 }  // Blue
 };
 
 UNUSED u8 unused_800DFA10[4] = {
@@ -449,12 +471,13 @@ unk800DFA3C gAudioMenuStrings[8] = {
     {   0,   0,    0,    0,    0,    0,    0, 0, 0,  0, NULL },
 };
 
-s32 gMusicTestSongIndex = 0; // Currently unknown, might be a different type.
+// Current song index used in the music test (from JUKEBOX magic code) 
+s32 gMusicTestSongIndex = 0;
 
 s32 gSfxVolumeSliderValue = 256;   // Value from 0 to 256
 s32 gMusicVolumeSliderValue = 256; // Value from 0 to 256
 
-s32 gAudioOutputType = 0;
+StereoPanMode gAudioOutputType = 0;
 
 // This is used for RGBA colors for the save options Controller Pak BG.
 u32 gContPakSaveBgColours[MAXCONTROLLERS] = {
@@ -464,9 +487,10 @@ u32 gContPakSaveBgColours[MAXCONTROLLERS] = {
     COLOUR_RGBA32(64, 255, 64, 255)   // Green for controller 4
 };
 
-s32 D_800DFADC = 0; // Currently unknown, might be a different type.
-s32 D_800DFAE0 = 0; // Currently unknown, might be a different type.
+s32 D_800DFADC = 0;
+s32 D_800DFAE0 = 0;
 
+// Strings related to the controller pak.
 char *gContPakNotPresentStrings[6] = { 0, 0, 0, 0, 0, 0 };
 char *gContPakCorruptDataRepairStrings[6] = { 0, 0, 0, 0, 0, 0 };
 char *gContPakDamagedStrings[6] = { 0, 0, 0, 0, 0, 0 };
@@ -477,25 +501,23 @@ char *gContPakCorruptDataStrings[6] = { 0, 0, 0, 0, 0, 0 };
 char *gContPakRumbleDetectedStrings[6] = { 0, 0, 0, 0, 0, 0 };
 char *gContPakSwitchToRumbleStrings[6] = { 0, 0, 0, 0, 0, 0 };
 char *gContPakNeed2ndAdvStrings[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-s32 gContPakStrings = 0;
 
-// Unused?
-char **D_800DFBE0[10] = {
-    gContPakNotPresentStrings, gContPakCorruptDataRepairStrings, gContPakDamagedStrings, gContPakFullStrings, gContPakDiffContStrings, gContPakNoRoomForGhostsStrings, gContPakRumbleDetectedStrings, gContPakSwitchToRumbleStrings, gContPakCorruptDataStrings, gContPakNeed2ndAdvStrings
+char **gContPakStrings[11] = {
+    NULL, gContPakNotPresentStrings, gContPakCorruptDataRepairStrings, gContPakDamagedStrings, gContPakFullStrings, gContPakDiffContStrings, gContPakNoRoomForGhostsStrings, gContPakRumbleDetectedStrings, gContPakSwitchToRumbleStrings, gContPakCorruptDataStrings, gContPakNeed2ndAdvStrings
 };
 
-s32 unused_800DFC08 = 0;      // Currently unknown, might be a different type.
-s32 unused_800DFC0C = 0xFFFF; // Currently unknown, might be a different type.
+s32 unused_800DFC08 = 0;     
+s32 unused_800DFC0C = 0xFFFF;
 
-DrawTexture D_800DFC10[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800DFC20[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800DFC30[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800DFC40[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800DFC50[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
-DrawTexture D_800DFC60[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+/*** Icons in the save options menu. ***/
+DrawTexture gDrawTexN64Icon[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gDrawTexTTIcon[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gDrawTexGhostIcon[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gDrawTexFileIcon[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gDrawTexContPakIcon[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
+DrawTexture gDrawTexTrashIcon[2] = { { NULL, 0, 0 }, { NULL, 0, 0 } };
 
-// Unused?
-u8 D_800DFC70[8] = { 0x40, 0x40, 0x04, 0x04, 0xFF, 0, 0, 0 };
+u8 unused_800DFC70[8] = { 0x40, 0x40, 0x04, 0x04, 0xFF, 0, 0, 0 };
 
 s16 gSaveMenuObjectIndices[26] = {
     0x0024, 0x0025, 0x0018, 0x0019,
@@ -507,7 +529,6 @@ s16 gSaveMenuObjectIndices[26] = {
     0xFFFF, 0x0000
 };
 
-//Image textures, likely for the below menu
 s16 gSaveMenuImageIndices[4] = {
     0x000B, 0x000C, 0x0002, 0xFFFF
 };
@@ -632,8 +653,18 @@ CharacterSelectData gCharacterSelectBytesComplete[] = {
 //!@bug T.T's down input selects Tiptup. It should be set to NONE.
 };
 
-s32 unused_800DFFCC = 0; // Likely unused.
+s32 unused_800DFFCC = 0;
+
+// Set from func_8008AEB4()
+// Is either 0, 1, or 2. However it is never set to 2?
+// Set to 0 upon entering the Character Select menu normally.
+// Set to 1 upon entering the Char Select from the 
+//   "Select Character" option on the "Pause Options" screen in a race.
 s32 gEnteredCharSelectFrom = 0;
+
+// Set from func_8008AEB4()
+// Set to the value *arg1 when arg0 is 2, but that never happens.
+// Not read from anywhere, so I'd consider this to be unused.
 s32 unused_800DFFD4 = -1;
 
 MenuElement gCautionMenuTextElements[14] = {
@@ -716,8 +747,17 @@ s16 gFileSelectElementPos[10] = {
 // Either 0 (2 racers), 1 (4 racers), or 2 (6 racers)
 s32 gMultiplayerSelectedNumberOfRacers = 0;
 
+// Highlighted option index for time trial in tracks mode.
+//   0 = Time Trial off
+//   1 = Time Trial on
 s32 gTracksMenuTimeTrialHighlightIndex = 0;
+
+// Highlighted option index for adventure 1 or 2 in tracks mode.
+//   0 = Adventure 1 (Normal)
+//   1 = Adventure 2 (Mirrored)
 s32 gTracksMenuAdventureHighlightIndex = 0;
+
+
 DrawTexture gMenuSelectionArrowUp[2] = { { NULL, -12, -8 }, { NULL, 0, 0 }};
 DrawTexture gMenuSelectionArrowLeft[2] = { { NULL, -8, -12 }, { NULL, 0, 0 }};
 DrawTexture gMenuSelectionArrowDown[2] = { { NULL, -12, -8 }, { NULL, 0, 0 }};
@@ -753,11 +793,11 @@ DrawTexture *gRaceSelectionImages[9] = {
 
 };
 
-DrawTexture *D_800E0648[6] = {
+DrawTexture *gTrackSelectTTImage[6] = {
     gRaceSelectionTTOff, gRaceSelectionTTOffOptHighlight, gRaceSelectionTTOffOpt, gRaceSelectionTTOn, gRaceSelectionTTOnOptHighlight, gRaceSelectionTTOnOpt
 };
 
-DrawTexture *D_800E0660[6] = {
+DrawTexture *gTrackSelectPlayerImage[6] = {
     gRaceSelectionPlayer1Texture, gRaceSelectionPlayer2Texture, gRaceSelectionPlayer3Texture, gRaceSelectionPlayer4Texture, gRaceSelectionVehicleTitleTexture, gRaceSelectionTTTitleTexture
 };
 
@@ -765,44 +805,58 @@ DrawTexture *gMenuSelectionArrows[4] = {
     gMenuSelectionArrowUp, gMenuSelectionArrowLeft, gMenuSelectionArrowDown, gMenuSelectionArrowRight
 };
 
+// X/Y offsets for the "Player" icon
 u16 gTracksMenuPlayerNamePositions[20] = {
-    0x44, 0x72, 0x44, 0x72,
-    0xCC, 0x72, 0x21, 0x72,
-    0x88, 0x72, 0xEF, 0x72,
-    0x21, 0x72, 0x66, 0x72,
-    0xAA, 0x72, 0xEF, 0x72,
+    // X, Y
+    0x44, 0x72,                                     // 1 player
+    0x44, 0x72, 0xCC, 0x72,                         // 2 players
+    0x21, 0x72, 0x88, 0x72, 0xEF, 0x72,             // 3 players
+    0x21, 0x72, 0x66, 0x72, 0xAA, 0x72, 0xEF, 0x72, // 4 players
 };
 
+// X offsets for "Car", "Hover", and "Plane" choices in track select.
 u16 gTracksMenuVehicleNamePositions[10] = {
-    0x68, 0x21, 0xFB, 0x27, 0x8E, 0xF5, 0x27, 0x6C, 0xB0, 0xF5
+    0x68,                     // 1 player
+    0x21, 0xFB,               // 2 players
+    0x27, 0x8E, 0xF5,         // 3 players
+    0x27, 0x6C, 0xB0, 0xF5    // 4 players
 };
 
 //Paired X / Y Offsets. X Is First, Y is Second. For NTSC.
 s16 gTracksMenuArrowPositionsNTSC[8] = {
-    0x0000, 0xFFC2, 0x0055, 0x0000,
-    0x0000, 0x003E, 0xFFAB, 0x0000,
+    0x0000, 0xFFC2, 
+    0x0055, 0x0000,
+    0x0000, 0x003E, 
+    0xFFAB, 0x0000,
 };
 
 //Paired X / Y Offsets. X Is First, Y is Second. For PAL.
 s16 gTracksMenuArrowPositionsPAL[8] = {
-    0x0000, 0xFFB6, 0x0055, 0x0000,
-    0x0000, 0x004A, 0xFFAB, 0x0000,
+    0x0000, 0xFFB6, 
+    0x0055, 0x0000,
+    0x0000, 0x004A, 
+    0xFFAB, 0x0000,
 };
 
 ButtonTextElement gTwoPlayerRacerCountMenu = {
     SCREEN_WIDTH_HALF - 80, 140, 160, 64, 4, 4, { 80, 20, 58, 40, 80, 40, 102, 40 }
 };
 
+// Adventure 1/2 button in the track select menu.
+// Note: The first element (.x) is not actually used.
 ButtonElement gTracksMenuAdventureButton = {
     80, 152, 160, 40, 4, 4, 80, 14
 };
 
-// Often access like gTracksMenuBgTextureIndices[i * 3 + 1]. Maybe it's s16[4][3]?
-s16 gTracksMenuBgTextureIndices[16] = {
-    0x0E, 0x0F, 0x00, 0x10,
-    0x11, 0x20, 0x12, 0x13,
-    0x00, 0x14, 0x15, 0x20,
-    0x16, 0x17, 0x20, 0x00
+// Often access like D_800E0710[i * 3 + 1].
+// Texture indices for the backgrounds in the Track Select
+// Seems like the 3rd number of a group of 3 is not used for anything?
+s16 gTracksMenuBgTextureIndices[15] = {
+    0x0E, 0x0F, 0x00, // Dino domain
+    0x10, 0x11, 0x20, // Sherbet Island
+    0x12, 0x13, 0x00, // Snowflake Mountain
+    0x14, 0x15, 0x20, // Dragon Forest
+    0x16, 0x17, 0x20  // Future Fun Land
 };
 
 TextureHeader *gTracksMenuBgTextures[10] = {
@@ -900,6 +954,13 @@ s16 gTrackSelectPreviewImageIndices[8] = {
 };
 
 // Not a struct, since the entries can *technically* be either 4 or 5 bytes. But it is always 5 in the final game.
+/*
+    Offset 0: u8 index;
+    Offset 1: u8 indexInto800E0730;
+    Offset 2: u8 alpha;
+    Offset 3: u8 alpha2;
+    Offset 4: u8 texCoordUFactor;
+*/
 u8 gTrackSelectBgData[295] = {
     0, 0, 255, 255, 0, 
     1, 1, 255, 255, 0, 
@@ -961,29 +1022,35 @@ u8 gTrackSelectBgData[295] = {
     41, 9, 255, 255, 32, 
     255, 0, 0, 0, 0
 };
-Vertex *gTrackSelectBgVertices = NULL;
-s32 D_800E096C = 0;
-Triangle *gTrackSelectBgTriangles = NULL;
-s32 D_800E0974 = 0;
+Vertex *gTrackSelectBgVertices[2] = { NULL, NULL };
+Triangle *gTrackSelectBgTriangles[2] = {NULL, NULL };
 char *gQMarkPtr = "?";
+
+// Boolean. Set to TRUE once in the Track Select menu, then
+//   set to FALSE when leaving the menu.
+// This is effectively unused, since it is only read from the 
+//   unused function func_8008E790()
 s32 gIsInTracksMenu = 0;
+
 s32 gTrackNameVoiceDelay = 0;
 s32 gMenuOptionCap = 0;
 s32 gMenuSubOption = 0;
-s32 gLastPlayerWhoPaused = 0; //Player ID or controllerIndex maybe?
+
+// Index of the last player who paused.
+s32 gLastPlayerWhoPaused = 0;
 
 ColourRGBA gPlayerPauseBgColour[4] = {
-    {{{  64,  64, 255, 160 }}},
-    {{{ 255,  64,  64, 160 }}},
-    {{{ 208, 192,  32, 176 }}},
-    {{{  32, 192,  64, 176 }}},
+    {{{  64,  64, 255, 160 }}}, // Blue for player 1
+    {{{ 255,  64,  64, 160 }}}, // Red for player 2
+    {{{ 208, 192,  32, 176 }}}, // Yellow for player 3
+    {{{  32, 192,  64, 176 }}}, // Green for player 4
 };
 
 ColourRGBA gPlayerPauseOptionsTextColour[4] = {
-    {{{   0, 255,   0, 128 }}},
-    {{{   0, 255,   0,  96 }}},
-    {{{   0,   0, 255,  96 }}},
-    {{{   0,   0, 255, 128 }}},
+    {{{   0, 255,   0, 128 }}}, // Green for Player 1
+    {{{   0, 255,   0,  96 }}}, // Green for Player 2
+    {{{   0,   0, 255,  96 }}}, // Blue for Player 3
+    {{{   0,   0, 255, 128 }}}, // Blue for Player 4
 };
 
 // BAD CONTROLLER PAK / If you wish to change / Controller Pak or Rumble Pak, / please do so now.
@@ -1141,7 +1208,6 @@ s32 gTrophyRaceWorldId = 0;
 s32 gTrophyRaceRound = 0; // Rounds 1 - 4 (as 0 - 3)
 s32 gPrevTrophyRaceRound = 0;
 
-// Unused? Not sure what this is.
 u32 unused_800E0FF4[4] = {
     0x01FFFFFF, 0x0012FFFF, 0x81FFFFFF, 0x00120000
 };
@@ -1151,11 +1217,11 @@ s32 gTrophyRacePointsArray[8] = {
     9, 7, 5, 3, 1, 0, 0, 0
 };
 
-s16 gGhostDataObjectIndices[14] = {
+s16 gTrophyRankingsObjectIndices[14] = {
     0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x00, 0x01, -1, 0x00
 };
 
-s16 gGhostDataImageIndices[3] = {
+s16 gTrophyRaceImageIndices[3] = {
     0, 1, -1
 };
 
@@ -1325,7 +1391,7 @@ DrawTexture *gDrawTexWorldBgs[5] = {
     gDrawTexFutureFunLandGhostBg  // Future Fun Land
 };
 
-s16 D_800E1708[34] = {
+s16 gGhostDataObjectIndices[34] = {
     0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
     0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D,
     0x32, 0x33, 0x34, 0x36, 0x35, 0x37, 0x38, 0x39,
@@ -1333,7 +1399,7 @@ s16 D_800E1708[34] = {
     0x3E, -1
 };
 
-s16 D_800E174C[4] = {
+s16 gGhostDataImageIndices[4] = {
     0, 1, 7, -1
 };
 
@@ -1367,38 +1433,111 @@ s16 gCreditsImageIndices[2] = {
     -1, 0
 };
 
-s16 gCreditsControlData[130] = {
-    0x20A5, 0x0000, 0x20A5, 0x0001, 0x0002, 0x20A5, 0x0003, 0x0004,
-    0x0005, 0x0006, 0x4000, 0x20A5, 0x0007, 0x0008, 0x20A5, 0x0009,
-    0x000A, 0x000B, 0x000C, 0x30A5, 0x000D, 0x000E, 0x000F, 0x4000,
-    0x20A5, 0x0010, 0x0011, 0x20A5, 0x0012, 0x0013, 0x20A5, 0x0014,
-    0x4000, 0x20A5, 0x0015, 0x0016, 0x20A5, 0x0017, 0x0018, 0x20A5,
-    0x0019, 0x001A, 0x4000, 0x20A5, 0x001B, 0x001C, 0x001D, 0x001E,
-    0x001F, 0x30A5, 0x0020, 0x0021, 0x0022, 0x0023, 0x30A5, 0x0024,
-    0x0025, 0x0026, 0x4000, 0x20A5, 0x0027, 0x0028, 0x0029, 0x002A,
-    0x002B, 0x30A5, 0x002C, 0x002D, 0x002E, 0x30A5, 0x002F, 0x0030,
-    0x0031, 0x4000, 0x20A5, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036,
-    0x30A5, 0x0037, 0x0038, 0x0039, 0x003A, 0x30A5, 0x003B, 0x003C,
-    0x003D, 0x003E, 0x4000, 0x20A5, 0x003F, 0x0040, 0x0041, 0x20A5,
-    0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x20A5, 0x0047, 0x0048,
-    0x0049, 0x4000, 0x20A5, 0x004A, 0x004B, 0x30A5, 0x004C, 0x30A5,
-    0x004D, 0x4000, 0x20A5, 0x004E, 0x004F, 0x20A5, 0x0050, 0x0051,
-    0x20A5, 0x0052, 0x0053, 0x4000, 0x20A5, 0x0054, 0x210E, 0x0055,
-    0x0056, 0x4000
-};
 
-UNUSED u16 D_800E18F8 = 0x1000; // Set but never read.
+#define CREDITS_END (0x1000)
+#define CREDITS_NEW_TITLE(seconds) (0x2000 | ((s16)(seconds * 60.0)))
+#define CREDITS_CONTINUE_TITLE(seconds) (0x3000 | ((s16)(seconds * 60.0)))
+#define CREDITS_NEXT_LEVEL (0x4000)
+#define CREDITS_DEV_TIMES(seconds) (0x6000 | ((s16)(seconds * 60.0)))
 
-// Unused?
-u16 D_800E18FC[30] = {
-    0x0001, 0x0002, 0x0003, 0x4000,
-    0x61F4, 0x0004, 0x0005, 0x0006,
-    0x0007, 0x4000, 0x61F4, 0x0008,
-    0x0009, 0x000A, 0x000B, 0x4000,
-    0x61F4, 0x000C, 0x000D, 0x000E,
-    0x000F, 0x4000, 0x61F4, 0x0010,
-    0x0011, 0x0012, 0x0013, 0x4000,
-    0x1000, 0x0000
+// Number of seconds for each section in the credits.
+#define CREDITS_DEFAULT_TITLE_TIME 2.75
+#define CREDITS_MAGIC_CODE_TIME 4.5 
+#define CREDITS_DEV_TIMES_TIME 8.334
+
+// Data used to control the credits.
+s16 gCreditsControlData[] = {
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME),
+        0, // "CREDITS"
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        1, 2, // "Software Director", "R.Harrison"
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        3, 4, 5, 6, 
+    CREDITS_NEXT_LEVEL,
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        7, 8, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        9, 10, 11, 12, 
+    CREDITS_CONTINUE_TITLE(CREDITS_DEFAULT_TITLE_TIME),
+        13, 14, 15, 
+    CREDITS_NEXT_LEVEL,
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        16, 17, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        18, 19, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        20,
+    CREDITS_NEXT_LEVEL, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        21, 22, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        23, 24, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME),
+        25, 26, 
+    CREDITS_NEXT_LEVEL, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        27, 28, 29, 30, 31, 
+    CREDITS_CONTINUE_TITLE(CREDITS_DEFAULT_TITLE_TIME),
+        32, 33, 34, 35, 
+    CREDITS_CONTINUE_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        36, 37, 38, 
+    CREDITS_NEXT_LEVEL, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        39, 40, 41, 42, 43, 
+    CREDITS_CONTINUE_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        44, 45, 46, 
+    CREDITS_CONTINUE_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        47, 48, 49, 
+    CREDITS_NEXT_LEVEL, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        50, 51, 52, 53, 54,
+    CREDITS_CONTINUE_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        55, 56, 57, 58, 
+    CREDITS_CONTINUE_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        59, 60, 61, 62, 
+    CREDITS_NEXT_LEVEL, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        63, 64, 65, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME),
+        66, 67, 68, 69, 70, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        71, 72, 73, 
+    CREDITS_NEXT_LEVEL, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        74, 75, // "Special Thanks To", "J.HOCHBERG"
+    CREDITS_CONTINUE_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        76, // "H.LINCOLN"
+    CREDITS_CONTINUE_TITLE(CREDITS_DEFAULT_TITLE_TIME),
+        77, // "M.ARAKAWA"
+    CREDITS_NEXT_LEVEL, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        78, 79, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        80, 81,
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        82, 83, 
+    CREDITS_NEXT_LEVEL, 
+    CREDITS_NEW_TITLE(CREDITS_DEFAULT_TITLE_TIME), 
+        84, // "THE END"
+    CREDITS_NEW_TITLE(CREDITS_MAGIC_CODE_TIME),
+        85, 86, // Magic Code Description, Magic Code
+    CREDITS_NEXT_LEVEL,
+    CREDITS_END, // Set to CREDITS_DEV_TIMES(CREDITS_DEV_TIMES_TIME) if you've beaten wizpig 2.
+        0, 1, 2, 3, 
+    CREDITS_NEXT_LEVEL,
+    CREDITS_DEV_TIMES(CREDITS_DEV_TIMES_TIME), 
+        4, 5, 6, 7, 
+    CREDITS_NEXT_LEVEL, 
+    CREDITS_DEV_TIMES(CREDITS_DEV_TIMES_TIME), 
+        8, 9, 10, 11, 
+    CREDITS_NEXT_LEVEL,
+    CREDITS_DEV_TIMES(CREDITS_DEV_TIMES_TIME), 
+        12, 13, 14, 15, 
+    CREDITS_NEXT_LEVEL, 
+    CREDITS_DEV_TIMES(CREDITS_DEV_TIMES_TIME),
+        16, 17, 18, 19, 
+    CREDITS_NEXT_LEVEL,
+    CREDITS_END
 };
 
 // List of amazing people.
@@ -1508,6 +1647,7 @@ UNUSED Gfx dMenuHudDrawModes[][2] = {
     }
 };
 
+// Triangle indices for the wood panels used in multiple menus.
 s8 gWoodPanelsIndices[32] = {
     0, 1, 2, 0, 2, 3, 4, 5,
     6, 4, 6, 7, 8, 9, 10, 8,
@@ -1515,7 +1655,7 @@ s8 gWoodPanelsIndices[32] = {
     16, 17, 18, 16, 18, 19, 0, 0
 };
 
-// UV coordinate indices
+// UV coordinate indices the wood panels.
 u8 gWoodPanelTexCoords[5][12] = {
     { 0, 0, 3, 0, 2, 1, 0, 0, 2, 1, 1, 1 }, 
     { 2, 1, 3, 0, 3, 3, 2, 1, 3, 3, 2, 2 }, 
@@ -1524,7 +1664,7 @@ u8 gWoodPanelTexCoords[5][12] = {
     { 1, 1, 2, 1, 2, 2, 1, 1, 2, 2, 1, 2 }
 };
 
-// Position offsets, why are there 10?
+// Position offsets for the wood panels.
 u16 gWoodPanelVertCoords[10][4] = {
     {   0,    0, 256,    0 },
     { 511,  255,   1,  255 },
@@ -1538,13 +1678,13 @@ u16 gWoodPanelVertCoords[10][4] = {
     { 511, -255,   1, -255 }
 };
 
-// Colours
+// Colour filter, used for the shadows on the side of the panels.
 s16 gWoodPanelVertColours[5][4] = {
-    { 216, 216, 216, 256 },
-    { 176, 176, 176, 256 },
-    {  96,  96,  96, 256 },
-    { 136, 136, 136, 256 },
-    { 256, 256, 256, 256 }
+    { 216, 216, 216, 256 }, // Colour for top part of the panel
+    { 176, 176, 176, 256 }, // Colour for right part of the panel
+    {  96,  96,  96, 256 }, // Colour for bottom part of the panel
+    { 136, 136, 136, 256 }, // Colour for left part of the panel
+    { 256, 256, 256, 256 }  // Colour for the center of the panel
 };
 
 s32 *gWoodPanelVertices[2] = {
@@ -1557,21 +1697,28 @@ s32 *gWoodPanelTriangles[2] = {
 
 s32 D_800E1DB4 = 0;
 s32 gWoodPanelCount = 0;
-s32 D_800E1DBC = 0;
+s32 gWoodPanelAllocCount = 0;
 
+// U tex scale for wood panels (32 is 1.0x)
 s32 gWoodPanelTexScaleU = 32;
+// V tex scale for wood panels (32 is 1.0x)
 s32 gWoodPanelTexScaleV = 32;
 
+// Related to the file select wood panel highlight.
 s16 D_800E1DC8[16] = {
     1, 1, -1, 1, -1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1
 };
 
+// Fade transition from the logo screen to the title screen.
 FadeTransition gFadeLogoToTitleScreen = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 120, -1);
 
 char gRareCopyrightString[24] = "(C) COPYRIGHT RARE 1997";
 
+// Fade transition between levels in the title screen demo.
 FadeTransition gFadeTitleScreenDemo = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 52, -1);
 
+// Used in func_800853D0(). Used for controller pak adventure saves.
+// So the first save in the pak would be (ADV.A), second save (ADV.B), etc.
 char *gConPakAdvSavePrefix = " (ADV.";
 
 
@@ -1765,7 +1912,7 @@ void func_8007FF88(void) {
     gWoodPanelVertices[0] = NULL;
     gWoodPanelVertices[1] = NULL;
     gWoodPanelCount = 0;
-    D_800E1DBC = 0;
+    gWoodPanelAllocCount = 0;
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_8007FFEC.s")
@@ -3400,12 +3547,12 @@ void menu_save_options_init(void) {
     allocate_menu_images(gSaveMenuImageIndices);
     func_8007FFEC(0xA);
     load_font(ASSET_FONTS_BIGFONT);
-    D_800DFC10[0].texture = gMenuObjects[TEXTURE_ICON_SAVE_N64];
-    D_800DFC20[0].texture = gMenuObjects[TEXTURE_ICON_SAVE_TT];
-    D_800DFC30[0].texture = gMenuObjects[TEXTURE_ICON_SAVE_GHOSTS];
-    D_800DFC40[0].texture = gMenuObjects[TEXTURE_ICON_SAVE_FILECABINET];
-    D_800DFC50[0].texture = gMenuObjects[TEXTURE_ICON_SAVE_CPAK];
-    D_800DFC60[0].texture = gMenuObjects[TEXTURE_ICON_SAVE_BIN];
+    gDrawTexN64Icon[0].texture = gMenuObjects[TEXTURE_ICON_SAVE_N64];
+    gDrawTexTTIcon[0].texture = gMenuObjects[TEXTURE_ICON_SAVE_TT];
+    gDrawTexGhostIcon[0].texture = gMenuObjects[TEXTURE_ICON_SAVE_GHOSTS];
+    gDrawTexFileIcon[0].texture = gMenuObjects[TEXTURE_ICON_SAVE_FILECABINET];
+    gDrawTexContPakIcon[0].texture = gMenuObjects[TEXTURE_ICON_SAVE_CPAK];
+    gDrawTexTrashIcon[0].texture = gMenuObjects[TEXTURE_ICON_SAVE_BIN];
     assign_menu_arrow_textures();
     mark_read_all_save_files();
     transition_begin(&sMenuTransitionFadeOut);
@@ -3427,7 +3574,7 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
     sp70 = 11;
     switch (arg0->saveFileType) {
         case SAVE_FILE_TYPE_UNK1:
-            drawTexture = D_800DFC10;
+            drawTexture = gDrawTexN64Icon;
             texture = gMenuObjects[TEXTURE_SURFACE_BUTTON_WOOD];
             colour = COLOUR_RGBA32(176, 224, 192, 255);
             if (!gSavefileData[arg0->controllerIndex]->newGame) {
@@ -3446,14 +3593,14 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
             text = gMenuText[ASSET_MENU_TEXT_GAMEPAK];
             break;
         case SAVE_FILE_TYPE_UNK2:
-            drawTexture = D_800DFC20;
+            drawTexture = gDrawTexTTIcon;
             texture = gMenuObjects[TEXTURE_SURFACE_BUTTON_WOOD];
             colour = COLOUR_RGBA32(176, 224, 192, 255);
             text2 = gMenuText[ASSET_MENU_TEXT_TIMES];
             text = gMenuText[ASSET_MENU_TEXT_GAMEPAK];
             break;
         case SAVE_FILE_TYPE_GAME_DATA:
-            drawTexture = D_800DFC10;
+            drawTexture = gDrawTexN64Icon;
             texture = gMenuObjects[TEXTURE_UNK_44];
             colour = gContPakSaveBgColours[arg0->controllerIndex];
             text2 = buffer;
@@ -3473,49 +3620,49 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
             }
             break;
         case SAVE_FILE_TYPE_TIME_DATA:
-            drawTexture = D_800DFC20;
+            drawTexture = gDrawTexTTIcon;
             texture = gMenuObjects[TEXTURE_UNK_44];
             colour = gContPakSaveBgColours[arg0->controllerIndex];
             text2 = arg0->unk8;
             text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + arg0->controllerIndex];
             break;
         case SAVE_FILE_TYPE_GHOST_DATA:
-            drawTexture = D_800DFC30;
+            drawTexture = gDrawTexGhostIcon;
             texture = gMenuObjects[TEXTURE_UNK_44];
             colour = gContPakSaveBgColours[arg0->controllerIndex];
             text2 = gMenuText[ASSET_MENU_TEXT_GHOSTS];
             text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + arg0->controllerIndex];
             break;
         case SAVE_FILE_TYPE_UNKNOWN:
-            drawTexture = D_800DFC40;
+            drawTexture = gDrawTexFileIcon;
             texture = gMenuObjects[TEXTURE_UNK_44];
             colour = gContPakSaveBgColours[arg0->controllerIndex];
             text2 = arg0->unk8;
             text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + arg0->controllerIndex];
             break;
         case SAVE_FILE_TYPE_UNK8:
-            drawTexture = D_800DFC50;
+            drawTexture = gDrawTexContPakIcon;
             texture = gMenuObjects[TEXTURE_UNK_44];
             colour = gContPakSaveBgColours[arg0->controllerIndex];
             text2 = gMenuText[ASSET_MENU_TEXT_EMPTYSLOT];
             text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + arg0->controllerIndex];
             break;
         case SAVE_FILE_TYPE_UNK9:
-            drawTexture = D_800DFC30;
+            drawTexture = gDrawTexGhostIcon;
             texture = gMenuObjects[TEXTURE_UNK_45];
             colour = -1;
             text2 = gMenuText[ASSET_MENU_TEXT_VIEWGHOSTS];
             text = NULL;
             break;
         case SAVE_FILE_TYPE_UNKA:
-            drawTexture = D_800DFC10;
+            drawTexture = gDrawTexN64Icon;
             text2 = gMenuText[ASSET_MENU_TEXT_GAMEPAKBONUSES];
             texture = gMenuObjects[TEXTURE_SURFACE_BUTTON_WOOD];
             colour = COLOUR_RGBA32(176, 224, 192, 255);
             text = gMenuText[ASSET_MENU_TEXT_GAMEPAK];
             break;
         default:
-            drawTexture = D_800DFC60;
+            drawTexture = gDrawTexTrashIcon;
             texture = gMenuObjects[TEXTURE_UNK_45];
             colour = COLOUR_RGBA32(128, 128, 128, 255);
             text2 = gMenuText[ASSET_MENU_TEXT_ERASE];
@@ -6866,10 +7013,10 @@ void menu_track_select_init(void) {
             var_s0[1] = NULL;
         }
     }
-    gTrackSelectBgTriangles = (Triangle *) allocate_from_main_pool_safe(2880, COLOUR_TAG_YELLOW);
-    D_800E0974 = (s32) (&gTrackSelectBgTriangles[40]); //640 bytes forward
-    D_800E096C = (s32) (&gTrackSelectBgTriangles[80]); //1280 bytes forward
-    //D_800E096C = (s32) (&gTrackSelectBgVertices[80]); //800 bytes past gTrackSelectBgVertices
+    gTrackSelectBgTriangles[0] = (Triangle *) allocate_from_main_pool_safe(2880, COLOUR_TAG_YELLOW);
+    gTrackSelectBgTriangles[1] = (s32) (&gTrackSelectBgTriangles[0][40]); //640 bytes forward
+    gTrackSelectBgVertices[0] = (s32) (&gTrackSelectBgTriangles[1][80]); //1280 bytes forward
+    //gTrackSelectBgVertices[1] = (s32) (&gTrackSelectBgVertices[0][80]); //800 bytes past gTrackSelectBgVertices
     var_a0 = -160;
     var_v0 = 0;
     for (var_v0 = 0; var_v0 < 80; var_v0++) {
@@ -7065,7 +7212,7 @@ s32 menu_track_select_loop(s32 updateRate) {
     }
     if (D_801267D0 < 0) {
         func_8008F534();
-        unused_800DF478 = 0;
+        gTrackSpecifiedWithTrackIdToLoad = 0;
         if (gNumberOfActivePlayers >= 3 || (gNumberOfActivePlayers == 2 && (gActiveMagicCodes << 7) >= 0)) {
             cutsceneId = 0;
             if (is_drumstick_unlocked()) {
@@ -7091,7 +7238,7 @@ s32 menu_track_select_loop(s32 updateRate) {
             }
         }
         if (D_801269C8 != 4) {
-            unused_800DF478 = 1;
+            gTrackSpecifiedWithTrackIdToLoad = 1;
             return gNumberOfActivePlayers;
         }
         gTrophyRaceWorldId = D_801269CC + 1;
@@ -7110,7 +7257,7 @@ void func_8008F534(void) {
     camDisableUserView(0, FALSE);
     func_8009C4A8(gTrackSelectObjectIndices);
     set_free_queue_state(0);
-    free_from_memory_pool(gTrackSelectBgTriangles);
+    free_from_memory_pool(gTrackSelectBgTriangles[0]);
     set_free_queue_state(2);
     for (i = 0; i < 15; i += 3) {
         if (gTracksMenuBgTextureIndices[i] != -1) {
@@ -7696,9 +7843,9 @@ void render_track_select_setup_ui(s32 updateRate) {
                         for (i = 0; i < 2; i++) {
                             s32 yTemp = 0x97 + sp80 + (i * 0x18);
                             if (i == gTracksMenuTimeTrialHighlightIndex) {
-                                render_textured_rectangle(&sMenuCurrDisplayList, D_800E0648[(i * 3) + 1], 0x68, yTemp, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
+                                render_textured_rectangle(&sMenuCurrDisplayList, gTrackSelectTTImage[(i * 3) + 1], 0x68, yTemp, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
                             } else {
-                                render_textured_rectangle(&sMenuCurrDisplayList, D_800E0648[(i * 3) + 2], 0x68, yTemp, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
+                                render_textured_rectangle(&sMenuCurrDisplayList, gTrackSelectTTImage[(i * 3) + 2], 0x68, yTemp, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
                             }
                         }
                     }
@@ -7716,7 +7863,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                             }
 
                             // "Player" text image
-                            render_textured_rectangle(&sMenuCurrDisplayList, D_800E0660[i], gTracksMenuPlayerNamePositions[s3 + (i * 2)], gTracksMenuPlayerNamePositions[s3 + (i * 2) + 1] + sp80, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
+                            render_textured_rectangle(&sMenuCurrDisplayList, gTrackSelectPlayerImage[i], gTracksMenuPlayerNamePositions[s3 + (i * 2)], gTracksMenuPlayerNamePositions[s3 + (i * 2) + 1] + sp80, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
                         }
                     }
                 }
@@ -7758,7 +7905,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                         render_textured_rectangle(&sMenuCurrDisplayList, gRaceSelectionImages[gPlayerSelectVehicle[PLAYER_ONE] * 3], 0x95, s7, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
                     } else {
                         // Draw T.T. image for one player
-                        render_textured_rectangle(&sMenuCurrDisplayList, D_800E0648[gTracksMenuTimeTrialHighlightIndex * 3], 0x95, sp80, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
+                        render_textured_rectangle(&sMenuCurrDisplayList, gTrackSelectTTImage[gTracksMenuTimeTrialHighlightIndex * 3], 0x95, sp80, 0xFF, 0xFF, 0xFF, sMenuGuiOpacity);
                     }
                 }
                 if ((gNumberOfActivePlayers == 2) && (!sp74)) {
@@ -9789,7 +9936,7 @@ s32 menu_trophy_race_round_loop(s32 updateRate) {
     if (gMenuDelay >= 31) {
         unload_big_font_5();
         gTrackIdToLoad = trackMenuIds[(((gTrophyRaceWorldId - 1) * 6) + gTrophyRaceRound)];
-        unused_800DF478 = 1;
+        gTrackSpecifiedWithTrackIdToLoad = 1;
         return gNumberOfActivePlayers;
     }
     gIgnorePlayerInputTime = 0;
@@ -9828,8 +9975,8 @@ void menu_trophy_race_rankings_init(void) {
     gOptionBlinkTimer = 0;
     gOpacityDecayTimer = 0;
     reset_controller_sticks();
-    func_8009C674(gGhostDataObjectIndices);
-    allocate_menu_images(gGhostDataImageIndices);
+    func_8009C674(gTrophyRankingsObjectIndices);
+    allocate_menu_images(gTrophyRaceImageIndices);
     gPrevTrophyRaceRound = gTrophyRaceRound;
     do {
         if(++gTrophyRaceRound >= 4) break;
@@ -10080,7 +10227,7 @@ s32 menu_trophy_race_rankings_loop(s32 updateRate) {
 }
 
 void func_80099600(void) {
-    func_8009C4A8(gGhostDataObjectIndices);
+    func_8009C4A8(gTrophyRankingsObjectIndices);
     unload_font(ASSET_FONTS_BIGFONT);
 }
 
@@ -10145,8 +10292,8 @@ void menu_ghost_data_init(void) {
     if (pakStatus == CONTROLLER_PAK_GOOD) {
         func_8009963C();
     }
-    func_8009C674(&D_800E1708);
-    allocate_menu_images(&D_800E174C);
+    func_8009C674(&gGhostDataObjectIndices);
+    allocate_menu_images(&gGhostDataImageIndices);
     load_font(ASSET_FONTS_BIGFONT);
     gDrawTexDinoDomainGhostBg[0].texture = gMenuObjects[TEXTURE_BACKGROUND_DINO_DOMAIN_TOP];
     gDrawTexDinoDomainGhostBg[5].texture = gMenuObjects[TEXTURE_BACKGROUND_DINO_DOMAIN_BOTTOM];
@@ -10436,7 +10583,7 @@ s32 menu_ghost_data_loop(s32 updateRate) {
 }
 
 void func_8009ABAC(void) {
-    func_8009C4A8(D_800E1708);
+    func_8009C4A8(gGhostDataObjectIndices);
     unload_font(ASSET_FONTS_BIGFONT);
 }
 
@@ -10557,7 +10704,7 @@ void menu_credits_init(void) {
     assign_racer_portrait_textures();
     load_font(ASSET_FONTS_BIGFONT);
     set_music_player_voice_limit(24);
-    D_800E18F8 = 0x1000;
+    gCreditsControlData[130] = CREDITS_END; // DONT show developer times
     if (gViewingCreditsFromCheat) {
         play_music(SEQUENCE_DARKMOON_CAVERNS);
         gCreditsArray[84] = gCreditsLastMessageArray[2]; // "THE END"
@@ -10568,7 +10715,7 @@ void menu_credits_init(void) {
         if (settings->bosses & 0x20) {
             play_music(SEQUENCE_CRESCENT_ISLAND);
             gCreditsArray[84] = gCreditsLastMessageArray[1]; // "TO BE CONTINUED ..."
-            D_800E18F8 = 0x61F4;
+            gCreditsControlData[130] = CREDITS_DEV_TIMES(CREDITS_DEV_TIMES_TIME); // Show developer times.
             D_80126BCC = 9;
         } else {
             play_music(SEQUENCE_DARKMOON_CAVERNS);
@@ -10769,14 +10916,14 @@ s32 get_save_file_index(void) {
  */
 s32 get_track_id_to_load(void) {
     Settings *settings = get_settings();
-    if (!gIsInTracksMode && unused_800DF478 == 0) {
+    if (!gIsInTracksMode && gTrackSpecifiedWithTrackIdToLoad == 0) {
         if (settings->newGame) {
             return 0;
         } else {
             return settings->courseId;
         }
     }
-    unused_800DF478 = 0;
+    gTrackSpecifiedWithTrackIdToLoad = 0;
     return gTrackIdToLoad;
 }
 

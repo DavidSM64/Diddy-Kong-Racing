@@ -27,12 +27,12 @@ glabel menu_ghost_data_init
 /* 09A6C0 80099AC0 0C02658F */  jal   func_8009963C
 /* 09A6C4 80099AC4 00000000 */   nop   
 .L80099AC8:
-/* 09A6C8 80099AC8 3C04800E */  lui   $a0, %hi(D_800E1708) # $a0, 0x800e
+/* 09A6C8 80099AC8 3C04800E */  lui   $a0, %hi(gGhostDataObjectIndices) # $a0, 0x800e
 /* 09A6CC 80099ACC 0C02719D */  jal   func_8009C674
-/* 09A6D0 80099AD0 24841708 */   addiu $a0, %lo(D_800E1708) # addiu $a0, $a0, 0x1708
-/* 09A6D4 80099AD4 3C04800E */  lui   $a0, %hi(D_800E174C) # $a0, 0x800e
+/* 09A6D0 80099AD0 24841708 */   addiu $a0, %lo(gGhostDataObjectIndices) # addiu $a0, $a0, 0x1708
+/* 09A6D4 80099AD4 3C04800E */  lui   $a0, %hi(gGhostDataImageIndices) # $a0, 0x800e
 /* 09A6D8 80099AD8 0C027229 */  jal   allocate_menu_images
-/* 09A6DC 80099ADC 2484174C */   addiu $a0, %lo(D_800E174C) # addiu $a0, $a0, 0x174c
+/* 09A6DC 80099ADC 2484174C */   addiu $a0, %lo(gGhostDataImageIndices) # addiu $a0, $a0, 0x174c
 /* 09A6E0 80099AE0 0C03105C */  jal   load_font
 /* 09A6E4 80099AE4 24040002 */   li    $a0, 2
 /* 09A6E8 80099AE8 3C028012 */  lui   $v0, %hi(gMenuObjects) # $v0, 0x8012

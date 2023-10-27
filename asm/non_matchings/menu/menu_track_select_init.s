@@ -153,10 +153,10 @@ glabel menu_track_select_init
 /* 08F5E4 8008E9E4 24A50970 */  addiu $a1, %lo(gTrackSelectBgTriangles) # addiu $a1, $a1, 0x970
 /* 08F5E8 8008E9E8 ACA20000 */  sw    $v0, ($a1)
 /* 08F5EC 8008E9EC 244B0280 */  addiu $t3, $v0, 0x280
-/* 08F5F0 8008E9F0 3C01800E */  lui   $at, %hi(D_800E0974) # $at, 0x800e
-/* 08F5F4 8008E9F4 AC2B0974 */  sw    $t3, %lo(D_800E0974)($at)
+/* 08F5F0 8008E9F0 3C01800E */  lui   $at, %hi(gTrackSelectBgTriangles+4) # $at, 0x800e
+/* 08F5F4 8008E9F4 AC2B0974 */  sw    $t3, %lo(gTrackSelectBgTriangles+4)($at)
 /* 08F5F8 8008E9F8 8CAC0004 */  lw    $t4, 4($a1)
-/* 08F5FC 8008E9FC 3C01800E */  lui   $at, %hi(D_800E096C) # $at, 0x800e
+/* 08F5FC 8008E9FC 3C01800E */  lui   $at, %hi(gTrackSelectBgVertices+4) # $at, 0x800e
 /* 08F600 8008EA00 258D0280 */  addiu $t5, $t4, 0x280
 /* 08F604 8008EA04 AC2D0968 */  sw    $t5, %lo(gTrackSelectBgVertices)($at)
 /* 08F608 8008EA08 3C0E800E */  lui   $t6, %hi(gTrackSelectBgVertices) # $t6, 0x800e
@@ -164,7 +164,7 @@ glabel menu_track_select_init
 /* 08F610 8008EA10 3C03800E */  lui   $v1, %hi(gTrackSelectBgVertices) # $v1, 0x800e
 /* 08F614 8008EA14 3C08800E */  lui   $t0, %hi(gTrackSelectBgTriangles) # $t0, 0x800e
 /* 08F618 8008EA18 25CF0320 */  addiu $t7, $t6, 0x320
-/* 08F61C 8008EA1C AC2F096C */  sw    $t7, %lo(D_800E096C)($at)
+/* 08F61C 8008EA1C AC2F096C */  sw    $t7, %lo(gTrackSelectBgVertices+4)($at)
 /* 08F620 8008EA20 2404FF60 */  li    $a0, -160
 /* 08F624 8008EA24 25080970 */  addiu $t0, %lo(gTrackSelectBgTriangles) # addiu $t0, $t0, 0x970
 /* 08F628 8008EA28 24630968 */  addiu $v1, %lo(gTrackSelectBgVertices) # addiu $v1, $v1, 0x968
