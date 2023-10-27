@@ -6824,7 +6824,7 @@ void menu_track_select_init(void) {
     load_font(ASSET_FONTS_BIGFONT);
     settings = get_settings();
     get_number_of_levels_and_worlds(&levelCount, &worldCount);
-    trackMenuIds = (s8 **)get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
+    trackMenuIds = (s8 **) get_misc_asset(ASSET_MISC_TRACKS_MENU_IDS);
     if (D_800DF488 != 0) {
         D_801269C8 = 0;
         D_801269CC = 0;
@@ -6881,14 +6881,14 @@ void menu_track_select_init(void) {
         D_800E0968[var_v0].b = 0xFF;
     }
     for (var_v0 = 0; var_v0 < 40; var_v0++) {
-        D_800E0970[var_v0].unk0 = 0x40;
-        D_800E0970[var_v0].unk1 = 0;
-        D_800E0970[var_v0].unk2 = 2;
-        D_800E0970[var_v0].unk3 = 1;
+        D_800E0970[var_v0].flags = 0x40; // 0x40 = Draw backface
+        D_800E0970[var_v0].vi0 = 0;
+        D_800E0970[var_v0].vi1 = 2;
+        D_800E0970[var_v0].vi2 = 1;
     }
     D_80126924 = 0;
     set_background_draw_function(func_8008F618);
-    resize_viewport(0, 80, gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY >> 1), 240, (gTrackSelectViewPortHalfY >> 1) + gTrackSelectViewPortHalfY);
+    resize_viewport(0, 80, gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY >> 1), SCREEN_HEIGHT, (gTrackSelectViewPortHalfY >> 1) + gTrackSelectViewPortHalfY);
     copy_viewports_to_stack();
     camEnableUserView(0, 0);
     D_800E097C = 1;
@@ -10240,7 +10240,7 @@ void func_80099E8C(UNUSED s32 updateRate) {
     x = 40;
     while (spE4 < D_801264D4 && spE8 > 0) {
         if (((!D_800E1754) && (!D_800E1754)) && (!D_800E1754)){} // Fakematch
-        
+
         currentWorldId = get_map_world_id(D_80126508[spE4]) - 1;
         if (currentWorldId < 0 || currentWorldId >= 5) {
             currentWorldId = 0;
