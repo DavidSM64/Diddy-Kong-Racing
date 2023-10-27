@@ -10238,8 +10238,9 @@ void func_80099E8C(UNUSED s32 updateRate) {
     colourIntensity |= ~0xFF;
     set_text_font(FONT_SMALL);
     x = 40;
-    while ((spE4 < D_801264D4) && (spE8 > 0)) {
+    while (spE4 < D_801264D4 && spE8 > 0) {
         if (((!D_800E1754) && (!D_800E1754)) && (!D_800E1754)){} // Fakematch
+        
         currentWorldId = get_map_world_id(D_80126508[spE4]) - 1;
         if (currentWorldId < 0 || currentWorldId >= 5) {
             currentWorldId = 0;
@@ -10263,7 +10264,7 @@ void func_80099E8C(UNUSED s32 updateRate) {
         }
         set_text_colour(200, 228, 80, 255, 255);
         draw_text(&sMenuCurrDisplayList, D_800E1754[0] + 40, D_800E1754[1] + y, textBuffer, ALIGN_MIDDLE_CENTER);
-        render_textured_rectangle(&sMenuCurrDisplayList, gRacerPortraits[D_80126510[spE4]], D_800E1754[2] + 0x28, D_800E1754[3] + y, 255, 255, 255, 255);
+        render_textured_rectangle(&sMenuCurrDisplayList, gRacerPortraits[D_80126510[spE4]], D_800E1754[2] + 40, D_800E1754[3] + y, 255, 255, 255, 255);
         switch (D_80126518[spE4]) {
             case 1:
                 vehicleSelectTex = gRaceSelectionHoverTex;
