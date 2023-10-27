@@ -273,7 +273,7 @@ s32 D_80126CC0;
 /************ .data ************/
 
 // A boolean, set to TRUE if player has entered trophy race through adventure mode.
-s8 gInAdvModeTrophyRace = 0;
+s8 gInAdvModeTrophyRace = FALSE;
 
 // Height scale of the wooden frames in the track select menu.
 f32 gTrackSelectWoodFrameHeightScale = 1.0f;
@@ -324,7 +324,7 @@ s32 gIsInTwoPlayerAdventure = 0;
 s32 gTrackIdForPreview      = ASSET_LEVEL_CENTRALAREAHUB;
 s32 gTrackSelectRow         = 0; // 1 = Dino Domain, 2 = Sherbet Island, etc.
 s32 gSaveFileIndex          = 0;
-s32 unused_800DF4D0         = 0; // Unused?
+s32 unused_800DF4D0         = 0;
 s32 gTrackIdToLoad          = 0;
 s8 unused_800DF4D8          = 1;
 s8 gNextTajChallengeMenu    = FALSE;
@@ -384,8 +384,8 @@ UNUSED FadeTransition sMenuTransitionFadeOutWhite = FADE_TRANSITION(FADE_FULLSCR
 
 s32 gTrophyRankingsState = 4;
 MenuElement *gTrophyRankingsMenuElements = NULL;
-s32 gDrawMenuElementsYOffset = 0;
-s32 gDrawMenuElementsYOffset2 = 0;
+s32 gDrawElementsRegionYOffset = 0;
+s32 gDrawElementsYOffset = 0;
 
 char *gTitleMenuStrings[3] = { 0, 0, 0 };
 
@@ -477,7 +477,7 @@ s32 gMusicTestSongIndex = 0;
 s32 gSfxVolumeSliderValue = 256;   // Value from 0 to 256
 s32 gMusicVolumeSliderValue = 256; // Value from 0 to 256
 
-StereoPanMode gAudioOutputType = 0;
+StereoPanMode gAudioOutputType = STEREO;
 
 // This is used for RGBA colors for the save options Controller Pak BG.
 u32 gContPakSaveBgColours[MAXCONTROLLERS] = {
@@ -718,7 +718,6 @@ char *gFilenames[3] = {
     NULL, NULL, NULL
 };
 
-// Unused?
 u16 unused_800E03BC[8] = {
     0x004C,
     0x0070,
@@ -2421,8 +2420,8 @@ void func_80081E54(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s3
     D_8012685C = arg2 * 60.0f;
     D_80126860 = arg3 * 60.0f;
     D_80126854 = 0;
-    gDrawMenuElementsYOffset = arg4;
-    gDrawMenuElementsYOffset2 = arg5;
+    gDrawElementsRegionYOffset = arg4;
+    gDrawElementsYOffset = arg5;
     if (D_80126858 > 0) {
         play_sound_global(SOUND_WHOOSH1, NULL);
     }
@@ -2540,7 +2539,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                             elem->details.background.backgroundAlpha);
                         set_text_colour(elem->filterRed, elem->filterGreen, elem->filterBlue, elem->filterAlpha, elem->opacity);
                         set_text_font(elem->textFont);
-                        draw_text(&sMenuCurrDisplayList, xPos, yPos + gDrawMenuElementsYOffset, elem->unk14_a.asciiText, elem->textAlignFlags);
+                        draw_text(&sMenuCurrDisplayList, xPos, yPos + gDrawElementsRegionYOffset, elem->unk14_a.asciiText, elem->textAlignFlags);
                         break;
                     case 1:
                         if (s5) {
@@ -2551,7 +2550,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                         show_timestamp(
                             *elem->unk14_a.numberU16,
                             xPos - 160,
-                            (-yPos - gDrawMenuElementsYOffset2) + 120,
+                            (-yPos - gDrawElementsYOffset) + 120,
                             elem->filterRed,
                             elem->filterGreen,
                             elem->filterBlue,
@@ -2565,7 +2564,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                         func_80081C04(
                             *elem->unk14_a.number,
                             xPos - 160,
-                            (-yPos - gDrawMenuElementsYOffset2) + 120,
+                            (-yPos - gDrawElementsYOffset) + 120,
                             elem->filterRed,
                             elem->filterGreen,
                             elem->filterBlue,
@@ -2578,7 +2577,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                             &sMenuCurrDisplayList,
                             elem->unk14_a.texture,
                             xPos,
-                            yPos + gDrawMenuElementsYOffset,
+                            yPos + gDrawElementsRegionYOffset,
                             elem->filterRed,
                             elem->filterGreen,
                             elem->filterBlue,
@@ -2590,7 +2589,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                             &sMenuCurrDisplayList,
                             elem->unk14_a.element,
                             xPos,
-                            yPos + gDrawMenuElementsYOffset,
+                            yPos + gDrawElementsRegionYOffset,
                             elem->details.texture.width / 256.0f,
                             elem->details.texture.height / 256.0f,
                             (elem->filterRed << 24) | (elem->filterGreen << 16) | (elem->filterBlue << 8) | elem->opacity,
@@ -2605,7 +2604,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                         func_80068508(1);
                         sprite_opaque(FALSE);
                         gMenuImageStack[elem->unk14_a.value].unkC = xPos - 160;
-                        gMenuImageStack[elem->unk14_a.value].unk10 = (-yPos - gDrawMenuElementsYOffset2) + 120;
+                        gMenuImageStack[elem->unk14_a.value].unk10 = (-yPos - gDrawElementsYOffset) + 120;
                         gMenuImageStack[elem->unk14_a.value].unk18 = elem->textFont;
                         gMenuImageStack[elem->unk14_a.value].unk4 = elem->details.background.backgroundRed;
                         gMenuImageStack[elem->unk14_a.value].unk2 = elem->details.background.backgroundGreen;
@@ -2624,7 +2623,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                         func_80080E90(
                             &sMenuCurrDisplayList,
                             xPos,
-                            yPos + gDrawMenuElementsYOffset2,
+                            yPos + gDrawElementsYOffset,
                             elem->details.texture.width,
                             elem->details.texture.height,
                             elem->details.texture.borderWidth,
@@ -2638,7 +2637,7 @@ void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
                         func_80080580(
                             &sMenuCurrDisplayList,
                             xPos,
-                            yPos + gDrawMenuElementsYOffset2,
+                            yPos + gDrawElementsYOffset,
                             elem->details.texture.width,
                             elem->details.texture.height,
                             elem->details.texture.borderWidth,
@@ -3432,10 +3431,10 @@ s32 menu_audio_options_loop(s32 updateRate) {
                     gAudioOutputType++;
                 }
                 if (gAudioOutputType < 0) {
-                    gAudioOutputType = 2;
+                    gAudioOutputType = HEADPHONES;
                 }
                 if (gAudioOutputType >= 3) {
-                    gAudioOutputType = 0;
+                    gAudioOutputType = STEREO;
                 }
                 set_stereo_pan_mode(gAudioOutputType);
                 sp30 = 1;
@@ -6177,11 +6176,11 @@ void func_8008C698(UNUSED s32 updateRate) {
         }
 
         if (osTvType == TV_TYPE_PAL) {
-            gDrawMenuElementsYOffset = 12;
-            gDrawMenuElementsYOffset2 = 0;
+            gDrawElementsRegionYOffset = 12;
+            gDrawElementsYOffset = 0;
         } else {
-            gDrawMenuElementsYOffset = 0;
-            gDrawMenuElementsYOffset2 = 0;
+            gDrawElementsRegionYOffset = 0;
+            gDrawElementsYOffset = 0;
         }
 
         draw_menu_elements(1, gGameSelectElements, 1.0f);

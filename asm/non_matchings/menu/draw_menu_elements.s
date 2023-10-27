@@ -34,14 +34,14 @@ glabel draw_menu_elements
 /* 082E58 80082258 8E110014 */  lw    $s1, 0x14($s0)
 /* 082E5C 8008225C 3C013B80 */  li    $at, 0x3B800000 # 0.003906
 /* 082E60 80082260 12200175 */  beqz  $s1, .L80082838
-/* 082E64 80082264 3C17800E */   lui   $s7, %hi(gDrawMenuElementsYOffset2) # $s7, 0x800e
-/* 082E68 80082268 3C1E800E */  lui   $fp, %hi(gDrawMenuElementsYOffset) # $fp, 0x800e
+/* 082E64 80082264 3C17800E */   lui   $s7, %hi(gDrawElementsYOffset) # $s7, 0x800e
+/* 082E68 80082268 3C1E800E */  lui   $fp, %hi(gDrawElementsRegionYOffset) # $fp, 0x800e
 /* 082E6C 8008226C 3C14800E */  lui   $s4, %hi(gMenuImageStack) # $s4, 0x800e
 /* 082E70 80082270 4481B000 */  mtc1  $at, $f22
 /* 082E74 80082274 8FA40070 */  lw    $a0, 0x70($sp)
 /* 082E78 80082278 2694F75C */  addiu $s4, %lo(gMenuImageStack) # addiu $s4, $s4, -0x8a4
-/* 082E7C 8008227C 27DEF79C */  addiu $fp, %lo(gDrawMenuElementsYOffset) # addiu $fp, $fp, -0x864
-/* 082E80 80082280 26F7F7A0 */  addiu $s7, %lo(gDrawMenuElementsYOffset2) # addiu $s7, $s7, -0x860
+/* 082E7C 8008227C 27DEF79C */  addiu $fp, %lo(gDrawElementsRegionYOffset) # addiu $fp, $fp, -0x864
+/* 082E80 80082280 26F7F7A0 */  addiu $s7, %lo(gDrawElementsYOffset) # addiu $s7, $s7, -0x860
 .L80082284:
 /* 082E84 80082284 3C0F8012 */  lui   $t7, %hi(D_80126850) # $t7, 0x8012
 /* 082E88 80082288 25EF6850 */  addiu $t7, %lo(D_80126850) # addiu $t7, $t7, 0x6850
