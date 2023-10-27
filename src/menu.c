@@ -40,8 +40,8 @@
 // The bss section needs to stay above the data section!
 // Otherwise the bss variables will get reordered, which is bad.
 
-DrawTexture *D_80126390;
-DrawTexture *D_80126394;
+char D_80126390[4]; //course initials
+char D_80126394[4]; //flap initials
 s32 gSaveGhostDelayCounter;
 s32 gPreviousMenuID;
 Gfx *sMenuCurrDisplayList;
@@ -8465,14 +8465,14 @@ void func_80094688(s32 arg0, s32 arg1) {
     if (is_in_two_player_adventure()) {
         set_scene_viewport_num(VIEWPORTS_COUNT_1_PLAYER);
     }
-    D_80126A90 = 0;
+    D_80126A90 = FALSE;
     if (gNumberOfActivePlayers == 1 && gTrophyRaceWorldId == 0) {
         if (is_in_tracks_mode() == TRUE) {
             gResultOptionText[0] = gMenuText[ASSET_MENU_TEXT_TRYAGAIN];
             gResultOptionText[1] = gMenuText[ASSET_MENU_TEXT_SELECTTRACK];
             gResultOptionText[2] = gMenuText[ASSET_MENU_TEXT_SELECTCHARACTER];
             gResultOptionCount = 3;
-            D_80126A90 = 1;
+            D_80126A90 = TRUE;
         } else {
             if (arg0 == 0) {
                 gResultOptionText[0] = gMenuText[ASSET_MENU_TEXT_TRYAGAIN];
@@ -8712,7 +8712,7 @@ void func_80094D28(UNUSED s32 updateRate) {
             set_dialogue_font(7, FONT_COLOURFUL);
             set_current_text_background_colour(7, 0, 0, 0, 0);
             
-            if (D_80126A98) {
+            if (D_80126A98 != 0) {
                 temp = 1;
             } else if (D_80126C1C != NULL) {
                 temp = D_80126C24;
@@ -8734,7 +8734,7 @@ void func_80094D28(UNUSED s32 updateRate) {
             set_current_dialogue_box_coords(7, 0, temp - viewportULY - viewportULX - 4, SCREEN_WIDTH, temp + viewportULY + viewportULX + 4);
             set_current_dialogue_background_colour(7, 64, 64, 255, 0);
             set_current_text_colour(7, 255, 0, 255, 64, 255);
-            if (D_80126A98) {
+            if (D_80126A98 != 0) {
                 render_dialogue_text(7, POS_CENTRED, 12, gMenuText[ASSET_MENU_TEXT_PLEASEWAIT], 1, ALIGN_MIDDLE_CENTER);
             } else if (D_80126C1C != NULL) {
                 for (y = 12, temp = 0; temp < D_80126C24; temp++, y += viewportLRY) {
@@ -8820,7 +8820,316 @@ void func_80095624(s32 status) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_80095728.s")
+s32 func_80095728(Gfx **dlist, MatrixS **matrices, Vertex **vertices, s32 updateRate) {
+    s32 sp54;
+    s32 sp50;
+    s32 sp4C;
+    s32 i;
+    s32 ret;
+    s32 buttonsPressed;
+    s32 prevMenuOption;
+    s32 sp38;
+    s32 sp34;
+    s32 numPlayers;
+    Settings *settings;
+    Racer *racer;
+    char *temp_v1_14;
+    
+    sp54 = 0;
+    sp50 = 0;
+    sp4C = 0;
+    ret = 0;
+    sMenuCurrDisplayList = *dlist;
+    sMenuCurrHudMat = *matrices;
+    sMenuCurrHudVerts = *vertices;
+    settings = get_settings();
+    if (osTvType == TV_TYPE_PAL) {
+        sp38 = 26;
+        sp34 = 12;
+    } else {
+        sp38 = 0;
+        sp34 = 0;
+    }
+    numPlayers = gNumberOfActivePlayers;
+    if (is_in_two_player_adventure()) {
+        numPlayers = 2;
+    }
+    if (D_80126A90) {
+        if (has_ghost_to_save()) {
+            gResultOptionText[gResultOptionCount-1] = gMenuText[ASSET_MENU_TEXT_SAVEGHOST];
+            gResultOptionText[gResultOptionCount] = gMenuText[ASSET_MENU_TEXT_QUIT];
+            gResultOptionCount++;
+        }
+        D_80126A90 = FALSE;
+    }
+    func_80094A5C();
+    func_80094C14(updateRate);
+    if (gMenuDelay < 20 && D_80126C28 == 0) {
+        if (D_80126C54.unk0_s32 < 0) {
+            func_80094D28(updateRate);
+        }
+    } else {
+        func_80078170(NULL, NULL, 0);
+    }
+    update_controller_sticks();
+    buttonsPressed = 0;
+    if (gIgnorePlayerInputTime == FALSE && D_80126C54.unk0_s32 < 0) {
+        for(i = 0; i < numPlayers; i++) {
+            buttonsPressed |= get_buttons_pressed_from_player(i);
+        }
+    }
+    switch (gMenuOptionCount) {
+        case 0:
+            if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+                gMenuOptionCount = 1;
+                D_80126A94 = 0;
+            }
+            break;
+        case 1:
+            if (D_80126A94 > 60 || buttonsPressed & (A_BUTTON | START_BUTTON)) {
+                resize_viewport(0, 80, gTrackSelectViewPortHalfY - ((gTrackSelectViewPortHalfY * 4) / 5), SCREEN_HEIGHT, (gTrackSelectViewPortHalfY / 5) + gTrackSelectViewPortHalfY);
+                gMenuImageStack[4].unkC = 0.0f;
+                gMenuImageStack[4].unk10 = 36.0f;
+                gMenuImageStack[4].unk8 = sMenuImageProperties[4].unk8;
+                if (get_map_race_type(settings->courseId) & RACETYPE_CHALLENGE) {
+                    gMenuOptionCount = 6;
+                } else if (!settings->display_times) {
+                    func_80081E54(D_800E0CEC, 0.5f, 15.0f, 0.5f, sp38, sp34);
+                    gMenuOptionCount = 3;
+                } else {
+                    racer = &settings->racers[settings->timeTrialRacer];
+                    D_800E0BEC[3].unk14_a.numberU16 = &racer->lap_times[0];
+                    D_800E0BEC[4].unk14_a.numberU16 = &racer->lap_times[1];
+                    D_800E0BEC[5].unk14_a.numberU16 = &racer->lap_times[2];
+                    D_800E0BEC[6].unk14_a.numberU16 = &racer->course_time;
+                    func_80081E54(D_800E0BEC, 0.5f, 15.0f, 0.5f, sp38, sp34);
+                    gMenuOptionCount = 2;
+                }
+            }
+            break;
+        case 2:
+            if (func_80081F4C(updateRate) != 0) {
+                if (gTrophyRaceWorldId != 0) {
+                    set_music_fade_timer(-128);
+                    transition_begin(&sMenuTransitionFadeIn);
+                    gMenuOptionCount = 8;
+                } else if (settings->display_times) {
+                    D_800E0E4C[3].unk14_a.numberU16 = &settings->courseTimesPtr[*gPlayerSelectVehicle][settings->courseId];
+                    D_800E0E4C[6].unk14_a.numberU16 = &settings->flapTimesPtr[*gPlayerSelectVehicle][settings->courseId];
+                    decompress_filename_string(settings->courseInitialsPtr[*gPlayerSelectVehicle][settings->courseId], D_80126390, 3);
+                    decompress_filename_string(settings->flapInitialsPtr[*gPlayerSelectVehicle][settings->courseId], D_80126394, 3);
+                    if (settings->racers[0].best_times != 0) {
+                        gMenuOptionCount = 4;
+                        if ((gIsInTracksMode == 0) && (D_800E0FAC)) {
+                            decompress_filename_string(settings->filename, D_800E0FA8, 3);
+                            D_800E0FAC = 0;
+                        }
+                        func_80097874(sp38 + 196, 160, sp38 + 120, 2, &D_800E0FA4, D_800E0FA8, 3);
+                    } else {
+                        func_80081E54(D_800E0E4C, 0.5f, 15.0f, 0.5f, sp38, sp34);
+                        gMenuOptionCount = 5;
+                    }
+                } else {
+                    gMenuOptionCount = 3;
+                    func_80081E54(D_800E0CEC, 0.5f, 15.0f, 0.5f, sp38, sp34);
+                }
+            }
+            break;
+        case 3:
+            if (func_80081F4C(updateRate) != 0) {
+                gMenuOptionCount = 6;
+            }
+            break;
+        case 4:
+            if (menu_enter_filename_loop(updateRate) != 0) {
+                if (settings->racers[0].best_times & 0x7F) {
+                    settings->flapInitialsPtr[*gPlayerSelectVehicle][settings->courseId] = compress_filename_string(D_800E0FA8, 3);
+                    decompress_filename_string(settings->flapInitialsPtr[*gPlayerSelectVehicle][settings->courseId], D_80126394, 3);
+                }
+                if (settings->racers[0].best_times & 0x80) {
+                    settings->courseInitialsPtr[*gPlayerSelectVehicle][settings->courseId] = compress_filename_string(D_800E0FA8, 3);
+                    decompress_filename_string(settings->courseInitialsPtr[*gPlayerSelectVehicle][settings->courseId], D_80126390, 3);
+                }
+                func_80081E54(D_800E0E4C, 0.5f, 15.0f, 0.5f, sp38, sp34);
+                gMenuOptionCount = 5;
+            }
+            break;
+        case 5:
+            if (func_80081F4C(updateRate) != 0) {
+                gMenuOptionCount = 6;
+            }
+            break;
+        case 6:
+            if (D_80126A98 != 0) {
+                D_80126A98++;
+                if (D_80126A98 >= 5) {
+                    adjust_audio_volume(3);
+                    sp54 = func_8001B738(0);
+                    if ((sp54 & 0xFF) == 5) {
+                        sp54 = func_8001B738(0);
+                    }
+                    adjust_audio_volume(2);
+                    if (sp54 != 0) {
+                        func_80095624(sp54);
+                        sp54 = 1;
+                    } else {
+                        if (D_80126C1C == sInsertControllerPakMenuText) {
+                            func_80095624(8);
+                        } else {
+                            D_80126C1C = NULL;
+                        }
+                        gResultOptionText[gMenuOption] = gMenuText[28];
+                        gMenuOption = 0;
+                        gResultOptionCount -= 1;
+                    }
+                    D_80126A98 = 0;
+                }
+            } else if (D_80126C1C != NULL) {
+                if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+                    sp50 = 1;
+                    if (D_80126C1C == sInsertControllerPakMenuText) {
+                        D_80126A98 = 1;
+                    } else {
+                        D_80126C1C = NULL;
+                    }
+                } else if (buttonsPressed & B_BUTTON) {
+                    D_80126C1C = NULL;
+                    sp54 = 1;
+                }
+            } else {
+                if (gMenuSubOption != 0) {
+                    if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+                        if (gMenuSubOption == 1) {
+                            sp50 = 1;
+                            set_music_fade_timer(-128);
+                            transition_begin(&sMenuTransitionFadeIn);
+                            gMenuOptionCount = 8;
+                        } else {
+                            sp54 = 1;
+                            gMenuSubOption = 0;
+                        }
+                    } else {
+                        prevMenuOption = gMenuSubOption;
+                        if (buttonsPressed & B_BUTTON) {
+                            sp54 = 1;
+                            gMenuSubOption = 0;
+                        } else {
+                            for(i = 0; i < numPlayers; i++) {
+                                if ((gControllersYAxisDirection[i] > 0) && (gMenuSubOption == 2)) {
+                                    gMenuSubOption = 1;
+                                }
+                                if ((gControllersYAxisDirection[i] < 0) && (gMenuSubOption == 1)) {
+                                    gMenuSubOption = 2;
+                                }
+                            }
+                            if (prevMenuOption != gMenuSubOption) {
+                                sp4C = 1;
+                            }
+                        }
+                    }
+                } else if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+                    sp50 = 1;
+                    temp_v1_14 = gResultOptionText[gMenuOption];
+                    if (temp_v1_14 == gMenuText[ASSET_MENU_TEXT_SAVEGHOST]) {
+                        D_80126A98 = 1;
+                    } else if (temp_v1_14 == gMenuText[ASSET_MENU_TEXT_QUIT]) {
+                        gMenuSubOption = 2;
+                    } else {
+                        set_music_fade_timer(-128);
+                        transition_begin(&sMenuTransitionFadeIn);
+                        gMenuOptionCount = 8;
+                    }
+                } else {
+                    prevMenuOption = gMenuOption;
+                    for(i = 0; i < numPlayers; i++) {
+                        if (gControllersYAxisDirection[i] < 0) {
+                            if (gMenuOption < (gResultOptionCount - 1)) {
+                                gMenuOption++;
+                            }
+                        }
+                        if (gControllersYAxisDirection[i] > 0) {
+                            if (gMenuOption > 0) {
+                                gMenuOption--;
+                            }
+                        }
+                    }
+                    if (prevMenuOption != gMenuOption) {
+                        sp4C = 1;
+                    }
+                }
+            }
+            if (sp54 != 0) {
+                play_sound_global(0x241, NULL);
+            } else if((sp50 != 0)) {
+                play_sound_global(0xEF, NULL);
+            } else if((sp4C != 0)) {
+                play_sound_global(0xEB, NULL);
+            }
+            break;
+        case 7:
+            if (buttonsPressed & (A_BUTTON | START_BUTTON)) {
+                set_music_fade_timer(-128);
+                transition_begin(&sMenuTransitionFadeIn);
+                gMenuOptionCount = 8;
+            }
+            break;
+        case 8:
+            gMenuDelay += updateRate;
+            if (gMenuDelay > 30) {
+                if (settings->display_times) {
+                    if (settings->racers[0].best_times & 0x7F) {
+                        mark_to_write_flap_times();
+                    }
+                    if (settings->racers[0].best_times & 0x80) {
+                        mark_to_write_course_times();
+                    }
+                }
+                camDisableUserView(0, FALSE);
+                func_80096790();
+                close_dialogue_box(7);
+                assign_dialogue_box_id(7);
+                if (D_80126C28 >= 2) {
+                    if (D_80126C28 == 9) {
+                        func_8009ABD8((s8 *) get_misc_asset(ASSET_MISC_25), D_80126C28, 0x10E, 0, 0, NULL);
+                    } else {
+                        func_8009ABD8((s8 *) get_misc_asset(ASSET_MISC_25), D_80126C28, 0x101, 0, 0, NULL);
+                    }
+                    ret = 13;
+                } else if((gTrophyRaceWorldId != 0)) {
+                    ret = 10;
+                } else if((gNumberOfActivePlayers >= 2)) {
+                    ret = 8;
+                } else {
+                    temp_v1_14 = gResultOptionText[gMenuOption];
+                    if (temp_v1_14 == gMenuText[ASSET_MENU_TEXT_TRYAGAIN]) {
+                        if (!gIsInTracksMode && gTTVoiceLines[get_ingame_map_id()] != -1) {
+                            func_80000FDC(gTTVoiceLines[get_ingame_map_id()], 0, 1.0f);
+                        }
+                        ret = 2;
+                    } else if (temp_v1_14 == gMenuText[ASSET_MENU_TEXT_SELECTTRACK]) {
+                        ret = 5;
+                    } else if (temp_v1_14 == gMenuText[ASSET_MENU_TEXT_SELECTCHARACTER]) {
+                        ret = 12;
+                    } else if (temp_v1_14 == gMenuText[ASSET_MENU_TEXT_RETURNTOLOBBY]) {
+                        ret = 1;
+                    } else {
+                        ret = 4;
+                    }
+                }
+            }
+            break;
+    }
+    if (gIgnorePlayerInputTime > 0) {
+        gIgnorePlayerInputTime -= updateRate;
+        if (gIgnorePlayerInputTime < 0) {
+            gIgnorePlayerInputTime = 0;
+        }
+    }
+    *dlist = sMenuCurrDisplayList;
+    *matrices = sMenuCurrHudMat;
+    *vertices = sMenuCurrHudVerts;
+    return ret;
+}
 
 void func_80096790(void) {
     s32 temp;
@@ -9099,14 +9408,14 @@ void trim_filename_string(char* input, char* output) {
     *output = '\0';
 }
 
-void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *fileName, s32 arg6) {
+void func_80097874(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, char *fileName, s32 fileNameLength) {
     D_800E0F90 = arg0;
     D_800E0F94 = arg1;
     D_800E0F98 = arg2;
     D_800E0F9C = arg3;
     D_80126C6C = arg4;
     D_80126C74 = fileName;
-    D_80126C78 = arg6;
+    D_80126C78 = fileNameLength;
     D_800E0FA0 = 0;
     D_80126C50 = (f32) *D_80126C6C;
     D_80126C48 = FALSE;
@@ -10004,7 +10313,7 @@ void func_8009ABD8(s8 *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s8 *arg5) {
         arg0++;
     }
 
-    if ((phi_v1 == 0) && (get_misc_asset(ASSET_MISC_25) == (s32 *)arg0)) {
+    if (phi_v1 == 0 && (s8 *) get_misc_asset(ASSET_MISC_25) == arg0) {
         D_8012684C = TRUE;
     } else {
         D_8012684C = FALSE;
