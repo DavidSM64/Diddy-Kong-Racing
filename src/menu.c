@@ -285,14 +285,14 @@ s32 gTitleScreenCurrentOption = 0; // 0 = "Start", 1 = "Options"
 // Currently selected index for all menus.
 s32 gMenuCurIndex = 0;
 
-s32 ununsed_800DF464 = 4; 
-s32 ununsed_800DF468 = 0;
+s32 unused_800DF464 = 4; 
+s32 unused_800DF468 = 0;
 
 // Used as a short delay before printing the missing controller text.
 s32 gMissingControllerDelay = 0;
 
 s32 gCurrentMenuId = 0; 
-s32 ununsed_800DF474 = 0;
+s32 unused_800DF474 = 0;
 
 // A boolean, set to TRUE when a track is loaded using gTrackIdToLoad.
 s32 gTrackSpecifiedWithTrackIdToLoad = 0; 
@@ -11208,7 +11208,7 @@ void func_8009CA60(s32 stackIndex) {
                 new_var->segment.trans.y_position = new_var2->trans.y_position;
                 new_var->segment.trans.z_position = new_var2->trans.z_position;
                 new_var->segment.trans.scale = new_var2->trans.scale;
-                if (ununsed_800DF468 == 0) {
+                if (unused_800DF468 == 0) {
                     new_var->segment.animFrame = new_var2->unk1D;
                     new_var->segment.object.modelIndex = new_var2->unk18;
                 }
