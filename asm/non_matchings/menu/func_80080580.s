@@ -1,8 +1,8 @@
 glabel func_80080580
 /* 081180 80080580 27BDFF40 */  addiu $sp, $sp, -0xc0
 /* 081184 80080584 AFBE0038 */  sw    $fp, 0x38($sp)
-/* 081188 80080588 3C1E800E */  lui   $fp, %hi(D_800E1DB8) # $fp, 0x800e
-/* 08118C 8008058C 27DE1DB8 */  addiu $fp, %lo(D_800E1DB8) # addiu $fp, $fp, 0x1db8
+/* 081188 80080588 3C1E800E */  lui   $fp, %hi(gWoodPanelCount) # $fp, 0x800e
+/* 08118C 8008058C 27DE1DB8 */  addiu $fp, %lo(gWoodPanelCount) # addiu $fp, $fp, 0x1db8
 /* 081190 80080590 8FCF0000 */  lw    $t7, ($fp)
 /* 081194 80080594 3C0E8012 */  lui   $t6, %hi(D_80126C2C) # $t6, 0x8012
 /* 081198 80080598 000FC140 */  sll   $t8, $t7, 5
@@ -28,19 +28,19 @@ glabel func_80080580
 /* 0811E8 800805E8 0080B825 */  move  $s7, $a0
 /* 0811EC 800805EC 12600086 */  beqz  $s3, .L80080808
 /* 0811F0 800805F0 AF130010 */   sw    $s3, 0x10($t8)
-/* 0811F4 800805F4 3C05800E */  lui   $a1, %hi(D_800E1DC0) # $a1, 0x800e
+/* 0811F4 800805F4 3C05800E */  lui   $a1, %hi(gWoodPanelTexScaleU) # $a1, 0x800e
 /* 0811F8 800805F8 8FAB00D4 */  lw    $t3, 0xd4($sp)
-/* 0811FC 800805FC 8CA51DC0 */  lw    $a1, %lo(D_800E1DC0)($a1)
+/* 0811FC 800805FC 8CA51DC0 */  lw    $a1, %lo(gWoodPanelTexScaleU)($a1)
 /* 081200 80080600 00EBC823 */  subu  $t9, $a3, $t3
 /* 081204 80080604 00AB0019 */  multu $a1, $t3
-/* 081208 80080608 3C06800E */  lui   $a2, %hi(D_800E1DC4) # $a2, 0x800e
+/* 081208 80080608 3C06800E */  lui   $a2, %hi(gWoodPanelTexScaleV) # $a2, 0x800e
 /* 08120C 8008060C 8FAC00D8 */  lw    $t4, 0xd8($sp)
-/* 081210 80080610 8CC61DC4 */  lw    $a2, %lo(D_800E1DC4)($a2)
+/* 081210 80080610 8CC61DC4 */  lw    $a2, %lo(gWoodPanelTexScaleV)($a2)
 /* 081214 80080614 8FAD00D0 */  lw    $t5, 0xd0($sp)
 /* 081218 80080618 AFA000B0 */  sw    $zero, 0xb0($sp)
 /* 08121C 8008061C AFA000A0 */  sw    $zero, 0xa0($sp)
-/* 081220 80080620 3C02800E */  lui   $v0, %hi(D_800E1CF0) # $v0, 0x800e
-/* 081224 80080624 24421CF0 */  addiu $v0, %lo(D_800E1CF0) # addiu $v0, $v0, 0x1cf0
+/* 081220 80080620 3C02800E */  lui   $v0, %hi(gWoodPanelTexCoords) # $v0, 0x800e
+/* 081224 80080624 24421CF0 */  addiu $v0, %lo(gWoodPanelTexCoords) # addiu $v0, $v0, 0x1cf0
 /* 081228 80080628 0000F825 */  move  $ra, $zero
 /* 08122C 8008062C 27A400B0 */  addiu $a0, $sp, 0xb0
 /* 081230 80080630 00007812 */  mflo  $t7
@@ -182,14 +182,14 @@ glabel func_80080580
 /* 081448 80080848 01D87821 */  addu  $t7, $t6, $t8
 /* 08144C 8008084C 00197080 */  sll   $t6, $t9, 2
 /* 081450 80080850 01EEC021 */  addu  $t8, $t7, $t6
-/* 081454 80080854 3C0A800E */  lui   $t2, %hi(D_800E1D7C) # $t2, 0x800e
-/* 081458 80080858 3C03800E */  lui   $v1, %hi(D_800E1D2C) # $v1, 0x800e
+/* 081454 80080854 3C0A800E */  lui   $t2, %hi(gWoodPanelVertColours) # $t2, 0x800e
+/* 081458 80080858 3C03800E */  lui   $v1, %hi(gWoodPanelVertCoords) # $v1, 0x800e
 /* 08145C 8008085C 8FAB00D4 */  lw    $t3, 0xd4($sp)
 /* 081460 80080860 8FAC00D8 */  lw    $t4, 0xd8($sp)
 /* 081464 80080864 8FAD00D0 */  lw    $t5, 0xd0($sp)
 /* 081468 80080868 8F020000 */  lw    $v0, ($t8)
-/* 08146C 8008086C 24631D2C */  addiu $v1, %lo(D_800E1D2C) # addiu $v1, $v1, 0x1d2c
-/* 081470 80080870 254A1D7C */  addiu $t2, %lo(D_800E1D7C) # addiu $t2, $t2, 0x1d7c
+/* 08146C 8008086C 24631D2C */  addiu $v1, %lo(gWoodPanelVertCoords) # addiu $v1, $v1, 0x1d2c
+/* 081470 80080870 254A1D7C */  addiu $t2, %lo(gWoodPanelVertColours) # addiu $t2, $t2, 0x1d7c
 /* 081474 80080874 0000F825 */  move  $ra, $zero
 /* 081478 80080878 24090004 */  li    $t1, 4
 /* 08147C 8008087C 309600FF */  andi  $s6, $a0, 0xff

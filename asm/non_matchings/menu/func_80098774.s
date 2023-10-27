@@ -11,7 +11,7 @@ glabel func_80098774
 /* 099398 80098798 0C01BAA4 */  jal   get_settings
 /* 09939C 8009879C AFB00018 */   sw    $s0, 0x18($sp)
 /* 0993A0 800987A0 12C00007 */  beqz  $s6, .L800987C0
-/* 0993A4 800987A4 3C05800E */   lui   $a1, %hi(D_800E1048) # $a1, 0x800e
+/* 0993A4 800987A4 3C05800E */   lui   $a1, %hi(gTrophyRankingsTitle) # $a1, 0x800e
 /* 0993A8 800987A8 3C0E800E */  lui   $t6, %hi(gMenuText) # $t6, 0x800e
 /* 0993AC 800987AC 8DCEF4A0 */  lw    $t6, %lo(gMenuText)($t6)
 /* 0993B0 800987B0 00000000 */  nop   
@@ -25,7 +25,7 @@ glabel func_80098774
 /* 0993CC 800987CC 8DE3007C */  lw    $v1, 0x7c($t7)
 /* 0993D0 800987D0 00000000 */  nop   
 .L800987D4:
-/* 0993D4 800987D4 24A51048 */  addiu $a1, %lo(D_800E1048) # addiu $a1, $a1, 0x1048
+/* 0993D4 800987D4 24A51048 */  addiu $a1, %lo(gTrophyRankingsTitle) # addiu $a1, $a1, 0x1048
 /* 0993D8 800987D8 ACA30014 */  sw    $v1, 0x14($a1)
 /* 0993DC 800987DC ACA30034 */  sw    $v1, 0x34($a1)
 /* 0993E0 800987E0 3C09800E */  lui   $t1, %hi(gRankingPlayerCount) # $t1, 0x800e
@@ -40,9 +40,9 @@ glabel func_80098774
 /* 099404 80098804 27080010 */  addiu $t0, $t8, 0x10
 /* 099408 80098808 24070108 */  li    $a3, 264
 .L8009880C:
-/* 09940C 8009880C 3C03800E */  lui   $v1, %hi(D_800E14BC) # $v1, 0x800e
+/* 09940C 8009880C 3C03800E */  lui   $v1, %hi(gTrophyRankingsIconPositions) # $v1, 0x800e
 /* 099410 80098810 00087080 */  sll   $t6, $t0, 2
-/* 099414 80098814 246314BC */  addiu $v1, %lo(D_800E14BC) # addiu $v1, $v1, 0x14bc
+/* 099414 80098814 246314BC */  addiu $v1, %lo(gTrophyRankingsIconPositions) # addiu $v1, $v1, 0x14bc
 /* 099418 80098818 25080001 */  addiu $t0, $t0, 1
 /* 09941C 8009881C 006E7821 */  addu  $t7, $v1, $t6
 /* 099420 80098820 0008C080 */  sll   $t8, $t0, 2
@@ -167,8 +167,8 @@ glabel func_80098774
 /* 0995DC 800989DC 258C0060 */  addiu $t4, $t4, 0x60
 /* 0995E0 800989E0 1420FFA8 */  bnez  $at, .L80098884
 /* 0995E4 800989E4 256B0060 */   addiu $t3, $t3, 0x60
-/* 0995E8 800989E8 3C05800E */  lui   $a1, %hi(D_800E1048) # $a1, 0x800e
-/* 0995EC 800989EC 24A51048 */  addiu $a1, %lo(D_800E1048) # addiu $a1, $a1, 0x1048
+/* 0995E8 800989E8 3C05800E */  lui   $a1, %hi(gTrophyRankingsTitle) # $a1, 0x800e
+/* 0995EC 800989EC 24A51048 */  addiu $a1, %lo(gTrophyRankingsTitle) # addiu $a1, $a1, 0x1048
 .L800989F0:
 /* 0995F0 800989F0 00107140 */  sll   $t6, $s0, 5
 .L800989F4:

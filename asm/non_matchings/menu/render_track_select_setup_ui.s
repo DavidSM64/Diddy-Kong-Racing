@@ -93,17 +93,17 @@ glabel render_track_select_setup_ui
 /* 091C74 80091074 17000004 */  bnez  $t8, .L80091088
 /* 091C78 80091078 00000000 */   nop   
 /* 091C7C 8009107C C42484F0 */  lwc1  $f4, %lo(D_800E84F0)($at)
-/* 091C80 80091080 3C01800E */  lui   $at, %hi(D_800DF454) # $at, 0x800e
-/* 091C84 80091084 E424F454 */  swc1  $f4, %lo(D_800DF454)($at)
+/* 091C80 80091080 3C01800E */  lui   $at, %hi(gTrackSelectWoodFrameHeightScale) # $at, 0x800e
+/* 091C84 80091084 E424F454 */  swc1  $f4, %lo(gTrackSelectWoodFrameHeightScale)($at)
 .L80091088:
 /* 091C88 80091088 0C027298 */  jal   func_8009CA60
 /* 091C8C 8009108C 00000000 */   nop   
 /* 091C90 80091090 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 091C94 80091094 44813000 */  mtc1  $at, $f6
 /* 091C98 80091098 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
-/* 091C9C 8009109C 3C01800E */  lui   $at, %hi(D_800DF454) # $at, 0x800e
+/* 091C9C 8009109C 3C01800E */  lui   $at, %hi(gTrackSelectWoodFrameHeightScale) # $at, 0x800e
 /* 091CA0 800910A0 8C42F47C */  lw    $v0, %lo(gMenuDelay)($v0)
-/* 091CA4 800910A4 E426F454 */  swc1  $f6, %lo(D_800DF454)($at)
+/* 091CA4 800910A4 E426F454 */  swc1  $f6, %lo(gTrackSelectWoodFrameHeightScale)($at)
 .L800910A8:
 /* 091CA8 800910A8 2841FFEA */  slti  $at, $v0, -0x16
 /* 091CAC 800910AC 1420042A */  bnez  $at, .L80092158
@@ -205,10 +205,10 @@ glabel render_track_select_setup_ui
 /* 091E18 80091218 00003025 */   move  $a2, $zero
 /* 091E1C 8009121C 0282082A */  slt   $at, $s4, $v0
 /* 091E20 80091220 10200002 */  beqz  $at, .L8009122C
-/* 091E24 80091224 3C10800E */   lui   $s0, %hi(D_800E0700) # $s0, 0x800e
+/* 091E24 80091224 3C10800E */   lui   $s0, %hi(gTracksMenuAdventureButton) # $s0, 0x800e
 /* 091E28 80091228 0040A025 */  move  $s4, $v0
 .L8009122C:
-/* 091E2C 8009122C 26100700 */  addiu $s0, %lo(D_800E0700) # addiu $s0, $s0, 0x700
+/* 091E2C 8009122C 26100700 */  addiu $s0, %lo(gTracksMenuAdventureButton) # addiu $s0, $s0, 0x700
 /* 091E30 80091230 86020004 */  lh    $v0, 4($s0)
 /* 091E34 80091234 3C048012 */  lui   $a0, %hi(sMenuCurrDisplayList) # $a0, 0x8012
 /* 091E38 80091238 0282082A */  slt   $at, $s4, $v0
@@ -221,8 +221,8 @@ glabel render_track_select_setup_ui
 .L80091250:
 /* 091E50 80091250 8FCE0000 */  lw    $t6, ($fp)
 /* 091E54 80091254 3C01B0E0 */  lui   $at, (0xB0E0C000 >> 16) # lui $at, 0xb0e0
-/* 091E58 80091258 3C188012 */  lui   $t8, %hi(gMenuTextures) # $t8, 0x8012
-/* 091E5C 8009125C 8F18665C */  lw    $t8, %lo(gMenuTextures + 0x10C)($t8)
+/* 091E58 80091258 3C188012 */  lui   $t8, %hi(gMenuObjects) # $t8, 0x8012
+/* 091E5C 8009125C 8F18665C */  lw    $t8, %lo(gMenuObjects + 0x10C)($t8)
 /* 091E60 80091260 86090002 */  lh    $t1, 2($s0)
 /* 091E64 80091264 860B0006 */  lh    $t3, 6($s0)
 /* 091E68 80091268 860C0008 */  lh    $t4, 8($s0)
@@ -248,10 +248,10 @@ glabel render_track_select_setup_ui
 /* 091EB8 800912B8 86080002 */  lh    $t0, 2($s0)
 /* 091EBC 800912BC 8FA90080 */  lw    $t1, 0x80($sp)
 /* 091EC0 800912C0 03285021 */  addu  $t2, $t9, $t0
-/* 091EC4 800912C4 3C16800E */  lui   $s6, %hi(D_800E0418) # $s6, 0x800e
+/* 091EC4 800912C4 3C16800E */  lui   $s6, %hi(gTracksMenuAdventureHighlightIndex) # $s6, 0x800e
 /* 091EC8 800912C8 0149B821 */  addu  $s7, $t2, $t1
 /* 091ECC 800912CC 26F70001 */  addiu $s7, $s7, 1
-/* 091ED0 800912D0 26D60418 */  addiu $s6, %lo(D_800E0418) # addiu $s6, $s6, 0x418
+/* 091ED0 800912D0 26D60418 */  addiu $s6, %lo(gTracksMenuAdventureHighlightIndex) # addiu $s6, $s6, 0x418
 /* 091ED4 800912D4 0000A025 */  move  $s4, $zero
 /* 091ED8 800912D8 00008825 */  move  $s1, $zero
 /* 091EDC 800912DC 241200A1 */  li    $s2, 161
@@ -503,8 +503,8 @@ glabel render_track_select_setup_ui
 /* 092298 80091698 26100648 */  addiu $s0, %lo(D_800E0648) # addiu $s0, $s0, 0x648
 /* 09229C 8009169C 26F70097 */  addiu $s7, $s7, 0x97
 .L800916A0:
-/* 0922A0 800916A0 3C0E800E */  lui   $t6, %hi(D_800E0414) # $t6, 0x800e
-/* 0922A4 800916A4 8DCE0414 */  lw    $t6, %lo(D_800E0414)($t6)
+/* 0922A0 800916A0 3C0E800E */  lui   $t6, %hi(gTracksMenuTimeTrialHighlightIndex) # $t6, 0x800e
+/* 0922A4 800916A4 8DCE0414 */  lw    $t6, %lo(gTracksMenuTimeTrialHighlightIndex)($t6)
 /* 0922A8 800916A8 3C048012 */  lui   $a0, %hi(sMenuCurrDisplayList) # $a0, 0x8012
 /* 0922AC 800916AC 16AE0011 */  bne   $s5, $t6, .L800916F4
 /* 0922B0 800916B0 248463A0 */   addiu $a0, %lo(sMenuCurrDisplayList) # addiu $a0, $a0, 0x63a0
@@ -554,8 +554,8 @@ glabel render_track_select_setup_ui
 /* 092350 80091750 17000047 */  bnez  $t8, .L80091870
 /* 092354 80091754 28410002 */   slti  $at, $v0, 2
 /* 092358 80091758 01C20019 */  multu $t6, $v0
-/* 09235C 8009175C 3C19800E */  lui   $t9, %hi(D_800E0688) # $t9, 0x800e
-/* 092360 80091760 27390688 */  addiu $t9, %lo(D_800E0688) # addiu $t9, $t9, 0x688
+/* 09235C 8009175C 3C19800E */  lui   $t9, %hi(gTracksMenuPlayerNamePositions) # $t9, 0x800e
+/* 092360 80091760 27390688 */  addiu $t9, %lo(gTracksMenuPlayerNamePositions) # addiu $t9, $t9, 0x688
 /* 092364 80091764 3C11800E */  lui   $s1, %hi(D_800E0660) # $s1, 0x800e
 /* 092368 80091768 3C128012 */  lui   $s2, %hi(D_801269C4) # $s2, 0x8012
 /* 09236C 8009176C 0040B825 */  move  $s7, $v0
@@ -660,8 +660,8 @@ glabel render_track_select_setup_ui
 /* 0924D8 800918D8 00154880 */  sll   $t1, $s5, 2
 /* 0924DC 800918DC 01354823 */  subu  $t1, $t1, $s5
 /* 0924E0 800918E0 3C0A800E */  lui   $t2, %hi(gRaceSelectionImages) # $t2, 0x800e
-/* 0924E4 800918E4 3C0C800E */  lui   $t4, %hi(D_800E06B0) # $t4, 0x800e
-/* 0924E8 800918E8 258C06B0 */  addiu $t4, %lo(D_800E06B0) # addiu $t4, $t4, 0x6b0
+/* 0924E4 800918E4 3C0C800E */  lui   $t4, %hi(gTracksMenuVehicleNamePositions) # $t4, 0x800e
+/* 0924E8 800918E8 258C06B0 */  addiu $t4, %lo(gTracksMenuVehicleNamePositions) # addiu $t4, $t4, 0x6b0
 /* 0924EC 800918EC 254A0624 */  addiu $t2, %lo(gRaceSelectionImages) # addiu $t2, $t2, 0x624
 /* 0924F0 800918F0 00094080 */  sll   $t0, $t1, 2
 /* 0924F4 800918F4 3C118012 */  lui   $s1, %hi(gPlayerSelectVehicle) # $s1, 0x8012
@@ -791,8 +791,8 @@ glabel render_track_select_setup_ui
 /* 0926C0 80091AC0 10000019 */  b     .L80091B28
 /* 0926C4 80091AC4 00000000 */   nop   
 .L80091AC8:
-/* 0926C8 80091AC8 3C0C800E */  lui   $t4, %hi(D_800E0414) # $t4, 0x800e
-/* 0926CC 80091ACC 8D8C0414 */  lw    $t4, %lo(D_800E0414)($t4)
+/* 0926C8 80091AC8 3C0C800E */  lui   $t4, %hi(gTracksMenuTimeTrialHighlightIndex) # $t4, 0x800e
+/* 0926CC 80091ACC 8D8C0414 */  lw    $t4, %lo(gTracksMenuTimeTrialHighlightIndex)($t4)
 /* 0926D0 80091AD0 3C05800E */  lui   $a1, %hi(D_800E0648) # $a1, 0x800e
 /* 0926D4 80091AD4 01960019 */  multu $t4, $s6
 /* 0926D8 80091AD8 8FC90000 */  lw    $t1, ($fp)
@@ -936,8 +936,8 @@ glabel render_track_select_setup_ui
 .L80091CE8:
 /* 0928E8 80091CE8 0060A025 */  move  $s4, $v1
 .L80091CEC:
-/* 0928EC 80091CEC 3C0B8012 */  lui   $t3, %hi(gMenuTextures) # $t3, 0x8012
-/* 0928F0 80091CF0 8D6B665C */  lw    $t3, %lo(gMenuTextures + 0x10C)($t3)
+/* 0928EC 80091CEC 3C0B8012 */  lui   $t3, %hi(gMenuObjects) # $t3, 0x8012
+/* 0928F0 80091CF0 8D6B665C */  lw    $t3, %lo(gMenuObjects + 0x10C)($t3)
 /* 0928F4 80091CF4 864E0002 */  lh    $t6, 2($s2)
 /* 0928F8 80091CF8 86590006 */  lh    $t9, 6($s2)
 /* 0928FC 80091CFC 86490008 */  lh    $t1, 8($s2)
