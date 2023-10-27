@@ -423,7 +423,7 @@ void run_object_loop_func(Object *obj, s32 arg1);
 s16 *func_80024594(s32 *currentCount, s32 *maxCount);
 void func_800245B4(s16 arg0);
 void object_do_player_tumble(Object *this);
-f32 catmull_rom_interpolation(f32*, s32, f32);
+f32 catmull_rom_interpolation(f32 *data, s32 index, f32 x);
 f32 cubic_spline_interpolation(f32 *data, s32 index, f32 x, f32 *derivative);
 s16 func_8001C418(f32 yPos);
 void func_80021400(s32 arg0);

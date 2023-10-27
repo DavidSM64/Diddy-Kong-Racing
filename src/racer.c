@@ -5609,7 +5609,7 @@ void func_80059944(void) {
 }
 
 void func_80059984(s32 arg0) {
-    D_8011D59D = (s8)((D_8011D59C + 1) & 1);
+    D_8011D59D = ((D_8011D59C + 1) & 1);
     D_8011D5AC = arg0;
 }
  //get_previous_map_id?
@@ -5711,110 +5711,115 @@ s16 func_80059E20(void) {
 
 #ifdef NON_EQUIVALENT
 s32 set_ghost_position_and_rotation(Object *obj) {
-    Vec3f vector[3];
+    f32 vectorX[3];
+    f32 vectorY[3];
+    f32 vectorZ[3];
     GhostNode *nextGhostNode;
-    GhostNode *temp_ra;
-    GhostNode *temp_v0;
+    GhostNode *ghostData;
     GhostNode *curGhostNode;
-    Object_64 *temp_v0_2;
-    f32 temp_f2;
-    f32 var_f2;
-    s16 yRot;
-    s16 zRot;
-    s16 xRot;
-    s16 temp_t5;
-    s32 temp_f6;
-    s32 var_a1;
+    Object_Racer *racer;
+    f32 catmullX;
+    f32 commonUnk0f32;
+    s32 commonUnk0s32;
+    s32 ghostNodeCount;
+    s32 ghostDataIndex;
     s32 nodeIndex;
     s32 rotDiff;
+    s32 rot;
     s32 i;
 
-    var_a1 = (D_8011D59C + 1) & 1;
+    ghostDataIndex = (D_8011D59C + 1) & 1;
     if (is_time_trial_ghost(obj)) {
-        var_a1 = 2;
+        ghostDataIndex = 2;
     }
-    var_f2 = (f32) obj->properties.common.unk0 / 30.0f;
-    if (osTvType == TV_TYPE_PAL && var_a1 == 2) {
-        var_f2 = ((f32) obj->properties.common.unk0 * 1.2) / 30.0f;
+    
+    commonUnk0f32 = (f32) obj->properties.common.unk0 / 30.0f;
+    if (osTvType == TV_TYPE_PAL && ghostDataIndex == 2) {
+        commonUnk0f32 = ((f32) obj->properties.common.unk0 * 1.2) / 30.0f;
     }
-    temp_f6 = var_f2;
-    temp_t5 = D_8011D5A0[var_a1];
-    if (temp_f6 >= (temp_t5 - 2)) {
+    commonUnk0s32 = commonUnk0f32; //Truncate the float to an integer?
+
+    ghostNodeCount = D_8011D5A0[ghostDataIndex];
+    if (commonUnk0s32 >= (ghostNodeCount - 2)) {
         return FALSE;
     }
-    if (var_a1 != 2 && get_current_map_id() != D_8011D5AC) {
+    if (ghostDataIndex != 2 && get_current_map_id() != D_8011D5AC) {
         return FALSE;
     }
-    temp_ra = gGhostData[var_a1];
-    nodeIndex = temp_f6 - 1;
-    curGhostNode = &temp_ra[nodeIndex];
-    i = 0;
-    do {
+    ghostData = gGhostData[ghostDataIndex];
+    nodeIndex = commonUnk0s32 - 1;
+    curGhostNode = &ghostData[nodeIndex];
+
+    //This whole loop is a bit of a mystery still... The i < 4 is a complete guess...
+    for (i = 0; i < 3; i++) {
         if (nodeIndex == -1) {
-            vector[i].x = ((curGhostNode + 1)->x * 2) - (curGhostNode + 2)->x;
-            vector[i].y = ((curGhostNode + 1)->y * 2) - (curGhostNode + 2)->y;
-            vector[i].z = ((curGhostNode + 1)->z * 2) - (curGhostNode + 2)->z;
-        } else if (nodeIndex >= temp_t5) {
-            vector[i].x = (curGhostNode->x * 2) - (curGhostNode - 1)->x;
-            vector[i].y = (curGhostNode->y * 2) - (curGhostNode - 1)->y;
-            vector[i].z = (curGhostNode->z * 2) - (curGhostNode - 1)->z;
+            vectorX[i] = ((curGhostNode + 1)->x * 2) - (curGhostNode + 2)->x;
+            vectorY[i] = ((curGhostNode + 1)->y * 2) - (curGhostNode + 2)->y;
+            vectorZ[i] = ((curGhostNode + 1)->z * 2) - (curGhostNode + 2)->z;
+        } else if (nodeIndex >= ghostNodeCount) {
+            vectorX[i] = (curGhostNode->x * 2) - (curGhostNode - 1)->x;
+            vectorY[i] = (curGhostNode->y * 2) - (curGhostNode - 1)->y;
+            vectorZ[i] = (curGhostNode->z * 2) - (curGhostNode - 1)->z;
         } else {
-            vector[i].x = curGhostNode->x;
-            vector[i].y = curGhostNode->y;
-            vector[i].z = curGhostNode->z;
+            vectorX[i] = curGhostNode->x;
+            vectorY[i] = curGhostNode->y;
+            vectorZ[i] = curGhostNode->z;
         }
         nodeIndex++;
         curGhostNode++;
-        i++;
-    } while (i < 3);
-    temp_f2 = var_f2 - temp_f6;
-    curGhostNode = &temp_ra[temp_f6];
-    obj->segment.trans.x_position = catmull_rom_interpolation(&vector->x, 0, temp_f2);
-    obj->segment.trans.y_position = catmull_rom_interpolation(&vector->y, 0, temp_f2);
-    obj->segment.trans.z_position = catmull_rom_interpolation(&vector->z, 0, temp_f2);
+    }
+    
+    catmullX = commonUnk0f32 - commonUnk0s32;
+    obj->segment.trans.x_position = catmull_rom_interpolation(vectorX, 0, catmullX);
+    obj->segment.trans.y_position = catmull_rom_interpolation(vectorY, 0, catmullX);
+    obj->segment.trans.z_position = catmull_rom_interpolation(vectorZ, 0, catmullX);
 
-    
-    yRot = curGhostNode->yRotation;
+    curGhostNode = &ghostData[commonUnk0s32];
+
+    //Y Rotation
+    rot = curGhostNode->yRotation;
     nextGhostNode = curGhostNode + 1;
-    rotDiff = nextGhostNode->yRotation - (yRot & 0xFFFF);
+    rotDiff = nextGhostNode->yRotation - (rot & 0xFFFF);
     if (rotDiff > 0x8000) {
         rotDiff -= 0xFFFF;
     }
     if (rotDiff < -0x8000) {
         rotDiff += 0xFFFF;
     }
-    obj->segment.trans.y_rotation = yRot + (s32) (rotDiff * temp_f2);
+    obj->segment.trans.y_rotation = rot + (s32) (rotDiff * catmullX);
     
-    xRot = curGhostNode->xRotation;
+    //X Rotation
+    rot = curGhostNode->xRotation;
     nextGhostNode = curGhostNode + 1;
-    rotDiff = nextGhostNode->xRotation - (xRot & 0xFFFF);
+    rotDiff = nextGhostNode->xRotation - (rot & 0xFFFF);
     if (rotDiff > 0x8000) {
         rotDiff -= 0xFFFF;
     }
     if (rotDiff < -0x8000) {
         rotDiff += 0xFFFF;
     }
-    obj->segment.trans.x_rotation = xRot + (s32) (rotDiff * temp_f2);
+    obj->segment.trans.x_rotation = rot + (s32) (rotDiff * catmullX);
     
-    zRot = curGhostNode->zRotation;
+    //Z Rotation
+    rot = curGhostNode->zRotation;
     nextGhostNode = curGhostNode + 1;
-    rotDiff = nextGhostNode->zRotation - (zRot & 0xFFFF);
+    rotDiff = nextGhostNode->zRotation - (rot & 0xFFFF);
     if (rotDiff > 0x8000) {
         rotDiff -= 0xFFFF;
     }
     if (rotDiff < -0x8000) {
         rotDiff += 0xFFFF;
     }
-    obj->segment.trans.z_rotation = zRot + (s32) (rotDiff * temp_f2);
+    obj->segment.trans.z_rotation = rot + (s32) (rotDiff * catmullX);
     
     obj->unk74 = 0;
     obj->segment.object.segmentID = get_level_segment_index_from_position(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
-    if (temp_t5 == (temp_f6 + 3)) {
-        temp_v0_2 = obj->unk64;
-        if (temp_f2 >= 0.8) {
-            temp_v0_2->racer.transparency = 0;
+    if (ghostNodeCount == (commonUnk0s32 + 3)) {
+        racer = &obj->unk64->racer;
+        if (catmullX >= 0.8) {
+            racer->transparency = 0;
         } else {
-            temp_v0_2->racer.transparency = (0.8 - temp_f2) * 96.0;
+            racer->transparency = (0.8 - catmullX) * 96.0;
         }
     }
     return TRUE;
