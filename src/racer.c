@@ -5668,7 +5668,7 @@ void free_tt_ghost_data(void) {
 }
 
 s32 func_80059B7C(s32 controllerIndex, s32 mapId, s16 arg2, s16 arg3, s16 arg4) {
-    return func_80075000(controllerIndex, (s16)mapId, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], (GhostHeader *) gGhostData[D_8011D59C]);
+    return func_80075000(controllerIndex, (s16) mapId, arg2, arg3, arg4, D_8011D5A0[D_8011D59C], (GhostHeader *) gGhostData[D_8011D59C]);
 }
 
 void func_80059BF0(Object *obj, s32 updateRate) {

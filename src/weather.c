@@ -12,6 +12,7 @@
 #include "unknown_008C40.h"
 #include "textures_sprites.h"
 #include "math_util.h"
+#include "objects.h"
 
 /************ .rodata ************/
 
@@ -34,7 +35,7 @@ unk800E2850 D_800E28D8 = { NULL, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 Vertex *D_800E2904 = 0;
 s32 D_800E2908 = 0;
 s32 *D_800E290C = NULL;
-s32 *D_800E2910 = NULL;
+s16 *D_800E2910 = NULL;
 Vertex *D_800E2914[2] = { NULL, NULL };
 s32 *D_800E291C = NULL; // List of Ids
 s32 D_800E2920 = 0;
@@ -124,8 +125,8 @@ unk800E2B4C D_800E2B4C[8] = {
 };
 
 unk800E2C2C gRainGfx[2] = {
-    { 0, 0, 0x400, 0x400, 0x000A, 0xFFC4, NULL, 0x80, 0xFF, 0xFF, 0x80, 0x80, 0xFF, 0x80, 0x00 },
-    { 0, 0, 0x600, 0x600, 0x0020, 0xFF40, NULL, 0xFF, 0xFF, 0xFF, 0x00, 0x80, 0xFF, 0xFF, 0x00 }
+    { 0, 0, 0x400, 0x400, 0x000A, 0xFFC4, NULL, 128, 255, 255, 128, 128, 255, 128, 0 },
+    { 0, 0, 0x600, 0x600, 0x0020, 0xFF40, NULL, 255, 255, 255, 0, 128, 255, 255, 0 }
 };
 
 s32 gWeatherType = WEATHER_SNOW;
@@ -364,7 +365,51 @@ void func_800AC0C8(s32 updateRate) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+void func_800AC21C(void) {
+    s16 zPos; // sp74
+    s16 yPos;
+    s16 xPos;
+    Matrix sp64;
+    s32 sp58;
+    s32 sp54;
+    s32 sp50;
+    s32 i;
+
+    sp58 = (D_80127C1C->trans.x_position * 65536.0f);
+    sp54 = (D_80127C1C->trans.y_position * 65536.0f);
+    sp50 = (D_80127C1C->trans.z_position * 65536.0f);
+    D_800E2908 = 0;
+    for(i = 0; i < D_80127BB4; i++) {
+        sp64[0][0] = (f32) (((D_800E28D4[i].unk0 - sp58) & D_800E28D8.unk18) + D_800E28D8.unkC) * (1.0f / 65536.0f);
+        sp64[0][1] = (f32) (((D_800E28D4[i].unk4 - sp54) & D_800E28D8.unk1C) + D_800E28D8.unk10) * (1.0f / 65536.0f);
+        sp64[0][2] = (f32) (((D_800E28D4[i].unk8 - sp50) & D_800E28D8.unk20) + D_800E28D8.unk14) * (1.0f / 65536.0f);
+        f32_matrix_dot(D_80127C20, &sp64, &sp64);
+        zPos = sp64[0][2];
+        if ((zPos < D_80127BF8.unk0) && (D_80127BF8.unk4 < zPos)) {
+            xPos = sp64[0][0];
+            yPos = sp64[0][1];
+            D_800E2904[i].x = xPos - D_800E28D8.unk24;
+            D_800E2904[i].y = yPos + D_800E28D8.unk26;
+            D_800E2904[i].z = zPos;
+            D_800E2904[i+1].x = xPos + D_800E28D8.unk24;
+            D_800E2904[i+1].y = yPos + D_800E28D8.unk26;
+            D_800E2904[i+1].z = zPos;
+            D_800E2904[i+2].x = xPos + D_800E28D8.unk24;
+            D_800E2904[i+2].y = yPos - D_800E28D8.unk26;
+            D_800E2904[i+2].z = zPos;
+            D_800E2904[i+3].x = xPos - D_800E28D8.unk24;
+            D_800E2904[i+3].y = yPos - D_800E28D8.unk26;
+            D_800E2904[i+3].z = zPos;
+            D_800E2908 += 4;
+            D_800E2910[D_800E2908 >> 2] = i;
+            if ((!i) && (!i)){} // Fakematch
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/weather/func_800AC21C.s")
+#endif
 
 /**
  * Load and execute the draw commands for the falling snowflakes, seen with snowy weather enabled.
@@ -674,5 +719,74 @@ void handle_rain_sound(UNUSED s32 updateRate) {
     }
 }
 
-//https://decomp.me/scratch/PDAZs
+#ifdef NON_EQUIVALENT
+void render_rain_overlay(unk800E2C2C *arg0, s32 arg1) {
+    f32 zSins;
+    Triangle *sp64;
+    f32 zCoss;
+    s32 altVertical;
+    s32 altHorizontal;
+    s32 opacity;
+    s32 horizontal;
+    s32 vertical;
+    s32 temp_t9;
+    s32 temp_v1;
+    TextureHeader *tex;
+    Vertex *verts;
+    Triangle *tris;
+
+    tex = arg0->tex;
+    if (tex != NULL) {
+        horizontal = tex->width << 5;
+        vertical = tex->height << 5;
+        temp_v1 = (horizontal * 2) - 1;
+        temp_t9 = ((vertical * 2) - 1) & 0xFFFFFFFFFFFFFFFF;
+        arg0->unk0 = (normalise_time(arg0->unk8 * arg1) + arg0->unk0) & temp_v1;
+        arg0->unk2 = (normalise_time(arg0->unkA * arg1) + arg0->unk2) & temp_t9;
+        horizontal = (arg0->unk4 * horizontal) >> 8;
+        opacity = (arg0->unk16 * (((D_800E2C6C >> 2) * gLightningFrequency) >> 14)) >> 16;
+        if (opacity > 0) {
+            altVertical = arg0->unk2;
+            vertical = ((arg0->unk6 * vertical) >> 8) + arg0->unk2;
+            altHorizontal = (arg0->unk0 + ((horizontal * 6 * D_80127C1C->trans.y_rotation) >> 16)) & temp_v1;
+            horizontal += altHorizontal;
+            zSins = sins_f(D_80127C1C->trans.z_rotation);
+            zCoss = coss_f(D_80127C1C->trans.z_rotation);
+            verts = &D_800E2AAC[D_800E2C90];
+            verts[0].x = ((D_800E2A8C * zCoss) - (D_800E2A9C * zSins));
+            verts[0].y = ((D_800E2A8C * zSins) + (D_800E2A9C * zCoss));
+            verts[1].x = ((D_800E2A9C * zCoss) - (D_800E2A9C * zSins));
+            verts[1].y = ((D_800E2A9C * zSins) + (D_800E2A9C * zCoss));
+            verts[2].x = ((D_800E2A9C * zCoss) - (D_800E2AA8 * zSins));
+            verts[2].y = ((D_800E2A9C * zSins) + (D_800E2AA8 * zCoss));
+            verts[3].x = ((D_800E2AA8 * zCoss) - (D_800E2AA8 * zSins));
+            verts[3].y = ((D_800E2AA8 * zSins) + (D_800E2AA8 * zCoss));
+            tris = gCurrWeatherTriList;
+            tris[0].vertices = (0x40 << 24) | (0 << 16) | (1 << 8) | 2;
+            tris[0].uv0.u = altHorizontal;
+            tris[0].uv0.v = altVertical;
+            tris[0].uv1.u = horizontal;
+            tris[0].uv1.v = altVertical;
+            tris[0].uv2.u = horizontal;
+            tris[0].uv2.v = vertical;
+            tris[1].vertices = (0x40 << 24) | (2 << 16) | (3 << 8) | 0;
+            tris[1].uv0.u = horizontal;
+            tris[1].uv0.v = vertical;
+            tris[1].uv1.u = altHorizontal;
+            tris[1].uv1.v = vertical;
+            tris[1].uv2.u = altHorizontal;
+            tris[1].uv2.v = altVertical;
+            sp64 = tris + 0x20;
+            func_8007F594(&gCurrWeatherDisplayList, 0, COLOUR_RGBA32(arg0->primitiveRed, arg0->primitiveGreen, arg0->primitiveBlue, opacity), COLOUR_RGBA32(arg0->environmentRed, arg0->environmentGreen, arg0->environmentBlue, 0));
+            gDkrDmaDisplayList(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
+            gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(&D_800E2AAC[D_800E2C90]), 4, 0);
+            gSPPolygon(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(gCurrWeatherTriList), 2, 1);
+            gDPPipeSync(gCurrWeatherDisplayList++);
+            D_800E2C90 = (D_800E2C90 + 4) & 0xF;
+            gCurrWeatherTriList = sp64;
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/weather/render_rain_overlay.s")
+#endif

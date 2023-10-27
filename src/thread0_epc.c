@@ -204,15 +204,6 @@ void update_object_stack_trace(s32 index, s32 value) {
     }
 }
 
-#if 1
-// Ok, so this is weird... If I remove the last GLOBAL_ASM in this file, 
-// even if it's not included anymore, it breaks get_lockup_status
-// as it can't seem to find the externed statics?
-#else
-//Cursed as hell, it doesn't seem to matter what file this is pointing to really.
-GLOBAL_ASM("asm/unknown_062930/func_80061D30.s")
-#endif
-
 /**
  * Called as a check to see if render_epc_lock_up_display should be called.
  */
