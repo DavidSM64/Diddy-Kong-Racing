@@ -1029,7 +1029,7 @@ char *gQMarkPtr = "?";
 //   set to FALSE when leaving the menu.
 // This is effectively unused, since it is only read from the 
 //   unused function func_8008E790()
-s32 gIsInTracksMenu = 0;
+s32 gIsInTracksMenu = FALSE;
 
 s32 gTrackNameVoiceDelay = 0;
 s32 gMenuOptionCap = 0;
@@ -7037,7 +7037,7 @@ void menu_track_select_init(void) {
     resize_viewport(0, 80, gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY >> 1), SCREEN_HEIGHT, (gTrackSelectViewPortHalfY >> 1) + gTrackSelectViewPortHalfY);
     copy_viewports_to_stack();
     camEnableUserView(0, 0);
-    gIsInTracksMenu = 1;
+    gIsInTracksMenu = TRUE;
     func_8009C674(gTrackSelectObjectIndices);
     allocate_menu_images(gTrackSelectImageIndices);
     assign_menu_arrow_textures();
@@ -7650,7 +7650,7 @@ void func_80090918(s32 updateRate) {
         }
         if (gMenuDelay < -22) {
             set_background_draw_function(NULL);
-            gIsInTracksMenu = 0;
+            gIsInTracksMenu = FALSE;
         }
         if (gMenuDelay > 30) {
             if ((is_adventure_two_unlocked()) && (D_801269C8 != 5)) {
