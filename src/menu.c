@@ -9072,11 +9072,11 @@ s32 func_80095728(Gfx **dlist, MatrixS **matrices, Vertex **vertices, s32 update
                 }
             }
             if (sp54 != 0) {
-                play_sound_global(0x241, NULL);
+                play_sound_global(SOUND_MENU_BACK3, NULL);
             } else if((sp50 != 0)) {
-                play_sound_global(0xEF, NULL);
+                play_sound_global(SOUND_SELECT2, NULL);
             } else if((sp4C != 0)) {
-                play_sound_global(0xEB, NULL);
+                play_sound_global(SOUND_MENU_PICK2, NULL);
             }
             break;
         case 7:
