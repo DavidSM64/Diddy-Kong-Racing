@@ -18,16 +18,16 @@ glabel func_8007FFEC
 /* 080C28 80080028 000D7880 */  sll   $t7, $t5, 2
 /* 080C2C 8008002C 01ED7821 */  addu  $t7, $t7, $t5
 /* 080C30 80080030 24020020 */  li    $v0, 32
-/* 080C34 80080034 3C01800E */  lui   $at, %hi(D_800E1DC0) # $at, 0x800e
+/* 080C34 80080034 3C01800E */  lui   $at, %hi(gWoodPanelTexScaleU) # $at, 0x800e
 /* 080C38 80080038 000F6840 */  sll   $t5, $t7, 1
-/* 080C3C 8008003C AC221DC0 */  sw    $v0, %lo(D_800E1DC0)($at)
-/* 080C40 80080040 3C01800E */  lui   $at, %hi(D_800E1DC4) # $at, 0x800e
+/* 080C3C 8008003C AC221DC0 */  sw    $v0, %lo(gWoodPanelTexScaleU)($at)
+/* 080C40 80080040 3C01800E */  lui   $at, %hi(gWoodPanelTexScaleV) # $at, 0x800e
 /* 080C44 80080044 00106140 */  sll   $t4, $s0, 5
 /* 080C48 80080048 00001812 */  mflo  $v1
 /* 080C4C 8008004C 0003C100 */  sll   $t8, $v1, 4
 /* 080C50 80080050 01B8C821 */  addu  $t9, $t5, $t8
 /* 080C54 80080054 00197040 */  sll   $t6, $t9, 1
-/* 080C58 80080058 AC221DC4 */  sw    $v0, %lo(D_800E1DC4)($at)
+/* 080C58 80080058 AC221DC4 */  sw    $v0, %lo(gWoodPanelTexScaleV)($at)
 /* 080C5C 8008005C 01CC2021 */  addu  $a0, $t6, $t4
 /* 080C60 80080060 03001825 */  move  $v1, $t8
 /* 080C64 80080064 AFB80020 */  sw    $t8, 0x20($sp)
@@ -36,12 +36,12 @@ glabel func_8007FFEC
 /* 080C70 80080070 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 080C74 80080074 2405FFFF */   li    $a1, -1
 /* 080C78 80080078 8FA30020 */  lw    $v1, 0x20($sp)
-/* 080C7C 8008007C 3C07800E */  lui   $a3, %hi(D_800E1DAC) # $a3, 0x800e
-/* 080C80 80080080 24E71DAC */  addiu $a3, %lo(D_800E1DAC) # addiu $a3, $a3, 0x1dac
+/* 080C7C 8008007C 3C07800E */  lui   $a3, %hi(gWoodPanelTriangles) # $a3, 0x800e
+/* 080C80 80080080 24E71DAC */  addiu $a3, %lo(gWoodPanelTriangles) # addiu $a3, $a3, 0x1dac
 /* 080C84 80080084 ACE20000 */  sw    $v0, ($a3)
-/* 080C88 80080088 3C01800E */  lui   $at, %hi(D_800E1DAC+4) # $at, 0x800e
+/* 080C88 80080088 3C01800E */  lui   $at, %hi(gWoodPanelTriangles+4) # $at, 0x800e
 /* 080C8C 8008008C 0043C021 */  addu  $t8, $v0, $v1
-/* 080C90 80080090 AC381DB0 */  sw    $t8, %lo(D_800E1DAC+4)($at)
+/* 080C90 80080090 AC381DB0 */  sw    $t8, %lo(gWoodPanelTriangles+4)($at)
 /* 080C94 80080094 8CF90004 */  lw    $t9, 4($a3)
 /* 080C98 80080098 3C068012 */  lui   $a2, %hi(D_80126C2C) # $a2, 0x8012
 /* 080C9C 8008009C 3C018012 */  lui   $at, %hi(D_80126C2C) # $at, 0x8012
@@ -50,16 +50,16 @@ glabel func_8007FFEC
 /* 080CA8 800800A8 AC2E6C2C */  sw    $t6, %lo(D_80126C2C)($at)
 /* 080CAC 800800AC 8FAC0028 */  lw    $t4, 0x28($sp)
 /* 080CB0 800800B0 8CCF0000 */  lw    $t7, ($a2)
-/* 080CB4 800800B4 3C08800E */  lui   $t0, %hi(D_800E1DA4) # $t0, 0x800e
-/* 080CB8 800800B8 3C01800E */  lui   $at, %hi(D_800E1DA4+4) # $at, 0x800e
+/* 080CB4 800800B4 3C08800E */  lui   $t0, %hi(gWoodPanelVertices) # $t0, 0x800e
+/* 080CB8 800800B8 3C01800E */  lui   $at, %hi(gWoodPanelVertices+4) # $at, 0x800e
 /* 080CBC 800800BC 01ECC021 */  addu  $t8, $t7, $t4
-/* 080CC0 800800C0 25081DA4 */  addiu $t0, %lo(D_800E1DA4) # addiu $t0, $t0, 0x1da4
-/* 080CC4 800800C4 AC381DA4 */  sw    $t8, %lo(D_800E1DA4)($at)
+/* 080CC0 800800C0 25081DA4 */  addiu $t0, %lo(gWoodPanelVertices) # addiu $t0, $t0, 0x1da4
+/* 080CC4 800800C4 AC381DA4 */  sw    $t8, %lo(gWoodPanelVertices)($at)
 /* 080CC8 800800C8 8FAD0024 */  lw    $t5, 0x24($sp)
 /* 080CCC 800800CC 8D190000 */  lw    $t9, ($t0)
 /* 080CD0 800800D0 2409000A */  li    $t1, 10
 /* 080CD4 800800D4 032D7021 */  addu  $t6, $t9, $t5
-/* 080CD8 800800D8 AC2E1DA8 */  sw    $t6, %lo(D_800E1DA4+4)($at)
+/* 080CD8 800800D8 AC2E1DA8 */  sw    $t6, %lo(gWoodPanelVertices+4)($at)
 /* 080CDC 800800DC 00005025 */  move  $t2, $zero
 /* 080CE0 800800E0 00002825 */  move  $a1, $zero
 /* 080CE4 800800E4 1A0000C8 */  blez  $s0, .L80080408
@@ -275,12 +275,12 @@ glabel func_8007FFEC
 /* 081018 80080418 00001825 */  move  $v1, $zero
 /* 08101C 8008041C 24050040 */  li    $a1, 64
 .L80080420:
-/* 081020 80080420 3C04800E */  lui   $a0, %hi(D_800E1CD0) # $a0, 0x800e
-/* 081024 80080424 24841CD0 */  addiu $a0, %lo(D_800E1CD0) # addiu $a0, $a0, 0x1cd0
+/* 081020 80080420 3C04800E */  lui   $a0, %hi(gWoodPanelsIndices) # $a0, 0x800e
+/* 081024 80080424 24841CD0 */  addiu $a0, %lo(gWoodPanelsIndices) # addiu $a0, $a0, 0x1cd0
 /* 081028 80080428 00003825 */  move  $a3, $zero
 .L8008042C:
-/* 08102C 8008042C 3C02800E */  lui   $v0, %hi(D_800E1DAC) # $v0, 0x800e
-/* 081030 80080430 24421DAC */  addiu $v0, %lo(D_800E1DAC) # addiu $v0, $v0, 0x1dac
+/* 08102C 8008042C 3C02800E */  lui   $v0, %hi(gWoodPanelTriangles) # $v0, 0x800e
+/* 081030 80080430 24421DAC */  addiu $v0, %lo(gWoodPanelTriangles) # addiu $v0, $v0, 0x1dac
 .L80080434:
 /* 081034 80080434 8C4F0000 */  lw    $t7, ($v0)
 /* 081038 80080438 24420004 */  addiu $v0, $v0, 4
@@ -332,11 +332,11 @@ glabel func_8007FFEC
 /* 0810F0 800804F0 00000000 */   nop   
 .L800804F4:
 /* 0810F4 800804F4 AC201DB4 */  sw    $zero, %lo(D_800E1DB4)($at)
-/* 0810F8 800804F8 3C01800E */  lui   $at, %hi(D_800E1DB8) # $at, 0x800e
-/* 0810FC 800804FC AC201DB8 */  sw    $zero, %lo(D_800E1DB8)($at)
-/* 081100 80080500 3C01800E */  lui   $at, %hi(D_800E1DBC) # $at, 0x800e
+/* 0810F8 800804F8 3C01800E */  lui   $at, %hi(gWoodPanelCount) # $at, 0x800e
+/* 0810FC 800804FC AC201DB8 */  sw    $zero, %lo(gWoodPanelCount)($at)
+/* 081100 80080500 3C01800E */  lui   $at, %hi(gWoodPanelAllocCount) # $at, 0x800e
 /* 081104 80080504 8FBF001C */  lw    $ra, 0x1c($sp)
-/* 081108 80080508 AC301DBC */  sw    $s0, %lo(D_800E1DBC)($at)
+/* 081108 80080508 AC301DBC */  sw    $s0, %lo(gWoodPanelAllocCount)($at)
 /* 08110C 8008050C 8FB00018 */  lw    $s0, 0x18($sp)
 /* 081110 80080510 03E00008 */  jr    $ra
 /* 081114 80080514 27BD0050 */   addiu $sp, $sp, 0x50

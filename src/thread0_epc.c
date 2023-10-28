@@ -49,7 +49,9 @@ void thread0_create(void) {
     }
 }
 
-
+/**
+ * Main thread for the epc lockup screen. Thread 0.
+ */
 void thread0_Main(UNUSED void *unused) {
     s32 sp34;
     s32 s0 = 0;
@@ -69,29 +71,38 @@ void thread0_Main(UNUSED void *unused) {
             continue;
         }
         s0 &= ~8;
-        func_800B70D0();
-        func_800B7144();
-        func_800B71B0();
+        enable_interupts_on_main();
+        stop_all_threads_except_main();
+        write_epc_data_to_cpak();
     }
 }
 
-void func_800B70D0(void) {
+/**
+ * Enable interrupts on all idle priority threads, which should just be the main thread 1.
+ */
+void enable_interupts_on_main(void) {
     OSThread *node = __osGetActiveQueue();
     while (node->priority != -1) {
-        if (node->priority == 0) {
+        if (node->priority == OS_PRIORITY_IDLE) {
+            //Clear all existing interrupts and disable them.
             node->context.sr &= ~(SR_IMASK | SR_IE);
-            //node->context.sr |= (0x6C01);
-            //Pretty sure these are the flags
-            node->context.sr |= ((SR_SX | SR_UX | SR_KSU_SUP | SR_ERL) << SR_IMASKSHIFT) | SR_IE;
-            //Could be this though.
-            //node->context.sr | = (SR_IBIT7 | SR_IBIT6 | SR_IBIT4 | SR_IBIT3 | SR_IE);
+            
+            //Enable interrupts
+            //IP3 Int1 pin (N64: Cartridge)
+            //IP4 Int2 pin (N64: Pre-NMI (Reset button))
+            //IP6 Int4 pin (N64: RDB Write)
+            //IP7 Timer interrupt
+            node->context.sr |= (SR_IBIT7 | SR_IBIT6 | SR_IBIT4 | SR_IBIT3 | SR_IE);
             break;
         }
         node = node->tlnext;
     }
 }
 
-void func_800B7144(void) {
+/**
+ * Stop all threads except for the main thread 1
+ */
+void stop_all_threads_except_main(void) {
     OSThread *node = __osGetActiveQueue();
     while (node->priority != -1) {
         if (node->priority > OS_PRIORITY_IDLE && node->priority <= OS_PRIORITY_APPMAX) {
@@ -101,7 +112,10 @@ void func_800B7144(void) {
     }
 }
 
-void func_800B71B0(void) {
+/**
+ * Writes epc data to the controller pak so that it can be read back later.
+ */
+void write_epc_data_to_cpak(void) {
     OSThread *thread;
     UNUSED s16 sp444[0x200];
     u8 sp244[0x200];
@@ -140,9 +154,11 @@ void func_800B71B0(void) {
     while (1) {} // Infinite loop
 }
 
-#ifdef NON_EQUIVALENT
-//Rename mask to colourTag?
-void func_800B7460(s32 *epc, s32 size, u32 mask) {
+/**
+ * Writes epc data to the controller pak when a memory allocation has failed, 
+ * but only if CHEAT_EPC_LOCK_UP_DISPLAY is active.
+ */
+void dump_memory_to_cpak(s32 epc, s32 size, u32 colourTag) {
     epcInfo epcinfo;
     s16 sp440[0x200];
     u8 sp240[0x200];
@@ -150,38 +166,33 @@ void func_800B7460(s32 *epc, s32 size, u32 mask) {
     s16 *v0;
     s32 currentCount;
     s32 i;
-    u8 zero;
+    UNUSED s32 pad;
 
     // This is checking if the EPC cheat is active
     if (get_filtered_cheats() & CHEAT_EPC_LOCK_UP_DISPLAY) {
         bzero(&epcinfo, sizeof(epcInfo));
-        epcinfo.epc = epc;
+        epcinfo.epc = epc & 0xFFFFFFFFFFFFFFFF; //fakematch
         epcinfo.a0 = size;
-        epcinfo.a1 = mask;
+        epcinfo.a1 = colourTag;
         epcinfo.cause = -1;
         epcinfo.objectStackTrace[0] = gObjectStackTrace[0];
         epcinfo.objectStackTrace[1] = gObjectStackTrace[1];
         epcinfo.objectStackTrace[2] = gObjectStackTrace[2];
         bcopy(&epcinfo, &sp40, sizeof(epcInfo));
         bzero(&sp240, sizeof(sp240));
-        zero = 0; // Why is this needed to match?
         v0 = func_80024594(&currentCount, &size);
-        for (i = zero; i < size; i++) {
+        for (i = 0; i < size; i++) {
             sp440[i] = v0[currentCount];
             currentCount--;
-            if (currentCount < zero) {
+            if (currentCount < 0) {
                 currentCount += size;
             }
         }
-        write_controller_pak_file(0, -1, "CORE", "", &sp40, sizeof(sp40) + sizeof(sp240) + sizeof(sp440));
+        i = sizeof(sp40) + sizeof(sp240) + sizeof(sp440); //fakematch?
+        write_controller_pak_file(0, -1, "CORE", "", sp40, i);
+        while (1) {} // Infinite loop; waiting for the player to reset the console?
     }
-    while (1) {} // Infinite loop; waiting for the player to reset the console?
 }
-#else
-const char sCoreFileName[] = "CORE";
-const char sCoreFileExt[] = "";
-GLOBAL_ASM("asm/non_matchings/thread0_epc/func_800B7460.s")
-#endif
 
 /**
  * Mark the object type given, so if the game crashes while processing it, the debug screen will tell you which object ID is to blame.
@@ -193,7 +204,9 @@ void update_object_stack_trace(s32 index, s32 value) {
     }
 }
 
-//Called as a check to see if render_epc_lock_up_display should be called.
+/**
+ * Called as a check to see if render_epc_lock_up_display should be called.
+ */
 s32 get_lockup_status(void) {
     s32 fileNum;
     s32 controllerIndex = 0;
@@ -228,7 +241,7 @@ s32 get_lockup_status(void) {
 /**
  * Counts up. Automatically switches page every second.
  * Official name: diCpuTraceTick
-*/
+ */
 void lockup_screen_loop(s32 updateRate) {
     sLockupDelay += updateRate;
     if (sLockupDelay > 60) {
@@ -244,7 +257,7 @@ void lockup_screen_loop(s32 updateRate) {
  * Page 0 shows the address of the instruction that crashed as well as fixed point registers
  * Page 1-3 show the stack dump of the crashed thread.
  * Page 4 appears to show the data of the EPC stack itself?
-*/
+ */
 void render_epc_lock_up_display(void) {
     u16 *temp;
     char *objStatusString[3] = {"setup", "control", "print"};

@@ -9,11 +9,11 @@ glabel func_800871D8
 /* 087DF4 800871F4 26B5FAE0 */  addiu $s5, %lo(D_800DFAE0) # addiu $s5, $s5, -0x520
 /* 087DF8 800871F8 31CF0003 */  andi  $t7, $t6, 3
 /* 087DFC 800871FC 0018C880 */  sll   $t9, $t8, 2
-/* 087E00 80087200 3C08800E */  lui   $t0, %hi(D_800DFBDC) # $t0, 0x800e
+/* 087E00 80087200 3C08800E */  lui   $t0, %hi(gContPakStrings) # $t0, 0x800e
 /* 087E04 80087204 AFB4002C */  sw    $s4, 0x2c($sp)
 /* 087E08 80087208 AEAF0000 */  sw    $t7, ($s5)
 /* 087E0C 8008720C 01194021 */  addu  $t0, $t0, $t9
-/* 087E10 80087210 8D08FBDC */  lw    $t0, %lo(D_800DFBDC)($t0)
+/* 087E10 80087210 8D08FBDC */  lw    $t0, %lo(gContPakStrings)($t0)
 /* 087E14 80087214 3C148012 */  lui   $s4, %hi(D_80126A70) # $s4, 0x8012
 /* 087E18 80087218 26946A70 */  addiu $s4, %lo(D_80126A70) # addiu $s4, $s4, 0x6a70
 /* 087E1C 8008721C 3C01800E */  lui   $at, %hi(D_800DFADC) # $at, 0x800e
@@ -100,21 +100,21 @@ glabel func_800871D8
 /* 087F50 80087350 3C02800E */  lui   $v0, %hi(gMenuText) # $v0, 0x800e
 /* 087F54 80087354 8C42F4A0 */  lw    $v0, %lo(gMenuText)($v0)
 /* 087F58 80087358 8E830000 */  lw    $v1, ($s4)
-/* 087F5C 8008735C 3C0D800E */  lui   $t5, %hi(D_800DFB8C) # $t5, 0x800e
-/* 087F60 80087360 25ADFB8C */  addiu $t5, %lo(D_800DFB8C) # addiu $t5, $t5, -0x474
+/* 087F5C 8008735C 3C0D800E */  lui   $t5, %hi(gContPakRumbleDetectedStrings) # $t5, 0x800e
+/* 087F60 80087360 25ADFB8C */  addiu $t5, %lo(gContPakRumbleDetectedStrings) # addiu $t5, $t5, -0x474
 /* 087F64 80087364 8C470100 */  lw    $a3, 0x100($v0)
 /* 087F68 80087368 106D0005 */  beq   $v1, $t5, .L80087380
 /* 087F6C 8008736C 24040007 */   li    $a0, 7
-/* 087F70 80087370 3C0E800E */  lui   $t6, %hi(D_800DFBA4) # $t6, 0x800e
-/* 087F74 80087374 25CEFBA4 */  addiu $t6, %lo(D_800DFBA4) # addiu $t6, $t6, -0x45c
+/* 087F70 80087370 3C0E800E */  lui   $t6, %hi(gContPakSwitchToRumbleStrings) # $t6, 0x800e
+/* 087F74 80087374 25CEFBA4 */  addiu $t6, %lo(gContPakSwitchToRumbleStrings) # addiu $t6, $t6, -0x45c
 /* 087F78 80087378 146E0004 */  bne   $v1, $t6, .L8008738C
-/* 087F7C 8008737C 3C0F800E */   lui   $t7, %hi(D_800DFBBC) # $t7, 0x800e
+/* 087F7C 8008737C 3C0F800E */   lui   $t7, %hi(gContPakNeed2ndAdvStrings) # $t7, 0x800e
 .L80087380:
 /* 087F80 80087380 8C470260 */  lw    $a3, 0x260($v0)
 /* 087F84 80087384 10000007 */  b     .L800873A4
 /* 087F88 80087388 24180001 */   li    $t8, 1
 .L8008738C:
-/* 087F8C 8008738C 25EFFBBC */  addiu $t7, %lo(D_800DFBBC) # addiu $t7, $t7, -0x444
+/* 087F8C 8008738C 25EFFBBC */  addiu $t7, %lo(gContPakNeed2ndAdvStrings) # addiu $t7, $t7, -0x444
 /* 087F90 80087390 146F0004 */  bne   $v1, $t7, .L800873A4
 /* 087F94 80087394 24180001 */   li    $t8, 1
 /* 087F98 80087398 8C4701F4 */  lw    $a3, 0x1f4($v0)

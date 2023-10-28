@@ -224,7 +224,7 @@ glabel func_80074B34
 /* 075A5C 80074E5C 8FA7004C */  lw    $a3, 0x4c($sp)
 /* 075A60 80074E60 1440000E */  bnez  $v0, .L80074E9C
 /* 075A64 80074E64 00000000 */   nop   
-/* 075A68 80074E68 0C01D2C7 */  jal   func_80074B1C
+/* 075A68 80074E68 0C01D2C7 */  jal   get_ghost_data_file_size
 /* 075A6C 80074E6C AFA7004C */   sw    $a3, 0x4c($sp)
 /* 075A70 80074E70 8FAE0038 */  lw    $t6, 0x38($sp)
 /* 075A74 80074E74 8FA7004C */  lw    $a3, 0x4c($sp)

@@ -36,6 +36,21 @@ typedef enum {
     CONTROLLER_PAK_BAD_DATA
 } SIDeviceStatus;
 
+typedef enum {
+    SAVE_FILE_TYPE_UNSET = -1,
+    SAVE_FILE_TYPE_UNK0, //Unused? 
+    SAVE_FILE_TYPE_UNK1, //GAMD on cartridge save?
+    SAVE_FILE_TYPE_UNK2, //TIMD saved on cartridge>
+    SAVE_FILE_TYPE_GAME_DATA, //GAMD saved on cpak?
+    SAVE_FILE_TYPE_TIME_DATA, //TIMD saved on cpak>
+    SAVE_FILE_TYPE_GHOST_DATA, //GHSS
+    SAVE_FILE_TYPE_UNKNOWN, //Possibly from another game?
+    SAVE_FILE_TYPE_UNK7,
+    SAVE_FILE_TYPE_UNK8, //Empty Slot?
+    SAVE_FILE_TYPE_UNK9, //View Ghosts?
+    SAVE_FILE_TYPE_UNKA //Game Pak Bonuses?
+} SaveFileType;
+
 extern s8 *D_800DE440;
 extern u8 gN64FontCodes[68];
 extern s32 D_800DE48C;
@@ -61,7 +76,7 @@ s32 read_eeprom_settings(u64 *eepromSettings);
 s32 write_eeprom_settings(u64 *eepromSettings);
 s16 calculate_ghost_header_checksum(GhostHeader *ghostHeader);
 void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 nodeCount, u8 *dest);
-s32 func_80074B1C(void);
+s32 get_ghost_data_file_size(void);
 SIDeviceStatus get_si_device_status(s32 controllerIndex);
 s32 start_reading_controller_data(s32 controllerIndex);
 SIDeviceStatus check_for_rumble_pak(s32 controllerIndex);
@@ -77,7 +92,7 @@ SIDeviceStatus read_data_from_controller_pak(s32 controllerIndex, s32 fileNum, u
 SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, char *fileName, char *fileExt, u8 *dataToWrite, s32 fileSize);
 SIDeviceStatus get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize);
 char *font_codes_to_string(char *inString, char *outString, s32 stringLength);
-s32 get_file_type(s32 controllerIndex, s32 fileNum);
+SaveFileType get_file_type(s32 controllerIndex, s32 fileNum);
 void func_80072578(s16 controllerIndex, s16 arg1, s16 arg2);
 void func_80072348(s16 controllerIndex, u8 arg1);
 void func_80072424(s16 controllerIndex, u8 arg1, f32 arg2);

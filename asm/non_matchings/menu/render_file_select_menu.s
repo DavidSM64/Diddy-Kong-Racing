@@ -28,12 +28,12 @@ glabel render_file_select_menu
 /* 08D9D4 8008CDD4 02E02025 */   move  $a0, $s7
 /* 08D9D8 8008CDD8 3C118012 */  lui   $s1, %hi(gSavefileInfo) # $s1, 0x8012
 /* 08D9DC 8008CDDC 3C10800E */  lui   $s0, %hi(gFileSelectButtons) # $s0, 0x800e
-/* 08D9E0 8008CDE0 3C158012 */  lui   $s5, %hi(gMenuTextures) # $s5, 0x8012
+/* 08D9E0 8008CDE0 3C158012 */  lui   $s5, %hi(gMenuObjects) # $s5, 0x8012
 /* 08D9E4 8008CDE4 3C13B0E0 */  lui   $s3, (0xB0E0C0FF >> 16) # lui $s3, 0xb0e0
 /* 08D9E8 8008CDE8 3C12800E */  lui   $s2, %hi(gIsInAdventureTwo) # $s2, 0x800e
 /* 08D9EC 8008CDEC 2652F494 */  addiu $s2, %lo(gIsInAdventureTwo) # addiu $s2, $s2, -0xb6c
 /* 08D9F0 8008CDF0 3673C0FF */  ori   $s3, (0xB0E0C0FF & 0xFFFF) # ori $s3, $s3, 0xc0ff
-/* 08D9F4 8008CDF4 26B56550 */  addiu $s5, %lo(gMenuTextures) # addiu $s5, $s5, 0x6550
+/* 08D9F4 8008CDF4 26B56550 */  addiu $s5, %lo(gMenuObjects) # addiu $s5, $s5, 0x6550
 /* 08D9F8 8008CDF8 261003CC */  addiu $s0, %lo(gFileSelectButtons) # addiu $s0, $s0, 0x3cc
 /* 08D9FC 8008CDFC 263164A0 */  addiu $s1, %lo(gSavefileInfo) # addiu $s1, $s1, 0x64a0
 /* 08DA00 8008CE00 24140078 */  li    $s4, 120

@@ -27,60 +27,60 @@ glabel menu_ghost_data_init
 /* 09A6C0 80099AC0 0C02658F */  jal   func_8009963C
 /* 09A6C4 80099AC4 00000000 */   nop   
 .L80099AC8:
-/* 09A6C8 80099AC8 3C04800E */  lui   $a0, %hi(D_800E1708) # $a0, 0x800e
+/* 09A6C8 80099AC8 3C04800E */  lui   $a0, %hi(gGhostDataObjectIndices) # $a0, 0x800e
 /* 09A6CC 80099ACC 0C02719D */  jal   func_8009C674
-/* 09A6D0 80099AD0 24841708 */   addiu $a0, %lo(D_800E1708) # addiu $a0, $a0, 0x1708
-/* 09A6D4 80099AD4 3C04800E */  lui   $a0, %hi(D_800E174C) # $a0, 0x800e
+/* 09A6D0 80099AD0 24841708 */   addiu $a0, %lo(gGhostDataObjectIndices) # addiu $a0, $a0, 0x1708
+/* 09A6D4 80099AD4 3C04800E */  lui   $a0, %hi(gGhostDataImageIndices) # $a0, 0x800e
 /* 09A6D8 80099AD8 0C027229 */  jal   allocate_menu_images
-/* 09A6DC 80099ADC 2484174C */   addiu $a0, %lo(D_800E174C) # addiu $a0, $a0, 0x174c
+/* 09A6DC 80099ADC 2484174C */   addiu $a0, %lo(gGhostDataImageIndices) # addiu $a0, $a0, 0x174c
 /* 09A6E0 80099AE0 0C03105C */  jal   load_font
 /* 09A6E4 80099AE4 24040002 */   li    $a0, 2
-/* 09A6E8 80099AE8 3C028012 */  lui   $v0, %hi(gMenuTextures) # $v0, 0x8012
-/* 09A6EC 80099AEC 24426550 */  addiu $v0, %lo(gMenuTextures) # addiu $v0, $v0, 0x6550
+/* 09A6E8 80099AE8 3C028012 */  lui   $v0, %hi(gMenuObjects) # $v0, 0x8012
+/* 09A6EC 80099AEC 24426550 */  addiu $v0, %lo(gMenuObjects) # addiu $v0, $v0, 0x6550
 /* 09A6F0 80099AF0 8C570038 */  lw    $s7, 0x38($v0)
-/* 09A6F4 80099AF4 3C01800E */  lui   $at, %hi(D_800E153C) # $at, 0x800e
-/* 09A6F8 80099AF8 AC37153C */  sw    $s7, %lo(D_800E153C)($at)
+/* 09A6F4 80099AF4 3C01800E */  lui   $at, %hi(gDrawTexDinoDomainGhostBg) # $at, 0x800e
+/* 09A6F8 80099AF8 AC37153C */  sw    $s7, %lo(gDrawTexDinoDomainGhostBg)($at)
 /* 09A6FC 80099AFC 8C5E003C */  lw    $fp, 0x3c($v0)
-/* 09A700 80099B00 3C01800E */  lui   $at, %hi(D_800E153C+0x28) # $at, 0x800e
-/* 09A704 80099B04 AC3E1564 */  sw    $fp, %lo(D_800E153C+0x28)($at)
+/* 09A700 80099B00 3C01800E */  lui   $at, %hi(gDrawTexDinoDomainGhostBg+0x28) # $at, 0x800e
+/* 09A704 80099B04 AC3E1564 */  sw    $fp, %lo(gDrawTexDinoDomainGhostBg+0x28)($at)
 /* 09A708 80099B08 8C430040 */  lw    $v1, 0x40($v0)
-/* 09A70C 80099B0C 3C01800E */  lui   $at, %hi(D_800E1594) # $at, 0x800e
-/* 09A710 80099B10 AC231594 */  sw    $v1, %lo(D_800E1594)($at)
+/* 09A70C 80099B0C 3C01800E */  lui   $at, %hi(gDrawTexSherbetIslandGhostBg) # $at, 0x800e
+/* 09A710 80099B10 AC231594 */  sw    $v1, %lo(gDrawTexSherbetIslandGhostBg)($at)
 /* 09A714 80099B14 8C440044 */  lw    $a0, 0x44($v0)
-/* 09A718 80099B18 3C01800E */  lui   $at, %hi(D_800E1594+0x28) # $at, 0x800e
-/* 09A71C 80099B1C AC2415BC */  sw    $a0, %lo(D_800E1594+0x28)($at)
+/* 09A718 80099B18 3C01800E */  lui   $at, %hi(gDrawTexSherbetIslandGhostBg+0x28) # $at, 0x800e
+/* 09A71C 80099B1C AC2415BC */  sw    $a0, %lo(gDrawTexSherbetIslandGhostBg+0x28)($at)
 /* 09A720 80099B20 8C450048 */  lw    $a1, 0x48($v0)
-/* 09A724 80099B24 3C01800E */  lui   $at, %hi(D_800E15EC) # $at, 0x800e
-/* 09A728 80099B28 AC2515EC */  sw    $a1, %lo(D_800E15EC)($at)
+/* 09A724 80099B24 3C01800E */  lui   $at, %hi(gDrawTexSnowflakeMountainGhostBg) # $at, 0x800e
+/* 09A728 80099B28 AC2515EC */  sw    $a1, %lo(gDrawTexSnowflakeMountainGhostBg)($at)
 /* 09A72C 80099B2C 8C46004C */  lw    $a2, 0x4c($v0)
-/* 09A730 80099B30 3C01800E */  lui   $at, %hi(D_800E15EC+0x28) # $at, 0x800e
-/* 09A734 80099B34 AC261614 */  sw    $a2, %lo(D_800E15EC+0x28)($at)
+/* 09A730 80099B30 3C01800E */  lui   $at, %hi(gDrawTexSnowflakeMountainGhostBg+0x28) # $at, 0x800e
+/* 09A734 80099B34 AC261614 */  sw    $a2, %lo(gDrawTexSnowflakeMountainGhostBg+0x28)($at)
 /* 09A738 80099B38 8C470050 */  lw    $a3, 0x50($v0)
-/* 09A73C 80099B3C 3C01800E */  lui   $at, %hi(D_800E1644) # $at, 0x800e
-/* 09A740 80099B40 AC271644 */  sw    $a3, %lo(D_800E1644)($at)
+/* 09A73C 80099B3C 3C01800E */  lui   $at, %hi(gDrawTexDragonForestGhostBg) # $at, 0x800e
+/* 09A740 80099B40 AC271644 */  sw    $a3, %lo(gDrawTexDragonForestGhostBg)($at)
 /* 09A744 80099B44 8C490054 */  lw    $t1, 0x54($v0)
-/* 09A748 80099B48 3C01800E */  lui   $at, %hi(D_800E1644+0x28) # $at, 0x800e
-/* 09A74C 80099B4C AC29166C */  sw    $t1, %lo(D_800E1644+0x28)($at)
+/* 09A748 80099B48 3C01800E */  lui   $at, %hi(gDrawTexDragonForestGhostBg+0x28) # $at, 0x800e
+/* 09A74C 80099B4C AC29166C */  sw    $t1, %lo(gDrawTexDragonForestGhostBg+0x28)($at)
 /* 09A750 80099B50 8C4A0058 */  lw    $t2, 0x58($v0)
-/* 09A754 80099B54 3C01800E */  lui   $at, %hi(D_800E169C) # $at, 0x800e
+/* 09A754 80099B54 3C01800E */  lui   $at, %hi(gDrawTexFutureFunLandGhostBg) # $at, 0x800e
 /* 09A758 80099B58 24080001 */  li    $t0, 1
 /* 09A75C 80099B5C AFA60058 */  sw    $a2, 0x58($sp)
-/* 09A760 80099B60 AC2A169C */  sw    $t2, %lo(D_800E169C)($at)
+/* 09A760 80099B60 AC2A169C */  sw    $t2, %lo(gDrawTexFutureFunLandGhostBg)($at)
 /* 09A764 80099B64 AFAA004C */  sw    $t2, 0x4c($sp)
 /* 09A768 80099B68 24060005 */  li    $a2, 5
 /* 09A76C 80099B6C 310A0001 */  andi  $t2, $t0, 1
 /* 09A770 80099B70 01460019 */  multu $t2, $a2
 /* 09A774 80099B74 8C4B005C */  lw    $t3, 0x5c($v0)
-/* 09A778 80099B78 3C01800E */  lui   $at, %hi(D_800E169C+0x28) # $at, 0x800e
-/* 09A77C 80099B7C AC2B16C4 */  sw    $t3, %lo(D_800E169C+0x28)($at)
+/* 09A778 80099B78 3C01800E */  lui   $at, %hi(gDrawTexFutureFunLandGhostBg+0x28) # $at, 0x800e
+/* 09A77C 80099B7C AC2B16C4 */  sw    $t3, %lo(gDrawTexFutureFunLandGhostBg+0x28)($at)
 /* 09A780 80099B80 AFAB0048 */  sw    $t3, 0x48($sp)
-/* 09A784 80099B84 3C0F800E */  lui   $t7, %hi(D_800E153C) # $t7, 0x800e
+/* 09A784 80099B84 3C0F800E */  lui   $t7, %hi(gDrawTexDinoDomainGhostBg) # $t7, 0x800e
 /* 09A788 80099B88 AFA5005C */  sw    $a1, 0x5c($sp)
 /* 09A78C 80099B8C AFA90050 */  sw    $t1, 0x50($sp)
-/* 09A790 80099B90 3C05800E */  lui   $a1, %hi(D_800E1594) # $a1, 0x800e
+/* 09A790 80099B90 3C05800E */  lui   $a1, %hi(gDrawTexSherbetIslandGhostBg) # $a1, 0x800e
 /* 09A794 80099B94 000848C0 */  sll   $t1, $t0, 3
-/* 09A798 80099B98 25EF153C */  addiu $t7, %lo(D_800E153C) # addiu $t7, $t7, 0x153c
-/* 09A79C 80099B9C 24A51594 */  addiu $a1, %lo(D_800E1594) # addiu $a1, $a1, 0x1594
+/* 09A798 80099B98 25EF153C */  addiu $t7, %lo(gDrawTexDinoDomainGhostBg) # addiu $t7, $t7, 0x153c
+/* 09A79C 80099B9C 24A51594 */  addiu $a1, %lo(gDrawTexSherbetIslandGhostBg) # addiu $a1, $a1, 0x1594
 /* 09A7A0 80099BA0 0000C012 */  mflo  $t8
 /* 09A7A4 80099BA4 01185821 */  addu  $t3, $t0, $t8
 /* 09A7A8 80099BA8 39580001 */  xori  $t8, $t2, 1
@@ -92,21 +92,21 @@ glabel menu_ghost_data_init
 /* 09A7C0 80099BC0 ADE30000 */  sw    $v1, ($t7)
 /* 09A7C4 80099BC4 AFA30064 */  sw    $v1, 0x64($sp)
 /* 09A7C8 80099BC8 AFA70054 */  sw    $a3, 0x54($sp)
-/* 09A7CC 80099BCC 3C07800E */  lui   $a3, %hi(D_800E169C) # $a3, 0x800e
+/* 09A7CC 80099BCC 3C07800E */  lui   $a3, %hi(gDrawTexFutureFunLandGhostBg) # $a3, 0x800e
 /* 09A7D0 80099BD0 AFA40060 */  sw    $a0, 0x60($sp)
-/* 09A7D4 80099BD4 24E7169C */  addiu $a3, %lo(D_800E169C) # addiu $a3, $a3, 0x169c
+/* 09A7D4 80099BD4 24E7169C */  addiu $a3, %lo(gDrawTexFutureFunLandGhostBg) # addiu $a3, $a3, 0x169c
 /* 09A7D8 80099BD8 250D0001 */  addiu $t5, $t0, 1
 /* 09A7DC 80099BDC 0000C812 */  mflo  $t9
 /* 09A7E0 80099BE0 01196021 */  addu  $t4, $t0, $t9
 /* 09A7E4 80099BE4 000C70C0 */  sll   $t6, $t4, 3
 /* 09A7E8 80099BE8 00AEC021 */  addu  $t8, $a1, $t6
 /* 09A7EC 80099BEC AF040000 */  sw    $a0, ($t8)
-/* 09A7F0 80099BF0 3C19800E */  lui   $t9, %hi(D_800E15EC) # $t9, 0x800e
+/* 09A7F0 80099BF0 3C19800E */  lui   $t9, %hi(gDrawTexSnowflakeMountainGhostBg) # $t9, 0x800e
 /* 09A7F4 80099BF4 8FAF0058 */  lw    $t7, 0x58($sp)
-/* 09A7F8 80099BF8 273915EC */  addiu $t9, %lo(D_800E15EC) # addiu $t9, $t9, 0x15ec
+/* 09A7F8 80099BF8 273915EC */  addiu $t9, %lo(gDrawTexSnowflakeMountainGhostBg) # addiu $t9, $t9, 0x15ec
 /* 09A7FC 80099BFC 01391821 */  addu  $v1, $t1, $t9
-/* 09A800 80099C00 3C18800E */  lui   $t8, %hi(D_800E1644) # $t8, 0x800e
-/* 09A804 80099C04 27181644 */  addiu $t8, %lo(D_800E1644) # addiu $t8, $t8, 0x1644
+/* 09A800 80099C00 3C18800E */  lui   $t8, %hi(gDrawTexDragonForestGhostBg) # $t8, 0x800e
+/* 09A804 80099C04 27181644 */  addiu $t8, %lo(gDrawTexDragonForestGhostBg) # addiu $t8, $t8, 0x1644
 /* 09A808 80099C08 AC6F0028 */  sw    $t7, 0x28($v1)
 /* 09A80C 80099C0C 8FAF004C */  lw    $t7, 0x4c($sp)
 /* 09A810 80099C10 01382021 */  addu  $a0, $t1, $t8

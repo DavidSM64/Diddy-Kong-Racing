@@ -14,10 +14,10 @@ glabel func_80080BC8
 /* 0817F8 80080BF8 AC8E0000 */  sw    $t6, ($a0)
 /* 0817FC 80080BFC 27181C70 */  addiu $t8, %lo(dMenuHudSettings) # addiu $t8, $t8, 0x1c70
 /* 081800 80080C00 3C0F0600 */  lui   $t7, 0x600
-/* 081804 80080C04 3C09800E */  lui   $t1, %hi(D_800E1DB8) # $t1, 0x800e
+/* 081804 80080C04 3C09800E */  lui   $t1, %hi(gWoodPanelCount) # $t1, 0x800e
 /* 081808 80080C08 AC4F0000 */  sw    $t7, ($v0)
 /* 08180C 80080C0C AC580004 */  sw    $t8, 4($v0)
-/* 081810 80080C10 8D291DB8 */  lw    $t1, %lo(D_800E1DB8)($t1)
+/* 081810 80080C10 8D291DB8 */  lw    $t1, %lo(gWoodPanelCount)($t1)
 /* 081814 80080C14 00803025 */  move  $a2, $a0
 /* 081818 80080C18 2408FFFF */  li    $t0, -1
 /* 08181C 80080C1C 00006825 */  move  $t5, $zero
@@ -104,7 +104,7 @@ glabel func_80080BC8
 /* 081940 80080D40 AC400004 */  sw    $zero, 4($v0)
 /* 081944 80080D44 AC530000 */  sw    $s3, ($v0)
 /* 081948 80080D48 8CC20000 */  lw    $v0, ($a2)
-/* 08194C 80080D4C 3C09800E */  lui   $t1, %hi(D_800E1DB8) # $t1, 0x800e
+/* 08194C 80080D4C 3C09800E */  lui   $t1, %hi(gWoodPanelCount) # $t1, 0x800e
 /* 081950 80080D50 244F0008 */  addiu $t7, $v0, 8
 /* 081954 80080D54 ACCF0000 */  sw    $t7, ($a2)
 /* 081958 80080D58 8D780000 */  lw    $t8, ($t3)
@@ -150,7 +150,7 @@ glabel func_80080BC8
 /* 0819F8 80080DF8 00000000 */  nop   
 /* 0819FC 80080DFC 01CC7821 */  addu  $t7, $t6, $t4
 /* 081A00 80080E00 AC4F0004 */  sw    $t7, 4($v0)
-/* 081A04 80080E04 8D291DB8 */  lw    $t1, %lo(D_800E1DB8)($t1)
+/* 081A04 80080E04 8D291DB8 */  lw    $t1, %lo(gWoodPanelCount)($t1)
 /* 081A08 80080E08 00000000 */  nop   
 .L80080E0C:
 /* 081A0C 80080E0C 24E70001 */  addiu $a3, $a3, 1
@@ -159,9 +159,9 @@ glabel func_80080BC8
 /* 081A18 80080E18 00000000 */   nop   
 .L80080E1C:
 /* 081A1C 80080E1C 3C0A800E */  lui   $t2, %hi(D_800E1DB4) # $t2, 0x800e
-/* 081A20 80080E20 3C01800E */  lui   $at, %hi(D_800E1DB8) # $at, 0x800e
+/* 081A20 80080E20 3C01800E */  lui   $at, %hi(gWoodPanelCount) # $at, 0x800e
 /* 081A24 80080E24 254A1DB4 */  addiu $t2, %lo(D_800E1DB4) # addiu $t2, $t2, 0x1db4
-/* 081A28 80080E28 AC201DB8 */  sw    $zero, %lo(D_800E1DB8)($at)
+/* 081A28 80080E28 AC201DB8 */  sw    $zero, %lo(gWoodPanelCount)($at)
 /* 081A2C 80080E2C 8D590000 */  lw    $t9, ($t2)
 /* 081A30 80080E30 24100001 */  li    $s0, 1
 /* 081A34 80080E34 0219C023 */  subu  $t8, $s0, $t9

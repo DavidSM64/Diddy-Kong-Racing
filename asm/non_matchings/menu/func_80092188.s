@@ -57,10 +57,10 @@ glabel func_80092188
 .L80092248:
 /* 092E48 80092248 3C18800E */  lui   $t8, %hi(gTrackIdForPreview) # $t8, 0x800e
 /* 092E4C 8009224C 8F18F4C4 */  lw    $t8, %lo(gTrackIdForPreview)($t8)
-/* 092E50 80092250 3C02800E */  lui   $v0, %hi(D_800E0758) # $v0, 0x800e
+/* 092E50 80092250 3C02800E */  lui   $v0, %hi(gTTVoiceLines) # $v0, 0x800e
 /* 092E54 80092254 0018C840 */  sll   $t9, $t8, 1
 /* 092E58 80092258 00591021 */  addu  $v0, $v0, $t9
-/* 092E5C 8009225C 84420758 */  lh    $v0, %lo(D_800E0758)($v0)
+/* 092E5C 8009225C 84420758 */  lh    $v0, %lo(gTTVoiceLines)($v0)
 /* 092E60 80092260 240DFFFF */  li    $t5, -1
 /* 092E64 80092264 11A2000B */  beq   $t5, $v0, .L80092294
 /* 092E68 80092268 00000000 */   nop   
@@ -230,24 +230,24 @@ glabel L8009246C
 /* 0930C8 800924C8 AFAE003C */   sw    $t6, 0x3c($sp)
 .L800924CC:
 /* 0930CC 800924CC 84426838 */  lh    $v0, %lo(D_80126830 + 8)($v0)
-/* 0930D0 800924D0 3C19800E */  lui   $t9, %hi(D_800E0418) # $t9, 0x800e
+/* 0930D0 800924D0 3C19800E */  lui   $t9, %hi(gTracksMenuAdventureHighlightIndex) # $t9, 0x800e
 /* 0930D4 800924D4 18400008 */  blez  $v0, .L800924F8
 /* 0930D8 800924D8 00000000 */   nop   
-/* 0930DC 800924DC 8F390418 */  lw    $t9, %lo(D_800E0418)($t9)
-/* 0930E0 800924E0 3C01800E */  lui   $at, %hi(D_800E0418) # $at, 0x800e
+/* 0930DC 800924DC 8F390418 */  lw    $t9, %lo(gTracksMenuAdventureHighlightIndex)($t9)
+/* 0930E0 800924E0 3C01800E */  lui   $at, %hi(gTracksMenuAdventureHighlightIndex) # $at, 0x800e
 /* 0930E4 800924E4 13200004 */  beqz  $t9, .L800924F8
 /* 0930E8 800924E8 240F0001 */   li    $t7, 1
-/* 0930EC 800924EC AC200418 */  sw    $zero, %lo(D_800E0418)($at)
+/* 0930EC 800924EC AC200418 */  sw    $zero, %lo(gTracksMenuAdventureHighlightIndex)($at)
 /* 0930F0 800924F0 10000189 */  b     .L80092B18
 /* 0930F4 800924F4 AFAF0034 */   sw    $t7, 0x34($sp)
 .L800924F8:
 /* 0930F8 800924F8 04410187 */  bgez  $v0, .L80092B18
-/* 0930FC 800924FC 3C18800E */   lui   $t8, %hi(D_800E0418) # $t8, 0x800e
-/* 093100 80092500 8F180418 */  lw    $t8, %lo(D_800E0418)($t8)
+/* 0930FC 800924FC 3C18800E */   lui   $t8, %hi(gTracksMenuAdventureHighlightIndex) # $t8, 0x800e
+/* 093100 80092500 8F180418 */  lw    $t8, %lo(gTracksMenuAdventureHighlightIndex)($t8)
 /* 093104 80092504 241F0001 */  li    $ra, 1
 /* 093108 80092508 17000183 */  bnez  $t8, .L80092B18
-/* 09310C 8009250C 3C01800E */   lui   $at, %hi(D_800E0418) # $at, 0x800e
-/* 093110 80092510 AC3F0418 */  sw    $ra, %lo(D_800E0418)($at)
+/* 09310C 8009250C 3C01800E */   lui   $at, %hi(gTracksMenuAdventureHighlightIndex) # $at, 0x800e
+/* 093110 80092510 AC3F0418 */  sw    $ra, %lo(gTracksMenuAdventureHighlightIndex)($at)
 /* 093114 80092514 10000180 */  b     .L80092B18
 /* 093118 80092518 AFBF0034 */   sw    $ra, 0x34($sp)
 glabel L8009251C
@@ -431,10 +431,10 @@ glabel L80092740
 /* 093394 80092794 AFB8003C */  sw    $t8, 0x3c($sp)
 .L80092798:
 /* 093398 80092798 84636830 */  lh    $v1, %lo(D_80126830)($v1)
-/* 09339C 8009279C 3C02800E */  lui   $v0, %hi(D_800E0414) # $v0, 0x800e
+/* 09339C 8009279C 3C02800E */  lui   $v0, %hi(gTracksMenuTimeTrialHighlightIndex) # $v0, 0x800e
 /* 0933A0 800927A0 18600015 */  blez  $v1, .L800927F8
 /* 0933A4 800927A4 00000000 */   nop   
-/* 0933A8 800927A8 8C420414 */  lw    $v0, %lo(D_800E0414)($v0)
+/* 0933A8 800927A8 8C420414 */  lw    $v0, %lo(gTracksMenuTimeTrialHighlightIndex)($v0)
 /* 0933AC 800927AC 3C048012 */  lui   $a0, %hi(D_80126848) # $a0, 0x8012
 /* 0933B0 800927B0 18400011 */  blez  $v0, .L800927F8
 /* 0933B4 800927B4 00000000 */   nop   
@@ -445,20 +445,20 @@ glabel L80092740
 /* 0933C8 800927C8 0C001223 */  jal   func_8000488C
 /* 0933CC 800927CC 00000000 */   nop   
 /* 0933D0 800927D0 3C038012 */  lui   $v1, %hi(D_80126830) # $v1, 0x8012
-/* 0933D4 800927D4 3C02800E */  lui   $v0, %hi(D_800E0414) # $v0, 0x800e
-/* 0933D8 800927D8 8C420414 */  lw    $v0, %lo(D_800E0414)($v0)
+/* 0933D4 800927D4 3C02800E */  lui   $v0, %hi(gTracksMenuTimeTrialHighlightIndex) # $v0, 0x800e
+/* 0933D8 800927D8 8C420414 */  lw    $v0, %lo(gTracksMenuTimeTrialHighlightIndex)($v0)
 /* 0933DC 800927DC 84636830 */  lh    $v1, %lo(D_80126830)($v1)
 /* 0933E0 800927E0 00000000 */  nop   
 /* 0933E4 800927E4 244EFFFF */  addiu $t6, $v0, -1
 .L800927E8:
-/* 0933E8 800927E8 3C01800E */  lui   $at, %hi(D_800E0414) # $at, 0x800e
+/* 0933E8 800927E8 3C01800E */  lui   $at, %hi(gTracksMenuTimeTrialHighlightIndex) # $at, 0x800e
 /* 0933EC 800927EC 240F0001 */  li    $t7, 1
-/* 0933F0 800927F0 AC2E0414 */  sw    $t6, %lo(D_800E0414)($at)
+/* 0933F0 800927F0 AC2E0414 */  sw    $t6, %lo(gTracksMenuTimeTrialHighlightIndex)($at)
 /* 0933F4 800927F4 AFAF0034 */  sw    $t7, 0x34($sp)
 .L800927F8:
 /* 0933F8 800927F8 046100C7 */  bgez  $v1, .L80092B18
-/* 0933FC 800927FC 3C19800E */   lui   $t9, %hi(D_800E0414) # $t9, 0x800e
-/* 093400 80092800 8F390414 */  lw    $t9, %lo(D_800E0414)($t9)
+/* 0933FC 800927FC 3C19800E */   lui   $t9, %hi(gTracksMenuTimeTrialHighlightIndex) # $t9, 0x800e
+/* 093400 80092800 8F390414 */  lw    $t9, %lo(gTracksMenuTimeTrialHighlightIndex)($t9)
 /* 093404 80092804 3C048012 */  lui   $a0, %hi(D_80126840) # $a0, 0x8012
 /* 093408 80092808 1F2000C4 */  bgtz  $t9, .L80092B1C
 /* 09340C 8009280C 8FAF003C */   lw    $t7, 0x3c($sp)
@@ -486,12 +486,12 @@ glabel L80092740
 /* 09345C 8009285C 0C000741 */  jal   play_sound_global
 /* 093460 80092860 24A56848 */   addiu $a1, %lo(D_80126848) # addiu $a1, $a1, 0x6848
 .L80092864:
-/* 093464 80092864 3C0E800E */  lui   $t6, %hi(D_800E0414) # $t6, 0x800e
-/* 093468 80092868 8DCE0414 */  lw    $t6, %lo(D_800E0414)($t6)
-/* 09346C 8009286C 3C01800E */  lui   $at, %hi(D_800E0414) # $at, 0x800e
+/* 093464 80092864 3C0E800E */  lui   $t6, %hi(gTracksMenuTimeTrialHighlightIndex) # $t6, 0x800e
+/* 093468 80092868 8DCE0414 */  lw    $t6, %lo(gTracksMenuTimeTrialHighlightIndex)($t6)
+/* 09346C 8009286C 3C01800E */  lui   $at, %hi(gTracksMenuTimeTrialHighlightIndex) # $at, 0x800e
 /* 093470 80092870 25CF0001 */  addiu $t7, $t6, 1
 /* 093474 80092874 100000A8 */  b     .L80092B18
-/* 093478 80092878 AC2F0414 */   sw    $t7, %lo(D_800E0414)($at)
+/* 093478 80092878 AC2F0414 */   sw    $t7, %lo(gTracksMenuTimeTrialHighlightIndex)($at)
 glabel L8009287C
 /* 09347C 8009287C 24010002 */  li    $at, 2
 /* 093480 80092880 1461003E */  bne   $v1, $at, .L8009297C
@@ -574,9 +574,9 @@ glabel L8009287C
 /* 09359C 8009299C AC3FF47C */  sw    $ra, %lo(gMenuDelay)($at)
 /* 0935A0 800929A0 0C01E2AB */  jal   set_background_draw_function
 /* 0935A4 800929A4 00002025 */   move  $a0, $zero
-/* 0935A8 800929A8 3C01800E */  lui   $at, %hi(D_800E097C) # $at, 0x800e
+/* 0935A8 800929A8 3C01800E */  lui   $at, %hi(gIsInTracksMenu) # $at, 0x800e
 /* 0935AC 800929AC 0C030060 */  jal   disable_new_screen_transitions
-/* 0935B0 800929B0 AC20097C */   sw    $zero, %lo(D_800E097C)($at)
+/* 0935B0 800929B0 AC20097C */   sw    $zero, %lo(gIsInTracksMenu)($at)
 /* 0935B4 800929B4 3C04800E */  lui   $a0, %hi(sMenuTransitionFadeIn) # $a0, 0x800e
 /* 0935B8 800929B8 0C030076 */  jal   transition_begin
 /* 0935BC 800929BC 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
@@ -711,7 +711,7 @@ glabel L8009287C
 /* 093788 80092B88 10200006 */  beqz  $at, .L80092BA4
 /* 09378C 80092B8C 00000000 */   nop   
 /* 093790 80092B90 8DEF69C8 */  lw    $t7, %lo(D_801269C8)($t7)
-/* 093794 80092B94 3C04800E */  lui   $a0, %hi(D_800E0414) # $a0, 0x800e
+/* 093794 80092B94 3C04800E */  lui   $a0, %hi(gTracksMenuTimeTrialHighlightIndex) # $a0, 0x800e
 /* 093798 80092B98 29E10004 */  slti  $at, $t7, 4
 /* 09379C 80092B9C 14200005 */  bnez  $at, .L80092BB4
 /* 0937A0 80092BA0 00000000 */   nop   
@@ -721,12 +721,12 @@ glabel L8009287C
 /* 0937AC 80092BAC 10000004 */  b     .L80092BC0
 /* 0937B0 80092BB0 00000000 */   nop   
 .L80092BB4:
-/* 0937B4 80092BB4 8C840414 */  lw    $a0, %lo(D_800E0414)($a0)
+/* 0937B4 80092BB4 8C840414 */  lw    $a0, %lo(gTracksMenuTimeTrialHighlightIndex)($a0)
 /* 0937B8 80092BB8 0C00392F */  jal   set_time_trial_enabled
 /* 0937BC 80092BBC 00000000 */   nop   
 .L80092BC0:
-/* 0937C0 80092BC0 3C19800E */  lui   $t9, %hi(D_800E0418) # $t9, 0x800e
-/* 0937C4 80092BC4 8F390418 */  lw    $t9, %lo(D_800E0418)($t9)
+/* 0937C0 80092BC0 3C19800E */  lui   $t9, %hi(gTracksMenuAdventureHighlightIndex) # $t9, 0x800e
+/* 0937C4 80092BC4 8F390418 */  lw    $t9, %lo(gTracksMenuAdventureHighlightIndex)($t9)
 /* 0937C8 80092BC8 3C01800E */  lui   $at, %hi(gIsInAdventureTwo) # $at, 0x800e
 /* 0937CC 80092BCC AC39F494 */  sw    $t9, %lo(gIsInAdventureTwo)($at)
 /* 0937D0 80092BD0 8FBF001C */  lw    $ra, 0x1c($sp)
