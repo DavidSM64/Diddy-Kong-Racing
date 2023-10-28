@@ -4231,7 +4231,7 @@ u8 func_8001B4FC(s32 trackId) {
     gBeatStaffGhost = FALSE;
     gTimeTrialStaffGhost = FALSE;
     settings = get_settings();
-    if (get_map_default_vehicle(trackId) == D_8011AE82) {
+    if (get_map_default_vehicle(trackId) == (Vehicle) D_8011AE82) {
         mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
         temp_v0 = (u16 *) get_misc_asset(ASSET_MISC_24);
         for (i = 0; mainTrackIds[i] != -1 && trackId != mainTrackIds[i]; i++) { }
