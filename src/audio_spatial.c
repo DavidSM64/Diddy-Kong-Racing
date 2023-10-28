@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80008040 */
 
-#include "unknown_008C40.h"
+#include "audio_spatial.h"
 #include "types.h"
 #include "macros.h"
 #include "audio_internal.h"
@@ -65,7 +65,7 @@ void func_80008040(void) {
     func_80008174();
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80008040.s")
+GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80008040.s")
 #endif
 
 void func_80008140(void) {
@@ -127,10 +127,10 @@ void func_80008174(void) {
     D_8011AC18 = 0;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80008174.s")
+GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80008174.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80008438.s")
+GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80008438.s")
 
 s32 func_800090C0(f32 arg0, f32 arg1, s32 arg2) {
     s32 temp_v1;
@@ -324,7 +324,7 @@ void func_80009968(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80009968.s")
+GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80009968.s")
 #endif
 
 s32 func_800099EC(u8 arg0) {
@@ -424,10 +424,10 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80009B7C.s")
+GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80009B7C.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80009D6C.s")
+GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80009D6C.s")
 
 #ifdef NON_EQUIVALENT
 extern unk80119C58 **D_80119C5C;
@@ -453,7 +453,7 @@ void func_8000A184(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_8000A184.s")
+GLOBAL_ASM("asm/non_matchings/audio_spatial/func_8000A184.s")
 #endif
 
 void func_8000A2E8(s32 arg0) {

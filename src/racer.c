@@ -11,7 +11,7 @@
 #include "structs.h"
 #include "asset_enums.h"
 #include "save_data.h"
-#include "unknown_008C40.h"
+#include "audio_spatial.h"
 #include "objects.h"
 #include "audio.h"
 #include "object_functions.h"

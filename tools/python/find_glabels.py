@@ -57,7 +57,7 @@ def _find_glabels(asm):
 
 def main():
     FileUtil.set_working_dir_to_project_base()
-    contents = FileUtil.get_text_from_file('asm/non_matchings/unknown_005740/func_80005254.s')
+    contents = FileUtil.get_text_from_file('asm/non_matchings/audio_vehicle/func_80005254.s')
     glabels = _find_glabels(contents)
     print('%d undeclared labels found:' % len(glabels))
     for glabel in glabels:

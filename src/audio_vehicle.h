@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_005740_H_
-#define _UNKNOWN_005740_H_
+#ifndef _AUDIO_VEHICLE_H_
+#define _AUDIO_VEHICLE_H_
 
 #include "types.h"
 #include "structs.h"

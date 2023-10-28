@@ -1,5 +1,5 @@
-#ifndef _UNKNOWN_008C40_H_
-#define _UNKNOWN_008C40_H_
+#ifndef _AUDIO_SPATIAL_H_
+#define _AUDIO_SPATIAL_H_
 
 #include "types.h"
 #include "libc/math.h"

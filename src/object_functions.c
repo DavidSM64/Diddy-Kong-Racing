@@ -14,7 +14,7 @@
 #include "racer.h"
 #include "game.h"
 #include "audio.h"
-#include "unknown_008C40.h"
+#include "audio_spatial.h"
 #include "objects.h"
 #include "particles.h"
 #include "tracks.h"

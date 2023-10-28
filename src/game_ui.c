@@ -19,7 +19,7 @@
 #include "rcp.h"
 #include "audiosfx.h"
 #include "printf.h"
-#include "unknown_008C40.h"
+#include "audio_spatial.h"
 #include "controller.h"
 
 /************ .data ************/

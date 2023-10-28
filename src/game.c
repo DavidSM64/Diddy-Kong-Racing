@@ -34,7 +34,7 @@
 #include "printf.h"
 #include "fade_transition.h"
 #include "borders.h"
-#include "unknown_008C40.h"
+#include "audio_spatial.h"
 #include "tracks.h"
 #include "game_text.h"
 #include "game_ui.h"

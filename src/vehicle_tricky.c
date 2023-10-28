@@ -9,7 +9,7 @@
 #include "audio.h"
 #include "objects.h"
 #include "audio_vehicle.h"
-#include "unknown_008C40.h"
+#include "audio_spatial.h"
 #include "menu.h"
 #include "game.h"
 #include "particles.h"

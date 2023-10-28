@@ -24,7 +24,7 @@
 #include "object_models.h"
 #include "lights.h"
 #include "game_ui.h"
-#include "unknown_008C40.h"
+#include "audio_spatial.h"
 #include "controller.h"
 #include "game_text.h"
 #include "audiosfx.h"

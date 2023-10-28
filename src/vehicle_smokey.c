@@ -8,7 +8,7 @@
 #include "math_util.h"
 #include "objects.h"
 #include "object_functions.h"
-#include "unknown_008C40.h"
+#include "audio_spatial.h"
 #include "racer.h"
 #include "particles.h"
 

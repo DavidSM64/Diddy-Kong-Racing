@@ -5,7 +5,7 @@
 
 #include "types.h"
 #include "macros.h"
-#include "unknown_008C40.h"
+#include "audio_spatial.h"
 #include "audiosfx.h"
 #include "objects.h"
 #include "controller.h"
@@ -28,7 +28,7 @@ s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
 VehicleSoundData *D_80119C30[2];
 VehicleSoundData *gRacerSound;
 Object_Racer *gSoundRacerObj;
-unk80115D18 *D_80119C40; // This should be in unknown_008C40?
+unk80115D18 *D_80119C40; // This should be in audio_spatial?
 SoundMask **D_80119C44;
 unk80119C48 **D_80119C48; //0x24 struct size - 0x5A0 total size - should be 40 elements
 u8 D_80119C4C;
