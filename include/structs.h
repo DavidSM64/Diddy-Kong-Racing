@@ -1283,7 +1283,7 @@ typedef struct Object_Racer {
   /* 0x193 */ s8 lap;
   /* 0x194 */ s8 countLap;
   /* 0x195 */ s8 magnetLevel3;
-  /* 0x196 */ s16 unk196;
+  /* 0x196 */ s16 cameraYaw;
   /* 0x198 */ s16 unk198;
   /* 0x19A */ s16 unk19A;
   /* 0x19C */ s16 unk19C;

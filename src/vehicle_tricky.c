@@ -8,7 +8,7 @@
 #include "macros.h"
 #include "audio.h"
 #include "objects.h"
-#include "unknown_005740.h"
+#include "audio_vehicle.h"
 #include "unknown_008C40.h"
 #include "menu.h"
 #include "game.h"

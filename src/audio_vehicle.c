@@ -1,7 +1,7 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80004B40 */
 
-#include "unknown_005740.h"
+#include "audio_vehicle.h"
 
 #include "types.h"
 #include "macros.h"
@@ -12,10 +12,11 @@
 #include "racer.h"
 #include "PR/libaudio.h"
 #include "game_ui.h"
+#include "math_util.h"
 
 /************ .data ************/
 
-u8 D_800DC6D0 = 1;
+u8 gVehicleSounds = TRUE;
 s32 D_800DC6D4 = 0; // Currently unknown, might be a different type.
 s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
 
@@ -25,7 +26,7 @@ s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
 
 unk80119C38 *D_80119C30[2];
 unk80119C38 *D_80119C38;
-Object_Racer *D_80119C3C;
+Object_Racer *gSoundRacer;
 unk80115D18 *D_80119C40; // This should be in unknown_008C40?
 SoundMask **D_80119C44;
 unk80119C48 **D_80119C48; //0x24 struct size - 0x5A0 total size - should be 40 elements
@@ -161,18 +162,23 @@ loop_10:
     return temp_v0_3;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80004B40.s")
+GLOBAL_ASM("asm/non_matchings/audio_vehicle/func_80004B40.s")
 #endif
 
-void func_800050D0(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
-    if ((D_800DC6D0 != 0)) {
-        D_80119C3C = &obj->unk64->racer;
-        D_80119C38 = (unk80119C38 *) D_80119C3C->unk118;
+/**
+ * Handle the sound of the engine and braking during gameplay.
+ * Check which vehicle is being used, update the position of the audio,
+ * then call a function to handle that particular vehicles audio.
+*/
+void racer_vehicle_sounds(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
+    if (gVehicleSounds) {
+        gSoundRacer = &obj->unk64->racer;
+        D_80119C38 = (unk80119C38 *) gSoundRacer->unk118;
         if (D_80119C38 != NULL) {
             if (func_8001139C()) {
-                if (D_80119C3C->playerIndex != PLAYER_COMPUTER) {
-                    buttonsHeld = get_buttons_held_from_player(D_80119C3C->playerIndex);
-                    buttonsPressed = get_buttons_pressed_from_player(D_80119C3C->playerIndex);
+                if (gSoundRacer->playerIndex != PLAYER_COMPUTER) {
+                    buttonsHeld = get_buttons_held_from_player(gSoundRacer->playerIndex);
+                    buttonsPressed = get_buttons_pressed_from_player(gSoundRacer->playerIndex);
                 }
             }
             if (D_80119C38->unk0[0] == 0) {
@@ -183,11 +189,11 @@ void func_800050D0(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
                 D_80119C38->unk78 = obj->segment.trans.x_position;
                 D_80119C38->unk7C = obj->segment.trans.y_position;
                 D_80119C38->unk80 = obj->segment.trans.z_position;
-                switch (D_80119C3C->vehicleIDPrev) {
-                    case 1:
-                        func_80005D08(obj, buttonsPressed, buttonsHeld, updateRate);
+                switch (gSoundRacer->vehicleIDPrev) {
+                    case VEHICLE_HOVERCRAFT:
+                        racer_hovercraft_sound(obj, buttonsPressed, buttonsHeld, updateRate);
                         break;
-                    case 2:
+                    case VEHICLE_PLANE:
                         func_800063EC(obj, buttonsPressed, buttonsHeld, updateRate);
                         break;
                     default:
@@ -218,10 +224,10 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
     s32 innerLoop;
     s32 var_v1_3;
 
-    if (D_80119C3C->unk1FB != 0) {
+    if (gSoundRacer->unk1FB != 0) {
         var_f0 = 12.0f;
     } else {
-        var_f0 = D_80119C3C->velocity;
+        var_f0 = gSoundRacer->velocity;
     }
     if (var_f0 < 0.0f) {
         var_f0 = -var_f0;
@@ -249,9 +255,9 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
             temp_f14 = (var_s0 - D_80119C38->unk4[0][innerLoop]) / ((f32) (D_80119C38->unk4[0][innerLoop + 1] - D_80119C38->unk4[0][innerLoop]));
             temp_f16 = D_80119C38->unk18[innerLoop] / 10000.0f;
             temp_f18 = D_80119C38->unk18[innerLoop + 1] / 10000.0f;
-            if (var_s0 > 50 && D_80119C3C->bananas != 0) {
-                if (D_80119C3C->bananas <= 10) {
-                    var_v1_3 = D_80119C3C->bananas;
+            if (var_s0 > 50 && gSoundRacer->bananas != 0) {
+                if (gSoundRacer->bananas <= 10) {
+                    var_v1_3 = gSoundRacer->bananas;
                 } else {                    
                     var_v1_3 = 10;
                 }
@@ -265,18 +271,18 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
                 D_80119C38->unk3C *= 0.95;
                 var_f2 = ((temp_f18 - temp_f16) * temp_f14) + temp_f16 + D_80119C38->unk3C;
             }
-            if (D_80119C3C->drift_direction != 0) {
+            if (gSoundRacer->drift_direction != 0) {
                 D_80119C38->unk40 += ((0.13 - D_80119C38->unk40) / 8);
             } else {
                 D_80119C38->unk40 /= 4;
             }
             var_f2 += D_80119C38->unk40;
-            if ((D_80119C3C->groundedWheels == 0) && (D_80119C3C->playerIndex != PLAYER_COMPUTER)) {
+            if ((gSoundRacer->groundedWheels == 0) && (gSoundRacer->playerIndex != PLAYER_COMPUTER)) {
                 var_f2 += 0.3;
             }
             var_f12 = (var_f2 - D_80119C38->unk5C[outerLoop]) / 2;
             var_f14 = (temp_f4 - D_80119C38->unk54[outerLoop]) / 2;
-            if (D_80119C3C->playerIndex != PLAYER_COMPUTER) {
+            if (gSoundRacer->playerIndex != PLAYER_COMPUTER) {
                 if (get_random_number_from_range(0, 10) < 7) {
                     D_80119C38->unk90 = (D_80119C38->unk90 + get_random_number_from_range(0, 10)) - 5;
                     if (D_80119C38->unk90 > 5) {
@@ -308,17 +314,17 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
             }
         }
     }
-    if (((D_80119C3C->unk10 != 0) || (D_80119C3C->unk14 != 0) || 
-        !(buttonsHeld & B_BUTTON) || (D_80119C3C->velocity > -0.1) || 
-        (D_80119C3C->vehicleID == 4)) && (D_80119C38->unkA8 != 0)
+    if (((gSoundRacer->unk10 != 0) || (gSoundRacer->unk14 != 0) || 
+        !(buttonsHeld & B_BUTTON) || (gSoundRacer->velocity > -0.1) || 
+        (gSoundRacer->vehicleID == 4)) && (D_80119C38->unkA8 != 0)
     ) {
             func_8000488C(D_80119C38->unkA8);
             D_80119C38->unkA8 = 0;
-    } else if ((buttonsPressed & B_BUTTON) && (D_80119C38->unkA8 == 0) && (D_80119C3C->playerIndex >= 0)) {
-        if (D_80119C3C->velocity < 0.0f) {
-            var_f20 = -D_80119C3C->velocity;
+    } else if ((buttonsPressed & B_BUTTON) && (D_80119C38->unkA8 == 0) && (gSoundRacer->playerIndex >= 0)) {
+        if (gSoundRacer->velocity < 0.0f) {
+            var_f20 = -gSoundRacer->velocity;
         } else {
-            var_f20 = D_80119C3C->velocity;
+            var_f20 = gSoundRacer->velocity;
         }
         if (var_f20 > 12.0f) {
             var_f20 = 12.0f;
@@ -333,7 +339,7 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
         D_80119C38->unkD0 = 0;
     }
     if (D_80119C38->unkA8 != 0) {
-        if (D_80119C3C->groundedWheels == 0) {
+        if (gSoundRacer->groundedWheels == 0) {
             D_80119C38->unkD0 += updateRate;
         } else {
             D_80119C38->unkD0 = 0;
@@ -351,69 +357,62 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80005254.s")
+GLOBAL_ASM("asm/non_matchings/audio_vehicle/func_80005254.s")
 #endif
 
-void func_80005D08(Object *arg0, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
+#include "printf.h"
+
+void racer_hovercraft_sound(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 updateRate) {
     UNUSED s32 pad;
-    f32 var_f16;
+    f32 velocity;
     f32 new_var;
     u16 temp_f10;
-    f32 var_f2;
+    f32 angleSine;
     f32 var_f18;
     f32 var_f14;
-    f32 temp_f14;
-    s32 var_v0;
+    s32 angleDiff;
     s32 var_a1;
     u8 var_t0;
     u8 i;
 
     if (func_8001139C() == 0) {
-        temp_f14 = arg0->segment.x_velocity;
-        var_f2 = arg0->segment.z_velocity;
-        var_f16 = sqrtf((temp_f14 * temp_f14) + (var_f2 * var_f2));
+        velocity = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) + (obj->segment.z_velocity * obj->segment.z_velocity));
     } else {
-        var_f16 = 0.0f;
+        velocity = 0.0f;
     }
     var_f14 = D_80119C38->unkD4;
     if (buttonsHeld & A_BUTTON) {
-        D_80119C38->unkA4 += D_80119C38->unkB0 * (f32) updateRate;
-        if (D_80119C38->unkC8 < D_80119C38->unkA4) {
-            D_80119C38->unkA4 = D_80119C38->unkC8;
+        D_80119C38->throttlePitch += D_80119C38->throttlePitchVel * updateRate;
+        if (D_80119C38->throttlePitch > D_80119C38->throttlePitchCeil) {
+            D_80119C38->throttlePitch = D_80119C38->throttlePitchCeil;
         }
     } else {
-        D_80119C38->unkA4 -= D_80119C38->unkB4 * (f32) updateRate;
+        D_80119C38->throttlePitch -= D_80119C38->throttlePitchDecay * updateRate;
     }
-    if (D_80119C38->unkA4 < 0.0f) {
-        D_80119C38->unkA4 = 0.0f;
+    if (D_80119C38->throttlePitch < 0.0f) {
+        D_80119C38->throttlePitch = 0.0f;
     }
-    var_v0 = (-D_80119C3C->unk196 - (D_80119C3C->steerVisualRotation & 0xFFFF)) + 0x8000;
-    if (var_v0 > 0x8000) {
-        var_v0 -= 0xFFFF;
-    }
-    if (var_v0 < -0x8000) {
-        var_v0 += 0xFFFF;
-    }
-    var_f2 = sins_f(var_v0);
-    if (var_f2 < 0.0f) {
-        var_f2 = -var_f2;
-    }
-    if (check_if_showing_cutscene_camera() == 0 && func_8001139C() == 0) {
-        var_f18 = ((D_80119C38->unkBC * var_f2 * var_f16) / 15.0);
+
+    angleDiff = (-gSoundRacer->cameraYaw - (gSoundRacer->steerVisualRotation & 0xFFFF)) + 0x8000;
+    WRAP(angleDiff, -0x8000, 0x8000);
+    angleSine = sins_f(angleDiff);
+    angleSine = ABSF(angleSine);
+    if (check_if_showing_cutscene_camera() == FALSE && func_8001139C() == 0) {
+        var_f18 = (D_80119C38->unkBC * angleSine * velocity) / 15.0;
     } else {
         var_f18 = 0.0f;
     }
     if (func_800A0190() == FALSE) {
-        D_80119C38->unkA4 = 0.0f;
+        D_80119C38->throttlePitch = 0.0f;
     }
-    if (var_f16 > 10.0) {
-        var_f16 -= 10.0;
+    if (velocity > 10.0) {
+        velocity -= 10.0;
     } else {
-        var_f16 = 0.0f;
+        velocity = 0.0f;
     }
-    if (var_f16 != 0.0 && D_80119C3C->bananas != 0) {
-        if (D_80119C3C->bananas <= 10) {
-            var_a1 = D_80119C3C->bananas;
+    if (velocity != 0.0 && gSoundRacer->bananas != 0) {
+        if (gSoundRacer->bananas <= 10) {
+            var_a1 = gSoundRacer->bananas;
         } else {
             var_a1 = 10;
         }
@@ -427,8 +426,8 @@ void func_80005D08(Object *arg0, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32
         D_80119C38->unk3C *= 0.95;
         var_f14 += D_80119C38->unk3C;
     }
-    var_f14 += ((var_f16 * D_80119C38->unkCC) + var_f18 + D_80119C38->unkA4);
-    if ((D_80119C3C->playerIndex != -1) && (D_80119C3C->groundedWheels == 0) && (D_80119C3C->waterTimer < 4)) {
+    var_f14 += ((velocity * D_80119C38->unkCC) + var_f18 + D_80119C38->throttlePitch);
+    if ((gSoundRacer->playerIndex != -1) && (gSoundRacer->groundedWheels == 0) && (gSoundRacer->waterTimer < 4)) {
         if (func_8001139C() == 0) {
             var_f14 += 0.3;
         }
@@ -495,20 +494,20 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
     }
     var_f14 = D_80119C38->unkD4;
     if (buttonsHeld & A_BUTTON) {
-        D_80119C38->unkA4 += D_80119C38->unkB0 * (f32) updateRate;
-        if (D_80119C38->unkC8 < D_80119C38->unkA4) {
-            D_80119C38->unkA4 = D_80119C38->unkC8;
+        D_80119C38->throttlePitch += D_80119C38->throttlePitchVel * (f32) updateRate;
+        if (D_80119C38->throttlePitchCeil < D_80119C38->throttlePitch) {
+            D_80119C38->throttlePitch = D_80119C38->throttlePitchCeil;
         }
     } else {
-        D_80119C38->unkA4 -= D_80119C38->unkB4 * (f32) updateRate;
+        D_80119C38->throttlePitch -= D_80119C38->throttlePitchDecay * (f32) updateRate;
     }
-    if (D_80119C38->unkA4 < 0) {
-        D_80119C38->unkA4 = 0;
+    if (D_80119C38->throttlePitch < 0) {
+        D_80119C38->throttlePitch = 0;
     }
     if (func_800A0190() == 0) {
-        D_80119C38->unkA4 = 0.0f;
+        D_80119C38->throttlePitch = 0.0f;
     }
-    var_f14 += D_80119C38->unkA4;
+    var_f14 += D_80119C38->throttlePitch;
     sp28 = sins_f(obj->segment.trans.x_rotation);
     var_f2 = sins_f(obj->segment.trans.z_rotation) * D_80119C38->unkC0;
     if (var_f2 < 0.0f) {
@@ -521,9 +520,9 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
     }
     var_f14 += ((D_80119C38->unkC4 * sp28) + var_f2);
     var_f14 += (var_f18 * D_80119C38->unkCC);
-    if ((var_f18 != 0.0) && (D_80119C3C->bananas != 0)) {
-        if (D_80119C3C->bananas <= 10) {
-            var_a0 = D_80119C3C->bananas;
+    if ((var_f18 != 0.0) && (gSoundRacer->bananas != 0)) {
+        if (gSoundRacer->bananas <= 10) {
+            var_a0 = gSoundRacer->bananas;
         } else {
             var_a0 = 10;
         }
@@ -543,10 +542,10 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
     }
     D_80119C38->unk5C[1] = 1.0f;
     D_80119C38->unk54[1] = 0.0f;
-    if ((D_80119C3C->playerIndex != PLAYER_COMPUTER) && (D_80119C3C->spinout_timer != 0) && !D_80119C38->unkD8) {
+    if ((gSoundRacer->playerIndex != PLAYER_COMPUTER) && (gSoundRacer->spinout_timer != 0) && !D_80119C38->unkD8) {
         D_80119C38->unkD8 = TRUE;
         play_sound_global(SOUND_UNK_13D, &D_80119C38->unkDC);
-    } else if (D_80119C3C->spinout_timer == 0) {
+    } else if (gSoundRacer->spinout_timer == 0) {
         D_80119C38->unkD8 = FALSE;
         if (D_80119C38->unkDC != NULL) {
             func_8000488C(D_80119C38->unkDC);
@@ -554,7 +553,7 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_800063EC.s")
+GLOBAL_ASM("asm/non_matchings/audio_vehicle/func_800063EC.s")
 #endif
 
 void func_80006AC8(Object *obj) {
@@ -901,19 +900,28 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_005740/func_80006FC8.s")
+GLOBAL_ASM("asm/non_matchings/audio_vehicle/func_80006FC8.s")
 #endif
 
-UNUSED void func_80007F78(void) {
-    D_800DC6D0 = 1;
+/**
+ * Enable the vehicle sounds made during gameplay.
+*/
+UNUSED void sound_vehicle_enable(void) {
+    gVehicleSounds = TRUE;
 }
 
-UNUSED void func_80007F88(void) {
-    D_800DC6D0 = 0;
+/**
+ * Disable the vehicle sounds made during gameplay.
+*/
+UNUSED void sound_vehicle_disable(void) {
+    gVehicleSounds = FALSE;
 }
 
-UNUSED u8 func_80007F94(void) {
-    return D_800DC6D0;
+/**
+ * Return whether vehicle sounds should be playing during gameplay.
+*/
+UNUSED u8 sound_vehicle_check(void) {
+    return gVehicleSounds;
 }
 
 // This is likely an arctanh function.

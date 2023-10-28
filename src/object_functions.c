@@ -26,7 +26,7 @@
 #include "math_util.h"
 #include "game_text.h"
 #include "fade_transition.h"
-#include "unknown_005740.h"
+#include "audio_vehicle.h"
 #include "object_models.h"
 #include "lib/src/libc/rmonPrintf.h"
 #include "collision.h"

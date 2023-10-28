@@ -5,7 +5,7 @@
 #include "types.h"
 #include "macros.h"
 #include "audio_internal.h"
-#include "unknown_005740.h"
+#include "audio_vehicle.h"
 #include "memory.h"
 #include "audio.h"
 #include "textures_sprites.h"

@@ -28,7 +28,7 @@
 #include "controller.h"
 #include "game_text.h"
 #include "audiosfx.h"
-#include "unknown_005740.h"
+#include "audio_vehicle.h"
 #include "vehicle_misc.h"
 
 #define MAX_CHECKPOINTS 60

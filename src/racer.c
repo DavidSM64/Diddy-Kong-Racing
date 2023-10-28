@@ -21,7 +21,7 @@
 #include "tracks.h"
 #include "weather.h"
 #include "vehicle_misc.h"
-#include "unknown_005740.h"
+#include "audio_vehicle.h"
 #include "game_ui.h"
 #include "object_models.h"
 #include "audiosfx.h"
@@ -1097,7 +1097,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     temp_f0 = sqrtf((obj->segment.z_velocity * obj->segment.z_velocity) + (obj->segment.x_velocity * obj->segment.x_velocity));
     if (temp_f0 > 0.25) {
         racer->unk168 = arctan2_f(obj->segment.x_velocity, obj->segment.z_velocity) + 0x8000;
-        var_v1 = ((0x8000 - racer->unk168) & 0xFFFF) - (racer->unk196 & 0xFFFF);
+        var_v1 = ((0x8000 - racer->unk168) & 0xFFFF) - (racer->cameraYaw & 0xFFFF);
         if (var_v1 > 0x8000) {
             var_v1 -= 0xFFFF;
         }
@@ -1109,8 +1109,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             sp11C = 8.0f;
         }
         sp11C *= 0.125;
-        racer->unk196 += (((s32) ((var_v1 * ((f32) sp11C)) * 0.75)) * updateRate) >> 4;
-        var_v1 = (0x8000 - racer->unk196) - (racer->steerVisualRotation & 0xFFFF);
+        racer->cameraYaw += (((s32) ((var_v1 * ((f32) sp11C)) * 0.75)) * updateRate) >> 4;
+        var_v1 = (0x8000 - racer->cameraYaw) - (racer->steerVisualRotation & 0xFFFF);
         if (var_v1 > 0x8000) {
             var_v1 -= 0xFFFF;
         }
@@ -1126,7 +1126,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         racer->steerVisualRotation += ((s32) (var_v1 * updateRate)) >> 7;
     }
-    var_v1 = (0x8000 - racer->steerVisualRotation) - (racer->unk196 & 0xFFFF);
+    var_v1 = (0x8000 - racer->steerVisualRotation) - (racer->cameraYaw & 0xFFFF);
     if (var_v1 > 0x8000) {
         var_v1 -= 0xFFFF;
     }
@@ -1134,7 +1134,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         var_v1 += 0xFFFF;
     }
     temp = 1.0f;
-    racer->unk196 += (((s32) ((((f32) var_v1) * 1.75) * temp)) * updateRate) >> 6;
+    racer->cameraYaw += (((s32) ((((f32) var_v1) * 1.75) * temp)) * updateRate) >> 6;
     if (!racer->zipperDirCorrection) {
         if ((gCurrentPlayerIndex == PLAYER_COMPUTER) && (!racer->raceFinished)) {
             var_f16 = racer->lateral_velocity * 0.25;
@@ -1595,14 +1595,14 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     sp34 = sins_f(gCameraObject->trans.x_rotation - sp24);
     phi_f18 = coss_f(gCameraObject->trans.x_rotation - sp24);
     phi_f18 = (gCameraObject->unk1C * sp34) + (gCameraObject->unk20 * phi_f18);
-    xVel = sins_f(-racer->unk196 + 0x8000) * gCameraObject->unk1C;
-    zVel = coss_f(-racer->unk196 + 0x8000) * gCameraObject->unk1C;
+    xVel = sins_f(-racer->cameraYaw + 0x8000) * gCameraObject->unk1C;
+    zVel = coss_f(-racer->cameraYaw + 0x8000) * gCameraObject->unk1C;
     yVel = (1.0 - (gDialogueCameraAngle / 10240.0f)); // Goes between 0-1
     xVel -= racer->ox1 * 10.0f * yVel;
     zVel -= racer->oz1 * 10.0f * yVel;
     yVel = racer->lateral_velocity * 2;
     racer->unkC8 -= (racer->unkC8 - yVel) * 0.25;
-    yVel = sins_f(racer->unk196 + 0x4000) * racer->unkC8;
+    yVel = sins_f(racer->cameraYaw + 0x4000) * racer->unkC8;
     gCameraObject->trans.x_position = obj->segment.trans.x_position + xVel + yVel;
     yVel = gCameraObject->trans.y_position - (obj->segment.trans.y_position + phi_f18);
     if (yVel > 0.0f) {
@@ -1623,9 +1623,9 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
         gCameraObject->trans.y_position = obj->segment.trans.y_position + phi_f18;
     }
 
-    coss_f(racer->unk196 + 0x4000); // Unused function call that wasn't fully optimised out.
+    coss_f(racer->cameraYaw + 0x4000); // Unused function call that wasn't fully optimised out.
     gCameraObject->trans.z_position = obj->segment.trans.z_position + zVel;
-    gCameraObject->trans.y_rotation = racer->unk196;
+    gCameraObject->trans.y_rotation = racer->cameraYaw;
     segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, gCameraObject->trans.y_position, gCameraObject->trans.z_position);
     if (segmentIndex != SEGMENT_NONE) {
         gCameraObject->segmentIndex = segmentIndex;
@@ -1813,7 +1813,7 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
         baseFloat1 = 42.0f;
     }
     if (((!(gCurrentRacerInput & 0x10)) || racer->groundedWheels < 3) && !racer->zipperDirCorrection) {
-        angle = (-racer->steerVisualRotation - (racer->unk196 & 0xFFFF)) + 0x8000;
+        angle = (-racer->steerVisualRotation - (racer->cameraYaw & 0xFFFF)) + 0x8000;
         if (angle > 0x8000) {
             angle -= 0xFFFF;
         }
@@ -1840,12 +1840,12 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
         if (angle > 0 && angle < angleVel) {
             angleVel = angle;
         }
-        racer->unk196 += angleVel;
+        racer->cameraYaw += angleVel;
     } else {
         racer->camera_zoom = 0.0f;
     }
     if (gDialogueCameraAngle) {
-        racer->unk196 = 0x8000 - racer->steerVisualRotation;
+        racer->cameraYaw = 0x8000 - racer->steerVisualRotation;
     }
     if (racer->unk1E0 == 2 || racer->unk1E0 == -2) {
         angle = 0;
@@ -1919,9 +1919,9 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
     baseFloat2 = (gCameraObject->unk1C * baseFloat3) - (gCameraObject->unk20 * xOffset);
     baseFloat1 = ((gCameraObject->unk1C) * (gCameraObject->unk1C));
     baseFloat1 += (gCameraObject->unk20 * baseFloat3);
-    xOffset = sins_f(0x8000 - racer->unk196) * baseFloat2;
-    zOffset = coss_f(0x8000 - racer->unk196) * baseFloat2;
-    yVel = sins_f(racer->unk196 + 0x4000) * 3.0f;
+    xOffset = sins_f(0x8000 - racer->cameraYaw) * baseFloat2;
+    zOffset = coss_f(0x8000 - racer->cameraYaw) * baseFloat2;
+    yVel = sins_f(racer->cameraYaw + 0x4000) * 3.0f;
     yVel = yVel * racer->lateral_velocity;
     gCameraObject->trans.x_position = (obj->segment.trans.x_position + xOffset) + yVel;
     temp_f16 = obj->segment.trans.y_position;
@@ -1946,8 +1946,8 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
         yVel = yOffset;
     }
     gCameraObject->trans.y_position -= yVel;
-    gCameraObject->trans.z_position = zOffset + obj->segment.trans.z_position + (-coss_f(racer->unk196 + 0x4000) * 3.0f * racer->lateral_velocity);
-    gCameraObject->trans.y_rotation = racer->unk196;
+    gCameraObject->trans.z_position = zOffset + obj->segment.trans.z_position + (-coss_f(racer->cameraYaw + 0x4000) * 3.0f * racer->lateral_velocity);
+    gCameraObject->trans.y_rotation = racer->cameraYaw;
     if (racer->unk1E0 || gDialogueCameraAngle) {
         angle = -(u16) gCameraObject->trans.z_rotation;
         if (angle > 0x8000) {
@@ -1973,7 +1973,7 @@ void update_camera_plane(f32 updateRate, Object* obj, Object_Racer* racer) {
     if (segmentIndex != -1) {
         gCameraObject->segmentIndex = segmentIndex;
     }
-    racer->unk196 = gCameraObject->trans.y_rotation;
+    racer->cameraYaw = gCameraObject->trans.y_rotation;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/racer/update_camera_plane.s")
@@ -2004,7 +2004,7 @@ void update_camera_loop(f32 updateRateF, Object *obj, Object_Racer *racer) {
     if (gRaceStartTimer > 60) {
         zoom += ((f32) (gRaceStartTimer - 60) * 4.0f);
     }
-    racer->unk196 = 0x8000 - racer->steerVisualRotation;
+    racer->cameraYaw = 0x8000 - racer->steerVisualRotation;
     if (get_viewport_count() == 1) {
         zoom = 160.0f;
     }
@@ -2040,12 +2040,12 @@ void update_camera_loop(f32 updateRateF, Object *obj, Object_Racer *racer) {
     angle = angleDiff - (u16) gCameraObject->trans.x_rotation;
     WRAP(angle, -0x8000, 0x8000);
     gCameraObject->trans.x_rotation += ((angle * UpdateRate) >> 4);
-    gCameraObject->trans.y_rotation = racer->unk196;
+    gCameraObject->trans.y_rotation = racer->cameraYaw;
     segmentIndex = get_level_segment_index_from_position(gCameraObject->trans.x_position, gCameraObject->trans.y_position, gCameraObject->trans.z_position);
     if (segmentIndex != SEGMENT_NONE) {
         gCameraObject->segmentIndex = segmentIndex;
     }
-    racer->unk196 = gCameraObject->trans.y_rotation;
+    racer->cameraYaw = gCameraObject->trans.y_rotation;
     gCameraObject->trans.x_position += gCameraObject->offsetX;
     gCameraObject->trans.y_position += gCameraObject->offsetY;
     gCameraObject->trans.z_position += gCameraObject->offsetZ;
@@ -2116,7 +2116,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
     tempRacer->x_rotation_vel = obj->segment.trans.z_rotation;
     tempRacer->unkC4 = 0.5f;
     if (1) {} // Fakematch
-    tempRacer->unk196 = tempRacer->steerVisualRotation;
+    tempRacer->cameraYaw = tempRacer->steerVisualRotation;
     tempRacer->unkD8.x = obj->segment.trans.x_position;
     tempRacer->unkD8.y = obj->segment.trans.y_position + 30.0f;
     tempRacer->unkD8.z = obj->segment.trans.z_position;
@@ -2152,7 +2152,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
         gCameraObject = (ObjectCamera *) get_active_camera_segment_no_cutscenes();
         gCameraObject->trans.z_rotation = 0;
         gCameraObject->trans.x_rotation = 0x400;
-        gCameraObject->trans.y_rotation = tempRacer->unk196;
+        gCameraObject->trans.y_rotation = tempRacer->cameraYaw;
         gCameraObject->mode = CAMERA_CAR;
         gCameraObject->unk3C = 0xFF;
         gCameraObject->unk3D = 0xFF;
@@ -2499,7 +2499,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             CLAMP(tempRacer->velocity, playerIDF, playerID);
         }
         if (context != GAMEMODE_MENU || func_8000E148()) {
-            func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
+            racer_vehicle_sounds(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
         lastCheckpointDist = tempRacer->checkpoint_distance;
         tempVar = func_800185E4(tempRacer->checkpoint, obj, xTemp, yTemp, zTemp, &tempRacer->checkpoint_distance, &tempRacer->unk1C8);
@@ -5143,7 +5143,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
         baseAngle = 0xD00;
     }
     angle = racer->unk19E >> 3;
-    racer->unk196 = (-racer->steerVisualRotation - racer->unk19E) + 0x8000;
+    racer->cameraYaw = (-racer->steerVisualRotation - racer->unk19E) + 0x8000;
     if (angle > 0x400) {
         angle = 0x400;
     }
@@ -5235,8 +5235,8 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     lateralOffset = gCameraObject->unk1C;
     lateralOffset = (lateralOffset * sineOffset) - (gCameraObject->unk20 * cosOffset);
     yVel = (gCameraObject->unk1C * cosOffset) + (gCameraObject->unk20 * sineOffset);
-    sineOffset = sins_f(-racer->unk196 + 0x8000) * lateralOffset;
-    cosOffset = coss_f(-racer->unk196 + 0x8000) * lateralOffset;
+    sineOffset = sins_f(-racer->cameraYaw + 0x8000) * lateralOffset;
+    cosOffset = coss_f(-racer->cameraYaw + 0x8000) * lateralOffset;
     baseDistance = 0.0f;
     if (gCurrentRacerInput & A_BUTTON) {
         baseDistance = racer->lateral_velocity * 1.3;
@@ -5264,7 +5264,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     xOffset = obj->segment.trans.x_position - (racer->ox1 * racer->camera_zoom);
     yOffset = obj->segment.trans.y_position - (racer->oy1 * racer->camera_zoom);
     zOffset = obj->segment.trans.z_position - (racer->oz1 * racer->camera_zoom);
-    tempVel = sins_f(racer->unk196 + 0x4000) * racer->unkC8;
+    tempVel = sins_f(racer->cameraYaw + 0x4000) * racer->unkC8;
     baseDistance = xOffset + tempVel;
     gCameraObject->trans.x_position = sineOffset + baseDistance;
     yOffset += yVel;
@@ -5276,8 +5276,8 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     if (temp_f16 > 0.0f || gRaceStartTimer) {
         gCameraObject->trans.y_position = yOffset;
     }
-    gCameraObject->trans.z_position = zOffset + (-coss_f(racer->unk196 + 0x4000) * racer->unkC8) + cosOffset;
-    gCameraObject->trans.y_rotation = racer->unk196;
+    gCameraObject->trans.z_position = zOffset + (-coss_f(racer->cameraYaw + 0x4000) * racer->unkC8) + cosOffset;
+    gCameraObject->trans.y_rotation = racer->cameraYaw;
     newAngle = gCameraObject->trans.z_rotation;
     if ((racer->drift_direction && racer->brake > 0.0) || gDialogueCameraAngle) {
         newAngle = 0;
@@ -5297,7 +5297,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
     if (segmentIndex != -1) {
         gCameraObject->segmentIndex = segmentIndex;
     }
-    racer->unk196 = gCameraObject->trans.y_rotation;
+    racer->cameraYaw = gCameraObject->trans.y_rotation;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/racer/update_camera_car.s")
@@ -5334,7 +5334,7 @@ void update_camera_finish_challenge(UNUSED f32 updateRate, Object *obj, Object_R
     if (segmentIndex != SEGMENT_NONE) {
         gCameraObject->segmentIndex = segmentIndex;
     }
-    racer->unk196 = gCameraObject->trans.y_rotation;
+    racer->cameraYaw = gCameraObject->trans.y_rotation;
 }
 
 /**
@@ -5963,7 +5963,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         case VEHICLE_ROCKET: update_rocket(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         }
         if (gameMode != GAMEMODE_MENU) {
-            func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
+            racer_vehicle_sounds(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
         lastCheckpointDist = racer->checkpoint_distance;
         countOfObjects = racer->checkpoint;
@@ -6016,7 +6016,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     } else {
         func_8005B818(obj, racer, updateRate, updateRateF);
         if (gameMode != GAMEMODE_MENU) {
-            func_800050D0(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
+            racer_vehicle_sounds(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
     }
     if (racer->magnetTimer == 0) {

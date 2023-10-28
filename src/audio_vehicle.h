@@ -81,16 +81,16 @@ typedef struct unk80119C38 {
     /* 0x98 */ u8 unk98;
     /* 0x99 */ u8 pad99[0x7];
     /* 0xA0 */ u8 unkA0;
-    /* 0xA4 */ f32 unkA4;
+    /* 0xA4 */ f32 throttlePitch;
     /* 0xA8 */ s32 unkA8;
     /* 0xAC */ u16 unkAC;
-    /* 0xB0 */ f32 unkB0;
-    /* 0xB4 */ f32 unkB4;
+    /* 0xB0 */ f32 throttlePitchVel;
+    /* 0xB4 */ f32 throttlePitchDecay;
     /* 0xB8 */ u8 unkB8;
     /* 0xBC */ f32 unkBC;
     /* 0xC0 */ f32 unkC0;
     /* 0xC4 */ f32 unkC4;
-    /* 0xC8 */ f32 unkC8;
+    /* 0xC8 */ f32 throttlePitchCeil;
     /* 0xCC */ f32 unkCC;
     /* 0xD0 */ u8 unkD0;
     /* 0xD4 */ f32 unkD4;
@@ -131,7 +131,7 @@ typedef struct unkAudioAsset {
     /* 0x4A */ u8 unk4A;
 } unkAudioAsset;
 
-extern u8 D_800DC6D0;
+extern u8 gVehicleSounds;
 extern s32 D_800DC6D8;
 extern s32 D_800DC6DC;
 extern u16 D_800DC6E0;
@@ -141,13 +141,13 @@ extern SoundMask **D_80119C50;
 extern u8 D_80119C4C;
 
 
-void func_800050D0(Object* obj, u32 buttonsPressed, u32 carInput, s32 updateRate);
+void racer_vehicle_sounds(Object* obj, u32 buttonsPressed, u32 carInput, s32 updateRate);
 void func_80006AC8(Object *);
 
 f32 func_80007FA4(f32 arg0);
 unk80119C38 *func_80004B40(s8 characterId, s8 vehicleId);
 void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
-void func_80005D08(Object *, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
+void racer_hovercraft_sound(Object *, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
 void func_800063EC(Object *, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
 
 #endif
