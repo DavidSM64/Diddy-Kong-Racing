@@ -936,7 +936,7 @@ glabel func_8000CC7C
 /* 00E570 8000D970 00000000 */   nop   
 glabel L8000D974
 /* 00E574 8000D974 02202025 */  move  $a0, $s1
-/* 00E578 8000D978 0C0170BC */  jal   func_8005C2F0
+/* 00E578 8000D978 0C0170BC */  jal   racer_special_init
 /* 00E57C 8000D97C 02602825 */   move  $a1, $s3
 /* 00E580 8000D980 8FA40068 */  lw    $a0, 0x68($sp)
 /* 00E584 8000D984 10000003 */  b     .L8000D994

@@ -34,7 +34,7 @@ typedef struct unk80119C58 {
 } unk80119C58;
 
 /* Size: 0xE0 / 224 bytes */
-typedef struct unk80119C38 {
+typedef struct VehicleSoundData {
     /* 0x00 */ u16 unk0[2];
     u8 unk4[2][4];
     /* 0x08 */ u8 pad8[0x2];
@@ -58,7 +58,7 @@ typedef struct unk80119C38 {
     /* 0x38 */ u8 unk38;
     /* 0x39 */ u8 unk39;
     /* 0x3A */ u8 pad3A[0x2];
-    /* 0x3C */ f32 unk3C;
+    /* 0x3C */ f32 bananaPitch;
     /* 0x40 */ f32 unk40;
     /* 0x44 */ u8 unk44[4];
     /* 0x48 */ u8 *unk48[2]; //soundMask / soundState?
@@ -69,19 +69,17 @@ typedef struct unk80119C38 {
     /* 0x68 */ f32 unk68;
     /* 0x6C */ f32 unk6C[2];
     /* 0x74 */ u8 unk74;
-    /* 0x78 */ f32 unk78; // X
-    /* 0x7C */ f32 unk7C; // Y
-    /* 0x80 */ f32 unk80; // Z
+    /* 0x78 */ Vec3f racerPos;
     /* 0x84 */ f32 unk84;
     /* 0x88 */ u8 unk88; // Volume?
     /* 0x8C */ f32 unk8C; // Volume?
     /* 0x90 */ s8 unk90;
     /* 0x91 */ u8 unk91[3];
-    /* 0x94 */ f32 unk94;
+    /* 0x94 */ f32 enginePitch; // Engine noise for the car.
     /* 0x98 */ u8 unk98;
     /* 0x99 */ u8 pad99[0x7];
     /* 0xA0 */ u8 unkA0;
-    /* 0xA4 */ f32 throttlePitch;
+    /* 0xA4 */ f32 throttlePitch; // Engine noise for the hovercraft and plane.
     /* 0xA8 */ s32 unkA8;
     /* 0xAC */ u16 unkAC;
     /* 0xB0 */ f32 throttlePitchVel;
@@ -93,10 +91,10 @@ typedef struct unk80119C38 {
     /* 0xC8 */ f32 throttlePitchCeil;
     /* 0xCC */ f32 unkCC;
     /* 0xD0 */ u8 unkD0;
-    /* 0xD4 */ f32 unkD4;
+    /* 0xD4 */ f32 basePitch;
     /* 0xD8 */ u8 unkD8; //Sound is playing bool?
     /* 0xDC */ u8 *unkDC; //soundMask / soundState?
-} unk80119C38;
+} VehicleSoundData;
 
 /* Size: 0x4C / 76 Bytes */
 typedef struct unkAudioAsset {
@@ -142,12 +140,12 @@ extern u8 D_80119C4C;
 
 
 void racer_vehicle_sounds(Object* obj, u32 buttonsPressed, u32 carInput, s32 updateRate);
-void func_80006AC8(Object *);
+void racer_sound_free(Object *);
 
 f32 func_80007FA4(f32 arg0);
-unk80119C38 *func_80004B40(s8 characterId, s8 vehicleId);
+VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId);
 void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
-void racer_hovercraft_sound(Object *, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
+void racer_sound_hovercraft(Object *, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
 void func_800063EC(Object *, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
 
 #endif

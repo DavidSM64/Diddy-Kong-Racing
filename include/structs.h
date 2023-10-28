@@ -1236,7 +1236,7 @@ typedef struct Object_Racer {
   /* 0x10C */ s32 unk10C;
   /* 0x110 */ s32 unk110;
   /* 0x114 */ s32 unk114;
-  /* 0x118 */ struct unk80119C38 *unk118;
+  /* 0x118 */ struct VehicleSoundData *vehicleSound;
   /* 0x11C */ f32 unk11C;
   /* 0x120 */ f32 unk120;
   /* 0x124 */ f32 unk124;

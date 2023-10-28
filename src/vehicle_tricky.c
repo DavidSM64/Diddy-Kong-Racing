@@ -54,15 +54,19 @@ enum TrickyAnimations {
     ANIM_TRICKY_DAMAGE
 };
 
-void func_8005C2F0(Object *object, Object_Racer *racer) {
+/**
+ * Overrides some basic racer properties that are either not needed or intended to work differently.
+ * Also frees the engine sound data, since it won't be used.
+*/
+void racer_special_init(Object *object, Object_Racer *racer) {
     object->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0004;
     object->interactObj->unk11 = 0;
     object->interactObj->hitboxRadius = 30;
     object->interactObj->pushForce = 0;
     racer->animationSpeed = 0.0f;
     gTrickyRacerPeakHeight = object->segment.trans.y_position;
-    if (racer->unk118 != 0) {
-        func_80006AC8(object);
+    if (racer->vehicleSound) {
+        racer_sound_free(object);
     }
     gTrickyCutsceneTimer = 0;
 }

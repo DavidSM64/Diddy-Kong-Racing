@@ -964,9 +964,9 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
                 }
             }
             if ((gameMode != GAMEMODE_MENU || D_8011AD3C == 2) && vehicle < VEHICLE_TRICKY) {
-                curRacer->unk118 = func_80004B40(curRacer->characterId, curRacer->vehicleID);
+                curRacer->vehicleSound = func_80004B40(curRacer->characterId, curRacer->vehicleID);
             } else {
-                curRacer->unk118 = NULL;
+                curRacer->vehicleSound = NULL;
             }
             
             newRacerObj->interactObj->pushForce = miscAsset16[curRacer->characterId] + 1;
@@ -979,7 +979,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
                 case VEHICLE_BUBBLER:
                 case VEHICLE_WIZPIG:
                 case VEHICLE_ROCKET:
-                    func_8005C2F0(newRacerObj, curRacer);
+                    racer_special_init(newRacerObj, curRacer);
                     break;
                 default:
                     break;
@@ -1284,7 +1284,7 @@ void transform_player_vehicle(void) {
     racer->unk2 = 0;
     racer->characterId = settings->racers[PLAYER_ONE].character;
     racer->playerIndex = 0;
-    racer->unk118 = 0;
+    racer->vehicleSound = 0;
     if (get_filtered_cheats() & CHEAT_BIG_CHARACTERS) {
         player->segment.trans.scale *= 1.4f;
     }

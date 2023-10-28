@@ -2057,8 +2057,8 @@ void update_camera_loop(f32 updateRateF, Object *obj, Object_Racer *racer) {
 void update_carpet(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer) {
     s16 sp26;
 
-    if (racer->unk118 != 0) {
-        func_80006AC8(obj);
+    if (racer->vehicleSound) {
+        racer_sound_free(obj);
     }
     if (is_taj_challenge() && racer->vehicleID == VEHICLE_CARPET) {
         obj->interactObj->flags = INTERACT_FLAGS_NONE;
@@ -2630,7 +2630,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             if (tempRacer->shieldTimer > 60) {
                 if (tempRacer->shieldSoundMask) {
                     update_spatial_audio_position(tempRacer->shieldSoundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
-                } else if (tempRacer->unk118) {
+                } else if (tempRacer->vehicleSound) {
                     play_sound_at_position(SOUND_SHIELD, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &tempRacer->shieldSoundMask);
                 }
             } else if (tempRacer->shieldSoundMask) {
@@ -6055,7 +6055,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         if (racer->shieldTimer > 60) {
             if (racer->shieldSoundMask) {
                 update_spatial_audio_position(racer->shieldSoundMask, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
-            } else if (racer->unk118 != 0) {
+            } else if (racer->vehicleSound) {
                 play_sound_at_position(SOUND_SHIELD, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 1, &racer->shieldSoundMask);
             }
         } else {

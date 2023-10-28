@@ -410,7 +410,7 @@ glabel L80010664
 /* 011330 80010730 0C001223 */  jal   func_8000488C
 /* 011334 80010734 00000000 */   nop   
 .L80010738:
-/* 011338 80010738 0C001AB2 */  jal   func_80006AC8
+/* 011338 80010738 0C001AB2 */  jal   racer_sound_free
 /* 01133C 8001073C 02C02025 */   move  $a0, $s6
 /* 011340 80010740 3C158012 */  lui   $s5, %hi(gObjectCount) # $s5, 0x8012
 /* 011344 80010744 26B5AE5C */  addiu $s5, %lo(gObjectCount) # addiu $s5, $s5, -0x51a4
