@@ -432,13 +432,14 @@ GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80009D6C.s")
 #ifdef NON_EQUIVALENT
 extern unk80119C58 **D_80119C5C;
 extern unk8011A6D8 **D_8011A6DC;
+// debug_render_audio_effects
 void func_8000A184(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
     s32 i, j;
 
     for (i = 0; i < 7; i++) {
         if (D_80119C58[i].unk16C != 0) {
             for (j = 0; j < D_80119C58[i].unk17C; j++) {
-                debug_render_spline(arg0, arg1, arg2, (floatXYZVals *) &D_80119C5C[i], 0xFF, 0xFF, 0);
+                debug_render_line(arg0, arg1, arg2, (floatXYZVals *) &D_80119C5C[i], 0xFF, 0xFF, 0);
             }
         }
     }
@@ -446,7 +447,7 @@ void func_8000A184(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
     for (i = 0; i < 7; i++) {
         if (D_8011A6D8[i].unk0.unk0_02 != 0) {
             for (j = 0; j < D_8011A6D8[i].unkB8; j++) {
-                debug_render_spline(arg0, arg1, arg2, (floatXYZVals *) &D_8011A6DC[i], 0xFF, 0xFF, 0);
+                debug_render_line(arg0, arg1, arg2, (floatXYZVals *) &D_8011A6DC[i], 0xFF, 0xFF, 0);
             }
         }
     }
@@ -472,10 +473,10 @@ void func_8000A2E8(s32 arg0) {
 }
 
 /**
- * Generates and renders a coloured spline visible from anywhere.
- * Allows use of a colour, that interpolates from bright to dark from the beginning to the end of the spline.
+ * Generates and renders a coloured line visible from anywhere.
+ * Allows use of a colour, that interpolates from bright to dark from the beginning to the end of the line.
 */
-void debug_render_spline(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *arg3, u8 red, u8 green, u8 blue) {
+void debug_render_line(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *arg3, u8 red, u8 green, u8 blue) {
     Gfx *temp_dlist;
     Vertex *temp_verts;
     Triangle *temp_tris;
