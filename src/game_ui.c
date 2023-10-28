@@ -512,7 +512,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 render_magnet_reticle(arg3);
                 set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
                 gDPSetEnvColor(gHUDCurrDisplayList++, 255, 255, 255, 0);
-                sp2C = func_8001139C() >> 1;
+                sp2C = get_race_countdown() >> 1;
                 if (is_in_time_trial()) {
                     func_800A277C(sp2C, arg3, updateRate);
                 } else {
@@ -1130,7 +1130,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
         obj68 = (Object_68 *) ttSWBodyObject->unk68[0];
         obj68->objModel->unk52 = updateRate;
         if (gStopwatchFaceID != 0xFF) {
-            if ((gStopwatchFaceID == 4) && ((func_8001139C()) || (!music_is_playing()))) {
+            if ((gStopwatchFaceID == 4) && ((get_race_countdown()) || (!music_is_playing()))) {
                 ttSWBodyObject->segment.animFrame = 16;
             } else if (gStopwatchFaceID == 4) {
                 posX = audio_get_chr_select_anim_frac();
@@ -1254,7 +1254,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
         if (func_8001B288()) {
             ttSWBodyObject = func_8001B2E0();
             if (ttSWBodyObject != NULL) {
-                if ((func_8001139C() == 0) && (curRacer->raceFinished == 0)) {
+                if ((get_race_countdown() == 0) && (curRacer->raceFinished == 0)) {
                     posY = ttSWBodyObject->segment.trans.y_position - playerRacerObj->segment.trans.y_position;
                     posX = ttSWBodyObject->segment.trans.x_position - playerRacerObj->segment.trans.x_position;
                     posZ = ttSWBodyObject->segment.trans.z_position - playerRacerObj->segment.trans.z_position;
@@ -1736,7 +1736,7 @@ void render_race_position(Object_Racer *racer, s32 updateRate) {
         return;
     }
     place = racer->racePosition;
-    if (func_8001139C()) {
+    if (get_race_countdown()) {
         if (get_current_level_race_type() == RACETYPE_BOSS || is_taj_challenge()) {
             place = 2;
         } else {

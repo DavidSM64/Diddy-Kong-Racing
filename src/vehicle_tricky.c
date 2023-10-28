@@ -396,7 +396,7 @@ GLOBAL_ASM("asm/non_matchings/vehicle_tricky/func_8005CB68.s")
 void fade_when_near_camera(Object *object, Object_Racer *racer, s32 distance) {
     Object *player = get_racer_object(PLAYER_ONE);
     racer->transparency = 255;
-    if (!func_8001139C()) {
+    if (!get_race_countdown()) {
         if ((object->segment.object.distanceToCamera + distance) < player->segment.object.distanceToCamera) {
             racer->transparency = 64;
         }

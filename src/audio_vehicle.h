@@ -80,7 +80,7 @@ typedef struct VehicleSoundData {
     /* 0x99 */ u8 pad99[0x7];
     /* 0xA0 */ u8 unkA0;
     /* 0xA4 */ f32 throttlePitch; // Engine noise for the hovercraft and plane.
-    /* 0xA8 */ s32 unkA8;
+    /* 0xA8 */ SoundMask *unkA8;
     /* 0xAC */ u16 unkAC;
     /* 0xB0 */ f32 throttlePitchVel;
     /* 0xB4 */ f32 throttlePitchDecay;
@@ -92,8 +92,8 @@ typedef struct VehicleSoundData {
     /* 0xCC */ f32 unkCC;
     /* 0xD0 */ u8 unkD0;
     /* 0xD4 */ f32 basePitch;
-    /* 0xD8 */ u8 unkD8; //Sound is playing bool?
-    /* 0xDC */ u8 *unkDC; //soundMask / soundState?
+    /* 0xD8 */ u8 brakeSound; //Sound is playing bool?
+    /* 0xDC */ SoundMask *brakeSoundMask; //soundMask / soundState?
 } VehicleSoundData;
 
 /* Size: 0x4C / 76 Bytes */
@@ -139,7 +139,7 @@ extern SoundMask **D_80119C50;
 extern u8 D_80119C4C;
 
 
-void racer_vehicle_sounds(Object* obj, u32 buttonsPressed, u32 carInput, s32 updateRate);
+void racer_sound_update(Object* obj, u32 buttonsPressed, u32 carInput, s32 updateRate);
 void racer_sound_free(Object *);
 
 f32 func_80007FA4(f32 arg0);

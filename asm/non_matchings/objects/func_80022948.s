@@ -49,8 +49,8 @@ glabel func_80022948
 /* 023604 80022A04 0C01BAA4 */  jal   get_settings
 /* 023608 80022A08 AFA2007C */   sw    $v0, 0x7c($sp)
 /* 02360C 80022A0C 24190050 */  li    $t9, 80
-/* 023610 80022A10 3C018012 */  lui   $at, %hi(D_8011ADB0) # $at, 0x8012
-/* 023614 80022A14 AC39ADB0 */  sw    $t9, %lo(D_8011ADB0)($at)
+/* 023610 80022A10 3C018012 */  lui   $at, %hi(gEventCountdown) # $at, 0x8012
+/* 023614 80022A14 AC39ADB0 */  sw    $t9, %lo(gEventCountdown)($at)
 /* 023618 80022A18 3C018012 */  lui   $at, %hi(D_8011ADB4) # $at, 0x8012
 /* 02361C 80022A1C 8FA30068 */  lw    $v1, 0x68($sp)
 /* 023620 80022A20 AC20ADB4 */  sw    $zero, %lo(D_8011ADB4)($at)

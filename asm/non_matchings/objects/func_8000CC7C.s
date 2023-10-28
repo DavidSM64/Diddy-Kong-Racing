@@ -15,8 +15,8 @@ glabel func_8000CC7C
 /* 00D87C 8000CC7C 27BDFEB0 */  addiu $sp, $sp, -0x150
 /* 00D880 8000CC80 3C018012 */  lui   $at, %hi(D_8011AD20) # $at, 0x8012
 /* 00D884 8000CC84 A020AD20 */  sb    $zero, %lo(D_8011AD20)($at)
-/* 00D888 8000CC88 3C018012 */  lui   $at, %hi(D_8011ADB0) # $at, 0x8012
-/* 00D88C 8000CC8C AC20ADB0 */  sw    $zero, %lo(D_8011ADB0)($at)
+/* 00D888 8000CC88 3C018012 */  lui   $at, %hi(gEventCountdown) # $at, 0x8012
+/* 00D88C 8000CC8C AC20ADB0 */  sw    $zero, %lo(gEventCountdown)($at)
 /* 00D890 8000CC90 3C018012 */  lui   $at, %hi(gFirstTimeFinish) # $at, 0x8012
 /* 00D894 8000CC94 AFB1001C */  sw    $s1, 0x1c($sp)
 /* 00D898 8000CC98 A020ADC4 */  sb    $zero, %lo(gFirstTimeFinish)($at)
@@ -1151,9 +1151,9 @@ glabel L8000D98C
 /* 00E890 8000DC90 3C0E8012 */  lui   $t6, %hi(gNumRacers) # $t6, 0x8012
 /* 00E894 8000DC94 8DCEAEF0 */  lw    $t6, %lo(gNumRacers)($t6)
 /* 00E898 8000DC98 24180064 */  li    $t8, 100
-/* 00E89C 8000DC9C 3C018012 */  lui   $at, %hi(D_8011ADB0) # $at, 0x8012
+/* 00E89C 8000DC9C 3C018012 */  lui   $at, %hi(gEventCountdown) # $at, 0x8012
 /* 00E8A0 8000DCA0 19C00068 */  blez  $t6, .L8000DE44
-/* 00E8A4 8000DCA4 AC38ADB0 */   sw    $t8, %lo(D_8011ADB0)($at)
+/* 00E8A4 8000DCA4 AC38ADB0 */   sw    $t8, %lo(gEventCountdown)($at)
 /* 00E8A8 8000DCA8 0000A825 */  move  $s5, $zero
 .L8000DCAC:
 /* 00E8AC 8000DCAC 3C198012 */  lui   $t9, %hi(gRacers) # $t9, 0x8012
@@ -1279,15 +1279,15 @@ glabel L8000D98C
 /* 00EA64 8000DE64 17200005 */  bnez  $t9, .L8000DE7C
 /* 00EA68 8000DE68 00000000 */   nop   
 /* 00EA6C 8000DE6C 81EFAD3C */  lb    $t7, %lo(D_8011AD3C)($t7)
-/* 00EA70 8000DE70 3C018012 */  lui   $at, %hi(D_8011ADB0) # $at, 0x8012
+/* 00EA70 8000DE70 3C018012 */  lui   $at, %hi(gEventCountdown) # $at, 0x8012
 /* 00EA74 8000DE74 11E00004 */  beqz  $t7, .L8000DE88
 /* 00EA78 8000DE78 00000000 */   nop   
 .L8000DE7C:
-/* 00EA7C 8000DE7C 3C018012 */  lui   $at, %hi(D_8011ADB0) # $at, 0x8012
+/* 00EA7C 8000DE7C 3C018012 */  lui   $at, %hi(gEventCountdown) # $at, 0x8012
 /* 00EA80 8000DE80 10000002 */  b     .L8000DE8C
-/* 00EA84 8000DE84 AC2DADB0 */   sw    $t5, %lo(D_8011ADB0)($at)
+/* 00EA84 8000DE84 AC2DADB0 */   sw    $t5, %lo(gEventCountdown)($at)
 .L8000DE88:
-/* 00EA88 8000DE88 AC20ADB0 */  sw    $zero, %lo(D_8011ADB0)($at)
+/* 00EA88 8000DE88 AC20ADB0 */  sw    $zero, %lo(gEventCountdown)($at)
 .L8000DE8C:
 /* 00EA8C 8000DE8C 8FB80068 */  lw    $t8, 0x68($sp)
 /* 00EA90 8000DE90 8FAE0058 */  lw    $t6, 0x58($sp)
@@ -1410,8 +1410,8 @@ glabel L8000D98C
 /* 00EC44 8000E044 00000000 */   nop   
 /* 00EC48 8000E048 0C01C8A6 */  jal   func_80072298
 /* 00EC4C 8000E04C 00002025 */   move  $a0, $zero
-/* 00EC50 8000E050 3C018012 */  lui   $at, %hi(D_8011ADB0) # $at, 0x8012
-/* 00EC54 8000E054 AC20ADB0 */  sw    $zero, %lo(D_8011ADB0)($at)
+/* 00EC50 8000E050 3C018012 */  lui   $at, %hi(gEventCountdown) # $at, 0x8012
+/* 00EC54 8000E054 AC20ADB0 */  sw    $zero, %lo(gEventCountdown)($at)
 /* 00EC58 8000E058 3C013F80 */  li    $at, 0x3F800000 # 1.000000
 /* 00EC5C 8000E05C 44816000 */  mtc1  $at, $f12
 /* 00EC60 8000E060 0C01AF44 */  jal   start_level_music

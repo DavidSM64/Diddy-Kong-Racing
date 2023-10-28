@@ -191,9 +191,9 @@ s32 gAssetsMiscTableLength;
 s16 D_8011ADA4;
 f32 gObjectUpdateRateF;
 s32 D_8011ADAC;
-s32 D_8011ADB0;
+s32 gEventCountdown;
 s32 D_8011ADB4;
-s32 gRaceStartCountdown;
+s32 gEventStartTimer;
 s32 D_8011ADBC;
 s32 D_8011ADC0;
 s8 gFirstTimeFinish;
@@ -707,7 +707,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     s32 tajFlags;
 
     D_8011AD20 = 0;
-    D_8011ADB0 = 0;
+    gEventCountdown = 0;
     gFirstTimeFinish = 0;
     gNumRacers = 0;
     D_8011AF00 = 0;
@@ -1047,7 +1047,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             newRacerObj->unk64->racer.transparency = 0x60;
         }
     }
-    D_8011ADB0 = 100;
+    gEventCountdown = 100;
     for (j = 0; j < gNumRacers; j++) {
         curRacerObj = (*gRacers)[j];
         curRacer = &curRacerObj->unk64->racer;
@@ -1083,9 +1083,9 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         curRacer->stretch_height = 1.0f;
     }
     if (raceType == RACETYPE_DEFAULT || isChallengeMode || gIsTimeTrial || D_8011AD3C) {
-        D_8011ADB0 = 80;
+        gEventCountdown = 80;
     } else {
-        D_8011ADB0 = 0;
+        gEventCountdown = 0;
     }
     if (raceType == RACETYPE_DEFAULT && numPlayers == 1 && !is_in_adventure_two()) {
         if (is_two_player_adventure_race() == 0) {
@@ -1134,7 +1134,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     }
     if (func_8000E148() != 0) {
         func_80072298(0);
-        D_8011ADB0 = 0;
+        gEventCountdown = 0;
         start_level_music(1.0f);
     }
     set_free_queue_state(0);
@@ -2044,15 +2044,15 @@ void func_80010994(s32 updateRate) {
     UNUSED Object_64 *obj64;
 
     func_800245B4(-1);
-    gRaceStartCountdown = D_8011ADB0;
-    if ((D_8011ADB0 > 0) && (func_800A0190() != 0)) {
-        D_8011ADB0 -= updateRate;
+    gEventStartTimer = gEventCountdown;
+    if ((gEventCountdown > 0) && (func_800A0190() != 0)) {
+        gEventCountdown -= updateRate;
         D_8011ADBC = 0;
     } else {
         D_8011ADBC += updateRate;
     }
-    if (D_8011ADB0 <= 0) {
-        D_8011ADB0 = 0;
+    if (gEventCountdown <= 0) {
+        gEventCountdown = 0;
     }
     D_8011AD3D = 0;
     D_8011AD21 = 1 - D_8011AD21;
@@ -2171,7 +2171,7 @@ void func_80010994(s32 updateRate) {
     func_800179D0();
     } while(0); //FAKEMATCH
     if (D_8011AF00 == 1) {
-        if ((D_8011ADB0 == 0x50) && (gCutsceneID == 0)) {
+        if ((gEventCountdown == 0x50) && (gCutsceneID == 0)) {
             sp54 = 0;
             for (i = 0; i < MAXCONTROLLERS; i++) {
                 tempVal = get_buttons_pressed_from_player(i);
@@ -2278,17 +2278,20 @@ void func_80011390(void) {
     D_8011ADAC = 0;
 }
 
-s32 func_8001139C(void) {
-    return D_8011ADB0;
+/**
+ * Return the current race countdown timer.
+*/
+s32 get_race_countdown(void) {
+    return gEventCountdown;
 }
 
 /**
- * Return the timer countdown before the race starts.
+ * Return the timer that the countdown is set to before the race starts.
  * There exists another variable in racer.c with exactly the same purpose.
  * This does not get used anywhere else.
  */
 s32 get_race_start_timer(void) {
-    return gRaceStartCountdown;
+    return gEventStartTimer;
 }
 
 // Unused function, purpose currently unknown.
@@ -3663,12 +3666,12 @@ void func_80016748(Object *obj0, Object *obj1) {
         if (!((objModel->unk3C + 50.0) < sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff)))) {
             obj0Interact = obj0->interactObj;
             obj1Interact = obj1->interactObj; 
-            object_transform_to_matrix(obj1TransformMtx, &obj1->segment.trans);
+            object_transform_to_matrix((float (*)[4]) obj1TransformMtx, &obj1->segment.trans);
             for(i = 0; i < objModel->unk20; i += 2) {
                 xDiff = obj1->unk44[objModel->unk1C[i]].x;
                 yDiff = obj1->unk44[objModel->unk1C[i]].y;
                 zDiff = obj1->unk44[objModel->unk1C[i]].z;
-                guMtxXFMF(obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
+                guMtxXFMF((float (*)[4]) obj1TransformMtx, xDiff, yDiff, zDiff, &xDiff, &yDiff, &zDiff);
                 temp = (((f32) objModel->unk1C[i + 1] / 64) * obj1->segment.trans.scale) * 50.0;
                 xDiff -= obj0->segment.trans.x_position;
                 yDiff -= obj0->segment.trans.y_position;
@@ -5714,8 +5717,8 @@ void func_80022E18(s32 arg0) {
         if (arg0 == 2) {
             set_current_text(0);
         }
-        D_8011ADB0 = 0;
-        gRaceStartCountdown = 0;
+        gEventCountdown = 0;
+        gEventStartTimer = 0;
         obj->properties.common.unk0 = 0x14;
     }
     func_80000B28();

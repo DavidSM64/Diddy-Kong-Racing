@@ -431,7 +431,7 @@ void ingame_logic_loop(s32 updateRate) {
     // Update all objects
     if (!gIsPaused) {
         func_80010994(updateRate);
-        if (check_if_showing_cutscene_camera() == 0 || func_8001139C()) {
+        if (check_if_showing_cutscene_camera() == 0 || get_race_countdown()) {
             if (buttonPressedInputs & START_BUTTON && get_level_property_stack_pos() == 0 && gDrumstickSceneLoadTimer == 0
                 && gGameMode == GAMEMODE_INGAME && gPostRaceViewPort == NULL && gLevelLoadTimer == 0 && gPauseLockTimer == 0) {
                 buttonPressedInputs = 0;

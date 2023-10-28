@@ -1064,7 +1064,7 @@ void obj_loop_unknown58(Object *obj, s32 updateRate) {
 
     obj->segment.object.animationID = 0;
     obj->segment.animFrame = 40;
-    if (func_8001139C() == 0) {
+    if (get_race_countdown() == 0) {
         obj->properties.common.unk0 += updateRate;
     }
     set_ghost_position_and_rotation(obj);

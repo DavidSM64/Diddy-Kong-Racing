@@ -2217,7 +2217,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
 
     gNumViewports = get_viewport_count() + 1;
     gCurrentSurfaceType = SURFACE_DEFAULT;
-    gRaceStartTimer = func_8001139C();
+    gRaceStartTimer = get_race_countdown();
     updateRateF = updateRate;
     tempRacer = (Object_Racer *) obj->unk64;
     // Cap all of the velocities on the different axes.
@@ -2499,7 +2499,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
             CLAMP(tempRacer->velocity, playerIDF, playerID);
         }
         if (context != GAMEMODE_MENU || func_8000E148()) {
-            racer_vehicle_sounds(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
+            racer_sound_update(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
         lastCheckpointDist = tempRacer->checkpoint_distance;
         tempVar = func_800185E4(tempRacer->checkpoint, obj, xTemp, yTemp, zTemp, &tempRacer->checkpoint_distance, &tempRacer->unk1C8);
@@ -5963,7 +5963,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         case VEHICLE_ROCKET: update_rocket(updateRate, updateRateF, obj, racer, &gCurrentRacerInput, &gCurrentButtonsPressed, &gRaceStartTimer); break;
         }
         if (gameMode != GAMEMODE_MENU) {
-            racer_vehicle_sounds(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
+            racer_sound_update(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
         lastCheckpointDist = racer->checkpoint_distance;
         countOfObjects = racer->checkpoint;
@@ -6016,7 +6016,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     } else {
         func_8005B818(obj, racer, updateRate, updateRateF);
         if (gameMode != GAMEMODE_MENU) {
-            racer_vehicle_sounds(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
+            racer_sound_update(obj, gCurrentButtonsPressed, gCurrentRacerInput, updateRate);
         }
     }
     if (racer->magnetTimer == 0) {
