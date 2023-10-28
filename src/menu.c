@@ -11149,7 +11149,7 @@ void func_8009C6D4(s32 arg0) {
             entry.z = 0;
             gMenuObjects[arg0] = spawn_object(&entry, 0);
         } else {
-            gMenuObjects[arg0] = func_8005F99C(i & 0x3FFF, 0);
+            gMenuObjects[arg0] = object_model_init(i & 0x3FFF, 0);
         }
 
         D_80126750[arg0] = TRUE;
