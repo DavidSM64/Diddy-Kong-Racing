@@ -284,7 +284,7 @@ void func_800098A4(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6,
 
     if ((argB < 7) && (argC < 30)) {
         temp_v1 = &D_80119C58[argB];
-        temp_a0 = &temp_v1->unk4 + argC * 3; //This can't be right...
+        temp_a0 = (Vec3f *) (((u32 *) &temp_v1->unk4) + argC * 3); //This can't be right...
         temp_a0->x = x;
         temp_a0->y = y;
         temp_a0->z = z;
@@ -476,7 +476,7 @@ void func_8000A2E8(s32 arg0) {
  * Generates and renders a coloured line visible from anywhere.
  * Allows use of a colour, that interpolates from bright to dark from the beginning to the end of the line.
 */
-void debug_render_line(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *arg3, u8 red, u8 green, u8 blue) {
+void debug_render_line(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *coords, u8 red, u8 green, u8 blue) {
     Gfx *temp_dlist;
     Vertex *temp_verts;
     Triangle *temp_tris;
@@ -487,12 +487,12 @@ void debug_render_line(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVal
     s16 y2;
     s16 z2;
 
-    x1 =  arg3->x1;
-    y1 =  arg3->y1;
-    z1 =  arg3->z1;
-    x2 =  arg3->x2;
-    y2 =  arg3->y2;
-    z2 =  arg3->z2;
+    x1 =  coords->x1;
+    y1 =  coords->y1;
+    z1 =  coords->z1;
+    x2 =  coords->x2;
+    y2 =  coords->y2;
+    z2 =  coords->z2;
     temp_dlist = *dlist;
     
     temp_verts = *verts;

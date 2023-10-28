@@ -459,12 +459,13 @@ typedef struct LevelHeader {
   /* 0xBA */ s16 unkBA;
   /* 0xBC */ u8 unkBC;
   /* 0xBD */ s8 unkBD;
-  /* 0xBE */ u8 unkBE;
-  /* 0xBF */ u8 unkBF;
-  /* 0xC0 */ u8 unkC0;
-  /* 0xC1 */ u8 unkC1;
-  /* 0xC2 */ u8 unkC2;
-  /* 0xC3 */ u8 unkC3;
+  // Multiplayer gradient background
+  /* 0xBE */ u8 BGColourBottomR;
+  /* 0xBF */ u8 BGColourBottomG;
+  /* 0xC0 */ u8 BGColourBottomB;
+  /* 0xC1 */ u8 BGColourTopR;
+  /* 0xC2 */ u8 BGColourTopG;
+  /* 0xC3 */ u8 BGColourTopB;
 } LevelHeader;
 
 /* Size: 0x50 bytes */
