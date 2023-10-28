@@ -438,7 +438,7 @@ void func_8000A184(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
     for (i = 0; i < 7; i++) {
         if (D_80119C58[i].unk16C != 0) {
             for (j = 0; j < D_80119C58[i].unk17C; j++) {
-                func_8000A414(arg0, arg1, arg2, (floatXYZVals *) &D_80119C5C[i], 0xFF, 0xFF, 0);
+                debug_render_spline(arg0, arg1, arg2, (floatXYZVals *) &D_80119C5C[i], 0xFF, 0xFF, 0);
             }
         }
     }
@@ -446,7 +446,7 @@ void func_8000A184(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
     for (i = 0; i < 7; i++) {
         if (D_8011A6D8[i].unk0.unk0_02 != 0) {
             for (j = 0; j < D_8011A6D8[i].unkB8; j++) {
-                func_8000A414(arg0, arg1, arg2, (floatXYZVals *) &D_8011A6DC[i], 0xFF, 0xFF, 0);
+                debug_render_spline(arg0, arg1, arg2, (floatXYZVals *) &D_8011A6DC[i], 0xFF, 0xFF, 0);
             }
         }
     }
@@ -471,7 +471,11 @@ void func_8000A2E8(s32 arg0) {
     }
 }
 
-void func_8000A414(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *arg3, u8 red, u8 green, u8 blue) {
+/**
+ * Generates and renders a coloured spline visible from anywhere.
+ * Allows use of a colour, that interpolates from bright to dark from the beginning to the end of the spline.
+*/
+void debug_render_spline(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *arg3, u8 red, u8 green, u8 blue) {
     Gfx *temp_dlist;
     Vertex *temp_verts;
     Triangle *temp_tris;

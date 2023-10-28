@@ -61,7 +61,7 @@ void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 arg6,
 void func_800098A4(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6,
                    u8 arg7, u8 arg8, u16 arg9, u8 argA, u8 argB, u8 argC);
 s32 func_800099EC(u8 arg0);
-void func_8000A414(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *arg3, u8 red, u8 green, u8 blue);
+void debug_render_spline(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *arg3, u8 red, u8 green, u8 blue);
 void func_80006BFC(Object *obj, ObjectSegment *segment, Object *obj2, s32 updateRate);
 void update_spatial_audio_position(SoundMask *arg0, f32 x, f32 y, f32 z);
 s32 func_80009AB4(u8 arg0);

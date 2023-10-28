@@ -36,7 +36,7 @@ glabel func_8000A184
 /* 00AE04 8000A204 02802825 */  move  $a1, $s4
 /* 00AE08 8000A208 02A03025 */  move  $a2, $s5
 /* 00AE0C 8000A20C 02203825 */  move  $a3, $s1
-/* 00AE10 8000A210 0C002905 */  jal   func_8000A414
+/* 00AE10 8000A210 0C002905 */  jal   debug_render_spline
 /* 00AE14 8000A214 AFA00018 */   sw    $zero, 0x18($sp)
 /* 00AE18 8000A218 8248017C */  lb    $t0, 0x17c($s2)
 /* 00AE1C 8000A21C 26100001 */  addiu $s0, $s0, 1
@@ -71,7 +71,7 @@ glabel func_8000A184
 /* 00AE84 8000A284 02802825 */  move  $a1, $s4
 /* 00AE88 8000A288 02A03025 */  move  $a2, $s5
 /* 00AE8C 8000A28C 02203825 */  move  $a3, $s1
-/* 00AE90 8000A290 0C002905 */  jal   func_8000A414
+/* 00AE90 8000A290 0C002905 */  jal   debug_render_spline
 /* 00AE94 8000A294 AFA00014 */   sw    $zero, 0x14($sp)
 /* 00AE98 8000A298 824D00B8 */  lb    $t5, 0xb8($s2)
 /* 00AE9C 8000A29C 26100001 */  addiu $s0, $s0, 1
