@@ -5609,7 +5609,7 @@ void func_80059944(void) {
 }
 
 void func_80059984(s32 arg0) {
-    D_8011D59D = (s8)((D_8011D59C + 1) & 1);
+    D_8011D59D = ((D_8011D59C + 1) & 1);
     D_8011D5AC = arg0;
 }
  //get_previous_map_id?
@@ -5709,7 +5709,124 @@ s16 func_80059E20(void) {
     return D_8011D5A8[D_8011D59C];
 }
 
+#ifdef NON_EQUIVALENT
+s32 set_ghost_position_and_rotation(Object *obj) {
+    f32 vectorX[3];
+    f32 vectorY[3];
+    f32 vectorZ[3];
+    GhostNode *nextGhostNode;
+    GhostNode *ghostData;
+    GhostNode *curGhostNode;
+    Object_Racer *racer;
+    f32 catmullX;
+    f32 commonUnk0f32;
+    s32 commonUnk0s32;
+    s32 ghostNodeCount;
+    s32 ghostDataIndex;
+    s32 nodeIndex;
+    s32 rotDiff;
+    s32 rot;
+    s32 i;
+
+    ghostDataIndex = (D_8011D59C + 1) & 1;
+    if (is_time_trial_ghost(obj)) {
+        ghostDataIndex = 2;
+    }
+    
+    commonUnk0f32 = (f32) obj->properties.common.unk0 / 30.0f;
+    if (osTvType == TV_TYPE_PAL && ghostDataIndex == 2) {
+        commonUnk0f32 = ((f32) obj->properties.common.unk0 * 1.2) / 30.0f;
+    }
+    commonUnk0s32 = commonUnk0f32; //Truncate the float to an integer?
+
+    ghostNodeCount = D_8011D5A0[ghostDataIndex];
+    if (commonUnk0s32 >= (ghostNodeCount - 2)) {
+        return FALSE;
+    }
+    if (ghostDataIndex != 2 && get_current_map_id() != D_8011D5AC) {
+        return FALSE;
+    }
+    ghostData = gGhostData[ghostDataIndex];
+    nodeIndex = commonUnk0s32 - 1;
+    curGhostNode = &ghostData[nodeIndex];
+
+    //This whole loop is a bit of a mystery still... The i < 4 is a complete guess...
+    for (i = 0; i < 3; i++) {
+        if (nodeIndex == -1) {
+            vectorX[i] = ((curGhostNode + 1)->x * 2) - (curGhostNode + 2)->x;
+            vectorY[i] = ((curGhostNode + 1)->y * 2) - (curGhostNode + 2)->y;
+            vectorZ[i] = ((curGhostNode + 1)->z * 2) - (curGhostNode + 2)->z;
+        } else if (nodeIndex >= ghostNodeCount) {
+            vectorX[i] = (curGhostNode->x * 2) - (curGhostNode - 1)->x;
+            vectorY[i] = (curGhostNode->y * 2) - (curGhostNode - 1)->y;
+            vectorZ[i] = (curGhostNode->z * 2) - (curGhostNode - 1)->z;
+        } else {
+            vectorX[i] = curGhostNode->x;
+            vectorY[i] = curGhostNode->y;
+            vectorZ[i] = curGhostNode->z;
+        }
+        nodeIndex++;
+        curGhostNode++;
+    }
+    
+    catmullX = commonUnk0f32 - commonUnk0s32;
+    obj->segment.trans.x_position = catmull_rom_interpolation(vectorX, 0, catmullX);
+    obj->segment.trans.y_position = catmull_rom_interpolation(vectorY, 0, catmullX);
+    obj->segment.trans.z_position = catmull_rom_interpolation(vectorZ, 0, catmullX);
+
+    curGhostNode = &ghostData[commonUnk0s32];
+
+    //Y Rotation
+    rot = curGhostNode->yRotation;
+    nextGhostNode = curGhostNode + 1;
+    rotDiff = nextGhostNode->yRotation - (rot & 0xFFFF);
+    if (rotDiff > 0x8000) {
+        rotDiff -= 0xFFFF;
+    }
+    if (rotDiff < -0x8000) {
+        rotDiff += 0xFFFF;
+    }
+    obj->segment.trans.y_rotation = rot + (s32) (rotDiff * catmullX);
+    
+    //X Rotation
+    rot = curGhostNode->xRotation;
+    nextGhostNode = curGhostNode + 1;
+    rotDiff = nextGhostNode->xRotation - (rot & 0xFFFF);
+    if (rotDiff > 0x8000) {
+        rotDiff -= 0xFFFF;
+    }
+    if (rotDiff < -0x8000) {
+        rotDiff += 0xFFFF;
+    }
+    obj->segment.trans.x_rotation = rot + (s32) (rotDiff * catmullX);
+    
+    //Z Rotation
+    rot = curGhostNode->zRotation;
+    nextGhostNode = curGhostNode + 1;
+    rotDiff = nextGhostNode->zRotation - (rot & 0xFFFF);
+    if (rotDiff > 0x8000) {
+        rotDiff -= 0xFFFF;
+    }
+    if (rotDiff < -0x8000) {
+        rotDiff += 0xFFFF;
+    }
+    obj->segment.trans.z_rotation = rot + (s32) (rotDiff * catmullX);
+    
+    obj->unk74 = 0;
+    obj->segment.object.segmentID = get_level_segment_index_from_position(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
+    if (ghostNodeCount == (commonUnk0s32 + 3)) {
+        racer = &obj->unk64->racer;
+        if (catmullX >= 0.8) {
+            racer->transparency = 0;
+        } else {
+            racer->transparency = (0.8 - catmullX) * 96.0;
+        }
+    }
+    return TRUE;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/racer/set_ghost_position_and_rotation.s")
+#endif
 
 /**
  * Blocks the player's movement until the end of their update cycle.
