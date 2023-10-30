@@ -4973,7 +4973,7 @@ void render_magic_codes_ui(UNUSED s32 updateRate) {
     UNUSED s32 pad[2];
 
     set_text_background_colour(0, 0, 0, 0);
-    render_dialogue_box(&sMenuCurrDisplayList, 0, 0, 7);
+    render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
     set_text_font(ASSET_FONTS_BIGFONT);
     set_text_colour(0, 0, 0, 255, 128);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 35, gMenuText[ASSET_MENU_TEXT_MAGICCODES], ALIGN_MIDDLE_CENTER); // "MAGIC CODES"
@@ -5079,7 +5079,7 @@ void render_magic_codes_ui(UNUSED s32 updateRate) {
                 temp += 20;
             }
         }
-        render_dialogue_box(&sMenuCurrDisplayList, 0, 0, 6);
+        render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
     }
     if (get_filtered_cheats() & CHEAT_ROM_CHECKSUM) {
         calculate_and_display_rom_checksum();
@@ -7823,7 +7823,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                 if (gNumberOfActivePlayers == 1) {
                     // Glow effect
                     set_current_dialogue_box_coords(7, 134, sp80 + 112, 186, sp80 + 137);
-                    render_dialogue_box(&sMenuCurrDisplayList, 0, 0, 7);
+                    render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
                     if (gMenuOptionCount <= 0) {
                         render_textured_rectangle(&sMenuCurrDisplayList, &gRaceSelectionVehicleTitleTexture, 136, sp80 + 114, 255, 0xFF, 255, sMenuGuiOpacity);
                     } else {
@@ -7847,7 +7847,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                                 s32 temp_v1 = gTracksMenuPlayerNamePositions[s3 + (i * 2) + 1] + sp80;
                                 // Glow effect around Player image
                                 set_current_dialogue_box_coords(7, temp_v0_9 - 2, temp_v1 - 2, temp_v0_9 + 0x32, temp_v1 + 0x17);
-                                render_dialogue_box(&sMenuCurrDisplayList, 0, 0, 7);
+                                render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
                             }
 
                             // "Player" text image
