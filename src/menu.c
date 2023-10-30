@@ -3713,28 +3713,26 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 void func_80085B9C(UNUSED s32 updateRate) {
-    s32 yPos; //yPos
-    s32 var_s2; //for loop iterator?
-    s32 var_s3; //bool
-    s32 temp_f4;
     s32 videoWidth;
-    s32 temp_v0;
-    s32 drawTexturedRectangle; //bool
-    s32 drawPleaseWait; //bool
-    s32 drawOk; //bool
-    s32 drawDialogueBox; //bool
-    DrawTexture *tempTex;
+    s32 temp;
+    s32 sp5C;
+    s32 var_s1;
+    s32 var_s2;
+    s32 var_s3;
+    s32 drawTexturedRectangle;
+    s32 drawPleaseWait;
+    s32 drawOk;
+    s32 drawDialogueBox;
 
     videoWidth = GET_VIDEO_WIDTH(get_video_width_and_height_as_s32());
     var_s3 = FALSE;
-    drawTexturedRectangle = FALSE; //render textured rectangle
-    drawPleaseWait = FALSE; //Draw Please Wait
-    drawOk = FALSE; //Draw "OK?"
-    drawDialogueBox = FALSE; //Render Dialogue Box
+    drawTexturedRectangle = FALSE;
+    drawPleaseWait = FALSE;
+    drawOk = FALSE;
+    drawDialogueBox = FALSE;
     switch (gMenuOptionCount & 7) {
-        case 0: 
+        case 0:
             break;
         case 1:
         case 2:
@@ -3769,50 +3767,58 @@ void func_80085B9C(UNUSED s32 updateRate) {
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 35, gMenuText[ASSET_MENU_TEXT_SAVEOPTIONS], ALIGN_MIDDLE_CENTER);
     set_text_colour(255, 255, 255, 0, 255);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, gMenuText[ASSET_MENU_TEXT_SAVEOPTIONS], ALIGN_MIDDLE_CENTER);
+    
     if (drawTexturedRectangle) {
-        yPos = (osTvType == TV_TYPE_PAL) ? SCREEN_HEIGHT_HALF_PAL : SCREEN_HEIGHT_HALF;
-        yPos += ((s32) (gOptionBlinkTimer & 0x1F) >> 1);
-        var_s2 = 0;
-        tempTex = &gMenuSelectionArrowDown[var_s2];
-        do {
-            render_textured_rectangle(&sMenuCurrDisplayList, tempTex, SCREEN_WIDTH_HALF, yPos, 255, 255, 255, 255);
-            tempTex++;
-            var_s2++;
-            yPos += 16;
-        } while(var_s2 < 2);
+        temp = (osTvType == TV_TYPE_PAL) ? SCREEN_HEIGHT_HALF_PAL : SCREEN_HEIGHT_HALF;
+        temp += ((s32) (gOptionBlinkTimer & 0x1F) >> 1);
+        
+        for (var_s2 = 0; var_s2 < 2; var_s2 += 1, temp += 16) {
+            render_textured_rectangle(&sMenuCurrDisplayList, gMenuSelectionArrowDown, SCREEN_WIDTH_HALF, temp, 255, 255, 255, 255);
+        }
     }
+    
     if (var_s3) {
-        temp_f4 = D_80126BDC;
-        temp_v0 = 80 - (s32) ((D_80126BDC - temp_f4) * 164);
-        while ((temp_v0 < videoWidth) && (temp_f4 < D_80126A08)) {
-            func_800853D0(&D_80126A0C[temp_f4], temp_v0, 64);
-            temp_f4++;
-            temp_v0 += 164;
+        var_s2 = (s32) D_80126BDC;
+        temp = var_s2;
+        sp5C = 80 - (s32) ((D_80126BDC - var_s2) * 164.0f);
+        var_s1 = sp5C;
+        while (var_s1 < videoWidth && temp < D_80126A08) {
+            func_800853D0(&D_80126A0C[temp], var_s1, 64);
+            var_s1 += 164;
+            temp++;
         }
-        while ((temp_v0 > 0)  && (temp_f4 > 0)) {
-            temp_f4--;
-            temp_v0 -= 164;
-            func_800853D0(&D_80126A0C[temp_f4], temp_v0, 64);
+        temp = var_s2;
+        var_s1 = sp5C;
+        while((var_s1 > 0) && (temp > 0)) {
+            temp--;
+            var_s1 -= 164;
+            func_800853D0(&D_80126A0C[temp], var_s1, 64);
         }
     }
+    
     if (drawTexturedRectangle) {
-        temp_f4 = D_80126BEC;
-        temp_v0 = 80 - (s32) ((D_80126BEC - temp_f4) * 164);
-        while ((temp_v0 < videoWidth) && (temp_f4 < D_80126A00)) {
-            func_800853D0(&D_80126A04[temp_f4], temp_v0, 144);
-            temp_f4++;
-            temp_v0 += 164;
+        var_s2 = (s32) D_80126BEC;
+        temp = var_s2;
+        sp5C = 80- (s32) ((D_80126BEC - (f32) var_s2) * 164.0f);
+        var_s1 = sp5C;
+        while (var_s1 < videoWidth && temp < D_80126A00) {
+            func_800853D0(&D_80126A04[temp], var_s1, 144);
+            var_s1 += 164;
+            temp++;
         }
-        while ((temp_v0 > 0) && (temp_f4 > 0)) {
-            temp_f4--;
-            temp_v0 -= 164;
-            func_800853D0(&D_80126A04[temp_f4], temp_v0, 144);
+        temp = var_s2;
+        var_s1 = sp5C;
+        while (var_s1 > 0 && temp > 0) {
+            temp--;
+            var_s1 -= 164;
+            func_800853D0(&D_80126A04[temp], var_s1, 144);
         }
     }
+    
     set_text_font(2);
     set_text_colour(255, 255, 255, 0, 255);
     if (drawOk) {
-        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 128, D_800E8208, ALIGN_MIDDLE_CENTER); // "OK?"
+        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 128, (char *) D_800E8208, ALIGN_MIDDLE_CENTER); // "OK?"
     }
     if (drawPleaseWait) {
         draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 128, gMenuText[ASSET_MENU_TEXT_PLEASEWAIT], ALIGN_MIDDLE_CENTER);
@@ -3822,9 +3828,6 @@ void func_80085B9C(UNUSED s32 updateRate) {
     }
     func_80080E6C();
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_80085B9C.s")
-#endif
 
 s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, s32 fileSize, UNUSED s32 arg5) {
     s32 ret = 0;
