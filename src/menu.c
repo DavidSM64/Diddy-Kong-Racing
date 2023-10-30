@@ -2719,7 +2719,7 @@ void menu_logos_screen_init(void) {
     set_background_fill_colour(0, 0, 0);
     if (osTvType == TV_TYPE_PAL) {
         resize_viewport(0, 0, 38, SCREEN_WIDTH, SCREEN_HEIGHT - 16);
-        set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT + 44);
+        set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT_PAL);
     } else {
         resize_viewport(0, 0, 40, SCREEN_WIDTH, SCREEN_HEIGHT - 44);
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -7583,7 +7583,37 @@ void func_8008FF1C(s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/menu/func_8008FF1C.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/menu/func_800904E8.s")
+void func_800904E8(s32 updateRate) {
+    s32 x1;
+    s32 y1;
+    s32 x2;
+    s32 y2;
+    s32 i;
+
+    tick_thread30();
+    for(i = 0; i < updateRate; i++) {
+        gTrackSelectX += (D_801269E8 - gTrackSelectX) * 0.1;
+        gTrackSelectY += (D_801269EC - gTrackSelectY) * 0.1;
+    }
+    if (gOpacityDecayTimer == 32 && get_thread30_level_id_to_load() == 0) {
+        if (gTrackIdForPreview == D_801263D0) {
+            gSelectedTrackX = D_801269C8;
+            gSelectedTrackY = D_801269CC;
+        } else if (gTrackIdForPreview != D_801263D0 && gTrackIdForPreview != -1 && set_level_to_load_in_background(gTrackIdForPreview, 1)) {
+            D_801263D0 = gTrackIdForPreview;
+            gSelectedTrackX = D_801269C8;
+            gSelectedTrackY = D_801269CC;
+            set_level_default_vehicle(get_map_default_vehicle(gTrackIdForPreview));
+        }
+    }
+    x1 = ((gSelectedTrackX * SCREEN_WIDTH) - gTrackSelectX) + SCREEN_WIDTH_FLOAT_HALF - 80.0f;
+    x2 = x1 + SCREEN_WIDTH_HALF;
+    y1 = gTrackSelectViewPortHalfY - ((gSelectedTrackY * -gTrackSelectViewportY) - gTrackSelectY) - (gTrackSelectViewportY >> 2);
+    y2 = y1 + gTrackSelectViewPortHalfY;
+    resize_viewport(0, x1, y1, x2, y2);
+    copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2);
+    camEnableUserView(0, 0);
+}
 
 void func_80090918(s32 updateRate) {
     UNUSED s32 pad1[2];
@@ -10708,7 +10738,7 @@ void menu_credits_init(void) {
     set_background_fill_colour(0, 0, 0);
     if (osTvType == TV_TYPE_PAL) {
         resize_viewport(0, 0, 38, SCREEN_WIDTH, 224);
-        set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT + 44);
+        set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT_PAL);
     } else {
         resize_viewport(0, 0, 40, SCREEN_WIDTH, 196);
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
