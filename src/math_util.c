@@ -8,7 +8,7 @@
 #include "macros.h"
 #include "structs.h"
 
-extern s32 D_800DD430;
+extern s32 IntDisFlag;
 extern s32 gCurrentRNGSeed; //Official Name: rngSeed
 extern s32 gPrevRNGSeed;
 extern s16 gSineTable[];
@@ -16,19 +16,19 @@ extern s16 gArcTanTable[];
 
 /**
  * Most files below are handwritten assembly. Because of this, matching C code is impossible.
- * Nonmatching is not, so functionally equivilent C code can be here to replace these handwritten functions in nonmatching builds.
+ * Nonmatching is not, so functionally equivalent C code can be here to replace these handwritten functions in nonmatching builds.
  * Variables cannot be declared here because of the way they're aligned, so they have to stay in an assembly file.
 */
 
 /******************************/
 
 /* Official Name: disableInterrupts*/
-GLOBAL_ASM("asm/math_util/clear_status_register_flags.s")
+GLOBAL_ASM("asm/math_util/disableInterrupts.s")
 /* Official Name: enableInterrupts */
-GLOBAL_ASM("asm/math_util/set_status_register_flags.s")
+GLOBAL_ASM("asm/math_util/enableInterrupts.s")
 /* Official Name: setIntDisFlag */
-GLOBAL_ASM("asm/math_util/set_D_800DD430.s")
-GLOBAL_ASM("asm/math_util/get_D_800DD430.s")
+GLOBAL_ASM("asm/math_util/setIntDisFlag.s")
+GLOBAL_ASM("asm/math_util/getIntDisFlag.s")
 
 #ifdef NON_EQUIVALENT // Untested
 UNUSED void s32_matrix_to_s16_matrix(s32 **input, s16 **output) {

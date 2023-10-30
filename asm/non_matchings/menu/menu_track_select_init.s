@@ -536,7 +536,7 @@ glabel menu_track_select_init
 /* 08FBA8 8008EFA8 00000000 */   nop   
 /* 08FBAC 8008EFAC 0C0002C6 */  jal   func_80000B18
 /* 08FBB0 8008EFB0 00000000 */   nop   
-/* 08FBB4 8008EFB4 0C01BD59 */  jal   set_D_800DD430
+/* 08FBB4 8008EFB4 0C01BD59 */  jal   setIntDisFlag
 /* 08FBB8 8008EFB8 24040001 */   li    $a0, 1
 /* 08FBBC 8008EFBC 3C0C800E */  lui   $t4, %hi(gTracksMenuAdventureHighlightIndex) # $t4, 0x800e
 /* 08FBC0 8008EFC0 8D8C0418 */  lw    $t4, %lo(gTracksMenuAdventureHighlightIndex)($t4)

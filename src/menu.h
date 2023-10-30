@@ -535,7 +535,7 @@ s32 menu_credits_loop(s32 updateRate);
 void func_8007FFEC(s32 arg0);
 void func_800871D8(s32 arg0);
 SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1);
-void set_D_800DD430(s8 arg0);
+void setIntDisFlag(s8 bool);
 void func_80081218(void);
 void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour, TextureHeader *tex);
 void func_8008D8BC(s32 updateRate);
