@@ -5,7 +5,7 @@
 
 .section .data
 
-glabel IntDisFlag
+glabel gIntDisFlag
 .word 0x00000000
 
 glabel gCurrentRNGSeed

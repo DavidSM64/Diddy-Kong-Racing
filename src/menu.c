@@ -7095,7 +7095,7 @@ void menu_track_select_init(void) {
     play_music(SEQUENCE_MAIN_MENU);
     set_relative_volume_for_music(sMenuMusicVolume);
     func_80000B18();
-    setIntDisFlag(TRUE); // Set an interrupt?
+    set_gIntDisFlag(TRUE); // Set an interrupt?
     gIsInAdventureTwo = gTracksMenuAdventureHighlightIndex;
     gMultiplayerSelectedNumberOfRacersCopy = gMultiplayerSelectedNumberOfRacers;
 }
@@ -7260,7 +7260,7 @@ void func_8008F534(void) {
     func_80000B28();
     func_80000C2C();
     func_80001844();
-    setIntDisFlag(FALSE);
+    set_gIntDisFlag(FALSE);
 }
 
 #ifdef NON_EQUIVALENT
@@ -10783,7 +10783,7 @@ void menu_credits_init(void) {
     }
     func_80000B18();
     enable_new_screen_transitions();
-    setIntDisFlag(TRUE);
+    set_gIntDisFlag(TRUE);
 }
 
 /**
@@ -10816,7 +10816,7 @@ void func_8009BCF0(void) {
     set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO, VIEWPORT_AUTO);
     func_8009C4A8(gCreditsObjectIndices);
     unload_font(ASSET_FONTS_BIGFONT);
-    setIntDisFlag(FALSE);
+    set_gIntDisFlag(FALSE);
 }
 
 void func_8009BD5C(void) {

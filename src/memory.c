@@ -50,13 +50,13 @@ MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots) {
     s32 size;
     MemoryPoolSlot *slots;
     UNUSED s32 unused_2;
-    s32 *flags = disableInterrupts();
+    s32 *flags = disable_interrupts();
     MemoryPoolSlot *newPool;
 
     size = poolDataSize + (numSlots * sizeof(MemoryPoolSlot));
     slots = (MemoryPoolSlot *) allocate_from_main_pool_safe(size, COLOUR_TAG_WHITE);
     newPool = new_memory_pool(slots, size, numSlots);
-    enableInterrupts(flags);
+    enable_interrupts(flags);
     return newPool;
 }
 
@@ -133,13 +133,13 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag
     s32 nextIndex;
     s32 currIndex;
         
-    flags = disableInterrupts();
+    flags = disable_interrupts();
     if (size == 0) {
         stubbed_printf("*** mmAlloc: size = 0 ***\n");
     }
     pool = &gMemoryPools[poolIndex];
     if ((pool->curNumSlots + 1) == (*pool).maxNumSlots) {
-        enableInterrupts(flags);
+        enable_interrupts(flags);
         stubbed_printf("*** mm Error *** ---> No more slots available.\n");
         return NULL;
     }
@@ -163,10 +163,10 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag
     } while (nextIndex != -1);
     if (currIndex != -1) {
         allocate_memory_pool_slot(poolIndex, (s32) currIndex, size, 1, 0, colourTag);
-        enableInterrupts(flags);
+        enable_interrupts(flags);
         return (MemoryPoolSlot *) (slots + currIndex)->data;
     }
-    enableInterrupts(flags);
+    enable_interrupts(flags);
     stubbed_printf("\n*** mm Error *** ---> No suitble block found for allocation.\n");
     return NULL;
 }
@@ -189,12 +189,12 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
     MemoryPoolSlot *slots;
     s32 *flags;
     
-    flags = disableInterrupts();
+    flags = disable_interrupts();
     if (size == 0) {
         stubbed_printf("*** mmAllocAtAddr: size = 0 ***\n");
     }
     if ((gMemoryPools[0].curNumSlots + 1) == gMemoryPools[0].maxNumSlots) {
-        enableInterrupts(flags);
+        enable_interrupts(flags);
         stubbed_printf("\n*** mm Error *** ---> No more slots available.\n");
     } else {
         if (size & 0xF) {
@@ -207,18 +207,18 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
                 if ((u32) address >= (u32) curSlot->data && (u32)address + size <= (u32) curSlot->data + curSlot->size)  {
                     if (address == (u8 *) curSlot->data) {
                         allocate_memory_pool_slot(0, i, size, 1, 0, colorTag);
-                        enableInterrupts(flags);
+                        enable_interrupts(flags);
                         return curSlot->data;
                     } else {
                         i = allocate_memory_pool_slot(0, i, (u32) address - (u32) curSlot->data, 0, 1, colorTag);
                         allocate_memory_pool_slot(0, i, size, 1, 0, colorTag);
-                        enableInterrupts(flags);
+                        enable_interrupts(flags);
                         return (slots + i)->data;
                     }
                 }
             }
         }
-        enableInterrupts(flags);
+        enable_interrupts(flags);
     }
     stubbed_printf("\n*** mm Error *** ---> Can't allocate memory at desired address.\n");
     return NULL;
@@ -230,14 +230,14 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
  * Official name: mmSetDelay
  */
 void set_free_queue_state(s32 state) {
-    s32 *flags = disableInterrupts();
+    s32 *flags = disable_interrupts();
     gFreeQueueTimer = state;
     if (state == 0) { // flush free queue if state is 0.
         while (gFreeQueueCount > 0) {
             free_slot_containing_address(gFreeQueue[--gFreeQueueCount].dataAddress);
         }
     }
-    enableInterrupts(flags);
+    enable_interrupts(flags);
 }
 
 /**
@@ -246,13 +246,13 @@ void set_free_queue_state(s32 state) {
  * Official Name: mmFree
  */
 void free_from_memory_pool(void *data) {
-    s32 *flags = disableInterrupts();
+    s32 *flags = disable_interrupts();
     if (gFreeQueueTimer == 0) {
         free_slot_containing_address(data);
     } else {
         add_to_free_queue(data);
     }
-    enableInterrupts(flags);
+    enable_interrupts(flags);
 }
 
 /**
@@ -263,7 +263,7 @@ void clear_free_queue(void) {
     s32 i;
     s32 *flags;
 
-    flags = disableInterrupts();
+    flags = disable_interrupts();
 
     for (i = 0; i < gFreeQueueCount;) {
         gFreeQueue[i].freeTimer--;
@@ -278,7 +278,7 @@ void clear_free_queue(void) {
         }
     }
 
-    enableInterrupts(flags);
+    enable_interrupts(flags);
 }
 
 /* Official name: heapFree */
@@ -313,7 +313,7 @@ UNUSED void func_80071314(void) {
     s32 poolIndex;
     s32 slotIndex;
         
-    flags = disableInterrupts();
+    flags = disable_interrupts();
     poolIndex = gNumberOfMemoryPools;
     while (poolIndex != -1) {
         pool = &gMemoryPools[poolIndex];
@@ -327,7 +327,7 @@ UNUSED void func_80071314(void) {
                 if (pool->curNumSlots == 1) {
                     free_memory_pool_slot(poolIndex, slotIndex);
                 } else {
-                    enableInterrupts(flags);
+                    enable_interrupts(flags);
                     return;
                 }
             }
@@ -335,7 +335,7 @@ UNUSED void func_80071314(void) {
         } while (slotIndex != -1);
         poolIndex--;
     }
-    enableInterrupts(flags);
+    enable_interrupts(flags);
     stubbed_printf("\n*** mm Error *** ---> No match found for mmFree.\n");
 }
 
@@ -360,7 +360,7 @@ s32 func_80071478(u8 *address) {
     MemoryPool *pool;
     s32 *flags;
 
-    flags = disableInterrupts();
+    flags = disable_interrupts();
     pool = &gMemoryPools[get_memory_pool_index_containing_address(address)];
     slotIndex = 0;
     while (slotIndex != -1) {
@@ -368,13 +368,13 @@ s32 func_80071478(u8 *address) {
         if (address == (u8 *) slot->data) {
             if (slot->flags == 1 || slot->flags == 4) {
                 slot->flags |= 2;
-                enableInterrupts(flags);
+                enable_interrupts(flags);
                 return TRUE;
             }
         }
         slotIndex = slot->nextIndex;
     }
-    enableInterrupts(flags);
+    enable_interrupts(flags);
     return FALSE;
 }
 
@@ -384,7 +384,7 @@ s32 func_80071538(u8 *address) {
     MemoryPool *pool;
     s32 *flags;
 
-    flags = disableInterrupts();
+    flags = disable_interrupts();
     pool = &gMemoryPools[get_memory_pool_index_containing_address(address)];
     slotIndex = 0;
     while (slotIndex != -1) {
@@ -392,13 +392,13 @@ s32 func_80071538(u8 *address) {
         if (address == (u8 *)slot->data) {
             if (slot->flags & 2) {
                 slot->flags ^= 2;
-                enableInterrupts(flags);
+                enable_interrupts(flags);
                 return TRUE;
             }
         }
         slotIndex = slot->nextIndex;
     }
-    enableInterrupts(flags);
+    enable_interrupts(flags);
     return FALSE;
 }
 

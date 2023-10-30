@@ -8,7 +8,7 @@
 #include "macros.h"
 #include "structs.h"
 
-extern s32 IntDisFlag;
+extern s32 gIntDisFlag;
 extern s32 gCurrentRNGSeed; //Official Name: rngSeed
 extern s32 gPrevRNGSeed;
 extern s16 gSineTable[];
@@ -23,12 +23,12 @@ extern s16 gArcTanTable[];
 /******************************/
 
 /* Official Name: disableInterrupts*/
-GLOBAL_ASM("asm/math_util/disableInterrupts.s")
-/* Official Name: enableInterrupts */
-GLOBAL_ASM("asm/math_util/enableInterrupts.s")
+GLOBAL_ASM("asm/math_util/disable_interrupts.s")
+/* Official Name: enable_interrupts */
+GLOBAL_ASM("asm/math_util/enable_interrupts.s")
 /* Official Name: setIntDisFlag */
-GLOBAL_ASM("asm/math_util/setIntDisFlag.s")
-GLOBAL_ASM("asm/math_util/getIntDisFlag.s")
+GLOBAL_ASM("asm/math_util/set_gIntDisFlag.s")
+GLOBAL_ASM("asm/math_util/get_gIntDisFlag.s")
 
 #ifdef NON_EQUIVALENT // Untested
 UNUSED void s32_matrix_to_s16_matrix(s32 **input, s16 **output) {
