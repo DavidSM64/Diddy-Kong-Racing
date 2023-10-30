@@ -508,12 +508,14 @@ void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
 void func_80093D40(UNUSED s32 updateRate);
 s32 func_80095728(Gfx **dlist, MatrixS **matrices, Vertex **vertices, s32 updateRate);
 void func_80099E8C(UNUSED s32 updateRate);
+s32 func_800998E0(s32 arg0);
+void render_magic_codes_ui(s32 updateRate);
+void render_magic_codes_list_menu_text(s32 updateRate);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
 void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2);
 s32 menu_controller_pak_loop(s32 updateRate);
-void render_magic_codes_list_menu_text(s32 arg0);
 void menu_game_select_init(void);
 void render_file_select_menu(s32 arg0);
 void func_8008FF1C(s32 updateRate);
@@ -534,7 +536,6 @@ void func_8007FFEC(s32 arg0);
 void func_800871D8(s32 arg0);
 SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1);
 void set_D_800DD430(s8 arg0);
-s32 func_800998E0(s32 arg0);
 void func_80081218(void);
 void func_80080580(Gfx **dlist, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour, TextureHeader *tex);
 void func_8008D8BC(s32 updateRate);
@@ -546,7 +547,6 @@ void func_80084854(void);
 s32 func_80086AFC(void);
 void func_80085B9C(UNUSED s32 updateRate);
 void func_80098774(s32);
-void render_magic_codes_ui(s32 updateRate);
 void func_80096978(s32, f32);
 void func_80094D28(UNUSED s32 updateRate);
 
