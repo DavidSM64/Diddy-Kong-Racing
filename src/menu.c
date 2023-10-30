@@ -4963,130 +4963,135 @@ void menu_magic_codes_init(void) {
     load_font(ASSET_FONTS_BIGFONT);
 }
 
-#ifdef NON_EQUIVALENT
-
-// Close to matching, but should be functionally equivalent.
 void render_magic_codes_ui(s32 arg0) {
-    s32 xPos, yPos;
-    s32 yIncr;
-    s32 i, j;
-    s32 temp, alpha, green;
-    char c;
+    u16 *cheatData;
+    s32 j;
+    s32 green;
+    s32 i;
+    s32 alpha;
+    s32 x;
+    s32 alpha2;
+    s32 y;
+    s8 displayChar[2];
+    s32 temp;
+    s32 y2;
+    s32 pad[2];
 
     set_text_background_colour(0, 0, 0, 0);
-    render_dialogue_box(&sMenuCurrDisplayList, 0, 0, 7);
-    set_text_font(ASSET_FONTS_BIGFONT);
-    set_text_colour(0, 0, 0, 255, 128);
-    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 35, gMenuText[ASSET_MENU_TEXT_MAGICCODES], ALIGN_MIDDLE_CENTER); //"MAGIC CODES"
-    set_text_colour(255, 255, 255, 0, 255);
-    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, gMenuText[ASSET_MENU_TEXT_MAGICCODES], ALIGN_MIDDLE_CENTER); //"MAGIC CODES"
-    set_text_font(ASSET_FONTS_FUNFONT);
-    set_text_colour(255, 255, 255, 0, 255);
-
-    c = 'A';
-    yPos = 60;
-    // Draw the input table
-    for (i = 0; i < 4; i++) {
-        for (j = 0; j < 7; j++) {
-            xPos = 64 + (j * 32);
-            if (gOptionsMenuItemIndex == 5 && j == gCheatInputCurrentColumn && i == gCheatInputCurrentRow) {
-                temp = gOptionBlinkTimer * 8;
-                if (temp >= 256) {
-                    temp = 511 - temp;
+    render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 7);
+    set_text_font(2);
+    set_text_colour(0, 0, 0, 0xFF, 0x80);
+    draw_text(&sMenuCurrDisplayList, 0xA1, 0x23, gMenuText[17], ALIGN_MIDDLE_CENTER);
+    set_text_colour(0xFF, 0xFF, 0xFF, 0, 0xFF);
+    draw_text(&sMenuCurrDisplayList, 0xA0, 0x20, gMenuText[17], ALIGN_MIDDLE_CENTER);
+    temp = 'A';
+    set_text_font(0);
+    set_text_colour(0xFF, 0xFF, 0xFF, 0, 0xFF);
+    for (i = 0, y = 0x3C; i < 4; i++, y += 22) {
+        for(j = 0, x = 0x40; j < 7; j++, x += 32) {
+            if (gOptionsMenuItemIndex == 5) {
+                if (j == gCheatInputCurrentColumn) {
+                    if (i == gCheatInputCurrentRow) {
+                        alpha2 = gOptionBlinkTimer * 8;
+                        if (alpha2 >= 0x100) {
+                            alpha2 = 0x1FF - alpha2;
+                        }
+                        alpha2 >>= 1;
+                        alpha2 += 0x80;
+                        set_text_colour(0x80, 0xFF, 0xC0, alpha2, 0xFF);
+                    }
                 }
-                set_text_colour(128, 255, 192, (temp >> 1) + 128, 255);
             }
-            if (c < '[') {
-                draw_text(&sMenuCurrDisplayList, xPos, yPos, &c, ALIGN_MIDDLE_CENTER); // Draw the character
+            if (temp <= 'Z') {
+                displayChar[0] = temp;
+                displayChar[1] = '\0';
+                draw_text(&sMenuCurrDisplayList, x, y, &displayChar, ALIGN_MIDDLE_CENTER);
             } else if (j == 5) {
-                draw_text(&sMenuCurrDisplayList, xPos, yPos, &D_800E8210, ALIGN_MIDDLE_CENTER); // D_800E8210 = "DEL"
+                draw_text(&sMenuCurrDisplayList, x, y, D_800E8210, ALIGN_MIDDLE_CENTER);
             } else {
-                draw_text(&sMenuCurrDisplayList, xPos, yPos, &D_800E8214, ALIGN_MIDDLE_CENTER); // D_800E8214 = "OK"
+                draw_text(&sMenuCurrDisplayList, x, y, D_800E8214, ALIGN_MIDDLE_CENTER);
             }
-            if ((5 == gOptionsMenuItemIndex) && (j == gCheatInputCurrentColumn) && (i == gCheatInputCurrentRow)) {
-                set_text_colour(255, 255, 255, 0, 255);
+            if ((gOptionsMenuItemIndex == 5) && (j == gCheatInputCurrentColumn) && (i == gCheatInputCurrentRow)) {
+                set_text_colour(0xFF, 0xFF, 0xFF, 0, 0xFF);
             }
-            c++;
-            c &= 0xFF;
+            temp = (temp + 1) & 0xFF;
         }
-        yPos += 0x16;
     }
-
-    temp = gOptionBlinkTimer * 8;
-    if (temp >= 256) {
-        temp = 511 - temp;
+    alpha2 = gOptionBlinkTimer * 8;
+    if (alpha2 >= 0x100) {
+        alpha2 = 0x1FF - alpha2;
     }
-
-    set_text_font(ASSET_FONTS_FUNFONT);
-    yPos = 164;
-    yIncr = 16;
+    set_text_font(0);
+    i = 0;
+    temp = 0xA4;
+    y = 0x10;
     if (osTvType == TV_TYPE_PAL) {
-        yIncr = 24;
+        y = 0x18;
     }
-
-    for (i = 0; gMagicCodeMenuStrings[i] != NULL; i++) {
+    while (gMagicCodeMenuStrings[i] != NULL) {
         alpha = 0;
-        if (i == gOptionsMenuItemIndex && gMenuOptionCount == 0) {
-            alpha = temp;
+        if (i == gOptionsMenuItemIndex) {
+            if (gMenuOptionCount == 0) {
+                alpha = alpha2;
+            }
         }
-        set_text_colour(255, 255, 255, alpha, 255);
-        draw_text(&sMenuCurrDisplayList, POS_CENTRED, yPos, gMagicCodeMenuStrings[i], ALIGN_MIDDLE_CENTER);
-        yPos += yIncr;
+        set_text_colour(0xFF, 0xFF, 0xFF, alpha, 0xFF);
+        draw_text(&sMenuCurrDisplayList, POS_CENTRED, temp, gMagicCodeMenuStrings[i], ALIGN_MIDDLE_CENTER);
+        i++;
+        temp += y;
     }
-    set_text_font(ASSET_FONTS_FUNFONT);
-    set_text_colour(255, 255, 128, 128, 255);
-    set_text_background_colour(0, 0, 128, 128);
+    set_text_font(0);
+    set_text_colour(0xFF, 0xFF, 0x80, 0x80, 0xFF);
+    set_text_background_colour(0, 0, 0x80, 0x80);
     if (gOptionsMenuItemIndex == 4) {
         if (D_80126C4C == -1) {
-            draw_text(&sMenuCurrDisplayList, POS_CENTRED, 144, gMenuText[ASSET_MENU_TEXT_BADCODE], ALIGN_MIDDLE_CENTER); //"Sorry, the code was incorrect"
+            draw_text(&sMenuCurrDisplayList, POS_CENTRED, 0x90, gMenuText[18], ALIGN_MIDDLE_CENTER);
         } else {
-            // Draw cheat code name.
-            draw_text(&sMenuCurrDisplayList, POS_CENTRED, 144, (char *)(*gCheatsAssetData) + (*gCheatsAssetData + 1)[D_80126C4C + 1], ALIGN_MIDDLE_CENTER);
+            cheatData = (*gCheatsAssetData) + 1;
+            draw_text(&sMenuCurrDisplayList, POS_CENTRED, 0x90, &((char*)(*gCheatsAssetData))[cheatData[D_80126C4C + 1]], ALIGN_MIDDLE_CENTER);
         }
-    } else if (5 == gOptionsMenuItemIndex) {
-        draw_text(&sMenuCurrDisplayList, POS_CENTRED, 144, D_80126C58, ALIGN_MIDDLE_CENTER);
+    } else if (gOptionsMenuItemIndex == 5) {
+        draw_text(&sMenuCurrDisplayList, POS_CENTRED, 0x90, (s8* ) D_80126C58, ALIGN_MIDDLE_CENTER);
     } else if (gOptionsMenuItemIndex == 6) {
-        draw_text(&sMenuCurrDisplayList, POS_CENTRED, 144, gMenuText[ASSET_MENU_TEXT_ALLCODESDELETED], ALIGN_MIDDLE_CENTER); //"All cheats have been deleted"
+        draw_text(&sMenuCurrDisplayList, POS_CENTRED, 0x90, gMenuText[19], ALIGN_MIDDLE_CENTER);
     }
     if (gMenuOptionCount != 0) {
-        yPos = SCREEN_HEIGHT_HALF;
         if (osTvType == TV_TYPE_PAL) {
-            yPos = SCREEN_HEIGHT_HALF + 14;
+            temp = 0x86;
+        } else {
+            temp = 0x78;
         }
         assign_dialogue_box_id(6);
-        set_dialogue_font(6, ASSET_FONTS_FUNFONT);
-        set_current_dialogue_box_coords(6, 76, yPos - 28, 244, yPos + 28);
-        set_current_dialogue_background_colour(6, 0, 0, 0, 160);
-        yPos = 4;
-        for (i = 0; i < 3; i++) {
-            alpha = 0;
+        set_dialogue_font(6, 0);
+        set_current_dialogue_box_coords(6, 0x4C, temp - 0x1C, 0xF4, temp + 0x1C);
+        set_current_dialogue_background_colour(6, 0, 0, 0, 0xA0);
+        temp = 4;
+        
+        for(i = 0; i < 3; i++) {
             green = 0xFF;
+            alpha = 0;
             if (i == 0) {
-                alpha = 64;
                 green = 0;
+                alpha = 0x40;
             } else if (i == gMenuOptionCount) {
-                alpha = temp;
+                alpha = alpha2;
             }
-            set_current_text_colour(6, 255, green, 255, alpha, 255);
-
+            set_current_text_colour(6, 0xFF, green, 0xFF, alpha, 0xFF);
             // gMenuText[148] = "CLEAR ALL CODES?", [149] = "OK", [150] = "CANCEL"
-            render_dialogue_text(6, POS_CENTRED, yPos, gMenuText[148 + i], 1, HORZ_ALIGN_CENTER);
-
+            render_dialogue_text(6, POS_CENTRED, temp, gMenuText[148 + i], 1, 4);
             if (i != 0) {
-                yPos += 16;
+                temp += 0x10;
             } else {
-                yPos += 20;
+                temp += 0x14;
             }
         }
-        render_dialogue_box(&sMenuCurrDisplayList, 0, 0, 6);
+        render_dialogue_box(&sMenuCurrDisplayList, NULL, NULL, 6);
     }
     if (get_filtered_cheats() & CHEAT_ROM_CHECKSUM) {
         calculate_and_display_rom_checksum();
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/render_magic_codes_ui.s")
-#endif
+
 
 s32 menu_magic_codes_loop(s32 updateRate) {
     s32 i;
@@ -5360,68 +5365,60 @@ void menu_magic_codes_list_init(void) {
     }
 }
 
-#ifdef NON_EQUIVALENT
-
-// Should be functionally equivalent
 void render_magic_codes_list_menu_text(s32 arg0) {
-    s32 numOfUnlockedCheats;
-    s32 alpha;
-    s32 phi_v0;
-    s32 yPos;
     s32 i;
+    s32 alpha;
+    s32 y;
+    s32 var_s3;
+    s32 code;
+    u16 *cheatData;
 
     set_text_background_colour(0, 0, 0, 0);
-    set_text_font(ASSET_FONTS_BIGFONT);
-    set_text_colour(0, 0, 0, 255, 128);
-    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 35, gMenuText[ASSET_MENU_TEXT_MAGICCODESLIST], ALIGN_MIDDLE_CENTER); // MAGIC CODES LIST
-    set_text_colour(255, 255, 255, 0, 255);
-    draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, gMenuText[ASSET_MENU_TEXT_MAGICCODESLIST], ALIGN_MIDDLE_CENTER); // MAGIC CODES LIST
-    numOfUnlockedCheats = 0;
-    phi_v0 = 1;
-    for (i = 0; i < 32; i++) {
-        if (phi_v0 & gUnlockedMagicCodes) {
-            D_80126C80[numOfUnlockedCheats] = i;
-            numOfUnlockedCheats += 1;
+    set_text_font(2);
+    set_text_colour(0, 0, 0, 0xFF, 0x80);
+    draw_text(&sMenuCurrDisplayList, 0xA1, 0x23, gMenuText[20], ALIGN_MIDDLE_CENTER);
+    set_text_colour(0xFF, 0xFF, 0xFF, 0, 0xFF);
+    draw_text(&sMenuCurrDisplayList, 0xA0, 0x20, gMenuText[20], ALIGN_MIDDLE_CENTER);
+    
+    for (i = 0, code = 1, var_s3 = 0; i < 32; i++, code <<= 1) {
+        if (code & gUnlockedMagicCodes) {
+            D_80126C80[var_s3] = i;
+            var_s3 += 1;
         }
-        phi_v0 <<= 1;
     }
-    yPos = 54;
-    alpha = gOptionBlinkTimer;
-    alpha *= 8;
-    if (alpha >= 256) {
-        alpha = 511 - alpha;
+    y = 0x36; 
+    alpha = gOptionBlinkTimer * 8;
+    if (alpha >= 0x100) {
+        alpha = 0x1FF - alpha;
     }
-    set_text_font(ASSET_FONTS_FUNFONT);
-    set_text_colour(255, 255, 255, 0, 255);
-    for (i = gMenuOptionCount; (i < gMenuOptionCount + gNumOnscreenMagicCodes) && (i < numOfUnlockedCheats); i++) {
+    set_text_font(0);
+    set_text_colour(0xFF, 0xFF, 0xFF, 0, 0xFF);
+    
+    for (i = gMenuOptionCount, cheatData = (*gCheatsAssetData) + 1; (i < gMenuOptionCount + gNumOnscreenMagicCodes) && (i < var_s3); i++, y+= 16) {
         if (i == gOptionsMenuItemIndex) {
-            set_text_colour(255, 255, 255, alpha, 255);
+            set_text_colour(0xFF, 0xFF, 0xFF, alpha, 0xFF);
         }
-        draw_text(&sMenuCurrDisplayList, 48, yPos, (char *)(*gCheatsAssetData) + ((*gCheatsAssetData + 1)[D_80126C80[i] * 2 + 1]), ALIGN_TOP_LEFT);
+        draw_text(&sMenuCurrDisplayList, 0x30, y, (char*)(*gCheatsAssetData) + cheatData[(D_80126C80[i] << 1) + 1], ALIGN_TOP_LEFT);
         if ((1 << D_80126C80[i]) & gActiveMagicCodes) {
-            draw_text(&sMenuCurrDisplayList, 256, yPos, gMenuText[ASSET_MENU_TEXT_ON], ALIGN_TOP_LEFT); // ON
+            draw_text(&sMenuCurrDisplayList, 0x100, y, gMenuText[21], ALIGN_TOP_LEFT);
         } else {
-            draw_text(&sMenuCurrDisplayList, 256, yPos, gMenuText[ASSET_MENU_TEXT_OFF], ALIGN_TOP_LEFT); // OFF
-        }
+            draw_text(&sMenuCurrDisplayList, 0x100, y, gMenuText[22], ALIGN_TOP_LEFT);
+        } 
         if (i == gOptionsMenuItemIndex) {
-            set_text_colour(255, 255, 255, 0, 255);
+            set_text_colour(0xFF, 0xFF, 0xFF, 0, 0xFF);
         }
-        yPos += 16;
     }
     if (i < gMenuOptionCount + gNumOnscreenMagicCodes) {
-        if (numOfUnlockedCheats == gOptionsMenuItemIndex) {
-            set_text_colour(255, 255, 255, alpha, 255);
+        if (var_s3 == gOptionsMenuItemIndex) {
+            set_text_colour(0xFF, 0xFF, 0xFF, alpha, 0xFF);
         }
-        draw_text(&sMenuCurrDisplayList, POS_CENTRED, yPos, gMenuText[ASSET_MENU_TEXT_RETURN], ALIGN_TOP_CENTER); // RETURN
+        draw_text(&sMenuCurrDisplayList, -0x8000, y, gMenuText[5], ALIGN_TOP_CENTER);
         return;
     }
     if (gOptionBlinkTimer & 8) {
-        render_textured_rectangle(&sMenuCurrDisplayList, &gMenuSelectionArrowDown, SCREEN_WIDTH_HALF, yPos + 8, 255, 255, 255, 255);
+        render_textured_rectangle(&sMenuCurrDisplayList, gMenuSelectionArrowDown, 0xA0, y + 8, (u8) 0xFF, (u8) 0xFF, (u8) 0xFF, (u8) 0xFF);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/render_magic_codes_list_menu_text.s")
-#endif
 
 void func_8008A8F8(s32 arg0, s32 arg1, s32 arg2) {
     if ((arg0 & arg1) && (arg0 & gActiveMagicCodes)) {
@@ -10278,7 +10275,35 @@ void func_8009963C(void) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_800998E0.s")
+s32 func_800998E0(s32 arg0) {
+    s32 temp_s0;
+    s32 result;
+    s32 i;
+
+    result = 0;
+    if ((arg0 >= 0) && (arg0 < D_801264D4)) {
+        play_sound_global(0xEFU, NULL);
+        temp_s0 = D_80126540[arg0];
+        result = func_800753D8(D_801264D0, temp_s0);
+        if (result == 0) {
+            D_801264DC[temp_s0] = 0xFF;
+            D_801264D4--;
+            for(i = arg0; i < D_801264D4; i++) {
+                D_80126540[i] = D_80126540[i + 1];
+                D_80126508[i] = D_80126508[i + 1];
+                D_80126510[i] = D_80126510[i + 1];
+                D_80126518[i] = D_80126518[i + 1];
+                D_80126520[i] = D_80126520[i + 1];
+            }
+            for(i = 0; i < D_801264D4; i++) {
+                if(temp_s0 < D_80126540[i]) {
+                    D_80126540[i]--;
+                }
+            }
+        }
+    }
+    return result;
+}
 
 #ifdef NON_EQUIVALENT
 
@@ -11868,7 +11893,102 @@ s32 tt_menu_loop(void) {
     return currentOption;
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_8009E3D0.s")
+void func_8009E3D0(void) {
+    s32 numBalloonsTensDigit;
+    s32 y;
+    s32 i;
+    s32 x;
+    s32 numOfItem;
+    Settings *settings;
+    s32 flag;
+    s16 tempX;
+
+    if (D_800E1E28 == 1) {
+        D_800E1E28++;
+        return;
+    }
+    settings = get_settings();
+    func_80068508(1);
+    if (osTvType == TV_TYPE_PAL) {
+        y = 10;
+    } else {
+        y = 20;
+    }
+    numOfItem = 8;
+    if (settings->cutsceneFlags & 4) {
+        numOfItem = 9;
+    }
+    tempX = -74;
+    gMenuImageStack[numOfItem].unkC = tempX;
+    gMenuImageStack[numOfItem].unk10 = (65 - y);
+    func_8009CA60(numOfItem);
+    sprite_opaque(0);
+    tempX = -29;
+    gMenuImageStack[0].unkC = tempX;
+    gMenuImageStack[0].unk10 = (98 - y);
+    gMenuImageStack[0].unkC -= 6.0f;
+    
+    flag = (settings->balloonsPtr[0] / 10); // settings->balloonsPtr[0] is the total balloon count.
+    numBalloonsTensDigit = flag;
+    if (numBalloonsTensDigit != 0) {
+        gMenuImageStack[0].unk18 = numBalloonsTensDigit;
+        func_8009CA60(0);
+        gMenuImageStack[0].unkC += 12.0f;
+    }
+    gMenuImageStack[0].unk18 = (settings->balloonsPtr[0] % 10);
+    func_8009CA60(0);
+    tempX = -49;
+    gMenuImageStack[10].unkC = tempX;
+    gMenuImageStack[10].unk10 = (98 - y);
+    func_8009CA60(10);
+    sprite_opaque(1);
+    y += 50;
+    tempX = -89;
+    gMenuImageStack[15].unkC = tempX;
+    gMenuImageStack[15].unk10 = (95 - y);
+    gMenuImageStack[15].unk18 = settings->wizpigAmulet;
+    func_8009CA60(15);
+    tempX = -29;
+    gMenuImageStack[16].unkC = tempX;
+    gMenuImageStack[16].unk10 = (95 - y);
+    gMenuImageStack[16].unk18 = settings->ttAmulet;
+    func_8009CA60(16);
+    
+    for (flag = 3, numOfItem = 0, i = 0; i < 16; flag <<= 2, i++) {
+        if (flag == (settings->trophies & flag)) {
+            numOfItem++;
+        }
+    }
+    y += 50;
+    for (x = 20, i = 0; i < 4; i++, x += 30) {
+        gMenuImageStack[13].unkC = (x - 124);
+        gMenuImageStack[13].unk10 = (95 - y);
+        if (i < numOfItem) {
+            gMenuImageStack[13].unk18 = 1;
+        } else {
+            gMenuImageStack[13].unk18 = 0;
+        }
+        func_8009CA60(13);
+    }
+    for (flag = 1, i = 0, numOfItem = 0; i < 16; flag <<= 1, i++) {
+        if (flag == (settings->keys & flag)) {
+            numOfItem++;
+        }
+    }
+    y += 45;
+    for (x = 20, i = 0; i < 4; i++, x += 30) {
+        gMenuImageStack[14].unkC = (x - 124);
+        gMenuImageStack[14].unk10 = (95 - (y));
+        if (i < numOfItem) {
+            gMenuImageStack[14].unk18 = 1;
+        } else {
+            gMenuImageStack[14].unk18 = 0;
+        }
+        func_8009CA60(14);
+    }
+    func_80068508(0);
+}
+
 
 /**
  * Dialogue menu for the trophy cabinets in each world hub.
