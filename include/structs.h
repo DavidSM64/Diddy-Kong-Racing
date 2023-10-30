@@ -1891,12 +1891,12 @@ typedef struct GhostHeader {
 
 /* Size: 12 bytes */
 typedef struct GhostNode {
-    s16 x;
-    s16 y;
-    s16 z;
-    s16 zRotation; // This order is correct.
-    s16 xRotation;
-    s16 yRotation;
+  /* 0x00 */ s16 x;
+  /* 0x02 */ s16 y;
+  /* 0x04 */ s16 z;
+  /* 0x06 */ s16 zRotation; // This order is correct.
+  /* 0x08 */ s16 xRotation;
+  /* 0x0A */ s16 yRotation;
 } GhostNode;
 
 /* Size: 12 bytes */
