@@ -7008,18 +7008,18 @@ void menu_track_select_init(void) {
     var_a0 = -160;
     var_v0 = 0;
     for (var_v0 = 0; var_v0 < 80; var_v0++) {
-        gTrackSelectBgVertices[var_v0].x = var_a0;
+        gTrackSelectBgVertices[var_v0]->x = var_a0;
         var_a0 = -var_a0;
-        gTrackSelectBgVertices[var_v0].z = -1024;
-        gTrackSelectBgVertices[var_v0].r = 0xFF;
-        gTrackSelectBgVertices[var_v0].g = 0xFF;
-        gTrackSelectBgVertices[var_v0].b = 0xFF;
+        gTrackSelectBgVertices[var_v0]->z = -1024;
+        gTrackSelectBgVertices[var_v0]->r = 0xFF;
+        gTrackSelectBgVertices[var_v0]->g = 0xFF;
+        gTrackSelectBgVertices[var_v0]->b = 0xFF;
     }
     for (var_v0 = 0; var_v0 < 40; var_v0++) {
-        gTrackSelectBgTriangles[var_v0].flags = 0x40; // 0x40 = Draw backface
-        gTrackSelectBgTriangles[var_v0].vi0 = 0;
-        gTrackSelectBgTriangles[var_v0].vi1 = 2;
-        gTrackSelectBgTriangles[var_v0].vi2 = 1;
+        gTrackSelectBgTriangles[var_v0]->flags = 0x40; // 0x40 = Draw backface
+        gTrackSelectBgTriangles[var_v0]->vi0 = 0;
+        gTrackSelectBgTriangles[var_v0]->vi1 = 2;
+        gTrackSelectBgTriangles[var_v0]->vi2 = 1;
     }
     D_80126924 = 0;
     set_background_draw_function(func_8008F618);
