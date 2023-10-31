@@ -514,12 +514,12 @@ void render_magic_codes_list_menu_text(s32 updateRate);
 void func_800904E8(s32 updateRate);
 void func_80085B9C(UNUSED s32 updateRate);
 void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale);
+void render_file_select_menu(UNUSED s32 updateRate);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
 s32 menu_controller_pak_loop(s32 updateRate);
 void menu_game_select_init(void);
-void render_file_select_menu(s32 arg0);
 void func_8008FF1C(s32 updateRate);
 void func_80090918(s32 updateRate);
 void render_track_select_setup_ui(s32 updateRate);

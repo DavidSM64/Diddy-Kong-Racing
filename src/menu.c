@@ -6328,97 +6328,99 @@ void render_menu_image(s32 imageID, s32 xOffset, s32 yOffset, s32 red, s32 green
     func_8009CA60(imageID);
 }
 
-#ifdef NON_EQUIVALENT
-// Shouldn't have any major issues.
 void render_file_select_menu(UNUSED s32 updateRate) {
-    s32 s2;
-    s32 s5;
-    s32 y;
-    s32 phi_v0_2;
-    u8 tempName[8];
-    u32 color;
+    s32 yPos;
+    s32 var_s2;
+    s32 temp;
+    u32 colour;
     s32 i;
+    UNUSED s32 pad[3];
+    char trimmedFilename[4];
 
     if (osTvType == TV_TYPE_PAL) {
-        y = 12;
+        yPos = 12;
     } else {
-        y = 0;
+        yPos = 0;
     }
 
     func_8009BD5C();
     set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         if (gSavefileInfo[i].isAdventure2 == gIsInAdventureTwo || gSavefileInfo[i].isStarted == 0) {
-            color = COLOUR_RGBA32(176, 224, 192, 255);
+            colour = COLOUR_RGBA32(176, 224, 192, 255);
         } else {
-            color = COLOUR_RGBA32(106, 144, 115, 255);
+            colour = COLOUR_RGBA32(106, 144, 115, 255);
         }
         func_80080580(NULL, gFileSelectButtons[i].x - 160, 120 - gFileSelectButtons[i].y, gFileSelectButtons[i].width,
-            gFileSelectButtons[i].height, gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, color, gMenuObjects[TEXTURE_SURFACE_BUTTON_WOOD]);
+            gFileSelectButtons[i].height, gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, colour, gMenuObjects[TEXTURE_SURFACE_BUTTON_WOOD]);
     }
     func_80080BC8(&sMenuCurrDisplayList);
     if (gOpacityDecayTimer == 0) {
         set_text_font(ASSET_FONTS_BIGFONT);
         set_text_background_colour(0, 0, 0, 0);
-        s5 = 10;
         for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
-            if (gSavefileInfo[i].isStarted != 0) {
-                s2 = 0xB;
+            if (gSavefileInfo[i].isStarted) {
                 sprite_opaque(FALSE);
-                if (gSavefileInfo[i].isAdventure2 != 0) {
-                    s2 = 0xC;
+                var_s2 = 0xB;
+                if (gSavefileInfo[i].isAdventure2) {
+                    var_s2 = 0xC;
                 }
-                render_menu_image(s2, gFileSelectElementPos[2] + gFileSelectButtons[i].x, gFileSelectElementPos[3] + gFileSelectButtons[i].y, 0, 0, 0, 128);
+                render_menu_image(var_s2, gFileSelectButtons[i].x + gFileSelectElementPos[2], gFileSelectButtons[i].y + gFileSelectElementPos[3], 0, 0, 0, 128);
                 func_80068508(TRUE);
-                gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount / s5;
-                render_menu_image(0, (gFileSelectElementPos[6] + gFileSelectButtons[i].x) - 6, gFileSelectElementPos[7] + gFileSelectButtons[i].y, 0, 0, 0, 128);
-                gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount % s5;
-                render_menu_image(0, gFileSelectElementPos[6] + gFileSelectButtons[i].x + 6, gFileSelectElementPos[7] + gFileSelectButtons[i].y, 0, 0, 0, 128);
+                gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount / 10;
+                render_menu_image(0, gFileSelectButtons[i].x + gFileSelectElementPos[6] - 6, gFileSelectButtons[i].y + gFileSelectElementPos[7], 0, 0, 0, 128);
+                gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount % 10;
+                render_menu_image(0, gFileSelectButtons[i].x + gFileSelectElementPos[6] + 6, gFileSelectButtons[i].y + gFileSelectElementPos[7], 0, 0, 0, 128);
                 func_80068508(FALSE);
                 sMenuGuiColourG = 64;
                 sMenuGuiColourB = 64;
-                render_menu_image(s5, gFileSelectElementPos[8] + gFileSelectButtons[i].x, gFileSelectElementPos[9] + gFileSelectButtons[i].y, 0, 0, 0, 128);
+                render_menu_image(10, gFileSelectButtons[i].x + gFileSelectElementPos[8], gFileSelectButtons[i].y + gFileSelectElementPos[9], 0, 0, 0, 128);
                 sMenuGuiColourG = 255;
                 sMenuGuiColourB = 255;
                 sprite_opaque(TRUE);
             } else {
                 set_text_colour(255, 255, 255, 64, 255);
-                draw_text(&sMenuCurrDisplayList, gFileSelectElementPos[4] + gFileSelectButtons[i].x, gFileSelectElementPos[5] + gFileSelectButtons[i].y + y, gMenuText[ASSET_MENU_TEXT_NEW], ALIGN_MIDDLE_CENTER);
+                draw_text(&sMenuCurrDisplayList,  gFileSelectButtons[i].x + gFileSelectElementPos[4], gFileSelectButtons[i].y + gFileSelectElementPos[5] + yPos, gMenuText[ASSET_MENU_TEXT_NEW], ALIGN_MIDDLE_CENTER);
             }
         }
     }
-    phi_v0_2 = gOptionBlinkTimer * 8;
-    if (phi_v0_2 >= 0x100) {
-        phi_v0_2 = 0x1FF - phi_v0_2;
+    temp = gOptionBlinkTimer * 8;
+    if (temp >= 256) {
+        temp = 511 - temp;
     }
     set_text_font(ASSET_FONTS_FUNFONT);
     set_text_background_colour(0, 0, 0, 0);
     set_text_colour(255, 255, 255, 0, 255);
     for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
-        s2 = FALSE;
+        var_s2 = FALSE;
         if (D_80126484 != FALSE) {
             if (D_80126494 == 0 && i == gSaveFileIndex3) {
-                s2 = TRUE;
+                var_s2 = TRUE;
             } else if (D_80126494 > 0 && i == gSaveFileIndex2) {
-                s2 = TRUE;
+                var_s2 = TRUE;
             }
-        } else if (D_80126488 != FALSE && i == gSaveFileIndex3) {
-            s2 = TRUE;
+        } else if (D_80126488 != FALSE) {
+            if (i == gSaveFileIndex3) {
+                var_s2 = TRUE;
+            }
         } else if (gMenuOptionCount == 0 && i == gSaveFileIndex) {
-            s2 = TRUE;
+            var_s2 = TRUE;
         }
-        if (s2) {
-            s32 temp_t0 = phi_v0_2 | ~0xFF;
-            func_80080E90(&sMenuCurrDisplayList, gFileSelectButtons[i].x, gFileSelectButtons[i].y + y, gFileSelectButtons[i].width, gFileSelectButtons[i].height,
-                gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, temp_t0, temp_t0, temp_t0, temp_t0);
+        if (var_s2) {
+            colour = temp | ~0xFF;
+            func_80080E90(&sMenuCurrDisplayList, gFileSelectButtons[i].x, gFileSelectButtons[i].y + yPos, gFileSelectButtons[i].width, gFileSelectButtons[i].height,
+                gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, colour, colour, colour, colour);
         }
         if (D_80126CC0 == 0 || i != gSaveFileIndex) {
-            trim_filename_string(gSavefileInfo[i].name, tempName);
+            trim_filename_string(gSavefileInfo[i].name, trimmedFilename);
             if (gSavefileInfo[i].isStarted == 0) {
-                trim_filename_string(gFilenames[i], tempName);
+                trim_filename_string(gFilenames[i], trimmedFilename);
             }
-            if (tempName != NULL) {
-                draw_text(&sMenuCurrDisplayList, gFileSelectElementPos[0] + gFileSelectButtons[i].x, gFileSelectElementPos[1] + gFileSelectButtons[i].y + y, tempName, ALIGN_MIDDLE_CENTER);
+            if (trimmedFilename) {
+                draw_text(&sMenuCurrDisplayList, 
+                    gFileSelectButtons[i].x + gFileSelectElementPos[0],
+                    gFileSelectButtons[i].y + gFileSelectElementPos[1] + yPos,
+                    trimmedFilename, ALIGN_MIDDLE_CENTER);
             }
         }
     }
@@ -6428,45 +6430,42 @@ void render_file_select_menu(UNUSED s32 updateRate) {
     set_text_colour(255, 255, 255, 0, 255);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 16, gMenuText[ASSET_MENU_TEXT_GAMESELECT], ALIGN_TOP_CENTER);
     set_text_colour(255, 255, 255, 0, 255);
-    y += 0xBB;
+    yPos += 187;
     if (D_80126484 != FALSE) {
         if (D_80126494 == 0) {
             set_text_font(ASSET_FONTS_FUNFONT);
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[ASSET_MENU_TEXT_GAMETOCOPY], ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, gMenuText[ASSET_MENU_TEXT_GAMETOCOPY], ALIGN_MIDDLE_CENTER);
         } else if (D_80126494 == 1) {
             set_text_font(ASSET_FONTS_FUNFONT);
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[ASSET_MENU_TEXT_GAMETOCOPYTO], ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, gMenuText[ASSET_MENU_TEXT_GAMETOCOPYTO], ALIGN_MIDDLE_CENTER);
         } else {
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, &D_800E8234, ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, (char *) &D_800E8234 /* "OK?" */, ALIGN_MIDDLE_CENTER);
         }
         return;
     }
     if (D_80126488 != FALSE) {
         if (D_80126494 == 0) {
             set_text_font(ASSET_FONTS_FUNFONT);
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[ASSET_MENU_TEXT_GAMETOERASE], ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, gMenuText[ASSET_MENU_TEXT_GAMETOERASE], ALIGN_MIDDLE_CENTER);
         } else {
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, &D_800E8238, ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, (char *) &D_800E8238 /* "OK?" */, ALIGN_MIDDLE_CENTER);
         }
         return;
     }
     if (D_80126CC0 == 0) {
         if (gMenuOptionCount == 1) {
-            set_text_colour(255, 255, 255, phi_v0_2, 255);
+            set_text_colour(255, 255, 255, temp, 255);
         }
-        draw_text(&sMenuCurrDisplayList, 90, y, gMenuText[ASSET_MENU_TEXT_COPY], ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, 90, yPos, gMenuText[ASSET_MENU_TEXT_COPY], ALIGN_MIDDLE_CENTER);
         if (gMenuOptionCount == 2) {
-            set_text_colour(255, 255, 255, phi_v0_2, 255);
+            set_text_colour(255, 255, 255, temp, 255);
         } else {
             set_text_colour(255, 255, 255, 0, 255);
         }
-        draw_text(&sMenuCurrDisplayList, 230, y, gMenuText[ASSET_MENU_TEXT_ERASE], ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, 230, yPos, gMenuText[ASSET_MENU_TEXT_ERASE], ALIGN_MIDDLE_CENTER);
         return;
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/render_file_select_menu.s")
-#endif
 
 s32 func_8008D5F8(UNUSED s32 updateRate) {
     u32 buttonsPressed;
