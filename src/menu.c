@@ -133,7 +133,7 @@ u16 D_80126520[6];
 Settings *gSavefileData[4];
 u8 D_80126540[8];
 s32 gMultiplayerSelectedNumberOfRacersCopy; // Saved version gMultiplayerSelectedNumberOfRacers?
-TextureHeader *gMenuObjects[128]; // lookup table? Contains Objects as well. Need to change name and type.
+void *gMenuObjects[128]; // lookup table? Contains Textures, Objects, and Sprites. Need to change name and type.
 u8 D_80126750[128]; // Seems to be a boolean for "This texture exists" for the above array.
 s32 D_801267D0;
 s32 D_801267D4;
@@ -4103,7 +4103,7 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
             D_80126A80[i]->unk13 = 0;
         }
     }
-    if (buttonsPressed & B_BUTTON || (buttonsPressed & (START_BUTTON | A_BUTTON) && D_80126A74 == (D_80126A78 + 1U))) {
+    if (buttonsPressed & B_BUTTON || (buttonsPressed & (START_BUTTON | A_BUTTON) && (u32) D_80126A74 == (u32) (D_80126A78 + 1))) {
         play_sound_global(SOUND_MENU_BACK3, NULL);
         gMenuOptionCount &= ~8;
         switch (sp1C) {
@@ -5455,17 +5455,24 @@ s32 menu_magic_codes_list_loop(s32 updateRate) {
         play_sound_global(SOUND_SELECT2, NULL);
         code = 1 << D_80126C80[gOptionsMenuItemIndex];
         gActiveMagicCodes ^= code;       // Toggle active cheats?
-        func_8008A8F8(code, 0x10, 0x20); // func_8008A8F8() = Clear flags?
-        func_8008A8F8(code, 0x20, 0x10);
-        func_8008A8F8(code, 0x1000, 0x6080);
-        func_8008A8F8(code, 0x6080, 0x1000);
-        func_8008A8F8(code, 0x800, 0x1F8000);
-        func_8008A8F8(code, 0x1F8000, 0x800);
-        func_8008A8F8(code, 0x8000, 0xF0000);
-        func_8008A8F8(code, 0x10000, 0xE8000);
-        func_8008A8F8(code, 0x20000, 0xD8000);
-        func_8008A8F8(code, 0x40000, 0xB8000);
-        func_8008A8F8(code, 0x80000, 0x78000);
+        func_8008A8F8(code, 0x10, CHEAT_SMALL_CHARACTERS); // func_8008A8F8() = Clear flags?
+        func_8008A8F8(code, 0x20, CHEAT_BIG_CHARACTERS);
+        func_8008A8F8(code, 0x1000, (CHEAT_NO_LIMIT_TO_BANANAS | CHEAT_BANANAS_REDUCE_SPEED | CHEAT_START_WITH_10_BANANAS));
+        func_8008A8F8(code, 0x6080, CHEAT_DISABLE_BANANAS);
+        func_8008A8F8(code, 0x800, (CHEAT_ALL_BALLOONS_ARE_RED | CHEAT_ALL_BALLOONS_ARE_GREEN | 
+                                    CHEAT_ALL_BALLOONS_ARE_BLUE | CHEAT_ALL_BALLOONS_ARE_YELLOW | 
+                                    CHEAT_ALL_BALLOONS_ARE_RAINBOW | CHEAT_MAXIMUM_POWER_UP));
+        func_8008A8F8(code, 0x1F8000, CHEAT_DISABLE_WEAPONS);
+        func_8008A8F8(code, 0x8000, (CHEAT_ALL_BALLOONS_ARE_GREEN | CHEAT_ALL_BALLOONS_ARE_BLUE |
+                                    CHEAT_ALL_BALLOONS_ARE_YELLOW | CHEAT_ALL_BALLOONS_ARE_RAINBOW));
+        func_8008A8F8(code, 0x10000, (CHEAT_ALL_BALLOONS_ARE_RED | CHEAT_ALL_BALLOONS_ARE_BLUE |
+                                    CHEAT_ALL_BALLOONS_ARE_YELLOW | CHEAT_ALL_BALLOONS_ARE_RAINBOW));
+        func_8008A8F8(code, 0x20000, (CHEAT_ALL_BALLOONS_ARE_RED | CHEAT_ALL_BALLOONS_ARE_GREEN |
+                                    CHEAT_ALL_BALLOONS_ARE_YELLOW | CHEAT_ALL_BALLOONS_ARE_RAINBOW));
+        func_8008A8F8(code, 0x40000, (CHEAT_ALL_BALLOONS_ARE_RED | CHEAT_ALL_BALLOONS_ARE_GREEN |
+                                    CHEAT_ALL_BALLOONS_ARE_BLUE | CHEAT_ALL_BALLOONS_ARE_RAINBOW));
+        func_8008A8F8(code, 0x80000, (CHEAT_ALL_BALLOONS_ARE_RED | CHEAT_ALL_BALLOONS_ARE_GREEN |
+                                    CHEAT_ALL_BALLOONS_ARE_BLUE | CHEAT_ALL_BALLOONS_ARE_YELLOW));
     }
 
     previousMenuItemIndex = gOptionsMenuItemIndex;
@@ -7384,7 +7391,7 @@ void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
         opacity = 255;
     }
     if (hubName != D_801269F0) {
-        temp = get_level_name(get_hub_area_id(3));
+        temp = (s32) get_level_name(get_hub_area_id(3));
         if ((s32) hubName == temp) {
             set_kerning(TRUE);
         }
