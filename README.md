@@ -9,7 +9,7 @@ As of October 30, 2023, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 62.34%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 33.66%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 34.35%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -135,8 +135,8 @@ As of October 30th, 2023, this is our current score:
  -------------------------- 62.34% Complete ---------------------------
                       # Decompiled functions: 1656
                       # GLOBAL_ASM remaining: 189
-                      # NON_MATCHING functions: 12
-                   # NON_EQUIVALENT WIP functions: 57
+                      # NON_MATCHING functions: 14
+                   # NON_EQUIVALENT WIP functions: 55
  ---------------------------- Game Status -----------------------------
                Balloons: 30/47, Keys: 3/4, Trophies: 2/5
                  T.T. Amulets: 3/4, Wizpig Amulets: 3/4
@@ -144,14 +144,14 @@ As of October 30th, 2023, this is our current score:
  We are participating in the Trophy Race of Sherbet Island. (Round One)
  ======================================================================
                  ADVENTURE TWO (Cleanup & Documentation)
- -------------------------- 33.66% Complete ---------------------------
-                      # Documented functions: 747
-                     # Undocumented remaining: 821
+ -------------------------- 34.35% Complete ---------------------------
+                      # Documented functions: 761
+                     # Undocumented remaining: 807
  ---------------------------- Game Status -----------------------------
                Balloons: 17/47, Keys: 2/4, Trophies: 1/5
                  T.T. Amulets: 1/4, Wizpig Amulets: 1/4
  ----------------------------------------------------------------------
-        We are battling in Icicle Pyramid. (3 opponents remain)
+        We are battling in Icicle Pyramid. (2 opponents remain)
  ======================================================================
 ```
 <!-- README_SCORE_END -->

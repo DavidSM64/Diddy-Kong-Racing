@@ -13,7 +13,7 @@ ROM_FILEPATH = BUILD_DIR + '/dkr.z64'
 FUNCTIONS_TO_CALC = [
     # function         checksum variable        func size variable
     ('func_80019808', 'gFunc80019808Checksum', 'gFunc80019808Length'),
-    ('render_scene', 'gTractionTableChecksum', 'gFunc80024D54Length'),
+    ('render_scene', 'gTractionTableChecksum', 'gTrackRenderFuncLength'),
     ('obj_loop_goldenballoon', 'gObjLoopGoldenBalloonChecksum', 'gObjLoopGoldenBalloonLength'),
     ('func_80068158', 'gFunc80068158Checksum', 'gFunc80068158Length')
 ]

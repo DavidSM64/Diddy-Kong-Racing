@@ -47,8 +47,6 @@ typedef struct FadeTransition {
   /* 0x06 */ u16 endTimer;
 } FadeTransition;
 
-extern u32 osTvType;
-
 void enable_new_screen_transitions(void);
 void disable_new_screen_transitions(void);
 u32 check_fadeout_transition(void);

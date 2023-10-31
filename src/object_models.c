@@ -14,7 +14,7 @@
 /************ .data ************/
 
 s32 gTractionTableChecksum = 116315;
-s32 gFunc80024D54Length = 1980;
+s32 gTrackRenderFuncLength = 1980;
 
 /*******************************/
 
@@ -35,7 +35,7 @@ s32 *gObjectModelTable;
 s32 *D_8011D624;
 s32 *D_8011D628;
 s32 D_8011D62C;
-s32 D_8011D630;
+s32 gNumModelIDs;
 s32 D_8011D634;
 s16 *gAnimationTable;
 s32 *gObjectAnimationTable;
@@ -56,11 +56,11 @@ void allocate_object_model_pools(void) {
     D_8011D62C = 0;
     D_8011D634 = 0;
     gObjectModelTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_MODELS_TABLE);
-    D_8011D630 = 0;
-    while (gObjectModelTable[D_8011D630] != -1) {
-        D_8011D630++;
+    gNumModelIDs = 0;
+    while (gObjectModelTable[gNumModelIDs] != -1) {
+        gNumModelIDs++;
     }
-    D_8011D630--;
+    gNumModelIDs--;
     gAnimationTable = (s16 *) load_asset_section_from_rom(ASSET_ANIMATION_IDS);
     gObjectAnimationTable = (s32 *) load_asset_section_from_rom(ASSET_OBJECT_ANIMATIONS_TABLE);
     D_8011D644 = (s32) allocate_from_main_pool_safe(0xC00, COLOUR_TAG_GREEN);
@@ -68,7 +68,7 @@ void allocate_object_model_pools(void) {
 
     // Antipiracy measure
     checksum = 0;
-    for (i = 0; i < gFunc80024D54Length; i++) {
+    for (i = 0; i < gTrackRenderFuncLength; i++) {
         checksum += *(u8 *)(((s32) &render_scene) + i);
     }
     if (checksum != gTractionTableChecksum) {
@@ -76,7 +76,11 @@ void allocate_object_model_pools(void) {
     }
 }
 
-Object_68 *func_8005F99C(s32 arg0, s32 arg1) {
+/**
+ * Load the associated model ID and assign it to the objects gfx data.
+ * Also loads textures and animations.
+*/
+Object_68 *object_model_init(s32 modelID, s32 flags) {
     s32 i;
     s32 sp50;
     ObjectModel *objMdl;
@@ -87,17 +91,18 @@ Object_68 *func_8005F99C(s32 arg0, s32 arg1) {
     u32 compressedData;
     s32 sp34;
 
-    if (arg0 >= D_8011D630) {
-        arg0 = 0;
+    if (modelID >= gNumModelIDs) {
+        stubbed_printf(D_800E6B20);
+        modelID = 0;
     }
 
     // Check if the model already exists in the cache.
     for(i = 0; i < D_8011D62C; i++) {
-        if(arg0 == D_8011D624[(i << 1)]) {
+        if(modelID == D_8011D624[(i << 1)]) {
             objMdl = (ObjectModel *) D_8011D624[(i << 1) + 1];
-            ret = func_8005FCD0(objMdl, arg1);
+            ret = func_8005FCD0(objMdl, flags);
             if (ret != NULL) {
-                objMdl->unk30++;
+                objMdl->references++;
             }
             return ret;
         }
@@ -111,8 +116,8 @@ Object_68 *func_8005F99C(s32 arg0, s32 arg1) {
         D_8011D62C++;
     }
 
-    temp_s0 = gObjectModelTable[arg0];
-    sp48 = gObjectModelTable[arg0 + 1] - temp_s0;
+    temp_s0 = gObjectModelTable[modelID];
+    sp48 = gObjectModelTable[modelID + 1] - temp_s0;
     sp34 = get_asset_uncompressed_size(ASSET_OBJECT_MODELS, temp_s0) + 0x80;
     objMdl = (ObjectModel *) allocate_from_main_pool(sp34, COLOUR_TAG_RED);
     if (objMdl == NULL) {
@@ -128,7 +133,7 @@ Object_68 *func_8005F99C(s32 arg0, s32 arg1) {
     objMdl->unk14 = (s16 *) ((s32) objMdl->unk14 + (u8 *) objMdl);
     objMdl->unk1C = (s16 *) ((s32) objMdl->unk1C + (u8 *) objMdl);
     objMdl->unk4C = (s32 *) ((s32) objMdl->unk4C + (u8 *) objMdl);
-    objMdl->unk30 = 1;
+    objMdl->references = 1;
     objMdl->unkC = 0;
     objMdl->unk10 = 0;
     objMdl->unk32 = 0;
@@ -146,13 +151,14 @@ Object_68 *func_8005F99C(s32 arg0, s32 arg1) {
     if (!sp3F) {
         for(i = 0; i < objMdl->numberOfBatches; i++) {
             if ((objMdl->batches[i].textureIndex != 0xFF) && (objMdl->batches[i].textureIndex >= objMdl->numberOfTextures)) {
+                stubbed_printf(D_800E6B4C);
                 goto block_30;
             }
         }
-        if ((func_80060EA8(objMdl) == 0) && (func_80061A00(objMdl, arg0) == 0)) {
-            ret = func_8005FCD0(objMdl, arg1);
+        if ((func_80060EA8(objMdl) == 0) && (func_80061A00(objMdl, modelID) == 0)) {
+            ret = func_8005FCD0(objMdl, flags);
             if (ret != NULL) {
-                D_8011D624[(sp50 << 1)] = arg0;
+                D_8011D624[(sp50 << 1)] = modelID;
                 D_8011D624[(sp50 << 1) + 1] = (s32) objMdl;
                 if (D_8011D62C < 70) {
                     ret->unk20 = 0;
@@ -162,7 +168,7 @@ Object_68 *func_8005F99C(s32 arg0, s32 arg1) {
         }
     }
 block_30:
-    free_object_model((ObjectModel* ) objMdl);
+    free_model_data((ObjectModel* ) objMdl);
     return NULL;
 }
 
@@ -208,9 +214,9 @@ Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
     result->unk18 = 0;
     result->unk1A = 0;
     result->objModel = model;
-    result->unk10 = -1;
-    result->unk12 = -1;
-    result->unk1F = 0;
+    result->animationID = -1;
+    result->animationFrame = -1;
+    result->animationTaskNum = 0;
     if (result->unk1E != 0) {
         temp = 0;
         vertex = result->unk4[0];
@@ -247,7 +253,10 @@ Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
     return result;
 }
 
-void func_8005FF40(ObjectModel **modelPtr) {
+/**
+ * Attempts to free the object model from RAM.
+*/
+void free_3d_model(ObjectModel **modelPtr) {
     UNUSED s32 pad;
     s32 modelIndex;
     ObjectModel *model;
@@ -255,8 +264,8 @@ void func_8005FF40(ObjectModel **modelPtr) {
     
     if (modelPtr != 0) {
         model = *modelPtr;
-        model->unk30--;
-        if (model->unk30 > 0) {
+        model->references--;
+        if (model->references > 0) { // Model is still used, so free the reference and return.
             free_from_memory_pool(modelPtr);
             return;
         }
@@ -269,7 +278,7 @@ void func_8005FF40(ObjectModel **modelPtr) {
         }
         
         if (modelIndex != -1) {
-            free_object_model(model);
+            free_model_data(model);
             D_8011D628[D_8011D634] = modelIndex;
             D_8011D634++;
             D_8011D624[modelIndex << 1] = -1;
@@ -279,7 +288,10 @@ void func_8005FF40(ObjectModel **modelPtr) {
     }
 }
 
-void free_object_model(ObjectModel *mdl) {
+/**
+ * Frees all associated meshes, textures and animations from the model.
+*/
+void free_model_data(ObjectModel *mdl) {
     // free the textures
     s16 numTextures = mdl->numberOfTextures;
     if (numTextures > 0) {
@@ -470,7 +482,7 @@ void func_80061C0C(Object *obj) {
         }
         if (var_v1 < obj->segment.animFrame >> 4) {
             obj->segment.animFrame = 0;
-            gfxData->unk10 = -1;
+            gfxData->animationID = -1;
         }
     }
 }

@@ -390,7 +390,7 @@ typedef struct LevelHeader {
   /* 0x08 */ f32 course_height;
   /* 0x0C */ u8 unkC[10];
   /* 0x16 */ u8 unk16[10];
-  /* 0x20 */ s32 *unk20;
+  /* 0x20 */ s8 *AILevelTable;
 
   /* 0x24 */ u8 pad24[6];
   /* 0x2A */ u8 unk2A;
@@ -460,12 +460,13 @@ typedef struct LevelHeader {
   /* 0xBA */ s16 unkBA;
   /* 0xBC */ u8 unkBC;
   /* 0xBD */ s8 unkBD;
-  /* 0xBE */ u8 unkBE;
-  /* 0xBF */ u8 unkBF;
-  /* 0xC0 */ u8 unkC0;
-  /* 0xC1 */ u8 unkC1;
-  /* 0xC2 */ u8 unkC2;
-  /* 0xC3 */ u8 unkC3;
+  // Multiplayer gradient background
+  /* 0xBE */ u8 BGColourBottomR;
+  /* 0xBF */ u8 BGColourBottomG;
+  /* 0xC0 */ u8 BGColourBottomB;
+  /* 0xC1 */ u8 BGColourTopR;
+  /* 0xC2 */ u8 BGColourTopG;
+  /* 0xC3 */ u8 BGColourTopB;
 } LevelHeader;
 
 /* Size: 0x50 bytes */
@@ -588,7 +589,7 @@ typedef struct ObjectModel {
     /* 0x2A */ u8 pad2A[4];
     /* 0x2E */ u8 unk2E;
     /* 0x2F */ char pad2F[1];
-    /* 0x30 */ s16 unk30;
+    /* 0x30 */ s16 references;
     /* 0x32 */ s16 unk32;
     /* 0x34 */ u8 pad34[4];
     /* 0x38 */ TriangleBatchInfo* batches;
@@ -1237,7 +1238,7 @@ typedef struct Object_Racer {
   /* 0x10C */ s32 unk10C;
   /* 0x110 */ s32 unk110;
   /* 0x114 */ s32 unk114;
-  /* 0x118 */ struct unk80119C38 *unk118;
+  /* 0x118 */ struct VehicleSoundData *vehicleSound;
   /* 0x11C */ f32 unk11C;
   /* 0x120 */ f32 unk120;
   /* 0x124 */ f32 unk124;
@@ -1284,7 +1285,7 @@ typedef struct Object_Racer {
   /* 0x193 */ s8 lap;
   /* 0x194 */ s8 countLap;
   /* 0x195 */ s8 magnetLevel3;
-  /* 0x196 */ s16 unk196;
+  /* 0x196 */ s16 cameraYaw;
   /* 0x198 */ s16 unk198;
   /* 0x19A */ s16 unk19A;
   /* 0x19C */ s16 unk19C;
@@ -1661,16 +1662,17 @@ typedef struct Object_68 {
       ObjectModel *objModel;
       TextureHeader *texHeader;
   };
-  /* 0x04 */ Vertex *unk4[3];
-  /* 0x10 */ s16 unk10;
-  /* 0x12 */ s16 unk12;
-  /* 0x14 */ s16 unk14;
+  /* 0x04 */ Vertex *unk4[2];
+  /* 0x0C */ s32 *unkC;
+  /* 0x10 */ s16 animationID;
+  /* 0x12 */ s16 animationFrame;
+  /* 0x14 */ s16 animationFrameCount;
   /* 0x16 */ s16 unk16;
   /* 0x18 */ s16 unk18;
   /* 0x1A */ s16 unk1A;
   /* 0x1C */ s16 unk1C;
   /* 0x1E */ s8 unk1E;
-  /* 0x1F */ s8 unk1F;
+  /* 0x1F */ s8 animationTaskNum;
   /* 0x20 */ s8 unk20;
   /* 0x21 */ s8 unk21;
   /* 0x22 */ s16 unk22;

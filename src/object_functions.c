@@ -14,7 +14,7 @@
 #include "racer.h"
 #include "game.h"
 #include "audio.h"
-#include "unknown_008C40.h"
+#include "audio_spatial.h"
 #include "objects.h"
 #include "particles.h"
 #include "tracks.h"
@@ -26,7 +26,7 @@
 #include "math_util.h"
 #include "game_text.h"
 #include "fade_transition.h"
-#include "unknown_005740.h"
+#include "audio_vehicle.h"
 #include "object_models.h"
 #include "lib/src/libc/rmonPrintf.h"
 #include "collision.h"
@@ -1064,7 +1064,7 @@ void obj_loop_unknown58(Object *obj, s32 updateRate) {
 
     obj->segment.object.animationID = 0;
     obj->segment.animFrame = 40;
-    if (func_8001139C() == 0) {
+    if (get_race_countdown() == 0) {
         obj->properties.common.unk0 += updateRate;
     }
     set_ghost_position_and_rotation(obj);
@@ -1249,8 +1249,8 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
                 func_800012E8();
                 play_music(SEQUENCE_TTS_THEME);
                 if (racerObj != NULL) {
-                    func_80006AC8(racerObj);
-                    racer->unk118 = 0;
+                    racer_sound_free(racerObj);
+                    racer->vehicleSound = NULL;
                 }
             }
         }
@@ -1343,7 +1343,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             slowly_change_fog(PLAYER_ONE, tt->fogR, tt->fogG, tt->fogB, tt->fogNear, tt->fogFar, 180);
             play_music(header->music);
             func_80001074(header->instruments);
-            racer->unk118 = func_80004B40(racer->characterId, racer->vehicleID);
+            racer->vehicleSound = func_80004B40(racer->characterId, racer->vehicleID);
         }
         obj->properties.npc.timer = 180;
         move_object(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF, obj->segment.z_velocity * updateRateF);
@@ -2219,7 +2219,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     s32 dialogueID;
     s32 numRacers;
     Object_NPC *taj;
-    Object_64 *racer64;
+    Object_Racer *racer;
     u32 buttonsPressed;
     s8 sp6B;
     LevelHeader *levelHeader;
@@ -2247,9 +2247,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     obj->segment.z_velocity = 0.0f;
     racerObj = get_racer_object(PLAYER_ONE);
     if (racerObj != NULL) {
-        racer64 = racerObj->unk64;
-        xPosDiff = (racerObj->segment.trans.x_position - (racer64->racer.ox1 * 50.0f)) - obj->segment.trans.x_position;
-        zPosDiff = (racerObj->segment.trans.z_position - (racer64->racer.oz1 * 50.0f)) - obj->segment.trans.z_position;
+        racer = (Object_Racer *) racerObj->unk64;
+        xPosDiff = (racerObj->segment.trans.x_position - (racer->ox1 * 50.0f)) - obj->segment.trans.x_position;
+        zPosDiff = (racerObj->segment.trans.z_position - (racer->oz1 * 50.0f)) - obj->segment.trans.z_position;
         distance = sqrtf((xPosDiff * xPosDiff) + (zPosDiff * zPosDiff));
     }
     buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
@@ -2263,7 +2263,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         )
     ) {
         if (buttonsPressed & Z_TRIG) {
-            play_char_horn_sound(racerObj, &racer64->racer);
+            play_char_horn_sound(racerObj, racer);
         }
         arctan = arctan2_f(racerObj->segment.trans.x_position - obj->segment.trans.x_position, racerObj->segment.trans.z_position - obj->segment.trans.z_position) - (racerObj->segment.trans.y_rotation & 0xFFFF);
         if (arctan > 0x8000) {
@@ -2283,8 +2283,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         set_music_player_voice_limit(24);
         play_music(SEQUENCE_ENTRANCED);
         if (racerObj != NULL) {
-            func_80006AC8(racerObj);
-            racer64->racer.unk118 = 0;
+            racer_sound_free(racerObj);
+            racer->vehicleSound = NULL;
         }
         func_80008140();
         arctan = arctan2_f(
@@ -2441,23 +2441,23 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
         if (dialogueID & 0x80) {
             gTajDialogueChoice = dialogueID & 0x7F;
-            if (gTajDialogueChoice != racer64->racer.vehicleID) {
+            if (gTajDialogueChoice != racer->vehicleID) {
                 obj->properties.npc.action = TAJ_MODE_TRANSFORM_BEGIN;
                 taj->animFrameF = 0;
                 // Voice clips: Abrakadabra, Alakazam, Alakazoom?
-                play_taj_voice_clip((racer64->racer.vehicleID + SOUND_VOICE_TAJ_ABRAKADABRA), TRUE);
+                play_taj_voice_clip((racer->vehicleID + SOUND_VOICE_TAJ_ABRAKADABRA), TRUE);
             } else {
                 set_menu_id_if_option_equal(0x62, 2);
             }
         }
         if (dialogueID & 0x40) {
             gTajDialogueChoice = dialogueID & 0xF;
-            if (gTajDialogueChoice != racer64->racer.vehicleID) {
+            if (gTajDialogueChoice != racer->vehicleID) {
                 gTajDialogueChoice |= 0x80;
                 obj->properties.npc.action = TAJ_MODE_TRANSFORM_BEGIN;
                 taj->animFrameF = 0.0f;
                 // Voice clips: Abrakadabra, Alakazam, Alakazoom?
-                play_taj_voice_clip((racer64->racer.vehicleID + SOUND_VOICE_TAJ_ABRAKADABRA), TRUE);
+                play_taj_voice_clip((racer->vehicleID + SOUND_VOICE_TAJ_ABRAKADABRA), TRUE);
             } else {
                 obj->properties.npc.action = TAJ_MODE_SET_CHALLENGE;
                 transition_begin(&gTajTransition);
@@ -2479,10 +2479,10 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
         if (taj->animFrameF > 60.0) {
             taj->animFrameF = 60.0f;
-            if (racer64->racer.transparency > (updateRate * 16)) {
-                racer64->racer.transparency -= (updateRate * 16);
+            if (racer->transparency > (updateRate * 16)) {
+                racer->transparency -= (updateRate * 16);
             } else {
-                racer64->racer.transparency = 0;
+                racer->transparency = 0;
                 despawn_player_racer(racerObj, gTajDialogueChoice & 0xF);
                 obj->properties.npc.action = TAJ_MODE_TRANSFORM_END;
                 play_sound_global(SOUND_CYMBAL, NULL);
@@ -2501,10 +2501,10 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 var_a2 = 4;
             }
             var_a2 <<= 5;
-            if (racer64->racer.transparency < (255 - (var_a2))) {
-                racer64->racer.transparency += var_a2;
+            if (racer->transparency < (255 - (var_a2))) {
+                racer->transparency += var_a2;
             } else {
-                racer64->racer.transparency = 255;
+                racer->transparency = 255;
                 if (taj->animFrameF == 0.0) {
                     if (gTajDialogueChoice & 0x80) {
                         transition_begin(&gTajTransition);
@@ -2530,14 +2530,14 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             if (obj->properties.npc.action == TAJ_MODE_END_DIALOGUE_UNUSED) {
                 func_80022CFC(
                     obj->segment.object.segmentID,
-                    obj->segment.trans.x_position - (racer64->racer.ox1 * 50.0f),
+                    obj->segment.trans.x_position - (racer->ox1 * 50.0f),
                     obj->segment.trans.y_position,
-                    obj->segment.trans.z_position - (racer64->racer.oz1 * 50.0f)
+                    obj->segment.trans.z_position - (racer->oz1 * 50.0f)
                 );
             }
             obj->properties.npc.action = TAJ_MODE_TELEPORT_AWAY_BEGIN;
             play_sound_global(SOUND_WHOOSH4, NULL);
-            racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.vehicleID);
+            racer->vehicleSound = func_80004B40(racer->characterId, racer->vehicleID);
         }
         break;
     case TAJ_MODE_TELEPORT_TO_PLAYER_BEGIN:
@@ -2560,8 +2560,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             sp6B = 1;
             obj->segment.object.opacity = 0;
             obj->properties.npc.action = TAJ_MODE_TELEPORT_TO_PLAYER_END;
-            obj->segment.trans.x_position = racerObj->segment.trans.x_position - (racer64->racer.ox1 * 150.0f);
-            obj->segment.trans.z_position = racerObj->segment.trans.z_position - (racer64->racer.oz1 * 150.0f);
+            obj->segment.trans.x_position = racerObj->segment.trans.x_position - (racer->ox1 * 150.0f);
+            obj->segment.trans.z_position = racerObj->segment.trans.z_position - (racer->oz1 * 150.0f);
             obj->segment.object.segmentID = get_level_segment_index_from_position(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
             obj->segment.trans.y_rotation = racerObj->segment.trans.y_rotation + 0x8000;
         }
@@ -2595,12 +2595,12 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         if (obj->segment.object.opacity > var_a2) {
             obj->segment.object.opacity -= var_a2;
         } else {
-            racer64->racer.unk118 = func_80004B40(racer64->racer.characterId, racer64->racer.vehicleID);
+            racer->vehicleSound = func_80004B40(racer->characterId, racer->vehicleID);
             slowly_change_fog(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
             set_music_player_voice_limit(levelHeader->voiceLimit);
             play_music(levelHeader->music);
             func_80001074(levelHeader->instruments);
-            init_racer_for_challenge(racer64->racer.vehicleID);
+            init_racer_for_challenge(racer->vehicleID);
             telepoint = find_furthest_telepoint(obj->segment.trans.x_position, obj->segment.trans.z_position);
             if (telepoint != NULL) {
                 obj->segment.trans.x_position = telepoint->segment.trans.x_position;

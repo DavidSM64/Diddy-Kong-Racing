@@ -8,7 +8,7 @@
 #include "math_util.h"
 #include "objects.h"
 #include "object_functions.h"
-#include "unknown_008C40.h"
+#include "audio_spatial.h"
 #include "racer.h"
 #include "particles.h"
 
@@ -165,13 +165,13 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     diffX = (objModel->animations[obj->segment.object.animationID].unk4 * 16) - 17;
     while (racer->animationSpeed < 0.0f) {
         racer->animationSpeed += diffX;
-        gfxData->unk10 = -1;
+        gfxData->animationID = -1;
     }
     while (diffX < racer->animationSpeed) {
         racer->animationSpeed -= diffX;
-        gfxData->unk10 = -1;
+        gfxData->animationID = -1;
     }
-    if (gfxData->unk10 == -1 && obj->segment.object.animationID == ANIM_BLUEY_DAMAGE) {
+    if (gfxData->animationID == -1 && obj->segment.object.animationID == ANIM_BLUEY_DAMAGE) {
         obj->segment.object.animationID = racer->unk1CD;
     }
     animFrame = obj->segment.animFrame;

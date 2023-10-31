@@ -2862,7 +2862,7 @@ void func_80083098(f32 arg0) {
                 text = introCharData->unk0;
                 didUpdate = TRUE;
             } else {
-                if (!gTitleCinematicTextColours){} // Fake
+                if (!gTitleCinematicTextColours[0].red){} // Fake
                 D_801268E0++;
             }
         }
@@ -10469,7 +10469,7 @@ void func_80099E8C(UNUSED s32 updateRate) {
     set_text_font(FONT_SMALL);
     x = 40;
     while (spE4 < D_801264D4 && spE8 > 0) {
-        if (((!gGhostDataElementPositions) && (!gGhostDataElementPositions)) && (!gGhostDataElementPositions)){} // Fakematch
+        if (gGhostDataElementPositions[0]){} // Fakematch
 
         currentWorldId = get_map_world_id(D_80126508[spE4]) - 1;
         if (currentWorldId < 0 || currentWorldId >= 5) {
@@ -11173,7 +11173,7 @@ void func_8009C508(s32 arg0) {
                     if ((*gAssetsMenuElementIds)[arg0] & 0x4000) {
                         free_object((Object *) (u32) gMenuObjects[arg0]);
                     } else {
-                        func_8005FF40((ObjectModel**)(u32)gMenuObjects[arg0]);
+                        free_3d_model((ObjectModel**)(u32)gMenuObjects[arg0]);
                     }
                 }
             }
@@ -11221,9 +11221,9 @@ void func_8009C6D4(s32 arg0) {
         if (((!arg0) && (!arg0)) && (!arg0)){} // Fakematch
         
         if ((i & 0xC000) == 0xC000) {
-            gMenuObjects[arg0] = load_texture(i & 0x3FFF);
+            gMenuObjects[arg0] = (TextureHeader *) load_texture(i & 0x3FFF);
         } else if (i & 0x8000) {
-            gMenuObjects[arg0] = func_8007C12C(i & 0x3FFF, 0);
+            gMenuObjects[arg0] = (TextureHeader *) func_8007C12C(i & 0x3FFF, 0);
         } else if (i & 0x4000) {
             if (gMenuElementIdCount){} // Fakematch
             entry.objectID = i & 0xFFFF;
@@ -11231,9 +11231,9 @@ void func_8009C6D4(s32 arg0) {
             entry.x = 0;
             entry.y = 0;
             entry.z = 0;
-            gMenuObjects[arg0] = spawn_object(&entry, 0);
+            gMenuObjects[arg0] = (TextureHeader *) spawn_object(&entry, 0);
         } else {
-            gMenuObjects[arg0] = func_8005F99C(i & 0x3FFF, 0);
+            gMenuObjects[arg0] = (TextureHeader *) object_model_init(i & 0x3FFF, 0);
         }
 
         D_80126750[arg0] = TRUE;
