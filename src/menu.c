@@ -4430,7 +4430,7 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
         || (pakStatusError3  != 0)
         || (pakStatusErrorNoFreeSpace != 0)
         || (pakStatusError9 != 0)) {
-        return NO_CONTROLLER_PAK; // Return unsuccessfully?
+        return CONTROLLER_PAK_NOT_FOUND; // Return unsuccessfully?
     }
 
     controllerIndexVal = *controllerIndex;

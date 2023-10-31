@@ -1198,23 +1198,23 @@ loop_10:
                 if (fileOffset == 0) {
                     ret = CONTROLLER_PAK_NO_ROOM_FOR_GHOSTS;
                     if (fileData[4] == 0xFF) {
-                        ret = CONTROLLER_PAK_UNK8;
+                        ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
                     }
                     temp_v0_4 = temp_a1 + (2 * 4);
                     if (fileData[4] == 0xFF) {
-                        ret = CONTROLLER_PAK_UNK8;
+                        ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
                     }
                     if (temp_v0_4[0] == 0xFF) {
-                        ret = CONTROLLER_PAK_UNK8;
+                        ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
                     }
                     if (temp_v0_4[4] == 0xFF) {
-                        ret = CONTROLLER_PAK_UNK8;
+                        ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
                     }
                     if (temp_v0_4[8] == 0xFF) {
-                        ret = CONTROLLER_PAK_UNK8;
+                        ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
                     }
                     if (temp_v0_4[12] == 0xFF) {
-                        ret = CONTROLLER_PAK_UNK8;
+                        ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
                     }
                 }
             } else {
