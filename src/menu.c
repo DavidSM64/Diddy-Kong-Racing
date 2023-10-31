@@ -7462,7 +7462,7 @@ void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
             if (copyViewPort) {
                 copy_viewport_frame_size_to_coords(0, &x1, &y1, &x2, &y2);
                 temp = x1;
-                sp58 = (x2 - temp) * (1.0f / 128.0f);
+                sp58 = (x2 - temp) / 128.0f;
                 sp54 = (y2 - y1) / 96.0f;
             } else {
                 x2 = xTemp + 80;

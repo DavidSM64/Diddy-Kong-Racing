@@ -719,7 +719,7 @@ void obj_loop_wavepower(Object *obj) {
                 diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
                 diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
                 if ((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ) < distance) {
-                    D_8012A720 = entry->unkA * (1.0f / 256.0f);
+                    D_8012A720 = entry->unkA / 256.0f;
                     D_8012A724 = (D_8012A720 -  D_80129FC8->unk40) / (f32) entry->unkC;
                     D_8012A728 = entry->unkC;
                     gWaveGeneratorObj = obj;
