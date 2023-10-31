@@ -312,7 +312,7 @@ char **gMenuText = NULL;
 u8 sMenuGuiColourR = 0xFF;
 u8 sMenuGuiColourG = 0xFF;
 u8 sMenuGuiColourB = 0xFF;
-u8 sMenuGuiColourA = 0;
+u8 sMenuGuiColourBlendFactor = 0;
 
 // Flags for menu/HUD sprites. Used in func_8009CA60()
 // Seems like it doesn't matter what you set it as?
@@ -2530,7 +2530,7 @@ void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale) {
                         elems->details.background.backgroundGreen,
                         elems->details.background.backgroundBlue,
                         elems->details.background.backgroundAlpha);
-                    set_text_colour(elems->filterRed, elems->filterGreen, elems->filterBlue, elems->filterAlpha, elems->opacity);
+                    set_text_colour(elems->filterRed, elems->filterGreen, elems->filterBlue, elems->filterBlendFactor, elems->opacity);
                     set_text_font(elems->textFont);
                     draw_text(&sMenuCurrDisplayList, xPos, yPos + gDrawElementsRegionYOffset, elems->unk14_a.asciiText, elems->textAlignFlags);
                     break;
@@ -2606,7 +2606,7 @@ void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale) {
                     sMenuGuiColourR = elems->filterRed;
                     sMenuGuiColourG = elems->filterGreen;
                     sMenuGuiColourB = elems->filterBlue;
-                    sMenuGuiColourA = elems->filterAlpha;
+                    sMenuGuiColourBlendFactor = elems->filterBlendFactor;
                     sMenuGuiOpacity = elems->opacity;
                     func_8009CA60(elems->unk14_a.value);
                     func_80068508(FALSE);
@@ -2648,7 +2648,7 @@ void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale) {
     sMenuGuiColourR = 255;
     sMenuGuiColourG = 255;
     sMenuGuiColourB = 255;
-    sMenuGuiColourA = 0;
+    sMenuGuiColourBlendFactor = 0;
     sMenuGuiOpacity = 255;
 }
 
@@ -6189,7 +6189,7 @@ void menu_game_select_init(void) {
 
 void func_8008C698(UNUSED s32 updateRate) {
     s32 i;
-    s32 filterAlpha;
+    s32 filterBlendFactor;
     s32 fade;
 
     if (gMenuDelay >= -21 && gMenuDelay < 22) {
@@ -6201,12 +6201,12 @@ void func_8008C698(UNUSED s32 updateRate) {
         set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
 
         for (i = 0; i <= gMenuOptionCount; i++) {
-            filterAlpha = 0;
+            filterBlendFactor = 0;
             if (i == gMenuCurIndex) {
-                filterAlpha = fade;
+                filterBlendFactor = fade;
             }
             //Fakematch? What's the (i ^ 0)?
-            gGameSelectElements[((i ^ 0) * 2) + 3].filterAlpha = filterAlpha;
+            gGameSelectElements[((i ^ 0) * 2) + 3].filterBlendFactor = filterBlendFactor;
         }
 
         if (osTvType == TV_TYPE_PAL) {

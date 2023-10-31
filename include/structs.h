@@ -151,7 +151,7 @@ typedef struct MenuElement {
   /* 0x0C */ u8 filterRed;
   /* 0x0D */ u8 filterGreen;
   /* 0x0E */ u8 filterBlue;
-  /* 0x0F */ u8 filterAlpha; // 0 = no filter color, 0xFF = full color.
+  /* 0x0F */ u8 filterBlendFactor; // 0 = no filter color, 0xFF = full color.
   /* 0x10 */ u8 opacity;
   // Element Properties
   /* 0x11 */ u8 textFont;
