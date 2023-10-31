@@ -1461,7 +1461,10 @@ Matrix *get_camera_matrix(void) {
     return &gCameraMatrixF;
 }
 
-f32 func_80069DC8(f32 x, f32 y, f32 z) {
+/**
+ * Return the screenspace distance to the camera.
+*/
+f32 get_distance_to_camera(f32 x, f32 y, f32 z) {
     f32 ox, oy, oz;
 
     guMtxXFMF(gCameraMatrixF, x, y, z, &ox, &oy, &oz);

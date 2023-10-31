@@ -9,6 +9,7 @@
 #include "textures_sprites.h"
 #include "objects.h"
 #include "tracks.h"
+#include "math_util.h"
 
 /************ .data ************/
 

@@ -8,8 +8,8 @@
 #include "macros.h"
 #include "audio.h"
 #include "objects.h"
-#include "unknown_005740.h"
-#include "unknown_008C40.h"
+#include "audio_vehicle.h"
+#include "audio_spatial.h"
 #include "menu.h"
 #include "game.h"
 #include "particles.h"
@@ -54,15 +54,19 @@ enum TrickyAnimations {
     ANIM_TRICKY_DAMAGE
 };
 
-void func_8005C2F0(Object *object, Object_Racer *racer) {
+/**
+ * Overrides some basic racer properties that are either not needed or intended to work differently.
+ * Also frees the engine sound data, since it won't be used.
+*/
+void racer_special_init(Object *object, Object_Racer *racer) {
     object->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0004;
     object->interactObj->unk11 = 0;
     object->interactObj->hitboxRadius = 30;
     object->interactObj->pushForce = 0;
     racer->animationSpeed = 0.0f;
     gTrickyRacerPeakHeight = object->segment.trans.y_position;
-    if (racer->unk118 != 0) {
-        func_80006AC8(object);
+    if (racer->vehicleSound) {
+        racer_sound_free(object);
     }
     gTrickyCutsceneTimer = 0;
 }
@@ -152,13 +156,13 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     while (racer->animationSpeed < 0.0f) {
         racer->animationSpeed += diffX;
-        gfxData->unk10 = -1;
+        gfxData->animationID = -1;
     }
     while (diffX < racer->animationSpeed) {
         racer->animationSpeed -= diffX;
-        gfxData->unk10 = -1;
+        gfxData->animationID = -1;
     }
-    if (gfxData->unk10 == -1 && obj->segment.object.animationID == ANIM_TRICKY_DAMAGE) {
+    if (gfxData->animationID == -1 && obj->segment.object.animationID == ANIM_TRICKY_DAMAGE) {
         obj->segment.object.animationID = racer->unk1CD;
     }
     animFrame = obj->segment.animFrame;
@@ -392,7 +396,7 @@ GLOBAL_ASM("asm/non_matchings/vehicle_tricky/func_8005CB68.s")
 void fade_when_near_camera(Object *object, Object_Racer *racer, s32 distance) {
     Object *player = get_racer_object(PLAYER_ONE);
     racer->transparency = 255;
-    if (!func_8001139C()) {
+    if (!get_race_countdown()) {
         if ((object->segment.object.distanceToCamera + distance) < player->segment.object.distanceToCamera) {
             racer->transparency = 64;
         }

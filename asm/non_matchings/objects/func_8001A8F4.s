@@ -104,7 +104,7 @@ glabel func_8001A8F4
 /* 01B670 8001AA70 8DCEAEE4 */  lw    $t6, %lo(gRacers)($t6)
 /* 01B674 8001AA74 00000000 */  nop   
 /* 01B678 8001AA78 8DC40000 */  lw    $a0, ($t6)
-/* 01B67C 8001AA7C 0C001AB2 */  jal   func_80006AC8
+/* 01B67C 8001AA7C 0C001AB2 */  jal   racer_sound_free
 /* 01B680 8001AA80 00000000 */   nop   
 /* 01B684 8001AA84 0C0282DD */  jal   func_800A0B74
 /* 01B688 8001AA88 00000000 */   nop   

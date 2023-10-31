@@ -2873,7 +2873,7 @@ void func_80083098(f32 arg0) {
                 text = introCharData->unk0;
                 didUpdate = TRUE;
             } else {
-                if (!gTitleCinematicTextColours){} // Fake
+                if (!gTitleCinematicTextColours[0].red){} // Fake
                 D_801268E0++;
             }
         }
@@ -4112,7 +4112,7 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
             D_80126A80[i]->unk13 = 0;
         }
     }
-    if (buttonsPressed & B_BUTTON || (buttonsPressed & (START_BUTTON | A_BUTTON) && D_80126A74 == (D_80126A78 + 1U))) {
+    if (buttonsPressed & B_BUTTON || (buttonsPressed & (START_BUTTON | A_BUTTON) && (u32) D_80126A74 == (D_80126A78 + 1U))) {
         play_sound_global(SOUND_MENU_BACK3, NULL);
         gMenuOptionCount &= ~8;
         switch (sp1C) {
@@ -7401,7 +7401,7 @@ void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
         opacity = 255;
     }
     if (hubName != D_801269F0) {
-        temp = get_level_name(get_hub_area_id(3));
+        temp = (s32) get_level_name(get_hub_area_id(3));
         if ((s32) hubName == temp) {
             set_kerning(TRUE);
         }
@@ -10432,7 +10432,7 @@ void func_80099E8C(UNUSED s32 updateRate) {
     set_text_font(FONT_SMALL);
     x = 40;
     while (spE4 < D_801264D4 && spE8 > 0) {
-        if (((!gGhostDataElementPositions) && (!gGhostDataElementPositions)) && (!gGhostDataElementPositions)){} // Fakematch
+        if (gGhostDataElementPositions[0]){} // Fakematch
 
         currentWorldId = get_map_world_id(D_80126508[spE4]) - 1;
         if (currentWorldId < 0 || currentWorldId >= 5) {
@@ -11136,7 +11136,7 @@ void func_8009C508(s32 arg0) {
                     if ((*gAssetsMenuElementIds)[arg0] & 0x4000) {
                         free_object((Object *) (u32) gMenuObjects[arg0]);
                     } else {
-                        func_8005FF40((ObjectModel**)(u32)gMenuObjects[arg0]);
+                        free_3d_model((ObjectModel**)(u32)gMenuObjects[arg0]);
                     }
                 }
             }
@@ -11184,9 +11184,9 @@ void func_8009C6D4(s32 arg0) {
         if (((!arg0) && (!arg0)) && (!arg0)){} // Fakematch
         
         if ((i & 0xC000) == 0xC000) {
-            gMenuObjects[arg0] = load_texture(i & 0x3FFF);
+            gMenuObjects[arg0] = (TextureHeader *) load_texture(i & 0x3FFF);
         } else if (i & 0x8000) {
-            gMenuObjects[arg0] = func_8007C12C(i & 0x3FFF, 0);
+            gMenuObjects[arg0] = (TextureHeader *) func_8007C12C(i & 0x3FFF, 0);
         } else if (i & 0x4000) {
             if (gMenuElementIdCount){} // Fakematch
             entry.objectID = i & 0xFFFF;
@@ -11194,9 +11194,9 @@ void func_8009C6D4(s32 arg0) {
             entry.x = 0;
             entry.y = 0;
             entry.z = 0;
-            gMenuObjects[arg0] = spawn_object(&entry, 0);
+            gMenuObjects[arg0] = (TextureHeader *) spawn_object(&entry, 0);
         } else {
-            gMenuObjects[arg0] = func_8005F99C(i & 0x3FFF, 0);
+            gMenuObjects[arg0] = (TextureHeader *) object_model_init(i & 0x3FFF, 0);
         }
 
         D_80126750[arg0] = TRUE;

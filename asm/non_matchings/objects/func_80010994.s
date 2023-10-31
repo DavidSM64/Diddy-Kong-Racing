@@ -11,17 +11,17 @@ glabel func_80010994
 /* 0115B8 800109B8 AFB00018 */  sw    $s0, 0x18($sp)
 /* 0115BC 800109BC 0C00916D */  jal   func_800245B4
 /* 0115C0 800109C0 2404FFFF */   li    $a0, -1
-/* 0115C4 800109C4 3C028012 */  lui   $v0, %hi(D_8011ADB0) # $v0, 0x8012
-/* 0115C8 800109C8 8C42ADB0 */  lw    $v0, %lo(D_8011ADB0)($v0)
-/* 0115CC 800109CC 3C018012 */  lui   $at, %hi(gRaceStartCountdown) # $at, 0x8012
+/* 0115C4 800109C4 3C028012 */  lui   $v0, %hi(gEventCountdown) # $v0, 0x8012
+/* 0115C8 800109C8 8C42ADB0 */  lw    $v0, %lo(gEventCountdown)($v0)
+/* 0115CC 800109CC 3C018012 */  lui   $at, %hi(gEventStartTimer) # $at, 0x8012
 /* 0115D0 800109D0 1840000D */  blez  $v0, .L80010A08
-/* 0115D4 800109D4 AC22ADB8 */   sw    $v0, %lo(gRaceStartCountdown)($at)
+/* 0115D4 800109D4 AC22ADB8 */   sw    $v0, %lo(gEventStartTimer)($at)
 /* 0115D8 800109D8 0C028064 */  jal   func_800A0190
 /* 0115DC 800109DC 00000000 */   nop   
 /* 0115E0 800109E0 10400009 */  beqz  $v0, .L80010A08
 /* 0115E4 800109E4 3C038012 */   lui   $v1, %hi(D_8011ADBC) # $v1, 0x8012
-/* 0115E8 800109E8 3C048012 */  lui   $a0, %hi(D_8011ADB0) # $a0, 0x8012
-/* 0115EC 800109EC 2484ADB0 */  addiu $a0, %lo(D_8011ADB0) # addiu $a0, $a0, -0x5250
+/* 0115E8 800109E8 3C048012 */  lui   $a0, %hi(gEventCountdown) # $a0, 0x8012
+/* 0115EC 800109EC 2484ADB0 */  addiu $a0, %lo(gEventCountdown) # addiu $a0, $a0, -0x5250
 /* 0115F0 800109F0 8C8E0000 */  lw    $t6, ($a0)
 /* 0115F4 800109F4 2463ADBC */  addiu $v1, %lo(D_8011ADBC) # addiu $v1, $v1, -0x5244
 /* 0115F8 800109F8 01D41023 */  subu  $v0, $t6, $s4
@@ -32,16 +32,16 @@ glabel func_80010994
 /* 011608 80010A08 3C038012 */  lui   $v1, %hi(D_8011ADBC) # $v1, 0x8012
 /* 01160C 80010A0C 2463ADBC */  addiu $v1, %lo(D_8011ADBC) # addiu $v1, $v1, -0x5244
 /* 011610 80010A10 8C780000 */  lw    $t8, ($v1)
-/* 011614 80010A14 3C028012 */  lui   $v0, %hi(D_8011ADB0) # $v0, 0x8012
+/* 011614 80010A14 3C028012 */  lui   $v0, %hi(gEventCountdown) # $v0, 0x8012
 /* 011618 80010A18 0314C821 */  addu  $t9, $t8, $s4
 /* 01161C 80010A1C AC790000 */  sw    $t9, ($v1)
-/* 011620 80010A20 8C42ADB0 */  lw    $v0, %lo(D_8011ADB0)($v0)
+/* 011620 80010A20 8C42ADB0 */  lw    $v0, %lo(gEventCountdown)($v0)
 /* 011624 80010A24 00000000 */  nop   
 .L80010A28:
 /* 011628 80010A28 1C400003 */  bgtz  $v0, .L80010A38
 /* 01162C 80010A2C 3C048012 */   lui   $a0, %hi(gNumRacers) # $a0, 0x8012
-/* 011630 80010A30 3C018012 */  lui   $at, %hi(D_8011ADB0) # $at, 0x8012
-/* 011634 80010A34 AC20ADB0 */  sw    $zero, %lo(D_8011ADB0)($at)
+/* 011630 80010A30 3C018012 */  lui   $at, %hi(gEventCountdown) # $at, 0x8012
+/* 011634 80010A34 AC20ADB0 */  sw    $zero, %lo(gEventCountdown)($at)
 .L80010A38:
 /* 011638 80010A38 3C028012 */  lui   $v0, %hi(D_8011AD21) # $v0, 0x8012
 /* 01163C 80010A3C 3C018012 */  lui   $at, %hi(D_8011AD3D) # $at, 0x8012
@@ -475,8 +475,8 @@ glabel func_80010994
 /* 011C5C 8001105C 80620000 */  lb    $v0, ($v1)
 /* 011C60 80011060 24010001 */  li    $at, 1
 /* 011C64 80011064 14410026 */  bne   $v0, $at, .L80011100
-/* 011C68 80011068 3C0A8012 */   lui   $t2, %hi(D_8011ADB0) # $t2, 0x8012
-/* 011C6C 8001106C 8D4AADB0 */  lw    $t2, %lo(D_8011ADB0)($t2)
+/* 011C68 80011068 3C0A8012 */   lui   $t2, %hi(gEventCountdown) # $t2, 0x8012
+/* 011C6C 8001106C 8D4AADB0 */  lw    $t2, %lo(gEventCountdown)($t2)
 /* 011C70 80011070 24010050 */  li    $at, 80
 /* 011C74 80011074 15410025 */  bne   $t2, $at, .L8001110C
 /* 011C78 80011078 3C0B8012 */   lui   $t3, %hi(gCutsceneID) # $t3, 0x8012

@@ -748,13 +748,13 @@ void draw_gradient_background(void) {
         
     verts = (Vertex *) gSceneCurrVertexList;
     tris = (Triangle *) gSceneCurrTriList;
-    headerRed0 = gCurrentLevelHeader2->unkC1;
+    headerRed0 = gCurrentLevelHeader2->BGColourTopR;
     also_one = 1;
-    headerGreen0 = gCurrentLevelHeader2->unkC2;
-    headerBlue0 = gCurrentLevelHeader2->unkC3;
-    headerRed1 = gCurrentLevelHeader2->unkBE;
-    headerGreen1 = gCurrentLevelHeader2->unkBF;
-    headerBlue1 = gCurrentLevelHeader2->unkC0;
+    headerGreen0 = gCurrentLevelHeader2->BGColourTopG;
+    headerBlue0 = gCurrentLevelHeader2->BGColourTopB;
+    headerRed1 = gCurrentLevelHeader2->BGColourBottomR;
+    headerGreen1 = gCurrentLevelHeader2->BGColourBottomG;
+    headerBlue1 = gCurrentLevelHeader2->BGColourBottomB;
     reset_render_settings(&gSceneCurrDisplayList);
     load_and_set_texture_no_offset(&gSceneCurrDisplayList, 0, RENDER_FOG_ACTIVE);
     gSPVertexDKR(gSceneCurrDisplayList++, OS_PHYSICAL_TO_K0(verts), 4, 0);
@@ -949,7 +949,7 @@ void render_level_geometry_and_objects(void) {
     }
 
     reset_render_settings(&gSceneCurrDisplayList);
-    func_80015348(sp160, objCount - 1);
+    sort_objects_by_dist(sp160, objCount - 1);
     visibleFlags = OBJ_FLAGS_INVIS_PLAYER1 << (get_current_viewport() & 1);
 
     for (i = sp160; i < objCount; i++) {

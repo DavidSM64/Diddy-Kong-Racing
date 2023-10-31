@@ -7,6 +7,8 @@
 #include "types.h"
 #include "macros.h"
 #include "structs.h"
+#include "game.h"
+#include "string.h"
 
 extern s32 gIntDisFlag;
 extern s32 gCurrentRNGSeed; //Official Name: rngSeed
@@ -22,13 +24,45 @@ extern s16 gArcTanTable[];
 
 /******************************/
 
+#ifdef NON_MATCHING
 /* Official Name: disableInterrupts*/
+u32 disable_interrupts(void) {
+    if (gIntDisFlag) {
+        return __osDisableInt();
+    }
+}
+#else
 GLOBAL_ASM("asm/math_util/disable_interrupts.s")
+#endif
+
+#ifdef NON_MATCHING
 /* Official Name: enable_interrupts */
+void enable_interrupts(u32 flags) {
+    if (gIntDisFlag) {
+        __osRestoreInt(flags);
+    }
+}
+#else
 GLOBAL_ASM("asm/math_util/enable_interrupts.s")
+#endif
+
+#ifdef NON_MATCHING
 /* Official Name: setIntDisFlag */
+void set_gIntDisFlag(s8 setting) {
+    gIntDisFlag = setting;
+}
+#else
 GLOBAL_ASM("asm/math_util/set_gIntDisFlag.s")
+#endif
+
+#ifdef NON_MATCHING
+/* Official Name: getIntDisFlag */
+s8 get_gIntDisFlag(void) {
+    return gIntDisFlag;
+}
+#else
 GLOBAL_ASM("asm/math_util/get_gIntDisFlag.s")
+#endif
 
 #ifdef NON_EQUIVALENT // Untested
 UNUSED void s32_matrix_to_s16_matrix(s32 **input, s16 **output) {
@@ -48,8 +82,8 @@ UNUSED void s32_matrix_to_s16_matrix(s32 **input, s16 **output) {
 GLOBAL_ASM("asm/math_util/s32_matrix_to_s16_matrix.s")
 #endif
 
-#ifdef NON_EQUIVALENT
-void f32_matrix_to_s32_matrix(Matrix *input, Matrix *output) {
+#ifdef NON_MATCHING
+void f32_matrix_to_s32_matrix(Matrix *input, MatrixS *output) {
     s32 i;
     for(i = 0; i < 4; i++) {
         (*output)[i][0] = (s32) ((*input)[i][0] * 65536.0f);
@@ -73,55 +107,51 @@ void guMtxXFMF(Matrix mf, float x, float y, float z, float *ox, float *oy, float
 GLOBAL_ASM("asm/math_util/guMtxXFMF.s")
 #endif
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 /* Official name: mathMtxFastXFMF */
 void f32_matrix_dot(Matrix *mat1, Matrix *mat2, Matrix *output) {
-    (*output)[0][0] = ((*mat2)[0][0] * (*mat1)[0][0]) + ((*mat2)[0][1] * (*mat1)[1][0]) + ((*mat2)[0][2] * (*mat1)[2][0]);
-    (*output)[0][1] = ((*mat2)[0][0] * (*mat1)[0][1]) + ((*mat2)[0][1] * (*mat1)[1][1]) + ((*mat2)[0][2] * (*mat1)[2][1]);
-    (*output)[0][2] = ((*mat2)[0][0] * (*mat1)[0][2]) + ((*mat2)[0][1] * (*mat1)[1][2]) + ((*mat2)[0][2] * (*mat1)[2][2]);
+    f32 temp_f4;
+    f32 temp_f6;
+    f32 temp_f8;
+
+    temp_f4 = (*mat2)[0][0];
+    temp_f6 = (*mat2)[0][1];
+    temp_f8 = (*mat2)[0][2];
+    (*output)[0][0] = (temp_f4 * (*mat1)[0][0]) + (temp_f6 * (*mat1)[1][0]) + (temp_f8 * (*mat1)[2][0]);
+    (*output)[0][1] = (temp_f4 * (*mat1)[0][1]) + (temp_f6 * (*mat1)[1][1]) + (temp_f8 * (*mat1)[2][1]);
+    (*output)[0][2] = (temp_f4 * (*mat1)[0][2]) + (temp_f6 * (*mat1)[1][2]) + (temp_f8 * (*mat1)[2][2]);
 }
 #else
 GLOBAL_ASM("asm/math_util/f32_matrix_dot.s")
 #endif
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 /* Official name: mathMtxCatF */
 void f32_matrix_mult(Matrix *mat1, Matrix *mat2, Matrix *output) {
     s32 i;
-    for(i = 0; i < 4; i++) {
-        (*output)[i][0] = (f32) (((*mat1)[i][1] * (*mat2)[1][0]) + ((*mat1)[i][3] * (*mat2)[2][0]) + (((*mat1)[i][0] * (*mat2)[0][0]) + ((*mat1)[i][3] * (*mat2)[3][0])));
-        (*output)[i][1] = (f32) (((*mat1)[i][1] * (*mat2)[1][1]) + ((*mat1)[i][3] * (*mat2)[2][1]) + (((*mat1)[i][0] * (*mat2)[0][1]) + ((*mat1)[i][3] * (*mat2)[3][1])));
-        (*output)[i][2] = (f32) (((*mat1)[i][1] * (*mat2)[1][2]) + ((*mat1)[i][3] * (*mat2)[2][2]) + (((*mat1)[i][0] * (*mat2)[0][2]) + ((*mat1)[i][3] * (*mat2)[3][2])));
-        (*output)[i][3] = (f32) (((*mat1)[i][1] * (*mat2)[1][3]) + ((*mat1)[i][3] * (*mat2)[2][3]) + (((*mat1)[i][0] * (*mat2)[0][3]) + ((*mat1)[i][3] * (*mat2)[3][3])));
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 w;
+    for (i = 0; i < 4; i++) {
+        x = (*mat1)[i][0];
+        y = (*mat1)[i][1];
+        z = (*mat1)[i][2];
+        w = (*mat1)[i][3];
+        (*output)[i][0] = (f32) ((y * (*mat2)[1][0]) + (z * (*mat2)[2][0]) + ((x * (*mat2)[0][0]) + (w * (*mat2)[3][0])));
+        (*output)[i][1] = (f32) ((y * (*mat2)[1][1]) + (z * (*mat2)[2][1]) + ((x * (*mat2)[0][1]) + (w * (*mat2)[3][1])));
+        (*output)[i][2] = (f32) ((y * (*mat2)[1][2]) + (z * (*mat2)[2][2]) + ((x * (*mat2)[0][2]) + (w * (*mat2)[3][2])));
+        (*output)[i][3] = (f32) ((y * (*mat2)[1][3]) + (z * (*mat2)[2][3]) + ((x * (*mat2)[0][3]) + (w * (*mat2)[3][3])));
     }
 }
 #else
 GLOBAL_ASM("asm/math_util/f32_matrix_mult.s")
 #endif
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 /* Official name: mathMtxF2L */
 void f32_matrix_to_s16_matrix(Matrix *input, MatrixS *output) {
-    s32 temp_f10;
-    s32 temp_f4;
-    s32 temp_f6;
-    s32 temp_f8;
-    s32 i;
-    
-    for(i = 0; i < 4; i++){
-        temp_f4  = (*input)[i][0] * 65536.0f;
-        temp_f6  = (*input)[i][1] * 65536.0f;
-        temp_f8  = (*input)[i][2] * 65536.0f;
-        temp_f10 = (*input)[i][3] * 65536.0f;
-        *output[i+4][0] = temp_f4;
-        *output[i+4][1] = temp_f6;
-        *output[i+4][2] = temp_f8;
-        *output[i+4][3] = temp_f10;
-        *output[i][0] = (temp_f4 >> 16);
-        *output[i][1] = (temp_f6 >> 16);
-        *output[i][2] = (temp_f8 >> 16);
-        *output[i][3] = (temp_f10 >> 16);
-    }
+    guMtxF2L((float (*)[4]) input, (Mtx *) output);
 }
 #else
 GLOBAL_ASM("asm/math_util/f32_matrix_to_s16_matrix.s")
@@ -146,8 +176,20 @@ s32 get_rng_seed(void) {
     return gCurrentRNGSeed;
 }
 
+#ifdef NON_MATCHING
 /* Official Name: mathRnd */
+s32 get_random_number_from_range(s32 min, s32 max) {
+    s32 newSeed;
+    u64 curSeed;
+
+    curSeed = (((u64) ((s64) gCurrentRNGSeed << 0x3F) >> 0x1F) | ((u64) ((s64) gCurrentRNGSeed << 0x1F) >> 0x20)) ^ ((u64) ((s64) gCurrentRNGSeed << 0x2C) >> 0x20);
+    newSeed = ((curSeed >> 0x14) & 0xFFF) ^ curSeed;
+    gCurrentRNGSeed = newSeed;
+    return ((u32) (newSeed - min) % (u32) ((max - min) + 1)) + min;
+}
+#else
 GLOBAL_ASM("asm/math_util/rng.s")
+#endif
 
 #ifdef NON_EQUIVALENT
 /* Official name: fastShortReflection */
@@ -187,11 +229,18 @@ UNUSED void s16_vec3_mult_by_s32_matrix_full(s32 **input, s16 *output) {
 GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix_full.s")
 #endif
 
-#ifdef NON_EQUIVALENT
-void s16_vec3_mult_by_s32_matrix(s32 **input, s16 *output) {
-    output[0] = ((output[0] * input[0][0]) + (output[1] * input[1][0]) + (output[2] * input[2][0])) >> 16;
-    output[1] = ((output[0] * input[0][1]) + (output[1] * input[1][1]) + (output[2] * input[2][1])) >> 16;
-    output[2] = ((output[0] * input[0][2]) + (output[1] * input[1][2]) + (output[2] * input[2][2])) >> 16;
+#ifdef NON_MATCHING
+void s16_vec3_mult_by_s32_matrix(MatrixS input, Vec3s *output) {
+    s32 x;
+    s32 y;
+    s32 z;
+
+    x = output->x;
+    y = output->y;
+    z = output->z;
+    output->x = ((x * input[0][0]) + (y * input[1][0]) + (z * input[2][0])) >> 16;
+    output->y = ((x * input[0][1]) + (y * input[1][1]) + (z * input[2][1])) >> 16;
+    output->z = ((x * input[0][2]) + (y * input[1][2]) + (z * input[2][2])) >> 16;
 }
 #else
 GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix.s")
@@ -539,46 +588,67 @@ GLOBAL_ASM("asm/math_util/f32_matrix_from_position.s")
 
 GLOBAL_ASM("asm/math_util/f32_matrix_from_scale.s")
 
-#ifdef NON_EQUIVALENT
-s32 atan2s(s32 xDelta, s32 zDelta) {
-    s32 temp;
-    s32 someAngle;
+#ifdef NON_MATCHING
+// Blatantly stolen from SM64 :)
+static u16 atan2_lookup(f32 y, f32 x) {
+    u16 ret;
 
-    if ((xDelta | zDelta) == 0) {
-        return 0;
+    if (x == 0) {
+        ret = gArcTanTable[0];
+    } else {
+        ret = gArcTanTable[(s32)(y / x * 1024 + 0.5f)];
     }
-    if (xDelta >= 0) {
-        if (zDelta >= 0) {
-            someAngle = 0;
+    return ret;
+}
+
+s32 atan2s(s32 x, s32 y) {
+    u16 ret;
+
+    if (x >= 0) {
+        if (y >= 0) {
+            if (y >= x) {
+                ret = atan2_lookup(x, y);
+            } else {
+                ret = 0x4000 - atan2_lookup(y, x);
+            }
         } else {
-            zDelta = -zDelta;
-            someAngle = 0x4000;
-            temp = xDelta ^ zDelta;
-            zDelta ^= temp;
-            xDelta = temp ^ zDelta;
+            y = -y;
+            if (y < x) {
+                ret = 0x4000 + atan2_lookup(y, x);
+            } else {
+                ret = 0x8000 - atan2_lookup(x, y);
+            }
         }
     } else {
-        xDelta = -xDelta;
-        if (zDelta >= 0) {
-            someAngle = 0xC000;
-            temp = xDelta ^ zDelta;
-            zDelta ^= temp;
-            xDelta = temp ^ zDelta;
+        x = -x;
+        if (y < 0) {
+            y = -y;
+            if (y >= x) {
+                ret = 0x8000 + atan2_lookup(x, y);
+            } else {
+                ret = 0xC000 - atan2_lookup(y, x);
+            }
         } else {
-            zDelta = -zDelta;
-            someAngle = 0x8000;
+            if (y < x) {
+                ret = 0xC000 + atan2_lookup(y, x);
+            } else {
+                ret = -atan2_lookup(x, y);
+            }
         }
     }
-    if ((xDelta - zDelta) >= 0) {
-        return (someAngle + 0x4000) - gArcTanTable[((zDelta << 11) / xDelta) & 0xFFE];
-    } else {
-        return someAngle + gArcTanTable[((xDelta << 11) / zDelta) & 0xFFE];
-    }
+    return ret;
 }
 #else
 GLOBAL_ASM("asm/math_util/atan2s.s")
 #endif
+
+#ifdef NON_MATCHING
+s16 arctan2_f(f32 y, f32 x) {
+    return atan2s((s32) (y * 255.0f), (s32) (x * 255.0f));
+}
+#else
 GLOBAL_ASM("asm/math_util/arctan2_f.s")
+#endif
 
 #ifdef NON_EQUIVALENT // Untested
 UNUSED s32 s32_matrix_cell_sqrt(s32 arg0) {
@@ -674,4 +744,11 @@ GLOBAL_ASM("asm/math_util/area_triangle_2d.s")
 #endif
 
 GLOBAL_ASM("asm/math_util/set_breakpoint.s")
+
+#ifdef NON_MATCHING
+void dmacopy_doubleword(void *src, void *dst, s32 size) {
+    memcpy(dst, src, size);
+}
+#else
 GLOBAL_ASM("asm/math_util/dmacopy_doubleword.s")
+#endif

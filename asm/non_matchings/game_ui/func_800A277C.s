@@ -120,7 +120,7 @@ glabel func_800A277C
 /* 0A34D8 800A28D8 24010004 */   li    $at, 4
 /* 0A34DC 800A28DC 1441000D */  bne   $v0, $at, .L800A2914
 /* 0A34E0 800A28E0 00000000 */   nop   
-/* 0A34E4 800A28E4 0C0044E7 */  jal   func_8001139C
+/* 0A34E4 800A28E4 0C0044E7 */  jal   get_race_countdown
 /* 0A34E8 800A28E8 AFA900A8 */   sw    $t1, 0xa8($sp)
 /* 0A34EC 800A28EC 8FA900A8 */  lw    $t1, 0xa8($sp)
 /* 0A34F0 800A28F0 14400006 */  bnez  $v0, .L800A290C
@@ -287,7 +287,7 @@ glabel func_800A277C
 .L800A2B54:
 /* 0A3754 800A2B54 02002025 */  move  $a0, $s0
 .L800A2B58:
-/* 0A3758 800A2B58 0C01874C */  jal   func_80061D30
+/* 0A3758 800A2B58 0C01874C */  jal   object_animate
 /* 0A375C 800A2B5C AFA900A8 */   sw    $t1, 0xa8($sp)
 /* 0A3760 800A2B60 8FA900A8 */  lw    $t1, 0xa8($sp)
 /* 0A3764 800A2B64 00000000 */  nop   
@@ -738,7 +738,7 @@ glabel func_800A277C
 /* 0A3DFC 800A31FC 00000000 */   nop   
 /* 0A3E00 800A3200 1040004A */  beqz  $v0, .L800A332C
 /* 0A3E04 800A3204 00408025 */   move  $s0, $v0
-/* 0A3E08 800A3208 0C0044E7 */  jal   func_8001139C
+/* 0A3E08 800A3208 0C0044E7 */  jal   get_race_countdown
 /* 0A3E0C 800A320C 00000000 */   nop   
 /* 0A3E10 800A3210 14400047 */  bnez  $v0, .L800A3330
 /* 0A3E14 800A3214 8FAA00A0 */   lw    $t2, 0xa0($sp)

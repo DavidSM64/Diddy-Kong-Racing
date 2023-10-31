@@ -1,11 +1,11 @@
 /* The comment below is needed for this file to be picked up by generate_ld */
 /* RAM_POS: 0x80008040 */
 
-#include "unknown_008C40.h"
+#include "audio_spatial.h"
 #include "types.h"
 #include "macros.h"
 #include "audio_internal.h"
-#include "unknown_005740.h"
+#include "audio_vehicle.h"
 #include "memory.h"
 #include "audio.h"
 #include "textures_sprites.h"
@@ -65,7 +65,7 @@ void func_80008040(void) {
     func_80008174();
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80008040.s")
+GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80008040.s")
 #endif
 
 void func_80008140(void) {
@@ -127,10 +127,10 @@ void func_80008174(void) {
     D_8011AC18 = 0;
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80008174.s")
+GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80008174.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80008438.s")
+GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80008438.s")
 
 s32 func_800090C0(f32 arg0, f32 arg1, s32 arg2) {
     s32 temp_v1;
@@ -284,7 +284,7 @@ void func_800098A4(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6,
 
     if ((argB < 7) && (argC < 30)) {
         temp_v1 = &D_80119C58[argB];
-        temp_a0 = &temp_v1->unk4 + argC * 3; //This can't be right...
+        temp_a0 = (Vec3f *) (((u32 *) &temp_v1->unk4) + argC * 3); //This can't be right...
         temp_a0->x = x;
         temp_a0->y = y;
         temp_a0->z = z;
@@ -324,7 +324,7 @@ void func_80009968(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80009968.s")
+GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80009968.s")
 #endif
 
 s32 func_800099EC(u8 arg0) {
@@ -424,21 +424,22 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80009B7C.s")
+GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80009B7C.s")
 #endif
 
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_80009D6C.s")
+GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80009D6C.s")
 
 #ifdef NON_EQUIVALENT
 extern unk80119C58 **D_80119C5C;
 extern unk8011A6D8 **D_8011A6DC;
+// debug_render_audio_effects
 void func_8000A184(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
     s32 i, j;
 
     for (i = 0; i < 7; i++) {
         if (D_80119C58[i].unk16C != 0) {
             for (j = 0; j < D_80119C58[i].unk17C; j++) {
-                func_8000A414(arg0, arg1, arg2, (floatXYZVals *) &D_80119C5C[i], 0xFF, 0xFF, 0);
+                debug_render_line(arg0, arg1, arg2, (floatXYZVals *) &D_80119C5C[i], 0xFF, 0xFF, 0);
             }
         }
     }
@@ -446,13 +447,13 @@ void func_8000A184(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
     for (i = 0; i < 7; i++) {
         if (D_8011A6D8[i].unk0.unk0_02 != 0) {
             for (j = 0; j < D_8011A6D8[i].unkB8; j++) {
-                func_8000A414(arg0, arg1, arg2, (floatXYZVals *) &D_8011A6DC[i], 0xFF, 0xFF, 0);
+                debug_render_line(arg0, arg1, arg2, (floatXYZVals *) &D_8011A6DC[i], 0xFF, 0xFF, 0);
             }
         }
     }
 }
 #else
-GLOBAL_ASM("asm/non_matchings/unknown_008C40/func_8000A184.s")
+GLOBAL_ASM("asm/non_matchings/audio_spatial/func_8000A184.s")
 #endif
 
 void func_8000A2E8(s32 arg0) {
@@ -471,7 +472,11 @@ void func_8000A2E8(s32 arg0) {
     }
 }
 
-void func_8000A414(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *arg3, u8 red, u8 green, u8 blue) {
+/**
+ * Generates and renders a coloured line visible from anywhere.
+ * Allows use of a colour, that interpolates from bright to dark from the beginning to the end of the line.
+*/
+void debug_render_line(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *coords, u8 red, u8 green, u8 blue) {
     Gfx *temp_dlist;
     Vertex *temp_verts;
     Triangle *temp_tris;
@@ -482,12 +487,12 @@ void func_8000A414(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *a
     s16 y2;
     s16 z2;
 
-    x1 =  arg3->x1;
-    y1 =  arg3->y1;
-    z1 =  arg3->z1;
-    x2 =  arg3->x2;
-    y2 =  arg3->y2;
-    z2 =  arg3->z2;
+    x1 =  coords->x1;
+    y1 =  coords->y1;
+    z1 =  coords->z1;
+    x2 =  coords->x2;
+    y2 =  coords->y2;
+    z2 =  coords->z2;
     temp_dlist = *dlist;
     
     temp_verts = *verts;

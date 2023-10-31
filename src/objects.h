@@ -354,7 +354,7 @@ void free_object(Object *);
 s32 func_80010018(void);
 s32 func_80010028(s32 arg0);
 void func_80011390(void);
-s32 func_8001139C(void);
+s32 get_race_countdown(void);
 s32 get_race_start_timer(void);
 s32 ignore_bounds_check(void);
 void func_80012C30(void);
@@ -478,7 +478,7 @@ void func_80022E18(s32 arg0);
 void func_8001BF20(void);
 void func_8001E6EC(s8);
 Object *func_8000FD54(s32 objectHeaderIndex);
-void func_80015348(s32 startIndex, s32 lastIndex);
+void sort_objects_by_dist(s32 startIndex, s32 lastIndex);
 void func_80016748(Object *obj0, Object *obj1);
 void func_8001AE64(void);
 s32 func_80016DE8(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **arg5);
@@ -516,7 +516,7 @@ void func_80010994(s32 updateRate);
 void func_800159C8(Object *, Object *);
 void func_80011264(ObjectModel *, Object *);
 void func_800245F0(ObjectModel *, Object *, f32); //asm func in unknown_0251F0
-s32 func_80061D30(Object *); //asm func in unknown_062930
+s32 object_animate(Object *obj); //asm func in unknown_062930
 s32 func_80014B50(s32 arg0, s32 arg1, f32 arg2, u32 arg3);
 s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3); // NON MATCHING
 

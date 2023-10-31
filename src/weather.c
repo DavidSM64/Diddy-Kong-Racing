@@ -9,7 +9,7 @@
 #include "PR/libultra.h"
 #include "camera.h"
 #include "tracks.h"
-#include "unknown_008C40.h"
+#include "audio_spatial.h"
 #include "textures_sprites.h"
 #include "math_util.h"
 #include "objects.h"

@@ -105,7 +105,7 @@ glabel func_800AA600
 /* 0AB36C 800AA76C ADC20000 */   sw    $v0, ($t6)
 .L800AA770:
 /* 0AB370 800AA770 8FA40038 */  lw    $a0, 0x38($sp)
-/* 0AB374 800AA774 0C017E67 */  jal   func_8005F99C
+/* 0AB374 800AA774 0C017E67 */  jal   object_model_init
 /* 0AB378 800AA778 00002825 */   move  $a1, $zero
 /* 0AB37C 800AA77C 3C098012 */  lui   $t1, %hi(gAssetHudElements) # $t1, 0x8012
 /* 0AB380 800AA780 860F0006 */  lh    $t7, 6($s0)

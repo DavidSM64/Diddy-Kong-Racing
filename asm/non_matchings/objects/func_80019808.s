@@ -84,7 +84,7 @@ glabel func_80019808
 /* 01A548 80019948 8F240000 */  lw    $a0, ($t9)
 /* 01A54C 8001994C AFBF0064 */  sw    $ra, 0x64($sp)
 /* 01A550 80019950 AFAA0044 */  sw    $t2, 0x44($sp)
-/* 01A554 80019954 0C001AB2 */  jal   func_80006AC8
+/* 01A554 80019954 0C001AB2 */  jal   racer_sound_free
 /* 01A558 80019958 AFA5004C */   sw    $a1, 0x4c($sp)
 /* 01A55C 8001995C 3C0B8012 */  lui   $t3, %hi(gRacers) # $t3, 0x8012
 /* 01A560 80019960 256BAEE4 */  addiu $t3, %lo(gRacers) # addiu $t3, $t3, -0x511c
