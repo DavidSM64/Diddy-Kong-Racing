@@ -672,7 +672,7 @@ s32 func_8000CC20(Object *obj) {
     return NextFreeIndex;
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     s32 numPlayers; // sp144
     enum GameMode gameMode;

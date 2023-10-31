@@ -1073,7 +1073,7 @@ void render_hud_hubworld(Object *obj, s32 updateRate) {
     }
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
 // render_hud_time_trial
 // https://decomp.me/scratch/BWqz9
 // Draws Time Trial HUD. Also handles music/audio?
