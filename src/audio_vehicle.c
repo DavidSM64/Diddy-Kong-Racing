@@ -94,9 +94,9 @@ VehicleSoundData *func_80004B40(s8 characterId, s8 vehicleId) {
     temp_v0_3->unk38 = temp_v0_2->unk38;
     temp_v0_3->unk39 = temp_v0_2->unk39;
     temp_v0_3->unk64 = temp_v0_2->unk3A;
-    temp_v0_3->unkC8 = temp_v0_2->unk46 / 10000.0f;
-    temp_v0_3->unkB0 = temp_v0_2->unk3E / 10000.0f;
-    temp_v0_3->unkB4 = temp_v0_2->unk40 / 10000.0f;
+    temp_v0_3->throttlePitchCeil = temp_v0_2->unk46 / 10000.0f;
+    temp_v0_3->throttlePitchVel = temp_v0_2->unk3E / 10000.0f;
+    temp_v0_3->throttlePitchDecay = temp_v0_2->unk40 / 10000.0f;
     temp_v0_3->unkC0 = temp_v0_2->unk42 / 10000.0f;
     temp_v0_3->unkC4 = temp_v0_2->unk44 / 10000.0f;
     temp_v0_3->unkBC = temp_v0_2->unk3C / 10000.0f;
@@ -145,14 +145,14 @@ loop_10:
     } while (var_s0_2 < 4);
     temp_v0_3->unk74 = 0;
     temp_v0_3->unk6C[0] = 0.0f;
-    temp_v0_3->unkD4 = temp_v0_2->unk4A / 100.0f;
+    temp_v0_3->basePitch = temp_v0_2->unk4A / 100.0f;
     if (vehicleId == 0) {
         temp_v0_3->unk54[0] = temp_v0_3->unk2C[0];
         temp_v0_3->unk5C[0] = temp_v0_3->unk18[0] / 10000.0f;
         temp_v0_3->unk54[1] = temp_v0_3->unk31;
         temp_v0_3->unk5C[1] = temp_v0_3->unk22 / 10000.0f;
     } else {
-        temp_v0_3->unk5C[0] = temp_v0_3->unkD4;
+        temp_v0_3->unk5C[0] = temp_v0_3->basePitch;
         temp_a1 = temp_v0_3->unk5C[0] * 10000.0f;
         for (var_a0_2 = 0; temp_a1 >= temp_v0_3->unk18[var_a0_2] && var_a0_2 < 4; var_a0_2++) { }
         var_a0_2--;
@@ -742,7 +742,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
             }
             for (loopCount2 = 0; loopCount2 < 2 && gRacerSound->unk0[loopCount2] != 0 && var_f26 != 0.0; loopCount2++) {
                 temp_s3 =  gRacerSound->unk54[loopCount2] * var_f26;
-                sp8C = gRacerSound->unk5C[loopCount2] + gRacerSound->bananaPitch + gRacerSound->unk94 + gRacerSound->unk68;
+                sp8C = gRacerSound->unk5C[loopCount2] + gRacerSound->bananaPitch + gRacerSound->enginePitch + gRacerSound->unk68;
                 if (sp8C < 0.05) {
                     sp8C = 0.05f;
                 }
@@ -788,7 +788,7 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
             racer = &objs[loopCount1]->unk64->racer;
             for (loopCount2 = arg3; loopCount2 < numRacers; loopCount2++) {
                 if (objs[loopCount2]->unk64 != NULL) {
-                    gRacerSound = (VehicleSoundData *) objs[loopCount2]->unk64->racer.unk118;
+                    gRacerSound = (VehicleSoundData *) objs[loopCount2]->unk64->racer.cameraYaw;
                     if (gRacerSound != 0) {
                         if (racer->raceFinished != 0) {              
                             tempxPos = objs[loopCount2]->segment.trans.x_position - segment[loopCount1].trans.x_position;       
