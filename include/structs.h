@@ -162,6 +162,7 @@ typedef struct MenuElement {
   /* 0x14 */ void *element;   // Generic pointer
   /* 0x14 */ char *asciiText; // Pointer to ascii text to be displayed on the screen.
   /* 0x14 */ TextureHeader *texture;    // Pointer to texture to be displayed on the screen.
+  /* 0x14 */ DrawTexture *drawTexture;    // Pointer to texture to be displayed on the screen.
   /* 0x14 */ s32 *number;     // Pointer to a number to be displayed on the screen.
   /* 0x14 */ u16 *numberU16;  // Pointer to a number to be displayed on the screen.
   /* 0x14 */ s32 value;       // Some value for elementType == 5

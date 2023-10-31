@@ -2305,7 +2305,7 @@ void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blu
         xOffset3 = 5;
     }
     get_timestamp_from_frames(frameCount, &minutes, &seconds, &hundredths);
-    func_80068508(1);
+    func_80068508(TRUE);
     sprite_opaque(FALSE);
 
     gMenuImageStack[imageIndex].unk18 = minutes / 10;
@@ -2345,7 +2345,7 @@ void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blu
     gMenuImageStack[imageIndex].unkC = xPos;
     func_8009CA60(imageIndex);
 
-    func_80068508(0);
+    func_80068508(FALSE);
     sprite_opaque(TRUE);
     sMenuGuiColourR = (u8)255;
     sMenuGuiColourG = (u8)255;
@@ -2396,7 +2396,7 @@ void func_80081C04(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UNUSED 
     sMenuGuiColourB = b;
     sMenuGuiOpacity = a;
     sprite_opaque(0);
-    func_80068508(1);
+    func_80068508(TRUE);
     if (powerOfTen && number) {} // Fakematch
     gMenuImageStack[0].unk10 = y;
     for (i = 0; i < strLen; i++) {
@@ -2406,7 +2406,7 @@ void func_80081C04(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UNUSED 
         x += 12;
     }
     sprite_opaque(1);
-    func_80068508(0);
+    func_80068508(FALSE);
     sMenuGuiColourR = 255;
     sMenuGuiColourG = 255;
     sMenuGuiColourB = 255;
@@ -2428,13 +2428,13 @@ void func_80081E54(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s3
 }
 
 s32 func_80081F4C(s32 updateRate) {
-    f32 var_f20;
+    f32 scale;
     s32 ret;
     s32 i;
     s32 buttonsPressedAllPlayers;
 
     ret = 1;
-    var_f20 = -1.0f;
+    scale = -1.0f;
     buttonsPressedAllPlayers = 0;
     if (gTrophyRankingsState != 4) {
         if (gIgnorePlayerInputTime == 0) {
@@ -2455,7 +2455,7 @@ s32 func_80081F4C(s32 updateRate) {
                             D_80126854 -= D_80126858;
                             gTrophyRankingsState = 1;
                         } else {
-                            var_f20 = (f32) D_80126854 / (f32) D_80126858;
+                            scale = (f32) D_80126854 / (f32) D_80126858;
                         }
                     }
                     break;
@@ -2478,7 +2478,7 @@ s32 func_80081F4C(s32 updateRate) {
                                 play_sound_global(SOUND_WHOOSH1, NULL);
                             }
                         } else {
-                            var_f20 = (f32) D_80126854 / (f32) D_8012685C;
+                            scale = (f32) D_80126854 / (f32) D_8012685C;
                         }
                     }
                     break;
@@ -2486,182 +2486,170 @@ s32 func_80081F4C(s32 updateRate) {
                     if ((buttonsPressedAllPlayers & (A_BUTTON | START_BUTTON)) || (D_80126854 >= D_80126860)) {
                         gTrophyRankingsState = 4;
                     } else {
-                        var_f20 = (f32) D_80126854 / (f32) D_80126860;
+                        scale = (f32) D_80126854 / (f32) D_80126860;
                     }
                     break;
             }
-        } while ((var_f20 < 0.0f) && (gTrophyRankingsState != 4));
+        } while (scale < 0.0f && gTrophyRankingsState != 4);
 
         if (gTrophyRankingsState != 4) {
-            draw_menu_elements(gTrophyRankingsState, gTrophyRankingsMenuElements, var_f20);
+            draw_menu_elements(gTrophyRankingsState, gTrophyRankingsMenuElements, scale);
             ret = 0;
         }
     }
     return ret;
 }
 
-#ifdef NON_EQUIVALENT
-
-void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
-    s32 s5;
-    s32 tempX, tempY;
+void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale) {
+    s32 shouldResetRenderSettings;
     s32 xPos, yPos;
 
-    s5 = FALSE;
-    if (arg0 != 4) {
-        set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
-        while (elem->unk14_a.element != NULL) {
-            if (elem->unk14_a.element != &D_80126850) {
-                if (arg0 == 0) {
-                    tempX = elem->center - elem->left;
-                    tempX *= arg2;
-                    xPos = tempX + elem->left;
-                    tempY = elem->middle - elem->top;
-                    tempY *= arg2;
-                    yPos = tempY + elem->top;
-                } else if (arg0 == 1) {
-                    xPos = elem->center;
-                    yPos = elem->middle;
-                } else {
-                    tempX = elem->right - elem->center;
-                    tempX *= arg2;
-                    xPos = tempX + elem->center;
-                    tempY = elem->bottom - elem->middle;
-                    tempY *= arg2;
-                    yPos = (tempY & 0xFFFFFFFFFFFFFFFFu) + elem->middle;
-                }
-                switch (elem->elementType) {
-                    case 0: //ascii text
-                        set_text_background_colour(
-                            elem->details.background.backgroundRed, 
-                            elem->details.background.backgroundGreen,
-                            elem->details.background.backgroundBlue,
-                            elem->details.background.backgroundAlpha);
-                        set_text_colour(elem->filterRed, elem->filterGreen, elem->filterBlue, elem->filterAlpha, elem->opacity);
-                        set_text_font(elem->textFont);
-                        draw_text(&sMenuCurrDisplayList, xPos, yPos + gDrawElementsRegionYOffset, elem->unk14_a.asciiText, elem->textAlignFlags);
-                        break;
-                    case 1:
-                        if (s5) {
-                            s5 = FALSE;
-                            reset_render_settings(&sMenuCurrDisplayList);
-                        }
-                        sMenuGuiOpacity = elem->opacity;
-                        show_timestamp(
-                            *elem->unk14_a.numberU16,
-                            xPos - 160,
-                            (-yPos - gDrawElementsYOffset) + 120,
-                            elem->filterRed,
-                            elem->filterGreen,
-                            elem->filterBlue,
-                            elem->textFont);
-                        break;
-                    case 2: //Number
-                        if (s5) {
-                            s5 = FALSE;
-                            reset_render_settings(&sMenuCurrDisplayList);
-                        }
-                        func_80081C04(
-                            *elem->unk14_a.number,
-                            xPos - 160,
-                            (-yPos - gDrawElementsYOffset) + 120,
-                            elem->filterRed,
-                            elem->filterGreen,
-                            elem->filterBlue,
-                            elem->opacity,
-                            elem->textFont,
-                            elem->textAlignFlags);
-                        break;
-                    case 3:
-                        render_textured_rectangle(
-                            &sMenuCurrDisplayList,
-                            elem->unk14_a.texture,
-                            xPos,
-                            yPos + gDrawElementsRegionYOffset,
-                            elem->filterRed,
-                            elem->filterGreen,
-                            elem->filterBlue,
-                            elem->opacity);
-                        s5 = TRUE;
-                        break;
-                    case 4:
-                        render_texture_rectangle_scaled(
-                            &sMenuCurrDisplayList,
-                            elem->unk14_a.element,
-                            xPos,
-                            yPos + gDrawElementsRegionYOffset,
-                            elem->details.texture.width / 256.0f,
-                            elem->details.texture.height / 256.0f,
-                            (elem->filterRed << 24) | (elem->filterGreen << 16) | (elem->filterBlue << 8) | elem->opacity,
-                            elem->textAlignFlags);
-                        s5 = TRUE;
-                        break;
-                    case 5:
-                        if (s5) {
-                            s5 = FALSE;
-                            reset_render_settings(&sMenuCurrDisplayList);
-                        }
-                        func_80068508(1);
-                        sprite_opaque(FALSE);
-                        gMenuImageStack[elem->unk14_a.value].unkC = xPos - 160;
-                        gMenuImageStack[elem->unk14_a.value].unk10 = (-yPos - gDrawElementsYOffset) + 120;
-                        gMenuImageStack[elem->unk14_a.value].unk18 = elem->textFont;
-                        gMenuImageStack[elem->unk14_a.value].unk4 = elem->details.background.backgroundRed;
-                        gMenuImageStack[elem->unk14_a.value].unk2 = elem->details.background.backgroundGreen;
-                        gMenuImageStack[elem->unk14_a.value].unk0 = elem->details.background.backgroundBlue;
-                        gMenuImageStack[elem->unk14_a.value].unk8 = elem->details.background.backgroundAlpha / 256.0f;
-                        sMenuGuiColourR = elem->filterRed;
-                        sMenuGuiColourG = elem->filterGreen;
-                        sMenuGuiColourB = elem->filterBlue;
-                        sMenuGuiColourA = elem->filterAlpha;
-                        sMenuGuiOpacity = elem->opacity;
-                        func_8009CA60(elem->unk14_a.value);
-                        func_80068508(0);
-                        sprite_opaque(TRUE);
-                        break;
-                    case 6:
-                        func_80080E90(
-                            &sMenuCurrDisplayList,
-                            xPos,
-                            yPos + gDrawElementsYOffset,
-                            elem->details.texture.width,
-                            elem->details.texture.height,
-                            elem->details.texture.borderWidth,
-                            elem->details.texture.borderHeight,
-                            elem->filterRed,
-                            elem->filterGreen,
-                            elem->filterBlue,
-                            elem->opacity);
-                        break;
-                    case 7: //Texture
-                        func_80080580(
-                            &sMenuCurrDisplayList,
-                            xPos,
-                            yPos + gDrawElementsYOffset,
-                            elem->details.texture.width,
-                            elem->details.texture.height,
-                            elem->details.texture.borderWidth,
-                            elem->details.texture.borderHeight,
-                            (elem->filterRed << 24) | (elem->filterGreen << 16) | (elem->filterBlue << 8) | elem->opacity,
-                            elem->unk14_a.element);
-                        break;
-                }
-            }
-            elem++; // Go onto the next element.
-        }
-        if (s5) {
-            reset_render_settings(&sMenuCurrDisplayList);
-        }
-        sMenuGuiColourR = 0xFF;
-        sMenuGuiColourG = 0xFF;
-        sMenuGuiColourB = 0xFF;
-        sMenuGuiColourA = 0;
-        sMenuGuiOpacity = 0xFF;
+    shouldResetRenderSettings = FALSE;
+    if (flags == 4) {
+        return;
     }
+
+    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    while (elems->unk14_a.element != NULL) {
+        if ((elems->unk14_a.element != &D_80126850)) { //fakematch
+            if (flags == ((elems->unk14_a.element != (&D_80126850)) * 0)) { //fakematch
+                xPos = ((s32) ((elems->center - elems->left) * scale)) + elems->left;
+                yPos = ((s32) ((elems->middle - elems->top) * scale)) + elems->top;
+            } else if((flags == 1)) {
+                xPos = elems->center;
+                yPos = elems->middle;
+            } else {
+                xPos = ((s32) ((elems->right - elems->center) * scale)) + elems->center;
+                yPos = ((s32) ((elems->bottom - elems->middle) * scale)) + elems->middle;
+            }
+            switch (elems->elementType) {
+                case 0: //ascii text
+                    set_text_background_colour(
+                        elems->details.background.backgroundRed, 
+                        elems->details.background.backgroundGreen,
+                        elems->details.background.backgroundBlue,
+                        elems->details.background.backgroundAlpha);
+                    set_text_colour(elems->filterRed, elems->filterGreen, elems->filterBlue, elems->filterAlpha, elems->opacity);
+                    set_text_font(elems->textFont);
+                    draw_text(&sMenuCurrDisplayList, xPos, yPos + gDrawElementsRegionYOffset, elems->unk14_a.asciiText, elems->textAlignFlags);
+                    break;
+                case 1:
+                    if (shouldResetRenderSettings) {
+                        shouldResetRenderSettings = FALSE;
+                        reset_render_settings(&sMenuCurrDisplayList);
+                    }
+                    sMenuGuiOpacity = elems->opacity;
+                    show_timestamp(
+                        *elems->unk14_a.numberU16,
+                        xPos - 160,
+                        (-yPos - gDrawElementsYOffset) + 120,
+                        elems->filterRed,
+                        elems->filterGreen,
+                        elems->filterBlue,
+                        elems->textFont);
+                    break;
+                case 2: //Number
+                    if (shouldResetRenderSettings) {
+                        shouldResetRenderSettings = FALSE;
+                        reset_render_settings(&sMenuCurrDisplayList);
+                    }
+                    func_80081C04(
+                        *elems->unk14_a.number,
+                        xPos - 160,
+                        (-yPos - gDrawElementsYOffset) + 120,
+                        elems->filterRed,
+                        elems->filterGreen,
+                        elems->filterBlue,
+                        elems->opacity,
+                        elems->textFont,
+                        elems->textAlignFlags);
+                    break;
+                case 3:
+                    render_textured_rectangle(
+                        &sMenuCurrDisplayList,
+                        elems->unk14_a.drawTexture,
+                        xPos,
+                        yPos + gDrawElementsRegionYOffset,
+                        elems->filterRed,
+                        elems->filterGreen,
+                        elems->filterBlue,
+                        elems->opacity);
+                    shouldResetRenderSettings = TRUE;
+                    break;
+                case 4:
+                    render_texture_rectangle_scaled(
+                        &sMenuCurrDisplayList,
+                        elems->unk14_a.element,
+                        xPos,
+                        yPos + gDrawElementsRegionYOffset,
+                        elems->details.texture.width / 256.0f,
+                        elems->details.texture.height / 256.0f,
+                        (elems->filterRed << 24) | (elems->filterGreen << 16) | (elems->filterBlue << 8) | elems->opacity,
+                        elems->textAlignFlags);
+                    shouldResetRenderSettings = TRUE;
+                    break;
+                case 5:
+                    if (shouldResetRenderSettings) {
+                        shouldResetRenderSettings = FALSE;
+                        reset_render_settings(&sMenuCurrDisplayList);
+                    }
+                    func_80068508(TRUE);
+                    sprite_opaque(FALSE);
+                    gMenuImageStack[elems->unk14_a.value].unkC = xPos - 160;
+                    gMenuImageStack[elems->unk14_a.value].unk10 = (-yPos - gDrawElementsYOffset) + 120;
+                    gMenuImageStack[elems->unk14_a.value].unk18 = elems->textFont;
+                    gMenuImageStack[elems->unk14_a.value].unk4 = elems->details.background.backgroundRed;
+                    gMenuImageStack[elems->unk14_a.value].unk2 = elems->details.background.backgroundGreen;
+                    gMenuImageStack[elems->unk14_a.value].unk0 = elems->details.background.backgroundBlue;
+                    gMenuImageStack[elems->unk14_a.value].unk8 = elems->details.background.backgroundAlpha / 256.0f;
+                    sMenuGuiColourR = elems->filterRed;
+                    sMenuGuiColourG = elems->filterGreen;
+                    sMenuGuiColourB = elems->filterBlue;
+                    sMenuGuiColourA = elems->filterAlpha;
+                    sMenuGuiOpacity = elems->opacity;
+                    func_8009CA60(elems->unk14_a.value);
+                    func_80068508(FALSE);
+                    sprite_opaque(TRUE);
+                    break;
+                case 6:
+                    func_80080E90(
+                        &sMenuCurrDisplayList,
+                        xPos,
+                        yPos + gDrawElementsYOffset,
+                        elems->details.texture.width,
+                        elems->details.texture.height,
+                        elems->details.texture.borderWidth,
+                        elems->details.texture.borderHeight,
+                        elems->filterRed,
+                        elems->filterGreen,
+                        elems->filterBlue,
+                        elems->opacity);
+                    break;
+                case 7: //Texture
+                    func_80080580(
+                        &sMenuCurrDisplayList,
+                        xPos,
+                        yPos + gDrawElementsYOffset,
+                        elems->details.texture.width,
+                        elems->details.texture.height,
+                        elems->details.texture.borderWidth,
+                        elems->details.texture.borderHeight,
+                        (elems->filterRed << 24) | (elems->filterGreen << 16) | (elems->filterBlue << 8) | elems->opacity,
+                        elems->unk14_a.element);
+                    break;
+            }
+        }
+        elems++; // Go onto the next element.
+    }
+    if (shouldResetRenderSettings) {
+        reset_render_settings(&sMenuCurrDisplayList);
+    }
+    sMenuGuiColourR = 255;
+    sMenuGuiColourG = 255;
+    sMenuGuiColourB = 255;
+    sMenuGuiColourA = 0;
+    sMenuGuiOpacity = 255;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/draw_menu_elements.s")
-#endif
 
 void func_800828B8(void) {
     s32 i;
@@ -2963,7 +2951,7 @@ void render_title_screen(UNUSED s32 updateRate, f32 updateRateF) {
         set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
         scale = (f32) gTitleRevealTimer * 0.03125f;
         sMenuGuiOpacity = (gTitleRevealTimer * 8) - 1;
-        func_80068508(0);
+        func_80068508(FALSE);
         if (scale != 1.0f) {
             render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_FLOAT_HALF, 52.0f, scale, scale, 0xFFFFFFFE, TEXRECT_POINT);
         } else {
@@ -3678,7 +3666,7 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
         } else {
             i = 120;
         }
-        func_80068508(1);
+        func_80068508(TRUE);
         temp = (i - y);
         gMenuImageStack[2].unk10 = temp - 49;
         gMenuImageStack[sp70].unk10 = temp - 24;
@@ -3692,7 +3680,7 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
         sprite_opaque(1);
         gMenuImageStack[sp70].unkC = x - 128;
         func_8009CA60(sp70);
-        func_80068508(0);
+        func_80068508(FALSE);
     }
     if (drawTexture != NULL) {
         render_textured_rectangle(&sMenuCurrDisplayList, drawTexture, x + 60, y + 6, 255, 255, 255, 255);
@@ -6381,12 +6369,12 @@ void render_file_select_menu(UNUSED s32 updateRate) {
                     s2 = 0xC;
                 }
                 render_menu_image(s2, gFileSelectElementPos[2] + gFileSelectButtons[i].x, gFileSelectElementPos[3] + gFileSelectButtons[i].y, 0, 0, 0, 128);
-                func_80068508(1);
+                func_80068508(TRUE);
                 gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount / s5;
                 render_menu_image(0, (gFileSelectElementPos[6] + gFileSelectButtons[i].x) - 6, gFileSelectElementPos[7] + gFileSelectButtons[i].y, 0, 0, 0, 128);
                 gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount % s5;
                 render_menu_image(0, gFileSelectElementPos[6] + gFileSelectButtons[i].x + 6, gFileSelectElementPos[7] + gFileSelectButtons[i].y, 0, 0, 0, 128);
-                func_80068508(0);
+                func_80068508(FALSE);
                 sMenuGuiColourG = 64;
                 sMenuGuiColourB = 64;
                 render_menu_image(s5, gFileSelectElementPos[8] + gFileSelectButtons[i].x, gFileSelectElementPos[9] + gFileSelectButtons[i].y, 0, 0, 0, 128);
@@ -7972,7 +7960,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                     draw_text(&sMenuCurrDisplayList, gTwoPlayerRacerCountMenu.textPos[2] + gTwoPlayerRacerCountMenu.x + 1, gTwoPlayerRacerCountMenu.textPos[3] + gTwoPlayerRacerCountMenu.y + 1, gMenuText[ASSET_MENU_TEXT_NUMBEROFRACERS], ALIGN_MIDDLE_CENTER);
                     set_text_colour(0xFF, 0xFF, 0xFF, 0, 0xFF);
                     draw_text(&sMenuCurrDisplayList, gTwoPlayerRacerCountMenu.textPos[2] + gTwoPlayerRacerCountMenu.x - 1, gTwoPlayerRacerCountMenu.textPos[3] + gTwoPlayerRacerCountMenu.y - 1, gMenuText[ASSET_MENU_TEXT_NUMBEROFRACERS], ALIGN_MIDDLE_CENTER);
-                    func_80068508(1);
+                    func_80068508(TRUE);
                     sprite_opaque(FALSE);
                     for (i = 0; i < 3; i++) {
                         s32 index = i * 2;
@@ -7996,7 +7984,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                         sMenuGuiColourB = 0xFF;
                     }
                     sprite_opaque(TRUE);
-                    func_80068508(0);
+                    func_80068508(FALSE);
                 }
             }
         }
@@ -11933,7 +11921,7 @@ void func_8009E3D0(void) {
         return;
     }
     settings = get_settings();
-    func_80068508(1);
+    func_80068508(TRUE);
     if (osTvType == TV_TYPE_PAL) {
         y = 10;
     } else {
@@ -12011,7 +11999,7 @@ void func_8009E3D0(void) {
         }
         func_8009CA60(14);
     }
-    func_80068508(0);
+    func_80068508(FALSE);
 }
 
 

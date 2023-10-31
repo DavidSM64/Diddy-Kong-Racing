@@ -517,9 +517,9 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                     func_800A277C(sp2C, arg3, updateRate);
                 } else {
                     if (get_cutscene_id() == 10) {
-                        func_80068508(1);
+                        func_80068508(TRUE);
                         render_balloon_count(racer);
-                        func_80068508(0);
+                        func_80068508(FALSE);
                     } else {
                         switch (get_current_level_race_type()) {
                             case RACETYPE_DEFAULT:
@@ -549,7 +549,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                     }
                 }
                 if (racer->raceFinished == TRUE) {
-                    func_80068508(1);
+                    func_80068508(TRUE);
                     if (is_in_time_trial()) {
                         render_time_trial_finish((Object_Racer *) racer, updateRate);
                     } else if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER && racer->unk1AC == 1) {
@@ -565,7 +565,7 @@ showFinish:
 block_95:
                         func_800A6254(racer, updateRate);
                     }
-                    func_80068508(0);
+                    func_80068508(FALSE);
                 }
                 D_80126CD1 = 0;
                 sprite_opaque(TRUE);
@@ -654,7 +654,7 @@ void func_800A0BD4(s32 updateRate) {
 void render_hud_race(s32 arg0, Object *obj, s32 updateRate) {
     Object_Racer *racer = &obj->unk64->racer;
 
-    func_80068508(1);
+    func_80068508(TRUE);
     render_course_indicator_arrows(racer, updateRate);
     render_wrong_way_text(racer, updateRate);
     render_race_start(arg0, updateRate);
@@ -673,7 +673,7 @@ void render_hud_race(s32 arg0, Object *obj, s32 updateRate) {
     }
 
     render_weapon_hud(obj, updateRate);
-    func_80068508(0);
+    func_80068508(FALSE);
 }
 
 /**
@@ -784,7 +784,7 @@ void render_hud_banana_challenge(s32 arg0, Object *obj, s32 updateRate) {
 
     racer = &obj->unk64->racer;
     racers = get_racer_objects(&numRacers);
-    func_80068508(1);
+    func_80068508(TRUE);
     render_race_start(arg0, updateRate);
     switch (gNumActivePlayers) {
     case 1:
@@ -811,7 +811,7 @@ void render_hud_banana_challenge(s32 arg0, Object *obj, s32 updateRate) {
     reset_render_settings(&gHUDCurrDisplayList);
     render_racer_bananas(racer, updateRate);
     render_weapon_hud(obj, updateRate);
-    func_80068508(0);
+    func_80068508(FALSE);
 }
 
 /**
@@ -820,7 +820,7 @@ void render_hud_banana_challenge(s32 arg0, Object *obj, s32 updateRate) {
 void render_hud_challenge_eggs(s32 arg0, Object *obj, s32 updateRate) {
     Object_Racer *racer = &obj->unk64->racer;
     if (racer->raceFinished == FALSE) {
-        func_80068508(1);
+        func_80068508(TRUE);
         render_race_start(arg0, updateRate);
         render_weapon_hud(obj, updateRate);
         if ((127 - (updateRate * 2)) >= gCurrentHud->unk67A) {
@@ -831,7 +831,7 @@ void render_hud_challenge_eggs(s32 arg0, Object *obj, s32 updateRate) {
         if (gNumActivePlayers != 2) {
             func_800A14F0(obj, updateRate);
         }
-        func_80068508(0);
+        func_80068508(FALSE);
     }
 }
 
@@ -866,7 +866,7 @@ void func_800A14F0(Object *racerObj, s32 updateRate) {
         racer = &racers[0]->unk64->racer;
     }
     if (numRacers == 4) {
-        func_80068508(1);
+        func_80068508(TRUE);
         sp44 = (s32) gCurrentHud->unk64C;
         sp3C = (s32) gCurrentHud->unk650;
         sp40 = (s32) (gCurrentHud->unk66C - sp44);
@@ -895,7 +895,7 @@ void func_800A14F0(Object *racerObj, s32 updateRate) {
         gCurrentHud->unk66C = sp44 + sp40;
         gCurrentHud->unk650 = sp3C;
         gCurrentHud->unk670 = sp3C + sp38;
-        func_80068508(0);
+        func_80068508(FALSE);
     }
 }
 
@@ -949,7 +949,7 @@ void render_hud_battle(s32 arg0, Object *obj, s32 updateRate) {
 
     racer = (Object_Racer *) obj->unk64;
     if (gNumActivePlayers != 1 || racer->raceFinished == FALSE) {
-        func_80068508(1);
+        func_80068508(TRUE);
         render_race_start(arg0, updateRate);
         render_weapon_hud(obj, updateRate);
         racerObjs = get_racer_objects(&numRacers);
@@ -973,7 +973,7 @@ void render_hud_battle(s32 arg0, Object *obj, s32 updateRate) {
                 render_racer_bananas(racer, updateRate);
                 break;
         }
-        func_80068508(0);
+        func_80068508(FALSE);
     }
 }
 
@@ -1019,7 +1019,7 @@ void render_hud_race_boss(s32 arg0, Object *obj, s32 updateRate) {
     LevelHeader *level;
     Object_Racer *racer = (Object_Racer *) obj->unk64;
 
-    func_80068508(1);
+    func_80068508(TRUE);
     render_wrong_way_text(racer, updateRate);
     render_race_start(arg0, updateRate);
     render_race_time(racer, updateRate);
@@ -1032,7 +1032,7 @@ void render_hud_race_boss(s32 arg0, Object *obj, s32 updateRate) {
 
     render_speedometer(obj, updateRate);
     render_race_position(racer, updateRate);
-    func_80068508(0);
+    func_80068508(FALSE);
 }
 
 /**
@@ -1041,14 +1041,14 @@ void render_hud_race_boss(s32 arg0, Object *obj, s32 updateRate) {
 void render_hud_taj_race(s32 arg0, Object *obj, s32 updateRate) {
     Object_Racer *racer = (Object_Racer *) obj->unk64;
 
-    func_80068508(1);
+    func_80068508(TRUE);
     render_wrong_way_text(racer, updateRate);
     render_lap_count(racer, updateRate);
     render_race_position(racer, updateRate);
     render_race_time(racer, updateRate);
     render_race_start(arg0, updateRate);
     render_speedometer(obj, updateRate);
-    func_80068508(0);
+    func_80068508(FALSE);
 }
 
 /**
@@ -1061,7 +1061,7 @@ void render_hud_hubworld(Object *obj, s32 updateRate) {
 
     if (get_viewport_count() == 0) {
         racer = (Object_Racer *) obj->unk64;
-        func_80068508(1);
+        func_80068508(TRUE);
         render_balloon_count(racer);
         render_speedometer(obj, updateRate);
         if (is_in_two_player_adventure()) {
@@ -1069,7 +1069,7 @@ void render_hud_hubworld(Object *obj, s32 updateRate) {
             temp_a3->unk6 = (get_settings()->racers[1].character + 0x38);
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) temp_a3);
         }
-        func_80068508(0);
+        func_80068508(FALSE);
     }
 }
 
@@ -1191,7 +1191,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk440);
         }
         obj68->unk20 = 0;
-        func_80068508(1);
+        func_80068508(TRUE);
         render_course_indicator_arrows(curRacer, updateRate);
         if (!curRacer->raceFinished) {
             spB8 = gCurrentHud->unk2F0;
@@ -1320,7 +1320,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
             update_colour_cycle((s8 *)D_80127194, updateRate);
             set_kerning(0);
         }
-        func_80068508(0);
+        func_80068508(FALSE);
     }
 }
 #else
@@ -1563,13 +1563,13 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
             }
         } else {
             gCurrentHud->unkF8 = var_v1 + 128;
-            func_80068508(0);
+            func_80068508(FALSE);
             sprite_opaque(TRUE);
             set_viewport_tv_type(TV_TYPE_NTSC);
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unkE0);
             sprite_opaque(FALSE);
             set_viewport_tv_type(TV_TYPE_PAL);
-            func_80068508(1);
+            func_80068508(TRUE);
             gCurrentHud->unkF8 -= 128;
         }
         temp_lo = bananas / 10;

@@ -513,10 +513,10 @@ void render_magic_codes_ui(s32 updateRate);
 void render_magic_codes_list_menu_text(s32 updateRate);
 void func_800904E8(s32 updateRate);
 void func_80085B9C(UNUSED s32 updateRate);
+void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
-void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2);
 s32 menu_controller_pak_loop(s32 updateRate);
 void menu_game_select_init(void);
 void render_file_select_menu(s32 arg0);
