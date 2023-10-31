@@ -6287,7 +6287,7 @@ void menu_file_select_init(void) {
     gOptionBlinkTimer = 0;
     D_80126484 = FALSE;
     D_80126488 = FALSE;
-    D_80126CC0 = 0;
+    D_80126CC0 = FALSE;
     transition_begin(&sMenuTransitionFadeOut);
     load_font(ASSET_FONTS_BIGFONT);
     play_music(SEQUENCE_CHOOSE_YOUR_RACER);
@@ -6351,7 +6351,7 @@ void render_file_select_menu(UNUSED s32 updateRate) {
         } else {
             colour = COLOUR_RGBA32(106, 144, 115, 255);
         }
-        func_80080580(NULL, gFileSelectButtons[i].x - 160, 120 - gFileSelectButtons[i].y, gFileSelectButtons[i].width,
+        func_80080580(NULL, gFileSelectButtons[i].x - SCREEN_WIDTH_HALF, SCREEN_HEIGHT_HALF - gFileSelectButtons[i].y, gFileSelectButtons[i].width,
             gFileSelectButtons[i].height, gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, colour, gMenuObjects[TEXTURE_SURFACE_BUTTON_WOOD]);
     }
     func_80080BC8(&sMenuCurrDisplayList);
@@ -6361,9 +6361,9 @@ void render_file_select_menu(UNUSED s32 updateRate) {
         for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
             if (gSavefileInfo[i].isStarted) {
                 sprite_opaque(FALSE);
-                var_s2 = 0xB;
+                var_s2 = 11;
                 if (gSavefileInfo[i].isAdventure2) {
-                    var_s2 = 0xC;
+                    var_s2 = 12;
                 }
                 render_menu_image(var_s2, gFileSelectButtons[i].x + gFileSelectElementPos[2], gFileSelectButtons[i].y + gFileSelectElementPos[3], 0, 0, 0, 128);
                 func_80068508(TRUE);
@@ -6411,9 +6411,9 @@ void render_file_select_menu(UNUSED s32 updateRate) {
             func_80080E90(&sMenuCurrDisplayList, gFileSelectButtons[i].x, gFileSelectButtons[i].y + yPos, gFileSelectButtons[i].width, gFileSelectButtons[i].height,
                 gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, colour, colour, colour, colour);
         }
-        if (D_80126CC0 == 0 || i != gSaveFileIndex) {
+        if (!D_80126CC0 || i != gSaveFileIndex) {
             trim_filename_string(gSavefileInfo[i].name, trimmedFilename);
-            if (gSavefileInfo[i].isStarted == 0) {
+            if (!gSavefileInfo[i].isStarted) {
                 trim_filename_string(gFilenames[i], trimmedFilename);
             }
             if (trimmedFilename) {
@@ -6431,7 +6431,7 @@ void render_file_select_menu(UNUSED s32 updateRate) {
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 16, gMenuText[ASSET_MENU_TEXT_GAMESELECT], ALIGN_TOP_CENTER);
     set_text_colour(255, 255, 255, 0, 255);
     yPos += 187;
-    if (D_80126484 != FALSE) {
+    if (D_80126484) {
         if (D_80126494 == 0) {
             set_text_font(ASSET_FONTS_FUNFONT);
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, gMenuText[ASSET_MENU_TEXT_GAMETOCOPY], ALIGN_MIDDLE_CENTER);
@@ -6441,18 +6441,14 @@ void render_file_select_menu(UNUSED s32 updateRate) {
         } else {
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, (char *) &D_800E8234 /* "OK?" */, ALIGN_MIDDLE_CENTER);
         }
-        return;
-    }
-    if (D_80126488 != FALSE) {
+    } else if (D_80126488) {
         if (D_80126494 == 0) {
             set_text_font(ASSET_FONTS_FUNFONT);
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, gMenuText[ASSET_MENU_TEXT_GAMETOERASE], ALIGN_MIDDLE_CENTER);
         } else {
             draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, (char *) &D_800E8238 /* "OK?" */, ALIGN_MIDDLE_CENTER);
         }
-        return;
-    }
-    if (D_80126CC0 == 0) {
+    } else if (!D_80126CC0) {
         if (gMenuOptionCount == 1) {
             set_text_colour(255, 255, 255, temp, 255);
         }
@@ -6463,7 +6459,6 @@ void render_file_select_menu(UNUSED s32 updateRate) {
             set_text_colour(255, 255, 255, 0, 255);
         }
         draw_text(&sMenuCurrDisplayList, 230, yPos, gMenuText[ASSET_MENU_TEXT_ERASE], ALIGN_MIDDLE_CENTER);
-        return;
     }
 }
 
@@ -6615,10 +6610,10 @@ void func_8008D8BC(UNUSED s32 updateRate) {
             return;
         }
         prevValue = gSaveFileIndex2;
-        if ((xAxisDirection < 0) && (gSaveFileIndex2 > 0)) {
+        if (xAxisDirection < 0 && gSaveFileIndex2 > 0) {
             gSaveFileIndex2--;
         }
-        if ((xAxisDirection > 0) && (gSaveFileIndex2 < 2)) {
+        if (xAxisDirection > 0 && gSaveFileIndex2 < 2) {
             gSaveFileIndex2++;
         }
         if (prevValue != gSaveFileIndex2) {
@@ -6641,9 +6636,7 @@ void func_8008D8BC(UNUSED s32 updateRate) {
             gSaveFileIndex = gSaveFileIndex2;
             gMenuOptionCount = 0;
             D_80126484 = FALSE;
-            return;
-        }
-        if (buttonsPressed & B_BUTTON) {
+        } else if (buttonsPressed & B_BUTTON) {
             play_sound_global(SOUND_MENU_BACK3, NULL);
             D_80126494 = 1;
         }
@@ -6659,7 +6652,7 @@ void func_8008DC7C(UNUSED s32 updateRate) {
     controllerXAxisDirection = gControllersXAxisDirection[0];
 
     if (gNumberOfActivePlayers == 2) {
-        buttonsPressed |= get_buttons_pressed_from_player(1);
+        buttonsPressed |= get_buttons_pressed_from_player(PLAYER_TWO);
         controllerXAxisDirection += gControllersXAxisDirection[1];
     }
 
@@ -6767,18 +6760,18 @@ s32 menu_file_select_loop(s32 updateRate) {
             func_8008D8BC(updateRate);
         } else if (D_80126488 != FALSE) {
             func_8008DC7C(updateRate);
-        } else if (D_80126CC0 != 0) {
+        } else if (D_80126CC0) {
             buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
             if ((buttonsPressed & B_BUTTON) && (gCurrentFilenameChars == 0)) {
                 unload_big_font_4();
-                D_80126CC0 = 0;
+                D_80126CC0 = FALSE;
                 gSavefileInfo[i].name[0] = 'D';
                 gSavefileInfo[i].name[1] = 'K';
                 gSavefileInfo[i].name[2] = 'R';
                 gSavefileInfo[i].name[3] = '\0';
             } else if (menu_enter_filename_loop(updateRate) != 0) {
                 unload_big_font_4();
-                D_80126CC0 = 0;
+                D_80126CC0 = FALSE;
                 gSavefileInfo[gSaveFileIndex].isAdventure2 = 0;
                 if (gIsInAdventureTwo != 0) {
                     gSavefileInfo[gSaveFileIndex].isAdventure2 = 1;
@@ -6800,7 +6793,7 @@ s32 menu_file_select_loop(s32 updateRate) {
                         mark_read_save_file(gSaveFileIndex);
                         set_music_fade_timer(-128);
                     } else {
-                        D_80126CC0 = 1;
+                        D_80126CC0 = TRUE;
                         gIndexOfCurInputCharacter = 0;
                         i = 0;
                         if (osTvType == TV_TYPE_PAL) {
@@ -8657,7 +8650,7 @@ void func_80094688(s32 arg0, s32 arg1) {
     } else {
         gMenuOptionCount = 7;
     }
-    D_80126CC0 = 0;
+    D_80126CC0 = FALSE;
     gOptionBlinkTimer = 0;
     gOpacityDecayTimer = 0;
     gMenuDelay = 0;
