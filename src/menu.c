@@ -133,7 +133,7 @@ u16 D_80126520[6];
 Settings *gSavefileData[4];
 u8 D_80126540[8];
 s32 gMultiplayerSelectedNumberOfRacersCopy; // Saved version gMultiplayerSelectedNumberOfRacers?
-TextureHeader *gMenuObjects[128]; // lookup table? Contains Objects as well. Need to change name and type.
+void *gMenuObjects[128]; // lookup table? Contains Textures, Objects, and Sprites. Need to change name and type.
 u8 D_80126750[128]; // Seems to be a boolean for "This texture exists" for the above array.
 s32 D_801267D0;
 s32 D_801267D4;
@@ -208,7 +208,7 @@ u8 sControllerPakDataPresent[MAXCONTROLLERS]; //Flag to see if there's data pres
 char *D_80126A64;
 s32 gMenuOption; //sCurrentControllerIndex?
 s32 D_80126A6C;
-s32 D_80126A70;
+char **gDeviceStatusStrings;
 s32 D_80126A74;
 s32 D_80126A78;
 s32 D_80126A7C;
@@ -312,7 +312,7 @@ char **gMenuText = NULL;
 u8 sMenuGuiColourR = 0xFF;
 u8 sMenuGuiColourG = 0xFF;
 u8 sMenuGuiColourB = 0xFF;
-u8 sMenuGuiColourA = 0;
+u8 sMenuGuiColourBlendFactor = 0;
 
 // Flags for menu/HUD sprites. Used in func_8009CA60()
 // Seems like it doesn't matter what you set it as?
@@ -487,8 +487,8 @@ u32 gContPakSaveBgColours[MAXCONTROLLERS] = {
     COLOUR_RGBA32(64, 255, 64, 255)   // Green for controller 4
 };
 
-s32 D_800DFADC = 0;
-s32 D_800DFAE0 = 0;
+SIDeviceStatus D_800DFADC = CONTROLLER_PAK_GOOD;
+s32 gControllerIndex = 0;
 
 // Strings related to the controller pak.
 char *gContPakNotPresentStrings[6] = { 0, 0, 0, 0, 0, 0 };
@@ -502,6 +502,7 @@ char *gContPakRumbleDetectedStrings[6] = { 0, 0, 0, 0, 0, 0 };
 char *gContPakSwitchToRumbleStrings[6] = { 0, 0, 0, 0, 0, 0 };
 char *gContPakNeed2ndAdvStrings[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
+//Associated with SIDeviceStatus enum values.
 char **gContPakStrings[11] = {
     NULL, gContPakNotPresentStrings, gContPakCorruptDataRepairStrings, gContPakDamagedStrings, gContPakFullStrings, gContPakDiffContStrings, gContPakNoRoomForGhostsStrings, gContPakRumbleDetectedStrings, gContPakSwitchToRumbleStrings, gContPakCorruptDataStrings, gContPakNeed2ndAdvStrings
 };
@@ -2305,7 +2306,7 @@ void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blu
         xOffset3 = 5;
     }
     get_timestamp_from_frames(frameCount, &minutes, &seconds, &hundredths);
-    func_80068508(1);
+    func_80068508(TRUE);
     sprite_opaque(FALSE);
 
     gMenuImageStack[imageIndex].unk18 = minutes / 10;
@@ -2345,7 +2346,7 @@ void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blu
     gMenuImageStack[imageIndex].unkC = xPos;
     func_8009CA60(imageIndex);
 
-    func_80068508(0);
+    func_80068508(FALSE);
     sprite_opaque(TRUE);
     sMenuGuiColourR = (u8)255;
     sMenuGuiColourG = (u8)255;
@@ -2396,7 +2397,7 @@ void func_80081C04(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UNUSED 
     sMenuGuiColourB = b;
     sMenuGuiOpacity = a;
     sprite_opaque(0);
-    func_80068508(1);
+    func_80068508(TRUE);
     if (powerOfTen && number) {} // Fakematch
     gMenuImageStack[0].unk10 = y;
     for (i = 0; i < strLen; i++) {
@@ -2406,7 +2407,7 @@ void func_80081C04(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UNUSED 
         x += 12;
     }
     sprite_opaque(1);
-    func_80068508(0);
+    func_80068508(FALSE);
     sMenuGuiColourR = 255;
     sMenuGuiColourG = 255;
     sMenuGuiColourB = 255;
@@ -2428,13 +2429,13 @@ void func_80081E54(MenuElement *arg0, f32 arg1, f32 arg2, f32 arg3, s32 arg4, s3
 }
 
 s32 func_80081F4C(s32 updateRate) {
-    f32 var_f20;
+    f32 scale;
     s32 ret;
     s32 i;
     s32 buttonsPressedAllPlayers;
 
     ret = 1;
-    var_f20 = -1.0f;
+    scale = -1.0f;
     buttonsPressedAllPlayers = 0;
     if (gTrophyRankingsState != 4) {
         if (gIgnorePlayerInputTime == 0) {
@@ -2455,7 +2456,7 @@ s32 func_80081F4C(s32 updateRate) {
                             D_80126854 -= D_80126858;
                             gTrophyRankingsState = 1;
                         } else {
-                            var_f20 = (f32) D_80126854 / (f32) D_80126858;
+                            scale = (f32) D_80126854 / (f32) D_80126858;
                         }
                     }
                     break;
@@ -2478,7 +2479,7 @@ s32 func_80081F4C(s32 updateRate) {
                                 play_sound_global(SOUND_WHOOSH1, NULL);
                             }
                         } else {
-                            var_f20 = (f32) D_80126854 / (f32) D_8012685C;
+                            scale = (f32) D_80126854 / (f32) D_8012685C;
                         }
                     }
                     break;
@@ -2486,182 +2487,170 @@ s32 func_80081F4C(s32 updateRate) {
                     if ((buttonsPressedAllPlayers & (A_BUTTON | START_BUTTON)) || (D_80126854 >= D_80126860)) {
                         gTrophyRankingsState = 4;
                     } else {
-                        var_f20 = (f32) D_80126854 / (f32) D_80126860;
+                        scale = (f32) D_80126854 / (f32) D_80126860;
                     }
                     break;
             }
-        } while ((var_f20 < 0.0f) && (gTrophyRankingsState != 4));
+        } while (scale < 0.0f && gTrophyRankingsState != 4);
 
         if (gTrophyRankingsState != 4) {
-            draw_menu_elements(gTrophyRankingsState, gTrophyRankingsMenuElements, var_f20);
+            draw_menu_elements(gTrophyRankingsState, gTrophyRankingsMenuElements, scale);
             ret = 0;
         }
     }
     return ret;
 }
 
-#ifdef NON_EQUIVALENT
-
-void draw_menu_elements(s32 arg0, MenuElement *elem, f32 arg2) {
-    s32 s5;
-    s32 tempX, tempY;
+void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale) {
+    s32 shouldResetRenderSettings;
     s32 xPos, yPos;
 
-    s5 = FALSE;
-    if (arg0 != 4) {
-        set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
-        while (elem->unk14_a.element != NULL) {
-            if (elem->unk14_a.element != &D_80126850) {
-                if (arg0 == 0) {
-                    tempX = elem->center - elem->left;
-                    tempX *= arg2;
-                    xPos = tempX + elem->left;
-                    tempY = elem->middle - elem->top;
-                    tempY *= arg2;
-                    yPos = tempY + elem->top;
-                } else if (arg0 == 1) {
-                    xPos = elem->center;
-                    yPos = elem->middle;
-                } else {
-                    tempX = elem->right - elem->center;
-                    tempX *= arg2;
-                    xPos = tempX + elem->center;
-                    tempY = elem->bottom - elem->middle;
-                    tempY *= arg2;
-                    yPos = (tempY & 0xFFFFFFFFFFFFFFFFu) + elem->middle;
-                }
-                switch (elem->elementType) {
-                    case 0: //ascii text
-                        set_text_background_colour(
-                            elem->details.background.backgroundRed, 
-                            elem->details.background.backgroundGreen,
-                            elem->details.background.backgroundBlue,
-                            elem->details.background.backgroundAlpha);
-                        set_text_colour(elem->filterRed, elem->filterGreen, elem->filterBlue, elem->filterAlpha, elem->opacity);
-                        set_text_font(elem->textFont);
-                        draw_text(&sMenuCurrDisplayList, xPos, yPos + gDrawElementsRegionYOffset, elem->unk14_a.asciiText, elem->textAlignFlags);
-                        break;
-                    case 1:
-                        if (s5) {
-                            s5 = FALSE;
-                            reset_render_settings(&sMenuCurrDisplayList);
-                        }
-                        sMenuGuiOpacity = elem->opacity;
-                        show_timestamp(
-                            *elem->unk14_a.numberU16,
-                            xPos - 160,
-                            (-yPos - gDrawElementsYOffset) + 120,
-                            elem->filterRed,
-                            elem->filterGreen,
-                            elem->filterBlue,
-                            elem->textFont);
-                        break;
-                    case 2: //Number
-                        if (s5) {
-                            s5 = FALSE;
-                            reset_render_settings(&sMenuCurrDisplayList);
-                        }
-                        func_80081C04(
-                            *elem->unk14_a.number,
-                            xPos - 160,
-                            (-yPos - gDrawElementsYOffset) + 120,
-                            elem->filterRed,
-                            elem->filterGreen,
-                            elem->filterBlue,
-                            elem->opacity,
-                            elem->textFont,
-                            elem->textAlignFlags);
-                        break;
-                    case 3:
-                        render_textured_rectangle(
-                            &sMenuCurrDisplayList,
-                            elem->unk14_a.texture,
-                            xPos,
-                            yPos + gDrawElementsRegionYOffset,
-                            elem->filterRed,
-                            elem->filterGreen,
-                            elem->filterBlue,
-                            elem->opacity);
-                        s5 = TRUE;
-                        break;
-                    case 4:
-                        render_texture_rectangle_scaled(
-                            &sMenuCurrDisplayList,
-                            elem->unk14_a.element,
-                            xPos,
-                            yPos + gDrawElementsRegionYOffset,
-                            elem->details.texture.width / 256.0f,
-                            elem->details.texture.height / 256.0f,
-                            (elem->filterRed << 24) | (elem->filterGreen << 16) | (elem->filterBlue << 8) | elem->opacity,
-                            elem->textAlignFlags);
-                        s5 = TRUE;
-                        break;
-                    case 5:
-                        if (s5) {
-                            s5 = FALSE;
-                            reset_render_settings(&sMenuCurrDisplayList);
-                        }
-                        func_80068508(1);
-                        sprite_opaque(FALSE);
-                        gMenuImageStack[elem->unk14_a.value].unkC = xPos - 160;
-                        gMenuImageStack[elem->unk14_a.value].unk10 = (-yPos - gDrawElementsYOffset) + 120;
-                        gMenuImageStack[elem->unk14_a.value].unk18 = elem->textFont;
-                        gMenuImageStack[elem->unk14_a.value].unk4 = elem->details.background.backgroundRed;
-                        gMenuImageStack[elem->unk14_a.value].unk2 = elem->details.background.backgroundGreen;
-                        gMenuImageStack[elem->unk14_a.value].unk0 = elem->details.background.backgroundBlue;
-                        gMenuImageStack[elem->unk14_a.value].unk8 = elem->details.background.backgroundAlpha / 256.0f;
-                        sMenuGuiColourR = elem->filterRed;
-                        sMenuGuiColourG = elem->filterGreen;
-                        sMenuGuiColourB = elem->filterBlue;
-                        sMenuGuiColourA = elem->filterAlpha;
-                        sMenuGuiOpacity = elem->opacity;
-                        func_8009CA60(elem->unk14_a.value);
-                        func_80068508(0);
-                        sprite_opaque(TRUE);
-                        break;
-                    case 6:
-                        func_80080E90(
-                            &sMenuCurrDisplayList,
-                            xPos,
-                            yPos + gDrawElementsYOffset,
-                            elem->details.texture.width,
-                            elem->details.texture.height,
-                            elem->details.texture.borderWidth,
-                            elem->details.texture.borderHeight,
-                            elem->filterRed,
-                            elem->filterGreen,
-                            elem->filterBlue,
-                            elem->opacity);
-                        break;
-                    case 7: //Texture
-                        func_80080580(
-                            &sMenuCurrDisplayList,
-                            xPos,
-                            yPos + gDrawElementsYOffset,
-                            elem->details.texture.width,
-                            elem->details.texture.height,
-                            elem->details.texture.borderWidth,
-                            elem->details.texture.borderHeight,
-                            (elem->filterRed << 24) | (elem->filterGreen << 16) | (elem->filterBlue << 8) | elem->opacity,
-                            elem->unk14_a.element);
-                        break;
-                }
-            }
-            elem++; // Go onto the next element.
-        }
-        if (s5) {
-            reset_render_settings(&sMenuCurrDisplayList);
-        }
-        sMenuGuiColourR = 0xFF;
-        sMenuGuiColourG = 0xFF;
-        sMenuGuiColourB = 0xFF;
-        sMenuGuiColourA = 0;
-        sMenuGuiOpacity = 0xFF;
+    shouldResetRenderSettings = FALSE;
+    if (flags == 4) {
+        return;
     }
+
+    set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
+    while (elems->unk14_a.element != NULL) {
+        if ((elems->unk14_a.element != &D_80126850)) { //fakematch
+            if (flags == ((elems->unk14_a.element != (&D_80126850)) * 0)) { //fakematch
+                xPos = ((s32) ((elems->center - elems->left) * scale)) + elems->left;
+                yPos = ((s32) ((elems->middle - elems->top) * scale)) + elems->top;
+            } else if((flags == 1)) {
+                xPos = elems->center;
+                yPos = elems->middle;
+            } else {
+                xPos = ((s32) ((elems->right - elems->center) * scale)) + elems->center;
+                yPos = ((s32) ((elems->bottom - elems->middle) * scale)) + elems->middle;
+            }
+            switch (elems->elementType) {
+                case 0: //ascii text
+                    set_text_background_colour(
+                        elems->details.background.backgroundRed, 
+                        elems->details.background.backgroundGreen,
+                        elems->details.background.backgroundBlue,
+                        elems->details.background.backgroundAlpha);
+                    set_text_colour(elems->filterRed, elems->filterGreen, elems->filterBlue, elems->filterBlendFactor, elems->opacity);
+                    set_text_font(elems->textFont);
+                    draw_text(&sMenuCurrDisplayList, xPos, yPos + gDrawElementsRegionYOffset, elems->unk14_a.asciiText, elems->textAlignFlags);
+                    break;
+                case 1:
+                    if (shouldResetRenderSettings) {
+                        shouldResetRenderSettings = FALSE;
+                        reset_render_settings(&sMenuCurrDisplayList);
+                    }
+                    sMenuGuiOpacity = elems->opacity;
+                    show_timestamp(
+                        *elems->unk14_a.numberU16,
+                        xPos - 160,
+                        (-yPos - gDrawElementsYOffset) + 120,
+                        elems->filterRed,
+                        elems->filterGreen,
+                        elems->filterBlue,
+                        elems->textFont);
+                    break;
+                case 2: //Number
+                    if (shouldResetRenderSettings) {
+                        shouldResetRenderSettings = FALSE;
+                        reset_render_settings(&sMenuCurrDisplayList);
+                    }
+                    func_80081C04(
+                        *elems->unk14_a.number,
+                        xPos - 160,
+                        (-yPos - gDrawElementsYOffset) + 120,
+                        elems->filterRed,
+                        elems->filterGreen,
+                        elems->filterBlue,
+                        elems->opacity,
+                        elems->textFont,
+                        elems->textAlignFlags);
+                    break;
+                case 3:
+                    render_textured_rectangle(
+                        &sMenuCurrDisplayList,
+                        elems->unk14_a.drawTexture,
+                        xPos,
+                        yPos + gDrawElementsRegionYOffset,
+                        elems->filterRed,
+                        elems->filterGreen,
+                        elems->filterBlue,
+                        elems->opacity);
+                    shouldResetRenderSettings = TRUE;
+                    break;
+                case 4:
+                    render_texture_rectangle_scaled(
+                        &sMenuCurrDisplayList,
+                        elems->unk14_a.element,
+                        xPos,
+                        yPos + gDrawElementsRegionYOffset,
+                        elems->details.texture.width / 256.0f,
+                        elems->details.texture.height / 256.0f,
+                        (elems->filterRed << 24) | (elems->filterGreen << 16) | (elems->filterBlue << 8) | elems->opacity,
+                        elems->textAlignFlags);
+                    shouldResetRenderSettings = TRUE;
+                    break;
+                case 5:
+                    if (shouldResetRenderSettings) {
+                        shouldResetRenderSettings = FALSE;
+                        reset_render_settings(&sMenuCurrDisplayList);
+                    }
+                    func_80068508(TRUE);
+                    sprite_opaque(FALSE);
+                    gMenuImageStack[elems->unk14_a.value].unkC = xPos - 160;
+                    gMenuImageStack[elems->unk14_a.value].unk10 = (-yPos - gDrawElementsYOffset) + 120;
+                    gMenuImageStack[elems->unk14_a.value].unk18 = elems->textFont;
+                    gMenuImageStack[elems->unk14_a.value].unk4 = elems->details.background.backgroundRed;
+                    gMenuImageStack[elems->unk14_a.value].unk2 = elems->details.background.backgroundGreen;
+                    gMenuImageStack[elems->unk14_a.value].unk0 = elems->details.background.backgroundBlue;
+                    gMenuImageStack[elems->unk14_a.value].unk8 = elems->details.background.backgroundAlpha / 256.0f;
+                    sMenuGuiColourR = elems->filterRed;
+                    sMenuGuiColourG = elems->filterGreen;
+                    sMenuGuiColourB = elems->filterBlue;
+                    sMenuGuiColourBlendFactor = elems->filterBlendFactor;
+                    sMenuGuiOpacity = elems->opacity;
+                    func_8009CA60(elems->unk14_a.value);
+                    func_80068508(FALSE);
+                    sprite_opaque(TRUE);
+                    break;
+                case 6:
+                    func_80080E90(
+                        &sMenuCurrDisplayList,
+                        xPos,
+                        yPos + gDrawElementsYOffset,
+                        elems->details.texture.width,
+                        elems->details.texture.height,
+                        elems->details.texture.borderWidth,
+                        elems->details.texture.borderHeight,
+                        elems->filterRed,
+                        elems->filterGreen,
+                        elems->filterBlue,
+                        elems->opacity);
+                    break;
+                case 7: //Texture
+                    func_80080580(
+                        &sMenuCurrDisplayList,
+                        xPos,
+                        yPos + gDrawElementsYOffset,
+                        elems->details.texture.width,
+                        elems->details.texture.height,
+                        elems->details.texture.borderWidth,
+                        elems->details.texture.borderHeight,
+                        (elems->filterRed << 24) | (elems->filterGreen << 16) | (elems->filterBlue << 8) | elems->opacity,
+                        elems->unk14_a.element);
+                    break;
+            }
+        }
+        elems++; // Go onto the next element.
+    }
+    if (shouldResetRenderSettings) {
+        reset_render_settings(&sMenuCurrDisplayList);
+    }
+    sMenuGuiColourR = 255;
+    sMenuGuiColourG = 255;
+    sMenuGuiColourB = 255;
+    sMenuGuiColourBlendFactor = 0;
+    sMenuGuiOpacity = 255;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/draw_menu_elements.s")
-#endif
 
 void func_800828B8(void) {
     s32 i;
@@ -2963,7 +2952,7 @@ void render_title_screen(UNUSED s32 updateRate, f32 updateRateF) {
         set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
         scale = (f32) gTitleRevealTimer * 0.03125f;
         sMenuGuiOpacity = (gTitleRevealTimer * 8) - 1;
-        func_80068508(0);
+        func_80068508(FALSE);
         if (scale != 1.0f) {
             render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_FLOAT_HALF, 52.0f, scale, scale, 0xFFFFFFFE, TEXRECT_POINT);
         } else {
@@ -3678,7 +3667,7 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
         } else {
             i = 120;
         }
-        func_80068508(1);
+        func_80068508(TRUE);
         temp = (i - y);
         gMenuImageStack[2].unk10 = temp - 49;
         gMenuImageStack[sp70].unk10 = temp - 24;
@@ -3692,7 +3681,7 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
         sprite_opaque(1);
         gMenuImageStack[sp70].unkC = x - 128;
         func_8009CA60(sp70);
-        func_80068508(0);
+        func_80068508(FALSE);
     }
     if (drawTexture != NULL) {
         render_textured_rectangle(&sMenuCurrDisplayList, drawTexture, x + 60, y + 6, 255, 255, 255, 255);
@@ -3713,28 +3702,26 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
     }
 }
 
-#ifdef NON_EQUIVALENT
 void func_80085B9C(UNUSED s32 updateRate) {
-    s32 yPos; //yPos
-    s32 var_s2; //for loop iterator?
-    s32 var_s3; //bool
-    s32 temp_f4;
     s32 videoWidth;
-    s32 temp_v0;
-    s32 drawTexturedRectangle; //bool
-    s32 drawPleaseWait; //bool
-    s32 drawOk; //bool
-    s32 drawDialogueBox; //bool
-    DrawTexture *tempTex;
+    s32 temp;
+    s32 sp5C;
+    s32 var_s1;
+    s32 var_s2;
+    s32 var_s3;
+    s32 drawTexturedRectangle;
+    s32 drawPleaseWait;
+    s32 drawOk;
+    s32 drawDialogueBox;
 
     videoWidth = GET_VIDEO_WIDTH(get_video_width_and_height_as_s32());
     var_s3 = FALSE;
-    drawTexturedRectangle = FALSE; //render textured rectangle
-    drawPleaseWait = FALSE; //Draw Please Wait
-    drawOk = FALSE; //Draw "OK?"
-    drawDialogueBox = FALSE; //Render Dialogue Box
+    drawTexturedRectangle = FALSE;
+    drawPleaseWait = FALSE;
+    drawOk = FALSE;
+    drawDialogueBox = FALSE;
     switch (gMenuOptionCount & 7) {
-        case 0: 
+        case 0:
             break;
         case 1:
         case 2:
@@ -3769,50 +3756,58 @@ void func_80085B9C(UNUSED s32 updateRate) {
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF + 1, 35, gMenuText[ASSET_MENU_TEXT_SAVEOPTIONS], ALIGN_MIDDLE_CENTER);
     set_text_colour(255, 255, 255, 0, 255);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 32, gMenuText[ASSET_MENU_TEXT_SAVEOPTIONS], ALIGN_MIDDLE_CENTER);
+    
     if (drawTexturedRectangle) {
-        yPos = (osTvType == TV_TYPE_PAL) ? SCREEN_HEIGHT_HALF_PAL : SCREEN_HEIGHT_HALF;
-        yPos += ((s32) (gOptionBlinkTimer & 0x1F) >> 1);
-        var_s2 = 0;
-        tempTex = &gMenuSelectionArrowDown[var_s2];
-        do {
-            render_textured_rectangle(&sMenuCurrDisplayList, tempTex, SCREEN_WIDTH_HALF, yPos, 255, 255, 255, 255);
-            tempTex++;
-            var_s2++;
-            yPos += 16;
-        } while(var_s2 < 2);
+        temp = (osTvType == TV_TYPE_PAL) ? SCREEN_HEIGHT_HALF_PAL : SCREEN_HEIGHT_HALF;
+        temp += ((s32) (gOptionBlinkTimer & 0x1F) >> 1);
+        
+        for (var_s2 = 0; var_s2 < 2; var_s2 += 1, temp += 16) {
+            render_textured_rectangle(&sMenuCurrDisplayList, gMenuSelectionArrowDown, SCREEN_WIDTH_HALF, temp, 255, 255, 255, 255);
+        }
     }
+    
     if (var_s3) {
-        temp_f4 = D_80126BDC;
-        temp_v0 = 80 - (s32) ((D_80126BDC - temp_f4) * 164);
-        while ((temp_v0 < videoWidth) && (temp_f4 < D_80126A08)) {
-            func_800853D0(&D_80126A0C[temp_f4], temp_v0, 64);
-            temp_f4++;
-            temp_v0 += 164;
+        var_s2 = (s32) D_80126BDC;
+        temp = var_s2;
+        sp5C = 80 - (s32) ((D_80126BDC - var_s2) * 164.0f);
+        var_s1 = sp5C;
+        while (var_s1 < videoWidth && temp < D_80126A08) {
+            func_800853D0(&D_80126A0C[temp], var_s1, 64);
+            var_s1 += 164;
+            temp++;
         }
-        while ((temp_v0 > 0)  && (temp_f4 > 0)) {
-            temp_f4--;
-            temp_v0 -= 164;
-            func_800853D0(&D_80126A0C[temp_f4], temp_v0, 64);
+        temp = var_s2;
+        var_s1 = sp5C;
+        while((var_s1 > 0) && (temp > 0)) {
+            temp--;
+            var_s1 -= 164;
+            func_800853D0(&D_80126A0C[temp], var_s1, 64);
         }
     }
+    
     if (drawTexturedRectangle) {
-        temp_f4 = D_80126BEC;
-        temp_v0 = 80 - (s32) ((D_80126BEC - temp_f4) * 164);
-        while ((temp_v0 < videoWidth) && (temp_f4 < D_80126A00)) {
-            func_800853D0(&D_80126A04[temp_f4], temp_v0, 144);
-            temp_f4++;
-            temp_v0 += 164;
+        var_s2 = (s32) D_80126BEC;
+        temp = var_s2;
+        sp5C = 80 - (s32) ((D_80126BEC - (f32) var_s2) * 164.0f);
+        var_s1 = sp5C;
+        while (var_s1 < videoWidth && temp < D_80126A00) {
+            func_800853D0(&D_80126A04[temp], var_s1, 144);
+            var_s1 += 164;
+            temp++;
         }
-        while ((temp_v0 > 0) && (temp_f4 > 0)) {
-            temp_f4--;
-            temp_v0 -= 164;
-            func_800853D0(&D_80126A04[temp_f4], temp_v0, 144);
+        temp = var_s2;
+        var_s1 = sp5C;
+        while (var_s1 > 0 && temp > 0) {
+            temp--;
+            var_s1 -= 164;
+            func_800853D0(&D_80126A04[temp], var_s1, 144);
         }
     }
+    
     set_text_font(2);
     set_text_colour(255, 255, 255, 0, 255);
     if (drawOk) {
-        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 128, D_800E8208, ALIGN_MIDDLE_CENTER); // "OK?"
+        draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 128, (char *) D_800E8208, ALIGN_MIDDLE_CENTER); // "OK?"
     }
     if (drawPleaseWait) {
         draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 128, gMenuText[ASSET_MENU_TEXT_PLEASEWAIT], ALIGN_MIDDLE_CENTER);
@@ -3822,12 +3817,9 @@ void func_80085B9C(UNUSED s32 updateRate) {
     }
     func_80080E6C();
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/func_80085B9C.s")
-#endif
 
-s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, s32 fileSize, UNUSED s32 arg5) {
-    s32 ret = 0;
+SIDeviceStatus func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, s32 fileSize, UNUSED s32 arg5) {
+    SIDeviceStatus ret = CONTROLLER_PAK_GOOD;
 
     if (*arg1 != 0) {
         ret = get_free_space(controllerIndex, &arg2[*arg3].fileSize, &sControllerPakNotesFree[controllerIndex]);
@@ -3839,15 +3831,15 @@ s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, 
             }
         } else {
             SIDeviceStatus status = ret & 0xFF; //The upper bytes could be controllerIndex, so focus on the status
-            if ((*arg1 < 0) && status == RUMBLE_PAK) {
+            if ((*arg1 < 0) && status == CONTROLLER_PAK_RUMBLE_PAK_FOUND) {
                 *arg1 = 0;
-                ret = 0;
+                ret = CONTROLLER_PAK_GOOD;
             } else if
                 (status != CONTROLLER_PAK_WITH_BAD_ID &&
                  status != CONTROLLER_PAK_INCONSISTENT &&
                  status != CONTROLLER_PAK_BAD_DATA)
             {
-                ret = 0;
+                ret = CONTROLLER_PAK_GOOD;
             }
         }
     }
@@ -3964,7 +3956,7 @@ SIDeviceStatus func_800862C4(void) {
                     }
                 }
                 packDirectoryFree();
-            } else if (temp == RUMBLE_PAK) {
+            } else if (temp == CONTROLLER_PAK_RUMBLE_PAK_FOUND) {
                 D_80126A14 = 1;
                 if (D_80126A18 < 0) {
                     result = CONTROLLER_PAK_GOOD;
@@ -3973,7 +3965,7 @@ SIDeviceStatus func_800862C4(void) {
                     D_80126A10 = 1;
                     D_80126A6C = 0;
                 }
-            } else if (temp == NO_CONTROLLER_PAK) {
+            } else if (temp == CONTROLLER_PAK_NOT_FOUND) {
                 result = CONTROLLER_PAK_GOOD;
             } else if (D_80126A18 < 0 && temp == CONTROLLER_PAK_CHANGED) {
                 numAttempts = 0;
@@ -3984,8 +3976,8 @@ SIDeviceStatus func_800862C4(void) {
     return result;
 }
 
-s32 func_800867D4(void) {
-    s32 ret = 0;
+SIDeviceStatus func_800867D4(void) {
+    SIDeviceStatus ret = CONTROLLER_PAK_GOOD;
 
     D_80126A00 = 0;
 
@@ -4036,7 +4028,53 @@ void func_80086A48(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80086AFC.s")
-GLOBAL_ASM("asm/non_matchings/menu/func_800871D8.s")
+
+void func_800871D8(SIDeviceStatus deviceStatus) {
+    s32 i;
+    s32 j;
+    s32 k;
+    s32 y;
+    char *text;
+    
+    gControllerIndex = (deviceStatus >> 30) & 3; //Gets the controller index from the device status.
+    deviceStatus &= 0x3FFFFFFF; //Removes the controller index from the device status value.
+    gDeviceStatusStrings = gContPakStrings[deviceStatus];
+    D_800DFADC = deviceStatus;
+    D_80126A74 = 0;
+    
+    for (k = 0; gDeviceStatusStrings[k] != NULL; k++) {}
+    k++;
+    for (; gDeviceStatusStrings[k] != NULL; D_80126A74++, k++) {}
+    
+    D_80126A78 = D_80126A74 - 1;
+    
+    assign_dialogue_box_id(7);
+    set_current_dialogue_box_coords(7, 40, SCREEN_HEIGHT_HALF - (((k * 16) + 44) >> 1), 280, (((k * 16) + 44) >> 1) + SCREEN_HEIGHT_HALF);
+    set_current_dialogue_background_colour(7, 0, 0, 0, 160);
+    set_current_text_background_colour(7, 0, 0, 0, 0);
+    set_dialogue_font(7, 2);
+    set_current_text_colour(7, 255, 255, 255, 0, 255);
+    text = gMenuText[ASSET_MENU_TEXT_PAKERROR];
+    if (gDeviceStatusStrings == gContPakRumbleDetectedStrings || gDeviceStatusStrings == gContPakSwitchToRumbleStrings) {
+        text = gMenuText[ASSET_MENU_TEXT_CAUTION];
+    } else if (gDeviceStatusStrings == gContPakNeed2ndAdvStrings) {
+        text = gMenuText[ASSET_MENU_TEXT_GAMEERROR];
+    }
+    render_dialogue_text(7, POS_CENTRED, 20, text, 1, ALIGN_MIDDLE_CENTER);
+    y = 52;
+    i = 0;
+    set_dialogue_font(7, ASSET_FONTS_FUNFONT);
+    for (; gDeviceStatusStrings[i] != NULL; i++, y += 16) {
+        render_dialogue_text(7, POS_CENTRED, y, gDeviceStatusStrings[i], gControllerIndex + 1, ALIGN_MIDDLE_CENTER);
+    }
+    i++;
+    y += 16;
+    for (j = 0; gDeviceStatusStrings[i] != NULL; i++, j++, y += 16) {
+        D_80126A80[j] = render_dialogue_text(7, POS_CENTRED, y, gDeviceStatusStrings[i], 1, ALIGN_MIDDLE_CENTER);
+    }
+    gMenuOptionCount |= 8;
+}
+
 
 s32 func_800874D0(s32 buttonsPressed, s32 arg1) {
     s32 ret;
@@ -4045,7 +4083,7 @@ s32 func_800874D0(s32 buttonsPressed, s32 arg1) {
     if (buttonsPressed & B_BUTTON) {
         gMenuOptionCount = 0;
         if (D_80126A10 != D_80126A14) {
-            func_800871D8(8);
+            func_800871D8(CONTROLLER_PAK_SWITCH_TO_RUMBLE);
         } else {
             play_sound_global(SOUND_MENU_BACK3, NULL);
             ret = -1;
@@ -4112,7 +4150,7 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
             D_80126A80[i]->unk13 = 0;
         }
     }
-    if (buttonsPressed & B_BUTTON || (buttonsPressed & (START_BUTTON | A_BUTTON) && (u32) D_80126A74 == (D_80126A78 + 1U))) {
+    if (buttonsPressed & B_BUTTON || (buttonsPressed & (START_BUTTON | A_BUTTON) && (u32) D_80126A74 == (u32) (D_80126A78 + 1))) {
         play_sound_global(SOUND_MENU_BACK3, NULL);
         gMenuOptionCount &= ~8;
         switch (sp1C) {
@@ -4124,17 +4162,17 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
                 break;
             case 2:
                 switch (D_800DFADC) {
-                    case 5:
+                    case CONTROLLER_PAK_CHANGED:
                         gOpacityDecayTimer = 5;
                         gMenuOptionCount = 1;
                         break;
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 9:
+                    case CONTROLLER_PAK_NOT_FOUND:
+                    case CONTROLLER_PAK_INCONSISTENT:
+                    case CONTROLLER_PAK_WITH_BAD_ID:
+                    case CONTROLLER_PAK_BAD_DATA:
                         D_80126A18 = 0;
                         break;
-                    case 7:
+                    case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
                         D_80126A18 = -1;
                         break;
                     default:
@@ -4144,17 +4182,17 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
                 break;
             case 4:
                 switch (D_800DFADC) {
-                    case 1:
-                    case 5:
+                    case CONTROLLER_PAK_NOT_FOUND:
+                    case CONTROLLER_PAK_CHANGED:
                         gOpacityDecayTimer = 5;
                         gMenuOptionCount = 1;
                         break;
-                    case 2:
-                    case 3:
-                    case 9:
+                    case CONTROLLER_PAK_INCONSISTENT:
+                    case CONTROLLER_PAK_WITH_BAD_ID:
+                    case CONTROLLER_PAK_BAD_DATA:
                         D_80126A1C = 0;
                         break;
-                    case 7:
+                    case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
                         D_80126A1C = -1;
                         break;
                     default:
@@ -4164,16 +4202,16 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
                 break;
             case 7:
                 switch (D_800DFADC) {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 5:
-                    case 7:
+                    case CONTROLLER_PAK_NOT_FOUND:
+                    case CONTROLLER_PAK_INCONSISTENT:
+                    case CONTROLLER_PAK_WITH_BAD_ID:
+                    case CONTROLLER_PAK_CHANGED:
+                    case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
                         gOpacityDecayTimer = 5;
                         gMenuOptionCount = 1;
                         break;
-                    case 9:
-                    case 10:
+                    case CONTROLLER_PAK_BAD_DATA:
+                    case CONTROLLER_PAK_NEED_SECOND_ADVENTURE:
                         gMenuOptionCount = 4;
                         break;
                 }
@@ -4184,7 +4222,7 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
         gMenuOptionCount &= ~8;
         switch (D_800DFADC) {
             case CONTROLLER_PAK_WITH_BAD_ID:
-                reformat_controller_pak(D_800DFAE0);
+                reformat_controller_pak(gControllerIndex);
                 if (sp1C == 4) {
                     D_80126A1C = 0;
                 } else if (sp1C == 7) {
@@ -4193,14 +4231,14 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
                 break;
             case CONTROLLER_PAK_INCONSISTENT:
             case CONTROLLER_PAK_BAD_DATA:
-                repair_controller_pak(D_800DFAE0);
+                repair_controller_pak(gControllerIndex);
                 if (sp1C == 4) {
                     D_80126A1C = 1;
                 } else if (sp1C == 2) {
                     D_80126A18 = 1;
                 }
                 break;
-            case RUMBLE_PAK:
+            case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
                 if (sp1C == 4) {
                     D_80126A1C = -1;
                 } else {
@@ -4219,7 +4257,7 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
 }
 
 s32 menu_save_options_loop(s32 updateRate) {
-    s32 result;
+    SIDeviceStatus result;
     s32 buttonsPressed;
     s32 i;
     s32 yAxis;
@@ -4289,7 +4327,7 @@ s32 menu_save_options_loop(s32 updateRate) {
             D_80126BE4 = 0;
             D_80126BEC = 0.0f;
             result = func_800867D4();
-            if (result != 0) {
+            if (result != CONTROLLER_PAK_GOOD) {
                 func_800871D8(result);
             } else {
                 gMenuOptionCount = 5;
@@ -4305,7 +4343,7 @@ s32 menu_save_options_loop(s32 updateRate) {
             gOpacityDecayTimer++;
             if (gOpacityDecayTimer >= 4) {
                 result = func_80086AFC();
-                if (result != 0) {
+                if (result != CONTROLLER_PAK_GOOD) {
                     func_800871D8(result);
                 } else {
                     gOpacityDecayTimer = 6;
@@ -4392,7 +4430,7 @@ SIDeviceStatus func_80087F14(s32 *controllerIndex, s32 arg1) {
         || (pakStatusError3  != 0)
         || (pakStatusErrorNoFreeSpace != 0)
         || (pakStatusError9 != 0)) {
-        return NO_CONTROLLER_PAK; // Return unsuccessfully?
+        return CONTROLLER_PAK_NOT_FOUND; // Return unsuccessfully?
     }
 
     controllerIndexVal = *controllerIndex;
@@ -5464,17 +5502,24 @@ s32 menu_magic_codes_list_loop(s32 updateRate) {
         play_sound_global(SOUND_SELECT2, NULL);
         code = 1 << D_80126C80[gOptionsMenuItemIndex];
         gActiveMagicCodes ^= code;       // Toggle active cheats?
-        func_8008A8F8(code, 0x10, 0x20); // func_8008A8F8() = Clear flags?
-        func_8008A8F8(code, 0x20, 0x10);
-        func_8008A8F8(code, 0x1000, 0x6080);
-        func_8008A8F8(code, 0x6080, 0x1000);
-        func_8008A8F8(code, 0x800, 0x1F8000);
-        func_8008A8F8(code, 0x1F8000, 0x800);
-        func_8008A8F8(code, 0x8000, 0xF0000);
-        func_8008A8F8(code, 0x10000, 0xE8000);
-        func_8008A8F8(code, 0x20000, 0xD8000);
-        func_8008A8F8(code, 0x40000, 0xB8000);
-        func_8008A8F8(code, 0x80000, 0x78000);
+        func_8008A8F8(code, 0x10, CHEAT_SMALL_CHARACTERS); // func_8008A8F8() = Clear flags?
+        func_8008A8F8(code, 0x20, CHEAT_BIG_CHARACTERS);
+        func_8008A8F8(code, 0x1000, (CHEAT_NO_LIMIT_TO_BANANAS | CHEAT_BANANAS_REDUCE_SPEED | CHEAT_START_WITH_10_BANANAS));
+        func_8008A8F8(code, 0x6080, CHEAT_DISABLE_BANANAS);
+        func_8008A8F8(code, 0x800, (CHEAT_ALL_BALLOONS_ARE_RED | CHEAT_ALL_BALLOONS_ARE_GREEN | 
+                                    CHEAT_ALL_BALLOONS_ARE_BLUE | CHEAT_ALL_BALLOONS_ARE_YELLOW | 
+                                    CHEAT_ALL_BALLOONS_ARE_RAINBOW | CHEAT_MAXIMUM_POWER_UP));
+        func_8008A8F8(code, 0x1F8000, CHEAT_DISABLE_WEAPONS);
+        func_8008A8F8(code, 0x8000, (CHEAT_ALL_BALLOONS_ARE_GREEN | CHEAT_ALL_BALLOONS_ARE_BLUE |
+                                    CHEAT_ALL_BALLOONS_ARE_YELLOW | CHEAT_ALL_BALLOONS_ARE_RAINBOW));
+        func_8008A8F8(code, 0x10000, (CHEAT_ALL_BALLOONS_ARE_RED | CHEAT_ALL_BALLOONS_ARE_BLUE |
+                                    CHEAT_ALL_BALLOONS_ARE_YELLOW | CHEAT_ALL_BALLOONS_ARE_RAINBOW));
+        func_8008A8F8(code, 0x20000, (CHEAT_ALL_BALLOONS_ARE_RED | CHEAT_ALL_BALLOONS_ARE_GREEN |
+                                    CHEAT_ALL_BALLOONS_ARE_YELLOW | CHEAT_ALL_BALLOONS_ARE_RAINBOW));
+        func_8008A8F8(code, 0x40000, (CHEAT_ALL_BALLOONS_ARE_RED | CHEAT_ALL_BALLOONS_ARE_GREEN |
+                                    CHEAT_ALL_BALLOONS_ARE_BLUE | CHEAT_ALL_BALLOONS_ARE_RAINBOW));
+        func_8008A8F8(code, 0x80000, (CHEAT_ALL_BALLOONS_ARE_RED | CHEAT_ALL_BALLOONS_ARE_GREEN |
+                                    CHEAT_ALL_BALLOONS_ARE_BLUE | CHEAT_ALL_BALLOONS_ARE_YELLOW));
     }
 
     previousMenuItemIndex = gOptionsMenuItemIndex;
@@ -6144,7 +6189,7 @@ void menu_game_select_init(void) {
 
 void func_8008C698(UNUSED s32 updateRate) {
     s32 i;
-    s32 filterAlpha;
+    s32 filterBlendFactor;
     s32 fade;
 
     if (gMenuDelay >= -21 && gMenuDelay < 22) {
@@ -6156,12 +6201,12 @@ void func_8008C698(UNUSED s32 updateRate) {
         set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
 
         for (i = 0; i <= gMenuOptionCount; i++) {
-            filterAlpha = 0;
+            filterBlendFactor = 0;
             if (i == gMenuCurIndex) {
-                filterAlpha = fade;
+                filterBlendFactor = fade;
             }
             //Fakematch? What's the (i ^ 0)?
-            gGameSelectElements[((i ^ 0) * 2) + 3].filterAlpha = filterAlpha;
+            gGameSelectElements[((i ^ 0) * 2) + 3].filterBlendFactor = filterBlendFactor;
         }
 
         if (osTvType == TV_TYPE_PAL) {
@@ -6296,7 +6341,7 @@ void menu_file_select_init(void) {
     gOptionBlinkTimer = 0;
     D_80126484 = FALSE;
     D_80126488 = FALSE;
-    D_80126CC0 = 0;
+    D_80126CC0 = FALSE;
     transition_begin(&sMenuTransitionFadeOut);
     load_font(ASSET_FONTS_BIGFONT);
     play_music(SEQUENCE_CHOOSE_YOUR_RACER);
@@ -6337,97 +6382,99 @@ void render_menu_image(s32 imageID, s32 xOffset, s32 yOffset, s32 red, s32 green
     func_8009CA60(imageID);
 }
 
-#ifdef NON_EQUIVALENT
-// Shouldn't have any major issues.
 void render_file_select_menu(UNUSED s32 updateRate) {
-    s32 s2;
-    s32 s5;
-    s32 y;
-    s32 phi_v0_2;
-    u8 tempName[8];
-    u32 color;
+    s32 yPos;
+    s32 var_s2;
+    s32 temp;
+    u32 colour;
     s32 i;
+    UNUSED s32 pad[3];
+    char trimmedFilename[4];
 
     if (osTvType == TV_TYPE_PAL) {
-        y = 12;
+        yPos = 12;
     } else {
-        y = 0;
+        yPos = 0;
     }
 
     func_8009BD5C();
     set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
     for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         if (gSavefileInfo[i].isAdventure2 == gIsInAdventureTwo || gSavefileInfo[i].isStarted == 0) {
-            color = COLOUR_RGBA32(176, 224, 192, 255);
+            colour = COLOUR_RGBA32(176, 224, 192, 255);
         } else {
-            color = COLOUR_RGBA32(106, 144, 115, 255);
+            colour = COLOUR_RGBA32(106, 144, 115, 255);
         }
-        func_80080580(NULL, gFileSelectButtons[i].x - 160, 120 - gFileSelectButtons[i].y, gFileSelectButtons[i].width,
-            gFileSelectButtons[i].height, gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, color, gMenuObjects[TEXTURE_SURFACE_BUTTON_WOOD]);
+        func_80080580(NULL, gFileSelectButtons[i].x - SCREEN_WIDTH_HALF, SCREEN_HEIGHT_HALF - gFileSelectButtons[i].y, gFileSelectButtons[i].width,
+            gFileSelectButtons[i].height, gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, colour, gMenuObjects[TEXTURE_SURFACE_BUTTON_WOOD]);
     }
     func_80080BC8(&sMenuCurrDisplayList);
     if (gOpacityDecayTimer == 0) {
         set_text_font(ASSET_FONTS_BIGFONT);
         set_text_background_colour(0, 0, 0, 0);
-        s5 = 10;
         for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
-            if (gSavefileInfo[i].isStarted != 0) {
-                s2 = 0xB;
+            if (gSavefileInfo[i].isStarted) {
                 sprite_opaque(FALSE);
-                if (gSavefileInfo[i].isAdventure2 != 0) {
-                    s2 = 0xC;
+                var_s2 = 11;
+                if (gSavefileInfo[i].isAdventure2) {
+                    var_s2 = 12;
                 }
-                render_menu_image(s2, gFileSelectElementPos[2] + gFileSelectButtons[i].x, gFileSelectElementPos[3] + gFileSelectButtons[i].y, 0, 0, 0, 128);
-                func_80068508(1);
-                gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount / s5;
-                render_menu_image(0, (gFileSelectElementPos[6] + gFileSelectButtons[i].x) - 6, gFileSelectElementPos[7] + gFileSelectButtons[i].y, 0, 0, 0, 128);
-                gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount % s5;
-                render_menu_image(0, gFileSelectElementPos[6] + gFileSelectButtons[i].x + 6, gFileSelectElementPos[7] + gFileSelectButtons[i].y, 0, 0, 0, 128);
-                func_80068508(0);
+                render_menu_image(var_s2, gFileSelectButtons[i].x + gFileSelectElementPos[2], gFileSelectButtons[i].y + gFileSelectElementPos[3], 0, 0, 0, 128);
+                func_80068508(TRUE);
+                gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount / 10;
+                render_menu_image(0, gFileSelectButtons[i].x + gFileSelectElementPos[6] - 6, gFileSelectButtons[i].y + gFileSelectElementPos[7], 0, 0, 0, 128);
+                gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount % 10;
+                render_menu_image(0, gFileSelectButtons[i].x + gFileSelectElementPos[6] + 6, gFileSelectButtons[i].y + gFileSelectElementPos[7], 0, 0, 0, 128);
+                func_80068508(FALSE);
                 sMenuGuiColourG = 64;
                 sMenuGuiColourB = 64;
-                render_menu_image(s5, gFileSelectElementPos[8] + gFileSelectButtons[i].x, gFileSelectElementPos[9] + gFileSelectButtons[i].y, 0, 0, 0, 128);
+                render_menu_image(10, gFileSelectButtons[i].x + gFileSelectElementPos[8], gFileSelectButtons[i].y + gFileSelectElementPos[9], 0, 0, 0, 128);
                 sMenuGuiColourG = 255;
                 sMenuGuiColourB = 255;
                 sprite_opaque(TRUE);
             } else {
                 set_text_colour(255, 255, 255, 64, 255);
-                draw_text(&sMenuCurrDisplayList, gFileSelectElementPos[4] + gFileSelectButtons[i].x, gFileSelectElementPos[5] + gFileSelectButtons[i].y + y, gMenuText[ASSET_MENU_TEXT_NEW], ALIGN_MIDDLE_CENTER);
+                draw_text(&sMenuCurrDisplayList,  gFileSelectButtons[i].x + gFileSelectElementPos[4], gFileSelectButtons[i].y + gFileSelectElementPos[5] + yPos, gMenuText[ASSET_MENU_TEXT_NEW], ALIGN_MIDDLE_CENTER);
             }
         }
     }
-    phi_v0_2 = gOptionBlinkTimer * 8;
-    if (phi_v0_2 >= 0x100) {
-        phi_v0_2 = 0x1FF - phi_v0_2;
+    temp = gOptionBlinkTimer * 8;
+    if (temp >= 256) {
+        temp = 511 - temp;
     }
     set_text_font(ASSET_FONTS_FUNFONT);
     set_text_background_colour(0, 0, 0, 0);
     set_text_colour(255, 255, 255, 0, 255);
     for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
-        s2 = FALSE;
+        var_s2 = FALSE;
         if (D_80126484 != FALSE) {
             if (D_80126494 == 0 && i == gSaveFileIndex3) {
-                s2 = TRUE;
+                var_s2 = TRUE;
             } else if (D_80126494 > 0 && i == gSaveFileIndex2) {
-                s2 = TRUE;
+                var_s2 = TRUE;
             }
-        } else if (D_80126488 != FALSE && i == gSaveFileIndex3) {
-            s2 = TRUE;
+        } else if (D_80126488 != FALSE) {
+            if (i == gSaveFileIndex3) {
+                var_s2 = TRUE;
+            }
         } else if (gMenuOptionCount == 0 && i == gSaveFileIndex) {
-            s2 = TRUE;
+            var_s2 = TRUE;
         }
-        if (s2) {
-            s32 temp_t0 = phi_v0_2 | ~0xFF;
-            func_80080E90(&sMenuCurrDisplayList, gFileSelectButtons[i].x, gFileSelectButtons[i].y + y, gFileSelectButtons[i].width, gFileSelectButtons[i].height,
-                gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, temp_t0, temp_t0, temp_t0, temp_t0);
+        if (var_s2) {
+            colour = temp | ~0xFF;
+            func_80080E90(&sMenuCurrDisplayList, gFileSelectButtons[i].x, gFileSelectButtons[i].y + yPos, gFileSelectButtons[i].width, gFileSelectButtons[i].height,
+                gFileSelectButtons[i].borderWidth, gFileSelectButtons[i].borderHeight, colour, colour, colour, colour);
         }
-        if (D_80126CC0 == 0 || i != gSaveFileIndex) {
-            trim_filename_string(gSavefileInfo[i].name, tempName);
-            if (gSavefileInfo[i].isStarted == 0) {
-                trim_filename_string(gFilenames[i], tempName);
+        if (!D_80126CC0 || i != gSaveFileIndex) {
+            trim_filename_string(gSavefileInfo[i].name, trimmedFilename);
+            if (!gSavefileInfo[i].isStarted) {
+                trim_filename_string(gFilenames[i], trimmedFilename);
             }
-            if (tempName != NULL) {
-                draw_text(&sMenuCurrDisplayList, gFileSelectElementPos[0] + gFileSelectButtons[i].x, gFileSelectElementPos[1] + gFileSelectButtons[i].y + y, tempName, ALIGN_MIDDLE_CENTER);
+            if (trimmedFilename) {
+                draw_text(&sMenuCurrDisplayList, 
+                    gFileSelectButtons[i].x + gFileSelectElementPos[0],
+                    gFileSelectButtons[i].y + gFileSelectElementPos[1] + yPos,
+                    trimmedFilename, ALIGN_MIDDLE_CENTER);
             }
         }
     }
@@ -6437,45 +6484,37 @@ void render_file_select_menu(UNUSED s32 updateRate) {
     set_text_colour(255, 255, 255, 0, 255);
     draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, 16, gMenuText[ASSET_MENU_TEXT_GAMESELECT], ALIGN_TOP_CENTER);
     set_text_colour(255, 255, 255, 0, 255);
-    y += 0xBB;
-    if (D_80126484 != FALSE) {
+    yPos += 187;
+    if (D_80126484) {
         if (D_80126494 == 0) {
             set_text_font(ASSET_FONTS_FUNFONT);
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[ASSET_MENU_TEXT_GAMETOCOPY], ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, gMenuText[ASSET_MENU_TEXT_GAMETOCOPY], ALIGN_MIDDLE_CENTER);
         } else if (D_80126494 == 1) {
             set_text_font(ASSET_FONTS_FUNFONT);
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[ASSET_MENU_TEXT_GAMETOCOPYTO], ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, gMenuText[ASSET_MENU_TEXT_GAMETOCOPYTO], ALIGN_MIDDLE_CENTER);
         } else {
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, &D_800E8234, ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, (char *) &D_800E8234 /* "OK?" */, ALIGN_MIDDLE_CENTER);
         }
-        return;
-    }
-    if (D_80126488 != FALSE) {
+    } else if (D_80126488) {
         if (D_80126494 == 0) {
             set_text_font(ASSET_FONTS_FUNFONT);
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, gMenuText[ASSET_MENU_TEXT_GAMETOERASE], ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, gMenuText[ASSET_MENU_TEXT_GAMETOERASE], ALIGN_MIDDLE_CENTER);
         } else {
-            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, y, &D_800E8238, ALIGN_MIDDLE_CENTER);
+            draw_text(&sMenuCurrDisplayList, SCREEN_WIDTH_HALF, yPos, (char *) &D_800E8238 /* "OK?" */, ALIGN_MIDDLE_CENTER);
         }
-        return;
-    }
-    if (D_80126CC0 == 0) {
+    } else if (!D_80126CC0) {
         if (gMenuOptionCount == 1) {
-            set_text_colour(255, 255, 255, phi_v0_2, 255);
+            set_text_colour(255, 255, 255, temp, 255);
         }
-        draw_text(&sMenuCurrDisplayList, 90, y, gMenuText[ASSET_MENU_TEXT_COPY], ALIGN_MIDDLE_CENTER);
+        draw_text(&sMenuCurrDisplayList, 90, yPos, gMenuText[ASSET_MENU_TEXT_COPY], ALIGN_MIDDLE_CENTER);
         if (gMenuOptionCount == 2) {
-            set_text_colour(255, 255, 255, phi_v0_2, 255);
+            set_text_colour(255, 255, 255, temp, 255);
         } else {
             set_text_colour(255, 255, 255, 0, 255);
         }
-        draw_text(&sMenuCurrDisplayList, 230, y, gMenuText[ASSET_MENU_TEXT_ERASE], ALIGN_MIDDLE_CENTER);
-        return;
+        draw_text(&sMenuCurrDisplayList, 230, yPos, gMenuText[ASSET_MENU_TEXT_ERASE], ALIGN_MIDDLE_CENTER);
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/menu/render_file_select_menu.s")
-#endif
 
 s32 func_8008D5F8(UNUSED s32 updateRate) {
     u32 buttonsPressed;
@@ -6625,10 +6664,10 @@ void func_8008D8BC(UNUSED s32 updateRate) {
             return;
         }
         prevValue = gSaveFileIndex2;
-        if ((xAxisDirection < 0) && (gSaveFileIndex2 > 0)) {
+        if (xAxisDirection < 0 && gSaveFileIndex2 > 0) {
             gSaveFileIndex2--;
         }
-        if ((xAxisDirection > 0) && (gSaveFileIndex2 < 2)) {
+        if (xAxisDirection > 0 && gSaveFileIndex2 < 2) {
             gSaveFileIndex2++;
         }
         if (prevValue != gSaveFileIndex2) {
@@ -6651,9 +6690,7 @@ void func_8008D8BC(UNUSED s32 updateRate) {
             gSaveFileIndex = gSaveFileIndex2;
             gMenuOptionCount = 0;
             D_80126484 = FALSE;
-            return;
-        }
-        if (buttonsPressed & B_BUTTON) {
+        } else if (buttonsPressed & B_BUTTON) {
             play_sound_global(SOUND_MENU_BACK3, NULL);
             D_80126494 = 1;
         }
@@ -6669,7 +6706,7 @@ void func_8008DC7C(UNUSED s32 updateRate) {
     controllerXAxisDirection = gControllersXAxisDirection[0];
 
     if (gNumberOfActivePlayers == 2) {
-        buttonsPressed |= get_buttons_pressed_from_player(1);
+        buttonsPressed |= get_buttons_pressed_from_player(PLAYER_TWO);
         controllerXAxisDirection += gControllersXAxisDirection[1];
     }
 
@@ -6777,18 +6814,18 @@ s32 menu_file_select_loop(s32 updateRate) {
             func_8008D8BC(updateRate);
         } else if (D_80126488 != FALSE) {
             func_8008DC7C(updateRate);
-        } else if (D_80126CC0 != 0) {
+        } else if (D_80126CC0) {
             buttonsPressed = get_buttons_pressed_from_player(PLAYER_ONE);
             if ((buttonsPressed & B_BUTTON) && (gCurrentFilenameChars == 0)) {
                 unload_big_font_4();
-                D_80126CC0 = 0;
+                D_80126CC0 = FALSE;
                 gSavefileInfo[i].name[0] = 'D';
                 gSavefileInfo[i].name[1] = 'K';
                 gSavefileInfo[i].name[2] = 'R';
                 gSavefileInfo[i].name[3] = '\0';
             } else if (menu_enter_filename_loop(updateRate) != 0) {
                 unload_big_font_4();
-                D_80126CC0 = 0;
+                D_80126CC0 = FALSE;
                 gSavefileInfo[gSaveFileIndex].isAdventure2 = 0;
                 if (gIsInAdventureTwo != 0) {
                     gSavefileInfo[gSaveFileIndex].isAdventure2 = 1;
@@ -6810,7 +6847,7 @@ s32 menu_file_select_loop(s32 updateRate) {
                         mark_read_save_file(gSaveFileIndex);
                         set_music_fade_timer(-128);
                     } else {
-                        D_80126CC0 = 1;
+                        D_80126CC0 = TRUE;
                         gIndexOfCurInputCharacter = 0;
                         i = 0;
                         if (osTvType == TV_TYPE_PAL) {
@@ -7425,7 +7462,7 @@ void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectO
             if (copyViewPort) {
                 copy_viewport_frame_size_to_coords(0, &x1, &y1, &x2, &y2);
                 temp = x1;
-                sp58 = (x2 - temp) * (1.0f / 128.0f);
+                sp58 = (x2 - temp) / 128.0f;
                 sp54 = (y2 - y1) / 96.0f;
             } else {
                 x2 = xTemp + 80;
@@ -7969,7 +8006,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                     draw_text(&sMenuCurrDisplayList, gTwoPlayerRacerCountMenu.textPos[2] + gTwoPlayerRacerCountMenu.x + 1, gTwoPlayerRacerCountMenu.textPos[3] + gTwoPlayerRacerCountMenu.y + 1, gMenuText[ASSET_MENU_TEXT_NUMBEROFRACERS], ALIGN_MIDDLE_CENTER);
                     set_text_colour(0xFF, 0xFF, 0xFF, 0, 0xFF);
                     draw_text(&sMenuCurrDisplayList, gTwoPlayerRacerCountMenu.textPos[2] + gTwoPlayerRacerCountMenu.x - 1, gTwoPlayerRacerCountMenu.textPos[3] + gTwoPlayerRacerCountMenu.y - 1, gMenuText[ASSET_MENU_TEXT_NUMBEROFRACERS], ALIGN_MIDDLE_CENTER);
-                    func_80068508(1);
+                    func_80068508(TRUE);
                     sprite_opaque(FALSE);
                     for (i = 0; i < 3; i++) {
                         s32 index = i * 2;
@@ -7993,7 +8030,7 @@ void render_track_select_setup_ui(s32 updateRate) {
                         sMenuGuiColourB = 0xFF;
                     }
                     sprite_opaque(TRUE);
-                    func_80068508(0);
+                    func_80068508(FALSE);
                 }
             }
         }
@@ -8667,7 +8704,7 @@ void func_80094688(s32 arg0, s32 arg1) {
     } else {
         gMenuOptionCount = 7;
     }
-    D_80126CC0 = 0;
+    D_80126CC0 = FALSE;
     gOptionBlinkTimer = 0;
     gOpacityDecayTimer = 0;
     gMenuDelay = 0;
@@ -8966,23 +9003,23 @@ void func_80094D28(UNUSED s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/menu/func_80094D28.s")
 #endif
 
-void func_80095624(s32 status) {
+void func_80095624(SIDeviceStatus status) {
     // status may contain controllerIndex in it's upper bits
     // so grab the lower bits for the SIDeviceStatus
     switch (status & 0xFF) {
-        case NO_CONTROLLER_PAK:
+        case CONTROLLER_PAK_NOT_FOUND:
         case CONTROLLER_PAK_CHANGED: /*Required to match*/ \
             D_80126C1C = sNoControllerPakMenuText;
             break;
         case CONTROLLER_PAK_FULL:
-        case CONTROLLER_PAK_UNK6: /*Required to match*/ \
+        case CONTROLLER_PAK_NO_ROOM_FOR_GHOSTS: /*Required to match*/ \
             D_80126C1C = sControllerPakFullMenuText;
             break;
-        case RUMBLE_PAK:
+        case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
             // If you wish to use / the Controller Pak / insert it now!
             D_80126C1C = sInsertControllerPakMenuText;
             break;
-        case CONTROLLER_PAK_UNK8:
+        case CONTROLLER_PAK_SWITCH_TO_RUMBLE:
             //If you wish to use / the Rumble Pak / insert it now!
             D_80126C1C = sInsertRumblePakMenuText;
             break;
@@ -9152,7 +9189,7 @@ s32 func_80095728(Gfx **dlist, MatrixS **matrices, Vertex **vertices, s32 update
                         sp54 = 1;
                     } else {
                         if (D_80126C1C == sInsertControllerPakMenuText) {
-                            func_80095624(8);
+                            func_80095624(CONTROLLER_PAK_SWITCH_TO_RUMBLE);
                         } else {
                             D_80126C1C = NULL;
                         }
@@ -11869,17 +11906,17 @@ s32 tt_menu_loop(void) {
                     case CONTROLLER_PAK_GOOD:
                         sCurrentMenuID = gPreviousMenuID;
                         break;
-                    case RUMBLE_PAK:
+                    case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
                         sCurrentMenuID = TT_MENU_INSERT_CONT_PAK;
                         break;
-                    case NO_CONTROLLER_PAK:
+                    case CONTROLLER_PAK_NOT_FOUND:
                         // NO CONTROLLER PAK
                         // If you wish to change / Controller Pak or Rumble Pak, / please do so now.
                         gTTSaveGhostPakErrorText = sNoControllerPakMenuText;
                         sCurrentMenuID = TT_MENU_CONT_PAK_ERROR_1;
                         break;
                     case CONTROLLER_PAK_FULL:
-                    case CONTROLLER_PAK_UNK6:
+                    case CONTROLLER_PAK_NO_ROOM_FOR_GHOSTS:
                         // CONTROLLER PAK FULL
                         // If you wish to change / Controller Pak or Rumble Pak, / please do so now.
                         gTTSaveGhostPakErrorText = sControllerPakFullMenuText;
@@ -11895,7 +11932,7 @@ s32 tt_menu_loop(void) {
                     case CONTROLLER_PAK_INCONSISTENT:
                     case CONTROLLER_PAK_WITH_BAD_ID:
                     case CONTROLLER_PAK_CHANGED:
-                    case CONTROLLER_PAK_UNK8:
+                    case CONTROLLER_PAK_SWITCH_TO_RUMBLE:
                     default:
                         // BAD CONTROLLER PAK
                         // If you wish to change / Controller Pak or Rumble Pak, / please do so now.
@@ -11930,7 +11967,7 @@ void func_8009E3D0(void) {
         return;
     }
     settings = get_settings();
-    func_80068508(1);
+    func_80068508(TRUE);
     if (osTvType == TV_TYPE_PAL) {
         y = 10;
     } else {
@@ -12008,7 +12045,7 @@ void func_8009E3D0(void) {
         }
         func_8009CA60(14);
     }
-    func_80068508(0);
+    func_80068508(FALSE);
 }
 
 

@@ -1153,19 +1153,19 @@ GLOBAL_ASM("asm/non_matchings/objects/func_8000CC7C.s")
 s32 get_contpak_error(void) {
     // D_8011AD38 is likely an SIDeviceStatus value, but not 100% sure yet.
     switch (D_8011AD38) {
-        case NO_CONTROLLER_PAK:
+        case CONTROLLER_PAK_NOT_FOUND:
             return CONTPAK_ERROR_MISSING;
-        case RUMBLE_PAK:
+        case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
             return CONTPAK_ERROR_NONE;
         case CONTROLLER_PAK_INCONSISTENT:
         case CONTROLLER_PAK_WITH_BAD_ID:
             return CONTPAK_ERROR_DAMAGED;
         case CONTROLLER_PAK_FULL:
-        case CONTROLLER_PAK_UNK6:
+        case CONTROLLER_PAK_NO_ROOM_FOR_GHOSTS:
             return CONTPAK_ERROR_FULL;
         case CONTROLLER_PAK_GOOD:
         case CONTROLLER_PAK_CHANGED:
-        case CONTROLLER_PAK_UNK8:
+        case CONTROLLER_PAK_SWITCH_TO_RUMBLE:
             return func_80059E20();
         default:
             return CONTPAK_ERROR_NONE;
@@ -4286,7 +4286,7 @@ s32 func_8001B668(s32 arg0) {
     return func_800599B8(arg0, get_current_map_id(), D_8011AE82, NULL, NULL);
 }
 
-s32 func_8001B738(s32 controllerIndex) {
+SIDeviceStatus func_8001B738(s32 controllerIndex) {
     return func_80059B7C(controllerIndex, func_800599A8(), D_800DC728, D_800DC72C, D_800DC724);
 }
 

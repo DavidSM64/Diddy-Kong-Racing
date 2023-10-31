@@ -23,17 +23,21 @@
 
 #define NUMBER_OF_SAVE_FILES 3
 
+// One unique thing about results using SIDeviceStatus is that they
+// store the enum value in the lower 0xFF byte, and they store
+// the controller index in the upper 3 bits.
 typedef enum {
     CONTROLLER_PAK_GOOD,
-    NO_CONTROLLER_PAK,
+    CONTROLLER_PAK_NOT_FOUND,
     CONTROLLER_PAK_INCONSISTENT,
     CONTROLLER_PAK_WITH_BAD_ID,
     CONTROLLER_PAK_FULL,
     CONTROLLER_PAK_CHANGED,
-    CONTROLLER_PAK_UNK6, //Could be another way to mark as full according to tt_menu_loop
-    RUMBLE_PAK,
-    CONTROLLER_PAK_UNK8, // func_80074B34 Sets this, possibly set in func_800860A8
-    CONTROLLER_PAK_BAD_DATA
+    CONTROLLER_PAK_NO_ROOM_FOR_GHOSTS,
+    CONTROLLER_PAK_RUMBLE_PAK_FOUND,
+    CONTROLLER_PAK_SWITCH_TO_RUMBLE,
+    CONTROLLER_PAK_BAD_DATA,
+    CONTROLLER_PAK_NEED_SECOND_ADVENTURE
 } SIDeviceStatus;
 
 typedef enum {
@@ -115,7 +119,7 @@ char *string_to_font_codes(char *inString, char *outString, s32 stringLength);
 
 //Reasonably certain about these names for now.
 s32 func_80074EB8(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, u8 *dest);
-s32 func_80075000(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, GhostHeader *arg6);
+SIDeviceStatus func_80075000(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, GhostHeader *arg6);
 s32 func_800753D8(s32 controllerIndex, s32 arg1);
 
 #endif

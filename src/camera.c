@@ -159,7 +159,7 @@ void camera_init(void) {
     gModelMatrixStackPos = 0;
     gCameraMatrixPos = 0;
     gNumberOfViewports = 0;
-    D_80120D0C = 0;
+    D_80120D0C = FALSE;
     D_80120D18 = 0;
     gAdjustViewportHeight = 0;
     gAntiPiracyViewport = 0;
@@ -1006,8 +1006,8 @@ void func_80068408(Gfx **dlist, MatrixS **mtx) {
     gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), gMatrixType << 6);
 }
 
-void func_80068508(s32 arg0) {
-    D_80120D0C = arg0;
+void func_80068508(s32 bool) {
+    D_80120D0C = bool;
 }
 
 /**
@@ -1099,7 +1099,7 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
         gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*dlist)++);
     }
-    if (D_80120D0C == 0) {
+    if (D_80120D0C == FALSE) {
         textureFrame = ((textureFrame & 0xFF) * arg4->textureCount) >> 8;
     }
     flags &= ~RENDER_VEHICLE_PART;
