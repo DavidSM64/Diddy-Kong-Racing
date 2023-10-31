@@ -232,7 +232,7 @@ void func_80045128(Object **racerObjs);
 void func_80059BF0(Object *obj, s32 updateRate);
 
 //Non Matching
-void set_ghost_position_and_rotation(Object *obj);
+s32 set_ghost_position_and_rotation(Object *obj);
 void func_80054FD0(Object *obj, Object_Racer *racer, s32);
 void func_80053750(Object *obj, Object_Racer *racer, f32);
 void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32, f32);

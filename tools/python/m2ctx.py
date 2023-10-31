@@ -15,6 +15,9 @@ ignoreFiles = ["include/sys/regdef.h"]
 
 search_folders = ["include/", "src/"]
 
+# Needed for StereoPanMode
+includeFiles = ['lib/src/mips1/al/alSynStartVoiceParams.h']
+
 hack_directives_into_singleline = ['DRAW_TABLE_ENTRY', 'DRAW_TABLE_GROUP']
 
 # From: https://stackoverflow.com/a/18381470
@@ -334,9 +337,11 @@ def collect(filenames):
     }
 
     mapText = load_map()
+    
+    filepaths = filenames.split('\n') + includeFiles
 
-    for filename in filenames.split('\n'):
-        if len(filename) < 1 or not os.path.isfile(filename) or filename in ignoreFiles:
+    for filename in filepaths:
+        if (len(filename) < 1) or (not os.path.isfile(filename)) or (filename in ignoreFiles):
             continue
         filetext = open(filename, 'r').read()
         filetext = remove_comments(filetext)
@@ -478,6 +483,7 @@ def find_files():
 
 def main():
     print("Generating context file...")
+    
     data = collect(find_files())
 
     with open(os.path.join(root_dir, "ctx.c"), "w", encoding="UTF-8") as f:

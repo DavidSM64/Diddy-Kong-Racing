@@ -5,7 +5,7 @@
 
 .section .data
 
-glabel D_800DD430
+glabel gIntDisFlag
 .word 0x00000000
 
 glabel gCurrentRNGSeed

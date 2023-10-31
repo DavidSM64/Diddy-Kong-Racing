@@ -1,8 +1,8 @@
-glabel clear_status_register_flags /* Official name: disableInterrupts */
-/* 070110 8006F510 3C08800E */  lui   $t0, %hi(D_800DD430) # $t0, 0x800e
-/* 070114 8006F514 8108D430 */  lb    $t0, %lo(D_800DD430)($t0)
+glabel disable_interrupts /* Official name: disableInterrupts */
+/* 070110 8006F510 3C08800E */  lui   $t0, %hi(gIntDisFlag) # $t0, 0x800e
+/* 070114 8006F514 8108D430 */  lb    $t0, %lo(gIntDisFlag)($t0)
 /* 070118 8006F518 11000006 */  beqz  $t0, .L8006F534
-/* 07011C 8006F51C 40086000 */   mfc0  $t0, $12 # C0_SR - Status Register
+/* 07011C 8006F51C 40086000 */  mfc0  $t0, $12 # C0_SR - Status Register
 /* 070120 8006F520 2401FFFE */  li    $at, -2
 /* 070124 8006F524 01014824 */  and   $t1, $t0, $at
 /* 070128 8006F528 40896000 */  mtc0  $t1, $12
