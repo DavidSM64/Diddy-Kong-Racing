@@ -5,6 +5,7 @@
 #include "printf.h"
 #include "thread0_epc.h"
 #include "controller.h"
+#include "math_util.h"
 
 /************ .bss ************/
 
@@ -50,7 +51,7 @@ MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots) {
     s32 size;
     MemoryPoolSlot *slots;
     UNUSED s32 unused_2;
-    s32 *flags = disable_interrupts();
+    u32 flags = disable_interrupts();
     MemoryPoolSlot *newPool;
 
     size = poolDataSize + (numSlots * sizeof(MemoryPoolSlot));
@@ -129,7 +130,7 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag
     UNUSED s32 pad;
     MemoryPool *pool;
     MemoryPoolSlot *slots;
-    s32 *flags;
+    u32 flags;
     s32 nextIndex;
     s32 currIndex;
         
@@ -187,7 +188,7 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
     s32 i;
     MemoryPoolSlot *curSlot;
     MemoryPoolSlot *slots;
-    s32 *flags;
+    u32 flags;
     
     flags = disable_interrupts();
     if (size == 0) {
@@ -230,7 +231,7 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
  * Official name: mmSetDelay
  */
 void set_free_queue_state(s32 state) {
-    s32 *flags = disable_interrupts();
+    u32 flags = disable_interrupts();
     gFreeQueueTimer = state;
     if (state == 0) { // flush free queue if state is 0.
         while (gFreeQueueCount > 0) {
@@ -246,7 +247,7 @@ void set_free_queue_state(s32 state) {
  * Official Name: mmFree
  */
 void free_from_memory_pool(void *data) {
-    s32 *flags = disable_interrupts();
+    u32 flags = disable_interrupts();
     if (gFreeQueueTimer == 0) {
         free_slot_containing_address(data);
     } else {
@@ -261,7 +262,7 @@ void free_from_memory_pool(void *data) {
  */
 void clear_free_queue(void) {
     s32 i;
-    s32 *flags;
+    u32 flags;
 
     flags = disable_interrupts();
 
@@ -309,7 +310,7 @@ UNUSED void func_80071314(void) {
     MemoryPoolSlot *slotPos;
     MemoryPool *pool;
     UNUSED s32 pad;
-    s32 *flags;
+    u32 flags;
     s32 poolIndex;
     s32 slotIndex;
         
@@ -358,7 +359,7 @@ s32 func_80071478(u8 *address) {
     s32 slotIndex;
     MemoryPoolSlot *slot;
     MemoryPool *pool;
-    s32 *flags;
+    u32 flags;
 
     flags = disable_interrupts();
     pool = &gMemoryPools[get_memory_pool_index_containing_address(address)];
@@ -382,7 +383,7 @@ s32 func_80071538(u8 *address) {
     s32 slotIndex;
     MemoryPoolSlot *slot;
     MemoryPool *pool;
-    s32 *flags;
+    u32 flags;
 
     flags = disable_interrupts();
     pool = &gMemoryPools[get_memory_pool_index_containing_address(address)];

@@ -8,6 +8,7 @@
 #include "macros.h"
 #include "objects.h"
 #include "game.h"
+#include "math_util.h"
 
 /************ .data ************/
 
