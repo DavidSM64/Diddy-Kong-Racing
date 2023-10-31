@@ -405,59 +405,57 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     if (gCurrentLevelHeader->race_type == RACETYPE_DEFAULT) {
         clear_level_property_stack();
     }
-    if (get_level_property_stack_pos() == 0) {
-        if (D_800DD32C == 0) {
-            if (gCurrentLevelHeader->race_type == RACETYPE_BOSS) {
-                var_s0 = settings->courseFlagsPtr[levelId];
-                wizpig = FALSE;
-                if (gCurrentLevelHeader->world == WORLD_CENTRAL_AREA || gCurrentLevelHeader->world == WORLD_FUTURE_FUN_LAND) {
-                    wizpig = TRUE;
-                }
-                if (!(var_s0 & 1) || wizpig) {
-                    push_level_property_stack(levelId, entranceId, vehicleId, cutsceneId);
-                    if (settings->bosses & (1 << settings->worldId)) {
-                        cutsceneId = CUTSCENE_ID_UNK_7;
-                    } else {
-                        cutsceneId = CUTSCENE_ID_UNK_3;
-                    }
-                    if (wizpig) {
-                        cutsceneId = 0;
-                        if (var_s0 & 1) {
-                            D_800DD330 = 2;
-                        }
-                    }
-                    someAsset = (s8 *) get_misc_asset(ASSET_MISC_67);
-                    for (var_s0 = 0; levelId != someAsset[var_s0]; var_s0 += 2) { }
-                    levelId = someAsset[var_s0 + 1];
-                    entranceId = cutsceneId;
-                    if (cutsceneId == CUTSCENE_NONE) {
-                        stubbed_printf("BossLev problem\n");
-                    }
-                }
+    if (get_level_property_stack_pos() == 0 && D_800DD32C == 0) {
+        if (gCurrentLevelHeader->race_type == RACETYPE_BOSS) {
+            var_s0 = settings->courseFlagsPtr[levelId];
+            wizpig = FALSE;
+            if (gCurrentLevelHeader->world == WORLD_CENTRAL_AREA || gCurrentLevelHeader->world == WORLD_FUTURE_FUN_LAND) {
+                wizpig = TRUE;
             }
-            if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD) {
-                if (gCurrentLevelHeader->world > WORLD_CENTRAL_AREA && gCurrentLevelHeader->world < WORLD_FUTURE_FUN_LAND) {
-                    var_s0 = gCurrentLevelHeader->world;
-                    if (settings->keys & (1 << var_s0) && !(settings->cutsceneFlags & (CUTSCENE_DINO_DOMAIN_KEY << (var_s0 + 31)))) {
-                        // Trigger World Key unlocking Challenge Door cutscene.
-                        push_level_property_stack(levelId, entranceId, vehicleId, cutsceneId);
-                        settings->cutsceneFlags |= CUTSCENE_DINO_DOMAIN_KEY << (var_s0 + 31);
-                        someAsset = (s8 *) get_misc_asset(ASSET_MISC_68);
-                        levelId = someAsset[var_s0 - 1];
-                        entranceId = 0;
-                        cutsceneId = CUTSCENE_ID_UNK_5;
-                    }
-                }
-            }
-            if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD && gCurrentLevelHeader->world == WORLD_CENTRAL_AREA && 
-                !(settings->cutsceneFlags & CUTSCENE_WIZPIG_FACE) && settings->wizpigAmulet >= 4) {
-                // Trigger wizpig face cutscene
+            if (!(var_s0 & 1) || wizpig) {
                 push_level_property_stack(levelId, entranceId, vehicleId, cutsceneId);
-                entranceId = 0;
-                cutsceneId = CUTSCENE_NONE;
-                settings->cutsceneFlags |= CUTSCENE_WIZPIG_FACE;
-                levelId = ((s8 *) get_misc_asset(ASSET_MISC_68))[4];
+                if (settings->bosses & (1 << settings->worldId)) {
+                    cutsceneId = CUTSCENE_ID_UNK_7;
+                } else {
+                    cutsceneId = CUTSCENE_ID_UNK_3;
+                }
+                if (wizpig) {
+                    cutsceneId = 0;
+                    if (var_s0 & 1) {
+                        D_800DD330 = 2;
+                    }
+                }
+                someAsset = (s8 *) get_misc_asset(ASSET_MISC_67);
+                for (var_s0 = 0; levelId != someAsset[var_s0]; var_s0 += 2) { }
+                levelId = someAsset[var_s0 + 1];
+                entranceId = cutsceneId;
+                if (cutsceneId == CUTSCENE_NONE) {
+                    stubbed_printf("BossLev problem\n");
+                }
             }
+        }
+        if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD) {
+            if (gCurrentLevelHeader->world > WORLD_CENTRAL_AREA && gCurrentLevelHeader->world < WORLD_FUTURE_FUN_LAND) {
+                var_s0 = gCurrentLevelHeader->world;
+                if (settings->keys & (1 << var_s0) && !(settings->cutsceneFlags & (CUTSCENE_DINO_DOMAIN_KEY << (var_s0 + 31)))) {
+                    // Trigger World Key unlocking Challenge Door cutscene.
+                    push_level_property_stack(levelId, entranceId, vehicleId, cutsceneId);
+                    settings->cutsceneFlags |= CUTSCENE_DINO_DOMAIN_KEY << (var_s0 + 31);
+                    someAsset = (s8 *) get_misc_asset(ASSET_MISC_68);
+                    levelId = someAsset[var_s0 - 1];
+                    entranceId = 0;
+                    cutsceneId = CUTSCENE_ID_UNK_5;
+                }
+            }
+        }
+        if (gCurrentLevelHeader->race_type == RACETYPE_HUBWORLD && gCurrentLevelHeader->world == WORLD_CENTRAL_AREA && 
+            !(settings->cutsceneFlags & CUTSCENE_WIZPIG_FACE) && settings->wizpigAmulet >= 4) {
+            // Trigger wizpig face cutscene
+            push_level_property_stack(levelId, entranceId, vehicleId, cutsceneId);
+            entranceId = 0;
+            cutsceneId = CUTSCENE_NONE;
+            settings->cutsceneFlags |= CUTSCENE_WIZPIG_FACE;
+            levelId = ((s8 *) get_misc_asset(ASSET_MISC_68))[4];
         }
     }
     D_800DD32C = 0;
@@ -469,7 +467,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         load_asset_to_address(ASSET_LEVEL_HEADERS, (u32) gCurrentLevelHeader, offset, size);
     }
     free_from_memory_pool(gTempAssetTable);
-    set_ai_level((s8 *) &gCurrentLevelHeader->unk20);
+    set_ai_level((s8 *) &gCurrentLevelHeader->AILevelTable);
     func_8000CBC0();
     gMapId = levelId;
     for (var_s0 = 0; var_s0 < 7; var_s0++) {
@@ -705,7 +703,7 @@ void clear_audio_and_track(void) {
  * Set the skill level of the AI.
  * Apply offsets based on game mode.
 */
-void set_ai_level(s8 *arg0) {
+void set_ai_level(s8 *aiLevelTable) {
     s32 temp;
     UNUSED s32 temp2;
     s16 phi_v1;
@@ -731,7 +729,7 @@ void set_ai_level(s8 *arg0) {
     if (is_in_adventure_two()) {
         aiLevel += 5;
     }
-    aiLevel = arg0[aiLevel];
+    aiLevel = aiLevelTable[aiLevel];
     if (get_filtered_cheats() & CHEAT_ULTIMATE_AI) {
         aiLevel = 9;
     }

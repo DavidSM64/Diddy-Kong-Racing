@@ -47,7 +47,7 @@ LevelHeader *get_current_level_header(void);
 u8 get_total_level_header_count(void);
 char *get_level_name(s32 levelId);
 void clear_audio_and_track(void);
-void set_ai_level(s8 *arg0);
+void set_ai_level(s8 *aiLevelTable);
 void free_ai_behaviour_table(void);
 AIBehaviourTable *get_ai_behaviour_table(void);
 s8 is_two_player_adventure_race(void);

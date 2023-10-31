@@ -389,7 +389,7 @@ typedef struct LevelHeader {
   /* 0x08 */ f32 course_height;
   /* 0x0C */ u8 unkC[10];
   /* 0x16 */ u8 unk16[10];
-  /* 0x20 */ s32 *unk20;
+  /* 0x20 */ s8 *AILevelTable;
 
   /* 0x24 */ u8 pad24[6];
   /* 0x2A */ u8 unk2A;
