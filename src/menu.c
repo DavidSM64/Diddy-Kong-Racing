@@ -3788,7 +3788,7 @@ void func_80085B9C(UNUSED s32 updateRate) {
     if (drawTexturedRectangle) {
         var_s2 = (s32) D_80126BEC;
         temp = var_s2;
-        sp5C = 80- (s32) ((D_80126BEC - (f32) var_s2) * 164.0f);
+        sp5C = 80 - (s32) ((D_80126BEC - (f32) var_s2) * 164.0f);
         var_s1 = sp5C;
         while (var_s1 < videoWidth && temp < D_80126A00) {
             func_800853D0(&D_80126A04[temp], var_s1, 144);
