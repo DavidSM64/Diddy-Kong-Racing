@@ -1090,7 +1090,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
     Object_68 *obj68;
     LevelObjectEntryCommon ttSWBody;
     LevelObjectEntryCommon ttSWArms;
-    s32 temp_a0_2;
+    UNUSED s32 temp_a0_2;
     s32 temp_t6;
     u16 stopwatchEndSoundID;
     s32 recordTime;
@@ -1098,7 +1098,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
     f32 posX;
     f32 posY;
     f32 posZ;
-    f32 new_var;
+    UNUSED f32 new_var;
     char *SWMessage[3];
     
     curRacer = &playerRacerObj->unk64->racer;
@@ -1317,7 +1317,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
             draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28, D_80127190, SWMessage[0], ALIGN_MIDDLE_CENTER);
             draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28, D_80127190 + 14, SWMessage[1], ALIGN_MIDDLE_CENTER);
             draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28, D_80127190 + 28, SWMessage[2], ALIGN_MIDDLE_CENTER);
-            update_colour_cycle((s8 *)D_80127194, updateRate);
+            update_colour_cycle(D_80127194, updateRate);
             set_kerning(0);
         }
         func_80068508(0);

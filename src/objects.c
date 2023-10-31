@@ -748,7 +748,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         curObj = gObjPtrList[i2];
         if (!(curObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             if (curObj->behaviorId == BHV_SETUP_POINT) {
-                if (arg1 == curObj->properties.setupPoint.unk4) {
+                if (arg1 == (u32) curObj->properties.setupPoint.unk4) {
                     if (curObj->properties.setupPoint.unk0 < 8) {
                         spF4[curObj->properties.setupPoint.unk0] = curObj->segment.trans.x_position;
                         spD4[curObj->properties.setupPoint.unk0] = curObj->segment.trans.y_position;
@@ -844,7 +844,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             }
         }
     }
-    if (((!(&curObj->segment.trans)) && (!(&curObj->segment.trans))) && (!(&curObj->segment.trans))) {}
+    if (((!(curObj->segment.trans.y_rotation)) && (!(curObj->segment.trans.y_rotation))) && (!(curObj->segment.trans.y_rotation))) {}
     entry = allocate_from_main_pool_safe(sizeof(LevelObjectEntry_Unk8000CC7C), COLOUR_TAG_YELLOW);
     entry->unkC = 0;
     entry->unkA = 0;
@@ -934,7 +934,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             newRacerObj->segment.level_entry = NULL;
             curRacer->vehicleID = vehicle;
             curRacer->vehicleIDPrev = vehicle;
-            if (sp127 != -1 && sp127 != vehicle) {
+            if (sp127 != -1 && sp127 != (s32) vehicle) {
                 D_8011AD20 = 1;
             }
             sp127 = vehicle;
