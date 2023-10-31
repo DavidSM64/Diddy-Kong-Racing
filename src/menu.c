@@ -208,7 +208,7 @@ u8 sControllerPakDataPresent[MAXCONTROLLERS]; //Flag to see if there's data pres
 char *D_80126A64;
 s32 gMenuOption; //sCurrentControllerIndex?
 s32 D_80126A6C;
-s32 D_80126A70;
+char **gDeviceStatusStrings;
 s32 D_80126A74;
 s32 D_80126A78;
 s32 D_80126A7C;
@@ -487,8 +487,8 @@ u32 gContPakSaveBgColours[MAXCONTROLLERS] = {
     COLOUR_RGBA32(64, 255, 64, 255)   // Green for controller 4
 };
 
-s32 D_800DFADC = 0;
-s32 D_800DFAE0 = 0;
+SIDeviceStatus D_800DFADC = CONTROLLER_PAK_GOOD;
+s32 gControllerIndex = 0;
 
 // Strings related to the controller pak.
 char *gContPakNotPresentStrings[6] = { 0, 0, 0, 0, 0, 0 };
@@ -502,6 +502,7 @@ char *gContPakRumbleDetectedStrings[6] = { 0, 0, 0, 0, 0, 0 };
 char *gContPakSwitchToRumbleStrings[6] = { 0, 0, 0, 0, 0, 0 };
 char *gContPakNeed2ndAdvStrings[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
+//Associated with SIDeviceStatus enum values.
 char **gContPakStrings[11] = {
     NULL, gContPakNotPresentStrings, gContPakCorruptDataRepairStrings, gContPakDamagedStrings, gContPakFullStrings, gContPakDiffContStrings, gContPakNoRoomForGhostsStrings, gContPakRumbleDetectedStrings, gContPakSwitchToRumbleStrings, gContPakCorruptDataStrings, gContPakNeed2ndAdvStrings
 };
@@ -3817,8 +3818,8 @@ void func_80085B9C(UNUSED s32 updateRate) {
     func_80080E6C();
 }
 
-s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, s32 fileSize, UNUSED s32 arg5) {
-    s32 ret = 0;
+SIDeviceStatus func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, s32 fileSize, UNUSED s32 arg5) {
+    SIDeviceStatus ret = CONTROLLER_PAK_GOOD;
 
     if (*arg1 != 0) {
         ret = get_free_space(controllerIndex, &arg2[*arg3].fileSize, &sControllerPakNotesFree[controllerIndex]);
@@ -3830,15 +3831,15 @@ s32 func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, 
             }
         } else {
             SIDeviceStatus status = ret & 0xFF; //The upper bytes could be controllerIndex, so focus on the status
-            if ((*arg1 < 0) && status == RUMBLE_PAK) {
+            if ((*arg1 < 0) && status == CONTROLLER_PAK_RUMBLE_PAK_FOUND) {
                 *arg1 = 0;
-                ret = 0;
+                ret = CONTROLLER_PAK_GOOD;
             } else if
                 (status != CONTROLLER_PAK_WITH_BAD_ID &&
                  status != CONTROLLER_PAK_INCONSISTENT &&
                  status != CONTROLLER_PAK_BAD_DATA)
             {
-                ret = 0;
+                ret = CONTROLLER_PAK_GOOD;
             }
         }
     }
@@ -3955,7 +3956,7 @@ SIDeviceStatus func_800862C4(void) {
                     }
                 }
                 packDirectoryFree();
-            } else if (temp == RUMBLE_PAK) {
+            } else if (temp == CONTROLLER_PAK_RUMBLE_PAK_FOUND) {
                 D_80126A14 = 1;
                 if (D_80126A18 < 0) {
                     result = CONTROLLER_PAK_GOOD;
@@ -3964,7 +3965,7 @@ SIDeviceStatus func_800862C4(void) {
                     D_80126A10 = 1;
                     D_80126A6C = 0;
                 }
-            } else if (temp == NO_CONTROLLER_PAK) {
+            } else if (temp == CONTROLLER_PAK_NOT_FOUND) {
                 result = CONTROLLER_PAK_GOOD;
             } else if (D_80126A18 < 0 && temp == CONTROLLER_PAK_CHANGED) {
                 numAttempts = 0;
@@ -3975,8 +3976,8 @@ SIDeviceStatus func_800862C4(void) {
     return result;
 }
 
-s32 func_800867D4(void) {
-    s32 ret = 0;
+SIDeviceStatus func_800867D4(void) {
+    SIDeviceStatus ret = CONTROLLER_PAK_GOOD;
 
     D_80126A00 = 0;
 
@@ -4027,7 +4028,53 @@ void func_80086A48(s32 arg0) {
 }
 
 GLOBAL_ASM("asm/non_matchings/menu/func_80086AFC.s")
-GLOBAL_ASM("asm/non_matchings/menu/func_800871D8.s")
+
+void func_800871D8(SIDeviceStatus deviceStatus) {
+    s32 i;
+    s32 j;
+    s32 k;
+    s32 y;
+    char *text;
+    
+    gControllerIndex = (deviceStatus >> 30) & 3; //Gets the controller index from the device status.
+    deviceStatus &= 0x3FFFFFFF; //Removes the controller index from the device status value.
+    gDeviceStatusStrings = gContPakStrings[deviceStatus];
+    D_800DFADC = deviceStatus;
+    D_80126A74 = 0;
+    
+    for (k = 0; gDeviceStatusStrings[k] != NULL; k++) {}
+    k++;
+    for (; gDeviceStatusStrings[k] != NULL; D_80126A74++, k++) {}
+    
+    D_80126A78 = D_80126A74 - 1;
+    
+    assign_dialogue_box_id(7);
+    set_current_dialogue_box_coords(7, 40, SCREEN_HEIGHT_HALF - (((k * 16) + 44) >> 1), 280, (((k * 16) + 44) >> 1) + SCREEN_HEIGHT_HALF);
+    set_current_dialogue_background_colour(7, 0, 0, 0, 160);
+    set_current_text_background_colour(7, 0, 0, 0, 0);
+    set_dialogue_font(7, 2);
+    set_current_text_colour(7, 255, 255, 255, 0, 255);
+    text = gMenuText[ASSET_MENU_TEXT_PAKERROR];
+    if (gDeviceStatusStrings == gContPakRumbleDetectedStrings || gDeviceStatusStrings == gContPakSwitchToRumbleStrings) {
+        text = gMenuText[ASSET_MENU_TEXT_CAUTION];
+    } else if (gDeviceStatusStrings == gContPakNeed2ndAdvStrings) {
+        text = gMenuText[ASSET_MENU_TEXT_GAMEERROR];
+    }
+    render_dialogue_text(7, POS_CENTRED, 20, text, 1, ALIGN_MIDDLE_CENTER);
+    y = 52;
+    i = 0;
+    set_dialogue_font(7, ASSET_FONTS_FUNFONT);
+    for (; gDeviceStatusStrings[i] != NULL; i++, y += 16) {
+        render_dialogue_text(7, POS_CENTRED, y, gDeviceStatusStrings[i], gControllerIndex + 1, ALIGN_MIDDLE_CENTER);
+    }
+    i++;
+    y += 16;
+    for (j = 0; gDeviceStatusStrings[i] != NULL; i++, j++, y += 16) {
+        D_80126A80[j] = render_dialogue_text(7, POS_CENTRED, y, gDeviceStatusStrings[i], 1, ALIGN_MIDDLE_CENTER);
+    }
+    gMenuOptionCount |= 8;
+}
+
 
 s32 func_800874D0(s32 buttonsPressed, s32 arg1) {
     s32 ret;
@@ -4036,7 +4083,7 @@ s32 func_800874D0(s32 buttonsPressed, s32 arg1) {
     if (buttonsPressed & B_BUTTON) {
         gMenuOptionCount = 0;
         if (D_80126A10 != D_80126A14) {
-            func_800871D8(8);
+            func_800871D8(CONTROLLER_PAK_SWITCH_TO_RUMBLE);
         } else {
             play_sound_global(SOUND_MENU_BACK3, NULL);
             ret = -1;
@@ -4115,17 +4162,17 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
                 break;
             case 2:
                 switch (D_800DFADC) {
-                    case 5:
+                    case CONTROLLER_PAK_CHANGED:
                         gOpacityDecayTimer = 5;
                         gMenuOptionCount = 1;
                         break;
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 9:
+                    case CONTROLLER_PAK_NOT_FOUND:
+                    case CONTROLLER_PAK_INCONSISTENT:
+                    case CONTROLLER_PAK_WITH_BAD_ID:
+                    case CONTROLLER_PAK_BAD_DATA:
                         D_80126A18 = 0;
                         break;
-                    case 7:
+                    case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
                         D_80126A18 = -1;
                         break;
                     default:
@@ -4135,17 +4182,17 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
                 break;
             case 4:
                 switch (D_800DFADC) {
-                    case 1:
-                    case 5:
+                    case CONTROLLER_PAK_NOT_FOUND:
+                    case CONTROLLER_PAK_CHANGED:
                         gOpacityDecayTimer = 5;
                         gMenuOptionCount = 1;
                         break;
-                    case 2:
-                    case 3:
-                    case 9:
+                    case CONTROLLER_PAK_INCONSISTENT:
+                    case CONTROLLER_PAK_WITH_BAD_ID:
+                    case CONTROLLER_PAK_BAD_DATA:
                         D_80126A1C = 0;
                         break;
-                    case 7:
+                    case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
                         D_80126A1C = -1;
                         break;
                     default:
@@ -4155,16 +4202,16 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
                 break;
             case 7:
                 switch (D_800DFADC) {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 5:
-                    case 7:
+                    case CONTROLLER_PAK_NOT_FOUND:
+                    case CONTROLLER_PAK_INCONSISTENT:
+                    case CONTROLLER_PAK_WITH_BAD_ID:
+                    case CONTROLLER_PAK_CHANGED:
+                    case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
                         gOpacityDecayTimer = 5;
                         gMenuOptionCount = 1;
                         break;
-                    case 9:
-                    case 10:
+                    case CONTROLLER_PAK_BAD_DATA:
+                    case CONTROLLER_PAK_NEED_SECOND_ADVENTURE:
                         gMenuOptionCount = 4;
                         break;
                 }
@@ -4175,7 +4222,7 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
         gMenuOptionCount &= ~8;
         switch (D_800DFADC) {
             case CONTROLLER_PAK_WITH_BAD_ID:
-                reformat_controller_pak(D_800DFAE0);
+                reformat_controller_pak(gControllerIndex);
                 if (sp1C == 4) {
                     D_80126A1C = 0;
                 } else if (sp1C == 7) {
@@ -4184,14 +4231,14 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
                 break;
             case CONTROLLER_PAK_INCONSISTENT:
             case CONTROLLER_PAK_BAD_DATA:
-                repair_controller_pak(D_800DFAE0);
+                repair_controller_pak(gControllerIndex);
                 if (sp1C == 4) {
                     D_80126A1C = 1;
                 } else if (sp1C == 2) {
                     D_80126A18 = 1;
                 }
                 break;
-            case RUMBLE_PAK:
+            case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
                 if (sp1C == 4) {
                     D_80126A1C = -1;
                 } else {
@@ -4210,7 +4257,7 @@ s32 func_80087734(s32 buttonsPressed, s32 yAxis) {
 }
 
 s32 menu_save_options_loop(s32 updateRate) {
-    s32 result;
+    SIDeviceStatus result;
     s32 buttonsPressed;
     s32 i;
     s32 yAxis;
@@ -4280,7 +4327,7 @@ s32 menu_save_options_loop(s32 updateRate) {
             D_80126BE4 = 0;
             D_80126BEC = 0.0f;
             result = func_800867D4();
-            if (result != 0) {
+            if (result != CONTROLLER_PAK_GOOD) {
                 func_800871D8(result);
             } else {
                 gMenuOptionCount = 5;
@@ -4296,7 +4343,7 @@ s32 menu_save_options_loop(s32 updateRate) {
             gOpacityDecayTimer++;
             if (gOpacityDecayTimer >= 4) {
                 result = func_80086AFC();
-                if (result != 0) {
+                if (result != CONTROLLER_PAK_GOOD) {
                     func_800871D8(result);
                 } else {
                     gOpacityDecayTimer = 6;
@@ -8960,19 +9007,19 @@ void func_80095624(s32 status) {
     // status may contain controllerIndex in it's upper bits
     // so grab the lower bits for the SIDeviceStatus
     switch (status & 0xFF) {
-        case NO_CONTROLLER_PAK:
+        case CONTROLLER_PAK_NOT_FOUND:
         case CONTROLLER_PAK_CHANGED: /*Required to match*/ \
             D_80126C1C = sNoControllerPakMenuText;
             break;
         case CONTROLLER_PAK_FULL:
-        case CONTROLLER_PAK_UNK6: /*Required to match*/ \
+        case CONTROLLER_PAK_NO_ROOM_FOR_GHOSTS: /*Required to match*/ \
             D_80126C1C = sControllerPakFullMenuText;
             break;
-        case RUMBLE_PAK:
+        case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
             // If you wish to use / the Controller Pak / insert it now!
             D_80126C1C = sInsertControllerPakMenuText;
             break;
-        case CONTROLLER_PAK_UNK8:
+        case CONTROLLER_PAK_SWITCH_TO_RUMBLE:
             //If you wish to use / the Rumble Pak / insert it now!
             D_80126C1C = sInsertRumblePakMenuText;
             break;
@@ -11859,17 +11906,17 @@ s32 tt_menu_loop(void) {
                     case CONTROLLER_PAK_GOOD:
                         sCurrentMenuID = gPreviousMenuID;
                         break;
-                    case RUMBLE_PAK:
+                    case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
                         sCurrentMenuID = TT_MENU_INSERT_CONT_PAK;
                         break;
-                    case NO_CONTROLLER_PAK:
+                    case CONTROLLER_PAK_NOT_FOUND:
                         // NO CONTROLLER PAK
                         // If you wish to change / Controller Pak or Rumble Pak, / please do so now.
                         gTTSaveGhostPakErrorText = sNoControllerPakMenuText;
                         sCurrentMenuID = TT_MENU_CONT_PAK_ERROR_1;
                         break;
                     case CONTROLLER_PAK_FULL:
-                    case CONTROLLER_PAK_UNK6:
+                    case CONTROLLER_PAK_NO_ROOM_FOR_GHOSTS:
                         // CONTROLLER PAK FULL
                         // If you wish to change / Controller Pak or Rumble Pak, / please do so now.
                         gTTSaveGhostPakErrorText = sControllerPakFullMenuText;
@@ -11885,7 +11932,7 @@ s32 tt_menu_loop(void) {
                     case CONTROLLER_PAK_INCONSISTENT:
                     case CONTROLLER_PAK_WITH_BAD_ID:
                     case CONTROLLER_PAK_CHANGED:
-                    case CONTROLLER_PAK_UNK8:
+                    case CONTROLLER_PAK_SWITCH_TO_RUMBLE:
                     default:
                         // BAD CONTROLLER PAK
                         // If you wish to change / Controller Pak or Rumble Pak, / please do so now.
