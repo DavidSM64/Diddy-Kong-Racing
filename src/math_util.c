@@ -83,7 +83,7 @@ GLOBAL_ASM("asm/math_util/s32_matrix_to_s16_matrix.s")
 #endif
 
 #ifdef NON_MATCHING
-void f32_matrix_to_s32_matrix(Matrix *input, Matrix *output) {
+void f32_matrix_to_s32_matrix(Matrix *input, MatrixS *output) {
     s32 i;
     for(i = 0; i < 4; i++) {
         (*output)[i][0] = (s32) ((*input)[i][0] * 65536.0f);
