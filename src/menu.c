@@ -9003,7 +9003,7 @@ void func_80094D28(UNUSED s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/menu/func_80094D28.s")
 #endif
 
-void func_80095624(s32 status) {
+void func_80095624(SIDeviceStatus status) {
     // status may contain controllerIndex in it's upper bits
     // so grab the lower bits for the SIDeviceStatus
     switch (status & 0xFF) {
@@ -9189,7 +9189,7 @@ s32 func_80095728(Gfx **dlist, MatrixS **matrices, Vertex **vertices, s32 update
                         sp54 = 1;
                     } else {
                         if (D_80126C1C == sInsertControllerPakMenuText) {
-                            func_80095624(8);
+                            func_80095624(CONTROLLER_PAK_SWITCH_TO_RUMBLE);
                         } else {
                             D_80126C1C = NULL;
                         }

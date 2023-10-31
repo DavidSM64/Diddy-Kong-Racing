@@ -378,7 +378,7 @@ Object *func_8001B2E0(void);
 s32 is_time_trial_ghost(Object* obj);
 Object *get_time_trial_ghost(void);
 s32 unbeaten_staff_time(void);
-s32 func_8001B738(s32 controllerIndex);
+SIDeviceStatus func_8001B738(s32 controllerIndex);
 u8 has_ghost_to_save(void);
 void set_ghost_none(void);
 f32 func_8001B834(Object_Racer *racer1, Object_Racer *racer2);

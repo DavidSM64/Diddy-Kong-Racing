@@ -9,6 +9,7 @@
 #include "asset_loading.h"
 #include "textures_sprites.h"
 #include "racer.h"
+#include "save_data.h"
 
 /************ .data ************/
 

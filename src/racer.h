@@ -4,6 +4,7 @@
 #include "types.h"
 #include "structs.h"
 #include "level_object_entries.h"
+#include "save_data.h"
 
 #define SEGMENT_NONE -1 // If the level in question does not use segmentation.
 
@@ -188,7 +189,7 @@ s32 func_800599A8(void);
 s32 func_800599B8(s32 arg0, s32 mapId, s16 arg2, s16 *arg3, s16 *arg4);
 s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime);
 void free_tt_ghost_data(void);
-s32 func_80059B7C(s32 controllerIndex, s32 mapId, s16 arg2, s16 arg3, s16 arg4);
+SIDeviceStatus func_80059B7C(s32 controllerIndex, s32 mapId, s16 arg2, s16 arg3, s16 arg4);
 s16 func_80059E20(void);
 void disable_racer_input(void);
 void racer_set_dialogue_camera(void);

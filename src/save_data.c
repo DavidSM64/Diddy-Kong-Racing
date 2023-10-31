@@ -1310,12 +1310,12 @@ typedef struct GhostData {
 GLOBAL_ASM("asm/non_matchings/save_data/func_80074EB8.s")
 
 #ifdef NON_EQUIVALENT
-s32 func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, GhostHeader *ghostData) {
+SIDeviceStatus func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, GhostHeader *ghostData) {
     GhostHeaderAlt *sp70;
     s32 sp58;
     s32 fileSize;
     s32 fileNumber;
-    s32 ret;
+    SIDeviceStatus ret;
     s32 ghostIndex;
     s32 i;
     GhostHeader *ghostFileData;

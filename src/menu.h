@@ -460,7 +460,7 @@ s32 menu_character_select_loop(s32 updateRate);
 s32 menu_caution_loop(s32 updateRate);
 void func_8008DC7C(UNUSED s32 updateRate);
 s32 menu_adventure_track_loop(s32 updateRate);
-void func_80095624(s32 status);
+void func_80095624(SIDeviceStatus status);
 s32 menu_boot_loop(s32 arg0);
 void menu_magic_codes_init(void);
 s32 menu_game_select_loop(s32 updateRate);

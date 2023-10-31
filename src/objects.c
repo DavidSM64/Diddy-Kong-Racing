@@ -4281,7 +4281,7 @@ s32 func_8001B668(s32 arg0) {
     return func_800599B8(arg0, get_current_map_id(), D_8011AE82, NULL, NULL);
 }
 
-s32 func_8001B738(s32 controllerIndex) {
+SIDeviceStatus func_8001B738(s32 controllerIndex) {
     return func_80059B7C(controllerIndex, func_800599A8(), D_800DC728, D_800DC72C, D_800DC724);
 }
 
