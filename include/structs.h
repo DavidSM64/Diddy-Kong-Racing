@@ -67,12 +67,12 @@ typedef struct Vec4f {
 typedef struct SoundMask {
     /* 0x00 */ Vec3f pos;
     /* 0x0C */ u16 soundId;
-    /* 0x0E */ u8 unkE;
-    /* 0x0F */ u8 unkF;
+    /* 0x0E */ u8 volume;
+    /* 0x0F */ u8 pitch;
     /* 0x10 */ u8 unk10;
     /* 0x11 */ u8 unk11;
     /* 0x12 */ u8 unk12;
-    /* 0x14 */ s32 unk14;
+    /* 0x14 */ s32 distance;
     /* 0x18 */ s32 unk18;
     /* 0x1C */ struct SoundMask **soundMask;
     /* 0x20 */ u8 unk20;

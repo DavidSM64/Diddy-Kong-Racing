@@ -5,11 +5,11 @@ glabel D_800E4F10
 .text
 glabel func_80008174
 /* 008D74 80008174 27BDFFC0 */  addiu $sp, $sp, -0x40
-/* 008D78 80008178 3C038012 */  lui   $v1, %hi(D_80119C4C) # $v1, 0x8012
-/* 008D7C 8000817C 3C048012 */  lui   $a0, %hi(D_80119C48) # $a0, 0x8012
+/* 008D78 80008178 3C038012 */  lui   $v1, %hi(gFreeMasks) # $v1, 0x8012
+/* 008D7C 8000817C 3C048012 */  lui   $a0, %hi(gSoundMaskHeap) # $a0, 0x8012
 /* 008D80 80008180 300200FF */  andi  $v0, $zero, 0xff
-/* 008D84 80008184 24639C4C */  addiu $v1, %lo(D_80119C4C) # addiu $v1, $v1, -0x63b4
-/* 008D88 80008188 8C849C48 */  lw    $a0, %lo(D_80119C48)($a0)
+/* 008D84 80008184 24639C4C */  addiu $v1, %lo(gFreeMasks) # addiu $v1, $v1, -0x63b4
+/* 008D88 80008188 8C849C48 */  lw    $a0, %lo(gSoundMaskHeap)($a0)
 /* 008D8C 8000818C 28410028 */  slti  $at, $v0, 0x28
 /* 008D90 80008190 AFBF003C */  sw    $ra, 0x3c($sp)
 /* 008D94 80008194 AFB60038 */  sw    $s6, 0x38($sp)
@@ -23,8 +23,8 @@ glabel func_80008174
 /* 008DB4 800081B4 E7B4001C */  swc1  $f20, 0x1c($sp)
 /* 008DB8 800081B8 1020000E */  beqz  $at, .L800081F4
 /* 008DBC 800081BC A0600000 */   sb    $zero, ($v1)
-/* 008DC0 800081C0 3C058012 */  lui   $a1, %hi(D_80119C50) # $a1, 0x8012
-/* 008DC4 800081C4 24A59C50 */  addiu $a1, %lo(D_80119C50) # addiu $a1, $a1, -0x63b0
+/* 008DC0 800081C0 3C058012 */  lui   $a1, %hi(gSoundMaskHeapFree) # $a1, 0x8012
+/* 008DC4 800081C4 24A59C50 */  addiu $a1, %lo(gSoundMaskHeapFree) # addiu $a1, $a1, -0x63b0
 .L800081C8:
 /* 008DC8 800081C8 8CAE0000 */  lw    $t6, ($a1)
 /* 008DCC 800081CC 00027880 */  sll   $t7, $v0, 2
@@ -38,15 +38,15 @@ glabel func_80008174
 /* 008DEC 800081EC 1420FFF6 */  bnez  $at, .L800081C8
 /* 008DF0 800081F0 A0690000 */   sb    $t1, ($v1)
 .L800081F4:
-/* 008DF4 800081F4 3C14800E */  lui   $s4, %hi(D_800DC6E0) # $s4, 0x800e
-/* 008DF8 800081F8 2694C6E0 */  addiu $s4, %lo(D_800DC6E0) # addiu $s4, $s4, -0x3920
+/* 008DF4 800081F4 3C14800E */  lui   $s4, %hi(gUsedMasks) # $s4, 0x800e
+/* 008DF8 800081F8 2694C6E0 */  addiu $s4, %lo(gUsedMasks) # addiu $s4, $s4, -0x3920
 /* 008DFC 800081FC 968B0000 */  lhu   $t3, ($s4)
 /* 008E00 80008200 244AFFFF */  addiu $t2, $v0, -1
 /* 008E04 80008204 A06A0000 */  sb    $t2, ($v1)
 /* 008E08 80008208 19600014 */  blez  $t3, .L8000825C
 /* 008E0C 8000820C 00008825 */   move  $s1, $zero
-/* 008E10 80008210 3C128012 */  lui   $s2, %hi(D_80119C44) # $s2, 0x8012
-/* 008E14 80008214 26529C44 */  addiu $s2, %lo(D_80119C44) # addiu $s2, $s2, -0x63bc
+/* 008E10 80008210 3C128012 */  lui   $s2, %hi(gSoundMaskHeapUsed) # $s2, 0x8012
+/* 008E14 80008214 26529C44 */  addiu $s2, %lo(gSoundMaskHeapUsed) # addiu $s2, $s2, -0x63bc
 /* 008E18 80008218 00008025 */  move  $s0, $zero
 .L8000821C:
 /* 008E1C 8000821C 8E4C0000 */  lw    $t4, ($s2)
@@ -97,7 +97,7 @@ glabel func_80008174
 .L800082C4:
 /* 008EC4 800082C4 16C20003 */  bne   $s6, $v0, .L800082D4
 /* 008EC8 800082C8 00000000 */   nop   
-/* 008ECC 800082CC 0C000638 */  jal   func_800018E0
+/* 008ECC 800082CC 0C000638 */  jal   music_jingle_stop
 /* 008ED0 800082D0 00000000 */   nop   
 .L800082D4:
 /* 008ED4 800082D4 AE200178 */  sw    $zero, 0x178($s1)

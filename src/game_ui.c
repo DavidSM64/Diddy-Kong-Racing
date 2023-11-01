@@ -465,7 +465,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                     if (gHudLevelHeader->race_type & RACETYPE_CHALLENGE || gHudLevelHeader->race_type == RACETYPE_DEFAULT || gHudLevelHeader->race_type == RACETYPE_HORSESHOE_GULCH || gHudLevelHeader->race_type == RACETYPE_BOSS) {
                         D_800E2770[0].unk2 = 0x7F;
                         D_800E2770[1].unk2 = 0x7F;
-                        func_80001844();
+                        music_stop();
                         func_800012E8();
                         play_music(SEQUENCE_RACE_START_FANFARE);
                         set_sound_channel_count(12);
@@ -1133,7 +1133,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
             if ((gStopwatchFaceID == 4) && ((get_race_countdown()) || (!music_is_playing()))) {
                 ttSWBodyObject->segment.animFrame = 16;
             } else if (gStopwatchFaceID == 4) {
-                posX = audio_get_chr_select_anim_frac();
+                posX = music_animation_fraction();
                 temp_t6 = (obj68->objModel->animations[gStopwatchFaceID].unk4 - 1) << 4;
                 if (posX == -1.0) {
                     ttSWBodyObject->segment.animFrame = 0.0;

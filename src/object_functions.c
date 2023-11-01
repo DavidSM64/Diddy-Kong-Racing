@@ -665,12 +665,12 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                         gfxData->unk0 = 140;
                         set_sndfx_player_voice_limit(16);
                         set_music_fade_timer(-8);
-                        play_sequence(SEQUENCE_NO_TROPHY_FOR_YOU);
+                        music_jingle_play(SEQUENCE_NO_TROPHY_FOR_YOU);
                     }
                 }
             }
         }
-        if (gfxData->unk0 && func_80001C08() == 0) {
+        if (gfxData->unk0 && music_jingle_playing() == 0) {
             if (updateRate < gfxData->unk0) {
                 gfxData->unk0 -= updateRate;
             } else {
@@ -1342,7 +1342,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             }
             slowly_change_fog(PLAYER_ONE, tt->fogR, tt->fogG, tt->fogB, tt->fogNear, tt->fogFar, 180);
             play_music(header->music);
-            func_80001074(header->instruments);
+            music_dynamic_reset(header->instruments);
             racer->vehicleSound = func_80004B40(racer->characterId, racer->vehicleID);
         }
         obj->properties.npc.timer = 180;
@@ -2436,7 +2436,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             slowly_change_fog(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
             set_music_player_voice_limit(levelHeader->voiceLimit);
             play_music(levelHeader->music);
-            func_80001074(levelHeader->instruments);
+            music_dynamic_reset(levelHeader->instruments);
             func_80008168();
         }
         if (dialogueID & 0x80) {
@@ -2599,7 +2599,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             slowly_change_fog(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
             set_music_player_voice_limit(levelHeader->voiceLimit);
             play_music(levelHeader->music);
-            func_80001074(levelHeader->instruments);
+            music_dynamic_reset(levelHeader->instruments);
             init_racer_for_challenge(racer->vehicleID);
             telepoint = find_furthest_telepoint(obj->segment.trans.x_position, obj->segment.trans.z_position);
             if (telepoint != NULL) {
@@ -3216,7 +3216,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
                     set_music_fade_timer(-8);
                     ttDoor->unk8 = 140;
                     set_sndfx_player_voice_limit(16);
-                    play_sequence(SEQUENCE_NO_TROPHY_FOR_YOU);
+                    music_jingle_play(SEQUENCE_NO_TROPHY_FOR_YOU);
                     set_current_text(ttDoor->unk13 & 0xFF);
                 }
                 ttDoor->unkC = 300;
@@ -3226,7 +3226,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
             }
         }
     }
-    if (ttDoor->unk8 && func_80001C08() == 0) {
+    if (ttDoor->unk8 && music_jingle_playing() == 0) {
         if (updateRate < ttDoor->unk8) {
             ttDoor->unk8 -= updateRate;
         } else {
@@ -3913,7 +3913,7 @@ void obj_loop_silvercoin(Object *obj, s32 updateRate) {
                         obj->properties.npc.action |= SILVER_COIN_COLLECTED << racer->playerIndex;
                         obj->properties.npc.timer = 16;
                         obj->segment.trans.flags |= OBJ_FLAGS_INVIS_PLAYER1 << racer->playerIndex;
-                        play_sequence(SEQUENCE_SILVER_COIN_1 + racer->silverCoinCount);
+                        music_jingle_play(SEQUENCE_SILVER_COIN_1 + racer->silverCoinCount);
                         racer->silverCoinCount++;
                     }
                 }
@@ -3966,7 +3966,7 @@ void obj_loop_worldkey(Object *worldKeyObj, s32 updateRate) {
                 Object_WorldKey *obj64 = &playerObj->unk64->world_key;
                 if (obj64->unk0 != -1) {
                     // Player has grabbed the key!
-                    play_sequence(SEQUENCE_KEY_COLLECT);
+                    music_jingle_play(SEQUENCE_KEY_COLLECT);
                     settings = get_settings();
                     settings->keys |= 1 << worldKeyObj->properties.worldKey.keyID; // Set key flag
                     free_object(worldKeyObj);   // Makes the key unload.
@@ -4491,7 +4491,7 @@ void play_rocket_trailing_sound(Object *obj, struct Object_Weapon *weapon, u16 s
             diffY = racer->segment.trans.y_position - obj->segment.trans.y_position;
             diffZ = racer->segment.trans.z_position - obj->segment.trans.z_position;
             distance = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
-            if (distance <= func_80001CB8(soundID)) {
+            if (distance <= sound_distance(soundID)) {
                 shouldPlaySound = TRUE;
             }
         }
@@ -4551,7 +4551,7 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     obj64->unk5 = entry->unkD;
     obj64->unkD = entry->unk10;
     obj64->soundMask = NULL;
-    if (ALBankFile_80115D14_GetSoundDecayTime(obj64->soundId)) {
+    if (gSoundEffectsTable_GetSoundDecayTime(obj64->soundId)) {
         func_8000974C(obj64->soundId, entry->common.x, entry->common.y, entry->common.z,
             9, obj64->unk5, obj64->unk4, obj64->unk2, obj64->unkC,
             obj64->unk6, obj64->unkD, &obj64->soundMask);

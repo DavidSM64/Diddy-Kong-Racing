@@ -5,6 +5,8 @@
 #include "audio_internal.h"
 #include "sched.h"
 
+#define AUDIO_CHANNELS 16
+
 enum AudioVolumeBehaviour {
     VOLUME_NORMAL,
     VOLUME_LOWER,
@@ -13,23 +15,23 @@ enum AudioVolumeBehaviour {
 };
 
 /* Size: 0x0A bytes */
-typedef struct unk80115D18 {
- u16 unk0;
- u8 unk2;
+typedef struct SoundData {
+ u16 soundBite; // Audio file index.
+ u8 volume; // Multiplied by 256. 128 = 32768, max volume.
  u8 unk3;
- u8 unk4;
+ u8 pitch; // Fractional. 100 = 1.0f.
  u8 unk5;
- u16 unk6;
+ u16 distance; // Ingame units distance, same as any other.
  u8 unk8;
  u8 unk9;
-} unk80115D18;
+} SoundData;
 
 
 /* Size: 0x03 bytes */
 typedef struct unk80115D1C {
-    u8 unk0;
-    u8 unk1;
-    u8 unk2;
+    u8 volume;
+    u8 tempo;
+    u8 reverb;
 } unk80115D1C;
 
 /* Size: 0x08 bytes */
@@ -49,8 +51,8 @@ u8 alCSPGetChlVol(ALCSPlayer *seqp, u8 chan); //lib/src/al
 void func_80063BA0(ALSeqPlayer *seqp, u8 chan, ALPan pan); //lib/src/unknown_0647A0.c
 u8 func_80063C00(ALCSPlayer *seqp, u8 chan); //lib/src/mips1/al/unknown_064800.c
 u8 alSeqpGetChlFXMix(ALSeqPlayer *seqp, u8 chan); //lib/src/al/alSeqpGetChlFXMix.c
-void func_8006492C(u8 arg0); //lib/src/mips1/al/reverb.c
-u8 func_8006493C(); //lib/src/mips1/al/reverb.c
+void alFxReverbSet(u8 arg0); //lib/src/mips1/al/reverb.c
+u8 _alFxEnabled(); //lib/src/mips1/al/reverb.c
 void alHeapInit(ALHeap *hp, u8 *base, s32 len); //lib/src/al/alHeapInit.c
 void alBnkfNew(ALBankFile *ctl, u8 *tbl); //lib/src/al/global_asm.c
 void alCSPSetVol(ALCSPlayer *seqp, s16 vol); //lib/src/al/alCSPSetVol.c
@@ -74,7 +76,7 @@ void handle_music_fade(u8 updateRate);
 void func_80000FDC(u16 soundId, s32 arg1, f32 arg2);
 void func_80001050(void);
 u16 musicGetChanMask(void);
-void func_80001074(u16 arg0);
+void music_dynamic_reset(u16 arg0);
 void func_80001114(u8 chan);
 s32 musicGetChnlActive(s32 arg0);
 void func_80001170(u8 arg0);
@@ -90,45 +92,45 @@ void multiply_music_tempo(f32 tempo);
 void musicSetTempo(s32 tempo);
 s16 musicGetTempo(void);
 u8 music_is_playing(void);
-void func_80001728(u8 arg0, u8 *arg1, u8 *arg2, u8 *arg3);
-void func_80001784(u8 a0);
+void sound_get_properties(u8 arg0, u8 *arg1, u8 *arg2, u8 *arg3);
+void music_jingle_play_safe(u8 a0);
 void sfxSetTempo(s32 tempo);
-void func_80001844(void);
-void func_80001878(u8 arg0);
-u8 func_800018D0(void);
-void func_800018E0(void);
-u8 func_80001918(void);
+void music_stop(void);
+void music_enabled_set(u8 arg0);
+u8 music_can_play(void);
+void music_jingle_stop(void);
+u8 music_current_sequence(void);
 u8 func_80001954(void);
-u8 func_80001980(void);
+u8 music_jingle_current(void);
 void set_relative_volume_for_music(u8 vol);
 void set_music_volume_slider(u32 slider_val);
 u8 musicGetRelativeVolume(void);
 s32 musicGetVolSliderPercentage(void);
 void sfxSetRelativeVolume(u8 arg0);
 void sfxSetPan(ALPan pan);
-void play_sequence(u8 seqID);
-u32 func_80001C08(void);
+void music_jingle_play(u8 seqID);
+u32 music_jingle_playing(void);
 void set_all_channel_volume(u16 arg0);
-u16 func_80001CB8(u16 soundId);
+u16 sound_distance(u16 soundId);
 void play_sound_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **arg4);
-void func_80001F14(u16 soundID, s32 *arg1);
-u16 ALBankFile_80115D14_GetSoundCount(void);
-u8 ALSeqFile_80115CF8_GetSeqCount(void);
-void func_80002128(unk80115D18 **arg0, s32 *arg1, s32 *arg2);
-void func_8000216C(unk80115D1C **arg0, s32 *arg1, s32 *arg2);
-u8 ALBankFile_80115D14_GetSoundDecayTime(u16 soundID);
-ALSeqPlayer *func_80002224(s32 _max_voices, s32 _max_events);
-void func_800022BC(u8 arg0, ALSeqPlayer *arg1);
-void func_80002570(ALSeqPlayer *seqp);
-void func_80002608(u8 arg0);
-u8 func_80002630(void);
+void func_80001F14(u16 soundID, s32 *soundMask);
+u16 sound_count(void);
+u8 music_sequence_count(void);
+void sound_pool_properties(SoundData **arg0, s32 *arg1, s32 *arg2);
+void music_pool_properties(unk80115D1C **arg0, s32 *arg1, s32 *arg2);
+u8 gSoundEffectsTable_GetSoundDecayTime(u16 soundID);
+ALSeqPlayer *sound_seqplayer_init(s32 _max_voices, s32 _max_events);
+void music_sequence_start(u8 arg0, ALSeqPlayer *arg1);
+void music_sequence_stop(ALSeqPlayer *seqp);
+void sound_reverb_set(u8 arg0);
+u8 sound_reverb_enabled(void);
 void alSeqFileNew(ALSeqFile *file, u8 *base);
 void func_80063A90(ALSeqPlayer *seqp, u8 chan);
 void func_80001FB8(u16 soundID, void *soundState, u8 volume);
-void func_8000232C(ALSeqPlayer* arg0, void* arg1, u8* arg2, ALCSeq* arg3);
+void music_sequence_init(ALSeqPlayer* arg0, void* arg1, u8* arg2, ALCSeq* arg3);
 
 void play_sound_global(u16 soundID, s32* soundMask); //Non matching.
-f32 audio_get_chr_select_anim_frac(void);
+f32 music_animation_fraction(void);
 void func_80009B7C(s32 *arg0, f32 x, f32 y, f32 z); // Non Matching
 
 #endif

@@ -4,33 +4,33 @@ glabel func_80008040
 /* 008C48 80008048 3C048012 */  lui   $a0, %hi(D_80119C40) # $a0, 0x8012
 /* 008C4C 8000804C 24849C40 */  addiu $a0, %lo(D_80119C40) # addiu $a0, $a0, -0x63c0
 /* 008C50 80008050 00002825 */  move  $a1, $zero
-/* 008C54 80008054 0C00084A */  jal   func_80002128
+/* 008C54 80008054 0C00084A */  jal   sound_pool_properties
 /* 008C58 80008058 00003025 */   move  $a2, $zero
 /* 008C5C 8000805C 3C0500FF */  lui   $a1, (0x00FFFFFF >> 16) # lui $a1, 0xff
 /* 008C60 80008060 34A5FFFF */  ori   $a1, (0x00FFFFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 008C64 80008064 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 008C68 80008068 240405A0 */   li    $a0, 1440
-/* 008C6C 8000806C 3C068012 */  lui   $a2, %hi(D_80119C48) # $a2, 0x8012
-/* 008C70 80008070 24C69C48 */  addiu $a2, %lo(D_80119C48) # addiu $a2, $a2, -0x63b8
+/* 008C6C 8000806C 3C068012 */  lui   $a2, %hi(gSoundMaskHeap) # $a2, 0x8012
+/* 008C70 80008070 24C69C48 */  addiu $a2, %lo(gSoundMaskHeap) # addiu $a2, $a2, -0x63b8
 /* 008C74 80008074 3C0500FF */  lui   $a1, (0x00FFFFFF >> 16) # lui $a1, 0xff
 /* 008C78 80008078 ACC20000 */  sw    $v0, ($a2)
 /* 008C7C 8000807C 34A5FFFF */  ori   $a1, (0x00FFFFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 008C80 80008080 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 008C84 80008084 240400A0 */   li    $a0, 160
-/* 008C88 80008088 3C018012 */  lui   $at, %hi(D_80119C50) # $at, 0x8012
+/* 008C88 80008088 3C018012 */  lui   $at, %hi(gSoundMaskHeapFree) # $at, 0x8012
 /* 008C8C 8000808C 3C0500FF */  lui   $a1, (0x00FFFFFF >> 16) # lui $a1, 0xff
-/* 008C90 80008090 AC229C50 */  sw    $v0, %lo(D_80119C50)($at)
+/* 008C90 80008090 AC229C50 */  sw    $v0, %lo(gSoundMaskHeapFree)($at)
 /* 008C94 80008094 34A5FFFF */  ori   $a1, (0x00FFFFFF & 0xFFFF) # ori $a1, $a1, 0xffff
 /* 008C98 80008098 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 008C9C 8000809C 240400A0 */   li    $a0, 160
-/* 008CA0 800080A0 3C018012 */  lui   $at, %hi(D_80119C44) # $at, 0x8012
-/* 008CA4 800080A4 AC229C44 */  sw    $v0, %lo(D_80119C44)($at)
-/* 008CA8 800080A8 3C068012 */  lui   $a2, %hi(D_80119C48) # $a2, 0x8012
-/* 008CAC 800080AC 3C01800E */  lui   $at, %hi(D_800DC6E0) # $at, 0x800e
+/* 008CA0 800080A0 3C018012 */  lui   $at, %hi(gSoundMaskHeapUsed) # $at, 0x8012
+/* 008CA4 800080A4 AC229C44 */  sw    $v0, %lo(gSoundMaskHeapUsed)($at)
+/* 008CA8 800080A8 3C068012 */  lui   $a2, %hi(gSoundMaskHeap) # $a2, 0x8012
+/* 008CAC 800080AC 3C01800E */  lui   $at, %hi(gUsedMasks) # $at, 0x800e
 /* 008CB0 800080B0 3C028012 */  lui   $v0, %hi(D_8011A6D8) # $v0, 0x8012
 /* 008CB4 800080B4 3C038012 */  lui   $v1, %hi(D_80119C58) # $v1, 0x8012
-/* 008CB8 800080B8 24C69C48 */  addiu $a2, %lo(D_80119C48) # addiu $a2, $a2, -0x63b8
-/* 008CBC 800080BC A420C6E0 */  sh    $zero, %lo(D_800DC6E0)($at)
+/* 008CB8 800080B8 24C69C48 */  addiu $a2, %lo(gSoundMaskHeap) # addiu $a2, $a2, -0x63b8
+/* 008CBC 800080BC A420C6E0 */  sh    $zero, %lo(gUsedMasks)($at)
 /* 008CC0 800080C0 24639C58 */  addiu $v1, %lo(D_80119C58) # addiu $v1, $v1, -0x63a8
 /* 008CC4 800080C4 2442A6D8 */  addiu $v0, %lo(D_8011A6D8) # addiu $v0, $v0, -0x5928
 .L800080C8:

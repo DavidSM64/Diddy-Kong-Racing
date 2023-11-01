@@ -38,7 +38,7 @@ Acmd *_filterBuffer(ALLowPass *lp, s32 buff, s32 count, Acmd *p);
 f32  _doModFunc(ALDelay *d, s32 count);
 void init_lpfilter(ALLowPass *lp);
 
-u8 D_800DCEB0 = 1;
+u8 alFXEnabled = TRUE;
 static s32 L_INC[] = { L0_INC, L1_INC, L2_INC };
 
 /***********************************************************************
@@ -68,7 +68,7 @@ Acmd *alFxPull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset,
     ptr = (*source->handler)(source, outp, outCount, sampleOffset, p);
 
     //Added by Rare Devs
-    if (D_800DCEB0 == 0) {
+    if (alFXEnabled == FALSE) {
         return ptr;
     }
 
@@ -434,10 +434,10 @@ f32 _doModFunc(ALDelay *d, s32 count)
   return(d->rsgain * val);
 }
 
-void func_8006492C(u8 arg0) {
-    D_800DCEB0 = arg0;
+void alFxReverbSet(u8 setting) {
+    alFXEnabled = setting;
 }
 
-u8 func_8006493C() {
-    return D_800DCEB0;
+u8 _alFxEnabled() {
+    return alFXEnabled;
 }

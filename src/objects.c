@@ -5711,7 +5711,7 @@ void func_80022E18(s32 arg0) {
         set_taj_status(2);
     } else {
         func_80000B28();
-        func_80001844();
+        music_stop();
         set_next_taj_challenge_menu(0);
         func_80008168();
         if (arg0 == 2) {

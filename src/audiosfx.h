@@ -7,6 +7,7 @@
 #include "asset_enums.h"
 #include "libultra_internal.h"
 #include "sched.h"
+#include "structs.h"
 
 #define AL_SNDP_PLAY_EVT (1 << 0)
 #define AL_SNDP_STOP_EVT (1 << 1)
@@ -72,7 +73,7 @@ typedef union {
 
     struct{
         s16 type;
-        void* state;
+        SoundMask *state;
         u32 unk04;
     }snd_event;
 
@@ -135,9 +136,9 @@ ALMicroTime  _sndpVoiceHandler(void *node);
 void func_8000410C(ALSoundState *state);
 u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex);
 void func_80004604(u8 *arg0, u8 arg1);
-s32 func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2);
+s32 func_80004638(ALBank *bnk, s16 sndIndx, SoundMask *soundMask);
 void func_800049D8(void);
-void func_800049F8(s32 soundMask, s16 type, u32 volume);
+void sound_event_update(s32 soundMask, s16 type, u32 volume);
 u16 get_sound_channel_volume(u8 channel);
 void set_sound_channel_volume(u8 channel, u16 volume);
 void func_8000418C(ALVoiceState *voiceState);

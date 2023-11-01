@@ -109,7 +109,7 @@ glabel obj_loop_door
 /* 03C710 8003BB10 AD0F0008 */   sw    $t7, 8($t0)
 /* 03C714 8003BB14 0C002050 */  jal   func_80008140
 /* 03C718 8003BB18 00000000 */   nop   
-/* 03C71C 8003BB1C 0C0006F0 */  jal   play_sequence
+/* 03C71C 8003BB1C 0C0006F0 */  jal   music_jingle_play
 /* 03C720 8003BB20 24040011 */   li    $a0, 17
 /* 03C724 8003BB24 8FA80044 */  lw    $t0, 0x44($sp)
 /* 03C728 8003BB28 00000000 */  nop   
@@ -144,7 +144,7 @@ glabel obj_loop_door
 /* 03C790 8003BB90 1180001B */  beqz  $t4, .L8003BC00
 /* 03C794 8003BB94 00000000 */   nop   
 /* 03C798 8003BB98 AFA80044 */  sw    $t0, 0x44($sp)
-/* 03C79C 8003BB9C 0C000702 */  jal   func_80001C08
+/* 03C79C 8003BB9C 0C000702 */  jal   music_jingle_playing
 /* 03C7A0 8003BBA0 AFA90040 */   sw    $t1, 0x40($sp)
 /* 03C7A4 8003BBA4 8FA80044 */  lw    $t0, 0x44($sp)
 /* 03C7A8 8003BBA8 8FA90040 */  lw    $t1, 0x40($sp)

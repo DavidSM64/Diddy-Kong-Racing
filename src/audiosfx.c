@@ -213,8 +213,8 @@ UNUSED u8 func_8000461C(u8 *arg0) {
     return 0;
 }
 
-s32 func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2) {
-    return func_80004668(bnk, sndIndx, 0, arg2);
+s32 func_80004638(ALBank *bnk, s16 sndIndx, SoundMask *soundMask) {
+    return func_80004668(bnk, sndIndx, 0, soundMask);
 }
 
 #ifdef NON_EQUIVALENT
@@ -251,7 +251,10 @@ void func_800049D8(void) {
     func_800048D8(3);
 }
 
-void func_800049F8(s32 soundMask, s16 type, u32 volume) {
+/**
+ * Send a message to the sound player to update an existing property of the sound entry.
+*/
+void sound_event_update(s32 soundMask, s16 type, u32 volume) {
     ALEvent2 sndEvt;
     sndEvt.snd_event.type = type;
     sndEvt.snd_event.state = (void *) soundMask;

@@ -138,7 +138,7 @@ glabel func_800A277C
 /* 0A3518 800A2918 24010004 */  li    $at, 4
 /* 0A351C 800A291C 15E10042 */  bne   $t7, $at, .L800A2A28
 /* 0A3520 800A2920 00000000 */   nop   
-/* 0A3524 800A2924 0C00057E */  jal   audio_get_chr_select_anim_frac
+/* 0A3524 800A2924 0C00057E */  jal   music_animation_fraction
 /* 0A3528 800A2928 AFA900A8 */   sw    $t1, 0xa8($sp)
 /* 0A352C 800A292C 8FB80098 */  lw    $t8, 0x98($sp)
 /* 0A3530 800A2930 924C0000 */  lbu   $t4, ($s2)

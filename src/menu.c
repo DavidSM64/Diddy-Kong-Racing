@@ -2126,7 +2126,7 @@ void menu_init(u32 menuId) {
 
     //Needs to be one line
     for (i = 0; i < ARRAY_COUNT(D_80126808); i++) { D_80126808[i] = 0; }
-    func_80001844();
+    music_stop();
     switch (gCurrentMenuId) {
         case MENU_LOGOS:
             menu_logos_screen_init();
@@ -3461,7 +3461,7 @@ s32 menu_audio_options_loop(s32 updateRate) {
                     gMusicTestSongIndex--;
                     sp30 = 1;
                 } else if (contX > 0) {
-                    if (gMusicTestSongIndex < (ALSeqFile_80115CF8_GetSeqCount() - 1)) {
+                    if (gMusicTestSongIndex < (music_sequence_count() - 1)) {
                         gMusicTestSongIndex++;
                         sp30 = 1;
                     }
@@ -7296,7 +7296,7 @@ void func_8008F534(void) {
     func_8007FF88();
     func_80000B28();
     func_80000C2C();
-    func_80001844();
+    music_stop();
     set_gIntDisFlag(FALSE);
 }
 

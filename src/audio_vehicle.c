@@ -28,11 +28,11 @@ s32 D_800DC6D8 = 1; // Currently unknown, might be a different type.
 VehicleSoundData *D_80119C30[2];
 VehicleSoundData *gRacerSound;
 Object_Racer *gSoundRacerObj;
-unk80115D18 *D_80119C40; // This should be in audio_spatial?
-SoundMask **D_80119C44;
-unk80119C48 **D_80119C48; //0x24 struct size - 0x5A0 total size - should be 40 elements
-u8 D_80119C4C;
-SoundMask **D_80119C50;
+SoundData *D_80119C40; // This should be in audio_spatial?
+SoundMask **gSoundMaskHeapUsed;
+unk80119C48 **gSoundMaskHeap; //0x24 struct size - 0x5A0 total size - should be 40 elements
+u8 gFreeMasks;
+SoundMask **gSoundMaskHeapFree;
 s32 D_80119C54; //Padding?
 unk80119C58 **D_80119C58; //Struct of size in func_8000A184 = 0x180 = 384 bytes | Ambient Sounds
 unk80119C58 **D_80119C5C; //Struct of size in func_8000A184 = 0x180 = 384 bytes Likely the same as above
@@ -335,7 +335,7 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
         sp6C = (((var_f20 * 0.5) / 12.0) + 0.5);
         temp_a0_4 = gRacerSound->unkA8;
         if (temp_a0_4 != 0) {
-            func_800049F8(temp_a0_4, 16, *((u32*) &sp6C));
+            sound_event_update(temp_a0_4, 16, *((u32*) &sp6C));
         }
         gRacerSound->unkAC = 110;
         gRacerSound->unkD0 = 0;
@@ -347,9 +347,9 @@ void func_80005254(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateR
             gRacerSound->unkD0 = 0;
         }
         if (gRacerSound->unkD0 >= 10) {
-            func_800049F8(gRacerSound->unkA8, 8, 0);
+            sound_event_update(gRacerSound->unkA8, 8, 0);
         } else {
-            func_800049F8(gRacerSound->unkA8, 8, gRacerSound->unkAC << 8);
+            sound_event_update(gRacerSound->unkA8, 8, gRacerSound->unkAC << 8);
             func_80009B7C((s32 *) gRacerSound->unkA8, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
         }
     }
@@ -727,10 +727,10 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                     sp8C = temp_f0_3 + ((((f32) gRacerSound->unk39 / 100.0f) - temp_f0_3) * temp_f20_2);
                     if (gRacerSound->unk50 != NULL) {
                         func_80009B7C((s32 *) gRacerSound->unk50, objs[loopCount1]->segment.trans.x_position, objs[loopCount1]->segment.trans.y_position, objs[loopCount1]->segment.trans.z_position);
-                        func_800049F8(gRacerSound->unk50, 8, temp_s3 << 8);
-                        func_800049F8(gRacerSound->unk50, 16, *((u32*) &sp8C));
+                        sound_event_update(gRacerSound->unk50, 8, temp_s3 << 8);
+                        sound_event_update(gRacerSound->unk50, 16, *((u32*) &sp8C));
                         func_80004604(gRacerSound->unk50, 80);
-                        func_800049F8(gRacerSound->unk50, 4, gRacerSound->unk91[0]);
+                        sound_event_update(gRacerSound->unk50, 4, gRacerSound->unk91[0]);
                     }
                 } else if (gRacerSound->unk50 != NULL) {
                     func_8000488C(gRacerSound->unk50);
@@ -761,13 +761,13 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                         }
                         if (gRacerSound->unk48[loopCount2] != NULL) {
                             func_80009B7C((s32 *) gRacerSound->unk48[loopCount2], objs[loopCount1]->segment.trans.x_position, objs[loopCount1]->segment.trans.y_position, objs[loopCount1]->segment.trans.z_position);
-                            func_800049F8(gRacerSound->unk48[loopCount2], 8, temp_s3 << 8);
-                            func_800049F8(gRacerSound->unk48[loopCount2], 16, *((u32*) &sp8C));
+                            sound_event_update(gRacerSound->unk48[loopCount2], 8, temp_s3 << 8);
+                            sound_event_update(gRacerSound->unk48[loopCount2], 16, *((u32*) &sp8C));
                             func_80004604(gRacerSound->unk48[loopCount2], 80);
                             if (arg3 != 1) {
                                 gRacerSound->unk91[0] = 64;
                             }
-                            func_800049F8(gRacerSound->unk48[loopCount2], 4, gRacerSound->unk91[0]);
+                            sound_event_update(gRacerSound->unk48[loopCount2], 4, gRacerSound->unk91[0]);
                         }
                     }
                 }
@@ -893,12 +893,12 @@ void func_80006FC8(Object **objs, s32 numRacers, ObjectSegment *segment, u8 arg3
                             }
                             if (temp->unk48[0] != NULL) {
                                 func_80009B7C((s32 *) temp->unk48[0], temp->racerPos.x, temp->racerPos.y, temp->racerPos.z);
-                                func_800049F8(temp->unk48[0], 8, temp->unk88 << 8);
-                                func_800049F8(temp->unk48[0], 16, *((u32*) &temp->unk8C));
+                                sound_event_update(temp->unk48[0], 8, temp->unk88 << 8);
+                                sound_event_update(temp->unk48[0], 16, *((u32*) &temp->unk8C));
                                 if (arg3 != 1) {
                                     temp->unk91[0] = 64;
                                 }
-                                func_800049F8(temp->unk48[0], 4, temp->unk91[0]);
+                                sound_event_update(temp->unk48[0], 4, temp->unk91[0]);
                                 func_80004604(temp->unk48[0], 70);
                             }
                         }

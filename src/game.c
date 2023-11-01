@@ -603,7 +603,7 @@ void start_level_music(f32 tempo) {
         func_800012E8();
         play_music(gCurrentLevelHeader->music);
         multiply_music_tempo(tempo);
-        func_80001074(gCurrentLevelHeader->instruments);
+        music_dynamic_reset(gCurrentLevelHeader->instruments);
     }
 }
 
@@ -682,8 +682,8 @@ void clear_audio_and_track(void) {
     set_background_prim_colour(0, 0, 0);
     free_from_memory_pool(gCurrentLevelHeader);
     func_800049D8();
-    func_80001844();
-    func_800018E0();
+    music_stop();
+    music_jingle_stop();
     func_800012E8();
     free_lights();
     free_track();
