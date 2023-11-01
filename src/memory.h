@@ -78,7 +78,7 @@ void free_from_memory_pool(void *data);
 void clear_free_queue(void);
 void add_to_free_queue(void *dataAddress);
 s32 func_80071478(u8 *address);
-s32 func_80071538(u8 *address);
+s32 memory_slot_exists(u8 *address);
 s32 get_memory_pool_index_containing_address(u8 *address);
 u8 *align16(u8 *address);
 u8 *align8(u8 *address);

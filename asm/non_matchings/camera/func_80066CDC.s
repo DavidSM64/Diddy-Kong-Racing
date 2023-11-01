@@ -125,7 +125,7 @@ glabel func_80066CDC
 /* 067AC4 80066EC4 000E7B00 */  sll   $t7, $t6, 0xc
 /* 067AC8 80066EC8 030FC825 */  or    $t9, $t8, $t7
 /* 067ACC 80066ECC AC590004 */  sw    $t9, 4($v0)
-/* 067AD0 80066ED0 0C01A056 */  jal   func_80068158
+/* 067AD0 80066ED0 0C01A056 */  jal   viewport_rsp_set
 /* 067AD4 80066ED4 AFA00010 */   sw    $zero, 0x10($sp)
 /* 067AD8 80066ED8 8FA5006C */  lw    $a1, 0x6c($sp)
 /* 067ADC 80066EDC 8FAE002C */  lw    $t6, 0x2c($sp)
@@ -886,7 +886,7 @@ glabel func_80066CDC
 .L800679F0:
 /* 0685F0 800679F0 8FA50054 */  lw    $a1, 0x54($sp)
 /* 0685F4 800679F4 8FA60058 */  lw    $a2, 0x58($sp)
-/* 0685F8 800679F8 0C01A056 */  jal   func_80068158
+/* 0685F8 800679F8 0C01A056 */  jal   viewport_rsp_set
 /* 0685FC 800679FC AFAB0010 */   sw    $t3, 0x10($sp)
 /* 068600 80067A00 8FA5006C */  lw    $a1, 0x6c($sp)
 /* 068604 80067A04 3C1F8012 */  lui   $ra, %hi(gActiveCameraID) # $ra, 0x8012

@@ -2707,10 +2707,10 @@ void menu_logos_screen_init(void) {
     sBootScreenTimer = 16.0f;
     set_background_fill_colour(0, 0, 0);
     if (osTvType == TV_TYPE_PAL) {
-        resize_viewport(0, 0, 38, SCREEN_WIDTH, SCREEN_HEIGHT - 16);
+        viewport_menu_set(0, 0, 38, SCREEN_WIDTH, SCREEN_HEIGHT - 16);
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT_PAL);
     } else {
-        resize_viewport(0, 0, 40, SCREEN_WIDTH, SCREEN_HEIGHT - 44);
+        viewport_menu_set(0, 0, 40, SCREEN_WIDTH, SCREEN_HEIGHT - 44);
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
     copy_viewports_to_stack(); //Init viewports
@@ -7060,7 +7060,7 @@ void menu_track_select_init(void) {
     }
     D_80126924 = 0;
     set_background_draw_function(func_8008F618);
-    resize_viewport(0, 80, gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY >> 1), SCREEN_HEIGHT, (gTrackSelectViewPortHalfY >> 1) + gTrackSelectViewPortHalfY);
+    viewport_menu_set(0, 80, gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY >> 1), SCREEN_HEIGHT, (gTrackSelectViewPortHalfY >> 1) + gTrackSelectViewPortHalfY);
     copy_viewports_to_stack();
     camEnableUserView(0, 0);
     gIsInTracksMenu = TRUE;
@@ -7325,7 +7325,7 @@ s32 func_8008F618(Gfx **dlist, MatrixS **mtx) {
     
     numVertices = 0;
     camDisableUserView(0, TRUE); 
-    func_80066230(dlist, mtx); 
+    camera_init_tracks_menu(dlist, mtx); 
     set_ortho_matrix_view(dlist, mtx); 
     reset_render_settings(dlist);
     gDPPipeSync((*dlist)++); 
@@ -7647,7 +7647,7 @@ void func_800904E8(s32 updateRate) {
     x2 = x1 + SCREEN_WIDTH_HALF;
     y1 = gTrackSelectViewPortHalfY - ((gSelectedTrackY * -gTrackSelectViewportY) - gTrackSelectY) - (gTrackSelectViewportY >> 2);
     y2 = y1 + gTrackSelectViewPortHalfY;
-    resize_viewport(0, x1, y1, x2, y2);
+    viewport_menu_set(0, x1, y1, x2, y2);
     copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2);
     camEnableUserView(0, 0);
 }
@@ -7683,7 +7683,7 @@ void func_80090918(s32 updateRate) {
         }
         var_t3 = (((var_t1 + 20) * gTrackSelectViewPortHalfY) / 40) + var_t0;
         var_a2 = var_t0 - (((var_t1 + 20) * gTrackSelectViewPortHalfY) / 40);
-        resize_viewport(0, (var_t2 - (var_t1 * 4)) - 80, var_a2, (var_t1 * 4) + var_t2 + 80, var_t3);
+        viewport_menu_set(0, (var_t2 - (var_t1 * 4)) - 80, var_a2, (var_t1 * 4) + var_t2 + 80, var_t3);
         gMenuImageStack[4].unk8 = (f32) (sMenuImageProperties[4].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
         gMenuImageStack[6].unk8 = (f32) (sMenuImageProperties[6].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
         gMenuImageStack[5].unk8 = (f32) (sMenuImageProperties[5].unk8 * (1.0f + ((f32) var_t1 / 20.0f)));
@@ -8753,7 +8753,7 @@ void func_80094688(s32 arg0, s32 arg1) {
             func_80078170(D_80126BB8, D_80126BBC, D_80126BC0);
         }
         camEnableUserView(0, 1);
-        resize_viewport(0, 0, 0, gTrackSelectViewPortX, gTrackSelectViewportY);
+        viewport_menu_set(0, 0, 0, gTrackSelectViewPortX, gTrackSelectViewportY);
     }
     adjust_audio_volume(VOLUME_LOWER_AMBIENT);
 }
@@ -8857,7 +8857,7 @@ void func_80094D28(UNUSED s32 updateRate) {
             viewportULY = ((gTrackSelectViewPortHalfY - ((gTrackSelectViewPortHalfY * 4) / 5)) * temp) / 60;
             viewportLRY = gTrackSelectViewportY - (((gTrackSelectViewPortHalfY - (gTrackSelectViewPortHalfY / 5)) * temp) / 60);
             viewportULX = (temp * 80) / 60;
-            resize_viewport(0, viewportULX, viewportULY, SCREEN_WIDTH - viewportULX, viewportLRY);
+            viewport_menu_set(0, viewportULX, viewportULY, SCREEN_WIDTH - viewportULX, viewportLRY);
             gMenuImageStack[4].unkC = 0.0f;
             gMenuImageStack[4].unk10 = gTrackSelectViewPortHalfY - ((viewportULY + viewportLRY) >> 1);
             gMenuImageStack[4].unk8 = sMenuImageProperties[4].unk8 * (2.0f - (temp / 60.0f));
@@ -9102,7 +9102,7 @@ s32 func_80095728(Gfx **dlist, MatrixS **matrices, Vertex **vertices, s32 update
             break;
         case 1:
             if (D_80126A94 > 60 || buttonsPressed & (A_BUTTON | START_BUTTON)) {
-                resize_viewport(0, 80, gTrackSelectViewPortHalfY - ((gTrackSelectViewPortHalfY * 4) / 5), SCREEN_HEIGHT, (gTrackSelectViewPortHalfY / 5) + gTrackSelectViewPortHalfY);
+                viewport_menu_set(0, 80, gTrackSelectViewPortHalfY - ((gTrackSelectViewPortHalfY * 4) / 5), SCREEN_HEIGHT, (gTrackSelectViewPortHalfY / 5) + gTrackSelectViewPortHalfY);
                 gMenuImageStack[4].unkC = 0.0f;
                 gMenuImageStack[4].unk10 = 36.0f;
                 gMenuImageStack[4].unk8 = sMenuImageProperties[4].unk8;
@@ -10774,10 +10774,10 @@ void menu_credits_init(void) {
     D_80126BE0 = 0;
     set_background_fill_colour(0, 0, 0);
     if (osTvType == TV_TYPE_PAL) {
-        resize_viewport(0, 0, 38, SCREEN_WIDTH, 224);
+        viewport_menu_set(0, 0, 38, SCREEN_WIDTH, 224);
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT_PAL);
     } else {
-        resize_viewport(0, 0, 40, SCREEN_WIDTH, 196);
+        viewport_menu_set(0, 0, 40, SCREEN_WIDTH, 196);
         set_viewport_properties(0, VIEWPORT_AUTO, VIEWPORT_AUTO, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
     copy_viewports_to_stack();

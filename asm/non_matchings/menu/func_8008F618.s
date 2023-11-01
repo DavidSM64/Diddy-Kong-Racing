@@ -17,7 +17,7 @@ glabel func_8008F618
 /* 090254 8008F654 0C019A25 */  jal   camDisableUserView
 /* 090258 8008F658 AFA00058 */   sw    $zero, 0x58($sp)
 /* 09025C 8008F65C 02C02025 */  move  $a0, $s6
-/* 090260 8008F660 0C01988C */  jal   func_80066230
+/* 090260 8008F660 0C01988C */  jal   camera_init_tracks_menu
 /* 090264 8008F664 02002825 */   move  $a1, $s0
 /* 090268 8008F668 02C02025 */  move  $a0, $s6
 /* 09026C 8008F66C 0C019FCB */  jal   set_ortho_matrix_view

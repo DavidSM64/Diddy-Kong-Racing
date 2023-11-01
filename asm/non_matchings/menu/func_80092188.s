@@ -106,7 +106,7 @@ glabel func_80092188
 /* 092EFC 800922FC 0000C012 */  mflo  $t8
 /* 092F00 80092300 03025021 */  addu  $t2, $t8, $v0
 /* 092F04 80092304 AFAA0010 */  sw    $t2, 0x10($sp)
-/* 092F08 80092308 0C019A50 */  jal   resize_viewport
+/* 092F08 80092308 0C019A50 */  jal   viewport_menu_set
 /* 092F0C 8009230C 00583023 */   subu  $a2, $v0, $t8
 /* 092F10 80092310 8FA90048 */  lw    $t1, 0x48($sp)
 /* 092F14 80092314 3C0141A0 */  li    $at, 0x41A00000 # 20.000000
@@ -168,7 +168,7 @@ glabel func_80092188
 /* 092FE8 800923E8 AFAE0010 */  sw    $t6, 0x10($sp)
 /* 092FEC 800923EC 24050050 */  li    $a1, 80
 /* 092FF0 800923F0 240700F0 */  li    $a3, 240
-/* 092FF4 800923F4 0C019A50 */  jal   resize_viewport
+/* 092FF4 800923F4 0C019A50 */  jal   viewport_menu_set
 /* 092FF8 800923F8 00433023 */   subu  $a2, $v0, $v1
 .L800923FC:
 /* 092FFC 800923FC 00002025 */  move  $a0, $zero

@@ -152,7 +152,7 @@ glabel L80094DD0
 .L80094F30:
 /* 095B30 80094F30 00002812 */  mflo  $a1
 /* 095B34 80094F34 01A53823 */  subu  $a3, $t5, $a1
-/* 095B38 80094F38 0C019A50 */  jal   resize_viewport
+/* 095B38 80094F38 0C019A50 */  jal   viewport_menu_set
 /* 095B3C 80094F3C 00000000 */   nop   
 /* 095B40 80094F40 3C02800E */  lui   $v0, %hi(gMenuImageStack) # $v0, 0x800e
 /* 095B44 80094F44 44905000 */  mtc1  $s0, $f10

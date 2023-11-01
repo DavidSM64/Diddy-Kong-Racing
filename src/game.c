@@ -53,8 +53,8 @@ u8 gTwoPlayerAdvRace = FALSE;
 s32 gIsInRace = 0;
 
 // Updated automatically from calc_func_checksums.py
-s32 gFunc80068158Checksum = 0x585E;
-s32 gFunc80068158Length = 0x154;
+s32 gViewportFuncChecksum = 0x585E;
+s32 gViewportFuncLength = 0x154;
 s16 gLevelPropertyStackPos = 0;
 s16 D_800DD32C = 0;
 s8 D_800DD330 = 0;
@@ -143,10 +143,10 @@ void init_level_globals(void) {
     free_from_memory_pool(gTempAssetTable);
     // Antipiracy measure
     checksumCount = 0;
-    for (j = 0; j < gFunc80068158Length; j++) {
-        checksumCount += ((u8 *) (&func_80068158))[j];
+    for (j = 0; j < gViewportFuncLength; j++) {
+        checksumCount += ((u8 *) (&viewport_rsp_set))[j];
     }
-    if (checksumCount != gFunc80068158Checksum) {
+    if (checksumCount != gViewportFuncChecksum) {
         disable_button_mask();
     }
 }
@@ -644,7 +644,6 @@ char *get_level_name(s32 levelId) {
     u8 numberOfNullPointers = 0;
 
     if (levelId < 0 || levelId >= gNumberOfLevelHeaders) {
-        stubbed_printf("AITABLE Error: Table out of range\n");
         return NULL;
     }
 
@@ -706,7 +705,7 @@ void clear_audio_and_track(void) {
 void set_ai_level(s8 *aiLevelTable) {
     s32 temp;
     UNUSED s32 temp2;
-    s16 phi_v1;
+    s16 tableIndexCount;
     s8 aiLevel;
     Settings *settings;
 
@@ -737,12 +736,13 @@ void set_ai_level(s8 *aiLevelTable) {
         aiLevel = 5;
     }
     gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_AI_BEHAVIOUR_TABLE);
-    phi_v1 = 0;
-    while (-1 != (s32) gTempAssetTable[phi_v1]) {
-        phi_v1++;
+    tableIndexCount = 0;
+    while (-1 != (s32) gTempAssetTable[tableIndexCount]) {
+        tableIndexCount++;
     }
-    phi_v1--;
-    if (aiLevel >= phi_v1) {
+    tableIndexCount--;
+    if (aiLevel >= tableIndexCount) {
+        stubbed_printf("AITABLE Error: Table out of range\n");
         aiLevel = 0;
     }
     temp2 = gTempAssetTable[aiLevel];

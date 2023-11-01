@@ -298,7 +298,7 @@ void generate_particle_shape_triangle(ParticleModel *model, Vertex **vtx, Triang
     model->triangleCount = 1;
     model->triangles = *triangles;
     tempTri = *triangles;
-    tempTri->flags = RENDER_UNK_0000040;
+    tempTri->flags = RENDER_CLAMP_X;
     tempTri->vi0 = 2;
     tempTri->vi1 = 1;
     tempTri->vi2 = 0;
@@ -335,7 +335,7 @@ void generate_particle_shape_quad(ParticleModel *model, Vertex **vtx, Triangle *
     model->triangleCount = 2;
     model->triangles = *triangles;
     tempTri = *triangles;
-    tempTri[0].flags = RENDER_UNK_0000040;
+    tempTri[0].flags = RENDER_CLAMP_X;
     tempTri[0].vi0 = 3;
     tempTri[0].uv0.u = 0;
     tempTri[0].vi1 = 1;
@@ -343,7 +343,7 @@ void generate_particle_shape_quad(ParticleModel *model, Vertex **vtx, Triangle *
     tempTri[0].vi2 = 0;
     tempTri[0].uv2.u = 0;
     tempTri[0].uv2.v = 0;
-    tempTri[1].flags = RENDER_UNK_0000040;
+    tempTri[1].flags = RENDER_CLAMP_X;
     tempTri[1].vi0 = 3;
     tempTri[1].uv0.u = 0;
     tempTri[1].vi1 = 2;

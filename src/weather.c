@@ -662,7 +662,7 @@ void handle_weather_rain(s32 updateRate) {
             gDPSetPrimColor(gCurrWeatherDisplayList++, 0, 0, 255, 255, 255, 255);
             gDPSetEnvColor(gCurrWeatherDisplayList++, 255, 255, 255, 0);
             reset_render_settings(&gCurrWeatherDisplayList); // Pipesync and some stuff idk yet
-            func_800682AC(&gCurrWeatherDisplayList); // Looks to create a viewport scissor.
+            viewport_reset(&gCurrWeatherDisplayList); // Looks to create a viewport scissor.
         }
     }
 }

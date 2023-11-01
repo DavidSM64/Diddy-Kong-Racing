@@ -43,11 +43,11 @@ enum RenderFlags {
     RENDER_FOG_ACTIVE =         (1 << 3), // Applies fog to the geometry.
     RENDER_CUTOUT =             (1 << 4), // A surface with 1 bit alpha cut out for quick transparency.
     RENDER_COLOUR_INDEX =       (1 << 5), // Enables palleted textures.
-    RENDER_UNK_0000040 =        (1 << 6),
-    RENDER_UNK_0000080 =        (1 << 7),
+    RENDER_CLAMP_X =            (1 << 6), // Prevent texture repeating on the X axis.
+    RENDER_CLAMP_Y =            (1 << 7), // Prevent texture repeating on the Y axis.
     RENDER_Z_UPDATE =           (1 << 8), // Updates the depth buffer when rendering.
     RENDER_PRESERVE_COVERAGE =  (1 << 9), // Coverage is used to help smooth the image. This won't write over existing coverage values.
-    RENDER_UNK_0000400 =        (1 << 10),
+    RENDER_LINE_SWAP =          (1 << 10), // Texture has swapped lines, for speed. Makes the load process slightly different.
     RENDER_DECAL =              (1 << 11), // Projects a surface on existing geometry, taking precedent to not zfight.
     RENDER_UNK_0001000 =        (1 << 12),
     RENDER_UNK_0002000 =        (1 << 13),

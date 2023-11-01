@@ -2345,7 +2345,7 @@ void render_magnet_reticle(Object *racerObj) {
         gAssetHudElementStaleCounter[hudElementIndex] = 0;
         hud = (unk80126CDC *) &hud->unk220;
         func_80066CDC(&gHUDCurrDisplayList, &gHUDCurrMatrix);
-        func_80068408(&gHUDCurrDisplayList, &gHUDCurrMatrix);
+        matrix_world_origin(&gHUDCurrDisplayList, &gHUDCurrMatrix);
         render_sprite_billboard(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (Object *) hud, entry, RENDER_Z_UPDATE);
     }
 }

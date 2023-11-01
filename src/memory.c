@@ -379,7 +379,11 @@ s32 func_80071478(u8 *address) {
     return FALSE;
 }
 
-s32 func_80071538(u8 *address) {
+/**
+ * Search the memory pool for the slot that's tied to the given address.
+ * Return true if it's found, otherwise return false.
+*/
+s32 memory_slot_exists(u8 *address) {
     s32 slotIndex;
     MemoryPoolSlot *slot;
     MemoryPool *pool;
