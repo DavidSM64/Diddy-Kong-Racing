@@ -37,8 +37,8 @@ s32 D_800E2908 = 0;
 s32 *D_800E290C = NULL;
 s16 *D_800E2910 = NULL;
 Vertex *D_800E2914[2] = { NULL, NULL };
-s32 *D_800E291C = NULL; // List of Ids
-s32 D_800E2920 = 0;
+s32 *gWeatherAssetTable = NULL; // List of Ids
+s32 gWeatherAssetTableLength = 0; // Set, but never read.
 
 Gfx D_800E2928[] = {
     gsDPPipeSync(),
@@ -163,8 +163,8 @@ Gfx *gCurrWeatherDisplayList;
 MatrixS *gCurrWeatherMatrix;
 Vertex *gCurrWeatherVertexList;
 TriangleList *gCurrWeatherTriList;
-ObjectSegment *D_80127C1C;
-Matrix *D_80127C20;
+ObjectSegment *gWeatherCamera;
+Matrix *gWeatherCameraMatrix;
 s32 D_80127C24;
 s32 D_80127C28;
 Matrix *D_80127C2C;
@@ -188,15 +188,15 @@ void init_weather(void) {
     D_800E2914[1] = 0;
     D_800E290C = 0;
     D_80127BF8.unk0 = -1;
-    D_80127BF8.unk2 = -0x200;
+    D_80127BF8.unk2 = -512;
     D_800E2A80 = NULL;
     D_800E2A84 = TRUE;
     D_800E2A88 = 0;
-    if (D_800E291C == NULL) {
-        D_800E291C = (s32 *)load_asset_section_from_rom(ASSET_WEATHER_PARTICLES);
-        D_800E2920 = 0;
-        while ((s32)D_800E291C[D_800E2920] != -1) {
-            D_800E2920++;
+    if (gWeatherAssetTable == NULL) {
+        gWeatherAssetTable = (s32 *)load_asset_section_from_rom(ASSET_WEATHER_PARTICLES);
+        gWeatherAssetTableLength = 0;
+        while ((s32) gWeatherAssetTable[gWeatherAssetTableLength] != -1) {
+            gWeatherAssetTableLength++;
         }
     }
     D_80127C08 = 0;
@@ -271,7 +271,7 @@ void func_800ABB34(void) {
         phi_s1 += temp_v0;
     }
 
-    D_800E28D8.unk8 = load_texture(*D_800E291C);
+    D_800E28D8.unk8 = load_texture(*gWeatherAssetTable);
 }
 
 
@@ -309,8 +309,8 @@ void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currH
     gCurrWeatherMatrix = *currHudMat;
     gCurrWeatherVertexList = *currHudVerts;
     gCurrWeatherTriList = *currHudTris;
-    D_80127C1C = get_active_camera_segment();
-    D_80127C20 = get_camera_matrix();
+    gWeatherCamera = get_active_camera_segment();
+    gWeatherCameraMatrix = get_camera_matrix();
     if (gWeatherType != WEATHER_SNOW) {
         handle_weather_rain(updateRate);
     } else {
@@ -376,15 +376,15 @@ void func_800AC21C(void) {
     s32 sp50;
     s32 i;
 
-    sp58 = (D_80127C1C->trans.x_position * 65536.0f);
-    sp54 = (D_80127C1C->trans.y_position * 65536.0f);
-    sp50 = (D_80127C1C->trans.z_position * 65536.0f);
+    sp58 = (gWeatherCamera->trans.x_position * 65536.0f);
+    sp54 = (gWeatherCamera->trans.y_position * 65536.0f);
+    sp50 = (gWeatherCamera->trans.z_position * 65536.0f);
     D_800E2908 = 0;
     for(i = 0; i < D_80127BB4; i++) {
         sp64[0][0] = (f32) (((D_800E28D4[i].unk0 - sp58) & D_800E28D8.unk18) + D_800E28D8.unkC) * (1.0f / 65536.0f);
         sp64[0][1] = (f32) (((D_800E28D4[i].unk4 - sp54) & D_800E28D8.unk1C) + D_800E28D8.unk10) * (1.0f / 65536.0f);
         sp64[0][2] = (f32) (((D_800E28D4[i].unk8 - sp50) & D_800E28D8.unk20) + D_800E28D8.unk14) * (1.0f / 65536.0f);
-        f32_matrix_dot(D_80127C20, &sp64, &sp64);
+        f32_matrix_dot(gWeatherCameraMatrix, &sp64, &sp64);
         zPos = sp64[0][2];
         if ((zPos < D_80127BF8.unk0) && (D_80127BF8.unk4 < zPos)) {
             xPos = sp64[0][0];
@@ -576,9 +576,9 @@ void func_800AD144(s32 arg0, s32 arg1) {
     gThunderTimer = 0;
     D_800E2C84 = 0;
     D_800E2C90 = 0;
-    gRainGfx[0].tex = load_texture(D_800E291C[1]);
-    gRainGfx[1].tex = load_texture(D_800E291C[1]);
-    gRainSplashGfx = (Sprite *)func_8007C12C(D_800E291C[3], 0);
+    gRainGfx[0].tex = load_texture(gWeatherAssetTable[1]);
+    gRainGfx[1].tex = load_texture(gWeatherAssetTable[1]);
+    gRainSplashGfx = (Sprite *)func_8007C12C(gWeatherAssetTable[3], 0);
     gWeatherType = WEATHER_RAIN;
 }
 
@@ -707,11 +707,11 @@ void handle_rain_sound(UNUSED s32 updateRate) {
     f32 sineOffset;
 
     length = 1152.0f - (f32) (gLightningFrequency >> 6);
-    cosOffset = sins_f(D_80127C1C->trans.y_rotation) * length;
-    sineOffset = coss_f(D_80127C1C->trans.y_rotation) * length;
-    xPos = D_80127C1C->trans.x_position + (sineOffset - cosOffset);
-    yPos = D_80127C1C->trans.y_position;
-    zPos = D_80127C1C->trans.z_position + (-sineOffset - cosOffset);
+    cosOffset = sins_f(gWeatherCamera->trans.y_rotation) * length;
+    sineOffset = coss_f(gWeatherCamera->trans.y_rotation) * length;
+    xPos = gWeatherCamera->trans.x_position + (sineOffset - cosOffset);
+    yPos = gWeatherCamera->trans.y_position;
+    zPos = gWeatherCamera->trans.z_position + (-sineOffset - cosOffset);
     if (gWeatherSoundMask) {
         update_spatial_audio_position(gWeatherSoundMask, xPos, yPos, zPos);
     } else {
@@ -748,10 +748,10 @@ void render_rain_overlay(unk800E2C2C *arg0, s32 arg1) {
         if (opacity > 0) {
             altVertical = arg0->unk2;
             vertical = ((arg0->unk6 * vertical) >> 8) + arg0->unk2;
-            altHorizontal = (arg0->unk0 + ((horizontal * 6 * D_80127C1C->trans.y_rotation) >> 16)) & temp_v1;
+            altHorizontal = (arg0->unk0 + ((horizontal * 6 * gWeatherCamera->trans.y_rotation) >> 16)) & temp_v1;
             horizontal += altHorizontal;
-            zSins = sins_f(D_80127C1C->trans.z_rotation);
-            zCoss = coss_f(D_80127C1C->trans.z_rotation);
+            zSins = sins_f(gWeatherCamera->trans.z_rotation);
+            zCoss = coss_f(gWeatherCamera->trans.z_rotation);
             verts = &D_800E2AAC[D_800E2C90];
             verts[0].x = ((D_800E2A8C * zCoss) - (D_800E2A9C * zSins));
             verts[0].y = ((D_800E2A8C * zSins) + (D_800E2A9C * zCoss));

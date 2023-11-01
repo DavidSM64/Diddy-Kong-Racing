@@ -134,7 +134,7 @@ typedef struct ObjectCamera {
   /* 0x0030 */ f32 unk30;
   /* 0x0034 */ s16 segmentIndex;
   /* 0x0036 */ s16 mode;
-  /* 0x0038 */ s16 unk38;
+  /* 0x0038 */ s16 pitchOffset;
   /* 0x003A */ s8 unk3A;
   /* 0x003B */ u8 zoom;
   /* 0x003C */ u8 unk3C;

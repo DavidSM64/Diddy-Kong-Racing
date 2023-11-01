@@ -190,11 +190,11 @@ glabel func_800AB4A8
 /* 0AC384 800AB784 0C01C327 */  jal   allocate_from_main_pool_safe
 /* 0AC388 800AB788 02C02825 */   move  $a1, $s6
 /* 0AC38C 800AB78C 3C07800E */  lui   $a3, %hi(D_800E2914) # $a3, 0x800e
-/* 0AC390 800AB790 3C08800E */  lui   $t0, %hi(D_800E291C) # $t0, 0x800e
+/* 0AC390 800AB790 3C08800E */  lui   $t0, %hi(gWeatherAssetTable) # $t0, 0x800e
 /* 0AC394 800AB794 3C03800E */  lui   $v1, %hi(D_800E2904) # $v1, 0x800e
 /* 0AC398 800AB798 AE620004 */  sw    $v0, 4($s3)
 /* 0AC39C 800AB79C 24632904 */  addiu $v1, %lo(D_800E2904) # addiu $v1, $v1, 0x2904
-/* 0AC3A0 800AB7A0 2508291C */  addiu $t0, %lo(D_800E291C) # addiu $t0, $t0, 0x291c
+/* 0AC3A0 800AB7A0 2508291C */  addiu $t0, %lo(gWeatherAssetTable) # addiu $t0, $t0, 0x291c
 /* 0AC3A4 800AB7A4 24E72914 */  addiu $a3, %lo(D_800E2914) # addiu $a3, $a3, 0x2914
 /* 0AC3A8 800AB7A8 240400FF */  li    $a0, 255
 .L800AB7AC:

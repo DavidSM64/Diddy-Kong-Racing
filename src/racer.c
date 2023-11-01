@@ -111,9 +111,9 @@ s32 gSurfaceFlagTable4P[20] = {
 };
 
 // Used to know how the AI should use a balloon when they have one.
-s8 gRacerAIBalloonActionTable[NUM_WEAPON_TYPES - 1] = {
+s8 gRacerAIBalloonActionTable[NUM_WEAPON_TYPES] = {
     1, 1, 2, 2, 4, 3, 0, 6,
-    4, 3, 2, 2, 5, 5, 5,
+    4, 3, 2, 2, 5, 5, 5, 0
 };
 
 // Unused?
@@ -5040,7 +5040,7 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
     gCameraObject->offsetX = (((obj->segment.trans.x_position + (91.75 * racer->ox1) + (90.0 * racer->ox3)) - gCameraObject->trans.x_position) * dialogueAngle);
     gCameraObject->offsetZ = (((obj->segment.trans.z_position + (91.75 * racer->oz1) + (90.0 * racer->oz3)) - gCameraObject->trans.z_position) * dialogueAngle);
     gCameraObject->offsetY = (((get_npc_pos_y() + 48.5) - gCameraObject->trans.y_position) * dialogueAngle);
-    gCameraObject->unk38 =  -gCameraObject->trans.x_rotation * dialogueAngle;
+    gCameraObject->pitchOffset =  -gCameraObject->trans.x_rotation * dialogueAngle;
     gCameraObject->trans.x_position += gCameraObject->offsetX;
     gCameraObject->trans.y_position += gCameraObject->offsetY + gCameraObject->unk30;
     gCameraObject->trans.z_position += gCameraObject->offsetZ;
