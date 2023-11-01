@@ -3911,7 +3911,7 @@ SIDeviceStatus func_800862C4(void) {
                         (*sControllerPakNotesFree)--;
                         D_80126A0C[D_80126A08].saveFileType = fileTypes[fileIndex];
                         D_80126A0C[D_80126A08].controllerIndex = 0;
-                        D_80126A0C[D_80126A08].unk7 = fileIndex;
+                        D_80126A0C[D_80126A08].saveFileNumber = fileIndex;
                         D_80126A0C[D_80126A08].fileSize = fileSizes[fileIndex];
                         if (fileTypes[fileIndex] == SAVE_FILE_TYPE_GAME_DATA) {
                             if (read_game_data_from_controller_pak(0, fileExts[fileIndex], settings) == CONTROLLER_PAK_GOOD) {
@@ -4027,7 +4027,129 @@ void func_80086A48(s32 arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/menu/func_80086AFC.s")
+SIDeviceStatus func_80086AFC(void) {
+    s32 i;
+    SIDeviceStatus ret;
+    UNUSED s32 pad[2];
+    char fileExt[PFS_FILE_EXT_LEN];
+    Settings *settings;
+
+    settings = get_settings();
+    switch (D_80126A0C[D_80126BD4].saveFileType) {
+        case SAVE_FILE_TYPE_UNK1:
+            switch (D_80126A04[D_80126BE4].saveFileType) {
+                case SAVE_FILE_TYPE_UNK1:
+                    force_mark_write_save_file(D_80126A04[D_80126BE4].controllerIndex);
+                    gSavefileData[D_80126A04[D_80126BE4].controllerIndex]->cutsceneFlags = settings->cutsceneFlags;
+                    gSavefileData[D_80126A04[D_80126BE4].controllerIndex]->newGame = FALSE;
+                    *gSavefileData[D_80126A04[D_80126BE4].controllerIndex]->balloonsPtr = *settings->balloonsPtr;
+                    gSavefileData[D_80126A04[D_80126BE4].controllerIndex]->filename = settings->filename;
+                    break;
+                case SAVE_FILE_TYPE_UNK8:
+                    ret = write_game_data_to_controller_pak(D_80126A04[D_80126BE4].controllerIndex, settings);
+                    break;
+                case SAVE_FILE_TYPE_UNK7:
+                    mark_save_file_to_erase(D_80126A0C[D_80126BD4].controllerIndex);
+                    gSavefileData[D_80126A0C[D_80126BD4].controllerIndex]->newGame = 1;
+                    break;
+            }
+            break;
+        case SAVE_FILE_TYPE_UNK2:
+            if (D_80126A04[D_80126BE4].saveFileType != SAVE_FILE_TYPE_UNK7) {
+                if (D_80126A04[D_80126BE4].saveFileType == SAVE_FILE_TYPE_UNK8) {
+                    ret = write_time_data_to_controller_pak(D_80126A04[D_80126BE4].controllerIndex, settings);
+                }
+            } else {
+                clear_lap_records(settings, 3);
+                mark_to_write_flap_and_course_times();
+                unset_eeprom_settings_value(0xFFFFF0); //Reset most eeprom save data, but keep Adventure 2, and Drumstick.
+            }
+            break;
+        case SAVE_FILE_TYPE_GAME_DATA:
+            switch (D_80126A04[D_80126BE4].saveFileType) {
+                case SAVE_FILE_TYPE_UNK1:
+                    ret = read_game_data_from_controller_pak(D_80126A0C[D_80126BD4].controllerIndex, D_80126A0C[D_80126BD4].unk8, settings);
+                    if (settings->cutsceneFlags & 4) {
+                        if (is_adventure_two_unlocked() == 0) {
+                            ret = CONTROLLER_PAK_NEED_SECOND_ADVENTURE;
+                        }
+                    }
+                    if (ret == CONTROLLER_PAK_GOOD) {
+                        force_mark_write_save_file((s32) D_80126A04[D_80126BE4].controllerIndex);
+                        gSavefileData[D_80126A04[D_80126BE4].controllerIndex]->cutsceneFlags = settings->cutsceneFlags;
+                        gSavefileData[D_80126A04[D_80126BE4].controllerIndex]->newGame = 0;
+                        *gSavefileData[D_80126A04[D_80126BE4].controllerIndex]->balloonsPtr = *settings->balloonsPtr;
+                        gSavefileData[D_80126A04[D_80126BE4].controllerIndex]->filename = settings->filename;
+                    }
+                    break;
+                case SAVE_FILE_TYPE_UNK8:
+                    ret = read_game_data_from_controller_pak(D_80126A0C[D_80126BD4].controllerIndex, D_80126A0C[D_80126BD4].unk8, gSavefileData[3]);
+                    if (ret == CONTROLLER_PAK_GOOD) {
+                        ret = write_game_data_to_controller_pak(D_80126A04[D_80126BE4].controllerIndex, gSavefileData[3]);
+                    }
+                    break;
+                case SAVE_FILE_TYPE_UNK7:
+                    ret = delete_file(D_80126A0C[D_80126BD4].controllerIndex, D_80126A0C[D_80126BD4].saveFileNumber);
+                    break;
+            }
+            break;
+        case SAVE_FILE_TYPE_TIME_DATA:
+            for (i = 0; D_80126A0C[D_80126BD4].unk8[i] != 0; i++) {}
+            if (i > 0) {
+                fileExt[0] = D_80126A0C[D_80126BD4].unk8[i - 1];
+            } else {
+                fileExt[0] = 'A';
+
+            }
+            fileExt[1] = '\0';
+            switch (D_80126A04[D_80126BE4].saveFileType) {
+                case SAVE_FILE_TYPE_UNK2:
+                    ret = read_time_data_from_controller_pak(D_80126A0C[D_80126BD4].controllerIndex, fileExt, settings);
+                    break;
+                case SAVE_FILE_TYPE_UNK8:
+                    ret = read_time_data_from_controller_pak(D_80126A0C[D_80126BD4].controllerIndex, fileExt, settings);
+                    if (ret == CONTROLLER_PAK_GOOD) {
+                        ret = write_time_data_to_controller_pak(D_80126A04[D_80126BE4].controllerIndex, settings);
+                    }
+                    mark_to_read_flap_and_course_times();
+                    break;
+                case SAVE_FILE_TYPE_UNK7:
+                    ret = delete_file(D_80126A0C[D_80126BD4].controllerIndex, D_80126A0C[D_80126BD4].saveFileNumber);
+                    break;
+            }
+            break;
+        case SAVE_FILE_TYPE_GHOST_DATA:
+            if (D_80126A04[D_80126BE4].saveFileType != SAVE_FILE_TYPE_UNK7) {
+                if (D_80126A04[D_80126BE4].saveFileType != SAVE_FILE_TYPE_UNK8) {
+                    if (D_80126A04[D_80126BE4].saveFileType == SAVE_FILE_TYPE_UNK9) {
+                        gMenuDelay = 1;
+                        D_801264D0 = D_80126A0C[D_80126BD4].controllerIndex;
+                    }
+                } else {
+                    ret = copy_controller_pak_data(D_80126A0C[D_80126BD4].controllerIndex, D_80126A0C[D_80126BD4].saveFileNumber, D_80126A04[D_80126BE4].controllerIndex);
+                }
+            } else {
+                ret = delete_file(D_80126A0C[D_80126BD4].controllerIndex, D_80126A0C[D_80126BD4].saveFileNumber);
+            }
+            break;
+        case SAVE_FILE_TYPE_UNKNOWN:
+            if (D_80126A04[D_80126BE4].saveFileType == SAVE_FILE_TYPE_UNK7) {
+                ret = delete_file(D_80126A0C[D_80126BD4].controllerIndex, D_80126A0C[D_80126BD4].saveFileNumber);
+            }
+            break;
+        case SAVE_FILE_TYPE_UNKA:
+            if (D_80126A04[D_80126BE4].saveFileType == SAVE_FILE_TYPE_UNK7) {
+                unset_eeprom_settings_value(0xFFFFF3); //Reset most eeprom save data including Adventure Two unlock and Drumstick unlock.
+                gActiveMagicCodes &= ~(CHEAT_CONTROL_TT | CHEAT_CONTROL_DRUMSTICK);
+                gUnlockedMagicCodes &= ~(CHEAT_CONTROL_TT | CHEAT_CONTROL_DRUMSTICK);
+            }
+            break;
+        default:
+            ret = CONTROLLER_PAK_GOOD;
+            break;
+    }
+    return ret;
+}
 
 void func_800871D8(SIDeviceStatus deviceStatus) {
     s32 i;
