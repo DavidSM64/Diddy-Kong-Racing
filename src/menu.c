@@ -4050,7 +4050,7 @@ SIDeviceStatus func_80086AFC(void) {
                     break;
                 case SAVE_FILE_TYPE_UNK7:
                     mark_save_file_to_erase(D_80126A0C[D_80126BD4].controllerIndex);
-                    gSavefileData[D_80126A0C[D_80126BD4].controllerIndex]->newGame = 1;
+                    gSavefileData[D_80126A0C[D_80126BD4].controllerIndex]->newGame = TRUE;
                     break;
             }
             break;
@@ -4069,13 +4069,11 @@ SIDeviceStatus func_80086AFC(void) {
             switch (D_80126A04[D_80126BE4].saveFileType) {
                 case SAVE_FILE_TYPE_UNK1:
                     ret = read_game_data_from_controller_pak(D_80126A0C[D_80126BD4].controllerIndex, D_80126A0C[D_80126BD4].saveFileExt, settings);
-                    if (settings->cutsceneFlags & 4) {
-                        if (is_adventure_two_unlocked() == 0) {
-                            ret = CONTROLLER_PAK_NEED_SECOND_ADVENTURE;
-                        }
+                    if (settings->cutsceneFlags & 4 && !is_adventure_two_unlocked()) {
+                        ret = CONTROLLER_PAK_NEED_SECOND_ADVENTURE;
                     }
                     if (ret == CONTROLLER_PAK_GOOD) {
-                        force_mark_write_save_file((s32) D_80126A04[D_80126BE4].controllerIndex);
+                        force_mark_write_save_file(D_80126A04[D_80126BE4].controllerIndex);
                         gSavefileData[D_80126A04[D_80126BE4].controllerIndex]->cutsceneFlags = settings->cutsceneFlags;
                         gSavefileData[D_80126A04[D_80126BE4].controllerIndex]->newGame = 0;
                         *gSavefileData[D_80126A04[D_80126BE4].controllerIndex]->balloonsPtr = *settings->balloonsPtr;
@@ -4099,7 +4097,6 @@ SIDeviceStatus func_80086AFC(void) {
                 fileExt[0] = D_80126A0C[D_80126BD4].saveFileExt[i - 1];
             } else {
                 fileExt[0] = 'A';
-
             }
             fileExt[1] = '\0';
             switch (D_80126A04[D_80126BE4].saveFileType) {

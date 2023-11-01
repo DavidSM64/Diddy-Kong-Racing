@@ -516,6 +516,7 @@ void func_80085B9C(UNUSED s32 updateRate);
 void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale);
 void render_file_select_menu(UNUSED s32 updateRate);
 void func_800871D8(SIDeviceStatus deviceStatus);
+SIDeviceStatus func_80086AFC(void);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -545,7 +546,6 @@ s32 func_8008F618(Gfx **dlist, MatrixS **mtx);
 void func_80080BC8(Gfx **);
 void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour0, s32 colour1, s32 colour2, s32 colour3);
 void func_80084854(void);
-SIDeviceStatus func_80086AFC(void);
 void func_80098774(s32);
 void func_80096978(s32, f32);
 void func_80094D28(UNUSED s32 updateRate);
