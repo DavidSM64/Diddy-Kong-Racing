@@ -191,9 +191,9 @@ s32 gSelectedTrackX;
 s32 gSelectedTrackY;
 s32 *D_801269FC;
 s32 D_80126A00;
-unk800861C8 *D_80126A04; //Shares it's allocation with D_80126A0C
+SaveFileData *D_80126A04;
 s32 D_80126A08;
-unk800861C8 *D_80126A0C; //Allocated 2560 bytes in menu_save_options_init. Possibly an array of 2 large structs.
+SaveFileData *D_80126A0C;
 s32 D_80126A10;
 s32 D_80126A14;
 s32 D_80126A18;
@@ -3523,7 +3523,7 @@ void menu_save_options_init(void) {
     gMenuOptionCount = 1;
     gOpacityDecayTimer = 0;
     D_80126A64 = (char *) allocate_from_main_pool_safe(0x800, COLOUR_TAG_WHITE);
-    D_80126A0C = (unk800861C8 *) allocate_from_main_pool_safe(0xA00, COLOUR_TAG_WHITE);
+    D_80126A0C = (SaveFileData *) allocate_from_main_pool_safe(0xA00, COLOUR_TAG_WHITE);
     D_80126A04 = &D_80126A0C[80];
     D_80126A08 = 0;
     D_80126BD4 = 0;
@@ -3546,7 +3546,7 @@ void menu_save_options_init(void) {
     transition_begin(&sMenuTransitionFadeOut);
 }
 
-void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
+void func_800853D0(SaveFileData *arg0, s32 x, s32 y) {
     s32 i;
     s32 sp78;
     s32 sp74;
@@ -3597,7 +3597,7 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
             for (i = 0; gConPakAdvSavePrefix[i] != '\0'; i++) {
                 buffer[i+3] = gConPakAdvSavePrefix[i];
             }
-            buffer[i+3] = arg0->unk8[0];
+            buffer[i+3] = arg0->saveFileExt[0];
             buffer[i+4] = ')';
             buffer[i+5] = '\0';
             text = gMenuText[86 + arg0->controllerIndex];
@@ -3611,7 +3611,7 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
             drawTexture = gDrawTexTTIcon;
             texture = gMenuObjects[TEXTURE_UNK_44];
             colour = gContPakSaveBgColours[arg0->controllerIndex];
-            text2 = arg0->unk8;
+            text2 = arg0->saveFileExt;
             text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + arg0->controllerIndex];
             break;
         case SAVE_FILE_TYPE_GHOST_DATA:
@@ -3625,7 +3625,7 @@ void func_800853D0(unk800861C8 *arg0, s32 x, s32 y) {
             drawTexture = gDrawTexFileIcon;
             texture = gMenuObjects[TEXTURE_UNK_44];
             colour = gContPakSaveBgColours[arg0->controllerIndex];
-            text2 = arg0->unk8;
+            text2 = arg0->saveFileExt;
             text = gMenuText[ASSET_MENU_TEXT_CONTPAK1 + arg0->controllerIndex];
             break;
         case SAVE_FILE_TYPE_UNK8:
@@ -3818,7 +3818,7 @@ void func_80085B9C(UNUSED s32 updateRate) {
     func_80080E6C();
 }
 
-SIDeviceStatus func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, s32 fileSize, UNUSED s32 arg5) {
+SIDeviceStatus func_800860A8(s32 controllerIndex, s32 *arg1, SaveFileData *arg2, s32 *arg3, s32 fileSize, UNUSED s32 arg5) {
     SIDeviceStatus ret = CONTROLLER_PAK_GOOD;
 
     if (*arg1 != 0) {
@@ -3847,7 +3847,7 @@ SIDeviceStatus func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, 
     return ret;
 }
 
-void func_800861C8(unk800861C8 *arg0, s32 *arg1) {
+void func_800861C8(SaveFileData *arg0, s32 *arg1) {
     s32 i;
     for (i = 0; i < NUMBER_OF_SAVE_FILES; i++) {
         if (gSavefileData[i]->newGame) {
@@ -3915,7 +3915,7 @@ SIDeviceStatus func_800862C4(void) {
                         D_80126A0C[D_80126A08].fileSize = fileSizes[fileIndex];
                         if (fileTypes[fileIndex] == SAVE_FILE_TYPE_GAME_DATA) {
                             if (read_game_data_from_controller_pak(0, fileExts[fileIndex], settings) == CONTROLLER_PAK_GOOD) {
-                                D_80126A0C[D_80126A08].unk8 = temp_D_80126A64;
+                                D_80126A0C[D_80126A08].saveFileExt = temp_D_80126A64;
                                 temp_D_80126A64[0] = *fileExts[fileIndex];
                                 temp_D_80126A64[1] = 0;
                                 temp_D_80126A64 += 2;
@@ -3931,7 +3931,7 @@ SIDeviceStatus func_800862C4(void) {
                                 if (fileTypes[fileIndex] == SAVE_FILE_TYPE_TIME_DATA) {
                                     temp = CONTROLLER_PAK_BAD_DATA;
                                 }
-                                D_80126A0C[D_80126A08].unk8 = temp_D_80126A64;
+                                D_80126A0C[D_80126A08].saveFileExt = temp_D_80126A64;
                                 while (fileNames[fileIndex][temp] != '\0') {
                                     *temp_D_80126A64 = fileNames[fileIndex][temp];
                                     temp++;
@@ -4068,7 +4068,7 @@ SIDeviceStatus func_80086AFC(void) {
         case SAVE_FILE_TYPE_GAME_DATA:
             switch (D_80126A04[D_80126BE4].saveFileType) {
                 case SAVE_FILE_TYPE_UNK1:
-                    ret = read_game_data_from_controller_pak(D_80126A0C[D_80126BD4].controllerIndex, D_80126A0C[D_80126BD4].unk8, settings);
+                    ret = read_game_data_from_controller_pak(D_80126A0C[D_80126BD4].controllerIndex, D_80126A0C[D_80126BD4].saveFileExt, settings);
                     if (settings->cutsceneFlags & 4) {
                         if (is_adventure_two_unlocked() == 0) {
                             ret = CONTROLLER_PAK_NEED_SECOND_ADVENTURE;
@@ -4083,7 +4083,7 @@ SIDeviceStatus func_80086AFC(void) {
                     }
                     break;
                 case SAVE_FILE_TYPE_UNK8:
-                    ret = read_game_data_from_controller_pak(D_80126A0C[D_80126BD4].controllerIndex, D_80126A0C[D_80126BD4].unk8, gSavefileData[3]);
+                    ret = read_game_data_from_controller_pak(D_80126A0C[D_80126BD4].controllerIndex, D_80126A0C[D_80126BD4].saveFileExt, gSavefileData[3]);
                     if (ret == CONTROLLER_PAK_GOOD) {
                         ret = write_game_data_to_controller_pak(D_80126A04[D_80126BE4].controllerIndex, gSavefileData[3]);
                     }
@@ -4094,9 +4094,9 @@ SIDeviceStatus func_80086AFC(void) {
             }
             break;
         case SAVE_FILE_TYPE_TIME_DATA:
-            for (i = 0; D_80126A0C[D_80126BD4].unk8[i] != 0; i++) {}
+            for (i = 0; D_80126A0C[D_80126BD4].saveFileExt[i] != '\0'; i++) {}
             if (i > 0) {
-                fileExt[0] = D_80126A0C[D_80126BD4].unk8[i - 1];
+                fileExt[0] = D_80126A0C[D_80126BD4].saveFileExt[i - 1];
             } else {
                 fileExt[0] = 'A';
 
