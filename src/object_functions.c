@@ -2184,7 +2184,7 @@ void obj_init_parkwarden(Object *obj, UNUSED LevelObjectEntry_Parkwarden *entry)
     taj->unk0 = 0.0f;
     taj->unk28 = 0;
     taj->unk2C = 0;
-    taj->musicPan = 0;
+    taj->musicFade = 0;
     taj->unk36 = 0;
     gTajSoundMask = NULL;
     gTajSoundID = SOUND_VOICE_TAJ_HELLO;
@@ -2727,13 +2727,13 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         }
         switch (taj->unk36) {
         case 0:
-            if (taj->musicPan > updateRate << 7) {
-                taj->musicPan -= updateRate << 7;
+            if (taj->musicFade > updateRate << 7) {
+                taj->musicFade -= updateRate << 7;
                 music_channel_on(14);
-                music_channel_fade_set(14, taj->musicPan >> 8);
+                music_channel_fade_set(14, taj->musicFade >> 8);
                 taj->unk30 = 0;
             } else {
-                taj->musicPan = 0;
+                taj->musicFade = 0;
                 music_channel_off(14);
                 if (taj->unk30 == 0) {
                     taj->unk30 = get_random_number_from_range(600, 900);
@@ -2753,16 +2753,16 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             break;
         case 1:
             if ((music_channel_get_mask() & ~0x4000) == 0xB) {
-                taj->musicPan += (updateRate * 128);
-                if (taj->musicPan > 0x7F00) {
-                    taj->musicPan = 0x7F00;
+                taj->musicFade += (updateRate * 128);
+                if (taj->musicFade > 0x7F00) {
+                    taj->musicFade = 0x7F00;
                 }
                 taj->unk2C -= updateRate;
                 if (taj->unk2C < 0) {
                     taj->unk36 = 0;
                 }
                 music_channel_on(14);
-                music_channel_fade_set(14, taj->musicPan >> 8);
+                music_channel_fade_set(14, taj->musicFade >> 8);
             } else {
                 taj->unk36 = 0;
                 taj->unk2C = 0;

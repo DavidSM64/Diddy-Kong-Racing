@@ -1494,7 +1494,7 @@ typedef struct Object_NPC {
    /* 0x2A */ s16 unk2A;
    /* 0x2C */ s32 unk2C;
    /* 0x30 */ s32 unk30;
-   /* 0x34 */ u16 musicPan;
+   /* 0x34 */ u16 musicFade;
    /* 0x36 */ s8 unk36;
 } Object_NPC;
 
