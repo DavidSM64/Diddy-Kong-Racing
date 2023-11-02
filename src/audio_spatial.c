@@ -48,7 +48,7 @@ extern unk8011A6D8 D_8011A6D8[];
 void func_80008040(void) {
     s32 var_v0;
 
-    sound_pool_properties(&D_80119C40, NULL, NULL);
+    sound_table_properties(&D_80119C40, NULL, NULL);
     gSoundMaskHeap = allocate_from_main_pool_safe(0x5A0, COLOUR_TAG_CYAN);
     gSoundMaskHeapFree = allocate_from_main_pool_safe(0xA0, COLOUR_TAG_CYAN);
     gSoundMaskHeapUsed = allocate_from_main_pool_safe(0xA0, COLOUR_TAG_CYAN);

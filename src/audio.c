@@ -44,7 +44,6 @@ u8 gBssSectionStart[AUDIO_HEAP_SIZE];
 ALHeap gALHeap;
 ALSeqFile *gSequenceTable;
 void *gMusicSequenceData;
-
 void *gJingleSequenceData;
 u8 gCurrentSequenceID;
 u8 gCurrentJingleID;
@@ -52,14 +51,12 @@ s32 musicTempo;
 u32 *gSeqLengthTable;
 ALBankFile *gSequenceBank;
 ALBankFile *gSoundBank;
-
-SoundData *sSoundEffectsPool;
-unk80115D1C *sMusicPool;
-
-s32 gSoundEffectCount;
-s32 sMusicPoolCount;
+SoundData *gSoundTable;
+MusicData *gSeqSoundTable;
+s32 gSoundCount;
+s32 gSeqSoundCount;
 u32 gSoundTableSize;
-u32 sMusicPoolSize;
+u32 gSeqSoundTableSize;
 s16 sMusicTempo;
 f32 gMusicAnimationTick;
 s32 sMusicDelayTimer;
@@ -71,7 +68,7 @@ ALCSeq gMusicSequence;
 ALCSeq gJingleSequence;
 u8 gSkipResetChannels; // Stored and used by a single function, but redundant.
 u8 gAudioVolumeSetting;
-s32 gDynamicMusicChannelMask;
+u32 gDynamicMusicChannelMask;
 SoundMask *gGlobalSoundMask;
 SoundMask *gSpatialSoundMask;
 SoundMask *gRacerSoundMask;
@@ -100,14 +97,14 @@ void audio_init(OSSched *sc) {
     alBnkfNew(gSoundBank, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[ASSET_AUDIO_2]));
 
     gSoundTableSize = addrPtr[ASSET_AUDIO_7] - addrPtr[ASSET_AUDIO_6];
-    sSoundEffectsPool = (SoundData *) allocate_from_main_pool_safe(gSoundTableSize, COLOUR_TAG_CYAN);
-    load_asset_to_address(ASSET_AUDIO, (u32) sSoundEffectsPool, addrPtr[ASSET_AUDIO_6], gSoundTableSize);
-    gSoundEffectCount = gSoundTableSize / sizeof(SoundData);
+    gSoundTable = (SoundData *) allocate_from_main_pool_safe(gSoundTableSize, COLOUR_TAG_CYAN);
+    load_asset_to_address(ASSET_AUDIO, (u32) gSoundTable, addrPtr[ASSET_AUDIO_6], gSoundTableSize);
+    gSoundCount = gSoundTableSize / sizeof(SoundData);
 
-    sMusicPoolSize = addrPtr[ASSET_AUDIO_6] - addrPtr[ASSET_AUDIO_5];
-    sMusicPool = (unk80115D1C *) allocate_from_main_pool_safe(sMusicPoolSize, COLOUR_TAG_CYAN);
-    load_asset_to_address(ASSET_AUDIO, (u32) sMusicPool, addrPtr[ASSET_AUDIO_5], sMusicPoolSize);
-    sMusicPoolCount = sMusicPoolSize / sizeof(unk80115D1C);
+    gSeqSoundTableSize = addrPtr[ASSET_AUDIO_6] - addrPtr[ASSET_AUDIO_5];
+    gSeqSoundTable = (MusicData *) allocate_from_main_pool_safe(gSeqSoundTableSize, COLOUR_TAG_CYAN);
+    load_asset_to_address(ASSET_AUDIO, (u32) gSeqSoundTable, addrPtr[ASSET_AUDIO_5], gSeqSoundTableSize);
+    gSeqSoundCount = gSeqSoundTableSize / sizeof(MusicData);
 
     gSequenceBank = (ALBankFile *) allocate_from_main_pool_safe(addrPtr[ASSET_AUDIO_0], COLOUR_TAG_CYAN);
     load_asset_to_address(ASSET_AUDIO, (u32) gSequenceBank, 0, addrPtr[ASSET_AUDIO_0]);
@@ -249,7 +246,7 @@ void music_play(u8 seqID) {
         musicTempo = alCSPGetTempo((ALCSPlayer *) gMusicPlayer);
         audioPrevCount = osGetCount();
         gMusicPlaying = TRUE;
-        gDynamicMusicChannelMask = -1;
+        gDynamicMusicChannelMask = MUSIC_CHAN_MASK_NONE;
     }
 }
 
@@ -597,9 +594,9 @@ f32 music_animation_fraction(void) {
  * Writes the music and sound tempo, as well as the volume to the arguments.
 */
 UNUSED void sound_get_properties(u8 poolID, u8 *tempo, u8 *volume, u8 *reverb) {
-    *tempo = sMusicPool[poolID].tempo;
-    *volume = sMusicPool[poolID].volume;
-    *reverb = sMusicPool[poolID].reverb;
+    *tempo = gSeqSoundTable[poolID].tempo;
+    *volume = gSeqSoundTable[poolID].volume;
+    *reverb = gSeqSoundTable[poolID].reverb;
 }
 
 /**
@@ -785,10 +782,10 @@ UNUSED void sound_channel_volume_all(u16 volume) {
  * Return the audible distance of the sound effect.
 */
 u16 sound_distance(u16 soundId) {
-    if (soundId > gSoundEffectCount) {
+    if (soundId > gSoundCount) {
         return 0;
     }
-    return sSoundEffectsPool[soundId].distance;
+    return gSoundTable[soundId].distance;
 }
 
 /**
@@ -799,14 +796,14 @@ void sound_play(u16 soundID, s32 *soundMask) {
     f32 pitch;
     s32 soundBite;
 
-    if (soundID > gSoundEffectCount) {
+    if (soundID > gSoundCount) {
         if (soundMask != NULL) {
             *soundMask = NULL;
         }
         stubbed_printf("amSndPlay: Illegal sound effects table index\n");
         return;
     }
-    soundBite = sSoundEffectsPool[soundID].soundBite;
+    soundBite = gSoundTable[soundID].soundBite;
     if (soundBite == NULL) {
         if (soundMask != NULL) {
             *soundMask = NULL;
@@ -814,18 +811,18 @@ void sound_play(u16 soundID, s32 *soundMask) {
         stubbed_printf("amSndPlayDirect: Somebody tried to play illegal sound %d\n", soundID);
         return;
     }
-    pitch = sSoundEffectsPool[soundID].pitch / 100.0f;
+    pitch = gSoundTable[soundID].pitch / 100.0f;
     if (soundMask != NULL) {
-        func_80004668(gSoundBank->bankArray[0], soundBite, sSoundEffectsPool[soundID].unk8, (s32) soundMask);
+        func_80004668(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, (s32) soundMask);
         if (*soundMask != NULL) {
-            sound_event_update(*soundMask, AL_SNDP_VOL_EVT, sSoundEffectsPool[soundID].volume * 256);
+            sound_event_update(*soundMask, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
             sound_event_update(*soundMask, AL_SNDP_PITCH_EVT, *((u32*) &pitch));
         }
     } else {
         soundMask = (s32 *) &gGlobalSoundMask;
-        func_80004668(gSoundBank->bankArray[0], soundBite, sSoundEffectsPool[soundID].unk8, (s32) &gGlobalSoundMask);
+        func_80004668(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, (s32) &gGlobalSoundMask);
         if (*soundMask != NULL) {
-            sound_event_update(*soundMask, AL_SNDP_VOL_EVT, sSoundEffectsPool[soundID].volume * 256);
+            sound_event_update(*soundMask, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
             sound_event_update(*soundMask, AL_SNDP_PITCH_EVT, *((u32*) &pitch));
         }
     }
@@ -866,7 +863,7 @@ void func_80001F14(u16 soundID, s32 *soundMask) {
  * Set the volume of the sound relative to the baseline volume of the sound ID.
 */
 void sound_volume_set_relative(u16 soundID, void *soundState, u8 volume) {
-    s32 newVolume = ((s32) (sSoundEffectsPool[soundID].volume * (volume / 127.0f))) * 256;
+    s32 newVolume = ((s32) (gSoundTable[soundID].volume * (volume / 127.0f))) * 256;
     if (soundState) {
         sound_event_update((s32) soundState, AL_SNDP_VOL_EVT, newVolume);
     }
@@ -907,32 +904,32 @@ u8 music_sequence_count(void) {
 }
 
 /**
- * Writes the sound pool address, size and pool count into the arguments
+ * Writes the sound table address, size and element count into the arguments.
 */
-void sound_pool_properties(SoundData **pool, s32 *size, s32 *count) {
-    if (pool != NULL) {
-        *pool = sSoundEffectsPool;
+void sound_table_properties(SoundData **table, s32 *size, s32 *count) {
+    if (table != NULL) {
+        *table = gSoundTable;
     }
     if (size != NULL) {
         *size = gSoundTableSize;
     }
     if (count != NULL) {
-        *count = gSoundEffectCount;
+        *count = gSoundCount;
     }
 }
 
 /**
- * Writes the music pool address, size and pool count into the arguments
+ * Writes the music sound table address, size and element count into the arguments.
 */
-UNUSED void music_pool_properties(unk80115D1C **pool, s32 *size, s32 *count) {
-    if (pool != NULL) {
-        *pool = sMusicPool;
+UNUSED void music_table_properties(MusicData **table, s32 *size, s32 *count) {
+    if (table != NULL) {
+        *table = gSeqSoundTable;
     }
     if (size != NULL) {
-        *size = sMusicPoolSize;
+        *size = gSeqSoundTableSize;
     }
     if (count != NULL) {
-        *count = sMusicPoolCount;
+        *count = gSeqSoundCount;
     }
 }
 
@@ -995,15 +992,15 @@ void music_sequence_init(ALSeqPlayer *seqp, void *sequence, u8 *seqID, ALCSeq *s
         alCSPSetSeq((ALCSPlayer* ) seqp, seq);
         alCSPPlay((ALCSPlayer* ) seqp);
         if (seqp == gMusicPlayer) {
-            music_volume_set(sMusicPool[*seqID].volume);
-            if (sMusicPool[*seqID].tempo != 0) {
-                music_tempo_set(sMusicPool[*seqID].tempo);
+            music_volume_set(gSeqSoundTable[*seqID].volume);
+            if (gSeqSoundTable[*seqID].tempo != 0) {
+                music_tempo_set(gSeqSoundTable[*seqID].tempo);
             } else {
                 sMusicTempo = -1;
             }
-            sound_reverb_set(sMusicPool[*seqID].reverb);
+            sound_reverb_set(gSeqSoundTable[*seqID].reverb);
             gCurrentSequenceID = *seqID;
-            if (gDynamicMusicChannelMask != -1) {
+            if (gDynamicMusicChannelMask != MUSIC_CHAN_MASK_NONE) {
                 for (i = 0; i < AUDIO_CHANNELS; i++) {
                     if ((1 << i) & gDynamicMusicChannelMask) {
                         music_channel_on(i);
@@ -1013,9 +1010,9 @@ void music_sequence_init(ALSeqPlayer *seqp, void *sequence, u8 *seqID, ALCSeq *s
                 }
             }
         } else {
-            music_jingle_volume_set(sMusicPool[*seqID].volume);
-            if (sMusicPool[*seqID].tempo != 0) {
-                sound_jingle_tempo_set(sMusicPool[*seqID].tempo);
+            music_jingle_volume_set(gSeqSoundTable[*seqID].volume);
+            if (gSeqSoundTable[*seqID].tempo != 0) {
+                sound_jingle_tempo_set(gSeqSoundTable[*seqID].tempo);
             }
             gCurrentJingleID = *seqID;
         }
@@ -1051,5 +1048,5 @@ void sound_reverb_set(u8 setting) {
  * Returns whether or not reverb is currently enabled.
 */
 UNUSED u8 sound_reverb_enabled(void) {
-    return sMusicPool[gCurrentSequenceID].reverb;
+    return gSeqSoundTable[gCurrentSequenceID].reverb;
 }

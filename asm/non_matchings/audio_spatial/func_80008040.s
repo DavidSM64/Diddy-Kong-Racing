@@ -4,7 +4,7 @@ glabel func_80008040
 /* 008C48 80008048 3C048012 */  lui   $a0, %hi(D_80119C40) # $a0, 0x8012
 /* 008C4C 8000804C 24849C40 */  addiu $a0, %lo(D_80119C40) # addiu $a0, $a0, -0x63c0
 /* 008C50 80008050 00002825 */  move  $a1, $zero
-/* 008C54 80008054 0C00084A */  jal   sound_pool_properties
+/* 008C54 80008054 0C00084A */  jal   sound_table_properties
 /* 008C58 80008058 00003025 */   move  $a2, $zero
 /* 008C5C 8000805C 3C0500FF */  lui   $a1, (0x00FFFFFF >> 16) # lui $a1, 0xff
 /* 008C60 80008060 34A5FFFF */  ori   $a1, (0x00FFFFFF & 0xFFFF) # ori $a1, $a1, 0xffff
