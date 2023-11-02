@@ -255,7 +255,7 @@ void __resetPerfChanState(ALSeqPlayer *seqp, s32 chan)
   ((ALChanState_Custom*)seqp->chanState)[chan].fxmix = AL_DEFAULT_FXMIX;
   ((ALChanState_Custom*)seqp->chanState)[chan].pan = AL_PAN_CENTER;
   ((ALChanState_Custom*)seqp->chanState)[chan].vol = AL_VOL_FULL;
-  ((ALChanState_Custom*)seqp->chanState)[chan].unk10 = AL_VOL_FULL;
+  ((ALChanState_Custom*)seqp->chanState)[chan].fade = AL_VOL_FULL;
   ((ALChanState_Custom*)seqp->chanState)[chan].priority = AL_DEFAULT_PRIORITY;
   ((ALChanState_Custom*)seqp->chanState)[chan].sustain = 0;
   ((ALChanState_Custom*)seqp->chanState)[chan].bendRange = 200;

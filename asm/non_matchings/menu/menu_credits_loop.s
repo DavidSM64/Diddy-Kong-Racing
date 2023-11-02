@@ -639,7 +639,7 @@ glabel L8009BB9C
 /* 09C83C 8009BC3C 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 09C840 8009BC40 0C03005C */  jal   enable_new_screen_transitions
 /* 09C844 8009BC44 00000000 */   nop   
-/* 09C848 8009BC48 0C000326 */  jal   set_music_fade_timer
+/* 09C848 8009BC48 0C000326 */  jal   music_fade
 /* 09C84C 8009BC4C 2404FF80 */   li    $a0, -128
 .L8009BC50:
 /* 09C850 8009BC50 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e

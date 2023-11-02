@@ -681,7 +681,7 @@ void handle_rain_lightning(s32 updateRate) {
             if (D_800E2C6C >= 32769 && check_fadeout_transition() == 0) {
                 transition_begin(&gThunderTransition);
             }
-            play_sound_global(SOUND_LIGHTNING, NULL);
+            sound_play(SOUND_LIGHTNING, NULL);
             gThunderTimer = 0;
         }
     } else if (gLightningFrequency >= 48000) {
@@ -689,7 +689,7 @@ void handle_rain_lightning(s32 updateRate) {
             gLightningTimer -= updateRate;
             return;
         }
-        play_sound_global(SOUND_THUNDER, NULL);
+        sound_play(SOUND_THUNDER, NULL);
         gThunderTimer = 600 - ((s32) (gLightningFrequency + -48000) >> 5);
         gLightningTimer = get_random_number_from_range(900, 1140) - ((s32) (gLightningFrequency + -48000) >> 5);
     }

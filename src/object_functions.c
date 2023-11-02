@@ -290,7 +290,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
                         racer->bubbleTrapTimer = 60;
                         obj->properties.fireball.timer = -60;
                         obj->properties.fireball.obj = someObj;
-                        play_sound_global(SOUND_BUBBLE_RISE, &weapon->soundMask);
+                        sound_play(SOUND_BUBBLE_RISE, &weapon->soundMask);
                     }
                 }
             }
@@ -656,15 +656,15 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                 if (gfxData->unk4 == 0) {
                     if (worldBalloons) {
                         obj->properties.trophyCabinet.action = 1;
-                        play_sound_global(SOUND_VOICE_TT_TROPHY_RACE, NULL);
+                        sound_play(SOUND_VOICE_TT_TROPHY_RACE, NULL);
                         func_800A3870();
                     } else {
                         // Text for "TROPHY RACE" "TO ENTER THE TROPHY RACE, YOU MUST COMPLETE ALL THE TASKS FROM THIS WORLD. KEEP RACING!"
                         set_current_text(ASSET_GAME_TEXT_4);
                         gfxData->unk4 = 180;
                         gfxData->unk0 = 140;
-                        set_sndfx_player_voice_limit(16);
-                        set_music_fade_timer(-8);
+                        music_jingle_voicelimit_set(16);
+                        music_fade(-8);
                         music_jingle_play(SEQUENCE_NO_TROPHY_FOR_YOU);
                     }
                 }
@@ -675,8 +675,8 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                 gfxData->unk0 -= updateRate;
             } else {
                 gfxData->unk0 = 0;
-                set_music_fade_timer(8);
-                set_sndfx_player_voice_limit(6);
+                music_fade(8);
+                music_jingle_voicelimit_set(6);
             }
         }
         if (obj->unk5C->unk100 != NULL || func_800C3400()) {
@@ -1033,7 +1033,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
                 diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
                 if ((s32) sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < obj->properties.zipper.radius) {
                     if (racer->playerIndex != PLAYER_COMPUTER) {
-                        play_sound_spatial(SOUND_ZIP_PAD_BOOST, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
+                        sound_play_spatial(SOUND_ZIP_PAD_BOOST, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
                     }
                     racer->boostTimer = normalise_time(45);
                     racer->boostType = BOOST_LARGE;
@@ -1247,7 +1247,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
                 get_fog_settings(PLAYER_ONE, &tt->fogNear, &tt->fogFar, &tt->fogR, &tt->fogG, &tt->fogB);
                 slowly_change_fog(PLAYER_ONE, 128, 128, 255, 900, 998, 240);
                 music_channel_reset_all();
-                play_music(SEQUENCE_TTS_THEME);
+                music_play(SEQUENCE_TTS_THEME);
                 if (racerObj != NULL) {
                     racer_sound_free(racerObj);
                     racer->vehicleSound = NULL;
@@ -1341,8 +1341,8 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
                 play_tt_voice_clip(SOUND_VOICE_TT_OK, 1);
             }
             slowly_change_fog(PLAYER_ONE, tt->fogR, tt->fogG, tt->fogB, tt->fogNear, tt->fogFar, 180);
-            play_music(header->music);
-            music_dynamic_reset(header->instruments);
+            music_play(header->music);
+            music_dynamic_set(header->instruments);
             racer->vehicleSound = func_80004B40(racer->characterId, racer->vehicleID);
         }
         obj->properties.npc.timer = 180;
@@ -1411,7 +1411,7 @@ void play_tt_voice_clip(u16 soundID, s32 interrupt) {
         gTTSoundMask = NULL;
     }
     if (gTTSoundMask == NULL) {
-        play_sound_global(soundID, &gTTSoundMask);
+        sound_play(soundID, &gTTSoundMask);
     }
 }
 
@@ -2029,7 +2029,7 @@ void obj_loop_teleport(Object *obj, UNUSED s32 updateRate) {
         if (obj->interactObj->distance < 120) {
             begin_level_teleport(level_entry->levelID);
             obj->properties.lighthouse.active = FALSE;
-            play_sound_global(SOUND_WHOOSH2, NULL);
+            sound_play(SOUND_WHOOSH2, NULL);
             sound_play_delayed(SOUND_VOICE_TT_FUTURE_FUN_LAND, NULL, 1.0f);
         }
     }
@@ -2280,8 +2280,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     if ((should_taj_teleport() || var_a2) && (obj->properties.npc.action == TAJ_MODE_ROAM || obj->properties.npc.action == TAJ_MODE_UNK1F)) {
         music_channel_reset_all();
-        set_music_player_voice_limit(24);
-        play_music(SEQUENCE_ENTRANCED);
+        music_voicelimit_set(24);
+        music_play(SEQUENCE_ENTRANCED);
         if (racerObj != NULL) {
             racer_sound_free(racerObj);
             racer->vehicleSound = NULL;
@@ -2434,9 +2434,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             taj->unk1C = 0;
             play_taj_voice_clip(SOUND_VOICE_TAJ_BYE, TRUE);
             slowly_change_fog(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
-            set_music_player_voice_limit(levelHeader->voiceLimit);
-            play_music(levelHeader->music);
-            music_dynamic_reset(levelHeader->instruments);
+            music_voicelimit_set(levelHeader->voiceLimit);
+            music_play(levelHeader->music);
+            music_dynamic_set(levelHeader->instruments);
             func_80008168();
         }
         if (dialogueID & 0x80) {
@@ -2485,7 +2485,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 racer->transparency = 0;
                 despawn_player_racer(racerObj, gTajDialogueChoice & 0xF);
                 obj->properties.npc.action = TAJ_MODE_TRANSFORM_END;
-                play_sound_global(SOUND_CYMBAL, NULL);
+                sound_play(SOUND_CYMBAL, NULL);
                 transition_begin(&gTajTransformTransitionEnd);
             }
         }
@@ -2510,7 +2510,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                         transition_begin(&gTajTransition);
                         sp6B = 1;
                         obj->properties.npc.action = TAJ_MODE_SET_CHALLENGE;
-                        play_sound_global(SOUND_WHOOSH4, NULL);
+                        sound_play(SOUND_WHOOSH4, NULL);
                         taj->animFrameF = 0.0f;
                     } else {
                         obj->properties.npc.action = TAJ_MODE_DIALOGUE;
@@ -2536,7 +2536,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 );
             }
             obj->properties.npc.action = TAJ_MODE_TELEPORT_AWAY_BEGIN;
-            play_sound_global(SOUND_WHOOSH4, NULL);
+            sound_play(SOUND_WHOOSH4, NULL);
             racer->vehicleSound = func_80004B40(racer->characterId, racer->vehicleID);
         }
         break;
@@ -2556,7 +2556,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         if (obj->segment.object.opacity > var_a2) {
             obj->segment.object.opacity -= var_a2;
         } else {
-            play_sound_global(SOUND_WHOOSH4, NULL);
+            sound_play(SOUND_WHOOSH4, NULL);
             sp6B = 1;
             obj->segment.object.opacity = 0;
             obj->properties.npc.action = TAJ_MODE_TELEPORT_TO_PLAYER_END;
@@ -2597,9 +2597,9 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         } else {
             racer->vehicleSound = func_80004B40(racer->characterId, racer->vehicleID);
             slowly_change_fog(PLAYER_ONE, taj->fogR, taj->fogG, taj->fogB, taj->fogNear, taj->fogFar, 180);
-            set_music_player_voice_limit(levelHeader->voiceLimit);
-            play_music(levelHeader->music);
-            music_dynamic_reset(levelHeader->instruments);
+            music_voicelimit_set(levelHeader->voiceLimit);
+            music_play(levelHeader->music);
+            music_dynamic_set(levelHeader->instruments);
             init_racer_for_challenge(racer->vehicleID);
             telepoint = find_furthest_telepoint(obj->segment.trans.x_position, obj->segment.trans.z_position);
             if (telepoint != NULL) {
@@ -2709,16 +2709,16 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 zPosDiff = obj->segment.trans.z_position - temp_v0_22->trans.z_position;
                 arctan = func_800090C0(xPosDiff, zPosDiff, temp_v0_22->trans.y_rotation);
                 temp = arctan;
-                music_channel_fade_in(10, sp3C);
-                music_channel_fade_in(11, sp3C);
-                music_channel_fade_in(15, sp3C);
+                music_channel_fade_set(10, sp3C);
+                music_channel_fade_set(11, sp3C);
+                music_channel_fade_set(15, sp3C);
                 music_channel_pan_set(10, temp);
                 music_channel_pan_set(11, temp);
                 music_channel_pan_set(15, temp);
                 music_channel_on(10);
                 music_channel_on(11);
                 music_channel_on(15);
-                music_channel_fade_in(3, 127 - sp3C);
+                music_channel_fade_set(3, 127 - sp3C);
             } else {
                 music_channel_off(10);
                 music_channel_off(11);
@@ -2730,7 +2730,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             if (taj->musicPan > updateRate << 7) {
                 taj->musicPan -= updateRate << 7;
                 music_channel_on(14);
-                music_channel_fade_in(14, taj->musicPan >> 8);
+                music_channel_fade_set(14, taj->musicPan >> 8);
                 taj->unk30 = 0;
             } else {
                 taj->musicPan = 0;
@@ -2762,7 +2762,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                     taj->unk36 = 0;
                 }
                 music_channel_on(14);
-                music_channel_fade_in(14, taj->musicPan >> 8);
+                music_channel_fade_set(14, taj->musicPan >> 8);
             } else {
                 taj->unk36 = 0;
                 taj->unk2C = 0;
@@ -2807,7 +2807,7 @@ void play_taj_voice_clip(u16 soundID, s32 interrupt) {
         gTajSoundMask = 0;
     }
     if (!gTajSoundMask) {
-        play_sound_global(soundID, &gTajSoundMask);
+        sound_play(soundID, &gTajSoundMask);
     }
 }
 
@@ -2987,7 +2987,7 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
                         if (racer->bananas < 10) {
                             racer->bananas = 10;
                             play_sound_at_position(SOUND_SELECT, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, 4, NULL);
-                            play_sound_spatial(racer->characterId + SOUND_UNK_7B, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
+                            sound_play_spatial(racer->characterId + SOUND_UNK_7B, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
                         }
                     }
                 }
@@ -3088,7 +3088,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
                         }
                         settings->courseFlagsPtr[settings->courseId] |= flag;
                         if (1) {} // Fakematch
-                        play_sound_spatial(SOUND_COLLECT_BALLOON, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
+                        sound_play_spatial(SOUND_COLLECT_BALLOON, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
                         obj->properties.npc.timer = 16;
                         obj->unk74 = 2;
                         obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
@@ -3213,9 +3213,9 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
             racer = (Object_Racer *) racerObj->unk64;
             if (racer->playerIndex != PLAYER_COMPUTER && racerObj == obj->unk5C->unk100) {
                 if (ttDoor->unk13 != -1 && func_800C3400() == 0 && ttDoor->unkC == 0) {
-                    set_music_fade_timer(-8);
+                    music_fade(-8);
                     ttDoor->unk8 = 140;
-                    set_sndfx_player_voice_limit(16);
+                    music_jingle_voicelimit_set(16);
                     music_jingle_play(SEQUENCE_NO_TROPHY_FOR_YOU);
                     set_current_text(ttDoor->unk13 & 0xFF);
                 }
@@ -3231,8 +3231,8 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
             ttDoor->unk8 -= updateRate;
         } else {
             ttDoor->unk8 = 0.0f;
-            set_music_fade_timer(8);
-            set_sndfx_player_voice_limit(6);
+            music_fade(8);
+            music_jingle_voicelimit_set(6);
         }
     }
     if (ttDoor->unkC > 0) {
@@ -3656,7 +3656,7 @@ void obj_loop_flycoin(Object *obj, s32 updateRate) {
         }
         free_object(obj);
         if (racerObj->playerIndex != PLAYER_COMPUTER) {
-            play_sound_global(SOUND_SELECT, NULL);
+            sound_play(SOUND_SELECT, NULL);
         }
     }
     obj->segment.animFrame += updateRate * 8;
@@ -3820,7 +3820,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
                         func_800096F8(prevSoundMask);
                     }
                     if (racer->playerIndex != PLAYER_COMPUTER && racer->bananas == 9) {
-                        play_sound_spatial(racer->characterId + SOUND_UNK_7B, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
+                        sound_play_spatial(racer->characterId + SOUND_UNK_7B, racerObj->segment.trans.x_position, racerObj->segment.trans.y_position, racerObj->segment.trans.z_position, NULL);
                     }
                     racer->bananas++;
                     if (banana->spawner != NULL) {
@@ -4119,7 +4119,7 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
                                     if (racer->balloon_level > 2) {
                                         newvar = 2;
                                     }
-                                    play_sound_global(SOUND_COLLECT_ITEM + newvar, NULL);
+                                    sound_play(SOUND_COLLECT_ITEM + newvar, NULL);
                                 } else {
                                     play_sound_at_position(SOUND_BALLOON_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                                 }
@@ -4129,7 +4129,7 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
                             if (newvar > 0) {
                                 set_time_trial_start_voice(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
                             }
-                            play_sound_global(SOUND_COLLECT_ITEM + racer->balloon_level, NULL);
+                            sound_play(SOUND_COLLECT_ITEM + racer->balloon_level, NULL);
                         }
                     }
                     obj->unk74 = 1;

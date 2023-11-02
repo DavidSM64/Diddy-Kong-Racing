@@ -153,7 +153,7 @@ void audio_init(OSSched *sc) {
     audConfig.hp = &gALHeap;
     alSndPNew(&audConfig);
     audioStartThread();
-    adjust_audio_volume(VOLUME_NORMAL);
+    sound_volume_change(VOLUME_NORMAL);
     free_from_memory_pool(addrPtr);
     set_sound_channel_count(10);
     gBlockMusicChange = FALSE;
@@ -170,7 +170,7 @@ void audio_init(OSSched *sc) {
 /**
  * Depending on whether or not the audio volume is set to normal and the argument is false, reset sound effect channel volumes.
 */
-void reset_sound_volume(u8 skipReset) {
+void sound_volume_reset(u8 skipReset) {
     if (gAudioVolumeSetting == VOLUME_NORMAL) {
         gSkipResetChannels = skipReset;
         if (gSkipResetChannels == FALSE) {
@@ -187,7 +187,7 @@ void reset_sound_volume(u8 skipReset) {
 /**
  * Changes the volume of each sound channel depending on what value is passed through.
 */
-void adjust_audio_volume(s32 behaviour) {
+void sound_volume_change(s32 behaviour) {
     switch (behaviour) {
         case VOLUME_LOWER: // Mute most sound effects and half the volume of music.
             set_sound_channel_volume(0, 0);
@@ -239,7 +239,7 @@ void music_change_on(void) {
  * Queue a new music sequence to play if not blocked.
  * Stops any playing existing music beforehand.
 */
-void play_music(u8 seqID) {
+void music_play(u8 seqID) {
     if (gBlockMusicChange == FALSE && gMusicSliderVolume != 0) {
         gCurrentSequenceID = seqID;
         gMusicBaseVolume = 127;
@@ -256,7 +256,7 @@ void play_music(u8 seqID) {
 /**
  * Update the background music voice limit if not prevented from doing so.
 */
-void set_music_player_voice_limit(u8 voiceLimit) {
+void music_voicelimit_set(u8 voiceLimit) {
     if (gBlockVoiceLimitChange == FALSE) {
         set_voice_limit(gMusicPlayer, voiceLimit);
     }
@@ -279,7 +279,7 @@ void music_voicelimit_change_on(void) {
 /**
  * Update the jingle players voice limit.
 */
-void set_sndfx_player_voice_limit(u8 voiceLimit) {
+void music_jingle_voicelimit_set(u8 voiceLimit) {
     set_voice_limit(gJinglePlayer, voiceLimit);
 }
 
@@ -291,7 +291,7 @@ UNUSED void func_80000C68(u8 arg0) {
  * Enables the timer to start fading in or out the background music.
  * Give it a positive number to fade in, otherwise, give it a negative one to fade out.
  */
-void set_music_fade_timer(s32 time) {
+void music_fade(s32 time) {
     sMusicDelayTimer = 0;
     sMusicDelayLength = (time * 60) >> 8;
 }
@@ -340,7 +340,7 @@ void sound_update_queue(u8 updateRate) {
             gDelayedSounds[i].timer -= updateRate;
             if (gDelayedSounds[i].timer <= 0) {
                 j = i;
-                play_sound_global(gDelayedSounds[i].soundId, (s32 *) gDelayedSounds[i].soundMask);
+                sound_play(gDelayedSounds[i].soundId, (s32 *) gDelayedSounds[i].soundMask);
 
                 gDelayedSoundsCount -= 1;
                 while (j < gDelayedSoundsCount) {
@@ -391,14 +391,17 @@ u16 music_channel_get_mask(void) {
     return gMusicPlayer->chanMask;
 }
 
-void music_dynamic_reset(u16 channel) {
+/**
+ * Sets the channels in the sequence on or off based on the channel mask given.
+*/
+void music_dynamic_set(u16 channelMask) {
     u32 i;
     if (gMusicNextSeqID) {
-        gDynamicMusicChannelMask = channel;
+        gDynamicMusicChannelMask = channelMask;
     } else {
-        gMusicPlayer->chanMask = channel;
+        gMusicPlayer->chanMask = channelMask;
         for (i = 0; i != AUDIO_CHANNELS; i++) {
-            if (channel & (1 << i)) {
+            if (channelMask & (1 << i)) {
                 music_channel_on(i);
             } else {
                 music_channel_off(i);
@@ -469,17 +472,20 @@ UNUSED u8 music_channel_volume(u8 channel) {
 /**
  * Set this channel to fade in over time.
 */
-void music_channel_fade_in(u8 channel, u8 fade) {
+void music_channel_fade_set(u8 channel, u8 fade) {
     if (channel < AUDIO_CHANNELS) {
         alCSPSetFadeIn(gMusicPlayer, channel, fade);
     }
 }
 
-u8 func_800012A8(u8 channel) {
+/**
+ * Return the fade volume of the given channel.
+*/
+u8 music_channel_fade(u8 channel) {
     if (channel >= AUDIO_CHANNELS) {
         return 0;
     }
-    return func_80063C00((ALCSPlayer *) gMusicPlayer, channel);
+    return alCSPGetFadeIn((ALCSPlayer *) gMusicPlayer, channel);
 }
 
 /**
@@ -491,7 +497,7 @@ void music_channel_reset_all(void) {
     if (gBlockMusicChange == FALSE) {
         for (channel = 0; channel < AUDIO_CHANNELS; channel++) {
             music_channel_on(channel);
-            music_channel_fade_in(channel, 127);
+            music_channel_fade_set(channel, 127);
             music_channel_volume_set(channel, 127);
         }
     }
@@ -631,7 +637,7 @@ UNUSED void music_enabled_set(u8 setting) {
     if (setting != gCanPlayMusic) {
         gCanPlayMusic = setting;
         if (setting) {
-            play_music(gCurrentSequenceID);
+            music_play(gCurrentSequenceID);
         } else {
             music_stop();
         }
@@ -764,9 +770,11 @@ u32 music_jingle_playing(void) {
 }
 
 /**
- * Sets the volume of what I presume is all sound channels
+ * Sets the volume for every sound channel.
+ * Tries to set up to 64, regardless of if there are 64 sound channels or not.
+ * !@bug: This can cause an out of bounds array index.
 */
-UNUSED void set_all_channel_volume(u16 volume) {
+UNUSED void sound_channel_volume_all(u16 volume) {
     u32 i;
     for (i = 0; i < 64; i++) {
         set_sound_channel_volume(i, volume << 8);
@@ -787,7 +795,7 @@ u16 sound_distance(u16 soundId) {
  * Add the requested sound to the queue and update the mask to show that this sound is playing at that source.
  * If no soundmask is provided, then instead use the global mask.
 */
-void play_sound_global(u16 soundID, s32 *soundMask) {
+void sound_play(u16 soundID, s32 *soundMask) {
     f32 pitch;
     s32 soundBite;
 
@@ -828,12 +836,12 @@ void play_sound_global(u16 soundID, s32 *soundMask) {
  * This then makes the audio pan around in 3D space.
  * If it is not given a mask, then it will use the global mask.
  */
-void play_sound_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **soundMask) {
+void sound_play_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **soundMask) {
     if (soundMask == NULL) {
         soundMask = (s32 **) &gSpatialSoundMask;
     }
 
-    play_sound_global(soundID, (s32 *) soundMask);
+    sound_play(soundID, (s32 *) soundMask);
 
     if (*soundMask != NULL) {
         func_80009B7C(*soundMask, x, y, z);
@@ -854,7 +862,10 @@ void func_80001F14(u16 soundID, s32 *soundMask) {
     }
 }
 
-void func_80001FB8(u16 soundID, void *soundState, u8 volume) {
+/**
+ * Set the volume of the sound relative to the baseline volume of the sound ID.
+*/
+void sound_volume_set_relative(u16 soundID, void *soundState, u8 volume) {
     s32 newVolume = ((s32) (sSoundEffectsPool[soundID].volume * (volume / 127.0f))) * 256;
     if (soundState) {
         sound_event_update((s32) soundState, AL_SNDP_VOL_EVT, newVolume);

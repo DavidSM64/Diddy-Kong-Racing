@@ -207,7 +207,7 @@ ALMicroTime __CSPVoiceHandler(void *node)
         seqp->chanMask = 0xFFFF;
         for (chan = 0; chan < seqp->maxChannels; chan++)
         {
-            seqp->chanState[chan].unk10 = 0x7F;
+            seqp->chanState[chan].fade = 0x7F;
             seqp->chanState[chan].vol = seqp->chanState[chan].unk11;
         }
 
@@ -632,13 +632,13 @@ void __CSPHandleMIDIMsg(ALCSPlayer_Custom *seqp, ALEvent *event)
                     {
                         f32 temp;
                         seqp->chanState[chan].unk11 = byte2;
-                        temp = seqp->chanState[chan].unk10;
-                        if (seqp->chanState[chan].unk10 < 0)
+                        temp = seqp->chanState[chan].fade;
+                        if (seqp->chanState[chan].fade < 0)
                         {
                             temp += 0xFFFFFFFF;
                         }
                         
-                        seqp->chanState[chan].vol = (temp * seqp->chanState[chan].unk10) / 127.0f;
+                        seqp->chanState[chan].vol = (temp * seqp->chanState[chan].fade) / 127.0f;
                         
                         for (vs = seqp->vAllocHead; vs != 0; vs = vs->next)
                         {
@@ -652,8 +652,8 @@ void __CSPHandleMIDIMsg(ALCSPlayer_Custom *seqp, ALEvent *event)
                     }
                     break;
                 case (8):
-                    seqp->chanState[chan].unk10 = byte2;                        
-                    seqp->chanState[chan].vol = (seqp->chanState[chan].unk11 * seqp->chanState[chan].unk10) / 127.0f;
+                    seqp->chanState[chan].fade = byte2;                        
+                    seqp->chanState[chan].vol = (seqp->chanState[chan].unk11 * seqp->chanState[chan].fade) / 127.0f;
                     for (vs = seqp->vAllocHead; vs != 0; vs = vs->next)
                     {
                         if ((vs->channel == chan) && (vs->envPhase != AL_PHASE_RELEASE))

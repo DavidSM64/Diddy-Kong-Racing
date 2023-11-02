@@ -550,7 +550,7 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
     gRacerSound->unk54[1] = 0.0f;
     if ((gSoundRacerObj->playerIndex != PLAYER_COMPUTER) && (gSoundRacerObj->spinout_timer != 0) && !gRacerSound->brakeSound) {
         gRacerSound->brakeSound = TRUE;
-        play_sound_global(SOUND_UNK_13D, &gRacerSound->brakeSoundMask);
+        sound_play(SOUND_UNK_13D, &gRacerSound->brakeSoundMask);
     } else if (gSoundRacerObj->spinout_timer == 0) {
         gRacerSound->brakeSound = FALSE;
         if (gRacerSound->brakeSoundMask != NULL) {

@@ -126,7 +126,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         obj->segment.object.animationID = ANIM_TRICKY_DAMAGE;
         obj->segment.y_velocity += 7.5;
         play_random_boss_sound(BOSS_SOUND_NEGATIVE);
-        play_sound_global(SOUND_EXPLOSION, NULL);
+        sound_play(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
         racer->velocity *= 0.3;
         racer->animationSpeed = 0.0f;
@@ -246,7 +246,7 @@ void play_random_boss_sound(s32 offset) {
         randomOffset = 0;
     }
     offset += randomOffset;
-    play_sound_global(gBossSoundIDOffset[offset], NULL);
+    sound_play(gBossSoundIDOffset[offset], NULL);
 }
 
 // boss_race_finish
@@ -294,9 +294,9 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
     racerUnk1AC = racer->unk1AC;
     if (arg1_ret == 1) {
         if (racerUnk1AC == 1) {
-            play_music(SEQUENCE_BATTLE_VICTORY);
+            music_play(SEQUENCE_BATTLE_VICTORY);
         } else {
-            play_music(SEQUENCE_BATTLE_LOSE);
+            music_play(SEQUENCE_BATTLE_LOSE);
         }
         if ((settings->worldId == WORLD_CENTRAL_AREA) || (settings->worldId == WORLD_FUTURE_FUN_LAND)) {
             if (racerUnk1AC == 1) {

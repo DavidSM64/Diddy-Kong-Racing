@@ -50,7 +50,7 @@ void alCSPSetChlPan(ALCSPlayer *seqp, u8 channel, ALPan pan); //lib/src/unknown_
 void alCSPSetChlVol(ALCSPlayer *, u8 channel, u8 volume); //lib/src/unknown_0C84E0.c
 u8 alCSPGetChlVol(ALCSPlayer *seqp, u8 channel); //lib/src/al
 void alCSPSetFadeIn(ALSeqPlayer *seqp, u8 channel, ALPan pan); //lib/src/unknown_0647A0.c
-u8 func_80063C00(ALCSPlayer *seqp, u8 channel); //lib/src/mips1/al/unknown_064800.c
+u8 alCSPGetFadeIn(ALCSPlayer *seqp, u8 channel); //lib/src/mips1/al/unknown_064800.c
 u8 alSeqpGetChlFXMix(ALSeqPlayer *seqp, u8 channel); //lib/src/al/alSeqpGetChlFXMix.c
 void alFxReverbSet(u8 arg0); //lib/src/mips1/al/reverb.c
 u8 _alFxEnabled(); //lib/src/mips1/al/reverb.c
@@ -61,31 +61,31 @@ void alCSPStop(ALCSPlayer *seqp); //lib/src/al/unknown_0C91A0.c
 s32  alCSPGetState(ALCSPlayer *seqp); //lib/src/unknown_0C8650.c
 
 void audio_init(OSSched *arg0);
-void reset_sound_volume(u8 skipReset);
-void adjust_audio_volume(s32 arg0);
+void sound_volume_reset(u8 skipReset);
+void sound_volume_change(s32 arg0);
 void music_change_off(void);
 void music_change_on(void);
-void play_music(u8 seqID);
-void set_music_player_voice_limit(u8 voiceLimit);
+void music_play(u8 seqID);
+void music_voicelimit_set(u8 voiceLimit);
 void music_voicelimit_change_off(void);
 void music_voicelimit_change_on(void);
-void set_sndfx_player_voice_limit(u8 voiceLimit);
+void music_jingle_voicelimit_set(u8 voiceLimit);
 void func_80000C68(u8 arg0);
-void set_music_fade_timer(s32 time);
+void music_fade(s32 time);
 void music_volume_reset(void);
 void sound_update_queue(u8 updateRate);
 void sound_play_delayed(u16 soundId, SoundMask *soundMask, f32 delayTime);
 void sound_clear_delayed(void);
 u16 music_channel_get_mask(void);
-void music_dynamic_reset(u16 arg0);
+void music_dynamic_set(u16 arg0);
 void music_channel_off(u8 channel);
 s32 music_channel_active(s32 channel);
 void music_channel_on(u8 channel);
 void music_channel_pan_set(u8 channel, ALPan pan);
 void music_channel_volume_set(u8 channel, u8 volume);
 u8 music_channel_volume(u8 arg0);
-void music_channel_fade_in(u8 channel, ALPan pan);
-u8 func_800012A8(u8 arg0);
+void music_channel_fade_set(u8 channel, ALPan pan);
+u8 music_channel_fade(u8 arg0);
 void music_channel_reset_all(void);
 u8 func_80001358(u8 arg0, u8 arg1, s32 arg2);
 void func_80001440(u8 *arg0);
@@ -111,9 +111,9 @@ void music_jingle_volume_set(u8 arg0);
 void music_jingle_pan_set(ALPan pan);
 void music_jingle_play(u8 seqID);
 u32 music_jingle_playing(void);
-void set_all_channel_volume(u16 arg0);
+void sound_channel_volume_all(u16 arg0);
 u16 sound_distance(u16 soundId);
-void play_sound_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **arg4);
+void sound_play_spatial(u16 soundID, f32 x, f32 y, f32 z, s32 **arg4);
 void func_80001F14(u16 soundID, s32 *soundMask);
 u16 sound_count(void);
 u8 music_sequence_count(void);
@@ -127,10 +127,10 @@ void sound_reverb_set(u8 arg0);
 u8 sound_reverb_enabled(void);
 void alSeqFileNew(ALSeqFile *file, u8 *base);
 void func_80063A90(ALSeqPlayer *seqp, u8 channel);
-void func_80001FB8(u16 soundID, void *soundState, u8 volume);
+void sound_volume_set_relative(u16 soundID, void *soundState, u8 volume);
 void music_sequence_init(ALSeqPlayer* arg0, void* arg1, u8* arg2, ALCSeq* arg3);
 
-void play_sound_global(u16 soundID, s32* soundMask); //Non matching.
+void sound_play(u16 soundID, s32* soundMask); //Non matching.
 f32 music_animation_fraction(void);
 void func_80009B7C(s32 *arg0, f32 x, f32 y, f32 z); // Non Matching
 

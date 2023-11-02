@@ -349,11 +349,11 @@ void init_hud(UNUSED s32 viewportCount) {
     set_sound_channel_volume(0, 32767);
     set_sound_channel_volume(2, 32767);
     for(i = 0; i < 2; i++){
-        D_800E2770[i].unk2 = 0;
+        D_800E2770[i].volume = 0;
         D_800E2770[i].unk3 = 0;
-        D_800E2770[i].unkC = -1;
-        if (D_800E2770[i].unk4 != 0) {
-            func_8000488C(D_800E2770[i].unk4);
+        D_800E2770[i].playerIndex = PLAYER_COMPUTER;
+        if (D_800E2770[i].soundMask) {
+            func_8000488C(D_800E2770[i].soundMask);
         }
     }
 }
@@ -437,7 +437,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                     if (gHUDNumPlayers == ONE_PLAYER) {
                         if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->raceFinished == FALSE && ((gHudLevelHeader->race_type == RACETYPE_DEFAULT) || gHudLevelHeader->race_type == RACETYPE_HORSESHOE_GULCH) && D_80126D34) {
                             gShowCourseDirections = 1 - gShowCourseDirections;
-                            play_sound_global((SOUND_TING_HIGHER + gShowCourseDirections), NULL);
+                            sound_play((SOUND_TING_HIGHER + gShowCourseDirections), NULL);
                             if (gShowCourseDirections) {
                                 D_800E27B8 = 0x78;
                             } else {
@@ -450,24 +450,24 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         } else {
                              D_800E2794[gHUDNumPlayers][racer->playerIndex] = PLAYER_ONE;
                         }
-                        play_sound_global((SOUND_TING_HIGHEST - (D_800E2794[gHUDNumPlayers][racer->playerIndex] == 0)), NULL);
+                        sound_play((SOUND_TING_HIGHEST - (D_800E2794[gHUDNumPlayers][racer->playerIndex] == 0)), NULL);
                     }
                     if (get_buttons_pressed_from_player(D_80126D10) & R_CBUTTONS && racer->raceFinished == FALSE && D_80126D34 && D_80126CD0 == 0) {
                         gHudToggleSettings[gHUDNumPlayers] = 1 - gHudToggleSettings[gHUDNumPlayers];
                         if (gHudToggleSettings[gHUDNumPlayers] == 0) {
-                            play_sound_global(SOUND_TING_LOW, NULL);
+                            sound_play(SOUND_TING_LOW, NULL);
                         } else {
-                            play_sound_global(SOUND_TING_HIGH, NULL);
+                            sound_play(SOUND_TING_HIGH, NULL);
                         }
                     }
                 }
                 if (gRaceStartShowHudStep == 0) {
                     if (gHudLevelHeader->race_type & RACETYPE_CHALLENGE || gHudLevelHeader->race_type == RACETYPE_DEFAULT || gHudLevelHeader->race_type == RACETYPE_HORSESHOE_GULCH || gHudLevelHeader->race_type == RACETYPE_BOSS) {
-                        D_800E2770[0].unk2 = 0x7F;
-                        D_800E2770[1].unk2 = 0x7F;
+                        D_800E2770[0].volume = 127;
+                        D_800E2770[1].volume = 127;
                         music_stop();
                         music_channel_reset_all();
-                        play_music(SEQUENCE_RACE_START_FANFARE);
+                        music_play(SEQUENCE_RACE_START_FANFARE);
                         set_sound_channel_count(12);
                     } else {
                         start_level_music(1.0f);
@@ -494,7 +494,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         }
                     } else {
                         if (gRaceStartShowHudStep == 1) {
-                            play_sound_global(SOUND_WHOOSH1, NULL);
+                            sound_play(SOUND_WHOOSH1, NULL);
                             gRaceStartShowHudStep += 1;
                         }
                         D_80126D24 -= updateRate * 13;
@@ -503,7 +503,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         }
                         if (D_80126D24 == 0) {
                             D_80126D35 = 1;
-                            play_sound_global(SOUND_EXPLOSION2, NULL);
+                            sound_play(SOUND_EXPLOSION2, NULL);
                             D_80126D28 = 0;
                         }
                     }
@@ -585,10 +585,10 @@ block_95:
 void func_800A0B74(void) {
     s32 i;
     for (i = 0; i < 2; i++) {
-        if (D_800E2770[i].unk4 != 0) {
-            func_8000488C(D_800E2770[i].unk4);
-            D_800E2770[i].unk4 = 0;
-            D_800E2770[i].unk2 = 0;
+        if (D_800E2770[i].soundMask) {
+            func_8000488C(D_800E2770[i].soundMask);
+            D_800E2770[i].soundMask = NULL;
+            D_800E2770[i].volume = 0;
         }
     }
 }
@@ -601,42 +601,42 @@ void func_800A0BD4(s32 updateRate) {
         gTimeTrialVoiceDelay -= updateRate;
         if (gTimeTrialVoiceDelay <= 0) {
             gTimeTrialVoiceDelay = 0;
-            if (gHUDVoiceSoundMask == 0) {
-                play_sound_global(gTimeTrialVoiceID, &gHUDVoiceSoundMask);
+            if (gHUDVoiceSoundMask == NULL) {
+                sound_play(gTimeTrialVoiceID, &gHUDVoiceSoundMask);
             }
         }
     }
     for(i = 0; i < 2; i++) {
-        if (D_800E2770[i].unk2) {
-            if (D_800E2770[i].unk4 == 0) {
-                play_sound_global(D_800E2770[i].unk0, (s32 *) &D_800E2770[i].unk4);
+        if (D_800E2770[i].volume) {
+            if (D_800E2770[i].soundMask == NULL) {
+                sound_play(D_800E2770[i].soundID, (s32 *) &D_800E2770[i].soundMask);
             }
-            func_80001FB8(D_800E2770[i].unk0, D_800E2770[i].unk4, D_800E2770[i].unk2);
+            sound_volume_set_relative(D_800E2770[i].soundID, D_800E2770[i].soundMask, D_800E2770[i].volume);
             if (D_800E2770[i].unk3 > 0) {
                 temp = D_800E2770[i].unk3 * updateRate;
-                if ((127 - temp) >= D_800E2770[i].unk2) {
-                    D_800E2770[i].unk2 += temp;
+                if ((127 - temp) >= D_800E2770[i].volume) {
+                    D_800E2770[i].volume += temp;
                 } else {
                     D_800E2770[i].unk3 = 0;
-                    D_800E2770[i].unk2 = 0x7F;
+                    D_800E2770[i].volume = 0x7F;
                 }
             } else if (D_800E2770[i].unk3 < 0) {
                 temp = D_800E2770[i].unk3 * updateRate;
-                if (-temp < D_800E2770[i].unk2) {
-                    D_800E2770[i].unk2 += temp;
+                if (-temp < D_800E2770[i].volume) {
+                    D_800E2770[i].volume += temp;
                 } else {
                     D_800E2770[i].unk3 = 0;
-                    D_800E2770[i].unk2 = 0;
+                    D_800E2770[i].volume = 0;
                 }
             }
         } else {
-            if (D_800E2770[i].unk4) {
-                func_8000488C(D_800E2770[i].unk4);
-                D_800E2770[i].unk4 = 0;
+            if (D_800E2770[i].soundMask) {
+                func_8000488C(D_800E2770[i].soundMask);
+                D_800E2770[i].soundMask = 0;
             }
         }
     }
-    if ((D_80126D70 != 0) && (D_800E2770[0].unk2 == 0)) {
+    if ((D_80126D70 != 0) && (D_800E2770[0].volume == 0)) {
         D_80126D70 = 0;
         if (gNumActivePlayers == 1) {
             set_sound_channel_count(8);
@@ -1232,7 +1232,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
                         stopwatchEndSoundID = get_random_number_from_range(0, D_80126D64 + 2) + SOUND_VOICE_TT_OH_NO;
                     }
                     D_80126D48 = (u16) stopwatchEndSoundID;
-                    play_sound_global(stopwatchEndSoundID, &gHUDVoiceSoundMask);
+                    sound_play(stopwatchEndSoundID, &gHUDVoiceSoundMask);
                     D_80126D64 = 1;
                 }
             }
@@ -1247,7 +1247,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
                     }
                 }
                 if (recordTime) {
-                    play_sound_global(SOUND_VOICE_TT_LAP_RECORD, &gHUDVoiceSoundMask);
+                    sound_play(SOUND_VOICE_TT_LAP_RECORD, &gHUDVoiceSoundMask);
                 }
             }
         }
@@ -1264,7 +1264,7 @@ void func_800A277C(s32 arg0, Object* playerRacerObj, s32 updateRate) {
                             newLapSoundID = (get_random_number_from_range(0, 2) + SOUND_VOICE_TT_GO_FOR_IT);
                         }
                         D_80126D48 = newLapSoundID;
-                        play_sound_global(newLapSoundID, &gHUDVoiceSoundMask);
+                        sound_play(newLapSoundID, &gHUDVoiceSoundMask);
                         D_80126D50 = get_random_number_from_range(120, 1200);
                     }
                     D_80126D50 -= updateRate;
@@ -1444,7 +1444,7 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
 void render_race_start(s32 arg0, s32 updateRate) {
 
     if (!is_game_paused()) {
-        if (arg0 == 0 && D_800E2770[0].unkC == -1) {
+        if (arg0 == 0 && D_800E2770[0].playerIndex == PLAYER_COMPUTER) {
             D_800E2770[0].unk3 = -1;
             D_800E2770[1].unk3 = -1;
         }
@@ -1457,7 +1457,7 @@ void render_race_start(s32 arg0, s32 updateRate) {
                 func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk1A0);
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                 if (gRaceStartShowHudStep == 2) {
-                    play_sound_global(SOUND_VOICE_TT_GET_READY, &gHUDVoiceSoundMask);
+                    sound_play(SOUND_VOICE_TT_GET_READY, &gHUDVoiceSoundMask);
                     gRaceStartShowHudStep++;
                 }
             }
@@ -1487,17 +1487,17 @@ void render_race_start(s32 arg0, s32 updateRate) {
                 if (gRaceStartShowHudStep == 4) {
                     // Mute background music in 3/4 player.
                     if (get_viewport_count() > TWO_PLAYERS) {
-                        play_music(SEQUENCE_NONE);
+                        music_play(SEQUENCE_NONE);
                     } else {
                         start_level_music(1.0f);
                     }
-                    play_sound_global(SOUND_WHOOSH1, NULL);
+                    sound_play(SOUND_WHOOSH1, NULL);
                     gRaceStartShowHudStep++;
                 }
                 gCurrentHud->unk18C -= (updateRate * 8);
             }
             if (gRaceStartShowHudStep == 3) {
-                play_sound_global(SOUND_VOICE_TT_GO, &gHUDVoiceSoundMask);
+                sound_play(SOUND_VOICE_TT_GO, &gHUDVoiceSoundMask);
                 if (get_time_trial_ghost() && unbeaten_staff_time() == FALSE) {
                     set_time_trial_start_voice(SOUND_VOICE_TT_BEAT_MY_TIME, 1.7f, 0);
                     set_delayed_text(ASSET_GAME_TEXT_82, 1.7f); // Now try and beat my time!
@@ -1639,7 +1639,7 @@ void render_silver_coin_counter(Object_Racer *racer, s32 updateRate) {
             if (gCurrentHud->unk5DB >= 30) {
                 gCurrentHud->unk5DA = 1;
                 if (gHUDVoiceSoundMask == NULL) {
-                    play_sound_global(SOUND_VOICE_TT_GO_FOR_IT, &gHUDVoiceSoundMask);
+                    sound_play(SOUND_VOICE_TT_GO_FOR_IT, &gHUDVoiceSoundMask);
                 }
             }
         }
@@ -1664,13 +1664,13 @@ void render_race_finish_position(Object_Racer *racer, s32 updateRate) {
     drawPosition = FALSE;
     switch (temp_a3->unk1A) {
         case 0:
-            set_music_player_voice_limit(24);
-            play_music(SEQUENCE_FIRST_PLACE);
-            play_sound_global(SOUND_WHOOSH1, NULL);
-            play_sound_global(SOUND_VOICE_TT_FINISH, &gHUDVoiceSoundMask);
-            D_800E2770->unk2 = 127;
+            music_voicelimit_set(24);
+            music_play(SEQUENCE_FIRST_PLACE);
+            sound_play(SOUND_WHOOSH1, NULL);
+            sound_play(SOUND_VOICE_TT_FINISH, &gHUDVoiceSoundMask);
+            D_800E2770->volume = 127;
             D_800E2770->unk3 = 0;
-            D_800E2770->unkC = racer->playerIndex;
+            D_800E2770->playerIndex = racer->playerIndex;
             temp_a3->unk1A = 1;
             break;
         case 1:
@@ -1691,8 +1691,8 @@ void render_race_finish_position(Object_Racer *racer, s32 updateRate) {
                 }
                 if (temp_a3->unk1C == 2) {
                     temp_a3->unk1A = 2;
-                    play_sound_global(SOUND_WHOOSH1, NULL);
-                    if (D_800E2770->unkC == racer->playerIndex) {
+                    sound_play(SOUND_WHOOSH1, NULL);
+                    if (D_800E2770->playerIndex == racer->playerIndex) {
                         D_800E2770->unk3 = -1;
                     }
                 }
@@ -1824,7 +1824,7 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
                 gCurrentHud->unk3DA = 2;
                 gCurrentHud->unk3DB = 1;
                 gCurrentHud->unk3DD = 0;
-                play_sound_global(SOUND_WHOOSH1, NULL);
+                sound_play(SOUND_WHOOSH1, NULL);
                 switch (gHUDNumPlayers) {
                 case ONE_PLAYER:
                     gCurrentHud->unk3DC = -21;
@@ -1856,7 +1856,7 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
                 gCurrentHud->unk3DA = 3;
                 gCurrentHud->unk3DB = -1;
                 gCurrentHud->unk3DD = 0;
-                play_sound_global(SOUND_WHOOSH1, NULL);
+                sound_play(SOUND_WHOOSH1, NULL);
                 switch (gHUDNumPlayers) {
                 case ONE_PLAYER:
                     gCurrentHud->unk3DC = 51;
@@ -1901,11 +1901,11 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
                     }
                     if (racer->lap_times[racer->lap] >= 60) {
                         gCurrentHud->unk3DB = -1;
-                        play_sound_global(SOUND_WHOOSH1, NULL);
+                        sound_play(SOUND_WHOOSH1, NULL);
                     }
                     if (gCurrentHud->unk3CC == ((0, gCurrentHud))->unk3DC && gCurrentHud->unk3EC == ((0, gCurrentHud))->unk3FC && gCurrentHud->unk3DD == 0) {
                         if (gHUDVoiceSoundMask == NULL) {
-                            play_sound_global(SOUND_VOICE_TT_LAP2, &gHUDVoiceSoundMask);
+                            sound_play(SOUND_VOICE_TT_LAP2, &gHUDVoiceSoundMask);
                         }
                         gCurrentHud->unk3DD = 1;
                     }
@@ -1934,11 +1934,11 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
                     }
                     if (racer->lap_times[racer->lap] >= 60) {
                         gCurrentHud->unk3DB = 1;
-                        play_sound_global(SOUND_WHOOSH1, NULL);
+                        sound_play(SOUND_WHOOSH1, NULL);
                     }
                     if (gCurrentHud->unk3CC == ((0, gCurrentHud))->unk3DC && gCurrentHud->unk3AC == ((0, gCurrentHud))->unk3BC && gCurrentHud->unk3DD == 0) {
                         if (gHUDVoiceSoundMask == NULL) {
-                            play_sound_global(SOUND_VOICE_TT_FINAL_LAP, &gHUDVoiceSoundMask);
+                            sound_play(SOUND_VOICE_TT_FINAL_LAP, &gHUDVoiceSoundMask);
                         }
                         gCurrentHud->unk3DD = 1;
                     }
@@ -1976,11 +1976,11 @@ void render_wrong_way_text(Object_Racer *obj, s32 updateRate) {
             // 20% chance that T.T decides not to precede his nagging with "No no no!"
             if (gWrongWayNagPrefix || get_random_number_from_range(1, 10) >= 8) {
                 gWrongWayNagPrefix = FALSE;
-                play_sound_global(SOUND_VOICE_TT_WRONG_WAY, &gHUDVoiceSoundMask);
+                sound_play(SOUND_VOICE_TT_WRONG_WAY, &gHUDVoiceSoundMask);
                 gWrongWayNagTimer = get_random_number_from_range(1, 480) + 120;
             } else {
                 gWrongWayNagPrefix = TRUE;
-                play_sound_global(SOUND_VOICE_TT_NONONO, &gHUDVoiceSoundMask);
+                sound_play(SOUND_VOICE_TT_NONONO, &gHUDVoiceSoundMask);
             }
         }
         gWrongWayNagTimer -= updateRate;
@@ -2004,7 +2004,7 @@ void render_wrong_way_text(Object_Racer *obj, s32 updateRate) {
                 }
                 if (obj->unk1FC <= 90) {
                     gCurrentHud->unk47A[1] = -1;
-                    play_sound_global(SOUND_WHOOSH1, NULL);
+                    sound_play(SOUND_WHOOSH1, NULL);
                 }
             } else if (gCurrentHud->unk47A[1] == -1) {
                 textMoveSpeed = updateRate * 13;
@@ -2041,7 +2041,7 @@ void render_wrong_way_text(Object_Racer *obj, s32 updateRate) {
         }
         gCurrentHud->unk48C = gCurrentHud->unk49C + 200;
         gCurrentHud->unk46C =  gCurrentHud->unk49C - 200;
-        play_sound_global(SOUND_WHOOSH1, NULL);
+        sound_play(SOUND_WHOOSH1, NULL);
     }
     sprite_opaque(FALSE);
 }
@@ -2079,9 +2079,9 @@ void play_time_trial_end_message(s16 *playerID) {
 
     if (playerID != NULL) {
         if (settings->racers[*playerID].best_times & 0x80) {
-            play_sound_global(SOUND_VOICE_TT_RACE_RECORD, &gHUDVoiceSoundMask);
+            sound_play(SOUND_VOICE_TT_RACE_RECORD, &gHUDVoiceSoundMask);
         } else {
-            play_sound_global(SOUND_VOICE_TT_FINISH, &gHUDVoiceSoundMask);
+            sound_play(SOUND_VOICE_TT_FINISH, &gHUDVoiceSoundMask);
         }
     }
 }
@@ -2094,10 +2094,10 @@ void render_time_trial_finish(Object_Racer *racer, s32 updateRate) {
     
     switch (gCurrentHud->unk1DA) {
     case 0:
-        D_800E2770->unk2 = 127;
+        D_800E2770->volume = 127;
         D_800E2770->unk3 = 0;
-        D_800E2770->unkC = (s8) racer->playerIndex;
-        play_sound_global(SOUND_WHOOSH1, NULL);
+        D_800E2770->playerIndex = (s8) racer->playerIndex;
+        sound_play(SOUND_WHOOSH1, NULL);
         if (gHUDNumPlayers == 0 || gHUDNumPlayers == 1) {
             gCurrentHud->unk1CC = -200.0f;
             gCurrentHud->unk1DD = 0;
@@ -2139,7 +2139,7 @@ void render_time_trial_finish(Object_Racer *racer, s32 updateRate) {
                     gCurrentHud->unk1DD = -40;
                 }
             }
-            play_sound_global(SOUND_WHOOSH1, NULL);
+            sound_play(SOUND_WHOOSH1, NULL);
         }
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk1C0);
         return;
@@ -2185,7 +2185,7 @@ void render_balloon_count(UNUSED Object_Racer *racer) {
         balloonCount = *settings->balloonsPtr;
         if (get_cutscene_id() == 10) {
             if (get_balloon_cutscene_timer() < balloonTickTimer + 8 && D_80126D44 == 0) {
-                play_sound_global(SOUND_HUD_LAP_TICK, &D_80126D44);
+                sound_play(SOUND_HUD_LAP_TICK, &D_80126D44);
             }
         }
     }
@@ -2218,7 +2218,7 @@ void render_balloon_count(UNUSED Object_Racer *racer) {
 */
 UNUSED void play_hud_voice_line(u16 soundId) {
     if (gHUDVoiceSoundMask == NULL && !(is_game_paused())) {
-        play_sound_global(soundId, &gHUDVoiceSoundMask);
+        sound_play(soundId, &gHUDVoiceSoundMask);
     }
 }
 
@@ -2401,7 +2401,7 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
                 } else {
                     if (gHideRaceTimer) {
                         if (gHUDNumPlayers == ONE_PLAYER) {
-                            play_sound_global(SOUND_HUD_LAP_TICK, NULL);
+                            sound_play(SOUND_HUD_LAP_TICK, NULL);
                         }
                         gHideRaceTimer = FALSE;
                     }

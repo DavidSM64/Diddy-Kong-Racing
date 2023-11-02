@@ -496,7 +496,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     if (numPlayers && gCurrentLevelHeader->race_type != RACETYPE_CUTSCENE_2) {
         gCurrentLevelHeader->race_type = RACETYPE_CUTSCENE_1;
     }
-    set_music_player_voice_limit(gCurrentLevelHeader->voiceLimit);
+    music_voicelimit_set(gCurrentLevelHeader->voiceLimit);
     music_volume_reset();
     setup_lights(32);
     var_s0 = VEHICLE_CAR;
@@ -601,9 +601,9 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
 void start_level_music(f32 tempo) {
     if (gCurrentLevelHeader->music != SEQUENCE_NONE) {
         music_channel_reset_all();
-        play_music(gCurrentLevelHeader->music);
+        music_play(gCurrentLevelHeader->music);
         music_tempo_set_relative(tempo);
-        music_dynamic_reset(gCurrentLevelHeader->instruments);
+        music_dynamic_set(gCurrentLevelHeader->instruments);
     }
 }
 
@@ -688,7 +688,7 @@ void clear_audio_and_track(void) {
     free_lights();
     free_track();
     func_80008174();
-    adjust_audio_volume(VOLUME_NORMAL);
+    sound_volume_change(VOLUME_NORMAL);
     if (gCurrentLevelHeader->weatherEnable > 0) {
         free_weather_memory();
     }

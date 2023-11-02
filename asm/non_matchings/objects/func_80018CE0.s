@@ -159,14 +159,14 @@ glabel func_80018CE0
 /* 019B38 80018F38 03D22823 */  subu  $a1, $fp, $s2
 /* 019B3C 80018F3C 30AF00FF */  andi  $t7, $a1, 0xff
 /* 019B40 80018F40 01E02825 */  move  $a1, $t7
-/* 019B44 80018F44 0C00049A */  jal   music_channel_fade_in
+/* 019B44 80018F44 0C00049A */  jal   music_channel_fade_set
 /* 019B48 80018F48 320400FF */   andi  $a0, $s0, 0xff
 /* 019B4C 80018F4C 0C00045C */  jal   music_channel_on
 /* 019B50 80018F50 320400FF */   andi  $a0, $s0, 0xff
 /* 019B54 80018F54 1000000C */  b     .L80018F88
 /* 019B58 80018F58 26310001 */   addiu $s1, $s1, 1
 .L80018F5C:
-/* 019B5C 80018F5C 0C0004AA */  jal   func_800012A8
+/* 019B5C 80018F5C 0C0004AA */  jal   music_channel_fade
 /* 019B60 80018F60 320400FF */   andi  $a0, $s0, 0xff
 /* 019B64 80018F64 18400007 */  blez  $v0, .L80018F84
 /* 019B68 80018F68 00000000 */   nop   
@@ -174,7 +174,7 @@ glabel func_80018CE0
 /* 019B70 80018F70 02202025 */   move  $a0, $s1
 /* 019B74 80018F74 14400003 */  bnez  $v0, .L80018F84
 /* 019B78 80018F78 320400FF */   andi  $a0, $s0, 0xff
-/* 019B7C 80018F7C 0C00049A */  jal   music_channel_fade_in
+/* 019B7C 80018F7C 0C00049A */  jal   music_channel_fade_set
 /* 019B80 80018F80 324500FF */   andi  $a1, $s2, 0xff
 .L80018F84:
 /* 019B84 80018F84 26310001 */  addiu $s1, $s1, 1
@@ -352,7 +352,7 @@ glabel func_80018CE0
 /* 019E20 80019220 15220005 */  bne   $t1, $v0, .L80019238
 /* 019E24 80019224 8FAA00F4 */   lw    $t2, 0xf4($sp)
 /* 019E28 80019228 96240000 */  lhu   $a0, ($s1)
-/* 019E2C 8001922C 0C00041D */  jal   music_dynamic_reset
+/* 019E2C 8001922C 0C00041D */  jal   music_dynamic_set
 /* 019E30 80019230 00000000 */   nop   
 .L80019234:
 /* 019E34 80019234 8FAA00F4 */  lw    $t2, 0xf4($sp)
@@ -473,7 +473,7 @@ glabel func_80018CE0
 /* 019FD8 800193D8 0C00045C */  jal   music_channel_on
 /* 019FDC 800193DC 320400FF */   andi  $a0, $s0, 0xff
 /* 019FE0 800193E0 320400FF */  andi  $a0, $s0, 0xff
-/* 019FE4 800193E4 0C00049A */  jal   music_channel_fade_in
+/* 019FE4 800193E4 0C00049A */  jal   music_channel_fade_set
 /* 019FE8 800193E8 2405007F */   li    $a1, 127
 /* 019FEC 800193EC 3C038012 */  lui   $v1, %hi(D_8011AF60) # $v1, 0x8012
 /* 019FF0 800193F0 8C63AF60 */  lw    $v1, %lo(D_8011AF60)($v1)
@@ -496,12 +496,12 @@ glabel func_80018CE0
 /* 01A02C 8001942C 01609025 */  move  $s2, $t3
 /* 01A030 80019430 0C00045C */  jal   music_channel_on
 /* 01A034 80019434 320400FF */   andi  $a0, $s0, 0xff
-/* 01A038 80019438 0C0004AA */  jal   func_800012A8
+/* 01A038 80019438 0C0004AA */  jal   music_channel_fade
 /* 01A03C 8001943C 320400FF */   andi  $a0, $s0, 0xff
 /* 01A040 80019440 0052082A */  slt   $at, $v0, $s2
 /* 01A044 80019444 10200003 */  beqz  $at, .L80019454
 /* 01A048 80019448 320400FF */   andi  $a0, $s0, 0xff
-/* 01A04C 8001944C 0C00049A */  jal   music_channel_fade_in
+/* 01A04C 8001944C 0C00049A */  jal   music_channel_fade_set
 /* 01A050 80019450 324500FF */   andi  $a1, $s2, 0xff
 .L80019454:
 /* 01A054 80019454 3C038012 */  lui   $v1, %hi(D_8011AF60) # $v1, 0x8012
@@ -516,12 +516,12 @@ glabel func_80018CE0
 /* 01A074 80019474 03C29023 */   subu  $s2, $fp, $v0
 /* 01A078 80019478 325800FF */  andi  $t8, $s2, 0xff
 /* 01A07C 8001947C 03009025 */  move  $s2, $t8
-/* 01A080 80019480 0C0004AA */  jal   func_800012A8
+/* 01A080 80019480 0C0004AA */  jal   music_channel_fade
 /* 01A084 80019484 320400FF */   andi  $a0, $s0, 0xff
 /* 01A088 80019488 0242082A */  slt   $at, $s2, $v0
 /* 01A08C 8001948C 10200007 */  beqz  $at, .L800194AC
 /* 01A090 80019490 320400FF */   andi  $a0, $s0, 0xff
-/* 01A094 80019494 0C00049A */  jal   music_channel_fade_in
+/* 01A094 80019494 0C00049A */  jal   music_channel_fade_set
 /* 01A098 80019498 324500FF */   andi  $a1, $s2, 0xff
 /* 01A09C 8001949C 10000003 */  b     .L800194AC
 /* 01A0A0 800194A0 00000000 */   nop   

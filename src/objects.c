@@ -3609,8 +3609,8 @@ void func_80016500(Object *obj, Object_Racer *racer) {
             angle = 127;
         }
         if (racer->unk1F6 == 0) {
-            play_sound_global(SOUND_CRASH_CHARACTER, &racer->unk220);
-            func_80001FB8(SOUND_CRASH_CHARACTER, (s32 *) racer->unk220, angle);
+            sound_play(SOUND_CRASH_CHARACTER, &racer->unk220);
+            sound_volume_set_relative(SOUND_CRASH_CHARACTER, (s32 *) racer->unk220, angle);
         }
         if (racer->unk1F6 == 0 && angle >= 56) {
             if (!racer->raceFinished) {
@@ -4211,11 +4211,11 @@ void tt_ghost_beaten(s32 arg0, s16 *playerId) {
         //Check if TT has been beaten for all tracks.
         if ((get_eeprom_settings() & 0xFFFFF0) == 0xFFFFF0) {
             set_magic_code_flags(CHEAT_CONTROL_TT);
-            play_sound_global(SOUND_VOICE_TT_BEAT_ALL_TIMES, NULL);
+            sound_play(SOUND_VOICE_TT_BEAT_ALL_TIMES, NULL);
             sound_play_delayed(SOUND_VOICE_TT_UNLOCKED, NULL, 1.5f);
             set_current_text(ASSET_GAME_TEXT_84); //Text for "You have beaten all my times!" and then "Now you can PICK me!"
         } else {
-            play_sound_global(SOUND_VOICE_TT_WELL_DONE, NULL);
+            sound_play(SOUND_VOICE_TT_WELL_DONE, NULL);
             sound_play_delayed(SOUND_VOICE_TT_TRY_ANOTHER_TRACK, NULL, 1.0f);
             set_current_text(ASSET_GAME_TEXT_83); //Text for "Well Done! Now try another track."
         }

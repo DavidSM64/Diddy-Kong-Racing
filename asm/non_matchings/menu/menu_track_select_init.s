@@ -525,11 +525,11 @@ glabel menu_track_select_init
 /* 08FB7C 8008EF7C 2610F760 */  addiu $s0, %lo(sMenuMusicVolume) # addiu $s0, $s0, -0x8a0
 /* 08FB80 8008EF80 AC206848 */  sw    $zero, %lo(D_80126848)($at)
 /* 08FB84 8008EF84 AE000000 */  sw    $zero, ($s0)
-/* 08FB88 8008EF88 0C0002F8 */  jal   set_music_player_voice_limit
+/* 08FB88 8008EF88 0C0002F8 */  jal   music_voicelimit_set
 /* 08FB8C 8008EF8C 24040018 */   li    $a0, 24
 /* 08FB90 8008EF90 0C000307 */  jal   music_voicelimit_change_off
 /* 08FB94 8008EF94 00000000 */   nop   
-/* 08FB98 8008EF98 0C0002CD */  jal   play_music
+/* 08FB98 8008EF98 0C0002CD */  jal   music_play
 /* 08FB9C 8008EF9C 24040018 */   li    $a0, 24
 /* 08FBA0 8008EFA0 92040003 */  lbu   $a0, 3($s0)
 /* 08FBA4 8008EFA4 0C000664 */  jal   music_volume_set
