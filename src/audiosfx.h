@@ -146,7 +146,7 @@ void func_8000410C(ALSoundState *state);
 u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex);
 void func_80004604(u8 *arg0, u8 arg1);
 s32 func_80004638(ALBank *bnk, s16 sndIndx, SoundMask *soundMask);
-void func_800049D8(void);
+void sound_stop_all(void);
 void sound_event_update(s32 soundMask, s16 type, u32 volume);
 u16 get_sound_channel_volume(u8 channel);
 void set_sound_channel_volume(u8 channel, u16 volume);

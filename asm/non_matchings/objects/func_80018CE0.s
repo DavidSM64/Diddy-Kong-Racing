@@ -159,7 +159,7 @@ glabel func_80018CE0
 /* 019B38 80018F38 03D22823 */  subu  $a1, $fp, $s2
 /* 019B3C 80018F3C 30AF00FF */  andi  $t7, $a1, 0xff
 /* 019B40 80018F40 01E02825 */  move  $a1, $t7
-/* 019B44 80018F44 0C00049A */  jal   func_80001268
+/* 019B44 80018F44 0C00049A */  jal   music_channel_fade_in
 /* 019B48 80018F48 320400FF */   andi  $a0, $s0, 0xff
 /* 019B4C 80018F4C 0C00045C */  jal   music_channel_on
 /* 019B50 80018F50 320400FF */   andi  $a0, $s0, 0xff
@@ -174,7 +174,7 @@ glabel func_80018CE0
 /* 019B70 80018F70 02202025 */   move  $a0, $s1
 /* 019B74 80018F74 14400003 */  bnez  $v0, .L80018F84
 /* 019B78 80018F78 320400FF */   andi  $a0, $s0, 0xff
-/* 019B7C 80018F7C 0C00049A */  jal   func_80001268
+/* 019B7C 80018F7C 0C00049A */  jal   music_channel_fade_in
 /* 019B80 80018F80 324500FF */   andi  $a1, $s2, 0xff
 .L80018F84:
 /* 019B84 80018F84 26310001 */  addiu $s1, $s1, 1
@@ -473,7 +473,7 @@ glabel func_80018CE0
 /* 019FD8 800193D8 0C00045C */  jal   music_channel_on
 /* 019FDC 800193DC 320400FF */   andi  $a0, $s0, 0xff
 /* 019FE0 800193E0 320400FF */  andi  $a0, $s0, 0xff
-/* 019FE4 800193E4 0C00049A */  jal   func_80001268
+/* 019FE4 800193E4 0C00049A */  jal   music_channel_fade_in
 /* 019FE8 800193E8 2405007F */   li    $a1, 127
 /* 019FEC 800193EC 3C038012 */  lui   $v1, %hi(D_8011AF60) # $v1, 0x8012
 /* 019FF0 800193F0 8C63AF60 */  lw    $v1, %lo(D_8011AF60)($v1)
@@ -501,7 +501,7 @@ glabel func_80018CE0
 /* 01A040 80019440 0052082A */  slt   $at, $v0, $s2
 /* 01A044 80019444 10200003 */  beqz  $at, .L80019454
 /* 01A048 80019448 320400FF */   andi  $a0, $s0, 0xff
-/* 01A04C 8001944C 0C00049A */  jal   func_80001268
+/* 01A04C 8001944C 0C00049A */  jal   music_channel_fade_in
 /* 01A050 80019450 324500FF */   andi  $a1, $s2, 0xff
 .L80019454:
 /* 01A054 80019454 3C038012 */  lui   $v1, %hi(D_8011AF60) # $v1, 0x8012
@@ -521,7 +521,7 @@ glabel func_80018CE0
 /* 01A088 80019488 0242082A */  slt   $at, $s2, $v0
 /* 01A08C 8001948C 10200007 */  beqz  $at, .L800194AC
 /* 01A090 80019490 320400FF */   andi  $a0, $s0, 0xff
-/* 01A094 80019494 0C00049A */  jal   func_80001268
+/* 01A094 80019494 0C00049A */  jal   music_channel_fade_in
 /* 01A098 80019498 324500FF */   andi  $a1, $s2, 0xff
 /* 01A09C 8001949C 10000003 */  b     .L800194AC
 /* 01A0A0 800194A0 00000000 */   nop   

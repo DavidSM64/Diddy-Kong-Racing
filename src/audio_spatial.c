@@ -252,7 +252,7 @@ void func_8000974C(u16 soundBite, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 volu
     }
     if (gUsedMasks == 40) {
         if (soundMask != NULL) {
-            *soundMask = 0;
+            *soundMask = NULL;
         }
         func_800245B4(0xAA55);
         return;

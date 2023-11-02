@@ -600,7 +600,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
 */
 void start_level_music(f32 tempo) {
     if (gCurrentLevelHeader->music != SEQUENCE_NONE) {
-        func_800012E8();
+        music_channel_reset_all();
         play_music(gCurrentLevelHeader->music);
         music_tempo_set_relative(tempo);
         music_dynamic_reset(gCurrentLevelHeader->instruments);
@@ -681,10 +681,10 @@ void clear_audio_and_track(void) {
     free_ai_behaviour_table();
     set_background_prim_colour(0, 0, 0);
     free_from_memory_pool(gCurrentLevelHeader);
-    func_800049D8();
+    sound_stop_all();
     music_stop();
     music_jingle_stop();
-    func_800012E8();
+    music_channel_reset_all();
     free_lights();
     free_track();
     func_80008174();

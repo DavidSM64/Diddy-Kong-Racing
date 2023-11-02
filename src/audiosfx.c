@@ -267,7 +267,10 @@ UNUSED void func_800049B8(void) {
     func_800048D8(AL_SNDP_PLAY_EVT | AL_SNDP_PITCH_EVT);
 }
 
-void func_800049D8(void) {
+/**
+ * Stops all sounds from playing.
+*/
+void sound_stop_all(void) {
     func_800048D8(AL_SNDP_PLAY_EVT | AL_SNDP_STOP_EVT);
 }
 

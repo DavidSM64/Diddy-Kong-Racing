@@ -5,8 +5,7 @@
 #include "macros.h"
 #include "audio_internal.h"
 
-//Could be ALCSPlayer instead of ALSeqPlayer
-void func_80063BA0(ALSeqPlayer *seqp, u8 chan, ALPan pan) {
+void alCSPSetFadeIn(ALSeqPlayer *seqp, u8 chan, ALPan pan) {
     ALEvent       evt;
 
     evt.type            = AL_SEQP_MIDI_EVT;

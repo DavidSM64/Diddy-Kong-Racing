@@ -532,7 +532,7 @@ glabel menu_track_select_init
 /* 08FB98 8008EF98 0C0002CD */  jal   play_music
 /* 08FB9C 8008EF9C 24040018 */   li    $a0, 24
 /* 08FBA0 8008EFA0 92040003 */  lbu   $a0, 3($s0)
-/* 08FBA4 8008EFA4 0C000664 */  jal   set_relative_volume_for_music
+/* 08FBA4 8008EFA4 0C000664 */  jal   music_volume_set
 /* 08FBA8 8008EFA8 00000000 */   nop   
 /* 08FBAC 8008EFAC 0C0002C6 */  jal   music_change_off
 /* 08FBB0 8008EFB0 00000000 */   nop   

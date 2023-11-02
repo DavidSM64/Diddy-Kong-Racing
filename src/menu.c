@@ -2901,7 +2901,7 @@ void menu_title_screen_init(void) {
     gNumberOfActivePlayers = 4;
     initialise_player_ids();
     play_music(SEQUENCE_NONE2);
-    sMenuMusicVolume = musicGetRelativeVolume();
+    sMenuMusicVolume = music_volume();
     if (gResetTitleScale) {
         gTitleRevealTimer = 0;
         gResetTitleScale = FALSE;
@@ -3081,13 +3081,13 @@ s32 menu_title_screen_loop(s32 updateRate) {
     }
     if (gTitleAudioCounter > 0.0f) {
         if (gTitleAudioCounter < 0.5f) {
-            set_relative_volume_for_music((s32) ((f32) sMenuMusicVolume * (1.0f - gTitleAudioCounter)));
+            music_volume_set((s32) ((f32) sMenuMusicVolume * (1.0f - gTitleAudioCounter)));
         } else if (gTitleAudioCounter < 4.5f) {
-            set_relative_volume_for_music(((s32) sMenuMusicVolume >> 1));
+            music_volume_set(((s32) sMenuMusicVolume >> 1));
         } else if (gTitleAudioCounter < 5.0f) {
-            set_relative_volume_for_music((s32) ((f32) sMenuMusicVolume * (gTitleAudioCounter - 4.0f)));
+            music_volume_set((s32) ((f32) sMenuMusicVolume * (gTitleAudioCounter - 4.0f)));
         } else {
-            set_relative_volume_for_music(*((s8*)&sMenuMusicVolume + 3));
+            music_volume_set(*((s8*)&sMenuMusicVolume + 3));
         }
     }
     if (gTitleRevealTimer == 0) {
@@ -3338,7 +3338,7 @@ void menu_audio_options_init(void) {
     assign_menu_arrow_textures();
     transition_begin(&sMenuTransitionFadeOut);
     func_8007FFEC(2);
-    gMusicVolumeSliderValue = musicGetVolSliderPercentage();
+    gMusicVolumeSliderValue = music_volume_config();
     gSfxVolumeSliderValue = get_sfx_volume_slider();
     if (gActiveMagicCodes & CHEAT_MUSIC_MENU) { // Check if "JUKEBOX" cheat is active
         gAudioMenuStrings[6].unkC = gMusicTestString;
@@ -3443,7 +3443,7 @@ s32 menu_audio_options_loop(s32 updateRate) {
                     } else if (gMusicVolumeSliderValue > 256) {
                         gMusicVolumeSliderValue = 256;
                     }
-                    set_music_volume_slider(gMusicVolumeSliderValue);
+                    music_volume_config_set(gMusicVolumeSliderValue);
                     if (!music_is_playing()) {
                         if (gOpacityDecayTimer >= 0) {
                             music_change_on();
@@ -6080,8 +6080,8 @@ void func_8008C168(s32 updateRate) {
         if (gMenuSelectedCharacter.unk2 > 127) {
             gMenuSelectedCharacter.unk2 = 127;
         }
-        func_80001268(gCharacterVolumes[gMenuSelectedCharacter.channelIndex][0], gMenuSelectedCharacter.unk2);
-        func_80001268(gCharacterVolumes[0][gMenuSelectedCharacter.channelIndex * 2 + 1], gMenuSelectedCharacter.unk3);
+        music_channel_fade_in(gCharacterVolumes[gMenuSelectedCharacter.channelIndex][0], gMenuSelectedCharacter.unk2);
+        music_channel_fade_in(gCharacterVolumes[0][gMenuSelectedCharacter.channelIndex * 2 + 1], gMenuSelectedCharacter.unk3);
     }
     if (D_801263B8.channelIndex >= 0) {
         D_801263B8.unk2 -= updateRate * 4;
@@ -6090,8 +6090,8 @@ void func_8008C168(s32 updateRate) {
                 music_channel_off(gCharacterVolumes[D_801263B8.channelIndex][0]);
                 music_channel_off(gCharacterVolumes[0][D_801263B8.channelIndex * 2 + 1]);
             } else {
-                func_80001268(gCharacterVolumes[D_801263B8.channelIndex][0], D_801263B8.unk2);
-                func_80001268(gCharacterVolumes[0][D_801263B8.channelIndex * 2 + 1], D_801263B8.unk3);
+                music_channel_fade_in(gCharacterVolumes[D_801263B8.channelIndex][0], D_801263B8.unk2);
+                music_channel_fade_in(gCharacterVolumes[0][D_801263B8.channelIndex * 2 + 1], D_801263B8.unk3);
             }
         }
         if (D_801263B8.unk2 < 0) {
@@ -7130,7 +7130,7 @@ void menu_track_select_init(void) {
     set_music_player_voice_limit(24);
     music_voicelimit_change_off();
     play_music(SEQUENCE_MAIN_MENU);
-    set_relative_volume_for_music(sMenuMusicVolume);
+    music_volume_set(sMenuMusicVolume);
     music_change_off();
     set_gIntDisFlag(TRUE); // Set an interrupt?
     gIsInAdventureTwo = gTracksMenuAdventureHighlightIndex;
@@ -7227,13 +7227,13 @@ s32 menu_track_select_loop(s32 updateRate) {
     }
 
     if (sMenuMusicVolume < 0) {
-        set_relative_volume_for_music(0);
+        music_volume_set(0);
     } else {
         sMenuMusicVolume += updateRate * 2;
         if (sMenuMusicVolume >= 81) {
             sMenuMusicVolume = 80;
         }
-        set_relative_volume_for_music((u8)sMenuMusicVolume);
+        music_volume_set((u8)sMenuMusicVolume);
     }
     if (D_801267D0 < 0) {
         func_8008F534();

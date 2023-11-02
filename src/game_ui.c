@@ -466,7 +466,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         D_800E2770[0].unk2 = 0x7F;
                         D_800E2770[1].unk2 = 0x7F;
                         music_stop();
-                        func_800012E8();
+                        music_channel_reset_all();
                         play_music(SEQUENCE_RACE_START_FANFARE);
                         set_sound_channel_count(12);
                     } else {

@@ -1246,7 +1246,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
                 obj->properties.npc.action = TT_MODE_APPROACH_PLAYER;
                 get_fog_settings(PLAYER_ONE, &tt->fogNear, &tt->fogFar, &tt->fogR, &tt->fogG, &tt->fogB);
                 slowly_change_fog(PLAYER_ONE, 128, 128, 255, 900, 998, 240);
-                func_800012E8();
+                music_channel_reset_all();
                 play_music(SEQUENCE_TTS_THEME);
                 if (racerObj != NULL) {
                     racer_sound_free(racerObj);
@@ -2184,7 +2184,7 @@ void obj_init_parkwarden(Object *obj, UNUSED LevelObjectEntry_Parkwarden *entry)
     taj->unk0 = 0.0f;
     taj->unk28 = 0;
     taj->unk2C = 0;
-    taj->unk34 = 0;
+    taj->musicPan = 0;
     taj->unk36 = 0;
     gTajSoundMask = NULL;
     gTajSoundID = SOUND_VOICE_TAJ_HELLO;
@@ -2279,7 +2279,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     }
     obj->interactObj->flags = INTERACT_FLAGS_SOLID;
     if ((should_taj_teleport() || var_a2) && (obj->properties.npc.action == TAJ_MODE_ROAM || obj->properties.npc.action == TAJ_MODE_UNK1F)) {
-        func_800012E8();
+        music_channel_reset_all();
         set_music_player_voice_limit(24);
         play_music(SEQUENCE_ENTRANCED);
         if (racerObj != NULL) {
@@ -2709,31 +2709,31 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 zPosDiff = obj->segment.trans.z_position - temp_v0_22->trans.z_position;
                 arctan = func_800090C0(xPosDiff, zPosDiff, temp_v0_22->trans.y_rotation);
                 temp = arctan;
-                func_80001268(0xA, sp3C);
-                func_80001268(0xB, sp3C);
-                func_80001268(0xF, sp3C);
-                music_channel_set_pan(0xA, temp);
-                music_channel_set_pan(0xB, temp);
-                music_channel_set_pan(0xF, temp);
-                music_channel_on(0xA);
-                music_channel_on(0xB);
-                music_channel_on(0xF);
-                func_80001268(3, 0x7F - sp3C);
+                music_channel_fade_in(10, sp3C);
+                music_channel_fade_in(11, sp3C);
+                music_channel_fade_in(15, sp3C);
+                music_channel_pan_set(10, temp);
+                music_channel_pan_set(11, temp);
+                music_channel_pan_set(15, temp);
+                music_channel_on(10);
+                music_channel_on(11);
+                music_channel_on(15);
+                music_channel_fade_in(3, 127 - sp3C);
             } else {
-                music_channel_off(0xA);
-                music_channel_off(0xB);
-                music_channel_off(0xF);
+                music_channel_off(10);
+                music_channel_off(11);
+                music_channel_off(15);
             }
         }
         switch (taj->unk36) {
         case 0:
-            if (taj->unk34 > updateRate << 7) {
-                taj->unk34 -= updateRate << 7;
+            if (taj->musicPan > updateRate << 7) {
+                taj->musicPan -= updateRate << 7;
                 music_channel_on(14);
-                func_80001268(14, taj->unk34 >> 8);
+                music_channel_fade_in(14, taj->musicPan >> 8);
                 taj->unk30 = 0;
             } else {
-                taj->unk34 = 0;
+                taj->musicPan = 0;
                 music_channel_off(14);
                 if (taj->unk30 == 0) {
                     taj->unk30 = get_random_number_from_range(600, 900);
@@ -2753,16 +2753,16 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             break;
         case 1:
             if ((music_channel_get_mask() & ~0x4000) == 0xB) {
-                taj->unk34 += (updateRate * 128);
-                if (taj->unk34 > 0x7F00) {
-                    taj->unk34 = 0x7F00;
+                taj->musicPan += (updateRate * 128);
+                if (taj->musicPan > 0x7F00) {
+                    taj->musicPan = 0x7F00;
                 }
                 taj->unk2C -= updateRate;
                 if (taj->unk2C < 0) {
                     taj->unk36 = 0;
                 }
-                music_channel_on(0xE);
-                func_80001268(0xE, taj->unk34 >> 8);
+                music_channel_on(14);
+                music_channel_fade_in(14, taj->musicPan >> 8);
             } else {
                 taj->unk36 = 0;
                 taj->unk2C = 0;
