@@ -7,9 +7,9 @@ Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 
 <!-- README_SCORE_SUMMARY_BEGIN -->
 As of October 31, 2023, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 63.02%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 63.04%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 34.35%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 35.21%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -128,13 +128,13 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of October 31st, 2023, this is our current score:
+As of November 2nd, 2023, this is our current score:
 ```
  ========================================================================
                   ADVENTURE ONE (ASM -> C Decompilation)
- --------------------------- 63.02% Complete ----------------------------
-                       # Decompiled functions: 1660
-                       # GLOBAL_ASM remaining: 185
+ --------------------------- 63.04% Complete ----------------------------
+                       # Decompiled functions: 1661
+                       # GLOBAL_ASM remaining: 184
                        # NON_MATCHING functions: 14
                     # NON_EQUIVALENT WIP functions: 52
  ----------------------------- Game Status ------------------------------
@@ -144,14 +144,14 @@ As of October 31st, 2023, this is our current score:
  We are participating in the Trophy Race of Sherbet Island. (Round Three)
  ========================================================================
                   ADVENTURE TWO (Cleanup & Documentation)
- --------------------------- 34.35% Complete ----------------------------
-                       # Documented functions: 761
-                      # Undocumented remaining: 807
+ --------------------------- 35.21% Complete ----------------------------
+                       # Documented functions: 825
+                      # Undocumented remaining: 743
  ----------------------------- Game Status ------------------------------
                 Balloons: 17/47, Keys: 2/4, Trophies: 1/5
-                  T.T. Amulets: 1/4, Wizpig Amulets: 1/4
+                  T.T. Amulets: 2/4, Wizpig Amulets: 1/4
  ------------------------------------------------------------------------
-         We are battling in Icicle Pyramid. (2 opponents remain)
+   We are collecting silver coins in Everfrost Peak. (2/8 silver coins)
  ========================================================================
 ```
 <!-- README_SCORE_END -->
