@@ -122,6 +122,13 @@ typedef struct audioMgrConfig_s{
     u16  unk10; // Heap Size?
 } audioMgrConfig;
 
+typedef struct AudQueueCustom {
+    ALEventQueue alQ;
+    struct TempAud *next;
+    u8 unk0[0x26];
+    u8 unk3E;
+} AudQueueCustom;
+
 extern void *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size); //lib/src/al
 extern void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount); //lib/src/unknown_0C9C90.c
 extern ALMicroTime alEvtqNextEvent(ALEventQueue *evtq, ALEvent *evt); //lib/src/unknown_0C9C90.c
@@ -145,9 +152,9 @@ void func_8000418C(ALVoiceState *voiceState);
 
 // Non Matching
 void func_80004520(ALSoundState *);
-s32 func_80004668(ALBank *bnk, s16 sndIndx, u8, s32);
+s32 func_80004668(ALBank *bnk, s16 sndIndx, u8, SoundMask *soundMask);
 INCONSISTENT void func_8000488C();
-void func_800048D8(s32);
+void func_800048D8(u8 event);
 void _handleEvent(unk800DC6BC *sndp, ALSndpEvent *event);
 
 #endif
