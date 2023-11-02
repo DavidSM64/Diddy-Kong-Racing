@@ -59,7 +59,7 @@ glabel render_rain_overlay
 /* 0AE9A0 800ADDA0 A60D0002 */  sh    $t5, 2($s0)
 /* 0AE9A4 800ADDA4 3C0D800E */  lui   $t5, %hi(D_800E2C6C) # $t5, 0x800e
 /* 0AE9A8 800ADDA8 8DAD2C6C */  lw    $t5, %lo(D_800E2C6C)($t5)
-/* 0AE9AC 800ADDAC 3C028012 */  lui   $v0, %hi(D_80127C1C) # $v0, 0x8012
+/* 0AE9AC 800ADDAC 3C028012 */  lui   $v0, %hi(gWeatherCamera) # $v0, 0x8012
 /* 0AE9B0 800ADDB0 000D7083 */  sra   $t6, $t5, 2
 /* 0AE9B4 800ADDB4 00008812 */  mflo  $s1
 /* 0AE9B8 800ADDB8 00117A03 */  sra   $t7, $s1, 8
@@ -81,7 +81,7 @@ glabel render_rain_overlay
 /* 0AE9F8 800ADDF8 00036C03 */  sra   $t5, $v1, 0x10
 /* 0AE9FC 800ADDFC 19A0010A */  blez  $t5, .L800AE228
 /* 0AEA00 800ADE00 01A01825 */   move  $v1, $t5
-/* 0AEA04 800ADE04 8C427C1C */  lw    $v0, %lo(D_80127C1C)($v0)
+/* 0AEA04 800ADE04 8C427C1C */  lw    $v0, %lo(gWeatherCamera)($v0)
 /* 0AEA08 800ADE08 01D17023 */  subu  $t6, $t6, $s1
 /* 0AEA0C 800ADE0C 844F0000 */  lh    $t7, ($v0)
 /* 0AEA10 800ADE10 000E7040 */  sll   $t6, $t6, 1
@@ -100,8 +100,8 @@ glabel render_rain_overlay
 /* 0AEA44 800ADE44 02288821 */  addu  $s1, $s1, $t0
 /* 0AEA48 800ADE48 0C01C1F1 */  jal   sins_f
 /* 0AEA4C 800ADE4C AFA8009C */   sw    $t0, 0x9c($sp)
-/* 0AEA50 800ADE50 3C188012 */  lui   $t8, %hi(D_80127C1C) # $t8, 0x8012
-/* 0AEA54 800ADE54 8F187C1C */  lw    $t8, %lo(D_80127C1C)($t8)
+/* 0AEA50 800ADE50 3C188012 */  lui   $t8, %hi(gWeatherCamera) # $t8, 0x8012
+/* 0AEA54 800ADE54 8F187C1C */  lw    $t8, %lo(gWeatherCamera)($t8)
 /* 0AEA58 800ADE58 00000000 */  nop   
 /* 0AEA5C 800ADE5C 87040004 */  lh    $a0, 4($t8)
 /* 0AEA60 800ADE60 0C01C1FE */  jal   coss_f

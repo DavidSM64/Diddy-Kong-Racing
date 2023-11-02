@@ -407,12 +407,12 @@ typedef struct unk800E1E64 {
 
 /* Size: 0x10 bytes */
 typedef struct unk800E2770 {
-    u16 unk0;
-    u8 unk2;
+    u16 soundID;
+    u8 volume;
     s8 unk3;
-    s32 *unk4; //soundmask?
+    SoundMask *soundMask;
     s32 unk8;
-    s8 unkC;
+    s8 playerIndex;
     s8 unkD;
     s8 unkE;
     s8 unkF;

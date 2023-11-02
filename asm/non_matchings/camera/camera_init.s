@@ -45,7 +45,7 @@ glabel camera_init
 /* 066B34 80065F34 240500C8 */  li    $a1, 200
 /* 066B38 80065F38 240600C8 */  li    $a2, 200
 /* 066B3C 80065F3C 00003825 */  move  $a3, $zero
-/* 066B40 80065F40 0C0198F7 */  jal   func_800663DC
+/* 066B40 80065F40 0C0198F7 */  jal   camera_reset
 /* 066B44 80065F44 AFA00010 */   sw    $zero, 0x10($sp)
 /* 066B48 80065F48 26100001 */  addiu $s0, $s0, 1
 /* 066B4C 80065F4C 1612FFF6 */  bne   $s0, $s2, .L80065F28

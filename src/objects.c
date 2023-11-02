@@ -3609,8 +3609,8 @@ void func_80016500(Object *obj, Object_Racer *racer) {
             angle = 127;
         }
         if (racer->unk1F6 == 0) {
-            play_sound_global(SOUND_CRASH_CHARACTER, &racer->unk220);
-            func_80001FB8(SOUND_CRASH_CHARACTER, (s32 *) racer->unk220, angle);
+            sound_play(SOUND_CRASH_CHARACTER, &racer->unk220);
+            sound_volume_set_relative(SOUND_CRASH_CHARACTER, (s32 *) racer->unk220, angle);
         }
         if (racer->unk1F6 == 0 && angle >= 56) {
             if (!racer->raceFinished) {
@@ -4211,12 +4211,12 @@ void tt_ghost_beaten(s32 arg0, s16 *playerId) {
         //Check if TT has been beaten for all tracks.
         if ((get_eeprom_settings() & 0xFFFFF0) == 0xFFFFF0) {
             set_magic_code_flags(CHEAT_CONTROL_TT);
-            play_sound_global(SOUND_VOICE_TT_BEAT_ALL_TIMES, NULL);
-            func_80000FDC(SOUND_VOICE_TT_UNLOCKED, 0, 1.5f);
+            sound_play(SOUND_VOICE_TT_BEAT_ALL_TIMES, NULL);
+            sound_play_delayed(SOUND_VOICE_TT_UNLOCKED, NULL, 1.5f);
             set_current_text(ASSET_GAME_TEXT_84); //Text for "You have beaten all my times!" and then "Now you can PICK me!"
         } else {
-            play_sound_global(SOUND_VOICE_TT_WELL_DONE, NULL);
-            func_80000FDC(SOUND_VOICE_TT_TRY_ANOTHER_TRACK, 0, 1.0f);
+            sound_play(SOUND_VOICE_TT_WELL_DONE, NULL);
+            sound_play_delayed(SOUND_VOICE_TT_TRY_ANOTHER_TRACK, NULL, 1.0f);
             set_current_text(ASSET_GAME_TEXT_83); //Text for "Well Done! Now try another track."
         }
         gBeatStaffGhost = FALSE;
@@ -5710,8 +5710,8 @@ void func_80022E18(s32 arg0) {
         obj->properties.common.unk0 = 0x1F;
         set_taj_status(2);
     } else {
-        func_80000B28();
-        func_80001844();
+        music_change_on();
+        music_stop();
         set_next_taj_challenge_menu(0);
         func_80008168();
         if (arg0 == 2) {
@@ -5721,7 +5721,7 @@ void func_80022E18(s32 arg0) {
         gEventStartTimer = 0;
         obj->properties.common.unk0 = 0x14;
     }
-    func_80000B28();
+    music_change_on();
     func_800A0B74();
     start_level_music(1.0f);
     gIsTajChallenge = 0;

@@ -7,6 +7,7 @@
 #include "asset_enums.h"
 #include "libultra_internal.h"
 #include "sched.h"
+#include "structs.h"
 
 #define AL_SNDP_PLAY_EVT (1 << 0)
 #define AL_SNDP_STOP_EVT (1 << 1)
@@ -22,7 +23,9 @@
 #define AL_SNDP_UNK_11_EVT (1 << 11)
 
 typedef struct {
-  /* 0x00 */ s8 pad00[0x0C];
+    struct ALSoundState *next;
+    struct ALSoundState *prev;
+    struct ALSoundState *unk8;
   /* 0x0C */ ALVoice     voice;
     ALSound     *sound;         /* sound referenced here */
     s16         priority;
@@ -72,8 +75,8 @@ typedef union {
 
     struct{
         s16 type;
-        void* state;
-        u32 unk04;
+        SoundMask *state;
+        u32 param;
     }snd_event;
 
 } ALEvent2;
@@ -121,6 +124,13 @@ typedef struct audioMgrConfig_s{
     u16  unk10; // Heap Size?
 } audioMgrConfig;
 
+typedef struct AudQueueCustom {
+    ALEventQueue alQ;
+    struct TempAud *next;
+    u8 unk0[0x26];
+    u8 unk3E;
+} AudQueueCustom;
+
 extern void *alHeapDBAlloc(u8 *file, s32 line, ALHeap *hp, s32 num, s32 size); //lib/src/al
 extern void alEvtqNew(ALEventQueue *evtq, ALEventListItem *items, s32 itemCount); //lib/src/unknown_0C9C90.c
 extern ALMicroTime alEvtqNextEvent(ALEventQueue *evtq, ALEvent *evt); //lib/src/unknown_0C9C90.c
@@ -135,18 +145,18 @@ ALMicroTime  _sndpVoiceHandler(void *node);
 void func_8000410C(ALSoundState *state);
 u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex);
 void func_80004604(u8 *arg0, u8 arg1);
-s32 func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2);
-void func_800049D8(void);
-void func_800049F8(s32 soundMask, s16 type, u32 volume);
+s32 func_80004638(ALBank *bnk, s16 sndIndx, SoundMask *soundMask);
+void sound_stop_all(void);
+void sound_event_update(s32 soundMask, s16 type, u32 volume);
 u16 get_sound_channel_volume(u8 channel);
 void set_sound_channel_volume(u8 channel, u16 volume);
 void func_8000418C(ALVoiceState *voiceState);
+void func_800048D8(u8 event);
 
 // Non Matching
 void func_80004520(ALSoundState *);
-s32 func_80004668(ALBank *bnk, s16 sndIndx, u8, s32);
+s32 func_80004668(ALBank *bnk, s16 sndIndx, u8, SoundMask *soundMask);
 INCONSISTENT void func_8000488C();
-void func_800048D8(s32);
 void _handleEvent(unk800DC6BC *sndp, ALSndpEvent *event);
 
 #endif

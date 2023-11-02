@@ -138,7 +138,7 @@ glabel func_800A277C
 /* 0A3518 800A2918 24010004 */  li    $at, 4
 /* 0A351C 800A291C 15E10042 */  bne   $t7, $at, .L800A2A28
 /* 0A3520 800A2920 00000000 */   nop   
-/* 0A3524 800A2924 0C00057E */  jal   audio_get_chr_select_anim_frac
+/* 0A3524 800A2924 0C00057E */  jal   music_animation_fraction
 /* 0A3528 800A2928 AFA900A8 */   sw    $t1, 0xa8($sp)
 /* 0A352C 800A292C 8FB80098 */  lw    $t8, 0x98($sp)
 /* 0A3530 800A2930 924C0000 */  lbu   $t4, ($s2)
@@ -652,7 +652,7 @@ glabel func_800A277C
 .L800A30BC:
 /* 0A3CBC 800A30BC 3C058012 */  lui   $a1, %hi(gHUDVoiceSoundMask) # $a1, 0x8012
 /* 0A3CC0 800A30C0 A6240000 */  sh    $a0, ($s1)
-/* 0A3CC4 800A30C4 0C000741 */  jal   play_sound_global
+/* 0A3CC4 800A30C4 0C000741 */  jal   sound_play
 /* 0A3CC8 800A30C8 24A56D40 */   addiu $a1, %lo(gHUDVoiceSoundMask) # addiu $a1, $a1, 0x6d40
 /* 0A3CCC 800A30CC 240E0001 */  li    $t6, 1
 /* 0A3CD0 800A30D0 8FA900A0 */  lw    $t1, 0xa0($sp)
@@ -727,7 +727,7 @@ glabel func_800A277C
 /* 0A3DD4 800A31D4 11200004 */  beqz  $t1, .L800A31E8
 /* 0A3DD8 800A31D8 24040144 */   li    $a0, 324
 /* 0A3DDC 800A31DC 3C058012 */  lui   $a1, %hi(gHUDVoiceSoundMask) # $a1, 0x8012
-/* 0A3DE0 800A31E0 0C000741 */  jal   play_sound_global
+/* 0A3DE0 800A31E0 0C000741 */  jal   sound_play
 /* 0A3DE4 800A31E4 24A56D40 */   addiu $a1, %lo(gHUDVoiceSoundMask) # addiu $a1, $a1, 0x6d40
 .L800A31E8:
 /* 0A3DE8 800A31E8 0C006CA2 */  jal   func_8001B288
@@ -798,7 +798,7 @@ glabel func_800A277C
 .L800A32E8:
 /* 0A3EE8 800A32E8 3C058012 */  lui   $a1, %hi(gHUDVoiceSoundMask) # $a1, 0x8012
 /* 0A3EEC 800A32EC A6240000 */  sh    $a0, ($s1)
-/* 0A3EF0 800A32F0 0C000741 */  jal   play_sound_global
+/* 0A3EF0 800A32F0 0C000741 */  jal   sound_play
 /* 0A3EF4 800A32F4 24A56D40 */   addiu $a1, %lo(gHUDVoiceSoundMask) # addiu $a1, $a1, 0x6d40
 /* 0A3EF8 800A32F8 24040078 */  li    $a0, 120
 /* 0A3EFC 800A32FC 0C01BE53 */  jal   get_random_number_from_range

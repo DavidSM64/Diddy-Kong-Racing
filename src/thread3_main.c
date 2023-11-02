@@ -304,7 +304,7 @@ void main_game_loop(void) {
     // This is a good spot to place custom text if you want it to overlay it over ALL the
     // menus & gameplay.
 
-    handle_music_fade(sLogicUpdateRate);
+    sound_update_queue(sLogicUpdateRate);
     print_debug_strings(&gCurrDisplayList);
     render_dialogue_boxes(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     close_dialogue_box(4);
@@ -519,7 +519,7 @@ void ingame_logic_loop(s32 updateRate) {
                 gIsPaused = FALSE;
                 break;
             case 1:
-                func_80001050();
+                sound_clear_delayed();
                 reset_delayed_text();
                 if (func_80023568() != 0 && is_in_two_player_adventure()) {
                     swap_lead_player();
@@ -527,7 +527,7 @@ void ingame_logic_loop(s32 updateRate) {
                 buttonHeldInputs |= (L_TRIG | Z_TRIG);
                 break;
             case 2:
-                func_80001050();
+                sound_clear_delayed();
                 reset_delayed_text();
                 if (func_80023568() != 0 && is_in_two_player_adventure()) {
                     swap_lead_player();
@@ -553,7 +553,7 @@ void ingame_logic_loop(s32 updateRate) {
                 break;
             case 3:
                 gDrumstickSceneLoadTimer = 0;
-                func_80001050();
+                sound_clear_delayed();
                 reset_delayed_text();
                 clear_level_property_stack();
                 buttonHeldInputs |= (L_TRIG | R_TRIG);
@@ -640,7 +640,7 @@ void ingame_logic_loop(s32 updateRate) {
                 i = func_800214C4();
                 if ((i != 0) || ((buttonPressedInputs & A_BUTTON) && (sp3C != 0))) {
                     if (sp3C != 0) {
-                        func_80000B28();
+                        music_change_on();
                     }
                     set_frame_blackout_timer();
                     pop_level_property_stack(&gPlayableMapId, &gGameCurrentEntrance, &i, &gGameCurrentCutscene);
@@ -1025,7 +1025,7 @@ void menu_logic_loop(s32 updateRate) {
         gGameMode = GAMEMODE_INGAME;
         load_next_ingame_level(menuLoopResult, -1, gLevelDefaultVehicleID);
         if (gSettingsPtr->newGame && !is_in_tracks_mode()) {
-            func_80000B28();
+            music_change_on();
             gSettingsPtr->newGame = FALSE;
         }
     }

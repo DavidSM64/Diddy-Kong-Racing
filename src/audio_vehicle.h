@@ -132,11 +132,11 @@ typedef struct unkAudioAsset {
 extern u8 gVehicleSounds;
 extern s32 D_800DC6D8;
 extern s32 D_800DC6DC;
-extern u16 D_800DC6E0;
-extern unk80119C48 **D_80119C48;
-extern SoundMask **D_80119C44;
-extern SoundMask **D_80119C50;
-extern u8 D_80119C4C;
+extern u16 gUsedMasks;
+extern unk80119C48 **gSoundMaskHeap;
+extern SoundMask **gSoundMaskHeapUsed;
+extern SoundMask **gSoundMaskHeapFree;
+extern u8 gFreeMasks;
 
 
 void racer_sound_update(Object* obj, u32 buttonsPressed, u32 carInput, s32 updateRate);

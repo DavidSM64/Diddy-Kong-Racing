@@ -401,7 +401,7 @@ glabel func_80019808
 /* 01A9C4 80019DC4 1420FFED */  bnez  $at, .L80019D7C
 /* 01A9C8 80019DC8 24840004 */   addiu $a0, $a0, 4
 .L80019DCC:
-/* 01A9CC 80019DCC 0C0002CD */  jal   play_music
+/* 01A9CC 80019DCC 0C0002CD */  jal   music_play
 /* 01A9D0 80019DD0 30A400FF */   andi  $a0, $a1, 0xff
 /* 01A9D4 80019DD4 24050004 */  li    $a1, 4
 /* 01A9D8 80019DD8 00001825 */  move  $v1, $zero
@@ -627,7 +627,7 @@ glabel func_80019808
 /* 01ACFC 8001A0FC 00002825 */   move  $a1, $zero
 /* 01AD00 8001A100 AFBF0064 */  sw    $ra, 0x64($sp)
 /* 01AD04 8001A104 AFA80080 */  sw    $t0, 0x80($sp)
-/* 01AD08 8001A108 0C000741 */  jal   play_sound_global
+/* 01AD08 8001A108 0C000741 */  jal   sound_play
 /* 01AD0C 8001A10C AFAA0044 */   sw    $t2, 0x44($sp)
 /* 01AD10 8001A110 3C0B8012 */  lui   $t3, %hi(gRacers) # $t3, 0x8012
 /* 01AD14 8001A114 8FA80080 */  lw    $t0, 0x80($sp)

@@ -643,7 +643,7 @@ typedef struct {
     u8                  fxmix;          /* current fx mix for this chan     */
     u8                  sustain;        /* current sustain pedal state      */
     f32                 pitchBend;      /* current pitch bend val in cents  */
-    u8                  unk10;
+    u8                  fade;
     u8                  unk11;
 } ALChanState_Custom;
 

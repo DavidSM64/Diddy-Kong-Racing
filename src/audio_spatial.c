@@ -16,7 +16,7 @@
 
 /************ .data ************/
 
-u16 D_800DC6E0 = 0;
+u16 gUsedMasks = 0;
 
 /*******************************/
 
@@ -38,7 +38,7 @@ UNUSED const char D_800E4EDC[] = "Reverb line definition error (line=%d, vertex=
 /************ .bss ************/
 
 extern s8 D_8011AC18;
-extern unk80115D18 *D_80119C40;
+extern SoundData *D_80119C40;
 extern unk80119C58 D_80119C58[];
 extern unk8011A6D8 D_8011A6D8[];
 
@@ -48,19 +48,19 @@ extern unk8011A6D8 D_8011A6D8[];
 void func_80008040(void) {
     s32 var_v0;
 
-    func_80002128(&D_80119C40, NULL, NULL);
-    D_80119C48 = allocate_from_main_pool_safe(0x5A0, COLOUR_TAG_CYAN);
-    D_80119C50 = allocate_from_main_pool_safe(0xA0, COLOUR_TAG_CYAN);
-    D_80119C44 = allocate_from_main_pool_safe(0xA0, COLOUR_TAG_CYAN);
-    D_800DC6E0 = 0;
+    sound_table_properties(&D_80119C40, NULL, NULL);
+    gSoundMaskHeap = allocate_from_main_pool_safe(0x5A0, COLOUR_TAG_CYAN);
+    gSoundMaskHeapFree = allocate_from_main_pool_safe(0xA0, COLOUR_TAG_CYAN);
+    gSoundMaskHeapUsed = allocate_from_main_pool_safe(0xA0, COLOUR_TAG_CYAN);
+    gUsedMasks = 0;
     for (var_v0 = 0; var_v0 < 7; var_v0++) {
         D_80119C58[var_v0].unk4 = NULL;
     }
     for (var_v0 = 0; var_v0 < 10; var_v0++) {
-        D_80119C48[var_v0]->unk18 = 0;
-        D_80119C48[var_v0]->unk3C = 0;
-        D_80119C48[var_v0]->unk60 = 0;
-        D_80119C48[var_v0]->unk84 = 0;
+        gSoundMaskHeap[var_v0]->unk18 = 0;
+        gSoundMaskHeap[var_v0]->unk3C = 0;
+        gSoundMaskHeap[var_v0]->unk60 = 0;
+        gSoundMaskHeap[var_v0]->unk84 = 0;
     }
     func_80008174();
 }
@@ -69,7 +69,7 @@ GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80008040.s")
 #endif
 
 void func_80008140(void) {
-    func_800018E0();
+    music_jingle_stop();
     D_8011AC18 = 1;
 }
 
@@ -85,18 +85,18 @@ void func_80008174(void) {
     s32 i;
     s32 j;
 
-    for (D_80119C4C = 0; D_80119C4C < 40; D_80119C4C++) {
-        D_80119C50[D_80119C4C] = D_80119C48[D_80119C4C];
+    for (gFreeMasks = 0; gFreeMasks < 40; gFreeMasks++) {
+        gSoundMaskHeapFree[gFreeMasks] = gSoundMaskHeap[gFreeMasks];
     }
-    D_80119C4C--;
+    gFreeMasks--;
 
-    for (i = 0; i < D_800DC6E0; i++) {
-        D_80119C44[i]->unk12 = 0;
-        if (D_80119C44[i]->unk18 != NULL) {
-            func_8000488C(D_80119C44[i]->unk18);
+    for (i = 0; i < gUsedMasks; i++) {
+        gSoundMaskHeapUsed[i]->unk12 = 0;
+        if (gSoundMaskHeapUsed[i]->unk18 != NULL) {
+            func_8000488C(gSoundMaskHeapUsed[i]->unk18);
         }
     }
-    D_800DC6E0 = 0;
+    gUsedMasks = 0;
 
     for (i = 0; i < ARRAY_COUNT(D_80119C60); i++) {
         D_80119C58[i].unk16C = 0;
@@ -104,7 +104,7 @@ void func_80008174(void) {
             if (D_80119C58[i].unk0.unk0_02 == 0) {
                 func_8000488C(D_80119C58[i].unk178);
             } else if (D_80119C58[i].unk0.unk0_02 == 1) {
-                func_800018E0();
+                music_jingle_stop();
             }
             D_80119C58[i].unk178 = 0;
         }
@@ -218,8 +218,8 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
  * Play Sound at position 
  */
 void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, SoundMask **soundMask) {
-    func_8000974C(D_80119C40[soundId].unk0, x, y, z, arg4, D_80119C40[soundId].unk3,
-        D_80119C40[soundId].unk2, D_80119C40[soundId].unk6, 0, D_80119C40[soundId].unk4,
+    func_8000974C(D_80119C40[soundId].soundBite, x, y, z, arg4, D_80119C40[soundId].unk3,
+        D_80119C40[soundId].volume, D_80119C40[soundId].distance, 0, D_80119C40[soundId].pitch,
         D_80119C40[soundId].unk8, soundMask);
 }
 
@@ -237,43 +237,43 @@ void update_spatial_audio_position(SoundMask *arg0, f32 x, f32 y, f32 z) {
 void func_800096F8(SoundMask *arg0) {
     s32 i;
     for (i = 0; i < 40; i++) {
-        if (arg0 == D_80119C44[i]) {
+        if (arg0 == gSoundMaskHeapUsed[i]) {
             func_8000A2E8(i);
             break;
         }
     }
 }
 
-void func_8000974C(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 arg6, u16 arg7, u8 arg8, u8 arg9, u8 argA, SoundMask **soundMask) {
-    SoundMask *temp_v0;
+void func_8000974C(u16 soundBite, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 volume, u16 distance, u8 arg8, u8 pitch, u8 argA, SoundMask **soundMask) {
+    SoundMask *newMask;
 
     if (soundMask != NULL) {
-        func_800245B4(soundId | 0xE000);
+        func_800245B4(soundBite | 0xE000);
     }
-    if (D_800DC6E0 == 40) {
+    if (gUsedMasks == 40) {
         if (soundMask != NULL) {
-            *soundMask = 0;
+            *soundMask = NULL;
         }
         func_800245B4(0xAA55);
         return;
     }
-    temp_v0 = D_80119C50[D_80119C4C--];
-    temp_v0->pos.x = x;
-    temp_v0->pos.y = y;
-    temp_v0->pos.z = z;
-    temp_v0->soundId = soundId;
-    temp_v0->unk11 = arg4;
-    temp_v0->unk10 = arg5;
-    temp_v0->unkE = arg6;
-    temp_v0->unkF = arg9;
-    temp_v0->unk14 = arg7;
-    temp_v0->unk20 = arg8;
-    temp_v0->unk21 = argA;
-    temp_v0->unk22 = 0;
-    temp_v0->soundMask = soundMask;
-    D_80119C44[D_800DC6E0++] = temp_v0;
+    newMask = gSoundMaskHeapFree[gFreeMasks--];
+    newMask->pos.x = x;
+    newMask->pos.y = y;
+    newMask->pos.z = z;
+    newMask->soundId = soundBite;
+    newMask->unk11 = arg4;
+    newMask->unk10 = arg5;
+    newMask->volume = volume;
+    newMask->pitch = pitch;
+    newMask->distance = distance;
+    newMask->unk20 = arg8;
+    newMask->unk21 = argA;
+    newMask->unk22 = 0;
+    newMask->soundMask = soundMask;
+    gSoundMaskHeapUsed[gUsedMasks++] = newMask;
     if (soundMask != NULL) {
-        *soundMask = temp_v0;
+        *soundMask = newMask;
     }
 }
 
@@ -420,7 +420,7 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
         }
     }
     if (soundState != NULL) {
-        func_800049F8((s32) soundState, 0x100, (u32) volume);
+        sound_event_update((s32) soundState, 0x100, (u32) volume);
     }
 }
 #else
@@ -457,18 +457,18 @@ GLOBAL_ASM("asm/non_matchings/audio_spatial/func_8000A184.s")
 #endif
 
 void func_8000A2E8(s32 arg0) {
-    if (D_800DC6E0 != 0) {
-        if (D_80119C44[arg0]->unk18 != 0) {
-            func_8000488C(D_80119C44[arg0]->unk18);
+    if (gUsedMasks != 0) {
+        if (gSoundMaskHeapUsed[arg0]->unk18 != 0) {
+            func_8000488C(gSoundMaskHeapUsed[arg0]->unk18);
         }
-        if (D_80119C44[arg0]->soundMask != NULL) {
-            *D_80119C44[arg0]->soundMask = NULL;
-            func_800245B4(D_80119C44[arg0]->soundId | 0x5000);
+        if (gSoundMaskHeapUsed[arg0]->soundMask != NULL) {
+            *gSoundMaskHeapUsed[arg0]->soundMask = NULL;
+            func_800245B4(gSoundMaskHeapUsed[arg0]->soundId | 0x5000);
         }
-        D_80119C4C++;
-        D_80119C50[D_80119C4C] = D_80119C44[arg0];
-        D_80119C44[arg0] = D_80119C44[D_800DC6E0 - 1];
-        D_800DC6E0--;
+        gFreeMasks++;
+        gSoundMaskHeapFree[gFreeMasks] = gSoundMaskHeapUsed[arg0];
+        gSoundMaskHeapUsed[arg0] = gSoundMaskHeapUsed[gUsedMasks - 1];
+        gUsedMasks--;
     }
 }
 

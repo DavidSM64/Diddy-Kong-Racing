@@ -100,16 +100,16 @@ glabel obj_loop_door
 /* 03C6EC 8003BAEC 15C0001D */  bnez  $t6, .L8003BB64
 /* 03C6F0 8003BAF0 240B012C */   li    $t3, 300
 /* 03C6F4 8003BAF4 AFA80044 */  sw    $t0, 0x44($sp)
-/* 03C6F8 8003BAF8 0C000326 */  jal   set_music_fade_timer
+/* 03C6F8 8003BAF8 0C000326 */  jal   music_fade
 /* 03C6FC 8003BAFC AFA90040 */   sw    $t1, 0x40($sp)
 /* 03C700 8003BB00 8FA80044 */  lw    $t0, 0x44($sp)
 /* 03C704 8003BB04 240F008C */  li    $t7, 140
 /* 03C708 8003BB08 24040010 */  li    $a0, 16
-/* 03C70C 8003BB0C 0C00030E */  jal   set_sndfx_player_voice_limit
+/* 03C70C 8003BB0C 0C00030E */  jal   music_jingle_voicelimit_set
 /* 03C710 8003BB10 AD0F0008 */   sw    $t7, 8($t0)
 /* 03C714 8003BB14 0C002050 */  jal   func_80008140
 /* 03C718 8003BB18 00000000 */   nop   
-/* 03C71C 8003BB1C 0C0006F0 */  jal   play_sequence
+/* 03C71C 8003BB1C 0C0006F0 */  jal   music_jingle_play
 /* 03C720 8003BB20 24040011 */   li    $a0, 17
 /* 03C724 8003BB24 8FA80044 */  lw    $t0, 0x44($sp)
 /* 03C728 8003BB28 00000000 */  nop   
@@ -144,7 +144,7 @@ glabel obj_loop_door
 /* 03C790 8003BB90 1180001B */  beqz  $t4, .L8003BC00
 /* 03C794 8003BB94 00000000 */   nop   
 /* 03C798 8003BB98 AFA80044 */  sw    $t0, 0x44($sp)
-/* 03C79C 8003BB9C 0C000702 */  jal   func_80001C08
+/* 03C79C 8003BB9C 0C000702 */  jal   music_jingle_playing
 /* 03C7A0 8003BBA0 AFA90040 */   sw    $t1, 0x40($sp)
 /* 03C7A4 8003BBA4 8FA80044 */  lw    $t0, 0x44($sp)
 /* 03C7A8 8003BBA8 8FA90040 */  lw    $t1, 0x40($sp)
@@ -161,9 +161,9 @@ glabel obj_loop_door
 .L8003BBD4:
 /* 03C7D4 8003BBD4 AD000008 */  sw    $zero, 8($t0)
 /* 03C7D8 8003BBD8 AFA90040 */  sw    $t1, 0x40($sp)
-/* 03C7DC 8003BBDC 0C000326 */  jal   set_music_fade_timer
+/* 03C7DC 8003BBDC 0C000326 */  jal   music_fade
 /* 03C7E0 8003BBE0 AFA80044 */   sw    $t0, 0x44($sp)
-/* 03C7E4 8003BBE4 0C00030E */  jal   set_sndfx_player_voice_limit
+/* 03C7E4 8003BBE4 0C00030E */  jal   music_jingle_voicelimit_set
 /* 03C7E8 8003BBE8 24040006 */   li    $a0, 6
 /* 03C7EC 8003BBEC 0C00205A */  jal   func_80008168
 /* 03C7F0 8003BBF0 00000000 */   nop   

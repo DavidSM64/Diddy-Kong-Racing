@@ -69,7 +69,7 @@ glabel func_800ACA20
 /* 0AD72C 800ACB2C 0C019B37 */  jal   func_80066CDC
 /* 0AD730 800ACB30 E7B200C8 */   swc1  $f18, 0xc8($sp)
 /* 0AD734 800ACB34 02202025 */  move  $a0, $s1
-/* 0AD738 800ACB38 0C01A102 */  jal   func_80068408
+/* 0AD738 800ACB38 0C01A102 */  jal   matrix_world_origin
 /* 0AD73C 800ACB3C 02A02825 */   move  $a1, $s5
 /* 0AD740 800ACB40 3C014000 */  li    $at, 0x40000000 # 2.000000
 /* 0AD744 800ACB44 4481C000 */  mtc1  $at, $f24

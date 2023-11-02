@@ -639,7 +639,7 @@ glabel L8009BB9C
 /* 09C83C 8009BC3C 2484F774 */   addiu $a0, %lo(sMenuTransitionFadeIn) # addiu $a0, $a0, -0x88c
 /* 09C840 8009BC40 0C03005C */  jal   enable_new_screen_transitions
 /* 09C844 8009BC44 00000000 */   nop   
-/* 09C848 8009BC48 0C000326 */  jal   set_music_fade_timer
+/* 09C848 8009BC48 0C000326 */  jal   music_fade
 /* 09C84C 8009BC4C 2404FF80 */   li    $a0, -128
 .L8009BC50:
 /* 09C850 8009BC50 3C02800E */  lui   $v0, %hi(gMenuDelay) # $v0, 0x800e
@@ -657,7 +657,7 @@ glabel L8009BB9C
 /* 09C880 8009BC80 2B21001F */  slti  $at, $t9, 0x1f
 /* 09C884 8009BC84 1420000C */  bnez  $at, .L8009BCB8
 /* 09C888 8009BC88 8FBF0054 */   lw    $ra, 0x54($sp)
-/* 09C88C 8009BC8C 0C0002CA */  jal   func_80000B28
+/* 09C88C 8009BC8C 0C0002CA */  jal   music_change_on
 /* 09C890 8009BC90 00000000 */   nop   
 /* 09C894 8009BC94 0C026F3C */  jal   func_8009BCF0
 /* 09C898 8009BC98 00000000 */   nop   
