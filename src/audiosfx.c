@@ -178,9 +178,9 @@ u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
 
     mask = osSetIntMask(OS_IM_NONE);
     queue = (ALSoundState *) &D_800DC6B0;
-    nextFreeList = queue->next;
-    nextAllocList = queue->unk8;
-    prevFreeList = queue->prev;
+    nextFreeList = (ALLink *) queue->next;
+    nextAllocList = (ALLink *) queue->unk8;
+    prevFreeList = (ALLink *) queue->prev;
 
     for (freeListNextIndex = 0; nextFreeList != 0; freeListNextIndex++) {
         nextFreeList = (ALLink *) nextFreeList->next;

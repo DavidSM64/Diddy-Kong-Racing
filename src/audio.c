@@ -813,14 +813,14 @@ void sound_play(u16 soundID, s32 *soundMask) {
     }
     pitch = gSoundTable[soundID].pitch / 100.0f;
     if (soundMask != NULL) {
-        func_80004668(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, (s32) soundMask);
+        func_80004668(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, (SoundMask *) soundMask);
         if (*soundMask != NULL) {
             sound_event_update(*soundMask, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
             sound_event_update(*soundMask, AL_SNDP_PITCH_EVT, *((u32*) &pitch));
         }
     } else {
         soundMask = (s32 *) &gGlobalSoundMask;
-        func_80004668(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, (s32) &gGlobalSoundMask);
+        func_80004668(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, (SoundMask *) &gGlobalSoundMask);
         if (*soundMask != NULL) {
             sound_event_update(*soundMask, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
             sound_event_update(*soundMask, AL_SNDP_PITCH_EVT, *((u32*) &pitch));
@@ -853,9 +853,9 @@ void func_80001F14(u16 soundID, s32 *soundMask) {
         return;
     }
     if (soundMask) {
-        func_80004638(gSoundBank->bankArray[0], (s16) soundID, soundMask);
+        func_80004638(gSoundBank->bankArray[0], (s16) soundID, (SoundMask *) soundMask);
     } else {
-        func_80004638(gSoundBank->bankArray[0], (s16) soundID, &gRacerSoundMask);
+        func_80004638(gSoundBank->bankArray[0], (s16) soundID, (SoundMask *) &gRacerSoundMask);
     }
 }
 
