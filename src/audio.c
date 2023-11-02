@@ -47,7 +47,7 @@ void *gMusicSequenceData;
 void *gJingleSequenceData;
 u8 gCurrentSequenceID;
 u8 gCurrentJingleID;
-s32 musicTempo;
+s32 gMusicTempo;
 u32 *gSeqLengthTable;
 ALBankFile *gSequenceBank;
 ALBankFile *gSoundBank;
@@ -243,7 +243,7 @@ void music_play(u8 seqID) {
         if (gCanPlayMusic) {
             music_sequence_start(gCurrentSequenceID, gMusicPlayer);
         }
-        musicTempo = alCSPGetTempo((ALCSPlayer *) gMusicPlayer);
+        gMusicTempo = alCSPGetTempo((ALCSPlayer *) gMusicPlayer);
         audioPrevCount = osGetCount();
         gMusicPlaying = TRUE;
         gDynamicMusicChannelMask = MUSIC_CHAN_MASK_NONE;
