@@ -4212,11 +4212,11 @@ void tt_ghost_beaten(s32 arg0, s16 *playerId) {
         if ((get_eeprom_settings() & 0xFFFFF0) == 0xFFFFF0) {
             set_magic_code_flags(CHEAT_CONTROL_TT);
             play_sound_global(SOUND_VOICE_TT_BEAT_ALL_TIMES, NULL);
-            func_80000FDC(SOUND_VOICE_TT_UNLOCKED, 0, 1.5f);
+            sound_play_delayed(SOUND_VOICE_TT_UNLOCKED, NULL, 1.5f);
             set_current_text(ASSET_GAME_TEXT_84); //Text for "You have beaten all my times!" and then "Now you can PICK me!"
         } else {
             play_sound_global(SOUND_VOICE_TT_WELL_DONE, NULL);
-            func_80000FDC(SOUND_VOICE_TT_TRY_ANOTHER_TRACK, 0, 1.0f);
+            sound_play_delayed(SOUND_VOICE_TT_TRY_ANOTHER_TRACK, NULL, 1.0f);
             set_current_text(ASSET_GAME_TEXT_83); //Text for "Well Done! Now try another track."
         }
         gBeatStaffGhost = FALSE;
@@ -5710,7 +5710,7 @@ void func_80022E18(s32 arg0) {
         obj->properties.common.unk0 = 0x1F;
         set_taj_status(2);
     } else {
-        func_80000B28();
+        music_change_on();
         music_stop();
         set_next_taj_challenge_menu(0);
         func_80008168();
@@ -5721,7 +5721,7 @@ void func_80022E18(s32 arg0) {
         gEventStartTimer = 0;
         obj->properties.common.unk0 = 0x14;
     }
-    func_80000B28();
+    music_change_on();
     func_800A0B74();
     start_level_music(1.0f);
     gIsTajChallenge = 0;

@@ -76,7 +76,7 @@ typedef union {
     struct{
         s16 type;
         SoundMask *state;
-        u32 unk04;
+        u32 param;
     }snd_event;
 
 } ALEvent2;

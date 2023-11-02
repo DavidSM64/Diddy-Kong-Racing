@@ -151,7 +151,7 @@ glabel func_80018CE0
 .L80018F20:
 /* 019B20 80018F20 14200005 */  bnez  $at, .L80018F38
 /* 019B24 80018F24 323000FF */   andi  $s0, $s1, 0xff
-/* 019B28 80018F28 0C000445 */  jal   func_80001114
+/* 019B28 80018F28 0C000445 */  jal   music_channel_off
 /* 019B2C 80018F2C 322400FF */   andi  $a0, $s1, 0xff
 /* 019B30 80018F30 10000015 */  b     .L80018F88
 /* 019B34 80018F34 26310001 */   addiu $s1, $s1, 1
@@ -161,7 +161,7 @@ glabel func_80018CE0
 /* 019B40 80018F40 01E02825 */  move  $a1, $t7
 /* 019B44 80018F44 0C00049A */  jal   func_80001268
 /* 019B48 80018F48 320400FF */   andi  $a0, $s0, 0xff
-/* 019B4C 80018F4C 0C00045C */  jal   func_80001170
+/* 019B4C 80018F4C 0C00045C */  jal   music_channel_on
 /* 019B50 80018F50 320400FF */   andi  $a0, $s0, 0xff
 /* 019B54 80018F54 1000000C */  b     .L80018F88
 /* 019B58 80018F58 26310001 */   addiu $s1, $s1, 1
@@ -170,7 +170,7 @@ glabel func_80018CE0
 /* 019B60 80018F60 320400FF */   andi  $a0, $s0, 0xff
 /* 019B64 80018F64 18400007 */  blez  $v0, .L80018F84
 /* 019B68 80018F68 00000000 */   nop   
-/* 019B6C 80018F6C 0C000453 */  jal   musicGetChnlActive
+/* 019B6C 80018F6C 0C000453 */  jal   music_channel_active
 /* 019B70 80018F70 02202025 */   move  $a0, $s1
 /* 019B74 80018F74 14400003 */  bnez  $v0, .L80018F84
 /* 019B78 80018F78 320400FF */   andi  $a0, $s0, 0xff
@@ -339,7 +339,7 @@ glabel func_80018CE0
 /* 019DEC 800191EC 00000000 */  nop   
 /* 019DF0 800191F0 45000011 */  bc1f  .L80019238
 /* 019DF4 800191F4 8FAA00F4 */   lw    $t2, 0xf4($sp)
-/* 019DF8 800191F8 0C000417 */  jal   musicGetChanMask
+/* 019DF8 800191F8 0C000417 */  jal   music_channel_get_mask
 /* 019DFC 800191FC 00000000 */   nop   
 /* 019E00 80019200 96280000 */  lhu   $t0, ($s1)
 /* 019E04 80019204 00000000 */  nop   
@@ -470,7 +470,7 @@ glabel func_80018CE0
 /* 019FD0 800193D0 1000003A */  b     .L800194BC
 /* 019FD4 800193D4 26310001 */   addiu $s1, $s1, 1
 .L800193D8:
-/* 019FD8 800193D8 0C00045C */  jal   func_80001170
+/* 019FD8 800193D8 0C00045C */  jal   music_channel_on
 /* 019FDC 800193DC 320400FF */   andi  $a0, $s0, 0xff
 /* 019FE0 800193E0 320400FF */  andi  $a0, $s0, 0xff
 /* 019FE4 800193E4 0C00049A */  jal   func_80001268
@@ -480,7 +480,7 @@ glabel func_80018CE0
 /* 019FF4 800193F4 10000031 */  b     .L800194BC
 /* 019FF8 800193F8 26310001 */   addiu $s1, $s1, 1
 .L800193FC:
-/* 019FFC 800193FC 0C000445 */  jal   func_80001114
+/* 019FFC 800193FC 0C000445 */  jal   music_channel_off
 /* 01A000 80019400 322400FF */   andi  $a0, $s1, 0xff
 /* 01A004 80019404 3C038012 */  lui   $v1, %hi(D_8011AF60) # $v1, 0x8012
 /* 01A008 80019408 8C63AF60 */  lw    $v1, %lo(D_8011AF60)($v1)
@@ -494,7 +494,7 @@ glabel func_80018CE0
 /* 01A024 80019424 2452FF81 */   addiu $s2, $v0, -0x7f
 /* 01A028 80019428 324B00FF */  andi  $t3, $s2, 0xff
 /* 01A02C 8001942C 01609025 */  move  $s2, $t3
-/* 01A030 80019430 0C00045C */  jal   func_80001170
+/* 01A030 80019430 0C00045C */  jal   music_channel_on
 /* 01A034 80019434 320400FF */   andi  $a0, $s0, 0xff
 /* 01A038 80019438 0C0004AA */  jal   func_800012A8
 /* 01A03C 8001943C 320400FF */   andi  $a0, $s0, 0xff
@@ -526,7 +526,7 @@ glabel func_80018CE0
 /* 01A09C 8001949C 10000003 */  b     .L800194AC
 /* 01A0A0 800194A0 00000000 */   nop   
 .L800194A4:
-/* 01A0A4 800194A4 0C000445 */  jal   func_80001114
+/* 01A0A4 800194A4 0C000445 */  jal   music_channel_off
 /* 01A0A8 800194A8 322400FF */   andi  $a0, $s1, 0xff
 .L800194AC:
 /* 01A0AC 800194AC 3C038012 */  lui   $v1, %hi(D_8011AF60) # $v1, 0x8012

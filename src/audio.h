@@ -4,6 +4,7 @@
 #include "types.h"
 #include "audio_internal.h"
 #include "sched.h"
+#include "structs.h"
 
 #define AUDIO_CHANNELS 16
 
@@ -35,11 +36,11 @@ typedef struct unk80115D1C {
 } unk80115D1C;
 
 /* Size: 0x08 bytes */
-typedef struct unk80115D48 {
+typedef struct DelayedSound {
     /* 0x00 */ u16 soundId;
-    /* 0x02 */ s16 unk2;
-    /* 0x04 */ s32 unk4;
-} unk80115D48;
+    /* 0x02 */ s16 timer;
+    /* 0x04 */ SoundMask *soundMask;
+} DelayedSound;
 
 void  alCSPNew(ALCSPlayer *seqp, ALSeqpConfig *config); //lib/src/al/csplayer.c
 void  alCSPSetBank(ALCSPlayer *seqp, ALBank *b); //lib/src/unknown_0C8660.c
@@ -62,35 +63,35 @@ s32  alCSPGetState(ALCSPlayer *seqp); //lib/src/unknown_0C8650.c
 void audio_init(OSSched *arg0);
 void reset_sound_volume(u8 skipReset);
 void adjust_audio_volume(s32 arg0);
-void func_80000B18(void);
-void func_80000B28(void);
+void music_change_off(void);
+void music_change_on(void);
 void play_music(u8 seqID);
 void set_music_player_voice_limit(u8 voiceLimit);
-void func_80000C1C(void);
-void func_80000C2C(void);
+void music_voicelimit_change_off(void);
+void music_voicelimit_change_on(void);
 void set_sndfx_player_voice_limit(u8 voiceLimit);
 void func_80000C68(u8 arg0);
 void set_music_fade_timer(s32 time);
-void func_80000CBC(void);
-void handle_music_fade(u8 updateRate);
-void func_80000FDC(u16 soundId, s32 arg1, f32 arg2);
-void func_80001050(void);
-u16 musicGetChanMask(void);
+void music_volume_reset(void);
+void sound_update_queue(u8 updateRate);
+void sound_play_delayed(u16 soundId, SoundMask *soundMask, f32 delayTime);
+void sound_clear_delayed(void);
+u16 music_channel_get_mask(void);
 void music_dynamic_reset(u16 arg0);
-void func_80001114(u8 chan);
-s32 musicGetChnlActive(s32 arg0);
-void func_80001170(u8 arg0);
-void musicSetChlPan(u8 chan, ALPan pan);
-void musicSetChlVol(u8 chan, u8 vol);
-u8 musicGetChlVol(u8 arg0);
-void func_80001268(u8 chan, ALPan pan);
+void music_channel_off(u8 channel);
+s32 music_channel_active(s32 channel);
+void music_channel_on(u8 channel);
+void music_channel_set_pan(u8 channel, ALPan pan);
+void music_channel_set_volume(u8 channel, u8 volume);
+u8 music_channel_volume(u8 arg0);
+void func_80001268(u8 channel, ALPan pan);
 u8 func_800012A8(u8 arg0);
 void func_800012E8(void);
 u8 func_80001358(u8 arg0, u8 arg1, s32 arg2);
 void func_80001440(u8 *arg0);
-void multiply_music_tempo(f32 tempo);
-void musicSetTempo(s32 tempo);
-s16 musicGetTempo(void);
+void music_tempo_set_relative(f32 tempo);
+void music_tempo_set(s32 tempo);
+s16 music_tempo(void);
 u8 music_is_playing(void);
 void sound_get_properties(u8 arg0, u8 *arg1, u8 *arg2, u8 *arg3);
 void music_jingle_play_safe(u8 a0);
@@ -118,7 +119,7 @@ u16 sound_count(void);
 u8 music_sequence_count(void);
 void sound_pool_properties(SoundData **arg0, s32 *arg1, s32 *arg2);
 void music_pool_properties(unk80115D1C **arg0, s32 *arg1, s32 *arg2);
-u8 gSoundEffectsTable_GetSoundDecayTime(u16 soundID);
+u8 gSoundBank_GetSoundDecayTime(u16 soundID);
 ALSeqPlayer *sound_seqplayer_init(s32 _max_voices, s32 _max_events);
 void music_sequence_start(u8 arg0, ALSeqPlayer *arg1);
 void music_sequence_stop(ALSeqPlayer *seqp);

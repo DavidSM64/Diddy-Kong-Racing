@@ -2030,7 +2030,7 @@ void obj_loop_teleport(Object *obj, UNUSED s32 updateRate) {
             begin_level_teleport(level_entry->levelID);
             obj->properties.lighthouse.active = FALSE;
             play_sound_global(SOUND_WHOOSH2, NULL);
-            func_80000FDC(SOUND_VOICE_TT_FUTURE_FUN_LAND, 0, 1.0f);
+            sound_play_delayed(SOUND_VOICE_TT_FUTURE_FUN_LAND, NULL, 1.0f);
         }
     }
 }
@@ -2712,35 +2712,35 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 func_80001268(0xA, sp3C);
                 func_80001268(0xB, sp3C);
                 func_80001268(0xF, sp3C);
-                musicSetChlPan(0xA, temp);
-                musicSetChlPan(0xB, temp);
-                musicSetChlPan(0xF, temp);
-                func_80001170(0xA);
-                func_80001170(0xB);
-                func_80001170(0xF);
+                music_channel_set_pan(0xA, temp);
+                music_channel_set_pan(0xB, temp);
+                music_channel_set_pan(0xF, temp);
+                music_channel_on(0xA);
+                music_channel_on(0xB);
+                music_channel_on(0xF);
                 func_80001268(3, 0x7F - sp3C);
             } else {
-                func_80001114(0xA);
-                func_80001114(0xB);
-                func_80001114(0xF);
+                music_channel_off(0xA);
+                music_channel_off(0xB);
+                music_channel_off(0xF);
             }
         }
         switch (taj->unk36) {
         case 0:
             if (taj->unk34 > updateRate << 7) {
                 taj->unk34 -= updateRate << 7;
-                func_80001170(14);
+                music_channel_on(14);
                 func_80001268(14, taj->unk34 >> 8);
                 taj->unk30 = 0;
             } else {
                 taj->unk34 = 0;
-                func_80001114(14);
+                music_channel_off(14);
                 if (taj->unk30 == 0) {
                     taj->unk30 = get_random_number_from_range(600, 900);
                     taj->unk2C = 0;
                 }
             }
-            if ((taj->unk30 != 0) && ((musicGetChanMask() & ~0x4000) == 0xB)) {
+            if ((taj->unk30 != 0) && ((music_channel_get_mask() & ~0x4000) == 0xB)) {
                 taj->unk2C += updateRate;
                 if (taj->unk30 < taj->unk2C) {
                     taj->unk36 = 1;
@@ -2752,7 +2752,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             }
             break;
         case 1:
-            if ((musicGetChanMask() & ~0x4000) == 0xB) {
+            if ((music_channel_get_mask() & ~0x4000) == 0xB) {
                 taj->unk34 += (updateRate * 128);
                 if (taj->unk34 > 0x7F00) {
                     taj->unk34 = 0x7F00;
@@ -2761,7 +2761,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 if (taj->unk2C < 0) {
                     taj->unk36 = 0;
                 }
-                func_80001170(0xE);
+                music_channel_on(0xE);
                 func_80001268(0xE, taj->unk34 >> 8);
             } else {
                 taj->unk36 = 0;
@@ -2770,7 +2770,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             }
             break;
         }
-        taj->unk28 = musicGetChanMask() & 0xBFFF;
+        taj->unk28 = music_channel_get_mask() & 0xBFFF;
         break;
     }
     obj->segment.trans.y_position = tempPosY;
@@ -4551,7 +4551,7 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
     obj64->unk5 = entry->unkD;
     obj64->unkD = entry->unk10;
     obj64->soundMask = NULL;
-    if (gSoundEffectsTable_GetSoundDecayTime(obj64->soundId)) {
+    if (gSoundBank_GetSoundDecayTime(obj64->soundId)) {
         func_8000974C(obj64->soundId, entry->common.x, entry->common.y, entry->common.z,
             9, obj64->unk5, obj64->unk4, obj64->unk2, obj64->unkC,
             obj64->unk6, obj64->unkD, &obj64->soundMask);

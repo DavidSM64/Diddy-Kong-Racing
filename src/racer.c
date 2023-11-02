@@ -2528,7 +2528,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                 }
                 if (tempRacer->playerIndex != PLAYER_COMPUTER && tempRacer->lap + 1 == header->laps
                     && !D_8011D580 && get_current_level_race_type() == RACETYPE_DEFAULT) {
-                    multiply_music_tempo(1.12f);
+                    music_tempo_set_relative(1.12f);
                     D_8011D580 = 1;
                 }
             }

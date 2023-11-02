@@ -527,14 +527,14 @@ glabel menu_track_select_init
 /* 08FB84 8008EF84 AE000000 */  sw    $zero, ($s0)
 /* 08FB88 8008EF88 0C0002F8 */  jal   set_music_player_voice_limit
 /* 08FB8C 8008EF8C 24040018 */   li    $a0, 24
-/* 08FB90 8008EF90 0C000307 */  jal   func_80000C1C
+/* 08FB90 8008EF90 0C000307 */  jal   music_voicelimit_change_off
 /* 08FB94 8008EF94 00000000 */   nop   
 /* 08FB98 8008EF98 0C0002CD */  jal   play_music
 /* 08FB9C 8008EF9C 24040018 */   li    $a0, 24
 /* 08FBA0 8008EFA0 92040003 */  lbu   $a0, 3($s0)
 /* 08FBA4 8008EFA4 0C000664 */  jal   set_relative_volume_for_music
 /* 08FBA8 8008EFA8 00000000 */   nop   
-/* 08FBAC 8008EFAC 0C0002C6 */  jal   func_80000B18
+/* 08FBAC 8008EFAC 0C0002C6 */  jal   music_change_off
 /* 08FBB0 8008EFB0 00000000 */   nop   
 /* 08FBB4 8008EFB4 0C01BD59 */  jal   set_gIntDisFlag
 /* 08FBB8 8008EFB8 24040001 */   li    $a0, 1

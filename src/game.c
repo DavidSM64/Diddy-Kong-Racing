@@ -497,7 +497,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
         gCurrentLevelHeader->race_type = RACETYPE_CUTSCENE_1;
     }
     set_music_player_voice_limit(gCurrentLevelHeader->voiceLimit);
-    func_80000CBC();
+    music_volume_reset();
     setup_lights(32);
     var_s0 = VEHICLE_CAR;
     if (vehicleId >= VEHICLE_CAR && vehicleId < NUMBER_OF_PLAYER_VEHICLES) {
@@ -602,7 +602,7 @@ void start_level_music(f32 tempo) {
     if (gCurrentLevelHeader->music != SEQUENCE_NONE) {
         func_800012E8();
         play_music(gCurrentLevelHeader->music);
-        multiply_music_tempo(tempo);
+        music_tempo_set_relative(tempo);
         music_dynamic_reset(gCurrentLevelHeader->instruments);
     }
 }

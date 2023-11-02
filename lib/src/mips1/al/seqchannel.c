@@ -5,7 +5,7 @@
 #include "macros.h"
 #include "audio_internal.h"
 
-void func_80063AF0(ALSeqPlayer *seqp, u8 chan) {
+void alSeqChOff(ALSeqPlayer *seqp, u8 chan) {
     ALEvent evt;
 
     evt.type = AL_SEQP_MIDI_EVT;
@@ -16,7 +16,7 @@ void func_80063AF0(ALSeqPlayer *seqp, u8 chan) {
     alEvtqPostEvent(&seqp->evtq, &evt, 0);
 }
 
-void func_80063B44(ALSeqPlayer *seqp, u8 chan) {
+void alSeqChOn(ALSeqPlayer *seqp, u8 chan) {
     ALEvent evt;
 
     evt.type = AL_SEQP_MIDI_EVT;

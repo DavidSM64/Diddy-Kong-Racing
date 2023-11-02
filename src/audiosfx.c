@@ -278,7 +278,7 @@ void sound_event_update(s32 soundMask, s16 type, u32 volume) {
     ALEvent2 sndEvt;
     sndEvt.snd_event.type = type;
     sndEvt.snd_event.state = (void *) soundMask;
-    sndEvt.snd_event.unk04 = volume;
+    sndEvt.snd_event.param = volume;
     if (soundMask) {
         alEvtqPostEvent(&(gAlSndPlayerPtr->evtq), (ALEvent *) &sndEvt, 0);
     }

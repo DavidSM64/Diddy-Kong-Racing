@@ -12,7 +12,7 @@
 #include "audiomgr.h"
 #include "audiosfx.h"
 #include "sched.h"
-#include "lib/src/mips1/al/unknown_0646F0.h"
+#include "lib/src/mips1/al/seqchannel.h"
 
 /************ .data ************/
 
@@ -22,23 +22,21 @@ u8 musicRelativeVolume = 127;
 u8 sfxRelativeVolume = 127;
 u8 gCanPlayMusic = TRUE;
 u8 gCanPlayJingle = FALSE;
-s32 D_800DC648 = FALSE;
+s32 gBlockMusicChange = FALSE;
 s32 audioPrevCount = 0;
 f32 sMusicFadeVolume = 1.0f;
 s32 musicVolumeSliderPercentage = 256;
-s32 D_800DC658 = 0;
+s32 gDelayedSoundsCount = 0;
 u8 gMusicSetChannelMask = FALSE;
 u8 gSoundSetChannelMask = FALSE;
 UNUSED s32 D_800DC664 = 0;
 UNUSED s32 D_800DC668 = 0;
 s32 sMusicVolumeMultiplier = 256; // This is never not 256...
-u8 D_800DC670 = 0;
+u8 gBlockVoiceLimitChange = FALSE;
 
 /*******************************/
 
 /************ .bss ************/
-
-#define AUDIO_HEAP_SIZE 0x29D88
 
 // The audio heap is located at the start of the BSS section.
 u8 gBssSectionStart[AUDIO_HEAP_SIZE];
@@ -52,8 +50,8 @@ u8 gCurrentSequenceID;
 u8 gCurrentJingleID;
 s32 musicTempo;
 u32 *gSeqLengthTable;
-ALBankFile *ALBankFile_80115D10; // And I have reason to believe these are voice clips.
-ALBankFile *gSoundEffectsTable; // These are sound effects, I do not know if it is ALL the sound effects.
+ALBankFile *gSequenceBank;
+ALBankFile *gSoundBank;
 
 SoundData *sSoundEffectsPool;
 unk80115D1C *sMusicPool;
@@ -68,7 +66,7 @@ s32 sMusicDelayTimer;
 s32 sMusicDelayLength;
 u8 gMusicPlaying;
 u8 gJinglePlaying;
-unk80115D48 D_80115D48[8];
+DelayedSound gDelayedSounds[8];
 ALCSeq gMusicSequence;
 ALCSeq gJingleSequence;
 u8 gSkipResetChannels; // Stored and used by a single function, but redundant.
@@ -97,9 +95,9 @@ void audio_init(OSSched *sc) {
     alHeapInit(&gALHeap, gBssSectionStart, sizeof(gBssSectionStart));
 
     addrPtr = (s32 *) load_asset_section_from_rom(ASSET_AUDIO_TABLE);
-    gSoundEffectsTable = (ALBankFile *) allocate_from_main_pool_safe(addrPtr[ASSET_AUDIO_2] - addrPtr[ASSET_AUDIO_1], COLOUR_TAG_CYAN);
-    load_asset_to_address(ASSET_AUDIO, (u32) gSoundEffectsTable, addrPtr[ASSET_AUDIO_1], addrPtr[ASSET_AUDIO_2] - addrPtr[ASSET_AUDIO_1]);
-    alBnkfNew(gSoundEffectsTable, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[ASSET_AUDIO_2]));
+    gSoundBank = (ALBankFile *) allocate_from_main_pool_safe(addrPtr[ASSET_AUDIO_2] - addrPtr[ASSET_AUDIO_1], COLOUR_TAG_CYAN);
+    load_asset_to_address(ASSET_AUDIO, (u32) gSoundBank, addrPtr[ASSET_AUDIO_1], addrPtr[ASSET_AUDIO_2] - addrPtr[ASSET_AUDIO_1]);
+    alBnkfNew(gSoundBank, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[ASSET_AUDIO_2]));
 
     gSoundTableSize = addrPtr[ASSET_AUDIO_7] - addrPtr[ASSET_AUDIO_6];
     sSoundEffectsPool = (SoundData *) allocate_from_main_pool_safe(gSoundTableSize, COLOUR_TAG_CYAN);
@@ -111,9 +109,9 @@ void audio_init(OSSched *sc) {
     load_asset_to_address(ASSET_AUDIO, (u32) sMusicPool, addrPtr[ASSET_AUDIO_5], sMusicPoolSize);
     sMusicPoolCount = sMusicPoolSize / sizeof(unk80115D1C);
 
-    ALBankFile_80115D10 = (ALBankFile *) allocate_from_main_pool_safe(addrPtr[ASSET_AUDIO_0], COLOUR_TAG_CYAN);
-    load_asset_to_address(ASSET_AUDIO, (u32) ALBankFile_80115D10, 0, addrPtr[ASSET_AUDIO_0]);
-    alBnkfNew(ALBankFile_80115D10, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[ASSET_AUDIO_0]));
+    gSequenceBank = (ALBankFile *) allocate_from_main_pool_safe(addrPtr[ASSET_AUDIO_0], COLOUR_TAG_CYAN);
+    load_asset_to_address(ASSET_AUDIO, (u32) gSequenceBank, 0, addrPtr[ASSET_AUDIO_0]);
+    alBnkfNew(gSequenceBank, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[ASSET_AUDIO_0]));
     gSequenceTable = (ALSeqFile *) alHeapAlloc(&gALHeap, 1, 4);
     load_asset_to_address(ASSET_AUDIO, (u32) gSequenceTable, addrPtr[ASSET_AUDIO_4], 4);
 
@@ -158,10 +156,10 @@ void audio_init(OSSched *sc) {
     adjust_audio_volume(VOLUME_NORMAL);
     free_from_memory_pool(addrPtr);
     set_sound_channel_count(10);
-    D_800DC648 = FALSE;
+    gBlockMusicChange = FALSE;
     gMusicPlaying = FALSE;
     gJinglePlaying = FALSE;
-    D_800DC658 = 0;
+    gDelayedSoundsCount = 0;
     gSkipResetChannels = FALSE;
     gAudioVolumeSetting = VOLUME_NORMAL;
 #ifdef AVOID_UB
@@ -223,16 +221,26 @@ void adjust_audio_volume(s32 behaviour) {
     gAudioVolumeSetting = behaviour;
 }
 
-void func_80000B18(void) {
-    D_800DC648 = TRUE;
+/**
+ * Prevents changing of background music.
+*/
+void music_change_off(void) {
+    gBlockMusicChange = TRUE;
 }
 
-void func_80000B28(void) {
-    D_800DC648 = FALSE;
+/**
+ * Allows changing of background music.
+*/
+void music_change_on(void) {
+    gBlockMusicChange = FALSE;
 }
 
+/**
+ * Queue a new music sequence to play if not blocked.
+ * Stops any playing existing music beforehand.
+*/
 void play_music(u8 seqID) {
-    if (D_800DC648 == FALSE && musicVolumeSliderPercentage != 0) {
+    if (gBlockMusicChange == FALSE && musicVolumeSliderPercentage != 0) {
         gCurrentSequenceID = seqID;
         musicRelativeVolume = 127;
         if (gCanPlayMusic) {
@@ -245,20 +253,32 @@ void play_music(u8 seqID) {
     }
 }
 
+/**
+ * Update the background music voice limit if not prevented from doing so.
+*/
 void set_music_player_voice_limit(u8 voiceLimit) {
-    if (D_800DC670 == 0) {
+    if (gBlockVoiceLimitChange == FALSE) {
         set_voice_limit(gMusicPlayer, voiceLimit);
     }
 }
 
-void func_80000C1C(void) {
-    D_800DC670 = 1;
+/**
+ * Prevent the background music voice limit from being changed.
+*/
+void music_voicelimit_change_off(void) {
+    gBlockVoiceLimitChange = TRUE;
 }
 
-void func_80000C2C(void) {
-    D_800DC670 = 0;
+/**
+ * Allow the background music voice limit to be changed.
+*/
+void music_voicelimit_change_on(void) {
+    gBlockVoiceLimitChange = FALSE;
 }
 
+/**
+ * Update the jingle players voice limit.
+*/
 void set_sndfx_player_voice_limit(u8 voiceLimit) {
     set_voice_limit(gSndFxPlayer, voiceLimit);
 }
@@ -276,21 +296,28 @@ void set_music_fade_timer(s32 time) {
     sMusicDelayLength = (time * 60) >> 8;
 }
 
-void func_80000CBC(void) {
+/**
+ * Sets the background music volume back to normal.
+*/
+void music_volume_reset(void) {
     sMusicDelayTimer = 0;
     sMusicDelayLength = 0;
     sMusicFadeVolume = 1.0f;
     set_relative_volume_for_music(musicRelativeVolume);
 }
 
-void handle_music_fade(u8 updateRate) {
-    s32 reg_s2;
+/**
+ * Run every frame, this handles the transitions in and out of music sequences.
+ * If there's something in the queue, then begin to play that.
+ * Additionally, it also handles the delayed audio queue, counting down and playing any sounds.
+*/
+void sound_update_queue(u8 updateRate) {
+    s32 i;
     s32 j;
+
     if (sMusicDelayLength > 0) {
-
         sMusicDelayTimer += updateRate;
-        sMusicFadeVolume = ((f32)sMusicDelayTimer) / ((f32)sMusicDelayLength);
-
+        sMusicFadeVolume = ((f32) sMusicDelayTimer) / ((f32) sMusicDelayLength);
         if (sMusicFadeVolume > 1.0) {
             sMusicDelayTimer = 0;
             sMusicDelayLength = 0;
@@ -298,9 +325,8 @@ void handle_music_fade(u8 updateRate) {
         }
         set_relative_volume_for_music(musicRelativeVolume);
     } else if (sMusicDelayLength < 0) {
-
         sMusicDelayTimer -= updateRate;
-        sMusicFadeVolume = 1.0f - ((f32)sMusicDelayTimer) / ((f32)sMusicDelayLength);
+        sMusicFadeVolume = 1.0f - ((f32) sMusicDelayTimer) / ((f32) sMusicDelayLength);
         if (sMusicFadeVolume < 0.0) {
             sMusicDelayTimer = 0;
             sMusicDelayLength = 0;
@@ -309,23 +335,23 @@ void handle_music_fade(u8 updateRate) {
         set_relative_volume_for_music(musicRelativeVolume);
     }
 
-    if (D_800DC658 > 0) {
-        for (reg_s2 = 0; reg_s2 < D_800DC658;) {
-            D_80115D48[reg_s2].unk2 -= updateRate;
-            if (D_80115D48[reg_s2].unk2 <= 0) {
-                j = reg_s2;
-                play_sound_global(D_80115D48[reg_s2].soundId, (s32 *) D_80115D48[reg_s2].unk4);
+    if (gDelayedSoundsCount > 0) {
+        for (i = 0; i < gDelayedSoundsCount;) {
+            gDelayedSounds[i].timer -= updateRate;
+            if (gDelayedSounds[i].timer <= 0) {
+                j = i;
+                play_sound_global(gDelayedSounds[i].soundId, (s32 *) gDelayedSounds[i].soundMask);
 
-                D_800DC658 -= 1;
-                while (j < D_800DC658) {
-                    D_80115D48[reg_s2].soundId = D_80115D48[reg_s2 + 1].soundId;
-                    D_80115D48[reg_s2].unk2 = D_80115D48[reg_s2 + 1].unk2;
-                    D_80115D48[reg_s2].unk4 = D_80115D48[reg_s2 + 1].unk4;
+                gDelayedSoundsCount -= 1;
+                while (j < gDelayedSoundsCount) {
+                    gDelayedSounds[i].soundId = gDelayedSounds[i + 1].soundId;
+                    gDelayedSounds[i].timer = gDelayedSounds[i + 1].timer;
+                    gDelayedSounds[i].soundMask = gDelayedSounds[i + 1].soundMask;
                     j++;
                 }
                 j++;
             } else {
-                reg_s2++;
+                i++;
             }
         }
     }
@@ -337,20 +363,31 @@ void handle_music_fade(u8 updateRate) {
     }
 }
 
-void func_80000FDC(u16 soundId, s32 arg1, f32 arg2) {
-    if (D_800DC658 < 8) {
-        D_80115D48[D_800DC658].soundId = soundId;
-        D_80115D48[D_800DC658].unk4 = arg1;
-        D_80115D48[D_800DC658].unk2 = arg2 * 60.0f;
-        D_800DC658++;
+/**
+ * Add a sound to a queue to play after a set time has passed.
+ * Delay time is in seconds. (1.0f = 1 second)
+*/
+void sound_play_delayed(u16 soundId, SoundMask *soundMask, f32 delayTime) {
+    if (gDelayedSoundsCount < 8) {
+        gDelayedSounds[gDelayedSoundsCount].soundId = soundId;
+        gDelayedSounds[gDelayedSoundsCount].soundMask = soundMask;
+        gDelayedSounds[gDelayedSoundsCount].timer = delayTime * 60.0f;
+        gDelayedSoundsCount++;
     }
 }
 
-void func_80001050(void) {
-    D_800DC658 = 0;
+/**
+ * Clear the delayed sound queue.
+*/
+void sound_clear_delayed(void) {
+    gDelayedSoundsCount = 0;
 }
 
-u16 musicGetChanMask(void) {
+/**
+ * Return the channel mask of the music player.
+ * Official name: musicGetChanMask
+*/
+u16 music_channel_get_mask(void) {
     return gMusicPlayer->chanMask;
 }
 
@@ -362,47 +399,69 @@ void music_dynamic_reset(u16 channel) {
         gMusicPlayer->chanMask = channel;
         for (chan = 0; chan != AUDIO_CHANNELS; chan++) {
             if (channel & (1 << chan)) {
-                func_80001170(chan);
+                music_channel_on(chan);
             } else {
-                func_80001114(chan);
+                music_channel_off(chan);
             }
         }
     }
 }
 
-void func_80001114(u8 chan) {
+/**
+ * Mute the sequence channel, preventing it from playing any sound.
+*/
+void music_channel_off(u8 chan) {
     if (chan < AUDIO_CHANNELS) {
-        func_80063AF0(gMusicPlayer, chan);
+        alSeqChOff(gMusicPlayer, chan);
     }
 }
 
-s32 musicGetChnlActive(s32 arg0) {
-    return (gMusicPlayer->chanMask & (1 << arg0)) == 0;
+/**
+ * Return true if the given channel is currently active.
+ * Official name: musicGetChnlActive
+*/
+s32 music_channel_active(s32 channel) {
+    return (gMusicPlayer->chanMask & (1 << channel)) == 0;
 }
 
-void func_80001170(u8 chan) {
+/**
+ * Unmute the sequence channel so it can play sound.
+*/
+void music_channel_on(u8 chan) {
     if (chan < AUDIO_CHANNELS) {
-        func_80063B44(gMusicPlayer, chan);
+        alSeqChOn(gMusicPlayer, chan);
     }
 }
 
-void musicSetChlPan(u8 chan, ALPan pan) {
-    if (chan < AUDIO_CHANNELS) {
-        alCSPSetChlPan((ALCSPlayer *) gMusicPlayer, chan, pan);
+/**
+ * Set the panning level of the given channel for the music player.
+ * Official name: musicSetChlPan
+*/
+void music_channel_set_pan(u8 channel, ALPan pan) {
+    if (channel < AUDIO_CHANNELS) {
+        alCSPSetChlPan((ALCSPlayer *) gMusicPlayer, channel, pan);
     }
 }
 
-void musicSetChlVol(u8 chan, u8 vol) {
-    if (chan < AUDIO_CHANNELS) {
-        alCSPSetChlVol((ALCSPlayer *) gMusicPlayer, chan, vol);
+/**
+ * Set the volume of the given channel for the music player.
+ * Official name musicSetChlVol
+*/
+void music_channel_set_volume(u8 channel, u8 volume) {
+    if (channel < AUDIO_CHANNELS) {
+        alCSPSetChlVol((ALCSPlayer *) gMusicPlayer, channel, volume);
     }
 }
 
-UNUSED u8 musicGetChlVol(u8 chan) {
-    if (chan >= AUDIO_CHANNELS) {
+/**
+ * Return the volume of the given channel in the music player.
+ * Official name: musicGetChlVol
+*/
+UNUSED u8 music_channel_volume(u8 channel) {
+    if (channel >= AUDIO_CHANNELS) {
         return 0;
     } else {
-        return alCSPGetChlVol((ALCSPlayer *) gMusicPlayer, chan);
+        return alCSPGetChlVol((ALCSPlayer *) gMusicPlayer, channel);
     }
 }
 
@@ -421,17 +480,17 @@ u8 func_800012A8(u8 chan) {
 
 void func_800012E8(void) {
     u32 chan;
-    if (D_800DC648 == FALSE) {
+    if (gBlockMusicChange == FALSE) {
         for (chan = 0; chan < AUDIO_CHANNELS; chan++) {
-            func_80001170(chan);
+            music_channel_on(chan);
             func_80001268(chan, 127);
-            musicSetChlVol(chan, 127);
+            music_channel_set_volume(chan, 127);
         }
     }
     return;
 }
 
-u8 func_80001358(u8 arg0, u8 arg1, s32 arg2) {
+UNUSED u8 func_80001358(u8 arg0, u8 arg1, s32 arg2) {
     u8 val_1f;
     u8 val_1e;
     s32 updatedVol;
@@ -446,7 +505,6 @@ u8 func_80001358(u8 arg0, u8 arg1, s32 arg2) {
     }
 
     if (arg1 != 100) {
-
         updatedVol = alCSPGetChlVol((ALCSPlayer *) gMusicPlayer, arg1);
         val_1e = (updatedVol > arg2) ? updatedVol - arg2 : 0;
         alCSPSetChlVol((ALCSPlayer *) gMusicPlayer, arg1, val_1e);
@@ -456,7 +514,7 @@ u8 func_80001358(u8 arg0, u8 arg1, s32 arg2) {
     }
 }
 
-void func_80001440(u8 *arg0) {
+UNUSED void func_80001440(u8 *arg0) {
     s32 s0 = 0;
     if (gMusicPlayer->maxChannels > 0) {
         do {
@@ -468,16 +526,17 @@ void func_80001440(u8 *arg0) {
 
 /**
  * Multiplies the current tempo of the background music.
- * Since it calls musicGetTempo and multiplies it by the result, calling this repeatedly can recursively change the music's speed.
+ * Since it calls music_tempo and multiplies it by the result, calling this repeatedly can recursively change the music's speed.
 */
-void multiply_music_tempo(f32 tempo) {
-    musicSetTempo((s32)((f32)(u32)(musicGetTempo() & 0xFF) * tempo));
+void music_tempo_set_relative(f32 tempo) {
+    music_tempo_set((s32)((f32)(u32)(music_tempo() & 0xFF) * tempo));
 }
 
 /**
  * Set the tempo of the current playing background music.
+ * Official name: musicSetTempo
  */
-void musicSetTempo(s32 tempo) {
+void music_tempo_set(s32 tempo) {
     if (tempo != 0) {
         f32 inv_tempo = (1.0f / tempo);
         alCSPSetTempo((ALCSPlayer *) gMusicPlayer, (s32)(inv_tempo * 60000000.0f));
@@ -487,8 +546,9 @@ void musicSetTempo(s32 tempo) {
 
 /**
  * Return the tempo of the current playing background music.
+ * Official name: musicGetTempo
  */
-s16 musicGetTempo(void) {
+s16 music_tempo(void) {
     return sMusicTempo;
 }
 
@@ -548,7 +608,7 @@ void sfxSetTempo(s32 tempo) {
  * Stops the background music.
 */
 void music_stop(void) {
-    if (D_800DC648 == FALSE) {
+    if (gBlockMusicChange == FALSE) {
         music_sequence_stop(gMusicPlayer);
     }
 }
@@ -713,14 +773,14 @@ void play_sound_global(u16 soundID, s32 *soundMask) {
     }
     pitch = sSoundEffectsPool[soundID].pitch / 100.0f;
     if (soundMask != NULL) {
-        func_80004668(gSoundEffectsTable->bankArray[0], soundBite, sSoundEffectsPool[soundID].unk8, (s32) soundMask);
+        func_80004668(gSoundBank->bankArray[0], soundBite, sSoundEffectsPool[soundID].unk8, (s32) soundMask);
         if (*soundMask != NULL) {
             sound_event_update(*soundMask, AL_SNDP_VOL_EVT, sSoundEffectsPool[soundID].volume * 256);
             sound_event_update(*soundMask, AL_SNDP_PITCH_EVT, *((u32*) &pitch));
         }
     } else {
         soundMask = (s32 *) &gGlobalSoundMask;
-        func_80004668(gSoundEffectsTable->bankArray[0], soundBite, sSoundEffectsPool[soundID].unk8, (s32) &gGlobalSoundMask);
+        func_80004668(gSoundBank->bankArray[0], soundBite, sSoundEffectsPool[soundID].unk8, (s32) &gGlobalSoundMask);
         if (*soundMask != NULL) {
             sound_event_update(*soundMask, AL_SNDP_VOL_EVT, sSoundEffectsPool[soundID].volume * 256);
             sound_event_update(*soundMask, AL_SNDP_PITCH_EVT, *((u32*) &pitch));
@@ -753,9 +813,9 @@ void func_80001F14(u16 soundID, s32 *soundMask) {
         return;
     }
     if (soundMask) {
-        func_80004638(gSoundEffectsTable->bankArray[0], (s16) soundID, soundMask);
+        func_80004638(gSoundBank->bankArray[0], (s16) soundID, soundMask);
     } else {
-        func_80004638(gSoundEffectsTable->bankArray[0], (s16) soundID, &gRacerSoundMask);
+        func_80004638(gSoundBank->bankArray[0], (s16) soundID, &gRacerSoundMask);
     }
 }
 
@@ -772,10 +832,14 @@ UNUSED void func_8000208C(void *sndState, u8 arg1) {
     }
 }
 
-UNUSED void amSndSetPitchDirect(void *sndState, u32 arg1) {
-    u32 *temp = &arg1;
+/**
+ * Updates the pitch of the given sound mask.
+ * Official name: amSndSetPitchDirect
+*/
+UNUSED void sound_pitch_set(void *sndState, u32 pitch) {
+    u32 *pitchAddr = &pitch;
     if (sndState != NULL) {
-        sound_event_update((s32) sndState, AL_SNDP_PITCH_EVT, *temp);
+        sound_event_update((s32) sndState, AL_SNDP_PITCH_EVT, *pitchAddr);
     }
 }
 
@@ -783,7 +847,7 @@ UNUSED void amSndSetPitchDirect(void *sndState, u32 arg1) {
  * Return the number of playable sounds in the audio table.
 */
 u16 sound_count(void) {
-    return gSoundEffectsTable->bankArray[0]->instArray[0]->soundCount;
+    return gSoundBank->bankArray[0]->instArray[0]->soundCount;
 }
 
 /**
@@ -823,11 +887,11 @@ UNUSED void music_pool_properties(unk80115D1C **pool, s32 *size, s32 *count) {
     }
 }
 
-u8 gSoundEffectsTable_GetSoundDecayTime(u16 soundID) {
-    if (soundID <= 0 || gSoundEffectsTable->bankArray[0]->instArray[0]->soundCount < soundID) {
+u8 gSoundBank_GetSoundDecayTime(u16 soundID) {
+    if (soundID <= 0 || gSoundBank->bankArray[0]->instArray[0]->soundCount < soundID) {
         return 0;
     }
-    return ((u32)(1 + gSoundEffectsTable->bankArray[0]->instArray[0]->soundArray[soundID - 1]->envelope->decayTime) == 0);
+    return ((u32)(1 + gSoundBank->bankArray[0]->instArray[0]->soundArray[soundID - 1]->envelope->decayTime) == 0);
 }
 
 /**
@@ -848,7 +912,7 @@ ALSeqPlayer *sound_seqplayer_init(s32 maxVoices, s32 maxEvents) {
 
     cseqp = (ALCSPlayer *) alHeapAlloc(&gALHeap, 1, sizeof(ALCSPlayer));
     alCSPNew(cseqp, &config);
-    alCSPSetBank(cseqp, ALBankFile_80115D10->bankArray[0]);
+    alCSPSetBank(cseqp, gSequenceBank->bankArray[0]);
     cseqp->unk36 = 127;
 
     return (ALSeqPlayer *) cseqp;
@@ -884,7 +948,7 @@ void music_sequence_init(ALSeqPlayer *seqp, void *sequence, u8 *arg2, ALCSeq *se
         if (seqp == gMusicPlayer) {
             set_relative_volume_for_music(sMusicPool[*arg2].volume);
             if (sMusicPool[*arg2].tempo != 0) {
-                musicSetTempo(sMusicPool[*arg2].tempo);
+                music_tempo_set(sMusicPool[*arg2].tempo);
             } else {
                 sMusicTempo = -1;
             }
@@ -893,9 +957,9 @@ void music_sequence_init(ALSeqPlayer *seqp, void *sequence, u8 *arg2, ALCSeq *se
             if (gDynamicMusicChannelMask != -1) {
                 for (i = 0; i < AUDIO_CHANNELS; i++) {
                     if ((1 << i) & gDynamicMusicChannelMask) {
-                        func_80001170(i);
+                        music_channel_on(i);
                     } else {
-                        func_80001114(i);
+                        music_channel_off(i);
                     }
                 }
             }
