@@ -10,7 +10,7 @@
 #include "objects.h"
 #include "PR/libaudio.h"
 
-AudQueueCustom *D_800DC6B0 = NULL;
+ALSoundState *D_800DC6B0 = NULL;
 s32 D_800DC6B4 = 0; // Currently unknown, might be a different type.
 unk800DC6BC_40 *D_800DC6B8 = NULL; // Set but not used.
 unk800DC6BC gAlSndPlayer;
@@ -151,8 +151,8 @@ static void _removeEvents(ALEventQueue *evtq, ALSoundState *state, u16 eventType
     thisNode = evtq->allocList.next;
     while( thisNode != 0 ) {
 	nextNode = thisNode->next;
-        thisItem = (ALEventListItem *)thisNode;
-        nextItem = (ALEventListItem *)nextNode;
+        thisItem = (ALEventListItem *) thisNode;
+        nextItem = (ALEventListItem *) nextNode;
         thisEvent = (ALSndpEvent *) &thisItem->evt;
         if (thisEvent->common.state == state && (u16)thisEvent->msg.type & eventType){
             if( nextItem )
@@ -174,13 +174,13 @@ u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
     ALLink *nextAllocList;
     ALLink *nextFreeList;
     ALLink *prevFreeList;
-    AudQueueCustom *queue;
+    ALSoundState *queue;
 
     mask = osSetIntMask(OS_IM_NONE);
-    queue = &D_800DC6B0;
-    nextFreeList = queue->alQ.freeList.next;
-    nextAllocList = queue->alQ.allocList.next;
-    prevFreeList = queue->alQ.freeList.prev;
+    queue = (ALSoundState *) &D_800DC6B0;
+    nextFreeList = queue->next;
+    nextAllocList = queue->unk8;
+    prevFreeList = queue->prev;
 
     for (freeListNextIndex = 0; nextFreeList != 0; freeListNextIndex++) {
         nextFreeList = (ALLink *) nextFreeList->next;
@@ -243,18 +243,18 @@ void func_8000488C(u8 *arg0) {
 void func_800048D8(u8 event) {
     u32 intMask;
     ALEvent evt;
-    AudQueueCustom *queue;
+    ALSoundState *queue;
 
     intMask = osSetIntMask(OS_IM_NONE);
     queue = D_800DC6B0;
     while (queue != NULL) {
         evt.type = AL_SNDP_UNK_10_EVT;
-        evt.msg.end.ticks = queue;
+        evt.msg.end.ticks = (s32) queue; // TODO: find the correct value for this.
         if ((queue->unk3E & event) == event) {
-            queue->unk3E &= ~0x10;
+            queue->unk3E &= ~AL_SNDP_PITCH_EVT;
             alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &evt, 0);
         }
-        queue = (AudQueueCustom *) queue->alQ.freeList.next;
+        queue = (ALSoundState *) queue->next;
     }
     osSetIntMask(intMask);
 }
@@ -299,22 +299,22 @@ u16 get_sound_channel_volume(u8 channel) {
 */
 void set_sound_channel_volume(u8 channel, u16 volume) {
     OSIntMask mask;
-    AudQueueCustom *queue;
+    ALEventQueue *queue;
     UNUSED s32 pad;
     ALEvent evt;
 
     mask = osSetIntMask(OS_IM_NONE);
-    queue = D_800DC6B0;
+    queue = (ALEventQueue *) D_800DC6B0;
     gSoundChannelVolume[channel] = volume;
 
     while (queue != NULL) {
         //This is almost definitely the wrong struct list, but it matches so I'm not going to complain
-        if ((((ALInstrument *) queue->alQ.allocList.next->prev)->priority & 0x3F) == channel) {
+        if ((((ALInstrument *) queue->allocList.next->prev)->priority & 0x3F) == channel) {
             evt.type = AL_SNDP_UNK_11_EVT;
             evt.msg.spseq.seq = (void *) queue;
             alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &evt, 0);
         }
-        queue = (AudQueueCustom *) queue->alQ.freeList.next;
+        queue = (ALEventQueue *) queue->freeList.next;
     }
 
     osSetIntMask(mask);

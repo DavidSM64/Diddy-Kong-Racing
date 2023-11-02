@@ -23,7 +23,9 @@
 #define AL_SNDP_UNK_11_EVT (1 << 11)
 
 typedef struct {
-  /* 0x00 */ s8 pad00[0x0C];
+    struct ALSoundState *next;
+    struct ALSoundState *prev;
+    struct ALSoundState *unk8;
   /* 0x0C */ ALVoice     voice;
     ALSound     *sound;         /* sound referenced here */
     s16         priority;
