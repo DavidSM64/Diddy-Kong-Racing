@@ -469,7 +469,7 @@ UNUSED u8 music_channel_volume(u8 channel) {
 /**
  * Set this channel to fade in over time.
 */
-void music_channel_fade_set(u8 channel, u8 fade) {
+void music_channel_fade_set(u8 channel, ALPan fade) {
     if (channel < AUDIO_CHANNELS) {
         alCSPSetFadeIn(gMusicPlayer, channel, fade);
     }
