@@ -261,7 +261,7 @@ typedef struct unk800861C8 {
   /* 0x03 */ u8 unk3;
   /* 0x04 */ s16 compressedFilename;
   /* 0x06 */ u8 controllerIndex;
-  /* 0x07 */ u8 unk7;
+  /* 0x07 */ u8 saveFileNumber;
   /* 0x08 */ char *unk8;
   /* 0x0C */ u32 fileSize; // Game Data File Size
 } unk800861C8;
