@@ -52,7 +52,7 @@ LIB_SRC_DIRECTORY = './lib/src'
 FUNCTION_REGEX = r'^(?<!static\s)(?:(\/[*][*!][*]*\n(?:[^/]*\n)+?\s*[*]\/\n)(?:\s*)*?)?(?:\s*UNUSED\s+)?([^\s]+)\s(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{'
 GLOBAL_ASM_REGEX = r'GLOBAL_ASM[(]".*(?=\/)\/([^.]+).s"[)]'
 WIP_REGEX = r'#ifdef\s+(?:NON_MATCHING|NON_EQUIVALENT)(?:.|\n)*?#else\s*(GLOBAL_ASM[(][^)]*[)])(.|\n)*?#endif'
-NON_MATCHING_REGEX = re.compile(r'^#ifdef[ ]+NON_MATCHING', re.MULTILINE)
+NON_MATCHING_REGEX = re.compile(r'^#ifdef[ ]+NON_MATCHING(?:.|\n)*?(?:\s*UNUSED\s+)?(?:[^\s]+)\s(?:\s|[*])*?([0-9A-Za-z_]+)\s*[(][^)]*[)]\s*{', re.MULTILINE)
 NON_EQUVIALENT_REGEX = re.compile(r'^#ifdef[ ]+NON_EQUIVALENT', re.MULTILINE)
 
 CODE_START = 0x80000400
@@ -107,7 +107,11 @@ class ScoreFile:
     def read_file(self):
         with open(self.path, "r") as inFile:
             self.text = inFile.read()
-            self.numNonMatchings = len(re.findall(NON_MATCHING_REGEX, self.text))
+            self.nonMatchings = re.findall(NON_MATCHING_REGEX, self.text)
+            self.nonMatchingsSizes = 0
+            for nonMatching in self.nonMatchings:
+                self.nonMatchingsSizes += MAP_FILE.functionSizes[nonMatching]
+            self.numNonMatchings = len(self.nonMatchings)
             self.numNonEquivalents = len(re.findall(NON_EQUVIALENT_REGEX, self.text))
             self.text = re.sub(WIP_REGEX, r"GLOBAL_ASM(\1)", self.text)
             
@@ -142,6 +146,9 @@ class ScoreFile:
             size += func.size
         return size
         
+    def get_size_of_functions_with_nonmatching(self):
+        return self.get_size_of_functions() + self.nonMatchingsSizes
+        
     def get_size_of_documented_functions(self):
         size = 0
         for func in self.functions:
@@ -170,6 +177,7 @@ def main():
     totalNumberOfNonMatching = 0
     totalNumberOfNonEquivalent = 0
     totalSizeOfDecompiledFunctions = 0
+    totalSizeOfDecompiledAndNonMatchingFunctions = 0
     totalSizeOfDocumentedFunctions = 0
     ignoreNumberDocumentedFunctions = 0
     ignoreSizeDocumentedFunctions = 0
@@ -190,6 +198,7 @@ def main():
             totalNumberOfNonEquivalent += scoreFile.numNonEquivalents
             totalNumberOfDocumentedFunctions += scoreFile.get_number_of_documented_functions()
             totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
+            totalSizeOfDecompiledAndNonMatchingFunctions += scoreFile.get_size_of_functions_with_nonmatching()
             totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
             scoreFiles.append(scoreFile)
     # Get score properties of libultra functions.
@@ -201,6 +210,7 @@ def main():
         #totalNumberOfDocumentedFunctions += scoreFile.get_number_of_documented_functions()
         ignoreNumberDocumentedFunctions += scoreFile.get_number_of_functions()
         totalSizeOfDecompiledFunctions += scoreFile.get_size_of_functions()
+        totalSizeOfDecompiledAndNonMatchingFunctions += scoreFile.get_size_of_functions_with_nonmatching()
         #totalSizeOfDocumentedFunctions += scoreFile.get_size_of_documented_functions()
         ignoreSizeDocumentedFunctions += scoreFile.get_size_of_functions()
         scoreFiles.append(scoreFile)
@@ -209,9 +219,12 @@ def main():
     totalNumberOfFunctions = totalNumberOfDecompiledFunctions + totalNumberOfGlobalAsms
     for asm_function in ASM_LABELS:
         if asm_function in MAP_FILE.functionSizes:
-            totalSizeOfDecompiledFunctions += MAP_FILE.functionSizes[asm_function]
+            asmFuncSize = MAP_FILE.functionSizes[asm_function]
+            totalSizeOfDecompiledFunctions += asmFuncSize
+            totalSizeOfDecompiledAndNonMatchingFunctions += asmFuncSize
     
     adventureOnePercentage = (totalSizeOfDecompiledFunctions / CODE_SIZE) * 100
+    adventureOnePercentageWithNonMatching = (totalSizeOfDecompiledAndNonMatchingFunctions / CODE_SIZE) * 100
     adventureTwoPercentage = (totalSizeOfDocumentedFunctions / (CODE_SIZE - ignoreSizeDocumentedFunctions)) * 100
     
     if args.summary:
@@ -219,7 +232,7 @@ def main():
         print(f"Documentation progress: {adventureTwoPercentage:5.2f}%")
         sys.exit(0)
     scoreDisplay = ScoreDisplay()
-    print(scoreDisplay.getDisplay(adventureOnePercentage, adventureTwoPercentage, adventureSelect, totalNumberOfDecompiledFunctions, totalNumberOfGlobalAsms, totalNumberOfNonMatching, totalNumberOfNonEquivalent, totalNumberOfDocumentedFunctions, (totalNumberOfFunctions - ignoreNumberDocumentedFunctions) - totalNumberOfDocumentedFunctions))
+    print(scoreDisplay.getDisplay(adventureOnePercentage, adventureOnePercentageWithNonMatching, adventureTwoPercentage, adventureSelect, totalNumberOfDecompiledFunctions, totalNumberOfGlobalAsms, totalNumberOfNonMatching, totalNumberOfNonEquivalent, totalNumberOfDocumentedFunctions, (totalNumberOfFunctions - ignoreNumberDocumentedFunctions) - totalNumberOfDocumentedFunctions))
     
     if showTopFiles > 0:
         if showTopFiles > len(scoreFiles):
