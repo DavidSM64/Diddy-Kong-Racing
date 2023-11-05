@@ -254,7 +254,7 @@ typedef struct unk80126A80 {
 } unk80126A80;
 
 /* Size: 0x10 bytes */
-typedef struct unk800861C8 {
+typedef struct SaveFileData {
   /* 0x00 */ u8 saveFileType; //SaveFileType enum
   /* 0x01 */ u8 unk1;
   /* 0x02 */ u8 unk2;
@@ -262,9 +262,9 @@ typedef struct unk800861C8 {
   /* 0x04 */ s16 compressedFilename;
   /* 0x06 */ u8 controllerIndex;
   /* 0x07 */ u8 saveFileNumber;
-  /* 0x08 */ char *unk8;
+  /* 0x08 */ char *saveFileExt;
   /* 0x0C */ u32 fileSize; // Game Data File Size
-} unk800861C8;
+} SaveFileData;
 
 // Size: 12 bytes
 typedef struct unk80126878 {
@@ -308,7 +308,7 @@ typedef struct TitleScreenDemos {
 
 /* Size 0x10 bytes */
 typedef struct TrackRenderDetails {
-  /* 0x00 */ u8 *hubName;
+  /* 0x00 */ char *hubName;
   /* 0x04 */ u8 *trackName;
   /* 0x08 */ s16 xOff;
   /* 0x0A */ s16 yOff;
@@ -348,8 +348,8 @@ void unload_big_font_1(void);
 void menu_audio_options_init(void);
 void func_800851FC(void);
 void menu_save_options_init(void);
-SIDeviceStatus func_800860A8(s32 controllerIndex, s32 *arg1, unk800861C8 *arg2, s32 *arg3, s32 fileSize, s32 arg5);
-void func_800861C8(unk800861C8 *arg0, s32 *arg1);
+SIDeviceStatus func_800860A8(s32 controllerIndex, s32 *arg1, SaveFileData *arg2, s32 *arg3, s32 fileSize, s32 arg5);
+void func_800861C8(SaveFileData *arg0, s32 *arg1);
 s32 func_800874D0(s32 buttonsPressed, s32 arg1);
 s32 func_800875E4(s32 buttonsPressed, s32 arg1);
 s32 func_800876CC(s32 buttonsPressed, s32 arg1);
@@ -503,7 +503,7 @@ void func_8008E4EC(void);
 SIDeviceStatus func_800862C4(void);
 void func_8009C6D4(s32 arg0);
 s32 func_80087734(s32 buttonsPressed, s32 yAxis);
-void func_800853D0(unk800861C8 *arg0, s32 x, s32 y);
+void func_800853D0(SaveFileData *arg0, s32 x, s32 y);
 void render_track_select(s32 x, s32 y, char *hubName, char *trackName, s32 rectOpacity, s32 imageId, s32 copyViewPort, DrawTexture *arg7, s32 arg8);
 void func_80093D40(UNUSED s32 updateRate);
 s32 func_80095728(Gfx **dlist, MatrixS **matrices, Vertex **vertices, s32 updateRate);
@@ -516,6 +516,10 @@ void func_80085B9C(UNUSED s32 updateRate);
 void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale);
 void render_file_select_menu(UNUSED s32 updateRate);
 void func_800871D8(SIDeviceStatus deviceStatus);
+SIDeviceStatus func_80086AFC(void);
+void render_track_select_setup_ui(s32 updateRate);
+void func_80098EBC(s32 updateRate);
+void func_80096978(UNUSED s32 updateRate, f32 opacity);
 
 // Non Matching functions below here
 void load_menu_text(s32 language); // Non Matching
@@ -523,7 +527,6 @@ s32 menu_controller_pak_loop(s32 updateRate);
 void menu_game_select_init(void);
 void func_8008FF1C(s32 updateRate);
 void func_80090918(s32 updateRate);
-void render_track_select_setup_ui(s32 updateRate);
 void func_80092188(s32 updateRate);
 void trim_filename_string(char *input, char *output);
 void menu_ghost_data_init(void);
@@ -545,9 +548,7 @@ s32 func_8008F618(Gfx **dlist, MatrixS **mtx);
 void func_80080BC8(Gfx **);
 void func_80080E90(Gfx **dList, s32 startX, s32 startY, s32 width, s32 height, s32 borderWidth, s32 borderHeight, s32 colour0, s32 colour1, s32 colour2, s32 colour3);
 void func_80084854(void);
-SIDeviceStatus func_80086AFC(void);
 void func_80098774(s32);
-void func_80096978(s32, f32);
 void func_80094D28(UNUSED s32 updateRate);
 
 typedef enum MenuTextures {

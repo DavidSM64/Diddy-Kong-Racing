@@ -78,9 +78,9 @@ ObjectLight *func_80031CAC(Object *light, LevelObjectEntry_RgbaLight *lightEntry
     newLight = NULL;
     if (gNumActiveLights < gMaxLights) {
         newLight = gActiveLights[gNumActiveLights++];
-        newLight->unk0 = ((s32) (lightEntry->unk8 & 0xF0) >> 4);
+        newLight->unk0 = (lightEntry->unk8 & 0xF0) >> 4;
         newLight->type = lightEntry->unk8 & 0xF;
-        newLight->unk1 = ((s32) (lightEntry->unk9 & 0xE0) >> 5);
+        newLight->unk1 = (lightEntry->unk9 & 0xE0) >> 5;
         newLight->unk2 = lightEntry->unk9 & 0x1F;
         newLight->enabled = TRUE;
         newLight->owner = NULL;
@@ -92,9 +92,9 @@ ObjectLight *func_80031CAC(Object *light, LevelObjectEntry_RgbaLight *lightEntry
             newLight->y = light->segment.trans.y_position;
             newLight->z = light->segment.trans.z_position;
         } else {
-            newLight->x = (f32) lightEntry->common.x;
-            newLight->y = (f32) lightEntry->common.y;
-            newLight->z = (f32) lightEntry->common.z;
+            newLight->x = lightEntry->common.x;
+            newLight->y = lightEntry->common.y;
+            newLight->z = lightEntry->common.z;
         }
         newLight->unk1C = lightEntry->unkA << 16;
         newLight->unk2C = 0;
