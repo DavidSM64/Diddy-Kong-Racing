@@ -107,7 +107,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     // Unused, since there are no weapon balloons in Wizpig 1.
     if (racer->attackType != ATTACK_NONE && obj->segment.object.animationID != ANIM_WIZPIG_DAMAGE) {
         play_random_boss_sound(BOSS_SOUND_NEGATIVE);
-        play_sound_global(SOUND_EXPLOSION, NULL);
+        sound_play(SOUND_EXPLOSION, NULL);
         set_camera_shake(12.0f);
         obj->segment.object.animationID = ANIM_WIZPIG_DAMAGE;
         obj->segment.x_velocity *= 0.4;

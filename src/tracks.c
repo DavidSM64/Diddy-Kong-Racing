@@ -360,7 +360,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
         func_8002A31C();
         // Show detailed skydome in single player.
         if (numViewports < 2) {
-            func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
+            matrix_world_origin(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             if (gCurrentLevelHeader2->skyDome == -1) {
                 func_80028050();
             } else {
@@ -370,7 +370,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             func_8006807C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             draw_gradient_background();
             func_80067D3C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
-            func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
+            matrix_world_origin(&gSceneCurrDisplayList, &gSceneCurrMatrix);
         }
         gDPPipeSync(gSceneCurrDisplayList++);
         initialise_player_viewport_vars(updateRate);
@@ -400,7 +400,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             func_8006807C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             draw_gradient_background();
             func_80067D3C(&gSceneCurrDisplayList, &gSceneCurrMatrix);
-            func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
+            matrix_world_origin(&gSceneCurrDisplayList, &gSceneCurrMatrix);
             gDPPipeSync(gSceneCurrDisplayList++);
             initialise_player_viewport_vars(updateRate);
             set_weather_limits(-1, -512);
@@ -420,7 +420,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             func_800278E8(updateRate);
         }
     }
-    func_800682AC(&gSceneCurrDisplayList);
+    viewport_reset(&gSceneCurrDisplayList);
     gDPPipeSync(gSceneCurrDisplayList++);
     gDkrDisableBillboard(gSceneCurrDisplayList++);
     gShadowHeapFlip = 1 - gShadowHeapFlip;
@@ -841,7 +841,7 @@ void render_skydome(void) {
         gSkydomeSegment->segment.trans.z_position = cam->trans.z_position;
     }
 
-    func_80068408(&gSceneCurrDisplayList, &gSceneCurrMatrix);
+    matrix_world_origin(&gSceneCurrDisplayList, &gSceneCurrMatrix);
     if (gSceneRenderSkyDome) {
         render_object(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, gSkydomeSegment);
     }

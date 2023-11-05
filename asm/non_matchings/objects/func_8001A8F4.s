@@ -110,7 +110,7 @@ glabel func_8001A8F4
 /* 01B688 8001AA88 00000000 */   nop   
 /* 01B68C 8001AA8C 0C00FC34 */  jal   reset_rocket_sound_timer
 /* 01B690 8001AA90 00000000 */   nop   
-/* 01B694 8001AA94 0C001276 */  jal   func_800049D8
+/* 01B694 8001AA94 0C001276 */  jal   sound_stop_all
 /* 01B698 8001AA98 00000000 */   nop   
 /* 01B69C 8001AA9C 0C027B20 */  jal   is_in_two_player_adventure
 /* 01B6A0 8001AAA0 00000000 */   nop   

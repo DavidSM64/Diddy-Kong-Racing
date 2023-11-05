@@ -53,8 +53,8 @@ u8 gTwoPlayerAdvRace = FALSE;
 s32 gIsInRace = 0;
 
 // Updated automatically from calc_func_checksums.py
-s32 gFunc80068158Checksum = 0x585E;
-s32 gFunc80068158Length = 0x154;
+s32 gViewportFuncChecksum = 0x585E;
+s32 gViewportFuncLength = 0x154;
 s16 gLevelPropertyStackPos = 0;
 s16 D_800DD32C = 0;
 s8 D_800DD330 = 0;
@@ -143,10 +143,10 @@ void init_level_globals(void) {
     free_from_memory_pool(gTempAssetTable);
     // Antipiracy measure
     checksumCount = 0;
-    for (j = 0; j < gFunc80068158Length; j++) {
-        checksumCount += ((u8 *) (&func_80068158))[j];
+    for (j = 0; j < gViewportFuncLength; j++) {
+        checksumCount += ((u8 *) (&viewport_rsp_set))[j];
     }
-    if (checksumCount != gFunc80068158Checksum) {
+    if (checksumCount != gViewportFuncChecksum) {
         disable_button_mask();
     }
 }
@@ -496,8 +496,8 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     if (numPlayers && gCurrentLevelHeader->race_type != RACETYPE_CUTSCENE_2) {
         gCurrentLevelHeader->race_type = RACETYPE_CUTSCENE_1;
     }
-    set_music_player_voice_limit(gCurrentLevelHeader->voiceLimit);
-    func_80000CBC();
+    music_voicelimit_set(gCurrentLevelHeader->voiceLimit);
+    music_volume_reset();
     setup_lights(32);
     var_s0 = VEHICLE_CAR;
     if (vehicleId >= VEHICLE_CAR && vehicleId < NUMBER_OF_PLAYER_VEHICLES) {
@@ -578,7 +578,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     settings->courseId = levelId;
     if (gCurrentLevelHeader->weatherEnable > 0) {
         func_800AB4A8(gCurrentLevelHeader->weatherType, gCurrentLevelHeader->weatherEnable, gCurrentLevelHeader->weatherVelX << 8, gCurrentLevelHeader->weatherVelY << 8, gCurrentLevelHeader->weatherVelZ << 8, gCurrentLevelHeader->weatherIntensity * 257, gCurrentLevelHeader->weatherOpacity * 257);
-        set_weather_limits(-1, -0x200);
+        set_weather_limits(-1, -512);
     }
     if (gCurrentLevelHeader->skyDome == -1) {
         gCurrentLevelHeader->unkA4 = load_texture((s32) gCurrentLevelHeader->unkA4);
@@ -600,10 +600,10 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
 */
 void start_level_music(f32 tempo) {
     if (gCurrentLevelHeader->music != SEQUENCE_NONE) {
-        func_800012E8();
-        play_music(gCurrentLevelHeader->music);
-        multiply_music_tempo(tempo);
-        func_80001074(gCurrentLevelHeader->instruments);
+        music_channel_reset_all();
+        music_play(gCurrentLevelHeader->music);
+        music_tempo_set_relative(tempo);
+        music_dynamic_set(gCurrentLevelHeader->instruments);
     }
 }
 
@@ -644,7 +644,6 @@ char *get_level_name(s32 levelId) {
     u8 numberOfNullPointers = 0;
 
     if (levelId < 0 || levelId >= gNumberOfLevelHeaders) {
-        stubbed_printf("AITABLE Error: Table out of range\n");
         return NULL;
     }
 
@@ -682,14 +681,14 @@ void clear_audio_and_track(void) {
     free_ai_behaviour_table();
     set_background_prim_colour(0, 0, 0);
     free_from_memory_pool(gCurrentLevelHeader);
-    func_800049D8();
-    func_80001844();
-    func_800018E0();
-    func_800012E8();
+    sound_stop_all();
+    music_stop();
+    music_jingle_stop();
+    music_channel_reset_all();
     free_lights();
     free_track();
     func_80008174();
-    adjust_audio_volume(VOLUME_NORMAL);
+    sound_volume_change(VOLUME_NORMAL);
     if (gCurrentLevelHeader->weatherEnable > 0) {
         free_weather_memory();
     }
@@ -706,7 +705,7 @@ void clear_audio_and_track(void) {
 void set_ai_level(s8 *aiLevelTable) {
     s32 temp;
     UNUSED s32 temp2;
-    s16 phi_v1;
+    s16 tableIndexCount;
     s8 aiLevel;
     Settings *settings;
 
@@ -737,12 +736,13 @@ void set_ai_level(s8 *aiLevelTable) {
         aiLevel = 5;
     }
     gTempAssetTable = (s32 *) load_asset_section_from_rom(ASSET_AI_BEHAVIOUR_TABLE);
-    phi_v1 = 0;
-    while (-1 != (s32) gTempAssetTable[phi_v1]) {
-        phi_v1++;
+    tableIndexCount = 0;
+    while (-1 != (s32) gTempAssetTable[tableIndexCount]) {
+        tableIndexCount++;
     }
-    phi_v1--;
-    if (aiLevel >= phi_v1) {
+    tableIndexCount--;
+    if (aiLevel >= tableIndexCount) {
+        stubbed_printf("AITABLE Error: Table out of range\n");
         aiLevel = 0;
     }
     temp2 = gTempAssetTable[aiLevel];

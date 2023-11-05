@@ -522,14 +522,14 @@ glabel func_8004F7F4
 /* 050B2C 8004FF2C 8E25000C */  lw    $a1, 0xc($s1)
 /* 050B30 8004FF30 8E260010 */  lw    $a2, 0x10($s1)
 /* 050B34 8004FF34 8E270014 */  lw    $a3, 0x14($s1)
-/* 050B38 8004FF38 0C0007AA */  jal   play_sound_spatial
+/* 050B38 8004FF38 0C0007AA */  jal   sound_play_spatial
 /* 050B3C 8004FF3C AFAF0010 */   sw    $t7, 0x10($sp)
 /* 050B40 8004FF40 3C048012 */  lui   $a0, %hi(D_8011D550) # $a0, 0x8012
 /* 050B44 8004FF44 3C068012 */  lui   $a2, %hi(D_8011D553) # $a2, 0x8012
 /* 050B48 8004FF48 90C6D553 */  lbu   $a2, %lo(D_8011D553)($a2)
 /* 050B4C 8004FF4C 9484D550 */  lhu   $a0, %lo(D_8011D550)($a0)
 /* 050B50 8004FF50 8E05021C */  lw    $a1, 0x21c($s0)
-/* 050B54 8004FF54 0C0007EE */  jal   func_80001FB8
+/* 050B54 8004FF54 0C0007EE */  jal   sound_volume_set_relative
 /* 050B58 8004FF58 00000000 */   nop   
 .L8004FF5C:
 /* 050B5C 8004FF5C 3C188012 */  lui   $t8, %hi(D_8011D552) # $t8, 0x8012

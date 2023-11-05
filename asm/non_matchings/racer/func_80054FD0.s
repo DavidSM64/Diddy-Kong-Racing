@@ -406,7 +406,7 @@ glabel func_80054FD0
 /* 0561CC 800555CC 2404013F */  li    $a0, 319
 /* 0561D0 800555D0 1DC00006 */  bgtz  $t6, .L800555EC
 /* 0561D4 800555D4 26050020 */   addiu $a1, $s0, 0x20
-/* 0561D8 800555D8 0C000741 */  jal   play_sound_global
+/* 0561D8 800555D8 0C000741 */  jal   sound_play
 /* 0561DC 800555DC AFA9018C */   sw    $t1, 0x18c($sp)
 /* 0561E0 800555E0 8FA9018C */  lw    $t1, 0x18c($sp)
 /* 0561E4 800555E4 44808000 */  mtc1  $zero, $f16

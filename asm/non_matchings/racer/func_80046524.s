@@ -464,7 +464,7 @@ glabel func_80046524
 /* 047714 80046B14 8E25000C */  lw    $a1, 0xc($s1)
 /* 047718 80046B18 8E260010 */  lw    $a2, 0x10($s1)
 /* 04771C 80046B1C 8E270014 */  lw    $a3, 0x14($s1)
-/* 047720 80046B20 0C0007AA */  jal   play_sound_spatial
+/* 047720 80046B20 0C0007AA */  jal   sound_play_spatial
 /* 047724 80046B24 AFA00010 */   sw    $zero, 0x10($sp)
 /* 047728 80046B28 02202025 */  move  $a0, $s1
 /* 04772C 80046B2C 24050162 */  li    $a1, 354
@@ -1116,7 +1116,7 @@ glabel func_80046524
 /* 0480A0 800474A0 2605021C */  addiu $a1, $s0, 0x21c
 /* 0480A4 800474A4 A3A700AD */  sb    $a3, 0xad($sp)
 /* 0480A8 800474A8 A3A900AF */  sb    $t1, 0xaf($sp)
-/* 0480AC 800474AC 0C000741 */  jal   play_sound_global
+/* 0480AC 800474AC 0C000741 */  jal   sound_play
 /* 0480B0 800474B0 E7B20104 */   swc1  $f18, 0x104($sp)
 /* 0480B4 800474B4 820601E0 */  lb    $a2, 0x1e0($s0)
 /* 0480B8 800474B8 8E05021C */  lw    $a1, 0x21c($s0)
@@ -1124,7 +1124,7 @@ glabel func_80046524
 /* 0480C0 800474C0 27260032 */  addiu $a2, $t9, 0x32
 /* 0480C4 800474C4 30CA00FF */  andi  $t2, $a2, 0xff
 /* 0480C8 800474C8 01403025 */  move  $a2, $t2
-/* 0480CC 800474CC 0C0007EE */  jal   func_80001FB8
+/* 0480CC 800474CC 0C0007EE */  jal   sound_volume_set_relative
 /* 0480D0 800474D0 240400AE */   li    $a0, 174
 /* 0480D4 800474D4 83A700AD */  lb    $a3, 0xad($sp)
 /* 0480D8 800474D8 83A900AF */  lb    $t1, 0xaf($sp)

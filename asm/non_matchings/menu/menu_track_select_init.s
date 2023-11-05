@@ -320,7 +320,7 @@ glabel menu_track_select_init
 /* 08F878 8008EC78 AFA90010 */  sw    $t1, 0x10($sp)
 /* 08F87C 8008EC7C 24050050 */  li    $a1, 80
 /* 08F880 8008EC80 240700F0 */  li    $a3, 240
-/* 08F884 8008EC84 0C019A50 */  jal   resize_viewport
+/* 08F884 8008EC84 0C019A50 */  jal   viewport_menu_set
 /* 08F888 8008EC88 00433023 */   subu  $a2, $v0, $v1
 /* 08F88C 8008EC8C 0C019984 */  jal   copy_viewports_to_stack
 /* 08F890 8008EC90 00000000 */   nop   
@@ -525,16 +525,16 @@ glabel menu_track_select_init
 /* 08FB7C 8008EF7C 2610F760 */  addiu $s0, %lo(sMenuMusicVolume) # addiu $s0, $s0, -0x8a0
 /* 08FB80 8008EF80 AC206848 */  sw    $zero, %lo(D_80126848)($at)
 /* 08FB84 8008EF84 AE000000 */  sw    $zero, ($s0)
-/* 08FB88 8008EF88 0C0002F8 */  jal   set_music_player_voice_limit
+/* 08FB88 8008EF88 0C0002F8 */  jal   music_voicelimit_set
 /* 08FB8C 8008EF8C 24040018 */   li    $a0, 24
-/* 08FB90 8008EF90 0C000307 */  jal   func_80000C1C
+/* 08FB90 8008EF90 0C000307 */  jal   music_voicelimit_change_off
 /* 08FB94 8008EF94 00000000 */   nop   
-/* 08FB98 8008EF98 0C0002CD */  jal   play_music
+/* 08FB98 8008EF98 0C0002CD */  jal   music_play
 /* 08FB9C 8008EF9C 24040018 */   li    $a0, 24
 /* 08FBA0 8008EFA0 92040003 */  lbu   $a0, 3($s0)
-/* 08FBA4 8008EFA4 0C000664 */  jal   set_relative_volume_for_music
+/* 08FBA4 8008EFA4 0C000664 */  jal   music_volume_set
 /* 08FBA8 8008EFA8 00000000 */   nop   
-/* 08FBAC 8008EFAC 0C0002C6 */  jal   func_80000B18
+/* 08FBAC 8008EFAC 0C0002C6 */  jal   music_change_off
 /* 08FBB0 8008EFB0 00000000 */   nop   
 /* 08FBB4 8008EFB4 0C01BD59 */  jal   set_gIntDisFlag
 /* 08FBB8 8008EFB8 24040001 */   li    $a0, 1

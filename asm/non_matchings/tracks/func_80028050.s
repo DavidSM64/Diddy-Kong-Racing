@@ -323,7 +323,7 @@ glabel func_80028050
 /* 029154 80028554 44194000 */  mfc1  $t9, $f8
 /* 029158 80028558 44CFF800 */  ctc1  $t7, $31
 /* 02915C 8002855C 03236021 */  addu  $t4, $t9, $v1
-/* 029160 80028560 0C01A102 */  jal   func_80068408
+/* 029160 80028560 0C01A102 */  jal   matrix_world_origin
 /* 029164 80028564 A7AC0124 */   sh    $t4, 0x124($sp)
 /* 029168 80028568 3C04800E */  lui   $a0, %hi(gCurrentLevelHeader2) # $a0, 0x800e
 /* 02916C 8002856C 8C84C91C */  lw    $a0, %lo(gCurrentLevelHeader2)($a0)

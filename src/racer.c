@@ -111,9 +111,9 @@ s32 gSurfaceFlagTable4P[20] = {
 };
 
 // Used to know how the AI should use a balloon when they have one.
-s8 gRacerAIBalloonActionTable[NUM_WEAPON_TYPES - 1] = {
+s8 gRacerAIBalloonActionTable[NUM_WEAPON_TYPES] = {
     1, 1, 2, 2, 4, 3, 0, 6,
-    4, 3, 2, 2, 5, 5, 5,
+    4, 3, 2, 2, 5, 5, 5, 0
 };
 
 // Unused?
@@ -872,7 +872,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         racer->steerVisualRotation += (var_v1 * updateRate) >> 3;
         if ((var_v1 < 0x400 && var_v1 > -0x400) || (racer->playerIndex == PLAYER_COMPUTER)) {
             if (racer->playerIndex != PLAYER_COMPUTER) {
-                play_sound_spatial(SOUND_ZIP_PAD_BOOST, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
+                sound_play_spatial(SOUND_ZIP_PAD_BOOST, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
                 play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, (0x80 | 0x2));
             }
             racer->boostTimer = normalise_time(45);
@@ -1046,8 +1046,8 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         if (racer->unk1E0 != 0) {
             if (racer->groundedWheels) {
                 if (((gRaceStartTimer != 100) && (racer->playerIndex != PLAYER_COMPUTER)) && (racer->unk1E0 >= 6)) {
-                    play_sound_global(SOUND_BOUNCE, &racer->unk21C);
-                    func_80001FB8(SOUND_BOUNCE, (void *) racer->unk21C, (racer->unk1E0 * 2) + 0x32);
+                    sound_play(SOUND_BOUNCE, &racer->unk21C);
+                    sound_volume_set_relative(SOUND_BOUNCE, (void *) racer->unk21C, (racer->unk1E0 * 2) + 0x32);
                 }
             }
             else if (racer->approachTarget == 0) {
@@ -2528,7 +2528,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                 }
                 if (tempRacer->playerIndex != PLAYER_COMPUTER && tempRacer->lap + 1 == header->laps
                     && !D_8011D580 && get_current_level_race_type() == RACETYPE_DEFAULT) {
-                    multiply_music_tempo(1.12f);
+                    music_tempo_set_relative(1.12f);
                     D_8011D580 = 1;
                 }
             }
@@ -2679,7 +2679,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                 if (tempRacer->playerIndex == PLAYER_COMPUTER) {
                     play_sound_at_position(tempRacer->delaySoundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                 } else {
-                    play_sound_spatial(tempRacer->delaySoundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
+                    sound_play_spatial(tempRacer->delaySoundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
                 }
                 tempRacer->delaySoundID = SOUND_NONE;
             }
@@ -3000,7 +3000,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         }
         if (racer->drift_direction != 0 || racer->drifting != 0 || racer->unk1FB != 0) {
             if (racer->unk10 == 0) {
-                play_sound_spatial(SOUND_CAR_SLIDE, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, (s32 **) &racer->unk10);
+                sound_play_spatial(SOUND_CAR_SLIDE, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, (s32 **) &racer->unk10);
             } else {
                 func_80009B7C((void *) racer->unk10, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position);
             }
@@ -3185,7 +3185,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     surfaceType = gSurfaceSoundTable[surfaceType];
     soundID = surfaceType;
     if (racer->unk18 == NULL && soundID != SOUND_NONE && racer->velocity < -2.0) {
-        play_sound_global(soundID, &racer->unk18);
+        sound_play(soundID, &racer->unk18);
     }
     if (racer->unk18 != NULL && (soundID == SOUND_NONE || racer->velocity > -2.0)) {
         func_8000488C(racer->unk18);
@@ -4611,7 +4611,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                                 if (racer->weaponSoundMask) {
                                     func_8000488C(racer->weaponSoundMask);
                                 }
-                                play_sound_spatial(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, (s32** ) &racer->weaponSoundMask);
+                                sound_play_spatial(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, (s32** ) &racer->weaponSoundMask);
                             }
                         }
                     }
@@ -4672,7 +4672,7 @@ void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate) {
             racer->boostType |= EMPOWER_BOOST;
         }
         if (racer->magnetSoundMask == NULL && racer->raceFinished == FALSE) {
-            play_sound_global(SOUND_MAGNET_HUM, (void *) &racer->magnetSoundMask);
+            sound_play(SOUND_MAGNET_HUM, (void *) &racer->magnetSoundMask);
         }
     } else {
         racer->magnetTimer = 0;
@@ -4702,7 +4702,7 @@ void racer_activate_magnet(Object *obj, Object_Racer *racer, s32 updateRate) {
 void racer_play_sound(Object *obj, s32 soundID) {
     Object_Racer *racer = &obj->unk64->racer;
     if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->exitObj == NULL) {
-        play_sound_spatial(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
+        sound_play_spatial(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, NULL);
     }
 }
 
@@ -4987,13 +4987,13 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
         }
         switch (gCameraObject->zoom) {
         case ZOOM_MEDIUM:
-            play_sound_global(SOUND_MENU_BACK, NULL);
+            sound_play(SOUND_MENU_BACK, NULL);
             break;
         case ZOOM_FAR:
-            play_sound_global(SOUND_MENU_BACK2, NULL);
+            sound_play(SOUND_MENU_BACK2, NULL);
             break;
         default:
-            play_sound_global(SOUND_UNK_6A, NULL);
+            sound_play(SOUND_UNK_6A, NULL);
             break;
         }
     }
@@ -5040,7 +5040,7 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
     gCameraObject->offsetX = (((obj->segment.trans.x_position + (91.75 * racer->ox1) + (90.0 * racer->ox3)) - gCameraObject->trans.x_position) * dialogueAngle);
     gCameraObject->offsetZ = (((obj->segment.trans.z_position + (91.75 * racer->oz1) + (90.0 * racer->oz3)) - gCameraObject->trans.z_position) * dialogueAngle);
     gCameraObject->offsetY = (((get_npc_pos_y() + 48.5) - gCameraObject->trans.y_position) * dialogueAngle);
-    gCameraObject->unk38 =  -gCameraObject->trans.x_rotation * dialogueAngle;
+    gCameraObject->pitchOffset =  -gCameraObject->trans.x_rotation * dialogueAngle;
     gCameraObject->trans.x_position += gCameraObject->offsetX;
     gCameraObject->trans.y_position += gCameraObject->offsetY + gCameraObject->unk30;
     gCameraObject->trans.z_position += gCameraObject->offsetZ;

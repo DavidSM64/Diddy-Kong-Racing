@@ -1,7 +1,7 @@
 glabel func_800AC21C
 /* 0ACE1C 800AC21C 27BDFF88 */  addiu $sp, $sp, -0x78
-/* 0ACE20 800AC220 3C028012 */  lui   $v0, %hi(D_80127C1C) # $v0, 0x8012
-/* 0ACE24 800AC224 8C427C1C */  lw    $v0, %lo(D_80127C1C)($v0)
+/* 0ACE20 800AC220 3C028012 */  lui   $v0, %hi(gWeatherCamera) # $v0, 0x8012
+/* 0ACE24 800AC224 8C427C1C */  lw    $v0, %lo(gWeatherCamera)($v0)
 /* 0ACE28 800AC228 AFBF0044 */  sw    $ra, 0x44($sp)
 /* 0ACE2C 800AC22C AFBE0040 */  sw    $fp, 0x40($sp)
 /* 0ACE30 800AC230 AFB7003C */  sw    $s7, 0x3c($sp)
@@ -41,9 +41,9 @@ glabel func_800AC21C
 /* 0ACEB8 800AC2B8 35E10003 */  ori   $at, $t7, 3
 /* 0ACEBC 800AC2BC 38210002 */  xori  $at, $at, 2
 /* 0ACEC0 800AC2C0 44C1F800 */  ctc1  $at, $31
-/* 0ACEC4 800AC2C4 3C1E8012 */  lui   $fp, %hi(D_80127C20) # $fp, 0x8012
+/* 0ACEC4 800AC2C4 3C1E8012 */  lui   $fp, %hi(gWeatherCameraMatrix) # $fp, 0x8012
 /* 0ACEC8 800AC2C8 460084A4 */  cvt.w.s $f18, $f16
-/* 0ACECC 800AC2CC 27DE7C20 */  addiu $fp, %lo(D_80127C20) # addiu $fp, $fp, 0x7c20
+/* 0ACECC 800AC2CC 27DE7C20 */  addiu $fp, %lo(gWeatherCameraMatrix) # addiu $fp, $fp, 0x7c20
 /* 0ACED0 800AC2D0 44CFF800 */  ctc1  $t7, $31
 /* 0ACED4 800AC2D4 44079000 */  mfc1  $a3, $f18
 /* 0ACED8 800AC2D8 46002182 */  mul.s $f6, $f4, $f0

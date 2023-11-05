@@ -573,7 +573,7 @@ glabel func_80050A28
 /* 051DBC 800511BC 8D05000C */  lw    $a1, 0xc($t0)
 /* 051DC0 800511C0 8D060010 */  lw    $a2, 0x10($t0)
 /* 051DC4 800511C4 8D070014 */  lw    $a3, 0x14($t0)
-/* 051DC8 800511C8 0C0007AA */  jal   play_sound_spatial
+/* 051DC8 800511C8 0C0007AA */  jal   sound_play_spatial
 /* 051DCC 800511CC AFAF0010 */   sw    $t7, 0x10($sp)
 /* 051DD0 800511D0 10000007 */  b     .L800511F0
 /* 051DD4 800511D4 8E020014 */   lw    $v0, 0x14($s0)
@@ -1235,7 +1235,7 @@ glabel func_80050A28
 /* 052760 80051B60 3124FFFF */  andi  $a0, $t1, 0xffff
 /* 052764 80051B64 45000007 */  bc1f  .L80051B84
 /* 052768 80051B68 26050018 */   addiu $a1, $s0, 0x18
-/* 05276C 80051B6C 0C000741 */  jal   play_sound_global
+/* 05276C 80051B6C 0C000741 */  jal   sound_play
 /* 052770 80051B70 AFA90064 */   sw    $t1, 0x64($sp)
 /* 052774 80051B74 8FA90064 */  lw    $t1, 0x64($sp)
 /* 052778 80051B78 8E020018 */  lw    $v0, 0x18($s0)

@@ -10,7 +10,7 @@
 #include "objects.h"
 #include "PR/libaudio.h"
 
-ALEventQueue *D_800DC6B0 = NULL;
+ALSoundState *D_800DC6B0 = NULL;
 s32 D_800DC6B4 = 0; // Currently unknown, might be a different type.
 unk800DC6BC_40 *D_800DC6B8 = NULL; // Set but not used.
 unk800DC6BC gAlSndPlayer;
@@ -44,6 +44,9 @@ void set_sound_channel_count(s32 numChannels) {
     }
 }
 
+/**
+ * Initialise a sound player and ready it for use with the sound event system.
+*/
 void alSndPNew(audioMgrConfig *c) {
     u32 i;
     unk800DC6BC_40 *tmp1;
@@ -148,8 +151,8 @@ static void _removeEvents(ALEventQueue *evtq, ALSoundState *state, u16 eventType
     thisNode = evtq->allocList.next;
     while( thisNode != 0 ) {
 	nextNode = thisNode->next;
-        thisItem = (ALEventListItem *)thisNode;
-        nextItem = (ALEventListItem *)nextNode;
+        thisItem = (ALEventListItem *) thisNode;
+        nextItem = (ALEventListItem *) nextNode;
         thisEvent = (ALSndpEvent *) &thisItem->evt;
         if (thisEvent->common.state == state && (u16)thisEvent->msg.type & eventType){
             if( nextItem )
@@ -171,13 +174,13 @@ u16 func_800042CC(u16 *lastAllocListIndex, u16 *lastFreeListIndex) {
     ALLink *nextAllocList;
     ALLink *nextFreeList;
     ALLink *prevFreeList;
-    ALEventQueue *queue;
+    ALSoundState *queue;
 
     mask = osSetIntMask(OS_IM_NONE);
-    queue = (ALEventQueue *) &D_800DC6B0; //D_800DC6B0 could be a different type?
-    nextFreeList = queue->freeList.next;
-    nextAllocList = queue->allocList.next;
-    prevFreeList = queue->freeList.prev;
+    queue = (ALSoundState *) &D_800DC6B0;
+    nextFreeList = (ALLink *) queue->next;
+    nextAllocList = (ALLink *) queue->unk8;
+    prevFreeList = (ALLink *) queue->prev;
 
     for (freeListNextIndex = 0; nextFreeList != 0; freeListNextIndex++) {
         nextFreeList = (ALLink *) nextFreeList->next;
@@ -213,12 +216,12 @@ UNUSED u8 func_8000461C(u8 *arg0) {
     return 0;
 }
 
-s32 func_80004638(ALBank *bnk, s16 sndIndx, s32 arg2) {
-    return func_80004668(bnk, sndIndx, 0, arg2);
+s32 func_80004638(ALBank *bnk, s16 sndIndx, SoundMask *soundMask) {
+    return func_80004668(bnk, sndIndx, 0, soundMask);
 }
 
 #ifdef NON_EQUIVALENT
-s32 func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, s32 arg3) {
+s32 func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, SoundMask *soundMask) {
 }
 #else
 GLOBAL_ASM("asm/non_matchings/audiosfx/func_80004668.s")
@@ -237,25 +240,48 @@ void func_8000488C(u8 *arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/audiosfx/func_800048D8.s")
+void func_800048D8(u8 event) {
+    u32 intMask;
+    ALEvent evt;
+    ALSoundState *queue;
+
+    intMask = osSetIntMask(OS_IM_NONE);
+    queue = D_800DC6B0;
+    while (queue != NULL) {
+        evt.type = AL_SNDP_UNK_10_EVT;
+        evt.msg.end.ticks = (s32) queue; // TODO: find the correct value for this.
+        if ((queue->unk3E & event) == event) {
+            queue->unk3E &= ~AL_SNDP_PITCH_EVT;
+            alEvtqPostEvent(&gAlSndPlayerPtr->evtq, &evt, 0);
+        }
+        queue = (ALSoundState *) queue->next;
+    }
+    osSetIntMask(intMask);
+}
 
 UNUSED void func_80004998(void) {
-    func_800048D8(1);
+    func_800048D8(AL_SNDP_PLAY_EVT);
 }
 
 UNUSED void func_800049B8(void) {
-    func_800048D8(17);
+    func_800048D8(AL_SNDP_PLAY_EVT | AL_SNDP_PITCH_EVT);
 }
 
-void func_800049D8(void) {
-    func_800048D8(3);
+/**
+ * Stops all sounds from playing.
+*/
+void sound_stop_all(void) {
+    func_800048D8(AL_SNDP_PLAY_EVT | AL_SNDP_STOP_EVT);
 }
 
-void func_800049F8(s32 soundMask, s16 type, u32 volume) {
+/**
+ * Send a message to the sound player to update an existing property of the sound entry.
+*/
+void sound_event_update(s32 soundMask, s16 type, u32 volume) {
     ALEvent2 sndEvt;
     sndEvt.snd_event.type = type;
     sndEvt.snd_event.state = (void *) soundMask;
-    sndEvt.snd_event.unk04 = volume;
+    sndEvt.snd_event.param = volume;
     if (soundMask) {
         alEvtqPostEvent(&(gAlSndPlayerPtr->evtq), (ALEvent *) &sndEvt, 0);
     }
@@ -281,7 +307,7 @@ void set_sound_channel_volume(u8 channel, u16 volume) {
     ALEvent evt;
 
     mask = osSetIntMask(OS_IM_NONE);
-    queue = D_800DC6B0;
+    queue = (ALEventQueue *) D_800DC6B0;
     gSoundChannelVolume[channel] = volume;
 
     while (queue != NULL) {

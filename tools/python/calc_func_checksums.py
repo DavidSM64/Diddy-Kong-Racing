@@ -15,7 +15,7 @@ FUNCTIONS_TO_CALC = [
     ('func_80019808', 'gFunc80019808Checksum', 'gFunc80019808Length'),
     ('render_scene', 'gTractionTableChecksum', 'gTrackRenderFuncLength'),
     ('obj_loop_goldenballoon', 'gObjLoopGoldenBalloonChecksum', 'gObjLoopGoldenBalloonLength'),
-    ('func_80068158', 'gFunc80068158Checksum', 'gFunc80068158Length')
+    ('viewport_rsp_set', 'gViewportFuncChecksum', 'gViewportFuncLength')
 ]
 
 def getMatches(string, regex):

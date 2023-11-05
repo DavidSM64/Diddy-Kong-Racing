@@ -457,7 +457,7 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
         }
     }
     gDPPipeSync((*dList)++);
-    set_viewport_scissor(dList);
+    viewport_scissor(dList);
 }
 
 /**

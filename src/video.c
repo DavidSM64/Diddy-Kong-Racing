@@ -24,8 +24,6 @@ VideoModeResolution gVideoModeResolutions[] = {
 // This value exists in order to make sure there are no out of bounds accesses of gVideoModeResolutions
 #define NUM_RESOLUTION_MODES ((sizeof(gVideoModeResolutions) / sizeof(VideoModeResolution)) - 1)
 
-UNUSED s32 D_800DE7BC = 0;
-
 /*******************************/
 
 /************ .bss ************/
@@ -235,7 +233,7 @@ void init_vi_settings(void) {
  */
 void init_framebuffer(s32 index) {
     if (gVideoFramebuffers[index] != 0) {
-        func_80071538((u8 *)gVideoFramebuffers[index]);
+        memory_slot_exists((u8 *)gVideoFramebuffers[index]); // Effectively unused.
         free_from_memory_pool(gVideoFramebuffers[index]);
     }
     gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].width;

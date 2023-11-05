@@ -110,7 +110,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
             obj->segment.object.animationID = ANIM_BLUEY_DAMAGE;
             racer->animationSpeed = 0.0f;
             play_random_boss_sound(BOSS_SOUND_NEGATIVE);
-            play_sound_global(SOUND_EXPLOSION, NULL);
+            sound_play(SOUND_EXPLOSION, NULL);
             set_camera_shake(12.0f);
             racer->attackType = ATTACK_NONE;
             racer->velocity *= 0.3;
