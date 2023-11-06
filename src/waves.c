@@ -44,9 +44,9 @@ unk800E3090 D_800E3090[4] = {
 TextureHeader *D_800E30D0 = NULL;
 s32 *D_800E30D4 = NULL;
 LevelModel_Alternate *D_800E30D8 = NULL;
-s32 D_800E30DC = 0;
-s32 D_800E30E0 = 0;
-s32 D_800E30E4 = 0;
+s32 D_800E30DC = 0; //Tracks an index into D_8012A1E8
+s16 *D_800E30E0 = NULL; //Points to either D_800E30E8 or D_800E3110
+s16 *D_800E30E4 = NULL; //Points to either D_800E30FC or D_800E3144
 
 s16 D_800E30E8[10] = {
     1, 2, 3, 4, 5, 6, 7, 8, 9, 0
@@ -68,12 +68,11 @@ s32 *D_800E3178 = NULL;
 s32 D_800E317C = 0;
 LevelHeader_70 *D_800E3180 = NULL;
 unk800E3184 *D_800E3184 = NULL;
-s32 D_800E3188 = NULL;
+s32 D_800E3188 = 0;
 s32 D_800E318C = 0;
 unk800E3190 *D_800E3190 = NULL;
 Object **D_800E3194 = NULL;
 Object *gWaveGeneratorObj = NULL;
-s32 D_800E319C = 0;
 
 /*******************************/
 
@@ -127,13 +126,12 @@ s32 D_8012A0E8[64];
 s16 D_8012A1E8[512];
 s32 D_8012A5E8[3];
 s32 D_8012A5F4;
-s32 D_8012A5F8;
-s32 D_8012A5FC;
+UNUSED s32 D_8012A5F8;
+UNUSED s32 D_8012A5FC;
 s32 D_8012A600[72];
 f32 D_8012A720;
 f32 D_8012A724;
 s32 D_8012A728;
-s32 D_8012A72C;
 
 /*****************************/
 
@@ -532,7 +530,7 @@ void func_800BF3E4(Object *obj) {
                 }
             }
             D_800E3194[j] = NULL;
-            D_800E3188 -= 1;
+            D_800E3188--;
         }
     }
 }
@@ -574,7 +572,7 @@ unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, 
         i--;
         if (var_a0 != 0) {
             D_800E3194[i] = obj;
-            D_800E3188 += 1;
+            D_800E3188++;
             var_f0 = D_8012A0B8;
             if (D_80129FC8->unk28 != 0) {
                 var_f0 /= 2.0f;
