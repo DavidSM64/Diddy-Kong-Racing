@@ -137,54 +137,98 @@ s32 D_8012A72C;
 
 /*****************************/
 
+#define FREE_MEM(mem)                   \
+    tempMem = (s32 *) mem;              \
+    if (tempMem != NULL) {              \
+        free_from_memory_pool(tempMem); \
+        mem = NULL;                     \
+    }
+#define FREE_TEX(tex)                   \
+    tempTex = tex;                      \
+    if (tempTex != NULL) {              \
+        free_texture(tempTex);          \
+        tex = NULL;                     \
+    }
+
 void free_waves(void) {
-    if (D_800E3040 != NULL) {
-        free_from_memory_pool(D_800E3040);
-        D_800E3040 = NULL;
-    }
-    if (D_800E3044 != NULL) {
-        free_from_memory_pool(D_800E3044);
-        D_800E3044 = NULL;
-    }
-    if (D_800E3048 != NULL) {
-        free_from_memory_pool(D_800E3048);
-        D_800E3048 = NULL;
-    }
-    if (D_800E304C != NULL) {
-        free_from_memory_pool(D_800E304C);
-        D_800E304C = NULL;
-    }
-    if (D_800E3070[0] != NULL) {
-        free_from_memory_pool(D_800E3070[0]);
-        D_800E3070[0] = NULL;
-    }
-    if (D_800E3080[0] != NULL) {
-        free_from_memory_pool(D_800E3080[0]);
-        D_800E3080[0] = NULL;
-    }
-    if (D_800E30D0 != NULL) {
-        free_texture(D_800E30D0);
-        D_800E30D0 = NULL;
-    }
-    if (D_800E30D4 != NULL) {
-        free_from_memory_pool(D_800E30D4);
-        D_800E30D4 = NULL;
-    }
-    if (D_800E30D8 != NULL) {
-        free_from_memory_pool(D_800E30D8);
-        D_800E30D8 = NULL;
-    }
-    if (D_800E3178 != NULL) {
-        free_from_memory_pool(D_800E3178);
-        D_800E3178 = NULL;
-    }
+    TextureHeader *tempTex;
+    s32 *tempMem;
+    FREE_MEM(D_800E3040);
+    FREE_MEM(D_800E3044);
+    FREE_MEM(D_800E3048);
+    FREE_MEM(D_800E304C);
+    FREE_MEM(D_800E3070[0]);
+    FREE_MEM(D_800E3080[0]);
+    FREE_TEX(D_800E30D0);
+    FREE_MEM(D_800E30D4);
+    FREE_MEM(D_800E30D8);
+    FREE_MEM(D_800E3178);
     D_800E3190 = NULL;
     D_800E3194 = NULL;
     D_800E3184 = NULL;
     D_800E3188 = NULL;
 }
 
+#ifdef NON_EQUIVALENT
+void func_800B7EB4(void) {
+    s32 *var_v1;
+    s32 temp_lo;
+    s32 temp_t7;
+    s32 temp_t9;
+    s32 temp_v1;
+    s32 var_a1;
+    s32 var_a2;
+    s32 var_a3;
+    s32 var_t0;
+    s32 var_t1;
+
+    free_waves();
+    D_800E3040 = (s32 *) allocate_from_main_pool_safe(D_80129FC8->unk20 * 4, COLOUR_TAG_CYAN);
+    D_800E3044 = (s32 *) allocate_from_main_pool_safe(D_80129FC8->unk4 * 4 * D_80129FC8->unk4, COLOUR_TAG_CYAN);
+    D_800E3048 = (s32 *) allocate_from_main_pool_safe((D_80129FC8->unk0 + 1) * 4 * (D_80129FC8->unk0 + 1), COLOUR_TAG_CYAN);
+    temp_lo = (D_80129FC8->unk0 + 1) * 4 * (D_80129FC8->unk0 + 1);
+    D_800E304C = allocate_from_main_pool_safe(temp_lo * 9, COLOUR_TAG_CYAN);
+    
+    // for (var_a1 = 1; var_a1 < 4; var_a1++) {
+    //     D_800E3050[var_a1] = (s32 *) ((u32) D_800E304C + (temp_lo * var_a1));
+    // }
+
+    var_v1 = D_800E3050;
+    var_a1 = 1;
+    do {
+        var_v1[0]= (s32 *) (D_800E304C + temp_lo);
+        var_v1[1]= (s32 *) (D_800E304C + (temp_lo * 2));
+        var_v1[2]= (s32 *) (D_800E304C + (temp_lo * 3));
+        var_v1[3] = (s32 *) (D_800E304C + (temp_lo * 4));
+        var_v1 += 4;
+        var_a1 += 4;
+    } while (var_a1 < 9);
+
+    temp_lo = (D_80129FC8->unk0 + 1) * 250 * (D_80129FC8->unk0 + 1);
+    if (D_8012A078 != 2) {
+        D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(temp_lo * 2, COLOUR_TAG_CYAN);
+        D_800E3070[1] = (s32 *) ((u32) D_800E3070[0] + temp_lo);
+    } else {        
+        D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(temp_lo * 4, COLOUR_TAG_CYAN);
+        D_800E3070[1] = (s32 *) ((u32) D_800E3070[0] + temp_lo);
+        D_800E3070[2] = (s32 *) ((u32) D_800E3070[1] + temp_lo);
+        D_800E3070[3] = (s32 *) ((u32) D_800E3070[2] + temp_lo);
+    }
+    temp_lo = (D_80129FC8->unk0 << 5) * D_80129FC8->unk0;
+    if (D_8012A078 != 2) {
+        D_800E3080[0] = allocate_from_main_pool_safe(temp_lo * 2, COLOUR_TAG_CYAN);
+        D_800E3080[1] = (s32 *) ((u32) D_800E3080[0] + temp_lo);
+    } else {
+        D_800E3080[0] = (s32 *) allocate_from_main_pool_safe(temp_lo * 4, COLOUR_TAG_CYAN);
+        D_800E3080[1] = (s32 *) ((u32) D_800E3080[0] + temp_lo);
+        D_800E3080[2] = (s32 *) ((u32) D_800E3080[1] + temp_lo);
+        D_800E3080[3] = (s32 *) ((u32) D_800E3080[2] + temp_lo);
+    }
+    D_800E30D0 = load_texture(D_80129FC8->unk2C);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/waves/func_800B7EB4.s")
+#endif
 
 void func_800B8134(unk800B8134 *arg0) {
     if (D_8012A078 != 2) {
@@ -194,10 +238,10 @@ void func_800B8134(unk800B8134 *arg0) {
     }
     D_80129FC8->unk4 = arg0->unk57;
     D_80129FC8->unk8 = arg0->unk58;
-    D_80129FC8->unkC = arg0->unk5A * 0.00390625f;
+    D_80129FC8->unkC = arg0->unk5A / 256.0f;
     D_80129FC8->unk10 = arg0->unk59 << 8;
     D_80129FC8->unk14 = arg0->unk5C;
-    D_80129FC8->unk18 = arg0->unk5E * 0.00390625f;
+    D_80129FC8->unk18 = arg0->unk5E / 256.0f;
     D_80129FC8->unk1C = arg0->unk5D << 8;
     D_80129FC8->unk20 = arg0->unk60 & ~1;
     if (D_8012A078 != 2) {
@@ -211,9 +255,9 @@ void func_800B8134(unk800B8134 *arg0) {
     D_80129FC8->unk34 = arg0->unk6B;
     D_80129FC8->unk38 = arg0->unk6C;
     D_80129FC8->unk3C = arg0->unk6D;
-    D_80129FC8->unk40 = arg0->unk62 * 0.00390625f;
-    D_80129FC8->unk44 = arg0->unk64 * 0.00390625f;
-    D_80129FC8->unk48 = arg0->unk66 * 0.00390625f;
+    D_80129FC8->unk40 = arg0->unk62 / 256.0f;
+    D_80129FC8->unk44 = arg0->unk64 / 256.0f;
+    D_80129FC8->unk48 = arg0->unk66 / 256.0f;
     D_80129FC8->unk4C = arg0->unk70;
 }
 
@@ -340,7 +384,7 @@ void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1) {
     gWaveBoundingBoxZ1 = bb->z1;
     gWaveBatch = curBatch;
     gWaveTexture = level->textures[curBatch->textureIndex].texture;
-    temp_t6 = (curBatch->flags & (BATCH_FLAGS_UNK40000000 | BATCH_FLAGS_UNK20000000 | BATCH_FLAGS_UNK10000000)) >> 0x1C;
+    temp_t6 = (curBatch->flags & (BATCH_FLAGS_UNK40000000 | BATCH_FLAGS_UNK20000000 | BATCH_FLAGS_UNK10000000)) >> 28;
     if (temp_t6 > 0) {
         D_800E3180 = (LevelHeader_70 *) arg1->unk70[temp_t6];
     } else {
@@ -377,7 +421,7 @@ f32 get_wave_height(Object_Log *log, s32 updateRate) {
     } else {
         var_t0 <<= log->unk2;
     }
-    y = (((f32) var_t0 * 0.0625) + (f32) log->unk0);
+    y = (((f32) var_t0 / 16.0) + (f32) log->unk0);
     y *= D_80129FC8->unk40;
     y += func_800BEFC4(log->unkC, log->unk8, log->unkA);
     return y;
@@ -505,7 +549,7 @@ void func_800BF524(Object *obj) {
         var_v1 |= 2;
     }
     func_800BF634(obj, obj->segment.trans.x_position, obj->segment.trans.z_position, (f32) temp_v0->unkA, temp_v0->unk9 << 8,  
-        (f32) temp_v0->unk8 * 0.0625, (f32) temp_v0->unkE, (f32) temp_v0->unkC * 0.0625, var_v1);
+        (f32) temp_v0->unk8 / 16.0, (f32) temp_v0->unkE, (f32) temp_v0->unkC / 16.0, var_v1);
 }
 
 unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, f32 arg5, f32 arg6, f32 arg7, s32 arg8) {
@@ -532,7 +576,7 @@ unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, 
             D_800E3188 += 1;
             var_f0 = D_8012A0B8;
             if (D_80129FC8->unk28 != 0) {
-                var_f0 *= 0.5f;
+                var_f0 /= 2.0f;
             }
             var_a0_2 = (((xPos - arg3) - D_8012A0D0) / var_f0);
             if (var_a0_2 >= D_800E318C) {
@@ -674,7 +718,7 @@ UNUSED void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, 
         if (arg0->unk2C < 1.0) {
             arg0->unk2C = 1.0f;
         }
-        arg0->unk20 = (65536.0f / arg0->unk2C);
+        arg0->unk20 = (65536.0f / arg0->unk2C); //0x10000
         arg0->unk24 = (arg0->unk24 + arg4);
     }
 }
