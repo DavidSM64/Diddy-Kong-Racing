@@ -421,10 +421,34 @@ typedef struct LevelHeader {
   /* 0x52 */ u8 music;
   /* 0x53 */ u8 unk53;
   /* 0x54 */ u16 instruments;
+  /* 0x56 */ u8 unk56;
+  /* 0x57 */ u8 unk57;
+  /* 0x58 */ u8 unk58;
+  /* 0x59 */ u8 unk59;
+  /* 0x5A */ s16 unk5A;
+  /* 0x5C */ u8 unk5C;
+  /* 0x5D */ u8 unk5D;
+  /* 0x5E */ s16 unk5E;
+  /* 0x60 */ s16 unk60;
+  /* 0x62 */ s16 unk62;
+  /* 0x64 */ s16 unk64;
+  /* 0x66 */ s16 unk66;
+  /* 0x68 */ s16 unk68;
+  /* 0x6A */ u8 unk6A;
+  /* 0x6B */ u8 unk6B;
+  /* 0x6C */ s8 unk6C;
+  /* 0x6D */ s8 unk6D;
+  /* 0x6E */ s16 unk6E;
 
-  /* 0x56 */ u8 pad56[0x1A];
-
+    //func_800B8134 Seems to use this struct, and it differs on unk70 only.
+    union {
   /* 0x70 */ LevelHeader_70 *unk70;
+        struct {
+  /* 0x70 */ u8 unk70_u8;
+  /* 0x71 */ u8 unk71;
+        };
+    };
+
   /* 0x74 */ LevelHeader_70 *unk74[7];
 
   // Weather related?

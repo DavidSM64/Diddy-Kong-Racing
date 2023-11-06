@@ -93,8 +93,8 @@ s32 D_80129FC0;
 s32 D_80129FC4;
 unk80129FC8 D_80129FC8[1];
 s32 D_8012A018;
-s32 D_8012A01C;
-s32 D_8012A020[2];
+f32 D_8012A01C;
+f32 D_8012A020[2];
 s32 D_8012A028[20];
 s32 D_8012A078;
 TriangleBatchInfo *gWaveBatch;
@@ -106,8 +106,8 @@ s32 D_8012A090;
 s32 D_8012A094;
 s32 D_8012A098;
 s32 D_8012A09C;
-s32 D_8012A0A0;
-s32 D_8012A0A4;
+f32 D_8012A0A0;
+f32 D_8012A0A4;
 s32 gWaveBoundingBoxDiffX;
 s32 gWaveBoundingBoxDiffZ;
 s32 gWaveBoundingBoxX1;
@@ -183,10 +183,10 @@ void func_800B7EB4(void) {
     s32 var_t1;
 
     free_waves();
-    D_800E3040 = (s32 *) allocate_from_main_pool_safe(D_80129FC8->unk20 * 4, COLOUR_TAG_CYAN);
-    D_800E3044 = (s32 *) allocate_from_main_pool_safe(D_80129FC8->unk4 * 4 * D_80129FC8->unk4, COLOUR_TAG_CYAN);
-    D_800E3048 = (s32 *) allocate_from_main_pool_safe((D_80129FC8->unk0 + 1) * 4 * (D_80129FC8->unk0 + 1), COLOUR_TAG_CYAN);
-    temp_lo = (D_80129FC8->unk0 + 1) * 4 * (D_80129FC8->unk0 + 1);
+    D_800E3040 = (s32 *) allocate_from_main_pool_safe(D_80129FC8->unk20 << 2, COLOUR_TAG_CYAN);
+    D_800E3044 = (s32 *) allocate_from_main_pool_safe((D_80129FC8->unk4 << 2) * D_80129FC8->unk4, COLOUR_TAG_CYAN);
+    D_800E3048 = (s32 *) allocate_from_main_pool_safe(((D_80129FC8->unk0 + 1) << 2) * (D_80129FC8->unk0 + 1), COLOUR_TAG_CYAN);
+    temp_lo = ((D_80129FC8->unk0 + 1) << 2) * (D_80129FC8->unk0 + 1);
     D_800E304C = allocate_from_main_pool_safe(temp_lo * 9, COLOUR_TAG_CYAN);
     
     // for (var_a1 = 1; var_a1 < 4; var_a1++) {
@@ -196,30 +196,31 @@ void func_800B7EB4(void) {
     var_v1 = D_800E3050;
     var_a1 = 1;
     do {
-        var_v1[0]= (s32 *) (D_800E304C + temp_lo);
-        var_v1[1]= (s32 *) (D_800E304C + (temp_lo * 2));
-        var_v1[2]= (s32 *) (D_800E304C + (temp_lo * 3));
+        var_v1[0] = (s32 *) (D_800E304C + temp_lo);
+        var_v1[1] = (s32 *) (D_800E304C + (temp_lo * 2));
+        var_v1[2] = (s32 *) (D_800E304C + (temp_lo * 3));
         var_v1[3] = (s32 *) (D_800E304C + (temp_lo * 4));
         var_v1 += 4;
         var_a1 += 4;
     } while (var_a1 < 9);
 
-    temp_lo = (D_80129FC8->unk0 + 1) * 250 * (D_80129FC8->unk0 + 1);
+    //temp_lo = (D_80129FC8->unk0 + 1) * 250 * (D_80129FC8->unk0 + 1);
+    temp_lo = ((((D_80129FC8->unk0 + 1) << 5)  - D_80129FC8->unk0) * 10) * (D_80129FC8->unk0 + 1);
     if (D_8012A078 != 2) {
-        D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(temp_lo * 2, COLOUR_TAG_CYAN);
+        D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(temp_lo << 1, COLOUR_TAG_CYAN);
         D_800E3070[1] = (s32 *) ((u32) D_800E3070[0] + temp_lo);
     } else {        
-        D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(temp_lo * 4, COLOUR_TAG_CYAN);
+        D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(temp_lo << 2, COLOUR_TAG_CYAN);
         D_800E3070[1] = (s32 *) ((u32) D_800E3070[0] + temp_lo);
         D_800E3070[2] = (s32 *) ((u32) D_800E3070[1] + temp_lo);
         D_800E3070[3] = (s32 *) ((u32) D_800E3070[2] + temp_lo);
     }
     temp_lo = (D_80129FC8->unk0 << 5) * D_80129FC8->unk0;
     if (D_8012A078 != 2) {
-        D_800E3080[0] = allocate_from_main_pool_safe(temp_lo * 2, COLOUR_TAG_CYAN);
+        D_800E3080[0] = allocate_from_main_pool_safe(temp_lo << 1, COLOUR_TAG_CYAN);
         D_800E3080[1] = (s32 *) ((u32) D_800E3080[0] + temp_lo);
     } else {
-        D_800E3080[0] = (s32 *) allocate_from_main_pool_safe(temp_lo * 4, COLOUR_TAG_CYAN);
+        D_800E3080[0] = (s32 *) allocate_from_main_pool_safe(temp_lo << 2, COLOUR_TAG_CYAN);
         D_800E3080[1] = (s32 *) ((u32) D_800E3080[0] + temp_lo);
         D_800E3080[2] = (s32 *) ((u32) D_800E3080[1] + temp_lo);
         D_800E3080[3] = (s32 *) ((u32) D_800E3080[2] + temp_lo);
@@ -230,7 +231,7 @@ void func_800B7EB4(void) {
 GLOBAL_ASM("asm/non_matchings/waves/func_800B7EB4.s")
 #endif
 
-void func_800B8134(unk800B8134 *arg0) {
+void func_800B8134(LevelHeader *arg0) {
     if (D_8012A078 != 2) {
         D_80129FC8->unk0 = arg0->unk56;
     } else {
@@ -258,7 +259,7 @@ void func_800B8134(unk800B8134 *arg0) {
     D_80129FC8->unk40 = arg0->unk62 / 256.0f;
     D_80129FC8->unk44 = arg0->unk64 / 256.0f;
     D_80129FC8->unk48 = arg0->unk66 / 256.0f;
-    D_80129FC8->unk4C = arg0->unk70;
+    D_80129FC8->unk4C = arg0->unk70_u8;
 }
 
 GLOBAL_ASM("asm/non_matchings/waves/func_800B82B4.s")

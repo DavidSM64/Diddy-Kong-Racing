@@ -162,15 +162,23 @@ void set_rng_seed(s32 num) {
     gCurrentRNGSeed = num;
 }
 
-void save_rng_seed(s32 num) {
-    num = gCurrentRNGSeed;
+#ifdef NON_MATCHING
+void save_rng_seed(void) {
+    s32 num = gCurrentRNGSeed;
     gPrevRNGSeed = num;
 }
+#else
+GLOBAL_ASM("asm/math_util/save_rng_seed.s")
+#endif
 
-void load_rng_seed(s32 num) {
-    num = gPrevRNGSeed;
+#ifdef NON_MATCHING
+void load_rng_seed(void) {
+    s32 num = gPrevRNGSeed;
     gCurrentRNGSeed = num;
 }
+#else
+GLOBAL_ASM("asm/math_util/load_rng_seed.s")
+#endif
 
 s32 get_rng_seed(void) {
     return gCurrentRNGSeed;
