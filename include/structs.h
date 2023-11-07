@@ -1414,16 +1414,16 @@ typedef struct Object_Racer {
 
 typedef struct Object_Door {
   /* 0x00 */ f32 homeY;
-  /* 0x04 */ u8 pad4[0x4];
+  /* 0x04 */ SoundMask *unk4;
   /* 0x08 */ s32 unk8;
-  /* 0x0A */ s16 padA;
+  /* 0x0A */ s16 unkA;
   /* 0x0E */ s8 unkE;
   /* 0x0F */ u8 unkF;
   /* 0x10 */ u8 unk10;
   /* 0x11 */ u8 unk11;
   /* 0x12 */ u8 unk12;
-  /* 0x13 */ u8 unk13;
-  /* 0x14 */ s8 unk14;
+  /* 0x13 */ s8 unk13;
+  /* 0x14 */ s8 unk14[4];
 } Object_Door;
 
 typedef struct Object_Trigger {

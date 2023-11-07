@@ -23,7 +23,7 @@ s32 D_800E3050[8] = {
     0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-s32 *D_800E3070[2] = { NULL, NULL };
+Vertex **D_800E3070[2] = { NULL, NULL };
 s32 *D_800E3078[2] = { NULL, NULL };
 
 // This could also be D_800E3080[2] + D_800E3088[2]
@@ -94,7 +94,7 @@ unk80129FC8 D_80129FC8[1];
 s32 D_8012A018;
 f32 D_8012A01C;
 f32 D_8012A020[2];
-s32 D_8012A028[20];
+unk8012A028 *D_8012A028[20];
 s32 D_8012A078;
 TriangleBatchInfo *gWaveBatch;
 TextureHeader *gWaveTexture;
@@ -260,7 +260,283 @@ void func_800B8134(LevelHeader *arg0) {
     D_80129FC8->unk4C = arg0->unk70_u8;
 }
 
+#ifdef NON_EQUIVALENT
+void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
+    s32 sp54;
+    s32 sp4C;
+    Vertex **var_a3;
+    Vertex **var_v0;
+    Vertex *temp_a1_2;
+    Vertex *temp_a2;
+    Vertex *temp_t2;
+    Vertex *temp_v0_4;
+    Vertex *temp_v0_5;
+    f32 *temp_v0;
+    f32 *temp_v0_2;
+    f32 temp_f0;
+    f32 temp_f0_2;
+    f32 temp_f20;
+    s32 **var_v1;
+    s32 *temp_t6;
+    s32 temp_lo;
+    s32 temp_v0_3;
+    s32 temp_v1;
+    s32 var_a0;
+    s32 var_a0_2;
+    s32 var_a2;
+    s32 var_fp;
+    s32 var_s0;
+    s32 var_s0_2;
+    s32 var_s0_3;
+    s32 var_s3;
+    s32 var_s5;
+    s32 var_s5_2;
+    s32 var_s6;
+    s32 var_s6_2;
+    s32 var_s7;
+    s32 var_v0_2;
+    s8 temp_a1;
+    s8 var_s0_4;
+    unk8012A028 **var_a0_3;
+    f32 phi_f0;
+    s32 i;
+
+    D_8012A078 = arg2;
+    func_800B8134(arg1);
+    func_800B7EB4();
+    func_800BBDDC(arg0, arg1);
+    D_8012A0A0 = (f32) gWaveBoundingBoxDiffX;
+    temp_f0 = (f32) D_80129FC8->unk0;
+    D_8012A0A4 = (f32) gWaveBoundingBoxDiffZ;
+    var_s7 = 0;
+    D_8012A0B8 = D_8012A0A0 / temp_f0;
+    D_8012A0BC = D_8012A0A4 / temp_f0;
+    D_8012A084 = 0;
+    D_8012A088 = 0;
+    D_8012A08C = (s32) ((gWaveTexture->width * D_80129FC8->unk30) << 5) / (s32) D_80129FC8->unk0;
+    D_8012A090 = (s32) ((gWaveTexture->height * D_80129FC8->unk34) << 5) / (s32) D_80129FC8->unk0;
+    D_8012A094 = (gWaveTexture->width << 5) - 1;
+    D_8012A098 = (gWaveTexture->height << 5) - 1;
+    D_8012A09C = 0;
+    var_s6 = D_80129FC8->unk10;
+    var_fp = D_80129FC8->unk1C;
+    sp54 = (s32) (D_80129FC8->unk8 << 0x10) / (s32) D_80129FC8->unk20;
+    D_8012A01C = 10000.0f;
+    *D_8012A020 = -10000.0f;
+    sp4C = (s32) (D_80129FC8->unk14 << 0x10) / (s32) D_80129FC8->unk20;
+    if (D_80129FC8->unk20 > 0) {
+        var_s0 = 0;
+        do {
+            temp_f20 = sins_f((s16) var_s6);
+            var_s7 += 1;
+            *(D_800E3040 + var_s0) = (sins_f((s16) var_fp) * D_80129FC8->unk18) + (temp_f20 * D_80129FC8->unkC);
+            if (D_80129FC8->unk28 != 0) {
+                temp_v0 = D_800E3040 + var_s0;
+                *temp_v0 *= 2.0f;
+            }
+            temp_v0_2 = D_800E3040 + var_s0;
+            temp_f0_2 = *temp_v0_2;
+            var_s0 += 4;
+            phi_f0 = temp_f0_2;
+            if (temp_f0_2 < D_8012A01C) {
+                D_8012A01C = temp_f0_2;
+                phi_f0 = *temp_v0_2;
+            }
+            if (*D_8012A020 < phi_f0) {
+                *D_8012A020 = phi_f0;
+            }
+            var_s6 += sp54;
+            var_fp += sp4C;
+        } while (var_s7 < D_80129FC8->unk20);
+        var_s7 = 0;
+    }
+    save_rng_seed();
+    set_rng_seed(0x57415646);
+    temp_v1 = D_80129FC8->unk4;
+    var_s5 = 0;
+    if (temp_v1 > 0) {
+        do {
+            var_s0_2 = 0;
+            if (temp_v1 > 0) {
+                var_s6_2 = var_s5 * 4;
+                do {
+                    *(D_800E3044 + var_s6_2) = get_random_number_from_range(0, D_80129FC8->unk20 - 1);
+                    var_s0_2 += 1;
+                    //(D_800E3044 + var_s6_2)->unk2 = get_random_number_from_range(0, D_80129FC8->unk20 - 1);
+                    var_s6_2 += 4;
+                    var_s5 += 1;
+                } while (var_s0_2 < D_80129FC8->unk4);
+            }
+            var_s7 += 1;
+        } while (var_s7 < temp_v1);
+        var_s7 = 0;
+        var_s5 = 0;
+    }
+    load_rng_seed();
+    var_a2 = 0;
+    if (arg2 != 2) {
+        var_s3 = 2;
+    } else {
+        var_s3 = 4;
+    }
+    do {
+        var_a2 += 1;
+        if (D_80129FC8->unk0 >= 0) {
+            do {
+                var_s0_3 = 0;
+                if (D_80129FC8->unk0 >= 0) {
+                    do {
+                        var_a0 = 0;
+                        if (var_s3 > 0) {
+                            var_v0 = D_800E3070;
+                            do {
+                                var_a0 += 1;
+                                (*var_v0)[var_s5].x = (s16) (s32) ((f64) ((f32) var_s0_3 * D_8012A0B8) + 0.5);
+                                (*var_v0)[var_s5].z = (s16) (s32) ((f64) ((f32) var_s7 * D_8012A0BC) + 0.5);
+                                if (D_80129FC8->unk4C == 0) {
+                                    (*var_v0)[var_s5].r = 0xFF;
+                                    (*var_v0)[var_s5].g = 0xFF;
+                                    (*var_v0)[var_s5].b = 0xFF;
+                                } else {
+                                    (*var_v0)[var_s5].r = 0;
+                                    (*var_v0)[var_s5].g = 0;
+                                    (*var_v0)[var_s5].b = 0;
+                                }
+                                temp_t2 = *var_v0;
+                                var_v0 += 4;
+                                temp_t2[var_s5].a = 0xFF;
+                            } while (var_a0 != var_s3);
+                        }
+                        var_s0_3 += 1;
+                        var_s5 += 1;
+                    } while (D_80129FC8->unk0 >= var_s0_3);
+                }
+                var_s7 += 1;
+            } while (D_80129FC8->unk0 >= var_s7);
+            var_s7 = 0;
+        }
+    } while (var_a2 < 0x19);
+    var_s5_2 = 0;
+    // if (D_80129FC8->unk0 > 0) {
+    //     do {
+    //         var_s0_4 = 0;
+    //         if (D_80129FC8->unk0 > 0) {
+    //             do {
+    //                 var_a0_2 = 0;
+    //                 if (var_s3 > 0) {
+    //                     var_v1 = D_800E3080;
+    //                     temp_a1 = var_s0_4 + 1;
+    //                     var_v0_2 = var_s5_2 * 0x10;
+    //                     do {
+    //                         var_a0_2 += 1;
+    //                         *(*var_v1 + var_v0_2) = 0x40;
+    //                         temp_t6 = *var_v1;
+    //                         var_v1 += 4;
+    //                         (temp_t6 + var_v0_2)->unk1 = var_s0_4;
+    //                         (var_v1->unk-4 + var_v0_2)->unk2 = (s8) (var_s0_4 + D_80129FC8->unk0 + 1);
+    //                         (var_v1->unk-4 + var_v0_2)->unk3 = temp_a1;
+    //                         temp_v0_3 = var_v0_2 + 0x10;
+    //                         *(var_v1->unk-4 + temp_v0_3) = 0x40;
+    //                         (var_v1->unk-4 + temp_v0_3)->unk1 = temp_a1;
+    //                         (var_v1->unk-4 + temp_v0_3)->unk2 = (s8) (var_s0_4 + D_80129FC8->unk0 + 1);
+    //                         (var_v1->unk-4 + temp_v0_3)->unk3 = (s8) (var_s0_4 + D_80129FC8->unk0 + 2);
+    //                         var_v0_2 = temp_v0_3 - 0x10;
+    //                     } while (var_a0_2 != var_s3);
+    //                 }
+    //                 var_s0_4 += 1;
+    //                 var_s5_2 += 2;
+    //             } while (var_s0_4 < D_80129FC8->unk0);
+    //         }
+    //         var_s7 += 1;
+    //     } while (var_s7 < D_80129FC8->unk0);
+    // }
+    func_800BC6C8();
+    temp_lo = (D_80129FC8->unk0 + 1) * D_80129FC8->unk0;
+    var_a3 = D_800E3070;
+    var_a0_3 = D_8012A028;
+    for (i = 0; i < 2; i++) {
+        D_8012A028[i]->vertexA.y = 0;
+        D_8012A028[i]->vertexA.x = D_800E3070[i][0]->x;
+        D_8012A028[i]->vertexA.z = D_800E3070[i][0]->z;
+        D_8012A028[i]->vertexA.r = D_800E3070[i][0]->r;
+        D_8012A028[i]->vertexA.g = D_800E3070[i][0]->g;
+        D_8012A028[i]->vertexA.b = D_800E3070[i][0]->b;
+        D_8012A028[i]->vertexA.a = D_800E3070[i][0]->a;
+        D_8012A028[i]->vertexB.y = 0;
+        D_8012A028[i]->vertexB.x = D_800E3070[i][1]->x;
+        D_8012A028[i]->vertexB.z = D_800E3070[i][1]->z;
+        D_8012A028[i]->vertexB.r = D_800E3070[i][1]->r;
+        D_8012A028[i]->vertexB.g = D_800E3070[i][1]->g;
+        D_8012A028[i]->vertexB.b = D_800E3070[i][1]->b;
+        D_8012A028[i]->vertexB.a = D_800E3070[i][1]->a;
+        D_8012A028[i]->vertexC.y = 0;
+        D_8012A028[i]->vertexC.x = D_800E3070[i][2]->x;
+        D_8012A028[i]->vertexC.z = D_800E3070[i][2]->z;
+        D_8012A028[i]->vertexC.r = D_800E3070[i][2]->r;
+        D_8012A028[i]->vertexC.g = D_800E3070[i][2]->g;
+        D_8012A028[i]->vertexC.b = D_800E3070[i][2]->b;
+        D_8012A028[i]->vertexC.a = D_800E3070[i][2]->a;
+        D_8012A028[i]->vertexD.y = 0;
+        D_8012A028[i]->vertexD.x = D_800E3070[i][3]->x;
+        D_8012A028[i]->vertexD.z = D_800E3070[i][3]->z;
+        D_8012A028[i]->vertexD.r = D_800E3070[i][3]->r;
+        D_8012A028[i]->vertexD.g = D_800E3070[i][3]->g;
+        D_8012A028[i]->vertexD.b = D_800E3070[i][3]->b;
+        D_8012A028[i]->vertexD.a = D_800E3070[i][3]->a;
+    }
+    // do {
+    //     temp_a1_2 = *var_a3;
+    //     var_a3 += 4;
+    //     var_a0_3->unk2 = 0;
+    //     var_a0_3->unk0 = (s16) temp_a1_2->x;
+    //     temp_v0_4 = &temp_a1_2[D_80129FC8->unk0];
+    //     var_a0_3->unk4 = (s16) temp_a1_2->z;
+    //     temp_a2 = &temp_a1_2[temp_lo];
+    //     var_a0_3->unk6 = (u8) temp_a1_2->r;
+    //     var_a0_3 += 0x28;
+    //     var_a0_3->unk-21 = (u8) temp_a1_2->g;
+    //     var_a0_3->unk-20 = (u8) temp_a1_2->b;
+    //     var_a0_3->unk-1F = (u8) temp_a1_2->a;
+    //     var_a0_3->unk-1C = 0;
+    //     var_a0_3->unk-1E = (s16) temp_v0_4->x;
+    //     var_a0_3->unk-1A = (s16) temp_v0_4->z;
+    //     var_a0_3->unk-18 = (u8) temp_v0_4->r;
+    //     var_a0_3->unk-17 = (u8) temp_v0_4->g;
+    //     var_a0_3->unk-16 = (u8) temp_v0_4->b;
+    //     var_a0_3->unk-15 = (u8) temp_v0_4->a;
+    //     var_a0_3->unk-12 = 0;
+    //     var_a0_3->unk-14 = (s16) temp_a2->x;
+    //     var_a0_3->unk-10 = (s16) temp_a2->z;
+    //     var_a0_3->unk-E = (u8) temp_a2->r;
+    //     var_a0_3->unk-D = (u8) temp_a2->g;
+    //     temp_v0_5 = &(&temp_a1_2[temp_lo])[D_80129FC8->unk0];
+    //     var_a0_3->unk-C = (u8) temp_a2->b;
+    //     var_a0_3->unk-B = (u8) temp_a2->a;
+    //     var_a0_3->unk-8 = 0;
+    //     var_a0_3->unk-A = (s16) temp_v0_5->x;
+    //     var_a0_3->unk-6 = (s16) temp_v0_5->z;
+    //     var_a0_3->unk-4 = (u8) temp_v0_5->r;
+    //     var_a0_3->unk-3 = (u8) temp_v0_5->g;
+    //     var_a0_3->unk-2 = (u8) temp_v0_5->b;
+    //     var_a0_3->unk-1 = (u8) temp_v0_5->a;
+    // } while (var_a3 != D_800E3078);
+    func_800BCC70(arg0);
+    if (D_80129FC8->unk24 == 3) {
+        D_800E30E0 = D_800E30E8;
+        D_800E30E4 = D_800E30FC;
+    } else {
+        D_80129FC8->unk24 = 5;
+        D_800E30E0 = D_800E3110;
+        D_800E30E4 = D_800E3144;
+    }
+    D_800E3188 = 0;
+    D_8012A728 = 0;
+    gWaveGeneratorObj = NULL;
+    D_8012A018 = 0;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/waves/func_800B82B4.s")
+#endif
 
 void func_800B8B8C(void) {
     s32 temp_v0;

@@ -482,7 +482,7 @@ void clear_object_pointers(void) {
     D_8011AE00 = 0;
     D_8011AE01 = 1;
     D_8011AD53 = 0;
-    D_8011ADD5 = 0;
+    D_8011ADD5 = FALSE;
 }
 
 /**

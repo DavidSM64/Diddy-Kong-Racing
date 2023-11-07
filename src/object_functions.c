@@ -670,7 +670,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                 }
             }
         }
-        if (gfxData->unk0 && music_jingle_playing() == 0) {
+        if (gfxData->unk0 && music_jingle_playing() == SEQUENCE_NONE) {
             if (updateRate < gfxData->unk0) {
                 gfxData->unk0 -= updateRate;
             } else {
@@ -3116,27 +3116,27 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
 }
 
 void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
-    Object_Door *obj64;
+    Object_Door *door;
     f32 radius;
 
-    obj64 = &obj->unk64->door;
+    door = &obj->unk64->door;
     if (entry->unkC == -1) {
         entry->unkC = func_8000CC20(obj);
     } else {
         func_8000CBF0(obj, entry->unkC);
     }
-    obj64->unkE = entry->unkC;
-    obj64->unkF = entry->unkE;
-    obj64->unk11 = entry->numBalloonsToOpen;
-    obj64->unk10 = entry->numBalloonsToOpen;
-    obj64->unk12 = entry->distanceToOpen;
-    if (obj64->unkE == -1) {
+    door->unkE = entry->unkC;
+    door->unkF = entry->unkE;
+    door->unk11 = entry->numBalloonsToOpen;
+    door->unk10 = entry->numBalloonsToOpen;
+    door->unk12 = entry->distanceToOpen;
+    if (door->unkE == -1) {
         rmonPrintf("Illegal door no!!!\n");
     }
     obj->segment.object.modelIndex = entry->modelIndex;
     obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->closedRotation);
-    obj64->homeY = obj->segment.trans.y_position;
-    obj64->unk8 = 0;
+    door->homeY = obj->segment.trans.y_position;
+    door->unk8 = 0;
     obj->properties.door.closeAngle = obj->segment.trans.y_rotation;
     obj->properties.door.openAngle = (s32) ((entry->openRotation & 0x3F) << 10);
     radius = entry->scale & 0xFF;
@@ -3145,8 +3145,8 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     }
     radius /= 64;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
-    obj64->unk13 = (u8) entry->unkF;
-    obj64->unk14 = (s8) entry->unk11;
+    door->unk13 = (u8) entry->unkF;
+    door->unk14[0] = (s8) entry->unk11;
     obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0020;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 20;
@@ -3156,7 +3156,209 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_door.s")
+void obj_loop_door(Object *doorObj, s32 updateRate) {
+    s32 temp2;
+    s16 temp;
+    volatile s32 sp54; // ???
+    s32 sp50;
+    s32 sp4C;
+    Object_Racer *racer; 
+    Object_Door *door;
+    Settings *settings;
+    Object *racerObj;
+    ObjectInteraction *racerObjInter;
+    LevelObjectEntry_Door *doorEntry;
+    f32 updateRateF;
+    UNUSED s32 pad;
+    s32 sp28;
+    
+    doorEntry = &doorObj->segment.level_entry->door;
+    updateRateF = updateRate; 
+    if (osTvType == TV_TYPE_PAL) {
+        updateRateF *= 1.2;
+    }
+    settings = get_settings();
+    temp2 = settings->courseFlagsPtr[settings->courseId];
+    door = &doorObj->unk64->door;
+    if (door->unkE >= 0) {
+        sp54 = 0x10000 << door->unkE; 
+        racerObjInter = doorObj->interactObj;
+        sp50 = racerObjInter->distance;
+        if (!(door->unkF & 1)) { 
+            sp50 = 0;
+        }
+        sp28 = temp2 & sp54;
+        if (sp28 == 0 && racerObjInter->distance < door->unk12) {
+            racerObj = racerObjInter->obj;
+            if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
+                racer = &racerObj->unk64->racer;
+                if (racer->playerIndex != PLAYER_COMPUTER && racerObj == doorObj->unk5C->unk100) {
+                    if (door->unk13 != -1 && func_800C3400() == 0 && door->unkA == 0) {
+                        music_fade(-8);
+                        door->unk8 = 140;
+                        music_jingle_voicelimit_set(16);
+                        func_80008140();
+                        music_jingle_play(SEQUENCE_NO_TROPHY_FOR_YOU);
+                        set_textbox_display_value(door->unk10);
+                        set_current_text(door->unk13 & 0xFF);
+                    }
+                    door->unkA = 300;
+                }
+                if (func_800C3400() != 0) {
+                    door->unkA = 300;
+                }
+            }
+        }
+        if (door->unk8 != 0 && music_jingle_playing() == SEQUENCE_NONE) {
+                if (updateRate < door->unk8) {
+                    door->unk8 -= updateRate;
+                } else {
+                    door->unk8 = 0;
+                    music_fade(8);
+                    music_jingle_voicelimit_set(6);
+                    func_80008168();
+                }
+        }
+        if (door->unkA > 0) {
+            door->unkA -= updateRate;
+        } else {
+            door->unkA = 0;
+        }
+        racerObjInter = doorObj->interactObj;
+        sp4C = 0;
+        if (racerObjInter->distance < door->unk12) {
+            racerObj = racerObjInter->obj;
+            if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
+                racer = &racerObj->unk64->racer;
+                switch (racer->vehicleID) { 
+                    case VEHICLE_HOVERCRAFT:
+                        sp4C = 2;
+                        break;
+                    case VEHICLE_PLANE:
+                        sp4C = 4;
+                        break;
+                    default:
+                        sp4C = 1; 
+                        break;
+                }
+            }
+        }
+        sp4C &= doorEntry->unk10;
+        if (doorEntry->common.objectID == 0x87 || doorEntry->common.objectID == 0xD7) {
+            if (func_800235C0() != 0) {
+                sp50 = 0;
+            }
+        }
+        if (door->unk14[1] == 0) {
+            if (sp4C == 0 && sp28 != 0 && sp50 < door->unk12) {
+                door->unk14[1] = 1;
+            } else if (door->unk12 + 10 < sp50) {
+                door->unk14[1] = -1;
+            }
+        }
+        temp2 = 0;
+        if (door->unkF & 2) {
+            if (sp28 != 0 && doorEntry->common.objectID == 0x19) {
+                if (settings->courseFlagsPtr[doorEntry->unk14] & 2) {
+                    if (settings->worldId == WORLD_FUTURE_FUN_LAND || settings->bosses & (1 << settings->worldId)) {
+                        door->unk10 = doorEntry->unk15;
+                        if (door->unk10 >= 10) {
+                            doorObj->segment.object.modelIndex = 3;
+                        } else {
+                            doorObj->segment.object.modelIndex = 2;
+                        }
+                    } else {
+                        doorObj->segment.object.modelIndex = 0;
+                    }
+                }
+                if (settings->courseFlagsPtr[doorEntry->unk14] & 4) {
+                    doorObj->segment.object.modelIndex = 1;
+                }
+            }
+            if (door->unk14[1] == 1) {
+                if (doorObj->segment.trans.y_position < (door->homeY + 130.0)) {
+                    temp2 = 1;
+                    doorObj->segment.trans.y_position += 2.0 * updateRateF;
+                }
+            } else if(door->unk14[1] == -1) {
+                if (door->homeY < doorObj->segment.trans.y_position) {
+                    temp2 = 1;
+                    doorObj->segment.trans.y_position -= (2.0 * updateRateF);
+                }
+            }
+        } else {
+            if (doorEntry->common.objectID == 0xD7) {
+                doorObj->segment.object.modelIndex = 0;
+                if (settings->bosses & (1 << settings->worldId)) {
+                    if (settings->balloonsPtr[settings->worldId] == 8) {
+                        doorObj->segment.object.modelIndex = 1;
+                    }
+                }
+                if (settings->bosses & (1 << (settings->worldId + 6))) {
+                    doorObj->segment.object.modelIndex = 2;
+                }
+                if (settings->worldId == 5) {
+                    temp = doorObj->segment.object.modelIndex;
+                    if (temp < 2) {
+                        doorObj->segment.object.modelIndex = temp + 1;
+                    }
+                }
+            }
+            temp = 0;
+            if (door->unk14[1] == 1) {
+                temp = doorObj->segment.trans.y_rotation - doorObj->properties.common.unk4;
+            } else if (door->unk14[1] == -1) {
+                temp = doorObj->segment.trans.y_rotation - doorObj->properties.common.unk0;
+            }
+            temp >>= 3;
+            if (temp > 0x200) {
+                temp = 0x200;
+            }
+            if (temp < -0x200) {
+                temp = -0x200;
+            }
+            doorObj->segment.trans.y_rotation -= temp;
+            if (temp != 0) {
+                temp2 = 1;
+            }
+        }
+        if (temp2) {
+            if (door->unk4 == NULL) {
+                play_sound_at_position(SOUND_DOOR_OPEN, doorObj->segment.trans.x_position, doorObj->segment.trans.y_position, 
+                    doorObj->segment.trans.z_position, 1, &door->unk4); 
+            } 
+        } else {
+            door->unk14[1] = 0;
+            if (door->unk4 != NULL) {
+                func_800096F8((SoundMask *) (s32) door->unk4);
+                door->unk4 = NULL;
+            }
+        }
+        if (door->unk14[0] >= 0) {
+            sp4C = (1 << door->unk14[0]);
+            if (settings->keys & sp4C) {
+                settings->courseFlagsPtr[settings->courseId] |= sp54;
+            }
+        } else {
+            if (doorEntry->unk13 == 0) {
+                if (*settings->balloonsPtr >= door->unk10) {
+                    settings->courseFlagsPtr[settings->courseId] |= sp54;
+                } else {
+                    settings->courseFlagsPtr[settings->courseId] &= ~sp54;
+                }
+            } else if (settings->balloonsPtr[settings->worldId] >= door->unk10) {
+                settings->courseFlagsPtr[settings->courseId] |= sp54;
+            } else {
+                settings->courseFlagsPtr[settings->courseId] &= ~sp54;
+            }
+        }
+    }
+    doorObj->interactObj->distance = 0xFF;
+    doorObj->interactObj->obj = NULL;
+    racerObjInter = doorObj->interactObj;
+    racerObjInter->flags &= ~8;
+    doorObj->unk5C->unk100 = NULL;
+}
 
 void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
     Object_TTDoor *obj64;
@@ -3226,7 +3428,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
             }
         }
     }
-    if (ttDoor->unk8 && music_jingle_playing() == 0) {
+    if (ttDoor->unk8 && music_jingle_playing() == SEQUENCE_NONE) {
         if (updateRate < ttDoor->unk8) {
             ttDoor->unk8 -= updateRate;
         } else {

@@ -92,6 +92,26 @@ typedef struct unk800BF9F8 {
     u16 unk18;
 } unk800BF9F8;
 
+// 4 Vertexes
+// Size: 0x28 - 40 bytes/
+typedef struct unk8012A028 {
+    Vertex vertexA;    
+    Vertex vertexB;
+    Vertex vertexC;
+    Vertex vertexD;
+} unk8012A028;
+
+// /* Size: 10 bytes */
+// typedef struct Vertex {
+// /* 0x00 */ s16 x;
+// /* 0x02 */ s16 y;
+// /* 0x04 */ s16 z;
+// /* 0x06 */ u8  r;
+// /* 0x07 */ u8  g;
+// /* 0x08 */ u8  b;
+// /* 0x09 */ u8  a;
+// } Vertex;
+
 void free_waves(void);
 void func_800B8B8C(void);
 s32 func_800B9228(LevelModelSegment *arg0);
@@ -115,5 +135,6 @@ void func_800BF524(Object *);
 f32 func_800BEFC4(s32, s32, s32);
 void func_800BC6C8(void);
 void func_800BCC70(LevelModel *arg0);
+void func_800B7EB4(void);
 
 #endif
