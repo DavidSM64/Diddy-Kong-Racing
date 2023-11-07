@@ -46,7 +46,7 @@ typedef enum {
     SAVE_FILE_TYPE_UNK1, //GAMD on cartridge save?
     SAVE_FILE_TYPE_UNK2, //TIMD saved on cartridge>
     SAVE_FILE_TYPE_GAME_DATA, //GAMD saved on cpak?
-    SAVE_FILE_TYPE_TIME_DATA, //TIMD saved on cpak>
+    SAVE_FILE_TYPE_TIME_DATA, //TIMD saved on cpak?
     SAVE_FILE_TYPE_GHOST_DATA, //GHSS
     SAVE_FILE_TYPE_UNKNOWN, //Possibly from another game?
     SAVE_FILE_TYPE_UNK7,

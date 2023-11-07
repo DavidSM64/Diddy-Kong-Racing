@@ -135,7 +135,7 @@ void update_menu_scene(s32 arg0);
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId);
 void calc_and_alloc_heap_for_settings(void);
 void init_racer_headers(void);
-void clear_lap_records(Settings *settings, s32 arg1);
+void clear_lap_records(Settings *settings, s32 flags);
 void clear_game_progress(Settings *settings);
 void reset_save_data(void);
 Settings *get_settings(void);

@@ -4798,77 +4798,70 @@ void obj_init_wavegenerator(Object *obj, UNUSED LevelObjectEntry_WaveGenerator *
     func_800BF524(obj);
 }
 
-#ifdef NON_EQUIVALENT
-
-void obj_init_butterfly(Object *obj, LevelObjectEntry_Butterfly *entry, s32 arg2) {
-    Object_Butterfly *obj64;
-    s32 i, j;
-    s32 uMask, vMask;
-
-    obj64 = &obj->unk64->butterfly;
+void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butterflyEntry, s32 arg2) {
+    Object_Butterfly *butterfly;
+    s32 uMask;
+    s32 vMask;
+    s32 i;
+    
+    butterfly = &butterflyObj->unk64->butterfly;
     if (arg2 == 0) {
-        obj->segment.y_velocity = 0.0f;
-        obj64->unkFE = 0;
-        obj64->unk100 = 0;
-        obj64->unk104 = 0;
-        obj64->unkFD = 0;
-        obj64->unk106 = 384;
-        obj64->unk108 = 0.0f;
-        // This loop is okay
+        butterflyObj->segment.y_velocity = 0.0f;
+        butterfly->unkFE = 0;
+        butterfly->unk100 = 0;
+        butterfly->unk104 = 0;
+        butterfly->unkFD = 0;
+        butterfly->unk106 = 0x180;
+        butterfly->unk108 = 0.0f;
         for(i = 0; i < 8; i++) {
-            obj64->triangles[i].flags = D_800DCAA8[i].flags;
-            obj64->triangles[i].vi0 = D_800DCAA8[i].vi0;
-            obj64->triangles[i].vi1 = D_800DCAA8[i].vi1;
-            obj64->triangles[i].vi2 = D_800DCAA8[i].vi2;
+            butterfly->triangles[i].flags = D_800DCAA8[i].flags;
+            butterfly->triangles[i].vi0 = D_800DCAA8[i].vi0;
+            butterfly->triangles[i].vi1 = D_800DCAA8[i].vi1;
+            butterfly->triangles[i].vi2 = D_800DCAA8[i].vi2;
         }
-        // This loop is not.
+        uMask = 0;
         for(i = 0; i < 6; i++) {
-            //u32 j = i + 6;
-            obj64->vertices[i].x = D_800DCB28[i].x;
-            obj64->vertices[i].y = D_800DCB28[i+1].y;
-            obj64->vertices[i].z = D_800DCB28[i+1].z;
-            obj64->vertices[i].r = 255;
-            obj64->vertices[i].g = 255;
-            obj64->vertices[i].b = 255;
-            obj64->vertices[i].a = 255;
-            obj64->vertices[(u32)(i+6)].x = D_800DCB28[i+1].x;
-            obj64->vertices[i+6].y = D_800DCB28[i].y;
-            obj64->vertices[i+6].z = D_800DCB28[i].z;
-            obj64->vertices[i+6].r = 255;
-            obj64->vertices[i+6].g = 255;
-            obj64->vertices[i+6].b = 255;
-            obj64->vertices[i+6].a = 255;
+            butterfly->vertices[uMask].x = D_800DCB28[uMask].x;
+            butterfly->vertices[uMask].y = D_800DCB28[uMask].y;
+            butterfly->vertices[uMask].z = D_800DCB28[uMask].z;
+            butterfly->vertices[uMask].r = 255;
+            butterfly->vertices[uMask].g = 255;
+            butterfly->vertices[uMask].b = 255;
+            butterfly->vertices[uMask].a = 255;
+            butterfly->vertices[uMask+6].x = D_800DCB28[uMask].x;
+            butterfly->vertices[uMask+6].y = D_800DCB28[uMask].y;
+            butterfly->vertices[uMask+6].z = D_800DCB28[uMask].z;
+            butterfly->vertices[uMask+6].r = 255;
+            butterfly->vertices[uMask+6].g = 255;
+            butterfly->vertices[uMask+6].b = 255;
+            butterfly->vertices[uMask+6].a = 255;
+            uMask++;
         }
-        obj64->unkFC = 1;
+        butterfly->unkFC = 1;
     }
-    obj->segment.trans.scale = entry->unkB * 0.01f;
-    if (entry->unkA < obj->segment.header->numberOfModelIds) {
-        obj64->texture = (TextureHeader*)obj->unk68[entry->unkA];
+    butterflyObj->segment.trans.scale = butterflyEntry->unkB * 0.01f;
+    if (butterflyEntry->unkA < butterflyObj->segment.header->numberOfModelIds) {
+        butterfly->texture = (TextureHeader* ) butterflyObj->unk68[butterflyEntry->unkA];
     } else {
-        obj64->texture = (TextureHeader*)obj->unk68[0];
+        butterfly->texture = (TextureHeader* ) butterflyObj->unk68[0];
     }
-
-    if (obj64->texture) {
-        uMask = (obj64->texture->width - 1) << 5;
-        vMask = (obj64->texture->height - 1) << 5;
+    if (butterfly->texture != NULL) {
+        uMask = (butterfly->texture->width - 1) << 5;
+        vMask = (butterfly->texture->height - 1) << 5;
     } else {
         uMask = 0;
         vMask = 0;
     }
     for(i = 0; i < 8; i++) {
-        obj64->triangles[i].uv0.u = D_800DCAA8[i].uv0.u & uMask;
-        obj64->triangles[i].uv0.v = D_800DCAA8[i].uv0.v & vMask;
-        obj64->triangles[i].uv1.u = D_800DCAA8[i].uv1.u & uMask;
-        obj64->triangles[i].uv1.v = D_800DCAA8[i].uv1.v & vMask;
-        obj64->triangles[i].uv2.u = D_800DCAA8[i].uv2.u & uMask;
-        obj64->triangles[i].uv2.v = D_800DCAA8[i].uv2.v & vMask;
+        butterfly->triangles[i].uv0.u = D_800DCAA8[i].uv0.u & uMask;
+        butterfly->triangles[i].uv0.v = D_800DCAA8[i].uv0.v & vMask;
+        butterfly->triangles[i].uv1.u = D_800DCAA8[i].uv1.u & uMask;
+        butterfly->triangles[i].uv1.v = D_800DCAA8[i].uv1.v & vMask;
+        butterfly->triangles[i].uv2.u = D_800DCAA8[i].uv2.u & uMask;
+        butterfly->triangles[i].uv2.v = D_800DCAA8[i].uv2.v & vMask;
     }
 }
 
-
-#else
-GLOBAL_ASM("asm/non_matchings/object_functions/obj_init_butterfly.s")
-#endif
 
 GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_butterfly.s")
 
