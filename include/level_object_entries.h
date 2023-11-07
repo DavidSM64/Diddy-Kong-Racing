@@ -96,7 +96,7 @@ typedef struct LevelObjectEntry_AudioLine {
     /* 0x08 */ u8 unk8;
     /* 0x09 */ u8 unk9;
     /* 0x0A */ u16 soundID;
-    /* 0x0C */ u8 unkC;
+    /* 0x0C */ u8 lineID;
     /* 0x0D */ u8 unkD;
     /* 0x0E */ u16 unkE;
     /* 0x10 */ u8 unk10;
@@ -217,7 +217,7 @@ typedef struct LevelObjectEntry_SkyControl {
 typedef struct LevelObjectEntry_AudioReverb {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8;
-    /* 0x09 */ u8 unk9;
+    /* 0x09 */ u8 lineID;
     /* 0x0A */ u8 unkA;
 } LevelObjectEntry_AudioReverb;
 

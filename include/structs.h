@@ -1102,7 +1102,7 @@ typedef struct Object_AudioLine {
                  } unk_struct;
                  s32 unk8_word;
              } unk_union;
-  /* 0x0C */ u8 unkC;
+  /* 0x0C */ u8 lineID;
   /* 0x0D */ u8 unkD;
   /* 0x0E */ u8 unkE;
   /* 0x0F */ u8 unkF;
@@ -1114,7 +1114,7 @@ typedef struct Object_AudioLine {
 typedef struct Object_AudioReverb {
   /* 0x0 */ u16 pad0;
   /* 0x2 */ s16 unk2;
-  /* 0x4 */ u8 unk4;
+  /* 0x4 */ u8 lineID;
   /* 0x5 */ u8 unk5;
 } Object_AudioReverb;
 

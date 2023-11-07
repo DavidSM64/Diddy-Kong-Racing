@@ -4565,34 +4565,34 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
 
 /* Official name: audioLineInit */
 void obj_init_audioline(Object *obj, LevelObjectEntry_AudioLine *entry) {
-    Object_AudioLine *obj64;
+    Object_AudioLine *audLine;
 
-    obj64 = &obj->unk64->audio_line;
-    obj64->unk0 = entry->unk8;
-    obj64->soundID = entry->soundID;
-    obj64->unkC = entry->unkC;
-    obj64->unkD = entry->unkD;
-    obj64->unk_union.unk8_word = 0;
-    obj64->unk4 = entry->unkE;
-    obj64->unk11 = entry->unk12;
-    obj64->unk10 = entry->unk11;
-    obj64->unkE = entry->unk9;
-    obj64->unkF = entry->unk10;
-    obj64->unk12 = entry->unk13;
-    func_800098A4(obj64->unk0, obj64->soundID, entry->common.x, entry->common.y, entry->common.z,
-                  obj64->unkF, obj64->unkE, obj64->unk10, obj64->unk12, obj64->unk4, obj64->unk11,
-                  obj64->unkC, obj64->unkD);
+    audLine = &obj->unk64->audio_line;
+    audLine->unk0 = entry->unk8;
+    audLine->soundID = entry->soundID;
+    audLine->lineID = entry->lineID;
+    audLine->unkD = entry->unkD;
+    audLine->unk_union.unk8_word = 0;
+    audLine->unk4 = entry->unkE;
+    audLine->unk11 = entry->unk12;
+    audLine->unk10 = entry->unk11;
+    audLine->unkE = entry->unk9;
+    audLine->unkF = entry->unk10;
+    audLine->unk12 = entry->unk13;
+    audioline_ambient_create(audLine->unk0, audLine->soundID, entry->common.x, entry->common.y, entry->common.z,
+                  audLine->unkF, audLine->unkE, audLine->unk10, audLine->unk12, audLine->unk4, audLine->unk11,
+                  audLine->lineID, audLine->unkD);
     free_object(obj);
 }
 
 void obj_init_audioreverb(Object *obj, LevelObjectEntry_AudioReverb *entry) {
     s32 temp;
-    Object_AudioReverb *obj64 = &obj->unk64->audio_reverb;
-    obj64->unk2 = entry->unk8;
-    temp = entry->unk9;
-    obj64->unk4 = temp & 0xFF;
-    obj64->unk5 = entry->unkA;
-    func_80009968(entry->common.x, entry->common.y, entry->common.z, obj64->unk2, obj64->unk4, obj64->unk5);
+    Object_AudioReverb *reverb = &obj->unk64->audio_reverb;
+    reverb->unk2 = entry->unk8;
+    temp = entry->lineID;
+    reverb->lineID = temp & 0xFF;
+    reverb->unk5 = entry->unkA;
+    func_80009968(entry->common.x, entry->common.y, entry->common.z, reverb->unk2, reverb->lineID, reverb->unk5);
     free_object(obj);
 }
 

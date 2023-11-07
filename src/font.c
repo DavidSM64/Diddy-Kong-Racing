@@ -217,6 +217,9 @@ UNUSED TextureHeader *get_loaded_font(s32 font, u8 index) {
         }
     }
     //!@bug: No return statement. The function will return whatever happens to be in v0 before this function was called.
+#ifdef AVOID_UB
+    return NULL;
+#endif
 }
 
 /**
