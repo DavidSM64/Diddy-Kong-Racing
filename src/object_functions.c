@@ -3356,7 +3356,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
     doorObj->interactObj->distance = 0xFF;
     doorObj->interactObj->obj = NULL;
     racerObjInter = doorObj->interactObj;
-    racerObjInter->flags &= ~8;
+    racerObjInter->flags &= ~INTERACT_FLAGS_PUSHING;
     doorObj->unk5C->unk100 = NULL;
 }
 
