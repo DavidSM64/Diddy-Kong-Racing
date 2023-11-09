@@ -400,6 +400,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry);
 void obj_loop_effectbox(Object *obj, s32 updateRate);
 void func_8001EE74(void);
 void obj_loop_door(Object *doorObj, s32 updateRate);
+void obj_loop_fish(Object *fishObj, s32 updateRate);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 updateRate);
@@ -417,7 +418,6 @@ void obj_loop_char_select(Object *obj, s32 updateRate);
 void obj_loop_texscroll(Object *obj, s32 updateRate);
 void obj_loop_weaponballoon(Object *obj, s32 updateRate);
 void obj_loop_exit(Object *obj, s32 updateRate);
-void obj_loop_fish(Object *obj, s32 updateRate);
 void obj_loop_scenery(Object *obj, s32 updateRate);
 void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry);
 INCONSISTENT void obj_init_butterfly();

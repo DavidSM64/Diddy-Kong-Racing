@@ -1416,7 +1416,96 @@ void play_tt_voice_clip(u16 soundID, s32 interrupt) {
 }
 
 GLOBAL_ASM("asm/non_matchings/object_functions/obj_init_fish.s")
-GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_fish.s")
+
+void obj_loop_fish(Object *fishObj, s32 updateRate) {
+    f32 zThing;
+    f32 yThing;
+    f32 xThing;
+    f32 xDiff;
+    f32 yDiff;
+    f32 zDiff;
+    f32 dist2D;
+    f32 dist3D;
+    f32 sinUnk104;
+    Object_Fish *fish;
+    f32 cosUnk104;
+    s16 temp_v0_2;
+    s32 temp_s0_2;
+    s32 temp_t1;
+    s32 temp_t9;
+    f32 prevXThing, prevZThing; 
+    Vertex *verts;
+    s32 randNumber;
+    
+    if (get_viewport_count() > 0) {
+        free_object(fishObj);
+        return;
+    }
+    fish = &fishObj->unk64->fish;
+    yThing = fishObj->segment.trans.y_position;
+    if (fish->unkFD != 0) {
+        if ((s32) fish->unkFD >= updateRate) {
+            yThing += (fishObj->segment.y_velocity * updateRate);
+            fish->unkFD = fish->unkFD - updateRate;
+        } else {
+            yThing += (fishObj->segment.y_velocity * fish->unkFD);
+            fish->unkFD = 0;
+        }
+    } else {
+        randNumber = get_random_number_from_range(0, 7);
+        if (randNumber == 0 && fish->unk118 >= 1.0f) {
+            fish->unkFD = get_random_number_from_range(160, 255);
+            randNumber = get_random_number_from_range(0, fish->unk118);
+            fishObj->segment.y_velocity = fish->unk10C - fishObj->segment.trans.y_position;
+            fishObj->segment.y_velocity = (fishObj->segment.trans.y_position < fish->unk10C) ? (fishObj->segment.y_velocity + randNumber) : 
+                (fishObj->segment.y_velocity - randNumber);
+            fishObj->segment.y_velocity /= fish->unkFD;
+        }
+    }
+    fish->unkFE += updateRate * fish->unk100;
+    zThing = sins_f(fish->unkFE * 2) * fish->unk114;
+    xThing = coss_f(fish->unkFE) * fish->unk114;
+    sinUnk104 = sins_f(fish->unk104);
+    cosUnk104 = coss_f(fish->unk104);
+    dist3D += 0; // Fakematch
+    prevXThing = zThing; 
+    prevZThing = xThing;
+    zThing = prevXThing; // Fakematch?
+    zThing = (zThing * cosUnk104) + (prevZThing * sinUnk104);
+    xThing = (prevZThing * cosUnk104) - (prevXThing * sinUnk104);
+    zThing += fish->unk108;
+    xThing += fish->unk110;
+    xDiff = fishObj->segment.trans.x_position - zThing;
+    yDiff = fishObj->segment.trans.y_position - yThing;
+    zDiff = fishObj->segment.trans.z_position - xThing;
+    fishObj->segment.trans.x_position = 0.0f;
+    fishObj->segment.trans.y_position = 0.0f;
+    fishObj->segment.trans.z_position = 0.0f;
+    ignore_bounds_check();
+    move_object(fishObj, zThing, yThing, xThing);
+    dist2D = (xDiff * xDiff) + (zDiff * zDiff); 
+    dist3D = sqrtf((yDiff * yDiff) + dist2D);
+    dist2D = sqrtf(dist2D);
+    fish->unk106 += (s32) (dist3D * 0x600);
+    fishObj->segment.trans.y_rotation = arctan2_f(xDiff, zDiff);
+    temp_v0_2 = arctan2_f(-yDiff, dist2D);
+    temp_t9 = (temp_v0_2 - fishObj->segment.trans.x_rotation) & 0xFFFF;
+    temp_t1 = (fishObj->segment.trans.x_rotation - temp_v0_2) & 0xFFFF;
+    if (temp_t9 < temp_t1) {
+        fishObj->segment.trans.x_rotation += ((temp_t9 * updateRate) >> 3);
+    } else {
+        fishObj->segment.trans.x_rotation -= ((temp_t1 * updateRate) >> 3);
+    }
+    fish->unkFC = 1 - fish->unkFC;
+    verts = &fish->vertices[fish->unkFC * 6];
+    randNumber = sins(fish->unk106) >> 3;
+    temp_s0_2 = (s32) (coss_f(randNumber) * 32);
+    temp_t1 = (s32) (sins_f(randNumber) * 32);
+    verts[4].x = (verts[2].x + temp_t1); 
+    verts[4].z = (verts[2].z + temp_s0_2);
+    verts[5].x = (verts[3].x + temp_t1);
+    verts[5].z = (verts[3].z + temp_s0_2);
+}
 
 /**
  * Lava Spurt init behaviour.

@@ -1028,9 +1028,9 @@ typedef struct Object_Fish {
   /* 0x0F8 */ TextureHeader *texture;
   /* 0x0FC */ u8 unkFC;
   /* 0x0FD */ u8 unkFD;
-  /* 0x0FE */ u8 unkFE;
-  /* 0x0FF */ u8 unkFF;
-  /* 0x100 */ s32 unk100;
+  /* 0x0FE */ s16 unkFE;
+  /* 0x100 */ s16 unk100;
+  /* 0x102 */ s16 unk102;
   /* 0x104 */ s16 unk104;
   /* 0x106 */ s16 unk106;
   /* 0x108 */ f32 unk108;
