@@ -1606,7 +1606,9 @@ typedef struct Object_8001E89C_64 {
 typedef struct Object_CharacterSelect {
     u8 pad0[0x14];
     f32 unk14;
-    u8 pad18[0x14];
+    u8 pad18[0x10];
+    s16 unk28;
+    u8 unk2A[2];
     u8 unk2C;
     u8 pad2D[2];
     u8 unk2F;

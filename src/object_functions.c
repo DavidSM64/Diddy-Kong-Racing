@@ -70,22 +70,29 @@ u16 D_800DC9D0[64] = {
     0x0002, 0x0504, 0x0001, 0x0000,
     0x0000, 0x0004, 0x0000, 0x0000,
 };
-s8 D_800DCA50[8] = {
+u8 D_800DCA50[8] = {
     2, 5, 6, 3, 10, 8, 7, 9
 };
 u8 D_800DCA58[9] = {
     2, 5, 6, 3, 10, 8, 7, 9, 11
 };
-s8 D_800DCA64[9] = {
+u8 D_800DCA64[9] = {
     2, 5, 6, 3, 10, 8, 7, 9, 12
 };
-s8 D_800DCA70[10] = {
+u8 D_800DCA70[10] = {
     2, 5, 6, 3, 10, 8, 7, 9, 11, 12
 };
-s32 D_800DCA7C[3] = { // Not sure about typing
+u8 D_800DCA7C[12] = {
+    0, 0, 0, 
+    0, 0, 0, 
+    0, 0, 0, 
     0, 0, 0
 };
-s32 D_800DCA88[3] = { // Not sure about typing
+
+u8 D_800DCA88[12] = { 
+    0, 0, 0, 
+    0, 0, 0, 
+    0, 0, 0, 
     0, 0, 0
 };
 
@@ -1918,7 +1925,102 @@ void obj_loop_snowball(Object *obj, s32 updateRate) {
 UNUSED void obj_init_char_select(UNUSED s32 arg0, UNUSED s32 arg1) {
 }
 
-GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_char_select.s")
+void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
+    s32 i2;
+    s32 i;
+    f32 temp_f0;
+    ObjectModel *objMdl;
+    Object_CharacterSelect *charSelect;
+    s32 var_a0;
+    s32 var_s0;
+    s8 *var_v0;
+    Object_68 *obj68;
+    u8 sp50[4];
+    u8 sp4F;
+    u8 *var_a2;
+    
+    var_s0 = 0;
+    func_8001F460(charSelectObj, updateRate, NULL);
+    charSelect = &charSelectObj->unk64->characterSelect;
+    charSelectObj->unk74 = 0;
+    if (charSelect != NULL) {
+        obj68 = charSelectObj->unk68[charSelectObj->segment.object.modelIndex];
+        if (obj68 != NULL) {
+            objMdl = obj68->objModel;
+            if (is_drumstick_unlocked()) {
+                if (is_tt_unlocked()) {
+                    var_a2 = D_800DCA70;
+                    var_a0 = 10;
+                } else {
+                    var_a2 = D_800DCA58;
+                    var_a0 = 9;
+                }
+            } else if (is_tt_unlocked()) {
+                var_a2 = D_800DCA64;
+                var_a0 = 9;
+            } else {
+                var_a2 = D_800DCA50;
+                var_a0 = 8;
+            }
+            
+            for (i = 0; i < var_a0 && !var_s0; i++) {
+                if (charSelect->unk28 == var_a2[i]) {
+                    var_s0 = 1;
+                }
+            }
+            i--;
+            if (var_s0) {
+                charSelectObj->segment.object.animationID = 1;
+                for(var_s0 = 0, sp4F = 0; var_s0 < MAXCONTROLLERS; var_s0++) {
+                    if (get_player_character(var_s0) == i) {
+                        sp50[sp4F++] = var_s0;
+                    }
+                }
+                D_800DCA7C[i] += updateRate;
+                if (D_800DCA7C[i] >= 16) {
+                    D_800DCA7C[i] &= 0xF;
+                    D_800DCA88[i]++;
+                }
+                if (D_800DCA88[i] >= sp4F) {
+                    D_800DCA88[i] = 0;
+                }
+                if (sp4F > 0) {
+                    var_v0 = func_8009C274();
+                    for (i2 = 0; i2 < sp4F; i2++) {
+                        if (var_v0[sp50[i2]] == 1) {
+                            charSelectObj->unk74 = 1;
+                            func_800AFC3C(charSelectObj, 2);
+                        }
+                    }
+                    
+                    for (i2 = 0; i2 < objMdl->numberOfBatches; i2++) {
+                        //Unneccessary check for textureIndex to be greater than or equal to zero since it's a u8 and can't be less.
+                        if (objMdl->batches[i2].textureIndex >= 0 && objMdl->batches[i2].textureIndex < 4) {
+                            objMdl->batches[i2].textureIndex = sp50[D_800DCA88[i]];
+                        }
+                    }
+                    charSelectObj->segment.object.animationID = 0;
+                }
+            }
+            if (charSelectObj->segment.object.animationID >= 0) {
+                if ((charSelectObj->segment.object.animationID < objMdl->numberOfAnimations)) {
+                    i = (objMdl->animations[charSelectObj->segment.object.animationID].unk4 - 1) << 4; 
+                    if((charSelect->unk2C == 1)) {
+                        temp_f0 = music_animation_fraction();
+                        if (temp_f0 > 0.5) {
+                            temp_f0 -= 0.5;
+                            temp_f0 *= 2.0;
+                            charSelectObj->segment.animFrame = i - (temp_f0 * i);
+                        } else {
+                            temp_f0 *= 2;
+                            charSelectObj->segment.animFrame = temp_f0 * i;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 void obj_loop_animcamera(Object *obj, s32 updateRate) {
     s32 temp_v0;
