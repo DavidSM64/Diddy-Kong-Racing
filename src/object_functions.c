@@ -4328,53 +4328,55 @@ void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) 
     }
 }
 
-#ifdef NON_MATCHING
-void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
-    s8 currentBalloon;
+void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
+    UNUSED s32 pad;
     Object_Racer *racer;
-    Object_WeaponBalloon *balloon;
-    s8 *balloonAsset;
-    s8 prevQuantity;
+    Object_WeaponBalloon *weaponBalloon;
+    s8 *powerupTable;
+    UNUSED s8 pad3;
+    s8 prevBalloonQuantity;
     s8 levelMask;
-    Object *interactObj;
-    s32 newvar;
+    Object *whatObjInteracted;
+    ObjectInteraction *interactObj;
+    s32 prevBalloonType;
 
-    balloon = (Object_WeaponBalloon *) obj->unk64;
-    obj->segment.trans.scale = balloon->radius * (1.0 - (balloon->unk4 / 90.0f));
-    if (obj->segment.trans.scale < 0.001) {
-        obj->segment.trans.scale = 0.001f;
+    weaponBalloon = (Object_WeaponBalloon *) weaponBalloonObj->unk64;
+    weaponBalloonObj->segment.trans.scale = weaponBalloon->radius * (1.0 - (weaponBalloon->unk4 / 90.0f));
+    if (weaponBalloonObj->segment.trans.scale < 0.001) {
+        weaponBalloonObj->segment.trans.scale = 0.001f;
     }
-    if (obj->segment.trans.scale < 0.1) {
-        obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
+    if (weaponBalloonObj->segment.trans.scale < 0.1) {
+        weaponBalloonObj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
     } else {
-        obj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
+        weaponBalloonObj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
     }
-    if (obj->properties.weaponBalloon.unk4 > 0) {
-        obj->unk74 = 1;
-        func_800AFC3C(obj, updateRate);
-        obj->properties.weaponBalloon.unk4 -= updateRate;
+    if (weaponBalloonObj->properties.weaponBalloon.unk4 > 0) {
+        weaponBalloonObj->unk74 = 1;
+        func_800AFC3C(weaponBalloonObj, updateRate);
+        weaponBalloonObj->properties.weaponBalloon.unk4 -= updateRate;
     }
-    if (balloon->unk4 != 0) {
-        if (!(balloon->unk4 == 90 && obj->interactObj->distance < 45)) {
-            balloon->unk4 = (balloon->unk4 - updateRate) - updateRate;
+    if (weaponBalloon->unk4 != 0) {
+        if (weaponBalloon->unk4 != 90 || weaponBalloonObj->interactObj->distance >= 45) {
+            weaponBalloon->unk4 = (weaponBalloon->unk4 - updateRate) - updateRate;
         }
-        if (balloon->unk4 < 0) {
-            balloon->unk4 = 0;
+        if (weaponBalloon->unk4 < 0) {
+            weaponBalloon->unk4 = 0;
         }
     } else {
-        if (obj->interactObj->distance < 45) {
-            interactObj = obj->interactObj->obj;
-            if (interactObj != NULL && interactObj->segment.header->behaviorId == BHV_RACER) {
-                racer = (Object_Racer *) interactObj->unk64;
-                    if (racer->vehicleID < VEHICLE_TRICKY|| racer->playerIndex != PLAYER_COMPUTER) {
-                    currentBalloon = racer->balloon_type;
-                    racer->balloon_type = obj->properties.weaponBalloon.balloonID;
-                    if (currentBalloon == racer->balloon_type && racer->balloon_quantity != 0) {
+        interactObj = weaponBalloonObj->interactObj;
+        if (interactObj->distance < 45) {
+            whatObjInteracted = interactObj->obj;
+            if (whatObjInteracted != NULL && whatObjInteracted->segment.header->behaviorId == BHV_RACER) {
+                racer = &whatObjInteracted->unk64->racer;
+                if (racer->vehicleID < VEHICLE_TRICKY || racer->playerIndex != PLAYER_COMPUTER) {
+                    prevBalloonType = racer->balloon_type;
+                    racer->balloon_type = weaponBalloonObj->properties.weaponBalloon.balloonID;
+                    if (prevBalloonType == racer->balloon_type && racer->balloon_quantity != 0) {
                         racer->balloon_level++;
                     } else {
                         racer->balloon_level = 0;
                     }
-                    // Disallow level 3 ballons in challenge mode
+                    // Disallow level 3 balloons in challenge mode
                     if (get_current_level_race_type() & RACETYPE_CHALLENGE) {
                         if (racer->balloon_level > 1) {
                             racer->balloon_level = 1;
@@ -4392,48 +4394,46 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
                         racer->balloon_level = 2;
                         levelMask = 2;
                     }
-                    balloonAsset = (s8 *) get_misc_asset(ASSET_MISC_12);
-                    prevQuantity = racer->balloon_quantity;
-                    racer->balloon_quantity = balloonAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2) + 1];
+                    powerupTable = (s8 *) get_misc_asset(ASSET_MISC_12);
+                    prevBalloonQuantity = racer->balloon_quantity;
+                    racer->balloon_quantity = powerupTable[(racer->balloon_type * 10) + (racer->balloon_level * 2) + 1];
                     racer->unk209 |= 1;
                     if (get_number_of_active_players() < THREE_PLAYERS) {
-                        obj->properties.weaponBalloon.unk4 = 0x10;
+                        weaponBalloonObj->properties.weaponBalloon.unk4 = 16;
                     }
                     if (racer->playerIndex == PLAYER_COMPUTER) {
-                        play_sound_at_position(SOUND_BALLOON_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                        play_sound_at_position(SOUND_BALLOON_POP, weaponBalloonObj->segment.trans.x_position,
+                            weaponBalloonObj->segment.trans.y_position, weaponBalloonObj->segment.trans.z_position, 4, NULL);
                     } else {
                         if (levelMask == racer->balloon_level) {
                             if (racer->raceFinished == FALSE) {
-                                if (prevQuantity != racer->balloon_quantity) {
+                                if (prevBalloonQuantity != racer->balloon_quantity) {
                                     set_time_trial_start_voice(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
-                                    newvar = racer->balloon_level;
-                                    if (racer->balloon_level > 2) {
-                                        newvar = 2;
+                                    prevBalloonQuantity = racer->balloon_level;
+                                    if (prevBalloonQuantity > 2) {
+                                        prevBalloonQuantity = 2;
                                     }
-                                    sound_play(SOUND_COLLECT_ITEM + newvar, NULL);
+                                    sound_play(SOUND_COLLECT_ITEM + prevBalloonQuantity, NULL);
                                 } else {
-                                    play_sound_at_position(SOUND_BALLOON_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                                    play_sound_at_position(SOUND_BALLOON_POP, weaponBalloonObj->segment.trans.x_position,
+                                        weaponBalloonObj->segment.trans.y_position, weaponBalloonObj->segment.trans.z_position, 4, NULL);
                                 }
                             }
                         } else if (racer->raceFinished == FALSE) {
-                            newvar = racer->balloon_level;
-                            if (newvar > 0) {
+                            if (racer->balloon_level > 0) {
                                 set_time_trial_start_voice(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
                             }
                             sound_play(SOUND_COLLECT_ITEM + racer->balloon_level, NULL);
                         }
                     }
-                    obj->unk74 = 1;
-                    func_800AFC3C(obj, updateRate);
-                    balloon->unk4 = 90;
+                    weaponBalloonObj->unk74 = 1;
+                    func_800AFC3C(weaponBalloonObj, updateRate);
+                    weaponBalloon->unk4 = 90;
                 }
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_weaponballoon.s")
-#endif
 
 /**
  * Balloon Burst Effect init behaviour.
