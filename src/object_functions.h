@@ -391,6 +391,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate);
 void obj_loop_fish(Object *fishObj, s32 updateRate);
 void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate);
 void obj_loop_char_select(Object *charSelectObj, s32 updateRate);
+void func_8003F2E8(Object *weaponObj, s32 updateRate);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 updateRate);
@@ -431,6 +432,5 @@ void try_to_collect_egg(Object *, Object_CollectEgg*);
 
 s32 func_8001F3EC(s32);
 s32 func_80021600(s32);
-void func_8003F2E8(Object *, s32 updateRate);
 
 #endif

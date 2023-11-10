@@ -4907,7 +4907,204 @@ void play_rocket_trailing_sound(Object *obj, struct Object_Weapon *weapon, u16 s
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/object_functions/func_8003F2E8.s")
+void func_8003F2E8(Object *weaponObj, s32 updateRate) {
+    Object *weaponInteractObj;
+    Object_Racer *weaponHit;
+    Object_Racer *weaponOwner;
+    Vec3f sp58;
+    f32 radius;
+    f32 updateRateF;
+    s32 hasCollision;
+    s32 var_a1;
+    s8 surface;
+    Object_Weapon *weapon;
+    ObjPropertyWeapon *weaponProperties;
+    
+    weapon = &weaponObj->unk64->weapon;
+    weaponOwner = &weapon->owner->unk64->racer; 
+    updateRateF = (f32) updateRate;
+    weaponProperties = &weaponObj->properties.weapon;
+    if (osTvType == TV_TYPE_PAL) {
+        updateRateF *= 1.2;
+    }
+    if (weaponProperties->unk4 == 0) {
+        sp58.x = weaponObj->segment.trans.x_position + (weaponObj->segment.x_velocity * updateRateF);
+        sp58.y = weaponObj->segment.trans.y_position + (weaponObj->segment.y_velocity * updateRateF);
+        sp58.z = weaponObj->segment.trans.z_position + (weaponObj->segment.z_velocity * updateRateF);
+        radius = 9.0f;
+        func_80031130(1, &weaponObj->segment.trans.x_position, &sp58.x, -1);
+        hasCollision = FALSE;
+        surface = -1;
+        func_80031600(&weaponObj->segment.trans.x_position, &sp58.x, &radius, &surface, 1, &hasCollision);
+        weaponObj->segment.x_velocity = (sp58.x - weaponObj->segment.trans.x_position) / updateRateF;
+        weaponObj->segment.y_velocity = (sp58.y - weaponObj->segment.trans.y_position) / updateRateF;
+        weaponObj->segment.z_velocity = (sp58.z - weaponObj->segment.trans.z_position) / updateRateF;
+        weaponObj->segment.trans.x_position = sp58.x;
+        weaponObj->segment.trans.y_position = sp58.y;
+        weaponObj->segment.trans.z_position = sp58.z;
+        if (hasCollision || weaponOwner->vehicleID == VEHICLE_PLANE) {
+            weaponObj->segment.x_velocity = 0.0f;
+            weaponObj->segment.z_velocity = 0.0f;
+            weaponProperties->unk4 = 1;
+            weaponProperties->unk5 = 0;
+            weaponProperties->unk6 = 0;
+            if (weapon->weaponID == WEAPON_BUBBLE_TRAP) {
+                weaponObj->segment.trans.y_position += 16.0f;
+            }
+        }
+        radius = -10000.0f;
+        if (func_8002B9BC(weaponObj, &radius, NULL, 1) && (weaponObj->segment.trans.y_position < radius)) {
+            weaponProperties->unk4 = 1;
+            weaponProperties->unk5 = 1;
+            weaponProperties->unk6 = 0;
+            if (weapon->weaponID == WEAPON_BUBBLE_TRAP) {
+                weaponObj->segment.trans.y_position += 16.0f;
+            }
+        }
+    }
+    if (weapon->weaponID == WEAPON_OIL_SLICK) {
+        if (weaponProperties->unk4 != 0) {
+            if (weaponProperties->unk4 == 1) {
+                weaponProperties->unk6 += updateRate;
+                if (weaponProperties->unk6 > 12) {
+                    weaponProperties->unk6 = 12;
+                }
+            } else {
+                weaponProperties->unk6 -= updateRate;
+                if (weaponProperties->unk6 <= 0) {
+                    weaponProperties->unk6 = 1;
+                    free_object(weaponObj);
+                }
+            }
+            if (weaponOwner->vehicleID != VEHICLE_PLANE) {
+                if (weaponProperties->unk5 != 0) {
+                    weaponObj->waterEffect->scale = weaponProperties->unk6 * 0.6f;
+                } else {
+                    weaponObj->shadow->scale = weaponProperties->unk6 * 0.6f;
+                }
+                weaponObj->segment.trans.flags |= OBJ_FLAGS_SHADOW_ONLY;
+            }
+        }
+    }
+    if (weapon->weaponID == WEAPON_BUBBLE_TRAP) {
+        if (weapon->target != NULL) {
+            weaponObj->segment.trans.x_position = 0.0f;
+            weaponObj->segment.trans.y_position = 0.0f;
+            weaponObj->segment.trans.z_position = 0.0f;
+            ignore_bounds_check();
+            move_object(weaponObj, weapon->target->segment.trans.x_position,
+                weapon->target->segment.trans.y_position, weapon->target->segment.trans.z_position);
+        }
+        if (weaponProperties->unk4 == 1 || weaponProperties->unk4 == 2) {
+            weaponProperties->unk6 += updateRate;
+            if (weaponProperties->unk6 > 20) {
+                weaponProperties->unk6 = 20;
+            }
+        }
+        if (weaponProperties->unk4 == 2) {
+            weaponProperties->unk5 += updateRate;
+            if (weaponProperties->unk5 > 120) {
+                weaponProperties->unk4 = 3;
+                if (weapon->soundMask != NULL) {
+                    func_800096F8(weapon->soundMask);
+                    weapon->soundMask = NULL;
+                }
+                play_sound_at_position(SOUND_POP, weaponObj->segment.trans.x_position,
+                    weaponObj->segment.trans.y_position, weaponObj->segment.trans.z_position, 4, NULL);
+            }
+        }
+        if (weaponProperties->unk4 == 3) {
+            weaponObj->unk74 = 1;
+            func_800AFC3C(weaponObj, updateRate);
+            weaponObj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
+            weaponProperties->unk6 -= updateRate;
+            if (weaponProperties->unk6 < 1) {
+                weaponProperties->unk6 = 1;
+                free_object(weaponObj);
+            }
+        }
+        if (weaponProperties->unk4 != 0) {
+            weaponObj->segment.trans.scale = (f32) weaponProperties->unk6 * 0.075f;
+        }
+        weaponObj->segment.animFrame += updateRate * 16;
+    }
+    if (weaponProperties->unk4 < 2) {
+        var_a1 = 60;
+        if (weaponOwner->vehicleID != VEHICLE_PLANE) {
+            var_a1 = 34;
+            weaponObj->segment.y_velocity -= 2.0;
+            weaponObj->segment.x_velocity -= (weaponObj->segment.x_velocity / 8);
+            weaponObj->segment.z_velocity -= (weaponObj->segment.z_velocity / 8);
+        } else {
+            weaponObj->segment.y_velocity = 0.0f;
+            weaponObj->segment.animFrame += updateRate * 8;
+        }
+        if (weapon->weaponID == WEAPON_BUBBLE_TRAP || weapon->weaponID == WEAPON_OIL_SLICK) {
+            var_a1 += var_a1 >> 1;
+        }
+        weaponInteractObj = weaponObj->interactObj->obj;
+        if (weaponInteractObj != NULL) {
+            if (weapon->owner != weaponObj->interactObj->obj || weaponProperties->unk0 < normalise_time(450)) {
+                if (weaponObj->interactObj->distance < var_a1) {
+                    weaponInteractObj = weaponObj->interactObj->obj;
+                    if (weaponInteractObj->segment.header->behaviorId == BHV_RACER) {
+                        weaponHit = &weaponInteractObj->unk64->racer;
+                        weaponHit->attackType = ATTACK_EXPLOSION;
+                        if (weapon->weaponID == WEAPON_TRIPMINE) {
+                            func_8003FC44(weaponObj->segment.trans.x_position, weaponObj->segment.trans.y_position,
+                                weaponObj->segment.trans.z_position, 44, SOUND_EXPLOSION, 1.0f, 1);
+                        } else if(weapon->weaponID == WEAPON_BUBBLE_TRAP) {
+                            if (weaponHit->shieldTimer > 0 && weaponHit->shieldType >= SHIELD_LEVEL3) {
+                                weaponProperties->unk4 = 3;
+                                
+                                play_sound_at_position(SOUND_POP, weaponObj->segment.trans.x_position, 
+                                    weaponObj->segment.trans.y_position, weaponObj->segment.trans.z_position, 4, NULL);
+                            } else {
+                                weapon->target = weaponInteractObj;
+                                
+                                play_sound_at_position(SOUND_BUBBLE, weaponInteractObj->segment.trans.x_position,
+                                    weaponInteractObj->segment.trans.y_position, weaponInteractObj->segment.trans.z_position, 4, &weapon->soundMask);
+                                weaponHit->attackType = ATTACK_BUBBLE;
+                                weaponProperties->unk4 = 2;
+                                weaponProperties->unk5 = 0;
+                            }
+                        } else if(weapon->weaponID == WEAPON_OIL_SLICK) {
+                            weaponHit->attackType = ATTACK_SPIN;
+                            weaponProperties->unk4 = 2;
+                        }
+                        if (!weaponHit->raceFinished) {
+                            func_80072348(weaponHit->playerIndex, 13);
+                        }
+                        weaponOwner = &weapon->owner->unk64->racer;
+                        if (weaponHit->playerIndex != PLAYER_COMPUTER || weaponOwner->playerIndex != PLAYER_COMPUTER) {
+                            weaponOwner->boost_sound |= BOOST_SOUND_UNK2;
+                        }
+                        if (weapon->weaponID != WEAPON_OIL_SLICK && weapon->weaponID != WEAPON_BUBBLE_TRAP) {
+                            free_object(weaponObj);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        weaponProperties->unk0 -= updateRate;
+        if (weaponProperties->unk4 < 2) {
+            if (weaponProperties->unk0 < normalise_time(-1320)) {
+                if (weapon->weaponID == WEAPON_OIL_SLICK) {
+                    weaponProperties->unk4 = 2;
+                } else if((weapon->weaponID == WEAPON_BUBBLE_TRAP)) {
+                    weaponProperties->unk4 = 3;
+                    play_sound_at_position(SOUND_POP, weaponObj->segment.trans.x_position,
+                        weaponObj->segment.trans.y_position, weaponObj->segment.trans.z_position, 4, NULL);
+                } else {
+                    func_8003FC44(weaponObj->segment.trans.x_position, weaponObj->segment.trans.y_position,
+                        weaponObj->segment.trans.z_position, 44, SOUND_EXPLOSION, 1.0f, 1);
+                    free_object(weaponObj);
+                }
+            }
+        }
+    }
+}
 
 void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 soundID, f32 scale, s32 arg6) {
     LevelObjectEntry8003FC44 spawnObj;
