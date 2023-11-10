@@ -214,16 +214,6 @@ typedef struct AssetObjectHeaders {
     s32 unk24;
 } AssetObjectHeaders;
 
-/* Size: 0x8 bytes */
-typedef struct unknown800DC6F0 {
-    union {
-        s8 unk00;
-        s32 dummy_force_alignment; // Not sure of a better way to do this.
-    } unk00_a;
-    u16 unk04;
-    u16 unk06;
-} unknown800DC6F0;
-
 /* Size: 0x3C bytes */
 typedef struct CheckpointNode {
 /* 0x00 */ f32 rotationXFrac;
@@ -482,6 +472,7 @@ void sort_objects_by_dist(s32 startIndex, s32 lastIndex);
 void func_80016748(Object *obj0, Object *obj1);
 void func_8001AE64(void);
 s32 func_80016DE8(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **arg5);
+void func_80022948(void);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -502,7 +493,6 @@ void func_800135B8(Object *);
 void func_8000CC7C(Vehicle, u32, s32);
 void func_8000B020(s32, s32);
 void func_8000BADC(s32);
-void func_80022948(void);
 void func_80017E98(void);
 void func_8001BC54(void);
 void func_8001E93C(void);
@@ -511,7 +501,7 @@ void func_8001A8F4(s32 updateRate);
 void func_80014090(Object*, s32, ObjectHeader*);
 void func_80008438(Object**, s32, s32);
 void func_8001E89C(void);
-void func_800230D0(Object*, Object_Racer*);
+CheckpointNode *func_800230D0(Object*, Object_Racer*);
 void func_80010994(s32 updateRate);
 void func_800159C8(Object *, Object *);
 void func_80011264(ObjectModel *, Object *);

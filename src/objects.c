@@ -39,8 +39,8 @@
 
 /************ .data ************/
 
-unknown800DC6F0 D_800DC6F0 = { { -128 }, 0x1E, 0x0F };
-unknown800DC6F0 D_800DC6F8 = { { 3 }, 0x1E, 0x0F };
+FadeTransition D_800DC6F0 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 30, 15);
+FadeTransition D_800DC6F8 = FADE_TRANSITION(FADE_CIRCLE, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, 15);
 
 s32 D_800DC700 = 0;
 s32 D_800DC704 = 0; // Currently unknown, might be a different type.
@@ -68,7 +68,7 @@ s32 D_800DC760 = 9; // Currently unknown, might be a different type.
 Object *gMagnetEffectObject = NULL;
 s32 D_800DC768 = 0; // Currently unknown, might be a different type.
 
-f32 D_800DC76C[15] = {
+UNUSED f32 D_800DC76C[15] = {
     1.0f, 0.70711f, 0.70711f, 1.0f,
     0.0f, 0.70711f, -0.70711f, 0.0f,
     -1.0f, -0.70711f, -0.70711f, -1.0f,
@@ -2121,14 +2121,14 @@ void func_80010994(s32 updateRate) {
     func_8000BADC(updateRate);
     for (i = gObjectListStart; i < tempVal; i++) {
         obj = gObjPtrList[i];
-        if ((!(obj->segment.trans.flags & 0x8000) && (obj->behaviorId == BHV_WEAPON)) || (obj->behaviorId == BHV_FOG_CHANGER)) {
+        if ((!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (obj->behaviorId == BHV_WEAPON)) || (obj->behaviorId == BHV_FOG_CHANGER)) {
             run_object_loop_func(obj, updateRate);
         }
     }
     if (gParticleCount > 0) {
         for (i = gObjectListStart; i < tempVal; i++) {
             obj = gObjPtrList[i];
-            if (obj->segment.trans.flags & 0x8000) {
+            if (obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
                 //Why is this object being treated as a Particle?
                 handle_particle_movement((Particle *) obj, updateRate);
             }
@@ -2139,7 +2139,7 @@ void func_80010994(s32 updateRate) {
     if (get_light_count() > 0) {
         for (i = gObjectListStart; i < gObjectCount; i++) {
             obj = gObjPtrList[i];
-            if (!(obj->segment.trans.flags & 0x8000) && (obj->shading != NULL)) {
+            if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (obj->shading != NULL)) {
                 func_80032C7C(obj);
             }
         }
@@ -3391,7 +3391,7 @@ s32 func_80014814(s32 *retObjCount) {
     maxObjCount = gObjectCount - 1;
     while (maxObjCount >= curObjCount) {
         for (i = 0; maxObjCount >= curObjCount && i == 0; i++) {
-            if (!(gObjPtrList[curObjCount]->segment.trans.flags & 0x8000)) {
+            if (!(gObjPtrList[curObjCount]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
                 if (gObjPtrList[curObjCount]->segment.header->flags & 1) {
                     curObjCount++;
                 }
@@ -3401,7 +3401,7 @@ s32 func_80014814(s32 *retObjCount) {
             }
         }
         for (i = 0; maxObjCount >= curObjCount && i == 0; i++) {
-            if (gObjPtrList[maxObjCount]->segment.trans.flags & 0x8000) {
+            if (gObjPtrList[maxObjCount]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) {
                 i = -1;
             } else if (!(gObjPtrList[maxObjCount]->segment.header->flags & 1)) {
                 maxObjCount--;
@@ -5627,7 +5627,88 @@ void init_racer_for_challenge(s32 vehicleID) {
     set_pause_lockout_timer(10);
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_80022948.s")
+void func_80022948(void) {
+    CheckpointNode *checkpointNode;
+    UNUSED s32 pad;
+    s32 j;
+    s32 i;
+    s32 lvlSeg;
+    LevelHeader *levelHeader;
+    LevelObjectEntry_Racer newRacerEntry;
+    Settings *settings;
+    Object *racerObj;
+    Object_Racer *racer;
+    UNUSED s32 pad2[7]; 
+    f32 sp2C;
+    
+    D_8011AEF7 -= 1;
+    if (D_8011AEF7 == 0) {
+        levelHeader = get_current_level_header();
+        D_8011AEF8 = levelHeader->music;
+        D_8011AEFC = levelHeader->instruments;
+        levelHeader->music = 0x1D;
+        levelHeader->instruments = 0xFFFF;
+        racerObj = get_racer_object(PLAYER_ONE);
+        racer = &racerObj->unk64->racer;
+        gIsTajChallenge = racer->vehicleID + 1;
+        checkpointNode = func_800230D0(racerObj, racer);
+        racer->cameraYaw = 0x8000 - racer->steerVisualRotation;
+        racer->unk1FC = 0;
+        racer->startInput = 0;
+        racer->courseCheckpoint = 0;
+        racer->checkpoint = 0;
+        racer->lap = 0;
+        racer->countLap = 0;
+        racer->lap_times[0] = 0;
+        racer->lap_times[1] = 0;
+        racer->lap_times[2] = 0;
+        racer->unk1BA = 0;
+        settings = get_settings();
+        gEventCountdown = 80;
+        D_8011ADB4 = 0;
+        D_8011ADC0 = 1;
+        levelHeader->laps = 3;
+        levelHeader->race_type = 0;
+        func_8009F034();
+        for (i = 0; i < ARRAY_COUNT(racer->lap_times); i++) racer->lap_times[i] = 0;  // Must be a single line.
+        newRacerEntry.common.x = (checkpointNode->x + (checkpointNode->rotationZFrac * 35.0f));
+        newRacerEntry.common.z = (checkpointNode->z - (checkpointNode->rotationXFrac * 35.0f));
+        lvlSeg = get_level_segment_index_from_position(newRacerEntry.common.x, checkpointNode->y, newRacerEntry.common.z);
+        newRacerEntry.common.y = func_8002BAB0(lvlSeg, newRacerEntry.common.x, newRacerEntry.common.z, &sp2C) ? sp2C : checkpointNode->y;
+        newRacerEntry.common.size = 16;
+        newRacerEntry.angleY = racer->steerVisualRotation;
+        newRacerEntry.angleX = 0;
+        newRacerEntry.angleZ = 0;
+        newRacerEntry.playerIndex = 4;
+        newRacerEntry.common.objectID = 0xDA;
+        func_800619F4(0);
+        racerObj = spawn_object(&newRacerEntry.common, 1);
+        (*gRacers)[1] = racerObj;
+        gRacersByPosition[1] = racerObj;
+        gRacersByPort[1] = racerObj;
+        racerObj->segment.level_entry = NULL;
+        gNumRacers = 2;
+        racer = &racerObj->unk64->racer;
+        i = 0; // Fakematch
+        racer->vehicleID = VEHICLE_CARPET;
+        racer->vehicleIDPrev = racer->vehicleID;
+        racer->unk2 = 1;
+        racer->characterId = settings->racers[0].character;
+        racer->stretch_height_cap = 1.0f;
+        racer->stretch_height = 1.0f;
+        racer->transparency = 0xFF;
+        racer->vehicleSound = NULL;
+        racerObj->interactObj->pushForce = 2;
+        
+        for (j = gObjectListStart; j < gObjectCount; j++) {
+            if (!(gObjPtrList[j]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && gObjPtrList[j]->behaviorId == BHV_PARK_WARDEN) {
+                racer->unk154 = gObjPtrList[j];
+            }
+        }
+        set_pause_lockout_timer(20);
+        transition_begin(&D_800DC6F0);
+    }
+}
 
 void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z) {
     s32 index;
@@ -5714,7 +5795,7 @@ void func_80022E18(s32 arg0) {
         set_next_taj_challenge_menu(0);
         func_80008168();
         if (arg0 == 2) {
-            set_current_text(0);
+            set_current_text(ASSET_GAME_TEXT_0);
         }
         gEventCountdown = 0;
         gEventStartTimer = 0;
