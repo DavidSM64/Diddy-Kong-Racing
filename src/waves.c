@@ -23,7 +23,7 @@ s32 D_800E3050[8] = {
     0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-s32 *D_800E3070[2] = { NULL, NULL };
+Vertex **D_800E3070[2] = { NULL, NULL };
 s32 *D_800E3078[2] = { NULL, NULL };
 
 // This could also be D_800E3080[2] + D_800E3088[2]
@@ -44,9 +44,9 @@ unk800E3090 D_800E3090[4] = {
 TextureHeader *D_800E30D0 = NULL;
 s32 *D_800E30D4 = NULL;
 LevelModel_Alternate *D_800E30D8 = NULL;
-s32 D_800E30DC = 0;
-s32 D_800E30E0 = 0;
-s32 D_800E30E4 = 0;
+s32 D_800E30DC = 0; //Tracks an index into D_8012A1E8
+s16 *D_800E30E0 = NULL; //Points to either D_800E30E8 or D_800E3110
+s16 *D_800E30E4 = NULL; //Points to either D_800E30FC or D_800E3144
 
 s16 D_800E30E8[10] = {
     1, 2, 3, 4, 5, 6, 7, 8, 9, 0
@@ -68,12 +68,11 @@ s32 *D_800E3178 = NULL;
 s32 D_800E317C = 0;
 LevelHeader_70 *D_800E3180 = NULL;
 unk800E3184 *D_800E3184 = NULL;
-s32 D_800E3188 = NULL;
+s32 D_800E3188 = 0;
 s32 D_800E318C = 0;
 unk800E3190 *D_800E3190 = NULL;
 Object **D_800E3194 = NULL;
 Object *gWaveGeneratorObj = NULL;
-s32 D_800E319C = 0;
 
 /*******************************/
 
@@ -93,9 +92,9 @@ s32 D_80129FC0;
 s32 D_80129FC4;
 unk80129FC8 D_80129FC8[1];
 s32 D_8012A018;
-s32 D_8012A01C;
-s32 D_8012A020[2];
-s32 D_8012A028[20];
+f32 D_8012A01C;
+f32 D_8012A020[2];
+unk8012A028 *D_8012A028[20];
 s32 D_8012A078;
 TriangleBatchInfo *gWaveBatch;
 TextureHeader *gWaveTexture;
@@ -106,8 +105,8 @@ s32 D_8012A090;
 s32 D_8012A094;
 s32 D_8012A098;
 s32 D_8012A09C;
-s32 D_8012A0A0;
-s32 D_8012A0A4;
+f32 D_8012A0A0;
+f32 D_8012A0A4;
 s32 gWaveBoundingBoxDiffX;
 s32 gWaveBoundingBoxDiffZ;
 s32 gWaveBoundingBoxX1;
@@ -127,66 +126,110 @@ s32 D_8012A0E8[64];
 s16 D_8012A1E8[512];
 s32 D_8012A5E8[3];
 s32 D_8012A5F4;
-s32 D_8012A5F8;
-s32 D_8012A5FC;
+UNUSED s32 D_8012A5F8;
+UNUSED s32 D_8012A5FC;
 s32 D_8012A600[72];
 f32 D_8012A720;
 f32 D_8012A724;
 s32 D_8012A728;
-s32 D_8012A72C;
 
 /*****************************/
 
+#define FREE_MEM(mem)                   \
+    tempMem = (s32 *) mem;              \
+    if (tempMem != NULL) {              \
+        free_from_memory_pool(tempMem); \
+        mem = NULL;                     \
+    }
+#define FREE_TEX(tex)                   \
+    tempTex = tex;                      \
+    if (tempTex != NULL) {              \
+        free_texture(tempTex);          \
+        tex = NULL;                     \
+    }
+
 void free_waves(void) {
-    if (D_800E3040 != NULL) {
-        free_from_memory_pool(D_800E3040);
-        D_800E3040 = NULL;
-    }
-    if (D_800E3044 != NULL) {
-        free_from_memory_pool(D_800E3044);
-        D_800E3044 = NULL;
-    }
-    if (D_800E3048 != NULL) {
-        free_from_memory_pool(D_800E3048);
-        D_800E3048 = NULL;
-    }
-    if (D_800E304C != NULL) {
-        free_from_memory_pool(D_800E304C);
-        D_800E304C = NULL;
-    }
-    if (D_800E3070[0] != NULL) {
-        free_from_memory_pool(D_800E3070[0]);
-        D_800E3070[0] = NULL;
-    }
-    if (D_800E3080[0] != NULL) {
-        free_from_memory_pool(D_800E3080[0]);
-        D_800E3080[0] = NULL;
-    }
-    if (D_800E30D0 != NULL) {
-        free_texture(D_800E30D0);
-        D_800E30D0 = NULL;
-    }
-    if (D_800E30D4 != NULL) {
-        free_from_memory_pool(D_800E30D4);
-        D_800E30D4 = NULL;
-    }
-    if (D_800E30D8 != NULL) {
-        free_from_memory_pool(D_800E30D8);
-        D_800E30D8 = NULL;
-    }
-    if (D_800E3178 != NULL) {
-        free_from_memory_pool(D_800E3178);
-        D_800E3178 = NULL;
-    }
+    TextureHeader *tempTex;
+    s32 *tempMem;
+    FREE_MEM(D_800E3040);
+    FREE_MEM(D_800E3044);
+    FREE_MEM(D_800E3048);
+    FREE_MEM(D_800E304C);
+    FREE_MEM(D_800E3070[0]);
+    FREE_MEM(D_800E3080[0]);
+    FREE_TEX(D_800E30D0);
+    FREE_MEM(D_800E30D4);
+    FREE_MEM(D_800E30D8);
+    FREE_MEM(D_800E3178);
     D_800E3190 = NULL;
     D_800E3194 = NULL;
     D_800E3184 = NULL;
     D_800E3188 = NULL;
 }
 
-GLOBAL_ASM("asm/non_matchings/waves/func_800B7EB4.s")
+#ifdef NON_EQUIVALENT
+void func_800B7EB4(void) {
+    s32 *var_v1;
+    s32 temp_lo;
+    s32 temp_t7;
+    s32 temp_t9;
+    s32 temp_v1;
+    s32 var_a1;
+    s32 var_a2;
+    s32 var_a3;
+    s32 var_t0;
+    s32 var_t1;
 
-void func_800B8134(unk800B8134 *arg0) {
+    free_waves();
+    D_800E3040 = (s32 *) allocate_from_main_pool_safe(D_80129FC8->unk20 << 2, COLOUR_TAG_CYAN);
+    D_800E3044 = (s32 *) allocate_from_main_pool_safe((D_80129FC8->unk4 << 2) * D_80129FC8->unk4, COLOUR_TAG_CYAN);
+    D_800E3048 = (s32 *) allocate_from_main_pool_safe(((D_80129FC8->unk0 + 1) << 2) * (D_80129FC8->unk0 + 1), COLOUR_TAG_CYAN);
+    temp_lo = ((D_80129FC8->unk0 + 1) << 2) * (D_80129FC8->unk0 + 1);
+    D_800E304C = allocate_from_main_pool_safe(temp_lo * 9, COLOUR_TAG_CYAN);
+    
+    // for (var_a1 = 1; var_a1 < 4; var_a1++) {
+    //     D_800E3050[var_a1] = (s32 *) ((u32) D_800E304C + (temp_lo * var_a1));
+    // }
+
+    var_v1 = D_800E3050;
+    var_a1 = 1;
+    do {
+        var_v1[0] = (s32 *) (D_800E304C + temp_lo);
+        var_v1[1] = (s32 *) (D_800E304C + (temp_lo * 2));
+        var_v1[2] = (s32 *) (D_800E304C + (temp_lo * 3));
+        var_v1[3] = (s32 *) (D_800E304C + (temp_lo * 4));
+        var_v1 += 4;
+        var_a1 += 4;
+    } while (var_a1 < 9);
+
+    //temp_lo = (D_80129FC8->unk0 + 1) * 250 * (D_80129FC8->unk0 + 1);
+    temp_lo = ((((D_80129FC8->unk0 + 1) << 5)  - D_80129FC8->unk0) * 10) * (D_80129FC8->unk0 + 1);
+    if (D_8012A078 != 2) {
+        D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(temp_lo << 1, COLOUR_TAG_CYAN);
+        D_800E3070[1] = (s32 *) ((u32) D_800E3070[0] + temp_lo);
+    } else {        
+        D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(temp_lo << 2, COLOUR_TAG_CYAN);
+        D_800E3070[1] = (s32 *) ((u32) D_800E3070[0] + temp_lo);
+        D_800E3070[2] = (s32 *) ((u32) D_800E3070[1] + temp_lo);
+        D_800E3070[3] = (s32 *) ((u32) D_800E3070[2] + temp_lo);
+    }
+    temp_lo = (D_80129FC8->unk0 << 5) * D_80129FC8->unk0;
+    if (D_8012A078 != 2) {
+        D_800E3080[0] = allocate_from_main_pool_safe(temp_lo << 1, COLOUR_TAG_CYAN);
+        D_800E3080[1] = (s32 *) ((u32) D_800E3080[0] + temp_lo);
+    } else {
+        D_800E3080[0] = (s32 *) allocate_from_main_pool_safe(temp_lo << 2, COLOUR_TAG_CYAN);
+        D_800E3080[1] = (s32 *) ((u32) D_800E3080[0] + temp_lo);
+        D_800E3080[2] = (s32 *) ((u32) D_800E3080[1] + temp_lo);
+        D_800E3080[3] = (s32 *) ((u32) D_800E3080[2] + temp_lo);
+    }
+    D_800E30D0 = load_texture(D_80129FC8->unk2C);
+}
+#else
+GLOBAL_ASM("asm/non_matchings/waves/func_800B7EB4.s")
+#endif
+
+void func_800B8134(LevelHeader *arg0) {
     if (D_8012A078 != 2) {
         D_80129FC8->unk0 = arg0->unk56;
     } else {
@@ -194,10 +237,10 @@ void func_800B8134(unk800B8134 *arg0) {
     }
     D_80129FC8->unk4 = arg0->unk57;
     D_80129FC8->unk8 = arg0->unk58;
-    D_80129FC8->unkC = arg0->unk5A * 0.00390625f;
+    D_80129FC8->unkC = arg0->unk5A / 256.0f;
     D_80129FC8->unk10 = arg0->unk59 << 8;
     D_80129FC8->unk14 = arg0->unk5C;
-    D_80129FC8->unk18 = arg0->unk5E * 0.00390625f;
+    D_80129FC8->unk18 = arg0->unk5E / 256.0f;
     D_80129FC8->unk1C = arg0->unk5D << 8;
     D_80129FC8->unk20 = arg0->unk60 & ~1;
     if (D_8012A078 != 2) {
@@ -211,13 +254,289 @@ void func_800B8134(unk800B8134 *arg0) {
     D_80129FC8->unk34 = arg0->unk6B;
     D_80129FC8->unk38 = arg0->unk6C;
     D_80129FC8->unk3C = arg0->unk6D;
-    D_80129FC8->unk40 = arg0->unk62 * 0.00390625f;
-    D_80129FC8->unk44 = arg0->unk64 * 0.00390625f;
-    D_80129FC8->unk48 = arg0->unk66 * 0.00390625f;
-    D_80129FC8->unk4C = arg0->unk70;
+    D_80129FC8->unk40 = arg0->unk62 / 256.0f;
+    D_80129FC8->unk44 = arg0->unk64 / 256.0f;
+    D_80129FC8->unk48 = arg0->unk66 / 256.0f;
+    D_80129FC8->unk4C = arg0->unk70_u8;
 }
 
+#ifdef NON_EQUIVALENT
+void func_800B82B4(LevelModel *arg0, LevelHeader *arg1, s32 arg2) {
+    s32 sp54;
+    s32 sp4C;
+    Vertex **var_a3;
+    Vertex **var_v0;
+    Vertex *temp_a1_2;
+    Vertex *temp_a2;
+    Vertex *temp_t2;
+    Vertex *temp_v0_4;
+    Vertex *temp_v0_5;
+    f32 *temp_v0;
+    f32 *temp_v0_2;
+    f32 temp_f0;
+    f32 temp_f0_2;
+    f32 temp_f20;
+    s32 **var_v1;
+    s32 *temp_t6;
+    s32 temp_lo;
+    s32 temp_v0_3;
+    s32 temp_v1;
+    s32 var_a0;
+    s32 var_a0_2;
+    s32 var_a2;
+    s32 var_fp;
+    s32 var_s0;
+    s32 var_s0_2;
+    s32 var_s0_3;
+    s32 var_s3;
+    s32 var_s5;
+    s32 var_s5_2;
+    s32 var_s6;
+    s32 var_s6_2;
+    s32 var_s7;
+    s32 var_v0_2;
+    s8 temp_a1;
+    s8 var_s0_4;
+    unk8012A028 **var_a0_3;
+    f32 phi_f0;
+    s32 i;
+
+    D_8012A078 = arg2;
+    func_800B8134(arg1);
+    func_800B7EB4();
+    func_800BBDDC(arg0, arg1);
+    D_8012A0A0 = (f32) gWaveBoundingBoxDiffX;
+    temp_f0 = (f32) D_80129FC8->unk0;
+    D_8012A0A4 = (f32) gWaveBoundingBoxDiffZ;
+    var_s7 = 0;
+    D_8012A0B8 = D_8012A0A0 / temp_f0;
+    D_8012A0BC = D_8012A0A4 / temp_f0;
+    D_8012A084 = 0;
+    D_8012A088 = 0;
+    D_8012A08C = (s32) ((gWaveTexture->width * D_80129FC8->unk30) << 5) / (s32) D_80129FC8->unk0;
+    D_8012A090 = (s32) ((gWaveTexture->height * D_80129FC8->unk34) << 5) / (s32) D_80129FC8->unk0;
+    D_8012A094 = (gWaveTexture->width << 5) - 1;
+    D_8012A098 = (gWaveTexture->height << 5) - 1;
+    D_8012A09C = 0;
+    var_s6 = D_80129FC8->unk10;
+    var_fp = D_80129FC8->unk1C;
+    sp54 = (s32) (D_80129FC8->unk8 << 0x10) / (s32) D_80129FC8->unk20;
+    D_8012A01C = 10000.0f;
+    *D_8012A020 = -10000.0f;
+    sp4C = (s32) (D_80129FC8->unk14 << 0x10) / (s32) D_80129FC8->unk20;
+    if (D_80129FC8->unk20 > 0) {
+        var_s0 = 0;
+        do {
+            temp_f20 = sins_f((s16) var_s6);
+            var_s7 += 1;
+            *(D_800E3040 + var_s0) = (sins_f((s16) var_fp) * D_80129FC8->unk18) + (temp_f20 * D_80129FC8->unkC);
+            if (D_80129FC8->unk28 != 0) {
+                temp_v0 = D_800E3040 + var_s0;
+                *temp_v0 *= 2.0f;
+            }
+            temp_v0_2 = D_800E3040 + var_s0;
+            temp_f0_2 = *temp_v0_2;
+            var_s0 += 4;
+            phi_f0 = temp_f0_2;
+            if (temp_f0_2 < D_8012A01C) {
+                D_8012A01C = temp_f0_2;
+                phi_f0 = *temp_v0_2;
+            }
+            if (*D_8012A020 < phi_f0) {
+                *D_8012A020 = phi_f0;
+            }
+            var_s6 += sp54;
+            var_fp += sp4C;
+        } while (var_s7 < D_80129FC8->unk20);
+        var_s7 = 0;
+    }
+    save_rng_seed();
+    set_rng_seed(0x57415646);
+    temp_v1 = D_80129FC8->unk4;
+    var_s5 = 0;
+    if (temp_v1 > 0) {
+        do {
+            var_s0_2 = 0;
+            if (temp_v1 > 0) {
+                var_s6_2 = var_s5 * 4;
+                do {
+                    *(D_800E3044 + var_s6_2) = get_random_number_from_range(0, D_80129FC8->unk20 - 1);
+                    var_s0_2 += 1;
+                    //(D_800E3044 + var_s6_2)->unk2 = get_random_number_from_range(0, D_80129FC8->unk20 - 1);
+                    var_s6_2 += 4;
+                    var_s5 += 1;
+                } while (var_s0_2 < D_80129FC8->unk4);
+            }
+            var_s7 += 1;
+        } while (var_s7 < temp_v1);
+        var_s7 = 0;
+        var_s5 = 0;
+    }
+    load_rng_seed();
+    var_a2 = 0;
+    if (arg2 != 2) {
+        var_s3 = 2;
+    } else {
+        var_s3 = 4;
+    }
+    do {
+        var_a2 += 1;
+        if (D_80129FC8->unk0 >= 0) {
+            do {
+                var_s0_3 = 0;
+                if (D_80129FC8->unk0 >= 0) {
+                    do {
+                        var_a0 = 0;
+                        if (var_s3 > 0) {
+                            var_v0 = D_800E3070;
+                            do {
+                                var_a0 += 1;
+                                (*var_v0)[var_s5].x = (s16) (s32) ((f64) ((f32) var_s0_3 * D_8012A0B8) + 0.5);
+                                (*var_v0)[var_s5].z = (s16) (s32) ((f64) ((f32) var_s7 * D_8012A0BC) + 0.5);
+                                if (D_80129FC8->unk4C == 0) {
+                                    (*var_v0)[var_s5].r = 0xFF;
+                                    (*var_v0)[var_s5].g = 0xFF;
+                                    (*var_v0)[var_s5].b = 0xFF;
+                                } else {
+                                    (*var_v0)[var_s5].r = 0;
+                                    (*var_v0)[var_s5].g = 0;
+                                    (*var_v0)[var_s5].b = 0;
+                                }
+                                temp_t2 = *var_v0;
+                                var_v0 += 4;
+                                temp_t2[var_s5].a = 0xFF;
+                            } while (var_a0 != var_s3);
+                        }
+                        var_s0_3 += 1;
+                        var_s5 += 1;
+                    } while (D_80129FC8->unk0 >= var_s0_3);
+                }
+                var_s7 += 1;
+            } while (D_80129FC8->unk0 >= var_s7);
+            var_s7 = 0;
+        }
+    } while (var_a2 < 0x19);
+    var_s5_2 = 0;
+    // if (D_80129FC8->unk0 > 0) {
+    //     do {
+    //         var_s0_4 = 0;
+    //         if (D_80129FC8->unk0 > 0) {
+    //             do {
+    //                 var_a0_2 = 0;
+    //                 if (var_s3 > 0) {
+    //                     var_v1 = D_800E3080;
+    //                     temp_a1 = var_s0_4 + 1;
+    //                     var_v0_2 = var_s5_2 * 0x10;
+    //                     do {
+    //                         var_a0_2 += 1;
+    //                         *(*var_v1 + var_v0_2) = 0x40;
+    //                         temp_t6 = *var_v1;
+    //                         var_v1 += 4;
+    //                         (temp_t6 + var_v0_2)->unk1 = var_s0_4;
+    //                         (var_v1->unk-4 + var_v0_2)->unk2 = (s8) (var_s0_4 + D_80129FC8->unk0 + 1);
+    //                         (var_v1->unk-4 + var_v0_2)->unk3 = temp_a1;
+    //                         temp_v0_3 = var_v0_2 + 0x10;
+    //                         *(var_v1->unk-4 + temp_v0_3) = 0x40;
+    //                         (var_v1->unk-4 + temp_v0_3)->unk1 = temp_a1;
+    //                         (var_v1->unk-4 + temp_v0_3)->unk2 = (s8) (var_s0_4 + D_80129FC8->unk0 + 1);
+    //                         (var_v1->unk-4 + temp_v0_3)->unk3 = (s8) (var_s0_4 + D_80129FC8->unk0 + 2);
+    //                         var_v0_2 = temp_v0_3 - 0x10;
+    //                     } while (var_a0_2 != var_s3);
+    //                 }
+    //                 var_s0_4 += 1;
+    //                 var_s5_2 += 2;
+    //             } while (var_s0_4 < D_80129FC8->unk0);
+    //         }
+    //         var_s7 += 1;
+    //     } while (var_s7 < D_80129FC8->unk0);
+    // }
+    func_800BC6C8();
+    temp_lo = (D_80129FC8->unk0 + 1) * D_80129FC8->unk0;
+    var_a3 = D_800E3070;
+    var_a0_3 = D_8012A028;
+    for (i = 0; i < 2; i++) {
+        D_8012A028[i]->vertexA.y = 0;
+        D_8012A028[i]->vertexA.x = D_800E3070[i][0]->x;
+        D_8012A028[i]->vertexA.z = D_800E3070[i][0]->z;
+        D_8012A028[i]->vertexA.r = D_800E3070[i][0]->r;
+        D_8012A028[i]->vertexA.g = D_800E3070[i][0]->g;
+        D_8012A028[i]->vertexA.b = D_800E3070[i][0]->b;
+        D_8012A028[i]->vertexA.a = D_800E3070[i][0]->a;
+        D_8012A028[i]->vertexB.y = 0;
+        D_8012A028[i]->vertexB.x = D_800E3070[i][1]->x;
+        D_8012A028[i]->vertexB.z = D_800E3070[i][1]->z;
+        D_8012A028[i]->vertexB.r = D_800E3070[i][1]->r;
+        D_8012A028[i]->vertexB.g = D_800E3070[i][1]->g;
+        D_8012A028[i]->vertexB.b = D_800E3070[i][1]->b;
+        D_8012A028[i]->vertexB.a = D_800E3070[i][1]->a;
+        D_8012A028[i]->vertexC.y = 0;
+        D_8012A028[i]->vertexC.x = D_800E3070[i][2]->x;
+        D_8012A028[i]->vertexC.z = D_800E3070[i][2]->z;
+        D_8012A028[i]->vertexC.r = D_800E3070[i][2]->r;
+        D_8012A028[i]->vertexC.g = D_800E3070[i][2]->g;
+        D_8012A028[i]->vertexC.b = D_800E3070[i][2]->b;
+        D_8012A028[i]->vertexC.a = D_800E3070[i][2]->a;
+        D_8012A028[i]->vertexD.y = 0;
+        D_8012A028[i]->vertexD.x = D_800E3070[i][3]->x;
+        D_8012A028[i]->vertexD.z = D_800E3070[i][3]->z;
+        D_8012A028[i]->vertexD.r = D_800E3070[i][3]->r;
+        D_8012A028[i]->vertexD.g = D_800E3070[i][3]->g;
+        D_8012A028[i]->vertexD.b = D_800E3070[i][3]->b;
+        D_8012A028[i]->vertexD.a = D_800E3070[i][3]->a;
+    }
+    // do {
+    //     temp_a1_2 = *var_a3;
+    //     var_a3 += 4;
+    //     var_a0_3->unk2 = 0;
+    //     var_a0_3->unk0 = (s16) temp_a1_2->x;
+    //     temp_v0_4 = &temp_a1_2[D_80129FC8->unk0];
+    //     var_a0_3->unk4 = (s16) temp_a1_2->z;
+    //     temp_a2 = &temp_a1_2[temp_lo];
+    //     var_a0_3->unk6 = (u8) temp_a1_2->r;
+    //     var_a0_3 += 0x28;
+    //     var_a0_3->unk-21 = (u8) temp_a1_2->g;
+    //     var_a0_3->unk-20 = (u8) temp_a1_2->b;
+    //     var_a0_3->unk-1F = (u8) temp_a1_2->a;
+    //     var_a0_3->unk-1C = 0;
+    //     var_a0_3->unk-1E = (s16) temp_v0_4->x;
+    //     var_a0_3->unk-1A = (s16) temp_v0_4->z;
+    //     var_a0_3->unk-18 = (u8) temp_v0_4->r;
+    //     var_a0_3->unk-17 = (u8) temp_v0_4->g;
+    //     var_a0_3->unk-16 = (u8) temp_v0_4->b;
+    //     var_a0_3->unk-15 = (u8) temp_v0_4->a;
+    //     var_a0_3->unk-12 = 0;
+    //     var_a0_3->unk-14 = (s16) temp_a2->x;
+    //     var_a0_3->unk-10 = (s16) temp_a2->z;
+    //     var_a0_3->unk-E = (u8) temp_a2->r;
+    //     var_a0_3->unk-D = (u8) temp_a2->g;
+    //     temp_v0_5 = &(&temp_a1_2[temp_lo])[D_80129FC8->unk0];
+    //     var_a0_3->unk-C = (u8) temp_a2->b;
+    //     var_a0_3->unk-B = (u8) temp_a2->a;
+    //     var_a0_3->unk-8 = 0;
+    //     var_a0_3->unk-A = (s16) temp_v0_5->x;
+    //     var_a0_3->unk-6 = (s16) temp_v0_5->z;
+    //     var_a0_3->unk-4 = (u8) temp_v0_5->r;
+    //     var_a0_3->unk-3 = (u8) temp_v0_5->g;
+    //     var_a0_3->unk-2 = (u8) temp_v0_5->b;
+    //     var_a0_3->unk-1 = (u8) temp_v0_5->a;
+    // } while (var_a3 != D_800E3078);
+    func_800BCC70(arg0);
+    if (D_80129FC8->unk24 == 3) {
+        D_800E30E0 = D_800E30E8;
+        D_800E30E4 = D_800E30FC;
+    } else {
+        D_80129FC8->unk24 = 5;
+        D_800E30E0 = D_800E3110;
+        D_800E30E4 = D_800E3144;
+    }
+    D_800E3188 = 0;
+    D_8012A728 = 0;
+    gWaveGeneratorObj = NULL;
+    D_8012A018 = 0;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/waves/func_800B82B4.s")
+#endif
 
 void func_800B8B8C(void) {
     s32 temp_v0;
@@ -340,7 +659,7 @@ void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1) {
     gWaveBoundingBoxZ1 = bb->z1;
     gWaveBatch = curBatch;
     gWaveTexture = level->textures[curBatch->textureIndex].texture;
-    temp_t6 = (curBatch->flags & (BATCH_FLAGS_UNK40000000 | BATCH_FLAGS_UNK20000000 | BATCH_FLAGS_UNK10000000)) >> 0x1C;
+    temp_t6 = (curBatch->flags & (BATCH_FLAGS_UNK40000000 | BATCH_FLAGS_UNK20000000 | BATCH_FLAGS_UNK10000000)) >> 28;
     if (temp_t6 > 0) {
         D_800E3180 = (LevelHeader_70 *) arg1->unk70[temp_t6];
     } else {
@@ -377,7 +696,7 @@ f32 get_wave_height(Object_Log *log, s32 updateRate) {
     } else {
         var_t0 <<= log->unk2;
     }
-    y = (((f32) var_t0 * 0.0625) + (f32) log->unk0);
+    y = (((f32) var_t0 / 16.0) + (f32) log->unk0);
     y *= D_80129FC8->unk40;
     y += func_800BEFC4(log->unkC, log->unk8, log->unkA);
     return y;
@@ -487,7 +806,7 @@ void func_800BF3E4(Object *obj) {
                 }
             }
             D_800E3194[j] = NULL;
-            D_800E3188 -= 1;
+            D_800E3188--;
         }
     }
 }
@@ -505,7 +824,7 @@ void func_800BF524(Object *obj) {
         var_v1 |= 2;
     }
     func_800BF634(obj, obj->segment.trans.x_position, obj->segment.trans.z_position, (f32) temp_v0->unkA, temp_v0->unk9 << 8,  
-        (f32) temp_v0->unk8 * 0.0625, (f32) temp_v0->unkE, (f32) temp_v0->unkC * 0.0625, var_v1);
+        (f32) temp_v0->unk8 / 16.0, (f32) temp_v0->unkE, (f32) temp_v0->unkC / 16.0, var_v1);
 }
 
 unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, f32 arg5, f32 arg6, f32 arg7, s32 arg8) {
@@ -529,10 +848,10 @@ unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, 
         i--;
         if (var_a0 != 0) {
             D_800E3194[i] = obj;
-            D_800E3188 += 1;
+            D_800E3188++;
             var_f0 = D_8012A0B8;
             if (D_80129FC8->unk28 != 0) {
-                var_f0 *= 0.5f;
+                var_f0 /= 2.0f;
             }
             var_a0_2 = (((xPos - arg3) - D_8012A0D0) / var_f0);
             if (var_a0_2 >= D_800E318C) {
@@ -674,7 +993,7 @@ UNUSED void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, 
         if (arg0->unk2C < 1.0) {
             arg0->unk2C = 1.0f;
         }
-        arg0->unk20 = (65536.0f / arg0->unk2C);
+        arg0->unk20 = (65536.0f / arg0->unk2C); //0x10000
         arg0->unk24 = (arg0->unk24 + arg4);
     }
 }

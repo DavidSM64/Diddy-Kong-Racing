@@ -482,7 +482,7 @@ void clear_object_pointers(void) {
     D_8011AE00 = 0;
     D_8011AE01 = 1;
     D_8011AD53 = 0;
-    D_8011ADD5 = 0;
+    D_8011ADD5 = FALSE;
 }
 
 /**
@@ -2346,9 +2346,8 @@ s32 play_footstep_sounds(Object *obj, s32 arg1, s32 frame, s32 oddSoundId, s32 e
  * Make the next call of move_object never mark the object as out of bounds.
  * Official Name: objMoveXYZnocheck
 */
-s32 ignore_bounds_check(void) { //! @bug The developers probably intended this to be a void function.
+void ignore_bounds_check(void) {
     gNoBoundsCheck = TRUE;
-    // No return value!
 }
 
 /**

@@ -239,18 +239,6 @@ typedef struct unk80041A90_MidiFade {
     f32 unk14;
 } unk80041A90_MidiFade;
 
-// Unsure about the signed/unsigned with these arrays.
-extern u16 D_800DC9A8[20];
-extern u16 D_800DC9D0[64];
-extern s8 D_800DCA50[8];
-extern u8 D_800DCA58[9];
-extern s8 D_800DCA64[9];
-extern s8 D_800DCA70[10];
-extern s32 D_800DCA7C[3];
-extern s32 D_800DCA88[3];
-extern s8 D_800DCA94[8];
-extern s8 D_800DCA9C[12];
-
 typedef struct VertexPosition {
 /* 0x00 */ s16 x;
 /* 0x02 */ s16 y;
@@ -399,6 +387,11 @@ void homing_rocket_prevent_overshoot(Object *obj, s32 updateRate, Object_Weapon 
 void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry);
 void obj_loop_effectbox(Object *obj, s32 updateRate);
 void func_8001EE74(void);
+void obj_loop_door(Object *doorObj, s32 updateRate);
+void obj_loop_fish(Object *fishObj, s32 updateRate);
+void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate);
+void obj_loop_char_select(Object *charSelectObj, s32 updateRate);
+void func_8003F2E8(Object *weaponObj, s32 updateRate);
 
 //Non Matching
 void obj_loop_lavaspurt(Object *obj, s32 updateRate);
@@ -412,12 +405,8 @@ void obj_loop_posarrow(Object *obj, s32 updateRate);
 void obj_loop_bananacreator(Object *obj, s32 updateRate);
 void obj_loop_butterfly(Object *obj, s32 updateRate);
 void obj_loop_airzippers_waterzippers(Object *obj, s32 updateRate);
-void obj_loop_char_select(Object *obj, s32 updateRate);
 void obj_loop_texscroll(Object *obj, s32 updateRate);
-void obj_loop_weaponballoon(Object *obj, s32 updateRate);
-void obj_loop_door(Object *obj, s32 updateRate);
 void obj_loop_exit(Object *obj, s32 updateRate);
-void obj_loop_fish(Object *obj, s32 updateRate);
 void obj_loop_scenery(Object *obj, s32 updateRate);
 void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry);
 INCONSISTENT void obj_init_butterfly();
@@ -443,6 +432,5 @@ void try_to_collect_egg(Object *, Object_CollectEgg*);
 
 s32 func_8001F3EC(s32);
 s32 func_80021600(s32);
-void func_8003F2E8(Object *, s32 updateRate);
 
 #endif

@@ -157,6 +157,9 @@ typedef struct LevelObjectEntry_Door {
     /* 0x10 */ u8 unk10;
     /* 0x11 */ s8 unk11;
     /* 0x12 */ u8 scale;
+    /* 0x13 */ s8 unk13;
+    /* 0x14 */ s8 unk14;
+    /* 0x15 */ u8 unk15;
 } LevelObjectEntry_Door;
 
 typedef struct LevelObjectEntry_FogChanger {

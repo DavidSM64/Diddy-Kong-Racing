@@ -356,7 +356,7 @@ s32 func_80010028(s32 arg0);
 void func_80011390(void);
 s32 get_race_countdown(void);
 s32 get_race_start_timer(void);
-s32 ignore_bounds_check(void);
+void ignore_bounds_check(void);
 void func_80012C30(void);
 void func_80012C3C(Gfx** dList);
 void func_80012C98(Gfx **dList);

@@ -40,30 +40,6 @@ typedef struct unk800E3184 {
     u8 unk0[8];
 } unk800E3184;
 
-typedef struct unk800B8134 {
-    u8 pad0[0x56];
-    u8 unk56;
-    u8 unk57;
-    u8 unk58;
-    u8 unk59;
-    s16 unk5A;
-    u8 unk5C;
-    u8 unk5D;
-    s16 unk5E;
-    s16 unk60;
-    s16 unk62;
-    s16 unk64;
-    s16 unk66;
-    s16 unk68;
-    u8 unk6A;
-    u8 unk6B;
-    s8 unk6C;
-    s8 unk6D;
-    s16 unk6E;
-    u8 unk70;
-    u8 unk71;
-} unk800B8134;
-
 typedef struct unk80129FC8 {
     s32 unk0;
     s32 unk4;
@@ -116,12 +92,32 @@ typedef struct unk800BF9F8 {
     u16 unk18;
 } unk800BF9F8;
 
+// 4 Vertexes
+// Size: 0x28 - 40 bytes/
+typedef struct unk8012A028 {
+    Vertex vertexA;    
+    Vertex vertexB;
+    Vertex vertexC;
+    Vertex vertexD;
+} unk8012A028;
+
+// /* Size: 10 bytes */
+// typedef struct Vertex {
+// /* 0x00 */ s16 x;
+// /* 0x02 */ s16 y;
+// /* 0x04 */ s16 z;
+// /* 0x06 */ u8  r;
+// /* 0x07 */ u8  g;
+// /* 0x08 */ u8  b;
+// /* 0x09 */ u8  a;
+// } Vertex;
+
 void free_waves(void);
 void func_800B8B8C(void);
 s32 func_800B9228(LevelModelSegment *arg0);
 void func_800BBDDC(LevelModel *level, LevelHeader *header);
 void func_800BFE98(s32 arg0);
-void func_800B8134(unk800B8134 *arg0);
+void func_800B8134(LevelHeader *arg0);
 void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1);
 void obj_loop_wavepower(Object *obj);
 void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
@@ -137,5 +133,8 @@ f32 func_800BB2F4(s32, f32, f32, f32*);
 void func_800B8C04(s32, s32, s32, s32, s32);
 void func_800BF524(Object *);
 f32 func_800BEFC4(s32, s32, s32);
+void func_800BC6C8(void);
+void func_800BCC70(LevelModel *arg0);
+void func_800B7EB4(void);
 
 #endif

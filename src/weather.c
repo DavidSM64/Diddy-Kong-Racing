@@ -216,15 +216,14 @@ void set_weather_limits(s16 arg0, s16 arg1) {
 }
 
 #define FREE_MEM(mem)                   \
-    tempMem = (s32 *)mem;               \
-    if (tempMem != 0) {                 \
+    tempMem = (s32 *) mem;              \
+    if (tempMem != NULL) {              \
         free_from_memory_pool(tempMem); \
         mem = NULL;                     \
     }
-
 #define FREE_TEX(tex)                   \
     tempTex = tex;                      \
-    if (tempTex != 0) {                 \
+    if (tempTex != NULL) {              \
         free_texture(tempTex);          \
         tex = NULL;                     \
     }

@@ -421,10 +421,34 @@ typedef struct LevelHeader {
   /* 0x52 */ u8 music;
   /* 0x53 */ u8 unk53;
   /* 0x54 */ u16 instruments;
+  /* 0x56 */ u8 unk56;
+  /* 0x57 */ u8 unk57;
+  /* 0x58 */ u8 unk58;
+  /* 0x59 */ u8 unk59;
+  /* 0x5A */ s16 unk5A;
+  /* 0x5C */ u8 unk5C;
+  /* 0x5D */ u8 unk5D;
+  /* 0x5E */ s16 unk5E;
+  /* 0x60 */ s16 unk60;
+  /* 0x62 */ s16 unk62;
+  /* 0x64 */ s16 unk64;
+  /* 0x66 */ s16 unk66;
+  /* 0x68 */ s16 unk68;
+  /* 0x6A */ u8 unk6A;
+  /* 0x6B */ u8 unk6B;
+  /* 0x6C */ s8 unk6C;
+  /* 0x6D */ s8 unk6D;
+  /* 0x6E */ s16 unk6E;
 
-  /* 0x56 */ u8 pad56[0x1A];
-
+    //func_800B8134 Seems to use this struct, and it differs on unk70 only.
+    union {
   /* 0x70 */ LevelHeader_70 *unk70;
+        struct {
+  /* 0x70 */ u8 unk70_u8;
+  /* 0x71 */ u8 unk71;
+        };
+    };
+
   /* 0x74 */ LevelHeader_70 *unk74[7];
 
   // Weather related?
@@ -1004,9 +1028,9 @@ typedef struct Object_Fish {
   /* 0x0F8 */ TextureHeader *texture;
   /* 0x0FC */ u8 unkFC;
   /* 0x0FD */ u8 unkFD;
-  /* 0x0FE */ u8 unkFE;
-  /* 0x0FF */ u8 unkFF;
-  /* 0x100 */ s32 unk100;
+  /* 0x0FE */ s16 unkFE;
+  /* 0x100 */ s16 unk100;
+  /* 0x102 */ s16 unk102;
   /* 0x104 */ s16 unk104;
   /* 0x106 */ s16 unk106;
   /* 0x108 */ f32 unk108;
@@ -1390,16 +1414,16 @@ typedef struct Object_Racer {
 
 typedef struct Object_Door {
   /* 0x00 */ f32 homeY;
-  /* 0x04 */ u8 pad4[0x4];
+  /* 0x04 */ SoundMask *unk4;
   /* 0x08 */ s32 unk8;
-  /* 0x0A */ s16 padA;
+  /* 0x0A */ s16 unkA;
   /* 0x0E */ s8 unkE;
   /* 0x0F */ u8 unkF;
   /* 0x10 */ u8 unk10;
   /* 0x11 */ u8 unk11;
   /* 0x12 */ u8 unk12;
-  /* 0x13 */ u8 unk13;
-  /* 0x14 */ s8 unk14;
+  /* 0x13 */ s8 unk13;
+  /* 0x14 */ s8 unk14[4];
 } Object_Door;
 
 typedef struct Object_Trigger {
@@ -1582,7 +1606,9 @@ typedef struct Object_8001E89C_64 {
 typedef struct Object_CharacterSelect {
     u8 pad0[0x14];
     f32 unk14;
-    u8 pad18[0x14];
+    u8 pad18[0x10];
+    s16 unk28;
+    u8 unk2A[2];
     u8 unk2C;
     u8 pad2D[2];
     u8 unk2F;
