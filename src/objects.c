@@ -121,11 +121,8 @@ u32 gMagnetColours[3] = {
     COLOUR_RGBA32(16, 64, 255, 0), // Level 2
     COLOUR_RGBA32(16, 255, 64, 0), // Level 3
 };
-s32 D_800DC858 = 0;          // Currently unknown, might be a different type.
-s32 D_800DC85C = 0x0028FFFF; // Currently unknown, might be a different type.
-
-u8 D_800DC860 = 0x80;
-u16 D_800DC864 = 0x0028;
+FadeTransition D_800DC858 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 40, 0xFFFF);
+FadeTransition D_800DC860 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 40, 0);
 
 /*******************************/
 
@@ -174,7 +171,7 @@ s16 gTransformPosZ;
 s16 gTransformAngleY;
 s16 D_8011AD4E;
 s8 D_8011AD50;
-s8 D_8011AD51;
+s8 gNumRacersSaved;
 s8 D_8011AD52;
 s8 D_8011AD53;
 s32 D_8011AD54;
@@ -2280,7 +2277,7 @@ void func_80010994(s32 updateRate) {
             }
 
             if (sp54 & A_BUTTON) {
-                func_8001E45C(100);
+                func_8001E45C(CUTSCENE_ID_UNK_64);
             } else if ((sp54 & B_BUTTON) && (get_trophy_race_world_id() == 0) && (is_in_tracks_mode() == 0)) {
                 func_8006F140(1); //FADE_BARNDOOR_HORIZONTAL?
             }
@@ -4120,12 +4117,135 @@ s8 set_course_finish_flags(Settings *settings) {
 }
 
 void func_8001A8D4(s32 arg0) {
-    D_8011AD4E = 0x12C;
+    D_8011AD4E = 300;
     D_8011AD50 = 0;
     D_8011AD52 = arg0;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8001A8F4.s")
+void func_8001A8F4(s32 updateRate) {
+    s32 i;
+    Object_Racer *racer;
+    Object *prevPort0Racer;
+    s32 sp30;
+    Object *prevRacer0Obj;
+    Settings *settings;
+    u32 cutsceneTimerLimit;
+
+    set_pause_lockout_timer(1);
+    sp30 = D_8011AD4E;
+    D_8011AD4E -= updateRate;
+    if (D_8011AD4E <= 0) {
+        D_8011AD4E = -1;
+    }
+    if (sp30 > 50 && D_8011AD4E <= 50) {
+        transition_begin(&D_800DC858);
+    }
+    sp30 = 0;
+    if (D_8011AD50 == 0 && D_8011AD4E == -1) {
+        for (i = 0; i < gNumRacers; i++) {
+            racer = &(*gRacers)[i]->unk64->racer;
+            racer->magnetTargetObj = NULL;
+            if (racer->playerIndex != PLAYER_COMPUTER && racer->unk1AC == 1) {
+                sp30 = i;
+            }
+            if (racer->magnetSoundMask != NULL) {
+                func_8000488C(racer->magnetSoundMask);
+            }
+            if (racer->shieldSoundMask != NULL) {
+                func_800096F8(racer->shieldSoundMask);
+            }
+        }
+        prevPort0Racer = (*gRacers)[0];
+        (*gRacers)[0] = (*gRacers)[sp30];
+        (*gRacers)[sp30] = prevPort0Racer;
+        racer_sound_free((*gRacers)[0]);
+        func_800A0B74();
+        reset_rocket_sound_timer();
+        sound_stop_all();
+        if (is_in_two_player_adventure()) {
+            set_scene_viewport_num(0);
+            set_active_viewports_and_max(0);
+            prevRacer0Obj = (*gRacers)[0];
+            prevPort0Racer = gRacersByPort[0];
+            racer = &prevRacer0Obj->unk64->racer;
+            gRacersByPort[0] = prevRacer0Obj;
+            gRacersByPort[1] = prevPort0Racer;
+            if (gSwapLeadPlayer != 0) {
+                gSwapLeadPlayer = 0;
+                swap_lead_player();
+                racer->playerIndex = 0;
+            }
+        }
+        gNumRacersSaved = gNumRacers;
+        D_8011AD50 = 1;
+    }
+    if (D_8011AD50 == 1) {
+        set_hud_visibility(0);
+        gNumRacersSaved--;
+        if (gNumRacersSaved > 0) {
+            i = 0;
+            while (i < gNumRacers && gRacersByPosition[i] != (*gRacers)[gNumRacersSaved]) {
+               i++;
+            }
+            if (i < gNumRacers) {
+                for (; i < (gNumRacers - 1); i++) {
+                    gRacersByPosition[i] = gRacersByPosition[i + 1];
+                }
+            }
+            free_object((*gRacers)[gNumRacersSaved]);
+            (*gRacers)[gNumRacersSaved] = NULL;
+            gNumRacers--;
+            
+        } else {
+            D_8011AD50 = 2;
+        }
+    }
+    if (D_8011AD50 == 2) {
+        prevPort0Racer = (*gRacers)[0];
+        racer = &prevPort0Racer->unk64->racer;
+        func_800230D0(prevPort0Racer, racer);
+        racer->raceFinished = FALSE;
+        D_8011AD50 = 3;
+        func_8001E45C(CUTSCENE_ID_UNK_A);
+        gBalloonCutsceneTimer = 0;
+        func_8001E93C();
+    }
+    if (D_8011AD50 == 3) {
+        transition_begin(&D_800DC860);
+        D_8011AD50 = 4;
+        set_anti_aliasing(TRUE);
+    }
+    if (D_8011AD50 == 4) {
+        set_anti_aliasing(TRUE);
+        disable_racer_input();
+        if (!(get_current_level_race_type() & RACETYPE_CHALLENGE_BATTLE)) {
+            if (osTvType == TV_TYPE_PAL) {
+                cutsceneTimerLimit = 415;
+            } else {
+                cutsceneTimerLimit = 540;
+            }
+            gBalloonCutsceneTimer += updateRate;
+            if (gBalloonCutsceneTimer < cutsceneTimerLimit) {
+                func_800AB194(1);
+            } else {
+                set_hud_visibility(1);
+            }
+        }
+        i = get_buttons_pressed_from_player(PLAYER_ONE) & A_BUTTON;
+        settings = get_settings();
+        if (!(settings->cutsceneFlags & 0x40000)) {
+            i = 0;
+        }
+        if (func_800214C4() != 0 || (i != 0 && check_fadeout_transition() == 0)) {
+            if (i != 0) {
+                transition_begin(&D_800DC6F8);
+            }
+            func_8006F140(2);
+            D_8011AD50 = 5;
+            settings->cutsceneFlags |= 0x40000;
+        }
+    }
+}
 
 s16 func_8001AE44(void) {
     return D_8011AD4E;

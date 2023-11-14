@@ -406,7 +406,7 @@ void func_8001E344(s32 arg0);
 void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3);
 s16 get_cutscene_id(void);
 void set_cutscene_id(s32 arg0);
-void func_8001E45C(s32 arg0);
+void func_8001E45C(s32 cutsceneID);
 s32 get_object_list_index(void);
 s8 func_8001F3B8(void);
 void func_8001F3C8(s32 arg0);
@@ -487,6 +487,7 @@ s32 func_80016DE8(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **arg5)
 void func_80022948(void);
 void func_8000BADC(s32 updateRate);
 f32 func_8002277C(f32 *data, s32 index, f32 x);
+void func_8001A8F4(s32 updateRate);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -510,7 +511,6 @@ void func_80017E98(void);
 void func_8001BC54(void);
 void func_8001E93C(void);
 void func_80019808(s32 updateRate);
-void func_8001A8F4(s32 updateRate);
 void func_80014090(Object*, s32, ObjectHeader*);
 void func_80008438(Object**, s32, s32);
 void func_8001E89C(void);

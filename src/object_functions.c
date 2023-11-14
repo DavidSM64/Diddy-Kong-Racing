@@ -696,7 +696,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
         }
         if (obj->properties.trophyCabinet.action == 1) {
             func_800AB1AC(3);
-            set_hud_visibility(0U);
+            set_hud_visibility(0);
             dialogueID = npc_dialogue_loop(DIALOGUE_TROPHY);
             if (dialogueID) {
                 obj->properties.trophyCabinet.action = 0;

@@ -485,8 +485,8 @@ void init_transition_shape(FadeTransition *transition, s32 numVerts, s32 numTris
     
     sTransitionVtx[0] = allocate_from_main_pool_safe(((sizeVerts + sizeTris) * 2) + (i * 3), COLOUR_TAG_YELLOW);
     sTransitionVtx[1] = sTransitionVtx[0] + j;
-    sTransitionTris[0] = (Triangle*) (sTransitionVtx[1] + j);
-    sTransitionTris[1] = (Triangle*) (((u8 *) sTransitionTris[0]) + sizeTris);
+    sTransitionTris[0] = (Triangle *) (sTransitionVtx[1] + j);
+    sTransitionTris[1] = (Triangle *) (((u8 *) sTransitionTris[0]) + sizeTris);
     gTransitionNextVtx = (f32 *) (((u8 *) sTransitionTris[1]) + sizeTris);
     gTransitionVtxStep = (f32 *) (((u8 *) gTransitionNextVtx) + i);
     gTransitionVertexTarget = (f32 *) (((u8 *) gTransitionVtxStep) + i);
@@ -535,7 +535,7 @@ void init_transition_shape(FadeTransition *transition, s32 numVerts, s32 numTris
         }
     }
     
-    sTransitionStatus = 1;
+    sTransitionStatus = TRANSITION_ACTIVE;
     gTransitionVertexCount = numVerts;
 }
 
@@ -601,7 +601,95 @@ void render_fade_barndoor_vertical(Gfx **dList, UNUSED MatrixS **mats, UNUSED Ve
     reset_render_settings(dList);
 }
 
+#if 0
+void func_800C15D4(FadeTransition *transition) {
+    s32 i;
+    s32 j;
+    s32 sizeVerts;
+    s32 sizeTris;
+    s32 numVerts = 72;
+    s32 numTris = 64;
+
+    sizeVerts = numVerts * sizeof(Vertex);
+    sizeTris = numTris * sizeof(Triangle);
+
+    sTransitionVtx[0] = (Vertex *) allocate_from_main_pool_safe(((sizeVerts + sizeTris) * 2), COLOUR_TAG_YELLOW);
+    sTransitionVtx[1] = (Vertex *) ((uintptr_t) sTransitionVtx[0] + sizeVerts);
+    sTransitionTris[0] = (Triangle *) ((uintptr_t) sTransitionVtx[1] + sizeVerts);
+    sTransitionTris[1] = (Triangle *) ((uintptr_t) sTransitionTris[0] + sizeTris);
+
+    // This first one should be correct?
+    for(i = 0; i < 2; i++) {
+        for(j = 0; j < 72; j++) {
+            sTransitionVtx[i][j].r = gCurFadeRed;
+            sTransitionVtx[i][j].g = gCurFadeGreen; 
+            sTransitionVtx[i][j].b = gCurFadeBlue;
+            sTransitionVtx[i][j].a = 255;
+        }
+    }
+
+    // ???
+    for(i = 0; i < 2; i++) {
+        for(j = 0; j < 9; j++) {
+            sTransitionVtx[i][j+19].a = 0;
+            sTransitionVtx[i][j+55].a = 0;
+        }
+    }
+
+    for(i = 0; i < 2; i++) {
+        for(j = 0; j < 9; j++) {
+            sTransitionVtx[i][j].x = sins_f(j * 0x1000) * 240.0f;
+            sTransitionVtx[i][j].y = coss_f(j * 0x1000) * 180.0f; 
+            sTransitionVtx[i][j].z = -16;
+            sTransitionVtx[i][j + 1].x = -16;
+            sTransitionVtx[i][j + 1].y = -16;
+            sTransitionVtx[i][j + 1].z = -16;
+        }
+    }
+    
+    if (transition->type & FADE_FLAG_OUT) {
+        D_8012A758 = 0.0f;
+        D_8012A75C = 0.0f;
+        D_8012A760 = (240.0f / sTransitionFadeTimer);
+        D_8012A764 = (180.0f / sTransitionFadeTimer);
+        D_8012A768 = 240.0f;
+        D_8012A76C = 180.0f;
+    } else {
+        D_8012A758 = 240.0f;
+        D_8012A75C = 180.0f;
+        D_8012A760 = (-240.0f / sTransitionFadeTimer);
+        D_8012A764 = (-180.0f / sTransitionFadeTimer);
+        D_8012A768 = 0.0f;
+        D_8012A76C = 0.0f;
+    }
+    
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 64; j++) {
+            sTransitionTris[i][j].flags = 0x40;
+            sTransitionTris[i][j].uv0.u = 0;
+            sTransitionTris[i][j].uv0.v = 0;
+            sTransitionTris[i][j].uv1.u = 0;
+            sTransitionTris[i][j].uv1.v = 0;
+            sTransitionTris[i][j].uv2.u = 0;
+            sTransitionTris[i][j].uv2.v = 0;
+        }
+    }
+    for (i = 0; i < 2; i++) {
+        for (j = 0; j < 8; j++) {
+            sTransitionTris[i][(j*2)].vi0 = (j*2) + 0;
+            sTransitionTris[i][(j*2)].vi1 = (j*2) + 1;
+            sTransitionTris[i][(j*2)].vi2 = (j*2) + 3;
+            sTransitionTris[i][(j*2)+1].vi0 = (j*2) + 0;
+            sTransitionTris[i][(j*2)+1].vi1 = (j*2) + 3;
+            sTransitionTris[i][(j*2)+1].vi2 = (j*2) + 2;
+        }
+    }
+    
+    sTransitionStatus = TRANSITION_ACTIVE;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C15D4.s")
+#endif
 
 void func_800C1EE8(s32 updateRate) {
     f32 temp_f20;
@@ -736,16 +824,16 @@ void render_fade_barndoor_diagonal(Gfx **dList, UNUSED MatrixS **mats, UNUSED Ve
  * Set the transition colour target, then set the velocity for the colour to fade to.
 */
 void init_transition_blank(UNUSED FadeTransition *transition) {
-    gLastFadeRed <<= 0x10;
-    gLastFadeGreen <<= 0x10;
-    gLastFadeBlue <<= 0x10;
+    gLastFadeRed <<= 16;
+    gLastFadeGreen <<= 16;
+    gLastFadeBlue <<= 16;
     gCurFadeAlpha = 255;
     sTransitionOpacity = 255.0f;
     gTransitionOpacityVel = 0.0f;
-    gLastFadeRedStep = ((gCurFadeRed << 0x10) - gLastFadeRed) / sTransitionFadeTimer;
-    gLastFadeGreenStep = ((gCurFadeGreen << 0x10) - gLastFadeGreen) / sTransitionFadeTimer;
-    gLastFadeBlueStep = ((gCurFadeBlue << 0x10) - gLastFadeBlue) / sTransitionFadeTimer;
-    sTransitionStatus = 1;
+    gLastFadeRedStep = ((gCurFadeRed << 16) - gLastFadeRed) / sTransitionFadeTimer;
+    gLastFadeGreenStep = ((gCurFadeGreen << 16) - gLastFadeGreen) / sTransitionFadeTimer;
+    gLastFadeBlueStep = ((gCurFadeBlue << 16) - gLastFadeBlue) / sTransitionFadeTimer;
+    sTransitionStatus = TRANSITION_ACTIVE;
 }
 
 /**
@@ -760,9 +848,9 @@ void process_transition_disabled(s32 updateRate) {
             gLastFadeGreen += gLastFadeGreenStep * updateRate;
             gLastFadeBlue += gLastFadeBlueStep * updateRate;
             if (updateRate >= sTransitionFadeTimer) {
-                gLastFadeRed = gCurFadeRed << 0x10;
-                gLastFadeGreen = gCurFadeGreen << 0x10;
-                gLastFadeBlue = gCurFadeBlue << 0x10;
+                gLastFadeRed = gCurFadeRed << 16;
+                gLastFadeGreen = gCurFadeGreen << 16;
+                gLastFadeBlue = gCurFadeBlue << 16;
                 updateRate -= sTransitionFadeTimer;
                 sTransitionFadeTimer = 0;
             } else {
