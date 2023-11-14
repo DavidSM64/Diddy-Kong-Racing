@@ -250,27 +250,21 @@ void play_random_boss_sound(s32 offset) {
 }
 
 // boss_race_finish
-#ifdef NON_EQUIVALENT
-// This looks like it's just some stack and regalloc differences, but I can't be certain it's NON_MATCHING yet.
-// This function looks like it sets up the animation sequences
 void func_8005CB68(Object_Racer *racer, s8 *arg1) {
-    s32 bossId;
-    s8 arg1_ret;
-    s8 *miscAsset68;
     Settings *settings;
+    s8 arg1_ret;
+    s8 *asset;
+    s32 worldBit;
     s32 racerUnk1AC;
-    s8 *miscAsset67;
+    UNUSED s32 pad;
     s32 miscAsset68Byte5;
     s32 miscAsset68Byte6;
     s32 miscAsset68Byte7;
-    s8 miscAsset67CourseByte;
-    s32 var_t1;
     s32 i;
 
     arg1_ret = *arg1;
     settings = get_settings();
-    bossId = (1 << settings->worldId);
-    if (!miscAsset67CourseByte){}
+    worldBit = (1 << settings->worldId);
     /*
         ASSET_MISC_68[] =
         ASSET_LEVELNAME_DINODOMAINTROPHYANIM,
@@ -282,15 +276,13 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
         ASSET_LEVELNAME_LASTBIT,
         ASSET_LEVELNAME_LASTBITB
     */
-    miscAsset68 = (s8 *)get_misc_asset(ASSET_MISC_68); //8 bytes - 2F 31 30 32 2A 38 3F 40 - LevelIds for the world animations?
-    miscAsset68Byte5 = miscAsset68[5]; //0x38 - 56 - ASSET_LEVELNAME_PARTYSEQUENCE?
-    miscAsset68Byte6 = miscAsset68[6]; //0x3F - 63 - ASSET_LEVELNAME_LASTBIT?
-    miscAsset68Byte7 = miscAsset68[7]; //0x40 - 64 - ASSET_LEVELNAME_LASTBITB?
-    miscAsset67 = (s8 *)get_misc_asset(ASSET_MISC_67); //20 bytes - course id's array with world id index?
-    for (i = 0; settings->courseId != miscAsset67[i]; i += 2) {
-        if ((miscAsset67CourseByte && miscAsset67CourseByte) && miscAsset67CourseByte) {}
-    }
-    miscAsset67CourseByte = miscAsset67[i + 1];
+    asset = (s8 *) get_misc_asset(ASSET_MISC_68); //8 bytes - 2F 31 30 32 2A 38 3F 40 - LevelIds for the world animations?
+    miscAsset68Byte5 = asset[5]; //0x38 - 56 - ASSET_LEVELNAME_PARTYSEQUENCE?
+    miscAsset68Byte6 = asset[6]; //0x3F - 63 - ASSET_LEVELNAME_LASTBIT?
+    miscAsset68Byte7 = asset[7]; //0x40 - 64 - ASSET_LEVELNAME_LASTBITB?
+    asset = (s8 *) get_misc_asset(ASSET_MISC_67); //20 bytes - course id's array with world id index?
+    for (i = 0; settings->courseId != asset[i]; i += 2) {}
+    i = asset[i + 1];
     racerUnk1AC = racer->unk1AC;
     if (arg1_ret == 1) {
         if (racerUnk1AC == 1) {
@@ -298,29 +290,29 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
         } else {
             music_play(SEQUENCE_BATTLE_LOSE);
         }
-        if ((settings->worldId == WORLD_CENTRAL_AREA) || (settings->worldId == WORLD_FUTURE_FUN_LAND)) {
+        if (settings->worldId == WORLD_CENTRAL_AREA || settings->worldId == WORLD_FUTURE_FUN_LAND) {
             if (racerUnk1AC == 1) {
-                settings->bosses |= bossId;
+                settings->bosses |= worldBit;
                 settings->courseFlagsPtr[settings->courseId] |= 2;
             }
             if (settings->worldId == WORLD_CENTRAL_AREA) {
                 if (racerUnk1AC == 1) {
                     push_level_property_stack(SPECIAL_MAP_ID_UNK_NEG2, 0, VEHICLE_CAR, 0);
                     push_level_property_stack(miscAsset68Byte5, 0, -1, 0);
-                    push_level_property_stack(miscAsset67CourseByte, 0, -1, 1);
+                    push_level_property_stack(i, 0, -1, 1);
                 } else {
                     push_level_property_stack(SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
-                    push_level_property_stack(miscAsset67CourseByte, 0, -1, 2);
+                    push_level_property_stack(i, 0, -1, 2);
                 }
             } else if (racerUnk1AC == 1) {
                 set_eeprom_settings_value(1); //Set Adventure Two Unlocked
                 push_level_property_stack(SPECIAL_MAP_ID_UNK_NEG2, 0, VEHICLE_CAR, 0);
                 push_level_property_stack(miscAsset68Byte7, 0, -1, 0);
                 push_level_property_stack(miscAsset68Byte6, 0, -1, 0);
-                push_level_property_stack(miscAsset67CourseByte, 0, -1, 1);
+                push_level_property_stack(i, 0, -1, 1);
             } else {
                 push_level_property_stack(SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
-                push_level_property_stack(miscAsset67CourseByte, 0, -1, 2);
+                push_level_property_stack(i, 0, -1, 2);
             }
             if (racerUnk1AC == 1) {
                 func_8006F140(4);
@@ -347,38 +339,41 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
         }
         if (racerUnk1AC == 1) {
             settings->courseFlagsPtr[settings->courseId] |= 2;
-            if (!(settings->bosses & bossId)) {
-                settings->bosses |= bossId;
-                push_level_property_stack((s32)SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
-                push_level_property_stack(miscAsset67CourseByte, 4, -1, 4);
-            } else if (!(settings->bosses & (bossId << 6))) {
-                settings->bosses |= (bossId << 6) & 0xFFFF;
-                var_t1 = 0;
-                if ((settings->worldId > 0) && (settings->worldId < 5)) {
-                    if (settings->worldId){ }
-                    var_t1 = settings->wizpigAmulet + 1;
-                    if (var_t1 >= 5) {
-                        var_t1 = 4;
+            if (!(settings->bosses & worldBit)) {
+                settings->bosses |= worldBit;
+                push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
+                push_level_property_stack(i, 4, -1, 4);
+            } else {
+                worldBit <<= 6;
+                if (!(settings->bosses & worldBit)) {
+                    settings->bosses |= worldBit;
+                    worldBit = 0;
+                    if (settings->worldId > 0 && settings->worldId < 5) {
+                        worldBit = settings->wizpigAmulet;
+                        worldBit++;
+                        if (worldBit >= 5) {
+                            worldBit = 4;
+                        }
+                        settings->wizpigAmulet = worldBit;
                     }
-                    settings->wizpigAmulet = var_t1;
-                }
-                if (var_t1 != 0) {
-                    push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
-                    push_level_property_stack(ASSET_LEVELNAME_WIZPIGAMULETSEQUENCE, 0, -1, settings->wizpigAmulet - 1);
-                    push_level_property_stack(miscAsset67CourseByte, 6, -1, 6);
+                    if (worldBit != 0) {
+                        push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
+                        push_level_property_stack(ASSET_LEVELNAME_WIZPIGAMULETSEQUENCE, 0, -1, settings->wizpigAmulet - 1);
+                        push_level_property_stack(i, 6, -1, 6);
+                    } else {
+                        push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
+                        push_level_property_stack(i, 4, -1, 4);
+                    }
                 } else {
                     push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
-                    push_level_property_stack(miscAsset67CourseByte, 4, -1, 4);
+                    push_level_property_stack(i, 4, -1, 4);
                 }
-            } else {
-                push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
-                push_level_property_stack(miscAsset67CourseByte, 4, -1, 4);
             }
             func_8006F140(4);
             instShowBearBar();
         } else {
             push_level_property_stack(SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
-            push_level_property_stack(miscAsset67CourseByte, 5, -1, 5);
+            push_level_property_stack(i, 5, -1, 5);
             func_8006F140(3);
         }
         arg1_ret++;
@@ -386,9 +381,6 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
     }
     *arg1 = arg1_ret;
 }
-#else
-GLOBAL_ASM("asm/non_matchings/vehicle_tricky/func_8005CB68.s")
-#endif
 
 /**
  * When close to the camera, fade the object so it doesn't block the screen.

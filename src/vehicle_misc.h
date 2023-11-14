@@ -19,7 +19,6 @@ void set_boss_voice_clip_offset(u16 *soundID);
 void func_8005CA84(f32 x, f32 y, f32 z, s32 arg3);
 void play_random_boss_sound(s32 arg0);
 void fade_when_near_camera(Object *object, Object_Racer *racer, s32 distance);
-
-void func_8005CB68(Object_Racer *racer, s8 *arg1); // Non Matching
+void func_8005CB68(Object_Racer *racer, s8 *arg1);
 
 #endif
