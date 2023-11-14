@@ -311,6 +311,18 @@ typedef struct unk800149C0 {
     s16 unk6;
 } unk800149C0;
 
+// Size: 0x80 bytes.
+typedef struct Asset20 {
+    f32 unk0;
+    s32 pad4[27];
+    u8 unk70;
+    u8 unk71;
+    u8 unk72;
+    s8 unk73;
+    f32 unk74;
+    u8 pad78[0x8];
+} Asset20;
+
 #define CIC_ID 6103
 extern s32 osCicId; // Used for an Anti-Piracy check in render_3d_model
 
@@ -473,6 +485,8 @@ void func_80016748(Object *obj0, Object *obj1);
 void func_8001AE64(void);
 s32 func_80016DE8(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **arg5);
 void func_80022948(void);
+void func_8000BADC(s32 updateRate);
+f32 func_8002277C(f32 *data, s32 index, f32 x);
 
 //Non Matching
 void calc_dynamic_lighting_for_object_1(Object *, ObjectModel *, s16, Object *, f32, f32);
@@ -492,7 +506,6 @@ void func_800101AC(Object *, s32);
 void func_800135B8(Object *);
 void func_8000CC7C(Vehicle, u32, s32);
 void func_8000B020(s32, s32);
-void func_8000BADC(s32);
 void func_80017E98(void);
 void func_8001BC54(void);
 void func_8001E93C(void);

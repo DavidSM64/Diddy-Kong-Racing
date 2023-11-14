@@ -95,10 +95,11 @@ typedef struct unk800BF9F8 {
 // 4 Vertexes
 // Size: 0x28 - 40 bytes/
 typedef struct unk8012A028 {
-    Vertex vertexA;    
-    Vertex vertexB;
-    Vertex vertexC;
-    Vertex vertexD;
+    Vertex vert[4];
+    // Vertex vertexA;
+    // Vertex vertexB;
+    // Vertex vertexC;
+    // Vertex vertexD;
 } unk8012A028;
 
 // /* Size: 10 bytes */

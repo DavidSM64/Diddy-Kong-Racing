@@ -284,7 +284,7 @@ u8 D_8011B010[16];
 Object *D_8011B020[10];
 s32 D_8011B048[4];
 s32 D_8011B058[4];
-s32 D_8011B068[4];
+u8 D_8011B068[16];
 u8 D_8011B078[3];
 u8 D_8011B07B[1];
 s32 D_8011B080[7];
@@ -341,7 +341,108 @@ void func_8000B290(void) {
 
 GLOBAL_ASM("asm/non_matchings/objects/func_8000B38C.s")
 GLOBAL_ASM("asm/non_matchings/objects/func_8000B750.s")
-GLOBAL_ASM("asm/non_matchings/objects/func_8000BADC.s")
+
+void func_8000BADC(s32 updateRate) {
+    s32 i;
+    Asset20 *asset20Part;
+    s32 temp;
+    Asset20 *asset20;
+    f32 updateRateF;
+    Object_Racer *racer;
+    
+    D_8011B008 = 1 - D_8011B008;
+    D_8011AFFC = 0;
+    D_8011B004 = 0;
+    asset20 = (Asset20 *) get_misc_asset(ASSET_MISC_20);
+    D_800DC760 = 9;
+    for (i = 0; i < 10; i++) {
+        if (D_8011B068[i] && D_8011B020[i] != NULL) {
+            D_8011B020[i]->properties.common.unk0 = 0;
+        }
+        D_8011B068[i] = 1;
+    }
+    for (i = 0; i < gNumRacers; i++) {
+        updateRateF = (f32) updateRate;
+        if (osTvType == TV_TYPE_PAL) {
+            updateRateF *= 1.2f;
+        }
+        racer = &(*gRacers)[i]->unk64->racer;
+        asset20Part = &asset20[racer->unk2];
+        if (racer->shieldTimer != 0) {
+            D_8011B010[racer->unk2] += updateRate;
+        }
+        asset20Part->unk72 += updateRate;
+        if (racer->boostTimer != 0) {
+            asset20Part->unk73 = 20;
+            if (asset20Part->unk70 == 0) {
+                asset20Part->unk74 += updateRateF * 0.25f;
+                updateRateF = 0.0f;
+                if (asset20Part->unk74 > 2.4f) {
+                    asset20Part->unk74 = (f32) (4.8f - asset20Part->unk74);
+                    asset20Part->unk70 = 1;
+                }
+            }
+            if (asset20Part->unk70 == 1) {
+                asset20Part->unk74 -= updateRateF * 0.25f;
+                updateRateF = 0.0f;
+                if (asset20Part->unk74 < 1.0f) {
+                    asset20Part->unk70 = 2;
+                    asset20Part->unk74 = 1.0f - asset20Part->unk74;
+                }
+            }
+            if (asset20Part->unk70 == 2) {
+                if (asset20Part->unk74 < 1.0f) {
+                    asset20Part->unk74 += updateRateF * 0.125f;
+                    if (asset20Part->unk74 > 1.0f) {
+                        asset20Part->unk74 = 1.0f;
+                    }
+                } 
+            }
+        } else {
+            if (asset20Part->unk73 > 0) {
+                asset20Part->unk73 -= updateRate;
+            } else {
+                if (asset20Part->unk70 == 2) {
+                    asset20Part->unk74 -= updateRateF * 0.05f;
+                    updateRateF = 0.0f;
+                    if (asset20Part->unk74 < 0.0f) {
+                        asset20Part->unk70 = 0U;
+                        asset20Part->unk74 += 1.0f;
+                    }
+                }
+                if (asset20Part->unk70 < 2) {
+                    asset20Part->unk74 -= (updateRateF * 0.1f);
+                    if (asset20Part->unk74 < 0.0f) {
+                        asset20Part->unk74 = 0.0f;
+                    }
+                    asset20Part->unk70 = 0U;
+                }
+            }
+        }
+        if ((asset20Part->unk70 > 0) || (asset20Part->unk74 > 0.0f)) {
+            func_8000B750((*gRacers)[i], racer->unk2, racer->vehicleIDPrev, racer->boostType, 0);
+        }
+        temp = racer->unk2 << 2;
+        D_8011B078[temp + 1] += updateRate;
+        D_8011B078[temp + 2] += updateRate;
+        if (racer->magnetTimer != 0) {
+            if (D_8011B078[temp + 3] + (updateRate << 2) < 32) {
+                D_8011B078[temp + 3] += (updateRate << 2);
+            } else {
+                D_8011B078[temp + 3] = 32;
+            }
+        } else {
+            if (D_8011B078[temp + 3] - updateRate > 0) {
+                D_8011B078[temp + 3] -= updateRate;
+            } else {
+                D_8011B078[temp + 3] = 0;
+            }
+        }
+    }
+    if (gMagnetEffectObject != NULL) {
+        func_80011134(gMagnetEffectObject, updateRate);
+    }
+}
 
 Object *func_8000BF44(s32 arg0) {
     if (arg0 == -1) {
@@ -5587,7 +5688,18 @@ f32 cubic_spline_interpolation(f32 *data, s32 index, f32 x, f32 *derivative) {
     return ret;
 }
 
-GLOBAL_ASM("asm/non_matchings/objects/func_8002277C.s")
+f32 func_8002277C(f32 *data, s32 index, f32 x) {
+    f32 derivative;
+    f32 temp3, temp2, temp;
+    
+    temp =  (-0.5 * data[index])    + ( 1.5 * data[index + 1]) + (-1.5 * data[index + 2]) + ( 0.5 * data[index + 3]);
+    temp2 = ( 1.0 * data[index])    + (-2.5 * data[index + 1]) + ( 2.0 * data[index + 2]) + (-0.5 * data[index + 3]);
+    temp3 = (data[index + 2] * 0.5) + ( 0.0 * data[index + 1]) + (-0.5 * data[index])     + ( 0.0 * data[index + 3]);
+    
+    derivative = (((temp * 3 * x) + (2 * temp2)) * x) + temp3;
+    
+    return derivative;
+}
 
 UNUSED f32 lerp(f32 *arg0, u32 arg1, f32 arg2) {
     f32 result = arg0[arg1 + 1] + ((arg0[arg1 + 2] - arg0[arg1 + 1]) * arg2);
