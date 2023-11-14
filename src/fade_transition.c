@@ -11,6 +11,7 @@
 #include "PR/libultra.h"
 #include "video.h"
 #include "textures_sprites.h"
+#include "math_util.h"
 
 /************ .data ************/
 
@@ -198,12 +199,12 @@ s32 gLastFadeGreenStep;
 s32 gLastFadeBlueStep;
 f32 sTransitionOpacity;
 f32 gTransitionOpacityVel;
-s32 D_8012A758;
-s32 D_8012A75C;
-s32 D_8012A760;
-s32 D_8012A764;
-s32 D_8012A768;
-s32 D_8012A76C;
+f32 D_8012A758;
+f32 D_8012A75C;
+f32 D_8012A760;
+f32 D_8012A764;
+f32 D_8012A768;
+f32 D_8012A76C;
 f32 *gTransitionNextVtx;
 f32 *gTransitionVtxStep;
 f32 *gTransitionVertexTarget;
@@ -601,7 +602,57 @@ void render_fade_barndoor_vertical(Gfx **dList, UNUSED MatrixS **mats, UNUSED Ve
 }
 
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C15D4.s")
-GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1EE8.s")
+
+void func_800C1EE8(s32 updateRate) {
+    f32 temp_f20;
+    f32 temp_f2;
+    f32 temp_f16;
+    s16 temp_f6;
+    s32 i;
+    f32 arg0F;
+    f32 new_var;
+    s32 j;
+
+    arg0F = updateRate;
+    if (sTransitionFadeTimer > 0) {
+        if (updateRate < sTransitionFadeTimer) {
+            D_8012A758 += (arg0F * D_8012A760);
+            D_8012A75C += (arg0F * D_8012A764);
+            sTransitionFadeTimer -= updateRate;
+        } else {
+            D_8012A758 = D_8012A768;
+            D_8012A75C = D_8012A76C;
+            sTransitionFadeTimer = 0;
+        }
+        
+        for (j = 0, i = 0; i < 9; i++, j += 0x1000) { 
+            new_var = 1.2f;
+            temp_f20 = sins_f(j) * D_8012A758;
+            temp_f2 = coss_f(j) * D_8012A75C;
+            temp_f6 = (temp_f20 * new_var);
+            temp_f16 = (temp_f2 * new_var);
+            sTransitionVtx[sTransitionTaskNum][(i << 1) + 1].x = temp_f6;
+            sTransitionVtx[sTransitionTaskNum][(i << 1) + 1].y = temp_f16;
+            sTransitionVtx[sTransitionTaskNum][(i << 1) + 37].x = -temp_f6;
+            sTransitionVtx[sTransitionTaskNum][(i << 1) + 37].y = temp_f16;
+            sTransitionVtx[sTransitionTaskNum][(i << 1) + 18].x = temp_f6; 
+            sTransitionVtx[sTransitionTaskNum][(i << 1) + 18].y = temp_f16; 
+            sTransitionVtx[sTransitionTaskNum][(i << 1) + 54].x = -temp_f6;
+            sTransitionVtx[sTransitionTaskNum][(i << 1) + 54].y = temp_f16;
+            sTransitionVtx[sTransitionTaskNum][(i << 1) + 19].x = temp_f20;
+            sTransitionVtx[sTransitionTaskNum][(i << 1) + 19].y = temp_f2;
+            temp_f6 = temp_f20;
+            sTransitionVtx[sTransitionTaskNum][(i << 1) + 55].x = -temp_f6;
+            sTransitionVtx[sTransitionTaskNum][(i << 1) + 55].y = temp_f2;
+        }
+    } else if (gTransitionEndTimer != 0xFFFF) {
+        if (updateRate < gTransitionEndTimer) {
+            gTransitionEndTimer -= updateRate;
+        } else {
+            gTransitionEndTimer = 0;
+        }
+    }
+}
 
 #define NUM_OF_VERTS 18
 #define NUM_OF_TRIS 16
