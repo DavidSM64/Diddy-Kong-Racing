@@ -601,7 +601,7 @@ void render_fade_barndoor_vertical(Gfx **dList, UNUSED MatrixS **mats, UNUSED Ve
     reset_render_settings(dList);
 }
 
-#if 0
+#ifdef NON_EQUIVALENT
 void func_800C15D4(FadeTransition *transition) {
     s32 i;
     s32 j;
@@ -637,13 +637,20 @@ void func_800C15D4(FadeTransition *transition) {
     }
 
     for(i = 0; i < 2; i++) {
+        s16 xSins = sins_f(i * 0x1000) * 240.0f;
+        s16 yCoss = coss_f(i * 0x1000) * 180.0f;
         for(j = 0; j < 9; j++) {
-            sTransitionVtx[i][j].x = sins_f(j * 0x1000) * 240.0f;
-            sTransitionVtx[i][j].y = coss_f(j * 0x1000) * 180.0f; 
+            sTransitionVtx[i][j].x = xSins;
+            sTransitionVtx[i][j].y = yCoss;
             sTransitionVtx[i][j].z = -16;
-            sTransitionVtx[i][j + 1].x = -16;
-            sTransitionVtx[i][j + 1].y = -16;
             sTransitionVtx[i][j + 1].z = -16;
+            sTransitionVtx[i][j + 17].z = -16;
+            sTransitionVtx[i][j + 18].z = -16;
+            sTransitionVtx[i][j + 34].x = -xSins;
+            sTransitionVtx[i][j + 36].x = yCoss;
+            sTransitionVtx[i][j + 36].y = -16;
+            sTransitionVtx[i][j + 54].z = -16;
+            sTransitionVtx[i][j + 55].z = -16;
         }
     }
     
@@ -674,14 +681,14 @@ void func_800C15D4(FadeTransition *transition) {
             sTransitionTris[i][j].uv2.v = 0;
         }
     }
-    for (i = 0; i < 2; i++) {
+    for (i = 0; i < 8; i++) {
         for (j = 0; j < 8; j++) {
-            sTransitionTris[i][(j*2)].vi0 = (j*2) + 0;
-            sTransitionTris[i][(j*2)].vi1 = (j*2) + 1;
-            sTransitionTris[i][(j*2)].vi2 = (j*2) + 3;
-            sTransitionTris[i][(j*2)+1].vi0 = (j*2) + 0;
-            sTransitionTris[i][(j*2)+1].vi1 = (j*2) + 3;
-            sTransitionTris[i][(j*2)+1].vi2 = (j*2) + 2;
+            sTransitionTris[i][j * sizeof(Triangle)].vi0 = (i) + 1;
+            sTransitionTris[i][j * sizeof(Triangle)].vi1 = (i) + 2;
+            sTransitionTris[i][j * sizeof(Triangle)].vi2 = (i) + 3;
+            sTransitionTris[i][j * sizeof(Triangle) + 1].vi0 = (i) + 1;
+            sTransitionTris[i][j * sizeof(Triangle) + 1].vi1 = (i) + 2;
+            sTransitionTris[i][j * sizeof(Triangle) + 1].vi2 = (i) + 3;
         }
     }
     
