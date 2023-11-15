@@ -2159,15 +2159,15 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
     f32 var_f12;
     f32 var_f14;
     f32 var_f2;
-    s32 sp48;
-    s32 sp44;
+    s32 totalRaceTime;
+    s32 fastestLapTime;
     s32 minutes;
     s32 seconds;
     s32 hundredths;
     LevelHeader *curLevelHeader;
     s32 temp_v0_4;
     
-    sp44 = 2;
+    temp_v0_4 = 2;
     raceType = get_current_level_race_type();
     if (is_in_two_player_adventure() && is_postrace_viewport_active() && D_80127189 == 0) {
         if (func_8000E184()) {
@@ -2287,25 +2287,19 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
             }
             if (gNumActivePlayers != 1) {
                 curLevelHeader = get_current_level_header();
-                sp48 = 0;
-                var_v1 = 0;
-                sp44 = racer->lap_times[0];
-                var_a0 = racer->lap_times;
-                while (var_v1 < (var_a2 = curLevelHeader->laps)) {
-                    temp_v0_4 = var_a0[0];
-                    sp48 += temp_v0_4;
-                    if (temp_v0_4 < sp44) {
-                        sp44 = temp_v0_4;
-                        
+                totalRaceTime = 0;
+                fastestLapTime = racer->lap_times[0];
+                for (var_v1 = 0; var_v1 < (var_a2 = curLevelHeader->laps); var_v1++) {
+                    totalRaceTime += racer->lap_times[var_v1];
+                    if (racer->lap_times[var_v1] < fastestLapTime) {
+                        fastestLapTime = racer->lap_times[var_v1];
                     }
-                    var_v1++;
-                    var_a0++;
                 }
-                get_timestamp_from_frames(sp44, &minutes, &seconds, &hundredths);
+                get_timestamp_from_frames(fastestLapTime, &minutes, &seconds, &hundredths);
                 gCurrentHud->unk2FA = minutes;
                 gCurrentHud->unk2FB = seconds;
                 gCurrentHud->unk2FC = hundredths;
-                get_timestamp_from_frames(sp48, &minutes, &seconds, &hundredths);
+                get_timestamp_from_frames(totalRaceTime, &minutes, &seconds, &hundredths);
                 gCurrentHud->unk17A = minutes;
                 gCurrentHud->unk17B = seconds;
                 gCurrentHud->unk17C = hundredths;
@@ -2313,9 +2307,9 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
             break;
         case 1:
             var_a2 = TRUE;
-            var_v1 = (updateRate * 13);
             if (gCurrentHud->unk5EC < (gCurrentHud->unk5FD - (updateRate * 13)) + 160) {
-                var_a2 = 0;
+                var_v1 = (updateRate * 13);
+                var_a2 = FALSE;
             } else {
                 var_v1 = (gCurrentHud->unk5FD + 160) - gCurrentHud->unk5EC;
             }
@@ -2336,8 +2330,8 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                 gCurrentHud->unk2EC += var_v1;
             }
             if (var_a2) {
-                gCurrentHud->unk5FA = sp44;
-                gCurrentHud->unk5FB = -0x78;
+                gCurrentHud->unk5FA = temp_v0_4;
+                gCurrentHud->unk5FB = -120;
                 gCurrentHud->unk5FC = 0;
                 if (gHUDVoiceSoundMask == NULL) {
                     if (raceType == RACETYPE_CHALLENGE_BATTLE) {
@@ -2352,19 +2346,19 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                             default:
                                 sound_play(SOUND_VOICE_TT_UNLUCKY, &gHUDVoiceSoundMask);
                                 break;
-                            }
-                        } else if (get_time_trial_ghost() == NULL) {
-                            play_time_trial_end_message(&racer->playerIndex);
                         }
+                    } else if (get_time_trial_ghost() == NULL) {
+                            play_time_trial_end_message(&racer->playerIndex);
                     }
                 }
-                func_800A5F18(racer);
-                break;
+            }
+            func_800A5F18(racer);
+            break;
         case 2:
             gCurrentHud->unk5FB += updateRate;
             
-            if (gCurrentHud->unk5FB >= 0x78) {
-                gCurrentHud->unk5FB = -0x78;
+            if (gCurrentHud->unk5FB >= 120) {
+                gCurrentHud->unk5FB = -120;
                 gCurrentHud->unk5FC++;
             }
             if (gCurrentHud->unk5FC == 2) {
