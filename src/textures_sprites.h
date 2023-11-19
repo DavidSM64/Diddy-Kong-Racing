@@ -64,7 +64,8 @@ enum RenderFlags {
     RENDER_UNK_1000000 =        (1 << 24),
     RENDER_UNK_2000000 =        (1 << 25),
     RENDER_UNK_4000000 =        (1 << 26),
-    RENDER_VTX_ALPHA =          (1 << 27)  // Allows use of vertex alpha, disabling fog if necessary.
+    RENDER_VTX_ALPHA   =        (1 << 27),  // Allows use of vertex alpha, disabling fog if necessary.
+    RENDER_ALL         =        0xFFFFFFFF
 };
 
 typedef enum TransFlags {

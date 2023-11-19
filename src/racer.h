@@ -149,14 +149,6 @@ typedef struct AIBehaviourTable {
     s8 percentages[4][4];
 } AIBehaviourTable;
 
-typedef struct Asset20 {
-    f32 unk0;
-    u8 pad4[0x6C];
-    u8 unk70;
-    f32 unk74;
-    u8 pad78[0x8];
-} Asset20;
-
 typedef struct Unknown80046524 {
     s16 unk0;
     u8 pad2[0x38];

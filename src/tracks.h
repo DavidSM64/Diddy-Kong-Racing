@@ -143,7 +143,7 @@ enum WaveTypes {
     WATER_UNK_F = 15
 };
 
-s32 set_scene_viewport_num(s32 arg0);
+s32 set_scene_viewport_num(s32 numPorts);
 void func_800257D0(void);
 void spawn_skydome(s32 arg0);
 void set_skydome_visbility(s32 renderSky);
@@ -205,7 +205,7 @@ void func_8002EEEC(void);
 void func_8002F2AC(void);
 void func_8002F440(void);
 f32 func_8002FA64(void);
-s32 func_8002BAB0(s16, f32, f32, f32*);
+s32 func_8002BAB0(s32, f32, f32, f32*);
 void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, u32 entranceId, u32 collectables, u32 arg6);
 void func_800B82B4(LevelModel *, LevelHeader *, s32);
 void func_80025510(s32);

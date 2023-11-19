@@ -1266,9 +1266,7 @@ typedef struct Object_Racer {
   /* 0x11C */ f32 unk11C;
   /* 0x120 */ f32 unk120;
   /* 0x124 */ f32 unk124;
-  /* 0x128 */ s32 lap_times[3];
-  /* 0x134 */ s32 unk134;
-  /* 0x138 */ s32 unk138;
+  /* 0x128 */ s32 lap_times[5]; //func_80022948 implies there should be at least 5 lap times.
   /* 0x13C */ s32 unk13C;
   /* 0x140 */ struct Object *magnetTargetObj;
   /* 0x144 */ struct Object *held_obj;

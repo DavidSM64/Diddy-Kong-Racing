@@ -477,7 +477,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 gDPPipeSync(gHUDCurrDisplayList++);
                 init_rsp(&gHUDCurrDisplayList);
                 init_rdp_and_framebuffer(&gHUDCurrDisplayList);
-                tex_enable_modes(0xFFFFFFFF);
+                tex_enable_modes(RENDER_ALL);
                 tex_disable_modes(RENDER_Z_COMPARE);
                 sprite_opaque(FALSE);
                 if (check_if_showing_cutscene_camera() == FALSE && D_80126D34 == FALSE && racer->playerIndex == PLAYER_ONE) {
@@ -551,7 +551,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 if (racer->raceFinished == TRUE) {
                     func_80068508(TRUE);
                     if (is_in_time_trial()) {
-                        render_time_trial_finish((Object_Racer *) racer, updateRate);
+                        render_time_trial_finish(racer, updateRate);
                     } else if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER && racer->unk1AC == 1) {
                         if (is_in_two_player_adventure()) {
                             if (get_current_level_race_type() == RACETYPE_BOSS) {
@@ -571,12 +571,12 @@ block_95:
                 sprite_opaque(TRUE);
                 if (D_80127180) {
                     gHudSprites[D_80127180].texture = NULL;
-                    render_textured_rectangle(&gHUDCurrDisplayList, (DrawTexture *) &gHudSprites, 0, 0, 255, 255, 255, 255);
+                    render_textured_rectangle(&gHUDCurrDisplayList, gHudSprites, 0, 0, 255, 255, 255, 255);
                 }
                 *dList = gHUDCurrDisplayList;
                 *mtx = gHUDCurrMatrix;
                 *vertexList = gHUDCurrVertex;
-                tex_enable_modes(0xFFFFFFFF);
+                tex_enable_modes(RENDER_ALL);
             }
         }
     }
@@ -977,9 +977,89 @@ void render_hud_battle(s32 arg0, Object *obj, s32 updateRate) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1E48.s")
+#ifdef NON_EQUIVALENT
+void func_800A1E48(Object *racerObj, s32 updateRate) {
+    f32 temp;
+    s32 i;
+    Object_Racer *racer;
+    s32 numRacers;
+    Object **racers;
+    s32 prevCurrHudUnk64C;
+    s32 prevCurrHudUnk650;
+    f32 temp2;
+    Object_Racer *curRacer;
+    s32 offset;
+    s32 temp3;
+    s32 temp4;
+    
+    racers = get_racer_objects(&numRacers);
+    if (racerObj != NULL) {
+        racer = &racerObj->unk64->racer;
+    } else {
+        racer = &racers[PLAYER_ONE]->unk64->racer;
+    }
 
-void func_800A22F4(Object_Racer *racer, UNUSED void *unused) {
+    func_80068508(TRUE);
+    if (numRacers == 4) {
+        offset = 0;
+        prevCurrHudUnk64C = gCurrentHud->unk64C;
+        prevCurrHudUnk650 = gCurrentHud->unk650;
+        for (i = 0; i < 4; i++) {
+            curRacer = &racers[i]->unk64->racer;
+            temp = prevCurrHudUnk64C ^ 0;
+            temp3 = temp - gCurrentHud->unk64C;
+            temp = temp3;
+            temp2 = offset + prevCurrHudUnk650;
+            temp4 = temp2 - gCurrentHud->unk650;
+            temp2 = temp4;
+            gCurrentHud->unk64C += temp;
+            gCurrentHud->unk650 += temp2;
+            gCurrentHud->unk68C += temp;
+            gCurrentHud->unk690 -= temp2;
+            gCurrentHud->unk6AC += temp;
+            gCurrentHud->unk6B0 += temp2;
+            gCurrentHud->unk6CC += temp;
+            gCurrentHud->unk6D0 += temp2;
+            gCurrentHud->unk6EC += temp;
+            gCurrentHud->unk6F0 += temp2;
+            if (gNumActivePlayers < 3 || racer->playerIndex == curRacer->playerIndex) {
+                func_800A22F4(curRacer, updateRate);
+            }
+            if (gNumActivePlayers == 1) {
+                prevCurrHudUnk64C += 68;
+            } else if (gNumActivePlayers == 2) {
+                if (osTvType == TV_TYPE_PAL) {
+                    offset += 66.0;
+                } else {
+                    offset += 55;
+                }
+            }
+        }
+
+        temp = prevCurrHudUnk64C;
+        temp3 = temp - gCurrentHud->unk64C;
+        temp = temp3;
+        temp2 = prevCurrHudUnk650;
+        temp4 = temp2 - gCurrentHud->unk650;
+        temp2 = temp4;
+        gCurrentHud->unk64C += temp;
+        gCurrentHud->unk650 += temp2;
+        gCurrentHud->unk68C += temp;
+        gCurrentHud->unk690 -= temp2;
+        gCurrentHud->unk6AC += temp;
+        gCurrentHud->unk6B0 += temp2;
+        gCurrentHud->unk6CC += temp;
+        gCurrentHud->unk6D0 += temp2;
+        gCurrentHud->unk6EC += temp;
+        gCurrentHud->unk6F0 += temp2;
+    }
+    func_80068508(FALSE);
+}
+#else
+GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1E48.s")
+#endif
+
+void func_800A22F4(Object_Racer *racer, UNUSED s32 updateRate) {
     gCurrentHud->unk646 = racer->characterId + 56;
     if (gNumActivePlayers < 3 || (gNumActivePlayers == 3 && racer->playerIndex == PLAYER_COMPUTER)) {
         D_80126CD5 = TRUE;
@@ -2051,7 +2131,7 @@ void func_800A5F18(Object_Racer *racer) {
 
     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk5E0);
     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk600);
-    if (!(get_current_level_race_type() & 0x40) && (is_in_two_player_adventure() == 0)) {
+    if (!(get_current_level_race_type() & RACETYPE_CHALLENGE_BATTLE) && (is_in_two_player_adventure() == 0)) {
         get_racer_objects(&sp24);
         if (gNumActivePlayers >= 2 && (is_in_two_player_adventure() == FALSE || is_postrace_viewport_active() == FALSE)) {
             set_text_font(FONT_COLOURFUL);
@@ -2068,7 +2148,259 @@ void func_800A5F18(Object_Racer *racer) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+void func_800A6254(Object_Racer *racer, s32 updateRate) {
+    s32 *var_a0;
+    s32 var_t0;
+    s32 var_a2;
+    s32 var_v1;
+    s32 raceType;
+    f32 var_f0;
+    f32 var_f12;
+    f32 var_f14;
+    f32 var_f2;
+    s32 totalRaceTime;
+    s32 fastestLapTime;
+    s32 minutes;
+    s32 seconds;
+    s32 hundredths;
+    LevelHeader *curLevelHeader;
+    s32 temp_v0_4;
+    
+    raceType = get_current_level_race_type();
+    if (is_in_two_player_adventure() && is_postrace_viewport_active() && D_80127189 == 0) {
+        if (func_8000E184()) {
+            gCurrentHud->unk5F0 -= 108.0f;
+            gCurrentHud->unk610 -= 108.0f;
+            gCurrentHud->unk170 -= 108.0f;
+            gCurrentHud->unk2F0 -= 108.0f;
+        }
+        gCurrentHud->unk5F0 += 35.0f;
+        gCurrentHud->unk610 += 35.0f;
+        gCurrentHud->unk170 += 35.0f;
+        gCurrentHud->unk2F0 += 35.0f;
+        D_800E2770[0].playerIndex = racer->playerIndex;
+        D_80127189 = 1;
+    }
+    
+    switch (gCurrentHud->unk5FA) {
+        case 0:
+            if (!(raceType & RACETYPE_CHALLENGE_BATTLE)) {
+                D_800E2770[0].volume = 127;
+                D_800E2770[0].unk3 = 0;
+                D_800E2770[0].playerIndex = racer->playerIndex;
+                sound_play(SOUND_WHOOSH1, NULL);
+            }
+            switch (gHUDNumPlayers) {
+                case 0:
+                case 1:
+                    gCurrentHud->unk5FD = -20;
+                    gCurrentHud->unk17D = -15;
+                    gCurrentHud->unk2FD = -15;
+                    break;
+                default:
+                    if (racer->playerIndex == PLAYER_ONE || racer->playerIndex == PLAYER_THREE) {
+                        gCurrentHud->unk5FD = -90;
+                        gCurrentHud->unk17D = -85;
+                        gCurrentHud->unk2FD = -85;
+                    } else {
+                        gCurrentHud->unk5FD = 55;
+                        gCurrentHud->unk17D = 60;
+                        gCurrentHud->unk2FD = 60;
+                    }
+                    break;
+            }
+            if (osTvType == TV_TYPE_PAL) {
+                gCurrentHud->unk5FD -= 4;
+                gCurrentHud->unk17D -= 4;
+                gCurrentHud->unk2FD -= 4;
+            }
+            if (racer->unk1AC < 4) {
+                gCurrentHud->unk618 = racer->unk1AC - 1;
+            } else {
+                gCurrentHud->unk618 = 3;
+            }
+            gCurrentHud->unk5F8 = racer->unk1AC - 1;
+            gCurrentHud->unk5FA = 1;
+            switch (gNumActivePlayers) {
+                case 2:
+                    var_f12 = 360.0f;
+                    var_f14 = -40.0f;
+                    if (racer->playerIndex == PLAYER_ONE) {
+                        var_f0 = 75.0f;
+                        var_f2 = 90.0f;
+                    } else {
+                        var_f0 = 183.0f;
+                        var_f2 = 198.0f;
+                    }
+                    if (osTvType == TV_TYPE_PAL) {
+                        var_f0 *= 1.1;
+                        var_f2 *= 1.1;
+                        var_f12 -= 4.0f;
+                        var_f14 -= 4.0f;
+                        var_f0 = (s32) var_f0;
+                        var_f2 = (s32) var_f2;
+                        if (racer->playerIndex == 0) {
+                            var_f0 -= 9.0f;
+                            var_f2 -= 9.0f;
+                        }
+                    }
+                    gCurrentHud->unk16C = var_f12;
+                    gCurrentHud->unk170 = var_f0;
+                    gCurrentHud->unk2EC = var_f14;
+                    gCurrentHud->unk2F0 = var_f2;
+                    break;
+                case 3:
+                case 4:
+                    if (racer->playerIndex < 2) {
+                        var_f0 = 75.0f;
+                        var_f2 = 90.0f;
+                    } else {
+                        var_f0 = 183.0f;
+                        var_f2 = 198.0f;
+                    }
+                    if (racer->playerIndex == PLAYER_ONE || racer->playerIndex == PLAYER_THREE) {
+                        var_f12 = 70.0f;
+                        var_f14 = -230.0f;
+                    } else {
+                        var_f12 = 230.0f;
+                        var_f14 = -70.0f;
+                    }
+                    if (osTvType == TV_TYPE_PAL) {
+                        var_f0 *= 1.1;
+                        var_f2 *= 1.1;
+                        var_f12 -= 4.0f;
+                        var_f14 -= 4.0f;
+                        var_f0 = (s32) var_f0;
+                        var_f2 = (s32) var_f2;
+                        if (racer->playerIndex < 2) {
+                            var_f0 -= 9.0f;
+                            var_f2 -= 9.0f;
+                        }
+                    }
+                    gCurrentHud->unk16C = var_f12;
+                    gCurrentHud->unk170 = var_f0;
+                    gCurrentHud->unk2EC = var_f14;
+                    gCurrentHud->unk2F0 = var_f2;
+                    break;
+            }
+            if (gNumActivePlayers != 1) {
+                curLevelHeader = get_current_level_header();
+                totalRaceTime = 0;
+                fastestLapTime = racer->lap_times[0];
+                for (var_v1 = 0; var_v1 < (var_a2 = curLevelHeader->laps); var_v1++) {
+                    totalRaceTime += racer->lap_times[var_v1];
+                    if (racer->lap_times[var_v1] < fastestLapTime) {
+                        fastestLapTime = racer->lap_times[var_v1];
+                    }
+                }
+                get_timestamp_from_frames(fastestLapTime, &minutes, &seconds, &hundredths);
+                gCurrentHud->unk2FA = minutes;
+                gCurrentHud->unk2FB = seconds;
+                gCurrentHud->unk2FC = hundredths;
+                get_timestamp_from_frames(totalRaceTime, &minutes, &seconds, &hundredths);
+                gCurrentHud->unk17A = minutes;
+                gCurrentHud->unk17B = seconds;
+                gCurrentHud->unk17C = hundredths;
+            }
+            break;
+        case 1:
+            var_a2 = TRUE;
+            if (gCurrentHud->unk5EC < (gCurrentHud->unk5FD - (updateRate * 13)) + 160) {
+                var_v1 = (updateRate * 13);
+                var_a2 = FALSE;
+            } else {
+                var_v1 = (gCurrentHud->unk5FD + 160) - gCurrentHud->unk5EC;
+            }
+            gCurrentHud->unk5EC += var_v1;
+            gCurrentHud->unk60C += var_v1;
+            if (gNumActivePlayers != 1) {
+                if ((gCurrentHud->unk17D + (updateRate * 13) + 160) < gCurrentHud->unk16C) {
+                    var_a2 = FALSE;
+                } else {
+                    var_v1 = gCurrentHud->unk16C - (gCurrentHud->unk17D + 160);
+                }
+                gCurrentHud->unk16C -= var_v1;
+                if (gCurrentHud->unk2EC < (gCurrentHud->unk2FD - var_v1) + 160) {
+                    var_a2 = FALSE;
+                } else { 
+                    var_v1 = (gCurrentHud->unk2FD + 160) - gCurrentHud->unk2EC;
+                }
+                gCurrentHud->unk2EC += var_v1;
+            }
+            temp_v0_4 = 2; //fakematch?
+            if (var_a2) {
+                gCurrentHud->unk5FA = temp_v0_4; //fakematch? Why not just set directly to 2?
+                gCurrentHud->unk5FB = -120;
+                gCurrentHud->unk5FC = 0;
+                if (gHUDVoiceSoundMask == NULL) {
+                    if (raceType == RACETYPE_CHALLENGE_BATTLE) {
+                        switch (racer->unk1AC) {
+                            case 1:
+                            case 2:
+                                sound_play(SOUND_UNK_146, &gHUDVoiceSoundMask);
+                                break;
+                            case 3:
+                                sound_play(SOUND_VOICE_TT_TOO_BAD, &gHUDVoiceSoundMask);
+                                break;
+                            default:
+                                sound_play(SOUND_VOICE_TT_UNLUCKY, &gHUDVoiceSoundMask);
+                                break;
+                        }
+                    } else if (get_time_trial_ghost() == NULL) {
+                        play_time_trial_end_message(&racer->playerIndex);
+                    }
+                }
+            }
+            func_800A5F18(racer);
+            break;
+        case 2:
+            gCurrentHud->unk5FB += updateRate;
+            
+            if (gCurrentHud->unk5FB >= 120) {
+                gCurrentHud->unk5FB = -120;
+                gCurrentHud->unk5FC++;
+            }
+            if (gCurrentHud->unk5FC == 2) {
+                if (gNumActivePlayers == 1 || is_in_two_player_adventure()) {
+                    gCurrentHud->unk5FA = 3;
+                    sound_play(SOUND_WHOOSH1, NULL);
+                } else {
+                    gCurrentHud->unk5FA = 4;
+                }
+            }
+            func_800A5F18(racer);
+            break;
+        case 3:
+            if (raceType == RACETYPE_CHALLENGE_BATTLE) {
+                gCurrentHud->unk5FA = 4;
+            } else {
+                gCurrentHud->unk5EC -= (updateRate * 13);
+                gCurrentHud->unk60C -= (updateRate * 13);
+                if (gCurrentHud->unk5EC < -200.0f) {
+                    gCurrentHud->unk5FA = 4;
+                }
+                gCurrentHud->unk16C += (updateRate * 13);
+                gCurrentHud->unk2EC += (updateRate * 13);
+            }
+            func_800A5F18(racer);
+            break;
+        case 4:
+            if (racer->playerIndex == D_800E2770[0].playerIndex) {
+                D_800E2770[0].unk3 = -1;
+            }
+            gCurrentHud->unk5FA = 5;
+            gCurrentHud->unk5FB = 0;
+            func_800A5F18(racer);
+            break;
+        default:
+            func_800A5F18(racer);
+            break;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A6254.s")
+#endif
 
 /**
  * Play the normal race finish message, unless you beat your time record,
