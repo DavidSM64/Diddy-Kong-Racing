@@ -2131,7 +2131,7 @@ void func_800A5F18(Object_Racer *racer) {
 
     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk5E0);
     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk600);
-    if (!(get_current_level_race_type() & 0x40) && (is_in_two_player_adventure() == 0)) {
+    if (!(get_current_level_race_type() & RACETYPE_CHALLENGE_BATTLE) && (is_in_two_player_adventure() == 0)) {
         get_racer_objects(&sp24);
         if (gNumActivePlayers >= 2 && (is_in_two_player_adventure() == FALSE || is_postrace_viewport_active() == FALSE)) {
             set_text_font(FONT_COLOURFUL);
@@ -2167,7 +2167,6 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
     LevelHeader *curLevelHeader;
     s32 temp_v0_4;
     
-    temp_v0_4 = 2;
     raceType = get_current_level_race_type();
     if (is_in_two_player_adventure() && is_postrace_viewport_active() && D_80127189 == 0) {
         if (func_8000E184()) {
@@ -2195,19 +2194,19 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
             switch (gHUDNumPlayers) {
                 case 0:
                 case 1:
-                    gCurrentHud->unk5FD = -0x14;
-                    gCurrentHud->unk17D = -0xF;
-                    gCurrentHud->unk2FD = -0xF;
+                    gCurrentHud->unk5FD = -20;
+                    gCurrentHud->unk17D = -15;
+                    gCurrentHud->unk2FD = -15;
                     break;
                 default:
                     if (racer->playerIndex == PLAYER_ONE || racer->playerIndex == PLAYER_THREE) {
-                        gCurrentHud->unk5FD = -0x5A;
-                        gCurrentHud->unk17D = -0x55;
-                        gCurrentHud->unk2FD = -0x55;
+                        gCurrentHud->unk5FD = -90;
+                        gCurrentHud->unk17D = -85;
+                        gCurrentHud->unk2FD = -85;
                     } else {
-                        gCurrentHud->unk5FD = 0x37;
-                        gCurrentHud->unk17D = 0x3C;
-                        gCurrentHud->unk2FD = 0x3C;
+                        gCurrentHud->unk5FD = 55;
+                        gCurrentHud->unk17D = 60;
+                        gCurrentHud->unk2FD = 60;
                     }
                     break;
             }
@@ -2329,8 +2328,9 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                 }
                 gCurrentHud->unk2EC += var_v1;
             }
+            temp_v0_4 = 2; //fakematch?
             if (var_a2) {
-                gCurrentHud->unk5FA = temp_v0_4;
+                gCurrentHud->unk5FA = temp_v0_4; //fakematch? Why not just set directly to 2?
                 gCurrentHud->unk5FB = -120;
                 gCurrentHud->unk5FC = 0;
                 if (gHUDVoiceSoundMask == NULL) {
@@ -2348,7 +2348,7 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                                 break;
                         }
                     } else if (get_time_trial_ghost() == NULL) {
-                            play_time_trial_end_message(&racer->playerIndex);
+                        play_time_trial_end_message(&racer->playerIndex);
                     }
                 }
             }
@@ -2375,8 +2375,8 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
             if (raceType == RACETYPE_CHALLENGE_BATTLE) {
                 gCurrentHud->unk5FA = 4;
             } else {
-                gCurrentHud->unk5EC = (gCurrentHud->unk5EC - (updateRate * 13));
-                gCurrentHud->unk60C = (gCurrentHud->unk60C - (updateRate * 13));
+                gCurrentHud->unk5EC -= (updateRate * 13);
+                gCurrentHud->unk60C -= (updateRate * 13);
                 if (gCurrentHud->unk5EC < -200.0f) {
                     gCurrentHud->unk5FA = 4;
                 }
