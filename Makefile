@@ -62,7 +62,7 @@ endif
 
 ########## Make tools ##########
 
-DUMMY != make -s -C tools >&2 || echo FAIL
+DUMMY != $(MAKE) -s -C tools >&2 || echo FAIL
 ifeq ($(DUMMY),FAIL)
   $(error Failed to build tools)
 endif
@@ -132,14 +132,25 @@ endif
 
 AS = $(CROSS)as
 CC := tools/ido-static-recomp/build/5.3/out/cc
-CPP := cpp -P -Wno-trigraphs -I include
 LD = $(CROSS)ld
 OBJDUMP = $(CROSS)objdump
-# Pad to 12MB if matching, otherwise build to a necessary minimum of 1.04KB
+# Pad to 12MB if matching, otherwise build to a necessary minimum of 1.004MB
 ifeq ($(NON_MATCHING),0)
   OBJCOPY = $(CROSS)objcopy --pad-to=0xC00000 --gap-fill=0xFF
 else
   OBJCOPY = $(CROSS)objcopy --pad-to=0x101000 --gap-fill=0xFF
+endif
+
+# Returns the path to the command $(1) if exists. Otherwise returns an empty string.
+find-command = $(shell which $(1) 2>/dev/null)
+
+# Prefer clang as C preprocessor if installed on the system
+ifneq (,$(call find-command,clang))
+  CPP      := clang
+  CPPFLAGS := -E -P -x c -Wno-trigraphs -I include
+else
+  CPP      := cpp
+  CPPFLAGS := -P -Wno-trigraphs -I include
 endif
 
 MIPSISET := -mips1
@@ -168,30 +179,28 @@ EMU_FLAGS = --noosd
 LOADER = loader64
 LOADER_FLAGS = -vwf
 
-FixPath = $(subst /,,$1)
-
 N64CRC = $(TOOLS_DIR)/n64crc
 FIXCHECKSUMS = python3 $(TOOLS_DIR)/python/calc_func_checksums.py $(VERSION)
 COMPRESS = $(TOOLS_DIR)/dkr_assets_tool -fc
 BUILDER = $(TOOLS_DIR)/dkr_assets_tool -b $(VERSION) ./assets
 
-LIB_DIRS := lib/
-ASM_DIRS := asm/ asm/boot/ asm/assets/ lib/asm/ lib/asm/non_decompilable
-SRC_DIRS := $(sort $(dir $(wildcard src/* src/**/*))) $(sort $(dir $(wildcard lib/src/* lib/src/**/* lib/src/**/**/*)))
+LIB_DIRS := lib
+ASM_DIRS := asm asm/boot asm/assets lib/asm lib/asm/non_decompilable
+SRC_DIRS := $(sort $(patsubst %/,%,$(dir $(wildcard src/* src/**/* lib/src/* lib/src/**/* lib/src/**/**/*))))
 
 GLOBAL_ASM_C_FILES != grep -rl 'GLOBAL_ASM(' $(SRC_DIRS)
 GLOBAL_ASM_O_FILES = $(foreach file,$(GLOBAL_ASM_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
 
-S_FILES := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)*.s))
-C_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)*.c))
+S_FILES := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)/*.s))
+C_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c))
 
 # Object files
-O_FILES := 	$(foreach file,$(S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
-            $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file:.c=.o))
-			
+O_FILES := $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
+           $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file:.c=.o))
+
 # Automatic dependency files
 DEP_FILES := $(O_FILES:.o=.d) $(BUILD_DIR)/$(LD_SCRIPT).d
-			
+
 # Check code syntax with host compiler
 CC_CHECK := gcc
 ifeq ($(shell getconf LONG_BIT), 64)
@@ -302,47 +311,47 @@ LD_SCRIPT = $(TARGET).ld
 
 all: $(BUILD_DIR)/$(TARGET).z64
 
-reset: 
-ifneq ($(wildcard ./build/.*),) 
+reset:
+ifneq ($(wildcard ./build/.*),)
 	rm -r build
-endif 
-ifneq ($(wildcard ./assets/.*),) 
-	rm -r assets
-endif 
-ifneq ($(wildcard ./ucode/.*),) 
-	rm -r ucode
-endif 
-	@echo "Done." 
-
-clean: 
-ifneq ($(wildcard ./build/.*),) 
-	rm -r build
-	rm -r dkr.ld
-else 
-	@echo "/build/ directory has already been deleted." 
 endif
+ifneq ($(wildcard ./assets/.*),)
+	rm -r assets
+endif
+ifneq ($(wildcard ./ucode/.*),)
+	rm -r ucode
+endif
+	@echo "Done."
+
+clean:
+ifneq ($(wildcard ./build/.*),)
+	rm -r build
+else
+	@echo "/build/ directory has already been deleted."
+endif
+	rm -f dkr.ld
 
 distclean:
 	rm -rf build
 	rm -rf assets
 	rm -rf ucode
-	rm -rf dkr.ld
+	rm -f dkr.ld
 	$(MAKE) -C tools distclean
-    
+
 clean_lib:
 ifneq ($(wildcard $(BUILD_DIR)/lib/.*),)
 	rm -r $(BUILD_DIR)/lib/src/*/*.o
-else 
-	@echo "build lib directory has already been deleted." 
-endif 
+else
+	@echo "build lib directory has already been deleted."
+endif
 
 clean_src: clean_lib
 ifneq ($(wildcard $(BUILD_DIR)/src/.*),)
 	rm -r $(BUILD_DIR)/src/*.o
-	rm -rf dkr.ld
-else 
-	@echo "/build/lib directory has already been deleted." 
-endif 
+	rm -f dkr.ld
+else
+	@echo "/build/lib directory has already been deleted."
+endif
 
 # Helps fix an issue with parallel jobs.
 $(ALL_ASSETS_BUILT): | $(BUILD_DIR)
@@ -370,13 +379,13 @@ $(foreach FILE,$(JSON_FILES),$(eval $(call DEFINE_ASSET_TARGET,$(FILE),$(call JS
 $(UCODE_OUT_DIR)/%.bin: $(UCODE_IN_DIR)/%.bin
 	$(call print,Copying:,$<,$@)
 	$(V)$(ASSETS_COPY) $^ $@
-    
+
 ###############################
 
 $(BUILD_DIR)/%.o: %.s | $(ALL_ASSETS_BUILT)
 	$(call print,Assembling:,$<,$@)
 	$(V)$(AS) $(ASFLAGS) -MD $(BUILD_DIR)/$*.d -o $@ $<
-	
+
 $(BUILD_DIR)/%.o: %.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling:,$<,$@)
 	@$(CC_CHECK) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
@@ -391,7 +400,7 @@ $(BUILD_DIR)/lib/src/libc/ll.o: lib/src/libc/ll.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling mips3:,$<,$@)
 	$(V)$(CC) $(CFLAGS) -o $@ $<
 	$(V)python3 tools/python/patchmips3.py $@ || rm $@
-	
+
 $(BUILD_DIR)/%.o: $(BUILD_DIR)/%.c | $(ALL_ASSETS_BUILT)
 	$(call print,Compiling:,$<,$@)
 	@$(CC_CHECK) $(CC_CHECK_CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
@@ -399,7 +408,7 @@ $(BUILD_DIR)/%.o: $(BUILD_DIR)/%.c | $(ALL_ASSETS_BUILT)
 
 $(BUILD_DIR)/$(LD_SCRIPT): $(LD_SCRIPT) | $(ALL_ASSETS_BUILT)
 	$(call print,Preprocessing linker script:,$<,$@)
-	$(V)$(CPP) $(VERSION_CFLAGS) -DBUILD_DIR=$(BUILD_DIR) -MMD -MP -MT $@ -MF $@.d -o $@ $<
+	$(V)$(CPP) $(CPPFLAGS) $(VERSION_CFLAGS) -DBUILD_DIR=$(BUILD_DIR) -MMD -MP -MT $@ -MF $@.d -o $@ $<
 
 $(BUILD_DIR)/$(TARGET).elf: $(O_FILES) $(BUILD_DIR)/$(LD_SCRIPT) | $(ALL_ASSETS_BUILT)
 	@$(PRINT) "$(GREEN)Linking ELF file: $(BLUE)$@ $(NO_COL)\n"
@@ -428,7 +437,7 @@ $(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR)/$(TARGET).z64
 
 $(BUILD_DIR)/$(TARGET).objdump: $(BUILD_DIR)/$(TARGET).elf
 	$(OBJDUMP) -D $< > $@
-    
+
 $(GLOBAL_ASM_O_FILES): CC := python3 tools/asm_processor/build.py $(CC) -- $(AS) $(ASFLAGS) --
 
 test: $(BUILD_DIR)/$(TARGET).z64

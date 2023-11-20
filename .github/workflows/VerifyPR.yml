@@ -20,7 +20,7 @@ jobs:
     - name: Install packages
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential pkg-config git python3 libssl-dev wget libcapstone-dev binutils-mips-linux-gnu
+        sudo apt-get install -y build-essential pkg-config git python3 libssl-dev wget binutils-mips-linux-gnu
 
     - name: Get ROM
       run: wget -q -O baseroms/dkr.z64 ${{secrets.ROMURL}}
@@ -30,7 +30,7 @@ jobs:
 
     - name: Download Recomp
       run: |
-        wget -q -O ido-static-recomp.tar.gz https://github.com/decompals/ido-static-recomp/releases/download/v0.1/ido-5.3-recomp-ubuntu-latest.tar.gz
+        wget -q -O ido-static-recomp.tar.gz https://github.com/decompals/ido-static-recomp/releases/download/v1.0/ido-5.3-recomp-linux.tar.gz
         mkdir -p tools/ido-static-recomp/build5.3/out
         tar -xvzf ido-static-recomp.tar.gz -C tools/ido-static-recomp/build5.3/out
 
