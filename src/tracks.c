@@ -1677,7 +1677,222 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
+    LevelModelSegment *currentSegment;
+    Triangle *temp_fp;
+    Vertex *temp_ra;
+    Vertex *temp_s7;
+    Vertex *temp_s7_2;
+    Vertex *temp_s7_3;
+    f32 *temp_t9_2;
+    f32 *var_a1_2;
+    f32 temp_f0;
+    f32 temp_f2;
+    f32 temp_f2_2;
+    s16 temp_a0_2;
+    s16 temp_a1;
+    s16 temp_a2;
+    s16 temp_a3_2;
+    s16 temp_t0_5;
+    s16 temp_t0_6;
+    s16 temp_t1_4;
+    s16 temp_t5;
+    s16 temp_v0_2;
+    s16 temp_v1_2;
+    s16 temp_v1_3;
+    s16 var_a1;
+    s16 var_a2;
+    s16 var_s1;
+    s16 var_t0;
+    s16 var_t1;
+    //s32 temp_a0_3;
+    s32 argInInt;
+    s32 temp_fp_2;
+    s32 temp_ra_2;
+    s32 temp_s7_4;
+    s32 var_s2;
+    s32 var_s5;
+    s32 var_s6;
+    s32 i;
+    s32 var_t2_3;
+    s32 var_v0;
+    s32 var_v1;
+    TriangleBatchInfo *temp_a0;
+    s16 *temp_v1_4;
+
+    if (levelSegmentIndex < 0 || levelSegmentIndex >= gCurrentLevelModel->numberOfSegments) {
+        return 0;
+    }
+    currentSegment = &gCurrentLevelModel->segments[levelSegmentIndex];
+    var_a1 = 1;
+    var_s1 = 0;
+
+    argInInt = xIn;
+    temp_a2 = ((gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x2 - gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x1) >> 3) + 1;
+    var_t0 = temp_a2 + gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x1;
+    var_t1 = gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x1;
+    for (i = 0; i < 8; i++) {
+        if (var_t0 >= argInInt && argInInt >= var_t1) {
+            var_s1 |= var_a1;
+        }
+        var_t0 += temp_a2;
+        var_t1 += temp_a2;
+        var_a1 *= 2;
+    } 
+    
+    argInInt = zIn;
+    temp_a2 = ((gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z2 - gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z1) >> 3) + 1;
+    var_t0 = temp_a2 + gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z1;
+    var_t1 = gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z1;
+    i = 0;
+    do {
+        if (var_t0 >= argInInt && argInInt >= var_t1) {
+            var_s1 |= var_a1;
+        }
+        var_t0 += temp_a2;
+        var_t1 += temp_a2;
+        var_a1 *= 2;
+        if (var_t0 >= argInInt && argInInt >= var_t1) {
+            var_s1 |= var_a1;
+        }
+        var_t0 += temp_a2;
+        var_t1 += temp_a2;
+        var_a1 *= 2;
+        if (var_t0 >= argInInt && argInInt >= var_t1) {
+            var_s1 |= var_a1;
+        }
+        var_t0 += temp_a2;
+        var_t1 += temp_a2;
+        var_a1 *= 2;
+        if (temp_t0_5 >= argInInt && argInInt >= var_t1) {
+            var_s1 |= var_a1;
+        }
+        var_t0 += temp_a2;
+        var_t1 += temp_a2;
+        var_a1 *= 2;
+        i+=4;
+    } while (i < 8);
+
+    var_s2 = 0;
+    var_s5 = 0;
+    if (currentSegment->numberOfBatches > 0) {
+        var_s6 = 0;
+        do {
+            var_s5 += 1;
+            temp_a0 = currentSegment->batches + var_s6;
+            temp_v1_2 = temp_a0->facesOffset;
+            temp_t5 = temp_a0[1].facesOffset;
+            temp_t1_4 = temp_a0->verticesOffset;
+            var_a2 = temp_v1_2;
+            if (temp_v1_2 < temp_t5) {
+                var_t2_3 = temp_v1_2 * 2;
+                do {
+                    if (var_s1 == (*(currentSegment->unk10 + var_t2_3) & var_s1)) {
+                        temp_fp = &currentSegment->triangles[var_a2];
+                        temp_ra = currentSegment->vertices;
+                        temp_s7 = &temp_ra[temp_fp->verticesArray[1] + temp_t1_4];
+                        temp_v0_2 = temp_s7->x;
+                        temp_v1_3 = temp_s7->z;
+                        temp_fp_2 = argInInt - temp_v1_3;
+                        temp_s7_2 = &temp_ra[temp_fp->verticesArray[2] + temp_t1_4];
+                        temp_a0_2 = temp_s7_2->x;
+                        temp_a1 = temp_s7_2->z;
+                        temp_s7_3 = &temp_ra[temp_fp->verticesArray[3] + temp_t1_4];
+                        temp_a3_2 = temp_s7_3->x;
+                        temp_t0_6 = temp_s7_3->z;
+                        temp_s7_4 = argInInt - temp_v0_2;
+                        temp_ra_2 = (((temp_s7_4 * (temp_a1 - temp_v1_3)) - ((temp_a0_2 - temp_v0_2) * temp_fp_2)) < 0) ^ 1;
+                        if (((((((argInInt - temp_a0_2) * (temp_t0_6 - temp_a1)) - ((temp_a3_2 - temp_a0_2) * (argInInt - temp_a1))) < 0) ^ 1) == temp_ra_2) && (temp_ra_2 != ((((temp_s7_4 * (temp_t0_6 - temp_v1_3)) - ((temp_a3_2 - temp_v0_2) * temp_fp_2)) < 0) ^ 1))) {
+                            temp_v1_4 = currentSegment->unk18 + (*(currentSegment->unk14 + (var_a2 * 8)) * 0x10);
+                            temp_f2 = temp_v1_4[3];
+                            if (temp_f2 != 0.0) {
+                                temp_t9_2 = &yOut[var_s2];
+                                var_s2 += 1;
+                                *temp_t9_2 = -(((temp_v1_4[0] * xIn) + (temp_v1_4[4] * zIn) + temp_v1_4[6]) / temp_f2);
+                            }
+                        }
+                    }
+                    var_a2 += 1;
+                    var_t2_3 += 2;
+                } while (var_a2 < temp_t5);
+            }
+            var_s6 += 0xC;
+        } while (var_s5 < currentSegment->numberOfBatches);
+    }
+    //temp_a0_3 = var_s2 - 1;
+    var_v1 = 1;
+
+    for (var_v0 = 0; var_v0 < var_s2 - 1 && var_v1 != 0; var_v0++) {
+        var_a1_2 = &yOut[var_v0];
+        temp_f0 = var_a1_2[1];
+        temp_f2_2 = var_a1_2[0];
+        if (temp_f0 < temp_f2_2) {
+            var_a1_2[0] = temp_f0;
+            var_a1_2[1] = temp_f2_2;
+            var_v1 = 0;
+        }
+    }
+//     do {
+//         var_v0 = 0;
+//         if (temp_a0_3 > 0) {
+//             temp_t8_2 = (var_s2 - 1) & 3;
+//             if (temp_t8_2 != 0) {
+//                 var_a1_2 = &arg3[0];
+//                 do {
+//                     temp_f0 = var_a1_2[1];
+//                     temp_f2_2 = var_a1_2[0];
+//                     var_v0 += 1;
+//                     if (temp_f0 < temp_f2_2) {
+//                         var_v1 = 0;
+//                         var_a1_2[0] = temp_f0;
+//                         var_a1_2[1] = temp_f2_2;
+//                     }
+//                     var_a1_2 += 4;
+//                 } while (temp_t8_2 != var_v0);
+//                 if (var_v0 != temp_a0_3) {
+//                     goto block_44;
+//                 }
+//             } else {
+// block_44:
+//                 var_a1_3 = &arg3[var_v0];
+//                 do {
+//                     temp_f0_2 = var_a1_3[1];
+//                     temp_f2_3 = var_a1_3[0];
+//                     if (temp_f0_2 < temp_f2_3) {
+//                         var_a1_3[0] = temp_f0_2;
+//                         var_a1_3[1] = temp_f2_3;
+//                         var_v1 = 0;
+//                     }
+//                     temp_f2_4 = var_a1_3[2];
+//                     if (temp_f2_4 < var_a1_3[1]) {
+//                         var_a1_3[1] = temp_f2_4;
+//                         var_a1_3[2] = var_a1_3[1];
+//                         var_v1 = 0;
+//                     }
+//                     temp_f0_3 = var_a1_3[3];
+//                     if (temp_f0_3 < var_a1_3[2]) {
+//                         var_a1_3[2] = temp_f0_3;
+//                         var_a1_3[3] = var_a1_3[3];
+//                         var_v1 = 0;
+//                     }
+//                     temp_f2_5 = var_a1_3[4];
+//                     if (temp_f2_5 < var_a1_3[3]) {
+//                         var_v1 = 0;
+//                         var_a1_3[3] = temp_f2_5;
+//                         var_a1_3[4] = var_a1_3[3];
+//                     }
+//                     var_a1_3 += 0x10;
+//                 } while (var_a1_3 != &arg3[temp_a0_3]);
+//             }
+//         }
+//         var_v1 = 1;
+//     } while (var_v1 == 0);
+    return var_s2;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002BAB0.s")
+#endif
 
 #ifdef NON_MATCHING
 // generate_track
