@@ -1682,9 +1682,6 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     LevelModelSegment *currentSegment;
     Triangle *tri;
     Vertex *vert;
-    f32 *var_a1_2;
-    f32 temp_f0;
-    f32 temp_f2;
     f32 temp_f2_2;
     s16 vert2X;
     s16 vert2Z;
@@ -1701,26 +1698,31 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     s16 var_s1;
     s16 var_t0;
     s16 var_t1;
-    //s32 temp_a0_3;
     s32 XInInt;
     s32 ZInInt;
+    s32 temp_ra_1;
     s32 temp_ra_2;
-    s32 var_s2;
+    s32 temp_ra_3;
+    s32 yOutCount;
     s32 batchNum;
     s32 i;
     s32 var_v0;
-    s32 var_v1;
+    s32 stopSorting;
     TriangleBatchInfo *currentBatch;
     f32 *temp_v1_4;
+    Vec4f tempVec4f;
 
     if (levelSegmentIndex < 0 || levelSegmentIndex >= gCurrentLevelModel->numberOfSegments) {
         return 0;
     }
+
+    vert = NULL; //fake?
     currentSegment = &gCurrentLevelModel->segments[levelSegmentIndex];
     var_a1 = 1;
     var_s1 = 0;
-
     XInInt = xIn;
+    ZInInt = zIn;
+
     temp_a2 = ((gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x2 - gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x1) >> 3) + 1;
     var_t0 = temp_a2 + gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x1;
     var_t1 = gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x1;
@@ -1734,7 +1736,6 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     } 
     
     //Same as above, but for Z 
-    ZInInt = zIn;
     temp_a2 = ((gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z2 - gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z1) >> 3) + 1;
     var_t0 = temp_a2 + gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z1;
     var_t1 = gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z1;
@@ -1747,14 +1748,14 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
         var_a1 *= 2;
     }
 
-    var_s2 = 0;
+    yOutCount = 0;
     for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
-        currentFaceOffset = currentSegment->batches[batchNum].facesOffset;
-        nextFaceOffset = currentSegment->batches[batchNum + 1].facesOffset;
         currentBatch = &currentSegment->batches[batchNum];
+        currentFaceOffset = currentBatch->facesOffset;
+        nextFaceOffset = (currentBatch + 1)->facesOffset;
         currentVerticesOffset = currentBatch->verticesOffset;
         for (faceNum = currentFaceOffset; faceNum < nextFaceOffset; faceNum++) {
-            if (var_s1 == (currentSegment->unk10[faceNum * 2] & var_s1)) {
+            if (var_s1 == (currentSegment->unk10[faceNum] & var_s1)) {
                 tri = &currentSegment->triangles[faceNum];
                 vert = &currentSegment->vertices[tri->verticesArray[1] + currentVerticesOffset];
                 vert1X = vert->x;
@@ -1765,89 +1766,39 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
                 vert = &currentSegment->vertices[tri->verticesArray[3] + currentVerticesOffset];
                 vert3X = vert->x;
                 vert3Z = vert->z;
-                temp_ra_2 = ((((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) < 0) ^ 1;
-                if (((((((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) < 0) ^ 1) == temp_ra_2) 
-                    && (temp_ra_2 != (((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) < 0) ^ 1))) {
-                    temp_v1_4 = currentSegment->unk18 + (currentSegment->unk14[faceNum * 4] * 8);
-                    temp_f2 = temp_v1_4[3];
-                    if (temp_f2 != 0.0) {
-                        yOut[var_s2] = -(((temp_v1_4[0] * xIn) + (temp_v1_4[4] * zIn) + temp_v1_4[6]) / temp_f2);
-                        var_s2++;
+                temp_ra_1 = ((((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0);
+                temp_ra_2 = ((((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0);
+                temp_ra_3 = ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
+                if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
+                    temp_v1_4 = (f32 *) &currentSegment->unk18[currentSegment->unk14[faceNum * 4] * 4];
+                    tempVec4f.x = temp_v1_4[0];
+                    tempVec4f.y = temp_v1_4[1];
+                    tempVec4f.z = temp_v1_4[2];
+                    tempVec4f.w = temp_v1_4[3];
+                    if (tempVec4f.y != 0.0) {
+                        yOut[yOutCount] = -(((tempVec4f.x * xIn) + (tempVec4f.z * zIn) + tempVec4f.w) / tempVec4f.y);
+                        yOutCount++;
                     }
                 }
             }
         }        
     }
 
-    //temp_a0_3 = var_s2 - 1;
-    var_v1 = 1;
-
-    for (var_v0 = 0; var_v0 < var_s2 - 1 && var_v1 != 0; var_v0++) {
-        var_a1_2 = &yOut[var_v0];
-        temp_f0 = var_a1_2[1];
-        temp_f2_2 = var_a1_2[0];
-        if (temp_f0 < temp_f2_2) {
-            var_a1_2[0] = temp_f0;
-            var_a1_2[1] = temp_f2_2;
-            var_v1 = 0;
+    
+    do {
+        do { } while (0); //fake
+        stopSorting = TRUE;
+        for (var_v0 = 0; var_v0 < yOutCount - 1; var_v0++) {
+            if (yOut[var_v0] > yOut[var_v0 + 1]) {
+                stopSorting = FALSE;
+                temp_f2_2 = yOut[var_v0];
+                yOut[var_v0] = yOut[var_v0 + 1];
+                yOut[var_v0 + 1] = temp_f2_2;
+            }
         }
-    }
-//     do {
-//         var_v0 = 0;
-//         if (temp_a0_3 > 0) {
-//             temp_t8_2 = (var_s2 - 1) & 3;
-//             if (temp_t8_2 != 0) {
-//                 var_a1_2 = &arg3[0];
-//                 do {
-//                     temp_f0 = var_a1_2[1];
-//                     temp_f2_2 = var_a1_2[0];
-//                     var_v0 += 1;
-//                     if (temp_f0 < temp_f2_2) {
-//                         var_v1 = 0;
-//                         var_a1_2[0] = temp_f0;
-//                         var_a1_2[1] = temp_f2_2;
-//                     }
-//                     var_a1_2 += 4;
-//                 } while (temp_t8_2 != var_v0);
-//                 if (var_v0 != temp_a0_3) {
-//                     goto block_44;
-//                 }
-//             } else {
-// block_44:
-//                 var_a1_3 = &arg3[var_v0];
-//                 do {
-//                     temp_f0_2 = var_a1_3[1];
-//                     temp_f2_3 = var_a1_3[0];
-//                     if (temp_f0_2 < temp_f2_3) {
-//                         var_a1_3[0] = temp_f0_2;
-//                         var_a1_3[1] = temp_f2_3;
-//                         var_v1 = 0;
-//                     }
-//                     temp_f2_4 = var_a1_3[2];
-//                     if (temp_f2_4 < var_a1_3[1]) {
-//                         var_a1_3[1] = temp_f2_4;
-//                         var_a1_3[2] = var_a1_3[1];
-//                         var_v1 = 0;
-//                     }
-//                     temp_f0_3 = var_a1_3[3];
-//                     if (temp_f0_3 < var_a1_3[2]) {
-//                         var_a1_3[2] = temp_f0_3;
-//                         var_a1_3[3] = var_a1_3[3];
-//                         var_v1 = 0;
-//                     }
-//                     temp_f2_5 = var_a1_3[4];
-//                     if (temp_f2_5 < var_a1_3[3]) {
-//                         var_v1 = 0;
-//                         var_a1_3[3] = temp_f2_5;
-//                         var_a1_3[4] = var_a1_3[3];
-//                     }
-//                     var_a1_3 += 0x10;
-//                 } while (var_a1_3 != &arg3[temp_a0_3]);
-//             }
-//         }
-//         var_v1 = 1;
-//     } while (var_v1 == 0);
-    return var_s2;
+    } while (!stopSorting);
+
+    return yOutCount;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002BAB0.s")
@@ -1913,7 +1864,7 @@ void func_8002C0C4(s32 modelId) {
     for(k = 0; k < gCurrentLevelModel->numberOfSegments; k++) {
         gCurrentLevelModel->segments[k].unk10 = (s16 *) j;
         j = (s32) align16(((u8 *) (gCurrentLevelModel->segments[k].numberOfTriangles * 2)) + j);
-        gCurrentLevelModel->segments[k].unk18 = (s16 *) j;
+        gCurrentLevelModel->segments[k].unk18 = (f32 *) j;
         j = (s32) &((u8*)j)[func_8002CC30(&gCurrentLevelModel->segments[k])];
         func_8002C954(&gCurrentLevelModel->segments[k], &gCurrentLevelModel->segmentsBoundingBoxes[k], k);
         gCurrentLevelModel->segments[k].unk30 = 0;
