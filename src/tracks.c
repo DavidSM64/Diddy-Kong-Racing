@@ -1696,10 +1696,10 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     s16 temp_a3_2;
     s16 temp_t0_5;
     s16 temp_t0_6;
-    s16 temp_t1_4;
-    s16 temp_t5;
+    s16 currentVerticesOffset;
+    s16 nextFace;
     s16 temp_v0_2;
-    s16 temp_v1_2;
+    s16 currentFace;
     s16 temp_v1_3;
     s16 var_a1;
     s16 var_a2;
@@ -1713,13 +1713,12 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     s32 temp_s7_4;
     s32 var_s2;
     s32 var_s5;
-    s32 var_s6;
     s32 i;
     s32 var_t2_3;
     s32 var_v0;
     s32 var_v1;
-    TriangleBatchInfo *temp_a0;
-    s16 *temp_v1_4;
+    TriangleBatchInfo *currentBatch;
+    f32 *temp_v1_4;
 
     if (levelSegmentIndex < 0 || levelSegmentIndex >= gCurrentLevelModel->numberOfSegments) {
         return 0;
@@ -1741,85 +1740,61 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
         var_a1 *= 2;
     } 
     
+    //Same as above, but for Z 
     argInInt = zIn;
     temp_a2 = ((gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z2 - gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z1) >> 3) + 1;
     var_t0 = temp_a2 + gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z1;
     var_t1 = gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z1;
-    i = 0;
-    do {
+    for (i = 0; i < 8; i++) {
         if (var_t0 >= argInInt && argInInt >= var_t1) {
             var_s1 |= var_a1;
         }
         var_t0 += temp_a2;
         var_t1 += temp_a2;
         var_a1 *= 2;
-        if (var_t0 >= argInInt && argInInt >= var_t1) {
-            var_s1 |= var_a1;
-        }
-        var_t0 += temp_a2;
-        var_t1 += temp_a2;
-        var_a1 *= 2;
-        if (var_t0 >= argInInt && argInInt >= var_t1) {
-            var_s1 |= var_a1;
-        }
-        var_t0 += temp_a2;
-        var_t1 += temp_a2;
-        var_a1 *= 2;
-        if (temp_t0_5 >= argInInt && argInInt >= var_t1) {
-            var_s1 |= var_a1;
-        }
-        var_t0 += temp_a2;
-        var_t1 += temp_a2;
-        var_a1 *= 2;
-        i+=4;
-    } while (i < 8);
+    }
 
     var_s2 = 0;
-    var_s5 = 0;
-    if (currentSegment->numberOfBatches > 0) {
-        var_s6 = 0;
-        do {
-            var_s5 += 1;
-            temp_a0 = currentSegment->batches + var_s6;
-            temp_v1_2 = temp_a0->facesOffset;
-            temp_t5 = temp_a0[1].facesOffset;
-            temp_t1_4 = temp_a0->verticesOffset;
-            var_a2 = temp_v1_2;
-            if (temp_v1_2 < temp_t5) {
-                var_t2_3 = temp_v1_2 * 2;
-                do {
-                    if (var_s1 == (*(currentSegment->unk10 + var_t2_3) & var_s1)) {
-                        temp_fp = &currentSegment->triangles[var_a2];
-                        temp_ra = currentSegment->vertices;
-                        temp_s7 = &temp_ra[temp_fp->verticesArray[1] + temp_t1_4];
-                        temp_v0_2 = temp_s7->x;
-                        temp_v1_3 = temp_s7->z;
-                        temp_fp_2 = argInInt - temp_v1_3;
-                        temp_s7_2 = &temp_ra[temp_fp->verticesArray[2] + temp_t1_4];
-                        temp_a0_2 = temp_s7_2->x;
-                        temp_a1 = temp_s7_2->z;
-                        temp_s7_3 = &temp_ra[temp_fp->verticesArray[3] + temp_t1_4];
-                        temp_a3_2 = temp_s7_3->x;
-                        temp_t0_6 = temp_s7_3->z;
-                        temp_s7_4 = argInInt - temp_v0_2;
-                        temp_ra_2 = (((temp_s7_4 * (temp_a1 - temp_v1_3)) - ((temp_a0_2 - temp_v0_2) * temp_fp_2)) < 0) ^ 1;
-                        if (((((((argInInt - temp_a0_2) * (temp_t0_6 - temp_a1)) - ((temp_a3_2 - temp_a0_2) * (argInInt - temp_a1))) < 0) ^ 1) == temp_ra_2) && (temp_ra_2 != ((((temp_s7_4 * (temp_t0_6 - temp_v1_3)) - ((temp_a3_2 - temp_v0_2) * temp_fp_2)) < 0) ^ 1))) {
-                            temp_v1_4 = currentSegment->unk18 + (*(currentSegment->unk14 + (var_a2 * 8)) * 0x10);
-                            temp_f2 = temp_v1_4[3];
-                            if (temp_f2 != 0.0) {
-                                temp_t9_2 = &yOut[var_s2];
-                                var_s2 += 1;
-                                *temp_t9_2 = -(((temp_v1_4[0] * xIn) + (temp_v1_4[4] * zIn) + temp_v1_4[6]) / temp_f2);
-                            }
+    for (var_s5 = 0; var_s5 < currentSegment->numberOfBatches; var_s5++) {
+        currentBatch = &currentSegment->batches[var_s5];
+        currentFace = currentBatch->facesOffset;
+        nextFace = currentBatch[1].facesOffset;
+        currentVerticesOffset = currentBatch->verticesOffset;
+        var_a2 = currentFace;
+        if (currentFace < nextFace) {
+            var_t2_3 = currentFace * 2;
+            do {
+                if (var_s1 == (*(currentSegment->unk10 + var_t2_3) & var_s1)) {
+                    temp_fp = &currentSegment->triangles[var_a2];
+                    temp_ra = currentSegment->vertices;
+                    temp_s7 = &temp_ra[temp_fp->verticesArray[1] + currentVerticesOffset];
+                    temp_v0_2 = temp_s7->x;
+                    temp_v1_3 = temp_s7->z;
+                    temp_fp_2 = argInInt - temp_v1_3;
+                    temp_s7_2 = &temp_ra[temp_fp->verticesArray[2] + currentVerticesOffset];
+                    temp_a0_2 = temp_s7_2->x;
+                    temp_a1 = temp_s7_2->z;
+                    temp_s7_3 = &temp_ra[temp_fp->verticesArray[3] + currentVerticesOffset];
+                    temp_a3_2 = temp_s7_3->x;
+                    temp_t0_6 = temp_s7_3->z;
+                    temp_s7_4 = argInInt - temp_v0_2;
+                    temp_ra_2 = (((temp_s7_4 * (temp_a1 - temp_v1_3)) - ((temp_a0_2 - temp_v0_2) * temp_fp_2)) < 0) ^ 1;
+                    if (((((((argInInt - temp_a0_2) * (temp_t0_6 - temp_a1)) - ((temp_a3_2 - temp_a0_2) * (argInInt - temp_a1))) < 0) ^ 1) == temp_ra_2) 
+                        && (temp_ra_2 != ((((temp_s7_4 * (temp_t0_6 - temp_v1_3)) - ((temp_a3_2 - temp_v0_2) * temp_fp_2)) < 0) ^ 1))) {
+                        temp_v1_4 = currentSegment->unk18 + (*(currentSegment->unk14 + (var_a2 * 8)) * 0x10);
+                        temp_f2 = temp_v1_4[3];
+                        if (temp_f2 != 0.0) {
+                            yOut[var_s2] = -(((temp_v1_4[0] * xIn) + (temp_v1_4[4] * zIn) + temp_v1_4[6]) / temp_f2);
+                            var_s2++;
                         }
                     }
-                    var_a2 += 1;
-                    var_t2_3 += 2;
-                } while (var_a2 < temp_t5);
-            }
-            var_s6 += 0xC;
-        } while (var_s5 < currentSegment->numberOfBatches);
+                }
+                var_a2 += 1;
+                var_t2_3 += 2;
+            } while (var_a2 < nextFace);
+        }        
     }
+
     //temp_a0_3 = var_s2 - 1;
     var_v1 = 1;
 
@@ -1945,7 +1920,7 @@ void func_8002C0C4(s32 modelId) {
         LOCAL_OFFSET_TO_RAM_ADDRESS(Vertex *, gCurrentLevelModel->segments[k].vertices);
         LOCAL_OFFSET_TO_RAM_ADDRESS(Triangle *, gCurrentLevelModel->segments[k].triangles);
         LOCAL_OFFSET_TO_RAM_ADDRESS(TriangleBatchInfo *, gCurrentLevelModel->segments[k].batches);
-        LOCAL_OFFSET_TO_RAM_ADDRESS(u8 *, gCurrentLevelModel->segments[k].unk14);
+        LOCAL_OFFSET_TO_RAM_ADDRESS(u16 *, gCurrentLevelModel->segments[k].unk14);
     }
     for(k = 0; k < gCurrentLevelModel->numberOfTextures; k++) {
         gCurrentLevelModel->textures[k].texture = load_texture(((s32)gCurrentLevelModel->textures[k].texture) | 0x8000);
