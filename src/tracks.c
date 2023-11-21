@@ -1680,41 +1680,34 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
 #ifdef NON_EQUIVALENT
 s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     LevelModelSegment *currentSegment;
-    Triangle *temp_fp;
-    Vertex *temp_ra;
-    Vertex *temp_s7;
-    Vertex *temp_s7_2;
-    Vertex *temp_s7_3;
-    f32 *temp_t9_2;
+    Triangle *tri;
+    Vertex *vert;
     f32 *var_a1_2;
     f32 temp_f0;
     f32 temp_f2;
     f32 temp_f2_2;
-    s16 temp_a0_2;
-    s16 temp_a1;
+    s16 vert2X;
+    s16 vert2Z;
     s16 temp_a2;
-    s16 temp_a3_2;
-    s16 temp_t0_5;
-    s16 temp_t0_6;
-    s16 currentVerticesOffset;
-    s16 nextFace;
-    s16 temp_v0_2;
-    s16 currentFace;
-    s16 temp_v1_3;
+    s16 vert3X;
+    s16 vert3Z;
+    s32 currentVerticesOffset;
+    s16 nextFaceOffset;
+    s16 vert1X;
+    s32 currentFaceOffset;
+    s16 vert1Z;
     s16 var_a1;
-    s16 var_a2;
+    s32 faceNum;
     s16 var_s1;
     s16 var_t0;
     s16 var_t1;
     //s32 temp_a0_3;
-    s32 argInInt;
-    s32 temp_fp_2;
+    s32 XInInt;
+    s32 ZInInt;
     s32 temp_ra_2;
-    s32 temp_s7_4;
     s32 var_s2;
-    s32 var_s5;
+    s32 batchNum;
     s32 i;
-    s32 var_t2_3;
     s32 var_v0;
     s32 var_v1;
     TriangleBatchInfo *currentBatch;
@@ -1727,12 +1720,12 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     var_a1 = 1;
     var_s1 = 0;
 
-    argInInt = xIn;
+    XInInt = xIn;
     temp_a2 = ((gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x2 - gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x1) >> 3) + 1;
     var_t0 = temp_a2 + gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x1;
     var_t1 = gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x1;
     for (i = 0; i < 8; i++) {
-        if (var_t0 >= argInInt && argInInt >= var_t1) {
+        if (var_t0 >= XInInt && XInInt >= var_t1) {
             var_s1 |= var_a1;
         }
         var_t0 += temp_a2;
@@ -1741,12 +1734,12 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     } 
     
     //Same as above, but for Z 
-    argInInt = zIn;
+    ZInInt = zIn;
     temp_a2 = ((gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z2 - gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z1) >> 3) + 1;
     var_t0 = temp_a2 + gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z1;
     var_t1 = gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z1;
     for (i = 0; i < 8; i++) {
-        if (var_t0 >= argInInt && argInInt >= var_t1) {
+        if (var_t0 >= ZInInt && ZInInt >= var_t1) {
             var_s1 |= var_a1;
         }
         var_t0 += temp_a2;
@@ -1755,43 +1748,34 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     }
 
     var_s2 = 0;
-    for (var_s5 = 0; var_s5 < currentSegment->numberOfBatches; var_s5++) {
-        currentBatch = &currentSegment->batches[var_s5];
-        currentFace = currentBatch->facesOffset;
-        nextFace = currentBatch[1].facesOffset;
+    for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
+        currentFaceOffset = currentSegment->batches[batchNum].facesOffset;
+        nextFaceOffset = currentSegment->batches[batchNum + 1].facesOffset;
+        currentBatch = &currentSegment->batches[batchNum];
         currentVerticesOffset = currentBatch->verticesOffset;
-        var_a2 = currentFace;
-        if (currentFace < nextFace) {
-            var_t2_3 = currentFace * 2;
-            do {
-                if (var_s1 == (*(currentSegment->unk10 + var_t2_3) & var_s1)) {
-                    temp_fp = &currentSegment->triangles[var_a2];
-                    temp_ra = currentSegment->vertices;
-                    temp_s7 = &temp_ra[temp_fp->verticesArray[1] + currentVerticesOffset];
-                    temp_v0_2 = temp_s7->x;
-                    temp_v1_3 = temp_s7->z;
-                    temp_fp_2 = argInInt - temp_v1_3;
-                    temp_s7_2 = &temp_ra[temp_fp->verticesArray[2] + currentVerticesOffset];
-                    temp_a0_2 = temp_s7_2->x;
-                    temp_a1 = temp_s7_2->z;
-                    temp_s7_3 = &temp_ra[temp_fp->verticesArray[3] + currentVerticesOffset];
-                    temp_a3_2 = temp_s7_3->x;
-                    temp_t0_6 = temp_s7_3->z;
-                    temp_s7_4 = argInInt - temp_v0_2;
-                    temp_ra_2 = (((temp_s7_4 * (temp_a1 - temp_v1_3)) - ((temp_a0_2 - temp_v0_2) * temp_fp_2)) < 0) ^ 1;
-                    if (((((((argInInt - temp_a0_2) * (temp_t0_6 - temp_a1)) - ((temp_a3_2 - temp_a0_2) * (argInInt - temp_a1))) < 0) ^ 1) == temp_ra_2) 
-                        && (temp_ra_2 != ((((temp_s7_4 * (temp_t0_6 - temp_v1_3)) - ((temp_a3_2 - temp_v0_2) * temp_fp_2)) < 0) ^ 1))) {
-                        temp_v1_4 = currentSegment->unk18 + (*(currentSegment->unk14 + (var_a2 * 8)) * 0x10);
-                        temp_f2 = temp_v1_4[3];
-                        if (temp_f2 != 0.0) {
-                            yOut[var_s2] = -(((temp_v1_4[0] * xIn) + (temp_v1_4[4] * zIn) + temp_v1_4[6]) / temp_f2);
-                            var_s2++;
-                        }
+        for (faceNum = currentFaceOffset; faceNum < nextFaceOffset; faceNum++) {
+            if (var_s1 == (currentSegment->unk10[faceNum * 2] & var_s1)) {
+                tri = &currentSegment->triangles[faceNum];
+                vert = &currentSegment->vertices[tri->verticesArray[1] + currentVerticesOffset];
+                vert1X = vert->x;
+                vert1Z = vert->z;
+                vert = &currentSegment->vertices[tri->verticesArray[2] + currentVerticesOffset];
+                vert2X = vert->x;
+                vert2Z = vert->z;
+                vert = &currentSegment->vertices[tri->verticesArray[3] + currentVerticesOffset];
+                vert3X = vert->x;
+                vert3Z = vert->z;
+                temp_ra_2 = ((((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) < 0) ^ 1;
+                if (((((((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) < 0) ^ 1) == temp_ra_2) 
+                    && (temp_ra_2 != (((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) < 0) ^ 1))) {
+                    temp_v1_4 = currentSegment->unk18 + (currentSegment->unk14[faceNum * 4] * 8);
+                    temp_f2 = temp_v1_4[3];
+                    if (temp_f2 != 0.0) {
+                        yOut[var_s2] = -(((temp_v1_4[0] * xIn) + (temp_v1_4[4] * zIn) + temp_v1_4[6]) / temp_f2);
+                        var_s2++;
                     }
                 }
-                var_a2 += 1;
-                var_t2_3 += 2;
-            } while (var_a2 < nextFace);
+            }
         }        
     }
 
