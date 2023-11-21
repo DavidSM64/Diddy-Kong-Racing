@@ -1680,6 +1680,7 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
 #ifdef NON_EQUIVALENT
 s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     LevelModelSegment *currentSegment;
+    LevelModelSegmentBoundingBox *currentBoundingBox;
     Triangle *tri;
     Vertex *vert;
     f32 temp_f2_2;
@@ -1691,7 +1692,7 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     s32 currentVerticesOffset;
     s16 nextFaceOffset;
     s16 vert1X;
-    s32 currentFaceOffset;
+    s16 currentFaceOffset;
     s16 vert1Z;
     s16 var_a1;
     s32 faceNum;
@@ -1711,6 +1712,8 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     TriangleBatchInfo *currentBatch;
     f32 *temp_v1_4;
     Vec4f tempVec4f;
+    u16 *new_var;
+    u16 temp;
 
     if (levelSegmentIndex < 0 || levelSegmentIndex >= gCurrentLevelModel->numberOfSegments) {
         return 0;
@@ -1718,14 +1721,15 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
 
     vert = NULL; //fake?
     currentSegment = &gCurrentLevelModel->segments[levelSegmentIndex];
+    currentBoundingBox = &gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex];
     var_a1 = 1;
     var_s1 = 0;
     XInInt = xIn;
     ZInInt = zIn;
 
-    temp_a2 = ((gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x2 - gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x1) >> 3) + 1;
-    var_t0 = temp_a2 + gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x1;
-    var_t1 = gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].x1;
+    temp_a2 = ((currentBoundingBox->x2 - currentBoundingBox->x1) >> 3) + 1;
+    var_t0 = temp_a2 + currentBoundingBox->x1;
+    var_t1 = currentBoundingBox->x1;
     for (i = 0; i < 8; i++) {
         if (var_t0 >= XInInt && XInInt >= var_t1) {
             var_s1 |= var_a1;
@@ -1736,9 +1740,9 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     } 
     
     //Same as above, but for Z 
-    temp_a2 = ((gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z2 - gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z1) >> 3) + 1;
-    var_t0 = temp_a2 + gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z1;
-    var_t1 = gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex].z1;
+    temp_a2 = ((currentBoundingBox->z2 - currentBoundingBox->z1) >> 3) + 1;
+    var_t0 = temp_a2 + currentBoundingBox->z1;
+    var_t1 = currentBoundingBox->z1;
     for (i = 0; i < 8; i++) {
         if (var_t0 >= ZInInt && ZInInt >= var_t1) {
             var_s1 |= var_a1;
@@ -1750,6 +1754,7 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
 
     yOutCount = 0;
     for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
+        if (1) { } // fake
         currentBatch = &currentSegment->batches[batchNum];
         currentFaceOffset = currentBatch->facesOffset;
         nextFaceOffset = (currentBatch + 1)->facesOffset;
@@ -1769,8 +1774,11 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
                 temp_ra_1 = ((((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0);
                 temp_ra_2 = ((((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0);
                 temp_ra_3 = ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
+                var_v0 = faceNum; //fake?
                 if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
-                    temp_v1_4 = (f32 *) &currentSegment->unk18[currentSegment->unk14[faceNum * 4] * 4];
+                    new_var = currentSegment->unk14;
+                    temp = new_var[faceNum * 4];
+                    temp_v1_4 = (f32 *) &currentSegment->unk18[temp * 4];
                     tempVec4f.x = temp_v1_4[0];
                     tempVec4f.y = temp_v1_4[1];
                     tempVec4f.z = temp_v1_4[2];
@@ -1786,7 +1794,6 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
 
     
     do {
-        do { } while (0); //fake
         stopSorting = TRUE;
         for (var_v0 = 0; var_v0 < yOutCount - 1; var_v0++) {
             if (yOut[var_v0] > yOut[var_v0 + 1]) {
