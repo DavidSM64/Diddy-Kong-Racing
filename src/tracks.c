@@ -1677,7 +1677,10 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
     }
 }
 
-#ifdef NON_EQUIVALENT
+#ifdef NON_MATCHING
+// Collision: Returns the Y Values in yOut, and the number of values in the array as the return.
+// Get's the Y Offset acrross a surface.
+// Basically it goes down, finds a triangle, then locates where the intersection is and returns the Y level of that.
 s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
     LevelModelSegment *currentSegment;
     LevelModelSegmentBoundingBox *currentBoundingBox;
@@ -1789,9 +1792,8 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
                     }
                 }
             }
-        }        
+        }
     }
-
     
     do {
         stopSorting = TRUE;
