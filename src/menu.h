@@ -309,7 +309,7 @@ typedef struct TitleScreenDemos {
 /* Size 0x10 bytes */
 typedef struct TrackRenderDetails {
   /* 0x00 */ char *hubName;
-  /* 0x04 */ u8 *trackName;
+  /* 0x04 */ char *trackName;
   /* 0x08 */ s16 xOff;
   /* 0x0A */ s16 yOff;
   /* 0x0C */ u8 visible;
