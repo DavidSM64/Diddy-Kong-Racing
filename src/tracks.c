@@ -1722,6 +1722,7 @@ s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
         return 0;
     }
 
+    // if (!temp_v1_4){} //Fake, but fixes one regalloc, at the cost of a much worse stack.    
     vert = NULL; //fake?
     currentSegment = &gCurrentLevelModel->segments[levelSegmentIndex];
     currentBoundingBox = &gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex];
