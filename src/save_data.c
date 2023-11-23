@@ -1146,21 +1146,33 @@ s32 get_ghost_data_file_size(void) {
 }
 
 #ifdef NON_EQUIVALENT
-s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 *ghostCharacterId, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *ghostData) {
+typedef struct unkGhostData {
+    u8 unk0;
+    u8 unk1;
+    s16 unk2;
+    u8 unk4;
+    u8 unk5;
+    s16 unk6;
+    u8 unk8;
+    u8 unk9;
+    u8 unkA;
+    u8 unkB;
+    u8 unkC;
+} unkGhostData;
+s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCharacterId, s16 *ghostTime, s16 *ghostNodeCount, GhostHeader *ghostData) {
     #define GHSS_FILE_SIZE 0x100
-    u8 *fileData;
+    static OSPfs *pfs; //Maybe static?
+    s32 i;
+    u8 *cPakFile;
+    s32 bytesFree;
     s32 fileNumber;
+    s32 notesFree;
     s32 fileOffset;
     s32 fileSize;
-    s32 bytesFree;
-    s32 notesFree;
-    s32 ret;
-    s32 retTemp;
-    s32 var_v1;
-    u8 *temp_a1;
-    GhostHeader *ghostHeader;
-    u8 *var_v0_2;
-    u8 *temp_v0_4;
+    SIDeviceStatus ret;
+    SIDeviceStatus retTemp;
+    GhostHeader *fileData;
+    unkGhostData *temp_v0_4;
 
     fileOffset = 0;
     ret = get_si_device_status(controllerIndex);
@@ -1174,46 +1186,42 @@ s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 *ghostCha
     }
     ret = get_file_number(controllerIndex, (char *) sDKRacingGhosts, (char *) sDKRacingGhostFileExt, &fileNumber);
     if (ret == CONTROLLER_PAK_GOOD) {
-        fileData = allocate_from_main_pool_safe(GHSS_FILE_SIZE, COLOUR_TAG_BLACK);
-        if (!(pfs[controllerIndex].status & PFS_INITIALIZED)) {
-            osPfsInit(sControllerMesgQueue, &pfs[controllerIndex], controllerIndex);
+        cPakFile = allocate_from_main_pool_safe(GHSS_FILE_SIZE, COLOUR_TAG_BLACK);
+        pfs = &pfs[controllerIndex]; //This should be uninintialized?
+        if (!(pfs->status & PFS_INITIALIZED)) {
+            osPfsInit(sControllerMesgQueue, &pfs, controllerIndex);
         }
-        ret = read_data_from_controller_pak(controllerIndex, fileNumber, fileData, GHSS_FILE_SIZE);
+        ret = read_data_from_controller_pak(controllerIndex, fileNumber, cPakFile, GHSS_FILE_SIZE);
         if (ret == CONTROLLER_PAK_GOOD) {
-            temp_a1 = fileData + 4;
-            if (fileData[0] == GHSS) {
-                var_v1 = 0;
-                var_v0_2 = temp_a1;
-loop_10:
-                var_v1 += 4;
-                if ((levelId == var_v0_2[0]) && (vehicleId == var_v0_2[1])) {
-                    fileOffset = var_v0_2[2];
-                    fileSize = var_v0_2[6] - var_v0_2[2];
-                } else {
-                    var_v0_2 += 4;
-                    if (var_v1 < 24) {
-                        goto loop_10;
+            //The first 4 bytes of any data from the controller pak will have initials declaring it's type.
+            if (*((s32 *)cPakFile) == GHSS) {
+                fileData = (GhostHeader *) (cPakFile + 4);
+                for (i = 0; i < 5; i++) {
+                    if (levelId == fileData[i].unk0.levelID && vehicleId == fileData[i].unk0.vehicleID) {
+                        fileOffset = fileData[i].unk2;
+                        fileSize = fileData[i].nodeCount - fileData[i].unk2;
+                        break;
                     }
                 }
                 if (fileOffset == 0) {
                     ret = CONTROLLER_PAK_NO_ROOM_FOR_GHOSTS;
-                    if (fileData[4] == 0xFF) {
+                    if (fileData->unk0.levelID == 0xFF) {
                         ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
                     }
-                    temp_v0_4 = temp_a1 + (2 * 4);
-                    if (fileData[4] == 0xFF) {
+                    if (fileData->unk4 == 0xFF) {
                         ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
                     }
-                    if (temp_v0_4[0] == 0xFF) {
+                    temp_v0_4 = (unkGhostData *) (fileData + 1);
+                    if (temp_v0_4->unk0 == 0xFF) {
                         ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
                     }
-                    if (temp_v0_4[4] == 0xFF) {
+                    if (temp_v0_4->unk4 == 0xFF) {
                         ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
                     }
-                    if (temp_v0_4[8] == 0xFF) {
+                    if (temp_v0_4->unk8 == 0xFF) {
                         ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
                     }
-                    if (temp_v0_4[12] == 0xFF) {
+                    if (temp_v0_4->unkC == 0xFF) {
                         ret = CONTROLLER_PAK_SWITCH_TO_RUMBLE;
                     }
                 }
@@ -1221,23 +1229,24 @@ loop_10:
                 ret = CONTROLLER_PAK_BAD_DATA;
             }
         }
-        free_from_memory_pool(fileData);
+        free_from_memory_pool(cPakFile);
         if (fileOffset != 0) {
             if (ghostCharacterId != NULL) {
-                ghostHeader = allocate_from_main_pool_safe(fileSize + GHSS_FILE_SIZE, COLOUR_TAG_BLACK);
+                cPakFile = allocate_from_main_pool_safe(fileSize + GHSS_FILE_SIZE, COLOUR_TAG_BLACK);
                 retTemp = CONTROLLER_PAK_BAD_DATA;
-                if (osPfsReadWriteFile(&pfs[controllerIndex], fileNumber, PFS_READ, fileOffset, fileSize, (u8 *) ghostHeader) == 0) {
-                    if (calculate_ghost_header_checksum(ghostHeader) == ghostHeader->checksum) {
-                        *ghostCharacterId = ghostHeader->characterID;
-                        *ghostTime = ghostHeader->time;
-                        *ghostNodeCount = ghostHeader->nodeCount;
-                        bcopy(ghostHeader + 8, ghostData, *ghostNodeCount * sizeof(GhostNode));
+                if (osPfsReadWriteFile(pfs, fileNumber, PFS_READ, fileOffset, fileSize, cPakFile) == 0) {
+                    fileData = (GhostHeader *) cPakFile;
+                    if (calculate_ghost_header_checksum(fileData) == fileData->checksum) {
+                        *ghostCharacterId = fileData->characterID;
+                        *ghostTime = fileData->time;
+                        *ghostNodeCount = fileData->nodeCount;
+                        bcopy(fileData, ghostData, *ghostNodeCount * sizeof(GhostNode));
                         retTemp = CONTROLLER_PAK_GOOD;
                     } else {
                         retTemp = CONTROLLER_PAK_BAD_DATA;
                     }
                 }
-                free_from_memory_pool(ghostHeader);
+                free_from_memory_pool(cPakFile);
                 ret = retTemp;
             }
         }
@@ -1248,13 +1257,13 @@ loop_10:
     start_reading_controller_data(controllerIndex);
     if (ret == CONTROLLER_PAK_CHANGED) {
         if (get_free_space(controllerIndex, &bytesFree, &notesFree) == CONTROLLER_PAK_GOOD) {
-            if ((bytesFree < get_ghost_data_file_size()) || ((notesFree == 0))) {
+            if (bytesFree < get_ghost_data_file_size() || notesFree == 0) {
                 return CONTROLLER_PAK_FULL;
             }
-            /* Duplicate return node #48. Try simplifying control flow for better match */
-            return ret;
         }
-        return CONTROLLER_PAK_BAD_DATA;
+        else {
+            return CONTROLLER_PAK_BAD_DATA;
+        }
     }
     return ret;
 }

@@ -5623,7 +5623,7 @@ s32 func_800599B8(s32 arg0, s32 mapId, s16 arg2, s16 *arg3, s16 *arg4) {
     s16 sp2E;
 
     temp_t8 = (D_8011D59C + 1) & 1;
-    temp_v0 = func_80074B34(arg0, (s16)mapId, arg2, arg3, arg4, &sp2E, (GhostHeader *) gGhostData[temp_t8]);
+    temp_v0 = func_80074B34(arg0, (s16) mapId, arg2, arg3, arg4, &sp2E, (GhostHeader *) gGhostData[temp_t8]);
     if (arg3 != 0) {
         if (temp_v0 == 0) {
             D_8011D5A0[temp_t8] = sp2E;
