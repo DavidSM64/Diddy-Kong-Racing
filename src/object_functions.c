@@ -5478,14 +5478,14 @@ void obj_init_wavegenerator(Object *obj, UNUSED LevelObjectEntry_WaveGenerator *
     func_800BF524(obj);
 }
 
-void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butterflyEntry, s32 arg2) {
+void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butterflyEntry, s32 param) {
     Object_Butterfly *butterfly;
     s32 uMask;
     s32 vMask;
     s32 i;
     
     butterfly = &butterflyObj->unk64->butterfly;
-    if (arg2 == 0) {
+    if (param == 0) {
         butterflyObj->segment.y_velocity = 0.0f;
         butterfly->unkFE = 0;
         butterfly->unk100 = 0;

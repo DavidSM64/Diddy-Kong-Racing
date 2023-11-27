@@ -392,10 +392,10 @@ void obj_loop_fish(Object *fishObj, s32 updateRate);
 void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate);
 void obj_loop_char_select(Object *charSelectObj, s32 updateRate);
 void func_8003F2E8(Object *weaponObj, s32 updateRate);
-
-//Non Matching
+void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butterflyEntry, s32 param);
+void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2);
+void obj_init_lensflareswitch(Object *obj, LevelObjectEntry_LensFlareSwitch *entry, UNUSED s32 arg2);
 void obj_loop_lavaspurt(Object *obj, s32 updateRate);
-void obj_loop_animator(Object *obj, s32 updateRate);
 void obj_loop_vehicleanim(Object *obj, s32 updateRate);
 void obj_loop_snowball(Object *obj, s32 updateRate);
 void obj_loop_goldenballoon(Object *obj, s32 updateRate);
@@ -403,26 +403,25 @@ void obj_loop_groundzipper(Object *obj, s32 updateRate);
 void obj_loop_laserbolt(Object *obj, s32 updateRate);
 void obj_loop_posarrow(Object *obj, s32 updateRate);
 void obj_loop_bananacreator(Object *obj, s32 updateRate);
-void obj_loop_butterfly(Object *obj, s32 updateRate);
 void obj_loop_airzippers_waterzippers(Object *obj, s32 updateRate);
-void obj_loop_texscroll(Object *obj, s32 updateRate);
 void obj_loop_exit(Object *obj, s32 updateRate);
 void obj_loop_scenery(Object *obj, s32 updateRate);
-void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry);
-INCONSISTENT void obj_init_butterfly();
 void obj_init_trigger(Object *obj, LevelObjectEntry_Trigger *entry);
-INCONSISTENT void obj_init_animation();
-INCONSISTENT void obj_init_lensflareswitch();
 void obj_init_lensflare(Object *obj, LevelObjectEntry_LensFlare *entry);
 void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry);
 void obj_init_door(Object *obj, LevelObjectEntry_Door *entry);
 void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry);
 void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry);
-void obj_init_fish(Object *obj, LevelObjectEntry_Fish *entry, s32 param);
 void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry);
-void calc_env_mapping_for_object(ObjectModel *, s16, s16, s16);
 void handle_rocket_projectile(Object *obj, s32 updateRate);
 
+//Non Matching
+void calc_env_mapping_for_object(ObjectModel *, s16, s16, s16);
+void obj_init_fish(Object *obj, LevelObjectEntry_Fish *entry, s32 param);
+void obj_init_midifade(Object *obj, LevelObjectEntry_MidiFade *entry);
+void obj_loop_texscroll(Object *obj, s32 updateRate);
+void obj_loop_butterfly(Object *obj, s32 updateRate);
+void obj_loop_animator(Object *obj, s32 updateRate);
 s32 func_8001C524(f32 x, f32 y, f32 z, s32 arg3);
 s32 func_8001CC48(s32, s32, s32);
 f32 func_8001C6C4(Object_64 *, Object *, f32, f32, s32);
