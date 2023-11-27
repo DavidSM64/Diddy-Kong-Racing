@@ -1316,7 +1316,50 @@ typedef struct GhostData {
     /* 0x1E */ s16 unk1E;
 } GhostData;
 
+#ifdef NON_EQUIVALENT
+//This is just a mess until we can figure out the ghost data structs properly.
+SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, u8 *dest) {
+    #define GHSS_FILE_SIZE 0x100
+    SIDeviceStatus ret;
+    s32 fileSize;
+    u8 *temp_v0_3;
+    GhostDataData *temp_v0_4;
+    void *temp_v0_5;
+    GhostHeader *temp_v1;
+    GhostHeader *ghost;
+
+    fileSize = 0x1100 * 6;
+    temp_v0_3 = allocate_from_main_pool_safe(fileSize + 0x200, COLOUR_TAG_BLACK);
+    *((s32 *)temp_v0_3) = GHSS;
+    ghost = (GhostHeader *) (temp_v0_3 + 4);
+    //temp_v0_3->unk0 = GHSS;
+    ghost->unk0.levelID = arg1;
+    ghost->nodeCount = 0x100;
+    temp_v1 = ghost + 4;
+    //ghost->unkA = (s16) (ghost->nodeCount + 0x1100);
+    ghost->unk5 = arg2;
+    temp_v0_4 = temp_v1 + 4;
+    temp_v0_4->unk0 = 0xFF;
+    temp_v0_4->unk4 = 0xFF;
+    temp_v0_4->unk2 = (s16) temp_v1->time;
+    temp_v0_4->unk6 = (s16) temp_v1->time;
+    // temp_v0_5 = temp_v1 + (3 * 4);
+    // temp_v0_5->unk0 = 0xFF;
+    // temp_v0_5->unk4 = 0xFF;
+    // temp_v0_5->unk2 = (s16) temp_v1->time;
+    // temp_v0_5->unk8 = 0xFF;
+    // temp_v0_5->unk6 = (s16) temp_v1->time;
+    // temp_v0_5->unkC = 0xFF;
+    // temp_v0_5->unkA = (s16) temp_v1->time;
+    // temp_v0_5->unkE = (s16) temp_v1->time;
+    func_80074AA8((GhostHeader *) &ghost[temp_v1->unk2], ghostCharacterId, ghostTime, ghostNodeCount, dest);
+    ret = write_controller_pak_file(controllerIndex, -1, "DKRACING-GHOSTS", "", (u8 *) ghost, fileSize + GHSS_FILE_SIZE);
+    free_from_memory_pool(ghost);
+    return ret;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/save_data/func_80074EB8.s")
+#endif
 
 #ifdef NON_EQUIVALENT
 SIDeviceStatus func_80075000(s32 controllerIndex, s16 levelId, s16 vehicleId, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, GhostHeader *ghostData) {
@@ -1999,7 +2042,7 @@ SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, ch
     u8 fileNameAsFontCodes[PFS_FILE_NAME_LEN];
     UNUSED s32 temp2;
     u8 fileExtAsFontCodes[PFS_FILE_EXT_LEN];
-    s32 ret;
+    SIDeviceStatus ret;
     s32 file_number;
     s32 bytesToSave;
     u32 game_code;

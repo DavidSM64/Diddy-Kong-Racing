@@ -118,7 +118,7 @@ s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCha
 char *string_to_font_codes(char *inString, char *outString, s32 stringLength);
 
 //Reasonably certain about these names for now.
-s32 func_80074EB8(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, u8 *dest);
+SIDeviceStatus func_80074EB8(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, u8 *dest);
 SIDeviceStatus func_80075000(s32 controllerIndex, s16 arg1, s16 arg2, s16 ghostCharacterId, s16 ghostTime, s16 ghostNodeCount, GhostHeader *arg6);
 s32 func_800753D8(s32 controllerIndex, s32 arg1);
 

@@ -1913,7 +1913,10 @@ typedef struct GhostHeader {
       s16 unk2;
     };
     union {
-        u8 unk4;
+        struct {
+            u8 unk4;
+            s8 unk5;
+        };
         s16 time; // In frames, where 60 frames = 1 second.
     };
     s16 nodeCount;
