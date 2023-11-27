@@ -6257,7 +6257,7 @@ void run_object_init_func(Object *obj, void *entry, s32 param) {
             obj_init_scenery(obj, (LevelObjectEntry_Scenery*) entry);
             break;
         case BHV_FISH:
-            obj_init_fish(obj, (LevelObjectEntry_Fish *) entry);
+            obj_init_fish(obj, (LevelObjectEntry_Fish *) entry, param);
             break;
         case BHV_ANIMATOR:
             obj_init_animator(obj, (LevelObjectEntry_Animator *) entry, param);
