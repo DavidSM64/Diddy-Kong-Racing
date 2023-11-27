@@ -24,12 +24,6 @@ typedef struct LevelObjectEntry_Scenery {
     /* 0x0B */ u8 solid;
 } LevelObjectEntry_Scenery;
 
-typedef struct LevelObjectEntry_Fish {
-    /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ f32 *unk8[1];
-    /* 0x0C */ u8 unkC[1]; //Unknown size
-} LevelObjectEntry_Fish;
-
 typedef struct LevelObjectEntry_Animator {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ s8 batchID;
@@ -429,6 +423,15 @@ typedef struct LevelObjectEntry_Butterfly {
     /* 0x0A */ u8 unkA;
     /* 0x0B */ u8 unkB;
 } LevelObjectEntry_Butterfly;
+
+typedef struct LevelObjectEntry_Fish {
+    /* 0x00 */ LevelObjectEntryCommon common;
+    /* 0x08 */ u16 unk8;
+    /* 0x0A */ u8 unkA;
+    /* 0x0A */ u8 unkB;
+    /* 0x0C */ u8 unkC[1]; //Unknown size
+} LevelObjectEntry_Fish;
+
 
 typedef struct LevelObjectEntry_Parkwarden {
     /* 0x00 */ LevelObjectEntryCommon common;
