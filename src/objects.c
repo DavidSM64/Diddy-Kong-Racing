@@ -2582,7 +2582,7 @@ void render_3d_misc(Object *obj) {
             break;
         case BHV_FISH:
             objData = obj->unk64;
-            scale = obj->segment.level_entry->fish.unkC[1];
+            scale = obj->segment.level_entry->fish.unkD;
             scale *= 0.01f;
             render_misc_model(obj, &objData->fish.vertices[objData->fish.unkFC * 6], 6, objData->fish.triangles, 8, objData->fish.texture, 
                           RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_CUTOUT, 0, scale);

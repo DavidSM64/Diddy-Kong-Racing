@@ -1432,8 +1432,8 @@ void obj_init_fish(Object *fishObj, LevelObjectEntry_Fish *fishEntry, s32 param)
     s32 i;
 
     fish = &fishObj->unk64->fish;
-    fish->unk100 = fishEntry->unkC[2] << 4;
-    fish->unk104 = fishEntry->unkC[3] << 8;
+    fish->unk100 = fishEntry->unkE << 4;
+    fish->unk104 = fishEntry->unkF << 8;
     fish->unk114 = fishEntry->unk8;
     fish->unk118 = fishEntry->unkA;
     fish->unk108 = fishEntry->common.x;
@@ -1488,7 +1488,7 @@ void obj_init_fish(Object *fishObj, LevelObjectEntry_Fish *fishEntry, s32 param)
         }
         fish->unkFC = 1;
     }
-    fishObj->segment.trans.scale = fishEntry->unkC[0] * 0.01f;
+    fishObj->segment.trans.scale = fishEntry->unkC * 0.01f;
     if (fishEntry->unkB < fishObj->segment.header->numberOfModelIds) {
         fish->texture = (TextureHeader *) fishObj->unk68[fishEntry->unkB];
     } else {

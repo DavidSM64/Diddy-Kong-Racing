@@ -428,10 +428,12 @@ typedef struct LevelObjectEntry_Fish {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u16 unk8;
     /* 0x0A */ u8 unkA;
-    /* 0x0A */ u8 unkB;
-    /* 0x0C */ u8 unkC[1]; //Unknown size
+    /* 0x0B */ u8 unkB;
+    /* 0x0C */ u8 unkC;
+    /* 0x0D */ u8 unkD;
+    /* 0x0E */ u8 unkE;
+    /* 0x0F */ u8 unkF;
 } LevelObjectEntry_Fish;
-
 
 typedef struct LevelObjectEntry_Parkwarden {
     /* 0x00 */ LevelObjectEntryCommon common;
