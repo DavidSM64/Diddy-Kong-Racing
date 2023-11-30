@@ -1713,9 +1713,10 @@ typedef struct Object_68 {
  
 /* Size: 0x20 bytes */
 typedef struct Object_6C {
-    /* 0x00 */ u8  pad0[0x4];
+    /* 0x00 */ struct Particle *unk0;
     /* 0x04 */ s16 unk4;
-    /* 0x05 */ u8  pad6[0x4];
+    /* 0x06 */ u8 unk6;
+    /* 0x07 */ u8 pad7[0x3];
     /* 0x0A */ s16 unkA;
     /* 0x0C */ u8  padC[0x14];
 } Object_6C;

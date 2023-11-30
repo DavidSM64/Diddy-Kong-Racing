@@ -577,7 +577,65 @@ void func_800AF6E4(Object *obj, s32 arg1) {
 }
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800AF714.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800AFC3C.s")
+
+void func_800AFC3C(Object *arg0, s32 arg1) {
+    Object_6C *temp_s1;
+    Object_6C *temp_s1_2;
+    s32 var_s0;
+    s32 i;
+    s32 var_t9;
+    s32 var_a3;
+    u32 bits;
+    
+    bits = arg0->unk74;
+    var_a3 = arg0->segment.header->unk57;
+    for(i = 0; i < var_a3; i++) {
+        if (bits & 1) {
+            if (!(arg0->unk6C[i].unk4 & 0x8000)) {
+                func_800AF52C(arg0, i);
+            }
+            if (arg0->unk6C[i].unk4 & 0x4000) {
+                func_800AFE5C((Particle *) arg0, &arg0->unk6C[i]);
+            } else if((arg0->unk6C[i].unk4 & 0x400)) {
+                func_800AFE5C((Particle *) arg0, &arg0->unk6C[i]);
+            } else {
+                arg0->unk6C[i].unkA += arg1;
+                if (arg0->unk6C[i].unkA >= arg0->unk6C[i].unk0->segment.unk40_s16) {
+                    func_800AFE5C((Particle *) arg0, &arg0->unk6C[i]);
+                }
+            }
+            var_a3 = arg0->segment.header->unk57;
+        } else {
+            if (arg0->unk6C[i].unk4 & 0x8000) {
+                if (arg0->unk6C[i].unk4 & 0x4000) {
+                    temp_s1 = &arg0->unk6C[i];
+                    var_s0 = temp_s1->unk6 - 0x40;
+                    if (var_s0 < 0) {
+                        var_s0 = 0;
+                    }
+                    temp_s1->unk6 = (u8) var_s0;
+                    func_800AFE5C((Particle *) arg0, temp_s1);
+                    temp_s1->unk6 = (u8) var_s0;
+                    if (var_s0 == 0) {
+                        func_800AF6E4(arg0, i);
+                    }
+                    var_a3 = arg0->segment.header->unk57;
+                } else if((arg0->unk6C[i].unk4 & 0x400)) {
+                    temp_s1_2 = &arg0->unk6C[i];
+                    arg0->unk6C[i].unk4 |= 0x200;
+                    if (temp_s1_2->unk6 == 0) {
+                        func_800AF6E4(arg0, i);
+                    }
+                    var_a3 = arg0->segment.header->unk57;
+                } else {
+                    func_800AF6E4(arg0, i);
+                    var_a3 = arg0->segment.header->unk57;
+                }
+            }
+        }
+        bits >>= 1;
+    }
+}
 
 void func_800AFE5C(Particle *arg0, Particle *arg1) {
     Particle *temp_s0;

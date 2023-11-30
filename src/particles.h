@@ -137,7 +137,13 @@ typedef struct ParticleSegment {
       SegmentPropertiesCamera camera;
   };
   /* 0x003C */ void *unk3C;
-  /* 0x0040 */ s32 unk40;
+  union {
+    struct {
+        /* 0x0040 */ s16 unk40_s16;
+        /* 0x0042 */ s16 unk42;
+    };
+    s32 unk40;
+  };
 } ParticleSegment;
 
 typedef struct ParticleModel {
