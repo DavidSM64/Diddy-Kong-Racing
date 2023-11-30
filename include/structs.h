@@ -1867,6 +1867,36 @@ typedef struct ObjectSegment {
   /* 0x0040 */ ObjectHeader *header;
 } ObjectSegment;
 
+typedef struct Object_LightData_UnkC_Unk44 {
+    u8 pad0[8];
+    Vertex *unk8;
+} Object_LightData_UnkC_Unk44;
+
+typedef struct Object_LightData_UnkC {
+  /* 0x00 */ ObjectTransform trans;
+  /* 0x18 */ u8 pad18[0x22];
+  /* 0x3A */ s16 unk3A;
+  /* 0x3C */ u8 pad3C[0x8];
+  /* 0x44 */ Object_LightData_UnkC_Unk44 *unk44;
+  /* 0x48 */ u8 pad48[0x14];
+  /* 0x5C */ s16 unk5C;
+  /* 0x5E */ u8 pad5E[0xE];
+  /* 0x6C */ u8 unk6C;
+  /* 0x6D */ u8 unk6D;
+  /* 0x6E */ u8 unk6E;
+  /* 0x6F */ u8 pad6F[0x6];
+  /* 0x75 */ u8 unk75;
+  /* 0x76 */ u8 pad76;
+  /* 0x77 */ s8 unk77;
+} Object_LightData_UnkC;
+
+typedef struct Object_LightData {
+  /* 0x00 */ u8 pad0[6];
+  /* 0x06 */ u8 unk6;
+  /* 0x07 */ u8 pad7[5];
+  /* 0x0C */ Object_LightData_UnkC **unkC;
+} Object_LightData;
+
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ ObjectSegment segment;
@@ -1882,7 +1912,7 @@ typedef struct Object {
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
   /* 0x0068 */ Object_68 **unk68; //player + 0x80
   /* 0x006C */ Object_6C *unk6C; //player + 0x370
-  /* 0x0070 */ u32 *lightData;
+  /* 0x0070 */ Object_LightData **lightData;
   /* 0x0074 */ u32 unk74;
   /* 0x0078 */ ObjProperties properties;
   /* 0x0080 */ void *unk80;

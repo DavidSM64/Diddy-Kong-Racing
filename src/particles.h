@@ -238,6 +238,7 @@ void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vt
 void func_800B4668(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void func_800AFC3C(Object *obj, s32 updateRate);
+void func_800B3E64(Object *obj);
 
 void func_800AF404(s32 arg0); // Non Matching
 void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
@@ -249,6 +250,5 @@ void move_particle_velocity_parent(Particle *);
 void move_particle_with_velocities(Particle *);
 void move_particle_basic(Particle *);
 void move_particle_with_velocity(Particle *);
-void func_800B3E64(Object *); // Non Matching
 
 #endif
