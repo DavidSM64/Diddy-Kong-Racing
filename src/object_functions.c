@@ -36,7 +36,7 @@
 
 // Unsure about the signed/unsigned with these arrays.
 FadeTransition gTajTransformTransitionEnd = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_INVERT, FADE_COLOR_WHITE, 7, 3);
-FadeTransition gTajTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, 0xFFFF);
+FadeTransition gTajTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
 
 Vertex gCharacterFlagVertices[4] = {
     { -256,  256, 0, 255, 255, 255, 255 },
@@ -45,31 +45,29 @@ Vertex gCharacterFlagVertices[4] = {
     { -256, -256, 0, 255, 255, 255, 255 },
 };
 
-u16 D_800DC9A8[20] = {
-    0x0000, 0x0040, 0xFFC0, 0x0000,
-    0xFFC0, 0xFFC0, 0x0000, 0x0040,
-    0x0020, 0x0000, 0xFFC0, 0x0020,
-    0x0000, 0x0040, 0x0040, 0x0000,
-    0xFFC0, 0x0040, 0x0000, 0x0000,
+VertexPosition D_800DC9A8[6] = {
+    { 0,  64, -64 },
+    { 0, -64, -64 },
+    { 0,  64,  32 },
+    { 0, -64,  32 },
+    { 0,  64,  64 },
+    { 0, -64,  64 },
 };
-u16 D_800DC9D0[64] = {
-    0x0000, 0x0301, 0x0004, 0x0000,
-    0x0001, 0x0004, 0x0004, 0x0004,
-    0x0000, 0x0203, 0x0004, 0x0000,
-    0x0001, 0x0000, 0x0001, 0x0004,
-    0x0002, 0x0503, 0x0001, 0x0000,
-    0x0000, 0x0004, 0x0001, 0x0004,
-    0x0002, 0x0405, 0x0001, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0004,
-    0x0000, 0x0103, 0x0004, 0x0000,
-    0x0004, 0x0004, 0x0001, 0x0004,
-    0x0000, 0x0302, 0x0004, 0x0000,
-    0x0001, 0x0004, 0x0001, 0x0000,
-    0x0002, 0x0305, 0x0001, 0x0000,
-    0x0001, 0x0004, 0x0000, 0x0004,
-    0x0002, 0x0504, 0x0001, 0x0000,
-    0x0000, 0x0004, 0x0000, 0x0000,
+
+UNUSED s32 D_800DC9C8 = 0;
+
+// Fish Object Related
+Triangle D_800DC9D0[8] = {
+    { {{ 0, 0, 3, 1 }}, {{{ 4, 0 }}}, {{{ 1, 4 }}}, {{{ 4, 4 }}} },
+    { {{ 0, 0, 2, 3 }}, {{{ 4, 0 }}}, {{{ 1, 0 }}}, {{{ 1, 4 }}} },
+    { {{ 0, 2, 5, 3 }}, {{{ 1, 0 }}}, {{{ 0, 4 }}}, {{{ 1, 4 }}} },
+    { {{ 0, 2, 4, 5 }}, {{{ 1, 0 }}}, {{{ 0, 0 }}}, {{{ 0, 4 }}} },
+    { {{ 0, 0, 1, 3 }}, {{{ 4, 0 }}}, {{{ 4, 4 }}}, {{{ 1, 4 }}} },
+    { {{ 0, 0, 3, 2 }}, {{{ 4, 0 }}}, {{{ 1, 4 }}}, {{{ 1, 0 }}} },
+    { {{ 0, 2, 3, 5 }}, {{{ 1, 0 }}}, {{{ 1, 4 }}}, {{{ 0, 4 }}} },
+    { {{ 0, 2, 5, 4 }}, {{{ 1, 0 }}}, {{{ 0, 4 }}}, {{{ 0, 0 }}} },
 };
+
 u8 D_800DCA50[8] = {
     2, 5, 6, 3, 10, 8, 7, 9
 };
@@ -104,6 +102,7 @@ s8 D_800DCA9C[12] = {
     0x00, 0x01, 0x01, 0x02, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+// Butterfly Object Related
 Triangle D_800DCAA8[8] = {
     { {{ 0, 0, 3, 1 }}, {{{  0, 0 }}}, {{{ -1, -1 }}}, {{{  0, -1 }}} },
     { {{ 0, 0, 2, 3 }}, {{{  0, 0 }}}, {{{ -1,  0 }}}, {{{ -1, -1 }}} },
@@ -1422,7 +1421,98 @@ void play_tt_voice_clip(u16 soundID, s32 interrupt) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+void obj_init_fish(Object *fishObj, LevelObjectEntry_Fish *fishEntry, s32 param) {
+    Object_Fish *fish;
+    f32 sinsFE, cossFE, sins104, coss104;
+    f32 xPos;
+    f32 zPos;
+    s32 uMask;
+    s32 vMask;
+    s32 i;
+
+    fish = &fishObj->unk64->fish;
+    fish->unk100 = fishEntry->unkE << 4;
+    fish->unk104 = fishEntry->unkF << 8;
+    fish->unk114 = fishEntry->unk8;
+    fish->unk118 = fishEntry->unkA;
+    fish->unk108 = fishEntry->common.x;
+    fish->unk10C = fishEntry->common.y;
+    fish->unk110 = fishEntry->common.z;
+    if (param == 0) {
+        fish->unkFE = get_random_number_from_range(0, 0x10000);
+        fish->unk102 = get_random_number_from_range(0, 0x10000);
+        fish->unk106 = get_random_number_from_range(0, 0x10000);
+        fish->unkFD = 0;
+    } else {
+        fish->unkFE = 0x4000;
+        fishObj->segment.trans.y_rotation = fish->unk104;
+    }
+    sinsFE = sins_f((fish->unkFE * 2)) * fish->unk114;
+    cossFE = coss_f(fish->unkFE) * fish->unk114;
+    sins104 = sins_f(fish->unk104);
+    coss104 = coss_f(fish->unk104);
+
+    fishObj->segment.trans.x_position = fish->unk108;
+    xPos = (sinsFE * coss104) + (cossFE * sins104);
+    
+    fishObj->segment.trans.z_position = fish->unk110;
+    zPos = (cossFE * coss104) - (sinsFE * sins104);
+
+    ignore_bounds_check();
+    move_object(fishObj, xPos, 0.0f, zPos);
+    if (param == 0) {
+        for(i = 0; i < 8; i++) {
+            fish->triangles[i].flags = D_800DC9D0[i].flags;
+            fish->triangles[i].vi0 = D_800DC9D0[i].vi0;
+            fish->triangles[i].vi1 = D_800DC9D0[i].vi1;
+            fish->triangles[i].vi2 = D_800DC9D0[i].vi2;
+        }
+        uMask = 0;
+        for(i = 0; i < 6; i++) {
+            fish->vertices[uMask].x = D_800DC9A8[uMask].x;
+            fish->vertices[uMask].y = D_800DC9A8[uMask].y;
+            fish->vertices[uMask].z = D_800DC9A8[uMask].z;
+            fish->vertices[uMask].r = 255;
+            fish->vertices[uMask].g = 255;
+            fish->vertices[uMask].b = 255;
+            fish->vertices[uMask].a = 255;
+            fish->vertices[uMask+6].x = D_800DC9A8[uMask].x;
+            fish->vertices[uMask+6].y = D_800DC9A8[uMask].y;
+            fish->vertices[uMask+6].z = D_800DC9A8[uMask].z;
+            fish->vertices[uMask+6].r = 255;
+            fish->vertices[uMask+6].g = 255;
+            fish->vertices[uMask+6].b = 255;
+            fish->vertices[uMask+6].a = 255;
+            uMask++;
+        }
+        fish->unkFC = 1;
+    }
+    fishObj->segment.trans.scale = fishEntry->unkC * 0.01f;
+    if (fishEntry->unkB < fishObj->segment.header->numberOfModelIds) {
+        fish->texture = (TextureHeader *) fishObj->unk68[fishEntry->unkB];
+    } else {
+        fish->texture = (TextureHeader *) fishObj->unk68[0];
+    }
+    if (fish->texture != NULL) {
+        uMask = (fish->texture->width - 1) << 5;
+        vMask = (fish->texture->height - 1) << 5;
+    } else {
+        uMask = 0;
+        vMask = 0;
+    }
+    for(i = 0; i < 8; i++) {
+        fish->triangles[i].uv0.u = D_800DC9D0[i].uv0.u * uMask >> 2;
+        fish->triangles[i].uv0.v = D_800DC9D0[i].uv0.v * vMask >> 2;
+        fish->triangles[i].uv1.u = D_800DC9D0[i].uv1.u * uMask >> 2;
+        fish->triangles[i].uv1.v = D_800DC9D0[i].uv1.v * vMask >> 2;
+        fish->triangles[i].uv2.u = D_800DC9D0[i].uv2.u * uMask >> 2;
+        fish->triangles[i].uv2.v = D_800DC9D0[i].uv2.v * vMask >> 2;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/object_functions/obj_init_fish.s")
+#endif
 
 void obj_loop_fish(Object *fishObj, s32 updateRate) {
     f32 zThing;
@@ -5388,14 +5478,14 @@ void obj_init_wavegenerator(Object *obj, UNUSED LevelObjectEntry_WaveGenerator *
     func_800BF524(obj);
 }
 
-void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butterflyEntry, s32 arg2) {
+void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butterflyEntry, s32 param) {
     Object_Butterfly *butterfly;
     s32 uMask;
     s32 vMask;
     s32 i;
     
     butterfly = &butterflyObj->unk64->butterfly;
-    if (arg2 == 0) {
+    if (param == 0) {
         butterflyObj->segment.y_velocity = 0.0f;
         butterfly->unkFE = 0;
         butterfly->unk100 = 0;
@@ -5431,9 +5521,9 @@ void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butter
     }
     butterflyObj->segment.trans.scale = butterflyEntry->unkB * 0.01f;
     if (butterflyEntry->unkA < butterflyObj->segment.header->numberOfModelIds) {
-        butterfly->texture = (TextureHeader* ) butterflyObj->unk68[butterflyEntry->unkA];
+        butterfly->texture = (TextureHeader *) butterflyObj->unk68[butterflyEntry->unkA];
     } else {
-        butterfly->texture = (TextureHeader* ) butterflyObj->unk68[0];
+        butterfly->texture = (TextureHeader *) butterflyObj->unk68[0];
     }
     if (butterfly->texture != NULL) {
         uMask = (butterfly->texture->width - 1) << 5;

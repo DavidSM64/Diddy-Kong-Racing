@@ -2582,7 +2582,7 @@ void render_3d_misc(Object *obj) {
             break;
         case BHV_FISH:
             objData = obj->unk64;
-            scale = obj->segment.level_entry->fish.unkC[1];
+            scale = obj->segment.level_entry->fish.unkD;
             scale *= 0.01f;
             render_misc_model(obj, &objData->fish.vertices[objData->fish.unkFC * 6], 6, objData->fish.triangles, 8, objData->fish.texture, 
                           RENDER_Z_COMPARE | RENDER_FOG_ACTIVE | RENDER_CUTOUT, 0, scale);
@@ -6257,7 +6257,7 @@ void run_object_init_func(Object *obj, void *entry, s32 param) {
             obj_init_scenery(obj, (LevelObjectEntry_Scenery*) entry);
             break;
         case BHV_FISH:
-            obj_init_fish(obj, (LevelObjectEntry_Fish *) entry);
+            obj_init_fish(obj, (LevelObjectEntry_Fish *) entry, param);
             break;
         case BHV_ANIMATOR:
             obj_init_animator(obj, (LevelObjectEntry_Animator *) entry, param);
@@ -6364,7 +6364,7 @@ void run_object_init_func(Object *obj, void *entry, s32 param) {
             obj_init_lensflare(obj, (LevelObjectEntry_LensFlare *) entry);
             break;
         case BHV_LENS_FLARE_SWITCH:
-            obj_init_lensflareswitch(obj, (LevelObjectEntry_LensFlareSwitch *) entry);
+            obj_init_lensflareswitch(obj, (LevelObjectEntry_LensFlareSwitch *) entry, param);
             break;
         case BHV_COLLECT_EGG:
             obj_init_collectegg(obj, (LevelObjectEntry_CollectEgg *) entry);
@@ -6376,7 +6376,7 @@ void run_object_init_func(Object *obj, void *entry, s32 param) {
             obj_init_characterflag(obj, (LevelObjectEntry_CharacterFlag *) entry);
             break;
         case BHV_ANIMATION:
-            obj_init_animation(obj, (LevelObjectEntry_Animation *) entry);
+            obj_init_animation(obj, (LevelObjectEntry_Animation *) entry, param);
             break;
         case BHV_INFO_POINT:
             obj_init_infopoint(obj, (LevelObjectEntry_InfoPoint *) entry);
@@ -6395,7 +6395,7 @@ void run_object_init_func(Object *obj, void *entry, s32 param) {
             obj_init_wavegenerator(obj, (LevelObjectEntry_WaveGenerator *) entry, param);
             break;
         case BHV_BUTTERFLY:
-            obj_init_butterfly(obj, (LevelObjectEntry_Butterfly *) entry);
+            obj_init_butterfly(obj, (LevelObjectEntry_Butterfly *) entry, param);
             break;
         case BHV_PARK_WARDEN:
             obj_init_parkwarden(obj, (LevelObjectEntry_Parkwarden *) entry);

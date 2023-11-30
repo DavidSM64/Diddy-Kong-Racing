@@ -205,7 +205,7 @@ void func_8002EEEC(void);
 void func_8002F2AC(void);
 void func_8002F440(void);
 f32 func_8002FA64(void);
-s32 func_8002BAB0(s32, f32, f32, f32*);
+s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut);
 void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, u32 entranceId, u32 collectables, u32 arg6);
 void func_800B82B4(LevelModel *, LevelHeader *, s32);
 void func_80025510(s32);
