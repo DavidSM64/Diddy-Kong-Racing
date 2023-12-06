@@ -807,7 +807,7 @@ void func_800AFE5C(Particle *arg0, Particle *arg1) {
 
     temp_s4 = arg1->data.behaviour;
     if (arg1->data.flags & 0x4000) {
-        tempObj = func_800B0BAC();
+        tempObj = func_800B0BAC((Object *) arg0, arg1);
         if (tempObj != NULL) {
             func_8000E9D0((Object *) tempObj);
         }
@@ -1076,7 +1076,117 @@ Particle *func_800B0698(Particle *arg0, Particle *arg1) {
     return var_v0;
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800B0BAC.s")
+Particle *func_800B0BAC(Object* arg0, Particle *arg1) {
+    ParticleProperties *sp34;
+    Particle *sp30;
+    ParticleModel *sp2C;
+    ParticleBehavior *sp28;
+    unkParticleBehaviorUnk9C *sp24;
+
+    sp34 = gParticlesAssetTable[arg1->data.propertyID];
+    if (sp34->unk0 != 3) {
+        return NULL;
+    }
+    sp28 = arg1->data.behaviour;
+    sp24 = (unkParticleBehaviorUnk9C *) sp28->unk9C;
+    sp30 = func_800B1CB8(3);
+    if (sp30 == NULL) {
+        return NULL;
+    }
+    sp30->segment.object.segmentID = arg0->segment.object.segmentID;
+    sp30->segment.trans.flags = -0x8000;
+    sp30->segment.object.opacity = sp34->movementType;
+    sp30->segment.unk40 = sp34->unk2;
+    sp30->segment.unk3C = (ParticleSegment_3C *) arg0;
+    sp30->unk58_ptr = (Particle_58 **) arg1;
+    sp30->segment.trans.scale = sp34->scale * sp28->unk50;
+    sp30->segment.scaleVel = sp34->scale * sp28->unk54;
+    sp30->segment.particle.destroyTimer = sp34->lifeTime;
+    sp30->segment.particle.unk34 = 0.0f;
+    sp30->segment.object.unk38 = 0;
+    if (D_800E2D00->word != 0) {
+        sp30->colour.word = D_800E2D00->word;
+    } else {
+        sp30->colour.r = sp34->colour.r;
+        sp30->colour.g = sp34->colour.g;
+        sp30->colour.b = sp34->colour.b;
+    }
+    sp30->colour.a = sp34->colour.a;
+    if (sp30->segment.unk40 & 0x800 && arg0->shading != NULL) {
+        sp30->brightness = arg0->shading->unk0 * 255.0f;
+    } else {
+        sp30->brightness = 0xFF;
+    }
+    sp30->opacityTimer = sp34->opacityTimer;
+    sp30->opacity = sp34->opacity << 8;
+    if (sp34->opacity < 0xFF) {
+        if (sp30->segment.unk40 & 0x1000) {
+            sp30->segment.trans.flags |= OBJ_FLAGS_UNK_0100;
+        } else {
+            sp30->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
+        }
+    }
+    if (sp30->opacityTimer < sp30->segment.particle.destroyTimer) {
+        sp30->opacityVel = (((sp34->opacityVel - sp34->opacity) << 8) / (sp30->segment.particle.destroyTimer - sp30->opacityTimer));
+    } else {
+        sp30->opacityVel = 0;
+    }
+    arg1->segment.trans.x_position = arg1->segment.textureFrame;
+    arg1->segment.trans.y_position = arg1->segment.unk1A;
+    arg1->segment.trans.z_position = arg1->data.baseVelZ;
+    f32_vec3_apply_object_rotation(&arg0->segment.trans, &arg1->segment.trans.x_position);
+    arg1->segment.trans.x_position += arg0->segment.trans.x_position;
+    arg1->segment.trans.y_position += arg0->segment.trans.y_position;
+    arg1->segment.trans.z_position += arg0->segment.trans.z_position;
+    sp30->unk68b = 0;
+    sp30->unk6Ab = 0;
+    sp30->unk6Bb = -1;
+    sp30->segment.unk1A = sp34->unk6;
+    sp30->segment.textureFrame = 0;
+    sp2C = sp30->modelData;
+    if (sp34->textureID == -1) {
+        sp2C->texture = NULL;
+    } else {
+        sp2C->texture = load_texture(sp34->textureID);
+        if (sp2C->texture != NULL) {
+            if (sp2C->texture->flags & 4) {
+                if (sp30->segment.unk40 & 0x1000) {
+                    sp30->segment.trans.flags |= OBJ_FLAGS_UNK_0100;
+                } else {
+                    sp30->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
+                }
+            }
+            if ((sp30->segment.unk40 & 3) == 2) {
+                sp30->segment.textureFrame = sp2C->texture->numOfTextures - 1;
+            }
+        }
+    }
+    sp2C->vertices->x = arg1->segment.trans.x_position;
+    sp2C->vertices->y = arg1->segment.trans.y_position;
+    sp2C->vertices->z = arg1->segment.trans.z_position;
+    if ((s32)sp24 != -1U) {
+        arg1->data.unk1E += 1;
+        if (arg1->data.unk1E >= sp24[0].unk0) {
+            arg1->data.unk1E = 0;
+        }
+        sp2C->vertices->r = sp24[arg1->data.unk1E + 2].r;
+        sp2C->vertices->g = sp24[arg1->data.unk1E + 2].g;
+        sp2C->vertices->b = sp24[arg1->data.unk1E + 2].b;
+        sp2C->vertices->a = arg1->data.unk6;
+    } else {
+        sp2C->vertices->r = sp30->colour.r;
+        sp2C->vertices->g = sp30->colour.g;
+        sp2C->vertices->b = sp30->colour.b;
+        sp2C->vertices->a = arg1->data.unk6;
+    }
+    sp30->unk6Ab = ((u32) sp34->lifeTimeRangeUnsigned >> 10);
+    sp30->unk6Bb = ((u32) (sp34->lifeTimeWord << 22) >> 26); 
+    sp30->segment.trans.x_position = arg0->segment.trans.x_position;
+    sp30->segment.trans.y_position = arg0->segment.trans.y_position;
+    sp30->segment.trans.z_position = arg0->segment.trans.z_position;
+    arg1->data.opacity = 0;
+    return sp30;
+}
 
 Particle *func_800B1130(Particle *arg0, Particle *arg1) {
     s32 flags;

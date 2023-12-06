@@ -56,8 +56,16 @@ typedef struct ParticleProperties {
   /* 0x02 */ u16 unk2;
   /* 0x04 */ s16 textureID;
   /* 0x06 */ s16 unk6;
-  /* 0x08 */ s16 lifeTime;
-  /* 0x0A */ s16 lifeTimeRange;
+  union {
+    struct {
+        /* 0x08 */ s16 lifeTime;
+        union {
+        /* 0x0A */ s16 lifeTimeRange;
+        /* 0x0A */ u16 lifeTimeRangeUnsigned;
+        };
+    };
+    /* 0x08 */ s32 lifeTimeWord;
+  };
   /* 0x0C */ u8 opacity;
   /* 0x0D */ u8 opacityVel;
   /* 0x0E */ s16 opacityTimer;
@@ -223,7 +231,7 @@ typedef struct Particle {
   /* 0x0054 */ f32 *unk54_ptr;
   };
   union {
-  /* 0x0058 */ s32 **unk58_ptr;
+  /* 0x0058 */ Particle_58 **unk58_ptr;
   /* 0x0058 */ f32 forwardVel;
   };
   /* 0x005C */ s16 opacity;
@@ -238,7 +246,7 @@ typedef struct Particle {
   /* 0x0068 */ u8 unk68b;
   /* 0x0069 */ u8 unk69b;
   /* 0x006A */ s8 unk6Ab;
-  /* 0x006B */ u8 unk6Bb;
+  /* 0x006B */ s8 unk6Bb;
   };
   };
   /* 0x006C */ ColourRGBA colour;
@@ -248,6 +256,15 @@ typedef struct Particle {
   /* 0x0076 */ u8 unk76;
   /* 0x0077 */ s8 unk77;
 } Particle;
+
+// Size: 8 bytes
+typedef struct unkParticleBehaviorUnk9C {
+    s32 unk0;
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 pad7; // Probably alpha
+} unkParticleBehaviorUnk9C;
 
 // Almost an identical copy of Particle, but a few bytes shorter. Exists to make sure func_800B1CB8 matches.
 typedef struct ParticleType {
@@ -292,10 +309,10 @@ void func_800AFC3C(Object *obj, s32 updateRate);
 void func_800B3E64(Object *obj);
 void func_800B26E0(Particle *particle);
 void func_800AF714(Object *racerObj, s32 updateRate);
+Particle* func_800B0BAC(Object* arg0, Particle* arg1);
 
 void func_800AF404(s32 arg0); // Non Matching
 void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
-Particle *func_800B0BAC();
 void move_particle_basic_parent(Particle *);
 void move_particle_velocity_parent(Particle *);
 void move_particle_with_velocities(Particle *);
