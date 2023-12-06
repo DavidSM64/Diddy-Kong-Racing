@@ -1324,7 +1324,7 @@ void handle_particle_movement(Particle *particle, s32 updateRate) {
     gParticleUpdateRate = updateRate;
     tempParticle = NULL;
     if (particle->segment.particle.unk2C == 3) {
-        func_800B26E0();
+        func_800B26E0(particle);
     } else {
         if (particle->segment.unk40 & 3) {
             if (gParticleUpdateRate > 0) {
@@ -1406,7 +1406,145 @@ void func_800B263C(Particle *arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800B26E0.s")
+void func_800B26E0(Particle *particle) {
+    Vec3f sp44;
+    f32 tempf;
+    f32 scale;
+    ParticleModel *particleModel;
+    ParticleSegment_3C *sp34;
+    Particle_58 *sp30;
+    Particle_58_0_9C *sp2C;
+    Particle_58_0_9C **sp2C_ptr; 
+    
+    sp34 = particle->segment.unk3C;
+    particleModel = 0; 
+    sp2C_ptr = &sp2C;
+    if (sp34 != NULL) {
+        sp30 = (Particle_58 *) particle->unk58_ptr;
+        sp2C = sp30->unk0->unk9C;
+        particleModel = particle->modelData;
+    }
+    if (particle->unk68b < 2 && sp34 != NULL) {
+        if (sp30->unk0->unk0 & 0x1000) {
+            scale = sqrtf((sp34->unk1C * sp34->unk1C) + (sp34->unk20 * sp34->unk20) + (sp34->unk24 * sp34->unk24));
+            scale = scale * particle->segment.trans.scale * 0.1f;
+        } else {
+            scale = particle->segment.trans.scale;
+        }
+        if (!(particle->segment.unk40 & 0x4000)) {
+            sp44.x = 0.0f;
+            sp44.y = 0.0f;
+            sp44.z = 0.0f;
+            switch (particle->unk6Ab) {
+                default:
+                    sp44.x = scale;
+                    break;
+                case 2:
+                    sp44.z = scale;
+                    break;
+                case 1:
+                    sp44.y = scale;
+                    break;
+            }
+            f32_vec3_apply_object_rotation((ObjectTransform *) sp34, &sp44.x);
+        } else {
+            sp44.x= sp34->unk1C;
+            sp44.y = sp34->unk20;
+            sp44.z = sp34->unk24;
+            tempf = ((sp44.x * sp44.x) + (sp44.y * sp44.y)) + (sp44.z * sp44.f[2]);
+            if (tempf < 0.01f) {
+                tempf = 1.0f;
+            } else {
+                tempf = scale / sqrtf(tempf);
+            }
+            sp44.x *= tempf;
+            sp44.y *= tempf;
+            sp44.z *= tempf;
+            switch (particle->unk6Ab) {
+                case 0:
+                    tempf = sp44.x;
+                    sp44.x = -sp44.z;
+                    sp44.z = tempf;
+                    break;
+                case 1:
+                    tempf = sp44.y;
+                    sp44.y = -sp44.z;
+                    sp44.z = tempf;
+                    break;
+            }
+        }
+        if (particleModel != NULL && particle->unk68b == 0) {
+            particleModel->vertices[1].x = sp44.f[0] + sp30->unkC;
+            particleModel->vertices[1].y = sp44.f[1] + sp30->unk10;
+            particleModel->vertices[1].z = sp44.f[2] + sp30->unk14;
+            particleModel->vertices[1].r = particleModel->vertices->r;
+            particleModel->vertices[1].g = particleModel->vertices->g;
+            particleModel->vertices[1].b = particleModel->vertices->b;
+            particleModel->vertices[1].a = sp30->unk6;
+            particleModel->vertices[2].x = sp30->unkC;
+            particleModel->vertices[2].y = sp30->unk10;
+            particleModel->vertices[2].z = sp30->unk14;
+            if ((s32) *sp2C_ptr != -1) {
+                particleModel->vertices[2].r = (*sp2C_ptr)[sp30->unk1E + 2].unk4;
+                particleModel->vertices[2].g = (*sp2C_ptr)[sp30->unk1E + 2].unk5;
+                particleModel->vertices[2].b = (*sp2C_ptr)[sp30->unk1E + 2].unk6;
+                particleModel->vertices[2].a = sp30->unk6;
+            } else {
+                particleModel->vertices[2].r = particle->colour.r;
+                particleModel->vertices[2].g = particle->colour.g;
+                particleModel->vertices[2].b = particle->colour.b;
+                particleModel->vertices[2].a = sp30->unk6;
+            }
+            particleModel->vertices[3].x = sp30->unkC - sp44.f[0];
+            particleModel->vertices[3].y = sp30->unk10 - sp44.f[1];
+            particleModel->vertices[3].z = sp30->unk14 - sp44.f[2];
+            particleModel->vertices[3].r = particleModel->vertices->r;
+            particleModel->vertices[3].g = particleModel->vertices->g;
+            particleModel->vertices[3].b = particleModel->vertices->b;
+            particleModel->vertices[3].a = sp30->unk6;
+            particle->unk68b = 1;
+        } else if (particleModel != NULL) {
+            particleModel->vertices[4].x = sp44.f[0] + sp30->unkC;
+            particleModel->vertices[4].y = sp44.f[1] + sp30->unk10;
+            particleModel->vertices[4].z = sp44.f[2] + sp30->unk14;
+            particleModel->vertices[4].r = particleModel->vertices[2].r;
+            particleModel->vertices[4].g = particleModel->vertices[2].g;
+            particleModel->vertices[4].b = particleModel->vertices[2].b;
+            particleModel->vertices[4].a = sp30->unk6;
+            particleModel->vertices[5].x = sp30->unkC - sp44.f[0];
+            particleModel->vertices[5].y = sp30->unk10 - sp44.f[1];
+            particleModel->vertices[5].z = sp30->unk14 - sp44.f[2];
+            particleModel->vertices[5].r = particleModel->vertices[2].r;
+            particleModel->vertices[5].g = particleModel->vertices[2].g;
+            particleModel->vertices[5].b = particleModel->vertices[2].b;
+            particleModel->vertices[5].a = sp30->unk6;
+            particle->unk68b = 2;
+        }
+    } else {
+        particle->segment.particle.destroyTimer -= gParticleUpdateRate;
+        if (particle->segment.particle.destroyTimer <= 0) {
+            free_object((Object *) particle);
+        } else if (particle->opacityTimer == 0) {
+            particle->opacity += gParticleUpdateRate * particle->opacityVel;
+            if (particle->opacity < 0xFF) {
+                if (particle->segment.unk40 & 0x1000) {
+                    particle->segment.trans.flags |= OBJ_FLAGS_UNK_0100;
+                } else {
+                    particle->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
+                }
+            }
+        } else {
+            particle->opacityTimer -= gParticleUpdateRate;
+            if (particle->opacityTimer < 0) {
+                particle->opacity -= particle->opacityTimer * particle->opacityVel;
+                particle->opacityTimer = 0;
+            }
+        }
+    }
+    if (particleModel != NULL && particleModel->texture != NULL && particle->segment.unk40 & 3 && gParticleUpdateRate > 0) {
+        set_particle_texture_frame(particle);
+    }    
+}
 
 void set_particle_texture_frame(Particle *particle) {
     s32 someFlag;

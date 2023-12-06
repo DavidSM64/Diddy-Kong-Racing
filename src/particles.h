@@ -87,6 +87,49 @@ typedef struct unk800B1130_SP28 {
     u8 a;
 } unk800B1130_SP28;
 
+
+// Size: 8 bytes
+typedef struct Particle_58_0_9C {
+    u8 pad0[4];
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
+} Particle_58_0_9C;
+
+typedef struct Particle_58_0 {
+    s32 unk0;
+    u8 pad4[0x2];
+    u8 unk6;
+    u8 pad7[0x5];
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    u8 pad18[0x6];
+    s16 unk1E;
+    u8 pad20[0x7C];
+    Particle_58_0_9C *unk9C;
+} Particle_58_0;
+
+typedef struct Particle_58 {
+    Particle_58_0 *unk0;
+    u8 pad4[0x2];
+    u8 unk6;
+    u8 pad7[0x5];
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    u8 pad18[0x6];
+    s16 unk1E;
+} Particle_58;
+
+typedef struct ParticleSegment_3C {
+    u8 pad0[0x1C];
+    f32 unk1C;
+    f32 unk20;
+    f32 unk24;
+} ParticleSegment_3C;
+
 typedef struct ParticleAngle {
     s16 y_rotation;
     s16 x_rotation;
@@ -179,7 +222,10 @@ typedef struct Particle {
   /* 0x0054 */ f32 baseVelZ;
   /* 0x0054 */ f32 *unk54_ptr;
   };
+  union {
+  /* 0x0058 */ s32 **unk58_ptr;
   /* 0x0058 */ f32 forwardVel;
+  };
   /* 0x005C */ s16 opacity;
   /* 0x005E */ s16 opacityVel;
   /* 0x0060 */ s16 opacityTimer;
@@ -187,8 +233,13 @@ typedef struct Particle {
   /* 0x0064 */ s16 angleVelX;
   /* 0x0066 */ s16 angleVelZ;
   union {
-  /* 0x0068 */ u8 unk68b;
   /* 0x0068 */ f32 gravity;
+  struct {
+  /* 0x0068 */ u8 unk68b;
+  /* 0x0069 */ u8 unk69b;
+  /* 0x006A */ s8 unk6Ab;
+  /* 0x006B */ u8 unk6Bb;
+  };
   };
   /* 0x006C */ ColourRGBA colour;
   /* 0x0070 */ struct Particle *unk70;
@@ -239,12 +290,12 @@ void func_800B4668(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void func_800AFC3C(Object *obj, s32 updateRate);
 void func_800B3E64(Object *obj);
+void func_800B26E0(Particle *particle);
 
 void func_800AF404(s32 arg0); // Non Matching
 void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
 void func_800AF714(Object*, s32); // Non matching
 Particle *func_800B0BAC();
-void func_800B26E0();
 void move_particle_basic_parent(Particle *);
 void move_particle_velocity_parent(Particle *);
 void move_particle_with_velocities(Particle *);
