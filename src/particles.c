@@ -133,17 +133,36 @@ XYStruct gParticleCoordListQuad[4] = {
     { -6, -6 },
 };
 
-s32 D_800E2E84[16] = {
-    0x00000000, 0xC00840FF, 0xFF6008FF, 0x404040FF, 
-    0x00000000, 0x00000000, 0x00000000, 0x00000000, 
-    0x00000000, 0x00000000, 0x00000000, 0x00000000, 
-    0x00000000, 0x1070FFFF, 0x00000000, 0x00000000
+ColourRGBA D_800E2E84[16] = {
+    {{{ 0, 0, 0, 0 }}},
+    {{{ 192, 8, 64, 255 }}},
+    {{{ 255, 96, 8, 255 }}},
+    {{{ 64, 64, 64, 255 }}},
+    {{{ 0, 0, 0, 0 }}},
+    {{{ 0, 0, 0, 0 }}},
+    {{{ 0, 0, 0, 0 }}},
+    {{{ 0, 0, 0, 0 }}},
+    {{{ 0, 0, 0, 0 }}},
+    {{{ 0, 0, 0, 0 }}},
+    {{{ 0, 0, 0, 0 }}},
+    {{{ 0, 0, 0, 0 }}},
+    {{{ 0, 0, 0, 0 }}},
+    {{{ 16, 112, 255, 255 }}},
+    {{{ 0, 0, 0, 0 }}},
+    {{{ 0, 0, 0, 0 }}}
 };
 
-s32 D_800E2EC4[10] = {
-    0x404040FF, 0x404040FF, 0x002D00FF, 0x002D00FF, 
-    0x403C0AFF, 0x403C0AFF, 0x4040FFFF, 0x4040FFFF, 
-    0x404040FF, 0x404040FF
+ColourRGBA D_800E2EC4[10] = {
+    {{{ 64, 64, 64, 255 }}},
+    {{{ 64, 64, 64, 255 }}},
+    {{{ 0, 45, 0, 255 }}},
+    {{{ 0, 45, 0, 255 }}},
+    {{{ 64, 60, 10, 255 }}},
+    {{{ 64, 60, 10, 255 }}},
+    {{{ 64, 64, 255, 255 }}},
+    {{{ 64, 64, 255, 255 }}},
+    {{{ 64, 64, 64, 255 }}},
+    {{{ 64, 64, 64, 255 }}} 
 };
 
 s32 gParticleOpacity = 256;
@@ -154,7 +173,7 @@ s32 gParticleOpacity = 256;
 
 s32 gParticleUpdateRate;
 s32 D_80127C84;
-s32 D_80127C88[6];
+s16 D_80127C88[12];
 //printf.c
 //thread0_epc
 /******************************/
@@ -576,7 +595,148 @@ void func_800AF6E4(Object *obj, s32 arg1) {
     obj->segment.unk1A--;
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800AF714.s")
+void func_800AF714(Object *racerObj, s32 updateRate) {
+    Object_Racer *racer;
+    ParticleProperties *temp_a3;
+    s32 var_v0;
+    s32 temp_v1;
+    s32 i;
+    Object_6C *new_var;
+    Object_6C *new_var2;
+    s32 var_t1;
+    s32 someBool;
+    s8 vehicleId;
+    u32 var_s7;
+    u8 *alphaPtr;
+
+    racer = &racerObj->unk64->racer;
+    var_s7 = racerObj->unk74;
+    vehicleId = racer->vehicleID;
+    i = 0;
+    object_do_player_tumble(racerObj);
+    for (; i < racerObj->segment.header->unk57; i++) {
+        if (var_s7 & 1) {
+            someBool = TRUE;
+            switch (vehicleId) {
+                case VEHICLE_CAR:
+                    if (i >= 0 && i < 10) {
+                        var_v0 = racer->unk16E;
+                        if (var_v0 < 0) {
+                            var_v0 = -var_v0;
+                        }
+                        var_v0 -= 24;
+                        if (var_v0 > 0) {
+                            temp_a3 = gParticlesAssetTable[racerObj->unk6C[i].unk8];
+                            alphaPtr = &D_800E2EC4[i].a;
+                            var_t1 = 4;
+                            if (var_v0 > 32) {
+                                var_v0 = 32;
+                            }
+                            var_t1 = var_v0 << var_t1;
+                            temp_v1 = var_t1 - ((var_v0 * var_v0) >> 2);
+                            D_800E2D00[0].word = ((((D_800E2EC4[i].r - temp_a3->colour.r) * temp_v1) >> 8) + temp_a3->colour.r) << 24;
+                            D_800E2D00[0].word |= (temp_a3->colour.g + ((((D_800E2EC4[i].g - temp_a3->colour.g) * temp_v1)) >> 8)) << 16;
+                            D_800E2D00[0].word |= (temp_a3->colour.b + ((((D_800E2EC4[i].b - temp_a3->colour.b) * temp_v1)) >> 8)) << 8;
+                            if (var_v0 > 16) {
+                                var_t1 = 256;
+                            }
+                            var_v0 = temp_a3->colour.a;
+                            D_800E2D00[0].word |= var_v0 + (((*alphaPtr - var_v0) * var_t1) >> 8); 
+                        }
+                    } else {
+                        switch (i) {
+                            case 10:
+                                if (racer->wheel_surfaces[2] == 0xFF) {
+                                    someBool = FALSE;
+                                }
+                                D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[2] & 0xF].word;
+                                break;
+                            
+                            case 11:
+                                if (racer->wheel_surfaces[3] == 0xFF) {
+                                    someBool = FALSE;
+                                }
+                                D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[3] & 0xF].word;
+                                break;
+                            
+                            case 12:
+                                if (racer->wheel_surfaces[0] == 0xFF) {
+                                    someBool = FALSE;
+                                }
+                                D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[0] & 0xF].word;
+                                break;
+                            
+                            case 13:
+                                if (racer->wheel_surfaces[1] == 0xFF) {
+                                    someBool = FALSE;
+                                }
+                                D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[1] & 0xF].word;
+                                break;                            
+                        }                        
+                    }
+                    break;                
+                case VEHICLE_PLANE:
+                    if (i == 0) {
+                        D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[0] & 0xF].word;
+                    } else if (i == 1) {
+                        D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[1] & 0xF].word;
+                    }
+                    break;                
+                case VEHICLE_HOVERCRAFT:
+                    if (i == 2 || i == 3) {
+                        var_v0 = D_80127C88[racer->unk2 & 7];
+                        var_v0 += (updateRate * 4);
+                        if (var_v0 > 256) {
+                            var_v0 = 256;
+                        }
+                        D_80127C88[racer->unk2 & 7] = var_v0;
+                        gParticleOpacity = var_v0;
+                    }
+                    break;                
+            }
+            
+            if (someBool) {
+                if (!(racerObj->unk6C[i].unk4 & 0x8000)) {
+                    func_800AF52C(racerObj, i);
+                }
+                if (racerObj->unk6C[i].unk4 & 0x4000) {
+                    func_800AFE5C((Particle *) racerObj, (Particle *) &racerObj->unk6C[i]);
+                } else if (racerObj->unk6C[i].unk4 & 0x400) {
+                    func_800AFE5C((Particle *) racerObj, (Particle *) &racerObj->unk6C[i]);
+                } else {
+                    racerObj->unk6C[i].unkA += updateRate;
+                    if (racerObj->unk6C[i].unkA >= racerObj->unk6C[i].unk0->segment.unk40_s16) {
+                        func_800AFE5C((Particle *) racerObj, (Particle *) &racerObj->unk6C[i]);
+                    }
+                }
+            }
+        } else if (racerObj->unk6C[i].unk4 & 0x8000) {
+            if (racerObj->unk6C[i].unk4 & 0x4000) {
+                new_var2 = &racerObj->unk6C[i];
+                new_var2->unk6 = 0;
+                func_800AF6E4(racerObj, i);
+            } else { 
+                if (racerObj->unk6C[i].unk4 & 0x400) {
+                    new_var = &racerObj->unk6C[i];
+                    racerObj->unk6C[i].unk4 |= 0x200;
+                    if (new_var->unk6 == 0) {
+                        func_800AF6E4(racerObj, i);
+                    }
+                } else {
+                    func_800AF6E4(racerObj, i);
+                }
+            }
+            if (i == 2 || i == 3) {
+                D_80127C88[racer->unk2 & 7] = 0;
+            }
+        }
+        D_800E2D00[0].word = 0;
+        var_s7 >>= 1;
+        gParticleOpacity = 256;
+    }
+    
+    object_undo_player_tumble(racerObj);
+}
 
 void func_800AFC3C(Object *obj, s32 updateRate) {
     Object_6C *temp_s1;

@@ -291,10 +291,10 @@ void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void func_800AFC3C(Object *obj, s32 updateRate);
 void func_800B3E64(Object *obj);
 void func_800B26E0(Particle *particle);
+void func_800AF714(Object *racerObj, s32 updateRate);
 
 void func_800AF404(s32 arg0); // Non Matching
 void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
-void func_800AF714(Object*, s32); // Non matching
 Particle *func_800B0BAC();
 void move_particle_basic_parent(Particle *);
 void move_particle_velocity_parent(Particle *);
