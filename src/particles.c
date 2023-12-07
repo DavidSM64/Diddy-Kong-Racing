@@ -66,13 +66,12 @@ s32 *gParticleBehavioursAssets = NULL;
 ParticleBehavior **gParticleBehavioursAssetTable = NULL;
 ColourRGBA D_800E2D00[2] = {{{{ 0 }}}, {{{ 0 }}}};
 
-// Are these just Triangles?
-unk800E2D08 D_800E2D08[5] = {
-    { 0x4000, 0x0102, 0x0100, 0x0000, 0x0000, 0x01E0, 0x0100, 0x01E0 },
-    { 0x4000, 0x0203, 0x0100, 0x0000, 0x0100, 0x01E0, 0x01E0, 0x01E0 },
-    { 0x4001, 0x0204, 0x0000, 0x0000, 0x0100, 0x0000, 0x0000, 0x01E0 },
-    { 0x4002, 0x0305, 0x0100, 0x0000, 0x01E0, 0x0000, 0x01E0, 0x01E0 },
-    { 0x4000, 0x0103, 0x0100, 0x0000, 0x0000, 0x01E0, 0x01E0, 0x01E0 },
+Triangle D_800E2D08[5] = {
+    { {{ DRAW_BACKFACE, 0, 1, 2 }}, {{{ 256, 0 }}}, {{{   0, 480 }}}, {{{ 256, 480 }}} },
+    { {{ DRAW_BACKFACE, 0, 2, 3 }}, {{{ 256, 0 }}}, {{{ 256, 480 }}}, {{{ 480, 480 }}} },
+    { {{ DRAW_BACKFACE, 1, 2, 4 }}, {{{   0, 0 }}}, {{{ 256,   0 }}}, {{{   0, 480 }}} },
+    { {{ DRAW_BACKFACE, 2, 3, 5 }}, {{{ 256, 0 }}}, {{{ 480,   0 }}}, {{{ 480, 480 }}} },
+    { {{ DRAW_BACKFACE, 0, 1, 3 }}, {{{ 256, 0 }}}, {{{   0, 480 }}}, {{{ 480, 480 }}} }
 };
 
 Vec3s D_800E2D58[5] = {
@@ -83,16 +82,15 @@ Vec3s D_800E2D58[5] = {
     {{{ 0x0000, 0x01FF, 0x01FF }}},
 };
 
-// Are these just Triangles?
-unk800E2D08 D_800E2D78[8] = {
-    { 0x0000, 0x0105, 0x0000, 0x0000, 0x0080, 0x0000, 0x0080, 0x01FF },
-    { 0x0000, 0x0504, 0x0000, 0x0000, 0x0080, 0x01FF, 0x0000, 0x01FF },
-    { 0x0001, 0x0206, 0x0080, 0x0000, 0x0100, 0x0000, 0x0100, 0x01FF },
-    { 0x0001, 0x0605, 0x0080, 0x0000, 0x0100, 0x01FF, 0x0080, 0x01FF },
-    { 0x0002, 0x0307, 0x0100, 0x0000, 0x0180, 0x0000, 0x0180, 0x01FF },
-    { 0x0002, 0x0706, 0x0100, 0x0000, 0x0180, 0x01FF, 0x0100, 0x01FF },
-    { 0x0003, 0x0004, 0x0180, 0x0000, 0x0200, 0x0000, 0x0200, 0x01FF },
-    { 0x0003, 0x0407, 0x0180, 0x0000, 0x0200, 0x01FF, 0x0180, 0x01FF },
+Triangle D_800E2D78[8] = {
+    { {{ CULL_BACKFACE, 0, 1, 5 }}, {{{   0, 0 }}}, {{{ 128,   0 }}}, {{{ 128, 511 }}} },
+    { {{ CULL_BACKFACE, 0, 5, 4 }}, {{{   0, 0 }}}, {{{ 128, 511 }}}, {{{   0, 511 }}} },
+    { {{ CULL_BACKFACE, 1, 2, 6 }}, {{{ 128, 0 }}}, {{{ 256,   0 }}}, {{{ 256, 511 }}} },
+    { {{ CULL_BACKFACE, 1, 6, 5 }}, {{{ 128, 0 }}}, {{{ 256, 511 }}}, {{{ 128, 511 }}} },
+    { {{ CULL_BACKFACE, 2, 3, 7 }}, {{{ 256, 0 }}}, {{{ 384,   0 }}}, {{{ 384, 511 }}} },
+    { {{ CULL_BACKFACE, 2, 7, 6 }}, {{{ 256, 0 }}}, {{{ 384, 511 }}}, {{{ 256, 511 }}} },
+    { {{ CULL_BACKFACE, 3, 0, 4 }}, {{{ 384, 0 }}}, {{{ 512,   0 }}}, {{{ 512, 511 }}} },
+    { {{ CULL_BACKFACE, 3, 4, 7 }}, {{{ 384, 0 }}}, {{{ 512, 511 }}}, {{{ 384, 511 }}} },
 };
 
 Vec3s D_800E2DF8[8] = {
@@ -515,24 +513,28 @@ void func_800AF29C(Particle *arg0, s32 behaviourID, s32 propertyID, s16 velX, s1
 }
 
 #ifdef NON_EQUIVALENT
-
-// Should be functionally equivalent.
-void func_800AF404(s32 arg0) {
+void func_800AF404(s32 updateRate) {
+    u32 new_var;
     s32 i;
+    s16 temp;
+    Vec3s *vecTemp;
 
-    D_800E2E28 = (D_800E2E28 + (arg0 * 64)) & 0x1FF;
-    for (i = 0; i < 5; i++) {
-        D_800E2D08[i].unk6 = D_800E2D58[i].y_rotation + D_800E2E28;
-        D_800E2D08[i].unkA = D_800E2D58[i].x_rotation + D_800E2E28;
-        D_800E2D08[i].unkE = D_800E2D58[i].z_rotation + D_800E2E28;
+    D_800E2E28 = (D_800E2E28 + (updateRate << 6)) & 0x1FF;
+    temp = D_800E2E28;
+    new_var = temp;
+    for (i = 0; i < ARRAY_COUNT(D_800E2D08); i++) {\
+        vecTemp = &D_800E2D58[i];\
+        D_800E2D08[i].uv2.v = vecTemp->s[0] + new_var;\
+        D_800E2D08[i].uv1.v = vecTemp->s[1] + new_var;\
+        D_800E2D08[i].uv0.v = vecTemp->s[2] + new_var;\
     }
-    for (i = 0; i < 8; i++) {
-        D_800E2D78[i].unk6 = D_800E2DF8[i].y_rotation + D_800E2E28;
-        D_800E2D78[i].unkA = D_800E2DF8[i].x_rotation + D_800E2E28;
-        D_800E2D78[i].unkE = D_800E2DF8[i].z_rotation + D_800E2E28;
+    for (i = 0; i < ARRAY_COUNT(D_800E2D78); i++) {
+        vecTemp = &D_800E2DF8[i];
+        D_800E2D78[i].uv0.v = vecTemp->s[0] + new_var;
+        D_800E2D78[i].uv1.v = vecTemp->s[1] + new_var;
+        D_800E2D78[i].uv2.v = vecTemp->s[2] + new_var;
     }
 }
-
 #else
 GLOBAL_ASM("asm/non_matchings/particles/func_800AF404.s")
 #endif
