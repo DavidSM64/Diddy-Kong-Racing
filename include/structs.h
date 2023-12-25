@@ -421,10 +421,34 @@ typedef struct LevelHeader {
   /* 0x52 */ u8 music;
   /* 0x53 */ u8 unk53;
   /* 0x54 */ u16 instruments;
+  /* 0x56 */ u8 unk56;
+  /* 0x57 */ u8 unk57;
+  /* 0x58 */ u8 unk58;
+  /* 0x59 */ u8 unk59;
+  /* 0x5A */ s16 unk5A;
+  /* 0x5C */ u8 unk5C;
+  /* 0x5D */ u8 unk5D;
+  /* 0x5E */ s16 unk5E;
+  /* 0x60 */ s16 unk60;
+  /* 0x62 */ s16 unk62;
+  /* 0x64 */ s16 unk64;
+  /* 0x66 */ s16 unk66;
+  /* 0x68 */ s16 unk68;
+  /* 0x6A */ u8 unk6A;
+  /* 0x6B */ u8 unk6B;
+  /* 0x6C */ s8 unk6C;
+  /* 0x6D */ s8 unk6D;
+  /* 0x6E */ s16 unk6E;
 
-  /* 0x56 */ u8 pad56[0x1A];
-
+    //func_800B8134 Seems to use this struct, and it differs on unk70 only.
+    union {
   /* 0x70 */ LevelHeader_70 *unk70;
+        struct {
+  /* 0x70 */ u8 unk70_u8;
+  /* 0x71 */ u8 unk71;
+        };
+    };
+
   /* 0x74 */ LevelHeader_70 *unk74[7];
 
   // Weather related?
@@ -610,8 +634,8 @@ typedef struct LevelModelSegment {
 /* 0x08 */ s32 unk8;
 /* 0x0C */ TriangleBatchInfo *batches;
 /* 0x10 */ s16 *unk10;
-/* 0x14 */ u8 *unk14;
-/* 0x18 */ s16 *unk18;
+/* 0x14 */ u16 *unk14;
+/* 0x18 */ f32 *unk18;
 /* 0x1C */ s16 numberOfVertices;
 /* 0x1E */ s16 numberOfTriangles;
 /* 0x20 */ s16 numberOfBatches;
@@ -1004,9 +1028,9 @@ typedef struct Object_Fish {
   /* 0x0F8 */ TextureHeader *texture;
   /* 0x0FC */ u8 unkFC;
   /* 0x0FD */ u8 unkFD;
-  /* 0x0FE */ u8 unkFE;
-  /* 0x0FF */ u8 unkFF;
-  /* 0x100 */ s32 unk100;
+  /* 0x0FE */ s16 unkFE;
+  /* 0x100 */ s16 unk100;
+  /* 0x102 */ s16 unk102;
   /* 0x104 */ s16 unk104;
   /* 0x106 */ s16 unk106;
   /* 0x108 */ f32 unk108;
@@ -1242,9 +1266,7 @@ typedef struct Object_Racer {
   /* 0x11C */ f32 unk11C;
   /* 0x120 */ f32 unk120;
   /* 0x124 */ f32 unk124;
-  /* 0x128 */ s32 lap_times[3];
-  /* 0x134 */ s32 unk134;
-  /* 0x138 */ s32 unk138;
+  /* 0x128 */ s32 lap_times[5]; //func_80022948 implies there should be at least 5 lap times.
   /* 0x13C */ s32 unk13C;
   /* 0x140 */ struct Object *magnetTargetObj;
   /* 0x144 */ struct Object *held_obj;
@@ -1390,16 +1412,16 @@ typedef struct Object_Racer {
 
 typedef struct Object_Door {
   /* 0x00 */ f32 homeY;
-  /* 0x04 */ u8 pad4[0x4];
+  /* 0x04 */ SoundMask *unk4;
   /* 0x08 */ s32 unk8;
-  /* 0x0A */ s16 padA;
+  /* 0x0A */ s16 unkA;
   /* 0x0E */ s8 unkE;
   /* 0x0F */ u8 unkF;
   /* 0x10 */ u8 unk10;
   /* 0x11 */ u8 unk11;
   /* 0x12 */ u8 unk12;
-  /* 0x13 */ u8 unk13;
-  /* 0x14 */ s8 unk14;
+  /* 0x13 */ s8 unk13;
+  /* 0x14 */ s8 unk14[4];
 } Object_Door;
 
 typedef struct Object_Trigger {
@@ -1582,7 +1604,9 @@ typedef struct Object_8001E89C_64 {
 typedef struct Object_CharacterSelect {
     u8 pad0[0x14];
     f32 unk14;
-    u8 pad18[0x14];
+    u8 pad18[0x10];
+    s16 unk28;
+    u8 unk2A[2];
     u8 unk2C;
     u8 pad2D[2];
     u8 unk2F;
@@ -1689,9 +1713,10 @@ typedef struct Object_68 {
  
 /* Size: 0x20 bytes */
 typedef struct Object_6C {
-    /* 0x00 */ u8  pad0[0x4];
+    /* 0x00 */ struct Particle *unk0;
     /* 0x04 */ s16 unk4;
-    /* 0x05 */ u8  pad6[0x4];
+    /* 0x06 */ u8 unk6;
+    /* 0x07 */ u8 pad7[0x3];
     /* 0x0A */ s16 unkA;
     /* 0x0C */ u8  padC[0x14];
 } Object_6C;
@@ -1842,6 +1867,36 @@ typedef struct ObjectSegment {
   /* 0x0040 */ ObjectHeader *header;
 } ObjectSegment;
 
+typedef struct Object_LightData_UnkC_Unk44 {
+    u8 pad0[8];
+    Vertex *unk8;
+} Object_LightData_UnkC_Unk44;
+
+typedef struct Object_LightData_UnkC {
+  /* 0x00 */ ObjectTransform trans;
+  /* 0x18 */ u8 pad18[0x22];
+  /* 0x3A */ s16 unk3A;
+  /* 0x3C */ u8 pad3C[0x8];
+  /* 0x44 */ Object_LightData_UnkC_Unk44 *unk44;
+  /* 0x48 */ u8 pad48[0x14];
+  /* 0x5C */ s16 unk5C;
+  /* 0x5E */ u8 pad5E[0xE];
+  /* 0x6C */ u8 unk6C;
+  /* 0x6D */ u8 unk6D;
+  /* 0x6E */ u8 unk6E;
+  /* 0x6F */ u8 pad6F[0x6];
+  /* 0x75 */ u8 unk75;
+  /* 0x76 */ u8 pad76;
+  /* 0x77 */ s8 unk77;
+} Object_LightData_UnkC;
+
+typedef struct Object_LightData {
+  /* 0x00 */ u8 pad0[6];
+  /* 0x06 */ u8 unk6;
+  /* 0x07 */ u8 pad7[5];
+  /* 0x0C */ Object_LightData_UnkC **unkC;
+} Object_LightData;
+
 /* Size: 0x0630 bytes */
 typedef struct Object {
   /* 0x0000 */ ObjectSegment segment;
@@ -1857,7 +1912,7 @@ typedef struct Object {
   /* 0x0064 */ Object_64 *unk64; //player + 0x98
   /* 0x0068 */ Object_68 **unk68; //player + 0x80
   /* 0x006C */ Object_6C *unk6C; //player + 0x370
-  /* 0x0070 */ u32 *lightData;
+  /* 0x0070 */ Object_LightData **lightData;
   /* 0x0074 */ u32 unk74;
   /* 0x0078 */ ObjProperties properties;
   /* 0x0080 */ void *unk80;
@@ -1888,7 +1943,13 @@ typedef struct GhostHeader {
       };
       s16 unk2;
     };
-    s16 time; // In frames, where 60 frames = 1 second.
+    union {
+        struct {
+            u8 unk4;
+            s8 unk5;
+        };
+        s16 time; // In frames, where 60 frames = 1 second.
+    };
     s16 nodeCount;
 } GhostHeader;
 

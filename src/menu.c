@@ -6070,7 +6070,7 @@ s32 menu_character_select_loop(s32 updateRate) {
             phi_t3 = 0;
             if (gEnteredCharSelectFrom == 0) {
                 phi_t3++;
-                if ((gActiveMagicCodes << 7) < 0) {
+                if (gActiveMagicCodes & CHEAT_TWO_PLAYER_ADVENTURE) {
                     phi_t3++;
                 }
             }
@@ -7337,7 +7337,7 @@ s32 menu_track_select_loop(s32 updateRate) {
     if (D_801267D0 < 0) {
         func_8008F534();
         gTrackSpecifiedWithTrackIdToLoad = 0;
-        if (gNumberOfActivePlayers >= 3 || (gNumberOfActivePlayers == 2 && (gActiveMagicCodes << 7) >= 0)) {
+        if (gNumberOfActivePlayers >= 3 || (gNumberOfActivePlayers == 2 && !(gActiveMagicCodes & CHEAT_TWO_PLAYER_ADVENTURE))) {
             cutsceneId = 0;
             if (is_drumstick_unlocked()) {
                 cutsceneId = 1;

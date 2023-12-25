@@ -1510,7 +1510,7 @@ void begin_level_teleport(s32 levelID) {
 }
 
 /**
- * Set the nunber of frames to disallow pausing for.
+ * Set the number of frames to disallow pausing for.
 */
 void set_pause_lockout_timer(u8 time) {
     gPauseLockTimer = time;

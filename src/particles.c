@@ -577,8 +577,67 @@ void func_800AF6E4(Object *obj, s32 arg1) {
 }
 
 GLOBAL_ASM("asm/non_matchings/particles/func_800AF714.s")
-GLOBAL_ASM("asm/non_matchings/particles/func_800AFC3C.s")
 
+void func_800AFC3C(Object *obj, s32 updateRate) {
+    Object_6C *temp_s1;
+    Object_6C *temp_s1_2;
+    s32 var_s0;
+    s32 i;
+    UNUSED s32 pad;
+    s32 var_a3;
+    u32 bits;
+    
+    bits = obj->unk74;
+    var_a3 = obj->segment.header->unk57;
+    for(i = 0; i < var_a3; i++) {
+        if (bits & 1) {
+            if (!(obj->unk6C[i].unk4 & 0x8000)) {
+                func_800AF52C(obj, i);
+            }
+            if (obj->unk6C[i].unk4 & 0x4000) {
+                func_800AFE5C((Particle *) obj, (Particle *) &obj->unk6C[i]);
+            } else if((obj->unk6C[i].unk4 & 0x400)) {
+                func_800AFE5C((Particle *) obj, (Particle *) &obj->unk6C[i]);
+            } else {
+                obj->unk6C[i].unkA += updateRate;
+                if (obj->unk6C[i].unkA >= obj->unk6C[i].unk0->segment.unk40_s16) {
+                    func_800AFE5C((Particle *) obj, (Particle *) &obj->unk6C[i]);
+                }
+            }
+            var_a3 = obj->segment.header->unk57;
+        } else {
+            if (obj->unk6C[i].unk4 & 0x8000) {
+                if (obj->unk6C[i].unk4 & 0x4000) {
+                    temp_s1 = &obj->unk6C[i];
+                    var_s0 = temp_s1->unk6 - 0x40;
+                    if (var_s0 < 0) {
+                        var_s0 = 0;
+                    }
+                    temp_s1->unk6 = var_s0;
+                    func_800AFE5C((Particle *) obj, (Particle *) temp_s1);
+                    temp_s1->unk6 = var_s0;
+                    if (var_s0 == 0) {
+                        func_800AF6E4(obj, i);
+                    }
+                    var_a3 = obj->segment.header->unk57;
+                } else if((obj->unk6C[i].unk4 & 0x400)) {
+                    temp_s1_2 = &obj->unk6C[i];
+                    obj->unk6C[i].unk4 |= 0x200;
+                    if (temp_s1_2->unk6 == 0) {
+                        func_800AF6E4(obj, i);
+                    }
+                    var_a3 = obj->segment.header->unk57;
+                } else {
+                    func_800AF6E4(obj, i);
+                    var_a3 = obj->segment.header->unk57;
+                }
+            }
+        }
+        bits >>= 1;
+    }
+}
+
+//TODO: Should this be void func_800AFE5C(Object *arg0, Object_6C *arg1)?
 void func_800AFE5C(Particle *arg0, Particle *arg1) {
     Particle *temp_s0;
     Particle *tempObj;
@@ -1647,7 +1706,128 @@ void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vt
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800B3E64.s")
+void func_800B3E64(Object *obj) {
+    UNUSED s32 pad;
+    s32 index;
+    Vec3f vec3_1;
+    Vec3f vec3_0;
+    Object_LightData_UnkC *temp_s0;
+    Object_LightData_UnkC *prev_s0;
+    Object_LightData *lightData;
+    Object_LightData_UnkC_Unk44 *temp_s1;
+    Vertex *otherVerts;
+    Vertex *verts;
+    Object_LightData_UnkC_Unk44 *prev_s1;
+    
+    lightData = (Object_LightData *) obj->lightData;
+    prev_s0 = NULL;
+    prev_s1 = NULL;
+    if (lightData != NULL) {
+        if (lightData->unkC != NULL) {
+            index = (lightData->unk6 - 1);
+            while (index >= 0) {
+                temp_s0 = lightData->unkC[index];
+                if (temp_s0->unk3A != 0) {
+                    temp_s1 = temp_s0->unk44;
+                    vec3_0.f[0] = temp_s0->trans.scale;
+                    vec3_0.f[1] = 0.0f;
+                    vec3_0.f[2] = 0.0f;
+                    f32_vec3_apply_object_rotation(&temp_s0->trans, &vec3_0.f[0]);
+                    vec3_1.f[0] = 0.0f;
+                    vec3_1.f[1] = temp_s0->trans.scale;
+                    vec3_1.f[2] = 0.0f;
+                    f32_vec3_apply_object_rotation(&temp_s0->trans, &vec3_1.f[0]);
+
+                    // It seems super odd to do negative indices. Why not just increment by 4 and add up from there?
+                    verts = &temp_s1->unk8[temp_s0->unk75 << 3];
+                    if (1) { } if (1) { } if (1) { } if (1) { } if (1) { } if (1) { } // Fake
+                    verts += 7;
+                    verts[-3].x = temp_s0->trans.x_position + vec3_0.f[0];
+                    verts[-3].y = temp_s0->trans.y_position + vec3_0.f[1];
+                    verts[-3].z = temp_s0->trans.z_position + vec3_0.f[2];
+                    verts[-3].r = temp_s0->unk6C;
+                    verts[-3].g = temp_s0->unk6D;
+                    verts[-3].b = temp_s0->unk6E;
+                    verts[-3].a = temp_s0->unk5C >> 8;
+                    verts[-2].x = temp_s0->trans.x_position + vec3_1.f[0];
+                    verts[-2].y = temp_s0->trans.y_position + vec3_1.f[1];
+                    verts[-2].z = temp_s0->trans.z_position + vec3_1.f[2];
+                    verts[-2].r = temp_s0->unk6C;
+                    verts[-2].g = temp_s0->unk6D;
+                    verts[-2].b = temp_s0->unk6E;
+                    verts[-2].a = temp_s0->unk5C >> 8;
+                    verts[-1].x = temp_s0->trans.x_position - vec3_0.f[0];
+                    verts[-1].y = temp_s0->trans.y_position - vec3_0.f[1];
+                    verts[-1].z = temp_s0->trans.z_position - vec3_0.f[2];
+                    verts[-1].r = temp_s0->unk6C;
+                    verts[-1].g = temp_s0->unk6D;
+                    verts[-1].b = temp_s0->unk6E;
+                    verts[-1].a = temp_s0->unk5C >> 8;
+                    verts[0].x = temp_s0->trans.x_position - vec3_1.f[0];
+                    verts[0].y = temp_s0->trans.y_position - vec3_1.f[1];
+                    verts[0].z = temp_s0->trans.z_position - vec3_1.f[2];
+                    verts[0].r = temp_s0->unk6C;
+                    verts[0].g = temp_s0->unk6D;
+                    verts[0].b = temp_s0->unk6E;
+                    verts[0].a = temp_s0->unk5C >> 8;
+                    
+                    verts = &temp_s1->unk8[temp_s0->unk75 << 3];
+                    if (prev_s1 != NULL) {
+                        if(1) { // Fake
+                        otherVerts = &prev_s1->unk8[prev_s0->unk75 << 3];
+                        }
+                        otherVerts += 4;
+                    } else {
+                        otherVerts = &temp_s1->unk8[temp_s0->unk75 << 3];
+                        otherVerts += 4;
+                    }
+                    
+                    
+                    index--;
+                    verts += 3;
+                    otherVerts += 3;
+                    
+                    prev_s0 = temp_s0;
+                    prev_s1 = temp_s1;
+
+                    verts[-3].x = otherVerts[-3].x;
+                    verts[-3].y = otherVerts[-3].y;
+                    verts[-3].z = otherVerts[-3].z;
+                    verts[-3].r = otherVerts[-3].r;
+                    verts[-3].g = otherVerts[-3].g;
+                    verts[-3].b = otherVerts[-3].b;
+                    verts[-3].a = otherVerts[-3].a;
+                    verts[-2].x = otherVerts[-2].x;
+                    verts[-2].y = otherVerts[-2].y;
+                    verts[-2].z = otherVerts[-2].z;
+                    verts[-2].r = otherVerts[-2].r;
+                    verts[-2].g = otherVerts[-2].g;
+                    verts[-2].b = otherVerts[-2].b;
+                    verts[-2].a = otherVerts[-2].a;
+                    verts[-1].x = otherVerts[-1].x;
+                    verts[-1].y = otherVerts[-1].y;
+                    verts[-1].z = otherVerts[-1].z;
+                    verts[-1].r = otherVerts[-1].r;
+                    verts[-1].g = otherVerts[-1].g;
+                    verts[-1].b = otherVerts[-1].b;
+                    verts[-1].a = otherVerts[-1].a;
+                    verts[0].x = otherVerts[0].x;
+                    verts[0].y = otherVerts[0].y;
+                    verts[0].z = otherVerts[0].z;
+                    verts[0].r = otherVerts[0].r;
+                    verts[0].g = otherVerts[0].g;
+                    verts[0].b = otherVerts[0].b;
+                    verts[0].a = otherVerts[0].a;
+                
+                    temp_s0->unk77 = -1;
+                
+                    continue;
+                }
+                break;
+            }
+        }
+    }
+}
 
 /**
  * Return a specific particle asset table from the main table.

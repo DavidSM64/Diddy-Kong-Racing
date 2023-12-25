@@ -137,7 +137,13 @@ typedef struct ParticleSegment {
       SegmentPropertiesCamera camera;
   };
   /* 0x003C */ void *unk3C;
-  /* 0x0040 */ s32 unk40;
+  union {
+    struct {
+        /* 0x0040 */ s16 unk40_s16;
+        /* 0x0042 */ s16 unk42;
+    };
+    s32 unk40;
+  };
 } ParticleSegment;
 
 typedef struct ParticleModel {
@@ -231,9 +237,10 @@ void func_800AF134(Particle *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s16 a
 void render_particle(Particle *particle, Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 flags);
 void func_800B4668(Object *obj, s32 idx, s32 arg2, s32 arg3);
 void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3);
+void func_800AFC3C(Object *obj, s32 updateRate);
+void func_800B3E64(Object *obj);
 
 void func_800AF404(s32 arg0); // Non Matching
-void func_800AFC3C(Object *, s32); // Non Matching
 void func_800AE728(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5); // Non Matching
 void func_800AF714(Object*, s32); // Non matching
 Particle *func_800B0BAC();
@@ -243,6 +250,5 @@ void move_particle_velocity_parent(Particle *);
 void move_particle_with_velocities(Particle *);
 void move_particle_basic(Particle *);
 void move_particle_with_velocity(Particle *);
-void func_800B3E64(Object *); // Non Matching
 
 #endif

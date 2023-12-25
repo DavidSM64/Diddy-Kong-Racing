@@ -36,7 +36,7 @@
 
 // Unsure about the signed/unsigned with these arrays.
 FadeTransition gTajTransformTransitionEnd = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_INVERT, FADE_COLOR_WHITE, 7, 3);
-FadeTransition gTajTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, 0xFFFF);
+FadeTransition gTajTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
 
 Vertex gCharacterFlagVertices[4] = {
     { -256,  256, 0, 255, 255, 255, 255 },
@@ -45,47 +45,52 @@ Vertex gCharacterFlagVertices[4] = {
     { -256, -256, 0, 255, 255, 255, 255 },
 };
 
-u16 D_800DC9A8[20] = {
-    0x0000, 0x0040, 0xFFC0, 0x0000,
-    0xFFC0, 0xFFC0, 0x0000, 0x0040,
-    0x0020, 0x0000, 0xFFC0, 0x0020,
-    0x0000, 0x0040, 0x0040, 0x0000,
-    0xFFC0, 0x0040, 0x0000, 0x0000,
+VertexPosition D_800DC9A8[6] = {
+    { 0,  64, -64 },
+    { 0, -64, -64 },
+    { 0,  64,  32 },
+    { 0, -64,  32 },
+    { 0,  64,  64 },
+    { 0, -64,  64 },
 };
-u16 D_800DC9D0[64] = {
-    0x0000, 0x0301, 0x0004, 0x0000,
-    0x0001, 0x0004, 0x0004, 0x0004,
-    0x0000, 0x0203, 0x0004, 0x0000,
-    0x0001, 0x0000, 0x0001, 0x0004,
-    0x0002, 0x0503, 0x0001, 0x0000,
-    0x0000, 0x0004, 0x0001, 0x0004,
-    0x0002, 0x0405, 0x0001, 0x0000,
-    0x0000, 0x0000, 0x0000, 0x0004,
-    0x0000, 0x0103, 0x0004, 0x0000,
-    0x0004, 0x0004, 0x0001, 0x0004,
-    0x0000, 0x0302, 0x0004, 0x0000,
-    0x0001, 0x0004, 0x0001, 0x0000,
-    0x0002, 0x0305, 0x0001, 0x0000,
-    0x0001, 0x0004, 0x0000, 0x0004,
-    0x0002, 0x0504, 0x0001, 0x0000,
-    0x0000, 0x0004, 0x0000, 0x0000,
+
+UNUSED s32 D_800DC9C8 = 0;
+
+// Fish Object Related
+Triangle D_800DC9D0[8] = {
+    { {{ 0, 0, 3, 1 }}, {{{ 4, 0 }}}, {{{ 1, 4 }}}, {{{ 4, 4 }}} },
+    { {{ 0, 0, 2, 3 }}, {{{ 4, 0 }}}, {{{ 1, 0 }}}, {{{ 1, 4 }}} },
+    { {{ 0, 2, 5, 3 }}, {{{ 1, 0 }}}, {{{ 0, 4 }}}, {{{ 1, 4 }}} },
+    { {{ 0, 2, 4, 5 }}, {{{ 1, 0 }}}, {{{ 0, 0 }}}, {{{ 0, 4 }}} },
+    { {{ 0, 0, 1, 3 }}, {{{ 4, 0 }}}, {{{ 4, 4 }}}, {{{ 1, 4 }}} },
+    { {{ 0, 0, 3, 2 }}, {{{ 4, 0 }}}, {{{ 1, 4 }}}, {{{ 1, 0 }}} },
+    { {{ 0, 2, 3, 5 }}, {{{ 1, 0 }}}, {{{ 1, 4 }}}, {{{ 0, 4 }}} },
+    { {{ 0, 2, 5, 4 }}, {{{ 1, 0 }}}, {{{ 0, 4 }}}, {{{ 0, 0 }}} },
 };
-s8 D_800DCA50[8] = {
+
+u8 D_800DCA50[8] = {
     2, 5, 6, 3, 10, 8, 7, 9
 };
 u8 D_800DCA58[9] = {
     2, 5, 6, 3, 10, 8, 7, 9, 11
 };
-s8 D_800DCA64[9] = {
+u8 D_800DCA64[9] = {
     2, 5, 6, 3, 10, 8, 7, 9, 12
 };
-s8 D_800DCA70[10] = {
+u8 D_800DCA70[10] = {
     2, 5, 6, 3, 10, 8, 7, 9, 11, 12
 };
-s32 D_800DCA7C[3] = { // Not sure about typing
+u8 D_800DCA7C[12] = {
+    0, 0, 0, 
+    0, 0, 0, 
+    0, 0, 0, 
     0, 0, 0
 };
-s32 D_800DCA88[3] = { // Not sure about typing
+
+u8 D_800DCA88[12] = { 
+    0, 0, 0, 
+    0, 0, 0, 
+    0, 0, 0, 
     0, 0, 0
 };
 
@@ -97,6 +102,7 @@ s8 D_800DCA9C[12] = {
     0x00, 0x01, 0x01, 0x02, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+// Butterfly Object Related
 Triangle D_800DCAA8[8] = {
     { {{ 0, 0, 3, 1 }}, {{{  0, 0 }}}, {{{ -1, -1 }}}, {{{  0, -1 }}} },
     { {{ 0, 0, 2, 3 }}, {{{  0, 0 }}}, {{{ -1,  0 }}}, {{{ -1, -1 }}} },
@@ -670,7 +676,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                 }
             }
         }
-        if (gfxData->unk0 && music_jingle_playing() == 0) {
+        if (gfxData->unk0 && music_jingle_playing() == SEQUENCE_NONE) {
             if (updateRate < gfxData->unk0) {
                 gfxData->unk0 -= updateRate;
             } else {
@@ -689,7 +695,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
         }
         if (obj->properties.trophyCabinet.action == 1) {
             func_800AB1AC(3);
-            set_hud_visibility(0U);
+            set_hud_visibility(0);
             dialogueID = npc_dialogue_loop(DIALOGUE_TROPHY);
             if (dialogueID) {
                 obj->properties.trophyCabinet.action = 0;
@@ -1415,8 +1421,188 @@ void play_tt_voice_clip(u16 soundID, s32 interrupt) {
     }
 }
 
+#ifdef NON_EQUIVALENT
+void obj_init_fish(Object *fishObj, LevelObjectEntry_Fish *fishEntry, s32 param) {
+    Object_Fish *fish;
+    f32 sinsFE, cossFE, sins104, coss104;
+    f32 xPos;
+    f32 zPos;
+    s32 uMask;
+    s32 vMask;
+    s32 i;
+
+    fish = &fishObj->unk64->fish;
+    fish->unk100 = fishEntry->unkE << 4;
+    fish->unk104 = fishEntry->unkF << 8;
+    fish->unk114 = fishEntry->unk8;
+    fish->unk118 = fishEntry->unkA;
+    fish->unk108 = fishEntry->common.x;
+    fish->unk10C = fishEntry->common.y;
+    fish->unk110 = fishEntry->common.z;
+    if (param == 0) {
+        fish->unkFE = get_random_number_from_range(0, 0x10000);
+        fish->unk102 = get_random_number_from_range(0, 0x10000);
+        fish->unk106 = get_random_number_from_range(0, 0x10000);
+        fish->unkFD = 0;
+    } else {
+        fish->unkFE = 0x4000;
+        fishObj->segment.trans.y_rotation = fish->unk104;
+    }
+    sinsFE = sins_f((fish->unkFE * 2)) * fish->unk114;
+    cossFE = coss_f(fish->unkFE) * fish->unk114;
+    sins104 = sins_f(fish->unk104);
+    coss104 = coss_f(fish->unk104);
+
+    fishObj->segment.trans.x_position = fish->unk108;
+    xPos = (sinsFE * coss104) + (cossFE * sins104);
+    
+    fishObj->segment.trans.z_position = fish->unk110;
+    zPos = (cossFE * coss104) - (sinsFE * sins104);
+
+    ignore_bounds_check();
+    move_object(fishObj, xPos, 0.0f, zPos);
+    if (param == 0) {
+        for(i = 0; i < 8; i++) {
+            fish->triangles[i].flags = D_800DC9D0[i].flags;
+            fish->triangles[i].vi0 = D_800DC9D0[i].vi0;
+            fish->triangles[i].vi1 = D_800DC9D0[i].vi1;
+            fish->triangles[i].vi2 = D_800DC9D0[i].vi2;
+        }
+        uMask = 0;
+        for(i = 0; i < 6; i++) {
+            fish->vertices[uMask].x = D_800DC9A8[uMask].x;
+            fish->vertices[uMask].y = D_800DC9A8[uMask].y;
+            fish->vertices[uMask].z = D_800DC9A8[uMask].z;
+            fish->vertices[uMask].r = 255;
+            fish->vertices[uMask].g = 255;
+            fish->vertices[uMask].b = 255;
+            fish->vertices[uMask].a = 255;
+            fish->vertices[uMask+6].x = D_800DC9A8[uMask].x;
+            fish->vertices[uMask+6].y = D_800DC9A8[uMask].y;
+            fish->vertices[uMask+6].z = D_800DC9A8[uMask].z;
+            fish->vertices[uMask+6].r = 255;
+            fish->vertices[uMask+6].g = 255;
+            fish->vertices[uMask+6].b = 255;
+            fish->vertices[uMask+6].a = 255;
+            uMask++;
+        }
+        fish->unkFC = 1;
+    }
+    fishObj->segment.trans.scale = fishEntry->unkC * 0.01f;
+    if (fishEntry->unkB < fishObj->segment.header->numberOfModelIds) {
+        fish->texture = (TextureHeader *) fishObj->unk68[fishEntry->unkB];
+    } else {
+        fish->texture = (TextureHeader *) fishObj->unk68[0];
+    }
+    if (fish->texture != NULL) {
+        uMask = (fish->texture->width - 1) << 5;
+        vMask = (fish->texture->height - 1) << 5;
+    } else {
+        uMask = 0;
+        vMask = 0;
+    }
+    for(i = 0; i < 8; i++) {
+        fish->triangles[i].uv0.u = D_800DC9D0[i].uv0.u * uMask >> 2;
+        fish->triangles[i].uv0.v = D_800DC9D0[i].uv0.v * vMask >> 2;
+        fish->triangles[i].uv1.u = D_800DC9D0[i].uv1.u * uMask >> 2;
+        fish->triangles[i].uv1.v = D_800DC9D0[i].uv1.v * vMask >> 2;
+        fish->triangles[i].uv2.u = D_800DC9D0[i].uv2.u * uMask >> 2;
+        fish->triangles[i].uv2.v = D_800DC9D0[i].uv2.v * vMask >> 2;
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/object_functions/obj_init_fish.s")
-GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_fish.s")
+#endif
+
+void obj_loop_fish(Object *fishObj, s32 updateRate) {
+    f32 zThing;
+    f32 yThing;
+    f32 xThing;
+    f32 xDiff;
+    f32 yDiff;
+    f32 zDiff;
+    f32 dist2D;
+    f32 dist3D;
+    f32 sinUnk104;
+    Object_Fish *fish;
+    f32 cosUnk104;
+    s16 temp_v0_2;
+    s32 temp_s0_2;
+    s32 temp_t1;
+    s32 temp_t9;
+    f32 prevXThing, prevZThing; 
+    Vertex *verts;
+    s32 randNumber;
+    
+    if (get_viewport_count() > 0) {
+        free_object(fishObj);
+        return;
+    }
+    fish = &fishObj->unk64->fish;
+    yThing = fishObj->segment.trans.y_position;
+    if (fish->unkFD != 0) {
+        if ((s32) fish->unkFD >= updateRate) {
+            yThing += (fishObj->segment.y_velocity * updateRate);
+            fish->unkFD = fish->unkFD - updateRate;
+        } else {
+            yThing += (fishObj->segment.y_velocity * fish->unkFD);
+            fish->unkFD = 0;
+        }
+    } else {
+        randNumber = get_random_number_from_range(0, 7);
+        if (randNumber == 0 && fish->unk118 >= 1.0f) {
+            fish->unkFD = get_random_number_from_range(160, 255);
+            randNumber = get_random_number_from_range(0, fish->unk118);
+            fishObj->segment.y_velocity = fish->unk10C - fishObj->segment.trans.y_position;
+            fishObj->segment.y_velocity = (fishObj->segment.trans.y_position < fish->unk10C) ? (fishObj->segment.y_velocity + randNumber) : 
+                (fishObj->segment.y_velocity - randNumber);
+            fishObj->segment.y_velocity /= fish->unkFD;
+        }
+    }
+    fish->unkFE += updateRate * fish->unk100;
+    zThing = sins_f(fish->unkFE * 2) * fish->unk114;
+    xThing = coss_f(fish->unkFE) * fish->unk114;
+    sinUnk104 = sins_f(fish->unk104);
+    cosUnk104 = coss_f(fish->unk104);
+    dist3D += 0; // Fakematch
+    prevXThing = zThing; 
+    prevZThing = xThing;
+    zThing = prevXThing; // Fakematch?
+    zThing = (zThing * cosUnk104) + (prevZThing * sinUnk104);
+    xThing = (prevZThing * cosUnk104) - (prevXThing * sinUnk104);
+    zThing += fish->unk108;
+    xThing += fish->unk110;
+    xDiff = fishObj->segment.trans.x_position - zThing;
+    yDiff = fishObj->segment.trans.y_position - yThing;
+    zDiff = fishObj->segment.trans.z_position - xThing;
+    fishObj->segment.trans.x_position = 0.0f;
+    fishObj->segment.trans.y_position = 0.0f;
+    fishObj->segment.trans.z_position = 0.0f;
+    ignore_bounds_check();
+    move_object(fishObj, zThing, yThing, xThing);
+    dist2D = (xDiff * xDiff) + (zDiff * zDiff); 
+    dist3D = sqrtf((yDiff * yDiff) + dist2D);
+    dist2D = sqrtf(dist2D);
+    fish->unk106 += (s32) (dist3D * 0x600);
+    fishObj->segment.trans.y_rotation = arctan2_f(xDiff, zDiff);
+    temp_v0_2 = arctan2_f(-yDiff, dist2D);
+    temp_t9 = (temp_v0_2 - fishObj->segment.trans.x_rotation) & 0xFFFF;
+    temp_t1 = (fishObj->segment.trans.x_rotation - temp_v0_2) & 0xFFFF;
+    if (temp_t9 < temp_t1) {
+        fishObj->segment.trans.x_rotation += ((temp_t9 * updateRate) >> 3);
+    } else {
+        fishObj->segment.trans.x_rotation -= ((temp_t1 * updateRate) >> 3);
+    }
+    fish->unkFC = 1 - fish->unkFC;
+    verts = &fish->vertices[fish->unkFC * 6];
+    randNumber = sins(fish->unk106) >> 3;
+    temp_s0_2 = (s32) (coss_f(randNumber) * 32);
+    temp_t1 = (s32) (sins_f(randNumber) * 32);
+    verts[4].x = (verts[2].x + temp_t1); 
+    verts[4].z = (verts[2].z + temp_s0_2);
+    verts[5].x = (verts[3].x + temp_t1);
+    verts[5].z = (verts[3].z + temp_s0_2);
+}
 
 /**
  * Lava Spurt init behaviour.
@@ -1829,7 +2015,102 @@ void obj_loop_snowball(Object *obj, s32 updateRate) {
 UNUSED void obj_init_char_select(UNUSED s32 arg0, UNUSED s32 arg1) {
 }
 
-GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_char_select.s")
+void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
+    s32 i2;
+    s32 i;
+    f32 temp_f0;
+    ObjectModel *objMdl;
+    Object_CharacterSelect *charSelect;
+    s32 var_a0;
+    s32 var_s0;
+    s8 *var_v0;
+    Object_68 *obj68;
+    u8 sp50[4];
+    u8 sp4F;
+    u8 *var_a2;
+    
+    var_s0 = 0;
+    func_8001F460(charSelectObj, updateRate, NULL);
+    charSelect = &charSelectObj->unk64->characterSelect;
+    charSelectObj->unk74 = 0;
+    if (charSelect != NULL) {
+        obj68 = charSelectObj->unk68[charSelectObj->segment.object.modelIndex];
+        if (obj68 != NULL) {
+            objMdl = obj68->objModel;
+            if (is_drumstick_unlocked()) {
+                if (is_tt_unlocked()) {
+                    var_a2 = D_800DCA70;
+                    var_a0 = 10;
+                } else {
+                    var_a2 = D_800DCA58;
+                    var_a0 = 9;
+                }
+            } else if (is_tt_unlocked()) {
+                var_a2 = D_800DCA64;
+                var_a0 = 9;
+            } else {
+                var_a2 = D_800DCA50;
+                var_a0 = 8;
+            }
+            
+            for (i = 0; i < var_a0 && !var_s0; i++) {
+                if (charSelect->unk28 == var_a2[i]) {
+                    var_s0 = 1;
+                }
+            }
+            i--;
+            if (var_s0) {
+                charSelectObj->segment.object.animationID = 1;
+                for(var_s0 = 0, sp4F = 0; var_s0 < MAXCONTROLLERS; var_s0++) {
+                    if (get_player_character(var_s0) == i) {
+                        sp50[sp4F++] = var_s0;
+                    }
+                }
+                D_800DCA7C[i] += updateRate;
+                if (D_800DCA7C[i] >= 16) {
+                    D_800DCA7C[i] &= 0xF;
+                    D_800DCA88[i]++;
+                }
+                if (D_800DCA88[i] >= sp4F) {
+                    D_800DCA88[i] = 0;
+                }
+                if (sp4F > 0) {
+                    var_v0 = func_8009C274();
+                    for (i2 = 0; i2 < sp4F; i2++) {
+                        if (var_v0[sp50[i2]] == 1) {
+                            charSelectObj->unk74 = 1;
+                            func_800AFC3C(charSelectObj, 2);
+                        }
+                    }
+                    
+                    for (i2 = 0; i2 < objMdl->numberOfBatches; i2++) {
+                        //Unneccessary check for textureIndex to be greater than or equal to zero since it's a u8 and can't be less.
+                        if (objMdl->batches[i2].textureIndex >= 0 && objMdl->batches[i2].textureIndex < 4) {
+                            objMdl->batches[i2].textureIndex = sp50[D_800DCA88[i]];
+                        }
+                    }
+                    charSelectObj->segment.object.animationID = 0;
+                }
+            }
+            if (charSelectObj->segment.object.animationID >= 0) {
+                if ((charSelectObj->segment.object.animationID < objMdl->numberOfAnimations)) {
+                    i = (objMdl->animations[charSelectObj->segment.object.animationID].unk4 - 1) << 4; 
+                    if((charSelect->unk2C == 1)) {
+                        temp_f0 = music_animation_fraction();
+                        if (temp_f0 > 0.5) {
+                            temp_f0 -= 0.5;
+                            temp_f0 *= 2.0;
+                            charSelectObj->segment.animFrame = i - (temp_f0 * i);
+                        } else {
+                            temp_f0 *= 2;
+                            charSelectObj->segment.animFrame = temp_f0 * i;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 void obj_loop_animcamera(Object *obj, s32 updateRate) {
     s32 temp_v0;
@@ -3116,27 +3397,27 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
 }
 
 void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
-    Object_Door *obj64;
+    Object_Door *door;
     f32 radius;
 
-    obj64 = &obj->unk64->door;
+    door = &obj->unk64->door;
     if (entry->unkC == -1) {
         entry->unkC = func_8000CC20(obj);
     } else {
         func_8000CBF0(obj, entry->unkC);
     }
-    obj64->unkE = entry->unkC;
-    obj64->unkF = entry->unkE;
-    obj64->unk11 = entry->numBalloonsToOpen;
-    obj64->unk10 = entry->numBalloonsToOpen;
-    obj64->unk12 = entry->distanceToOpen;
-    if (obj64->unkE == -1) {
+    door->unkE = entry->unkC;
+    door->unkF = entry->unkE;
+    door->unk11 = entry->numBalloonsToOpen;
+    door->unk10 = entry->numBalloonsToOpen;
+    door->unk12 = entry->distanceToOpen;
+    if (door->unkE == -1) {
         rmonPrintf("Illegal door no!!!\n");
     }
     obj->segment.object.modelIndex = entry->modelIndex;
     obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->closedRotation);
-    obj64->homeY = obj->segment.trans.y_position;
-    obj64->unk8 = 0;
+    door->homeY = obj->segment.trans.y_position;
+    door->unk8 = 0;
     obj->properties.door.closeAngle = obj->segment.trans.y_rotation;
     obj->properties.door.openAngle = (s32) ((entry->openRotation & 0x3F) << 10);
     radius = entry->scale & 0xFF;
@@ -3145,8 +3426,8 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     }
     radius /= 64;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
-    obj64->unk13 = (u8) entry->unkF;
-    obj64->unk14 = (s8) entry->unk11;
+    door->unk13 = (u8) entry->unkF;
+    door->unk14[0] = (s8) entry->unk11;
     obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0020;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 20;
@@ -3156,7 +3437,209 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_door.s")
+void obj_loop_door(Object *doorObj, s32 updateRate) {
+    s32 temp2;
+    s16 temp;
+    volatile s32 sp54; // ???
+    s32 sp50;
+    s32 sp4C;
+    Object_Racer *racer; 
+    Object_Door *door;
+    Settings *settings;
+    Object *racerObj;
+    ObjectInteraction *racerObjInter;
+    LevelObjectEntry_Door *doorEntry;
+    f32 updateRateF;
+    UNUSED s32 pad;
+    s32 sp28;
+    
+    doorEntry = &doorObj->segment.level_entry->door;
+    updateRateF = updateRate; 
+    if (osTvType == TV_TYPE_PAL) {
+        updateRateF *= 1.2;
+    }
+    settings = get_settings();
+    temp2 = settings->courseFlagsPtr[settings->courseId];
+    door = &doorObj->unk64->door;
+    if (door->unkE >= 0) {
+        sp54 = 0x10000 << door->unkE; 
+        racerObjInter = doorObj->interactObj;
+        sp50 = racerObjInter->distance;
+        if (!(door->unkF & 1)) { 
+            sp50 = 0;
+        }
+        sp28 = temp2 & sp54;
+        if (sp28 == 0 && racerObjInter->distance < door->unk12) {
+            racerObj = racerObjInter->obj;
+            if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
+                racer = &racerObj->unk64->racer;
+                if (racer->playerIndex != PLAYER_COMPUTER && racerObj == doorObj->unk5C->unk100) {
+                    if (door->unk13 != -1 && func_800C3400() == 0 && door->unkA == 0) {
+                        music_fade(-8);
+                        door->unk8 = 140;
+                        music_jingle_voicelimit_set(16);
+                        func_80008140();
+                        music_jingle_play(SEQUENCE_NO_TROPHY_FOR_YOU);
+                        set_textbox_display_value(door->unk10);
+                        set_current_text(door->unk13 & 0xFF);
+                    }
+                    door->unkA = 300;
+                }
+                if (func_800C3400() != 0) {
+                    door->unkA = 300;
+                }
+            }
+        }
+        if (door->unk8 != 0 && music_jingle_playing() == SEQUENCE_NONE) {
+                if (updateRate < door->unk8) {
+                    door->unk8 -= updateRate;
+                } else {
+                    door->unk8 = 0;
+                    music_fade(8);
+                    music_jingle_voicelimit_set(6);
+                    func_80008168();
+                }
+        }
+        if (door->unkA > 0) {
+            door->unkA -= updateRate;
+        } else {
+            door->unkA = 0;
+        }
+        racerObjInter = doorObj->interactObj;
+        sp4C = 0;
+        if (racerObjInter->distance < door->unk12) {
+            racerObj = racerObjInter->obj;
+            if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
+                racer = &racerObj->unk64->racer;
+                switch (racer->vehicleID) { 
+                    case VEHICLE_HOVERCRAFT:
+                        sp4C = 2;
+                        break;
+                    case VEHICLE_PLANE:
+                        sp4C = 4;
+                        break;
+                    default:
+                        sp4C = 1; 
+                        break;
+                }
+            }
+        }
+        sp4C &= doorEntry->unk10;
+        if (doorEntry->common.objectID == 0x87 || doorEntry->common.objectID == 0xD7) {
+            if (func_800235C0() != 0) {
+                sp50 = 0;
+            }
+        }
+        if (door->unk14[1] == 0) {
+            if (sp4C == 0 && sp28 != 0 && sp50 < door->unk12) {
+                door->unk14[1] = 1;
+            } else if (door->unk12 + 10 < sp50) {
+                door->unk14[1] = -1;
+            }
+        }
+        temp2 = 0;
+        if (door->unkF & 2) {
+            if (sp28 != 0 && doorEntry->common.objectID == 0x19) {
+                if (settings->courseFlagsPtr[doorEntry->unk14] & 2) {
+                    if (settings->worldId == WORLD_FUTURE_FUN_LAND || settings->bosses & (1 << settings->worldId)) {
+                        door->unk10 = doorEntry->unk15;
+                        if (door->unk10 >= 10) {
+                            doorObj->segment.object.modelIndex = 3;
+                        } else {
+                            doorObj->segment.object.modelIndex = 2;
+                        }
+                    } else {
+                        doorObj->segment.object.modelIndex = 0;
+                    }
+                }
+                if (settings->courseFlagsPtr[doorEntry->unk14] & 4) {
+                    doorObj->segment.object.modelIndex = 1;
+                }
+            }
+            if (door->unk14[1] == 1) {
+                if (doorObj->segment.trans.y_position < (door->homeY + 130.0)) {
+                    temp2 = 1;
+                    doorObj->segment.trans.y_position += 2.0 * updateRateF;
+                }
+            } else if(door->unk14[1] == -1) {
+                if (door->homeY < doorObj->segment.trans.y_position) {
+                    temp2 = 1;
+                    doorObj->segment.trans.y_position -= (2.0 * updateRateF);
+                }
+            }
+        } else {
+            if (doorEntry->common.objectID == 0xD7) {
+                doorObj->segment.object.modelIndex = 0;
+                if (settings->bosses & (1 << settings->worldId)) {
+                    if (settings->balloonsPtr[settings->worldId] == 8) {
+                        doorObj->segment.object.modelIndex = 1;
+                    }
+                }
+                if (settings->bosses & (1 << (settings->worldId + 6))) {
+                    doorObj->segment.object.modelIndex = 2;
+                }
+                if (settings->worldId == 5) {
+                    temp = doorObj->segment.object.modelIndex;
+                    if (temp < 2) {
+                        doorObj->segment.object.modelIndex = temp + 1;
+                    }
+                }
+            }
+            temp = 0;
+            if (door->unk14[1] == 1) {
+                temp = doorObj->segment.trans.y_rotation - doorObj->properties.common.unk4;
+            } else if (door->unk14[1] == -1) {
+                temp = doorObj->segment.trans.y_rotation - doorObj->properties.common.unk0;
+            }
+            temp >>= 3;
+            if (temp > 0x200) {
+                temp = 0x200;
+            }
+            if (temp < -0x200) {
+                temp = -0x200;
+            }
+            doorObj->segment.trans.y_rotation -= temp;
+            if (temp != 0) {
+                temp2 = 1;
+            }
+        }
+        if (temp2) {
+            if (door->unk4 == NULL) {
+                play_sound_at_position(SOUND_DOOR_OPEN, doorObj->segment.trans.x_position, doorObj->segment.trans.y_position, 
+                    doorObj->segment.trans.z_position, 1, &door->unk4); 
+            } 
+        } else {
+            door->unk14[1] = 0;
+            if (door->unk4 != NULL) {
+                func_800096F8((SoundMask *) (s32) door->unk4);
+                door->unk4 = NULL;
+            }
+        }
+        if (door->unk14[0] >= 0) {
+            sp4C = (1 << door->unk14[0]);
+            if (settings->keys & sp4C) {
+                settings->courseFlagsPtr[settings->courseId] |= sp54;
+            }
+        } else {
+            if (doorEntry->unk13 == 0) {
+                if (*settings->balloonsPtr >= door->unk10) {
+                    settings->courseFlagsPtr[settings->courseId] |= sp54;
+                } else {
+                    settings->courseFlagsPtr[settings->courseId] &= ~sp54;
+                }
+            } else if (settings->balloonsPtr[settings->worldId] >= door->unk10) {
+                settings->courseFlagsPtr[settings->courseId] |= sp54;
+            } else {
+                settings->courseFlagsPtr[settings->courseId] &= ~sp54;
+            }
+        }
+    }
+    doorObj->interactObj->distance = 0xFF;
+    doorObj->interactObj->obj = NULL;
+    racerObjInter = doorObj->interactObj;
+    racerObjInter->flags &= ~INTERACT_FLAGS_PUSHING;
+    doorObj->unk5C->unk100 = NULL;
+}
 
 void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
     Object_TTDoor *obj64;
@@ -3226,7 +3709,7 @@ void obj_loop_ttdoor(Object *obj, s32 updateRate) {
             }
         }
     }
-    if (ttDoor->unk8 && music_jingle_playing() == 0) {
+    if (ttDoor->unk8 && music_jingle_playing() == SEQUENCE_NONE) {
         if (updateRate < ttDoor->unk8) {
             ttDoor->unk8 -= updateRate;
         } else {
@@ -4037,53 +4520,55 @@ void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) 
     }
 }
 
-#ifdef NON_MATCHING
-void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
-    s8 currentBalloon;
+void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
+    UNUSED s32 pad;
     Object_Racer *racer;
-    Object_WeaponBalloon *balloon;
-    s8 *balloonAsset;
-    s8 prevQuantity;
+    Object_WeaponBalloon *weaponBalloon;
+    s8 *powerupTable;
+    UNUSED s8 pad3;
+    s8 prevBalloonQuantity;
     s8 levelMask;
-    Object *interactObj;
-    s32 newvar;
+    Object *whatObjInteracted;
+    ObjectInteraction *interactObj;
+    s32 prevBalloonType;
 
-    balloon = (Object_WeaponBalloon *) obj->unk64;
-    obj->segment.trans.scale = balloon->radius * (1.0 - (balloon->unk4 / 90.0f));
-    if (obj->segment.trans.scale < 0.001) {
-        obj->segment.trans.scale = 0.001f;
+    weaponBalloon = (Object_WeaponBalloon *) weaponBalloonObj->unk64;
+    weaponBalloonObj->segment.trans.scale = weaponBalloon->radius * (1.0 - (weaponBalloon->unk4 / 90.0f));
+    if (weaponBalloonObj->segment.trans.scale < 0.001) {
+        weaponBalloonObj->segment.trans.scale = 0.001f;
     }
-    if (obj->segment.trans.scale < 0.1) {
-        obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
+    if (weaponBalloonObj->segment.trans.scale < 0.1) {
+        weaponBalloonObj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
     } else {
-        obj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
+        weaponBalloonObj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
     }
-    if (obj->properties.weaponBalloon.unk4 > 0) {
-        obj->unk74 = 1;
-        func_800AFC3C(obj, updateRate);
-        obj->properties.weaponBalloon.unk4 -= updateRate;
+    if (weaponBalloonObj->properties.weaponBalloon.unk4 > 0) {
+        weaponBalloonObj->unk74 = 1;
+        func_800AFC3C(weaponBalloonObj, updateRate);
+        weaponBalloonObj->properties.weaponBalloon.unk4 -= updateRate;
     }
-    if (balloon->unk4 != 0) {
-        if (!(balloon->unk4 == 90 && obj->interactObj->distance < 45)) {
-            balloon->unk4 = (balloon->unk4 - updateRate) - updateRate;
+    if (weaponBalloon->unk4 != 0) {
+        if (weaponBalloon->unk4 != 90 || weaponBalloonObj->interactObj->distance >= 45) {
+            weaponBalloon->unk4 = (weaponBalloon->unk4 - updateRate) - updateRate;
         }
-        if (balloon->unk4 < 0) {
-            balloon->unk4 = 0;
+        if (weaponBalloon->unk4 < 0) {
+            weaponBalloon->unk4 = 0;
         }
     } else {
-        if (obj->interactObj->distance < 45) {
-            interactObj = obj->interactObj->obj;
-            if (interactObj != NULL && interactObj->segment.header->behaviorId == BHV_RACER) {
-                racer = (Object_Racer *) interactObj->unk64;
-                    if (racer->vehicleID < VEHICLE_TRICKY|| racer->playerIndex != PLAYER_COMPUTER) {
-                    currentBalloon = racer->balloon_type;
-                    racer->balloon_type = obj->properties.weaponBalloon.balloonID;
-                    if (currentBalloon == racer->balloon_type && racer->balloon_quantity != 0) {
+        interactObj = weaponBalloonObj->interactObj;
+        if (interactObj->distance < 45) {
+            whatObjInteracted = interactObj->obj;
+            if (whatObjInteracted != NULL && whatObjInteracted->segment.header->behaviorId == BHV_RACER) {
+                racer = &whatObjInteracted->unk64->racer;
+                if (racer->vehicleID < VEHICLE_TRICKY || racer->playerIndex != PLAYER_COMPUTER) {
+                    prevBalloonType = racer->balloon_type;
+                    racer->balloon_type = weaponBalloonObj->properties.weaponBalloon.balloonID;
+                    if (prevBalloonType == racer->balloon_type && racer->balloon_quantity != 0) {
                         racer->balloon_level++;
                     } else {
                         racer->balloon_level = 0;
                     }
-                    // Disallow level 3 ballons in challenge mode
+                    // Disallow level 3 balloons in challenge mode
                     if (get_current_level_race_type() & RACETYPE_CHALLENGE) {
                         if (racer->balloon_level > 1) {
                             racer->balloon_level = 1;
@@ -4101,48 +4586,46 @@ void obj_loop_weaponballoon(Object *obj, s32 updateRate) {
                         racer->balloon_level = 2;
                         levelMask = 2;
                     }
-                    balloonAsset = (s8 *) get_misc_asset(ASSET_MISC_12);
-                    prevQuantity = racer->balloon_quantity;
-                    racer->balloon_quantity = balloonAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2) + 1];
+                    powerupTable = (s8 *) get_misc_asset(ASSET_MISC_12);
+                    prevBalloonQuantity = racer->balloon_quantity;
+                    racer->balloon_quantity = powerupTable[(racer->balloon_type * 10) + (racer->balloon_level * 2) + 1];
                     racer->unk209 |= 1;
                     if (get_number_of_active_players() < THREE_PLAYERS) {
-                        obj->properties.weaponBalloon.unk4 = 0x10;
+                        weaponBalloonObj->properties.weaponBalloon.unk4 = 16;
                     }
                     if (racer->playerIndex == PLAYER_COMPUTER) {
-                        play_sound_at_position(SOUND_BALLOON_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                        play_sound_at_position(SOUND_BALLOON_POP, weaponBalloonObj->segment.trans.x_position,
+                            weaponBalloonObj->segment.trans.y_position, weaponBalloonObj->segment.trans.z_position, 4, NULL);
                     } else {
                         if (levelMask == racer->balloon_level) {
                             if (racer->raceFinished == FALSE) {
-                                if (prevQuantity != racer->balloon_quantity) {
+                                if (prevBalloonQuantity != racer->balloon_quantity) {
                                     set_time_trial_start_voice(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
-                                    newvar = racer->balloon_level;
-                                    if (racer->balloon_level > 2) {
-                                        newvar = 2;
+                                    prevBalloonQuantity = racer->balloon_level;
+                                    if (prevBalloonQuantity > 2) {
+                                        prevBalloonQuantity = 2;
                                     }
-                                    sound_play(SOUND_COLLECT_ITEM + newvar, NULL);
+                                    sound_play(SOUND_COLLECT_ITEM + prevBalloonQuantity, NULL);
                                 } else {
-                                    play_sound_at_position(SOUND_BALLOON_POP, obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
+                                    play_sound_at_position(SOUND_BALLOON_POP, weaponBalloonObj->segment.trans.x_position,
+                                        weaponBalloonObj->segment.trans.y_position, weaponBalloonObj->segment.trans.z_position, 4, NULL);
                                 }
                             }
                         } else if (racer->raceFinished == FALSE) {
-                            newvar = racer->balloon_level;
-                            if (newvar > 0) {
+                            if (racer->balloon_level > 0) {
                                 set_time_trial_start_voice(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
                             }
                             sound_play(SOUND_COLLECT_ITEM + racer->balloon_level, NULL);
                         }
                     }
-                    obj->unk74 = 1;
-                    func_800AFC3C(obj, updateRate);
-                    balloon->unk4 = 90;
+                    weaponBalloonObj->unk74 = 1;
+                    func_800AFC3C(weaponBalloonObj, updateRate);
+                    weaponBalloon->unk4 = 90;
                 }
             }
         }
     }
 }
-#else
-GLOBAL_ASM("asm/non_matchings/object_functions/obj_loop_weaponballoon.s")
-#endif
 
 /**
  * Balloon Burst Effect init behaviour.
@@ -4514,7 +4997,204 @@ void play_rocket_trailing_sound(Object *obj, struct Object_Weapon *weapon, u16 s
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/object_functions/func_8003F2E8.s")
+void func_8003F2E8(Object *weaponObj, s32 updateRate) {
+    Object *weaponInteractObj;
+    Object_Racer *weaponHit;
+    Object_Racer *weaponOwner;
+    Vec3f sp58;
+    f32 radius;
+    f32 updateRateF;
+    s32 hasCollision;
+    s32 var_a1;
+    s8 surface;
+    Object_Weapon *weapon;
+    ObjPropertyWeapon *weaponProperties;
+    
+    weapon = &weaponObj->unk64->weapon;
+    weaponOwner = &weapon->owner->unk64->racer; 
+    updateRateF = (f32) updateRate;
+    weaponProperties = &weaponObj->properties.weapon;
+    if (osTvType == TV_TYPE_PAL) {
+        updateRateF *= 1.2;
+    }
+    if (weaponProperties->unk4 == 0) {
+        sp58.x = weaponObj->segment.trans.x_position + (weaponObj->segment.x_velocity * updateRateF);
+        sp58.y = weaponObj->segment.trans.y_position + (weaponObj->segment.y_velocity * updateRateF);
+        sp58.z = weaponObj->segment.trans.z_position + (weaponObj->segment.z_velocity * updateRateF);
+        radius = 9.0f;
+        func_80031130(1, &weaponObj->segment.trans.x_position, &sp58.x, -1);
+        hasCollision = FALSE;
+        surface = -1;
+        func_80031600(&weaponObj->segment.trans.x_position, &sp58.x, &radius, &surface, 1, &hasCollision);
+        weaponObj->segment.x_velocity = (sp58.x - weaponObj->segment.trans.x_position) / updateRateF;
+        weaponObj->segment.y_velocity = (sp58.y - weaponObj->segment.trans.y_position) / updateRateF;
+        weaponObj->segment.z_velocity = (sp58.z - weaponObj->segment.trans.z_position) / updateRateF;
+        weaponObj->segment.trans.x_position = sp58.x;
+        weaponObj->segment.trans.y_position = sp58.y;
+        weaponObj->segment.trans.z_position = sp58.z;
+        if (hasCollision || weaponOwner->vehicleID == VEHICLE_PLANE) {
+            weaponObj->segment.x_velocity = 0.0f;
+            weaponObj->segment.z_velocity = 0.0f;
+            weaponProperties->unk4 = 1;
+            weaponProperties->unk5 = 0;
+            weaponProperties->unk6 = 0;
+            if (weapon->weaponID == WEAPON_BUBBLE_TRAP) {
+                weaponObj->segment.trans.y_position += 16.0f;
+            }
+        }
+        radius = -10000.0f;
+        if (func_8002B9BC(weaponObj, &radius, NULL, 1) && (weaponObj->segment.trans.y_position < radius)) {
+            weaponProperties->unk4 = 1;
+            weaponProperties->unk5 = 1;
+            weaponProperties->unk6 = 0;
+            if (weapon->weaponID == WEAPON_BUBBLE_TRAP) {
+                weaponObj->segment.trans.y_position += 16.0f;
+            }
+        }
+    }
+    if (weapon->weaponID == WEAPON_OIL_SLICK) {
+        if (weaponProperties->unk4 != 0) {
+            if (weaponProperties->unk4 == 1) {
+                weaponProperties->unk6 += updateRate;
+                if (weaponProperties->unk6 > 12) {
+                    weaponProperties->unk6 = 12;
+                }
+            } else {
+                weaponProperties->unk6 -= updateRate;
+                if (weaponProperties->unk6 <= 0) {
+                    weaponProperties->unk6 = 1;
+                    free_object(weaponObj);
+                }
+            }
+            if (weaponOwner->vehicleID != VEHICLE_PLANE) {
+                if (weaponProperties->unk5 != 0) {
+                    weaponObj->waterEffect->scale = weaponProperties->unk6 * 0.6f;
+                } else {
+                    weaponObj->shadow->scale = weaponProperties->unk6 * 0.6f;
+                }
+                weaponObj->segment.trans.flags |= OBJ_FLAGS_SHADOW_ONLY;
+            }
+        }
+    }
+    if (weapon->weaponID == WEAPON_BUBBLE_TRAP) {
+        if (weapon->target != NULL) {
+            weaponObj->segment.trans.x_position = 0.0f;
+            weaponObj->segment.trans.y_position = 0.0f;
+            weaponObj->segment.trans.z_position = 0.0f;
+            ignore_bounds_check();
+            move_object(weaponObj, weapon->target->segment.trans.x_position,
+                weapon->target->segment.trans.y_position, weapon->target->segment.trans.z_position);
+        }
+        if (weaponProperties->unk4 == 1 || weaponProperties->unk4 == 2) {
+            weaponProperties->unk6 += updateRate;
+            if (weaponProperties->unk6 > 20) {
+                weaponProperties->unk6 = 20;
+            }
+        }
+        if (weaponProperties->unk4 == 2) {
+            weaponProperties->unk5 += updateRate;
+            if (weaponProperties->unk5 > 120) {
+                weaponProperties->unk4 = 3;
+                if (weapon->soundMask != NULL) {
+                    func_800096F8(weapon->soundMask);
+                    weapon->soundMask = NULL;
+                }
+                play_sound_at_position(SOUND_POP, weaponObj->segment.trans.x_position,
+                    weaponObj->segment.trans.y_position, weaponObj->segment.trans.z_position, 4, NULL);
+            }
+        }
+        if (weaponProperties->unk4 == 3) {
+            weaponObj->unk74 = 1;
+            func_800AFC3C(weaponObj, updateRate);
+            weaponObj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
+            weaponProperties->unk6 -= updateRate;
+            if (weaponProperties->unk6 < 1) {
+                weaponProperties->unk6 = 1;
+                free_object(weaponObj);
+            }
+        }
+        if (weaponProperties->unk4 != 0) {
+            weaponObj->segment.trans.scale = (f32) weaponProperties->unk6 * 0.075f;
+        }
+        weaponObj->segment.animFrame += updateRate * 16;
+    }
+    if (weaponProperties->unk4 < 2) {
+        var_a1 = 60;
+        if (weaponOwner->vehicleID != VEHICLE_PLANE) {
+            var_a1 = 34;
+            weaponObj->segment.y_velocity -= 2.0;
+            weaponObj->segment.x_velocity -= (weaponObj->segment.x_velocity / 8);
+            weaponObj->segment.z_velocity -= (weaponObj->segment.z_velocity / 8);
+        } else {
+            weaponObj->segment.y_velocity = 0.0f;
+            weaponObj->segment.animFrame += updateRate * 8;
+        }
+        if (weapon->weaponID == WEAPON_BUBBLE_TRAP || weapon->weaponID == WEAPON_OIL_SLICK) {
+            var_a1 += var_a1 >> 1;
+        }
+        weaponInteractObj = weaponObj->interactObj->obj;
+        if (weaponInteractObj != NULL) {
+            if (weapon->owner != weaponObj->interactObj->obj || weaponProperties->unk0 < normalise_time(450)) {
+                if (weaponObj->interactObj->distance < var_a1) {
+                    weaponInteractObj = weaponObj->interactObj->obj;
+                    if (weaponInteractObj->segment.header->behaviorId == BHV_RACER) {
+                        weaponHit = &weaponInteractObj->unk64->racer;
+                        weaponHit->attackType = ATTACK_EXPLOSION;
+                        if (weapon->weaponID == WEAPON_TRIPMINE) {
+                            func_8003FC44(weaponObj->segment.trans.x_position, weaponObj->segment.trans.y_position,
+                                weaponObj->segment.trans.z_position, 44, SOUND_EXPLOSION, 1.0f, 1);
+                        } else if(weapon->weaponID == WEAPON_BUBBLE_TRAP) {
+                            if (weaponHit->shieldTimer > 0 && weaponHit->shieldType >= SHIELD_LEVEL3) {
+                                weaponProperties->unk4 = 3;
+                                
+                                play_sound_at_position(SOUND_POP, weaponObj->segment.trans.x_position, 
+                                    weaponObj->segment.trans.y_position, weaponObj->segment.trans.z_position, 4, NULL);
+                            } else {
+                                weapon->target = weaponInteractObj;
+                                
+                                play_sound_at_position(SOUND_BUBBLE, weaponInteractObj->segment.trans.x_position,
+                                    weaponInteractObj->segment.trans.y_position, weaponInteractObj->segment.trans.z_position, 4, &weapon->soundMask);
+                                weaponHit->attackType = ATTACK_BUBBLE;
+                                weaponProperties->unk4 = 2;
+                                weaponProperties->unk5 = 0;
+                            }
+                        } else if(weapon->weaponID == WEAPON_OIL_SLICK) {
+                            weaponHit->attackType = ATTACK_SPIN;
+                            weaponProperties->unk4 = 2;
+                        }
+                        if (!weaponHit->raceFinished) {
+                            func_80072348(weaponHit->playerIndex, 13);
+                        }
+                        weaponOwner = &weapon->owner->unk64->racer;
+                        if (weaponHit->playerIndex != PLAYER_COMPUTER || weaponOwner->playerIndex != PLAYER_COMPUTER) {
+                            weaponOwner->boost_sound |= BOOST_SOUND_UNK2;
+                        }
+                        if (weapon->weaponID != WEAPON_OIL_SLICK && weapon->weaponID != WEAPON_BUBBLE_TRAP) {
+                            free_object(weaponObj);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        weaponProperties->unk0 -= updateRate;
+        if (weaponProperties->unk4 < 2) {
+            if (weaponProperties->unk0 < normalise_time(-1320)) {
+                if (weapon->weaponID == WEAPON_OIL_SLICK) {
+                    weaponProperties->unk4 = 2;
+                } else if((weapon->weaponID == WEAPON_BUBBLE_TRAP)) {
+                    weaponProperties->unk4 = 3;
+                    play_sound_at_position(SOUND_POP, weaponObj->segment.trans.x_position,
+                        weaponObj->segment.trans.y_position, weaponObj->segment.trans.z_position, 4, NULL);
+                } else {
+                    func_8003FC44(weaponObj->segment.trans.x_position, weaponObj->segment.trans.y_position,
+                        weaponObj->segment.trans.z_position, 44, SOUND_EXPLOSION, 1.0f, 1);
+                    free_object(weaponObj);
+                }
+            }
+        }
+    }
+}
 
 void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 soundID, f32 scale, s32 arg6) {
     LevelObjectEntry8003FC44 spawnObj;
@@ -4798,14 +5478,14 @@ void obj_init_wavegenerator(Object *obj, UNUSED LevelObjectEntry_WaveGenerator *
     func_800BF524(obj);
 }
 
-void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butterflyEntry, s32 arg2) {
+void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butterflyEntry, s32 param) {
     Object_Butterfly *butterfly;
     s32 uMask;
     s32 vMask;
     s32 i;
     
     butterfly = &butterflyObj->unk64->butterfly;
-    if (arg2 == 0) {
+    if (param == 0) {
         butterflyObj->segment.y_velocity = 0.0f;
         butterfly->unkFE = 0;
         butterfly->unk100 = 0;
@@ -4841,9 +5521,9 @@ void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butter
     }
     butterflyObj->segment.trans.scale = butterflyEntry->unkB * 0.01f;
     if (butterflyEntry->unkA < butterflyObj->segment.header->numberOfModelIds) {
-        butterfly->texture = (TextureHeader* ) butterflyObj->unk68[butterflyEntry->unkA];
+        butterfly->texture = (TextureHeader *) butterflyObj->unk68[butterflyEntry->unkA];
     } else {
-        butterfly->texture = (TextureHeader* ) butterflyObj->unk68[0];
+        butterfly->texture = (TextureHeader *) butterflyObj->unk68[0];
     }
     if (butterfly->texture != NULL) {
         uMask = (butterfly->texture->width - 1) << 5;

@@ -66,9 +66,9 @@ s32 transition_begin(FadeTransition *transition);
 void render_fade_circle(Gfx **dList, MatrixS **mats, Vertex **verts);
 void process_transition_shape(s32 updateRate);
 void init_transition_shape(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *arg3, u8 *arg4, u8 *arg5, u8 *arg6, u8 *arg7, u8 *arg8);
+void func_800C1EE8(s32 updateRate);
+void render_fade_waves(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts);
 
-void render_fade_waves(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts); //Non Matching
-void func_800C1EE8(s32); //Non Matching
 void func_800C15D4(FadeTransition *transition); //Non Matching
 
 #endif

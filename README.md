@@ -5,9 +5,9 @@ This repo contains a work-in-progress decompilation of Diddy Kong Racing for the
 Currently, only the US 1.0 version of the game is supported. US 1.1, EU 1.0, EU 1.1, and JP are not supported at this time.
 
 <!-- README_SCORE_SUMMARY_BEGIN -->
-As of November 4, 2023, this is our current score:
+As of November 30, 2023, this is our current score:
 
-&emsp;&emsp;&emsp;&emsp;Decomp progress: 64.12%
+&emsp;&emsp;&emsp;&emsp;Decomp progress: 65.92%
 
 &emsp;&emsp;&emsp;&emsp;Documentation progress: 35.21%
 <!-- README_SCORE_SUMMARY_END -->
@@ -16,13 +16,12 @@ As of November 4, 2023, this is our current score:
 
 ## Dependencies
 
-* `libcapstone-dev`
 * `gcc`, Version 8.0 or higher
 * `make`, Version 4.2 or higher
 * `python3`
 * `wget`
 
-`sudo apt install build-essential pkg-config git python3 wget libcapstone-dev`
+`sudo apt install build-essential pkg-config git python3 wget`
 
 ### binutils
 
@@ -38,12 +37,10 @@ You are not required to install a binutils package, but it does speed up the ini
 3. Run `make` in the main directory.  
     **a.** Use the `-jN` argument to use `N` number of threads to speed up building. For example, if you have a system with 4 cores / 4 threads, you should do `make -j4`.
 
-### Building on MacOS
-1. `brew install gcc capstone coreutils`
-2. Put GNU-coreutils `bin` on path using by adding `PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"` to your shell rcfile (or update any GNU-util usage in `Makefile` and `tools/Makefile` to use the `g`-prefixed versions).
-3. Download latest `macos` build of `ido-static-recomp` from [here](https://github.com/decompals/ido-static-recomp/releases/), and add `cp` the binaries to `tools/ido-static-recomp/build5.3/out`.
-4. Take a look at [this gist](https://gist.github.com/tonyspumoni/fc1b4c9217c5f2821a9fc4cbf69b51ef) to see what other updates are needed to get the build to pass, and apply them if they are relevant to your environment. You may need to add specific `-I` and `-L` flags to get things like `openssl` and `gcc-12` includes/libs included.
-5. `make` from repository root should work now.
+### Building on macOS
+1. Use homebrew to install dependencies: `brew install make`
+2. Place the ROM file within the `baseroms` directory. See [Setup](#setup--building) above for more info.
+3. Run `gmake` from the main directory. Note that macOS built-in `make` will not work since it does not meet the version requirements.
 
 ## Modding
 If you are modifying the code in the repo, then you should add `NON_MATCHING=1` to the make command.  
@@ -128,20 +125,20 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of November 4, 2023, this is our current score:
+As of November 30, 2023, this is our current score:
 ```
  ====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- -------------- 64.12% Complete (67.03% NON_MATCHING) ---------------
-                     # Decompiled functions: 1665
-                     # GLOBAL_ASM remaining: 180
+ -------------- 65.92% Complete (68.87% NON_MATCHING) ---------------
+                     # Decompiled functions: 1678
+                     # GLOBAL_ASM remaining: 167
                      # NON_MATCHING functions: 16
-                  # NON_EQUIVALENT WIP functions: 49
+                  # NON_EQUIVALENT WIP functions: 54
  --------------------------- Game Status ----------------------------
-              Balloons: 30/47, Keys: 3/4, Trophies: 3/5
+              Balloons: 31/47, Keys: 3/4, Trophies: 3/5
                 T.T. Amulets: 3/4, Wizpig Amulets: 3/4
  --------------------------------------------------------------------
-         We are racing Taj in the Plane Challenge. (Lap 1/3)
+             We are racing in Windmill Plains. (Lap 2/3)
  ====================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
  ------------------------- 35.21% Complete --------------------------

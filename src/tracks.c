@@ -1677,7 +1677,142 @@ s32 func_8002B9BC(Object *obj, f32 *arg1, f32 *arg2, s32 arg3) {
     }
 }
 
+#ifdef NON_MATCHING
+// Collision: Returns the Y Values in yOut, and the number of values in the array as the return.
+// Get's the Y Offset acrross a surface.
+// Basically it goes down, finds a triangle, then locates where the intersection is and returns the Y level of that.
+s32 func_8002BAB0(s32 levelSegmentIndex, f32 xIn, f32 zIn, f32 *yOut) {
+    LevelModelSegment *currentSegment;
+    LevelModelSegmentBoundingBox *currentBoundingBox;
+    Triangle *tri;
+    Vertex *vert;
+    f32 temp_f2_2;
+    s16 vert2X;
+    s16 vert2Z;
+    s16 temp_a2;
+    s16 vert3X;
+    s16 vert3Z;
+    s32 currentVerticesOffset;
+    s16 nextFaceOffset;
+    s16 vert1X;
+    s16 currentFaceOffset;
+    s16 vert1Z;
+    s16 var_a1;
+    s32 faceNum;
+    s16 var_s1;
+    s16 var_t0;
+    s16 var_t1;
+    s32 XInInt;
+    s32 ZInInt;
+    s32 temp_ra_1;
+    s32 temp_ra_2;
+    s32 temp_ra_3;
+    s32 yOutCount;
+    s32 batchNum;
+    s32 i;
+    s32 var_v0;
+    s32 stopSorting;
+    TriangleBatchInfo *currentBatch;
+    f32 *temp_v1_4;
+    Vec4f tempVec4f;
+    u16 *new_var;
+    u16 temp;
+
+    if (levelSegmentIndex < 0 || levelSegmentIndex >= gCurrentLevelModel->numberOfSegments) {
+        return 0;
+    }
+
+    // if (!temp_v1_4){} //Fake, but fixes one regalloc, at the cost of a much worse stack.    
+    vert = NULL; //fake?
+    currentSegment = &gCurrentLevelModel->segments[levelSegmentIndex];
+    currentBoundingBox = &gCurrentLevelModel->segmentsBoundingBoxes[levelSegmentIndex];
+    var_a1 = 1;
+    var_s1 = 0;
+    XInInt = xIn;
+    ZInInt = zIn;
+
+    temp_a2 = ((currentBoundingBox->x2 - currentBoundingBox->x1) >> 3) + 1;
+    var_t0 = temp_a2 + currentBoundingBox->x1;
+    var_t1 = currentBoundingBox->x1;
+    for (i = 0; i < 8; i++) {
+        if (var_t0 >= XInInt && XInInt >= var_t1) {
+            var_s1 |= var_a1;
+        }
+        var_t0 += temp_a2;
+        var_t1 += temp_a2;
+        var_a1 *= 2;
+    } 
+    
+    //Same as above, but for Z 
+    temp_a2 = ((currentBoundingBox->z2 - currentBoundingBox->z1) >> 3) + 1;
+    var_t0 = temp_a2 + currentBoundingBox->z1;
+    var_t1 = currentBoundingBox->z1;
+    for (i = 0; i < 8; i++) {
+        if (var_t0 >= ZInInt && ZInInt >= var_t1) {
+            var_s1 |= var_a1;
+        }
+        var_t0 += temp_a2;
+        var_t1 += temp_a2;
+        var_a1 *= 2;
+    }
+
+    yOutCount = 0;
+    for (batchNum = 0; batchNum < currentSegment->numberOfBatches; batchNum++) {
+        if (1) { } // fake
+        currentBatch = &currentSegment->batches[batchNum];
+        currentFaceOffset = currentBatch->facesOffset;
+        nextFaceOffset = (currentBatch + 1)->facesOffset;
+        currentVerticesOffset = currentBatch->verticesOffset;
+        for (faceNum = currentFaceOffset; faceNum < nextFaceOffset; faceNum++) {
+            if (var_s1 == (currentSegment->unk10[faceNum] & var_s1)) {
+                tri = &currentSegment->triangles[faceNum];
+                vert = &currentSegment->vertices[tri->verticesArray[1] + currentVerticesOffset];
+                vert1X = vert->x;
+                vert1Z = vert->z;
+                vert = &currentSegment->vertices[tri->verticesArray[2] + currentVerticesOffset];
+                vert2X = vert->x;
+                vert2Z = vert->z;
+                vert = &currentSegment->vertices[tri->verticesArray[3] + currentVerticesOffset];
+                vert3X = vert->x;
+                vert3Z = vert->z;
+                temp_ra_1 = ((((XInInt - vert2X) * (vert3Z - vert2Z)) - ((vert3X - vert2X) * (ZInInt - vert2Z))) >= 0);
+                temp_ra_2 = ((((XInInt - vert1X) * (vert2Z - vert1Z)) - ((vert2X - vert1X) * (ZInInt - vert1Z))) >= 0);
+                temp_ra_3 = ((((XInInt - vert1X) * (vert3Z - vert1Z)) - ((vert3X - vert1X) * (ZInInt - vert1Z))) >= 0);
+                var_v0 = faceNum; //fake?
+                if (temp_ra_1 == temp_ra_2 && temp_ra_2 != temp_ra_3) {
+                    new_var = currentSegment->unk14;
+                    temp = new_var[faceNum * 4];
+                    temp_v1_4 = (f32 *) &currentSegment->unk18[temp * 4];
+                    tempVec4f.x = temp_v1_4[0];
+                    tempVec4f.y = temp_v1_4[1];
+                    tempVec4f.z = temp_v1_4[2];
+                    tempVec4f.w = temp_v1_4[3];
+                    if (tempVec4f.y != 0.0) {
+                        yOut[yOutCount] = -(((tempVec4f.x * xIn) + (tempVec4f.z * zIn) + tempVec4f.w) / tempVec4f.y);
+                        yOutCount++;
+                    }
+                }
+            }
+        }
+    }
+    
+    do {
+        stopSorting = TRUE;
+        for (var_v0 = 0; var_v0 < yOutCount - 1; var_v0++) {
+            if (yOut[var_v0] > yOut[var_v0 + 1]) {
+                stopSorting = FALSE;
+                temp_f2_2 = yOut[var_v0];
+                yOut[var_v0] = yOut[var_v0 + 1];
+                yOut[var_v0 + 1] = temp_f2_2;
+            }
+        }
+    } while (!stopSorting);
+
+    return yOutCount;
+}
+#else
 GLOBAL_ASM("asm/non_matchings/tracks/func_8002BAB0.s")
+#endif
 
 #ifdef NON_MATCHING
 // generate_track
@@ -1730,7 +1865,7 @@ void func_8002C0C4(s32 modelId) {
         LOCAL_OFFSET_TO_RAM_ADDRESS(Vertex *, gCurrentLevelModel->segments[k].vertices);
         LOCAL_OFFSET_TO_RAM_ADDRESS(Triangle *, gCurrentLevelModel->segments[k].triangles);
         LOCAL_OFFSET_TO_RAM_ADDRESS(TriangleBatchInfo *, gCurrentLevelModel->segments[k].batches);
-        LOCAL_OFFSET_TO_RAM_ADDRESS(u8 *, gCurrentLevelModel->segments[k].unk14);
+        LOCAL_OFFSET_TO_RAM_ADDRESS(u16 *, gCurrentLevelModel->segments[k].unk14);
     }
     for(k = 0; k < gCurrentLevelModel->numberOfTextures; k++) {
         gCurrentLevelModel->textures[k].texture = load_texture(((s32)gCurrentLevelModel->textures[k].texture) | 0x8000);
@@ -1739,7 +1874,7 @@ void func_8002C0C4(s32 modelId) {
     for(k = 0; k < gCurrentLevelModel->numberOfSegments; k++) {
         gCurrentLevelModel->segments[k].unk10 = (s16 *) j;
         j = (s32) align16(((u8 *) (gCurrentLevelModel->segments[k].numberOfTriangles * 2)) + j);
-        gCurrentLevelModel->segments[k].unk18 = (s16 *) j;
+        gCurrentLevelModel->segments[k].unk18 = (f32 *) j;
         j = (s32) &((u8*)j)[func_8002CC30(&gCurrentLevelModel->segments[k])];
         func_8002C954(&gCurrentLevelModel->segments[k], &gCurrentLevelModel->segmentsBoundingBoxes[k], k);
         gCurrentLevelModel->segments[k].unk30 = 0;
