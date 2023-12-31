@@ -1853,7 +1853,7 @@ void objFreeAssets(Object *obj, s32 count, s32 objType) {
 void light_setup_light_sources(Object *obj) {
     s32 i;
     for (i = 0; i < obj->segment.header->numLightSources; i++) {
-        obj->lightData[i] = (u32) add_object_light(obj, &obj->segment.header->unk24[i]);
+        obj->lightData[i] = (Object_LightData *) add_object_light(obj, &obj->segment.header->unk24[i]);
     }
 }
 

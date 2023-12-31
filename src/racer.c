@@ -78,25 +78,20 @@ s32 gSurfaceBobbingTable[19] = {
 };
 // When landing on this surface, it makes a sound.
 // Strangely, they did only two surface types then called it a day.
-s32 gSurfaceSoundTable[13] = {
+s32 gSurfaceSoundTable[19] = {
     SOUND_NONE, SOUND_LAND_GRASS, SOUND_LAND_SAND, SOUND_NONE, 
     SOUND_NONE, SOUND_NONE, SOUND_NONE, SOUND_NONE,
     SOUND_NONE, SOUND_NONE, SOUND_NONE, SOUND_NONE, 
-    SOUND_NONE
+    SOUND_NONE, SOUND_NONE, SOUND_NONE, SOUND_NONE, 
+    SOUND_NONE, SOUND_NONE, SOUND_NONE
 };
 
-// Unused?
-s16 D_800DCCB4[12] = {
-    0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0,
-};
-
-u16 D_800DCCCC[20] = {
+u16 D_800DCCCC[19] = {
     0x010C, 0x010B, 0x0009, 0x010C,
     0x010C, 0x010C, 0x010C, 0x010C,
     0x010C, 0x010C, 0x010C, 0x0005,
     0x010C, 0x010C, 0x010C, 0x010C,
-    0x010C, 0x010C, 0x010C, 0x0000,
+    0x010C, 0x010C, 0x010C,
 };
 
 s32 gSurfaceFlagTable[19] = {
@@ -105,7 +100,7 @@ s32 gSurfaceFlagTable[19] = {
 };
 
 s32 gSurfaceFlagTable4P[20] = {
-    0, 4, 16, 0, 0, 0, 0, 0, 0, 0,
+    0, 4, 0x10, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0x100, 0, 0, 0, 0,
     0, 0,
 };
@@ -5623,7 +5618,7 @@ s32 func_800599B8(s32 arg0, s32 mapId, s16 arg2, s16 *arg3, s16 *arg4) {
     s16 sp2E;
 
     temp_t8 = (D_8011D59C + 1) & 1;
-    temp_v0 = func_80074B34(arg0, (s16) mapId, arg2, arg3, arg4, &sp2E, (GhostHeader *) gGhostData[temp_t8]);
+    temp_v0 = func_80074B34(arg0, mapId, arg2, (u16 *) arg3, arg4, &sp2E, (GhostHeader *) gGhostData[temp_t8]);
     if (arg3 != 0) {
         if (temp_v0 == 0) {
             D_8011D5A0[temp_t8] = sp2E;
