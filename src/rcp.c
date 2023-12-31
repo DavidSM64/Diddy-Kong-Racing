@@ -55,7 +55,7 @@ Gfx dRdpInit[] = {
     gsDPSetAlphaCompare(G_AC_NONE),
     gsDPSetRenderMode(G_RM_OPA_SURF, G_RM_OPA_SURF2),
     gsDPSetColorDither(G_CD_MAGICSQ),
-    gsDPPipeSync(),
+    gsDPPipeSync(), // Why are we randomly pipesyncing in the middle of setting RDP states?
     gsSPEndDisplayList(),
 };
 
