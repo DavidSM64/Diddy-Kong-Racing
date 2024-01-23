@@ -11,10 +11,10 @@ UNUSED s32 D_800DE774 = 0;
 UNUSED s8 D_800DE778 = 2;
 
 VideoModeResolution gVideoModeResolutions[] = {
-    {          SCREEN_WIDTH,          SCREEN_HEIGHT }, // 320x240
-    {          SCREEN_WIDTH,          SCREEN_HEIGHT }, // 320x240
-    { HIGH_RES_SCREEN_WIDTH,          SCREEN_HEIGHT }, // 640x240
-    { HIGH_RES_SCREEN_WIDTH,          SCREEN_HEIGHT }, // 640x240
+    { SCREEN_WIDTH, SCREEN_HEIGHT },                   // 320x240
+    { SCREEN_WIDTH, SCREEN_HEIGHT },                   // 320x240
+    { HIGH_RES_SCREEN_WIDTH, SCREEN_HEIGHT },          // 640x240
+    { HIGH_RES_SCREEN_WIDTH, SCREEN_HEIGHT },          // 640x240
     { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
     { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
     { HIGH_RES_SCREEN_WIDTH, HIGH_RES_SCREEN_HEIGHT }, // 640x480
@@ -28,7 +28,7 @@ VideoModeResolution gVideoModeResolutions[] = {
 
 /************ .bss ************/
 
-s32 gVideoRefreshRate; //Official Name: viFramesPerSecond
+s32 gVideoRefreshRate; // Official Name: viFramesPerSecond
 f32 gVideoAspectRatio;
 f32 gVideoHeightRatio;
 UNUSED s32 D_8012617C;
@@ -41,10 +41,10 @@ u16 *gVideoFramebuffers[2];
 s32 gVideoCurrFbIndex;
 s32 gVideoModeIndex;
 s32 sBlackScreenTimer;
-u16 *gVideoCurrFramebuffer; //Official Name: currentScreen
-u16 *gVideoLastFramebuffer; //Official Name: otherScreen
+u16 *gVideoCurrFramebuffer; // Official Name: currentScreen
+u16 *gVideoLastFramebuffer; // Official Name: otherScreen
 u16 *gVideoCurrDepthBuffer;
-u16 *gVideoLastDepthBuffer; //Official Name: otherZbuf
+u16 *gVideoLastDepthBuffer; // Official Name: otherZbuf
 u8 D_801262E4;
 UNUSED OSMesg D_801262E8[8];
 u8 gVideoDeltaCounter;
@@ -89,8 +89,8 @@ void init_video(s32 videoModeIndex, OSSched *sc) {
     init_framebuffer(1);
     gVideoCurrFbIndex = 1;
     swap_framebuffers();
-    osCreateMesgQueue((OSMesgQueue *)&gVideoMesgQueue, gVideoMesgBuf, ARRAY_COUNT(gVideoMesgBuf));
-    osScAddClient(sc, &gVideoSched, (OSMesgQueue *)&gVideoMesgQueue, OS_SC_ID_VIDEO);
+    osCreateMesgQueue((OSMesgQueue *) &gVideoMesgQueue, gVideoMesgBuf, ARRAY_COUNT(gVideoMesgBuf));
+    osScAddClient(sc, &gVideoSched, (OSMesgQueue *) &gVideoMesgQueue, OS_SC_ID_VIDEO);
     init_vi_settings();
     sBlackScreenTimer = 12;
     osViBlack(TRUE);
@@ -154,9 +154,9 @@ void init_vi_settings(void) {
             break;
         case VIDEO_MODE_LOWRES_LPN:
             //@bug: The video mode being set here is Point sampled
-            //but the printf implies it was intended to be Anti-aliased.
-            //By my understanding, this is the case we will always hit in code,
-            //So maybe it was swapped out late in development?
+            // but the printf implies it was intended to be Anti-aliased.
+            // By my understanding, this is the case we will always hit in code,
+            // So maybe it was swapped out late in development?
             stubbed_printf("320 by 240 Anti-aliased, Non interlaced.\n");
             tvViMode = &osViModeNtscLpn1;
             if (osTvType == TV_TYPE_PAL) {
@@ -164,9 +164,9 @@ void init_vi_settings(void) {
             } else if (osTvType == TV_TYPE_MPAL) {
                 tvViMode = &osViModeMpalLpn1;
             }
-            memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
+            memory_copy((u8 *) tvViMode, (u8 *) &gTvViMode, sizeof(OSViMode));
             if (osTvType == TV_TYPE_PAL) {
-                //A simple osViExtendVStart to add an additional 24 scanlines?
+                // A simple osViExtendVStart to add an additional 24 scanlines?
                 gTvViMode.fldRegs[0].vStart -= (PAL_HEIGHT_DIFFERENCE << 16);
                 gTvViMode.fldRegs[1].vStart -= (PAL_HEIGHT_DIFFERENCE << 16);
                 gTvViMode.fldRegs[0].vStart += PAL_HEIGHT_DIFFERENCE;
@@ -183,7 +183,7 @@ void init_vi_settings(void) {
                 tvViMode = &osViModeMpalLpn1;
             }
 
-            memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
+            memory_copy((u8 *) tvViMode, (u8 *) &gTvViMode, sizeof(OSViMode));
             gTvViMode.comRegs.width = WIDTH(HIGH_RES_SCREEN_WIDTH);
             gTvViMode.comRegs.xScale = SCALE(1, 0);
             gTvViMode.fldRegs[0].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
@@ -198,7 +198,7 @@ void init_vi_settings(void) {
             } else if (osTvType == TV_TYPE_MPAL) {
                 tvViMode = &osViModeMpalLan1;
             }
-            memory_copy((u8 *)tvViMode, (u8 *)&gTvViMode, sizeof(OSViMode));
+            memory_copy((u8 *) tvViMode, (u8 *) &gTvViMode, sizeof(OSViMode));
             gTvViMode.comRegs.width = WIDTH(HIGH_RES_SCREEN_WIDTH);
             gTvViMode.comRegs.xScale = SCALE(1, 0);
             gTvViMode.fldRegs[0].origin = ORIGIN(HIGH_RES_SCREEN_WIDTH * 2);
@@ -233,24 +233,28 @@ void init_vi_settings(void) {
  */
 void init_framebuffer(s32 index) {
     if (gVideoFramebuffers[index] != 0) {
-        memory_slot_exists((u8 *)gVideoFramebuffers[index]); // Effectively unused.
+        memory_slot_exists((u8 *) gVideoFramebuffers[index]); // Effectively unused.
         free_from_memory_pool(gVideoFramebuffers[index]);
     }
     gVideoFbWidths[index] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].width;
     gVideoFbHeights[index] = gVideoModeResolutions[gVideoModeIndex & NUM_RESOLUTION_MODES].height;
     if (gVideoModeIndex >= VIDEO_MODE_MIDRES_MASK) {
-        gVideoFramebuffers[index] = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
-        gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
+        gVideoFramebuffers[index] =
+            allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+        gVideoFramebuffers[index] = (u16 *) (((s32) gVideoFramebuffers[index] + 0x3F) & ~0x3F);
         if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = allocate_from_main_pool_safe((HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
-            gVideoDepthBuffer = (u16 *)(((s32)gVideoDepthBuffer + 0x3F) & ~0x3F);
+            gVideoDepthBuffer = allocate_from_main_pool_safe(
+                (HIGH_RES_SCREEN_WIDTH * HIGH_RES_SCREEN_HEIGHT * 2) + 0x30, COLOUR_TAG_WHITE);
+            gVideoDepthBuffer = (u16 *) (((s32) gVideoDepthBuffer + 0x3F) & ~0x3F);
         }
     } else {
-        gVideoFramebuffers[index] = allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
-        gVideoFramebuffers[index] = (u16 *)(((s32)gVideoFramebuffers[index] + 0x3F) & ~0x3F);
+        gVideoFramebuffers[index] =
+            allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
+        gVideoFramebuffers[index] = (u16 *) (((s32) gVideoFramebuffers[index] + 0x3F) & ~0x3F);
         if (gVideoDepthBuffer == NULL) {
-            gVideoDepthBuffer = allocate_from_main_pool_safe((gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
-            gVideoDepthBuffer = (u16 *)(((s32)gVideoDepthBuffer + 0x3F) & ~0x3F);
+            gVideoDepthBuffer = allocate_from_main_pool_safe(
+                (gVideoFbWidths[index] * gVideoFbHeights[index] * 2) + 0x30, COLOUR_TAG_WHITE);
+            gVideoDepthBuffer = (u16 *) (((s32) gVideoDepthBuffer + 0x3F) & ~0x3F);
         }
     }
 }
@@ -322,7 +326,7 @@ void func_8007AB24(u8 arg0) {
  * Perhaps may have been used originally to calculate the factor in which to handle frameskipping with.
  */
 UNUSED s32 get_video_refresh_speed(void) {
-    return (s32)((f32)gVideoRefreshRate / (f32)gVideoDeltaTime);
+    return (s32) ((f32) gVideoRefreshRate / (f32) gVideoDeltaTime);
 }
 
 /**

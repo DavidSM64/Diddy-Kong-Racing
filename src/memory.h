@@ -88,10 +88,11 @@ void render_memory_colour_tags(void);
 void func_80071CE8(void);
 MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlots);
 void free_memory_pool_slot(s32 poolIndex, s32 slotIndex);
-s32 allocate_memory_pool_slot(s32 memoryPoolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken, u32 colourTag);
+s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken,
+                              u32 colourTag);
 s32 get_memory_colour_tag_count(u32 colourTag);
 void free_slot_containing_address(u8 *address);
-MemoryPoolSlot *allocate_from_memory_pool(s32 memoryPoolIndex, s32 size, u32 colourTag);
-void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colourTag);
+MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag);
+void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag);
 
 #endif

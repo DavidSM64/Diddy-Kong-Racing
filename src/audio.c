@@ -78,7 +78,7 @@ SoundMask *gRacerSoundMask;
 /**
  * Allocate memory for all of the audio systems, including sequence data, sound data and heaps.
  * Afterwards, set up the audio thread and start it.
-*/
+ */
 void audio_init(OSSched *sc) {
     s32 iCnt;
     ALSynConfig synth_config;
@@ -92,8 +92,10 @@ void audio_init(OSSched *sc) {
     alHeapInit(&gALHeap, gBssSectionStart, sizeof(gBssSectionStart));
 
     addrPtr = (s32 *) load_asset_section_from_rom(ASSET_AUDIO_TABLE);
-    gSoundBank = (ALBankFile *) allocate_from_main_pool_safe(addrPtr[ASSET_AUDIO_2] - addrPtr[ASSET_AUDIO_1], COLOUR_TAG_CYAN);
-    load_asset_to_address(ASSET_AUDIO, (u32) gSoundBank, addrPtr[ASSET_AUDIO_1], addrPtr[ASSET_AUDIO_2] - addrPtr[ASSET_AUDIO_1]);
+    gSoundBank =
+        (ALBankFile *) allocate_from_main_pool_safe(addrPtr[ASSET_AUDIO_2] - addrPtr[ASSET_AUDIO_1], COLOUR_TAG_CYAN);
+    load_asset_to_address(ASSET_AUDIO, (u32) gSoundBank, addrPtr[ASSET_AUDIO_1],
+                          addrPtr[ASSET_AUDIO_2] - addrPtr[ASSET_AUDIO_1]);
     alBnkfNew(gSoundBank, get_rom_offset_of_asset(ASSET_AUDIO, addrPtr[ASSET_AUDIO_2]));
 
     gSoundTableSize = addrPtr[ASSET_AUDIO_7] - addrPtr[ASSET_AUDIO_6];
@@ -165,8 +167,9 @@ void audio_init(OSSched *sc) {
 }
 
 /**
- * Depending on whether or not the audio volume is set to normal and the argument is false, reset sound effect channel volumes.
-*/
+ * Depending on whether or not the audio volume is set to normal and the argument is false, reset sound effect channel
+ * volumes.
+ */
 void sound_volume_reset(u8 skipReset) {
     if (gAudioVolumeSetting == VOLUME_NORMAL) {
         gSkipResetChannels = skipReset;
@@ -183,7 +186,7 @@ void sound_volume_reset(u8 skipReset) {
 
 /**
  * Changes the volume of each sound channel depending on what value is passed through.
-*/
+ */
 void sound_volume_change(s32 behaviour) {
     switch (behaviour) {
         case VOLUME_LOWER: // Mute most sound effects and half the volume of music.
@@ -220,14 +223,14 @@ void sound_volume_change(s32 behaviour) {
 
 /**
  * Prevents changing of background music.
-*/
+ */
 void music_change_off(void) {
     gBlockMusicChange = TRUE;
 }
 
 /**
  * Allows changing of background music.
-*/
+ */
 void music_change_on(void) {
     gBlockMusicChange = FALSE;
 }
@@ -235,7 +238,7 @@ void music_change_on(void) {
 /**
  * Queue a new music sequence to play if not blocked.
  * Stops any playing existing music beforehand.
-*/
+ */
 void music_play(u8 seqID) {
     if (gBlockMusicChange == FALSE && gMusicSliderVolume != 0) {
         gCurrentSequenceID = seqID;
@@ -252,7 +255,7 @@ void music_play(u8 seqID) {
 
 /**
  * Update the background music voice limit if not prevented from doing so.
-*/
+ */
 void music_voicelimit_set(u8 voiceLimit) {
     if (gBlockVoiceLimitChange == FALSE) {
         set_voice_limit(gMusicPlayer, voiceLimit);
@@ -261,21 +264,21 @@ void music_voicelimit_set(u8 voiceLimit) {
 
 /**
  * Prevent the background music voice limit from being changed.
-*/
+ */
 void music_voicelimit_change_off(void) {
     gBlockVoiceLimitChange = TRUE;
 }
 
 /**
  * Allow the background music voice limit to be changed.
-*/
+ */
 void music_voicelimit_change_on(void) {
     gBlockVoiceLimitChange = FALSE;
 }
 
 /**
  * Update the jingle players voice limit.
-*/
+ */
 void music_jingle_voicelimit_set(u8 voiceLimit) {
     set_voice_limit(gJinglePlayer, voiceLimit);
 }
@@ -295,7 +298,7 @@ void music_fade(s32 time) {
 
 /**
  * Sets the background music volume back to normal.
-*/
+ */
 void music_volume_reset(void) {
     sMusicDelayTimer = 0;
     sMusicDelayLength = 0;
@@ -307,7 +310,7 @@ void music_volume_reset(void) {
  * Run every frame, this handles the transitions in and out of music sequences.
  * If there's something in the queue, then begin to play that.
  * Additionally, it also handles the delayed audio queue, counting down and playing any sounds.
-*/
+ */
 void sound_update_queue(u8 updateRate) {
     s32 i;
     s32 j;
@@ -363,7 +366,7 @@ void sound_update_queue(u8 updateRate) {
 /**
  * Add a sound to a queue to play after a set time has passed.
  * Delay time is in seconds. (1.0f = 1 second)
-*/
+ */
 void sound_play_delayed(u16 soundId, SoundMask *soundMask, f32 delayTime) {
     if (gDelayedSoundsCount < 8) {
         gDelayedSounds[gDelayedSoundsCount].soundId = soundId;
@@ -375,7 +378,7 @@ void sound_play_delayed(u16 soundId, SoundMask *soundMask, f32 delayTime) {
 
 /**
  * Clear the delayed sound queue.
-*/
+ */
 void sound_clear_delayed(void) {
     gDelayedSoundsCount = 0;
 }
@@ -383,14 +386,14 @@ void sound_clear_delayed(void) {
 /**
  * Return the channel mask of the music player.
  * Official name: musicGetChanMask
-*/
+ */
 u16 music_channel_get_mask(void) {
     return gMusicPlayer->chanMask;
 }
 
 /**
  * Sets the channels in the sequence on or off based on the channel mask given.
-*/
+ */
 void music_dynamic_set(u16 channelMask) {
     u32 i;
     if (gMusicNextSeqID) {
@@ -402,7 +405,6 @@ void music_dynamic_set(u16 channelMask) {
                 music_channel_on(i);
             } else {
                 music_channel_off(i);
-                
             }
         }
     }
@@ -410,7 +412,7 @@ void music_dynamic_set(u16 channelMask) {
 
 /**
  * Mute the sequence channel, preventing it from playing any sound.
-*/
+ */
 void music_channel_off(u8 channel) {
     if (channel < AUDIO_CHANNELS) {
         alSeqChOff(gMusicPlayer, channel);
@@ -420,14 +422,14 @@ void music_channel_off(u8 channel) {
 /**
  * Return true if the given channel is currently active.
  * Official name: musicGetChnlActive
-*/
+ */
 s32 music_channel_active(s32 channel) {
     return (gMusicPlayer->chanMask & (1 << channel)) == 0;
 }
 
 /**
  * Unmute the sequence channel so it can play sound.
-*/
+ */
 void music_channel_on(u8 channel) {
     if (channel < AUDIO_CHANNELS) {
         alSeqChOn(gMusicPlayer, channel);
@@ -437,7 +439,7 @@ void music_channel_on(u8 channel) {
 /**
  * Set the panning level of the given channel for the music player.
  * Official name: musicSetChlPan
-*/
+ */
 void music_channel_pan_set(u8 channel, ALPan pan) {
     if (channel < AUDIO_CHANNELS) {
         alCSPSetChlPan((ALCSPlayer *) gMusicPlayer, channel, pan);
@@ -447,7 +449,7 @@ void music_channel_pan_set(u8 channel, ALPan pan) {
 /**
  * Set the volume of the given channel for the music player.
  * Official name musicSetChlVol
-*/
+ */
 void music_channel_volume_set(u8 channel, u8 volume) {
     if (channel < AUDIO_CHANNELS) {
         alCSPSetChlVol((ALCSPlayer *) gMusicPlayer, channel, volume);
@@ -457,7 +459,7 @@ void music_channel_volume_set(u8 channel, u8 volume) {
 /**
  * Return the volume of the given channel in the music player.
  * Official name: musicGetChlVol
-*/
+ */
 UNUSED u8 music_channel_volume(u8 channel) {
     if (channel >= AUDIO_CHANNELS) {
         return 0;
@@ -468,7 +470,7 @@ UNUSED u8 music_channel_volume(u8 channel) {
 
 /**
  * Set this channel to fade in over time.
-*/
+ */
 void music_channel_fade_set(u8 channel, ALPan fade) {
     if (channel < AUDIO_CHANNELS) {
         alCSPSetFadeIn(gMusicPlayer, channel, fade);
@@ -477,7 +479,7 @@ void music_channel_fade_set(u8 channel, ALPan fade) {
 
 /**
  * Return the fade volume of the given channel.
-*/
+ */
 u8 music_channel_fade(u8 channel) {
     if (channel >= AUDIO_CHANNELS) {
         return 0;
@@ -488,7 +490,7 @@ u8 music_channel_fade(u8 channel) {
 /**
  * Resets all audio channels for the music player to the default state.
  * This is being enabled, centre panning and at normal volume.
-*/
+ */
 void music_channel_reset_all(void) {
     u32 channel;
     if (gBlockMusicChange == FALSE) {
@@ -505,7 +507,7 @@ UNUSED u8 func_80001358(u8 arg0, u8 arg1, s32 arg2) {
     u8 val_1e;
     s32 updatedVol;
 
-    //u8 fadeIn_chan = arg0;
+    // u8 fadeIn_chan = arg0;
     if (!(arg0 == 100)) {
         val_1f = arg2 + alCSPGetChlVol((ALCSPlayer *) gMusicPlayer, arg0);
         if (val_1f > 127) {
@@ -536,10 +538,11 @@ UNUSED void func_80001440(u8 *arg0) {
 
 /**
  * Multiplies the current tempo of the background music.
- * Since it calls music_tempo and multiplies it by the result, calling this repeatedly can recursively change the music's speed.
-*/
+ * Since it calls music_tempo and multiplies it by the result, calling this repeatedly can recursively change the
+ * music's speed.
+ */
 void music_tempo_set_relative(f32 tempo) {
-    music_tempo_set((s32)((f32)(u32)(music_tempo() & 0xFF) * tempo));
+    music_tempo_set((s32) ((f32) (u32) (music_tempo() & 0xFF) * tempo));
 }
 
 /**
@@ -549,7 +552,7 @@ void music_tempo_set_relative(f32 tempo) {
 void music_tempo_set(s32 tempo) {
     if (tempo != 0) {
         f32 inv_tempo = (1.0f / tempo);
-        alCSPSetTempo((ALCSPlayer *) gMusicPlayer, (s32)(inv_tempo * 60000000.0f));
+        alCSPSetTempo((ALCSPlayer *) gMusicPlayer, (s32) (inv_tempo * 60000000.0f));
         sMusicTempo = tempo;
     }
 }
@@ -564,7 +567,7 @@ s16 music_tempo(void) {
 
 /**
  * Returns true if background music is currently playing.
-*/
+ */
 u8 music_is_playing(void) {
     return (alCSPGetState((ALCSPlayer *) gMusicPlayer) == AL_PLAYING);
 }
@@ -572,7 +575,7 @@ u8 music_is_playing(void) {
 /**
  * Counts up using the internal timer.
  * Loops itself round, so the final result will return 0.0f - 1.0f.
-*/
+ */
 f32 music_animation_fraction(void) {
     f32 tmp;
     u32 cnt = osGetCount();
@@ -584,15 +587,16 @@ f32 music_animation_fraction(void) {
     if (gMusicPlaying == FALSE) {
         sMusicTempo = 182;
     }
-    for (tmp = 120000.0f / (f32) sMusicTempo; tmp < gMusicAnimationTick; gMusicAnimationTick -= tmp)
+    for (tmp = 120000.0f / (f32) sMusicTempo; tmp < gMusicAnimationTick; gMusicAnimationTick -= tmp) {
         ;
+    }
     audioPrevCount = (s32) cnt;
     return gMusicAnimationTick / tmp;
 }
 
 /**
  * Writes the music and sound tempo, as well as the volume to the arguments.
-*/
+ */
 UNUSED void sound_get_properties(u8 poolID, u8 *tempo, u8 *volume, u8 *reverb) {
     *tempo = gSeqSoundTable[poolID].tempo;
     *volume = gSeqSoundTable[poolID].volume;
@@ -601,7 +605,7 @@ UNUSED void sound_get_properties(u8 poolID, u8 *tempo, u8 *volume, u8 *reverb) {
 
 /**
  * Play a jingle, but only if there isn't one playing already.
-*/
+ */
 void music_jingle_play_safe(u8 jingleID) {
     if (music_jingle_playing() == SEQUENCE_NONE) {
         music_sequence_start(gCurrentJingleID = jingleID, gJinglePlayer);
@@ -611,15 +615,15 @@ void music_jingle_play_safe(u8 jingleID) {
 
 /**
  * Sets the tempo for the jingle player.
-*/
+ */
 void sound_jingle_tempo_set(s32 tempo) {
     f32 inv_tempo = (1.0f / tempo);
-    alCSPSetTempo((ALCSPlayer *) gJinglePlayer, (s32)(inv_tempo * 60000000.0f));
+    alCSPSetTempo((ALCSPlayer *) gJinglePlayer, (s32) (inv_tempo * 60000000.0f));
 }
 
 /**
  * Stops the background music.
-*/
+ */
 void music_stop(void) {
     if (gBlockMusicChange == FALSE) {
         music_sequence_stop(gMusicPlayer);
@@ -629,7 +633,7 @@ void music_stop(void) {
 /**
  * Set background music to play or not.
  * If the setting changed, then either stop or start music.
-*/
+ */
 UNUSED void music_enabled_set(u8 setting) {
     if (setting != gCanPlayMusic) {
         gCanPlayMusic = setting;
@@ -643,14 +647,14 @@ UNUSED void music_enabled_set(u8 setting) {
 
 /**
  * Return whether background music can be played.
-*/
+ */
 u8 music_can_play(void) {
     return gCanPlayMusic;
 }
 
 /**
  * Stops the currently playing jingle.
-*/
+ */
 void music_jingle_stop(void) {
     if (music_jingle_playing() == SEQUENCE_NONE) {
         gCurrentJingleID = SEQUENCE_NONE;
@@ -660,7 +664,7 @@ void music_jingle_stop(void) {
 
 /**
  * Return the currently playing music.
-*/
+ */
 u8 music_current_sequence(void) {
     if (gCurrentSequenceID != SEQUENCE_NONE && gMusicPlayer->state == AL_PLAYING) {
         return gCurrentSequenceID;
@@ -672,7 +676,7 @@ u8 music_current_sequence(void) {
 /**
  * Return the next music sequence to be played if there is one.
  * Otherwise, return what's currently playing.
-*/
+ */
 UNUSED u8 music_next(void) {
     if (gMusicNextSeqID) {
         return gMusicNextSeqID;
@@ -683,7 +687,7 @@ UNUSED u8 music_next(void) {
 
 /**
  * Return the currently playing jingle.
-*/
+ */
 u8 music_jingle_current(void) {
     return gCurrentJingleID;
 }
@@ -691,38 +695,38 @@ u8 music_jingle_current(void) {
 /**
  * Set the volume of the music.
  * Update music volume with this new setting.
-*/
+ */
 void music_volume_set(u8 volume) {
     f32 normalized_vol;
 
     gMusicBaseVolume = volume;
     normalized_vol = gMusicSliderVolume * gMusicBaseVolume * sMusicFadeVolume;
-    alCSPSetVol((ALCSPlayer *) gMusicPlayer, (s16)((s32)(gGlobalMusicVolume * normalized_vol) >> 8));
+    alCSPSetVol((ALCSPlayer *) gMusicPlayer, (s16) ((s32) (gGlobalMusicVolume * normalized_vol) >> 8));
 }
 
 /**
  * Set the user configured music volume.
  * Update music volume with this new setting.
-*/
+ */
 void music_volume_config_set(u32 slider_val) {
     f32 normalized_vol;
 
     slider_val = (slider_val <= 256) ? slider_val : 256;
     gMusicSliderVolume = slider_val;
     normalized_vol = gMusicSliderVolume * gMusicBaseVolume * sMusicFadeVolume;
-    alCSPSetVol((ALCSPlayer *) gMusicPlayer, (s16)((s32)(gGlobalMusicVolume * normalized_vol) >> 8));
+    alCSPSetVol((ALCSPlayer *) gMusicPlayer, (s16) ((s32) (gGlobalMusicVolume * normalized_vol) >> 8));
 }
 
 /**
  * Return the baseline music volume, unaffected by user config.
-*/
+ */
 u8 music_volume(void) {
     return gMusicBaseVolume;
 }
 
 /**
  * Return the music volume set by the player.
-*/
+ */
 s32 music_volume_config(void) {
     return gMusicSliderVolume;
 }
@@ -730,15 +734,15 @@ s32 music_volume_config(void) {
 /**
  * Set the volume for the jingle player.
  * The jingle player scales with sfx volume rather than music volume.
-*/
+ */
 void music_jingle_volume_set(u8 arg0) {
     sfxRelativeVolume = arg0;
-    alCSPSetVol((ALCSPlayer *) gJinglePlayer, (s16)(get_sfx_volume_slider() * sfxRelativeVolume));
+    alCSPSetVol((ALCSPlayer *) gJinglePlayer, (s16) (get_sfx_volume_slider() * sfxRelativeVolume));
 }
 
 /**
  * Set the panning level for every channel in the jingle player.
-*/
+ */
 void music_jingle_pan_set(ALPan pan) {
     u32 iChan;
     for (iChan = 0; iChan < AUDIO_CHANNELS; iChan++) {
@@ -757,7 +761,7 @@ void music_jingle_play(u8 seqID) {
 
 /**
  * If there's a jingle playing, return that, otherwise, return 0.
-*/
+ */
 u32 music_jingle_playing(void) {
     if (gCurrentJingleID && gCanPlayJingle && (gJinglePlayer->state == AL_PLAYING)) {
         return gCurrentJingleID;
@@ -770,7 +774,7 @@ u32 music_jingle_playing(void) {
  * Sets the volume for every sound channel.
  * Tries to set up to 64, regardless of if there are 64 sound channels or not.
  * !@bug: This can cause an out of bounds array index.
-*/
+ */
 UNUSED void sound_channel_volume_all(u16 volume) {
     u32 i;
     for (i = 0; i < 64; i++) {
@@ -780,7 +784,7 @@ UNUSED void sound_channel_volume_all(u16 volume) {
 
 /**
  * Return the audible distance of the sound effect.
-*/
+ */
 u16 sound_distance(u16 soundId) {
     if (soundId > gSoundCount) {
         return 0;
@@ -791,7 +795,7 @@ u16 sound_distance(u16 soundId) {
 /**
  * Add the requested sound to the queue and update the mask to show that this sound is playing at that source.
  * If no soundmask is provided, then instead use the global mask.
-*/
+ */
 void sound_play(u16 soundID, s32 *soundMask) {
     f32 pitch;
     s32 soundBite;
@@ -816,14 +820,14 @@ void sound_play(u16 soundID, s32 *soundMask) {
         func_80004668(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, (SoundMask *) soundMask);
         if (*soundMask != NULL) {
             sound_event_update(*soundMask, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
-            sound_event_update(*soundMask, AL_SNDP_PITCH_EVT, *((u32*) &pitch));
+            sound_event_update(*soundMask, AL_SNDP_PITCH_EVT, *((u32 *) &pitch));
         }
     } else {
         soundMask = (s32 *) &gGlobalSoundMask;
         func_80004668(gSoundBank->bankArray[0], soundBite, gSoundTable[soundID].unk8, (SoundMask *) &gGlobalSoundMask);
         if (*soundMask != NULL) {
             sound_event_update(*soundMask, AL_SNDP_VOL_EVT, gSoundTable[soundID].volume * 256);
-            sound_event_update(*soundMask, AL_SNDP_PITCH_EVT, *((u32*) &pitch));
+            sound_event_update(*soundMask, AL_SNDP_PITCH_EVT, *((u32 *) &pitch));
         }
     }
 }
@@ -861,7 +865,7 @@ void func_80001F14(u16 soundID, s32 *soundMask) {
 
 /**
  * Set the volume of the sound relative to the baseline volume of the sound ID.
-*/
+ */
 void sound_volume_set_relative(u16 soundID, void *soundState, u8 volume) {
     s32 newVolume = ((s32) (gSoundTable[soundID].volume * (volume / 127.0f))) * 256;
     if (soundState) {
@@ -871,7 +875,7 @@ void sound_volume_set_relative(u16 soundID, void *soundState, u8 volume) {
 
 /**
  * Updates the volume of the given sound mask.
-*/
+ */
 UNUSED void sound_volume_set(SoundMask *soundMask, u8 arg1) {
     if (soundMask != NULL) {
         sound_event_update((s32) soundMask, AL_SNDP_VOL_EVT, arg1 * 256);
@@ -881,7 +885,7 @@ UNUSED void sound_volume_set(SoundMask *soundMask, u8 arg1) {
 /**
  * Updates the pitch of the given sound mask.
  * Official name: amSndSetPitchDirect
-*/
+ */
 UNUSED void sound_pitch_set(SoundMask *soundMask, u32 pitch) {
     u32 *pitchAddr = &pitch;
     if (soundMask != NULL) {
@@ -891,21 +895,21 @@ UNUSED void sound_pitch_set(SoundMask *soundMask, u32 pitch) {
 
 /**
  * Return the number of playable sounds in the audio table.
-*/
+ */
 u16 sound_count(void) {
     return gSoundBank->bankArray[0]->instArray[0]->soundCount;
 }
 
 /**
  * Return mumber of playable sequences in the table.
-*/
+ */
 u8 music_sequence_count(void) {
     return gSequenceTable->seqCount;
 }
 
 /**
  * Writes the sound table address, size and element count into the arguments.
-*/
+ */
 void sound_table_properties(SoundData **table, s32 *size, s32 *count) {
     if (table != NULL) {
         *table = gSoundTable;
@@ -920,7 +924,7 @@ void sound_table_properties(SoundData **table, s32 *size, s32 *count) {
 
 /**
  * Writes the music sound table address, size and element count into the arguments.
-*/
+ */
 UNUSED void music_table_properties(MusicData **table, s32 *size, s32 *count) {
     if (table != NULL) {
         *table = gSeqSoundTable;
@@ -937,19 +941,19 @@ u8 gSoundBank_GetSoundDecayTime(u16 soundID) {
     if (soundID <= 0 || gSoundBank->bankArray[0]->instArray[0]->soundCount < soundID) {
         return 0;
     }
-    return ((u32)(1 + gSoundBank->bankArray[0]->instArray[0]->soundArray[soundID - 1]->envelope->decayTime) == 0);
+    return ((u32) (1 + gSoundBank->bankArray[0]->instArray[0]->soundArray[soundID - 1]->envelope->decayTime) == 0);
 }
 
 /**
  * Allocate space, then initialise a sequence player for audio playback.
-*/
+ */
 ALSeqPlayer *sound_seqplayer_init(s32 maxVoices, s32 maxEvents) {
     ALCSPlayer *cseqp;
     ALSeqpConfig config;
 
     config.maxVoices = maxVoices;
     config.maxEvents = maxEvents;
-    config.unknown_0x10 = maxVoices; //this member doesn't exist in other versions of ALSeqpConfig
+    config.unknown_0x10 = maxVoices; // this member doesn't exist in other versions of ALSeqpConfig
     config.maxChannels = AUDIO_CHANNELS;
     config.heap = &gALHeap;
     config.initOsc = NULL;
@@ -966,7 +970,7 @@ ALSeqPlayer *sound_seqplayer_init(s32 maxVoices, s32 maxEvents) {
 
 /**
  * Stop the current sequence then set the parameters for the next sequence.
-*/
+ */
 void music_sequence_start(u8 seqID, ALSeqPlayer *seqPlayer) {
     music_sequence_stop(seqPlayer);
     if (seqID < gSequenceTable->seqCount) {
@@ -980,17 +984,19 @@ void music_sequence_start(u8 seqID, ALSeqPlayer *seqPlayer) {
     }
 }
 
-/** 
+/**
  * If the sequence player is currently inactive, start a new sequence with the current properties.
-*/
+ */
 void music_sequence_init(ALSeqPlayer *seqp, void *sequence, u8 *seqID, ALCSeq *seq) {
     s32 i;
 
-    if ((alCSPGetState((ALCSPlayer* ) seqp) == AL_STOPPED) && (*seqID != 0)) {
-        load_asset_to_address(ASSET_AUDIO, (u32) sequence, gSequenceTable->seqArray[*seqID].offset - get_rom_offset_of_asset(ASSET_AUDIO, 0), (s32) gSeqLengthTable[*seqID]);
+    if ((alCSPGetState((ALCSPlayer *) seqp) == AL_STOPPED) && (*seqID != 0)) {
+        load_asset_to_address(ASSET_AUDIO, (u32) sequence,
+                              gSequenceTable->seqArray[*seqID].offset - get_rom_offset_of_asset(ASSET_AUDIO, 0),
+                              (s32) gSeqLengthTable[*seqID]);
         alCSeqNew(seq, sequence);
-        alCSPSetSeq((ALCSPlayer* ) seqp, seq);
-        alCSPPlay((ALCSPlayer* ) seqp);
+        alCSPSetSeq((ALCSPlayer *) seqp, seq);
+        alCSPPlay((ALCSPlayer *) seqp);
         if (seqp == gMusicPlayer) {
             music_volume_set(gSeqSoundTable[*seqID].volume);
             if (gSeqSoundTable[*seqID].tempo != 0) {
@@ -1022,7 +1028,7 @@ void music_sequence_init(ALSeqPlayer *seqp, void *sequence, u8 *seqID, ALCSeq *s
 
 /**
  * Stops the current playing sequence for the given sequence player.
-*/
+ */
 void music_sequence_stop(ALSeqPlayer *seqPlayer) {
     if (gMusicPlayer == seqPlayer && gMusicPlaying) {
         alCSPStop((ALCSPlayer *) seqPlayer);
@@ -1039,14 +1045,14 @@ void music_sequence_stop(ALSeqPlayer *seqPlayer) {
 /**
  * Enable or disable special audio effects.
  * This includes reverb and echo.
-*/
+ */
 void sound_reverb_set(u8 setting) {
     alFxReverbSet(setting);
 }
 
 /**
  * Returns whether or not reverb is currently enabled.
-*/
+ */
 UNUSED u8 sound_reverb_enabled(void) {
     return gSeqSoundTable[gCurrentSequenceID].reverb;
 }

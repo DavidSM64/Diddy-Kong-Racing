@@ -11,16 +11,17 @@
 #include "string.h"
 
 extern s32 gIntDisFlag;
-extern s32 gCurrentRNGSeed; //Official Name: rngSeed
+extern s32 gCurrentRNGSeed; // Official Name: rngSeed
 extern s32 gPrevRNGSeed;
 extern s16 gSineTable[];
 extern s16 gArcTanTable[];
 
 /**
  * Most files below are handwritten assembly. Because of this, matching C code is impossible.
- * Nonmatching is not, so functionally equivalent C code can be here to replace these handwritten functions in nonmatching builds.
- * Variables cannot be declared here because of the way they're aligned, so they have to stay in an assembly file.
-*/
+ * Nonmatching is not, so functionally equivalent C code can be here to replace these handwritten functions in
+ * nonmatching builds. Variables cannot be declared here because of the way they're aligned, so they have to stay in an
+ * assembly file.
+ */
 
 /******************************/
 
@@ -67,15 +68,15 @@ GLOBAL_ASM("asm/math_util/get_gIntDisFlag.s")
 #ifdef NON_EQUIVALENT // Untested
 UNUSED void s32_matrix_to_s16_matrix(s32 **input, s16 **output) {
     s32 i;
-    for(i = 0; i < 4; i++){
+    for (i = 0; i < 4; i++) {
         output[i][2] = input[i][0];
-        output[i][3] = input[i+4][0];
+        output[i][3] = input[i + 4][0];
         output[i][6] = input[i][1];
-        output[i][7] = input[i+4][1];
+        output[i][7] = input[i + 4][1];
         output[i][0] = input[i][0] >> 16;
-        output[i][1] = input[i+4][0] >> 16;
+        output[i][1] = input[i + 4][0] >> 16;
         output[i][4] = input[i][1] >> 16;
-        output[i][5] = input[i+4][1] >> 16;
+        output[i][5] = input[i + 4][1] >> 16;
     }
 }
 #else
@@ -85,7 +86,7 @@ GLOBAL_ASM("asm/math_util/s32_matrix_to_s16_matrix.s")
 #ifdef NON_MATCHING
 void f32_matrix_to_s32_matrix(Matrix *input, MatrixS *output) {
     s32 i;
-    for(i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++) {
         (*output)[i][0] = (s32) ((*input)[i][0] * 65536.0f);
         (*output)[i][1] = (s32) ((*input)[i][1] * 65536.0f);
         (*output)[i][2] = (s32) ((*input)[i][2] * 65536.0f);
@@ -99,9 +100,9 @@ GLOBAL_ASM("asm/math_util/f32_matrix_to_s32_matrix.s")
 #ifdef NON_MATCHING
 /* Official name: mathMtxXFMF */
 void guMtxXFMF(Matrix mf, float x, float y, float z, float *ox, float *oy, float *oz) {
-        *ox = mf[0][0]*x + mf[1][0]*y + mf[2][0]*z + mf[3][0];
-        *oy = mf[0][1]*x + mf[1][1]*y + mf[2][1]*z + mf[3][1];
-        *oz = mf[0][2]*x + mf[1][2]*y + mf[2][2]*z + mf[3][2];
+    *ox = mf[0][0] * x + mf[1][0] * y + mf[2][0] * z + mf[3][0];
+    *oy = mf[0][1] * x + mf[1][1] * y + mf[2][1] * z + mf[3][1];
+    *oz = mf[0][2] * x + mf[1][2] * y + mf[2][2] * z + mf[3][2];
 }
 #else
 GLOBAL_ASM("asm/math_util/guMtxXFMF.s")
@@ -138,10 +139,14 @@ void f32_matrix_mult(Matrix *mat1, Matrix *mat2, Matrix *output) {
         y = (*mat1)[i][1];
         z = (*mat1)[i][2];
         w = (*mat1)[i][3];
-        (*output)[i][0] = (f32) ((y * (*mat2)[1][0]) + (z * (*mat2)[2][0]) + ((x * (*mat2)[0][0]) + (w * (*mat2)[3][0])));
-        (*output)[i][1] = (f32) ((y * (*mat2)[1][1]) + (z * (*mat2)[2][1]) + ((x * (*mat2)[0][1]) + (w * (*mat2)[3][1])));
-        (*output)[i][2] = (f32) ((y * (*mat2)[1][2]) + (z * (*mat2)[2][2]) + ((x * (*mat2)[0][2]) + (w * (*mat2)[3][2])));
-        (*output)[i][3] = (f32) ((y * (*mat2)[1][3]) + (z * (*mat2)[2][3]) + ((x * (*mat2)[0][3]) + (w * (*mat2)[3][3])));
+        (*output)[i][0] =
+            (f32) ((y * (*mat2)[1][0]) + (z * (*mat2)[2][0]) + ((x * (*mat2)[0][0]) + (w * (*mat2)[3][0])));
+        (*output)[i][1] =
+            (f32) ((y * (*mat2)[1][1]) + (z * (*mat2)[2][1]) + ((x * (*mat2)[0][1]) + (w * (*mat2)[3][1])));
+        (*output)[i][2] =
+            (f32) ((y * (*mat2)[1][2]) + (z * (*mat2)[2][2]) + ((x * (*mat2)[0][2]) + (w * (*mat2)[3][2])));
+        (*output)[i][3] =
+            (f32) ((y * (*mat2)[1][3]) + (z * (*mat2)[2][3]) + ((x * (*mat2)[0][3]) + (w * (*mat2)[3][3])));
     }
 }
 #else
@@ -151,7 +156,7 @@ GLOBAL_ASM("asm/math_util/f32_matrix_mult.s")
 #ifdef NON_MATCHING
 /* Official name: mathMtxF2L */
 void f32_matrix_to_s16_matrix(Matrix *input, MatrixS *output) {
-    guMtxF2L((float (*)[4]) input, (Mtx *) output);
+    guMtxF2L((float(*)[4]) input, (Mtx *) output);
 }
 #else
 GLOBAL_ASM("asm/math_util/f32_matrix_to_s16_matrix.s")
@@ -190,7 +195,8 @@ s32 get_random_number_from_range(s32 min, s32 max) {
     s32 newSeed;
     u64 curSeed;
 
-    curSeed = (((u64) ((s64) gCurrentRNGSeed << 0x3F) >> 0x1F) | ((u64) ((s64) gCurrentRNGSeed << 0x1F) >> 0x20)) ^ ((u64) ((s64) gCurrentRNGSeed << 0x2C) >> 0x20);
+    curSeed = (((u64) ((s64) gCurrentRNGSeed << 0x3F) >> 0x1F) | ((u64) ((s64) gCurrentRNGSeed << 0x1F) >> 0x20)) ^
+              ((u64) ((s64) gCurrentRNGSeed << 0x2C) >> 0x20);
     newSeed = ((curSeed >> 0x14) & 0xFFF) ^ curSeed;
     gCurrentRNGSeed = newSeed;
     return ((u32) (newSeed - min) % (u32) ((max - min) + 1)) + min;
@@ -207,8 +213,8 @@ void s16_matrix_rotate(s16 *arg0[4][4], s16 arg1[4][4]) {
     temp_t6 = (s32) ((*arg0[0][0] * arg1[0][0]) + (*arg0[0][1] * arg1[0][1]) + (*arg0[0][2] * *arg0[0][2])) >> 12;
     *arg0[1][0] = (s16) (((s32) (temp_t6 * arg1[0][0]) >> 13) - *arg0[0][0]);
     *arg0[1][1] = (s16) (((s32) (temp_t6 * arg1[0][1]) >> 13) - *arg0[0][1]);
-    *arg0[1][2] = (s16) (((s32) (temp_t6 * arg1[0][2]) >> 13) - *arg0[0][0]); // Did they mean to do `- *arg0[0][2]` here?
-
+    *arg0[1][2] =
+        (s16) (((s32) (temp_t6 * arg1[0][2]) >> 13) - *arg0[0][0]); // Did they mean to do `- *arg0[0][2]` here?
 }
 #else
 GLOBAL_ASM("asm/math_util/s16_matrix_rotate.s")
@@ -217,9 +223,9 @@ GLOBAL_ASM("asm/math_util/s16_matrix_rotate.s")
 #ifdef NON_EQUIVALENT // Untested
 UNUSED void s16_matrix_to_s32_matrix(s16 **arg0, s32 **arg1) {
     s32 i, j;
-    for(i = 0; i < 4; i++) {
-        for(j = 0; j < 4; j++) {
-            arg1[i][j] = (arg0[i][j] << 16) | arg0[i+4][j];
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 4; j++) {
+            arg1[i][j] = (arg0[i][j] << 16) | arg0[i + 4][j];
         }
     }
 }
@@ -255,7 +261,7 @@ GLOBAL_ASM("asm/math_util/s16_vec3_mult_by_s32_matrix.s")
 #endif
 
 #ifdef NON_EQUIVALENT
-void object_transform_to_matrix(Matrix arg0, ObjectTransform *trans) {
+void object_transform_to_matrix(Matrix mtx, ObjectTransform *trans) {
     f32 yRotSine;
     f32 yRotCosine;
     f32 xRotSine;
@@ -271,23 +277,23 @@ void object_transform_to_matrix(Matrix arg0, ObjectTransform *trans) {
     zRotSine = sins(trans->z_rotation) * 0.000015f;
     zRotCosine = coss(trans->z_rotation) * 0.000015f;
     scale = trans->scale * 0.000015f;
-    
-    arg0[0][0] = ((xRotSine * yRotSine * zRotSine) + (scale * yRotCosine)) * scale;
-    arg0[0][1] = (zRotSine * xRotCosine * scale);
-    arg0[0][2] = (((xRotSine * yRotCosine * zRotSine) - (scale * yRotSine)) * scale);
-    arg0[0][3] = 0;
-    arg0[1][0] = (((xRotSine * yRotSine * scale) - (zRotSine * yRotCosine)) * scale);
-    arg0[1][1] = (scale * xRotCosine * scale);
-    arg0[1][2] = (((xRotSine * yRotCosine * scale) + (zRotSine * yRotSine)) * scale);
-    arg0[1][3] = 0;
-    arg0[2][0] = (xRotCosine * yRotSine * scale);
-    arg0[2][1] = -(xRotSine * scale);
-    arg0[2][2] = (xRotCosine * yRotCosine * scale);
-    arg0[2][3] = 0;
-    arg0[3][0] = trans->x_position;
-    arg0[3][1] = trans->y_position;
-    arg0[3][2] = 1.0f;
-    arg0[3][3] = trans->z_position;
+
+    mtx[0][0] = ((xRotSine * yRotSine * zRotSine) + (scale * yRotCosine)) * scale;
+    mtx[0][1] = (zRotSine * xRotCosine * scale);
+    mtx[0][2] = (((xRotSine * yRotCosine * zRotSine) - (scale * yRotSine)) * scale);
+    mtx[0][3] = 0;
+    mtx[1][0] = (((xRotSine * yRotSine * scale) - (zRotSine * yRotCosine)) * scale);
+    mtx[1][1] = (scale * xRotCosine * scale);
+    mtx[1][2] = (((xRotSine * yRotCosine * scale) + (zRotSine * yRotSine)) * scale);
+    mtx[1][3] = 0;
+    mtx[2][0] = (xRotCosine * yRotSine * scale);
+    mtx[2][1] = -(xRotSine * scale);
+    mtx[2][2] = (xRotCosine * yRotCosine * scale);
+    mtx[2][3] = 0;
+    mtx[3][0] = trans->x_position;
+    mtx[3][1] = trans->y_position;
+    mtx[3][2] = 1.0f;
+    mtx[3][3] = trans->z_position;
 }
 #else
 GLOBAL_ASM("asm/math_util/object_transform_to_matrix.s")
@@ -331,9 +337,9 @@ void object_transform_to_matrix_2(Matrix mtx, ObjectTransform *trans) {
     xRotSine = sins(trans->x_rotation) * 0.000015f;
     zRotCosine = coss(trans->z_rotation) * 0.000015f;
     zRotSine = sins(trans->z_rotation) * 0.000015f;
-    
+
     scale = trans->scale * 0.000015f;
-    
+
     mtx[0][0] = (yRotSine * scale) - (xRotCosine * zRotCosine * yRotCosine);
     mtx[0][1] = (xRotCosine * scale * yRotCosine) + (yRotSine * zRotCosine);
     mtx[0][2] = -(yRotCosine * xRotSine);
@@ -402,18 +408,18 @@ void s16_vec3_apply_object_rotation(ObjectTransform *trans, s16 *vec3Arg) {
     xRotSine = sins(trans->x_rotation);
     zRotCosine = coss(trans->z_rotation);
     zRotSine = sins(trans->z_rotation);
-    
+
     temp_t3 = ((vec3Arg[0] * yRotSine) - (vec3Arg[1] * yRotCosine)) >> 16;
     temp_t4 = ((vec3Arg[1] * yRotSine) + (vec3Arg[0] * yRotCosine)) >> 16;
-    
-    temp_t4 = ((   temp_t4 * xRotSine) - (vec3Arg[2] * xRotCosine)) >> 16;
-    temp_t5 = ((vec3Arg[2] * xRotSine) + (   temp_t4 * xRotCosine)) >> 16;
-    
+
+    temp_t4 = ((temp_t4 * xRotSine) - (vec3Arg[2] * xRotCosine)) >> 16;
+    temp_t5 = ((vec3Arg[2] * xRotSine) + (temp_t4 * xRotCosine)) >> 16;
+
     vec3Arg[1] = temp_t4;
-    
+
     temp_t3 = ((temp_t3 * zRotSine) + (temp_t5 * zRotCosine)) >> 16;
     temp_t5 = ((temp_t5 * zRotSine) - (temp_t3 * zRotCosine)) >> 16;
-    
+
     vec3Arg[0] = temp_t3;
     vec3Arg[2] = temp_t5;
 }
@@ -439,22 +445,22 @@ void f32_vec3_apply_object_rotation(ObjectTransform *trans, f32 *vec3_f32) {
     xRotCosine = cosf(trans->x_rotation);
     yRotSine = sinf(trans->y_rotation);
     yRotCosine = cosf(trans->y_rotation);
-    
+
     x = vec3_f32[0];
     y = vec3_f32[1];
     z = vec3_f32[2];
-    
+
     x = (vec3_f32[0] * zRotCosine) - (vec3_f32[1] * zRotSine);
     y = (vec3_f32[1] * zRotCosine) + (vec3_f32[0] * zRotSine);
-    
+
     temp = y;
     y = (temp * xRotCosine) - (vec3_f32[2] * xRotSine);
     z = (vec3_f32[2] * xRotCosine) + (temp * xRotSine);
-    
+
     temp = x;
     x = (temp * yRotCosine) + (z * yRotSine);
     z = (z * yRotCosine) - (temp * yRotSine);
-    
+
     vec3_f32[0] = x;
     vec3_f32[1] = y;
     vec3_f32[2] = z;
@@ -482,18 +488,18 @@ void f32_vec3_apply_object_rotation2(ObjectTransform *trans, f32 *arg1) {
     yRotCosine = cosf(trans->y_rotation);
     zRotCosine = cosf(trans->z_rotation);
     zRotSine = sinf(trans->z_rotation);
-    
+
     temp_f4 = (arg1[0] * xRotSine) + (arg1[2] * xRotCosine);
     temp_f8 = (arg1[2] * xRotSine) - (arg1[0] * xRotCosine);
-    
+
     temp_f6 = (arg1[1] * yRotSine) - (temp_f8 * yRotCosine);
     temp_f8 = (temp_f8 * yRotSine) + (arg1[1] * yRotCosine);
-    
+
     arg1[2] = temp_f8;
-    
+
     temp_f4 = (temp_f4 * zRotSine) - (temp_f6 * zRotCosine);
     temp_f6 = (temp_f6 * zRotSine) + (temp_f4 * zRotCosine);
-    
+
     arg1[0] = temp_f4;
     arg1[1] = temp_f6;
 }
@@ -514,13 +520,13 @@ void f32_vec3_apply_object_rotation3(ObjectTransform *trans, f32 *vec3_f32) {
     xRotCosine = cosf(trans->x_rotation);
     yRotSine = sinf(trans->y_rotation);
     yRotCosine = cosf(trans->y_rotation);
-    
+
     z = vec3_f32[2];
     y = -(z * xRotSine);
     z = z * xRotCosine;
     x = (z * yRotSine);
     z = z * yRotCosine;
-    
+
     vec3_f32[0] = x;
     vec3_f32[1] = y;
     vec3_f32[2] = z;
@@ -577,8 +583,8 @@ void f32_matrix_from_position(Matrix *mtx, f32 x, f32 y, f32 z) {
     s32 j;
     s32 i;
     // Clear matrix
-    for(i = 0; i < 4; i++) {
-        for(j = 0; j < 4; j++) {
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 4; j++) {
             *mtx[i][j] = 0;
         }
     }
@@ -604,43 +610,43 @@ static u16 atan2_lookup(f32 y, f32 x) {
     if (x == 0) {
         ret = gArcTanTable[0];
     } else {
-        ret = gArcTanTable[(s32)(y / x * 1024 + 0.5f)];
+        ret = gArcTanTable[(s32) (y / x * 1024 + 0.5f)];
     }
     return ret;
 }
 
-s32 atan2s(s32 x, s32 y) {
+s32 atan2s(s32 xDelta, s32 zDelta) {
     u16 ret;
 
-    if (x >= 0) {
-        if (y >= 0) {
-            if (y >= x) {
-                ret = atan2_lookup(x, y);
+    if (xDelta >= 0) {
+        if (zDelta >= 0) {
+            if (zDelta >= xDelta) {
+                ret = atan2_lookup(xDelta, zDelta);
             } else {
-                ret = 0x4000 - atan2_lookup(y, x);
+                ret = 0x4000 - atan2_lookup(zDelta, xDelta);
             }
         } else {
-            y = -y;
-            if (y < x) {
-                ret = 0x4000 + atan2_lookup(y, x);
+            zDelta = -zDelta;
+            if (zDelta < xDelta) {
+                ret = 0x4000 + atan2_lookup(zDelta, xDelta);
             } else {
-                ret = 0x8000 - atan2_lookup(x, y);
+                ret = 0x8000 - atan2_lookup(xDelta, zDelta);
             }
         }
     } else {
-        x = -x;
-        if (y < 0) {
-            y = -y;
-            if (y >= x) {
-                ret = 0x8000 + atan2_lookup(x, y);
+        xDelta = -xDelta;
+        if (zDelta < 0) {
+            zDelta = -zDelta;
+            if (zDelta >= xDelta) {
+                ret = 0x8000 + atan2_lookup(xDelta, zDelta);
             } else {
-                ret = 0xC000 - atan2_lookup(y, x);
+                ret = 0xC000 - atan2_lookup(zDelta, xDelta);
             }
         } else {
-            if (y < x) {
-                ret = 0xC000 + atan2_lookup(y, x);
+            if (zDelta < xDelta) {
+                ret = 0xC000 + atan2_lookup(zDelta, xDelta);
             } else {
-                ret = -atan2_lookup(x, y);
+                ret = -atan2_lookup(xDelta, zDelta);
             }
         }
     }
@@ -695,15 +701,16 @@ UNUSED s32 calc_dyn_lighting_for_level_segment(LevelModelSegment *segment, s32 *
     numBatches = segment->numberOfBatches;
     batches = segment->batches;
     vertCount = 0;
-    for(i = 0; i < numBatches; i++){
+    for (i = 0; i < numBatches; i++) {
         // batches[i].unk6 is 0xFF if vertex colors are used. Otherwise dynamic lighting is used.
-        if ((batches[i].unk6 - 0xFF) != 0) { 
+        if ((batches[i].unk6 - 0xFF) != 0) {
             verts = &segment->vertices[vertCount];
             verts2C = &segment->unk2C[vertCount];
-            numVertsInBatch = batches[i+1].verticesOffset - batches[i].verticesOffset;
-            for(j = 0; j < numVertsInBatch; j++) {
+            numVertsInBatch = batches[i + 1].verticesOffset - batches[i].verticesOffset;
+            for (j = 0; j < numVertsInBatch; j++) {
                 alpha = verts2C[j].a;
-                dotProduct = (verts2C[j].x * vec3_ints[0]) + (verts2C[j].y * vec3_ints[1]) + (verts2C[j].z * vec3_ints[2]);
+                dotProduct =
+                    (verts2C[j].x * vec3_ints[0]) + (verts2C[j].y * vec3_ints[1]) + (verts2C[j].z * vec3_ints[2]);
                 if (dotProduct > 0) {
                     alpha += dotProduct >> 22;
                     if (alpha > 128) {
@@ -717,7 +724,7 @@ UNUSED s32 calc_dyn_lighting_for_level_segment(LevelModelSegment *segment, s32 *
             }
             vertCount += numVertsInBatch;
         } else {
-            vertCount += batches[i+1].verticesOffset - batches[i].verticesOffset;
+            vertCount += batches[i + 1].verticesOffset - batches[i].verticesOffset;
         }
     }
     return vertCount;
@@ -729,9 +736,9 @@ GLOBAL_ASM("asm/math_util/calc_dyn_lighting_for_level_segment.s")
 #ifdef NON_MATCHING
 /**
  * Signed distance field calculation. It's used to calculate the level of intersection between a point and a triangle.
-*/
+ */
 f32 area_triangle_2d(f32 x0, f32 z0, f32 x1, f32 z1, f32 x2, f32 z2) {
-    f32 dx0 = x1 - x0; 
+    f32 dx0 = x1 - x0;
     f32 dz0 = z1 - z0;
     f32 dx1 = x2 - x1;
     f32 dz1 = z2 - z1;
@@ -740,7 +747,7 @@ f32 area_triangle_2d(f32 x0, f32 z0, f32 x1, f32 z1, f32 x2, f32 z2) {
     f32 d0 = sqrtf((dx0 * dx0) + (dz0 * dz0)); // Distance between points 0 & 1
     f32 d1 = sqrtf((dx1 * dx1) + (dz1 * dz1)); // Distance between points 1 & 2
     f32 d2 = sqrtf((dx2 * dx2) + (dz2 * dz2)); // Distance between points 2 & 0
-    f32 m = 0.5f * (d0 + d1 + d2); // Half the sum of the distances?
+    f32 m = 0.5f * (d0 + d1 + d2);             // Half the sum of the distances?
     f32 result = m * (m - d0) * (m - d1) * (m - d2);
     if (result < 0.0f) {
         result = 0.0f;

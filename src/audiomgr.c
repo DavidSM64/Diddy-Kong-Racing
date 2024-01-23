@@ -14,44 +14,43 @@
 typedef union {
 
     struct {
-        short     type;
+        short type;
     } gen;
 
     struct {
-        short     type;
-        struct    AudioInfo_s *info;
+        short type;
+        struct AudioInfo_s *info;
     } done;
 
-    OSScMsg       app;
+    OSScMsg app;
 
 } AudioMsg;
 
 // TODO: Rare likely modified this struct as evidenced by __amHandleFrameMsg
 // using *data when it should have been using msg.
 typedef struct AudioInfo_s {
-    short         *data;          /* Output data pointer */
-    short         frameSamples;   /* # of samples synthesized in this frame */
-    OSScTask      task;           /* scheduler structure */
-    AudioMsg      msg;            /* completion message */
+    short *data;        /* Output data pointer */
+    short frameSamples; /* # of samples synthesized in this frame */
+    OSScTask task;      /* scheduler structure */
+    AudioMsg msg;       /* completion message */
 } AudioInfo;
 
 typedef struct {
-    Acmd          *ACMDList[NUM_ACMD_LISTS];
-    AudioInfo     *audioInfo[NUM_OUTPUT_BUFFERS];
-    OSThread      thread;
-    OSMesgQueue   audioFrameMsgQ;
-    OSMesg        audioFrameMsgBuf[MAX_MESGS];
-    OSMesgQueue   audioReplyMsgQ;
-    OSMesg        audioReplyMsgBuf[MAX_MESGS];
-    ALGlobals     g;
+    Acmd *ACMDList[NUM_ACMD_LISTS];
+    AudioInfo *audioInfo[NUM_OUTPUT_BUFFERS];
+    OSThread thread;
+    OSMesgQueue audioFrameMsgQ;
+    OSMesg audioFrameMsgBuf[MAX_MESGS];
+    OSMesgQueue audioReplyMsgQ;
+    OSMesg audioReplyMsgBuf[MAX_MESGS];
+    ALGlobals g;
 } AMAudioMgr;
 
-typedef struct
-{
-    ALLink      node;
-    u32         startAddr;
-    u32         lastFrame;
-    char        *ptr;
+typedef struct {
+    ALLink node;
+    u32 startAddr;
+    u32 lastFrame;
+    char *ptr;
 } AMDMABuffer;
 
 typedef struct {
@@ -60,35 +59,34 @@ typedef struct {
     AMDMABuffer *firstFree;
 } AMDMAState;
 
-
 /**** audio manager globals ****/
 
 OSSched *gAudioSched;
 ALHeap *gAudioHeap; // Set but not used
 
-AMAudioMgr      __am;
-static          u64 audioStack[AUDIO_STACKSIZE/sizeof(u64)];
+AMAudioMgr __am;
+static u64 audioStack[AUDIO_STACKSIZE / sizeof(u64)];
 
-AMDMAState      dmaState;
-AMDMABuffer     dmaBuffs[NUM_DMA_BUFFERS];
-u32             audFrameCt = 0;
-u32             nextDMA = 0;
-u32             curAcmdList = 0;
-u32             minFrameSize;
-u32             frameSize;
-u32             maxFrameSize;
-s32             gAudioCmdLen; // Set but not used
+AMDMAState dmaState;
+AMDMABuffer dmaBuffs[NUM_DMA_BUFFERS];
+u32 audFrameCt = 0;
+u32 nextDMA = 0;
+u32 curAcmdList = 0;
+u32 minFrameSize;
+u32 frameSize;
+u32 maxFrameSize;
+s32 gAudioCmdLen; // Set but not used
 
 /**** Anti Piracy - Sets random audio frequency ****/
-s16             gAntiPiracyCRCStart;
-s8              gAntiPiracyAudioFreq = FALSE;
-s32             gFunc80019808Checksum = 0x35281;
-s32             gFunc80019808Length = 0xFD0;
+s16 gAntiPiracyCRCStart;
+s8 gAntiPiracyAudioFreq = FALSE;
+s32 gFunc80019808Checksum = 0x35281;
+s32 gFunc80019808Length = 0xFD0;
 
 /** Queues and storage for use with audio DMA's ****/
-OSIoMesg        audDMAIOMesgBuf[NUM_DMA_MESSAGES];
-OSMesgQueue     audDMAMessageQ;
-OSMesg          audDMAMessageBuf[NUM_DMA_MESSAGES];
+OSIoMesg audDMAIOMesgBuf[NUM_DMA_MESSAGES];
+OSMesgQueue audDMAMessageQ;
+OSMesg audDMAMessageBuf[NUM_DMA_MESSAGES];
 
 /**** Not really sure why these are here. They are set, but never used. ****/
 static s16 *gLastAudioPtr = 0;
@@ -98,13 +96,13 @@ static s32 gLastAudioFrameSamples = 0;
 static void __amMain(UNUSED void *arg);
 static s32 __amDMA(s32 addr, s32 len, void *state);
 static ALDMAproc __amDmaNew(AMDMAState **state);
-static u32  __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo);
+static u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo);
 static void __amHandleDoneMsg(AudioInfo *info);
 static void __clearAudioDMA(void);
 
-
 /**** Debug strings ****/
-const char D_800E49F0[] = "audio manager: RCP audio interface bug caused DMA from bad address - move audiomgr.c in the makelist!\n";
+const char D_800E49F0[] =
+    "audio manager: RCP audio interface bug caused DMA from bad address - move audiomgr.c in the makelist!\n";
 const char D_800E4A58[] = "audio: ai out of samples\n";
 const char D_800E4A74[] = "OH DEAR - No audio DMA buffers left\n";
 const char D_800E4A9C[] = "Dma not done\n";
@@ -190,10 +188,11 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     }
 
     for (i = 0; i < NUM_ACMD_LISTS; i++) {
-        __am.ACMDList[i] = (Acmd *) alHeapAlloc(c->heap, 1, 0xA000); //sizeof(Acmd) * DMA_BUFFER_LENGTH * 5?
+        __am.ACMDList[i] = (Acmd *) alHeapAlloc(c->heap, 1, 0xA000); // sizeof(Acmd) * DMA_BUFFER_LENGTH * 5?
     }
 
-    asset = allocate_at_address_in_main_pool((maxFrameSize * 12), (u8 *)(0x803FFE00 - (maxFrameSize * 12)), COLOUR_TAG_CYAN);
+    asset = allocate_at_address_in_main_pool((maxFrameSize * 12), (u8 *) (0x803FFE00 - (maxFrameSize * 12)),
+                                             COLOUR_TAG_CYAN);
 
     /**** initialize the done messages ****/
     for (i = 0; i < NUM_ACMD_LISTS + 1; i++) {
@@ -206,13 +205,12 @@ void amCreateAudioMgr(ALSynConfig *c, OSPri pri, OSSched *audSched) {
     osCreateMesgQueue(&__am.audioFrameMsgQ, __am.audioFrameMsgBuf, MAX_MESGS);
     osCreateMesgQueue(&audDMAMessageQ, audDMAMessageBuf, NUM_DMA_MESSAGES);
 
-    osCreateThread(&__am.thread, 4, __amMain, 0,
-                    (void *)(audioStack+AUDIO_STACKSIZE/sizeof(u64)), pri);
+    osCreateThread(&__am.thread, 4, __amMain, 0, (void *) (audioStack + AUDIO_STACKSIZE / sizeof(u64)), pri);
 }
 
 /**
  * Official Name: amGo
-*/
+ */
 void audioStartThread(void) {
     osStartThread(&__am.thread);
 }
@@ -249,21 +247,21 @@ static void __amMain(UNUSED void *arg) {
     while (!done) {
         (void) osRecvMesg(&__am.audioFrameMsgQ, (OSMesg *) &msg, OS_MESG_BLOCK);
         switch (msg->gen.type) {
-        case OS_SC_RETRACE_MSG:
-            //TODO: Check type of ACMDList?
-            __amHandleFrameMsg((AudioInfo *) __am.ACMDList[(((u32) audFrameCt % 3))+2], lastInfo);
-            /* wait for done message */
-            osRecvMesg(&__am.audioReplyMsgQ, (OSMesg *) &lastInfo, OS_MESG_BLOCK);
-            __amHandleDoneMsg(lastInfo);
-            break;
-        case OS_SC_PRE_NMI_MSG:
-            /* what should we really do here? quit? ramp down volume? */
-            break;
-        case QUIT_MSG:
-            done = 1;
-            break;
-        default:
-            break;
+            case OS_SC_RETRACE_MSG:
+                // TODO: Check type of ACMDList?
+                __amHandleFrameMsg((AudioInfo *) __am.ACMDList[(((u32) audFrameCt % 3)) + 2], lastInfo);
+                /* wait for done message */
+                osRecvMesg(&__am.audioReplyMsgQ, (OSMesg *) &lastInfo, OS_MESG_BLOCK);
+                __amHandleDoneMsg(lastInfo);
+                break;
+            case OS_SC_PRE_NMI_MSG:
+                /* what should we really do here? quit? ramp down volume? */
+                break;
+            case QUIT_MSG:
+                done = 1;
+                break;
+            default:
+                break;
         }
     }
 
@@ -272,13 +270,13 @@ static void __amMain(UNUSED void *arg) {
 
 /******************************************************************************
  *
- * __amHandleFrameMsg. First, clear the past audio dma's, then calculate 
+ * __amHandleFrameMsg. First, clear the past audio dma's, then calculate
  * the number of samples you will need for this frame. This value varies
- * due to the fact that audio is synchronised off of the video interupt 
- * which can have a small amount of jitter in it. Varying the number of 
+ * due to the fact that audio is synchronised off of the video interupt
+ * which can have a small amount of jitter in it. Varying the number of
  * samples slightly will allow you to stay in synch with the video. This
- * is an advantageous thing to do, since if you are in synch with the 
- * video, you will have fewer graphics yields. After you've calculated 
+ * is an advantageous thing to do, since if you are in synch with the
+ * video, you will have fewer graphics yields. After you've calculated
  * the number of frames needed, call alAudioFrame, which will call all
  * of the synthesizer's players (sequence player and sound player) to
  * generate the audio task list. If you get a valid task list back, put
@@ -293,11 +291,10 @@ static u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
     OSScTask *t;
     u32 ret;
 
-    
     __clearAudioDMA(); /* call once a frame, before doing alAudioFrame */
 
     audioPtr = (s16 *) osVirtualToPhysical(info->data);
-    
+
     if (lastInfo) {
         s16 *outputDataPointer;
         s32 frameSamples;
@@ -312,37 +309,35 @@ static u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
         }
     }
 
-    
     /* calculate how many samples needed for this frame to keep the DAC full */
     /* this will vary slightly frame to frame, must recalculate every frame */
     samplesLeft = osAiGetLength() >> 2; /* divide by four, to convert bytes */
                                         /* to stereo 16 bit samples */
     info->frameSamples = (16 + (frameSize - samplesLeft + EXTRA_SAMPLES)) & ~0xf;
-    if ((u32)info->frameSamples < minFrameSize)
+    if ((u32) info->frameSamples < minFrameSize) {
         info->frameSamples = minFrameSize;
+    }
 
-    cmdp = alAudioFrame(__am.ACMDList[curAcmdList], &gAudioCmdLen, audioPtr,
-                        info->frameSamples);
+    cmdp = alAudioFrame(__am.ACMDList[curAcmdList], &gAudioCmdLen, audioPtr, info->frameSamples);
 
     t = &info->task;
-    
-    t->next      = 0;                    /* paranoia */
-    t->msgQ      = &__am.audioReplyMsgQ; /* reply to when finished */
-    //TODO: This should be &info->msg, but the struct is likely modified.
-    t->msg       = (OSMesg) &info->data;   /* reply with this message */
-    t->flags     = OS_SC_NEEDS_RSP;
+
+    t->next = 0;                    /* paranoia */
+    t->msgQ = &__am.audioReplyMsgQ; /* reply to when finished */
+    // TODO: This should be &info->msg, but the struct is likely modified.
+    t->msg = (OSMesg) &info->data; /* reply with this message */
+    t->flags = OS_SC_NEEDS_RSP;
     t->unk58 = -1;
     t->unk60 = 0xFF;
     t->unk5C = 0;
     t->unk64 = 0;
-    
-    t->list.t.data_ptr    = (u64 *) __am.ACMDList[curAcmdList];
-    t->list.t.data_size   = (cmdp - __am.ACMDList[curAcmdList]) * sizeof(Acmd);
-    t->list.t.type  = M_AUDTASK;
-    t->list.t.ucode_boot = (u64 *)rspF3DDKRBootStart;
-    t->list.t.ucode_boot_size =
-        ((int) rspF3DDKRDramStart - (int) rspF3DDKRBootStart);
-    t->list.t.flags  = OS_TASK_DP_WAIT;
+
+    t->list.t.data_ptr = (u64 *) __am.ACMDList[curAcmdList];
+    t->list.t.data_size = (cmdp - __am.ACMDList[curAcmdList]) * sizeof(Acmd);
+    t->list.t.type = M_AUDTASK;
+    t->list.t.ucode_boot = (u64 *) rspF3DDKRBootStart;
+    t->list.t.ucode_boot_size = ((int) rspF3DDKRDramStart - (int) rspF3DDKRBootStart);
+    t->list.t.flags = OS_TASK_DP_WAIT;
     t->list.t.ucode = (u64 *) aspMainTextStart;
     t->list.t.ucode_data = (u64 *) aspMainDataStart;
     t->list.t.ucode_data_size = SP_UCODE_DATA_SIZE;
@@ -351,9 +346,9 @@ static u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
     t->unk6C = 1;
 
     ret = osSendMesg(osScGetCmdQ(gAudioSched), (OSMesg) t, OS_MESG_NOBLOCK);
-    
-    curAcmdList ^= 1; /* swap which acmd list you use each frame */    
-    
+
+    curAcmdList ^= 1; /* swap which acmd list you use each frame */
+
     return ret;
 }
 
@@ -364,12 +359,12 @@ static u32 __amHandleFrameMsg(AudioInfo *info, AudioInfo *lastInfo) {
  *
  *****************************************************************************/
 static void __amHandleDoneMsg(UNUSED AudioInfo *info) {
-    s32    samplesLeft;
+    s32 samplesLeft;
     static int firstTime = 1;
 
-    samplesLeft = osAiGetLength()>>2;
+    samplesLeft = osAiGetLength() >> 2;
     if (samplesLeft == 0 && !firstTime) {
-        //stubbed_printf("audio: ai out of samples\n");    
+        // stubbed_printf("audio: ai out of samples\n");
         firstTime = 0;
     }
 }
@@ -389,31 +384,31 @@ static void __amHandleDoneMsg(UNUSED AudioInfo *info) {
  *
  *****************************************************************************/
 static s32 __amDMA(s32 addr, s32 len, UNUSED void *state) {
-    void            *foundBuffer;
-    s32             delta, addrEnd, buffEnd;
-    AMDMABuffer     *dmaPtr, *lastDmaPtr;
+    void *foundBuffer;
+    s32 delta, addrEnd, buffEnd;
+    AMDMABuffer *dmaPtr, *lastDmaPtr;
     UNUSED s32 pad;
 
     lastDmaPtr = 0;
     delta = addr & 1;
     dmaPtr = dmaState.firstUsed;
-    addrEnd = addr+len;
+    addrEnd = addr + len;
 
     /* first check to see if a currently existing buffer contains the
        sample that you need.  */
 
     while (dmaPtr) {
         buffEnd = dmaPtr->startAddr + DMA_BUFFER_LENGTH;
-        if(dmaPtr->startAddr > (u32)addr) /* since buffers are ordered */
-            break;                   /* abort if past possible */
+        if (dmaPtr->startAddr > (u32) addr) { /* since buffers are ordered */
+            break;                            /* abort if past possible */
 
-        else if(addrEnd <= buffEnd) { /* yes, found a buffer with samples */
+        } else if (addrEnd <= buffEnd) {    /* yes, found a buffer with samples */
             dmaPtr->lastFrame = audFrameCt; /* mark it used */
             foundBuffer = dmaPtr->ptr + addr - dmaPtr->startAddr;
             return (int) osVirtualToPhysical(foundBuffer);
         }
         lastDmaPtr = dmaPtr;
-        dmaPtr = (AMDMABuffer * )dmaPtr->node.next;
+        dmaPtr = (AMDMABuffer *) dmaPtr->node.next;
     }
 
     /* get here, and you didn't find a buffer, so dma a new one */
@@ -430,7 +425,7 @@ static s32 __amDMA(s32 addr, s32 len, UNUSED void *state) {
      * pointer, it's better than nothing
      */
     if (!dmaPtr) {
-	    return (int) osVirtualToPhysical(lastDmaPtr->ptr) + delta;
+        return (int) osVirtualToPhysical(lastDmaPtr->ptr) + delta;
     }
 
     dmaState.firstFree = (AMDMABuffer *) dmaPtr->node.next;
@@ -438,18 +433,16 @@ static s32 __amDMA(s32 addr, s32 len, UNUSED void *state) {
 
     /* add it to the used list */
     if (lastDmaPtr) { /* if you have other dmabuffers used, add this one */
-                     /* to the list, after the last one checked above */
+                      /* to the list, after the last one checked above */
         alLink((ALLink *) dmaPtr, (ALLink *) lastDmaPtr);
-    }
-    else if (dmaState.firstUsed) { /* if this buffer is before any others */
-                                  /* jam at begining of list */
+    } else if (dmaState.firstUsed) { /* if this buffer is before any others */
+                                     /* jam at begining of list */
         lastDmaPtr = dmaState.firstUsed;
         dmaState.firstUsed = dmaPtr;
         dmaPtr->node.next = (ALLink *) lastDmaPtr;
         dmaPtr->node.prev = 0;
         lastDmaPtr->node.prev = (ALLink *) dmaPtr;
-    }
-    else { /* no buffers in list, this is the first one */
+    } else { /* no buffers in list, this is the first one */
         dmaState.firstUsed = dmaPtr;
         dmaPtr->node.next = 0;
         dmaPtr->node.prev = 0;
@@ -458,10 +451,10 @@ static s32 __amDMA(s32 addr, s32 len, UNUSED void *state) {
     foundBuffer = dmaPtr->ptr;
     addr -= delta;
     dmaPtr->startAddr = addr;
-    dmaPtr->lastFrame = audFrameCt;  /* mark it */
+    dmaPtr->lastFrame = audFrameCt; /* mark it */
 
-    osPiStartDma(&audDMAIOMesgBuf[nextDMA++], OS_MESG_PRI_HIGH, OS_READ,
-                addr, foundBuffer, DMA_BUFFER_LENGTH, &audDMAMessageQ);
+    osPiStartDma(&audDMAIOMesgBuf[nextDMA++], OS_MESG_PRI_HIGH, OS_READ, addr, foundBuffer, DMA_BUFFER_LENGTH,
+                 &audDMAMessageQ);
 
     return (int) osVirtualToPhysical(foundBuffer) + delta;
 }
@@ -479,13 +472,13 @@ static s32 __amDMA(s32 addr, s32 len, UNUSED void *state) {
  *****************************************************************************/
 static ALDMAproc __amDmaNew(AMDMAState **state) {
 
-    if(!dmaState.initialized) {  /* only do this once */
+    if (!dmaState.initialized) { /* only do this once */
         dmaState.firstUsed = 0;
         dmaState.firstFree = &dmaBuffs[0];
         dmaState.initialized = 1;
     }
 
-    *state = &dmaState;  /* state is never used in this case */
+    *state = &dmaState; /* state is never used in this case */
 
     return __amDMA;
 }
@@ -495,42 +488,41 @@ static ALDMAproc __amDmaNew(AMDMAState **state) {
  * __clearAudioDMA.  Routine to move dma buffers back to the unused list.
  * First clear out your dma messageQ. Then check each buffer to see when
  * it was last used. If that was more than FRAME_LAG frames ago, move it
- * back to the unused list. 
+ * back to the unused list.
  *
  *****************************************************************************/
 static void __clearAudioDMA(void) {
-    u32          i;
-    OSIoMesg     *iomsg = 0;
-    AMDMABuffer  *dmaPtr,*nextPtr;
-    
+    u32 i;
+    OSIoMesg *iomsg = 0;
+    AMDMABuffer *dmaPtr, *nextPtr;
+
     /*
      * Don't block here. If dma's aren't complete, you've had an audio
      * overrun. (Bad news, but go for it anyway, and try and recover.
      */
     for (i = 0; i < nextDMA; i++) {
-        if (osRecvMesg(&audDMAMessageQ, (OSMesg *) &iomsg, OS_MESG_NOBLOCK) == -1)
-        { /* stubbed_printf("Dma not done\n"); */ }
+        if (osRecvMesg(&audDMAMessageQ, (OSMesg *) &iomsg, OS_MESG_NOBLOCK) ==
+            -1) { /* stubbed_printf("Dma not done\n"); */
+        }
         // if (logging)
         //     osLogEvent(log, 17, 2, iomsg->devAddr, iomsg->size);
     }
 
-    
     dmaPtr = dmaState.firstUsed;
-    while(dmaPtr) {
+    while (dmaPtr) {
         nextPtr = (AMDMABuffer *) dmaPtr->node.next;
 
         /* remove old dma's from list */
         /* Can change FRAME_LAG value.  Should be at least one.  */
         /* Larger values mean more buffers needed, but fewer DMA's */
-        if(dmaPtr->lastFrame + FRAME_LAG  < audFrameCt) {
-            if(dmaState.firstUsed == dmaPtr) {
+        if (dmaPtr->lastFrame + FRAME_LAG < audFrameCt) {
+            if (dmaState.firstUsed == dmaPtr) {
                 dmaState.firstUsed = (AMDMABuffer *) dmaPtr->node.next;
             }
             alUnlink((ALLink *) dmaPtr);
-            if(dmaState.firstFree) {
+            if (dmaState.firstFree) {
                 alLink((ALLink *) dmaPtr, (ALLink *) dmaState.firstFree);
-            }
-            else {
+            } else {
                 dmaState.firstFree = dmaPtr;
                 dmaPtr->node.next = 0;
                 dmaPtr->node.prev = 0;
@@ -538,7 +530,7 @@ static void __clearAudioDMA(void) {
         }
         dmaPtr = nextPtr;
     }
-    
-    nextDMA = 0;  /* reset */
+
+    nextDMA = 0; /* reset */
     audFrameCt++;
 }

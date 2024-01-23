@@ -33,7 +33,7 @@ UNUSED u32 load_screen(s32 screenIndex) {
     // since there are no screen assets in the ROM.
     if (screenTableCount == 0) {
         free_from_memory_pool(screenTable);
-        return (u32)OS_PHYSICAL_TO_K0(0x100000);
+        return (u32) OS_PHYSICAL_TO_K0(0x100000);
     } else {
         if (screenIndex < 0 || screenIndex >= screenTableCount) {
             rmonPrintf("SCREEN: No out of range!!\n");
@@ -42,7 +42,7 @@ UNUSED u32 load_screen(s32 screenIndex) {
 
         start = screenTable[screenIndex];
         size = screenTable[screenIndex + 1] - start;
-        someAddr = (u32)allocate_from_main_pool_safe(size, COLOUR_TAG_BLUE);
+        someAddr = (u32) allocate_from_main_pool_safe(size, COLOUR_TAG_BLUE);
 
         load_asset_to_address(ASSET_SCREENS, someAddr, start, size);
         free_from_memory_pool(screenTable);
@@ -58,7 +58,8 @@ UNUSED u32 load_screen(s32 screenIndex) {
 UNUSED void render_screen(Gfx **dlist, u8 *screenAddress) {
     s32 y_pos;
 
-    gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(&gRdpSetModeScreenAsset), numberOfGfxCommands(gRdpSetModeScreenAsset));
+    gDkrDmaDisplayList((*dlist)++, OS_PHYSICAL_TO_K0(&gRdpSetModeScreenAsset),
+                       numberOfGfxCommands(gRdpSetModeScreenAsset));
 
     // Screen header is 16 bytes.
     screenAddress += 16;
@@ -67,12 +68,12 @@ UNUSED void render_screen(Gfx **dlist, u8 *screenAddress) {
     y_pos = 0;
     while (y_pos != SCREEN_HEIGHT) {
         // Load the texture.
-        gDPLoadTextureBlockS((*dlist)++, OS_PHYSICAL_TO_K0(screenAddress), G_IM_FMT_RGBA, G_IM_SIZ_16b,
-            SCREEN_WIDTH, SCREEN_HEIGHT_PART, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
+        gDPLoadTextureBlockS((*dlist)++, OS_PHYSICAL_TO_K0(screenAddress), G_IM_FMT_RGBA, G_IM_SIZ_16b, SCREEN_WIDTH,
+                             SCREEN_HEIGHT_PART, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
 
         // Draw the texture.
-        gSPTextureRectangle((*dlist)++, 0, (y_pos << 2), SCREEN_WIDTH << 2,
-            ((y_pos + SCREEN_HEIGHT_PART) << 2), G_TX_RENDERTILE, 0, 0, 1 << 12, 1 << 10);
+        gSPTextureRectangle((*dlist)++, 0, (y_pos << 2), SCREEN_WIDTH << 2, ((y_pos + SCREEN_HEIGHT_PART) << 2),
+                            G_TX_RENDERTILE, 0, 0, 1 << 12, 1 << 10);
 
         // Advance to the next slice.
         screenAddress += SCREEN_WIDTH * SCREEN_HEIGHT_PART * 2;

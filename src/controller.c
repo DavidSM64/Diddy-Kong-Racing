@@ -4,8 +4,9 @@
 #include "controller.h"
 #include "game.h"
 
-s32 sNoControllerPluggedIn = FALSE; // Looks to be a boolean for whether a controller is plugged in. FALSE if plugged in, and TRUE if not.
-u16 gButtonMask = 0xFFFF; //Used when anti-cheat/anti-tamper has failed in init_level_globals()
+s32 sNoControllerPluggedIn =
+    FALSE; // Looks to be a boolean for whether a controller is plugged in. FALSE if plugged in, and TRUE if not.
+u16 gButtonMask = 0xFFFF; // Used when anti-cheat/anti-tamper has failed in init_level_globals()
 
 OSMesgQueue sSIMesgQueue;
 OSMesg sSIMesgBuf;
@@ -65,7 +66,7 @@ s32 handle_save_data_and_read_controller(s32 saveDataFlags, s32 updateRate) {
     s32 i;
 
     if (osRecvMesg(&sSIMesgQueue, &unusedMsg, OS_MESG_NOBLOCK) == 0) {
-        //Back up old controller data
+        // Back up old controller data
         for (i = 0; i < MAXCONTROLLERS; i++) {
             gControllerPrevData[i] = gControllerCurrData[i];
         }
@@ -101,7 +102,7 @@ s32 handle_save_data_and_read_controller(s32 saveDataFlags, s32 updateRate) {
             if (saveDataFlags & SAVE_DATA_FLAG_WRITE_EEPROM_SETTINGS) {
                 write_eeprom_settings(get_eeprom_settings_pointer());
             }
-            //Reset all flags
+            // Reset all flags
             saveDataFlags = 0;
         }
         rumble_controllers(updateRate);
@@ -111,9 +112,14 @@ s32 handle_save_data_and_read_controller(s32 saveDataFlags, s32 updateRate) {
         if (sNoControllerPluggedIn) {
             gControllerCurrData[i].button = 0;
         }
-        //XOR the diff between the last read of the controller data with the current read to see what buttons have been pushed and released.
-        gControllerButtonsPressed[i]  = ((gControllerCurrData[i].button ^ gControllerPrevData[i].button) & gControllerCurrData[i].button) & gButtonMask;
-        gControllerButtonsReleased[i] = ((gControllerCurrData[i].button ^ gControllerPrevData[i].button) & gControllerPrevData[i].button) & gButtonMask;
+        // XOR the diff between the last read of the controller data with the current read to see what buttons have been
+        // pushed and released.
+        gControllerButtonsPressed[i] =
+            ((gControllerCurrData[i].button ^ gControllerPrevData[i].button) & gControllerCurrData[i].button) &
+            gButtonMask;
+        gControllerButtonsReleased[i] =
+            ((gControllerCurrData[i].button ^ gControllerPrevData[i].button) & gControllerPrevData[i].button) &
+            gButtonMask;
     }
     return saveDataFlags;
 }

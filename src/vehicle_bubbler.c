@@ -41,17 +41,15 @@ s8 gBubblerStartBoost;
 
 /******************************/
 
-enum BubblerAnimations {
-    ANIM_BUBBLER_IDLE,
-    ANIM_BUBBLER_MOVE,
-    ANIM_BUBBLER_DAMAGE
-};
+enum BubblerAnimations { ANIM_BUBBLER_IDLE, ANIM_BUBBLER_MOVE, ANIM_BUBBLER_DAMAGE };
 
 /**
  * Top level function for updating the "Bubbler" vehicle.
- * Basically this controls the Bubbler boss on Sherbert Island, who follows a path, then throws special tripmines and bubble traps on the course.
-*/
-void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
+ * Basically this controls the Bubbler boss on Sherbert Island, who follows a path, then throws special tripmines and
+ * bubble traps on the course.
+ */
+void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed,
+                    s32 *startTimer) {
     s16 animID;
     s16 animFrame;
     s16 tempHeadAngle;
@@ -65,7 +63,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     Object *firstRacerObj;
     f32 diffX;
     s32 temp2;
-    
+
     set_boss_voice_clip_offset(gBubblerVoiceTable);
     *buttonsPressed &= ~R_TRIG;
     *input &= ~R_TRIG;
@@ -148,15 +146,15 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     func_800AFC3C(obj, updateRate);
     fade_when_near_camera(obj, racer, 40);
     switch (obj->segment.object.animationID) {
-    case ANIM_BUBBLER_MOVE:
-        headAngleRange = 0x2500;
-    break;
-    case ANIM_BUBBLER_DAMAGE:
-        headAngleRange = 0x100;
-    break;
-    default:
-        headAngleRange = 0x1500;
-    break;
+        case ANIM_BUBBLER_MOVE:
+            headAngleRange = 0x2500;
+            break;
+        case ANIM_BUBBLER_DAMAGE:
+            headAngleRange = 0x100;
+            break;
+        default:
+            headAngleRange = 0x1500;
+            break;
     }
     firstRacerObj = get_racer_object(PLAYER_ONE);
     diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;
@@ -173,13 +171,14 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
         }
     }
     racer = (Object_Racer *) firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_BUBBLER_MOVE) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
+        obj->segment.object.animationID == ANIM_BUBBLER_MOVE) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {
         if (gBubblerCutsceneTimer == 0) {
-        gBubblerCutsceneTimer = 1;
-        func_8005CB68(racer, &gBubblerCutsceneTimer);
+            gBubblerCutsceneTimer = 1;
+            func_8005CB68(racer, &gBubblerCutsceneTimer);
         }
     }
 }

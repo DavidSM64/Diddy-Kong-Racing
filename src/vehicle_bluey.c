@@ -42,18 +42,13 @@ s8 gBlueyStartBoost;
 
 /******************************/
 
-enum BlueAnimations {
-    ANIM_BLUEY_RUN,
-    ANIM_BLUEY_WALK,
-    ANIM_BLUEY_IDLE,
-    ANIM_BLUEY_TURN,
-    ANIM_BLUEY_DAMAGE
-};
+enum BlueAnimations { ANIM_BLUEY_RUN, ANIM_BLUEY_WALK, ANIM_BLUEY_IDLE, ANIM_BLUEY_TURN, ANIM_BLUEY_DAMAGE };
 
 /**
  * Top level function for the Bluey vehicle, as seen in the Snowflake Mountain boss stage.
-*/
-void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
+ */
+void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed,
+                  s32 *startTimer) {
     s16 animID;
     s16 animFrame;
     s16 tempHeadAngle;
@@ -84,7 +79,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     if (racer->playerIndex == PLAYER_COMPUTER) {
         if (*startTimer != 100) {
             *startTimer -= 15;
-            if (*startTimer  < 0) {
+            if (*startTimer < 0) {
                 if (gBlueyStartBoost == FALSE) {
                     play_random_boss_sound(BOSS_SOUND_POSITIVE);
                     racer->boostTimer = 3;
@@ -97,7 +92,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
             }
         }
     }
-    
+
     func_8004F7F4(updateRate, updateRateF, obj, racer);
     *startTimer = tempStartTimer;
     racer->lateral_velocity = 0.0f;
@@ -201,7 +196,8 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
         racer->headAngleTarget = 0;
     }
     racer = (Object_Racer *) firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_BLUEY_WALK) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
+        obj->segment.object.animationID == ANIM_BLUEY_WALK) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {

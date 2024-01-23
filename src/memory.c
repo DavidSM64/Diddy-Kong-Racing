@@ -18,14 +18,14 @@ s32 gNumberOfMemoryPools;
 UNUSED s32 D_801235C4;
 FreeQueueSlot gFreeQueue[256];
 s32 gFreeQueueCount;
-s32 gFreeQueueTimer; //Official Name: mmDelay
+s32 gFreeQueueTimer; // Official Name: mmDelay
 
 extern MemoryPoolSlot gMainMemoryPool;
 
 /******************************/
 
 /**
- * Creates the main memory pool. 
+ * Creates the main memory pool.
  * Starts at 0x8012D3F0. Ends at 0x80400000. Contains 1600 allocation slots.
  * Official Name: mmInit
  */
@@ -38,7 +38,7 @@ void init_main_memory_pool(void) {
     } else {
         ramEnd = RAM_END;
     }
-    new_memory_pool(&gMainMemoryPool, ramEnd - (s32)(&gMainMemoryPool), MAIN_POOL_SLOT_COUNT);
+    new_memory_pool(&gMainMemoryPool, ramEnd - (s32) (&gMainMemoryPool), MAIN_POOL_SLOT_COUNT);
     set_free_queue_state(2);
     gFreeQueueCount = 0;
 }
@@ -64,13 +64,13 @@ MemoryPoolSlot *new_sub_memory_pool(s32 poolDataSize, s32 numSlots) {
 /**
  * Create and initialise a memory pool in RAM that will act as the place where arbitrary allocations can go.
  * Will return the location of the first free slot in that pool.
-*/
+ */
 MemoryPoolSlot *new_memory_pool(MemoryPoolSlot *slots, s32 poolSize, s32 numSlots) {
     MemoryPoolSlot *firstSlot;
     s32 poolCount;
     s32 i;
     s32 firstSlotSize;
-    
+
     poolCount = ++gNumberOfMemoryPools;
     firstSlotSize = poolSize - (numSlots * sizeof(MemoryPoolSlot));
     gMemoryPools[poolCount].maxNumSlots = numSlots;
@@ -107,7 +107,7 @@ void *allocate_from_main_pool_safe(s32 size, u32 colourTag) {
         dump_memory_to_cpak(get_stack_pointer()->unk14, size, colourTag);
     }
     temp_v0 = allocate_from_memory_pool(0, size, colourTag);
-    if (temp_v0 == (void *)NULL) {
+    if (temp_v0 == (void *) NULL) {
         dump_memory_to_cpak(get_stack_pointer()->unk14, size, colourTag);
     }
     return temp_v0;
@@ -123,7 +123,7 @@ MemoryPoolSlot *allocate_from_main_pool(s32 size, u32 colourTag) {
 /**
  * Search the existing empty slots and try to find one that can meet the size requirement.
  * Afterwards, write the new allocation data to the slot in question and return the address.
-*/
+ */
 MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag) {
     s32 slotSize;
     MemoryPoolSlot *curSlot;
@@ -133,7 +133,7 @@ MemoryPoolSlot *allocate_from_memory_pool(s32 poolIndex, s32 size, u32 colourTag
     u32 flags;
     s32 nextIndex;
     s32 currIndex;
-        
+
     flags = disable_interrupts();
     if (size == 0) {
         stubbed_printf("*** mmAlloc: size = 0 ***\n");
@@ -180,7 +180,7 @@ void *allocate_from_pool_containing_slots(MemoryPoolSlot *slots, s32 size) {
             return allocate_from_memory_pool(i, size, 0);
         }
     }
-    return (void *)NULL;
+    return (void *) NULL;
 }
 
 /* Official Name: mmAllocAtAddr */
@@ -189,7 +189,7 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
     MemoryPoolSlot *curSlot;
     MemoryPoolSlot *slots;
     u32 flags;
-    
+
     flags = disable_interrupts();
     if (size == 0) {
         stubbed_printf("*** mmAllocAtAddr: size = 0 ***\n");
@@ -205,7 +205,8 @@ void *allocate_at_address_in_main_pool(s32 size, u8 *address, u32 colorTag) {
         for (i = 0; i != -1; i = curSlot->nextIndex) {
             curSlot = &slots[i];
             if (curSlot->flags == 0) {
-                if ((u32) address >= (u32) curSlot->data && (u32)address + size <= (u32) curSlot->data + curSlot->size)  {
+                if ((u32) address >= (u32) curSlot->data &&
+                    (u32) address + size <= (u32) curSlot->data + curSlot->size) {
                     if (address == (u8 *) curSlot->data) {
                         allocate_memory_pool_slot(0, i, size, 1, 0, colorTag);
                         enable_interrupts(flags);
@@ -289,13 +290,13 @@ void free_slot_containing_address(u8 *address) {
     MemoryPool *pool;
     MemoryPoolSlot *slots;
     MemoryPoolSlot *slot;
-    
+
     poolIndex = get_memory_pool_index_containing_address(address);
     pool = gMemoryPools;
     slots = pool[poolIndex].slots;
     for (slotIndex = 0; slotIndex != -1; slotIndex = slot->nextIndex) {
         slot = &slots[slotIndex];
-        
+
         if (address == (u8 *) slot->data) {
             if (slot->flags == 1 || slot->flags == 4) {
                 free_memory_pool_slot(poolIndex, slotIndex);
@@ -313,7 +314,7 @@ UNUSED void func_80071314(void) {
     u32 flags;
     s32 poolIndex;
     s32 slotIndex;
-        
+
     flags = disable_interrupts();
     poolIndex = gNumberOfMemoryPools;
     while (poolIndex != -1) {
@@ -348,7 +349,7 @@ UNUSED const char D_800E7438[] = "\n*** mm Error *** ---> Can't unfix the specif
 
 /**
  * Adds the current memory address to the back of the queue, so it can be freed.
-*/
+ */
 void add_to_free_queue(void *dataAddress) {
     gFreeQueue[gFreeQueueCount].dataAddress = dataAddress;
     gFreeQueue[gFreeQueueCount].freeTimer = gFreeQueueTimer;
@@ -382,7 +383,7 @@ s32 func_80071478(u8 *address) {
 /**
  * Search the memory pool for the slot that's tied to the given address.
  * Return true if it's found, otherwise return false.
-*/
+ */
 s32 memory_slot_exists(u8 *address) {
     s32 slotIndex;
     MemoryPoolSlot *slot;
@@ -394,7 +395,7 @@ s32 memory_slot_exists(u8 *address) {
     slotIndex = 0;
     while (slotIndex != -1) {
         slot = slotIndex + pool->slots; // `slot = &pool->slots[slotIndex];` does not match.
-        if (address == (u8 *)slot->data) {
+        if (address == (u8 *) slot->data) {
             if (slot->flags & 2) {
                 slot->flags ^= 2;
                 enable_interrupts(flags);
@@ -429,7 +430,7 @@ s32 get_memory_pool_index_containing_address(u8 *address) {
 /**
  * Clears the current slot of all information, effectively freeing the allocated memory.
  * Unused slots before and after will be merged with this slot
-*/
+ */
 void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
     s32 nextIndex;
     s32 prevIndex;
@@ -439,7 +440,7 @@ void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
     MemoryPoolSlot *slot;
     MemoryPoolSlot *nextSlot;
     MemoryPoolSlot *prevSlot;
-    
+
     pool = &gMemoryPools[poolIndex];
     slots = pool->slots;
     pool = pool; // Fakematch
@@ -478,7 +479,7 @@ void free_memory_pool_slot(s32 poolIndex, s32 slotIndex) {
 
 /**
  * Return the address of the first slot of a given memory pool.
-*/
+ */
 UNUSED MemoryPoolSlot *get_memory_pool_address(s32 poolIndex) {
     return gMemoryPools[poolIndex].slots;
 }
@@ -487,14 +488,15 @@ UNUSED MemoryPoolSlot *get_memory_pool_address(s32 poolIndex) {
  * Initialise and attempts to fit the new memory block in the slot given.
  * Updates the linked list with any entries before and after then returns the new slot index.
  * If the region cannot fit, return the old slot instead.
-*/
-s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken, u32 colourTag) {
+ */
+s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIsTaken, s32 newSlotIsTaken,
+                              u32 colourTag) {
     MemoryPool *pool;
     MemoryPoolSlot *poolSlots;
     s32 index;
     s32 nextIndex;
     s32 poolSize;
-    
+
     pool = &gMemoryPools[poolIndex];
     poolSlots = pool->slots;
     pool = pool; // Fakematch
@@ -528,9 +530,9 @@ s32 allocate_memory_pool_slot(s32 poolIndex, s32 slotIndex, s32 size, s32 slotIs
  * Official name: mmAlign16
  */
 u8 *align16(u8 *address) {
-    s32 remainder = (s32)address & 0xF;
+    s32 remainder = (s32) address & 0xF;
     if (remainder > 0) {
-        address = (u8 *)(((s32)address - remainder) + 16);
+        address = (u8 *) (((s32) address - remainder) + 16);
     }
     return address;
 }
@@ -540,9 +542,9 @@ u8 *align16(u8 *address) {
  * Official name: mmAlign8
  */
 UNUSED u8 *align8(u8 *address) {
-    s32 remainder = (s32)address & 0x7;
+    s32 remainder = (s32) address & 0x7;
     if (remainder > 0) {
-        address = (u8 *)(((s32)address - remainder) + 8);
+        address = (u8 *) (((s32) address - remainder) + 8);
     }
     return address;
 }
@@ -552,9 +554,9 @@ UNUSED u8 *align8(u8 *address) {
  * Official name: mmAlign4
  */
 UNUSED u8 *align4(u8 *address) {
-    s32 remainder = (s32)address & 0x3;
+    s32 remainder = (s32) address & 0x3;
     if (remainder > 0) {
-        address = (u8 *)(((s32)address - remainder) + 4);
+        address = (u8 *) (((s32) address - remainder) + 4);
     }
     return address;
 }
@@ -565,7 +567,7 @@ UNUSED u8 *align4(u8 *address) {
  * Afterwards, print out the results.
  * Since the function only has space for 64 different colours, make sure
  * any missed tallies are at least reported.
-*/
+ */
 UNUSED s32 find_active_pool_slot_colours(void) {
     u32 colours[64];
     u32 colourCounts[64];
@@ -576,11 +578,11 @@ UNUSED s32 find_active_pool_slot_colours(void) {
     s32 colourIndex;
     s32 slotColour;
     u32 curColour;
-    
+
     numOverflows = 0;
     for (j = 0; j < 64; j++) {
         colours[j] = 0;
-        colourCounts[j] = 0; 
+        colourCounts[j] = 0;
     }
     for (i = 0; i < gNumberOfMemoryPools; i++) {
         curSlot = gMemoryPools[i].slots;
@@ -622,7 +624,7 @@ UNUSED s32 find_active_pool_slot_colours(void) {
 /**
  * Search through each memory pool, counting up the slots that match the colour tag looking to be found.
  * Marked as unused, since the functions calling it is also unused.
-*/
+ */
 UNUSED s32 get_memory_colour_tag_count(u32 colourTag) {
     s32 i, count;
     MemoryPoolSlot *slot;
@@ -630,7 +632,7 @@ UNUSED s32 get_memory_colour_tag_count(u32 colourTag) {
     slot = &gMemoryPools[0].slots[0];
     for (i = 0; i < MAIN_POOL_SLOT_COUNT; i++) {
         if (slot->flags != 0) {
-            if(colourTag == slot->colourTag) {
+            if (colourTag == slot->colourTag) {
                 count++;
             }
         }
@@ -678,7 +680,7 @@ UNUSED void mmSlotPrint(void) {
     s32 index2;
     s32 nextIndex;
     MemoryPoolSlot *slot;
-    
+
     for (i = 0; (gNumberOfMemoryPools ^ 0) >= i; i++) {
         if (i && i) {} // Fakematch
         slot = &gMemoryPools[i].slots[0];
