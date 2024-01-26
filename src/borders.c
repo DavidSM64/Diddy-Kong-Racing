@@ -26,7 +26,7 @@ void render_borders_for_multiplayer(Gfx **dlist) {
     width = GET_VIDEO_WIDTH(widthAndHeight);
     height = GET_VIDEO_HEIGHT(widthAndHeight);
     xOffset = width / 256;
-    width += 0; //Fake match?
+    width += 0; // Fake match?
     yOffset = height / 128;
     gDPSetCycleType((*dlist)++, G_CYC_FILL);
     gDPSetFillColor((*dlist)++, GPACK_RGBA5551(0, 0, 0, 1) << 16 | GPACK_RGBA5551(0, 0, 0, 1)); // Black fill color
@@ -46,7 +46,8 @@ void render_borders_for_multiplayer(Gfx **dlist) {
         case VIEWPORTS_COUNT_4_PLAYERS:
             x = (width >> 1) - xOffset;
             // Draws 2 black lines in the middle of the screen. One vertical, another horizontal.
-            gDPFillRectangle((*dlist)++, height * 0, (height >> 1) - yOffset, width, ((height >> 1) - yOffset) + yOffset);
+            gDPFillRectangle((*dlist)++, height * 0, (height >> 1) - yOffset, width,
+                             ((height >> 1) - yOffset) + yOffset);
             gDPFillRectangle((*dlist)++, x, 0, x + xOffset, height);
             break;
     }
@@ -75,7 +76,7 @@ void render_second_multiplayer_borders(Gfx **dlist) {
     gDPSetCombineMode((*dlist)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
     gDPSetRenderMode((*dlist)++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetPrimColor((*dlist)++, 0, 0, 0, 0, 0, 0);
-    switch(get_viewport_count()) {
+    switch (get_viewport_count()) {
         case VIEWPORTS_COUNT_2_PLAYERS:
             tempY = (screenHeight / 2) - (height / 2);
             gDPFillRectangle((*dlist)++, 0, tempY, screenWidth, tempY + height);

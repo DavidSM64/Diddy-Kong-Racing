@@ -53,15 +53,15 @@ typedef struct TextBox {
 
 void init_dialogue_text(void);
 void free_message_box(void);
-void set_subtitles(s32 arg0);
-void process_subtitles(s32 arg0);
+void set_subtitles(s32 setting);
+void process_subtitles(s32 updateRate);
 void load_game_text_table(void);
 void free_game_text_table(void);
-void set_textbox_display_value(s32 arg0);
+void set_textbox_display_value(s32 num);
 void reset_delayed_text(void);
-void set_delayed_text(s32 arg0, f32 arg1);
+void set_delayed_text(s32 textID, f32 delay);
 s32 func_800C3400(void);
-void process_onscreen_textbox(s32 arg0);
+void process_onscreen_textbox(s32 updateRate);
 void find_next_subtitle(void);
 s32 func_800C38B4(s32 arg0, TextBox *textbox);
 void render_subtitles(void);

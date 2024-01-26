@@ -38,7 +38,7 @@ OSMesgQueue D_801297E8;
 /**
  * Start the exception program counter thread.
  * Official Name: diCpuTraceInit
-*/
+ */
 void thread0_create(void) {
     s32 i;
 
@@ -84,14 +84,14 @@ void enable_interupts_on_main(void) {
     OSThread *node = __osGetActiveQueue();
     while (node->priority != -1) {
         if (node->priority == OS_PRIORITY_IDLE) {
-            //Clear all existing interrupts and disable them.
+            // Clear all existing interrupts and disable them.
             node->context.sr &= ~(SR_IMASK | SR_IE);
-            
-            //Enable interrupts
-            //IP3 Int1 pin (N64: Cartridge)
-            //IP4 Int2 pin (N64: Pre-NMI (Reset button))
-            //IP6 Int4 pin (N64: RDB Write)
-            //IP7 Timer interrupt
+
+            // Enable interrupts
+            // IP3 Int1 pin (N64: Cartridge)
+            // IP4 Int2 pin (N64: Pre-NMI (Reset button))
+            // IP6 Int4 pin (N64: RDB Write)
+            // IP7 Timer interrupt
             node->context.sr |= (SR_IBIT7 | SR_IBIT6 | SR_IBIT4 | SR_IBIT3 | SR_IE);
             break;
         }
@@ -125,7 +125,7 @@ void write_epc_data_to_cpak(void) {
     s32 currentCount;
     s32 maxCount;
     u8 zero;
-    
+
     for (thread = __osGetActiveQueue(); thread->priority != -1; thread = thread->tlnext) {
         if (thread->priority > OS_PRIORITY_IDLE && thread->priority <= OS_PRIORITY_APPMAX) {
             if (thread->flags & 2 || thread->flags & 1) {
@@ -133,7 +133,7 @@ void write_epc_data_to_cpak(void) {
             }
         }
     }
-    
+
     if (thread->priority != -1) {
         thread->context.fp0.f.f_odd = gObjectStackTrace[0];
         thread->context.fp0.f.f_even = gObjectStackTrace[1];
@@ -155,7 +155,7 @@ void write_epc_data_to_cpak(void) {
 }
 
 /**
- * Writes epc data to the controller pak when a memory allocation has failed, 
+ * Writes epc data to the controller pak when a memory allocation has failed,
  * but only if CHEAT_EPC_LOCK_UP_DISPLAY is active.
  */
 void dump_memory_to_cpak(s32 epc, s32 size, u32 colourTag) {
@@ -171,7 +171,7 @@ void dump_memory_to_cpak(s32 epc, s32 size, u32 colourTag) {
     // This is checking if the EPC cheat is active
     if (get_filtered_cheats() & CHEAT_EPC_LOCK_UP_DISPLAY) {
         bzero(&epcinfo, sizeof(epcInfo));
-        epcinfo.epc = epc & 0xFFFFFFFFFFFFFFFF; //fakematch
+        epcinfo.epc = epc & 0xFFFFFFFFFFFFFFFF; // fakematch
         epcinfo.a0 = size;
         epcinfo.a1 = colourTag;
         epcinfo.cause = -1;
@@ -188,16 +188,16 @@ void dump_memory_to_cpak(s32 epc, s32 size, u32 colourTag) {
                 currentCount += size;
             }
         }
-        i = sizeof(sp40) + sizeof(sp240) + sizeof(sp440); //fakematch?
+        i = sizeof(sp40) + sizeof(sp240) + sizeof(sp440); // fakematch?
         write_controller_pak_file(0, -1, "CORE", "", sp40, i);
         while (1) {} // Infinite loop; waiting for the player to reset the console?
     }
 }
 
 /**
- * Mark the object type given, so if the game crashes while processing it, the debug screen will tell you which object ID is to blame.
- * Split into three sections, for spawning an object, updating an object and for rendering an object.
-*/
+ * Mark the object type given, so if the game crashes while processing it, the debug screen will tell you which object
+ * ID is to blame. Split into three sections, for spawning an object, updating an object and for rendering an object.
+ */
 void update_object_stack_trace(s32 index, s32 value) {
     if (index >= OBJECT_SPAWN && index <= OBJECT_DRAW) {
         gObjectStackTrace[index] = value;
@@ -212,7 +212,7 @@ s32 get_lockup_status(void) {
     s32 controllerIndex = 0;
     s64 sp420[128]; // Overwrite epcStack?
     s64 sp220[64];
-    u8 dataFromControllerPak[512]; //Looks to be sizeof(epcInfo), aligned to 64
+    u8 dataFromControllerPak[512]; // Looks to be sizeof(epcInfo), aligned to 64
     extern epcInfo gEpcInfo;
     extern s32 D_801299B0[64];
 
@@ -223,7 +223,8 @@ s32 get_lockup_status(void) {
         // Looks like it reads EpcInfo data from the controller pak, which is interesting
         if ((get_si_device_status(controllerIndex) == CONTROLLER_PAK_GOOD) &&
             (get_file_number(controllerIndex, "CORE", "", &fileNum) == CONTROLLER_PAK_GOOD) &&
-            (read_data_from_controller_pak(controllerIndex, fileNum, dataFromControllerPak, 0x800) == CONTROLLER_PAK_GOOD)) {
+            (read_data_from_controller_pak(controllerIndex, fileNum, dataFromControllerPak, 0x800) ==
+             CONTROLLER_PAK_GOOD)) {
             bcopy(&dataFromControllerPak, &gEpcInfo, sizeof(epcInfo));
             bcopy(&sp220, &D_801299B0, sizeof(sp220));
             bcopy(&sp420, &D_80129BB0, sizeof(sp420));
@@ -250,7 +251,7 @@ void lockup_screen_loop(s32 updateRate) {
     }
 }
 
-#define GET_REG(reg) (s32)gEpcInfo.reg
+#define GET_REG(reg) (s32) gEpcInfo.reg
 
 /**
  * Draw onscreen the four pages of the crash screen.
@@ -260,14 +261,14 @@ void lockup_screen_loop(s32 updateRate) {
  */
 void render_epc_lock_up_display(void) {
     u16 *temp;
-    char *objStatusString[3] = {"setup", "control", "print"};
+    char *objStatusString[3] = { "setup", "control", "print" };
     s32 offset;
     s32 s3;
     s32 j;
     s32 i;
     static epcInfo gEpcInfo;
     static s32 D_801299B0[64];
-    
+
     s3 = 0;
 
     set_render_printf_position(16, 32);
@@ -307,7 +308,7 @@ void render_epc_lock_up_display(void) {
                     render_printf("%s %d ", objStatusString[i], gObjectStackTrace[i]);
                 }
             }
-            render_printf("\n");            
+            render_printf("\n");
             render_printf(" at 0x%08x v0 0x%08x v1 0x%08x\n", GET_REG(at), GET_REG(v0), GET_REG(v1));
             render_printf(" a0 0x%08x a1 0x%08x a2 0x%08x\n", GET_REG(a0), GET_REG(a1), GET_REG(a2));
             render_printf(" a3 0x%08x t0 0x%08x t1 0x%08x\n", GET_REG(a3), GET_REG(t0), GET_REG(t1));
@@ -324,7 +325,7 @@ void render_epc_lock_up_display(void) {
         case EPC_PAGE_STACK_BOTTOM:
             offset = (sLockupPage - 1) * 48;
             for (j = (s32) &D_801299B0[offset], i = 0; i < 16; i++) {
-                render_printf("   %08x %08x %08x\n", ((u8**)j)[0], ((u8**)j)[16], ((u8**)j)[32]); 
+                render_printf("   %08x %08x %08x\n", ((u8 **) j)[0], ((u8 **) j)[16], ((u8 **) j)[32]);
                 j = (s32) ((s32 *) j + 1);
             }
             break;
@@ -332,7 +333,7 @@ void render_epc_lock_up_display(void) {
             offset = (sLockupPage - 4) * 128;
             for (temp = (u16 *) &D_80129BB0[offset], i = 0; i < 16; i++) {
                 render_printf("  ");
-                for(j = 0; j < 8; j++) {
+                for (j = 0; j < 8; j++) {
                     render_printf("%04x ", temp[0]);
                     temp++;
                 }

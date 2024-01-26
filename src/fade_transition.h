@@ -65,7 +65,8 @@ void process_transition_disabled(s32 updateRate);
 s32 transition_begin(FadeTransition *transition);
 void render_fade_circle(Gfx **dList, MatrixS **mats, Vertex **verts);
 void process_transition_shape(s32 updateRate);
-void init_transition_shape(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *arg3, u8 *arg4, u8 *arg5, u8 *arg6, u8 *arg7, u8 *arg8);
+void init_transition_shape(FadeTransition *transition, s32 numVerts, s32 numTris, s16 *coords, u8 *nextPos,
+                           u8 *targetPos, u8 *nextAlpha, u8 *targetAlpha, u8 *vertIndices);
 void func_800C1EE8(s32 updateRate);
 void render_fade_waves(Gfx **dlist, UNUSED MatrixS **mats, UNUSED Vertex **verts);
 

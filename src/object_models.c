@@ -46,7 +46,7 @@ s32 D_8011D644;
 
 /**
  * Allocate memory for object model ID's and animation tables.
-*/
+ */
 void allocate_object_model_pools(void) {
     s32 i;
     s32 checksum;
@@ -69,7 +69,7 @@ void allocate_object_model_pools(void) {
     // Antipiracy measure
     checksum = 0;
     for (i = 0; i < gTrackRenderFuncLength; i++) {
-        checksum += *(u8 *)(((s32) &render_scene) + i);
+        checksum += *(u8 *) (((s32) &render_scene) + i);
     }
     if (checksum != gTractionTableChecksum) {
         antipiracy_modify_surface_traction_table();
@@ -79,7 +79,7 @@ void allocate_object_model_pools(void) {
 /**
  * Load the associated model ID and assign it to the objects gfx data.
  * Also loads textures and animations.
-*/
+ */
 Object_68 *object_model_init(s32 modelID, s32 flags) {
     s32 i;
     s32 sp50;
@@ -97,8 +97,8 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
     }
 
     // Check if the model already exists in the cache.
-    for(i = 0; i < D_8011D62C; i++) {
-        if(modelID == D_8011D624[(i << 1)]) {
+    for (i = 0; i < D_8011D62C; i++) {
+        if (modelID == D_8011D624[(i << 1)]) {
             objMdl = (ObjectModel *) D_8011D624[(i << 1) + 1];
             ret = func_8005FCD0(objMdl, flags);
             if (ret != NULL) {
@@ -107,7 +107,7 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
             return ret;
         }
     }
-    
+
     if (D_8011D634 > 0) {
         D_8011D634--;
         sp50 = D_8011D628[D_8011D634];
@@ -128,7 +128,7 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
     gzip_inflate((u8 *) compressedData, (u8 *) objMdl);
     objMdl->textures = (TextureInfo *) ((s32) objMdl->textures + (u8 *) objMdl);
     objMdl->vertices = (Vertex *) ((s32) objMdl->vertices + (u8 *) objMdl);
-    objMdl->triangles = (Triangle*) ((s32) objMdl->triangles + (u8 *) objMdl);
+    objMdl->triangles = (Triangle *) ((s32) objMdl->triangles + (u8 *) objMdl);
     objMdl->batches = (TriangleBatchInfo *) ((s32) objMdl->batches + (u8 *) objMdl);
     objMdl->unk14 = (s16 *) ((s32) objMdl->unk14 + (u8 *) objMdl);
     objMdl->unk1C = (s16 *) ((s32) objMdl->unk1C + (u8 *) objMdl);
@@ -149,8 +149,9 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
         }
     }
     if (!sp3F) {
-        for(i = 0; i < objMdl->numberOfBatches; i++) {
-            if ((objMdl->batches[i].textureIndex != 0xFF) && (objMdl->batches[i].textureIndex >= objMdl->numberOfTextures)) {
+        for (i = 0; i < objMdl->numberOfBatches; i++) {
+            if ((objMdl->batches[i].textureIndex != 0xFF) &&
+                (objMdl->batches[i].textureIndex >= objMdl->numberOfTextures)) {
                 stubbed_printf(D_800E6B4C);
                 goto block_30;
             }
@@ -168,7 +169,7 @@ Object_68 *object_model_init(s32 modelID, s32 flags) {
         }
     }
 block_30:
-    free_model_data((ObjectModel* ) objMdl);
+    free_model_data((ObjectModel *) objMdl);
     return NULL;
 }
 
@@ -232,8 +233,8 @@ Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
             vertex++;
             mdlVertex++;
             temp++;
-        } while(temp < model->numberOfVertices);
-        
+        } while (temp < model->numberOfVertices);
+
         temp = 0;
         vertex = result->unk4[1];
         mdlVertex = &model->vertices[0];
@@ -248,20 +249,20 @@ Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
             vertex++;
             mdlVertex++;
             temp++;
-        } while(temp < model->numberOfVertices);
+        } while (temp < model->numberOfVertices);
     }
     return result;
 }
 
 /**
  * Attempts to free the object model from RAM.
-*/
+ */
 void free_3d_model(ObjectModel **modelPtr) {
     UNUSED s32 pad;
     s32 modelIndex;
     ObjectModel *model;
     s32 i;
-    
+
     if (modelPtr != 0) {
         model = *modelPtr;
         model->references--;
@@ -269,14 +270,14 @@ void free_3d_model(ObjectModel **modelPtr) {
             free_from_memory_pool(modelPtr);
             return;
         }
-        
+
         modelIndex = -1;
         for (i = 0; i < D_8011D62C; i++) {
             if ((s32) model == D_8011D624[(i << 1) + 1]) {
                 modelIndex = i;
             }
         }
-        
+
         if (modelIndex != -1) {
             free_model_data(model);
             D_8011D628[D_8011D634] = modelIndex;
@@ -290,7 +291,7 @@ void free_3d_model(ObjectModel **modelPtr) {
 
 /**
  * Frees all associated meshes, textures and animations from the model.
-*/
+ */
 void free_model_data(ObjectModel *mdl) {
     // free the textures
     s16 numTextures = mdl->numberOfTextures;
@@ -379,9 +380,8 @@ s32 func_80060C58(Vertex *vertices, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
             }
         }
     }
-    end:
+end:
     return 0;
-    
 }
 
 GLOBAL_ASM("asm/non_matchings/object_models/func_80060EA8.s")
@@ -405,7 +405,7 @@ s32 func_80061A00(ObjectModel *model, s32 animTableIndex) {
     s32 *temp;
 
     start = gAnimationTable[animTableIndex];
-    end = gAnimationTable[animTableIndex+1];
+    end = gAnimationTable[animTableIndex + 1];
     if (start == end) {
         model->numberOfAnimations = 0;
         return 0;
@@ -425,12 +425,12 @@ s32 func_80061A00(ObjectModel *model, s32 animTableIndex) {
     i2 = 0;
     do {
         assetOffset = gObjectAnimationTable[start];
-        animAddress = gObjectAnimationTable[start+1] - assetOffset;
+        animAddress = gObjectAnimationTable[start + 1] - assetOffset;
         assetSize = animAddress;
         size = get_asset_uncompressed_size(ASSET_OBJECT_ANIMATIONS, assetOffset) + 0x80;
         model->animations[i].animData = (u8 *) allocate_from_main_pool(size, COLOUR_TAG_RED);
         if (model->animations[i].animData == NULL) {
-            for(j = 0; j < i2; j++) {
+            for (j = 0; j < i2; j++) {
                 free_from_memory_pool(model->animations[j].animData);
             }
             free_from_memory_pool(model->animations);
@@ -439,7 +439,7 @@ s32 func_80061A00(ObjectModel *model, s32 animTableIndex) {
         }
         animAddress = (u32) (model->animations[i].animData + size) - assetSize;
         load_asset_to_address(ASSET_OBJECT_ANIMATIONS, animAddress, assetOffset, assetSize);
-        gzip_inflate((u8* ) animAddress, (u8 *) model->animations[i].anim);
+        gzip_inflate((u8 *) animAddress, (u8 *) model->animations[i].anim);
         temp = model->animations[i].anim;
         model->animations[i].unk4 = *temp;
         model->animations[i].anim++;

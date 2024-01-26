@@ -32,7 +32,7 @@ UNUSED s16 D_8012A78C; // Set to -1, never read.
 s16 D_8012A78E;
 s16 gTextTableEntries;
 UNUSED s16 D_8012A792;
-char *gGameTextTableEntries[2]; //960 x2 bytes
+char *gGameTextTableEntries[2]; // 960 x2 bytes
 char *D_8012A7A0;
 s32 D_8012A7A4;
 s16 gDialogueAlpha;
@@ -55,7 +55,7 @@ s32 D_8012A7D4;
 
 /**
  * Set the default values of dialogue and allocate memory for the active text entry.
-*/
+ */
 void init_dialogue_text(void) {
     gCurrentMessageText[0] = (char *) allocate_from_main_pool_safe(0x780, COLOUR_TAG_GREEN);
     gCurrentMessageText[1] = gCurrentMessageText[0] + 0x3C0;
@@ -78,7 +78,7 @@ void init_dialogue_text(void) {
 
 /**
  * Close screen dialogue and free the text currently loaded into it.
-*/
+ */
 void free_message_box(void) {
     free_from_memory_pool(gCurrentMessageText[0]);
     gShowSubtitles = FALSE;
@@ -88,14 +88,14 @@ void free_message_box(void) {
 
 /**
  * Toggle an override that prevents subtitles from showing.
-*/
+ */
 void set_subtitles(s32 setting) {
     gSubtitleSetting = setting;
 }
 
 /**
  * Render currently active subtitles on the screen.
-*/
+ */
 void render_subtitles(void) {
     s32 textX;
     s32 textY;
@@ -109,7 +109,6 @@ void render_subtitles(void) {
     set_current_text_background_colour(6, 0, 0, 0, 0);
     textY = ((((gDialogueYPos2 - gDialogueYPos1) - (gSubtitleLineCount * 12)) - (gSubtitleLineCount * 2)) + 2) >> 1;
 
-    
     for (i = 0; i < gSubtitleLineCount; i++) {
         textData = &gSubtitleProperties[0];
         set_dialogue_font(6, (s32) textData[i][TEXT_FONT]);
@@ -123,7 +122,8 @@ void render_subtitles(void) {
                 textX = 8;
             }
         }
-        set_current_text_colour(6, textData[i][TEXT_COL_R], textData[i][TEXT_COL_G], textData[i][TEXT_COL_B], 255, (textData[i][TEXT_ALPHA] * gDialogueAlpha) >> 8);
+        set_current_text_colour(6, textData[i][TEXT_COL_R], textData[i][TEXT_COL_G], textData[i][TEXT_COL_B], 255,
+                                (textData[i][TEXT_ALPHA] * gDialogueAlpha) >> 8);
         render_dialogue_text(6, textX, textY, textData[i] + 8, 1, textFlags);
         set_current_text_colour(6, 0, 0, 0, 255, (gDialogueAlpha * 255) >> 8);
         render_dialogue_text(6, textX + 1, textY + 1, textData[i] + 8, 1, textFlags);
@@ -135,13 +135,13 @@ void render_subtitles(void) {
 /**
  * Get the line count and text timer from the next message of the subtitle.
  * Close the subtitles if none can be found.
-*/
+ */
 void find_next_subtitle(void) {
     u32 new_var3;
     u8 new_var;
     s32 new_var2;
     s32 done;
-    
+
     gSubtitleLineCount = 0;
     gSubtitleTimer = 0;
     done = FALSE;
@@ -172,14 +172,14 @@ void find_next_subtitle(void) {
         }
     }
     if (gSubtitleLineCount > 0) {
-    gShowSubtitles = TRUE;
+        gShowSubtitles = TRUE;
     }
 }
 
 /**
  * Handle the subtitle system from here.
  * Slowly show the text, tick down the timer, find the next message or close the box, then render.
-*/
+ */
 void process_subtitles(s32 updateRate) {
     if (gSubtitleSetting == FALSE) {
         gShowSubtitles = FALSE;
@@ -212,7 +212,7 @@ void process_subtitles(s32 updateRate) {
 /**
  * Load the text table into RAM.
  * Assign the entries to a pointer table, then calculate the number of entries.
-*/
+ */
 void load_game_text_table(void) {
     D_8012A78C = -1;
     gGameTextTable[0] = (GameTextTableStruct *) allocate_from_main_pool_safe(0x800, COLOUR_TAG_GREEN);
@@ -243,21 +243,21 @@ void free_game_text_table(void) {
 
 /**
  * Set the variable used by the message boxes when trying to display an arbitrary number.
-*/
+ */
 void set_textbox_display_value(s32 num) {
     gTextDisplayNumber = num;
 }
 
 /**
  * Sets the delayed text timer back to 0.
-*/
+ */
 void reset_delayed_text(void) {
     gTextboxDelay = 0;
 }
 
 /**
  * Set the delayed text ID and delay (in seconds)
-*/
+ */
 void set_delayed_text(s32 textID, f32 delay) {
     if (osTvType == TV_TYPE_PAL) {
         gTextboxDelay = delay * 50.0;
@@ -269,44 +269,46 @@ void set_delayed_text(s32 textID, f32 delay) {
 
 /**
  * Set the current text index based on the entry.
- * Start certain behaviours based on the header, 
+ * Start certain behaviours based on the header,
  * like showing a subtitle, or opening an onscreen text box.
-*/
+ */
 void set_current_text(s32 textID) {
     char **entries;
     UNUSED s32 pad;
     s32 size;
     s32 language;
     s32 temp;
-    
+
     if (gTextTableExists && textID >= 0 && textID < gTextTableEntries) {
         language = get_language();
         switch (language) {
-        case LANGUAGE_GERMAN:
-            textID += 85;
-            break;
-        case LANGUAGE_FRENCH:
-            textID += 170;
-            break;
-        case LANGUAGE_JAPANESE:
-            textID += 255;
-            break;
+            case LANGUAGE_GERMAN:
+                textID += 85;
+                break;
+            case LANGUAGE_FRENCH:
+                textID += 170;
+                break;
+            case LANGUAGE_JAPANESE:
+                textID += 255;
+                break;
         }
 
         load_asset_to_address(ASSET_GAME_TEXT_TABLE, (u32) (*gGameTextTable)->entries, (textID & (~1)) << 2, 16);
-        
+
         entries = (*gGameTextTable)->entries;
         temp = ((s32) entries[textID & 1]) & 0xFF000000;
         size = (((s32) entries[(textID & 1) + 1]) & 0xFFFFFF) - (((s32) entries[textID & 1]) & 0xFFFFFF);
-        
+
         if (temp) {
-            load_asset_to_address(ASSET_GAME_TEXT, (u32) gCurrentMessageText[D_8012A7D4], ((s32) entries[textID & 1]) ^ temp, size);
+            load_asset_to_address(ASSET_GAME_TEXT, (u32) gCurrentMessageText[D_8012A7D4],
+                                  ((s32) entries[textID & 1]) ^ temp, size);
             gCurrentTextProperties = gCurrentMessageText[D_8012A7D4];
             find_next_subtitle();
             D_8012A7D4 = (D_8012A7D4 + 1) & 1;
             return;
         }
-        load_asset_to_address(ASSET_GAME_TEXT, (u32) gGameTextTableEntries[D_8012A7A4], ((s32) entries[textID & 1]) ^ temp, size);
+        load_asset_to_address(ASSET_GAME_TEXT, (u32) gGameTextTableEntries[D_8012A7A4],
+                              ((s32) entries[textID & 1]) ^ temp, size);
         D_8012A7A0 = gGameTextTableEntries[D_8012A7A4];
         D_8012A7A4 = (D_8012A7A4 + 1) & 1;
         D_8012A788 = 0;
@@ -340,7 +342,7 @@ s32 func_800C3400(void) {
 /**
  * Top level function for handling message boxes and dialogue.
  * Calls a function too, to load in text entries when needed.
-*/
+ */
 void process_onscreen_textbox(s32 updateRate) {
     if (gTextTableExists) {
         if (!is_game_paused()) {
@@ -386,13 +388,13 @@ s32 dialogue_challenge_loop(void) {
     textBox.textColBlue = 0;
     textBox.textColAlpha = 0;
     SET_TEXTBOX_TEXT_POS_AND_LINEHEIGHT(5, 10, 15);
-    
+
     set_current_dialogue_box_coords(1, textBox.left, textBox.top, textBox.right, textBox.bottom);
     set_dialogue_font(1, textBox.font);
     set_current_dialogue_background_colour(1, 0, 16, 16, 128);
-    set_current_text_colour(1, textBox.textColRed, textBox.textColGreen, textBox.textColBlue, textBox.textColAlpha, 255);
+    set_current_text_colour(1, textBox.textColRed, textBox.textColGreen, textBox.textColBlue, textBox.textColAlpha,
+                            255);
 
-    
     for (index = 0, numberOfOnes = 0; D_8012A78E != numberOfOnes && D_8012A7A0[index] != 2; index++) {
         if (D_8012A7A0[index] >= 3 && D_8012A7A0[index] < 13) {
             index = func_800C38B4(index, &textBox);
@@ -404,7 +406,7 @@ s32 dialogue_challenge_loop(void) {
     if (D_8012A7A0[index] >= 3 && D_8012A7A0[index] < 13) {
         index = func_800C38B4(index, &textBox);
     }
-    
+
     keepLooping = TRUE;
     do {
         if (textBox.textFlags == 0) {
@@ -454,80 +456,81 @@ s32 func_800C38B4(s32 arg0, TextBox *textbox) {
     var_s0 = &D_8012A7A0[arg0];
     while (var_s0[0] >= 3 && var_s0[0] < 13) {
         switch (var_s0[0] - 3) {
-        case 0:
-            textbox->font = var_s0[1];
-            arg0 += 2;
-            set_dialogue_font(1, textbox->font);
-            var_s0 = &D_8012A7A0[arg0];
-            break;
-        case 1:
-            textbox->left = var_s0[1] & 0xFF;
-            textbox->top = D_8012A7A0[arg0 + 2] & 0xFF;
-            if (osTvType == TV_TYPE_PAL) {
-                temp = textbox->top;
-                textbox->top = (textbox->top * 264) / 240;
-                temp = textbox->top - temp;
-            } else {
-                temp = 0;
-            }
-            textbox->right = (D_8012A7A0[arg0 + 3] & 0xFF) + 65;
-            textbox->bottom = (D_8012A7A0[arg0 + 4] & 0xFF) + temp;
-            arg0 += 5;
-            set_current_dialogue_box_coords(1, textbox->left, textbox->top, textbox->right, textbox->bottom);
-            var_s0 = &D_8012A7A0[arg0];
-            break;
-        case 2:
-            textbox->textColRed = var_s0[1];
-            textbox->textColGreen = D_8012A7A0[arg0 + 2];
-            textbox->textColBlue = D_8012A7A0[arg0 + 3];
-            textbox->textColAlpha = D_8012A7A0[arg0 + 4];
-            arg0 += 5;
-            set_current_text_colour(1, textbox->textColRed, textbox->textColGreen, textbox->textColBlue, textbox->textColAlpha, 255);
-            var_s0 = &D_8012A7A0[arg0];
-            break;
-        case 3:
-            if (var_s0[1] == 0) {
-                textbox->textFlags = 4;
-            } else {
-                textbox->textFlags = 0;
-            }
-            arg0 += 2;
-            var_s0 = &D_8012A7A0[arg0];
-            break;
-        case 4:
-            arg0 += 2;
-            textbox->textX = var_s0[1];
-            var_s0 = &D_8012A7A0[arg0];
-            break;
-        case 5:
-            arg0 += 2;
-            textbox->textY += var_s0[1];
-            var_s0 = &D_8012A7A0[arg0];
-            break;
-        case 6:
-            arg0 += 2;
-            textbox->lineHeight = var_s0[1];
-            var_s0 = &D_8012A7A0[arg0];
-            break;
-        case 7:
-            if (gTextCloseTimerSeconds == 0) {
-                gTextCloseTimerSeconds = var_s0[1] & 0xFF;
-                gTextCloseTimerFrames = normalise_time(60);
+            case 0:
+                textbox->font = var_s0[1];
+                arg0 += 2;
+                set_dialogue_font(1, textbox->font);
                 var_s0 = &D_8012A7A0[arg0];
-            }
-            arg0 += 2;
-            var_s0 += 2;
-            break;
-        case 8:
-            arg0 += 2;
-            D_8012A787 = var_s0[1];
-            var_s0 += 2;
-            break;
-        case 9:
-            arg0 += 2;
-            D_8012A788 = var_s0[1];
-            var_s0 += 2;
-            break;
+                break;
+            case 1:
+                textbox->left = var_s0[1] & 0xFF;
+                textbox->top = D_8012A7A0[arg0 + 2] & 0xFF;
+                if (osTvType == TV_TYPE_PAL) {
+                    temp = textbox->top;
+                    textbox->top = (textbox->top * 264) / 240;
+                    temp = textbox->top - temp;
+                } else {
+                    temp = 0;
+                }
+                textbox->right = (D_8012A7A0[arg0 + 3] & 0xFF) + 65;
+                textbox->bottom = (D_8012A7A0[arg0 + 4] & 0xFF) + temp;
+                arg0 += 5;
+                set_current_dialogue_box_coords(1, textbox->left, textbox->top, textbox->right, textbox->bottom);
+                var_s0 = &D_8012A7A0[arg0];
+                break;
+            case 2:
+                textbox->textColRed = var_s0[1];
+                textbox->textColGreen = D_8012A7A0[arg0 + 2];
+                textbox->textColBlue = D_8012A7A0[arg0 + 3];
+                textbox->textColAlpha = D_8012A7A0[arg0 + 4];
+                arg0 += 5;
+                set_current_text_colour(1, textbox->textColRed, textbox->textColGreen, textbox->textColBlue,
+                                        textbox->textColAlpha, 255);
+                var_s0 = &D_8012A7A0[arg0];
+                break;
+            case 3:
+                if (var_s0[1] == 0) {
+                    textbox->textFlags = 4;
+                } else {
+                    textbox->textFlags = 0;
+                }
+                arg0 += 2;
+                var_s0 = &D_8012A7A0[arg0];
+                break;
+            case 4:
+                arg0 += 2;
+                textbox->textX = var_s0[1];
+                var_s0 = &D_8012A7A0[arg0];
+                break;
+            case 5:
+                arg0 += 2;
+                textbox->textY += var_s0[1];
+                var_s0 = &D_8012A7A0[arg0];
+                break;
+            case 6:
+                arg0 += 2;
+                textbox->lineHeight = var_s0[1];
+                var_s0 = &D_8012A7A0[arg0];
+                break;
+            case 7:
+                if (gTextCloseTimerSeconds == 0) {
+                    gTextCloseTimerSeconds = var_s0[1] & 0xFF;
+                    gTextCloseTimerFrames = normalise_time(60);
+                    var_s0 = &D_8012A7A0[arg0];
+                }
+                arg0 += 2;
+                var_s0 += 2;
+                break;
+            case 8:
+                arg0 += 2;
+                D_8012A787 = var_s0[1];
+                var_s0 += 2;
+                break;
+            case 9:
+                arg0 += 2;
+                D_8012A788 = var_s0[1];
+                var_s0 += 2;
+                break;
         }
     }
     return arg0;

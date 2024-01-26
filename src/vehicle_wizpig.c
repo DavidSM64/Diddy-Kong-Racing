@@ -13,20 +13,13 @@
 /************ .data ************/
 
 s16 gWizpigVoiceTable[14] = {
-    SOUND_VOICE_BOSS_LAUGH2, 
-    SOUND_VOICE_TRICKY_HM, 
-    SOUND_VOICE_TRICKY_HMMM, 
-    SOUND_VOICE_WIZPIG_LAUGH4, 
-    SOUND_VOICE_WIZPIG_LAUGH2, 
-    SOUND_VOICE_WIZPIG_GROAN, 
-    SOUND_VOICE_WIZPIG_LAUGH3, 
-    SOUND_VOICE_SMOKEY_HAH, 
-    SOUND_VOICE_SMOKEY_LAUGH, 
-    SOUND_VOICE_SMOKEY_HM, 
-    SOUND_VOICE_SMOKEY_HM2, 
-    SOUND_VOICE_CONKER_YEHAHA, 
-    SOUND_VOICE_TIMBER_WOW, 
-    SOUND_WHOOSH2
+    SOUND_VOICE_BOSS_LAUGH2,   SOUND_VOICE_TRICKY_HM,
+    SOUND_VOICE_TRICKY_HMMM,   SOUND_VOICE_WIZPIG_LAUGH4,
+    SOUND_VOICE_WIZPIG_LAUGH2, SOUND_VOICE_WIZPIG_GROAN,
+    SOUND_VOICE_WIZPIG_LAUGH3, SOUND_VOICE_SMOKEY_HAH,
+    SOUND_VOICE_SMOKEY_LAUGH,  SOUND_VOICE_SMOKEY_HM,
+    SOUND_VOICE_SMOKEY_HM2,    SOUND_VOICE_CONKER_YEHAHA,
+    SOUND_VOICE_TIMBER_WOW,    SOUND_WHOOSH2,
 };
 
 /*******************************/
@@ -49,8 +42,9 @@ enum WizpigAnimations {
 
 /**
  * Top level function for updating the wizpig vehicle from the first boss race against him.
-*/
-void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
+ */
+void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed,
+                   s32 *startTimer) {
     s16 animID;
     s16 animFrame;
     s16 tempHeadAngle;
@@ -63,7 +57,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     ObjectModel *objModel;
     Object_68 *gfxData;
 
-    set_boss_voice_clip_offset((u16* ) gWizpigVoiceTable);
+    set_boss_voice_clip_offset((u16 *) gWizpigVoiceTable);
     racer->unk1EC = 0;
     animID = obj->segment.object.animationID;
     animFrame = obj->segment.animFrame;
@@ -144,44 +138,44 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         animVelocity = 2.0f;
     }
     switch (obj->segment.object.animationID) {
-    case ANIM_WIZPIG_IDLE:
-        racer->unk1CD = 0;
-        racer->animationSpeed += 1.0 * updateRateF;
-        break;
-    case ANIM_WIZPIG_WALK:
-        if (racer->unk1CD == 2) {
-            racer->animationSpeed += animVelocity;
-        } else {
+        case ANIM_WIZPIG_IDLE:
+            racer->unk1CD = 0;
+            racer->animationSpeed += 1.0 * updateRateF;
+            break;
+        case ANIM_WIZPIG_WALK:
+            if (racer->unk1CD == 2) {
+                racer->animationSpeed += animVelocity;
+            } else {
+                racer->animationSpeed -= animVelocity;
+            }
+            break;
+        case ANIM_WIZPIG_RUN:
+            racer->unk1CD = 2;
             racer->animationSpeed -= animVelocity;
-        }
-        break;
-    case ANIM_WIZPIG_RUN:
-        racer->unk1CD = 2;
-        racer->animationSpeed -= animVelocity;
-        break;
-    case ANIM_WIZPIG_JUMP:
-        if (racer->unk1CD == 4) {
-            racer->animationSpeed -= 2.0 * updateRateF;
-        } else {
+            break;
+        case ANIM_WIZPIG_JUMP:
+            if (racer->unk1CD == 4) {
+                racer->animationSpeed -= 2.0 * updateRateF;
+            } else {
+                racer->animationSpeed += 2.0 * updateRateF;
+            }
+            break;
+        case ANIM_WIZPIG_FLY:
+            racer->unk1CD = 4;
             racer->animationSpeed += 2.0 * updateRateF;
-        }
-        break;
-    case ANIM_WIZPIG_FLY:
-        racer->unk1CD = 4;
-        racer->animationSpeed += 2.0 * updateRateF;
-        break;
-    case ANIM_WIZPIG_DAMAGE:
-        racer->animationSpeed += 2.0 * updateRateF;
-        break;
-    default:
-        break;
+            break;
+        case ANIM_WIZPIG_DAMAGE:
+            racer->animationSpeed += 2.0 * updateRateF;
+            break;
+        default:
+            break;
     }
-    
+
     while (diffX <= racer->animationSpeed) {
         racer->animationSpeed -= diffX;
         gfxData->animationID = -1;
     }
-    while (racer->animationSpeed <= 0.0f){
+    while (racer->animationSpeed <= 0.0f) {
         racer->animationSpeed += diffX;
         gfxData->animationID = -1;
     }
@@ -240,7 +234,8 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     fade_when_near_camera(obj, racer, 40);
     firstRacerObj = get_racer_object(PLAYER_ONE);
     racer = (Object_Racer *) firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_WIZPIG_WALK) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
+        obj->segment.object.animationID == ANIM_WIZPIG_WALK) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished) {
