@@ -11,10 +11,7 @@
 
 /************ .data ************/
 
-s16 gGfxTaskMesgNums[16] = {
-    2, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0
-};
+s16 gGfxTaskMesgNums[16] = { 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 u8 sBackgroundPrimColourR = 0;
 u8 sBackgroundPrimColourG = 0;
@@ -32,8 +29,8 @@ s32 gfxBufCounter2 = 0;
 s32 gGfxTaskIsRunning = FALSE;
 
 Gfx dRspInit[] = {
-    gsSPClearGeometryMode(G_SHADE | G_SHADING_SMOOTH | G_CULL_FRONT | G_CULL_BACK |
-                          G_FOG | G_LIGHTING | G_TEXTURE_GEN | G_TEXTURE_GEN_LINEAR | G_LOD),
+    gsSPClearGeometryMode(G_SHADE | G_SHADING_SMOOTH | G_CULL_FRONT | G_CULL_BACK | G_FOG | G_LIGHTING | G_TEXTURE_GEN |
+                          G_TEXTURE_GEN_LINEAR | G_LOD),
     gsSPTexture(0, 0, 0, 0, 0),
     gsSPSetGeometryMode(G_SHADING_SMOOTH | G_SHADE),
     gsSPClipRatio(FRUSTRATIO_2),
@@ -107,20 +104,28 @@ Gfx dScaledRectangleBaseModes[] = {
 
 Gfx dTextureRectangleScaledOpa[][2] = {
     // Bilinear Filtered texture
-    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_BILERP_NOPERSP, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2),
-    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_BILERP_NOPERSP, G_RM_OPA_SURF, G_RM_OPA_SURF2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_BILERP_NOPERSP, G_RM_AA_OPA_SURF,
+                     G_RM_AA_OPA_SURF2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_BILERP_NOPERSP, G_RM_OPA_SURF,
+                     G_RM_OPA_SURF2),
     // Point Sampled texture
-    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT_NOPERSP, G_RM_AA_OPA_SURF, G_RM_AA_OPA_SURF2),
-    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT_NOPERSP, G_RM_OPA_SURF, G_RM_OPA_SURF2)
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT_NOPERSP, G_RM_AA_OPA_SURF,
+                     G_RM_AA_OPA_SURF2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT_NOPERSP, G_RM_OPA_SURF,
+                     G_RM_OPA_SURF2)
 };
 
 Gfx dTextureRectangleScaledXlu[][2] = {
     // Bilinear Filtered texture
-    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_BILERP_NOPERSP, G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2),
-    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_BILERP_NOPERSP, G_RM_XLU_SURF, G_RM_XLU_SURF2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_BILERP_NOPERSP, G_RM_AA_XLU_SURF,
+                     G_RM_AA_XLU_SURF2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_BILERP_NOPERSP, G_RM_XLU_SURF,
+                     G_RM_XLU_SURF2),
     // Point Sampled texture
-    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT_NOPERSP, G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2),
-    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT_NOPERSP, G_RM_XLU_SURF, G_RM_XLU_SURF2)
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT_NOPERSP, G_RM_AA_XLU_SURF,
+                     G_RM_AA_XLU_SURF2),
+    DRAW_TABLE_ENTRY(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM, DKR_OMH_1CYC_POINT_NOPERSP, G_RM_XLU_SURF,
+                     G_RM_XLU_SURF2)
 };
 
 /*******************************/
@@ -160,7 +165,7 @@ OSMesgQueue *osScInterruptQ;
  * Sends a message to the scheduler to start processing an RSP task once set up.
  * Official Name: rcpFast3d
  */
-s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
+s32 setup_ostask_xbus(Gfx *dlBegin, Gfx *dlEnd, UNUSED s32 recvMesg) {
     DKR_OSTask *dkrtask;
 
     gGfxTaskIsRunning = TRUE;
@@ -203,7 +208,7 @@ s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, UNUSED s32 recvMesg) {
  * Unused variant of the xbus task function.
  * Probably intended to be a secondary task system, since it doesn't set the var saying there's a task running.
  */
-UNUSED void setup_ostask_xbus_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
+UNUSED void setup_ostask_xbus_2(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
     OSMesg mesgBuf;
 
@@ -238,7 +243,7 @@ UNUSED void setup_ostask_xbus_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->unused60 = 0xFF;
     dkrtask->unused64 = 0xFF;
     dkrtask->unk68 = 0;
-    
+
     if (recvMesg) {
         dkrtask->mesgQueue = &D_80125EA0;
     }
@@ -250,12 +255,12 @@ UNUSED void setup_ostask_xbus_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
 }
 
 /**
- * 
+ *
  * Prepare the gfx task for the F3DDKR FIFO microcode.
  * Sends a message to the scheduler to start processing an RSP task once set up.
  * Goes unused, and is broken.
  */
-UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
+UNUSED void setup_ostask_fifo(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
     OSMesg mesgBuf;
 
@@ -265,7 +270,7 @@ UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     if (gfxBufCounter2 == 2) {
         gfxBufCounter2 = 0;
     }
-    
+
     dkrtask->task.data_ptr = (u64 *) dlBegin;
     dkrtask->task.ucode_boot = (u64 *) rspF3DDKRBootStart;
     dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
@@ -291,13 +296,13 @@ UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     dkrtask->unused60 = 0xFF;
     dkrtask->unused64 = 0xFF;
     dkrtask->unk68 = 0;
-    
+
     if (recvMesg) {
-        dkrtask->mesgQueue =  &D_80125EA0;
+        dkrtask->mesgQueue = &D_80125EA0;
     }
     osWritebackDCacheAll();
     osSendMesg(osScInterruptQ, dkrtask, 1);
-    
+
     if (recvMesg) {
         osRecvMesg(&D_80125EA0, &mesgBuf, OS_MESG_BLOCK);
     }
@@ -307,7 +312,7 @@ UNUSED void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
  * Unused variant of the FIFO task function.
  * Probably intended to be a secondary task system, since it doesn't set the var saying there's a task running.
  */
-UNUSED void setup_ostask_fifo_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
+UNUSED void setup_ostask_fifo_2(Gfx *dlBegin, Gfx *dlEnd, s32 recvMesg) {
     DKR_OSTask *dkrtask;
     OSMesg mesgBuf;
 
@@ -318,7 +323,7 @@ UNUSED void setup_ostask_fifo_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
     if (gfxBufCounter == 3) {
         gfxBufCounter = 0;
     }
-    
+
     dkrtask->task.data_size = (s32) (dlEnd - dlBegin) * sizeof(Gfx);
     dkrtask->task.data_ptr = (u64 *) dlBegin;
     dkrtask->task.type = M_GFXTASK;
@@ -361,10 +366,10 @@ UNUSED void setup_ostask_fifo_2(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg) {
  */
 s32 wait_for_gfx_task(void) {
     OSMesg *mesg = NULL;
-    if (gGfxTaskIsRunning == FALSE) { 
+    if (gGfxTaskIsRunning == FALSE) {
         return 0;
     }
-    osRecvMesg(&gGfxTaskMesgQueue, (OSMesg) &mesg, OS_MESG_BLOCK); 
+    osRecvMesg(&gGfxTaskMesgQueue, (OSMesg) &mesg, OS_MESG_BLOCK);
     gGfxTaskIsRunning = FALSE;
     return (s32) mesg[1];
 }
@@ -400,7 +405,7 @@ void set_background_fill_colour(s32 red, s32 green, s32 blue) {
  * over the colour buffer. DrawBG if set to 0 (which never happens) will completely skip
  * over clearing the colour buffer.
  * Official Name: rcpClearScreen
-*/
+ */
 void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
     s32 widthAndHeight;
     s32 w;
@@ -435,10 +440,12 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
                 gDPSetFillColor((*dList)++, sBackgroundFillColour);
                 gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
             }
-            // Used for secondary viewport backgrounds. This does not need to be 1 cycle, this could easily work with fillmode.
+            // Used for secondary viewport backgrounds. This does not need to be 1 cycle, this could easily work with
+            // fillmode.
             if (copy_viewport_background_size_to_coords(0, &x1, &y1, &x2, &y2)) {
                 gDPSetCycleType((*dList)++, G_CYC_1CYCLE);
-                gDPSetPrimColor((*dList)++, 0, 0, sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 255);
+                gDPSetPrimColor((*dList)++, 0, 0, sBackgroundPrimColourR, sBackgroundPrimColourG,
+                                sBackgroundPrimColourB, 255);
                 gDPSetCombineMode((*dList)++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
                 gDPSetRenderMode((*dList)++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
                 gDPFillRectangle((*dList)++, x1, y1, x2, y2);
@@ -451,7 +458,10 @@ void render_background(Gfx **dList, Matrix *mtx, s32 drawBG) {
             } else if (gBackgroundDrawFunc.ptr != NULL) {
                 gBackgroundDrawFunc.function((Gfx *) dList, mtx);
             } else {
-                gDPSetFillColor((*dList)++, (GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1) << 16) | GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1));
+                gDPSetFillColor(
+                    (*dList)++,
+                    (GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1) << 16) |
+                        GPACK_RGBA5551(sBackgroundPrimColourR, sBackgroundPrimColourG, sBackgroundPrimColourB, 1));
                 gDPFillRectangle((*dList)++, 0, 0, w - 1, h - 1);
             }
         }
@@ -489,7 +499,7 @@ void setup_gfx_mesg_queues(OSSched *sc) {
     osCreateMesgQueue(&gGfxTaskMesgQueue, gGfxTaskMesgBuf, ARRAY_COUNT(gGfxTaskMesgBuf));
 }
 
-//Called after finishing a race. Sets values during single player races. Set to zero during trophy races.
+// Called after finishing a race. Sets values during single player races. Set to zero during trophy races.
 void func_80078170(TextureHeader *arg0, TextureHeader *arg1, u32 arg2) {
     D_800DE4C4 = arg0;
     D_800DE4C8 = arg1;
@@ -501,7 +511,7 @@ void func_80078170(TextureHeader *arg0, TextureHeader *arg1, u32 arg2) {
  * Seems to render the background screen after a race finishes while you're at the menu deciding what to do next.
  * https://i.imgur.com/MHbUD2a.png is an example. The left is correct, and the right is incorrect rendering.
  * Official Name: rcpMosaicClear
-*/
+ */
 void func_80078190(Gfx **dlist) {
     s32 texture1And2UpperHeight;
     s32 videoHeight;
@@ -510,16 +520,16 @@ void func_80078190(Gfx **dlist) {
     s32 upperVideoHeight;
     s32 texture1UpperWidth;
     s32 texture1UpperHeight;
-    //s32 texture2UpperHeight;
+    // s32 texture2UpperHeight;
     s32 widthAndHeight;
     s32 yPos;
     s32 var_s3;
-    s32 uly; //the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
-    s32 ulx; //the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
-    s32 lry; //the y-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
-    s32 lrx; //the x-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
-    s32 t;   //the texture coordinate t of upper-left corner of rectangle (s10.5)
-    s32 s;   //the texture coordinate s of upper-left corner of rectangle (s10.5)
+    s32 uly; // the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
+    s32 ulx; // the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
+    s32 lry; // the y-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
+    s32 lrx; // the x-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
+    s32 t;   // the texture coordinate t of upper-left corner of rectangle (s10.5)
+    s32 s;   // the texture coordinate s of upper-left corner of rectangle (s10.5)
 
     widthAndHeight = get_video_width_and_height_as_s32();
     videoWidth = GET_VIDEO_WIDTH(widthAndHeight);
@@ -557,7 +567,7 @@ void func_80078190(Gfx **dlist) {
         upperVideoHeight = videoHeight << 2;
         texture1UpperWidth = D_800DE4C4->width << 2;
         texture1UpperHeight = D_800DE4C4->height << 2;
-        //texture2UpperHeight = D_800DE4C8->height << 2;
+        // texture2UpperHeight = D_800DE4C8->height << 2;
         texture1And2UpperHeight = (D_800DE4C8->height << 2) + texture1UpperHeight;
         var_s3 = 0;
         for (yPos = 0; yPos < upperVideoHeight; yPos += texture1And2UpperHeight) {
@@ -609,7 +619,7 @@ GLOBAL_ASM("asm/non_matchings/rcp/func_80078190.s")
 
 /**
  * Enables the chequer background and sets up its properties.
-*/
+ */
 UNUSED void set_chequer_background(s32 colourA, s32 colourB, s32 width, s32 height) {
     gChequerBGColourR1 = (colourA >> 24) & 0xFF;
     gChequerBGColourG1 = (colourA >> 16) & 0xFF;
@@ -626,7 +636,7 @@ UNUSED void set_chequer_background(s32 colourA, s32 colourB, s32 width, s32 heig
 
 /**
  * Disables the chequer background.
-*/
+ */
 UNUSED void disable_chequer_background(void) {
     gChequerBGEnabled = FALSE;
 }
@@ -635,7 +645,7 @@ UNUSED void disable_chequer_background(void) {
  * Uses global chequerboard settings to render a background using two different alternating colours.
  * Goes unused.
  * Official Name: rcpCheckClear
-*/
+ */
 void render_chequer_background(Gfx **dList) {
     s32 height;
     s32 width;
@@ -646,31 +656,31 @@ void render_chequer_background(Gfx **dList) {
     width = get_video_width_and_height_as_s32();
     height = GET_VIDEO_HEIGHT(width) & 0xFFFF;
     width = GET_VIDEO_WIDTH(width);
-    
+
     gSPDisplayList((*dList)++, dChequerBGSettings);
     gDPSetPrimColor((*dList)++, 0, 0, gChequerBGColourR1, gChequerBGColourG1, gChequerBGColourB1, gChequerBGColourA1);
 
     for (y = 0, flip = 0; y < height; y += gChequerBGHeight, flip ^= 1) {
         for (x = flip * gChequerBGWidth; x < width; x += gChequerBGWidth * 2) {
-            gDPFillRectangle((*dList)++, x, y, x + gChequerBGWidth, y + gChequerBGHeight);            
+            gDPFillRectangle((*dList)++, x, y, x + gChequerBGWidth, y + gChequerBGHeight);
         }
     }
-    
+
     gDPSetPrimColor((*dList)++, 0, 0, gChequerBGColourR2, gChequerBGColourG2, gChequerBGColourB2, gChequerBGColourA2);
-    
+
     for (y = 0, flip = 1; y < height; y += gChequerBGHeight, flip ^= 1) {
         for (x = flip * gChequerBGWidth; x < width; x += gChequerBGWidth * 2) {
-            gDPFillRectangle((*dList)++, x, y, x + gChequerBGWidth, y + gChequerBGHeight);            
+            gDPFillRectangle((*dList)++, x, y, x + gChequerBGWidth, y + gChequerBGHeight);
         }
     }
-    
+
     gDPPipeSync((*dList)++);
 }
 
 /**
  * Sets the function pointer to whatever's passed through.
  * If nonzero, will override the background drawing section.
-*/
+ */
 void set_background_draw_function(void *func) {
     gBackgroundDrawFunc.ptr = func;
 }
@@ -679,8 +689,9 @@ void set_background_draw_function(void *func) {
  * Renders one or more textures directly on screen resulting from the passed image properties.
  * Texture rectangle coordinates use 10.2 precision and texture coords use 10.5 precision.
  * Typically, you do these shifts in the draw call itself, but Rare decided to do it beforehand.
-*/
-void render_textured_rectangle(Gfx **dList, DrawTexture *element, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha) {
+ */
+void render_textured_rectangle(Gfx **dList, DrawTexture *element, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue,
+                               u8 alpha) {
     TextureHeader *tex;
     s32 i;
     s32 uly;
@@ -691,7 +702,7 @@ void render_textured_rectangle(Gfx **dList, DrawTexture *element, s32 xPos, s32 
     s32 s;
 
     gSPDisplayList((*dList)++, dTextureRectangleModes);
-    gDPSetPrimColor((*dList)++, 0, 0, red, green, blue, alpha); 
+    gDPSetPrimColor((*dList)++, 0, 0, red, green, blue, alpha);
     xPos <<= 2;
     yPos <<= 2;
     for (i = 0; (tex = element[i].texture); i++) {
@@ -718,20 +729,21 @@ void render_textured_rectangle(Gfx **dList, DrawTexture *element, s32 xPos, s32 
     gDPSetPrimColor((*dList)++, 0, 0, 255, 255, 255, 255);
 }
 
-void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale, u32 colour, s32 flags) {
+void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale,
+                                     u32 colour, s32 flags) {
     TextureHeader *tex;
     Gfx *dmaDlist;
     s32 i;
     s32 bFlipX;
     s32 bFlipY;
-    s32 s;   //the texture coordinate s of upper-left corner of rectangle (s10.5)
-    s32 t;   //the texture coordinate t of upper-left corner of rectangle (s10.5)
-    s32 dsdx;//the change in s for each change in x (s5.10)
-    s32 dtdy;//the change in t for each change in y (s5.10)
-    s32 ulx; //the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
-    s32 uly; //the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
-    s32 lrx; //the x-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
-    s32 lry; //the y-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
+    s32 s;    // the texture coordinate s of upper-left corner of rectangle (s10.5)
+    s32 t;    // the texture coordinate t of upper-left corner of rectangle (s10.5)
+    s32 dsdx; // the change in s for each change in x (s5.10)
+    s32 dtdy; // the change in t for each change in y (s5.10)
+    s32 ulx;  // the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
+    s32 uly;  // the y-coordinate of upper-left corner of rectangle (10.2, 0.0~1023.75)
+    s32 lrx;  // the x-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
+    s32 lry;  // the y-coordinate of lower-right corner of rectangle (10.2, 0.0~1023.75)
     s32 xPos4x;
     s32 yPos4x;
     s32 width;
@@ -741,11 +753,11 @@ void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos
     width = GET_VIDEO_WIDTH(height) * 4;
     height = (GET_VIDEO_HEIGHT(height) & 0xFFFF) * 4;
 
-    //If the colour is fully opaque
+    // If the colour is fully opaque
     if ((colour & 0xFF) == 0xFF) {
-        dmaDlist = dTextureRectangleScaledOpa[(u8)flags & 0xFF];
+        dmaDlist = dTextureRectangleScaledOpa[(u8) flags & 0xFF];
     } else {
-        dmaDlist = dTextureRectangleScaledXlu[(u8)flags & 0xFF];
+        dmaDlist = dTextureRectangleScaledXlu[(u8) flags & 0xFF];
     }
 
     gSPDisplayList((*dlist)++, dScaledRectangleBaseModes);

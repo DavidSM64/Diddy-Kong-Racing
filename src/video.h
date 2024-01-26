@@ -99,8 +99,6 @@ void func_8007AB24(u8 arg0);
 s32 get_video_refresh_speed(void);
 void swap_framebuffers(void);
 void memory_copy(u8 *src, u8 *dest, s32 len);
-
-//Non Matching
-s32 swap_framebuffer_when_ready(s32 arg0);
+s32 swap_framebuffer_when_ready(s32 mesg);
 
 #endif

@@ -23,9 +23,12 @@ const char D_800E87F0[] = "\nMaximum limit of %d lens flare switches, per level,
 /************ .data ************/
 
 unk800E2850 D_800E2850[3] = {
-    { 0,  0x40, (TextureHeader *)0, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
-    { 0, 0x100, (TextureHeader *)1, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
-    { 0,  0x08, (TextureHeader *)2, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8, 8 },
+    { 0, 0x40, (TextureHeader *) 0, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8,
+      8 },
+    { 0, 0x100, (TextureHeader *) 1, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8,
+      8 },
+    { 0, 0x08, (TextureHeader *) 2, 0xFE000000, 0xFE000000, 0xFE000000, 0x03FFFFFF, 0x03FFFFFF, 0x03FFFFFF, 4, 4, 8,
+      8 },
 };
 
 unk800E28D4 *D_800E28D4 = NULL;
@@ -37,7 +40,7 @@ s32 D_800E2908 = 0;
 s32 *D_800E290C = NULL;
 s16 *D_800E2910 = NULL;
 Vertex *D_800E2914[2] = { NULL, NULL };
-s32 *gWeatherAssetTable = NULL; // List of Ids
+s32 *gWeatherAssetTable = NULL;   // List of Ids
 s32 gWeatherAssetTableLength = 0; // Set, but never read.
 
 Gfx D_800E2928[] = {
@@ -56,30 +59,30 @@ Gfx D_800E2928[] = {
 
 unk800E2980 D_800E2980[2] = {
     { 1, 0xFFFF, 0xC090, 3.0f, 0.0f },
-    { 0,      0,      0, 0.0f, 0.0f },
+    { 0, 0, 0, 0.0f, 0.0f },
 };
 
 unk800E2980 D_800E29A0[4] = {
-    { 3, 0xFFFF, 0x0090, 0.75f,  -32.0f },
-    { 2, 0x0050, 0xFF60,  0.8f,  -96.0f },
+    { 3, 0xFFFF, 0x0090, 0.75f, -32.0f },
+    { 2, 0x0050, 0xFF60, 0.8f, -96.0f },
     { 2, 0x00FF, 0x0090, 0.75f, -192.0f },
-    { 0,      0,      0,  0.0f,    0.0f },
+    { 0, 0, 0, 0.0f, 0.0f },
 };
 
 unk800E2980 D_800E29E0[5] = {
-    { 3, 0xFF80, 0x1490, 0.65f,  -64.0f },
-    { 2, 0xFFFF, 0xFF90,  1.0f, -128.0f },
-    { 3, 0xFFFF, 0x8090,  0.5f, -176.0f },
+    { 3, 0xFF80, 0x1490, 0.65f, -64.0f },
+    { 2, 0xFFFF, 0xFF90, 1.0f, -128.0f },
+    { 3, 0xFFFF, 0x8090, 0.5f, -176.0f },
     { 3, 0xFF28, 0x2890, 0.75f, -224.0f },
-    { 0,      0,      0,  0.0f,    0.0f },
+    { 0, 0, 0, 0.0f, 0.0f },
 };
 
 unk800E2980 D_800E2A30[5] = {
-    { 3, 0xFF80, 0xFF80,  0.5f,  -64.0f },
+    { 3, 0xFF80, 0xFF80, 0.5f, -64.0f },
     { 1, 0xFFFF, 0xC090, 0.75f, -128.0f },
-    { 2, 0xFF28, 0x0080,  0.6f, -176.0f },
+    { 2, 0xFF28, 0x0080, 0.6f, -176.0f },
     { 1, 0xFFC0, 0xFF90, 0.75f, -224.0f },
-    { 0,      0,      0,  0.0f,    0.0f },
+    { 0, 0, 0, 0.0f, 0.0f },
 };
 
 Object *D_800E2A80 = NULL;
@@ -95,38 +98,24 @@ f32 D_800E2AA4 = -200.0f;
 f32 D_800E2AA8 = -200.0f;
 
 Vertex D_800E2AAC[16] = {
-    { 0, 0, 0, 255, 255, 255, 255 },
-    { 0, 0, 0, 255, 255, 255, 255 },
-    { 0, 0, 0, 255, 255, 255, 255 },
-    { 0, 0, 0, 255, 255, 255, 255 },
-    { 0, 0, 0, 255, 255, 255, 255 },
-    { 0, 0, 0, 255, 255, 255, 255 },
-    { 0, 0, 0, 255, 255, 255, 255 },
-    { 0, 0, 0, 255, 255, 255, 255 },
-    { 0, 0, 0, 255, 255, 255, 255 },
-    { 0, 0, 0, 255, 255, 255, 255 },
-    { 0, 0, 0, 255, 255, 255, 255 },
-    { 0, 0, 0, 255, 255, 255, 255 },
-    { 0, 0, 0, 255, 255, 255, 255 },
-    { 0, 0, 0, 255, 255, 255, 255 },
-    { 0, 0, 0, 255, 255, 255, 255 },
+    { 0, 0, 0, 255, 255, 255, 255 }, { 0, 0, 0, 255, 255, 255, 255 }, { 0, 0, 0, 255, 255, 255, 255 },
+    { 0, 0, 0, 255, 255, 255, 255 }, { 0, 0, 0, 255, 255, 255, 255 }, { 0, 0, 0, 255, 255, 255, 255 },
+    { 0, 0, 0, 255, 255, 255, 255 }, { 0, 0, 0, 255, 255, 255, 255 }, { 0, 0, 0, 255, 255, 255, 255 },
+    { 0, 0, 0, 255, 255, 255, 255 }, { 0, 0, 0, 255, 255, 255, 255 }, { 0, 0, 0, 255, 255, 255, 255 },
+    { 0, 0, 0, 255, 255, 255, 255 }, { 0, 0, 0, 255, 255, 255, 255 }, { 0, 0, 0, 255, 255, 255, 255 },
     { 0, 0, 0, 255, 255, 255, 255 },
 };
 
 unk800E2B4C D_800E2B4C[8] = {
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
-    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
+    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 }, { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
+    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 }, { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
+    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 }, { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
+    { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 }, { 0, 0, 0, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0 },
 };
 
 unk800E2C2C gRainGfx[2] = {
     { 0, 0, 0x400, 0x400, 0x000A, 0xFFC4, NULL, 128, 255, 255, 128, 128, 255, 128, 0 },
-    { 0, 0, 0x600, 0x600, 0x0020, 0xFF40, NULL, 255, 255, 255, 0, 128, 255, 255, 0 }
+    { 0, 0, 0x600, 0x600, 0x0020, 0xFF40, NULL, 255, 255, 255, 0, 128, 255, 255, 0 },
 };
 
 s32 gWeatherType = WEATHER_SNOW;
@@ -144,7 +133,6 @@ TextureHeader *gRainOverlayUnusedValue = NULL; // Set, but never read.
 Sprite *gRainSplashGfx = 0;
 s32 D_800E2C90 = 0;
 SoundMask *gWeatherSoundMask = NULL;
-
 
 FadeTransition gThunderTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_INVERT, FADE_COLOR_WHITE, 5, 2);
 
@@ -175,7 +163,7 @@ Object *D_80127C40[16];
 
 /**
  * Official Name: initWeather
-*/
+ */
 void init_weather(void) {
     D_800E28D8.unk0 = 0;
     D_800E28D8.unk4 = 0;
@@ -193,7 +181,7 @@ void init_weather(void) {
     D_800E2A84 = TRUE;
     D_800E2A88 = 0;
     if (gWeatherAssetTable == NULL) {
-        gWeatherAssetTable = (s32 *)load_asset_section_from_rom(ASSET_WEATHER_PARTICLES);
+        gWeatherAssetTable = (s32 *) load_asset_section_from_rom(ASSET_WEATHER_PARTICLES);
         gWeatherAssetTableLength = 0;
         while ((s32) gWeatherAssetTable[gWeatherAssetTableLength] != -1) {
             gWeatherAssetTableLength++;
@@ -204,7 +192,7 @@ void init_weather(void) {
 
 /**
  * Official Name: setWeatherLimits
-*/
+ */
 void set_weather_limits(s16 arg0, s16 arg1) {
     if (D_80127BF8.unk2 < D_80127BF8.unk0) {
         D_80127BF8.unk0 = arg0;
@@ -221,11 +209,11 @@ void set_weather_limits(s16 arg0, s16 arg1) {
         free_from_memory_pool(tempMem); \
         mem = NULL;                     \
     }
-#define FREE_TEX(tex)                   \
-    tempTex = tex;                      \
-    if (tempTex != NULL) {              \
-        free_texture(tempTex);          \
-        tex = NULL;                     \
+#define FREE_TEX(tex)          \
+    tempTex = tex;             \
+    if (tempTex != NULL) {     \
+        free_texture(tempTex); \
+        tex = NULL;            \
     }
 
 /**
@@ -263,7 +251,7 @@ void func_800ABB34(void) {
     temp_v0 = 0x10000 / D_800E28D8.unk4;
     phi_s1 = 0;
 
-    for(i = 0; i < D_800E28D8.unk4; i++) {
+    for (i = 0; i < D_800E28D8.unk4; i++) {
         D_800E28D8.unk0[i].unk0 = coss(phi_s1 & 0xFFFF) << 3;
         D_800E28D8.unk0[i].unk4 = 0xFFFC0000;
         D_800E28D8.unk0[i].unk8 = sins(phi_s1 & 0xFFFF) << 1;
@@ -273,10 +261,9 @@ void func_800ABB34(void) {
     D_800E28D8.unk8 = load_texture(*gWeatherAssetTable);
 }
 
-
 void changeWeather(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
-    if ((arg5 > 0) && ((arg0 != D_80127BB8[5]) || (arg1 != D_80127BB8[8]) || (arg2 != D_80127BB8[11])
-        || (arg3 != D_80127BB8[0]) || (arg4 != D_80127BB8[12]))) {
+    if ((arg5 > 0) && ((arg0 != D_80127BB8[5]) || (arg1 != D_80127BB8[8]) || (arg2 != D_80127BB8[11]) ||
+                       (arg3 != D_80127BB8[0]) || (arg4 != D_80127BB8[12]))) {
         D_80127BB8[5] = arg0;
         D_80127BB8[8] = arg1;
         D_80127BB8[11] = arg2;
@@ -302,7 +289,8 @@ void changeWeather(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
  * The root function for handling all weather.
  * Decide whether to perform rain or snow logic, execute it, then set it to render right after.
  */
-void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris, s32 updateRate) {
+void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currHudVerts, TriangleList **currHudTris,
+                     s32 updateRate) {
     UNUSED s32 unused;
     gCurrWeatherDisplayList = *currDisplayList;
     gCurrWeatherMatrix = *currHudMat;
@@ -349,18 +337,21 @@ void process_weather(Gfx **currDisplayList, MatrixS **currHudMat, Vertex **currH
 
 // This is the snow physics that makes it move
 void func_800AC0C8(s32 updateRate) {
-    unk800E2850_unk0* temp_v1;
+    unk800E2850_unk0 *temp_v1;
     s32 i;
 
     for (i = 0; i < D_80127BB0; i++) {
         temp_v1 = &D_800E28D8.unk0[D_800E28D4[i].unkF];
-        D_800E28D4[i].unk0 = ((((temp_v1->unk0 + (D_80127BB8[3] * 2)) * updateRate) >> 1) + D_800E28D4[i].unk0) & D_800E28D8.unk18;
-        D_800E28D4[i].unk4 = ((((temp_v1->unk4 + (D_80127BB8[6] * 2)) * updateRate) >> 1) + D_800E28D4[i].unk4) & D_800E28D8.unk1C;
-        D_800E28D4[i].unk8 = ((((temp_v1->unk8 + (D_80127BB8[9] * 2)) * updateRate) >> 1) + D_800E28D4[i].unk8) & D_800E28D8.unk20;
+        D_800E28D4[i].unk0 =
+            ((((temp_v1->unk0 + (D_80127BB8[3] * 2)) * updateRate) >> 1) + D_800E28D4[i].unk0) & D_800E28D8.unk18;
+        D_800E28D4[i].unk4 =
+            ((((temp_v1->unk4 + (D_80127BB8[6] * 2)) * updateRate) >> 1) + D_800E28D4[i].unk4) & D_800E28D8.unk1C;
+        D_800E28D4[i].unk8 =
+            ((((temp_v1->unk8 + (D_80127BB8[9] * 2)) * updateRate) >> 1) + D_800E28D4[i].unk8) & D_800E28D8.unk20;
         D_800E28D4[i].unkF++;
         if (D_800E28D4[i].unkF >= D_800E28D8.unk4) {
             D_800E28D4[i].unkF -= D_800E28D8.unk4;
-        } 
+        }
     }
 }
 
@@ -379,7 +370,7 @@ void func_800AC21C(void) {
     sp54 = (gWeatherCamera->trans.y_position * 65536.0f);
     sp50 = (gWeatherCamera->trans.z_position * 65536.0f);
     D_800E2908 = 0;
-    for(i = 0; i < D_80127BB4; i++) {
+    for (i = 0; i < D_80127BB4; i++) {
         sp64[0][0] = (f32) (((D_800E28D4[i].unk0 - sp58) & D_800E28D8.unk18) + D_800E28D8.unkC) * (1.0f / 65536.0f);
         sp64[0][1] = (f32) (((D_800E28D4[i].unk4 - sp54) & D_800E28D8.unk1C) + D_800E28D8.unk10) * (1.0f / 65536.0f);
         sp64[0][2] = (f32) (((D_800E28D4[i].unk8 - sp50) & D_800E28D8.unk20) + D_800E28D8.unk14) * (1.0f / 65536.0f);
@@ -391,18 +382,18 @@ void func_800AC21C(void) {
             D_800E2904[i].x = xPos - D_800E28D8.unk24;
             D_800E2904[i].y = yPos + D_800E28D8.unk26;
             D_800E2904[i].z = zPos;
-            D_800E2904[i+1].x = xPos + D_800E28D8.unk24;
-            D_800E2904[i+1].y = yPos + D_800E28D8.unk26;
-            D_800E2904[i+1].z = zPos;
-            D_800E2904[i+2].x = xPos + D_800E28D8.unk24;
-            D_800E2904[i+2].y = yPos - D_800E28D8.unk26;
-            D_800E2904[i+2].z = zPos;
-            D_800E2904[i+3].x = xPos - D_800E28D8.unk24;
-            D_800E2904[i+3].y = yPos - D_800E28D8.unk26;
-            D_800E2904[i+3].z = zPos;
+            D_800E2904[i + 1].x = xPos + D_800E28D8.unk24;
+            D_800E2904[i + 1].y = yPos + D_800E28D8.unk26;
+            D_800E2904[i + 1].z = zPos;
+            D_800E2904[i + 2].x = xPos + D_800E28D8.unk24;
+            D_800E2904[i + 2].y = yPos - D_800E28D8.unk26;
+            D_800E2904[i + 2].z = zPos;
+            D_800E2904[i + 3].x = xPos - D_800E28D8.unk24;
+            D_800E2904[i + 3].y = yPos - D_800E28D8.unk26;
+            D_800E2904[i + 3].z = zPos;
             D_800E2908 += 4;
             D_800E2910[D_800E2908 >> 2] = i;
-            if ((!i) && (!i)){} // Fakematch
+            if ((!i) && (!i)) {} // Fakematch
         }
     }
 }
@@ -463,37 +454,37 @@ void func_800AC8A8(Object *lensflareObj) {
     D_800E2A80 = lensflareObj;
     D_800E2A84 = 0;
     entry = &D_800E2A80->segment.level_entry->lensFlare;
-    
+
     switch (entry->unkC) {
-    default:
-        D_80127C24 = 0; 
-        break;
-    case 1:
-        D_80127C24 = (s32) D_800E29A0;
-        break;
-    case 2:
-        D_80127C24 = (s32) D_800E29E0;
-        break;
-    case 3:
-        D_80127C24 = (s32) D_800E2A30;
-        break;
+        default:
+            D_80127C24 = 0;
+            break;
+        case 1:
+            D_80127C24 = (s32) D_800E29A0;
+            break;
+        case 2:
+            D_80127C24 = (s32) D_800E29E0;
+            break;
+        case 3:
+            D_80127C24 = (s32) D_800E2A30;
+            break;
     }
 
     switch (entry->unkD) {
-    default:
-        D_80127C28 = 0;
-        break;
-    case 1: 
-        D_80127C28 = (s32) D_800E29A0;
-        break;
-    case 2: 
-        D_80127C28 = (s32) D_800E29E0;
-        break;
-    case 3: 
-        D_80127C28 = (s32) D_800E2A30;
-        break;
+        default:
+            D_80127C28 = 0;
+            break;
+        case 1:
+            D_80127C28 = (s32) D_800E29A0;
+            break;
+        case 2:
+            D_80127C28 = (s32) D_800E29E0;
+            break;
+        case 3:
+            D_80127C28 = (s32) D_800E2A30;
+            break;
     }
-    
+
     if (entry->unkE == 1) {
         D_80127C2C = (Matrix *) D_800E2980;
     } else {
@@ -501,7 +492,7 @@ void func_800AC8A8(Object *lensflareObj) {
     }
 
     sp1C.y_rotation = entry->unkA;
-    sp1C.x_rotation = entry->unk8; 
+    sp1C.x_rotation = entry->unk8;
     sp1C.z_rotation = 0;
     D_80127C30.x = 0;
     D_80127C30.y = 0;
@@ -512,7 +503,7 @@ void func_800AC8A8(Object *lensflareObj) {
     D_80127C30.z = -D_80127C30.z;
 }
 
-//https://decomp.me/scratch/mYuMJ
+// https://decomp.me/scratch/mYuMJ
 GLOBAL_ASM("asm/non_matchings/weather/func_800ACA20.s")
 
 void cameraAddOverrideObject(Object *arg0) {
@@ -522,7 +513,7 @@ void cameraAddOverrideObject(Object *arg0) {
     }
 }
 
-void func_800ACF98(Object* arg0) {
+void func_800ACF98(Object *arg0) {
     s32 i;
     s32 isFound = FALSE;
 
@@ -539,7 +530,6 @@ void func_800ACF98(Object* arg0) {
             D_80127C40[i] = D_80127C40[i + 1];
         }
     }
-
 }
 
 void func_800AD030(ObjectSegment *cameraSegment) {
@@ -547,10 +537,10 @@ void func_800AD030(ObjectSegment *cameraSegment) {
     f32 xDiff;
     f32 zDiff;
     f32 yDiff;
-    s32 i; 
+    s32 i;
     D_800E2A84 = FALSE;
     if (D_800E2A88 > 0 && D_800E2A80 != 0) {
-        if(D_80127C40[0]){} // Fakematch
+        if (D_80127C40[0]) {} // Fakematch
         for (i = 0; i < D_800E2A88; i++) {
             xDiff = cameraSegment->trans.x_position - D_80127C40[i]->segment.trans.x_position;
             yDiff = cameraSegment->trans.y_position - D_80127C40[i]->segment.trans.y_position;
@@ -577,7 +567,7 @@ void func_800AD144(s32 arg0, s32 arg1) {
     D_800E2C90 = 0;
     gRainGfx[0].tex = load_texture(gWeatherAssetTable[1]);
     gRainGfx[1].tex = load_texture(gWeatherAssetTable[1]);
-    gRainSplashGfx = (Sprite *)func_8007C12C(gWeatherAssetTable[3], 0);
+    gRainSplashGfx = (Sprite *) func_8007C12C(gWeatherAssetTable[3], 0);
     gWeatherType = WEATHER_RAIN;
 }
 
@@ -655,13 +645,13 @@ void handle_weather_rain(s32 updateRate) {
         handle_rain_lightning(updateRate);
         if (gLightningFrequency >= 256) {
             set_ortho_matrix_view(&gCurrWeatherDisplayList, &gCurrWeatherMatrix);
-            for(i = 0; i < 2; i++) {
+            for (i = 0; i < 2; i++) {
                 render_rain_overlay(&gRainGfx[i], updateRate);
             }
             gDPSetPrimColor(gCurrWeatherDisplayList++, 0, 0, 255, 255, 255, 255);
             gDPSetEnvColor(gCurrWeatherDisplayList++, 255, 255, 255, 0);
             reset_render_settings(&gCurrWeatherDisplayList); // Pipesync and some stuff idk yet
-            viewport_reset(&gCurrWeatherDisplayList); // Looks to create a viewport scissor.
+            viewport_reset(&gCurrWeatherDisplayList);        // Looks to create a viewport scissor.
         }
     }
 }
@@ -670,8 +660,8 @@ GLOBAL_ASM("asm/non_matchings/weather/render_rain_splashes.s")
 
 /**
  * On a randomly set timer, based on the weather intensity, count down and make the sound of thunder.
- * Set a second timer, that then counts down to zero and creates a flash of lightning in the form of a screen transition.
- * Afterwards, set the thunder timer back.
+ * Set a second timer, that then counts down to zero and creates a flash of lightning in the form of a screen
+ * transition. Afterwards, set the thunder timer back.
  */
 void handle_rain_lightning(s32 updateRate) {
     if (gThunderTimer > 0) {
@@ -776,7 +766,9 @@ void render_rain_overlay(unk800E2C2C *arg0, s32 arg1) {
             tris[1].uv2.u = altHorizontal;
             tris[1].uv2.v = altVertical;
             sp64 = tris + 0x20;
-            func_8007F594(&gCurrWeatherDisplayList, 0, COLOUR_RGBA32(arg0->primitiveRed, arg0->primitiveGreen, arg0->primitiveBlue, opacity), COLOUR_RGBA32(arg0->environmentRed, arg0->environmentGreen, arg0->environmentBlue, 0));
+            func_8007F594(&gCurrWeatherDisplayList, 0,
+                          COLOUR_RGBA32(arg0->primitiveRed, arg0->primitiveGreen, arg0->primitiveBlue, opacity),
+                          COLOUR_RGBA32(arg0->environmentRed, arg0->environmentGreen, arg0->environmentBlue, 0));
             gDkrDmaDisplayList(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(tex->cmd), tex->numberOfCommands);
             gSPVertexDKR(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(&D_800E2AAC[D_800E2C90]), 4, 0);
             gSPPolygon(gCurrWeatherDisplayList++, OS_PHYSICAL_TO_K0(gCurrWeatherTriList), 2, 1);

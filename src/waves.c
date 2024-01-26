@@ -35,34 +35,26 @@ typedef struct unk800E3090 {
 } unk800E3090;
 
 unk800E3090 D_800E3090[4] = {
-    { 0x4000, 0x0201, 0, 0, 0, 0, 0, 0, },
-    { 0x4001, 0x0203, 0, 0, 0, 0, 0, 0, },
-    { 0x4000, 0x0201, 0, 0, 0, 0, 0, 0, },
-    { 0x4001, 0x0203, 0, 0, 0, 0, 0, 0, },
+    { 0x4000, 0x0201, 0, 0, 0, 0, 0, 0 },
+    { 0x4001, 0x0203, 0, 0, 0, 0, 0, 0 },
+    { 0x4000, 0x0201, 0, 0, 0, 0, 0, 0 },
+    { 0x4001, 0x0203, 0, 0, 0, 0, 0, 0 },
 };
 
 TextureHeader *D_800E30D0 = NULL;
 s32 *D_800E30D4 = NULL;
 LevelModel_Alternate *D_800E30D8 = NULL;
-s32 D_800E30DC = 0; //Tracks an index into D_8012A1E8
-s16 *D_800E30E0 = NULL; //Points to either D_800E30E8 or D_800E3110
-s16 *D_800E30E4 = NULL; //Points to either D_800E30FC or D_800E3144
+s32 D_800E30DC = 0;     // Tracks an index into D_8012A1E8
+s16 *D_800E30E0 = NULL; // Points to either D_800E30E8 or D_800E3110
+s16 *D_800E30E4 = NULL; // Points to either D_800E30FC or D_800E3144
 
-s16 D_800E30E8[10] = {
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 0
-};
+s16 D_800E30E8[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 
-s16 D_800E30FC[10] = {
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 0
-};
+s16 D_800E30FC[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 0 };
 
-s16 D_800E3110[26] = {
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 0
-};
+s16 D_800E3110[26] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 0 };
 
-s16 D_800E3144[26] = {
-    0, 1, 1, 1, 2, 3, 4, 4, 4, 5, 3, 4, 4, 4, 5, 3, 4, 4, 4, 5, 6, 7, 7, 7, 8, 0
-};
+s16 D_800E3144[26] = { 0, 1, 1, 1, 2, 3, 4, 4, 4, 5, 3, 4, 4, 4, 5, 3, 4, 4, 4, 5, 6, 7, 7, 7, 8, 0 };
 
 s32 *D_800E3178 = NULL;
 s32 D_800E317C = 0;
@@ -141,11 +133,11 @@ s32 D_8012A728;
         free_from_memory_pool(tempMem); \
         mem = NULL;                     \
     }
-#define FREE_TEX(tex)                   \
-    tempTex = tex;                      \
-    if (tempTex != NULL) {              \
-        free_texture(tempTex);          \
-        tex = NULL;                     \
+#define FREE_TEX(tex)          \
+    tempTex = tex;             \
+    if (tempTex != NULL) {     \
+        free_texture(tempTex); \
+        tex = NULL;            \
     }
 
 void free_waves(void) {
@@ -183,10 +175,11 @@ void func_800B7EB4(void) {
     free_waves();
     D_800E3040 = (s32 *) allocate_from_main_pool_safe(D_80129FC8->unk20 << 2, COLOUR_TAG_CYAN);
     D_800E3044 = (s32 *) allocate_from_main_pool_safe((D_80129FC8->unk4 << 2) * D_80129FC8->unk4, COLOUR_TAG_CYAN);
-    D_800E3048 = (s32 *) allocate_from_main_pool_safe(((D_80129FC8->unk0 + 1) << 2) * (D_80129FC8->unk0 + 1), COLOUR_TAG_CYAN);
+    D_800E3048 =
+        (s32 *) allocate_from_main_pool_safe(((D_80129FC8->unk0 + 1) << 2) * (D_80129FC8->unk0 + 1), COLOUR_TAG_CYAN);
     temp_lo = ((D_80129FC8->unk0 + 1) << 2) * (D_80129FC8->unk0 + 1);
     D_800E304C = allocate_from_main_pool_safe(temp_lo * 9, COLOUR_TAG_CYAN);
-    
+
     // for (var_a1 = 1; var_a1 < 4; var_a1++) {
     //     D_800E3050[var_a1] = (s32 *) ((u32) D_800E304C + (temp_lo * var_a1));
     // }
@@ -202,12 +195,12 @@ void func_800B7EB4(void) {
         var_a1 += 4;
     } while (var_a1 < 9);
 
-    //temp_lo = (D_80129FC8->unk0 + 1) * 250 * (D_80129FC8->unk0 + 1);
-    temp_lo = ((((D_80129FC8->unk0 + 1) << 5)  - D_80129FC8->unk0) * 10) * (D_80129FC8->unk0 + 1);
+    // temp_lo = (D_80129FC8->unk0 + 1) * 250 * (D_80129FC8->unk0 + 1);
+    temp_lo = ((((D_80129FC8->unk0 + 1) << 5) - D_80129FC8->unk0) * 10) * (D_80129FC8->unk0 + 1);
     if (D_8012A078 != 2) {
         D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(temp_lo << 1, COLOUR_TAG_CYAN);
         D_800E3070[1] = (s32 *) ((u32) D_800E3070[0] + temp_lo);
-    } else {        
+    } else {
         D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(temp_lo << 2, COLOUR_TAG_CYAN);
         D_800E3070[1] = (s32 *) ((u32) D_800E3070[0] + temp_lo);
         D_800E3070[2] = (s32 *) ((u32) D_800E3070[1] + temp_lo);
@@ -299,12 +292,12 @@ GLOBAL_ASM("asm/non_matchings/waves/func_800B9C18.s")
 void func_800BA288(s32 arg0, s32 arg1) {
     s32 i;
     s32 j;
-    
+
     arg1 <<= 3;
     for (i = 0; i < D_8012A0E0; i++) {
         if (D_8012A0E8[D_800E30D8[i].unkB] & (1 << D_800E30D8[i].unkA)) {
             if (D_80129FC8->unk28 != 0) {
-                for(j = 0; j < 4; j++) {
+                for (j = 0; j < 4; j++) {
                     s32 ti = j << 3;
                     if (D_800E30D4[D_800E30D8[i].unkC] & (0xFF << ti)) {
                         if (arg1 < D_800E30D8[i].unk14[arg0].unk0[j]) {
@@ -316,7 +309,7 @@ void func_800BA288(s32 arg0, s32 arg1) {
                         if (D_800E30D8[i].unk14[arg0].unk0[j] + arg1 < 128) {
                             D_800E30D8[i].unk14[arg0].unk0[j] += arg1;
                         } else {
-                           D_800E30D8[i].unk14[arg0].unk0[j] = 128;
+                            D_800E30D8[i].unk14[arg0].unk0[j] = 128;
                         }
                     }
                 }
@@ -339,7 +332,7 @@ void func_800BA288(s32 arg0, s32 arg1) {
     }
 }
 
-//https://decomp.me/scratch/h4uac
+// https://decomp.me/scratch/h4uac
 GLOBAL_ASM("asm/non_matchings/waves/func_800BA4B8.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BA8E4.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BB2F4.s")
@@ -349,7 +342,7 @@ void func_800BBDDC(LevelModel *level, LevelHeader *header) {
     func_800BBF78(level);
 }
 
-//TODO: arg1 should be a LevelHeader
+// TODO: arg1 should be a LevelHeader
 void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1) {
     s16 numSegments;
     s32 j;
@@ -361,16 +354,17 @@ void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1) {
 
     numSegments = level->numberOfSegments;
     curBatch = 0;
-    
+
     for (i = 0; curBatch == 0 && i < numSegments; i++) {
         segment = &level->segments[i];
         for (j = 0; curBatch == 0 && j < segment->numberOfBatches; j++) {
-            if ((segment->batches[j].flags & (BATCH_FLAGS_UNK01000000 | BATCH_FLAGS_WATER | BATCH_FLAGS_HIDDEN)) == (BATCH_FLAGS_UNK01000000 | BATCH_FLAGS_WATER)) {
+            if ((segment->batches[j].flags & (BATCH_FLAGS_UNK01000000 | BATCH_FLAGS_WATER | BATCH_FLAGS_HIDDEN)) ==
+                (BATCH_FLAGS_UNK01000000 | BATCH_FLAGS_WATER)) {
                 curBatch = &segment->batches[j];
             }
         }
     }
-    
+
     if (curBatch == 0) {
         i = 0;
     } else {
@@ -509,7 +503,7 @@ void func_800BF3E4(Object *obj) {
     unk800E3184 *temp_a1;
 
     if (D_800E3190 != NULL) {
-        
+
         for (i = 0, m = 0; i < D_800E3188 && m == 0; i++) {
             if (obj == D_800E3194[i]) {
                 m = -1;
@@ -547,11 +541,13 @@ void func_800BF524(Object *obj) {
     if (temp_v0->unk11 != 0) {
         var_v1 |= 2;
     }
-    func_800BF634(obj, obj->segment.trans.x_position, obj->segment.trans.z_position, (f32) temp_v0->unkA, temp_v0->unk9 << 8,  
-        (f32) temp_v0->unk8 / 16.0, (f32) temp_v0->unkE, (f32) temp_v0->unkC / 16.0, var_v1);
+    func_800BF634(obj, obj->segment.trans.x_position, obj->segment.trans.z_position, (f32) temp_v0->unkA,
+                  temp_v0->unk9 << 8, (f32) temp_v0->unk8 / 16.0, (f32) temp_v0->unkE, (f32) temp_v0->unkC / 16.0,
+                  var_v1);
 }
 
-unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, f32 arg5, f32 arg6, f32 arg7, s32 arg8) {
+unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, f32 arg5, f32 arg6, f32 arg7,
+                           s32 arg8) {
     f32 var_f0;
     s32 var_a0;
     s32 var_a0_2;
@@ -564,7 +560,7 @@ unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, 
 
     result = NULL;
     if (D_800E3190 != NULL) {
-        for(i = 0, var_a0 = 0; i < 32 && var_a0 == 0; i++) {
+        for (i = 0, var_a0 = 0; i < 32 && var_a0 == 0; i++) {
             if (D_800E3194[i] == NULL) {
                 var_a0 = -1;
             }
@@ -591,7 +587,7 @@ unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, 
             if (var_a2_2 >= D_800E318C) {
                 var_a2_2 = D_800E318C - 1;
             }
-            
+
             for (j = var_a0_2; j <= var_a2_2; j++) {
                 temp = &D_800E3184[j];
                 if (temp->unk0[7] == 0xFF) {
@@ -612,12 +608,12 @@ unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, 
             result->unk14 = arg3 * arg3;
             result->unk1A = arg4;
             if (osTvType == TV_TYPE_PAL) {
-                result->unk1C = arg5 * 20971.52;//(f64) (0x80000 / 25.0);
+                result->unk1C = arg5 * 20971.52; //(f64) (0x80000 / 25.0);
             } else {
-                result->unk1C = arg5 * 17476.27;//(f64) ((0x80000 / 1.2) / 25.0);
+                result->unk1C = arg5 * 17476.27; //(f64) ((0x80000 / 1.2) / 25.0);
             }
             result->unk20 = 65536.0f / arg6;
-            result->unk24 = arg7; 
+            result->unk24 = arg7;
             result->unk28 = arg5;
             result->unk31 = arg8 & 1;
             result->unk32 = arg8 & 2;
@@ -668,7 +664,7 @@ void func_800BF9F8(unk800BF9F8 *arg0, f32 arg1, f32 arg2) {
                     j = 0;
                     if (iteration != 0) {
                         if (var_a2_2[7] == 0xFF) {
-                            while(var_a2_2[0] != 0xFF) {
+                            while (var_a2_2[0] != 0xFF) {
                                 var_a2_2++;
                             }
                             var_a2_2[0] = temp_v1;
@@ -676,8 +672,8 @@ void func_800BF9F8(unk800BF9F8 *arg0, f32 arg1, f32 arg2) {
                     } else {
                         while (j < 8) {
                             if (temp_v1 == var_a2_2[j]) {
-                                while(j < 7){
-                                    var_a2_2[j] = var_a2_2[j+1];
+                                while (j < 7) {
+                                    var_a2_2[j] = var_a2_2[j + 1];
                                     j++;
                                 }
                                 var_a2_2[j] = 0xFF;
@@ -709,15 +705,15 @@ UNUSED void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, 
         arg0->unk4 = (arg0->unkC + arg0->unk10);
         arg0->unk28 += arg2;
         if (osTvType == TV_TYPE_PAL) {
-            arg0->unk1C = arg0->unk28 * 20971.52;//(f64) (0x80000 / 25.0);
+            arg0->unk1C = arg0->unk28 * 20971.52; //(f64) (0x80000 / 25.0);
         } else {
-            arg0->unk1C = arg0->unk28 * 17476.27;//(f64) ((0x80000 / 1.2) / 25.0);
+            arg0->unk1C = arg0->unk28 * 17476.27; //(f64) ((0x80000 / 1.2) / 25.0);
         }
         arg0->unk2C = (arg0->unk2C + arg3);
         if (arg0->unk2C < 1.0) {
             arg0->unk2C = 1.0f;
         }
-        arg0->unk20 = (65536.0f / arg0->unk2C); //0x10000
+        arg0->unk20 = (65536.0f / arg0->unk2C); // 0x10000
         arg0->unk24 = (arg0->unk24 + arg4);
     }
 }
@@ -725,7 +721,7 @@ UNUSED void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, 
 void func_800BFE98(s32 arg0) {
     s32 i;
 
-    for(i = 0; i < 32; i++) {
+    for (i = 0; i < 32; i++) {
         if (D_800E3194[i] != NULL) {
             D_800E3190[i].unk1A += ((0, D_800E3190[i].unk1C * arg0)) >> 4;
         }
@@ -763,7 +759,7 @@ void obj_loop_wavepower(Object *obj) {
                 diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
                 if ((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ) < distance) {
                     D_8012A720 = entry->unkA / 256.0f;
-                    D_8012A724 = (D_8012A720 -  D_80129FC8->unk40) / (f32) entry->unkC;
+                    D_8012A724 = (D_8012A720 - D_80129FC8->unk40) / (f32) entry->unkC;
                     D_8012A728 = entry->unkC;
                     gWaveGeneratorObj = obj;
                 }

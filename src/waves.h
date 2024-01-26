@@ -126,7 +126,7 @@ void func_800BF3E4(Object *obj);
 f32 get_wave_height(Object_Log *log, s32 updateRate);
 void func_800BA288(s32 arg0, s32 arg1);
 void func_800BF9F8(unk800BF9F8 *arg0, f32 arg1, f32 arg2);
-unk800E3190 *func_800BF634(Object *obj, f32 arg1, f32 arg2, f32 arg3, s32 arg4, f32 arg5, f32 arg6, f32 arg7, s32 arg8);
+unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, f32 arg5, f32 arg6, f32 arg7, s32 arg8);
 
 Object_64 *func_800BE654(s16, f32, f32); // Non Matching
 void func_800BBF78(LevelModel *arg0); // Non Matching

@@ -47,11 +47,7 @@
 
 /************ .rodata ************/
 
-UNUSED char *sDebugRomBuildInfo[] = {
-    "1.1605",
-    "02/10/97 16:03",
-    "pmountain"
-};
+UNUSED char *sDebugRomBuildInfo[] = { "1.1605", "02/10/97 16:03", "pmountain" };
 
 const char D_800E7134[] = "BBB\n"; // Functionally unused.
 
@@ -63,7 +59,7 @@ UNUSED char gBuildString[40] = "Version 7.7 29/09/97 15.00 L.Schuneman";
 
 s8 sAntiPiracyTriggered = 0;
 UNUSED s32 D_800DD378 = 1;
-s32 gSaveDataFlags = 0; //Official Name: load_save_flags
+s32 gSaveDataFlags = 0; // Official Name: load_save_flags
 s32 gScreenStatus = OSMESG_SWAP_BUFFER;
 s32 sControllerStatus = 0;
 UNUSED s32 D_800DD388 = 0;
@@ -85,9 +81,7 @@ FadeTransition D_800DD3F4 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE
 UNUSED FadeTransition D_800DD3FC = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 20, -1);
 s32 sLogicUpdateRate = LOGIC_5FPS;
 FadeTransition gDrumstickSceneTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_WHITE, 30, -1);
-UNUSED char *D_800DD410[3] = {
-    "CAR", "HOV", "PLN"
-};
+UNUSED char *D_800DD410[3] = { "CAR", "HOV", "PLN" };
 FadeTransition gLevelFadeOutTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, -1);
 FadeTransition D_800DD424 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 260, -1);
 
@@ -136,11 +130,10 @@ s32 gCurrNumHudVertsPerPlayer;
 OSScClient *gNMISched[3];
 OSMesg gNMIOSMesg;
 OSMesgQueue gNMIMesgQueue;
-s32 gNMIMesgBuf; //Official Name: resetPressed
+s32 gNMIMesgBuf;          // Official Name: resetPressed
 UNUSED s32 D_80123568[3]; // BSS Padding
 
 /******************************/
-
 
 /**
  * Main looping function for the main thread.
@@ -156,11 +149,13 @@ void thread3_main(UNUSED void *unused) {
             func_80072708();
             audioStopThread();
             stop_thread30();
-            __osSpSetStatus(SP_SET_HALT | SP_CLR_INTR_BREAK | SP_CLR_YIELD | SP_CLR_YIELDED | SP_CLR_TASKDONE | SP_CLR_RSPSIGNAL
-                            | SP_CLR_CPUSIGNAL | SP_CLR_SIG5 | SP_CLR_SIG6 | SP_CLR_SIG7);
-            osDpSetStatus(DPC_SET_XBUS_DMEM_DMA | DPC_CLR_FREEZE | DPC_CLR_FLUSH | DPC_CLR_TMEM_CTR | DPC_CLR_PIPE_CTR
-                            | DPC_CLR_CMD_CTR | DPC_CLR_CMD_CTR);
-            while (1); // Infinite loop
+            __osSpSetStatus(SP_SET_HALT | SP_CLR_INTR_BREAK | SP_CLR_YIELD | SP_CLR_YIELDED | SP_CLR_TASKDONE |
+                            SP_CLR_RSPSIGNAL | SP_CLR_CPUSIGNAL | SP_CLR_SIG5 | SP_CLR_SIG6 | SP_CLR_SIG7);
+            osDpSetStatus(DPC_SET_XBUS_DMEM_DMA | DPC_CLR_FREEZE | DPC_CLR_FLUSH | DPC_CLR_TMEM_CTR | DPC_CLR_PIPE_CTR |
+                          DPC_CLR_CMD_CTR | DPC_CLR_CMD_CTR);
+            while (1) {
+                ; // Infinite loop
+            }
         }
         main_game_loop();
         thread3_verify_stack();
@@ -219,7 +214,7 @@ void init_game(void) {
     func_80081218(); // init_save_data
     create_and_start_thread30();
     osCreateMesgQueue(&gNMIMesgQueue, &gNMIOSMesg, 1);
-    osScAddClient(&gMainSched, (OSScClient*) gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);
+    osScAddClient(&gMainSched, (OSScClient *) gNMISched, &gNMIMesgQueue, OS_SC_ID_PRENMI);
     gNMIMesgBuf = 0;
     gGameCurrentEntrance = 0;
     gGameCurrentCutscene = 0;
@@ -270,7 +265,7 @@ void main_game_loop(void) {
     set_rsp_segment(&gCurrDisplayList, 4, (s32) gVideoLastFramebuffer - 0x500);
     init_rsp(&gCurrDisplayList);
     init_rdp_and_framebuffer(&gCurrDisplayList);
-    render_background(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE); 
+    render_background(&gCurrDisplayList, (Matrix *) &gGameCurrMatrix, TRUE);
     gSaveDataFlags = handle_save_data_and_read_controller(gSaveDataFlags, sLogicUpdateRate);
     if (get_lockup_status()) {
         render_epc_lock_up_display();
@@ -336,7 +331,7 @@ void main_game_loop(void) {
     if (gDrawFrameTimer == 2) {
         framebufferSize = SCREEN_WIDTH * SCREEN_HEIGHT * 2;
         if (osTvType == TV_TYPE_PAL) {
-            framebufferSize = (s32)((SCREEN_WIDTH * SCREEN_HEIGHT * 2) * 1.1f);
+            framebufferSize = (s32) ((SCREEN_WIDTH * SCREEN_HEIGHT * 2) * 1.1f);
         }
         dmacopy_doubleword(gVideoLastFramebuffer, gVideoCurrFramebuffer, (s32) gVideoCurrFramebuffer + framebufferSize);
     }
@@ -354,7 +349,7 @@ void main_game_loop(void) {
 
 /**
  * Loads a level for gameplay based on what the next track ID is, with the option to override.
-*/
+ */
 void load_next_ingame_level(s32 numPlayers, s32 trackID, Vehicle vehicle) {
     gGameNumPlayers = numPlayers - 1;
     if (trackID == -1) {
@@ -388,7 +383,7 @@ void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
  * Call numerous functions to clear data in RAM.
  * Then call to free particles, HUD and text.
  * Waits for a GFX task before unloading.
-*/
+ */
 void unload_level_game(void) {
     set_free_queue_state(0);
     if (gSkipGfxTask == FALSE) {
@@ -411,7 +406,7 @@ void unload_level_game(void) {
 /**
  * The main behaviour function involving all of the ingame stuff.
  * Involves the updating of all objects and setting up the render scene.
-*/
+ */
 void ingame_logic_loop(s32 updateRate) {
     s32 buttonPressedInputs, buttonHeldInputs, i, loadContext, sp3C;
 
@@ -432,8 +427,9 @@ void ingame_logic_loop(s32 updateRate) {
     if (!gIsPaused) {
         func_80010994(updateRate);
         if (check_if_showing_cutscene_camera() == 0 || get_race_countdown()) {
-            if (buttonPressedInputs & START_BUTTON && get_level_property_stack_pos() == 0 && gDrumstickSceneLoadTimer == 0
-                && gGameMode == GAMEMODE_INGAME && gPostRaceViewPort == NULL && gLevelLoadTimer == 0 && gPauseLockTimer == 0) {
+            if (buttonPressedInputs & START_BUTTON && get_level_property_stack_pos() == 0 &&
+                gDrumstickSceneLoadTimer == 0 && gGameMode == GAMEMODE_INGAME && gPostRaceViewPort == NULL &&
+                gLevelLoadTimer == 0 && gPauseLockTimer == 0) {
                 buttonPressedInputs = 0;
                 gIsPaused = TRUE;
                 func_80093A40();
@@ -457,7 +453,7 @@ void ingame_logic_loop(s32 updateRate) {
         buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
     }
     if (gPostRaceViewPort) {
-        i = func_80095728(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate); 
+        i = func_80095728(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
         switch (i) {
             case 2:
                 buttonHeldInputs |= (L_TRIG | Z_TRIG);
@@ -467,37 +463,30 @@ void ingame_logic_loop(s32 updateRate) {
                 func_8006D8F0(-1);
                 break;
             case 4:
-                clear_level_property_stack(); 
+                clear_level_property_stack();
                 gDrumstickSceneLoadTimer = 0;
                 buttonHeldInputs |= (L_TRIG | R_TRIG);
                 break;
             case 5:
-                buttonHeldInputs |= L_TRIG,
-                loadContext = LEVEL_CONTEXT_TRACK_SELECT;
+                buttonHeldInputs |= L_TRIG, loadContext = LEVEL_CONTEXT_TRACK_SELECT;
                 break;
             case 8:
-                buttonHeldInputs |= L_TRIG,
-                loadContext = LEVEL_CONTEXT_RESULTS;
+                buttonHeldInputs |= L_TRIG, loadContext = LEVEL_CONTEXT_RESULTS;
                 break;
             case 9:
-                buttonHeldInputs |= L_TRIG,
-                loadContext = LEVEL_CONTEXT_TROPHY_ROUND;
+                buttonHeldInputs |= L_TRIG, loadContext = LEVEL_CONTEXT_TROPHY_ROUND;
                 break;
             case 10:
-                buttonHeldInputs |= L_TRIG,
-                loadContext = LEVEL_CONTEXT_TROPHY_RESULTS;
+                buttonHeldInputs |= L_TRIG, loadContext = LEVEL_CONTEXT_TROPHY_RESULTS;
                 break;
             case 11:
-                buttonHeldInputs |= L_TRIG,
-                loadContext = LEVEL_CONTEXT_UNUSED;
+                buttonHeldInputs |= L_TRIG, loadContext = LEVEL_CONTEXT_UNUSED;
                 break;
             case 12:
-                buttonHeldInputs |= L_TRIG,
-                loadContext = LEVEL_CONTEXT_CHARACTER_SELECT;
+                buttonHeldInputs |= L_TRIG, loadContext = LEVEL_CONTEXT_CHARACTER_SELECT;
                 break;
             case 13:
-                buttonHeldInputs |= L_TRIG,
-                loadContext = LEVEL_CONTEXT_UNK7;
+                buttonHeldInputs |= L_TRIG, loadContext = LEVEL_CONTEXT_UNK7;
                 break;
         }
     }
@@ -745,7 +734,7 @@ void ingame_logic_loop(s32 updateRate) {
 
 /**
  * Reset dialogue and set the transition effect for the cutscene showing an unlocked Drumstick.
-*/
+ */
 void set_drumstick_unlock_transition(void) {
     gDrumstickSceneLoadTimer = 44;
     gIsPaused = 0;
@@ -780,15 +769,15 @@ void func_8006D968(s8 *arg0) {
     if (gGameMode != GAMEMODE_UNUSED_4) {
         gLevelSettings[0] = gPlayableMapId;
         for (i = 0; i < 2; i++) {
-            gLevelSettings[i + 2] = arg0[i + 8];   //0x8-0x9 - destinationMapId
-            gLevelSettings[i + 4] = arg0[i + 10];  //0xA-0xB - overworldSpawnIndex
-            gLevelSettings[i + 6] = arg0[i + 12];  //0xC-0xD - ?
-            gLevelSettings[i + 8] = arg0[i + 14];  //0xE-0xF - ?
-            gLevelSettings[i + 10] = arg0[i + 18]; //0x12-0x13 - ?
-            gLevelSettings[i + 12] = arg0[i + 20]; //0x14-0x15 - ?
+            gLevelSettings[i + 2] = arg0[i + 8];   // 0x8-0x9 - destinationMapId
+            gLevelSettings[i + 4] = arg0[i + 10];  // 0xA-0xB - overworldSpawnIndex
+            gLevelSettings[i + 6] = arg0[i + 12];  // 0xC-0xD - ?
+            gLevelSettings[i + 8] = arg0[i + 14];  // 0xE-0xF - ?
+            gLevelSettings[i + 10] = arg0[i + 18]; // 0x12-0x13 - ?
+            gLevelSettings[i + 12] = arg0[i + 20]; // 0x14-0x15 - ?
         }
-        gLevelSettings[14] = arg0[22]; //0x16 - ?
-        gLevelSettings[15] = arg0[23]; //0x17 returnSpawnIndex
+        gLevelSettings[14] = arg0[22]; // 0x16 - ?
+        gLevelSettings[15] = arg0[23]; // 0x17 returnSpawnIndex
         D_801234FC = 1;
     }
 }
@@ -811,7 +800,7 @@ UNUSED void set_game_mode(s32 changeTo) {
 /**
  * Sets up and loads a level to be used in the background of the menu that's about to be set up.
  * Used for every kind of menu that's not ingame.
-*/
+ */
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     alloc_displaylist_heap(PLAYER_ONE);
     gGameMode = GAMEMODE_MENU;
@@ -845,7 +834,7 @@ void set_level_default_vehicle(Vehicle vehicleID) {
 
 /**
  * Sets the vehicle option that the next level loaded for a menu may use.
-*/
+ */
 void set_vehicle_id_for_menu(Vehicle vehicleId) {
     stubbed_printf("Swapping\n");
     gMenuVehicleID = vehicleId;
@@ -877,7 +866,7 @@ void load_level_menu(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
 /**
  * Call numerous functions to clear data in RAM.
  * Then call to free particles, HUD and text.
-*/
+ */
 void unload_level_menu(void) {
     if (!gIsLoading) {
         gIsLoading = TRUE;
@@ -895,7 +884,7 @@ void unload_level_menu(void) {
 /**
  * Used in menus, update objects and draw the game.
  * In the tracks menu, this only runs if there's a track actively loaded.
-*/
+ */
 void update_menu_scene(s32 updateRate) {
     if (get_thread30_level_id_to_load() == NULL) {
         func_80010994(updateRate);
@@ -912,19 +901,20 @@ void update_menu_scene(s32 updateRate) {
 /**
  * Main function for handling behaviour in menus.
  * Runs the menu code, with a simplified object update and scene rendering system.
-*/
+ */
 void menu_logic_loop(s32 updateRate) {
     s32 menuLoopResult;
     s32 temp;
     s32 playerVehicle;
     s32 temp5;
-    
+
     gIsPaused = FALSE;
     gPostRaceViewPort = NULL;
     if (!gIsLoading && gRenderMenu) {
         update_menu_scene(updateRate);
     }
-    menuLoopResult = menu_loop(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
+    menuLoopResult =
+        menu_loop(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
     gRenderMenu = TRUE;
     if (menuLoopResult == -2) {
         gRenderMenu = FALSE;
@@ -1006,10 +996,10 @@ void menu_logic_loop(s32 updateRate) {
         gLevelSettings[1] = menuLoopResult;
         gLevelSettings[0] = gPlayableMapId;
 
-        gPlayableMapId = gLevelSettings[menuLoopResult+2];
-        gGameCurrentEntrance = gLevelSettings[menuLoopResult+4];
+        gPlayableMapId = gLevelSettings[menuLoopResult + 2];
+        gGameCurrentEntrance = gLevelSettings[menuLoopResult + 4];
         gGameMode = GAMEMODE_INGAME;
-        gGameCurrentCutscene = gLevelSettings[menuLoopResult+12];
+        gGameCurrentCutscene = gLevelSettings[menuLoopResult + 12];
         playerVehicle = get_player_selected_vehicle(PLAYER_ONE);
         gGameNumPlayers = gSettingsPtr->gNumRacers - 1;
         load_level_game(gPlayableMapId, gGameNumPlayers, gGameCurrentEntrance, playerVehicle);
@@ -1034,7 +1024,7 @@ void menu_logic_loop(s32 updateRate) {
 /**
  * Loads a level, intended to be used in a menu.
  * Skips loading many things, otherwise used in gameplay.
-*/
+ */
 void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
     if (!gIsLoading) {
         unload_level_menu();
@@ -1045,7 +1035,8 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
         }
     }
     if (levelId != (s32) SPECIAL_MAP_ID_NO_LEVEL) {
-        //!@bug: Forcing the plane here makes all AI use plane paths. This can be seen most evidently in the Ancient Lake demo.
+        //!@bug: Forcing the plane here makes all AI use plane paths.
+        //! This can be seen most evidently in the Ancient Lake demo.
         load_level_menu(levelId, numberOfPlayers, 0, VEHICLE_PLANE, cutsceneId);
         gIsLoading = FALSE;
         return;
@@ -1056,7 +1047,7 @@ void load_level_for_menu(s32 levelId, s32 numberOfPlayers, s32 cutsceneId) {
 /**
  * Initialise global game settings data.
  * Allocate space to accomodate it then set the start points for each data point.
-*/
+ */
 void calc_and_alloc_heap_for_settings(void) {
     s32 dataSize;
     u32 sizes[15];
@@ -1083,33 +1074,31 @@ void calc_and_alloc_heap_for_settings(void) {
     sizes[14] = sizes[13] + dataSize; // total size
 
     gSettingsPtr = allocate_from_main_pool_safe(sizes[14], COLOUR_TAG_WHITE);
-    gSettingsPtr->courseFlagsPtr = (s32 *)((u8 *)gSettingsPtr + sizes[0]);
-    gSettingsPtr->balloonsPtr = (s16 *)((u8 *)gSettingsPtr + sizes[1]);
+    gSettingsPtr->courseFlagsPtr = (s32 *) ((u8 *) gSettingsPtr + sizes[0]);
+    gSettingsPtr->balloonsPtr = (s16 *) ((u8 *) gSettingsPtr + sizes[1]);
     gSettingsPtr->tajFlags = 0;
-    gSettingsPtr->flapInitialsPtr[0] = (u16 *)((u8 *)gSettingsPtr + sizes[2]);
-    gSettingsPtr->flapInitialsPtr[1] = (u16 *)((u8 *)gSettingsPtr + sizes[3]);
-    gSettingsPtr->flapInitialsPtr[2] = (u16 *)((u8 *)gSettingsPtr + sizes[4]);
-    gSettingsPtr->flapTimesPtr[0] = (u16 *)((u8 *)gSettingsPtr + sizes[5]);
-    gSettingsPtr->flapTimesPtr[1] = (u16 *)((u8 *)gSettingsPtr + sizes[6]);
-    gSettingsPtr->flapTimesPtr[2] = (u16 *)((u8 *)gSettingsPtr + sizes[7]);
-    gSettingsPtr->courseInitialsPtr[0] = (u16 *)((u8 *)gSettingsPtr + sizes[8]);
-    gSettingsPtr->courseInitialsPtr[1] = (u16 *)((u8 *)gSettingsPtr + sizes[9]);
-    gSettingsPtr->courseInitialsPtr[2] = (u16 *)((u8 *)gSettingsPtr + sizes[10]);
-    gSettingsPtr->courseTimesPtr[0] = (u16 *)((u8 *)gSettingsPtr + sizes[11]);
-    gSettingsPtr->courseTimesPtr[1] = (u16 *)((u8 *)gSettingsPtr + sizes[12]);
-    gSettingsPtr->courseTimesPtr[2] = (u16 *)((u8 *)gSettingsPtr + sizes[13]);
+    gSettingsPtr->flapInitialsPtr[0] = (u16 *) ((u8 *) gSettingsPtr + sizes[2]);
+    gSettingsPtr->flapInitialsPtr[1] = (u16 *) ((u8 *) gSettingsPtr + sizes[3]);
+    gSettingsPtr->flapInitialsPtr[2] = (u16 *) ((u8 *) gSettingsPtr + sizes[4]);
+    gSettingsPtr->flapTimesPtr[0] = (u16 *) ((u8 *) gSettingsPtr + sizes[5]);
+    gSettingsPtr->flapTimesPtr[1] = (u16 *) ((u8 *) gSettingsPtr + sizes[6]);
+    gSettingsPtr->flapTimesPtr[2] = (u16 *) ((u8 *) gSettingsPtr + sizes[7]);
+    gSettingsPtr->courseInitialsPtr[0] = (u16 *) ((u8 *) gSettingsPtr + sizes[8]);
+    gSettingsPtr->courseInitialsPtr[1] = (u16 *) ((u8 *) gSettingsPtr + sizes[9]);
+    gSettingsPtr->courseInitialsPtr[2] = (u16 *) ((u8 *) gSettingsPtr + sizes[10]);
+    gSettingsPtr->courseTimesPtr[0] = (u16 *) ((u8 *) gSettingsPtr + sizes[11]);
+    gSettingsPtr->courseTimesPtr[1] = (u16 *) ((u8 *) gSettingsPtr + sizes[12]);
+    gSettingsPtr->courseTimesPtr[2] = (u16 *) ((u8 *) gSettingsPtr + sizes[13]);
     gSettingsPtr->unk4C = (Settings4C *) &gLevelSettings;
     gSaveDataFlags = // Set bits 0/1/2/8 and wipe out all others
-        SAVE_DATA_FLAG_READ_FLAP_TIMES |
-        SAVE_DATA_FLAG_READ_COURSE_TIMES |
-        SAVE_DATA_FLAG_READ_SAVE_DATA |
+        SAVE_DATA_FLAG_READ_FLAP_TIMES | SAVE_DATA_FLAG_READ_COURSE_TIMES | SAVE_DATA_FLAG_READ_SAVE_DATA |
         SAVE_DATA_FLAG_READ_EEPROM_SETTINGS;
 }
 
 /**
  * Set the init values for each racer based on which character they are and which player they are.
  * Then reset race status.
-*/
+ */
 void init_racer_headers(void) {
     s32 i, j;
     gSettingsPtr->gNumRacers = get_number_of_active_players();
@@ -1142,7 +1131,7 @@ void init_racer_headers(void) {
 
 /**
  * Depending on flags, clear fastest lap times and/or overall course times.
-*/
+ */
 void clear_lap_records(Settings *settings, s32 flags) {
     s32 i, j;
     s32 numWorlds, numLevels;
@@ -1168,7 +1157,7 @@ void clear_lap_records(Settings *settings, s32 flags) {
 
 /**
  * Set all game progression values to their default, as if it were a new game.
-*/
+ */
 void clear_game_progress(Settings *settings) {
     s32 i;
     s32 worldCount;
@@ -1196,7 +1185,7 @@ void clear_game_progress(Settings *settings) {
 
 /**
  * Call functions to set all game save data to the default.
-*/
+ */
 UNUSED void reset_save_data(void) {
     clear_lap_records(gSettingsPtr, 3);
     clear_game_progress(gSettingsPtr);
@@ -1205,7 +1194,7 @@ UNUSED void reset_save_data(void) {
 /**
  * Return the global game settings.
  * This is where global game records and perferences are stored.
-*/
+ */
 Settings *get_settings(void) {
     return gSettingsPtr;
 }
@@ -1219,7 +1208,7 @@ s8 is_game_paused(void) {
 
 /**
  * Returns the status of the post-race shrunken viewport.
-*/
+ */
 s8 is_postrace_viewport_active(void) {
     return gPostRaceViewPort;
 }
@@ -1230,14 +1219,14 @@ s8 is_postrace_viewport_active(void) {
  */
 s32 is_reset_pressed(void) {
     if (gNMIMesgBuf == 0) {
-        gNMIMesgBuf = (s32)((osRecvMesg(&gNMIMesgQueue, NULL, OS_MESG_NOBLOCK) + 1) != 0);
+        gNMIMesgBuf = (s32) ((osRecvMesg(&gNMIMesgQueue, NULL, OS_MESG_NOBLOCK) + 1) != 0);
     }
     return gNMIMesgBuf;
 }
 
 /**
  * Returns the current map ID if ingame, since this var is only set ingame.
-*/
+ */
 s32 get_ingame_map_id(void) {
     return gPlayableMapId;
 }
@@ -1267,9 +1256,9 @@ void mark_to_read_flap_and_course_times(void) {
  * Marks a flag to read the save file from the passed index from flash.
  */
 void mark_read_save_file(s32 saveFileIndex) {
-    //Wipe out bits 8 and 9
+    // Wipe out bits 8 and 9
     gSaveDataFlags &= ~(SAVE_DATA_FLAG_READ_EEPROM_SETTINGS | SAVE_DATA_FLAG_WRITE_EEPROM_SETTINGS);
-    //Place saveFileIndex at bits 8 and 9 and set bit 2
+    // Place saveFileIndex at bits 8 and 9 and set bit 2
     gSaveDataFlags |= (SAVE_DATA_FLAG_READ_SAVE_DATA | ((saveFileIndex & SAVE_DATA_FLAG_INDEX_VALUE) << 8));
 }
 
@@ -1277,7 +1266,7 @@ void mark_read_save_file(s32 saveFileIndex) {
  * Marks a flag to read all save file data from flash.
  */
 void mark_read_all_save_files(void) {
-    gSaveDataFlags |= SAVE_DATA_FLAG_READ_ALL_SAVE_DATA; //Set bit 3
+    gSaveDataFlags |= SAVE_DATA_FLAG_READ_ALL_SAVE_DATA; // Set bit 3
 }
 
 /**
@@ -1306,19 +1295,20 @@ void mark_to_write_flap_and_course_times(void) {
  * Official Name: mainSaveGame
  */
 void force_mark_write_save_file(s32 saveFileIndex) {
-    gSaveDataFlags &= ~SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER_BITS; //Wipe out bits 10 and 11
-    gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_SAVE_DATA | ((saveFileIndex & 3) << 10)); //Set bit 6 and place saveFileIndex into bits 10 and 11
+    gSaveDataFlags &= ~SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER_BITS; // Wipe out bits 10 and 11
+    gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_SAVE_DATA |
+                       ((saveFileIndex & 3) << 10)); // Set bit 6 and place saveFileIndex into bits 10 and 11
 }
 
 /**
- * Marks a flag to write a save file to flash as long as we're not in tracks mode, and we're in the draw game render context.
- * This should prevent save data from being overwritten outside of Adventure Mode.
- * Official Name: mainSaveGame2
+ * Marks a flag to write a save file to flash as long as we're not in tracks mode, and we're in the draw game render
+ * context. This should prevent save data from being overwritten outside of Adventure Mode. Official Name: mainSaveGame2
  */
 void safe_mark_write_save_file(s32 saveFileIndex) {
     if (gGameMode == GAMEMODE_INGAME && !is_in_tracks_mode()) {
-        gSaveDataFlags &= ~SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER_BITS; //Wipe out bits 10 and 11
-        gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_SAVE_DATA | ((saveFileIndex & 3) << 10));; //Set bit 6 and place saveFileIndex into bits 10 and 11
+        gSaveDataFlags &= ~SAVE_DATA_FLAG_WRITE_SAVE_FILE_NUMBER_BITS; // Wipe out bits 10 and 11
+        gSaveDataFlags |= (SAVE_DATA_FLAG_WRITE_SAVE_DATA | ((saveFileIndex & 3) << 10));
+        ; // Set bit 6 and place saveFileIndex into bits 10 and 11
     }
 }
 
@@ -1326,7 +1316,7 @@ void safe_mark_write_save_file(s32 saveFileIndex) {
  * Marks a flag to erase a save file from flash later
  */
 void mark_save_file_to_erase(s32 saveFileIndex) {
-    //Set bit 7 and and place saveFileIndex into bits 10 and 11 while wiping everything else
+    // Set bit 7 and and place saveFileIndex into bits 10 and 11 while wiping everything else
     gSaveDataFlags = SAVE_DATA_FLAG_ERASE_SAVE_DATA | ((saveFileIndex & 3) << 10);
 }
 
@@ -1361,13 +1351,11 @@ void alloc_displaylist_heap(s32 numberOfPlayers) {
         set_free_queue_state(0);
         free_from_memory_pool(gDisplayLists[0]);
         free_from_memory_pool(gDisplayLists[1]);
-        totalSize =
-            ((gNumF3dCmdsPerPlayer[num] * sizeof(Gwords)))
-            + ((gNumHudMatPerPlayer[num] * sizeof(Matrix)))
-            + ((gNumHudVertsPerPlayer[num] * sizeof(Vertex)))
-            + ((gNumHudTrisPerPlayer[num] * sizeof(Triangle)));
+        totalSize = ((gNumF3dCmdsPerPlayer[num] * sizeof(Gwords))) + ((gNumHudMatPerPlayer[num] * sizeof(Matrix))) +
+                    ((gNumHudVertsPerPlayer[num] * sizeof(Vertex))) + ((gNumHudTrisPerPlayer[num] * sizeof(Triangle)));
         gDisplayLists[0] = (Gfx *) allocate_at_address_in_main_pool(totalSize, (u8 *) gDisplayLists[0], COLOUR_TAG_RED);
-        gDisplayLists[1] = (Gfx *) allocate_at_address_in_main_pool(totalSize, (u8 *) gDisplayLists[1], COLOUR_TAG_YELLOW);
+        gDisplayLists[1] =
+            (Gfx *) allocate_at_address_in_main_pool(totalSize, (u8 *) gDisplayLists[1], COLOUR_TAG_YELLOW);
         if ((gDisplayLists[0] == NULL) || gDisplayLists[1] == NULL) {
             if (gDisplayLists[0] != NULL) {
                 free_from_memory_pool(gDisplayLists[0]);
@@ -1379,12 +1367,12 @@ void alloc_displaylist_heap(s32 numberOfPlayers) {
             }
             default_alloc_displaylist_heap();
         }
-        gMatrixHeap[0] = (MatrixS *)((u8 *) gDisplayLists[0] + ((gNumF3dCmdsPerPlayer[num] * sizeof(Gwords))));
-        gTriangleHeap[0] = (TriangleList *)((u8 *) gMatrixHeap[0] + ((gNumHudMatPerPlayer[num] * sizeof(Matrix))));
-        gVertexHeap[0] = (Vertex *)((u8 *) gTriangleHeap[0] + ((gNumHudTrisPerPlayer[num] * sizeof(Triangle))));
-        gMatrixHeap[1] = (MatrixS *)((u8 *) gDisplayLists[1] + ((gNumF3dCmdsPerPlayer[num] * sizeof(Gwords))));
-        gTriangleHeap[1] = (TriangleList *)((u8 *) gMatrixHeap[1] + ((gNumHudMatPerPlayer[num] * sizeof(Matrix))));
-        gVertexHeap[1] = (Vertex *)((u8 *) gTriangleHeap[1] + ((gNumHudTrisPerPlayer[num] * sizeof(Triangle))));
+        gMatrixHeap[0] = (MatrixS *) ((u8 *) gDisplayLists[0] + ((gNumF3dCmdsPerPlayer[num] * sizeof(Gwords))));
+        gTriangleHeap[0] = (TriangleList *) ((u8 *) gMatrixHeap[0] + ((gNumHudMatPerPlayer[num] * sizeof(Matrix))));
+        gVertexHeap[0] = (Vertex *) ((u8 *) gTriangleHeap[0] + ((gNumHudTrisPerPlayer[num] * sizeof(Triangle))));
+        gMatrixHeap[1] = (MatrixS *) ((u8 *) gDisplayLists[1] + ((gNumF3dCmdsPerPlayer[num] * sizeof(Gwords))));
+        gTriangleHeap[1] = (TriangleList *) ((u8 *) gMatrixHeap[1] + ((gNumHudMatPerPlayer[num] * sizeof(Matrix))));
+        gVertexHeap[1] = (Vertex *) ((u8 *) gTriangleHeap[1] + ((gNumHudTrisPerPlayer[num] * sizeof(Triangle))));
         gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[num];
         gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[num];
         gCurrNumHudTrisPerPlayer = gNumHudTrisPerPlayer[num];
@@ -1419,20 +1407,22 @@ void default_alloc_displaylist_heap(void) {
 
     numberOfPlayers = FOUR_PLAYERS;
     gPrevPlayerCount = numberOfPlayers;
-    totalSize = (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords))
-        + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix))
-        + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex))
-        + (gNumHudTrisPerPlayer[numberOfPlayers] * sizeof(Triangle));
+    totalSize = (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)) +
+                (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)) +
+                (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)) +
+                (gNumHudTrisPerPlayer[numberOfPlayers] * sizeof(Triangle));
 
     gDisplayLists[0] = (Gfx *) allocate_from_main_pool_safe(totalSize, COLOUR_TAG_RED);
     gMatrixHeap[0] = (MatrixS *) ((u8 *) gDisplayLists[0] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
     gVertexHeap[0] = (Vertex *) ((u8 *) gMatrixHeap[0] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
-    gTriangleHeap[0] = (TriangleList *) ((u8 *) gVertexHeap[0] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
+    gTriangleHeap[0] =
+        (TriangleList *) ((u8 *) gVertexHeap[0] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
     gDisplayLists[1] = (Gfx *) allocate_from_main_pool_safe(totalSize, COLOUR_TAG_YELLOW);
     gMatrixHeap[1] = (MatrixS *) ((u8 *) gDisplayLists[1] + (gNumF3dCmdsPerPlayer[numberOfPlayers] * sizeof(Gwords)));
     gVertexHeap[1] = (Vertex *) ((u8 *) gMatrixHeap[1] + (gNumHudMatPerPlayer[numberOfPlayers] * sizeof(Matrix)));
-    gTriangleHeap[1] = (TriangleList *) ((u8 *) gVertexHeap[1] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
+    gTriangleHeap[1] =
+        (TriangleList *) ((u8 *) gVertexHeap[1] + (gNumHudVertsPerPlayer[numberOfPlayers] * sizeof(Vertex)));
 
     gCurrNumF3dCmdsPerPlayer = gNumF3dCmdsPerPlayer[numberOfPlayers];
     gCurrNumHudMatPerPlayer = gNumHudMatPerPlayer[numberOfPlayers];
@@ -1445,18 +1435,18 @@ void func_8006F140(s32 arg0) {
         gLevelLoadTimer = 40;
         gLevelLoadType = LEVEL_LOAD_NORMAL;
         D_80123526 = 0;
-        if (arg0 == 1) { //FADE_BARNDOOR_HORIZONTAL?
+        if (arg0 == 1) { // FADE_BARNDOOR_HORIZONTAL?
             transition_begin(&gLevelFadeOutTransition);
         }
-        if (arg0 == 3) { //FADE_CIRCLE?
+        if (arg0 == 3) { // FADE_CIRCLE?
             gLevelLoadTimer = 282;
             transition_begin(&D_800DD424);
         }
-        if (arg0 == 4) { //FADE_WAVES?
+        if (arg0 == 4) { // FADE_WAVES?
             gLevelLoadTimer = 360;
             transition_begin(&D_800DD424);
         }
-        if (arg0 == 0) { //FADE_FULLSCREEN?
+        if (arg0 == 0) { // FADE_FULLSCREEN?
             gLevelLoadTimer = 2;
         }
     }
@@ -1472,7 +1462,7 @@ UNUSED void func_8006F20C(void) {
 
 /**
  * Begins a fade transition, then signals to the level loading that it wants to be a trophy race.
-*/
+ */
 void begin_trophy_race_teleport(void) {
     if (gLevelLoadTimer == 0) {
         transition_begin(&gLevelFadeOutTransition);
@@ -1483,10 +1473,11 @@ void begin_trophy_race_teleport(void) {
 
 /**
  * Check if all available trophy races and Wizpig 1 has been beaten, and if the cutscene has not yet played.
-*/
+ */
 void begin_lighthouse_rocket_cutscene(void) {
     if (gLevelLoadTimer == 0) {
-        if ((gSettingsPtr->trophies & 0xFF) == 0xFF && !(gSettingsPtr->cutsceneFlags & CUTSCENE_LIGHTHOUSE_ROCKET) && gSettingsPtr->bosses & 1) {
+        if ((gSettingsPtr->trophies & 0xFF) == 0xFF && !(gSettingsPtr->cutsceneFlags & CUTSCENE_LIGHTHOUSE_ROCKET) &&
+            gSettingsPtr->bosses & 1) {
             gSettingsPtr->cutsceneFlags |= CUTSCENE_LIGHTHOUSE_ROCKET;
             transition_begin(&gLevelFadeOutTransition);
             gLevelLoadTimer = 40;
@@ -1499,7 +1490,7 @@ void begin_lighthouse_rocket_cutscene(void) {
 /**
  * Begin a transition, then set the next level to the passed argument.
  * This is used only to warp to Future Fun Land from the hub area.
-*/
+ */
 void begin_level_teleport(s32 levelID) {
     if (gLevelLoadTimer == 0) {
         gNextMap = levelID;
@@ -1511,7 +1502,7 @@ void begin_level_teleport(s32 levelID) {
 
 /**
  * Set the number of frames to disallow pausing for.
-*/
+ */
 void set_pause_lockout_timer(u8 time) {
     gPauseLockTimer = time;
 }
@@ -1519,7 +1510,7 @@ void set_pause_lockout_timer(u8 time) {
 /**
  * Switch the data around for player 1 and 2 for two player adventure,
  * effectively passing the lead over to the other player.
-*/
+ */
 void swap_lead_player(void) {
     s32 i;
     u8 temp;
@@ -1529,8 +1520,8 @@ void swap_lead_player(void) {
     swap_player_1_and_2_ids();
     func_8000E194();
 
-    first_racer_data = (u8 *)(gSettingsPtr->racers);
-    second_racer_data = (u8 *)(gSettingsPtr->racers + 1);
+    first_racer_data = (u8 *) (gSettingsPtr->racers);
+    second_racer_data = (u8 *) (gSettingsPtr->racers + 1);
 
     for (i = 0; i < (s32) sizeof(Racer); i++) {
         temp = first_racer_data[i];
@@ -1542,7 +1533,7 @@ void swap_lead_player(void) {
 /**
  * Sets the timer to delay drawing new frames.
  * When set to 2, the game will copy the previous framebuffer over to the next.
-*/
+ */
 void set_frame_blackout_timer(void) {
     gDrawFrameTimer = 2;
 }
@@ -1579,9 +1570,10 @@ s32 is_controller_missing(void) {
 }
 
 /**
- * Ran on boot, will make sure the CIC chip (CIC6103) is to spec. Will return true if it's all good, otherwise it returns false.
- * The intention of this function, is an attempt to check that the cartridge is a legitimate copy.
- * A false read, meaning you're caught running an illegitimate copy, will force the game to pause when you enter the world.
+ * Ran on boot, will make sure the CIC chip (CIC6103) is to spec. Will return true if it's all good, otherwise it
+ * returns false. The intention of this function, is an attempt to check that the cartridge is a legitimate copy. A
+ * false read, meaning you're caught running an illegitimate copy, will force the game to pause when you enter the
+ * world.
  */
 s32 check_imem_validity(void) {
     if (IO_READ(SP_IMEM_START) != CIC_ID) {

@@ -165,7 +165,7 @@ void set_dialogue_font(s32 dialogueBoxID, s32 font);
 void set_current_dialogue_background_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha);
 void set_current_text_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha, s32 opacity);
 void set_current_text_background_colour(s32 dialogueBoxID, s32 red, s32 green, s32 blue, s32 alpha);
-void move_dialogue_box_to_front(s32 dialogueBoxID, DialogueBox *box);
+void move_dialogue_box_to_front(s32 dialogueBoxID, DialogueBox *dialogueBox);
 void assign_dialogue_box_id(s32 dialogueBoxID);
 void open_dialogue_box(s32 dialogueBoxID);
 void close_dialogue_box(s32 dialogueBoxID);
@@ -177,7 +177,8 @@ void parse_string_with_number(char *input, char *output, s32 number);
 void s32_to_string(char **outString, s32 number);
 void load_font(s32 fontID);
 void unload_font(s32 fontID);
-void render_text_string(Gfx **dlist, DialogueBoxBackground *box, char *text, AlignmentFlags alignmentFlags, f32 scisScale);
+void render_text_string(Gfx **dList, DialogueBoxBackground *box, char *text, AlignmentFlags alignmentFlags,
+                        f32 scisScale);
 s32 get_text_width(char *text, s32 x, s32 font);
 void *render_dialogue_text(s32 dialogueBoxID, s32 posX, s32 posY, char *text, s32 number, s32 flags);
 

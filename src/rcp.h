@@ -63,19 +63,20 @@ extern s8 rspF3DDKRFifoStart[];
 extern s8 rspF3DDKRDataFifoStart[];
 
 s32 wait_for_gfx_task(void);
-void func_80077AAC(void *bufPtr, s32 arg1, UNUSED s32 arg2);
-void set_background_prim_colour(u8 arg0, u8 arg1, u8 arg2);
+void func_80077AAC(void *bufPtr, s32 bufSize, UNUSED s32 arg2);
+void set_background_prim_colour(u8 red, u8 green, u8 blue);
 void set_background_fill_colour(s32 red, s32 green, s32 blue);
-void init_rdp_and_framebuffer(Gfx **dlist);
-void init_rsp(Gfx **dlist);
+void init_rdp_and_framebuffer(Gfx **dList);
+void init_rsp(Gfx **dList);
 void setup_gfx_mesg_queues(OSSched *sc);
 void func_80078170(TextureHeader *arg0, TextureHeader *arg1, u32 arg2);
 s32 setup_ostask_xbus(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
 void setup_ostask_fifo(Gfx* dlBegin, Gfx* dlEnd, s32 recvMesg);
-void render_textured_rectangle(Gfx **dlist, DrawTexture *img, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue, u8 alpha);
+void render_textured_rectangle(Gfx **dList, DrawTexture *element, s32 xPos, s32 yPos, u8 red, u8 green, u8 blue,
+                               u8 alpha);
 void render_chequer_background(Gfx** dList);
-void render_background(Gfx **dlist, Matrix *mtx, s32 drawBG);
-void set_background_draw_function(void *arg0);
+void render_background(Gfx **dList, Matrix *mtx, s32 drawBG);
+void set_background_draw_function(void *func);
 void render_texture_rectangle_scaled(Gfx **dlist, DrawTexture *element, f32 xPos, f32 yPos, f32 xScale, f32 yScale, u32 colour, s32 flags);
 
 //Non Matching

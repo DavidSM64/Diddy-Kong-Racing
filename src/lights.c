@@ -57,12 +57,13 @@ void setup_lights(s32 count) {
 
     free_lights();
     gMaxLights = count;
-    temp_v0 = (ObjectLight **) allocate_from_main_pool_safe(gMaxLights * (sizeof(s32 *) + sizeof(ObjectLight) + sizeof(unk800DC960) + sizeof(Vec3f)), COLOUR_TAG_MAGENTA);
+    temp_v0 = (ObjectLight **) allocate_from_main_pool_safe(
+        gMaxLights * (sizeof(s32 *) + sizeof(ObjectLight) + sizeof(unk800DC960) + sizeof(Vec3f)), COLOUR_TAG_MAGENTA);
     newCount = gMaxLights;
     gActiveLights = temp_v0;
-    D_800DC954 = (ObjectLight *) (newCount + (0, temp_v0)); //fakematch
-    D_800DC960 = (unk800DC960 *) (newCount + (0, D_800DC954)); //fakematch
-    D_800DC964 = (Vec3f *) (newCount + (0, D_800DC960)); //fakematch
+    D_800DC954 = (ObjectLight *) (newCount + (0, temp_v0));    // fakematch
+    D_800DC960 = (unk800DC960 *) (newCount + (0, D_800DC954)); // fakematch
+    D_800DC964 = (Vec3f *) (newCount + (0, D_800DC960));       // fakematch
     for (i = 0; i < gMaxLights; i++) {
         gActiveLights[i] = &D_800DC954[i];
     }
@@ -120,14 +121,14 @@ ObjectLight *func_80031CAC(Object *light, LevelObjectEntry_RgbaLight *lightEntry
                 newLight->unk4E = 0;
                 newLight->unk48 = (u16) &test->red2;
                 temp_a0 = (u16) &test->red2;
-                for (i = 0; i < temp_a0; ) {
+                for (i = 0; i < temp_a0;) {
                     newLight->unk4E += test->unk18[i++].unk0;
                 }
             }
         }
         newLight->radius = lightEntry->unkE;
-        newLight->unk60  = lightEntry->unk10;
-        newLight->unk64  = lightEntry->unk12;
+        newLight->unk60 = lightEntry->unk10;
+        newLight->unk64 = lightEntry->unk12;
         newLight->radiusSquare = newLight->radius * newLight->radius;
         newLight->radiusMag = 1 / newLight->radius;
         newLight->unk70 = lightEntry->unk14;
@@ -189,9 +190,9 @@ ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1) {
             light->unk4C = 0;
             light->unk4E = 0;
             light->unk44 = (SubMiscAssetObjectHeader24 *) &miscAsset->unk14;
-            for (i = 0; i < light->unk48 ; i++) { \
-                light->unk4E += light->unk44[i].unk4; //Must be on one line!
-            }
+            // clang-format off
+            for (i = 0; i < light->unk48; i++) { light->unk4E += light->unk44[i].unk4; } // Must be on one line!
+            // clang-format on
         } else {
             light->unk44 = 0;
         }
@@ -215,7 +216,7 @@ ObjectLight *add_object_light(Object *obj, ObjectHeader24 *arg1) {
 /**
  * Disable this objects light data.
  * Official Name: turnLightOff?
-*/
+ */
 UNUSED void disable_object_light(ObjectLight *light) {
     light->enabled = FALSE;
 }
@@ -223,14 +224,14 @@ UNUSED void disable_object_light(ObjectLight *light) {
 /**
  * Enable this objects light data.
  * Official Name: turnLightOn?
-*/
+ */
 UNUSED void enable_object_light(ObjectLight *light) {
     light->enabled = TRUE;
 }
 
 /**
  * Toggle this objects light data on or off.
-*/
+ */
 UNUSED void toggle_object_light(ObjectLight *light) {
     if (light->enabled == TRUE) {
         light->enabled = FALSE;
@@ -263,7 +264,7 @@ UNUSED void func_80032344(ObjectLight *light, s32 arg1, s32 arg2) {
 
 /**
  * Loops through all active lights and updates their properties.
-*/
+ */
 void lightUpdateLights(s32 updateRate) {
     s32 i;
     for (i = 0; i < gNumActiveLights; i++) {
@@ -275,7 +276,7 @@ GLOBAL_ASM("asm/non_matchings/lights/func_80032424.s")
 
 /**
  * Official Name: killLight?
-*/
+ */
 void func_80032BAC(ObjectLight *light) {
     ObjectLight *entry = NULL;
     s32 i;
@@ -296,7 +297,7 @@ void func_80032BAC(ObjectLight *light) {
 /**
  * Return the number of active lights.
  * Official Name: lightGetLights?
-*/
+ */
 s32 get_light_count(void) {
     return gNumActiveLights;
 }
@@ -320,7 +321,7 @@ void func_80032C7C(Object *object) {
                 sp64 = 2;
                 break;
             case OBJECT_MODEL_TYPE_SPRITE_BILLBOARD: // 2D Billboard
-            case OBJECT_MODEL_TYPE_VEHICLE_PART: // Vehicle Part
+            case OBJECT_MODEL_TYPE_VEHICLE_PART:     // Vehicle Part
             case OBJECT_MODEL_TYPE_UNKNOWN3:
                 sp64 = 4;
                 break;
@@ -335,9 +336,8 @@ void func_80032C7C(Object *object) {
         D_800DC968 = 0;
         for (i = 0; i < gNumActiveLights; i++) {
             entry = gActiveLights[i];
-            if ((entry->unk2 & sp64) && (entry->enabled == 1) && (sp82 >= entry->unk50) &&
-                (entry->unk56 >= sp82) && (sp80 >= entry->unk52) && (entry->unk58 >= sp80) &&
-                (sp7E >= entry->unk54) && (entry->unk5A >= sp7E)) {
+            if ((entry->unk2 & sp64) && (entry->enabled == 1) && (sp82 >= entry->unk50) && (entry->unk56 >= sp82) &&
+                (sp80 >= entry->unk52) && (entry->unk58 >= sp80) && (sp7E >= entry->unk54) && (entry->unk5A >= sp7E)) {
                 if (entry->unk0 == 0) {
                     if (entry->unk28 >= 0x10000) {
                         D_800DC960[D_800DC968].unk0 = entry->unk0;
@@ -354,7 +354,8 @@ void func_80032C7C(Object *object) {
                     if (entry->unk0 == 2) {
                         gLightDiffY = 0.0f;
                     }
-                    gLightDistance = (gLightDiffX * gLightDiffX) + (gLightDiffY * gLightDiffY) + (gLightDiffZ * gLightDiffZ);
+                    gLightDistance =
+                        (gLightDiffX * gLightDiffX) + (gLightDiffY * gLightDiffY) + (gLightDiffZ * gLightDiffZ);
                     if (gLightDistance < entry->radiusSquare) {
                         if (entry->unk1 == 2) {
                             f20 = light_direction_calc(entry);
@@ -383,7 +384,7 @@ void func_80032C7C(Object *object) {
                                 D_800DC960[D_800DC968].unk4 = entry->unk1C >> 0x10;
                                 D_800DC960[D_800DC968].unk8 = entry->unk20 >> 0x10;
                                 D_800DC960[D_800DC968].unkC = entry->unk24 >> 0x10;
-                                D_800DC960[D_800DC968].unk10 = (u8)f20;
+                                D_800DC960[D_800DC968].unk10 = (u8) f20;
                                 D_800DC968++;
                             }
                         }
@@ -469,8 +470,8 @@ void func_800337E4(void) {
     unk800DC960 *temp_a1;
 
     for (i = 1; i < D_800DC968; i++) {
-        index = i; // Needed?
-        if ((&D_800DC960[index])->unk10){} // Fakematch
+        index = i;                          // Needed?
+        if ((&D_800DC960[index])->unk10) {} // Fakematch
         temp_a1 = (0, D_800DC960) + index;
         temp_a2 = temp_a1->unk10;
         if (temp_a2 >= 2) {
@@ -491,7 +492,7 @@ void func_800337E4(void) {
                 D_800DC960->unk4 = 255;
             }
             if (D_800DC960->unk8 >= 256) {
-             D_800DC960->unk8 = 255;
+                D_800DC960->unk8 = 255;
             }
             if (D_800DC960->unkC >= 256) {
                 D_800DC960->unkC = 255;
@@ -502,42 +503,42 @@ void func_800337E4(void) {
 
 /**
  * Official Name: lightDistanceCalc
-*/
+ */
 f32 light_distance_calc(ObjectLight *light) {
     f32 dist;
     f32 mag;
 
     dist = light->unk28 / 65536.0f;
     switch (light->type) {
-    case LIGHT_UNK1:
-        mag = 1.0f - (sqrtf(gLightDistance) * light->radiusMag);
-        dist *= mag;
-        break;
-    case LIGHT_UNK2:
-        mag = 1.0f - sqrtf(sqrtf(gLightDistance) * light->radiusMag);
-        dist *= mag;
-        break;
-    case LIGHT_UNK3:
-        mag = coss_f(sqrtf(gLightDistance) * light->radiusMag * 16384.0f);
-        dist *= mag;
-        break;
-    case LIGHT_UNK4:
-        mag = coss_f(sqrtf(gLightDistance) * light->radiusMag * 16384.0f);
-        mag *= mag;
-        dist *= mag;
-        break;
-    case LIGHT_UNK5:
-        mag = 1.0f - (sqrtf(gLightDistance) * light->radiusMag);
-        mag *= mag;
-        dist *= mag;
-        break;
+        case LIGHT_UNK1:
+            mag = 1.0f - (sqrtf(gLightDistance) * light->radiusMag);
+            dist *= mag;
+            break;
+        case LIGHT_UNK2:
+            mag = 1.0f - sqrtf(sqrtf(gLightDistance) * light->radiusMag);
+            dist *= mag;
+            break;
+        case LIGHT_UNK3:
+            mag = coss_f(sqrtf(gLightDistance) * light->radiusMag * 16384.0f);
+            dist *= mag;
+            break;
+        case LIGHT_UNK4:
+            mag = coss_f(sqrtf(gLightDistance) * light->radiusMag * 16384.0f);
+            mag *= mag;
+            dist *= mag;
+            break;
+        case LIGHT_UNK5:
+            mag = 1.0f - (sqrtf(gLightDistance) * light->radiusMag);
+            mag *= mag;
+            dist *= mag;
+            break;
     }
     return dist;
 }
 
 /**
  * Official Name: lightDirectionCalc
-*/
+ */
 f32 light_direction_calc(ObjectLight *light) {
     f32 mag;
     f32 distance;
@@ -545,7 +546,8 @@ f32 light_direction_calc(ObjectLight *light) {
     distance = gLightDistance;
     if (distance > 0.0f) {
         mag = 1.0f / sqrtf(distance);
-        distance = (gLightDiffX * mag * light->unk7C) + (gLightDiffY * mag * light->unk80) + (gLightDiffZ * mag * light->unk84);
+        distance = (gLightDiffX * mag * light->unk7C) + (gLightDiffY * mag * light->unk80) +
+                   (gLightDiffZ * mag * light->unk84);
         if (distance < 0.0f) {
             distance = 0.0f;
         }
