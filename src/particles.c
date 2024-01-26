@@ -66,13 +66,12 @@ s32 *gParticleBehavioursAssets = NULL;
 ParticleBehavior **gParticleBehavioursAssetTable = NULL;
 ColourRGBA D_800E2D00[2] = { { { { 0 } } }, { { { 0 } } } };
 
-// Are these just Triangles?
-unk800E2D08 D_800E2D08[5] = {
-    { 0x4000, 0x0102, 0x0100, 0x0000, 0x0000, 0x01E0, 0x0100, 0x01E0 },
-    { 0x4000, 0x0203, 0x0100, 0x0000, 0x0100, 0x01E0, 0x01E0, 0x01E0 },
-    { 0x4001, 0x0204, 0x0000, 0x0000, 0x0100, 0x0000, 0x0000, 0x01E0 },
-    { 0x4002, 0x0305, 0x0100, 0x0000, 0x01E0, 0x0000, 0x01E0, 0x01E0 },
-    { 0x4000, 0x0103, 0x0100, 0x0000, 0x0000, 0x01E0, 0x01E0, 0x01E0 },
+Triangle D_800E2D08[5] = {
+    { { { BACKFACE_DRAW, 0, 1, 2 } }, { { { 256, 0 } } }, { { { 0, 480 } } }, { { { 256, 480 } } } },
+    { { { BACKFACE_DRAW, 0, 2, 3 } }, { { { 256, 0 } } }, { { { 256, 480 } } }, { { { 480, 480 } } } },
+    { { { BACKFACE_DRAW, 1, 2, 4 } }, { { { 0, 0 } } }, { { { 256, 0 } } }, { { { 0, 480 } } } },
+    { { { BACKFACE_DRAW, 2, 3, 5 } }, { { { 256, 0 } } }, { { { 480, 0 } } }, { { { 480, 480 } } } },
+    { { { BACKFACE_DRAW, 0, 1, 3 } }, { { { 256, 0 } } }, { { { 0, 480 } } }, { { { 480, 480 } } } }
 };
 
 Vec3s D_800E2D58[5] = {
@@ -80,16 +79,15 @@ Vec3s D_800E2D58[5] = {
     { { { 0x0000, 0x0000, 0x01FF } } }, { { { 0x0000, 0x01FF, 0x01FF } } },
 };
 
-// Are these just Triangles?
-unk800E2D08 D_800E2D78[8] = {
-    { 0x0000, 0x0105, 0x0000, 0x0000, 0x0080, 0x0000, 0x0080, 0x01FF },
-    { 0x0000, 0x0504, 0x0000, 0x0000, 0x0080, 0x01FF, 0x0000, 0x01FF },
-    { 0x0001, 0x0206, 0x0080, 0x0000, 0x0100, 0x0000, 0x0100, 0x01FF },
-    { 0x0001, 0x0605, 0x0080, 0x0000, 0x0100, 0x01FF, 0x0080, 0x01FF },
-    { 0x0002, 0x0307, 0x0100, 0x0000, 0x0180, 0x0000, 0x0180, 0x01FF },
-    { 0x0002, 0x0706, 0x0100, 0x0000, 0x0180, 0x01FF, 0x0100, 0x01FF },
-    { 0x0003, 0x0004, 0x0180, 0x0000, 0x0200, 0x0000, 0x0200, 0x01FF },
-    { 0x0003, 0x0407, 0x0180, 0x0000, 0x0200, 0x01FF, 0x0180, 0x01FF },
+Triangle D_800E2D78[8] = {
+    { { { BACKFACE_CULL, 0, 1, 5 } }, { { { 0, 0 } } }, { { { 128, 0 } } }, { { { 128, 511 } } } },
+    { { { BACKFACE_CULL, 0, 5, 4 } }, { { { 0, 0 } } }, { { { 128, 511 } } }, { { { 0, 511 } } } },
+    { { { BACKFACE_CULL, 1, 2, 6 } }, { { { 128, 0 } } }, { { { 256, 0 } } }, { { { 256, 511 } } } },
+    { { { BACKFACE_CULL, 1, 6, 5 } }, { { { 128, 0 } } }, { { { 256, 511 } } }, { { { 128, 511 } } } },
+    { { { BACKFACE_CULL, 2, 3, 7 } }, { { { 256, 0 } } }, { { { 384, 0 } } }, { { { 384, 511 } } } },
+    { { { BACKFACE_CULL, 2, 7, 6 } }, { { { 256, 0 } } }, { { { 384, 511 } } }, { { { 256, 511 } } } },
+    { { { BACKFACE_CULL, 3, 0, 4 } }, { { { 384, 0 } } }, { { { 512, 0 } } }, { { { 512, 511 } } } },
+    { { { BACKFACE_CULL, 3, 4, 7 } }, { { { 384, 0 } } }, { { { 512, 511 } } }, { { { 384, 511 } } } },
 };
 
 Vec3s D_800E2DF8[8] = {
@@ -123,14 +121,18 @@ XYStruct gParticleCoordListQuad[4] = {
     { -6, -6 },
 };
 
-s32 D_800E2E84[16] = {
-    0x00000000, 0xC00840FF, 0xFF6008FF, 0x404040FF, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x1070FFFF, 0x00000000, 0x00000000,
+ColourRGBA D_800E2E84[16] = {
+    { { { 0, 0, 0, 0 } } }, { { { 192, 8, 64, 255 } } },   { { { 255, 96, 8, 255 } } }, { { { 64, 64, 64, 255 } } },
+    { { { 0, 0, 0, 0 } } }, { { { 0, 0, 0, 0 } } },        { { { 0, 0, 0, 0 } } },      { { { 0, 0, 0, 0 } } },
+    { { { 0, 0, 0, 0 } } }, { { { 0, 0, 0, 0 } } },        { { { 0, 0, 0, 0 } } },      { { { 0, 0, 0, 0 } } },
+    { { { 0, 0, 0, 0 } } }, { { { 16, 112, 255, 255 } } }, { { { 0, 0, 0, 0 } } },      { { { 0, 0, 0, 0 } } },
 };
 
-s32 D_800E2EC4[10] = {
-    0x404040FF, 0x404040FF, 0x002D00FF, 0x002D00FF, 0x403C0AFF,
-    0x403C0AFF, 0x4040FFFF, 0x4040FFFF, 0x404040FF, 0x404040FF,
+ColourRGBA D_800E2EC4[10] = {
+    { { { 64, 64, 64, 255 } } },  { { { 64, 64, 64, 255 } } },  { { { 0, 45, 0, 255 } } },
+    { { { 0, 45, 0, 255 } } },    { { { 64, 60, 10, 255 } } },  { { { 64, 60, 10, 255 } } },
+    { { { 64, 64, 255, 255 } } }, { { { 64, 64, 255, 255 } } }, { { { 64, 64, 64, 255 } } },
+    { { { 64, 64, 64, 255 } } },
 };
 
 s32 gParticleOpacity = 256;
@@ -141,7 +143,7 @@ s32 gParticleOpacity = 256;
 
 s32 gParticleUpdateRate;
 s32 D_80127C84;
-s32 D_80127C88[6];
+s16 D_80127C88[12];
 // printf.c
 // thread0_epc
 /******************************/
@@ -486,24 +488,30 @@ void func_800AF29C(Particle *arg0, s32 behaviourID, s32 propertyID, s16 velX, s1
 }
 
 #ifdef NON_EQUIVALENT
-
-// Should be functionally equivalent.
-void func_800AF404(s32 arg0) {
+void func_800AF404(s32 updateRate) {
+    u32 new_var;
     s32 i;
+    s16 temp;
+    Vec3s *vecTemp;
 
-    D_800E2E28 = (D_800E2E28 + (arg0 * 64)) & 0x1FF;
-    for (i = 0; i < 5; i++) {
-        D_800E2D08[i].unk6 = D_800E2D58[i].y_rotation + D_800E2E28;
-        D_800E2D08[i].unkA = D_800E2D58[i].x_rotation + D_800E2E28;
-        D_800E2D08[i].unkE = D_800E2D58[i].z_rotation + D_800E2E28;
+    D_800E2E28 = (D_800E2E28 + (updateRate << 6)) & 0x1FF;
+    temp = D_800E2E28;
+    new_var = temp;
+    // clang-format off
+    for (i = 0; i < ARRAY_COUNT(D_800E2D08); i++) {\
+        vecTemp = &D_800E2D58[i];\
+        D_800E2D08[i].uv2.v = vecTemp->s[0] + new_var;\
+        D_800E2D08[i].uv1.v = vecTemp->s[1] + new_var;\
+        D_800E2D08[i].uv0.v = vecTemp->s[2] + new_var;\
     }
-    for (i = 0; i < 8; i++) {
-        D_800E2D78[i].unk6 = D_800E2DF8[i].y_rotation + D_800E2E28;
-        D_800E2D78[i].unkA = D_800E2DF8[i].x_rotation + D_800E2E28;
-        D_800E2D78[i].unkE = D_800E2DF8[i].z_rotation + D_800E2E28;
+    // clang-format on
+    for (i = 0; i < ARRAY_COUNT(D_800E2D78); i++) {
+        vecTemp = &D_800E2DF8[i];
+        D_800E2D78[i].uv0.v = vecTemp->s[0] + new_var;
+        D_800E2D78[i].uv1.v = vecTemp->s[1] + new_var;
+        D_800E2D78[i].uv2.v = vecTemp->s[2] + new_var;
     }
 }
-
 #else
 GLOBAL_ASM("asm/non_matchings/particles/func_800AF404.s")
 #endif
@@ -566,7 +574,151 @@ void func_800AF6E4(Object *obj, s32 arg1) {
     obj->segment.unk1A--;
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800AF714.s")
+void func_800AF714(Object *racerObj, s32 updateRate) {
+    Object_Racer *racer;
+    ParticleProperties *temp_a3;
+    s32 var_v0;
+    s32 temp_v1;
+    s32 i;
+    Object_6C *new_var;
+    Object_6C *new_var2;
+    s32 var_t1;
+    s32 someBool;
+    s8 vehicleId;
+    u32 var_s7;
+    u8 *alphaPtr;
+
+    racer = &racerObj->unk64->racer;
+    var_s7 = racerObj->unk74;
+    vehicleId = racer->vehicleID;
+    i = 0;
+    object_do_player_tumble(racerObj);
+    for (; i < racerObj->segment.header->unk57; i++) {
+        if (var_s7 & 1) {
+            someBool = TRUE;
+            switch (vehicleId) {
+                case VEHICLE_CAR:
+                    if (i >= 0 && i < 10) {
+                        var_v0 = racer->unk16E;
+                        if (var_v0 < 0) {
+                            var_v0 = -var_v0;
+                        }
+                        var_v0 -= 24;
+                        if (var_v0 > 0) {
+                            temp_a3 = gParticlesAssetTable[racerObj->unk6C[i].unk8];
+                            alphaPtr = &D_800E2EC4[i].a;
+                            var_t1 = 4;
+                            if (var_v0 > 32) {
+                                var_v0 = 32;
+                            }
+                            var_t1 = var_v0 << var_t1;
+                            temp_v1 = var_t1 - ((var_v0 * var_v0) >> 2);
+                            D_800E2D00[0].word =
+                                ((((D_800E2EC4[i].r - temp_a3->colour.r) * temp_v1) >> 8) + temp_a3->colour.r) << 24;
+                            D_800E2D00[0].word |=
+                                (temp_a3->colour.g + ((((D_800E2EC4[i].g - temp_a3->colour.g) * temp_v1)) >> 8)) << 16;
+                            D_800E2D00[0].word |=
+                                (temp_a3->colour.b + ((((D_800E2EC4[i].b - temp_a3->colour.b) * temp_v1)) >> 8)) << 8;
+                            if (var_v0 > 16) {
+                                var_t1 = 256;
+                            }
+                            var_v0 = temp_a3->colour.a;
+                            D_800E2D00[0].word |= var_v0 + (((*alphaPtr - var_v0) * var_t1) >> 8);
+                        }
+                    } else {
+                        switch (i) {
+                            case 10:
+                                if (racer->wheel_surfaces[2] == 0xFF) {
+                                    someBool = FALSE;
+                                }
+                                D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[2] & 0xF].word;
+                                break;
+
+                            case 11:
+                                if (racer->wheel_surfaces[3] == 0xFF) {
+                                    someBool = FALSE;
+                                }
+                                D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[3] & 0xF].word;
+                                break;
+
+                            case 12:
+                                if (racer->wheel_surfaces[0] == 0xFF) {
+                                    someBool = FALSE;
+                                }
+                                D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[0] & 0xF].word;
+                                break;
+
+                            case 13:
+                                if (racer->wheel_surfaces[1] == 0xFF) {
+                                    someBool = FALSE;
+                                }
+                                D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[1] & 0xF].word;
+                                break;
+                        }
+                    }
+                    break;
+                case VEHICLE_PLANE:
+                    if (i == 0) {
+                        D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[0] & 0xF].word;
+                    } else if (i == 1) {
+                        D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[1] & 0xF].word;
+                    }
+                    break;
+                case VEHICLE_HOVERCRAFT:
+                    if (i == 2 || i == 3) {
+                        var_v0 = D_80127C88[racer->unk2 & 7];
+                        var_v0 += (updateRate * 4);
+                        if (var_v0 > 256) {
+                            var_v0 = 256;
+                        }
+                        D_80127C88[racer->unk2 & 7] = var_v0;
+                        gParticleOpacity = var_v0;
+                    }
+                    break;
+            }
+
+            if (someBool) {
+                if (!(racerObj->unk6C[i].unk4 & 0x8000)) {
+                    func_800AF52C(racerObj, i);
+                }
+                if (racerObj->unk6C[i].unk4 & 0x4000) {
+                    func_800AFE5C((Particle *) racerObj, (Particle *) &racerObj->unk6C[i]);
+                } else if (racerObj->unk6C[i].unk4 & 0x400) {
+                    func_800AFE5C((Particle *) racerObj, (Particle *) &racerObj->unk6C[i]);
+                } else {
+                    racerObj->unk6C[i].unkA += updateRate;
+                    if (racerObj->unk6C[i].unkA >= racerObj->unk6C[i].unk0->segment.unk40_s16) {
+                        func_800AFE5C((Particle *) racerObj, (Particle *) &racerObj->unk6C[i]);
+                    }
+                }
+            }
+        } else if (racerObj->unk6C[i].unk4 & 0x8000) {
+            if (racerObj->unk6C[i].unk4 & 0x4000) {
+                new_var2 = &racerObj->unk6C[i];
+                new_var2->unk6 = 0;
+                func_800AF6E4(racerObj, i);
+            } else {
+                if (racerObj->unk6C[i].unk4 & 0x400) {
+                    new_var = &racerObj->unk6C[i];
+                    racerObj->unk6C[i].unk4 |= 0x200;
+                    if (new_var->unk6 == 0) {
+                        func_800AF6E4(racerObj, i);
+                    }
+                } else {
+                    func_800AF6E4(racerObj, i);
+                }
+            }
+            if (i == 2 || i == 3) {
+                D_80127C88[racer->unk2 & 7] = 0;
+            }
+        }
+        D_800E2D00[0].word = 0;
+        var_s7 >>= 1;
+        gParticleOpacity = 256;
+    }
+
+    object_undo_player_tumble(racerObj);
+}
 
 void func_800AFC3C(Object *obj, s32 updateRate) {
     Object_6C *temp_s1;
@@ -637,7 +789,7 @@ void func_800AFE5C(Particle *arg0, Particle *arg1) {
 
     temp_s4 = arg1->data.behaviour;
     if (arg1->data.flags & 0x4000) {
-        tempObj = func_800B0BAC();
+        tempObj = func_800B0BAC((Object *) arg0, arg1);
         if (tempObj != NULL) {
             func_8000E9D0((Object *) tempObj);
         }
@@ -914,7 +1066,118 @@ Particle *func_800B0698(Particle *arg0, Particle *arg1) {
     return var_v0;
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800B0BAC.s")
+Particle *func_800B0BAC(Object *arg0, Particle *arg1) {
+    ParticleProperties *sp34;
+    Particle *sp30;
+    ParticleModel *sp2C;
+    ParticleBehavior *sp28;
+    unkParticleBehaviorUnk9C *sp24;
+
+    sp34 = gParticlesAssetTable[arg1->data.propertyID];
+    if (sp34->unk0 != 3) {
+        return NULL;
+    }
+    sp28 = arg1->data.behaviour;
+    sp24 = (unkParticleBehaviorUnk9C *) sp28->unk9C;
+    sp30 = func_800B1CB8(3);
+    if (sp30 == NULL) {
+        return NULL;
+    }
+    sp30->segment.object.segmentID = arg0->segment.object.segmentID;
+    sp30->segment.trans.flags = -0x8000;
+    sp30->segment.object.opacity = sp34->movementType;
+    sp30->segment.unk40 = sp34->unk2;
+    sp30->segment.unk3C = (ParticleSegment_3C *) arg0;
+    sp30->unk58_ptr = (Particle_58 **) arg1;
+    sp30->segment.trans.scale = sp34->scale * sp28->unk50;
+    sp30->segment.scaleVel = sp34->scale * sp28->unk54;
+    sp30->segment.particle.destroyTimer = sp34->lifeTime;
+    sp30->segment.particle.unk34 = 0.0f;
+    sp30->segment.object.unk38 = 0;
+    if (D_800E2D00->word != 0) {
+        sp30->colour.word = D_800E2D00->word;
+    } else {
+        sp30->colour.r = sp34->colour.r;
+        sp30->colour.g = sp34->colour.g;
+        sp30->colour.b = sp34->colour.b;
+    }
+    sp30->colour.a = sp34->colour.a;
+    if (sp30->segment.unk40 & 0x800 && arg0->shading != NULL) {
+        sp30->brightness = arg0->shading->unk0 * 255.0f;
+    } else {
+        sp30->brightness = 0xFF;
+    }
+    sp30->opacityTimer = sp34->opacityTimer;
+    sp30->opacity = sp34->opacity << 8;
+    if (sp34->opacity < 0xFF) {
+        if (sp30->segment.unk40 & 0x1000) {
+            sp30->segment.trans.flags |= OBJ_FLAGS_UNK_0100;
+        } else {
+            sp30->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
+        }
+    }
+    if (sp30->opacityTimer < sp30->segment.particle.destroyTimer) {
+        sp30->opacityVel =
+            (((sp34->opacityVel - sp34->opacity) << 8) / (sp30->segment.particle.destroyTimer - sp30->opacityTimer));
+    } else {
+        sp30->opacityVel = 0;
+    }
+    arg1->segment.trans.x_position = arg1->segment.textureFrame;
+    arg1->segment.trans.y_position = arg1->segment.unk1A;
+    arg1->segment.trans.z_position = arg1->data.baseVelZ;
+    f32_vec3_apply_object_rotation(&arg0->segment.trans, &arg1->segment.trans.x_position);
+    arg1->segment.trans.x_position += arg0->segment.trans.x_position;
+    arg1->segment.trans.y_position += arg0->segment.trans.y_position;
+    arg1->segment.trans.z_position += arg0->segment.trans.z_position;
+    sp30->unk68b = 0;
+    sp30->unk6Ab = 0;
+    sp30->unk6Bb = -1;
+    sp30->segment.unk1A = sp34->unk6;
+    sp30->segment.textureFrame = 0;
+    sp2C = sp30->modelData;
+    if (sp34->textureID == -1) {
+        sp2C->texture = NULL;
+    } else {
+        sp2C->texture = load_texture(sp34->textureID);
+        if (sp2C->texture != NULL) {
+            if (sp2C->texture->flags & 4) {
+                if (sp30->segment.unk40 & 0x1000) {
+                    sp30->segment.trans.flags |= OBJ_FLAGS_UNK_0100;
+                } else {
+                    sp30->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
+                }
+            }
+            if ((sp30->segment.unk40 & 3) == 2) {
+                sp30->segment.textureFrame = sp2C->texture->numOfTextures - 1;
+            }
+        }
+    }
+    sp2C->vertices->x = arg1->segment.trans.x_position;
+    sp2C->vertices->y = arg1->segment.trans.y_position;
+    sp2C->vertices->z = arg1->segment.trans.z_position;
+    if ((s32) sp24 != -1U) {
+        arg1->data.unk1E += 1;
+        if (arg1->data.unk1E >= sp24[0].unk0) {
+            arg1->data.unk1E = 0;
+        }
+        sp2C->vertices->r = sp24[arg1->data.unk1E + 2].r;
+        sp2C->vertices->g = sp24[arg1->data.unk1E + 2].g;
+        sp2C->vertices->b = sp24[arg1->data.unk1E + 2].b;
+        sp2C->vertices->a = arg1->data.unk6;
+    } else {
+        sp2C->vertices->r = sp30->colour.r;
+        sp2C->vertices->g = sp30->colour.g;
+        sp2C->vertices->b = sp30->colour.b;
+        sp2C->vertices->a = arg1->data.unk6;
+    }
+    sp30->unk6Ab = ((u32) sp34->lifeTimeRangeUnsigned >> 10);
+    sp30->unk6Bb = ((u32) (sp34->lifeTimeWord << 22) >> 26);
+    sp30->segment.trans.x_position = arg0->segment.trans.x_position;
+    sp30->segment.trans.y_position = arg0->segment.trans.y_position;
+    sp30->segment.trans.z_position = arg0->segment.trans.z_position;
+    arg1->data.opacity = 0;
+    return sp30;
+}
 
 Particle *func_800B1130(Particle *arg0, Particle *arg1) {
     s32 flags;
@@ -1332,7 +1595,7 @@ void handle_particle_movement(Particle *particle, s32 updateRate) {
     gParticleUpdateRate = updateRate;
     tempParticle = NULL;
     if (particle->segment.particle.unk2C == 3) {
-        func_800B26E0();
+        func_800B26E0(particle);
     } else {
         if (particle->segment.unk40 & 3) {
             if (gParticleUpdateRate > 0) {
@@ -1420,7 +1683,146 @@ void func_800B263C(Particle *arg0) {
     }
 }
 
-GLOBAL_ASM("asm/non_matchings/particles/func_800B26E0.s")
+void func_800B26E0(Particle *particle) {
+    Vec3f sp44;
+    f32 tempf;
+    f32 scale;
+    ParticleModel *particleModel;
+    ParticleSegment_3C *sp34;
+    Particle_58 *sp30;
+    Particle_58_0_9C *sp2C;
+    Particle_58_0_9C **sp2C_ptr;
+
+    sp34 = particle->segment.unk3C;
+    particleModel = 0;
+    sp2C_ptr = &sp2C;
+    if (sp34 != NULL) {
+        sp30 = (Particle_58 *) particle->unk58_ptr;
+        sp2C = sp30->unk0->unk9C;
+        particleModel = particle->modelData;
+    }
+    if (particle->unk68b < 2 && sp34 != NULL) {
+        if (sp30->unk0->unk0 & 0x1000) {
+            scale = sqrtf((sp34->unk1C * sp34->unk1C) + (sp34->unk20 * sp34->unk20) + (sp34->unk24 * sp34->unk24));
+            scale = scale * particle->segment.trans.scale * 0.1f;
+        } else {
+            scale = particle->segment.trans.scale;
+        }
+        if (!(particle->segment.unk40 & 0x4000)) {
+            sp44.x = 0.0f;
+            sp44.y = 0.0f;
+            sp44.z = 0.0f;
+            switch (particle->unk6Ab) {
+                default:
+                    sp44.x = scale;
+                    break;
+                case 2:
+                    sp44.z = scale;
+                    break;
+                case 1:
+                    sp44.y = scale;
+                    break;
+            }
+            f32_vec3_apply_object_rotation((ObjectTransform *) sp34, &sp44.x);
+        } else {
+            sp44.x = sp34->unk1C;
+            sp44.y = sp34->unk20;
+            sp44.z = sp34->unk24;
+            tempf = ((sp44.x * sp44.x) + (sp44.y * sp44.y)) + (sp44.z * sp44.f[2]);
+            if (tempf < 0.01f) {
+                tempf = 1.0f;
+            } else {
+                tempf = scale / sqrtf(tempf);
+            }
+            sp44.x *= tempf;
+            sp44.y *= tempf;
+            sp44.z *= tempf;
+            switch (particle->unk6Ab) {
+                case 0:
+                    tempf = sp44.x;
+                    sp44.x = -sp44.z;
+                    sp44.z = tempf;
+                    break;
+                case 1:
+                    tempf = sp44.y;
+                    sp44.y = -sp44.z;
+                    sp44.z = tempf;
+                    break;
+            }
+        }
+        if (particleModel != NULL && particle->unk68b == 0) {
+            particleModel->vertices[1].x = sp44.f[0] + sp30->unkC;
+            particleModel->vertices[1].y = sp44.f[1] + sp30->unk10;
+            particleModel->vertices[1].z = sp44.f[2] + sp30->unk14;
+            particleModel->vertices[1].r = particleModel->vertices->r;
+            particleModel->vertices[1].g = particleModel->vertices->g;
+            particleModel->vertices[1].b = particleModel->vertices->b;
+            particleModel->vertices[1].a = sp30->unk6;
+            particleModel->vertices[2].x = sp30->unkC;
+            particleModel->vertices[2].y = sp30->unk10;
+            particleModel->vertices[2].z = sp30->unk14;
+            if ((s32) *sp2C_ptr != -1) {
+                particleModel->vertices[2].r = (*sp2C_ptr)[sp30->unk1E + 2].unk4;
+                particleModel->vertices[2].g = (*sp2C_ptr)[sp30->unk1E + 2].unk5;
+                particleModel->vertices[2].b = (*sp2C_ptr)[sp30->unk1E + 2].unk6;
+                particleModel->vertices[2].a = sp30->unk6;
+            } else {
+                particleModel->vertices[2].r = particle->colour.r;
+                particleModel->vertices[2].g = particle->colour.g;
+                particleModel->vertices[2].b = particle->colour.b;
+                particleModel->vertices[2].a = sp30->unk6;
+            }
+            particleModel->vertices[3].x = sp30->unkC - sp44.f[0];
+            particleModel->vertices[3].y = sp30->unk10 - sp44.f[1];
+            particleModel->vertices[3].z = sp30->unk14 - sp44.f[2];
+            particleModel->vertices[3].r = particleModel->vertices->r;
+            particleModel->vertices[3].g = particleModel->vertices->g;
+            particleModel->vertices[3].b = particleModel->vertices->b;
+            particleModel->vertices[3].a = sp30->unk6;
+            particle->unk68b = 1;
+        } else if (particleModel != NULL) {
+            particleModel->vertices[4].x = sp44.f[0] + sp30->unkC;
+            particleModel->vertices[4].y = sp44.f[1] + sp30->unk10;
+            particleModel->vertices[4].z = sp44.f[2] + sp30->unk14;
+            particleModel->vertices[4].r = particleModel->vertices[2].r;
+            particleModel->vertices[4].g = particleModel->vertices[2].g;
+            particleModel->vertices[4].b = particleModel->vertices[2].b;
+            particleModel->vertices[4].a = sp30->unk6;
+            particleModel->vertices[5].x = sp30->unkC - sp44.f[0];
+            particleModel->vertices[5].y = sp30->unk10 - sp44.f[1];
+            particleModel->vertices[5].z = sp30->unk14 - sp44.f[2];
+            particleModel->vertices[5].r = particleModel->vertices[2].r;
+            particleModel->vertices[5].g = particleModel->vertices[2].g;
+            particleModel->vertices[5].b = particleModel->vertices[2].b;
+            particleModel->vertices[5].a = sp30->unk6;
+            particle->unk68b = 2;
+        }
+    } else {
+        particle->segment.particle.destroyTimer -= gParticleUpdateRate;
+        if (particle->segment.particle.destroyTimer <= 0) {
+            free_object((Object *) particle);
+        } else if (particle->opacityTimer == 0) {
+            particle->opacity += gParticleUpdateRate * particle->opacityVel;
+            if (particle->opacity < 0xFF) {
+                if (particle->segment.unk40 & 0x1000) {
+                    particle->segment.trans.flags |= OBJ_FLAGS_UNK_0100;
+                } else {
+                    particle->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
+                }
+            }
+        } else {
+            particle->opacityTimer -= gParticleUpdateRate;
+            if (particle->opacityTimer < 0) {
+                particle->opacity -= particle->opacityTimer * particle->opacityVel;
+                particle->opacityTimer = 0;
+            }
+        }
+    }
+    if (particleModel != NULL && particleModel->texture != NULL && particle->segment.unk40 & 3 &&
+        gParticleUpdateRate > 0) {
+        set_particle_texture_frame(particle);
+    }
+}
 
 void set_particle_texture_frame(Particle *particle) {
     s32 someFlag;

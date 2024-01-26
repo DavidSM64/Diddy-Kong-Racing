@@ -547,6 +547,9 @@ typedef struct TexCoords {
     };
 } TexCoords;
 
+#define BACKFACE_CULL 0x00
+#define BACKFACE_DRAW 0x40
+
 /* Size: 0x10 bytes */
 typedef struct Triangle {
     union {
@@ -1716,7 +1719,8 @@ typedef struct Object_6C {
     /* 0x00 */ struct Particle *unk0;
     /* 0x04 */ s16 unk4;
     /* 0x06 */ u8 unk6;
-    /* 0x07 */ u8 pad7[0x3];
+    /* 0x07 */ u8 unk7;
+    /* 0x08 */ s16 unk8;
     /* 0x0A */ s16 unkA;
     /* 0x0C */ u8  padC[0x14];
 } Object_6C;
