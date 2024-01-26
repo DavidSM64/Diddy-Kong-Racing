@@ -67,11 +67,11 @@ ParticleBehavior **gParticleBehavioursAssetTable = NULL;
 ColourRGBA D_800E2D00[2] = { { { { 0 } } }, { { { 0 } } } };
 
 Triangle D_800E2D08[5] = {
-    { {{ DRAW_BACKFACE, 0, 1, 2 }}, {{{ 256, 0 }}}, {{{   0, 480 }}}, {{{ 256, 480 }}} },
-    { {{ DRAW_BACKFACE, 0, 2, 3 }}, {{{ 256, 0 }}}, {{{ 256, 480 }}}, {{{ 480, 480 }}} },
-    { {{ DRAW_BACKFACE, 1, 2, 4 }}, {{{   0, 0 }}}, {{{ 256,   0 }}}, {{{   0, 480 }}} },
-    { {{ DRAW_BACKFACE, 2, 3, 5 }}, {{{ 256, 0 }}}, {{{ 480,   0 }}}, {{{ 480, 480 }}} },
-    { {{ DRAW_BACKFACE, 0, 1, 3 }}, {{{ 256, 0 }}}, {{{   0, 480 }}}, {{{ 480, 480 }}} }
+    { { { DRAW_BACKFACE, 0, 1, 2 } }, { { { 256, 0 } } }, { { { 0, 480 } } }, { { { 256, 480 } } } },
+    { { { DRAW_BACKFACE, 0, 2, 3 } }, { { { 256, 0 } } }, { { { 256, 480 } } }, { { { 480, 480 } } } },
+    { { { DRAW_BACKFACE, 1, 2, 4 } }, { { { 0, 0 } } }, { { { 256, 0 } } }, { { { 0, 480 } } } },
+    { { { DRAW_BACKFACE, 2, 3, 5 } }, { { { 256, 0 } } }, { { { 480, 0 } } }, { { { 480, 480 } } } },
+    { { { DRAW_BACKFACE, 0, 1, 3 } }, { { { 256, 0 } } }, { { { 0, 480 } } }, { { { 480, 480 } } } }
 };
 
 Vec3s D_800E2D58[5] = {
@@ -80,14 +80,14 @@ Vec3s D_800E2D58[5] = {
 };
 
 Triangle D_800E2D78[8] = {
-    { {{ CULL_BACKFACE, 0, 1, 5 }}, {{{   0, 0 }}}, {{{ 128,   0 }}}, {{{ 128, 511 }}} },
-    { {{ CULL_BACKFACE, 0, 5, 4 }}, {{{   0, 0 }}}, {{{ 128, 511 }}}, {{{   0, 511 }}} },
-    { {{ CULL_BACKFACE, 1, 2, 6 }}, {{{ 128, 0 }}}, {{{ 256,   0 }}}, {{{ 256, 511 }}} },
-    { {{ CULL_BACKFACE, 1, 6, 5 }}, {{{ 128, 0 }}}, {{{ 256, 511 }}}, {{{ 128, 511 }}} },
-    { {{ CULL_BACKFACE, 2, 3, 7 }}, {{{ 256, 0 }}}, {{{ 384,   0 }}}, {{{ 384, 511 }}} },
-    { {{ CULL_BACKFACE, 2, 7, 6 }}, {{{ 256, 0 }}}, {{{ 384, 511 }}}, {{{ 256, 511 }}} },
-    { {{ CULL_BACKFACE, 3, 0, 4 }}, {{{ 384, 0 }}}, {{{ 512,   0 }}}, {{{ 512, 511 }}} },
-    { {{ CULL_BACKFACE, 3, 4, 7 }}, {{{ 384, 0 }}}, {{{ 512, 511 }}}, {{{ 384, 511 }}} },
+    { { { CULL_BACKFACE, 0, 1, 5 } }, { { { 0, 0 } } }, { { { 128, 0 } } }, { { { 128, 511 } } } },
+    { { { CULL_BACKFACE, 0, 5, 4 } }, { { { 0, 0 } } }, { { { 128, 511 } } }, { { { 0, 511 } } } },
+    { { { CULL_BACKFACE, 1, 2, 6 } }, { { { 128, 0 } } }, { { { 256, 0 } } }, { { { 256, 511 } } } },
+    { { { CULL_BACKFACE, 1, 6, 5 } }, { { { 128, 0 } } }, { { { 256, 511 } } }, { { { 128, 511 } } } },
+    { { { CULL_BACKFACE, 2, 3, 7 } }, { { { 256, 0 } } }, { { { 384, 0 } } }, { { { 384, 511 } } } },
+    { { { CULL_BACKFACE, 2, 7, 6 } }, { { { 256, 0 } } }, { { { 384, 511 } } }, { { { 256, 511 } } } },
+    { { { CULL_BACKFACE, 3, 0, 4 } }, { { { 384, 0 } } }, { { { 512, 0 } } }, { { { 512, 511 } } } },
+    { { { CULL_BACKFACE, 3, 4, 7 } }, { { { 384, 0 } } }, { { { 512, 511 } } }, { { { 384, 511 } } } },
 };
 
 Vec3s D_800E2DF8[8] = {
@@ -122,35 +122,17 @@ XYStruct gParticleCoordListQuad[4] = {
 };
 
 ColourRGBA D_800E2E84[16] = {
-    {{{ 0, 0, 0, 0 }}},
-    {{{ 192, 8, 64, 255 }}},
-    {{{ 255, 96, 8, 255 }}},
-    {{{ 64, 64, 64, 255 }}},
-    {{{ 0, 0, 0, 0 }}},
-    {{{ 0, 0, 0, 0 }}},
-    {{{ 0, 0, 0, 0 }}},
-    {{{ 0, 0, 0, 0 }}},
-    {{{ 0, 0, 0, 0 }}},
-    {{{ 0, 0, 0, 0 }}},
-    {{{ 0, 0, 0, 0 }}},
-    {{{ 0, 0, 0, 0 }}},
-    {{{ 0, 0, 0, 0 }}},
-    {{{ 16, 112, 255, 255 }}},
-    {{{ 0, 0, 0, 0 }}},
-    {{{ 0, 0, 0, 0 }}}
+    { { { 0, 0, 0, 0 } } }, { { { 192, 8, 64, 255 } } },   { { { 255, 96, 8, 255 } } }, { { { 64, 64, 64, 255 } } },
+    { { { 0, 0, 0, 0 } } }, { { { 0, 0, 0, 0 } } },        { { { 0, 0, 0, 0 } } },      { { { 0, 0, 0, 0 } } },
+    { { { 0, 0, 0, 0 } } }, { { { 0, 0, 0, 0 } } },        { { { 0, 0, 0, 0 } } },      { { { 0, 0, 0, 0 } } },
+    { { { 0, 0, 0, 0 } } }, { { { 16, 112, 255, 255 } } }, { { { 0, 0, 0, 0 } } },      { { { 0, 0, 0, 0 } } },
 };
 
 ColourRGBA D_800E2EC4[10] = {
-    {{{ 64, 64, 64, 255 }}},
-    {{{ 64, 64, 64, 255 }}},
-    {{{ 0, 45, 0, 255 }}},
-    {{{ 0, 45, 0, 255 }}},
-    {{{ 64, 60, 10, 255 }}},
-    {{{ 64, 60, 10, 255 }}},
-    {{{ 64, 64, 255, 255 }}},
-    {{{ 64, 64, 255, 255 }}},
-    {{{ 64, 64, 64, 255 }}},
-    {{{ 64, 64, 64, 255 }}} 
+    { { { 64, 64, 64, 255 } } },  { { { 64, 64, 64, 255 } } },  { { { 0, 45, 0, 255 } } },
+    { { { 0, 45, 0, 255 } } },    { { { 64, 60, 10, 255 } } },  { { { 64, 60, 10, 255 } } },
+    { { { 64, 64, 255, 255 } } }, { { { 64, 64, 255, 255 } } }, { { { 64, 64, 64, 255 } } },
+    { { { 64, 64, 64, 255 } } },
 };
 
 s32 gParticleOpacity = 256;
@@ -162,8 +144,8 @@ s32 gParticleOpacity = 256;
 s32 gParticleUpdateRate;
 s32 D_80127C84;
 s16 D_80127C88[12];
-//printf.c
-//thread0_epc
+// printf.c
+// thread0_epc
 /******************************/
 
 void func_800AE270(void) {
@@ -515,12 +497,14 @@ void func_800AF404(s32 updateRate) {
     D_800E2E28 = (D_800E2E28 + (updateRate << 6)) & 0x1FF;
     temp = D_800E2E28;
     new_var = temp;
+    // clang-format off
     for (i = 0; i < ARRAY_COUNT(D_800E2D08); i++) {\
         vecTemp = &D_800E2D58[i];\
         D_800E2D08[i].uv2.v = vecTemp->s[0] + new_var;\
         D_800E2D08[i].uv1.v = vecTemp->s[1] + new_var;\
         D_800E2D08[i].uv0.v = vecTemp->s[2] + new_var;\
     }
+    // clang-format on
     for (i = 0; i < ARRAY_COUNT(D_800E2D78); i++) {
         vecTemp = &D_800E2DF8[i];
         D_800E2D78[i].uv0.v = vecTemp->s[0] + new_var;
@@ -629,14 +613,17 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
                             }
                             var_t1 = var_v0 << var_t1;
                             temp_v1 = var_t1 - ((var_v0 * var_v0) >> 2);
-                            D_800E2D00[0].word = ((((D_800E2EC4[i].r - temp_a3->colour.r) * temp_v1) >> 8) + temp_a3->colour.r) << 24;
-                            D_800E2D00[0].word |= (temp_a3->colour.g + ((((D_800E2EC4[i].g - temp_a3->colour.g) * temp_v1)) >> 8)) << 16;
-                            D_800E2D00[0].word |= (temp_a3->colour.b + ((((D_800E2EC4[i].b - temp_a3->colour.b) * temp_v1)) >> 8)) << 8;
+                            D_800E2D00[0].word =
+                                ((((D_800E2EC4[i].r - temp_a3->colour.r) * temp_v1) >> 8) + temp_a3->colour.r) << 24;
+                            D_800E2D00[0].word |=
+                                (temp_a3->colour.g + ((((D_800E2EC4[i].g - temp_a3->colour.g) * temp_v1)) >> 8)) << 16;
+                            D_800E2D00[0].word |=
+                                (temp_a3->colour.b + ((((D_800E2EC4[i].b - temp_a3->colour.b) * temp_v1)) >> 8)) << 8;
                             if (var_v0 > 16) {
                                 var_t1 = 256;
                             }
                             var_v0 = temp_a3->colour.a;
-                            D_800E2D00[0].word |= var_v0 + (((*alphaPtr - var_v0) * var_t1) >> 8); 
+                            D_800E2D00[0].word |= var_v0 + (((*alphaPtr - var_v0) * var_t1) >> 8);
                         }
                     } else {
                         switch (i) {
@@ -646,37 +633,37 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
                                 }
                                 D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[2] & 0xF].word;
                                 break;
-                            
+
                             case 11:
                                 if (racer->wheel_surfaces[3] == 0xFF) {
                                     someBool = FALSE;
                                 }
                                 D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[3] & 0xF].word;
                                 break;
-                            
+
                             case 12:
                                 if (racer->wheel_surfaces[0] == 0xFF) {
                                     someBool = FALSE;
                                 }
                                 D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[0] & 0xF].word;
                                 break;
-                            
+
                             case 13:
                                 if (racer->wheel_surfaces[1] == 0xFF) {
                                     someBool = FALSE;
                                 }
                                 D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[1] & 0xF].word;
-                                break;                            
-                        }                        
+                                break;
+                        }
                     }
-                    break;                
+                    break;
                 case VEHICLE_PLANE:
                     if (i == 0) {
                         D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[0] & 0xF].word;
                     } else if (i == 1) {
                         D_800E2D00[0].word = D_800E2E84[racer->wheel_surfaces[1] & 0xF].word;
                     }
-                    break;                
+                    break;
                 case VEHICLE_HOVERCRAFT:
                     if (i == 2 || i == 3) {
                         var_v0 = D_80127C88[racer->unk2 & 7];
@@ -687,9 +674,9 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
                         D_80127C88[racer->unk2 & 7] = var_v0;
                         gParticleOpacity = var_v0;
                     }
-                    break;                
+                    break;
             }
-            
+
             if (someBool) {
                 if (!(racerObj->unk6C[i].unk4 & 0x8000)) {
                     func_800AF52C(racerObj, i);
@@ -710,7 +697,7 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
                 new_var2 = &racerObj->unk6C[i];
                 new_var2->unk6 = 0;
                 func_800AF6E4(racerObj, i);
-            } else { 
+            } else {
                 if (racerObj->unk6C[i].unk4 & 0x400) {
                     new_var = &racerObj->unk6C[i];
                     racerObj->unk6C[i].unk4 |= 0x200;
@@ -729,7 +716,7 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
         var_s7 >>= 1;
         gParticleOpacity = 256;
     }
-    
+
     object_undo_player_tumble(racerObj);
 }
 
@@ -1079,7 +1066,7 @@ Particle *func_800B0698(Particle *arg0, Particle *arg1) {
     return var_v0;
 }
 
-Particle *func_800B0BAC(Object* arg0, Particle *arg1) {
+Particle *func_800B0BAC(Object *arg0, Particle *arg1) {
     ParticleProperties *sp34;
     Particle *sp30;
     ParticleModel *sp2C;
@@ -1130,7 +1117,8 @@ Particle *func_800B0BAC(Object* arg0, Particle *arg1) {
         }
     }
     if (sp30->opacityTimer < sp30->segment.particle.destroyTimer) {
-        sp30->opacityVel = (((sp34->opacityVel - sp34->opacity) << 8) / (sp30->segment.particle.destroyTimer - sp30->opacityTimer));
+        sp30->opacityVel =
+            (((sp34->opacityVel - sp34->opacity) << 8) / (sp30->segment.particle.destroyTimer - sp30->opacityTimer));
     } else {
         sp30->opacityVel = 0;
     }
@@ -1167,7 +1155,7 @@ Particle *func_800B0BAC(Object* arg0, Particle *arg1) {
     sp2C->vertices->x = arg1->segment.trans.x_position;
     sp2C->vertices->y = arg1->segment.trans.y_position;
     sp2C->vertices->z = arg1->segment.trans.z_position;
-    if ((s32)sp24 != -1U) {
+    if ((s32) sp24 != -1U) {
         arg1->data.unk1E += 1;
         if (arg1->data.unk1E >= sp24[0].unk0) {
             arg1->data.unk1E = 0;
@@ -1183,7 +1171,7 @@ Particle *func_800B0BAC(Object* arg0, Particle *arg1) {
         sp2C->vertices->a = arg1->data.unk6;
     }
     sp30->unk6Ab = ((u32) sp34->lifeTimeRangeUnsigned >> 10);
-    sp30->unk6Bb = ((u32) (sp34->lifeTimeWord << 22) >> 26); 
+    sp30->unk6Bb = ((u32) (sp34->lifeTimeWord << 22) >> 26);
     sp30->segment.trans.x_position = arg0->segment.trans.x_position;
     sp30->segment.trans.y_position = arg0->segment.trans.y_position;
     sp30->segment.trans.z_position = arg0->segment.trans.z_position;
@@ -1703,10 +1691,10 @@ void func_800B26E0(Particle *particle) {
     ParticleSegment_3C *sp34;
     Particle_58 *sp30;
     Particle_58_0_9C *sp2C;
-    Particle_58_0_9C **sp2C_ptr; 
-    
+    Particle_58_0_9C **sp2C_ptr;
+
     sp34 = particle->segment.unk3C;
-    particleModel = 0; 
+    particleModel = 0;
     sp2C_ptr = &sp2C;
     if (sp34 != NULL) {
         sp30 = (Particle_58 *) particle->unk58_ptr;
@@ -1737,7 +1725,7 @@ void func_800B26E0(Particle *particle) {
             }
             f32_vec3_apply_object_rotation((ObjectTransform *) sp34, &sp44.x);
         } else {
-            sp44.x= sp34->unk1C;
+            sp44.x = sp34->unk1C;
             sp44.y = sp34->unk20;
             sp44.z = sp34->unk24;
             tempf = ((sp44.x * sp44.x) + (sp44.y * sp44.y)) + (sp44.z * sp44.f[2]);
@@ -1830,9 +1818,10 @@ void func_800B26E0(Particle *particle) {
             }
         }
     }
-    if (particleModel != NULL && particleModel->texture != NULL && particle->segment.unk40 & 3 && gParticleUpdateRate > 0) {
+    if (particleModel != NULL && particleModel->texture != NULL && particle->segment.unk40 & 3 &&
+        gParticleUpdateRate > 0) {
         set_particle_texture_frame(particle);
-    }    
+    }
 }
 
 void set_particle_texture_frame(Particle *particle) {
