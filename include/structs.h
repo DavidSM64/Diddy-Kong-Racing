@@ -547,8 +547,8 @@ typedef struct TexCoords {
     };
 } TexCoords;
 
-#define CULL_BACKFACE 0x00
-#define DRAW_BACKFACE 0x40
+#define BACKFACE_CULL 0x00
+#define BACKFACE_DRAW 0x40
 
 /* Size: 0x10 bytes */
 typedef struct Triangle {
