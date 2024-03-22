@@ -10,6 +10,7 @@ build/
 assets/
 ucode/
 !asm/assets/
+!mods/*
 
 # Linker file is automatically generated, so it should be ignored
 dkr.ld

@@ -1,0 +1,23 @@
+{
+    "characters": {
+        "A": {
+            "char-width": 8,
+            "tex-index": 0,
+            "tex-size": {
+                "height": 8,
+                "width": 8
+            },
+            "uv": {
+                "u": 8,
+                "v": 8
+            }
+        }
+    },
+    "name": "ComicFans",
+    "special-character-width": 3,
+    "tab-width": 32,
+    "textures": [
+        "ASSET_TEX2D_COMICFANS"
+    ],
+    "y-offset": 16
+}

@@ -1,0 +1,8 @@
+{
+    "fonts": {
+        "ASSET_FONTS_COMICFANS": "game_fonts/ComicFans.meta.json"
+    },
+    "fonts-order": [
+        "ASSET_FONTS_COMICFANS"
+    ]
+}

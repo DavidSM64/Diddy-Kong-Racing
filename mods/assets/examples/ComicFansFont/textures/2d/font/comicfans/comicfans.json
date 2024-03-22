@@ -1,0 +1,14 @@
+{
+    "compressed": true,
+    "flags": {
+        "wrap-s": "Wrap",
+        "wrap-t": "Wrap"
+    },
+    "format": "IA4",
+    "images": [
+        "comicfans.png"
+    ],
+    "render-mode": "OPAQUE",
+    "type": "Texture",
+    "write-size": true
+}
