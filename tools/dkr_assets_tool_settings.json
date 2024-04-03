@@ -1,0 +1,17 @@
+{
+    "default_dkr_version": "us_1.0",
+    "baseroms_subpath" : "baseroms/",
+    "assets_subpath" : "assets/",
+    "configs_subpath" : "extract-ver/",
+    "include_subpath" : "include/",
+    "asm_subpath" : "asm/",
+    "src_subpath" : "src/",
+    "lib_asm_subpath" : "lib/asm/",
+    "lib_src_subpath" : "lib/src/",
+    "build_subpath" : "build/",
+    "data_subpath" : "data/",
+    "model_scale": 0.001,
+    "debug": {
+        "keep-uncompressed": true
+    }
+}

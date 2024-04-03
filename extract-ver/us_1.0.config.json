@@ -17,7 +17,7 @@
             },
             {
                 "type": "Binary",
-                "folder": "bin",
+                "folder": "asm/boot",
                 "files": [
                     {
                         "filename": "boot",
@@ -37,7 +37,7 @@
             },
             {
                 "type": "Binary",
-                "folder": "../../../ucode/us_1.0",
+                "folder": "ucode/us_1.0",
                 "files": [
                     {
                         "filename": "ucode_audio",
@@ -77,7 +77,7 @@
             },
             {
                 "type": "Binary",
-                "folder": "../../../ucode/us_1.0",
+                "folder": "ucode/us_1.0",
                 "files": [
                     {
                         "filename": "data_audio",
@@ -118,7 +118,7 @@
             },
             {
                 "build-id": "ASSET_TEXTURES_3D",
-                "type": "Textures",
+                "type": "Texture",
                 "folder": "textures/3d",
                 "table": 3,
                 "flip-textures-by-default": true,
@@ -8512,7 +8512,7 @@
             },
             {
                 "build-id": "ASSET_TEXTURES_2D",
-                "type": "Textures",
+                "type": "Texture",
                 "folder": "textures/2d",
                 "table": 5,
                 "flip-textures-by-default": false,
@@ -13951,7 +13951,8 @@
                 "build-id": "ASSET_GAME_TEXT",
                 "type": "GameText",
                 "folder": "text/game",
-                "table": 7
+                "table": 7,
+                "group": 1
             },
             {
                 "build-id": "ASSET_GAME_TEXT_TABLE",
@@ -14198,7 +14199,7 @@
             },
             {
                 "build-id": "ASSET_SPRITES",
-                "type": "Sprites",
+                "type": "Sprite",
                 "folder": "sprites",
                 "table": 13,
                 "files-default-folder": "unlabeled",
@@ -15382,34 +15383,25 @@
                 "default-build-id-prefix": "ASSET_MISC_",
                 "files": [
                     {
-                        "index": 5,
-                        "filename": "tricky_boss_data",
-                        "build-id": "ASSET_MISC_TRICKY_BOSS_DATA"
-                    },
-                    {
-                        "index": 6,
-                        "filename": "bluey_boss_data",
-                        "build-id": "ASSET_MISC_BLUEY_BOSS_DATA"
-                    },
-                    {
-                        "index": 7,
-                        "filename": "smokey_boss_data",
-                        "build-id": "ASSET_MISC_SMOKEY_BOSS_DATA"
-                    },
-                    {
                         "index": 9,
                         "filename": "racer_weight_data",
-                        "build-id": "ASSET_MISC_RACER_WEIGHT"
+                        "build-id": "ASSET_MISC_RACER_WEIGHT",
+                        "misc-type": "RacerStat",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 10,
                         "filename": "racer_handling_data",
-                        "build-id": "ASSET_MISC_RACER_HANDLING"
+                        "build-id": "ASSET_MISC_RACER_HANDLING",
+                        "misc-type": "RacerStat",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 11,
                         "filename": "racer_unused_11_data",
-                        "build-id": "ASSET_MISC_RACER_UNUSED_11"
+                        "build-id": "ASSET_MISC_RACER_UNUSED_11",
+                        "misc-type": "RacerStat",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 21,
@@ -15424,92 +15416,128 @@
                     {
                         "index": 26,
                         "filename": "tracks_menu_ids",
-                        "build-id": "ASSET_MISC_TRACKS_MENU_IDS"
+                        "build-id": "ASSET_MISC_TRACKS_MENU_IDS",
+                        "misc-type": "TrackIds",
+                        "folder": "track_ids"
                     },
                     {
                         "index": 27,
                         "filename": "hub_area_ids",
-                        "build-id": "ASSET_MISC_HUB_AREA_IDS"
+                        "build-id": "ASSET_MISC_HUB_AREA_IDS",
+                        "misc-type": "TrackIds",
+                        "folder": "track_ids"
                     },
                     {
                         "index": 28,
                         "filename": "main_tracks_ids",
-                        "build-id": "ASSET_MISC_MAIN_TRACKS_IDS"
+                        "build-id": "ASSET_MISC_MAIN_TRACKS_IDS",
+                        "misc-type": "TrackIds",
+                        "folder": "track_ids"
                     },
                     {
                         "index": 29,
                         "filename": "battle_tracks_ids",
-                        "build-id": "ASSET_MISC_BATTLE_TRACKS_IDS"
+                        "build-id": "ASSET_MISC_BATTLE_TRACKS_IDS",
+                        "misc-type": "TrackIds",
+                        "folder": "track_ids"
                     },
                     {
                         "index": 30,
                         "filename": "boss_tracks_ids",
-                        "build-id": "ASSET_MISC_BOSS_TRACKS_IDS"
+                        "build-id": "ASSET_MISC_BOSS_TRACKS_IDS",
+                        "misc-type": "TrackIds",
+                        "folder": "track_ids"
                     },
                     {
                         "index": 33,
-                        "filename": "RacerStats_Unknown0",
-                        "build-id": "ASSET_MISC_RACERSTATS_UNKNOWN0"
+                        "filename": "RacerAcceleration_Unknown0",
+                        "build-id": "ASSET_MISC_RACERACCELERATION_UNKNOWN0",
+                        "misc-type": "RacerAcceleration",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 34,
-                        "filename": "RacerStats_Diddy",
-                        "build-id": "ASSET_MISC_RACERSTATS_DIDDY"
+                        "filename": "RacerAcceleration_Diddy",
+                        "build-id": "ASSET_MISC_RACERACCELERATION_DIDDY",
+                        "misc-type": "RacerAcceleration",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 35,
-                        "filename": "RacerStats_TT",
-                        "build-id": "ASSET_MISC_RACERSTATS_TT"
+                        "filename": "RacerAcceleration_TT",
+                        "build-id": "ASSET_MISC_RACERACCELERATION_TT",
+                        "misc-type": "RacerAcceleration",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 36,
-                        "filename": "RacerStats_Unknown1",
-                        "build-id": "ASSET_MISC_RACERSTATS_UNKNOWN1"
+                        "filename": "RacerAcceleration_Unknown1",
+                        "build-id": "ASSET_MISC_RACERACCELERATION_UNKNOWN1",
+                        "misc-type": "RacerAcceleration",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 37,
-                        "filename": "RacerStats_Krunch",
-                        "build-id": "ASSET_MISC_RACERSTATS_KRUNCH"
+                        "filename": "RacerAcceleration_Krunch",
+                        "build-id": "ASSET_MISC_RACERACCELERATION_KRUNCH",
+                        "misc-type": "RacerAcceleration",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 38,
-                        "filename": "RacerStats_Bumper",
-                        "build-id": "ASSET_MISC_RACERSTATS_BUMPER"
+                        "filename": "RacerAcceleration_Bumper",
+                        "build-id": "ASSET_MISC_RACERACCELERATION_BUMPER",
+                        "misc-type": "RacerAcceleration",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 39,
-                        "filename": "RacerStats_Tiptup",
-                        "build-id": "ASSET_MISC_RACERSTATS_TIPTUP"
+                        "filename": "RacerAcceleration_Tiptup",
+                        "build-id": "ASSET_MISC_RACERACCELERATION_TIPTUP",
+                        "misc-type": "RacerAcceleration",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 40,
-                        "filename": "RacerStats_Conker",
-                        "build-id": "ASSET_MISC_RACERSTATS_CONKER"
+                        "filename": "RacerAcceleration_Conker",
+                        "build-id": "ASSET_MISC_RACERACCELERATION_CONKER",
+                        "misc-type": "RacerAcceleration",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 41,
-                        "filename": "RacerStats_Timber",
-                        "build-id": "ASSET_MISC_RACERSTATS_TIMBER"
+                        "filename": "RacerAcceleration_Timber",
+                        "build-id": "ASSET_MISC_RACERACCELERATION_TIMBER",
+                        "misc-type": "RacerAcceleration",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 42,
-                        "filename": "RacerStats_Banjo",
-                        "build-id": "ASSET_MISC_RACERSTATS_BANJO"
+                        "filename": "RacerAcceleration_Banjo",
+                        "build-id": "ASSET_MISC_RACERACCELERATION_BANJO",
+                        "misc-type": "RacerAcceleration",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 43,
-                        "filename": "RacerStats_Drumstick",
-                        "build-id": "ASSET_MISC_RACERSTATS_DRUMSTICK"
+                        "filename": "RacerAcceleration_Drumstick",
+                        "build-id": "ASSET_MISC_RACERACCELERATION_DRUMSTICK",
+                        "misc-type": "RacerAcceleration",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 44,
-                        "filename": "RacerStats_Pipsy",
-                        "build-id": "ASSET_MISC_RACERSTATS_PIPSY"
+                        "filename": "RacerAcceleration_Pipsy",
+                        "build-id": "ASSET_MISC_RACERACCELERATION_PIPSY",
+                        "misc-type": "RacerAcceleration",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 45,
-                        "filename": "RacerStats_Unknown2",
-                        "build-id": "ASSET_MISC_RACERSTATS_UNKNOWN2"
+                        "filename": "RacerAcceleration_Unknown2",
+                        "build-id": "ASSET_MISC_RACERACCELERATION_UNKNOWN2",
+                        "misc-type": "RacerAcceleration",
+                        "folder": "racer_stats"
                     },
                     {
                         "index": 56,
@@ -15519,12 +15547,16 @@
                     {
                         "index": 65,
                         "filename": "magic_codes",
-                        "build-id": "ASSET_MISC_MAGIC_CODES"
+                        "build-id": "ASSET_MISC_MAGIC_CODES",
+                        "misc-type": "MagicCodes",
+                        "folder": "cheats"
                     },
                     {
                         "index": 66,
                         "filename": "title_screen_demo_ids",
-                        "build-id": "ASSET_MISC_TITLE_SCREEN_DEMO_IDS"
+                        "build-id": "ASSET_MISC_TITLE_SCREEN_DEMO_IDS",
+                        "misc-type": "TitleScreenDemos",
+                        "folder": "title_screen"
                     }
                 ]
             },
@@ -15572,7 +15604,8 @@
                 "build-id": "ASSET_LEVEL_OBJECT_MAPS",
                 "type": "LevelObjectMap",
                 "folder": "levels/objectMaps",
-                "table": 20
+                "table": 20,
+                "group": 1
             },
             {
                 "build-id": "ASSET_LEVEL_HEADERS_TABLE",
@@ -15581,7 +15614,7 @@
             },
             {
                 "build-id": "ASSET_LEVEL_HEADERS",
-                "type": "LevelHeaders",
+                "type": "LevelHeader",
                 "folder": "levels/headers",
                 "table": 22,
                 "files": [
@@ -15919,7 +15952,13 @@
             },
             {
                 "build-id": "ASSET_LEVEL_NAMES",
-                "type": "LevelNames",
+                "defer": true,
+                "defer-info": {
+                    "from-section": "ASSET_LEVEL_HEADERS",
+                    "id-postfix": "_NAME",
+                    "output-path": "../names"
+                },
+                "type": "LevelName",
                 "folder": "levels/names",
                 "table": 24,
                 "files": [
@@ -16257,7 +16296,7 @@
             },
             {
                 "build-id": "ASSET_LEVEL_MODELS",
-                "type": "LevelModels",
+                "type": "LevelModel",
                 "folder": "levels/models",
                 "table": 26,
                 "default-build-id-prefix": "ASSET_LEVELMODEL_",
@@ -16601,7 +16640,7 @@
             },
             {
                 "build-id": "ASSET_OBJECT_MODELS",
-                "type": "ObjectModels",
+                "type": "ObjectModel",
                 "folder": "objects/models",
                 "table": 28,
                 "files": [
@@ -18574,7 +18613,7 @@
             },
             {
                 "build-id": "ASSET_OBJECT_ANIMATIONS",
-                "type": "ObjectAnimations",
+                "type": "ObjectAnimation",
                 "folder": "objects/animations",
                 "table": 31
             },
@@ -18584,1536 +18623,1536 @@
                 "for": "ASSET_OBJECT_HEADERS"
             },
             {
-                "build-id": "ASSET_OBJECT_HEADERS",
-                "type": "ObjectHeaders",
+                "build-id": "ASSET_OBJECTS",
+                "type": "ObjectHeader",
                 "folder": "objects/headers",
                 "table": 33,
                 "files": [
                     {
                         "index": 0,
                         "filename": "diddycar",
-                        "build-id": "ASSET_OBJHEADER_DIDDYCAR"
+                        "build-id": "ASSET_OBJECT_DIDDYCAR"
                     },
                     {
                         "index": 1,
                         "filename": "SWcar",
-                        "build-id": "ASSET_OBJHEADER_SWCAR"
+                        "build-id": "ASSET_OBJECT_SWCAR"
                     },
                     {
                         "index": 2,
                         "filename": "KremCar",
-                        "build-id": "ASSET_OBJHEADER_KREMCAR"
+                        "build-id": "ASSET_OBJECT_KREMCAR"
                     },
                     {
                         "index": 3,
                         "filename": "BadgerCar",
-                        "build-id": "ASSET_OBJHEADER_BADGERCAR"
+                        "build-id": "ASSET_OBJECT_BADGERCAR"
                     },
                     {
                         "index": 4,
                         "filename": "TortCar",
-                        "build-id": "ASSET_OBJHEADER_TORTCAR"
+                        "build-id": "ASSET_OBJECT_TORTCAR"
                     },
                     {
                         "index": 5,
                         "filename": "ConkaCar",
-                        "build-id": "ASSET_OBJHEADER_CONKACAR"
+                        "build-id": "ASSET_OBJECT_CONKACAR"
                     },
                     {
                         "index": 6,
                         "filename": "TigerCar",
-                        "build-id": "ASSET_OBJHEADER_TIGERCAR"
+                        "build-id": "ASSET_OBJECT_TIGERCAR"
                     },
                     {
                         "index": 7,
                         "filename": "BanjoCar",
-                        "build-id": "ASSET_OBJHEADER_BANJOCAR"
+                        "build-id": "ASSET_OBJECT_BANJOCAR"
                     },
                     {
                         "index": 8,
                         "filename": "ChickenCar",
-                        "build-id": "ASSET_OBJHEADER_CHICKENCAR"
+                        "build-id": "ASSET_OBJECT_CHICKENCAR"
                     },
                     {
                         "index": 9,
                         "filename": "MouseCar",
-                        "build-id": "ASSET_OBJHEADER_MOUSECAR"
+                        "build-id": "ASSET_OBJECT_MOUSECAR"
                     },
                     {
                         "index": 10,
                         "filename": "diddyhover",
-                        "build-id": "ASSET_OBJHEADER_DIDDYHOVER"
+                        "build-id": "ASSET_OBJECT_DIDDYHOVER"
                     },
                     {
                         "index": 11,
                         "filename": "ticktockhover",
-                        "build-id": "ASSET_OBJHEADER_TICKTOCKHOVER"
+                        "build-id": "ASSET_OBJECT_TICKTOCKHOVER"
                     },
                     {
                         "index": 12,
                         "filename": "KremlinHover",
-                        "build-id": "ASSET_OBJHEADER_KREMLINHOVER"
+                        "build-id": "ASSET_OBJECT_KREMLINHOVER"
                     },
                     {
                         "index": 13,
                         "filename": "BadgerHover",
-                        "build-id": "ASSET_OBJHEADER_BADGERHOVER"
+                        "build-id": "ASSET_OBJECT_BADGERHOVER"
                     },
                     {
                         "index": 14,
                         "filename": "TortHover",
-                        "build-id": "ASSET_OBJHEADER_TORTHOVER"
+                        "build-id": "ASSET_OBJECT_TORTHOVER"
                     },
                     {
                         "index": 15,
                         "filename": "ConkaHover",
-                        "build-id": "ASSET_OBJHEADER_CONKAHOVER"
+                        "build-id": "ASSET_OBJECT_CONKAHOVER"
                     },
                     {
                         "index": 16,
                         "filename": "TigerHover",
-                        "build-id": "ASSET_OBJHEADER_TIGERHOVER"
+                        "build-id": "ASSET_OBJECT_TIGERHOVER"
                     },
                     {
                         "index": 17,
                         "filename": "BanjoHover",
-                        "build-id": "ASSET_OBJHEADER_BANJOHOVER"
+                        "build-id": "ASSET_OBJECT_BANJOHOVER"
                     },
                     {
                         "index": 18,
                         "filename": "ChickenHover",
-                        "build-id": "ASSET_OBJHEADER_CHICKENHOVER"
+                        "build-id": "ASSET_OBJECT_CHICKENHOVER"
                     },
                     {
                         "index": 19,
                         "filename": "MouseHover",
-                        "build-id": "ASSET_OBJHEADER_MOUSEHOVER"
+                        "build-id": "ASSET_OBJECT_MOUSEHOVER"
                     },
                     {
                         "index": 20,
                         "filename": "diddyplane",
-                        "build-id": "ASSET_OBJHEADER_DIDDYPLANE"
+                        "build-id": "ASSET_OBJECT_DIDDYPLANE"
                     },
                     {
                         "index": 21,
                         "filename": "ticktockplane",
-                        "build-id": "ASSET_OBJHEADER_TICKTOCKPLANE"
+                        "build-id": "ASSET_OBJECT_TICKTOCKPLANE"
                     },
                     {
                         "index": 22,
                         "filename": "KremPlane",
-                        "build-id": "ASSET_OBJHEADER_KREMPLANE"
+                        "build-id": "ASSET_OBJECT_KREMPLANE"
                     },
                     {
                         "index": 23,
                         "filename": "BadgerPlane",
-                        "build-id": "ASSET_OBJHEADER_BADGERPLANE"
+                        "build-id": "ASSET_OBJECT_BADGERPLANE"
                     },
                     {
                         "index": 24,
                         "filename": "TortPlane",
-                        "build-id": "ASSET_OBJHEADER_TORTPLANE"
+                        "build-id": "ASSET_OBJECT_TORTPLANE"
                     },
                     {
                         "index": 25,
                         "filename": "Conka",
-                        "build-id": "ASSET_OBJHEADER_CONKA"
+                        "build-id": "ASSET_OBJECT_CONKA"
                     },
                     {
                         "index": 26,
                         "filename": "TigPlane",
-                        "build-id": "ASSET_OBJHEADER_TIGPLANE"
+                        "build-id": "ASSET_OBJECT_TIGPLANE"
                     },
                     {
                         "index": 27,
                         "filename": "BanjoPlane",
-                        "build-id": "ASSET_OBJHEADER_BANJOPLANE"
+                        "build-id": "ASSET_OBJECT_BANJOPLANE"
                     },
                     {
                         "index": 28,
                         "filename": "ChickenPlane",
-                        "build-id": "ASSET_OBJHEADER_CHICKENPLANE"
+                        "build-id": "ASSET_OBJECT_CHICKENPLANE"
                     },
                     {
                         "index": 29,
                         "filename": "MousePlane",
-                        "build-id": "ASSET_OBJHEADER_MOUSEPLANE"
+                        "build-id": "ASSET_OBJECT_MOUSEPLANE"
                     },
                     {
                         "index": 30,
                         "filename": "FlyingCarpet",
-                        "build-id": "ASSET_OBJHEADER_FLYINGCARPET"
+                        "build-id": "ASSET_OBJECT_FLYINGCARPET"
                     },
                     {
                         "index": 31,
                         "filename": "timberdancer",
-                        "build-id": "ASSET_OBJHEADER_TIMBERDANCER"
+                        "build-id": "ASSET_OBJECT_TIMBERDANCER"
                     },
                     {
                         "index": 32,
                         "filename": "Chickencharacte",
-                        "build-id": "ASSET_OBJHEADER_CHICKENCHARACTE"
+                        "build-id": "ASSET_OBJECT_CHICKENCHARACTE"
                     },
                     {
                         "index": 33,
                         "filename": "pipsydancer",
-                        "build-id": "ASSET_OBJHEADER_PIPSYDANCER"
+                        "build-id": "ASSET_OBJECT_PIPSYDANCER"
                     },
                     {
                         "index": 34,
                         "filename": "banjodancer",
-                        "build-id": "ASSET_OBJHEADER_BANJODANCER"
+                        "build-id": "ASSET_OBJECT_BANJODANCER"
                     },
                     {
                         "index": 35,
                         "filename": "ticktockdancer",
-                        "build-id": "ASSET_OBJHEADER_TICKTOCKDANCER"
+                        "build-id": "ASSET_OBJECT_TICKTOCKDANCER"
                     },
                     {
                         "index": 36,
                         "filename": "wizpigship",
-                        "build-id": "ASSET_OBJHEADER_WIZPIGSHIP"
+                        "build-id": "ASSET_OBJECT_WIZPIGSHIP"
                     },
                     {
                         "index": 37,
                         "filename": "conkadancer",
-                        "build-id": "ASSET_OBJHEADER_CONKADANCER"
+                        "build-id": "ASSET_OBJECT_CONKADANCER"
                     },
                     {
                         "index": 38,
                         "filename": "EmptyHover",
-                        "build-id": "ASSET_OBJHEADER_EMPTYHOVER"
+                        "build-id": "ASSET_OBJECT_EMPTYHOVER"
                     },
                     {
                         "index": 39,
                         "filename": "Stopwatch-man",
-                        "build-id": "ASSET_OBJHEADER_STOPWATCHMAN"
+                        "build-id": "ASSET_OBJECT_STOPWATCHMAN"
                     },
                     {
                         "index": 40,
                         "filename": "stopwatchselect",
-                        "build-id": "ASSET_OBJHEADER_STOPWATCHSELECT"
+                        "build-id": "ASSET_OBJECT_STOPWATCHSELECT"
                     },
                     {
                         "index": 41,
                         "filename": "Parkwarden",
-                        "build-id": "ASSET_OBJHEADER_PARKWARDEN"
+                        "build-id": "ASSET_OBJECT_PARKWARDEN"
                     },
                     {
                         "index": 42,
                         "filename": "SmartieTree",
-                        "build-id": "ASSET_OBJHEADER_SMARTIETREE"
+                        "build-id": "ASSET_OBJECT_SMARTIETREE"
                     },
                     {
                         "index": 43,
                         "filename": "BlueBerryBush",
-                        "build-id": "ASSET_OBJHEADER_BLUEBERRYBUSH"
+                        "build-id": "ASSET_OBJECT_BLUEBERRYBUSH"
                     },
                     {
                         "index": 44,
                         "filename": "RubberSnowTree",
-                        "build-id": "ASSET_OBJHEADER_RUBBERSNOWTREE"
+                        "build-id": "ASSET_OBJECT_RUBBERSNOWTREE"
                     },
                     {
                         "index": 45,
                         "filename": "SkinnySnowTree",
-                        "build-id": "ASSET_OBJHEADER_SKINNYSNOWTREE"
+                        "build-id": "ASSET_OBJECT_SKINNYSNOWTREE"
                     },
                     {
                         "index": 46,
                         "filename": "XmasTree",
-                        "build-id": "ASSET_OBJHEADER_XMASTREE"
+                        "build-id": "ASSET_OBJECT_XMASTREE"
                     },
                     {
                         "index": 47,
                         "filename": "AlpineSnowTree",
-                        "build-id": "ASSET_OBJHEADER_ALPINESNOWTREE"
+                        "build-id": "ASSET_OBJECT_ALPINESNOWTREE"
                     },
                     {
                         "index": 48,
                         "filename": "RubberTree",
-                        "build-id": "ASSET_OBJHEADER_RUBBERTREE"
+                        "build-id": "ASSET_OBJECT_RUBBERTREE"
                     },
                     {
                         "index": 49,
                         "filename": "Beachtree",
-                        "build-id": "ASSET_OBJHEADER_BEACHTREE"
+                        "build-id": "ASSET_OBJECT_BEACHTREE"
                     },
                     {
                         "index": 50,
                         "filename": "PalmTreeTop",
-                        "build-id": "ASSET_OBJHEADER_PALMTREETOP"
+                        "build-id": "ASSET_OBJECT_PALMTREETOP"
                     },
                     {
                         "index": 51,
                         "filename": "PalmPlant",
-                        "build-id": "ASSET_OBJHEADER_PALMPLANT"
+                        "build-id": "ASSET_OBJECT_PALMPLANT"
                     },
                     {
                         "index": 52,
                         "filename": "PalmTreeTopChea",
-                        "build-id": "ASSET_OBJHEADER_PALMTREETOPCHEA"
+                        "build-id": "ASSET_OBJECT_PALMTREETOPCHEA"
                     },
                     {
                         "index": 53,
                         "filename": "FirTree",
-                        "build-id": "ASSET_OBJHEADER_FIRTREE"
+                        "build-id": "ASSET_OBJECT_FIRTREE"
                     },
                     {
                         "index": 54,
                         "filename": "SpaceTree",
-                        "build-id": "ASSET_OBJHEADER_SPACETREE"
+                        "build-id": "ASSET_OBJECT_SPACETREE"
                     },
                     {
                         "index": 55,
                         "filename": "Lamppost",
-                        "build-id": "ASSET_OBJHEADER_LAMPPOST"
+                        "build-id": "ASSET_OBJECT_LAMPPOST"
                     },
                     {
                         "index": 56,
                         "filename": "Flowers",
-                        "build-id": "ASSET_OBJHEADER_FLOWERS"
+                        "build-id": "ASSET_OBJECT_FLOWERS"
                     },
                     {
                         "index": 57,
                         "filename": "Reeds",
-                        "build-id": "ASSET_OBJHEADER_REEDS"
+                        "build-id": "ASSET_OBJECT_REEDS"
                     },
                     {
                         "index": 58,
                         "filename": "smoke",
-                        "build-id": "ASSET_OBJHEADER_SMOKE"
+                        "build-id": "ASSET_OBJECT_SMOKE"
                     },
                     {
                         "index": 59,
                         "filename": "Dinosaur1",
-                        "build-id": "ASSET_OBJHEADER_DINOSAUR1"
+                        "build-id": "ASSET_OBJECT_DINOSAUR1"
                     },
                     {
                         "index": 60,
                         "filename": "Dinosaur2",
-                        "build-id": "ASSET_OBJHEADER_DINOSAUR2"
+                        "build-id": "ASSET_OBJECT_DINOSAUR2"
                     },
                     {
                         "index": 61,
                         "filename": "Dinosaur3",
-                        "build-id": "ASSET_OBJHEADER_DINOSAUR3"
+                        "build-id": "ASSET_OBJECT_DINOSAUR3"
                     },
                     {
                         "index": 62,
                         "filename": "Whale",
-                        "build-id": "ASSET_OBJHEADER_WHALE"
+                        "build-id": "ASSET_OBJECT_WHALE"
                     },
                     {
                         "index": 63,
                         "filename": "Snowmen",
-                        "build-id": "ASSET_OBJHEADER_SNOWMEN"
+                        "build-id": "ASSET_OBJECT_SNOWMEN"
                     },
                     {
                         "index": 64,
                         "filename": "Signs",
-                        "build-id": "ASSET_OBJHEADER_SIGNS"
+                        "build-id": "ASSET_OBJECT_SIGNS"
                     },
                     {
                         "index": 65,
                         "filename": "FlamingTorch",
-                        "build-id": "ASSET_OBJHEADER_FLAMINGTORCH"
+                        "build-id": "ASSET_OBJECT_FLAMINGTORCH"
                     },
                     {
                         "index": 66,
                         "filename": "Mist",
-                        "build-id": "ASSET_OBJHEADER_MIST"
+                        "build-id": "ASSET_OBJECT_MIST"
                     },
                     {
                         "index": 67,
                         "filename": "SnowBall",
-                        "build-id": "ASSET_OBJHEADER_SNOWBALL"
+                        "build-id": "ASSET_OBJECT_SNOWBALL"
                     },
                     {
                         "index": 68,
                         "filename": "buoy",
-                        "build-id": "ASSET_OBJHEADER_BUOY"
+                        "build-id": "ASSET_OBJECT_BUOY"
                     },
                     {
                         "index": 69,
                         "filename": "pirateship",
-                        "build-id": "ASSET_OBJHEADER_PIRATESHIP"
+                        "build-id": "ASSET_OBJECT_PIRATESHIP"
                     },
                     {
                         "index": 70,
                         "filename": "log",
-                        "build-id": "ASSET_OBJHEADER_LOG"
+                        "build-id": "ASSET_OBJECT_LOG"
                     },
                     {
                         "index": 71,
                         "filename": "piglog",
-                        "build-id": "ASSET_OBJHEADER_PIGLOG"
+                        "build-id": "ASSET_OBJECT_PIGLOG"
                     },
                     {
                         "index": 72,
                         "filename": "boulder",
-                        "build-id": "ASSET_OBJHEADER_BOULDER"
+                        "build-id": "ASSET_OBJECT_BOULDER"
                     },
                     {
                         "index": 73,
                         "filename": "AirZippers",
-                        "build-id": "ASSET_OBJHEADER_AIRZIPPERS"
+                        "build-id": "ASSET_OBJECT_AIRZIPPERS"
                     },
                     {
                         "index": 74,
                         "filename": "WaterZippers",
-                        "build-id": "ASSET_OBJHEADER_WATERZIPPERS"
+                        "build-id": "ASSET_OBJECT_WATERZIPPERS"
                     },
                     {
                         "index": 75,
                         "filename": "LevelDoor",
-                        "build-id": "ASSET_OBJHEADER_LEVELDOOR"
+                        "build-id": "ASSET_OBJECT_LEVELDOOR"
                     },
                     {
                         "index": 76,
                         "filename": "KeithPigDoor",
-                        "build-id": "ASSET_OBJHEADER_KEITHPIGDOOR"
+                        "build-id": "ASSET_OBJECT_KEITHPIGDOOR"
                     },
                     {
                         "index": 77,
                         "filename": "ChalDoor",
-                        "build-id": "ASSET_OBJHEADER_CHALDOOR"
+                        "build-id": "ASSET_OBJECT_CHALDOOR"
                     },
                     {
                         "index": 78,
                         "filename": "BossDoor",
-                        "build-id": "ASSET_OBJHEADER_BOSSDOOR"
+                        "build-id": "ASSET_OBJECT_BOSSDOOR"
                     },
                     {
                         "index": 79,
                         "filename": "bigbossdoor",
-                        "build-id": "ASSET_OBJHEADER_BIGBOSSDOOR"
+                        "build-id": "ASSET_OBJECT_BIGBOSSDOOR"
                     },
                     {
                         "index": 80,
                         "filename": "WorldGate",
-                        "build-id": "ASSET_OBJHEADER_WORLDGATE"
+                        "build-id": "ASSET_OBJECT_WORLDGATE"
                     },
                     {
                         "index": 81,
                         "filename": "TTDoor",
-                        "build-id": "ASSET_OBJHEADER_TTDOOR"
+                        "build-id": "ASSET_OBJECT_TTDOOR"
                     },
                     {
                         "index": 82,
                         "filename": "RampSwitch",
-                        "build-id": "ASSET_OBJHEADER_RAMPSWITCH"
+                        "build-id": "ASSET_OBJECT_RAMPSWITCH"
                     },
                     {
                         "index": 83,
                         "filename": "NoentryDoor",
-                        "build-id": "ASSET_OBJHEADER_NOENTRYDOOR"
+                        "build-id": "ASSET_OBJECT_NOENTRYDOOR"
                     },
                     {
                         "index": 84,
                         "filename": "RampWhale",
-                        "build-id": "ASSET_OBJHEADER_RAMPWHALE"
+                        "build-id": "ASSET_OBJECT_RAMPWHALE"
                     },
                     {
                         "index": 85,
                         "filename": "SeaMonster",
-                        "build-id": "ASSET_OBJHEADER_SEAMONSTER"
+                        "build-id": "ASSET_OBJECT_SEAMONSTER"
                     },
                     {
                         "index": 86,
                         "filename": "Dinoisle",
-                        "build-id": "ASSET_OBJHEADER_DINOISLE"
+                        "build-id": "ASSET_OBJECT_DINOISLE"
                     },
                     {
                         "index": 87,
                         "filename": "skycontrol",
-                        "build-id": "ASSET_OBJHEADER_SKYCONTROL"
+                        "build-id": "ASSET_OBJECT_SKYCONTROL"
                     },
                     {
                         "index": 88,
                         "filename": "checkpoint",
-                        "build-id": "ASSET_OBJHEADER_CHECKPOINT"
+                        "build-id": "ASSET_OBJECT_CHECKPOINT"
                     },
                     {
                         "index": 89,
                         "filename": "checkarrow",
-                        "build-id": "ASSET_OBJHEADER_CHECKARROW"
+                        "build-id": "ASSET_OBJECT_CHECKARROW"
                     },
                     {
                         "index": 90,
                         "filename": "modechange",
-                        "build-id": "ASSET_OBJHEADER_MODECHANGE"
+                        "build-id": "ASSET_OBJECT_MODECHANGE"
                     },
                     {
                         "index": 91,
                         "filename": "trigger",
-                        "build-id": "ASSET_OBJHEADER_TRIGGER"
+                        "build-id": "ASSET_OBJECT_TRIGGER"
                     },
                     {
                         "index": 92,
                         "filename": "fogchanger",
-                        "build-id": "ASSET_OBJHEADER_FOGCHANGER"
+                        "build-id": "ASSET_OBJECT_FOGCHANGER"
                     },
                     {
                         "index": 93,
                         "filename": "ai-node",
-                        "build-id": "ASSET_OBJHEADER_AINODE"
+                        "build-id": "ASSET_OBJECT_AINODE"
                     },
                     {
                         "index": 94,
                         "filename": "exit",
-                        "build-id": "ASSET_OBJHEADER_EXIT"
+                        "build-id": "ASSET_OBJECT_EXIT"
                     },
                     {
                         "index": 95,
                         "filename": "bonus",
-                        "build-id": "ASSET_OBJHEADER_BONUS"
+                        "build-id": "ASSET_OBJECT_BONUS"
                     },
                     {
                         "index": 96,
                         "filename": "camera_control",
-                        "build-id": "ASSET_OBJHEADER_CAMERA_CONTROL"
+                        "build-id": "ASSET_OBJECT_CAMERA_CONTROL"
                     },
                     {
                         "index": 97,
                         "filename": "setuppoint",
-                        "build-id": "ASSET_OBJHEADER_SETUPPOINT"
+                        "build-id": "ASSET_OBJECT_SETUPPOINT"
                     },
                     {
                         "index": 98,
                         "filename": "animator",
-                        "build-id": "ASSET_OBJHEADER_ANIMATOR"
+                        "build-id": "ASSET_OBJECT_ANIMATOR"
                     },
                     {
                         "index": 99,
                         "filename": "texscroll",
-                        "build-id": "ASSET_OBJHEADER_TEXSCROLL"
+                        "build-id": "ASSET_OBJECT_TEXSCROLL"
                     },
                     {
                         "index": 100,
                         "filename": "rgbalight",
-                        "build-id": "ASSET_OBJHEADER_RGBALIGHT"
+                        "build-id": "ASSET_OBJECT_RGBALIGHT"
                     },
                     {
                         "index": 101,
                         "filename": "introcam",
-                        "build-id": "ASSET_OBJHEADER_INTROCAM"
+                        "build-id": "ASSET_OBJECT_INTROCAM"
                     },
                     {
                         "index": 102,
                         "filename": "weather",
-                        "build-id": "ASSET_OBJHEADER_WEATHER"
+                        "build-id": "ASSET_OBJECT_WEATHER"
                     },
                     {
                         "index": 103,
                         "filename": "lensflare",
-                        "build-id": "ASSET_OBJHEADER_LENSFLARE"
+                        "build-id": "ASSET_OBJECT_LENSFLARE"
                     },
                     {
                         "index": 104,
                         "filename": "lensflareswitch",
-                        "build-id": "ASSET_OBJHEADER_LENSFLARESWITCH"
+                        "build-id": "ASSET_OBJECT_LENSFLARESWITCH"
                     },
                     {
                         "index": 105,
                         "filename": "InfoPoint",
-                        "build-id": "ASSET_OBJHEADER_INFOPOINT"
+                        "build-id": "ASSET_OBJECT_INFOPOINT"
                     },
                     {
                         "index": 106,
                         "filename": "wavegenerator",
-                        "build-id": "ASSET_OBJHEADER_WAVEGENERATOR"
+                        "build-id": "ASSET_OBJECT_WAVEGENERATOR"
                     },
                     {
                         "index": 107,
                         "filename": "wavepower",
-                        "build-id": "ASSET_OBJHEADER_WAVEPOWER"
+                        "build-id": "ASSET_OBJECT_WAVEPOWER"
                     },
                     {
                         "index": 108,
                         "filename": "RangeTrigger",
-                        "build-id": "ASSET_OBJHEADER_RANGETRIGGER"
+                        "build-id": "ASSET_OBJECT_RANGETRIGGER"
                     },
                     {
                         "index": 109,
                         "filename": "lavaspurt",
-                        "build-id": "ASSET_OBJHEADER_LAVASPURT"
+                        "build-id": "ASSET_OBJECT_LAVASPURT"
                     },
                     {
                         "index": 110,
                         "filename": "bombexplosion",
-                        "build-id": "ASSET_OBJHEADER_BOMBEXPLOSION"
+                        "build-id": "ASSET_OBJECT_BOMBEXPLOSION"
                     },
                     {
                         "index": 111,
                         "filename": "wardensmoke",
-                        "build-id": "ASSET_OBJHEADER_WARDENSMOKE"
+                        "build-id": "ASSET_OBJECT_WARDENSMOKE"
                     },
                     {
                         "index": 112,
                         "filename": "bubbler",
-                        "build-id": "ASSET_OBJHEADER_BUBBLER"
+                        "build-id": "ASSET_OBJECT_BUBBLER"
                     },
                     {
                         "index": 113,
                         "filename": "WeaponBalloon",
-                        "build-id": "ASSET_OBJHEADER_WEAPONBALLOON"
+                        "build-id": "ASSET_OBJECT_WEAPONBALLOON"
                     },
                     {
                         "index": 114,
                         "filename": "wballoonpop",
-                        "build-id": "ASSET_OBJHEADER_WBALLOONPOP"
+                        "build-id": "ASSET_OBJECT_WBALLOONPOP"
                     },
                     {
                         "index": 115,
                         "filename": "MissileGlow",
-                        "build-id": "ASSET_OBJHEADER_MISSILEGLOW"
+                        "build-id": "ASSET_OBJECT_MISSILEGLOW"
                     },
                     {
                         "index": 116,
                         "filename": "HomingGlow",
-                        "build-id": "ASSET_OBJHEADER_HOMINGGLOW"
+                        "build-id": "ASSET_OBJECT_HOMINGGLOW"
                     },
                     {
                         "index": 117,
                         "filename": "Missile",
-                        "build-id": "ASSET_OBJHEADER_MISSILE"
+                        "build-id": "ASSET_OBJECT_MISSILE"
                     },
                     {
                         "index": 118,
                         "filename": "Homing",
-                        "build-id": "ASSET_OBJHEADER_HOMING"
+                        "build-id": "ASSET_OBJECT_HOMING"
                     },
                     {
                         "index": 119,
                         "filename": "OilSlick",
-                        "build-id": "ASSET_OBJHEADER_OILSLICK"
+                        "build-id": "ASSET_OBJECT_OILSLICK"
                     },
                     {
                         "index": 120,
                         "filename": "SmokeCloud",
-                        "build-id": "ASSET_OBJHEADER_SMOKECLOUD"
+                        "build-id": "ASSET_OBJECT_SMOKECLOUD"
                     },
                     {
                         "index": 121,
                         "filename": "Bomb",
-                        "build-id": "ASSET_OBJHEADER_BOMB"
+                        "build-id": "ASSET_OBJECT_BOMB"
                     },
                     {
                         "index": 122,
                         "filename": "BubbleWeapon",
-                        "build-id": "ASSET_OBJHEADER_BUBBLEWEAPON"
+                        "build-id": "ASSET_OBJECT_BUBBLEWEAPON"
                     },
                     {
                         "index": 123,
                         "filename": "WorldKey",
-                        "build-id": "ASSET_OBJHEADER_WORLDKEY"
+                        "build-id": "ASSET_OBJECT_WORLDKEY"
                     },
                     {
                         "index": 124,
                         "filename": "CoinCreator",
-                        "build-id": "ASSET_OBJHEADER_COINCREATOR"
+                        "build-id": "ASSET_OBJECT_COINCREATOR"
                     },
                     {
                         "index": 125,
                         "filename": "TreasureSucker",
-                        "build-id": "ASSET_OBJHEADER_TREASURESUCKER"
+                        "build-id": "ASSET_OBJECT_TREASURESUCKER"
                     },
                     {
                         "index": 126,
                         "filename": "Coin",
-                        "build-id": "ASSET_OBJHEADER_COIN"
+                        "build-id": "ASSET_OBJECT_COIN"
                     },
                     {
                         "index": 127,
                         "filename": "SilverCoin",
-                        "build-id": "ASSET_OBJHEADER_SILVERCOIN"
+                        "build-id": "ASSET_OBJECT_SILVERCOIN"
                     },
                     {
                         "index": 128,
                         "filename": "GoldCoin",
-                        "build-id": "ASSET_OBJHEADER_GOLDCOIN"
+                        "build-id": "ASSET_OBJECT_GOLDCOIN"
                     },
                     {
                         "index": 129,
                         "filename": "BonusGem",
-                        "build-id": "ASSET_OBJHEADER_BONUSGEM"
+                        "build-id": "ASSET_OBJECT_BONUSGEM"
                     },
                     {
                         "index": 130,
                         "filename": "CollectEgg",
-                        "build-id": "ASSET_OBJHEADER_COLLECTEGG"
+                        "build-id": "ASSET_OBJECT_COLLECTEGG"
                     },
                     {
                         "index": 131,
                         "filename": "EggCreator",
-                        "build-id": "ASSET_OBJHEADER_EGGCREATOR"
+                        "build-id": "ASSET_OBJECT_EGGCREATOR"
                     },
                     {
                         "index": 132,
                         "filename": "CharacterFlag",
-                        "build-id": "ASSET_OBJHEADER_CHARACTERFLAG"
+                        "build-id": "ASSET_OBJECT_CHARACTERFLAG"
                     },
                     {
                         "index": 133,
                         "filename": "Animation",
-                        "build-id": "ASSET_OBJHEADER_ANIMATION"
+                        "build-id": "ASSET_OBJECT_ANIMATION"
                     },
                     {
                         "index": 134,
                         "filename": "OverRidePos",
-                        "build-id": "ASSET_OBJHEADER_OVERRIDEPOS"
+                        "build-id": "ASSET_OBJECT_OVERRIDEPOS"
                     },
                     {
                         "index": 135,
                         "filename": "AnimCamera",
-                        "build-id": "ASSET_OBJHEADER_ANIMCAMERA"
+                        "build-id": "ASSET_OBJECT_ANIMCAMERA"
                     },
                     {
                         "index": 136,
                         "filename": "AnimCar",
-                        "build-id": "ASSET_OBJHEADER_ANIMCAR"
+                        "build-id": "ASSET_OBJECT_ANIMCAR"
                     },
                     {
                         "index": 137,
                         "filename": "AnimDome",
-                        "build-id": "ASSET_OBJHEADER_ANIMDOME"
+                        "build-id": "ASSET_OBJECT_ANIMDOME"
                     },
                     {
                         "index": 138,
                         "filename": "Wizghosts",
-                        "build-id": "ASSET_OBJHEADER_WIZGHOSTS"
+                        "build-id": "ASSET_OBJECT_WIZGHOSTS"
                     },
                     {
                         "index": 139,
                         "filename": "N64logo",
-                        "build-id": "ASSET_OBJHEADER_N64LOGO"
+                        "build-id": "ASSET_OBJECT_N64LOGO"
                     },
                     {
                         "index": 140,
                         "filename": "Asteroid",
-                        "build-id": "ASSET_OBJHEADER_ASTEROID"
+                        "build-id": "ASSET_OBJECT_ASTEROID"
                     },
                     {
                         "index": 141,
                         "filename": "pillar",
-                        "build-id": "ASSET_OBJHEADER_PILLAR"
+                        "build-id": "ASSET_OBJECT_PILLAR"
                     },
                     {
                         "index": 142,
                         "filename": "boulderanim",
-                        "build-id": "ASSET_OBJHEADER_BOULDERANIM"
+                        "build-id": "ASSET_OBJECT_BOULDERANIM"
                     },
                     {
                         "index": 143,
                         "filename": "pigheadcolours",
-                        "build-id": "ASSET_OBJHEADER_PIGHEADCOLOURS"
+                        "build-id": "ASSET_OBJECT_PIGHEADCOLOURS"
                     },
                     {
                         "index": 144,
                         "filename": "pigfaceanimator",
-                        "build-id": "ASSET_OBJHEADER_PIGFACEANIMATOR"
+                        "build-id": "ASSET_OBJECT_PIGFACEANIMATOR"
                     },
                     {
                         "index": 145,
                         "filename": "pterodactyl",
-                        "build-id": "ASSET_OBJHEADER_PTERODACTYL"
+                        "build-id": "ASSET_OBJECT_PTERODACTYL"
                     },
                     {
                         "index": 146,
                         "filename": "amuletpiece1",
-                        "build-id": "ASSET_OBJHEADER_AMULETPIECE1"
+                        "build-id": "ASSET_OBJECT_AMULETPIECE1"
                     },
                     {
                         "index": 147,
                         "filename": "amuletpiece2",
-                        "build-id": "ASSET_OBJHEADER_AMULETPIECE2"
+                        "build-id": "ASSET_OBJECT_AMULETPIECE2"
                     },
                     {
                         "index": 148,
                         "filename": "amuletpiece3",
-                        "build-id": "ASSET_OBJHEADER_AMULETPIECE3"
+                        "build-id": "ASSET_OBJECT_AMULETPIECE3"
                     },
                     {
                         "index": 149,
                         "filename": "amuletpiece4",
-                        "build-id": "ASSET_OBJHEADER_AMULETPIECE4"
+                        "build-id": "ASSET_OBJECT_AMULETPIECE4"
                     },
                     {
                         "index": 150,
                         "filename": "swamulet1",
-                        "build-id": "ASSET_OBJHEADER_SWAMULET1"
+                        "build-id": "ASSET_OBJECT_SWAMULET1"
                     },
                     {
                         "index": 151,
                         "filename": "swamulet2",
-                        "build-id": "ASSET_OBJHEADER_SWAMULET2"
+                        "build-id": "ASSET_OBJECT_SWAMULET2"
                     },
                     {
                         "index": 152,
                         "filename": "swamulet3",
-                        "build-id": "ASSET_OBJHEADER_SWAMULET3"
+                        "build-id": "ASSET_OBJECT_SWAMULET3"
                     },
                     {
                         "index": 153,
                         "filename": "swamulet4",
-                        "build-id": "ASSET_OBJHEADER_SWAMULET4"
+                        "build-id": "ASSET_OBJECT_SWAMULET4"
                     },
                     {
                         "index": 154,
                         "filename": "AnimKey",
-                        "build-id": "ASSET_OBJHEADER_ANIMKEY"
+                        "build-id": "ASSET_OBJECT_ANIMKEY"
                     },
                     {
                         "index": 155,
                         "filename": "SpaceShip1",
-                        "build-id": "ASSET_OBJHEADER_SPACESHIP1"
+                        "build-id": "ASSET_OBJECT_SPACESHIP1"
                     },
                     {
                         "index": 156,
                         "filename": "MiniShip",
-                        "build-id": "ASSET_OBJHEADER_MINISHIP"
+                        "build-id": "ASSET_OBJECT_MINISHIP"
                     },
                     {
                         "index": 157,
                         "filename": "MonoRail",
-                        "build-id": "ASSET_OBJHEADER_MONORAIL"
+                        "build-id": "ASSET_OBJECT_MONORAIL"
                     },
                     {
                         "index": 158,
                         "filename": "SpaceShip2",
-                        "build-id": "ASSET_OBJHEADER_SPACESHIP2"
+                        "build-id": "ASSET_OBJECT_SPACESHIP2"
                     },
                     {
                         "index": 159,
                         "filename": "SpaceShip3",
-                        "build-id": "ASSET_OBJHEADER_SPACESHIP3"
+                        "build-id": "ASSET_OBJECT_SPACESHIP3"
                     },
                     {
                         "index": 160,
                         "filename": "Lighthouse",
-                        "build-id": "ASSET_OBJHEADER_LIGHTHOUSE"
+                        "build-id": "ASSET_OBJECT_LIGHTHOUSE"
                     },
                     {
                         "index": 161,
                         "filename": "rocketsignpost",
-                        "build-id": "ASSET_OBJHEADER_ROCKETSIGNPOST"
+                        "build-id": "ASSET_OBJECT_ROCKETSIGNPOST"
                     },
                     {
                         "index": 162,
                         "filename": "lighthouse1",
-                        "build-id": "ASSET_OBJHEADER_LIGHTHOUSE1"
+                        "build-id": "ASSET_OBJECT_LIGHTHOUSE1"
                     },
                     {
                         "index": 163,
                         "filename": "lighthouse2",
-                        "build-id": "ASSET_OBJHEADER_LIGHTHOUSE2"
+                        "build-id": "ASSET_OBJECT_LIGHTHOUSE2"
                     },
                     {
                         "index": 164,
                         "filename": "SelectionHill",
-                        "build-id": "ASSET_OBJHEADER_SELECTIONHILL"
+                        "build-id": "ASSET_OBJECT_SELECTIONHILL"
                     },
                     {
                         "index": 165,
                         "filename": "Widescreen",
-                        "build-id": "ASSET_OBJHEADER_WIDESCREEN"
+                        "build-id": "ASSET_OBJECT_WIDESCREEN"
                     },
                     {
                         "index": 166,
                         "filename": "TigerAnimPlane",
-                        "build-id": "ASSET_OBJHEADER_TIGERANIMPLANE"
+                        "build-id": "ASSET_OBJECT_TIGERANIMPLANE"
                     },
                     {
                         "index": 167,
                         "filename": "BadgerAnimWalk",
-                        "build-id": "ASSET_OBJHEADER_BADGERANIMWALK"
+                        "build-id": "ASSET_OBJECT_BADGERANIMWALK"
                     },
                     {
                         "index": 168,
                         "filename": "Timberanimcar",
-                        "build-id": "ASSET_OBJHEADER_TIMBERANIMCAR"
+                        "build-id": "ASSET_OBJECT_TIMBERANIMCAR"
                     },
                     {
                         "index": 169,
                         "filename": "KremSelect",
-                        "build-id": "ASSET_OBJHEADER_KREMSELECT"
+                        "build-id": "ASSET_OBJECT_KREMSELECT"
                     },
                     {
                         "index": 170,
                         "filename": "ConkSelect",
-                        "build-id": "ASSET_OBJHEADER_CONKSELECT"
+                        "build-id": "ASSET_OBJECT_CONKSELECT"
                     },
                     {
                         "index": 171,
                         "filename": "BadgerSelect",
-                        "build-id": "ASSET_OBJHEADER_BADGERSELECT"
+                        "build-id": "ASSET_OBJECT_BADGERSELECT"
                     },
                     {
                         "index": 172,
                         "filename": "TortSelect",
-                        "build-id": "ASSET_OBJHEADER_TORTSELECT"
+                        "build-id": "ASSET_OBJECT_TORTSELECT"
                     },
                     {
                         "index": 173,
                         "filename": "TigerSelect",
-                        "build-id": "ASSET_OBJHEADER_TIGERSELECT"
+                        "build-id": "ASSET_OBJECT_TIGERSELECT"
                     },
                     {
                         "index": 174,
                         "filename": "DiddySelect",
-                        "build-id": "ASSET_OBJHEADER_DIDDYSELECT"
+                        "build-id": "ASSET_OBJECT_DIDDYSELECT"
                     },
                     {
                         "index": 175,
                         "filename": "BanjoSelect",
-                        "build-id": "ASSET_OBJHEADER_BANJOSELECT"
+                        "build-id": "ASSET_OBJECT_BANJOSELECT"
                     },
                     {
                         "index": 176,
                         "filename": "ChickSelect",
-                        "build-id": "ASSET_OBJHEADER_CHICKSELECT"
+                        "build-id": "ASSET_OBJECT_CHICKSELECT"
                     },
                     {
                         "index": 177,
                         "filename": "MouseSelect",
-                        "build-id": "ASSET_OBJHEADER_MOUSESELECT"
+                        "build-id": "ASSET_OBJECT_MOUSESELECT"
                     },
                     {
                         "index": 178,
                         "filename": "MagicCarpet",
-                        "build-id": "ASSET_OBJHEADER_MAGICCARPET"
+                        "build-id": "ASSET_OBJECT_MAGICCARPET"
                     },
                     {
                         "index": 179,
                         "filename": "PolyGoldBaloon",
-                        "build-id": "ASSET_OBJHEADER_POLYGOLDBALOON"
+                        "build-id": "ASSET_OBJECT_POLYGOLDBALOON"
                     },
                     {
                         "index": 180,
                         "filename": "AnimGenie",
-                        "build-id": "ASSET_OBJHEADER_ANIMGENIE"
+                        "build-id": "ASSET_OBJECT_ANIMGENIE"
                     },
                     {
                         "index": 181,
                         "filename": "AnimGenie3",
-                        "build-id": "ASSET_OBJHEADER_ANIMGENIE3"
+                        "build-id": "ASSET_OBJECT_ANIMGENIE3"
                     },
                     {
                         "index": 182,
                         "filename": "ButterflyBait",
-                        "build-id": "ASSET_OBJHEADER_BUTTERFLYBAIT"
+                        "build-id": "ASSET_OBJECT_BUTTERFLYBAIT"
                     },
                     {
                         "index": 183,
                         "filename": "audio",
-                        "build-id": "ASSET_OBJHEADER_AUDIO"
+                        "build-id": "ASSET_OBJECT_AUDIO"
                     },
                     {
                         "index": 184,
                         "filename": "audioline",
-                        "build-id": "ASSET_OBJHEADER_AUDIOLINE"
+                        "build-id": "ASSET_OBJECT_AUDIOLINE"
                     },
                     {
                         "index": 185,
                         "filename": "audioseqline",
-                        "build-id": "ASSET_OBJHEADER_AUDIOSEQLINE"
+                        "build-id": "ASSET_OBJECT_AUDIOSEQLINE"
                     },
                     {
                         "index": 186,
                         "filename": "audioseq",
-                        "build-id": "ASSET_OBJHEADER_AUDIOSEQ"
+                        "build-id": "ASSET_OBJECT_AUDIOSEQ"
                     },
                     {
                         "index": 187,
                         "filename": "audioreverb",
-                        "build-id": "ASSET_OBJHEADER_AUDIOREVERB"
+                        "build-id": "ASSET_OBJECT_AUDIOREVERB"
                     },
                     {
                         "index": 188,
                         "filename": "fronttyre",
-                        "build-id": "ASSET_OBJHEADER_FRONTTYRE"
+                        "build-id": "ASSET_OBJECT_FRONTTYRE"
                     },
                     {
                         "index": 189,
                         "filename": "backtyre",
-                        "build-id": "ASSET_OBJHEADER_BACKTYRE"
+                        "build-id": "ASSET_OBJECT_BACKTYRE"
                     },
                     {
                         "index": 190,
                         "filename": "planetyre",
-                        "build-id": "ASSET_OBJHEADER_PLANETYRE"
+                        "build-id": "ASSET_OBJECT_PLANETYRE"
                     },
                     {
                         "index": 191,
                         "filename": "fan",
-                        "build-id": "ASSET_OBJHEADER_FAN"
+                        "build-id": "ASSET_OBJECT_FAN"
                     },
                     {
                         "index": 192,
                         "filename": "jetengine",
-                        "build-id": "ASSET_OBJHEADER_JETENGINE"
+                        "build-id": "ASSET_OBJECT_JETENGINE"
                     },
                     {
                         "index": 193,
                         "filename": "glove",
-                        "build-id": "ASSET_OBJHEADER_GLOVE"
+                        "build-id": "ASSET_OBJECT_GLOVE"
                     },
                     {
                         "index": 194,
                         "filename": "Leefan",
-                        "build-id": "ASSET_OBJHEADER_LEEFAN"
+                        "build-id": "ASSET_OBJECT_LEEFAN"
                     },
                     {
                         "index": 195,
                         "filename": "MagicRing",
-                        "build-id": "ASSET_OBJHEADER_MAGICRING"
+                        "build-id": "ASSET_OBJECT_MAGICRING"
                     },
                     {
                         "index": 196,
                         "filename": "dome",
-                        "build-id": "ASSET_OBJHEADER_DOME"
+                        "build-id": "ASSET_OBJECT_DOME"
                     },
                     {
                         "index": 197,
                         "filename": "dome1",
-                        "build-id": "ASSET_OBJHEADER_DOME1"
+                        "build-id": "ASSET_OBJECT_DOME1"
                     },
                     {
                         "index": 198,
                         "filename": "dome2",
-                        "build-id": "ASSET_OBJHEADER_DOME2"
+                        "build-id": "ASSET_OBJECT_DOME2"
                     },
                     {
                         "index": 199,
                         "filename": "dome3",
-                        "build-id": "ASSET_OBJHEADER_DOME3"
+                        "build-id": "ASSET_OBJECT_DOME3"
                     },
                     {
                         "index": 200,
                         "filename": "dome4",
-                        "build-id": "ASSET_OBJHEADER_DOME4"
+                        "build-id": "ASSET_OBJECT_DOME4"
                     },
                     {
                         "index": 201,
                         "filename": "dome5",
-                        "build-id": "ASSET_OBJHEADER_DOME5"
+                        "build-id": "ASSET_OBJECT_DOME5"
                     },
                     {
                         "index": 202,
                         "filename": "dome6",
-                        "build-id": "ASSET_OBJHEADER_DOME6"
+                        "build-id": "ASSET_OBJECT_DOME6"
                     },
                     {
                         "index": 203,
                         "filename": "dome7",
-                        "build-id": "ASSET_OBJHEADER_DOME7"
+                        "build-id": "ASSET_OBJECT_DOME7"
                     },
                     {
                         "index": 204,
                         "filename": "dome8",
-                        "build-id": "ASSET_OBJHEADER_DOME8"
+                        "build-id": "ASSET_OBJECT_DOME8"
                     },
                     {
                         "index": 205,
                         "filename": "dome9",
-                        "build-id": "ASSET_OBJHEADER_DOME9"
+                        "build-id": "ASSET_OBJECT_DOME9"
                     },
                     {
                         "index": 206,
                         "filename": "dome10",
-                        "build-id": "ASSET_OBJHEADER_DOME10"
+                        "build-id": "ASSET_OBJECT_DOME10"
                     },
                     {
                         "index": 207,
                         "filename": "dome11",
-                        "build-id": "ASSET_OBJHEADER_DOME11"
+                        "build-id": "ASSET_OBJECT_DOME11"
                     },
                     {
                         "index": 208,
                         "filename": "dome12",
-                        "build-id": "ASSET_OBJHEADER_DOME12"
+                        "build-id": "ASSET_OBJECT_DOME12"
                     },
                     {
                         "index": 209,
                         "filename": "dome13",
-                        "build-id": "ASSET_OBJHEADER_DOME13"
+                        "build-id": "ASSET_OBJECT_DOME13"
                     },
                     {
                         "index": 210,
                         "filename": "dome14",
-                        "build-id": "ASSET_OBJHEADER_DOME14"
+                        "build-id": "ASSET_OBJECT_DOME14"
                     },
                     {
                         "index": 211,
                         "filename": "dome15",
-                        "build-id": "ASSET_OBJHEADER_DOME15"
+                        "build-id": "ASSET_OBJECT_DOME15"
                     },
                     {
                         "index": 212,
                         "filename": "dome16",
-                        "build-id": "ASSET_OBJHEADER_DOME16"
+                        "build-id": "ASSET_OBJECT_DOME16"
                     },
                     {
                         "index": 213,
                         "filename": "dome17",
-                        "build-id": "ASSET_OBJHEADER_DOME17"
+                        "build-id": "ASSET_OBJECT_DOME17"
                     },
                     {
                         "index": 214,
                         "filename": "selectionshadow",
-                        "build-id": "ASSET_OBJHEADER_SELECTIONSHADOW"
+                        "build-id": "ASSET_OBJECT_SELECTIONSHADOW"
                     },
                     {
                         "index": 215,
                         "filename": "postforparty",
-                        "build-id": "ASSET_OBJHEADER_POSTFORPARTY"
+                        "build-id": "ASSET_OBJECT_POSTFORPARTY"
                     },
                     {
                         "index": 216,
                         "filename": "Rarelogo",
-                        "build-id": "ASSET_OBJHEADER_RARELOGO"
+                        "build-id": "ASSET_OBJECT_RARELOGO"
                     },
                     {
                         "index": 217,
                         "filename": "sparklything",
-                        "build-id": "ASSET_OBJHEADER_SPARKLYTHING"
+                        "build-id": "ASSET_OBJECT_SPARKLYTHING"
                     },
                     {
                         "index": 218,
                         "filename": "DoorOpener",
-                        "build-id": "ASSET_OBJHEADER_DOOROPENER"
+                        "build-id": "ASSET_OBJECT_DOOROPENER"
                     },
                     {
                         "index": 219,
                         "filename": "AnimDinosaur2",
-                        "build-id": "ASSET_OBJHEADER_ANIMDINOSAUR2"
+                        "build-id": "ASSET_OBJECT_ANIMDINOSAUR2"
                     },
                     {
                         "index": 220,
                         "filename": "Timeranimhover",
-                        "build-id": "ASSET_OBJHEADER_TIMERANIMHOVER"
+                        "build-id": "ASSET_OBJECT_TIMERANIMHOVER"
                     },
                     {
                         "index": 221,
                         "filename": "AnimBadgerPlane",
-                        "build-id": "ASSET_OBJHEADER_ANIMBADGERPLANE"
+                        "build-id": "ASSET_OBJECT_ANIMBADGERPLANE"
                     },
                     {
                         "index": 222,
                         "filename": "AnimDinosaur1",
-                        "build-id": "ASSET_OBJHEADER_ANIMDINOSAUR1"
+                        "build-id": "ASSET_OBJECT_ANIMDINOSAUR1"
                     },
                     {
                         "index": 223,
                         "filename": "AnimMouseCar",
-                        "build-id": "ASSET_OBJHEADER_ANIMMOUSECAR"
+                        "build-id": "ASSET_OBJECT_ANIMMOUSECAR"
                     },
                     {
                         "index": 224,
                         "filename": "Animtort",
-                        "build-id": "ASSET_OBJHEADER_ANIMTORT"
+                        "build-id": "ASSET_OBJECT_ANIMTORT"
                     },
                     {
                         "index": 225,
                         "filename": "ChickenAnimPlan",
-                        "build-id": "ASSET_OBJHEADER_CHICKENANIMPLAN"
+                        "build-id": "ASSET_OBJECT_CHICKENANIMPLAN"
                     },
                     {
                         "index": 226,
                         "filename": "EmptyHoverAnim",
-                        "build-id": "ASSET_OBJHEADER_EMPTYHOVERANIM"
+                        "build-id": "ASSET_OBJECT_EMPTYHOVERANIM"
                     },
                     {
                         "index": 227,
                         "filename": "KremAnim",
-                        "build-id": "ASSET_OBJHEADER_KREMANIM"
+                        "build-id": "ASSET_OBJECT_KREMANIM"
                     },
                     {
                         "index": 228,
                         "filename": "MouseHoverAnim",
-                        "build-id": "ASSET_OBJHEADER_MOUSEHOVERANIM"
+                        "build-id": "ASSET_OBJECT_MOUSEHOVERANIM"
                     },
                     {
                         "index": 229,
                         "filename": "TortRunner",
-                        "build-id": "ASSET_OBJHEADER_TORTRUNNER"
+                        "build-id": "ASSET_OBJECT_TORTRUNNER"
                     },
                     {
                         "index": 230,
                         "filename": "AnimBanjoPlane",
-                        "build-id": "ASSET_OBJHEADER_ANIMBANJOPLANE"
+                        "build-id": "ASSET_OBJECT_ANIMBANJOPLANE"
                     },
                     {
                         "index": 231,
                         "filename": "Conkaanimcar",
-                        "build-id": "ASSET_OBJHEADER_CONKAANIMCAR"
+                        "build-id": "ASSET_OBJECT_CONKAANIMCAR"
                     },
                     {
                         "index": 232,
                         "filename": "GBParkwarden",
-                        "build-id": "ASSET_OBJHEADER_GBPARKWARDEN"
+                        "build-id": "ASSET_OBJECT_GBPARKWARDEN"
                     },
                     {
                         "index": 233,
                         "filename": "Wizpig",
-                        "build-id": "ASSET_OBJHEADER_WIZPIG"
+                        "build-id": "ASSET_OBJECT_WIZPIG"
                     },
                     {
                         "index": 234,
                         "filename": "WizpigRocket",
-                        "build-id": "ASSET_OBJHEADER_WIZPIGROCKET"
+                        "build-id": "ASSET_OBJECT_WIZPIGROCKET"
                     },
                     {
                         "index": 235,
                         "filename": "Pigboss",
-                        "build-id": "ASSET_OBJHEADER_PIGBOSS"
+                        "build-id": "ASSET_OBJECT_PIGBOSS"
                     },
                     {
                         "index": 236,
                         "filename": "Pigboss2",
-                        "build-id": "ASSET_OBJHEADER_PIGBOSS2"
+                        "build-id": "ASSET_OBJECT_PIGBOSS2"
                     },
                     {
                         "index": 237,
                         "filename": "PigRocketeer",
-                        "build-id": "ASSET_OBJHEADER_PIGROCKETEER"
+                        "build-id": "ASSET_OBJECT_PIGROCKETEER"
                     },
                     {
                         "index": 238,
                         "filename": "Particles2",
-                        "build-id": "ASSET_OBJHEADER_PARTICLES2"
+                        "build-id": "ASSET_OBJECT_PARTICLES2"
                     },
                     {
                         "index": 239,
                         "filename": "Pigboulder",
-                        "build-id": "ASSET_OBJHEADER_PIGBOULDER"
+                        "build-id": "ASSET_OBJECT_PIGBOULDER"
                     },
                     {
                         "index": 240,
                         "filename": "Bigplanet",
-                        "build-id": "ASSET_OBJHEADER_BIGPLANET"
+                        "build-id": "ASSET_OBJECT_BIGPLANET"
                     },
                     {
                         "index": 241,
                         "filename": "rocketbit1",
-                        "build-id": "ASSET_OBJHEADER_ROCKETBIT1"
+                        "build-id": "ASSET_OBJECT_ROCKETBIT1"
                     },
                     {
                         "index": 242,
                         "filename": "rocketbit2",
-                        "build-id": "ASSET_OBJHEADER_ROCKETBIT2"
+                        "build-id": "ASSET_OBJECT_ROCKETBIT2"
                     },
                     {
                         "index": 243,
                         "filename": "Geniehead",
-                        "build-id": "ASSET_OBJHEADER_GENIEHEAD"
+                        "build-id": "ASSET_OBJECT_GENIEHEAD"
                     },
                     {
                         "index": 244,
                         "filename": "Pigboulder2",
-                        "build-id": "ASSET_OBJHEADER_PIGBOULDER2"
+                        "build-id": "ASSET_OBJECT_PIGBOULDER2"
                     },
                     {
                         "index": 245,
                         "filename": "Pigboulder3",
-                        "build-id": "ASSET_OBJHEADER_PIGBOULDER3"
+                        "build-id": "ASSET_OBJECT_PIGBOULDER3"
                     },
                     {
                         "index": 246,
                         "filename": "Pigboulder4",
-                        "build-id": "ASSET_OBJHEADER_PIGBOULDER4"
+                        "build-id": "ASSET_OBJECT_PIGBOULDER4"
                     },
                     {
                         "index": 247,
                         "filename": "Pigboulder5",
-                        "build-id": "ASSET_OBJHEADER_PIGBOULDER5"
+                        "build-id": "ASSET_OBJECT_PIGBOULDER5"
                     },
                     {
                         "index": 248,
                         "filename": "Trickytops",
-                        "build-id": "ASSET_OBJHEADER_TRICKYTOPS"
+                        "build-id": "ASSET_OBJECT_TRICKYTOPS"
                     },
                     {
                         "index": 249,
                         "filename": "Trickyanim",
-                        "build-id": "ASSET_OBJHEADER_TRICKYANIM"
+                        "build-id": "ASSET_OBJECT_TRICKYANIM"
                     },
                     {
                         "index": 250,
                         "filename": "Trickyanim2",
-                        "build-id": "ASSET_OBJHEADER_TRICKYANIM2"
+                        "build-id": "ASSET_OBJECT_TRICKYANIM2"
                     },
                     {
                         "index": 251,
                         "filename": "Trickyanim3",
-                        "build-id": "ASSET_OBJHEADER_TRICKYANIM3"
+                        "build-id": "ASSET_OBJECT_TRICKYANIM3"
                     },
                     {
                         "index": 252,
                         "filename": "Walrus_anim",
-                        "build-id": "ASSET_OBJHEADER_WALRUS_ANIM"
+                        "build-id": "ASSET_OBJECT_WALRUS_ANIM"
                     },
                     {
                         "index": 253,
                         "filename": "Terryboss",
-                        "build-id": "ASSET_OBJHEADER_TERRYBOSS"
+                        "build-id": "ASSET_OBJECT_TERRYBOSS"
                     },
                     {
                         "index": 254,
                         "filename": "Dragonboss",
-                        "build-id": "ASSET_OBJHEADER_DRAGONBOSS"
+                        "build-id": "ASSET_OBJECT_DRAGONBOSS"
                     },
                     {
                         "index": 255,
                         "filename": "DragonAnim",
-                        "build-id": "ASSET_OBJHEADER_DRAGONANIM"
+                        "build-id": "ASSET_OBJECT_DRAGONANIM"
                     },
                     {
                         "index": 256,
                         "filename": "Walrus",
-                        "build-id": "ASSET_OBJHEADER_WALRUS"
+                        "build-id": "ASSET_OBJECT_WALRUS"
                     },
                     {
                         "index": 257,
                         "filename": "SnowballBoss",
-                        "build-id": "ASSET_OBJHEADER_SNOWBALLBOSS"
+                        "build-id": "ASSET_OBJECT_SNOWBALLBOSS"
                     },
                     {
                         "index": 258,
                         "filename": "animocto",
-                        "build-id": "ASSET_OBJHEADER_ANIMOCTO"
+                        "build-id": "ASSET_OBJECT_ANIMOCTO"
                     },
                     {
                         "index": 259,
                         "filename": "octopus",
-                        "build-id": "ASSET_OBJHEADER_OCTOPUS"
+                        "build-id": "ASSET_OBJECT_OCTOPUS"
                     },
                     {
                         "index": 260,
                         "filename": "GoldBaloonSprit",
-                        "build-id": "ASSET_OBJHEADER_GOLDBALOONSPRIT"
+                        "build-id": "ASSET_OBJECT_GOLDBALOONSPRIT"
                     },
                     {
                         "index": 261,
                         "filename": "SpaceColumn1",
-                        "build-id": "ASSET_OBJHEADER_SPACECOLUMN1"
+                        "build-id": "ASSET_OBJECT_SPACECOLUMN1"
                     },
                     {
                         "index": 262,
                         "filename": "SpaceColumn2",
-                        "build-id": "ASSET_OBJHEADER_SPACECOLUMN2"
+                        "build-id": "ASSET_OBJECT_SPACECOLUMN2"
                     },
                     {
                         "index": 263,
                         "filename": "SpaceColumn3",
-                        "build-id": "ASSET_OBJHEADER_SPACECOLUMN3"
+                        "build-id": "ASSET_OBJECT_SPACECOLUMN3"
                     },
                     {
                         "index": 264,
                         "filename": "Haystack",
-                        "build-id": "ASSET_OBJHEADER_HAYSTACK"
+                        "build-id": "ASSET_OBJECT_HAYSTACK"
                     },
                     {
                         "index": 265,
                         "filename": "AnimGenie2",
-                        "build-id": "ASSET_OBJHEADER_ANIMGENIE2"
+                        "build-id": "ASSET_OBJECT_ANIMGENIE2"
                     },
                     {
                         "index": 266,
                         "filename": "Brightstar",
-                        "build-id": "ASSET_OBJHEADER_BRIGHTSTAR"
+                        "build-id": "ASSET_OBJECT_BRIGHTSTAR"
                     },
                     {
                         "index": 267,
                         "filename": "Butterfly",
-                        "build-id": "ASSET_OBJHEADER_BUTTERFLY"
+                        "build-id": "ASSET_OBJECT_BUTTERFLY"
                     },
                     {
                         "index": 268,
                         "filename": "Fish",
-                        "build-id": "ASSET_OBJHEADER_FISH"
+                        "build-id": "ASSET_OBJECT_FISH"
                     },
                     {
                         "index": 269,
                         "filename": "Frog",
-                        "build-id": "ASSET_OBJHEADER_FROG"
+                        "build-id": "ASSET_OBJECT_FROG"
                     },
                     {
                         "index": 270,
                         "filename": "Boost",
-                        "build-id": "ASSET_OBJHEADER_BOOST"
+                        "build-id": "ASSET_OBJECT_BOOST"
                     },
                     {
                         "index": 271,
                         "filename": "MagnetFX",
-                        "build-id": "ASSET_OBJHEADER_MAGNETFX"
+                        "build-id": "ASSET_OBJECT_MAGNETFX"
                     },
                     {
                         "index": 272,
                         "filename": "stillfrog",
-                        "build-id": "ASSET_OBJHEADER_STILLFROG"
+                        "build-id": "ASSET_OBJECT_STILLFROG"
                     },
                     {
                         "index": 273,
                         "filename": "stopwatchicon",
-                        "build-id": "ASSET_OBJHEADER_STOPWATCHICON"
+                        "build-id": "ASSET_OBJECT_STOPWATCHICON"
                     },
                     {
                         "index": 274,
                         "filename": "stopwatchhand",
-                        "build-id": "ASSET_OBJHEADER_STOPWATCHHAND"
+                        "build-id": "ASSET_OBJECT_STOPWATCHHAND"
                     },
                     {
                         "index": 275,
                         "filename": "bridge",
-                        "build-id": "ASSET_OBJHEADER_BRIDGE"
+                        "build-id": "ASSET_OBJECT_BRIDGE"
                     },
                     {
                         "index": 276,
                         "filename": "posarrow",
-                        "build-id": "ASSET_OBJHEADER_POSARROW"
+                        "build-id": "ASSET_OBJECT_POSARROW"
                     },
                     {
                         "index": 277,
                         "filename": "hittester",
-                        "build-id": "ASSET_OBJHEADER_HITTESTER"
+                        "build-id": "ASSET_OBJECT_HITTESTER"
                     },
                     {
                         "index": 278,
                         "filename": "midifade",
-                        "build-id": "ASSET_OBJHEADER_MIDIFADE"
+                        "build-id": "ASSET_OBJECT_MIDIFADE"
                     },
                     {
                         "index": 279,
                         "filename": "windsail",
-                        "build-id": "ASSET_OBJHEADER_WINDSAIL"
+                        "build-id": "ASSET_OBJECT_WINDSAIL"
                     },
                     {
                         "index": 280,
                         "filename": "EffectBox",
-                        "build-id": "ASSET_OBJHEADER_EFFECTBOX"
+                        "build-id": "ASSET_OBJECT_EFFECTBOX"
                     },
                     {
                         "index": 281,
                         "filename": "trophycab",
-                        "build-id": "ASSET_OBJHEADER_TROPHYCAB"
+                        "build-id": "ASSET_OBJECT_TROPHYCAB"
                     },
                     {
                         "index": 282,
                         "filename": "FlyCoin",
-                        "build-id": "ASSET_OBJHEADER_FLYCOIN"
+                        "build-id": "ASSET_OBJECT_FLYCOIN"
                     },
                     {
                         "index": 283,
                         "filename": "GoldenBalloon",
-                        "build-id": "ASSET_OBJHEADER_GOLDENBALLOON"
+                        "build-id": "ASSET_OBJECT_GOLDENBALLOON"
                     },
                     {
                         "index": 284,
                         "filename": "laserbolt",
-                        "build-id": "ASSET_OBJHEADER_LASERBOLT"
+                        "build-id": "ASSET_OBJECT_LASERBOLT"
                     },
                     {
                         "index": 285,
                         "filename": "lasergun",
-                        "build-id": "ASSET_OBJHEADER_LASERGUN"
+                        "build-id": "ASSET_OBJECT_LASERGUN"
                     },
                     {
                         "index": 286,
                         "filename": "boltglow",
-                        "build-id": "ASSET_OBJHEADER_BOLTGLOW"
+                        "build-id": "ASSET_OBJECT_BOLTGLOW"
                     },
                     {
                         "index": 287,
                         "filename": "GroundZipper",
-                        "build-id": "ASSET_OBJHEADER_GROUNDZIPPER"
+                        "build-id": "ASSET_OBJECT_GROUNDZIPPER"
                     },
                     {
                         "index": 288,
                         "filename": "PWSafeTelepoint",
-                        "build-id": "ASSET_OBJHEADER_PWSAFETELEPOINT"
+                        "build-id": "ASSET_OBJECT_PWSAFETELEPOINT"
                     },
                     {
                         "index": 289,
                         "filename": "HeadForPoint",
-                        "build-id": "ASSET_OBJHEADER_HEADFORPOINT"
+                        "build-id": "ASSET_OBJECT_HEADFORPOINT"
                     },
                     {
                         "index": 290,
                         "filename": "FireballAttract",
-                        "build-id": "ASSET_OBJHEADER_FIREBALLATTRACT"
+                        "build-id": "ASSET_OBJECT_FIREBALLATTRACT"
                     },
                     {
                         "index": 291,
                         "filename": "Fireball",
-                        "build-id": "ASSET_OBJHEADER_FIREBALL"
+                        "build-id": "ASSET_OBJECT_FIREBALL"
                     },
                     {
                         "index": 292,
                         "filename": "OctoBubble",
-                        "build-id": "ASSET_OBJHEADER_OCTOBUBBLE"
+                        "build-id": "ASSET_OBJECT_OCTOBUBBLE"
                     },
                     {
                         "index": 293,
                         "filename": "OctoBomb",
-                        "build-id": "ASSET_OBJHEADER_OCTOBOMB"
+                        "build-id": "ASSET_OBJECT_OCTOBOMB"
                     },
                     {
                         "index": 294,
                         "filename": "GoldTrophy",
-                        "build-id": "ASSET_OBJHEADER_GOLDTROPHY"
+                        "build-id": "ASSET_OBJECT_GOLDTROPHY"
                     },
                     {
                         "index": 295,
                         "filename": "Parktrophy",
-                        "build-id": "ASSET_OBJHEADER_PARKTROPHY"
+                        "build-id": "ASSET_OBJECT_PARKTROPHY"
                     },
                     {
                         "index": 296,
                         "filename": "Ticktrophy",
-                        "build-id": "ASSET_OBJHEADER_TICKTROPHY"
+                        "build-id": "ASSET_OBJECT_TICKTROPHY"
                     },
                     {
                         "index": 297,
                         "filename": "Trophy",
-                        "build-id": "ASSET_OBJHEADER_TROPHY"
+                        "build-id": "ASSET_OBJECT_TROPHY"
                     },
                     {
                         "index": 298,
                         "filename": "Teleport",
-                        "build-id": "ASSET_OBJHEADER_TELEPORT"
+                        "build-id": "ASSET_OBJECT_TELEPORT"
                     },
                     {
                         "index": 299,
                         "filename": "Shield",
-                        "build-id": "ASSET_OBJHEADER_SHIELD"
+                        "build-id": "ASSET_OBJECT_SHIELD"
                     },
                     {
                         "index": 300,
                         "filename": "Lightning",
-                        "build-id": "ASSET_OBJHEADER_LIGHTNING"
+                        "build-id": "ASSET_OBJECT_LIGHTNING"
                     },
                     {
                         "index": 301,
                         "filename": "midifadepoint",
-                        "build-id": "ASSET_OBJHEADER_MIDIFADEPOINT"
+                        "build-id": "ASSET_OBJECT_MIDIFADEPOINT"
                     },
                     {
                         "index": 302,
                         "filename": "levelname",
-                        "build-id": "ASSET_OBJHEADER_LEVELNAME"
+                        "build-id": "ASSET_OBJECT_LEVELNAME"
                     },
                     {
                         "index": 303,
                         "filename": "midichset",
-                        "build-id": "ASSET_OBJHEADER_MIDICHSET"
+                        "build-id": "ASSET_OBJECT_MIDICHSET"
                     }
                 ]
             },
             {
                 "build-id": "ASSET_LEVEL_OBJECT_TRANSLATION_TABLE",
-                "type": "Binary",
+                "type": "LevelObjectTranslationTable",
                 "folder": "objects",
                 "files": [
                     {
@@ -20149,7 +20188,7 @@
             },
             {
                 "build-id": "ASSET_PARTICLES",
-                "type": "Particles",
+                "type": "Particle",
                 "folder": "particles/particles",
                 "table": 40
             },
@@ -20160,7 +20199,7 @@
             },
             {
                 "build-id": "ASSET_PARTICLE_BEHAVIORS",
-                "type": "ParticleBehaviors",
+                "type": "ParticleBehavior",
                 "folder": "particles/behaviors",
                 "table": 42
             },
@@ -20202,7 +20241,7 @@
             },
             {
                 "build-id": "ASSET_TTGHOSTS",
-                "type": "TTGhosts",
+                "type": "TTGhost",
                 "folder": "tt_ghosts",
                 "table": 48,
                 "files": [
@@ -20308,6 +20347,138 @@
                     }
                 ]
             }
-        ]
+        ],
+        "misc": {
+            "default-object-entries-order": [
+                "LevelObjectEntryCommon",
+                "LevelObjectEntry_Racer",
+                "LevelObjectEntry_Scenery",
+                "LevelObjectEntry_Fish",
+                "LevelObjectEntry_Animator",
+                "LevelObjectEntry_Weapon",
+                "LevelObjectEntry_Smoke",
+                "LevelObjectEntry_Exit",
+                "LevelObjectEntry_Audio",
+                "LevelObjectEntry_AudioLine",
+                "LevelObjectEntry_CameraControl",
+                "LevelObjectEntry_SetupPoint",
+                "LevelObjectEntry_Dino_Whale",
+                "LevelObjectEntry_Checkpoint",
+                "LevelObjectEntry_Door",
+                "LevelObjectEntry_FogChanger",
+                "LevelObjectEntry_AiNode",
+                "LevelObjectEntry_WeaponBalloon",
+                "LevelObjectEntry_Weapon",
+                "LevelObjectEntry_AudioSeqLine",
+                "LevelObjectEntry_Unknown20",
+                "LevelObjectEntry_Unknown21",
+                "LevelObjectEntry_BombExplosion",
+                "LevelObjectEntryCommon",
+                "LevelObjectEntry_Unknown24",
+                "LevelObjectEntry_Unknown25",
+                "LevelObjectEntry_SkyControl",
+                "LevelObjectEntry_AudioReverb",
+                "LevelObjectEntry_Torch_Mist",
+                "LevelObjectEntry_TexScroll",
+                "LevelObjectEntry_ModeChange",
+                "LevelObjectEntry_StopWatchMan",
+                "LevelObjectEntry_Banana",
+                "LevelObjectEntry_RgbaLight",
+                "LevelObjectEntry_Unknown34",
+                "LevelObjectEntry_Unknown35",
+                "LevelObjectEntry_Buoy_PirateShip",
+                "LevelObjectEntry_Weather",
+                "LevelObjectEntry_Bridge_WhaleRamp",
+                "LevelObjectEntry_RampSwitch",
+                "LevelObjectEntry_SeaMonster",
+                "LevelObjectEntry_Bonus",
+                "LevelObjectEntry_Unknown42",
+                "LevelObjectEntry_LensFlare",
+                "LevelObjectEntry_LensFlareSwitch",
+                "LevelObjectEntry_CollectEgg",
+                "LevelObjectEntry_EggCreator",
+                "LevelObjectEntry_CharacterFlag",
+                "LevelObjectEntry_Unknown48",
+                "LevelObjectEntry_Animation",
+                "LevelObjectEntry_AnimatedObject",
+                "LevelObjectEntry_CameraAnimation",
+                "LevelObjectEntry_InfoPoint",
+                "LevelObjectEntryCommon",
+                "LevelObjectEntry_CharacterSelect",
+                "LevelObjectEntry_Trigger",
+                "LevelObjectEntryCommon",
+                "LevelObjectEntry_AirZippers_WaterZippers",
+                "LevelObjectEntry_Unknown58",
+                "LevelObjectEntry_WaveGenerator",
+                "LevelObjectEntry_WavePower",
+                "LevelObjectEntry_Butterfly",
+                "LevelObjectEntry_Parkwarden",
+                "LevelObjectEntry_Unknown63",
+                "LevelObjectEntry_WorldKey",
+                "LevelObjectEntry_BananaCreator",
+                "LevelObjectEntry_TreasureSucker",
+                "LevelObjectEntry_Log",
+                "LevelObjectEntry_LavaSpurt",
+                "LevelObjectEntry_PosArrow",
+                "LevelObjectEntry_HitTester",
+                "LevelObjectEntry_MidiFade",
+                "LevelObjectEntry_HitTester",
+                "LevelObjectEntry_EffectBox",
+                "LevelObjectEntry_TrophyCab",
+                "LevelObjectEntry_Bubbler",
+                "LevelObjectEntry_FlyCoin",
+                "LevelObjectEntry_GoldenBalloon",
+                "LevelObjectEntry_Laserbolt",
+                "LevelObjectEntry_Lasergun",
+                "LevelObjectEntry_ParkWarden",
+                "LevelObjectEntry_AnimatedObject",
+                "LevelObjectEntry_GroundZipper",
+                "LevelObjectEntry_OverridePos",
+                "LevelObjectEntry_WizpigShip",
+                "LevelObjectEntry_AnimatedObject",
+                "LevelObjectEntry_AnimatedObject",
+                "LevelObjectEntry_TajTelepoint",
+                "LevelObjectEntry_SilverCoin",
+                "LevelObjectEntry_Boost",
+                "LevelObjectEntry_WardenSmoke",
+                "LevelObjectEntry_Unknown91",
+                "LevelObjectEntry_Unknown92",
+                "LevelObjectEntry_AirZippers_WaterZippers",
+                "LevelObjectEntry_Unknown94",
+                "LevelObjectEntry_DynamicLightObject2",
+                "LevelObjectEntry_Snowball",
+                "LevelObjectEntry_Snowball",
+                "LevelObjectEntry_Teleport",
+                "LevelObjectEntry_Lighthouse_RocketSignpost",
+                "LevelObjectEntry_Lighthouse_RocketSignpost",
+                "LevelObjectEntry_Snowball",
+                "LevelObjectEntry_Snowball",
+                "LevelObjectEntry_HitTester",
+                "LevelObjectEntry_HitTester",
+                "LevelObjectEntry_RangeTrigger",
+                "LevelObjectEntry_Unknown106",
+                "LevelObjectEntry_BossHazardTrigger",
+                "LevelObjectEntry_Fireball_Octoweapon",
+                "LevelObjectEntry_Frog",
+                "LevelObjectEntry_SilverCoinAdv2",
+                "LevelObjectEntry_TTDoor",
+                "LevelObjectEntry_MidiFadePoint",
+                "LevelObjectEntry_DoorOpener",
+                "LevelObjectEntry_Unknown114",
+                "LevelObjectEntry_PigRocketeer",
+                "LevelObjectEntry_Fireball_Octoweapon",
+                "LevelObjectEntry_LevelName",
+                "LevelObjectEntry_Midichset",
+                "LevelObjectEntry_WizpigGhosts",
+                "LevelObjectEntry_Unknown120",
+                "LevelObjectEntry_Unknown121",
+                "LevelObjectEntry_Unknown122",
+                "LevelObjectEntry_Unknown123",
+                "LevelObjectEntry_Unknown124",
+                "LevelObjectEntry_Unknown125",
+                "LevelObjectEntry_Unknown126",
+                "LevelObjectEntry_Unknown127"
+            ]
+        }
     }
 }

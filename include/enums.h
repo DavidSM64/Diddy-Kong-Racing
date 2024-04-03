@@ -17,6 +17,20 @@ typedef enum SpecialMapId {
     SPECIAL_MAP_ID_NO_LEVEL = -1,
 } SpecialMapId;
 
+typedef enum Character {
+    CHARACTER_KRUNCH,
+    CHARACTER_BUMPER,
+    CHARACTER_TIPTUP,
+    CHARACTER_CONKER,
+    CHARACTER_TIMBER,
+    CHARACTER_BANJO,
+    CHARACTER_DRUMSTICK,
+    CHARACTER_PIPSY,
+    CHARACTER_TT,
+    CHARACTER_DIDDY,
+    NUMBER_OF_CHARACTERS
+} Character;
+
 typedef enum Vehicle {
     VEHICLE_CAR,
     VEHICLE_HOVERCRAFT,
@@ -77,6 +91,14 @@ typedef enum RaceType {
     RACETYPE_CHALLENGE_BANANAS = 65,
     RACETYPE_CHALLENGE_EGGS    = 66
 } RaceType;
+
+typedef enum ObjectModelType {
+    OBJECT_MODEL_TYPE_3D_MODEL,
+    OBJECT_MODEL_TYPE_SPRITE_BILLBOARD,
+    OBJECT_MODEL_TYPE_VEHICLE_PART,
+    OBJECT_MODEL_TYPE_UNKNOWN3,
+    OBJECT_MODEL_TYPE_MISC
+} ObjectModelType;
 
 typedef enum HorizontalAlignmentFlags {
     HORZ_ALIGN_LEFT   = 0,

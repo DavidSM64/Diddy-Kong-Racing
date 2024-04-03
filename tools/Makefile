@@ -1,11 +1,16 @@
+
+OPT := -O2
+
 CC := gcc
 CXX := g++
-CFLAGS := -I . -Wall -Wextra -Wno-unused-parameter -pedantic -std=c99 -O2 -s
-CXXFLAGS := -I . -Wall -Wextra -std=c++17
+CFLAGS := -I . -Wall -Wextra -Wno-unused-parameter -pedantic -std=c99 $(OPT) -s
+# List of specific errors to ignore
+IGNORE_W_ERRORS := -Wno-unused-parameter -Wno-misleading-indentation -Wno-extra
+CXXFLAGS := -I . -I dkr_assets_tool_src/ -Werror -Wall $(IGNORE_W_ERRORS) -std=c++17 $(OPT) -lpcre2-8
 LDFLAGS := -lm
 PROGRAMS := n64crc dkr_assets_tool
 
-BUILD_DIR := dkr_assets_tool_classes/_build
+BUILD_DIR := dkr_assets_tool_src/_build
 
 ENUMS_HEADER := ../include/enums.h
 
@@ -29,10 +34,9 @@ distclean: clean
 n64crc: n64crc.c
 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
 
-dkr_assets_tool_CPP_FILES := dkr_assets_tool.cpp \
-                          $(call rwildcard,dkr_assets_tool_classes,*.cpp)
+dkr_assets_tool_CPP_FILES := $(call rwildcard,dkr_assets_tool_src,*.cpp)
 
-dkr_assets_tool_C_FILES := $(call rwildcard,dkr_assets_tool_classes,*.c)
+dkr_assets_tool_C_FILES := $(call rwildcard,dkr_assets_tool_src,*.c)
 
 dkr_assets_tool_OBJ_FILES := $(foreach file,$(dkr_assets_tool_C_FILES),$(BUILD_DIR)/$(file:.c=.o)) \
                              $(foreach file,$(dkr_assets_tool_CPP_FILES),$(BUILD_DIR)/$(file:.cpp=.o))

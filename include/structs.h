@@ -705,14 +705,6 @@ typedef struct LevelModel {
 /* 0x48 */ s32 modelSize;
 } LevelModel;
 
-typedef enum {
-    OBJECT_MODEL_TYPE_3D_MODEL,
-    OBJECT_MODEL_TYPE_SPRITE_BILLBOARD,
-    OBJECT_MODEL_TYPE_VEHICLE_PART,
-    OBJECT_MODEL_TYPE_UNKNOWN3,
-    OBJECT_MODEL_TYPE_MISC
-} ObjectModelType;
-
 typedef struct ObjHeaderParticleEntry {
   /* 0x00 */ s32 upper;
   /* 0x04 */ s32 lower;
