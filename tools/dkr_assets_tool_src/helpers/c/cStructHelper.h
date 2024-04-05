@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <any>
 
 class CContext;
@@ -38,9 +39,16 @@ struct CStructEntry {
     CStruct *innerStruct = nullptr; // Only used in struct/union type.
     
     CStructEntry(CContext *context, CStruct *parent, std::string &type, std::string &pointer, std::string &name, 
-        std::string &arrayBrackets);
+        std::string &arrayBrackets, std::string hint);
     bool is_pointer_to_type();
     bool is_array();
+    
+    bool has_hint();
+    std::string get_hint_type(); // What type of hint does this member have?
+    std::string get_hint_value(const std::string hintKey);
+    
+    // Returns the default value if the key isn't in the hint map.
+    std::string get_hint_value(const std::string hintKey, std::string defaultValue);
     
     std::string to_string();
     
@@ -74,11 +82,18 @@ struct CStructEntry {
     int get_offset();
     void set_offset(int newOffset); // Note: Should only be called by the parent cstruct.
     
+    CContext *get_context();
 private:
+    // The hint map is specifically used for Object Maps.
+    std::unordered_map<std::string, std::string> _hintMap;
+    void _generate_hint_map(std::string &hint);
+    
     CContext *_context;
     CStruct *_parent;
     InternalType _internalType = InternalType::NOT_SET;
     int _offset = -1; // Is only calculated if get_offset is called.
+    bool _isSignedType;
+
 
     size_t _arrayMultiplier;
     

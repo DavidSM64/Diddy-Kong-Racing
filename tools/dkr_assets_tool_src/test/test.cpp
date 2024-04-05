@@ -273,17 +273,24 @@ void test_cstruct_helper_engine(RegexEngine engine, DkrAssetsSettings &settings)
     
     input = R"(
         typedef struct LevelObjectEntry_Racer {
-           LevelObjectEntryCommon common;
-           s16 angleZ;    
-           s16 angleX;
-           s16 angleY;
-           s16 playerIndex;
+            /* 0x00 */ LevelObjectEntryCommon common;
+            /* 0x08 */ s16 angleZ; Hint((Angle))
+            /* 0x0A */ s16 angleX; Hint((   Angle))
+            /* 0x0C */ s16 angleY; Hint((  Angle     ))
+            /* 0x0E */ s16 playerIndex;
         } LevelObjectEntry_Racer;
     )";
     
     CStruct test1(&ctx, input);
     DebugHelper::assert(!test1.is_trivial(), "Failed test 1.0 (struct was trivial)");
-    DebugHelper::assert(test1.get_byte_size() == 16, "Failed test 1.0 (struct size incorrect, was ", test1.get_byte_size(), " when it should be 16)");
+    DebugHelper::assert(test1.get_byte_size() == 16, "Failed test 1.1 (struct size incorrect, was ", test1.get_byte_size(), " when it should be 16)");
+    DebugHelper::assert(test1.get_entry(1)->get_hint_type() == "Angle", "Failed test 1.2 (Invalid hint type, was \"", test1.get_entry(1)->get_hint_type(), 
+        "\" when it should've been \"Angle\")");
+    DebugHelper::assert(test1.get_entry(2)->get_hint_type() == "Angle", "Failed test 1.3 (Invalid hint type, was \"", test1.get_entry(2)->get_hint_type(), 
+        "\" when it should've been \"Angle\")");
+    DebugHelper::assert(test1.get_entry(3)->get_hint_type() == "Angle", "Failed test 1.4 (Invalid hint type, was \"", test1.get_entry(3)->get_hint_type(), 
+        "\" when it should've been \"Angle\")");
+    
     
     // Clear structs that were created in the previous test.
     ctx.clear_structs();
@@ -331,7 +338,7 @@ void test_cstruct_helper_engine(RegexEngine engine, DkrAssetsSettings &settings)
             // -1: Doesn't warp to a boss race
             // 0: Warps to a boss 1 race
             // 1: Warps to a boss 2 race
-            s8 bossFlag;
+            s8 bossFlag; Hint(  (  Enum : WarpFlag  )  )
             
             // Stuff added for testing purposes
             char *stringTest;
@@ -376,6 +383,8 @@ void test_cstruct_helper_engine(RegexEngine engine, DkrAssetsSettings &settings)
     CStruct test2(&ctx, input);
     
     DebugHelper::assert(!test2.is_trivial(), "Failed test 2.0 (struct was trivial)");
+    
+    DebugHelper::assert(test2.get_entry(9)->get_hint_value("Enum") == "WarpFlag", "Failed test 2.1 ()");
     // TODO: More tests needed!
     
     // Clear structs that were created in the previous test.

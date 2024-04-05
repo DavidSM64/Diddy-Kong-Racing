@@ -34,6 +34,9 @@ private:
     CContext *_context;
     std::unordered_map<std::string, int> _members;
     
+     // Multiple keys may have the same value, that is the reason for the vector here.
+    std::unordered_map<int, std::vector<std::string>> _values;
+    
     std::string _name;
     std::string _typedefName;
     

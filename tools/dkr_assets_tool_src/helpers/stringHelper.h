@@ -6,7 +6,7 @@
 // These are functions that I would've expected to be a part of std::string. (Except for a few)
 class StringHelper {
 public:
-    static bool has(const std::string &input, const char* substring);
+    static bool has(const std::string &input, const char *substring);
 
     static void make_lowercase(std::string &input);
     static void make_uppercase(std::string &input);

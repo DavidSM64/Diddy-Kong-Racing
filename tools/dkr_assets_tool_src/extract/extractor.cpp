@@ -471,7 +471,9 @@ void DkrExtract::_generate_obj_behavior_to_entry_json_file() {
     
     for(int i = 0; i < 128; i++) {
         std::string symbol;
-        objBehaviors->get_symbol_of_value(i, symbol);
+        DebugHelper::assert_(objBehaviors->get_symbol_of_value(i, symbol),
+            "(DkrExtract::_generate_obj_behavior_to_entry_json_file) Could not get a symbol for the value ", i, " in the ObjectBehaviors enum.");
+        
         
         CStruct *entryStruct = _c_context.get_struct(defaultObjEntriesOrder[i]);
         DebugHelper::assert_(entryStruct != nullptr, 

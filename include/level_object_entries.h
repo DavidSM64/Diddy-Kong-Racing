@@ -1,7 +1,15 @@
 #ifndef _LEVEL_OBJECT_ENTRIES_H_
 #define _LEVEL_OBJECT_ENTRIES_H_
 
-    /* Size: 8 bytes. Shared across every entry. */
+
+/**
+ * Only used in the DKR asset tool to help it figure out how to parse certain struct members.
+ * Shouldn't affect the actual game code.
+ * Also: It sucks that C didn't support variadic args in macros till c99. Double parenthesis is needed as a workaround.
+*/
+#define Hint(args) 
+
+/* Size: 8 bytes. Shared across every entry. */
 typedef struct LevelObjectEntryCommon {
     u8 objectID; // 9-bit object ID to load (uses size's MSB).
     u8 size; // 7-bit total entry length (MSB is used in object_id).
@@ -10,9 +18,9 @@ typedef struct LevelObjectEntryCommon {
 
 typedef struct LevelObjectEntry_Racer {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ s16 angleZ;    
-    /* 0x0A */ s16 angleX;
-    /* 0x0C */ s16 angleY;
+    /* 0x08 */ s16 angleZ; 
+    /* 0x0A */ s16 angleX; 
+    /* 0x0C */ s16 angleY; 
     /* 0x0E */ s16 playerIndex;
 } LevelObjectEntry_Racer;
 
@@ -42,7 +50,7 @@ typedef struct LevelObjectEntry_Smoke {
 
 typedef struct LevelObjectEntry_Exit {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 destinationMapId;
+    /* 0x08 */ u8 destinationMapId; Hint((AssetId:ASSET_LEVEL_HEADERS))
     /* 0x09 */ u8 pad9;
 
     // Defines the location in overworld the player will spawn at.
@@ -56,8 +64,8 @@ typedef struct LevelObjectEntry_Exit {
     /* 0x0A */ s8 overworldSpawnIndex;
 
     /* 0x0B */ u8 padB[5];
-    /* 0x10 */ u8 radius; // Activation radius.
-    /* 0x11 */ u8 angleY;
+    /* 0x10 */ u8 radius; Hint((Scale, DivideBy:128)) // Activation radius.
+    /* 0x11 */ u8 angleY; Hint((Angle, DivideBy:64))
     /* 0x12 */ u8 pad12[5];
     
     // Defines the location in a hub world the player will spawn at when exiting `destinationMapId`.
@@ -72,7 +80,7 @@ typedef struct LevelObjectEntry_Exit {
     // -1: Doesn't warp to a boss race
     // 0: Warps to a boss 1 race
     // 1: Warps to a boss 2 race
-    /* 0x18 */ s8 bossFlag;
+    /* 0x18 */ s8 bossFlag; Hint((Enum:WarpFlag))
     /* 0x19 */ u8 pad19;
 } LevelObjectEntry_Exit;
 
@@ -112,8 +120,8 @@ typedef struct LevelObjectEntry_SetupPoint {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8;
     /* 0x09 */ u8 unk9;
-    /* 0x0A */ u8 angleY;
-    /* 0x0B */ s8 vehicle;
+    /* 0x0A */ u8 angleY; Hint((Angle, DivideBy:64))
+    /* 0x0B */ s8 vehicle; Hint((Enum:Vehicle))
 } LevelObjectEntry_SetupPoint;
 
 typedef struct LevelObjectEntry_Dino_Whale {
@@ -146,8 +154,8 @@ typedef struct LevelObjectEntry_Checkpoint {
 
 typedef struct LevelObjectEntry_Door {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 closedRotation;
-    /* 0x09 */ u8 openRotation;
+    /* 0x08 */ u8 closedRotation; //Hint((Angle, DivideBy:64))
+    /* 0x09 */ u8 openRotation; //Hint((Angle, DivideBy:64))
     /* 0x0A */ u8 modelIndex;
     /* 0x0B */ u8 distanceToOpen;
     /* 0x0C */ s8 unkC;
@@ -182,17 +190,11 @@ typedef struct LevelObjectEntry_AiNode {
     /* 0x0F */ s8 padF;
 } LevelObjectEntry_AiNode;
 
-#define BALLOON_TYPE_BOOST   0
-#define BALLOON_TYPE_MISSILE 1
-#define BALLOON_TYPE_TRAP    2
-#define BALLOON_TYPE_SHIELD  3
-#define BALLOON_TYPE_MAGNET  4
-
 typedef struct LevelObjectEntry_WeaponBalloon {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8; // Unused?
-    /* 0x09 */ u8 balloonType; 
-    /* 0x0A */ u8 radius; // This is divided by 64 to get actual scale.
+    /* 0x09 */ u8 balloonType; Hint((Enum:BalloonType))
+    /* 0x0A */ u8 radius; Hint((Scale, DivideBy:64)) // This is divided by 64 to get actual scale.
     /* 0x0B */ u8 padB; 
 } LevelObjectEntry_WeaponBalloon;
 
@@ -362,10 +364,10 @@ typedef struct LevelObjectEntry_CharacterFlag {
  */
 typedef struct LevelObjectEntry_Animation {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 z_rotation;
-    /* 0x09 */ u8 x_rotation;
-    /* 0x0A */ u8 y_rotation;
-    /* 0x0B */ u8 scale;
+    /* 0x08 */ u8 z_rotation; //Hint((Angle, DivideBy:256))
+    /* 0x09 */ u8 x_rotation; //Hint((Angle, DivideBy:256))
+    /* 0x0A */ u8 y_rotation; //Hint((Angle, DivideBy:256))
+    /* 0x0B */ u8 scale; Hint((Scale, DivideBy:64))
     /* 0x0C */ s16 objectIdToSpawn;
     /* 0x0E */ s16 animationStartDelay;
     /* 0x10 */ s8 actorIndex;
@@ -976,5 +978,7 @@ typedef struct LevelObjectEntry {
         LevelObjectEntry_CharacterSelect characterSelect;
     };
 } LevelObjectEntry;
+
+#undef Hint
 
 #endif

@@ -12,7 +12,7 @@
 #include "cTypes.h"
 
 CStructEntry::CStructEntry(CContext *context, CStruct *parent, std::string &type, std::string &pointer, std::string &name, 
-    std::string &arrayBrackets) : type(type), pointer(pointer), name(name), arrayBrackets(arrayBrackets), 
+    std::string &arrayBrackets, std::string hint) : type(type), pointer(pointer), name(name), arrayBrackets(arrayBrackets), 
     _context(context), _parent(parent) {
         // Make sure the strings have no whitespace. Makes processing easier.
         StringHelper::remove_all_whitespace(this->type);
@@ -20,6 +20,12 @@ CStructEntry::CStructEntry(CContext *context, CStruct *parent, std::string &type
         StringHelper::remove_all_whitespace(this->name);
         StringHelper::remove_all_whitespace(this->arrayBrackets);
         _calc_array_multiplier();
+        
+        if(!hint.empty()) {
+            _generate_hint_map(hint);
+        }
+        
+        _isSignedType = CTypes::is_signed_type(type);
 }
 
 bool CStructEntry::is_pointer_to_type() {
@@ -28,6 +34,67 @@ bool CStructEntry::is_pointer_to_type() {
 
 bool CStructEntry::is_array() {
     return !arrayBrackets.empty();
+}
+
+bool CStructEntry::has_hint() {
+    return !_hintMap.empty();
+}
+
+std::string CStructEntry::get_hint_type() {
+    DebugHelper::assert(has_hint(), "(CStructEntry::get_hint_type) ", name, " does not have a hint!");
+    DebugHelper::assert(_hintMap.find("_hintType") != _hintMap.end(), "(CStructEntry::get_hint_type) ", name
+        , " does not have a hint type! (Should not be possible?)");
+    return _hintMap["_hintType"];
+}
+
+std::string CStructEntry::get_hint_value(const std::string hintKey) {
+    DebugHelper::assert(has_hint(), "(CStructEntry::get_hint_type) ", name, " does not have a hint!");
+    DebugHelper::assert(_hintMap.find(hintKey) != _hintMap.end(), "(CStructEntry::get_hint_type) ", name
+        , " does not have the hint key: \"", hintKey, "\"");
+    return _hintMap[hintKey];
+}
+
+std::string CStructEntry::get_hint_value(const std::string hintKey, std::string defaultValue) {
+    DebugHelper::assert(has_hint(), "(CStructEntry::get_hint_type) ", name, " does not have a hint!");
+    if(_hintMap.find(hintKey) == _hintMap.end()) {
+        return defaultValue;
+    }
+    return _hintMap[hintKey];
+}
+
+void CStructEntry::_generate_hint_map(std::string &hint) {
+    std::vector<std::string> hintArgs;
+    StringHelper::split(hint, ',', hintArgs);
+    size_t numArgs = hintArgs.size();
+    
+    std::string &firstArg = hintArgs[0];
+    
+    // Arg 0 is always the hint type. Might have a colon to indicate the sub-type.
+    if(StringHelper::has(firstArg, ":")) {
+        size_t colonIndex = firstArg.find_first_of(':');
+        std::string hintType = firstArg.substr(0, colonIndex);
+        _hintMap["_hintType"] = hintType;
+        _hintMap[hintType] = firstArg.substr(colonIndex + 1);
+    } else {
+        _hintMap["_hintType"] = firstArg;
+    }
+    
+    // Rest of the args
+    for(size_t i = 1; i < numArgs; i++) {
+        std::string &arg = hintArgs[i];
+        
+        size_t colonIndex = arg.find_first_of(':');
+        
+        if(colonIndex == std::string::npos) {
+            // TODO: Support other hint types besides just a std::string?
+            DebugHelper::error("(CStructEntry::_generate_hint_map) Invalid hint argument: \"", arg, "\"");
+        }
+        
+        std::string hintKey = arg.substr(0, colonIndex);
+        DebugHelper::assert(!hintKey.empty(), "(CStructEntry::_generate_hint_map) Hint arg ", i, 
+            " for \"", name, "\" does not have a key!");
+        _hintMap[hintKey] = arg.substr(colonIndex + 1);
+    }
 }
 
 std::string CStructEntry::to_string() {
@@ -151,6 +218,13 @@ int64_t CStructEntry::get_integer_from_data(uint8_t *data, bool isBigEndian) {
         value |= ((int64_t)data[index]) << (int64_t)(i * 8);
     }
     
+    if(_isSignedType) {
+        // Convert unsigned value to signed value.
+        int shiftBy = (sizeof(int64_t) - numBytes) * 8;
+        value <<= shiftBy;
+        value >>= shiftBy;
+    }
+    
     return value;
 }
 
@@ -248,6 +322,10 @@ void CStructEntry::_calc_array_multiplier() {
     }
 }
 
+CContext *CStructEntry::get_context() {
+    return _context;
+}
+
 CStruct::CStruct(CContext *context) : _context(context) {
 }
 
@@ -273,6 +351,9 @@ struct CStructMemberParse {
     bool isStruct; // type is a struct/union
     int structStart;
     int structEnd;
+    bool hasHint;
+    int hintStart;
+    int hintEnd;
     
     void reset() {
         start = -1;
@@ -280,6 +361,9 @@ struct CStructMemberParse {
         isStruct = false;
         structStart = -1;
         structEnd = -1;
+        hasHint = false;
+        hintStart = -1;
+        hintEnd = -1;
     }
     
     std::string to_string() {
@@ -304,9 +388,19 @@ struct CStructMemberParse {
         size_t length = structEnd - structStart;
         return structCode.substr(structStart, length);
     }
+    
+    std::string get_hint_substring(const std::string &structCode) {
+        if(!hasHint) {
+            return "";
+        }
+        size_t length = hintEnd - hintStart;
+        std::string out = structCode.substr(hintStart, length);
+        StringHelper::remove_all_whitespace(out); // Should be no spaces in a hint.
+        return out;
+    }
 };
 
-const std::string C_STRUCT_END_CHAR = R"(^((?:.|\n)*?([;{])))";
+const std::string C_STRUCT_END_CHAR = R"(^((?:.|\n)*?([;{]))(?:\s*Hint[(]\s*[(]?([^)\n]*)[)](?:\s*[)])?)?)";
 
 int get_next_member(const std::string &structCode, int offsetInCode, CStructMemberParse &out) {
     
@@ -340,6 +434,17 @@ int get_next_member(const std::string &structCode, int offsetInCode, CStructMemb
         // Not a struct type, so just return the start/end points.
         out.start = offsetInCode;
         out.end = endCharOffset + 1;
+        
+        // Check for hint.
+        out.hintStart = match->get_group(3).get_offset();
+        
+        if(out.hintStart != -1) {
+            // Hint data was found!
+            out.hintStart += offsetInCode;
+            out.hintEnd = out.hintStart + match->get_group(3).get_text_length();
+            out.hasHint = true;
+        }
+        
         delete match;
         return out.end;
     }
@@ -358,16 +463,15 @@ int get_next_member(const std::string &structCode, int offsetInCode, CStructMemb
     
     offsetInCode = out.structEnd;
     
-    // Now that the struct was found, get the rest of the member. 
-    //bool success = get_next_member_end_character(structCode, offsetInCode, endCharOffset, endChar, false);
-    //DebugHelper::assert(success, "(get_next_member) Couldn't find an ending colon for the struct! At pos ", offsetInCode);
-    
     delete match;
     
+    // Now that the struct was found, get the rest of the member.
     endCharOffset = structCode.find_first_of(';', offsetInCode);
     
     out.start = offsetInCode;
     out.end = endCharOffset + 1;
+    
+    // Don't bother checking hints for the struct. (Maybe at a later date?)
     
     return out.end;
 }
@@ -407,6 +511,9 @@ CStruct::CStruct(CContext *context, const std::string &rawCode) : _context(conte
         std::string type;
         std::string rest;
         
+        // Should be empty if there is no hint.
+        std::string hint = parseInfo.get_hint_substring(structCode);
+        
         if(parseInfo.isStruct) {
             std::string innerStructCode = parseInfo.get_struct_substring(structCode);
             innerStruct = new CStruct(_context, innerStructCode);
@@ -443,7 +550,7 @@ CStruct::CStruct(CContext *context, const std::string &rawCode) : _context(conte
                 delete match; // done with match.
             }
             
-            _entries.push_back(new CStructEntry(_context, this, type, pointers, name, arrayBrackets));
+            _entries.push_back(new CStructEntry(_context, this, type, pointers, name, arrayBrackets, hint));
             
             if(parseInfo.isStruct) {
                 _entries.back()->innerStruct = innerStruct;

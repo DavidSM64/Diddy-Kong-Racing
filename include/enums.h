@@ -46,7 +46,8 @@ typedef enum Vehicle {
     VEHICLE_BUBBLER,
     VEHICLE_WIZPIG,
     VEHICLE_ROCKET,
-
+    
+    VEHICLE_NO_OVERRIDE = -1, // Only used in Object Maps for the setup point.
     NUMBER_OF_VEHICLE_TYPES,
     NUMBER_OF_PLAYER_VEHICLES = 3
 } Vehicle;
@@ -99,6 +100,20 @@ typedef enum ObjectModelType {
     OBJECT_MODEL_TYPE_UNKNOWN3,
     OBJECT_MODEL_TYPE_MISC
 } ObjectModelType;
+
+typedef enum WarpFlag {
+    WARP_FLAG_NORMAL = -1, // Not a boss warp
+    WARP_FLAG_BOSS_1,
+    WARP_FLAG_BOSS_2
+} WarpFlag;
+
+typedef enum BalloonType {
+    BALLOON_TYPE_BOOST,
+    BALLOON_TYPE_MISSILE,
+    BALLOON_TYPE_TRAP,
+    BALLOON_TYPE_SHIELD,
+    BALLOON_TYPE_MAGNET
+} BalloonType;
 
 typedef enum HorizontalAlignmentFlags {
     HORZ_ALIGN_LEFT   = 0,

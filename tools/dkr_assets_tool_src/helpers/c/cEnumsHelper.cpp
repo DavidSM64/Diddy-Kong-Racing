@@ -85,10 +85,22 @@ CEnum::CEnum(CContext *context, const std::string &rawCode) : _context(context) 
         if(StringHelper::starts_with(rest, "=")) {
             std::string enumValue = match.get_group(3).get_text();
             int parsedEnumValue = _parse_enum_value(enumValue);
+            if(_values.find(parsedEnumValue) == _values.end()) {
+                // New vector in values map.
+                _values[parsedEnumValue] = {};
+            }
             _members[enumLabel] = parsedEnumValue;
+            // _values map is ordered by which the values were added.
+            _values[parsedEnumValue].push_back(enumLabel); 
             nextValue = parsedEnumValue + 1;
             continue;
         }
+        if(_values.find(nextValue) == _values.end()) {
+            // New vector in values map.
+            _values[nextValue] = {};
+        }
+        // _values map is ordered by which the values were added.
+        _values[nextValue].push_back(enumLabel); 
         _members[enumLabel] = nextValue;
         nextValue++;
     }
@@ -110,7 +122,6 @@ void CEnum::copy_members_to_map(std::unordered_map<std::string, int> &inputMap) 
     }
 }
 
-
 bool CEnum::get_value_of_member(const std::string &memberKey, int &out) {
     if(_members.find(memberKey) == _members.end()) {
         return false;
@@ -120,14 +131,12 @@ bool CEnum::get_value_of_member(const std::string &memberKey, int &out) {
 }
 
 bool CEnum::get_symbol_of_value(int value, std::string &outSymbol) {
-    for (auto& it : _members) {
-        if (it.second == value) {
-            outSymbol = it.first; // Return the first symbol that matches the value.
-            return true;
-        }
+    if(_values.find(value) == _values.end()) {
+        DebugHelper::warn("(CEnum::get_symbol_of_value) Could not find the value ", value, " for the enum \"", _name, "\"");
+        return false;
     }
-    // value was not found in the map.
-    return false;
+    outSymbol = _values[value][0]; // Return the first symbol of the value.
+    return true;
 }
 
 size_t CEnum::get_member_count() {
