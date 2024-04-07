@@ -69,7 +69,7 @@ BuildObjectMap::BuildObjectMap(DkrAssetsSettings &settings, BuildInfo &info) : _
         if(entryCommon != entryStruct) {
             for(size_t entry = 0; entry < entryStruct->entry_count(); entry++) {
                 CStructEntry *structMember = entryStruct->get_entry(entry);
-                CStructGltfHelper::put_gltf_node_extra_into_struct_entry(structMember, gltf, i, bytes);
+                CStructGltfHelper::put_gltf_node_extra_into_struct_entry(_settings, structMember, gltf, i, bytes);
             }
         }
         

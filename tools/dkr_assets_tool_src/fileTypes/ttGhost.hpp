@@ -1,8 +1,9 @@
 #pragma once
 
 #include "types.hpp"
+#include "misc/constants.hpp"
 
-#define GHOST_TIME_FPS 60.0
+#define GHOST_TIME_FPS DKR_FPS
 
 /* Size: 8 bytes */
 typedef struct GhostHeader {

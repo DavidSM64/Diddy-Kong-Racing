@@ -115,7 +115,7 @@ ExtractObjectMap::ExtractObjectMap(DkrAssetsSettings &settings, ExtractInfo &inf
         if(entryCommon != entryStruct) {
             for(size_t i = 0; i < entryStruct->entry_count(); i++) {
                 CStructEntry *structMember = entryStruct->get_entry(i);
-                CStructGltfHelper::put_struct_entry_into_gltf_node_extra(structMember, gltfFile, gltfObjNode, bytes);
+                CStructGltfHelper::put_struct_entry_into_gltf_node_extra(_settings, structMember, gltfFile, gltfObjNode, bytes);
             }
         }
         

@@ -28,7 +28,7 @@ typedef struct LevelObjectEntry_Scenery {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 modelIndex;
     /* 0x09 */ u8 radius;
-    /* 0x0A */ u8 angleY;
+    /* 0x0A */ u8 angleY; Hint((Angle, DivideBy:64))
     /* 0x0B */ u8 solid;
 } LevelObjectEntry_Scenery;
 
@@ -132,7 +132,7 @@ typedef struct LevelObjectEntry_Checkpoint {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 scale;
     /* 0x09 */ u8 unk9;
-    /* 0x0A */ u8 angleY;
+    /* 0x0A */ u8 angleY; Hint((Angle, DivideBy:64))
     /* 0x0B */ s8 unkB;
     /* 0x0C */ s8 unkC;
     /* 0x0D */ s8 unkD;
@@ -154,8 +154,8 @@ typedef struct LevelObjectEntry_Checkpoint {
 
 typedef struct LevelObjectEntry_Door {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 closedRotation; //Hint((Angle, DivideBy:64))
-    /* 0x09 */ u8 openRotation; //Hint((Angle, DivideBy:64))
+    /* 0x08 */ u8 closedRotation; Hint((Angle, DivideBy:64))
+    /* 0x09 */ u8 openRotation; Hint((Angle, DivideBy:64))
     /* 0x0A */ u8 modelIndex;
     /* 0x0B */ u8 distanceToOpen;
     /* 0x0C */ s8 unkC;
@@ -247,9 +247,9 @@ typedef struct LevelObjectEntry_TexScroll {
 
 typedef struct LevelObjectEntry_ModeChange {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 radius;
-    /* 0x09 */ u8 angleY;
-    /* 0x0A */ u8 vehicleID;
+    /* 0x08 */ u8 radius; 
+    /* 0x09 */ u8 angleY; Hint((Angle, DivideBy:64))
+    /* 0x0A */ u8 vehicleID; Hint((Enum:Vehicle))
     /* 0x0B */ u8 padB;
 } LevelObjectEntry_ModeChange;
 
@@ -299,7 +299,7 @@ typedef struct LevelObjectEntry_Weather {
 typedef struct LevelObjectEntry_Bridge_WhaleRamp {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 modelIndex;
-    /* 0x09 */ u8 angleY;
+    /* 0x09 */ u8 angleY; Hint((Angle, DivideBy:64))
     /* 0x0A */ u8 unkA;
     /* 0x0B */ u8 unkB;
     /* 0x0C */ u8 radius;
@@ -321,7 +321,7 @@ typedef struct LevelObjectEntry_SeaMonster {
 typedef struct LevelObjectEntry_Bonus {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 radius;
-    /* 0x09 */ u8 angleY;
+    /* 0x09 */ u8 angleY; Hint((Angle, DivideBy:64))
     /* 0x0A */ u8 unkA;
 } LevelObjectEntry_Bonus;
 
@@ -364,12 +364,12 @@ typedef struct LevelObjectEntry_CharacterFlag {
  */
 typedef struct LevelObjectEntry_Animation {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 z_rotation; //Hint((Angle, DivideBy:256))
-    /* 0x09 */ u8 x_rotation; //Hint((Angle, DivideBy:256))
-    /* 0x0A */ u8 y_rotation; //Hint((Angle, DivideBy:256))
+    /* 0x08 */ u8 z_rotation; Hint((Angle, DivideBy:256))
+    /* 0x09 */ u8 x_rotation; Hint((Angle, DivideBy:256))
+    /* 0x0A */ u8 y_rotation; Hint((Angle, DivideBy:256))
     /* 0x0B */ u8 scale; Hint((Scale, DivideBy:64))
-    /* 0x0C */ s16 objectIdToSpawn;
-    /* 0x0E */ s16 animationStartDelay;
+    /* 0x0C */ s16 objectIdToSpawn; Hint((Object)) // Index into the Level-Object Translation Table.
+    /* 0x0E */ s16 animationStartDelay; Hint((Time, RoundToPlaces:3)) // Pause before continuing?
     /* 0x10 */ s8 actorIndex;
     /* 0x11 */ s8 order;
     /* 0x12 */ s8 objAnimIndex;
@@ -390,9 +390,9 @@ typedef struct LevelObjectEntry_Animation {
     /* 0x21 */ s8 channel;
     /* 0x22 */ s8 unk22;
     /* 0x23 */ s8 unk23;
-    /* 0x24 */ s16 pauseFrameCount;
+    /* 0x24 */ s16 pauseFrameCount; Hint((Time, RoundToPlaces:4)) // Pause before continuing?
     /* 0x26 */ s8 specialHide;
-    /* 0x27 */ u8 messageId;
+    /* 0x27 */ u8 messageId; Hint((AssetId:ASSET_GAME_TEXT))
     /* 0x28 */ s8 unk28;
     /* 0x29 */ s8 unk29;
     /* 0x2A */ s8 unk2A;
@@ -415,7 +415,7 @@ typedef struct LevelObjectEntry_Trigger {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 scale;
     /* 0x09 */ s8 index;
-    /* 0x0A */ u8 angleY;
+    /* 0x0A */ u8 angleY; Hint((Angle, DivideBy:64))
     /* 0x0B */ u8 unkB;
     /* 0x0C */ u8 unkC;
     /* 0x0D */ u8 unkD;
@@ -425,7 +425,7 @@ typedef struct LevelObjectEntry_AirZippers_WaterZippers {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8;
     /* 0x09 */ u8 radius;
-    /* 0x0A */ u8 angleY;
+    /* 0x0A */ u8 angleY; Hint((Angle, DivideBy:64))
     /* 0x0B */ u8 padB;
 } LevelObjectEntry_AirZippers_WaterZippers;
 
@@ -481,14 +481,14 @@ typedef struct LevelObjectEntry_Log {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 modelIndex;
     /* 0x09 */ u8 radius;
-    /* 0x0A */ u8 angleY;
+    /* 0x0A */ u8 angleY; Hint((Angle, DivideBy:64))
     /* 0x0B */ u8 padB;
 } LevelObjectEntry_Log;
 
 typedef struct LevelObjectEntry_LavaSpurt {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 delayTimer;
-    /* 0x09 */ u8 initialTimer;
+    /* 0x08 */ u8 delayTimer; Hint((Time))
+    /* 0x09 */ u8 initialTimer; Hint((Time))
 } LevelObjectEntry_LavaSpurt;
 
 typedef struct LevelObjectEntry_PosArrow {
@@ -502,7 +502,7 @@ typedef struct LevelObjectEntry_HitTester {
 typedef struct LevelObjectEntry_MidiFade {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 scale;
-    /* 0x09 */ u8 angleY;
+    /* 0x09 */ u8 angleY; Hint((Angle, DivideBy:64))
     /* 0x0A */ u8 unkA[16]; // Is this 16 bytes or 15 bytes with a padded 0?
     /* 0x1A */ u8 unk1A;
     /* 0x1B */ u8 unk1B;
@@ -526,7 +526,7 @@ typedef struct LevelObjectEntry_EffectBox {
 
 typedef struct LevelObjectEntry_TrophyCab {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 angleY;
+    /* 0x08 */ u8 angleY; Hint((Angle, DivideBy:64))
     /* 0x09 */ u8 pad9;
 } LevelObjectEntry_TrophyCab;
 
@@ -556,8 +556,8 @@ typedef struct LevelObjectEntry_Laserbolt {
 
 typedef struct LevelObjectEntry_Lasergun {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 angleY;
-    /* 0x09 */ u8 angleX;
+    /* 0x08 */ u8 angleY; Hint((Angle, DivideBy:256))
+    /* 0x09 */ u8 angleX; 
     /* 0x0A */ s8 targeting;
     /* 0x0B */ s8 fireRate;
     /* 0x0C */ u8 laserDuration;
@@ -568,7 +568,7 @@ typedef struct LevelObjectEntry_GroundZipper {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8;
     /* 0x09 */ u8 scale;
-    /* 0x0A */ u8 angleY;
+    /* 0x0A */ u8 angleY; Hint((Angle, DivideBy:64))
     /* 0x0B */ u8 unkB;
 } LevelObjectEntry_GroundZipper;
 
@@ -622,7 +622,7 @@ typedef struct LevelObjectEntry_Lighthouse_RocketSignpost {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8;
     /* 0x09 */ u8 radius;
-    /* 0x0A */ u8 angleY;
+    /* 0x0A */ u8 angleY; Hint((Angle, DivideBy:64))
     /* 0x0B */ u8 padB;
 } LevelObjectEntry_Lighthouse_RocketSignpost;
 
@@ -653,8 +653,8 @@ typedef struct LevelObjectEntry_SilverCoinAdv2 {
 
 typedef struct LevelObjectEntry_TTDoor {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 angleY;
-    /* 0x09 */ u8 unk9;
+    /* 0x08 */ u8 angleY; Hint((Angle, DivideBy:64)) // Rotation when closed
+    /* 0x09 */ u8 unk9; Hint((Angle, DivideBy:64)) // Rotation when open
     /* 0x0A */ u8 unkA;
     /* 0x0B */ u8 unkB;
     /* 0x0C */ u8 radius;

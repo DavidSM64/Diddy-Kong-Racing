@@ -29,10 +29,12 @@ public:
     static JsonFile *get_main_json(DkrAssetsSettings &settings);
     static JsonFile *get_main_json(fs::path pathToAssets);
     static JsonFile *get_asset_section_json(DkrAssetsSettings &settings, const std::string assetSectionId);
+    static size_t get_asset_section_count(DkrAssetsSettings &settings, const std::string assetSectionId);
     static JsonFile *get_asset_json(DkrAssetsSettings &settings, const std::string assetSectionId, std::string buildId="");
     static int get_asset_index(DkrAssetsSettings &settings, const std::string assetSectionId, std::string &buildId);
     static std::string get_section_path(DkrAssetsSettings &settings, const std::string &assetSectionId);
     static std::string get_build_id_of_index(DkrAssetsSettings &settings, const std::string &assetSectionId, int index);
+    
     
     static DeferredAssetInfo get_deferred_asset_info(DkrAssetsSettings &settings, const std::string assetSectionId);
 private:

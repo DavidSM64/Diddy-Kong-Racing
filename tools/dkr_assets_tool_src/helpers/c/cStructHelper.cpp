@@ -230,7 +230,6 @@ int64_t CStructEntry::get_integer_from_data(uint8_t *data, bool isBigEndian) {
 
 void CStructEntry::set_integer_to_data(uint8_t *data, int64_t value, bool isBigEndian) {
     size_t numBytes = get_byte_size();
-
     for(size_t i = 0; i < numBytes; i++) {
         size_t index = get_offset() + ((isBigEndian) ? numBytes - i - 1 : i);
         data[index] = value >> (int64_t)(i * 8);

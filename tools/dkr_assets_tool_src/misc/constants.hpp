@@ -29,3 +29,5 @@ const bool DEFAULT_VERBOSE_VALUE = true;
 const bool USING_ASSERTS = true;
 
 const double DEFAULT_MODEL_SCALE_GLTF = 1.0 / 1000.0;
+
+const double DKR_FPS = 60.0; // For time conversions

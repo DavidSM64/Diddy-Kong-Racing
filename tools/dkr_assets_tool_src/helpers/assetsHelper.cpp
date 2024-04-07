@@ -37,6 +37,16 @@ JsonFile *AssetsHelper::get_asset_section_json(DkrAssetsSettings &settings, cons
     return _get_section_json(settings.pathToAssets, assetSectionId);
 }
 
+size_t AssetsHelper::get_asset_section_count(DkrAssetsSettings &settings, const std::string assetSectionId) {
+    JsonFile *assetSection = get_asset_section_json(settings, assetSectionId);
+    
+    if(assetSection == nullptr) {
+        return 0;
+    }
+    
+    return assetSection->length_of_array("/files/order");
+}
+
 // Returns the asset JSON file from a section ID & build ID.
 JsonFile *AssetsHelper::get_asset_json(DkrAssetsSettings &settings, const std::string assetSectionId, std::string buildId) {
     JsonFile *out = nullptr;
