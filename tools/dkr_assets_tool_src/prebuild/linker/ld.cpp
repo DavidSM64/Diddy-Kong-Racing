@@ -74,6 +74,6 @@ void WritableLD::write_newline() {
 
 void WritableLD::save(const std::string &filepath) {
     std::string ldText = _out.str();
-    FileHelper::write_text_file(ldText, filepath, true);
+    FileHelper::write_text_file_if_changed(ldText, filepath, true);
 }
 

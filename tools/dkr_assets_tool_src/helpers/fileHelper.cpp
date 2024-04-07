@@ -41,6 +41,24 @@ void FileHelper::write_text_file(const std::string &text, const fs::path &filepa
     myfile.close();
 }
 
+void FileHelper::write_text_file_if_changed(const std::string &text, const fs::path &filepath, bool ensurePathExists) {
+    if(FileHelper::path_exists(filepath)) {
+        // TODO: Is there a faster way to do this?
+        std::string savedText = FileHelper::read_text_file(filepath);
+        if(text == savedText) {
+            return; // Text is exactly the same, so return early.
+        }
+    }
+    if(ensurePathExists) {
+        write_folder_if_it_does_not_exist(filepath);
+    }
+    std::ofstream myfile;
+    myfile.open(filepath);
+    myfile << text;
+    myfile.close();
+}
+
+
 void FileHelper::write_folder_if_it_does_not_exist(const fs::path &path) {
     fs::path dirPath = path;
     if (dirPath.has_filename()) {

@@ -50,5 +50,5 @@ void WritableAsmInclude::write_global_label(const std::string &label, bool align
 
 void WritableAsmInclude::save(fs::path filepath) {
     std::string headerText = _out.str();
-    FileHelper::write_text_file(headerText, filepath, true);
+    FileHelper::write_text_file_if_changed(headerText, filepath, true);
 }

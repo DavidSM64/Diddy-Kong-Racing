@@ -18,6 +18,8 @@ public:
     static std::string read_text_file(const fs::path &filepath, size_t maxSize=SIZE_MAX);
     
     static void write_text_file(const std::string &text, const fs::path &filepath, bool ensurePathExists=false);
+    // Only writes if the contents of the file have been changed.
+    static void write_text_file_if_changed(const std::string &text, const fs::path &filepath, bool ensurePathExists=false);
     
     static void write_folder_if_it_does_not_exist(const fs::path &path);
     

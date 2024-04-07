@@ -201,6 +201,12 @@ namespace md5 {
         c.append(&bytes[0], bytes.size());
         return c.final();
     }
+
+    static Digest compute(uint8_t *data, size_t dataLength) {
+        details::Context c;
+        c.append(data, dataLength);
+        return c.final();
+    }
 }
 
 #endif

@@ -30,5 +30,5 @@ void WritableCHeader::write_raw_text_line(std::string text) {
 
 void WritableCHeader::save(fs::path filepath) {
     std::string headerText = _out.str();
-    FileHelper::write_text_file(headerText, filepath, true);
+    FileHelper::write_text_file_if_changed(headerText, filepath, true);
 }
