@@ -10,7 +10,7 @@ BuildFonts::BuildFonts(DkrAssetsSettings &settings, BuildInfo &info) : _settings
     
     // "rawDataSize" is the size of the FontData structure with the correct number of fonts.
     // Have to do this, since the number of fonts is dynamic.
-    size_t rawDataSize = FileHelper::align16(4 + numberOfFonts * sizeof(FontFile));
+    size_t rawDataSize = FileHelper::align16(sizeof(be_uint32_t) + (numberOfFonts * sizeof(FontFile)));
     uint8_t *rawData = new uint8_t[rawDataSize];
     std::memset(rawData, 0, rawDataSize); // zero out rawData bytes.
     
@@ -56,7 +56,14 @@ BuildFonts::BuildFonts(DkrAssetsSettings &settings, BuildInfo &info) : _settings
             
             int fontTextureIndex = AssetsHelper::get_asset_index(settings, "ASSET_TEXTURES_2D", texBuildId);
             
+            DebugHelper::info(texBuildId, " = ", fontTextureIndex);
+            
             outFontFile->textureIndices[texIndex] = fontTextureIndex;
+        }
+        
+        // Fills in the rest with nulls
+        for(size_t texIndex = numTextures; texIndex < FONTS_NUMBER_OF_TEXTURE_INDICES; texIndex++) {
+            outFontFile->textureIndices[texIndex] = -1;
         }
         
         // Assume ASCII by default.

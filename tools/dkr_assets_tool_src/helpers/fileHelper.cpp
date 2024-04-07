@@ -305,6 +305,12 @@ fs::path FileHelper::get_directory(const fs::path &path) {
     return path.parent_path();
 }
 
+void FileHelper::delete_directory(const fs::path &path) {
+    if(fs::exists(path)) {
+        fs::remove_all(path);
+    }
+}
+
 void FileHelper::rename(const fs::path &oldPath, const fs::path &newPath) {
     fs::rename(oldPath, newPath);
 }

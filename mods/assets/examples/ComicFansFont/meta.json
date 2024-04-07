@@ -1,6 +1,5 @@
 {
     "name": "Comic Fans Font",
-    "author" : "Example",
-    "revision": 3,
-    "description": "Font that was made by damieng. See: https://damieng.com/typography/zx-origins/comic-fans/"
+    "authors" : ["Example", "Damien Guard"],
+    "description": "A fun 8x8 font that was created by Damien Guard. See: https://damieng.com/typography/zx-origins/comic-fans/"
 }

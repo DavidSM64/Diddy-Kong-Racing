@@ -69,6 +69,8 @@ BuildTexture::BuildTexture(DkrAssetsSettings &settings, BuildInfo &info) : _sett
         header->width = imgWidth;
         header->height = imgHeight;
         
+        // TODO: Check if width and/or height is greater than 255, and error if it is!
+        
         if(writeSize) {
             header->textureSize = DataHelper::align16(sizeof(TextureHeader) + ImageHelper::image_size(imgWidth, imgHeight, format));
         } else {

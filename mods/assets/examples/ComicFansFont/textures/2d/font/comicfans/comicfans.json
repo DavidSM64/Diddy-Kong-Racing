@@ -1,8 +1,8 @@
 {
     "compressed": true,
     "flags": {
-        "wrap-s": "Wrap",
-        "wrap-t": "Wrap"
+        "wrap-s": "CLAMP",
+        "wrap-t": "CLAMP"
     },
     "format": "IA4",
     "images": [

@@ -46,6 +46,8 @@ public:
     
     static fs::path get_directory(const fs::path &path);
     
+    static void delete_directory(const fs::path &path);
+    
     static void rename(const fs::path &oldPath, const fs::path &newPath);
     static void copy(const fs::path &oldPath, const fs::path &newPath, bool recursive = false);
     

@@ -127,8 +127,10 @@ void CompileAssets::_compile_assets() {
     
     _statFile->set_value<int>("/last-order-size", _modOrderCount);
     
-    // First copy the vanilla path to the out path.
-    // This seems to be the slowest part, mainly limited by IO speed (copying thousands of small files).
+    // First clear the output directory (if it exists)
+    FileHelper::delete_directory(_outAssetsPath);
+    
+    // Copy all the vanilla files over to the output directory
     FileHelper::copy(_vanillaAssetsPath, _outAssetsPath, true);
     
     if(_modOrderCount == 0) {
