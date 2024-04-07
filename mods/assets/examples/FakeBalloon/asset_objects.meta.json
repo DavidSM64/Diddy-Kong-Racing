@@ -1,0 +1,12 @@
+{
+    "files": {
+        "order": [
+            "ASSET_OBJECT_FAKEBALLOON"
+        ],
+        "sections": {
+            "ASSET_OBJECT_FAKEBALLOON": {
+                "filename": "FakeBalloon.json"
+            }
+        }
+    }
+}
