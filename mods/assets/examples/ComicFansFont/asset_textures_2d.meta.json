@@ -5,7 +5,7 @@
         ],
         "sections": {
             "ASSET_TEX2D_COMICFANS": {
-                "filename": "comicfans.json"
+                "filename": "font/comicfans/comicfans.json"
             }
         }
     }

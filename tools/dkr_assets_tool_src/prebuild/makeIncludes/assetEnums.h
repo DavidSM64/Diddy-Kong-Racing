@@ -19,6 +19,7 @@ private:
     
     void _write_asset_section_enums();
     void _write_main_asset_enum(std::vector<std::string> &mainOrder);
+    void _write_single_asset_section_enums(const std::string &sectionId, JsonFile *sectionJson);
     void _write_asset_section_enums(const std::string &sectionId, JsonFile *sectionJson);
     
     void _write_deferred_asset_section_enums(const std::string &sectionId, JsonFile *mainJson, 

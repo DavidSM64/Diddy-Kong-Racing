@@ -356,7 +356,7 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
                     }
                     if (worldBit != 0) {
                         push_level_property_stack(SPECIAL_MAP_ID_NO_LEVEL, 0, VEHICLE_CAR, 0);
-                        push_level_property_stack(ASSET_LEVELNAME_WIZPIGAMULETSEQUENCE, 0, -1,
+                        push_level_property_stack(ASSET_LEVEL_WIZPIGAMULETSEQUENCE_NAME, 0, -1,
                                                   settings->wizpigAmulet - 1);
                         push_level_property_stack(i, 6, -1, 6);
                     } else {

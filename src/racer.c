@@ -6101,7 +6101,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
             racer->unk88 -= racer->unk88 * 0.0625 * updateRateF;
         }
         gCurrentRacerHandlingStat = 1;
-        gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_RACERSTATS_UNKNOWN0);
+        gCurrentRacerMiscAssetPtr = (f32 *) get_misc_asset(ASSET_MISC_RACERACCELERATION_UNKNOWN0);
         D_8011D568 = (f32 *) get_misc_asset(obj->segment.header->unk5D);
         if ((obj->segment.y_velocity < 4.0) && ((racer->groundedWheels >= 3) || (racer->buoyancy != 0.0))) {
             racer->unk1F1 = 0;
@@ -6327,7 +6327,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     CheckpointNode *checkpoint;
     s32 i;
 
-    gCurrentRacerMiscAssetPtr = get_misc_asset(ASSET_MISC_RACERSTATS_UNKNOWN0);
+    gCurrentRacerMiscAssetPtr = get_misc_asset(ASSET_MISC_RACERACCELERATION_UNKNOWN0);
     levelHeader = get_current_level_header();
     sp11C = get_checkpoint_count();
     if (sp11C != 0) {

@@ -59,7 +59,8 @@ BuildFonts::BuildFonts(DkrAssetsSettings &settings, BuildInfo &info) : _settings
             outFontFile->textureIndices[texIndex] = fontTextureIndex;
         }
         
-        std::string encodingType = fontJson->get_string("/encoding/type");
+        // Assume ASCII by default.
+        std::string encodingType = fontJson->get_string("/encoding/type", "ASCII");
         
         StringHelper::make_uppercase(encodingType); // Make sure string is uppercase.
         
@@ -70,8 +71,6 @@ BuildFonts::BuildFonts(DkrAssetsSettings &settings, BuildInfo &info) : _settings
             DebugHelper::error("(BuildFonts::BuildFonts) Unsupported font encoding type: \"", encodingType, "\"");
         }
     }
-    
-    DebugHelper::info(info.dstPath);
     
     FileHelper::write_binary_file(rawData, rawDataSize, _info.dstPath, true);
     
