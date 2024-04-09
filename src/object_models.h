@@ -21,9 +21,9 @@ void free_3d_model(ObjectModel **modelPtr);
 s32 func_80061A00(ObjectModel *model, s32 animTableIndex);
 s32 check_nearby_vertices(Vertex *vertices, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1);
-Object_68 *object_model_init(s32 arg0, s32 arg1);
+Object_68 *object_model_init(s32 modelID, s32 flags);
 
-void free_model_data(ObjectModel *model); //Non Matching
+void free_model_data(ObjectModel *mdl); // Non Matching
 void func_80060910(ObjectModel *);
 s32 func_80060AC8(ObjectModel *mdl, s32 arg1, s32 arg2, s32 arg3, s32 *outBatchIndex, s32 *outVertexIndex);
 s32 func_80060EA8(ObjectModel *);

@@ -11,7 +11,7 @@
 #include "PR/libaudio.h"
 
 ALSoundState *D_800DC6B0 = NULL;
-s32 D_800DC6B4 = 0; // Currently unknown, might be a different type.
+s32 D_800DC6B4 = 0;                // Currently unknown, might be a different type.
 unk800DC6BC_40 *D_800DC6B8 = NULL; // Set but not used.
 unk800DC6BC gAlSndPlayer;
 unk800DC6BC *gAlSndPlayerPtr = &gAlSndPlayer;
@@ -46,7 +46,7 @@ void set_sound_channel_count(s32 numChannels) {
 
 /**
  * Initialise a sound player and ready it for use with the sound event system.
-*/
+ */
 void alSndPNew(audioMgrConfig *c) {
     u32 i;
     unk800DC6BC_40 *tmp1;
@@ -58,9 +58,8 @@ void alSndPNew(audioMgrConfig *c) {
     gAlSndPlayerPtr->soundChannelsMax = c->maxChannels;
     gAlSndPlayerPtr->soundChannels = c->maxChannels;
     gAlSndPlayerPtr->unk3C = 0;
-    gAlSndPlayerPtr->frameTime = 33000; //AL_USEC_PER_FRAME        /* time between API events */
-    gAlSndPlayerPtr->unk40 = (unk800DC6BC_40 *) alHeapAlloc(c->hp, 1,
-                                                         c->unk00 * sizeof(unk800DC6BC_40));
+    gAlSndPlayerPtr->frameTime = 33000; // AL_USEC_PER_FRAME        /* time between API events */
+    gAlSndPlayerPtr->unk40 = (unk800DC6BC_40 *) alHeapAlloc(c->hp, 1, c->unk00 * sizeof(unk800DC6BC_40));
     alEvtqNew(&(gAlSndPlayerPtr->evtq), alHeapAlloc(c->hp, 1, (c->unk04) * 28), c->unk04);
     D_800DC6B8 = gAlSndPlayerPtr->unk40;
     for (i = 1; i < c->unk00; i++) {
@@ -131,36 +130,37 @@ void func_8000418C(ALVoiceState *voiceState) {
     ALEvent_unk8000418C evt;
     f32 sp1C;
 
-    sp1C = alCents2Ratio(((ALLink_unk8000418C*)voiceState->voice.node.prev->prev)->unk5) * voiceState->vibrato;
+    sp1C = alCents2Ratio(((ALLink_unk8000418C *) voiceState->voice.node.prev->prev)->unk5) * voiceState->vibrato;
     evt.type = AL_SEQP_STOP_EVT;
     evt.unk4 = voiceState;
-    evt.unk8 = *((s32*)&sp1C); // But why tho?
+    evt.unk8 = *((s32 *) &sp1C); // But why tho?
     alEvtqPostEvent(&gAlSndPlayerPtr->evtq, (ALEvent *) &evt, 33333);
 }
 
 static void _removeEvents(ALEventQueue *evtq, ALSoundState *state, u16 eventType) {
-    ALLink              *thisNode;
-    ALLink              *nextNode;
-    ALEventListItem     *thisItem;
-    ALEventListItem     *nextItem;
-    ALSndpEvent        *thisEvent;
-    OSIntMask           mask;
+    ALLink *thisNode;
+    ALLink *nextNode;
+    ALEventListItem *thisItem;
+    ALEventListItem *nextItem;
+    ALSndpEvent *thisEvent;
+    OSIntMask mask;
 
     mask = osSetIntMask(OS_IM_NONE);
 
     thisNode = evtq->allocList.next;
-    while( thisNode != 0 ) {
-	nextNode = thisNode->next;
+    while (thisNode != 0) {
+        nextNode = thisNode->next;
         thisItem = (ALEventListItem *) thisNode;
         nextItem = (ALEventListItem *) nextNode;
         thisEvent = (ALSndpEvent *) &thisItem->evt;
-        if (thisEvent->common.state == state && (u16)thisEvent->msg.type & eventType){
-            if( nextItem )
+        if (thisEvent->common.state == state && (u16) thisEvent->msg.type & eventType) {
+            if (nextItem) {
                 nextItem->delta += thisItem->delta;
+            }
             alUnlink(thisNode);
             alLink(thisNode, &evtq->freeList);
         }
-	thisNode = nextNode;
+        thisNode = nextNode;
     }
 
     osSetIntMask(mask);
@@ -206,13 +206,15 @@ GLOBAL_ASM("asm/non_matchings/audiosfx/func_80004384.s")
 GLOBAL_ASM("asm/non_matchings/audiosfx/func_80004520.s")
 
 void func_80004604(u8 *arg0, u8 arg1) {
-    if (arg0)
+    if (arg0) {
         arg0[0x36] = arg1;
+    }
 }
 
 UNUSED u8 func_8000461C(u8 *arg0) {
-    if (arg0)
+    if (arg0) {
         return arg0[0x3F];
+    }
     return 0;
 }
 
@@ -227,13 +229,13 @@ s32 func_80004668(ALBank *bnk, s16 sndIndx, u8 arg2, SoundMask *soundMask) {
 GLOBAL_ASM("asm/non_matchings/audiosfx/func_80004668.s")
 #endif
 
-//input typing not right (some type of struct)
-// 99% sure this function will clear the audio buffer associated with a given sound mask.
+// input typing not right (some type of struct)
+//  99% sure this function will clear the audio buffer associated with a given sound mask.
 void func_8000488C(u8 *arg0) {
     ALEvent sp_18;
     sp_18.type = 1024;
     //((u32 *)(&sp_18))[1] = (u32)arg0;
-    sp_18.msg.osc.vs = (ALVoiceState *) arg0; //Not really a voice state, but not sure what else it is.
+    sp_18.msg.osc.vs = (ALVoiceState *) arg0; // Not really a voice state, but not sure what else it is.
     if (arg0) {
         arg0[0x3e] &= ~(1 << 4);
         alEvtqPostEvent(&(gAlSndPlayerPtr->evtq), &sp_18, 0);
@@ -269,14 +271,14 @@ UNUSED void func_800049B8(void) {
 
 /**
  * Stops all sounds from playing.
-*/
+ */
 void sound_stop_all(void) {
     func_800048D8(AL_SNDP_PLAY_EVT | AL_SNDP_STOP_EVT);
 }
 
 /**
  * Send a message to the sound player to update an existing property of the sound entry.
-*/
+ */
 void sound_event_update(s32 soundMask, s16 type, u32 volume) {
     ALEvent2 sndEvt;
     sndEvt.snd_event.type = type;
@@ -290,16 +292,17 @@ void sound_event_update(s32 soundMask, s16 type, u32 volume) {
 /**
  * Returns the volume level of the channel ID.
  * Official Name: gsSndpGetMasterVolume
-*/
+ */
 u16 get_sound_channel_volume(u8 channel) {
     return gSoundChannelVolume[channel];
 }
 
-//TODO: The structs used here are almost definitely wrong, but they do match, so it can at least show the pattern we're looking for.
+// TODO: The structs used here are almost definitely wrong, but they do match, so it can at least show the pattern we're
+// looking for.
 /**
  * Looks for the intended audio channel in the main buffer and adjusts its volume
  * Official Name: gsSndpSetMasterVolume
-*/
+ */
 void set_sound_channel_volume(u8 channel, u16 volume) {
     OSIntMask mask;
     ALEventQueue *queue;
@@ -311,7 +314,7 @@ void set_sound_channel_volume(u8 channel, u16 volume) {
     gSoundChannelVolume[channel] = volume;
 
     while (queue != NULL) {
-        //This is almost definitely the wrong struct list, but it matches so I'm not going to complain
+        // This is almost definitely the wrong struct list, but it matches so I'm not going to complain
         if ((((ALInstrument *) queue->allocList.next->prev)->priority & 0x3F) == channel) {
             evt.type = AL_SNDP_UNK_11_EVT;
             evt.msg.spseq.seq = (void *) queue;

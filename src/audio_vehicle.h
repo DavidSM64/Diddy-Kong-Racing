@@ -138,8 +138,7 @@ extern SoundMask **gSoundMaskHeapUsed;
 extern SoundMask **gSoundMaskHeapFree;
 extern u8 gFreeMasks;
 
-
-void racer_sound_update(Object* obj, u32 buttonsPressed, u32 carInput, s32 updateRate);
+void racer_sound_update(Object *obj, u32 buttonsPressed, u32 buttonsHeld, s32 updateRate);
 void racer_sound_free(Object *);
 
 f32 func_80007FA4(f32 arg0);

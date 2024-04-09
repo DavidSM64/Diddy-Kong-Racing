@@ -18,4 +18,4 @@ compiler_type = "ido"
 "NULL" = "unsigned int"
 
 [decompme.compilers]
-"./tools/ido-static-recomp/build/5.3/out/cc" = "ido5.3_irix"
+"tools/ido-static-recomp/build/5.3/out/cc" = "ido5.3_irix"

@@ -80,7 +80,7 @@ void func_80008168(void) {
 
 #ifdef NON_EQUIVALENT
 extern f32 D_80119C60[672];
-extern f32 D_8011A6E0[336];//[7][48];
+extern f32 D_8011A6E0[336]; //[7][48];
 extern unk8011A6D8 **D_8011A6DC;
 // audioline_reset
 void func_80008174(void) {
@@ -125,7 +125,7 @@ void func_80008174(void) {
         //     D_8011A6E0[i][j] = -100000.0;
         // }
     }
-    
+
     D_8011AC18 = 0;
 }
 #else
@@ -222,12 +222,11 @@ s32 audioline_distance(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *o
 }
 
 /**
- * Play Sound at position 
+ * Play Sound at position
  */
 void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, SoundMask **soundMask) {
-    func_8000974C(D_80119C40[soundId].soundBite, x, y, z, arg4, D_80119C40[soundId].unk3,
-        D_80119C40[soundId].volume, D_80119C40[soundId].distance, 0, D_80119C40[soundId].pitch,
-        D_80119C40[soundId].unk8, soundMask);
+    func_8000974C(D_80119C40[soundId].soundBite, x, y, z, arg4, D_80119C40[soundId].unk3, D_80119C40[soundId].volume,
+                  D_80119C40[soundId].distance, 0, D_80119C40[soundId].pitch, D_80119C40[soundId].unk8, soundMask);
 }
 
 void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 arg6, SoundMask **soundMask) {
@@ -251,7 +250,8 @@ void func_800096F8(SoundMask *arg0) {
     }
 }
 
-void func_8000974C(u16 soundBite, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 volume, u16 distance, u8 arg8, u8 pitch, u8 argA, SoundMask **soundMask) {
+void func_8000974C(u16 soundBite, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 volume, u16 distance, u8 arg8, u8 pitch,
+                   u8 argA, SoundMask **soundMask) {
     SoundMask *newMask;
 
     if (soundMask != NULL) {
@@ -327,7 +327,7 @@ void func_80009968(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
             D_8011A6D8[arg4].unk0.unk0_02 = arg3 & 0xFF;
         }
         if (D_8011A6D8[arg4].unkB8 < tempArg5) {
-             D_8011A6D8[arg4].unkB8 = tempArg5;
+            D_8011A6D8[arg4].unkB8 = tempArg5;
         }
     }
 }
@@ -364,8 +364,8 @@ s32 func_80009AB4(u8 arg0) {
     s32 ret;
     s32 i;
     unk8011A6D8 *levelHeader;
-    unk8011A6D8_04 *var_a2; //Probably a Vec3f
-    
+    unk8011A6D8_04 *var_a2; // Probably a Vec3f
+
     ret = 1;
     levelHeader = &D_8011A6D8[arg0];
     var_a2 = (unk8011A6D8_04 *) &levelHeader->unk4;
@@ -375,9 +375,7 @@ s32 func_80009AB4(u8 arg0) {
     }
 
     for (i = 0; i < levelHeader->unkB8; i++, var_a2++) {
-        if ((var_a2->unk0 == -100000.0) || 
-            (var_a2->unk0 + 1 == -100000.0) || 
-            (var_a2->unk0 + 2 == -100000.0)) {
+        if ((var_a2->unk0 == -100000.0) || (var_a2->unk0 + 1 == -100000.0) || (var_a2->unk0 + 2 == -100000.0)) {
             ret = 0;
         }
     }
@@ -483,7 +481,7 @@ void func_8000A2E8(s32 arg0) {
 /**
  * Generates and renders a coloured line visible from anywhere.
  * Allows use of a colour, that interpolates from bright to dark from the beginning to the end of the line.
-*/
+ */
 void debug_render_line(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *coords, u8 red, u8 green, u8 blue) {
     Gfx *temp_dlist;
     Vertex *temp_verts;
@@ -495,14 +493,14 @@ void debug_render_line(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVal
     s16 y2;
     s16 z2;
 
-    x1 =  coords->x1;
-    y1 =  coords->y1;
-    z1 =  coords->z1;
-    x2 =  coords->x2;
-    y2 =  coords->y2;
-    z2 =  coords->z2;
+    x1 = coords->x1;
+    y1 = coords->y1;
+    z1 = coords->z1;
+    x2 = coords->x2;
+    y2 = coords->y2;
+    z2 = coords->z2;
     temp_dlist = *dlist;
-    
+
     temp_verts = *verts;
     temp_tris = *tris;
     load_and_set_texture_no_offset(&temp_dlist, NULL, RENDER_NONE);
@@ -537,7 +535,7 @@ void debug_render_line(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVal
     temp_verts[3].b = 255;
     temp_verts[3].a = 255;
     temp_verts += 4;
-    
+
     temp_tris[0].flags = 0x40; // 0x40 = Draw backface.
     temp_tris[0].vi0 = 2;
     temp_tris[0].vi1 = 1;
@@ -559,7 +557,7 @@ void debug_render_line(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVal
     temp_tris[1].uv2.u = 1;
     temp_tris[1].uv2.v = 0;
     temp_tris += 2;
-    
+
     *dlist = temp_dlist;
     *verts = temp_verts;
     *tris = temp_tris;

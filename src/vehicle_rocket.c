@@ -13,22 +13,15 @@
 
 /************ .data ************/
 
-//sSoundEffectsPool index values?
+// sSoundEffectsPool index values?
 s16 gRocketVoiceTable[14] = {
-    SOUND_VOICE_BOSS_LAUGH2,
-    SOUND_VOICE_TRICKY_HM,
-    SOUND_VOICE_TRICKY_HMMM,
-    SOUND_VOICE_WIZPIG_LAUGH4,
-    SOUND_VOICE_WIZPIG_LAUGH2,
-    SOUND_VOICE_WIZPIG_GROAN,
-    SOUND_VOICE_WIZPIG_LAUGH3,
-    SOUND_VOICE_SMOKEY_HAH,
-    SOUND_VOICE_SMOKEY_LAUGH,
-    SOUND_VOICE_SMOKEY_HM,
-    SOUND_VOICE_SMOKEY_HM2,
-    SOUND_VOICE_CONKER_YEHAHA,
-    SOUND_VOICE_TIMBER_WOW,
-    SOUND_WHOOSH2
+    SOUND_VOICE_BOSS_LAUGH2,   SOUND_VOICE_TRICKY_HM,
+    SOUND_VOICE_TRICKY_HMMM,   SOUND_VOICE_WIZPIG_LAUGH4,
+    SOUND_VOICE_WIZPIG_LAUGH2, SOUND_VOICE_WIZPIG_GROAN,
+    SOUND_VOICE_WIZPIG_LAUGH3, SOUND_VOICE_SMOKEY_HAH,
+    SOUND_VOICE_SMOKEY_LAUGH,  SOUND_VOICE_SMOKEY_HM,
+    SOUND_VOICE_SMOKEY_HM2,    SOUND_VOICE_CONKER_YEHAHA,
+    SOUND_VOICE_TIMBER_WOW,    SOUND_WHOOSH2,
 };
 
 /*******************************/
@@ -40,15 +33,13 @@ s8 gRocketStartBoost;
 
 /******************************/
 
-enum RocketAnimations {
-    ANIM_ROCKET_IDLE,
-    ANIM_ROCKET_DAMAGE
-};
+enum RocketAnimations { ANIM_ROCKET_IDLE, ANIM_ROCKET_DAMAGE };
 
 /**
  * Top level update function for the Wizpig Rocket vehicle, used in the Wizpig rematch.
-*/
-void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed, s32 *startTimer) {
+ */
+void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *racer, u32 *input, u32 *buttonsPressed,
+                   s32 *startTimer) {
     s16 animID;
     s16 animFrame;
     s16 tempHeadAngle;
@@ -61,7 +52,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     Object_68 *gfxData;
     ObjectModel *objModel;
 
-    set_boss_voice_clip_offset((u16* ) gRocketVoiceTable);
+    set_boss_voice_clip_offset((u16 *) gRocketVoiceTable);
     racer->unk1EC = 0;
     animID = obj->segment.object.animationID;
     animFrame = obj->segment.animFrame;
@@ -158,7 +149,8 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     firstRacerObj = get_racer_object(PLAYER_ONE);
     racer = (Object_Racer *) firstRacerObj->unk64;
-    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING && obj->segment.object.animationID == ANIM_ROCKET_DAMAGE) {
+    if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
+        obj->segment.object.animationID == ANIM_ROCKET_DAMAGE) {
         racer->attackType = ATTACK_SQUISHED;
     }
     if (racer->raceFinished != 0) {
