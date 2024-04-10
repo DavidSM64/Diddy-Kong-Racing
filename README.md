@@ -20,6 +20,7 @@ As of January 26, 2024, this is our current score:
 * `make`, Version 4.2 or higher
 * `python3`
 * `wget`
+* `libpcre2-dev` & `libpcre2-8-0`, Not technically required, but will speedup extracting/building some assets.
 
 `sudo apt install build-essential pkg-config git python3 wget`
 
