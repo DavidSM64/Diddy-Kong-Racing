@@ -282,7 +282,7 @@ glabel func_800063EC
 /* 0073C0 800067C0 E46200A4 */  swc1  $f2, 0xa4($v1)
 .L800067C4:
 /* 0073C4 800067C4 E7AE0018 */  swc1  $f14, 0x18($sp)
-/* 0073C8 800067C8 0C028064 */  jal   func_800A0190
+/* 0073C8 800067C8 0C028064 */  jal   race_starting
 /* 0073CC 800067CC E7B2002C */   swc1  $f18, 0x2c($sp)
 /* 0073D0 800067D0 3C098012 */  lui   $t1, %hi(gRacerSound) # $t1, 0x8012
 /* 0073D4 800067D4 C7AE0018 */  lwc1  $f14, 0x18($sp)

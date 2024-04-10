@@ -54,7 +54,7 @@ glabel func_80009B7C
 /* 00A844 80009C44 AFB80010 */  sw    $t8, 0x10($sp)
 /* 00A848 80009C48 4600B306 */  mov.s $f12, $f22
 /* 00A84C 80009C4C 4600A386 */  mov.s $f14, $f20
-/* 00A850 80009C50 0C0024AA */  jal   func_800092A8
+/* 00A850 80009C50 0C0024AA */  jal   audioline_distance
 /* 00A854 80009C54 03C03825 */   move  $a3, $fp
 /* 00A858 80009C58 0056082A */  slt   $at, $v0, $s6
 /* 00A85C 80009C5C 1020001D */  beqz  $at, .L80009CD4

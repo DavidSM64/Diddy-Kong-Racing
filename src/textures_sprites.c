@@ -241,6 +241,7 @@ Gfx dRenderSettingsPrimCol[][2] = {
                      G_RM_AA_XLU_SURF2, G_RM_NOOP, G_RM_AA_ZB_TEX_EDGE2, G_RM_NOOP, G_RM_AA_ZB_XLU_INTER2),
 };
 
+// Only opaque surface is actually used here.
 Gfx dRenderSettingsBlinkingLights[][2] = {
     // Opaque Surface
     DRAW_TABLE_GROUP(DKR_CC_UNK7, DKR_CC_UNK8, DKR_OMH_2CYC_BILERP, G_RM_NOOP, G_RM_OPA_SURF2, G_RM_NOOP,

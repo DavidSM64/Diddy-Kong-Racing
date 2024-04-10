@@ -1129,7 +1129,7 @@ typedef struct Object_AudioLine {
                  } unk_struct;
                  s32 unk8_word;
              } unk_union;
-  /* 0x0C */ u8 unkC;
+  /* 0x0C */ u8 lineID;
   /* 0x0D */ u8 unkD;
   /* 0x0E */ u8 unkE;
   /* 0x0F */ u8 unkF;
@@ -1141,7 +1141,7 @@ typedef struct Object_AudioLine {
 typedef struct Object_AudioReverb {
   /* 0x0 */ u16 pad0;
   /* 0x2 */ s16 unk2;
-  /* 0x4 */ u8 unk4;
+  /* 0x4 */ u8 lineID;
   /* 0x5 */ u8 unk5;
 } Object_AudioReverb;
 
@@ -1216,7 +1216,7 @@ typedef struct Object_Racer {
   /* 0x02A */ u16 unk2A;
   /* 0x02C */ f32 velocity;
   /* 0x030 */ f32 lateral_velocity;
-  /* 0x034 */ s32 unk34; // I think this is the engine pitch for the hovercraft and plane, but I cannot yet confirm.
+  /* 0x034 */ f32 unk34; // Vehicle pitch.
   /* 0x038 */ f32 ox1;
   /* 0x03C */ f32 oy1;
   /* 0x040 */ f32 oz1;

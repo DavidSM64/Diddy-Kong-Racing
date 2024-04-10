@@ -827,7 +827,7 @@ s32 func_8000CC20(Object *obj) {
     return NextFreeIndex;
 }
 
-#ifdef NON_MATCHING
+#ifdef NON_EQUIVALENT
 void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     s32 numPlayers; // sp144
     enum GameMode gameMode;
@@ -1918,7 +1918,7 @@ void objFreeAssets(Object *obj, s32 count, s32 objType) {
 void light_setup_light_sources(Object *obj) {
     s32 i;
     for (i = 0; i < obj->segment.header->numLightSources; i++) {
-        obj->lightData[i] = (u32) add_object_light(obj, &obj->segment.header->unk24[i]);
+        obj->lightData[i] = (Object_LightData *) add_object_light(obj, &obj->segment.header->unk24[i]);
     }
 }
 
@@ -2209,7 +2209,7 @@ void func_80010994(s32 updateRate) {
 
     func_800245B4(-1);
     gEventStartTimer = gEventCountdown;
-    if ((gEventCountdown > 0) && (func_800A0190() != 0)) {
+    if ((gEventCountdown > 0) && (race_starting() != 0)) {
         gEventCountdown -= updateRate;
         D_8011ADBC = 0;
     } else {
@@ -4281,7 +4281,7 @@ void func_8001A8F4(s32 updateRate) {
         D_8011AD50 = 1;
     }
     if (D_8011AD50 == 1) {
-        set_hud_visibility(0);
+        hud_visibility(0);
         gNumRacersSaved--;
         if (gNumRacersSaved > 0) {
             i = 0;
@@ -4327,9 +4327,9 @@ void func_8001A8F4(s32 updateRate) {
             }
             gBalloonCutsceneTimer += updateRate;
             if (gBalloonCutsceneTimer < cutsceneTimerLimit) {
-                func_800AB194(1);
+                minimap_fade(1);
             } else {
-                set_hud_visibility(1);
+                hud_visibility(1);
             }
         }
         i = get_buttons_pressed_from_player(PLAYER_ONE) & A_BUTTON;
@@ -6095,7 +6095,7 @@ void func_80022E18(s32 arg0) {
     levelHeader->race_type = 5;
     levelHeader->music = D_8011AEF8;
     levelHeader->instruments = D_8011AEFC;
-    func_800AB1AC(1);
+    minimap_opacity_set(1);
 
     // Only works with do {} while?
     i = 0;

@@ -262,8 +262,9 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
                     if (obj->behaviorId == BHV_FIREBALL_OCTOWEAPON) {
                         racer->attackType = ATTACK_EXPLOSION;
                         obj->properties.fireball.timer = 20;
-                        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                      obj->segment.trans.z_position, 44, SOUND_EXPLOSION, 1.0f, 1);
+                        obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position,
+                                         obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f,
+                                         1);
                         free_object(obj);
                     } else if (obj->properties.fireball.timer > 0) {
                         racer->bubbleTrapTimer = 60;
@@ -282,8 +283,8 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         if (obj->properties.fireball.timer < 0) {
             if (obj->unk4A == 298) {
                 free_object(obj);
-                func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                              obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);
+                obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position,
+                                 obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);
             }
             obj->segment.trans.scale *= 0.9; //!@Delta
             if (obj->segment.trans.scale < 0.5) {
@@ -457,8 +458,8 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
     move_object(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF,
                 obj->segment.z_velocity * updateRateF);
     if (hasCollision) {
-        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position - 36.0f,
-                      obj->segment.trans.z_position, 44, SOUND_NONE, 0.2, 0);
+        obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position - 36.0f,
+                         obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_NONE, 0.2, 0);
         delete = TRUE;
     }
 
@@ -481,8 +482,8 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
                 laserGun->fireTimer = 180;
             }
             delete = TRUE;
-            func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position - 36.0f,
-                          obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 0.5, 0);
+            obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position - 36.0f,
+                             obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 0.5, 0);
         }
     }
     if (delete) {
@@ -673,8 +674,8 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
             gfxData->unk4 = 0;
         }
         if (obj->properties.trophyCabinet.action == 1) {
-            func_800AB1AC(3);
-            set_hud_visibility(0);
+            minimap_opacity_set(3);
+            hud_visibility(0);
             dialogueID = npc_dialogue_loop(DIALOGUE_TROPHY);
             if (dialogueID) {
                 obj->properties.trophyCabinet.action = 0;
@@ -683,7 +684,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                     begin_trophy_race_teleport();
                     obj->properties.trophyCabinet.action = 2;
                 } else {
-                    set_hud_visibility(1);
+                    hud_visibility(1);
                 }
             }
             disable_racer_input();
@@ -1250,7 +1251,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     }
     if (obj->properties.npc.action != TT_MODE_ROAM) {
         disable_racer_input();
-        func_800AB194(3);
+        minimap_fade(3);
     }
     if (obj->properties.npc.action >= TT_MODE_TURN_TOWARDS_PLAYER) {
         index = npc_dialogue_loop(DIALOGUE_TT);
@@ -2270,8 +2271,8 @@ void obj_loop_bombexplosion(Object *obj, s32 updateRate) {
     temp_t8 = (obj->properties.bombExplosion.unk4 >> 8) & 0xFF;
     if (obj->properties.bombExplosion.timer > 10 && temp_t8 != 0) {
         obj->properties.bombExplosion.unk4 ^= (temp_t8 << 8);
-        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position,
-                      BHV_LENS_FLARE_SWITCH, SOUND_NONE, 1.0f, temp_t8 - 1);
+        obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position,
+                         BHV_LENS_FLARE_SWITCH, SOUND_NONE, 1.0f, temp_t8 - 1);
     }
     if (obj->properties.bombExplosion.timer < 20) {
         obj->segment.trans.scale = ((obj->properties.bombExplosion.timer / 20.0f) * 10.0f) + 0.5f;
@@ -2600,7 +2601,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
           obj->properties.npc.action == TAJ_MODE_TELEPORT_AWAY_BEGIN ||
           obj->properties.npc.action == TAJ_MODE_TELEPORT_AWAY_END)) {
         disable_racer_input();
-        func_800AB194(3);
+        minimap_fade(3);
     }
 
     switch (obj->properties.npc.action) {
@@ -3084,8 +3085,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         gNPCPosY = obj->segment.trans.y_position;
     }
     if (sp6B != 0) {
-        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position,
-                      BHV_DINO_WHALE, SOUND_NONE, 1.0f, 0);
+        obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position,
+                         BHV_DINO_WHALE, SOUND_NONE, 1.0f, 0);
     }
     obj->segment.animFrame = taj->animFrameF * 1.0;
     func_80061C0C(obj);
@@ -4200,8 +4201,8 @@ void obj_loop_bananacreator(Object *obj, s32 updateRate) {
             newBananaObj->segment.level_entry = NULL;
             newBananaObj64 = &newBananaObj->unk64->banana;
             newBananaObj64->spawner = obj;
-            func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position - 14.0f,
-                          obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_SELECT, 0.25f, 0);
+            obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position - 14.0f,
+                             obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_SELECT, 0.25f, 0);
             obj->properties.bananaSpawner.spawn = FALSE;
         }
         obj->properties.bananaSpawner.timer = TIME_SECONDS(20); // Set delay to respawn banana to 20 seconds.
@@ -4841,8 +4842,8 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
                     func_80072348(racer->playerIndex, 9);
                 }
             }
-            func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position,
-                          BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);
+            obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position,
+                             obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);
             free_object(obj);
             return;
         }
@@ -4861,8 +4862,8 @@ block_37:
     }
     obj->properties.projectile.timer -= updateRate;
     if (obj->properties.projectile.timer < 0) {
-        func_8003FC44(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position,
-                      BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);
+        obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position,
+                         BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);
         free_object(obj);
         return;
     }
@@ -5187,8 +5188,9 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
                         weaponHit = &weaponInteractObj->unk64->racer;
                         weaponHit->attackType = ATTACK_EXPLOSION;
                         if (weapon->weaponID == WEAPON_TRIPMINE) {
-                            func_8003FC44(weaponObj->segment.trans.x_position, weaponObj->segment.trans.y_position,
-                                          weaponObj->segment.trans.z_position, 44, SOUND_EXPLOSION, 1.0f, 1);
+                            obj_spawn_effect(weaponObj->segment.trans.x_position, weaponObj->segment.trans.y_position,
+                                             weaponObj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH,
+                                             SOUND_EXPLOSION, 1.0f, 1);
                         } else if (weapon->weaponID == WEAPON_BUBBLE_TRAP) {
                             if (weaponHit->shieldTimer > 0 && weaponHit->shieldType >= SHIELD_LEVEL3) {
                                 weaponProperties->unk4 = 3;
@@ -5237,8 +5239,9 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
                                            weaponObj->segment.trans.y_position, weaponObj->segment.trans.z_position, 4,
                                            NULL);
                 } else {
-                    func_8003FC44(weaponObj->segment.trans.x_position, weaponObj->segment.trans.y_position,
-                                  weaponObj->segment.trans.z_position, 44, SOUND_EXPLOSION, 1.0f, 1);
+                    obj_spawn_effect(weaponObj->segment.trans.x_position, weaponObj->segment.trans.y_position,
+                                     weaponObj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f,
+                                     1);
                     free_object(weaponObj);
                 }
             }
@@ -5246,7 +5249,11 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
     }
 }
 
-void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 soundID, f32 scale, s32 arg6) {
+/**
+ * Create a special effect at the given position.
+ * Plays a sound if one is given.
+ */
+void obj_spawn_effect(f32 x, f32 y, f32 z, s32 objectID, s32 soundID, f32 scale, s32 arg6) {
     LevelObjectEntry8003FC44 spawnObj;
     Object *newObj;
 
@@ -5293,33 +5300,34 @@ void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry) {
 
 /* Official name: audioLineInit */
 void obj_init_audioline(Object *obj, LevelObjectEntry_AudioLine *entry) {
-    Object_AudioLine *obj64;
+    Object_AudioLine *audLine;
 
-    obj64 = &obj->unk64->audio_line;
-    obj64->unk0 = entry->unk8;
-    obj64->soundID = entry->soundID;
-    obj64->unkC = entry->unkC;
-    obj64->unkD = entry->unkD;
-    obj64->unk_union.unk8_word = 0;
-    obj64->unk4 = entry->unkE;
-    obj64->unk11 = entry->unk12;
-    obj64->unk10 = entry->unk11;
-    obj64->unkE = entry->unk9;
-    obj64->unkF = entry->unk10;
-    obj64->unk12 = entry->unk13;
-    func_800098A4(obj64->unk0, obj64->soundID, entry->common.x, entry->common.y, entry->common.z, obj64->unkF,
-                  obj64->unkE, obj64->unk10, obj64->unk12, obj64->unk4, obj64->unk11, obj64->unkC, obj64->unkD);
+    audLine = &obj->unk64->audio_line;
+    audLine->unk0 = entry->unk8;
+    audLine->soundID = entry->soundID;
+    audLine->lineID = entry->lineID;
+    audLine->unkD = entry->unkD;
+    audLine->unk_union.unk8_word = 0;
+    audLine->unk4 = entry->unkE;
+    audLine->unk11 = entry->unk12;
+    audLine->unk10 = entry->unk11;
+    audLine->unkE = entry->unk9;
+    audLine->unkF = entry->unk10;
+    audLine->unk12 = entry->unk13;
+    audioline_ambient_create(audLine->unk0, audLine->soundID, entry->common.x, entry->common.y, entry->common.z,
+                             audLine->unkF, audLine->unkE, audLine->unk10, audLine->unk12, audLine->unk4,
+                             audLine->unk11, audLine->lineID, audLine->unkD);
     free_object(obj);
 }
 
 void obj_init_audioreverb(Object *obj, LevelObjectEntry_AudioReverb *entry) {
     s32 temp;
-    Object_AudioReverb *obj64 = &obj->unk64->audio_reverb;
-    obj64->unk2 = entry->unk8;
-    temp = entry->unk9;
-    obj64->unk4 = temp & 0xFF;
-    obj64->unk5 = entry->unkA;
-    func_80009968(entry->common.x, entry->common.y, entry->common.z, obj64->unk2, obj64->unk4, obj64->unk5);
+    Object_AudioReverb *reverb = &obj->unk64->audio_reverb;
+    reverb->unk2 = entry->unk8;
+    temp = entry->lineID;
+    reverb->lineID = temp & 0xFF;
+    reverb->unk5 = entry->unkA;
+    func_80009968(entry->common.x, entry->common.y, entry->common.z, reverb->unk2, reverb->lineID, reverb->unk5);
     free_object(obj);
 }
 

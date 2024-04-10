@@ -144,7 +144,7 @@ ByteColour gHudMinimapColours[40] = {
 
 u32 gHudColour = COLOUR_RGBA32(255, 255, 255, 254);
 
-f32 D_800E2838 = 0.0f;
+UNUSED f32 sRecordVel = 0.0f; // Set to whatever the highest velocity recorded is, but never actually used.
 
 // Unused?
 s32 D_800E283C[5] = { 0x06FFFFFF, 0x000FFFFF, 0x06000000, 0x0014FFFF, 0x00000000 };
@@ -153,10 +153,10 @@ s32 D_800E283C[5] = { 0x06FFFFFF, 0x000FFFFF, 0x06000000, 0x0014FFFF, 0x00000000
 
 /************ .bss ************/
 
-s8 D_80126CD0;
-s8 D_80126CD1;
+s8 gMinimapOpacity;
+s8 gMinimapFade;
 s8 gShowHUD;
-s8 D_80126CD3;
+s8 gMinimapXlu;
 
 /**
  * gRaceStartShowHudStep counts up from 0->5 on race start, and is used to
@@ -173,8 +173,8 @@ s8 gRaceStartShowHudStep;
 
 s8 D_80126CD5;
 u8 *gAssetHudElementStaleCounter;
-unk80126CDC *gCurrentHud;
-unk80126CDC *gPlayerHud[MAXCONTROLLERS]; // One per active player
+HudData *gCurrentHud;
+HudData *gPlayerHud[MAXCONTROLLERS]; // One per active player
 s16 *gAssetHudElementIds;
 HudElements *gAssetHudElements;
 s32 gAssetHudElementIdsCount;
@@ -188,11 +188,11 @@ s32 D_80126D14;
 s32 D_80126D18;
 s32 gMinimapDotOffsetX;
 s32 gMinimapDotOffsetY;
-s32 D_80126D24;
-s32 D_80126D28;
-u16 D_80126D2C;
-f32 D_80126D30;
-u8 D_80126D34;
+s32 gHudOffsetX; // Offset value to do the slide in animation.
+s32 gHudBounceX; // Offset value to do the bounce when the hud slides in.
+u16 gHudBounceTimer;
+f32 gHudBounceMag;
+u8 gHudRaceStart;
 u8 D_80126D35;
 u8 gHideRaceTimer;
 u8 gNumActivePlayers;
@@ -227,9 +227,9 @@ Settings *gHudSettings;
 u8 gHudSilverCoinRace;
 u8 D_80127189;
 u8 D_8012718A;
-u8 D_8012718B;
-s32 D_8012718C;
-s32 D_80127190;
+u8 gMinimapOpacityTarget;
+s32 gStopwatchErrorX;
+s32 gStopwatchErrorY;
 LevelHeader_70 *D_80127194;
 s32 D_80127198[6];
 
@@ -276,10 +276,10 @@ void init_hud(UNUSED s32 viewportCount) {
     } else {
         playerCount = 4; // Create four viewports if there are three players.
     }
-    gPlayerHud[PLAYER_ONE] = allocate_from_main_pool_safe(playerCount * sizeof(unk80126CDC), COLOUR_TAG_BLUE);
-    gPlayerHud[PLAYER_TWO] = (unk80126CDC *) ((u8 *) gPlayerHud[PLAYER_ONE] + sizeof(unk80126CDC));
-    gPlayerHud[PLAYER_THREE] = (unk80126CDC *) ((u8 *) gPlayerHud[PLAYER_TWO] + sizeof(unk80126CDC));
-    gPlayerHud[PLAYER_FOUR] = (unk80126CDC *) ((u8 *) gPlayerHud[PLAYER_THREE] + sizeof(unk80126CDC));
+    gPlayerHud[PLAYER_ONE] = allocate_from_main_pool_safe(playerCount * sizeof(HudData), COLOUR_TAG_BLUE);
+    gPlayerHud[PLAYER_TWO] = (HudData *) ((u8 *) gPlayerHud[PLAYER_ONE] + sizeof(HudData));
+    gPlayerHud[PLAYER_THREE] = (HudData *) ((u8 *) gPlayerHud[PLAYER_TWO] + sizeof(HudData));
+    gPlayerHud[PLAYER_FOUR] = (HudData *) ((u8 *) gPlayerHud[PLAYER_THREE] + sizeof(HudData));
     func_8009F034();
     D_80126D64 = 0;
     gWrongWayNagTimer = 0;
@@ -294,7 +294,7 @@ void init_hud(UNUSED s32 viewportCount) {
     gTimeTrialVoiceDelay = 0;
     D_80126D3C = NULL;
     D_80126D44 = 0;
-    D_80126CD3 = 0;
+    gMinimapXlu = 0;
     D_80127194 = (LevelHeader_70 *) get_misc_asset(ASSET_MISC_58);
     func_8007F1E8(D_80127194);
     set_sound_channel_volume(0, 32767);
@@ -337,8 +337,11 @@ void free_hud(void) {
     gParticlePtrList_flush();
 }
 
-u8 func_800A0190(void) {
-    return D_80126D34;
+/**
+ * Return whether the race has been started from the HUDs end.
+ */
+u8 race_starting(void) {
+    return gHudRaceStart;
 }
 
 /**
@@ -365,15 +368,15 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
             gHUDCurrMatrix = *mtx;
             gHUDCurrVertex = *vertexList;
             D_80127180 = 0;
-            if (D_80126CD1 != 0) {
-                D_80126CD0 += updateRate;
-                if (D_8012718B < D_80126CD0) {
-                    D_80126CD0 = D_8012718B;
+            if (gMinimapFade) {
+                gMinimapOpacity += updateRate;
+                if (gMinimapOpacity > gMinimapOpacityTarget) {
+                    gMinimapOpacity = gMinimapOpacityTarget;
                 }
             } else {
-                D_80126CD0 -= updateRate;
-                if (D_80126CD0 < 0) {
-                    D_80126CD0 = 0;
+                gMinimapOpacity -= updateRate;
+                if (gMinimapOpacity < 0) {
+                    gMinimapOpacity = 0;
                 }
             }
             if (gShowHUD == 0) {
@@ -389,7 +392,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->raceFinished == FALSE &&
                             ((gHudLevelHeader->race_type == RACETYPE_DEFAULT) ||
                              gHudLevelHeader->race_type == RACETYPE_HORSESHOE_GULCH) &&
-                            D_80126D34) {
+                            gHudRaceStart) {
                             gShowCourseDirections = 1 - gShowCourseDirections;
                             sound_play((SOUND_TING_HIGHER + gShowCourseDirections), NULL);
                             if (gShowCourseDirections) {
@@ -400,7 +403,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         }
                     } else if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS &&
                                racer->raceFinished == FALSE && !(gHudLevelHeader->race_type & RACETYPE_CHALLENGE) &&
-                               D_80126D34) {
+                               gHudRaceStart) {
                         if (D_800E2794[gHUDNumPlayers][racer->playerIndex] < PLAYER_FOUR) {
                             D_800E2794[gHUDNumPlayers][racer->playerIndex]++;
                         } else {
@@ -409,7 +412,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         sound_play((SOUND_TING_HIGHEST - (D_800E2794[gHUDNumPlayers][racer->playerIndex] == 0)), NULL);
                     }
                     if (get_buttons_pressed_from_player(D_80126D10) & R_CBUTTONS && racer->raceFinished == FALSE &&
-                        D_80126D34 && D_80126CD0 == 0) {
+                        gHudRaceStart && gMinimapOpacity == 0) {
                         gHudToggleSettings[gHUDNumPlayers] = 1 - gHudToggleSettings[gHUDNumPlayers];
                         if (gHudToggleSettings[gHUDNumPlayers] == 0) {
                             sound_play(SOUND_TING_LOW, NULL);
@@ -440,17 +443,17 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 tex_enable_modes(RENDER_ALL);
                 tex_disable_modes(RENDER_Z_COMPARE);
                 sprite_opaque(FALSE);
-                if (check_if_showing_cutscene_camera() == FALSE && D_80126D34 == FALSE &&
+                if (check_if_showing_cutscene_camera() == FALSE && gHudRaceStart == FALSE &&
                     racer->playerIndex == PLAYER_ONE) {
                     if (D_80126D35 != 0) {
-                        D_80126D28 = sins_f(D_80126D2C) * D_80126D30 * 8.0f;
-                        D_80126D2C += updateRate << 0xB;
-                        if (D_80126D2C >= 0x8000) {
-                            D_80126D2C -= 0x8000;
-                            D_80126D30 = D_80126D30 / 2;
-                            if (D_80126D30 <= 0.125) {
-                                D_80126D34 = TRUE;
-                                D_80126D24 = 0;
+                        gHudBounceX = sins_f(gHudBounceTimer) * gHudBounceMag * 8.0f;
+                        gHudBounceTimer += updateRate << 0xB;
+                        if (gHudBounceTimer >= 0x8000) {
+                            gHudBounceTimer -= 0x8000;
+                            gHudBounceMag = gHudBounceMag / 2;
+                            if (gHudBounceMag <= 0.125) {
+                                gHudRaceStart = TRUE;
+                                gHudOffsetX = 0;
                             }
                         }
                     } else {
@@ -458,14 +461,14 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                             sound_play(SOUND_WHOOSH1, NULL);
                             gRaceStartShowHudStep += 1;
                         }
-                        D_80126D24 -= updateRate * 13;
-                        if (D_80126D24 < 0) {
-                            D_80126D24 = 0;
+                        gHudOffsetX -= updateRate * 13;
+                        if (gHudOffsetX < 0) {
+                            gHudOffsetX = 0;
                         }
-                        if (D_80126D24 == 0) {
+                        if (gHudOffsetX == 0) {
                             D_80126D35 = 1;
                             sound_play(SOUND_EXPLOSION2, NULL);
-                            D_80126D28 = 0;
+                            gHudBounceX = 0;
                         }
                     }
                 }
@@ -528,7 +531,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                     }
                     func_80068508(FALSE);
                 }
-                D_80126CD1 = 0;
+                gMinimapFade = FALSE;
                 sprite_opaque(TRUE);
                 if (D_80127180) {
                     gHudSprites[D_80127180].texture = NULL;
@@ -643,7 +646,7 @@ void render_hud_race(s32 arg0, Object *obj, s32 updateRate) {
 void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
     s32 timer;
     s32 type;
-    IndicatorArrow *indicator;
+    HudElement *indicator;
 
     if (gShowCourseDirections) {
         timer = racer->indicator_timer;
@@ -651,58 +654,58 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
             type = racer->indicator_type;
             racer->indicator_timer = timer - updateRate;
             if (type) {
-                indicator = (IndicatorArrow *) &gCurrentHud->courseIndicator;
+                indicator = (HudElement *) &gCurrentHud->courseArrows;
                 switch (type) {
                     case INDICATOR_LEFT:
-                        indicator->textureID = 33;
-                        indicator->unk0 = 0;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_TURN_45;
+                        indicator->y_rotation = 0;
                         break;
                     case INDICATOR_LEFT_SHARP:
-                        indicator->textureID = 32;
-                        indicator->unk0 = 0;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_TURN_90;
+                        indicator->y_rotation = 0;
                         break;
                     case INDICATOR_LEFT_UTURN:
-                        indicator->textureID = 31;
-                        indicator->unk0 = 0;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_U;
+                        indicator->y_rotation = 0;
                         break;
                     case INDICATOR_RIGHT:
-                        indicator->textureID = 33;
-                        indicator->unk0 = -0x8000;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_TURN_45;
+                        indicator->y_rotation = -0x8000;
                         break;
                     case INDICATOR_RIGHT_SHARP:
-                        indicator->textureID = 32;
-                        indicator->unk0 = -0x8000;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_TURN_90;
+                        indicator->y_rotation = -0x8000;
                         break;
                     case INDICATOR_RIGHT_UTURN:
-                        indicator->textureID = 31;
-                        indicator->unk0 = -0x8000;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_U;
+                        indicator->y_rotation = -0x8000;
                         break;
                     case INDICATOR_UP:
-                        indicator->textureID = 30;
-                        indicator->unk0 = -0x8000;
-                        indicator->unk2 = -0x8000;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_DOWN;
+                        indicator->y_rotation = -0x8000;
+                        indicator->x_rotation = -0x8000;
                         break;
                     case INDICATOR_DOWN:
-                        indicator->textureID = 30;
-                        indicator->unk0 = 0;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_DOWN;
+                        indicator->y_rotation = 0;
                         break;
                     default: // INDICATOR_EXCLAMATION
-                        indicator->textureID = 29;
-                        indicator->unk0 = 0;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_EXCLAMATION;
+                        indicator->y_rotation = 0;
                         break;
                 }
                 // Flip the arrow direction on adventure 2.
                 if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS && racer->indicator_type < 30) {
-                    indicator->unk0 = (s16) (0x8000 - indicator->unk0);
+                    indicator->y_rotation = (s16) (0x8000 - indicator->y_rotation);
                 }
                 if (gHUDNumPlayers == ONE_PLAYER && racer->raceFinished == FALSE && racer->indicator_type &&
                     D_800E27B8 == 0) {
                     gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) indicator);
-                    indicator->unkC = -indicator->unkC;
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) indicator);
-                    indicator->unkC = -indicator->unkC;
-                    indicator->unk2 = 0;
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, indicator);
+                    indicator->x = -indicator->x;
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, indicator);
+                    indicator->x = -indicator->x;
+                    indicator->x_rotation = 0;
                     gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                 }
             }
@@ -712,17 +715,17 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
         if (D_800E27B8) {
             if (D_800E27B8 & 0x20) {
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                indicator = (IndicatorArrow *) &gCurrentHud->courseIndicator;
-                indicator->unk0 = 0;
-                indicator->unk2 = 0;
-                indicator->textureID = 29;
+                indicator = &gCurrentHud->courseArrows;
+                indicator->y_rotation = 0;
+                indicator->x_rotation = 0;
+                indicator->spriteID = HUD_SPRITE_INDICATOR_EXCLAMATION;
                 if ((get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) && ((s32) racer->indicator_type < 30)) {
-                    indicator->unk0 = (s16) (0x8000 - indicator->unk0);
+                    indicator->y_rotation = (s16) (0x8000 - indicator->y_rotation);
                 }
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) indicator);
-                indicator->unkC = (f32) -indicator->unkC;
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) indicator);
-                indicator->unkC = (f32) -indicator->unkC;
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, indicator);
+                indicator->x = (f32) -indicator->x;
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, indicator);
+                indicator->x = (f32) -indicator->x;
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
             if (updateRate < D_800E27B8) {
@@ -754,15 +757,15 @@ void render_hud_banana_challenge(s32 arg0, Object *obj, s32 updateRate) {
                 racer = &racers[i]->unk64->racer;
                 render_treasure_hud(racer);
                 if (i == 1) {
-                    gCurrentHud->unk64C += 55.0f;
-                    gCurrentHud->unk40C += 55.0f;
+                    gCurrentHud->challengePortrait.x += 55.0f;
+                    gCurrentHud->treasureMetre.x += 55.0f;
                 }
-                gCurrentHud->unk64C += 55.0f;
-                gCurrentHud->unk40C += 55.0f;
+                gCurrentHud->challengePortrait.x += 55.0f;
+                gCurrentHud->treasureMetre.x += 55.0f;
             }
             if (1) {} // Fakematch
-            gCurrentHud->unk64C -= 275.0f;
-            gCurrentHud->unk40C -= 275.0f;
+            gCurrentHud->challengePortrait.x -= 275.0f;
+            gCurrentHud->treasureMetre.x -= 275.0f;
             break;
         case 3:
         case 4:
@@ -785,10 +788,10 @@ void render_hud_challenge_eggs(s32 arg0, Object *obj, s32 updateRate) {
         func_80068508(TRUE);
         render_race_start(arg0, updateRate);
         render_weapon_hud(obj, updateRate);
-        if ((127 - (updateRate * 2)) >= gCurrentHud->unk67A) {
-            gCurrentHud->unk67A += updateRate * 2;
+        if ((127 - (updateRate * 2)) >= gCurrentHud->eggChallengeIcon.unk1A) {
+            gCurrentHud->eggChallengeIcon.unk1A += updateRate * 2;
         } else {
-            gCurrentHud->unk67A = (gCurrentHud->unk67A + (updateRate * 2)) - 255;
+            gCurrentHud->eggChallengeIcon.unk1A = (gCurrentHud->eggChallengeIcon.unk1A + (updateRate * 2)) - 255;
         }
         if (gNumActivePlayers != 2) {
             func_800A14F0(obj, updateRate);
@@ -829,34 +832,34 @@ void func_800A14F0(Object *racerObj, s32 updateRate) {
     }
     if (numRacers == 4) {
         func_80068508(TRUE);
-        sp44 = (s32) gCurrentHud->unk64C;
-        sp3C = (s32) gCurrentHud->unk650;
-        sp40 = (s32) (gCurrentHud->unk66C - sp44);
-        sp38 = (s32) (gCurrentHud->unk670 - sp3C);
+        sp44 = gCurrentHud->challengePortrait.x;
+        sp3C = gCurrentHud->challengePortrait.y;
+        sp40 = (gCurrentHud->eggChallengeIcon.x - sp44);
+        sp38 = (gCurrentHud->eggChallengeIcon.y - sp3C);
         for (i = 0; i < 4; i++) {
             curRacer = &racers[i]->unk64->racer;
-            if (((s32) gNumActivePlayers < 3) || (racer->playerIndex == curRacer->playerIndex)) {
+            if ((gNumActivePlayers < 3) || (racer->playerIndex == curRacer->playerIndex)) {
                 func_800A19A4(curRacer, updateRate);
             }
             gHudColour = -2;
             if (gNumActivePlayers == 1) {
-                gCurrentHud->unk64C += 68.0f;
+                gCurrentHud->challengePortrait.x += 68.0f;
             } else if (gNumActivePlayers == 2) {
-                gCurrentHud->unk64C = sp44;
+                gCurrentHud->challengePortrait.x = sp44;
                 if (osTvType == 0) {
-                    gCurrentHud->unk650 = (f32) ((f64) gCurrentHud->unk650 + 66.0);
-                    gCurrentHud->unk670 = (f32) ((f64) gCurrentHud->unk670 + 66.0);
+                    gCurrentHud->challengePortrait.y += 66.0;
+                    gCurrentHud->eggChallengeIcon.y += 66.0;
                 } else {
-                    gCurrentHud->unk650 += 55.0f;
-                    gCurrentHud->unk670 += 55.0f;
+                    gCurrentHud->challengePortrait.y += 55.0f;
+                    gCurrentHud->eggChallengeIcon.y += 55.0f;
                 }
             }
-            gCurrentHud->unk66C = gCurrentHud->unk64C + sp40;
+            gCurrentHud->eggChallengeIcon.x = gCurrentHud->challengePortrait.x + sp40;
         }
-        gCurrentHud->unk64C = sp44;
-        gCurrentHud->unk66C = sp44 + sp40;
-        gCurrentHud->unk650 = sp3C;
-        gCurrentHud->unk670 = sp3C + sp38;
+        gCurrentHud->challengePortrait.x = sp44;
+        gCurrentHud->eggChallengeIcon.x = sp44 + sp40;
+        gCurrentHud->challengePortrait.y = sp3C;
+        gCurrentHud->eggChallengeIcon.y = sp3C + sp38;
         func_80068508(FALSE);
     }
 }
@@ -865,35 +868,35 @@ void func_800A19A4(Object_Racer *racer, UNUSED s32 updateRate) {
     s32 i;
     UNUSED s32 pad;
     s32 sp44;
-    s32 sp40;
+    s32 prevY;
     s32 i2;
 
-    sp40 = (s32) gCurrentHud->unk66C;
-    gCurrentHud->unk646 = racer->characterId + 56;
+    prevY = gCurrentHud->eggChallengeIcon.x;
+    gCurrentHud->challengePortrait.spriteID = racer->characterId + HUD_SPRITE_PORTRAIT;
     D_80126CD5 = 1;
-    if (((s32) gNumActivePlayers < 3) || ((gNumActivePlayers == 3) && (racer->playerIndex == -1))) {
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk640);
+    if ((gNumActivePlayers < 3) || ((gNumActivePlayers == 3) && (racer->playerIndex == -1))) {
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->challengePortrait);
     }
-    if (gCurrentHud->unk67A < 0) {
-        sp44 = (gCurrentHud->unk67A * 2) + 256;
+    if (gCurrentHud->eggChallengeIcon.unk1A < 0) {
+        sp44 = (gCurrentHud->eggChallengeIcon.unk1A * 2) + 256;
     } else {
-        sp44 = 255 - (gCurrentHud->unk67A * 2);
+        sp44 = 255 - (gCurrentHud->eggChallengeIcon.unk1A * 2);
     }
     if (sp44 > 254) {
         sp44 = 254;
     }
     for (i = 0; (i < racer->lap) && (i < 3); i++) {
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk660);
-        gCurrentHud->unk66C += 12.0f;
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->eggChallengeIcon);
+        gCurrentHud->eggChallengeIcon.x += 12.0f;
     }
     gHudColour = sp44 | ~0xFF;
     i2 = i;
     for (i = 0; (i < racer->eggHudCounter) && (i2 < 3); i++) {
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk660);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->eggChallengeIcon);
         i2++;
-        gCurrentHud->unk66C += 12.0f;
+        gCurrentHud->eggChallengeIcon.x += 12.0f;
     }
-    gCurrentHud->unk66C = (f32) sp40;
+    gCurrentHud->eggChallengeIcon.x = prevY;
     D_80126CD5 = 0;
 }
 
@@ -963,26 +966,26 @@ void func_800A1E48(Object *racerObj, s32 updateRate) {
     func_80068508(TRUE);
     if (numRacers == 4) {
         offset = 0;
-        prevCurrHudUnk64C = gCurrentHud->unk64C;
-        prevCurrHudUnk650 = gCurrentHud->unk650;
+        prevCurrHudUnk64C = gCurrentHud->challengePortrait.x;
+        prevCurrHudUnk650 = gCurrentHud->challengePortrait.y;
         for (i = 0; i < 4; i++) {
             curRacer = &racers[i]->unk64->racer;
             temp = prevCurrHudUnk64C ^ 0;
-            temp3 = temp - gCurrentHud->unk64C;
+            temp3 = temp - gCurrentHud->challengePortrait.x;
             temp = temp3;
             temp2 = offset + prevCurrHudUnk650;
-            temp4 = temp2 - gCurrentHud->unk650;
+            temp4 = temp2 - gCurrentHud->challengePortrait.y;
             temp2 = temp4;
-            gCurrentHud->unk64C += temp;
-            gCurrentHud->unk650 += temp2;
-            gCurrentHud->unk68C += temp;
-            gCurrentHud->unk690 -= temp2;
-            gCurrentHud->unk6AC += temp;
-            gCurrentHud->unk6B0 += temp2;
-            gCurrentHud->unk6CC += temp;
-            gCurrentHud->unk6D0 += temp2;
-            gCurrentHud->unk6EC += temp;
-            gCurrentHud->unk6F0 += temp2;
+            gCurrentHud->challengePortrait.x += temp;
+            gCurrentHud->challengePortrait.y += temp2;
+            gCurrentHud->battleBananaIcon.x += temp;
+            gCurrentHud->battleBananaIcon.y -= temp2;
+            gCurrentHud->battleBananaX.x += temp;
+            gCurrentHud->battleBananaX.y += temp2;
+            gCurrentHud->battleBananaCount1.x += temp;
+            gCurrentHud->battleBananaCount1.y += temp2;
+            gCurrentHud->battleBananaCount2.x += temp;
+            gCurrentHud->battleBananaCount2.y += temp2;
             if (gNumActivePlayers < 3 || racer->playerIndex == curRacer->playerIndex) {
                 func_800A22F4(curRacer, updateRate);
             }
@@ -998,21 +1001,21 @@ void func_800A1E48(Object *racerObj, s32 updateRate) {
         }
 
         temp = prevCurrHudUnk64C;
-        temp3 = temp - gCurrentHud->unk64C;
+        temp3 = temp - gCurrentHud->challengePortrait.x;
         temp = temp3;
         temp2 = prevCurrHudUnk650;
-        temp4 = temp2 - gCurrentHud->unk650;
+        temp4 = temp2 - gCurrentHud->challengePortrait.y;
         temp2 = temp4;
-        gCurrentHud->unk64C += temp;
-        gCurrentHud->unk650 += temp2;
-        gCurrentHud->unk68C += temp;
-        gCurrentHud->unk690 -= temp2;
-        gCurrentHud->unk6AC += temp;
-        gCurrentHud->unk6B0 += temp2;
-        gCurrentHud->unk6CC += temp;
-        gCurrentHud->unk6D0 += temp2;
-        gCurrentHud->unk6EC += temp;
-        gCurrentHud->unk6F0 += temp2;
+        gCurrentHud->challengePortrait.x += temp;
+        gCurrentHud->challengePortrait.y += temp2;
+        gCurrentHud->battleBananaIcon.x += temp;
+        gCurrentHud->battleBananaIcon.y -= temp2;
+        gCurrentHud->battleBananaX.x += temp;
+        gCurrentHud->battleBananaX.y += temp2;
+        gCurrentHud->battleBananaCount1.x += temp;
+        gCurrentHud->battleBananaCount1.y += temp2;
+        gCurrentHud->battleBananaCount2.x += temp;
+        gCurrentHud->battleBananaCount2.y += temp2;
     }
     func_80068508(FALSE);
 }
@@ -1021,33 +1024,33 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1E48.s")
 #endif
 
 void func_800A22F4(Object_Racer *racer, UNUSED s32 updateRate) {
-    gCurrentHud->unk646 = racer->characterId + 56;
+    gCurrentHud->challengePortrait.spriteID = racer->characterId + HUD_SPRITE_PORTRAIT;
     if (gNumActivePlayers < 3 || (gNumActivePlayers == 3 && racer->playerIndex == PLAYER_COMPUTER)) {
         D_80126CD5 = TRUE;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk640);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->challengePortrait);
         D_80126CD5 = FALSE;
         init_rdp_and_framebuffer(&gHUDCurrDisplayList);
         reset_render_settings(&gHUDCurrDisplayList);
     }
     if (racer->bananas < 10) {
-        gCurrentHud->unk6D8 = racer->bananas;
+        gCurrentHud->battleBananaCount1.spriteOffset = racer->bananas;
         if (gNumActivePlayers == 2) {
-            gCurrentHud->unk6CC += 6.0f;
+            gCurrentHud->battleBananaCount1.x += 6.0f;
         }
     } else {
-        gCurrentHud->unk6D8 = racer->bananas / 10;
-        gCurrentHud->unk6F8 = racer->bananas % 10;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk6E0);
+        gCurrentHud->battleBananaCount1.spriteOffset = racer->bananas / 10;
+        gCurrentHud->battleBananaCount2.spriteOffset = racer->bananas % 10;
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->battleBananaCount2);
     }
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk6C0);
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->battleBananaCount1);
     if (gNumActivePlayers == 2 && racer->bananas < 10) {
-        gCurrentHud->unk6CC -= 6.0f;
+        gCurrentHud->battleBananaCount1.x -= 6.0f;
     }
     if (gNumActivePlayers != 2) {
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk6A0);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->battleBananaX);
         sprite_opaque(TRUE);
         D_80126CD5 = TRUE;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk680);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->battleBananaIcon);
         D_80126CD5 = FALSE;
         sprite_opaque(FALSE);
     }
@@ -1098,7 +1101,7 @@ void render_hud_taj_race(s32 arg0, Object *obj, s32 updateRate) {
  */
 void render_hud_hubworld(Object *obj, s32 updateRate) {
     Object_Racer *racer;
-    unk80126CDC *temp_a3;
+    HudElement *portrait;
 
     if (get_viewport_count() == 0) {
         racer = (Object_Racer *) obj->unk64;
@@ -1106,9 +1109,9 @@ void render_hud_hubworld(Object *obj, s32 updateRate) {
         render_balloon_count(racer);
         render_speedometer(obj, updateRate);
         if (is_in_two_player_adventure()) {
-            temp_a3 = (unk80126CDC *) &gCurrentHud->unk720;
-            temp_a3->unk6 = (get_settings()->racers[1].character + 0x38);
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) temp_a3);
+            portrait = (HudElement *) &gCurrentHud->twoPlayerAdvPortrait;
+            portrait->spriteID = (get_settings()->racers[1].character + HUD_SPRITE_PORTRAIT);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, portrait);
         }
         func_80068508(FALSE);
     }
@@ -1151,7 +1154,7 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         ttSWBody.y = 0;
         ttSWBody.z = 0;
         gAssetHudElements->entry[20] = spawn_object(&ttSWBody, 0);
-        gCurrentHud->unk340 = -0x8000;
+        gCurrentHud->stopwatchHands.y_rotation = -0x8000;
         if (gAssetHudElements->entry[20] != NULL) {
             ((Object *) gAssetHudElements->entry[20])->segment.animFrame = 0;
         }
@@ -1163,7 +1166,7 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         ttSWArms.y = 0;
         ttSWArms.z = 0;
         gAssetHudElements->entry[34] = spawn_object(&ttSWArms, 0);
-        gCurrentHud->unk440 = -0x8000;
+        gCurrentHud->stopwatch.y_rotation = -0x8000;
     }
     ttSWBodyObject = gAssetHudElements->entry[20];
     if (ttSWBodyObject != NULL) {
@@ -1210,7 +1213,7 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
             }
             object_animate(ttSWBodyObject);
         }
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &gCurrentHud->unk340);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->stopwatchHands);
 
         for (i = 0; curRacer->lap >= i && i < 5; i++) {
             stopwatchTimer += curRacer->lap_times[i];
@@ -1222,42 +1225,40 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
         if (normalise_time(36000) < stopwatchTimer) {
             stopwatchTimer = normalise_time(36000);
         }
-        gCurrentHud->unk444 = ((stopwatchTimer * 0x444) + 0x7FF8);
+        gCurrentHud->stopwatch.z_rotation = ((stopwatchTimer * 0x444) + 0x7FF8);
         if (get_contpak_error() <= 0) {
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                          (unk80126CDC **) &gCurrentHud->unk440);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->stopwatch);
         }
-        gCurrentHud->unk444 = ((((stopwatchTimer / 60) + 30) % 60) * 0x444);
-        gCurrentHud->unk450 = gCurrentHud->unk350 + 28.0f;
+        gCurrentHud->stopwatch.z_rotation = ((((stopwatchTimer / 60) + 30) % 60) * 0x444);
+        gCurrentHud->stopwatch.y = gCurrentHud->stopwatchHands.y + 28.0f;
         if (get_contpak_error() <= 0) {
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                          (unk80126CDC **) &gCurrentHud->unk440);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->stopwatch);
         }
         obj68->unk20 = 0;
         func_80068508(TRUE);
         render_course_indicator_arrows(curRacer, updateRate);
         if (!curRacer->raceFinished) {
-            spB8 = gCurrentHud->unk2F0;
+            spB8 = gCurrentHud->lapTimeText.y;
             for (i = 0; i < curRacer->countLap && i < gHudLevelHeader->laps; i++) {
                 // FAKEMATCH
                 get_timestamp_from_frames(curRacer->lap_times[i] & 0xFFFFFFFFFFFFFFFF, &spB4, &spB0, &spAC);
                 gHudColour = D_800E27AC[i];
-                render_timer(gCurrentHud->unk2EC, spB8, spB4, spB0, spAC, 1);
+                render_timer(gCurrentHud->lapTimeText.x, spB8, spB4, spB0, spAC, 1);
                 gHudColour = COLOUR_RGBA32(255, 255, 255, 254);
                 spB8 += 12;
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
-                gCurrentHud->unk338 = i + 1;
+                gCurrentHud->timeTrialLapNumber.spriteOffset = i + 1;
                 func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                              (unk80126CDC **) &gCurrentHud->unk320);
+                              (HudElement *) &gCurrentHud->timeTrialLapNumber);
                 func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                              (unk80126CDC **) &gCurrentHud->unk300);
-                gCurrentHud->unk330 += 12.0f;
-                gCurrentHud->unk310 += 12.0f;
+                              (HudElement *) &gCurrentHud->timeTrialLapText);
+                gCurrentHud->timeTrialLapNumber.y += 12.0f;
+                gCurrentHud->timeTrialLapText.y += 12.0f;
             }
             if (1) {} // FAKEMATCH
             posX = ((i * 4) - i) * 4;
-            gCurrentHud->unk330 -= posX;
-            gCurrentHud->unk310 -= posX;
+            gCurrentHud->timeTrialLapNumber.y -= posX;
+            gCurrentHud->timeTrialLapText.y -= posX;
             if ((curRacer->boost_sound & BOOST_SOUND_UNK4) && (D_80126D4C <= 0)) {
                 set_stopwatch_face(7, 3, 0, 4, 0);
                 D_80126D4C = 60;
@@ -1358,20 +1359,20 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
             set_text_font(ASSET_FONTS_FUNFONT);
             // Draw text shadow.
             set_text_colour(0, 0, 0, 255, 255);
-            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28 + 1, D_80127190 + 1, SWMessage[0],
-                      ALIGN_MIDDLE_CENTER);
-            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28 + 1, D_80127190 + 15, SWMessage[1],
-                      ALIGN_MIDDLE_CENTER);
-            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28 + 1, D_80127190 + 29, SWMessage[2],
-                      ALIGN_MIDDLE_CENTER);
+            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 1,
+                      SWMessage[0], ALIGN_MIDDLE_CENTER);
+            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 15,
+                      SWMessage[1], ALIGN_MIDDLE_CENTER);
+            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 29,
+                      SWMessage[2], ALIGN_MIDDLE_CENTER);
             // Draw actual text.
             set_text_colour(D_80127194->red, D_80127194->green, D_80127194->blue, 128, D_80127194->alpha);
-            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28, D_80127190, SWMessage[0],
-                      ALIGN_MIDDLE_CENTER);
-            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28, D_80127190 + 14, SWMessage[1],
-                      ALIGN_MIDDLE_CENTER);
-            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28, D_80127190 + 28, SWMessage[2],
-                      ALIGN_MIDDLE_CENTER);
+            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY,
+                      SWMessage[0], ALIGN_MIDDLE_CENTER);
+            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY + 14,
+                      SWMessage[1], ALIGN_MIDDLE_CENTER);
+            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY + 28,
+                      SWMessage[2], ALIGN_MIDDLE_CENTER);
             update_colour_cycle(D_80127194, updateRate);
             set_kerning(0);
         }
@@ -1421,7 +1422,7 @@ void set_stopwatch_face(u8 arg0, u8 arg1, u8 faceID, u8 arg3, u8 arg4) {
 }
 
 void func_800A3870(void) {
-    gCurrentHud->unk4C4 = 0x6490;
+    gCurrentHud->speedometreArrow.z_rotation = 0x6490;
 }
 
 /**
@@ -1445,12 +1446,13 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
                     vel = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) +
                                 (obj->segment.z_velocity * obj->segment.z_velocity));
                 }
-                if (D_800E2838 < vel) {
-                    D_800E2838 = vel;
+                if (sRecordVel < vel) {
+                    sRecordVel = vel;
                 }
                 vel *= 4.0f;
                 if (racer->drift_direction != 0) {
-                    vel += 7.0f;
+                    vel += 7.0f; //!@Bug: Planes and hovercraft use drift_direction for something else, applying this
+                                 //!unintentionally.
                 }
                 if (vel > 100.0f) {
                     vel = 100.0f;
@@ -1464,30 +1466,39 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
                     vel = 25744.0f;
                 }
                 if (!is_game_paused()) {
-                    if (vel < gCurrentHud->unk4C4) {
-                        gCurrentHud->unk4C4 += ((vel - gCurrentHud->unk4C4) / 2);
+                    if (vel < gCurrentHud->speedometreArrow.z_rotation) {
+                        gCurrentHud->speedometreArrow.z_rotation +=
+                            ((vel - gCurrentHud->speedometreArrow.z_rotation) / 2);
                     } else {
-                        gCurrentHud->unk4C4 += ((vel - gCurrentHud->unk4C4) / 8);
+                        gCurrentHud->speedometreArrow.z_rotation +=
+                            ((vel - gCurrentHud->speedometreArrow.z_rotation) / 8);
                     }
                 }
                 if (gHudToggleSettings[gHUDNumPlayers] == 0) {
-                    if (D_80126CD3 & 2) {
-                        opacity = 255.0f - ((D_80126CD0 * 255.0f) / D_8012718B);
+                    if (gMinimapXlu & 2) {
+                        opacity = 255.0f - ((gMinimapOpacity * 255.0f) / gMinimapOpacityTarget);
                     } else {
                         opacity = 255;
                     }
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk5A0);
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->speedometreBG);
                     reset_render_settings(&gHUDCurrDisplayList);
                     sprite_opaque(TRUE);
                     gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, opacity);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk4C0);
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
+                                  &gCurrentHud->speedometreArrow);
                     sprite_opaque(FALSE);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk4E0);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk500);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk520);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk540);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk560);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk580);
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
+                                  &gCurrentHud->speedometreNumber0);
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
+                                  &gCurrentHud->speedometreNumber30);
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
+                                  &gCurrentHud->speedometreNumber60);
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
+                                  &gCurrentHud->speedometreNumber90);
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
+                                  &gCurrentHud->speedometreNumber120);
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
+                                  &gCurrentHud->speedometreNumber150);
                 }
             }
         }
@@ -1509,9 +1520,9 @@ void render_race_start(s32 arg0, s32 updateRate) {
             sprite_opaque(TRUE);
         }
         if (arg0 > 0) {
-            if (D_80126D34) {
+            if (gHudRaceStart) {
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, (arg0 * 255) / 40);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk1A0);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->raceStartReady);
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
                 if (gRaceStartShowHudStep == 2) {
                     sound_play(SOUND_VOICE_TT_GET_READY, &gHUDVoiceSoundMask);
@@ -1537,12 +1548,13 @@ void render_race_start(s32 arg0, s32 updateRate) {
                     }
                 }
             }
-        } else if (gCurrentHud->unk18C > -200.0f) {
+        } else if (gCurrentHud->raceStartGo.x > -200.0f) {
             gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk180);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
+                          (HudElement *) &gCurrentHud->raceStartGo);
             gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
-            gCurrentHud->unk19A[gHudCurrentViewport] += updateRate;
-            if (gCurrentHud->unk19A[gHudCurrentViewport] >= 60) {
+            gCurrentHud->raceStartGo.unk1A[gHudCurrentViewport] += updateRate;
+            if (gCurrentHud->raceStartGo.unk1A[gHudCurrentViewport] >= 60) {
                 if (gRaceStartShowHudStep == 4) {
                     // Mute background music in 3/4 player.
                     if (get_viewport_count() > TWO_PLAYERS) {
@@ -1553,7 +1565,7 @@ void render_race_start(s32 arg0, s32 updateRate) {
                     sound_play(SOUND_WHOOSH1, NULL);
                     gRaceStartShowHudStep++;
                 }
-                gCurrentHud->unk18C -= (updateRate * 8);
+                gCurrentHud->raceStartGo.x -= (updateRate * 8);
             }
             if (gRaceStartShowHudStep == 3) {
                 sound_play(SOUND_VOICE_TT_GO, &gHUDVoiceSoundMask);
@@ -1585,67 +1597,68 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
           racer->raceFinished == FALSE) &&
          (gHUDNumPlayers < TWO_PLAYERS || (racer->lap < 1) || racer->lap_times[racer->lap] >= 180 ||
           gHudLevelHeader->race_type & RACETYPE_CHALLENGE))) {
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk240);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->bananaCountX);
         bananas = racer->bananas;
-        var_v1 = gCurrentHud->unkF8;
-        if ((gCurrentHud->unkFA == 0) && (gCurrentHud->unkFB != racer->bananas)) {
-            gCurrentHud->unkFA = 2;
-            gCurrentHud->unkFB = racer->bananas;
-        } else if (gCurrentHud->unkFA) {
-            gCurrentHud->unk388 = 2.0f;
+        var_v1 = gCurrentHud->bananaCountIconSpin.spriteOffset;
+        if ((gCurrentHud->bananaCountIconSpin.unk1A == 0) &&
+            (gCurrentHud->bananaCountIconSpin.unk1B != racer->bananas)) {
+            gCurrentHud->bananaCountIconSpin.unk1A = 2;
+            gCurrentHud->bananaCountIconSpin.unk1B = racer->bananas;
+        } else if (gCurrentHud->bananaCountIconSpin.unk1A) {
+            gCurrentHud->bananaCountSparkle.scale = 2.0f;
             var_v1 += updateRate * 13;
-            if (var_v1 < (gCurrentHud->unkF8 & 0xFF)) {
-                gCurrentHud->unkFA--;
-                if (gCurrentHud->unkFA == 0) {
-                    gCurrentHud->unk39B = 1;
-                    gCurrentHud->unk39A = 6;
+            if (var_v1 < (gCurrentHud->bananaCountIconSpin.spriteOffset & 0xFF)) {
+                gCurrentHud->bananaCountIconSpin.unk1A--;
+                if (gCurrentHud->bananaCountIconSpin.unk1A == 0) {
+                    gCurrentHud->bananaCountSparkle.unk1B = 1;
+                    gCurrentHud->bananaCountSparkle.unk1A = 6;
                     var_v1 = 0;
-                    gCurrentHud->unk398 = 1;
+                    gCurrentHud->bananaCountSparkle.spriteOffset = 1;
                 }
             }
         }
         if (var_v1 == 0) {
             sprite_opaque(TRUE);
             set_viewport_tv_type(TV_TYPE_NTSC);
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk360);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->bananaCountIconStatic);
             set_viewport_tv_type(TV_TYPE_PAL);
             sprite_opaque(FALSE);
-            gCurrentHud->unkF8 = var_v1;
-            if (gCurrentHud->unk39B) {
-                gCurrentHud->unk39A -= updateRate;
-                if (gCurrentHud->unk39A < 0) {
-                    gCurrentHud->unk39A = 6;
-                    if (gCurrentHud->unk398 == 6) {
-                        gCurrentHud->unk398 = 0;
-                        gCurrentHud->unk39B--;
+            gCurrentHud->bananaCountIconSpin.spriteOffset = var_v1;
+            if (gCurrentHud->bananaCountSparkle.unk1B) {
+                gCurrentHud->bananaCountSparkle.unk1A -= updateRate;
+                if (gCurrentHud->bananaCountSparkle.unk1A < 0) {
+                    gCurrentHud->bananaCountSparkle.unk1A = 6;
+                    if (gCurrentHud->bananaCountSparkle.spriteOffset == 6) {
+                        gCurrentHud->bananaCountSparkle.spriteOffset = 0;
+                        gCurrentHud->bananaCountSparkle.unk1B--;
                     } else {
-                        gCurrentHud->unk398++;
+                        gCurrentHud->bananaCountSparkle.spriteOffset++;
                     }
                 }
                 set_viewport_tv_type(TV_TYPE_NTSC);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk380);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->bananaCountSparkle);
                 set_viewport_tv_type(TV_TYPE_PAL);
             }
         } else {
-            gCurrentHud->unkF8 = var_v1 + 128;
+            gCurrentHud->bananaCountIconSpin.spriteOffset = var_v1 + 128;
             func_80068508(FALSE);
             sprite_opaque(TRUE);
             set_viewport_tv_type(TV_TYPE_NTSC);
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unkE0);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->bananaCountIconSpin);
             sprite_opaque(FALSE);
             set_viewport_tv_type(TV_TYPE_PAL);
             func_80068508(TRUE);
-            gCurrentHud->unkF8 -= 128;
+            gCurrentHud->bananaCountIconSpin.spriteOffset -= 128;
         }
         temp_lo = bananas / 10;
         if (temp_lo) {
-            gCurrentHud->unk118 = temp_lo;
-            gCurrentHud->unk138 = bananas % 10;
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk120);
+            gCurrentHud->bananaCountNumber1.spriteOffset = temp_lo;
+            gCurrentHud->bananaCountNumber2.spriteOffset = bananas % 10;
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->bananaCountNumber2);
         } else {
-            gCurrentHud->unk118 = bananas % 10;
+            gCurrentHud->bananaCountNumber1.spriteOffset = bananas % 10;
         }
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk100);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->bananaCountNumber1);
         gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     }
 }
@@ -1656,13 +1669,13 @@ void render_racer_bananas(Object_Racer *racer, s32 updateRate) {
  */
 void render_treasure_hud(Object_Racer *racer) {
     s32 i;
-    s32 sp48;
+    s32 prevY;
 
-    sp48 = gCurrentHud->unk410;
+    prevY = gCurrentHud->treasureMetre.y;
     if (gNumActivePlayers < 3 || (gNumActivePlayers == 3 && racer->playerIndex == PLAYER_COMPUTER)) {
-        gCurrentHud->unk646 = racer->characterId + 56;
+        gCurrentHud->challengePortrait.spriteID = racer->characterId + HUD_SPRITE_PORTRAIT;
         D_80126CD5 = TRUE;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk640);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->challengePortrait);
         D_80126CD5 = FALSE;
     }
     for (i = 0; i < 10; i++) {
@@ -1670,11 +1683,11 @@ void render_treasure_hud(Object_Racer *racer) {
             gHudColour = COLOUR_RGBA32(128, 128, 128, 128);
         }
         D_80126CD5 = TRUE;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk400);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->treasureMetre);
         D_80126CD5 = FALSE;
-        gCurrentHud->unk410 -= 3.0f;
+        gCurrentHud->treasureMetre.y -= 3.0f;
     }
-    gCurrentHud->unk410 = sp48;
+    gCurrentHud->treasureMetre.y = prevY;
     gHudColour = COLOUR_RGBA32(255, 255, 255, 254);
     D_80126CD5 = FALSE;
 }
@@ -1685,31 +1698,31 @@ void render_treasure_hud(Object_Racer *racer) {
  */
 void render_silver_coin_counter(Object_Racer *racer, s32 updateRate) {
     s32 i;
-    s32 prevUnk5D0;
+    s32 prevY;
 
-    gCurrentHud->unk5D0 = (s32) gCurrentHud->unk5D0; // Rounds float down to it's int value.
-    prevUnk5D0 = gCurrentHud->unk5D0;
+    gCurrentHud->silverCoinTally.y = (s32) gCurrentHud->silverCoinTally.y; // Rounds float down to it's int value.
+    prevY = gCurrentHud->silverCoinTally.y;
     for (i = 0; i < 8; i++) {
         if (i >= racer->silverCoinCount) {
             gHudColour = COLOUR_RGBA32(128, 128, 128, 128);
         }
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk5C0);
-        gCurrentHud->unk5D0 -= gCurrentHud->unk5DC;
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->silverCoinTally);
+        gCurrentHud->silverCoinTally.y -= gCurrentHud->silverCoinTally.unk1C;
     }
     if (racer->silverCoinCount == 8) {
-        if (gCurrentHud->unk5DB < 30) {
-            gCurrentHud->unk5DB += updateRate;
+        if (gCurrentHud->silverCoinTally.unk1B < 30) {
+            gCurrentHud->silverCoinTally.unk1B += updateRate;
         }
-        if (gCurrentHud->unk5DA == 0) {
-            if (gCurrentHud->unk5DB >= 30) {
-                gCurrentHud->unk5DA = 1;
+        if (gCurrentHud->silverCoinTally.unk1A == 0) {
+            if (gCurrentHud->silverCoinTally.unk1B >= 30) {
+                gCurrentHud->silverCoinTally.unk1A = 1;
                 if (gHUDVoiceSoundMask == NULL) {
                     sound_play(SOUND_VOICE_TT_GO_FOR_IT, &gHUDVoiceSoundMask);
                 }
             }
         }
     }
-    gCurrentHud->unk5D0 = prevUnk5D0;
+    gCurrentHud->silverCoinTally.y = prevY;
     gHudColour = COLOUR_RGBA32(255, 255, 255, 254);
 }
 
@@ -1723,8 +1736,8 @@ void render_race_finish_position(Object_Racer *racer, s32 updateRate) {
     unk800A497C *temp_s0;
     s8 drawPosition;
 
-    temp_a3 = (unk800A497C *) &gCurrentHud->unk700;
-    temp_s0 = (unk800A497C *) &gCurrentHud->unk740;
+    temp_a3 = (unk800A497C *) &gCurrentHud->raceFinishPosition1;
+    temp_s0 = (unk800A497C *) &gCurrentHud->raceFinishPosition2;
     // temp_s0 = &gCurrentHud->unk740;
     drawPosition = FALSE;
     switch (temp_a3->unk1A) {
@@ -1777,8 +1790,8 @@ void render_race_finish_position(Object_Racer *racer, s32 updateRate) {
     }
     if (drawPosition) {
         gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 210);
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) temp_a3);
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) temp_s0);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) temp_a3);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) temp_s0);
         gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
     }
 }
@@ -1807,45 +1820,45 @@ void render_race_position(Object_Racer *racer, s32 updateRate) {
         } else {
             settings = get_settings();
             place = settings->racers[D_80126D10].starting_position;
-            gCurrentHud->unk18 = place;
+            gCurrentHud->racePostion.spriteOffset = place;
             place++;
         }
     }
     if (gHUDNumPlayers < 2) {
         if (place < 4) {
-            gCurrentHud->unk38 = place - 1;
+            gCurrentHud->racePositionEnd.spriteOffset = place - 1;
         } else {
-            gCurrentHud->unk38 = 3;
+            gCurrentHud->racePositionEnd.spriteOffset = 3;
         }
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk20);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->racePositionEnd);
     }
-    scale = (gCurrentHud->unk1B + 129);
+    scale = (gCurrentHud->racePostion.unk1B + 129);
     scale *= 128.0f;
     scale = sins_f(scale);
     placeIndex = place - 1;
-    gCurrentHud->unk8 = (gCurrentHud->unk1C / 127.0f) + (1.0 + (0.5 * scale));
-    prevCurrHudUnkC = gCurrentHud->unkC;
-    gCurrentHud->unkC -= (24.0f * gCurrentHud->unk8);
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk0);
-    gCurrentHud->unkC = prevCurrHudUnkC;
-    if (gCurrentHud->unk1A) {
-        if (gCurrentHud->unk1B < 127 - (updateRate * 16)) {
-            gCurrentHud->unk1B += (updateRate * 16);
+    gCurrentHud->racePostion.scale = (gCurrentHud->racePostion.unk1C / 127.0f) + (1.0 + (0.5 * scale));
+    prevCurrHudUnkC = gCurrentHud->racePostion.x;
+    gCurrentHud->racePostion.x -= (24.0f * gCurrentHud->racePostion.scale);
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->racePostion);
+    gCurrentHud->racePostion.x = prevCurrHudUnkC;
+    if (gCurrentHud->racePostion.unk1A) {
+        if (gCurrentHud->racePostion.unk1B < 127 - (updateRate * 16)) {
+            gCurrentHud->racePostion.unk1B += (updateRate * 16);
         } else {
-            gCurrentHud->unk1B = 127;
+            gCurrentHud->racePostion.unk1B = 127;
         }
     }
-    if (placeIndex != gCurrentHud->unk18) {
-        if (gCurrentHud->unk1A && gCurrentHud->unk1B > 0) {
-            gCurrentHud->unk1B = -gCurrentHud->unk1B;
+    if (placeIndex != gCurrentHud->racePostion.spriteOffset) {
+        if (gCurrentHud->racePostion.unk1A && gCurrentHud->racePostion.unk1B > 0) {
+            gCurrentHud->racePostion.unk1B = -gCurrentHud->racePostion.unk1B;
         } else {
-            gCurrentHud->unk1B = -127;
-            gCurrentHud->unk1A = 1;
+            gCurrentHud->racePostion.unk1B = -127;
+            gCurrentHud->racePostion.unk1A = 1;
         }
     }
-    gCurrentHud->unk18 = placeIndex;
-    if (gCurrentHud->unk1A && gCurrentHud->unk1B == 127) {
-        gCurrentHud->unk1A = 0;
+    gCurrentHud->racePostion.spriteOffset = placeIndex;
+    if (gCurrentHud->racePostion.unk1A && gCurrentHud->racePostion.unk1B == 127) {
+        gCurrentHud->racePostion.unk1A = 0;
     }
 }
 
@@ -1859,167 +1872,169 @@ void render_lap_count(Object_Racer *racer, s32 updateRate) {
         (gHUDNumPlayers <= ONE_PLAYER || racer->lap <= 0 || racer->lap_times[racer->lap] >= 180) &&
         (gHUDNumPlayers <= ONE_PLAYER || D_800E2794[gHUDNumPlayers][racer->playerIndex] == 3)) {
         if (gHudLevelHeader->laps == (0, racer->countLap + 1) && gHUDNumPlayers < THREE_PLAYERS) {
-            gCurrentHud->unk21A += updateRate;
-            if (gCurrentHud->unk21A > 6) {
-                gCurrentHud->unk218++;
-                gCurrentHud->unk21A -= 6;
-                if (gCurrentHud->unk218 > 4) {
-                    gCurrentHud->unk218 = 0;
+            gCurrentHud->lapCountFlag.unk1A += updateRate;
+            if (gCurrentHud->lapCountFlag.unk1A > 6) {
+                gCurrentHud->lapCountFlag.spriteOffset++;
+                gCurrentHud->lapCountFlag.unk1A -= 6;
+                if (gCurrentHud->lapCountFlag.spriteOffset > 4) {
+                    gCurrentHud->lapCountFlag.spriteOffset = 0;
                 }
             }
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk200);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->lapCountFlag);
         }
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk60);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->lapCountLabel);
         if (racer->countLap >= gHudLevelHeader->laps - 1) {
-            gCurrentHud->unk98 = gHudLevelHeader->laps;
+            gCurrentHud->lapCountCurrent.spriteOffset = gHudLevelHeader->laps;
         } else {
-            gCurrentHud->unk98 = racer->countLap + 1;
+            gCurrentHud->lapCountCurrent.spriteOffset = racer->countLap + 1;
         }
-        gCurrentHud->unkD8 = gHudLevelHeader->laps;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk80);
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unkA0);
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unkC0);
+        gCurrentHud->lapCountTotal.spriteOffset = gHudLevelHeader->laps;
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->lapCountCurrent);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->lapCountSeperator);
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->lapCountTotal);
     }
     if (gHUDNumPlayers == TWO_PLAYERS) {
         sprite_opaque(TRUE);
     }
     if (is_game_paused() == FALSE) {
-        if (racer->lap_times[racer->lap] < 30 && gCurrentHud->unk3DA == 0 && racer->raceFinished == FALSE) {
+        if (racer->lap_times[racer->lap] < 30 && gCurrentHud->lapTextLap.unk1A == 0 && racer->raceFinished == FALSE) {
             if ((racer->lap == 1) && gHudLevelHeader->laps >= 3) {
-                gCurrentHud->unk3DA = 2;
-                gCurrentHud->unk3DB = 1;
-                gCurrentHud->unk3DD = 0;
+                gCurrentHud->lapTextLap.unk1A = 2;
+                gCurrentHud->lapTextLap.unk1B = 1;
+                gCurrentHud->lapTextLap.unk1D = 0;
                 sound_play(SOUND_WHOOSH1, NULL);
                 switch (gHUDNumPlayers) {
                     case ONE_PLAYER:
-                        gCurrentHud->unk3DC = -21;
-                        gCurrentHud->unk3FC = 32;
-                        gCurrentHud->unk3CC = -200.0f;
-                        gCurrentHud->unk3EC = 211.0f;
+                        gCurrentHud->lapTextLap.unk1C = -21;
+                        gCurrentHud->lapTextTwo.unk1C = 32;
+                        gCurrentHud->lapTextLap.x = -200.0f;
+                        gCurrentHud->lapTextTwo.x = 211.0f;
                         break;
                     case TWO_PLAYERS:
-                        gCurrentHud->unk3DC = -16;
-                        gCurrentHud->unk3FC = 27;
-                        gCurrentHud->unk3CC = -200.0f;
-                        gCurrentHud->unk3EC = 211.0f;
+                        gCurrentHud->lapTextLap.unk1C = -16;
+                        gCurrentHud->lapTextTwo.unk1C = 27;
+                        gCurrentHud->lapTextLap.x = -200.0f;
+                        gCurrentHud->lapTextTwo.x = 211.0f;
                         break;
                     default:
                         if (racer->playerIndex != PLAYER_ONE && racer->playerIndex != PLAYER_THREE) {
-                            gCurrentHud->unk3DC = 60;
-                            gCurrentHud->unk3FC = 91;
-                            gCurrentHud->unk3CC = -70.0f;
-                            gCurrentHud->unk3EC = 221.0f;
+                            gCurrentHud->lapTextLap.unk1C = 60;
+                            gCurrentHud->lapTextTwo.unk1C = 91;
+                            gCurrentHud->lapTextLap.x = -70.0f;
+                            gCurrentHud->lapTextTwo.x = 221.0f;
                         } else {
-                            gCurrentHud->unk3DC = -90;
-                            gCurrentHud->unk3FC = -59;
-                            gCurrentHud->unk3CC = -220.0f;
-                            gCurrentHud->unk3EC = 71.0f;
+                            gCurrentHud->lapTextLap.unk1C = -90;
+                            gCurrentHud->lapTextTwo.unk1C = -59;
+                            gCurrentHud->lapTextLap.x = -220.0f;
+                            gCurrentHud->lapTextTwo.x = 71.0f;
                         }
                         break;
                 }
             } else if (gHudLevelHeader->laps == (0, racer->lap + 1) && racer->lap != 0) {
-                gCurrentHud->unk3DA = 3;
-                gCurrentHud->unk3DB = -1;
-                gCurrentHud->unk3DD = 0;
+                gCurrentHud->lapTextLap.unk1A = 3;
+                gCurrentHud->lapTextLap.unk1B = -1;
+                gCurrentHud->lapTextLap.unk1D = 0;
                 sound_play(SOUND_WHOOSH1, NULL);
                 switch (gHUDNumPlayers) {
                     case ONE_PLAYER:
-                        gCurrentHud->unk3DC = 51;
-                        gCurrentHud->unk3BC = -41;
-                        gCurrentHud->unk3CC = 210.0f;
-                        gCurrentHud->unk3AC = -200.0f;
+                        gCurrentHud->lapTextLap.unk1C = 51;
+                        gCurrentHud->lapTextFinal.unk1C = -41;
+                        gCurrentHud->lapTextLap.x = 210.0f;
+                        gCurrentHud->lapTextFinal.x = -200.0f;
                         break;
                     case TWO_PLAYERS:
-                        gCurrentHud->unk3DC = 41;
-                        gCurrentHud->unk3BC = -31;
-                        gCurrentHud->unk3CC = 210.0f;
-                        gCurrentHud->unk3AC = -200.0f;
+                        gCurrentHud->lapTextLap.unk1C = 41;
+                        gCurrentHud->lapTextFinal.unk1C = -31;
+                        gCurrentHud->lapTextLap.x = 210.0f;
+                        gCurrentHud->lapTextFinal.x = -200.0f;
                         break;
                     default:
                         if (racer->playerIndex != PLAYER_ONE && racer->playerIndex != PLAYER_THREE) {
-                            gCurrentHud->unk3DC = 100;
-                            gCurrentHud->unk3BC = 50;
-                            gCurrentHud->unk3CC = 100.0f;
-                            gCurrentHud->unk3AC = -50.0f;
+                            gCurrentHud->lapTextLap.unk1C = 100;
+                            gCurrentHud->lapTextFinal.unk1C = 50;
+                            gCurrentHud->lapTextLap.x = 100.0f;
+                            gCurrentHud->lapTextFinal.x = -50.0f;
                         } else {
-                            gCurrentHud->unk3DC = -50;
-                            gCurrentHud->unk3BC = -100;
-                            gCurrentHud->unk3CC = 50.0f;
-                            gCurrentHud->unk3AC = -200.0f;
+                            gCurrentHud->lapTextLap.unk1C = -50;
+                            gCurrentHud->lapTextFinal.unk1C = -100;
+                            gCurrentHud->lapTextLap.x = 50.0f;
+                            gCurrentHud->lapTextFinal.x = -200.0f;
                         }
                         break;
                 }
             }
         }
-        if (gCurrentHud->unk3DA != 0) {
-            if (gCurrentHud->unk3DA == 2) {
-                if (gCurrentHud->unk3DB == 1) {
-                    if (gCurrentHud->unk3CC < gCurrentHud->unk3DC - (updateRate * 13)) {
-                        gCurrentHud->unk3CC = gCurrentHud->unk3CC + (updateRate * 13);
+        if (gCurrentHud->lapTextLap.unk1A != 0) {
+            if (gCurrentHud->lapTextLap.unk1A == 2) {
+                if (gCurrentHud->lapTextLap.unk1B == 1) {
+                    if (gCurrentHud->lapTextLap.x < gCurrentHud->lapTextLap.unk1C - (updateRate * 13)) {
+                        gCurrentHud->lapTextLap.x = gCurrentHud->lapTextLap.x + (updateRate * 13);
                     } else {
-                        gCurrentHud->unk3CC = gCurrentHud->unk3DC;
+                        gCurrentHud->lapTextLap.x = gCurrentHud->lapTextLap.unk1C;
                     }
-                    if (gCurrentHud->unk3EC > gCurrentHud->unk3FC + (updateRate * 13)) {
-                        gCurrentHud->unk3EC = gCurrentHud->unk3EC - (updateRate * 13);
+                    if (gCurrentHud->lapTextTwo.x > gCurrentHud->lapTextTwo.unk1C + (updateRate * 13)) {
+                        gCurrentHud->lapTextTwo.x = gCurrentHud->lapTextTwo.x - (updateRate * 13);
                     } else {
-                        gCurrentHud->unk3EC = gCurrentHud->unk3FC;
+                        gCurrentHud->lapTextTwo.x = gCurrentHud->lapTextTwo.unk1C;
                     }
                     if (racer->lap_times[racer->lap] >= 60) {
-                        gCurrentHud->unk3DB = -1;
+                        gCurrentHud->lapTextLap.unk1B = -1;
                         sound_play(SOUND_WHOOSH1, NULL);
                     }
-                    if (gCurrentHud->unk3CC == ((0, gCurrentHud))->unk3DC &&
-                        gCurrentHud->unk3EC == ((0, gCurrentHud))->unk3FC && gCurrentHud->unk3DD == 0) {
+                    if (gCurrentHud->lapTextLap.x == ((0, gCurrentHud))->lapTextLap.unk1C &&
+                        gCurrentHud->lapTextTwo.x == ((0, gCurrentHud))->lapTextTwo.unk1C &&
+                        gCurrentHud->lapTextLap.unk1D == 0) {
                         if (gHUDVoiceSoundMask == NULL) {
                             sound_play(SOUND_VOICE_TT_LAP2, &gHUDVoiceSoundMask);
                         }
-                        gCurrentHud->unk3DD = 1;
+                        gCurrentHud->lapTextLap.unk1D = 1;
                     }
-                } else if (gCurrentHud->unk3DB == -1) {
-                    gCurrentHud->unk3CC = gCurrentHud->unk3CC - (updateRate * 13);
-                    gCurrentHud->unk3EC = gCurrentHud->unk3EC + (updateRate * 13);
-                    if (gCurrentHud->unk3CC < -200.0f) {
-                        gCurrentHud->unk3DA = 0;
+                } else if (gCurrentHud->lapTextLap.unk1B == -1) {
+                    gCurrentHud->lapTextLap.x -= updateRate * 13;
+                    gCurrentHud->lapTextTwo.x += updateRate * 13;
+                    if (gCurrentHud->lapTextLap.x < -200.0f) {
+                        gCurrentHud->lapTextLap.unk1A = 0;
                     }
                 }
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk3E0);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk3C0);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->lapTextTwo);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->lapTextLap); // lap
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
-            } else if (gCurrentHud->unk3DA == 3) {
-                if (gCurrentHud->unk3DB == -1) {
-                    if (gCurrentHud->unk3CC > gCurrentHud->unk3DC + (updateRate * 13)) {
-                        gCurrentHud->unk3CC = gCurrentHud->unk3CC - (updateRate * 13);
+            } else if (gCurrentHud->lapTextLap.unk1A == 3) {
+                if (gCurrentHud->lapTextLap.unk1B == -1) {
+                    if (gCurrentHud->lapTextLap.x > gCurrentHud->lapTextLap.unk1C + (updateRate * 13)) {
+                        gCurrentHud->lapTextLap.x = gCurrentHud->lapTextLap.x - (updateRate * 13);
                     } else {
-                        gCurrentHud->unk3CC = gCurrentHud->unk3DC;
+                        gCurrentHud->lapTextLap.x = gCurrentHud->lapTextLap.unk1C;
                     }
-                    if (gCurrentHud->unk3AC < gCurrentHud->unk3BC - (updateRate * 13)) {
-                        gCurrentHud->unk3AC = gCurrentHud->unk3AC + (updateRate * 13);
+                    if (gCurrentHud->lapTextFinal.x < gCurrentHud->lapTextFinal.unk1C - (updateRate * 13)) {
+                        gCurrentHud->lapTextFinal.x += (updateRate * 13);
                     } else {
-                        gCurrentHud->unk3AC = gCurrentHud->unk3BC;
+                        gCurrentHud->lapTextFinal.x = gCurrentHud->lapTextFinal.unk1C;
                     }
                     if (racer->lap_times[racer->lap] >= 60) {
-                        gCurrentHud->unk3DB = 1;
+                        gCurrentHud->lapTextLap.unk1B = 1;
                         sound_play(SOUND_WHOOSH1, NULL);
                     }
-                    if (gCurrentHud->unk3CC == ((0, gCurrentHud))->unk3DC &&
-                        gCurrentHud->unk3AC == ((0, gCurrentHud))->unk3BC && gCurrentHud->unk3DD == 0) {
+                    if (gCurrentHud->lapTextLap.x == ((0, gCurrentHud))->lapTextLap.unk1C &&
+                        gCurrentHud->lapTextFinal.x == ((0, gCurrentHud))->lapTextFinal.unk1C &&
+                        gCurrentHud->lapTextLap.unk1D == 0) {
                         if (gHUDVoiceSoundMask == NULL) {
                             sound_play(SOUND_VOICE_TT_FINAL_LAP, &gHUDVoiceSoundMask);
                         }
-                        gCurrentHud->unk3DD = 1;
+                        gCurrentHud->lapTextLap.unk1D = 1;
                     }
-                } else if (gCurrentHud->unk3DB == 1) {
-                    gCurrentHud->unk3CC = gCurrentHud->unk3CC + (updateRate * 13);
-                    gCurrentHud->unk3AC = gCurrentHud->unk3AC - (updateRate * 13);
-                    if (gCurrentHud->unk3CC > 200.0f) {
-                        gCurrentHud->unk3DA = 0;
+                } else if (gCurrentHud->lapTextLap.unk1B == 1) {
+                    gCurrentHud->lapTextLap.x = gCurrentHud->lapTextLap.x + (updateRate * 13);
+                    gCurrentHud->lapTextFinal.x -= updateRate * 13;
+                    if (gCurrentHud->lapTextLap.x > 200.0f) {
+                        gCurrentHud->lapTextLap.unk1A = 0;
                     }
                 }
 
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk3A0);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk3C0);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->lapTextFinal);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->lapTextLap);
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
         }
@@ -2038,7 +2053,8 @@ void render_wrong_way_text(Object_Racer *obj, s32 updateRate) {
     if (gHUDNumPlayers == TWO_PLAYERS) {
         sprite_opaque(TRUE);
     }
-    if (obj->unk1FC > 120 && (gHUDNumPlayers || gCurrentHud->unk46C == gCurrentHud->unk47A[2]) && !is_game_paused()) {
+    if (obj->unk1FC > 120 && (gHUDNumPlayers || gCurrentHud->wrongWay1.unk1C == gCurrentHud->wrongWay1.x) &&
+        !is_game_paused()) {
         if ((gWrongWayNagPrefix || gWrongWayNagTimer == 0) && gHUDVoiceSoundMask == NULL) {
             // 20% chance that T.T decides not to precede his nagging with "No no no!"
             if (gWrongWayNagPrefix || get_random_number_from_range(1, 10) >= 8) {
@@ -2055,59 +2071,59 @@ void render_wrong_way_text(Object_Racer *obj, s32 updateRate) {
             gWrongWayNagTimer = 0;
         }
     }
-    if (gCurrentHud->unk47A[0]) {
-        if (gCurrentHud->unk47A[0] == 1) {
-            if (gCurrentHud->unk47A[1] == 1) {
+    if (gCurrentHud->wrongWay1.unk1A) {
+        if (gCurrentHud->wrongWay1.unk1A == 1) {
+            if (gCurrentHud->wrongWay1.unk1B == 1) {
                 textMoveSpeed = updateRate * 13;
-                gCurrentHud->unk46C += textMoveSpeed;
-                textPosTarget = gCurrentHud->unk47A[2];
-                if (gCurrentHud->unk46C > textPosTarget) {
-                    gCurrentHud->unk46C = textPosTarget;
+                gCurrentHud->wrongWay1.x += textMoveSpeed;
+                textPosTarget = gCurrentHud->wrongWay1.unk1C;
+                if (gCurrentHud->wrongWay1.x > textPosTarget) {
+                    gCurrentHud->wrongWay1.x = textPosTarget;
                 }
-                gCurrentHud->unk48C -= textMoveSpeed;
-                textPosTarget = gCurrentHud->unk49C;
-                if (gCurrentHud->unk48C < textPosTarget) {
-                    gCurrentHud->unk48C = textPosTarget;
+                gCurrentHud->wrongWay2.x -= textMoveSpeed;
+                textPosTarget = gCurrentHud->wrongWay2.unk1C;
+                if (gCurrentHud->wrongWay2.x < textPosTarget) {
+                    gCurrentHud->wrongWay2.x = textPosTarget;
                 }
                 if (obj->unk1FC <= 90) {
-                    gCurrentHud->unk47A[1] = -1;
+                    gCurrentHud->wrongWay1.unk1B = -1;
                     sound_play(SOUND_WHOOSH1, NULL);
                 }
-            } else if (gCurrentHud->unk47A[1] == -1) {
+            } else if (gCurrentHud->wrongWay1.unk1B == -1) {
                 textMoveSpeed = updateRate * 13;
-                gCurrentHud->unk46C -= textMoveSpeed;
-                gCurrentHud->unk48C += textMoveSpeed;
-                if (gCurrentHud->unk46C < -200.0f) {
-                    gCurrentHud->unk47A[0] = 0;
+                gCurrentHud->wrongWay1.x -= textMoveSpeed;
+                gCurrentHud->wrongWay2.x += textMoveSpeed;
+                if (gCurrentHud->wrongWay1.x < -200.0f) {
+                    gCurrentHud->wrongWay1.unk1A = 0;
                 }
             }
             if (!is_game_paused()) {
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk460);
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk480);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->wrongWay1);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->wrongWay2);
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
         }
     } else if (obj->unk1FC > 120) {
-        gCurrentHud->unk47A[0] = 1;
-        gCurrentHud->unk47A[1] = 1;
-        gCurrentHud->unk47A[2] = -31;
-        gCurrentHud->unk49C = 52;
-        gCurrentHud->unk47A[3] = 0;
+        gCurrentHud->wrongWay1.unk1A = 1;
+        gCurrentHud->wrongWay1.unk1B = 1;
+        gCurrentHud->wrongWay1.unk1C = -31;
+        gCurrentHud->wrongWay2.unk1C = 52;
+        gCurrentHud->wrongWay1.unk1D = 0;
         if (gHUDNumPlayers == TWO_PLAYERS) {
-            gCurrentHud->unk47A[2] = -21;
-            gCurrentHud->unk49C = 42;
+            gCurrentHud->wrongWay1.unk1C = -21;
+            gCurrentHud->wrongWay2.unk1C = 42;
         } else if (gHUDNumPlayers > TWO_PLAYERS) {
             if (obj->playerIndex == PLAYER_ONE || obj->playerIndex == PLAYER_THREE) {
-                gCurrentHud->unk47A[2] = -100;
-                gCurrentHud->unk49C = -55;
+                gCurrentHud->wrongWay1.unk1C = -100;
+                gCurrentHud->wrongWay2.unk1C = -55;
             } else {
-                gCurrentHud->unk47A[2] = 59;
-                gCurrentHud->unk49C = 104;
+                gCurrentHud->wrongWay1.unk1C = 59;
+                gCurrentHud->wrongWay2.unk1C = 104;
             }
         }
-        gCurrentHud->unk48C = gCurrentHud->unk49C + 200;
-        gCurrentHud->unk46C = gCurrentHud->unk49C - 200;
+        gCurrentHud->wrongWay2.x = gCurrentHud->wrongWay2.unk1C + 200;
+        gCurrentHud->wrongWay1.x = gCurrentHud->wrongWay2.unk1C - 200;
         sound_play(SOUND_WHOOSH1, NULL);
     }
     sprite_opaque(FALSE);
@@ -2116,8 +2132,8 @@ void render_wrong_way_text(Object_Racer *obj, s32 updateRate) {
 void func_800A5F18(Object_Racer *racer) {
     s32 sp24;
 
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk5E0);
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk600);
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->challengeFinishPosition1);
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->challengeFinishPosition2);
     if (!(get_current_level_race_type() & RACETYPE_CHALLENGE_BATTLE) && (is_in_two_player_adventure() == 0)) {
         get_racer_objects(&sp24);
         if (gNumActivePlayers >= 2 &&
@@ -2125,17 +2141,18 @@ void func_800A5F18(Object_Racer *racer) {
             set_text_font(FONT_COLOURFUL);
             if (sp24 != racer->unk1AC) {
                 set_text_colour(255, 255, 255, 0, 255);
-                draw_text(&gHUDCurrDisplayList, gCurrentHud->unk16C - 40.0f, gCurrentHud->unk170, "RACE",
+                draw_text(&gHUDCurrDisplayList, gCurrentHud->raceTimeNumber.x - 40.0f, gCurrentHud->raceTimeNumber.y,
+                          "RACE", ALIGN_TOP_LEFT);
+                render_timer(gCurrentHud->raceTimeNumber.x, gCurrentHud->raceTimeNumber.y,
+                             gCurrentHud->raceTimeNumber.unk1A, gCurrentHud->raceTimeNumber.unk1B,
+                             gCurrentHud->raceTimeNumber.unk1C, 1);
+                draw_text(&gHUDCurrDisplayList, gCurrentHud->lapTimeText.x - 40.0f, gCurrentHud->lapTimeText.y, "LAP",
                           ALIGN_TOP_LEFT);
-                render_timer(gCurrentHud->unk16C, gCurrentHud->unk170, gCurrentHud->unk17A, gCurrentHud->unk17B,
-                             gCurrentHud->unk17C, 1);
-                draw_text(&gHUDCurrDisplayList, gCurrentHud->unk2EC - 40.0f, gCurrentHud->unk2F0, "LAP",
-                          ALIGN_TOP_LEFT);
-                render_timer(gCurrentHud->unk2EC, gCurrentHud->unk2F0, gCurrentHud->unk2FA, gCurrentHud->unk2FB,
-                             gCurrentHud->unk2FC, 1);
+                render_timer(gCurrentHud->lapTimeText.x, gCurrentHud->lapTimeText.y, gCurrentHud->lapTimeText.unk1A,
+                             gCurrentHud->lapTimeText.unk1B, gCurrentHud->lapTimeText.unk1C, 1);
             } else {
-                draw_text(&gHUDCurrDisplayList, gCurrentHud->unk16C - 35.0f, gCurrentHud->unk170, "DID NOT FINISH",
-                          ALIGN_TOP_LEFT);
+                draw_text(&gHUDCurrDisplayList, gCurrentHud->raceTimeNumber.x - 35.0f, gCurrentHud->raceTimeNumber.y,
+                          "DID NOT FINISH", ALIGN_TOP_LEFT);
             }
         }
     }
@@ -2163,20 +2180,20 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
     raceType = get_current_level_race_type();
     if (is_in_two_player_adventure() && is_postrace_viewport_active() && D_80127189 == 0) {
         if (func_8000E184()) {
-            gCurrentHud->unk5F0 -= 108.0f;
-            gCurrentHud->unk610 -= 108.0f;
-            gCurrentHud->unk170 -= 108.0f;
-            gCurrentHud->unk2F0 -= 108.0f;
+            gCurrentHud->challengeFinishPosition1.y -= 108.0f;
+            gCurrentHud->challengeFinishPosition2.y -= 108.0f;
+            gCurrentHud->raceTimeNumber.y -= 108.0f;
+            gCurrentHud->lapTimeText.y -= 108.0f;
         }
-        gCurrentHud->unk5F0 += 35.0f;
-        gCurrentHud->unk610 += 35.0f;
-        gCurrentHud->unk170 += 35.0f;
-        gCurrentHud->unk2F0 += 35.0f;
+        gCurrentHud->challengeFinishPosition1.y += 35.0f;
+        gCurrentHud->challengeFinishPosition2.y += 35.0f;
+        gCurrentHud->raceTimeNumber.y += 35.0f;
+        gCurrentHud->lapTimeText.y += 35.0f;
         D_800E2770[0].playerIndex = racer->playerIndex;
         D_80127189 = 1;
     }
 
-    switch (gCurrentHud->unk5FA) {
+    switch (gCurrentHud->challengeFinishPosition1.unk1A) {
         case 0:
             if (!(raceType & RACETYPE_CHALLENGE_BATTLE)) {
                 D_800E2770[0].volume = 127;
@@ -2187,34 +2204,34 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
             switch (gHUDNumPlayers) {
                 case 0:
                 case 1:
-                    gCurrentHud->unk5FD = -20;
-                    gCurrentHud->unk17D = -15;
-                    gCurrentHud->unk2FD = -15;
+                    gCurrentHud->challengeFinishPosition1.unk1D = -20;
+                    gCurrentHud->raceTimeNumber.unk1D = -15;
+                    gCurrentHud->lapTimeText.unk1D = -15;
                     break;
                 default:
                     if (racer->playerIndex == PLAYER_ONE || racer->playerIndex == PLAYER_THREE) {
-                        gCurrentHud->unk5FD = -90;
-                        gCurrentHud->unk17D = -85;
-                        gCurrentHud->unk2FD = -85;
+                        gCurrentHud->challengeFinishPosition1.unk1D = -90;
+                        gCurrentHud->raceTimeNumber.unk1D = -85;
+                        gCurrentHud->lapTimeText.unk1D = -85;
                     } else {
-                        gCurrentHud->unk5FD = 55;
-                        gCurrentHud->unk17D = 60;
-                        gCurrentHud->unk2FD = 60;
+                        gCurrentHud->challengeFinishPosition1.unk1D = 55;
+                        gCurrentHud->raceTimeNumber.unk1D = 60;
+                        gCurrentHud->lapTimeText.unk1D = 60;
                     }
                     break;
             }
             if (osTvType == TV_TYPE_PAL) {
-                gCurrentHud->unk5FD -= 4;
-                gCurrentHud->unk17D -= 4;
-                gCurrentHud->unk2FD -= 4;
+                gCurrentHud->challengeFinishPosition1.unk1D -= 4;
+                gCurrentHud->raceTimeNumber.unk1D -= 4;
+                gCurrentHud->lapTimeText.unk1D -= 4;
             }
             if (racer->unk1AC < 4) {
-                gCurrentHud->unk618 = racer->unk1AC - 1;
+                gCurrentHud->challengeFinishPosition2.spriteOffset = racer->unk1AC - 1;
             } else {
-                gCurrentHud->unk618 = 3;
+                gCurrentHud->challengeFinishPosition2.spriteOffset = 3;
             }
-            gCurrentHud->unk5F8 = racer->unk1AC - 1;
-            gCurrentHud->unk5FA = 1;
+            gCurrentHud->challengeFinishPosition1.spriteOffset = racer->unk1AC - 1;
+            gCurrentHud->challengeFinishPosition1.unk1A = 1;
             switch (gNumActivePlayers) {
                 case 2:
                     var_f12 = 360.0f;
@@ -2238,10 +2255,10 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                             var_f2 -= 9.0f;
                         }
                     }
-                    gCurrentHud->unk16C = var_f12;
-                    gCurrentHud->unk170 = var_f0;
-                    gCurrentHud->unk2EC = var_f14;
-                    gCurrentHud->unk2F0 = var_f2;
+                    gCurrentHud->raceTimeNumber.x = var_f12;
+                    gCurrentHud->raceTimeNumber.y = var_f0;
+                    gCurrentHud->lapTimeText.x = var_f14;
+                    gCurrentHud->lapTimeText.y = var_f2;
                     break;
                 case 3:
                 case 4:
@@ -2271,10 +2288,10 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                             var_f2 -= 9.0f;
                         }
                     }
-                    gCurrentHud->unk16C = var_f12;
-                    gCurrentHud->unk170 = var_f0;
-                    gCurrentHud->unk2EC = var_f14;
-                    gCurrentHud->unk2F0 = var_f2;
+                    gCurrentHud->raceTimeNumber.x = var_f12;
+                    gCurrentHud->raceTimeNumber.y = var_f0;
+                    gCurrentHud->lapTimeText.x = var_f14;
+                    gCurrentHud->lapTimeText.y = var_f2;
                     break;
             }
             if (gNumActivePlayers != 1) {
@@ -2288,44 +2305,45 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                     }
                 }
                 get_timestamp_from_frames(fastestLapTime, &minutes, &seconds, &hundredths);
-                gCurrentHud->unk2FA = minutes;
-                gCurrentHud->unk2FB = seconds;
-                gCurrentHud->unk2FC = hundredths;
+                gCurrentHud->lapTimeText.unk1A = minutes;
+                gCurrentHud->lapTimeText.unk1B = seconds;
+                gCurrentHud->lapTimeText.unk1C = hundredths;
                 get_timestamp_from_frames(totalRaceTime, &minutes, &seconds, &hundredths);
-                gCurrentHud->unk17A = minutes;
-                gCurrentHud->unk17B = seconds;
-                gCurrentHud->unk17C = hundredths;
+                gCurrentHud->raceTimeNumber.unk1A = minutes;
+                gCurrentHud->raceTimeNumber.unk1B = seconds;
+                gCurrentHud->raceTimeNumber.unk1C = hundredths;
             }
             break;
         case 1:
             var_a2 = TRUE;
-            if (gCurrentHud->unk5EC < (gCurrentHud->unk5FD - (updateRate * 13)) + 160) {
+            if (gCurrentHud->challengeFinishPosition1.x <
+                (gCurrentHud->challengeFinishPosition1.unk1D - (updateRate * 13)) + 160) {
                 var_v1 = (updateRate * 13);
                 var_a2 = FALSE;
             } else {
-                var_v1 = (gCurrentHud->unk5FD + 160) - gCurrentHud->unk5EC;
+                var_v1 = (gCurrentHud->challengeFinishPosition1.unk1D + 160) - gCurrentHud->challengeFinishPosition1.x;
             }
-            gCurrentHud->unk5EC += var_v1;
-            gCurrentHud->unk60C += var_v1;
+            gCurrentHud->challengeFinishPosition1.x += var_v1;
+            gCurrentHud->challengeFinishPosition2.x += var_v1;
             if (gNumActivePlayers != 1) {
-                if ((gCurrentHud->unk17D + (updateRate * 13) + 160) < gCurrentHud->unk16C) {
+                if ((gCurrentHud->raceTimeNumber.unk1D + (updateRate * 13) + 160) < gCurrentHud->raceTimeNumber.x) {
                     var_a2 = FALSE;
                 } else {
-                    var_v1 = gCurrentHud->unk16C - (gCurrentHud->unk17D + 160);
+                    var_v1 = gCurrentHud->raceTimeNumber.x - (gCurrentHud->raceTimeNumber.unk1D + 160);
                 }
-                gCurrentHud->unk16C -= var_v1;
-                if (gCurrentHud->unk2EC < (gCurrentHud->unk2FD - var_v1) + 160) {
+                gCurrentHud->raceTimeNumber.x -= var_v1;
+                if (gCurrentHud->lapTimeText.x < (gCurrentHud->lapTimeText.unk1D - var_v1) + 160) {
                     var_a2 = FALSE;
                 } else {
-                    var_v1 = (gCurrentHud->unk2FD + 160) - gCurrentHud->unk2EC;
+                    var_v1 = (gCurrentHud->lapTimeText.unk1D + 160) - gCurrentHud->lapTimeText.x;
                 }
-                gCurrentHud->unk2EC += var_v1;
+                gCurrentHud->lapTimeText.x += var_v1;
             }
             temp_v0_4 = 2; // fakematch?
             if (var_a2) {
-                gCurrentHud->unk5FA = temp_v0_4; // fakematch? Why not just set directly to 2?
-                gCurrentHud->unk5FB = -120;
-                gCurrentHud->unk5FC = 0;
+                gCurrentHud->challengeFinishPosition1.unk1A = temp_v0_4; // fakematch? Why not just set directly to 2?
+                gCurrentHud->challengeFinishPosition1.unk1B = -120;
+                gCurrentHud->challengeFinishPosition1.unk1C = 0;
                 if (gHUDVoiceSoundMask == NULL) {
                     if (raceType == RACETYPE_CHALLENGE_BATTLE) {
                         switch (racer->unk1AC) {
@@ -2348,33 +2366,33 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
             func_800A5F18(racer);
             break;
         case 2:
-            gCurrentHud->unk5FB += updateRate;
+            gCurrentHud->challengeFinishPosition1.unk1B += updateRate;
 
-            if (gCurrentHud->unk5FB >= 120) {
-                gCurrentHud->unk5FB = -120;
-                gCurrentHud->unk5FC++;
+            if (gCurrentHud->challengeFinishPosition1.unk1B >= 120) {
+                gCurrentHud->challengeFinishPosition1.unk1B = -120;
+                gCurrentHud->challengeFinishPosition1.unk1C++;
             }
-            if (gCurrentHud->unk5FC == 2) {
+            if (gCurrentHud->challengeFinishPosition1.unk1C == 2) {
                 if (gNumActivePlayers == 1 || is_in_two_player_adventure()) {
-                    gCurrentHud->unk5FA = 3;
+                    gCurrentHud->challengeFinishPosition1.unk1A = 3;
                     sound_play(SOUND_WHOOSH1, NULL);
                 } else {
-                    gCurrentHud->unk5FA = 4;
+                    gCurrentHud->challengeFinishPosition1.unk1A = 4;
                 }
             }
             func_800A5F18(racer);
             break;
         case 3:
             if (raceType == RACETYPE_CHALLENGE_BATTLE) {
-                gCurrentHud->unk5FA = 4;
+                gCurrentHud->challengeFinishPosition1.unk1A = 4;
             } else {
-                gCurrentHud->unk5EC -= (updateRate * 13);
-                gCurrentHud->unk60C -= (updateRate * 13);
-                if (gCurrentHud->unk5EC < -200.0f) {
-                    gCurrentHud->unk5FA = 4;
+                gCurrentHud->challengeFinishPosition1.x -= (updateRate * 13);
+                gCurrentHud->challengeFinishPosition2.x -= (updateRate * 13);
+                if (gCurrentHud->challengeFinishPosition1.x < -200.0f) {
+                    gCurrentHud->challengeFinishPosition1.unk1A = 4;
                 }
-                gCurrentHud->unk16C += (updateRate * 13);
-                gCurrentHud->unk2EC += (updateRate * 13);
+                gCurrentHud->raceTimeNumber.x += (updateRate * 13);
+                gCurrentHud->lapTimeText.x += (updateRate * 13);
             }
             func_800A5F18(racer);
             break;
@@ -2382,8 +2400,8 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
             if (racer->playerIndex == D_800E2770[0].playerIndex) {
                 D_800E2770[0].unk3 = -1;
             }
-            gCurrentHud->unk5FA = 5;
-            gCurrentHud->unk5FB = 0;
+            gCurrentHud->challengeFinishPosition1.unk1A = 5;
+            gCurrentHud->challengeFinishPosition1.unk1B = 0;
             func_800A5F18(racer);
             break;
         default:
@@ -2417,68 +2435,68 @@ void play_time_trial_end_message(s16 *playerID) {
 void render_time_trial_finish(Object_Racer *racer, s32 updateRate) {
     s32 temp;
 
-    switch (gCurrentHud->unk1DA) {
+    switch (gCurrentHud->raceEndFinish.unk1A) {
         case 0:
             D_800E2770->volume = 127;
             D_800E2770->unk3 = 0;
             D_800E2770->playerIndex = (s8) racer->playerIndex;
             sound_play(SOUND_WHOOSH1, NULL);
             if (gHUDNumPlayers == 0 || gHUDNumPlayers == 1) {
-                gCurrentHud->unk1CC = -200.0f;
-                gCurrentHud->unk1DD = 0;
+                gCurrentHud->raceEndFinish.x = -200.0f;
+                gCurrentHud->raceEndFinish.unk1D = 0;
             } else {
                 if ((racer->playerIndex == 0) || (racer->playerIndex == 2)) {
-                    gCurrentHud->unk1DD = -80;
-                    gCurrentHud->unk1CC = -200.0f;
+                    gCurrentHud->raceEndFinish.unk1D = -80;
+                    gCurrentHud->raceEndFinish.x = -200.0f;
                 } else {
-                    gCurrentHud->unk1DD = 80;
-                    gCurrentHud->unk1CC = -40.0f;
+                    gCurrentHud->raceEndFinish.unk1D = 80;
+                    gCurrentHud->raceEndFinish.x = -40.0f;
                 }
             }
-            gCurrentHud->unk1DA = 1;
+            gCurrentHud->raceEndFinish.unk1A = 1;
             return;
         case 1:
             temp = (updateRate * 13);
-            if (gCurrentHud->unk1CC < gCurrentHud->unk1DD - temp) {
-                gCurrentHud->unk1CC += temp;
+            if (gCurrentHud->raceEndFinish.x < gCurrentHud->raceEndFinish.unk1D - temp) {
+                gCurrentHud->raceEndFinish.x += temp;
             } else {
-                gCurrentHud->unk1CC = gCurrentHud->unk1DD;
-                gCurrentHud->unk1DA = 2;
-                gCurrentHud->unk1DB = -120;
+                gCurrentHud->raceEndFinish.x = gCurrentHud->raceEndFinish.unk1D;
+                gCurrentHud->raceEndFinish.unk1A = 2;
+                gCurrentHud->raceEndFinish.unk1B = -120;
                 if (gHUDVoiceSoundMask == NULL && D_80126D71 == 0) {
                     play_time_trial_end_message(&racer->playerIndex);
                 }
             }
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk1C0);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->raceEndFinish);
             return;
         case 2:
-            gCurrentHud->unk1DB += updateRate;
-            if (gCurrentHud->unk1DB >= 120) {
-                gCurrentHud->unk1DA = 3;
+            gCurrentHud->raceEndFinish.unk1B += updateRate;
+            if (gCurrentHud->raceEndFinish.unk1B >= 120) {
+                gCurrentHud->raceEndFinish.unk1A = 3;
                 if ((gHUDNumPlayers == 0) || (gHUDNumPlayers == 1)) {
-                    gCurrentHud->unk1DD = 56;
+                    gCurrentHud->raceEndFinish.unk1D = 56;
                 } else {
                     if ((racer->playerIndex == 0) || (racer->playerIndex == 2)) {
-                        gCurrentHud->unk1DD = 56;
+                        gCurrentHud->raceEndFinish.unk1D = 56;
                     } else {
-                        gCurrentHud->unk1DD = -40;
+                        gCurrentHud->raceEndFinish.unk1D = -40;
                     }
                 }
                 sound_play(SOUND_WHOOSH1, NULL);
             }
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk1C0);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->raceEndFinish);
             return;
         case 3:
-            gCurrentHud->unk1CC -= updateRate * 13;
-            if (gCurrentHud->unk1CC < gCurrentHud->unk1DD) {
-                gCurrentHud->unk1DA = 4;
+            gCurrentHud->raceEndFinish.x -= updateRate * 13;
+            if (gCurrentHud->raceEndFinish.x < gCurrentHud->raceEndFinish.unk1D) {
+                gCurrentHud->raceEndFinish.unk1A = 4;
             }
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk1C0);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->raceEndFinish);
             return;
         case 4:
             D_800E2770->unk3 = -1;
-            gCurrentHud->unk1DA = 5;
-            gCurrentHud->unk1DB = 0;
+            gCurrentHud->raceEndFinish.unk1A = 5;
+            gCurrentHud->raceEndFinish.unk1B = 0;
             return;
         default:
             return;
@@ -2502,14 +2520,14 @@ void render_balloon_count(UNUSED Object_Racer *racer) {
         balloonTickTimer = 840;
     }
     if (settings->cutsceneFlags & CUTSCENE_ADVENTURE_TWO) {
-        gCurrentHud->unk266 = 69; // Use the adventure two balloon sprite.
+        gCurrentHud->balloonCountIcon.spriteID = HUD_SPRITE_BALLOON_DIAMOND; // Use the adventure two balloon sprite.
     }
     if (get_cutscene_id() == 10 && get_balloon_cutscene_timer() < balloonTickTimer) {
         balloonCount = *settings->balloonsPtr - 1;
     } else {
         balloonCount = *settings->balloonsPtr;
         if (get_cutscene_id() == 10) {
-            if (get_balloon_cutscene_timer() < balloonTickTimer + 8 && D_80126D44 == 0) {
+            if (get_balloon_cutscene_timer() < balloonTickTimer + 8 && D_80126D44 == NULL) {
                 sound_play(SOUND_HUD_LAP_TICK, &D_80126D44);
             }
         }
@@ -2519,21 +2537,22 @@ void render_balloon_count(UNUSED Object_Racer *racer) {
     }
     div = balloonCount / 10;
     if (div != 0) {
-        gCurrentHud->unk2B8 = div;
-        gCurrentHud->unk2D8 = balloonCount % 10;
-        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk2C0);
+        gCurrentHud->balloonCountNumber1.spriteOffset = div;
+        gCurrentHud->balloonCountNumber2.spriteOffset = balloonCount % 10;
+        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->balloonCountNumber2);
     } else {
-        gCurrentHud->unk2B8 = balloonCount % 10;
+        gCurrentHud->balloonCountNumber1.spriteOffset = balloonCount % 10;
     }
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk2A0);
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->balloonCountNumber1);
     set_viewport_tv_type(TV_TYPE_NTSC);
     if (osTvType == TV_TYPE_PAL) {
         sprite_opaque(TRUE);
     }
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk260);
+    // gCurrentHud->balloonCountIcon.scale += 0.001f;
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->balloonCountIcon);
     sprite_opaque(FALSE);
     set_viewport_tv_type(TV_TYPE_PAL);
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk280);
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->balloonCountX);
 }
 
 /**
@@ -2576,69 +2595,70 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
     if (racer->raceFinished == FALSE) {
         set_viewport_tv_type(TV_TYPE_NTSC);
         temp_a0 = (racer->balloon_type * 3) + (racer->balloon_level);
-        if (gCurrentHud->unk5D != racer->balloon_level) {
+        if (gCurrentHud->weaponDisplay.unk1D != racer->balloon_level) {
             if (racer->balloon_level == 0) {
-                gCurrentHud->unk5C = 120;
+                gCurrentHud->weaponDisplay.unk1C = 120;
             } else if (gNumActivePlayers == 1) {
-                gCurrentHud->unk5C = 0;
+                gCurrentHud->weaponDisplay.unk1C = 0;
             } else {
-                gCurrentHud->unk5C = 120;
+                gCurrentHud->weaponDisplay.unk1C = 120;
             }
-            gCurrentHud->unk5D = racer->balloon_level;
+            gCurrentHud->weaponDisplay.unk1D = racer->balloon_level;
         }
         if (racer->balloon_quantity > 0) {
-            if (gCurrentHud->unk5B < 16 && racer->unk170 == 0) {
-                gCurrentHud->unk44 = gCurrentHud->unk5B << 12;
-                gCurrentHud->unk48 = (gCurrentHud->unk5B * 0.04687) + 0.25;
+            if (gCurrentHud->weaponDisplay.unk1B < 16 && racer->unk170 == 0) {
+                gCurrentHud->weaponDisplay.z_rotation = gCurrentHud->weaponDisplay.unk1B << 12;
+                gCurrentHud->weaponDisplay.scale = (gCurrentHud->weaponDisplay.unk1B * 0.04687) + 0.25;
             } else {
-                gCurrentHud->unk44 = 0;
-                gCurrentHud->unk48 = 1.0f;
+                gCurrentHud->weaponDisplay.z_rotation = 0;
+                gCurrentHud->weaponDisplay.scale = 1.0f;
             }
-            gCurrentHud->unk58 = temp_a0;
-            gCurrentHud->unk5B += updateRate;
-            if (gCurrentHud->unk5B > 16) {
-                gCurrentHud->unk5B = 16;
-                gCurrentHud->unk5C += updateRate;
-                if (gCurrentHud->unk5C > 120) {
-                    gCurrentHud->unk5C = 120;
+            gCurrentHud->weaponDisplay.spriteOffset = temp_a0;
+            gCurrentHud->weaponDisplay.unk1B += updateRate;
+            if (gCurrentHud->weaponDisplay.unk1B > 16) {
+                gCurrentHud->weaponDisplay.unk1B = 16;
+                gCurrentHud->weaponDisplay.unk1C += updateRate;
+                if (gCurrentHud->weaponDisplay.unk1C > 120) {
+                    gCurrentHud->weaponDisplay.unk1C = 120;
                 } else if (gHUDNumPlayers == ONE_PLAYER) {
-                    gCurrentHud->unk48 += 0.18 * sins_f(((f32) gCurrentHud->unk5C * 682.6583 * 4.0));
+                    gCurrentHud->weaponDisplay.scale +=
+                        0.18 * sins_f(((f32) gCurrentHud->weaponDisplay.unk1C * 682.6583 * 4.0));
                 }
             }
             if (gHUDNumPlayers > ONE_PLAYER) {
-                gCurrentHud->unk48 *= 0.75;
+                gCurrentHud->weaponDisplay.scale *= 0.75;
             }
-            if (gCurrentHud->unk48 != 1.0) {
+            if (gCurrentHud->weaponDisplay.scale != 1.0) {
                 sprite_opaque(TRUE);
             }
-            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk40);
+            func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->weaponDisplay);
             sprite_opaque(FALSE);
             if (racer->balloon_quantity > 3) {
-                gCurrentHud->unk63A = -128;
+                gCurrentHud->weaponQuantity.unk1A = -128;
             }
             if (racer->balloon_quantity < 3) {
-                gCurrentHud->unk63A -= updateRate;
+                gCurrentHud->weaponQuantity.unk1A -= updateRate;
             }
             if (racer->balloon_quantity >= 3 ||
-                ((((gCurrentHud->unk63A + 128) % 32) < 20) && racer->balloon_quantity != 1)) {
+                ((((gCurrentHud->weaponQuantity.unk1A + 128) % 32) < 20) && racer->balloon_quantity != 1)) {
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 160);
-                gCurrentHud->unk638 = racer->balloon_quantity - 1;
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk620);
+                gCurrentHud->weaponQuantity.spriteOffset = racer->balloon_quantity - 1;
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->weaponQuantity);
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
             }
         } else {
-            if (gCurrentHud->unk5B > 0) {
-                gCurrentHud->unk44 = gCurrentHud->unk5B << 12;
-                gCurrentHud->unk48 = (gCurrentHud->unk5B * 0.04687) + 0.25;
-                gCurrentHud->unk5B -= updateRate;
-                gCurrentHud->unk58 = temp_a0;
-                if (gCurrentHud->unk5B < 0) {
-                    gCurrentHud->unk5B = 0;
+            if (gCurrentHud->weaponDisplay.unk1B > 0) {
+                gCurrentHud->weaponDisplay.z_rotation = gCurrentHud->weaponDisplay.unk1B << 12;
+                gCurrentHud->weaponDisplay.scale = (gCurrentHud->weaponDisplay.unk1B * 0.04687) + 0.25;
+                gCurrentHud->weaponDisplay.unk1B -= updateRate;
+                gCurrentHud->weaponDisplay.spriteOffset = temp_a0;
+                if (gCurrentHud->weaponDisplay.unk1B < 0) {
+                    gCurrentHud->weaponDisplay.unk1B = 0;
                 }
                 if (gHUDNumPlayers != ONE_PLAYER) {
-                    gCurrentHud->unk48 /= 2;
+                    gCurrentHud->weaponDisplay.scale /= 2;
                 }
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk40);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->weaponDisplay);
             }
         }
         gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -2651,24 +2671,21 @@ void render_weapon_hud(Object *obj, s32 updateRate) {
  */
 void render_magnet_reticle(Object *racerObj) {
     unk80068514_arg4 *entry;
-    unk80126CDC *hud;
+    HudElement *hud;
     Object_Racer *racer;
-    s32 hudElementIndex;
 
     if (entry) {} // Fakematch
     racer = &racerObj->unk64->racer;
     if (racer->magnetTargetObj != NULL && get_current_viewport() == racer->playerIndex) {
-        hud = gCurrentHud;
-        hud->unk22C = racer->magnetTargetObj->segment.trans.x_position;
-        hud->unk230 = racer->magnetTargetObj->segment.trans.y_position;
-        hud->unk234 = racer->magnetTargetObj->segment.trans.z_position;
-        hudElementIndex = hud->unk226;
-        entry = gAssetHudElements->entry[hudElementIndex];
+        hud = &gCurrentHud->magnetReticle;
+        hud->x = racer->magnetTargetObj->segment.trans.x_position;
+        hud->y = racer->magnetTargetObj->segment.trans.y_position;
+        hud->z = racer->magnetTargetObj->segment.trans.z_position;
+        entry = gAssetHudElements->entry[hud->spriteID];
         if (entry == NULL) {
             return;
         }
-        gAssetHudElementStaleCounter[hudElementIndex] = 0;
-        hud = (unk80126CDC *) &hud->unk220;
+        gAssetHudElementStaleCounter[hud->spriteID] = 0;
         func_80066CDC(&gHUDCurrDisplayList, &gHUDCurrMatrix);
         matrix_world_origin(&gHUDCurrDisplayList, &gHUDCurrMatrix);
         render_sprite_billboard(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (Object *) hud, entry,
@@ -2692,7 +2709,7 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
     if (!(gHUDNumPlayers != ONE_PLAYER && D_800E2794[gHUDNumPlayers][racer->playerIndex] != 1) ||
         (gHUDNumPlayers > ONE_PLAYER && racer->lap > 0 && racer->lap_times[racer->lap] < 180)) {
         if (racer->raceFinished == FALSE) {
-            timerHideCounter = gCurrentHud->unk15A + 127;
+            timerHideCounter = gCurrentHud->raceTimeLabel.unk1A + 127;
             if (racer->lap > 0 && racer->lap_times[racer->lap] < 180 && racer->lap < gHudLevelHeader->laps) {
                 stopwatchTimer = racer->lap_times[racer->lap - 1];
                 countingDown = TRUE;
@@ -2705,11 +2722,11 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
                     stopwatchTimer += racer->lap_times[i];
                 }
                 countingDown = stopwatchTimer == 0 || racer->raceFinished || is_game_paused();
-                gCurrentHud->unk15A = -127;
+                gCurrentHud->raceTimeLabel.unk1A = -127;
                 timerHideCounter = 0;
             }
             if (gHUDNumPlayers == ONE_PLAYER) {
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk140);
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->raceTimeLabel);
             }
             if (normalise_time(36000) < stopwatchTimer) {
                 stopwatchTimer = normalise_time(36000);
@@ -2721,7 +2738,7 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
                 } else {
                     timerHideCounter = 0;
                 }
-                gCurrentHud->unk15A = timerHideCounter - 127;
+                gCurrentHud->raceTimeLabel.unk1A = timerHideCounter - 127;
                 if ((timerHideCounter % 30) > 20) {
                     gHideRaceTimer = TRUE;
                     return;
@@ -2734,17 +2751,19 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
                     }
                 }
             } else {
-                hundredths = gCurrentHud->unk15B + ((hundredths / 10) * 10);
-                gCurrentHud->unk15B = gCurrentHud->unk15B + 1;
-                if (gCurrentHud->unk15B >= 10) {
-                    gCurrentHud->unk15B = 0;
+                hundredths = gCurrentHud->raceTimeLabel.unk1B + ((hundredths / 10) * 10);
+                gCurrentHud->raceTimeLabel.unk1B = gCurrentHud->raceTimeLabel.unk1B + 1;
+                if (gCurrentHud->raceTimeLabel.unk1B >= 10) {
+                    gCurrentHud->raceTimeLabel.unk1B = 0;
                 }
             }
 
             if (gNumActivePlayers == 1) {
-                render_timer(gCurrentHud->unk16C, gCurrentHud->unk170, minutes, seconds, hundredths, 0);
+                render_timer(gCurrentHud->raceTimeNumber.x, gCurrentHud->raceTimeNumber.y, minutes, seconds, hundredths,
+                             FALSE);
             } else {
-                render_timer(gCurrentHud->unk16C, gCurrentHud->unk170, minutes, seconds, hundredths, 1);
+                render_timer(gCurrentHud->raceTimeNumber.x, gCurrentHud->raceTimeNumber.y, minutes, seconds, hundredths,
+                             TRUE);
             }
             gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
         }
@@ -2754,9 +2773,9 @@ void render_race_time(Object_Racer *racer, s32 updateRate) {
 /**
  * Render a time in minutes, seconds and hundredths of a second.
  */
-void render_timer(s32 arg0, s32 arg1, s32 minutes, s32 seconds, s32 hundredths, s32 someBool) {
+void render_timer(s32 x, s32 y, s32 minutes, s32 seconds, s32 hundredths, s32 smallFont) {
     UNUSED s32 pad;
-    unk80126CDC_entry entry2;
+    HudElementBase entry2;
     s32 unk14;
     s32 unk10;
     s32 unkC;
@@ -2764,60 +2783,60 @@ void render_timer(s32 arg0, s32 arg1, s32 minutes, s32 seconds, s32 hundredths, 
     s32 var_s4;
     s32 unk0;
 
-    entry2.unkC = arg0;
-    entry2.unk10 = arg1;
-    entry2.unk4 = 0;
-    entry2.unk2 = 0;
-    entry2.unk0 = 0;
-    entry2.unk8 = 1.0f;
-    entry2.unk14 = 0.0f;
-    if (!someBool) {
+    entry2.x = x;
+    entry2.y = y;
+    entry2.z_rotation = 0;
+    entry2.x_rotation = 0;
+    entry2.y_rotation = 0;
+    entry2.scale = 1.0f;
+    entry2.z = 0.0f;
+    if (!smallFont) {
         unk14 = 11;
         unk10 = 10;
         unkC = 10;
         unk8 = 2;
-        var_s4 = 9;
-        unk0 = 11;
+        var_s4 = HUD_ASSET_9;
+        unk0 = HUD_ASSET_11;
     } else {
         unk14 = 10;
         unk10 = 8;
         unkC = 7;
         unk8 = 0;
-        var_s4 = 10;
-        unk0 = 12;
+        var_s4 = HUD_ASSET_10;
+        unk0 = HUD_ASSET_12;
     }
-    entry2.unk6 = var_s4;
-    entry2.unk18 = minutes / 10;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &entry2);
-    entry2.unkC += unk14;
-    entry2.unk18 = minutes % 10;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &entry2);
-    entry2.unk18 = 0;
-    entry2.unkC += unk10;
-    entry2.unk10 += unk8;
-    entry2.unk6 = unk0;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &entry2);
-    entry2.unk6 = var_s4;
-    entry2.unkC += unkC;
-    entry2.unk10 -= unk8;
-    entry2.unk18 = seconds / 10;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &entry2);
-    entry2.unkC += unk14;
-    entry2.unk18 = seconds % 10;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &entry2);
-    entry2.unk18 = 0;
-    entry2.unkC += unk10;
-    entry2.unk10 += unk8;
-    entry2.unk6 = (s16) unk0;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &entry2);
-    entry2.unk6 = var_s4;
-    entry2.unkC += unkC;
-    entry2.unk10 -= unk8;
-    entry2.unk18 = hundredths / 10;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &entry2);
-    entry2.unkC += unk14;
-    entry2.unk18 = hundredths % 10;
-    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (unk80126CDC **) &entry2);
+    entry2.spriteID = var_s4;
+    entry2.spriteOffset = minutes / 10;
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
+    entry2.x += unk14;
+    entry2.spriteOffset = minutes % 10;
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
+    entry2.spriteOffset = 0;
+    entry2.x += unk10;
+    entry2.y += unk8;
+    entry2.spriteID = unk0;
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
+    entry2.spriteID = var_s4;
+    entry2.x += unkC;
+    entry2.y -= unk8;
+    entry2.spriteOffset = seconds / 10;
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
+    entry2.x += unk14;
+    entry2.spriteOffset = seconds % 10;
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
+    entry2.spriteOffset = 0;
+    entry2.x += unk10;
+    entry2.y += unk8;
+    entry2.spriteID = unk0;
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
+    entry2.spriteID = var_s4;
+    entry2.x += unkC;
+    entry2.y -= unk8;
+    entry2.spriteOffset = hundredths / 10;
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
+    entry2.x += unk14;
+    entry2.spriteOffset = hundredths % 10;
+    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, (HudElement *) &entry2);
 }
 
 /**
@@ -2901,8 +2920,8 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     gAssetHudElementStaleCounter[HUD_ELEMENT_UNK_11] = 0;
     D_80127180 = 0;
 
-    if (D_80126CD3 & 2) {
-        mapOpacity = 255.0f - ((D_80126CD0 * 255.0f) / D_8012718B);
+    if (gMinimapXlu & 2) {
+        mapOpacity = 255.0f - ((gMinimapOpacity * 255.0f) / gMinimapOpacityTarget);
     } else {
         mapOpacity = 255;
     }
@@ -2942,26 +2961,26 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     }
                 }
                 if (tempVar4 != NULL) {
-                    temp_s0 = gCurrentHud->unk64C;
-                    temp_s1 = gCurrentHud->unk650;
-                    spF4 = gCurrentHud->unk66C;
-                    spF0 = gCurrentHud->unk670;
-                    gCurrentHud->unk64C = 225.0f;
-                    gCurrentHud->unk66C = 221.0f;
-                    gCurrentHud->unk670 = 197.0f;
-                    gCurrentHud->unk650 = 165.0f;
+                    temp_s0 = gCurrentHud->challengePortrait.x;
+                    temp_s1 = gCurrentHud->challengePortrait.y;
+                    spF4 = gCurrentHud->eggChallengeIcon.x;
+                    spF0 = gCurrentHud->eggChallengeIcon.y;
+                    gCurrentHud->challengePortrait.x = 225.0f;
+                    gCurrentHud->eggChallengeIcon.x = 221.0f;
+                    gCurrentHud->eggChallengeIcon.y = 197.0f;
+                    gCurrentHud->challengePortrait.y = 165.0f;
                     if (osTvType == TV_TYPE_PAL) {
-                        gCurrentHud->unk64C -= 4.0f;
-                        gCurrentHud->unk66C -= 4.0f;
-                        gCurrentHud->unk650 *= 1.1;
-                        gCurrentHud->unk670 *= 1.1;
+                        gCurrentHud->challengePortrait.x -= 4.0f;
+                        gCurrentHud->eggChallengeIcon.x -= 4.0f;
+                        gCurrentHud->challengePortrait.y *= 1.1;
+                        gCurrentHud->eggChallengeIcon.y *= 1.1;
                     }
                     func_800A19A4(tempVar4, updateRate);
                     gHudColour = COLOUR_RGBA32(255, 255, 255, 254);
-                    gCurrentHud->unk64C = temp_s0;
-                    gCurrentHud->unk650 = temp_s1;
-                    gCurrentHud->unk66C = spF4;
-                    gCurrentHud->unk670 = spF0;
+                    gCurrentHud->challengePortrait.x = temp_s0;
+                    gCurrentHud->challengePortrait.y = temp_s1;
+                    gCurrentHud->eggChallengeIcon.x = spF4;
+                    gCurrentHud->eggChallengeIcon.y = spF0;
                 }
             }
         }
@@ -2986,62 +3005,63 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 }
                 if (curRacerObj != NULL) {
                     gCurrentHud = gPlayerHud[PLAYER_FOUR];
-                    spE4 = gCurrentHud->unk64C;
-                    spE0 = gCurrentHud->unk650;
+                    spE4 = gCurrentHud->challengePortrait.x;
+                    spE0 = gCurrentHud->challengePortrait.y;
                     sprite_opaque(FALSE);
                     set_ortho_matrix_view(&gHUDCurrDisplayList, &gHUDCurrMatrix);
                     func_80068508(TRUE);
-                    gCurrentHud->unk64C = 225.0f;
+                    gCurrentHud->challengePortrait.x = 225.0f;
                     if (osTvType == TV_TYPE_PAL) {
-                        gCurrentHud->unk650 = 181.5f;
+                        gCurrentHud->challengePortrait.y = 181.5f;
                     } else {
-                        gCurrentHud->unk650 = 165.0f;
+                        gCurrentHud->challengePortrait.y = 165.0f;
                     }
                     if (osTvType == TV_TYPE_PAL) {
-                        var_a0_5 = (66.0f - gCurrentHud->unk36C) - 4.0f;
-                        temp = -114.0f - gCurrentHud->unk370;
+                        var_a0_5 = (66.0f - gCurrentHud->bananaCountIconStatic.x) - 4.0f;
+                        temp = -114.0f - gCurrentHud->bananaCountIconStatic.y;
                     } else {
-                        var_a0_5 = 66.0f - gCurrentHud->unk36C;
-                        temp = -100.0f - gCurrentHud->unk370;
+                        var_a0_5 = 66.0f - gCurrentHud->bananaCountIconStatic.x;
+                        temp = -100.0f - gCurrentHud->bananaCountIconStatic.y;
                     }
-                    gCurrentHud->unk36C += var_a0_5;
-                    gCurrentHud->unk370 += temp;
-                    gCurrentHud->unkEC += var_a0_5;
-                    gCurrentHud->unkF0 += temp;
-                    gCurrentHud->unk38C += var_a0_5;
-                    gCurrentHud->unk390 += temp;
-                    gCurrentHud->unk10C += var_a0_5;
-                    gCurrentHud->unk110 -= temp + 1;
-                    gCurrentHud->unk12C += var_a0_5;
-                    gCurrentHud->unk130 -= temp + 1;
-                    gCurrentHud->unk24C += var_a0_5;
-                    gCurrentHud->unk250 -= temp;
-                    gCurrentHud->unk646 = curRacerObj->characterId + 56;
+                    gCurrentHud->bananaCountIconStatic.x += var_a0_5;
+                    gCurrentHud->bananaCountIconStatic.y += temp;
+                    gCurrentHud->bananaCountIconSpin.x += var_a0_5;
+                    gCurrentHud->bananaCountIconSpin.y += temp;
+                    gCurrentHud->bananaCountSparkle.x += var_a0_5;
+                    gCurrentHud->bananaCountSparkle.y += temp;
+                    gCurrentHud->bananaCountNumber1.x += var_a0_5;
+                    gCurrentHud->bananaCountNumber1.y -= temp + 1;
+                    gCurrentHud->bananaCountNumber2.x += var_a0_5;
+                    gCurrentHud->bananaCountNumber2.y -= temp + 1;
+                    gCurrentHud->bananaCountX.x += var_a0_5;
+                    gCurrentHud->bananaCountX.y -= temp;
+                    gCurrentHud->challengePortrait.spriteID = curRacerObj->characterId + HUD_SPRITE_PORTRAIT;
                     if (osTvType == TV_TYPE_PAL) {
-                        gCurrentHud->unk64C -= 4.0f;
-                        gCurrentHud->unk66C -= 4.0f;
+                        gCurrentHud->challengePortrait.x -= 4.0f;
+                        gCurrentHud->eggChallengeIcon.x -= 4.0f;
                     }
                     D_80126CD5 = TRUE;
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk640);
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
+                                  &gCurrentHud->challengePortrait);
                     D_80126CD5 = FALSE;
-                    if (gCurrentHud->unkFB == 0 && curRacerObj->bananas == 10) {
-                        gCurrentHud->unkFB = curRacerObj->bananas;
+                    if (gCurrentHud->bananaCountIconSpin.unk1B == 0 && curRacerObj->bananas == 10) {
+                        gCurrentHud->bananaCountIconSpin.unk1B = curRacerObj->bananas;
                     }
                     render_racer_bananas(curRacerObj, updateRate);
-                    gCurrentHud->unk36C -= var_a0_5;
-                    gCurrentHud->unk370 -= temp;
-                    gCurrentHud->unkEC -= var_a0_5;
-                    gCurrentHud->unkF0 -= temp;
-                    gCurrentHud->unk38C -= var_a0_5;
-                    gCurrentHud->unk390 -= temp;
-                    gCurrentHud->unk10C -= var_a0_5;
-                    gCurrentHud->unk110 += temp + 1;
-                    gCurrentHud->unk12C -= var_a0_5;
-                    gCurrentHud->unk130 += temp + 1;
-                    gCurrentHud->unk24C -= var_a0_5;
-                    gCurrentHud->unk250 += temp;
-                    gCurrentHud->unk64C = spE4;
-                    gCurrentHud->unk650 = spE0;
+                    gCurrentHud->bananaCountIconStatic.x -= var_a0_5;
+                    gCurrentHud->bananaCountIconStatic.y -= temp;
+                    gCurrentHud->bananaCountIconSpin.x -= var_a0_5;
+                    gCurrentHud->bananaCountIconSpin.y -= temp;
+                    gCurrentHud->bananaCountSparkle.x -= var_a0_5;
+                    gCurrentHud->bananaCountSparkle.y -= temp;
+                    gCurrentHud->bananaCountNumber1.x -= var_a0_5;
+                    gCurrentHud->bananaCountNumber1.y += temp + 1;
+                    gCurrentHud->bananaCountNumber2.x -= var_a0_5;
+                    gCurrentHud->bananaCountNumber2.y += temp + 1;
+                    gCurrentHud->bananaCountX.x -= var_a0_5;
+                    gCurrentHud->bananaCountX.y += temp;
+                    gCurrentHud->challengePortrait.x = spE4;
+                    gCurrentHud->challengePortrait.y = spE0;
                     sprite_opaque(TRUE);
                     reset_render_settings(&gHUDCurrDisplayList);
                     func_80068508(FALSE);
@@ -3050,26 +3070,26 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
         }
     } else if (gHudLevelHeader->race_type == RACETYPE_CHALLENGE_BANANAS) {
         if (gNumActivePlayers == 2 && gHudToggleSettings[gHUDNumPlayers] == 0) {
-            temp_s0_2 = gCurrentHud->unk64C;
-            temp_s1_2 = gCurrentHud->unk650;
-            temp_s3 = gCurrentHud->unk40C;
-            spBC = gCurrentHud->unk410;
+            temp_s0_2 = gCurrentHud->challengePortrait.x;
+            temp_s1_2 = gCurrentHud->challengePortrait.y;
+            temp_s3 = gCurrentHud->treasureMetre.x;
+            spBC = gCurrentHud->treasureMetre.y;
             racerGroup = get_racer_objects(&racerCount);
             for (sp144 = 0; sp144 < racerCount; sp144++) {
                 someRacer = (Object_Racer *) racerGroup[sp144]->unk64;
                 render_treasure_hud(someRacer);
                 if (osTvType == TV_TYPE_PAL) {
-                    gCurrentHud->unk650 += 66.0;
-                    gCurrentHud->unk410 += 66.0;
+                    gCurrentHud->challengePortrait.y += 66.0;
+                    gCurrentHud->treasureMetre.y += 66.0;
                 } else {
-                    gCurrentHud->unk650 += 55.0f;
-                    gCurrentHud->unk410 += 55.0f;
+                    gCurrentHud->challengePortrait.y += 55.0f;
+                    gCurrentHud->treasureMetre.y += 55.0f;
                 }
             }
-            gCurrentHud->unk64C = temp_s0_2;
-            gCurrentHud->unk650 = temp_s1_2;
-            gCurrentHud->unk40C = temp_s3;
-            gCurrentHud->unk410 = spBC;
+            gCurrentHud->challengePortrait.x = temp_s0_2;
+            gCurrentHud->challengePortrait.y = temp_s1_2;
+            gCurrentHud->treasureMetre.x = temp_s3;
+            gCurrentHud->treasureMetre.y = spBC;
         } else if (gNumActivePlayers == 3) {
             tempVar4 = NULL;
             for (tempVar2 = 0; tempVar2 < objectCount; tempVar2++) {
@@ -3078,27 +3098,27 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 }
             }
             if (tempVar4 != NULL) {
-                temp_s0_3 = gCurrentHud->unk64C;
-                temp_s1_3 = gCurrentHud->unk650;
-                temp_f16 = gCurrentHud->unk40C;
-                temp_f6 = gCurrentHud->unk410;
-                gCurrentHud->unk64C = 225.0f;
-                gCurrentHud->unk650 = 165.0f;
-                gCurrentHud->unk40C = 209.0f;
-                gCurrentHud->unk410 = 193.0f;
+                temp_s0_3 = gCurrentHud->challengePortrait.x;
+                temp_s1_3 = gCurrentHud->challengePortrait.y;
+                temp_f16 = gCurrentHud->treasureMetre.x;
+                temp_f6 = gCurrentHud->treasureMetre.y;
+                gCurrentHud->challengePortrait.x = 225.0f;
+                gCurrentHud->challengePortrait.y = 165.0f;
+                gCurrentHud->treasureMetre.x = 209.0f;
+                gCurrentHud->treasureMetre.y = 193.0f;
                 if (osTvType == TV_TYPE_PAL) {
-                    gCurrentHud->unk64C -= 4.0f;
-                    gCurrentHud->unk40C -= 4.0f;
-                    gCurrentHud->unk650 *= 1.1;
-                    gCurrentHud->unk410 *= 1.1;
-                    gCurrentHud->unk650 = (s32) gCurrentHud->unk650;
-                    gCurrentHud->unk410 = (s32) gCurrentHud->unk410;
+                    gCurrentHud->challengePortrait.x -= 4.0f;
+                    gCurrentHud->treasureMetre.x -= 4.0f;
+                    gCurrentHud->challengePortrait.y *= 1.1;
+                    gCurrentHud->treasureMetre.y *= 1.1;
+                    gCurrentHud->challengePortrait.y = (s32) gCurrentHud->challengePortrait.y;
+                    gCurrentHud->treasureMetre.y = (s32) gCurrentHud->treasureMetre.y;
                 }
                 render_treasure_hud(tempVar4);
-                gCurrentHud->unk64C = temp_s0_3;
-                gCurrentHud->unk650 = temp_s1_3;
-                gCurrentHud->unk40C = temp_f16;
-                gCurrentHud->unk410 = temp_f6;
+                gCurrentHud->challengePortrait.x = temp_s0_3;
+                gCurrentHud->challengePortrait.y = temp_s1_3;
+                gCurrentHud->treasureMetre.x = temp_f16;
+                gCurrentHud->treasureMetre.y = temp_f6;
             }
         }
     }
@@ -3162,7 +3182,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 gMinimapScreenY *= 1.2;
             }
             sprite_opaque(FALSE);
-            objTrans.trans.x_position = gMinimapScreenX + D_80126D24 + D_80126D28;
+            objTrans.trans.x_position = gMinimapScreenX + gHudOffsetX + gHudBounceX;
             objTrans.trans.y_position = gMinimapScreenY;
             if (osTvType == TV_TYPE_PAL) {
                 objTrans.trans.x_position -= 4.0f;
@@ -3197,37 +3217,37 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 if (temp_v0_8 != NULL) {
                     minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114,
                                        sp118, sp11C);
-                    gCurrentHud->unk1E6 = 14;
-                    gCurrentHud->unk1E4 = 0;
-                    gCurrentHud->unk1E8 = 1.0f;
+                    gCurrentHud->minimapMarker.spriteID = HUD_SPRITE_MAP_DOT;
+                    gCurrentHud->minimapMarker.z_rotation = 0;
+                    gCurrentHud->minimapMarker.scale = 1.0f;
                     tempVar1 = (opacity * (f32) temp_v0_8->segment.object.opacity) * (1.0 / 128.0);
                     gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 60, 60, 60, tempVar1);
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk1E0);
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->minimapMarker);
                 }
             }
             temp_v0_8 = get_time_trial_ghost();
             if (temp_v0_8 != NULL) {
                 minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114,
                                    sp118, sp11C);
-                gCurrentHud->unk1E4 = 0;
+                gCurrentHud->minimapMarker.z_rotation = 0;
                 tempVar1 = (opacity * (f32) temp_v0_8->segment.object.opacity) * (1.0 / 128.0);
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gHudMinimapColours[8].red, gHudMinimapColours[8].green,
                                 gHudMinimapColours[8].blue, tempVar1);
-                gCurrentHud->unk1E8 = 1.0f;
-                gCurrentHud->unk1E6 = 14;
-                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk1E0);
+                gCurrentHud->minimapMarker.scale = 1.0f;
+                gCurrentHud->minimapMarker.spriteID = HUD_SPRITE_MAP_DOT;
+                func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->minimapMarker);
             }
             // Draw Taj's minimap icon.
             if (gHudLevelHeader->race_type == RACETYPE_HUBWORLD) {
                 temp_v0_8 = find_taj_object();
                 if (temp_v0_8 != NULL) {
-                    gCurrentHud->unk1E6 = 14;
+                    gCurrentHud->minimapMarker.spriteID = HUD_SPRITE_MAP_DOT;
                     minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114,
                                        sp118, sp11C);
-                    gCurrentHud->unk1E4 = 0;
+                    gCurrentHud->minimapMarker.z_rotation = 0;
                     gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 0, 255, opacity);
-                    gCurrentHud->unk1E8 = 1.0f;
-                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk1E0);
+                    gCurrentHud->minimapMarker.scale = 1.0f;
+                    func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->minimapMarker);
                 }
             }
             // Draw racer minimap icons.
@@ -3239,19 +3259,19 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     minimap_marker_pos(objectGroup[i]->segment.trans.x_position,
                                        objectGroup[i]->segment.trans.z_position, sp114, sp118, sp11C);
                     if (someRacer->playerIndex != PLAYER_COMPUTER) {
-                        gCurrentHud->unk1F0 -= 1.0f;
-                        gCurrentHud->unk1E6 = 27;
-                        gCurrentHud->unk1E4 =
+                        gCurrentHud->minimapMarker.y -= 1.0f;
+                        gCurrentHud->minimapMarker.spriteID = HUD_SPRITE_MAP_ARROW;
+                        gCurrentHud->minimapMarker.z_rotation =
                             (objectGroup[i]->segment.trans.y_rotation - ((lvlMdl->minimapRotation * 0xFFFF) / 360)) &
                             0xFFFF;
 
                         if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
-                            gCurrentHud->unk1E4 = 0xFFFF - gCurrentHud->unk1E4;
+                            gCurrentHud->minimapMarker.z_rotation = 0xFFFF - gCurrentHud->minimapMarker.z_rotation;
                         }
                         sprite_opaque(TRUE);
                     } else {
-                        gCurrentHud->unk1E4 = 0;
-                        gCurrentHud->unk1E6 = 14;
+                        gCurrentHud->minimapMarker.z_rotation = 0;
+                        gCurrentHud->minimapMarker.spriteID = HUD_SPRITE_MAP_DOT;
                     }
                     if (is_taj_challenge() && someRacer->vehicleID == VEHICLE_CARPET) {
                         gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 0, 255, opacity);
@@ -3262,25 +3282,26 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     }
                     if (!(get_current_level_race_type() & RACETYPE_CHALLENGE) || (!someRacer->raceFinished)) {
                         if (osTvType == TV_TYPE_PAL) {
-                            gCurrentHud->unk1EC -= 4.0f;
+                            gCurrentHud->minimapMarker.x -= 4.0f;
                         }
                         if (get_current_level_race_type() == RACETYPE_CHALLENGE_BATTLE) {
                             switch (someRacer->unk212) {
                                 case 0:
-                                    gCurrentHud->unk1E8 = 0.8f;
+                                    gCurrentHud->minimapMarker.scale = 0.8f;
                                     break;
                                 case 1:
-                                    gCurrentHud->unk1E8 = 1.0f;
+                                    gCurrentHud->minimapMarker.scale = 1.0f;
                                     break;
                                 case 2:
                                 case 3:
-                                    gCurrentHud->unk1E8 = 1.2f;
+                                    gCurrentHud->minimapMarker.scale = 1.2f;
                                     break;
                             }
                         } else {
-                            gCurrentHud->unk1E8 = 1.0f;
+                            gCurrentHud->minimapMarker.scale = 1.0f;
                         }
-                        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk1E0);
+                        func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
+                                      &gCurrentHud->minimapMarker);
                     }
                     sprite_opaque(FALSE);
                 }
@@ -3315,20 +3336,20 @@ void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspec
     scaledY = (lvlMdl->minimapYScale * -60.0f * (z - lvlMdl->lowerZBounds)) / b;
 
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) { // Is adventure 2?
-        gCurrentHud->unk1EC = (((f32) gMinimapScreenX - ((scaledX * angleCos) + (scaledY * angleSin))) +
-                               (f32) lvlMdl->minimapOffsetXAdv2) -
-                              (f32) gMinimapDotOffsetX;
-        gCurrentHud->unk1F0 =
+        gCurrentHud->minimapMarker.x = (((f32) gMinimapScreenX - ((scaledX * angleCos) + (scaledY * angleSin))) +
+                                        (f32) lvlMdl->minimapOffsetXAdv2) -
+                                       (f32) gMinimapDotOffsetX;
+        gCurrentHud->minimapMarker.y =
             ((f32) (lvlMdl->minimapOffsetYAdv2 + gMinimapScreenY) - ((scaledX * angleSin) - (scaledY * angleCos))) +
             (f32) gMinimapDotOffsetY;
         return;
     }
     // Final x position on minimap
-    gCurrentHud->unk1EC =
+    gCurrentHud->minimapMarker.x =
         ((f32) gMinimapScreenX + ((scaledX * angleCos) + (scaledY * angleSin)) + (f32) lvlMdl->minimapOffsetXAdv1) -
         (f32) gMinimapDotOffsetX;
     // Final y position on minimap
-    gCurrentHud->unk1F0 =
+    gCurrentHud->minimapMarker.y =
         ((f32) (lvlMdl->minimapOffsetYAdv1 + gMinimapScreenY) - ((scaledX * angleSin) - (scaledY * angleCos))) +
         (f32) gMinimapDotOffsetY;
 }
@@ -3379,26 +3400,34 @@ void func_800AAFD0(ObjectModel *objModel) {
     }
 }
 
-void func_800AB194(s32 arg0) {
-    D_80126CD1 = 1;
-    D_80126CD3 = arg0;
+/**
+ * Begin fading the minimap which will slowly set it to whatever the opacity target is.
+ * Fades in or out based on what the setting is.
+ */
+void minimap_fade(s32 setting) {
+    gMinimapFade = TRUE;
+    gMinimapXlu = setting;
 }
 
-void func_800AB1AC(s32 arg0) {
-    D_80126CD0 = D_8012718B;
-    D_80126CD3 = arg0;
+/**
+ * Snaps the minimap opacity to the target level.
+ * Fades in or out based on what the setting is.
+ */
+void minimap_opacity_set(s32 setting) {
+    gMinimapOpacity = gMinimapOpacityTarget;
+    gMinimapXlu = setting;
 }
 
 /**
  * Sets the race start HUD procedure to the first step.
  */
-UNUSED void reset_race_start_hud(void) {
+UNUSED void hud_reset_race_start(void) {
     gRaceStartShowHudStep = 0;
 }
 
 /**
  * Sets the visibility of the hud, hiding almost everything, leaving only the minimap.
  */
-void set_hud_visibility(u8 setting) {
+void hud_visibility(u8 setting) {
     gShowHUD = 1 - setting;
 }

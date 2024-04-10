@@ -7,7 +7,7 @@
 #include "macros.h"
 #include "video.h"
 #include "camera.h"
-//#include "lib/src/unknown_0D24D0.h"
+// #include "lib/src/unknown_0D24D0.h"
 
 /************ .data ************/
 
@@ -52,7 +52,7 @@ Gfx dRdpInit[] = {
     gsDPSetAlphaCompare(G_AC_NONE),
     gsDPSetRenderMode(G_RM_OPA_SURF, G_RM_OPA_SURF2),
     gsDPSetColorDither(G_CD_MAGICSQ),
-    gsDPPipeSync(),
+    gsDPPipeSync(), // Why are we randomly pipesyncing in the middle of setting RDP states?
     gsSPEndDisplayList(),
 };
 

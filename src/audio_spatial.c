@@ -45,6 +45,7 @@ extern unk8011A6D8 D_8011A6D8[];
 /*******************************/
 
 #ifdef NON_EQUIVALENT
+// audioline_init
 void func_80008040(void) {
     s32 var_v0;
 
@@ -81,6 +82,7 @@ void func_80008168(void) {
 extern f32 D_80119C60[672];
 extern f32 D_8011A6E0[336]; //[7][48];
 extern unk8011A6D8 **D_8011A6DC;
+// audioline_reset
 void func_80008174(void) {
     s32 i;
     s32 j;
@@ -99,7 +101,7 @@ void func_80008174(void) {
     gUsedMasks = 0;
 
     for (i = 0; i < ARRAY_COUNT(D_80119C60); i++) {
-        D_80119C58[i].unk16C = 0;
+        D_80119C58[i].soundID = 0;
         if (D_80119C58[i].unk178 != 0) {
             if (D_80119C58[i].unk0.unk0_02 == 0) {
                 func_8000488C(D_80119C58[i].unk178);
@@ -130,6 +132,7 @@ void func_80008174(void) {
 GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80008174.s")
 #endif
 
+// audioline_ambient
 GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80008438.s")
 
 s32 func_800090C0(f32 arg0, f32 arg1, s32 arg2) {
@@ -159,13 +162,17 @@ s32 func_800090C0(f32 arg0, f32 arg1, s32 arg2) {
     return ret;
 }
 
-// Best I can figure, this measures the distance between XYZ values.
-s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, f32 *outY, f32 *outZ) {
+/**
+ * Calculates the position between two points, then the distance from the nearest point.
+ * Write the adjusted positions to the arguments.
+ * Returns the distance between the input and the nearest endpoint.
+ */
+s32 audioline_distance(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, f32 *outY, f32 *outZ) {
     f32 dx, dy, dz;
     f32 x1, y1, z1;
     f32 x2, y2, z2;
 
-    f32 temp;
+    f32 mag;
     f32 ret;
 
     x1 = floatXYZ->x1;
@@ -174,19 +181,19 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
     x2 = floatXYZ->x2;
     y2 = floatXYZ->y2;
     z2 = floatXYZ->z2;
-    temp = 0.0f;
+    mag = 0.0f;
 
     dx = x2 - x1;
     dy = y2 - y1;
     dz = z2 - z1;
 
     if (dx == 0.0 && dy == 0.0 && dz == 0.0) {
-        temp = 0.0f;
+        mag = 0.0f;
     } else {
-        temp = ((inX - x1) * dx + (inY - y1) * dy + (inZ - z1) * dz) / (dx * dx + dy * dy + dz * dz);
+        mag = ((inX - x1) * dx + (inY - y1) * dy + (inZ - z1) * dz) / (dx * dx + dy * dy + dz * dz);
     }
 
-    if (temp < 0.0f) {
+    if (mag < 0.0f) {
         *outX = x1;
         *outY = y1;
         *outZ = z1;
@@ -194,7 +201,7 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
         dy = y1 - inY;
         dz = z1 - inZ;
         ret = sqrtf(dx * dx + dy * dy + dz * dz);
-    } else if (temp > 1.0f) {
+    } else if (mag > 1.0f) {
         *outX = x2;
         *outY = y2;
         *outZ = z2;
@@ -203,8 +210,8 @@ s32 func_800092A8(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, 
         dz = z2 - inZ;
         ret = sqrtf(dx * dx + dy * dy + dz * dz);
     } else {
-        *outX = temp * dx + x1, // Comma required here as this was likely all one line.
-            *outY = temp * dy + y1, *outZ = temp * dz + z1;
+        *outX = mag * dx + x1, // Comma required here as this was likely all one line.
+            *outY = mag * dy + y1, *outZ = mag * dz + z1;
 
         ret = sqrtf((*outX - inX) * (*outX - inX) + (*outY - inY) * (*outY - inY) + (*outZ - inZ) * (*outZ - inZ));
     }
@@ -275,35 +282,36 @@ void func_8000974C(u16 soundBite, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 volu
     }
 }
 
-void func_800098A4(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6, u8 arg7, u8 arg8, u16 arg9, u8 argA,
-                   u8 argB, u8 argC) {
+void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6, u8 arg7, u8 arg8, u16 arg9,
+                              u8 argA, u8 lineID, u8 argC) {
     Vec3f *temp_a0;
     unk80119C58 *temp_v1;
 
-    if ((argB < 7) && (argC < 30)) {
-        temp_v1 = &D_80119C58[argB];
+    if ((lineID < 7) && (argC < 30)) {
+        temp_v1 = &D_80119C58[lineID];
         temp_a0 = (Vec3f *) (((u32 *) &temp_v1->unk4) + argC * 3); // This can't be right...
         temp_a0->x = x;
         temp_a0->y = y;
         temp_a0->z = z;
         if (argC == 0) {
-            (&D_80119C58[argB])->unk16C = soundId;
-            (&D_80119C58[argB])->unk0.unk0_02 = arg0;
-            (&D_80119C58[argB])->unk170 = arg9;
-            (&D_80119C58[argB])->unk17D = argA;
-            (&D_80119C58[argB])->unk174 = arg6;
-            (&D_80119C58[argB])->unk175 = arg5;
-            (&D_80119C58[argB])->unk176 = arg7;
-            (&D_80119C58[argB])->unk17E = arg8;
+            (&D_80119C58[lineID])->soundID = soundId;
+            (&D_80119C58[lineID])->unk0.unk0_02 = arg0;
+            (&D_80119C58[lineID])->unk170 = arg9;
+            (&D_80119C58[lineID])->unk17D = argA;
+            (&D_80119C58[lineID])->unk174 = arg6;
+            (&D_80119C58[lineID])->unk175 = arg5;
+            (&D_80119C58[lineID])->unk176 = arg7;
+            (&D_80119C58[lineID])->unk17E = arg8;
         }
-        if ((&D_80119C58[argB])->unk17C < argC) {
-            (&D_80119C58[argB])->unk17C = argC;
+        if ((&D_80119C58[lineID])->unk17C < argC) {
+            (&D_80119C58[lineID])->unk17C = argC;
         }
     }
 }
 
 #ifdef NON_MATCHING
 // single regalloc diff
+// audioline_reverb_create
 void func_80009968(f32 x, f32 y, f32 z, u8 arg3, u8 arg4, u8 arg5) {
     Vec3f *temp_a1;
     s32 tempArg5 = arg5;
@@ -375,7 +383,7 @@ s32 func_80009AB4(u8 arg0) {
 
 #ifdef NON_EQUIVALENT
 u8 func_80009D6C(unk8011A6D8 *, f32, f32, f32);
-
+// audioline_reverb
 void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
     s32 j;
     f32 outX;
@@ -398,7 +406,7 @@ void func_80009B7C(s32 *soundState, f32 x, f32 y, f32 z) {
         if (D_8011A6D8[i].unk0.unk0_02 != 0) {
             if (func_80009AB4(i) != 0) {
                 for (j = 0; j < D_8011A6D8[i].unkB8; j++) {
-                    distBetween = func_800092A8(x, y, z, &D_8011A6D8[i].unk4.unk4_02[j], &outX, &outY, &outZ);
+                    distBetween = audioline_distance(x, y, z, &D_8011A6D8[i].unk4.unk4_02[j], &outX, &outY, &outZ);
                     if (distBetween < var_s6) {
                         numOfYVals = func_8002BAB0(levelSegmentIndex, x, z, yVals);
                         for (k = 0; k < numOfYVals; k++) {
@@ -433,7 +441,7 @@ void func_8000A184(Gfx **arg0, Vertex **arg1, Triangle **arg2) {
     s32 i, j;
 
     for (i = 0; i < 7; i++) {
-        if (D_80119C58[i].unk16C != 0) {
+        if (D_80119C58[i].soundID != 0) {
             for (j = 0; j < D_80119C58[i].unk17C; j++) {
                 debug_render_line(arg0, arg1, arg2, (floatXYZVals *) &D_80119C5C[i], 0xFF, 0xFF, 0);
             }

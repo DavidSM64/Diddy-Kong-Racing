@@ -67,19 +67,14 @@ s32 gSurfaceBobbingTable[19] = {
 };
 // When landing on this surface, it makes a sound.
 // Strangely, they did only two surface types then called it a day.
-s32 gSurfaceSoundTable[13] = {
-    SOUND_NONE, SOUND_LAND_GRASS, SOUND_LAND_SAND, SOUND_NONE, SOUND_NONE, SOUND_NONE, SOUND_NONE,
-    SOUND_NONE, SOUND_NONE,       SOUND_NONE,      SOUND_NONE, SOUND_NONE, SOUND_NONE,
-};
+s32 gSurfaceSoundTable[19] = { SOUND_NONE, SOUND_LAND_GRASS, SOUND_LAND_SAND, SOUND_NONE, SOUND_NONE,
+                               SOUND_NONE, SOUND_NONE,       SOUND_NONE,      SOUND_NONE, SOUND_NONE,
+                               SOUND_NONE, SOUND_NONE,       SOUND_NONE,      SOUND_NONE, SOUND_NONE,
+                               SOUND_NONE, SOUND_NONE,       SOUND_NONE,      SOUND_NONE };
 
-// Unused?
-s16 D_800DCCB4[12] = {
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-};
-
-u16 D_800DCCCC[20] = {
+u16 D_800DCCCC[19] = {
     0x010C, 0x010B, 0x0009, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C,
-    0x010C, 0x0005, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x0000,
+    0x010C, 0x0005, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C,
 };
 
 s32 gSurfaceFlagTable[19] = {
@@ -87,7 +82,7 @@ s32 gSurfaceFlagTable[19] = {
 };
 
 s32 gSurfaceFlagTable4P[20] = {
-    0, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x100, 0, 0, 0, 0, 0, 0,
+    0, 4, 0x10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x100, 0, 0, 0, 0, 0, 0,
 };
 
 // Used to know how the AI should use a balloon when they have one.
@@ -136,7 +131,7 @@ u32 gCurrentButtonsPressed;
 u32 gCurrentButtonsReleased;
 s32 gCurrentStickX;
 s32 gCurrentStickY;
-s32 D_8011D53C; // Set to 0 and only 0. Checked for being 1, but never true.
+s32 unused_8011D53C; // Set to 0 and only 0. Checked for being 1, but never true.
 s32 gRaceStartTimer;
 f32 D_8011D544; // Starts are 300, then counts down when the race starts. Usage currently unknown.
 f32 D_8011D548;
@@ -1585,8 +1580,8 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     if (yVel > 0.0f) {
         yVel *= 0.5;
     } else {
-        if (D_8011D53C == 1) {
-            yVel *= 0.5; // Unreachable. D_8011D53C is never not 0.
+        if (unused_8011D53C == 1) {
+            yVel *= 0.5; // Unreachable. unused_8011D53C is never not 0.
         } else {
             yVel *= 0.25;
         }
@@ -2075,7 +2070,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
     ActivePlayers player;
     s32 i;
 
-    D_8011D53C = 0;
+    unused_8011D53C = 0;
     tempRacer = (struct Object_Racer *) obj->unk64;
     obj->segment.trans.y_rotation = racer->angleY;
     obj->segment.trans.x_rotation = racer->angleX;
@@ -3391,7 +3386,7 @@ void handle_racer_head_turning(Object *obj, Object_Racer *racer, UNUSED s32 upda
  * The character's head will start to face forward.
  */
 void slowly_reset_head_angle(Object_Racer *racer) {
-    racer->headAngleTarget -= racer->headAngleTarget >> 3;
+    racer->headAngleTarget -= racer->headAngleTarget >> 3; //!@Delta
     if (racer->headAngleTarget > -10 && racer->headAngleTarget < 10) {
         racer->headAngleTarget = 0;
     }
@@ -5021,7 +5016,7 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
     s32 tempUpdateRateF;
     s32 angle;
 
-    if (gCurrentButtonsPressed & U_CBUTTONS && func_800A0190()) {
+    if (gCurrentButtonsPressed & U_CBUTTONS && race_starting()) {
         gCameraObject->zoom++;
         if (gCameraObject->zoom > ZOOM_VERY_CLOSE) {
             gCameraObject->zoom = ZOOM_MEDIUM;
@@ -5679,7 +5674,7 @@ s32 func_800599B8(s32 arg0, s32 mapId, s16 arg2, s16 *arg3, s16 *arg4) {
     s16 sp2E;
 
     temp_t8 = (D_8011D59C + 1) & 1;
-    temp_v0 = func_80074B34(arg0, (s16) mapId, arg2, arg3, arg4, &sp2E, (GhostHeader *) gGhostData[temp_t8]);
+    temp_v0 = func_80074B34(arg0, mapId, arg2, (u16 *) arg3, arg4, &sp2E, (GhostHeader *) gGhostData[temp_t8]);
     if (arg3 != 0) {
         if (temp_v0 == 0) {
             D_8011D5A0[temp_t8] = sp2E;
