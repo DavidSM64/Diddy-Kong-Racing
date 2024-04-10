@@ -84,6 +84,23 @@ typedef struct unk80126CDC_entry {
     s16 unk18;
 } unk80126CDC_entry;
 
+typedef struct HudElementBasic {
+    struct HudElementBasic *unk0;
+    s16 unk4;
+    s16 unk6;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    s16 unk18;
+    s8 unk1A;
+    s8 unk1B;
+    s8 unk1C;
+    s8 unk1D;
+    s8 unk1E;
+    s8 unk1F;
+} HudElementBasic;
+
 // Size: 0x760
 typedef struct unk80126CDC {
     struct unk80126CDC *unk0;
@@ -188,8 +205,8 @@ typedef struct unk80126CDC {
     s16 unk1E4;
     s16 unk1E6;
     f32 unk1E8;
-    f32 unk1EC;
-    f32 unk1F0;
+    f32 markerX;
+    f32 markerY;
     u8 pad1F4[0xC];
     struct unk80126CDC *unk200;
     u8 unk204[0x14];
@@ -465,7 +482,7 @@ typedef struct HudElements {
 
 extern u8 gGfxTaskYieldData[OS_YIELD_DATA_SIZE];
 
-u8 func_800A0190(void);
+u8 race_starting(void);
 void func_800A0B74(void);
 void render_hud_race(s32 arg0, Object *obj, s32 updateRate);
 void render_hud_challenge_eggs(s32 arg0, Object *obj, s32 updateRate);
@@ -477,10 +494,10 @@ void set_time_trial_start_voice(u16 soundID, f32 delay, s32 arg2);
 void func_800A74EC(u16 soundID, s32 arg1);
 void minimap_init(LevelModel *model);
 s8 get_hud_setting(void);
-void func_800AB194(s32 arg0);
-void func_800AB1AC(s32 arg0);
+void minimap_fade(s32 arg0);
+void minimap_opacity_set(s32 arg0);
 void func_800AB1C8(void);
-void set_hud_visibility(u8 setting);
+void hud_visibility(u8 setting);
 void render_race_time(Object_Racer *racer, s32 updateRate);
 void render_wrong_way_text(Object_Racer *obj, s32 updateRate);
 void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate);

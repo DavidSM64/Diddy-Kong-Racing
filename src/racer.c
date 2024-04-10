@@ -139,7 +139,7 @@ u32 gCurrentButtonsPressed;
 u32 gCurrentButtonsReleased;
 s32 gCurrentStickX;
 s32 gCurrentStickY;
-s32 D_8011D53C; // Set to 0 and only 0. Checked for being 1, but never true.
+s32 unused_8011D53C; // Set to 0 and only 0. Checked for being 1, but never true.
 s32 gRaceStartTimer;
 f32 D_8011D544; // Starts are 300, then counts down when the race starts. Usage currently unknown.
 f32 D_8011D548;
@@ -1588,8 +1588,8 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     if (yVel > 0.0f) {
         yVel *= 0.5;
     } else {
-        if (D_8011D53C == 1) {
-            yVel *= 0.5; // Unreachable. D_8011D53C is never not 0.
+        if (unused_8011D53C == 1) {
+            yVel *= 0.5; // Unreachable. unused_8011D53C is never not 0.
         } else {
             yVel *= 0.25;
         }
@@ -2078,7 +2078,7 @@ void obj_init_racer(Object *obj, LevelObjectEntry_Racer *racer) {
     ActivePlayers player;
     s32 i;
 
-    D_8011D53C = 0;
+    unused_8011D53C = 0;
     tempRacer = (struct Object_Racer *) obj->unk64;
     obj->segment.trans.y_rotation = racer->angleY;
     obj->segment.trans.x_rotation = racer->angleX;
@@ -3394,7 +3394,7 @@ void handle_racer_head_turning(Object *obj, Object_Racer *racer, UNUSED s32 upda
  * The character's head will start to face forward.
  */
 void slowly_reset_head_angle(Object_Racer *racer) {
-    racer->headAngleTarget -= racer->headAngleTarget >> 3;
+    racer->headAngleTarget -= racer->headAngleTarget >> 3; //!@Delta
     if (racer->headAngleTarget > -10 && racer->headAngleTarget < 10) {
         racer->headAngleTarget = 0;
     }
@@ -5024,7 +5024,7 @@ void update_player_camera(Object *obj, Object_Racer *racer, f32 updateRateF) {
     s32 tempUpdateRateF;
     s32 angle;
 
-    if (gCurrentButtonsPressed & U_CBUTTONS && func_800A0190()) {
+    if (gCurrentButtonsPressed & U_CBUTTONS && race_starting()) {
         gCameraObject->zoom++;
         if (gCameraObject->zoom > ZOOM_VERY_CLOSE) {
             gCameraObject->zoom = ZOOM_MEDIUM;

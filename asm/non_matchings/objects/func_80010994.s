@@ -16,7 +16,7 @@ glabel func_80010994
 /* 0115CC 800109CC 3C018012 */  lui   $at, %hi(gEventStartTimer) # $at, 0x8012
 /* 0115D0 800109D0 1840000D */  blez  $v0, .L80010A08
 /* 0115D4 800109D4 AC22ADB8 */   sw    $v0, %lo(gEventStartTimer)($at)
-/* 0115D8 800109D8 0C028064 */  jal   func_800A0190
+/* 0115D8 800109D8 0C028064 */  jal   race_starting
 /* 0115DC 800109DC 00000000 */   nop   
 /* 0115E0 800109E0 10400009 */  beqz  $v0, .L80010A08
 /* 0115E4 800109E4 3C038012 */   lui   $v1, %hi(D_8011ADBC) # $v1, 0x8012

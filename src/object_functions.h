@@ -361,7 +361,7 @@ void obj_loop_wizpigship(Object* wizShipObj, s32 updateRate);
 void obj_loop_silvercoin(Object *obj, s32 updateRate);
 void obj_loop_bombexplosion(Object *obj, s32 updateRate);
 void obj_loop_flycoin(Object *obj, s32 updateRate);
-void func_8003FC44(f32 x, f32 y, f32 z, s32 objectID, s32 soundID, f32 scale, s32 arg6);
+void obj_spawn_effect(f32 x, f32 y, f32 z, s32 objectID, s32 soundID, f32 scale, s32 arg6);
 void obj_loop_stopwatchman(Object *obj, s32 updateRate);
 void obj_loop_parkwarden(Object *obj, s32 updateRate);
 void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate);

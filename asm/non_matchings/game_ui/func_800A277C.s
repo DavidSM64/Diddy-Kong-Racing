@@ -942,16 +942,16 @@ glabel func_800A277C
 /* 0A40F8 800A34F8 00003025 */  move  $a2, $zero
 /* 0A40FC 800A34FC 0C0310E1 */  jal   set_text_colour
 /* 0A4100 800A3500 240700FF */   li    $a3, 255
-/* 0A4104 800A3504 3C108012 */  lui   $s0, %hi(D_8012718C) # $s0, 0x8012
-/* 0A4108 800A3508 3C118012 */  lui   $s1, %hi(D_80126D24) # $s1, 0x8012
-/* 0A410C 800A350C 26316D24 */  addiu $s1, %lo(D_80126D24) # addiu $s1, $s1, 0x6d24
-/* 0A4110 800A3510 2610718C */  addiu $s0, %lo(D_8012718C) # addiu $s0, $s0, 0x718c
+/* 0A4104 800A3504 3C108012 */  lui   $s0, %hi(gStopwatchErrorX) # $s0, 0x8012
+/* 0A4108 800A3508 3C118012 */  lui   $s1, %hi(gHudOffsetX) # $s1, 0x8012
+/* 0A410C 800A350C 26316D24 */  addiu $s1, %lo(gHudOffsetX) # addiu $s1, $s1, 0x6d24
+/* 0A4110 800A3510 2610718C */  addiu $s0, %lo(gStopwatchErrorX) # addiu $s0, $s0, 0x718c
 /* 0A4114 800A3514 8E190000 */  lw    $t9, ($s0)
 /* 0A4118 800A3518 8E2B0000 */  lw    $t3, ($s1)
-/* 0A411C 800A351C 3C0D8012 */  lui   $t5, %hi(D_80126D28) # $t5, 0x8012
-/* 0A4120 800A3520 8DAD6D28 */  lw    $t5, %lo(D_80126D28)($t5)
-/* 0A4124 800A3524 3C068012 */  lui   $a2, %hi(D_80127190) # $a2, 0x8012
-/* 0A4128 800A3528 8CC67190 */  lw    $a2, %lo(D_80127190)($a2)
+/* 0A411C 800A351C 3C0D8012 */  lui   $t5, %hi(gHudBounceX) # $t5, 0x8012
+/* 0A4120 800A3520 8DAD6D28 */  lw    $t5, %lo(gHudBounceX)($t5)
+/* 0A4124 800A3524 3C068012 */  lui   $a2, %hi(gStopwatchErrorY) # $a2, 0x8012
+/* 0A4128 800A3528 8CC67190 */  lw    $a2, %lo(gStopwatchErrorY)($a2)
 /* 0A412C 800A352C 032B6021 */  addu  $t4, $t9, $t3
 /* 0A4130 800A3530 8FA70060 */  lw    $a3, 0x60($sp)
 /* 0A4134 800A3534 2418000C */  li    $t8, 12
@@ -963,10 +963,10 @@ glabel func_800A277C
 /* 0A414C 800A354C 24C60001 */   addiu $a2, $a2, 1
 /* 0A4150 800A3550 8E0F0000 */  lw    $t7, ($s0)
 /* 0A4154 800A3554 8E2A0000 */  lw    $t2, ($s1)
-/* 0A4158 800A3558 3C198012 */  lui   $t9, %hi(D_80126D28) # $t9, 0x8012
-/* 0A415C 800A355C 8F396D28 */  lw    $t9, %lo(D_80126D28)($t9)
-/* 0A4160 800A3560 3C068012 */  lui   $a2, %hi(D_80127190) # $a2, 0x8012
-/* 0A4164 800A3564 8CC67190 */  lw    $a2, %lo(D_80127190)($a2)
+/* 0A4158 800A3558 3C198012 */  lui   $t9, %hi(gHudBounceX) # $t9, 0x8012
+/* 0A415C 800A355C 8F396D28 */  lw    $t9, %lo(gHudBounceX)($t9)
+/* 0A4160 800A3560 3C068012 */  lui   $a2, %hi(gStopwatchErrorY) # $a2, 0x8012
+/* 0A4164 800A3564 8CC67190 */  lw    $a2, %lo(gStopwatchErrorY)($a2)
 /* 0A4168 800A3568 01EA7021 */  addu  $t6, $t7, $t2
 /* 0A416C 800A356C 8FA7005C */  lw    $a3, 0x5c($sp)
 /* 0A4170 800A3570 240B000C */  li    $t3, 12
@@ -978,10 +978,10 @@ glabel func_800A277C
 /* 0A4188 800A3588 24C6000F */   addiu $a2, $a2, 0xf
 /* 0A418C 800A358C 8E0C0000 */  lw    $t4, ($s0)
 /* 0A4190 800A3590 8E2D0000 */  lw    $t5, ($s1)
-/* 0A4194 800A3594 3C0F8012 */  lui   $t7, %hi(D_80126D28) # $t7, 0x8012
-/* 0A4198 800A3598 8DEF6D28 */  lw    $t7, %lo(D_80126D28)($t7)
-/* 0A419C 800A359C 3C068012 */  lui   $a2, %hi(D_80127190) # $a2, 0x8012
-/* 0A41A0 800A35A0 8CC67190 */  lw    $a2, %lo(D_80127190)($a2)
+/* 0A4194 800A3594 3C0F8012 */  lui   $t7, %hi(gHudBounceX) # $t7, 0x8012
+/* 0A4198 800A3598 8DEF6D28 */  lw    $t7, %lo(gHudBounceX)($t7)
+/* 0A419C 800A359C 3C068012 */  lui   $a2, %hi(gStopwatchErrorY) # $a2, 0x8012
+/* 0A41A0 800A35A0 8CC67190 */  lw    $a2, %lo(gStopwatchErrorY)($a2)
 /* 0A41A4 800A35A4 018DC021 */  addu  $t8, $t4, $t5
 /* 0A41A8 800A35A8 8FA70058 */  lw    $a3, 0x58($sp)
 /* 0A41AC 800A35AC 240A000C */  li    $t2, 12
@@ -1002,10 +1002,10 @@ glabel func_800A277C
 /* 0A41E8 800A35E8 AFAE0010 */   sw    $t6, 0x10($sp)
 /* 0A41EC 800A35EC 8E190000 */  lw    $t9, ($s0)
 /* 0A41F0 800A35F0 8E2B0000 */  lw    $t3, ($s1)
-/* 0A41F4 800A35F4 3C0D8012 */  lui   $t5, %hi(D_80126D28) # $t5, 0x8012
-/* 0A41F8 800A35F8 8DAD6D28 */  lw    $t5, %lo(D_80126D28)($t5)
-/* 0A41FC 800A35FC 3C068012 */  lui   $a2, %hi(D_80127190) # $a2, 0x8012
-/* 0A4200 800A3600 8CC67190 */  lw    $a2, %lo(D_80127190)($a2)
+/* 0A41F4 800A35F4 3C0D8012 */  lui   $t5, %hi(gHudBounceX) # $t5, 0x8012
+/* 0A41F8 800A35F8 8DAD6D28 */  lw    $t5, %lo(gHudBounceX)($t5)
+/* 0A41FC 800A35FC 3C068012 */  lui   $a2, %hi(gStopwatchErrorY) # $a2, 0x8012
+/* 0A4200 800A3600 8CC67190 */  lw    $a2, %lo(gStopwatchErrorY)($a2)
 /* 0A4204 800A3604 8FA70060 */  lw    $a3, 0x60($sp)
 /* 0A4208 800A3608 2418000C */  li    $t8, 12
 /* 0A420C 800A360C 032B6021 */  addu  $t4, $t9, $t3
@@ -1015,10 +1015,10 @@ glabel func_800A277C
 /* 0A421C 800A361C 018D2821 */   addu  $a1, $t4, $t5
 /* 0A4220 800A3620 8E0F0000 */  lw    $t7, ($s0)
 /* 0A4224 800A3624 8E2A0000 */  lw    $t2, ($s1)
-/* 0A4228 800A3628 3C198012 */  lui   $t9, %hi(D_80126D28) # $t9, 0x8012
-/* 0A422C 800A362C 3C068012 */  lui   $a2, %hi(D_80127190) # $a2, 0x8012
-/* 0A4230 800A3630 8CC67190 */  lw    $a2, %lo(D_80127190)($a2)
-/* 0A4234 800A3634 8F396D28 */  lw    $t9, %lo(D_80126D28)($t9)
+/* 0A4228 800A3628 3C198012 */  lui   $t9, %hi(gHudBounceX) # $t9, 0x8012
+/* 0A422C 800A362C 3C068012 */  lui   $a2, %hi(gStopwatchErrorY) # $a2, 0x8012
+/* 0A4230 800A3630 8CC67190 */  lw    $a2, %lo(gStopwatchErrorY)($a2)
+/* 0A4234 800A3634 8F396D28 */  lw    $t9, %lo(gHudBounceX)($t9)
 /* 0A4238 800A3638 8FA7005C */  lw    $a3, 0x5c($sp)
 /* 0A423C 800A363C 240B000C */  li    $t3, 12
 /* 0A4240 800A3640 01EA7021 */  addu  $t6, $t7, $t2
@@ -1029,10 +1029,10 @@ glabel func_800A277C
 /* 0A4254 800A3654 01D92821 */   addu  $a1, $t6, $t9
 /* 0A4258 800A3658 8E0C0000 */  lw    $t4, ($s0)
 /* 0A425C 800A365C 8E2D0000 */  lw    $t5, ($s1)
-/* 0A4260 800A3660 3C0F8012 */  lui   $t7, %hi(D_80126D28) # $t7, 0x8012
-/* 0A4264 800A3664 3C068012 */  lui   $a2, %hi(D_80127190) # $a2, 0x8012
-/* 0A4268 800A3668 8CC67190 */  lw    $a2, %lo(D_80127190)($a2)
-/* 0A426C 800A366C 8DEF6D28 */  lw    $t7, %lo(D_80126D28)($t7)
+/* 0A4260 800A3660 3C0F8012 */  lui   $t7, %hi(gHudBounceX) # $t7, 0x8012
+/* 0A4264 800A3664 3C068012 */  lui   $a2, %hi(gStopwatchErrorY) # $a2, 0x8012
+/* 0A4268 800A3668 8CC67190 */  lw    $a2, %lo(gStopwatchErrorY)($a2)
+/* 0A426C 800A366C 8DEF6D28 */  lw    $t7, %lo(gHudBounceX)($t7)
 /* 0A4270 800A3670 8FA70058 */  lw    $a3, 0x58($sp)
 /* 0A4274 800A3674 240A000C */  li    $t2, 12
 /* 0A4278 800A3678 018DC021 */  addu  $t8, $t4, $t5

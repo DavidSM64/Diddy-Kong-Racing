@@ -416,7 +416,7 @@ void racer_sound_hovercraft(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsH
     } else {
         var_f18 = 0.0f;
     }
-    if (func_800A0190() == FALSE) {
+    if (race_starting() == FALSE) {
         gRacerSound->throttlePitch = 0.0f;
     }
     if (velocity > 10.0) {
@@ -521,7 +521,7 @@ void func_800063EC(Object *obj, UNUSED u32 buttonsPressed, u32 buttonsHeld, s32 
     if (gRacerSound->throttlePitch < 0) {
         gRacerSound->throttlePitch = 0;
     }
-    if (func_800A0190() == 0) {
+    if (race_starting() == 0) {
         gRacerSound->throttlePitch = 0.0f;
     }
     var_f14 += gRacerSound->throttlePitch;

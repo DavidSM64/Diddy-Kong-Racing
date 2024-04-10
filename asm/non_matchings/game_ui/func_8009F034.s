@@ -54,38 +54,38 @@ glabel func_8009F034
 /* 09FC9C 8009F09C 14410007 */  bne   $v0, $at, .L8009F0BC
 /* 09FCA0 8009F0A0 3C0F8012 */   lui   $t7, %hi(gHUDNumPlayers) # $t7, 0x8012
 .L8009F0A4:
-/* 09FCA4 8009F0A4 3C018012 */  lui   $at, %hi(D_80126D24) # $at, 0x8012
-/* 09FCA8 8009F0A8 AC206D24 */  sw    $zero, %lo(D_80126D24)($at)
-/* 09FCAC 8009F0AC 3C018012 */  lui   $at, %hi(D_80126D34) # $at, 0x8012
+/* 09FCA4 8009F0A4 3C018012 */  lui   $at, %hi(gHudOffsetX) # $at, 0x8012
+/* 09FCA8 8009F0A8 AC206D24 */  sw    $zero, %lo(gHudOffsetX)($at)
+/* 09FCAC 8009F0AC 3C018012 */  lui   $at, %hi(gHudRaceStart) # $at, 0x8012
 /* 09FCB0 8009F0B0 240E0001 */  li    $t6, 1
 /* 09FCB4 8009F0B4 10000015 */  b     .L8009F10C
-/* 09FCB8 8009F0B8 A02E6D34 */   sb    $t6, %lo(D_80126D34)($at)
+/* 09FCB8 8009F0B8 A02E6D34 */   sb    $t6, %lo(gHudRaceStart)($at)
 .L8009F0BC:
 /* 09FCBC 8009F0BC 8DEF6D0C */  lw    $t7, %lo(gHUDNumPlayers)($t7)
 /* 09FCC0 8009F0C0 24180140 */  li    $t8, 320
 /* 09FCC4 8009F0C4 29E10002 */  slti  $at, $t7, 2
 /* 09FCC8 8009F0C8 10200008 */  beqz  $at, .L8009F0EC
 /* 09FCCC 8009F0CC 241900C8 */   li    $t9, 200
-/* 09FCD0 8009F0D0 3C018012 */  lui   $at, %hi(D_80126D24) # $at, 0x8012
-/* 09FCD4 8009F0D4 AC386D24 */  sw    $t8, %lo(D_80126D24)($at)
+/* 09FCD0 8009F0D0 3C018012 */  lui   $at, %hi(gHudOffsetX) # $at, 0x8012
+/* 09FCD4 8009F0D4 AC386D24 */  sw    $t8, %lo(gHudOffsetX)($at)
 /* 09FCD8 8009F0D8 3C014000 */  li    $at, 0x40000000 # 2.000000
 /* 09FCDC 8009F0DC 44812000 */  mtc1  $at, $f4
-/* 09FCE0 8009F0E0 3C018012 */  lui   $at, %hi(D_80126D30) # $at, 0x8012
+/* 09FCE0 8009F0E0 3C018012 */  lui   $at, %hi(gHudBounceMag) # $at, 0x8012
 /* 09FCE4 8009F0E4 10000007 */  b     .L8009F104
-/* 09FCE8 8009F0E8 E4246D30 */   swc1  $f4, %lo(D_80126D30)($at)
+/* 09FCE8 8009F0E8 E4246D30 */   swc1  $f4, %lo(gHudBounceMag)($at)
 .L8009F0EC:
-/* 09FCEC 8009F0EC 3C018012 */  lui   $at, %hi(D_80126D24) # $at, 0x8012
-/* 09FCF0 8009F0F0 AC396D24 */  sw    $t9, %lo(D_80126D24)($at)
+/* 09FCEC 8009F0EC 3C018012 */  lui   $at, %hi(gHudOffsetX) # $at, 0x8012
+/* 09FCF0 8009F0F0 AC396D24 */  sw    $t9, %lo(gHudOffsetX)($at)
 /* 09FCF4 8009F0F4 3C014000 */  li    $at, 0x40000000 # 2.000000
 /* 09FCF8 8009F0F8 44813000 */  mtc1  $at, $f6
-/* 09FCFC 8009F0FC 3C018012 */  lui   $at, %hi(D_80126D30) # $at, 0x8012
-/* 09FD00 8009F100 E4266D30 */  swc1  $f6, %lo(D_80126D30)($at)
+/* 09FCFC 8009F0FC 3C018012 */  lui   $at, %hi(gHudBounceMag) # $at, 0x8012
+/* 09FD00 8009F100 E4266D30 */  swc1  $f6, %lo(gHudBounceMag)($at)
 .L8009F104:
-/* 09FD04 8009F104 3C018012 */  lui   $at, %hi(D_80126D34) # $at, 0x8012
-/* 09FD08 8009F108 A0206D34 */  sb    $zero, %lo(D_80126D34)($at)
+/* 09FD04 8009F104 3C018012 */  lui   $at, %hi(gHudRaceStart) # $at, 0x8012
+/* 09FD08 8009F108 A0206D34 */  sb    $zero, %lo(gHudRaceStart)($at)
 .L8009F10C:
-/* 09FD0C 8009F10C 3C018012 */  lui   $at, %hi(D_80126D2C) # $at, 0x8012
-/* 09FD10 8009F110 A4206D2C */  sh    $zero, %lo(D_80126D2C)($at)
+/* 09FD0C 8009F10C 3C018012 */  lui   $at, %hi(gHudBounceTimer) # $at, 0x8012
+/* 09FD10 8009F110 A4206D2C */  sh    $zero, %lo(gHudBounceTimer)($at)
 /* 09FD14 8009F114 3C018012 */  lui   $at, %hi(gRaceStartShowHudStep) # $at, 0x8012
 /* 09FD18 8009F118 A0206CD4 */  sb    $zero, %lo(gRaceStartShowHudStep)($at)
 /* 09FD1C 8009F11C 3C018012 */  lui   $at, %hi(gHideRaceTimer) # $at, 0x8012
@@ -94,24 +94,24 @@ glabel func_8009F034
 /* 09FD28 8009F128 A0206D38 */  sb    $zero, %lo(gWrongWayNagPrefix)($at)
 /* 09FD2C 8009F12C 3C018012 */  lui   $at, %hi(D_80126D35) # $at, 0x8012
 /* 09FD30 8009F130 A0206D35 */  sb    $zero, %lo(D_80126D35)($at)
-/* 09FD34 8009F134 3C018012 */  lui   $at, %hi(D_80126CD0) # $at, 0x8012
+/* 09FD34 8009F134 3C018012 */  lui   $at, %hi(gMinimapOpacity) # $at, 0x8012
 /* 09FD38 8009F138 26100300 */  addiu $s0, %lo(osTvType) # addiu $s0, $s0, 0x300
-/* 09FD3C 8009F13C A0206CD0 */  sb    $zero, %lo(D_80126CD0)($at)
+/* 09FD3C 8009F13C A0206CD0 */  sb    $zero, %lo(gMinimapOpacity)($at)
 /* 09FD40 8009F140 8E0E0000 */  lw    $t6, ($s0)
 /* 09FD44 8009F144 2419FF9C */  li    $t9, -100
 /* 09FD48 8009F148 15C00005 */  bnez  $t6, .L8009F160
 /* 09FD4C 8009F14C 24040078 */   li    $a0, 120
 /* 09FD50 8009F150 240F003C */  li    $t7, 60
-/* 09FD54 8009F154 3C018012 */  lui   $at, %hi(D_8012718B) # $at, 0x8012
+/* 09FD54 8009F154 3C018012 */  lui   $at, %hi(gMinimapOpacityTarget) # $at, 0x8012
 /* 09FD58 8009F158 10000004 */  b     .L8009F16C
-/* 09FD5C 8009F15C A02F718B */   sb    $t7, %lo(D_8012718B)($at)
+/* 09FD5C 8009F15C A02F718B */   sb    $t7, %lo(gMinimapOpacityTarget)($at)
 .L8009F160:
 /* 09FD60 8009F160 24180032 */  li    $t8, 50
-/* 09FD64 8009F164 3C018012 */  lui   $at, %hi(D_8012718B) # $at, 0x8012
-/* 09FD68 8009F168 A038718B */  sb    $t8, %lo(D_8012718B)($at)
+/* 09FD64 8009F164 3C018012 */  lui   $at, %hi(gMinimapOpacityTarget) # $at, 0x8012
+/* 09FD68 8009F168 A038718B */  sb    $t8, %lo(gMinimapOpacityTarget)($at)
 .L8009F16C:
-/* 09FD6C 8009F16C 3C018012 */  lui   $at, %hi(D_80126CD1) # $at, 0x8012
-/* 09FD70 8009F170 A0206CD1 */  sb    $zero, %lo(D_80126CD1)($at)
+/* 09FD6C 8009F16C 3C018012 */  lui   $at, %hi(gMinimapFade) # $at, 0x8012
+/* 09FD70 8009F170 A0206CD1 */  sb    $zero, %lo(gMinimapFade)($at)
 /* 09FD74 8009F174 3C018012 */  lui   $at, %hi(gShowHUD) # $at, 0x8012
 /* 09FD78 8009F178 A0206CD2 */  sb    $zero, %lo(gShowHUD)($at)
 /* 09FD7C 8009F17C 3C018012 */  lui   $at, %hi(D_80126CD5) # $at, 0x8012
@@ -128,10 +128,10 @@ glabel func_8009F034
 /* 09FDA8 8009F1A8 3C018012 */  lui   $at, %hi(D_8012718A) # $at, 0x8012
 /* 09FDAC 8009F1AC A022718A */  sb    $v0, %lo(D_8012718A)($at)
 /* 09FDB0 8009F1B0 8E180000 */  lw    $t8, ($s0)
-/* 09FDB4 8009F1B4 3C038012 */  lui   $v1, %hi(D_8012718C) # $v1, 0x8012
-/* 09FDB8 8009F1B8 3C048012 */  lui   $a0, %hi(D_80127190) # $a0, 0x8012
-/* 09FDBC 8009F1BC 24847190 */  addiu $a0, %lo(D_80127190) # addiu $a0, $a0, 0x7190
-/* 09FDC0 8009F1C0 2463718C */  addiu $v1, %lo(D_8012718C) # addiu $v1, $v1, 0x718c
+/* 09FDB4 8009F1B4 3C038012 */  lui   $v1, %hi(gStopwatchErrorX) # $v1, 0x8012
+/* 09FDB8 8009F1B8 3C048012 */  lui   $a0, %hi(gStopwatchErrorY) # $a0, 0x8012
+/* 09FDBC 8009F1BC 24847190 */  addiu $a0, %lo(gStopwatchErrorY) # addiu $a0, $a0, 0x7190
+/* 09FDC0 8009F1C0 2463718C */  addiu $v1, %lo(gStopwatchErrorX) # addiu $v1, $v1, 0x718c
 /* 09FDC4 8009F1C4 240E0037 */  li    $t6, 55
 /* 09FDC8 8009F1C8 240F00B3 */  li    $t7, 179
 /* 09FDCC 8009F1CC AC6E0000 */  sw    $t6, ($v1)

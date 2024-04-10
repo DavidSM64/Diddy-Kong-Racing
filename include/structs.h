@@ -1216,7 +1216,7 @@ typedef struct Object_Racer {
   /* 0x02A */ u16 unk2A;
   /* 0x02C */ f32 velocity;
   /* 0x030 */ f32 lateral_velocity;
-  /* 0x034 */ s32 unk34; // I think this is the engine pitch for the hovercraft and plane, but I cannot yet confirm.
+  /* 0x034 */ f32 unk34; // Vehicle pitch.
   /* 0x038 */ f32 ox1;
   /* 0x03C */ f32 oy1;
   /* 0x040 */ f32 oz1;

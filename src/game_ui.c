@@ -144,7 +144,7 @@ ByteColour gHudMinimapColours[40] = {
 
 u32 gHudColour = COLOUR_RGBA32(255, 255, 255, 254);
 
-f32 D_800E2838 = 0.0f;
+UNUSED f32 sRecordVel = 0.0f; // Set to whatever the highest velocity recorded is, but never actually used.
 
 // Unused?
 s32 D_800E283C[5] = { 0x06FFFFFF, 0x000FFFFF, 0x06000000, 0x0014FFFF, 0x00000000 };
@@ -153,10 +153,10 @@ s32 D_800E283C[5] = { 0x06FFFFFF, 0x000FFFFF, 0x06000000, 0x0014FFFF, 0x00000000
 
 /************ .bss ************/
 
-s8 D_80126CD0;
-s8 D_80126CD1;
+s8 gMinimapOpacity;
+s8 gMinimapFade;
 s8 gShowHUD;
-s8 D_80126CD3;
+s8 gMinimapXlu;
 
 /**
  * gRaceStartShowHudStep counts up from 0->5 on race start, and is used to
@@ -188,11 +188,11 @@ s32 D_80126D14;
 s32 D_80126D18;
 s32 gMinimapDotOffsetX;
 s32 gMinimapDotOffsetY;
-s32 D_80126D24;
-s32 D_80126D28;
-u16 D_80126D2C;
-f32 D_80126D30;
-u8 D_80126D34;
+s32 gHudOffsetX; // Offset value to do the slide in animation.
+s32 gHudBounceX; // Offset value to do the bounce when the hud slides in.
+u16 gHudBounceTimer;
+f32 gHudBounceMag;
+u8 gHudRaceStart;
 u8 D_80126D35;
 u8 gHideRaceTimer;
 u8 gNumActivePlayers;
@@ -227,9 +227,9 @@ Settings *gHudSettings;
 u8 gHudSilverCoinRace;
 u8 D_80127189;
 u8 D_8012718A;
-u8 D_8012718B;
-s32 D_8012718C;
-s32 D_80127190;
+u8 gMinimapOpacityTarget;
+s32 gStopwatchErrorX;
+s32 gStopwatchErrorY;
 LevelHeader_70 *D_80127194;
 s32 D_80127198[6];
 
@@ -294,7 +294,7 @@ void init_hud(UNUSED s32 viewportCount) {
     gTimeTrialVoiceDelay = 0;
     D_80126D3C = NULL;
     D_80126D44 = 0;
-    D_80126CD3 = 0;
+    gMinimapXlu = 0;
     D_80127194 = (LevelHeader_70 *) get_misc_asset(ASSET_MISC_58);
     func_8007F1E8(D_80127194);
     set_sound_channel_volume(0, 32767);
@@ -337,8 +337,11 @@ void free_hud(void) {
     gParticlePtrList_flush();
 }
 
-u8 func_800A0190(void) {
-    return D_80126D34;
+/**
+ * Return whether the race has been started from the HUDs end.
+*/
+u8 race_starting(void) {
+    return gHudRaceStart;
 }
 
 /**
@@ -365,15 +368,15 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
             gHUDCurrMatrix = *mtx;
             gHUDCurrVertex = *vertexList;
             D_80127180 = 0;
-            if (D_80126CD1 != 0) {
-                D_80126CD0 += updateRate;
-                if (D_8012718B < D_80126CD0) {
-                    D_80126CD0 = D_8012718B;
+            if (gMinimapFade) {
+                gMinimapOpacity += updateRate;
+                if (gMinimapOpacity > gMinimapOpacityTarget) {
+                    gMinimapOpacity = gMinimapOpacityTarget;
                 }
             } else {
-                D_80126CD0 -= updateRate;
-                if (D_80126CD0 < 0) {
-                    D_80126CD0 = 0;
+                gMinimapOpacity -= updateRate;
+                if (gMinimapOpacity < 0) {
+                    gMinimapOpacity = 0;
                 }
             }
             if (gShowHUD == 0) {
@@ -389,7 +392,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->raceFinished == FALSE &&
                             ((gHudLevelHeader->race_type == RACETYPE_DEFAULT) ||
                              gHudLevelHeader->race_type == RACETYPE_HORSESHOE_GULCH) &&
-                            D_80126D34) {
+                            gHudRaceStart) {
                             gShowCourseDirections = 1 - gShowCourseDirections;
                             sound_play((SOUND_TING_HIGHER + gShowCourseDirections), NULL);
                             if (gShowCourseDirections) {
@@ -400,7 +403,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         }
                     } else if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS &&
                                racer->raceFinished == FALSE && !(gHudLevelHeader->race_type & RACETYPE_CHALLENGE) &&
-                               D_80126D34) {
+                               gHudRaceStart) {
                         if (D_800E2794[gHUDNumPlayers][racer->playerIndex] < PLAYER_FOUR) {
                             D_800E2794[gHUDNumPlayers][racer->playerIndex]++;
                         } else {
@@ -409,7 +412,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         sound_play((SOUND_TING_HIGHEST - (D_800E2794[gHUDNumPlayers][racer->playerIndex] == 0)), NULL);
                     }
                     if (get_buttons_pressed_from_player(D_80126D10) & R_CBUTTONS && racer->raceFinished == FALSE &&
-                        D_80126D34 && D_80126CD0 == 0) {
+                        gHudRaceStart && gMinimapOpacity == 0) {
                         gHudToggleSettings[gHUDNumPlayers] = 1 - gHudToggleSettings[gHUDNumPlayers];
                         if (gHudToggleSettings[gHUDNumPlayers] == 0) {
                             sound_play(SOUND_TING_LOW, NULL);
@@ -440,17 +443,17 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                 tex_enable_modes(RENDER_ALL);
                 tex_disable_modes(RENDER_Z_COMPARE);
                 sprite_opaque(FALSE);
-                if (check_if_showing_cutscene_camera() == FALSE && D_80126D34 == FALSE &&
+                if (check_if_showing_cutscene_camera() == FALSE && gHudRaceStart == FALSE &&
                     racer->playerIndex == PLAYER_ONE) {
                     if (D_80126D35 != 0) {
-                        D_80126D28 = sins_f(D_80126D2C) * D_80126D30 * 8.0f;
-                        D_80126D2C += updateRate << 0xB;
-                        if (D_80126D2C >= 0x8000) {
-                            D_80126D2C -= 0x8000;
-                            D_80126D30 = D_80126D30 / 2;
-                            if (D_80126D30 <= 0.125) {
-                                D_80126D34 = TRUE;
-                                D_80126D24 = 0;
+                        gHudBounceX = sins_f(gHudBounceTimer) * gHudBounceMag * 8.0f;
+                        gHudBounceTimer += updateRate << 0xB;
+                        if (gHudBounceTimer >= 0x8000) {
+                            gHudBounceTimer -= 0x8000;
+                            gHudBounceMag = gHudBounceMag / 2;
+                            if (gHudBounceMag <= 0.125) {
+                                gHudRaceStart = TRUE;
+                                gHudOffsetX = 0;
                             }
                         }
                     } else {
@@ -458,14 +461,14 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                             sound_play(SOUND_WHOOSH1, NULL);
                             gRaceStartShowHudStep += 1;
                         }
-                        D_80126D24 -= updateRate * 13;
-                        if (D_80126D24 < 0) {
-                            D_80126D24 = 0;
+                        gHudOffsetX -= updateRate * 13;
+                        if (gHudOffsetX < 0) {
+                            gHudOffsetX = 0;
                         }
-                        if (D_80126D24 == 0) {
+                        if (gHudOffsetX == 0) {
                             D_80126D35 = 1;
                             sound_play(SOUND_EXPLOSION2, NULL);
-                            D_80126D28 = 0;
+                            gHudBounceX = 0;
                         }
                     }
                 }
@@ -528,7 +531,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                     }
                     func_80068508(FALSE);
                 }
-                D_80126CD1 = 0;
+                gMinimapFade = FALSE;
                 sprite_opaque(TRUE);
                 if (D_80127180) {
                     gHudSprites[D_80127180].texture = NULL;
@@ -1358,19 +1361,19 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
             set_text_font(ASSET_FONTS_FUNFONT);
             // Draw text shadow.
             set_text_colour(0, 0, 0, 255, 255);
-            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28 + 1, D_80127190 + 1, SWMessage[0],
+            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 1, SWMessage[0],
                       ALIGN_MIDDLE_CENTER);
-            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28 + 1, D_80127190 + 15, SWMessage[1],
+            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 15, SWMessage[1],
                       ALIGN_MIDDLE_CENTER);
-            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28 + 1, D_80127190 + 29, SWMessage[2],
+            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX + 1, gStopwatchErrorY + 29, SWMessage[2],
                       ALIGN_MIDDLE_CENTER);
             // Draw actual text.
             set_text_colour(D_80127194->red, D_80127194->green, D_80127194->blue, 128, D_80127194->alpha);
-            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28, D_80127190, SWMessage[0],
+            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY, SWMessage[0],
                       ALIGN_MIDDLE_CENTER);
-            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28, D_80127190 + 14, SWMessage[1],
+            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY + 14, SWMessage[1],
                       ALIGN_MIDDLE_CENTER);
-            draw_text(&gHUDCurrDisplayList, D_8012718C + D_80126D24 + D_80126D28, D_80127190 + 28, SWMessage[2],
+            draw_text(&gHUDCurrDisplayList, gStopwatchErrorX + gHudOffsetX + gHudBounceX, gStopwatchErrorY + 28, SWMessage[2],
                       ALIGN_MIDDLE_CENTER);
             update_colour_cycle(D_80127194, updateRate);
             set_kerning(0);
@@ -1445,12 +1448,12 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
                     vel = sqrtf((obj->segment.x_velocity * obj->segment.x_velocity) +
                                 (obj->segment.z_velocity * obj->segment.z_velocity));
                 }
-                if (D_800E2838 < vel) {
-                    D_800E2838 = vel;
+                if (sRecordVel < vel) {
+                    sRecordVel = vel;
                 }
                 vel *= 4.0f;
                 if (racer->drift_direction != 0) {
-                    vel += 7.0f;
+                    vel += 7.0f; //!@Bug: Planes and hovercraft use drift_direction for something else, applying this unintentionally.
                 }
                 if (vel > 100.0f) {
                     vel = 100.0f;
@@ -1471,8 +1474,8 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
                     }
                 }
                 if (gHudToggleSettings[gHUDNumPlayers] == 0) {
-                    if (D_80126CD3 & 2) {
-                        opacity = 255.0f - ((D_80126CD0 * 255.0f) / D_8012718B);
+                    if (gMinimapXlu & 2) {
+                        opacity = 255.0f - ((gMinimapOpacity * 255.0f) / gMinimapOpacityTarget);
                     } else {
                         opacity = 255;
                     }
@@ -1509,7 +1512,7 @@ void render_race_start(s32 arg0, s32 updateRate) {
             sprite_opaque(TRUE);
         }
         if (arg0 > 0) {
-            if (D_80126D34) {
+            if (gHudRaceStart) {
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, (arg0 * 255) / 40);
                 func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->unk1A0);
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 255, 255, 255);
@@ -2901,8 +2904,8 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     gAssetHudElementStaleCounter[HUD_ELEMENT_UNK_11] = 0;
     D_80127180 = 0;
 
-    if (D_80126CD3 & 2) {
-        mapOpacity = 255.0f - ((D_80126CD0 * 255.0f) / D_8012718B);
+    if (gMinimapXlu & 2) {
+        mapOpacity = 255.0f - ((gMinimapOpacity * 255.0f) / gMinimapOpacityTarget);
     } else {
         mapOpacity = 255;
     }
@@ -3162,7 +3165,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 gMinimapScreenY *= 1.2;
             }
             sprite_opaque(FALSE);
-            objTrans.trans.x_position = gMinimapScreenX + D_80126D24 + D_80126D28;
+            objTrans.trans.x_position = gMinimapScreenX + gHudOffsetX + gHudBounceX;
             objTrans.trans.y_position = gMinimapScreenY;
             if (osTvType == TV_TYPE_PAL) {
                 objTrans.trans.x_position -= 4.0f;
@@ -3239,7 +3242,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     minimap_marker_pos(objectGroup[i]->segment.trans.x_position,
                                        objectGroup[i]->segment.trans.z_position, sp114, sp118, sp11C);
                     if (someRacer->playerIndex != PLAYER_COMPUTER) {
-                        gCurrentHud->unk1F0 -= 1.0f;
+                        gCurrentHud->markerY -= 1.0f;
                         gCurrentHud->unk1E6 = 27;
                         gCurrentHud->unk1E4 =
                             (objectGroup[i]->segment.trans.y_rotation - ((lvlMdl->minimapRotation * 0xFFFF) / 360)) &
@@ -3262,7 +3265,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     }
                     if (!(get_current_level_race_type() & RACETYPE_CHALLENGE) || (!someRacer->raceFinished)) {
                         if (osTvType == TV_TYPE_PAL) {
-                            gCurrentHud->unk1EC -= 4.0f;
+                            gCurrentHud->markerX -= 4.0f;
                         }
                         if (get_current_level_race_type() == RACETYPE_CHALLENGE_BATTLE) {
                             switch (someRacer->unk212) {
@@ -3315,20 +3318,20 @@ void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspec
     scaledY = (lvlMdl->minimapYScale * -60.0f * (z - lvlMdl->lowerZBounds)) / b;
 
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) { // Is adventure 2?
-        gCurrentHud->unk1EC = (((f32) gMinimapScreenX - ((scaledX * angleCos) + (scaledY * angleSin))) +
+        gCurrentHud->markerX = (((f32) gMinimapScreenX - ((scaledX * angleCos) + (scaledY * angleSin))) +
                                (f32) lvlMdl->minimapOffsetXAdv2) -
                               (f32) gMinimapDotOffsetX;
-        gCurrentHud->unk1F0 =
+        gCurrentHud->markerY =
             ((f32) (lvlMdl->minimapOffsetYAdv2 + gMinimapScreenY) - ((scaledX * angleSin) - (scaledY * angleCos))) +
             (f32) gMinimapDotOffsetY;
         return;
     }
     // Final x position on minimap
-    gCurrentHud->unk1EC =
+    gCurrentHud->markerX =
         ((f32) gMinimapScreenX + ((scaledX * angleCos) + (scaledY * angleSin)) + (f32) lvlMdl->minimapOffsetXAdv1) -
         (f32) gMinimapDotOffsetX;
     // Final y position on minimap
-    gCurrentHud->unk1F0 =
+    gCurrentHud->markerY =
         ((f32) (lvlMdl->minimapOffsetYAdv1 + gMinimapScreenY) - ((scaledX * angleSin) - (scaledY * angleCos))) +
         (f32) gMinimapDotOffsetY;
 }
@@ -3379,26 +3382,34 @@ void func_800AAFD0(ObjectModel *objModel) {
     }
 }
 
-void func_800AB194(s32 arg0) {
-    D_80126CD1 = 1;
-    D_80126CD3 = arg0;
+/**
+ * Begin fading the minimap which will slowly set it to whatever the opacity target is.
+ * Fades in or out based on what the setting is.
+*/
+void minimap_fade(s32 setting) {
+    gMinimapFade = TRUE;
+    gMinimapXlu = setting;
 }
 
-void func_800AB1AC(s32 arg0) {
-    D_80126CD0 = D_8012718B;
-    D_80126CD3 = arg0;
+/**
+ * Snaps the minimap opacity to the target level.
+ * Fades in or out based on what the setting is.
+*/
+void minimap_opacity_set(s32 setting) {
+    gMinimapOpacity = gMinimapOpacityTarget;
+    gMinimapXlu = setting;
 }
 
 /**
  * Sets the race start HUD procedure to the first step.
  */
-UNUSED void reset_race_start_hud(void) {
+UNUSED void hud_reset_race_start(void) {
     gRaceStartShowHudStep = 0;
 }
 
 /**
  * Sets the visibility of the hud, hiding almost everything, leaving only the minimap.
  */
-void set_hud_visibility(u8 setting) {
+void hud_visibility(u8 setting) {
     gShowHUD = 1 - setting;
 }
