@@ -166,7 +166,7 @@ s32 func_800090C0(f32 arg0, f32 arg1, s32 arg2) {
  * Calculates the position between two points, then the distance from the nearest point.
  * Write the adjusted positions to the arguments.
  * Returns the distance between the input and the nearest endpoint.
-*/
+ */
 s32 audioline_distance(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *outX, f32 *outY, f32 *outZ) {
     f32 dx, dy, dz;
     f32 x1, y1, z1;
@@ -190,8 +190,7 @@ s32 audioline_distance(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *o
     if (dx == 0.0 && dy == 0.0 && dz == 0.0) {
         mag = 0.0f;
     } else {
-        mag = ((inX - x1) * dx + (inY - y1) * dy + (inZ - z1) * dz) /
-                (dx * dx + dy * dy + dz * dz);
+        mag = ((inX - x1) * dx + (inY - y1) * dy + (inZ - z1) * dz) / (dx * dx + dy * dy + dz * dz);
     }
 
     if (mag < 0.0f) {
@@ -212,8 +211,7 @@ s32 audioline_distance(f32 inX, f32 inY, f32 inZ, floatXYZVals *floatXYZ, f32 *o
         ret = sqrtf(dx * dx + dy * dy + dz * dz);
     } else {
         *outX = mag * dx + x1, // Comma required here as this was likely all one line.
-        *outY = mag * dy + y1,
-        *outZ = mag * dz + z1;
+            *outY = mag * dy + y1, *outZ = mag * dz + z1;
 
         ret = sqrtf((*outX - inX) * (*outX - inX) + (*outY - inY) * (*outY - inY) + (*outZ - inZ) * (*outZ - inZ));
     }
@@ -284,14 +282,14 @@ void func_8000974C(u16 soundBite, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 volu
     }
 }
 
-void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6,
-                   u8 arg7, u8 arg8, u16 arg9, u8 argA, u8 lineID, u8 argC) {
+void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6, u8 arg7, u8 arg8, u16 arg9,
+                              u8 argA, u8 lineID, u8 argC) {
     Vec3f *temp_a0;
     unk80119C58 *temp_v1;
 
     if ((lineID < 7) && (argC < 30)) {
         temp_v1 = &D_80119C58[lineID];
-        temp_a0 = (Vec3f *) (((u32 *) &temp_v1->unk4) + argC * 3); //This can't be right...
+        temp_a0 = (Vec3f *) (((u32 *) &temp_v1->unk4) + argC * 3); // This can't be right...
         temp_a0->x = x;
         temp_a0->y = y;
         temp_a0->z = z;

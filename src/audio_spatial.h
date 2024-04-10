@@ -59,8 +59,8 @@ void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, SoundMask
 void func_8000A2E8(s32 arg0);
 s32 func_800090C0(f32, f32, s32);
 void func_800095E8(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, f32 arg6, SoundMask **soundMask);
-void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6,
-                   u8 arg7, u8 arg8, u16 arg9, u8 argA, u8 argB, u8 argC);
+void audioline_ambient_create(u8 arg0, u16 soundId, f32 x, f32 y, f32 z, u8 arg5, u8 arg6, u8 arg7, u8 arg8, u16 arg9,
+                              u8 argA, u8 lineID, u8 argC);
 s32 func_800099EC(u8 arg0);
 void debug_render_line(Gfx **dlist, Vertex **verts, Triangle **tris, floatXYZVals *coords, u8 red, u8 green, u8 blue);
 void func_80006BFC(Object *obj, ObjectSegment *segment, Object *obj2, s32 updateRate);

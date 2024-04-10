@@ -224,8 +224,8 @@ void set_time_trial_start_voice(u16 soundID, f32 delay, s32 arg2);
 void func_800A74EC(u16 soundID, s32 arg1);
 void minimap_init(LevelModel *model);
 s8 get_hud_setting(void);
-void minimap_fade(s32 arg0);
-void minimap_opacity_set(s32 arg0);
+void minimap_fade(s32 setting);
+void minimap_opacity_set(s32 setting);
 void func_800AB1C8(void);
 void hud_visibility(u8 setting);
 void render_race_time(Object_Racer *racer, s32 updateRate);
@@ -256,7 +256,7 @@ void render_hud_banana_challenge(s32 arg0, Object *obj, s32 updateRate);
 void render_balloon_count(Object_Racer *racer);
 void render_treasure_hud(Object_Racer *racer);
 void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspectRatio);
-void render_timer(s32 arg0, s32 arg1, s32 minutes, s32 seconds, s32 hundredths, s32 someBool);
+void render_timer(s32 x, s32 y, s32 minutes, s32 seconds, s32 hundredths, s32 smallFont);
 
 // Non Matching
 void func_800AA600(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement *arg3);

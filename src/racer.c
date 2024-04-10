@@ -67,20 +67,14 @@ s32 gSurfaceBobbingTable[19] = {
 };
 // When landing on this surface, it makes a sound.
 // Strangely, they did only two surface types then called it a day.
-s32 gSurfaceSoundTable[19] = {
-    SOUND_NONE, SOUND_LAND_GRASS, SOUND_LAND_SAND, SOUND_NONE, 
-    SOUND_NONE, SOUND_NONE, SOUND_NONE, SOUND_NONE,
-    SOUND_NONE, SOUND_NONE, SOUND_NONE, SOUND_NONE, 
-    SOUND_NONE, SOUND_NONE, SOUND_NONE, SOUND_NONE, 
-    SOUND_NONE, SOUND_NONE, SOUND_NONE
-};
+s32 gSurfaceSoundTable[19] = { SOUND_NONE, SOUND_LAND_GRASS, SOUND_LAND_SAND, SOUND_NONE, SOUND_NONE,
+                               SOUND_NONE, SOUND_NONE,       SOUND_NONE,      SOUND_NONE, SOUND_NONE,
+                               SOUND_NONE, SOUND_NONE,       SOUND_NONE,      SOUND_NONE, SOUND_NONE,
+                               SOUND_NONE, SOUND_NONE,       SOUND_NONE,      SOUND_NONE };
 
 u16 D_800DCCCC[19] = {
-    0x010C, 0x010B, 0x0009, 0x010C,
-    0x010C, 0x010C, 0x010C, 0x010C,
-    0x010C, 0x010C, 0x010C, 0x0005,
-    0x010C, 0x010C, 0x010C, 0x010C,
-    0x010C, 0x010C, 0x010C,
+    0x010C, 0x010B, 0x0009, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C,
+    0x010C, 0x0005, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C,
 };
 
 s32 gSurfaceFlagTable[19] = {
@@ -88,9 +82,7 @@ s32 gSurfaceFlagTable[19] = {
 };
 
 s32 gSurfaceFlagTable4P[20] = {
-    0, 4, 0x10, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0x100, 0, 0, 0, 0,
-    0, 0,
+    0, 4, 0x10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x100, 0, 0, 0, 0, 0, 0,
 };
 
 // Used to know how the AI should use a balloon when they have one.
