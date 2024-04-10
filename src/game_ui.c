@@ -657,40 +657,40 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
                 indicator = (HudElement *) &gCurrentHud->courseArrows;
                 switch (type) {
                     case INDICATOR_LEFT:
-                        indicator->spriteID = 33;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_TURN_45;
                         indicator->y_rotation = 0;
                         break;
                     case INDICATOR_LEFT_SHARP:
-                        indicator->spriteID = 32;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_TURN_90;
                         indicator->y_rotation = 0;
                         break;
                     case INDICATOR_LEFT_UTURN:
-                        indicator->spriteID = 31;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_U;
                         indicator->y_rotation = 0;
                         break;
                     case INDICATOR_RIGHT:
-                        indicator->spriteID = 33;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_TURN_45;
                         indicator->y_rotation = -0x8000;
                         break;
                     case INDICATOR_RIGHT_SHARP:
-                        indicator->spriteID = 32;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_TURN_90;
                         indicator->y_rotation = -0x8000;
                         break;
                     case INDICATOR_RIGHT_UTURN:
-                        indicator->spriteID = 31;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_U;
                         indicator->y_rotation = -0x8000;
                         break;
                     case INDICATOR_UP:
-                        indicator->spriteID = 30;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_DOWN;
                         indicator->y_rotation = -0x8000;
                         indicator->x_rotation = -0x8000;
                         break;
                     case INDICATOR_DOWN:
-                        indicator->spriteID = 30;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_DOWN;
                         indicator->y_rotation = 0;
                         break;
                     default: // INDICATOR_EXCLAMATION
-                        indicator->spriteID = 29;
+                        indicator->spriteID = HUD_SPRITE_INDICATOR_EXCLAMATION;
                         indicator->y_rotation = 0;
                         break;
                 }
@@ -718,7 +718,7 @@ void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate) {
                 indicator = &gCurrentHud->courseArrows;
                 indicator->y_rotation = 0;
                 indicator->x_rotation = 0;
-                indicator->spriteID = 29;
+                indicator->spriteID = HUD_SPRITE_INDICATOR_EXCLAMATION;
                 if ((get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) && ((s32) racer->indicator_type < 30)) {
                     indicator->y_rotation = (s16) (0x8000 - indicator->y_rotation);
                 }
@@ -872,7 +872,7 @@ void func_800A19A4(Object_Racer *racer, UNUSED s32 updateRate) {
     s32 i2;
 
     prevY = gCurrentHud->eggChallengeIcon.x;
-    gCurrentHud->challengePortrait.spriteID = racer->characterId + 56;
+    gCurrentHud->challengePortrait.spriteID = racer->characterId + HUD_SPRITE_PORTRAIT;
     D_80126CD5 = 1;
     if ((gNumActivePlayers < 3) || ((gNumActivePlayers == 3) && (racer->playerIndex == -1))) {
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->challengePortrait);
@@ -1024,7 +1024,7 @@ GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1E48.s")
 #endif
 
 void func_800A22F4(Object_Racer *racer, UNUSED s32 updateRate) {
-    gCurrentHud->challengePortrait.spriteID = racer->characterId + 56;
+    gCurrentHud->challengePortrait.spriteID = racer->characterId + HUD_SPRITE_PORTRAIT;
     if (gNumActivePlayers < 3 || (gNumActivePlayers == 3 && racer->playerIndex == PLAYER_COMPUTER)) {
         D_80126CD5 = TRUE;
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->challengePortrait);
@@ -1110,7 +1110,7 @@ void render_hud_hubworld(Object *obj, s32 updateRate) {
         render_speedometer(obj, updateRate);
         if (is_in_two_player_adventure()) {
             portrait = (HudElement *) &gCurrentHud->twoPlayerAdvPortrait;
-            portrait->spriteID = (get_settings()->racers[1].character + 0x38);
+            portrait->spriteID = (get_settings()->racers[1].character + HUD_SPRITE_PORTRAIT);
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, portrait);
         }
         func_80068508(FALSE);
@@ -1673,7 +1673,7 @@ void render_treasure_hud(Object_Racer *racer) {
 
     prevY = gCurrentHud->treasureMetre.y;
     if (gNumActivePlayers < 3 || (gNumActivePlayers == 3 && racer->playerIndex == PLAYER_COMPUTER)) {
-        gCurrentHud->challengePortrait.spriteID = racer->characterId + 56;
+        gCurrentHud->challengePortrait.spriteID = racer->characterId + HUD_SPRITE_PORTRAIT;
         D_80126CD5 = TRUE;
         func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->challengePortrait);
         D_80126CD5 = FALSE;
@@ -2520,7 +2520,7 @@ void render_balloon_count(UNUSED Object_Racer *racer) {
         balloonTickTimer = 840;
     }
     if (settings->cutsceneFlags & CUTSCENE_ADVENTURE_TWO) {
-        gCurrentHud->balloonCountIcon.spriteID = 69; // Use the adventure two balloon sprite.
+        gCurrentHud->balloonCountIcon.spriteID = HUD_SPRITE_BALLOON_DIAMOND; // Use the adventure two balloon sprite.
     }
     if (get_cutscene_id() == 10 && get_balloon_cutscene_timer() < balloonTickTimer) {
         balloonCount = *settings->balloonsPtr - 1;
@@ -2795,15 +2795,15 @@ void render_timer(s32 x, s32 y, s32 minutes, s32 seconds, s32 hundredths, s32 sm
         unk10 = 10;
         unkC = 10;
         unk8 = 2;
-        var_s4 = 9;
-        unk0 = 11;
+        var_s4 = HUD_ASSET_9;
+        unk0 = HUD_ASSET_11;
     } else {
         unk14 = 10;
         unk10 = 8;
         unkC = 7;
         unk8 = 0;
-        var_s4 = 10;
-        unk0 = 12;
+        var_s4 = HUD_ASSET_10;
+        unk0 = HUD_ASSET_12;
     }
     entry2.spriteID = var_s4;
     entry2.spriteOffset = minutes / 10;
@@ -3035,7 +3035,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     gCurrentHud->bananaCountNumber2.y -= temp + 1;
                     gCurrentHud->bananaCountX.x += var_a0_5;
                     gCurrentHud->bananaCountX.y -= temp;
-                    gCurrentHud->challengePortrait.spriteID = curRacerObj->characterId + 56;
+                    gCurrentHud->challengePortrait.spriteID = curRacerObj->characterId + HUD_SPRITE_PORTRAIT;
                     if (osTvType == TV_TYPE_PAL) {
                         gCurrentHud->challengePortrait.x -= 4.0f;
                         gCurrentHud->eggChallengeIcon.x -= 4.0f;
@@ -3217,7 +3217,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 if (temp_v0_8 != NULL) {
                     minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114,
                                        sp118, sp11C);
-                    gCurrentHud->minimapMarker.spriteID = 14;
+                    gCurrentHud->minimapMarker.spriteID = HUD_SPRITE_MAP_DOT;
                     gCurrentHud->minimapMarker.z_rotation = 0;
                     gCurrentHud->minimapMarker.scale = 1.0f;
                     tempVar1 = (opacity * (f32) temp_v0_8->segment.object.opacity) * (1.0 / 128.0);
@@ -3234,14 +3234,14 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gHudMinimapColours[8].red, gHudMinimapColours[8].green,
                                 gHudMinimapColours[8].blue, tempVar1);
                 gCurrentHud->minimapMarker.scale = 1.0f;
-                gCurrentHud->minimapMarker.spriteID = 14;
+                gCurrentHud->minimapMarker.spriteID = HUD_SPRITE_MAP_DOT;
                 func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->minimapMarker);
             }
             // Draw Taj's minimap icon.
             if (gHudLevelHeader->race_type == RACETYPE_HUBWORLD) {
                 temp_v0_8 = find_taj_object();
                 if (temp_v0_8 != NULL) {
-                    gCurrentHud->minimapMarker.spriteID = 14;
+                    gCurrentHud->minimapMarker.spriteID = HUD_SPRITE_MAP_DOT;
                     minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114,
                                        sp118, sp11C);
                     gCurrentHud->minimapMarker.z_rotation = 0;
@@ -3260,7 +3260,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                                        objectGroup[i]->segment.trans.z_position, sp114, sp118, sp11C);
                     if (someRacer->playerIndex != PLAYER_COMPUTER) {
                         gCurrentHud->minimapMarker.y -= 1.0f;
-                        gCurrentHud->minimapMarker.spriteID = 27;
+                        gCurrentHud->minimapMarker.spriteID = HUD_SPRITE_MAP_ARROW;
                         gCurrentHud->minimapMarker.z_rotation =
                             (objectGroup[i]->segment.trans.y_rotation - ((lvlMdl->minimapRotation * 0xFFFF) / 360)) &
                             0xFFFF;
@@ -3271,7 +3271,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                         sprite_opaque(TRUE);
                     } else {
                         gCurrentHud->minimapMarker.z_rotation = 0;
-                        gCurrentHud->minimapMarker.spriteID = 14;
+                        gCurrentHud->minimapMarker.spriteID = HUD_SPRITE_MAP_DOT;
                     }
                     if (is_taj_challenge() && someRacer->vehicleID == VEHICLE_CARPET) {
                         gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, 255, 0, 255, opacity);
