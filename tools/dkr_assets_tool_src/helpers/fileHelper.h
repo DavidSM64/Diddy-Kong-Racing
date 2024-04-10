@@ -12,6 +12,13 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
+// Using path as a key doesn't seem to work on raspberry pi OS?
+struct PathHash {
+    std::size_t operator()(const std::filesystem::__cxx11::path& p) const {
+        return std::filesystem::hash_value(p);
+    }
+};
+
 class FileHelper {
 public:
     static std::vector<uint8_t> read_binary_file(const fs::path &filename);
@@ -60,7 +67,7 @@ public:
     static void endianswap(std::vector<uint8_t> &bytes);
     
     static std::string get_last_modified_timestamp(const fs::path &path);
-    static void insert_timestamps_from_directory(const fs::path &dirPath, std::unordered_map<fs::path, std::string> &timestamps);
+    static void insert_timestamps_from_directory(const fs::path &dirPath, std::unordered_map<fs::path, std::string, PathHash> &timestamps);
 private:
     
 };

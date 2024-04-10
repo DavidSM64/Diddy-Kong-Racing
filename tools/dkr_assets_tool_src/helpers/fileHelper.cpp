@@ -373,7 +373,7 @@ std::string FileHelper::get_last_modified_timestamp(const fs::path &path) {
     return out;
 }
 
-void FileHelper::insert_timestamps_from_directory(const fs::path &dirPath, std::unordered_map<fs::path, std::string> &timestamps) {
+void FileHelper::insert_timestamps_from_directory(const fs::path &dirPath, std::unordered_map<fs::path, std::string, PathHash> &timestamps) {
     // TODO: Make this multithreaded?
     for (const auto &filepath : fs::recursive_directory_iterator(dirPath)) {
         timestamps[filepath] = get_last_modified_timestamp(filepath);

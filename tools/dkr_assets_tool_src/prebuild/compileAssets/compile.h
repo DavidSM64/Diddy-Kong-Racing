@@ -20,8 +20,8 @@ private:
     JsonFile *_modOrderFile;
     size_t _modOrderCount;
     
-    std::unordered_map<fs::path, std::string> _lastModifiedDates;
-    std::unordered_map<fs::path, std::vector<fs::path>> _modFiles;
+    std::unordered_map<fs::path, std::string, PathHash> _lastModifiedDates;
+    std::unordered_map<fs::path, std::vector<fs::path>, PathHash> _modFiles;
     std::vector<fs::path> _modFilesModified;
     
     void _check_mod_path(fs::path &modPath);
