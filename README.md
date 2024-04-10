@@ -9,7 +9,7 @@ As of January 26, 2024, this is our current score:
 
 &emsp;&emsp;&emsp;&emsp;Decomp progress: 66.48%
 
-&emsp;&emsp;&emsp;&emsp;Documentation progress: 35.36%
+&emsp;&emsp;&emsp;&emsp;Documentation progress: 35.49%
 <!-- README_SCORE_SUMMARY_END -->
 
 ---
@@ -125,15 +125,15 @@ s32 is_drumstick_unlocked(void) {
 ```
 
 <!-- README_SCORE_BEGIN -->
-As of January 26, 2024, this is our current score:
+As of April 4, 2024, this is our current score:
 ```
  ====================================================================
                 ADVENTURE ONE (ASM -> C Decompilation)
- -------------- 66.48% Complete (69.44% NON_MATCHING) ---------------
+ -------------- 66.48% Complete (69.07% NON_MATCHING) ---------------
                      # Decompiled functions: 1681
                      # GLOBAL_ASM remaining: 164
-                     # NON_MATCHING functions: 16
-                  # NON_EQUIVALENT WIP functions: 54
+                     # NON_MATCHING functions: 15
+                  # NON_EQUIVALENT WIP functions: 55
  --------------------------- Game Status ----------------------------
               Balloons: 31/47, Keys: 3/4, Trophies: 3/5
                 T.T. Amulets: 3/4, Wizpig Amulets: 3/4
@@ -141,9 +141,9 @@ As of January 26, 2024, this is our current score:
              We are racing in Windmill Plains. (Lap 3/3)
  ====================================================================
                 ADVENTURE TWO (Cleanup & Documentation)
- ------------------------- 35.36% Complete --------------------------
-                     # Documented functions: 828
-                    # Undocumented remaining: 740
+ ------------------------- 35.49% Complete --------------------------
+                     # Documented functions: 833
+                    # Undocumented remaining: 735
  --------------------------- Game Status ----------------------------
               Balloons: 17/47, Keys: 2/4, Trophies: 1/5
                 T.T. Amulets: 2/4, Wizpig Amulets: 1/4
