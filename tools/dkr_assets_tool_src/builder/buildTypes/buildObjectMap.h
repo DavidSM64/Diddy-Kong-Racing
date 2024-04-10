@@ -30,8 +30,8 @@ private:
     JsonFile *_transTable;
     JsonFile *_objBehaviorToEntryTable;
     
-    void _set_obj_position(GltfFile &gltf, uint8_t *bytes, CStruct *entryCommon, int nodeIndex);
+    void _set_obj_position(GltfFileNode *objNode, uint8_t *bytes, CStruct *entryCommon, int nodeIndex);
     
-    size_t _calculate_size(GltfFile &gltf);
+    size_t _calculate_size(GltfFileNode *objectsNode);
     void _preload_c_context();
 };

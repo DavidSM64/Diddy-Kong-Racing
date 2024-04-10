@@ -5,39 +5,56 @@
 #include <string>
 #include "libs/tiny_gltf.h"
 
+class GltfFile;
+
+// Represents a node in the gltf file.
+class GltfFileNode {
+public:
+    GltfFileNode(GltfFile *file, tinygltf::Node *node);
+    ~GltfFileNode();
+    
+    size_t get_child_count();
+    GltfFileNode *get_child_node_by_index(int nodeIndex);
+    
+    void get_position(double &outX, double &outY, double &outZ);
+    std::string get_name();
+    
+    template <typename T>
+    T get_extra(std::string key, T defaultValue) {
+        if(!_node->extras.IsObject()) {
+            // This node does not have any extras, just return the default value.
+            return defaultValue;
+        }
+        
+        if(!_node->extras.Has(key)) {
+            // Return default value if the key is not in the map.
+            return defaultValue;
+        }
+        
+        tinygltf::Value val = _node->extras.Get(key);
+        
+        return val.Get<T>();
+    }
+private:
+    GltfFile *_file;
+    tinygltf::Node *_node;
+};
+
 // Read-Only .gltf file
 class GltfFile {
 public:
     GltfFile(const fs::path &filepath); 
     ~GltfFile();
     
-    // Node stuff
-    int get_node_count();
-    std::string get_node_name(int node);
-    void get_node_position(int node, double &x, double &y, double &z);
-    
-    template <typename T>
-    T get_node_extra(int node, std::string key, T defaultValue) {
-        tinygltf::Node &gltfNode = _model.nodes[node];
-        
-        if(!gltfNode.extras.IsObject()) {
-            // This node does not have any extras, just return the default value.
-            return defaultValue;
-        }
-        
-        if(!gltfNode.extras.Has(key)) {
-            // Return default value if the key is not in the map.
-            return defaultValue;
-        }
-        
-        tinygltf::Value val = gltfNode.extras.Get(key);
-        
-        return val.Get<T>();
-    }
+    size_t get_node_count();
+    GltfFileNode *get_node(int nodeIndex);
+    bool search_for_node_by_name(const std::string nodeName, int &outIndex);
     
 private:
     tinygltf::Model _model;
     tinygltf::TinyGLTF _tinygltf;
+    std::unordered_map<tinygltf::Node *, GltfFileNode *> _nodeCache;
+    
 };
 
 // Write-Only .gltf file

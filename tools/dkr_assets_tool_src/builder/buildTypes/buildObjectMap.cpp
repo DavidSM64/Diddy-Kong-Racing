@@ -8,6 +8,10 @@
 
 #include "helpers/c/cStructGltfHelper.h"
 
+void search_for_objects_node() {
+    
+}
+
 BuildObjectMap::BuildObjectMap(DkrAssetsSettings &settings, BuildInfo &info) : _settings(settings), _info(info) {
     _preload_c_context();
     
@@ -23,8 +27,14 @@ BuildObjectMap::BuildObjectMap(DkrAssetsSettings &settings, BuildInfo &info) : _
     
     GltfFile gltf(gltfPath);
     
+    int objectsNodeIndex;
+    DebugHelper::assert_(gltf.search_for_node_by_name("objects", objectsNodeIndex),
+        "(BuildObjectMap::BuildObjectMap) .glTF file does not contain a node named \"objects\"!");
+        
+    GltfFileNode *objectsNode = gltf.get_node(objectsNodeIndex);
+    
     // _calculate_size() also fills the `_objectIdToStructCache` map.
-    size_t dataSize = _calculate_size(gltf);
+    size_t dataSize = _calculate_size(objectsNode);
     
     size_t outSize = DataHelper::align8(dataSize + sizeof(LevelObjectMapHeader));
     
@@ -36,11 +46,15 @@ BuildObjectMap::BuildObjectMap(DkrAssetsSettings &settings, BuildInfo &info) : _
     objectMap->header.fileSize = dataSize;
     uint8_t *bytes = &objectMap->entriesData[0];
     
-    int numberOfNodes = gltf.get_node_count();
+    int numberOfChildNodes = objectsNode->get_child_count();
     
-    // Node 0 is the root node, so we want to start at node 1.
-    for(int i = 1; i < numberOfNodes; i++) {
-        std::string objectBuildId = gltf.get_node_extra<std::string>(i, "id", "");
+    for(int i = 0; i < numberOfChildNodes; i++) {
+        GltfFileNode *objNode = objectsNode->get_child_node_by_index(i);
+        
+        std::string objectBuildId = objNode->get_extra<std::string>("id", "");
+        
+        DebugHelper::assert_(!objectBuildId.empty(), "(BuildObjectMap::BuildObjectMap) Node", i,
+            " does not have id defined!");
         
         int id = _transTable->get_index_of_elem_in_array<std::string>("/table", objectBuildId);
         
@@ -64,12 +78,12 @@ BuildObjectMap::BuildObjectMap(DkrAssetsSettings &settings, BuildInfo &info) : _
             entryCommon = _c_context.get_struct("LevelObjectEntryCommon");
         }
         
-        _set_obj_position(gltf, bytes, entryCommon, i);
+        _set_obj_position(objNode, bytes, entryCommon, i);
         
         if(entryCommon != entryStruct) {
             for(size_t entry = 0; entry < entryStruct->entry_count(); entry++) {
                 CStructEntry *structMember = entryStruct->get_entry(entry);
-                CStructGltfHelper::put_gltf_node_extra_into_struct_entry(_settings, structMember, gltf, i, bytes);
+                CStructGltfHelper::put_gltf_node_extra_into_struct_entry(_settings, structMember, objNode, bytes);
             }
         }
         
@@ -92,13 +106,13 @@ BuildObjectMap::~BuildObjectMap() {
     
 }
 
-void BuildObjectMap::_set_obj_position(GltfFile &gltf, uint8_t *bytes, CStruct *entryCommon, int nodeIndex) {
+void BuildObjectMap::_set_obj_position(GltfFileNode *objNode, uint8_t *bytes, CStruct *entryCommon, int nodeIndex) {
     CStructEntry *memberX = entryCommon->get_entry(2);
     CStructEntry *memberY = entryCommon->get_entry(3);
     CStructEntry *memberZ = entryCommon->get_entry(4);
     
     double scaledX, scaledY, scaledZ;
-    gltf.get_node_position(nodeIndex, scaledX, scaledY, scaledZ);
+    objNode->get_position(scaledX, scaledY, scaledZ);
     
     int xPos = _settings.adjust_from_model_scale(scaledX);
     int yPos = _settings.adjust_from_model_scale(scaledY);
@@ -109,18 +123,17 @@ void BuildObjectMap::_set_obj_position(GltfFile &gltf, uint8_t *bytes, CStruct *
     memberZ->set_integer_to_data(bytes, zPos);
 }
 
-size_t BuildObjectMap::_calculate_size(GltfFile &gltf) {
+size_t BuildObjectMap::_calculate_size(GltfFileNode *objectsNode) {
     size_t out = 0;
     
-    int numberOfNodes = gltf.get_node_count();
+    int numberOfChildNodes = objectsNode->get_child_count();
     
-    
-    
-    // Node 0 is the root node, so we want to start at node 1.
-    for(int i = 1; i < numberOfNodes; i++) {
-        std::string objectBuildId = gltf.get_node_extra<std::string>(i, "id", "");
+    for(int i = 0; i < numberOfChildNodes; i++) {
+        GltfFileNode *objNode = objectsNode->get_child_node_by_index(i);
+        std::string objectBuildId = objNode->get_extra<std::string>("id", "");
         
-        DebugHelper::assert_(!objectBuildId.empty(), "(BuildObjectMap::_calculate_size) id was not defined in node ", i);
+        DebugHelper::assert_(!objectBuildId.empty(), 
+            "(BuildObjectMap::_calculate_size) id was not defined in node: ", objNode->get_name());
         
         // First check if we have already calcuated the size of this object build id.
         if(_objectIdStructSizeCache.find(objectBuildId) != _objectIdStructSizeCache.end()) {

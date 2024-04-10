@@ -87,10 +87,10 @@ typedef enum RaceType {
     RACETYPE_CUTSCENE_1        =  6, // Not sure what the difference between these two are.
     RACETYPE_CUTSCENE_2        =  7,
     RACETYPE_BOSS              =  8,
-    RACETYPE_CHALLENGE         = 64, // For masking
     RACETYPE_CHALLENGE_BATTLE  = 64,
     RACETYPE_CHALLENGE_BANANAS = 65,
-    RACETYPE_CHALLENGE_EGGS    = 66
+    RACETYPE_CHALLENGE_EGGS    = 66,
+    RACETYPE_CHALLENGE         = 0x40 // For masking
 } RaceType;
 
 typedef enum ObjectModelType {

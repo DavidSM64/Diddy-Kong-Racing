@@ -6139,8 +6139,6 @@ glabel ASSET_TEX2D_MENU_ICONTTAMULET4_0
 .incbin "./build/us_1.0/assets/textures/2d/menu/icon_tt_amulet4_0.bin"
 glabel ASSET_TEX2D_MENU_ICONTTAMULET4_1
 .incbin "./build/us_1.0/assets/textures/2d/menu/icon_tt_amulet4_1.bin"
-glabel ASSET_TEX2D_COMICFANS
-.incbin "./build/us_1.0/assets/textures/2d/font/comicfans/comicfans.bin"
 glabel ASSET_TEXTURES_2D_END
 
 /********** ASSET_TEXTURES_2D_TABLE **********/
@@ -7053,7 +7051,6 @@ glabel ASSET_TEXTURES_2D_TABLE
 .word ASSET_TEX2D_MENU_ICONTTAMULET3_1 - ASSET_TEXTURES_2D
 .word ASSET_TEX2D_MENU_ICONTTAMULET4_0 - ASSET_TEXTURES_2D
 .word ASSET_TEX2D_MENU_ICONTTAMULET4_1 - ASSET_TEXTURES_2D
-.word ASSET_TEX2D_COMICFANS - ASSET_TEXTURES_2D
 .word ASSET_TEXTURES_2D_END - ASSET_TEXTURES_2D
 .word 0xFFFFFFFF
 glabel ASSET_TEXTURES_2D_TABLE_END

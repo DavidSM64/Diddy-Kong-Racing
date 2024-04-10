@@ -11,6 +11,5 @@ public:
         int gltfNode, uint8_t *bytes);
     
     // gltf node extra -> struct entry
-    static void put_gltf_node_extra_into_struct_entry(DkrAssetsSettings &settings, CStructEntry *structMember, GltfFile &gltfFile,
-        int gltfNode, uint8_t *bytes);
+    static void put_gltf_node_extra_into_struct_entry(DkrAssetsSettings &settings, CStructEntry *structMember, GltfFileNode *objNode, uint8_t *bytes);
 };

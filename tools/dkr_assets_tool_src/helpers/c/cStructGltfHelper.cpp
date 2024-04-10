@@ -302,9 +302,10 @@ void CStructGltfHelper::put_struct_entry_into_gltf_node_extra(DkrAssetsSettings 
     }
 }
 
-void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(DkrAssetsSettings &settings, CStructEntry *structMember, GltfFile &gltfFile, int gltfNode, uint8_t *bytes) {
+void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(DkrAssetsSettings &settings, CStructEntry *structMember, GltfFileNode *objNode, uint8_t *bytes) {
     CStructEntry::InternalType internalType = structMember->get_internal_type();
     StructHintType hintType = StructHintType::NO_HINT;
+    
     if(structMember->has_hint()) {
         hintType = hintTypes[structMember->get_hint_type()];
     }
@@ -315,17 +316,17 @@ void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(DkrAssetsSettings 
             int value = 0;
             switch(hintType) {
                 case StructHintType::NO_HINT:
-                    value = gltfFile.get_node_extra<int>(gltfNode, structMember->name, 0);
+                    value = objNode->get_extra<int>(structMember->name, 0);
                     break;
                 case StructHintType::ENUM:
                 {
-                    std::string enumValue = gltfFile.get_node_extra<std::string>(gltfNode, structMember->name, "");
+                    std::string enumValue = objNode->get_extra<std::string>(structMember->name, "");
                     value = get_value_from_hint_enum(structMember, enumValue);
                     break;
                 }
                 case StructHintType::ASSET_ID:
                 {
-                    std::string buildId = gltfFile.get_node_extra<std::string>(gltfNode, structMember->name, "");
+                    std::string buildId = objNode->get_extra<std::string>(structMember->name, "");
                     if(buildId.empty()) {
                         value = -1;
                     } else {
@@ -335,19 +336,19 @@ void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(DkrAssetsSettings 
                 }
                 case StructHintType::ANGLE:
                 {
-                    double angle = gltfFile.get_node_extra<double>(gltfNode, structMember->name, 0.0);
+                    double angle = objNode->get_extra<double>(structMember->name, 0.0);
                     value = get_value_from_hint_angle(structMember, angle);
                     break;
                 }
                 case StructHintType::SCALE:
                 {
-                    double scale = gltfFile.get_node_extra<double>(gltfNode, structMember->name, 0.0);
+                    double scale = objNode->get_extra<double>(structMember->name, 0.0);
                     value = get_value_from_hint_scale(structMember, scale);
                     break;
                 }
                 case StructHintType::OBJECT:
                 {
-                    std::string buildId = gltfFile.get_node_extra<std::string>(gltfNode, structMember->name, "");
+                    std::string buildId = objNode->get_extra<std::string>(structMember->name, "");
                     if(buildId.empty()) {
                         value = -1;
                     } else {
@@ -357,7 +358,7 @@ void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(DkrAssetsSettings 
                 }
                 case StructHintType::TIME:
                 {
-                    double timeSeconds = gltfFile.get_node_extra<double>(gltfNode, structMember->name, -1.0);
+                    double timeSeconds = objNode->get_extra<double>(structMember->name, -1.0);
                     if(timeSeconds == -1.0) {
                         value = -1;
                         break;
@@ -374,7 +375,7 @@ void CStructGltfHelper::put_gltf_node_extra_into_struct_entry(DkrAssetsSettings 
         }
         case CStructEntry::InternalType::ARRAY_INTEGER:
         {
-            tinygltf::Value::Array arrayOfValues = gltfFile.get_node_extra<tinygltf::Value::Array>(gltfNode, structMember->name, {});
+            tinygltf::Value::Array arrayOfValues = objNode->get_extra<tinygltf::Value::Array>(structMember->name, {});
             std::vector<int64_t> values;
             for(tinygltf::Value &val : arrayOfValues) {
                 switch(hintType) {

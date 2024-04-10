@@ -5,6 +5,30 @@
 #define TINYGLTF_USE_CPP14
 #include "libs/tiny_gltf.h"
 
+GltfFileNode::GltfFileNode(GltfFile *file, tinygltf::Node *node) : _file(file), _node(node) {
+}
+
+GltfFileNode::~GltfFileNode(){
+}
+
+size_t GltfFileNode::get_child_count() {
+    return _node->children.size();
+}
+
+GltfFileNode *GltfFileNode::get_child_node_by_index(int nodeIndex) {
+    return _file->get_node(_node->children[nodeIndex]);
+}
+
+void GltfFileNode::get_position(double &outX, double &outY, double &outZ) {
+    outX = _node->translation[0];
+    outY = _node->translation[1];
+    outZ = _node->translation[2];
+}
+
+std::string GltfFileNode::get_name() {
+    return _node->name;
+}
+    
 GltfFile::GltfFile(const fs::path &filepath) {
     std::string err;
     std::string warn;
@@ -24,20 +48,44 @@ GltfFile::GltfFile(const fs::path &filepath) {
 }
 
 GltfFile::~GltfFile() {
+    // Free node cache memory.
+    for (auto &pair : _nodeCache) {
+        if(pair.second == nullptr) {
+            continue;
+        }
+        delete pair.second;
+    }
 }
 
-int GltfFile::get_node_count() {
+size_t GltfFile::get_node_count() {
     return _model.nodes.size();
 }
 
-std::string GltfFile::get_node_name(int node) {
-    return _model.nodes[node].name;
+GltfFileNode *GltfFile::get_node(int nodeIndex) {
+    DebugHelper::assert_(nodeIndex < (int)_model.nodes.size(), 
+        "(GltfFile::get_node) Node index ", nodeIndex, " is out of range!");
+        
+    tinygltf::Node *tinygltfNode = &_model.nodes[nodeIndex];
+    
+    if(_nodeCache.find(tinygltfNode) == _nodeCache.end()) {
+        _nodeCache[tinygltfNode] = new GltfFileNode(this, tinygltfNode);
+    }
+        
+    return _nodeCache[tinygltfNode];
 }
 
-void GltfFile::get_node_position(int node, double &x, double &y, double &z) {
-    x = _model.nodes[node].translation[0];
-    y = _model.nodes[node].translation[1];
-    z = _model.nodes[node].translation[2];
+
+bool GltfFile::search_for_node_by_name(const std::string nodeName, int &outIndex) {
+    size_t numNodes = get_node_count();
+    for(size_t i = 0; i < numNodes; i++) {
+        if(_model.nodes[i].name == nodeName) {
+            outIndex = i;
+            return true;
+        }
+    }
+    // No node with the name was found.
+    outIndex = -1;
+    return false;
 }
 
 WriteableGltfFile::WriteableGltfFile(std::string rootName) {

@@ -1,0 +1,5 @@
+{
+    "name": "Icicle Pyramid (with bananas)",
+    "authors" : ["Example"],
+    "description": "Adds some bananas to the Icicle Pyramid battle map. NOTE: This example was also supposed to change the gamemode to the smokey castle one, but it crashes due to the A.I. nodes. Need to figure that out."
+}

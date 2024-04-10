@@ -1,0 +1,181 @@
+{
+    "ai-levels": {
+        "adv1": {
+            "base": 0,
+            "completed": 0,
+            "silver-coins": 0,
+            "tracks-mode": 0,
+            "trophy-race": 0
+        },
+        "adv2": {
+            "base": 0,
+            "completed": 0,
+            "silver-coins": 0,
+            "tracks-mode": 0,
+            "trophy-race": 0
+        }
+    },
+    "avaliable-vehicles": [
+        "VEHICLE_CAR"
+    ],
+    "background": {
+        "colour": {
+            "blue": 0,
+            "green": 0,
+            "red": 0
+        },
+        "multiplayer": {
+            "gradient-colour": {
+                "bottom": {
+                    "blue": 255,
+                    "green": 128,
+                    "red": 128
+                },
+                "top": {
+                    "blue": 255,
+                    "green": 0,
+                    "red": 0
+                }
+            }
+        },
+        "skybox": {
+            "id": "ASSET_OBJECT_DOME8"
+        }
+    },
+    "course-height": 450.0,
+    "default-vehicle": "VEHICLE_CAR",
+    "fog": {
+        "colour": {
+            "blue": 0,
+            "green": 0,
+            "red": 0
+        },
+        "far": 0,
+        "near": 0
+    },
+    "fov": 60,
+    "instruments": 65535,
+    "map-2": "ASSET_LEVEL_OBJECT_MAPS_28",
+    "map-collectables": "ASSET_LEVEL_OBJECT_MAPS_97",
+    "model": "ASSET_LEVELMODEL_ICICLEPYRAMID",
+    "music": 34,
+    "name": {
+        "LANGUAGE_ENGLISH": "Icicle Pyramid",
+        "LANGUAGE_FRENCH": "PYRAMIDE POLAIRE",
+        "LANGUAGE_GERMAN": "Bibberpyramide",
+        "LANGUAGE_JAPANESE": "Japanese"
+    },
+    "race-type": "RACETYPE_CHALLENGE_BATTLE",
+    "type": "LevelHeader",
+    "unknown": {
+        "unk1": 0,
+        "unk16": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+        ],
+        "unk2": 0,
+        "unk2A": 85,
+        "unk2B": [
+            90,
+            85,
+            100,
+            100,
+            20,
+            100,
+            0,
+            0,
+            0
+        ],
+        "unk3": 1,
+        "unk4": [
+            3,
+            4,
+            4,
+            4
+        ],
+        "unk44": [
+            0,
+            0,
+            0,
+            0,
+            12
+        ],
+        "unk4F": [
+            0,
+            0,
+            0
+        ],
+        "unk53": 180,
+        "unk56": 4,
+        "unk57": 16,
+        "unk58": 1,
+        "unk59": 0,
+        "unk5A": 1536,
+        "unk5C": 2,
+        "unk5D": 0,
+        "unk5E": 768,
+        "unk60": 120,
+        "unk62": 256,
+        "unk64": 153,
+        "unk66": 1024,
+        "unk68": 62,
+        "unk6A": 1,
+        "unk6B": 1,
+        "unk6C": 1,
+        "unk6D": 1,
+        "unk6E": 5,
+        "unk70": 1,
+        "unk71": 1,
+        "unk72": 66,
+        "unk73": 224,
+        "unkA0": 257,
+        "unkA2": 0,
+        "unkA3": 0,
+        "unkA8": 0,
+        "unkAA": 5,
+        "unkB0": 3600,
+        "unkB2": 3,
+        "unkB3": 18,
+        "unkB4": 0,
+        "unkB5": 83,
+        "unkB6": 133,
+        "unkB7": 1,
+        "unkB8": 0,
+        "unkB9": 66,
+        "unkBC": 0,
+        "unkBD": 0,
+        "unkC": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+        ],
+        "unkC4": -1475936256
+    },
+    "weather": {
+        "enable": 0,
+        "intensity": 0,
+        "opacity": 0,
+        "type": 0,
+        "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        }
+    },
+    "world": "WORLD_SNOWFLAKE_MOUNTAIN"
+}
