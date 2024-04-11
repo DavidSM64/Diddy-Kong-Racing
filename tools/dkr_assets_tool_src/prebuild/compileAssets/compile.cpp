@@ -5,7 +5,7 @@
 
 CompileAssets::CompileAssets(DkrAssetsSettings &settings) : _settings(settings) {
     _vanillaAssetsPath = _settings.pathToAssets / ".vanilla" / settings.dkrVersion;
-    _outAssetsPath = _settings.pathToAssets / settings.dkrVersion;
+    _outAssetsPath = _settings.pathToAssets / _settings.dkrVersion;
     
     _statFile = new StatJsonFile(_settings.pathToCache / "compileAssetsCache.json");
     
@@ -210,7 +210,7 @@ void CompileAssets::_merge_or_copy_file(fs::path &modDir, fs::path &path) {
     if(copyFile) {
         FileHelper::copy(modPath, outPath);
     } else { // Merge file
-        JsonHelper::get().patch_json(outPath, modPath);
+        JsonHelper::get().patch_json(_settings, outPath, modPath);
     }
     
 }

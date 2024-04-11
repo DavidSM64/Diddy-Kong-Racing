@@ -311,6 +311,12 @@ void FileHelper::delete_directory(const fs::path &path) {
     }
 }
 
+void FileHelper::delete_file(const fs::path &path) {
+    if(fs::exists(path)) {
+        fs::remove(path);
+    }
+}
+
 void FileHelper::rename(const fs::path &oldPath, const fs::path &newPath) {
     fs::rename(oldPath, newPath);
 }

@@ -9,6 +9,8 @@
 #include "helpers/debugHelper.h"
 #include "helpers/stringHelper.h"
 
+#include "misc/settings.hpp"
+
 // TODO: Support RapidJSON
 #include "libs/json.hpp" // nlohmann JSON library. (https://github.com/nlohmann/json)
 
@@ -415,6 +417,54 @@ void json_merge_append(json &dst, json &patch) {
     }
 }
 
+/******************************************************************/
+
+void json_delete_file(DkrAssetsSettings &settings, json &dst, std::string filename) {
+    fs::path pathToAssets = settings.pathToAssets / settings.dkrVersion; 
+    std::string folder = dst[json::json_pointer("/folder")];
+    fs::path fileToDelete = pathToAssets / folder / filename;
+    
+    DebugHelper::info_verbose("Deleting file: ", fileToDelete);
+    
+    FileHelper::delete_file(fileToDelete);
+}
+
+#define _JSON_HAS_KEY(json, key) (json.find(key) != json.end())
+
+void json_check_for_removed_file_sections(DkrAssetsSettings &settings, json &dst, json &patch) {
+    json &order = dst[json::json_pointer("/files/order")];
+    json &sections = dst[json::json_pointer("/files/sections")];
+    json &patchSections = patch[json::json_pointer("/files/sections")];
+    
+    if(!order.is_array() || !sections.is_object() || !patchSections.is_object()) {
+        // Not the correct json type, so don't bother!
+        return;
+    }
+    
+    size_t index = 0;
+    
+    while(index < order.size()) {
+        std::string key = order[index];
+        if(_JSON_HAS_KEY(patchSections, key)) { // Check if the section id exists in the patch
+            json &section = sections.at(key);
+            json &patchSection = patchSections.at(key);
+            if(_JSON_HAS_KEY(section, "filename") && _JSON_HAS_KEY(patchSection, "filename")) { // Make sure both the patch & dst have a filename.
+                if(!section.at("filename").is_null() && patchSection.at("filename").is_null()) { // Check if the filename becomes null
+                    json_delete_file(settings, dst, section.at("filename")); // Delete the file if it exists.
+                    order.erase(order.begin() + index); // Erase the index from the order.
+                    sections.erase(key); // Erase the section.
+                    continue;
+                }
+            }
+        }
+        index++;
+    }
+}
+
+#undef _JSON_HAS_KEY
+
+/******************************************************************/
+
 enum JsonMergeType {
     MERGE_PATCH, // RFC 7386 - Arrays get overwritten.
     MERGE_APPEND // Like MERGE_PATCH, but arrays get appended to.
@@ -430,7 +480,7 @@ const std::string DEFAULT_PATCH_TYPE = "patch-append";
 
 /******************************************************************/
 
-void JsonHelper::patch_json(const fs::path &dstPath, const fs::path &patchPath) {
+void JsonHelper::patch_json(DkrAssetsSettings &settings, const fs::path &dstPath, const fs::path &patchPath) {
     JsonFile *dstJsonFile = _load_json_from_cache(dstPath);
     JsonFile *patchJsonFile = _load_json_from_cache(patchPath);
     
@@ -442,6 +492,8 @@ void JsonHelper::patch_json(const fs::path &dstPath, const fs::path &patchPath) 
     
     JSON_HELPER_DETAILS::JsonFileData *dstJson = dstJsonFile->get_data();
     JSON_HELPER_DETAILS::JsonFileData *patchJson = patchJsonFile->get_data();
+    
+    json_check_for_removed_file_sections(settings, dstJson->data, patchJson->data);
     
     switch(mergeType) {
         case JsonMergeType::MERGE_PATCH: // RFC 7386

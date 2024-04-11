@@ -85,6 +85,12 @@ void AssetEnums::_write_single_asset_section_enums(const std::string &sectionId,
     if(!fontSubfolder.empty()) {
         fontJsonPath /= fontSubfolder;
     }
+    
+    if(sectionJson->is_value_null("/filename")) {
+        _cHeader.write_comment("No file");
+        return;
+    }
+    
     fontJsonPath /= sectionJson->get_string("/filename");
     JsonFile *fontsJson;
     DebugHelper::assert(JsonHelper::get().get_file(fontJsonPath, &fontsJson),
@@ -140,7 +146,14 @@ void AssetEnums::_write_deferred_asset_section_enums(const std::string &sectionI
     std::vector<std::string> sectionOrder;
     fromSectionJson->get_array<std::string>("/files/order", sectionOrder);
     
+    std::string sectionPtr = "/files/sections/";
+    
     for(std::string &assetBuildId : sectionOrder) {
+        // Don't include files that have null filenames.
+        if(fromSectionJson->is_value_null(sectionPtr + assetBuildId + "/filename")) {
+            continue;
+        }
+        
         // TODO: This only works for LevelNames. 
         //       Will need to be modified later since Object Animations aren't one-to-one with Object Models.
         sectionEnum.add_symbol(assetBuildId + idPostfix);

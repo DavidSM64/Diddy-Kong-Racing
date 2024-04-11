@@ -106,6 +106,8 @@ class StatJsonFile {
         JSON_HELPER_DETAILS::JsonFileData *_data;
 };
 
+class DkrAssetsSettings;
+
 /**
  * Singleton class that deals with saving & loading json files.
  */
@@ -117,7 +119,7 @@ public:
     }
     
     bool get_file(fs::path filepath, JsonFile **out);
-    void patch_json(const fs::path &dst, const fs::path &patch);
+    void patch_json(DkrAssetsSettings &settings, const fs::path &dst, const fs::path &patch);
     
 private:
     std::unordered_map<std::string, JsonFile*> _fileCache;
