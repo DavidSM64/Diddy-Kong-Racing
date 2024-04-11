@@ -81,7 +81,7 @@ BuildFonts::BuildFonts(DkrAssetsSettings &settings, BuildInfo &info) : _settings
     
     FileHelper::write_binary_file(rawData, rawDataSize, _info.dstPath, true);
     
-    delete rawData;
+    delete rawData[];
 }
 
 BuildFonts::~BuildFonts() {
