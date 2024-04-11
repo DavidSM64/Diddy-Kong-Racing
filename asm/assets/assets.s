@@ -39,7 +39,7 @@
 .word ASSET_OBJECT_ANIMATIONS_TABLE - ASSETS_START
 .word ASSET_OBJECT_ANIMATIONS - ASSETS_START
 .word ASSET_OBJECT_HEADERS_TABLE - ASSETS_START
-.word ASSET_OBJECT_HEADERS - ASSETS_START
+.word ASSET_OBJECTS - ASSETS_START
 .word ASSET_LEVEL_OBJECT_TRANSLATION_TABLE - ASSETS_START
 .word ASSET_EMPTY_37_TABLE - ASSETS_START
 .word ASSET_EMPTY_37 - ASSETS_START
@@ -57,7 +57,7 @@
 .word ASSET_TTGHOSTS - ASSETS_START
 .word ASSETS_END - ASSETS_START
 
-/********** Asset Sections **********/
+/********** Asset Sections Table **********/
 
 .balign 16
 glabel ASSETS_START
@@ -67,25 +67,25 @@ glabel ASSETS_START
 .balign 16
 glabel ASSET_AI_BEHAVIOUR
 glabel ASSET_AI_BEHAVIOUR_0
-.incbin "./build/us_1.0/assets/ai-racers/unknown_0_0.bin"
+.incbin "./build/us_1.0/assets/ai-racers/asset_ai_behaviour_0.bin"
 glabel ASSET_AI_BEHAVIOUR_1
-.incbin "./build/us_1.0/assets/ai-racers/unknown_0_1.bin"
+.incbin "./build/us_1.0/assets/ai-racers/asset_ai_behaviour_1.bin"
 glabel ASSET_AI_BEHAVIOUR_2
-.incbin "./build/us_1.0/assets/ai-racers/unknown_0_2.bin"
+.incbin "./build/us_1.0/assets/ai-racers/asset_ai_behaviour_2.bin"
 glabel ASSET_AI_BEHAVIOUR_3
-.incbin "./build/us_1.0/assets/ai-racers/unknown_0_3.bin"
+.incbin "./build/us_1.0/assets/ai-racers/asset_ai_behaviour_3.bin"
 glabel ASSET_AI_BEHAVIOUR_4
-.incbin "./build/us_1.0/assets/ai-racers/unknown_0_4.bin"
+.incbin "./build/us_1.0/assets/ai-racers/asset_ai_behaviour_4.bin"
 glabel ASSET_AI_BEHAVIOUR_5
-.incbin "./build/us_1.0/assets/ai-racers/unknown_0_5.bin"
+.incbin "./build/us_1.0/assets/ai-racers/asset_ai_behaviour_5.bin"
 glabel ASSET_AI_BEHAVIOUR_6
-.incbin "./build/us_1.0/assets/ai-racers/unknown_0_6.bin"
+.incbin "./build/us_1.0/assets/ai-racers/asset_ai_behaviour_6.bin"
 glabel ASSET_AI_BEHAVIOUR_7
-.incbin "./build/us_1.0/assets/ai-racers/unknown_0_7.bin"
+.incbin "./build/us_1.0/assets/ai-racers/asset_ai_behaviour_7.bin"
 glabel ASSET_AI_BEHAVIOUR_8
-.incbin "./build/us_1.0/assets/ai-racers/unknown_0_8.bin"
+.incbin "./build/us_1.0/assets/ai-racers/asset_ai_behaviour_8.bin"
 glabel ASSET_AI_BEHAVIOUR_9
-.incbin "./build/us_1.0/assets/ai-racers/unknown_0_9.bin"
+.incbin "./build/us_1.0/assets/ai-racers/asset_ai_behaviour_9.bin"
 glabel ASSET_AI_BEHAVIOUR_END
 
 /********** ASSET_AI_BEHAVIOUR_TABLE **********/
@@ -104,6 +104,7 @@ glabel ASSET_AI_BEHAVIOUR_TABLE
 .word ASSET_AI_BEHAVIOUR_9 - ASSET_AI_BEHAVIOUR
 .word ASSET_AI_BEHAVIOUR_END - ASSET_AI_BEHAVIOUR
 .word 0xFFFFFFFF
+glabel ASSET_AI_BEHAVIOUR_TABLE_END
 
 /********** ASSET_TEXTURES_3D **********/
 
@@ -4320,6 +4321,7 @@ glabel ASSET_TEXTURES_3D_TABLE
 .word ASSET_TEX3D_SPACE_RAREWARESIGNNONBLINKING - ASSET_TEXTURES_3D
 .word ASSET_TEXTURES_3D_END - ASSET_TEXTURES_3D
 .word 0xFFFFFFFF
+glabel ASSET_TEXTURES_3D_TABLE_END
 
 /********** ASSET_TEXTURES_2D **********/
 
@@ -7051,521 +7053,522 @@ glabel ASSET_TEXTURES_2D_TABLE
 .word ASSET_TEX2D_MENU_ICONTTAMULET4_1 - ASSET_TEXTURES_2D
 .word ASSET_TEXTURES_2D_END - ASSET_TEXTURES_2D
 .word 0xFFFFFFFF
+glabel ASSET_TEXTURES_2D_TABLE_END
 
 /********** ASSET_GAME_TEXT **********/
 
 .balign 16
 glabel ASSET_GAME_TEXT
 glabel ASSET_GAME_TEXT_0
-.incbin "./build/us_1.0/assets/text/game/unknown_6_0.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_0.bin"
 glabel ASSET_GAME_TEXT_1
-.incbin "./build/us_1.0/assets/text/game/unknown_6_1.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_1.bin"
 glabel ASSET_GAME_TEXT_2
-.incbin "./build/us_1.0/assets/text/game/unknown_6_2.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_2.bin"
 glabel ASSET_GAME_TEXT_3
-.incbin "./build/us_1.0/assets/text/game/unknown_6_3.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_3.bin"
 glabel ASSET_GAME_TEXT_4
-.incbin "./build/us_1.0/assets/text/game/unknown_6_4.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_4.bin"
 glabel ASSET_GAME_TEXT_5
-.incbin "./build/us_1.0/assets/text/game/unknown_6_5.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_5.bin"
 glabel ASSET_GAME_TEXT_6
-.incbin "./build/us_1.0/assets/text/game/unknown_6_6.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_6.bin"
 glabel ASSET_GAME_TEXT_7
-.incbin "./build/us_1.0/assets/text/game/unknown_6_7.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_7.bin"
 glabel ASSET_GAME_TEXT_8
-.incbin "./build/us_1.0/assets/text/game/unknown_6_8.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_8.bin"
 glabel ASSET_GAME_TEXT_9
-.incbin "./build/us_1.0/assets/text/game/unknown_6_9.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_9.bin"
 glabel ASSET_GAME_TEXT_10
-.incbin "./build/us_1.0/assets/text/game/unknown_6_10.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_10.bin"
 glabel ASSET_GAME_TEXT_11
-.incbin "./build/us_1.0/assets/text/game/unknown_6_11.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_11.bin"
 glabel ASSET_GAME_TEXT_12
-.incbin "./build/us_1.0/assets/text/game/unknown_6_12.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_12.bin"
 glabel ASSET_GAME_TEXT_13
-.incbin "./build/us_1.0/assets/text/game/unknown_6_13.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_13.bin"
 glabel ASSET_GAME_TEXT_14
-.incbin "./build/us_1.0/assets/text/game/unknown_6_14.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_14.bin"
 glabel ASSET_GAME_TEXT_15
-.incbin "./build/us_1.0/assets/text/game/unknown_6_15.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_15.bin"
 glabel ASSET_GAME_TEXT_16
-.incbin "./build/us_1.0/assets/text/game/unknown_6_16.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_16.bin"
 glabel ASSET_GAME_TEXT_17
-.incbin "./build/us_1.0/assets/text/game/unknown_6_17.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_17.bin"
 glabel ASSET_GAME_TEXT_18
-.incbin "./build/us_1.0/assets/text/game/unknown_6_18.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_18.bin"
 glabel ASSET_GAME_TEXT_19
-.incbin "./build/us_1.0/assets/text/game/unknown_6_19.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_19.bin"
 glabel ASSET_GAME_TEXT_20
-.incbin "./build/us_1.0/assets/text/game/unknown_6_20.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_20.bin"
 glabel ASSET_GAME_TEXT_21
-.incbin "./build/us_1.0/assets/text/game/unknown_6_21.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_21.bin"
 glabel ASSET_GAME_TEXT_22
-.incbin "./build/us_1.0/assets/text/game/unknown_6_22.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_22.bin"
 glabel ASSET_GAME_TEXT_23
-.incbin "./build/us_1.0/assets/text/game/unknown_6_23.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_23.bin"
 glabel ASSET_GAME_TEXT_24
-.incbin "./build/us_1.0/assets/text/game/unknown_6_24.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_24.bin"
 glabel ASSET_GAME_TEXT_25
-.incbin "./build/us_1.0/assets/text/game/unknown_6_25.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_25.bin"
 glabel ASSET_GAME_TEXT_26
-.incbin "./build/us_1.0/assets/text/game/unknown_6_26.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_26.bin"
 glabel ASSET_GAME_TEXT_27
-.incbin "./build/us_1.0/assets/text/game/unknown_6_27.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_27.bin"
 glabel ASSET_GAME_TEXT_28
-.incbin "./build/us_1.0/assets/text/game/unknown_6_28.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_28.bin"
 glabel ASSET_GAME_TEXT_29
-.incbin "./build/us_1.0/assets/text/game/unknown_6_29.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_29.bin"
 glabel ASSET_GAME_TEXT_30
-.incbin "./build/us_1.0/assets/text/game/unknown_6_30.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_30.bin"
 glabel ASSET_GAME_TEXT_31
-.incbin "./build/us_1.0/assets/text/game/unknown_6_31.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_31.bin"
 glabel ASSET_GAME_TEXT_32
-.incbin "./build/us_1.0/assets/text/game/unknown_6_32.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_32.bin"
 glabel ASSET_GAME_TEXT_33
-.incbin "./build/us_1.0/assets/text/game/unknown_6_33.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_33.bin"
 glabel ASSET_GAME_TEXT_34
-.incbin "./build/us_1.0/assets/text/game/unknown_6_34.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_34.bin"
 glabel ASSET_GAME_TEXT_35
-.incbin "./build/us_1.0/assets/text/game/unknown_6_35.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_35.bin"
 glabel ASSET_GAME_TEXT_36
-.incbin "./build/us_1.0/assets/text/game/unknown_6_36.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_36.bin"
 glabel ASSET_GAME_TEXT_37
-.incbin "./build/us_1.0/assets/text/game/unknown_6_37.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_37.bin"
 glabel ASSET_GAME_TEXT_38
-.incbin "./build/us_1.0/assets/text/game/unknown_6_38.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_38.bin"
 glabel ASSET_GAME_TEXT_39
-.incbin "./build/us_1.0/assets/text/game/unknown_6_39.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_39.bin"
 glabel ASSET_GAME_TEXT_40
-.incbin "./build/us_1.0/assets/text/game/unknown_6_40.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_40.bin"
 glabel ASSET_GAME_TEXT_41
-.incbin "./build/us_1.0/assets/text/game/unknown_6_41.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_41.bin"
 glabel ASSET_GAME_TEXT_42
-.incbin "./build/us_1.0/assets/text/game/unknown_6_42.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_42.bin"
 glabel ASSET_GAME_TEXT_43
-.incbin "./build/us_1.0/assets/text/game/unknown_6_43.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_43.bin"
 glabel ASSET_GAME_TEXT_44
-.incbin "./build/us_1.0/assets/text/game/unknown_6_44.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_44.bin"
 glabel ASSET_GAME_TEXT_45
-.incbin "./build/us_1.0/assets/text/game/unknown_6_45.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_45.bin"
 glabel ASSET_GAME_TEXT_46
-.incbin "./build/us_1.0/assets/text/game/unknown_6_46.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_46.bin"
 glabel ASSET_GAME_TEXT_47
-.incbin "./build/us_1.0/assets/text/game/unknown_6_47.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_47.bin"
 glabel ASSET_GAME_TEXT_48
-.incbin "./build/us_1.0/assets/text/game/unknown_6_48.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_48.bin"
 glabel ASSET_GAME_TEXT_49
-.incbin "./build/us_1.0/assets/text/game/unknown_6_49.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_49.bin"
 glabel ASSET_GAME_TEXT_50
-.incbin "./build/us_1.0/assets/text/game/unknown_6_50.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_50.bin"
 glabel ASSET_GAME_TEXT_51
-.incbin "./build/us_1.0/assets/text/game/unknown_6_51.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_51.bin"
 glabel ASSET_GAME_TEXT_52
-.incbin "./build/us_1.0/assets/text/game/unknown_6_52.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_52.bin"
 glabel ASSET_GAME_TEXT_53
-.incbin "./build/us_1.0/assets/text/game/unknown_6_53.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_53.bin"
 glabel ASSET_GAME_TEXT_54
-.incbin "./build/us_1.0/assets/text/game/unknown_6_54.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_54.bin"
 glabel ASSET_GAME_TEXT_55
-.incbin "./build/us_1.0/assets/text/game/unknown_6_55.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_55.bin"
 glabel ASSET_GAME_TEXT_56
-.incbin "./build/us_1.0/assets/text/game/unknown_6_56.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_56.bin"
 glabel ASSET_GAME_TEXT_57
-.incbin "./build/us_1.0/assets/text/game/unknown_6_57.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_57.bin"
 glabel ASSET_GAME_TEXT_58
-.incbin "./build/us_1.0/assets/text/game/unknown_6_58.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_58.bin"
 glabel ASSET_GAME_TEXT_59
-.incbin "./build/us_1.0/assets/text/game/unknown_6_59.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_59.bin"
 glabel ASSET_GAME_TEXT_60
-.incbin "./build/us_1.0/assets/text/game/unknown_6_60.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_60.bin"
 glabel ASSET_GAME_TEXT_61
-.incbin "./build/us_1.0/assets/text/game/unknown_6_61.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_61.bin"
 glabel ASSET_GAME_TEXT_62
-.incbin "./build/us_1.0/assets/text/game/unknown_6_62.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_62.bin"
 glabel ASSET_GAME_TEXT_63
-.incbin "./build/us_1.0/assets/text/game/unknown_6_63.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_63.bin"
 glabel ASSET_GAME_TEXT_64
-.incbin "./build/us_1.0/assets/text/game/unknown_6_64.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_64.bin"
 glabel ASSET_GAME_TEXT_65
-.incbin "./build/us_1.0/assets/text/game/unknown_6_65.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_65.bin"
 glabel ASSET_GAME_TEXT_66
-.incbin "./build/us_1.0/assets/text/game/unknown_6_66.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_66.bin"
 glabel ASSET_GAME_TEXT_67
-.incbin "./build/us_1.0/assets/text/game/unknown_6_67.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_67.bin"
 glabel ASSET_GAME_TEXT_68
-.incbin "./build/us_1.0/assets/text/game/unknown_6_68.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_68.bin"
 glabel ASSET_GAME_TEXT_69
-.incbin "./build/us_1.0/assets/text/game/unknown_6_69.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_69.bin"
 glabel ASSET_GAME_TEXT_70
-.incbin "./build/us_1.0/assets/text/game/unknown_6_70.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_70.bin"
 glabel ASSET_GAME_TEXT_71
-.incbin "./build/us_1.0/assets/text/game/unknown_6_71.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_71.bin"
 glabel ASSET_GAME_TEXT_72
-.incbin "./build/us_1.0/assets/text/game/unknown_6_72.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_72.bin"
 glabel ASSET_GAME_TEXT_73
-.incbin "./build/us_1.0/assets/text/game/unknown_6_73.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_73.bin"
 glabel ASSET_GAME_TEXT_74
-.incbin "./build/us_1.0/assets/text/game/unknown_6_74.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_74.bin"
 glabel ASSET_GAME_TEXT_75
-.incbin "./build/us_1.0/assets/text/game/unknown_6_75.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_75.bin"
 glabel ASSET_GAME_TEXT_76
-.incbin "./build/us_1.0/assets/text/game/unknown_6_76.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_76.bin"
 glabel ASSET_GAME_TEXT_77
-.incbin "./build/us_1.0/assets/text/game/unknown_6_77.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_77.bin"
 glabel ASSET_GAME_TEXT_78
-.incbin "./build/us_1.0/assets/text/game/unknown_6_78.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_78.bin"
 glabel ASSET_GAME_TEXT_79
-.incbin "./build/us_1.0/assets/text/game/unknown_6_79.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_79.bin"
 glabel ASSET_GAME_TEXT_80
-.incbin "./build/us_1.0/assets/text/game/unknown_6_80.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_80.bin"
 glabel ASSET_GAME_TEXT_81
-.incbin "./build/us_1.0/assets/text/game/unknown_6_81.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_81.bin"
 glabel ASSET_GAME_TEXT_82
-.incbin "./build/us_1.0/assets/text/game/unknown_6_82.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_82.bin"
 glabel ASSET_GAME_TEXT_83
-.incbin "./build/us_1.0/assets/text/game/unknown_6_83.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_83.bin"
 glabel ASSET_GAME_TEXT_84
-.incbin "./build/us_1.0/assets/text/game/unknown_6_84.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_84.bin"
 glabel ASSET_GAME_TEXT_85
-.incbin "./build/us_1.0/assets/text/game/unknown_6_85.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_85.bin"
 glabel ASSET_GAME_TEXT_86
-.incbin "./build/us_1.0/assets/text/game/unknown_6_86.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_86.bin"
 glabel ASSET_GAME_TEXT_87
-.incbin "./build/us_1.0/assets/text/game/unknown_6_87.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_87.bin"
 glabel ASSET_GAME_TEXT_88
-.incbin "./build/us_1.0/assets/text/game/unknown_6_88.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_88.bin"
 glabel ASSET_GAME_TEXT_89
-.incbin "./build/us_1.0/assets/text/game/unknown_6_89.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_89.bin"
 glabel ASSET_GAME_TEXT_90
-.incbin "./build/us_1.0/assets/text/game/unknown_6_90.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_90.bin"
 glabel ASSET_GAME_TEXT_91
-.incbin "./build/us_1.0/assets/text/game/unknown_6_91.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_91.bin"
 glabel ASSET_GAME_TEXT_92
-.incbin "./build/us_1.0/assets/text/game/unknown_6_92.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_92.bin"
 glabel ASSET_GAME_TEXT_93
-.incbin "./build/us_1.0/assets/text/game/unknown_6_93.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_93.bin"
 glabel ASSET_GAME_TEXT_94
-.incbin "./build/us_1.0/assets/text/game/unknown_6_94.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_94.bin"
 glabel ASSET_GAME_TEXT_95
-.incbin "./build/us_1.0/assets/text/game/unknown_6_95.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_95.bin"
 glabel ASSET_GAME_TEXT_96
-.incbin "./build/us_1.0/assets/text/game/unknown_6_96.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_96.bin"
 glabel ASSET_GAME_TEXT_97
-.incbin "./build/us_1.0/assets/text/game/unknown_6_97.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_97.bin"
 glabel ASSET_GAME_TEXT_98
-.incbin "./build/us_1.0/assets/text/game/unknown_6_98.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_98.bin"
 glabel ASSET_GAME_TEXT_99
-.incbin "./build/us_1.0/assets/text/game/unknown_6_99.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_99.bin"
 glabel ASSET_GAME_TEXT_100
-.incbin "./build/us_1.0/assets/text/game/unknown_6_100.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_100.bin"
 glabel ASSET_GAME_TEXT_101
-.incbin "./build/us_1.0/assets/text/game/unknown_6_101.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_101.bin"
 glabel ASSET_GAME_TEXT_102
-.incbin "./build/us_1.0/assets/text/game/unknown_6_102.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_102.bin"
 glabel ASSET_GAME_TEXT_103
-.incbin "./build/us_1.0/assets/text/game/unknown_6_103.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_103.bin"
 glabel ASSET_GAME_TEXT_104
-.incbin "./build/us_1.0/assets/text/game/unknown_6_104.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_104.bin"
 glabel ASSET_GAME_TEXT_105
-.incbin "./build/us_1.0/assets/text/game/unknown_6_105.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_105.bin"
 glabel ASSET_GAME_TEXT_106
-.incbin "./build/us_1.0/assets/text/game/unknown_6_106.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_106.bin"
 glabel ASSET_GAME_TEXT_107
-.incbin "./build/us_1.0/assets/text/game/unknown_6_107.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_107.bin"
 glabel ASSET_GAME_TEXT_108
-.incbin "./build/us_1.0/assets/text/game/unknown_6_108.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_108.bin"
 glabel ASSET_GAME_TEXT_109
-.incbin "./build/us_1.0/assets/text/game/unknown_6_109.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_109.bin"
 glabel ASSET_GAME_TEXT_110
-.incbin "./build/us_1.0/assets/text/game/unknown_6_110.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_110.bin"
 glabel ASSET_GAME_TEXT_111
-.incbin "./build/us_1.0/assets/text/game/unknown_6_111.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_111.bin"
 glabel ASSET_GAME_TEXT_112
-.incbin "./build/us_1.0/assets/text/game/unknown_6_112.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_112.bin"
 glabel ASSET_GAME_TEXT_113
-.incbin "./build/us_1.0/assets/text/game/unknown_6_113.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_113.bin"
 glabel ASSET_GAME_TEXT_114
-.incbin "./build/us_1.0/assets/text/game/unknown_6_114.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_114.bin"
 glabel ASSET_GAME_TEXT_115
-.incbin "./build/us_1.0/assets/text/game/unknown_6_115.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_115.bin"
 glabel ASSET_GAME_TEXT_116
-.incbin "./build/us_1.0/assets/text/game/unknown_6_116.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_116.bin"
 glabel ASSET_GAME_TEXT_117
-.incbin "./build/us_1.0/assets/text/game/unknown_6_117.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_117.bin"
 glabel ASSET_GAME_TEXT_118
-.incbin "./build/us_1.0/assets/text/game/unknown_6_118.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_118.bin"
 glabel ASSET_GAME_TEXT_119
-.incbin "./build/us_1.0/assets/text/game/unknown_6_119.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_119.bin"
 glabel ASSET_GAME_TEXT_120
-.incbin "./build/us_1.0/assets/text/game/unknown_6_120.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_120.bin"
 glabel ASSET_GAME_TEXT_121
-.incbin "./build/us_1.0/assets/text/game/unknown_6_121.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_121.bin"
 glabel ASSET_GAME_TEXT_122
-.incbin "./build/us_1.0/assets/text/game/unknown_6_122.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_122.bin"
 glabel ASSET_GAME_TEXT_123
-.incbin "./build/us_1.0/assets/text/game/unknown_6_123.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_123.bin"
 glabel ASSET_GAME_TEXT_124
-.incbin "./build/us_1.0/assets/text/game/unknown_6_124.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_124.bin"
 glabel ASSET_GAME_TEXT_125
-.incbin "./build/us_1.0/assets/text/game/unknown_6_125.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_125.bin"
 glabel ASSET_GAME_TEXT_126
-.incbin "./build/us_1.0/assets/text/game/unknown_6_126.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_126.bin"
 glabel ASSET_GAME_TEXT_127
-.incbin "./build/us_1.0/assets/text/game/unknown_6_127.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_127.bin"
 glabel ASSET_GAME_TEXT_128
-.incbin "./build/us_1.0/assets/text/game/unknown_6_128.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_128.bin"
 glabel ASSET_GAME_TEXT_129
-.incbin "./build/us_1.0/assets/text/game/unknown_6_129.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_129.bin"
 glabel ASSET_GAME_TEXT_130
-.incbin "./build/us_1.0/assets/text/game/unknown_6_130.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_130.bin"
 glabel ASSET_GAME_TEXT_131
-.incbin "./build/us_1.0/assets/text/game/unknown_6_131.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_131.bin"
 glabel ASSET_GAME_TEXT_132
-.incbin "./build/us_1.0/assets/text/game/unknown_6_132.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_132.bin"
 glabel ASSET_GAME_TEXT_133
-.incbin "./build/us_1.0/assets/text/game/unknown_6_133.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_133.bin"
 glabel ASSET_GAME_TEXT_134
-.incbin "./build/us_1.0/assets/text/game/unknown_6_134.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_134.bin"
 glabel ASSET_GAME_TEXT_135
-.incbin "./build/us_1.0/assets/text/game/unknown_6_135.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_135.bin"
 glabel ASSET_GAME_TEXT_136
-.incbin "./build/us_1.0/assets/text/game/unknown_6_136.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_136.bin"
 glabel ASSET_GAME_TEXT_137
-.incbin "./build/us_1.0/assets/text/game/unknown_6_137.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_137.bin"
 glabel ASSET_GAME_TEXT_138
-.incbin "./build/us_1.0/assets/text/game/unknown_6_138.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_138.bin"
 glabel ASSET_GAME_TEXT_139
-.incbin "./build/us_1.0/assets/text/game/unknown_6_139.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_139.bin"
 glabel ASSET_GAME_TEXT_140
-.incbin "./build/us_1.0/assets/text/game/unknown_6_140.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_140.bin"
 glabel ASSET_GAME_TEXT_141
-.incbin "./build/us_1.0/assets/text/game/unknown_6_141.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_141.bin"
 glabel ASSET_GAME_TEXT_142
-.incbin "./build/us_1.0/assets/text/game/unknown_6_142.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_142.bin"
 glabel ASSET_GAME_TEXT_143
-.incbin "./build/us_1.0/assets/text/game/unknown_6_143.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_143.bin"
 glabel ASSET_GAME_TEXT_144
-.incbin "./build/us_1.0/assets/text/game/unknown_6_144.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_144.bin"
 glabel ASSET_GAME_TEXT_145
-.incbin "./build/us_1.0/assets/text/game/unknown_6_145.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_145.bin"
 glabel ASSET_GAME_TEXT_146
-.incbin "./build/us_1.0/assets/text/game/unknown_6_146.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_146.bin"
 glabel ASSET_GAME_TEXT_147
-.incbin "./build/us_1.0/assets/text/game/unknown_6_147.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_147.bin"
 glabel ASSET_GAME_TEXT_148
-.incbin "./build/us_1.0/assets/text/game/unknown_6_148.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_148.bin"
 glabel ASSET_GAME_TEXT_149
-.incbin "./build/us_1.0/assets/text/game/unknown_6_149.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_149.bin"
 glabel ASSET_GAME_TEXT_150
-.incbin "./build/us_1.0/assets/text/game/unknown_6_150.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_150.bin"
 glabel ASSET_GAME_TEXT_151
-.incbin "./build/us_1.0/assets/text/game/unknown_6_151.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_151.bin"
 glabel ASSET_GAME_TEXT_152
-.incbin "./build/us_1.0/assets/text/game/unknown_6_152.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_152.bin"
 glabel ASSET_GAME_TEXT_153
-.incbin "./build/us_1.0/assets/text/game/unknown_6_153.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_153.bin"
 glabel ASSET_GAME_TEXT_154
-.incbin "./build/us_1.0/assets/text/game/unknown_6_154.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_154.bin"
 glabel ASSET_GAME_TEXT_155
-.incbin "./build/us_1.0/assets/text/game/unknown_6_155.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_155.bin"
 glabel ASSET_GAME_TEXT_156
-.incbin "./build/us_1.0/assets/text/game/unknown_6_156.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_156.bin"
 glabel ASSET_GAME_TEXT_157
-.incbin "./build/us_1.0/assets/text/game/unknown_6_157.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_157.bin"
 glabel ASSET_GAME_TEXT_158
-.incbin "./build/us_1.0/assets/text/game/unknown_6_158.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_158.bin"
 glabel ASSET_GAME_TEXT_159
-.incbin "./build/us_1.0/assets/text/game/unknown_6_159.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_159.bin"
 glabel ASSET_GAME_TEXT_160
-.incbin "./build/us_1.0/assets/text/game/unknown_6_160.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_160.bin"
 glabel ASSET_GAME_TEXT_161
-.incbin "./build/us_1.0/assets/text/game/unknown_6_161.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_161.bin"
 glabel ASSET_GAME_TEXT_162
-.incbin "./build/us_1.0/assets/text/game/unknown_6_162.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_162.bin"
 glabel ASSET_GAME_TEXT_163
-.incbin "./build/us_1.0/assets/text/game/unknown_6_163.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_163.bin"
 glabel ASSET_GAME_TEXT_164
-.incbin "./build/us_1.0/assets/text/game/unknown_6_164.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_164.bin"
 glabel ASSET_GAME_TEXT_165
-.incbin "./build/us_1.0/assets/text/game/unknown_6_165.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_165.bin"
 glabel ASSET_GAME_TEXT_166
-.incbin "./build/us_1.0/assets/text/game/unknown_6_166.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_166.bin"
 glabel ASSET_GAME_TEXT_167
-.incbin "./build/us_1.0/assets/text/game/unknown_6_167.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_167.bin"
 glabel ASSET_GAME_TEXT_168
-.incbin "./build/us_1.0/assets/text/game/unknown_6_168.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_168.bin"
 glabel ASSET_GAME_TEXT_169
-.incbin "./build/us_1.0/assets/text/game/unknown_6_169.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_169.bin"
 glabel ASSET_GAME_TEXT_170
-.incbin "./build/us_1.0/assets/text/game/unknown_6_170.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_170.bin"
 glabel ASSET_GAME_TEXT_171
-.incbin "./build/us_1.0/assets/text/game/unknown_6_171.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_171.bin"
 glabel ASSET_GAME_TEXT_172
-.incbin "./build/us_1.0/assets/text/game/unknown_6_172.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_172.bin"
 glabel ASSET_GAME_TEXT_173
-.incbin "./build/us_1.0/assets/text/game/unknown_6_173.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_173.bin"
 glabel ASSET_GAME_TEXT_174
-.incbin "./build/us_1.0/assets/text/game/unknown_6_174.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_174.bin"
 glabel ASSET_GAME_TEXT_175
-.incbin "./build/us_1.0/assets/text/game/unknown_6_175.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_175.bin"
 glabel ASSET_GAME_TEXT_176
-.incbin "./build/us_1.0/assets/text/game/unknown_6_176.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_176.bin"
 glabel ASSET_GAME_TEXT_177
-.incbin "./build/us_1.0/assets/text/game/unknown_6_177.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_177.bin"
 glabel ASSET_GAME_TEXT_178
-.incbin "./build/us_1.0/assets/text/game/unknown_6_178.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_178.bin"
 glabel ASSET_GAME_TEXT_179
-.incbin "./build/us_1.0/assets/text/game/unknown_6_179.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_179.bin"
 glabel ASSET_GAME_TEXT_180
-.incbin "./build/us_1.0/assets/text/game/unknown_6_180.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_180.bin"
 glabel ASSET_GAME_TEXT_181
-.incbin "./build/us_1.0/assets/text/game/unknown_6_181.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_181.bin"
 glabel ASSET_GAME_TEXT_182
-.incbin "./build/us_1.0/assets/text/game/unknown_6_182.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_182.bin"
 glabel ASSET_GAME_TEXT_183
-.incbin "./build/us_1.0/assets/text/game/unknown_6_183.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_183.bin"
 glabel ASSET_GAME_TEXT_184
-.incbin "./build/us_1.0/assets/text/game/unknown_6_184.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_184.bin"
 glabel ASSET_GAME_TEXT_185
-.incbin "./build/us_1.0/assets/text/game/unknown_6_185.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_185.bin"
 glabel ASSET_GAME_TEXT_186
-.incbin "./build/us_1.0/assets/text/game/unknown_6_186.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_186.bin"
 glabel ASSET_GAME_TEXT_187
-.incbin "./build/us_1.0/assets/text/game/unknown_6_187.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_187.bin"
 glabel ASSET_GAME_TEXT_188
-.incbin "./build/us_1.0/assets/text/game/unknown_6_188.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_188.bin"
 glabel ASSET_GAME_TEXT_189
-.incbin "./build/us_1.0/assets/text/game/unknown_6_189.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_189.bin"
 glabel ASSET_GAME_TEXT_190
-.incbin "./build/us_1.0/assets/text/game/unknown_6_190.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_190.bin"
 glabel ASSET_GAME_TEXT_191
-.incbin "./build/us_1.0/assets/text/game/unknown_6_191.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_191.bin"
 glabel ASSET_GAME_TEXT_192
-.incbin "./build/us_1.0/assets/text/game/unknown_6_192.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_192.bin"
 glabel ASSET_GAME_TEXT_193
-.incbin "./build/us_1.0/assets/text/game/unknown_6_193.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_193.bin"
 glabel ASSET_GAME_TEXT_194
-.incbin "./build/us_1.0/assets/text/game/unknown_6_194.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_194.bin"
 glabel ASSET_GAME_TEXT_195
-.incbin "./build/us_1.0/assets/text/game/unknown_6_195.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_195.bin"
 glabel ASSET_GAME_TEXT_196
-.incbin "./build/us_1.0/assets/text/game/unknown_6_196.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_196.bin"
 glabel ASSET_GAME_TEXT_197
-.incbin "./build/us_1.0/assets/text/game/unknown_6_197.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_197.bin"
 glabel ASSET_GAME_TEXT_198
-.incbin "./build/us_1.0/assets/text/game/unknown_6_198.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_198.bin"
 glabel ASSET_GAME_TEXT_199
-.incbin "./build/us_1.0/assets/text/game/unknown_6_199.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_199.bin"
 glabel ASSET_GAME_TEXT_200
-.incbin "./build/us_1.0/assets/text/game/unknown_6_200.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_200.bin"
 glabel ASSET_GAME_TEXT_201
-.incbin "./build/us_1.0/assets/text/game/unknown_6_201.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_201.bin"
 glabel ASSET_GAME_TEXT_202
-.incbin "./build/us_1.0/assets/text/game/unknown_6_202.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_202.bin"
 glabel ASSET_GAME_TEXT_203
-.incbin "./build/us_1.0/assets/text/game/unknown_6_203.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_203.bin"
 glabel ASSET_GAME_TEXT_204
-.incbin "./build/us_1.0/assets/text/game/unknown_6_204.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_204.bin"
 glabel ASSET_GAME_TEXT_205
-.incbin "./build/us_1.0/assets/text/game/unknown_6_205.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_205.bin"
 glabel ASSET_GAME_TEXT_206
-.incbin "./build/us_1.0/assets/text/game/unknown_6_206.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_206.bin"
 glabel ASSET_GAME_TEXT_207
-.incbin "./build/us_1.0/assets/text/game/unknown_6_207.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_207.bin"
 glabel ASSET_GAME_TEXT_208
-.incbin "./build/us_1.0/assets/text/game/unknown_6_208.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_208.bin"
 glabel ASSET_GAME_TEXT_209
-.incbin "./build/us_1.0/assets/text/game/unknown_6_209.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_209.bin"
 glabel ASSET_GAME_TEXT_210
-.incbin "./build/us_1.0/assets/text/game/unknown_6_210.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_210.bin"
 glabel ASSET_GAME_TEXT_211
-.incbin "./build/us_1.0/assets/text/game/unknown_6_211.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_211.bin"
 glabel ASSET_GAME_TEXT_212
-.incbin "./build/us_1.0/assets/text/game/unknown_6_212.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_212.bin"
 glabel ASSET_GAME_TEXT_213
-.incbin "./build/us_1.0/assets/text/game/unknown_6_213.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_213.bin"
 glabel ASSET_GAME_TEXT_214
-.incbin "./build/us_1.0/assets/text/game/unknown_6_214.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_214.bin"
 glabel ASSET_GAME_TEXT_215
-.incbin "./build/us_1.0/assets/text/game/unknown_6_215.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_215.bin"
 glabel ASSET_GAME_TEXT_216
-.incbin "./build/us_1.0/assets/text/game/unknown_6_216.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_216.bin"
 glabel ASSET_GAME_TEXT_217
-.incbin "./build/us_1.0/assets/text/game/unknown_6_217.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_217.bin"
 glabel ASSET_GAME_TEXT_218
-.incbin "./build/us_1.0/assets/text/game/unknown_6_218.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_218.bin"
 glabel ASSET_GAME_TEXT_219
-.incbin "./build/us_1.0/assets/text/game/unknown_6_219.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_219.bin"
 glabel ASSET_GAME_TEXT_220
-.incbin "./build/us_1.0/assets/text/game/unknown_6_220.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_220.bin"
 glabel ASSET_GAME_TEXT_221
-.incbin "./build/us_1.0/assets/text/game/unknown_6_221.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_221.bin"
 glabel ASSET_GAME_TEXT_222
-.incbin "./build/us_1.0/assets/text/game/unknown_6_222.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_222.bin"
 glabel ASSET_GAME_TEXT_223
-.incbin "./build/us_1.0/assets/text/game/unknown_6_223.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_223.bin"
 glabel ASSET_GAME_TEXT_224
-.incbin "./build/us_1.0/assets/text/game/unknown_6_224.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_224.bin"
 glabel ASSET_GAME_TEXT_225
-.incbin "./build/us_1.0/assets/text/game/unknown_6_225.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_225.bin"
 glabel ASSET_GAME_TEXT_226
-.incbin "./build/us_1.0/assets/text/game/unknown_6_226.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_226.bin"
 glabel ASSET_GAME_TEXT_227
-.incbin "./build/us_1.0/assets/text/game/unknown_6_227.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_227.bin"
 glabel ASSET_GAME_TEXT_228
-.incbin "./build/us_1.0/assets/text/game/unknown_6_228.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_228.bin"
 glabel ASSET_GAME_TEXT_229
-.incbin "./build/us_1.0/assets/text/game/unknown_6_229.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_229.bin"
 glabel ASSET_GAME_TEXT_230
-.incbin "./build/us_1.0/assets/text/game/unknown_6_230.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_230.bin"
 glabel ASSET_GAME_TEXT_231
-.incbin "./build/us_1.0/assets/text/game/unknown_6_231.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_231.bin"
 glabel ASSET_GAME_TEXT_232
-.incbin "./build/us_1.0/assets/text/game/unknown_6_232.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_232.bin"
 glabel ASSET_GAME_TEXT_233
-.incbin "./build/us_1.0/assets/text/game/unknown_6_233.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_233.bin"
 glabel ASSET_GAME_TEXT_234
-.incbin "./build/us_1.0/assets/text/game/unknown_6_234.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_234.bin"
 glabel ASSET_GAME_TEXT_235
-.incbin "./build/us_1.0/assets/text/game/unknown_6_235.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_235.bin"
 glabel ASSET_GAME_TEXT_236
-.incbin "./build/us_1.0/assets/text/game/unknown_6_236.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_236.bin"
 glabel ASSET_GAME_TEXT_237
-.incbin "./build/us_1.0/assets/text/game/unknown_6_237.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_237.bin"
 glabel ASSET_GAME_TEXT_238
-.incbin "./build/us_1.0/assets/text/game/unknown_6_238.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_238.bin"
 glabel ASSET_GAME_TEXT_239
-.incbin "./build/us_1.0/assets/text/game/unknown_6_239.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_239.bin"
 glabel ASSET_GAME_TEXT_240
-.incbin "./build/us_1.0/assets/text/game/unknown_6_240.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_240.bin"
 glabel ASSET_GAME_TEXT_241
-.incbin "./build/us_1.0/assets/text/game/unknown_6_241.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_241.bin"
 glabel ASSET_GAME_TEXT_242
-.incbin "./build/us_1.0/assets/text/game/unknown_6_242.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_242.bin"
 glabel ASSET_GAME_TEXT_243
-.incbin "./build/us_1.0/assets/text/game/unknown_6_243.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_243.bin"
 glabel ASSET_GAME_TEXT_244
-.incbin "./build/us_1.0/assets/text/game/unknown_6_244.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_244.bin"
 glabel ASSET_GAME_TEXT_245
-.incbin "./build/us_1.0/assets/text/game/unknown_6_245.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_245.bin"
 glabel ASSET_GAME_TEXT_246
-.incbin "./build/us_1.0/assets/text/game/unknown_6_246.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_246.bin"
 glabel ASSET_GAME_TEXT_247
-.incbin "./build/us_1.0/assets/text/game/unknown_6_247.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_247.bin"
 glabel ASSET_GAME_TEXT_248
-.incbin "./build/us_1.0/assets/text/game/unknown_6_248.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_248.bin"
 glabel ASSET_GAME_TEXT_249
-.incbin "./build/us_1.0/assets/text/game/unknown_6_249.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_249.bin"
 glabel ASSET_GAME_TEXT_250
-.incbin "./build/us_1.0/assets/text/game/unknown_6_250.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_250.bin"
 glabel ASSET_GAME_TEXT_251
-.incbin "./build/us_1.0/assets/text/game/unknown_6_251.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_251.bin"
 glabel ASSET_GAME_TEXT_252
-.incbin "./build/us_1.0/assets/text/game/unknown_6_252.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_252.bin"
 glabel ASSET_GAME_TEXT_253
-.incbin "./build/us_1.0/assets/text/game/unknown_6_253.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_253.bin"
 glabel ASSET_GAME_TEXT_254
-.incbin "./build/us_1.0/assets/text/game/unknown_6_254.bin"
+.incbin "./build/us_1.0/assets/text/game/asset_game_text_254.bin"
 glabel ASSET_GAME_TEXT_END
 
 /********** ASSET_GAME_TEXT_TABLE **********/
@@ -7829,6 +7832,7 @@ glabel ASSET_GAME_TEXT_TABLE
 .word (ASSET_GAME_TEXT_254 - ASSET_GAME_TEXT) | 0x80000000
 .word ASSET_GAME_TEXT_END - ASSET_GAME_TEXT
 .word 0xFFFFFFFF
+glabel ASSET_GAME_TEXT_TABLE_END
 
 /********** ASSET_MENU_TEXT **********/
 
@@ -7848,13 +7852,14 @@ glabel ASSET_MENU_TEXT_END
 
 .balign 16
 glabel ASSET_MENU_TEXT_TABLE
-.word 186 # Number of text entries for the languages
+.word 186
 .word ASSET_MENU_TEXT_ENGLISH - ASSET_MENU_TEXT
 .word ASSET_MENU_TEXT_FRENCH - ASSET_MENU_TEXT
 .word ASSET_MENU_TEXT_GERMAN - ASSET_MENU_TEXT
 .word ASSET_MENU_TEXT_JAPANESE - ASSET_MENU_TEXT
 .word ASSET_MENU_TEXT_END - ASSET_MENU_TEXT
 .word 0xFFFFFFFF
+glabel ASSET_MENU_TEXT_TABLE_END
 
 /********** ASSET_SCREENS **********/
 
@@ -7868,6 +7873,7 @@ glabel ASSET_SCREENS_END
 glabel ASSET_SCREENS_TABLE
 .word ASSET_SCREENS_END - ASSET_SCREENS
 .word 0xFFFFFFFF
+glabel ASSET_SCREENS_TABLE_END
 
 /********** ASSET_SPRITES **********/
 
@@ -8460,6 +8466,7 @@ glabel ASSET_SPRITES_TABLE
 .word ASSET_SPRITE_MENU_ICONTTAMULET - ASSET_SPRITES
 .word ASSET_SPRITES_END - ASSET_SPRITES
 .word 0xFFFFFFFF
+glabel ASSET_SPRITES_TABLE_END
 
 /********** ASSET_EMPTY_14 **********/
 
@@ -8472,145 +8479,145 @@ glabel ASSET_EMPTY_14_END
 .balign 16
 glabel ASSET_MISC
 glabel ASSET_MISC_0
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_0.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_0.bin"
 glabel ASSET_MISC_1
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_1.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_1.bin"
 glabel ASSET_MISC_2
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_2.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_2.bin"
 glabel ASSET_MISC_3
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_3.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_3.bin"
 glabel ASSET_MISC_4
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_4.bin"
-glabel ASSET_MISC_TRICKY_BOSS_DATA
-.incbin "./build/us_1.0/assets/misc/unlabeled/tricky_boss_data.bin"
-glabel ASSET_MISC_BLUEY_BOSS_DATA
-.incbin "./build/us_1.0/assets/misc/unlabeled/bluey_boss_data.bin"
-glabel ASSET_MISC_SMOKEY_BOSS_DATA
-.incbin "./build/us_1.0/assets/misc/unlabeled/smokey_boss_data.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_4.bin"
+glabel ASSET_MISC_5
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_5.bin"
+glabel ASSET_MISC_6
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_6.bin"
+glabel ASSET_MISC_7
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_7.bin"
 glabel ASSET_MISC_8
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_8.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_8.bin"
 glabel ASSET_MISC_RACER_WEIGHT
-.incbin "./build/us_1.0/assets/misc/unlabeled/racer_weight_data.bin"
+.incbin "./build/us_1.0/assets/misc/racer_stats/racer_weight_data.bin"
 glabel ASSET_MISC_RACER_HANDLING
-.incbin "./build/us_1.0/assets/misc/unlabeled/racer_handling_data.bin"
+.incbin "./build/us_1.0/assets/misc/racer_stats/racer_handling_data.bin"
 glabel ASSET_MISC_RACER_UNUSED_11
-.incbin "./build/us_1.0/assets/misc/unlabeled/racer_unused_11_data.bin"
+.incbin "./build/us_1.0/assets/misc/racer_stats/racer_unused_11_data.bin"
 glabel ASSET_MISC_12
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_12.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_12.bin"
 glabel ASSET_MISC_13
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_13.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_13.bin"
 glabel ASSET_MISC_14
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_14.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_14.bin"
 glabel ASSET_MISC_15
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_15.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_15.bin"
 glabel ASSET_MISC_16
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_16.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_16.bin"
 glabel ASSET_MISC_17
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_17.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_17.bin"
 glabel ASSET_MISC_18
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_18.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_18.bin"
 glabel ASSET_MISC_19
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_19.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_19.bin"
 glabel ASSET_MISC_20
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_20.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_20.bin"
 glabel ASSET_MISC_SHIELD_DATA
 .incbin "./build/us_1.0/assets/misc/unlabeled/shield_data.bin"
 glabel ASSET_MISC_MAGNET_DATA
 .incbin "./build/us_1.0/assets/misc/unlabeled/magnet_data.bin"
 glabel ASSET_MISC_23
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_23.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_23.bin"
 glabel ASSET_MISC_24
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_24.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_24.bin"
 glabel ASSET_MISC_25
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_25.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_25.bin"
 glabel ASSET_MISC_TRACKS_MENU_IDS
-.incbin "./build/us_1.0/assets/misc/unlabeled/tracks_menu_ids.bin"
+.incbin "./build/us_1.0/assets/misc/track_ids/tracks_menu_ids.bin"
 glabel ASSET_MISC_HUB_AREA_IDS
-.incbin "./build/us_1.0/assets/misc/unlabeled/hub_area_ids.bin"
+.incbin "./build/us_1.0/assets/misc/track_ids/hub_area_ids.bin"
 glabel ASSET_MISC_MAIN_TRACKS_IDS
-.incbin "./build/us_1.0/assets/misc/unlabeled/main_tracks_ids.bin"
+.incbin "./build/us_1.0/assets/misc/track_ids/main_tracks_ids.bin"
 glabel ASSET_MISC_BATTLE_TRACKS_IDS
-.incbin "./build/us_1.0/assets/misc/unlabeled/battle_tracks_ids.bin"
+.incbin "./build/us_1.0/assets/misc/track_ids/battle_tracks_ids.bin"
 glabel ASSET_MISC_BOSS_TRACKS_IDS
-.incbin "./build/us_1.0/assets/misc/unlabeled/boss_tracks_ids.bin"
+.incbin "./build/us_1.0/assets/misc/track_ids/boss_tracks_ids.bin"
 glabel ASSET_MISC_31
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_31.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_31.bin"
 glabel ASSET_MISC_32
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_32.bin"
-glabel ASSET_MISC_RACERSTATS_UNKNOWN0
-.incbin "./build/us_1.0/assets/misc/unlabeled/RacerStats_Unknown0.bin"
-glabel ASSET_MISC_RACERSTATS_DIDDY
-.incbin "./build/us_1.0/assets/misc/unlabeled/RacerStats_Diddy.bin"
-glabel ASSET_MISC_RACERSTATS_TT
-.incbin "./build/us_1.0/assets/misc/unlabeled/RacerStats_TT.bin"
-glabel ASSET_MISC_RACERSTATS_UNKNOWN1
-.incbin "./build/us_1.0/assets/misc/unlabeled/RacerStats_Unknown1.bin"
-glabel ASSET_MISC_RACERSTATS_KRUNCH
-.incbin "./build/us_1.0/assets/misc/unlabeled/RacerStats_Krunch.bin"
-glabel ASSET_MISC_RACERSTATS_BUMPER
-.incbin "./build/us_1.0/assets/misc/unlabeled/RacerStats_Bumper.bin"
-glabel ASSET_MISC_RACERSTATS_TIPTUP
-.incbin "./build/us_1.0/assets/misc/unlabeled/RacerStats_Tiptup.bin"
-glabel ASSET_MISC_RACERSTATS_CONKER
-.incbin "./build/us_1.0/assets/misc/unlabeled/RacerStats_Conker.bin"
-glabel ASSET_MISC_RACERSTATS_TIMBER
-.incbin "./build/us_1.0/assets/misc/unlabeled/RacerStats_Timber.bin"
-glabel ASSET_MISC_RACERSTATS_BANJO
-.incbin "./build/us_1.0/assets/misc/unlabeled/RacerStats_Banjo.bin"
-glabel ASSET_MISC_RACERSTATS_DRUMSTICK
-.incbin "./build/us_1.0/assets/misc/unlabeled/RacerStats_Drumstick.bin"
-glabel ASSET_MISC_RACERSTATS_PIPSY
-.incbin "./build/us_1.0/assets/misc/unlabeled/RacerStats_Pipsy.bin"
-glabel ASSET_MISC_RACERSTATS_UNKNOWN2
-.incbin "./build/us_1.0/assets/misc/unlabeled/RacerStats_Unknown2.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_32.bin"
+glabel ASSET_MISC_RACERACCELERATION_UNKNOWN0
+.incbin "./build/us_1.0/assets/misc/racer_stats/RacerAcceleration_Unknown0.bin"
+glabel ASSET_MISC_RACERACCELERATION_DIDDY
+.incbin "./build/us_1.0/assets/misc/racer_stats/RacerAcceleration_Diddy.bin"
+glabel ASSET_MISC_RACERACCELERATION_TT
+.incbin "./build/us_1.0/assets/misc/racer_stats/RacerAcceleration_TT.bin"
+glabel ASSET_MISC_RACERACCELERATION_UNKNOWN1
+.incbin "./build/us_1.0/assets/misc/racer_stats/RacerAcceleration_Unknown1.bin"
+glabel ASSET_MISC_RACERACCELERATION_KRUNCH
+.incbin "./build/us_1.0/assets/misc/racer_stats/RacerAcceleration_Krunch.bin"
+glabel ASSET_MISC_RACERACCELERATION_BUMPER
+.incbin "./build/us_1.0/assets/misc/racer_stats/RacerAcceleration_Bumper.bin"
+glabel ASSET_MISC_RACERACCELERATION_TIPTUP
+.incbin "./build/us_1.0/assets/misc/racer_stats/RacerAcceleration_Tiptup.bin"
+glabel ASSET_MISC_RACERACCELERATION_CONKER
+.incbin "./build/us_1.0/assets/misc/racer_stats/RacerAcceleration_Conker.bin"
+glabel ASSET_MISC_RACERACCELERATION_TIMBER
+.incbin "./build/us_1.0/assets/misc/racer_stats/RacerAcceleration_Timber.bin"
+glabel ASSET_MISC_RACERACCELERATION_BANJO
+.incbin "./build/us_1.0/assets/misc/racer_stats/RacerAcceleration_Banjo.bin"
+glabel ASSET_MISC_RACERACCELERATION_DRUMSTICK
+.incbin "./build/us_1.0/assets/misc/racer_stats/RacerAcceleration_Drumstick.bin"
+glabel ASSET_MISC_RACERACCELERATION_PIPSY
+.incbin "./build/us_1.0/assets/misc/racer_stats/RacerAcceleration_Pipsy.bin"
+glabel ASSET_MISC_RACERACCELERATION_UNKNOWN2
+.incbin "./build/us_1.0/assets/misc/racer_stats/RacerAcceleration_Unknown2.bin"
 glabel ASSET_MISC_46
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_46.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_46.bin"
 glabel ASSET_MISC_47
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_47.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_47.bin"
 glabel ASSET_MISC_48
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_48.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_48.bin"
 glabel ASSET_MISC_49
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_49.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_49.bin"
 glabel ASSET_MISC_50
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_50.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_50.bin"
 glabel ASSET_MISC_51
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_51.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_51.bin"
 glabel ASSET_MISC_52
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_52.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_52.bin"
 glabel ASSET_MISC_53
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_53.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_53.bin"
 glabel ASSET_MISC_54
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_54.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_54.bin"
 glabel ASSET_MISC_55
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_55.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_55.bin"
 glabel ASSET_MISC_RACER_HITBOX_SIZE
 .incbin "./build/us_1.0/assets/misc/unlabeled/racer_hitbox_size.bin"
 glabel ASSET_MISC_57
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_57.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_57.bin"
 glabel ASSET_MISC_58
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_58.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_58.bin"
 glabel ASSET_MISC_59
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_59.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_59.bin"
 glabel ASSET_MISC_60
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_60.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_60.bin"
 glabel ASSET_MISC_61
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_61.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_61.bin"
 glabel ASSET_MISC_62
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_62.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_62.bin"
 glabel ASSET_MISC_63
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_63.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_63.bin"
 glabel ASSET_MISC_64
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_64.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_64.bin"
 glabel ASSET_MISC_MAGIC_CODES
-.incbin "./build/us_1.0/assets/misc/unlabeled/magic_codes.bin"
+.incbin "./build/us_1.0/assets/misc/cheats/magic_codes.bin"
 glabel ASSET_MISC_TITLE_SCREEN_DEMO_IDS
-.incbin "./build/us_1.0/assets/misc/unlabeled/title_screen_demo_ids.bin"
+.incbin "./build/us_1.0/assets/misc/title_screen/title_screen_demo_ids.bin"
 glabel ASSET_MISC_67
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_67.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_67.bin"
 glabel ASSET_MISC_68
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_68.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_68.bin"
 glabel ASSET_MISC_69
-.incbin "./build/us_1.0/assets/misc/unlabeled/unknown_15_69.bin"
+.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_69.bin"
 glabel ASSET_MISC_END
 
 /********** ASSET_MISC_TABLE **********/
@@ -8622,9 +8629,9 @@ glabel ASSET_MISC_TABLE
 .word (ASSET_MISC_2 - ASSET_MISC) / 4
 .word (ASSET_MISC_3 - ASSET_MISC) / 4
 .word (ASSET_MISC_4 - ASSET_MISC) / 4
-.word (ASSET_MISC_TRICKY_BOSS_DATA - ASSET_MISC) / 4
-.word (ASSET_MISC_BLUEY_BOSS_DATA - ASSET_MISC) / 4
-.word (ASSET_MISC_SMOKEY_BOSS_DATA - ASSET_MISC) / 4
+.word (ASSET_MISC_5 - ASSET_MISC) / 4
+.word (ASSET_MISC_6 - ASSET_MISC) / 4
+.word (ASSET_MISC_7 - ASSET_MISC) / 4
 .word (ASSET_MISC_8 - ASSET_MISC) / 4
 .word (ASSET_MISC_RACER_WEIGHT - ASSET_MISC) / 4
 .word (ASSET_MISC_RACER_HANDLING - ASSET_MISC) / 4
@@ -8650,19 +8657,19 @@ glabel ASSET_MISC_TABLE
 .word (ASSET_MISC_BOSS_TRACKS_IDS - ASSET_MISC) / 4
 .word (ASSET_MISC_31 - ASSET_MISC) / 4
 .word (ASSET_MISC_32 - ASSET_MISC) / 4
-.word (ASSET_MISC_RACERSTATS_UNKNOWN0 - ASSET_MISC) / 4
-.word (ASSET_MISC_RACERSTATS_DIDDY - ASSET_MISC) / 4
-.word (ASSET_MISC_RACERSTATS_TT - ASSET_MISC) / 4
-.word (ASSET_MISC_RACERSTATS_UNKNOWN1 - ASSET_MISC) / 4
-.word (ASSET_MISC_RACERSTATS_KRUNCH - ASSET_MISC) / 4
-.word (ASSET_MISC_RACERSTATS_BUMPER - ASSET_MISC) / 4
-.word (ASSET_MISC_RACERSTATS_TIPTUP - ASSET_MISC) / 4
-.word (ASSET_MISC_RACERSTATS_CONKER - ASSET_MISC) / 4
-.word (ASSET_MISC_RACERSTATS_TIMBER - ASSET_MISC) / 4
-.word (ASSET_MISC_RACERSTATS_BANJO - ASSET_MISC) / 4
-.word (ASSET_MISC_RACERSTATS_DRUMSTICK - ASSET_MISC) / 4
-.word (ASSET_MISC_RACERSTATS_PIPSY - ASSET_MISC) / 4
-.word (ASSET_MISC_RACERSTATS_UNKNOWN2 - ASSET_MISC) / 4
+.word (ASSET_MISC_RACERACCELERATION_UNKNOWN0 - ASSET_MISC) / 4
+.word (ASSET_MISC_RACERACCELERATION_DIDDY - ASSET_MISC) / 4
+.word (ASSET_MISC_RACERACCELERATION_TT - ASSET_MISC) / 4
+.word (ASSET_MISC_RACERACCELERATION_UNKNOWN1 - ASSET_MISC) / 4
+.word (ASSET_MISC_RACERACCELERATION_KRUNCH - ASSET_MISC) / 4
+.word (ASSET_MISC_RACERACCELERATION_BUMPER - ASSET_MISC) / 4
+.word (ASSET_MISC_RACERACCELERATION_TIPTUP - ASSET_MISC) / 4
+.word (ASSET_MISC_RACERACCELERATION_CONKER - ASSET_MISC) / 4
+.word (ASSET_MISC_RACERACCELERATION_TIMBER - ASSET_MISC) / 4
+.word (ASSET_MISC_RACERACCELERATION_BANJO - ASSET_MISC) / 4
+.word (ASSET_MISC_RACERACCELERATION_DRUMSTICK - ASSET_MISC) / 4
+.word (ASSET_MISC_RACERACCELERATION_PIPSY - ASSET_MISC) / 4
+.word (ASSET_MISC_RACERACCELERATION_UNKNOWN2 - ASSET_MISC) / 4
 .word (ASSET_MISC_46 - ASSET_MISC) / 4
 .word (ASSET_MISC_47 - ASSET_MISC) / 4
 .word (ASSET_MISC_48 - ASSET_MISC) / 4
@@ -8689,6 +8696,7 @@ glabel ASSET_MISC_TABLE
 .word (ASSET_MISC_69 - ASSET_MISC) / 4
 .word (ASSET_MISC_END - ASSET_MISC) / 4
 .word 0xFFFFFFFF
+glabel ASSET_MISC_TABLE_END
 
 /********** ASSET_HUD_ELEMENT_IDS **********/
 
@@ -8855,287 +8863,288 @@ glabel ASSET_LEVEL_OBJECT_MAPS_TABLE
 .word ASSET_LEVEL_OBJECT_MAPS_137 - ASSET_LEVEL_OBJECT_MAPS
 .word ASSET_LEVEL_OBJECT_MAPS_END - ASSET_LEVEL_OBJECT_MAPS
 .word 0xFFFFFFFF
+glabel ASSET_LEVEL_OBJECT_MAPS_TABLE_END
 
 /********** ASSET_LEVEL_OBJECT_MAPS **********/
 
 .balign 16
 glabel ASSET_LEVEL_OBJECT_MAPS
 glabel ASSET_LEVEL_OBJECT_MAPS_0
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_0.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_0.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_1
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_1.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_1.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_2
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_2.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_2.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_3
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_3.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_3.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_4
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_4.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_4.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_5
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_5.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_5.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_6
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_6.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_6.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_7
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_7.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_7.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_8
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_8.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_8.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_9
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_9.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_9.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_10
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_10.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_10.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_11
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_11.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_11.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_12
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_12.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_12.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_13
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_13.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_13.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_14
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_14.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_14.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_15
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_15.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_15.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_16
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_16.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_16.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_17
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_17.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_17.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_18
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_18.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_18.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_19
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_19.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_19.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_20
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_20.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_20.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_21
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_21.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_21.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_22
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_22.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_22.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_23
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_23.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_23.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_24
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_24.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_24.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_25
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_25.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_25.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_26
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_26.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_26.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_27
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_27.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_27.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_28
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_28.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_28.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_29
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_29.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_29.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_30
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_30.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_30.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_31
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_31.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_31.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_32
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_32.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_32.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_33
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_33.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_33.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_34
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_34.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_34.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_35
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_35.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_35.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_36
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_36.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_36.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_37
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_37.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_37.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_38
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_38.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_38.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_39
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_39.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_39.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_40
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_40.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_40.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_41
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_41.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_41.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_42
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_42.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_42.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_43
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_43.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_43.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_44
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_44.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_44.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_45
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_45.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_45.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_46
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_46.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_46.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_47
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_47.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_47.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_48
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_48.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_48.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_49
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_49.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_49.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_50
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_50.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_50.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_51
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_51.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_51.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_52
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_52.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_52.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_53
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_53.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_53.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_54
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_54.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_54.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_55
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_55.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_55.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_56
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_56.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_56.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_57
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_57.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_57.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_58
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_58.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_58.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_59
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_59.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_59.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_60
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_60.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_60.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_61
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_61.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_61.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_62
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_62.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_62.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_63
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_63.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_63.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_64
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_64.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_64.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_65
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_65.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_65.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_66
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_66.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_66.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_67
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_67.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_67.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_68
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_68.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_68.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_69
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_69.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_69.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_70
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_70.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_70.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_71
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_71.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_71.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_72
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_72.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_72.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_73
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_73.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_73.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_74
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_74.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_74.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_75
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_75.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_75.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_76
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_76.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_76.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_77
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_77.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_77.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_78
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_78.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_78.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_79
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_79.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_79.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_80
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_80.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_80.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_81
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_81.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_81.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_82
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_82.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_82.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_83
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_83.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_83.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_84
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_84.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_84.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_85
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_85.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_85.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_86
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_86.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_86.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_87
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_87.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_87.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_88
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_88.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_88.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_89
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_89.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_89.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_90
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_90.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_90.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_91
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_91.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_91.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_92
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_92.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_92.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_93
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_93.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_93.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_94
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_94.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_94.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_95
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_95.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_95.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_96
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_96.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_96.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_97
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_97.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_97.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_98
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_98.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_98.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_99
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_99.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_99.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_100
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_100.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_100.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_101
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_101.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_101.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_102
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_102.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_102.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_103
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_103.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_103.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_104
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_104.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_104.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_105
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_105.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_105.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_106
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_106.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_106.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_107
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_107.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_107.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_108
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_108.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_108.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_109
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_109.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_109.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_110
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_110.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_110.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_111
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_111.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_111.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_112
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_112.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_112.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_113
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_113.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_113.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_114
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_114.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_114.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_115
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_115.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_115.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_116
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_116.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_116.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_117
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_117.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_117.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_118
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_118.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_118.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_119
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_119.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_119.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_120
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_120.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_120.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_121
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_121.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_121.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_122
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_122.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_122.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_123
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_123.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_123.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_124
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_124.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_124.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_125
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_125.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_125.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_126
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_126.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_126.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_127
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_127.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_127.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_128
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_128.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_128.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_129
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_129.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_129.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_130
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_130.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_130.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_131
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_131.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_131.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_132
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_132.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_132.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_133
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_133.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_133.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_134
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_134.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_134.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_135
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_135.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_135.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_136
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_136.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_136.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_137
-.incbin "./build/us_1.0/assets/levels/objectMaps/unknown_21_137.bin"
+.incbin "./build/us_1.0/assets/levels/objectMaps/asset_level_object_maps_137.bin"
 glabel ASSET_LEVEL_OBJECT_MAPS_END
 
 /********** ASSET_LEVEL_HEADERS_TABLE **********/
@@ -9209,6 +9218,7 @@ glabel ASSET_LEVEL_HEADERS_TABLE
 .word ASSET_LEVEL_LASTBITB - ASSET_LEVEL_HEADERS
 .word ASSET_LEVEL_HEADERS_END - ASSET_LEVEL_HEADERS
 .word 0xFFFFFFFF
+glabel ASSET_LEVEL_HEADERS_TABLE_END
 
 /********** ASSET_LEVEL_HEADERS **********/
 
@@ -9350,208 +9360,209 @@ glabel ASSET_LEVEL_HEADERS_END
 
 .balign 16
 glabel ASSET_LEVEL_NAMES_TABLE
-.word ASSET_LEVELNAME_CENTRALAREAHUB - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_BLUEY1 - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_DRAGONFORESTHUB - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_FOSSILCANYON - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_PIRATELAGOON - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_ANCIENTLAKE - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_WALRUSCOVE - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_HOTTOPVOLCANO - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_WHALEBAY - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_SNOWBALLVALLEY - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_CRESCENTISLAND - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_FIREMOUNTAIN - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_DINODOMAINHUB - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_EVERFROSTPEAK - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_SHERBETISLANDHUB - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_SPACEPORTALPHA - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_HORSESHOEGULCH - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_SPACEDUSTALLEY - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_GREENWOODVILLAGE - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_BOULDERCANYON - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_WINDMILLPLAINS - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_FRONTEND - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_CHARACTERSELECT - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_TITLESCREENSEQUENCE - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_SNOWFLAKEMOUNTAINHUB - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_SMOKEYCASTLE - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_DARKWATERBEACH - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_ICICLEPYRAMID - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_FROSTYVILLAGE - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_JUNGLEFALLS - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_TREASURECAVES - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_HAUNTEDWOODS - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_DARKMOONCAVERNS - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_STARCITY - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_TROPHYRACE - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_FUTUREFUNLANDHUB - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_OPENINGSEQUENCE - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_WIZPIG1 - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_TRICKYTOPS1 - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_OPTIONSBACKGROUND - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_BUBBLER1 - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_SMOKEY1 - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_WIZPIGMOUTHSEQUENCE - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_WIZPIGAMULETSEQUENCE - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_TTAMULETSEQUENCE - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_ROCKETSEQUENCE - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_TRICKYTOPS2 - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_DINODOMAINTROPHYANIM - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_SNOWFLAKEMOUNTAINTROPHYANIM - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_SHERBETISLANDTROPHYANIM - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_DRAGONFORESTTROPHYANIM - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_FUTUREFUNLANDTROPHYANIM - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_BLUEY2 - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_BUBBLER2 - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_SMOKEY2 - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_WIZPIG2 - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_PARTYSEQUENCE - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_TRICKTOPSANIM - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_SMOKEYANIM - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_BLUEYANIM - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_WIZPIG1ANIM - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_BUBBLERANIM - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_WIZPIG2ANIM - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_LASTBIT - ASSET_LEVEL_NAMES
-.word ASSET_LEVELNAME_LASTBITB - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_CENTRALAREAHUB_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_BLUEY1_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_DRAGONFORESTHUB_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_FOSSILCANYON_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_PIRATELAGOON_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_ANCIENTLAKE_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_WALRUSCOVE_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_HOTTOPVOLCANO_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_WHALEBAY_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_SNOWBALLVALLEY_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_CRESCENTISLAND_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_FIREMOUNTAIN_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_DINODOMAINHUB_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_EVERFROSTPEAK_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_SHERBETISLANDHUB_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_SPACEPORTALPHA_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_HORSESHOEGULCH_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_SPACEDUSTALLEY_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_GREENWOODVILLAGE_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_BOULDERCANYON_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_WINDMILLPLAINS_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_FRONTEND_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_CHARACTERSELECT_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_TITLESCREENSEQUENCE_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_SNOWFLAKEMOUNTAINHUB_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_SMOKEYCASTLE_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_DARKWATERBEACH_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_ICICLEPYRAMID_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_FROSTYVILLAGE_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_JUNGLEFALLS_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_TREASURECAVES_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_HAUNTEDWOODS_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_DARKMOONCAVERNS_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_STARCITY_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_TROPHYRACE_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_FUTUREFUNLANDHUB_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_OPENINGSEQUENCE_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_WIZPIG1_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_TRICKYTOPS1_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_OPTIONSBACKGROUND_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_BUBBLER1_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_SMOKEY1_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_WIZPIGMOUTHSEQUENCE_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_WIZPIGAMULETSEQUENCE_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_TTAMULETSEQUENCE_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_ROCKETSEQUENCE_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_TRICKYTOPS2_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_DINODOMAINTROPHYANIM_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_SNOWFLAKEMOUNTAINTROPHYANIM_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_SHERBETISLANDTROPHYANIM_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_DRAGONFORESTTROPHYANIM_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_FUTUREFUNLANDTROPHYANIM_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_BLUEY2_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_BUBBLER2_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_SMOKEY2_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_WIZPIG2_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_PARTYSEQUENCE_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_TRICKTOPSANIM_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_SMOKEYANIM_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_BLUEYANIM_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_WIZPIG1ANIM_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_BUBBLERANIM_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_WIZPIG2ANIM_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_LASTBIT_NAME - ASSET_LEVEL_NAMES
+.word ASSET_LEVEL_LASTBITB_NAME - ASSET_LEVEL_NAMES
 .word ASSET_LEVEL_NAMES_END - ASSET_LEVEL_NAMES
 .word 0xFFFFFFFF
+glabel ASSET_LEVEL_NAMES_TABLE_END
 
 /********** ASSET_LEVEL_NAMES **********/
 
 .balign 16
 glabel ASSET_LEVEL_NAMES
-glabel ASSET_LEVELNAME_CENTRALAREAHUB
-.incbin "./build/us_1.0/assets/levels/names/CentralAreaHubName.bin"
-glabel ASSET_LEVELNAME_BLUEY1
-.incbin "./build/us_1.0/assets/levels/names/Bluey1Name.bin"
-glabel ASSET_LEVELNAME_DRAGONFORESTHUB
-.incbin "./build/us_1.0/assets/levels/names/DragonForestHubName.bin"
-glabel ASSET_LEVELNAME_FOSSILCANYON
-.incbin "./build/us_1.0/assets/levels/names/FossilCanyonName.bin"
-glabel ASSET_LEVELNAME_PIRATELAGOON
-.incbin "./build/us_1.0/assets/levels/names/PirateLagoonName.bin"
-glabel ASSET_LEVELNAME_ANCIENTLAKE
-.incbin "./build/us_1.0/assets/levels/names/AncientLakeName.bin"
-glabel ASSET_LEVELNAME_WALRUSCOVE
-.incbin "./build/us_1.0/assets/levels/names/WalrusCoveName.bin"
-glabel ASSET_LEVELNAME_HOTTOPVOLCANO
-.incbin "./build/us_1.0/assets/levels/names/HotTopVolcanoName.bin"
-glabel ASSET_LEVELNAME_WHALEBAY
-.incbin "./build/us_1.0/assets/levels/names/WhaleBayName.bin"
-glabel ASSET_LEVELNAME_SNOWBALLVALLEY
-.incbin "./build/us_1.0/assets/levels/names/SnowballValleyName.bin"
-glabel ASSET_LEVELNAME_CRESCENTISLAND
-.incbin "./build/us_1.0/assets/levels/names/CrescentIslandName.bin"
-glabel ASSET_LEVELNAME_FIREMOUNTAIN
-.incbin "./build/us_1.0/assets/levels/names/FireMountainName.bin"
-glabel ASSET_LEVELNAME_DINODOMAINHUB
-.incbin "./build/us_1.0/assets/levels/names/DinoDomainHubName.bin"
-glabel ASSET_LEVELNAME_EVERFROSTPEAK
-.incbin "./build/us_1.0/assets/levels/names/EverfrostPeakName.bin"
-glabel ASSET_LEVELNAME_SHERBETISLANDHUB
-.incbin "./build/us_1.0/assets/levels/names/SherbetIslandHubName.bin"
-glabel ASSET_LEVELNAME_SPACEPORTALPHA
-.incbin "./build/us_1.0/assets/levels/names/SpaceportAlphaName.bin"
-glabel ASSET_LEVELNAME_HORSESHOEGULCH
-.incbin "./build/us_1.0/assets/levels/names/HorseshoeGulchName.bin"
-glabel ASSET_LEVELNAME_SPACEDUSTALLEY
-.incbin "./build/us_1.0/assets/levels/names/SpacedustAlleyName.bin"
-glabel ASSET_LEVELNAME_GREENWOODVILLAGE
-.incbin "./build/us_1.0/assets/levels/names/GreenwoodVillageName.bin"
-glabel ASSET_LEVELNAME_BOULDERCANYON
-.incbin "./build/us_1.0/assets/levels/names/BoulderCanyonName.bin"
-glabel ASSET_LEVELNAME_WINDMILLPLAINS
-.incbin "./build/us_1.0/assets/levels/names/WindmillPlainsName.bin"
-glabel ASSET_LEVELNAME_FRONTEND
-.incbin "./build/us_1.0/assets/levels/names/FrontEndName.bin"
-glabel ASSET_LEVELNAME_CHARACTERSELECT
-.incbin "./build/us_1.0/assets/levels/names/CharacterSelectName.bin"
-glabel ASSET_LEVELNAME_TITLESCREENSEQUENCE
-.incbin "./build/us_1.0/assets/levels/names/TitleScreenSequenceName.bin"
-glabel ASSET_LEVELNAME_SNOWFLAKEMOUNTAINHUB
-.incbin "./build/us_1.0/assets/levels/names/SnowflakeMountainHubName.bin"
-glabel ASSET_LEVELNAME_SMOKEYCASTLE
-.incbin "./build/us_1.0/assets/levels/names/SmokeyCastleName.bin"
-glabel ASSET_LEVELNAME_DARKWATERBEACH
-.incbin "./build/us_1.0/assets/levels/names/DarkwaterBeachName.bin"
-glabel ASSET_LEVELNAME_ICICLEPYRAMID
-.incbin "./build/us_1.0/assets/levels/names/IciclePyramidName.bin"
-glabel ASSET_LEVELNAME_FROSTYVILLAGE
-.incbin "./build/us_1.0/assets/levels/names/FrostyVillageName.bin"
-glabel ASSET_LEVELNAME_JUNGLEFALLS
-.incbin "./build/us_1.0/assets/levels/names/JungleFallsName.bin"
-glabel ASSET_LEVELNAME_TREASURECAVES
-.incbin "./build/us_1.0/assets/levels/names/TreasureCavesName.bin"
-glabel ASSET_LEVELNAME_HAUNTEDWOODS
-.incbin "./build/us_1.0/assets/levels/names/HauntedWoodsName.bin"
-glabel ASSET_LEVELNAME_DARKMOONCAVERNS
-.incbin "./build/us_1.0/assets/levels/names/DarkmoonCavernsName.bin"
-glabel ASSET_LEVELNAME_STARCITY
-.incbin "./build/us_1.0/assets/levels/names/StarCityName.bin"
-glabel ASSET_LEVELNAME_TROPHYRACE
-.incbin "./build/us_1.0/assets/levels/names/TrophyRaceName.bin"
-glabel ASSET_LEVELNAME_FUTUREFUNLANDHUB
-.incbin "./build/us_1.0/assets/levels/names/FutureFunLandHubName.bin"
-glabel ASSET_LEVELNAME_OPENINGSEQUENCE
-.incbin "./build/us_1.0/assets/levels/names/OpeningSequenceName.bin"
-glabel ASSET_LEVELNAME_WIZPIG1
-.incbin "./build/us_1.0/assets/levels/names/Wizpig1Name.bin"
-glabel ASSET_LEVELNAME_TRICKYTOPS1
-.incbin "./build/us_1.0/assets/levels/names/Trickytops1Name.bin"
-glabel ASSET_LEVELNAME_OPTIONSBACKGROUND
-.incbin "./build/us_1.0/assets/levels/names/OptionsBackgroundName.bin"
-glabel ASSET_LEVELNAME_BUBBLER1
-.incbin "./build/us_1.0/assets/levels/names/Bubbler1Name.bin"
-glabel ASSET_LEVELNAME_SMOKEY1
-.incbin "./build/us_1.0/assets/levels/names/Smokey1Name.bin"
-glabel ASSET_LEVELNAME_WIZPIGMOUTHSEQUENCE
-.incbin "./build/us_1.0/assets/levels/names/WizpigMouthSequenceName.bin"
-glabel ASSET_LEVELNAME_WIZPIGAMULETSEQUENCE
-.incbin "./build/us_1.0/assets/levels/names/WizpigAmuletSequenceName.bin"
-glabel ASSET_LEVELNAME_TTAMULETSEQUENCE
-.incbin "./build/us_1.0/assets/levels/names/TTAmuletSequenceName.bin"
-glabel ASSET_LEVELNAME_ROCKETSEQUENCE
-.incbin "./build/us_1.0/assets/levels/names/RocketSequenceName.bin"
-glabel ASSET_LEVELNAME_TRICKYTOPS2
-.incbin "./build/us_1.0/assets/levels/names/Trickytops2Name.bin"
-glabel ASSET_LEVELNAME_DINODOMAINTROPHYANIM
-.incbin "./build/us_1.0/assets/levels/names/DinoDomainTrophyAnimName.bin"
-glabel ASSET_LEVELNAME_SNOWFLAKEMOUNTAINTROPHYANIM
-.incbin "./build/us_1.0/assets/levels/names/SnowflakeMountainTrophyAnimName.bin"
-glabel ASSET_LEVELNAME_SHERBETISLANDTROPHYANIM
-.incbin "./build/us_1.0/assets/levels/names/SherbetIslandTrophyAnimName.bin"
-glabel ASSET_LEVELNAME_DRAGONFORESTTROPHYANIM
-.incbin "./build/us_1.0/assets/levels/names/DragonForestTrophyAnimName.bin"
-glabel ASSET_LEVELNAME_FUTUREFUNLANDTROPHYANIM
-.incbin "./build/us_1.0/assets/levels/names/FutureFunLandTrophyAnimName.bin"
-glabel ASSET_LEVELNAME_BLUEY2
-.incbin "./build/us_1.0/assets/levels/names/Bluey2Name.bin"
-glabel ASSET_LEVELNAME_BUBBLER2
-.incbin "./build/us_1.0/assets/levels/names/Bubbler2Name.bin"
-glabel ASSET_LEVELNAME_SMOKEY2
-.incbin "./build/us_1.0/assets/levels/names/Smokey2Name.bin"
-glabel ASSET_LEVELNAME_WIZPIG2
-.incbin "./build/us_1.0/assets/levels/names/Wizpig2Name.bin"
-glabel ASSET_LEVELNAME_PARTYSEQUENCE
-.incbin "./build/us_1.0/assets/levels/names/PartySequenceName.bin"
-glabel ASSET_LEVELNAME_TRICKTOPSANIM
-.incbin "./build/us_1.0/assets/levels/names/TricktopsAnimName.bin"
-glabel ASSET_LEVELNAME_SMOKEYANIM
-.incbin "./build/us_1.0/assets/levels/names/SmokeyAnimName.bin"
-glabel ASSET_LEVELNAME_BLUEYANIM
-.incbin "./build/us_1.0/assets/levels/names/BlueyAnimName.bin"
-glabel ASSET_LEVELNAME_WIZPIG1ANIM
-.incbin "./build/us_1.0/assets/levels/names/Wizpig1AnimName.bin"
-glabel ASSET_LEVELNAME_BUBBLERANIM
-.incbin "./build/us_1.0/assets/levels/names/BubblerAnimName.bin"
-glabel ASSET_LEVELNAME_WIZPIG2ANIM
-.incbin "./build/us_1.0/assets/levels/names/Wizpig2AnimName.bin"
-glabel ASSET_LEVELNAME_LASTBIT
-.incbin "./build/us_1.0/assets/levels/names/LastBitName.bin"
-glabel ASSET_LEVELNAME_LASTBITB
-.incbin "./build/us_1.0/assets/levels/names/LastBitBName.bin"
+glabel ASSET_LEVEL_CENTRALAREAHUB_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/CentralAreaHub.bin"
+glabel ASSET_LEVEL_BLUEY1_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/Bluey1.bin"
+glabel ASSET_LEVEL_DRAGONFORESTHUB_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/DragonForestHub.bin"
+glabel ASSET_LEVEL_FOSSILCANYON_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/FossilCanyon.bin"
+glabel ASSET_LEVEL_PIRATELAGOON_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/PirateLagoon.bin"
+glabel ASSET_LEVEL_ANCIENTLAKE_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/AncientLake.bin"
+glabel ASSET_LEVEL_WALRUSCOVE_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/WalrusCove.bin"
+glabel ASSET_LEVEL_HOTTOPVOLCANO_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/HotTopVolcano.bin"
+glabel ASSET_LEVEL_WHALEBAY_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/WhaleBay.bin"
+glabel ASSET_LEVEL_SNOWBALLVALLEY_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/SnowballValley.bin"
+glabel ASSET_LEVEL_CRESCENTISLAND_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/CrescentIsland.bin"
+glabel ASSET_LEVEL_FIREMOUNTAIN_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/FireMountain.bin"
+glabel ASSET_LEVEL_DINODOMAINHUB_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/DinoDomainHub.bin"
+glabel ASSET_LEVEL_EVERFROSTPEAK_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/EverfrostPeak.bin"
+glabel ASSET_LEVEL_SHERBETISLANDHUB_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/SherbetIslandHub.bin"
+glabel ASSET_LEVEL_SPACEPORTALPHA_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/SpaceportAlpha.bin"
+glabel ASSET_LEVEL_HORSESHOEGULCH_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/HorseshoeGulch.bin"
+glabel ASSET_LEVEL_SPACEDUSTALLEY_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/SpacedustAlley.bin"
+glabel ASSET_LEVEL_GREENWOODVILLAGE_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/GreenwoodVillage.bin"
+glabel ASSET_LEVEL_BOULDERCANYON_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/BoulderCanyon.bin"
+glabel ASSET_LEVEL_WINDMILLPLAINS_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/WindmillPlains.bin"
+glabel ASSET_LEVEL_FRONTEND_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/FrontEnd.bin"
+glabel ASSET_LEVEL_CHARACTERSELECT_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/CharacterSelect.bin"
+glabel ASSET_LEVEL_TITLESCREENSEQUENCE_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/TitleScreenSequence.bin"
+glabel ASSET_LEVEL_SNOWFLAKEMOUNTAINHUB_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/SnowflakeMountainHub.bin"
+glabel ASSET_LEVEL_SMOKEYCASTLE_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/SmokeyCastle.bin"
+glabel ASSET_LEVEL_DARKWATERBEACH_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/DarkwaterBeach.bin"
+glabel ASSET_LEVEL_ICICLEPYRAMID_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/IciclePyramid.bin"
+glabel ASSET_LEVEL_FROSTYVILLAGE_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/FrostyVillage.bin"
+glabel ASSET_LEVEL_JUNGLEFALLS_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/JungleFalls.bin"
+glabel ASSET_LEVEL_TREASURECAVES_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/TreasureCaves.bin"
+glabel ASSET_LEVEL_HAUNTEDWOODS_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/HauntedWoods.bin"
+glabel ASSET_LEVEL_DARKMOONCAVERNS_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/DarkmoonCaverns.bin"
+glabel ASSET_LEVEL_STARCITY_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/StarCity.bin"
+glabel ASSET_LEVEL_TROPHYRACE_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/TrophyRace.bin"
+glabel ASSET_LEVEL_FUTUREFUNLANDHUB_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/FutureFunLandHub.bin"
+glabel ASSET_LEVEL_OPENINGSEQUENCE_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/OpeningSequence.bin"
+glabel ASSET_LEVEL_WIZPIG1_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/Wizpig1.bin"
+glabel ASSET_LEVEL_TRICKYTOPS1_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/Trickytops1.bin"
+glabel ASSET_LEVEL_OPTIONSBACKGROUND_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/OptionsBackground.bin"
+glabel ASSET_LEVEL_BUBBLER1_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/Bubbler1.bin"
+glabel ASSET_LEVEL_SMOKEY1_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/Smokey1.bin"
+glabel ASSET_LEVEL_WIZPIGMOUTHSEQUENCE_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/WizpigMouthSequence.bin"
+glabel ASSET_LEVEL_WIZPIGAMULETSEQUENCE_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/WizpigAmuletSequence.bin"
+glabel ASSET_LEVEL_TTAMULETSEQUENCE_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/TTAmuletSequence.bin"
+glabel ASSET_LEVEL_ROCKETSEQUENCE_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/RocketSequence.bin"
+glabel ASSET_LEVEL_TRICKYTOPS2_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/Trickytops2.bin"
+glabel ASSET_LEVEL_DINODOMAINTROPHYANIM_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/DinoDomainTrophyAnim.bin"
+glabel ASSET_LEVEL_SNOWFLAKEMOUNTAINTROPHYANIM_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/SnowflakeMountainTrophyAnim.bin"
+glabel ASSET_LEVEL_SHERBETISLANDTROPHYANIM_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/SherbetIslandTrophyAnim.bin"
+glabel ASSET_LEVEL_DRAGONFORESTTROPHYANIM_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/DragonForestTrophyAnim.bin"
+glabel ASSET_LEVEL_FUTUREFUNLANDTROPHYANIM_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/FutureFunLandTrophyAnim.bin"
+glabel ASSET_LEVEL_BLUEY2_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/Bluey2.bin"
+glabel ASSET_LEVEL_BUBBLER2_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/Bubbler2.bin"
+glabel ASSET_LEVEL_SMOKEY2_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/Smokey2.bin"
+glabel ASSET_LEVEL_WIZPIG2_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/Wizpig2.bin"
+glabel ASSET_LEVEL_PARTYSEQUENCE_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/PartySequence.bin"
+glabel ASSET_LEVEL_TRICKTOPSANIM_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/TricktopsAnim.bin"
+glabel ASSET_LEVEL_SMOKEYANIM_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/SmokeyAnim.bin"
+glabel ASSET_LEVEL_BLUEYANIM_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/BlueyAnim.bin"
+glabel ASSET_LEVEL_WIZPIG1ANIM_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/Wizpig1Anim.bin"
+glabel ASSET_LEVEL_BUBBLERANIM_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/BubblerAnim.bin"
+glabel ASSET_LEVEL_WIZPIG2ANIM_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/Wizpig2Anim.bin"
+glabel ASSET_LEVEL_LASTBIT_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/LastBit.bin"
+glabel ASSET_LEVEL_LASTBITB_NAME
+.incbin "./build/us_1.0/assets/levels/headers/../names/LastBitB.bin"
 glabel ASSET_LEVEL_NAMES_END
 
 /********** ASSET_LEVEL_MODELS_TABLE **********/
@@ -9615,6 +9626,7 @@ glabel ASSET_LEVEL_MODELS_TABLE
 .word ASSET_LEVELMODEL_ENDINGPART2 - ASSET_LEVEL_MODELS
 .word ASSET_LEVEL_MODELS_END - ASSET_LEVEL_MODELS
 .word 0xFFFFFFFF
+glabel ASSET_LEVEL_MODELS_TABLE_END
 
 /********** ASSET_LEVEL_MODELS **********/
 
@@ -10128,6 +10140,7 @@ glabel ASSET_OBJECT_MODELS_TABLE
 .word ASSET_OBJECTMODEL_MAGNETFX - ASSET_OBJECT_MODELS
 .word ASSET_OBJECT_MODELS_END - ASSET_OBJECT_MODELS
 .word 0xFFFFFFFF
+glabel ASSET_OBJECT_MODELS_TABLE_END
 
 /********** ASSET_OBJECT_MODELS **********/
 
@@ -11398,1877 +11411,1879 @@ glabel ASSET_OBJECT_ANIMATIONS_TABLE
 .word ASSET_OBJECT_ANIMATIONS_469 - ASSET_OBJECT_ANIMATIONS
 .word ASSET_OBJECT_ANIMATIONS_END - ASSET_OBJECT_ANIMATIONS
 .word 0xFFFFFFFF
+glabel ASSET_OBJECT_ANIMATIONS_TABLE_END
 
 /********** ASSET_OBJECT_ANIMATIONS **********/
 
 .balign 16
 glabel ASSET_OBJECT_ANIMATIONS
 glabel ASSET_OBJECT_ANIMATIONS_0
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_0.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_0.bin"
 glabel ASSET_OBJECT_ANIMATIONS_1
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_1.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_1.bin"
 glabel ASSET_OBJECT_ANIMATIONS_2
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_2.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_2.bin"
 glabel ASSET_OBJECT_ANIMATIONS_3
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_3.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_3.bin"
 glabel ASSET_OBJECT_ANIMATIONS_4
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_4.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_4.bin"
 glabel ASSET_OBJECT_ANIMATIONS_5
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_5.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_5.bin"
 glabel ASSET_OBJECT_ANIMATIONS_6
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_6.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_6.bin"
 glabel ASSET_OBJECT_ANIMATIONS_7
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_7.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_7.bin"
 glabel ASSET_OBJECT_ANIMATIONS_8
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_8.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_8.bin"
 glabel ASSET_OBJECT_ANIMATIONS_9
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_9.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_9.bin"
 glabel ASSET_OBJECT_ANIMATIONS_10
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_10.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_10.bin"
 glabel ASSET_OBJECT_ANIMATIONS_11
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_11.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_11.bin"
 glabel ASSET_OBJECT_ANIMATIONS_12
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_12.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_12.bin"
 glabel ASSET_OBJECT_ANIMATIONS_13
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_13.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_13.bin"
 glabel ASSET_OBJECT_ANIMATIONS_14
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_14.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_14.bin"
 glabel ASSET_OBJECT_ANIMATIONS_15
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_15.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_15.bin"
 glabel ASSET_OBJECT_ANIMATIONS_16
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_16.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_16.bin"
 glabel ASSET_OBJECT_ANIMATIONS_17
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_17.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_17.bin"
 glabel ASSET_OBJECT_ANIMATIONS_18
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_18.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_18.bin"
 glabel ASSET_OBJECT_ANIMATIONS_19
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_19.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_19.bin"
 glabel ASSET_OBJECT_ANIMATIONS_20
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_20.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_20.bin"
 glabel ASSET_OBJECT_ANIMATIONS_21
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_21.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_21.bin"
 glabel ASSET_OBJECT_ANIMATIONS_22
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_22.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_22.bin"
 glabel ASSET_OBJECT_ANIMATIONS_23
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_23.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_23.bin"
 glabel ASSET_OBJECT_ANIMATIONS_24
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_24.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_24.bin"
 glabel ASSET_OBJECT_ANIMATIONS_25
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_25.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_25.bin"
 glabel ASSET_OBJECT_ANIMATIONS_26
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_26.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_26.bin"
 glabel ASSET_OBJECT_ANIMATIONS_27
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_27.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_27.bin"
 glabel ASSET_OBJECT_ANIMATIONS_28
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_28.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_28.bin"
 glabel ASSET_OBJECT_ANIMATIONS_29
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_29.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_29.bin"
 glabel ASSET_OBJECT_ANIMATIONS_30
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_30.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_30.bin"
 glabel ASSET_OBJECT_ANIMATIONS_31
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_31.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_31.bin"
 glabel ASSET_OBJECT_ANIMATIONS_32
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_32.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_32.bin"
 glabel ASSET_OBJECT_ANIMATIONS_33
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_33.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_33.bin"
 glabel ASSET_OBJECT_ANIMATIONS_34
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_34.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_34.bin"
 glabel ASSET_OBJECT_ANIMATIONS_35
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_35.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_35.bin"
 glabel ASSET_OBJECT_ANIMATIONS_36
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_36.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_36.bin"
 glabel ASSET_OBJECT_ANIMATIONS_37
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_37.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_37.bin"
 glabel ASSET_OBJECT_ANIMATIONS_38
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_38.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_38.bin"
 glabel ASSET_OBJECT_ANIMATIONS_39
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_39.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_39.bin"
 glabel ASSET_OBJECT_ANIMATIONS_40
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_40.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_40.bin"
 glabel ASSET_OBJECT_ANIMATIONS_41
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_41.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_41.bin"
 glabel ASSET_OBJECT_ANIMATIONS_42
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_42.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_42.bin"
 glabel ASSET_OBJECT_ANIMATIONS_43
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_43.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_43.bin"
 glabel ASSET_OBJECT_ANIMATIONS_44
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_44.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_44.bin"
 glabel ASSET_OBJECT_ANIMATIONS_45
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_45.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_45.bin"
 glabel ASSET_OBJECT_ANIMATIONS_46
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_46.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_46.bin"
 glabel ASSET_OBJECT_ANIMATIONS_47
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_47.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_47.bin"
 glabel ASSET_OBJECT_ANIMATIONS_48
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_48.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_48.bin"
 glabel ASSET_OBJECT_ANIMATIONS_49
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_49.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_49.bin"
 glabel ASSET_OBJECT_ANIMATIONS_50
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_50.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_50.bin"
 glabel ASSET_OBJECT_ANIMATIONS_51
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_51.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_51.bin"
 glabel ASSET_OBJECT_ANIMATIONS_52
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_52.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_52.bin"
 glabel ASSET_OBJECT_ANIMATIONS_53
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_53.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_53.bin"
 glabel ASSET_OBJECT_ANIMATIONS_54
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_54.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_54.bin"
 glabel ASSET_OBJECT_ANIMATIONS_55
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_55.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_55.bin"
 glabel ASSET_OBJECT_ANIMATIONS_56
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_56.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_56.bin"
 glabel ASSET_OBJECT_ANIMATIONS_57
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_57.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_57.bin"
 glabel ASSET_OBJECT_ANIMATIONS_58
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_58.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_58.bin"
 glabel ASSET_OBJECT_ANIMATIONS_59
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_59.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_59.bin"
 glabel ASSET_OBJECT_ANIMATIONS_60
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_60.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_60.bin"
 glabel ASSET_OBJECT_ANIMATIONS_61
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_61.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_61.bin"
 glabel ASSET_OBJECT_ANIMATIONS_62
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_62.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_62.bin"
 glabel ASSET_OBJECT_ANIMATIONS_63
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_63.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_63.bin"
 glabel ASSET_OBJECT_ANIMATIONS_64
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_64.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_64.bin"
 glabel ASSET_OBJECT_ANIMATIONS_65
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_65.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_65.bin"
 glabel ASSET_OBJECT_ANIMATIONS_66
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_66.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_66.bin"
 glabel ASSET_OBJECT_ANIMATIONS_67
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_67.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_67.bin"
 glabel ASSET_OBJECT_ANIMATIONS_68
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_68.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_68.bin"
 glabel ASSET_OBJECT_ANIMATIONS_69
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_69.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_69.bin"
 glabel ASSET_OBJECT_ANIMATIONS_70
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_70.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_70.bin"
 glabel ASSET_OBJECT_ANIMATIONS_71
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_71.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_71.bin"
 glabel ASSET_OBJECT_ANIMATIONS_72
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_72.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_72.bin"
 glabel ASSET_OBJECT_ANIMATIONS_73
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_73.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_73.bin"
 glabel ASSET_OBJECT_ANIMATIONS_74
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_74.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_74.bin"
 glabel ASSET_OBJECT_ANIMATIONS_75
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_75.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_75.bin"
 glabel ASSET_OBJECT_ANIMATIONS_76
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_76.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_76.bin"
 glabel ASSET_OBJECT_ANIMATIONS_77
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_77.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_77.bin"
 glabel ASSET_OBJECT_ANIMATIONS_78
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_78.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_78.bin"
 glabel ASSET_OBJECT_ANIMATIONS_79
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_79.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_79.bin"
 glabel ASSET_OBJECT_ANIMATIONS_80
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_80.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_80.bin"
 glabel ASSET_OBJECT_ANIMATIONS_81
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_81.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_81.bin"
 glabel ASSET_OBJECT_ANIMATIONS_82
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_82.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_82.bin"
 glabel ASSET_OBJECT_ANIMATIONS_83
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_83.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_83.bin"
 glabel ASSET_OBJECT_ANIMATIONS_84
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_84.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_84.bin"
 glabel ASSET_OBJECT_ANIMATIONS_85
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_85.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_85.bin"
 glabel ASSET_OBJECT_ANIMATIONS_86
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_86.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_86.bin"
 glabel ASSET_OBJECT_ANIMATIONS_87
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_87.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_87.bin"
 glabel ASSET_OBJECT_ANIMATIONS_88
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_88.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_88.bin"
 glabel ASSET_OBJECT_ANIMATIONS_89
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_89.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_89.bin"
 glabel ASSET_OBJECT_ANIMATIONS_90
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_90.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_90.bin"
 glabel ASSET_OBJECT_ANIMATIONS_91
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_91.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_91.bin"
 glabel ASSET_OBJECT_ANIMATIONS_92
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_92.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_92.bin"
 glabel ASSET_OBJECT_ANIMATIONS_93
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_93.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_93.bin"
 glabel ASSET_OBJECT_ANIMATIONS_94
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_94.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_94.bin"
 glabel ASSET_OBJECT_ANIMATIONS_95
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_95.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_95.bin"
 glabel ASSET_OBJECT_ANIMATIONS_96
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_96.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_96.bin"
 glabel ASSET_OBJECT_ANIMATIONS_97
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_97.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_97.bin"
 glabel ASSET_OBJECT_ANIMATIONS_98
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_98.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_98.bin"
 glabel ASSET_OBJECT_ANIMATIONS_99
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_99.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_99.bin"
 glabel ASSET_OBJECT_ANIMATIONS_100
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_100.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_100.bin"
 glabel ASSET_OBJECT_ANIMATIONS_101
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_101.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_101.bin"
 glabel ASSET_OBJECT_ANIMATIONS_102
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_102.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_102.bin"
 glabel ASSET_OBJECT_ANIMATIONS_103
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_103.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_103.bin"
 glabel ASSET_OBJECT_ANIMATIONS_104
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_104.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_104.bin"
 glabel ASSET_OBJECT_ANIMATIONS_105
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_105.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_105.bin"
 glabel ASSET_OBJECT_ANIMATIONS_106
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_106.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_106.bin"
 glabel ASSET_OBJECT_ANIMATIONS_107
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_107.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_107.bin"
 glabel ASSET_OBJECT_ANIMATIONS_108
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_108.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_108.bin"
 glabel ASSET_OBJECT_ANIMATIONS_109
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_109.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_109.bin"
 glabel ASSET_OBJECT_ANIMATIONS_110
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_110.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_110.bin"
 glabel ASSET_OBJECT_ANIMATIONS_111
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_111.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_111.bin"
 glabel ASSET_OBJECT_ANIMATIONS_112
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_112.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_112.bin"
 glabel ASSET_OBJECT_ANIMATIONS_113
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_113.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_113.bin"
 glabel ASSET_OBJECT_ANIMATIONS_114
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_114.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_114.bin"
 glabel ASSET_OBJECT_ANIMATIONS_115
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_115.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_115.bin"
 glabel ASSET_OBJECT_ANIMATIONS_116
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_116.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_116.bin"
 glabel ASSET_OBJECT_ANIMATIONS_117
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_117.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_117.bin"
 glabel ASSET_OBJECT_ANIMATIONS_118
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_118.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_118.bin"
 glabel ASSET_OBJECT_ANIMATIONS_119
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_119.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_119.bin"
 glabel ASSET_OBJECT_ANIMATIONS_120
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_120.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_120.bin"
 glabel ASSET_OBJECT_ANIMATIONS_121
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_121.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_121.bin"
 glabel ASSET_OBJECT_ANIMATIONS_122
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_122.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_122.bin"
 glabel ASSET_OBJECT_ANIMATIONS_123
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_123.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_123.bin"
 glabel ASSET_OBJECT_ANIMATIONS_124
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_124.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_124.bin"
 glabel ASSET_OBJECT_ANIMATIONS_125
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_125.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_125.bin"
 glabel ASSET_OBJECT_ANIMATIONS_126
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_126.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_126.bin"
 glabel ASSET_OBJECT_ANIMATIONS_127
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_127.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_127.bin"
 glabel ASSET_OBJECT_ANIMATIONS_128
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_128.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_128.bin"
 glabel ASSET_OBJECT_ANIMATIONS_129
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_129.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_129.bin"
 glabel ASSET_OBJECT_ANIMATIONS_130
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_130.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_130.bin"
 glabel ASSET_OBJECT_ANIMATIONS_131
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_131.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_131.bin"
 glabel ASSET_OBJECT_ANIMATIONS_132
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_132.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_132.bin"
 glabel ASSET_OBJECT_ANIMATIONS_133
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_133.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_133.bin"
 glabel ASSET_OBJECT_ANIMATIONS_134
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_134.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_134.bin"
 glabel ASSET_OBJECT_ANIMATIONS_135
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_135.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_135.bin"
 glabel ASSET_OBJECT_ANIMATIONS_136
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_136.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_136.bin"
 glabel ASSET_OBJECT_ANIMATIONS_137
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_137.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_137.bin"
 glabel ASSET_OBJECT_ANIMATIONS_138
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_138.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_138.bin"
 glabel ASSET_OBJECT_ANIMATIONS_139
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_139.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_139.bin"
 glabel ASSET_OBJECT_ANIMATIONS_140
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_140.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_140.bin"
 glabel ASSET_OBJECT_ANIMATIONS_141
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_141.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_141.bin"
 glabel ASSET_OBJECT_ANIMATIONS_142
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_142.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_142.bin"
 glabel ASSET_OBJECT_ANIMATIONS_143
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_143.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_143.bin"
 glabel ASSET_OBJECT_ANIMATIONS_144
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_144.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_144.bin"
 glabel ASSET_OBJECT_ANIMATIONS_145
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_145.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_145.bin"
 glabel ASSET_OBJECT_ANIMATIONS_146
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_146.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_146.bin"
 glabel ASSET_OBJECT_ANIMATIONS_147
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_147.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_147.bin"
 glabel ASSET_OBJECT_ANIMATIONS_148
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_148.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_148.bin"
 glabel ASSET_OBJECT_ANIMATIONS_149
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_149.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_149.bin"
 glabel ASSET_OBJECT_ANIMATIONS_150
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_150.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_150.bin"
 glabel ASSET_OBJECT_ANIMATIONS_151
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_151.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_151.bin"
 glabel ASSET_OBJECT_ANIMATIONS_152
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_152.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_152.bin"
 glabel ASSET_OBJECT_ANIMATIONS_153
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_153.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_153.bin"
 glabel ASSET_OBJECT_ANIMATIONS_154
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_154.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_154.bin"
 glabel ASSET_OBJECT_ANIMATIONS_155
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_155.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_155.bin"
 glabel ASSET_OBJECT_ANIMATIONS_156
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_156.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_156.bin"
 glabel ASSET_OBJECT_ANIMATIONS_157
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_157.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_157.bin"
 glabel ASSET_OBJECT_ANIMATIONS_158
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_158.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_158.bin"
 glabel ASSET_OBJECT_ANIMATIONS_159
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_159.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_159.bin"
 glabel ASSET_OBJECT_ANIMATIONS_160
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_160.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_160.bin"
 glabel ASSET_OBJECT_ANIMATIONS_161
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_161.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_161.bin"
 glabel ASSET_OBJECT_ANIMATIONS_162
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_162.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_162.bin"
 glabel ASSET_OBJECT_ANIMATIONS_163
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_163.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_163.bin"
 glabel ASSET_OBJECT_ANIMATIONS_164
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_164.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_164.bin"
 glabel ASSET_OBJECT_ANIMATIONS_165
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_165.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_165.bin"
 glabel ASSET_OBJECT_ANIMATIONS_166
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_166.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_166.bin"
 glabel ASSET_OBJECT_ANIMATIONS_167
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_167.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_167.bin"
 glabel ASSET_OBJECT_ANIMATIONS_168
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_168.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_168.bin"
 glabel ASSET_OBJECT_ANIMATIONS_169
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_169.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_169.bin"
 glabel ASSET_OBJECT_ANIMATIONS_170
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_170.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_170.bin"
 glabel ASSET_OBJECT_ANIMATIONS_171
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_171.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_171.bin"
 glabel ASSET_OBJECT_ANIMATIONS_172
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_172.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_172.bin"
 glabel ASSET_OBJECT_ANIMATIONS_173
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_173.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_173.bin"
 glabel ASSET_OBJECT_ANIMATIONS_174
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_174.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_174.bin"
 glabel ASSET_OBJECT_ANIMATIONS_175
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_175.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_175.bin"
 glabel ASSET_OBJECT_ANIMATIONS_176
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_176.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_176.bin"
 glabel ASSET_OBJECT_ANIMATIONS_177
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_177.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_177.bin"
 glabel ASSET_OBJECT_ANIMATIONS_178
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_178.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_178.bin"
 glabel ASSET_OBJECT_ANIMATIONS_179
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_179.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_179.bin"
 glabel ASSET_OBJECT_ANIMATIONS_180
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_180.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_180.bin"
 glabel ASSET_OBJECT_ANIMATIONS_181
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_181.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_181.bin"
 glabel ASSET_OBJECT_ANIMATIONS_182
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_182.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_182.bin"
 glabel ASSET_OBJECT_ANIMATIONS_183
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_183.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_183.bin"
 glabel ASSET_OBJECT_ANIMATIONS_184
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_184.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_184.bin"
 glabel ASSET_OBJECT_ANIMATIONS_185
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_185.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_185.bin"
 glabel ASSET_OBJECT_ANIMATIONS_186
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_186.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_186.bin"
 glabel ASSET_OBJECT_ANIMATIONS_187
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_187.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_187.bin"
 glabel ASSET_OBJECT_ANIMATIONS_188
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_188.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_188.bin"
 glabel ASSET_OBJECT_ANIMATIONS_189
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_189.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_189.bin"
 glabel ASSET_OBJECT_ANIMATIONS_190
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_190.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_190.bin"
 glabel ASSET_OBJECT_ANIMATIONS_191
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_191.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_191.bin"
 glabel ASSET_OBJECT_ANIMATIONS_192
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_192.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_192.bin"
 glabel ASSET_OBJECT_ANIMATIONS_193
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_193.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_193.bin"
 glabel ASSET_OBJECT_ANIMATIONS_194
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_194.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_194.bin"
 glabel ASSET_OBJECT_ANIMATIONS_195
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_195.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_195.bin"
 glabel ASSET_OBJECT_ANIMATIONS_196
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_196.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_196.bin"
 glabel ASSET_OBJECT_ANIMATIONS_197
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_197.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_197.bin"
 glabel ASSET_OBJECT_ANIMATIONS_198
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_198.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_198.bin"
 glabel ASSET_OBJECT_ANIMATIONS_199
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_199.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_199.bin"
 glabel ASSET_OBJECT_ANIMATIONS_200
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_200.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_200.bin"
 glabel ASSET_OBJECT_ANIMATIONS_201
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_201.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_201.bin"
 glabel ASSET_OBJECT_ANIMATIONS_202
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_202.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_202.bin"
 glabel ASSET_OBJECT_ANIMATIONS_203
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_203.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_203.bin"
 glabel ASSET_OBJECT_ANIMATIONS_204
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_204.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_204.bin"
 glabel ASSET_OBJECT_ANIMATIONS_205
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_205.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_205.bin"
 glabel ASSET_OBJECT_ANIMATIONS_206
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_206.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_206.bin"
 glabel ASSET_OBJECT_ANIMATIONS_207
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_207.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_207.bin"
 glabel ASSET_OBJECT_ANIMATIONS_208
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_208.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_208.bin"
 glabel ASSET_OBJECT_ANIMATIONS_209
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_209.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_209.bin"
 glabel ASSET_OBJECT_ANIMATIONS_210
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_210.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_210.bin"
 glabel ASSET_OBJECT_ANIMATIONS_211
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_211.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_211.bin"
 glabel ASSET_OBJECT_ANIMATIONS_212
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_212.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_212.bin"
 glabel ASSET_OBJECT_ANIMATIONS_213
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_213.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_213.bin"
 glabel ASSET_OBJECT_ANIMATIONS_214
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_214.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_214.bin"
 glabel ASSET_OBJECT_ANIMATIONS_215
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_215.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_215.bin"
 glabel ASSET_OBJECT_ANIMATIONS_216
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_216.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_216.bin"
 glabel ASSET_OBJECT_ANIMATIONS_217
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_217.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_217.bin"
 glabel ASSET_OBJECT_ANIMATIONS_218
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_218.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_218.bin"
 glabel ASSET_OBJECT_ANIMATIONS_219
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_219.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_219.bin"
 glabel ASSET_OBJECT_ANIMATIONS_220
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_220.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_220.bin"
 glabel ASSET_OBJECT_ANIMATIONS_221
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_221.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_221.bin"
 glabel ASSET_OBJECT_ANIMATIONS_222
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_222.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_222.bin"
 glabel ASSET_OBJECT_ANIMATIONS_223
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_223.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_223.bin"
 glabel ASSET_OBJECT_ANIMATIONS_224
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_224.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_224.bin"
 glabel ASSET_OBJECT_ANIMATIONS_225
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_225.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_225.bin"
 glabel ASSET_OBJECT_ANIMATIONS_226
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_226.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_226.bin"
 glabel ASSET_OBJECT_ANIMATIONS_227
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_227.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_227.bin"
 glabel ASSET_OBJECT_ANIMATIONS_228
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_228.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_228.bin"
 glabel ASSET_OBJECT_ANIMATIONS_229
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_229.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_229.bin"
 glabel ASSET_OBJECT_ANIMATIONS_230
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_230.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_230.bin"
 glabel ASSET_OBJECT_ANIMATIONS_231
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_231.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_231.bin"
 glabel ASSET_OBJECT_ANIMATIONS_232
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_232.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_232.bin"
 glabel ASSET_OBJECT_ANIMATIONS_233
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_233.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_233.bin"
 glabel ASSET_OBJECT_ANIMATIONS_234
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_234.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_234.bin"
 glabel ASSET_OBJECT_ANIMATIONS_235
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_235.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_235.bin"
 glabel ASSET_OBJECT_ANIMATIONS_236
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_236.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_236.bin"
 glabel ASSET_OBJECT_ANIMATIONS_237
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_237.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_237.bin"
 glabel ASSET_OBJECT_ANIMATIONS_238
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_238.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_238.bin"
 glabel ASSET_OBJECT_ANIMATIONS_239
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_239.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_239.bin"
 glabel ASSET_OBJECT_ANIMATIONS_240
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_240.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_240.bin"
 glabel ASSET_OBJECT_ANIMATIONS_241
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_241.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_241.bin"
 glabel ASSET_OBJECT_ANIMATIONS_242
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_242.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_242.bin"
 glabel ASSET_OBJECT_ANIMATIONS_243
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_243.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_243.bin"
 glabel ASSET_OBJECT_ANIMATIONS_244
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_244.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_244.bin"
 glabel ASSET_OBJECT_ANIMATIONS_245
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_245.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_245.bin"
 glabel ASSET_OBJECT_ANIMATIONS_246
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_246.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_246.bin"
 glabel ASSET_OBJECT_ANIMATIONS_247
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_247.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_247.bin"
 glabel ASSET_OBJECT_ANIMATIONS_248
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_248.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_248.bin"
 glabel ASSET_OBJECT_ANIMATIONS_249
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_249.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_249.bin"
 glabel ASSET_OBJECT_ANIMATIONS_250
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_250.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_250.bin"
 glabel ASSET_OBJECT_ANIMATIONS_251
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_251.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_251.bin"
 glabel ASSET_OBJECT_ANIMATIONS_252
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_252.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_252.bin"
 glabel ASSET_OBJECT_ANIMATIONS_253
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_253.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_253.bin"
 glabel ASSET_OBJECT_ANIMATIONS_254
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_254.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_254.bin"
 glabel ASSET_OBJECT_ANIMATIONS_255
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_255.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_255.bin"
 glabel ASSET_OBJECT_ANIMATIONS_256
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_256.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_256.bin"
 glabel ASSET_OBJECT_ANIMATIONS_257
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_257.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_257.bin"
 glabel ASSET_OBJECT_ANIMATIONS_258
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_258.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_258.bin"
 glabel ASSET_OBJECT_ANIMATIONS_259
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_259.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_259.bin"
 glabel ASSET_OBJECT_ANIMATIONS_260
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_260.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_260.bin"
 glabel ASSET_OBJECT_ANIMATIONS_261
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_261.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_261.bin"
 glabel ASSET_OBJECT_ANIMATIONS_262
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_262.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_262.bin"
 glabel ASSET_OBJECT_ANIMATIONS_263
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_263.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_263.bin"
 glabel ASSET_OBJECT_ANIMATIONS_264
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_264.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_264.bin"
 glabel ASSET_OBJECT_ANIMATIONS_265
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_265.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_265.bin"
 glabel ASSET_OBJECT_ANIMATIONS_266
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_266.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_266.bin"
 glabel ASSET_OBJECT_ANIMATIONS_267
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_267.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_267.bin"
 glabel ASSET_OBJECT_ANIMATIONS_268
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_268.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_268.bin"
 glabel ASSET_OBJECT_ANIMATIONS_269
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_269.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_269.bin"
 glabel ASSET_OBJECT_ANIMATIONS_270
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_270.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_270.bin"
 glabel ASSET_OBJECT_ANIMATIONS_271
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_271.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_271.bin"
 glabel ASSET_OBJECT_ANIMATIONS_272
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_272.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_272.bin"
 glabel ASSET_OBJECT_ANIMATIONS_273
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_273.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_273.bin"
 glabel ASSET_OBJECT_ANIMATIONS_274
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_274.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_274.bin"
 glabel ASSET_OBJECT_ANIMATIONS_275
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_275.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_275.bin"
 glabel ASSET_OBJECT_ANIMATIONS_276
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_276.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_276.bin"
 glabel ASSET_OBJECT_ANIMATIONS_277
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_277.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_277.bin"
 glabel ASSET_OBJECT_ANIMATIONS_278
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_278.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_278.bin"
 glabel ASSET_OBJECT_ANIMATIONS_279
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_279.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_279.bin"
 glabel ASSET_OBJECT_ANIMATIONS_280
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_280.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_280.bin"
 glabel ASSET_OBJECT_ANIMATIONS_281
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_281.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_281.bin"
 glabel ASSET_OBJECT_ANIMATIONS_282
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_282.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_282.bin"
 glabel ASSET_OBJECT_ANIMATIONS_283
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_283.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_283.bin"
 glabel ASSET_OBJECT_ANIMATIONS_284
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_284.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_284.bin"
 glabel ASSET_OBJECT_ANIMATIONS_285
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_285.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_285.bin"
 glabel ASSET_OBJECT_ANIMATIONS_286
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_286.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_286.bin"
 glabel ASSET_OBJECT_ANIMATIONS_287
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_287.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_287.bin"
 glabel ASSET_OBJECT_ANIMATIONS_288
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_288.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_288.bin"
 glabel ASSET_OBJECT_ANIMATIONS_289
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_289.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_289.bin"
 glabel ASSET_OBJECT_ANIMATIONS_290
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_290.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_290.bin"
 glabel ASSET_OBJECT_ANIMATIONS_291
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_291.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_291.bin"
 glabel ASSET_OBJECT_ANIMATIONS_292
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_292.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_292.bin"
 glabel ASSET_OBJECT_ANIMATIONS_293
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_293.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_293.bin"
 glabel ASSET_OBJECT_ANIMATIONS_294
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_294.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_294.bin"
 glabel ASSET_OBJECT_ANIMATIONS_295
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_295.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_295.bin"
 glabel ASSET_OBJECT_ANIMATIONS_296
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_296.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_296.bin"
 glabel ASSET_OBJECT_ANIMATIONS_297
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_297.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_297.bin"
 glabel ASSET_OBJECT_ANIMATIONS_298
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_298.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_298.bin"
 glabel ASSET_OBJECT_ANIMATIONS_299
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_299.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_299.bin"
 glabel ASSET_OBJECT_ANIMATIONS_300
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_300.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_300.bin"
 glabel ASSET_OBJECT_ANIMATIONS_301
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_301.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_301.bin"
 glabel ASSET_OBJECT_ANIMATIONS_302
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_302.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_302.bin"
 glabel ASSET_OBJECT_ANIMATIONS_303
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_303.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_303.bin"
 glabel ASSET_OBJECT_ANIMATIONS_304
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_304.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_304.bin"
 glabel ASSET_OBJECT_ANIMATIONS_305
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_305.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_305.bin"
 glabel ASSET_OBJECT_ANIMATIONS_306
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_306.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_306.bin"
 glabel ASSET_OBJECT_ANIMATIONS_307
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_307.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_307.bin"
 glabel ASSET_OBJECT_ANIMATIONS_308
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_308.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_308.bin"
 glabel ASSET_OBJECT_ANIMATIONS_309
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_309.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_309.bin"
 glabel ASSET_OBJECT_ANIMATIONS_310
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_310.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_310.bin"
 glabel ASSET_OBJECT_ANIMATIONS_311
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_311.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_311.bin"
 glabel ASSET_OBJECT_ANIMATIONS_312
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_312.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_312.bin"
 glabel ASSET_OBJECT_ANIMATIONS_313
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_313.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_313.bin"
 glabel ASSET_OBJECT_ANIMATIONS_314
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_314.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_314.bin"
 glabel ASSET_OBJECT_ANIMATIONS_315
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_315.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_315.bin"
 glabel ASSET_OBJECT_ANIMATIONS_316
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_316.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_316.bin"
 glabel ASSET_OBJECT_ANIMATIONS_317
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_317.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_317.bin"
 glabel ASSET_OBJECT_ANIMATIONS_318
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_318.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_318.bin"
 glabel ASSET_OBJECT_ANIMATIONS_319
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_319.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_319.bin"
 glabel ASSET_OBJECT_ANIMATIONS_320
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_320.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_320.bin"
 glabel ASSET_OBJECT_ANIMATIONS_321
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_321.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_321.bin"
 glabel ASSET_OBJECT_ANIMATIONS_322
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_322.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_322.bin"
 glabel ASSET_OBJECT_ANIMATIONS_323
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_323.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_323.bin"
 glabel ASSET_OBJECT_ANIMATIONS_324
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_324.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_324.bin"
 glabel ASSET_OBJECT_ANIMATIONS_325
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_325.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_325.bin"
 glabel ASSET_OBJECT_ANIMATIONS_326
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_326.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_326.bin"
 glabel ASSET_OBJECT_ANIMATIONS_327
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_327.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_327.bin"
 glabel ASSET_OBJECT_ANIMATIONS_328
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_328.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_328.bin"
 glabel ASSET_OBJECT_ANIMATIONS_329
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_329.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_329.bin"
 glabel ASSET_OBJECT_ANIMATIONS_330
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_330.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_330.bin"
 glabel ASSET_OBJECT_ANIMATIONS_331
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_331.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_331.bin"
 glabel ASSET_OBJECT_ANIMATIONS_332
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_332.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_332.bin"
 glabel ASSET_OBJECT_ANIMATIONS_333
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_333.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_333.bin"
 glabel ASSET_OBJECT_ANIMATIONS_334
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_334.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_334.bin"
 glabel ASSET_OBJECT_ANIMATIONS_335
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_335.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_335.bin"
 glabel ASSET_OBJECT_ANIMATIONS_336
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_336.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_336.bin"
 glabel ASSET_OBJECT_ANIMATIONS_337
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_337.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_337.bin"
 glabel ASSET_OBJECT_ANIMATIONS_338
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_338.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_338.bin"
 glabel ASSET_OBJECT_ANIMATIONS_339
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_339.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_339.bin"
 glabel ASSET_OBJECT_ANIMATIONS_340
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_340.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_340.bin"
 glabel ASSET_OBJECT_ANIMATIONS_341
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_341.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_341.bin"
 glabel ASSET_OBJECT_ANIMATIONS_342
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_342.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_342.bin"
 glabel ASSET_OBJECT_ANIMATIONS_343
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_343.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_343.bin"
 glabel ASSET_OBJECT_ANIMATIONS_344
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_344.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_344.bin"
 glabel ASSET_OBJECT_ANIMATIONS_345
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_345.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_345.bin"
 glabel ASSET_OBJECT_ANIMATIONS_346
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_346.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_346.bin"
 glabel ASSET_OBJECT_ANIMATIONS_347
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_347.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_347.bin"
 glabel ASSET_OBJECT_ANIMATIONS_348
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_348.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_348.bin"
 glabel ASSET_OBJECT_ANIMATIONS_349
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_349.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_349.bin"
 glabel ASSET_OBJECT_ANIMATIONS_350
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_350.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_350.bin"
 glabel ASSET_OBJECT_ANIMATIONS_351
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_351.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_351.bin"
 glabel ASSET_OBJECT_ANIMATIONS_352
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_352.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_352.bin"
 glabel ASSET_OBJECT_ANIMATIONS_353
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_353.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_353.bin"
 glabel ASSET_OBJECT_ANIMATIONS_354
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_354.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_354.bin"
 glabel ASSET_OBJECT_ANIMATIONS_355
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_355.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_355.bin"
 glabel ASSET_OBJECT_ANIMATIONS_356
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_356.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_356.bin"
 glabel ASSET_OBJECT_ANIMATIONS_357
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_357.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_357.bin"
 glabel ASSET_OBJECT_ANIMATIONS_358
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_358.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_358.bin"
 glabel ASSET_OBJECT_ANIMATIONS_359
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_359.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_359.bin"
 glabel ASSET_OBJECT_ANIMATIONS_360
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_360.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_360.bin"
 glabel ASSET_OBJECT_ANIMATIONS_361
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_361.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_361.bin"
 glabel ASSET_OBJECT_ANIMATIONS_362
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_362.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_362.bin"
 glabel ASSET_OBJECT_ANIMATIONS_363
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_363.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_363.bin"
 glabel ASSET_OBJECT_ANIMATIONS_364
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_364.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_364.bin"
 glabel ASSET_OBJECT_ANIMATIONS_365
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_365.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_365.bin"
 glabel ASSET_OBJECT_ANIMATIONS_366
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_366.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_366.bin"
 glabel ASSET_OBJECT_ANIMATIONS_367
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_367.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_367.bin"
 glabel ASSET_OBJECT_ANIMATIONS_368
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_368.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_368.bin"
 glabel ASSET_OBJECT_ANIMATIONS_369
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_369.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_369.bin"
 glabel ASSET_OBJECT_ANIMATIONS_370
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_370.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_370.bin"
 glabel ASSET_OBJECT_ANIMATIONS_371
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_371.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_371.bin"
 glabel ASSET_OBJECT_ANIMATIONS_372
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_372.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_372.bin"
 glabel ASSET_OBJECT_ANIMATIONS_373
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_373.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_373.bin"
 glabel ASSET_OBJECT_ANIMATIONS_374
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_374.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_374.bin"
 glabel ASSET_OBJECT_ANIMATIONS_375
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_375.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_375.bin"
 glabel ASSET_OBJECT_ANIMATIONS_376
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_376.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_376.bin"
 glabel ASSET_OBJECT_ANIMATIONS_377
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_377.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_377.bin"
 glabel ASSET_OBJECT_ANIMATIONS_378
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_378.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_378.bin"
 glabel ASSET_OBJECT_ANIMATIONS_379
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_379.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_379.bin"
 glabel ASSET_OBJECT_ANIMATIONS_380
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_380.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_380.bin"
 glabel ASSET_OBJECT_ANIMATIONS_381
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_381.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_381.bin"
 glabel ASSET_OBJECT_ANIMATIONS_382
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_382.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_382.bin"
 glabel ASSET_OBJECT_ANIMATIONS_383
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_383.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_383.bin"
 glabel ASSET_OBJECT_ANIMATIONS_384
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_384.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_384.bin"
 glabel ASSET_OBJECT_ANIMATIONS_385
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_385.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_385.bin"
 glabel ASSET_OBJECT_ANIMATIONS_386
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_386.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_386.bin"
 glabel ASSET_OBJECT_ANIMATIONS_387
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_387.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_387.bin"
 glabel ASSET_OBJECT_ANIMATIONS_388
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_388.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_388.bin"
 glabel ASSET_OBJECT_ANIMATIONS_389
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_389.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_389.bin"
 glabel ASSET_OBJECT_ANIMATIONS_390
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_390.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_390.bin"
 glabel ASSET_OBJECT_ANIMATIONS_391
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_391.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_391.bin"
 glabel ASSET_OBJECT_ANIMATIONS_392
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_392.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_392.bin"
 glabel ASSET_OBJECT_ANIMATIONS_393
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_393.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_393.bin"
 glabel ASSET_OBJECT_ANIMATIONS_394
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_394.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_394.bin"
 glabel ASSET_OBJECT_ANIMATIONS_395
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_395.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_395.bin"
 glabel ASSET_OBJECT_ANIMATIONS_396
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_396.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_396.bin"
 glabel ASSET_OBJECT_ANIMATIONS_397
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_397.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_397.bin"
 glabel ASSET_OBJECT_ANIMATIONS_398
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_398.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_398.bin"
 glabel ASSET_OBJECT_ANIMATIONS_399
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_399.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_399.bin"
 glabel ASSET_OBJECT_ANIMATIONS_400
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_400.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_400.bin"
 glabel ASSET_OBJECT_ANIMATIONS_401
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_401.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_401.bin"
 glabel ASSET_OBJECT_ANIMATIONS_402
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_402.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_402.bin"
 glabel ASSET_OBJECT_ANIMATIONS_403
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_403.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_403.bin"
 glabel ASSET_OBJECT_ANIMATIONS_404
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_404.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_404.bin"
 glabel ASSET_OBJECT_ANIMATIONS_405
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_405.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_405.bin"
 glabel ASSET_OBJECT_ANIMATIONS_406
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_406.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_406.bin"
 glabel ASSET_OBJECT_ANIMATIONS_407
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_407.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_407.bin"
 glabel ASSET_OBJECT_ANIMATIONS_408
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_408.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_408.bin"
 glabel ASSET_OBJECT_ANIMATIONS_409
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_409.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_409.bin"
 glabel ASSET_OBJECT_ANIMATIONS_410
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_410.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_410.bin"
 glabel ASSET_OBJECT_ANIMATIONS_411
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_411.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_411.bin"
 glabel ASSET_OBJECT_ANIMATIONS_412
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_412.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_412.bin"
 glabel ASSET_OBJECT_ANIMATIONS_413
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_413.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_413.bin"
 glabel ASSET_OBJECT_ANIMATIONS_414
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_414.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_414.bin"
 glabel ASSET_OBJECT_ANIMATIONS_415
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_415.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_415.bin"
 glabel ASSET_OBJECT_ANIMATIONS_416
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_416.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_416.bin"
 glabel ASSET_OBJECT_ANIMATIONS_417
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_417.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_417.bin"
 glabel ASSET_OBJECT_ANIMATIONS_418
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_418.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_418.bin"
 glabel ASSET_OBJECT_ANIMATIONS_419
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_419.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_419.bin"
 glabel ASSET_OBJECT_ANIMATIONS_420
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_420.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_420.bin"
 glabel ASSET_OBJECT_ANIMATIONS_421
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_421.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_421.bin"
 glabel ASSET_OBJECT_ANIMATIONS_422
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_422.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_422.bin"
 glabel ASSET_OBJECT_ANIMATIONS_423
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_423.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_423.bin"
 glabel ASSET_OBJECT_ANIMATIONS_424
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_424.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_424.bin"
 glabel ASSET_OBJECT_ANIMATIONS_425
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_425.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_425.bin"
 glabel ASSET_OBJECT_ANIMATIONS_426
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_426.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_426.bin"
 glabel ASSET_OBJECT_ANIMATIONS_427
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_427.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_427.bin"
 glabel ASSET_OBJECT_ANIMATIONS_428
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_428.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_428.bin"
 glabel ASSET_OBJECT_ANIMATIONS_429
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_429.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_429.bin"
 glabel ASSET_OBJECT_ANIMATIONS_430
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_430.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_430.bin"
 glabel ASSET_OBJECT_ANIMATIONS_431
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_431.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_431.bin"
 glabel ASSET_OBJECT_ANIMATIONS_432
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_432.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_432.bin"
 glabel ASSET_OBJECT_ANIMATIONS_433
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_433.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_433.bin"
 glabel ASSET_OBJECT_ANIMATIONS_434
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_434.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_434.bin"
 glabel ASSET_OBJECT_ANIMATIONS_435
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_435.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_435.bin"
 glabel ASSET_OBJECT_ANIMATIONS_436
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_436.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_436.bin"
 glabel ASSET_OBJECT_ANIMATIONS_437
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_437.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_437.bin"
 glabel ASSET_OBJECT_ANIMATIONS_438
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_438.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_438.bin"
 glabel ASSET_OBJECT_ANIMATIONS_439
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_439.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_439.bin"
 glabel ASSET_OBJECT_ANIMATIONS_440
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_440.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_440.bin"
 glabel ASSET_OBJECT_ANIMATIONS_441
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_441.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_441.bin"
 glabel ASSET_OBJECT_ANIMATIONS_442
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_442.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_442.bin"
 glabel ASSET_OBJECT_ANIMATIONS_443
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_443.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_443.bin"
 glabel ASSET_OBJECT_ANIMATIONS_444
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_444.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_444.bin"
 glabel ASSET_OBJECT_ANIMATIONS_445
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_445.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_445.bin"
 glabel ASSET_OBJECT_ANIMATIONS_446
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_446.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_446.bin"
 glabel ASSET_OBJECT_ANIMATIONS_447
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_447.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_447.bin"
 glabel ASSET_OBJECT_ANIMATIONS_448
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_448.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_448.bin"
 glabel ASSET_OBJECT_ANIMATIONS_449
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_449.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_449.bin"
 glabel ASSET_OBJECT_ANIMATIONS_450
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_450.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_450.bin"
 glabel ASSET_OBJECT_ANIMATIONS_451
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_451.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_451.bin"
 glabel ASSET_OBJECT_ANIMATIONS_452
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_452.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_452.bin"
 glabel ASSET_OBJECT_ANIMATIONS_453
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_453.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_453.bin"
 glabel ASSET_OBJECT_ANIMATIONS_454
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_454.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_454.bin"
 glabel ASSET_OBJECT_ANIMATIONS_455
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_455.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_455.bin"
 glabel ASSET_OBJECT_ANIMATIONS_456
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_456.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_456.bin"
 glabel ASSET_OBJECT_ANIMATIONS_457
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_457.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_457.bin"
 glabel ASSET_OBJECT_ANIMATIONS_458
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_458.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_458.bin"
 glabel ASSET_OBJECT_ANIMATIONS_459
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_459.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_459.bin"
 glabel ASSET_OBJECT_ANIMATIONS_460
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_460.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_460.bin"
 glabel ASSET_OBJECT_ANIMATIONS_461
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_461.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_461.bin"
 glabel ASSET_OBJECT_ANIMATIONS_462
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_462.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_462.bin"
 glabel ASSET_OBJECT_ANIMATIONS_463
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_463.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_463.bin"
 glabel ASSET_OBJECT_ANIMATIONS_464
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_464.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_464.bin"
 glabel ASSET_OBJECT_ANIMATIONS_465
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_465.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_465.bin"
 glabel ASSET_OBJECT_ANIMATIONS_466
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_466.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_466.bin"
 glabel ASSET_OBJECT_ANIMATIONS_467
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_467.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_467.bin"
 glabel ASSET_OBJECT_ANIMATIONS_468
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_468.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_468.bin"
 glabel ASSET_OBJECT_ANIMATIONS_469
-.incbin "./build/us_1.0/assets/objects/animations/unknown_32_469.bin"
+.incbin "./build/us_1.0/assets/objects/animations/asset_object_animations_469.bin"
 glabel ASSET_OBJECT_ANIMATIONS_END
 
 /********** ASSET_OBJECT_HEADERS_TABLE **********/
 
 .balign 16
 glabel ASSET_OBJECT_HEADERS_TABLE
-.word ASSET_OBJHEADER_DIDDYCAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SWCAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_KREMCAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BADGERCAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TORTCAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CONKACAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TIGERCAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BANJOCAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CHICKENCAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MOUSECAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DIDDYHOVER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TICKTOCKHOVER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_KREMLINHOVER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BADGERHOVER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TORTHOVER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CONKAHOVER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TIGERHOVER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BANJOHOVER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CHICKENHOVER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MOUSEHOVER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DIDDYPLANE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TICKTOCKPLANE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_KREMPLANE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BADGERPLANE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TORTPLANE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CONKA - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TIGPLANE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BANJOPLANE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CHICKENPLANE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MOUSEPLANE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_FLYINGCARPET - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TIMBERDANCER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CHICKENCHARACTE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PIPSYDANCER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BANJODANCER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TICKTOCKDANCER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WIZPIGSHIP - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CONKADANCER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_EMPTYHOVER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_STOPWATCHMAN - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_STOPWATCHSELECT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PARKWARDEN - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SMARTIETREE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BLUEBERRYBUSH - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_RUBBERSNOWTREE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SKINNYSNOWTREE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_XMASTREE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ALPINESNOWTREE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_RUBBERTREE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BEACHTREE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PALMTREETOP - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PALMPLANT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PALMTREETOPCHEA - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_FIRTREE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SPACETREE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_LAMPPOST - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_FLOWERS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_REEDS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SMOKE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DINOSAUR1 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DINOSAUR2 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DINOSAUR3 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WHALE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SNOWMEN - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SIGNS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_FLAMINGTORCH - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MIST - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SNOWBALL - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BUOY - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PIRATESHIP - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_LOG - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PIGLOG - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BOULDER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_AIRZIPPERS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WATERZIPPERS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_LEVELDOOR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_KEITHPIGDOOR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CHALDOOR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BOSSDOOR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BIGBOSSDOOR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WORLDGATE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TTDOOR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_RAMPSWITCH - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_NOENTRYDOOR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_RAMPWHALE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SEAMONSTER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DINOISLE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SKYCONTROL - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CHECKPOINT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CHECKARROW - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MODECHANGE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TRIGGER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_FOGCHANGER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_AINODE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_EXIT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BONUS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CAMERA_CONTROL - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SETUPPOINT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMATOR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TEXSCROLL - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_RGBALIGHT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_INTROCAM - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WEATHER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_LENSFLARE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_LENSFLARESWITCH - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_INFOPOINT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WAVEGENERATOR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WAVEPOWER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_RANGETRIGGER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_LAVASPURT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BOMBEXPLOSION - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WARDENSMOKE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BUBBLER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WEAPONBALLOON - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WBALLOONPOP - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MISSILEGLOW - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_HOMINGGLOW - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MISSILE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_HOMING - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_OILSLICK - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SMOKECLOUD - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BOMB - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BUBBLEWEAPON - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WORLDKEY - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_COINCREATOR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TREASURESUCKER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_COIN - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SILVERCOIN - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_GOLDCOIN - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BONUSGEM - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_COLLECTEGG - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_EGGCREATOR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CHARACTERFLAG - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMATION - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_OVERRIDEPOS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMCAMERA - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMCAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMDOME - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WIZGHOSTS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_N64LOGO - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ASTEROID - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PILLAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BOULDERANIM - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PIGHEADCOLOURS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PIGFACEANIMATOR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PTERODACTYL - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_AMULETPIECE1 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_AMULETPIECE2 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_AMULETPIECE3 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_AMULETPIECE4 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SWAMULET1 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SWAMULET2 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SWAMULET3 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SWAMULET4 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMKEY - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SPACESHIP1 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MINISHIP - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MONORAIL - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SPACESHIP2 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SPACESHIP3 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_LIGHTHOUSE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ROCKETSIGNPOST - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_LIGHTHOUSE1 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_LIGHTHOUSE2 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SELECTIONHILL - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WIDESCREEN - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TIGERANIMPLANE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BADGERANIMWALK - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TIMBERANIMCAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_KREMSELECT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CONKSELECT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BADGERSELECT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TORTSELECT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TIGERSELECT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DIDDYSELECT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BANJOSELECT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CHICKSELECT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MOUSESELECT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MAGICCARPET - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_POLYGOLDBALOON - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMGENIE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMGENIE3 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BUTTERFLYBAIT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_AUDIO - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_AUDIOLINE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_AUDIOSEQLINE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_AUDIOSEQ - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_AUDIOREVERB - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_FRONTTYRE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BACKTYRE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PLANETYRE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_FAN - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_JETENGINE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_GLOVE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_LEEFAN - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MAGICRING - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME1 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME2 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME3 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME4 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME5 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME6 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME7 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME8 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME9 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME10 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME11 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME12 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME13 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME14 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME15 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME16 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOME17 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SELECTIONSHADOW - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_POSTFORPARTY - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_RARELOGO - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SPARKLYTHING - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DOOROPENER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMDINOSAUR2 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TIMERANIMHOVER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMBADGERPLANE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMDINOSAUR1 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMMOUSECAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMTORT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CHICKENANIMPLAN - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_EMPTYHOVERANIM - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_KREMANIM - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MOUSEHOVERANIM - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TORTRUNNER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMBANJOPLANE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_CONKAANIMCAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_GBPARKWARDEN - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WIZPIG - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WIZPIGROCKET - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PIGBOSS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PIGBOSS2 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PIGROCKETEER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PARTICLES2 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PIGBOULDER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BIGPLANET - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ROCKETBIT1 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ROCKETBIT2 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_GENIEHEAD - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PIGBOULDER2 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PIGBOULDER3 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PIGBOULDER4 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PIGBOULDER5 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TRICKYTOPS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TRICKYANIM - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TRICKYANIM2 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TRICKYANIM3 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WALRUS_ANIM - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TERRYBOSS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DRAGONBOSS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_DRAGONANIM - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WALRUS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SNOWBALLBOSS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMOCTO - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_OCTOPUS - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_GOLDBALOONSPRIT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SPACECOLUMN1 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SPACECOLUMN2 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SPACECOLUMN3 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_HAYSTACK - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_ANIMGENIE2 - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BRIGHTSTAR - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BUTTERFLY - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_FISH - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_FROG - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BOOST - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MAGNETFX - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_STILLFROG - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_STOPWATCHICON - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_STOPWATCHHAND - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BRIDGE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_POSARROW - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_HITTESTER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MIDIFADE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_WINDSAIL - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_EFFECTBOX - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TROPHYCAB - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_FLYCOIN - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_GOLDENBALLOON - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_LASERBOLT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_LASERGUN - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_BOLTGLOW - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_GROUNDZIPPER - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PWSAFETELEPOINT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_HEADFORPOINT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_FIREBALLATTRACT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_FIREBALL - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_OCTOBUBBLE - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_OCTOBOMB - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_GOLDTROPHY - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_PARKTROPHY - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TICKTROPHY - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TROPHY - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_TELEPORT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_SHIELD - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_LIGHTNING - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MIDIFADEPOINT - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_LEVELNAME - ASSET_OBJECT_HEADERS
-.word ASSET_OBJHEADER_MIDICHSET - ASSET_OBJECT_HEADERS
-.word ASSET_OBJECT_HEADERS_END - ASSET_OBJECT_HEADERS
+.word ASSET_OBJECT_DIDDYCAR - ASSET_OBJECTS
+.word ASSET_OBJECT_SWCAR - ASSET_OBJECTS
+.word ASSET_OBJECT_KREMCAR - ASSET_OBJECTS
+.word ASSET_OBJECT_BADGERCAR - ASSET_OBJECTS
+.word ASSET_OBJECT_TORTCAR - ASSET_OBJECTS
+.word ASSET_OBJECT_CONKACAR - ASSET_OBJECTS
+.word ASSET_OBJECT_TIGERCAR - ASSET_OBJECTS
+.word ASSET_OBJECT_BANJOCAR - ASSET_OBJECTS
+.word ASSET_OBJECT_CHICKENCAR - ASSET_OBJECTS
+.word ASSET_OBJECT_MOUSECAR - ASSET_OBJECTS
+.word ASSET_OBJECT_DIDDYHOVER - ASSET_OBJECTS
+.word ASSET_OBJECT_TICKTOCKHOVER - ASSET_OBJECTS
+.word ASSET_OBJECT_KREMLINHOVER - ASSET_OBJECTS
+.word ASSET_OBJECT_BADGERHOVER - ASSET_OBJECTS
+.word ASSET_OBJECT_TORTHOVER - ASSET_OBJECTS
+.word ASSET_OBJECT_CONKAHOVER - ASSET_OBJECTS
+.word ASSET_OBJECT_TIGERHOVER - ASSET_OBJECTS
+.word ASSET_OBJECT_BANJOHOVER - ASSET_OBJECTS
+.word ASSET_OBJECT_CHICKENHOVER - ASSET_OBJECTS
+.word ASSET_OBJECT_MOUSEHOVER - ASSET_OBJECTS
+.word ASSET_OBJECT_DIDDYPLANE - ASSET_OBJECTS
+.word ASSET_OBJECT_TICKTOCKPLANE - ASSET_OBJECTS
+.word ASSET_OBJECT_KREMPLANE - ASSET_OBJECTS
+.word ASSET_OBJECT_BADGERPLANE - ASSET_OBJECTS
+.word ASSET_OBJECT_TORTPLANE - ASSET_OBJECTS
+.word ASSET_OBJECT_CONKA - ASSET_OBJECTS
+.word ASSET_OBJECT_TIGPLANE - ASSET_OBJECTS
+.word ASSET_OBJECT_BANJOPLANE - ASSET_OBJECTS
+.word ASSET_OBJECT_CHICKENPLANE - ASSET_OBJECTS
+.word ASSET_OBJECT_MOUSEPLANE - ASSET_OBJECTS
+.word ASSET_OBJECT_FLYINGCARPET - ASSET_OBJECTS
+.word ASSET_OBJECT_TIMBERDANCER - ASSET_OBJECTS
+.word ASSET_OBJECT_CHICKENCHARACTE - ASSET_OBJECTS
+.word ASSET_OBJECT_PIPSYDANCER - ASSET_OBJECTS
+.word ASSET_OBJECT_BANJODANCER - ASSET_OBJECTS
+.word ASSET_OBJECT_TICKTOCKDANCER - ASSET_OBJECTS
+.word ASSET_OBJECT_WIZPIGSHIP - ASSET_OBJECTS
+.word ASSET_OBJECT_CONKADANCER - ASSET_OBJECTS
+.word ASSET_OBJECT_EMPTYHOVER - ASSET_OBJECTS
+.word ASSET_OBJECT_STOPWATCHMAN - ASSET_OBJECTS
+.word ASSET_OBJECT_STOPWATCHSELECT - ASSET_OBJECTS
+.word ASSET_OBJECT_PARKWARDEN - ASSET_OBJECTS
+.word ASSET_OBJECT_SMARTIETREE - ASSET_OBJECTS
+.word ASSET_OBJECT_BLUEBERRYBUSH - ASSET_OBJECTS
+.word ASSET_OBJECT_RUBBERSNOWTREE - ASSET_OBJECTS
+.word ASSET_OBJECT_SKINNYSNOWTREE - ASSET_OBJECTS
+.word ASSET_OBJECT_XMASTREE - ASSET_OBJECTS
+.word ASSET_OBJECT_ALPINESNOWTREE - ASSET_OBJECTS
+.word ASSET_OBJECT_RUBBERTREE - ASSET_OBJECTS
+.word ASSET_OBJECT_BEACHTREE - ASSET_OBJECTS
+.word ASSET_OBJECT_PALMTREETOP - ASSET_OBJECTS
+.word ASSET_OBJECT_PALMPLANT - ASSET_OBJECTS
+.word ASSET_OBJECT_PALMTREETOPCHEA - ASSET_OBJECTS
+.word ASSET_OBJECT_FIRTREE - ASSET_OBJECTS
+.word ASSET_OBJECT_SPACETREE - ASSET_OBJECTS
+.word ASSET_OBJECT_LAMPPOST - ASSET_OBJECTS
+.word ASSET_OBJECT_FLOWERS - ASSET_OBJECTS
+.word ASSET_OBJECT_REEDS - ASSET_OBJECTS
+.word ASSET_OBJECT_SMOKE - ASSET_OBJECTS
+.word ASSET_OBJECT_DINOSAUR1 - ASSET_OBJECTS
+.word ASSET_OBJECT_DINOSAUR2 - ASSET_OBJECTS
+.word ASSET_OBJECT_DINOSAUR3 - ASSET_OBJECTS
+.word ASSET_OBJECT_WHALE - ASSET_OBJECTS
+.word ASSET_OBJECT_SNOWMEN - ASSET_OBJECTS
+.word ASSET_OBJECT_SIGNS - ASSET_OBJECTS
+.word ASSET_OBJECT_FLAMINGTORCH - ASSET_OBJECTS
+.word ASSET_OBJECT_MIST - ASSET_OBJECTS
+.word ASSET_OBJECT_SNOWBALL - ASSET_OBJECTS
+.word ASSET_OBJECT_BUOY - ASSET_OBJECTS
+.word ASSET_OBJECT_PIRATESHIP - ASSET_OBJECTS
+.word ASSET_OBJECT_LOG - ASSET_OBJECTS
+.word ASSET_OBJECT_PIGLOG - ASSET_OBJECTS
+.word ASSET_OBJECT_BOULDER - ASSET_OBJECTS
+.word ASSET_OBJECT_AIRZIPPERS - ASSET_OBJECTS
+.word ASSET_OBJECT_WATERZIPPERS - ASSET_OBJECTS
+.word ASSET_OBJECT_LEVELDOOR - ASSET_OBJECTS
+.word ASSET_OBJECT_KEITHPIGDOOR - ASSET_OBJECTS
+.word ASSET_OBJECT_CHALDOOR - ASSET_OBJECTS
+.word ASSET_OBJECT_BOSSDOOR - ASSET_OBJECTS
+.word ASSET_OBJECT_BIGBOSSDOOR - ASSET_OBJECTS
+.word ASSET_OBJECT_WORLDGATE - ASSET_OBJECTS
+.word ASSET_OBJECT_TTDOOR - ASSET_OBJECTS
+.word ASSET_OBJECT_RAMPSWITCH - ASSET_OBJECTS
+.word ASSET_OBJECT_NOENTRYDOOR - ASSET_OBJECTS
+.word ASSET_OBJECT_RAMPWHALE - ASSET_OBJECTS
+.word ASSET_OBJECT_SEAMONSTER - ASSET_OBJECTS
+.word ASSET_OBJECT_DINOISLE - ASSET_OBJECTS
+.word ASSET_OBJECT_SKYCONTROL - ASSET_OBJECTS
+.word ASSET_OBJECT_CHECKPOINT - ASSET_OBJECTS
+.word ASSET_OBJECT_CHECKARROW - ASSET_OBJECTS
+.word ASSET_OBJECT_MODECHANGE - ASSET_OBJECTS
+.word ASSET_OBJECT_TRIGGER - ASSET_OBJECTS
+.word ASSET_OBJECT_FOGCHANGER - ASSET_OBJECTS
+.word ASSET_OBJECT_AINODE - ASSET_OBJECTS
+.word ASSET_OBJECT_EXIT - ASSET_OBJECTS
+.word ASSET_OBJECT_BONUS - ASSET_OBJECTS
+.word ASSET_OBJECT_CAMERA_CONTROL - ASSET_OBJECTS
+.word ASSET_OBJECT_SETUPPOINT - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMATOR - ASSET_OBJECTS
+.word ASSET_OBJECT_TEXSCROLL - ASSET_OBJECTS
+.word ASSET_OBJECT_RGBALIGHT - ASSET_OBJECTS
+.word ASSET_OBJECT_INTROCAM - ASSET_OBJECTS
+.word ASSET_OBJECT_WEATHER - ASSET_OBJECTS
+.word ASSET_OBJECT_LENSFLARE - ASSET_OBJECTS
+.word ASSET_OBJECT_LENSFLARESWITCH - ASSET_OBJECTS
+.word ASSET_OBJECT_INFOPOINT - ASSET_OBJECTS
+.word ASSET_OBJECT_WAVEGENERATOR - ASSET_OBJECTS
+.word ASSET_OBJECT_WAVEPOWER - ASSET_OBJECTS
+.word ASSET_OBJECT_RANGETRIGGER - ASSET_OBJECTS
+.word ASSET_OBJECT_LAVASPURT - ASSET_OBJECTS
+.word ASSET_OBJECT_BOMBEXPLOSION - ASSET_OBJECTS
+.word ASSET_OBJECT_WARDENSMOKE - ASSET_OBJECTS
+.word ASSET_OBJECT_BUBBLER - ASSET_OBJECTS
+.word ASSET_OBJECT_WEAPONBALLOON - ASSET_OBJECTS
+.word ASSET_OBJECT_WBALLOONPOP - ASSET_OBJECTS
+.word ASSET_OBJECT_MISSILEGLOW - ASSET_OBJECTS
+.word ASSET_OBJECT_HOMINGGLOW - ASSET_OBJECTS
+.word ASSET_OBJECT_MISSILE - ASSET_OBJECTS
+.word ASSET_OBJECT_HOMING - ASSET_OBJECTS
+.word ASSET_OBJECT_OILSLICK - ASSET_OBJECTS
+.word ASSET_OBJECT_SMOKECLOUD - ASSET_OBJECTS
+.word ASSET_OBJECT_BOMB - ASSET_OBJECTS
+.word ASSET_OBJECT_BUBBLEWEAPON - ASSET_OBJECTS
+.word ASSET_OBJECT_WORLDKEY - ASSET_OBJECTS
+.word ASSET_OBJECT_COINCREATOR - ASSET_OBJECTS
+.word ASSET_OBJECT_TREASURESUCKER - ASSET_OBJECTS
+.word ASSET_OBJECT_COIN - ASSET_OBJECTS
+.word ASSET_OBJECT_SILVERCOIN - ASSET_OBJECTS
+.word ASSET_OBJECT_GOLDCOIN - ASSET_OBJECTS
+.word ASSET_OBJECT_BONUSGEM - ASSET_OBJECTS
+.word ASSET_OBJECT_COLLECTEGG - ASSET_OBJECTS
+.word ASSET_OBJECT_EGGCREATOR - ASSET_OBJECTS
+.word ASSET_OBJECT_CHARACTERFLAG - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMATION - ASSET_OBJECTS
+.word ASSET_OBJECT_OVERRIDEPOS - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMCAMERA - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMCAR - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMDOME - ASSET_OBJECTS
+.word ASSET_OBJECT_WIZGHOSTS - ASSET_OBJECTS
+.word ASSET_OBJECT_N64LOGO - ASSET_OBJECTS
+.word ASSET_OBJECT_ASTEROID - ASSET_OBJECTS
+.word ASSET_OBJECT_PILLAR - ASSET_OBJECTS
+.word ASSET_OBJECT_BOULDERANIM - ASSET_OBJECTS
+.word ASSET_OBJECT_PIGHEADCOLOURS - ASSET_OBJECTS
+.word ASSET_OBJECT_PIGFACEANIMATOR - ASSET_OBJECTS
+.word ASSET_OBJECT_PTERODACTYL - ASSET_OBJECTS
+.word ASSET_OBJECT_AMULETPIECE1 - ASSET_OBJECTS
+.word ASSET_OBJECT_AMULETPIECE2 - ASSET_OBJECTS
+.word ASSET_OBJECT_AMULETPIECE3 - ASSET_OBJECTS
+.word ASSET_OBJECT_AMULETPIECE4 - ASSET_OBJECTS
+.word ASSET_OBJECT_SWAMULET1 - ASSET_OBJECTS
+.word ASSET_OBJECT_SWAMULET2 - ASSET_OBJECTS
+.word ASSET_OBJECT_SWAMULET3 - ASSET_OBJECTS
+.word ASSET_OBJECT_SWAMULET4 - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMKEY - ASSET_OBJECTS
+.word ASSET_OBJECT_SPACESHIP1 - ASSET_OBJECTS
+.word ASSET_OBJECT_MINISHIP - ASSET_OBJECTS
+.word ASSET_OBJECT_MONORAIL - ASSET_OBJECTS
+.word ASSET_OBJECT_SPACESHIP2 - ASSET_OBJECTS
+.word ASSET_OBJECT_SPACESHIP3 - ASSET_OBJECTS
+.word ASSET_OBJECT_LIGHTHOUSE - ASSET_OBJECTS
+.word ASSET_OBJECT_ROCKETSIGNPOST - ASSET_OBJECTS
+.word ASSET_OBJECT_LIGHTHOUSE1 - ASSET_OBJECTS
+.word ASSET_OBJECT_LIGHTHOUSE2 - ASSET_OBJECTS
+.word ASSET_OBJECT_SELECTIONHILL - ASSET_OBJECTS
+.word ASSET_OBJECT_WIDESCREEN - ASSET_OBJECTS
+.word ASSET_OBJECT_TIGERANIMPLANE - ASSET_OBJECTS
+.word ASSET_OBJECT_BADGERANIMWALK - ASSET_OBJECTS
+.word ASSET_OBJECT_TIMBERANIMCAR - ASSET_OBJECTS
+.word ASSET_OBJECT_KREMSELECT - ASSET_OBJECTS
+.word ASSET_OBJECT_CONKSELECT - ASSET_OBJECTS
+.word ASSET_OBJECT_BADGERSELECT - ASSET_OBJECTS
+.word ASSET_OBJECT_TORTSELECT - ASSET_OBJECTS
+.word ASSET_OBJECT_TIGERSELECT - ASSET_OBJECTS
+.word ASSET_OBJECT_DIDDYSELECT - ASSET_OBJECTS
+.word ASSET_OBJECT_BANJOSELECT - ASSET_OBJECTS
+.word ASSET_OBJECT_CHICKSELECT - ASSET_OBJECTS
+.word ASSET_OBJECT_MOUSESELECT - ASSET_OBJECTS
+.word ASSET_OBJECT_MAGICCARPET - ASSET_OBJECTS
+.word ASSET_OBJECT_POLYGOLDBALOON - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMGENIE - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMGENIE3 - ASSET_OBJECTS
+.word ASSET_OBJECT_BUTTERFLYBAIT - ASSET_OBJECTS
+.word ASSET_OBJECT_AUDIO - ASSET_OBJECTS
+.word ASSET_OBJECT_AUDIOLINE - ASSET_OBJECTS
+.word ASSET_OBJECT_AUDIOSEQLINE - ASSET_OBJECTS
+.word ASSET_OBJECT_AUDIOSEQ - ASSET_OBJECTS
+.word ASSET_OBJECT_AUDIOREVERB - ASSET_OBJECTS
+.word ASSET_OBJECT_FRONTTYRE - ASSET_OBJECTS
+.word ASSET_OBJECT_BACKTYRE - ASSET_OBJECTS
+.word ASSET_OBJECT_PLANETYRE - ASSET_OBJECTS
+.word ASSET_OBJECT_FAN - ASSET_OBJECTS
+.word ASSET_OBJECT_JETENGINE - ASSET_OBJECTS
+.word ASSET_OBJECT_GLOVE - ASSET_OBJECTS
+.word ASSET_OBJECT_LEEFAN - ASSET_OBJECTS
+.word ASSET_OBJECT_MAGICRING - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME1 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME2 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME3 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME4 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME5 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME6 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME7 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME8 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME9 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME10 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME11 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME12 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME13 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME14 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME15 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME16 - ASSET_OBJECTS
+.word ASSET_OBJECT_DOME17 - ASSET_OBJECTS
+.word ASSET_OBJECT_SELECTIONSHADOW - ASSET_OBJECTS
+.word ASSET_OBJECT_POSTFORPARTY - ASSET_OBJECTS
+.word ASSET_OBJECT_RARELOGO - ASSET_OBJECTS
+.word ASSET_OBJECT_SPARKLYTHING - ASSET_OBJECTS
+.word ASSET_OBJECT_DOOROPENER - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMDINOSAUR2 - ASSET_OBJECTS
+.word ASSET_OBJECT_TIMERANIMHOVER - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMBADGERPLANE - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMDINOSAUR1 - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMMOUSECAR - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMTORT - ASSET_OBJECTS
+.word ASSET_OBJECT_CHICKENANIMPLAN - ASSET_OBJECTS
+.word ASSET_OBJECT_EMPTYHOVERANIM - ASSET_OBJECTS
+.word ASSET_OBJECT_KREMANIM - ASSET_OBJECTS
+.word ASSET_OBJECT_MOUSEHOVERANIM - ASSET_OBJECTS
+.word ASSET_OBJECT_TORTRUNNER - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMBANJOPLANE - ASSET_OBJECTS
+.word ASSET_OBJECT_CONKAANIMCAR - ASSET_OBJECTS
+.word ASSET_OBJECT_GBPARKWARDEN - ASSET_OBJECTS
+.word ASSET_OBJECT_WIZPIG - ASSET_OBJECTS
+.word ASSET_OBJECT_WIZPIGROCKET - ASSET_OBJECTS
+.word ASSET_OBJECT_PIGBOSS - ASSET_OBJECTS
+.word ASSET_OBJECT_PIGBOSS2 - ASSET_OBJECTS
+.word ASSET_OBJECT_PIGROCKETEER - ASSET_OBJECTS
+.word ASSET_OBJECT_PARTICLES2 - ASSET_OBJECTS
+.word ASSET_OBJECT_PIGBOULDER - ASSET_OBJECTS
+.word ASSET_OBJECT_BIGPLANET - ASSET_OBJECTS
+.word ASSET_OBJECT_ROCKETBIT1 - ASSET_OBJECTS
+.word ASSET_OBJECT_ROCKETBIT2 - ASSET_OBJECTS
+.word ASSET_OBJECT_GENIEHEAD - ASSET_OBJECTS
+.word ASSET_OBJECT_PIGBOULDER2 - ASSET_OBJECTS
+.word ASSET_OBJECT_PIGBOULDER3 - ASSET_OBJECTS
+.word ASSET_OBJECT_PIGBOULDER4 - ASSET_OBJECTS
+.word ASSET_OBJECT_PIGBOULDER5 - ASSET_OBJECTS
+.word ASSET_OBJECT_TRICKYTOPS - ASSET_OBJECTS
+.word ASSET_OBJECT_TRICKYANIM - ASSET_OBJECTS
+.word ASSET_OBJECT_TRICKYANIM2 - ASSET_OBJECTS
+.word ASSET_OBJECT_TRICKYANIM3 - ASSET_OBJECTS
+.word ASSET_OBJECT_WALRUS_ANIM - ASSET_OBJECTS
+.word ASSET_OBJECT_TERRYBOSS - ASSET_OBJECTS
+.word ASSET_OBJECT_DRAGONBOSS - ASSET_OBJECTS
+.word ASSET_OBJECT_DRAGONANIM - ASSET_OBJECTS
+.word ASSET_OBJECT_WALRUS - ASSET_OBJECTS
+.word ASSET_OBJECT_SNOWBALLBOSS - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMOCTO - ASSET_OBJECTS
+.word ASSET_OBJECT_OCTOPUS - ASSET_OBJECTS
+.word ASSET_OBJECT_GOLDBALOONSPRIT - ASSET_OBJECTS
+.word ASSET_OBJECT_SPACECOLUMN1 - ASSET_OBJECTS
+.word ASSET_OBJECT_SPACECOLUMN2 - ASSET_OBJECTS
+.word ASSET_OBJECT_SPACECOLUMN3 - ASSET_OBJECTS
+.word ASSET_OBJECT_HAYSTACK - ASSET_OBJECTS
+.word ASSET_OBJECT_ANIMGENIE2 - ASSET_OBJECTS
+.word ASSET_OBJECT_BRIGHTSTAR - ASSET_OBJECTS
+.word ASSET_OBJECT_BUTTERFLY - ASSET_OBJECTS
+.word ASSET_OBJECT_FISH - ASSET_OBJECTS
+.word ASSET_OBJECT_FROG - ASSET_OBJECTS
+.word ASSET_OBJECT_BOOST - ASSET_OBJECTS
+.word ASSET_OBJECT_MAGNETFX - ASSET_OBJECTS
+.word ASSET_OBJECT_STILLFROG - ASSET_OBJECTS
+.word ASSET_OBJECT_STOPWATCHICON - ASSET_OBJECTS
+.word ASSET_OBJECT_STOPWATCHHAND - ASSET_OBJECTS
+.word ASSET_OBJECT_BRIDGE - ASSET_OBJECTS
+.word ASSET_OBJECT_POSARROW - ASSET_OBJECTS
+.word ASSET_OBJECT_HITTESTER - ASSET_OBJECTS
+.word ASSET_OBJECT_MIDIFADE - ASSET_OBJECTS
+.word ASSET_OBJECT_WINDSAIL - ASSET_OBJECTS
+.word ASSET_OBJECT_EFFECTBOX - ASSET_OBJECTS
+.word ASSET_OBJECT_TROPHYCAB - ASSET_OBJECTS
+.word ASSET_OBJECT_FLYCOIN - ASSET_OBJECTS
+.word ASSET_OBJECT_GOLDENBALLOON - ASSET_OBJECTS
+.word ASSET_OBJECT_LASERBOLT - ASSET_OBJECTS
+.word ASSET_OBJECT_LASERGUN - ASSET_OBJECTS
+.word ASSET_OBJECT_BOLTGLOW - ASSET_OBJECTS
+.word ASSET_OBJECT_GROUNDZIPPER - ASSET_OBJECTS
+.word ASSET_OBJECT_PWSAFETELEPOINT - ASSET_OBJECTS
+.word ASSET_OBJECT_HEADFORPOINT - ASSET_OBJECTS
+.word ASSET_OBJECT_FIREBALLATTRACT - ASSET_OBJECTS
+.word ASSET_OBJECT_FIREBALL - ASSET_OBJECTS
+.word ASSET_OBJECT_OCTOBUBBLE - ASSET_OBJECTS
+.word ASSET_OBJECT_OCTOBOMB - ASSET_OBJECTS
+.word ASSET_OBJECT_GOLDTROPHY - ASSET_OBJECTS
+.word ASSET_OBJECT_PARKTROPHY - ASSET_OBJECTS
+.word ASSET_OBJECT_TICKTROPHY - ASSET_OBJECTS
+.word ASSET_OBJECT_TROPHY - ASSET_OBJECTS
+.word ASSET_OBJECT_TELEPORT - ASSET_OBJECTS
+.word ASSET_OBJECT_SHIELD - ASSET_OBJECTS
+.word ASSET_OBJECT_LIGHTNING - ASSET_OBJECTS
+.word ASSET_OBJECT_MIDIFADEPOINT - ASSET_OBJECTS
+.word ASSET_OBJECT_LEVELNAME - ASSET_OBJECTS
+.word ASSET_OBJECT_MIDICHSET - ASSET_OBJECTS
+.word ASSET_OBJECTS_END - ASSET_OBJECTS
 .word 0xFFFFFFFF
+glabel ASSET_OBJECT_HEADERS_TABLE_END
 
-/********** ASSET_OBJECT_HEADERS **********/
+/********** ASSET_OBJECTS **********/
 
 .balign 16
-glabel ASSET_OBJECT_HEADERS
-glabel ASSET_OBJHEADER_DIDDYCAR
+glabel ASSET_OBJECTS
+glabel ASSET_OBJECT_DIDDYCAR
 .incbin "./build/us_1.0/assets/objects/headers/diddycar.bin"
-glabel ASSET_OBJHEADER_SWCAR
+glabel ASSET_OBJECT_SWCAR
 .incbin "./build/us_1.0/assets/objects/headers/SWcar.bin"
-glabel ASSET_OBJHEADER_KREMCAR
+glabel ASSET_OBJECT_KREMCAR
 .incbin "./build/us_1.0/assets/objects/headers/KremCar.bin"
-glabel ASSET_OBJHEADER_BADGERCAR
+glabel ASSET_OBJECT_BADGERCAR
 .incbin "./build/us_1.0/assets/objects/headers/BadgerCar.bin"
-glabel ASSET_OBJHEADER_TORTCAR
+glabel ASSET_OBJECT_TORTCAR
 .incbin "./build/us_1.0/assets/objects/headers/TortCar.bin"
-glabel ASSET_OBJHEADER_CONKACAR
+glabel ASSET_OBJECT_CONKACAR
 .incbin "./build/us_1.0/assets/objects/headers/ConkaCar.bin"
-glabel ASSET_OBJHEADER_TIGERCAR
+glabel ASSET_OBJECT_TIGERCAR
 .incbin "./build/us_1.0/assets/objects/headers/TigerCar.bin"
-glabel ASSET_OBJHEADER_BANJOCAR
+glabel ASSET_OBJECT_BANJOCAR
 .incbin "./build/us_1.0/assets/objects/headers/BanjoCar.bin"
-glabel ASSET_OBJHEADER_CHICKENCAR
+glabel ASSET_OBJECT_CHICKENCAR
 .incbin "./build/us_1.0/assets/objects/headers/ChickenCar.bin"
-glabel ASSET_OBJHEADER_MOUSECAR
+glabel ASSET_OBJECT_MOUSECAR
 .incbin "./build/us_1.0/assets/objects/headers/MouseCar.bin"
-glabel ASSET_OBJHEADER_DIDDYHOVER
+glabel ASSET_OBJECT_DIDDYHOVER
 .incbin "./build/us_1.0/assets/objects/headers/diddyhover.bin"
-glabel ASSET_OBJHEADER_TICKTOCKHOVER
+glabel ASSET_OBJECT_TICKTOCKHOVER
 .incbin "./build/us_1.0/assets/objects/headers/ticktockhover.bin"
-glabel ASSET_OBJHEADER_KREMLINHOVER
+glabel ASSET_OBJECT_KREMLINHOVER
 .incbin "./build/us_1.0/assets/objects/headers/KremlinHover.bin"
-glabel ASSET_OBJHEADER_BADGERHOVER
+glabel ASSET_OBJECT_BADGERHOVER
 .incbin "./build/us_1.0/assets/objects/headers/BadgerHover.bin"
-glabel ASSET_OBJHEADER_TORTHOVER
+glabel ASSET_OBJECT_TORTHOVER
 .incbin "./build/us_1.0/assets/objects/headers/TortHover.bin"
-glabel ASSET_OBJHEADER_CONKAHOVER
+glabel ASSET_OBJECT_CONKAHOVER
 .incbin "./build/us_1.0/assets/objects/headers/ConkaHover.bin"
-glabel ASSET_OBJHEADER_TIGERHOVER
+glabel ASSET_OBJECT_TIGERHOVER
 .incbin "./build/us_1.0/assets/objects/headers/TigerHover.bin"
-glabel ASSET_OBJHEADER_BANJOHOVER
+glabel ASSET_OBJECT_BANJOHOVER
 .incbin "./build/us_1.0/assets/objects/headers/BanjoHover.bin"
-glabel ASSET_OBJHEADER_CHICKENHOVER
+glabel ASSET_OBJECT_CHICKENHOVER
 .incbin "./build/us_1.0/assets/objects/headers/ChickenHover.bin"
-glabel ASSET_OBJHEADER_MOUSEHOVER
+glabel ASSET_OBJECT_MOUSEHOVER
 .incbin "./build/us_1.0/assets/objects/headers/MouseHover.bin"
-glabel ASSET_OBJHEADER_DIDDYPLANE
+glabel ASSET_OBJECT_DIDDYPLANE
 .incbin "./build/us_1.0/assets/objects/headers/diddyplane.bin"
-glabel ASSET_OBJHEADER_TICKTOCKPLANE
+glabel ASSET_OBJECT_TICKTOCKPLANE
 .incbin "./build/us_1.0/assets/objects/headers/ticktockplane.bin"
-glabel ASSET_OBJHEADER_KREMPLANE
+glabel ASSET_OBJECT_KREMPLANE
 .incbin "./build/us_1.0/assets/objects/headers/KremPlane.bin"
-glabel ASSET_OBJHEADER_BADGERPLANE
+glabel ASSET_OBJECT_BADGERPLANE
 .incbin "./build/us_1.0/assets/objects/headers/BadgerPlane.bin"
-glabel ASSET_OBJHEADER_TORTPLANE
+glabel ASSET_OBJECT_TORTPLANE
 .incbin "./build/us_1.0/assets/objects/headers/TortPlane.bin"
-glabel ASSET_OBJHEADER_CONKA
+glabel ASSET_OBJECT_CONKA
 .incbin "./build/us_1.0/assets/objects/headers/Conka.bin"
-glabel ASSET_OBJHEADER_TIGPLANE
+glabel ASSET_OBJECT_TIGPLANE
 .incbin "./build/us_1.0/assets/objects/headers/TigPlane.bin"
-glabel ASSET_OBJHEADER_BANJOPLANE
+glabel ASSET_OBJECT_BANJOPLANE
 .incbin "./build/us_1.0/assets/objects/headers/BanjoPlane.bin"
-glabel ASSET_OBJHEADER_CHICKENPLANE
+glabel ASSET_OBJECT_CHICKENPLANE
 .incbin "./build/us_1.0/assets/objects/headers/ChickenPlane.bin"
-glabel ASSET_OBJHEADER_MOUSEPLANE
+glabel ASSET_OBJECT_MOUSEPLANE
 .incbin "./build/us_1.0/assets/objects/headers/MousePlane.bin"
-glabel ASSET_OBJHEADER_FLYINGCARPET
+glabel ASSET_OBJECT_FLYINGCARPET
 .incbin "./build/us_1.0/assets/objects/headers/FlyingCarpet.bin"
-glabel ASSET_OBJHEADER_TIMBERDANCER
+glabel ASSET_OBJECT_TIMBERDANCER
 .incbin "./build/us_1.0/assets/objects/headers/timberdancer.bin"
-glabel ASSET_OBJHEADER_CHICKENCHARACTE
+glabel ASSET_OBJECT_CHICKENCHARACTE
 .incbin "./build/us_1.0/assets/objects/headers/Chickencharacte.bin"
-glabel ASSET_OBJHEADER_PIPSYDANCER
+glabel ASSET_OBJECT_PIPSYDANCER
 .incbin "./build/us_1.0/assets/objects/headers/pipsydancer.bin"
-glabel ASSET_OBJHEADER_BANJODANCER
+glabel ASSET_OBJECT_BANJODANCER
 .incbin "./build/us_1.0/assets/objects/headers/banjodancer.bin"
-glabel ASSET_OBJHEADER_TICKTOCKDANCER
+glabel ASSET_OBJECT_TICKTOCKDANCER
 .incbin "./build/us_1.0/assets/objects/headers/ticktockdancer.bin"
-glabel ASSET_OBJHEADER_WIZPIGSHIP
+glabel ASSET_OBJECT_WIZPIGSHIP
 .incbin "./build/us_1.0/assets/objects/headers/wizpigship.bin"
-glabel ASSET_OBJHEADER_CONKADANCER
+glabel ASSET_OBJECT_CONKADANCER
 .incbin "./build/us_1.0/assets/objects/headers/conkadancer.bin"
-glabel ASSET_OBJHEADER_EMPTYHOVER
+glabel ASSET_OBJECT_EMPTYHOVER
 .incbin "./build/us_1.0/assets/objects/headers/EmptyHover.bin"
-glabel ASSET_OBJHEADER_STOPWATCHMAN
+glabel ASSET_OBJECT_STOPWATCHMAN
 .incbin "./build/us_1.0/assets/objects/headers/Stopwatch-man.bin"
-glabel ASSET_OBJHEADER_STOPWATCHSELECT
+glabel ASSET_OBJECT_STOPWATCHSELECT
 .incbin "./build/us_1.0/assets/objects/headers/stopwatchselect.bin"
-glabel ASSET_OBJHEADER_PARKWARDEN
+glabel ASSET_OBJECT_PARKWARDEN
 .incbin "./build/us_1.0/assets/objects/headers/Parkwarden.bin"
-glabel ASSET_OBJHEADER_SMARTIETREE
+glabel ASSET_OBJECT_SMARTIETREE
 .incbin "./build/us_1.0/assets/objects/headers/SmartieTree.bin"
-glabel ASSET_OBJHEADER_BLUEBERRYBUSH
+glabel ASSET_OBJECT_BLUEBERRYBUSH
 .incbin "./build/us_1.0/assets/objects/headers/BlueBerryBush.bin"
-glabel ASSET_OBJHEADER_RUBBERSNOWTREE
+glabel ASSET_OBJECT_RUBBERSNOWTREE
 .incbin "./build/us_1.0/assets/objects/headers/RubberSnowTree.bin"
-glabel ASSET_OBJHEADER_SKINNYSNOWTREE
+glabel ASSET_OBJECT_SKINNYSNOWTREE
 .incbin "./build/us_1.0/assets/objects/headers/SkinnySnowTree.bin"
-glabel ASSET_OBJHEADER_XMASTREE
+glabel ASSET_OBJECT_XMASTREE
 .incbin "./build/us_1.0/assets/objects/headers/XmasTree.bin"
-glabel ASSET_OBJHEADER_ALPINESNOWTREE
+glabel ASSET_OBJECT_ALPINESNOWTREE
 .incbin "./build/us_1.0/assets/objects/headers/AlpineSnowTree.bin"
-glabel ASSET_OBJHEADER_RUBBERTREE
+glabel ASSET_OBJECT_RUBBERTREE
 .incbin "./build/us_1.0/assets/objects/headers/RubberTree.bin"
-glabel ASSET_OBJHEADER_BEACHTREE
+glabel ASSET_OBJECT_BEACHTREE
 .incbin "./build/us_1.0/assets/objects/headers/Beachtree.bin"
-glabel ASSET_OBJHEADER_PALMTREETOP
+glabel ASSET_OBJECT_PALMTREETOP
 .incbin "./build/us_1.0/assets/objects/headers/PalmTreeTop.bin"
-glabel ASSET_OBJHEADER_PALMPLANT
+glabel ASSET_OBJECT_PALMPLANT
 .incbin "./build/us_1.0/assets/objects/headers/PalmPlant.bin"
-glabel ASSET_OBJHEADER_PALMTREETOPCHEA
+glabel ASSET_OBJECT_PALMTREETOPCHEA
 .incbin "./build/us_1.0/assets/objects/headers/PalmTreeTopChea.bin"
-glabel ASSET_OBJHEADER_FIRTREE
+glabel ASSET_OBJECT_FIRTREE
 .incbin "./build/us_1.0/assets/objects/headers/FirTree.bin"
-glabel ASSET_OBJHEADER_SPACETREE
+glabel ASSET_OBJECT_SPACETREE
 .incbin "./build/us_1.0/assets/objects/headers/SpaceTree.bin"
-glabel ASSET_OBJHEADER_LAMPPOST
+glabel ASSET_OBJECT_LAMPPOST
 .incbin "./build/us_1.0/assets/objects/headers/Lamppost.bin"
-glabel ASSET_OBJHEADER_FLOWERS
+glabel ASSET_OBJECT_FLOWERS
 .incbin "./build/us_1.0/assets/objects/headers/Flowers.bin"
-glabel ASSET_OBJHEADER_REEDS
+glabel ASSET_OBJECT_REEDS
 .incbin "./build/us_1.0/assets/objects/headers/Reeds.bin"
-glabel ASSET_OBJHEADER_SMOKE
+glabel ASSET_OBJECT_SMOKE
 .incbin "./build/us_1.0/assets/objects/headers/smoke.bin"
-glabel ASSET_OBJHEADER_DINOSAUR1
+glabel ASSET_OBJECT_DINOSAUR1
 .incbin "./build/us_1.0/assets/objects/headers/Dinosaur1.bin"
-glabel ASSET_OBJHEADER_DINOSAUR2
+glabel ASSET_OBJECT_DINOSAUR2
 .incbin "./build/us_1.0/assets/objects/headers/Dinosaur2.bin"
-glabel ASSET_OBJHEADER_DINOSAUR3
+glabel ASSET_OBJECT_DINOSAUR3
 .incbin "./build/us_1.0/assets/objects/headers/Dinosaur3.bin"
-glabel ASSET_OBJHEADER_WHALE
+glabel ASSET_OBJECT_WHALE
 .incbin "./build/us_1.0/assets/objects/headers/Whale.bin"
-glabel ASSET_OBJHEADER_SNOWMEN
+glabel ASSET_OBJECT_SNOWMEN
 .incbin "./build/us_1.0/assets/objects/headers/Snowmen.bin"
-glabel ASSET_OBJHEADER_SIGNS
+glabel ASSET_OBJECT_SIGNS
 .incbin "./build/us_1.0/assets/objects/headers/Signs.bin"
-glabel ASSET_OBJHEADER_FLAMINGTORCH
+glabel ASSET_OBJECT_FLAMINGTORCH
 .incbin "./build/us_1.0/assets/objects/headers/FlamingTorch.bin"
-glabel ASSET_OBJHEADER_MIST
+glabel ASSET_OBJECT_MIST
 .incbin "./build/us_1.0/assets/objects/headers/Mist.bin"
-glabel ASSET_OBJHEADER_SNOWBALL
+glabel ASSET_OBJECT_SNOWBALL
 .incbin "./build/us_1.0/assets/objects/headers/SnowBall.bin"
-glabel ASSET_OBJHEADER_BUOY
+glabel ASSET_OBJECT_BUOY
 .incbin "./build/us_1.0/assets/objects/headers/buoy.bin"
-glabel ASSET_OBJHEADER_PIRATESHIP
+glabel ASSET_OBJECT_PIRATESHIP
 .incbin "./build/us_1.0/assets/objects/headers/pirateship.bin"
-glabel ASSET_OBJHEADER_LOG
+glabel ASSET_OBJECT_LOG
 .incbin "./build/us_1.0/assets/objects/headers/log.bin"
-glabel ASSET_OBJHEADER_PIGLOG
+glabel ASSET_OBJECT_PIGLOG
 .incbin "./build/us_1.0/assets/objects/headers/piglog.bin"
-glabel ASSET_OBJHEADER_BOULDER
+glabel ASSET_OBJECT_BOULDER
 .incbin "./build/us_1.0/assets/objects/headers/boulder.bin"
-glabel ASSET_OBJHEADER_AIRZIPPERS
+glabel ASSET_OBJECT_AIRZIPPERS
 .incbin "./build/us_1.0/assets/objects/headers/AirZippers.bin"
-glabel ASSET_OBJHEADER_WATERZIPPERS
+glabel ASSET_OBJECT_WATERZIPPERS
 .incbin "./build/us_1.0/assets/objects/headers/WaterZippers.bin"
-glabel ASSET_OBJHEADER_LEVELDOOR
+glabel ASSET_OBJECT_LEVELDOOR
 .incbin "./build/us_1.0/assets/objects/headers/LevelDoor.bin"
-glabel ASSET_OBJHEADER_KEITHPIGDOOR
+glabel ASSET_OBJECT_KEITHPIGDOOR
 .incbin "./build/us_1.0/assets/objects/headers/KeithPigDoor.bin"
-glabel ASSET_OBJHEADER_CHALDOOR
+glabel ASSET_OBJECT_CHALDOOR
 .incbin "./build/us_1.0/assets/objects/headers/ChalDoor.bin"
-glabel ASSET_OBJHEADER_BOSSDOOR
+glabel ASSET_OBJECT_BOSSDOOR
 .incbin "./build/us_1.0/assets/objects/headers/BossDoor.bin"
-glabel ASSET_OBJHEADER_BIGBOSSDOOR
+glabel ASSET_OBJECT_BIGBOSSDOOR
 .incbin "./build/us_1.0/assets/objects/headers/bigbossdoor.bin"
-glabel ASSET_OBJHEADER_WORLDGATE
+glabel ASSET_OBJECT_WORLDGATE
 .incbin "./build/us_1.0/assets/objects/headers/WorldGate.bin"
-glabel ASSET_OBJHEADER_TTDOOR
+glabel ASSET_OBJECT_TTDOOR
 .incbin "./build/us_1.0/assets/objects/headers/TTDoor.bin"
-glabel ASSET_OBJHEADER_RAMPSWITCH
+glabel ASSET_OBJECT_RAMPSWITCH
 .incbin "./build/us_1.0/assets/objects/headers/RampSwitch.bin"
-glabel ASSET_OBJHEADER_NOENTRYDOOR
+glabel ASSET_OBJECT_NOENTRYDOOR
 .incbin "./build/us_1.0/assets/objects/headers/NoentryDoor.bin"
-glabel ASSET_OBJHEADER_RAMPWHALE
+glabel ASSET_OBJECT_RAMPWHALE
 .incbin "./build/us_1.0/assets/objects/headers/RampWhale.bin"
-glabel ASSET_OBJHEADER_SEAMONSTER
+glabel ASSET_OBJECT_SEAMONSTER
 .incbin "./build/us_1.0/assets/objects/headers/SeaMonster.bin"
-glabel ASSET_OBJHEADER_DINOISLE
+glabel ASSET_OBJECT_DINOISLE
 .incbin "./build/us_1.0/assets/objects/headers/Dinoisle.bin"
-glabel ASSET_OBJHEADER_SKYCONTROL
+glabel ASSET_OBJECT_SKYCONTROL
 .incbin "./build/us_1.0/assets/objects/headers/skycontrol.bin"
-glabel ASSET_OBJHEADER_CHECKPOINT
+glabel ASSET_OBJECT_CHECKPOINT
 .incbin "./build/us_1.0/assets/objects/headers/checkpoint.bin"
-glabel ASSET_OBJHEADER_CHECKARROW
+glabel ASSET_OBJECT_CHECKARROW
 .incbin "./build/us_1.0/assets/objects/headers/checkarrow.bin"
-glabel ASSET_OBJHEADER_MODECHANGE
+glabel ASSET_OBJECT_MODECHANGE
 .incbin "./build/us_1.0/assets/objects/headers/modechange.bin"
-glabel ASSET_OBJHEADER_TRIGGER
+glabel ASSET_OBJECT_TRIGGER
 .incbin "./build/us_1.0/assets/objects/headers/trigger.bin"
-glabel ASSET_OBJHEADER_FOGCHANGER
+glabel ASSET_OBJECT_FOGCHANGER
 .incbin "./build/us_1.0/assets/objects/headers/fogchanger.bin"
-glabel ASSET_OBJHEADER_AINODE
+glabel ASSET_OBJECT_AINODE
 .incbin "./build/us_1.0/assets/objects/headers/ai-node.bin"
-glabel ASSET_OBJHEADER_EXIT
+glabel ASSET_OBJECT_EXIT
 .incbin "./build/us_1.0/assets/objects/headers/exit.bin"
-glabel ASSET_OBJHEADER_BONUS
+glabel ASSET_OBJECT_BONUS
 .incbin "./build/us_1.0/assets/objects/headers/bonus.bin"
-glabel ASSET_OBJHEADER_CAMERA_CONTROL
+glabel ASSET_OBJECT_CAMERA_CONTROL
 .incbin "./build/us_1.0/assets/objects/headers/camera_control.bin"
-glabel ASSET_OBJHEADER_SETUPPOINT
+glabel ASSET_OBJECT_SETUPPOINT
 .incbin "./build/us_1.0/assets/objects/headers/setuppoint.bin"
-glabel ASSET_OBJHEADER_ANIMATOR
+glabel ASSET_OBJECT_ANIMATOR
 .incbin "./build/us_1.0/assets/objects/headers/animator.bin"
-glabel ASSET_OBJHEADER_TEXSCROLL
+glabel ASSET_OBJECT_TEXSCROLL
 .incbin "./build/us_1.0/assets/objects/headers/texscroll.bin"
-glabel ASSET_OBJHEADER_RGBALIGHT
+glabel ASSET_OBJECT_RGBALIGHT
 .incbin "./build/us_1.0/assets/objects/headers/rgbalight.bin"
-glabel ASSET_OBJHEADER_INTROCAM
+glabel ASSET_OBJECT_INTROCAM
 .incbin "./build/us_1.0/assets/objects/headers/introcam.bin"
-glabel ASSET_OBJHEADER_WEATHER
+glabel ASSET_OBJECT_WEATHER
 .incbin "./build/us_1.0/assets/objects/headers/weather.bin"
-glabel ASSET_OBJHEADER_LENSFLARE
+glabel ASSET_OBJECT_LENSFLARE
 .incbin "./build/us_1.0/assets/objects/headers/lensflare.bin"
-glabel ASSET_OBJHEADER_LENSFLARESWITCH
+glabel ASSET_OBJECT_LENSFLARESWITCH
 .incbin "./build/us_1.0/assets/objects/headers/lensflareswitch.bin"
-glabel ASSET_OBJHEADER_INFOPOINT
+glabel ASSET_OBJECT_INFOPOINT
 .incbin "./build/us_1.0/assets/objects/headers/InfoPoint.bin"
-glabel ASSET_OBJHEADER_WAVEGENERATOR
+glabel ASSET_OBJECT_WAVEGENERATOR
 .incbin "./build/us_1.0/assets/objects/headers/wavegenerator.bin"
-glabel ASSET_OBJHEADER_WAVEPOWER
+glabel ASSET_OBJECT_WAVEPOWER
 .incbin "./build/us_1.0/assets/objects/headers/wavepower.bin"
-glabel ASSET_OBJHEADER_RANGETRIGGER
+glabel ASSET_OBJECT_RANGETRIGGER
 .incbin "./build/us_1.0/assets/objects/headers/RangeTrigger.bin"
-glabel ASSET_OBJHEADER_LAVASPURT
+glabel ASSET_OBJECT_LAVASPURT
 .incbin "./build/us_1.0/assets/objects/headers/lavaspurt.bin"
-glabel ASSET_OBJHEADER_BOMBEXPLOSION
+glabel ASSET_OBJECT_BOMBEXPLOSION
 .incbin "./build/us_1.0/assets/objects/headers/bombexplosion.bin"
-glabel ASSET_OBJHEADER_WARDENSMOKE
+glabel ASSET_OBJECT_WARDENSMOKE
 .incbin "./build/us_1.0/assets/objects/headers/wardensmoke.bin"
-glabel ASSET_OBJHEADER_BUBBLER
+glabel ASSET_OBJECT_BUBBLER
 .incbin "./build/us_1.0/assets/objects/headers/bubbler.bin"
-glabel ASSET_OBJHEADER_WEAPONBALLOON
+glabel ASSET_OBJECT_WEAPONBALLOON
 .incbin "./build/us_1.0/assets/objects/headers/WeaponBalloon.bin"
-glabel ASSET_OBJHEADER_WBALLOONPOP
+glabel ASSET_OBJECT_WBALLOONPOP
 .incbin "./build/us_1.0/assets/objects/headers/wballoonpop.bin"
-glabel ASSET_OBJHEADER_MISSILEGLOW
+glabel ASSET_OBJECT_MISSILEGLOW
 .incbin "./build/us_1.0/assets/objects/headers/MissileGlow.bin"
-glabel ASSET_OBJHEADER_HOMINGGLOW
+glabel ASSET_OBJECT_HOMINGGLOW
 .incbin "./build/us_1.0/assets/objects/headers/HomingGlow.bin"
-glabel ASSET_OBJHEADER_MISSILE
+glabel ASSET_OBJECT_MISSILE
 .incbin "./build/us_1.0/assets/objects/headers/Missile.bin"
-glabel ASSET_OBJHEADER_HOMING
+glabel ASSET_OBJECT_HOMING
 .incbin "./build/us_1.0/assets/objects/headers/Homing.bin"
-glabel ASSET_OBJHEADER_OILSLICK
+glabel ASSET_OBJECT_OILSLICK
 .incbin "./build/us_1.0/assets/objects/headers/OilSlick.bin"
-glabel ASSET_OBJHEADER_SMOKECLOUD
+glabel ASSET_OBJECT_SMOKECLOUD
 .incbin "./build/us_1.0/assets/objects/headers/SmokeCloud.bin"
-glabel ASSET_OBJHEADER_BOMB
+glabel ASSET_OBJECT_BOMB
 .incbin "./build/us_1.0/assets/objects/headers/Bomb.bin"
-glabel ASSET_OBJHEADER_BUBBLEWEAPON
+glabel ASSET_OBJECT_BUBBLEWEAPON
 .incbin "./build/us_1.0/assets/objects/headers/BubbleWeapon.bin"
-glabel ASSET_OBJHEADER_WORLDKEY
+glabel ASSET_OBJECT_WORLDKEY
 .incbin "./build/us_1.0/assets/objects/headers/WorldKey.bin"
-glabel ASSET_OBJHEADER_COINCREATOR
+glabel ASSET_OBJECT_COINCREATOR
 .incbin "./build/us_1.0/assets/objects/headers/CoinCreator.bin"
-glabel ASSET_OBJHEADER_TREASURESUCKER
+glabel ASSET_OBJECT_TREASURESUCKER
 .incbin "./build/us_1.0/assets/objects/headers/TreasureSucker.bin"
-glabel ASSET_OBJHEADER_COIN
+glabel ASSET_OBJECT_COIN
 .incbin "./build/us_1.0/assets/objects/headers/Coin.bin"
-glabel ASSET_OBJHEADER_SILVERCOIN
+glabel ASSET_OBJECT_SILVERCOIN
 .incbin "./build/us_1.0/assets/objects/headers/SilverCoin.bin"
-glabel ASSET_OBJHEADER_GOLDCOIN
+glabel ASSET_OBJECT_GOLDCOIN
 .incbin "./build/us_1.0/assets/objects/headers/GoldCoin.bin"
-glabel ASSET_OBJHEADER_BONUSGEM
+glabel ASSET_OBJECT_BONUSGEM
 .incbin "./build/us_1.0/assets/objects/headers/BonusGem.bin"
-glabel ASSET_OBJHEADER_COLLECTEGG
+glabel ASSET_OBJECT_COLLECTEGG
 .incbin "./build/us_1.0/assets/objects/headers/CollectEgg.bin"
-glabel ASSET_OBJHEADER_EGGCREATOR
+glabel ASSET_OBJECT_EGGCREATOR
 .incbin "./build/us_1.0/assets/objects/headers/EggCreator.bin"
-glabel ASSET_OBJHEADER_CHARACTERFLAG
+glabel ASSET_OBJECT_CHARACTERFLAG
 .incbin "./build/us_1.0/assets/objects/headers/CharacterFlag.bin"
-glabel ASSET_OBJHEADER_ANIMATION
+glabel ASSET_OBJECT_ANIMATION
 .incbin "./build/us_1.0/assets/objects/headers/Animation.bin"
-glabel ASSET_OBJHEADER_OVERRIDEPOS
+glabel ASSET_OBJECT_OVERRIDEPOS
 .incbin "./build/us_1.0/assets/objects/headers/OverRidePos.bin"
-glabel ASSET_OBJHEADER_ANIMCAMERA
+glabel ASSET_OBJECT_ANIMCAMERA
 .incbin "./build/us_1.0/assets/objects/headers/AnimCamera.bin"
-glabel ASSET_OBJHEADER_ANIMCAR
+glabel ASSET_OBJECT_ANIMCAR
 .incbin "./build/us_1.0/assets/objects/headers/AnimCar.bin"
-glabel ASSET_OBJHEADER_ANIMDOME
+glabel ASSET_OBJECT_ANIMDOME
 .incbin "./build/us_1.0/assets/objects/headers/AnimDome.bin"
-glabel ASSET_OBJHEADER_WIZGHOSTS
+glabel ASSET_OBJECT_WIZGHOSTS
 .incbin "./build/us_1.0/assets/objects/headers/Wizghosts.bin"
-glabel ASSET_OBJHEADER_N64LOGO
+glabel ASSET_OBJECT_N64LOGO
 .incbin "./build/us_1.0/assets/objects/headers/N64logo.bin"
-glabel ASSET_OBJHEADER_ASTEROID
+glabel ASSET_OBJECT_ASTEROID
 .incbin "./build/us_1.0/assets/objects/headers/Asteroid.bin"
-glabel ASSET_OBJHEADER_PILLAR
+glabel ASSET_OBJECT_PILLAR
 .incbin "./build/us_1.0/assets/objects/headers/pillar.bin"
-glabel ASSET_OBJHEADER_BOULDERANIM
+glabel ASSET_OBJECT_BOULDERANIM
 .incbin "./build/us_1.0/assets/objects/headers/boulderanim.bin"
-glabel ASSET_OBJHEADER_PIGHEADCOLOURS
+glabel ASSET_OBJECT_PIGHEADCOLOURS
 .incbin "./build/us_1.0/assets/objects/headers/pigheadcolours.bin"
-glabel ASSET_OBJHEADER_PIGFACEANIMATOR
+glabel ASSET_OBJECT_PIGFACEANIMATOR
 .incbin "./build/us_1.0/assets/objects/headers/pigfaceanimator.bin"
-glabel ASSET_OBJHEADER_PTERODACTYL
+glabel ASSET_OBJECT_PTERODACTYL
 .incbin "./build/us_1.0/assets/objects/headers/pterodactyl.bin"
-glabel ASSET_OBJHEADER_AMULETPIECE1
+glabel ASSET_OBJECT_AMULETPIECE1
 .incbin "./build/us_1.0/assets/objects/headers/amuletpiece1.bin"
-glabel ASSET_OBJHEADER_AMULETPIECE2
+glabel ASSET_OBJECT_AMULETPIECE2
 .incbin "./build/us_1.0/assets/objects/headers/amuletpiece2.bin"
-glabel ASSET_OBJHEADER_AMULETPIECE3
+glabel ASSET_OBJECT_AMULETPIECE3
 .incbin "./build/us_1.0/assets/objects/headers/amuletpiece3.bin"
-glabel ASSET_OBJHEADER_AMULETPIECE4
+glabel ASSET_OBJECT_AMULETPIECE4
 .incbin "./build/us_1.0/assets/objects/headers/amuletpiece4.bin"
-glabel ASSET_OBJHEADER_SWAMULET1
+glabel ASSET_OBJECT_SWAMULET1
 .incbin "./build/us_1.0/assets/objects/headers/swamulet1.bin"
-glabel ASSET_OBJHEADER_SWAMULET2
+glabel ASSET_OBJECT_SWAMULET2
 .incbin "./build/us_1.0/assets/objects/headers/swamulet2.bin"
-glabel ASSET_OBJHEADER_SWAMULET3
+glabel ASSET_OBJECT_SWAMULET3
 .incbin "./build/us_1.0/assets/objects/headers/swamulet3.bin"
-glabel ASSET_OBJHEADER_SWAMULET4
+glabel ASSET_OBJECT_SWAMULET4
 .incbin "./build/us_1.0/assets/objects/headers/swamulet4.bin"
-glabel ASSET_OBJHEADER_ANIMKEY
+glabel ASSET_OBJECT_ANIMKEY
 .incbin "./build/us_1.0/assets/objects/headers/AnimKey.bin"
-glabel ASSET_OBJHEADER_SPACESHIP1
+glabel ASSET_OBJECT_SPACESHIP1
 .incbin "./build/us_1.0/assets/objects/headers/SpaceShip1.bin"
-glabel ASSET_OBJHEADER_MINISHIP
+glabel ASSET_OBJECT_MINISHIP
 .incbin "./build/us_1.0/assets/objects/headers/MiniShip.bin"
-glabel ASSET_OBJHEADER_MONORAIL
+glabel ASSET_OBJECT_MONORAIL
 .incbin "./build/us_1.0/assets/objects/headers/MonoRail.bin"
-glabel ASSET_OBJHEADER_SPACESHIP2
+glabel ASSET_OBJECT_SPACESHIP2
 .incbin "./build/us_1.0/assets/objects/headers/SpaceShip2.bin"
-glabel ASSET_OBJHEADER_SPACESHIP3
+glabel ASSET_OBJECT_SPACESHIP3
 .incbin "./build/us_1.0/assets/objects/headers/SpaceShip3.bin"
-glabel ASSET_OBJHEADER_LIGHTHOUSE
+glabel ASSET_OBJECT_LIGHTHOUSE
 .incbin "./build/us_1.0/assets/objects/headers/Lighthouse.bin"
-glabel ASSET_OBJHEADER_ROCKETSIGNPOST
+glabel ASSET_OBJECT_ROCKETSIGNPOST
 .incbin "./build/us_1.0/assets/objects/headers/rocketsignpost.bin"
-glabel ASSET_OBJHEADER_LIGHTHOUSE1
+glabel ASSET_OBJECT_LIGHTHOUSE1
 .incbin "./build/us_1.0/assets/objects/headers/lighthouse1.bin"
-glabel ASSET_OBJHEADER_LIGHTHOUSE2
+glabel ASSET_OBJECT_LIGHTHOUSE2
 .incbin "./build/us_1.0/assets/objects/headers/lighthouse2.bin"
-glabel ASSET_OBJHEADER_SELECTIONHILL
+glabel ASSET_OBJECT_SELECTIONHILL
 .incbin "./build/us_1.0/assets/objects/headers/SelectionHill.bin"
-glabel ASSET_OBJHEADER_WIDESCREEN
+glabel ASSET_OBJECT_WIDESCREEN
 .incbin "./build/us_1.0/assets/objects/headers/Widescreen.bin"
-glabel ASSET_OBJHEADER_TIGERANIMPLANE
+glabel ASSET_OBJECT_TIGERANIMPLANE
 .incbin "./build/us_1.0/assets/objects/headers/TigerAnimPlane.bin"
-glabel ASSET_OBJHEADER_BADGERANIMWALK
+glabel ASSET_OBJECT_BADGERANIMWALK
 .incbin "./build/us_1.0/assets/objects/headers/BadgerAnimWalk.bin"
-glabel ASSET_OBJHEADER_TIMBERANIMCAR
+glabel ASSET_OBJECT_TIMBERANIMCAR
 .incbin "./build/us_1.0/assets/objects/headers/Timberanimcar.bin"
-glabel ASSET_OBJHEADER_KREMSELECT
+glabel ASSET_OBJECT_KREMSELECT
 .incbin "./build/us_1.0/assets/objects/headers/KremSelect.bin"
-glabel ASSET_OBJHEADER_CONKSELECT
+glabel ASSET_OBJECT_CONKSELECT
 .incbin "./build/us_1.0/assets/objects/headers/ConkSelect.bin"
-glabel ASSET_OBJHEADER_BADGERSELECT
+glabel ASSET_OBJECT_BADGERSELECT
 .incbin "./build/us_1.0/assets/objects/headers/BadgerSelect.bin"
-glabel ASSET_OBJHEADER_TORTSELECT
+glabel ASSET_OBJECT_TORTSELECT
 .incbin "./build/us_1.0/assets/objects/headers/TortSelect.bin"
-glabel ASSET_OBJHEADER_TIGERSELECT
+glabel ASSET_OBJECT_TIGERSELECT
 .incbin "./build/us_1.0/assets/objects/headers/TigerSelect.bin"
-glabel ASSET_OBJHEADER_DIDDYSELECT
+glabel ASSET_OBJECT_DIDDYSELECT
 .incbin "./build/us_1.0/assets/objects/headers/DiddySelect.bin"
-glabel ASSET_OBJHEADER_BANJOSELECT
+glabel ASSET_OBJECT_BANJOSELECT
 .incbin "./build/us_1.0/assets/objects/headers/BanjoSelect.bin"
-glabel ASSET_OBJHEADER_CHICKSELECT
+glabel ASSET_OBJECT_CHICKSELECT
 .incbin "./build/us_1.0/assets/objects/headers/ChickSelect.bin"
-glabel ASSET_OBJHEADER_MOUSESELECT
+glabel ASSET_OBJECT_MOUSESELECT
 .incbin "./build/us_1.0/assets/objects/headers/MouseSelect.bin"
-glabel ASSET_OBJHEADER_MAGICCARPET
+glabel ASSET_OBJECT_MAGICCARPET
 .incbin "./build/us_1.0/assets/objects/headers/MagicCarpet.bin"
-glabel ASSET_OBJHEADER_POLYGOLDBALOON
+glabel ASSET_OBJECT_POLYGOLDBALOON
 .incbin "./build/us_1.0/assets/objects/headers/PolyGoldBaloon.bin"
-glabel ASSET_OBJHEADER_ANIMGENIE
+glabel ASSET_OBJECT_ANIMGENIE
 .incbin "./build/us_1.0/assets/objects/headers/AnimGenie.bin"
-glabel ASSET_OBJHEADER_ANIMGENIE3
+glabel ASSET_OBJECT_ANIMGENIE3
 .incbin "./build/us_1.0/assets/objects/headers/AnimGenie3.bin"
-glabel ASSET_OBJHEADER_BUTTERFLYBAIT
+glabel ASSET_OBJECT_BUTTERFLYBAIT
 .incbin "./build/us_1.0/assets/objects/headers/ButterflyBait.bin"
-glabel ASSET_OBJHEADER_AUDIO
+glabel ASSET_OBJECT_AUDIO
 .incbin "./build/us_1.0/assets/objects/headers/audio.bin"
-glabel ASSET_OBJHEADER_AUDIOLINE
+glabel ASSET_OBJECT_AUDIOLINE
 .incbin "./build/us_1.0/assets/objects/headers/audioline.bin"
-glabel ASSET_OBJHEADER_AUDIOSEQLINE
+glabel ASSET_OBJECT_AUDIOSEQLINE
 .incbin "./build/us_1.0/assets/objects/headers/audioseqline.bin"
-glabel ASSET_OBJHEADER_AUDIOSEQ
+glabel ASSET_OBJECT_AUDIOSEQ
 .incbin "./build/us_1.0/assets/objects/headers/audioseq.bin"
-glabel ASSET_OBJHEADER_AUDIOREVERB
+glabel ASSET_OBJECT_AUDIOREVERB
 .incbin "./build/us_1.0/assets/objects/headers/audioreverb.bin"
-glabel ASSET_OBJHEADER_FRONTTYRE
+glabel ASSET_OBJECT_FRONTTYRE
 .incbin "./build/us_1.0/assets/objects/headers/fronttyre.bin"
-glabel ASSET_OBJHEADER_BACKTYRE
+glabel ASSET_OBJECT_BACKTYRE
 .incbin "./build/us_1.0/assets/objects/headers/backtyre.bin"
-glabel ASSET_OBJHEADER_PLANETYRE
+glabel ASSET_OBJECT_PLANETYRE
 .incbin "./build/us_1.0/assets/objects/headers/planetyre.bin"
-glabel ASSET_OBJHEADER_FAN
+glabel ASSET_OBJECT_FAN
 .incbin "./build/us_1.0/assets/objects/headers/fan.bin"
-glabel ASSET_OBJHEADER_JETENGINE
+glabel ASSET_OBJECT_JETENGINE
 .incbin "./build/us_1.0/assets/objects/headers/jetengine.bin"
-glabel ASSET_OBJHEADER_GLOVE
+glabel ASSET_OBJECT_GLOVE
 .incbin "./build/us_1.0/assets/objects/headers/glove.bin"
-glabel ASSET_OBJHEADER_LEEFAN
+glabel ASSET_OBJECT_LEEFAN
 .incbin "./build/us_1.0/assets/objects/headers/Leefan.bin"
-glabel ASSET_OBJHEADER_MAGICRING
+glabel ASSET_OBJECT_MAGICRING
 .incbin "./build/us_1.0/assets/objects/headers/MagicRing.bin"
-glabel ASSET_OBJHEADER_DOME
+glabel ASSET_OBJECT_DOME
 .incbin "./build/us_1.0/assets/objects/headers/dome.bin"
-glabel ASSET_OBJHEADER_DOME1
+glabel ASSET_OBJECT_DOME1
 .incbin "./build/us_1.0/assets/objects/headers/dome1.bin"
-glabel ASSET_OBJHEADER_DOME2
+glabel ASSET_OBJECT_DOME2
 .incbin "./build/us_1.0/assets/objects/headers/dome2.bin"
-glabel ASSET_OBJHEADER_DOME3
+glabel ASSET_OBJECT_DOME3
 .incbin "./build/us_1.0/assets/objects/headers/dome3.bin"
-glabel ASSET_OBJHEADER_DOME4
+glabel ASSET_OBJECT_DOME4
 .incbin "./build/us_1.0/assets/objects/headers/dome4.bin"
-glabel ASSET_OBJHEADER_DOME5
+glabel ASSET_OBJECT_DOME5
 .incbin "./build/us_1.0/assets/objects/headers/dome5.bin"
-glabel ASSET_OBJHEADER_DOME6
+glabel ASSET_OBJECT_DOME6
 .incbin "./build/us_1.0/assets/objects/headers/dome6.bin"
-glabel ASSET_OBJHEADER_DOME7
+glabel ASSET_OBJECT_DOME7
 .incbin "./build/us_1.0/assets/objects/headers/dome7.bin"
-glabel ASSET_OBJHEADER_DOME8
+glabel ASSET_OBJECT_DOME8
 .incbin "./build/us_1.0/assets/objects/headers/dome8.bin"
-glabel ASSET_OBJHEADER_DOME9
+glabel ASSET_OBJECT_DOME9
 .incbin "./build/us_1.0/assets/objects/headers/dome9.bin"
-glabel ASSET_OBJHEADER_DOME10
+glabel ASSET_OBJECT_DOME10
 .incbin "./build/us_1.0/assets/objects/headers/dome10.bin"
-glabel ASSET_OBJHEADER_DOME11
+glabel ASSET_OBJECT_DOME11
 .incbin "./build/us_1.0/assets/objects/headers/dome11.bin"
-glabel ASSET_OBJHEADER_DOME12
+glabel ASSET_OBJECT_DOME12
 .incbin "./build/us_1.0/assets/objects/headers/dome12.bin"
-glabel ASSET_OBJHEADER_DOME13
+glabel ASSET_OBJECT_DOME13
 .incbin "./build/us_1.0/assets/objects/headers/dome13.bin"
-glabel ASSET_OBJHEADER_DOME14
+glabel ASSET_OBJECT_DOME14
 .incbin "./build/us_1.0/assets/objects/headers/dome14.bin"
-glabel ASSET_OBJHEADER_DOME15
+glabel ASSET_OBJECT_DOME15
 .incbin "./build/us_1.0/assets/objects/headers/dome15.bin"
-glabel ASSET_OBJHEADER_DOME16
+glabel ASSET_OBJECT_DOME16
 .incbin "./build/us_1.0/assets/objects/headers/dome16.bin"
-glabel ASSET_OBJHEADER_DOME17
+glabel ASSET_OBJECT_DOME17
 .incbin "./build/us_1.0/assets/objects/headers/dome17.bin"
-glabel ASSET_OBJHEADER_SELECTIONSHADOW
+glabel ASSET_OBJECT_SELECTIONSHADOW
 .incbin "./build/us_1.0/assets/objects/headers/selectionshadow.bin"
-glabel ASSET_OBJHEADER_POSTFORPARTY
+glabel ASSET_OBJECT_POSTFORPARTY
 .incbin "./build/us_1.0/assets/objects/headers/postforparty.bin"
-glabel ASSET_OBJHEADER_RARELOGO
+glabel ASSET_OBJECT_RARELOGO
 .incbin "./build/us_1.0/assets/objects/headers/Rarelogo.bin"
-glabel ASSET_OBJHEADER_SPARKLYTHING
+glabel ASSET_OBJECT_SPARKLYTHING
 .incbin "./build/us_1.0/assets/objects/headers/sparklything.bin"
-glabel ASSET_OBJHEADER_DOOROPENER
+glabel ASSET_OBJECT_DOOROPENER
 .incbin "./build/us_1.0/assets/objects/headers/DoorOpener.bin"
-glabel ASSET_OBJHEADER_ANIMDINOSAUR2
+glabel ASSET_OBJECT_ANIMDINOSAUR2
 .incbin "./build/us_1.0/assets/objects/headers/AnimDinosaur2.bin"
-glabel ASSET_OBJHEADER_TIMERANIMHOVER
+glabel ASSET_OBJECT_TIMERANIMHOVER
 .incbin "./build/us_1.0/assets/objects/headers/Timeranimhover.bin"
-glabel ASSET_OBJHEADER_ANIMBADGERPLANE
+glabel ASSET_OBJECT_ANIMBADGERPLANE
 .incbin "./build/us_1.0/assets/objects/headers/AnimBadgerPlane.bin"
-glabel ASSET_OBJHEADER_ANIMDINOSAUR1
+glabel ASSET_OBJECT_ANIMDINOSAUR1
 .incbin "./build/us_1.0/assets/objects/headers/AnimDinosaur1.bin"
-glabel ASSET_OBJHEADER_ANIMMOUSECAR
+glabel ASSET_OBJECT_ANIMMOUSECAR
 .incbin "./build/us_1.0/assets/objects/headers/AnimMouseCar.bin"
-glabel ASSET_OBJHEADER_ANIMTORT
+glabel ASSET_OBJECT_ANIMTORT
 .incbin "./build/us_1.0/assets/objects/headers/Animtort.bin"
-glabel ASSET_OBJHEADER_CHICKENANIMPLAN
+glabel ASSET_OBJECT_CHICKENANIMPLAN
 .incbin "./build/us_1.0/assets/objects/headers/ChickenAnimPlan.bin"
-glabel ASSET_OBJHEADER_EMPTYHOVERANIM
+glabel ASSET_OBJECT_EMPTYHOVERANIM
 .incbin "./build/us_1.0/assets/objects/headers/EmptyHoverAnim.bin"
-glabel ASSET_OBJHEADER_KREMANIM
+glabel ASSET_OBJECT_KREMANIM
 .incbin "./build/us_1.0/assets/objects/headers/KremAnim.bin"
-glabel ASSET_OBJHEADER_MOUSEHOVERANIM
+glabel ASSET_OBJECT_MOUSEHOVERANIM
 .incbin "./build/us_1.0/assets/objects/headers/MouseHoverAnim.bin"
-glabel ASSET_OBJHEADER_TORTRUNNER
+glabel ASSET_OBJECT_TORTRUNNER
 .incbin "./build/us_1.0/assets/objects/headers/TortRunner.bin"
-glabel ASSET_OBJHEADER_ANIMBANJOPLANE
+glabel ASSET_OBJECT_ANIMBANJOPLANE
 .incbin "./build/us_1.0/assets/objects/headers/AnimBanjoPlane.bin"
-glabel ASSET_OBJHEADER_CONKAANIMCAR
+glabel ASSET_OBJECT_CONKAANIMCAR
 .incbin "./build/us_1.0/assets/objects/headers/Conkaanimcar.bin"
-glabel ASSET_OBJHEADER_GBPARKWARDEN
+glabel ASSET_OBJECT_GBPARKWARDEN
 .incbin "./build/us_1.0/assets/objects/headers/GBParkwarden.bin"
-glabel ASSET_OBJHEADER_WIZPIG
+glabel ASSET_OBJECT_WIZPIG
 .incbin "./build/us_1.0/assets/objects/headers/Wizpig.bin"
-glabel ASSET_OBJHEADER_WIZPIGROCKET
+glabel ASSET_OBJECT_WIZPIGROCKET
 .incbin "./build/us_1.0/assets/objects/headers/WizpigRocket.bin"
-glabel ASSET_OBJHEADER_PIGBOSS
+glabel ASSET_OBJECT_PIGBOSS
 .incbin "./build/us_1.0/assets/objects/headers/Pigboss.bin"
-glabel ASSET_OBJHEADER_PIGBOSS2
+glabel ASSET_OBJECT_PIGBOSS2
 .incbin "./build/us_1.0/assets/objects/headers/Pigboss2.bin"
-glabel ASSET_OBJHEADER_PIGROCKETEER
+glabel ASSET_OBJECT_PIGROCKETEER
 .incbin "./build/us_1.0/assets/objects/headers/PigRocketeer.bin"
-glabel ASSET_OBJHEADER_PARTICLES2
+glabel ASSET_OBJECT_PARTICLES2
 .incbin "./build/us_1.0/assets/objects/headers/Particles2.bin"
-glabel ASSET_OBJHEADER_PIGBOULDER
+glabel ASSET_OBJECT_PIGBOULDER
 .incbin "./build/us_1.0/assets/objects/headers/Pigboulder.bin"
-glabel ASSET_OBJHEADER_BIGPLANET
+glabel ASSET_OBJECT_BIGPLANET
 .incbin "./build/us_1.0/assets/objects/headers/Bigplanet.bin"
-glabel ASSET_OBJHEADER_ROCKETBIT1
+glabel ASSET_OBJECT_ROCKETBIT1
 .incbin "./build/us_1.0/assets/objects/headers/rocketbit1.bin"
-glabel ASSET_OBJHEADER_ROCKETBIT2
+glabel ASSET_OBJECT_ROCKETBIT2
 .incbin "./build/us_1.0/assets/objects/headers/rocketbit2.bin"
-glabel ASSET_OBJHEADER_GENIEHEAD
+glabel ASSET_OBJECT_GENIEHEAD
 .incbin "./build/us_1.0/assets/objects/headers/Geniehead.bin"
-glabel ASSET_OBJHEADER_PIGBOULDER2
+glabel ASSET_OBJECT_PIGBOULDER2
 .incbin "./build/us_1.0/assets/objects/headers/Pigboulder2.bin"
-glabel ASSET_OBJHEADER_PIGBOULDER3
+glabel ASSET_OBJECT_PIGBOULDER3
 .incbin "./build/us_1.0/assets/objects/headers/Pigboulder3.bin"
-glabel ASSET_OBJHEADER_PIGBOULDER4
+glabel ASSET_OBJECT_PIGBOULDER4
 .incbin "./build/us_1.0/assets/objects/headers/Pigboulder4.bin"
-glabel ASSET_OBJHEADER_PIGBOULDER5
+glabel ASSET_OBJECT_PIGBOULDER5
 .incbin "./build/us_1.0/assets/objects/headers/Pigboulder5.bin"
-glabel ASSET_OBJHEADER_TRICKYTOPS
+glabel ASSET_OBJECT_TRICKYTOPS
 .incbin "./build/us_1.0/assets/objects/headers/Trickytops.bin"
-glabel ASSET_OBJHEADER_TRICKYANIM
+glabel ASSET_OBJECT_TRICKYANIM
 .incbin "./build/us_1.0/assets/objects/headers/Trickyanim.bin"
-glabel ASSET_OBJHEADER_TRICKYANIM2
+glabel ASSET_OBJECT_TRICKYANIM2
 .incbin "./build/us_1.0/assets/objects/headers/Trickyanim2.bin"
-glabel ASSET_OBJHEADER_TRICKYANIM3
+glabel ASSET_OBJECT_TRICKYANIM3
 .incbin "./build/us_1.0/assets/objects/headers/Trickyanim3.bin"
-glabel ASSET_OBJHEADER_WALRUS_ANIM
+glabel ASSET_OBJECT_WALRUS_ANIM
 .incbin "./build/us_1.0/assets/objects/headers/Walrus_anim.bin"
-glabel ASSET_OBJHEADER_TERRYBOSS
+glabel ASSET_OBJECT_TERRYBOSS
 .incbin "./build/us_1.0/assets/objects/headers/Terryboss.bin"
-glabel ASSET_OBJHEADER_DRAGONBOSS
+glabel ASSET_OBJECT_DRAGONBOSS
 .incbin "./build/us_1.0/assets/objects/headers/Dragonboss.bin"
-glabel ASSET_OBJHEADER_DRAGONANIM
+glabel ASSET_OBJECT_DRAGONANIM
 .incbin "./build/us_1.0/assets/objects/headers/DragonAnim.bin"
-glabel ASSET_OBJHEADER_WALRUS
+glabel ASSET_OBJECT_WALRUS
 .incbin "./build/us_1.0/assets/objects/headers/Walrus.bin"
-glabel ASSET_OBJHEADER_SNOWBALLBOSS
+glabel ASSET_OBJECT_SNOWBALLBOSS
 .incbin "./build/us_1.0/assets/objects/headers/SnowballBoss.bin"
-glabel ASSET_OBJHEADER_ANIMOCTO
+glabel ASSET_OBJECT_ANIMOCTO
 .incbin "./build/us_1.0/assets/objects/headers/animocto.bin"
-glabel ASSET_OBJHEADER_OCTOPUS
+glabel ASSET_OBJECT_OCTOPUS
 .incbin "./build/us_1.0/assets/objects/headers/octopus.bin"
-glabel ASSET_OBJHEADER_GOLDBALOONSPRIT
+glabel ASSET_OBJECT_GOLDBALOONSPRIT
 .incbin "./build/us_1.0/assets/objects/headers/GoldBaloonSprit.bin"
-glabel ASSET_OBJHEADER_SPACECOLUMN1
+glabel ASSET_OBJECT_SPACECOLUMN1
 .incbin "./build/us_1.0/assets/objects/headers/SpaceColumn1.bin"
-glabel ASSET_OBJHEADER_SPACECOLUMN2
+glabel ASSET_OBJECT_SPACECOLUMN2
 .incbin "./build/us_1.0/assets/objects/headers/SpaceColumn2.bin"
-glabel ASSET_OBJHEADER_SPACECOLUMN3
+glabel ASSET_OBJECT_SPACECOLUMN3
 .incbin "./build/us_1.0/assets/objects/headers/SpaceColumn3.bin"
-glabel ASSET_OBJHEADER_HAYSTACK
+glabel ASSET_OBJECT_HAYSTACK
 .incbin "./build/us_1.0/assets/objects/headers/Haystack.bin"
-glabel ASSET_OBJHEADER_ANIMGENIE2
+glabel ASSET_OBJECT_ANIMGENIE2
 .incbin "./build/us_1.0/assets/objects/headers/AnimGenie2.bin"
-glabel ASSET_OBJHEADER_BRIGHTSTAR
+glabel ASSET_OBJECT_BRIGHTSTAR
 .incbin "./build/us_1.0/assets/objects/headers/Brightstar.bin"
-glabel ASSET_OBJHEADER_BUTTERFLY
+glabel ASSET_OBJECT_BUTTERFLY
 .incbin "./build/us_1.0/assets/objects/headers/Butterfly.bin"
-glabel ASSET_OBJHEADER_FISH
+glabel ASSET_OBJECT_FISH
 .incbin "./build/us_1.0/assets/objects/headers/Fish.bin"
-glabel ASSET_OBJHEADER_FROG
+glabel ASSET_OBJECT_FROG
 .incbin "./build/us_1.0/assets/objects/headers/Frog.bin"
-glabel ASSET_OBJHEADER_BOOST
+glabel ASSET_OBJECT_BOOST
 .incbin "./build/us_1.0/assets/objects/headers/Boost.bin"
-glabel ASSET_OBJHEADER_MAGNETFX
+glabel ASSET_OBJECT_MAGNETFX
 .incbin "./build/us_1.0/assets/objects/headers/MagnetFX.bin"
-glabel ASSET_OBJHEADER_STILLFROG
+glabel ASSET_OBJECT_STILLFROG
 .incbin "./build/us_1.0/assets/objects/headers/stillfrog.bin"
-glabel ASSET_OBJHEADER_STOPWATCHICON
+glabel ASSET_OBJECT_STOPWATCHICON
 .incbin "./build/us_1.0/assets/objects/headers/stopwatchicon.bin"
-glabel ASSET_OBJHEADER_STOPWATCHHAND
+glabel ASSET_OBJECT_STOPWATCHHAND
 .incbin "./build/us_1.0/assets/objects/headers/stopwatchhand.bin"
-glabel ASSET_OBJHEADER_BRIDGE
+glabel ASSET_OBJECT_BRIDGE
 .incbin "./build/us_1.0/assets/objects/headers/bridge.bin"
-glabel ASSET_OBJHEADER_POSARROW
+glabel ASSET_OBJECT_POSARROW
 .incbin "./build/us_1.0/assets/objects/headers/posarrow.bin"
-glabel ASSET_OBJHEADER_HITTESTER
+glabel ASSET_OBJECT_HITTESTER
 .incbin "./build/us_1.0/assets/objects/headers/hittester.bin"
-glabel ASSET_OBJHEADER_MIDIFADE
+glabel ASSET_OBJECT_MIDIFADE
 .incbin "./build/us_1.0/assets/objects/headers/midifade.bin"
-glabel ASSET_OBJHEADER_WINDSAIL
+glabel ASSET_OBJECT_WINDSAIL
 .incbin "./build/us_1.0/assets/objects/headers/windsail.bin"
-glabel ASSET_OBJHEADER_EFFECTBOX
+glabel ASSET_OBJECT_EFFECTBOX
 .incbin "./build/us_1.0/assets/objects/headers/EffectBox.bin"
-glabel ASSET_OBJHEADER_TROPHYCAB
+glabel ASSET_OBJECT_TROPHYCAB
 .incbin "./build/us_1.0/assets/objects/headers/trophycab.bin"
-glabel ASSET_OBJHEADER_FLYCOIN
+glabel ASSET_OBJECT_FLYCOIN
 .incbin "./build/us_1.0/assets/objects/headers/FlyCoin.bin"
-glabel ASSET_OBJHEADER_GOLDENBALLOON
+glabel ASSET_OBJECT_GOLDENBALLOON
 .incbin "./build/us_1.0/assets/objects/headers/GoldenBalloon.bin"
-glabel ASSET_OBJHEADER_LASERBOLT
+glabel ASSET_OBJECT_LASERBOLT
 .incbin "./build/us_1.0/assets/objects/headers/laserbolt.bin"
-glabel ASSET_OBJHEADER_LASERGUN
+glabel ASSET_OBJECT_LASERGUN
 .incbin "./build/us_1.0/assets/objects/headers/lasergun.bin"
-glabel ASSET_OBJHEADER_BOLTGLOW
+glabel ASSET_OBJECT_BOLTGLOW
 .incbin "./build/us_1.0/assets/objects/headers/boltglow.bin"
-glabel ASSET_OBJHEADER_GROUNDZIPPER
+glabel ASSET_OBJECT_GROUNDZIPPER
 .incbin "./build/us_1.0/assets/objects/headers/GroundZipper.bin"
-glabel ASSET_OBJHEADER_PWSAFETELEPOINT
+glabel ASSET_OBJECT_PWSAFETELEPOINT
 .incbin "./build/us_1.0/assets/objects/headers/PWSafeTelepoint.bin"
-glabel ASSET_OBJHEADER_HEADFORPOINT
+glabel ASSET_OBJECT_HEADFORPOINT
 .incbin "./build/us_1.0/assets/objects/headers/HeadForPoint.bin"
-glabel ASSET_OBJHEADER_FIREBALLATTRACT
+glabel ASSET_OBJECT_FIREBALLATTRACT
 .incbin "./build/us_1.0/assets/objects/headers/FireballAttract.bin"
-glabel ASSET_OBJHEADER_FIREBALL
+glabel ASSET_OBJECT_FIREBALL
 .incbin "./build/us_1.0/assets/objects/headers/Fireball.bin"
-glabel ASSET_OBJHEADER_OCTOBUBBLE
+glabel ASSET_OBJECT_OCTOBUBBLE
 .incbin "./build/us_1.0/assets/objects/headers/OctoBubble.bin"
-glabel ASSET_OBJHEADER_OCTOBOMB
+glabel ASSET_OBJECT_OCTOBOMB
 .incbin "./build/us_1.0/assets/objects/headers/OctoBomb.bin"
-glabel ASSET_OBJHEADER_GOLDTROPHY
+glabel ASSET_OBJECT_GOLDTROPHY
 .incbin "./build/us_1.0/assets/objects/headers/GoldTrophy.bin"
-glabel ASSET_OBJHEADER_PARKTROPHY
+glabel ASSET_OBJECT_PARKTROPHY
 .incbin "./build/us_1.0/assets/objects/headers/Parktrophy.bin"
-glabel ASSET_OBJHEADER_TICKTROPHY
+glabel ASSET_OBJECT_TICKTROPHY
 .incbin "./build/us_1.0/assets/objects/headers/Ticktrophy.bin"
-glabel ASSET_OBJHEADER_TROPHY
+glabel ASSET_OBJECT_TROPHY
 .incbin "./build/us_1.0/assets/objects/headers/Trophy.bin"
-glabel ASSET_OBJHEADER_TELEPORT
+glabel ASSET_OBJECT_TELEPORT
 .incbin "./build/us_1.0/assets/objects/headers/Teleport.bin"
-glabel ASSET_OBJHEADER_SHIELD
+glabel ASSET_OBJECT_SHIELD
 .incbin "./build/us_1.0/assets/objects/headers/Shield.bin"
-glabel ASSET_OBJHEADER_LIGHTNING
+glabel ASSET_OBJECT_LIGHTNING
 .incbin "./build/us_1.0/assets/objects/headers/Lightning.bin"
-glabel ASSET_OBJHEADER_MIDIFADEPOINT
+glabel ASSET_OBJECT_MIDIFADEPOINT
 .incbin "./build/us_1.0/assets/objects/headers/midifadepoint.bin"
-glabel ASSET_OBJHEADER_LEVELNAME
+glabel ASSET_OBJECT_LEVELNAME
 .incbin "./build/us_1.0/assets/objects/headers/levelname.bin"
-glabel ASSET_OBJHEADER_MIDICHSET
+glabel ASSET_OBJECT_MIDICHSET
 .incbin "./build/us_1.0/assets/objects/headers/midichset.bin"
-glabel ASSET_OBJECT_HEADERS_END
+glabel ASSET_OBJECTS_END
 
 /********** ASSET_LEVEL_OBJECT_TRANSLATION_TABLE **********/
 
@@ -13283,6 +13298,7 @@ glabel ASSET_LEVEL_OBJECT_TRANSLATION_TABLE_END
 glabel ASSET_EMPTY_37_TABLE
 .word ASSET_EMPTY_37_END - ASSET_EMPTY_37
 .word 0xFFFFFFFF
+glabel ASSET_EMPTY_37_TABLE_END
 
 /********** ASSET_EMPTY_37 **********/
 
@@ -13294,6 +13310,7 @@ glabel ASSET_EMPTY_37_END
 
 .balign 16
 glabel ASSET_AUDIO_TABLE
+# For whatever reason, the first table entry in the audio table is not set.
 .word ASSET_AUDIO_1 - ASSET_AUDIO
 .word ASSET_AUDIO_2 - ASSET_AUDIO
 .word ASSET_AUDIO_3 - ASSET_AUDIO
@@ -13308,37 +13325,38 @@ glabel ASSET_AUDIO_TABLE
 .word ASSET_AUDIO_12 - ASSET_AUDIO
 .word ASSET_AUDIO_END - ASSET_AUDIO
 .word 0xFFFFFFFF
+glabel ASSET_AUDIO_TABLE_END
 
 /********** ASSET_AUDIO **********/
 
 .balign 16
 glabel ASSET_AUDIO
 glabel ASSET_AUDIO_0
-.incbin "./build/us_1.0/assets/audio/unknown_39_0.bin"
+.incbin "./build/us_1.0/assets/audio/asset_audio_0.bin"
 glabel ASSET_AUDIO_1
-.incbin "./build/us_1.0/assets/audio/unknown_39_1.bin"
+.incbin "./build/us_1.0/assets/audio/asset_audio_1.bin"
 glabel ASSET_AUDIO_2
-.incbin "./build/us_1.0/assets/audio/unknown_39_2.bin"
+.incbin "./build/us_1.0/assets/audio/asset_audio_2.bin"
 glabel ASSET_AUDIO_3
-.incbin "./build/us_1.0/assets/audio/unknown_39_3.bin"
+.incbin "./build/us_1.0/assets/audio/asset_audio_3.bin"
 glabel ASSET_AUDIO_4
-.incbin "./build/us_1.0/assets/audio/unknown_39_4.bin"
+.incbin "./build/us_1.0/assets/audio/asset_audio_4.bin"
 glabel ASSET_AUDIO_5
-.incbin "./build/us_1.0/assets/audio/unknown_39_5.bin"
+.incbin "./build/us_1.0/assets/audio/asset_audio_5.bin"
 glabel ASSET_AUDIO_6
-.incbin "./build/us_1.0/assets/audio/unknown_39_6.bin"
+.incbin "./build/us_1.0/assets/audio/asset_audio_6.bin"
 glabel ASSET_AUDIO_7
-.incbin "./build/us_1.0/assets/audio/unknown_39_7.bin"
+.incbin "./build/us_1.0/assets/audio/asset_audio_7.bin"
 glabel ASSET_AUDIO_8
-.incbin "./build/us_1.0/assets/audio/unknown_39_8.bin"
+.incbin "./build/us_1.0/assets/audio/asset_audio_8.bin"
 glabel ASSET_AUDIO_9
-.incbin "./build/us_1.0/assets/audio/unknown_39_9.bin"
+.incbin "./build/us_1.0/assets/audio/asset_audio_9.bin"
 glabel ASSET_AUDIO_10
-.incbin "./build/us_1.0/assets/audio/unknown_39_10.bin"
+.incbin "./build/us_1.0/assets/audio/asset_audio_10.bin"
 glabel ASSET_AUDIO_11
-.incbin "./build/us_1.0/assets/audio/unknown_39_11.bin"
+.incbin "./build/us_1.0/assets/audio/asset_audio_11.bin"
 glabel ASSET_AUDIO_12
-.incbin "./build/us_1.0/assets/audio/unknown_39_12.bin"
+.incbin "./build/us_1.0/assets/audio/asset_audio_12.bin"
 glabel ASSET_AUDIO_END
 
 /********** ASSET_PARTICLES_TABLE **********/
@@ -13417,151 +13435,152 @@ glabel ASSET_PARTICLES_TABLE
 .word ASSET_PARTICLES_69 - ASSET_PARTICLES
 .word ASSET_PARTICLES_END - ASSET_PARTICLES
 .word 0xFFFFFFFF
+glabel ASSET_PARTICLES_TABLE_END
 
 /********** ASSET_PARTICLES **********/
 
 .balign 16
 glabel ASSET_PARTICLES
 glabel ASSET_PARTICLES_0
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_0.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_0.bin"
 glabel ASSET_PARTICLES_1
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_1.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_1.bin"
 glabel ASSET_PARTICLES_2
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_2.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_2.bin"
 glabel ASSET_PARTICLES_3
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_3.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_3.bin"
 glabel ASSET_PARTICLES_4
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_4.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_4.bin"
 glabel ASSET_PARTICLES_5
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_5.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_5.bin"
 glabel ASSET_PARTICLES_6
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_6.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_6.bin"
 glabel ASSET_PARTICLES_7
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_7.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_7.bin"
 glabel ASSET_PARTICLES_8
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_8.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_8.bin"
 glabel ASSET_PARTICLES_9
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_9.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_9.bin"
 glabel ASSET_PARTICLES_10
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_10.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_10.bin"
 glabel ASSET_PARTICLES_11
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_11.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_11.bin"
 glabel ASSET_PARTICLES_12
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_12.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_12.bin"
 glabel ASSET_PARTICLES_13
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_13.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_13.bin"
 glabel ASSET_PARTICLES_14
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_14.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_14.bin"
 glabel ASSET_PARTICLES_15
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_15.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_15.bin"
 glabel ASSET_PARTICLES_16
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_16.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_16.bin"
 glabel ASSET_PARTICLES_17
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_17.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_17.bin"
 glabel ASSET_PARTICLES_18
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_18.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_18.bin"
 glabel ASSET_PARTICLES_19
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_19.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_19.bin"
 glabel ASSET_PARTICLES_20
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_20.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_20.bin"
 glabel ASSET_PARTICLES_21
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_21.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_21.bin"
 glabel ASSET_PARTICLES_22
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_22.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_22.bin"
 glabel ASSET_PARTICLES_23
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_23.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_23.bin"
 glabel ASSET_PARTICLES_24
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_24.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_24.bin"
 glabel ASSET_PARTICLES_25
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_25.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_25.bin"
 glabel ASSET_PARTICLES_26
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_26.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_26.bin"
 glabel ASSET_PARTICLES_27
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_27.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_27.bin"
 glabel ASSET_PARTICLES_28
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_28.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_28.bin"
 glabel ASSET_PARTICLES_29
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_29.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_29.bin"
 glabel ASSET_PARTICLES_30
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_30.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_30.bin"
 glabel ASSET_PARTICLES_31
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_31.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_31.bin"
 glabel ASSET_PARTICLES_32
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_32.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_32.bin"
 glabel ASSET_PARTICLES_33
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_33.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_33.bin"
 glabel ASSET_PARTICLES_34
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_34.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_34.bin"
 glabel ASSET_PARTICLES_35
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_35.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_35.bin"
 glabel ASSET_PARTICLES_36
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_36.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_36.bin"
 glabel ASSET_PARTICLES_37
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_37.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_37.bin"
 glabel ASSET_PARTICLES_38
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_38.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_38.bin"
 glabel ASSET_PARTICLES_39
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_39.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_39.bin"
 glabel ASSET_PARTICLES_40
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_40.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_40.bin"
 glabel ASSET_PARTICLES_41
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_41.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_41.bin"
 glabel ASSET_PARTICLES_42
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_42.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_42.bin"
 glabel ASSET_PARTICLES_43
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_43.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_43.bin"
 glabel ASSET_PARTICLES_44
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_44.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_44.bin"
 glabel ASSET_PARTICLES_45
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_45.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_45.bin"
 glabel ASSET_PARTICLES_46
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_46.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_46.bin"
 glabel ASSET_PARTICLES_47
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_47.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_47.bin"
 glabel ASSET_PARTICLES_48
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_48.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_48.bin"
 glabel ASSET_PARTICLES_49
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_49.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_49.bin"
 glabel ASSET_PARTICLES_50
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_50.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_50.bin"
 glabel ASSET_PARTICLES_51
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_51.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_51.bin"
 glabel ASSET_PARTICLES_52
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_52.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_52.bin"
 glabel ASSET_PARTICLES_53
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_53.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_53.bin"
 glabel ASSET_PARTICLES_54
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_54.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_54.bin"
 glabel ASSET_PARTICLES_55
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_55.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_55.bin"
 glabel ASSET_PARTICLES_56
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_56.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_56.bin"
 glabel ASSET_PARTICLES_57
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_57.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_57.bin"
 glabel ASSET_PARTICLES_58
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_58.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_58.bin"
 glabel ASSET_PARTICLES_59
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_59.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_59.bin"
 glabel ASSET_PARTICLES_60
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_60.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_60.bin"
 glabel ASSET_PARTICLES_61
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_61.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_61.bin"
 glabel ASSET_PARTICLES_62
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_62.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_62.bin"
 glabel ASSET_PARTICLES_63
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_63.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_63.bin"
 glabel ASSET_PARTICLES_64
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_64.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_64.bin"
 glabel ASSET_PARTICLES_65
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_65.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_65.bin"
 glabel ASSET_PARTICLES_66
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_66.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_66.bin"
 glabel ASSET_PARTICLES_67
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_67.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_67.bin"
 glabel ASSET_PARTICLES_68
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_68.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_68.bin"
 glabel ASSET_PARTICLES_69
-.incbin "./build/us_1.0/assets/particles/particles/unknown_41_69.bin"
+.incbin "./build/us_1.0/assets/particles/particles/asset_particles_69.bin"
 glabel ASSET_PARTICLES_END
 
 /********** ASSET_PARTICLE_BEHAVIORS_TABLE **********/
@@ -13645,161 +13664,162 @@ glabel ASSET_PARTICLE_BEHAVIORS_TABLE
 .word ASSET_PARTICLE_BEHAVIORS_74 - ASSET_PARTICLE_BEHAVIORS
 .word ASSET_PARTICLE_BEHAVIORS_END - ASSET_PARTICLE_BEHAVIORS
 .word 0xFFFFFFFF
+glabel ASSET_PARTICLE_BEHAVIORS_TABLE_END
 
 /********** ASSET_PARTICLE_BEHAVIORS **********/
 
 .balign 16
 glabel ASSET_PARTICLE_BEHAVIORS
 glabel ASSET_PARTICLE_BEHAVIORS_0
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_0.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_0.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_1
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_1.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_1.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_2
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_2.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_2.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_3
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_3.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_3.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_4
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_4.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_4.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_5
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_5.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_5.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_6
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_6.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_6.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_7
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_7.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_7.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_8
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_8.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_8.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_9
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_9.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_9.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_10
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_10.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_10.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_11
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_11.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_11.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_12
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_12.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_12.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_13
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_13.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_13.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_14
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_14.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_14.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_15
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_15.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_15.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_16
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_16.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_16.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_17
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_17.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_17.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_18
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_18.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_18.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_19
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_19.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_19.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_20
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_20.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_20.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_21
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_21.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_21.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_22
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_22.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_22.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_23
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_23.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_23.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_24
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_24.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_24.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_25
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_25.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_25.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_26
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_26.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_26.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_27
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_27.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_27.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_28
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_28.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_28.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_29
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_29.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_29.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_30
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_30.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_30.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_31
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_31.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_31.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_32
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_32.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_32.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_33
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_33.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_33.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_34
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_34.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_34.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_35
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_35.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_35.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_36
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_36.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_36.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_37
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_37.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_37.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_38
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_38.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_38.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_39
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_39.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_39.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_40
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_40.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_40.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_41
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_41.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_41.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_42
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_42.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_42.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_43
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_43.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_43.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_44
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_44.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_44.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_45
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_45.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_45.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_46
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_46.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_46.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_47
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_47.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_47.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_48
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_48.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_48.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_49
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_49.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_49.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_50
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_50.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_50.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_51
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_51.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_51.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_52
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_52.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_52.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_53
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_53.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_53.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_54
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_54.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_54.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_55
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_55.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_55.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_56
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_56.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_56.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_57
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_57.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_57.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_58
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_58.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_58.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_59
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_59.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_59.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_60
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_60.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_60.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_61
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_61.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_61.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_62
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_62.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_62.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_63
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_63.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_63.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_64
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_64.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_64.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_65
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_65.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_65.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_66
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_66.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_66.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_67
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_67.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_67.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_68
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_68.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_68.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_69
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_69.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_69.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_70
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_70.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_70.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_71
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_71.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_71.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_72
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_72.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_72.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_73
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_73.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_73.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_74
-.incbin "./build/us_1.0/assets/particles/behaviors/unknown_43_74.bin"
+.incbin "./build/us_1.0/assets/particles/behaviors/asset_particle_behaviors_74.bin"
 glabel ASSET_PARTICLE_BEHAVIORS_END
 
 /********** ASSET_FONTS **********/
@@ -13813,37 +13833,37 @@ glabel ASSET_FONTS_END
 
 .balign 16
 glabel ASSET_BINARY_45
-.incbin "./build/us_1.0/assets/fonts/unknown_45.bin"
+.incbin "./build/us_1.0/assets/fonts/asset_binary_45.bin"
 glabel ASSET_BINARY_45_END
 
 /********** ASSET_BINARY_46 **********/
 
 .balign 16
 glabel ASSET_BINARY_46
-.incbin "./build/us_1.0/assets/fonts/unknown_46.bin"
+.incbin "./build/us_1.0/assets/fonts/asset_binary_46.bin"
 glabel ASSET_BINARY_46_END
 
 /********** ASSET_BINARY_47 **********/
 
 .balign 16
 glabel ASSET_BINARY_47
-.incbin "./build/us_1.0/assets/ids/unknown_47.bin"
+.incbin "./build/us_1.0/assets/ids/asset_binary_47.bin"
 glabel ASSET_BINARY_47_END
 
 /********** ASSET_TTGHOSTS_TABLE **********/
 
 .balign 16
 glabel ASSET_TTGHOSTS_TABLE
-.word 0x3000000, ASSET_TTGHOSTS_FOSSILCANYON - ASSET_TTGHOSTS
-.word 0x4010000, ASSET_TTGHOSTS_PIRATELAGOON - ASSET_TTGHOSTS
-.word 0x5000000, ASSET_TTGHOSTS_ANCIENTLAKE - ASSET_TTGHOSTS
-.word 0x6000000, ASSET_TTGHOSTS_WALRUSCOVE - ASSET_TTGHOSTS
-.word 0x7020000, ASSET_TTGHOSTS_HOTTOPVOLCANO - ASSET_TTGHOSTS
-.word 0x8010000, ASSET_TTGHOSTS_WHALEBAY - ASSET_TTGHOSTS
-.word 0x9000000, ASSET_TTGHOSTS_SNOWBALLVALLEY - ASSET_TTGHOSTS
-.word 0xA000000, ASSET_TTGHOSTS_CRESCENTISLAND - ASSET_TTGHOSTS
-.word 0xD020000, ASSET_TTGHOSTS_EVERFROSTPEAK - ASSET_TTGHOSTS
-.word 0xF020000, ASSET_TTGHOSTS_SPACEPORTALPHA - ASSET_TTGHOSTS
+.word 0x03000000, ASSET_TTGHOSTS_FOSSILCANYON - ASSET_TTGHOSTS
+.word 0x04010000, ASSET_TTGHOSTS_PIRATELAGOON - ASSET_TTGHOSTS
+.word 0x05000000, ASSET_TTGHOSTS_ANCIENTLAKE - ASSET_TTGHOSTS
+.word 0x06000000, ASSET_TTGHOSTS_WALRUSCOVE - ASSET_TTGHOSTS
+.word 0x07020000, ASSET_TTGHOSTS_HOTTOPVOLCANO - ASSET_TTGHOSTS
+.word 0x08010000, ASSET_TTGHOSTS_WHALEBAY - ASSET_TTGHOSTS
+.word 0x09000000, ASSET_TTGHOSTS_SNOWBALLVALLEY - ASSET_TTGHOSTS
+.word 0x0A000000, ASSET_TTGHOSTS_CRESCENTISLAND - ASSET_TTGHOSTS
+.word 0x0D020000, ASSET_TTGHOSTS_EVERFROSTPEAK - ASSET_TTGHOSTS
+.word 0x0F020000, ASSET_TTGHOSTS_SPACEPORTALPHA - ASSET_TTGHOSTS
 .word 0x11020000, ASSET_TTGHOSTS_SPACEDUSTALLEY - ASSET_TTGHOSTS
 .word 0x12000000, ASSET_TTGHOSTS_GREENWOODVILLAGE - ASSET_TTGHOSTS
 .word 0x13010000, ASSET_TTGHOSTS_BOULDERCANYON - ASSET_TTGHOSTS
@@ -13856,6 +13876,7 @@ glabel ASSET_TTGHOSTS_TABLE
 .word 0x21000000, ASSET_TTGHOSTS_STARCITY - ASSET_TTGHOSTS
 .word 0xFFFF0000, ASSET_TTGHOSTS_END - ASSET_TTGHOSTS
 .word 0xFFFF0000, 0xFFFFFFFF
+glabel ASSET_TTGHOSTS_TABLE_END
 
 /********** ASSET_TTGHOSTS **********/
 

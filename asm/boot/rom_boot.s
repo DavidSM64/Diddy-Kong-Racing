@@ -1,1 +1,1 @@
-.incbin "./assets/us_1.0/bin/boot.bin"
+.incbin "asm/boot/boot.bin"

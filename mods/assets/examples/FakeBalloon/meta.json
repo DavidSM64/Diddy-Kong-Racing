@@ -1,0 +1,5 @@
+{
+    "name": "Fake Missle Balloon",
+    "authors" : ["Example"],
+    "description": "Creates the new object type 'ASSET_OBJECT_FAKEBALLOON' and replaces the red missile balloons in the ancient lake object map. "
+}

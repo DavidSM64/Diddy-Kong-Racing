@@ -681,7 +681,7 @@ ObjectHeader *load_object_header(s32 index) {
     size = gAssetsObjectHeadersTable[index + 1] - assetOffset;
     address = allocate_from_pool_containing_slots((MemoryPoolSlot *) gObjectMemoryPool, size);
     if (address != NULL) {
-        load_asset_to_address(ASSET_OBJECT_HEADERS, (u32) address, assetOffset, size);
+        load_asset_to_address(ASSET_OBJECTS, (u32) address, assetOffset, size);
         address->unk24 = (ObjectHeader24 *) ((uintptr_t) address + (uintptr_t) address->unk24);
         address->objectParticles =
             (ObjHeaderParticleEntry *) ((uintptr_t) address + (uintptr_t) address->objectParticles);

@@ -20,8 +20,9 @@ As of January 26, 2024, this is our current score:
 * `make`, Version 4.2 or higher
 * `python3`
 * `wget`
+* `libpcre2-dev` and `libpcre2-8-0` (Not technically required, but will speedup extracting/building some assets.)
 
-`sudo apt install build-essential pkg-config git python3 wget`
+`sudo apt install build-essential pkg-config git python3 wget libpcre2-dev libpcre2-8-0`
 
 ### binutils
 
@@ -32,7 +33,7 @@ You are not required to install a binutils package, but it does speed up the ini
 ## Setup / Building
 1. Install the dependencies
 2. Place the ROM file within the `baseroms` directory.  
-    **a.** The name of the ROM file does not matter, but it must end with one of these extensions: `.z64`, `.v64`, `.n64`, or `.rom`. It will be detected automatically from an md5 checksum.  
+    **a.** The name of the ROM file does not matter. It will be detected automatically from an md5 checksum.  
     **b.** If you use a byte-swapped or little-endian ROM, then it will automatically be converted to a big-endian (.z64) ROM file.  
 3. Run `make` in the main directory.  
     **a.** Use the `-jN` argument to use `N` number of threads to speed up building. For example, if you have a system with 4 cores / 4 threads, you should do `make -j4`.

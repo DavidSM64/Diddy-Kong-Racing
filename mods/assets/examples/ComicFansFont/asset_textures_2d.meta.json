@@ -1,0 +1,12 @@
+{
+    "files": {
+        "order": [
+            "ASSET_TEX2D_COMICFANS"
+        ],
+        "sections": {
+            "ASSET_TEX2D_COMICFANS": {
+                "filename": "font/comicfans/comicfans.json"
+            }
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "compressed": true,
+    "flags": {
+        "wrap-s": "CLAMP",
+        "wrap-t": "CLAMP"
+    },
+    "format": "IA4",
+    "images": [
+        "comicfans.png"
+    ],
+    "render-mode": "OPAQUE",
+    "type": "Texture",
+    "write-size": true
+}

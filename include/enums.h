@@ -17,6 +17,20 @@ typedef enum SpecialMapId {
     SPECIAL_MAP_ID_NO_LEVEL = -1,
 } SpecialMapId;
 
+typedef enum Character {
+    CHARACTER_KRUNCH,
+    CHARACTER_BUMPER,
+    CHARACTER_TIPTUP,
+    CHARACTER_CONKER,
+    CHARACTER_TIMBER,
+    CHARACTER_BANJO,
+    CHARACTER_DRUMSTICK,
+    CHARACTER_PIPSY,
+    CHARACTER_TT,
+    CHARACTER_DIDDY,
+    NUMBER_OF_CHARACTERS
+} Character;
+
 typedef enum Vehicle {
     VEHICLE_CAR,
     VEHICLE_HOVERCRAFT,
@@ -32,7 +46,8 @@ typedef enum Vehicle {
     VEHICLE_BUBBLER,
     VEHICLE_WIZPIG,
     VEHICLE_ROCKET,
-
+    
+    VEHICLE_NO_OVERRIDE = -1, // Only used in Object Maps for the setup point.
     NUMBER_OF_VEHICLE_TYPES,
     NUMBER_OF_PLAYER_VEHICLES = 3
 } Vehicle;
@@ -72,11 +87,33 @@ typedef enum RaceType {
     RACETYPE_CUTSCENE_1        =  6, // Not sure what the difference between these two are.
     RACETYPE_CUTSCENE_2        =  7,
     RACETYPE_BOSS              =  8,
-    RACETYPE_CHALLENGE         = 64, // For masking
     RACETYPE_CHALLENGE_BATTLE  = 64,
     RACETYPE_CHALLENGE_BANANAS = 65,
-    RACETYPE_CHALLENGE_EGGS    = 66
+    RACETYPE_CHALLENGE_EGGS    = 66,
+    RACETYPE_CHALLENGE         = 0x40 // For masking
 } RaceType;
+
+typedef enum ObjectModelType {
+    OBJECT_MODEL_TYPE_3D_MODEL,
+    OBJECT_MODEL_TYPE_SPRITE_BILLBOARD,
+    OBJECT_MODEL_TYPE_VEHICLE_PART,
+    OBJECT_MODEL_TYPE_UNKNOWN3,
+    OBJECT_MODEL_TYPE_MISC
+} ObjectModelType;
+
+typedef enum WarpFlag {
+    WARP_FLAG_NORMAL = -1, // Not a boss warp
+    WARP_FLAG_BOSS_1,
+    WARP_FLAG_BOSS_2
+} WarpFlag;
+
+typedef enum BalloonType {
+    BALLOON_TYPE_BOOST,
+    BALLOON_TYPE_MISSILE,
+    BALLOON_TYPE_TRAP,
+    BALLOON_TYPE_SHIELD,
+    BALLOON_TYPE_MAGNET
+} BalloonType;
 
 typedef enum HorizontalAlignmentFlags {
     HORZ_ALIGN_LEFT   = 0,

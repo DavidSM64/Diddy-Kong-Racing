@@ -1,0 +1,5 @@
+{
+    "name": "Remove Unused Assets",
+    "authors" : ["Example"],
+    "description": "A simple example of how to remove assets by setting the section filename to null."
+}

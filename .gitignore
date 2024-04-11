@@ -6,10 +6,12 @@ nonmatchings/*
 __pycache__
 
 # Automatically generated folders should be ignored
+tools/dkr_assets_tool_src/_build/
 build/
 assets/
 ucode/
 !asm/assets/
+!mods/*
 
 # Linker file is automatically generated, so it should be ignored
 dkr.ld

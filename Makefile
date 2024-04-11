@@ -12,16 +12,6 @@ VERSION := us_1.0
 NON_MATCHING ?= 0
 $(eval $(call validate-option,NON_MATCHING,0 1))
 
-COMPILE_ASSETS ?= 0
-$(eval $(call validate-option,COMPILE_ASSETS,0 1))
-
-ifeq ($(COMPILE_ASSETS),1)
-  DUMMY != ./tools/dkr_assets_tool -c $(VERSION) ./assets >&2 || echo FAIL
-  ifeq ($(DUMMY),FAIL)
-    $(error Failed to compile assets)
-  endif
-endif
-
 ifeq ($(VERSION),us_1.0)
   DEFINES += VERSION_US_1_0=1
   DEFINES += F3DDKR_GBI=1
@@ -99,6 +89,10 @@ endif
 ######## Extract Assets & Microcode ########
 
 DUMMY != python3 ./tools/python/check_if_need_to_extract.py $(VERSION) >&2 || echo FAIL
+
+######## Prebuild step (Compile assets, generate linker file, etc.) ########
+
+DUMMY != ./tools/dkr_assets_tool -dkrv $(VERSION) prebuild >&2 || echo FAIL
 
 ################################
 
@@ -181,8 +175,7 @@ LOADER_FLAGS = -vwf
 
 N64CRC = $(TOOLS_DIR)/n64crc
 FIXCHECKSUMS = python3 $(TOOLS_DIR)/python/calc_func_checksums.py $(VERSION)
-COMPRESS = $(TOOLS_DIR)/dkr_assets_tool -fc
-BUILDER = $(TOOLS_DIR)/dkr_assets_tool -b $(VERSION) ./assets
+BUILDER = $(TOOLS_DIR)/dkr_assets_tool  -dkrv $(VERSION) build
 
 LIB_DIRS := lib
 ASM_DIRS := asm asm/boot asm/assets lib/asm lib/asm/non_decompilable
@@ -229,13 +222,12 @@ JSON_FILES := $(shell find $(ASSETS) -type f -name '*.json')
 IGNORE_JSON_FILES := $(shell find $(ASSETS) -type f -name '*.meta.json')
 JSON_FILES := $(filter-out $(IGNORE_JSON_FILES),$(JSON_FILES))
 # Add .cbin files
-CBIN_FILES := $(shell find $(ASSETS) -type f -name '*.cbin')
+#CBIN_FILES := $(shell find $(ASSETS) -type f -name '*.cbin')
 # Add .bin files
-BIN_FILES := $(shell find $(ASSETS) -type f -name '*.bin')
-ALL_FILES := $(CBIN_FILES) $(BIN_FILES) $(JSON_FILES)
+#BIN_FILES := $(shell find $(ASSETS) -type f -name '*.bin')
+ALL_FILES := $(JSON_FILES)
 
 ALL_FILES_OUT := $(foreach FILE,ALL_FILES,$($(FILE):$(ASSETS)%=$(ASSETS_BUILD_DIR)%))
-ALL_FILES_OUT := $(foreach FILE,ALL_FILES_OUT,$($(FILE):$.cbin%=$.bin%))
 ALL_FILES_OUT := $(foreach FILE,ALL_FILES_OUT,$($(FILE):$.json%=$.bin%))
 
 DIRECTORY = $(sort $(dir $(ALL_FILES_OUT))) $(addprefix $(BUILD_DIR)/,$(LIB_DIRS) $(ASM_DIRS) $(SRC_DIRS) ucode)
@@ -251,21 +243,9 @@ $(eval ALL_ASSETS_BUILT+=$(BASE_PATH).bin)
 endef
 
 # $1 = Print message
-define BIN_FILE_ACTION
-	$$(call print,$1:,$$<,$$@)
-	$$(V)$$(ASSETS_COPY) $$^ $$@
-endef
-
-# $1 = Print message
-define CBIN_FILE_ACTION
-	$$(call print,$1:,$$<,$$@)
-	$$(V)$$(COMPRESS) $$^ $$@
-endef
-
-# $1 = Print message
 define JSON_FILE_ACTION
 	$$(call print,$1:,$$<,$$@)
-	$$(V)$$(BUILDER) $$< $$@
+	$$(V)$$(BUILDER) -i $$< -o $$@
 endef
 
 # Microcode
@@ -361,18 +341,6 @@ dont_remove_asset_files: $(ALL_ASSETS_BUILT)
 
 ######## Asset Targets ########
 
-$(BUILD_DIR)/enumsCache.bin: include/enums.h
-	$(call print,Building enums.h cache:,$<,$@)
-	$(V)$(TOOLS_DIR)/dkr_assets_tool -bc $(VERSION) $<
-
-dkr.ld: $(BUILD_DIR)/enumsCache.bin
-	@$(PRINT) "$(YELLOW)Generating Linker File...$(NO_COL)\n"
-	$(V)./generate_ld.sh $(VERSION)
-
-ALL_ASSETS_BUILT += dkr.ld # This is a hack, but it works I guess.
-
-$(foreach FILE,$(BIN_FILES),$(eval $(call DEFINE_ASSET_TARGET,$(FILE),$(call BIN_FILE_ACTION,Copying))))
-$(foreach FILE,$(CBIN_FILES),$(eval $(call DEFINE_ASSET_TARGET,$(FILE),$(call CBIN_FILE_ACTION,Compressing))))
 $(foreach FILE,$(JSON_FILES),$(eval $(call DEFINE_ASSET_TARGET,$(FILE),$(call JSON_FILE_ACTION,Building))))
 
 # Microcode target

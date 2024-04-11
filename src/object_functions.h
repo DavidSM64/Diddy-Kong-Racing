@@ -346,7 +346,7 @@ void obj_init_wavegenerator(Object *obj, LevelObjectEntry_WaveGenerator *entry, 
 void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry);
 void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry);
 void obj_loop_bubbler(Object *obj, s32 updateRate);
-void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry);
+void obj_init_boost(Object *obj, LevelObjectEntry_Boost2 *entry);
 void obj_init_unknown94(Object *obj, LevelObjectEntry_Unknown94 *entry, s32 arg2);
 void obj_loop_unknown94(Object *obj, s32 updateRate);
 void obj_init_rangetrigger(Object *obj, LevelObjectEntry_RangeTrigger *entry);

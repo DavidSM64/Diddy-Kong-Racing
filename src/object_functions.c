@@ -5668,7 +5668,7 @@ void obj_loop_bubbler(Object *obj, s32 updateRate) {
     }
 }
 
-void obj_init_boost(Object *obj, LevelObjectEntry_Boost *entry) {
+void obj_init_boost(Object *obj, LevelObjectEntry_Boost2 *entry) {
     obj->unk64 = (Object_64 *) ((s32) get_misc_asset(ASSET_MISC_20) + (entry->unk8[0] << 7));
     obj->segment.level_entry = NULL;
 }
