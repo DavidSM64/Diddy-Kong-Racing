@@ -1,5 +1,8 @@
 #pragma once
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 #include <unordered_set>
 #include <set>
 
@@ -163,3 +166,5 @@ namespace stde
 		std::unordered_set<_KeyType>,
 		std::unordered_set<_ValueType>>;
 }
+
+#pragma GCC diagnostic pop
