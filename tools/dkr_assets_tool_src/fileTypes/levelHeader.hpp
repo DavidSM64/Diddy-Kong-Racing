@@ -70,7 +70,7 @@ struct LevelHeader {
     uint8_t unk5D;
     be_int16_t unk5E;
     be_int16_t unk60;
-    be_int16_t unk62;
+    be_int16_t wavePower;
     be_int16_t unk64;
     be_int16_t unk66;
     be_int16_t unk68;

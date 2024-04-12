@@ -430,8 +430,8 @@ typedef struct LevelHeader {
   /* 0x5D */ u8 unk5D;
   /* 0x5E */ s16 unk5E;
   /* 0x60 */ s16 unk60;
-  /* 0x62 */ s16 unk62;
-  /* 0x64 */ s16 unk64;
+  /* 0x62 */ s16 wavePower;
+  /* 0x64 */ s16 unk64; // Some form of secondary power
   /* 0x66 */ s16 unk66;
   /* 0x68 */ s16 unk68;
   /* 0x6A */ u8 unk6A;

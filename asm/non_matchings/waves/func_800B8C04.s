@@ -18,7 +18,7 @@ glabel func_800B8C04
 /* 0B9844 800B8C44 00808025 */  move  $s0, $a0
 /* 0B9848 800B8C48 AFB60030 */  sw    $s6, 0x30($sp)
 /* 0B984C 800B8C4C AFA7005C */  sw    $a3, 0x5c($sp)
-/* 0B9850 800B8C50 3C048013 */  lui   $a0, %hi(D_8012A720) # $a0, 0x8013
+/* 0B9850 800B8C50 3C048013 */  lui   $a0, %hi(gWavePowerBase) # $a0, 0x8013
 /* 0B9854 800B8C54 2419FFFF */  li    $t9, -1
 /* 0B9858 800B8C58 3C038013 */  lui   $v1, %hi(D_8012A600) # $v1, 0x8013
 /* 0B985C 800B8C5C AFBF003C */  sw    $ra, 0x3c($sp)
@@ -41,7 +41,7 @@ glabel func_800B8C04
 .L800B8C9C:
 /* 0B989C 800B8C9C 00002812 */  mflo  $a1
 /* 0B98A0 800B8CA0 2463A600 */  addiu $v1, %lo(D_8012A600) # addiu $v1, $v1, -0x5a00
-/* 0B98A4 800B8CA4 2484A720 */  addiu $a0, %lo(D_8012A720) # addiu $a0, $a0, -0x58e0
+/* 0B98A4 800B8CA4 2484A720 */  addiu $a0, %lo(gWavePowerBase) # addiu $a0, $a0, -0x58e0
 /* 0B98A8 800B8CA8 01E9001A */  div   $zero, $t7, $t1
 /* 0B98AC 800B8CAC 15200002 */  bnez  $t1, .L800B8CB8
 /* 0B98B0 800B8CB0 00000000 */   nop   

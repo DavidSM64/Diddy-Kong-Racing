@@ -5373,7 +5373,7 @@ void obj_init_buoy_pirateship(Object *obj, UNUSED LevelObjectEntry_Buoy_PirateSh
  */
 void obj_loop_buoy_pirateship(Object *obj, s32 updateRate) {
     if (obj->unk64 != NULL) {
-        obj->segment.trans.y_position = get_wave_height((Object_Log *) obj->unk64, updateRate);
+        obj->segment.trans.y_position = log_wave_height((Object_Log *) obj->unk64, updateRate);
     }
     obj->segment.animFrame += updateRate * 8;
 }
@@ -5414,7 +5414,7 @@ void obj_loop_log(Object *obj, s32 updateRate) {
 
     log = (Object_Log *) obj->unk64;
     if (log != NULL) {
-        obj->segment.trans.y_position = get_wave_height(log, updateRate);
+        obj->segment.trans.y_position = log_wave_height(log, updateRate);
     } else {
         obj->segment.trans.y_position = ((LevelObjectEntryCommon *) obj->segment.level_entry)->y;
     }

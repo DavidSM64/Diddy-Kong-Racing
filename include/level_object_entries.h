@@ -723,8 +723,8 @@ typedef struct LevelObjectEntry800BF524 {
 typedef struct LevelObjectEntry_WavePower {
     LevelObjectEntryCommon common;
     u16 radius;
-    u16 unkA;
-    u16 unkC;
+    u16 power;
+    u16 divisor;
 } LevelObjectEntry_WavePower;
 
 typedef struct LevelObjectEntry_CharacterSelect {

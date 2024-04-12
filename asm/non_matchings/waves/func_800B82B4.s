@@ -589,8 +589,8 @@ glabel func_800B82B4
 .L800B8B34:
 /* B9734 800B8B34 3C01800E */  lui        $at, %hi(D_800E3188)
 /* B9738 800B8B38 AC203188 */  sw         $zero, %lo(D_800E3188)($at)
-/* B973C 800B8B3C 3C018013 */  lui        $at, %hi(D_8012A728)
-/* B9740 800B8B40 AC20A728 */  sw         $zero, %lo(D_8012A728)($at)
+/* B973C 800B8B3C 3C018013 */  lui        $at, %hi(gWavePowerDivisor)
+/* B9740 800B8B40 AC20A728 */  sw         $zero, %lo(gWavePowerDivisor)($at)
 /* B9744 800B8B44 3C01800E */  lui        $at, %hi(gWaveGeneratorObj)
 /* B9748 800B8B48 8FBF0044 */  lw         $ra, 0x44($sp)
 /* B974C 800B8B4C AC203198 */  sw         $zero, %lo(gWaveGeneratorObj)($at)
