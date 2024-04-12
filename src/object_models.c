@@ -211,9 +211,9 @@ Object_68 *func_8005FCD0(ObjectModel *model, s32 arg1) {
         result->unk4[2] = NULL;
         result->unk1E = 0;
     }
-    result->unk16 = 0;
-    result->unk18 = 0;
-    result->unk1A = 0;
+    result->offsetX = 0;
+    result->offsetY = 0;
+    result->offsetZ = 0;
     result->objModel = model;
     result->animationID = -1;
     result->animationFrame = -1;

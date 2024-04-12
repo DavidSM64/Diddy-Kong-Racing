@@ -1375,17 +1375,17 @@ void camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f
 void apply_head_turning_matrix(Gfx **dlist, MatrixS **mtx, Object_68 *objGfx, s16 headAngle) {
     f32 coss_headAngle;
     f32 sins_headAngle;
-    f32 f_unk16;
-    f32 f_unk18;
-    f32 f_unk1A;
+    f32 offsetX;
+    f32 offsetY;
+    f32 offsetZ;
     f32 coss_unk1C;
     f32 sins_unk1C;
     Matrix rotationMtxF;
     Matrix headMtxF;
 
-    f_unk16 = (f32) objGfx->unk16;
-    f_unk18 = (f32) objGfx->unk18;
-    f_unk1A = (f32) objGfx->unk1A;
+    offsetX = (f32) objGfx->offsetX;
+    offsetY = (f32) objGfx->offsetY;
+    offsetZ = (f32) objGfx->offsetZ;
     coss_unk1C = coss_f(objGfx->unk1C);
     sins_unk1C = sins_f(objGfx->unk1C);
     coss_headAngle = coss_f(headAngle);
@@ -1402,11 +1402,11 @@ void apply_head_turning_matrix(Gfx **dlist, MatrixS **mtx, Object_68 *objGfx, s1
     headMtxF[2][1] = (sins_headAngle * sins_unk1C);
     headMtxF[2][2] = coss_headAngle;
     headMtxF[2][3] = 0.0f;
-    headMtxF[3][0] = (-f_unk16 * (coss_headAngle * coss_unk1C)) + (-f_unk18 * -sins_unk1C) +
-                     (-f_unk1A * (sins_headAngle * coss_unk1C)) + f_unk16;
-    headMtxF[3][1] = (-f_unk16 * (coss_headAngle * sins_unk1C)) + (-f_unk18 * coss_unk1C) +
-                     (-f_unk1A * (sins_headAngle * sins_unk1C)) + f_unk18;
-    headMtxF[3][2] = (-f_unk16 * -sins_headAngle) + (-f_unk1A * coss_headAngle) + f_unk1A;
+    headMtxF[3][0] = (-offsetX * (coss_headAngle * coss_unk1C)) + (-offsetY * -sins_unk1C) +
+                     (-offsetZ * (sins_headAngle * coss_unk1C)) + offsetX;
+    headMtxF[3][1] = (-offsetX * (coss_headAngle * sins_unk1C)) + (-offsetY * coss_unk1C) +
+                     (-offsetZ * (sins_headAngle * sins_unk1C)) + offsetY;
+    headMtxF[3][2] = (-offsetX * -sins_headAngle) + (-offsetZ * coss_headAngle) + offsetZ;
     headMtxF[3][3] = 1.0f;
     f32_matrix_mult(&headMtxF, &gCurrentModelMatrixS, &rotationMtxF);
     f32_matrix_to_s16_matrix(&rotationMtxF, *mtx);

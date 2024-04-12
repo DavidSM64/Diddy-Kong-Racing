@@ -1686,9 +1686,9 @@ typedef struct Object_68 {
   /* 0x10 */ s16 animationID;
   /* 0x12 */ s16 animationFrame;
   /* 0x14 */ s16 animationFrameCount;
-  /* 0x16 */ s16 unk16;
-  /* 0x18 */ s16 unk18;
-  /* 0x1A */ s16 unk1A;
+  /* 0x16 */ s16 offsetX;
+  /* 0x18 */ s16 offsetY;
+  /* 0x1A */ s16 offsetZ;
   /* 0x1C */ s16 unk1C;
   /* 0x1E */ s8 unk1E;
   /* 0x1F */ s8 animationTaskNum;
