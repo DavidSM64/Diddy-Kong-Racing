@@ -802,7 +802,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
             racer->brake = 1.2f;
         }
         if (racer->velocity < (-2.0)) {
-            rumble_set(racer->playerIndex, 5);
+            rumble_set(racer->playerIndex, RUMBLE_TYPE_5);
         }
     } else {
         racer->brake -= updateRateF * 0.046;
@@ -850,7 +850,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
                 racer->boostType |= BOOST_SMALL_FAST;
             }
             racer->zipperDirCorrection = 0;
-            rumble_set(racer->playerIndex, 8);
+            rumble_set(racer->playerIndex, RUMBLE_TYPE_8);
         } else {
             obj->segment.x_velocity = (obj->segment.x_velocity * 1.0) * 0.75f;
             obj->segment.y_velocity = (obj->segment.y_velocity * 1.0) * 0.75f;
@@ -1057,7 +1057,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
         racer_play_sound(obj, SOUND_ZIP_PAD_BOOST);
         play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, SOUND_NUMBER_OF_RACERS, (0x80 | 0x2));
-        rumble_set(racer->playerIndex, 8);
+        rumble_set(racer->playerIndex, RUMBLE_TYPE_8);
     }
     temp_f0 = sqrtf((obj->segment.z_velocity * obj->segment.z_velocity) +
                     (obj->segment.x_velocity * obj->segment.x_velocity));
@@ -2905,7 +2905,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     // If currently braking, do something idk
     if (racer->brake > 0.4) {
         if (racer->velocity < -2.0 && racer->raceFinished == FALSE) {
-            rumble_set(racer->playerIndex, 1);
+            rumble_set(racer->playerIndex, RUMBLE_TYPE_1);
         }
         sp60 = TRUE;
         if (gCurrentPlayerIndex >= PLAYER_ONE) {
@@ -3012,7 +3012,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
           racer->drifting == 0 && racer->unk1FB == 0)) {
         sp60 = 1;
         if (racer->unk1FB != 0 && racer->raceFinished == FALSE) {
-            rumble_set(racer->playerIndex, 0);
+            rumble_set(racer->playerIndex, RUMBLE_TYPE_0);
         }
         if (racer->y_rotation_vel < 0) {
             obj->unk74 |= 0x1000 | 0x400;
@@ -3126,7 +3126,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
     }
     // no clue :)
     if (surfaceType == SURFACE_SAND && racer->velocity < -2.0 && racer->raceFinished == FALSE) {
-        rumble_set(racer->playerIndex, 0);
+        rumble_set(racer->playerIndex, RUMBLE_TYPE_0);
     }
     miscAsset = (f32 *) get_misc_asset(ASSET_MISC_8);
     // Degrade lateral velocity
@@ -3171,7 +3171,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         racer_play_sound(obj, SOUND_ZIP_PAD_BOOST);
         play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 0x82);
         if (racer->raceFinished == FALSE) {
-            rumble_set(racer->playerIndex, 8);
+            rumble_set(racer->playerIndex, RUMBLE_TYPE_8);
         }
     }
     // Slow down gradually when not acellerating and almost at a standstill
@@ -3605,7 +3605,7 @@ void racer_spinout_car(Object *obj, Object_Racer *racer, s32 updateRate, f32 upd
     racer->velocity *= 0.97; //!@Delta: Reduces 3% of speed per frame, not accounting for game speed.
     racer->lateral_velocity = 0.0f;
     if (racer->raceFinished == FALSE) {
-        rumble_set(racer->playerIndex, 0);
+        rumble_set(racer->playerIndex, RUMBLE_TYPE_0);
     }
     angleVel = racer->y_rotation_vel;
     if (gCurrentPlayerIndex > PLAYER_COMPUTER) {
@@ -4537,10 +4537,10 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                         racer->balloon_quantity -= 1;
                         if (weaponID == WEAPON_NITRO_LEVEL_1) {
                             if (racer->raceFinished == FALSE) {
-                                rumble_set(racer->playerIndex, 6);
+                                rumble_set(racer->playerIndex, RUMBLE_TYPE_6);
                             }
                         } else if (racer->raceFinished == FALSE) {
-                            rumble_set(racer->playerIndex, 8);
+                            rumble_set(racer->playerIndex, RUMBLE_TYPE_8);
                         }
                         return;
                     case WEAPON_MAGNET_LEVEL_1:
@@ -4552,7 +4552,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                                 racer->magnetModelID = (weaponID - WEAPON_MAGNET_LEVEL_1) >> 1;
                             }
                             if (racer->raceFinished == FALSE) {
-                                rumble_set(racer->playerIndex, 15);
+                                rumble_set(racer->playerIndex, RUMBLE_TYPE_15);
                             }
                         }
                         return;
@@ -4567,7 +4567,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                                 magnetTarget->racer.magnetModelID = MAGNET_LEVEL3;
                             }
                             if (racer->raceFinished == FALSE) {
-                                rumble_set(racer->playerIndex, 15);
+                                rumble_set(racer->playerIndex, RUMBLE_TYPE_15);
                             }
                         }
                         return;
@@ -4862,7 +4862,7 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
         }
     }
     if (racer->boostTimer && !gRaceStartTimer && timer3 && racer->raceFinished == FALSE) {
-        rumble_set(racer->playerIndex, 6);
+        rumble_set(racer->playerIndex, RUMBLE_TYPE_6);
     }
     if (gRaceStartTimer < 80 && gCurrentButtonsPressed & A_BUTTON) {
         racer->startInput = 1;

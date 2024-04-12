@@ -1030,7 +1030,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
                         racer->boostType |= BOOST_SMALL_FAST;
                     }
                     if (racer->raceFinished == FALSE) {
-                        rumble_set(racer->playerIndex, 8);
+                        rumble_set(racer->playerIndex, RUMBLE_TYPE_8);
                     }
                 }
             }
@@ -1098,7 +1098,7 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
             flag = &obj->unk64->character_flag;
             racer = &racerObj->unk64->racer;
             obj->properties.characterFlag.characterID = racer->characterId;
-            if (obj->properties.characterFlag.characterID < 0 || obj->properties.characterFlag.characterID >= 10) {
+            if (obj->properties.characterFlag.characterID < 0 || obj->properties.characterFlag.characterID >= NUMBER_OF_CHARACTERS) {
                 obj->properties.characterFlag.characterID = 0;
             }
             flag->vertices = gCharacterFlagVertices;
@@ -1269,12 +1269,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             if (distance > 10.0) {
                 angleDiff =
                     (arctan2_f(diffX / distance, diffZ / distance) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
-                if (angleDiff > 0x8000) {
-                    angleDiff -= 0xFFFF;
-                }
-                if (angleDiff < -0x8000) {
-                    angleDiff += 0xFFFF;
-                }
+                WRAP(angleDiff, -0x8000, 0x8000);
                 if (angleDiff > 0) {
                     if (angleDiff < 0x10) {
                         angleDiff = 0x10;
@@ -1301,12 +1296,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             obj->segment.object.animationID = 0;
             tt->animFrameF += 3.0 * updateRateF;
             angleDiff = (racerObj->segment.trans.y_rotation - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
-            if (angleDiff > 0x8000) {
-                angleDiff -= 0xFFFF;
-            }
-            if (angleDiff < -0x8000) {
-                angleDiff += 0xFFFF;
-            }
+            WRAP(angleDiff, -0x8000, 0x8000);
             if (angleDiff > 0) {
                 if (angleDiff < 0x10) {
                     angleDiff = 0x10;
@@ -3210,7 +3200,7 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
                         }
                         if (modeChange->vehicleID == VEHICLE_LOOPDELOOP) {
                             if (racer->raceFinished == FALSE) {
-                                rumble_set(racer->playerIndex, 8);
+                                rumble_set(racer->playerIndex, RUMBLE_TYPE_8);
                             }
                             radius_3 =
                                 func_8001C524(racerObj->segment.trans.x_position, racerObj->segment.trans.y_position,
@@ -3623,7 +3613,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
             if (temp < -0x200) {
                 temp = -0x200;
             }
-            doorObj->segment.trans.y_rotation -= temp;
+            doorObj->segment.trans.y_rotation -= temp; //@!Delta
             if (temp != 0) {
                 temp2 = 1;
             }
@@ -4839,7 +4829,7 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
                     weaponOwner->boost_sound |= BOOST_SOUND_UNK2;
                 }
                 if (racer->raceFinished == FALSE) {
-                    rumble_set(racer->playerIndex, 9);
+                    rumble_set(racer->playerIndex, RUMBLE_TYPE_9);
                 }
             }
             obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position,
@@ -5214,7 +5204,7 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
                             weaponProperties->unk4 = 2;
                         }
                         if (!weaponHit->raceFinished) {
-                            rumble_set(weaponHit->playerIndex, 13);
+                            rumble_set(weaponHit->playerIndex, RUMBLE_TYPE_13);
                         }
                         weaponOwner = &weapon->owner->unk64->racer;
                         if (weaponHit->playerIndex != PLAYER_COMPUTER || weaponOwner->playerIndex != PLAYER_COMPUTER) {
@@ -5433,7 +5423,7 @@ void obj_loop_log(Object *obj, s32 updateRate) {
         if (racerObj->behaviorId == BHV_RACER) {
             racer = (Object_Racer *) racerObj->unk64;
             if (racer->velocity < -4.0 && racer->raceFinished == FALSE) {
-                rumble_set(racer->playerIndex, 18);
+                rumble_set(racer->playerIndex, RUMBLE_TYPE_18);
             }
         }
         sine = sins_f(-obj->segment.trans.y_rotation);

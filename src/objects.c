@@ -3810,7 +3810,7 @@ void func_80016500(Object *obj, Object_Racer *racer) {
         }
         if (racer->unk1F6 == 0 && angle >= 56) {
             if (!racer->raceFinished) {
-                rumble_set(racer->playerIndex, 18);
+                rumble_set(racer->playerIndex, RUMBLE_TYPE_18);
             }
             racer->unk1F3 |= 8;
         }
@@ -3894,7 +3894,7 @@ void func_80016748(Object *obj0, Object *obj1) {
                     if (obj0->behaviorId == BHV_RACER) {
                         racer = &obj0->unk64->racer;
                         if (!racer->raceFinished) {
-                            rumble_set(racer->playerIndex, 18);
+                            rumble_set(racer->playerIndex, RUMBLE_TYPE_18);
                         }
                         if (racer->vehicleID == VEHICLE_HOVERCRAFT) {
                             if (radius > 0.1) {

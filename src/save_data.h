@@ -55,6 +55,30 @@ typedef enum {
     SAVE_FILE_TYPE_UNKA //Game Pak Bonuses?
 } SaveFileType;
 
+enum RumbleTypes {
+    RUMBLE_TYPE_0,
+    RUMBLE_TYPE_1,
+    RUMBLE_TYPE_2,
+    RUMBLE_TYPE_3,
+    RUMBLE_TYPE_4,
+    RUMBLE_TYPE_5,
+    RUMBLE_TYPE_6,
+    RUMBLE_TYPE_7,
+    RUMBLE_TYPE_8,
+    RUMBLE_TYPE_9,
+    RUMBLE_TYPE_10,
+    RUMBLE_TYPE_11,
+    RUMBLE_TYPE_12,
+    RUMBLE_TYPE_13,
+    RUMBLE_TYPE_14,
+    RUMBLE_TYPE_15,
+    RUMBLE_TYPE_16,
+    RUMBLE_TYPE_17,
+    RUMBLE_TYPE_18,
+    RUMBLE_TYPE_19,
+    RUMBLE_TYPE_20,
+};
+
 extern s8 *D_800DE440;
 extern u8 gN64FontCodes[68];
 extern s32 gRumbleKillTimer;
@@ -62,7 +86,7 @@ extern OSPfs pfs[MAXCONTROLLERS];
 extern int	bcmp(const void *, const void *, int);
 size_t strlen(const char *str);
 
-u8 func_80072250(s32 arg0);
+u8 input_get_id(s32 controllerIndex);
 void rumble_init(u8 canRumble);
 s32 rumble_exists(s16 controllerIndex);
 void rumble_kill(void);
@@ -97,9 +121,9 @@ SIDeviceStatus write_controller_pak_file(s32 controllerIndex, s32 fileNumber, ch
 SIDeviceStatus get_file_size(s32 controllerIndex, s32 fileNum, s32 *fileSize);
 char *font_codes_to_string(char *inString, char *outString, s32 stringLength);
 SaveFileType get_file_type(s32 controllerIndex, s32 fileNum);
-void rumble_start(s16 controllerIndex, s16 arg1, s16 arg2);
-void rumble_set(s16 controllerIndex, u8 arg1);
-void rumble_set_fade(s16 controllerIndex, u8 arg1, f32 arg2);
+void rumble_start(s16 controllerIndex, s16 strength, s16 timer);
+void rumble_set(s16 controllerIndex, u8 type);
+void rumble_set_fade(s16 controllerIndex, u8 type, f32 strength);
 void rumble_update(s32 updateRate);
 void init_controller_paks(void);
 void func_80072E28(s32 arg0, u32 arg1);

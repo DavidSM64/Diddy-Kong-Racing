@@ -1452,7 +1452,7 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
                 vel *= 4.0f;
                 if (racer->drift_direction != 0) {
                     vel += 7.0f; //!@Bug: Planes and hovercraft use drift_direction for something else, applying this
-                                 //!unintentionally.
+                                 //! unintentionally.
                 }
                 if (vel > 100.0f) {
                     vel = 100.0f;
