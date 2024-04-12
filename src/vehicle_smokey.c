@@ -271,7 +271,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (racer->raceFinished != FALSE) {
         if (gSmokeyCutsceneTimer == 0) {
             gSmokeyCutsceneTimer = 1;
-            func_8005CB68(racer, &gSmokeyCutsceneTimer);
+            racer_boss_finish(racer, &gSmokeyCutsceneTimer);
         }
     }
 }

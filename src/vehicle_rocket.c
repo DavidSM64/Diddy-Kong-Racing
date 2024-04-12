@@ -53,7 +53,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     ObjectModel *objModel;
 
     set_boss_voice_clip_offset((u16 *) gRocketVoiceTable);
-    racer->unk1EC = 0;
+    racer->tappedR = 0;
     animID = obj->segment.object.animationID;
     animFrame = obj->segment.animFrame;
     tempHeadAngle = racer->headAngle;
@@ -156,7 +156,7 @@ void update_rocket(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (racer->raceFinished != 0) {
         if (gRocketCutsceneTimer == 0) {
             gRocketCutsceneTimer = 1;
-            func_8005CB68(racer, &gRocketCutsceneTimer);
+            racer_boss_finish(racer, &gRocketCutsceneTimer);
         }
     }
 }

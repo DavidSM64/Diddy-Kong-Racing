@@ -1430,23 +1430,27 @@ void default_alloc_displaylist_heap(void) {
     gCurrNumHudVertsPerPlayer = gNumHudVertsPerPlayer[numberOfPlayers];
 }
 
-void func_8006F140(s32 arg0) {
+/**
+ * Set a delayed level trigger and a transition.
+ * Once the timer hits zero, the level will change.
+*/
+void level_transition_begin(s32 type) {
     if (gLevelLoadTimer == 0) {
         gLevelLoadTimer = 40;
         gLevelLoadType = LEVEL_LOAD_NORMAL;
         D_80123526 = 0;
-        if (arg0 == 1) { // FADE_BARNDOOR_HORIZONTAL?
+        if (type == 1) { // FADE_BARNDOOR_HORIZONTAL?
             transition_begin(&gLevelFadeOutTransition);
         }
-        if (arg0 == 3) { // FADE_CIRCLE?
+        if (type == 3) { // FADE_CIRCLE?
             gLevelLoadTimer = 282;
             transition_begin(&D_800DD424);
         }
-        if (arg0 == 4) { // FADE_WAVES?
+        if (type == 4) { // FADE_WAVES?
             gLevelLoadTimer = 360;
             transition_begin(&D_800DD424);
         }
-        if (arg0 == 0) { // FADE_FULLSCREEN?
+        if (type == 0) { // FADE_FULLSCREEN?
             gLevelLoadTimer = 2;
         }
     }

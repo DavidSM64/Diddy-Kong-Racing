@@ -218,7 +218,7 @@ s8 gNumRacersSaved;
 s8 D_8011AD52;
 s8 D_8011AD53;
 s32 D_8011AD54;
-Object *(*gSpawnObjectHeap)[0x200];
+Object *(*gSpawnObjectHeap)[sizeof(Object)];
 s32 D_8011AD5C;
 s32 D_8011AD60;
 s32 *gAssetsObjectHeadersTable;
@@ -2347,7 +2347,7 @@ void func_80010994(s32 updateRate) {
             if (sp54 & A_BUTTON) {
                 func_8001E45C(CUTSCENE_ID_UNK_64);
             } else if ((sp54 & B_BUTTON) && (get_trophy_race_world_id() == 0) && (is_in_tracks_mode() == 0)) {
-                func_8006F140(1); // FADE_BARNDOOR_HORIZONTAL?
+                level_transition_begin(1); // FADE_BARNDOOR_HORIZONTAL?
             }
         }
     } else if (D_8011AF00 == 0) {
@@ -4246,7 +4246,7 @@ void func_8001A8F4(s32 updateRate) {
         for (i = 0; i < gNumRacers; i++) {
             racer = &(*gRacers)[i]->unk64->racer;
             racer->magnetTargetObj = NULL;
-            if (racer->playerIndex != PLAYER_COMPUTER && racer->unk1AC == 1) {
+            if (racer->playerIndex != PLAYER_COMPUTER && racer->finishPosition == 1) {
                 sp30 = i;
             }
             if (racer->magnetSoundMask != NULL) {
@@ -4341,7 +4341,7 @@ void func_8001A8F4(s32 updateRate) {
             if (i != 0) {
                 transition_begin(&D_800DC6F8);
             }
-            func_8006F140(2);
+            level_transition_begin(2);
             D_8011AD50 = 5;
             settings->cutsceneFlags |= 0x40000;
         }
@@ -6123,7 +6123,7 @@ void func_80022E18(s32 arg0) {
         racer->unk15C = NULL;
     }
     if (arg0 == 0) {
-        if (racer->unk1AC == 1) {
+        if (racer->finishPosition == 1) {
             settings = get_settings();
             flags = racer->vehicleID;
             flags = 1 << (flags + 3);

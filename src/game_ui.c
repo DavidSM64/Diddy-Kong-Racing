@@ -516,7 +516,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                     func_80068508(TRUE);
                     if (is_in_time_trial()) {
                         render_time_trial_finish(racer, updateRate);
-                    } else if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER && racer->unk1AC == 1) {
+                    } else if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER && racer->finishPosition == 1) {
                         if (is_in_two_player_adventure()) {
                             if (get_current_level_race_type() == RACETYPE_BOSS) {
                                 goto showFinish;
@@ -2139,7 +2139,7 @@ void func_800A5F18(Object_Racer *racer) {
         if (gNumActivePlayers >= 2 &&
             (is_in_two_player_adventure() == FALSE || is_postrace_viewport_active() == FALSE)) {
             set_text_font(FONT_COLOURFUL);
-            if (sp24 != racer->unk1AC) {
+            if (sp24 != racer->finishPosition) {
                 set_text_colour(255, 255, 255, 0, 255);
                 draw_text(&gHUDCurrDisplayList, gCurrentHud->raceTimeNumber.x - 40.0f, gCurrentHud->raceTimeNumber.y,
                           "RACE", ALIGN_TOP_LEFT);
@@ -2225,12 +2225,12 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                 gCurrentHud->raceTimeNumber.unk1D -= 4;
                 gCurrentHud->lapTimeText.unk1D -= 4;
             }
-            if (racer->unk1AC < 4) {
-                gCurrentHud->challengeFinishPosition2.spriteOffset = racer->unk1AC - 1;
+            if (racer->finishPosition < 4) {
+                gCurrentHud->challengeFinishPosition2.spriteOffset = racer->finishPosition - 1;
             } else {
                 gCurrentHud->challengeFinishPosition2.spriteOffset = 3;
             }
-            gCurrentHud->challengeFinishPosition1.spriteOffset = racer->unk1AC - 1;
+            gCurrentHud->challengeFinishPosition1.spriteOffset = racer->finishPosition - 1;
             gCurrentHud->challengeFinishPosition1.unk1A = 1;
             switch (gNumActivePlayers) {
                 case 2:
@@ -2346,7 +2346,7 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                 gCurrentHud->challengeFinishPosition1.unk1C = 0;
                 if (gHUDVoiceSoundMask == NULL) {
                     if (raceType == RACETYPE_CHALLENGE_BATTLE) {
-                        switch (racer->unk1AC) {
+                        switch (racer->finishPosition) {
                             case 1:
                             case 2:
                                 sound_play(SOUND_UNK_146, &gHUDVoiceSoundMask);

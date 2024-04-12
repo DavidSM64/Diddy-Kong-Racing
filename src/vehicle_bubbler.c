@@ -178,7 +178,7 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     if (racer->raceFinished) {
         if (gBubblerCutsceneTimer == 0) {
             gBubblerCutsceneTimer = 1;
-            func_8005CB68(racer, &gBubblerCutsceneTimer);
+            racer_boss_finish(racer, &gBubblerCutsceneTimer);
         }
     }
 }

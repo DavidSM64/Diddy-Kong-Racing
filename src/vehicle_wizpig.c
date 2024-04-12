@@ -58,7 +58,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     Object_68 *gfxData;
 
     set_boss_voice_clip_offset((u16 *) gWizpigVoiceTable);
-    racer->unk1EC = 0;
+    racer->tappedR = 0;
     animID = obj->segment.object.animationID;
     animFrame = obj->segment.animFrame;
     tempHeadAngle = racer->headAngle;
@@ -241,7 +241,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (racer->raceFinished) {
         if (gWizpigCutsceneTimer == 0) {
             gWizpigCutsceneTimer = 1;
-            func_8005CB68(racer, &gWizpigCutsceneTimer);
+            racer_boss_finish(racer, &gWizpigCutsceneTimer);
         }
     }
 }

@@ -204,7 +204,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         if (check_fadeout_transition() == 0 && is_in_two_player_adventure()) {
             swap_lead_player();
         }
-        func_8006F140(1);
+        level_transition_begin(1);
     }
     if (obj == firstRacerObj->interactObj->obj && firstRacerObj->interactObj->flags & INTERACT_FLAGS_PUSHING &&
         obj->segment.object.animationID == ANIM_TRICKY_RUN) {
@@ -213,7 +213,7 @@ void update_tricky(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (racer->raceFinished != FALSE) {
         if (gTrickyCutsceneTimer == 0) {
             gTrickyCutsceneTimer = 1;
-            func_8005CB68(racer, &gTrickyCutsceneTimer);
+            racer_boss_finish(racer, &gTrickyCutsceneTimer);
         }
     }
 }
@@ -225,7 +225,11 @@ void set_boss_voice_clip_offset(u16 *soundID) {
     gBossSoundIDOffset = soundID;
 }
 
-void func_8005CA84(f32 x, f32 y, f32 z, s32 offset) {
+/**
+ * Add a random amount to offset, then play a random voice clip within that range.
+ * Also has worldspace values.
+ */
+void racer_boss_sound_spatial(f32 x, f32 y, f32 z, s32 offset) {
     s8 randomOffset = get_random_number_from_range(0, 1);
     if (offset == 0) {
         randomOffset = 0;
@@ -246,20 +250,23 @@ void play_random_boss_sound(s32 offset) {
     sound_play(gBossSoundIDOffset[offset], NULL);
 }
 
-// boss_race_finish
-void func_8005CB68(Object_Racer *racer, s8 *arg1) {
+/**
+ * Trigger a post-race cutscene that depends on which boss was fought, which attempt it was and if the player won or not.
+ * Save the game afterwards, writing the victory, and the cutscene having been seen.
+*/
+void racer_boss_finish(Object_Racer *racer, s8 *sceneTimer) {
     Settings *settings;
     s8 arg1_ret;
     s8 *asset;
     s32 worldBit;
-    s32 racerUnk1AC;
+    s32 finishPos;
     UNUSED s32 pad;
     s32 miscAsset68Byte5;
     s32 miscAsset68Byte6;
     s32 miscAsset68Byte7;
     s32 i;
 
-    arg1_ret = *arg1;
+    arg1_ret = *sceneTimer;
     settings = get_settings();
     worldBit = (1 << settings->worldId);
     /*
@@ -281,20 +288,20 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
     asset = (s8 *) get_misc_asset(ASSET_MISC_67); // 20 bytes - course id's array with world id index?
     for (i = 0; settings->courseId != asset[i]; i += 2) {}
     i = asset[i + 1];
-    racerUnk1AC = racer->unk1AC;
+    finishPos = racer->finishPosition;
     if (arg1_ret == 1) {
-        if (racerUnk1AC == 1) {
+        if (finishPos == 1) {
             music_play(SEQUENCE_BATTLE_VICTORY);
         } else {
             music_play(SEQUENCE_BATTLE_LOSE);
         }
         if (settings->worldId == WORLD_CENTRAL_AREA || settings->worldId == WORLD_FUTURE_FUN_LAND) {
-            if (racerUnk1AC == 1) {
+            if (finishPos == 1) {
                 settings->bosses |= worldBit;
                 settings->courseFlagsPtr[settings->courseId] |= 2;
             }
             if (settings->worldId == WORLD_CENTRAL_AREA) {
-                if (racerUnk1AC == 1) {
+                if (finishPos == 1) {
                     push_level_property_stack(SPECIAL_MAP_ID_UNK_NEG2, 0, VEHICLE_CAR, 0);
                     push_level_property_stack(miscAsset68Byte5, 0, -1, 0);
                     push_level_property_stack(i, 0, -1, 1);
@@ -302,7 +309,7 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
                     push_level_property_stack(SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
                     push_level_property_stack(i, 0, -1, 2);
                 }
-            } else if (racerUnk1AC == 1) {
+            } else if (finishPos == 1) {
                 set_eeprom_settings_value(1); // Set Adventure Two Unlocked
                 push_level_property_stack(SPECIAL_MAP_ID_UNK_NEG2, 0, VEHICLE_CAR, 0);
                 push_level_property_stack(miscAsset68Byte7, 0, -1, 0);
@@ -312,30 +319,30 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
                 push_level_property_stack(SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
                 push_level_property_stack(i, 0, -1, 2);
             }
-            if (racerUnk1AC == 1) {
-                func_8006F140(4);
+            if (finishPos == 1) {
+                level_transition_begin(4);
             } else {
-                func_8006F140(3);
+                level_transition_begin(3);
             }
             arg1_ret++;
-            *arg1 = arg1_ret;
+            *sceneTimer = arg1_ret;
             return;
         }
         if (settings->courseFlagsPtr[settings->courseId] & 2) {
-            if (racerUnk1AC == 1) {
-                func_8006F140(4);
+            if (finishPos == 1) {
+                level_transition_begin(4);
                 instShowBearBar();
             } else {
-                func_8006F140(3);
+                level_transition_begin(3);
                 if (is_in_two_player_adventure()) {
                     swap_lead_player();
                 }
             }
             arg1_ret++;
-            *arg1 = arg1_ret;
+            *sceneTimer = arg1_ret;
             return;
         }
-        if (racerUnk1AC == 1) {
+        if (finishPos == 1) {
             settings->courseFlagsPtr[settings->courseId] |= 2;
             if (!(settings->bosses & worldBit)) {
                 settings->bosses |= worldBit;
@@ -368,17 +375,17 @@ void func_8005CB68(Object_Racer *racer, s8 *arg1) {
                     push_level_property_stack(i, 4, -1, 4);
                 }
             }
-            func_8006F140(4);
+            level_transition_begin(4);
             instShowBearBar();
         } else {
             push_level_property_stack(SPECIAL_MAP_ID_UNK_NEG10, 0, VEHICLE_CAR, 0);
             push_level_property_stack(i, 5, -1, 5);
-            func_8006F140(3);
+            level_transition_begin(3);
         }
         arg1_ret++;
         safe_mark_write_save_file(get_save_file_index());
     }
-    *arg1 = arg1_ret;
+    *sceneTimer = arg1_ret;
 }
 
 /**

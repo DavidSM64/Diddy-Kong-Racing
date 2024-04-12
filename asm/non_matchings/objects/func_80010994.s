@@ -511,7 +511,7 @@ glabel func_80010994
 /* 011CE4 800110E4 00000000 */   nop   
 /* 011CE8 800110E8 14400009 */  bnez  $v0, .L80011110
 /* 011CEC 800110EC 8FBF0034 */   lw    $ra, 0x34($sp)
-/* 011CF0 800110F0 0C01BC50 */  jal   func_8006F140
+/* 011CF0 800110F0 0C01BC50 */  jal   level_transition_begin
 /* 011CF4 800110F4 24040001 */   li    $a0, 1
 /* 011CF8 800110F8 10000005 */  b     .L80011110
 /* 011CFC 800110FC 8FBF0034 */   lw    $ra, 0x34($sp)

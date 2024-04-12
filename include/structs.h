@@ -1313,7 +1313,7 @@ typedef struct Object_Racer {
   /* 0x1A6 */ s16 z_rotation_vel;
   /* 0x1A8 */ s16 unk1A8;
   /* 0x1AA */ u16 unk1AA;
-  /* 0x1AC */ s16 unk1AC;
+  /* 0x1AC */ s16 finishPosition;
   /* 0x1AE */ s16 racePosition;
   /* 0x1B0 */ s16 unk1B0;
   /* 0x1B2 */ s16 unk1B2;
@@ -1347,7 +1347,7 @@ typedef struct Object_Racer {
   /* 0x1DA */ u8 unk1DA;
   /* 0x1DB */ s8 spinout_timer;
   /* 0x1DC */ u8 wheel_surfaces[4];
-  /* 0x1E0 */ s8 unk1E0;
+  /* 0x1E0 */ s8 trickType; // This depends on which vehicle you're using, but this name fits the most for now.
   /* 0x1E1 */ s8 steerAngle;
   /* 0x1E2 */ s8 groundedWheels;
   /* 0x1E3 */ s8 unk1E3;
@@ -1358,8 +1358,8 @@ typedef struct Object_Racer {
   /* 0x1E8 */ s8 unk1E8;
   /* 0x1E9 */ s8 unk1E9;
   /* 0x1EA */ s8 unk1EA;
-  /* 0x1EB */ s8 unk1EB;
-  /* 0x1EC */ s8 unk1EC;
+  /* 0x1EB */ s8 tapTimerR;
+  /* 0x1EC */ s8 tappedR;
   /* 0x1ED */ s8 squish_timer;
   /* 0x1EE */ u8 unk1EE;
   /* 0x1EF */ u8 boost_sound;

@@ -3193,7 +3193,7 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
                     dist = ((modeChange->directionX * racerObj->segment.trans.x_position) +
                             (modeChange->directionZ * racerObj->segment.trans.z_position) + modeChange->rotationDiff);
                     if (dist < 0.0f) {
-                        racer->unk1E0 = 0;
+                        racer->trickType = 0;
                         if (modeChange->vehicleID == VEHICLE_CAR) {
                             racer->vehicleID = racer->vehicleIDPrev;
                         } else {
