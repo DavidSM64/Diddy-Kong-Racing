@@ -9496,7 +9496,7 @@ void func_80093A40(void) {
     s32 i;
     Settings *settings;
 
-    func_80072298(0);
+    rumble_init(FALSE);
     settings = get_settings();
     gLastPlayerWhoPaused = -1;
 
@@ -9745,7 +9745,7 @@ s32 render_pause_menu(UNUSED Gfx **dl, s32 updateRate) {
 }
 
 void n_alSynRemovePlayer(void) {
-    func_80072298(1);
+    rumble_init(TRUE);
     close_dialogue_box(7);
     assign_dialogue_box_id(7);
     gMenuOptionCap = 0;
@@ -9775,7 +9775,7 @@ void func_80094688(s32 arg0, s32 arg1) {
     s16 *var_v1;
     LevelHeader *header;
 
-    func_80072298(0);
+    rumble_init(FALSE);
     header = get_current_level_header();
     D_80126C28 = arg0;
     if (is_in_two_player_adventure()) {

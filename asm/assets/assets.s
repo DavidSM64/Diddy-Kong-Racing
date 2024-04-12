@@ -8516,8 +8516,8 @@ glabel ASSET_MISC_17
 .incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_17.bin"
 glabel ASSET_MISC_18
 .incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_18.bin"
-glabel ASSET_MISC_19
-.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_19.bin"
+glabel ASSET_MISC_RUMBLE_DATA
+.incbin "./build/us_1.0/assets/misc/unlabeled/rumble_data.bin"
 glabel ASSET_MISC_20
 .incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_20.bin"
 glabel ASSET_MISC_SHIELD_DATA
@@ -8643,7 +8643,7 @@ glabel ASSET_MISC_TABLE
 .word (ASSET_MISC_16 - ASSET_MISC) / 4
 .word (ASSET_MISC_17 - ASSET_MISC) / 4
 .word (ASSET_MISC_18 - ASSET_MISC) / 4
-.word (ASSET_MISC_19 - ASSET_MISC) / 4
+.word (ASSET_MISC_RUMBLE_DATA - ASSET_MISC) / 4
 .word (ASSET_MISC_20 - ASSET_MISC) / 4
 .word (ASSET_MISC_SHIELD_DATA - ASSET_MISC) / 4
 .word (ASSET_MISC_MAGNET_DATA - ASSET_MISC) / 4

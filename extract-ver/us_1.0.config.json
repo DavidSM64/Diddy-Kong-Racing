@@ -15404,6 +15404,11 @@
                         "folder": "racer_stats"
                     },
                     {
+                        "index": 19,
+                        "filename": "rumble_data",
+                        "build-id": "ASSET_MISC_RUMBLE_DATA"
+                    },
+                    {
                         "index": 21,
                         "filename": "shield_data",
                         "build-id": "ASSET_MISC_SHIELD_DATA"

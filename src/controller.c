@@ -105,7 +105,7 @@ s32 handle_save_data_and_read_controller(s32 saveDataFlags, s32 updateRate) {
             // Reset all flags
             saveDataFlags = 0;
         }
-        rumble_controllers(updateRate);
+        rumble_update(updateRate);
         osContStartReadData(&sSIMesgQueue);
     }
     for (i = 0; i < MAXCONTROLLERS; i++) {

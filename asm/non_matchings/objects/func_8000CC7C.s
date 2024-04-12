@@ -1408,7 +1408,7 @@ glabel L8000D98C
 /* 00EC3C 8000E03C 00000000 */   nop   
 /* 00EC40 8000E040 10400009 */  beqz  $v0, .L8000E068
 /* 00EC44 8000E044 00000000 */   nop   
-/* 00EC48 8000E048 0C01C8A6 */  jal   func_80072298
+/* 00EC48 8000E048 0C01C8A6 */  jal   rumble_init
 /* 00EC4C 8000E04C 00002025 */   move  $a0, $zero
 /* 00EC50 8000E050 3C018012 */  lui   $at, %hi(gEventCountdown) # $at, 0x8012
 /* 00EC54 8000E054 AC20ADB0 */  sw    $zero, %lo(gEventCountdown)($at)

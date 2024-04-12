@@ -1030,7 +1030,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
                         racer->boostType |= BOOST_SMALL_FAST;
                     }
                     if (racer->raceFinished == FALSE) {
-                        func_80072348(racer->playerIndex, 8);
+                        rumble_set(racer->playerIndex, 8);
                     }
                 }
             }
@@ -3210,7 +3210,7 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
                         }
                         if (modeChange->vehicleID == VEHICLE_LOOPDELOOP) {
                             if (racer->raceFinished == FALSE) {
-                                func_80072348(racer->playerIndex, 8);
+                                rumble_set(racer->playerIndex, 8);
                             }
                             radius_3 =
                                 func_8001C524(racerObj->segment.trans.x_position, racerObj->segment.trans.y_position,
@@ -4839,7 +4839,7 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
                     weaponOwner->boost_sound |= BOOST_SOUND_UNK2;
                 }
                 if (racer->raceFinished == FALSE) {
-                    func_80072348(racer->playerIndex, 9);
+                    rumble_set(racer->playerIndex, 9);
                 }
             }
             obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position,
@@ -5214,7 +5214,7 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
                             weaponProperties->unk4 = 2;
                         }
                         if (!weaponHit->raceFinished) {
-                            func_80072348(weaponHit->playerIndex, 13);
+                            rumble_set(weaponHit->playerIndex, 13);
                         }
                         weaponOwner = &weapon->owner->unk64->racer;
                         if (weaponHit->playerIndex != PLAYER_COMPUTER || weaponOwner->playerIndex != PLAYER_COMPUTER) {
@@ -5433,7 +5433,7 @@ void obj_loop_log(Object *obj, s32 updateRate) {
         if (racerObj->behaviorId == BHV_RACER) {
             racer = (Object_Racer *) racerObj->unk64;
             if (racer->velocity < -4.0 && racer->raceFinished == FALSE) {
-                func_80072348(racer->playerIndex, 18);
+                rumble_set(racer->playerIndex, 18);
             }
         }
         sine = sins_f(-obj->segment.trans.y_rotation);

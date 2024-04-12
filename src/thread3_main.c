@@ -146,7 +146,7 @@ void thread3_main(UNUSED void *unused) {
     gGameMode = GAMEMODE_INTRO;
     while (1) {
         if (is_reset_pressed()) {
-            func_80072708();
+            rumble_kill();
             audioStopThread();
             stop_thread30();
             __osSpSetStatus(SP_SET_HALT | SP_CLR_INTR_BREAK | SP_CLR_YIELD | SP_CLR_YIELDED | SP_CLR_TASKDONE |
@@ -376,7 +376,7 @@ void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     func_8001BF20();
     osSetTime(0);
     set_free_queue_state(2);
-    func_80072298(1);
+    rumble_init(TRUE);
 }
 
 /**

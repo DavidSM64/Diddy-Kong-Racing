@@ -518,7 +518,7 @@ glabel func_80049794
 /* 04AA54 80049E54 14200006 */  bnez  $at, .L80049E70
 /* 04AA58 80049E58 00000000 */   nop   
 /* 04AA5C 80049E5C 86040000 */  lh    $a0, ($s0)
-/* 04AA60 80049E60 0C01C8D2 */  jal   func_80072348
+/* 04AA60 80049E60 0C01C8D2 */  jal   rumble_set
 /* 04AA64 80049E64 24050003 */   li    $a1, 3
 /* 04AA68 80049E68 44806000 */  mtc1  $zero, $f12
 /* 04AA6C 80049E6C 00000000 */  nop   
@@ -894,7 +894,7 @@ glabel func_80049794
 /* 04AFDC 8004A3DC 0C015C2E */  jal   play_random_character_voice
 /* 04AFE0 8004A3E0 24070082 */   li    $a3, 130
 /* 04AFE4 8004A3E4 86040000 */  lh    $a0, ($s0)
-/* 04AFE8 8004A3E8 0C01C8D2 */  jal   func_80072348
+/* 04AFE8 8004A3E8 0C01C8D2 */  jal   rumble_set
 /* 04AFEC 8004A3EC 24050008 */   li    $a1, 8
 /* 04AFF0 8004A3F0 3C098012 */  lui   $t1, %hi(gCurrentStickY) # $t1, 0x8012
 /* 04AFF4 8004A3F4 C7A10048 */  lwc1  $f1, 0x48($sp)
@@ -1173,7 +1173,7 @@ glabel func_80049794
 .L8004A7E8:
 /* 04B3E8 8004A7E8 86040000 */  lh    $a0, ($s0)
 /* 04B3EC 8004A7EC E7AE00DC */  swc1  $f14, 0xdc($sp)
-/* 04B3F0 8004A7F0 0C01C8D2 */  jal   func_80072348
+/* 04B3F0 8004A7F0 0C01C8D2 */  jal   rumble_set
 /* 04B3F4 8004A7F4 24050008 */   li    $a1, 8
 /* 04B3F8 8004A7F8 C7AE00DC */  lwc1  $f14, 0xdc($sp)
 /* 04B3FC 8004A7FC 10000015 */  b     .L8004A854

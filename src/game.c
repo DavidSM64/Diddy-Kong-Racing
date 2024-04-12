@@ -374,7 +374,7 @@ void load_level(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle vehicl
     Settings *settings;
     s32 offset;
 
-    func_80072708();
+    rumble_kill();
     if (cutsceneId == -1) {
         cutsceneId = CUTSCENE_NONE;
     }
