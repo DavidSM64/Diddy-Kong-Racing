@@ -203,7 +203,7 @@ void init_game(void) {
     tex_init_textures();
     allocate_object_model_pools();
     allocate_object_pools();
-    diPrintfInit();
+    debug_text_init();
     allocate_ghost_data();
     init_particle_assets();
     init_weather();
@@ -300,7 +300,7 @@ void main_game_loop(void) {
     // menus & gameplay.
 
     sound_update_queue(sLogicUpdateRate);
-    print_debug_strings(&gCurrDisplayList);
+    debug_text_print(&gCurrDisplayList);
     render_dialogue_boxes(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList);
     close_dialogue_box(4);
     assign_dialogue_box_id(4);

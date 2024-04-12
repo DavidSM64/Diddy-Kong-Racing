@@ -45,18 +45,18 @@ typedef struct TexFontCoords {
 
 
 char *_itoa(u64 n, char *outBuffer, u32 radix, s32 useUpperCase);
-void func_800B4A08(s32 arg0);
-void diPrintfInit(void);
+void func_800B4A08(s32 setting);
+void debug_text_init(void);
 void set_render_printf_colour(u8 red, u8 green, u8 blue, u8 alpha);
 void set_render_printf_background_colour(u8 red, u8 green, u8 blue, u8 alpha);
-void func_800B695C(Gfx **dList, u32 ulx, u32 uly, u32 lrx, u32 lry);
-s32 func_800B69FC(Gfx **dList, s32 asciiVal);
-void print_debug_strings(Gfx **dList);
+void debug_text_background(Gfx **dList, u32 ulx, u32 uly, u32 lrx, u32 lry);
+s32 debug_text_character(Gfx **dList, s32 asciiVal);
+void debug_text_print(Gfx **dList);
 void set_render_printf_position(u16 x, u16 y);
 s32 render_printf(const char *format, ...);
-void func_800B6E50(void);
-void func_800B6EE0(void);
-void func_800B6F04(void);
+void debug_text_bounds(void);
+void debug_text_origin(void);
+void debug_text_newline(void);
 
 s32 func_800B653C(Gfx**, char*);
 int vsprintf(char *s, const char *fmt, ...);

@@ -1098,7 +1098,8 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
             flag = &obj->unk64->character_flag;
             racer = &racerObj->unk64->racer;
             obj->properties.characterFlag.characterID = racer->characterId;
-            if (obj->properties.characterFlag.characterID < 0 || obj->properties.characterFlag.characterID >= NUMBER_OF_CHARACTERS) {
+            if (obj->properties.characterFlag.characterID < 0 ||
+                obj->properties.characterFlag.characterID >= NUMBER_OF_CHARACTERS) {
                 obj->properties.characterFlag.characterID = 0;
             }
             flag->vertices = gCharacterFlagVertices;

@@ -282,8 +282,7 @@ void rumble_update(s32 updateRate) {
             if (gRumbleKillTimer != 0) {
                 osPfsIsPlug(sControllerMesgQueue, &pfsBitPattern);
             }
-            for (i = 0, controllerToCheck = 1, pak = gRumble; i < MAXCONTROLLERS;
-                 i++, controllerToCheck <<= 1, pak++) {
+            for (i = 0, controllerToCheck = 1, pak = gRumble; i < MAXCONTROLLERS; i++, controllerToCheck <<= 1, pak++) {
                 if (gRumbleKillTimer != 0) {
                     pak->rumbleType = pak->lingeringStrength = pak->timer = -1;
                     if (!(pfsBitPattern & controllerToCheck)) {
