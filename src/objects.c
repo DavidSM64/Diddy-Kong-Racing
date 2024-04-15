@@ -1631,7 +1631,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         curObj->segment.trans.x_position, curObj->segment.trans.y_position, curObj->segment.trans.z_position);
     curObj->segment.object.unk2C = var_a0;
     curObj->segment.level_entry = (LevelObjectEntry *) entry;
-    curObj->unk4A = objType;
+    curObj->objectID = objType;
     func_800245B4(objType);
     curObj->segment.trans.scale = curObj->segment.header->scale;
     curObj->segment.camera.unk34 = curObj->segment.header->unk50 * curObj->segment.trans.scale;
@@ -1690,8 +1690,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
             break;
     }
     if (!(arg1 & 2)) {
-        if (curObj->unk4A != 0x19) {
-            if (curObj->unk4A == 0xCB) {
+        if (curObj->objectID != 0x19) {
+            if (curObj->objectID == 0xCB) {
                 assetCount = 1;
                 if (is_in_adventure_two()) {
                     curObj->segment.header->modelIds[0] = curObj->segment.header->modelIds[1];
@@ -2106,7 +2106,7 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
     object->segment.trans.flags = OBJ_FLAGS_UNK_0002;
     object->segment.header = objHeader;
     object->segment.object.unk2C = objectHeaderIndex;
-    object->unk4A = objectHeaderIndex;
+    object->objectID = objectHeaderIndex;
     object->segment.trans.scale = objHeader->scale;
     if (objHeader->flags & OBJ_FLAGS_UNK_0080) {
         object->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
@@ -2147,7 +2147,7 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
  * Official Name: objFreeObject
  */
 void free_object(Object *object) {
-    func_800245B4(object->unk4A | OBJ_FLAGS_DEACTIVATED);
+    func_800245B4(object->objectID | OBJ_FLAGS_DEACTIVATED);
     gParticlePtrList[gFreeListCount] = object;
     gFreeListCount++;
 }
@@ -3047,7 +3047,7 @@ void render_object(Gfx **dList, MatrixS **mtx, Vertex **verts, Object *obj) {
     if (obj->segment.trans.flags & (OBJ_FLAGS_INVISIBLE | OBJ_FLAGS_SHADOW_ONLY)) {
         return;
     }
-    update_object_stack_trace(OBJECT_DRAW, obj->unk4A);
+    update_object_stack_trace(OBJECT_DRAW, obj->objectID);
     gObjectCurrDisplayList = *dList;
     gObjectCurrMatrix = *mtx;
     gObjectCurrVertexList = *verts;
@@ -6768,7 +6768,7 @@ s32 obj_init_property_flags(s32 behaviorId) {
  * One big switch statement for whichever object.
  */
 void run_object_loop_func(Object *obj, s32 updateRate) {
-    update_object_stack_trace(OBJECT_UPDATE, obj->unk4A);
+    update_object_stack_trace(OBJECT_UPDATE, obj->objectID);
     switch (obj->behaviorId) {
         case BHV_SCENERY:
             obj_loop_scenery(obj, updateRate);

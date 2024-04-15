@@ -244,7 +244,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         }
         move_object(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF,
                     obj->segment.z_velocity * updateRateF);
-        if (obj->unk4A == 298) {
+        if (obj->objectID == 298) {
             if (get_wave_properties(obj->segment.trans.y_position, &waveHeight, NULL)) {
                 obj->segment.trans.y_position = waveHeight;
             }
@@ -281,7 +281,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         func_800AFC3C(obj, updateRate);
         obj->properties.fireball.timer -= updateRate;
         if (obj->properties.fireball.timer < 0) {
-            if (obj->unk4A == 298) {
+            if (obj->objectID == 298) {
                 free_object(obj);
                 obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position,
                                  obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);

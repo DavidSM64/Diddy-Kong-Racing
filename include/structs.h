@@ -1898,7 +1898,7 @@ typedef struct Object {
   /* 0x0000 */ ObjectSegment segment;
   /* 0x0044 */ Vertex *unk44;
   /* 0x0048 */ s16 behaviorId;
-  /* 0x004A */ s16 unk4A; // Upper byte is object ID, lower byte is object size.
+  /* 0x004A */ s16 objectID; // First 9 bits are object ID, last 7 bits are header size
   /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318
   /* 0x0050 */ ShadowData *shadow; //player + 0x2F4
   /* 0x0054 */ ShadeProperties *shading; //player + 0x2C0
