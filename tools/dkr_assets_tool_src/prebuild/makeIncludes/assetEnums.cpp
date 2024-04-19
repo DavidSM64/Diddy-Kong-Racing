@@ -111,7 +111,14 @@ void AssetEnums::_write_single_asset_section_enums(const std::string &sectionId,
                 continue;
             }
             std::string objectId = assetJson->get_string(ptr);
-            sectionEnum.add_symbol(objectId + "_ID");
+            
+            if(StringHelper::starts_with(objectId, "ASSET_OBJECT_")) {
+                objectId.insert(13, "ID_");
+            } else {
+                objectId += "_ID";
+            }
+            
+            sectionEnum.add_symbol(objectId);
         }
     }
     
