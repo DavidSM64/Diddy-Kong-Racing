@@ -6590,7 +6590,7 @@ void run_object_init_func(Object *obj, void *entry, s32 param) {
             obj_init_wizpigship(obj, (LevelObjectEntry_WizpigShip *) entry);
             break;
         case BHV_BOOST:
-            obj_init_boost(obj, (LevelObjectEntry_Boost *) entry);
+            obj_init_boost(obj, (LevelObjectEntry_Boost2 *) entry);
             break;
         case BHV_SILVER_COIN:
             obj_init_silvercoin(obj, (LevelObjectEntry_SilverCoin *) entry);
