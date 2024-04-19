@@ -71,8 +71,8 @@ void AssetEnums::_write_main_asset_enum(std::vector<std::string> &mainOrder) {
 }
 
 void AssetEnums::_write_single_asset_section_enums(const std::string &sectionId, JsonFile *sectionJson) {
-    if(sectionId != "ASSET_FONTS") {
-        return; // This function is just for the fonts.
+    if((sectionId != "ASSET_FONTS") && (sectionId != "ASSET_LEVEL_OBJECT_TRANSLATION_TABLE")) {
+        return;
     }
     _cHeader.write_newline();
     _cHeader.write_header_comment(sectionId.c_str());
@@ -80,10 +80,10 @@ void AssetEnums::_write_single_asset_section_enums(const std::string &sectionId,
     std::string sectionEnumName = StringHelper::upper_snake_case_to_pascal_case(sectionId) + "Enum";
     WriteableCEnum sectionEnum(sectionEnumName);
     
-    fs::path fontSubfolder = sectionJson->get_path("/folder");
-    fs::path fontJsonPath = _settings.pathToAssets;
-    if(!fontSubfolder.empty()) {
-        fontJsonPath /= fontSubfolder;
+    fs::path subFolder = sectionJson->get_path("/folder");
+    fs::path jsonPath = _settings.pathToAssets;
+    if(!subFolder.empty()) {
+        jsonPath /= subFolder;
     }
     
     if(sectionJson->is_value_null("/filename")) {
@@ -91,20 +91,32 @@ void AssetEnums::_write_single_asset_section_enums(const std::string &sectionId,
         return;
     }
     
-    fontJsonPath /= sectionJson->get_string("/filename");
-    JsonFile *fontsJson;
-    DebugHelper::assert(JsonHelper::get().get_file(fontJsonPath, &fontsJson),
+    jsonPath /= sectionJson->get_string("/filename");
+    JsonFile *assetJson;
+    DebugHelper::assert(JsonHelper::get().get_file(jsonPath, &assetJson),
         "(AssetEnums::_write_single_asset_section_enums) Could not load fonts json!");
-        
-    std::vector<std::string> fontIds;
-    fontsJson->get_array<std::string>("/fonts-order", fontIds);
-    for(std::string &fontId : fontIds) {
-        sectionEnum.add_symbol(fontId);
+    
+    if(sectionId == "ASSET_FONTS") {
+        std::vector<std::string> fontIds;
+        assetJson->get_array<std::string>("/fonts-order", fontIds);
+        for(std::string &fontId : fontIds) {
+            sectionEnum.add_symbol(fontId);
+        }
+    } else if(sectionId == "ASSET_LEVEL_OBJECT_TRANSLATION_TABLE") {
+        size_t tableLen = assetJson->length_of_array("/table");
+        for(size_t i = 0; i < tableLen; i++) {
+            std::string ptr = "/table/" + std::to_string(i);
+            if(assetJson->is_value_null(ptr)) {
+                sectionEnum.add_symbol("NULL_OBJECT_" + std::to_string(i) + "_ID");
+                continue;
+            }
+            std::string objectId = assetJson->get_string(ptr);
+            sectionEnum.add_symbol(objectId + "_ID");
+        }
     }
     
     _cHeader.write_raw_text(sectionEnum.to_string());
 }
-
 
 void AssetEnums::_write_asset_section_enums(const std::string &sectionId, JsonFile *sectionJson) {
     std::string sectionEnumName = StringHelper::upper_snake_case_to_pascal_case(sectionId) + "Enum";
