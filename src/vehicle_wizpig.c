@@ -227,7 +227,7 @@ void update_wizpig(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     }
     if (racer->playerIndex == PLAYER_COMPUTER) {
         if (func_80023568() != 0) {
-            spawn_boss_hazard(obj, racer, 100.0f, 0x89, SOUND_VOICE_TRICKY_HM);
+            spawn_boss_hazard(obj, racer, 100.0f, ASSET_OBJECT_ID_FIREBALL, SOUND_VOICE_TRICKY_HM);
         }
     }
     func_800AFC3C(obj, updateRate);

@@ -263,7 +263,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
                         racer->attackType = ATTACK_EXPLOSION;
                         obj->properties.fireball.timer = 20;
                         obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                         obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f,
+                                         obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION, 1.0f,
                                          1);
                         free_object(obj);
                     } else if (obj->properties.fireball.timer > 0) {
@@ -284,7 +284,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
             if (obj->objectID == 298) {
                 free_object(obj);
                 obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                 obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);
+                                 obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION, 1.0f, 1);
             }
             obj->segment.trans.scale *= 0.9; //!@Delta
             if (obj->segment.trans.scale < 0.5) {
@@ -379,7 +379,7 @@ void obj_loop_lasergun(Object *obj, s32 updateRate) {
             spawnObj.y = obj->segment.trans.y_position;
             spawnObj.z = obj->segment.trans.z_position;
             spawnObj.size = 8;
-            spawnObj.objectID = 0xC6;
+            spawnObj.objectID = ASSET_OBJECT_ID_LASERBOLT;
             play_sound_at_position(SOUND_LASER_GUN, obj->segment.trans.x_position, obj->segment.trans.y_position,
                                    obj->segment.trans.z_position, 4, NULL);
             laserBoltObj = spawn_object(&spawnObj, 1);
@@ -459,7 +459,7 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
                 obj->segment.z_velocity * updateRateF);
     if (hasCollision) {
         obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position - 36.0f,
-                         obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_NONE, 0.2, 0);
+                         obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_NONE, 0.2, 0);
         delete = TRUE;
     }
 
@@ -483,7 +483,7 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
             }
             delete = TRUE;
             obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position - 36.0f,
-                             obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 0.5, 0);
+                             obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION, 0.5, 0);
         }
     }
     if (delete) {
@@ -610,7 +610,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
         if (header->race_type != RACETYPE_CUTSCENE_2 && header->race_type != RACETYPE_CUTSCENE_1) {
             obj->properties.trophyCabinet.trophy = TRUE;
             if ((settings->trophies >> (((settings->worldId - 1) ^ 0) * 2)) & 3) { // Fakematch
-                newObject.objectID = 0x80;
+                newObject.objectID = ASSET_OBJECT_ID_TROPHY;
                 newObject.x = obj->segment.level_entry->animation.common.x;
                 newObject.y = obj->segment.level_entry->animation.common.y;
                 newObject.z = obj->segment.level_entry->animation.common.z;
@@ -830,7 +830,7 @@ void obj_loop_eggcreator(Object *obj, UNUSED s32 updateRate) {
         spawnObj.y = obj->segment.trans.y_position;
         spawnObj.z = obj->segment.trans.z_position;
         spawnObj.size = 8;
-        spawnObj.objectID = 0x34;
+        spawnObj.objectID = ASSET_OBJECT_ID_COLLECTEGG;
         eggObj = spawn_object(&spawnObj, 1);
         if (eggObj != NULL) {
             Object_EggCreator *eggSpawner = &eggObj->unk64->egg_creator;
@@ -1904,7 +1904,7 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
                             newObject.y = posY;
                             newObject.z = posZ;
                             newObject.size = 8;
-                            newObject.objectID = 0xC6;
+                            newObject.objectID = ASSET_OBJECT_ID_LASERBOLT;
                             newObj = spawn_object(&newObject, 1);
                             if (newObj != NULL) {
                                 newObj->segment.level_entry = NULL;
@@ -2263,7 +2263,7 @@ void obj_loop_bombexplosion(Object *obj, s32 updateRate) {
     if (obj->properties.bombExplosion.timer > 10 && temp_t8 != 0) {
         obj->properties.bombExplosion.unk4 ^= (temp_t8 << 8);
         obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position,
-                         BHV_LENS_FLARE_SWITCH, SOUND_NONE, 1.0f, temp_t8 - 1);
+                         ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_NONE, 1.0f, temp_t8 - 1);
     }
     if (obj->properties.bombExplosion.timer < 20) {
         obj->segment.trans.scale = ((obj->properties.bombExplosion.timer / 20.0f) * 10.0f) + 0.5f;
@@ -3077,7 +3077,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     }
     if (sp6B != 0) {
         obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position,
-                         BHV_DINO_WHALE, SOUND_NONE, 1.0f, 0);
+                         ASSET_OBJECT_ID_WARDENSMOKE, SOUND_NONE, 1.0f, 0);
     }
     obj->segment.animFrame = taj->animFrameF * 1.0;
     func_80061C0C(obj);
@@ -4120,7 +4120,7 @@ void obj_loop_treasuresucker(Object *obj, s32 updateRate) {
             spawnObj.y = (s16) racerObj->segment.trans.y_position + 10;
             spawnObj.z = racerObj->segment.trans.z_position;
             spawnObj.size = 8;
-            spawnObj.objectID = BHV_SNOWBALL_2;
+            spawnObj.objectID = ASSET_OBJECT_ID_FLYCOIN;
             newObj = spawn_object(&spawnObj, 1);
             if (newObj != NULL) {
                 newObj->segment.level_entry = NULL;
@@ -4185,7 +4185,7 @@ void obj_loop_bananacreator(Object *obj, s32 updateRate) {
         newEntry.y = ((s32) ((s16) obj->segment.trans.y_position)) - 3;
         newEntry.z = (s32) obj->segment.trans.z_position;
         newEntry.size = 8;
-        newEntry.objectID = 83;
+        newEntry.objectID = ASSET_OBJECT_ID_COIN;
         newBananaObj = spawn_object(&newEntry, 1);
         obj->properties.bananaSpawner.spawn = TRUE;
         if (newBananaObj) {
@@ -4193,7 +4193,7 @@ void obj_loop_bananacreator(Object *obj, s32 updateRate) {
             newBananaObj64 = &newBananaObj->unk64->banana;
             newBananaObj64->spawner = obj;
             obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position - 14.0f,
-                             obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_SELECT, 0.25f, 0);
+                             obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_SELECT, 0.25f, 0);
             obj->properties.bananaSpawner.spawn = FALSE;
         }
         obj->properties.bananaSpawner.timer = TIME_SECONDS(20); // Set delay to respawn banana to 20 seconds.
@@ -4834,7 +4834,7 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
                 }
             }
             obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                             obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);
+                             obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION, 1.0f, 1);
             free_object(obj);
             return;
         }
@@ -4854,7 +4854,7 @@ block_37:
     obj->properties.projectile.timer -= updateRate;
     if (obj->properties.projectile.timer < 0) {
         obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position,
-                         BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);
+                         ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION, 1.0f, 1);
         free_object(obj);
         return;
     }
@@ -5180,7 +5180,7 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
                         weaponHit->attackType = ATTACK_EXPLOSION;
                         if (weapon->weaponID == WEAPON_TRIPMINE) {
                             obj_spawn_effect(weaponObj->segment.trans.x_position, weaponObj->segment.trans.y_position,
-                                             weaponObj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH,
+                                             weaponObj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION,
                                              SOUND_EXPLOSION, 1.0f, 1);
                         } else if (weapon->weaponID == WEAPON_BUBBLE_TRAP) {
                             if (weaponHit->shieldTimer > 0 && weaponHit->shieldType >= SHIELD_LEVEL3) {
@@ -5231,7 +5231,7 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
                                            NULL);
                 } else {
                     obj_spawn_effect(weaponObj->segment.trans.x_position, weaponObj->segment.trans.y_position,
-                                     weaponObj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f,
+                                     weaponObj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION, 1.0f,
                                      1);
                     free_object(weaponObj);
                 }

@@ -135,9 +135,9 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
     if (racer->playerIndex == PLAYER_COMPUTER) {
         temp2 = func_80023568();
         if (temp2 != 0) {
-            objectID = 0x110;
+            objectID = ASSET_OBJECT_ID_OCTOBUBBLE;
             if (temp2 == 6) {
-                objectID = 0x12A;
+                objectID = ASSET_OBJECT_ID_OCTOBOMB;
             }
             spawn_boss_hazard(obj, racer, 0.0f, objectID, SOUND_VOICE_BUBBLER_HOHO2);
         }

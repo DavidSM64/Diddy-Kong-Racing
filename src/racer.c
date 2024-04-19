@@ -2550,7 +2550,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
                         newObject.x = 0;
                         newObject.y = 0;
                         newObject.z = 0;
-                        newObject.objectID = 0x86;
+                        newObject.objectID = ASSET_OBJECT_ID_CHECKARROW;
                         newObject.size = 8;
                         tempRacer->unk15C = spawn_object(&newObject, 1);
                         if (tempRacer->unk15C) {
@@ -4471,13 +4471,13 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                         break;
                 }
             }
-            objID = 29;
+            objID = ASSET_OBJECT_ID_MISSILE;
             if (gCurrentButtonsReleased & Z_TRIG) {
                 velocity = 30.0f;
                 switch (weaponID) {
                     case WEAPON_ROCKET_HOMING:
                         objDist = -10.0f;
-                        objID = 229;
+                        objID = ASSET_OBJECT_ID_HOMING;
                         break;
                     case WEAPON_ROCKET:
                         objDist = -10.0f;
@@ -4486,13 +4486,13 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                     case WEAPON_UNK_11:
                         objDist = 10.0f;
                         velocity = -2.0f;
-                        objID = 14;
+                        objID = ASSET_OBJECT_ID_BOMB;
                         break;
                     case WEAPON_OIL_SLICK:
                         if (racer->vehicleID != VEHICLE_PLANE) {
-                            objID = 130;
+                            objID = ASSET_OBJECT_ID_OILSLICK;
                         } else {
-                            objID = 235;
+                            objID = ASSET_OBJECT_ID_SMOKECLOUD;
                         }
                         objDist = 10.0f;
                         velocity = -2.0f;
@@ -4500,7 +4500,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                     case WEAPON_BUBBLE_TRAP:
                         objDist = 10.0f;
                         velocity = -2.0f;
-                        objID = 46;
+                        objID = ASSET_OBJECT_ID_BUBBLEWEAPON;
                         intendedTarget = NULL;
                         break;
                     case WEAPON_NITRO_LEVEL_1:
@@ -4952,7 +4952,7 @@ void drop_bananas(Object *obj, Object_Racer *racer, s32 number) {
             newObject.y = pos[1] + (s32) obj->segment.trans.y_position;
             newObject.z = pos[2] + (s32) obj->segment.trans.z_position;
             newObject.size = 8;
-            newObject.objectID = BHV_OVERRIDE_POS;
+            newObject.objectID = ASSET_OBJECT_ID_COIN;
             i = number;
             do {
                 if (get_current_level_race_type() != RACETYPE_CHALLENGE) {
