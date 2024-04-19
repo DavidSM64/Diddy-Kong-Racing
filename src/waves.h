@@ -118,7 +118,7 @@ void func_800B8B8C(void);
 s32 func_800B9228(LevelModelSegment *arg0);
 void func_800BBDDC(LevelModel *level, LevelHeader *header);
 void func_800BFE98(s32 arg0);
-void func_800B8134(LevelHeader *arg0);
+void func_800B8134(LevelHeader *header);
 void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1);
 void obj_loop_wavepower(Object *obj);
 void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);

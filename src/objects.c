@@ -75,18 +75,13 @@ UNUSED f32 D_800DC76C[15] = {
 
 u16 D_800DC7A8[] = {
     // Car
-    ASSET_OBJECT_ID_KREMCAR,
-    ASSET_OBJECT_ID_BADGERCAR,
-    ASSET_OBJECT_ID_TORTCAR,
-    ASSET_OBJECT_ID_CONKACAR,
-    ASSET_OBJECT_ID_TIGERCAR,
-    ASSET_OBJECT_ID_BANJOCAR,
-    ASSET_OBJECT_ID_CHICKENCAR,
-    ASSET_OBJECT_ID_MOUSECAR,
+    ASSET_OBJECT_ID_KREMCAR,  ASSET_OBJECT_ID_BADGERCAR, ASSET_OBJECT_ID_TORTCAR,    ASSET_OBJECT_ID_CONKACAR,
+    ASSET_OBJECT_ID_TIGERCAR, ASSET_OBJECT_ID_BANJOCAR,  ASSET_OBJECT_ID_CHICKENCAR, ASSET_OBJECT_ID_MOUSECAR,
 };
 
 s16 D_800DC7B8[] = {
-    // TODO: move these first two entries to the first var above. I'm thinking this is either all one big var, or the boss objects have their own table.
+    // TODO: move these first two entries to the first var above. I'm thinking this is either all one big var, or the
+    // boss objects have their own table.
     ASSET_OBJECT_ID_SWCAR,
     ASSET_OBJECT_ID_DIDDYCAR,
     // Hover

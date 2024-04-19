@@ -256,7 +256,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
                                 play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 3);
                             } else {
                                 racer_boss_sound_spatial(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                              obj->segment.trans.z_position, 5);
+                                                         obj->segment.trans.z_position, 5);
                             }
                             play_random_character_voice(racerGroup[temp_v1_2], SOUND_VOICE_CHARACTER_POSITIVE, 8, 2);
                         }
@@ -269,7 +269,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
                                 play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 3);
                             } else {
                                 racer_boss_sound_spatial(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                              obj->segment.trans.z_position, 3);
+                                                         obj->segment.trans.z_position, 3);
                             }
                         }
                     }

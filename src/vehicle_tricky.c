@@ -251,9 +251,9 @@ void play_random_boss_sound(s32 offset) {
 }
 
 /**
- * Trigger a post-race cutscene that depends on which boss was fought, which attempt it was and if the player won or not.
- * Save the game afterwards, writing the victory, and the cutscene having been seen.
-*/
+ * Trigger a post-race cutscene that depends on which boss was fought, which attempt it was and if the player won or
+ * not. Save the game afterwards, writing the victory, and the cutscene having been seen.
+ */
 void racer_boss_finish(Object_Racer *racer, s8 *sceneTimer) {
     Settings *settings;
     s8 arg1_ret;

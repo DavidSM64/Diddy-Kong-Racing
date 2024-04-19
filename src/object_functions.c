@@ -263,8 +263,8 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
                         racer->attackType = ATTACK_EXPLOSION;
                         obj->properties.fireball.timer = 20;
                         obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                         obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION, 1.0f,
-                                         1);
+                                         obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION,
+                                         1.0f, 1);
                         free_object(obj);
                     } else if (obj->properties.fireball.timer > 0) {
                         racer->bubbleTrapTimer = 60;
@@ -284,7 +284,8 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
             if (obj->objectID == ASSET_OBJECT_ID_OCTOBOMB) {
                 free_object(obj);
                 obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                 obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION, 1.0f, 1);
+                                 obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION, 1.0f,
+                                 1);
             }
             obj->segment.trans.scale *= 0.9; //!@Delta
             if (obj->segment.trans.scale < 0.5) {
@@ -3541,7 +3542,8 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
             }
         }
         sp4C &= doorEntry->unk10;
-        if (doorEntry->common.objectID == ASSET_OBJECT_ID_BIGBOSSDOOR || doorEntry->common.objectID == ASSET_OBJECT_ID_BOSSDOOR) {
+        if (doorEntry->common.objectID == ASSET_OBJECT_ID_BIGBOSSDOOR ||
+            doorEntry->common.objectID == ASSET_OBJECT_ID_BOSSDOOR) {
             if (func_800235C0() != 0) {
                 sp50 = 0;
             }
@@ -5231,8 +5233,8 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
                                            NULL);
                 } else {
                     obj_spawn_effect(weaponObj->segment.trans.x_position, weaponObj->segment.trans.y_position,
-                                     weaponObj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION, 1.0f,
-                                     1);
+                                     weaponObj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION,
+                                     SOUND_EXPLOSION, 1.0f, 1);
                     free_object(weaponObj);
                 }
             }

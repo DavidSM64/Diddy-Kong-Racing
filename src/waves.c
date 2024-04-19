@@ -394,7 +394,7 @@ GLOBAL_ASM("asm/non_matchings/waves/func_800BE654.s")
 
 /**
  * Finds the wave height and returns it for the spinning log object.
-*/
+ */
 f32 log_wave_height(Object_Log *log, s32 updateRate) {
     s32 var_t0;
     f32 y;
@@ -735,7 +735,7 @@ void func_800BFE98(s32 arg0) {
 /**
  * Wave Power loop func.
  * Waits for racers to pass through, then sets itself as the current baseline for how strong the waves should be.
-*/
+ */
 void obj_loop_wavepower(Object *obj) {
     LevelObjectEntry_WavePower *entry;
     s32 numRacers;

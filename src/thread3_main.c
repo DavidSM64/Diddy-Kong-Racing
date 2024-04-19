@@ -1433,7 +1433,7 @@ void default_alloc_displaylist_heap(void) {
 /**
  * Set a delayed level trigger and a transition.
  * Once the timer hits zero, the level will change.
-*/
+ */
 void level_transition_begin(s32 type) {
     if (gLevelLoadTimer == 0) {
         gLevelLoadTimer = 40;
