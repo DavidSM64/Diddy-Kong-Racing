@@ -244,7 +244,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         }
         move_object(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF,
                     obj->segment.z_velocity * updateRateF);
-        if (obj->objectID == 298) {
+        if (obj->objectID == ASSET_OBJECT_ID_OCTOBOMB) {
             if (get_wave_properties(obj->segment.trans.y_position, &waveHeight, NULL)) {
                 obj->segment.trans.y_position = waveHeight;
             }
@@ -281,7 +281,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         func_800AFC3C(obj, updateRate);
         obj->properties.fireball.timer -= updateRate;
         if (obj->properties.fireball.timer < 0) {
-            if (obj->objectID == 298) {
+            if (obj->objectID == ASSET_OBJECT_ID_OCTOBOMB) {
                 free_object(obj);
                 obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position,
                                  obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION, 1.0f, 1);
@@ -3541,7 +3541,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
             }
         }
         sp4C &= doorEntry->unk10;
-        if (doorEntry->common.objectID == 0x87 || doorEntry->common.objectID == 0xD7) {
+        if (doorEntry->common.objectID == ASSET_OBJECT_ID_BIGBOSSDOOR || doorEntry->common.objectID == ASSET_OBJECT_ID_BOSSDOOR) {
             if (func_800235C0() != 0) {
                 sp50 = 0;
             }
@@ -3555,7 +3555,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
         }
         temp2 = 0;
         if (door->unkF & 2) {
-            if (sp28 != 0 && doorEntry->common.objectID == 0x19) {
+            if (sp28 != 0 && doorEntry->common.objectID == ASSET_OBJECT_ID_LEVELDOOR) {
                 if (settings->courseFlagsPtr[doorEntry->unk14] & 2) {
                     if (settings->worldId == WORLD_FUTURE_FUN_LAND || settings->bosses & (1 << settings->worldId)) {
                         door->unk10 = doorEntry->unk15;
@@ -3584,7 +3584,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
                 }
             }
         } else {
-            if (doorEntry->common.objectID == 0xD7) {
+            if (doorEntry->common.objectID == ASSET_OBJECT_ID_BOSSDOOR) {
                 doorObj->segment.object.modelIndex = 0;
                 if (settings->bosses & (1 << settings->worldId)) {
                     if (settings->balloonsPtr[settings->worldId] == 8) {

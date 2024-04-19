@@ -1253,7 +1253,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     if (raceType == RACETYPE_DEFAULT && numPlayers == 1 && !is_in_adventure_two()) {
         if (is_two_player_adventure_race() == 0) {
             for (i2 = 0; i2 < 3; i2++) {
-                entry->common.objectID = BHV_ANIMATED_OBJECT;
+                entry->common.objectID = ASSET_OBJECT_ID_POSARROW;
                 entry->common.size = 8;
                 entry->common.x = 0;
                 entry->common.y = 0;
@@ -6034,7 +6034,7 @@ void func_80022948(void) {
         newRacerEntry.angleX = 0;
         newRacerEntry.angleZ = 0;
         newRacerEntry.playerIndex = 4;
-        newRacerEntry.common.objectID = 0xDA;
+        newRacerEntry.common.objectID = ASSET_OBJECT_ID_FLYINGCARPET;
         func_800619F4(0);
         racerObj = spawn_object(&newRacerEntry.common, 1);
         (*gRacers)[1] = racerObj;
