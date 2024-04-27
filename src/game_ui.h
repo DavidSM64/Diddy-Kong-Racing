@@ -5,6 +5,11 @@
 #include "structs.h"
 #include "libultra_internal.h"
 
+#define HUD_ELEMENT_MODEL       0x0000
+#define HUD_ELEMENT_OBJECT      0x4000
+#define HUD_ELEMENT_SPRITE      0x8000
+#define HUD_ELEMENT_TEXTURE     0xC000
+
 enum CourseIndicatorArrows {
     INDICATOR_NONE,
     INDICATOR_LEFT,
@@ -240,29 +245,18 @@ typedef struct HudData {
   /* 0x0740 */ HudElement raceFinishPosition2;
 } HudData;
 
-typedef struct unk800E1E64 {
-    s32 unk0;
-    s32 unk4;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-} unk800E1E64;
-
 /* Size: 0x10 bytes */
-typedef struct unk800E2770 {
+typedef struct HudAudio {
     u16 soundID;
     u8 volume;
-    s8 unk3;
+    s8 volumeRamp;
     SoundMask *soundMask;
     s32 unk8;
     s8 playerIndex;
     s8 unkD;
     s8 unkE;
     s8 unkF;
-} unk800E2770;
+} HudAudio;
 
 typedef struct unk800A497C {
     u8 pad0[0xC];
@@ -330,6 +324,7 @@ void render_balloon_count(Object_Racer *racer);
 void render_treasure_hud(Object_Racer *racer);
 void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspectRatio);
 void render_timer(s32 x, s32 y, s32 minutes, s32 seconds, s32 hundredths, s32 smallFont);
+void func_800AAFD0(ObjectModel *objModel);
 
 // Non Matching
 void func_800AA600(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement *arg3);

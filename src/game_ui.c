@@ -27,66 +27,67 @@
 // Unused?
 s32 D_800E1E60 = 0;
 
-unk800E1E64 D_800E1E64[59] = {
-    { 0, 0, 1.0f, 53.0f, 16.0f, 0, 127, 0 },
-    { 0, 3, 1.0f, 54.0f, 18.0f, 0, 0, 0 },
-    { 0, 1, 0.4f, -120.0f, -68.0f, 0, 0, 0 },
-    { 0, 6, 1.0f, 104.0f, 16.0f, 0, 0, 0 },
-    { 0, 9, 1.0f, 93.0f, 31.0f, 0, 0, 0 },
-    { 0, 4, 1.0f, 104.0f, 32.0f, 0, 0, 0 },
-    { 0, 9, 1.0f, 114.0f, 31.0f, 0, 0, 0 },
-    { 0, 8, 0.5f, -3.0f, 73.0f, 0, 0, 0 },
-    { 0, 9, 1.0f, 182.0f, 22.0f, 0, 0, 0 },
-    { 0, 9, 1.0f, 192.0f, 22.0f, 0, 0, 0 },
-    { 0, 13, 1.0f, 239.0f, 16.0f, 0, 0, 0 },
-    { 0, 9, 1.0f, 206.0f, 31.0f, 0, 0, 0 },
-    { 0, 7, 1.0f, 0.0f, 30.0f, 0, 0, 0 },
-    { 0, 22, 1.0f, 0.0f, 30.0f, 0, 0, 0 },
-    { 0, 5, 1.0f, -200.0f, 30.0f, 0, 0, 0 },
-    { 0, 14, 1.0f, 0.0f, 0.0f, 0, 0, 0 },
-    { 0, 16, 1.0f, -50.0f, 87.0f, 0, 0, 0 },
-    { 0, 17, 2.0f, -50.0f, 87.0f, 0, 0, 0 },
-    { 0, 18, 1.0f, 167.0f, 22.0f, 0, 0, 0 },
-    { 0, 19, 1.0f, -127.0f, 88.0f, 0, 0, 0 },
-    { 0, 18, 1.0f, 52.0f, 27.0f, 0, 0, 0 },
-    { 0, 9, 1.0f, 67.0f, 27.0f, 0, 0, 0 },
-    { 0, 9, 1.0f, 77.0f, 27.0f, 0, 0, 0 },
-    { 0, 9, 1.0f, 221.0f, 48.0f, 0, 0, 0 },
-    { 0, 6, 1.0f, 188.0f, 48.0f, 0, 0, 0 },
-    { 0, 10, 1.0f, 206.0f, 48.0f, 0, 0, 0 },
-    { 0, 20, 0.4f, -105.0f, -98.0f, 0, 0, 0 },
-    { 0, 21, 0.5f, -3.0f, 73.0f, 0, 0, 0 },
-    { 0, 23, 1.0f, -8.0f, 97.0f, 0, 0, 0 },
-    { 0, 24, 1.0f, 0.0f, 30.0f, 0, 0, 0 },
-    { 0, 25, 1.0f, 0.0f, 30.0f, 0, 0, 0 },
-    { 0, 26, 1.0f, 0.0f, 30.0f, 0, 0, 0 },
-    { 0, 2, 1.0f, 25.0f, 48.0f, 0, 0, 0 },
-    { 0, 32, 1.0f, -120.0f, 30.0f, 0, 0, 0 },
-    { 0, 34, 0.4f, -105.0f, -98.0f, 0, 0, 0 },
-    { 0, 35, 1.0f, 0.0f, 30.0f, 0, 0, 0 },
-    { 0, 36, 1.0f, 0.0f, 30.0f, 0, 0, 0 },
-    { 0, 40, 1.0f, 80.0f, -60.0f, 0, 0, 0 },
-    { 0, 1687158830, 0.5f, 122.0f, -71.0f, 0, 0, 0 },
-    { 0, 47, 0.75f, 247.0f, 212.0f, 0, 0, 0 },
-    { 0, 48, 1.0f, 234.0f, 196.0f, 0, 0, 0 },
-    { 0, 49, 1.0f, 232.0f, 177.0f, 0, 0, 0 },
-    { 0, 50, 1.0f, 240.0f, 159.0f, 0, 0, 0 },
-    { 0, 51, 1.0f, 256.0f, 146.0f, 0, 0, 0 },
-    { 0, 52, 1.0f, 275.0f, 143.0f, 0, 0, 0 },
-    { 0, 53, 1.0f, 246.0f, 156.0f, 0, 0, 0 },
-    { 0, 54, 0.7272f, 27.0f, 142.0f, 0, 0, 0 },
-    { 0, 0, 1.0f, -200.0f, 70.0f, 0, 129, 0 },
-    { 0, 3, 1.0f, -175.0f, 72.0f, 0, 0, 0 },
-    { 0, 55, 1.0f, -99.0f, -89.0f, 0, 0, 0 },
-    { 0, 56, 0.76f, 43.0f, 20.0f, 0, 0, 0 },
-    { 0, 66, 1.0f, 40.0f, 54.0f, 0, 0, 0 },
-    { 0, 8, 0.375f, -117.0f, 46.0f, 0, 0, 0 },
-    { 0, 28, 1.0f, 51.0f, 56.0f, 0, 0, 0 },
-    { 0, 10, 1.0f, 60.0f, 57.0f, 0, 0, 0 },
-    { 0, 10, 1.0f, 69.0f, 57.0f, 0, 0, 0 },
-    { 0, 67, 1.0f, -160.0f, 5.0f, 0, 0, 0 },
-    { 0, 56, 1.0f, 260.0f, 16.0f, 0, 0, 0 },
-    { 0, 68, 1.0f, 160.0f, 5.0f, 0, 0, 0 },
+// Base positions of all onscreen hud elements
+HudElement gHudElementBase[sizeof(HudData) / sizeof(HudElement)] = {
+    { 0, 0, 0, HUD_ASSET_0, 1.0f, 53.0f, 16.0f, 0.0f, 0, 0, 127, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_3, 1.0f, 54.0f, 18.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_WEAPONS, 0.4f, -120.0f, -68.0f, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_6, 1.0f, 104.0f, 16.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_9, 1.0f, 93.0f, 31.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_4, 1.0f, 104.0f, 32.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_9, 1.0f, 114.0f, 31.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_BANANA_ANIM, 0.5f, -3.0f, 73.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_9, 1.0f, 182.0f, 22.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_9, 1.0f, 192.0f, 22.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_13, 1.0f, 239.0f, 16.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_9, 1.0f, 206.0f, 31.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_GO_BIG, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_GET_READY, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_FINISH, 1.0f, -200.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_MAP_DOT, 1.0f, 0.0f, 0.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_CHEQUER_FLAG, 1.0f, -50.0f, 87.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_RETICLE, 2.0f, -50.0f, 87.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_18, 1.0f, 167.0f, 22.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_GOLD_BALLOON, 1.0f, -127.0f, 88.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_18, 1.0f, 52.0f, 27.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_9, 1.0f, 67.0f, 27.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_9, 1.0f, 77.0f, 27.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_9, 1.0f, 221.0f, 48.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_6, 1.0f, 188.0f, 48.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_10, 1.0f, 206.0f, 48.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_20, 0.4f, -105.0f, -98.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_BANANA_STATIC, 0.5f, -3.0f, 73.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_23, 1.0f, -8.0f, 97.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_LAP_FINAL, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_LAP_LAP, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_LAP_2, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_2, 1.0f, 25.0f, 48.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_INDICATOR_TURN_90, 1.0f, -120.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_34, 0.4f, -105.0f, -98.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_WRONG, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_WAY, 1.0f, 0.0f, 30.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_PRO_AM, 1.0f, 80.0f, -60.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 }, // Unused
+    { 0, 0, 0x6490, HUD_SPRITE_SPEEDOMETRE_ARROW, 0.5f, 122.0f, -71.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_47, 0.75f, 247.0f, 212.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_48, 1.0f, 234.0f, 196.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_49, 1.0f, 232.0f, 177.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_50, 1.0f, 240.0f, 159.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_51, 1.0f, 256.0f, 146.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_52, 1.0f, 275.0f, 143.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_53, 1.0f, 246.0f, 156.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_54, 0.7272f, 27.0f, 142.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_0, 1.0f, -200.0f, 70.0f, 0.0f, 0, 0, 129, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_3, 1.0f, -175.0f, 72.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_WEAPON_NUMBER, 1.0f, -99.0f, -89.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_PORTRAIT, 0.76f, 43.0f, 20.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_66, 1.0f, 40.0f, 54.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_BANANA_ANIM, 0.375f, -117.0f, 46.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_28, 1.0f, 51.0f, 56.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_10, 1.0f, 60.0f, 57.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_ASSET_10, 1.0f, 69.0f, 57.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_PLACE_1, 1.0f, -160.0f, 5.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_PORTRAIT, 1.0f, 260.0f, 16.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, HUD_SPRITE_PLACE_ST, 1.0f, 160.0f, 5.0f, 0.0f, 0, 0, 0, 0, 0, 0, 0 },
 };
 
 u16 D_800E25C4[96] = {
@@ -111,9 +112,9 @@ u16 D_800E2684[118] = {
     0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0x0000,
 };
 
-unk800E2770 D_800E2770[2] = {
-    { 0x00FD, 0, 0, NULL, 0, 0, 0, 0, 0 },
-    { 0x00FF, 0, 0, NULL, 0, 0, 0, 0, 0 },
+HudAudio gHudAudioData[2] = {
+    { SOUND_CROWD, 0, 0, NULL, 0, 0, 0, 0, 0 },
+    { SOUND_UNK_FF, 0, 0, NULL, 0, 0, 0, 0, 0 },
 };
 
 u8 gShowCourseDirections = TRUE;
@@ -122,9 +123,9 @@ u8 D_800E2794[4][4] = { { 1, 1, 1, 1 }, { 2, 2, 2, 2 }, { 2, 2, 2, 2 }, { 2, 2, 
 
 s8 gHudToggleSettings[4] = { 1, 1, 1, 1 };
 
-s8 D_800E27A8 = 1;
+s8 gPrevToggleSetting = 1;
 
-u32 D_800E27AC[3] = {
+u32 gHudLapColours[3] = {
     COLOUR_RGBA32(255, 40, 40, 254),
     COLOUR_RGBA32(40, 255, 40, 254),
     COLOUR_RGBA32(40, 40, 255, 254),
@@ -300,29 +301,30 @@ void init_hud(UNUSED s32 viewportCount) {
     set_sound_channel_volume(0, 32767);
     set_sound_channel_volume(2, 32767);
     for (i = 0; i < 2; i++) {
-        D_800E2770[i].volume = 0;
-        D_800E2770[i].unk3 = 0;
-        D_800E2770[i].playerIndex = PLAYER_COMPUTER;
-        if (D_800E2770[i].soundMask) {
-            func_8000488C(D_800E2770[i].soundMask);
+        gHudAudioData[i].volume = 0;
+        gHudAudioData[i].volumeRamp = 0;
+        gHudAudioData[i].playerIndex = PLAYER_COMPUTER;
+        if (gHudAudioData[i].soundMask) {
+            func_8000488C(gHudAudioData[i].soundMask);
         }
     }
 }
 
+// hud_init_element
 GLOBAL_ASM("asm/non_matchings/game_ui/func_8009F034.s")
 
 /**
- * Free's all elements in the hud, and the player hud, and flushes particles
+ * Frees all elements in the hud, and the player hud, and flushes particles
  */
 void free_hud(void) {
     s32 i;
     for (i = 0; i < gAssetHudElementIdsCount; i++) {
         if (gAssetHudElements->entry[i] != NULL) {
-            if ((gAssetHudElementIds[i] & 0xC000) == 0xC000) {
+            if ((gAssetHudElementIds[i] & HUD_ELEMENT_TEXTURE) == HUD_ELEMENT_TEXTURE) {
                 free_texture(gAssetHudElements->entry[i]);
-            } else if (gAssetHudElementIds[i] & 0x8000) {
+            } else if (gAssetHudElementIds[i] & HUD_ELEMENT_SPRITE) {
                 free_sprite((Sprite *) gAssetHudElements->entry[i]);
-            } else if (gAssetHudElementIds[i] & 0x4000) {
+            } else if (gAssetHudElementIds[i] & HUD_ELEMENT_OBJECT) {
                 free_object((Object *) gAssetHudElements->entry[i]);
             } else {
                 free_3d_model((ObjectModel **) gAssetHudElements->entry[i]);
@@ -426,8 +428,8 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
                         gHudLevelHeader->race_type == RACETYPE_DEFAULT ||
                         gHudLevelHeader->race_type == RACETYPE_HORSESHOE_GULCH ||
                         gHudLevelHeader->race_type == RACETYPE_BOSS) {
-                        D_800E2770[0].volume = 127;
-                        D_800E2770[1].volume = 127;
+                        gHudAudioData[0].volume = 127;
+                        gHudAudioData[1].volume = 127;
                         music_stop();
                         music_channel_reset_all();
                         music_play(SEQUENCE_RACE_START_FANFARE);
@@ -549,10 +551,10 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s
 void func_800A0B74(void) {
     s32 i;
     for (i = 0; i < 2; i++) {
-        if (D_800E2770[i].soundMask) {
-            func_8000488C(D_800E2770[i].soundMask);
-            D_800E2770[i].soundMask = NULL;
-            D_800E2770[i].volume = 0;
+        if (gHudAudioData[i].soundMask) {
+            func_8000488C(gHudAudioData[i].soundMask);
+            gHudAudioData[i].soundMask = NULL;
+            gHudAudioData[i].volume = 0;
         }
     }
 }
@@ -571,36 +573,36 @@ void func_800A0BD4(s32 updateRate) {
         }
     }
     for (i = 0; i < 2; i++) {
-        if (D_800E2770[i].volume) {
-            if (D_800E2770[i].soundMask == NULL) {
-                sound_play(D_800E2770[i].soundID, (s32 *) &D_800E2770[i].soundMask);
+        if (gHudAudioData[i].volume) {
+            if (gHudAudioData[i].soundMask == NULL) {
+                sound_play(gHudAudioData[i].soundID, (s32 *) &gHudAudioData[i].soundMask);
             }
-            sound_volume_set_relative(D_800E2770[i].soundID, D_800E2770[i].soundMask, D_800E2770[i].volume);
-            if (D_800E2770[i].unk3 > 0) {
-                temp = D_800E2770[i].unk3 * updateRate;
-                if ((127 - temp) >= D_800E2770[i].volume) {
-                    D_800E2770[i].volume += temp;
+            sound_volume_set_relative(gHudAudioData[i].soundID, gHudAudioData[i].soundMask, gHudAudioData[i].volume);
+            if (gHudAudioData[i].volumeRamp > 0) {
+                temp = gHudAudioData[i].volumeRamp * updateRate;
+                if ((127 - temp) >= gHudAudioData[i].volume) {
+                    gHudAudioData[i].volume += temp;
                 } else {
-                    D_800E2770[i].unk3 = 0;
-                    D_800E2770[i].volume = 0x7F;
+                    gHudAudioData[i].volumeRamp = 0;
+                    gHudAudioData[i].volume = 127;
                 }
-            } else if (D_800E2770[i].unk3 < 0) {
-                temp = D_800E2770[i].unk3 * updateRate;
-                if (-temp < D_800E2770[i].volume) {
-                    D_800E2770[i].volume += temp;
+            } else if (gHudAudioData[i].volumeRamp < 0) {
+                temp = gHudAudioData[i].volumeRamp * updateRate;
+                if (-temp < gHudAudioData[i].volume) {
+                    gHudAudioData[i].volume += temp;
                 } else {
-                    D_800E2770[i].unk3 = 0;
-                    D_800E2770[i].volume = 0;
+                    gHudAudioData[i].volumeRamp = 0;
+                    gHudAudioData[i].volume = 0;
                 }
             }
         } else {
-            if (D_800E2770[i].soundMask) {
-                func_8000488C(D_800E2770[i].soundMask);
-                D_800E2770[i].soundMask = 0;
+            if (gHudAudioData[i].soundMask) {
+                func_8000488C(gHudAudioData[i].soundMask);
+                gHudAudioData[i].soundMask = 0;
             }
         }
     }
-    if ((D_80126D70 != 0) && (D_800E2770[0].volume == 0)) {
+    if ((D_80126D70 != 0) && (gHudAudioData[0].volume == 0)) {
         D_80126D70 = 0;
         if (gNumActivePlayers == 1) {
             set_sound_channel_count(8);
@@ -841,12 +843,12 @@ void func_800A14F0(Object *racerObj, s32 updateRate) {
             if ((gNumActivePlayers < 3) || (racer->playerIndex == curRacer->playerIndex)) {
                 func_800A19A4(curRacer, updateRate);
             }
-            gHudColour = -2;
+            gHudColour = COLOUR_RGBA32(255, 255, 255, 254);
             if (gNumActivePlayers == 1) {
                 gCurrentHud->challengePortrait.x += 68.0f;
             } else if (gNumActivePlayers == 2) {
                 gCurrentHud->challengePortrait.x = sp44;
-                if (osTvType == 0) {
+                if (osTvType == TV_TYPE_PAL) {
                     gCurrentHud->challengePortrait.y += 66.0;
                     gCurrentHud->eggChallengeIcon.y += 66.0;
                 } else {
@@ -1242,7 +1244,7 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
             for (i = 0; i < curRacer->countLap && i < gHudLevelHeader->laps; i++) {
                 // FAKEMATCH
                 get_timestamp_from_frames(curRacer->lap_times[i] & 0xFFFFFFFFFFFFFFFF, &spB4, &spB0, &spAC);
-                gHudColour = D_800E27AC[i];
+                gHudColour = gHudLapColours[i];
                 render_timer(gCurrentHud->lapTimeText.x, spB8, spB4, spB0, spAC, 1);
                 gHudColour = COLOUR_RGBA32(255, 255, 255, 254);
                 spB8 += 12;
@@ -1512,9 +1514,9 @@ void render_speedometer(Object *obj, UNUSED s32 updateRate) {
 void render_race_start(s32 arg0, s32 updateRate) {
 
     if (!is_game_paused()) {
-        if (arg0 == 0 && D_800E2770[0].playerIndex == PLAYER_COMPUTER) {
-            D_800E2770[0].unk3 = -1;
-            D_800E2770[1].unk3 = -1;
+        if (arg0 == 0 && gHudAudioData[0].playerIndex == PLAYER_COMPUTER) {
+            gHudAudioData[0].volumeRamp = -1;
+            gHudAudioData[1].volumeRamp = -1;
         }
         if (gHUDNumPlayers == TWO_PLAYERS) {
             sprite_opaque(TRUE);
@@ -1746,9 +1748,9 @@ void render_race_finish_position(Object_Racer *racer, s32 updateRate) {
             music_play(SEQUENCE_FIRST_PLACE);
             sound_play(SOUND_WHOOSH1, NULL);
             sound_play(SOUND_VOICE_TT_FINISH, &gHUDVoiceSoundMask);
-            D_800E2770->volume = 127;
-            D_800E2770->unk3 = 0;
-            D_800E2770->playerIndex = racer->playerIndex;
+            gHudAudioData[0].volume = 127;
+            gHudAudioData[0].volumeRamp = 0;
+            gHudAudioData[0].playerIndex = racer->playerIndex;
             temp_a3->unk1A = 1;
             break;
         case 1:
@@ -1770,8 +1772,8 @@ void render_race_finish_position(Object_Racer *racer, s32 updateRate) {
                 if (temp_a3->unk1C == 2) {
                     temp_a3->unk1A = 2;
                     sound_play(SOUND_WHOOSH1, NULL);
-                    if (D_800E2770->playerIndex == racer->playerIndex) {
-                        D_800E2770->unk3 = -1;
+                    if (gHudAudioData[0].playerIndex == racer->playerIndex) {
+                        gHudAudioData[0].volumeRamp = -1;
                     }
                 }
             }
@@ -2189,16 +2191,16 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
         gCurrentHud->challengeFinishPosition2.y += 35.0f;
         gCurrentHud->raceTimeNumber.y += 35.0f;
         gCurrentHud->lapTimeText.y += 35.0f;
-        D_800E2770[0].playerIndex = racer->playerIndex;
+        gHudAudioData[0].playerIndex = racer->playerIndex;
         D_80127189 = 1;
     }
 
     switch (gCurrentHud->challengeFinishPosition1.unk1A) {
         case 0:
             if (!(raceType & RACETYPE_CHALLENGE_BATTLE)) {
-                D_800E2770[0].volume = 127;
-                D_800E2770[0].unk3 = 0;
-                D_800E2770[0].playerIndex = racer->playerIndex;
+                gHudAudioData[0].volume = 127;
+                gHudAudioData[0].volumeRamp = 0;
+                gHudAudioData[0].playerIndex = racer->playerIndex;
                 sound_play(SOUND_WHOOSH1, NULL);
             }
             switch (gHUDNumPlayers) {
@@ -2397,8 +2399,8 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
             func_800A5F18(racer);
             break;
         case 4:
-            if (racer->playerIndex == D_800E2770[0].playerIndex) {
-                D_800E2770[0].unk3 = -1;
+            if (racer->playerIndex == gHudAudioData[0].playerIndex) {
+                gHudAudioData[0].volumeRamp = -1;
             }
             gCurrentHud->challengeFinishPosition1.unk1A = 5;
             gCurrentHud->challengeFinishPosition1.unk1B = 0;
@@ -2437,15 +2439,15 @@ void render_time_trial_finish(Object_Racer *racer, s32 updateRate) {
 
     switch (gCurrentHud->raceEndFinish.unk1A) {
         case 0:
-            D_800E2770->volume = 127;
-            D_800E2770->unk3 = 0;
-            D_800E2770->playerIndex = (s8) racer->playerIndex;
+            gHudAudioData[0].volume = 127;
+            gHudAudioData[0].volumeRamp = 0;
+            gHudAudioData[0].playerIndex = racer->playerIndex;
             sound_play(SOUND_WHOOSH1, NULL);
             if (gHUDNumPlayers == 0 || gHUDNumPlayers == 1) {
                 gCurrentHud->raceEndFinish.x = -200.0f;
                 gCurrentHud->raceEndFinish.unk1D = 0;
             } else {
-                if ((racer->playerIndex == 0) || (racer->playerIndex == 2)) {
+                if (racer->playerIndex == PLAYER_ONE || racer->playerIndex == PLAYER_THREE) {
                     gCurrentHud->raceEndFinish.unk1D = -80;
                     gCurrentHud->raceEndFinish.x = -200.0f;
                 } else {
@@ -2473,10 +2475,10 @@ void render_time_trial_finish(Object_Racer *racer, s32 updateRate) {
             gCurrentHud->raceEndFinish.unk1B += updateRate;
             if (gCurrentHud->raceEndFinish.unk1B >= 120) {
                 gCurrentHud->raceEndFinish.unk1A = 3;
-                if ((gHUDNumPlayers == 0) || (gHUDNumPlayers == 1)) {
+                if (gHUDNumPlayers == PLAYER_ONE || gHUDNumPlayers == PLAYER_TWO) {
                     gCurrentHud->raceEndFinish.unk1D = 56;
                 } else {
-                    if ((racer->playerIndex == 0) || (racer->playerIndex == 2)) {
+                    if (racer->playerIndex == PLAYER_ONE || racer->playerIndex == PLAYER_THREE) {
                         gCurrentHud->raceEndFinish.unk1D = 56;
                     } else {
                         gCurrentHud->raceEndFinish.unk1D = -40;
@@ -2494,7 +2496,7 @@ void render_time_trial_finish(Object_Racer *racer, s32 updateRate) {
             func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->raceEndFinish);
             return;
         case 4:
-            D_800E2770->unk3 = -1;
+            gHudAudioData[0].volumeRamp = -1;
             gCurrentHud->raceEndFinish.unk1A = 5;
             gCurrentHud->raceEndFinish.unk1B = 0;
             return;
@@ -2929,11 +2931,11 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     for (i = 0; i < gAssetHudElementIdsCount; i++) {
         if (gAssetHudElements->entry[i] && i != 40) {
             if (++gAssetHudElementStaleCounter[i] > 60) {
-                if ((gAssetHudElementIds[i] & (0x4000 | 0x8000)) == (0x4000 | 0x8000)) {
+                if ((gAssetHudElementIds[i] & HUD_ELEMENT_TEXTURE) == HUD_ELEMENT_TEXTURE) {
                     free_texture((TextureHeader *) gAssetHudElements->entry[i]);
-                } else if (gAssetHudElementIds[i] & 0x8000) {
+                } else if (gAssetHudElementIds[i] & HUD_ELEMENT_SPRITE) {
                     free_sprite((Sprite *) gAssetHudElements->entry[i]);
-                } else if (gAssetHudElementIds[i] & 0x4000) {
+                } else if (gAssetHudElementIds[i] & HUD_ELEMENT_OBJECT) {
                     free_object((Object *) gAssetHudElements->entry[i]);
                 } else {
                     free_3d_model((ObjectModel **) gAssetHudElements->entry[i]);

@@ -65,9 +65,9 @@ glabel func_800A6254
 /* 0A6F28 800A6328 3C01420C */  li    $at, 0x420C0000 # 35.000000
 /* 0A6F2C 800A632C 44810000 */  mtc1  $at, $f0
 /* 0A6F30 800A6330 C44405F0 */  lwc1  $f4, 0x5f0($v0)
-/* 0A6F34 800A6334 3C03800E */  lui   $v1, %hi(D_800E2770) # $v1, 0x800e
+/* 0A6F34 800A6334 3C03800E */  lui   $v1, %hi(gHudAudioData) # $v1, 0x800e
 /* 0A6F38 800A6338 46002180 */  add.s $f6, $f4, $f0
-/* 0A6F3C 800A633C 24632770 */  addiu $v1, %lo(D_800E2770) # addiu $v1, $v1, 0x2770
+/* 0A6F3C 800A633C 24632770 */  addiu $v1, %lo(gHudAudioData) # addiu $v1, $v1, 0x2770
 /* 0A6F40 800A6340 E44605F0 */  swc1  $f6, 0x5f0($v0)
 /* 0A6F44 800A6344 8D220000 */  lw    $v0, ($t1)
 /* 0A6F48 800A6348 3C018012 */  lui   $at, %hi(D_80127189) # $at, 0x8012
@@ -95,9 +95,9 @@ glabel func_800A6254
 /* 0A6F9C 800A639C 3C098012 */  lui   $t1, %hi(gCurrentHud) # $t1, 0x8012
 /* 0A6FA0 800A63A0 25296CDC */  addiu $t1, %lo(gCurrentHud) # addiu $t1, $t1, 0x6cdc
 /* 0A6FA4 800A63A4 8D220000 */  lw    $v0, ($t1)
-/* 0A6FA8 800A63A8 3C03800E */  lui   $v1, %hi(D_800E2770) # $v1, 0x800e
+/* 0A6FA8 800A63A8 3C03800E */  lui   $v1, %hi(gHudAudioData) # $v1, 0x800e
 /* 0A6FAC 800A63AC 905905FA */  lbu   $t9, 0x5fa($v0)
-/* 0A6FB0 800A63B0 24632770 */  addiu $v1, %lo(D_800E2770) # addiu $v1, $v1, 0x2770
+/* 0A6FB0 800A63B0 24632770 */  addiu $v1, %lo(gHudAudioData) # addiu $v1, $v1, 0x2770
 /* 0A6FB4 800A63B4 2F210005 */  sltiu $at, $t9, 5
 /* 0A6FB8 800A63B8 10200278 */  beqz  $at, .L800A6D9C
 /* 0A6FBC 800A63BC 0019C880 */   sll   $t9, $t9, 2
