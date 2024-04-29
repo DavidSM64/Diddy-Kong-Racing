@@ -33,7 +33,7 @@ glabel func_800A1E48
 /* 0A2AAC 800A1EAC 00000000 */  nop   
 /* 0A2AB0 800A1EB0 24040001 */  li    $a0, 1
 .L800A1EB4:
-/* 0A2AB4 800A1EB4 0C01A142 */  jal   func_80068508
+/* 0A2AB4 800A1EB4 0C01A142 */  jal   sprite_anim_off
 /* 0A2AB8 800A1EB8 AFA7007C */   sw    $a3, 0x7c($sp)
 /* 0A2ABC 800A1EBC 8FAF0078 */  lw    $t7, 0x78($sp)
 /* 0A2AC0 800A1EC0 8FA7007C */  lw    $a3, 0x7c($sp)
@@ -170,7 +170,7 @@ glabel func_800A1E48
 /* 0A2CC8 800A20C8 00000000 */   nop   
 .L800A20CC:
 /* 0A2CCC 800A20CC AFA7007C */  sw    $a3, 0x7c($sp)
-/* 0A2CD0 800A20D0 0C0288BD */  jal   func_800A22F4
+/* 0A2CD0 800A20D0 0C0288BD */  jal   hud_draw_lives
 /* 0A2CD4 800A20D4 AFA8006C */   sw    $t0, 0x6c($sp)
 /* 0A2CD8 800A20D8 8FA7007C */  lw    $a3, 0x7c($sp)
 /* 0A2CDC 800A20DC 8FA8006C */  lw    $t0, 0x6c($sp)
@@ -296,7 +296,7 @@ glabel func_800A1E48
 /* 0A2EAC 800A22AC 46022180 */  add.s $f6, $f4, $f2
 /* 0A2EB0 800A22B0 E44606F0 */  swc1  $f6, 0x6f0($v0)
 .L800A22B4:
-/* 0A2EB4 800A22B4 0C01A142 */  jal   func_80068508
+/* 0A2EB4 800A22B4 0C01A142 */  jal   sprite_anim_off
 /* 0A2EB8 800A22B8 00002025 */   move  $a0, $zero
 /* 0A2EBC 800A22BC 8FBF0044 */  lw    $ra, 0x44($sp)
 /* 0A2EC0 800A22C0 C7B50018 */  lwc1  $f21, 0x18($sp)

@@ -73,70 +73,71 @@ UNUSED f32 D_800DC76C[15] = {
     -1.0f, -0.70711f, -0.70711f, -1.0f, 0.0f, -0.70711f, 0.70711f,
 };
 
-u16 D_800DC7A8[8] = {
-    BHV_RACER,
-    BHV_SCENERY,
-    BHV_FISH,
-    BHV_ANIMATOR,
-    BHV_ANIMATED_OBJECT_2,
-    BHV_WIZPIG_SHIP,
-    BHV_ANIMATED_OBJECT_3,
-    BHV_ANIMATED_OBJECT_4,
+u16 D_800DC7A8[] = {
+    // Car
+    ASSET_OBJECT_ID_KREMCAR,  ASSET_OBJECT_ID_BADGERCAR, ASSET_OBJECT_ID_TORTCAR,    ASSET_OBJECT_ID_CONKACAR,
+    ASSET_OBJECT_ID_TIGERCAR, ASSET_OBJECT_ID_BANJOCAR,  ASSET_OBJECT_ID_CHICKENCAR, ASSET_OBJECT_ID_MOUSECAR,
 };
 
-s16 D_800DC7B8[52] = {
-    0x00ED,
-    0x00FF,
-    BHV_TRIGGER,
-    BHV_VEHICLE_ANIMATION,
-    BHV_ZIPPER_WATER,
-    BHV_UNK_3A,
-    BHV_TAJ_TELEPOINT,
-    BHV_SILVER_COIN,
-    BHV_BOOST,
-    BHV_WARDEN_SMOKE,
-    0x00F3,
-    0x00FD,
-    BHV_TREASURE_SUCKER,
-    BHV_LOG,
-    BHV_LAVA_SPURT,
-    BHV_POS_ARROW,
-    BHV_UNK_5B,
-    BHV_UNK_5C,
-    BHV_ZIPPER_AIR,
-    BHV_UNK_5E,
-    0x00F4,
-    0x0101,
-    BHV_RACER,
-    BHV_SCENERY,
-    BHV_FISH,
-    BHV_ANIMATOR,
-    BHV_ANIMATED_OBJECT_2,
-    BHV_WIZPIG_SHIP,
-    BHV_ANIMATED_OBJECT_3,
-    BHV_ANIMATED_OBJECT_4,
-    0x00ED,
-    0x00FF,
-    BHV_RACER,
-    BHV_SCENERY,
-    BHV_FISH,
-    BHV_ANIMATOR,
-    BHV_ANIMATED_OBJECT_2,
-    BHV_WIZPIG_SHIP,
-    BHV_ANIMATED_OBJECT_3,
-    BHV_ANIMATED_OBJECT_4,
-    0x00ED,
-    0x00FF,
-    0x00D9,
-    0x00DF,
-    0x00E0,
-    0x0105,
-    0x008A,
-    0x00DA,
-    0x00E8,
-    0x0115,
-    0x0118,
-    BHV_NONE,
+s16 D_800DC7B8[] = {
+    // TODO: move these first two entries to the first var above. I'm thinking this is either all one big var, or the
+    // boss objects have their own table.
+    ASSET_OBJECT_ID_SWCAR,
+    ASSET_OBJECT_ID_DIDDYCAR,
+    // Hover
+    ASSET_OBJECT_ID_KREMLINHOVER,
+    ASSET_OBJECT_ID_BADGERHOVER,
+    ASSET_OBJECT_ID_TORTHOVER,
+    ASSET_OBJECT_ID_CONKAHOVER,
+    ASSET_OBJECT_ID_TIGERHOVER,
+    ASSET_OBJECT_ID_BANJOHOVER,
+    ASSET_OBJECT_ID_CHICKENHOVER,
+    ASSET_OBJECT_ID_MOUSEHOVER,
+    ASSET_OBJECT_ID_TICKTOCKHOVER,
+    ASSET_OBJECT_ID_DIDDYHOVER,
+    // Plane
+    ASSET_OBJECT_ID_KREMPLANE,
+    ASSET_OBJECT_ID_BADGERPLANE,
+    ASSET_OBJECT_ID_TORTPLANE,
+    ASSET_OBJECT_ID_CONKA,
+    ASSET_OBJECT_ID_TIGPLANE,
+    ASSET_OBJECT_ID_BANJOPLANE,
+    ASSET_OBJECT_ID_CHICKENPLANE,
+    ASSET_OBJECT_ID_MOUSEPLANE,
+    ASSET_OBJECT_ID_TICKTOCKPLANE,
+    ASSET_OBJECT_ID_DIDDYPLANE,
+    // Car
+    ASSET_OBJECT_ID_KREMCAR,
+    ASSET_OBJECT_ID_BADGERCAR,
+    ASSET_OBJECT_ID_TORTCAR,
+    ASSET_OBJECT_ID_CONKACAR,
+    ASSET_OBJECT_ID_TIGERCAR,
+    ASSET_OBJECT_ID_BANJOCAR,
+    ASSET_OBJECT_ID_CHICKENCAR,
+    ASSET_OBJECT_ID_MOUSECAR,
+    ASSET_OBJECT_ID_SWCAR,
+    ASSET_OBJECT_ID_DIDDYCAR,
+    // Car again?
+    ASSET_OBJECT_ID_KREMCAR,
+    ASSET_OBJECT_ID_BADGERCAR,
+    ASSET_OBJECT_ID_TORTCAR,
+    ASSET_OBJECT_ID_CONKACAR,
+    ASSET_OBJECT_ID_TIGERCAR,
+    ASSET_OBJECT_ID_BANJOCAR,
+    ASSET_OBJECT_ID_CHICKENCAR,
+    ASSET_OBJECT_ID_MOUSECAR,
+    ASSET_OBJECT_ID_SWCAR,
+    ASSET_OBJECT_ID_DIDDYCAR,
+    // Special
+    ASSET_OBJECT_ID_TRICKYTOPS,
+    ASSET_OBJECT_ID_WALRUS,
+    ASSET_OBJECT_ID_DRAGONBOSS,
+    ASSET_OBJECT_ID_TERRYBOSS,
+    ASSET_OBJECT_ID_SNOWBALLBOSS,
+    ASSET_OBJECT_ID_FLYINGCARPET,
+    ASSET_OBJECT_ID_OCTOPUS,
+    ASSET_OBJECT_ID_WIZPIG,
+    ASSET_OBJECT_ID_WIZPIGROCKET,
 };
 
 // A table of which vehicles to use for boss races.
@@ -218,7 +219,7 @@ s8 gNumRacersSaved;
 s8 D_8011AD52;
 s8 D_8011AD53;
 s32 D_8011AD54;
-Object *(*gSpawnObjectHeap)[0x200];
+Object *(*gSpawnObjectHeap)[sizeof(Object)];
 s32 D_8011AD5C;
 s32 D_8011AD60;
 s32 *gAssetsObjectHeadersTable;
@@ -643,7 +644,7 @@ void free_all_objects(void) {
     free_tt_ghost_data();
     D_800DC748 = 0;
     if (D_800DC71C) {
-        func_80072298(1);
+        rumble_init(TRUE);
     }
     D_800DC71C = 0;
     if (gSwapLeadPlayer && is_in_two_player_adventure()) {
@@ -1012,7 +1013,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     }
     sp127 = -1;
     i2 = gNumRacers;
-    D_8011AD24[1] = levelHeader->unkB8;
+    D_8011AD24[1] = levelHeader->bossRaceID;
     for (i6 = 0; i6 < gNumRacers; i6++) {
         var_s4 = i6;
         if (raceType != RACETYPE_HUBWORLD && isChallengeMode == 0 && D_8011AD3C == 0) {
@@ -1247,7 +1248,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     if (raceType == RACETYPE_DEFAULT && numPlayers == 1 && !is_in_adventure_two()) {
         if (is_two_player_adventure_race() == 0) {
             for (i2 = 0; i2 < 3; i2++) {
-                entry->common.objectID = BHV_ANIMATED_OBJECT;
+                entry->common.objectID = ASSET_OBJECT_ID_POSARROW;
                 entry->common.size = 8;
                 entry->common.x = 0;
                 entry->common.y = 0;
@@ -1290,7 +1291,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         cutsceneCameraSegment->object.animationID = cutsceneID;
     }
     if (func_8000E148() != 0) {
-        func_80072298(0);
+        rumble_init(FALSE);
         gEventCountdown = 0;
         start_level_music(1.0f);
     }
@@ -1631,7 +1632,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         curObj->segment.trans.x_position, curObj->segment.trans.y_position, curObj->segment.trans.z_position);
     curObj->segment.object.unk2C = var_a0;
     curObj->segment.level_entry = (LevelObjectEntry *) entry;
-    curObj->unk4A = objType;
+    curObj->objectID = objType;
     func_800245B4(objType);
     curObj->segment.trans.scale = curObj->segment.header->scale;
     curObj->segment.camera.unk34 = curObj->segment.header->unk50 * curObj->segment.trans.scale;
@@ -1690,8 +1691,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
             break;
     }
     if (!(arg1 & 2)) {
-        if (curObj->unk4A != 0x19) {
-            if (curObj->unk4A == 0xCB) {
+        if (curObj->objectID != 0x19) {
+            if (curObj->objectID == 0xCB) {
                 assetCount = 1;
                 if (is_in_adventure_two()) {
                     curObj->segment.header->modelIds[0] = curObj->segment.header->modelIds[1];
@@ -2106,7 +2107,7 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
     object->segment.trans.flags = OBJ_FLAGS_UNK_0002;
     object->segment.header = objHeader;
     object->segment.object.unk2C = objectHeaderIndex;
-    object->unk4A = objectHeaderIndex;
+    object->objectID = objectHeaderIndex;
     object->segment.trans.scale = objHeader->scale;
     if (objHeader->flags & OBJ_FLAGS_UNK_0080) {
         object->segment.trans.flags |= OBJ_FLAGS_UNK_0080;
@@ -2147,7 +2148,7 @@ Object *func_8000FD54(s32 objectHeaderIndex) {
  * Official Name: objFreeObject
  */
 void free_object(Object *object) {
-    func_800245B4(object->unk4A | OBJ_FLAGS_DEACTIVATED);
+    func_800245B4(object->objectID | OBJ_FLAGS_DEACTIVATED);
     gParticlePtrList[gFreeListCount] = object;
     gFreeListCount++;
 }
@@ -2347,7 +2348,7 @@ void func_80010994(s32 updateRate) {
             if (sp54 & A_BUTTON) {
                 func_8001E45C(CUTSCENE_ID_UNK_64);
             } else if ((sp54 & B_BUTTON) && (get_trophy_race_world_id() == 0) && (is_in_tracks_mode() == 0)) {
-                func_8006F140(1); // FADE_BARNDOOR_HORIZONTAL?
+                level_transition_begin(1); // FADE_BARNDOOR_HORIZONTAL?
             }
         }
     } else if (D_8011AF00 == 0) {
@@ -3047,7 +3048,7 @@ void render_object(Gfx **dList, MatrixS **mtx, Vertex **verts, Object *obj) {
     if (obj->segment.trans.flags & (OBJ_FLAGS_INVISIBLE | OBJ_FLAGS_SHADOW_ONLY)) {
         return;
     }
-    update_object_stack_trace(OBJECT_DRAW, obj->unk4A);
+    update_object_stack_trace(OBJECT_DRAW, obj->objectID);
     gObjectCurrDisplayList = *dList;
     gObjectCurrMatrix = *mtx;
     gObjectCurrVertexList = *verts;
@@ -3810,7 +3811,7 @@ void func_80016500(Object *obj, Object_Racer *racer) {
         }
         if (racer->unk1F6 == 0 && angle >= 56) {
             if (!racer->raceFinished) {
-                func_80072348(racer->playerIndex, 18);
+                rumble_set(racer->playerIndex, RUMBLE_TYPE_18);
             }
             racer->unk1F3 |= 8;
         }
@@ -3894,7 +3895,7 @@ void func_80016748(Object *obj0, Object *obj1) {
                     if (obj0->behaviorId == BHV_RACER) {
                         racer = &obj0->unk64->racer;
                         if (!racer->raceFinished) {
-                            func_80072348(racer->playerIndex, 18);
+                            rumble_set(racer->playerIndex, RUMBLE_TYPE_18);
                         }
                         if (racer->vehicleID == VEHICLE_HOVERCRAFT) {
                             if (radius > 0.1) {
@@ -4246,7 +4247,7 @@ void func_8001A8F4(s32 updateRate) {
         for (i = 0; i < gNumRacers; i++) {
             racer = &(*gRacers)[i]->unk64->racer;
             racer->magnetTargetObj = NULL;
-            if (racer->playerIndex != PLAYER_COMPUTER && racer->unk1AC == 1) {
+            if (racer->playerIndex != PLAYER_COMPUTER && racer->finishPosition == 1) {
                 sp30 = i;
             }
             if (racer->magnetSoundMask != NULL) {
@@ -4260,7 +4261,7 @@ void func_8001A8F4(s32 updateRate) {
         (*gRacers)[0] = (*gRacers)[sp30];
         (*gRacers)[sp30] = prevPort0Racer;
         racer_sound_free((*gRacers)[0]);
-        func_800A0B74();
+        hud_audio_init();
         reset_rocket_sound_timer();
         sound_stop_all();
         if (is_in_two_player_adventure()) {
@@ -4341,7 +4342,7 @@ void func_8001A8F4(s32 updateRate) {
             if (i != 0) {
                 transition_begin(&D_800DC6F8);
             }
-            func_8006F140(2);
+            level_transition_begin(2);
             D_8011AD50 = 5;
             settings->cutsceneFlags |= 0x40000;
         }
@@ -6028,7 +6029,7 @@ void func_80022948(void) {
         newRacerEntry.angleX = 0;
         newRacerEntry.angleZ = 0;
         newRacerEntry.playerIndex = 4;
-        newRacerEntry.common.objectID = 0xDA;
+        newRacerEntry.common.objectID = ASSET_OBJECT_ID_FLYINGCARPET;
         func_800619F4(0);
         racerObj = spawn_object(&newRacerEntry.common, 1);
         (*gRacers)[1] = racerObj;
@@ -6123,7 +6124,7 @@ void func_80022E18(s32 arg0) {
         racer->unk15C = NULL;
     }
     if (arg0 == 0) {
-        if (racer->unk1AC == 1) {
+        if (racer->finishPosition == 1) {
             settings = get_settings();
             flags = racer->vehicleID;
             flags = 1 << (flags + 3);
@@ -6152,7 +6153,7 @@ void func_80022E18(s32 arg0) {
         obj->properties.common.unk0 = 0x14;
     }
     music_change_on();
-    func_800A0B74();
+    hud_audio_init();
     start_level_music(1.0f);
     gIsTajChallenge = 0;
 }
@@ -6589,7 +6590,7 @@ void run_object_init_func(Object *obj, void *entry, s32 param) {
             obj_init_wizpigship(obj, (LevelObjectEntry_WizpigShip *) entry);
             break;
         case BHV_BOOST:
-            obj_init_boost(obj, (LevelObjectEntry_Boost *) entry);
+            obj_init_boost(obj, (LevelObjectEntry_Boost2 *) entry);
             break;
         case BHV_SILVER_COIN:
             obj_init_silvercoin(obj, (LevelObjectEntry_SilverCoin *) entry);
@@ -6768,7 +6769,7 @@ s32 obj_init_property_flags(s32 behaviorId) {
  * One big switch statement for whichever object.
  */
 void run_object_loop_func(Object *obj, s32 updateRate) {
-    update_object_stack_trace(OBJECT_UPDATE, obj->unk4A);
+    update_object_stack_trace(OBJECT_UPDATE, obj->objectID);
     switch (obj->behaviorId) {
         case BHV_SCENERY:
             obj_loop_scenery(obj, updateRate);

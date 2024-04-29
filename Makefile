@@ -333,6 +333,15 @@ else
 	@echo "/build/lib directory has already been deleted."
 endif
 
+clean_assets:
+ifneq ($(wildcard ./build/.*),)
+	rm -r build
+else
+	@echo "/build/ directory has already been deleted."
+endif
+	rm -r assets
+	rm -f dkr.ld
+
 # Helps fix an issue with parallel jobs.
 $(ALL_ASSETS_BUILT): | $(BUILD_DIR)
 

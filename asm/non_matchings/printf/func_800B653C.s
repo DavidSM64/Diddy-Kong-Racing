@@ -20,16 +20,16 @@ glabel func_800B653C
 /* 0B7170 800B6570 0080A825 */  move  $s5, $a0
 /* 0B7174 800B6574 122000EB */  beqz  $s1, .L800B6924
 /* 0B7178 800B6578 24B00001 */   addiu $s0, $a1, 1
-/* 0B717C 800B657C 3C1E8012 */  lui   $fp, %hi(D_80127CB8) # $fp, 0x8012
+/* 0B717C 800B657C 3C1E8012 */  lui   $fp, %hi(gDebugTextOn) # $fp, 0x8012
 /* 0B7180 800B6580 3C178012 */  lui   $s7, %hi(D_80127CB2) # $s7, 0x8012
 /* 0B7184 800B6584 3C168012 */  lui   $s6, %hi(D_80127CB0) # $s6, 0x8012
-/* 0B7188 800B6588 3C148012 */  lui   $s4, %hi(D_80127CAE) # $s4, 0x8012
-/* 0B718C 800B658C 3C128012 */  lui   $s2, %hi(D_80127CAC) # $s2, 0x8012
-/* 0B7190 800B6590 26527CAC */  addiu $s2, %lo(D_80127CAC) # addiu $s2, $s2, 0x7cac
-/* 0B7194 800B6594 26947CAE */  addiu $s4, %lo(D_80127CAE) # addiu $s4, $s4, 0x7cae
+/* 0B7188 800B6588 3C148012 */  lui   $s4, %hi(gDebugTextY) # $s4, 0x8012
+/* 0B718C 800B658C 3C128012 */  lui   $s2, %hi(gDebugTextX) # $s2, 0x8012
+/* 0B7190 800B6590 26527CAC */  addiu $s2, %lo(gDebugTextX) # addiu $s2, $s2, 0x7cac
+/* 0B7194 800B6594 26947CAE */  addiu $s4, %lo(gDebugTextY) # addiu $s4, $s4, 0x7cae
 /* 0B7198 800B6598 26D67CB0 */  addiu $s6, %lo(D_80127CB0) # addiu $s6, $s6, 0x7cb0
 /* 0B719C 800B659C 26F77CB2 */  addiu $s7, %lo(D_80127CB2) # addiu $s7, $s7, 0x7cb2
-/* 0B71A0 800B65A0 27DE7CB8 */  addiu $fp, %lo(D_80127CB8) # addiu $fp, $fp, 0x7cb8
+/* 0B71A0 800B65A0 27DE7CB8 */  addiu $fp, %lo(gDebugTextOn) # addiu $fp, $fp, 0x7cb8
 /* 0B71A4 800B65A4 2A21000B */  slti  $at, $s1, 0xb
 .L800B65A8:
 /* 0B71A8 800B65A8 14200012 */  bnez  $at, .L800B65F4
@@ -63,8 +63,8 @@ glabel func_800B653C
 /* 0B7210 800B6610 02A02025 */   move  $a0, $s5
 glabel L800B6614
 /* 0B7214 800B6614 3C018012 */  lui   $at, %hi(D_80127CB4) # $at, 0x8012
-/* 0B7218 800B6618 3C058012 */  lui   $a1, %hi(D_80127CD0) # $a1, 0x8012
-/* 0B721C 800B661C 94A57CD0 */  lhu   $a1, %lo(D_80127CD0)($a1)
+/* 0B7218 800B6618 3C058012 */  lui   $a1, %hi(gDebugScreenWidth) # $a1, 0x8012
+/* 0B721C 800B661C 94A57CD0 */  lhu   $a1, %lo(gDebugScreenWidth)($a1)
 /* 0B7220 800B6620 AC207CB4 */  sw    $zero, %lo(D_80127CB4)($at)
 /* 0B7224 800B6624 96440000 */  lhu   $a0, ($s2)
 /* 0B7228 800B6628 00001825 */  move  $v1, $zero
@@ -73,8 +73,8 @@ glabel L800B6614
 glabel L800B6634
 /* 0B7234 800B6634 240F0001 */  li    $t7, 1
 /* 0B7238 800B6638 3C018012 */  lui   $at, %hi(D_80127CB4) # $at, 0x8012
-/* 0B723C 800B663C 3C058012 */  lui   $a1, %hi(D_80127CD0) # $a1, 0x8012
-/* 0B7240 800B6640 94A57CD0 */  lhu   $a1, %lo(D_80127CD0)($a1)
+/* 0B723C 800B663C 3C058012 */  lui   $a1, %hi(gDebugScreenWidth) # $a1, 0x8012
+/* 0B7240 800B6640 94A57CD0 */  lhu   $a1, %lo(gDebugScreenWidth)($a1)
 /* 0B7244 800B6644 AC2F7CB4 */  sw    $t7, %lo(D_80127CB4)($at)
 /* 0B7248 800B6648 96440000 */  lhu   $a0, ($s2)
 /* 0B724C 800B664C 24030001 */  li    $v1, 1
@@ -104,8 +104,8 @@ glabel L800B6658
 /* 0B72A8 800B66A8 03194025 */  or    $t0, $t8, $t9
 /* 0B72AC 800B66AC AC680004 */  sw    $t0, 4($v1)
 .L800B66B0:
-/* 0B72B0 800B66B0 3C058012 */  lui   $a1, %hi(D_80127CD0) # $a1, 0x8012
-/* 0B72B4 800B66B4 94A57CD0 */  lhu   $a1, %lo(D_80127CD0)($a1)
+/* 0B72B0 800B66B0 3C058012 */  lui   $a1, %hi(gDebugScreenWidth) # $a1, 0x8012
+/* 0B72B4 800B66B4 94A57CD0 */  lhu   $a1, %lo(gDebugScreenWidth)($a1)
 /* 0B72B8 800B66B8 3C038012 */  lui   $v1, %hi(D_80127CB4) # $v1, 0x8012
 /* 0B72BC 800B66BC 8C637CB4 */  lw    $v1, %lo(D_80127CB4)($v1)
 /* 0B72C0 800B66C0 96440000 */  lhu   $a0, ($s2)
@@ -135,8 +135,8 @@ glabel L800B66CC
 /* 0B731C 800B671C 012B5025 */  or    $t2, $t1, $t3
 /* 0B7320 800B6720 AC6A0004 */  sw    $t2, 4($v1)
 .L800B6724:
-/* 0B7324 800B6724 3C058012 */  lui   $a1, %hi(D_80127CD0) # $a1, 0x8012
-/* 0B7328 800B6728 94A57CD0 */  lhu   $a1, %lo(D_80127CD0)($a1)
+/* 0B7324 800B6724 3C058012 */  lui   $a1, %hi(gDebugScreenWidth) # $a1, 0x8012
+/* 0B7328 800B6728 94A57CD0 */  lhu   $a1, %lo(gDebugScreenWidth)($a1)
 /* 0B732C 800B672C 3C038012 */  lui   $v1, %hi(D_80127CB4) # $v1, 0x8012
 /* 0B7330 800B6730 8C637CB4 */  lw    $v1, %lo(D_80127CB4)($v1)
 /* 0B7334 800B6734 96440000 */  lhu   $a0, ($s2)
@@ -152,11 +152,11 @@ glabel L800B6740
 /* 0B7358 800B6758 96E60000 */  lhu   $a2, ($s7)
 /* 0B735C 800B675C 96470000 */  lhu   $a3, ($s2)
 /* 0B7360 800B6760 25AE000A */  addiu $t6, $t5, 0xa
-/* 0B7364 800B6764 0C02DA57 */  jal   func_800B695C
+/* 0B7364 800B6764 0C02DA57 */  jal   debug_text_background
 /* 0B7368 800B6768 AFAE0010 */   sw    $t6, 0x10($sp)
 .L800B676C:
 /* 0B736C 800B676C 92190000 */  lbu   $t9, ($s0)
-/* 0B7370 800B6770 3C058012 */  lui   $a1, %hi(D_80127CD0) # $a1, 0x8012
+/* 0B7370 800B6770 3C058012 */  lui   $a1, %hi(gDebugScreenWidth) # $a1, 0x8012
 /* 0B7374 800B6774 A6590000 */  sh    $t9, ($s2)
 /* 0B7378 800B6778 92180001 */  lbu   $t8, 1($s0)
 /* 0B737C 800B677C 3C038012 */  lui   $v1, %hi(D_80127CB4) # $v1, 0x8012
@@ -172,14 +172,14 @@ glabel L800B6740
 /* 0B73A4 800B67A4 014D7825 */  or    $t7, $t2, $t5
 /* 0B73A8 800B67A8 A68F0000 */  sh    $t7, ($s4)
 /* 0B73AC 800B67AC A6EF0000 */  sh    $t7, ($s7)
-/* 0B73B0 800B67B0 94A57CD0 */  lhu   $a1, %lo(D_80127CD0)($a1)
+/* 0B73B0 800B67B0 94A57CD0 */  lhu   $a1, %lo(gDebugScreenWidth)($a1)
 /* 0B73B4 800B67B4 8C637CB4 */  lw    $v1, %lo(D_80127CB4)($v1)
 /* 0B73B8 800B67B8 26100004 */  addiu $s0, $s0, 4
 /* 0B73BC 800B67BC 10000039 */  b     .L800B68A4
 /* 0B73C0 800B67C0 24A5FFF0 */   addiu $a1, $a1, -0x10
 .L800B67C4:
-/* 0B73C4 800B67C4 3C058012 */  lui   $a1, %hi(D_80127CD0) # $a1, 0x8012
-/* 0B73C8 800B67C8 94A57CD0 */  lhu   $a1, %lo(D_80127CD0)($a1)
+/* 0B73C4 800B67C4 3C058012 */  lui   $a1, %hi(gDebugScreenWidth) # $a1, 0x8012
+/* 0B73C8 800B67C8 94A57CD0 */  lhu   $a1, %lo(gDebugScreenWidth)($a1)
 /* 0B73CC 800B67CC 3C038012 */  lui   $v1, %hi(D_80127CB4) # $v1, 0x8012
 /* 0B73D0 800B67D0 8C637CB4 */  lw    $v1, %lo(D_80127CB4)($v1)
 /* 0B73D4 800B67D4 96440000 */  lhu   $a0, ($s2)
@@ -195,25 +195,25 @@ glabel L800B6740
 /* 0B73F8 800B67F8 96E60000 */  lhu   $a2, ($s7)
 /* 0B73FC 800B67FC 96470000 */  lhu   $a3, ($s2)
 /* 0B7400 800B6800 2728000A */  addiu $t0, $t9, 0xa
-/* 0B7404 800B6804 0C02DA57 */  jal   func_800B695C
+/* 0B7404 800B6804 0C02DA57 */  jal   debug_text_background
 /* 0B7408 800B6808 AFA80010 */   sw    $t0, 0x10($sp)
 .L800B680C:
-/* 0B740C 800B680C 0C02DBC1 */  jal   func_800B6F04
+/* 0B740C 800B680C 0C02DBC1 */  jal   debug_text_newline
 /* 0B7410 800B6810 00000000 */   nop   
 /* 0B7414 800B6814 96440000 */  lhu   $a0, ($s2)
 /* 0B7418 800B6818 96890000 */  lhu   $t1, ($s4)
-/* 0B741C 800B681C 3C058012 */  lui   $a1, %hi(D_80127CD0) # $a1, 0x8012
+/* 0B741C 800B681C 3C058012 */  lui   $a1, %hi(gDebugScreenWidth) # $a1, 0x8012
 /* 0B7420 800B6820 A6C40000 */  sh    $a0, ($s6)
 /* 0B7424 800B6824 A6E90000 */  sh    $t1, ($s7)
-/* 0B7428 800B6828 94A57CD0 */  lhu   $a1, %lo(D_80127CD0)($a1)
+/* 0B7428 800B6828 94A57CD0 */  lhu   $a1, %lo(gDebugScreenWidth)($a1)
 /* 0B742C 800B682C 3C038012 */  lui   $v1, %hi(D_80127CB4) # $v1, 0x8012
 /* 0B7430 800B6830 8C637CB4 */  lw    $v1, %lo(D_80127CB4)($v1)
 /* 0B7434 800B6834 1000001B */  b     .L800B68A4
 /* 0B7438 800B6838 24A5FFF0 */   addiu $a1, $a1, -0x10
 .L800B683C:
 /* 0B743C 800B683C 96440000 */  lhu   $a0, ($s2)
-/* 0B7440 800B6840 3C058012 */  lui   $a1, %hi(D_80127CD0) # $a1, 0x8012
-/* 0B7444 800B6844 94A57CD0 */  lhu   $a1, %lo(D_80127CD0)($a1)
+/* 0B7440 800B6840 3C058012 */  lui   $a1, %hi(gDebugScreenWidth) # $a1, 0x8012
+/* 0B7444 800B6844 94A57CD0 */  lhu   $a1, %lo(gDebugScreenWidth)($a1)
 /* 0B7448 800B6848 8C637CB4 */  lw    $v1, %lo(D_80127CB4)($v1)
 /* 0B744C 800B684C 04810004 */  bgez  $a0, .L800B6860
 /* 0B7450 800B6850 3082001F */   andi  $v0, $a0, 0x1f
@@ -232,10 +232,10 @@ glabel L800B6740
 .L800B687C:
 /* 0B747C 800B687C 02A02025 */  move  $a0, $s5
 .L800B6880:
-/* 0B7480 800B6880 0C02DA7F */  jal   func_800B69FC
+/* 0B7480 800B6880 0C02DA7F */  jal   debug_text_character
 /* 0B7484 800B6884 02202825 */   move  $a1, $s1
-/* 0B7488 800B6888 3C058012 */  lui   $a1, %hi(D_80127CD0) # $a1, 0x8012
-/* 0B748C 800B688C 94A57CD0 */  lhu   $a1, %lo(D_80127CD0)($a1)
+/* 0B7488 800B6888 3C058012 */  lui   $a1, %hi(gDebugScreenWidth) # $a1, 0x8012
+/* 0B748C 800B688C 94A57CD0 */  lhu   $a1, %lo(gDebugScreenWidth)($a1)
 /* 0B7490 800B6890 3C038012 */  lui   $v1, %hi(D_80127CB4) # $v1, 0x8012
 /* 0B7494 800B6894 8C637CB4 */  lw    $v1, %lo(D_80127CB4)($v1)
 /* 0B7498 800B6898 96440000 */  lhu   $a0, ($s2)
@@ -264,10 +264,10 @@ glabel L800B6740
 /* 0B74E8 800B68E8 96C50000 */  lhu   $a1, ($s6)
 /* 0B74EC 800B68EC 96E60000 */  lhu   $a2, ($s7)
 /* 0B74F0 800B68F0 25AE000A */  addiu $t6, $t5, 0xa
-/* 0B74F4 800B68F4 0C02DA57 */  jal   func_800B695C
+/* 0B74F4 800B68F4 0C02DA57 */  jal   debug_text_background
 /* 0B74F8 800B68F8 AFAE0010 */   sw    $t6, 0x10($sp)
 .L800B68FC:
-/* 0B74FC 800B68FC 0C02DBC1 */  jal   func_800B6F04
+/* 0B74FC 800B68FC 0C02DBC1 */  jal   debug_text_newline
 /* 0B7500 800B6900 00000000 */   nop   
 /* 0B7504 800B6904 964F0000 */  lhu   $t7, ($s2)
 /* 0B7508 800B6908 96980000 */  lhu   $t8, ($s4)

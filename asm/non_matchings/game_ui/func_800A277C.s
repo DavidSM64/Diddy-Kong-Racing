@@ -435,7 +435,7 @@ glabel func_800A277C
 /* 0A3974 800A2D74 8FAF0098 */  lw    $t7, 0x98($sp)
 .L800A2D78:
 /* 0A3978 800A2D78 24040001 */  li    $a0, 1
-/* 0A397C 800A2D7C 0C01A142 */  jal   func_80068508
+/* 0A397C 800A2D7C 0C01A142 */  jal   sprite_anim_off
 /* 0A3980 800A2D80 A1E00020 */   sb    $zero, 0x20($t7)
 /* 0A3984 800A2D84 8FA400A0 */  lw    $a0, 0xa0($sp)
 /* 0A3988 800A2D88 8FA500C8 */  lw    $a1, 0xc8($sp)
@@ -468,8 +468,8 @@ glabel func_800A277C
 /* 0A39F4 800A2DF4 81D8004B */  lb    $t8, 0x4b($t6)
 /* 0A39F8 800A2DF8 01228021 */  addu  $s0, $t1, $v0
 /* 0A39FC 800A2DFC 1B000060 */  blez  $t8, .L800A2F80
-/* 0A3A00 800A2E00 3C0F800E */   lui   $t7, %hi(D_800E27AC) # $t7, 0x800e
-/* 0A3A04 800A2E04 25EF27AC */  addiu $t7, %lo(D_800E27AC) # addiu $t7, $t7, 0x27ac
+/* 0A3A00 800A2E00 3C0F800E */   lui   $t7, %hi(gHudLapColours) # $t7, 0x800e
+/* 0A3A04 800A2E04 25EF27AC */  addiu $t7, %lo(gHudLapColours) # addiu $t7, $t7, 0x27ac
 /* 0A3A08 800A2E08 004FC821 */  addu  $t9, $v0, $t7
 /* 0A3A0C 800A2E0C AFB9003C */  sw    $t9, 0x3c($sp)
 .L800A2E10:
@@ -1049,7 +1049,7 @@ glabel func_800A277C
 /* 0A42A4 800A36A4 0C031059 */  jal   set_kerning
 /* 0A42A8 800A36A8 00002025 */   move  $a0, $zero
 .L800A36AC:
-/* 0A42AC 800A36AC 0C01A142 */  jal   func_80068508
+/* 0A42AC 800A36AC 0C01A142 */  jal   sprite_anim_off
 /* 0A42B0 800A36B0 00002025 */   move  $a0, $zero
 .L800A36B4:
 /* 0A42B4 800A36B4 8FBF002C */  lw    $ra, 0x2c($sp)

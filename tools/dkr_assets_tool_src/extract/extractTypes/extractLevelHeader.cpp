@@ -140,26 +140,27 @@ ExtractLevelHeader::ExtractLevelHeader(DkrAssetsSettings &settings, ExtractInfo 
     
     jsonFile.set_int("/unknown/unk53", header->unk53);
     
-    jsonFile.set_int("/unknown/unk56", header->unk56);
-    jsonFile.set_int("/unknown/unk57", header->unk57);
-    jsonFile.set_int("/unknown/unk58", header->unk58);
-    jsonFile.set_int("/unknown/unk59", header->unk59);
-    jsonFile.set_int("/unknown/unk5A", header->unk5A);
-    jsonFile.set_int("/unknown/unk5C", header->unk5C);
-    jsonFile.set_int("/unknown/unk5D", header->unk5D);
-    jsonFile.set_int("/unknown/unk5E", header->unk5E);
-    jsonFile.set_int("/unknown/unk60", header->unk60);
-    jsonFile.set_int("/unknown/unk62", header->unk62);
-    jsonFile.set_int("/unknown/unk64", header->unk64);
-    jsonFile.set_int("/unknown/unk66", header->unk66);
-    jsonFile.set_int("/unknown/unk68", header->unk68);
-    jsonFile.set_int("/unknown/unk6A", header->unk6A);
-    jsonFile.set_int("/unknown/unk6B", header->unk6B);
-    jsonFile.set_int("/unknown/unk6C", header->unk6C);
-    jsonFile.set_int("/unknown/unk6D", header->unk6D);
-    jsonFile.set_int("/unknown/unk6E", header->unk6E);
-    jsonFile.set_int("/unknown/unk70", header->unk70);
-    jsonFile.set_int("/unknown/unk71", header->unk71);
+    jsonFile.set_int("/waves/unk56", header->unk56);
+    jsonFile.set_int("/waves/unk57", header->unk57);
+    jsonFile.set_int("/waves/unk58", header->unk58);
+    jsonFile.set_int("/waves/unk59", header->unk59);
+    jsonFile.set_int("/waves/unk5A", header->unk5A);
+    jsonFile.set_int("/waves/unk5C", header->unk5C);
+    jsonFile.set_int("/waves/unk5D", header->unk5D);
+    jsonFile.set_int("/waves/unk5E", header->unk5E);
+    jsonFile.set_int("/waves/unk60", header->unk60);
+    jsonFile.set_int("/waves/wave-power", header->wavePower);
+    jsonFile.set_int("/waves/unk64", header->unk64);
+    jsonFile.set_int("/waves/unk66", header->unk66);
+    jsonFile.set_int("/waves/unk68", header->unk68);
+    jsonFile.set_int("/waves/unk6A", header->unk6A);
+    jsonFile.set_int("/waves/unk6B", header->unk6B);
+    jsonFile.set_int("/waves/unk6C", header->unk6C);
+    jsonFile.set_int("/waves/unk6D", header->unk6D);
+    jsonFile.set_int("/waves/unk6E", header->unk6E);
+    jsonFile.set_int("/waves/unk70", header->unk70);
+    jsonFile.set_int("/waves/unk71", header->unk71);
+    
     jsonFile.set_int("/unknown/unk72", header->unk72);
     jsonFile.set_int("/unknown/unk73", header->unk73);
     
@@ -177,7 +178,8 @@ ExtractLevelHeader::ExtractLevelHeader(DkrAssetsSettings &settings, ExtractInfo 
     jsonFile.set_int("/unknown/unkB5", header->unkB5);
     jsonFile.set_int("/unknown/unkB6", header->unkB6);
     jsonFile.set_int("/unknown/unkB7", header->unkB7);
-    jsonFile.set_int("/unknown/unkB8", header->unkB8);
+    std::string bossRaceID = _info.c_context->get_symbol_of_enum_int("BossSetupTypes", header->bossRaceID);
+    jsonFile.set_string("/boss-race-id", bossRaceID);
     jsonFile.set_int("/unknown/unkB9", header->unkB9);
     jsonFile.set_int("/unknown/unkBC", header->unkBC);
     jsonFile.set_int("/unknown/unkBD", header->unkBD);

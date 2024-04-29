@@ -21,7 +21,7 @@ u8 gN64FontCodes[] = "\0               0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#'
 
 u8 sControllerPaksPresent = 0; // Bits 0, 1, 2, and 3 of the bit pattern correspond to Controllers 1, 2, 3, and 4.
                                // 1 if a controller pak is present
-s32 D_800DE48C = 0;
+s32 gRumbleKillTimer = 0;
 
 /*******************************/
 
@@ -68,21 +68,24 @@ UNUSED const char D_800E7750[] = "warning: corrupt ghost\n";
 /************ .bss ************/
 
 OSMesgQueue *sControllerMesgQueue;
-s32 D_80124014;
+UNUSED s32 D_80124014;
 
 OSPfs pfs[MAXCONTROLLERS];
 
 /* Size: 0xA bytes */
-typedef struct unk_801241B8 {
-    /* 0x00 */ s16 unk0;
-    /* 0x02 */ s16 unk2;
-    /* 0x04 */ s16 unk4;
-    /* 0x06 */ s16 unk6;
-    /* 0x08 */ s16 unk8;
-} unk_801241B8;
-unk_801241B8 D_801241B8[MAXCONTROLLERS];
+typedef struct RumbleData {
+    /* 0x00 */ s16 rumbleType;        // Which rumble type was called
+    /* 0x02 */ s16 initialStrength;   // What lingeringStrength gets set to when it hits zero.
+    /* 0x04 */ s16 timer;             // Time left to spin the motor
+    /* 0x06 */ s16 lingeringStrength; // Timer that decides to continue spinning the motor
+    /* 0x08 */ s16 spinTime;          // Time the motor has been spinning
+} RumbleData;
+RumbleData gRumble[MAXCONTROLLERS];
 
-s16 *sUnkMiscAsset19; // Misc Asset 19
+#define RUMBLE_DURATION (type * 2) + 1 // Accesses the second byte of the rumble table.
+#define RUMBLE_STRENGTH (type * 2)     // Accesses the first byte of the rumble table.
+
+s16 *sRumbleTable; // Misc Asset 19, first byte is strength, second byte is duration.
 /**
  * Values for Misc Asset 19
  * 00 2D 00 12
@@ -105,11 +108,11 @@ s16 *sUnkMiscAsset19; // Misc Asset 19
  * 00 28 00 0A
  * 00 64 00 0F
  **/
-u8 D_801241E4;
-u8 sRumblePaksPresent; // Bits 0, 1, 2, and 3 of the bit pattern correspond to Controllers 1, 2, 3, and 4.
-                       // 1 if a rumble pak is present
-u8 D_801241E6;
-u8 D_801241E7;
+u8 gRumbleOn;
+u8 gRumblePresent; // Bits 0, 1, 2, and 3 of the bit pattern correspond to Controllers 1, 2, 3, and 4.
+                   // 1 if a rumble pak is present
+u8 gRumbleIdle;    // Bitfield showing which rumble paks are not spinning.
+u8 gRumbleActive;  // Bitfield showing which rumble paks are currently spinning.
 s32 gRumbleDetectionTimer;
 u8 *D_801241EC;
 u32 D_801241F0;
@@ -117,191 +120,215 @@ u32 D_801241F4;
 
 /*******************************/
 
-// Guessing, but maybe this gets player id from controller index,
-// but it might check for something like jointventure and will return
-// the same value for controllers one and two?
-u8 func_80072250(s32 arg0) {
-    if ((arg0 == 0 || arg0 == 1) && func_8000E158()) {
-        arg0 = 1 - arg0;
+/**
+ * Returns the player ID of the controller. Flips them around in 2 player adventure if the players have been swapped.
+ */
+u8 input_get_id(s32 controllerIndex) {
+    if ((controllerIndex == 0 || controllerIndex == 1) && func_8000E158()) {
+        controllerIndex = 1 - controllerIndex;
     }
-    return get_player_id(arg0);
+    return get_player_id(controllerIndex);
 }
 
-void func_80072298(u8 arg0) {
-    D_801241E4 = arg0;
-    if (arg0) {
-        gRumbleDetectionTimer = 0x79;
-        D_801241E6 = 0xF;
+/**
+ * Reset the rumble state for all controllers and set whether or not to allow rumble.
+ */
+void rumble_init(u8 canRumble) {
+    gRumbleOn = canRumble;
+    if (canRumble) {
+        gRumbleDetectionTimer = 121;
+        gRumbleIdle = 0xF;
         return;
     }
-    func_80072708();
+    rumble_kill();
 }
 
-UNUSED s32 func_800722E8(s16 controllerIndex) {
-    s32 temp;
+/**
+ * Check if the controller has a rumble pak inserted.
+ */
+UNUSED s32 rumble_exists(s16 controllerIndex) {
+    s32 cont;
     if (controllerIndex < 0 || controllerIndex >= 4) {
-        return 0;
+        return FALSE;
     }
-    temp = ((1 << func_80072250(controllerIndex)) & 0xFF);
-    return sRumblePaksPresent & temp;
+    cont = ((1 << input_get_id(controllerIndex)) & 0xFF);
+    return gRumblePresent & cont;
 }
 
-void func_80072348(s16 controllerIndex, u8 arg1) {
+/**
+ * Enable rumble for the controller using a behaviour table set by type.
+ */
+void rumble_set(s16 controllerIndex, u8 type) {
     s32 index;
 
-    if (arg1 < 19 && controllerIndex >= 0 && controllerIndex < 4) {
-        index = (func_80072250(controllerIndex)) & 0xFFFF;
-        if (D_801241B8[index].unk0 == arg1) {
-            if (D_801241B8[index].unk8 < 0) {
-                D_801241B8[index].unk8 = -300;
+    if (type < 19 && controllerIndex >= 0 && controllerIndex < 4) {
+        index = (input_get_id(controllerIndex)) & 0xFFFF;
+        if (gRumble[index].rumbleType == type) {
+            if (gRumble[index].spinTime < 0) {
+                gRumble[index].spinTime = -300;
             }
-            D_801241B8[index].unk4 = sUnkMiscAsset19[(arg1 * 2) + 1];
+            gRumble[index].timer = sRumbleTable[RUMBLE_DURATION];
         } else {
-            D_801241B8[index].unk0 = arg1;
-            if (sUnkMiscAsset19[arg1 * 2] != 0) {
-                func_80072578(controllerIndex, sUnkMiscAsset19[arg1 * 2], sUnkMiscAsset19[(arg1 * 2) + 1]);
+            gRumble[index].rumbleType = type;
+            if (sRumbleTable[RUMBLE_STRENGTH] != 0) {
+                rumble_start(controllerIndex, sRumbleTable[RUMBLE_STRENGTH], sRumbleTable[RUMBLE_DURATION]);
             }
         }
     }
 }
 
-void func_80072424(s16 controllerIndex, u8 arg1, f32 arg2) {
+/**
+ * Enable rumble for the controller using a behaviour table set by type.
+ * Also control the strength arbitrarily.
+ */
+void rumble_set_fade(s16 controllerIndex, u8 type, f32 strength) {
     s32 index;
 
-    if (arg1 < 19 && controllerIndex >= 0 && controllerIndex < 4) {
-        index = func_80072250(controllerIndex) & 0xFFFF;
-        if (arg1 == D_801241B8[index].unk0) {
-            if (D_801241B8[index].unk8 < 0) {
-                D_801241B8[index].unk8 = -300;
+    if (type < 19 && controllerIndex >= 0 && controllerIndex < 4) {
+        index = input_get_id(controllerIndex) & 0xFFFF;
+        if (type == gRumble[index].rumbleType) {
+            if (gRumble[index].spinTime < 0) {
+                gRumble[index].spinTime = -300;
             }
-            D_801241B8[index].unk4 = sUnkMiscAsset19[(arg1 * 2) + 1];
+            gRumble[index].timer = sRumbleTable[RUMBLE_DURATION];
         } else {
-            if (arg2 < 0.0f) {
-                arg2 = 0.0f;
+            if (strength < 0.0f) {
+                strength = 0.0f;
             }
-            if (arg2 > 1.0f) {
-                arg2 = 1.0f;
+            if (strength > 1.0f) {
+                strength = 1.0f;
             }
-            D_801241B8[index].unk0 = arg1;
-            if (sUnkMiscAsset19[arg1 * 2] != 0) {
-                func_80072578(controllerIndex, (sUnkMiscAsset19[arg1 * 2] * arg2), sUnkMiscAsset19[(arg1 * 2) + 1]);
+            gRumble[index].rumbleType = type;
+            if (sRumbleTable[RUMBLE_STRENGTH] != 0) {
+                rumble_start(controllerIndex, (sRumbleTable[RUMBLE_STRENGTH] * strength),
+                             sRumbleTable[RUMBLE_DURATION]);
             }
         }
     }
 }
 
-void func_80072578(s16 controllerIndex, s16 arg1, s16 arg2) {
+/**
+ * Check the controller should be able to rumble, then enable rumble for it.
+ */
+void rumble_start(s16 controllerIndex, s16 strength, s16 timer) {
     s16 index;
-    u8 new_var;
+    u8 contBit;
 
-    if (D_801241E4 && controllerIndex >= 0 && controllerIndex < 4) {
-        new_var = func_80072250(controllerIndex);
+    if (gRumbleOn && controllerIndex >= 0 && controllerIndex < 4) {
+        contBit = input_get_id(controllerIndex);
         index = 0xFFFF;
-        index &= new_var;
-        new_var = 1 << index;
-        D_801241E6 |= new_var;
-        D_801241E7 &= ~new_var;
-        D_801241B8[index].unk6 = ((arg1 * arg1) * 0.1);
-        D_801241B8[index].unk2 = ((arg1 * arg1) * 0.1);
-        D_801241B8[index].unk4 = arg2;
+        index &= contBit;
+        contBit = 1 << index;
+        gRumbleIdle |= contBit;
+        gRumbleActive &= ~contBit;
+        gRumble[index].lingeringStrength = ((strength * strength) * 0.1);
+        gRumble[index].initialStrength = ((strength * strength) * 0.1);
+        gRumble[index].timer = timer;
     }
 }
 
-UNUSED void func_8007267C(s16 controllerIndex) {
+/**
+ * Stop ongoing rumble for the given controller.
+ */
+UNUSED void rumble_stop(s16 controllerIndex) {
     s16 index;
 
     if (controllerIndex >= 0 && controllerIndex < 4) {
-        index = func_80072250(controllerIndex);
-        D_801241E7 |= 1 << index;
-        D_801241B8[index].unk4 = -1;
-        D_801241B8[index].unk0 = -1;
-        D_801241B8[index].unk8 = 0;
+        index = input_get_id(controllerIndex);
+        gRumbleActive |= 1 << index;
+        gRumble[index].timer = -1;
+        gRumble[index].rumbleType = -1;
+        gRumble[index].spinTime = 0;
     }
 }
 
-/* Official Name: RumbleKill? */
-void func_80072708(void) {
-    D_800DE48C = 3;
+/**
+ * Stop all rumble pak activity.
+ */
+void rumble_kill(void) {
+    gRumbleKillTimer = 3;
 }
 
-/* Official Name: rumbleTick */
-void rumble_controllers(s32 updateRate) {
-    unk_801241B8 *temp;
+/**
+ * Loop through and detect any newly connected or disconnected rumble paks.
+ * Start and stop any motors set by gRumble, or stop activity altogether if requested.
+ */
+void rumble_update(s32 updateRate) {
+    RumbleData *pak;
     s32 pfsStatus;
     u8 i;
     u8 controllerToCheck;
     u8 pfsBitPattern;
 
-    if ((D_801241E6 != 0) || ((D_800DE48C != 0))) {
+    if (gRumbleIdle != 0 || gRumbleKillTimer != 0) {
         gRumbleDetectionTimer += updateRate;
-        if (gRumbleDetectionTimer >= 121) {
+        if (gRumbleDetectionTimer > 120) {
             gRumbleDetectionTimer = 0;
             osPfsIsPlug(sControllerMesgQueue, &pfsBitPattern);
             for (i = 0, controllerToCheck = 1; i < MAXCONTROLLERS; i++, controllerToCheck <<= 1) {
-                if ((pfsBitPattern & controllerToCheck) && !(~D_801241E6 & sRumblePaksPresent & controllerToCheck)) {
+                if ((pfsBitPattern & controllerToCheck) && !(~gRumbleIdle & gRumblePresent & controllerToCheck)) {
                     if (osMotorInit(sControllerMesgQueue, &pfs[i], i) != 0) {
-                        D_801241E6 &= ~controllerToCheck;
-                        D_801241E7 &= ~controllerToCheck;
-                        sRumblePaksPresent &= ~controllerToCheck;
+                        gRumbleIdle &= ~controllerToCheck;
+                        gRumbleActive &= ~controllerToCheck;
+                        gRumblePresent &= ~controllerToCheck;
                     } else {
-                        sRumblePaksPresent |= controllerToCheck;
+                        gRumblePresent |= controllerToCheck;
                     }
                 }
             }
         }
-        if ((sRumblePaksPresent != 0) || (D_800DE48C != 0)) {
+        if (gRumblePresent != 0 || gRumbleKillTimer != 0) {
             pfsStatus = 0;
-            if (D_800DE48C != 0) {
+            if (gRumbleKillTimer != 0) {
                 osPfsIsPlug(sControllerMesgQueue, &pfsBitPattern);
             }
-            for (i = 0, controllerToCheck = 1, temp = D_801241B8; i < MAXCONTROLLERS;
-                 i++, controllerToCheck <<= 1, temp++) {
-                if (D_800DE48C != 0) {
-                    temp->unk0 = temp->unk6 = temp->unk4 = -1;
+            for (i = 0, controllerToCheck = 1, pak = gRumble; i < MAXCONTROLLERS; i++, controllerToCheck <<= 1, pak++) {
+                if (gRumbleKillTimer != 0) {
+                    pak->rumbleType = pak->lingeringStrength = pak->timer = -1;
                     if (!(pfsBitPattern & controllerToCheck)) {
                         continue;
                     } else if (osMotorInit(sControllerMesgQueue, &pfs[i], i) == 0) {
                         osMotorStop(&pfs[i]);
                     }
-                } else if (D_801241E6 & sRumblePaksPresent & controllerToCheck) {
-                    if (temp->unk4 <= 0) {
-                        D_801241E6 &= ~controllerToCheck;
-                        temp->unk0 = -1;
-                        temp->unk8 = 0;
+                } else if (gRumbleIdle & gRumblePresent & controllerToCheck) {
+                    if (pak->timer <= 0) {
+                        gRumbleIdle &= ~controllerToCheck;
+                        pak->rumbleType = -1;
+                        pak->spinTime = 0;
                         osMotorStop(&pfs[i]);
                     } else {
-                        temp->unk4 -= updateRate;
-                        temp->unk8 += updateRate;
-                        if (temp->unk8 < 0) {
+                        pak->timer -= updateRate;
+                        pak->spinTime += updateRate;
+                        if (pak->spinTime < 0) {
                             continue;
-                        } else if (temp->unk8 >= 601) {
-                            D_801241E6 &= ~controllerToCheck;
-                            temp->unk0 = -1;
-                            temp->unk8 = -300;
+                        } else if (pak->spinTime > 600) {
+                            gRumbleIdle &= ~controllerToCheck;
+                            pak->rumbleType = -1;
+                            pak->spinTime = -300;
                             osMotorStop(&pfs[i]);
                         } else {
-                            if (temp->unk2 > 490.0) {
-                                if (!(D_801241E7 & controllerToCheck)) {
+                            if (pak->initialStrength > 490.0) {
+                                if (!(gRumbleActive & controllerToCheck)) {
                                     pfsStatus |= osMotorStart(&pfs[i]);
-                                    D_801241E7 |= controllerToCheck;
+                                    gRumbleActive |= controllerToCheck;
                                 }
-                            } else if (temp->unk2 < 3.6) {
-                                if (D_801241E7 & controllerToCheck) {
+                            } else if (pak->initialStrength < 3.6) {
+                                if (gRumbleActive & controllerToCheck) {
                                     pfsStatus |= osMotorStop(&pfs[i]);
-                                    D_801241E7 &= ~controllerToCheck;
+                                    gRumbleActive &= ~controllerToCheck;
                                 }
-                            } else if (temp->unk6 >= 256) {
-                                if (!(D_801241E7 & controllerToCheck)) {
+                            } else if (pak->lingeringStrength >= 256) {
+                                if (!(gRumbleActive & controllerToCheck)) {
                                     pfsStatus |= osMotorStart(&pfs[i]);
-                                    D_801241E7 |= controllerToCheck;
+                                    gRumbleActive |= controllerToCheck;
                                 }
-                                temp->unk6 -= 256;
+                                pak->lingeringStrength -= 256;
                             } else {
-                                if (D_801241E7 & controllerToCheck) {
+                                if (gRumbleActive & controllerToCheck) {
                                     pfsStatus |= osMotorStop(&pfs[i]);
-                                    D_801241E7 &= ~controllerToCheck;
+                                    gRumbleActive &= ~controllerToCheck;
                                 }
-                                temp->unk6 += temp->unk2 + 4;
+                                pak->lingeringStrength += pak->initialStrength + 4;
                             }
                             if (1) {} // fakematch
                         }
@@ -309,10 +336,10 @@ void rumble_controllers(s32 updateRate) {
                 }
             }
             if (pfsStatus != 0) {
-                sRumblePaksPresent = 0;
+                gRumblePresent = 0;
             }
-            if (D_800DE48C != 0) {
-                D_800DE48C--;
+            if (gRumbleKillTimer != 0) {
+                gRumbleKillTimer--;
             }
         }
     }
@@ -1693,12 +1720,12 @@ void init_controller_paks(void) {
     s8 maxControllers;
 
     sControllerMesgQueue = get_si_mesg_queue();
-    sUnkMiscAsset19 = (s16 *) get_misc_asset(ASSET_MISC_19);
-    D_801241E6 = D_801241E7 = 0xF;
-    D_801241E4 = TRUE;
+    sRumbleTable = (s16 *) get_misc_asset(ASSET_MISC_RUMBLE_DATA);
+    gRumbleIdle = gRumbleActive = 0xF;
+    gRumbleOn = TRUE;
     gRumbleDetectionTimer = 0;
-    D_800DE48C = 1;
-    sControllerPaksPresent = sRumblePaksPresent = 0;
+    gRumbleKillTimer = 1;
+    sControllerPaksPresent = gRumblePresent = 0;
 
     // pakPattern will set the first 4 bits representing each controller
     // and it will be 1 if there's something attached.
@@ -1706,10 +1733,10 @@ void init_controller_paks(void) {
 
     for (controllerIndex = 0, controllerBit = 1, maxControllers = MAXCONTROLLERS;
          (0, controllerIndex) != maxControllers; controllerIndex++, controllerBit <<= 1) {
-        D_801241B8[controllerIndex].unk2 = 0;
-        D_801241B8[controllerIndex].unk4 = -1;
-        D_801241B8[controllerIndex].unk0 = -1;
-        D_801241B8[controllerIndex].unk6 = D_801241B8[controllerIndex].unk2;
+        gRumble[controllerIndex].initialStrength = 0;
+        gRumble[controllerIndex].timer = -1;
+        gRumble[controllerIndex].rumbleType = -1;
+        gRumble[controllerIndex].lingeringStrength = gRumble[controllerIndex].initialStrength;
 
         // If something is plugged into the controller
         if (pakPattern & controllerBit) {
@@ -1725,7 +1752,7 @@ void init_controller_paks(void) {
                 ret = osMotorInit(sControllerMesgQueue, &pfs[controllerIndex], controllerIndex);
                 if (ret == 0) {
                     // If we found a rumble pak, set the bit that has one
-                    sRumblePaksPresent |= controllerBit;
+                    gRumblePresent |= controllerBit;
                 }
             }
         }
@@ -1742,7 +1769,7 @@ UNUSED SIDeviceStatus check_for_rumble_pak(s32 controllerIndex) {
     start_reading_controller_data(controllerIndex);
 
     if (ret == CONTROLLER_PAK_RUMBLE_PAK_FOUND) {
-        sRumblePaksPresent |= 1 << controllerIndex;
+        gRumblePresent |= 1 << controllerIndex;
     }
 
     return ret;

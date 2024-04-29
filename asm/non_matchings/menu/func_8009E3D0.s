@@ -21,7 +21,7 @@ glabel func_8009E3D0
 /* 09F018 8009E418 0C01BAA4 */  jal   get_settings
 /* 09F01C 8009E41C 00000000 */   nop   
 /* 09F020 8009E420 AFA20048 */  sw    $v0, 0x48($sp)
-/* 09F024 8009E424 0C01A142 */  jal   func_80068508
+/* 09F024 8009E424 0C01A142 */  jal   sprite_anim_off
 /* 09F028 8009E428 02802025 */   move  $a0, $s4
 /* 09F02C 8009E42C 3C0F8000 */  lui   $t7, %hi(osTvType) # $t7, 0x8000
 /* 09F030 8009E430 8DEF0300 */  lw    $t7, %lo(osTvType)($t7)
@@ -267,7 +267,7 @@ glabel func_8009E3D0
 /* 09F3A8 8009E7A8 24010004 */  li    $at, 4
 /* 09F3AC 8009E7AC 1601FFEC */  bne   $s0, $at, .L8009E760
 /* 09F3B0 8009E7B0 2631001E */   addiu $s1, $s1, 0x1e
-/* 09F3B4 8009E7B4 0C01A142 */  jal   func_80068508
+/* 09F3B4 8009E7B4 0C01A142 */  jal   sprite_anim_off
 /* 09F3B8 8009E7B8 00002025 */   move  $a0, $zero
 .L8009E7BC:
 /* 09F3BC 8009E7BC 8FBF0034 */  lw    $ra, 0x34($sp)

@@ -406,8 +406,8 @@ glabel func_800B9C18
 /* 0BAE0C 800BA20C 3C0B8013 */  lui   $t3, %hi(D_80129FC8) # $t3, 0x8013
 /* 0BAE10 800BA210 256B9FC8 */  addiu $t3, %lo(D_80129FC8) # addiu $t3, $t3, -0x6038
 .L800BA214:
-/* 0BAE14 800BA214 3C038013 */  lui   $v1, %hi(D_8012A728) # $v1, 0x8013
-/* 0BAE18 800BA218 2463A728 */  addiu $v1, %lo(D_8012A728) # addiu $v1, $v1, -0x58d8
+/* 0BAE14 800BA214 3C038013 */  lui   $v1, %hi(gWavePowerDivisor) # $v1, 0x8013
+/* 0BAE18 800BA218 2463A728 */  addiu $v1, %lo(gWavePowerDivisor) # addiu $v1, $v1, -0x58d8
 /* 0BAE1C 800BA21C 8C620000 */  lw    $v0, ($v1)
 /* 0BAE20 800BA220 00000000 */  nop   
 /* 0BAE24 800BA224 18400012 */  blez  $v0, .L800BA270
@@ -415,9 +415,9 @@ glabel func_800B9C18
 /* 0BAE2C 800BA22C 1020000C */  beqz  $at, .L800BA260
 /* 0BAE30 800BA230 00000000 */   nop   
 /* 0BAE34 800BA234 44912000 */  mtc1  $s1, $f4
-/* 0BAE38 800BA238 3C018013 */  lui   $at, %hi(D_8012A724) # $at, 0x8013
+/* 0BAE38 800BA238 3C018013 */  lui   $at, %hi(gWaveMagnitude) # $at, 0x8013
 /* 0BAE3C 800BA23C 468021A0 */  cvt.s.w $f6, $f4
-/* 0BAE40 800BA240 C428A724 */  lwc1  $f8, %lo(D_8012A724)($at)
+/* 0BAE40 800BA240 C428A724 */  lwc1  $f8, %lo(gWaveMagnitude)($at)
 /* 0BAE44 800BA244 C5700040 */  lwc1  $f16, 0x40($t3)
 /* 0BAE48 800BA248 46083282 */  mul.s $f10, $f6, $f8
 /* 0BAE4C 800BA24C 00517023 */  subu  $t6, $v0, $s1
@@ -426,8 +426,8 @@ glabel func_800B9C18
 /* 0BAE58 800BA258 10000005 */  b     .L800BA270
 /* 0BAE5C 800BA25C E5720040 */   swc1  $f18, 0x40($t3)
 .L800BA260:
-/* 0BAE60 800BA260 3C018013 */  lui   $at, %hi(D_8012A720) # $at, 0x8013
-/* 0BAE64 800BA264 C424A720 */  lwc1  $f4, %lo(D_8012A720)($at)
+/* 0BAE60 800BA260 3C018013 */  lui   $at, %hi(gWavePowerBase) # $at, 0x8013
+/* 0BAE64 800BA264 C424A720 */  lwc1  $f4, %lo(gWavePowerBase)($at)
 /* 0BAE68 800BA268 AC600000 */  sw    $zero, ($v1)
 /* 0BAE6C 800BA26C E5640040 */  swc1  $f4, 0x40($t3)
 .L800BA270:

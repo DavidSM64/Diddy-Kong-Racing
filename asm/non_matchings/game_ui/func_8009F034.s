@@ -147,13 +147,13 @@ glabel func_8009F034
 /* 09FDF0 8009F1F0 00000000 */   nop   
 /* 09FDF4 8009F1F4 14400004 */  bnez  $v0, .L8009F208
 /* 09FDF8 8009F1F8 240C0001 */   li    $t4, 1
-/* 09FDFC 8009F1FC 3C018012 */  lui   $at, %hi(D_80126D71) # $at, 0x8012
+/* 09FDFC 8009F1FC 3C018012 */  lui   $at, %hi(gHudTimeTrialGhost) # $at, 0x8012
 /* 09FE00 8009F200 10000004 */  b     .L8009F214
-/* 09FE04 8009F204 A0206D71 */   sb    $zero, %lo(D_80126D71)($at)
+/* 09FE04 8009F204 A0206D71 */   sb    $zero, %lo(gHudTimeTrialGhost)($at)
 .L8009F208:
 /* 09FE08 8009F208 24190001 */  li    $t9, 1
-/* 09FE0C 8009F20C 3C018012 */  lui   $at, %hi(D_80126D71) # $at, 0x8012
-/* 09FE10 8009F210 A0396D71 */  sb    $t9, %lo(D_80126D71)($at)
+/* 09FE0C 8009F20C 3C018012 */  lui   $at, %hi(gHudTimeTrialGhost) # $at, 0x8012
+/* 09FE10 8009F210 A0396D71 */  sb    $t9, %lo(gHudTimeTrialGhost)($at)
 .L8009F214:
 /* 09FE14 8009F214 3C028012 */  lui   $v0, %hi(gNumActivePlayers) # $v0, 0x8012
 /* 09FE18 8009F218 90426D37 */  lbu   $v0, %lo(gNumActivePlayers)($v0)
@@ -208,9 +208,9 @@ glabel func_8009F034
 /* 09FED4 8009F2D4 3408C000 */  li    $t0, 49152
 .L8009F2D8:
 /* 09FED8 8009F2D8 8FB9006C */  lw    $t9, 0x6c($sp)
-/* 09FEDC 8009F2DC 3C02800E */  lui   $v0, %hi(D_800E1E64) # $v0, 0x800e
+/* 09FEDC 8009F2DC 3C02800E */  lui   $v0, %hi(gHudElementBase) # $v0, 0x800e
 /* 09FEE0 8009F2E0 8F2E0000 */  lw    $t6, ($t9)
-/* 09FEE4 8009F2E4 24421E64 */  addiu $v0, %lo(D_800E1E64) # addiu $v0, $v0, 0x1e64
+/* 09FEE4 8009F2E4 24421E64 */  addiu $v0, %lo(gHudElementBase) # addiu $v0, $v0, 0x1e64
 /* 09FEE8 8009F2E8 00001825 */  move  $v1, $zero
 /* 09FEEC 8009F2EC ACAE0000 */  sw    $t6, ($a1)
 .L8009F2F0:
@@ -1082,13 +1082,13 @@ glabel func_8009F034
 /* 0A0BB8 8009FFB8 3C02800E */  lui   $v0, %hi(gHudToggleSettings) # $v0, 0x800e
 /* 0A0BBC 8009FFBC 244227A4 */  addiu $v0, %lo(gHudToggleSettings) # addiu $v0, $v0, 0x27a4
 /* 0A0BC0 8009FFC0 80580001 */  lb    $t8, 1($v0)
-/* 0A0BC4 8009FFC4 3C01800E */  lui   $at, %hi(D_800E27A8) # $at, 0x800e
-/* 0A0BC8 8009FFC8 A03827A8 */  sb    $t8, %lo(D_800E27A8)($at)
+/* 0A0BC4 8009FFC4 3C01800E */  lui   $at, %hi(gPrevToggleSetting) # $at, 0x800e
+/* 0A0BC8 8009FFC8 A03827A8 */  sb    $t8, %lo(gPrevToggleSetting)($at)
 /* 0A0BCC 8009FFCC 10000005 */  b     .L8009FFE4
 /* 0A0BD0 8009FFD0 A0400001 */   sb    $zero, 1($v0)
 .L8009FFD4:
-/* 0A0BD4 8009FFD4 3C0E800E */  lui   $t6, %hi(D_800E27A8) # $t6, 0x800e
-/* 0A0BD8 8009FFD8 81CE27A8 */  lb    $t6, %lo(D_800E27A8)($t6)
+/* 0A0BD4 8009FFD4 3C0E800E */  lui   $t6, %hi(gPrevToggleSetting) # $t6, 0x800e
+/* 0A0BD8 8009FFD8 81CE27A8 */  lb    $t6, %lo(gPrevToggleSetting)($t6)
 /* 0A0BDC 8009FFDC 244227A4 */  addiu $v0, %lo(gHudToggleSettings) # addiu $v0, $v0, 0x27a4
 /* 0A0BE0 8009FFE0 A04E0001 */  sb    $t6, 1($v0)
 .L8009FFE4:

@@ -605,7 +605,7 @@ glabel func_800AA600
 /* 0ABAE0 800AAEE0 8D620000 */  lw    $v0, ($t3)
 /* 0ABAE4 800AAEE4 00000000 */  nop   
 /* 0ABAE8 800AAEE8 8C440000 */  lw    $a0, ($v0)
-/* 0ABAEC 800AAEEC 0C02ABF4 */  jal   func_800AAFD0
+/* 0ABAEC 800AAEEC 0C02ABF4 */  jal   hud_draw_model
 /* 0ABAF0 800AAEF0 00000000 */   nop   
 /* 0ABAF4 800AAEF4 3C048012 */  lui   $a0, %hi(gHUDCurrDisplayList) # $a0, 0x8012
 /* 0ABAF8 800AAEF8 0C01A690 */  jal   apply_matrix_from_stack

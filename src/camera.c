@@ -94,7 +94,7 @@ s32 gViewportCap;
 UNUSED s32 D_80120CEC;
 ObjectTransform gCameraTransform;
 s32 gMatrixType;
-s32 D_80120D0C;
+s32 gSpriteAnimOff;
 f32 gCurCamFOV;
 s8 gCutsceneCameraActive;
 s8 gAdjustViewportHeight;
@@ -145,7 +145,7 @@ void camera_init(void) {
     gModelMatrixStackPos = 0;
     gCameraMatrixPos = 0;
     gNumberOfViewports = 0;
-    D_80120D0C = FALSE;
+    gSpriteAnimOff = FALSE;
     D_80120D18 = 0;
     gAdjustViewportHeight = 0;
     gAntiPiracyViewport = 0;
@@ -1023,8 +1023,12 @@ void matrix_world_origin(Gfx **dlist, MatrixS **mtx) {
     gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), gMatrixType << 6);
 }
 
-void func_80068508(s32 bool) {
-    D_80120D0C = bool;
+/**
+ * If set to true, disables animated sprite frames.
+ * Used when the sprite frame is already established before calling to draw.
+ */
+void sprite_anim_off(s32 setting) {
+    gSpriteAnimOff = setting;
 }
 
 /**
@@ -1119,7 +1123,7 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
         gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*dlist)++);
     }
-    if (D_80120D0C == FALSE) {
+    if (gSpriteAnimOff == FALSE) {
         textureFrame = ((textureFrame & 0xFF) * arg4->textureCount) >> 8;
     }
     flags &= ~RENDER_VEHICLE_PART;
@@ -1190,7 +1194,7 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         gModelMatrixS[gModelMatrixStackPos] = *mtx;
         gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*dList)++);
-        if (D_80120D0C == FALSE) {
+        if (gSpriteAnimOff == FALSE) {
             index = (((u8) index) * sprite->baseTextureId) >> 8;
         }
         func_8007BF34(dList, sprite->unk6 | flags);
@@ -1375,17 +1379,17 @@ void camera_push_model_mtx(Gfx **dList, MatrixS **mtx, ObjectTransform *trans, f
 void apply_head_turning_matrix(Gfx **dlist, MatrixS **mtx, Object_68 *objGfx, s16 headAngle) {
     f32 coss_headAngle;
     f32 sins_headAngle;
-    f32 f_unk16;
-    f32 f_unk18;
-    f32 f_unk1A;
+    f32 offsetX;
+    f32 offsetY;
+    f32 offsetZ;
     f32 coss_unk1C;
     f32 sins_unk1C;
     Matrix rotationMtxF;
     Matrix headMtxF;
 
-    f_unk16 = (f32) objGfx->unk16;
-    f_unk18 = (f32) objGfx->unk18;
-    f_unk1A = (f32) objGfx->unk1A;
+    offsetX = (f32) objGfx->offsetX;
+    offsetY = (f32) objGfx->offsetY;
+    offsetZ = (f32) objGfx->offsetZ;
     coss_unk1C = coss_f(objGfx->unk1C);
     sins_unk1C = sins_f(objGfx->unk1C);
     coss_headAngle = coss_f(headAngle);
@@ -1402,11 +1406,11 @@ void apply_head_turning_matrix(Gfx **dlist, MatrixS **mtx, Object_68 *objGfx, s1
     headMtxF[2][1] = (sins_headAngle * sins_unk1C);
     headMtxF[2][2] = coss_headAngle;
     headMtxF[2][3] = 0.0f;
-    headMtxF[3][0] = (-f_unk16 * (coss_headAngle * coss_unk1C)) + (-f_unk18 * -sins_unk1C) +
-                     (-f_unk1A * (sins_headAngle * coss_unk1C)) + f_unk16;
-    headMtxF[3][1] = (-f_unk16 * (coss_headAngle * sins_unk1C)) + (-f_unk18 * coss_unk1C) +
-                     (-f_unk1A * (sins_headAngle * sins_unk1C)) + f_unk18;
-    headMtxF[3][2] = (-f_unk16 * -sins_headAngle) + (-f_unk1A * coss_headAngle) + f_unk1A;
+    headMtxF[3][0] = (-offsetX * (coss_headAngle * coss_unk1C)) + (-offsetY * -sins_unk1C) +
+                     (-offsetZ * (sins_headAngle * coss_unk1C)) + offsetX;
+    headMtxF[3][1] = (-offsetX * (coss_headAngle * sins_unk1C)) + (-offsetY * coss_unk1C) +
+                     (-offsetZ * (sins_headAngle * sins_unk1C)) + offsetY;
+    headMtxF[3][2] = (-offsetX * -sins_headAngle) + (-offsetZ * coss_headAngle) + offsetZ;
     headMtxF[3][3] = 1.0f;
     f32_matrix_mult(&headMtxF, &gCurrentModelMatrixS, &rotationMtxF);
     f32_matrix_to_s16_matrix(&rotationMtxF, *mtx);

@@ -203,7 +203,7 @@ void update_bluey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *ra
     if (racer->raceFinished) {
         if (gBlueyCutsceneTimer == 0) {
             gBlueyCutsceneTimer = 1;
-            func_8005CB68(racer, &gBlueyCutsceneTimer);
+            racer_boss_finish(racer, &gBlueyCutsceneTimer);
         }
     }
 }

@@ -142,26 +142,26 @@ BuildLevelHeader::BuildLevelHeader(DkrAssetsSettings &settings, BuildInfo &info)
     
     header->unk53 = _info.srcFile->get_int("/unknown/unk53");
     
-    header->unk56 = _info.srcFile->get_int("/unknown/unk56");
-    header->unk57 = _info.srcFile->get_int("/unknown/unk57");
-    header->unk58 = _info.srcFile->get_int("/unknown/unk58");
-    header->unk59 = _info.srcFile->get_int("/unknown/unk59");
-    header->unk5A = _info.srcFile->get_int("/unknown/unk5A");
-    header->unk5C = _info.srcFile->get_int("/unknown/unk5C");
-    header->unk5D = _info.srcFile->get_int("/unknown/unk5D");
-    header->unk5E = _info.srcFile->get_int("/unknown/unk5E");
-    header->unk60 = _info.srcFile->get_int("/unknown/unk60");
-    header->unk62 = _info.srcFile->get_int("/unknown/unk62");
-    header->unk64 = _info.srcFile->get_int("/unknown/unk64");
-    header->unk66 = _info.srcFile->get_int("/unknown/unk66");
-    header->unk68 = _info.srcFile->get_int("/unknown/unk68");
-    header->unk6A = _info.srcFile->get_int("/unknown/unk6A");
-    header->unk6B = _info.srcFile->get_int("/unknown/unk6B");
-    header->unk6C = _info.srcFile->get_int("/unknown/unk6C");
-    header->unk6D = _info.srcFile->get_int("/unknown/unk6D");
-    header->unk6E = _info.srcFile->get_int("/unknown/unk6E");
-    header->unk70 = _info.srcFile->get_int("/unknown/unk70");
-    header->unk71 = _info.srcFile->get_int("/unknown/unk71");
+    header->unk56 = _info.srcFile->get_int("/waves/unk56");
+    header->unk57 = _info.srcFile->get_int("/waves/unk57");
+    header->unk58 = _info.srcFile->get_int("/waves/unk58");
+    header->unk59 = _info.srcFile->get_int("/waves/unk59");
+    header->unk5A = _info.srcFile->get_int("/waves/unk5A");
+    header->unk5C = _info.srcFile->get_int("/waves/unk5C");
+    header->unk5D = _info.srcFile->get_int("/waves/unk5D");
+    header->unk5E = _info.srcFile->get_int("/waves/unk5E");
+    header->unk60 = _info.srcFile->get_int("/waves/unk60");
+    header->wavePower = _info.srcFile->get_int("/waves/wave-power");
+    header->unk64 = _info.srcFile->get_int("/waves/unk64");
+    header->unk66 = _info.srcFile->get_int("/waves/unk66");
+    header->unk68 = _info.srcFile->get_int("/waves/unk68");
+    header->unk6A = _info.srcFile->get_int("/waves/unk6A");
+    header->unk6B = _info.srcFile->get_int("/waves/unk6B");
+    header->unk6C = _info.srcFile->get_int("/waves/unk6C");
+    header->unk6D = _info.srcFile->get_int("/waves/unk6D");
+    header->unk6E = _info.srcFile->get_int("/waves/unk6E");
+    header->unk70 = _info.srcFile->get_int("/waves/unk70");
+    header->unk71 = _info.srcFile->get_int("/waves/unk71");
     header->unk72 = _info.srcFile->get_int("/unknown/unk72");
     header->unk73 = _info.srcFile->get_int("/unknown/unk73");
     
@@ -179,7 +179,8 @@ BuildLevelHeader::BuildLevelHeader(DkrAssetsSettings &settings, BuildInfo &info)
     header->unkB5 = _info.srcFile->get_int("/unknown/unkB5");
     header->unkB6 = _info.srcFile->get_int("/unknown/unkB6");
     header->unkB7 = _info.srcFile->get_int("/unknown/unkB7");
-    header->unkB8 = _info.srcFile->get_int("/unknown/unkB8");
+    std::string bossRaceID = _info.srcFile->get_string("/boss-race-id");
+    header->bossRaceID = _c_context.get_int_value_of_symbol(bossRaceID);
     header->unkB9 = _info.srcFile->get_int("/unknown/unkB9");
     header->unkBC = _info.srcFile->get_int("/unknown/unkBC");
     header->unkBD = _info.srcFile->get_int("/unknown/unkBD");

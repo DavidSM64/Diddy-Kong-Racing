@@ -235,7 +235,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
     }
     if (racer->vehicleIDPrev == VEHICLE_SMOKEY && racer->playerIndex == PLAYER_COMPUTER && func_80023568()) {
-        spawn_boss_hazard(obj, racer, 100.0f, 137, SOUND_VOICE_TRICKY_HM);
+        spawn_boss_hazard(obj, racer, 100.0f, ASSET_OBJECT_ID_FIREBALL, SOUND_VOICE_TRICKY_HM);
     }
     func_800AFC3C(obj, updateRate);
     fade_when_near_camera(obj, racer, 40);
@@ -271,7 +271,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (racer->raceFinished != FALSE) {
         if (gSmokeyCutsceneTimer == 0) {
             gSmokeyCutsceneTimer = 1;
-            func_8005CB68(racer, &gSmokeyCutsceneTimer);
+            racer_boss_finish(racer, &gSmokeyCutsceneTimer);
         }
     }
 }

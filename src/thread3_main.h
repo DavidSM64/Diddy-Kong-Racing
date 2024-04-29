@@ -157,7 +157,7 @@ void mark_save_file_to_erase(s32 saveFileIndex);
 void mark_read_eeprom_settings(void);
 void mark_write_eeprom_settings(void);
 s32 check_dmem_validity(void);
-void func_8006F140(s32 arg0);
+void level_transition_begin(s32 type);
 void func_8006F20C(void);
 void begin_trophy_race_teleport(void);
 void begin_lighthouse_rocket_cutscene(void);

@@ -244,7 +244,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         }
         move_object(obj, obj->segment.x_velocity * updateRateF, obj->segment.y_velocity * updateRateF,
                     obj->segment.z_velocity * updateRateF);
-        if (obj->unk4A == 298) {
+        if (obj->objectID == ASSET_OBJECT_ID_OCTOBOMB) {
             if (get_wave_properties(obj->segment.trans.y_position, &waveHeight, NULL)) {
                 obj->segment.trans.y_position = waveHeight;
             }
@@ -263,8 +263,8 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
                         racer->attackType = ATTACK_EXPLOSION;
                         obj->properties.fireball.timer = 20;
                         obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                         obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f,
-                                         1);
+                                         obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION,
+                                         1.0f, 1);
                         free_object(obj);
                     } else if (obj->properties.fireball.timer > 0) {
                         racer->bubbleTrapTimer = 60;
@@ -281,10 +281,11 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         func_800AFC3C(obj, updateRate);
         obj->properties.fireball.timer -= updateRate;
         if (obj->properties.fireball.timer < 0) {
-            if (obj->unk4A == 298) {
+            if (obj->objectID == ASSET_OBJECT_ID_OCTOBOMB) {
                 free_object(obj);
                 obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                 obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);
+                                 obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION, 1.0f,
+                                 1);
             }
             obj->segment.trans.scale *= 0.9; //!@Delta
             if (obj->segment.trans.scale < 0.5) {
@@ -379,7 +380,7 @@ void obj_loop_lasergun(Object *obj, s32 updateRate) {
             spawnObj.y = obj->segment.trans.y_position;
             spawnObj.z = obj->segment.trans.z_position;
             spawnObj.size = 8;
-            spawnObj.objectID = 0xC6;
+            spawnObj.objectID = ASSET_OBJECT_ID_LASERBOLT;
             play_sound_at_position(SOUND_LASER_GUN, obj->segment.trans.x_position, obj->segment.trans.y_position,
                                    obj->segment.trans.z_position, 4, NULL);
             laserBoltObj = spawn_object(&spawnObj, 1);
@@ -459,7 +460,7 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
                 obj->segment.z_velocity * updateRateF);
     if (hasCollision) {
         obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position - 36.0f,
-                         obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_NONE, 0.2, 0);
+                         obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_NONE, 0.2, 0);
         delete = TRUE;
     }
 
@@ -483,7 +484,7 @@ void obj_loop_laserbolt(Object *obj, s32 updateRate) {
             }
             delete = TRUE;
             obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position - 36.0f,
-                             obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 0.5, 0);
+                             obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION, 0.5, 0);
         }
     }
     if (delete) {
@@ -610,7 +611,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
         if (header->race_type != RACETYPE_CUTSCENE_2 && header->race_type != RACETYPE_CUTSCENE_1) {
             obj->properties.trophyCabinet.trophy = TRUE;
             if ((settings->trophies >> (((settings->worldId - 1) ^ 0) * 2)) & 3) { // Fakematch
-                newObject.objectID = 0x80;
+                newObject.objectID = ASSET_OBJECT_ID_TROPHY;
                 newObject.x = obj->segment.level_entry->animation.common.x;
                 newObject.y = obj->segment.level_entry->animation.common.y;
                 newObject.z = obj->segment.level_entry->animation.common.z;
@@ -642,7 +643,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                     if (worldBalloons) {
                         obj->properties.trophyCabinet.action = 1;
                         sound_play(SOUND_VOICE_TT_TROPHY_RACE, NULL);
-                        func_800A3870();
+                        hud_speedometre_reset();
                     } else {
                         // Text for "TROPHY RACE" "TO ENTER THE TROPHY RACE, YOU MUST COMPLETE ALL THE TASKS FROM THIS
                         // WORLD. KEEP RACING!"
@@ -830,7 +831,7 @@ void obj_loop_eggcreator(Object *obj, UNUSED s32 updateRate) {
         spawnObj.y = obj->segment.trans.y_position;
         spawnObj.z = obj->segment.trans.z_position;
         spawnObj.size = 8;
-        spawnObj.objectID = 0x34;
+        spawnObj.objectID = ASSET_OBJECT_ID_COLLECTEGG;
         eggObj = spawn_object(&spawnObj, 1);
         if (eggObj != NULL) {
             Object_EggCreator *eggSpawner = &eggObj->unk64->egg_creator;
@@ -1030,7 +1031,7 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
                         racer->boostType |= BOOST_SMALL_FAST;
                     }
                     if (racer->raceFinished == FALSE) {
-                        func_80072348(racer->playerIndex, 8);
+                        rumble_set(racer->playerIndex, RUMBLE_TYPE_8);
                     }
                 }
             }
@@ -1098,7 +1099,8 @@ void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
             flag = &obj->unk64->character_flag;
             racer = &racerObj->unk64->racer;
             obj->properties.characterFlag.characterID = racer->characterId;
-            if (obj->properties.characterFlag.characterID < 0 || obj->properties.characterFlag.characterID >= 10) {
+            if (obj->properties.characterFlag.characterID < 0 ||
+                obj->properties.characterFlag.characterID >= NUMBER_OF_CHARACTERS) {
                 obj->properties.characterFlag.characterID = 0;
             }
             flag->vertices = gCharacterFlagVertices;
@@ -1269,12 +1271,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             if (distance > 10.0) {
                 angleDiff =
                     (arctan2_f(diffX / distance, diffZ / distance) - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
-                if (angleDiff > 0x8000) {
-                    angleDiff -= 0xFFFF;
-                }
-                if (angleDiff < -0x8000) {
-                    angleDiff += 0xFFFF;
-                }
+                WRAP(angleDiff, -0x8000, 0x8000);
                 if (angleDiff > 0) {
                     if (angleDiff < 0x10) {
                         angleDiff = 0x10;
@@ -1301,12 +1298,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
             obj->segment.object.animationID = 0;
             tt->animFrameF += 3.0 * updateRateF;
             angleDiff = (racerObj->segment.trans.y_rotation - (obj->segment.trans.y_rotation & 0xFFFF)) + 0x8000;
-            if (angleDiff > 0x8000) {
-                angleDiff -= 0xFFFF;
-            }
-            if (angleDiff < -0x8000) {
-                angleDiff += 0xFFFF;
-            }
+            WRAP(angleDiff, -0x8000, 0x8000);
             if (angleDiff > 0) {
                 if (angleDiff < 0x10) {
                     angleDiff = 0x10;
@@ -1913,7 +1905,7 @@ void obj_loop_wizpigship(Object *wizShipObj, s32 updateRate) {
                             newObject.y = posY;
                             newObject.z = posZ;
                             newObject.size = 8;
-                            newObject.objectID = 0xC6;
+                            newObject.objectID = ASSET_OBJECT_ID_LASERBOLT;
                             newObj = spawn_object(&newObject, 1);
                             if (newObj != NULL) {
                                 newObj->segment.level_entry = NULL;
@@ -2272,7 +2264,7 @@ void obj_loop_bombexplosion(Object *obj, s32 updateRate) {
     if (obj->properties.bombExplosion.timer > 10 && temp_t8 != 0) {
         obj->properties.bombExplosion.unk4 ^= (temp_t8 << 8);
         obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position,
-                         BHV_LENS_FLARE_SWITCH, SOUND_NONE, 1.0f, temp_t8 - 1);
+                         ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_NONE, 1.0f, temp_t8 - 1);
     }
     if (obj->properties.bombExplosion.timer < 20) {
         obj->segment.trans.scale = ((obj->properties.bombExplosion.timer / 20.0f) * 10.0f) + 0.5f;
@@ -3086,7 +3078,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     }
     if (sp6B != 0) {
         obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position,
-                         BHV_DINO_WHALE, SOUND_NONE, 1.0f, 0);
+                         ASSET_OBJECT_ID_WARDENSMOKE, SOUND_NONE, 1.0f, 0);
     }
     obj->segment.animFrame = taj->animFrameF * 1.0;
     func_80061C0C(obj);
@@ -3202,7 +3194,7 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
                     dist = ((modeChange->directionX * racerObj->segment.trans.x_position) +
                             (modeChange->directionZ * racerObj->segment.trans.z_position) + modeChange->rotationDiff);
                     if (dist < 0.0f) {
-                        racer->unk1E0 = 0;
+                        racer->trickType = 0;
                         if (modeChange->vehicleID == VEHICLE_CAR) {
                             racer->vehicleID = racer->vehicleIDPrev;
                         } else {
@@ -3210,7 +3202,7 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
                         }
                         if (modeChange->vehicleID == VEHICLE_LOOPDELOOP) {
                             if (racer->raceFinished == FALSE) {
-                                func_80072348(racer->playerIndex, 8);
+                                rumble_set(racer->playerIndex, RUMBLE_TYPE_8);
                             }
                             radius_3 =
                                 func_8001C524(racerObj->segment.trans.x_position, racerObj->segment.trans.y_position,
@@ -3550,7 +3542,8 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
             }
         }
         sp4C &= doorEntry->unk10;
-        if (doorEntry->common.objectID == 0x87 || doorEntry->common.objectID == 0xD7) {
+        if (doorEntry->common.objectID == ASSET_OBJECT_ID_BIGBOSSDOOR ||
+            doorEntry->common.objectID == ASSET_OBJECT_ID_BOSSDOOR) {
             if (func_800235C0() != 0) {
                 sp50 = 0;
             }
@@ -3564,7 +3557,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
         }
         temp2 = 0;
         if (door->unkF & 2) {
-            if (sp28 != 0 && doorEntry->common.objectID == 0x19) {
+            if (sp28 != 0 && doorEntry->common.objectID == ASSET_OBJECT_ID_LEVELDOOR) {
                 if (settings->courseFlagsPtr[doorEntry->unk14] & 2) {
                     if (settings->worldId == WORLD_FUTURE_FUN_LAND || settings->bosses & (1 << settings->worldId)) {
                         door->unk10 = doorEntry->unk15;
@@ -3593,7 +3586,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
                 }
             }
         } else {
-            if (doorEntry->common.objectID == 0xD7) {
+            if (doorEntry->common.objectID == ASSET_OBJECT_ID_BOSSDOOR) {
                 doorObj->segment.object.modelIndex = 0;
                 if (settings->bosses & (1 << settings->worldId)) {
                     if (settings->balloonsPtr[settings->worldId] == 8) {
@@ -3623,7 +3616,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
             if (temp < -0x200) {
                 temp = -0x200;
             }
-            doorObj->segment.trans.y_rotation -= temp;
+            doorObj->segment.trans.y_rotation -= temp; //@!Delta
             if (temp != 0) {
                 temp2 = 1;
             }
@@ -4129,7 +4122,7 @@ void obj_loop_treasuresucker(Object *obj, s32 updateRate) {
             spawnObj.y = (s16) racerObj->segment.trans.y_position + 10;
             spawnObj.z = racerObj->segment.trans.z_position;
             spawnObj.size = 8;
-            spawnObj.objectID = BHV_SNOWBALL_2;
+            spawnObj.objectID = ASSET_OBJECT_ID_FLYCOIN;
             newObj = spawn_object(&spawnObj, 1);
             if (newObj != NULL) {
                 newObj->segment.level_entry = NULL;
@@ -4194,7 +4187,7 @@ void obj_loop_bananacreator(Object *obj, s32 updateRate) {
         newEntry.y = ((s32) ((s16) obj->segment.trans.y_position)) - 3;
         newEntry.z = (s32) obj->segment.trans.z_position;
         newEntry.size = 8;
-        newEntry.objectID = 83;
+        newEntry.objectID = ASSET_OBJECT_ID_COIN;
         newBananaObj = spawn_object(&newEntry, 1);
         obj->properties.bananaSpawner.spawn = TRUE;
         if (newBananaObj) {
@@ -4202,7 +4195,7 @@ void obj_loop_bananacreator(Object *obj, s32 updateRate) {
             newBananaObj64 = &newBananaObj->unk64->banana;
             newBananaObj64->spawner = obj;
             obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position - 14.0f,
-                             obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_SELECT, 0.25f, 0);
+                             obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_SELECT, 0.25f, 0);
             obj->properties.bananaSpawner.spawn = FALSE;
         }
         obj->properties.bananaSpawner.timer = TIME_SECONDS(20); // Set delay to respawn banana to 20 seconds.
@@ -4638,7 +4631,7 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
                         if (levelMask == racer->balloon_level) {
                             if (racer->raceFinished == FALSE) {
                                 if (prevBalloonQuantity != racer->balloon_quantity) {
-                                    set_time_trial_start_voice(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
+                                    hud_sound_play_delayed(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
                                     prevBalloonQuantity = racer->balloon_level;
                                     if (prevBalloonQuantity > 2) {
                                         prevBalloonQuantity = 2;
@@ -4653,7 +4646,7 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
                             }
                         } else if (racer->raceFinished == FALSE) {
                             if (racer->balloon_level > 0) {
-                                set_time_trial_start_voice(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
+                                hud_sound_play_delayed(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
                             }
                             sound_play(SOUND_COLLECT_ITEM + racer->balloon_level, NULL);
                         }
@@ -4839,11 +4832,11 @@ void handle_rocket_projectile(Object *obj, s32 updateRate) {
                     weaponOwner->boost_sound |= BOOST_SOUND_UNK2;
                 }
                 if (racer->raceFinished == FALSE) {
-                    func_80072348(racer->playerIndex, 9);
+                    rumble_set(racer->playerIndex, RUMBLE_TYPE_9);
                 }
             }
             obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                             obj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);
+                             obj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION, 1.0f, 1);
             free_object(obj);
             return;
         }
@@ -4863,7 +4856,7 @@ block_37:
     obj->properties.projectile.timer -= updateRate;
     if (obj->properties.projectile.timer < 0) {
         obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position,
-                         BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f, 1);
+                         ASSET_OBJECT_ID_BOMBEXPLOSION, SOUND_EXPLOSION, 1.0f, 1);
         free_object(obj);
         return;
     }
@@ -5189,7 +5182,7 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
                         weaponHit->attackType = ATTACK_EXPLOSION;
                         if (weapon->weaponID == WEAPON_TRIPMINE) {
                             obj_spawn_effect(weaponObj->segment.trans.x_position, weaponObj->segment.trans.y_position,
-                                             weaponObj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH,
+                                             weaponObj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION,
                                              SOUND_EXPLOSION, 1.0f, 1);
                         } else if (weapon->weaponID == WEAPON_BUBBLE_TRAP) {
                             if (weaponHit->shieldTimer > 0 && weaponHit->shieldType >= SHIELD_LEVEL3) {
@@ -5214,7 +5207,7 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
                             weaponProperties->unk4 = 2;
                         }
                         if (!weaponHit->raceFinished) {
-                            func_80072348(weaponHit->playerIndex, 13);
+                            rumble_set(weaponHit->playerIndex, RUMBLE_TYPE_13);
                         }
                         weaponOwner = &weapon->owner->unk64->racer;
                         if (weaponHit->playerIndex != PLAYER_COMPUTER || weaponOwner->playerIndex != PLAYER_COMPUTER) {
@@ -5240,8 +5233,8 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
                                            NULL);
                 } else {
                     obj_spawn_effect(weaponObj->segment.trans.x_position, weaponObj->segment.trans.y_position,
-                                     weaponObj->segment.trans.z_position, BHV_LENS_FLARE_SWITCH, SOUND_EXPLOSION, 1.0f,
-                                     1);
+                                     weaponObj->segment.trans.z_position, ASSET_OBJECT_ID_BOMBEXPLOSION,
+                                     SOUND_EXPLOSION, 1.0f, 1);
                     free_object(weaponObj);
                 }
             }
@@ -5382,7 +5375,7 @@ void obj_init_buoy_pirateship(Object *obj, UNUSED LevelObjectEntry_Buoy_PirateSh
  */
 void obj_loop_buoy_pirateship(Object *obj, s32 updateRate) {
     if (obj->unk64 != NULL) {
-        obj->segment.trans.y_position = get_wave_height((Object_Log *) obj->unk64, updateRate);
+        obj->segment.trans.y_position = log_wave_height((Object_Log *) obj->unk64, updateRate);
     }
     obj->segment.animFrame += updateRate * 8;
 }
@@ -5423,7 +5416,7 @@ void obj_loop_log(Object *obj, s32 updateRate) {
 
     log = (Object_Log *) obj->unk64;
     if (log != NULL) {
-        obj->segment.trans.y_position = get_wave_height(log, updateRate);
+        obj->segment.trans.y_position = log_wave_height(log, updateRate);
     } else {
         obj->segment.trans.y_position = ((LevelObjectEntryCommon *) obj->segment.level_entry)->y;
     }
@@ -5433,7 +5426,7 @@ void obj_loop_log(Object *obj, s32 updateRate) {
         if (racerObj->behaviorId == BHV_RACER) {
             racer = (Object_Racer *) racerObj->unk64;
             if (racer->velocity < -4.0 && racer->raceFinished == FALSE) {
-                func_80072348(racer->playerIndex, 18);
+                rumble_set(racer->playerIndex, RUMBLE_TYPE_18);
             }
         }
         sine = sins_f(-obj->segment.trans.y_rotation);

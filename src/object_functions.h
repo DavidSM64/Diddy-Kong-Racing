@@ -227,7 +227,7 @@ typedef struct unk80042CD0 {
     s16 unk18;
 } unk80042CD0;
 
-//void func_80072348(s16 obj, u8 arg1);
+//void rumble_set(s16 obj, u8 arg1);
 
 typedef struct unk80041A90_MidiFade {
     s16 unk0; // Y rotation

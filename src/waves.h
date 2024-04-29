@@ -57,7 +57,7 @@ typedef struct unk80129FC8 {
     s32 unk34;
     s32 unk38;
     s32 unk3C;
-    f32 unk40;
+    f32 magnitude; // Global wave strength
     f32 unk44;
     f32 unk48;
     s32 unk4C;
@@ -118,12 +118,12 @@ void func_800B8B8C(void);
 s32 func_800B9228(LevelModelSegment *arg0);
 void func_800BBDDC(LevelModel *level, LevelHeader *header);
 void func_800BFE98(s32 arg0);
-void func_800B8134(LevelHeader *arg0);
+void func_800B8134(LevelHeader *header);
 void func_800BBE08(LevelModel *level, unk800BBE08_arg1 *arg1);
 void obj_loop_wavepower(Object *obj);
 void func_800BFC54(unk800BFC54_arg0 *arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4);
 void func_800BF3E4(Object *obj);
-f32 get_wave_height(Object_Log *log, s32 updateRate);
+f32 log_wave_height(Object_Log *log, s32 updateRate);
 void func_800BA288(s32 arg0, s32 arg1);
 void func_800BF9F8(unk800BF9F8 *arg0, f32 arg1, f32 arg2);
 unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, f32 arg5, f32 arg6, f32 arg7, s32 arg8);

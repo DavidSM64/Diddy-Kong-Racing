@@ -82,7 +82,7 @@ const char D_800E9260[] = "\nError :: can not add another wave swell, reached li
 
 s32 D_80129FC0;
 s32 D_80129FC4;
-unk80129FC8 D_80129FC8[1];
+unk80129FC8 D_80129FC8;
 s32 D_8012A018;
 f32 D_8012A01C;
 f32 D_8012A020[2];
@@ -121,9 +121,9 @@ s32 D_8012A5F4;
 UNUSED s32 D_8012A5F8;
 UNUSED s32 D_8012A5FC;
 s32 D_8012A600[72];
-f32 D_8012A720;
-f32 D_8012A724;
-s32 D_8012A728;
+f32 gWavePowerBase;
+f32 gWaveMagnitude;
+s32 gWavePowerDivisor;
 
 /*****************************/
 
@@ -160,6 +160,7 @@ void free_waves(void) {
 }
 
 #ifdef NON_EQUIVALENT
+// wave_init
 void func_800B7EB4(void) {
     s32 *var_v1;
     s32 temp_lo;
@@ -173,11 +174,11 @@ void func_800B7EB4(void) {
     s32 var_t1;
 
     free_waves();
-    D_800E3040 = (s32 *) allocate_from_main_pool_safe(D_80129FC8->unk20 << 2, COLOUR_TAG_CYAN);
-    D_800E3044 = (s32 *) allocate_from_main_pool_safe((D_80129FC8->unk4 << 2) * D_80129FC8->unk4, COLOUR_TAG_CYAN);
+    D_800E3040 = (s32 *) allocate_from_main_pool_safe(D_80129FC8.unk20 << 2, COLOUR_TAG_CYAN);
+    D_800E3044 = (s32 *) allocate_from_main_pool_safe((D_80129FC8.unk4 << 2) * D_80129FC8.unk4, COLOUR_TAG_CYAN);
     D_800E3048 =
-        (s32 *) allocate_from_main_pool_safe(((D_80129FC8->unk0 + 1) << 2) * (D_80129FC8->unk0 + 1), COLOUR_TAG_CYAN);
-    temp_lo = ((D_80129FC8->unk0 + 1) << 2) * (D_80129FC8->unk0 + 1);
+        (s32 *) allocate_from_main_pool_safe(((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1), COLOUR_TAG_CYAN);
+    temp_lo = ((D_80129FC8.unk0 + 1) << 2) * (D_80129FC8.unk0 + 1);
     D_800E304C = allocate_from_main_pool_safe(temp_lo * 9, COLOUR_TAG_CYAN);
 
     // for (var_a1 = 1; var_a1 < 4; var_a1++) {
@@ -195,8 +196,8 @@ void func_800B7EB4(void) {
         var_a1 += 4;
     } while (var_a1 < 9);
 
-    // temp_lo = (D_80129FC8->unk0 + 1) * 250 * (D_80129FC8->unk0 + 1);
-    temp_lo = ((((D_80129FC8->unk0 + 1) << 5) - D_80129FC8->unk0) * 10) * (D_80129FC8->unk0 + 1);
+    // temp_lo = (D_80129FC8.unk0 + 1) * 250 * (D_80129FC8.unk0 + 1);
+    temp_lo = ((((D_80129FC8.unk0 + 1) << 5) - D_80129FC8.unk0) * 10) * (D_80129FC8.unk0 + 1);
     if (D_8012A078 != 2) {
         D_800E3070[0] = (s32 *) allocate_from_main_pool_safe(temp_lo << 1, COLOUR_TAG_CYAN);
         D_800E3070[1] = (s32 *) ((u32) D_800E3070[0] + temp_lo);
@@ -206,7 +207,7 @@ void func_800B7EB4(void) {
         D_800E3070[2] = (s32 *) ((u32) D_800E3070[1] + temp_lo);
         D_800E3070[3] = (s32 *) ((u32) D_800E3070[2] + temp_lo);
     }
-    temp_lo = (D_80129FC8->unk0 << 5) * D_80129FC8->unk0;
+    temp_lo = (D_80129FC8.unk0 << 5) * D_80129FC8.unk0;
     if (D_8012A078 != 2) {
         D_800E3080[0] = allocate_from_main_pool_safe(temp_lo << 1, COLOUR_TAG_CYAN);
         D_800E3080[1] = (s32 *) ((u32) D_800E3080[0] + temp_lo);
@@ -216,41 +217,41 @@ void func_800B7EB4(void) {
         D_800E3080[2] = (s32 *) ((u32) D_800E3080[1] + temp_lo);
         D_800E3080[3] = (s32 *) ((u32) D_800E3080[2] + temp_lo);
     }
-    D_800E30D0 = load_texture(D_80129FC8->unk2C);
+    D_800E30D0 = load_texture(D_80129FC8.unk2C);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/waves/func_800B7EB4.s")
 #endif
 
-void func_800B8134(LevelHeader *arg0) {
+void func_800B8134(LevelHeader *header) {
     if (D_8012A078 != 2) {
-        D_80129FC8->unk0 = arg0->unk56;
+        D_80129FC8.unk0 = header->unk56;
     } else {
-        D_80129FC8->unk0 = 4;
+        D_80129FC8.unk0 = 4;
     }
-    D_80129FC8->unk4 = arg0->unk57;
-    D_80129FC8->unk8 = arg0->unk58;
-    D_80129FC8->unkC = arg0->unk5A / 256.0f;
-    D_80129FC8->unk10 = arg0->unk59 << 8;
-    D_80129FC8->unk14 = arg0->unk5C;
-    D_80129FC8->unk18 = arg0->unk5E / 256.0f;
-    D_80129FC8->unk1C = arg0->unk5D << 8;
-    D_80129FC8->unk20 = arg0->unk60 & ~1;
+    D_80129FC8.unk4 = header->unk57;
+    D_80129FC8.unk8 = header->unk58;
+    D_80129FC8.unkC = header->unk5A / 256.0f;
+    D_80129FC8.unk10 = header->unk59 << 8;
+    D_80129FC8.unk14 = header->unk5C;
+    D_80129FC8.unk18 = header->unk5E / 256.0f;
+    D_80129FC8.unk1C = header->unk5D << 8;
+    D_80129FC8.unk20 = header->unk60 & ~1;
     if (D_8012A078 != 2) {
-        D_80129FC8->unk24 = arg0->unk6E;
+        D_80129FC8.unk24 = header->unk6E;
     } else {
-        D_80129FC8->unk24 = 3;
+        D_80129FC8.unk24 = 3;
     }
-    D_80129FC8->unk28 = arg0->unk71;
-    D_80129FC8->unk2C = arg0->unk68 & 0xFFFF;
-    D_80129FC8->unk30 = arg0->unk6A;
-    D_80129FC8->unk34 = arg0->unk6B;
-    D_80129FC8->unk38 = arg0->unk6C;
-    D_80129FC8->unk3C = arg0->unk6D;
-    D_80129FC8->unk40 = arg0->unk62 / 256.0f;
-    D_80129FC8->unk44 = arg0->unk64 / 256.0f;
-    D_80129FC8->unk48 = arg0->unk66 / 256.0f;
-    D_80129FC8->unk4C = arg0->unk70_u8;
+    D_80129FC8.unk28 = header->unk71;
+    D_80129FC8.unk2C = header->unk68 & 0xFFFF;
+    D_80129FC8.unk30 = header->unk6A;
+    D_80129FC8.unk34 = header->unk6B;
+    D_80129FC8.unk38 = header->unk6C;
+    D_80129FC8.unk3C = header->unk6D;
+    D_80129FC8.magnitude = header->wavePower / 256.0f;
+    D_80129FC8.unk44 = header->unk64 / 256.0f;
+    D_80129FC8.unk48 = header->unk66 / 256.0f;
+    D_80129FC8.unk4C = header->unk70_u8;
 }
 
 GLOBAL_ASM("asm/non_matchings/waves/func_800B82B4.s")
@@ -296,7 +297,7 @@ void func_800BA288(s32 arg0, s32 arg1) {
     arg1 <<= 3;
     for (i = 0; i < D_8012A0E0; i++) {
         if (D_8012A0E8[D_800E30D8[i].unkB] & (1 << D_800E30D8[i].unkA)) {
-            if (D_80129FC8->unk28 != 0) {
+            if (D_80129FC8.unk28 != 0) {
                 for (j = 0; j < 4; j++) {
                     s32 ti = j << 3;
                     if (D_800E30D4[D_800E30D8[i].unkC] & (0xFF << ti)) {
@@ -391,7 +392,10 @@ GLOBAL_ASM("asm/non_matchings/waves/func_800BCC70.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BDC80.s")
 GLOBAL_ASM("asm/non_matchings/waves/func_800BE654.s")
 
-f32 get_wave_height(Object_Log *log, s32 updateRate) {
+/**
+ * Finds the wave height and returns it for the spinning log object.
+ */
+f32 log_wave_height(Object_Log *log, s32 updateRate) {
     s32 var_t0;
     f32 y;
 
@@ -415,7 +419,7 @@ f32 get_wave_height(Object_Log *log, s32 updateRate) {
         var_t0 <<= log->unk2;
     }
     y = (((f32) var_t0 / 16.0) + (f32) log->unk0);
-    y *= D_80129FC8->unk40;
+    y *= D_80129FC8.magnitude;
     y += func_800BEFC4(log->unkC, log->unk8, log->unkA);
     return y;
 }
@@ -444,9 +448,9 @@ f32 func_800BEFC4(s32 arg0, s32 arg1, s32 arg2) {
         return 0.0f;
     }
     var_f0 = D_8012A0B8;
-    var_v1 = D_80129FC8->unk0;
+    var_v1 = D_80129FC8.unk0;
     var_f2 = D_8012A0BC;
-    if (D_80129FC8->unk28 != 0) {
+    if (D_80129FC8.unk28 != 0) {
         var_f0 *= 0.5f;
         var_v1 *= 2;
         var_f2 *= 0.5f;
@@ -570,7 +574,7 @@ unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, 
             D_800E3194[i] = obj;
             D_800E3188++;
             var_f0 = D_8012A0B8;
-            if (D_80129FC8->unk28 != 0) {
+            if (D_80129FC8.unk28 != 0) {
                 var_f0 /= 2.0f;
             }
             var_a0_2 = (((xPos - arg3) - D_8012A0D0) / var_f0);
@@ -623,7 +627,7 @@ unk800E3190 *func_800BF634(Object *obj, f32 xPos, f32 zPos, f32 arg3, s32 arg4, 
     return result;
 }
 
-void func_800BF9F8(unk800BF9F8 *arg0, f32 arg1, f32 arg2) {
+UNUSED void func_800BF9F8(unk800BF9F8 *arg0, f32 arg1, f32 arg2) {
     UNUSED s32 pad[4];
     s32 sp1C;
     f32 var_f0;
@@ -638,7 +642,7 @@ void func_800BF9F8(unk800BF9F8 *arg0, f32 arg1, f32 arg2) {
     if (arg0 != NULL) {
         var_f0 = D_8012A0B8;
         iteration = 0;
-        if (D_80129FC8->unk28 != 0) {
+        if (D_80129FC8.unk28 != 0) {
             var_f0 *= 0.5f;
         }
         temp_v1 = arg0->unk18;
@@ -728,6 +732,10 @@ void func_800BFE98(s32 arg0) {
     }
 }
 
+/**
+ * Wave Power loop func.
+ * Waits for racers to pass through, then sets itself as the current baseline for how strong the waves should be.
+ */
 void obj_loop_wavepower(Object *obj) {
     LevelObjectEntry_WavePower *entry;
     s32 numRacers;
@@ -758,9 +766,9 @@ void obj_loop_wavepower(Object *obj) {
                 diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
                 diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
                 if ((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ) < distance) {
-                    D_8012A720 = entry->unkA / 256.0f;
-                    D_8012A724 = (D_8012A720 - D_80129FC8->unk40) / (f32) entry->unkC;
-                    D_8012A728 = entry->unkC;
+                    gWavePowerBase = entry->power / 256.0f;
+                    gWaveMagnitude = (gWavePowerBase - D_80129FC8.magnitude) / (f32) entry->divisor;
+                    gWavePowerDivisor = entry->divisor;
                     gWaveGeneratorObj = obj;
                 }
             }

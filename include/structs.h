@@ -430,8 +430,8 @@ typedef struct LevelHeader {
   /* 0x5D */ u8 unk5D;
   /* 0x5E */ s16 unk5E;
   /* 0x60 */ s16 unk60;
-  /* 0x62 */ s16 unk62;
-  /* 0x64 */ s16 unk64;
+  /* 0x62 */ s16 wavePower;
+  /* 0x64 */ s16 unk64; // Some form of secondary power
   /* 0x66 */ s16 unk66;
   /* 0x68 */ s16 unk68;
   /* 0x6A */ u8 unk6A;
@@ -479,7 +479,7 @@ typedef struct LevelHeader {
   /* 0xB5 */ u8 unkB5;
   /* 0xB6 */ u8 unkB6;
   /* 0xB7 */ u8 unkB7;
-  /* 0xB8 */ s8 unkB8;
+  /* 0xB8 */ s8 bossRaceID;
   /* 0xB9 */ u8 unkB9;
   /* 0xBA */ s16 unkBA;
   /* 0xBC */ u8 unkBC;
@@ -1313,7 +1313,7 @@ typedef struct Object_Racer {
   /* 0x1A6 */ s16 z_rotation_vel;
   /* 0x1A8 */ s16 unk1A8;
   /* 0x1AA */ u16 unk1AA;
-  /* 0x1AC */ s16 unk1AC;
+  /* 0x1AC */ s16 finishPosition;
   /* 0x1AE */ s16 racePosition;
   /* 0x1B0 */ s16 unk1B0;
   /* 0x1B2 */ s16 unk1B2;
@@ -1347,7 +1347,7 @@ typedef struct Object_Racer {
   /* 0x1DA */ u8 unk1DA;
   /* 0x1DB */ s8 spinout_timer;
   /* 0x1DC */ u8 wheel_surfaces[4];
-  /* 0x1E0 */ s8 unk1E0;
+  /* 0x1E0 */ s8 trickType; // This depends on which vehicle you're using, but this name fits the most for now.
   /* 0x1E1 */ s8 steerAngle;
   /* 0x1E2 */ s8 groundedWheels;
   /* 0x1E3 */ s8 unk1E3;
@@ -1358,8 +1358,8 @@ typedef struct Object_Racer {
   /* 0x1E8 */ s8 unk1E8;
   /* 0x1E9 */ s8 unk1E9;
   /* 0x1EA */ s8 unk1EA;
-  /* 0x1EB */ s8 unk1EB;
-  /* 0x1EC */ s8 unk1EC;
+  /* 0x1EB */ s8 tapTimerR;
+  /* 0x1EC */ s8 tappedR;
   /* 0x1ED */ s8 squish_timer;
   /* 0x1EE */ u8 unk1EE;
   /* 0x1EF */ u8 boost_sound;
@@ -1686,9 +1686,9 @@ typedef struct Object_68 {
   /* 0x10 */ s16 animationID;
   /* 0x12 */ s16 animationFrame;
   /* 0x14 */ s16 animationFrameCount;
-  /* 0x16 */ s16 unk16;
-  /* 0x18 */ s16 unk18;
-  /* 0x1A */ s16 unk1A;
+  /* 0x16 */ s16 offsetX;
+  /* 0x18 */ s16 offsetY;
+  /* 0x1A */ s16 offsetZ;
   /* 0x1C */ s16 unk1C;
   /* 0x1E */ s8 unk1E;
   /* 0x1F */ s8 animationTaskNum;
@@ -1898,7 +1898,7 @@ typedef struct Object {
   /* 0x0000 */ ObjectSegment segment;
   /* 0x0044 */ Vertex *unk44;
   /* 0x0048 */ s16 behaviorId;
-  /* 0x004A */ s16 unk4A; // Upper byte is object ID, lower byte is object size.
+  /* 0x004A */ s16 objectID; // First 9 bits are object ID, last 7 bits are header size
   /* 0x004C */ ObjectInteraction *interactObj; //player + 0x318
   /* 0x0050 */ ShadowData *shadow; //player + 0x2F4
   /* 0x0054 */ ShadeProperties *shading; //player + 0x2C0
