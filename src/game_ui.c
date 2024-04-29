@@ -198,7 +198,7 @@ u8 D_80126D35;
 u8 gHideRaceTimer;
 u8 gNumActivePlayers;
 u8 gWrongWayNagPrefix;
-SoundMask *D_80126D3C;
+SoundMask *gRaceStartSoundMask;
 s32 gHUDVoiceSoundMask;
 s32 D_80126D44;
 s16 D_80126D48;
@@ -293,7 +293,7 @@ void init_hud(UNUSED s32 viewportCount) {
     D_80126D70 = 0;
     gTimeTrialVoiceID = 0;
     gTimeTrialVoiceDelay = 0;
-    D_80126D3C = NULL;
+    gRaceStartSoundMask = NULL;
     D_80126D44 = 0;
     gMinimapXlu = 0;
     D_80127194 = (LevelHeader_70 *) get_misc_asset(ASSET_MISC_58);
@@ -1531,7 +1531,8 @@ void render_race_start(s32 arg0, s32 updateRate) {
                     gRaceStartShowHudStep++;
                 }
             }
-            if (D_80126D3C == NULL && func_80023568() == 0) {
+            // Make engine revving sounds of random pitches while the race is waiting to begin.
+            if (gRaceStartSoundMask == NULL && func_80023568() == 0) {
                 f32 sp4C;
                 UNUSED s32 pad;
                 Object **racerGroup;
@@ -1546,7 +1547,7 @@ void render_race_start(s32 arg0, s32 updateRate) {
                         sp4C = 1.25 - ((get_random_number_from_range(0, 7) * 0.5) / 7.0);
                         func_800095E8(76, randomRacer->segment.trans.x_position, randomRacer->segment.trans.y_position,
                                       randomRacer->segment.trans.z_position, 4,
-                                      ((get_random_number_from_range(0, 7) * 63) / 7) + 24, sp4C * 100.0f, &D_80126D3C);
+                                      ((get_random_number_from_range(0, 7) * 63) / 7) + 24, sp4C * 100.0f, &gRaceStartSoundMask);
                     }
                 }
             }
@@ -2878,8 +2879,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     Object_Racer *someRacer;
     s32 i;
     s32 objectCount;
-    UNUSED s32 tempVar3;
-    ObjectTransform_800A8474 objTrans;
+    HudElement objTrans;
     f32 sp11C;
     f32 sp118;
     f32 sp114;
@@ -3184,22 +3184,22 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 gMinimapScreenY *= 1.2;
             }
             sprite_opaque(FALSE);
-            objTrans.trans.x_position = gMinimapScreenX + gHudOffsetX + gHudBounceX;
-            objTrans.trans.y_position = gMinimapScreenY;
+            objTrans.x = gMinimapScreenX + gHudOffsetX + gHudBounceX;
+            objTrans.y = gMinimapScreenY;
             if (osTvType == TV_TYPE_PAL) {
-                objTrans.trans.x_position -= 4.0f;
+                objTrans.x -= 4.0f;
             }
-            objTrans.trans.z_rotation = -someObjSeg->trans.z_rotation;
-            objTrans.trans.x_rotation = 0;
+            objTrans.z_rotation = -someObjSeg->trans.z_rotation;
+            objTrans.x_rotation = 0;
             if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
-                objTrans.trans.y_rotation = -0x8000;
-                objTrans.trans.x_position -= gMinimapDotOffsetX;
+                objTrans.y_rotation = -0x8000;
+                objTrans.x -= gMinimapDotOffsetX;
             } else {
-                objTrans.trans.y_rotation = 0;
+                objTrans.y_rotation = 0;
             }
-            objTrans.unk18 = 0;
-            objTrans.trans.z_position = 0.0f;
-            objTrans.trans.scale = 1.0f;
+            objTrans.spriteOffset = 0;
+            objTrans.z = 0.0f;
+            objTrans.scale = 1.0f;
             opacity = mapOpacity;
             if (mapOpacity > 160) {
                 mapOpacity = 160;
@@ -3210,7 +3210,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                 gDPSetPrimColor(gHUDCurrDisplayList++, 0, 0, gMinimapRed, gMinimapGreen, gMinimapBlue, mapOpacity);
             }
             render_ortho_triangle_image(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex,
-                                        (ObjectSegment *) &objTrans.trans, minimap, 0);
+                                        (ObjectSegment *) &objTrans, minimap, 0);
             sp11C = (lvlMdl->upperXBounds - lvlMdl->lowerXBounds) / (f32) (lvlMdl->upperZBounds - lvlMdl->lowerZBounds);
             sp118 = coss_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
             sp114 = sins_f((lvlMdl->minimapRotation * 0xFFFF) / 360);

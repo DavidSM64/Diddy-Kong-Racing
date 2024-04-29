@@ -93,6 +93,19 @@ typedef enum RaceType {
     RACETYPE_CHALLENGE         = 0x40 // For masking
 } RaceType;
 
+enum BossSetupTypes {
+    BOSS_RACE_TRICKY1,
+    BOSS_RACE_BLUEY1,
+    BOSS_RACE_SMOKEY1,
+    BOSS_RACE_TRICKY2,
+    BOSS_RACE_BLUEY2,
+    BOSS_RACE_BUBBLER1,
+    BOSS_RACE_BUBBLER2,
+    BOSS_RACE_SMOKEY2,
+    BOSS_RACE_WIZPIG1,
+    BOSS_RACE_WIZPIG2
+};
+
 typedef enum ObjectModelType {
     OBJECT_MODEL_TYPE_3D_MODEL,
     OBJECT_MODEL_TYPE_SPRITE_BILLBOARD,

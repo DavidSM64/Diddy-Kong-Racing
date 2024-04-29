@@ -1013,7 +1013,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     }
     sp127 = -1;
     i2 = gNumRacers;
-    D_8011AD24[1] = levelHeader->unkB8;
+    D_8011AD24[1] = levelHeader->bossRaceID;
     for (i6 = 0; i6 < gNumRacers; i6++) {
         var_s4 = i6;
         if (raceType != RACETYPE_HUBWORLD && isChallengeMode == 0 && D_8011AD3C == 0) {

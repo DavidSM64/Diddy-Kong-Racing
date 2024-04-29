@@ -179,7 +179,8 @@ BuildLevelHeader::BuildLevelHeader(DkrAssetsSettings &settings, BuildInfo &info)
     header->unkB5 = _info.srcFile->get_int("/unknown/unkB5");
     header->unkB6 = _info.srcFile->get_int("/unknown/unkB6");
     header->unkB7 = _info.srcFile->get_int("/unknown/unkB7");
-    header->unkB8 = _info.srcFile->get_int("/unknown/unkB8");
+    std::string bossRaceID = _info.srcFile->get_string("/boss-race-id");
+    header->bossRaceID = _c_context.get_int_value_of_symbol(bossRaceID);
     header->unkB9 = _info.srcFile->get_int("/unknown/unkB9");
     header->unkBC = _info.srcFile->get_int("/unknown/unkBC");
     header->unkBD = _info.srcFile->get_int("/unknown/unkBD");

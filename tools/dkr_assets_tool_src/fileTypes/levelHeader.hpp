@@ -106,7 +106,7 @@ struct LevelHeader {
     uint8_t unkB5;
     uint8_t unkB6;
     uint8_t unkB7;
-    int8_t unkB8;
+    int8_t bossRaceID;
     uint8_t unkB9;
     be_int16_t objectMap2;
     uint8_t unkBC;

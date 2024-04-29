@@ -268,11 +268,6 @@ typedef struct unk800A497C {
     s8 unk1D;
 } unk800A497C;
 
-typedef struct ObjectTransform_800A8474 {
-    ObjectTransform trans;
-    s16 unk18;
-} ObjectTransform_800A8474;
-
 typedef struct HudElements {
     void *entry[40];
 } HudElements;

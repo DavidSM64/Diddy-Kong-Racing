@@ -178,7 +178,8 @@ ExtractLevelHeader::ExtractLevelHeader(DkrAssetsSettings &settings, ExtractInfo 
     jsonFile.set_int("/unknown/unkB5", header->unkB5);
     jsonFile.set_int("/unknown/unkB6", header->unkB6);
     jsonFile.set_int("/unknown/unkB7", header->unkB7);
-    jsonFile.set_int("/unknown/unkB8", header->unkB8);
+    std::string bossRaceID = _info.c_context->get_symbol_of_enum_int("BossSetupTypes", header->bossRaceID);
+    jsonFile.set_string("/boss-race-id", bossRaceID);
     jsonFile.set_int("/unknown/unkB9", header->unkB9);
     jsonFile.set_int("/unknown/unkBC", header->unkBC);
     jsonFile.set_int("/unknown/unkBD", header->unkBD);

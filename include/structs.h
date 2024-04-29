@@ -479,7 +479,7 @@ typedef struct LevelHeader {
   /* 0xB5 */ u8 unkB5;
   /* 0xB6 */ u8 unkB6;
   /* 0xB7 */ u8 unkB7;
-  /* 0xB8 */ s8 unkB8;
+  /* 0xB8 */ s8 bossRaceID;
   /* 0xB9 */ u8 unkB9;
   /* 0xBA */ s16 unkBA;
   /* 0xBC */ u8 unkBC;
