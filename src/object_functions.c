@@ -643,7 +643,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                     if (worldBalloons) {
                         obj->properties.trophyCabinet.action = 1;
                         sound_play(SOUND_VOICE_TT_TROPHY_RACE, NULL);
-                        func_800A3870();
+                        hud_speedometre_reset();
                     } else {
                         // Text for "TROPHY RACE" "TO ENTER THE TROPHY RACE, YOU MUST COMPLETE ALL THE TASKS FROM THIS
                         // WORLD. KEEP RACING!"

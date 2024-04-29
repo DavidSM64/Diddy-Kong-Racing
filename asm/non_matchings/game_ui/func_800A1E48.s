@@ -170,7 +170,7 @@ glabel func_800A1E48
 /* 0A2CC8 800A20C8 00000000 */   nop   
 .L800A20CC:
 /* 0A2CCC 800A20CC AFA7007C */  sw    $a3, 0x7c($sp)
-/* 0A2CD0 800A20D0 0C0288BD */  jal   func_800A22F4
+/* 0A2CD0 800A20D0 0C0288BD */  jal   hud_draw_lives
 /* 0A2CD4 800A20D4 AFA8006C */   sw    $t0, 0x6c($sp)
 /* 0A2CD8 800A20D8 8FA7007C */  lw    $a3, 0x7c($sp)
 /* 0A2CDC 800A20DC 8FA8006C */  lw    $t0, 0x6c($sp)

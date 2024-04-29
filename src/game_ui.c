@@ -805,7 +805,7 @@ void render_hud_challenge_eggs(s32 countdown, Object *obj, s32 updateRate) {
         }
         // Skip rendering the portraits if in 2 player, it's done elsewhere.
         if (gNumActivePlayers != 2) {
-            hud_eggs_draw(obj, updateRate);
+            hud_draw_eggs(obj, updateRate);
         }
         sprite_flipbook_off(FALSE);
     }
@@ -814,7 +814,7 @@ void render_hud_challenge_eggs(s32 countdown, Object *obj, s32 updateRate) {
 /**
  * Position and render the portraits for the egg challenge HUD.
  */
-void hud_eggs_draw(Object *racerObj, s32 updateRate) {
+void hud_draw_eggs(Object *racerObj, s32 updateRate) {
     Object **racers;
     s32 i;
     Object_Racer *racer;
@@ -1005,7 +1005,7 @@ void func_800A1E48(Object *racerObj, s32 updateRate) {
             gCurrentHud->battleBananaCount2.x += temp;
             gCurrentHud->battleBananaCount2.y += temp2;
             if (gNumActivePlayers < 3 || racer->playerIndex == curRacer->playerIndex) {
-                func_800A22F4(curRacer, updateRate);
+                hud_draw_lives(curRacer, updateRate);
             }
             if (gNumActivePlayers == 1) {
                 prevCurrHudUnk64C += 68;
@@ -1041,7 +1041,11 @@ void func_800A1E48(Object *racerObj, s32 updateRate) {
 GLOBAL_ASM("asm/non_matchings/game_ui/func_800A1E48.s")
 #endif
 
-void func_800A22F4(Object_Racer *racer, UNUSED s32 updateRate) {
+/**
+ * Render the portrait and life counter in the battle mode.
+ * In 3/4 player, skips the portrait for all human players. Player 4 has a portrait if it's AI.
+ */
+void hud_draw_lives(Object_Racer *racer, UNUSED s32 updateRate) {
     gCurrentHud->challengePortrait.spriteID = racer->characterId + HUD_SPRITE_PORTRAIT;
     if (gNumActivePlayers < 3 || (gNumActivePlayers == 3 && racer->playerIndex == PLAYER_COMPUTER)) {
         D_80126CD5 = TRUE;
@@ -1439,7 +1443,10 @@ void set_stopwatch_face(u8 arg0, u8 arg1, u8 faceID, u8 arg3, u8 arg4) {
     }
 }
 
-void func_800A3870(void) {
+/** 
+ * Reset the angle of the speedometre's needle to the starting position.
+*/
+void hud_speedometre_reset(void) {
     gCurrentHud->speedometreArrow.z_rotation = 0x6490;
 }
 
@@ -1549,7 +1556,7 @@ void render_race_start(s32 countdown, s32 updateRate) {
             }
             // Make engine revving sounds of random pitches while the race is waiting to begin.
             if (gRaceStartSoundMask == NULL && func_80023568() == 0) {
-                f32 sp4C;
+                f32 frequency;
                 UNUSED s32 pad;
                 Object **racerGroup;
                 Object *randomRacer;
@@ -1560,10 +1567,10 @@ void render_race_start(s32 countdown, s32 updateRate) {
                 racer = (Object_Racer *) randomRacer->unk64;
                 if (racer->vehicleID == VEHICLE_CAR) {
                     if (get_random_number_from_range(0, 100) >= 96) {
-                        sp4C = 1.25 - ((get_random_number_from_range(0, 7) * 0.5) / 7.0);
+                        frequency = 1.25 - ((get_random_number_from_range(0, 7) * 0.5) / 7.0);
                         func_800095E8(76, randomRacer->segment.trans.x_position, randomRacer->segment.trans.y_position,
                                       randomRacer->segment.trans.z_position, 4,
-                                      ((get_random_number_from_range(0, 7) * 63) / 7) + 24, sp4C * 100.0f,
+                                      ((get_random_number_from_range(0, 7) * 63) / 7) + 24, frequency * 100.0f,
                                       &gRaceStartSoundMask);
                     }
                 }
@@ -2974,7 +2981,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
     gHUDCurrVertex = *vtx;
     if (gHudLevelHeader->race_type == RACETYPE_CHALLENGE_EGGS) {
         if (gNumActivePlayers == 2 && gHudToggleSettings[gHUDNumPlayers] == 0) {
-            hud_eggs_draw(NULL, updateRate);
+            hud_draw_eggs(NULL, updateRate);
             reset_render_settings(&gHUDCurrDisplayList);
         } else {
             // Render player 4's egg challenge portrait if they are AI controlled.
