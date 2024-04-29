@@ -10,6 +10,10 @@
 #define HUD_ELEMENT_SPRITE      0x8000
 #define HUD_ELEMENT_TEXTURE     0xC000
 
+#define HUD_ELEMENT_COUNT (sizeof(struct HudData) / sizeof(struct HudElement))
+
+#define HUD_EGG_TOTAL 3
+
 enum CourseIndicatorArrows {
     INDICATOR_NONE,
     INDICATOR_LEFT,
@@ -258,32 +262,22 @@ typedef struct HudAudio {
     s8 unkF;
 } HudAudio;
 
-typedef struct unk800A497C {
-    u8 pad0[0xC];
-    f32 unkC;
-    u8 pad10[0xA];
-    s8 unk1A;
-    s8 unk1B;
-    s8 unk1C;
-    s8 unk1D;
-} unk800A497C;
-
 typedef struct HudElements {
-    void *entry[40];
+    void *entry[HUD_ELEMENT_COUNT];
 } HudElements;
 
 extern u8 gGfxTaskYieldData[OS_YIELD_DATA_SIZE];
 
 u8 race_starting(void);
-void func_800A0B74(void);
-void render_hud_race(s32 arg0, Object *obj, s32 updateRate);
-void render_hud_challenge_eggs(s32 arg0, Object *obj, s32 updateRate);
-void render_hud_race_boss(s32 arg0, Object *obj, s32 updateRate);
-void render_hud_taj_race(s32 arg0, Object *obj, s32 updateRate);
+void hud_audio_init(void);
+void render_hud_race(s32 countdown, Object *obj, s32 updateRate);
+void render_hud_challenge_eggs(s32 countdown, Object *obj, s32 updateRate);
+void render_hud_race_boss(s32 countdown, Object *obj, s32 updateRate);
+void render_hud_taj_race(s32 countdown, Object *obj, s32 updateRate);
 void func_800A3870(void);
 void play_time_trial_end_message(s16 *playerID);
-void set_time_trial_start_voice(u16 soundID, f32 delay, s32 arg2);
-void func_800A74EC(u16 soundID, s32 arg1);
+void hud_sound_play_delayed(u16 soundID, f32 delay, s32 playerIndex);
+void hud_sound_stop(u16 soundID, s32 playerIndex);
 void minimap_init(LevelModel *model);
 s8 get_hud_setting(void);
 void minimap_fade(s32 setting);
@@ -294,32 +288,32 @@ void render_race_time(Object_Racer *racer, s32 updateRate);
 void render_wrong_way_text(Object_Racer *obj, s32 updateRate);
 void render_course_indicator_arrows(Object_Racer *racer, s32 updateRate);
 void render_hud_hubworld(Object *obj, s32 updateRate);
-void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *arg3, s32 updateRate);
+void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s32 updateRate);
 void render_weapon_hud(Object *obj, s32 updateRate);
-void render_race_start(s32 arg0, s32 updateRate);
+void render_race_start(s32 countdown, s32 updateRate);
 void render_racer_bananas(Object_Racer *racer, s32 updateRate);
 void render_race_finish_position(Object_Racer *racer, s32 updateRate);
 void render_speedometer(Object *obj, s32 updateRate);
 void render_lap_count(Object_Racer *racer, s32 updateRate);
 void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 updateRate);
 void init_hud(s32 viewportCount);
-void render_hud_battle(s32 arg0, Object *obj, s32 updateRate);
+void render_hud_battle(s32 countdown, Object *obj, s32 updateRate);
 void func_800A22F4(Object_Racer *racer, s32 updateRate);
 void free_hud(void);
 void set_stopwatch_face(u8, u8, u8, u8, u8);
-void func_800A0BD4(s32 updateRate);
+void hud_audio_update(s32 updateRate);
 void render_silver_coin_counter(Object_Racer *racer, s32 updateRate);
 void render_magnet_reticle(Object *racerObj);
 void render_time_trial_finish(Object_Racer *racer, s32 updateRate);
-void func_800A19A4(Object_Racer *racer, s32 updateRate);
-void func_800A14F0(Object *racerObj, s32 updateRate);
+void hud_eggs_portrait(Object_Racer *racer, s32 updateRate);
+void hud_eggs_draw(Object *racerObj, s32 updateRate);
 void render_race_position(Object_Racer *racer, s32 updateRate);
-void render_hud_banana_challenge(s32 arg0, Object *obj, s32 updateRate);
+void render_hud_banana_challenge(s32 countdown, Object *obj, s32 updateRate);
 void render_balloon_count(Object_Racer *racer);
 void render_treasure_hud(Object_Racer *racer);
 void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspectRatio);
 void render_timer(s32 x, s32 y, s32 minutes, s32 seconds, s32 hundredths, s32 smallFont);
-void func_800AAFD0(ObjectModel *objModel);
+void hud_draw_model(ObjectModel *objModel);
 
 // Non Matching
 void func_800AA600(Gfx **dList, MatrixS **mtx, Vertex **vtxList, HudElement *arg3);

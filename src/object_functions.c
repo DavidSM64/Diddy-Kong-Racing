@@ -4631,7 +4631,7 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
                         if (levelMask == racer->balloon_level) {
                             if (racer->raceFinished == FALSE) {
                                 if (prevBalloonQuantity != racer->balloon_quantity) {
-                                    set_time_trial_start_voice(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
+                                    hud_sound_play_delayed(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
                                     prevBalloonQuantity = racer->balloon_level;
                                     if (prevBalloonQuantity > 2) {
                                         prevBalloonQuantity = 2;
@@ -4646,7 +4646,7 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
                             }
                         } else if (racer->raceFinished == FALSE) {
                             if (racer->balloon_level > 0) {
-                                set_time_trial_start_voice(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
+                                hud_sound_play_delayed(SOUND_VOICE_TT_POWERUP, 1.0f, racer->playerIndex);
                             }
                             sound_play(SOUND_COLLECT_ITEM + racer->balloon_level, NULL);
                         }

@@ -4433,7 +4433,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
             }
             magnetTarget = NULL;
             if (gCurrentButtonsPressed & Z_TRIG) {
-                func_800A74EC(SOUND_VOICE_TT_POWERUP, racer->playerIndex);
+                hud_sound_stop(SOUND_VOICE_TT_POWERUP, racer->playerIndex);
             }
             if (racer->magnetLevel3) {
                 if (racer->magnetTimer == 0) {

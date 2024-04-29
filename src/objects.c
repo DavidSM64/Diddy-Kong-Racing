@@ -4261,7 +4261,7 @@ void func_8001A8F4(s32 updateRate) {
         (*gRacers)[0] = (*gRacers)[sp30];
         (*gRacers)[sp30] = prevPort0Racer;
         racer_sound_free((*gRacers)[0]);
-        func_800A0B74();
+        hud_audio_init();
         reset_rocket_sound_timer();
         sound_stop_all();
         if (is_in_two_player_adventure()) {
@@ -6153,7 +6153,7 @@ void func_80022E18(s32 arg0) {
         obj->properties.common.unk0 = 0x14;
     }
     music_change_on();
-    func_800A0B74();
+    hud_audio_init();
     start_level_music(1.0f);
     gIsTajChallenge = 0;
 }

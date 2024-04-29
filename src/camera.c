@@ -94,7 +94,7 @@ s32 gViewportCap;
 UNUSED s32 D_80120CEC;
 ObjectTransform gCameraTransform;
 s32 gMatrixType;
-s32 D_80120D0C;
+s32 gSpriteFlipbookOff;
 f32 gCurCamFOV;
 s8 gCutsceneCameraActive;
 s8 gAdjustViewportHeight;
@@ -145,7 +145,7 @@ void camera_init(void) {
     gModelMatrixStackPos = 0;
     gCameraMatrixPos = 0;
     gNumberOfViewports = 0;
-    D_80120D0C = FALSE;
+    gSpriteFlipbookOff = FALSE;
     D_80120D18 = 0;
     gAdjustViewportHeight = 0;
     gAntiPiracyViewport = 0;
@@ -1023,8 +1023,12 @@ void matrix_world_origin(Gfx **dlist, MatrixS **mtx) {
     gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), gMatrixType << 6);
 }
 
-void func_80068508(s32 bool) {
-    D_80120D0C = bool;
+/**
+ * If set to true, disables animated sprite frames.
+ * Used when the sprite frame is already established before calling to draw.
+ */
+void sprite_flipbook_off(s32 setting) {
+    gSpriteFlipbookOff = setting;
 }
 
 /**
@@ -1119,7 +1123,7 @@ s32 render_sprite_billboard(Gfx **dlist, MatrixS **mtx, Vertex **vertexList, Obj
         gSPMatrix((*dlist)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*dlist)++);
     }
-    if (D_80120D0C == FALSE) {
+    if (gSpriteFlipbookOff == FALSE) {
         textureFrame = ((textureFrame & 0xFF) * arg4->textureCount) >> 8;
     }
     flags &= ~RENDER_VEHICLE_PART;
@@ -1190,7 +1194,7 @@ void render_ortho_triangle_image(Gfx **dList, MatrixS **mtx, Vertex **vtx, Objec
         gModelMatrixS[gModelMatrixStackPos] = *mtx;
         gSPMatrix((*dList)++, OS_PHYSICAL_TO_K0((*mtx)++), G_MTX_DKR_INDEX_2);
         gDkrEnableBillboard((*dList)++);
-        if (D_80120D0C == FALSE) {
+        if (gSpriteFlipbookOff == FALSE) {
             index = (((u8) index) * sprite->baseTextureId) >> 8;
         }
         func_8007BF34(dList, sprite->unk6 | flags);

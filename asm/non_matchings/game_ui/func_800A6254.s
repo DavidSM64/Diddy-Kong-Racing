@@ -651,7 +651,7 @@ glabel L800A691C
 /* 0A77B4 800A6BB4 8FA70070 */  lw    $a3, 0x70($sp)
 /* 0A77B8 800A6BB8 00000000 */  nop   
 .L800A6BBC:
-/* 0A77BC 800A6BBC 0C0297C6 */  jal   func_800A5F18
+/* 0A77BC 800A6BBC 0C0297C6 */  jal   hud_draw_finish_misc
 /* 0A77C0 800A6BC0 00E02025 */   move  $a0, $a3
 /* 0A77C4 800A6BC4 10000078 */  b     .L800A6DA8
 /* 0A77C8 800A6BC8 8FBF0014 */   lw    $ra, 0x14($sp)
@@ -710,7 +710,7 @@ glabel L800A6BCC
 /* 0A788C 800A6C8C 240D0004 */  li    $t5, 4
 /* 0A7890 800A6C90 A1CD05FA */  sb    $t5, 0x5fa($t6)
 .L800A6C94:
-/* 0A7894 800A6C94 0C0297C6 */  jal   func_800A5F18
+/* 0A7894 800A6C94 0C0297C6 */  jal   hud_draw_finish_misc
 /* 0A7898 800A6C98 00E02025 */   move  $a0, $a3
 /* 0A789C 800A6C9C 10000042 */  b     .L800A6DA8
 /* 0A78A0 800A6CA0 8FBF0014 */   lw    $ra, 0x14($sp)
@@ -763,7 +763,7 @@ glabel L800A6CA4
 /* 0A7950 800A6D50 46005100 */  add.s $f4, $f10, $f0
 /* 0A7954 800A6D54 E44402EC */  swc1  $f4, 0x2ec($v0)
 .L800A6D58:
-/* 0A7958 800A6D58 0C0297C6 */  jal   func_800A5F18
+/* 0A7958 800A6D58 0C0297C6 */  jal   hud_draw_finish_misc
 /* 0A795C 800A6D5C 00E02025 */   move  $a0, $a3
 /* 0A7960 800A6D60 10000011 */  b     .L800A6DA8
 /* 0A7964 800A6D64 8FBF0014 */   lw    $ra, 0x14($sp)
@@ -778,12 +778,12 @@ glabel L800A6D68
 .L800A6D84:
 /* 0A7984 800A6D84 A04F05FA */  sb    $t7, 0x5fa($v0)
 /* 0A7988 800A6D88 8D380000 */  lw    $t8, ($t1)
-/* 0A798C 800A6D8C 0C0297C6 */  jal   func_800A5F18
+/* 0A798C 800A6D8C 0C0297C6 */  jal   hud_draw_finish_misc
 /* 0A7990 800A6D90 A30005FB */   sb    $zero, 0x5fb($t8)
 /* 0A7994 800A6D94 10000004 */  b     .L800A6DA8
 /* 0A7998 800A6D98 8FBF0014 */   lw    $ra, 0x14($sp)
 .L800A6D9C:
-/* 0A799C 800A6D9C 0C0297C6 */  jal   func_800A5F18
+/* 0A799C 800A6D9C 0C0297C6 */  jal   hud_draw_finish_misc
 /* 0A79A0 800A6DA0 00E02025 */   move  $a0, $a3
 .L800A6DA4:
 /* 0A79A4 800A6DA4 8FBF0014 */  lw    $ra, 0x14($sp)

@@ -59,8 +59,8 @@ glabel camera_init
 /* 066B6C 80065F6C AC200D20 */  sw    $zero, %lo(gCameraMatrixPos)($at)
 /* 066B70 80065F70 3C018012 */  lui   $at, %hi(gNumberOfViewports) # $at, 0x8012
 /* 066B74 80065F74 AC200CE0 */  sw    $zero, %lo(gNumberOfViewports)($at)
-/* 066B78 80065F78 3C018012 */  lui   $at, %hi(D_80120D0C) # $at, 0x8012
-/* 066B7C 80065F7C AC200D0C */  sw    $zero, %lo(D_80120D0C)($at)
+/* 066B78 80065F78 3C018012 */  lui   $at, %hi(gSpriteFlipbookOff) # $at, 0x8012
+/* 066B7C 80065F7C AC200D0C */  sw    $zero, %lo(gSpriteFlipbookOff)($at)
 /* 066B80 80065F80 3C018012 */  lui   $at, %hi(D_80120D18) # $at, 0x8012
 /* 066B84 80065F84 AC200D18 */  sw    $zero, %lo(D_80120D18)($at)
 /* 066B88 80065F88 3C04800E */  lui   $a0, %hi(gAntiPiracyViewport) # $a0, 0x800e

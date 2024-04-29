@@ -435,7 +435,7 @@ glabel func_800A277C
 /* 0A3974 800A2D74 8FAF0098 */  lw    $t7, 0x98($sp)
 .L800A2D78:
 /* 0A3978 800A2D78 24040001 */  li    $a0, 1
-/* 0A397C 800A2D7C 0C01A142 */  jal   func_80068508
+/* 0A397C 800A2D7C 0C01A142 */  jal   sprite_flipbook_off
 /* 0A3980 800A2D80 A1E00020 */   sb    $zero, 0x20($t7)
 /* 0A3984 800A2D84 8FA400A0 */  lw    $a0, 0xa0($sp)
 /* 0A3988 800A2D88 8FA500C8 */  lw    $a1, 0xc8($sp)
@@ -1049,7 +1049,7 @@ glabel func_800A277C
 /* 0A42A4 800A36A4 0C031059 */  jal   set_kerning
 /* 0A42A8 800A36A8 00002025 */   move  $a0, $zero
 .L800A36AC:
-/* 0A42AC 800A36AC 0C01A142 */  jal   func_80068508
+/* 0A42AC 800A36AC 0C01A142 */  jal   sprite_flipbook_off
 /* 0A42B0 800A36B0 00002025 */   move  $a0, $zero
 .L800A36B4:
 /* 0A42B4 800A36B4 8FBF002C */  lw    $ra, 0x2c($sp)

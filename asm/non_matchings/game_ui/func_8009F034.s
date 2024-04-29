@@ -147,13 +147,13 @@ glabel func_8009F034
 /* 09FDF0 8009F1F0 00000000 */   nop   
 /* 09FDF4 8009F1F4 14400004 */  bnez  $v0, .L8009F208
 /* 09FDF8 8009F1F8 240C0001 */   li    $t4, 1
-/* 09FDFC 8009F1FC 3C018012 */  lui   $at, %hi(D_80126D71) # $at, 0x8012
+/* 09FDFC 8009F1FC 3C018012 */  lui   $at, %hi(gHudTimeTrialGhost) # $at, 0x8012
 /* 09FE00 8009F200 10000004 */  b     .L8009F214
-/* 09FE04 8009F204 A0206D71 */   sb    $zero, %lo(D_80126D71)($at)
+/* 09FE04 8009F204 A0206D71 */   sb    $zero, %lo(gHudTimeTrialGhost)($at)
 .L8009F208:
 /* 09FE08 8009F208 24190001 */  li    $t9, 1
-/* 09FE0C 8009F20C 3C018012 */  lui   $at, %hi(D_80126D71) # $at, 0x8012
-/* 09FE10 8009F210 A0396D71 */  sb    $t9, %lo(D_80126D71)($at)
+/* 09FE0C 8009F20C 3C018012 */  lui   $at, %hi(gHudTimeTrialGhost) # $at, 0x8012
+/* 09FE10 8009F210 A0396D71 */  sb    $t9, %lo(gHudTimeTrialGhost)($at)
 .L8009F214:
 /* 09FE14 8009F214 3C028012 */  lui   $v0, %hi(gNumActivePlayers) # $v0, 0x8012
 /* 09FE18 8009F218 90426D37 */  lbu   $v0, %lo(gNumActivePlayers)($v0)
