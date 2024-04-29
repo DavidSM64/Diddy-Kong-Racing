@@ -110,7 +110,7 @@ void func_8006807C(Gfx **dlist, MatrixS **mtx);
 void viewport_rsp_set(Gfx **dlist, s32 width, s32 height, s32 posX, s32 posY);
 void viewport_reset(Gfx **dlist);
 void matrix_world_origin(Gfx **dlist, MatrixS **mtx);
-void sprite_flipbook_off(s32 setting);
+void sprite_anim_off(s32 setting);
 ObjectSegment *get_active_camera_segment_no_cutscenes(void);
 ObjectSegment *get_active_camera_segment(void);
 ObjectSegment *get_cutscene_camera_segment(void);

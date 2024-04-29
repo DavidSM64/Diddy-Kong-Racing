@@ -3155,7 +3155,7 @@ void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blu
         xOffset3 = 5;
     }
     get_timestamp_from_frames(frameCount, &minutes, &seconds, &hundredths);
-    sprite_flipbook_off(TRUE);
+    sprite_anim_off(TRUE);
     sprite_opaque(FALSE);
 
     gMenuImageStack[imageIndex].unk18 = minutes / 10;
@@ -3195,7 +3195,7 @@ void show_timestamp(s32 frameCount, s32 xPos, s32 yPos, u8 red, u8 green, u8 blu
     gMenuImageStack[imageIndex].unkC = xPos;
     func_8009CA60(imageIndex);
 
-    sprite_flipbook_off(FALSE);
+    sprite_anim_off(FALSE);
     sprite_opaque(TRUE);
     sMenuGuiColourR = (u8) 255;
     sMenuGuiColourG = (u8) 255;
@@ -3246,7 +3246,7 @@ void func_80081C04(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UNUSED 
     sMenuGuiColourB = b;
     sMenuGuiOpacity = a;
     sprite_opaque(0);
-    sprite_flipbook_off(TRUE);
+    sprite_anim_off(TRUE);
     if (powerOfTen && number) {} // Fakematch
     gMenuImageStack[0].unk10 = y;
     for (i = 0; i < strLen; i++) {
@@ -3256,7 +3256,7 @@ void func_80081C04(s32 number, s32 x, s32 y, s32 r, s32 g, s32 b, s32 a, UNUSED 
         x += 12;
     }
     sprite_opaque(1);
-    sprite_flipbook_off(FALSE);
+    sprite_anim_off(FALSE);
     sMenuGuiColourR = 255;
     sMenuGuiColourG = 255;
     sMenuGuiColourB = 255;
@@ -3421,7 +3421,7 @@ void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale) {
                         shouldResetRenderSettings = FALSE;
                         reset_render_settings(&sMenuCurrDisplayList);
                     }
-                    sprite_flipbook_off(TRUE);
+                    sprite_anim_off(TRUE);
                     sprite_opaque(FALSE);
                     gMenuImageStack[elems->unk14_a.value].unkC = xPos - 160;
                     gMenuImageStack[elems->unk14_a.value].unk10 = (-yPos - gDrawElementsYOffset) + 120;
@@ -3436,7 +3436,7 @@ void draw_menu_elements(s32 flags, MenuElement *elems, f32 scale) {
                     sMenuGuiColourBlendFactor = elems->filterBlendFactor;
                     sMenuGuiOpacity = elems->opacity;
                     func_8009CA60(elems->unk14_a.value);
-                    sprite_flipbook_off(FALSE);
+                    sprite_anim_off(FALSE);
                     sprite_opaque(TRUE);
                     break;
                 case 6:
@@ -3773,7 +3773,7 @@ void render_title_screen(UNUSED s32 updateRate, f32 updateRateF) {
         set_ortho_matrix_view(&sMenuCurrDisplayList, &sMenuCurrHudMat);
         scale = (f32) gTitleRevealTimer * 0.03125f;
         sMenuGuiOpacity = (gTitleRevealTimer * 8) - 1;
-        sprite_flipbook_off(FALSE);
+        sprite_anim_off(FALSE);
         if (scale != 1.0f) {
             render_texture_rectangle_scaled(&sMenuCurrDisplayList, sGameTitleTileOffsets, SCREEN_WIDTH_FLOAT_HALF,
                                             52.0f, scale, scale, 0xFFFFFFFE, TEXRECT_POINT);
@@ -4496,7 +4496,7 @@ void func_800853D0(SaveFileData *arg0, s32 x, s32 y) {
         } else {
             i = 120;
         }
-        sprite_flipbook_off(TRUE);
+        sprite_anim_off(TRUE);
         temp = (i - y);
         gMenuImageStack[2].unk10 = temp - 49;
         gMenuImageStack[sp70].unk10 = temp - 24;
@@ -4510,7 +4510,7 @@ void func_800853D0(SaveFileData *arg0, s32 x, s32 y) {
         sprite_opaque(1);
         gMenuImageStack[sp70].unkC = x - 128;
         func_8009CA60(sp70);
-        sprite_flipbook_off(FALSE);
+        sprite_anim_off(FALSE);
     }
     if (drawTexture != NULL) {
         render_textured_rectangle(&sMenuCurrDisplayList, drawTexture, x + 60, y + 6, 255, 255, 255, 255);
@@ -7448,14 +7448,14 @@ void render_file_select_menu(UNUSED s32 updateRate) {
                 }
                 render_menu_image(var_s2, gFileSelectButtons[i].x + gFileSelectElementPos[2],
                                   gFileSelectButtons[i].y + gFileSelectElementPos[3], 0, 0, 0, 128);
-                sprite_flipbook_off(TRUE);
+                sprite_anim_off(TRUE);
                 gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount / 10;
                 render_menu_image(0, gFileSelectButtons[i].x + gFileSelectElementPos[6] - 6,
                                   gFileSelectButtons[i].y + gFileSelectElementPos[7], 0, 0, 0, 128);
                 gMenuImageStack->unk18 = gSavefileInfo[i].balloonCount % 10;
                 render_menu_image(0, gFileSelectButtons[i].x + gFileSelectElementPos[6] + 6,
                                   gFileSelectButtons[i].y + gFileSelectElementPos[7], 0, 0, 0, 128);
-                sprite_flipbook_off(FALSE);
+                sprite_anim_off(FALSE);
                 sMenuGuiColourG = 64;
                 sMenuGuiColourB = 64;
                 render_menu_image(10, gFileSelectButtons[i].x + gFileSelectElementPos[8],
@@ -9084,7 +9084,7 @@ void render_track_select_setup_ui(UNUSED s32 updateRate) {
                               (gTwoPlayerRacerCountMenu.textPos[0] + gTwoPlayerRacerCountMenu.x) - 1,
                               (gTwoPlayerRacerCountMenu.textPos[1] + gTwoPlayerRacerCountMenu.y + regionOffset) - 1,
                               gMenuText[ASSET_MENU_TEXT_NUMBEROFRACERS], ALIGN_MIDDLE_CENTER);
-                    sprite_flipbook_off(TRUE);
+                    sprite_anim_off(TRUE);
                     sprite_opaque(FALSE);
 
                     for (temp2 = 0; temp2 < 3; temp2++) {
@@ -9108,7 +9108,7 @@ void render_track_select_setup_ui(UNUSED s32 updateRate) {
                         sMenuGuiColourB = 255;
                     }
                     sprite_opaque(TRUE);
-                    sprite_flipbook_off(FALSE);
+                    sprite_anim_off(FALSE);
                 }
             }
         }
@@ -10587,7 +10587,7 @@ void func_80096978(UNUSED s32 updateRate, f32 opacity) {
         set_text_colour(255, 255, 192, 96, 255);
         draw_text(&sMenuCurrDisplayList, time - 34, y2 + sp98 + 2, gRacePlacementsArray[spA0], ALIGN_MIDDLE_CENTER);
         reset_render_settings(&sMenuCurrDisplayList);
-        sprite_flipbook_off(TRUE);
+        sprite_anim_off(TRUE);
         sprite_opaque(FALSE);
         sMenuGuiColourR = 255;
         sMenuGuiColourG = 255 - 64 * spA0;
@@ -10627,7 +10627,7 @@ void func_80096978(UNUSED s32 updateRate, f32 opacity) {
             func_8009CA60(0);
         }
         y2 = y2 + 17;
-        sprite_flipbook_off(FALSE);
+        sprite_anim_off(FALSE);
         sprite_opaque(TRUE);
         sMenuGuiColourG = 255;
         sMenuGuiColourBlendFactor = 0;
@@ -13362,7 +13362,7 @@ void func_8009E3D0(void) {
         return;
     }
     settings = get_settings();
-    sprite_flipbook_off(TRUE);
+    sprite_anim_off(TRUE);
     if (osTvType == TV_TYPE_PAL) {
         y = 10;
     } else {
@@ -13440,7 +13440,7 @@ void func_8009E3D0(void) {
         }
         func_8009CA60(14);
     }
-    sprite_flipbook_off(FALSE);
+    sprite_anim_off(FALSE);
 }
 
 /**
