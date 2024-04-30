@@ -4,7 +4,7 @@
 #include "types.h"
 #include "f3ddkr.h"
 
-void render_borders_for_multiplayer(Gfx **dlist);
-void render_second_multiplayer_borders(Gfx **dlist);
+void divider_draw(Gfx **dList);
+void divider_clear_coverage(Gfx **dList);
 
 #endif

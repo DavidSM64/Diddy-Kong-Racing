@@ -550,9 +550,9 @@ void ingame_logic_loop(s32 updateRate) {
         }
     }
     init_rdp_and_framebuffer(&gCurrDisplayList);
-    render_borders_for_multiplayer(&gCurrDisplayList);
+    divider_draw(&gCurrDisplayList);
     render_minimap_and_misc_hud(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, updateRate);
-    render_second_multiplayer_borders(&gCurrDisplayList);
+    divider_clear_coverage(&gCurrDisplayList);
     if (gFutureFunLandLevelTarget) {
         if (func_800214C4() != 0) {
             gPlayableMapId = ASSET_LEVEL_FUTUREFUNLANDHUB;
@@ -893,8 +893,8 @@ void update_menu_scene(s32 updateRate) {
         render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
         process_onscreen_textbox(updateRate);
         init_rdp_and_framebuffer(&gCurrDisplayList);
-        render_borders_for_multiplayer(&gCurrDisplayList);
-        render_second_multiplayer_borders(&gCurrDisplayList);
+        divider_draw(&gCurrDisplayList);
+        divider_clear_coverage(&gCurrDisplayList);
     }
 }
 

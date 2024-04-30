@@ -1443,9 +1443,9 @@ void set_stopwatch_face(u8 arg0, u8 arg1, u8 faceID, u8 arg3, u8 arg4) {
     }
 }
 
-/** 
+/**
  * Reset the angle of the speedometre's needle to the starting position.
-*/
+ */
 void hud_speedometre_reset(void) {
     gCurrentHud->speedometreArrow.z_rotation = 0x6490;
 }

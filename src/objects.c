@@ -2155,14 +2155,14 @@ void free_object(Object *object) {
 
 /**
  * Return the length of the object ID table.
-*/
+ */
 UNUSED s32 obj_table_ids(void) {
     return gAssetsLvlObjTranslationTableLength;
 }
 
 /**
  * Return true if the object ID is not higher than the header table length.
-*/
+ */
 UNUSED s32 obj_id_valid(s32 arg0) {
     return (gAssetsLvlObjTranslationTable[arg0] < gAssetsObjectHeadersTableLength);
 }
