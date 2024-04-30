@@ -333,10 +333,12 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) {
         flip = TRUE;
     }
+#ifdef ANTI_TAMPER
     // Antipiracy measure
     if (IO_READ(0x200) != 0xAC290000) {
         flip = TRUE;
     }
+#endif
     reset_render_settings(&gSceneCurrDisplayList);
     gDkrDisableBillboard(gSceneCurrDisplayList++);
     gSPClearGeometryMode(gSceneCurrDisplayList++, G_CULL_FRONT);
@@ -706,8 +708,10 @@ void animate_level_textures(s32 updateRate) {
 void spawn_skydome(s32 objectID) {
     LevelObjectEntryCommon spawnObject;
 
+#ifdef ANTI_TAMPER
     // Antipiracy measure
     compare_balloon_checksums();
+#endif
     if (objectID == -1) {
         gSkydomeSegment = NULL;
         return;

@@ -2622,11 +2622,15 @@ void update_player_racer(Object *obj, s32 updateRate) {
 
         tempVar = ((tempRacer->headAngleTarget - tempRacer->headAngle) * updateRate) >> 3;
         CLAMP(tempVar, -0x800, 0x800);
+#ifdef ANTI_TAMPER
         if (gAntiPiracyHeadroll) {
             tempRacer->headAngle += gAntiPiracyHeadroll;
         } else {
             tempRacer->headAngle += tempVar;
         }
+#else
+        tempRacer->headAngle += tempVar;
+#endif
         if ((gCurrentButtonsPressed & R_TRIG) && tempRacer->tapTimerR) {
             tempRacer->tappedR = TRUE;
             tempRacer->tapTimerR = 0;
@@ -5897,6 +5901,7 @@ void racer_set_dialogue_camera(void) {
     gRacerDialogueCamera = TRUE;
 }
 
+#ifdef ANTI_TAMPER
 /**
  * Antipiracy function that loops over an address of a function a number of times.
  * It compares the number it gets to a generated checksum to determine if the game has been tampered with at all.
@@ -5914,6 +5919,7 @@ void compare_balloon_checksums(void) {
         gAntiPiracyHeadroll = 0x800;
     }
 }
+#endif
 
 /**
  * When you enter a door, take control away from the player.
@@ -6232,11 +6238,15 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     }
     var_t2 = ((racer->headAngleTarget - racer->headAngle) * updateRate) >> 3;
     CLAMP(var_t2, -0x800, 0x800)
+#ifdef ANTI_TAMPER
     if (gAntiPiracyHeadroll) {
         racer->headAngle += gAntiPiracyHeadroll;
     } else {
         racer->headAngle += var_t2;
     }
+#else
+    racer->headAngle += var_t2;
+#endif
     if (racer->shieldTimer > 0) {
         if (racer->shieldTimer > 60) {
             if (racer->shieldSoundMask) {
@@ -6528,6 +6538,7 @@ void func_8005B818(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
 GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
 #endif
 
+#ifdef ANTI_TAMPER
 // This gets called if an anti-piracy checksum fails in allocate_object_model_pools.
 /**
  * Triggered upon failure of an anti-tamper test. Sets the first index of the surface speed
@@ -6536,6 +6547,7 @@ GLOBAL_ASM("asm/non_matchings/racer/func_8005B818.s")
 void antipiracy_modify_surface_traction_table(void) {
     gSurfaceTractionTable[SURFACE_DEFAULT] = 0.05f;
 }
+#endif
 
 void func_8005C270(Object_Racer *racer) {
     s32 temp = get_checkpoint_count();

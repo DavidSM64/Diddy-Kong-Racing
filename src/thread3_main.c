@@ -173,10 +173,12 @@ void init_game(void) {
     stubbed_printf(sDebugRomBuildInfo);
     init_main_memory_pool();
     init_rzip(); // Initialise gzip decompression related things
+#ifdef ANTI_TAMPER
     sAntiPiracyTriggered = TRUE;
     if (check_imem_validity()) {
         sAntiPiracyTriggered = FALSE;
     }
+#endif
     gIsLoading = FALSE;
     gLevelDefaultVehicleID = VEHICLE_CAR;
 
@@ -189,11 +191,13 @@ void init_game(void) {
     }
 
     osCreateScheduler(&gMainSched, &gSchedStack[0x400], /*priority*/ 13, viMode, 1);
+#ifdef ANTI_TAMPER
     // Antipiracy measure.
     gDmemInvalid = FALSE;
     if (check_dmem_validity() == FALSE) {
         gDmemInvalid = TRUE;
     }
+#endif
     init_video(VIDEO_MODE_LOWRES_LPN, &gMainSched);
     init_PI_mesg_queue();
     setup_gfx_mesg_queues(&gMainSched);
@@ -419,10 +423,12 @@ void ingame_logic_loop(s32 updateRate) {
         buttonHeldInputs |= get_buttons_held_from_player(i);
         buttonPressedInputs |= get_buttons_pressed_from_player(i);
     }
+#ifdef ANTI_TAMPER
     // Spam the start button, making the game unplayable because it's constantly paused.
     if (sAntiPiracyTriggered) {
         buttonPressedInputs |= START_BUTTON;
     }
+#endif
     // Update all objects
     if (!gIsPaused) {
         func_80010994(updateRate);
@@ -1573,6 +1579,7 @@ s32 is_controller_missing(void) {
     }
 }
 
+#ifdef ANTI_TAMPER
 /**
  * Ran on boot, will make sure the CIC chip (CIC6103) is to spec. Will return true if it's all good, otherwise it
  * returns false. The intention of this function, is an attempt to check that the cartridge is a legitimate copy. A
@@ -1585,3 +1592,4 @@ s32 check_imem_validity(void) {
     }
     return TRUE;
 }
+#endif

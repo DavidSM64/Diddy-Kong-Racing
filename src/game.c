@@ -144,6 +144,7 @@ void init_level_globals(void) {
     }
     free_from_memory_pool(gTempAssetTable);
     // Antipiracy measure
+#ifdef ANTI_TAMPER
     checksumCount = 0;
     for (j = 0; j < gViewportFuncLength; j++) {
         checksumCount += ((u8 *) (&viewport_rsp_set))[j];
@@ -151,6 +152,7 @@ void init_level_globals(void) {
     if (checksumCount != gViewportFuncChecksum) {
         disable_button_mask();
     }
+#endif
 }
 
 UNUSED s16 func_8006ABB4(s32 levelID) {
