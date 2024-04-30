@@ -304,8 +304,7 @@ s8 D_8011AF00;
 Object *(*D_8011AF04)[128];
 s32 D_8011AF08[2];
 s32 D_8011AF10[2];
-f32 D_8011AF18[4];
-s32 D_8011AF28;
+f32 gElevationHeights[5];
 s32 D_8011AF2C;
 ShadeProperties *gWorldShading; // Effectively unused.
 s32 D_8011AF34;
@@ -4942,7 +4941,7 @@ void func_8001BF20(void) {
         sp186 = 0;
         for (i = 0; i < gObjectCount; i++) {
             obj = gObjPtrList[i];
-            if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (obj->behaviorId == BHV_AINODE)) {
+            if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && obj->behaviorId == BHV_AINODE) {
                 aiNodeEntry = &obj->segment.level_entry->aiNode;
                 index2 = aiNodeEntry->unk9;
                 if (!(index2 & 128)) {
@@ -4996,7 +4995,7 @@ void func_8001BF20(void) {
             if (1) {} // Fakematch
 
             for (i = 0; i < 5; i++) {
-                D_8011AF18[i] = -20000.0f;
+                gElevationHeights[i] = -20000.0f;
             }
 
             index = sp64[0];
@@ -5006,29 +5005,33 @@ void func_8001BF20(void) {
                 }
                 if (index < sp64[i]) {
                     index = sp64[i];
-                    D_8011AF18[index] = (f32) ((f64) ((*D_8011AF04)[spE4[i]]->segment.trans.y_position +
-                                                      (*D_8011AF04)[spE4[i - 1]]->segment.trans.y_position) *
-                                               0.5);
+                    gElevationHeights[index] = ((*D_8011AF04)[spE4[i]]->segment.trans.y_position +
+                                                (*D_8011AF04)[spE4[i - 1]]->segment.trans.y_position) *
+                                               0.5;
                 } else {
                     i = sp186;
                 }
             }
-            D_8011AF18[0] = -10000.0f;
+            gElevationHeights[0] = -10000.0f;
 
-            D_8011AF18[4] = -D_8011AF18[0];
+            gElevationHeights[4] = -gElevationHeights[0];
         }
     }
 }
 
-s16 func_8001C418(f32 yPos) {
+/**
+ * Compare heights against the thresholds.
+ * Elevation level is set based on position.
+ */
+s16 obj_elevation(f32 yPos) {
     s16 i = 0;
-    s16 out = 0;
+    s16 elevation = 0;
     for (; i < 4; i++) {
-        if ((D_8011AF18[i] != -20000.0f) && (D_8011AF18[i] < yPos)) {
-            out = i;
+        if (gElevationHeights[i] != -20000.0f && gElevationHeights[i] < yPos) {
+            elevation = i;
         }
     }
-    return out;
+    return elevation;
 }
 
 s32 func_8001C48C(Object *obj) {
@@ -5057,7 +5060,7 @@ s32 func_8001C524(f32 diffX, f32 diffY, f32 diffZ, s32 someFlag) {
     LevelObjectEntry_TTDoor *levelObj;
 
     if (someFlag) {
-        sp64 = func_8001C418(diffY);
+        sp64 = obj_elevation(diffY);
     }
     dist = (f32) 50000.0;
     result = 0xFF;

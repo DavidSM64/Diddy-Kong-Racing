@@ -2708,9 +2708,9 @@ void update_player_racer(Object *obj, s32 updateRate) {
             }
         }
         if (header->race_type & RACETYPE_CHALLENGE && header->race_type != RACETYPE_CHALLENGE_EGGS) {
-            tempRacer->unk212 = func_8001C418(obj->segment.trans.y_position);
+            tempRacer->elevation = obj_elevation(obj->segment.trans.y_position);
         } else {
-            tempRacer->unk212 = 0;
+            tempRacer->elevation = ELEVATION_LOW;
         }
         if (tempRacer->countLap < tempRacer->lap) {
             tempRacer->countLap = tempRacer->lap;

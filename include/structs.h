@@ -1394,7 +1394,7 @@ typedef struct Object_Racer {
   /* 0x20E */ u16 delaySoundID;
   /* 0x210 */ u8 delaySoundTimer;
   /* 0x211 */ s8 unk211;
-  /* 0x212 */ s8 unk212;
+  /* 0x212 */ s8 elevation; // Some maps like Icicle Pyramid have elevation levels that are communicated on the minimap.
   /* 0x213 */ s8 unk213;
   /* 0x214 */ s8 unk214;
   /* 0x215 */ s8 unk215;

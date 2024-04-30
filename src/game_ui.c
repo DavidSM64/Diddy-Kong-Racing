@@ -3317,15 +3317,15 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                             gCurrentHud->minimapMarker.x -= 4.0f;
                         }
                         if (get_current_level_race_type() == RACETYPE_CHALLENGE_BATTLE) {
-                            switch (someRacer->unk212) {
-                                case 0:
+                            switch (someRacer->elevation) {
+                                case ELEVATION_LOW:
                                     gCurrentHud->minimapMarker.scale = 0.8f;
                                     break;
-                                case 1:
+                                case ELEVATION_NORMAL:
                                     gCurrentHud->minimapMarker.scale = 1.0f;
                                     break;
-                                case 2:
-                                case 3:
+                                case ELEVATION_HIGH:
+                                case ELEVATION_HIGHEST:
                                     gCurrentHud->minimapMarker.scale = 1.2f;
                                     break;
                             }
@@ -3368,22 +3368,18 @@ void minimap_marker_pos(f32 x, f32 z, f32 angleSin, f32 angleCos, f32 modelAspec
     scaledY = (lvlMdl->minimapYScale * -60.0f * (z - lvlMdl->lowerZBounds)) / b;
 
     if (get_filtered_cheats() & CHEAT_MIRRORED_TRACKS) { // Is adventure 2?
-        gCurrentHud->minimapMarker.x = (((f32) gMinimapScreenX - ((scaledX * angleCos) + (scaledY * angleSin))) +
-                                        (f32) lvlMdl->minimapOffsetXAdv2) -
-                                       (f32) gMinimapDotOffsetX;
-        gCurrentHud->minimapMarker.y =
-            ((f32) (lvlMdl->minimapOffsetYAdv2 + gMinimapScreenY) - ((scaledX * angleSin) - (scaledY * angleCos))) +
-            (f32) gMinimapDotOffsetY;
+        gCurrentHud->minimapMarker.x = (gMinimapScreenX - ((scaledX * angleCos) + (scaledY * angleSin))) +
+                                       lvlMdl->minimapOffsetXAdv2 - gMinimapDotOffsetX;
+        gCurrentHud->minimapMarker.y = (lvlMdl->minimapOffsetYAdv2 + gMinimapScreenY) -
+                                       ((scaledX * angleSin) - (scaledY * angleCos)) + gMinimapDotOffsetY;
         return;
     }
     // Final x position on minimap
-    gCurrentHud->minimapMarker.x =
-        ((f32) gMinimapScreenX + ((scaledX * angleCos) + (scaledY * angleSin)) + (f32) lvlMdl->minimapOffsetXAdv1) -
-        (f32) gMinimapDotOffsetX;
+    gCurrentHud->minimapMarker.x = gMinimapScreenX + ((scaledX * angleCos) + (scaledY * angleSin)) +
+                                   (f32) lvlMdl->minimapOffsetXAdv1 - gMinimapDotOffsetX;
     // Final y position on minimap
-    gCurrentHud->minimapMarker.y =
-        ((f32) (lvlMdl->minimapOffsetYAdv1 + gMinimapScreenY) - ((scaledX * angleSin) - (scaledY * angleCos))) +
-        (f32) gMinimapDotOffsetY;
+    gCurrentHud->minimapMarker.y = (lvlMdl->minimapOffsetYAdv1 + gMinimapScreenY) -
+                                   ((scaledX * angleSin) - (scaledY * angleCos)) + gMinimapDotOffsetY;
 }
 
 // hud_draw_element

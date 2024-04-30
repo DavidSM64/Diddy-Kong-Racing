@@ -31,6 +31,13 @@ typedef enum BoostSound {
     BOOST_SOUND_UNK4
 } BoostSound;
 
+typedef enum ObjectElevation {
+    ELEVATION_LOW,
+    ELEVATION_NORMAL,
+    ELEVATION_HIGH,
+    ELEVATION_HIGHEST
+} ObjectElevation;
+
 // boost types suffixed with _FAST are the ones you get from releasing the throttle.
 typedef enum BoostType {
     BOOST_SMALL,
