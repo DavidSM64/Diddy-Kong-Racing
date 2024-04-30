@@ -31,6 +31,7 @@
 #include "lib/src/libc/rmonPrintf.h"
 #include "collision.h"
 #include "controller.h"
+#include "printf.h"
 
 /************ .data ************/
 
@@ -1264,7 +1265,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
     switch (obj->properties.npc.action) {
         case TT_MODE_APPROACH_PLAYER:
             obj->segment.object.animationID = 0;
-            tt->unkD = 255;
+            tt->nodeCurrent = 255;
             if (distance < 100.0) {
                 racer_set_dialogue_camera();
             }
@@ -1350,14 +1351,14 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
         default:
             obj->segment.object.animationID = 0;
             tt->forwardVel = 0.0f;
-            if (tt->unkD == 0xFF) {
-                tt->unkD = func_8001C524(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                         obj->segment.trans.z_position, 0);
-                if (tt->unkD != 0xFF) {
-                    tt->unkE = func_8001CC48(tt->unkD, -1, 0);
-                    tt->unkF = func_8001CC48(tt->unkE, tt->unkD, 0);
-                    tt->unk10 = func_8001CC48(tt->unkF, tt->unkE, 0);
-                    tt->unkC = tt->unkD;
+            if (tt->nodeCurrent == NODE_NONE) {
+                tt->nodeCurrent = ainode_find_nearest(obj->segment.trans.x_position, obj->segment.trans.y_position,
+                                         obj->segment.trans.z_position, FALSE);
+                if (tt->nodeCurrent != NODE_NONE) {
+                    tt->nodeBack2 = func_8001CC48(tt->nodeCurrent, -1, 0);
+                    tt->nodeForward1 = func_8001CC48(tt->nodeBack2, tt->nodeCurrent, 0);
+                    tt->nodeForward2 = func_8001CC48(tt->nodeForward1, tt->nodeBack2, 0);
+                    tt->nodeBack1 = tt->nodeCurrent;
                 }
             } else {
                 diffZ = func_8001C6C4((Object_64 *) tt, obj, updateRateF, 1.0f, 0);
@@ -2464,7 +2465,7 @@ void obj_init_parkwarden(Object *obj, UNUSED LevelObjectEntry_Parkwarden *entry)
     obj->interactObj->hitboxRadius = 30;
     obj->interactObj->pushForce = 0;
     taj = &obj->unk64->npc;
-    taj->unkD = 0xFF;
+    taj->nodeCurrent = 0xFF;
     taj->unk0 = 0.0f;
     taj->unk28 = 0;
     taj->unk2C = 0;
@@ -2629,7 +2630,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     switch (obj->properties.npc.action) {
         case TAJ_MODE_APPROACH_PLAYER:
             obj->segment.object.animationID = 0;
-            taj->unkD = 0xFF;
+            taj->nodeCurrent = 0xFF;
             if (distance < 100.0) {
                 racer_set_dialogue_camera();
             }
@@ -2825,7 +2826,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             break;
         case TAJ_MODE_TELEPORT_TO_PLAYER_BEGIN:
             obj->segment.object.animationID = 3;
-            taj->unkD = 0xFF;
+            taj->nodeCurrent = 0xFF;
             taj->forwardVel = 0.0f;
             taj->animFrameF += updateRateF * 2.0;
             if (taj->animFrameF > 79.0f) {
@@ -2866,7 +2867,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             break;
         case TAJ_MODE_SET_CHALLENGE:
             obj->segment.object.animationID = 3;
-            taj->unkD = 0xFF;
+            taj->nodeCurrent = 0xFF;
             taj->forwardVel = 0.0f;
             taj->animFrameF += updateRateF * 2.0;
             if (taj->animFrameF > 79.0f) {
@@ -2897,7 +2898,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             break;
         case TAJ_MODE_TELEPORT_AWAY_BEGIN:
             obj->segment.object.animationID = 3;
-            taj->unkD = 0xFF;
+            taj->nodeCurrent = 0xFF;
             taj->forwardVel = 0.0f;
             taj->animFrameF += updateRateF * 2.0;
             if (taj->animFrameF > 79.0f) {
@@ -2944,14 +2945,14 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
         default:
             obj->segment.object.animationID = 0;
             taj->forwardVel = 0.0f;
-            if (taj->unkD == 0xFF) {
-                taj->unkD = func_8001C524(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                          obj->segment.trans.z_position, 0);
-                if (taj->unkD != 0xFF) {
-                    taj->unkE = func_8001CC48(taj->unkD, -1, 0);
-                    taj->unkF = func_8001CC48(taj->unkE, taj->unkD, 0);
-                    taj->unk10 = func_8001CC48(taj->unkF, taj->unkE, 0);
-                    taj->unkC = taj->unkD;
+            if (taj->nodeCurrent == NODE_NONE) {
+                taj->nodeCurrent = ainode_find_nearest(obj->segment.trans.x_position, obj->segment.trans.y_position,
+                                          obj->segment.trans.z_position, FALSE);
+                if (taj->nodeCurrent != NODE_NONE) {
+                    taj->nodeBack2 = func_8001CC48(taj->nodeCurrent, -1, 0);
+                    taj->nodeForward1 = func_8001CC48(taj->nodeBack2, taj->nodeCurrent, 0);
+                    taj->nodeForward2 = func_8001CC48(taj->nodeForward1, taj->nodeBack2, 0);
+                    taj->nodeBack1 = taj->nodeCurrent;
                 }
             } else {
                 if ((distance < 55.0f) && (taj->unk1C == 0) && (racerObj != NULL)) {
@@ -3205,12 +3206,12 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
                                 rumble_set(racer->playerIndex, RUMBLE_TYPE_8);
                             }
                             radius_3 =
-                                func_8001C524(racerObj->segment.trans.x_position, racerObj->segment.trans.y_position,
-                                              racerObj->segment.trans.z_position, 0);
-                            if (radius_3 != 0xFF) {
-                                racer->unk158 = func_8001D214(radius_3);
+                                ainode_find_nearest(racerObj->segment.trans.x_position, racerObj->segment.trans.y_position,
+                                              racerObj->segment.trans.z_position, FALSE);
+                            if (radius_3 != NODE_NONE) {
+                                racer->nodeCurrent = ainode_get(radius_3);
                             } else {
-                                racer->unk158 = NULL;
+                                racer->nodeCurrent = NULL;
                             }
                             racer->unk15C = NULL;
                             racer->unk19A = 0;
@@ -3315,7 +3316,7 @@ void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) 
     scalef /= 64;
     obj->segment.trans.scale = obj->segment.header->scale * scalef;
     obj64 = &obj->unk64->npc;
-    obj64->unkD = 255;
+    obj64->nodeCurrent = 255;
     obj64->unk0 = 0.0f;
     obj->properties.npc.action = 0;
     if (entry->challengeID) {
@@ -3399,14 +3400,14 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
             obj->segment.object.animationID = 0;
             obj64->forwardVel = 0.0f;
             speedf = (obj->segment.object.opacity < 255) ? 0 : 1;
-            if (obj64->unkD == 255) {
-                obj64->unkD = func_8001C524(obj->segment.trans.x_position, obj->segment.trans.y_position,
-                                            obj->segment.trans.z_position, 0);
-                if (obj64->unkD != 255) {
-                    obj64->unkE = func_8001CC48(obj64->unkD, -1, 0);
-                    obj64->unkF = func_8001CC48(obj64->unkE, obj64->unkD, 0);
-                    obj64->unk10 = func_8001CC48(obj64->unkF, obj64->unkE, 0);
-                    obj64->unkC = obj64->unkD;
+            if (obj64->nodeCurrent == 255) {
+                obj64->nodeCurrent = ainode_find_nearest(obj->segment.trans.x_position, obj->segment.trans.y_position,
+                                            obj->segment.trans.z_position, FALSE);
+                if (obj64->nodeCurrent != 255) {
+                    obj64->nodeBack2 = func_8001CC48(obj64->nodeCurrent, -1, 0);
+                    obj64->nodeForward1 = func_8001CC48(obj64->nodeBack2, obj64->nodeCurrent, 0);
+                    obj64->nodeForward2 = func_8001CC48(obj64->nodeForward1, obj64->nodeBack2, 0);
+                    obj64->nodeBack1 = obj64->nodeCurrent;
                 }
             } else {
                 func_8001C6C4((Object_64 *) obj64, obj, updateRateF, speedf, 0);
@@ -4056,14 +4057,22 @@ void obj_loop_skycontrol(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
+/**
+ * AI node init func.
+ * Adds itself to the node list, and then tells the game AI nodes exist.
+*/
 void obj_init_ainode(Object *obj, LevelObjectEntry_AiNode *entry) {
-    if (entry->unk9 == 0xFF) {
-        entry->unk9 = func_8001C48C(obj) & 0xFF;
+    if (entry->nodeID == NODE_NONE) {
+        entry->nodeID = ainode_register(obj) & NODE_NONE;
     }
-    func_8001D1BC(entry->unk9);
-    func_8001D1AC();
+    ainode_tail_set(entry->nodeID);
+    ainode_enable();
 }
 
+/**
+ * AI node loop func.
+ * Does nothing. All the relevant behaviour is handled globally.
+*/
 void obj_loop_ainode(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 

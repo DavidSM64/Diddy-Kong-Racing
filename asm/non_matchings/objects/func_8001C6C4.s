@@ -62,7 +62,7 @@ glabel func_8001C6C4
 /* 01D384 8001C784 8FBF005C */   lw    $ra, 0x5c($sp)
 .L8001C788:
 /* 01D388 8001C788 AFA50080 */  sw    $a1, 0x80($sp)
-/* 01D38C 8001C78C 0C007485 */  jal   func_8001D214
+/* 01D38C 8001C78C 0C007485 */  jal   ainode_get
 /* 01D390 8001C790 AFA6006C */   sw    $a2, 0x6c($sp)
 /* 01D394 8001C794 8FA50080 */  lw    $a1, 0x80($sp)
 /* 01D398 8001C798 8FA6006C */  lw    $a2, 0x6c($sp)

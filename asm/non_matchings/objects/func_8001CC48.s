@@ -6,12 +6,12 @@ glabel func_8001CC48
 /* 01D858 8001CC58 00A08025 */   move  $s0, $a1
 /* 01D85C 8001CC5C 28810080 */  slti  $at, $a0, 0x80
 /* 01D860 8001CC60 14200003 */  bnez  $at, .L8001CC70
-/* 01D864 8001CC64 3C0E8012 */   lui   $t6, %hi(D_8011AF04) # $t6, 0x8012
+/* 01D864 8001CC64 3C0E8012 */   lui   $t6, %hi(gAINodes) # $t6, 0x8012
 .L8001CC68:
 /* 01D868 8001CC68 1000002C */  b     .L8001CD1C
 /* 01D86C 8001CC6C 240200FF */   li    $v0, 255
 .L8001CC70:
-/* 01D870 8001CC70 8DCEAF04 */  lw    $t6, %lo(D_8011AF04)($t6)
+/* 01D870 8001CC70 8DCEAF04 */  lw    $t6, %lo(gAINodes)($t6)
 /* 01D874 8001CC74 00047880 */  sll   $t7, $a0, 2
 /* 01D878 8001CC78 01CFC021 */  addu  $t8, $t6, $t7
 /* 01D87C 8001CC7C 8F020000 */  lw    $v0, ($t8)

@@ -377,7 +377,7 @@ void load_level_game(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, gGameCurrentCutscene);
     init_hud(get_viewport_count());
     func_800AE728(8, 0x10, 0x96, 0x64, 0x32, 0);
-    func_8001BF20();
+    ainode_update();
     osSetTime(0);
     set_free_queue_state(2);
     rumble_init(TRUE);
@@ -452,7 +452,7 @@ void ingame_logic_loop(s32 updateRate) {
         gIsPaused = FALSE;
     }
     gParticlePtrList_flush();
-    func_8001BF20();
+    ainode_update();
     render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
     if (gGameMode == GAMEMODE_INGAME) {
         // Ignore the user's L/R/Z buttons.
@@ -864,7 +864,7 @@ void load_level_menu(s32 levelId, s32 numberOfPlayers, s32 entranceId, Vehicle v
     load_level(levelId, numberOfPlayers, entranceId, vehicleId, cutsceneId);
     init_hud(get_viewport_count());
     func_800AE728(4, 4, 0x6E, 0x30, 0x20, 0);
-    func_8001BF20();
+    ainode_update();
     osSetTime(0);
     set_free_queue_state(2);
 }
@@ -895,7 +895,7 @@ void update_menu_scene(s32 updateRate) {
     if (get_thread30_level_id_to_load() == NULL) {
         func_80010994(updateRate);
         gParticlePtrList_flush();
-        func_8001BF20();
+        ainode_update();
         render_scene(&gCurrDisplayList, &gGameCurrMatrix, &gGameCurrVertexList, &gGameCurrTriList, updateRate);
         process_onscreen_textbox(updateRate);
         init_rdp_and_framebuffer(&gCurrDisplayList);

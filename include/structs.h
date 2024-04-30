@@ -1187,7 +1187,7 @@ typedef struct Object_Exit {
 typedef struct Object_AiNode {
    /* 0x00 */ struct Object *nodeObj[4];
    /* 0x10 */ s16 distToNode[4];
-   /* 0x18 */ u8 unk18[4];
+   /* 0x18 */ s8 directions[4];
 } Object_AiNode;
 
 /* Size: 0x224 - 548 bytes */
@@ -1269,7 +1269,7 @@ typedef struct Object_Racer {
   /* 0x14C */ struct Object *zipperObj;
   /* 0x150 */ struct Object *unk150;
   /* 0x154 */ struct Object *unk154;
-  /* 0x158 */ struct Object *unk158;
+  /* 0x158 */ struct Object *nodeCurrent;
   /* 0x15C */ struct Object *unk15C;
   /* 0x160 */ s16 y_rotation_offset;
   /* 0x162 */ s16 x_rotation_offset;
@@ -1492,11 +1492,11 @@ typedef struct Object_NPC {
    /* 0x00 */ f32 unk0;
    /* 0x04 */ f32 animFrameF;
    /* 0x08 */ s32 unk8;
-   /* 0x0C */ s8 unkC;
-   /* 0x0D */ u8 unkD;
-   /* 0x0E */ u8 unkE;
-   /* 0x0F */ u8 unkF;
-   /* 0x10 */ u8 unk10;
+   /* 0x0C */ s8 nodeBack1; // One node backwards
+   /* 0x0D */ u8 nodeCurrent; // Intended target node
+   /* 0x0E */ u8 nodeBack2; // Two nodes backward
+   /* 0x0F */ u8 nodeForward1; // One node forward
+   /* 0x10 */ u8 nodeForward2; // Two nodes forward
    /* 0x11 */ u8 fogR;
    /* 0x12 */ u8 fogG;
    /* 0x13 */ u8 fogB;

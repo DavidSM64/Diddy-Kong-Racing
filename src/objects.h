@@ -18,6 +18,8 @@
     entryVar.objectID = (s8)(entryId);                                     \
 }
 
+#define NODE_NONE 255
+
 enum ObjectBehaviours {
     BHV_NONE,
     BHV_RACER,
@@ -393,10 +395,10 @@ Object **get_racer_objects_by_position(s32 *numRacers);
 Object *get_racer_object(s32 index);
 void debug_render_checkpoint_node(s32 checkpointID, s32 pathID, Gfx** dList, MatrixS **mtx, Vertex **vtx);
 Object *get_camera_object(s32 cameraIndex);
-void func_8001D1AC(void);
-void func_8001D1BC(s32 arg0);
-Object *func_8001D1E4(s32 *arg0);
-Object *func_8001D214(s32 arg0);
+void ainode_enable(void);
+void ainode_tail_set(s32 arg0);
+Object *ainode_tail(s32 *arg0);
+Object *ainode_get(s32 arg0);
 void set_world_shading(f32 brightness, f32 ambient, s16 angleX, s16 angleY, s16 angleZ);
 void set_shading_properties(ShadeProperties *arg0, f32 brightness, f32 ambient, s16 angleX, s16 angleY, s16 angleZ);
 void calc_dyn_light_and_env_map_for_object(ObjectModel *model, Object *object, s32 arg2, f32 intensity);
@@ -442,7 +444,7 @@ void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *tr
                        TextureHeader *tex, u32 flags, u32 texOffset, f32 scale);
 void func_8000B290(void);
 void func_80016BC4(Object *obj);
-s32 func_8001C48C(Object *obj);
+s32 ainode_register(Object *obj);
 void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z);
 Object *func_8001B7A8(Object *racer, s32 position, f32 *distance);
 s32 func_8000FD34(Object *obj, Object_5C *matrices);
@@ -478,7 +480,7 @@ s8 set_course_finish_flags(Settings *settings);
 void process_object_interactions(void);
 void render_3d_model(Object *obj);
 void func_80022E18(s32 arg0);
-void func_8001BF20(void);
+void ainode_update(void);
 void func_8001E6EC(s8);
 Object *func_8000FD54(s32 objectHeaderIndex);
 void sort_objects_by_dist(s32 startIndex, s32 lastIndex);

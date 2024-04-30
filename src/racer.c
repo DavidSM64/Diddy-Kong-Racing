@@ -625,7 +625,7 @@ void racer_AI_pathing_inputs(Object *obj, Object_Racer *racer, s32 updateRate) {
                 racer->unk1CA = (racer->unk1CA + 1) & 3;
             } else if (raceType == RACETYPE_CHALLENGE_BATTLE || raceType == RACETYPE_CHALLENGE_BANANAS) {
                 if (racer->unk1CE != 0xFF) {
-                    racer->unk154 = func_8001D214(racer->unk1CE);
+                    racer->unk154 = ainode_get(racer->unk1CE);
                 }
             }
         }

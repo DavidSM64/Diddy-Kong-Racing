@@ -184,9 +184,9 @@ typedef struct LevelObjectEntry_FogChanger {
 typedef struct LevelObjectEntry_AiNode {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8;
-    /* 0x09 */ u8 unk9;
-    /* 0x0A */ u8 unkA[4];
-    /* 0x0E */ s8 unkE;
+    /* 0x09 */ u8 nodeID;
+    /* 0x0A */ u8 adjacent[4];
+    /* 0x0E */ s8 elevation;
     /* 0x0F */ s8 padF;
 } LevelObjectEntry_AiNode;
 

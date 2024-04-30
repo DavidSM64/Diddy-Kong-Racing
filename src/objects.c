@@ -36,6 +36,7 @@
 #define OBJECT_SPAWN_HEAP_SIZE 0x800
 #define OBJECT_SLOT_COUNT 512
 #define ASSET_OBJECT_HEADER_TABLE_LENGTH 304 // This isn't important, but it's the number of object headers
+#define AINODE_COUNT 128
 
 /************ .data ************/
 
@@ -301,9 +302,10 @@ s8 D_8011AEF7;
 s8 D_8011AEF8;
 s32 D_8011AEFC;
 s8 D_8011AF00;
-Object *(*D_8011AF04)[128];
-s32 D_8011AF08[2];
-s32 D_8011AF10[2];
+Object *(*gAINodes)[AINODE_COUNT];
+s32 gAINodeTail[2];
+s32 gInitAINodes;
+s32 D_8011AF14;
 f32 gElevationHeights[5];
 s32 D_8011AF2C;
 ShadeProperties *gWorldShading; // Effectively unused.
@@ -513,7 +515,7 @@ void allocate_object_pools(void) {
     gRacers = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
     gRacersByPort = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
     gRacersByPosition = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
-    D_8011AF04 = allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
+    gAINodes = allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     D_8011ADCC = allocate_from_main_pool_safe(8, COLOUR_TAG_BLUE);
     D_8011AFF4 = allocate_from_main_pool_safe(0x400, COLOUR_TAG_BLUE);
     gAssetsLvlObjTranslationTable = (s16 *) load_asset_section_from_rom(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
@@ -604,8 +606,8 @@ void clear_object_pointers(void) {
     D_8011AD22[0] = 0;
     D_8011AD22[1] = 0;
 
-    for (i = 0; i < 128; i++) {
-        (*D_8011AF04)[i] = 0;
+    for (i = 0; i < AINODE_COUNT; i++) {
+        (*gAINodes)[i] = NULL;
     }
     for (i = 0; i < 8; i++) {
         (*D_8011ADCC)[i] = 0;
@@ -614,8 +616,8 @@ void clear_object_pointers(void) {
         D_8011AFF4[i].unk0 = 0;
     }
 
-    D_8011AF08[0] = 0xFF;
-    D_8011AF08[1] = 0xFF;
+    gAINodeTail[0] = 0xFF;
+    gAINodeTail[1] = 0xFF;
     gObjectCount = 0;
     gObjectListStart = 0;
     gParticleCount = 0;
@@ -4916,107 +4918,113 @@ Object *find_nearest_spectate_camera(Object *obj, s32 *cameraId) {
     return currCamera;
 }
 
-void func_8001BF20(void) {
+/**
+ * Take every existing AI node and find each neighbouring node.
+ * Afterwards, sort them by height so the game can generate elevation thresholds.
+*/
+void ainode_update(void) {
     LevelObjectEntry_AiNode *aiNodeEntry;
     Object *obj;
-    s16 sp186;
+    s16 nodeCount;
     Object *nextAiNodeObj;
-    f32 xDiff;
-    f32 zDiff;
-    f32 yDiff;
+    f32 diffX;
+    f32 diffZ;
+    f32 diffY;
     s32 i;
     s32 j;
     s8 index;  // Must be an s8
     u8 index2; // Must be an u8
     s16 swap;
     Object_AiNode *aiNodeObj64;
-    s8 spE4[128];
-    s8 sp64[128];
+    s8 nodeIDs[AINODE_COUNT];
+    s8 elevations[AINODE_COUNT];
 
-    if (D_8011AF10[0] != 0) {
-        D_8011AF10[0] = 0;
-        for (i = 0; i < 128; i++) {
-            (*D_8011AF04)[i] = 0;
-        }
-        sp186 = 0;
-        for (i = 0; i < gObjectCount; i++) {
-            obj = gObjPtrList[i];
-            if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && obj->behaviorId == BHV_AINODE) {
-                aiNodeEntry = &obj->segment.level_entry->aiNode;
-                index2 = aiNodeEntry->unk9;
-                if (!(index2 & 128)) {
-                    (*D_8011AF04)[index2] = obj;
-                    spE4[sp186] = aiNodeEntry->unk9;
-                    sp64[sp186] = aiNodeEntry->unkE & 3;
-                    sp186++;
-                }
+    if (gInitAINodes == FALSE) {
+        return;
+    }
+    gInitAINodes = FALSE;
+    for (i = 0; i < AINODE_COUNT; i++) {
+        (*gAINodes)[i] = NULL;
+    }
+    nodeCount = 0;
+    // Store each existing node ID in the temporary vars.
+    for (i = 0; i < gObjectCount; i++) {
+        obj = gObjPtrList[i];
+        if (!(obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && obj->behaviorId == BHV_AINODE) {
+            aiNodeEntry = &obj->segment.level_entry->aiNode;
+            index2 = aiNodeEntry->nodeID;
+            if (!(index2 & AINODE_COUNT)) {
+                (*gAINodes)[index2] = obj;
+                nodeIDs[nodeCount] = aiNodeEntry->nodeID;
+                elevations[nodeCount] = aiNodeEntry->elevation & 3;
+                nodeCount++;
             }
-        }
-        if (sp186 != 0) {
-            for (i = 0; i < 128; i++) {
-                obj = (*D_8011AF04)[i];
-                if (obj != NULL) {
-                    aiNodeObj64 = (Object_AiNode *) obj->unk64;
-                    aiNodeEntry = &obj->segment.level_entry->aiNode;
-                    for (j = 0; j < 4; j++) {
-                        index2 = aiNodeEntry->unkA[j];
-                        if (!(index2 & 128)) {
-                            nextAiNodeObj = (*D_8011AF04)[index2];
-                            aiNodeObj64->nodeObj[j] = nextAiNodeObj;
-                            if (nextAiNodeObj == NULL) {
-                                aiNodeEntry->unkA[j] = -1;
-                            } else {
-                                xDiff = obj->segment.trans.x_position - nextAiNodeObj->segment.trans.x_position;
-                                yDiff = obj->segment.trans.y_position - nextAiNodeObj->segment.trans.y_position;
-                                zDiff = obj->segment.trans.z_position - nextAiNodeObj->segment.trans.z_position;
-                                aiNodeObj64->distToNode[j] = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff));
-                            }
-                        }
-                    }
-                }
-            }
-
-            do {
-                j = TRUE;
-                for (i = 0; i < (sp186 - 1); i++) {
-                    if ((*D_8011AF04)[spE4[i + 1]]->segment.trans.y_position <
-                        (*D_8011AF04)[spE4[i]]->segment.trans.y_position) {
-                        swap = spE4[i];
-                        spE4[i] = spE4[i + 1];
-                        spE4[i + 1] = swap;
-                        swap = sp64[i];
-                        sp64[i] = sp64[i + 1];
-                        sp64[i + 1] = swap;
-                        j = FALSE;
-                    }
-                }
-            } while (!j); // Keep doing this until no more swaps are needed.
-
-            if (1) {} // Fakematch
-
-            for (i = 0; i < 5; i++) {
-                gElevationHeights[i] = -20000.0f;
-            }
-
-            index = sp64[0];
-            for (i = 0; i < (sp186 - 1);) {
-                while ((i < (sp186 - 1)) && (index >= sp64[i])) {
-                    i++;
-                }
-                if (index < sp64[i]) {
-                    index = sp64[i];
-                    gElevationHeights[index] = ((*D_8011AF04)[spE4[i]]->segment.trans.y_position +
-                                                (*D_8011AF04)[spE4[i - 1]]->segment.trans.y_position) *
-                                               0.5;
-                } else {
-                    i = sp186;
-                }
-            }
-            gElevationHeights[0] = -10000.0f;
-
-            gElevationHeights[4] = -gElevationHeights[0];
         }
     }
+    if (nodeCount == 0) {
+        return;
+    }
+    // Find and set each neighbouring node and distance for each existing node.
+    for (i = 0; i < AINODE_COUNT; i++) {
+        obj = (*gAINodes)[i];
+        if (obj != NULL) {
+            aiNodeObj64 = (Object_AiNode *) obj->unk64;
+            aiNodeEntry = &obj->segment.level_entry->aiNode;
+            for (j = 0; j < 4; j++) {
+                index2 = aiNodeEntry->adjacent[j];
+                if (!(index2 & AINODE_COUNT)) {
+                    nextAiNodeObj = (*gAINodes)[index2];
+                    aiNodeObj64->nodeObj[j] = nextAiNodeObj;
+                    if (nextAiNodeObj == NULL) {
+                        aiNodeEntry->adjacent[j] = -1;
+                    } else {
+                        diffX = obj->segment.trans.x_position - nextAiNodeObj->segment.trans.x_position;
+                        diffY = obj->segment.trans.y_position - nextAiNodeObj->segment.trans.y_position;
+                        diffZ = obj->segment.trans.z_position - nextAiNodeObj->segment.trans.z_position;
+                        aiNodeObj64->distToNode[j] = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
+                    }
+                }
+            }
+        }
+    }
+    // Sort them by height
+    do {
+        j = TRUE;
+        for (i = 0; i < nodeCount - 1; i++) {
+            if ((*gAINodes)[nodeIDs[i + 1]]->segment.trans.y_position < (*gAINodes)[nodeIDs[i]]->segment.trans.y_position) {
+                swap = nodeIDs[i];
+                nodeIDs[i] = nodeIDs[i + 1];
+                nodeIDs[i + 1] = swap;
+                swap = elevations[i];
+                elevations[i] = elevations[i + 1];
+                elevations[i + 1] = swap;
+                j = FALSE;
+            }
+        }
+    } while (!j); // Keep doing this until no more swaps are needed.
+
+    if (1) {} // Fakematch
+
+    for (i = 0; i < 5; i++) {
+        gElevationHeights[i] = -20000.0f;
+    }
+
+    index = elevations[0];
+    for (i = 0; i < nodeCount - 1;) {
+        while (i < nodeCount - 1 && index >= elevations[i]) {
+            i++;
+        }
+        if (index < elevations[i]) {
+            index = elevations[i];
+            gElevationHeights[index] =
+                ((*gAINodes)[nodeIDs[i]]->segment.trans.y_position + (*gAINodes)[nodeIDs[i - 1]]->segment.trans.y_position) *
+                0.5;
+        } else {
+            i = nodeCount;
+        }
+    }
+    gElevationHeights[0] = -10000.0f;
+    gElevationHeights[4] = -gElevationHeights[0];
 }
 
 /**
@@ -5034,48 +5042,55 @@ s16 obj_elevation(f32 yPos) {
     return elevation;
 }
 
-s32 func_8001C48C(Object *obj) {
+/**
+ * Loop through the AI Node list and add this new object to the list if it does not already exist.
+*/
+s32 ainode_register(Object *obj) {
     s32 i;
-    for (i = 0; i < 128; i++) {
-        if ((*D_8011AF04)[i] == 0) {
-            (*D_8011AF04)[i] = obj;
+    for (i = 0; i < AINODE_COUNT; i++) {
+        if ((*gAINodes)[i] == NULL) {
+            (*gAINodes)[i] = obj;
             return i;
         }
     }
     return -1;
 }
 
-s32 func_8001C524(f32 diffX, f32 diffY, f32 diffZ, s32 someFlag) {
+/**
+ * Search through each AI node and find the one closest to the coordinates given.
+ * Can choose to include or ignore elevation.
+*/
+s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation) {
     UNUSED f32 pad[6];
-    s32 sp64;
+    s32 elevation;
     f32 len;
     f32 x;
     f32 z;
     f32 y;
     f32 dist;
-    s32 var_a0;
+    s32 findDist;
     s32 numSteps;
     s32 result;
     ObjectSegment *segment;
-    LevelObjectEntry_TTDoor *levelObj;
+    LevelObjectEntry_AiNode *levelObj;
 
-    if (someFlag) {
-        sp64 = obj_elevation(diffY);
+    if (useElevation) {
+        elevation = obj_elevation(diffY);
     }
-    dist = (f32) 50000.0;
+    dist = 50000.0;
     result = 0xFF;
-    for (numSteps = 0; numSteps != 128; numSteps++) {
-        segment = (ObjectSegment *) (*D_8011AF04)[numSteps];
+    for (numSteps = 0; numSteps != AINODE_COUNT; numSteps++) {
+        segment = (ObjectSegment *) (*gAINodes)[numSteps];
         if (segment) {
-            levelObj = &((segment->level_entry)->ttDoor);
-            var_a0 = 1;
-            if (someFlag && (sp64 != levelObj->doorID)) {
-                var_a0 = 0;
+            levelObj = &((segment->level_entry)->aiNode);
+            findDist = TRUE;
+            if (useElevation && elevation != levelObj->elevation) {
+                findDist = FALSE;
             }
-            if ((someFlag == 2) && (levelObj->angleY != 3)) {
-                var_a0 = 0;
+            if (useElevation == 2 && levelObj->unk8 != 3) {
+                findDist = FALSE;
             }
-            if (var_a0) {
+            if (findDist) {
                 x = segment->trans.x_position - diffX;
                 y = segment->trans.y_position - diffY;
                 z = segment->trans.z_position - diffZ;
@@ -5093,55 +5108,45 @@ s32 func_8001C524(f32 diffX, f32 diffY, f32 diffZ, s32 someFlag) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8001C6C4.s")
 
 #ifdef NON_MATCHING
-typedef struct LevelObjectEntry_Unknown8001CC48 {
-    LevelObjectEntryCommon common;
-    u8 pad8[2];
-    u8 unkA[4];
-} LevelObjectEntry_Unknown8001CC48;
-
-typedef struct Object_Unknown8001CC48 {
-    s8 pad0[0x18];
-    s8 unk18[4];
-} Object_Unknown8001CC48;
-
-s32 func_8001CC48(s32 arg0, s32 arg1, s32 arg2) {
-    LevelObjectEntry_Unknown8001CC48 *entry;
+// ainode_find_next
+s32 func_8001CC48(s32 nodeCurrent, s32 arg1, s32 direction) {
+    LevelObjectEntry_AiNode *entry;
     Object *someObj;
-    Object_Unknown8001CC48 *someObj64;
+    Object_AiNode *someObj64;
     s32 someCount;
     s32 i;
     s32 someIndex;
     s32 test;
 
-    if ((arg0 < -1) || (arg0 >= 128)) {
-        return 255;
+    if ((nodeCurrent < -1) || (nodeCurrent >= AINODE_COUNT)) {
+        return NODE_NONE;
     }
-    someObj = (*D_8011AF04)[arg0];
+    someObj = (*gAINodes)[nodeCurrent];
     if (someObj == NULL) {
-        return 255;
+        return NODE_NONE;
     }
-    entry = (LevelObjectEntry_Unknown8001CC48 *) someObj->segment.level_entry;
-    someObj64 = (Object_Unknown8001CC48 *) someObj->unk64;
-    test = arg2 & 3;
-
+    entry = (LevelObjectEntry_AiNode *)someObj->segment.level_entry;
+    someObj64 = (Object_AiNode*)someObj->unk64;
+    test = direction & 3;
+    
     // Swapping these messes up the registers.
     someCount = 0;
-    someIndex = (someObj64->unk18[test] + 1) & 3;
-
+    someIndex = (someObj64->directions[test] + 1) & 3;
+    
     for (i = 0; i < 4; i++) {
-        if (entry->unkA[someIndex] != 255) {
-            if (entry->unkA[someIndex] != arg1) {
-                someObj64->unk18[test] = someIndex;
+        if (entry->adjacent[someIndex] != NODE_NONE) {
+            if (entry->adjacent[someIndex] != arg1) {
+                someObj64->directions[test] = someIndex;
                 i = 4;
                 someCount++;
-            }
-        }
+            } 
+        } 
         someIndex = (someIndex + 1) & 3;
     }
     if (someCount == 0) {
-        return 255;
+        return NODE_NONE;
     }
-    return entry->unkA[someObj64->unk18[test]];
+    return entry->adjacent[someObj64->directions[test]];
 }
 #else
 GLOBAL_ASM("asm/non_matchings/objects/func_8001CC48.s")
@@ -5163,33 +5168,33 @@ s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     s32 var_ra;
     Object_AiNode *aiNode;
     Object *aiNodeObj;
-    s32 sp154[128];
-    s8 spD4[128];
-    s8 sp54[128];
+    s32 sp154[AINODE_COUNT];
+    s8 spD4[AINODE_COUNT];
+    s8 sp54[AINODE_COUNT];
 
     // Only matches with do {} while?
     i = 0;
     do {
         sp154[i] = 0;
         i++;
-    } while (i < 128);
+    } while (i < AINODE_COUNT);
 
-    aiNodeObj = (*D_8011AF04)[arg0];
+    aiNodeObj = (*gAINodes)[arg0];
     aiNode = (Object_AiNode *) aiNodeObj->unk64;
     aiNodeEntry = &aiNodeObj->segment.level_entry->aiNode;
     var_t1 = 0;
     var_ra = 0;
-    result = 0xFF;
+    result = NODE_NONE;
     var_s3 = 0;
     someBool = 1;
     var_s5 = 0;
     do {
         for (i = 0; i < 4; i++) {
             if (aiNode->nodeObj[i] != 0) {
-                temp2 = aiNodeEntry->unkA[i];
+                temp2 = aiNodeEntry->adjacent[i];
                 temp = 1;
-                if (((arg0 == aiNodeEntry->unk9) && (temp2 == arg2)) ||
-                    ((arg2 == aiNodeEntry->unk9) && (temp2 == arg0))) {
+                if (((arg0 == aiNodeEntry->nodeID) && (temp2 == arg2)) ||
+                    ((arg2 == aiNodeEntry->nodeID) && (temp2 == arg0))) {
                     temp = 0;
                     if (var_s5 != 0) {
                         temp = 1;
@@ -5223,8 +5228,8 @@ s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
 
                     sp36C = var_t1 - 1;
 
-                    sp54[sp36C] = (someBool) ? aiNodeEntry->unkA[i] : var_s3;
-                    spD4[sp36C] = aiNodeEntry->unkA[i];
+                    sp54[sp36C] = (someBool) ? aiNodeEntry->adjacent[i] : var_s3;
+                    spD4[sp36C] = aiNodeEntry->adjacent[i];
 
                     while ((sp36C > 0) && (sp154[spD4[sp36C - 1]] < sp154[spD4[sp36C]])) {
                         temp = spD4[sp36C];
@@ -5241,14 +5246,14 @@ s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
 
         if (var_t1 > 0) {
             var_t1--;
-            aiNodeObj = (*D_8011AF04)[spD4[var_t1]];
+            aiNodeObj = (*gAINodes)[spD4[var_t1]];
             aiNodeEntry = &aiNodeObj->segment.level_entry->aiNode;
             var_s3 = sp54[var_t1];
-            var_ra = sp154[aiNodeEntry->unk9];
+            var_ra = sp154[aiNodeEntry->nodeID];
             aiNode = &aiNodeObj->unk64->ai_node;
             someBool = 0;
             if (arg1 & 0x100) {
-                if ((arg1 & 0x7F) == spD4[var_t1]) {
+                if ((arg1 & AINODE_COUNT) == spD4[var_t1]) {
                     result = var_s3;
                 }
             } else if (arg1 == aiNodeEntry->unk8) {
@@ -5258,15 +5263,15 @@ s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
                 result = var_s3;
             }
         }
-    } while ((result == 0xFF) && (var_t1 > 0));
+    } while ((result == NODE_NONE) && (var_t1 > 0));
 
     if (result != 0xFF) {
-        aiNodeObj = (*D_8011AF04)[arg0];
+        aiNodeObj = (*gAINodes)[arg0];
         aiNodeEntry = &aiNodeObj->segment.level_entry->aiNode;
         aiNode = &aiNodeObj->unk64->ai_node;
-        for (i = 0; (i < 4) && (result != aiNodeEntry->unkA[i]); i++) {}
+        for (i = 0; (i < 4) && (result != aiNodeEntry->adjacent[i]); i++) {}
         if (i < 4) {
-            aiNode->unk18[arg3] = i;
+            aiNode->directions[arg3] = i;
         }
     }
     return result;
@@ -5275,27 +5280,39 @@ s16 func_8001CD28(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
 GLOBAL_ASM("asm/non_matchings/objects/func_8001CD28.s")
 #endif
 
-void func_8001D1AC(void) {
-    D_8011AF10[0] = 1;
+/**
+ * Signal that AI nodes exist, so the game knows go initialise them.
+ */
+void ainode_enable(void) {
+    gInitAINodes = TRUE;
 }
 
-void func_8001D1BC(s32 arg0) {
-    if (arg0 != D_8011AF08[0]) {
-        D_8011AF08[1] = D_8011AF08[0];
-        D_8011AF08[0] = arg0;
+/**
+ * If the node ID is new, set the tail ID to it.
+*/
+void ainode_tail_set(s32 nodeID) {
+    if (nodeID != gAINodeTail[0]) {
+        gAINodeTail[1] = gAINodeTail[0];
+        gAINodeTail[0] = nodeID;
     }
 }
 
-Object *func_8001D1E4(s32 *arg0) {
-    *arg0 = D_8011AF08[1];
-    return D_8011AF04[0][D_8011AF08[1]];
+/**
+ * Return the last created AI node.
+*/
+UNUSED Object *ainode_tail(s32 *nodeID) {
+    *nodeID = gAINodeTail[1];
+    return gAINodes[0][gAINodeTail[1]];
 }
 
-Object *func_8001D214(s32 arg0) {
-    if (arg0 >= 0 && arg0 < 0x80) {
-        return D_8011AF04[0][arg0];
+/**
+ * Return the AI node assigned to the given ID.
+*/
+Object *ainode_get(s32 nodeID) {
+    if (nodeID >= 0 && nodeID < AINODE_COUNT) {
+        return gAINodes[0][nodeID];
     }
-    return 0;
+    return NULL;
 }
 
 UNUSED void func_8001D23C(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
