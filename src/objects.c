@@ -241,7 +241,7 @@ s8 gFirstTimeFinish;
 s8 D_8011ADC5;
 u32 gBalloonCutsceneTimer;
 s8 (*D_8011ADCC)[8];
-f32 D_8011ADD0;
+f32 gObjectOffsetY;
 s8 D_8011ADD4;
 s8 D_8011ADD5;
 Object *D_8011ADD8[10]; // Array of OverRidePos objects
@@ -2153,11 +2153,17 @@ void free_object(Object *object) {
     gFreeListCount++;
 }
 
-UNUSED s32 func_80010018(void) {
+/**
+ * Return the length of the object ID table.
+*/
+UNUSED s32 obj_table_ids(void) {
     return gAssetsLvlObjTranslationTableLength;
 }
 
-UNUSED s32 func_80010028(s32 arg0) {
+/**
+ * Return true if the object ID is not higher than the header table length.
+*/
+UNUSED s32 obj_id_valid(s32 arg0) {
     return (gAssetsLvlObjTranslationTable[arg0] < gAssetsObjectHeadersTableLength);
 }
 
@@ -3068,7 +3074,7 @@ void object_do_player_tumble(Object *this) {
     UNUSED s32 unused1;
     Object_Racer *sp_20;
     f32 tmp_f2;
-    f32 sp_1c;
+    f32 offsetY;
     f32 tmp_f0;
     f32 temp;
 
@@ -3078,21 +3084,21 @@ void object_do_player_tumble(Object *this) {
         this->segment.trans.y_rotation += sp_20->y_rotation_offset;
         this->segment.trans.x_rotation += sp_20->x_rotation_offset;
         this->segment.trans.z_rotation += sp_20->z_rotation_offset;
-        sp_1c = 0.0f;
+        offsetY = 0.0f;
         if (sp_20->vehicleIDPrev < VEHICLE_TRICKY) {
 
-            sp_1c = coss_f(sp_20->z_rotation_offset);
-            tmp_f2 = sp_1c;
+            offsetY = coss_f(sp_20->z_rotation_offset);
+            tmp_f2 = offsetY;
             tmp_f0 = coss_f(sp_20->x_rotation_offset - sp_20->unk166) * tmp_f2;
 
             tmp_f0 = (tmp_f0 < 0.0f) ? 0.0f : tmp_f0 * tmp_f0;
 
             temp = (1.0f - tmp_f0) * 24.0f + sp_20->unkD0;
             if (0) {} // Fakematch
-            sp_1c = temp;
+            offsetY = temp;
         }
-        this->segment.trans.y_position = this->segment.trans.y_position + sp_1c;
-        D_8011ADD0 = sp_1c;
+        this->segment.trans.y_position = this->segment.trans.y_position + offsetY;
+        gObjectOffsetY = offsetY;
     }
 }
 
@@ -3105,7 +3111,7 @@ void object_undo_player_tumble(Object *obj) {
         obj->segment.trans.y_rotation -= racer->y_rotation_offset;
         obj->segment.trans.x_rotation -= racer->x_rotation_offset;
         obj->segment.trans.z_rotation -= racer->z_rotation_offset;
-        obj->segment.trans.y_position -= D_8011ADD0;
+        obj->segment.trans.y_position -= gObjectOffsetY;
     }
 }
 
