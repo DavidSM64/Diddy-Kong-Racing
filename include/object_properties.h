@@ -165,6 +165,11 @@ typedef struct ObjPropertyCamControl {
     s32 cameraID; 
 } ObjPropertyCamControl;
 
+typedef struct ObjPropertyTimeTrial {
+    s32 timestamp; 
+    struct ObjectHeader *header; 
+} ObjPropertyTimeTrial;
+
 typedef struct ObjProperties {
     union {
         ObjPropertyCommon common;
@@ -198,6 +203,7 @@ typedef struct ObjProperties {
         ObjPropertySetupPoint setupPoint;
         ObjPropertyWeapon weapon;
         ObjPropertyCamControl camControl;
+        ObjPropertyTimeTrial timeTrial;
     };
 } ObjProperties;
 

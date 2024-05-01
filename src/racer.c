@@ -5643,8 +5643,8 @@ void get_timestamp_from_frames(s32 frameCount, s32 *minutes, s32 *seconds, s32 *
  * The path node pool is globally loaded, despite only being used in time trial.
  */
 void allocate_ghost_data(void) {
-    gGhostData[0] = allocate_from_main_pool_safe(
-        (sizeof(GhostNode) + sizeof(GhostDataFrame)) * MAX_NUMBER_OF_GHOST_NODES, COLOUR_TAG_RED);
+    // Two ghosts can play at a time, hence the * 2
+    gGhostData[0] = allocate_from_main_pool_safe((sizeof(GhostNode) * 2) * MAX_NUMBER_OF_GHOST_NODES, COLOUR_TAG_RED);
     gGhostData[1] = ((GhostNode *) gGhostData[0] + MAX_NUMBER_OF_GHOST_NODES);
     gGhostData[2] = NULL; // T.T. Ghost
     D_8011D5A0[0] = 0;

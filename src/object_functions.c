@@ -1040,13 +1040,22 @@ void obj_loop_groundzipper(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
-// This I'm quite sure is related to time trial checkpoints.
-void obj_init_unknown58(Object *obj, UNUSED LevelObjectEntry_Unknown58 *entry) {
-    obj->properties.common.unk0 = 0;
-    obj->properties.common.unk4 = (s32) obj->segment.header;
+/**
+ * Time Trial Ghost init func.
+ * Sets the timestamp frame to 0
+ */
+void obj_init_timetrialghost(Object *obj, UNUSED LevelObjectEntry_TimeTrial_Ghost *entry) {
+    obj->properties.timeTrial.timestamp = 0;
+    obj->properties.timeTrial.header = obj->segment.header;
 }
 
-void obj_loop_unknown58(Object *obj, s32 updateRate) {
+/**
+ * Time Trial Ghost loop func.
+ * Reads the ghost data associated with the header,
+ * then has the position and rotation manually set to simulate time trial playback.
+ * Has particle data, but never used.
+ */
+void obj_loop_timetrialghost(Object *obj, s32 updateRate) {
     Object *someObj;
     Object *someOtherObj;
     Object_UnkId58 *someOtherObj64;
@@ -1056,7 +1065,7 @@ void obj_loop_unknown58(Object *obj, s32 updateRate) {
     obj->segment.object.animationID = 0;
     obj->segment.animFrame = 40;
     if (get_race_countdown() == 0) {
-        obj->properties.common.unk0 += updateRate;
+        obj->properties.timeTrial.timestamp += updateRate;
     }
     set_ghost_position_and_rotation(obj);
     obj_spawn_particle(obj, updateRate);
@@ -1074,10 +1083,15 @@ void obj_loop_unknown58(Object *obj, s32 updateRate) {
     }
 }
 
+/**
+ * Character World Portrait init func.
+ * Sets the scale, but the actual geometry data is built during the update loop.
+ * These are seen in the challenge maps.
+ */
 void obj_init_characterflag(Object *obj, LevelObjectEntry_CharacterFlag *entry) {
     f32 radius;
     obj->properties.characterFlag.playerID = entry->playerIndex;
-    obj->properties.characterFlag.characterID = -1;
+    obj->properties.characterFlag.characterID = -1; // Set to -1 so the loop func builds the gfx data.
     obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
     radius = entry->radius & 0xFF;
     if (radius < 10.0f) {
@@ -1087,6 +1101,11 @@ void obj_init_characterflag(Object *obj, LevelObjectEntry_CharacterFlag *entry) 
     obj->segment.trans.scale = obj->segment.header->scale * radius;
 }
 
+/**
+ * Character World Portrait loop func.
+ * If there's no associated character ID, build the portrait geometry
+ * and set the texture based on the character ID, then write the character ID.
+ */
 void obj_loop_characterflag(Object *obj, UNUSED s32 updateRate) {
     s32 temp_t4;
     s32 temp_t5;
@@ -2404,7 +2423,7 @@ void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
 /**
  * Spectate Camera init func.
  * Sets the camera ID then signals to update the pathing systems which include spectate cameras.
-*/
+ */
 void obj_init_cameracontrol(Object *obj, LevelObjectEntry_CameraControl *entry) {
     obj->properties.camControl.cameraID = entry->cameraID;
     path_enable();
@@ -2413,14 +2432,14 @@ void obj_init_cameracontrol(Object *obj, LevelObjectEntry_CameraControl *entry) 
 /**
  * Spectate Cameras loop func.
  * Does nothing since all the behaviour is handled globally.
-*/
+ */
 void obj_loop_cameracontrol(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
 /**
  * Racer Spawnpoint init func.
  * Sets the spawn ID as well as racer index.
-*/
+ */
 void obj_init_setuppoint(Object *obj, LevelObjectEntry_SetupPoint *entry) {
     obj->properties.setupPoint.racerIndex = entry->racerIndex;
     obj->properties.setupPoint.entranceID = entry->entranceID;
@@ -2430,7 +2449,7 @@ void obj_init_setuppoint(Object *obj, LevelObjectEntry_SetupPoint *entry) {
 /**
  * Racer Spawnpoint loop func.
  * Does nothing by itself; the game will use these as an anchor for spawning racer objects.
-*/
+ */
 void obj_loop_setuppoint(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
@@ -3222,8 +3241,8 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
                                 rumble_set(racer->playerIndex, RUMBLE_TYPE_8);
                             }
                             node = ainode_find_nearest(racerObj->segment.trans.x_position,
-                                                           racerObj->segment.trans.y_position,
-                                                           racerObj->segment.trans.z_position, FALSE);
+                                                       racerObj->segment.trans.y_position,
+                                                       racerObj->segment.trans.z_position, FALSE);
                             if (node != NODE_NONE) {
                                 racer->nodeCurrent = ainode_get(node);
                             } else {
@@ -4319,7 +4338,7 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             obj->segment.trans.z_position = tempPos[2];
             // Bananas dropped by planes will not have gravity.
             if (banana->droppedVehicleID != VEHICLE_PLANE) {
-                obj->segment.y_velocity -= 1.0; //!@Delta
+                obj->segment.y_velocity -= 1.0;  //!@Delta
                 obj->segment.x_velocity *= 0.95; //!@Delta
                 obj->segment.z_velocity *= 0.95; //!@Delta
             } else {

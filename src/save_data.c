@@ -1162,7 +1162,7 @@ s16 calculate_ghost_header_checksum(GhostHeader *ghostHeader) {
     s16 sum;
 
     sum = 0;
-    len = (s16) (ghostHeader->nodeCount * sizeof(GhostDataFrame)) + sizeof(GhostHeader);
+    len = (s16) (ghostHeader->nodeCount * sizeof(GhostNode)) + sizeof(GhostHeader);
     for (i = 2; i < len; i++) {
         sum += ((u8 *) ghostHeader)[i];
     }
@@ -1175,7 +1175,7 @@ void func_80074AA8(GhostHeader *ghostHeader, s16 characterID, s16 time, s16 node
     ghostHeader->unk3 = 0;
     ghostHeader->time = time;
     ghostHeader->nodeCount = nodeCount;
-    bcopy(dest, (u8 *) ghostHeader + 8, nodeCount * sizeof(GhostDataFrame));
+    bcopy(dest, (u8 *) ghostHeader + 8, nodeCount * sizeof(GhostNode));
     ghostHeader->checksum = calculate_ghost_header_checksum(ghostHeader);
 }
 

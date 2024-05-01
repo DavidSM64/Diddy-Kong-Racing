@@ -1557,7 +1557,7 @@ s32 check_if_in_draw_range(Object *obj) {
                 obj64 = obj->unk64;
                 obj->segment.object.opacity = ((obj64->racer.transparency + 1) * alpha) >> 8;
                 break;
-            case BHV_UNK_3A: // Ghost Object?
+            case BHV_TIMETRIAL_GHOST: // Ghost Object?
                 obj64 = obj->unk64;
                 obj->segment.object.opacity = obj64->racer.transparency;
                 break;

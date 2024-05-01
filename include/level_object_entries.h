@@ -429,9 +429,9 @@ typedef struct LevelObjectEntry_AirZippers_WaterZippers {
     /* 0x0B */ u8 padB;
 } LevelObjectEntry_AirZippers_WaterZippers;
 
-typedef struct LevelObjectEntry_Unknown58 {
+typedef struct LevelObjectEntry_TimeTrial_Ghost {
     /* 0x00 */ LevelObjectEntryCommon common;
-} LevelObjectEntry_Unknown58;
+} LevelObjectEntry_TimeTrial_Ghost;
 
 typedef struct LevelObjectEntry_WaveGenerator {
     /* 0x00 */ LevelObjectEntryCommon common;
@@ -929,7 +929,7 @@ typedef struct LevelObjectEntry {
         LevelObjectEntry_InfoPoint infoPoint;
         LevelObjectEntry_Trigger trigger;
         LevelObjectEntry_AirZippers_WaterZippers airzipper_waterzipper;
-        LevelObjectEntry_Unknown58 unk58;
+        LevelObjectEntry_TimeTrial_Ghost unk58;
         LevelObjectEntry_WaveGenerator waverGenerator;
         LevelObjectEntry_Butterfly butterfly;
         LevelObjectEntry_Parkwarden taj;

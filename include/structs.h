@@ -1959,11 +1959,6 @@ typedef struct GhostNode {
   /* 0x0A */ s16 yRotation;
 } GhostNode;
 
-/* Size: 12 bytes */
-typedef struct GhostDataFrame {
-    u8 pad0[12];
-} GhostDataFrame;
-
 typedef struct ByteColour {
     u8 red;
     u8 green;

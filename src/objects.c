@@ -289,7 +289,7 @@ s32 gNumberOfCheckpoints;
 s32 D_8011AED4;
 s16 gTajChallengeType;
 Object *(*gCameraObjList)[CAMCONTROL_COUNT]; // Camera objects with a maximum of 20
-s32 gCameraObjCount;           // The number of camera objects in the above list
+s32 gCameraObjCount;                         // The number of camera objects in the above list
 Object *(*gRacers)[10];
 // Similar to gRacers, but sorts the pointer by the players' current position in the race.
 Object **gRacersByPosition;
@@ -1185,7 +1185,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             entry->unkC = sp94[0];
             newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, 1);
             newRacerObj->segment.level_entry = NULL;
-            newRacerObj->behaviorId = BHV_UNK_3A;
+            newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
             newRacerObj->shadow->scale = 0.01f;
             newRacerObj->interactObj->flags = 0;
             D_8011AD34 = newRacerObj;
@@ -1201,7 +1201,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             entry->unkC = sp94[0];
             newRacerObj = spawn_object((LevelObjectEntryCommon *) entry, 1);
             newRacerObj->segment.level_entry = NULL;
-            newRacerObj->behaviorId = BHV_UNK_3A;
+            newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
             newRacerObj->shadow->scale = 0.01f;
             newRacerObj->interactObj->flags = 0;
             gGhostObj = newRacerObj;
@@ -2458,7 +2458,7 @@ UNUSED s32 path_update_check(void) {
 
 /**
  * Signal to the game that checkpoints should be updated.
-*/
+ */
 void path_enable(void) {
     gPathUpdateOff = FALSE;
 }
@@ -3162,7 +3162,7 @@ void func_80012F94(Object *obj) {
                 var_t0 = 0;
                 batchNum = 0;
             } else {
-                if (obj->behaviorId == BHV_UNK_3A) { // Ghost Object?
+                if (obj->behaviorId == BHV_TIMETRIAL_GHOST) { // Ghost Object?
                     var_t0 = 1;
                     batchNum = 0;
                 } else {
@@ -3945,7 +3945,7 @@ void func_80016BC4(Object *obj) {
 
 /**
  * Find the first butterfly node within range and return a pointer to it.
-*/
+ */
 Object *obj_butterfly_node(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis) {
     f32 diffY;
     f32 diffZ;
@@ -4837,7 +4837,7 @@ UNUSED void debug_render_checkpoint_node(UNUSED s32 checkpointID, UNUSED s32 pat
 
 /**
  * Loop through every existing spectate camera and sort them by index.
-*/
+ */
 void spectate_update(void) {
     Object *objPtr;
     Object *temp;
@@ -6552,8 +6552,8 @@ void run_object_init_func(Object *obj, void *entry, s32 param) {
         case BHV_ZIPPER_AIR:
             obj_init_airzippers_waterzippers(obj, (LevelObjectEntry_AirZippers_WaterZippers *) entry);
             break;
-        case BHV_UNK_3A:
-            obj_init_unknown58(obj, (LevelObjectEntry_Unknown58 *) entry);
+        case BHV_TIMETRIAL_GHOST:
+            obj_init_timetrialghost(obj, (LevelObjectEntry_TimeTrial_Ghost *) entry);
             break;
         case BHV_WAVE_GENERATOR:
             obj_init_wavegenerator(obj, (LevelObjectEntry_WaveGenerator *) entry, param);
@@ -6948,8 +6948,8 @@ void run_object_loop_func(Object *obj, s32 updateRate) {
         case BHV_ZIPPER_AIR:
             obj_loop_airzippers_waterzippers(obj, updateRate);
             break;
-        case BHV_UNK_3A:
-            obj_loop_unknown58(obj, updateRate);
+        case BHV_TIMETRIAL_GHOST:
+            obj_loop_timetrialghost(obj, updateRate);
             break;
         case BHV_WAVE_POWER:
             obj_loop_wavepower(obj);
