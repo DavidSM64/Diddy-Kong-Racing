@@ -103,7 +103,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     func_80049794(updateRate, updateRateF, obj, racer);
     racer->vehicleID = racer->vehicleIDPrev;
     *startTimer = headAngleRange;
-    obj->unk74 = 0;
+    obj->particleEmitFlags = OBJ_EMIT_OFF;
     racer->headAngle = tempHeadAngle;
     obj->segment.object.animationID = animID;
     obj->segment.animFrame = animFrame;
@@ -222,7 +222,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     animFrame = obj->segment.animFrame;
     obj->segment.animFrame = racer->animationSpeed;
     stepFrame = obj->segment.animFrame >> 4;
-    obj->unk74 = 0;
+    obj->particleEmitFlags = OBJ_EMIT_OFF;
     if (obj->segment.object.animationID != ANIM_SMOKEY_RUN && obj->segment.object.animationID != 2) {
         animFrame >>= 4;
         stepFrame = 1;
@@ -237,7 +237,7 @@ void update_smokey(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (racer->vehicleIDPrev == VEHICLE_SMOKEY && racer->playerIndex == PLAYER_COMPUTER && func_80023568()) {
         spawn_boss_hazard(obj, racer, 100.0f, ASSET_OBJECT_ID_FIREBALL, SOUND_VOICE_TRICKY_HM);
     }
-    func_800AFC3C(obj, updateRate);
+    obj_spawn_particle(obj, updateRate);
     fade_when_near_camera(obj, racer, 40);
     firstRacerObj = get_racer_object(PLAYER_ONE);
     diffX = firstRacerObj->segment.trans.x_position - obj->segment.trans.x_position;

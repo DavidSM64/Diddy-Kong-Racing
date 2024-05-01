@@ -1930,7 +1930,7 @@ glabel func_8001F460
 /* 021C7C 8002107C 02C02025 */  move  $a0, $s6
 /* 021C80 80021080 AECF0074 */  sw    $t7, 0x74($s6)
 /* 021C84 80021084 8FA5019C */  lw    $a1, 0x19c($sp)
-/* 021C88 80021088 0C02BF0F */  jal   func_800AFC3C
+/* 021C88 80021088 0C02BF0F */  jal   obj_spawn_particle
 /* 021C8C 8002108C 00000000 */   nop   
 /* 021C90 80021090 00001025 */  move  $v0, $zero
 .L80021094:

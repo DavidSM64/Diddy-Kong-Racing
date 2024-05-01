@@ -1786,7 +1786,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         address += 0xC;
     }
     if (curObj->segment.header->unk57 > 0) {
-        address = (u32 *) ((uintptr_t) address + func_8000FAC4(curObj, (Object_6C *) address));
+        address = (u32 *) ((uintptr_t) address + obj_init_emitter(curObj, (ParticleEmitter *) address));
     }
     sizeOfobj = (uintptr_t) address - (uintptr_t) curObj;
     if (curObj->segment.header->numLightSources > 0) {
@@ -1845,7 +1845,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         newObj->unk60 = (Object_60 *) (((uintptr_t) newObj + (uintptr_t) newObj->unk60) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->segment.header->unk57 > 0) {
-        newObj->unk6C = (Object_6C *) (((uintptr_t) newObj + (uintptr_t) newObj->unk6C) - (uintptr_t) gSpawnObjectHeap);
+        newObj->unk6C = (ParticleEmitter *) (((uintptr_t) newObj + (uintptr_t) newObj->unk6C) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->segment.header->numLightSources > 0) {
         newObj->lightData =
@@ -1995,18 +1995,18 @@ s32 func_8000F99C(Object *obj) {
     return FALSE;
 }
 
-s32 func_8000FAC4(Object *obj, Object_6C *arg1) {
+s32 obj_init_emitter(Object *obj, ParticleEmitter *emitter) {
     ObjHeaderParticleEntry *particleDataEntry;
     s32 i;
 
-    obj->unk6C = arg1;
+    obj->particleEmitter = emitter;
     particleDataEntry = obj->segment.header->objectParticles;
     for (i = 0; i < obj->segment.header->unk57; i++) {
         if ((particleDataEntry[i].upper & 0xFFFF0000) == 0xFFFF0000) {
-            partInitTrigger((Particle *) &obj->unk6C[i], (particleDataEntry[i].upper >> 8) & 0xFF,
+            partInitTrigger((Particle *) &obj->particleEmitter[i].unk0, (particleDataEntry[i].upper >> 8) & 0xFF,
                             particleDataEntry[i].upper & 0xFF);
         } else {
-            func_800AF29C((Particle *) &obj->unk6C[i], (particleDataEntry[i].upper >> 0x18) & 0xFF,
+            func_800AF29C((Particle *) &obj->particleEmitter[i].unk0, (particleDataEntry[i].upper >> 0x18) & 0xFF,
                           (particleDataEntry[i].upper >> 0x10) & 0xFF, particleDataEntry[i].upper & 0xFFFF,
                           (particleDataEntry[i].lower >> 0x10) & 0xFFFF, particleDataEntry[i].lower & 0xFFFF);
         }
@@ -4921,7 +4921,7 @@ Object *find_nearest_spectate_camera(Object *obj, s32 *cameraId) {
 /**
  * Take every existing AI node and find each neighbouring node.
  * Afterwards, sort them by height so the game can generate elevation thresholds.
-*/
+ */
 void ainode_update(void) {
     LevelObjectEntry_AiNode *aiNodeEntry;
     Object *obj;
@@ -4991,7 +4991,8 @@ void ainode_update(void) {
     do {
         j = TRUE;
         for (i = 0; i < nodeCount - 1; i++) {
-            if ((*gAINodes)[nodeIDs[i + 1]]->segment.trans.y_position < (*gAINodes)[nodeIDs[i]]->segment.trans.y_position) {
+            if ((*gAINodes)[nodeIDs[i + 1]]->segment.trans.y_position <
+                (*gAINodes)[nodeIDs[i]]->segment.trans.y_position) {
                 swap = nodeIDs[i];
                 nodeIDs[i] = nodeIDs[i + 1];
                 nodeIDs[i + 1] = swap;
@@ -5016,9 +5017,9 @@ void ainode_update(void) {
         }
         if (index < elevations[i]) {
             index = elevations[i];
-            gElevationHeights[index] =
-                ((*gAINodes)[nodeIDs[i]]->segment.trans.y_position + (*gAINodes)[nodeIDs[i - 1]]->segment.trans.y_position) *
-                0.5;
+            gElevationHeights[index] = ((*gAINodes)[nodeIDs[i]]->segment.trans.y_position +
+                                        (*gAINodes)[nodeIDs[i - 1]]->segment.trans.y_position) *
+                                       0.5;
         } else {
             i = nodeCount;
         }
@@ -5044,7 +5045,7 @@ s16 obj_elevation(f32 yPos) {
 
 /**
  * Loop through the AI Node list and add this new object to the list if it does not already exist.
-*/
+ */
 s32 ainode_register(Object *obj) {
     s32 i;
     for (i = 0; i < AINODE_COUNT; i++) {
@@ -5059,7 +5060,7 @@ s32 ainode_register(Object *obj) {
 /**
  * Search through each AI node and find the one closest to the coordinates given.
  * Can choose to include or ignore elevation.
-*/
+ */
 s32 ainode_find_nearest(f32 diffX, f32 diffY, f32 diffZ, s32 useElevation) {
     UNUSED f32 pad[6];
     s32 elevation;
@@ -5125,22 +5126,22 @@ s32 func_8001CC48(s32 nodeCurrent, s32 arg1, s32 direction) {
     if (someObj == NULL) {
         return NODE_NONE;
     }
-    entry = (LevelObjectEntry_AiNode *)someObj->segment.level_entry;
-    someObj64 = (Object_AiNode*)someObj->unk64;
+    entry = (LevelObjectEntry_AiNode *) someObj->segment.level_entry;
+    someObj64 = (Object_AiNode *) someObj->unk64;
     test = direction & 3;
-    
+
     // Swapping these messes up the registers.
     someCount = 0;
     someIndex = (someObj64->directions[test] + 1) & 3;
-    
+
     for (i = 0; i < 4; i++) {
         if (entry->adjacent[someIndex] != NODE_NONE) {
             if (entry->adjacent[someIndex] != arg1) {
                 someObj64->directions[test] = someIndex;
                 i = 4;
                 someCount++;
-            } 
-        } 
+            }
+        }
         someIndex = (someIndex + 1) & 3;
     }
     if (someCount == 0) {
@@ -5289,7 +5290,7 @@ void ainode_enable(void) {
 
 /**
  * If the node ID is new, set the tail ID to it.
-*/
+ */
 void ainode_tail_set(s32 nodeID) {
     if (nodeID != gAINodeTail[0]) {
         gAINodeTail[1] = gAINodeTail[0];
@@ -5299,7 +5300,7 @@ void ainode_tail_set(s32 nodeID) {
 
 /**
  * Return the last created AI node.
-*/
+ */
 UNUSED Object *ainode_tail(s32 *nodeID) {
     *nodeID = gAINodeTail[1];
     return gAINodes[0][gAINodeTail[1]];
@@ -5307,7 +5308,7 @@ UNUSED Object *ainode_tail(s32 *nodeID) {
 
 /**
  * Return the AI node assigned to the given ID.
-*/
+ */
 Object *ainode_get(s32 nodeID) {
     if (nodeID >= 0 && nodeID < AINODE_COUNT) {
         return gAINodes[0][nodeID];
@@ -5684,7 +5685,7 @@ void func_8001EFA4(Object *arg0, Object *animObj) {
     anim->unk2D = 0;
     anim->unk4 = 0;
     anim->unk0 = 0;
-    arg0->unk6C = NULL;
+    arg0->particleEmitter = NULL;
     anim->unk36 = normalise_time(animEntry->pauseFrameCount);
     anim->unk3A = animEntry->specialHide;
     if (animEntry->unk13 >= 0) {

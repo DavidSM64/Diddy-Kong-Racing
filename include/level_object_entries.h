@@ -633,7 +633,7 @@ typedef struct LevelObjectEntry_Windsail {
 typedef struct LevelObjectEntry_RangeTrigger {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u16 unk8;
-    /* 0x0A */ u16 unkA;
+    /* 0x0A */ u16 particleFlags;
 } LevelObjectEntry_RangeTrigger;
 
 typedef struct LevelObjectEntry_Fireball_Octoweapon {

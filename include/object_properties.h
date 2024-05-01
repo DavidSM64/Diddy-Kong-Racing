@@ -26,9 +26,9 @@ typedef struct ObjPropertySpeed {
 } ObjPropertySpeed;
 
 typedef struct ObjPropertyBanana {
-    s32 unk0;
-    s16 unk4;
-    s16 unk6;
+    s32 status;
+    s16 intangibleTimer;
+    s16 destroyTimer;
 } ObjPropertyBanana;
 
 typedef struct ObjPropertyName {

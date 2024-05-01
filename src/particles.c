@@ -522,7 +522,7 @@ void func_800AF52C(Object *obj, s32 arg1) {
     ParticleBehavior *behaviour;
     Particle *temp;
 
-    temp_v0 = (Particle *) &obj->unk6C[arg1];
+    temp_v0 = (Particle *) &obj->particleEmitter[arg1].unk0;
     behaviour = temp_v0->data.behaviour;
     temp_v0->data.opacity = 0;
     if (temp_v0->data.flags & 0x4000) {
@@ -566,9 +566,9 @@ void func_800AF52C(Object *obj, s32 arg1) {
 }
 
 void func_800AF6E4(Object *obj, s32 arg1) {
-    Object_6C *obj6C;
+    ParticleEmitter *obj6C;
 
-    obj6C = &obj->unk6C[arg1];
+    obj6C = &obj->particleEmitter[arg1];
 
     obj6C->unk4 &= 0x7FFF;
     obj->segment.unk1A--;
@@ -580,8 +580,8 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
     s32 var_v0;
     s32 temp_v1;
     s32 i;
-    Object_6C *new_var;
-    Object_6C *new_var2;
+    ParticleEmitter *new_var;
+    ParticleEmitter *new_var2;
     s32 var_t1;
     s32 someBool;
     s8 vehicleId;
@@ -589,12 +589,12 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
     u8 *alphaPtr;
 
     racer = &racerObj->unk64->racer;
-    var_s7 = racerObj->unk74;
+    var_s7 = racerObj->particleEmitFlags;
     vehicleId = racer->vehicleID;
     i = 0;
     object_do_player_tumble(racerObj);
     for (; i < racerObj->segment.header->unk57; i++) {
-        if (var_s7 & 1) {
+        if (var_s7 & OBJ_EMIT_PARTICLE_1) {
             someBool = TRUE;
             switch (vehicleId) {
                 case VEHICLE_CAR:
@@ -605,7 +605,7 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
                         }
                         var_v0 -= 24;
                         if (var_v0 > 0) {
-                            temp_a3 = gParticlesAssetTable[racerObj->unk6C[i].unk8];
+                            temp_a3 = gParticlesAssetTable[racerObj->particleEmitter[i].unk8];
                             alphaPtr = &D_800E2EC4[i].a;
                             var_t1 = 4;
                             if (var_v0 > 32) {
@@ -678,29 +678,29 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
             }
 
             if (someBool) {
-                if (!(racerObj->unk6C[i].unk4 & 0x8000)) {
+                if (!(racerObj->particleEmitter[i].unk4 & 0x8000)) {
                     func_800AF52C(racerObj, i);
                 }
-                if (racerObj->unk6C[i].unk4 & 0x4000) {
-                    func_800AFE5C((Particle *) racerObj, (Particle *) &racerObj->unk6C[i]);
-                } else if (racerObj->unk6C[i].unk4 & 0x400) {
-                    func_800AFE5C((Particle *) racerObj, (Particle *) &racerObj->unk6C[i]);
+                if (racerObj->particleEmitter[i].unk4 & 0x4000) {
+                    func_800AFE5C((Particle *) racerObj, (Particle *) &racerObj->particleEmitter[i]);
+                } else if (racerObj->particleEmitter[i].unk4 & 0x400) {
+                    func_800AFE5C((Particle *) racerObj, (Particle *) &racerObj->particleEmitter[i]);
                 } else {
-                    racerObj->unk6C[i].unkA += updateRate;
-                    if (racerObj->unk6C[i].unkA >= racerObj->unk6C[i].unk0->segment.unk40_s16) {
-                        func_800AFE5C((Particle *) racerObj, (Particle *) &racerObj->unk6C[i]);
+                    racerObj->particleEmitter[i].unkA += updateRate;
+                    if (racerObj->particleEmitter[i].unkA >= racerObj->particleEmitter[i].unk0->segment.unk40_s16) {
+                        func_800AFE5C((Particle *) racerObj, (Particle *) &racerObj->particleEmitter[i]);
                     }
                 }
             }
-        } else if (racerObj->unk6C[i].unk4 & 0x8000) {
-            if (racerObj->unk6C[i].unk4 & 0x4000) {
-                new_var2 = &racerObj->unk6C[i];
+        } else if (racerObj->particleEmitter[i].unk4 & 0x8000) {
+            if (racerObj->particleEmitter[i].unk4 & 0x4000) {
+                new_var2 = &racerObj->particleEmitter[i];
                 new_var2->unk6 = 0;
                 func_800AF6E4(racerObj, i);
             } else {
-                if (racerObj->unk6C[i].unk4 & 0x400) {
-                    new_var = &racerObj->unk6C[i];
-                    racerObj->unk6C[i].unk4 |= 0x200;
+                if (racerObj->particleEmitter[i].unk4 & 0x400) {
+                    new_var = &racerObj->particleEmitter[i];
+                    racerObj->particleEmitter[i].unk4 |= 0x200;
                     if (new_var->unk6 == 0) {
                         func_800AF6E4(racerObj, i);
                     }
@@ -720,37 +720,37 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
     object_undo_player_tumble(racerObj);
 }
 
-void func_800AFC3C(Object *obj, s32 updateRate) {
-    Object_6C *temp_s1;
-    Object_6C *temp_s1_2;
+void obj_spawn_particle(Object *obj, s32 updateRate) {
+    ParticleEmitter *temp_s1;
+    ParticleEmitter *temp_s1_2;
     s32 var_s0;
     s32 i;
     UNUSED s32 pad;
     s32 var_a3;
     u32 bits;
 
-    bits = obj->unk74;
+    bits = obj->particleEmitFlags;
     var_a3 = obj->segment.header->unk57;
     for (i = 0; i < var_a3; i++) {
         if (bits & 1) {
-            if (!(obj->unk6C[i].unk4 & 0x8000)) {
+            if (!(obj->particleEmitter[i].unk4 & 0x8000)) {
                 func_800AF52C(obj, i);
             }
-            if (obj->unk6C[i].unk4 & 0x4000) {
-                func_800AFE5C((Particle *) obj, (Particle *) &obj->unk6C[i]);
-            } else if ((obj->unk6C[i].unk4 & 0x400)) {
-                func_800AFE5C((Particle *) obj, (Particle *) &obj->unk6C[i]);
+            if (obj->particleEmitter[i].unk4 & 0x4000) {
+                func_800AFE5C((Particle *) obj, (Particle *) &obj->particleEmitter[i]);
+            } else if ((obj->particleEmitter[i].unk4 & 0x400)) {
+                func_800AFE5C((Particle *) obj, (Particle *) &obj->particleEmitter[i]);
             } else {
-                obj->unk6C[i].unkA += updateRate;
-                if (obj->unk6C[i].unkA >= obj->unk6C[i].unk0->segment.unk40_s16) {
-                    func_800AFE5C((Particle *) obj, (Particle *) &obj->unk6C[i]);
+                obj->particleEmitter[i].unkA += updateRate;
+                if (obj->particleEmitter[i].unkA >= obj->particleEmitter[i].unk0->segment.unk40_s16) {
+                    func_800AFE5C((Particle *) obj, (Particle *) &obj->particleEmitter[i]);
                 }
             }
             var_a3 = obj->segment.header->unk57;
         } else {
-            if (obj->unk6C[i].unk4 & 0x8000) {
-                if (obj->unk6C[i].unk4 & 0x4000) {
-                    temp_s1 = &obj->unk6C[i];
+            if (obj->particleEmitter[i].unk4 & 0x8000) {
+                if (obj->particleEmitter[i].unk4 & 0x4000) {
+                    temp_s1 = &obj->particleEmitter[i];
                     var_s0 = temp_s1->unk6 - 0x40;
                     if (var_s0 < 0) {
                         var_s0 = 0;
@@ -762,9 +762,9 @@ void func_800AFC3C(Object *obj, s32 updateRate) {
                         func_800AF6E4(obj, i);
                     }
                     var_a3 = obj->segment.header->unk57;
-                } else if ((obj->unk6C[i].unk4 & 0x400)) {
-                    temp_s1_2 = &obj->unk6C[i];
-                    obj->unk6C[i].unk4 |= 0x200;
+                } else if ((obj->particleEmitter[i].unk4 & 0x400)) {
+                    temp_s1_2 = &obj->particleEmitter[i];
+                    obj->particleEmitter[i].unk4 |= 0x200;
                     if (temp_s1_2->unk6 == 0) {
                         func_800AF6E4(obj, i);
                     }
@@ -779,7 +779,7 @@ void func_800AFC3C(Object *obj, s32 updateRate) {
     }
 }
 
-// TODO: Should this be void func_800AFE5C(Object *arg0, Object_6C *arg1)?
+// TODO: Should this be void func_800AFE5C(Object *arg0, ParticleEmitter *arg1)?
 void func_800AFE5C(Particle *arg0, Particle *arg1) {
     Particle *temp_s0;
     Particle *tempObj;
@@ -2319,24 +2319,24 @@ void func_800B4668(Object *obj, s32 idx, s32 arg2, s32 arg3) {
     s32 temp_v0;
 
     arg3 <<= 8;
-    temp_v0 = (obj->unk6C[idx].unkA & 0xFFFF) + arg2;
+    temp_v0 = (obj->particleEmitter[idx].unkA & 0xFFFF) + arg2;
     if (arg3 < temp_v0) {
-        obj->unk6C[idx].unkA = arg3;
+        obj->particleEmitter[idx].unkA = arg3;
     } else {
-        obj->unk6C[idx].unkA = temp_v0;
+        obj->particleEmitter[idx].unkA = temp_v0;
     }
-    obj->unk6C[idx].unk4 |= 0x100;
+    obj->particleEmitter[idx].unk4 |= 0x100;
 }
 
 void func_800B46BC(Object *obj, s32 idx, s32 arg2, s32 arg3) {
     s32 temp_v0;
 
     arg3 <<= 8;
-    temp_v0 = (obj->unk6C[idx].unkA & 0xFFFF) - arg2;
+    temp_v0 = (obj->particleEmitter[idx].unkA & 0xFFFF) - arg2;
     if (temp_v0 < arg3) {
-        obj->unk6C[idx].unkA = arg3;
+        obj->particleEmitter[idx].unkA = arg3;
     } else {
-        obj->unk6C[idx].unkA = temp_v0;
+        obj->particleEmitter[idx].unkA = temp_v0;
     }
-    obj->unk6C[idx].unk4 |= 0x100;
+    obj->particleEmitter[idx].unk4 |= 0x100;
 }

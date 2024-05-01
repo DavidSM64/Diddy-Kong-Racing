@@ -142,8 +142,8 @@ void update_bubbler(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *
             spawn_boss_hazard(obj, racer, 0.0f, objectID, SOUND_VOICE_BUBBLER_HOHO2);
         }
     }
-    obj->unk74 = 0;
-    func_800AFC3C(obj, updateRate);
+    obj->particleEmitFlags = OBJ_EMIT_OFF;
+    obj_spawn_particle(obj, updateRate);
     fade_when_near_camera(obj, racer, 40);
     switch (obj->segment.object.animationID) {
         case ANIM_BUBBLER_MOVE:
