@@ -593,7 +593,7 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
     vehicleId = racer->vehicleID;
     i = 0;
     object_do_player_tumble(racerObj);
-    for (; i < racerObj->segment.header->unk57; i++) {
+    for (; i < racerObj->segment.header->particleCount; i++) {
         if (var_s7 & OBJ_EMIT_PARTICLE_1) {
             someBool = TRUE;
             switch (vehicleId) {
@@ -730,7 +730,7 @@ void obj_spawn_particle(Object *obj, s32 updateRate) {
     u32 bits;
 
     bits = obj->particleEmitFlags;
-    var_a3 = obj->segment.header->unk57;
+    var_a3 = obj->segment.header->particleCount;
     for (i = 0; i < var_a3; i++) {
         if (bits & 1) {
             if (!(obj->particleEmitter[i].unk4 & 0x8000)) {
@@ -746,7 +746,7 @@ void obj_spawn_particle(Object *obj, s32 updateRate) {
                     func_800AFE5C((Particle *) obj, (Particle *) &obj->particleEmitter[i]);
                 }
             }
-            var_a3 = obj->segment.header->unk57;
+            var_a3 = obj->segment.header->particleCount;
         } else {
             if (obj->particleEmitter[i].unk4 & 0x8000) {
                 if (obj->particleEmitter[i].unk4 & 0x4000) {
@@ -761,17 +761,17 @@ void obj_spawn_particle(Object *obj, s32 updateRate) {
                     if (var_s0 == 0) {
                         func_800AF6E4(obj, i);
                     }
-                    var_a3 = obj->segment.header->unk57;
+                    var_a3 = obj->segment.header->particleCount;
                 } else if ((obj->particleEmitter[i].unk4 & 0x400)) {
                     temp_s1_2 = &obj->particleEmitter[i];
                     obj->particleEmitter[i].unk4 |= 0x200;
                     if (temp_s1_2->unk6 == 0) {
                         func_800AF6E4(obj, i);
                     }
-                    var_a3 = obj->segment.header->unk57;
+                    var_a3 = obj->segment.header->particleCount;
                 } else {
                     func_800AF6E4(obj, i);
-                    var_a3 = obj->segment.header->unk57;
+                    var_a3 = obj->segment.header->particleCount;
                 }
             }
         }

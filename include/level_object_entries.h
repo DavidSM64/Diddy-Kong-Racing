@@ -407,7 +407,7 @@ typedef struct LevelObjectEntry_Animation {
 
 typedef struct LevelObjectEntry_InfoPoint {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 unk8[3];
+    /* 0x08 */ u8 hitbox[3];
     /* 0x0B */ u8 unkB;
 } LevelObjectEntry_InfoPoint;
 
@@ -632,7 +632,7 @@ typedef struct LevelObjectEntry_Windsail {
 
 typedef struct LevelObjectEntry_RangeTrigger {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u16 unk8;
+    /* 0x08 */ u16 radius;
     /* 0x0A */ u16 particleFlags;
 } LevelObjectEntry_RangeTrigger;
 

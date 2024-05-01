@@ -1845,7 +1845,8 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         newObj->unk60 = (Object_60 *) (((uintptr_t) newObj + (uintptr_t) newObj->unk60) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->segment.header->unk57 > 0) {
-        newObj->unk6C = (ParticleEmitter *) (((uintptr_t) newObj + (uintptr_t) newObj->unk6C) - (uintptr_t) gSpawnObjectHeap);
+        newObj->unk6C =
+            (ParticleEmitter *) (((uintptr_t) newObj + (uintptr_t) newObj->unk6C) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->segment.header->numLightSources > 0) {
         newObj->lightData =
@@ -2001,7 +2002,7 @@ s32 obj_init_emitter(Object *obj, ParticleEmitter *emitter) {
 
     obj->particleEmitter = emitter;
     particleDataEntry = obj->segment.header->objectParticles;
-    for (i = 0; i < obj->segment.header->unk57; i++) {
+    for (i = 0; i < obj->segment.header->particleCount; i++) {
         if ((particleDataEntry[i].upper & 0xFFFF0000) == 0xFFFF0000) {
             partInitTrigger((Particle *) &obj->particleEmitter[i].unk0, (particleDataEntry[i].upper >> 8) & 0xFF,
                             particleDataEntry[i].upper & 0xFF);
@@ -2011,7 +2012,7 @@ s32 obj_init_emitter(Object *obj, ParticleEmitter *emitter) {
                           (particleDataEntry[i].lower >> 0x10) & 0xFFFF, particleDataEntry[i].lower & 0xFFFF);
         }
     }
-    return ((obj->segment.header->unk57 << 5) + 3) & ~3;
+    return ((obj->segment.header->particleCount * sizeof(ParticleEmitter)) + 3) & ~3;
 }
 
 /**
@@ -3803,7 +3804,7 @@ void func_80016500(Object *obj, Object_Racer *racer) {
     sinAngle = sins_f(-angle);
     racer->lateral_velocity = (obj->segment.x_velocity * cosAngle) + (obj->segment.z_velocity * sinAngle);
     racer->velocity = (-obj->segment.x_velocity * sinAngle) + (obj->segment.z_velocity * cosAngle);
-    if (racer->playerIndex != -1) {
+    if (racer->playerIndex != PLAYER_COMPUTER) {
         angle = (startVelocity - racer->velocity) * 14.0f;
         if (angle < 0) {
             angle = -angle;
@@ -3882,9 +3883,9 @@ void func_80016748(Object *obj0, Object *obj1) {
                 zDiff -= obj0->segment.trans.z_position;
                 distance = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff));
                 temp += obj1Interact->hitboxRadius;
-                if ((distance < temp) && (distance > 0.0f)) {
-                    obj0Interact->flags |= 8;
-                    obj1Interact->flags |= 8;
+                if (distance < temp && distance > 0.0f) {
+                    obj0Interact->flags |= INTERACT_FLAGS_PUSHING;
+                    obj1Interact->flags |= INTERACT_FLAGS_PUSHING;
                     obj0Interact->obj = obj1;
                     obj1Interact->obj = obj0;
                     obj0Interact->distance = 0;
@@ -3935,24 +3936,27 @@ void func_80016BC4(Object *obj) {
     }
 }
 
-Object *func_80016C68(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis) {
-    f32 yDiff;
-    f32 zDiff;
-    f32 xDiff;
+/**
+ * Find the first butterfly node within range and return a pointer to it.
+*/
+Object *obj_butterfly_node(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis) {
+    f32 diffY;
+    f32 diffZ;
+    f32 diffX;
     f32 distance;
     s32 i;
     Object *curObj;
 
     for (i = 0; i < gObjectCount; i++) {
         curObj = gObjPtrList[i];
-        if (!(curObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && (curObj->behaviorId == BHV_ANIMATED_OBJECT_3)) {
-            xDiff = curObj->segment.trans.x_position - x;
-            zDiff = curObj->segment.trans.z_position - z;
+        if (!(curObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) && curObj->behaviorId == BHV_ANIMATED_OBJECT_3) {
+            diffX = curObj->segment.trans.x_position - x;
+            diffZ = curObj->segment.trans.z_position - z;
             if (!dontCheckYAxis) {
-                yDiff = curObj->segment.trans.y_position - y;
-                distance = sqrtf((xDiff * xDiff) + (yDiff * yDiff) + (zDiff * zDiff));
+                diffY = curObj->segment.trans.y_position - y;
+                distance = sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
             } else {
-                distance = sqrtf((xDiff * xDiff) + (zDiff * zDiff));
+                distance = sqrtf((diffX * diffX) + (diffZ * diffZ));
             }
             if (distance < maxDistCheck) {
                 return curObj;
@@ -3962,7 +3966,12 @@ Object *func_80016C68(f32 x, f32 y, f32 z, f32 maxDistCheck, s32 dontCheckYAxis)
     return NULL;
 }
 
-s32 func_80016DE8(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **arg5) {
+/**
+ * Compare distance between itself and every racer.
+ * Any racer within the radius is sorted from nearest to furthest.
+ * Returns the number of racers within the radius.
+ */
+s32 obj_dist_racer(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **sortObj) {
     f32 distances[8];
     s32 i;
     s32 j;
@@ -3980,7 +3989,7 @@ s32 func_80016DE8(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **arg5)
         for (i = 0; i < gNumRacers; i++) {
             racerObj = (*gRacers)[i];
             racer = &racerObj->unk64->racer;
-            if ((racer->playerIndex >= 0) && (racer->playerIndex < 4)) {
+            if (racer->playerIndex >= 0 && racer->playerIndex < 4) {
                 if (is2dCheck) {
                     xDiff = racerObj->segment.trans.x_position - x;
                     zDiff = racerObj->segment.trans.z_position - z;
@@ -3993,7 +4002,7 @@ s32 func_80016DE8(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **arg5)
                 }
                 if (yDiff < radius) {
                     distances[result] = yDiff;
-                    arg5[result] = (*gRacers)[i];
+                    sortObj[result] = (*gRacers)[i];
                     result++;
                 }
             }
@@ -4003,11 +4012,11 @@ s32 func_80016DE8(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **arg5)
                 for (j = 0; j < i; j++) {
                     if (distances[j + 1] < distances[j]) {
                         swapf = distances[j];
-                        swapObj = arg5[j];
+                        swapObj = sortObj[j];
                         distances[j] = distances[j + 1];
-                        arg5[j] = arg5[j + 1];
+                        sortObj[j] = sortObj[j + 1];
                         distances[j + 1] = swapf;
-                        arg5[j + 1] = swapObj;
+                        sortObj[j + 1] = swapObj;
                     }
                 }
             }

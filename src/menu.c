@@ -12427,7 +12427,7 @@ s8 *func_8009C274(void) {
  * Returns the character Id from a controller index.
  */
 s8 get_player_character(s32 controllerIndex) {
-    if (controllerIndex < 0 || controllerIndex >= 4) {
+    if (controllerIndex < 0 || controllerIndex >= MAXCONTROLLERS) {
         return -1;
     }
     if (!gActivePlayersArray[controllerIndex]) {

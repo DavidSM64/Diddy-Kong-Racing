@@ -773,7 +773,7 @@ typedef struct ObjectHeader {
   /* 0x54 */ s8 behaviorId;
   /* 0x55 */ s8 numberOfModelIds; // size of array pointed by Object->unk68
   /* 0x56 */ s8 unk56;
-  /* 0x57 */ s8 unk57;
+  /* 0x57 */ s8 particleCount; // Number of different particle types that are attached
   /* 0x58 */ s8 unk58;
   /* 0x59 */ u8 pad59;
   /* 0x5A */ s8 numLightSources;
@@ -1561,12 +1561,12 @@ typedef struct Object_Fireball_Octoweapon {
 typedef struct Object_AnimatedObject {
     u8 pad0[0x20];
   /* 0x20 */ u32 soundMask;
-  /* 0x24 */ s16 unk24;
+  /* 0x24 */ s16 currentSound;
   /* 0x26 */ s16 unk26;
     s16 unk28;
     u8 pad2A[0xC];
     s16 unk36;
-    s8 unk38;
+    s8 soundID;
     s8 unk39;
     s8 unk3A;
     s8 unk3B;
