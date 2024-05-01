@@ -413,8 +413,8 @@ glabel func_80010994
 /* 011B74 80010F74 0C008A52 */  jal   func_80022948
 /* 011B78 80010F78 00000000 */   nop   
 .L80010F7C:
-/* 011B7C 80010F7C 3C108012 */  lui   $s0, %hi(D_8011ADAC) # $s0, 0x8012
-/* 011B80 80010F80 2610ADAC */  addiu $s0, %lo(D_8011ADAC) # addiu $s0, $s0, -0x5254
+/* 011B7C 80010F7C 3C108012 */  lui   $s0, %hi(gPathUpdateOff) # $s0, 0x8012
+/* 011B80 80010F80 2610ADAC */  addiu $s0, %lo(gPathUpdateOff) # addiu $s0, $s0, -0x5254
 /* 011B84 80010F84 8E190000 */  lw    $t9, ($s0)
 /* 011B88 80010F88 00000000 */  nop   
 /* 011B8C 80010F8C 17200009 */  bnez  $t9, .L80010FB4
@@ -423,7 +423,7 @@ glabel func_80010994
 /* 011B98 80010F98 00000000 */   nop   
 /* 011B9C 80010F9C 0C005FA6 */  jal   func_80017E98
 /* 011BA0 80010FA0 00000000 */   nop   
-/* 011BA4 80010FA4 0C006F15 */  jal   func_8001BC54
+/* 011BA4 80010FA4 0C006F15 */  jal   spectate_update
 /* 011BA8 80010FA8 00000000 */   nop   
 /* 011BAC 80010FAC 0C007A4F */  jal   func_8001E93C
 /* 011BB0 80010FB0 00000000 */   nop   

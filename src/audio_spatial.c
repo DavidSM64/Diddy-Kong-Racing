@@ -95,7 +95,7 @@ void func_80008174(void) {
     for (i = 0; i < gUsedMasks; i++) {
         gSoundMaskHeapUsed[i]->unk12 = 0;
         if (gSoundMaskHeapUsed[i]->unk18 != NULL) {
-            func_8000488C(gSoundMaskHeapUsed[i]->unk18);
+            sound_stop(gSoundMaskHeapUsed[i]->unk18);
         }
     }
     gUsedMasks = 0;
@@ -104,7 +104,7 @@ void func_80008174(void) {
         D_80119C58[i].soundID = 0;
         if (D_80119C58[i].unk178 != 0) {
             if (D_80119C58[i].unk0.unk0_02 == 0) {
-                func_8000488C(D_80119C58[i].unk178);
+                sound_stop(D_80119C58[i].unk178);
             } else if (D_80119C58[i].unk0.unk0_02 == 1) {
                 music_jingle_stop();
             }
@@ -463,7 +463,7 @@ GLOBAL_ASM("asm/non_matchings/audio_spatial/func_8000A184.s")
 void func_8000A2E8(s32 arg0) {
     if (gUsedMasks != 0) {
         if (gSoundMaskHeapUsed[arg0]->unk18 != 0) {
-            func_8000488C(gSoundMaskHeapUsed[arg0]->unk18);
+            sound_stop(gSoundMaskHeapUsed[arg0]->unk18);
         }
         if (gSoundMaskHeapUsed[arg0]->soundMask != NULL) {
             *gSoundMaskHeapUsed[arg0]->soundMask = NULL;

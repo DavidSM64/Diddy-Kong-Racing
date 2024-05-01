@@ -37,6 +37,7 @@
 #define OBJECT_SLOT_COUNT 512
 #define ASSET_OBJECT_HEADER_TABLE_LENGTH 304 // This isn't important, but it's the number of object headers
 #define AINODE_COUNT 128
+#define CAMCONTROL_COUNT 20
 
 /************ .data ************/
 
@@ -232,7 +233,7 @@ Gfx *D_8011AD78[10];
 s32 gAssetsMiscTableLength;
 s16 D_8011ADA4;
 f32 gObjectUpdateRateF;
-s32 D_8011ADAC;
+s32 gPathUpdateOff;
 s32 gEventCountdown;
 s32 D_8011ADB4;
 s32 gEventStartTimer;
@@ -287,7 +288,7 @@ CheckpointNode *gTrackCheckpoints; // Array of structs, unknown number of member
 s32 gNumberOfCheckpoints;
 s32 D_8011AED4;
 s16 gTajChallengeType;
-Object *(*gCameraObjList)[20]; // Camera objects with a maximum of 20
+Object *(*gCameraObjList)[CAMCONTROL_COUNT]; // Camera objects with a maximum of 20
 s32 gCameraObjCount;           // The number of camera objects in the above list
 Object *(*gRacers)[10];
 // Similar to gRacers, but sorts the pointer by the players' current position in the race.
@@ -511,11 +512,11 @@ void allocate_object_pools(void) {
     D_8011AE6C = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
     D_8011AE74 = allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
     gTrackCheckpoints = allocate_from_main_pool_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
-    gCameraObjList = allocate_from_main_pool_safe(sizeof(uintptr_t *) * 20, COLOUR_TAG_BLUE);
+    gCameraObjList = allocate_from_main_pool_safe(sizeof(uintptr_t *) * CAMCONTROL_COUNT, COLOUR_TAG_BLUE);
     gRacers = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
     gRacersByPort = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
     gRacersByPosition = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
-    gAINodes = allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
+    gAINodes = allocate_from_main_pool_safe(sizeof(uintptr_t) * AINODE_COUNT, COLOUR_TAG_BLUE);
     D_8011ADCC = allocate_from_main_pool_safe(8, COLOUR_TAG_BLUE);
     D_8011AFF4 = allocate_from_main_pool_safe(0x400, COLOUR_TAG_BLUE);
     gAssetsLvlObjTranslationTable = (s16 *) load_asset_section_from_rom(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
@@ -784,13 +785,13 @@ void func_8000C8F8(s32 arg0, s32 arg1) {
         D_8011AE98[arg1] = (u8 *) (D_8011AEB0[arg1] + 4);
         D_8011AE70 = 0;
         D_8011ADC0 = 1;
-        if (D_8011ADAC == 0) {
+        if (gPathUpdateOff == FALSE) {
             gParticlePtrList_flush();
             func_80017E98();
-            func_8001BC54();
+            spectate_update();
             func_8001E93C();
         }
-        D_8011ADAC = 1;
+        gPathUpdateOff = TRUE;
     }
 }
 
@@ -830,6 +831,7 @@ s32 func_8000CC20(Object *obj) {
 }
 
 #ifdef NON_EQUIVALENT
+// track_init_racers
 void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     s32 numPlayers; // sp144
     enum GameMode gameMode;
@@ -905,12 +907,12 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         curObj = gObjPtrList[i2];
         if (!(curObj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             if (curObj->behaviorId == BHV_SETUP_POINT) {
-                if (arg1 == (u32) curObj->properties.setupPoint.unk4) {
-                    if (curObj->properties.setupPoint.unk0 < 8) {
-                        spF4[curObj->properties.setupPoint.unk0] = curObj->segment.trans.x_position;
-                        spD4[curObj->properties.setupPoint.unk0] = curObj->segment.trans.y_position;
-                        spB4[curObj->properties.setupPoint.unk0] = curObj->segment.trans.z_position;
-                        sp94[curObj->properties.setupPoint.unk0] = curObj->segment.trans.y_rotation;
+                if (arg1 == (u32) curObj->properties.setupPoint.entranceID) {
+                    if (curObj->properties.setupPoint.racerIndex < 8) {
+                        spF4[curObj->properties.setupPoint.racerIndex] = curObj->segment.trans.x_position;
+                        spD4[curObj->properties.setupPoint.racerIndex] = curObj->segment.trans.y_position;
+                        spB4[curObj->properties.setupPoint.racerIndex] = curObj->segment.trans.z_position;
+                        sp94[curObj->properties.setupPoint.racerIndex] = curObj->segment.trans.y_rotation;
                     }
                     tempVehicle = curObj->segment.level_entry->setupPoint.vehicle;
                     if (tempVehicle != -1) {
@@ -2323,10 +2325,10 @@ void func_80010994(s32 updateRate) {
         if (D_8011AEF7 != 0) {
             func_80022948();
         }
-        if (D_8011ADAC == 0) {
+        if (gPathUpdateOff == FALSE) {
             gParticlePtrList_flush();
             func_80017E98();
-            func_8001BC54();
+            spectate_update();
             func_8001E93C();
         }
         if (gNumRacers != 0) {
@@ -2337,7 +2339,7 @@ void func_80010994(s32 updateRate) {
             }
         }
         func_80008438(gRacersByPort, gNumRacers, updateRate);
-        D_8011ADAC = 1;
+        gPathUpdateOff = TRUE;
         gObjectUpdateRateF = (f32) updateRate;
         D_8011AD24[0] = 0;
         D_8011AD53 = 0;
@@ -2441,19 +2443,24 @@ UNUSED void do_nothing_func_80011364(UNUSED s32 unused) {
 }
 
 /**
- * Return the opposite of D_8011ADAC's value
+ * Return true if paths are intended to be updated.
+ * The variable they use here is backwards in terms of use.
+ * Yes means no, no means yes.
  */
-UNUSED s32 is_not_D_8011ADAC(void) {
-    // Ever hear of return !D_8011ADAC?
-    if (D_8011ADAC) {
+UNUSED s32 path_update_check(void) {
+    // Ever hear of return !gPathUpdateOff?
+    if (gPathUpdateOff) {
         return FALSE;
     } else {
         return TRUE;
     }
 }
 
-void func_80011390(void) {
-    D_8011ADAC = 0;
+/**
+ * Signal to the game that checkpoints should be updated.
+*/
+void path_enable(void) {
+    gPathUpdateOff = FALSE;
 }
 
 /**
@@ -4116,7 +4123,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_80017A18.s")
  */
 void set_taj_challenge_type(s32 vehicleID) {
     gTajChallengeType = vehicleID;
-    D_8011ADAC = 0;
+    gPathUpdateOff = FALSE;
 }
 
 /**
@@ -4267,7 +4274,7 @@ void func_8001A8F4(s32 updateRate) {
                 sp30 = i;
             }
             if (racer->magnetSoundMask != NULL) {
-                func_8000488C(racer->magnetSoundMask);
+                sound_stop(racer->magnetSoundMask);
             }
             if (racer->shieldSoundMask != NULL) {
                 func_800096F8(racer->shieldSoundMask);
@@ -4828,7 +4835,10 @@ UNUSED void debug_render_checkpoint_node(UNUSED s32 checkpointID, UNUSED s32 pat
                                          UNUSED MatrixS **mtx, UNUSED Vertex **vtx) {
 }
 
-void func_8001BC54(void) {
+/**
+ * Loop through every existing spectate camera and sort them by index.
+*/
+void spectate_update(void) {
     Object *objPtr;
     Object *temp;
     s32 continueLoop;
@@ -4839,7 +4849,7 @@ void func_8001BC54(void) {
         objPtr = gObjPtrList[i];
         if (!(objPtr->segment.trans.flags & OBJ_FLAGS_DEACTIVATED)) {
             if (objPtr->behaviorId == BHV_CAMERA_CONTROL) {
-                if (gCameraObjCount < 20) {
+                if (gCameraObjCount < CAMCONTROL_COUNT) {
                     (*gCameraObjList)[gCameraObjCount] = objPtr;
                     gCameraObjCount++;
                 }
@@ -4852,7 +4862,7 @@ void func_8001BC54(void) {
         for (i = 0; i < gCameraObjCount - 1; i++) {
             objPtr = (*gCameraObjList)[i + 1];
             temp = (*gCameraObjList)[i];
-            if (temp->properties.common.unk0 > objPtr->properties.common.unk0) {
+            if (temp->properties.camControl.cameraID > objPtr->properties.camControl.cameraID) {
                 (*gCameraObjList)[i] = (*gCameraObjList)[i + 1];
                 (*gCameraObjList)[i + 1] = temp;
                 continueLoop = FALSE;
@@ -4861,7 +4871,7 @@ void func_8001BC54(void) {
     } while (!continueLoop);
 }
 
-Object *get_camera_object(s32 cameraIndex) {
+Object *spectate_object(s32 cameraIndex) {
     if (cameraIndex < 0 || cameraIndex >= gCameraObjCount) {
         return NULL;
     }
@@ -4872,7 +4882,7 @@ Object *get_camera_object(s32 cameraIndex) {
  * Take the current camera passed through the function and compare distances between the next and previous camera.
  * Set the camera to be whichever's closest to the object.
  */
-Object *find_nearest_spectate_camera(Object *obj, s32 *cameraId) {
+Object *spectate_nearest(Object *obj, s32 *cameraId) {
     Object *nextCamera;
     Object *prevCamera;
     Object *currCamera;
@@ -5546,7 +5556,7 @@ void set_cutscene_id(s32 cutsceneID) {
 void func_8001E45C(s32 cutsceneID) {
     if (cutsceneID != gCutsceneID) {
         gCutsceneID = cutsceneID;
-        D_8011ADAC = 0;
+        gPathUpdateOff = FALSE;
         D_8011AE7E = 1;
         if (get_game_mode() == GAMEMODE_MENU) {
             set_frame_blackout_timer();
@@ -5708,7 +5718,7 @@ void func_8001EFA4(Object *arg0, Object *animObj) {
     anim->unk3C = animEntry->fadeAlpha;
     anim->unk42 = 0xFF;
     if (anim->unk18 != NULL) {
-        func_8000488C(anim->unk18);
+        sound_stop(anim->unk18);
     }
     anim->unk18 = 0;
     anim->unk43 = animEntry->unk30;

@@ -112,14 +112,14 @@ typedef struct LevelObjectEntry_AudioLine {
 
 typedef struct LevelObjectEntry_CameraControl {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ s8 unk8;
+    /* 0x08 */ s8 cameraID;
     /* 0x09 */ s8 pad9;
 } LevelObjectEntry_CameraControl;
 
 typedef struct LevelObjectEntry_SetupPoint {
     /* 0x00 */ LevelObjectEntryCommon common;
-    /* 0x08 */ u8 unk8;
-    /* 0x09 */ u8 unk9;
+    /* 0x08 */ u8 racerIndex;
+    /* 0x09 */ u8 entranceID;
     /* 0x0A */ u8 angleY; Hint((Angle, DivideBy:64))
     /* 0x0B */ s8 vehicle; Hint((Enum:Vehicle))
 } LevelObjectEntry_SetupPoint;

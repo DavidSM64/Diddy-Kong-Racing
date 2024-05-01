@@ -235,7 +235,7 @@ void init_track(u32 geometry, u32 skybox, s32 numberOfPlayers, Vehicle vehicle, 
     spawn_skydome(skybox);
     D_8011B110 = 0;
     D_8011B114 = 0x10000;
-    func_80011390();
+    path_enable();
     func_8000C8F8(arg6, 0);
     func_8000C8F8(collectables, 1);
     gScenePlayerViewports = numberOfPlayers;

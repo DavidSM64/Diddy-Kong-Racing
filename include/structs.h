@@ -984,7 +984,7 @@ typedef struct Object_OverridePos {
 
 typedef struct Object_WeaponBalloon {
   /* 0x0 */ f32 radius;
-  /* 0x4 */ s16 unk4;
+  /* 0x4 */ s16 respawnTime;
   /* 0x6 */ s8 unk6[0x2];
 } Object_WeaponBalloon;
 

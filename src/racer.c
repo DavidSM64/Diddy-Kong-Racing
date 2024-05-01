@@ -2498,7 +2498,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         if (tempRacer->magnetTimer == 0) {
             if (tempRacer->magnetSoundMask) {
-                func_8000488C(tempRacer->magnetSoundMask);
+                sound_stop(tempRacer->magnetSoundMask);
                 tempRacer->magnetSoundMask = NULL;
             }
         }
@@ -3032,19 +3032,19 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
                               obj->segment.trans.z_position);
             }
             if (racer->unk14) {
-                func_8000488C(racer->unk14);
+                sound_stop(racer->unk14);
             }
         } else {
             if (racer->unk10) {
-                func_8000488C(racer->unk10);
+                sound_stop(racer->unk10);
             }
         }
     } else {
         if (racer->unk10) {
-            func_8000488C(racer->unk10);
+            sound_stop(racer->unk10);
         }
         if (racer->unk14) {
-            func_8000488C(racer->unk14);
+            sound_stop(racer->unk14);
         }
     }
     // Velocity of steering input
@@ -3216,7 +3216,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         sound_play(soundID, &racer->unk18);
     }
     if (racer->unk18 != NULL && (soundID == SOUND_NONE || racer->velocity > -2.0)) {
-        func_8000488C(racer->unk18);
+        sound_stop(racer->unk18);
     }
     // Apply a bobbing effect when on grass and sand.
     if (racer->velocity < -2.0 && sp68 >= 4) {
@@ -3674,13 +3674,13 @@ void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateR
         racer->x_rotation_vel += (angle >> 3); //!@Delta
     }
     if (racer->unk18) {
-        func_8000488C((void *) racer->unk18);
+        sound_stop((void *) racer->unk18);
     }
     if (racer->unk10) {
-        func_8000488C((void *) racer->unk10);
+        sound_stop((void *) racer->unk10);
     }
     if (racer->unk14) {
-        func_8000488C((void *) racer->unk14);
+        sound_stop((void *) racer->unk14);
     }
     if (racer->unk1FE == 1 || racer->unk1FE == 3) {
         racer->unk1E8 = racer->steerAngle;
@@ -4650,7 +4650,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                                                    NULL);
                         } else {
                             if (racer->weaponSoundMask) {
-                                func_8000488C(racer->weaponSoundMask);
+                                sound_stop(racer->weaponSoundMask);
                             }
                             sound_play_spatial(soundID, obj->segment.trans.x_position, obj->segment.trans.y_position,
                                                obj->segment.trans.z_position, (s32 **) &racer->weaponSoundMask);
@@ -5401,7 +5401,7 @@ void update_camera_finish_race(UNUSED f32 updateRate, Object *obj, Object_Racer 
     f32 distance;
 
     cameraID = racer->spectateCamID;
-    cam = find_nearest_spectate_camera(obj, &cameraID);
+    cam = spectate_nearest(obj, &cameraID);
     if (cam == NULL) {
         gCameraObject->mode = CAMERA_FINISH_CHALLENGE;
         return;
@@ -6210,7 +6210,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
     }
     if (racer->magnetTimer == 0) {
         if (racer->magnetSoundMask != NULL) {
-            func_8000488C(racer->magnetSoundMask);
+            sound_stop(racer->magnetSoundMask);
             racer->magnetSoundMask = NULL;
         }
     }

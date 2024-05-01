@@ -308,7 +308,7 @@ void obj_loop_fireball_octoweapon(Object *obj, s32 updateRate) {
         if (obj->properties.fireball.timer == 0) {
             soundMask = weapon->soundMask;
             if (soundMask != NULL) {
-                func_8000488C(soundMask);
+                sound_stop(soundMask);
             }
             play_sound_at_position(SOUND_POP, obj->segment.trans.x_position, obj->segment.trans.y_position,
                                    obj->segment.trans.z_position, 4, NULL);
@@ -1400,7 +1400,7 @@ void obj_loop_stopwatchman(Object *obj, s32 updateRate) {
  */
 void play_tt_voice_clip(u16 soundID, s32 interrupt) {
     if (gTTSoundMask && interrupt & 1) {
-        func_8000488C(gTTSoundMask); // This is likely wrong and will need to be fixed
+        sound_stop(gTTSoundMask); // This is likely wrong and will need to be fixed
         gTTSoundMask = NULL;
     }
     if (gTTSoundMask == NULL) {
@@ -1804,7 +1804,7 @@ void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2
             entry->order = 0;
         }
     }
-    func_80011390();
+    path_enable();
     obj->properties.animatedObj.behaviourID = entry->actorIndex;
     obj->properties.animatedObj.action = arg2;
     if (arg2 != 0 && (get_buttons_pressed_from_player(PLAYER_ONE) & R_CBUTTONS)) {
@@ -2401,20 +2401,36 @@ void obj_loop_exit(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
+/**
+ * Spectate Camera init func.
+ * Sets the camera ID then signals to update the pathing systems which include spectate cameras.
+*/
 void obj_init_cameracontrol(Object *obj, LevelObjectEntry_CameraControl *entry) {
-    obj->properties.common.unk0 = entry->unk8;
-    func_80011390();
+    obj->properties.camControl.cameraID = entry->cameraID;
+    path_enable();
 }
 
+/**
+ * Spectate Cameras loop func.
+ * Does nothing since all the behaviour is handled globally.
+*/
 void obj_loop_cameracontrol(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
+/**
+ * Racer Spawnpoint init func.
+ * Sets the spawn ID as well as racer index.
+*/
 void obj_init_setuppoint(Object *obj, LevelObjectEntry_SetupPoint *entry) {
-    obj->properties.common.unk0 = entry->unk8;
-    obj->properties.common.unk4 = entry->unk9;
+    obj->properties.setupPoint.racerIndex = entry->racerIndex;
+    obj->properties.setupPoint.entranceID = entry->entranceID;
     obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
 }
 
+/**
+ * Racer Spawnpoint loop func.
+ * Does nothing by itself; the game will use these as an anchor for spawning racer objects.
+*/
 void obj_loop_setuppoint(UNUSED Object *obj, UNUSED s32 updateRate) {
 }
 
@@ -3092,8 +3108,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
  */
 void play_taj_voice_clip(u16 soundID, s32 interrupt) {
     if (gTajSoundMask && interrupt & 1) {
-        func_8000488C(gTajSoundMask);
-        gTajSoundMask = 0;
+        sound_stop(gTajSoundMask);
+        gTajSoundMask = NULL;
     }
     if (!gTajSoundMask) {
         sound_play(soundID, &gTajSoundMask);
@@ -3123,7 +3139,7 @@ void obj_init_checkpoint(Object *obj, LevelObjectEntry_Checkpoint *entry, UNUSED
     scale /= 64;
     obj->segment.trans.scale = scale;
     obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
-    func_80011390();
+    path_enable();
 }
 
 /**
@@ -4303,9 +4319,9 @@ void obj_loop_banana(Object *obj, s32 updateRate) {
             obj->segment.trans.z_position = tempPos[2];
             // Bananas dropped by planes will not have gravity.
             if (banana->droppedVehicleID != VEHICLE_PLANE) {
-                obj->segment.y_velocity -= 1.0;
-                obj->segment.x_velocity *= 0.95;
-                obj->segment.z_velocity *= 0.95;
+                obj->segment.y_velocity -= 1.0; //!@Delta
+                obj->segment.x_velocity *= 0.95; //!@Delta
+                obj->segment.z_velocity *= 0.95; //!@Delta
             } else {
                 obj->segment.x_velocity = 0.0f;
                 obj->segment.y_velocity = 0.0f;
@@ -4574,7 +4590,7 @@ void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) 
 
     obj->segment.trans.scale = obj->segment.header->scale * radius;
     balloon->radius = obj->segment.trans.scale;
-    balloon->unk4 = 0;
+    balloon->respawnTime = 0;
     obj->properties.weaponBalloon.unk4 = 0;
 
     if (get_filtered_cheats() & CHEAT_DISABLE_WEAPONS) {
@@ -4595,7 +4611,7 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
     s32 prevBalloonType;
 
     weaponBalloon = (Object_WeaponBalloon *) weaponBalloonObj->unk64;
-    weaponBalloonObj->segment.trans.scale = weaponBalloon->radius * (1.0 - (weaponBalloon->unk4 / 90.0f));
+    weaponBalloonObj->segment.trans.scale = weaponBalloon->radius * (1.0 - (weaponBalloon->respawnTime / 90.0f));
     if (weaponBalloonObj->segment.trans.scale < 0.001) {
         weaponBalloonObj->segment.trans.scale = 0.001f;
     }
@@ -4609,12 +4625,12 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
         obj_spawn_particle(weaponBalloonObj, updateRate);
         weaponBalloonObj->properties.weaponBalloon.unk4 -= updateRate;
     }
-    if (weaponBalloon->unk4 != 0) {
-        if (weaponBalloon->unk4 != 90 || weaponBalloonObj->interactObj->distance >= 45) {
-            weaponBalloon->unk4 = (weaponBalloon->unk4 - updateRate) - updateRate;
+    if (weaponBalloon->respawnTime != 0) {
+        if (weaponBalloon->respawnTime != 90 || weaponBalloonObj->interactObj->distance >= 45) {
+            weaponBalloon->respawnTime = (weaponBalloon->respawnTime - updateRate) - updateRate;
         }
-        if (weaponBalloon->unk4 < 0) {
-            weaponBalloon->unk4 = 0;
+        if (weaponBalloon->respawnTime < 0) {
+            weaponBalloon->respawnTime = 0;
         }
     } else {
         interactObj = weaponBalloonObj->interactObj;
@@ -4686,7 +4702,7 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
                     }
                     weaponBalloonObj->particleEmitFlags = OBJ_EMIT_PARTICLE_1;
                     obj_spawn_particle(weaponBalloonObj, updateRate);
-                    weaponBalloon->unk4 = 90;
+                    weaponBalloon->respawnTime = 90;
                 }
             }
         }

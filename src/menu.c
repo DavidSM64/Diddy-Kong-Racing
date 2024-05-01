@@ -4306,7 +4306,7 @@ s32 menu_audio_options_loop(s32 updateRate) {
                     sound_play(SOUND_VOICE_DIDDY_POSITIVE5, (s32 *) &D_801269FC);
                 }
             } else if (D_801269FC != NULL) {
-                func_8000488C((u8 *) D_801269FC);
+                sound_stop((u8 *) D_801269FC);
             }
             if (sp30 == 3) {
                 sound_play(SOUND_MENU_BACK3, NULL);
@@ -4328,7 +4328,7 @@ s32 menu_audio_options_loop(s32 updateRate) {
 
 void func_800851FC(void) {
     if (D_801269FC != NULL) {
-        func_8000488C(D_801269FC);
+        sound_stop(D_801269FC);
     }
     if (gOpacityDecayTimer >= 0) {
         music_voicelimit_set(24);
@@ -6813,7 +6813,7 @@ void func_8008B4C8(void) {
             }
         }
         if (D_80126808[characterSelected] != 0) {
-            func_8000488C(D_80126808[characterSelected]);
+            sound_stop(D_80126808[characterSelected]);
         }
         sound_play(((*gCurrCharacterSelectData)[gPlayersCharacterArray[characterSelected]].voiceID +
                     SOUND_VOICE_CHARACTER_SELECTED),
@@ -6831,7 +6831,7 @@ void func_8008B4C8(void) {
                     D_801263DC[i] = 0;
                     gNumberOfReadyPlayers--;
                     if (D_80126808[i] != 0) {
-                        func_8000488C(D_80126808[i]);
+                        sound_stop(D_80126808[i]);
                     }
                     sound_play(((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID +
                                 SOUND_VOICE_CHARACTER_DESELECTED),
@@ -6855,7 +6855,7 @@ void func_8008B758(s8 *activePlayers) {
                     D_801263DC[i] = 0;
                     gNumberOfReadyPlayers -= 1;
                     if (D_80126808[i] != 0) {
-                        func_8000488C(D_80126808[i]);
+                        sound_stop(D_80126808[i]);
                     }
                     sound_play(((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID +
                                 SOUND_VOICE_CHARACTER_DESELECTED),
@@ -6890,7 +6890,7 @@ void func_8008B758(s8 *activePlayers) {
                     D_801263DC[i] = 1;
                     gNumberOfReadyPlayers++;
                     if (D_80126808[i] != 0) {
-                        func_8000488C(D_80126808[i]);
+                        sound_stop(D_80126808[i]);
                     }
                     sound_play(
                         ((*gCurrCharacterSelectData)[gPlayersCharacterArray[i]].voiceID + SOUND_VOICE_CHARACTER_SELECT),

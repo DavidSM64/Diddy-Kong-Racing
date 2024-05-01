@@ -305,7 +305,7 @@ void init_hud(UNUSED s32 viewportCount) {
         gHudAudioData[i].volumeRamp = 0;
         gHudAudioData[i].playerIndex = PLAYER_COMPUTER;
         if (gHudAudioData[i].soundMask) {
-            func_8000488C(gHudAudioData[i].soundMask);
+            sound_stop(gHudAudioData[i].soundMask);
         }
     }
 }
@@ -555,7 +555,7 @@ void hud_audio_init(void) {
     s32 i;
     for (i = 0; i < 2; i++) {
         if (gHudAudioData[i].soundMask) {
-            func_8000488C(gHudAudioData[i].soundMask);
+            sound_stop(gHudAudioData[i].soundMask);
             gHudAudioData[i].soundMask = NULL;
             gHudAudioData[i].volume = 0;
         }
@@ -605,7 +605,7 @@ void hud_audio_update(s32 updateRate) {
             }
         } else {
             if (gHudAudioData[i].soundMask) {
-                func_8000488C(gHudAudioData[i].soundMask);
+                sound_stop(gHudAudioData[i].soundMask);
                 gHudAudioData[i].soundMask = 0;
             }
         }

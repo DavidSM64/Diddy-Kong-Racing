@@ -150,8 +150,8 @@ typedef struct ObjPropertyRacer {
 } ObjPropertyRacer;
 
 typedef struct ObjPropertySetupPoint {
-    s32 unk0; 
-    s32 unk4; 
+    s32 racerIndex; 
+    s32 entranceID; 
 } ObjPropertySetupPoint;
 
 typedef struct ObjPropertyWeapon {
@@ -160,6 +160,10 @@ typedef struct ObjPropertyWeapon {
     u8 unk5;
     s16 unk6;
 } ObjPropertyWeapon;
+
+typedef struct ObjPropertyCamControl {
+    s32 cameraID; 
+} ObjPropertyCamControl;
 
 typedef struct ObjProperties {
     union {
@@ -193,6 +197,7 @@ typedef struct ObjProperties {
         ObjPropertyRacer racer;
         ObjPropertySetupPoint setupPoint;
         ObjPropertyWeapon weapon;
+        ObjPropertyCamControl camControl;
     };
 } ObjProperties;
 
