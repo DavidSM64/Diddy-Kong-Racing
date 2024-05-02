@@ -430,10 +430,10 @@ glabel func_80010994
 .L80010FB4:
 /* 011BB4 80010FB4 3C078012 */  lui   $a3, %hi(gNumRacers) # $a3, 0x8012
 /* 011BB8 80010FB8 8CE7AEF0 */  lw    $a3, %lo(gNumRacers)($a3)
-/* 011BBC 80010FBC 3C098012 */  lui   $t1, %hi(D_8011AD4E) # $t1, 0x8012
+/* 011BBC 80010FBC 3C098012 */  lui   $t1, %hi(gRaceEndTimer) # $t1, 0x8012
 /* 011BC0 80010FC0 10E00010 */  beqz  $a3, .L80011004
 /* 011BC4 80010FC4 00000000 */   nop   
-/* 011BC8 80010FC8 8529AD4E */  lh    $t1, %lo(D_8011AD4E)($t1)
+/* 011BC8 80010FC8 8529AD4E */  lh    $t1, %lo(gRaceEndTimer)($t1)
 /* 011BCC 80010FCC 00000000 */  nop   
 /* 011BD0 80010FD0 15200007 */  bnez  $t1, .L80010FF0
 /* 011BD4 80010FD4 00000000 */   nop   
@@ -444,7 +444,7 @@ glabel func_80010994
 /* 011BE8 80010FE8 10000006 */  b     .L80011004
 /* 011BEC 80010FEC 00000000 */   nop   
 .L80010FF0:
-/* 011BF0 80010FF0 0C006A3D */  jal   func_8001A8F4
+/* 011BF0 80010FF0 0C006A3D */  jal   race_transition_adventure
 /* 011BF4 80010FF4 02802025 */   move  $a0, $s4
 /* 011BF8 80010FF8 3C078012 */  lui   $a3, %hi(gNumRacers) # $a3, 0x8012
 /* 011BFC 80010FFC 8CE7AEF0 */  lw    $a3, %lo(gNumRacers)($a3)

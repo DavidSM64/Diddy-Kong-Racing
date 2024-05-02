@@ -1804,7 +1804,7 @@ void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2
         func_8001F3C8(entry->actorIndex);
     }
     if (entry->channel == -1) {
-        entry->channel = get_cutscene_id();
+        entry->channel = cutscene_id();
     }
     if (entry->channel == 20) {
         entry->actorIndex |= 0x80;
@@ -1829,13 +1829,13 @@ void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2
     if (arg2 != 0 && (get_buttons_pressed_from_player(PLAYER_ONE) & R_CBUTTONS)) {
         obj->properties.animatedObj.action = 2;
     }
-    if (((get_cutscene_id() == entry->channel) || (entry->channel == 20)) && (obj->unk64 == NULL) &&
-        (entry->order == 0) && (entry->objectIdToSpawn != -1)) {
+    if (((cutscene_id() == entry->channel) || (entry->channel == 20)) && (obj->unk64 == NULL) && (entry->order == 0) &&
+        (entry->objectIdToSpawn != -1)) {
         func_8001F23C(obj, entry);
     }
     obj64 = &obj->unk64->animation;
     if (obj->unk64 != 0) {
-        func_8001EFA4(obj, (Object *) obj64);
+        obj_init_animcamera(obj, (Object *) obj64);
         if (entry->order != 0 || obj64->unk4A != entry->objectIdToSpawn) {
             free_object((Object *) obj64);
             obj->unk64 = NULL;
@@ -2128,22 +2128,26 @@ void obj_loop_char_select(Object *charSelectObj, s32 updateRate) {
     }
 }
 
+/**
+ * Camera Animation loop func.
+ * Follows a path and then writes to the view perspective.
+ */
 void obj_loop_animcamera(Object *obj, s32 updateRate) {
     s32 temp_v0;
-    s32 phi_v1;
-    Object_AnimCamera *obj64;
+    s32 updateCam;
+    Object_Animation *camera;
 
     temp_v0 = func_8001F460(obj, updateRate, obj);
     obj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
-    obj64 = &obj->unk64->anim_camera;
+    camera = &obj->unk64->animation;
     if (temp_v0 == 0) {
         if (get_viewport_count() == VIEWPORTS_COUNT_1_PLAYER) {
-            phi_v1 = func_800210CC(obj64->unk44);
+            updateCam = func_800210CC(camera->unk44);
         } else {
-            phi_v1 = 1;
+            updateCam = TRUE;
         }
-        if (phi_v1) {
-            write_to_object_render_stack(obj64->unk30, obj->segment.trans.x_position, obj->segment.trans.y_position,
+        if (updateCam) {
+            write_to_object_render_stack(camera->cameraID, obj->segment.trans.x_position, obj->segment.trans.y_position,
                                          obj->segment.trans.z_position, 0x8000 - obj->segment.trans.y_rotation,
                                          -obj->segment.trans.x_rotation, obj->segment.trans.z_rotation);
         }
@@ -3333,7 +3337,7 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
 /**
  * Golden Balloon init func.
  * Assigns the balloon ID either from the entry, or from the balloon ID table.
-*/
+ */
 void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) {
     Object_NPC *obj64;
     f32 scalef;
@@ -3374,7 +3378,7 @@ void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) 
  * Made invisible every frame, but made visible during behaviour if applicable.
  * Follows a path, like Taj and T.T, until collected.
  * Auto deletes if the ID is already claimed by the save flags.
-*/
+ */
 void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
     LevelObjectEntry *levelEntry;
     ObjectInteraction *interactObj;
@@ -3466,7 +3470,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
 /**
  * Door init func.
  * Sets all door parameters, which include type, direction and number of balloons needed to open
-*/
+ */
 void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     Object_Door *door;
     f32 radius;
@@ -3512,7 +3516,7 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
  * Door loop func.
  * If the requirement to open the door is not met, play a jingle and show a message.
  * Since there's a number of different kinds of doors, this code handles each type.
-*/
+ */
 void obj_loop_door(Object *doorObj, s32 updateRate) {
     s32 playSound;
     s16 angleVel;
@@ -3722,7 +3726,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
 /**
  * T.T Door init func.
  * A much simpler version of the regular door, but has many of the same attributes.
-*/
+ */
 void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
     Object_Door *obj64;
     f32 radius;
@@ -3929,16 +3933,20 @@ void obj_loop_trigger(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
+/**
+ * Moving Bridge init func.
+ * Sets hitbox info and the model from spawn info.
+ */
 void obj_init_bridge_whaleramp(Object *obj, LevelObjectEntry_Bridge_WhaleRamp *entry) {
-    Object_Bridge_WhaleRamp *temp = &obj->unk64->bridge_whale_ramp;
+    Object_Bridge_WhaleRamp *bridge = &obj->unk64->bridge_whale_ramp;
     obj->segment.object.modelIndex = entry->modelIndex;
     obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
-    temp->unk0 = obj->segment.trans.y_position;
+    bridge->homeY = obj->segment.trans.y_position;
     obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0020;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 20;
     obj->interactObj->pushForce = 0;
-    temp->unk4 = 0;
+    bridge->soundMask = NULL;
     if (obj->segment.object.modelIndex >= obj->segment.header->numberOfModelIds) {
         obj->segment.object.modelIndex = 0;
     }
@@ -3953,17 +3961,17 @@ void obj_init_bridge_whaleramp(Object *obj, LevelObjectEntry_Bridge_WhaleRamp *e
 void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
     Object *racerObj;
     UNUSED ObjectTransform *temp_v0_4;
-    f32 temp_f2;
+    f32 bobAmount;
     Object_Bridge_WhaleRamp *whaleRamp;
     LevelObjectEntry_Bridge_WhaleRamp *entry;
     f32 updateRateF;
     s32 vehicleID;
-    f32 sp50;
-    f32 sp4C;
-    f32 sp48;
-    f32 sp44;
-    f32 sp40;
-    f32 sp3C;
+    f32 bellX1;
+    f32 bellY1;
+    f32 bellZ1;
+    f32 bellX2;
+    f32 bellY2;
+    f32 bellZ2;
     Object_Racer *racer;
 
     whaleRamp = (Object_Bridge_WhaleRamp *) obj->unk64;
@@ -3976,46 +3984,44 @@ void obj_loop_bridge_whaleramp(Object *obj, s32 updateRate) {
 
     if (entry->unkB != 3) {
         if (obj->properties.common.unk0 != 0) {
-            temp_f2 = (2.0 * (f32) entry->unkE);
-            if (temp_f2 > 0.0f) {
-                if (obj->segment.trans.y_position < (whaleRamp->unk0 + temp_f2)) {
-                    obj->segment.trans.y_position += (updateRateF * 2);
+            bobAmount = 2.0 * (f32) entry->bobAmount;
+            if (bobAmount > 0.0f) {
+                if (obj->segment.trans.y_position < whaleRamp->homeY + bobAmount) {
+                    obj->segment.trans.y_position += updateRateF * 2;
                 }
             } else {
-                if ((whaleRamp->unk0 + temp_f2) < obj->segment.trans.y_position) {
-                    obj->segment.trans.y_position -= (updateRateF * 2);
+                if (whaleRamp->homeY + bobAmount < obj->segment.trans.y_position) {
+                    obj->segment.trans.y_position -= updateRateF * 2;
                 }
             }
         } else if (entry->radius > 0) {
-            if (whaleRamp->unk0 < obj->segment.trans.y_position) {
-                obj->segment.trans.y_position -= (updateRateF * 2);
+            if (whaleRamp->homeY < obj->segment.trans.y_position) {
+                obj->segment.trans.y_position -= updateRateF * 2;
             }
         } else {
-            if (obj->segment.trans.y_position < whaleRamp->unk0) {
-                obj->segment.trans.y_position += (updateRateF * 2);
+            if (obj->segment.trans.y_position < whaleRamp->homeY) {
+                obj->segment.trans.y_position += updateRateF * 2;
             }
         }
     } else if (obj->properties.common.unk0 != 0) {
         if (obj->segment.trans.x_rotation >= -0x12FF) {
-            obj->segment.trans.x_rotation -= (updateRate * 0x2D);
+            obj->segment.trans.x_rotation -= updateRate * 0x2D;
         }
-        if (whaleRamp->unk4 == 0) {
-            whaleRamp = whaleRamp;
-            func_8001E36C(entry->unkA, &sp50, &sp4C, &sp48);
-            play_sound_at_position(SOUND_DRAWBRIDGE_BELL, sp50, sp4C, sp48, 1, &whaleRamp->unk4);
+        if (whaleRamp->soundMask == NULL) {
+            obj_bridge_pos(entry->unkA, &bellX1, &bellY1, &bellZ1);
+            play_sound_at_position(SOUND_DRAWBRIDGE_BELL, bellX1, bellY1, bellZ1, 1, &whaleRamp->soundMask);
         }
     } else {
         if (obj->segment.trans.x_rotation < 0) {
-            obj->segment.trans.x_rotation = obj->segment.trans.x_rotation + (updateRate * 0x28);
-            if (whaleRamp->unk4 == 0) {
-                whaleRamp = whaleRamp;
-                func_8001E36C(entry->unkA, &sp44, &sp40, &sp3C);
-                play_sound_at_position(SOUND_DRAWBRIDGE_BELL, sp44, sp40, sp3C, 1, &whaleRamp->unk4);
+            obj->segment.trans.x_rotation += updateRate * 0x28;
+            if (whaleRamp->soundMask == NULL) {
+                obj_bridge_pos(entry->unkA, &bellX2, &bellY2, &bellZ2);
+                play_sound_at_position(SOUND_DRAWBRIDGE_BELL, bellX2, bellY2, bellZ2, 1, &whaleRamp->soundMask);
             }
         } else {
             obj->segment.trans.x_rotation = 0;
-            if (whaleRamp->unk4 != NULL) {
-                func_800096F8(whaleRamp->unk4);
+            if (whaleRamp->soundMask != NULL) {
+                func_800096F8(whaleRamp->soundMask);
             }
         }
     }
@@ -4592,7 +4598,7 @@ void obj_loop_worldkey(Object *worldKeyObj, s32 updateRate) {
 void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) {
     s32 cheats;
     Object_WeaponBalloon *balloon;
-    f32 radius;
+    f32 scale;
 
     obj->interactObj->flags = INTERACT_FLAGS_TANGIBLE;
     obj->interactObj->unk11 = 4;
@@ -4624,24 +4630,29 @@ void obj_init_weaponballoon(Object *obj, LevelObjectEntry_WeaponBalloon *entry) 
     obj->segment.object.modelIndex = entry->balloonType;
     obj->properties.weaponBalloon.balloonID = obj->segment.object.modelIndex;
 
-    radius = entry->radius & 0xFF;
-    if (radius < 10) {
-        radius = 10;
+    scale = entry->scale & 0xFF;
+    if (scale < 10) {
+        scale = 10;
     }
-    radius /= 64;
+    scale /= 64;
 
     balloon = &obj->unk64->weapon_balloon;
 
-    obj->segment.trans.scale = obj->segment.header->scale * radius;
-    balloon->radius = obj->segment.trans.scale;
+    obj->segment.trans.scale = obj->segment.header->scale * scale;
+    balloon->scale = obj->segment.trans.scale;
     balloon->respawnTime = 0;
-    obj->properties.weaponBalloon.unk4 = 0;
+    obj->properties.weaponBalloon.particleTimer = 0;
 
     if (get_filtered_cheats() & CHEAT_DISABLE_WEAPONS) {
         free_object(obj);
     }
 }
 
+/**
+ * Weapon Balloon loop func.
+ * Checks for any racers going over it.
+ * It gives them a weapon, then marks as disappeared, before slowly regrowing and becoming tangible again.
+ */
 void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
     UNUSED s32 pad;
     Object_Racer *racer;
@@ -4655,7 +4666,7 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
     s32 prevBalloonType;
 
     weaponBalloon = (Object_WeaponBalloon *) weaponBalloonObj->unk64;
-    weaponBalloonObj->segment.trans.scale = weaponBalloon->radius * (1.0 - (weaponBalloon->respawnTime / 90.0f));
+    weaponBalloonObj->segment.trans.scale = weaponBalloon->scale * (1.0 - (weaponBalloon->respawnTime / 90.0f));
     if (weaponBalloonObj->segment.trans.scale < 0.001) {
         weaponBalloonObj->segment.trans.scale = 0.001f;
     }
@@ -4664,10 +4675,10 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
     } else {
         weaponBalloonObj->segment.trans.flags &= ~OBJ_FLAGS_INVISIBLE;
     }
-    if (weaponBalloonObj->properties.weaponBalloon.unk4 > 0) {
+    if (weaponBalloonObj->properties.weaponBalloon.particleTimer > 0) {
         weaponBalloonObj->particleEmitFlags = OBJ_EMIT_PARTICLE_1;
         obj_spawn_particle(weaponBalloonObj, updateRate);
-        weaponBalloonObj->properties.weaponBalloon.unk4 -= updateRate;
+        weaponBalloonObj->properties.weaponBalloon.particleTimer -= updateRate;
     }
     if (weaponBalloon->respawnTime != 0) {
         if (weaponBalloon->respawnTime != 90 || weaponBalloonObj->interactObj->distance >= 45) {
@@ -4709,12 +4720,12 @@ void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate) {
                         racer->balloon_level = 2;
                         levelMask = 2;
                     }
-                    powerupTable = (s8 *) get_misc_asset(ASSET_MISC_12);
+                    powerupTable = (s8 *) get_misc_asset(ASSET_MISC_BALLOON_DATA);
                     prevBalloonQuantity = racer->balloon_quantity;
                     racer->balloon_quantity = powerupTable[(racer->balloon_type * 10) + (racer->balloon_level * 2) + 1];
                     racer->unk209 |= 1;
                     if (get_number_of_active_players() < THREE_PLAYERS) {
-                        weaponBalloonObj->properties.weaponBalloon.unk4 = 16;
+                        weaponBalloonObj->properties.weaponBalloon.particleTimer = 16;
                     }
                     if (racer->playerIndex == PLAYER_COMPUTER) {
                         play_sound_at_position(SOUND_BALLOON_POP, weaponBalloonObj->segment.trans.x_position,

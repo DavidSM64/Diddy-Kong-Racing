@@ -329,7 +329,7 @@ void set_current_text(s32 textID) {
 /**
  * Returns nonzero if a textbox is visible.
  * The number depends on what kind it is.
-*/
+ */
 s32 textbox_visible(void) {
     s32 result = 0;
     if (gTextTableExists) {

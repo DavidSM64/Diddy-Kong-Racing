@@ -194,7 +194,7 @@ typedef struct LevelObjectEntry_WeaponBalloon {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ u8 unk8; // Unused?
     /* 0x09 */ u8 balloonType; Hint((Enum:BalloonType))
-    /* 0x0A */ u8 radius; Hint((Scale, DivideBy:64)) // This is divided by 64 to get actual scale.
+    /* 0x0A */ u8 scale; Hint((Scale, DivideBy:64)) // This is divided by 64 to get actual scale.
     /* 0x0B */ u8 padB; 
 } LevelObjectEntry_WeaponBalloon;
 
@@ -304,7 +304,7 @@ typedef struct LevelObjectEntry_Bridge_WhaleRamp {
     /* 0x0B */ u8 unkB;
     /* 0x0C */ u8 radius;
     /* 0x0D */ u8 unkD;
-    /* 0x0E */ s8 unkE;
+    /* 0x0E */ s8 bobAmount; // How far up and down the whale goes
     /* 0x0F */ u8 allowedVehicles;
 } LevelObjectEntry_Bridge_WhaleRamp;
 
@@ -332,11 +332,13 @@ typedef struct LevelObjectEntry_LensFlare {
     /* 0x0C */ u8 set1;
     /* 0x0D */ u8 set2;
     /* 0x0E */ u8 largeShine;
+    /* 0x0A */ u8 pad[5];
 } LevelObjectEntry_LensFlare;
 
 typedef struct LevelObjectEntry_LensFlareSwitch {
     /* 0x00 */ LevelObjectEntryCommon common;
     /* 0x08 */ s16 radius;
+    /* 0x0A */ u8 pad[10];
 } LevelObjectEntry_LensFlareSwitch;
 
 typedef struct LevelObjectEntry_CollectEgg {

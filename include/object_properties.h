@@ -141,7 +141,7 @@ typedef struct ObjPropertyWorldKey {
 
 typedef struct ObjPropertyWeaponBalloon {
 	s32 balloonID;
-    s32 unk4;
+    s32 particleTimer;
 } ObjPropertyWeaponBalloon;
 
 typedef struct ObjPropertyRacer {

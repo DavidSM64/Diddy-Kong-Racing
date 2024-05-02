@@ -221,7 +221,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
     } else {
         racer->unk1C6 = 0;
     }
-    if (func_8001AE44() != 0) {
+    if (race_finish_timer() != 0) {
         gCurrentRacerInput |= A_BUTTON;
     } else {
         index = 0;
@@ -308,7 +308,7 @@ void func_80042D20(Object *obj, Object_Racer *racer, s32 updateRate) {
             if ((f32) (s16) ((racer->aiSkill - 2) << 2) <= 300.0f - D_8011D544) {
                 gCurrentRacerInput |= A_BUTTON;
             }
-            miscAsset4 = (u8 *) get_misc_asset(ASSET_MISC_12);
+            miscAsset4 = (u8 *) get_misc_asset(ASSET_MISC_BALLOON_DATA);
             if (racer->balloon_level < 3) {
                 balloonType = miscAsset4[racer->balloon_type * 3 + racer->balloon_level];
             } else {
@@ -555,7 +555,7 @@ void increment_ai_behaviour_chances(Object *obj, Object_Racer *racer, s32 update
     } else {
         sBalloonLevelAI = 0;
     }
-    test = (s8 *) get_misc_asset(ASSET_MISC_12);
+    test = (s8 *) get_misc_asset(ASSET_MISC_BALLOON_DATA);
     if ((gCurrentButtonsReleased & Z_TRIG) && racer->balloon_quantity) {
         if (racer->balloon_level < 3) {
             balloonType = test[racer->balloon_type * 3 + racer->balloon_level];
@@ -3445,7 +3445,7 @@ void func_8005250C(Object *obj, Object_Racer *racer, s32 updateRate) {
 
     angleVel = 0;
     if (racer->balloon_quantity > 0) {
-        balloonAsset = (s8 *) get_misc_asset(ASSET_MISC_12);
+        balloonAsset = (s8 *) get_misc_asset(ASSET_MISC_BALLOON_DATA);
 
         angleVel = balloonAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2)];
     }
@@ -4435,7 +4435,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                 play_char_horn_sound(obj, racer);
             }
         } else {
-            miscAsset = (s8 *) get_misc_asset(ASSET_MISC_12);
+            miscAsset = (s8 *) get_misc_asset(ASSET_MISC_BALLOON_DATA);
             weaponID = miscAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2)];
             if (miscAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2)] == WEAPON_NONE) {
                 racer->balloon_quantity = 0;

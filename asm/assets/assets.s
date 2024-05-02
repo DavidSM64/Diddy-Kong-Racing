@@ -8502,8 +8502,8 @@ glabel ASSET_MISC_RACER_HANDLING
 .incbin "./build/us_1.0/assets/misc/racer_stats/racer_handling_data.bin"
 glabel ASSET_MISC_RACER_UNUSED_11
 .incbin "./build/us_1.0/assets/misc/racer_stats/racer_unused_11_data.bin"
-glabel ASSET_MISC_12
-.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_12.bin"
+glabel ASSET_MISC_BALLOON_DATA
+.incbin "./build/us_1.0/assets/misc/unlabeled/balloon_data.bin"
 glabel ASSET_MISC_13
 .incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_13.bin"
 glabel ASSET_MISC_14
@@ -8636,7 +8636,7 @@ glabel ASSET_MISC_TABLE
 .word (ASSET_MISC_RACER_WEIGHT - ASSET_MISC) / 4
 .word (ASSET_MISC_RACER_HANDLING - ASSET_MISC) / 4
 .word (ASSET_MISC_RACER_UNUSED_11 - ASSET_MISC) / 4
-.word (ASSET_MISC_12 - ASSET_MISC) / 4
+.word (ASSET_MISC_BALLOON_DATA - ASSET_MISC) / 4
 .word (ASSET_MISC_13 - ASSET_MISC) / 4
 .word (ASSET_MISC_14 - ASSET_MISC) / 4
 .word (ASSET_MISC_15 - ASSET_MISC) / 4

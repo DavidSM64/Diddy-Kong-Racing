@@ -41,8 +41,8 @@
 
 /************ .data ************/
 
-FadeTransition D_800DC6F0 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 30, 15);
-FadeTransition D_800DC6F8 = FADE_TRANSITION(FADE_CIRCLE, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, 15);
+FadeTransition gTajChallengeTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 30, 15);
+FadeTransition gBalloonCutsceneTransition = FADE_TRANSITION(FADE_CIRCLE, FADE_FLAG_NONE, FADE_COLOR_BLACK, 30, 15);
 
 s32 D_800DC700 = 0;
 s32 D_800DC704 = 0; // Currently unknown, might be a different type.
@@ -53,10 +53,10 @@ s32 D_800DC714 = 0; // Currently unknown, might be a different type.
 Object *gGhostObj = NULL;
 s8 D_800DC71C = 0;
 s32 gObjectTexAnim = FALSE;
-s16 D_800DC724 = 0x2A30;
-s16 D_800DC728 = -1;
-s16 D_800DC72C = 0;
-u8 gHasGhostToSave = 0;
+s16 gTimeTrialTime = 0x2A30;
+s16 gTimeTrialVehicle = -1;
+s16 gTimeTrialCharacter = 0;
+u8 gHasGhostToSave = FALSE;
 u8 gTimeTrialStaffGhost = FALSE;
 u8 gBeatStaffGhost = FALSE;
 s8 D_800DC73C = 0;
@@ -167,8 +167,8 @@ u32 gMagnetColours[3] = {
     COLOUR_RGBA32(16, 64, 255, 0), // Level 2
     COLOUR_RGBA32(16, 255, 64, 0), // Level 3
 };
-FadeTransition D_800DC858 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 40, 0xFFFF);
-FadeTransition D_800DC860 = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 40, 0);
+FadeTransition gRaceEndFade = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_NONE, FADE_COLOR_BLACK, 40, -1);
+FadeTransition gRaceEndTransition = FADE_TRANSITION(FADE_FULLSCREEN, FADE_FLAG_OUT, FADE_COLOR_BLACK, 40, 0);
 
 /*******************************/
 
@@ -215,10 +215,10 @@ s16 gTransformPosX;
 s16 gTransformPosY;
 s16 gTransformPosZ;
 s16 gTransformAngleY;
-s16 D_8011AD4E;
-s8 D_8011AD50;
+s16 gRaceEndTimer;
+s8 gRaceEndStage;
 s8 gNumRacersSaved;
-s8 D_8011AD52;
+UNUSED s8 unused_D_8011AD52;
 s8 D_8011AD53;
 s32 D_8011AD54;
 Object *(*gSpawnObjectHeap)[sizeof(Object)];
@@ -269,8 +269,8 @@ s16 gCutsceneID;
 s16 D_8011AE7C;
 s8 D_8011AE7E;
 s16 gTTGhostTimeToBeat;
-s16 D_8011AE82;         // Current Vehicle being used in track?
-s16 gMapDefaultVehicle; // Vehicle enum
+s16 gPrevTimeTrialVehicle; // Current Vehicle being used in track?
+s16 gMapDefaultVehicle;    // Vehicle enum
 s32 D_8011AE88;
 Gfx *gObjectCurrDisplayList;
 MatrixS *gObjectCurrMatrix;
@@ -889,7 +889,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
     gameMode = get_game_mode();
     settings = get_settings();
     miscAsset16 = (s8 *) get_misc_asset(3);
-    D_8011AE82 = D_8011ADC5;
+    gPrevTimeTrialVehicle = D_8011ADC5;
     tajFlags = settings->courseFlagsPtr[settings->courseId];
     if (!(tajFlags & 1)) { // Check if the player has not visited the course yet.
         settings->courseFlagsPtr[settings->courseId] = tajFlags | 1;
@@ -923,7 +923,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         }
     }
     D_8011ADC5 = vehicle;
-    D_8011AE82 = D_8011ADC5;
+    gPrevTimeTrialVehicle = D_8011ADC5;
     numPlayers = arg2 + 1;
     gNumRacers = 8;
     D_800DC740 = 0;
@@ -1172,11 +1172,11 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
         func_80059944();
         D_8011AD38 = func_8001B668(0);
         gHasGhostToSave = 0;
-        if (D_800DC728 >= 5) {
-            D_800DC728 = 0;
+        if (gTimeTrialVehicle >= 5) {
+            gTimeTrialVehicle = 0;
         }
         if (func_8001B288() != 0) {
-            objectId = D_800DC7A8[(D_800DC728 * 10) + D_800DC72C];
+            objectId = D_800DC7A8[(gTimeTrialVehicle * 10) + gTimeTrialCharacter];
             entry->common.size = ((objectId & 0x100) >> 1) | 0x10;
             entry->common.objectID = objectId;
             entry->common.x = spF4[0];
@@ -1262,7 +1262,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             }
         }
     }
-    D_8011AD4E = 0;
+    gRaceEndTimer = 0;
     D_8011ADB4 = 0;
     set_next_taj_challenge_menu(0);
     if (settings->worldId == WORLD_CENTRAL_AREA) {
@@ -2209,6 +2209,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_800101AC.s")
 
 #ifdef NON_MATCHING
 // Minor regalloc diffs
+// obj_update
 void func_80010994(s32 updateRate) {
     s32 i;
     s32 tempVal;
@@ -2332,10 +2333,10 @@ void func_80010994(s32 updateRate) {
             func_8001E93C();
         }
         if (gNumRacers != 0) {
-            if (D_8011AD4E == 0) {
+            if (gRaceEndTimer == 0) {
                 func_80019808(updateRate);
             } else {
-                func_8001A8F4(updateRate);
+                race_transition_adventure(updateRate);
             }
         }
         func_80008438(gRacersByPort, gNumRacers, updateRate);
@@ -4241,13 +4242,22 @@ s8 set_course_finish_flags(Settings *settings) {
     return gFirstTimeFinish;
 }
 
-void func_8001A8D4(s32 arg0) {
-    D_8011AD4E = 300;
-    D_8011AD50 = 0;
-    D_8011AD52 = arg0;
+/**
+ * Sets the countdown ready for the level to fade out.
+ * Begins the timer that exits the level in 5 seconds.
+ */
+void race_finish_adventure(UNUSED s32 unusedArg) {
+    gRaceEndTimer = 300;
+    gRaceEndStage = 0;
+    unused_D_8011AD52 = unusedArg;
 }
 
-void func_8001A8F4(s32 updateRate) {
+/**
+ * Begins counting down, once it reaches 0, start stopping all the race behaviours.
+ * This function is also where the Taj Balloon cutscene is also handled.
+ * After that's done, write to save and send the player back to the hub.
+ */
+void race_transition_adventure(s32 updateRate) {
     s32 i;
     Object_Racer *racer;
     Object *prevPort0Racer;
@@ -4257,16 +4267,16 @@ void func_8001A8F4(s32 updateRate) {
     u32 cutsceneTimerLimit;
 
     set_pause_lockout_timer(1);
-    sp30 = D_8011AD4E;
-    D_8011AD4E -= updateRate;
-    if (D_8011AD4E <= 0) {
-        D_8011AD4E = -1;
+    sp30 = gRaceEndTimer;
+    gRaceEndTimer -= updateRate;
+    if (gRaceEndTimer <= 0) {
+        gRaceEndTimer = -1;
     }
-    if (sp30 > 50 && D_8011AD4E <= 50) {
-        transition_begin(&D_800DC858);
+    if (sp30 > 50 && gRaceEndTimer <= 50) {
+        transition_begin(&gRaceEndFade);
     }
     sp30 = 0;
-    if (D_8011AD50 == 0 && D_8011AD4E == -1) {
+    if (gRaceEndStage == 0 && gRaceEndTimer == -1) {
         for (i = 0; i < gNumRacers; i++) {
             racer = &(*gRacers)[i]->unk64->racer;
             racer->magnetTargetObj = NULL;
@@ -4302,10 +4312,10 @@ void func_8001A8F4(s32 updateRate) {
             }
         }
         gNumRacersSaved = gNumRacers;
-        D_8011AD50 = 1;
+        gRaceEndStage = 1;
     }
-    if (D_8011AD50 == 1) {
-        hud_visibility(0);
+    if (gRaceEndStage == 1) {
+        hud_visibility(FALSE);
         gNumRacersSaved--;
         if (gNumRacersSaved > 0) {
             i = 0;
@@ -4322,25 +4332,25 @@ void func_8001A8F4(s32 updateRate) {
             gNumRacers--;
 
         } else {
-            D_8011AD50 = 2;
+            gRaceEndStage = 2;
         }
     }
-    if (D_8011AD50 == 2) {
+    if (gRaceEndStage == 2) {
         prevPort0Racer = (*gRacers)[0];
         racer = &prevPort0Racer->unk64->racer;
         func_800230D0(prevPort0Racer, racer);
         racer->raceFinished = FALSE;
-        D_8011AD50 = 3;
+        gRaceEndStage = 3;
         func_8001E45C(CUTSCENE_ID_UNK_A);
         gBalloonCutsceneTimer = 0;
         func_8001E93C();
     }
-    if (D_8011AD50 == 3) {
-        transition_begin(&D_800DC860);
-        D_8011AD50 = 4;
+    if (gRaceEndStage == 3) {
+        transition_begin(&gRaceEndTransition);
+        gRaceEndStage = 4;
         set_anti_aliasing(TRUE);
     }
-    if (D_8011AD50 == 4) {
+    if (gRaceEndStage == 4) {
         set_anti_aliasing(TRUE);
         disable_racer_input();
         if (!(get_current_level_race_type() & RACETYPE_CHALLENGE_BATTLE)) {
@@ -4363,17 +4373,20 @@ void func_8001A8F4(s32 updateRate) {
         }
         if (func_800214C4() != 0 || (i != 0 && check_fadeout_transition() == 0)) {
             if (i != 0) {
-                transition_begin(&D_800DC6F8);
+                transition_begin(&gBalloonCutsceneTransition);
             }
             level_transition_begin(2);
-            D_8011AD50 = 5;
+            gRaceEndStage = 5;
             settings->cutsceneFlags |= 0x40000;
         }
     }
 }
 
-s16 func_8001AE44(void) {
-    return D_8011AD4E;
+/**
+ * Returns the race finish timer.
+ */
+s16 race_finish_timer(void) {
+    return gRaceEndTimer;
 }
 
 /**
@@ -4383,12 +4396,17 @@ u32 get_balloon_cutscene_timer(void) {
     return gBalloonCutsceneTimer;
 }
 
-void func_8001AE64(void) {
+/**
+ * Checks if the fastest lap or the race time is faster than the current record.
+ * Save those if they are, and if the staff ghost is not enabled, enable it for the next attempt.
+ * The staff ghost comparison is also called here.
+ */
+void race_finish_time_trial(void) {
     s32 bestCourseTime;
     s32 bestRacerTime;
     s32 i;
     s32 courseTime;
-    s32 temp;
+    s32 vehicleID;
     s32 curRacerLapTime;
     s32 j;
     Object_Racer *curRacer;
@@ -4409,8 +4427,8 @@ void func_8001AE64(void) {
         if (curRacer->unk2 >= 0) {
             if (curRacer->unk2 < get_number_of_active_players()) {
                 settings->racers[curRacer->unk2].best_times = 0;
-                temp = curRacer->vehicleIDPrev;
-                if ((temp >= 0) && (temp < 3)) {
+                vehicleID = curRacer->vehicleIDPrev;
+                if (vehicleID >= VEHICLE_CAR && vehicleID < NUMBER_OF_PLAYER_VEHICLES) {
                     courseTime = 0;
                     for (j = 0; j < levelHeader->laps && j < 5; j++) {
                         settings->racers[curRacer->unk2].lap_times[j] = curRacer->lap_times[j];
@@ -4432,36 +4450,36 @@ void func_8001AE64(void) {
             }
         }
     }
-    settings->display_times = 0;
+    settings->display_times = FALSE;
     if (gIsTimeTrial) {
-        temp = D_8011AE82;
-        if ((temp >= 3) || (temp < 0)) {
-            temp = 0;
+        vehicleID = gPrevTimeTrialVehicle;
+        if (vehicleID >= NUMBER_OF_PLAYER_VEHICLES || vehicleID < VEHICLE_CAR) {
+            vehicleID = VEHICLE_CAR;
         }
-        settings->display_times = 1;
-        if ((settings->unk115[0] == 0)) {
-            if ((settings->flapTimesPtr[temp][settings->courseId] == 0) ||
-                (bestRacerTime < settings->flapTimesPtr[temp][settings->courseId])) {
-                settings->flapTimesPtr[temp][settings->courseId] = bestRacerTime;
+        settings->display_times = TRUE;
+        if (settings->unk115[0] == 0) {
+            if ((settings->flapTimesPtr[vehicleID][settings->courseId] == NULL) ||
+                (bestRacerTime < settings->flapTimesPtr[vehicleID][settings->courseId])) {
+                settings->flapTimesPtr[vehicleID][settings->courseId] = bestRacerTime;
                 settings->racers[settings->unk115[0]].best_times |= 1 << settings->unk115[1];
             }
         }
-        if ((settings->timeTrialRacer == 0)) {
-            if ((settings->courseTimesPtr[temp][settings->courseId] == 0) ||
-                (bestCourseTime < settings->courseTimesPtr[temp][settings->courseId])) {
-                settings->courseTimesPtr[temp][settings->courseId] = bestCourseTime;
+        if (settings->timeTrialRacer == 0) {
+            if ((settings->courseTimesPtr[vehicleID][settings->courseId] == NULL) ||
+                (bestCourseTime < settings->courseTimesPtr[vehicleID][settings->courseId])) {
+                settings->courseTimesPtr[vehicleID][settings->courseId] = bestCourseTime;
                 settings->racers[settings->timeTrialRacer].best_times |= 0x80;
             }
         }
-        if (((!temp) && (!temp)) && (!temp)) {} // Fakematch
+        if (((!vehicleID) && (!vehicleID)) && (!vehicleID)) {} // Fakematch
         if (settings->timeTrialRacer == 0) {
-            if ((bestCourseTime < 10800) && ((temp != D_800DC728) || ((func_800599A8() != get_current_map_id())) ||
-                                             (bestCourseTime < D_800DC724))) {
-                D_800DC724 = bestCourseTime;
-                D_800DC728 = D_8011AE82;
-                D_800DC72C = settings->racers[0].character;
+            if (bestCourseTime < 10800 && (vehicleID != gTimeTrialVehicle || func_800599A8() != get_current_map_id() ||
+                                           bestCourseTime < gTimeTrialTime)) {
+                gTimeTrialTime = bestCourseTime;
+                gTimeTrialVehicle = gPrevTimeTrialVehicle;
+                gTimeTrialCharacter = settings->racers[0].character;
                 func_80059984(get_current_map_id());
-                gHasGhostToSave = 1;
+                gHasGhostToSave = TRUE;
             }
             if (osTvType == TV_TYPE_PAL) {
                 bestCourseTime = (bestCourseTime * 6) / 5;
@@ -4483,7 +4501,7 @@ s32 func_8001B288(void) {
     if (func_800599A8() != get_current_map_id()) {
         return 0;
     } else {
-        if (D_800DC728 != D_8011AE82) {
+        if (gTimeTrialVehicle != gPrevTimeTrialVehicle) {
             return 0;
         } else {
             return 1;
@@ -4584,12 +4602,12 @@ u8 func_8001B4FC(s32 trackId) {
     gBeatStaffGhost = FALSE;
     gTimeTrialStaffGhost = FALSE;
     settings = get_settings();
-    if (get_map_default_vehicle(trackId) == (Vehicle) D_8011AE82) {
+    if (get_map_default_vehicle(trackId) == (Vehicle) gPrevTimeTrialVehicle) {
         mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
         temp_v0 = (u16 *) get_misc_asset(ASSET_MISC_24);
         for (i = 0; mainTrackIds[i] != -1 && trackId != mainTrackIds[i]; i++) {}
         if (mainTrackIds[i] != -1) {
-            if (temp_v0[i] >= settings->courseTimesPtr[D_8011AE82][trackId]) {
+            if (temp_v0[i] >= settings->courseTimesPtr[gPrevTimeTrialVehicle][trackId]) {
                 // Check if TT has been beaten?
                 if (!(get_eeprom_settings() & ((1 << 4) << i))) {
                     gBeatStaffGhost = TRUE;
@@ -4624,20 +4642,20 @@ s32 func_8001B668(s32 arg0) {
     s32 mapId;
 
     mapId = func_800599A8();
-    if ((get_current_map_id() != mapId) || (D_800DC728 != D_8011AE82)) {
-        temp_v0 = func_800599B8(arg0, get_current_map_id(), D_8011AE82, &sp2E, &sp2C);
+    if ((get_current_map_id() != mapId) || (gTimeTrialVehicle != gPrevTimeTrialVehicle)) {
+        temp_v0 = func_800599B8(arg0, get_current_map_id(), gPrevTimeTrialVehicle, &sp2E, &sp2C);
         if (temp_v0 == 0) {
-            D_800DC728 = D_8011AE82;
-            D_800DC72C = sp2E;
-            D_800DC724 = sp2C;
+            gTimeTrialVehicle = gPrevTimeTrialVehicle;
+            gTimeTrialCharacter = sp2E;
+            gTimeTrialTime = sp2C;
         }
         return temp_v0;
     }
-    return func_800599B8(arg0, get_current_map_id(), D_8011AE82, NULL, NULL);
+    return func_800599B8(arg0, get_current_map_id(), gPrevTimeTrialVehicle, NULL, NULL);
 }
 
 SIDeviceStatus func_8001B738(s32 controllerIndex) {
-    return func_80059B7C(controllerIndex, func_800599A8(), D_800DC728, D_800DC72C, D_800DC724);
+    return func_80059B7C(controllerIndex, func_800599A8(), gTimeTrialVehicle, gTimeTrialCharacter, gTimeTrialTime);
 }
 
 /**
@@ -5521,20 +5539,23 @@ void func_8001E344(s32 arg0) {
     }
 }
 
-void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
+/**
+ * When the sound timer hits the correct value, write the objects position to the arguments.
+ */
+void obj_bridge_pos(s32 timing, f32 *x, f32 *y, f32 *z) {
     s32 i;
     Object *current_obj;
-    *arg1 = -32000.0f;
-    *arg2 = -32000.0f;
-    *arg3 = -32000.0f;
+    *x = -32000.0f;
+    *y = -32000.0f;
+    *z = -32000.0f;
     for (i = 0; i < gObjectCount; i++) {
         current_obj = gObjPtrList[i];
 
         if (current_obj != NULL && !(current_obj->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) &&
-            current_obj->behaviorId == BHV_RAMP_SWITCH && current_obj->properties.common.unk0 == arg0) {
-            *arg1 = current_obj->segment.trans.x_position;
-            *arg2 = current_obj->segment.trans.y_position;
-            *arg3 = current_obj->segment.trans.z_position;
+            current_obj->behaviorId == BHV_RAMP_SWITCH && current_obj->properties.common.unk0 == timing) {
+            *x = current_obj->segment.trans.x_position;
+            *y = current_obj->segment.trans.y_position;
+            *z = current_obj->segment.trans.z_position;
         }
     }
 }
@@ -5542,14 +5563,14 @@ void func_8001E36C(s32 arg0, f32 *arg1, f32 *arg2, f32 *arg3) {
 /**
  * Return the index of the currently active cutscene.
  */
-s16 get_cutscene_id(void) {
+s16 cutscene_id(void) {
     return gCutsceneID;
 }
 
 /**
  * Set the current cutscene index.
  */
-void set_cutscene_id(s32 cutsceneID) {
+void cutscene_id_set(s32 cutsceneID) {
     gCutsceneID = cutsceneID;
 }
 
@@ -5650,14 +5671,14 @@ void func_8001EE74(void) {
         }
         if (D_8011AD26 || animation->channel != 20) {
             if (obj->unk64 != NULL) {
-                func_8001EFA4(obj, (Object *) obj->unk64);
+                obj_init_animcamera(obj, (Object *) obj->unk64);
             }
         }
     }
     D_8011AD26 = FALSE;
 }
 
-void func_8001EFA4(Object *arg0, Object *animObj) {
+void obj_init_animcamera(Object *arg0, Object *animObj) {
     LevelObjectEntry_Animation *animEntry;
     Object_Animation *anim;
     f32 scale;
@@ -5672,10 +5693,10 @@ void func_8001EFA4(Object *arg0, Object *animObj) {
     animObj->segment.trans.scale = animObj->segment.header->scale * scale;
     animObj->properties.common.unk0 = 0;
     animObj->properties.common.unk4 = 0;
-    if ((animEntry->unk22 >= 2) && (animEntry->unk22 < 10)) {
+    if (animEntry->unk22 >= 2 && animEntry->unk22 < 10) {
         animObj->properties.common.unk0 = animEntry->unk22 - 1;
     }
-    if ((animEntry->unk22 >= 10) && (animEntry->unk22 < 18)) {
+    if (animEntry->unk22 >= 10 && animEntry->unk22 < 18) {
         animObj->properties.common.unk0 = animEntry->unk22 - 9;
     }
     animObj->segment.trans.x_position = arg0->segment.trans.x_position;
@@ -5688,7 +5709,7 @@ void func_8001EFA4(Object *arg0, Object *animObj) {
     anim->unk3D = animEntry->channel;
     anim->unk28 = animEntry->actorIndex;
     anim->unk8 = (f32) animEntry->nodeSpeed * 0.1;
-    anim->unk2A = normalise_time(animEntry->animationStartDelay);
+    anim->startDelay = normalise_time(animEntry->animationStartDelay);
     animObj->segment.object.animationID = animEntry->objAnimIndex;
     animObj->segment.animFrame = animEntry->unk16;
     anim->z = animEntry->objAnimSpeed;
@@ -5705,7 +5726,7 @@ void func_8001EFA4(Object *arg0, Object *animObj) {
     anim->unk4 = 0;
     anim->unk0 = 0;
     arg0->particleEmitter = NULL;
-    anim->unk36 = normalise_time(animEntry->pauseFrameCount);
+    anim->pauseCounter = normalise_time(animEntry->pauseFrameCount);
     anim->unk3A = animEntry->specialHide;
     if (animEntry->unk13 >= 0) {
         anim->unk2F = animEntry->unk13;
@@ -5720,7 +5741,7 @@ void func_8001EFA4(Object *arg0, Object *animObj) {
     if (anim->unk18 != NULL) {
         sound_stop(anim->unk18);
     }
-    anim->unk18 = 0;
+    anim->unk18 = NULL;
     anim->unk43 = animEntry->unk30;
     anim->unk1C = arg0;
     anim->unk45 = 0;
@@ -5739,7 +5760,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
     obj->unk64 = (Object_64 *) spawn_object((LevelObjectEntryCommon *) &newObjEntry, 1);
     newObj = (Object *) obj->unk64;
     // (newObj->behaviorId == BHV_DINO_WHALE) is Dinosaur1, Dinosaur2, Dinosaur3, Whale, and Dinoisle
-    if ((obj->unk64 != NULL) && (newObj->behaviorId == BHV_DINO_WHALE) && (gTimeTrialEnabled)) {
+    if (obj->unk64 != NULL && newObj->behaviorId == BHV_DINO_WHALE && gTimeTrialEnabled) {
         free_object(newObj);
         obj->unk64 = NULL;
         newObj = NULL;
@@ -5747,7 +5768,7 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
     camera = (Object_AnimCamera *) newObj;
     if (camera != NULL) {
         camera->unk3C = 0;
-        func_8001EFA4(obj, newObj);
+        obj_init_animcamera(obj, newObj);
         if (newObj->segment.header->behaviorId == BHV_CAMERA_ANIMATION) {
             camera = &newObj->unk64->anim_camera;
             camera->unk44 = D_8011AD3E;
@@ -5759,10 +5780,10 @@ void func_8001F23C(Object *obj, LevelObjectEntry_Animation *animEntry) {
                 newObj = spawn_object(&newObjEntry, 1);
                 if (newObj != NULL) {
                     newObj->segment.level_entry = NULL;
-                    func_8001EFA4(obj, newObj);
+                    obj_init_animcamera(obj, newObj);
                     camera = &newObj->unk64->anim_camera;
                     i++;
-                    camera->unk30 = i;
+                    camera->cameraID = i;
                     camera->unk44 = D_8011AD3E;
                 }
             }
@@ -5808,9 +5829,9 @@ GLOBAL_ASM("asm/non_matchings/objects/func_8001F460.s")
 s32 func_800210CC(s8 arg0) {
     if (arg0 >= D_8011AD3D) {
         D_8011AD3D = arg0;
-        return 1;
+        return TRUE;
     }
-    return 0;
+    return FALSE;
 }
 
 void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Animation *entry) {
@@ -5823,7 +5844,7 @@ void func_80021104(Object *obj, Object_Animation *animObj, LevelObjectEntry_Anim
         D_8011AD3E++;
     }
     if (entry->unk22 == 18) {
-        set_active_camera(animObj->unk30);
+        set_active_camera(animObj->cameraID);
         seg = get_active_camera_segment_no_cutscenes();
         animObjTrans->x_position = seg->trans.x_position;
         animObjTrans->y_position = seg->trans.y_position;
@@ -5927,7 +5948,7 @@ s8 func_800214E4(Object *obj, s32 updateRate) {
         for (i = 0; (i < D_8011AE78 && animObj->unk28 != D_8011AE74[i]->properties.common.unk4); i++) {
             if (FALSE) {} // FAKEMATCH
         }
-        func_8001EFA4(D_8011AE74[i], obj);
+        obj_init_animcamera(D_8011AE74[i], obj);
         return 1;
     }
     return 0;
@@ -6063,7 +6084,7 @@ void mode_init_taj_race(void) {
         D_8011ADB4 = 0;
         D_8011ADC0 = 1;
         levelHeader->laps = 3;
-        levelHeader->race_type = 0;
+        levelHeader->race_type = RACETYPE_DEFAULT;
         func_8009F034();
         // clang-format off
         for (i = 0; i < ARRAY_COUNT(racer->lap_times); i++) { racer->lap_times[i] = 0; } // Must be a single line.
@@ -6106,7 +6127,7 @@ void mode_init_taj_race(void) {
             }
         }
         set_pause_lockout_timer(20);
-        transition_begin(&D_800DC6F0);
+        transition_begin(&gTajChallengeTransition);
     }
 }
 
@@ -6269,14 +6290,14 @@ s32 func_80023568(void) {
 
 /**
  * Return whether doors can be forced open.
-*/
+ */
 s8 obj_door_override(void) {
     return gOverrideDoors;
 }
 
 /**
  * Set a value that decides whether doors can be forced open.
-*/
+ */
 void obj_door_open(s32 setting) {
     gOverrideDoors = setting;
 }

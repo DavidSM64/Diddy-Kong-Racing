@@ -360,7 +360,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
     }
     gHudLevelHeader = get_current_level_header();
     if (obj == NULL) {
-        if (get_cutscene_id() == 10) {
+        if (cutscene_id() == 10) {
             obj = get_racer_object_by_port(PLAYER_ONE);
         }
     }
@@ -389,7 +389,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                     D_80126D10 = racer->playerIndex;
                 }
                 gCurrentHud = gPlayerHud[gHudCurrentViewport];
-                if (get_cutscene_id() != 10) {
+                if (cutscene_id() != 10) {
                     if (gHUDNumPlayers == ONE_PLAYER) {
                         if (get_buttons_pressed_from_player(D_80126D10) & D_CBUTTONS && racer->raceFinished == FALSE &&
                             ((gHudLevelHeader->race_type == RACETYPE_DEFAULT) ||
@@ -482,7 +482,7 @@ void render_hud(Gfx **dList, MatrixS **mtx, Vertex **vertexList, Object *obj, s3
                 if (is_in_time_trial()) {
                     func_800A277C(countdown, obj, updateRate);
                 } else {
-                    if (get_cutscene_id() == 10) {
+                    if (cutscene_id() == 10) {
                         sprite_anim_off(TRUE);
                         render_balloon_count(racer);
                         sprite_anim_off(FALSE);
@@ -2552,11 +2552,11 @@ void render_balloon_count(UNUSED Object_Racer *racer) {
     if (settings->cutsceneFlags & CUTSCENE_ADVENTURE_TWO) {
         gCurrentHud->balloonCountIcon.spriteID = HUD_SPRITE_BALLOON_DIAMOND; // Use the adventure two balloon sprite.
     }
-    if (get_cutscene_id() == 10 && get_balloon_cutscene_timer() < balloonTickTimer) {
+    if (cutscene_id() == 10 && get_balloon_cutscene_timer() < balloonTickTimer) {
         balloonCount = *settings->balloonsPtr - 1;
     } else {
         balloonCount = *settings->balloonsPtr;
-        if (get_cutscene_id() == 10) {
+        if (cutscene_id() == 10) {
             if (get_balloon_cutscene_timer() < balloonTickTimer + 8 && D_80126D44 == NULL) {
                 sound_play(SOUND_HUD_LAP_TICK, &D_80126D44);
             }

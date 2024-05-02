@@ -943,18 +943,18 @@ typedef struct Object_Animation {
   /* 0x24 */ s16 unk24;
   /* 0x26 */ s16 unk26;
   /* 0x28 */ u16 unk28;
-  /* 0x2A */ u16 unk2A;
+  /* 0x2A */ u16 startDelay;
   /* 0x2C */ u8 unk2C;
   /* 0x2D */ u8 unk2D;
   /* 0x2E */ u8 unk2E;
   /* 0x2F */ u8 unk2F;
-  /* 0x30 */ s8 unk30;
+  /* 0x30 */ s8 cameraID;
   /* 0x31 */ u8 unk31;
   /* 0x32 */ u8 unk32;
   /* 0x33 */ u8 unk33;
   /* 0x34 */ u8 unk34;
   /* 0x35 */ u8 unk35;
-  /* 0x36 */ s16 unk36;
+  /* 0x36 */ s16 pauseCounter;
   /* 0x38 */ u8 unk38;
   /* 0x39 */ u8 unk39;
   /* 0x3A */ u8 unk3A;
@@ -983,7 +983,7 @@ typedef struct Object_OverridePos {
 } Object_OverridePos;
 
 typedef struct Object_WeaponBalloon {
-  /* 0x0 */ f32 radius;
+  /* 0x0 */ f32 scale;
   /* 0x4 */ s16 respawnTime;
   /* 0x6 */ s8 unk6[0x2];
 } Object_WeaponBalloon;
@@ -1074,7 +1074,7 @@ typedef struct Object_CharacterFlag {
 
 typedef struct Object_AnimCamera {
   /* 0x00 */ u8 pad0[0x30];
-  /* 0x30 */ s8 unk30;
+  /* 0x30 */ s8 cameraID;
   /* 0x31 */ u8 pad31[0xB];
   /* 0x3C */ s32 unk3C;
   /* 0x40 */ u8 pad40[4];
@@ -1510,8 +1510,8 @@ typedef struct Object_TT {
 } Object_TT;
 
 typedef struct Object_Bridge_WhaleRamp {
-  /* 0x0 */ f32 unk0;
-  /* 0x4 */ SoundMask *unk4;
+  /* 0x0 */ f32 homeY;
+  /* 0x4 */ SoundMask *soundMask;
 } Object_Bridge_WhaleRamp;
 
 typedef struct Object_8001B7A8 {

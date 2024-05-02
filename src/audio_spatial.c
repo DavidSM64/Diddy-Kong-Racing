@@ -71,7 +71,7 @@ GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80008040.s")
 
 /**
  * Stop any playing jingles, then block audio lines from playing anymore.
-*/
+ */
 void audioline_off(void) {
     music_jingle_stop();
     gAudioLinesOff = TRUE;
@@ -79,7 +79,7 @@ void audioline_off(void) {
 
 /**
  * Allow audio lines to play jingles.
-*/
+ */
 void audioline_on(void) {
     gAudioLinesOff = FALSE;
 }
