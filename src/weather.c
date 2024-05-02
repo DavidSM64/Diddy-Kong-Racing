@@ -16,12 +16,6 @@
 
 #define WEATHER_OVERRIDE_COUNT 16
 
-/************ .rodata ************/
-
-const char D_800E87F0[] = "\nMaximum limit of %d lens flare switches, per level, has been exceeded.";
-
-/*********************************/
-
 /************ .data ************/
 
 unk800E2850 D_800E2850[3] = {
@@ -59,33 +53,24 @@ Gfx dLensFlare[] = {
     gsSPEndDisplayList(),
 };
 
-LensFlareData gLensPresetLarge[2] = {
-    { 1, { { { 255, 255, 192, 144 } } }, 3.0f, 0.0f },
-    {NULL}
-};
+LensFlareData gLensPresetLarge[2] = { { 1, { { { 255, 255, 192, 144 } } }, 3.0f, 0.0f }, { NULL } };
 
-LensFlareData gLensPreset1[4] = {
-    { 3, { { { 255, 255, 0, 144 } } }, 0.75f, -32.0f },
-    { 2, { { { 0, 80, 255, 96 } } }, 0.8f, -96.0f },
-    { 2, { { { 0, 255, 0, 144 } } }, 0.75f, -192.0f },
-    {NULL}
-};
+LensFlareData gLensPreset1[4] = { { 3, { { { 255, 255, 0, 144 } } }, 0.75f, -32.0f },
+                                  { 2, { { { 0, 80, 255, 96 } } }, 0.8f, -96.0f },
+                                  { 2, { { { 0, 255, 0, 144 } } }, 0.75f, -192.0f },
+                                  { NULL } };
 
-LensFlareData gLensPreset2[5] = {
-    { 3, { { { 255, 128, 20, 144 } } }, 0.65f, -64.0f },
-    { 2, { { { 255, 255, 255, 144 } } }, 1.0f, -128.0f },
-    { 3, { { { 255, 255, 128, 144 } } }, 0.5f, -176.0f },
-    { 3, { { { 255, 40, 40, 144 } } }, 0.75f, -224.0f },
-    {NULL}
-};
+LensFlareData gLensPreset2[5] = { { 3, { { { 255, 128, 20, 144 } } }, 0.65f, -64.0f },
+                                  { 2, { { { 255, 255, 255, 144 } } }, 1.0f, -128.0f },
+                                  { 3, { { { 255, 255, 128, 144 } } }, 0.5f, -176.0f },
+                                  { 3, { { { 255, 40, 40, 144 } } }, 0.75f, -224.0f },
+                                  { NULL } };
 
-LensFlareData gLensPreset3[5] = {
-    { 3, { { { 255, 128, 255, 128 } } }, 0.5f, -64.0f }, 
-    { 1, { { { 255, 255, 192, 144 } } }, 0.75f, -128.0f },
-    { 2, { { { 255, 40, 0, 128 } } }, 0.6f, -176.0f },   
-    { 1, { { { 255, 192, 255, 144 } } }, 0.75f, -224.0f },
-    {NULL}
-};
+LensFlareData gLensPreset3[5] = { { 3, { { { 255, 128, 255, 128 } } }, 0.5f, -64.0f },
+                                  { 1, { { { 255, 255, 192, 144 } } }, 0.75f, -128.0f },
+                                  { 2, { { { 255, 40, 0, 128 } } }, 0.6f, -176.0f },
+                                  { 1, { { { 255, 192, 255, 144 } } }, 0.75f, -224.0f },
+                                  { NULL } };
 
 Object *gLensFlare = NULL;
 s32 gLensFlareOff = TRUE;
@@ -463,7 +448,7 @@ void lensflare_remove(Object *obj) {
  * Sets the weather systems' lens flare object to this.
  * Afterwards, assigns presets based on the spawn parameters.
  * Finally, set the screenspace matrix position.
-*/
+ */
 void lensflare_init(Object *obj) {
     LevelObjectEntry_LensFlare *entry;
     Vec3s angle;
@@ -532,6 +517,8 @@ void lensflare_override_add(Object *obj) {
     if (gLensFlareOverrideObjs < WEATHER_OVERRIDE_COUNT) {
         gLensFlareSwitches[gLensFlareOverrideObjs] = obj;
         gLensFlareOverrideObjs++;
+    } else {
+        stubbed_printf("\nMaximum limit of %d lens flare switches, per level, has been exceeded.", WEATHER_OVERRIDE_COUNT);
     }
 }
 

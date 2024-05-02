@@ -1089,19 +1089,6 @@ typedef struct Object_InfoPoint {
   /* 0x0 */ s16 unk0;
 } Object_InfoPoint;
 
-typedef struct Object_TTDoor {
-  /* 0x00 */ f32 homeY;
-  /* 0x04 */ SoundMask *soundMask;
-  /* 0x08 */ s32 unk8;
-  /* 0x0C */ s16 unkC;
-  /* 0x0C */ s8 unkE;
-  /* 0x0F */ u8 doorID;
-  /* 0x10 */ u8 pad10[2];
-  /* 0x12 */ u8 unk12;
-  /* 0x13 */ s8 unk13;
-  /* 0x14 */ s32 unk14;
-} Object_TTDoor;
-
 typedef struct Object_WorldKey {
   /* 0x0 */ s16 unk0;
 } Object_WorldKey;
@@ -1407,16 +1394,17 @@ typedef struct Object_Racer {
 
 typedef struct Object_Door {
   /* 0x00 */ f32 homeY;
-  /* 0x04 */ SoundMask *unk4;
-  /* 0x08 */ s32 unk8;
-  /* 0x0A */ s16 unkA;
-  /* 0x0E */ s8 unkE;
-  /* 0x0F */ u8 unkF;
-  /* 0x10 */ u8 unk10;
-  /* 0x11 */ u8 unk11;
-  /* 0x12 */ u8 unk12;
-  /* 0x13 */ s8 unk13;
-  /* 0x14 */ s8 unk14[4];
+  /* 0x04 */ SoundMask *soundMask;
+  /* 0x08 */ s32 jingleTimer;
+  /* 0x0A */ s16 jingleCooldown;
+  /* 0x0E */ s8 doorID;
+  /* 0x0F */ u8 doorType;
+  /* 0x10 */ u8 balloonCount;
+  /* 0x11 */ u8 balloonCountUnused;
+  /* 0x12 */ u8 radius;
+  /* 0x13 */ s8 textID;
+  /* 0x14 */ s8 keyID;
+  /* 0x15 */ s8 openDir;
 } Object_Door;
 
 typedef struct Object_Trigger {
@@ -1638,7 +1626,6 @@ typedef struct Object_64 {
         Object_CharacterFlag character_flag;
         Object_AnimCamera anim_camera;
         Object_InfoPoint info_point;
-        Object_TTDoor tt_door;
         Object_WorldKey world_key;
         Object_AudioLine audio_line;
         Object_AudioReverb audio_reverb;

@@ -19,6 +19,21 @@ enum BananaBehaviour {
     BANANA_DROPPED
 };
 
+enum WeaponBehaviour {
+    WEAPON_DROPPED,
+    WEAPON_ARMED,
+    WEAPON_TRIGGERED,
+    WEAPON_DESTROY,
+    WEAPON_STATUS_4,
+    WEAPON_STATUS_5
+};
+
+enum DoorStatus {
+    DOOR_CLOSING = -1,
+    DOOR_CLOSED,
+    DOOR_OPENING
+};
+
 enum BossRaceWarps {
     WARP_STANDARD = -1,
     WARP_BOSS_FIRST,
@@ -397,7 +412,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate);
 void obj_loop_fish(Object *fishObj, s32 updateRate);
 void obj_loop_weaponballoon(Object *weaponBalloonObj, s32 updateRate);
 void obj_loop_char_select(Object *charSelectObj, s32 updateRate);
-void func_8003F2E8(Object *weaponObj, s32 updateRate);
+void weapon_trap(Object *weaponObj, s32 updateRate);
 void obj_init_butterfly(Object *butterflyObj, LevelObjectEntry_Butterfly *butterflyEntry, s32 param);
 void obj_init_animation(Object *obj, LevelObjectEntry_Animation *entry, s32 arg2);
 void obj_init_lensflareswitch(Object *obj, LevelObjectEntry_LensFlareSwitch *entry, UNUSED s32 arg2);
@@ -419,7 +434,7 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry);
 void obj_init_audio(Object *obj, LevelObjectEntry_Audio *entry);
 void obj_init_bombexplosion(Object *obj, LevelObjectEntry_BombExplosion *entry);
 void obj_init_scenery(Object *obj, LevelObjectEntry_Scenery *entry);
-void handle_rocket_projectile(Object *obj, s32 updateRate);
+void weapon_projectile(Object *obj, s32 updateRate);
 
 //Non Matching
 void calc_env_mapping_for_object(ObjectModel *, s16, s16, s16);

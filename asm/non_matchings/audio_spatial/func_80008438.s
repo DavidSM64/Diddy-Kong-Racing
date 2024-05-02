@@ -804,11 +804,11 @@ glabel func_80008438
 /* 009BD8 80008FD8 1581FEC7 */  bne   $t4, $at, .L80008AF8
 /* 009BDC 80008FDC 24420180 */   addiu $v0, $v0, 0x180
 /* 009BE0 80008FE0 8FAE024C */  lw    $t6, 0x24c($sp)
-/* 009BE4 80008FE4 3C0D8012 */  lui   $t5, %hi(D_8011AC18) # $t5, 0x8012
+/* 009BE4 80008FE4 3C0D8012 */  lui   $t5, %hi(gAudioLinesOff) # $t5, 0x8012
 /* 009BE8 80008FE8 29C1000B */  slti  $at, $t6, 0xb
 /* 009BEC 80008FEC 14200015 */  bnez  $at, .L80009044
 /* 009BF0 80008FF0 00000000 */   nop   
-/* 009BF4 80008FF4 91ADAC18 */  lbu   $t5, %lo(D_8011AC18)($t5)
+/* 009BF4 80008FF4 91ADAC18 */  lbu   $t5, %lo(gAudioLinesOff)($t5)
 /* 009BF8 80008FF8 00000000 */  nop   
 /* 009BFC 80008FFC 15A00011 */  bnez  $t5, .L80009044
 /* 009C00 80009000 00000000 */   nop   

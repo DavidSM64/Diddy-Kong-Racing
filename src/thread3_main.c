@@ -497,12 +497,12 @@ void ingame_logic_loop(s32 updateRate) {
         }
     }
     process_onscreen_textbox(updateRate);
-    i = func_800C3400();
+    i = textbox_visible();
     if (i != 0) {
         if (i == 2) {
             gIsPaused = TRUE;
         }
-        if (func_800C3400() != 2) {
+        if (textbox_visible() != 2) {
             gIsPaused = FALSE;
             n_alSeqpDelete();
         }

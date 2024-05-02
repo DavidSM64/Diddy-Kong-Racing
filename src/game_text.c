@@ -326,12 +326,16 @@ void set_current_text(s32 textID) {
     gCloseTextMessage = TRUE;
 }
 
-s32 func_800C3400(void) {
+/**
+ * Returns nonzero if a textbox is visible.
+ * The number depends on what kind it is.
+*/
+s32 textbox_visible(void) {
     s32 result = 0;
     if (gTextTableExists) {
         if (gShowOnscreenMessage) {
             result = 1;
-            if (D_8012A788 != 0) {
+            if (D_8012A788) {
                 result = 2;
             }
         }

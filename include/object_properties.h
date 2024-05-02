@@ -155,10 +155,10 @@ typedef struct ObjPropertySetupPoint {
 } ObjPropertySetupPoint;
 
 typedef struct ObjPropertyWeapon {
-    s32 unk0;
-    u8 unk4;
-    u8 unk5;
-    s16 unk6;
+    s32 decayTimer;
+    u8 status;
+    u8 submerged;
+    s16 scale;
 } ObjPropertyWeapon;
 
 typedef struct ObjPropertyCamControl {

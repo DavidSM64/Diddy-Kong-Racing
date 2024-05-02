@@ -12789,7 +12789,7 @@ s32 npc_dialogue_loop(u32 dialogueOption) {
     s32 result;
 
     gDoneTalkingToNPC[dialogueOption] = 0;
-    if ((func_800C3400() != 0) && (dialogueOption != DIALOGUE_CHALLENGE)) {
+    if ((textbox_visible() != 0) && (dialogueOption != DIALOGUE_CHALLENGE)) {
         return 0;
     }
     if (gNeedToCloseDialogueBox) {

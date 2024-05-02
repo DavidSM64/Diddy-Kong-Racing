@@ -37,7 +37,7 @@ UNUSED const char D_800E4EDC[] = "Reverb line definition error (line=%d, vertex=
 
 /************ .bss ************/
 
-extern s8 D_8011AC18;
+extern s8 gAudioLinesOff;
 extern SoundData *D_80119C40;
 extern unk80119C58 D_80119C58[];
 extern unk8011A6D8 D_8011A6D8[];
@@ -69,13 +69,19 @@ void func_80008040(void) {
 GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80008040.s")
 #endif
 
-void func_80008140(void) {
+/**
+ * Stop any playing jingles, then block audio lines from playing anymore.
+*/
+void audioline_off(void) {
     music_jingle_stop();
-    D_8011AC18 = 1;
+    gAudioLinesOff = TRUE;
 }
 
-void func_80008168(void) {
-    D_8011AC18 = 0;
+/**
+ * Allow audio lines to play jingles.
+*/
+void audioline_on(void) {
+    gAudioLinesOff = FALSE;
 }
 
 #ifdef NON_EQUIVALENT
@@ -126,7 +132,7 @@ void func_80008174(void) {
         // }
     }
 
-    D_8011AC18 = 0;
+    gAudioLinesOff = 0;
 }
 #else
 GLOBAL_ASM("asm/non_matchings/audio_spatial/func_80008174.s")

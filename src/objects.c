@@ -245,7 +245,7 @@ u32 gBalloonCutsceneTimer;
 s8 (*D_8011ADCC)[8];
 f32 gObjectOffsetY;
 s8 D_8011ADD4;
-s8 D_8011ADD5;
+s8 gOverrideDoors;
 Object *D_8011ADD8[10]; // Array of OverRidePos objects
 s8 D_8011AE00;          // Number of OverRidePos objects in D_8011ADD8
 s8 D_8011AE01;          // A boolean? I've seen it either as 0 or 1
@@ -634,7 +634,7 @@ void clear_object_pointers(void) {
     D_8011AE00 = 0;
     D_8011AE01 = 1;
     D_8011AD53 = 0;
-    D_8011ADD5 = FALSE;
+    gOverrideDoors = FALSE;
 }
 
 /**
@@ -6201,7 +6201,7 @@ void mode_end_taj_race(s32 reason) {
         music_change_on();
         music_stop();
         set_next_taj_challenge_menu(0);
-        func_80008168();
+        audioline_on();
         if (reason == CHALLENGE_END_OOB) {
             set_current_text(ASSET_GAME_TEXT_0);
         }
@@ -6267,12 +6267,18 @@ s32 func_80023568(void) {
     return 0;
 }
 
-s8 func_800235C0(void) {
-    return D_8011ADD5;
+/**
+ * Return whether doors can be forced open.
+*/
+s8 obj_door_override(void) {
+    return gOverrideDoors;
 }
 
-void func_800235D0(s32 arg0) {
-    D_8011ADD5 = arg0;
+/**
+ * Set a value that decides whether doors can be forced open.
+*/
+void obj_door_open(s32 setting) {
+    gOverrideDoors = setting;
 }
 
 /**
@@ -6290,7 +6296,7 @@ s32 get_object_property_size(Object *obj, Object_64 *obj64) {
             break;
         case BHV_DOOR:
         case BHV_TT_DOOR:
-            ret = sizeof(Object_TTDoor);
+            ret = sizeof(Object_Door);
             break;
         case BHV_EXIT:
             ret = sizeof(Object_Exit);

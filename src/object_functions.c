@@ -638,7 +638,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
         if (worldBalloons) {
             worldBalloons = ((1 << (settings->worldId + 6)) & bossFlags) != 0;
         }
-        if (obj->properties.trophyCabinet.action == NULL && func_800C3400() == FALSE) {
+        if (obj->properties.trophyCabinet.action == NULL && textbox_visible() == FALSE) {
             if (obj->unk5C->unk100 != NULL) {
                 if (gfxData->unk4 == 0) {
                     if (worldBalloons) {
@@ -667,7 +667,7 @@ void obj_loop_trophycab(Object *obj, s32 updateRate) {
                 music_jingle_voicelimit_set(6);
             }
         }
-        if (obj->unk5C->unk100 != NULL || func_800C3400()) {
+        if (obj->unk5C->unk100 != NULL || textbox_visible()) {
             gfxData->unk4 = 180;
         }
         if (gfxData->unk4 > 0) {
@@ -1851,15 +1851,15 @@ void obj_loop_animobject(Object *obj, s32 updateRate) {
 }
 
 void obj_loop_dooropener(Object *obj, s32 updateRate) {
-    s32 phi_a0;
-    unk80037D08_arg0_64 *sp18;
+    s32 openDoors;
+    unk80037D08_arg0_64 *doorOpener;
 
-    sp18 = (unk80037D08_arg0_64 *) obj->unk64;
-    phi_a0 = 1 - func_8001F460(obj, updateRate, obj);
-    if (sp18->unk2A > 0) {
-        phi_a0 = 0;
+    doorOpener = (unk80037D08_arg0_64 *) obj->unk64;
+    openDoors = 1 - func_8001F460(obj, updateRate, obj);
+    if (doorOpener->unk2A > 0) {
+        openDoors = FALSE;
     }
-    func_800235D0(phi_a0);
+    obj_door_open(openDoors);
 }
 
 void obj_init_overridepos(UNUSED Object *obj, UNUSED LevelObjectEntry_OverridePos *entry) {
@@ -2605,7 +2605,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             racer_sound_free(racerObj);
             racer->vehicleSound = NULL;
         }
-        func_80008140();
+        audioline_off();
         arctan = arctan2_f(racerObj->segment.trans.x_position - obj->segment.trans.x_position,
                            racerObj->segment.trans.z_position - obj->segment.trans.z_position);
         arctan -= (racerObj->segment.trans.y_rotation & 0xFFFF);
@@ -2761,7 +2761,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 music_voicelimit_set(levelHeader->voiceLimit);
                 music_play(levelHeader->music);
                 music_dynamic_set(levelHeader->instruments);
-                func_80008168();
+                audioline_on();
             }
             if (dialogueID & 0x80) {
                 gTajDialogueChoice = dialogueID & 0x7F;
@@ -3307,7 +3307,7 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
             racerObj = racerObjects[i];
             racer = &racerObj->unk64->racer;
             diffY = racerObj->segment.trans.y_position - obj->segment.trans.y_position;
-            if ((diffY < halfDist) && (-halfDist < diffY)) {
+            if (diffY < halfDist && -halfDist < diffY) {
                 diffX = racerObj->segment.trans.x_position - obj->segment.trans.x_position;
                 diffZ = racerObj->segment.trans.z_position - obj->segment.trans.z_position;
                 if (sqrtf((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ)) < dist) {
@@ -3330,6 +3330,10 @@ void obj_loop_bonus(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
+/**
+ * Golden Balloon init func.
+ * Assigns the balloon ID either from the entry, or from the balloon ID table.
+*/
 void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) {
     Object_NPC *obj64;
     f32 scalef;
@@ -3365,6 +3369,12 @@ void obj_init_goldenballoon(Object *obj, LevelObjectEntry_GoldenBalloon *entry) 
     }
 }
 
+/**
+ * Golden Balloon loop func.
+ * Made invisible every frame, but made visible during behaviour if applicable.
+ * Follows a path, like Taj and T.T, until collected.
+ * Auto deletes if the ID is already claimed by the save flags.
+*/
 void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
     LevelObjectEntry *levelEntry;
     ObjectInteraction *interactObj;
@@ -3406,7 +3416,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
         if (obj->properties.npc.action == 0) {
             obj->segment.trans.flags &= (0xFFFF - OBJ_FLAGS_INVISIBLE);
             doubleSpeed = updateRate * 2;
-            if (obj->segment.object.opacity < (255 - doubleSpeed)) {
+            if (obj->segment.object.opacity < 255 - doubleSpeed) {
                 obj->segment.object.opacity += doubleSpeed;
             } else {
                 obj->segment.object.opacity = 255;
@@ -3419,7 +3429,7 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
                     if (racer->playerIndex == PLAYER_ONE) {
                         settings->balloonsPtr[settings->worldId]++;
                         if (isPirated == 1) {} // Fakematch
-                        if (settings->worldId != 0) {
+                        if (settings->worldId != WORLD_CENTRAL_AREA) {
                             settings->balloonsPtr[0]++;
                         }
                         settings->courseFlagsPtr[settings->courseId] |= flag;
@@ -3453,38 +3463,42 @@ void obj_loop_goldenballoon(Object *obj, s32 updateRate) {
     }
 }
 
+/**
+ * Door init func.
+ * Sets all door parameters, which include type, direction and number of balloons needed to open
+*/
 void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     Object_Door *door;
     f32 radius;
 
     door = &obj->unk64->door;
-    if (entry->unkC == -1) {
-        entry->unkC = func_8000CC20(obj);
+    if (entry->doorID == -1) {
+        entry->doorID = func_8000CC20(obj);
     } else {
-        func_8000CBF0(obj, entry->unkC);
+        func_8000CBF0(obj, entry->doorID);
     }
-    door->unkE = entry->unkC;
-    door->unkF = entry->unkE;
-    door->unk11 = entry->numBalloonsToOpen;
-    door->unk10 = entry->numBalloonsToOpen;
-    door->unk12 = entry->distanceToOpen;
-    if (door->unkE == -1) {
+    door->doorID = entry->doorID;
+    door->doorType = entry->doorType;
+    door->balloonCountUnused = entry->balloonCount;
+    door->balloonCount = entry->balloonCount;
+    door->radius = entry->distanceToOpen;
+    if (door->doorID == -1) {
         rmonPrintf("Illegal door no!!!\n");
     }
     obj->segment.object.modelIndex = entry->modelIndex;
     obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->closedRotation);
     door->homeY = obj->segment.trans.y_position;
-    door->unk8 = 0;
+    door->jingleTimer = 0;
     obj->properties.door.closeAngle = obj->segment.trans.y_rotation;
-    obj->properties.door.openAngle = (s32) ((entry->openRotation & 0x3F) << 10);
+    obj->properties.door.openAngle = (entry->openRotation & 0x3F) << 10;
     radius = entry->scale & 0xFF;
     if (radius < 10.0f) {
         radius = 10.0f;
     }
     radius /= 64;
     obj->segment.trans.scale = obj->segment.header->scale * radius;
-    door->unk13 = (u8) entry->unkF;
-    door->unk14[0] = (s8) entry->unk11;
+    door->textID = entry->textID;
+    door->keyID = entry->keyID;
     obj->interactObj->flags = INTERACT_FLAGS_SOLID | INTERACT_FLAGS_UNK_0020;
     obj->interactObj->unk11 = 2;
     obj->interactObj->hitboxRadius = 20;
@@ -3494,12 +3508,17 @@ void obj_init_door(Object *obj, LevelObjectEntry_Door *entry) {
     }
 }
 
+/**
+ * Door loop func.
+ * If the requirement to open the door is not met, play a jingle and show a message.
+ * Since there's a number of different kinds of doors, this code handles each type.
+*/
 void obj_loop_door(Object *doorObj, s32 updateRate) {
-    s32 temp2;
-    s16 temp;
-    volatile s32 sp54; // ???
-    s32 sp50;
-    s32 sp4C;
+    s32 playSound;
+    s16 angleVel;
+    volatile s32 doorIDFlag; // ???
+    s32 dist;
+    s32 keyBits;
     Object_Racer *racer;
     Object_Door *door;
     Settings *settings;
@@ -3507,7 +3526,7 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
     ObjectInteraction *racerObjInter;
     LevelObjectEntry_Door *doorEntry;
     f32 updateRateF;
-    UNUSED s32 pad;
+    s32 model;
     s32 sp28;
 
     doorEntry = &doorObj->segment.level_entry->door;
@@ -3516,92 +3535,92 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
         updateRateF *= 1.2;
     }
     settings = get_settings();
-    temp2 = settings->courseFlagsPtr[settings->courseId];
+    playSound = settings->courseFlagsPtr[settings->courseId];
     door = &doorObj->unk64->door;
-    if (door->unkE >= 0) {
-        sp54 = 0x10000 << door->unkE;
+    if (door->doorID >= 0) {
+        doorIDFlag = 0x10000 << door->doorID;
         racerObjInter = doorObj->interactObj;
-        sp50 = racerObjInter->distance;
-        if (!(door->unkF & 1)) {
-            sp50 = 0;
+        dist = racerObjInter->distance;
+        if (!(door->doorType & 1)) {
+            dist = 0; // Door is forced open
         }
-        sp28 = temp2 & sp54;
-        if (sp28 == 0 && racerObjInter->distance < door->unk12) {
+        sp28 = playSound & doorIDFlag;
+        if (sp28 == 0 && racerObjInter->distance < door->radius) {
             racerObj = racerObjInter->obj;
             if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
                 racer = &racerObj->unk64->racer;
                 if (racer->playerIndex != PLAYER_COMPUTER && racerObj == doorObj->unk5C->unk100) {
-                    if (door->unk13 != -1 && func_800C3400() == 0 && door->unkA == 0) {
+                    if (door->textID != -1 && textbox_visible() == FALSE && door->jingleCooldown == 0) {
                         music_fade(-8);
-                        door->unk8 = 140;
+                        door->jingleTimer = 140; // PAL users once again forsaken.
                         music_jingle_voicelimit_set(16);
-                        func_80008140();
+                        audioline_off();
                         music_jingle_play(SEQUENCE_NO_TROPHY_FOR_YOU);
-                        set_textbox_display_value(door->unk10);
-                        set_current_text(door->unk13 & 0xFF);
+                        set_textbox_display_value(door->balloonCount);
+                        set_current_text(door->textID & 0xFF);
                     }
-                    door->unkA = 300;
+                    door->jingleCooldown = 300;
                 }
-                if (func_800C3400() != 0) {
-                    door->unkA = 300;
+                if (textbox_visible()) {
+                    door->jingleCooldown = 300;
                 }
             }
         }
-        if (door->unk8 != 0 && music_jingle_playing() == SEQUENCE_NONE) {
-            if (updateRate < door->unk8) {
-                door->unk8 -= updateRate;
+        if (door->jingleTimer != 0 && music_jingle_playing() == SEQUENCE_NONE) {
+            if (updateRate < door->jingleTimer) {
+                door->jingleTimer -= updateRate;
             } else {
-                door->unk8 = 0;
+                door->jingleTimer = 0;
                 music_fade(8);
                 music_jingle_voicelimit_set(6);
-                func_80008168();
+                audioline_on();
             }
         }
-        if (door->unkA > 0) {
-            door->unkA -= updateRate;
+        if (door->jingleCooldown > 0) {
+            door->jingleCooldown -= updateRate;
         } else {
-            door->unkA = 0;
+            door->jingleCooldown = 0;
         }
         racerObjInter = doorObj->interactObj;
-        sp4C = 0;
-        if (racerObjInter->distance < door->unk12) {
+        keyBits = 0;
+        if (racerObjInter->distance < door->radius) {
             racerObj = racerObjInter->obj;
             if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
                 racer = &racerObj->unk64->racer;
                 switch (racer->vehicleID) {
                     case VEHICLE_HOVERCRAFT:
-                        sp4C = 2;
+                        keyBits = 2;
                         break;
                     case VEHICLE_PLANE:
-                        sp4C = 4;
+                        keyBits = 4;
                         break;
                     default:
-                        sp4C = 1;
+                        keyBits = 1;
                         break;
                 }
             }
         }
-        sp4C &= doorEntry->unk10;
+        keyBits &= doorEntry->unk10;
         if (doorEntry->common.objectID == ASSET_OBJECT_ID_BIGBOSSDOOR ||
             doorEntry->common.objectID == ASSET_OBJECT_ID_BOSSDOOR) {
-            if (func_800235C0() != 0) {
-                sp50 = 0;
+            if (obj_door_override()) {
+                dist = 0;
             }
         }
-        if (door->unk14[1] == 0) {
-            if (sp4C == 0 && sp28 != 0 && sp50 < door->unk12) {
-                door->unk14[1] = 1;
-            } else if (door->unk12 + 10 < sp50) {
-                door->unk14[1] = -1;
+        if (door->openDir == DOOR_CLOSED) {
+            if (keyBits == 0 && sp28 != 0 && dist < door->radius) {
+                door->openDir = DOOR_OPENING;
+            } else if (door->radius + 10 < dist) {
+                door->openDir = DOOR_CLOSING;
             }
         }
-        temp2 = 0;
-        if (door->unkF & 2) {
+        playSound = FALSE;
+        if (door->doorType & 2) {
             if (sp28 != 0 && doorEntry->common.objectID == ASSET_OBJECT_ID_LEVELDOOR) {
-                if (settings->courseFlagsPtr[doorEntry->unk14] & 2) {
+                if (settings->courseFlagsPtr[doorEntry->levelID] & RACE_CLEARED) {
                     if (settings->worldId == WORLD_FUTURE_FUN_LAND || settings->bosses & (1 << settings->worldId)) {
-                        door->unk10 = doorEntry->unk15;
-                        if (door->unk10 >= 10) {
+                        door->balloonCount = doorEntry->balloonCountOverride;
+                        if (door->balloonCount >= 10) {
                             doorObj->segment.object.modelIndex = 3;
                         } else {
                             doorObj->segment.object.modelIndex = 2;
@@ -3610,19 +3629,19 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
                         doorObj->segment.object.modelIndex = 0;
                     }
                 }
-                if (settings->courseFlagsPtr[doorEntry->unk14] & 4) {
+                if (settings->courseFlagsPtr[doorEntry->levelID] & RACE_CLEARED_SILVER_COINS) {
                     doorObj->segment.object.modelIndex = 1;
                 }
             }
-            if (door->unk14[1] == 1) {
-                if (doorObj->segment.trans.y_position < (door->homeY + 130.0)) {
-                    temp2 = 1;
+            if (door->openDir == DOOR_OPENING) {
+                if (doorObj->segment.trans.y_position < door->homeY + 130.0) {
+                    playSound = TRUE;
                     doorObj->segment.trans.y_position += 2.0 * updateRateF;
                 }
-            } else if (door->unk14[1] == -1) {
+            } else if (door->openDir == DOOR_CLOSING) {
                 if (door->homeY < doorObj->segment.trans.y_position) {
-                    temp2 = 1;
-                    doorObj->segment.trans.y_position -= (2.0 * updateRateF);
+                    playSound = TRUE;
+                    doorObj->segment.trans.y_position -= 2.0 * updateRateF;
                 }
             }
         } else {
@@ -3636,60 +3655,60 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
                 if (settings->bosses & (1 << (settings->worldId + 6))) {
                     doorObj->segment.object.modelIndex = 2;
                 }
-                if (settings->worldId == 5) {
-                    temp = doorObj->segment.object.modelIndex;
-                    if (temp < 2) {
-                        doorObj->segment.object.modelIndex = temp + 1;
+                if (settings->worldId == WORLD_FUTURE_FUN_LAND) {
+                    model = doorObj->segment.object.modelIndex;
+                    if (model < 2) {
+                        doorObj->segment.object.modelIndex = model + 1;
                     }
                 }
             }
-            temp = 0;
-            if (door->unk14[1] == 1) {
-                temp = doorObj->segment.trans.y_rotation - doorObj->properties.common.unk4;
-            } else if (door->unk14[1] == -1) {
-                temp = doorObj->segment.trans.y_rotation - doorObj->properties.common.unk0;
+            angleVel = 0;
+            if (door->openDir == DOOR_OPENING) {
+                angleVel = doorObj->segment.trans.y_rotation - doorObj->properties.common.unk4;
+            } else if (door->openDir == DOOR_CLOSING) {
+                angleVel = doorObj->segment.trans.y_rotation - doorObj->properties.common.unk0;
             }
-            temp >>= 3;
-            if (temp > 0x200) {
-                temp = 0x200;
+            angleVel >>= 3;
+            if (angleVel > 0x200) {
+                angleVel = 0x200;
             }
-            if (temp < -0x200) {
-                temp = -0x200;
+            if (angleVel < -0x200) {
+                angleVel = -0x200;
             }
-            doorObj->segment.trans.y_rotation -= temp; //@!Delta
-            if (temp != 0) {
-                temp2 = 1;
+            doorObj->segment.trans.y_rotation -= angleVel; //@!Delta
+            if (angleVel != 0) {
+                playSound = TRUE;
             }
         }
-        if (temp2) {
-            if (door->unk4 == NULL) {
+        if (playSound) {
+            if (door->soundMask == NULL) {
                 play_sound_at_position(SOUND_DOOR_OPEN, doorObj->segment.trans.x_position,
                                        doorObj->segment.trans.y_position, doorObj->segment.trans.z_position, 1,
-                                       &door->unk4);
+                                       &door->soundMask);
             }
         } else {
-            door->unk14[1] = 0;
-            if (door->unk4 != NULL) {
-                func_800096F8((SoundMask *) (s32) door->unk4);
-                door->unk4 = NULL;
+            door->openDir = DOOR_CLOSED;
+            if (door->soundMask != NULL) {
+                func_800096F8((SoundMask *) (s32) door->soundMask);
+                door->soundMask = NULL;
             }
         }
-        if (door->unk14[0] >= 0) {
-            sp4C = (1 << door->unk14[0]);
-            if (settings->keys & sp4C) {
-                settings->courseFlagsPtr[settings->courseId] |= sp54;
+        if (door->keyID >= 0) {
+            keyBits = 1 << door->keyID;
+            if (settings->keys & keyBits) {
+                settings->courseFlagsPtr[settings->courseId] |= doorIDFlag;
             }
         } else {
-            if (doorEntry->unk13 == 0) {
-                if (*settings->balloonsPtr >= door->unk10) {
-                    settings->courseFlagsPtr[settings->courseId] |= sp54;
+            if (doorEntry->localBalloons == FALSE) {
+                if (*settings->balloonsPtr >= door->balloonCount) {
+                    settings->courseFlagsPtr[settings->courseId] |= doorIDFlag;
                 } else {
-                    settings->courseFlagsPtr[settings->courseId] &= ~sp54;
+                    settings->courseFlagsPtr[settings->courseId] &= ~doorIDFlag;
                 }
-            } else if (settings->balloonsPtr[settings->worldId] >= door->unk10) {
-                settings->courseFlagsPtr[settings->courseId] |= sp54;
+            } else if (settings->balloonsPtr[settings->worldId] >= door->balloonCount) {
+                settings->courseFlagsPtr[settings->courseId] |= doorIDFlag;
             } else {
-                settings->courseFlagsPtr[settings->courseId] &= ~sp54;
+                settings->courseFlagsPtr[settings->courseId] &= ~doorIDFlag;
             }
         }
     }
@@ -3700,21 +3719,25 @@ void obj_loop_door(Object *doorObj, s32 updateRate) {
     doorObj->unk5C->unk100 = NULL;
 }
 
+/**
+ * T.T Door init func.
+ * A much simpler version of the regular door, but has many of the same attributes.
+*/
 void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
-    Object_TTDoor *obj64;
+    Object_Door *obj64;
     f32 radius;
 
     obj->segment.object.modelIndex = 0;
-    obj64 = &obj->unk64->tt_door;
+    obj64 = &obj->unk64->door;
     obj->segment.trans.y_rotation = U8_ANGLE_TO_U16(entry->angleY);
-    obj64->doorID = entry->doorID;
-    obj64->unk13 = entry->unkB;
+    obj64->doorType = entry->doorType;
+    obj64->textID = entry->textID;
     obj64->homeY = obj->segment.trans.y_position;
-    obj64->unk8 = 0;
-    obj64->unk12 = entry->unkA;
+    obj64->jingleTimer = 0;
+    obj64->radius = entry->radius;
     obj->properties.door.closeAngle = obj->segment.trans.y_rotation;
     obj->properties.door.openAngle = (entry->unk9 & 0x3F) << 0xA;
-    radius = entry->radius & 0xFF;
+    radius = entry->scale & 0xFF;
     if (radius < 10) {
         radius = 10;
     }
@@ -3736,54 +3759,54 @@ void obj_init_ttdoor(Object *obj, LevelObjectEntry_TTDoor *entry) {
  */
 void obj_loop_ttdoor(Object *obj, s32 updateRate) {
     Settings *settings;
-    Object_TTDoor *ttDoor;
+    Object_Door *ttDoor;
     Object *racerObj;
     Object_Racer *racer;
     s16 angle;
     s32 openDoor;
 
-    ttDoor = (Object_TTDoor *) obj->unk64;
+    ttDoor = (Object_Door *) obj->unk64;
     settings = get_settings();
-    if (ttDoor->doorID == 0) {
+    if (ttDoor->doorType == 0) {
         obj->segment.object.modelIndex = D_800DCA94[settings->ttAmulet];
     } else {
         obj->segment.object.modelIndex = D_800DCA9C[settings->ttAmulet];
     }
-    if (obj->interactObj->distance < ttDoor->unk12 && (settings->ttAmulet < 4 || *settings->balloonsPtr < 47)) {
+    if (obj->interactObj->distance < ttDoor->radius && (settings->ttAmulet < 4 || *settings->balloonsPtr < 47)) {
         racerObj = obj->interactObj->obj;
         if (racerObj != NULL && racerObj->segment.header->behaviorId == BHV_RACER) {
             racer = (Object_Racer *) racerObj->unk64;
             if (racer->playerIndex != PLAYER_COMPUTER && racerObj == obj->unk5C->unk100) {
-                if (ttDoor->unk13 != -1 && func_800C3400() == 0 && ttDoor->unkC == 0) {
+                if (ttDoor->textID != -1 && textbox_visible() == 0 && ttDoor->jingleCooldown == 0) {
                     music_fade(-8);
-                    ttDoor->unk8 = 140;
+                    ttDoor->jingleTimer = 140;
                     music_jingle_voicelimit_set(16);
                     music_jingle_play(SEQUENCE_NO_TROPHY_FOR_YOU);
-                    set_current_text(ttDoor->unk13 & 0xFF);
+                    set_current_text(ttDoor->textID & 0xFF);
                 }
-                ttDoor->unkC = 300;
+                ttDoor->jingleCooldown = 300;
             }
-            if (func_800C3400() != 0) {
-                ttDoor->unkC = 300;
+            if (textbox_visible()) {
+                ttDoor->jingleCooldown = 300;
             }
         }
     }
-    if (ttDoor->unk8 && music_jingle_playing() == SEQUENCE_NONE) {
-        if (updateRate < ttDoor->unk8) {
-            ttDoor->unk8 -= updateRate;
+    if (ttDoor->jingleTimer && music_jingle_playing() == SEQUENCE_NONE) {
+        if (updateRate < ttDoor->jingleTimer) {
+            ttDoor->jingleTimer -= updateRate;
         } else {
-            ttDoor->unk8 = 0.0f;
+            ttDoor->jingleTimer = 0.0f;
             music_fade(8);
             music_jingle_voicelimit_set(6);
         }
     }
-    if (ttDoor->unkC > 0) {
-        ttDoor->unkC -= updateRate;
+    if (ttDoor->jingleCooldown > 0) {
+        ttDoor->jingleCooldown -= updateRate;
     } else {
-        ttDoor->unkC = 0;
+        ttDoor->jingleCooldown = 0;
     }
     openDoor = TRUE;
-    if (settings->ttAmulet >= 4 && obj->interactObj->distance < ttDoor->unk12 && *settings->balloonsPtr >= 47) {
+    if (settings->ttAmulet >= 4 && obj->interactObj->distance < ttDoor->radius && *settings->balloonsPtr >= 47) {
         angle = obj->segment.trans.y_rotation - obj->properties.door.openAngle;
     } else {
         angle = obj->segment.trans.y_rotation - obj->properties.door.closeAngle;
@@ -4768,13 +4791,13 @@ void obj_loop_weapon(Object *obj, s32 updateRate) {
     switch (weapon->weaponID) {
         case WEAPON_ROCKET_HOMING:
         case WEAPON_ROCKET:
-            handle_rocket_projectile(obj, updateRate);
+            weapon_projectile(obj, updateRate);
             break;
         case WEAPON_TRIPMINE:
         case WEAPON_OIL_SLICK:
         case WEAPON_BUBBLE_TRAP:
         case WEAPON_UNK_11:
-            func_8003F2E8(obj, updateRate);
+            weapon_trap(obj, updateRate);
             break;
     }
     return;
@@ -4785,7 +4808,7 @@ void obj_loop_weapon(Object *obj, s32 updateRate) {
  * A homing rocket uses the checkpoint system to path towards its victim.
  * When it collides with a racer, they're launched into the air.
  */
-void handle_rocket_projectile(Object *obj, s32 updateRate) {
+void weapon_projectile(Object *obj, s32 updateRate) {
     Object *interactObj;
     Object_Racer *weaponOwner;
     Object_Weapon *weapon;
@@ -5106,80 +5129,87 @@ void play_rocket_trailing_sound(Object *obj, struct Object_Weapon *weapon, u16 s
     }
 }
 
-void func_8003F2E8(Object *weaponObj, s32 updateRate) {
+/**
+ * Handles all the trap weapon behaviour.
+ * When dropped, will fall to the ground, provided the user wasn't in a plane.
+ * Once on the ground, will count up until it reaches the target and consider itself armed.
+ * The timer is used for scaling the trap, which the bubble and oil slick use.
+ * If triggered, the trap will perform different behaviours depending on what it is, then remove itself.
+ */
+void weapon_trap(Object *weaponObj, s32 updateRate) {
     Object *weaponInteractObj;
     Object_Racer *weaponHit;
     Object_Racer *weaponOwner;
-    Vec3f sp58;
+    Vec3f intendedPos;
     f32 radius;
     f32 updateRateF;
     s32 hasCollision;
-    s32 var_a1;
+    s32 hitDist;
     s8 surface;
     Object_Weapon *weapon;
     ObjPropertyWeapon *weaponProperties;
 
     weapon = &weaponObj->unk64->weapon;
     weaponOwner = &weapon->owner->unk64->racer;
-    updateRateF = (f32) updateRate;
+    updateRateF = updateRate;
     weaponProperties = &weaponObj->properties.weapon;
     if (osTvType == TV_TYPE_PAL) {
         updateRateF *= 1.2;
     }
-    if (weaponProperties->unk4 == 0) {
-        sp58.x = weaponObj->segment.trans.x_position + (weaponObj->segment.x_velocity * updateRateF);
-        sp58.y = weaponObj->segment.trans.y_position + (weaponObj->segment.y_velocity * updateRateF);
-        sp58.z = weaponObj->segment.trans.z_position + (weaponObj->segment.z_velocity * updateRateF);
+    if (weaponProperties->status == WEAPON_DROPPED) {
+        intendedPos.x = weaponObj->segment.trans.x_position + (weaponObj->segment.x_velocity * updateRateF);
+        intendedPos.y = weaponObj->segment.trans.y_position + (weaponObj->segment.y_velocity * updateRateF);
+        intendedPos.z = weaponObj->segment.trans.z_position + (weaponObj->segment.z_velocity * updateRateF);
         radius = 9.0f;
-        func_80031130(1, &weaponObj->segment.trans.x_position, &sp58.x, -1);
+        func_80031130(1, &weaponObj->segment.trans.x_position, &intendedPos.x, -1);
         hasCollision = FALSE;
         surface = -1;
-        func_80031600(&weaponObj->segment.trans.x_position, &sp58.x, &radius, &surface, 1, &hasCollision);
-        weaponObj->segment.x_velocity = (sp58.x - weaponObj->segment.trans.x_position) / updateRateF;
-        weaponObj->segment.y_velocity = (sp58.y - weaponObj->segment.trans.y_position) / updateRateF;
-        weaponObj->segment.z_velocity = (sp58.z - weaponObj->segment.trans.z_position) / updateRateF;
-        weaponObj->segment.trans.x_position = sp58.x;
-        weaponObj->segment.trans.y_position = sp58.y;
-        weaponObj->segment.trans.z_position = sp58.z;
+        func_80031600(&weaponObj->segment.trans.x_position, &intendedPos.x, &radius, &surface, 1, &hasCollision);
+        weaponObj->segment.x_velocity = (intendedPos.x - weaponObj->segment.trans.x_position) / updateRateF;
+        weaponObj->segment.y_velocity = (intendedPos.y - weaponObj->segment.trans.y_position) / updateRateF;
+        weaponObj->segment.z_velocity = (intendedPos.z - weaponObj->segment.trans.z_position) / updateRateF;
+        weaponObj->segment.trans.x_position = intendedPos.x;
+        weaponObj->segment.trans.y_position = intendedPos.y;
+        weaponObj->segment.trans.z_position = intendedPos.z;
         if (hasCollision || weaponOwner->vehicleID == VEHICLE_PLANE) {
             weaponObj->segment.x_velocity = 0.0f;
             weaponObj->segment.z_velocity = 0.0f;
-            weaponProperties->unk4 = 1;
-            weaponProperties->unk5 = 0;
-            weaponProperties->unk6 = 0;
+            weaponProperties->status = WEAPON_ARMED;
+            weaponProperties->submerged = 0;
+            weaponProperties->scale = 0;
             if (weapon->weaponID == WEAPON_BUBBLE_TRAP) {
                 weaponObj->segment.trans.y_position += 16.0f;
             }
         }
         radius = -10000.0f;
         if (func_8002B9BC(weaponObj, &radius, NULL, 1) && (weaponObj->segment.trans.y_position < radius)) {
-            weaponProperties->unk4 = 1;
-            weaponProperties->unk5 = 1;
-            weaponProperties->unk6 = 0;
+            weaponProperties->status = WEAPON_ARMED;
+            weaponProperties->submerged = 1;
+            weaponProperties->scale = 0;
             if (weapon->weaponID == WEAPON_BUBBLE_TRAP) {
                 weaponObj->segment.trans.y_position += 16.0f;
             }
         }
     }
     if (weapon->weaponID == WEAPON_OIL_SLICK) {
-        if (weaponProperties->unk4 != 0) {
-            if (weaponProperties->unk4 == 1) {
-                weaponProperties->unk6 += updateRate;
-                if (weaponProperties->unk6 > 12) {
-                    weaponProperties->unk6 = 12;
+        if (weaponProperties->status != WEAPON_DROPPED) {
+            if (weaponProperties->status == WEAPON_ARMED) {
+                weaponProperties->scale += updateRate;
+                if (weaponProperties->scale > 12) {
+                    weaponProperties->scale = 12;
                 }
             } else {
-                weaponProperties->unk6 -= updateRate;
-                if (weaponProperties->unk6 <= 0) {
-                    weaponProperties->unk6 = 1;
+                weaponProperties->scale -= updateRate;
+                if (weaponProperties->scale <= 0) {
+                    weaponProperties->scale = 1;
                     free_object(weaponObj);
                 }
             }
             if (weaponOwner->vehicleID != VEHICLE_PLANE) {
-                if (weaponProperties->unk5 != 0) {
-                    weaponObj->waterEffect->scale = weaponProperties->unk6 * 0.6f;
+                if (weaponProperties->submerged != 0) {
+                    weaponObj->waterEffect->scale = weaponProperties->scale * 0.6f;
                 } else {
-                    weaponObj->shadow->scale = weaponProperties->unk6 * 0.6f;
+                    weaponObj->shadow->scale = weaponProperties->scale * 0.6f;
                 }
                 weaponObj->segment.trans.flags |= OBJ_FLAGS_SHADOW_ONLY;
             }
@@ -5194,16 +5224,16 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
             move_object(weaponObj, weapon->target->segment.trans.x_position, weapon->target->segment.trans.y_position,
                         weapon->target->segment.trans.z_position);
         }
-        if (weaponProperties->unk4 == 1 || weaponProperties->unk4 == 2) {
-            weaponProperties->unk6 += updateRate;
-            if (weaponProperties->unk6 > 20) {
-                weaponProperties->unk6 = 20;
+        if (weaponProperties->status == WEAPON_ARMED || weaponProperties->status == WEAPON_TRIGGERED) {
+            weaponProperties->scale += updateRate;
+            if (weaponProperties->scale > 20) {
+                weaponProperties->scale = 20;
             }
         }
-        if (weaponProperties->unk4 == 2) {
-            weaponProperties->unk5 += updateRate;
-            if (weaponProperties->unk5 > 120) {
-                weaponProperties->unk4 = 3;
+        if (weaponProperties->status == WEAPON_TRIGGERED) {
+            weaponProperties->submerged += updateRate;
+            if (weaponProperties->submerged > 120) {
+                weaponProperties->status = WEAPON_DESTROY;
                 if (weapon->soundMask != NULL) {
                     func_800096F8(weapon->soundMask);
                     weapon->soundMask = NULL;
@@ -5213,25 +5243,25 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
                                        NULL);
             }
         }
-        if (weaponProperties->unk4 == 3) {
+        if (weaponProperties->status == WEAPON_DESTROY) {
             weaponObj->particleEmitFlags = OBJ_EMIT_PARTICLE_1;
             obj_spawn_particle(weaponObj, updateRate);
             weaponObj->segment.trans.flags |= OBJ_FLAGS_INVISIBLE;
-            weaponProperties->unk6 -= updateRate;
-            if (weaponProperties->unk6 < 1) {
-                weaponProperties->unk6 = 1;
+            weaponProperties->scale -= updateRate;
+            if (weaponProperties->scale < 1) {
+                weaponProperties->scale = 1;
                 free_object(weaponObj);
             }
         }
-        if (weaponProperties->unk4 != 0) {
-            weaponObj->segment.trans.scale = (f32) weaponProperties->unk6 * 0.075f;
+        if (weaponProperties->status != WEAPON_DROPPED) {
+            weaponObj->segment.trans.scale = weaponProperties->scale * 0.075f;
         }
         weaponObj->segment.animFrame += updateRate * 16;
     }
-    if (weaponProperties->unk4 < 2) {
-        var_a1 = 60;
+    if (weaponProperties->status < WEAPON_TRIGGERED) {
+        hitDist = 60;
         if (weaponOwner->vehicleID != VEHICLE_PLANE) {
-            var_a1 = 34;
+            hitDist = 34;
             weaponObj->segment.y_velocity -= 2.0;
             weaponObj->segment.x_velocity -= (weaponObj->segment.x_velocity / 8);
             weaponObj->segment.z_velocity -= (weaponObj->segment.z_velocity / 8);
@@ -5240,12 +5270,12 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
             weaponObj->segment.animFrame += updateRate * 8;
         }
         if (weapon->weaponID == WEAPON_BUBBLE_TRAP || weapon->weaponID == WEAPON_OIL_SLICK) {
-            var_a1 += var_a1 >> 1;
+            hitDist += hitDist >> 1;
         }
         weaponInteractObj = weaponObj->interactObj->obj;
         if (weaponInteractObj != NULL) {
-            if (weapon->owner != weaponObj->interactObj->obj || weaponProperties->unk0 < normalise_time(450)) {
-                if (weaponObj->interactObj->distance < var_a1) {
+            if (weapon->owner != weaponObj->interactObj->obj || weaponProperties->decayTimer < normalise_time(450)) {
+                if (weaponObj->interactObj->distance < hitDist) {
                     weaponInteractObj = weaponObj->interactObj->obj;
                     if (weaponInteractObj->segment.header->behaviorId == BHV_RACER) {
                         weaponHit = &weaponInteractObj->unk64->racer;
@@ -5256,7 +5286,7 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
                                              SOUND_EXPLOSION, 1.0f, 1);
                         } else if (weapon->weaponID == WEAPON_BUBBLE_TRAP) {
                             if (weaponHit->shieldTimer > 0 && weaponHit->shieldType >= SHIELD_LEVEL3) {
-                                weaponProperties->unk4 = 3;
+                                weaponProperties->status = WEAPON_DESTROY;
 
                                 play_sound_at_position(SOUND_POP, weaponObj->segment.trans.x_position,
                                                        weaponObj->segment.trans.y_position,
@@ -5269,12 +5299,12 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
                                                        weaponInteractObj->segment.trans.z_position, 4,
                                                        &weapon->soundMask);
                                 weaponHit->attackType = ATTACK_BUBBLE;
-                                weaponProperties->unk4 = 2;
-                                weaponProperties->unk5 = 0;
+                                weaponProperties->status = WEAPON_TRIGGERED;
+                                weaponProperties->submerged = 0;
                             }
                         } else if (weapon->weaponID == WEAPON_OIL_SLICK) {
                             weaponHit->attackType = ATTACK_SPIN;
-                            weaponProperties->unk4 = 2;
+                            weaponProperties->status = WEAPON_TRIGGERED;
                         }
                         if (!weaponHit->raceFinished) {
                             rumble_set(weaponHit->playerIndex, RUMBLE_TYPE_13);
@@ -5291,13 +5321,13 @@ void func_8003F2E8(Object *weaponObj, s32 updateRate) {
                 }
             }
         }
-        weaponProperties->unk0 -= updateRate;
-        if (weaponProperties->unk4 < 2) {
-            if (weaponProperties->unk0 < normalise_time(-1320)) {
+        weaponProperties->decayTimer -= updateRate;
+        if (weaponProperties->status < WEAPON_TRIGGERED) {
+            if (weaponProperties->decayTimer < normalise_time(-1320)) {
                 if (weapon->weaponID == WEAPON_OIL_SLICK) {
-                    weaponProperties->unk4 = 2;
+                    weaponProperties->status = WEAPON_TRIGGERED;
                 } else if ((weapon->weaponID == WEAPON_BUBBLE_TRAP)) {
-                    weaponProperties->unk4 = 3;
+                    weaponProperties->status = WEAPON_DESTROY;
                     play_sound_at_position(SOUND_POP, weaponObj->segment.trans.x_position,
                                            weaponObj->segment.trans.y_position, weaponObj->segment.trans.z_position, 4,
                                            NULL);
@@ -5589,7 +5619,7 @@ void obj_loop_weather(Object *obj, UNUSED s32 updateRate) {
 /**
  * Lens Flare init func.
  * Calls the function to initialise the lens flare system, using presets.
-*/
+ */
 void obj_init_lensflare(Object *obj, UNUSED LevelObjectEntry_LensFlare *entry) {
     lensflare_init(obj);
 }
@@ -5598,7 +5628,7 @@ void obj_init_lensflare(Object *obj, UNUSED LevelObjectEntry_LensFlare *entry) {
  * Lens Flare Override init func.
  * Calls a function adding the object to the lens flare system,
  * so the rendering portion knows to disable lens flares when inside.
-*/
+ */
 void obj_init_lensflareswitch(Object *obj, LevelObjectEntry_LensFlareSwitch *entry, UNUSED s32 arg2) {
     lensflare_override_add(obj);
     obj->segment.trans.scale = entry->radius;

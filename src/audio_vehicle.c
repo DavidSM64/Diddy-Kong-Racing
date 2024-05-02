@@ -40,7 +40,7 @@ f32 D_80119C60[670];      // array size of 672 looks to be required for func_800
 unk8011A6D8 *D_8011A6D8;  // unk8011A6D8[] | Reverb stuff
 unk8011A6D8 **D_8011A6DC; // Struct of size 0xC0
 f32 D_8011A6E0[334];
-s32 D_8011AC18;
+s32 gAudioLinesOff;
 s32 D_8011AC1C;
 
 /******************************/

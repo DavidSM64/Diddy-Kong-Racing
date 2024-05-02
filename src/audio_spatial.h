@@ -50,9 +50,9 @@ typedef struct unk800A414_arg3 {
     f32 unk14;
 } unk800A414_arg3;
 
-void func_80008168(void);
+void audioline_on(void);
 void func_800096F8(SoundMask *);
-void func_80008140(void);
+void audioline_off(void);
 void func_8000974C(u16 soundBite, f32 x, f32 y, f32 z, u8 arg4, u8 arg5, u8 volume, u16 distance, u8 arg8, u8 pitch,
                    u8 argA, SoundMask **soundMask);
 void play_sound_at_position(u16 soundId, f32 x, f32 y, f32 z, u8 arg4, SoundMask **soundMask);
