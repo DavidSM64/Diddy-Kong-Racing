@@ -543,7 +543,7 @@ void ingame_logic_loop(s32 updateRate) {
                 gIsPaused = FALSE;
                 break;
             case 6:
-                func_80022E18(1);
+                mode_end_taj_race(CHALLENGE_END_QUIT);
                 gIsPaused = FALSE;
                 break;
             case 3:

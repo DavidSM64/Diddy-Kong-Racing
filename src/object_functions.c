@@ -2542,14 +2542,14 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     Object_NPC *taj;
     Object_Racer *racer;
     u32 buttonsPressed;
-    s8 sp6B;
+    s8 spawnSmoke;
     LevelHeader *levelHeader;
     ObjectSegment *temp_v0_22;
     f32 var_f2;
     s32 arctan;
     s32 temp;
 
-    sp6B = 0;
+    spawnSmoke = FALSE;
     tempPosY = obj->segment.trans.y_position;
 
     updateRateF2 = updateRate;
@@ -2618,7 +2618,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             obj->properties.npc.action = TAJ_MODE_APPROACH_PLAYER;
         } else {
             obj->properties.npc.action = TAJ_MODE_TELEPORT_TO_PLAYER_BEGIN;
-            sp6B = 1;
+            spawnSmoke = TRUE;
         }
         get_fog_settings(PLAYER_ONE, &taj->fogNear, &taj->fogFar, &taj->fogR, &taj->fogG, &taj->fogB);
         slowly_change_fog(PLAYER_ONE, 255, 0, 120, 960, 1100, 240);
@@ -2751,7 +2751,8 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             taj->animFrameF += updateRateF * 1.0;
             racer_set_dialogue_camera();
             if (dialogueID == 3 || dialogueID == 4) {
-                obj->properties.npc.action = (dialogueID == 4) ? TAJ_MODE_END_DIALOGUE_UNUSED : TAJ_MODE_END_DIALOGUE;
+                obj->properties.npc.action =
+                    (dialogueID == 4) ? TAJ_MODE_END_DIALOGUE_CHALLENGE : TAJ_MODE_END_DIALOGUE;
                 taj->animFrameF = 0.1f;
                 obj->segment.object.animationID = 2;
                 taj->unk1C = 0;
@@ -2784,7 +2785,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 } else {
                     obj->properties.npc.action = TAJ_MODE_SET_CHALLENGE;
                     transition_begin(&gTajTransition);
-                    sp6B = 1;
+                    spawnSmoke = TRUE;
                     play_taj_voice_clip(SOUND_WHOOSH4, TRUE);
                     taj->animFrameF = 0.0f;
                 }
@@ -2831,7 +2832,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                     if (taj->animFrameF == 0.0) {
                         if (gTajDialogueChoice & 0x80) {
                             transition_begin(&gTajTransition);
-                            sp6B = 1;
+                            spawnSmoke = TRUE;
                             obj->properties.npc.action = TAJ_MODE_SET_CHALLENGE;
                             sound_play(SOUND_WHOOSH4, NULL);
                             taj->animFrameF = 0.0f;
@@ -2844,15 +2845,16 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
             }
             break;
         case TAJ_MODE_END_DIALOGUE:
-        case TAJ_MODE_END_DIALOGUE_UNUSED:
+        case TAJ_MODE_END_DIALOGUE_CHALLENGE:
             if (taj->animFrameF != 0.0) {
                 taj->animFrameF = taj->animFrameF + (0.5 * updateRateF);
             }
             if (taj->animFrameF == 0) {
-                sp6B = 1;
-                if (obj->properties.npc.action == TAJ_MODE_END_DIALOGUE_UNUSED) {
-                    func_80022CFC(obj->segment.object.segmentID, obj->segment.trans.x_position - (racer->ox1 * 50.0f),
-                                  obj->segment.trans.y_position, obj->segment.trans.z_position - (racer->oz1 * 50.0f));
+                spawnSmoke = TRUE;
+                if (obj->properties.npc.action == TAJ_MODE_END_DIALOGUE_CHALLENGE) {
+                    obj_taj_create_balloon(
+                        obj->segment.object.segmentID, obj->segment.trans.x_position - (racer->ox1 * 50.0f),
+                        obj->segment.trans.y_position, obj->segment.trans.z_position - (racer->oz1 * 50.0f));
                 }
                 obj->properties.npc.action = TAJ_MODE_TELEPORT_AWAY_BEGIN;
                 sound_play(SOUND_WHOOSH4, NULL);
@@ -2876,7 +2878,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
                 obj->segment.object.opacity -= var_a2;
             } else {
                 sound_play(SOUND_WHOOSH4, NULL);
-                sp6B = 1;
+                spawnSmoke = TRUE;
                 obj->segment.object.opacity = 0;
                 obj->properties.npc.action = TAJ_MODE_TELEPORT_TO_PLAYER_END;
                 obj->segment.trans.x_position = racerObj->segment.trans.x_position - (racer->ox1 * 150.0f);
@@ -3112,7 +3114,7 @@ void obj_loop_parkwarden(Object *obj, s32 updateRate) {
     if (obj->properties.npc.action != TAJ_MODE_ROAM) {
         gNPCPosY = obj->segment.trans.y_position;
     }
-    if (sp6B != 0) {
+    if (spawnSmoke) {
         obj_spawn_effect(obj->segment.trans.x_position, obj->segment.trans.y_position, obj->segment.trans.z_position,
                          ASSET_OBJECT_ID_WARDENSMOKE, SOUND_NONE, 1.0f, 0);
     }
@@ -3248,7 +3250,7 @@ void obj_loop_modechange(Object *obj, UNUSED s32 updateRate) {
                             } else {
                                 racer->nodeCurrent = NULL;
                             }
-                            racer->unk15C = NULL;
+                            racer->challengeMarker = NULL;
                             racer->unk19A = 0;
                         }
                         racer->unk198 = obj->segment.trans.y_rotation;
@@ -5584,12 +5586,21 @@ void obj_loop_weather(Object *obj, UNUSED s32 updateRate) {
     }
 }
 
+/**
+ * Lens Flare init func.
+ * Calls the function to initialise the lens flare system, using presets.
+*/
 void obj_init_lensflare(Object *obj, UNUSED LevelObjectEntry_LensFlare *entry) {
-    func_800AC8A8(obj);
+    lensflare_init(obj);
 }
 
+/**
+ * Lens Flare Override init func.
+ * Calls a function adding the object to the lens flare system,
+ * so the rendering portion knows to disable lens flares when inside.
+*/
 void obj_init_lensflareswitch(Object *obj, LevelObjectEntry_LensFlareSwitch *entry, UNUSED s32 arg2) {
-    cameraAddOverrideObject(obj);
+    lensflare_override_add(obj);
     obj->segment.trans.scale = entry->radius;
     obj->segment.trans.scale /= 40.0f;
 }
@@ -5715,9 +5726,14 @@ void obj_init_midichset(Object *obj, LevelObjectEntry_Midichset *entry) {
 /* Official name: bubblerInit */
 void obj_init_bubbler(Object *obj, LevelObjectEntry_Bubbler *entry) {
     func_800AF134((Particle *) obj->particleEmitter, entry->particleBehaviourID, entry->particlePropertyID, 0, 0, 0);
-    obj->properties.common.unk0 = entry->unkA;
+    obj->properties.common.unk0 = entry->particleDensity;
 }
 
+/**
+ * Bubbler Boss loop func.
+ * All the racer side is handled elsewhere.
+ * This rolls a random number and starts emitting particles based on that for variable density.
+ */
 void obj_loop_bubbler(Object *obj, s32 updateRate) {
     if (obj->properties.common.unk0 >= get_random_number_from_range(0, 1024)) {
         obj->particleEmitFlags = OBJ_EMIT_PARTICLE_1;
@@ -5851,7 +5867,7 @@ void obj_loop_frog(Object *obj, s32 updateRate) {
                         free_object(obj);
                         break;
                     } else {
-                        frog->action = 2;
+                        frog->action = FROG_SQUISH;
                         play_sound_at_position(SOUND_SPLAT, obj->segment.trans.x_position,
                                                obj->segment.trans.y_position, obj->segment.trans.z_position, 4, NULL);
                     }

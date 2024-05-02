@@ -2546,28 +2546,34 @@ void update_player_racer(Object *obj, s32 updateRate) {
             if (is_taj_challenge()) {
                 if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
                     checkpointNode = find_next_checkpoint_node(tempRacer->checkpoint, tempRacer->unk1C8);
-                    if (!tempRacer->unk15C) {
+                    if (!tempRacer->challengeMarker) {
                         newObject.x = 0;
                         newObject.y = 0;
                         newObject.z = 0;
                         newObject.objectID = ASSET_OBJECT_ID_CHECKARROW;
                         newObject.size = 8;
-                        tempRacer->unk15C = spawn_object(&newObject, 1);
-                        if (tempRacer->unk15C) {
-                            tempRacer->unk15C->segment.level_entry = NULL;
-                            tempRacer->unk15C->segment.object.opacity = 128;
+                        tempRacer->challengeMarker = spawn_object(&newObject, 1);
+                        if (tempRacer->challengeMarker) {
+                            tempRacer->challengeMarker->segment.level_entry = NULL;
+                            tempRacer->challengeMarker->segment.object.opacity = 128;
                         }
                     }
-                    if (tempRacer->unk15C) {
-                        tempRacer->unk15C->segment.trans.x_position = checkpointNode->obj->segment.trans.x_position;
-                        tempRacer->unk15C->segment.trans.y_position = checkpointNode->obj->segment.trans.y_position;
+                    if (tempRacer->challengeMarker) {
+                        tempRacer->challengeMarker->segment.trans.x_position =
+                            checkpointNode->obj->segment.trans.x_position;
+                        tempRacer->challengeMarker->segment.trans.y_position =
+                            checkpointNode->obj->segment.trans.y_position;
                         if (tempRacer->vehicleID == VEHICLE_CAR) {
-                            tempRacer->unk15C->segment.trans.y_position -= 30.0;
+                            tempRacer->challengeMarker->segment.trans.y_position -= 30.0;
                         }
-                        tempRacer->unk15C->segment.trans.z_position = checkpointNode->obj->segment.trans.z_position;
-                        tempRacer->unk15C->segment.trans.y_rotation = checkpointNode->obj->segment.trans.y_rotation;
-                        tempRacer->unk15C->segment.trans.x_rotation = checkpointNode->obj->segment.trans.x_rotation;
-                        tempRacer->unk15C->segment.object.segmentID = checkpointNode->obj->segment.object.segmentID;
+                        tempRacer->challengeMarker->segment.trans.z_position =
+                            checkpointNode->obj->segment.trans.z_position;
+                        tempRacer->challengeMarker->segment.trans.y_rotation =
+                            checkpointNode->obj->segment.trans.y_rotation;
+                        tempRacer->challengeMarker->segment.trans.x_rotation =
+                            checkpointNode->obj->segment.trans.x_rotation;
+                        tempRacer->challengeMarker->segment.object.segmentID =
+                            checkpointNode->obj->segment.object.segmentID;
                     }
                 }
             }
@@ -2582,11 +2588,11 @@ void update_player_racer(Object *obj, s32 updateRate) {
             tempRacer->unk1A8 = tempVar;
         }
         if (is_taj_challenge()) {
-            if (tempRacer->unk15C) {
-                tempRacer->unk15C->segment.animFrame += 8 * updateRate;
+            if (tempRacer->challengeMarker) {
+                tempRacer->challengeMarker->segment.animFrame += 8 * updateRate;
             }
             if (tempRacer->unk1BA > 400 || tempRacer->unk1BA < -400) {
-                func_80022E18(2);
+                mode_end_taj_race(CHALLENGE_END_OOB);
             }
         }
         func_80018CE0(obj, xTemp, yTemp, zTemp, updateRate);

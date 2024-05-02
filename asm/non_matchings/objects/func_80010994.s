@@ -405,12 +405,12 @@ glabel func_80010994
 .L80010F58:
 /* 011B58 80010F58 0C0079BB */  jal   func_8001E6EC
 /* 011B5C 80010F5C 00002025 */   move  $a0, $zero
-/* 011B60 80010F60 3C188012 */  lui   $t8, %hi(D_8011AEF7) # $t8, 0x8012
-/* 011B64 80010F64 8318AEF7 */  lb    $t8, %lo(D_8011AEF7)($t8)
+/* 011B60 80010F60 3C188012 */  lui   $t8, %hi(gTajRaceInit) # $t8, 0x8012
+/* 011B64 80010F64 8318AEF7 */  lb    $t8, %lo(gTajRaceInit)($t8)
 /* 011B68 80010F68 00000000 */  nop   
 /* 011B6C 80010F6C 13000003 */  beqz  $t8, .L80010F7C
 /* 011B70 80010F70 00000000 */   nop   
-/* 011B74 80010F74 0C008A52 */  jal   func_80022948
+/* 011B74 80010F74 0C008A52 */  jal   mode_init_taj_race
 /* 011B78 80010F78 00000000 */   nop   
 .L80010F7C:
 /* 011B7C 80010F7C 3C108012 */  lui   $s0, %hi(gPathUpdateOff) # $s0, 0x8012

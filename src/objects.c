@@ -299,9 +299,9 @@ s32 gNumRacers;
 u8 gTimeTrialEnabled;
 u8 gIsTimeTrial;
 s8 gIsTajChallenge;
-s8 D_8011AEF7;
-s8 D_8011AEF8;
-s32 D_8011AEFC;
+s8 gTajRaceInit;
+s8 gChallengePrevMusic;
+s32 gChallengePrevInstruments;
 s8 D_8011AF00;
 Object *(*gAINodes)[AINODE_COUNT];
 s32 gAINodeTail[2];
@@ -509,8 +509,8 @@ void allocate_object_pools(void) {
     set_world_shading(0.67f, 0.33f, 0, -0x2000, 0);
     gObjectMemoryPool = (Object *) new_sub_memory_pool(OBJECT_POOL_SIZE, OBJECT_SLOT_COUNT);
     gParticlePtrList = allocate_from_main_pool_safe(sizeof(uintptr_t) * 200, COLOUR_TAG_BLUE);
-    D_8011AE6C = allocate_from_main_pool_safe(0x50, COLOUR_TAG_BLUE);
-    D_8011AE74 = allocate_from_main_pool_safe(0x200, COLOUR_TAG_BLUE);
+    D_8011AE6C = allocate_from_main_pool_safe(sizeof(uintptr_t) * 20, COLOUR_TAG_BLUE);
+    D_8011AE74 = allocate_from_main_pool_safe(sizeof(uintptr_t) * 128, COLOUR_TAG_BLUE);
     gTrackCheckpoints = allocate_from_main_pool_safe(sizeof(CheckpointNode) * MAX_CHECKPOINTS, COLOUR_TAG_BLUE);
     gCameraObjList = allocate_from_main_pool_safe(sizeof(uintptr_t *) * CAMCONTROL_COUNT, COLOUR_TAG_BLUE);
     gRacers = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
@@ -518,7 +518,7 @@ void allocate_object_pools(void) {
     gRacersByPosition = allocate_from_main_pool_safe(sizeof(uintptr_t) * 10, COLOUR_TAG_BLUE);
     gAINodes = allocate_from_main_pool_safe(sizeof(uintptr_t) * AINODE_COUNT, COLOUR_TAG_BLUE);
     D_8011ADCC = allocate_from_main_pool_safe(8, COLOUR_TAG_BLUE);
-    D_8011AFF4 = allocate_from_main_pool_safe(0x400, COLOUR_TAG_BLUE);
+    D_8011AFF4 = allocate_from_main_pool_safe(sizeof(unk800179D0) * 16, COLOUR_TAG_BLUE);
     gAssetsLvlObjTranslationTable = (s16 *) load_asset_section_from_rom(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE);
     gAssetsLvlObjTranslationTableLength = (get_size_of_asset_section(ASSET_LEVEL_OBJECT_TRANSLATION_TABLE) >> 1) - 1;
     while (gAssetsLvlObjTranslationTable[gAssetsLvlObjTranslationTableLength] == 0) {
@@ -629,7 +629,7 @@ void clear_object_pointers(void) {
     D_8011AE7C = 0;
     gTransformTimer = 0;
     gIsTajChallenge = FALSE;
-    D_8011AEF7 = 0;
+    gTajRaceInit = 0;
     D_8011AF60[0] = 0;
     D_8011AE00 = 0;
     D_8011AE01 = 1;
@@ -2322,8 +2322,8 @@ void func_80010994(s32 updateRate) {
             }
         }
         func_8001E6EC(0);
-        if (D_8011AEF7 != 0) {
-            func_80022948();
+        if (gTajRaceInit != 0) {
+            mode_init_taj_race();
         }
         if (gPathUpdateOff == FALSE) {
             gParticlePtrList_flush();
@@ -6008,7 +6008,7 @@ UNUSED void func_800228DC(UNUSED s32 arg0, UNUSED s32 arg1, UNUSED s32 arg2) {
 void init_racer_for_challenge(s32 vehicleID) {
     Object_Racer *racer;
 
-    D_8011AEF7 = 3;
+    gTajRaceInit = 3;
     racer = &get_racer_object(PLAYER_ONE)->unk64->racer;
     racer->courseCheckpoint = 0;
     racer->checkpoint = 0;
@@ -6018,7 +6018,11 @@ void init_racer_for_challenge(s32 vehicleID) {
     set_pause_lockout_timer(10);
 }
 
-void func_80022948(void) {
+/**
+ * Initialise the relevant variables related to races.
+ * These are usually done on level load, but Taj challenges don't reset the level.
+ */
+void mode_init_taj_race(void) {
     CheckpointNode *checkpointNode;
     UNUSED s32 pad;
     s32 j;
@@ -6032,12 +6036,12 @@ void func_80022948(void) {
     UNUSED s32 pad2[7];
     f32 sp2C;
 
-    D_8011AEF7 -= 1;
-    if (D_8011AEF7 == 0) {
+    gTajRaceInit -= 1;
+    if (gTajRaceInit == 0) {
         levelHeader = get_current_level_header();
-        D_8011AEF8 = levelHeader->music;
-        D_8011AEFC = levelHeader->instruments;
-        levelHeader->music = 0x1D;
+        gChallengePrevMusic = levelHeader->music;
+        gChallengePrevInstruments = levelHeader->instruments;
+        levelHeader->music = SEQUENCE_TAJS_RACES;
         levelHeader->instruments = 0xFFFF;
         racerObj = get_racer_object(PLAYER_ONE);
         racer = &racerObj->unk64->racer;
@@ -6106,31 +6110,38 @@ void func_80022948(void) {
     }
 }
 
-void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z) {
-    s32 index;
-    unk80022CFC_1 *obj;
+/**
+ * Finds which golden balloon should be moved, and move it onto Taj's current position.
+ * Sets opacity to 0, so the balloon with smoothly fade in.
+ */
+void obj_taj_create_balloon(s32 blockID, f32 x, f32 y, f32 z) {
+    s32 i;
+    Object *obj;
     Settings *settings = get_settings();
 
-    for (index = 0; index < gObjectCount; index += 1) {
-        obj = ((unk80022CFC_1 *) gObjPtrList[index]);
-        if (obj->unk48 == 0x4D) {
-            if (obj->unk3C != NULL) {
-                if (obj->unk3C->unkA > 0) {
-                    if ((settings->tajFlags != 0) && (settings->tajFlags & (1 << (obj->unk3C->unkA + 2)))) {
-                        obj->unkC = x;
-                        obj->unk10 = y + 10.0;
-                        obj->unk14 = z;
-                        obj->unk2E = arg0;
-                        obj->unk78 = 0;
-                        obj->unk39 = 0;
-                    }
-                }
+    for (i = 0; i < gObjectCount; i++) {
+        obj = gObjPtrList[i];
+        if (obj->behaviorId == BHV_GOLDEN_BALLOON && obj->segment.level_entry != NULL &&
+            obj->segment.level_entry->goldenBalloon.challengeID > 0) {
+            if (settings->tajFlags &&
+                settings->tajFlags & (1 << (obj->segment.level_entry->goldenBalloon.challengeID + 2))) {
+                obj->segment.trans.x_position = x;
+                obj->segment.trans.y_position = y + 10.0;
+                obj->segment.trans.z_position = z;
+                obj->segment.object.segmentID = blockID;
+                obj->properties.common.unk0 = 0;
+                obj->segment.object.opacity = 0;
             }
         }
     }
 }
 
-void func_80022E18(s32 arg0) {
+/**
+ * Revert changes set by the game when starting the Taj challenge.
+ * This includes the music set, as well as the extra racer spawned.
+ * Has a different response depending on whether the challenge was aborted or finished.
+ */
+void mode_end_taj_race(s32 reason) {
     s32 flags;
     s32 i;
     Object_Racer *racer;
@@ -6139,9 +6150,9 @@ void func_80022E18(s32 arg0) {
     LevelHeader *levelHeader;
 
     levelHeader = get_current_level_header();
-    levelHeader->race_type = 5;
-    levelHeader->music = D_8011AEF8;
-    levelHeader->instruments = D_8011AEFC;
+    levelHeader->race_type = RACETYPE_HUBWORLD;
+    levelHeader->music = gChallengePrevMusic;
+    levelHeader->instruments = gChallengePrevInstruments;
     minimap_opacity_set(1);
 
     // Only works with do {} while?
@@ -6160,16 +6171,16 @@ void func_80022E18(s32 arg0) {
     gNumRacers = 1;
     for (i = gObjectListStart; i < gObjectCount; i++) {
         if (!(gObjPtrList[i]->segment.trans.flags & OBJ_FLAGS_DEACTIVATED) &&
-            (gObjPtrList[i]->behaviorId == BHV_PARK_WARDEN)) {
+            gObjPtrList[i]->behaviorId == BHV_PARK_WARDEN) {
             obj = gObjPtrList[i];
         }
     }
     racer = &(*gRacers)[0]->unk64->racer;
-    if (racer->unk15C != NULL) {
-        free_object(racer->unk15C);
-        racer->unk15C = NULL;
+    if (racer->challengeMarker != NULL) {
+        free_object(racer->challengeMarker);
+        racer->challengeMarker = NULL;
     }
-    if (arg0 == 0) {
+    if (reason == CHALLENGE_END_FINISH) {
         if (racer->finishPosition == 1) {
             settings = get_settings();
             flags = racer->vehicleID;
@@ -6184,24 +6195,24 @@ void func_80022E18(s32 arg0) {
         } else {
             set_next_taj_challenge_menu(4);
         }
-        obj->properties.common.unk0 = 0x1F;
+        obj->properties.common.unk0 = 31;
         set_taj_status(2);
     } else {
         music_change_on();
         music_stop();
         set_next_taj_challenge_menu(0);
         func_80008168();
-        if (arg0 == 2) {
+        if (reason == CHALLENGE_END_OOB) {
             set_current_text(ASSET_GAME_TEXT_0);
         }
         gEventCountdown = 0;
         gEventStartTimer = 0;
-        obj->properties.common.unk0 = 0x14;
+        obj->properties.common.unk0 = 20;
     }
     music_change_on();
     hud_audio_init();
     start_level_music(1.0f);
-    gIsTajChallenge = 0;
+    gIsTajChallenge = FALSE;
 }
 
 GLOBAL_ASM("asm/non_matchings/objects/func_800230D0.s")

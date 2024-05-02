@@ -189,6 +189,12 @@ enum ContPakErrors {
     CONTPAK_ERROR_DAMAGED
 };
 
+enum TajChallengeReasons {
+    CHALLENGE_END_FINISH,
+    CHALLENGE_END_QUIT,
+    CHALLENGE_END_OOB // out of bounds
+};
+
 typedef struct RacerShieldGfx {
     s16 x_position;
     s16 y_position;
@@ -445,7 +451,7 @@ void render_misc_model(Object *obj, Vertex *verts, u32 numVertices, Triangle *tr
 void func_8000B290(void);
 void func_80016BC4(Object *obj);
 s32 ainode_register(Object *obj);
-void func_80022CFC(s32 arg0, f32 x, f32 y, f32 z);
+void obj_taj_create_balloon(s32 blockID, f32 x, f32 y, f32 z);
 Object *func_8001B7A8(Object *racer, s32 position, f32 *distance);
 s32 func_8000FD34(Object *obj, Object_5C *matrices);
 void func_8000E4E8(s32 index);
@@ -479,7 +485,7 @@ u8 func_8001B4FC(s32 trackId);
 s8 set_course_finish_flags(Settings *settings);
 void process_object_interactions(void);
 void render_3d_model(Object *obj);
-void func_80022E18(s32 arg0);
+void mode_end_taj_race(s32 reason);
 void ainode_update(void);
 void func_8001E6EC(s8);
 Object *func_8000FD54(s32 objectHeaderIndex);
@@ -487,7 +493,7 @@ void sort_objects_by_dist(s32 startIndex, s32 lastIndex);
 void func_80016748(Object *obj0, Object *obj1);
 void func_8001AE64(void);
 s32 obj_dist_racer(f32 x, f32 y, f32 z, f32 radius, s32 is2dCheck, Object **sortObj);
-void func_80022948(void);
+void mode_init_taj_race(void);
 void func_8000BADC(s32 updateRate);
 f32 func_8002277C(f32 *data, s32 index, f32 x);
 void func_8001A8F4(s32 updateRate);

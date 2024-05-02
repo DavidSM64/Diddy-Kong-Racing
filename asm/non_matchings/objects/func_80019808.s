@@ -792,7 +792,7 @@ glabel func_80019808
 /* 01AF4C 8001A34C 3C0F8012 */   lui   $t7, %hi(D_8011AD3C) # $t7, 0x8012
 /* 01AF50 8001A350 13000005 */  beqz  $t8, .L8001A368
 /* 01AF54 8001A354 00000000 */   nop   
-/* 01AF58 8001A358 0C008B86 */  jal   func_80022E18
+/* 01AF58 8001A358 0C008B86 */  jal   mode_end_taj_race
 /* 01AF5C 8001A35C 00002025 */   move  $a0, $zero
 /* 01AF60 8001A360 10000114 */  b     .L8001A7B4
 /* 01AF64 8001A364 8FBF0034 */   lw    $ra, 0x34($sp)

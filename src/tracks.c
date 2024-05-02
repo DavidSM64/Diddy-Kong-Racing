@@ -388,7 +388,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             process_weather(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, &gSceneCurrTriList,
                             tempUpdateRate);
         }
-        func_800AD030(get_active_camera_segment());
+        lensflare_override(get_active_camera_segment());
         func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList, get_active_camera_segment());
         render_hud(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList,
                    get_racer_object_by_port(gSceneCurrentPlayerID), updateRate);
@@ -415,7 +415,7 @@ void render_scene(Gfx **dList, MatrixS **mtx, Vertex **vtx, TriangleList **tris,
             gDPPipeSync(gSceneCurrDisplayList++);
             initialise_player_viewport_vars(updateRate);
             set_weather_limits(-1, -512);
-            func_800AD030(get_active_camera_segment());
+            lensflare_override(get_active_camera_segment());
             func_800ACA20(&gSceneCurrDisplayList, &gSceneCurrMatrix, &gSceneCurrVertexList,
                           get_active_camera_segment());
             set_text_font(FONT_COLOURFUL);
