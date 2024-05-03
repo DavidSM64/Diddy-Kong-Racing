@@ -928,7 +928,7 @@ typedef struct LevelObjectEntry {
         LevelObjectEntry_InfoPoint infoPoint;
         LevelObjectEntry_Trigger trigger;
         LevelObjectEntry_AirZippers_WaterZippers airzipper_waterzipper;
-        LevelObjectEntry_TimeTrial_Ghost unk58;
+        LevelObjectEntry_TimeTrial_Ghost ghost;
         LevelObjectEntry_WaveGenerator waverGenerator;
         LevelObjectEntry_Butterfly butterfly;
         LevelObjectEntry_Parkwarden taj;
