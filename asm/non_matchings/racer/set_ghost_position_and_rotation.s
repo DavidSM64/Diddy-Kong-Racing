@@ -6,15 +6,15 @@ glabel D_800E6938
 
 .text
 glabel set_ghost_position_and_rotation
-/* 05AA40 80059E40 3C058012 */  lui   $a1, %hi(D_8011D59C) # $a1, 0x8012
-/* 05AA44 80059E44 80A5D59C */  lb    $a1, %lo(D_8011D59C)($a1)
+/* 05AA40 80059E40 3C058012 */  lui   $a1, %hi(gCurrentGhostIndex) # $a1, 0x8012
+/* 05AA44 80059E44 80A5D59C */  lb    $a1, %lo(gCurrentGhostIndex)($a1)
 /* 05AA48 80059E48 27BDFF68 */  addiu $sp, $sp, -0x98
 /* 05AA4C 80059E4C 24A50001 */  addiu $a1, $a1, 1
 /* 05AA50 80059E50 AFBF001C */  sw    $ra, 0x1c($sp)
 /* 05AA54 80059E54 AFB00018 */  sw    $s0, 0x18($sp)
 /* 05AA58 80059E58 30AE0001 */  andi  $t6, $a1, 1
 /* 05AA5C 80059E5C 00808025 */  move  $s0, $a0
-/* 05AA60 80059E60 0C006CEB */  jal   is_time_trial_ghost
+/* 05AA60 80059E60 0C006CEB */  jal   timetrial_staff_ghost_check
 /* 05AA64 80059E64 AFAE005C */   sw    $t6, 0x5c($sp)
 /* 05AA68 80059E68 8FA5005C */  lw    $a1, 0x5c($sp)
 /* 05AA6C 80059E6C 10400002 */  beqz  $v0, .L80059E78
@@ -45,13 +45,13 @@ glabel set_ghost_position_and_rotation
 /* 05AACC 80059ECC 462020A0 */  cvt.s.d $f2, $f4
 .L80059ED0:
 /* 05AAD0 80059ED0 4459F800 */  cfc1  $t9, $31
-/* 05AAD4 80059ED4 3C0D8012 */  lui   $t5, %hi(D_8011D5A0) # $t5, 0x8012
+/* 05AAD4 80059ED4 3C0D8012 */  lui   $t5, %hi(gGhostNodeCount) # $t5, 0x8012
 /* 05AAD8 80059ED8 37210003 */  ori   $at, $t9, 3
 /* 05AADC 80059EDC 38210002 */  xori  $at, $at, 2
 /* 05AAE0 80059EE0 44C1F800 */  ctc1  $at, $31
 /* 05AAE4 80059EE4 01AE6821 */  addu  $t5, $t5, $t6
 /* 05AAE8 80059EE8 460011A4 */  cvt.w.s $f6, $f2
-/* 05AAEC 80059EEC 85ADD5A0 */  lh    $t5, %lo(D_8011D5A0)($t5)
+/* 05AAEC 80059EEC 85ADD5A0 */  lh    $t5, %lo(gGhostNodeCount)($t5)
 /* 05AAF0 80059EF0 44033000 */  mfc1  $v1, $f6
 /* 05AAF4 80059EF4 25AFFFFE */  addiu $t7, $t5, -2
 /* 05AAF8 80059EF8 44D9F800 */  ctc1  $t9, $31
@@ -69,8 +69,8 @@ glabel set_ghost_position_and_rotation
 /* 05AB24 80059F24 AFAD004C */  sw    $t5, 0x4c($sp)
 /* 05AB28 80059F28 0C01AF62 */  jal   get_current_map_id
 /* 05AB2C 80059F2C E7A20094 */   swc1  $f2, 0x94($sp)
-/* 05AB30 80059F30 3C188012 */  lui   $t8, %hi(D_8011D5AC) # $t8, 0x8012
-/* 05AB34 80059F34 8718D5AC */  lh    $t8, %lo(D_8011D5AC)($t8)
+/* 05AB30 80059F30 3C188012 */  lui   $t8, %hi(gGhostMapID) # $t8, 0x8012
+/* 05AB34 80059F34 8718D5AC */  lh    $t8, %lo(gGhostMapID)($t8)
 /* 05AB38 80059F38 8FA3003C */  lw    $v1, 0x3c($sp)
 /* 05AB3C 80059F3C 8FA5005C */  lw    $a1, 0x5c($sp)
 /* 05AB40 80059F40 8FAD004C */  lw    $t5, 0x4c($sp)

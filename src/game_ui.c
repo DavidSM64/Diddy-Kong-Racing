@@ -1322,8 +1322,8 @@ void func_800A277C(s32 arg0, Object *playerRacerObj, s32 updateRate) {
                 }
             }
         }
-        if (func_8001B288()) {
-            ttSWBodyObject = func_8001B2E0();
+        if (timetrial_valid_player_ghost()) {
+            ttSWBodyObject = timetrial_player_ghost();
             if (ttSWBodyObject != NULL) {
                 if ((get_race_countdown() == 0) && (curRacer->raceFinished == 0)) {
                     posY = ttSWBodyObject->segment.trans.y_position - playerRacerObj->segment.trans.y_position;
@@ -1596,7 +1596,7 @@ void render_race_start(s32 countdown, s32 updateRate) {
             }
             if (gRaceStartShowHudStep == 3) {
                 sound_play(SOUND_VOICE_TT_GO, &gHUDVoiceSoundMask);
-                if (get_time_trial_ghost() && unbeaten_staff_time() == FALSE) {
+                if (timetrial_ghost_staff() && timetrial_staff_unbeaten() == FALSE) {
                     hud_sound_play_delayed(SOUND_VOICE_TT_BEAT_MY_TIME, 1.7f, PLAYER_ONE);
                     set_delayed_text(ASSET_GAME_TEXT_82, 1.7f); // Now try and beat my time!
                 }
@@ -2388,7 +2388,7 @@ void func_800A6254(Object_Racer *racer, s32 updateRate) {
                                 sound_play(SOUND_VOICE_TT_UNLUCKY, &gHUDVoiceSoundMask);
                                 break;
                         }
-                    } else if (get_time_trial_ghost() == NULL) {
+                    } else if (timetrial_ghost_staff() == NULL) {
                         play_time_trial_end_message(&racer->playerIndex);
                     }
                 }
@@ -3244,8 +3244,8 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
             sp11C = (lvlMdl->upperXBounds - lvlMdl->lowerXBounds) / (f32) (lvlMdl->upperZBounds - lvlMdl->lowerZBounds);
             sp118 = coss_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
             sp114 = sins_f((lvlMdl->minimapRotation * 0xFFFF) / 360);
-            if (is_in_time_trial() && func_8001B288()) {
-                temp_v0_8 = func_8001B2E0();
+            if (is_in_time_trial() && timetrial_valid_player_ghost()) {
+                temp_v0_8 = timetrial_player_ghost();
                 if (temp_v0_8 != NULL) {
                     minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114,
                                        sp118, sp11C);
@@ -3257,7 +3257,7 @@ void render_minimap_and_misc_hud(Gfx **dList, MatrixS **mtx, Vertex **vtx, s32 u
                     func_800AA600(&gHUDCurrDisplayList, &gHUDCurrMatrix, &gHUDCurrVertex, &gCurrentHud->minimapMarker);
                 }
             }
-            temp_v0_8 = get_time_trial_ghost();
+            temp_v0_8 = timetrial_ghost_staff();
             if (temp_v0_8 != NULL) {
                 minimap_marker_pos(temp_v0_8->segment.trans.x_position, temp_v0_8->segment.trans.z_position, sp114,
                                    sp118, sp11C);

@@ -730,11 +730,11 @@ glabel func_800A277C
 /* 0A3DE0 800A31E0 0C000741 */  jal   sound_play
 /* 0A3DE4 800A31E4 24A56D40 */   addiu $a1, %lo(gHUDVoiceSoundMask) # addiu $a1, $a1, 0x6d40
 .L800A31E8:
-/* 0A3DE8 800A31E8 0C006CA2 */  jal   func_8001B288
+/* 0A3DE8 800A31E8 0C006CA2 */  jal   timetrial_valid_player_ghost
 /* 0A3DEC 800A31EC 00000000 */   nop   
 /* 0A3DF0 800A31F0 1040004F */  beqz  $v0, .L800A3330
 /* 0A3DF4 800A31F4 8FAA00A0 */   lw    $t2, 0xa0($sp)
-/* 0A3DF8 800A31F8 0C006CB8 */  jal   func_8001B2E0
+/* 0A3DF8 800A31F8 0C006CB8 */  jal   timetrial_player_ghost
 /* 0A3DFC 800A31FC 00000000 */   nop   
 /* 0A3E00 800A3200 1040004A */  beqz  $v0, .L800A332C
 /* 0A3E04 800A3204 00408025 */   move  $s0, $v0

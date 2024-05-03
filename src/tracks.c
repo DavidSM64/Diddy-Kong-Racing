@@ -69,9 +69,8 @@ ObjectSegment *gSceneActiveCamera;
 
 s32 gSceneCurrentPlayerID;
 Object *gSkydomeSegment;
-UNUSED s32
-    gIsNearCurrBBox;   // Set to true if the current visible segment is close to the camera. Never actually used though.
-UNUSED s32 D_8011B0C0; // Set to 0 then never read.
+UNUSED s32 gIsNearCurrBBox; // Set to true if the current visible segment is close to the camera.
+UNUSED s32 D_8011B0C0;      // Set to 0 then never read.
 UNUSED s32 gDisableShadows; // Never not 0.
 s32 gShadowHeapFlip;        // Flips between 0 and 1 to prevent incorrect access between frames.
 s32 D_8011B0CC;

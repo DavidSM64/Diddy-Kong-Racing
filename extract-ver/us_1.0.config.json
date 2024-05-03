@@ -15424,6 +15424,11 @@
                         "build-id": "ASSET_MISC_MAGNET_DATA"
                     },
                     {
+                        "index": 24,
+                        "filename": "ghost_unlock_times",
+                        "build-id": "ASSET_MISC_GHOST_UNLOCK_TIMES"
+                    },
+                    {
                         "index": 26,
                         "filename": "tracks_menu_ids",
                         "build-id": "ASSET_MISC_TRACKS_MENU_IDS",

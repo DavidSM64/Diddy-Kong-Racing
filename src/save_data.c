@@ -1199,6 +1199,7 @@ typedef struct unkGhostData {
     u8 unkB;
     u8 unkC;
 } unkGhostData;
+// cpak_read_ghost
 s32 func_80074B34(s32 controllerIndex, s16 levelId, s16 vehicleId, u16 *ghostCharacterId, s16 *ghostTime,
                   s16 *ghostNodeCount, GhostHeader *ghostData) {
 #define GHSS_FILE_SIZE 0x100

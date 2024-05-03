@@ -56,9 +56,7 @@ unk801263C0 gMenuCurrentCharacter;
 
 s32 gIgnorePlayerInputTime;  // A set amount of time to ignore player input.
 UNUSED s32 sUnused_801263C8; // Set to 0 in menu_init, and never again.
-CharacterSelectData (
-    *gCurrCharacterSelectData)[10]; // Some sort of character list? Cares if T.T. and Drumstick are unlocked
-
+CharacterSelectData (*gCurrCharacterSelectData)[10];
 s32 D_801263D0;                         // Compared for equality to gTrackIdForPreview
 s8 gActivePlayersArray[MAXCONTROLLERS]; // Boolean value for each controller if it's active with a player.
 s32 gOpacityDecayTimer;
@@ -10298,9 +10296,9 @@ s32 func_80095728(Gfx **dlist, MatrixS **matrices, Vertex **vertices, s32 update
                 D_80126A98++;
                 if (D_80126A98 >= 5) {
                     sound_volume_change(3);
-                    sp54 = func_8001B738(0);
+                    sp54 = timetrial_save_player_ghost(0);
                     if ((sp54 & 0xFF) == 5) {
-                        sp54 = func_8001B738(0);
+                        sp54 = timetrial_save_player_ghost(0);
                     }
                     sound_volume_change(2);
                     if (sp54 != 0) {
@@ -13294,9 +13292,9 @@ s32 tt_menu_loop(void) {
                                  HORZ_ALIGN_CENTER); // PLEASE WAIT
             gSaveGhostDelayCounter++;
             if (gSaveGhostDelayCounter >= 5) {
-                result = func_8001B738(0);
+                result = timetrial_save_player_ghost(0);
                 if (result == CONTROLLER_PAK_CHANGED) {
-                    result = func_8001B738(0);
+                    result = timetrial_save_player_ghost(0);
                 }
                 switch (result) {
                     case CONTROLLER_PAK_GOOD:

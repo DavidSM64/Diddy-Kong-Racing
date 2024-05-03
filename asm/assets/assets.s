@@ -8526,8 +8526,8 @@ glabel ASSET_MISC_MAGNET_DATA
 .incbin "./build/us_1.0/assets/misc/unlabeled/magnet_data.bin"
 glabel ASSET_MISC_23
 .incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_23.bin"
-glabel ASSET_MISC_24
-.incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_24.bin"
+glabel ASSET_MISC_GHOST_UNLOCK_TIMES
+.incbin "./build/us_1.0/assets/misc/unlabeled/ghost_unlock_times.bin"
 glabel ASSET_MISC_25
 .incbin "./build/us_1.0/assets/misc/unlabeled/asset_misc_25.bin"
 glabel ASSET_MISC_TRACKS_MENU_IDS
@@ -8648,7 +8648,7 @@ glabel ASSET_MISC_TABLE
 .word (ASSET_MISC_SHIELD_DATA - ASSET_MISC) / 4
 .word (ASSET_MISC_MAGNET_DATA - ASSET_MISC) / 4
 .word (ASSET_MISC_23 - ASSET_MISC) / 4
-.word (ASSET_MISC_24 - ASSET_MISC) / 4
+.word (ASSET_MISC_GHOST_UNLOCK_TIMES - ASSET_MISC) / 4
 .word (ASSET_MISC_25 - ASSET_MISC) / 4
 .word (ASSET_MISC_TRACKS_MENU_IDS - ASSET_MISC) / 4
 .word (ASSET_MISC_HUB_AREA_IDS - ASSET_MISC) / 4

@@ -641,7 +641,7 @@ glabel L800A691C
 /* 0A7790 800A6B90 1000000A */  b     .L800A6BBC
 /* 0A7794 800A6B94 00000000 */   nop   
 .L800A6B98:
-/* 0A7798 800A6B98 0C006D90 */  jal   get_time_trial_ghost
+/* 0A7798 800A6B98 0C006D90 */  jal   timetrial_ghost_staff
 /* 0A779C 800A6B9C AFA70070 */   sw    $a3, 0x70($sp)
 /* 0A77A0 800A6BA0 8FA70070 */  lw    $a3, 0x70($sp)
 /* 0A77A4 800A6BA4 14400005 */  bnez  $v0, .L800A6BBC

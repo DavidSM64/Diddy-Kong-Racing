@@ -50,7 +50,7 @@ s16 D_800DC708 = 0;
 s32 D_800DC70C = 0; // Currently unknown, might be a different type.
 s16 D_800DC710 = 1;
 s32 D_800DC714 = 0; // Currently unknown, might be a different type.
-Object *gGhostObj = NULL;
+Object *gGhostObjStaff = NULL;
 s8 D_800DC71C = 0;
 s32 gObjectTexAnim = FALSE;
 s16 gTimeTrialTime = 0x2A30;
@@ -203,8 +203,8 @@ s8 D_8011AD26;
 f32 D_8011AD28;
 s32 D_8011AD2C;
 f32 gCurrentLightIntensity;
-Object *D_8011AD34;
-s32 D_8011AD38; // D_8011AD38 is ultimately set by func_80074B34, and is almost definitely SIDeviceStatus
+Object *gGhostObjPlayer;
+s32 gTimeTrialContPak; // gTimeTrialContPak is ultimately set by func_80074B34, and is almost definitely SIDeviceStatus
 s8 D_8011AD3C;
 s8 D_8011AD3D;
 s8 D_8011AD3E;
@@ -332,7 +332,7 @@ u8 D_8011B078[3];
 u8 D_8011B07B[1];
 s32 D_8011B080[7];
 
-extern s16 D_8011D5AC;
+extern s16 gGhostMapID;
 
 /******************************/
 
@@ -643,7 +643,7 @@ void clear_object_pointers(void) {
  */
 void free_all_objects(void) {
     s32 i, len;
-    free_tt_ghost_data();
+    timetrial_free_staff_ghost();
     D_800DC748 = 0;
     if (D_800DC71C) {
         rumble_init(TRUE);
@@ -1165,17 +1165,17 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             }
         }
     }
-    gGhostObj = 0;
-    free_tt_ghost_data();
-    D_8011AD38 = -1;
+    gGhostObjStaff = 0;
+    timetrial_free_staff_ghost();
+    gTimeTrialContPak = -1;
     if ((gIsTimeTrial) && (numPlayers == 1)) {
-        func_80059944();
-        D_8011AD38 = func_8001B668(0);
+        timetrial_reset_player_ghost();
+        gTimeTrialContPak = timetrial_init_player_ghost(0);
         gHasGhostToSave = 0;
         if (gTimeTrialVehicle >= 5) {
             gTimeTrialVehicle = 0;
         }
-        if (func_8001B288() != 0) {
+        if (timetrial_valid_player_ghost() != 0) {
             objectId = D_800DC7A8[(gTimeTrialVehicle * 10) + gTimeTrialCharacter];
             entry->common.size = ((objectId & 0x100) >> 1) | 0x10;
             entry->common.objectID = objectId;
@@ -1188,10 +1188,10 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
             newRacerObj->shadow->scale = 0.01f;
             newRacerObj->interactObj->flags = 0;
-            D_8011AD34 = newRacerObj;
+            gGhostObjPlayer = newRacerObj;
             newRacerObj->unk64->racer.transparency = 0x60;
         }
-        if (func_8001B4FC(get_current_map_id()) != 0) {
+        if (timetrial_init_staff_ghost(get_current_map_id()) != 0) {
             objectId = D_800DC7B8[gMapDefaultVehicle * 10];
             entry->common.size = ((objectId & 0x100) >> 1) | 0x10;
             entry->common.objectID = objectId;
@@ -1204,7 +1204,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             newRacerObj->behaviorId = BHV_TIMETRIAL_GHOST;
             newRacerObj->shadow->scale = 0.01f;
             newRacerObj->interactObj->flags = 0;
-            gGhostObj = newRacerObj;
+            gGhostObjStaff = newRacerObj;
             newRacerObj->unk64->racer.transparency = 0x60;
         }
     }
@@ -1311,8 +1311,8 @@ GLOBAL_ASM("asm/non_matchings/objects/func_8000CC7C.s")
  * Categorises multiple different controller pak messages into one for fewer cases.
  */
 s32 get_contpak_error(void) {
-    // D_8011AD38 is likely an SIDeviceStatus value, but not 100% sure yet.
-    switch (D_8011AD38) {
+    // gTimeTrialContPak is likely an SIDeviceStatus value, but not 100% sure yet.
+    switch (gTimeTrialContPak) {
         case CONTROLLER_PAK_NOT_FOUND:
             return CONTPAK_ERROR_MISSING;
         case CONTROLLER_PAK_RUMBLE_PAK_FOUND:
@@ -1326,7 +1326,7 @@ s32 get_contpak_error(void) {
         case CONTROLLER_PAK_GOOD:
         case CONTROLLER_PAK_CHANGED:
         case CONTROLLER_PAK_SWITCH_TO_RUMBLE:
-            return func_80059E20();
+            return timetrial_ghost_full();
         default:
             return CONTPAK_ERROR_NONE;
     }
@@ -4473,12 +4473,12 @@ void race_finish_time_trial(void) {
         }
         if (((!vehicleID) && (!vehicleID)) && (!vehicleID)) {} // Fakematch
         if (settings->timeTrialRacer == 0) {
-            if (bestCourseTime < 10800 && (vehicleID != gTimeTrialVehicle || func_800599A8() != get_current_map_id() ||
+            if (bestCourseTime < 10800 && (vehicleID != gTimeTrialVehicle || timetrial_map_id() != get_current_map_id() ||
                                            bestCourseTime < gTimeTrialTime)) {
                 gTimeTrialTime = bestCourseTime;
                 gTimeTrialVehicle = gPrevTimeTrialVehicle;
                 gTimeTrialCharacter = settings->racers[0].character;
-                func_80059984(get_current_map_id());
+                timetrial_swap_player_ghost(get_current_map_id());
                 gHasGhostToSave = TRUE;
             }
             if (osTvType == TV_TYPE_PAL) {
@@ -4497,20 +4497,26 @@ void race_finish_time_trial(void) {
     }
 }
 
-s32 func_8001B288(void) {
-    if (func_800599A8() != get_current_map_id()) {
-        return 0;
+/**
+ * Returns true if the player ghost data is valid for playback.
+ */
+s32 timetrial_valid_player_ghost(void) {
+    if (timetrial_map_id() != get_current_map_id()) {
+        return FALSE;
     } else {
         if (gTimeTrialVehicle != gPrevTimeTrialVehicle) {
-            return 0;
+            return FALSE;
         } else {
-            return 1;
+            return TRUE;
         }
     }
 }
 
-Object *func_8001B2E0(void) {
-    return D_8011AD34;
+/** 
+ * Return the player ghost object.
+*/
+Object *timetrial_player_ghost(void) {
+    return gGhostObjPlayer;
 }
 
 /**
@@ -4519,7 +4525,7 @@ when TT is on. It looks like it checks some ghost data makes sure you've got a g
 with the default vehicle,
 Returns 0 if TT ghost was loaded successfully.
 */
-s32 func_8001B2F0(s32 mapId) {
+s32 timetrial_load_staff_ghost(s32 mapId) {
     TTGhostTable *ghostTable;
     TTGhostTable *prevGhostTable;
     s32 ret;
@@ -4551,8 +4557,8 @@ s32 func_8001B2F0(s32 mapId) {
 /**
  * Return true if this object is the time trial ghost.
  */
-s32 is_time_trial_ghost(Object *obj) {
-    return obj == gGhostObj;
+s32 timetrial_staff_ghost_check(Object *obj) {
+    return obj == gGhostObjStaff;
 }
 
 /**
@@ -4564,8 +4570,8 @@ void tt_ghost_beaten(s32 arg0, s16 *playerId) {
     s32 trackIdCount;
     s8 *mainTrackIds;
 
-    gGhostObj = NULL;
-    free_tt_ghost_data();
+    gGhostObjStaff = NULL;
+    timetrial_free_staff_ghost();
     gTimeTrialStaffGhost = FALSE;
     mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
     trackIdCount = 0;
@@ -4593,10 +4599,15 @@ void tt_ghost_beaten(s32 arg0, s16 *playerId) {
     play_time_trial_end_message(playerId);
 }
 
-u8 func_8001B4FC(s32 trackId) {
+/**
+ * Compare if the course record is enough to unlock the staff ghost.
+ * Also check if the ghost tiself has been beaten.
+ * Store both results and return if there should be a ghost.
+ */
+u8 timetrial_init_staff_ghost(s32 trackId) {
     s32 i;
     s8 *mainTrackIds;
-    u16 *temp_v0;
+    u16 *staffTime;
     Settings *settings;
 
     gBeatStaffGhost = FALSE;
@@ -4604,15 +4615,15 @@ u8 func_8001B4FC(s32 trackId) {
     settings = get_settings();
     if (get_map_default_vehicle(trackId) == (Vehicle) gPrevTimeTrialVehicle) {
         mainTrackIds = (s8 *) get_misc_asset(ASSET_MISC_MAIN_TRACKS_IDS);
-        temp_v0 = (u16 *) get_misc_asset(ASSET_MISC_24);
+        staffTime = (u16 *) get_misc_asset(ASSET_MISC_GHOST_UNLOCK_TIMES);
         for (i = 0; mainTrackIds[i] != -1 && trackId != mainTrackIds[i]; i++) {}
         if (mainTrackIds[i] != -1) {
-            if (temp_v0[i] >= settings->courseTimesPtr[gPrevTimeTrialVehicle][trackId]) {
+            if (staffTime[i] >= settings->courseTimesPtr[gPrevTimeTrialVehicle][trackId]) {
                 // Check if TT has been beaten?
                 if (!(get_eeprom_settings() & ((1 << 4) << i))) {
                     gBeatStaffGhost = TRUE;
                 }
-                if (func_8001B2F0(trackId) == 0) {
+                if (timetrial_load_staff_ghost(trackId) == 0) {
                     gTimeTrialStaffGhost = TRUE;
                 }
             }
@@ -4622,40 +4633,48 @@ u8 func_8001B4FC(s32 trackId) {
 }
 
 /**
- * Return the time trial ghost object.
+ * Return the time trial staff ghost object.
  */
-Object *get_time_trial_ghost(void) {
-    return gGhostObj;
+Object *timetrial_ghost_staff(void) {
+    return gGhostObjStaff;
 }
 
 /**
  * Return true if the tt ghost is unbeaten for this track.
  */
-s32 unbeaten_staff_time(void) {
+s32 timetrial_staff_unbeaten(void) {
     return gBeatStaffGhost == FALSE;
 }
 
-s32 func_8001B668(s32 arg0) {
-    s16 sp2E;
-    s16 sp2C;
-    s32 temp_v0;
-    s32 mapId;
+/**
+ * Calls a function to start loading the player ghost data from the controller pak.
+ * Returns the controller pak status. 0 means good.
+*/
+s32 timetrial_init_player_ghost(s32 playerID) {
+    s16 characterID;
+    s16 time;
+    s32 cpakStatus;
+    s32 ghostMapID;
 
-    mapId = func_800599A8();
-    if ((get_current_map_id() != mapId) || (gTimeTrialVehicle != gPrevTimeTrialVehicle)) {
-        temp_v0 = func_800599B8(arg0, get_current_map_id(), gPrevTimeTrialVehicle, &sp2E, &sp2C);
-        if (temp_v0 == 0) {
+    ghostMapID = timetrial_map_id();
+    if (get_current_map_id() != ghostMapID || gTimeTrialVehicle != gPrevTimeTrialVehicle) {
+        cpakStatus = timetrial_load_player_ghost(playerID, get_current_map_id(), gPrevTimeTrialVehicle, &characterID, &time);
+        if (cpakStatus == CONTROLLER_PAK_GOOD) {
             gTimeTrialVehicle = gPrevTimeTrialVehicle;
-            gTimeTrialCharacter = sp2E;
-            gTimeTrialTime = sp2C;
+            gTimeTrialCharacter = characterID;
+            gTimeTrialTime = time;
         }
-        return temp_v0;
+        return cpakStatus;
     }
-    return func_800599B8(arg0, get_current_map_id(), gPrevTimeTrialVehicle, NULL, NULL);
+    return timetrial_load_player_ghost(playerID, get_current_map_id(), gPrevTimeTrialVehicle, NULL, NULL);
 }
 
-SIDeviceStatus func_8001B738(s32 controllerIndex) {
-    return func_80059B7C(controllerIndex, func_800599A8(), gTimeTrialVehicle, gTimeTrialCharacter, gTimeTrialTime);
+/**
+ * Call a function to write the ghost data to the controller pak.
+ * Returns the controller pak status. 0 is good.
+*/
+SIDeviceStatus timetrial_save_player_ghost(s32 controllerIndex) {
+    return timetrial_write_player_ghost(controllerIndex, timetrial_map_id(), gTimeTrialVehicle, gTimeTrialCharacter, gTimeTrialTime);
 }
 
 /**
@@ -4669,7 +4688,7 @@ u8 has_ghost_to_save(void) {
  * Resets the variables used for ghost data saving.
  */
 void set_ghost_none(void) {
-    D_8011D5AC = -1;
+    gGhostMapID = -1;
     gHasGhostToSave = FALSE;
 }
 
