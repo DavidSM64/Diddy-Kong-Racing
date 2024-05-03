@@ -1281,7 +1281,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
     if (racer->buoyancy > 0.0 && racer->unk1FB == 0 && obj->segment.y_velocity > 4.0) {
         obj->segment.y_velocity = 4.0f;
     }
-    if (gNumViewports < 2 && obj->segment.header->unk57 >= 9) {
+    if (gNumViewports < 2 && obj->segment.header->particleCount >= 9) {
         if ((gCurrentRacerInput & (A_BUTTON | R_TRIG)) == (A_BUTTON | R_TRIG) &&
             (gCurrentStickX < -30 || gCurrentStickX > 30)) {
             func_800B4668(obj, 8, updateRate << 10, 0x80);
@@ -1317,7 +1317,7 @@ void func_80046524(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         }
     }
     if (gCurrentPlayerIndex != PLAYER_COMPUTER && racer->boostTimer == 0 && gNumViewports < 2) {
-        asset20 = &((Asset20 *) get_misc_asset(ASSET_MISC_20))[racer->unk2];
+        asset20 = &((Asset20 *) get_misc_asset(ASSET_MISC_20))[racer->racerIndex];
         i = ((racer->boostType & EMPOWER_BOOST) >> 2) + 10;
         if (i > 10) {
             if (asset20->unk70 > 0 || asset20->unk74 > 0.0) {

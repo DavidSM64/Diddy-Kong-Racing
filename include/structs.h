@@ -1180,7 +1180,7 @@ typedef struct Object_AiNode {
 /* Size: 0x224 - 548 bytes */
 typedef struct Object_Racer {
   /* 0x000 */ s16 playerIndex; // -1 = AI Controlled, 0 to 3 = Object controlled
-  /* 0x002 */ s8 unk2;
+  /* 0x002 */ s8 racerIndex; // Unique ID for each racer object.
   /* 0x003 */ s8 characterId; // Affects minimap color, horn, voice, etc.
   /* 0x004 */ s32 unk4;
   /* 0x008 */ f32 forwardVel;

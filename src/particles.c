@@ -666,12 +666,12 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
                     break;
                 case VEHICLE_HOVERCRAFT:
                     if (i == 2 || i == 3) {
-                        var_v0 = D_80127C88[racer->unk2 & 7];
+                        var_v0 = D_80127C88[racer->racerIndex & 7];
                         var_v0 += (updateRate * 4);
                         if (var_v0 > 256) {
                             var_v0 = 256;
                         }
-                        D_80127C88[racer->unk2 & 7] = var_v0;
+                        D_80127C88[racer->racerIndex & 7] = var_v0;
                         gParticleOpacity = var_v0;
                     }
                     break;
@@ -709,7 +709,7 @@ void func_800AF714(Object *racerObj, s32 updateRate) {
                 }
             }
             if (i == 2 || i == 3) {
-                D_80127C88[racer->unk2 & 7] = 0;
+                D_80127C88[racer->racerIndex & 7] = 0;
             }
         }
         D_800E2D00[0].word = 0;

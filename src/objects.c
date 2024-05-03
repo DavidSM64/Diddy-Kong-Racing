@@ -412,9 +412,9 @@ void func_8000BADC(s32 updateRate) {
             updateRateF *= 1.2f;
         }
         racer = &(*gRacers)[i]->unk64->racer;
-        asset20Part = &asset20[racer->unk2];
+        asset20Part = &asset20[racer->racerIndex];
         if (racer->shieldTimer != 0) {
-            D_8011B010[racer->unk2] += updateRate;
+            D_8011B010[racer->racerIndex] += updateRate;
         }
         asset20Part->unk72 += updateRate;
         if (racer->boostTimer != 0) {
@@ -465,9 +465,9 @@ void func_8000BADC(s32 updateRate) {
             }
         }
         if ((asset20Part->unk70 > 0) || (asset20Part->unk74 > 0.0f)) {
-            func_8000B750((*gRacers)[i], racer->unk2, racer->vehicleIDPrev, racer->boostType, 0);
+            func_8000B750((*gRacers)[i], racer->racerIndex, racer->vehicleIDPrev, racer->boostType, 0);
         }
-        temp = racer->unk2 << 2;
+        temp = racer->racerIndex << 2;
         D_8011B078[temp + 1] += updateRate;
         D_8011B078[temp + 2] += updateRate;
         if (racer->magnetTimer != 0) {
@@ -1107,7 +1107,7 @@ void func_8000CC7C(Vehicle vehicle, u32 arg1, s32 arg2) {
             if (tempVehicle < VEHICLE_CAR || tempVehicle > VEHICLE_PLANE) {
                 curRacer->unk1CB = 0;
             }
-            curRacer->unk2 = var_s4;
+            curRacer->racerIndex = var_s4;
             curRacer->characterId = settings->racers[var_s4].character;
             if (D_8011AD3C == 2) {
                 curRacer->characterId = D_800DC840[i6];
@@ -1441,7 +1441,7 @@ void transform_player_vehicle(void) {
     racer = &player->unk64->racer;
     racer->vehicleID = gOverworldVehicle;
     racer->vehicleIDPrev = gOverworldVehicle;
-    racer->unk2 = 0;
+    racer->racerIndex = 0;
     racer->characterId = settings->racers[PLAYER_ONE].character;
     racer->playerIndex = 0;
     racer->vehicleSound = 0;
@@ -1787,7 +1787,7 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
         curObj->unk60 = (Object_60 *) address;
         address += 0xC;
     }
-    if (curObj->segment.header->unk57 > 0) {
+    if (curObj->segment.header->particleCount > 0) {
         address = (u32 *) ((uintptr_t) address + obj_init_emitter(curObj, (ParticleEmitter *) address));
     }
     sizeOfobj = (uintptr_t) address - (uintptr_t) curObj;
@@ -1846,9 +1846,9 @@ Object *spawn_object(LevelObjectEntryCommon *entry, s32 arg1) {
     if (newObj->unk60 != NULL) {
         newObj->unk60 = (Object_60 *) (((uintptr_t) newObj + (uintptr_t) newObj->unk60) - (uintptr_t) gSpawnObjectHeap);
     }
-    if (newObj->segment.header->unk57 > 0) {
-        newObj->unk6C =
-            (ParticleEmitter *) (((uintptr_t) newObj + (uintptr_t) newObj->unk6C) - (uintptr_t) gSpawnObjectHeap);
+    if (newObj->segment.header->particleCount > 0) {
+        newObj->particleEmitter =
+            (ParticleEmitter *) (((uintptr_t) newObj + (uintptr_t) newObj->particleEmitter) - (uintptr_t) gSpawnObjectHeap);
     }
     if (newObj->segment.header->numLightSources > 0) {
         newObj->lightData =
@@ -2414,10 +2414,10 @@ void func_80011264(ObjectModel *model, Object *obj) {
     if (model->unk50 > 0) {
         batch = &model->batches[0];
         door = &obj->unk64->door;
-        current = ((door->unk10 / 10) - 1) << 2;
+        current = ((door->balloonCount / 10) - 1) << 2;
         if (model->textures[batch->textureIndex].texture) {} // fakematch
         if (1) {                                             // fakematch
-            remaining = ((door->unk10 % 10) << 2);
+            remaining = ((door->balloonCount % 10) << 2);
         }
         for (i = 0; i < model->numberOfBatches; i++, batch++) {
             if (batch->flags & 0x10000) {
@@ -3354,7 +3354,7 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
     struct RacerShieldGfx *shield;
     s32 shieldType;
     s32 vehicleID;
-    s32 var_a2;
+    s32 racerIndex;
     f32 scale;
     f32 shear;
 
@@ -3363,25 +3363,25 @@ void render_racer_shield(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
         gObjectCurrDisplayList = *dList;
         gObjectCurrMatrix = *mtx;
         gObjectCurrVertexList = *vtxList;
-        var_a2 = racer->unk2;
-        if (var_a2 > 10) {
-            var_a2 = 0;
+        racerIndex = racer->racerIndex;
+        if (racerIndex > 10) {
+            racerIndex = 0;
         }
         vehicleID = racer->vehicleID;
         if (vehicleID >= NUMBER_OF_PLAYER_VEHICLES) {
             vehicleID = VEHICLE_CAR;
         }
         shield = ((struct RacerShieldGfx *) get_misc_asset(ASSET_MISC_SHIELD_DATA));
-        vehicleID = (vehicleID * 10) + var_a2;
+        vehicleID = (vehicleID * 10) + racerIndex;
         shield = shield + vehicleID;
         gShieldEffectObject->segment.trans.x_position = shield->x_position;
         gShieldEffectObject->segment.trans.y_position = shield->y_position;
         gShieldEffectObject->segment.trans.z_position = shield->z_position;
-        gShieldEffectObject->segment.trans.y_position += shield->y_offset * sins_f(D_8011B010[var_a2] * 0x200);
-        shear = (coss_f(D_8011B010[var_a2] * 0x400) * 0.05f) + 0.95f;
+        gShieldEffectObject->segment.trans.y_position += shield->y_offset * sins_f(D_8011B010[racerIndex] * 0x200);
+        shear = (coss_f(D_8011B010[racerIndex] * 0x400) * 0.05f) + 0.95f;
         gShieldEffectObject->segment.trans.scale = shield->scale * shear;
         shear = shear * shield->turnSpeed;
-        gShieldEffectObject->segment.trans.y_rotation = D_8011B010[var_a2] * 0x800;
+        gShieldEffectObject->segment.trans.y_rotation = D_8011B010[racerIndex] * 0x800;
         gShieldEffectObject->segment.trans.x_rotation = 0x800;
         gShieldEffectObject->segment.trans.z_rotation = 0;
         shieldType = racer->shieldType;
@@ -3431,7 +3431,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
     UNUSED s32 pad;
 
     racer = (Object_Racer *) obj->unk64;
-    var_t0 = racer->unk2 * 4;
+    var_t0 = racer->racerIndex * 4;
     if (D_8011B07B[var_t0]) {
         if (gMagnetEffectObject != NULL) {
             gObjectCurrDisplayList = *dList;
@@ -3443,7 +3443,7 @@ void render_racer_magnet(Gfx **dList, MatrixS **mtx, Vertex **vtxList, Object *o
                 vehicleID = VEHICLE_CAR;
             }
             magnet = &magnet[vehicleID * 5];
-            var_t0 = racer->unk2;
+            var_t0 = racer->racerIndex;
             if (var_t0 > 10) {
                 var_t0 = 0;
             }
@@ -4424,26 +4424,26 @@ void race_finish_time_trial(void) {
     bestRacer = &gRacersByPosition[0]->unk64->racer;
     for (i = 0; i < gNumRacers; i++) {
         curRacer = &gRacersByPosition[i]->unk64->racer;
-        if (curRacer->unk2 >= 0) {
-            if (curRacer->unk2 < get_number_of_active_players()) {
-                settings->racers[curRacer->unk2].best_times = 0;
+        if (curRacer->racerIndex >= 0) {
+            if (curRacer->racerIndex < get_number_of_active_players()) {
+                settings->racers[curRacer->racerIndex].best_times = 0;
                 vehicleID = curRacer->vehicleIDPrev;
                 if (vehicleID >= VEHICLE_CAR && vehicleID < NUMBER_OF_PLAYER_VEHICLES) {
                     courseTime = 0;
                     for (j = 0; j < levelHeader->laps && j < 5; j++) {
-                        settings->racers[curRacer->unk2].lap_times[j] = curRacer->lap_times[j];
+                        settings->racers[curRacer->racerIndex].lap_times[j] = curRacer->lap_times[j];
                         curRacerLapTime = curRacer->lap_times[j];
                         courseTime += curRacerLapTime;
                         if (curRacerLapTime < bestRacerTime) {
                             settings->unk115[1] = j;
-                            settings->unk115[0] = curRacer->unk2;
+                            settings->unk115[0] = curRacer->racerIndex;
                             bestRacerTime = curRacerLapTime;
                         }
                     }
-                    settings->racers[curRacer->unk2].course_time = courseTime;
+                    settings->racers[curRacer->racerIndex].course_time = courseTime;
                     if (courseTime < bestCourseTime) {
                         bestCourseTime = courseTime;
-                        settings->timeTrialRacer = curRacer->unk2;
+                        settings->timeTrialRacer = curRacer->racerIndex;
                         bestRacer = curRacer;
                     }
                 }
@@ -6131,7 +6131,7 @@ void mode_init_taj_race(void) {
         i = 0; // Fakematch
         racer->vehicleID = VEHICLE_CARPET;
         racer->vehicleIDPrev = racer->vehicleID;
-        racer->unk2 = 1;
+        racer->racerIndex = 1;
         racer->characterId = settings->racers[0].character;
         racer->stretch_height_cap = 1.0f;
         racer->stretch_height = 1.0f;
