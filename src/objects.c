@@ -5341,7 +5341,7 @@ GLOBAL_ASM("asm/non_matchings/objects/func_8001CD28.s")
 #endif
 
 /**
- * Signal that AI nodes exist, so the game knows go initialise them.
+ * Signal that AI nodes exist, so the game knows to initialise them.
  */
 void ainode_enable(void) {
     gInitAINodes = TRUE;
